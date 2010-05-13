@@ -1,0 +1,103 @@
+#include "../../include/manager/ProjectControl.h"
+
+namespace manager {
+    ProjectControl::ProjectControl() {
+        this->activeProject = NULL;
+    }
+    ProjectControl::~ProjectControl() {
+        QWriteLocker locker(&lockProjects);
+        QMapIterator<QString,Project*> it(projects);
+        while(it.hasNext()){
+            it.next();
+            Project *p = it.value();
+            projects.remove(it.key());
+            delete p;
+            p = NULL;
+        }
+        projects.clear();
+    }
+
+    bool ProjectControl::openProject (QString projectId, QString location) {
+        //TODO - fazer parser do arquivo de projeto
+    }
+
+    Project* ProjectControl::createProject(QString projectId, QString location) {
+        lockProjects.lockForRead();
+        if (!projects.contains(projectId)) {
+            lockProjects.unlock();
+            Project *p = new Project(projectId,location);
+            lockProjects.lockForWrite();
+            projects[projectId] = p;
+            lockProjects.unlock();
+            return p;
+        }
+        lockProjects.unlock();
+        return NULL;
+
+    }
+
+    bool ProjectControl::activateProject (QString projectId){
+        lockProjects.lockForRead();
+        if (projects.contains(projectId)) {
+            lockProjects.unlock();
+            lockProjects.lockForWrite();
+            this->activeProject = projects[projectId];
+            lockProjects.unlock();
+            return true;
+        }
+        lockProjects.unlock();
+        return false;
+    }
+    bool ProjectControl::deactivateProject (QString projectId){
+        lockProjects.lockForRead();
+        if (projects.contains(projectId)) {
+            lockProjects.unlock();
+            lockProjects.lockForWrite();
+            this->activeProject = NULL;
+            lockProjects.unlock();
+            return true;
+        }
+        lockProjects.unlock();
+        return false;
+    }
+
+    Project *ProjectControl::getProject(QString projectId) {
+        lockProjects.lockForRead();
+        if (projects.contains(projectId)) {
+            Project *ret = projects[projectId];
+            lockProjects.unlock();
+            return ret;
+        }
+        lockProjects.unlock();
+        return NULL;
+    }
+
+    bool ProjectControl::saveProject (QString projectId, QString location) {
+        //TODO - salvar arquivo de projeto e chamar save para cada NCLDocument
+    }
+    bool ProjectControl::closeProject (QString projectId) {
+        //TODO - salvar arquivo de projeto e chamar save para cada NCLDocument
+    }
+    bool ProjectControl::deleteProject (QString projectId) {
+        //TODO - deletar todos os NCLDocument e deletar o arquivo de projeto
+    }
+
+    bool ProjectControl::addDocument (QString projectId, QString uri,
+                                      QString  documentId) {
+        //TODO - chamar o parser e adicionar o NclDocument no projeto
+
+    }
+    bool ProjectControl::removeDocument (QString projectId,
+                                         QString documentId) {
+        //TODO - deletar o NclDocument do projeto mas não o arquivo
+    }
+    bool ProjectControl::deleteDocument (QString projectId, QString documentId) {
+        //TODO - deletar o NclDocument do Projeto e deletar o arquivo do sistema
+    }
+
+    bool ProjectControl::saveDocument (QString projectId, QString documentId,
+                                       QString location) {
+        //TODO - salvar o documento Ncl
+    }
+
+}
