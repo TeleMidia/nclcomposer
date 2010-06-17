@@ -2,6 +2,7 @@
 # Project created by QtCreator 2010-03-12T13:06:44
 # -------------------------------------------------
 QT -= gui
+QT += xml
 TARGET = ComposerCoreControl
 CONFIG += release
 macx::MODEL_LOCATION = /Library/Frameworks
@@ -21,7 +22,7 @@ macx {
 }
 else:unix { 
     LIBS += -lComposerCoreModel
-    INCLUDEPATH += $$MODEL_LOCATION/include/model
+    INCLUDEPATH += $$MODEL_LOCATION/include/composer
 }
 
 DESTDIR = $$INSTALLBASE/lib/composer/control
@@ -35,15 +36,21 @@ SOURCES += src/manager/MessageControl.cpp \
     src/manager/ProjectControl.cpp \
     src/manager/PluginControl.cpp \
     src/manager/TransactionControl.cpp \
-    src/util/Project.cpp
+    src/util/Project.cpp \
+    src/manager/DocumentControl.cpp \
+    src/util/DocumentParser.cpp \
+    src/util/EntityUtil.cpp
 
 HEADERS_MAN += include/manager/MessageControl.h \
     include/manager/ProjectControl.h \
     include/manager/PluginControl.h \
-    include/manager/TransactionControl.h
+    include/manager/TransactionControl.h \
+    include/manager/DocumentControl.h
 
 HEADERS_UTIL +=include/util/ComposerCoreControl_global.h \
-    include/util/Project.h
+    include/util/Project.h \
+    include/util/DocumentParser.h \
+    include/util/EntityUtil.h
 
 HEADERS_PLUGIN += include/plugin/IPluginMessage.h \
     include/plugin/IPluginFactory.h

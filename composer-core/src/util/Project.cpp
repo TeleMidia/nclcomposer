@@ -19,7 +19,8 @@ Project::~Project() {
 
 
 
-NclDocument* Project::addDocument(QString documentId, QString uri, bool exists) {
+NclDocument* Project::addDocument(QString documentId, QString uri,
+                                  bool exists) {
     if (!exists) {
         map<string,string> atts;
         atts["id"] = documentId.toStdString();

@@ -1,11 +1,13 @@
-#include "../include/manager/MessageControl.h"
+#include "../../include/manager/MessageControl.h"
 
 namespace manager {
     MessageControl::MessageControl() {
+        QMutexLocker locker(&mutex);
         this->layoutFacade = Layout::getInstance();
     }
 
     MessageControl::~MessageControl() {
+        QMutexLocker locker(&mutex);
         Layout::releaseInstance();
     }
 

@@ -11,12 +11,9 @@ using namespace std;
 #include <model/ncm/NclDocument.h>
 using namespace ncm;
 
+#include "../util/EntityUtil.h"
+
 namespace plugin {
-    #define TOTALENTITIES 2
-    typedef enum {
-          REGION,
-          REGIONBASE,
-    }EntityType;
 
     class IPluginMessage : public QObject {
         Q_OBJECT

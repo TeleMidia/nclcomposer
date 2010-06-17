@@ -7,6 +7,7 @@
 using namespace ncm;
 
 #include <QReadWriteLock>
+#include <QMutex>
 #include <map>
 #include <string>
 using namespace std;
@@ -27,6 +28,7 @@ namespace manager {
             Layout  *layoutFacade;
             IPluginMessage *sender;
             QReadWriteLock lockSender;
+            QMutex mutex;
 
             inline void setSender(IPluginMessage *sender) {
                 QWriteLocker locker(&lockSender);
