@@ -16,6 +16,7 @@ using namespace std;
 using namespace ncm;
 
 #include <model/functional/Layout.h>
+#include <model/functional/Document.h>
 using namespace ncm::functional;
 
 #include "../plugin/IPluginMessage.h"
@@ -26,6 +27,7 @@ namespace manager {
             Q_OBJECT
         private:
             Layout  *layoutFacade;
+            Document *documentFacade;
             IPluginMessage *sender;
             QReadWriteLock lockSender;
             QMutex mutex;
@@ -74,8 +76,11 @@ namespace manager {
                            bool force);
             void onRemoveEntity(EntityType type, Entity *, bool force);
 
-        signals:
+            void onCreateDocument(map<string,string>& atts);
 
+
+        signals:
+            void documentCreated(NclDocument *);
             void regionAdded(Region *);
             void regionAddError(string error);
             /** TODO Lembrar se ele tiver mudado o ID */

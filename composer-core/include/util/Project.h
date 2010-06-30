@@ -40,7 +40,7 @@ class Project {
                 QReadLocker locker(&lockDocuments);
                 return nclDocuments;
         }
-        NclDocument* addDocument(QString documentId, QString uri,bool);
+        bool addDocument(QString documentId, NclDocument*,bool);
         bool removeDocument(QString documentId);
         bool deleteDocument(QString documentId);
 

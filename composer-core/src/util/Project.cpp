@@ -19,26 +19,26 @@ Project::~Project() {
 
 
 
-NclDocument* Project::addDocument(QString documentId, QString uri,
-                                  bool exists) {
-    if (!exists) {
-        map<string,string> atts;
-        atts["id"] = documentId.toStdString();
-        atts["uri"] = uri.toStdString();
-        return documentFacade->createNclDocument(atts);
+bool Project::addDocument(QString documentId, NclDocument *nclDoc,
+                                  bool copy) {
+    QReadLocker locker(&lockDocuments);
+    if (nclDocuments.contains(documentId)){
+        locker.unlock();
+        QWriteLocker lock(&lockDocuments);
+        nclDocuments[documentId] = nclDoc;
+        return true;
     }
+    return false;
 }
 
 bool Project::removeDocument(QString documentId) {
-        lockDocuments.lockForRead();
+        QReadLocker locker(&lockDocuments);
         if (nclDocuments.contains(documentId)) {
-            lockDocuments.unlock();
-            lockDocuments.lockForWrite();
+            locker.unlock();
+            QWriteLocker lock(&lockDocuments);
             documentFacade->releaseNclDocument(nclDocuments.take(documentId));
-            lockDocuments.unlock();
             return true;
         }
-        lockDocuments.unlock();
         return false;
 
 }

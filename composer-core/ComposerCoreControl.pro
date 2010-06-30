@@ -37,7 +37,6 @@ SOURCES += src/manager/MessageControl.cpp \
     src/manager/PluginControl.cpp \
     src/manager/TransactionControl.cpp \
     src/util/Project.cpp \
-    src/manager/DocumentControl.cpp \
     src/util/DocumentParser.cpp \
     src/util/EntityUtil.cpp
 
@@ -45,7 +44,6 @@ HEADERS_MAN += include/manager/MessageControl.h \
     include/manager/ProjectControl.h \
     include/manager/PluginControl.h \
     include/manager/TransactionControl.h \
-    include/manager/DocumentControl.h
 
 HEADERS_UTIL +=include/util/ComposerCoreControl_global.h \
     include/util/Project.h \

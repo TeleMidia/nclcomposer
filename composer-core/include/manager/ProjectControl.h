@@ -3,6 +3,7 @@
 
 #include <QtDebug>
 #include <QReadWriteLock>
+#include <QtDebug>
 
 #include <QObject>
 
@@ -10,6 +11,7 @@
 #include <QString>
 
 #include "../util/Project.h"
+#include "../util/DocumentParser.h"
 
 
 namespace manager {
@@ -20,6 +22,7 @@ namespace manager {
             QReadWriteLock lockProjects;
             Project *activeProject;
             QMap<QString,Project*> projects;
+            DocumentParser *documentParser;
 
         public:
             ProjectControl();
@@ -51,3 +54,4 @@ namespace manager {
     };
 }
 #endif // PROJECTCONTROL_H
+

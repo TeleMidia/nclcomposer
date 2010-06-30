@@ -3,6 +3,7 @@
 namespace manager {
     ProjectControl::ProjectControl() {
         this->activeProject = NULL;
+        this->documentParser = new DocumentParser();
     }
     ProjectControl::~ProjectControl() {
         QWriteLocker locker(&lockProjects);
@@ -15,6 +16,8 @@ namespace manager {
             p = NULL;
         }
         projects.clear();
+        delete documentParser;
+        documentParser = NULL;
     }
 
     bool ProjectControl::openProject (QString projectId, QString location) {
@@ -84,7 +87,22 @@ namespace manager {
 
     bool ProjectControl::addDocument (QString projectId, QString uri,
                                       QString  documentId) {
-        //TODO - chamar o parser e adicionar o NclDocument no projeto
+        if (documentParser->setUpParser(uri)) {
+            if (documentParser->parseDocument()) {
+              //TODO - verify the copy parameter to addDocument in Project
+              getProject(projectId)->addDocument(documentId,
+                                    documentParser->getNclDocument(),false);
+              return true;
+            } else {
+                qDebug() << tr("addDocument fails in parseDocument");
+                return false;
+            }
+        } else {
+            qDebug() << tr("addDocument fails in setUpParser");
+            return false;
+        }
+        return false;
+
 
     }
     bool ProjectControl::removeDocument (QString projectId,

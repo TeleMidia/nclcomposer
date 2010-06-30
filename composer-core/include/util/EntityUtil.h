@@ -3,7 +3,10 @@
 
 #include <QMap>
 #include <QString>
+#include <QDomNamedNodeMap>
 
+#include <string>
+using namespace std;
 
 #define TOTALENTITIES 2
 typedef enum {
@@ -26,6 +29,7 @@ public:
     static EntityType getEntityType(QString entityName);
     static EntityUtil *getInstance();
     static void releaseInstance();
+    static map<string,string> toStdMap(QDomNamedNodeMap);
 
 
 };

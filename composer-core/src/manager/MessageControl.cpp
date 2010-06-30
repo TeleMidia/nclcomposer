@@ -3,12 +3,19 @@
 namespace manager {
     MessageControl::MessageControl() {
         QMutexLocker locker(&mutex);
-        this->layoutFacade = Layout::getInstance();
+        this->layoutFacade   = Layout::getInstance();
+        this->documentFacade = Document::getInstance();
     }
 
     MessageControl::~MessageControl() {
         QMutexLocker locker(&mutex);
         Layout::releaseInstance();
+        Document::releaseInstance();
+    }
+
+    void MessageControl::onCreateDocument(map<string,string>& atts) {
+        NclDocument *nclDoc = documentFacade->createNclDocument(atts);
+        emit documentCreated(nclDoc);
     }
 
     void MessageControl::onAddEntity( EntityType entity,

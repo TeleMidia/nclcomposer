@@ -34,3 +34,15 @@ QString EntityUtil::getEntityName(EntityType entity) {
 EntityType EntityUtil::getEntityType(QString entityName) {
     return entitiesTypes.key(entityName,NONE);
 }
+
+map<string,string> EntityUtil::toStdMap(QDomNamedNodeMap attsElement) {
+    map<string,string> atts;
+    for (int i = 0; i < attsElement.count(); i++) {
+        QDomNode att = attsElement.item(i);
+        if (att.isAttr()) {
+            atts[att.nodeName().toStdString()] =
+                                               att.nodeValue().toStdString();
+        }
+    }
+    return atts;
+}
