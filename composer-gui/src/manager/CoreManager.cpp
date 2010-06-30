@@ -29,3 +29,13 @@ void CoreManager::createProject(QString name, QString location){
         emit onError(tr("The choosen directory does not exists."));
     }
 }
+
+void CoreManager::createDocument(QString name,QString location) {
+    int i = location.lastIndexOf("/");
+    if (i != -1) {
+        QString projectId = location.remove(0,i);
+        projectControl->addDocument(projectId,location,name);
+    }
+}
+
+

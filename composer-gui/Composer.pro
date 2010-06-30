@@ -4,8 +4,9 @@
 TARGET = Composer
 TEMPLATE = app
 CONFIG += debug
+QT += xml
 
-macx::LOCATION = /Library/Frameworks
+macx:LOCATION = /Library/Frameworks
 else:unix:LOCATION = /usr/local
 
 debug:INSTALLBASE = ./debug
@@ -31,14 +32,22 @@ else:unix {
 }
 SOURCES += main.cpp \
     src/gui/MainWindow.cpp \
-    src/gui/ProjectWizard.cpp \
+    src/gui/wizard/MainWizard.cpp \
+    src/gui/ProjectTreeWidget.cpp \
+    src/gui/wizard/IntroPage.cpp \
+    src/gui/wizard/EntryPage.cpp \
     src/manager/CoreManager.cpp
+
+
+
 HEADERS_GUI += include/gui/MainWindow.h \
-    include/gui/ProjectWizard.h 
+    include/gui/wizard/MainWizard.h \
+    include/gui/ProjectTreeWidget.h \
+    include/gui/wizard/IntroPage.h \
+    include/gui/wizard/EntryPage.h
 
 HEADERS_MANAGER +=  include/manager/CoreManager.h
 RESOURCES += images.qrc
 
-HEADERS += $$HEADERS_GUI $$HEADERS_MANAGER
-
+HEADERS += $$HEADERS_GUI $$HEADERS_MANAGER \
 

@@ -8,6 +8,7 @@ MainWindow::MainWindow(QWidget *parent)
             this,SLOT(createProjectInTree(QString,QString)));
     connect(cManager,SIGNAL(onError(QString)),
             this,SLOT(errorDialog(QString)));
+
 }
 
 MainWindow::~MainWindow() {
@@ -30,9 +31,16 @@ void MainWindow::initGUI() {
 }
 
 void MainWindow::launchProjectWizard() {
-    ProjectWizard *wizard = new ProjectWizard(this);
+    MainWizard *wizard = new MainWizard(this);
     connect(wizard,SIGNAL(infoReceived(QString,QString)),
             cManager,SLOT(createProject(QString,QString)));
+    wizard->init();
+}
+
+void MainWindow::launchDocumentWizard(QString projectLocation) {
+    MainWizard *wizard = new MainWizard(this,projectLocation);
+    connect(wizard,SIGNAL(infoReceived(QString,QString)),
+            cManager,SLOT(createDocument(QString,QString)));
     wizard->init();
 }
 
@@ -41,21 +49,25 @@ void MainWindow::createProjectInTree(QString name,QString location) {
     QTreeWidgetItem *item = new QTreeWidgetItem(projectTree);
     item->setIcon(0,QIcon(":/mainwindow/folderEmpty"));
     item->setText(1,name);
-    item->setToolTip(1,location+name);
+    item->setToolTip(1,location+"/"+name);
 }
 
 
 void MainWindow::createTreeProject() {
     dockTree = new QDockWidget(tr("Projects"), this);
     dockTree->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
-    projectTree = new QTreeWidget(this);
+    projectTree = new ProjectTreeWidget(this);
     projectTree->setColumnCount(2);
     projectTree->setSortingEnabled(false);
     //projectTree->setHeaderLabel(tr("Name"));
     projectTree->headerItem()->setHidden(true);
     projectTree->setIconSize(QSize(35,35));
+    projectTree->setContextMenuPolicy(Qt::DefaultContextMenu);
     dockTree->setWidget(projectTree);
     addDockWidget(Qt::LeftDockWidgetArea,dockTree,Qt::Horizontal);
+    connect(projectTree,SIGNAL(newDocument(QString)),this,
+            SLOT(launchDocumentWizard(QString)));
+
 }
 
 void MainWindow::createMenus() {
@@ -132,3 +144,4 @@ void MainWindow::updateWindowMenu()
      separatorWindowAct->setVisible(!windows.isEmpty());
 
  }
+

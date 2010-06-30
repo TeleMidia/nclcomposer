@@ -21,8 +21,9 @@
 #include <QtGui/QGridLayout>
 #include <QtGui/QLineEdit>
 
-#include "ProjectWizard.h"
+#include "wizard/MainWizard.h"
 #include "../manager/CoreManager.h"
+#include "ProjectTreeWidget.h"
 
 class MainWindow : public QMainWindow {
     Q_OBJECT
@@ -38,7 +39,7 @@ class MainWindow : public QMainWindow {
         QAction *aboutComposerAct;
         QAction *separatorWindowAct;
         QAction *projectWindowAct;
-        QTreeWidget *projectTree;
+        ProjectTreeWidget *projectTree;
         QDockWidget *dockTree;
 
     private:
@@ -62,6 +63,7 @@ class MainWindow : public QMainWindow {
     public slots:
         void createProjectInTree(QString name,QString location);
         void errorDialog(QString);
+        void launchDocumentWizard(QString projectLocation);
 
 
 };

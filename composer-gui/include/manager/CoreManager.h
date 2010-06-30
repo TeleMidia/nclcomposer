@@ -24,6 +24,7 @@ signals:
 
 public slots:
     void createProject(QString,QString);
+    void createDocument(QString,QString);
 
 };
 
