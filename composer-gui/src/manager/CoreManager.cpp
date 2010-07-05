@@ -30,12 +30,14 @@ void CoreManager::createProject(QString name, QString location){
     }
 }
 
-void CoreManager::createDocument(QString name,QString location) {
-    int i = location.lastIndexOf("/");
-    if (i != -1) {
-        QString projectId = location.remove(0,i);
-        projectControl->addDocument(projectId,location,name);
-    }
+void CoreManager::addDocument(QString name,QString location,
+                              QString projectId) {
+
+    projectControl->addDocument(projectId,location,name);
+}
+
+void CoreManager::createDocument(QString name, QString projectId) {
+
 }
 
 

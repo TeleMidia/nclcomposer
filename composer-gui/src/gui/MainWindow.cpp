@@ -31,18 +31,34 @@ void MainWindow::initGUI() {
 }
 
 void MainWindow::launchProjectWizard() {
-    MainWizard *wizard = new MainWizard(this);
+    wizard = new MainWizard(this);
+    wizard->setIsFile(false);
     connect(wizard,SIGNAL(infoReceived(QString,QString)),
             cManager,SLOT(createProject(QString,QString)));
     wizard->init();
 }
 
-void MainWindow::launchDocumentWizard(QString projectLocation) {
-    MainWizard *wizard = new MainWizard(this,projectLocation);
+void MainWindow::launchNewDocumentWizard(QString projectLocation) {
+    wizard = new MainWizard(this);
+    wizard->setDefaultLocation(projectLocation);
+    wizard->setIsFile(false);
     connect(wizard,SIGNAL(infoReceived(QString,QString)),
             cManager,SLOT(createDocument(QString,QString)));
     wizard->init();
 }
+
+void MainWindow::launchAddDocumentWizard(QString projectId) {
+    //TODO criar somente um ponteiro wizard que vai recebendo os diferentes
+    //wizards
+    wizard = new MainWizard(this);
+    wizard->setProjectId(projectId);
+    wizard->setIsFile(true);
+    qDebug() << tr("Add Document");
+    connect(wizard,SIGNAL(infoReceived(QString,QString,QString)),
+            cManager,SLOT(addDocument(QString,QString,QString)));
+    wizard->init();
+}
+
 
 
 void MainWindow::createProjectInTree(QString name,QString location) {
@@ -66,7 +82,9 @@ void MainWindow::createTreeProject() {
     dockTree->setWidget(projectTree);
     addDockWidget(Qt::LeftDockWidgetArea,dockTree,Qt::Horizontal);
     connect(projectTree,SIGNAL(newDocument(QString)),this,
-            SLOT(launchDocumentWizard(QString)));
+            SLOT(launchNewDocumentWizard(QString)));
+    connect(projectTree,SIGNAL(addDocument(QString)), this,
+            SLOT(launchAddDocumentWizard(QString)));
 
 }
 

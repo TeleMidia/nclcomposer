@@ -41,6 +41,7 @@ class MainWindow : public QMainWindow {
         QAction *projectWindowAct;
         ProjectTreeWidget *projectTree;
         QDockWidget *dockTree;
+        MainWizard *wizard;
 
     private:
          CoreManager *cManager;
@@ -63,7 +64,8 @@ class MainWindow : public QMainWindow {
     public slots:
         void createProjectInTree(QString name,QString location);
         void errorDialog(QString);
-        void launchDocumentWizard(QString projectLocation);
+        void launchNewDocumentWizard(QString projectLocation);
+        void launchAddDocumentWizard(QString projectId);
 
 
 };
