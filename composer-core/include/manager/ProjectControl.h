@@ -42,7 +42,9 @@ namespace manager {
              /** Fecha a base privada e descarta todo o conteúdo da base
                 privada */
              bool closeProject (QString projectId);
-             bool addDocument (QString projectId, QString uri, QString  documentId);
+             bool addDocument (QString projectId, QString uri,
+                               QString  documentId);
+
              bool removeDocument (QString projectId, QString documentId);
              bool deleteDocument (QString projectId, QString documentId);
              bool saveDocument (QString projectId, QString documentId,

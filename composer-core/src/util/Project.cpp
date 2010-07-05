@@ -19,14 +19,15 @@ Project::~Project() {
 
 
 
-bool Project::addDocument(QString documentId, NclDocument *nclDoc,
-                                  bool copy) {
+bool Project::addDocument(QString documentId, NclDocument *nclDoc) {
     QReadLocker locker(&lockDocuments);
-    if (nclDocuments.contains(documentId)){
+    if (!nclDocuments.contains(documentId)){
         locker.unlock();
         QWriteLocker lock(&lockDocuments);
         nclDocuments[documentId] = nclDoc;
         return true;
+    } else { //document already exists
+
     }
     return false;
 }

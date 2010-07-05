@@ -87,11 +87,19 @@ namespace manager {
 
     bool ProjectControl::addDocument (QString projectId, QString uri,
                                       QString  documentId) {
+        Project *p = getProject(projectId);
+        QString projectLocation = p->getLocation();
         if (documentParser->setUpParser(uri)) {
             if (documentParser->parseDocument()) {
               //TODO - verify the copy parameter to addDocument in Project
-              getProject(projectId)->addDocument(documentId,
-                                    documentParser->getNclDocument(),false);
+              if (p->addDocument(documentId,
+                                         documentParser->getNclDocument())) {
+                  if (!QFile::copy(uri,projectLocation+documentId+".ncl")) {
+                     qDebug() << tr("addDocument fails on copy the document");
+                     return false;
+                  }
+
+              }
               return true;
             } else {
                 qDebug() << tr("addDocument fails in parseDocument");

@@ -27,8 +27,7 @@ class DocumentParser : public QObject
     public:
         DocumentParser();
         ~DocumentParser();
-        QDomDocument nclDomDocument;
-        QMutex mutex;
+
         bool setUpParser(QString uri);
         bool parseDocument();
         bool parseElement(QDomElement element);
@@ -42,6 +41,8 @@ class DocumentParser : public QObject
         }
 
     private:
+        QDomDocument nclDomDocument;
+        QMutex mutex;
         MessageControl *messageControl;
         EntityUtil *util;
         NclDocument *nclDoc;

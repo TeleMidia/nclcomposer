@@ -43,8 +43,10 @@ bool DocumentParser::setUpParser(QString uri) {
         qDebug() << tr("DOM Parser") <<
                              tr("Parser error at line %1 , column %2 : %3\n")
                              .arg(errorLine).arg(errorColumn).arg(errorStr);
+        file->close();
         return false;
     }
+    file->close();
     return true;
 }
 
