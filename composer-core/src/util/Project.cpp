@@ -10,10 +10,12 @@ Project::~Project() {
     QWriteLocker locker(&lockDocuments);
     QMapIterator<QString,NclDocument*> it(nclDocuments);
     while(it.hasNext()){
-        documentFacade->releaseNclDocument(nclDocuments.take(it.key()));
         it.next();
+        NclDocument *ncl = it.value();
+        nclDocuments.remove(it.key());
+        documentFacade->releaseNclDocument(ncl);
     }
-    nclDocuments.clear();
+    //nclDocuments.clear();
     documentFacade->releaseInstance();
 }
 

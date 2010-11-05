@@ -32,7 +32,7 @@ namespace manager {
                 return;
             }
         } else {
-            //TODO -- erro on casting
+            qDebug() << ;
             return;
         }
     }

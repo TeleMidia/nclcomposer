@@ -28,7 +28,8 @@ namespace manager {
         lockProjects.lockForRead();
         if (!projects.contains(projectId)) {
             lockProjects.unlock();
-            Project *p = new Project(projectId,location);
+            Project *p = new Project(projectId,location+
+                                     QDir::separator()+projectId);
             lockProjects.lockForWrite();
             projects[projectId] = p;
             lockProjects.unlock();
@@ -36,7 +37,6 @@ namespace manager {
         }
         lockProjects.unlock();
         return NULL;
-
     }
 
     bool ProjectControl::activateProject (QString projectId){
@@ -78,6 +78,21 @@ namespace manager {
     bool ProjectControl::saveProject (QString projectId, QString location) {
         //TODO - salvar arquivo de projeto e chamar save para cada NCLDocument
     }
+
+    bool ProjectControl::saveAllProjects() {
+        QWriteLocker locker(&lockProjects);
+        QMapIterator<QString,Project*> it(projects);
+        QSettings settings("telemidia", "composer");
+        settings.beginGroup("projects");
+        while(it.hasNext()){
+            it.next();
+            Project *p = it.value();
+            settings.setValue(p->getProjectId(),p->getLocation());
+            //TODO salvar alterações no NCL
+        }
+        settings.endGroup();
+    }
+
     bool ProjectControl::closeProject (QString projectId) {
         //TODO - salvar arquivo de projeto e chamar save para cada NCLDocument
     }
@@ -86,33 +101,40 @@ namespace manager {
     }
 
     bool ProjectControl::addDocument (QString projectId, QString uri,
-                                      QString  documentId) {
+                                      QString  documentId, bool copy) {
         Project *p = getProject(projectId);
         QString projectLocation = p->getLocation();
+        if (copy) {
+            QString destUri = projectLocation+documentId;
+            if (documentId.endsWith(".ncl")) destUri += ".ncl";
+
+            if (!QFile::copy(uri,destUri)) {
+               qDebug() << tr("addDocument fails on copy the document");
+               return false;
+           }
+           uri = destUri;
+        }
         if (documentParser->setUpParser(uri)) {
             if (documentParser->parseDocument()) {
               //TODO - verify the copy parameter to addDocument in Project
               if (p->addDocument(documentId,
-                                         documentParser->getNclDocument())) {
-                  if (!QFile::copy(uri,projectLocation+documentId+".ncl")) {
-                     qDebug() << tr("addDocument fails on copy the document");
-                     return false;
-                  }
-
+                                 documentParser->getNclDocument())) {
+                return true;
+              } else {
+                qDebug() << tr("addDocument fails to addDocument to project");
+                return false;
               }
-              return true;
             } else {
                 qDebug() << tr("addDocument fails in parseDocument");
                 return false;
+              }
+            } else {
+                qDebug() << tr("addDocument fails in setUpParser");
+                return false;
             }
-        } else {
-            qDebug() << tr("addDocument fails in setUpParser");
-            return false;
-        }
         return false;
-
-
     }
+
     bool ProjectControl::removeDocument (QString projectId,
                                          QString documentId) {
         //TODO - deletar o NclDocument do projeto mas não o arquivo

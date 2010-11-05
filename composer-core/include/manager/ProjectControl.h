@@ -3,7 +3,7 @@
 
 #include <QtDebug>
 #include <QReadWriteLock>
-#include <QtDebug>
+#include <QSettings>
 
 #include <QObject>
 
@@ -42,8 +42,9 @@ namespace manager {
              /** Fecha a base privada e descarta todo o conteúdo da base
                 privada */
              bool closeProject (QString projectId);
+             bool saveAllProjects();
              bool addDocument (QString projectId, QString uri,
-                               QString  documentId);
+                               QString  documentId, bool copy);
 
              bool removeDocument (QString projectId, QString documentId);
              bool deleteDocument (QString projectId, QString documentId);

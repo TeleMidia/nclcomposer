@@ -84,11 +84,15 @@ bool DocumentParser::parseElement(QDomElement element) {
     }
 
     EntityType type = util->getEntityType(element.tagName());
+
+    //qDebug() << "element (" << element.tagName() << ")";
+    /*
+    //TODO - lembrar de voltar quando tiver completo
     if (type == NONE) {
         qDebug() << tr("parseElement but is not a valid NCL element (%1)")
                                                     .arg(element.tagName());
         return false;
-    }
+    }*/
 
     parentId = parentElement.attribute("id","").toStdString();
     attsElement = element.attributes();

@@ -4,6 +4,7 @@
 #include <QReadWriteLock>
 #include <QString>
 #include <QMap>
+#include <QDir>
 
 #include <model/ncm/NclDocument.h>
 using namespace ncm;
@@ -15,7 +16,7 @@ class Project {
     private:
         QReadWriteLock lockString;
         QReadWriteLock lockDocuments;
-        QString location;
+        QString location; /*top dir of the project */
         QString projectId;
         QMap<QString, NclDocument*> nclDocuments;
         Document *documentFacade;
@@ -24,7 +25,7 @@ class Project {
         ~Project();
         inline QString getLocation() {
             QReadLocker locker(&lockString);
-            return this->location;
+            return this->location+QDir::separator();
         }
 
         inline QString getProjectId() {

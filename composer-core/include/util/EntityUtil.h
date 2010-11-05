@@ -13,6 +13,8 @@ typedef enum {
       NONE,
       REGION,
       REGIONBASE,
+      HEAD,
+      BODY,
 }EntityType;
 
 class EntityUtil
