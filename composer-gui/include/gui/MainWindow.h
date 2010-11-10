@@ -3,6 +3,8 @@
 
 #include <QtDebug>
 #include <QCoreApplication>
+#include <QSettings>
+#include <QStringList>
 #include <QtGui/QMainWindow>
 #include <QtGui/QMdiArea>
 #include <QtGui/QStatusBar>
@@ -21,8 +23,10 @@
 #include <QtGui/QGridLayout>
 #include <QtGui/QLineEdit>
 
+#include <control/util/CoreManager.h>
+using namespace composer::core::util;
+
 #include "wizard/MainWizard.h"
-#include "../manager/CoreManager.h"
 #include "ProjectTreeWidget.h"
 
 class MainWindow : public QMainWindow {
@@ -51,6 +55,8 @@ class MainWindow : public QMainWindow {
         void createMenus();
         void createActions();
         void createTreeProject();
+        void readSettings();
+        void closeEvent(QCloseEvent *event);
 
 
     private slots:
@@ -63,10 +69,14 @@ class MainWindow : public QMainWindow {
         ~MainWindow();
     public slots:
         void createProjectInTree(QString name,QString location);
+        void createDocumentInTree(QString projectId, QString name,
+                                  QString location);
         void errorDialog(QString);
         void launchNewDocumentWizard(QString projectLocation);
         void launchAddDocumentWizard(QString projectId);
 
+    signals:
+        void writeSettings();
 
 };
 

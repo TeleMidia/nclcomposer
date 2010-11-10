@@ -36,7 +36,7 @@ SOURCES += main.cpp \
     src/gui/ProjectTreeWidget.cpp \
     src/gui/wizard/IntroPage.cpp \
     src/gui/wizard/EntryPage.cpp \
-    src/manager/CoreManager.cpp
+    #src/manager/CoreManager.cpp
 
 
 
@@ -46,7 +46,7 @@ HEADERS_GUI += include/gui/MainWindow.h \
     include/gui/wizard/IntroPage.h \
     include/gui/wizard/EntryPage.h
 
-HEADERS_MANAGER +=  include/manager/CoreManager.h
+HEADERS_MANAGER +=  #include/manager/CoreManager.h
 RESOURCES += images.qrc
 
 HEADERS += $$HEADERS_GUI $$HEADERS_MANAGER \

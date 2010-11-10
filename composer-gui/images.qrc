@@ -2,5 +2,6 @@
     <qresource prefix="/mainwindow">
         <file alias="folder">images/folder.png</file>
         <file alias="folderEmpty">images/folderEmpty.png</file>
+        <file alias="document">images/document.png</file>
     </qresource>
 </RCC>

@@ -6,8 +6,8 @@
 #include <QObject>
 #include <QDir>
 
-#include <control/manager/ProjectControl.h>
-using namespace manager;
+#include <control/modules/ProjectControl.h>
+using namespace composer::core::module;
 
 class CoreManager : public QObject
 {
@@ -17,15 +17,20 @@ public:
     ~CoreManager();
 private:
     ProjectControl *projectControl;
+    void addFilesInDirectory(QDir dir, QString projectId);
 
 signals:
     void projectCreated(QString,QString);
+    void documentAdded(QString,QString,QString);
     void onError(QString);
 
 public slots:
     void createProject(QString,QString);
-    void addDocument(QString,QString,QString);
+    void addProject(QString,QString);
+    void addDocument(QString,QString,QString,bool);
     void createDocument(QString,QString);
+    bool saveSettings();
+
 
 };
 

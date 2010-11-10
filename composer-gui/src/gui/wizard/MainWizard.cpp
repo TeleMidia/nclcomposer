@@ -1,0 +1,31 @@
+#include "../../../include/gui/wizard/MainWizard.h"
+
+MainWizard::MainWizard(QWidget* parent) :
+        QWizard(parent) {
+    intro = new IntroPage(this);
+    addPage(intro);
+    entry = new EntryPage(this);
+    addPage(entry);
+}
+
+void MainWizard::init() {
+    entry->initGUI();
+    this->show();
+    this->exec();
+}
+
+MainWizard::~MainWizard() {
+    //qDebug() << "Calling Project Wizard Destructor";
+}
+
+void MainWizard::accept() {
+    name        = field("name").toString();
+    location    = field("location").toString();
+    //TODO - melhorar pegando o checkbox ... e juntando em um só sinal
+    if (projectId != "") {
+        emit infoReceived(name,location,projectId,true);
+    } else {
+        emit infoReceived(name,location);
+    }
+    QDialog::accept();
+}

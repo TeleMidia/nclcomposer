@@ -6,13 +6,37 @@ MainWindow::MainWindow(QWidget *parent)
     cManager = new CoreManager(this);
     connect(cManager,SIGNAL(projectCreated(QString,QString)),
             this,SLOT(createProjectInTree(QString,QString)));
+    connect(cManager,SIGNAL(documentAdded(QString,QString,QString)),
+            this,SLOT(createDocumentInTree(QString,QString,QString)));
     connect(cManager,SIGNAL(onError(QString)),
             this,SLOT(errorDialog(QString)));
 
+    readSettings();
 }
 
 MainWindow::~MainWindow() {
 
+}
+
+void MainWindow::readSettings() {
+ #ifdef Q_WS_MAC
+    QSettings settings("telemidia.pucrio.br", "composer");
+ #else
+    QSettings settings("telemidia", "composer");
+ #endif
+    settings.beginGroup("mainwindow");
+        restoreGeometry(settings.value("geometry").toByteArray());
+        restoreState(settings.value("windowState").toByteArray());
+    settings.endGroup();
+    settings.beginGroup("projects");
+        QStringList projects = settings.childKeys();
+        QStringListIterator it(projects);
+        while (it.hasNext()) {
+            QString projectId = it.next();
+            QString location  = settings.value(projectId).toString();
+            cManager->createProject(projectId,location);
+        }
+    settings.endGroup();
 }
 
 void MainWindow::initGUI() {
@@ -54,8 +78,8 @@ void MainWindow::launchAddDocumentWizard(QString projectId) {
     wizard->setProjectId(projectId);
     wizard->setIsFile(true);
     qDebug() << tr("Add Document");
-    connect(wizard,SIGNAL(infoReceived(QString,QString,QString)),
-            cManager,SLOT(addDocument(QString,QString,QString)));
+    connect(wizard,SIGNAL(infoReceived(QString,QString,QString,bool)),
+            cManager,SLOT(addDocument(QString,QString,QString,bool)));
     wizard->init();
 }
 
@@ -66,11 +90,25 @@ void MainWindow::createProjectInTree(QString name,QString location) {
     item->setIcon(0,QIcon(":/mainwindow/folderEmpty"));
     item->setText(1,name);
     item->setToolTip(1,location+"/"+name);
+    projectTree->setCurrentItem(item); //TODO verificar se funciona
+
+}
+
+void MainWindow::createDocumentInTree(QString projectId, QString name,
+                          QString location) {
+
+    QTreeWidgetItem *parent = projectTree->currentItem();
+    QTreeWidgetItem *item = new QTreeWidgetItem(parent);
+    item->setIcon(0,QIcon(":/mainwindow/document"));
+    item->setText(1,name);
+    item->setToolTip(1,location+"/"+name);
+    projectTree->setCurrentItem(parent);
 }
 
 
 void MainWindow::createTreeProject() {
     dockTree = new QDockWidget(tr("Projects"), this);
+    dockTree->setObjectName("treeProject");
     dockTree->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
     projectTree = new ProjectTreeWidget(this);
     projectTree->setColumnCount(2);
@@ -85,6 +123,8 @@ void MainWindow::createTreeProject() {
             SLOT(launchNewDocumentWizard(QString)));
     connect(projectTree,SIGNAL(addDocument(QString)), this,
             SLOT(launchAddDocumentWizard(QString)));
+    connect(projectTree,SIGNAL(newProject()), this,
+            SLOT(launchProjectWizard()));
 
 }
 
@@ -112,7 +152,7 @@ void MainWindow::about() {
  }
 
 void MainWindow::errorDialog(QString message) {
-    QMessageBox::warning(this,tr("Error creating project."),
+    QMessageBox::warning(this,tr("Error!"),
                          tr(message.toStdString().c_str()));
 
  }
@@ -161,5 +201,31 @@ void MainWindow::updateWindowMenu()
      QList<QMdiSubWindow *> windows = mdiArea->subWindowList();
      separatorWindowAct->setVisible(!windows.isEmpty());
 
+ }
+
+void MainWindow::closeEvent(QCloseEvent *event)
+ {
+
+#ifdef Q_WS_MAC
+    QSettings settings("telemidia.pucrio.br", "composer");
+ #else
+    QSettings settings("telemidia", "composer");
+ #endif
+    if(cManager->saveSettings()) {
+     settings.beginGroup("mainwindow");
+        settings.setValue("geometry", saveGeometry());
+        settings.setValue("windowState", saveState());
+     settings.endGroup();
+     event->accept();
+     } else {
+        if ( QMessageBox::question(this,tr("Could not save some projects."),
+                               tr("Do you want to exit anyway ?"))
+            == QMessageBox::Ok) {
+            event->accept();
+        } else  {
+            event->ignore();
+        }
+     }
+    settings.sync();
  }
 
