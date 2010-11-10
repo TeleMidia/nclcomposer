@@ -5,12 +5,16 @@
 #include <QString>
 #include <QMap>
 #include <QDir>
+#include <QDebug>
 
 #include <model/ncm/NclDocument.h>
 using namespace ncm;
 #include <model/functional/Document.h>
 using namespace ncm::functional;
 
+namespace composer {
+namespace core {
+namespace util {
 
 class Project {
     private:
@@ -46,5 +50,8 @@ class Project {
         bool deleteDocument(QString documentId);
 
 };
+}
+}
+}
 
 #endif // PROJECT_H

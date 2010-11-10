@@ -2,6 +2,8 @@
 #define ILAYOUTMESSAGE_H
 
 #include <QObject>
+#include <QMutexLocker>
+#include <QMutex>
 
 #include <string>
 #include <map>
@@ -13,17 +15,27 @@ using namespace ncm;
 
 #include "../util/EntityUtil.h"
 
+namespace composer {
+namespace core {
 namespace plugin {
+
 
     class IPluginMessage : public QObject {
         Q_OBJECT
 
         private:
              NclDocument *nclDoc;
+             QMutex mutex;
         public:
-             IPluginMessage();
-             void setNclDocument(NclDocument *nclDoc) {this->nclDoc = nclDoc; };
-             NclDocument* getNclDocument() { return this->nclDoc; };
+             //IPluginMessage();
+             inline void setNclDocument(NclDocument *document) {
+                 QMutexLocker locker(&mutex);
+                 this->nclDoc = document;
+             }
+             inline NclDocument* getNclDocument() {
+                 QMutexLocker locker(&mutex);
+                 return this->nclDoc;
+             }
              virtual bool listenFilter(EntityType ) = 0;
         public slots:
              virtual void onEntityAdded(Entity *) = 0;
@@ -45,6 +57,8 @@ namespace plugin {
              void removeEntity( Entity *, bool force);
 
     };
+}
+}
 }
 
 #endif // ILAYOUTMESSAGE_H

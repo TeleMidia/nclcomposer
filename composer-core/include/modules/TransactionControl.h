@@ -3,7 +3,9 @@
 
 #include <QThread>
 
-namespace manager {
+namespace composer {
+namespace core {
+namespace module {
     class TransactionControl : public QThread {
         public:
             TransactionControl();
@@ -11,5 +13,6 @@ namespace manager {
             void run();
     };
 }
-
+}
+}
 #endif // TRANSACTIONCONTROL_H

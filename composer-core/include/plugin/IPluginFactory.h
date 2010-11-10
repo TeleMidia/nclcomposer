@@ -4,8 +4,10 @@
 #include <QtPlugin>
 #include <QString>
 #include "IPluginMessage.h"
-using namespace plugin;
+using namespace composer::core::plugin;
 
+namespace composer {
+namespace core {
 namespace plugin {
 
     class IPluginFactory {
@@ -19,8 +21,9 @@ namespace plugin {
 };
 
 }
-
-Q_DECLARE_INTERFACE(plugin::IPluginFactory,
+}
+}
+Q_DECLARE_INTERFACE(composer::core::plugin::IPluginFactory,
                    "br.telemidia.purcrio.composer.IPluginFactory")
 
 #endif // ILAYOUTPLUGIN_H

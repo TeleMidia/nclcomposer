@@ -1,5 +1,9 @@
 #include "../../include/util/EntityUtil.h"
 
+namespace composer {
+namespace core {
+namespace util {
+
 EntityUtil *EntityUtil::instance = NULL;
 QMap<EntityType,QString> EntityUtil::entitiesTypes;
 
@@ -45,4 +49,8 @@ map<string,string> EntityUtil::toStdMap(QDomNamedNodeMap attsElement) {
         }
     }
     return atts;
+}
+
+}
+}
 }

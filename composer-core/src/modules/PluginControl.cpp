@@ -1,7 +1,10 @@
-#include "../../include/manager/PluginControl.h"
+#include "../../include/modules/PluginControl.h"
 
 
-namespace manager {
+namespace composer {
+namespace core {
+namespace module {
+
     PluginControl::PluginControl(MessageControl *message) {
         this->messageControl = message;
     }
@@ -114,7 +117,6 @@ namespace manager {
                 SLOT(onEntityAboutToRemove(Entity*)),Qt::BlockingQueuedConnection);
     }
 
-
-
-
 }
+}
+}//fim namespace composer

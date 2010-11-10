@@ -18,9 +18,11 @@
 #include "MessageControl.h"
 #include "../plugin/IPluginFactory.h"
 #include "../plugin/IPluginMessage.h"
-using namespace plugin;
+using namespace composer::core::plugin;
 
-namespace manager {
+namespace composer {
+namespace core {
+namespace module {
     class PluginControl : public QObject{
         Q_OBJECT
         private:
@@ -38,5 +40,7 @@ namespace manager {
             void onNewDocument(NclDocument *nclDoc);
 
     };
+}
+}
 }
 #endif // PLUGINCONTROL_H

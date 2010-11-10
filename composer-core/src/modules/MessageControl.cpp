@@ -1,6 +1,9 @@
-#include "../../include/manager/MessageControl.h"
+#include "../../include/modules/MessageControl.h"
 
-namespace manager {
+namespace composer {
+namespace core {
+namespace module {
+
     MessageControl::MessageControl() {
         QMutexLocker locker(&mutex);
         this->layoutFacade   = Layout::getInstance();
@@ -11,11 +14,6 @@ namespace manager {
         QMutexLocker locker(&mutex);
         Layout::releaseInstance();
         Document::releaseInstance();
-    }
-
-    void MessageControl::onCreateDocument(map<string,string>& atts) {
-        NclDocument *nclDoc = documentFacade->createNclDocument(atts);
-        emit documentCreated(nclDoc);
     }
 
     void MessageControl::onAddEntity( EntityType entity,
@@ -32,7 +30,7 @@ namespace manager {
                 return;
             }
         } else {
-            qDebug() << ;
+            qDebug() << "Trying to add a entity but is not from a plugin";
             return;
         }
     }
@@ -171,4 +169,6 @@ namespace manager {
         emit regionBaseChanged(regionBase);
 
     }
+}
+}
 }

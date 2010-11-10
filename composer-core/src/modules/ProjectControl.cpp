@@ -1,6 +1,9 @@
-#include "../../include/manager/ProjectControl.h"
+#include "../../include/modules/ProjectControl.h"
 
-namespace manager {
+namespace composer {
+namespace core {
+namespace module {
+
     ProjectControl::ProjectControl() {
         this->activeProject = NULL;
         this->documentParser = new DocumentParser();
@@ -82,7 +85,11 @@ namespace manager {
     bool ProjectControl::saveAllProjects() {
         QWriteLocker locker(&lockProjects);
         QMapIterator<QString,Project*> it(projects);
+    #ifdef Q_WS_MAC
+        QSettings settings("telemidia.pucrio.br", "composer");
+     #else
         QSettings settings("telemidia", "composer");
+     #endif
         settings.beginGroup("projects");
         while(it.hasNext()){
             it.next();
@@ -91,6 +98,7 @@ namespace manager {
             //TODO salvar alterações no NCL
         }
         settings.endGroup();
+        settings.sync();
     }
 
     bool ProjectControl::closeProject (QString projectId) {
@@ -148,4 +156,6 @@ namespace manager {
         //TODO - salvar o documento Ncl
     }
 
-}
+}//fim
+}//fim
+}//fim namespace

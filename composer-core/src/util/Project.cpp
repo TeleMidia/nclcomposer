@@ -1,5 +1,10 @@
 #include "../../include/util/Project.h"
 
+namespace composer {
+namespace core {
+namespace util {
+
+
 Project::Project(QString projectId, QString location) {
     this->location  = location;
     this->projectId = projectId;
@@ -9,11 +14,13 @@ Project::Project(QString projectId, QString location) {
 Project::~Project() {
     QWriteLocker locker(&lockDocuments);
     QMapIterator<QString,NclDocument*> it(nclDocuments);
+
     while(it.hasNext()){
         it.next();
         NclDocument *ncl = it.value();
-        nclDocuments.remove(it.key());
         documentFacade->releaseNclDocument(ncl);
+        if (nclDocuments.remove(it.key()) != 1)
+             qDebug() << "Não conseguiu remover do mapa";
     }
     //nclDocuments.clear();
     documentFacade->releaseInstance();
@@ -49,4 +56,8 @@ bool Project::removeDocument(QString documentId) {
 bool Project::deleteDocument(QString documentId) {
         if (!removeDocument(documentId)) return false;
         //TODO - deletar o arquivo no sistema de arquivos
+}
+
+}
+}
 }

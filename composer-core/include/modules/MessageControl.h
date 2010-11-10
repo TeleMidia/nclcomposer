@@ -8,6 +8,8 @@ using namespace ncm;
 
 #include <QReadWriteLock>
 #include <QMutex>
+#include <QDebug>
+
 #include <map>
 #include <string>
 using namespace std;
@@ -20,9 +22,11 @@ using namespace ncm;
 using namespace ncm::functional;
 
 #include "../plugin/IPluginMessage.h"
-using namespace plugin;
+using namespace composer::core::plugin;
 
-namespace manager {
+namespace composer {
+namespace core {
+namespace module {
     class MessageControl : public QObject {
             Q_OBJECT
         private:
@@ -76,11 +80,8 @@ namespace manager {
                            bool force);
             void onRemoveEntity(EntityType type, Entity *, bool force);
 
-            void onCreateDocument(map<string,string>& atts);
-
 
         signals:
-            void documentCreated(NclDocument *);
             void regionAdded(Region *);
             void regionAddError(string error);
             /** TODO Lembrar se ele tiver mudado o ID */
@@ -100,5 +101,7 @@ namespace manager {
             void regionBaseRemoveError(string error);
             void aboutToRemoveRegionBase(Region *);
     };
+}
+}
 }
 #endif // MESSAGECONTROL_H

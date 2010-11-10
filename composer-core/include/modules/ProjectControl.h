@@ -12,9 +12,11 @@
 
 #include "../util/Project.h"
 #include "../util/DocumentParser.h"
+using namespace composer::core::util;
 
-
-namespace manager {
+namespace composer {
+namespace core {
+namespace module {
 
     class ProjectControl : public QObject{
         Q_OBJECT
@@ -55,6 +57,8 @@ namespace manager {
          signals:
              void newActivateProject(Project *);
     };
+}
+}
 }
 #endif // PROJECTCONTROL_H
 

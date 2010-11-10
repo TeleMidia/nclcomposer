@@ -11,11 +11,16 @@ using namespace std;
 #define TOTALENTITIES 2
 typedef enum {
       NONE,
+      NCL,
       REGION,
       REGIONBASE,
       HEAD,
       BODY,
 }EntityType;
+
+namespace composer {
+namespace core {
+namespace util {
 
 class EntityUtil
 {
@@ -36,4 +41,7 @@ public:
 
 };
 
+}
+}
+}
 #endif // ENTITYUTIL_H

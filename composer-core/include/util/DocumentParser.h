@@ -11,17 +11,21 @@
 #include <map>
 using namespace std;
 
-#include "../manager/MessageControl.h"
-using namespace manager;
+#include "../modules/MessageControl.h"
+using namespace composer::core::module;
+
+#include "../plugin/IPluginMessage.h"
 
 #include <model/ncm/NclDocument.h>
 using namespace ncm;
 
 #include "EntityUtil.h"
 
-//TODO - fazer essa classe singleton
+namespace composer {
+namespace core {
+namespace util {
 
-class DocumentParser : public QObject
+class DocumentParser : public IPluginMessage
 {
     Q_OBJECT
     public:
@@ -31,35 +35,40 @@ class DocumentParser : public QObject
         bool setUpParser(QString uri);
         bool parseDocument();
         bool parseElement(QDomElement element);
-        inline void setNclDocument(NclDocument *document) {
-            QMutexLocker locker(&mutex);
-            this->nclDoc = document;
-        }
-        inline NclDocument* getNclDocument() {
-            QMutexLocker locker(&mutex);
-            return this->nclDoc;
-        }
+
+        bool listenFilter(EntityType );
 
     private:
         QDomDocument nclDomDocument;
         QMutex mutex;
         MessageControl *messageControl;
         EntityUtil *util;
-        NclDocument *nclDoc;
+
         inline void setDomDocument(QDomDocument document) {
             QMutexLocker locker(&mutex);
             this->nclDomDocument = document;
         }
 
-    public slots:
-         void onDocumentCreated(NclDocument *nclDoc);
+
+   public slots:
+        void onEntityAdded(Entity *);
+        void onEntityAddError(string error);
+        /** TODO Lembrar se ele tiver mudado o ID */
+        void onEntityChanged(Entity *);
+        void onEntityChangeError(string error);
+        /** Lembrar de ele apagar a sua referência interna */
+        void onEntityAboutToRemove(Entity *);
+        void onEntityRemoved(string entityID);
+        void onEntityRemoveError(string error);
+
     signals:
-        void addEntity( EntityType entity,
-                       string parentEntityId, map<string,string>& atts,
-                       bool force);
         void createDocument(map<string,string> &atts);
 
 };
+
+}
+}
+}
 
 #endif // DOCUMENTPARSER_H
 
