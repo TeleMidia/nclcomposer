@@ -2,7 +2,7 @@
 
 namespace composer {
 namespace core {
-namespace util {
+namespace plugin {
 
 
 DocumentParser::DocumentParser() {

@@ -14,8 +14,9 @@
 using namespace composer::core::module;
 
 #include "../util/Project.h"
-#include "../util/DocumentParser.h"
 using namespace composer::core::util;
+#include "../util/DocumentParser.h"
+using namespace composer::core::plugin;
 
 namespace composer {
 namespace core {

@@ -25,7 +25,7 @@ using namespace composer::core::util;
 
 namespace composer {
 namespace core {
-namespace util {
+namespace plugin {
 
     class DocumentParser : public IPluginMessage
 {
