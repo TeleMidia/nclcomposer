@@ -4,10 +4,13 @@ namespace composer {
 namespace core {
 namespace module {
 
+    ProjectControl *ProjectControl::instance = NULL;
+
     ProjectControl::ProjectControl() {
         this->activeProject = NULL;
         this->documentParser = new DocumentParser();
     }
+
     ProjectControl::~ProjectControl() {
         QWriteLocker locker(&lockProjects);
         QMapIterator<QString,Project*> it(projects);
@@ -23,6 +26,22 @@ namespace module {
         documentParser = NULL;
     }
 
+    IModule* ProjectControl::getInstance(){
+        QMutexLocker locker(&instMutex);
+        if (!instance) {
+            instance = new ProjectControl();
+        }
+        return instance;
+    }
+
+    void     ProjectControl::releaseInstance() {
+        QMutexLocker locker(&instMutex);
+        if (instance != NULL) {
+            delete instance;
+            instance = NULL;
+        }
+    }
+
     bool ProjectControl::openProject (QString projectId, QString location) {
         //TODO - fazer parser do arquivo de projeto
     }
@@ -31,8 +50,7 @@ namespace module {
         lockProjects.lockForRead();
         if (!projects.contains(projectId)) {
             lockProjects.unlock();
-            Project *p = new Project(projectId,location+
-                                     QDir::separator()+projectId);
+            Project *p = new Project(projectId,location);
             lockProjects.lockForWrite();
             projects[projectId] = p;
             lockProjects.unlock();
@@ -95,6 +113,8 @@ namespace module {
             it.next();
             Project *p = it.value();
             settings.setValue(p->getProjectId(),p->getLocation());
+            qDebug() << "SAVEALL projectId: " << p->getProjectId() <<
+                        "location: " << p->getLocation();
             //TODO salvar alterações no NCL
         }
         settings.endGroup();

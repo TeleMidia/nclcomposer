@@ -5,8 +5,12 @@
 
 #include <QObject>
 #include <QDir>
+#include <QMutex>
+#include <QMutexLocker>
 
 
+#include "../modules/ModuleControl.h"
+#include "../modules/MessageControl.h"
 #include "../modules/ProjectControl.h"
 using namespace composer::core::module;
 
@@ -21,7 +25,7 @@ public:
     explicit CoreManager(QObject *parent = 0);
     ~CoreManager();
 private:
-    ProjectControl *projectControl;
+    ModuleControl *moduleControl;
     void addFilesInDirectory(QDir dir, QString projectId);
 
 signals:

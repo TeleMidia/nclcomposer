@@ -32,19 +32,22 @@ MOC_DIR = mocs
 OBJECTS_DIR = objs
 DEFINES += COMPOSERCORECONTROL_LIBRARY
 
-SOURCES += src/modules/MessageControl.cpp \
+SOURCES += src/util/DocumentParser.cpp \
+    src/modules/MessageControl.cpp \
     src/modules/ProjectControl.cpp \
     src/modules/PluginControl.cpp \
     src/modules/TransactionControl.cpp \
     src/util/Project.cpp \
-    src/util/DocumentParser.cpp \
     src/util/EntityUtil.cpp \
-    src/util/CoreManager.cpp
+    src/util/CoreManager.cpp \
+    src/modules/ModuleControl.cpp
 
 HEADERS_MAN += include/modules/MessageControl.h \
     include/modules/ProjectControl.h \
     include/modules/PluginControl.h \
     include/modules/TransactionControl.h \
+    include/modules/IModule.h \
+    include/modules/ModuleControl.h
 
 HEADERS_UTIL +=include/util/ComposerCoreControl_global.h \
     include/util/Project.h \
@@ -55,7 +58,9 @@ HEADERS_UTIL +=include/util/ComposerCoreControl_global.h \
 HEADERS_PLUGIN += include/plugin/IPluginMessage.h \
     include/plugin/IPluginFactory.h
 
-HEADERS = $$HEADERS_MAN $$HEADERS_UTIL $$HEADERS_PLUGIN \
+HEADERS = $$HEADERS_UTIL $$HEADERS_PLUGIN $$HEADERS_MAN
+
+
 
 
 headers_man.files = $$HEADERS_MAN

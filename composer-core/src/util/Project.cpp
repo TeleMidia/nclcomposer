@@ -8,6 +8,7 @@ namespace util {
 Project::Project(QString projectId, QString location) {
     this->location  = location;
     this->projectId = projectId;
+    //qDebug() << "PROJECT projectId: " << projectId << "location: " << location;
     documentFacade  = Document::getInstance();
 }
 
@@ -16,6 +17,7 @@ Project::~Project() {
     QMapIterator<QString,NclDocument*> it(nclDocuments);
 
     while(it.hasNext()){
+        qDebug() << "Passou aqui?";
         it.next();
         NclDocument *ncl = it.value();
         documentFacade->releaseNclDocument(ncl);
@@ -34,6 +36,7 @@ bool Project::addDocument(QString documentId, NclDocument *nclDoc) {
         locker.unlock();
         QWriteLocker lock(&lockDocuments);
         nclDocuments[documentId] = nclDoc;
+        qDebug() << "Adding document: " << documentId << "in: " << projectId;
         return true;
     } else { //document already exists
 

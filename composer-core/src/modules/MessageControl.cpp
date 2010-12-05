@@ -1,8 +1,12 @@
 #include "../../include/modules/MessageControl.h"
 
+
+
 namespace composer {
 namespace core {
 namespace module {
+
+    MessageControl *MessageControl::instance = NULL;
 
     MessageControl::MessageControl() {
         QMutexLocker locker(&mutex);
@@ -14,6 +18,22 @@ namespace module {
         QMutexLocker locker(&mutex);
         Layout::releaseInstance();
         Document::releaseInstance();
+    }
+
+    IModule* MessageControl::getInstance(){
+        QMutexLocker locker(&instMutex);
+        if (!instance) {
+            instance = new MessageControl();
+        }
+        return instance;
+    }
+
+    void     MessageControl::releaseInstance() {
+        QMutexLocker locker(&instMutex);
+        if (instance != NULL) {
+            delete instance;
+            instance = NULL;
+        }
     }
 
     void MessageControl::onAddEntity( EntityType entity,

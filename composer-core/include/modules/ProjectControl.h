@@ -10,6 +10,9 @@
 #include <QMap>
 #include <QString>
 
+#include "IModule.h"
+using namespace composer::core::module;
+
 #include "../util/Project.h"
 #include "../util/DocumentParser.h"
 using namespace composer::core::util;
@@ -18,17 +21,23 @@ namespace composer {
 namespace core {
 namespace module {
 
-    class ProjectControl : public QObject{
+    class ProjectControl : public IModule {
         Q_OBJECT
         private:
+            ProjectControl();
+            ~ProjectControl();
+            static ProjectControl *instance;
+            static QMutex instMutex;
+
             QReadWriteLock lockProjects;
             Project *activeProject;
             QMap<QString,Project*> projects;
             DocumentParser *documentParser;
 
         public:
-            ProjectControl();
-            ~ProjectControl();
+            IModule* getInstance();
+            void     releaseInstance();
+
             /** Abre uma base privada existente localizada pelo parâmetro
                 location. Se a base privada não existir ou se o parâmetro
                 location não for informado, uma nova base é criada com o

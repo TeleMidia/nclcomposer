@@ -8,17 +8,17 @@ namespace util {
 DocumentParser::DocumentParser() {
     //nclDomDocument = NULL;
     util = EntityUtil::getInstance();
-    messageControl = new MessageControl();
+    ModuleControl *moduleControl =
+                        (ModuleControl*)ModuleControl::getModule("module");
     connect(this,SIGNAL(addEntity(EntityType,string,
                         map<string,string>&,bool)),
-            messageControl,SLOT(onAddEntity(EntityType,string,
+            moduleControl->getModule("message"),
+            SLOT(onAddEntity(EntityType,string,
                         map<string,string>&,bool)));
 
 }
 
 DocumentParser::~DocumentParser() {
-    delete messageControl;
-    messageControl = NULL;
     EntityUtil::releaseInstance();
 //    delete nclDoc;
 //    nclDoc = NULL;

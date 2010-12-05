@@ -11,21 +11,23 @@
 #include <map>
 using namespace std;
 
-#include "../modules/MessageControl.h"
-using namespace composer::core::module;
-
 #include "../plugin/IPluginMessage.h"
+using namespace composer::core::plugin;
 
 #include <model/ncm/NclDocument.h>
 using namespace ncm;
 
+#include "../modules/ModuleControl.h"
+using namespace composer::core::module;
+
 #include "EntityUtil.h"
+using namespace composer::core::util;
 
 namespace composer {
 namespace core {
 namespace util {
 
-class DocumentParser : public IPluginMessage
+    class DocumentParser : public IPluginMessage
 {
     Q_OBJECT
     public:
@@ -41,7 +43,6 @@ class DocumentParser : public IPluginMessage
     private:
         QDomDocument nclDomDocument;
         QMutex mutex;
-        MessageControl *messageControl;
         EntityUtil *util;
 
         inline void setDomDocument(QDomDocument document) {

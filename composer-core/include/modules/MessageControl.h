@@ -24,18 +24,27 @@ using namespace ncm::functional;
 #include "../plugin/IPluginMessage.h"
 using namespace composer::core::plugin;
 
+#include "IModule.h"
+using namespace composer::core::module;
+
 namespace composer {
 namespace core {
 namespace module {
-    class MessageControl : public QObject {
+
+    class MessageControl : public IModule {
             Q_OBJECT
         private:
+            MessageControl();
+            ~MessageControl();
+            static MessageControl *instance;
             Layout  *layoutFacade;
             Document *documentFacade;
             IPluginMessage *sender;
             QReadWriteLock lockSender;
             QMutex mutex;
+            static QMutex instMutex;
 
+            //TODO - rever essa logica
             inline void setSender(IPluginMessage *sender) {
                 QWriteLocker locker(&lockSender);
                 this->sender = sender;
@@ -44,9 +53,11 @@ namespace module {
                 QReadLocker locker(&lockSender);
                 return this->sender;
             }
+
         public:
-            MessageControl();
-            ~MessageControl();
+            IModule* getInstance();
+            void     releaseInstance();
+
         private:
             void addRegion(string parentRegionId,
                            map<string,string>&, bool force);

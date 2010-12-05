@@ -29,7 +29,7 @@ class Project {
         ~Project();
         inline QString getLocation() {
             QReadLocker locker(&lockString);
-            return this->location+QDir::separator();
+            return this->location;
         }
 
         inline QString getProjectId() {
