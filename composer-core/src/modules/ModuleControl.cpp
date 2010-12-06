@@ -40,7 +40,8 @@ IModule* ModuleControl::getModule(QString moduleName) {
     if (moduleName == "project")
             return projectControl;
     if (moduleName == "module")
-            return this->getInstance();
+            return NULL;
+            //return ModuleControl::getInstance();
     return NULL;
 }
 

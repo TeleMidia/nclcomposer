@@ -33,9 +33,12 @@ namespace module {
 
     class MessageControl : public IModule {
             Q_OBJECT
-        private:
+
+      public:
             MessageControl();
             ~MessageControl();
+
+      private:
             static MessageControl *instance;
             Layout  *layoutFacade;
             Document *documentFacade;

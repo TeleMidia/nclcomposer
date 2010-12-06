@@ -10,6 +10,11 @@
 #include <QMap>
 #include <QString>
 
+namespace composer {
+namespace core {
+namespace module {
+class ProjectControl;
+} } }
 #include "IModule.h"
 using namespace composer::core::module;
 
@@ -24,9 +29,11 @@ namespace module {
 
     class ProjectControl : public IModule {
         Q_OBJECT
-        private:
+        public:
             ProjectControl();
             ~ProjectControl();
+
+        private:
             static ProjectControl *instance;
             static QMutex instMutex;
 
@@ -63,7 +70,7 @@ namespace module {
              bool saveDocument (QString projectId, QString documentId,
                                 QString location);
              Project *getProject(QString projectId);
-             inline Project *getCurrentProject() {return this->activeProject;}
+             inline Project *getCurrentProject() {return this->activeProject;};
          signals:
              void newActivateProject(Project *);
     };

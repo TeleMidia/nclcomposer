@@ -7,11 +7,12 @@ namespace util {
 
     CoreManager::CoreManager(QObject *parent) :
         QObject(parent) {
-        moduleControl = (ModuleControl*)ModuleControl::getInstance();
+        //moduleControl = (ModuleControl*)ModuleControl::getInstance();
     }
 
     CoreManager::~CoreManager() {
-        ModuleControl::releaseInstance();
+        //TODO: releaseInstance IModule ??
+        //ModuleControl::releaseInstance();
         moduleControl = NULL;
     }
 

@@ -17,11 +17,11 @@ release {
 }
 macx { 
     LIBS += -framework \
-        ComposerCoreModel
+        ComposerCoreModel 
     INCLUDEPATH += /Library/Frameworks/ComposerCoreModel.framework/
 }
 else:unix { 
-    LIBS += -lComposerCoreModel
+    LIBS += -L/usr/local/lib/composer/model -lComposerCoreModel
     INCLUDEPATH += $$MODEL_LOCATION/include/composer
 }
 
@@ -32,15 +32,15 @@ MOC_DIR = mocs
 OBJECTS_DIR = objs
 DEFINES += COMPOSERCORECONTROL_LIBRARY
 
-SOURCES += src/util/DocumentParser.cpp \
-    src/modules/MessageControl.cpp \
+SOURCES += src/modules/MessageControl.cpp \
     src/modules/ProjectControl.cpp \
+    src/modules/ModuleControl.cpp \
     src/modules/PluginControl.cpp \
     src/modules/TransactionControl.cpp \
     src/util/Project.cpp \
     src/util/EntityUtil.cpp \
     src/util/CoreManager.cpp \
-    src/modules/ModuleControl.cpp
+    src/util/DocumentParser.cpp
 
 HEADERS_MAN += include/modules/MessageControl.h \
     include/modules/ProjectControl.h \

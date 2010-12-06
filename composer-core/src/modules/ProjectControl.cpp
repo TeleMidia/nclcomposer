@@ -44,6 +44,7 @@ namespace module {
 
     bool ProjectControl::openProject (QString projectId, QString location) {
         //TODO - fazer parser do arquivo de projeto
+        return true;
     }
 
     Project* ProjectControl::createProject(QString projectId, QString location) {
@@ -98,6 +99,7 @@ namespace module {
 
     bool ProjectControl::saveProject (QString projectId, QString location) {
         //TODO - salvar arquivo de projeto e chamar save para cada NCLDocument
+        return true;
     }
 
     bool ProjectControl::saveAllProjects() {
@@ -119,13 +121,16 @@ namespace module {
         }
         settings.endGroup();
         settings.sync();
+        return true;
     }
 
     bool ProjectControl::closeProject (QString projectId) {
         //TODO - salvar arquivo de projeto e chamar save para cada NCLDocument
+      return true;
     }
     bool ProjectControl::deleteProject (QString projectId) {
         //TODO - deletar todos os NCLDocument e deletar o arquivo de projeto
+      return true;
     }
 
     bool ProjectControl::addDocument (QString projectId, QString uri,
@@ -166,14 +171,17 @@ namespace module {
     bool ProjectControl::removeDocument (QString projectId,
                                          QString documentId) {
         //TODO - deletar o NclDocument do projeto mas não o arquivo
+      return true;
     }
     bool ProjectControl::deleteDocument (QString projectId, QString documentId) {
         //TODO - deletar o NclDocument do Projeto e deletar o arquivo do sistema
+      return true;
     }
 
     bool ProjectControl::saveDocument (QString projectId, QString documentId,
                                        QString location) {
         //TODO - salvar o documento Ncl
+      return true;
     }
 
 }//fim

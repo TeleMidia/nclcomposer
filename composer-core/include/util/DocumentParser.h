@@ -11,6 +11,12 @@
 #include <map>
 using namespace std;
 
+namespace composer {
+namespace core {
+namespace plugin {
+class DocumentParser;
+} } }
+
 #include "../plugin/IPluginMessage.h"
 using namespace composer::core::plugin;
 

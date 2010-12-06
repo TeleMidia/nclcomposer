@@ -17,15 +17,18 @@ namespace module {
         public:
             IModule* getInstance();
             void     releaseInstance();
-            static   IModule* getModule(QString moduleName);
+            static IModule*  getModule(QString moduleName);
+
         private:
             ModuleControl();
             ~ModuleControl();
+
+        private:
             static ModuleControl* instance;
             static QMutex instMutex;
             /* Concetrates all the instances of teh Core Modules */
-            MessageControl *messageControl;
-            ProjectControl *projectControl;
+            static MessageControl *messageControl;
+            static ProjectControl *projectControl;
 
 };
 
