@@ -1,0 +1,287 @@
+// Validador NCL
+element(ncl, NULL, 1, false)
+element (head, ncl, ? , false)
+element (body, ncl, ? , true)
+
+//Tabela 6 (steve)
+element(ncl, NULL, 1, true)
+    attribute(ncl, id, true, ID)
+    attribute(ncl, title, false, string)
+    attribute(ncl, xmlns, false, url)
+
+element(head, ncl, ?, true)
+    attribute(head, id, false, NULL)
+
+element(body,ncl,?,true)
+    attribute(body,id,false,ID)
+
+//Tabela 7 (Maurício)
+element (regionBase, head, *, false)
+    attribute (regionBase, id, false, ID)
+    attribute (regionBase, device, false, device) // Device recebe...?
+
+//Working...
+element (region, regionBase, *, false)
+element (region, region, * , false)
+    attribute (region, id , true , ID )
+    attribute (region, title , false , string )
+    attribute (region, left , false,percentualORpixel )
+    attribute (region, right , false ,percentualORpixel)
+    attribute (region, top , false ,percentualORpixel)
+    attribute (region, bottom , false ,percentualORpixel)
+    attribute (region, height , false ,percentualORpixel)
+    attribute (region, width , false ,percentualORpixel)
+    attribute (region, zIndex , false , int )
+
+// Tabela 8(rafael)
+element (media, body, *, NULL)
+element (media, context, *, NULL)
+element (media, switch, *, NULL)
+        attribute(media, id, true, string)
+        attribute(media, src, false, string)
+        attribute(media, refer, false,ID)
+        attribute(media, instance, false, instance)
+        attribute(media, type, false, typee)
+        attribute(media, descriptor, false, ID)
+
+//tabela 9(rafael)
+element (context, body, *, true)
+element (context, context, *, true)
+        attribute(context, id, true, ID)
+        attribute(context, refer, false, ID )
+
+//tabela 10 (rafael)
+element(area, media, *, NULL)
+        attribute(area, id, true, ID)
+        attribute(area, coords, false, coord)
+        attribute(area, begin, false, explicitdur)
+        attribute(area, end, false, explicitdur)
+        attribute(area, text, false, string)
+        attribute(area, position, false, int)
+        attribute(area, first, false, timeframe)
+        attribute(area, last, false, timeframe)
+        attribute(area, label, false, string)
+
+
+//tabela 11 (rafael)
+element(port, context,*, NULL)
+element(port, body,*, NULL)
+        attribute(port, id ,true, ID)
+        attribute(port, component ,true, ID)
+        attribute(port, inteface ,false, ID)
+
+
+
+//Tabela 12 (Maurício)
+// Working...
+element (property,body , * , false)
+element (property,media, * , false)
+element (property,context , * , false)
+        attribute (property, name, true, namee)
+        attribute (property, value, false, string)
+
+
+//Tabela 13 (Steve)
+element(switchPort,switch,*,false)
+attribute(switch,id,true,ID)
+
+element(mapping,switchPort,+,false)
+attribute(mapping, component, true, ID)
+attribute(mapping,interface,false, ID)
+
+//Tabela 14 (Maurício)
+// Working...
+element (descriptor, descriptorBase, +, false)
+element (descriptor, descriptorSwitch, *, false)
+        attribute (descriptor, id, true, ID )
+        attribute (descriptor, player , false, ID)
+        attribute (descriptor, explicitDur, false ,  ID)
+        attribute (descriptor, region, false, string)
+        attribute (descriptor, freeze, false,  ID)
+        attribute (descriptor, moveLeft, false, ID)
+        attribute (descriptor, moveRight, false, ID)
+        attribute (descriptor, moveUp, false, ID)
+        attribute (descriptor, moveDown, false, ID)
+        attribute (descriptor, focusIndex, false, ID)
+        attribute (descriptor, focusBorderColor, false, ID)
+        attribute (descriptor, focusBorderWidth, false, ID)
+        attribute (descriptor, focusBorderTransparency, false, ID)
+        attribute (descriptor, focusSrc, false , ID)
+        attribute (descriptor, focusSelSrc, false, ID)
+        attribute (descriptor, selBorderColor, false, ID)
+
+element (descriptorParam, descriptor, * , false) // Working...
+        attribute (descriptorParam,name ,true , string )
+        attribute (descriptorParam,value ,true ,  )
+
+element (descriptorBase, head, ? , false)
+        attribute (descriptorBase,id,false, ID )
+
+
+//tabela 15 (rafael)
+element(bind, link,+,NULL)
+        attribute(bind,role,true,ID)
+        attribute(bind,component,true,ID)
+        attribute(bind,interface,false,ID)
+        attribute(bind,descriptor,false,ID)
+
+element(bindParam, bind, *, NULL)
+        attribute(bindParam,name,true, STRING)
+        attribute(bindParam,value,true, STRING)
+
+element(linkParam, link, *, NULL)
+        attribute(linkParam,name,true, STRING)
+        attribute(linkParam,value,true, STRING)
+
+element(link, context, *, NULL)
+        attribute(link,id,false, ID)
+        attribute(link,xconnector,true, ID)
+
+element(link, body, *, NULL)
+//        attribute(link,id,false, ID)
+//        attribute(link,xconnector,true, ID)
+
+//Tabela 16 (Maurício)
+element (causalConnector, connectorBase, * , false)
+        attribute (causalConnector,id,true,ID)
+
+element (connectorParam, causalConnector, * , false)
+        attribute (connectorParam,name,true,string)
+        attribute (connectorParam,type,false,)
+
+element (simpleCondition, causalConnector, 1 , false)
+element (simpleCondition, compoundCondition, + , false)
+        attribute (simpleCondition,role,true,)
+        attribute (simpleCondition,delay,false,)
+        attribute (simpleCondition,eventType,false,)
+        attribute (simpleCondition,key,false,)
+        attribute (simpleCondition,transition,false,)
+        attribute (simpleCondition,min,false,)
+        attribute (simpleCondition,max,false,)
+        attribute (simpleCondition,qualifier,false,)
+
+element (compoundCondition,causalConnector, 1 , false)
+element (compoundCondition,compoundCondition, + , false)
+        attribute (compoundCondition,operator,true ,)
+        attribute (compoundCondition,delay,false ,)
+
+element (simpleAction, causalConnector, 1 , false)
+element (simpleAction, compoundAction, + , false)
+        attribute (simpleAction,role,true, ,)
+        attribute (simpleAction,delay,false,)
+        attribute (simpleAction,eventType,false,)
+        attribute (simpleAction,actionType,false,)
+        attribute (simpleAction,value,false,)
+        attribute (simpleAction,min,false,)
+        attribute (simpleAction,max,false,)
+        attribute (simpleAction,qualifier,false,)
+        attribute (simpleAction,repeat,false,)
+        attribute (simpleAction,repeatDelay,false,)
+
+
+element (compoundAction, causalConnector, 1 , false)
+element (compoundAction,compoundAction, + , false)
+        attribute (compoundAction,operator,true,)
+        attribute (compoundAction,delay,false,)
+
+element (assessmentStatement, compoundCondition, * , false)
+element (assessmentStatement,compoundStatement, + , false)
+        attribute (assessmentStatement,comparator,true,)
+
+element (attributeAssessment,assessmentStatement, 1 , false)
+        attribute (attributeAssessment,role,true,)
+        attribute (attributeAssessment,eventType,true,)
+        attribute (attributeAssessment,key,false,)
+        attribute (attributeAssessment,attributeType,true,)
+        attribute (attributeAssessment,offset,false,)
+
+element (valueAssessment,assessmentStatement, 1 , false)
+        attribute (valueAssessment,Value,true,)
+
+element (compundStatement,compundCondition, * , false)
+element (compundStatement, compundStatement, + , false)
+        attribute (compundStatement,operator,true,)
+        attribute (compundStatement,isNegated,false,)
+
+//Tabela 17 (Maurício)
+element (connectorBase, head, ? , false)
+        attribute (connectorBase,Id,false,ID)
+
+//tabela 18(rafael)
+element(ruleBase,head,?,NULL)
+        attribute(ruleBase,id,false,ID)
+
+element(rule,ruleBase,+,NULL)
+        attribute(rule,id,true,)
+        attribute(rule,var,true,)
+        attribute(rule,comparator,true,)
+        attribute(rule,value,true,)
+
+element(compositeRule,rule,+,NULL)
+        attribute(compositeRule,id,true,)
+        attribute(compositeRule,operator,true,)
+
+element(compositeRule,compositeRule,+,NULL)
+        attribute(compositeRule,id,true,)
+        attribute(compositeRule,operator,true,)
+
+
+// tabela 19 (Steve)
+element(bindRule, switch, *, false)
+element(bindRule, descriptorSwitch, *, false)
+attribute(bindRule, constituent, true, ID)
+attribute(bindRule, rule, true, string)
+
+//Tabela 20 (Steve)
+element(switch, body, *, true)
+element(switch, switch, *, true)
+element(switch, context, *, false)
+attribute(switch, id, true, ID)
+attribute(switch, refer, false, string)
+element(defaultComponent, switch, ?, false)
+attribute(defaultComponent, component, true, ID)
+
+//Tabela 21 (Steve)
+element(descriptorSwitch, descriptorBase, +, false)
+attribute(descriptorSwitch, id, true, ID)
+element(defaultDescriptor, descriptorSwitch, *, false)
+attribute(defaultDescriptor, descriptor, true, ID)
+
+//Tabela 22 (Maurício)
+element (importBase,descriptorBase, + , false) // Working...
+element (importBase, connectorBase, * , false)
+element (importBase, ruleBase, + , false)
+        attribute (importBase,alias ,true ,  )
+        attribute (importBase,documentURI ,true , file )
+        attribute (importBase,region ,false ,  )
+
+element (importedDocumentBase, head, ? , false)
+        attribute (importedDocumentBase,id,false , ID )
+
+
+element (importNCL, importedDocumentBase, + , false) // Working...
+        attribute (importNCL,alias,true , ID)
+        attribute (importNCL,documentURI,true , file)
+
+
+reference ( media, descriptor, descriptor, id, ANY )
+reference ( link, xconnector, causalConnector, id, ANY )
+reference ( bind, role, simpleCondition, role, PARENT.xconnector )
+reference ( bind, role, simpleAction, role, FATHER.xconnector )
+
+//DATATYPES
+datatype(ID, ^[a-zA-Z][a-zA-Z0-9_]*)
+datatype(file,[a-zA-Z0-9-\.]+[a-zA-Z0-9-_\.]+\.[a-zA-Z0-9]+$)
+datatype(fileHTML,[a-zA-Z0-9-\.]+[a-zA-Z0-9-_\.]+\.html$)
+datatype(explicitdur, ^(^([0-1][0-9]|[2][0-3])(:([0-5][0-9])(,[0-9][0-9]?)?){1,2}$|^[0-9]+[s]$)$)
+datatype(percentual, ^[0-9]+(,[0-9][0-9]?)?%$)
+datatype(device,^(systemScreen[ ]?[(][0-9]+[)]|(systemAudio)[ ]?[(][0-9]+[)])$)
+datatype(int, ^[0-9]+)
+datatype(string, .*)
+datatype(percentORpixel, ^[0-9]+([0-9]*px|((,[0-9][0-9]?)?%))$)
+datatype(url, ^(http[s]?://|ftp://)?(www\.)?[a-zA-Z0-9-\.]+\.(com|org|net|mil|edu|ca|co.uk|com.au|gov|br)$)
+datatype(instance, ^(instSame|gradSame|new)$)
+datatype(typee, )
+datatype(coord, )
+datatype(timeframe,)
+datatype(namee, )

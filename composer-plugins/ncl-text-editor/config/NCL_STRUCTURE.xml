@@ -1,0 +1,54 @@
+<describe>
+    <datatypes>
+        <datatype name="INT" regex="^[0-9]*$"/>
+        <datatype name="STRING" regex="^[0-9]*$"/>
+        <datatype name="COORDINATE" regex="^[0-9]*(,[0-9]*){2,}"/>
+        <datatype name="QUANTITY" regex="^[0-9]*(,[0-9]*){2,}"/>
+        <datatype name="ID" regex="^[_a-zA-Z].*$"/>
+        <datatype name="SIZE" regex="^[_a-zA-Z].*$"/>
+        <datatype name="BOOLEAN" regex="and|or"/>
+        <datatype name="SYNCHRONISM_OPERATOR" regex="par|seq"/>
+    </datatypes>
+
+    <elements>
+        <element name="ncl" cardinality="">
+            <attribute name="id" required="true" type="ID" cardinality="" />
+        </element>
+
+        <element name="head" father="ncl" cardinality="">
+            <attribute name="id" required="true" type="ID" />
+        </element>
+
+        <element name="regionBase" father="head" cardinality="">
+            <attribute name="id" required="false" type="ID" />
+        </element>
+
+        <element name="connectorBase" father="head" cardinality="">
+            <attribute name="id" required="false" type="ID" />
+        </element>
+
+        <element name="ruleBase" father="head" cardinality="">
+            <attribute name="id" required="false" type="ID" />
+        </element>
+
+        <element name="region" father="regionBase" cardinality="">
+            <attribute name="id" required="false" type="ID" />
+        </element>
+
+        <element name="causalConnector" father="connectorBase" cardinality="">
+            <attribute name="id" required="false" type="ID" />
+        </element>
+
+        <element name="rule" father="ruleBase" cardinality="">
+            <attribute name="id" required="false" type="ID" />
+        </element>
+
+        <element name="body" father="ncl" cardinality="">
+            <attribute name="id" required="false" type="ID" />
+        </element>
+
+        <element name="media" father="ncl" cardinality="">
+            <attribute name="id" required="false" type="ID" />
+        </element>
+    </elements>
+</describe>

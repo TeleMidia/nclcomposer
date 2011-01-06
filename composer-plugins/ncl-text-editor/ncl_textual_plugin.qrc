@@ -1,0 +1,13 @@
+<RCC>
+    <qresource prefix="/">
+        <file>images/copy.png</file>
+        <file>images/cut.png</file>
+        <file>images/new.png</file>
+        <file>images/open.png</file>
+        <file>images/paste.png</file>
+        <file>images/save.png</file>
+        <file>config/apiNCL.txt</file>
+        <file>config/NCL_STRUCTURE</file>
+        <file>images/window_fullscreen.png</file>
+    </qresource>
+</RCC>
