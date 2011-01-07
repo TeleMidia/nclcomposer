@@ -19,21 +19,30 @@ bool NCLTreeWidget::updateFromText(QString text)
     inputSource.setData( text );
     QXmlSimpleReader reader;
 
-    this->setStyleSheet(/*"background-color:*/ "font-size: 11px;");;
+    this->setStyleSheet(/*"background-color:*/ "font-size: 11px;");
     clear();
     setHeaderLabels(labels);
     header()->setStretchLastSection(false);
     header()->setResizeMode(QHeaderView::ResizeToContents);
 
-    NCLSaxHandler handler(this);
-    reader.setContentHandler(&handler);
-    reader.setErrorHandler(&handler);
+    //TODO: Transform this parser in a puglin
+    NCLParser *handler = new NCLParser(this);
+
+    connect (  handler,
+               SIGNAL(fatalErrorFound(QString,QString,int,int,int)),
+               this,
+               SLOT(errorNotification(QString,QString,int,int,int)));
+
+    reader.setContentHandler(handler);
+    reader.setErrorHandler(handler);
     bool ret = reader.parse(inputSource);
+    delete handler;
     this->expandAll();
 
     return ret;
 }
 
+//TODO: Add Element with the correct icon
 QTreeWidgetItem* NCLTreeWidget::addElement ( QTreeWidgetItem *father,
                                  int pos,
                                  QString tagname,
@@ -41,13 +50,20 @@ QTreeWidgetItem* NCLTreeWidget::addElement ( QTreeWidgetItem *father,
                                  int line_in_text,
                                  int column_in_text)
 {
-    QTreeWidgetItem *child = new QTreeWidgetItem(father);
-    father->insertChild(pos, child);
+    QTreeWidgetItem *child = new QTreeWidgetItem(0);
+
+    father->insertChild(0, child);
     child->setText(0, tagname);
     child->setText(1, id);
     child->setText(2, QString::number(line_in_text));
     child->setText(3, QString::number(column_in_text));
+
     return child;
+}
+
+void NCLTreeWidget::errorNotification(QString message, QString filename, int line, int column, int severity)
+{
+    emit parserErrorNotify(message, filename, line, column, severity);
 }
 
 /*

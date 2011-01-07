@@ -11,5 +11,8 @@
         <file>images/media.png</file>
         <file>images/descriptor.png</file>
         <file>images/link-icon.png</file>
+        <file>images/error-icon-24.png</file>
+        <file>images/error-icon-16.png</file>
+        <file>images/clear-icon.png</file>
     </qresource>
 </RCC>

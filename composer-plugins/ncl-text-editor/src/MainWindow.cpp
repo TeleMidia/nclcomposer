@@ -28,21 +28,21 @@
 MainWindow::MainWindow(QWidget *parent):
         QMainWindow(parent)
 {
-    textEdit = new NCLTextEditor(this);
-    setCentralWidget(textEdit);
-
+    createTextView();
     createActions();
     createMenus();
     createToolBars();
     createStatusBar();
-    createTreeView();
+    createOutlineView();
+    createProblemsView();
 
+    setDockOptions(MainWindow::AllowNestedDocks | MainWindow::AllowTabbedDocks | MainWindow::AnimatedDocks);
     readSettings();
 
     connect(textEdit, SIGNAL(textChanged()),
             this, SLOT(documentWasModified()));
 
-    connect(treeWidget, SIGNAL(itemClicked(QTreeWidgetItem*, int)), SLOT(gotoLineOf(QTreeWidgetItem *, int)));
+    connect(outlineView, SIGNAL(itemClicked(QTreeWidgetItem*, int)), SLOT(gotoLineOf(QTreeWidgetItem *, int)));
 
     setCurrentFile("");
 }
@@ -211,34 +211,42 @@ void MainWindow::createStatusBar()
     statusBar()->showMessage(tr("Ready"));
 }
 
-void MainWindow::createTreeView()
+void MainWindow::createOutlineView()
 {
-    treeWidget = new NCLTreeWidget(this);
-    treeWidget->setColumnCount(1);
-    treeWidget->setMaximumWidth(300);;
-    treeWidget->setEditTriggers(QAbstractItemView::AllEditTriggers);
+    outlineView = new NCLTreeWidget(this);
+    outlineView->setColumnCount(1);
+    //outlineView->setMaximumWidth(300);;
+    outlineView->setEditTriggers(QAbstractItemView::AllEditTriggers);
 
     QTreeWidgetItem* item = new QTreeWidgetItem(0);
     item->setText(0, "hi");
     item->setFlags(Qt::ItemIsEnabled);
-    treeWidget->insertTopLevelItem(0, item);
+    outlineView->insertTopLevelItem(0, item);
 
-    dockTreeView = new QDockWidget("Outline", this);
-    dockTreeView->setFeatures(QDockWidget::DockWidgetMovable |
+    dockOutlineView = new QDockWidget("Outline", this);
+    dockOutlineView->setFeatures(QDockWidget::DockWidgetMovable |
                               QDockWidget::DockWidgetFloatable);
-    dockTreeView->setAllowedAreas(Qt::LeftDockWidgetArea |
+    dockOutlineView->setAllowedAreas(Qt::LeftDockWidgetArea |
                                   Qt::RightDockWidgetArea);
-    dockTreeView->setWidget(treeWidget);
+    dockOutlineView->setWidget(outlineView);
 
-    addDockWidget(Qt::LeftDockWidgetArea, dockTreeView);
+    addDockWidget(Qt::LeftDockWidgetArea, dockOutlineView);
 
-    treeWidget->setContextMenuPolicy(Qt::ActionsContextMenu);
+    outlineView->setContextMenuPolicy(Qt::ActionsContextMenu);
 
-    nodeMenu = new QMenu(treeWidget);
+    nodeMenu = new QMenu(outlineView);
     insertNodeChild = new QAction(QIcon(":/images/save.png"), tr("&Add child"), this);
     connect(insertNodeChild, SIGNAL(triggered()), this, SLOT(insertElement()));
-    treeWidget->addAction(insertNodeChild);
+    outlineView->addAction(insertNodeChild);
+}
 
+void MainWindow::createProblemsView()
+{
+    problemsView = new NCLProblemsView(this);
+    addDockWidget(Qt::BottomDockWidgetArea, problemsView);
+
+    connect(outlineView, SIGNAL(parserErrorNotify(QString, QString, int, int, int)),
+            problemsView, SLOT(addProblem(QString,QString,int,int,int)));
 }
 
 void MainWindow::readSettings()
@@ -318,7 +326,7 @@ bool MainWindow::saveFile(const QString &fileName)
     setCurrentFile(fileName);
     statusBar()->showMessage(tr("File saved"), 2000);
 
-    treeWidget->updateFromText(textEdit->text());
+    outlineView->updateFromText(textEdit->text());
     return true;
 }
 
@@ -335,7 +343,7 @@ void MainWindow::setCurrentFile(const QString &fileName)
         shownName = strippedName(curFile);
 
     setWindowTitle(tr("%1[*] - %2").arg(shownName).arg(tr("Application")));
-    treeWidget->updateFromText(textEdit->text());
+    outlineView->updateFromText(textEdit->text());
 }
 
 QString MainWindow::strippedName(const QString &fullFileName)
@@ -361,12 +369,10 @@ void MainWindow::gotoLineOf(QTreeWidgetItem *item, int column)
     textEdit->SendScintilla(QsciScintilla::SCI_SETFOCUS, true);
 }
 
-
 //FIXME:    1. fix line element line numbers.
-//          2. If element father is a start-closed tag in the same line, open it.
 void MainWindow::insertElement(){
     bool ok;
-    QList<QTreeWidgetItem*> selecteds = treeWidget->selectedItems ();
+    QList<QTreeWidgetItem*> selecteds = outlineView->selectedItems ();
     QTreeWidgetItem *item = selecteds.at (0);
     int line = item->text(2).toInt ( &ok, 10 );
     QString tagname = item->text(0);
@@ -390,8 +396,8 @@ void MainWindow::insertElement(){
                                 &ok);
 
     if(ok && !element.isEmpty()) {
-        //Add new Element to TreeWidget
-        treeWidget->addElement(item, 0, tagname, QString(""), line, 0);
+        //Add new Element to OutlineWidget
+        outlineView->addElement(item, 0, element, QString(""), line, 0);
 
         //Add new Element to texttWidget
         int endLine = textEdit->SendScintilla(QsciScintilla::SCI_GETLINEENDPOSITION, line-1);
@@ -450,3 +456,19 @@ void MainWindow::insertElement(){
     }
 
 }
+
+void MainWindow::createTextView() {
+    dockTextEdit = new QDockWidget(this);
+    dockTextEdit->setFeatures(QDockWidget::DockWidgetMovable |
+                              QDockWidget::DockWidgetFloatable);
+
+    dockTextEdit->setAllowedAreas(Qt::LeftDockWidgetArea |
+                                  Qt::RightDockWidgetArea);
+
+    textEdit = new NCLTextEditor(this);
+    dockTextEdit->setWidget(textEdit);
+
+    addDockWidget(Qt::RightDockWidgetArea, dockTextEdit);
+
+    //setCentralWidget(textEdit);
+ }

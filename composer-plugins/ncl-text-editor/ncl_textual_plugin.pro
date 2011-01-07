@@ -13,6 +13,7 @@ HEADERS     =   include/MainWindow.h \
                 include/MyLexer.h \
                 include/NCLValidator.h \
                 include/NCLParser.h \
+                include/NCLProblemsView.h \
                 include/NCLTreeWidget.h
 
 SOURCES     =   src/main.cpp \
@@ -24,6 +25,7 @@ SOURCES     =   src/main.cpp \
                 src/MyLexer.cpp \
                 src/NCLValidator.cpp \
                 src/NCLParser.cpp \
+                src/NCLProblemsView.cpp \
                 src/NCLTreeWidget.cpp
 
 OTHER_FILES +=  TODO \

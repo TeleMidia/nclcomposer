@@ -28,7 +28,9 @@ using namespace std;
 
 #include <QMainWindow>
 #include <QDockWidget>
+#include <QListWidget>
 
+#include "NCLProblemsView.h"
 #include "NCLTreeWidget.h"
 #include "NCLTextEditor.h"
 
@@ -61,7 +63,9 @@ private:
     void createMenus();
     void createToolBars();
     void createStatusBar();
-    void createTreeView();
+    void createTextView();
+    void createOutlineView();
+    void createProblemsView();
     void readSettings();
     void writeSettings();
     bool maybeSave();
@@ -70,6 +74,7 @@ private:
     void setCurrentFile(const QString &fileName);
     QString strippedName(const QString &fullFileName);
 
+    QDockWidget *dockTextEdit;
     NCLTextEditor *textEdit;
     QString curFile;
 
@@ -90,10 +95,12 @@ private:
     QAction *aboutQtAct;
     QAction *fullscreenAct;
 
-    QDockWidget *dockTreeView;
-    NCLTreeWidget *treeWidget;
+    QDockWidget *dockOutlineView;
+    NCLTreeWidget *outlineView;
     QMenu *nodeMenu;
     QAction *insertNodeChild;
+
+    NCLProblemsView *problemsView;
 };
 
 #endif

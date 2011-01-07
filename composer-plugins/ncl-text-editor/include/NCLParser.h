@@ -5,12 +5,13 @@
 
 #include <QList>
 #include <QMessageBox>
-
 #include <QTreeWidget>
 
-class NCLSaxHandler : public QXmlDefaultHandler {
+class NCLParser : public QObject, public QXmlDefaultHandler {
+    Q_OBJECT
+
 public:
-    NCLSaxHandler(QTreeWidget *tree);
+    NCLParser(QTreeWidget *tree);
     bool startElement(const QString &namespaceURI,
                       const QString &localName,
                       const QString &qName,
@@ -27,5 +28,12 @@ private:
     QTreeWidgetItem *currentItem;
     QString currentText;
     QXmlLocator *locator;
+
+signals:
+    void fatalErrorFound ( QString message,
+                           QString file,
+                           int line,
+                           int column,
+                           int severity);
 };
 #endif

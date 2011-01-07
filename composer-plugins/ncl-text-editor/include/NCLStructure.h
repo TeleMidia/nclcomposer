@@ -14,7 +14,6 @@ using namespace std;
 
 #define NCLSTRUCTURE_FILE ":/config/NCL_STRUCTURE"
 
-
 /**
 */
 class NCLReference {

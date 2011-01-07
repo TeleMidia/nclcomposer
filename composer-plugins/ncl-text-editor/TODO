@@ -1,7 +1,11 @@
+Reestruturacao do codigo:
+    Transformar NCLTextEditor em NCLTextView.
+    Transformar NCLTreeWidget em NCLTreeView.
+    p.s. Tem que herdar de alguem em comum para poder ser tratado como uma visao do Composer.
+
 1. Sugestão de código contextual
     Sugestão de valores de atributos: Carregar valores pré-definidos (Como ?)
     Sugestão de valores de atributos: Referencias.
-
 
 2. Validacao
     Tudo

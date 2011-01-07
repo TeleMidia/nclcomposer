@@ -1,12 +1,12 @@
 #include "NCLParser.h"
 
-NCLSaxHandler::NCLSaxHandler(QTreeWidget *tree)
+NCLParser::NCLParser(QTreeWidget *tree)
 {
     treeWidget = tree;
     currentItem = 0;
 }
 
-bool NCLSaxHandler::startElement(const QString & /* namespaceURI */,
+bool NCLParser::startElement(const QString & /* namespaceURI */,
                                  const QString &localName,
                                  const QString &qName,
                                  const QXmlAttributes &attributes)
@@ -17,6 +17,8 @@ bool NCLSaxHandler::startElement(const QString & /* namespaceURI */,
     } else {
         currentItem = new QTreeWidgetItem(treeWidget);
     }
+
+    //TODO: use the send a signal to all interested plugins.
     QIcon icon;
     if(qName == "media")
             icon = QIcon (":/images/media.png");
@@ -35,13 +37,13 @@ bool NCLSaxHandler::startElement(const QString & /* namespaceURI */,
     return true;
 }
 
-bool NCLSaxHandler::characters(const QString &str)
+bool NCLParser::characters(const QString &str)
 {
     currentText += str;
     return true;
 }
 
-bool NCLSaxHandler::endElement(const QString & /* namespaceURI */,
+bool NCLParser::endElement(const QString & /* namespaceURI */,
                                const QString & /* localName */,
                                const QString & /* qName */)
 {
@@ -49,7 +51,7 @@ bool NCLSaxHandler::endElement(const QString & /* namespaceURI */,
     return true;
 }
 
-bool NCLSaxHandler::fatalError(const QXmlParseException &exception)
+bool NCLParser::fatalError(const QXmlParseException &exception)
 {
     qDebug() <<  QObject::tr("Parse error at line %1, column "
                                      "%2:\n%3.")
@@ -57,10 +59,16 @@ bool NCLSaxHandler::fatalError(const QXmlParseException &exception)
                          .arg(exception.columnNumber())
                          .arg(exception.message());
 
+    emit fatalErrorFound ( exception.message(),
+                           QString("FILENAME"),
+                           exception.lineNumber(),
+                           exception.columnNumber(),
+                           0);
+
     return false;
 }
 
-void NCLSaxHandler::setDocumentLocator(QXmlLocator *locator)
+void NCLParser::setDocumentLocator(QXmlLocator *locator)
 {
     this->locator = locator;
 }

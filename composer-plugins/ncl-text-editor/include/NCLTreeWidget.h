@@ -25,6 +25,11 @@ public:
                                   int line_in_text = -1,
                                   int column_in_text = -1);
 
+public slots:
+    void errorNotification(QString message, QString filename, int line, int column, int severity);
+
+signals:
+    void parserErrorNotify(QString message, QString filename, int line, int column, int severity);
 };
 
 #endif
