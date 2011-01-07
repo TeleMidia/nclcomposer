@@ -49,7 +49,7 @@ void NCLStructure::loadStructure(){
         } else if(tokens[0] == "attribute"){
             qDebug() << "I'm reading a new ATTRIBUTE element" << endl;
 
-            if(tokens.size() == 5 ) {
+            if(tokens.size() == 5) {
                 bool required = false;
                 if(tokens[3].toLower() == "true")
                     required = true;
@@ -75,7 +75,46 @@ void NCLStructure::loadStructure(){
 
 vector <QString> NCLStructure::parseLine(QString line){
     vector <QString> ret;
-    //It ignores the lines starting with "//"
+    QChar ch;
+    int size = line.size(), i = 0;
+    QString token;
+    bool reading_attributes = false;
+
+    while (i < line.size()) {
+        ch = line.at(i);
+
+        if (ch == '/') {
+            if (i+1 < size && line[i+1] == '/') {
+                //comment was found, it will ignore the remaining caracteres in the line
+                token = "//";
+                break;
+            }
+        }
+        else if(ch == '(') {
+            if(token != "")
+                ret.push_back(token);
+            token = "";
+            reading_attributes = true;
+        }
+        else if(ch == ',') {
+            if(reading_attributes && token != "")
+                ret.push_back(token);
+            token = "";
+        }
+        else if (ch == ')') {
+            if(reading_attributes && token != "")
+                ret.push_back(token);
+            reading_attributes = false;
+            token = "";
+        }
+        else {
+            if(!ch.isSpace())
+                token.append(line.at(i));
+        }
+        i++;
+    }
+    /*
+     Old parser
     if(!line.startsWith("//")){
         QString element;
 
@@ -102,6 +141,7 @@ vector <QString> NCLStructure::parseLine(QString line){
             ret.push_back(param);
         }
     }
+    */
     return ret;
 }
 
