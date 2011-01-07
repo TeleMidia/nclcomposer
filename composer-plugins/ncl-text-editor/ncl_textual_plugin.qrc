@@ -6,8 +6,10 @@
         <file>images/open.png</file>
         <file>images/paste.png</file>
         <file>images/save.png</file>
-        <file>config/apiNCL.txt</file>
         <file>config/NCL_STRUCTURE</file>
         <file>images/window_fullscreen.png</file>
+        <file>images/media.png</file>
+        <file>images/descriptor.png</file>
+        <file>images/link-icon.png</file>
     </qresource>
 </RCC>
