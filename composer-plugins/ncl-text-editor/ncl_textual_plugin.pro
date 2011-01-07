@@ -26,8 +26,7 @@ SOURCES     =   src/main.cpp \
                 src/NCLParser.cpp \
                 src/NCLTreeWidget.cpp
 
-OTHER_FILES +=  config/apiNCL.txt \
-                TODO \
+OTHER_FILES +=  TODO \
                 config/NCL_STRUCTURE \
                 NEWS
 

@@ -12,6 +12,7 @@ element(ncl, NULL, 1, true)
 element(head, ncl, ?, true)
     attribute(head, id, false, NULL)
 
+
 element(body,ncl,?,true)
     attribute(body,id,false,ID)
 
@@ -20,8 +21,7 @@ element (regionBase, head, *, false)
     attribute (regionBase, id, false, ID)
     attribute (regionBase, device, false, device) // Device recebe...?
 
-//Working...
-element (region, regionBase, *, false)
+element (region, regionBase, *, false) //Working...
 element (region, region, * , false)
     attribute (region, id , true , ID )
     attribute (region, title , false , string )

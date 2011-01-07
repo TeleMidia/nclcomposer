@@ -166,7 +166,7 @@ void MainWindow::createActions()
 
     fullscreenAct = new QAction(QIcon(":/images/window_fullscreen.png"), tr("&FullScreen"), this);
     fullscreenAct->setShortcut(tr("F11"));
-    fullscreenAct->setStatusTip(tr("Show Fullscreen"));
+    fullscreenAct->setStatusTip(tr("Enable/disable fullscreen mode"));
     connect(fullscreenAct, SIGNAL(triggered()), this, SLOT(showInFullScreen()));
 }
 
@@ -231,6 +231,13 @@ void MainWindow::createTreeView()
     dockTreeView->setWidget(treeWidget);
 
     addDockWidget(Qt::LeftDockWidgetArea, dockTreeView);
+
+    treeWidget->setContextMenuPolicy(Qt::ActionsContextMenu);
+
+    nodeMenu = new QMenu(treeWidget);
+    insertNodeChild = new QAction(QIcon(":/images/save.png"), tr("&Insert Child"), this);
+    connect(insertNodeChild, SIGNAL(triggered()), this, SLOT(insertElement()));
+    treeWidget->addAction(insertNodeChild);
 
 }
 
@@ -352,4 +359,83 @@ void MainWindow::gotoLineOf(QTreeWidgetItem *item, int column)
     textEdit->setCursorPosition(line-1, 0);
     textEdit->ensureLineVisible(line-1);
     textEdit->SendScintilla(QsciScintilla::SCI_SETFOCUS, true);
+}
+
+
+//FIXME:    1. fix line element line numbers.
+//          2. If element father is a closed in the same line, open it.
+void MainWindow::insertElement(){
+    bool ok;
+    /*QString element = QInputDialog::getText(
+            this,
+            tr("String"),
+            tr("Element name:"),
+            QLineEdit::Normal,
+            tr(""),
+            &ok ); */
+
+    QList<QTreeWidgetItem*> selecteds = treeWidget->selectedItems ();
+    QTreeWidgetItem *item = selecteds.at (0);
+    int line = item->text(2).toInt ( &ok, 10 );
+    QString tagname = item->text(0);
+
+    QStringList strlist;
+    map <QString, char> * children = NCLStructure::getInstance()->getChildren(tagname);
+    map <QString, char>::iterator it;
+    for(it = children->begin(); it != children->end(); ++it){
+        strlist << it->first;
+    }
+
+    QString element = QInputDialog::getItem(this,
+                                tr("Add child"),
+                                tr("Element"),
+                                strlist,
+                                0,
+                                true,
+                                &ok);
+
+    if(ok && !element.isEmpty()) {
+
+        //Add new Element to TreeWidget
+        QTreeWidgetItem *child = new QTreeWidgetItem(child);
+        item->insertChild(0, child);
+        child->setText(0, element);
+        child->setText(1, QString(""));
+        child->setText(2, QString::number(line));
+
+        //Add new Element to texttWidget
+        int endLine = textEdit->SendScintilla(QsciScintilla::SCI_GETLINEENDPOSITION, line-1);
+        int beginLine = textEdit->SendScintilla(QsciScintilla::SCI_POSITIONFROMLINE, line-1);
+
+        //put all the required attributes
+        //TODO: remove from here (create a function)
+        map <QString, bool> *attributes = NCLStructure::getInstance()->getAttributes(element);
+        if(attributes != NULL) {
+            map <QString, bool>::iterator it;
+            for(it = attributes->begin(); it != attributes->end(); ++it){
+                if(it->second) {
+                    element += " ";
+                    element += it->first + "=\"\"";
+                }
+            }
+        }
+
+        element.prepend("<");
+        element.append("/>");
+        element.prepend("\n");
+
+        qDebug() << line << " " << beginLine << " " << endLine << " " << endLine - beginLine;
+
+        textEdit->insertAt(element, line-1, endLine-beginLine);
+
+        //fix indentation
+        int lineident = textEdit->SendScintilla(QsciScintilla::SCI_GETLINEINDENTATION, line-1);
+
+        textEdit->SendScintilla(QsciScintilla::SCI_SETLINEINDENTATION, line, lineident+8);
+
+        textEdit->setCursorPosition(line, 0);
+        textEdit->ensureLineVisible(line);
+        textEdit->SendScintilla(QsciScintilla::SCI_SETFOCUS, true);
+    }
+
 }

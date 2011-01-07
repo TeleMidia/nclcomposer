@@ -53,6 +53,7 @@ private slots:
     void about();
     void documentWasModified();
     void showInFullScreen();
+    void insertElement();
     void gotoLineOf(QTreeWidgetItem *item, int column);
 
 private:
@@ -91,6 +92,8 @@ private:
 
     QDockWidget *dockTreeView;
     NCLTreeWidget *treeWidget;
+    QMenu *nodeMenu;
+    QAction *insertNodeChild;
 };
 
 #endif

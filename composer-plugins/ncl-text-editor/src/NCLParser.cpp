@@ -11,12 +11,23 @@ bool NCLSaxHandler::startElement(const QString & /* namespaceURI */,
                                  const QString &qName,
                                  const QXmlAttributes &attributes)
 {
-    qDebug() << qName;
+    // qDebug() << qName;
     if (currentItem) {
         currentItem = new QTreeWidgetItem(currentItem);
     } else {
         currentItem = new QTreeWidgetItem(treeWidget);
     }
+    QIcon icon;
+    if(qName == "media")
+            icon = QIcon (":/images/media.png");
+    else if(qName == "descriptor")
+        icon = QIcon (":/images/descriptor.png");
+    else if(qName == "link")
+        icon = QIcon (":/images/link-icon.png");
+    else
+        icon = QIcon (":/images/new.png");
+
+    currentItem->setIcon(0, icon);
     currentItem->setText(0, localName);
     currentItem->setText(1, attributes.value("id"));
     currentItem->setText(2, QString::number(locator->lineNumber()) );

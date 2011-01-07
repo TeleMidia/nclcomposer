@@ -59,15 +59,17 @@ void QsciNCLAPIs::updateAutoCompletionList(const QStringList &context,
         qDebug() << "Must suggest attributes to " << tagname;
         if(tagname != ""){
             map <QString, bool> *attrs = nclStructure->getAttributes(tagname);
-            map <QString, bool>::iterator it;
-            for (int i = 0; i < context.count(); ++i) {
-                it = attrs->begin();
+            if(attrs != NULL) {
+                map <QString, bool>::iterator it;
+                for (int i = 0; i < context.count(); ++i) {
+                    it = attrs->begin();
 
-                for (; it != attrs->end(); ++it){
-                    if(it->first.startsWith(context[i]) && !current_attrs.contains(it->first)){
-                        QString str(it->first);
-                        list.push_back(str);
-                        qDebug() << it->first;
+                    for (; it != attrs->end(); ++it){
+                        if(it->first.startsWith(context[i]) && !current_attrs.contains(it->first)){
+                            QString str(it->first);
+                            list.push_back(str);
+                            qDebug() << it->first;
+                        }
                     }
                 }
             }
@@ -100,14 +102,22 @@ void QsciNCLAPIs::autoCompletionSelected(const QString &selection) {
     //delete original word from text
     start = pos - 1;
     strline = lexer()->editor()->text(line);
-    if(start >= 0 && strline.at(start).isLetter())
+
+    //if the user already put a word, delete this word (autocomplete will put it entirely
+    if(start >= 0 && strline.at(start).isLetter()) {
         lexer()->editor()->SendScintilla(QsciScintilla::SCI_DELWORDLEFT);
+
+        //update the start position and the content line
+        lexer()->editor()->getCursorPosition(&line, &pos);
+        strline = lexer()->editor()->text(line);
+        start = pos-1;
+    }
 
     if(suggesting == SUGGESTING_ELEMENTS) {
         QString attributes = getRequiredAttributesAsStr(selection);
 
-        if(start >= 0 && strline.at(start).isLetter())
-            lexer()->editor()->SendScintilla(QsciScintilla::SCI_DELWORDLEFT);
+        /*if(start >= 0 && strline.at(start).isLetter())
+            lexer()->editor()->SendScintilla(QsciScintilla::SCI_DELWORDLEFT);*/
 
         if(start < 0 || strline.at(start) != '<')
             outputStr += "<";
@@ -127,15 +137,22 @@ void QsciNCLAPIs::autoCompletionSelected(const QString &selection) {
 
     } else if(suggesting == SUGGESTING_ATTRIBUTES){
         outputStr = selection + "=\"\"";
+
+        //if the attribute is just after another word, put a space between then
+        if(start >= 0){
+            QChar ch = strline.at(start);
+            qDebug() << ch;
+            if(!ch.isSpace())
+                outputStr.prepend(' ');
+        }
     }
 
     //insert the new word (already managed)
     lexer()->editor()->insert(outputStr);
     //fix identation
     if(fixidentation){
-        int lineindent = lexer()->editor()->SendScintilla(QsciScintilla::SCI_GETLINEINDENTATION, line);
-        qDebug() << "lineident = " << lineindent;
-        lexer()->editor()->SendScintilla(QsciScintilla::SCI_SETLINEINDENTATION, line+1, lineindent);
+        int lineident = lexer()->editor()->SendScintilla(QsciScintilla::SCI_GETLINEINDENTATION, line);
+        lexer()->editor()->SendScintilla(QsciScintilla::SCI_SETLINEINDENTATION, line+1, lineident);
     }
 
     //move cursor to the new position
