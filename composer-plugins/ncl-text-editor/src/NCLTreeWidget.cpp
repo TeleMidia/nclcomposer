@@ -14,7 +14,7 @@ bool NCLTreeWidget::updateFromText(QString text)
 {
     qDebug() << "MainWindow::updateTreeWidget()";
     QStringList labels;
-    labels << QObject::tr("Element") << QObject::tr("id") << QObject::tr("Line");
+    labels << QObject::tr("Element") << QObject::tr("id") << QObject::tr("Line") << QObject::tr("Column");
     QXmlInputSource inputSource;
     inputSource.setData( text );
     QXmlSimpleReader reader;
@@ -33,6 +33,23 @@ bool NCLTreeWidget::updateFromText(QString text)
 
     return ret;
 }
+
+QTreeWidgetItem* NCLTreeWidget::addElement ( QTreeWidgetItem *father,
+                                 int pos,
+                                 QString tagname,
+                                 QString id,
+                                 int line_in_text,
+                                 int column_in_text)
+{
+    QTreeWidgetItem *child = new QTreeWidgetItem(father);
+    father->insertChild(pos, child);
+    child->setText(0, tagname);
+    child->setText(1, id);
+    child->setText(2, QString::number(line_in_text));
+    child->setText(3, QString::number(column_in_text));
+    return child;
+}
+
 /*
 void NCLTreeWidget::showContextMenu(const QPoint& pnt)
 {

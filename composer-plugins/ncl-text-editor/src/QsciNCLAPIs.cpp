@@ -116,9 +116,6 @@ void QsciNCLAPIs::autoCompletionSelected(const QString &selection) {
     if(suggesting == SUGGESTING_ELEMENTS) {
         QString attributes = getRequiredAttributesAsStr(selection);
 
-        /*if(start >= 0 && strline.at(start).isLetter())
-            lexer()->editor()->SendScintilla(QsciScintilla::SCI_DELWORDLEFT);*/
-
         if(start < 0 || strline.at(start) != '<')
             outputStr += "<";
         outputStr += selection + " " + attributes;

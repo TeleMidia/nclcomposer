@@ -235,7 +235,7 @@ void MainWindow::createTreeView()
     treeWidget->setContextMenuPolicy(Qt::ActionsContextMenu);
 
     nodeMenu = new QMenu(treeWidget);
-    insertNodeChild = new QAction(QIcon(":/images/save.png"), tr("&Insert Child"), this);
+    insertNodeChild = new QAction(QIcon(":/images/save.png"), tr("&Add child"), this);
     connect(insertNodeChild, SIGNAL(triggered()), this, SLOT(insertElement()));
     treeWidget->addAction(insertNodeChild);
 
@@ -363,17 +363,9 @@ void MainWindow::gotoLineOf(QTreeWidgetItem *item, int column)
 
 
 //FIXME:    1. fix line element line numbers.
-//          2. If element father is a closed in the same line, open it.
+//          2. If element father is a start-closed tag in the same line, open it.
 void MainWindow::insertElement(){
     bool ok;
-    /*QString element = QInputDialog::getText(
-            this,
-            tr("String"),
-            tr("Element name:"),
-            QLineEdit::Normal,
-            tr(""),
-            &ok ); */
-
     QList<QTreeWidgetItem*> selecteds = treeWidget->selectedItems ();
     QTreeWidgetItem *item = selecteds.at (0);
     int line = item->text(2).toInt ( &ok, 10 );
@@ -381,31 +373,41 @@ void MainWindow::insertElement(){
 
     QStringList strlist;
     map <QString, char> * children = NCLStructure::getInstance()->getChildren(tagname);
-    map <QString, char>::iterator it;
-    for(it = children->begin(); it != children->end(); ++it){
-        strlist << it->first;
+
+    if(children != NULL) {
+        map <QString, char>::iterator it;
+        for(it = children->begin(); it != children->end(); ++it){
+            strlist << it->first;
+        }
     }
 
     QString element = QInputDialog::getItem(this,
                                 tr("Add child"),
-                                tr("Element"),
+                                tr("Element name:"),
                                 strlist,
                                 0,
                                 true,
                                 &ok);
 
     if(ok && !element.isEmpty()) {
-
         //Add new Element to TreeWidget
-        QTreeWidgetItem *child = new QTreeWidgetItem(child);
-        item->insertChild(0, child);
-        child->setText(0, element);
-        child->setText(1, QString(""));
-        child->setText(2, QString::number(line));
+        treeWidget->addElement(item, 0, tagname, QString(""), line, 0);
 
         //Add new Element to texttWidget
         int endLine = textEdit->SendScintilla(QsciScintilla::SCI_GETLINEENDPOSITION, line-1);
         int beginLine = textEdit->SendScintilla(QsciScintilla::SCI_POSITIONFROMLINE, line-1);
+        int end_element_column = item->text(3).toInt(&ok, 10);
+        bool fix_next_line_indentation = false;
+
+        //find if we are in a "<tagname/>" then open this tag
+        char ch = textEdit->SendScintilla(QsciScintilla::SCI_GETCHARAT, beginLine + end_element_column-1);
+        qDebug() << ch;
+        if (ch == '/') {
+            QString endtag = ">";
+            endtag += "<";
+            textEdit->insertAt(tagname, line-1, end_element_column);
+            textEdit->insertAt(endtag,  line-1, end_element_column-1);
+        }
 
         //put all the required attributes
         //TODO: remove from here (create a function)
@@ -422,14 +424,23 @@ void MainWindow::insertElement(){
 
         element.prepend("<");
         element.append("/>");
+        if(end_element_column != endLine-beginLine) {
+            fix_next_line_indentation = true;
+            element.append("\n");
+        }
+
         element.prepend("\n");
 
-        qDebug() << line << " " << beginLine << " " << endLine << " " << endLine - beginLine;
+        qDebug() << line << " " << beginLine << " " << endLine << " " << end_element_column << " ";
 
-        textEdit->insertAt(element, line-1, endLine-beginLine);
+        textEdit->insertAt(element, line-1, end_element_column);
 
         //fix indentation
         int lineident = textEdit->SendScintilla(QsciScintilla::SCI_GETLINEINDENTATION, line-1);
+        textEdit->SendScintilla(QsciScintilla::SCI_GETLINEINDENTATION, line-1);
+
+        if(fix_next_line_indentation)
+            textEdit->SendScintilla(QsciScintilla::SCI_SETLINEINDENTATION, line+1, lineident);
 
         textEdit->SendScintilla(QsciScintilla::SCI_SETLINEINDENTATION, line, lineident+8);
 

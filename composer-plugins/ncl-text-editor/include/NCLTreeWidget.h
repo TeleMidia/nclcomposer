@@ -17,6 +17,14 @@ public:
 
     bool updateFromText(QString text);
 
+    //! Add an element as child of father and return this element
+    QTreeWidgetItem* addElement ( QTreeWidgetItem *father,
+                                  int pos,
+                                  QString tagname,
+                                  QString id = "",
+                                  int line_in_text = -1,
+                                  int column_in_text = -1);
+
 };
 
 #endif

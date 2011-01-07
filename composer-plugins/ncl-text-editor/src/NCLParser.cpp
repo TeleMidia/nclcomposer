@@ -30,7 +30,8 @@ bool NCLSaxHandler::startElement(const QString & /* namespaceURI */,
     currentItem->setIcon(0, icon);
     currentItem->setText(0, localName);
     currentItem->setText(1, attributes.value("id"));
-    currentItem->setText(2, QString::number(locator->lineNumber()) );
+    currentItem->setText(2, QString::number(locator->lineNumber()));
+    currentItem->setText(3, QString::number(locator->columnNumber()));
     return true;
 }
 
@@ -45,13 +46,6 @@ bool NCLSaxHandler::endElement(const QString & /* namespaceURI */,
                                const QString & /* qName */)
 {
     currentItem = currentItem->parent();
-    /*if (currentItem) {
-        QString allPages = currentItem->text(1);
-        if (!allPages.isEmpty())
-            allPages += ", ";
-        allPages += currentText;
-        currentItem->setText(1, allPages);
-    }*/
     return true;
 }
 
@@ -62,6 +56,7 @@ bool NCLSaxHandler::fatalError(const QXmlParseException &exception)
                          .arg(exception.lineNumber())
                          .arg(exception.columnNumber())
                          .arg(exception.message());
+
     return false;
 }
 
