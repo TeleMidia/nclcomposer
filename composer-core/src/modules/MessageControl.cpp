@@ -40,7 +40,7 @@ namespace module {
     void MessageControl::onAddEntity( EntityType entity,
                    string parentEntityId, map<string,string>& atts,
                    bool force) {
-        IPluginMessage *plugin = qobject_cast<IPluginMessage *>
+        IPlugin *plugin = qobject_cast<IPlugin *>
                                                         (QObject::sender());
         if(plugin) {
             sender = plugin;
@@ -58,7 +58,7 @@ namespace module {
 
     void MessageControl::onEditEntity(EntityType type,Entity *entity,
                                       map<string,string>& atts, bool force) {
-        IPluginMessage *plugin = qobject_cast<IPluginMessage *>
+        IPlugin *plugin = qobject_cast<IPlugin *>
                                                         (QObject::sender());
         if(plugin) {
             setSender(plugin);
@@ -78,7 +78,7 @@ namespace module {
     void MessageControl::onRemoveEntity( EntityType type, Entity *entity,
                                          bool force) {
 
-        IPluginMessage *plugin = qobject_cast<IPluginMessage *>
+        IPlugin *plugin = qobject_cast<IPlugin *>
                                                         (QObject::sender());
         if(plugin) {
             setSender(plugin);

@@ -3,7 +3,7 @@
 
 #include <QtPlugin>
 #include <QString>
-#include "IPluginMessage.h"
+#include "IPlugin.h"
 using namespace composer::core::plugin;
 
 //!  A factory interface for build plugins instances.
@@ -31,7 +31,7 @@ namespace plugin {
           /*!
             \return The new plugin instace.
           */
-        virtual IPluginMessage* createPluginInstance()  = 0;
+        virtual IPlugin* createPluginInstance()  = 0;
         //! When a NclDocument is closed by the user, or is no longer needed,
         //!    the core is going to use this call to release the plugin instance
         //!    that was associated with this NclDocument. This call free
@@ -40,7 +40,7 @@ namespace plugin {
             \param The new plugin instace.
           */
         virtual void            releasePluginInstance
-                                           (IPluginMessage *) = 0;
+                                           (IPlugin *) = 0;
 
 };
 

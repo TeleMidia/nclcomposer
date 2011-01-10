@@ -10,12 +10,13 @@
 #include <QMap>
 #include <QString>
 
+/*
 namespace composer {
 namespace core {
 namespace module {
 class ProjectControl;
 } } }
-
+*/
 #include "IModule.h"
 using namespace composer::core::module;
 

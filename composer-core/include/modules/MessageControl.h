@@ -21,7 +21,7 @@ using namespace ncm;
 #include <model/functional/Document.h>
 using namespace ncm::functional;
 
-#include "../plugin/IPluginMessage.h"
+#include "../plugin/IPlugin.h"
 using namespace composer::core::plugin;
 
 #include "IModule.h"
@@ -42,17 +42,17 @@ namespace module {
             static MessageControl *instance;
             Layout  *layoutFacade;
             Document *documentFacade;
-            IPluginMessage *sender;
+            IPlugin *sender;
             QReadWriteLock lockSender;
             QMutex mutex;
             static QMutex instMutex;
 
             //TODO - rever essa logica
-            inline void setSender(IPluginMessage *sender) {
+            inline void setSender(IPlugin *sender) {
                 QWriteLocker locker(&lockSender);
                 this->sender = sender;
             }
-            inline IPluginMessage* getSender() {
+            inline IPlugin* getSender() {
                 QReadLocker locker(&lockSender);
                 return this->sender;
             }

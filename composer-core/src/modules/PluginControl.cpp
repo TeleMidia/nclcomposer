@@ -13,12 +13,12 @@ namespace module {
          QHashIterator<QString,IPluginFactory*> itFac(pluginFactories);
 
          IPluginFactory *atualFactory = NULL;
-         IPluginMessage *atualInstance = NULL;
+         IPlugin *atualInstance = NULL;
          while(itFac.hasNext()){
              atualFactory = itFac.value();
-             QList<IPluginMessage*> instances = pluginInstances.values
+             QList<IPlugin*> instances = pluginInstances.values
                                                         (itFac.key());
-             QListIterator<IPluginMessage*> itInst(instances);
+             QListIterator<IPlugin*> itInst(instances);
              while(itInst.hasNext()) {
                  atualInstance = itInst.next();
                  atualFactory->releasePluginInstance(atualInstance);
@@ -52,7 +52,7 @@ namespace module {
     void PluginControl::onNewDocument(NclDocument *nclDoc) {
         QHashIterator<QString,IPluginFactory*> it(pluginFactories);
         IPluginFactory *pluginBuilder;
-        IPluginMessage *pluginInstance;
+        IPlugin *pluginInstance;
         while (it.hasNext()) {
             pluginBuilder  = it.value();
             pluginInstance = pluginBuilder->createPluginInstance();
@@ -66,7 +66,7 @@ namespace module {
         }
     }
 
-    void PluginControl::launchNewPlugin(IPluginMessage *plugin) {
+    void PluginControl::launchNewPlugin(IPlugin *plugin) {
 
         for (int i = 0; i < TOTALENTITIES; i++) {
             if (plugin->listenFilter(EntityType(i))) {
@@ -95,7 +95,7 @@ namespace module {
         }//endfor
     }
 
-    void PluginControl::connectRegion(IPluginMessage *plugin) {
+    void PluginControl::connectRegion(IPlugin *plugin) {
         connect(messageControl,SIGNAL(regionAdded(Region*)),plugin,
                 SLOT(onEntityAdded(Entity*))); 
         connect(messageControl,SIGNAL(regionChanged(Region*)), plugin,
@@ -106,7 +106,7 @@ namespace module {
                 SLOT(onEntityAboutToRemove(Entity*)),Qt::BlockingQueuedConnection);
     }
 
-    void PluginControl::connectRegionBase(IPluginMessage *plugin) {
+    void PluginControl::connectRegionBase(IPlugin *plugin) {
         connect(messageControl,SIGNAL(regionBaseAdded(Region*)), plugin,
                 SLOT(onEntityAdded(Entity*)));
         connect(messageControl,SIGNAL(regionBaseChanged(Region*)), plugin,

@@ -17,7 +17,7 @@ namespace plugin {
 class DocumentParser;
 } } }
 
-#include "../plugin/IPluginMessage.h"
+#include "../plugin/IPlugin.h"
 using namespace composer::core::plugin;
 
 #include <model/ncm/NclDocument.h>
@@ -33,7 +33,7 @@ namespace composer {
 namespace core {
 namespace plugin {
 
-    class DocumentParser : public IPluginMessage
+    class DocumentParser : public IPlugin
 {
     Q_OBJECT
     public:
@@ -45,6 +45,8 @@ namespace plugin {
         bool parseElement(QDomElement element);
 
         bool listenFilter(EntityType );
+
+        QWidget* getWidget() { return NULL;}
 
     private:
         QDomDocument nclDomDocument;

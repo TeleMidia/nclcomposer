@@ -32,7 +32,7 @@ namespace core {
 namespace plugin {
 
 
-    class IPluginMessage : public QObject {
+    class IPlugin : public QObject {
         Q_OBJECT
 
         private:

@@ -17,7 +17,7 @@
 
 #include "MessageControl.h"
 #include "../plugin/IPluginFactory.h"
-#include "../plugin/IPluginMessage.h"
+#include "../plugin/IPlugin.h"
 using namespace composer::core::plugin;
 
 namespace composer {
@@ -27,15 +27,15 @@ namespace module {
         Q_OBJECT
         private:
             QHash<QString,IPluginFactory*> pluginFactories;
-            QMultiHash<QString,IPluginMessage*> pluginInstances;
+            QMultiHash<QString,IPlugin*> pluginInstances;
             MessageControl *messageControl;
-            void connectRegion(IPluginMessage *);
-            void connectRegionBase(IPluginMessage *);
+            void connectRegion(IPlugin *);
+            void connectRegionBase(IPlugin *);
         public:
             PluginControl(MessageControl *message);
             ~PluginControl();
             void loadPlugins(QString pluginsDirPath);
-            void launchNewPlugin(IPluginMessage *);
+            void launchNewPlugin(IPlugin *);
         public slots:
             void onNewDocument(NclDocument *nclDoc);
 
