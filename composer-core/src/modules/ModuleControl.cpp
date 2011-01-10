@@ -39,9 +39,15 @@ IModule* ModuleControl::getModule(QString moduleName) {
             return messageControl;
     if (moduleName == "project")
             return projectControl;
-    if (moduleName == "module")
-            return NULL;
+    if (moduleName == "module") {
+            //return this->getInstance();
             //return ModuleControl::getInstance();
+        QMutexLocker locker(&instMutex);
+        if (!instance) {
+            instance = new ModuleControl();
+        }
+        return instance;
+    }
     return NULL;
 }
 

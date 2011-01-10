@@ -14,6 +14,7 @@ using namespace std;
 using namespace ncm;
 
 #include "../util/EntityUtil.h"
+using namespace composer::core::util;
 
 //!  The interface for communication between the core and the plugin
 /*!
@@ -70,12 +71,16 @@ namespace plugin {
         public slots:
              //! This is called by the core when a new Entity is added
              /*!
-                This call gives the possibilite to the core to filter
-                wich Entities changes are goign to be notified for this plugin.
-                Through this mechanism plugins can listen to changes in a specific
-                set of Entities, and all the filter control is made by the core.
+                This call is invoked by the core when a new Entity that this
+                particular plugin is listening is added.
              */
              virtual void onEntityAdded(Entity *) = 0;
+             //! This is called by the core when the adding a new Entity was ignored
+             /*!
+                This call is invoked by the core to notify the plugin that the
+                new Entity it was trying to add to e the NclDocument was ignored
+                because of an error.
+             */
              virtual void onEntityAddError(string error) = 0;
              /** TODO Lembrar se ele tiver mudado o ID */
              virtual void onEntityChanged(Entity *) = 0;
