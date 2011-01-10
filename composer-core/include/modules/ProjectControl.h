@@ -44,8 +44,8 @@ namespace module {
             DocumentParser *documentParser;
 
         public:
-            IModule* getInstance();
-            void     releaseInstance();
+            static IModule* getInstance();
+            static void     releaseInstance();
 
             /** Abre uma base privada existente localizada pelo parâmetro
                 location. Se a base privada não existir ou se o parâmetro

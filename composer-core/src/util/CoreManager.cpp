@@ -7,22 +7,19 @@ namespace util {
 
     CoreManager::CoreManager(QObject *parent) :
         QObject(parent) {
-        moduleControl = (ModuleControl*)ModuleControl::getModule("module");
+
     }
 
     CoreManager::~CoreManager() {
-        //TODO: releaseInstance IModule ??
-        //ModuleControl::releaseInstance();
-        moduleControl = NULL;
+
     }
 
     void CoreManager::addProject(QString projectId,QString location) {
-        ProjectControl *projectControl = (ProjectControl*)
-                                         moduleControl->getModule("project");
+        ProjectControl *projectControl = (ProjectControl *) ProjectControl::getInstance();
+
         QDir dir(location);
 
         if (dir.exists()) {
-
             projectControl->createProject(projectId,location);
             emit projectCreated(projectId,location);
             QStringList filters;
@@ -63,8 +60,8 @@ namespace util {
     }
 
     void CoreManager::createProject(QString name, QString location){
-        ProjectControl *projectControl = (ProjectControl*)
-                                         moduleControl->getModule("project");
+        ProjectControl *projectControl = (ProjectControl *) ProjectControl::getInstance();
+
         QDir dir(location);
         QDir dirEx(location + "/" + name);
 
@@ -87,8 +84,7 @@ namespace util {
     void CoreManager::addDocument(QString name,QString location,
                                   QString projectId, bool copy) {
 
-        ProjectControl *projectControl = (ProjectControl*)
-                                         moduleControl->getModule("project");
+        ProjectControl *projectControl = (ProjectControl *) ProjectControl::getInstance();
 
         if(projectControl->addDocument(projectId,location,name,copy)) {
             emit documentAdded(projectId,name,location);
@@ -104,8 +100,8 @@ namespace util {
     }
 
     bool CoreManager::saveSettings() {
-        ProjectControl *projectControl = (ProjectControl*)
-                                         moduleControl->getModule("project");
+        ProjectControl *projectControl = (ProjectControl *) ProjectControl::getInstance();
+
         if (!projectControl->saveAllProjects()) {
             emit onError(tr("Could not save the current projects"));
             return false;

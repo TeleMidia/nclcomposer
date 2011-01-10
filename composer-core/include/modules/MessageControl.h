@@ -58,24 +58,24 @@ namespace module {
             }
 
         public:
-            IModule* getInstance();
+            static IModule* getInstance();
             void     releaseInstance();
 
         private:
             void addRegion(string parentRegionId,
                            map<string,string>&, bool force);
 
-            void editRegion( Region *, map<string,string>& atts,
+            void editRegion( ncm::Region *, map<string,string>& atts,
                            bool force);
-            void removeRegion( Region *, bool force);
+            void removeRegion( ncm::Region *, bool force);
 
             void addRegionBase(map<string,string>& atts,
                            bool force);
 
-            void editRegionBase( Region *, map<string,string> &,
+            void editRegionBase( ncm::Region *, map<string,string> &,
                            bool force);
 
-            void removeRegionBase( Region *, bool force);
+            void removeRegionBase( ncm::Region *, bool force);
 
             void addEntity(EntityType entity, string parentEntityId,
                            map<string,string>& atts, bool force);
@@ -96,24 +96,24 @@ namespace module {
 
 
         signals:
-            void regionAdded(Region *);
+            void regionAdded(ncm::Region *);
             void regionAddError(string error);
             /** TODO Lembrar se ele tiver mudado o ID */
-            void regionChanged(Region *);
+            void regionChanged(ncm::Region *);
             void regionChangeError(string error);
             /** Lembrar de ele apagar a sua referência interna */
-            void aboutToRemoveRegion(Region *);
+            void aboutToRemoveRegion(ncm::Region *);
             void regionRemoved(string regionId);
             void regionRemoveError(string error);
-            void regionBaseAdded(Region *);
+            void regionBaseAdded(ncm::Region *);
             void regionBaseAddError(string error);
             /** TODO Lembrar se ele tiver mudado o ID */
-            void regionBaseChanged(Region *);
+            void regionBaseChanged(ncm::Region *);
             void regionBaseChangeError(string error);
             /** Lembrar de ele apagar a sua referência interna */
             void regionBaseRemoved(string regionBaseId);
             void regionBaseRemoveError(string error);
-            void aboutToRemoveRegionBase(Region *);
+            void aboutToRemoveRegionBase(ncm::Region *);
     };
 }
 }

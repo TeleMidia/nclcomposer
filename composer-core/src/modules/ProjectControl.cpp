@@ -5,6 +5,7 @@ namespace core {
 namespace module {
 
     ProjectControl *ProjectControl::instance = NULL;
+    QMutex ProjectControl::instMutex;
 
     ProjectControl::ProjectControl() {
         this->activeProject = NULL;

@@ -3,13 +3,18 @@
 # -------------------------------------------------
 QT -= gui
 QT += xml
+TEMPLATE = lib
 TARGET = ComposerCoreControl
-CONFIG += release
+CONFIG += qt release
+MOC_DIR = mocs
+OBJECTS_DIR = objs
+
 macx::MODEL_LOCATION = /Library/Frameworks
 else:unix:MODEL_LOCATION = /usr/local
-macx:CONFIG += lib_bundle \
-    x86
+
+macx:CONFIG += lib_bundle x86
 debug:INSTALLBASE = ./debug
+
 release {
     macx:INSTALLBASE = /Library/Frameworks
     else:unix:INSTALLBASE = /usr/local
@@ -21,33 +26,29 @@ macx {
     INCLUDEPATH += /Library/Frameworks/ComposerCoreModel.framework/
 }
 else:unix { 
-    LIBS += -L/usr/local/lib/composer/model -lComposerCoreModel
+    LIBS += -L/usr/local/lib/composer -lComposerCoreModel
     INCLUDEPATH += $$MODEL_LOCATION/include/composer
 }
 
-DESTDIR = $$INSTALLBASE/lib/composer/control
+target.path = $$INSTALLBASE/lib/composer
 
-TEMPLATE = lib
-MOC_DIR = mocs
-OBJECTS_DIR = objs
 DEFINES += COMPOSERCORECONTROL_LIBRARY
 
-SOURCES += src/modules/MessageControl.cpp \
+SOURCES += \
     src/modules/ProjectControl.cpp \
-    src/modules/ModuleControl.cpp \
     src/modules/PluginControl.cpp \
     src/modules/TransactionControl.cpp \
     src/util/Project.cpp \
     src/util/EntityUtil.cpp \
     src/util/CoreManager.cpp \
-    src/util/DocumentParser.cpp
+    src/util/DocumentParser.cpp \
+    src/modules/MessageControl.cpp
 
 HEADERS_MAN += include/modules/MessageControl.h \
     include/modules/ProjectControl.h \
     include/modules/PluginControl.h \
     include/modules/TransactionControl.h \
-    include/modules/IModule.h \
-    include/modules/ModuleControl.h
+    include/modules/IModule.h
 
 HEADERS_UTIL +=include/util/ComposerCoreControl_global.h \
     include/util/Project.h \
@@ -60,15 +61,12 @@ HEADERS_PLUGIN += include/plugin/IPluginMessage.h \
 
 HEADERS = $$HEADERS_UTIL $$HEADERS_PLUGIN $$HEADERS_MAN
 
-
-
-
 headers_man.files = $$HEADERS_MAN
 headers_plugin.files = $$HEADERS_PLUGIN
 headers_util.files = $$HEADERS_UTIL
 
 macx { 
-    DESTDIR = $$INSTALLBASE/
+    target.path = $$INSTALLBASE/
     QMAKE_FRAMEWORK_BUNDLE_NAME = ComposerCoreControl
     headers_man.path = control/modules
     headers_plugin.path = control/plugin
@@ -81,6 +79,6 @@ else:unix {
     headers_plugin.path = $$HEADERS_PATH_UNIX/control/plugin
     headers_util.path = $$HEADERS_PATH_UNIX/control/util
     #headers.CONFIG += no_all
-    INSTALLS += headers_man headers_plugin headers_util
+    INSTALLS += headers_man headers_plugin headers_util target
     PRE_TARGETDEPS += install_headers_man install_headers_plugin install_headers_util
 }else:win32:

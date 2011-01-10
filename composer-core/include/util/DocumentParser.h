@@ -23,8 +23,8 @@ using namespace composer::core::plugin;
 #include <model/ncm/NclDocument.h>
 using namespace ncm;
 
-#include "../modules/ModuleControl.h"
-using namespace composer::core::module;
+//#include "../modules/ModuleControl.h"
+//using namespace composer::core::module;
 
 #include "EntityUtil.h"
 using namespace composer::core::util;

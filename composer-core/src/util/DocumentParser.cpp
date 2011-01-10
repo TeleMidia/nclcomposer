@@ -8,13 +8,13 @@ namespace plugin {
 DocumentParser::DocumentParser() {
     //nclDomDocument = NULL;
     util = EntityUtil::getInstance();
-    ModuleControl *moduleControl =
-                        (ModuleControl*)ModuleControl::getModule("module");
-    connect(this,SIGNAL(addEntity(EntityType,string,
+    //ModuleControl *moduleControl = (ModuleControl*) ModuleControl::getModule("module");
+
+    /*connect(this,SIGNAL(addEntity(EntityType,string,
                         map<string,string>&,bool)),
             moduleControl->getModule("message"),
             SLOT(onAddEntity(EntityType,string,
-                        map<string,string>&,bool)));
+                        map<string,string>&,bool))); */
 
 }
 

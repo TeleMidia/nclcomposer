@@ -7,6 +7,7 @@ namespace core {
 namespace module {
 
     MessageControl *MessageControl::instance = NULL;
+    QMutex MessageControl::instMutex;
 
     MessageControl::MessageControl() {
         QMutexLocker locker(&mutex);

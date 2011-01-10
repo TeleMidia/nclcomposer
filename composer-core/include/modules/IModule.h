@@ -11,8 +11,9 @@ namespace composer{
         Q_OBJECT
         public:
             virtual ~IModule() {};
-            virtual IModule* getInstance() = 0;
-            virtual void     releaseInstance() = 0;
+            /** WARNING: THIS FUNCTIONS MUST BE REIMPLEMENTED */
+            static IModule* getInstance() { return NULL; };
+            static void     releaseInstance() { return; };
     };
 
         }

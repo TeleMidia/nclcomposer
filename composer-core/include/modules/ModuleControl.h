@@ -15,7 +15,7 @@ namespace module {
 
     class ModuleControl : public IModule {
         public:
-            IModule* getInstance();
+            static IModule* getInstance();
             void     releaseInstance();
             static IModule*  getModule(QString moduleName);
 
