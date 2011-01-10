@@ -5,6 +5,8 @@ TARGET = Composer
 TEMPLATE = app
 CONFIG += debug
 QT += xml
+MOC_DIR = mocs
+OBJECTS_DIR = objs
 
 macx:LOCATION = /Library/Frameworks
 else:unix:LOCATION = /usr/local
@@ -25,10 +27,12 @@ macx {
         /Library/Frameworks/ComposerCoreControl.framework/
 }
 else:unix { 
-    LIBS += -lComposerCoreModel \
+    LIBS += -L/usr/local/lib/composer -lComposerCoreModel \
         -lComposerCoreControl
-    INCLUDEPATH += $$LOCATION/include/model \
-        $$LOCATION/include/control
+    INCLUDEPATH += $$LOCATION/include/composer/model \
+        $$LOCATION/include/composer/control \
+        $$LOCATION/include/composer
+
 }
 SOURCES += main.cpp \
     src/gui/MainWindow.cpp \
@@ -37,8 +41,6 @@ SOURCES += main.cpp \
     src/gui/wizard/IntroPage.cpp \
     src/gui/wizard/EntryPage.cpp \
     #src/manager/CoreManager.cpp
-
-
 
 HEADERS_GUI += include/gui/MainWindow.h \
     include/gui/wizard/MainWizard.h \
@@ -49,5 +51,5 @@ HEADERS_GUI += include/gui/MainWindow.h \
 HEADERS_MANAGER +=  #include/manager/CoreManager.h
 RESOURCES += images.qrc
 
-HEADERS += $$HEADERS_GUI $$HEADERS_MANAGER \
+HEADERS += $$HEADERS_GUI $$HEADERS_MANAGER
 
