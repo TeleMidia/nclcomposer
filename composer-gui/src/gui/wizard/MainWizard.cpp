@@ -23,7 +23,7 @@ void MainWizard::accept() {
     location    = field("location").toString();
     //TODO - melhorar pegando o checkbox ... e juntando em um só sinal
     if (projectId != "") {
-        emit infoReceived(name,location,projectId,true);
+        emit infoReceived(name,location+QDir::separator()+name,projectId,true);
     } else {
         emit infoReceived(name,location);
     }

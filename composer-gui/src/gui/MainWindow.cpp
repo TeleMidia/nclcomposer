@@ -34,7 +34,8 @@ void MainWindow::readSettings() {
         while (it.hasNext()) {
             QString projectId = it.next();
             QString location  = settings.value(projectId).toString();
-            cManager->createProject(projectId,location);
+            qDebug() << "READ projectId: " << projectId << "location: " << location;
+            cManager->addProject(projectId,location);
         }
     settings.endGroup();
 }
