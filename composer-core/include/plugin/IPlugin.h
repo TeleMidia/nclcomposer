@@ -1,5 +1,5 @@
-#ifndef ILAYOUTMESSAGE_H
-#define ILAYOUTMESSAGE_H
+#ifndef IPLUGIN_H
+#define IPLUGIN_H
 
 #include <QObject>
 #include <QMutexLocker>
@@ -68,6 +68,15 @@ namespace plugin {
                 \param the EntityType that is going to be filtered
              */
              virtual bool listenFilter(EntityType ) = 0;
+
+             //! Return the main Widget
+             /*!
+               The core calls this method to retrieve the Plugin Interface
+               This Widget is going to be wrapped into a QDockWidget
+               and then displayed for the user in the main interface
+                \return QWidget - wrapping the plugin interface
+             */
+             virtual QWidget* getWidget() = 0;
         public slots:
              //! This is called by the core when a new Entity is added
              /*!
@@ -103,4 +112,4 @@ namespace plugin {
 }
 }
 
-#endif // ILAYOUTMESSAGE_H
+#endif // IPLUGIN_H

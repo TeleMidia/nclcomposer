@@ -56,7 +56,7 @@ HEADERS_UTIL +=include/util/ComposerCoreControl_global.h \
     include/util/EntityUtil.h \
     include/util/CoreManager.h
 
-HEADERS_PLUGIN += include/plugin/IPluginMessage.h \
+HEADERS_PLUGIN += include/plugin/IPlugin.h \
     include/plugin/IPluginFactory.h
 
 HEADERS = $$HEADERS_UTIL $$HEADERS_PLUGIN $$HEADERS_MAN
@@ -66,7 +66,7 @@ headers_plugin.files = $$HEADERS_PLUGIN
 headers_util.files = $$HEADERS_UTIL
 
 macx { 
-    target.path = $$INSTALLBASE/
+    DESTDIR = $$INSTALLBASE/
     QMAKE_FRAMEWORK_BUNDLE_NAME = ComposerCoreControl
     headers_man.path = control/modules
     headers_plugin.path = control/plugin
