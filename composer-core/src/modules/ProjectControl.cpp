@@ -9,7 +9,7 @@ namespace module {
 
     ProjectControl::ProjectControl() {
         this->activeProject = NULL;
-        this->documentParser = new DocumentParser();
+
     }
 
     ProjectControl::~ProjectControl() {
@@ -23,11 +23,19 @@ namespace module {
             p = NULL;
         }
         projects.clear();
-        delete documentParser;
-        documentParser = NULL;
+
+        QMapIterator<QString,DocumentParser*> itP(parsers);
+        while(itP.hasNext()){
+            itP.next();
+            DocumentParser *doc = itP.value();
+            parsers.remove(itP.key());
+            delete doc;
+            doc = NULL;
+        }
+        parsers.clear();
     }
 
-    IModule* ProjectControl::getInstance(){
+    ProjectControl* ProjectControl::getInstance(){
         QMutexLocker locker(&instMutex);
         if (!instance) {
             instance = new ProjectControl();
@@ -49,6 +57,10 @@ namespace module {
     }
 
     Project* ProjectControl::createProject(QString projectId, QString location) {
+
+        qDebug() << "ProjectControl::createProject(" << projectId << ", "
+                 << location << ")";
+
         lockProjects.lockForRead();
         if (!projects.contains(projectId)) {
             lockProjects.unlock();
@@ -116,8 +128,9 @@ namespace module {
             it.next();
             Project *p = it.value();
             settings.setValue(p->getProjectId(),p->getLocation());
-            qDebug() << "SAVEALL projectId: " << p->getProjectId() <<
-                        "location: " << p->getLocation();
+            qDebug() << "ProjectControl::saveAllProjects projectId: "
+                     << p->getProjectId() <<
+                     "location: " << p->getLocation();
             //TODO salvar alterações no NCL
         }
         settings.endGroup();
@@ -140,33 +153,27 @@ namespace module {
         QString projectLocation = p->getLocation();
         if (copy) {
             QString destUri = projectLocation+documentId;
-            if (documentId.endsWith(".ncl")) destUri += ".ncl";
+            if (!documentId.endsWith(".ncl")) destUri += ".ncl";
 
             if (!QFile::copy(uri,destUri)) {
-               qDebug() << tr("addDocument fails on copy the document");
+               qDebug() << "ProjectControl::addDocument" <<
+                           "fails on copy the document";
                return false;
            }
            uri = destUri;
         }
-        if (documentParser->setUpParser(uri)) {
-            if (documentParser->parseDocument()) {
-              //TODO - verify the copy parameter to addDocument in Project
-              if (p->addDocument(documentId,
-                                 documentParser->getNclDocument())) {
-                return true;
-              } else {
-                qDebug() << tr("addDocument fails to addDocument to project");
-                return false;
-              }
-            } else {
-                qDebug() << tr("addDocument fails in parseDocument");
-                return false;
-              }
-            } else {
-                qDebug() << tr("addDocument fails in setUpParser");
-                return false;
-            }
-        return false;
+
+        DocumentParser *docParser = new DocumentParser(documentId,projectId);
+        parsers[projectId+documentId] = docParser;
+
+        connect(docParser,SIGNAL(documentParsed(QString,QString)),this,
+                SLOT(onDocumentParsed(QString,QString)));
+
+        if (!docParser->setUpParser(uri)) {
+          qDebug() << "ProjectControl::addDocument fails in setUpParser";
+          return false;
+        }
+        return true;
     }
 
     bool ProjectControl::removeDocument (QString projectId,
@@ -183,6 +190,29 @@ namespace module {
                                        QString location) {
         //TODO - salvar o documento Ncl
       return true;
+    }
+
+    void ProjectControl::onDocumentParsed(QString projectId,
+                                          QString documentId)
+    {
+        Project *p = getProject(projectId);
+        if (p == NULL) {
+            //Delete parser
+            return;
+        }
+
+        if (parsers.count(projectId+documentId) != 0) {
+            DocumentParser *parser = parsers[projectId+documentId];
+            NclDocument *nclDoc = parser->getNclDocument();
+            if (nclDoc != NULL) {
+                if (p->addDocument(documentId,nclDoc)) {
+                    qDebug() << "ProjectControl::onDocumentParsed("
+                             << projectId << ", " << documentId << ")";
+                    emit documentCreatedAndParsed(documentId,
+                                                  p->getLocation());
+                }
+            }
+        }
     }
 
 }//fim

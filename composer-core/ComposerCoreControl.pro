@@ -5,6 +5,7 @@ QT -= gui
 QT += xml
 TEMPLATE = lib
 TARGET = ComposerCoreControl
+VERSION = 1.0
 CONFIG += qt release
 MOC_DIR = mocs
 OBJECTS_DIR = objs
@@ -30,8 +31,6 @@ else:unix {
     INCLUDEPATH += $$MODEL_LOCATION/include/composer
 }
 
-target.path = $$INSTALLBASE/lib/composer
-
 DEFINES += COMPOSERCORECONTROL_LIBRARY
 
 SOURCES += \
@@ -47,8 +46,7 @@ SOURCES += \
 HEADERS_MAN += include/modules/MessageControl.h \
     include/modules/ProjectControl.h \
     include/modules/PluginControl.h \
-    include/modules/TransactionControl.h \
-    include/modules/IModule.h
+    include/modules/TransactionControl.h
 
 HEADERS_UTIL +=include/util/ComposerCoreControl_global.h \
     include/util/Project.h \
@@ -67,13 +65,15 @@ headers_util.files = $$HEADERS_UTIL
 
 macx { 
     DESTDIR = $$INSTALLBASE/
-    QMAKE_FRAMEWORK_BUNDLE_NAME = ComposerCoreControl
+    QMAKE_FRAMEWORK_BUNDLE_NAME = $$TARGET
     headers_man.path = control/modules
     headers_plugin.path = control/plugin
     headers_util.path = control/util
     QMAKE_BUNDLE_DATA += headers_man headers_plugin headers_util
+
 }
 else:unix { 
+    target.path = $$INSTALLBASE/lib/composer
     HEADERS_PATH_UNIX = $$INSTALLBASE/include/composer
     headers_man.path = $$HEADERS_PATH_UNIX/control/modules
     headers_plugin.path = $$HEADERS_PATH_UNIX/control/plugin

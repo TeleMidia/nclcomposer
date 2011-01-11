@@ -32,7 +32,7 @@ namespace module {
             void connectRegion(IPlugin *);
             void connectRegionBase(IPlugin *);
         public:
-            PluginControl(MessageControl *message);
+            PluginControl();
             ~PluginControl();
             void loadPlugins(QString pluginsDirPath);
             void launchNewPlugin(IPlugin *);

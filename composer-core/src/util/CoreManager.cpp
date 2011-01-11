@@ -8,6 +8,9 @@ namespace util {
     CoreManager::CoreManager(QObject *parent) :
         QObject(parent) {
 
+        connect(ProjectControl::getInstance(),
+                SIGNAL(documentCreatedAndParsed(QString,QString)),
+                SIGNAL(documentAdded(QString,QString)));
     }
 
     CoreManager::~CoreManager() {
@@ -15,7 +18,10 @@ namespace util {
     }
 
     void CoreManager::addProject(QString projectId,QString location) {
-        ProjectControl *projectControl = (ProjectControl *) ProjectControl::getInstance();
+        ProjectControl *projectControl = ProjectControl::getInstance();
+
+        qDebug() << "CoreManager::addProject(" << projectId << ", "
+                 << location << ")";
 
         QDir dir(location);
 
@@ -25,7 +31,8 @@ namespace util {
             QStringList filters;
             //filters << "*.ncl";
             //dir.setNameFilters(filters);
-            dir.setFilter(QDir::Files | QDir::AllDirs);
+            dir.setFilter(QDir::Files | QDir::AllDirs
+                          | QDir::NoDotAndDotDot | QDir::NoSymLinks);
             dir.setSorting(QDir::DirsFirst | QDir::Name);
             addFilesInDirectory(dir,projectId);
         } else { //dir dont exists
@@ -37,20 +44,25 @@ namespace util {
 
     void CoreManager::addFilesInDirectory(QDir dir, QString projectId) {
         QFileInfoList list = dir.entryInfoList();
-        qDebug() << "Adding files in directory: " << dir.absolutePath();
+
+        qDebug() << "CoreManager::addFilesInDirectory(" <<
+                    dir << ", " << projectId;
+
         for (int i = 0; i < list.size(); ++i) {
            QFileInfo fileInfo = list.at(i);
-           qDebug() << "parsing file: " << fileInfo.fileName();
+           qDebug() << "CoreManager::addFilesInDirectory parsing file: " <<
+                        fileInfo.fileName();
            if (fileInfo.isFile()) {
                QString fileName = fileInfo.fileName();
                QString filePath = fileInfo.absoluteFilePath();
                if (fileName.endsWith(".ncl")) {
-                   qDebug() << "Adding NCL File: " << fileName << "in: " << projectId;
+                   qDebug() << "CoreManager::addFilesInDirectory " <<
+                                "Adding NCL File: " << fileName <<
+                                "in: " << projectId;
                    addDocument(fileName,filePath,projectId,false);
                    return;
                }
-           } else if (fileInfo.isDir() && fileInfo.fileName() != "." &&
-                                          fileInfo.fileName() != ".." ) {
+           } else if (fileInfo.isDir()) {
                //TODO adicionar diretorio no projectTree
                //TODO testar emitindo sinal de projetoCriado
                addFilesInDirectory(fileInfo.dir(),projectId);
@@ -60,7 +72,10 @@ namespace util {
     }
 
     void CoreManager::createProject(QString name, QString location){
-        ProjectControl *projectControl = (ProjectControl *) ProjectControl::getInstance();
+        ProjectControl *projectControl = ProjectControl::getInstance();
+
+        qDebug() << "CoreManager::createProject(" << name << ", "
+                 << location << ")";
 
         QDir dir(location);
         QDir dirEx(location + "/" + name);
@@ -84,15 +99,12 @@ namespace util {
     void CoreManager::addDocument(QString name,QString location,
                                   QString projectId, bool copy) {
 
-        ProjectControl *projectControl = (ProjectControl *) ProjectControl::getInstance();
+        ProjectControl *projectControl = ProjectControl::getInstance();
 
-        if(projectControl->addDocument(projectId,location,name,copy)) {
-            emit documentAdded(projectId,name,location);
-        } else {
+        if(!projectControl->addDocument(projectId,location,name,copy)) {
             emit onError(tr("Could not add the choosen NCL document"));
         }
     }
-
 
 
     void CoreManager::createDocument(QString name, QString projectId) {
@@ -100,7 +112,7 @@ namespace util {
     }
 
     bool CoreManager::saveSettings() {
-        ProjectControl *projectControl = (ProjectControl *) ProjectControl::getInstance();
+        ProjectControl *projectControl = ProjectControl::getInstance();
 
         if (!projectControl->saveAllProjects()) {
             emit onError(tr("Could not save the current projects"));

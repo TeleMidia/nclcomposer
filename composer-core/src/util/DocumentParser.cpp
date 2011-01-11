@@ -5,16 +5,20 @@ namespace core {
 namespace plugin {
 
 
-DocumentParser::DocumentParser() {
+DocumentParser::DocumentParser(QString documentId, QString projectId) {
     //nclDomDocument = NULL;
+    this->documentId = documentId;
+    this->projectId = projectId;
+    setNclDocument(NULL);
     util = EntityUtil::getInstance();
-    //ModuleControl *moduleControl = (ModuleControl*) ModuleControl::getModule("module");
 
-    /*connect(this,SIGNAL(addEntity(EntityType,string,
+    connect(this,SIGNAL(addEntity(EntityType,string,
                         map<string,string>&,bool)),
-            moduleControl->getModule("message"),
+            MessageControl::getInstance(),
             SLOT(onAddEntity(EntityType,string,
-                        map<string,string>&,bool))); */
+                        map<string,string>&,bool)));
+    connect(MessageControl::getInstance(),SIGNAL(nclAdded(Entity*)),
+            this,SLOT(onEntityAdded(Entity*)));
 
 }
 
@@ -26,10 +30,11 @@ DocumentParser::~DocumentParser() {
 
 bool DocumentParser::setUpParser(QString uri) {
 
+    qDebug() << "DocumentParser::setUpParser(" << uri << ")";
     QFile *file = new QFile(uri,this);
     if (!file->open(QIODevice::ReadOnly | QIODevice::Text)) {
-        qDebug() << tr("DOM Parser") << tr("Could not open file %1\n")
-                                        .arg(uri);
+        qDebug() << "DocumentParser::setUpParser"
+                 << tr("Could not open file %1\n").arg(uri);
         return false;
     }
 
@@ -40,13 +45,14 @@ bool DocumentParser::setUpParser(QString uri) {
     if (!nclDomDocument.setContent
         (file, true, &errorStr, &errorLine, &errorColumn)) {
 
-        qDebug() << tr("DOM Parser") <<
-                             tr("Parser error at line %1 , column %2 : %3\n")
-                             .arg(errorLine).arg(errorColumn).arg(errorStr);
+        qDebug() << "DocumentParser::setUpParser" <<
+                     tr("Parser error at line %1 , column %2 : %3\n")
+                     .arg(errorLine).arg(errorColumn).arg(errorStr);
         file->close();
         return false;
     } else {
         map<string,string> atts;
+        atts["id"]    = this->documentId.toStdString();
         atts["xmlns"] = "EDTV Basic Profile";
         emit addEntity(NCL,"",atts,false);
     }
@@ -58,7 +64,8 @@ bool DocumentParser::parseDocument() {
     QDomElement root = nclDomDocument.documentElement();
 
     if (root.tagName() != "ncl") {
-        qDebug() << tr("Not a NCL file.\n");
+        qDebug() << "DocumentParser::parseDocument()" <<
+                    tr("Not a NCL file.\n");
         return false;
     } else {
         QDomNodeList children = root.childNodes();
@@ -67,6 +74,7 @@ bool DocumentParser::parseDocument() {
                 parseElement(children.at(i).toElement());
         }
     }
+    emit documentParsed(projectId,documentId);
     return true;
 }
 
@@ -80,14 +88,15 @@ bool DocumentParser::parseElement(QDomElement element) {
     if (element.parentNode().isElement()) {
         parentElement = element.parentNode().toElement();
     } else {
-        qDebug() << tr("parseElement but the parent is not a element (%1)")
+        qDebug() << "DocumentParser::parseElement" <<
+                    tr("parseElement but the parent is not a element (%1)")
                                                     .arg(element.nodeType());
         return false;
     }
 
     EntityType type = util->getEntityType(element.tagName());
 
-    //qDebug() << "element (" << element.tagName() << ")";
+    qDebug() << "DocumentParser::parseElement (" << element.tagName() << ")";
     /*
     //TODO - lembrar de voltar quando tiver completo
     if (type == NONE) {

@@ -20,7 +20,7 @@ class Project {
     private:
         QReadWriteLock lockString;
         QReadWriteLock lockDocuments;
-        QString location; /*top dir of the project */
+        QString location; /*top dir of the project with separator*/
         QString projectId;
         QMap<QString, NclDocument*> nclDocuments;
         Document *documentFacade;

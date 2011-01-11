@@ -42,6 +42,8 @@ namespace plugin {
         virtual void            releasePluginInstance
                                            (IPlugin *) = 0;
 
+        virtual QString getPluginID() = 0;
+
 };
 
 }

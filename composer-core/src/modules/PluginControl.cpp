@@ -5,8 +5,8 @@ namespace composer {
 namespace core {
 namespace module {
 
-    PluginControl::PluginControl(MessageControl *message) {
-        this->messageControl = message;
+    PluginControl::PluginControl() {
+        this->messageControl = MessageControl::getInstance();
     }
 
     PluginControl::~PluginControl() {
@@ -41,7 +41,12 @@ namespace module {
                  if (plugin) {
                      pluginFactory = qobject_cast<IPluginFactory*> (plugin);
                      if (pluginFactory) {
-                         pluginFactories.insert(fileName,pluginFactory);
+                         QString pluginID = pluginFactory->getPluginID();
+                         if (pluginFactories.contains(pluginID))
+                             qDebug() << "PluginControl::loadPlugins" <<
+                                     "Plugin with ID (" << pluginID <<
+                                     ") already exists";
+                         pluginFactories.insert(pluginID,pluginFactory);
                      } else {
                          //TODO - erro loading plugin
                      }
@@ -60,6 +65,7 @@ namespace module {
                 launchNewPlugin(pluginInstance);
                 pluginInstance->setNclDocument(nclDoc);
                 pluginInstances.insert(it.key(),pluginInstance);
+                //TODO - Pegar o widget e colocar no QDockWidget
             } else {
                 //TODO -- erro creating instance
             }

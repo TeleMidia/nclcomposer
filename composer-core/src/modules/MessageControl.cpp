@@ -21,7 +21,7 @@ namespace module {
         Document::releaseInstance();
     }
 
-    IModule* MessageControl::getInstance(){
+    MessageControl* MessageControl::getInstance(){
         QMutexLocker locker(&instMutex);
         if (!instance) {
             instance = new MessageControl();
@@ -40,8 +40,12 @@ namespace module {
     void MessageControl::onAddEntity( EntityType entity,
                    string parentEntityId, map<string,string>& atts,
                    bool force) {
+
+        /* Cast to IPlugin to make sure it's a plugin */
+
         IPlugin *plugin = qobject_cast<IPlugin *>
                                                         (QObject::sender());
+
         if(plugin) {
             sender = plugin;
             try {
@@ -50,8 +54,9 @@ namespace module {
                 plugin->onEntityAddError(e.what());
                 return;
             }
-        } else {
-            qDebug() << "Trying to add a entity but is not from a plugin";
+        } else { //It's not a plugin
+            qDebug() << "MessageControl::onAddEntity " <<
+                        "Trying to add a entity but is not from a plugin";
             return;
         }
     }
@@ -99,6 +104,9 @@ namespace module {
                                    string parentEntityId, map<string,string>& atts,
                                    bool force) {
         switch(entity) {
+            case NCL:
+                addNcl(atts,force);
+            break;
             case REGION:
                 addRegion(parentEntityId,atts,force);
             break;
@@ -137,10 +145,19 @@ namespace module {
     }
 
 
+    void MessageControl::addNcl(map<string,string>& atts, bool force) {
+        qDebug() << "MessageControl::addNcl " << "creating NCL Document";
+        NclDocument *nclDoc = NULL;
+        nclDoc = documentFacade->createNclDocument(atts);
+
+        emit nclAdded(nclDoc);
+    }
+
     void MessageControl::addRegion(string parentRegionId,
                                    map<string,string> &atts, bool force) {
         Region *region = NULL;
         NclDocument *nclDoc = getSender()->getNclDocument();
+
         region = layoutFacade->addRegion(nclDoc,parentRegionId,atts);
 
         /* Everything worked well, then emit the signal */

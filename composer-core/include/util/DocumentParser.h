@@ -11,11 +11,11 @@
 #include <map>
 using namespace std;
 
-namespace composer {
+/*namespace composer {
 namespace core {
 namespace plugin {
 class DocumentParser;
-} } }
+} } } */
 
 #include "../plugin/IPlugin.h"
 using namespace composer::core::plugin;
@@ -23,12 +23,14 @@ using namespace composer::core::plugin;
 #include <model/ncm/NclDocument.h>
 using namespace ncm;
 
-//#include "../modules/ModuleControl.h"
-//using namespace composer::core::module;
+#include "../modules/MessageControl.h"
+using namespace composer::core::module;
 
 #include "EntityUtil.h"
 using namespace composer::core::util;
 
+
+//TODO - Modelar para ter 1 DocumentParser por Project
 namespace composer {
 namespace core {
 namespace plugin {
@@ -37,7 +39,7 @@ namespace plugin {
 {
     Q_OBJECT
     public:
-        DocumentParser();
+        DocumentParser(QString documentId, QString projectId);
         ~DocumentParser();
 
         bool setUpParser(QString uri);
@@ -48,9 +50,20 @@ namespace plugin {
 
         QWidget* getWidget() { return NULL;}
 
+        inline QString getProjectId() {
+            return this->projectId;
+        }
+
+        inline QString getDocumentId() {
+            return this->documentId;
+        }
+
     private:
         QDomDocument nclDomDocument;
         QMutex mutex;
+        QString documentId;
+        QString projectId;
+
         EntityUtil *util;
 
         inline void setDomDocument(QDomDocument document) {
@@ -71,7 +84,7 @@ namespace plugin {
         void onEntityRemoveError(string error);
 
     signals:
-        void createDocument(map<string,string> &atts);
+        void documentParsed(QString projectId, QString documentId);
 
 };
 

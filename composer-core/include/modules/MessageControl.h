@@ -24,14 +24,11 @@ using namespace ncm::functional;
 #include "../plugin/IPlugin.h"
 using namespace composer::core::plugin;
 
-#include "IModule.h"
-using namespace composer::core::module;
-
 namespace composer {
 namespace core {
 namespace module {
 
-    class MessageControl : public IModule {
+    class MessageControl : public QObject {
             Q_OBJECT
 
       public:
@@ -58,10 +55,12 @@ namespace module {
             }
 
         public:
-            static IModule* getInstance();
-            void     releaseInstance();
+            static MessageControl* getInstance();
+            static void     releaseInstance();
 
         private:
+            void addNcl(map<string,string>&, bool force);
+
             void addRegion(string parentRegionId,
                            map<string,string>&, bool force);
 
@@ -96,6 +95,8 @@ namespace module {
 
 
         signals:
+            void nclAdded(Entity *);
+
             void regionAdded(ncm::Region *);
             void regionAddError(string error);
             /** TODO Lembrar se ele tiver mudado o ID */

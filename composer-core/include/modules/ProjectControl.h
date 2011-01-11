@@ -17,8 +17,6 @@ namespace module {
 class ProjectControl;
 } } }
 */
-#include "IModule.h"
-using namespace composer::core::module;
 
 #include "../util/Project.h"
 using namespace composer::core::util;
@@ -29,7 +27,7 @@ namespace composer {
 namespace core {
 namespace module {
 
-    class ProjectControl : public IModule {
+    class ProjectControl : public QObject{
         Q_OBJECT
         public:
             ProjectControl();
@@ -41,11 +39,11 @@ namespace module {
 
             QReadWriteLock lockProjects;
             Project *activeProject;
-            QMap<QString,Project*> projects;
-            DocumentParser *documentParser;
+            QMap<QString, Project*> projects;
+            QMap<QString, DocumentParser* > parsers;
 
         public:
-            static IModule* getInstance();
+            static ProjectControl* getInstance();
             static void     releaseInstance();
 
             /** Abre uma base privada existente localizada pelo parâmetro
@@ -72,9 +70,15 @@ namespace module {
              bool saveDocument (QString projectId, QString documentId,
                                 QString location);
              Project *getProject(QString projectId);
-             inline Project *getCurrentProject() {return this->activeProject;};
+             inline Project *getCurrentProject() {return this->activeProject;}
+
+         public slots:
+             void onDocumentParsed(QString projectId, QString documentId);
          signals:
              void newActivateProject(Project *);
+             void documentCreatedAndParsed(QString documentId,
+                                           QString location);
+
     };
 }
 }

@@ -25,12 +25,11 @@ public:
     ~CoreManager();
 
 private:
-    IModule *getModule(QString module);
     void addFilesInDirectory(QDir dir, QString projectId);
 
 signals:
     void projectCreated(QString,QString);
-    void documentAdded(QString,QString,QString);
+    void documentAdded(QString,QString);
     void onError(QString);
 
 public slots:
@@ -39,6 +38,7 @@ public slots:
     void addDocument(QString,QString,QString,bool);
     void createDocument(QString,QString);
     bool saveSettings();
+
 };
 
 }
