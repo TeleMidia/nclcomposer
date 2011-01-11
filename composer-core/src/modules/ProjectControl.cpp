@@ -151,8 +151,10 @@ namespace module {
                                       QString  documentId, bool copy) {
         Project *p = getProject(projectId);
         QString projectLocation = p->getLocation();
+
         if (copy) {
-            QString destUri = projectLocation+documentId;
+            QString destUri = projectLocation+QDir::separator()+projectId+
+                              QDir::separator()+documentId;
             if (!documentId.endsWith(".ncl")) destUri += ".ncl";
 
             if (!QFile::copy(uri,destUri)) {

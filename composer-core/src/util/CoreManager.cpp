@@ -23,12 +23,13 @@ namespace util {
         qDebug() << "CoreManager::addProject(" << projectId << ", "
                  << location << ")";
 
-        QDir dir(location);
+        QDir dir(location + QDir::separator() + projectId);
 
         if (dir.exists()) {
             projectControl->createProject(projectId,location);
             emit projectCreated(projectId,location);
-            QStringList filters;
+            //TODO - fazer o filtro certinho
+            //QStringList filters;
             //filters << "*.ncl";
             //dir.setNameFilters(filters);
             dir.setFilter(QDir::Files | QDir::AllDirs
@@ -78,21 +79,29 @@ namespace util {
                  << location << ")";
 
         QDir dir(location);
-        QDir dirEx(location + "/" + name);
+        QDir dirEx(location + QDir::separator() + name);
 
-        if(dir.exists()) {
-            if(dirEx.exists()) {
-                emit onError(tr("A directory with this name already exists"));
+        if (!dir.exists()) {
+            if ( QMessageBox::question((QWidget*)this->parent(),
+                                   tr("The directory does not exists"),
+                                   tr("Do you want to create ?"))
+                == QMessageBox::No) {
+                emit onError(
+                     tr("Directory for this project could not be created"));
                 return;
             }
-            if(dir.mkdir(name)) {
-                projectControl->createProject(name,location);
-                emit projectCreated(name,location);
-            } else {
-                emit onError(tr("Directory for this project could not be created"));
-            }
+        }
+
+        if(dirEx.exists()) {
+            //TODO - asks to create the project anyway
+            emit onError(tr("A directory with this name already exists"));
+            return;
+        }
+        if(dir.mkdir(name)) {
+            projectControl->createProject(name,location);
+            emit projectCreated(name,location);
         } else {
-            emit onError(tr("The choosen directory does not exists."));
+            emit onError(tr("Directory for this project could not be created"));
         }
     }
 

@@ -9,6 +9,8 @@
 #include <QMutex>
 #include <QMutexLocker>
 
+#include <QMessageBox>
+
 #include "../modules/MessageControl.h"
 #include "../modules/ProjectControl.h"
 using namespace composer::core::module;

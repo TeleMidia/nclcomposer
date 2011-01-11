@@ -1,7 +1,7 @@
 # -------------------------------------------------
 # Project created by QtCreator 2010-03-12T13:06:44
 # -------------------------------------------------
-QT -= gui
+#QT -= gui
 QT += xml
 TEMPLATE = lib
 TARGET = ComposerCoreControl
