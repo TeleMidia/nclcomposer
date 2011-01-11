@@ -118,6 +118,8 @@ namespace util {
 
     void CoreManager::createDocument(QString name, QString projectId) {
 
+        qDebug() << "CoreManager::createDocument( " << name << ", " << projectId;
+
     }
 
     bool CoreManager::saveSettings() {

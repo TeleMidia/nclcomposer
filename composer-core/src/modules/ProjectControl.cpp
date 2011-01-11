@@ -127,7 +127,7 @@ namespace module {
         while(it.hasNext()){
             it.next();
             Project *p = it.value();
-            settings.setValue(p->getProjectId(),p->getLocation());
+            settings.setValue(p->getProjectId(), p->getLocation());
             qDebug() << "ProjectControl::saveAllProjects projectId: "
                      << p->getProjectId() <<
                      "location: " << p->getLocation();
@@ -157,7 +157,7 @@ namespace module {
                               QDir::separator()+documentId;
             if (!documentId.endsWith(".ncl")) destUri += ".ncl";
 
-            if (!QFile::copy(uri,destUri)) {
+            if (!QFile::copy(uri, destUri)) {
                qDebug() << "ProjectControl::addDocument" <<
                            "fails on copy the document";
                return false;
