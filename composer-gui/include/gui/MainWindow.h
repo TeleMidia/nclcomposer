@@ -27,6 +27,8 @@
 using namespace composer::core::util;
 
 #include "wizard/MainWizard.h"
+#include "wizard/ProjectWizard.h"
+#include "wizard/DocumentWizard.h"
 #include "ProjectTreeWidget.h"
 
 class MainWindow : public QMainWindow {
@@ -46,6 +48,8 @@ class MainWindow : public QMainWindow {
         ProjectTreeWidget *projectTree;
         QDockWidget *dockTree;
         MainWizard *wizard;
+        ProjectWizard *projectWizard;
+        DocumentWizard *documentWizard;
 
     private:
          CoreManager *cManager;

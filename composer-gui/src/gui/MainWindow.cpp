@@ -58,11 +58,11 @@ void MainWindow::initGUI() {
 }
 
 void MainWindow::launchProjectWizard() {
-    wizard = new MainWizard(this);
-    wizard->setIsFile(false);
-    connect(wizard,SIGNAL(infoReceived(QString,QString)),
+    projectWizard = new ProjectWizard(this);
+
+    connect(projectWizard,SIGNAL(infoReceived(QString,QString)),
             cManager,SLOT(createProject(QString,QString)));
-    wizard->init();
+    projectWizard->init();
 }
 
 void MainWindow::launchNewDocumentWizard(QString projectLocation) {
@@ -77,13 +77,12 @@ void MainWindow::launchNewDocumentWizard(QString projectLocation) {
 void MainWindow::launchAddDocumentWizard(QString projectId) {
     //TODO criar somente um ponteiro wizard que vai recebendo os diferentes
     //wizards
-    wizard = new MainWizard(this);
-    wizard->setProjectId(projectId);
-    wizard->setIsFile(true);
+    documentWizard = new DocumentWizard(this);
+    documentWizard->setProjectId(projectId);
     qDebug() << "MainWindow::launchAddDocumentWizard (" << projectId << ")";
-    connect(wizard,SIGNAL(infoReceived(QString,QString,QString,bool)),
+    connect(documentWizard,SIGNAL(infoReceived(QString,QString,QString,bool)),
             cManager,SLOT(addDocument(QString,QString,QString,bool)));
-    wizard->init();
+    documentWizard->init();
 }
 
 
@@ -94,6 +93,12 @@ void MainWindow::createProjectInTree(QString name,QString location) {
     item->setText(1,name);
     item->setToolTip(1,location);
     projectTree->setCurrentItem(item); //TODO verificar se funciona
+
+    /* The wizard is no long required
+    if(projectWizard != NULL) {
+        delete projectWizard;
+        projectWizard = NULL;
+    }*/
 
 }
 
@@ -106,7 +111,7 @@ void MainWindow::createDocumentInTree(QString name,
     QTreeWidgetItem *item = new QTreeWidgetItem(parent);
     item->setIcon(0,QIcon(":/mainwindow/document"));
     item->setText(1,name);
-    item->setToolTip(1,location+name);
+    item->setToolTip(1,location+QDir::separator()+name);
     projectTree->setCurrentItem(parent);
     parent->setExpanded(true);
     parent->setIcon(0,QIcon(":/mainwindow/folder"));

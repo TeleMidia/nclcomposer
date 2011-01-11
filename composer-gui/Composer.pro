@@ -41,12 +41,20 @@ SOURCES += main.cpp \
     src/gui/wizard/IntroPage.cpp \
     src/gui/wizard/EntryPage.cpp \
     #src/manager/CoreManager.cpp
+    src/gui/wizard/ProjectWizard.cpp \
+    src/gui/wizard/ProjectEntryPage.cpp \
+    src/gui/wizard/DocumentWizard.cpp \
+    src/gui/wizard/DocumentEntryPage.cpp
 
 HEADERS_GUI += include/gui/MainWindow.h \
     include/gui/wizard/MainWizard.h \
     include/gui/ProjectTreeWidget.h \
     include/gui/wizard/IntroPage.h \
-    include/gui/wizard/EntryPage.h
+    include/gui/wizard/EntryPage.h \
+    include/gui/wizard/ProjectWizard.h \
+    include/gui/wizard/ProjectEntryPage.h \
+    include/gui/wizard/DocumentWizard.h \
+    include/gui/wizard/DocumentEntryPage.h
 
 HEADERS_MANAGER +=  #include/manager/CoreManager.h
 RESOURCES += images.qrc
