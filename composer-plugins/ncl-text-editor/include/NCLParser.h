@@ -5,13 +5,15 @@
 
 #include <QList>
 #include <QMessageBox>
-#include <QTreeWidget>
+#include <NCLTreeWidget.h>
+
+class NCLTreeWidget;
 
 class NCLParser : public QObject, public QXmlDefaultHandler {
     Q_OBJECT
 
 public:
-    NCLParser(QTreeWidget *tree);
+    NCLParser(NCLTreeWidget *tree);
     bool startElement(const QString &namespaceURI,
                       const QString &localName,
                       const QString &qName,
@@ -24,7 +26,7 @@ public:
     void setDocumentLocator(QXmlLocator *locator);
 
 private:
-    QTreeWidget *treeWidget;
+    NCLTreeWidget *treeWidget;
     QTreeWidgetItem *currentItem;
     QString currentText;
     QXmlLocator *locator;

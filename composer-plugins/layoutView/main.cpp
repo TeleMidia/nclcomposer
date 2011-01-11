@@ -1,11 +1,11 @@
 #include <QtGui/QApplication>
-#include "mainwindow.h"
+#include "LayoutView.h"
 #include <QGraphicsScene>
 
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
-    MainWindow w;
+    LayoutView w;
     w.show();
     return a.exec();
 }

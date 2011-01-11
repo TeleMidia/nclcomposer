@@ -19,9 +19,9 @@ QString NCLTextEditorPlugin::toolTip() const
     return "NCL Text Editor Widget";
 }
 
-QWidget* NCLTextEditorPlugin::createWidget(QWidget* parent)
+QWidget* NCLTextEditorPlugin::createWidget (QWidget* parent)
 {
-    return new NCLTextEdit(parent);
+    return new NCLTextEditor(parent);
 }
 
 QString NCLTextEditorPlugin::includeFile() const

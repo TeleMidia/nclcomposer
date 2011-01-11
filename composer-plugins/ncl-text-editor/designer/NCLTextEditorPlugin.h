@@ -5,7 +5,7 @@
 #include <QList>
 #include <QDesignerCustomWidgetInterface>
 
-#include <NCLTextEdit.h>
+#include "NCLTextEditor.h"
 
 class NCLTextEditorPlugin : public QObject, public QDesignerCustomWidgetInterface
 {

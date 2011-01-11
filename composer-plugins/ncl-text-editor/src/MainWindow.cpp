@@ -35,8 +35,17 @@ MainWindow::MainWindow(QWidget *parent):
     createStatusBar();
     createOutlineView();
     createProblemsView();
+    // createLayoutView();
 
-    setDockOptions(MainWindow::AllowNestedDocks | MainWindow::AllowTabbedDocks | MainWindow::AnimatedDocks);
+    setDockOptions(MainWindow::AllowNestedDocks
+                   | MainWindow::AllowTabbedDocks
+                   | MainWindow::AnimatedDocks);
+
+    /* setTabPosition(Qt::LeftDockWidgetArea, QTabWidget::North);
+    setTabPosition(Qt::RightDockWidgetArea, QTabWidget::North);
+    setTabPosition(Qt::BottomDockWidgetArea, QTabWidget::North);
+    setTabPosition(Qt::TopDockWidgetArea, QTabWidget::North); */
+
     readSettings();
 
     connect(textEdit, SIGNAL(textChanged()),
@@ -45,6 +54,7 @@ MainWindow::MainWindow(QWidget *parent):
     connect(outlineView, SIGNAL(itemClicked(QTreeWidgetItem*, int)), SLOT(gotoLineOf(QTreeWidgetItem *, int)));
 
     setCurrentFile("");
+    setUnifiedTitleAndToolBarOnMac(true);
 }
 
 void MainWindow::closeEvent(QCloseEvent *event)
@@ -195,12 +205,14 @@ void MainWindow::createMenus()
 void MainWindow::createToolBars()
 {
     fileToolBar = addToolBar(tr("File"));
+    fileToolBar->setObjectName(QString("fileToolBar"));
     fileToolBar->addAction(newAct);
     fileToolBar->addAction(openAct);
     fileToolBar->addAction(saveAct);
     fileToolBar->addAction(fullscreenAct);
 
     editToolBar = addToolBar(tr("Edit"));
+    editToolBar->setObjectName(QString("editToolBar"));
     editToolBar->addAction(cutAct);
     editToolBar->addAction(copyAct);
     editToolBar->addAction(pasteAct);
@@ -214,8 +226,8 @@ void MainWindow::createStatusBar()
 void MainWindow::createOutlineView()
 {
     outlineView = new NCLTreeWidget(this);
+    //outlineView->setMaximumWidth(300);
     outlineView->setColumnCount(1);
-    //outlineView->setMaximumWidth(300);;
     outlineView->setEditTriggers(QAbstractItemView::AllEditTriggers);
 
     QTreeWidgetItem* item = new QTreeWidgetItem(0);
@@ -224,10 +236,11 @@ void MainWindow::createOutlineView()
     outlineView->insertTopLevelItem(0, item);
 
     dockOutlineView = new QDockWidget("Outline", this);
+    dockOutlineView->setObjectName(QString("dockOutlineView"));
     dockOutlineView->setFeatures(QDockWidget::DockWidgetMovable |
                               QDockWidget::DockWidgetFloatable);
-    dockOutlineView->setAllowedAreas(Qt::LeftDockWidgetArea |
-                                  Qt::RightDockWidgetArea);
+    /* dockOutlineView->setAllowedAreas(Qt::LeftDockWidgetArea |
+                                  Qt::RightDockWidgetArea); */
     dockOutlineView->setWidget(outlineView);
 
     addDockWidget(Qt::LeftDockWidgetArea, dockOutlineView);
@@ -238,15 +251,21 @@ void MainWindow::createOutlineView()
     insertNodeChild = new QAction(QIcon(":/images/save.png"), tr("&Add child"), this);
     connect(insertNodeChild, SIGNAL(triggered()), this, SLOT(insertElement()));
     outlineView->addAction(insertNodeChild);
+
+
+    connect(outlineView, SIGNAL(parserErrorNotify(QString, QString, int, int, int)),
+            textEdit, SLOT(markError(QString, QString, int, int, int)));
 }
 
 void MainWindow::createProblemsView()
 {
     problemsView = new NCLProblemsView(this);
-    addDockWidget(Qt::BottomDockWidgetArea, problemsView);
+    problemsView->setObjectName(QString("dockProblemsView"));
+    //problemsView->setMaximumHeight(150);
+    addDockWidget(Qt::RightDockWidgetArea, problemsView);
 
     connect(outlineView, SIGNAL(parserErrorNotify(QString, QString, int, int, int)),
-            problemsView, SLOT(addProblem(QString,QString,int,int,int)));
+            problemsView, SLOT(addProblem(QString, QString, int, int, int)));
 }
 
 void MainWindow::readSettings()
@@ -255,11 +274,15 @@ void MainWindow::readSettings()
     QPoint pos = settings.value("pos", QPoint(200, 200)).toPoint();
     QSize size = settings.value("size", QSize(400, 400)).toSize();
     bool fullscreen = settings.value("fullscreen", true).toBool();
+
     resize(size);
     move(pos);
 
+    restoreState(settings.value("qDocksState").toByteArray());
+
     if(fullscreen)
         showFullScreen();
+
 }
 
 void MainWindow::writeSettings()
@@ -268,6 +291,9 @@ void MainWindow::writeSettings()
     settings.setValue("pos", pos());
     settings.setValue("size", size());
     settings.setValue("fullscreen", isFullScreen());
+
+    // Save the QDock position state
+    settings.setValue("qDocksState", saveState());
 }
 
 bool MainWindow::maybeSave()
@@ -458,17 +484,34 @@ void MainWindow::insertElement(){
 }
 
 void MainWindow::createTextView() {
-    dockTextEdit = new QDockWidget(this);
+    dockTextEdit = new QDockWidget("Text", this);
+    dockTextEdit->setObjectName(QString("dockTextView"));
     dockTextEdit->setFeatures(QDockWidget::DockWidgetMovable |
                               QDockWidget::DockWidgetFloatable);
 
-    dockTextEdit->setAllowedAreas(Qt::LeftDockWidgetArea |
-                                  Qt::RightDockWidgetArea);
+    //dockTextEdit->setAllowedAreas(Qt::LeftDockWidgetArea |
+    //                              Qt::RightDockWidgetArea);
 
     textEdit = new NCLTextEditor(this);
     dockTextEdit->setWidget(textEdit);
 
     addDockWidget(Qt::RightDockWidgetArea, dockTextEdit);
 
-    //setCentralWidget(textEdit);
+    // setCentralWidget(textEdit);
  }
+
+void MainWindow::createLayoutView()
+{
+    dockLayoutView = new QDockWidget("Layout", this);
+    dockLayoutView->setObjectName(QString("dockLayoutView"));
+    dockLayoutView->setFeatures(QDockWidget::DockWidgetMovable |
+                              QDockWidget::DockWidgetFloatable);
+
+    //dockLayoutView->setAllowedAreas(Qt::LeftDockWidgetArea |
+    //                              Qt::RightDockWidgetArea);
+
+    layoutView = new LayoutView(this);
+    dockLayoutView->setWidget(layoutView);
+
+    addDockWidget(Qt::RightDockWidgetArea, dockLayoutView);
+}

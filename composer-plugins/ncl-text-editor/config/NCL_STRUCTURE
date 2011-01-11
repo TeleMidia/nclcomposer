@@ -1,4 +1,8 @@
-// Validador NCL
+﻿// validador NCL
+//ELEMENT (NAME, PARENT, CARDINALITY, DEFINE_SCOPE)
+//ATTRIBUTE (ELEMENT_NAME, NAME, REQUIRED, DATATYPE)
+
+//tabela 6 (steve)
 element(ncl, NULL, 1, false)
 element (head, ncl, ? , false)
 element (body, ncl, ? , true)
@@ -11,7 +15,6 @@ element(ncl, NULL, 1, true)
 
 element(head, ncl, ?, true)
     attribute(head, id, false, NULL)
-
 
 element(body,ncl,?,true)
     attribute(body,id,false,ID)

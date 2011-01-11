@@ -1,5 +1,5 @@
-#include "mainwindow.h"
-#include "ui_mainwindow.h"
+#include "LayoutView.h"
+#include "ui_LayoutView.h"
 #include <QHBoxLayout>
 #include <QVBoxLayout>
 #include <QGridLayout>
@@ -7,19 +7,19 @@
 #include <QDesktopWidget>
 #include <iostream>
 
-MainWindow::MainWindow(QWidget *parent)
-    : QMainWindow(parent), ui(new Ui::MainWindow)
+LayoutView::LayoutView(QWidget *parent)
+    : QMainWindow(parent), ui (new Ui::LayoutView)
 {
-   // ui->setupUi(this);
-    screenResolution = QApplication::desktop()->screenGeometry();
+    ui->setupUi(this);
 
-    width = 700;
-    height = 500;
+    width = 800;
+    height = 300;
 
     setWindowTitle("LayoutView");
 
     tree = new QTreeWidget;
-    tree->setHeaderLabel("RegionBase");
+    tree->setHeaderLabel("Regions");
+    tree->setMaximumWidth(150);
     tree->header()->setResizeMode(0, QHeaderView::Stretch);
 
 
@@ -94,11 +94,11 @@ MainWindow::MainWindow(QWidget *parent)
     QGridLayout *bottomLayout = new QGridLayout;
 
 
-    QCheckBox *check = new QCheckBox (tr("PreView"));
+    //QCheckBox *check = new QCheckBox (tr("PreView"));
 
     bottomLayout->addWidget(att, 0, 0);
-    bottomLayout->setColumnMinimumWidth(0, 700);
-    bottomLayout->addWidget(check, 0, 1);
+    bottomLayout->setColumnMinimumWidth(0, 100);
+    //bottomLayout->addWidget(check, 0, 1);
 
     rightLayout->addWidget(area);
     rightLayout->addLayout(bottomLayout);
@@ -116,17 +116,17 @@ MainWindow::MainWindow(QWidget *parent)
     resize(sizeHint());
 }
 
-void MainWindow::changeBottomRegion(QString id, QString newValue)
+void LayoutView::changeBottomRegion(QString id, QString newValue)
 {
 
 }
 
-void MainWindow::changeIdRegion(QString id, QString newValue)
+void LayoutView::changeIdRegion(QString id, QString newValue)
 {
     //region->setId (newValue);
 }
 
-void MainWindow::changeLeftRegion(QString id, QString newValue)
+void LayoutView::changeLeftRegion(QString id, QString newValue)
 {
     bool ok;
     int left = newValue.toInt(&ok, 10);
@@ -137,37 +137,37 @@ void MainWindow::changeLeftRegion(QString id, QString newValue)
     area->modify (id, "left", width * p);
 }
 
-void MainWindow::changeRightRegion(QString id, QString newValue)
+void LayoutView::changeRightRegion(QString id, QString newValue)
 {
 
 }
 
-void MainWindow::changeTopRegion(QString id, QString newValue)
+void LayoutView::changeTopRegion(QString id, QString newValue)
 {
 
 }
 
-void MainWindow::changeWidthRegion(QString id, QString newValue)
+void LayoutView::changeWidthRegion(QString id, QString newValue)
 {
 
 }
 
-void MainWindow::changeHeightRegion(QString id, QString newValue)
+void LayoutView::changeHeightRegion(QString id, QString newValue)
 {
 
 }
 
-void MainWindow::changeTitleRegion(QString id, QString newValue)
+void LayoutView::changeTitleRegion(QString id, QString newValue)
 {
 
 }
 
-void MainWindow::changeZIndexRegion(QString id, QString newValue)
+void LayoutView::changeZIndexRegion(QString id, QString newValue)
 {
 
 }
 
-void MainWindow::addNodeTreeView(NCLRegion *region)
+void LayoutView::addNodeTreeView(NCLRegion *region)
 {
     if (region == NULL) return;
     QTreeWidgetItem *item = new QTreeWidgetItem;
@@ -185,7 +185,7 @@ void MainWindow::addNodeTreeView(NCLRegion *region)
     tree->addTopLevelItem(item);
 }
 
-void MainWindow::selectRegion()
+void LayoutView::selectRegion()
 {
     QList <QTreeWidgetItem *> list = tree->selectedItems();
     NCLRegion *regions;
@@ -198,7 +198,7 @@ void MainWindow::selectRegion()
         att->fillFields(regions);
 }
 
-void MainWindow::performChanges(NCLRegion *region)
+void LayoutView::performChanges(NCLRegion *region)
 {
     if (region == NULL) return;
     QList <QTreeWidgetItem *> list = tree->selectedItems();
@@ -210,7 +210,7 @@ void MainWindow::performChanges(NCLRegion *region)
     
 }
 
-void MainWindow::createContextMenu ()
+void LayoutView::createContextMenu ()
 {
     area->addAction(createRegion);
     area->addAction(clearAction);
@@ -218,7 +218,7 @@ void MainWindow::createContextMenu ()
     area->setContextMenuPolicy(Qt::ActionsContextMenu);
 }
 
-void MainWindow::createActions ()
+void LayoutView::createActions ()
 {
     createRegion = new QAction (tr("Create New &Region"), this);
     createRegion->setShortcut(tr("Ctrl+R"));
@@ -233,13 +233,13 @@ void MainWindow::createActions ()
 
 }
 
-void MainWindow::selectRegion(NCLRegion *region)
+void LayoutView::selectRegion(NCLRegion *region)
 {
     if (region == NULL) return;
     currentNCLRegion = region;
 }
 
-void MainWindow::removeRegion()
+void LayoutView::removeRegion()
 {
     if (currentNCLRegion == NULL) return;
     std::cout << tree->indexOfTopLevelItem( itens[currentNCLRegion] ) << std::endl;
@@ -255,12 +255,12 @@ void MainWindow::removeRegion()
     att->fillFields(currentNCLRegion);
 }
 
-void MainWindow::fillFields(NCLRegion *region)
+void LayoutView::fillFields(NCLRegion *region)
 {
     //TODO
 }
 
-MainWindow::~MainWindow()
+LayoutView::~LayoutView()
 {
     delete ui;
 }

@@ -33,6 +33,7 @@ using namespace std;
 #include "NCLProblemsView.h"
 #include "NCLTreeWidget.h"
 #include "NCLTextEditor.h"
+#include "LayoutView.h"
 
 class QAction;
 class QMenu;
@@ -66,6 +67,7 @@ private:
     void createTextView();
     void createOutlineView();
     void createProblemsView();
+    void createLayoutView();
     void readSettings();
     void writeSettings();
     bool maybeSave();
@@ -101,6 +103,8 @@ private:
     QAction *insertNodeChild;
 
     NCLProblemsView *problemsView;
+    QDockWidget *dockLayoutView;
+    LayoutView *layoutView;
 };
 
 #endif

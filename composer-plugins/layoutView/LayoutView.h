@@ -1,5 +1,5 @@
-#ifndef MAINWINDOW_H
-#define MAINWINDOW_H
+#ifndef LAYOUTVIEW_H
+#define LAYOUTVIEW_H
 
 #include <QtGui/QMainWindow>
 #include "scribblearea.h"
@@ -16,16 +16,16 @@ using namespace std;
 
 namespace Ui
 {
-    class MainWindow;
+    class LayoutView;
 }
 
-class MainWindow : public QMainWindow
+class LayoutView : public QMainWindow
 {
     Q_OBJECT
 
 public:
-    MainWindow(QWidget *parent = 0);
-    ~MainWindow();
+    LayoutView(QWidget *parent = 0);
+    ~LayoutView();
 
 public slots:
     void fillFields (NCLRegion *region);
@@ -52,7 +52,7 @@ private:
 
 
     QTreeWidget *tree;
-    Ui::MainWindow *ui;
+    Ui::LayoutView *ui;
     ScribbleArea *area;
     QPushButton *button;
     QAction *createRegion;

@@ -23,7 +23,6 @@
 #include <QTreeView>
 
 #include "MainWindow.h"
-#include "NCLStructure.h"
 
 int main(int argc, char *argv[])
 {
@@ -34,5 +33,15 @@ int main(int argc, char *argv[])
     MainWindow mainWin;
     mainWin.show();
 
+/*    app.setStyleSheet("QDockWidget {\
+                            border: 1px solid lightgray;\
+                        }\
+                        QDockWidget::title {\
+                            text-color: #FFFFFF; \
+                            background: #000000;\
+                            padding-left: 5px;\
+                            padding-top: 5px;\
+                        }");
+*/
     return app.exec();
 }

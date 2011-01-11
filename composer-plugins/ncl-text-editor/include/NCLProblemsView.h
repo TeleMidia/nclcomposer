@@ -8,6 +8,7 @@
 #include <QTreeWidget>
 #include <QMainWindow>
 
+
 class NCLProblemsView : public QDockWidget {
     Q_OBJECT
 

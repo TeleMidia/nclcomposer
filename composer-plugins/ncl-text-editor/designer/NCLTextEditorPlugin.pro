@@ -1,4 +1,4 @@
-CONFIG      += designer plugin
+CONFIG      += designer plugin qt
 TARGET      = $$qtLibraryTarget($$TARGET)
 TEMPLATE    = lib
 
@@ -24,11 +24,9 @@ HEADERS  +=     NCLTextEditorPlugin.h \
                 ../include/QsciNCLAPIs.h \
                 ../include/NCLStructure.h
 
-INCLUDEPATH += ../
+INCLUDEPATH += ../include
 
 DBFILE       = plugin.db
 
-OTHER_FILES += \
-    config/apiNCL.txt \
-    TODO \
-    config/NCL_STRUCTURE
+RESOURCES   = ncl_text_editor.qrc \
+    ncl_text_editor.qrc

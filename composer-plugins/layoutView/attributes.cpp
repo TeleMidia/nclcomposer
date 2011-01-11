@@ -14,51 +14,51 @@ Attributes::Attributes (QGroupBox *parent)
 
     //setCheckable(true);
 
-    labelId = new QLabel ("Id   ");
-    labelLeft = new QLabel ("Left");
-    labelTop = new QLabel ("Top ");
-    labelRight = new QLabel ("Right    ");
-    labelBottom = new QLabel ("Bottom");
-    labelWidth = new QLabel ("Width ");
-    labelHeight = new QLabel ("Height");
-    labelZIndex = new QLabel ("zIndex");
-    labelTitle = new QLabel ("Title     ");
+    labelId = new QLabel ("Id:");
+    labelLeft = new QLabel ("Left:");
+    labelTop = new QLabel ("Top:");
+    labelRight = new QLabel ("Right:");
+    labelBottom = new QLabel ("Bottom:");
+    labelWidth = new QLabel ("Width:");
+    labelHeight = new QLabel ("Height:");
+    labelZIndex = new QLabel ("zIndex:");
+    labelTitle = new QLabel ("Title:");
 
-    editId = new QTextEdit ;
-    editId->setFixedHeight(HEIGHT);
-    editId->setFixedWidth(WIDTH);
+    editId = new QLineEdit ;
+    //editId->setFixedHeight(HEIGHT);
+    //editId->setFixedWidth(WIDTH);
 
-    editLeft = new QTextEdit ;
-    editLeft->setFixedHeight(HEIGHT);
-    editLeft->setFixedWidth(WIDTH);
+    editLeft = new QLineEdit ;
+    //editLeft->setFixedHeight(HEIGHT);
+    //editLeft->setFixedWidth(WIDTH);
 
-    editTop = new QTextEdit ;
-    editTop->setFixedHeight(HEIGHT);
-    editTop->setFixedWidth(WIDTH - 1);
+    editTop = new QLineEdit ;
+    //editTop->setFixedHeight(HEIGHT);
+    //editTop->setFixedWidth(WIDTH - 1);
 
-    editRight = new QTextEdit ;
-    editRight->setFixedHeight(HEIGHT);
-    editRight->setFixedWidth(WIDTH);
+    editRight = new QLineEdit ;
+    //editRight->setFixedHeight(HEIGHT);
+    //editRight->setFixedWidth(WIDTH);
 
-    editBottom = new QTextEdit;
-    editBottom->setFixedHeight(HEIGHT);
-    editBottom->setFixedWidth(WIDTH);
+    editBottom = new QLineEdit;
+    //editBottom->setFixedHeight(HEIGHT);
+    //editBottom->setFixedWidth(WIDTH);
 
-    editWidth = new QTextEdit ;
-    editWidth->setFixedHeight(HEIGHT);
-    editWidth->setFixedWidth(WIDTH);
+    editWidth = new QLineEdit ;
+    //editWidth->setFixedHeight(HEIGHT);
+    //editWidth->setFixedWidth(WIDTH);
 
-    editHeigth = new QTextEdit ;
-    editHeigth->setFixedHeight(HEIGHT);
-    editHeigth->setFixedWidth(WIDTH);
+    editHeigth = new QLineEdit ;
+    //editHeigth->setFixedHeight(HEIGHT);
+    //editHeigth->setFixedWidth(WIDTH);
 
-    editZIndex = new QTextEdit ;
-    editZIndex->setFixedHeight(HEIGHT);
-    editZIndex->setFixedWidth(WIDTH);
+    editZIndex = new QLineEdit ;
+    //editZIndex->setFixedHeight(HEIGHT);
+    //editZIndex->setFixedWidth(WIDTH);
 
-    editTitle = new QTextEdit ;
-    editTitle->setFixedHeight(HEIGHT);
-    editTitle->setFixedWidth(WIDTH);
+    editTitle = new QLineEdit ;
+    //editTitle->setFixedHeight(HEIGHT);
+    //editTitle->setFixedWidth(WIDTH);
 
     labelId->setBuddy(editId);
     labelLeft->setBuddy(editLeft);

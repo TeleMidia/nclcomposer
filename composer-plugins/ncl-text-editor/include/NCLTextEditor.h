@@ -27,12 +27,27 @@ public:
     explicit NCLTextEditor(QWidget *parent = 0);
     virtual ~NCLTextEditor();
 
+    void userFillingNextAttribute(int line, int index);
+    void userFillingPreviousAttribute(int line, int index);
+    void updateVisualFillingAttributeField(int line, int index, int &begin, int &end);
+
 private:
+
+    enum INTERACTION_STATE {
+        DEFAULT_STATE = 1,
+        FILLING_ATTRIBUTES_STATE
+    };
+
+    INTERACTION_STATE state;
+
     QShortcut *shortcut_ctrl_space;
     QShortcut *shortcut_zoomout;
     QShortcut *shortcut_zoomin;
-    QShortcut *shortcut_showindic;
     QsciNCLAPIs *apis;
+
+    int error_indicator;
+    int error_marker;
+    int filling_attribute_indicator;
 
     void initParameters();
 
@@ -47,7 +62,7 @@ protected:
 public slots:
     void Increasefont();
     void Decreasefont();
-    void ShowIndicators();
+    void markError(QString description, QString file, int line, int column = 0, int severity = 0);
     void MarkLine(int, int, Qt::KeyboardModifiers);
 };
 

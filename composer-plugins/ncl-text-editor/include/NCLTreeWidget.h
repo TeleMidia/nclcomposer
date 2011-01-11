@@ -25,6 +25,13 @@ public:
                                   int line_in_text = -1,
                                   int column_in_text = -1);
 
+    //! Add an element as child of father and return this element
+    QTreeWidgetItem* addElement ( int pos,
+                                  QString tagname,
+                                  QString id = "",
+                                  int line_in_text = -1,
+                                  int column_in_text = -1);
+
 public slots:
     void errorNotification(QString message, QString filename, int line, int column, int severity);
 

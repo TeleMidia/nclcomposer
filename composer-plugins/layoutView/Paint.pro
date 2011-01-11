@@ -4,12 +4,14 @@
 TARGET = Paint
 TEMPLATE = app
 SOURCES += main.cpp \
-    mainwindow.cpp \
+    LayoutView.cpp \
     scribblearea.cpp \
     nclregion.cpp \
     attributes.cpp
-HEADERS += mainwindow.h \
+
+HEADERS += LayoutView.h \
     scribblearea.h \
     nclregion.h \
     attributes.h
-FORMS += mainwindow.ui
+
+FORMS += LayoutView.ui

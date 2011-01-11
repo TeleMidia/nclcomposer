@@ -1,39 +1,33 @@
 #include "NCLParser.h"
 
-NCLParser::NCLParser(QTreeWidget *tree)
+NCLParser::NCLParser(NCLTreeWidget *tree)
 {
     treeWidget = tree;
     currentItem = 0;
 }
 
 bool NCLParser::startElement(const QString & /* namespaceURI */,
-                                 const QString &localName,
+                                 const QString & /*localName */,
                                  const QString &qName,
                                  const QXmlAttributes &attributes)
 {
     // qDebug() << qName;
     if (currentItem) {
-        currentItem = new QTreeWidgetItem(currentItem);
+        currentItem = treeWidget->addElement(currentItem,
+                                             currentItem->childCount(),
+                                             qName,
+                                             attributes.value("id"),
+                                             locator->lineNumber(),
+                                             locator->columnNumber());
     } else {
-        currentItem = new QTreeWidgetItem(treeWidget);
+        currentItem = treeWidget->addElement(0,
+                                            -1,
+                                            qName,
+                                            attributes.value("id"),
+                                            locator->lineNumber(),
+                                            locator->columnNumber());
     }
-
-    //TODO: use the send a signal to all interested plugins.
-    QIcon icon;
-    if(qName == "media")
-            icon = QIcon (":/images/media.png");
-    else if(qName == "descriptor")
-        icon = QIcon (":/images/descriptor.png");
-    else if(qName == "link")
-        icon = QIcon (":/images/link-icon.png");
-    else
-        icon = QIcon (":/images/new.png");
-
-    currentItem->setIcon(0, icon);
-    currentItem->setText(0, localName);
-    currentItem->setText(1, attributes.value("id"));
-    currentItem->setText(2, QString::number(locator->lineNumber()));
-    currentItem->setText(3, QString::number(locator->columnNumber()));
+    //TODO: send a signal to all interested plugins.
     return true;
 }
 
@@ -53,6 +47,12 @@ bool NCLParser::endElement(const QString & /* namespaceURI */,
 
 bool NCLParser::fatalError(const QXmlParseException &exception)
 {
+    if(currentItem != NULL) {
+        currentItem->setIcon(0, QIcon(":/images/error-icon-16.png"));
+        currentItem->setTextColor(0, QColor("#FF0000"));
+//      currentItem->setBackgroundColor(0, QColor("#FF0000"));
+    }
+
     qDebug() <<  QObject::tr("Parse error at line %1, column "
                                      "%2:\n%3.")
                          .arg(exception.lineNumber())

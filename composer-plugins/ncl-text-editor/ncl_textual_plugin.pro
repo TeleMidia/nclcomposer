@@ -3,7 +3,8 @@ TARGET      =   bin/ncl_textual_plugin
 QT          +=  xml
 CONFIG      +=  release
 
-INCLUDEPATH +=  include
+INCLUDEPATH +=  include \
+      ../layoutView/
 
 HEADERS     =   include/MainWindow.h \
                 include/NCLTextEditor.h \
@@ -14,7 +15,11 @@ HEADERS     =   include/MainWindow.h \
                 include/NCLValidator.h \
                 include/NCLParser.h \
                 include/NCLProblemsView.h \
-                include/NCLTreeWidget.h
+                include/NCLTreeWidget.h \
+    ../layoutView/scribblearea.h \
+    ../layoutView/nclregion.h \
+    ../layoutView/LayoutView.h \
+    ../layoutView/attributes.h
 
 SOURCES     =   src/main.cpp \
                 src/MainWindow.cpp \
@@ -26,7 +31,11 @@ SOURCES     =   src/main.cpp \
                 src/NCLValidator.cpp \
                 src/NCLParser.cpp \
                 src/NCLProblemsView.cpp \
-                src/NCLTreeWidget.cpp
+                src/NCLTreeWidget.cpp \
+    ../layoutView/scribblearea.cpp \
+    ../layoutView/nclregion.cpp \
+    ../layoutView/LayoutView.cpp \
+    ../layoutView/attributes.cpp
 
 OTHER_FILES +=  TODO \
                 config/NCL_STRUCTURE \
@@ -38,3 +47,6 @@ LIBS        +=  -lqscintilla2
 
 MOC_DIR     =   build
 OBJECTS_DIR =   build
+
+FORMS += \
+    ../layoutView/LayoutView.ui

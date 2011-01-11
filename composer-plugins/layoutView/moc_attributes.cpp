@@ -1,7 +1,7 @@
 /****************************************************************************
 ** Meta object code from reading C++ file 'attributes.h'
 **
-** Created: Mon Jun 14 11:15:00 2010
+** Created: Sun Jan 9 21:57:07 2011
 **      by: The Qt Meta Object Compiler version 62 (Qt 4.6.2)
 **
 ** WARNING! All changes made in this file will be lost!

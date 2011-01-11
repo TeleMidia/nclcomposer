@@ -2,7 +2,7 @@
 #define ATTRIBUTES_H
 
 #include <QLabel>
-#include <QTextEdit>
+#include <QLineEdit>
 #include <QWidget>
 #include <QGroupBox>
 #include <QToolBox>
@@ -57,15 +57,15 @@ private:
     QLabel *labelZIndex;
     QLabel *labelTitle;
 
-    QTextEdit *editId;
-    QTextEdit *editLeft;
-    QTextEdit *editTop;
-    QTextEdit *editRight;
-    QTextEdit *editBottom;
-    QTextEdit *editWidth;
-    QTextEdit *editHeigth;
-    QTextEdit *editZIndex;
-    QTextEdit *editTitle;
+    QLineEdit *editId;
+    QLineEdit *editLeft;
+    QLineEdit *editTop;
+    QLineEdit *editRight;
+    QLineEdit *editBottom;
+    QLineEdit *editWidth;
+    QLineEdit *editHeigth;
+    QLineEdit *editZIndex;
+    QLineEdit *editTitle;
 
     QGroupBox *group;
 };

@@ -19,7 +19,7 @@ bool NCLTreeWidget::updateFromText(QString text)
     inputSource.setData( text );
     QXmlSimpleReader reader;
 
-    this->setStyleSheet(/*"background-color:*/ "font-size: 11px;");
+    this->setStyleSheet("/*background-color: #ffffff;*/ font-size: 11px;");
     clear();
     setHeaderLabels(labels);
     header()->setStretchLastSection(false);
@@ -50,9 +50,35 @@ QTreeWidgetItem* NCLTreeWidget::addElement ( QTreeWidgetItem *father,
                                  int line_in_text,
                                  int column_in_text)
 {
-    QTreeWidgetItem *child = new QTreeWidgetItem(0);
 
-    father->insertChild(0, child);
+    QTreeWidgetItem *child;
+
+
+    if(father != 0) {
+        child = new QTreeWidgetItem(0);
+        int p = pos;
+        if(pos == -1)
+            p = father->childCount();
+
+        father->insertChild(p, child);
+    }
+    else {
+        child = new QTreeWidgetItem(this);
+        if(pos != -1)
+            this->insertTopLevelItem(pos, child);
+    }
+
+    QIcon icon;
+    if(tagname == "media")
+            icon = QIcon (":/images/media.png");
+    else if(tagname == "descriptor")
+        icon = QIcon (":/images/descriptor.png");
+    else if(tagname == "link")
+        icon = QIcon (":/images/link-icon.png");
+    else
+        icon = QIcon (":/images/new.png");
+
+    child->setIcon(0, icon);
     child->setText(0, tagname);
     child->setText(1, id);
     child->setText(2, QString::number(line_in_text));
@@ -63,6 +89,7 @@ QTreeWidgetItem* NCLTreeWidget::addElement ( QTreeWidgetItem *father,
 
 void NCLTreeWidget::errorNotification(QString message, QString filename, int line, int column, int severity)
 {
+    //this->setStyleSheet("background-color: #aa0000; font-size: 11px;");
     emit parserErrorNotify(message, filename, line, column, severity);
 }
 

@@ -1,5 +1,7 @@
 #include "QsciNCLAPIs.h"
 
+#include "NCLTextEditor.h"
+
 QsciNCLAPIs::QsciNCLAPIs(QsciLexer * 	lexer) :
         QsciAPIs(lexer)
 {
@@ -157,6 +159,12 @@ void QsciNCLAPIs::autoCompletionSelected(const QString &selection) {
     lexer()->editor()->SendScintilla(QsciScintilla::SCI_WORDRIGHT);
 
     lexer()->editor()->endUndoAction();
+
+    if (suggesting == SUGGESTING_ELEMENTS)
+    {
+        lexer()->editor()->getCursorPosition(&line, &pos);
+        ((NCLTextEditor *)lexer()->editor())->userFillingNextAttribute(line, pos);
+    }
 }
 
 
