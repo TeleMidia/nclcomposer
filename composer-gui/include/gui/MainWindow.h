@@ -69,7 +69,7 @@ class MainWindow : public QMainWindow {
         ~MainWindow();
     public slots:
         void createProjectInTree(QString name,QString location);
-        void createDocumentInTree(QString projectId, QString name,
+        void createDocumentInTree(QString name,
                                   QString location);
         void errorDialog(QString);
         void launchNewDocumentWizard(QString projectLocation);

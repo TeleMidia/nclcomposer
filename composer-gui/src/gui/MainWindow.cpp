@@ -6,8 +6,8 @@ MainWindow::MainWindow(QWidget *parent)
     cManager = new CoreManager(this);
     connect(cManager,SIGNAL(projectCreated(QString,QString)),
             this,SLOT(createProjectInTree(QString,QString)));
-    connect(cManager,SIGNAL(documentAdded(QString,QString,QString)),
-            this,SLOT(createDocumentInTree(QString,QString,QString)));
+    connect(cManager,SIGNAL(documentAdded(QString,QString)),
+            this,SLOT(createDocumentInTree(QString,QString)));
     connect(cManager,SIGNAL(onError(QString)),
             this,SLOT(errorDialog(QString)));
 
@@ -34,7 +34,9 @@ void MainWindow::readSettings() {
         while (it.hasNext()) {
             QString projectId = it.next();
             QString location  = settings.value(projectId).toString();
-            qDebug() << "READ projectId: " << projectId << "location: " << location;
+            qDebug() << "MainWindow::readSettings" <<
+                        "READ projectId: " << projectId <<
+                        "location: " << location;
             cManager->addProject(projectId,location);
         }
     settings.endGroup();
@@ -78,7 +80,7 @@ void MainWindow::launchAddDocumentWizard(QString projectId) {
     wizard = new MainWizard(this);
     wizard->setProjectId(projectId);
     wizard->setIsFile(true);
-    qDebug() << tr("Add Document");
+    qDebug() << "MainWindow::launchAddDocumentWizard (" << projectId << ")";
     connect(wizard,SIGNAL(infoReceived(QString,QString,QString,bool)),
             cManager,SLOT(addDocument(QString,QString,QString,bool)));
     wizard->init();
@@ -90,20 +92,24 @@ void MainWindow::createProjectInTree(QString name,QString location) {
     QTreeWidgetItem *item = new QTreeWidgetItem(projectTree);
     item->setIcon(0,QIcon(":/mainwindow/folderEmpty"));
     item->setText(1,name);
-    item->setToolTip(1,location+"/"+name);
+    item->setToolTip(1,location);
     projectTree->setCurrentItem(item); //TODO verificar se funciona
 
 }
 
-void MainWindow::createDocumentInTree(QString projectId, QString name,
+void MainWindow::createDocumentInTree(QString name,
                           QString location) {
 
+    qDebug() << "MainWindow::createDocumentInTree (" << name << ", "
+             << location << ")";
     QTreeWidgetItem *parent = projectTree->currentItem();
     QTreeWidgetItem *item = new QTreeWidgetItem(parent);
     item->setIcon(0,QIcon(":/mainwindow/document"));
     item->setText(1,name);
-    item->setToolTip(1,location+"/"+name);
+    item->setToolTip(1,location+name);
     projectTree->setCurrentItem(parent);
+    parent->setExpanded(true);
+    parent->setIcon(0,QIcon(":/mainwindow/folder"));
 }
 
 
