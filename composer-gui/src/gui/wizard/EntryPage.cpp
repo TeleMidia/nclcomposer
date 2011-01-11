@@ -44,7 +44,7 @@ void EntryPage::initGUI() {
     layout->addWidget(locatorButton, 1, 2);
     setLayout(layout);
     registerField("name*", nameLineEdit);
-    registerField("location*", directoryLine);
+    registerField("location", directoryLine);
 }
 
 void EntryPage::setProjectDirectory() {

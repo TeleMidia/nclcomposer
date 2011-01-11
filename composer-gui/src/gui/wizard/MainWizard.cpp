@@ -22,10 +22,11 @@ void MainWizard::accept() {
     name        = field("name").toString();
     location    = field("location").toString();
     //TODO - melhorar pegando o checkbox ... e juntando em um só sinal
+    qDebug() << "MainWizard::accept " << location+QDir::separator()+name;
     if (projectId != "") {
-        emit infoReceived(name,location+QDir::separator()+name,projectId,true);
+        emit infoReceived(name, location+QDir::separator()+name, projectId,true);
     } else {
-        emit infoReceived(name,location);
+        emit infoReceived(name, location+QDir::separator()+name);
     }
     QDialog::accept();
 }
