@@ -26,7 +26,6 @@
 #include <control/util/CoreManager.h>
 using namespace composer::core::util;
 
-#include "wizard/MainWizard.h"
 #include "wizard/ProjectWizard.h"
 #include "wizard/DocumentWizard.h"
 #include "ProjectTreeWidget.h"

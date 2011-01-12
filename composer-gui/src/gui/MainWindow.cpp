@@ -169,7 +169,8 @@ void MainWindow::createActions() {
      newDocumentAct = new QAction(tr("New &Document"), this);
      newDocumentAct->setShortcuts(QKeySequence::New);
      newDocumentAct->setStatusTip(tr("Create a new NCL Document"));
-     //connect(openAct, SIGNAL(triggered()), this, SLOT(open()));
+//     connect(newDocumentAct, SIGNAL(triggered()), this,
+//             SLOT(launchAddDocumentWizard(QString)));
 
      aboutComposerAct = new QAction(tr("&About"), this);
      aboutComposerAct->setStatusTip(tr("Show the application's About box"));
