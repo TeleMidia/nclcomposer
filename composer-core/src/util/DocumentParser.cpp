@@ -31,8 +31,8 @@ DocumentParser::~DocumentParser() {
 bool DocumentParser::setUpParser(QString uri) {
 
     qDebug() << "DocumentParser::setUpParser(" << uri << ")";
-    QFile *file = new QFile(uri,this);
-    if (!file->open(QIODevice::ReadOnly | QIODevice::Text)) {
+    file = new QFile(uri,this);
+    if (!file->open(QIODevice::ReadWrite)) {
         qDebug() << "DocumentParser::setUpParser"
                  << tr("Could not open file %1\n").arg(uri);
         return false;
@@ -42,8 +42,8 @@ bool DocumentParser::setUpParser(QString uri) {
     int errorLine;
     int errorColumn;
 
-    if (!nclDomDocument.setContent
-        (file, true, &errorStr, &errorLine, &errorColumn)) {
+    if ( (file->size() > 1) && !(nclDomDocument.setContent
+        (file, true, &errorStr, &errorLine, &errorColumn))) {
 
         qDebug() << "DocumentParser::setUpParser" <<
                      tr("Parser error at line %1 , column %2 : %3\n")
@@ -74,7 +74,6 @@ bool DocumentParser::parseDocument() {
                 parseElement(children.at(i).toElement());
         }
     }
-    emit documentParsed(projectId,documentId);
     return true;
 }
 
@@ -120,7 +119,8 @@ bool DocumentParser::parseElement(QDomElement element) {
 
 void DocumentParser::onEntityAdded(Entity *entity){
     setNclDocument((NclDocument*)entity);
-    parseDocument();
+    if (file->size() > 1) parseDocument();
+    emit documentParsed(projectId,documentId);
 }
 
 bool DocumentParser::listenFilter(EntityType entityType){

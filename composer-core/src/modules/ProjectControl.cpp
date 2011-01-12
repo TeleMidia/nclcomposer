@@ -152,28 +152,38 @@ namespace module {
         Project *p = getProject(projectId);
         QString projectLocation = p->getLocation();
 
-        if (copy) {
-            QString destUri = projectLocation+QDir::separator()+projectId+
-                              QDir::separator()+documentId;
-            if (!documentId.endsWith(".ncl")) destUri += ".ncl";
+        if (!documentId.endsWith(".ncl")) documentId += ".ncl";
+        QString destUri = projectLocation+QDir::separator()+projectId+
+                          QDir::separator()+documentId;
 
-            if (!QFile::copy(uri, destUri)) {
+        /* Adding a existing document */
+        if (copy) {
+           if (!QFile::copy(uri,destUri)) {
                qDebug() << "ProjectControl::addDocument" <<
                            "fails on copy the document";
                return false;
-           }
-           uri = destUri;
-        }
+           }           
+        } /*else { /* Creating a brand new Document /
+            QFile nclFile(destUri);
+            if (!nclFile.open( QIODevice::ReadWrite ) ) {
+                emit errorNotify(tr("Could not created the NCLFile (%1)")
+                                 .arg(destUri));
+                return false;
+            } else {
+                nclFile.close();
+            }
+        }*/
 
+        uri = destUri;
         DocumentParser *docParser = new DocumentParser(documentId,projectId);
         parsers[projectId+documentId] = docParser;
 
         connect(docParser,SIGNAL(documentParsed(QString,QString)),this,
-                SLOT(onDocumentParsed(QString,QString)));
+             SLOT(onDocumentParsed(QString,QString)));
 
         if (!docParser->setUpParser(uri)) {
-          qDebug() << "ProjectControl::addDocument fails in setUpParser";
-          return false;
+           qDebug() << "ProjectControl::addDocument fails in setUpParser";
+           return false;
         }
         return true;
     }

@@ -78,6 +78,7 @@ namespace module {
              void newActivateProject(Project *);
              void documentCreatedAndParsed(QString documentId,
                                            QString location);
+             void errorNotify(QString);
 
     };
 }

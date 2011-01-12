@@ -38,7 +38,6 @@ public slots:
     void createProject(QString,QString);
     void addProject(QString,QString);
     void addDocument(QString,QString,QString,bool);
-    void createDocument(QString,QString);
     bool saveSettings();
 
 };

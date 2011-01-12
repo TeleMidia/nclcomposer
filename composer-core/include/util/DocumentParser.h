@@ -63,7 +63,7 @@ namespace plugin {
         QMutex mutex;
         QString documentId;
         QString projectId;
-
+        QFile *file;
         EntityUtil *util;
 
         inline void setDomDocument(QDomDocument document) {

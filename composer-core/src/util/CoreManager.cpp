@@ -11,6 +11,9 @@ namespace util {
         connect(ProjectControl::getInstance(),
                 SIGNAL(documentCreatedAndParsed(QString,QString)),
                 SIGNAL(documentAdded(QString,QString)));
+        connect(ProjectControl::getInstance(),
+                SIGNAL(errorNotify(QString)),
+                SIGNAL(onError(QString)));
     }
 
     CoreManager::~CoreManager() {
@@ -61,7 +64,6 @@ namespace util {
                                 "Adding NCL File: " << fileName <<
                                 "in: " << projectId;
                    addDocument(fileName,filePath,projectId,false);
-                   return;
                }
            } else if (fileInfo.isDir()) {
                //TODO adicionar diretorio no projectTree
@@ -115,12 +117,6 @@ namespace util {
         }
     }
 
-
-    void CoreManager::createDocument(QString name, QString projectId) {
-
-        qDebug() << "CoreManager::createDocument( " << name << ", " << projectId;
-
-    }
 
     bool CoreManager::saveSettings() {
         ProjectControl *projectControl = ProjectControl::getInstance();
