@@ -117,7 +117,6 @@ namespace util {
         }
     }
 
-
     bool CoreManager::saveSettings() {
         ProjectControl *projectControl = ProjectControl::getInstance();
 

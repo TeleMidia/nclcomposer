@@ -132,7 +132,6 @@ namespace module {
         Project *p = getProject(projectId);
         QString projectLocation = p->getLocation();
 
-
         if (!documentId.endsWith(".ncl")) documentId += ".ncl";
         QString destUri = projectLocation+QDir::separator()+projectId+
                           QDir::separator()+documentId;
