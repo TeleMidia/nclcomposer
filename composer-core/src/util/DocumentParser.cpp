@@ -118,7 +118,13 @@ bool DocumentParser::parseElement(QDomElement element) {
 }
 
 void DocumentParser::onEntityAdded(Entity *entity){
+    QString documentID = QString::fromStdString(
+                                ((NclDocument*)entity)->getAttribute("id"));
+    /* Verify if this call is for myself*/
+    if (documentID != this->documentId) return;
+
     setNclDocument((NclDocument*)entity);
+    qDebug() << "DocumentParser::onEntityAdded(" << file->fileName()  << ")";
     if (file->size() > 1) parseDocument();
     emit documentParsed(projectId,documentId);
 }

@@ -6,7 +6,7 @@ namespace core {
 namespace module {
 
     PluginControl::PluginControl() {
-        this->messageControl = MessageControl::getInstance();
+
     }
 
     PluginControl::~PluginControl() {
@@ -73,6 +73,7 @@ namespace module {
     }
 
     void PluginControl::launchNewPlugin(IPlugin *plugin) {
+        MessageControl *messageControl = MessageControl::getInstance();
 
         for (int i = 0; i < TOTALENTITIES; i++) {
             if (plugin->listenFilter(EntityType(i))) {
@@ -102,6 +103,8 @@ namespace module {
     }
 
     void PluginControl::connectRegion(IPlugin *plugin) {
+        MessageControl *messageControl = MessageControl::getInstance();
+
         connect(messageControl,SIGNAL(regionAdded(Region*)),plugin,
                 SLOT(onEntityAdded(Entity*))); 
         connect(messageControl,SIGNAL(regionChanged(Region*)), plugin,
@@ -113,6 +116,8 @@ namespace module {
     }
 
     void PluginControl::connectRegionBase(IPlugin *plugin) {
+        MessageControl *messageControl = MessageControl::getInstance();
+
         connect(messageControl,SIGNAL(regionBaseAdded(Region*)), plugin,
                 SLOT(onEntityAdded(Entity*)));
         connect(messageControl,SIGNAL(regionBaseChanged(Region*)), plugin,

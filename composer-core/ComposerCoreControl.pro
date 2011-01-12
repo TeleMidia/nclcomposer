@@ -52,7 +52,9 @@ HEADERS_UTIL +=include/util/ComposerCoreControl_global.h \
     include/util/Project.h \
     include/util/DocumentParser.h \
     include/util/EntityUtil.h \
-    include/util/CoreManager.h
+    include/util/CoreManager.h \
+    include/util/Singleton.h
+
 
 HEADERS_PLUGIN += include/plugin/IPlugin.h \
     include/plugin/IPluginFactory.h

@@ -19,23 +19,25 @@ class ProjectControl;
 */
 
 #include "../util/Project.h"
+#include "../util/Singleton.h"
 using namespace composer::core::util;
 #include "../util/DocumentParser.h"
 using namespace composer::core::plugin;
+#include "PluginControl.h"
+using namespace composer::core::util;
+
 
 namespace composer {
 namespace core {
 namespace module {
 
-    class ProjectControl : public QObject{
+    class ProjectControl : public QObject , public Singleton<ProjectControl> {
         Q_OBJECT
-        public:
+
+        friend class Singleton<ProjectControl>;
+        private:
             ProjectControl();
             ~ProjectControl();
-
-        private:
-            static ProjectControl *instance;
-            static QMutex instMutex;
 
             QReadWriteLock lockProjects;
             Project *activeProject;
@@ -43,9 +45,6 @@ namespace module {
             QMap<QString, DocumentParser* > parsers;
 
         public:
-            static ProjectControl* getInstance();
-            static void     releaseInstance();
-
             /** Abre uma base privada existente localizada pelo parâmetro
                 location. Se a base privada não existir ou se o parâmetro
                 location não for informado, uma nova base é criada com o
@@ -78,6 +77,7 @@ namespace module {
              void newActivateProject(Project *);
              void documentCreatedAndParsed(QString documentId,
                                            QString location);
+             void launchNewPluginInstance(NclDocument *);
              void errorNotify(QString);
 
     };

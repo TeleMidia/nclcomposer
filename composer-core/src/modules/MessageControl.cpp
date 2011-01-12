@@ -6,9 +6,6 @@ namespace composer {
 namespace core {
 namespace module {
 
-    MessageControl *MessageControl::instance = NULL;
-    QMutex MessageControl::instMutex;
-
     MessageControl::MessageControl() {
         QMutexLocker locker(&mutex);
         this->layoutFacade   = Layout::getInstance();
@@ -19,22 +16,6 @@ namespace module {
         QMutexLocker locker(&mutex);
         Layout::releaseInstance();
         Document::releaseInstance();
-    }
-
-    MessageControl* MessageControl::getInstance(){
-        QMutexLocker locker(&instMutex);
-        if (!instance) {
-            instance = new MessageControl();
-        }
-        return instance;
-    }
-
-    void     MessageControl::releaseInstance() {
-        QMutexLocker locker(&instMutex);
-        if (instance != NULL) {
-            delete instance;
-            instance = NULL;
-        }
     }
 
     void MessageControl::onAddEntity( EntityType entity,

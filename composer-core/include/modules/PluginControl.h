@@ -14,6 +14,10 @@
 #include <QMetaObject>
 
 #include <model/ncm/NclDocument.h>
+using namespace ncm;
+
+#include "../util/Singleton.h"
+using namespace composer::core::util;
 
 #include "MessageControl.h"
 #include "../plugin/IPluginFactory.h"
@@ -23,17 +27,21 @@ using namespace composer::core::plugin;
 namespace composer {
 namespace core {
 namespace module {
-    class PluginControl : public QObject{
+
+    class PluginControl : public QObject , public Singleton<PluginControl> {
         Q_OBJECT
+
+        friend class Singleton<PluginControl>;
         private:
-            QHash<QString,IPluginFactory*> pluginFactories;
-            QMultiHash<QString,IPlugin*> pluginInstances;
-            MessageControl *messageControl;
-            void connectRegion(IPlugin *);
-            void connectRegionBase(IPlugin *);
-        public:
             PluginControl();
             ~PluginControl();
+            QHash<QString,IPluginFactory*> pluginFactories;
+            QMultiHash<QString,IPlugin*> pluginInstances;
+
+            void connectRegion(IPlugin *);
+            void connectRegionBase(IPlugin *);
+
+        public:
             void loadPlugins(QString pluginsDirPath);
             void launchNewPlugin(IPlugin *);
         public slots:

@@ -24,25 +24,26 @@ using namespace ncm::functional;
 #include "../plugin/IPlugin.h"
 using namespace composer::core::plugin;
 
+#include "../util/Singleton.h"
+using namespace composer::core::util;
+
 namespace composer {
 namespace core {
 namespace module {
 
-    class MessageControl : public QObject {
-            Q_OBJECT
+    class MessageControl : public QObject, public Singleton<MessageControl> {
+     Q_OBJECT
 
-      public:
+      friend class Singleton<MessageControl>;
+      private:
             MessageControl();
             ~MessageControl();
 
-      private:
-            static MessageControl *instance;
             Layout  *layoutFacade;
             Document *documentFacade;
             IPlugin *sender;
             QReadWriteLock lockSender;
             QMutex mutex;
-            static QMutex instMutex;
 
             //TODO - rever essa logica
             inline void setSender(IPlugin *sender) {
@@ -53,10 +54,6 @@ namespace module {
                 QReadLocker locker(&lockSender);
                 return this->sender;
             }
-
-        public:
-            static MessageControl* getInstance();
-            static void     releaseInstance();
 
         private:
             void addNcl(map<string,string>&, bool force);

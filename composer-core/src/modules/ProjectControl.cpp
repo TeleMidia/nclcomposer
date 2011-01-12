@@ -4,12 +4,8 @@ namespace composer {
 namespace core {
 namespace module {
 
-    ProjectControl *ProjectControl::instance = NULL;
-    QMutex ProjectControl::instMutex;
-
     ProjectControl::ProjectControl() {
         this->activeProject = NULL;
-
     }
 
     ProjectControl::~ProjectControl() {
@@ -33,22 +29,6 @@ namespace module {
             doc = NULL;
         }
         parsers.clear();
-    }
-
-    ProjectControl* ProjectControl::getInstance(){
-        QMutexLocker locker(&instMutex);
-        if (!instance) {
-            instance = new ProjectControl();
-        }
-        return instance;
-    }
-
-    void     ProjectControl::releaseInstance() {
-        QMutexLocker locker(&instMutex);
-        if (instance != NULL) {
-            delete instance;
-            instance = NULL;
-        }
     }
 
     bool ProjectControl::openProject (QString projectId, QString location) {
