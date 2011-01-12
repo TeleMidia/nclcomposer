@@ -37,9 +37,6 @@ else:unix {
 SOURCES += main.cpp \
     src/gui/MainWindow.cpp \
     src/gui/ProjectTreeWidget.cpp \
-    src/gui/wizard/IntroPage.cpp \
-    src/gui/wizard/EntryPage.cpp \
-    #src/manager/CoreManager.cpp
     src/gui/wizard/ProjectWizard.cpp \
     src/gui/wizard/ProjectEntryPage.cpp \
     src/gui/wizard/DocumentWizard.cpp \
@@ -47,8 +44,6 @@ SOURCES += main.cpp \
 
 HEADERS_GUI += include/gui/MainWindow.h \
     include/gui/ProjectTreeWidget.h \
-    include/gui/wizard/IntroPage.h \
-    include/gui/wizard/EntryPage.h \
     include/gui/wizard/ProjectWizard.h \
     include/gui/wizard/ProjectEntryPage.h \
     include/gui/wizard/DocumentWizard.h \
