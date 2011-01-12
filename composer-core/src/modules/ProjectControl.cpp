@@ -132,13 +132,14 @@ namespace module {
         Project *p = getProject(projectId);
         QString projectLocation = p->getLocation();
 
+
         if (!documentId.endsWith(".ncl")) documentId += ".ncl";
         QString destUri = projectLocation+QDir::separator()+projectId+
                           QDir::separator()+documentId;
 
         /* Adding a existing document */
         if (copy) {
-           if (!QFile::copy(uri,destUri)) {
+            if (!QFile::copy(uri, destUri)) {
                qDebug() << "ProjectControl::addDocument" <<
                            "fails on copy the document";
                return false;
