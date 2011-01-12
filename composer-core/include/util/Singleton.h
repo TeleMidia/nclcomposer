@@ -6,9 +6,6 @@
 
 #include <assert.h>
 
-#include "SingletonBase.h"
-using namespace composer::core::util;
-
 namespace composer {
 namespace core {
 namespace util {
