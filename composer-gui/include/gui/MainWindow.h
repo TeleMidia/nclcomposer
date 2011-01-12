@@ -47,7 +47,6 @@ class MainWindow : public QMainWindow {
         QAction *projectWindowAct;
         ProjectTreeWidget *projectTree;
         QDockWidget *dockTree;
-        MainWizard *wizard;
         ProjectWizard *projectWizard;
         DocumentWizard *documentWizard;
 
@@ -76,7 +75,6 @@ class MainWindow : public QMainWindow {
         void createDocumentInTree(QString name,
                                   QString location);
         void errorDialog(QString);
-        void launchNewDocumentWizard(QString projectLocation);
         void launchAddDocumentWizard(QString projectId);
 
     signals:

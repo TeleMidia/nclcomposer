@@ -23,7 +23,7 @@ void DocumentWizard::accept() {
 
     QString name        = field("name").toString();
     QString location    = field("location").toString();
-    bool checked        = field("copyCheck").toBool();
+    bool checked        = entryPage->isCopy();
 
     qDebug() << "DocumentWizard::accept(" << name << ", " << location << ")";
     emit infoReceived(name,location,projectId,checked);

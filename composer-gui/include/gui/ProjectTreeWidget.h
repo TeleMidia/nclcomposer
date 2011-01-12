@@ -21,7 +21,6 @@ signals:
     void newProject();
 
 private slots:
-    void onNewDocument();
     void onAddDocument();
 public slots:
 

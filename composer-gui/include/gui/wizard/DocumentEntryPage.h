@@ -16,6 +16,7 @@ class DocumentEntryPage : public QWizardPage
     Q_OBJECT
 public:
     explicit DocumentEntryPage(QWidget *parent = 0);
+    inline bool isCopy() { return copy;}
 private:
     void initGUI();
     QLabel *nameLabel;
@@ -25,12 +26,14 @@ private:
     QPushButton *locatorButton;
     QGroupBox *copyBox;
     QString defaultLocation;
+    bool copy;
 signals:
 
 public slots:
 
 private slots:
     void setDocumentLocation();
+    inline void setCopy(bool copy) { this->copy = copy; }
 
 };
 

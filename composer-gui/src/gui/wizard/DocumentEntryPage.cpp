@@ -6,6 +6,7 @@ DocumentEntryPage::DocumentEntryPage(QWidget *parent) :
     setTitle(tr("Fill the information"));
     setSubTitle(tr("Specify basic information about the document. \n"
                 "You can add a existing document to project"));
+    setCopy(false);
     initGUI();
 }
 
@@ -27,6 +28,8 @@ void DocumentEntryPage::initGUI() {
     copyBox = new QGroupBox(this);
     copyBox->setTitle("Copy a NCL Document");
     copyBox->setCheckable(true);
+    connect(copyBox,SIGNAL(clicked(bool)),SLOT(setCopy(bool)));
+
 
     QVBoxLayout *layoutGroup = new QVBoxLayout(copyBox);
     layoutGroup->addWidget(locationLabel);
