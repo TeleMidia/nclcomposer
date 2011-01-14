@@ -127,7 +127,7 @@ namespace module {
     void ProjectControl::addExistingProject(QString projectId,
                                             QString location) {
 
-        qDebug() << "ProjectControl::addProject(" << projectId << ", "
+        qDebug() << "ProjectControl::addExistingProject(" << projectId << ", "
                  << location << ")";
 
         QDir dir(location + QDir::separator() + projectId);

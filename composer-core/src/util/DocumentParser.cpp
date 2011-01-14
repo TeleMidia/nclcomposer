@@ -6,7 +6,6 @@ namespace util {
 
 
 DocumentParser::DocumentParser() {
-    util = EntityUtil::getInstance();
     qDebug() << "DocumentParser::DocumentParser()";
 }
 
@@ -42,16 +41,19 @@ bool DocumentParser::startElement(const QString &namespaceURI,
                   const QString &qName,
                   const QXmlAttributes &attributes)
 {
-    EntityType type = util->getEntityType(qName.toStdString());
-    map<string,string> atts;
-    //TODO - voltar aqui quando o modelo estiver fechado
-//    if (type == NONE) {
-//        qDebug() << "Element (" << qName << ") is not a valid NCL element";
-//    }
-    Entity *parentEntity = elementStack.top();
-    string parentId = parentEntity->getUniqueId();
-
     qDebug() << "DocumentParser::startElement(" << qName << ")";
+    if (qName == "ncl") return true;
+
+    EntityType type = EntityUtil::getEntityType(qName.toStdString());
+    map<string,string> atts;
+
+    if (type == NONE) {
+        qDebug() << "Element (" << qName << ") is not part of the model";
+        return true;
+    }
+    Entity *parentEntity = elementStack.top();
+
+    string parentId = parentEntity->getUniqueId();
 
     for (int i=0 ;i < attributes.count(); i++){
         atts[attributes.qName(i).toStdString()] =
@@ -59,15 +61,14 @@ bool DocumentParser::startElement(const QString &namespaceURI,
 
         emit addEntity(type,parentId,atts,false);
     }
-
+    return true;
 }
 
 bool DocumentParser::endElement(const QString &namespaceURI,
                 const QString &localName,
                 const QString &qName)
 {
-
-
+    elementStack.pop();
 }
 
 bool DocumentParser::characters(const QString &str) {
@@ -83,18 +84,20 @@ bool DocumentParser::fatalError(const QXmlParseException &exception) {
 }
 
 void DocumentParser::onEntityAdded(QString ID, Entity *entity){
+    qDebug() << "DocumentParser::onEntityAdded(" << ID
+            << ", " << QString::fromStdString(
+                    EntityUtil::getEntityName(entity->getType())) << ")";
+
     if (entity->getType() == NCL) {
-//        setNclDocument((NclDocument*)entity);
           setUpParser(QString::fromStdString(
                      ((NclDocument*)entity)->getLocation()));
-//        parseDocument();
-
+          parseDocument();
     }
+    elementStack.push(entity);
 }
 
 bool DocumentParser::listenFilter(EntityType entityType){
-    if (entityType == NCL)
-        return true;
+    return true;
 }
 
 void DocumentParser::onEntityAddError(string error){

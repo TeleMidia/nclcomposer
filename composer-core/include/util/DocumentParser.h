@@ -71,7 +71,6 @@ namespace util {
         QString documentId;
         QString projectId;
         QFile *file;
-        EntityUtil *util;
         QStack<Entity*> elementStack;
 
 

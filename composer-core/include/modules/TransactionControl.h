@@ -31,6 +31,10 @@ namespace module {
         public:
             TransactionControl(NclDocument *nclDoc);
             ~TransactionControl();
+            inline void notifyNCLtoParser() {
+                emit nclAdded("br.composer.plugin.DocumentParser",nclDoc);
+            }
+
         private:
             void addNcl(QString ID, map<string,string>&, bool force);
 

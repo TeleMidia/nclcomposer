@@ -86,9 +86,6 @@ namespace module {
         transControl = new TransactionControl(nclDoc);
         transactionControls[documentId] = transControl;
 
-        connect(this,SIGNAL(addNcl(QString,Entity*)),
-                transControl,SIGNAL(nclAdded(QString,Entity*)));
-
         while (it.hasNext()) {
             it.next();
             pluginBuilder  = it.value();
@@ -106,7 +103,7 @@ namespace module {
                 //TODO -- erro creating instance
             }
         }
-        emit addNcl("composer.core.util.DocumentParser",nclDoc);
+        transControl->notifyNCLtoParser();
         emit newDocumentLaunchedAndCreated(documentId,location);
     }
 
@@ -130,21 +127,20 @@ namespace module {
                         connectRegionBase(plugin, tControl);
                     break;
                 }
-
-                /* Connect signals from the plugin to slots of the core */
-                connect(plugin,SIGNAL(addEntity(EntityType,string,
-                                     map<string,string>&,bool)),
-                        tControl,SLOT(onAddEntity(EntityType,string,
-                                     map<string,string>&,bool)));
-                connect(plugin,SIGNAL(editEntity(Entity*,
-                                     map<string,string>&,bool)),
-                        tControl,SLOT(onEditEntity(Entity*,
-                                     map<string,string>&,bool)));
-                connect(plugin,SIGNAL(removeEntity(Entity*,bool)),
-                        tControl,SLOT(onRemoveEntity(Entity*,bool)));
-
             } //endif
         }//endfor
+
+        /* Connect signals from the plugin to slots of the core */
+        connect(plugin,SIGNAL(addEntity(EntityType,string,
+                             map<string,string>&,bool)),
+                tControl,SLOT(onAddEntity(EntityType,string,
+                             map<string,string>&,bool)));
+        connect(plugin,SIGNAL(editEntity(Entity*,
+                             map<string,string>&,bool)),
+                tControl,SLOT(onEditEntity(Entity*,
+                             map<string,string>&,bool)));
+        connect(plugin,SIGNAL(removeEntity(Entity*,bool)),
+                tControl,SLOT(onRemoveEntity(Entity*,bool)));
     }
 
     void PluginControl::connectRegion(IPlugin *plugin,

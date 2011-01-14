@@ -17,8 +17,10 @@ class ProjectControl;
 } } }
 */
 
+#include <model/util/Singleton.h>
+using namespace composer::model::util;
+
 #include "../util/Project.h"
-#include "../util/Singleton.h"
 using namespace composer::core::util;
 #include "../util/DocumentParser.h"
 using namespace composer::core::plugin;
