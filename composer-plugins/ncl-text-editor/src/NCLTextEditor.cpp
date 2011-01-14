@@ -74,9 +74,10 @@ void NCLTextEditor::initParameters(){
     //connect(this, SIGNAL(marginClicked(int,int,Qt::KeyboardModifiers)), this, SLOT(MarkLine(int,int,Qt::KeyboardModifiers)));
 
     error_marker = markerDefine(QPixmap(":/images/error-icon-16.png"), -1);
-    error_indicator = indicatorDefine(SquiggleIndicator, -1);
+    error_indicator = indicatorDefine(RoundBoxIndicator, 1);
     setIndicatorForegroundColor(QColor("#FF0000"), error_indicator);
-    filling_attribute_indicator = indicatorDefine (RoundBoxIndicator, -1);
+    filling_attribute_indicator = indicatorDefine (RoundBoxIndicator, 2);
+    qDebug() << error_marker << " " << error_indicator;
 }
 
 void NCLTextEditor::Increasefont(){
