@@ -49,7 +49,7 @@ HEADERS_GUI += include/gui/MainWindow.h \
     include/gui/wizard/DocumentWizard.h \
     include/gui/wizard/DocumentEntryPage.h
 
-HEADERS_MANAGER +=  #include/manager/CoreManager.h
+HEADERS_MANAGER +=
 RESOURCES += images.qrc
 
 HEADERS += $$HEADERS_GUI $$HEADERS_MANAGER

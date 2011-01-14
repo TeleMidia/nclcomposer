@@ -3,13 +3,16 @@
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent) {
     initGUI();
-    cManager = new CoreManager(this);
-    connect(cManager,SIGNAL(projectCreated(QString,QString)),
+    ProjectControl *pjControl = ProjectControl::getInstance();
+    PluginControl  *pgControl = PluginControl::getInstance();
+    connect(pjControl,SIGNAL(projectCreated(QString,QString)),
             this,SLOT(createProjectInTree(QString,QString)));
-    connect(cManager,SIGNAL(documentAdded(QString,QString)),
-            this,SLOT(createDocumentInTree(QString,QString)));
-    connect(cManager,SIGNAL(onError(QString)),
+    connect(pjControl,SIGNAL(notifyError(QString)),
             this,SLOT(errorDialog(QString)));
+    connect(pgControl,SIGNAL(notifyError(QString)),
+            this,SLOT(errorDialog(QString)));
+    connect(pgControl,SIGNAL(newDocumentLaunchedAndCreated(QString,QString)),
+            this,SLOT(createDocumentInTree(QString,QString)));
 
     readSettings();
 }
@@ -37,7 +40,7 @@ void MainWindow::readSettings() {
             qDebug() << "MainWindow::readSettings" <<
                         "READ projectId: " << projectId <<
                         "location: " << location;
-            cManager->addProject(projectId,location);
+            ProjectControl::getInstance()->addProject(projectId,location);
         }
     settings.endGroup();
 }
@@ -61,7 +64,7 @@ void MainWindow::launchProjectWizard() {
     projectWizard = new ProjectWizard(this);
 
     connect(projectWizard,SIGNAL(infoReceived(QString,QString)),
-            cManager,SLOT(createProject(QString,QString)));
+            ProjectControl::getInstance(),SLOT(addProject(QString,QString)));
     projectWizard->init();
 }
 
@@ -72,7 +75,8 @@ void MainWindow::launchAddDocumentWizard(QString projectId) {
     documentWizard->setProjectId(projectId);
     qDebug() << "MainWindow::launchAddDocumentWizard (" << projectId << ")";
     connect(documentWizard,SIGNAL(infoReceived(QString,QString,QString,bool)),
-            cManager,SLOT(addDocument(QString,QString,QString,bool)));
+            ProjectControl::getInstance(),
+            SLOT(addDocument(QString,QString,QString,bool)));
     documentWizard->init();
 }
 
@@ -213,7 +217,7 @@ void MainWindow::closeEvent(QCloseEvent *event)
  #else
     QSettings settings("telemidia", "composer");
  #endif
-    if(cManager->saveSettings()) {
+    if(ProjectControl::getInstance()->saveProjects()) {
      settings.beginGroup("mainwindow");
         settings.setValue("geometry", saveGeometry());
         settings.setValue("windowState", saveState());

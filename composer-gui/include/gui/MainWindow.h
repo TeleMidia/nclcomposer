@@ -23,8 +23,12 @@
 #include <QtGui/QGridLayout>
 #include <QtGui/QLineEdit>
 
-#include <control/util/CoreManager.h>
-using namespace composer::core::util;
+//#include <control/util/CoreManager.h>
+//using namespace composer::core::util;
+
+#include <control/modules/ProjectControl.h>
+#include <control/modules/PluginControl.h>
+using namespace composer::core::module;
 
 #include "wizard/ProjectWizard.h"
 #include "wizard/DocumentWizard.h"
@@ -49,8 +53,6 @@ class MainWindow : public QMainWindow {
         ProjectWizard *projectWizard;
         DocumentWizard *documentWizard;
 
-    private:
-         CoreManager *cManager;
     private:
         void initGUI();
         void createStatusBar();
