@@ -24,8 +24,8 @@ namespace plugin {
 
     class IPluginFactory {
     public:
-        IPluginFactory();
-        virtual ~IPluginFactory() = 0;
+
+        virtual ~IPluginFactory() {}
         //! Through this call the core is able to create a new plugin instance
         //!
           /*!
@@ -43,6 +43,7 @@ namespace plugin {
                                            (IPlugin *) = 0;
 
         virtual QString getPluginID() = 0;
+
 
 };
 

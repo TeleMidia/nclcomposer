@@ -4,9 +4,8 @@
 #include <QtDebug>
 #include <QReadWriteLock>
 #include <QSettings>
-
+#include <QMessageBox>
 #include <QObject>
-
 #include <QMap>
 #include <QString>
 
@@ -44,25 +43,26 @@ namespace module {
             QMap<QString, Project*> projects;
             QMap<QString, DocumentParser* > parsers;
 
+            void addFilesInDirectory(QDir dir, QString projectId);
+            void addExistingProject(QString projectId,QString location);
+
         public:
             /** Abre uma base privada existente localizada pelo parâmetro
                 location. Se a base privada não existir ou se o parâmetro
                 location não for informado, uma nova base é criada com o
                 identificador baseId. */
-             bool openProject (QString projectId, QString location);
+
              bool activateProject (QString projectId);
              bool deactivateProject (QString projectId);
              bool deleteProject (QString projectId);
+
+             /* the physical dir already exists, creating the Project* */
              Project* createProject(QString projectId, QString location);
-             /** Salva todo o conteúdo da base privada em um dispositivo de
-                armazenamento persistente */
-             bool saveProject (QString projectId, QString location);
+
              /** Fecha a base privada e descarta todo o conteúdo da base
                 privada */
              bool closeProject (QString projectId);
-             bool saveAllProjects();
-             bool addDocument (QString projectId, QString uri,
-                               QString  documentId, bool copy);
+             bool saveProjects();
 
              bool removeDocument (QString projectId, QString documentId);
              bool deleteDocument (QString projectId, QString documentId);
@@ -72,13 +72,17 @@ namespace module {
              inline Project *getCurrentProject() {return this->activeProject;}
 
          public slots:
-             void onDocumentParsed(QString projectId, QString documentId);
+             void addProject(QString projectId, QString location);
+
+             void addDocument(QString documentId,QString location,
+                              QString projectId, bool copy);
+
          signals:
+             void projectCreated(QString projectId,QString location);
              void newActivateProject(Project *);
-             void documentCreatedAndParsed(QString documentId,
-                                           QString location);
+             void documentAdded(QString documentId, QString location);
              void launchNewPluginInstance(NclDocument *);
-             void errorNotify(QString);
+             void notifyError(QString);
 
     };
 }

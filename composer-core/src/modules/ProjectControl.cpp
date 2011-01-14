@@ -6,6 +6,10 @@ namespace module {
 
     ProjectControl::ProjectControl() {
         this->activeProject = NULL;
+//        connect(PluginControl::getInstance(),
+//                SIGNAL(newDocumentLaunchedAndCreated(QString,QString)),
+//                this,
+//                SIGNAL(documentAdded(QString,QString)));
     }
 
     ProjectControl::~ProjectControl() {
@@ -19,24 +23,10 @@ namespace module {
             p = NULL;
         }
         projects.clear();
-
-        QMapIterator<QString,DocumentParser*> itP(parsers);
-        while(itP.hasNext()){
-            itP.next();
-            DocumentParser *doc = itP.value();
-            parsers.remove(itP.key());
-            delete doc;
-            doc = NULL;
-        }
-        parsers.clear();
     }
 
-    bool ProjectControl::openProject (QString projectId, QString location) {
-        //TODO - fazer parser do arquivo de projeto
-        return true;
-    }
-
-    Project* ProjectControl::createProject(QString projectId, QString location) {
+    Project* ProjectControl::createProject(QString projectId,
+                                       QString location) {
 
         qDebug() << "ProjectControl::createProject(" << projectId << ", "
                  << location << ")";
@@ -90,12 +80,7 @@ namespace module {
         return NULL;
     }
 
-    bool ProjectControl::saveProject (QString projectId, QString location) {
-        //TODO - salvar arquivo de projeto e chamar save para cada NCLDocument
-        return true;
-    }
-
-    bool ProjectControl::saveAllProjects() {
+    bool ProjectControl::saveProjects() {
         QWriteLocker locker(&lockProjects);
         QMapIterator<QString,Project*> it(projects);
     #ifdef Q_WS_MAC
@@ -127,46 +112,6 @@ namespace module {
       return true;
     }
 
-    bool ProjectControl::addDocument (QString projectId, QString uri,
-                                      QString  documentId, bool copy) {
-        Project *p = getProject(projectId);
-        QString projectLocation = p->getLocation();
-
-        if (!documentId.endsWith(".ncl")) documentId += ".ncl";
-        QString destUri = projectLocation+QDir::separator()+projectId+
-                          QDir::separator()+documentId;
-
-        /* Adding a existing document */
-        if (copy) {
-            if (!QFile::copy(uri, destUri)) {
-               qDebug() << "ProjectControl::addDocument" <<
-                           "fails on copy the document";
-               return false;
-           }           
-        } /*else { /* Creating a brand new Document /
-            QFile nclFile(destUri);
-            if (!nclFile.open( QIODevice::ReadWrite ) ) {
-                emit errorNotify(tr("Could not created the NCLFile (%1)")
-                                 .arg(destUri));
-                return false;
-            } else {
-                nclFile.close();
-            }
-        }*/
-
-        uri = destUri;
-        DocumentParser *docParser = new DocumentParser(documentId,projectId);
-        parsers[projectId+documentId] = docParser;
-
-        connect(docParser,SIGNAL(documentParsed(QString,QString)),this,
-             SLOT(onDocumentParsed(QString,QString)));
-
-        if (!docParser->setUpParser(uri)) {
-           qDebug() << "ProjectControl::addDocument fails in setUpParser";
-           return false;
-        }
-        return true;
-    }
 
     bool ProjectControl::removeDocument (QString projectId,
                                          QString documentId) {
@@ -178,33 +123,134 @@ namespace module {
       return true;
     }
 
-    bool ProjectControl::saveDocument (QString projectId, QString documentId,
-                                       QString location) {
-        //TODO - salvar o documento Ncl
-      return true;
+
+    void ProjectControl::addExistingProject(QString projectId,
+                                            QString location) {
+
+        qDebug() << "ProjectControl::addProject(" << projectId << ", "
+                 << location << ")";
+
+        QDir dir(location + QDir::separator() + projectId);
+
+        if (dir.exists()) {
+            createProject(projectId,location);
+            emit projectCreated(projectId,location);
+            //TODO - fazer o filtro certinho
+            //QStringList filters;
+            //filters << "*.ncl";
+            //dir.setNameFilters(filters);
+            dir.setFilter(QDir::Files | QDir::AllDirs
+                          | QDir::NoDotAndDotDot | QDir::NoSymLinks);
+            dir.setSorting(QDir::DirsFirst | QDir::Name);
+            addFilesInDirectory(dir,projectId);
+        } else { //dir dont exists
+            emit notifyError(tr("Project %1 could not be open,"
+                            "maybe the path (%2) has been changed")
+                         .arg(projectId).arg(location));
+        }
     }
 
-    void ProjectControl::onDocumentParsed(QString projectId,
-                                          QString documentId)
-    {
-        Project *p = getProject(projectId);
-        if (p == NULL) {
-            //Delete parser
-            return;
-        }
+    void ProjectControl::addFilesInDirectory(QDir dir, QString projectId) {
+        QFileInfoList list = dir.entryInfoList();
 
-        if (parsers.count(projectId+documentId) != 0) {
-            DocumentParser *parser = parsers[projectId+documentId];
-            NclDocument *nclDoc = parser->getNclDocument();
-            if (nclDoc != NULL) {
-                if (p->addDocument(documentId,nclDoc)) {
-                    qDebug() << "ProjectControl::onDocumentParsed("
-                             << projectId << ", " << documentId << ")";
-                    emit documentCreatedAndParsed(documentId,
-                                                  p->getLocation());
-                }
+        qDebug() << "ProjectControl::addFilesInDirectory(" <<
+                    dir << ", " << projectId;
+
+        for (int i = 0; i < list.size(); ++i) {
+           QFileInfo fileInfo = list.at(i);
+           qDebug() << "ProjectControl::addFilesInDirectory parsing file: " <<
+                        fileInfo.fileName();
+           if (fileInfo.isFile()) {
+               QString fileName = fileInfo.fileName();
+               QString filePath = fileInfo.absoluteFilePath();
+               if (fileName.endsWith(".ncl")) {
+                   qDebug() << "ProjectControl::addFilesInDirectory " <<
+                                "Adding NCL File: " << fileName <<
+                                "in: " << projectId;
+                   addDocument(fileName,filePath,projectId,false);
+               }
+           } else if (fileInfo.isDir()) {
+               //TODO adicionar diretorio no projectTree
+               //TODO testar emitindo sinal de projetoCriado
+               addFilesInDirectory(fileInfo.dir(),projectId);
+           }
+
+         }
+    }
+
+    void ProjectControl::addProject(QString projectId, QString location){
+
+        qDebug() << "ProjectControl::addProject(" << projectId << ", "
+                 << location << ")";
+
+        QString fullPath = location + QDir::separator() + projectId;
+        QDir dir(fullPath);
+
+        if(dir.exists()) {
+            QMessageBox mBox;
+            mBox.setText(tr("The directory (%1) already exists").arg(fullPath));
+            mBox.setInformativeText(tr("Do you want add as Project ?"));
+            mBox.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
+            mBox.setDefaultButton(QMessageBox::Yes);
+            mBox.setIcon(QMessageBox::Question);
+            if ( mBox.exec() == QMessageBox::Yes) {
+                return addExistingProject(projectId,location);
+            } else {
+                emit notifyError(
+                     tr("The project was not created due the user choice!"));
+                return;
+            }
+        } else { //Directory does not exists
+            if(dir.mkpath(fullPath)) {
+                createProject(projectId,location);
+                emit projectCreated(projectId,location);
+            } else {
+                emit notifyError(tr("Directory for this project could not be created"));
             }
         }
+    }
+
+    void ProjectControl::addDocument(QString documentId,QString location,
+                                  QString projectId, bool copy) {
+
+        //TODO - rever esses nomes de argumentos
+
+        qDebug() << "ProjectControl::addDocument(" << documentId << ", "
+                 << location << ")";
+
+        Project *p = getProject(projectId);
+        QString projectLocation = p->getLocation();
+
+        QString uri = location;
+        if (!documentId.endsWith(".ncl")) documentId += ".ncl";
+        QString destUri = projectLocation+QDir::separator()+projectId+
+                          QDir::separator()+documentId;
+
+        /* Adding a existing document */
+        if (copy) {
+            if (!QFile::copy(uri, destUri)) {
+               qDebug() << "ProjectControl::addDocument" <<
+                           "fails on copy the document";
+               emit notifyError(tr("Could not copy NCLFile (%1)"
+                                   "to location (%2)").arg(documentId,destUri));
+               return;
+           }
+        } else { /* Creating a brand new Document */
+            QFile nclFile(destUri);
+            if (!nclFile.open( QIODevice::ReadWrite ) ) {
+                emit notifyError(tr("Could not created the NCLFile (%1)")
+                                 .arg(destUri));
+                return;
+            } else {
+                nclFile.close();
+            }
+        }
+
+        uri = destUri;
+
+        //TODO - rever se eh projectLocation mesmo
+        PluginControl::getInstance()->onNewDocument(documentId,uri);
+
     }
 
 }//fim

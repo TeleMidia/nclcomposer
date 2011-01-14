@@ -6,7 +6,11 @@ namespace core {
 namespace module {
 
     PluginControl::PluginControl() {
-
+        qDebug() << "PluginControl::PluginControl()";
+        IPluginFactory *parserFac = new DocumentParserFactory();
+        pluginFactories.insert(parserFac->getPluginID(), parserFac);
+        //TODO - loadPlugins :D
+        //loadPlugins();
     }
 
     PluginControl::~PluginControl() {
@@ -15,6 +19,7 @@ namespace module {
          IPluginFactory *atualFactory = NULL;
          IPlugin *atualInstance = NULL;
          while(itFac.hasNext()){
+             itFac.next();
              atualFactory = itFac.value();
              QList<IPlugin*> instances = pluginInstances.values
                                                         (itFac.key());
@@ -54,78 +59,119 @@ namespace module {
         }
     }
 
-    void PluginControl::onNewDocument(NclDocument *nclDoc) {
+    void PluginControl::onNewDocument(QString documentId,
+                                      QString location) {
+
+        qDebug() << "PluginControl::onNewDocument(" << documentId
+                 << ", " << location << ")";
+
         QHashIterator<QString,IPluginFactory*> it(pluginFactories);
         IPluginFactory *pluginBuilder;
         IPlugin *pluginInstance;
+        TransactionControl *transControl;
+        map<string,string> atts;
+
+        if (transactionControls.contains(documentId)) {
+            emit notifyError(tr("Transaction Control could not be created"
+                                "for NCLDocument(%1)"));
+            return;
+        }
+
+        atts["id"] = documentId.toStdString();
+
+        /* create the NCLDocument */
+        NclDocument *nclDoc = Document::getInstance()->createNclDocument(
+                                               atts, location.toStdString());
+
+        transControl = new TransactionControl(nclDoc);
+        transactionControls[documentId] = transControl;
+
+        connect(this,SIGNAL(addNcl(QString,Entity*)),
+                transControl,SIGNAL(nclAdded(QString,Entity*)));
+
         while (it.hasNext()) {
+            it.next();
             pluginBuilder  = it.value();
             pluginInstance = pluginBuilder->createPluginInstance();
+            pluginInstance->setPluginID(pluginBuilder->getPluginID());
             if (pluginInstance) {
-                launchNewPlugin(pluginInstance);
+                launchNewPlugin(pluginInstance, transControl);
                 pluginInstance->setNclDocument(nclDoc);
                 pluginInstances.insert(it.key(),pluginInstance);
                 //TODO - Pegar o widget e colocar no QDockWidget
+                //Se for nulo nao eh plugin visual
             } else {
+                qDebug() << "Could not create a instance for the plugin"
+                         << "(" << pluginBuilder->getPluginID() << ")";
                 //TODO -- erro creating instance
             }
         }
+        emit addNcl("composer.core.util.DocumentParser",nclDoc);
+        emit newDocumentLaunchedAndCreated(documentId,location);
     }
 
-    void PluginControl::launchNewPlugin(IPlugin *plugin) {
-        MessageControl *messageControl = MessageControl::getInstance();
+    void PluginControl::launchNewPlugin(IPlugin *plugin,
+                                        TransactionControl *tControl) {
+        qDebug() << "PluginControl::launchNewPlugin(" << plugin->getPluginID()
+                 << ")";
 
         for (int i = 0; i < TOTALENTITIES; i++) {
             if (plugin->listenFilter(EntityType(i))) {
                 switch(EntityType(i)) {
+                    case NCL:
+                        connect(tControl,SIGNAL(nclAdded(QString,Entity*)),
+                                plugin,SLOT(onEntityAdded(QString,Entity*)));
+                        qDebug() << "PluginControl::launchNewPlugin(NCL)";
+                    break;
                     case REGION:
-                        connectRegion(plugin);
+                        connectRegion(plugin, tControl);
                     break;
                     case REGIONBASE:
-                        connectRegionBase(plugin);
+                        connectRegionBase(plugin, tControl);
                     break;
                 }
 
                 /* Connect signals from the plugin to slots of the core */
                 connect(plugin,SIGNAL(addEntity(EntityType,string,
                                      map<string,string>&,bool)),
-                        messageControl,SLOT(onAddEntity(EntityType,string,
+                        tControl,SLOT(onAddEntity(EntityType,string,
                                      map<string,string>&,bool)));
-                connect(plugin,SIGNAL(editEntity(EntityType,Entity*,
+                connect(plugin,SIGNAL(editEntity(Entity*,
                                      map<string,string>&,bool)),
-                        messageControl,SLOT(onEditEntity(EntityType,Entity*,
+                        tControl,SLOT(onEditEntity(Entity*,
                                      map<string,string>&,bool)));
                 connect(plugin,SIGNAL(removeEntity(Entity*,bool)),
-                        messageControl,SLOT(onRemoveEntity(Entity*,bool)));
+                        tControl,SLOT(onRemoveEntity(Entity*,bool)));
 
             } //endif
         }//endfor
     }
 
-    void PluginControl::connectRegion(IPlugin *plugin) {
-        MessageControl *messageControl = MessageControl::getInstance();
+    void PluginControl::connectRegion(IPlugin *plugin,
+                                      TransactionControl *tControl) {
 
-        connect(messageControl,SIGNAL(regionAdded(Region*)),plugin,
-                SLOT(onEntityAdded(Entity*))); 
-        connect(messageControl,SIGNAL(regionChanged(Region*)), plugin,
-                SLOT(onEntityChanged(Entity*))); 
-        connect(messageControl,SIGNAL(regionRemoved(string)),plugin,
-                SLOT(onEntityRemoved(string)));
-        connect(messageControl,SIGNAL(aboutToRemoveRegion(Region*)),plugin,
-                SLOT(onEntityAboutToRemove(Entity*)),Qt::BlockingQueuedConnection);
+
+        connect(tControl,SIGNAL(regionAdded(QString,Entity*)),
+                plugin, SLOT(onEntityAdded(QString,Entity*)));
+        connect(tControl,SIGNAL(regionChanged(QString,Entity*)),
+                plugin, SLOT(onEntityChanged(QString,Entity*)));
+        connect(tControl,SIGNAL(regionRemoved(QString,string)),
+                plugin, SLOT(onEntityRemoved(QString,string)));
+        connect(tControl,SIGNAL(aboutToRemoveRegion(Entity*)),
+                plugin, SLOT(onEntityAboutToRemove(Entity*)),Qt::BlockingQueuedConnection);
     }
 
-    void PluginControl::connectRegionBase(IPlugin *plugin) {
-        MessageControl *messageControl = MessageControl::getInstance();
+    void PluginControl::connectRegionBase(IPlugin *plugin,
+                                          TransactionControl *tControl) {
 
-        connect(messageControl,SIGNAL(regionBaseAdded(Region*)), plugin,
-                SLOT(onEntityAdded(Entity*)));
-        connect(messageControl,SIGNAL(regionBaseChanged(Region*)), plugin,
-                SLOT(onEntityChanged(Entity*)));
-        connect(messageControl,SIGNAL(regionBaseRemoved(string)), plugin,
-                SLOT(onEntityRemoved(string)));
-        connect(messageControl,SIGNAL(aboutToRemoveRegionBase(Region*)),plugin,
-                SLOT(onEntityAboutToRemove(Entity*)),Qt::BlockingQueuedConnection);
+        connect(tControl,SIGNAL(regionBaseAdded(QString,Entity*)),
+                plugin, SLOT(onEntityAdded(QString,Entity*)));
+        connect(tControl,SIGNAL(regionBaseChanged(QString,Entity*)),
+                plugin, SLOT(onEntityChanged(QString,Entity*)));
+        connect(tControl,SIGNAL(regionBaseRemoved(QString,string)), plugin,
+                SLOT(onEntityRemoved(QString,string)));
+        connect(tControl,SIGNAL(aboutToRemoveRegionBase(Entity*)),
+                plugin, SLOT(onEntityAboutToRemove(Entity*)),Qt::BlockingQueuedConnection);
     }
 
 }

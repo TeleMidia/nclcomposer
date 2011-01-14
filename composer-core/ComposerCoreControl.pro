@@ -38,28 +38,26 @@ SOURCES += \
     src/modules/PluginControl.cpp \
     src/modules/TransactionControl.cpp \
     src/util/Project.cpp \
-    src/util/EntityUtil.cpp \
-    src/util/CoreManager.cpp \
-    src/util/DocumentParser.cpp \
-    src/modules/MessageControl.cpp
+    #src/util/CoreManager.cpp \
+    src/util/DocumentParserFactory.cpp \
+    src/util/DocumentParser.cpp
 
-HEADERS_MAN += include/modules/MessageControl.h \
-    include/modules/ProjectControl.h \
+
+HEADERS_MAN += include/modules/ProjectControl.h \
     include/modules/PluginControl.h \
     include/modules/TransactionControl.h
 
 HEADERS_UTIL +=include/util/ComposerCoreControl_global.h \
     include/util/Project.h \
+    include/util/DocumentParserFactory.h \
     include/util/DocumentParser.h \
-    include/util/EntityUtil.h \
-    include/util/CoreManager.h \
-    include/util/Singleton.h
-
+    #include/util/CoreManager.h
 
 HEADERS_PLUGIN += include/plugin/IPlugin.h \
     include/plugin/IPluginFactory.h
 
 HEADERS = $$HEADERS_UTIL $$HEADERS_PLUGIN $$HEADERS_MAN
+
 
 headers_man.files = $$HEADERS_MAN
 headers_plugin.files = $$HEADERS_PLUGIN

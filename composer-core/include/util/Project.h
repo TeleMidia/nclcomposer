@@ -8,9 +8,10 @@
 #include <QDebug>
 
 #include <model/ncm/NclDocument.h>
-using namespace ncm;
+using namespace composer::model::ncm;
+
 #include <model/functional/Document.h>
-using namespace ncm::functional;
+using namespace composer::model::ncm::functional;
 
 namespace composer {
 namespace core {

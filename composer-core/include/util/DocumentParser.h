@@ -2,14 +2,11 @@
 #define DOCUMENTPARSER_H
 
 #include <QObject>
-#include <QDomDocument>
 #include <QFile>
 #include <QtDebug>
 #include <QMutex>
-#include <QDomNodeList>
-
-#include <map>
-using namespace std;
+#include <QXmlDefaultHandler>
+#include <QStack>
 
 /*namespace composer {
 namespace core {
@@ -17,34 +14,34 @@ namespace plugin {
 class DocumentParser;
 } } } */
 
+#include <map>
+#include <string>
+using namespace std;
+
 #include "../plugin/IPlugin.h"
 using namespace composer::core::plugin;
 
+#include <model/ncm/Entity.h>
 #include <model/ncm/NclDocument.h>
-using namespace ncm;
+using namespace composer::model::ncm;
 
-#include "../modules/MessageControl.h"
-using namespace composer::core::module;
+#include <model/util/EntityUtil.h>
+using namespace composer::model::util;
 
-#include "EntityUtil.h"
-using namespace composer::core::util;
-
-
-//TODO - Modelar para ter 1 DocumentParser por Project
 namespace composer {
 namespace core {
-namespace plugin {
+namespace util {
 
-    class DocumentParser : public IPlugin
+    class DocumentParser : public IPlugin, public QXmlDefaultHandler
 {
     Q_OBJECT
     public:
         DocumentParser(QString documentId, QString projectId);
+        DocumentParser();
         ~DocumentParser();
 
         bool setUpParser(QString uri);
         bool parseDocument();
-        bool parseElement(QDomElement element);
 
         bool listenFilter(EntityType );
 
@@ -58,33 +55,36 @@ namespace plugin {
             return this->documentId;
         }
 
+    protected:
+        bool startElement(const QString &namespaceURI,
+                          const QString &localName,
+                          const QString &qName,
+                          const QXmlAttributes &attributes);
+        bool endElement(const QString &namespaceURI,
+                        const QString &localName,
+                        const QString &qName);
+        bool characters(const QString &str);
+        bool fatalError(const QXmlParseException &exception);
+
     private:
-        QDomDocument nclDomDocument;
         QMutex mutex;
         QString documentId;
         QString projectId;
         QFile *file;
         EntityUtil *util;
-
-        inline void setDomDocument(QDomDocument document) {
-            QMutexLocker locker(&mutex);
-            this->nclDomDocument = document;
-        }
+        QStack<Entity*> elementStack;
 
 
    public slots:
-        void onEntityAdded(Entity *);
+        void onEntityAdded(QString ID, Entity *);
         void onEntityAddError(string error);
         /** TODO Lembrar se ele tiver mudado o ID */
-        void onEntityChanged(Entity *);
+        void onEntityChanged(QString ID, Entity *);
         void onEntityChangeError(string error);
         /** Lembrar de ele apagar a sua referência interna */
         void onEntityAboutToRemove(Entity *);
-        void onEntityRemoved(string entityID);
+        void onEntityRemoved(QString ID, string entityID);
         void onEntityRemoveError(string error);
-
-    signals:
-        void documentParsed(QString projectId, QString documentId);
 
 };
 

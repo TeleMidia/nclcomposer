@@ -6,23 +6,37 @@
 #include <QDir>
 #include <QPluginLoader>
 #include <QObject>
-#include <QPair>
 #include <QMultiHash>
 #include <QList>
 #include <QHashIterator>
-#include <QMetaEnum>
-#include <QMetaObject>
+#include <QDebug>
+
+#include <map>
+#include <string>
+using namespace std;
 
 #include <model/ncm/NclDocument.h>
-using namespace ncm;
+using namespace composer::model::ncm;
 
-#include "../util/Singleton.h"
-using namespace composer::core::util;
+#include <model/functional/Document.h>
+using namespace composer::model::ncm::functional;
 
-#include "MessageControl.h"
+#include <model/util/Singleton.h>
+using namespace composer::model::util;
+
+#include "TransactionControl.h"
+using namespace composer::core::module;
+
 #include "../plugin/IPluginFactory.h"
 #include "../plugin/IPlugin.h"
 using namespace composer::core::plugin;
+
+#include "../util/DocumentParserFactory.h"
+using namespace composer::core::util;
+
+
+//TODO - fazer um gerenciar de maneira eficiente
+//       quando o usuario fechar o plugin tirar ele da memoria
 
 namespace composer {
 namespace core {
@@ -36,16 +50,26 @@ namespace module {
             PluginControl();
             ~PluginControl();
             QHash<QString,IPluginFactory*> pluginFactories;
+            QHash<QString,TransactionControl*> transactionControls;
             QMultiHash<QString,IPlugin*> pluginInstances;
 
-            void connectRegion(IPlugin *);
-            void connectRegionBase(IPlugin *);
+            void connectRegion(IPlugin *,TransactionControl *tControl);
+            void connectRegionBase(IPlugin *, TransactionControl *tControl);
 
         public:
             void loadPlugins(QString pluginsDirPath);
-            void launchNewPlugin(IPlugin *);
+            void launchNewPlugin(IPlugin *plugin,
+                                 TransactionControl *tControl);
+
         public slots:
-            void onNewDocument(NclDocument *nclDoc);
+            void onNewDocument(QString documentId, QString location);
+
+        signals:
+            void newDocumentLaunchedAndCreated(QString documentdId,
+                                               QString location);
+            void notifyError(QString);
+
+            void addNcl(QString ID, Entity *);
 
     };
 }

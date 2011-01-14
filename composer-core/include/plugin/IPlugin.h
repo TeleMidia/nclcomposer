@@ -11,10 +11,10 @@ using namespace std;
 
 #include <model/ncm/Entity.h>
 #include <model/ncm/NclDocument.h>
-using namespace ncm;
+using namespace composer::model::ncm;
 
-#include "../util/EntityUtil.h"
-using namespace composer::core::util;
+#include <model/util/EntityUtil.h>
+using namespace composer::model::util;
 
 //!  The interface for communication between the core and the plugin
 /*!
@@ -38,9 +38,18 @@ namespace plugin {
         private:
              //! The NclDocument binded with this particular plugin instance
              NclDocument *nclDoc;
+             QString pluginID;
              QMutex mutex;
+
         public:
-             //IPluginMessage();
+             inline QString getPluginID() {
+                 return this->pluginID;
+             }
+
+             inline void setPluginID(QString pluginID) {
+                 this->pluginID = pluginID;
+             }
+
              //! This call is used by the core to bind an existing NclDocument
              //! with this plugin instance.
              /*!
@@ -83,7 +92,7 @@ namespace plugin {
                 This call is invoked by the core when a new Entity that this
                 particular plugin is listening is added.
              */
-             virtual void onEntityAdded(Entity *) = 0;
+             virtual void onEntityAdded(QString ID, Entity *) = 0;
              //! This is called by the core when the adding a new Entity was ignored
              /*!
                 This call is invoked by the core to notify the plugin that the
@@ -92,19 +101,18 @@ namespace plugin {
              */
              virtual void onEntityAddError(string error) = 0;
              /** TODO Lembrar se ele tiver mudado o ID */
-             virtual void onEntityChanged(Entity *) = 0;
+             virtual void onEntityChanged(QString ID, Entity *) = 0;
              virtual void onEntityChangeError(string error) = 0;
              /** Lembrar de ele apagar a sua referência interna */
              virtual void onEntityAboutToRemove(Entity *) = 0;
-             virtual void onEntityRemoved(string entityID) = 0;
+             virtual void onEntityRemoved(QString ID, string entityID) = 0;
              virtual void onEntityRemoveError(string error) = 0;
 
 
         signals:
              void addEntity( EntityType entity, string parentEntityId,
                                     map<string,string>& atts, bool force);
-             void editEntity(EntityType,Entity *, map<string,string>& atts,
-                                                                    bool force);
+             void editEntity(Entity *, map<string,string>& atts, bool force);
              void removeEntity( Entity *, bool force);
 
     };
