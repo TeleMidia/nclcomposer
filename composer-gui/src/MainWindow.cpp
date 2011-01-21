@@ -14,18 +14,9 @@ MainWindow::MainWindow(QWidget *parent)
         defaultEx = "/usr/local/lib";
     #endif
 
-    initModules();
     initGUI();
-    ProjectControl *pjControl = ProjectControl::getInstance();
-    PluginControl  *pgControl = PluginControl::getInstance();
-    connect(pjControl,SIGNAL(projectCreated(QString,QString)),
-            this,SLOT(createProjectInTree(QString,QString)));
-    connect(pjControl,SIGNAL(notifyError(QString)),
-            this,SLOT(errorDialog(QString)));
-    connect(pgControl,SIGNAL(notifyError(QString)),
-            this,SLOT(errorDialog(QString)));
-    connect(pgControl,SIGNAL(newDocumentLaunchedAndCreated(QString,QString)),
-            this,SLOT(createDocumentInTree(QString,QString)));
+
+    initModules();
 
     splash.finish(this);
     preferences = new PreferencesWidget(this);
@@ -38,10 +29,20 @@ MainWindow::~MainWindow() {
 
 void MainWindow::initModules()
 {
-    ProjectControl::getInstance();
-    LanguageControl::getInstance();
-    PluginControl::getInstance();
+    ProjectControl *pjControl = ProjectControl::getInstance();
+    PluginControl  *pgControl = PluginControl::getInstance();
+    LanguageControl *lgControl = LanguageControl::getInstance();
 
+    connect(pjControl,SIGNAL(projectCreated(QString,QString)),
+            this,SLOT(createProjectInTree(QString,QString)));
+    connect(pjControl,SIGNAL(notifyError(QString)),
+            this,SLOT(errorDialog(QString)));
+    connect(pgControl,SIGNAL(notifyError(QString)),
+            this,SLOT(errorDialog(QString)));
+    connect(pgControl,SIGNAL(newDocumentLaunchedAndCreated(QString,QString)),
+            this,SLOT(createDocumentInTree(QString,QString)));
+    connect(lgControl,SIGNAL(notifyLoadedProfile(QString,QString)),
+            this,SLOT(addProfileLoaded(QString,QString)));
     readExtensions();
 
 }
@@ -129,6 +130,7 @@ void MainWindow::initGUI() {
     createActions();
     createMenus();
     createToolBar();
+    createAbout();
     showMaximized();
 
 
@@ -207,6 +209,12 @@ void MainWindow::createTreeProject() {
 
 }
 
+void MainWindow::addProfileLoaded(QString name, QString fileName)
+{
+    qDebug() << "MainWindow::addProfileLoaded(" << name << ")";
+    profilesExt->addItem(new QListWidgetItem(name+"("+fileName+")"));
+}
+
 void MainWindow::createMenus() {
      fileMenu = menuBar()->addMenu(tr("&File"));
      fileMenu->addAction(newProjectAct);
@@ -225,10 +233,35 @@ void MainWindow::createMenus() {
 
  }
 
+
+void MainWindow::createAbout()
+{
+    aboutDialog = new QDialog(this);
+    aboutDialog->setWindowTitle(tr("About Composer"));
+
+    profilesExt = new QListWidget(aboutDialog);
+    profilesExt->setEnabled(false);
+
+    QPushButton *bOk = new QPushButton(tr("OK"),aboutDialog);
+    connect(bOk,SIGNAL(clicked()),aboutDialog,SLOT(close()));
+
+    QGridLayout *gLayout = new QGridLayout(aboutDialog);
+    gLayout->addWidget(new QLabel(tr("The <b>Composer</b> is an IDE for"
+                                     " the Multimedia languages."),
+                                     aboutDialog));
+    gLayout->addWidget(new QLabel(tr("<b>Profile Languages Loaded</b>"),
+                                  aboutDialog));
+    gLayout->addWidget(profilesExt);
+    gLayout->addWidget(bOk);
+    aboutDialog->setLayout(gLayout);
+
+
+
+}
+
 void MainWindow::about() {
-    //QDialog
-    QMessageBox::about(this, tr("About Composer"),
-             tr("The <b>Composer</b> is an IDE for the NCL language."));
+    aboutDialog->exec();
+
  }
 
 void MainWindow::errorDialog(QString message) {

@@ -23,7 +23,7 @@ bool PreferencesWidget::loadPreferencesPages(){
     QDir pluginsDir = QDir(pluginsDirStr);
 
     if(!pluginsDir.exists()) {
-        qDebug() << tr("The Language Profile extension "
+        qDebug() << tr("The Preferences extension "
                        "directory (%1) does not exist!").arg(pluginsDirStr);
         return false;
     }

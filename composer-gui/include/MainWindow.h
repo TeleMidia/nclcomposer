@@ -66,6 +66,7 @@ class MainWindow : public QMainWindow {
         DocumentWizard *documentWizard;
         PreferencesWidget *preferences;
 
+        QDialog *aboutDialog;
 
         QString defaultEx;
         QString user_directory_ext;
@@ -74,6 +75,7 @@ class MainWindow : public QMainWindow {
         QString promptChooseDirectory();
         void initModules();
         void initGUI();
+        void createAbout();
         void createStatusBar();
         void createToolBar();
         void createMenus();
@@ -89,6 +91,7 @@ class MainWindow : public QMainWindow {
         void launchProjectWizard();
         void updateWindowMenu();
         void showEditPreferencesDialog();
+        void addProfileLoaded(QString name, QString fileName);
 
     public:
         MainWindow(QWidget *parent = 0);
