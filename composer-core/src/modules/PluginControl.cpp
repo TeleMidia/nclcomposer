@@ -1,4 +1,4 @@
-#include "../../include/modules/PluginControl.h"
+#include "include/modules/PluginControl.h"
 
 
 namespace composer {
@@ -7,57 +7,80 @@ namespace module {
 
     PluginControl::PluginControl() {
         qDebug() << "PluginControl::PluginControl()";
-        IPluginFactory *parserFac = new DocumentParserFactory();
-        pluginFactories.insert(parserFac->getPluginID(), parserFac);
         //TODO - loadPlugins :D
         //loadPlugins();
     }
 
     PluginControl::~PluginControl() {
-         QHashIterator<QString,IPluginFactory*> itFac(pluginFactories);
+         QHash<QString,IPluginFactory*>::iterator itFac;
 
          IPluginFactory *atualFactory = NULL;
-         IPlugin *atualInstance = NULL;
-         while(itFac.hasNext()){
-             itFac.next();
-             atualFactory = itFac.value();
-             QList<IPlugin*> instances = pluginInstances.values
-                                                        (itFac.key());
-             QListIterator<IPlugin*> itInst(instances);
-             while(itInst.hasNext()) {
-                 atualInstance = itInst.next();
-                 atualFactory->releasePluginInstance(atualInstance);
-             }
-             itFac.next();
-             delete atualFactory;
+
+         for (itFac = pluginFactories.begin() ; itFac != pluginFactories.end();
+              itFac++)
+         {
+                 atualFactory = itFac.value();
+                 QList<IPlugin*> instances = pluginInstances.values
+                                                            (itFac.key());
+                 QList<IPlugin*>::iterator itInst;
+
+                 for (itInst = instances.begin() ; itInst != instances.end();
+                      itInst++)
+                 {
+                     atualFactory->releasePluginInstance(*itInst);
+                 }
+                 delete atualFactory;
+                 atualFactory = NULL;
          }
+
          pluginFactories.clear();
          pluginInstances.clear();
+         pluginsByType.clear();
+
     }
 
     void PluginControl::loadPlugins(QString pluginsDirPath) {
         IPluginFactory *pluginFactory = NULL;
 
         QDir pluginsDir = QDir(pluginsDirPath);
+
+        if(!pluginsDir.exists())
+        {
+            emit notifyError(tr("The Plugin Directory (%1) does not exist").
+                             arg(pluginsDirPath));
+            return;
+        }
         
         foreach (QString fileName, pluginsDir.entryList(QDir::Files)) {
-                 QPluginLoader loader(pluginsDir.absoluteFilePath(fileName));
-                 QObject *plugin = loader.instance();
-                 if (plugin) {
-                     pluginFactory = qobject_cast<IPluginFactory*> (plugin);
-                     if (pluginFactory) {
-                         QString pluginID = pluginFactory->getPluginID();
-                         if (pluginFactories.contains(pluginID))
-                             qDebug() << "PluginControl::loadPlugins" <<
-                                     "Plugin with ID (" << pluginID <<
-                                     ") already exists";
-                         pluginFactories.insert(pluginID,pluginFactory);
-                     } else {
-                         //TODO - erro loading plugin
-                     }
-                 }
-        }
-    }
+             QPluginLoader loader(pluginsDir.absoluteFilePath(fileName));
+             QObject *plugin = loader.instance();
+
+             if (plugin)
+             {
+                 pluginFactory = qobject_cast<IPluginFactory*> (plugin);
+                 if (pluginFactory)
+                 {
+                     QString pluginID = pluginFactory->getPluginID();
+                     if (!pluginFactories.contains(pluginID))
+                     {
+                         pluginFactories[pluginID] = pluginFactory;
+                         QList<LanguageType> types =
+                                 pluginFactory->getSupportLanguages();
+                         QList<LanguageType>::iterator it;
+                         for (it = types.begin() ; it!= types.end(); it++)
+                         {
+                             pluginsByType.insert(*it,
+                                                  pluginFactory->getPluginID());
+                         }
+                     }//fim OK insertMap
+                 }//fim if OK pluginFactory
+             }//fim OK load
+             else {
+                qDebug() << "PluginControl::loadPlugins failed to load"
+                         << "(" << fileName << ")";
+             }
+        }//fim foreach
+    }//fim function
 
     void PluginControl::onNewDocument(QString documentId,
                                       QString location) {
@@ -65,45 +88,76 @@ namespace module {
         qDebug() << "PluginControl::onNewDocument(" << documentId
                  << ", " << location << ")";
 
-        QHashIterator<QString,IPluginFactory*> it(pluginFactories);
-        IPluginFactory *pluginBuilder;
+        IPluginFactory *factory;
         IPlugin *pluginInstance;
         TransactionControl *transControl;
-        map<string,string> atts;
+        ILanguageProfile *profile;
+        IDocumentParser *parser;
+        QMap<QString,QString> atts;
 
         if (transactionControls.contains(documentId)) {
-            emit notifyError(tr("Transaction Control could not be created"
-                                "for NCLDocument(%1)"));
+            //TODO - mudar o para a chave da HASH levar em conta o projeto
+            qDebug() << tr("Transaction Control could not be created"
+                                "for Document(%1)").arg(documentId);
             return;
         }
 
-        atts["id"] = documentId.toStdString();
+        QString ext = location;
+        ext = ext.remove(0,ext.lastIndexOf(".")+1);
+        LanguageType type = Utilities::getLanguageTypeByExtension(ext);
+
+        if(type == NONE) {
+            emit notifyError(tr("No Language Profile found for (%1)").
+                             arg(ext.toUpper()));
+            return;
+        }
+
+        /*Requests the LanguageProfile associated with this DocumentType */
+        profile = LanguageControl::getInstance()->getProfileFromType(type);
+        if (!profile) {
+            emit notifyError(tr("No Language Profile Extension "
+                                "found for (%1)").
+                             arg(ext.toUpper()));
+            return;
+        }
+
+        atts["id"] = documentId;
 
         /* create the NCLDocument */
-        NclDocument *nclDoc = Document::getInstance()->createNclDocument(
-                                               atts, location.toStdString());
+        Document *doc = new Document(atts);
+        doc->setLocation(location);
+        doc->setDocumentType(type);
 
-        transControl = new TransactionControl(nclDoc);
+        transControl = new TransactionControl(doc);
         transactionControls[documentId] = transControl;
 
-        while (it.hasNext()) {
-            it.next();
-            pluginBuilder  = it.value();
-            pluginInstance = pluginBuilder->createPluginInstance();
-            pluginInstance->setPluginID(pluginBuilder->getPluginID());
-            if (pluginInstance) {
-                launchNewPlugin(pluginInstance, transControl);
-                pluginInstance->setNclDocument(nclDoc);
-                pluginInstances.insert(it.key(),pluginInstance);
-                //TODO - Pegar o widget e colocar no QDockWidget
-                //Se for nulo nao eh plugin visual
-            } else {
+        /* Requests a new DocumentParser for this Document*/
+        parser = profile->createDocumentParser(doc);
+
+        QList<QString> plugIDs = pluginsByType.values(type);
+        QList<QString>::iterator it;
+        for (it = plugIDs.begin() ; it != plugIDs.end() ;
+             it++)
+        {
+            factory        = pluginFactories[*it];
+            pluginInstance = factory->createPluginInstance();
+            if (pluginInstance)
+            {
+                pluginInstance->setPluginID(factory->getPluginID());
+                pluginInstance->setDocument(doc);
+                launchNewPlugin(pluginInstance,transControl);
+                pluginInstances.insert(*it,pluginInstance);
+                //TODO - pegar o widget e colocar no QDockWdget
+                // OBS: se for nulo nao eh um plug-in visual
+            }
+            else {
                 qDebug() << "Could not create a instance for the plugin"
-                         << "(" << pluginBuilder->getPluginID() << ")";
-                //TODO -- erro creating instance
+                        << "(" << *it << ")";
             }
         }
-        transControl->notifyNCLtoParser();
+        connectParser(parser,transControl);
+        parser->parseDocument();
+        profile->releaseDocumentParser(parser);
         emit newDocumentLaunchedAndCreated(documentId,location);
     }
 
@@ -112,63 +166,46 @@ namespace module {
         qDebug() << "PluginControl::launchNewPlugin(" << plugin->getPluginID()
                  << ")";
 
-        for (int i = 0; i < TOTALENTITIES; i++) {
-            if (plugin->listenFilter(EntityType(i))) {
-                switch(EntityType(i)) {
-                    case NCL:
-                        connect(tControl,SIGNAL(nclAdded(QString,Entity*)),
-                                plugin,SLOT(onEntityAdded(QString,Entity*)));
-                        qDebug() << "PluginControl::launchNewPlugin(NCL)";
-                    break;
-                    case REGION:
-                        connectRegion(plugin, tControl);
-                    break;
-                    case REGIONBASE:
-                        connectRegionBase(plugin, tControl);
-                    break;
-                }
-            } //endif
-        }//endfor
+        /* Connect signals from the core to slots in the plugins */
+        connect(tControl,SIGNAL(entityAdded(QString,Entity*)),
+                plugin, SLOT(onEntityAdded(QString,Entity*)));
+        connect(tControl,SIGNAL(entityChanged(QString,Entity*)),
+                plugin,SLOT(onEntityChanged(QString,Entity*)));
+        connect(tControl,SIGNAL(entityRemoved(QString,QString)),
+                plugin,SLOT(onEntityRemoved(QString,QString)));
+        connect(tControl,SIGNAL(aboutToRemoveEntity(Entity*)),
+                plugin, SLOT(onEntityAboutToRemove(Entity*)),
+                Qt::BlockingQueuedConnection);
 
         /* Connect signals from the plugin to slots of the core */
-        connect(plugin,SIGNAL(addEntity(EntityType,string,
-                             map<string,string>&,bool)),
-                tControl,SLOT(onAddEntity(EntityType,string,
-                             map<string,string>&,bool)));
-        connect(plugin,SIGNAL(editEntity(Entity*,
-                             map<string,string>&,bool)),
-                tControl,SLOT(onEditEntity(Entity*,
-                             map<string,string>&,bool)));
+        connect(plugin,
+                SIGNAL(addEntity(QString,QString,QMap<QString,QString>&,bool)),
+                tControl,
+                SLOT(onAddEntity(QString,QString,QMap<QString,QString>&,bool)));
+        connect(plugin,SIGNAL(editEntity(Entity*,QMap<QString,QString>&,bool)),
+                tControl,
+                SLOT(onEditEntity(Entity*,QMap<QString,QString>&,bool)));
         connect(plugin,SIGNAL(removeEntity(Entity*,bool)),
-                tControl,SLOT(onRemoveEntity(Entity*,bool)));
+                tControl,
+                SLOT(onRemoveEntity(Entity*,bool)));
     }
 
-    void PluginControl::connectRegion(IPlugin *plugin,
-                                      TransactionControl *tControl) {
-
-
-        connect(tControl,SIGNAL(regionAdded(QString,Entity*)),
-                plugin, SLOT(onEntityAdded(QString,Entity*)));
-        connect(tControl,SIGNAL(regionChanged(QString,Entity*)),
-                plugin, SLOT(onEntityChanged(QString,Entity*)));
-        connect(tControl,SIGNAL(regionRemoved(QString,string)),
-                plugin, SLOT(onEntityRemoved(QString,string)));
-        connect(tControl,SIGNAL(aboutToRemoveRegion(Entity*)),
-                plugin, SLOT(onEntityAboutToRemove(Entity*)),Qt::BlockingQueuedConnection);
+    void PluginControl::connectParser(IDocumentParser *parser,
+                         TransactionControl *tControl)
+    {
+        connect(parser,
+                SIGNAL(addEntity(QString,QString,QMap<QString,QString>&,bool)),
+                tControl,
+                SLOT(onAddEntity(QString,QString,QMap<QString,QString>&,bool)));
+        connect(parser,SIGNAL(editEntity(Entity*,QMap<QString,QString>&,bool)),
+                tControl,
+                SLOT(onEditEntity(Entity*,QMap<QString,QString>&,bool)));
+        connect(parser,SIGNAL(removeEntity(Entity*,bool)),
+                tControl,
+                SLOT(onRemoveEntity(Entity*,bool)));
     }
 
-    void PluginControl::connectRegionBase(IPlugin *plugin,
-                                          TransactionControl *tControl) {
 
-        connect(tControl,SIGNAL(regionBaseAdded(QString,Entity*)),
-                plugin, SLOT(onEntityAdded(QString,Entity*)));
-        connect(tControl,SIGNAL(regionBaseChanged(QString,Entity*)),
-                plugin, SLOT(onEntityChanged(QString,Entity*)));
-        connect(tControl,SIGNAL(regionBaseRemoved(QString,string)), plugin,
-                SLOT(onEntityRemoved(QString,string)));
-        connect(tControl,SIGNAL(aboutToRemoveRegionBase(Entity*)),
-                plugin, SLOT(onEntityAboutToRemove(Entity*)),Qt::BlockingQueuedConnection);
-    }
 
 }
 }

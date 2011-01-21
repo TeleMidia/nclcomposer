@@ -1,4 +1,4 @@
-#include "../../include/util/Project.h"
+#include "include/util/Project.h"
 
 namespace composer {
 namespace core {
@@ -9,32 +9,30 @@ Project::Project(QString projectId, QString location) {
     this->location  = location;
     this->projectId = projectId;
     qDebug() << "Project::Project(" << projectId << ", " << location << ")";
-    documentFacade  = Document::getInstance();
 }
 
 Project::~Project() {
     QWriteLocker locker(&lockDocuments);
-    QMapIterator<QString,NclDocument*> it(nclDocuments);
+    QMapIterator<QString,Document*> it(documents);
 
     while(it.hasNext()){
         it.next();
-        NclDocument *ncl = it.value();
-        documentFacade->releaseNclDocument(ncl);
-        if (nclDocuments.remove(it.key()) != 1)
+        Document *doc = it.value();
+        delete doc;
+        doc = NULL;
+        if (documents.remove(it.key()) != 1)
              qDebug() << "Não conseguiu remover do mapa";
     }
-    //nclDocuments.clear();
-    documentFacade->releaseInstance();
 }
 
 
 
-bool Project::addDocument(QString documentId, NclDocument *nclDoc) {
+bool Project::addDocument(QString documentId, Document *doc) {
     QReadLocker locker(&lockDocuments);
-    if (!nclDocuments.contains(documentId)){
+    if (!documents.contains(documentId)){
         locker.unlock();
         QWriteLocker lock(&lockDocuments);
-        nclDocuments[documentId] = nclDoc;
+        documents[documentId] = doc;
         qDebug() << "Project::addDocument(" << documentId << ", "
                  << projectId << ")";
         return true;
@@ -46,10 +44,12 @@ bool Project::addDocument(QString documentId, NclDocument *nclDoc) {
 
 bool Project::removeDocument(QString documentId) {
         QReadLocker locker(&lockDocuments);
-        if (nclDocuments.contains(documentId)) {
+        if (documents.contains(documentId)) {
             locker.unlock();
             QWriteLocker lock(&lockDocuments);
-            documentFacade->releaseNclDocument(nclDocuments.take(documentId));
+            Document *doc = documents.take(documentId);
+            delete doc;
+            doc = NULL;
             return true;
         }
         return false;

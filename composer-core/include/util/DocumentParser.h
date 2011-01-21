@@ -8,25 +8,13 @@
 #include <QXmlDefaultHandler>
 #include <QStack>
 
-/*namespace composer {
-namespace core {
-namespace plugin {
-class DocumentParser;
-} } } */
 
-#include <map>
-#include <string>
-using namespace std;
+#include "../extension/plugin/IPlugin.h"
+using namespace composer::core::extension::plugin;
 
-#include "../plugin/IPlugin.h"
-using namespace composer::core::plugin;
-
-#include <model/ncm/Entity.h>
-#include <model/ncm/NclDocument.h>
-using namespace composer::model::ncm;
-
-#include <model/util/EntityUtil.h>
-using namespace composer::model::util;
+#include "../model/Entity.h"
+#include "../model/Document.h"
+using namespace composer::core::model;
 
 namespace composer {
 namespace core {
@@ -42,8 +30,6 @@ namespace util {
 
         bool setUpParser(QString uri);
         bool parseDocument();
-
-        bool listenFilter(EntityType );
 
         QWidget* getWidget() { return NULL;}
 
@@ -76,14 +62,14 @@ namespace util {
 
    public slots:
         void onEntityAdded(QString ID, Entity *);
-        void onEntityAddError(string error);
+        void onEntityAddError(QString error);
         /** TODO Lembrar se ele tiver mudado o ID */
         void onEntityChanged(QString ID, Entity *);
-        void onEntityChangeError(string error);
+        void onEntityChangeError(QString error);
         /** Lembrar de ele apagar a sua referência interna */
         void onEntityAboutToRemove(Entity *);
-        void onEntityRemoved(QString ID, string entityID);
-        void onEntityRemoveError(string error);
+        void onEntityRemoved(QString ID, QString entityID);
+        void onEntityRemoveError(QString error);
 
 };
 

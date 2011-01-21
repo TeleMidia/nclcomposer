@@ -1,4 +1,4 @@
-#include "../../include/util/DocumentParser.h"
+#include "include/util/DocumentParser.h"
 
 namespace composer {
 namespace core {
@@ -44,22 +44,16 @@ bool DocumentParser::startElement(const QString &namespaceURI,
     qDebug() << "DocumentParser::startElement(" << qName << ")";
     if (qName == "ncl") return true;
 
-    EntityType type = EntityUtil::getEntityType(qName.toStdString());
-    map<string,string> atts;
+    QMap<QString,QString> atts;
 
-    if (type == NONE) {
-        qDebug() << "Element (" << qName << ") is not part of the model";
-        return true;
-    }
     Entity *parentEntity = elementStack.top();
 
-    string parentId = parentEntity->getUniqueId();
+    QString parentId = parentEntity->getUniqueId();
 
     for (int i=0 ;i < attributes.count(); i++){
-        atts[attributes.qName(i).toStdString()] =
-                                           attributes.value(i).toStdString();
+        atts[attributes.qName(i)] = attributes.value(i);
 
-        emit addEntity(type,parentId,atts,false);
+        emit addEntity(qName,parentId,atts,false);
     }
     return true;
 }
@@ -85,22 +79,17 @@ bool DocumentParser::fatalError(const QXmlParseException &exception) {
 
 void DocumentParser::onEntityAdded(QString ID, Entity *entity){
     qDebug() << "DocumentParser::onEntityAdded(" << ID
-            << ", " << QString::fromStdString(
-                    EntityUtil::getEntityName(entity->getType())) << ")";
+            << ", " << entity->getType() << ")";
 
-    if (entity->getType() == NCL) {
-          setUpParser(QString::fromStdString(
-                     ((NclDocument*)entity)->getLocation()));
+    if (entity->getType() == "document") {
+          setUpParser(((Document*)entity)->getLocation());
           parseDocument();
     }
     elementStack.push(entity);
 }
 
-bool DocumentParser::listenFilter(EntityType entityType){
-    return true;
-}
 
-void DocumentParser::onEntityAddError(string error){
+void DocumentParser::onEntityAddError(QString error){
 
 }
 
@@ -109,7 +98,7 @@ void DocumentParser::onEntityChanged(QString ID, Entity *){
 
 }
 
-void DocumentParser::onEntityChangeError(string error){
+void DocumentParser::onEntityChangeError(QString error){
 
 }
 
@@ -118,11 +107,11 @@ void DocumentParser::onEntityAboutToRemove(Entity *){
 
 }
 
-void DocumentParser::onEntityRemoved(QString ID, string entityID){
+void DocumentParser::onEntityRemoved(QString ID, QString entityID){
 
 }
 
-void DocumentParser::onEntityRemoveError(string error){
+void DocumentParser::onEntityRemoveError(QString error){
 
 }
 

@@ -9,23 +9,14 @@
 #include <QMap>
 #include <QString>
 
-/*
-namespace composer {
-namespace core {
-namespace module {
-class ProjectControl;
-} } }
-*/
-
-#include <model/util/Singleton.h>
-using namespace composer::model::util;
-
-#include "../util/Project.h"
+#include "include/util/Project.h"
+#include "include/util/DocumentParser.h"
+#include "include/util/Singleton.h"
 using namespace composer::core::util;
-#include "../util/DocumentParser.h"
-using namespace composer::core::plugin;
+
+
 #include "PluginControl.h"
-using namespace composer::core::util;
+using namespace composer::core::module;
 
 
 namespace composer {
@@ -83,7 +74,7 @@ namespace module {
              void projectCreated(QString projectId,QString location);
              void newActivateProject(Project *);
              void documentAdded(QString documentId, QString location);
-             void launchNewPluginInstance(NclDocument *);
+             void launchNewPluginInstance(Document *);
              void notifyError(QString);
 
     };

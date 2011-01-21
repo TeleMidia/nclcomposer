@@ -5,16 +5,9 @@
 #include <QMutexLocker>
 #include <QMutex>
 
-#include <string>
-#include <map>
-using namespace std;
-
-#include <model/ncm/Entity.h>
-#include <model/ncm/NclDocument.h>
-using namespace composer::model::ncm;
-
-#include <model/util/EntityUtil.h>
-using namespace composer::model::util;
+#include "../../model/Entity.h"
+#include "../../model/Document.h"
+using namespace composer::core::model;
 
 //!  The interface for communication between the core and the plugin
 /*!
@@ -29,6 +22,7 @@ using namespace composer::model::util;
 
 namespace composer {
 namespace core {
+namespace extension {
 namespace plugin {
 
 
@@ -36,8 +30,8 @@ namespace plugin {
         Q_OBJECT
 
         private:
-             //! The NclDocument binded with this particular plugin instance
-             NclDocument *nclDoc;
+             //! The Document binded with this particular plugin instance
+             Document *doc;
              QString pluginID;
              QMutex mutex;
 
@@ -55,28 +49,28 @@ namespace plugin {
              /*!
                    \param document a NclDocument instance
              */
-             inline void setNclDocument(NclDocument *document) {
+             inline void setDocument(Document *document) {
                  QMutexLocker locker(&mutex);
-                 this->nclDoc = document;
+                 this->doc = document;
              }
              //! This call is used by the core to recover the NclDocument
              //! instance previously binded with this plugin instance.
              /*!
                    \return nclDoc a NclDocument instance
              */
-             inline NclDocument* getNclDocument() {
+             inline Document* getDocument() {
                  QMutexLocker locker(&mutex);
-                 return this->nclDoc;
+                 return this->doc;
              }
-             //! This is the filter method.
-             /*!
-                This call gives the possibilite to the core to filter
-                wich Entities changes are goign to be notified for this plugin.
-                Through this mechanism plugins can listen to changes in a specific
-                set of Entities, and all the filter control is made by the core.
-                \param the EntityType that is going to be filtered
-             */
-             virtual bool listenFilter(EntityType ) = 0;
+//             //! This is the filter method.
+//             /*!
+//                This call gives the possibilite to the core to filter
+//                wich Entities changes are goign to be notified for this plugin.
+//                Through this mechanism plugins can listen to changes in a specific
+//                set of Entities, and all the filter control is made by the core.
+//                \param the EntityType that is going to be filtered
+//             */
+//             virtual bool listenFilter(QString ) = 0;
 
              //! Return the main Widget
              /*!
@@ -99,23 +93,24 @@ namespace plugin {
                 new Entity it was trying to add to e the NclDocument was ignored
                 because of an error.
              */
-             virtual void onEntityAddError(string error) = 0;
+             virtual void onEntityAddError(QString error) = 0;
              /** TODO Lembrar se ele tiver mudado o ID */
              virtual void onEntityChanged(QString ID, Entity *) = 0;
-             virtual void onEntityChangeError(string error) = 0;
+             virtual void onEntityChangeError(QString error) = 0;
              /** Lembrar de ele apagar a sua referência interna */
              virtual void onEntityAboutToRemove(Entity *) = 0;
-             virtual void onEntityRemoved(QString ID, string entityID) = 0;
-             virtual void onEntityRemoveError(string error) = 0;
+             virtual void onEntityRemoved(QString ID, QString entityID) = 0;
+             virtual void onEntityRemoveError(QString error) = 0;
 
 
         signals:
-             void addEntity( EntityType entity, string parentEntityId,
-                                    map<string,string>& atts, bool force);
-             void editEntity(Entity *, map<string,string>& atts, bool force);
+             void addEntity( QString type, QString parentEntityId,
+                                    QMap<QString,QString>& atts, bool force);
+             void editEntity(Entity *, QMap<QString,QString>& atts, bool force);
              void removeEntity( Entity *, bool force);
 
     };
+}
 }
 }
 }

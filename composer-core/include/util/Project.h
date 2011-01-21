@@ -7,11 +7,8 @@
 #include <QDir>
 #include <QDebug>
 
-#include <model/ncm/NclDocument.h>
-using namespace composer::model::ncm;
-
-#include <model/functional/Document.h>
-using namespace composer::model::ncm::functional;
+#include "../model/Document.h"
+using namespace composer::core::model;
 
 namespace composer {
 namespace core {
@@ -25,8 +22,8 @@ class Project {
         separator */
         QString location;
         QString projectId;
-        QMap<QString, NclDocument*> nclDocuments;
-        Document *documentFacade;
+        QMap<QString, Document*> documents;
+
     public:
         Project(QString, QString);
         ~Project();
@@ -39,16 +36,16 @@ class Project {
             QReadLocker locker(&lockString);
             return this->projectId;
         }
-        inline NclDocument* getNclDocument(QString documentId) {
+        inline Document* getDocument(QString documentId) {
                 QReadLocker locker(&lockDocuments);
-                return nclDocuments.contains(documentId) ?
-                       nclDocuments.value(documentId) : NULL;
+                return documents.contains(documentId) ?
+                       documents.value(documentId) : NULL;
         }
-        inline QMap<QString, NclDocument*> getNclDocuments() {
+        inline QMap<QString, Document*> getNclDocuments() {
                 QReadLocker locker(&lockDocuments);
-                return nclDocuments;
+                return documents;
         }
-        bool addDocument(QString documentId, NclDocument*);
+        bool addDocument(QString documentId, Document*);
         bool removeDocument(QString documentId);
         bool deleteDocument(QString documentId);
 

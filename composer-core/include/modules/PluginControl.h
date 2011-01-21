@@ -15,24 +15,24 @@
 #include <string>
 using namespace std;
 
-#include <model/ncm/NclDocument.h>
-using namespace composer::model::ncm;
-
-#include <model/functional/Document.h>
-using namespace composer::model::ncm::functional;
-
-#include <model/util/Singleton.h>
-using namespace composer::model::util;
-
-#include "TransactionControl.h"
-using namespace composer::core::module;
-
-#include "../plugin/IPluginFactory.h"
-#include "../plugin/IPlugin.h"
-using namespace composer::core::plugin;
+#include "../model/Document.h"
+using namespace composer::core::model;
 
 #include "../util/DocumentParserFactory.h"
+#include "../util/Singleton.h"
 using namespace composer::core::util;
+
+#include "TransactionControl.h"
+#include "LanguageControl.h"
+using namespace composer::core::module;
+
+#include "../extension/core/IDocumentParser.h"
+#include "../extension/core/ILanguageProfile.h"
+using namespace composer::core::extension;
+
+#include "../extension/plugin/IPluginFactory.h"
+#include "../extension/plugin/IPlugin.h"
+using namespace composer::core::extension::plugin;
 
 
 //TODO - fazer um gerenciar de maneira eficiente
@@ -49,17 +49,22 @@ namespace module {
         private:
             PluginControl();
             ~PluginControl();
+            /* PluginFactory by pluginID */
             QHash<QString,IPluginFactory*> pluginFactories;
+            /* pluginID by LanguageType */
+            QMultiHash<LanguageType, QString> pluginsByType;
+            /* TC by DocumentID */
             QHash<QString,TransactionControl*> transactionControls;
+            /* Plugin Instance by DocumentID */
             QMultiHash<QString,IPlugin*> pluginInstances;
 
-            void connectRegion(IPlugin *,TransactionControl *tControl);
-            void connectRegionBase(IPlugin *, TransactionControl *tControl);
+            void launchNewPlugin(IPlugin *plugin,
+                                 TransactionControl *tControl);
+            void connectParser(IDocumentParser *parser,
+                                 TransactionControl *tControl);
 
         public:
             void loadPlugins(QString pluginsDirPath);
-            void launchNewPlugin(IPlugin *plugin,
-                                 TransactionControl *tControl);
 
         public slots:
             void onNewDocument(QString documentId, QString location);
@@ -68,8 +73,6 @@ namespace module {
             void newDocumentLaunchedAndCreated(QString documentdId,
                                                QString location);
             void notifyError(QString);
-
-            void addNcl(QString ID, Entity *);
 
     };
 }
