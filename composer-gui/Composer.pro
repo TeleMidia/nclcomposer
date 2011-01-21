@@ -22,32 +22,30 @@ release {
 
 macx { 
     LIBS += -framework \
-        ComposerCoreControl
-    INCLUDEPATH += /Library/Frameworks/ComposerCoreControl.framework/
+        ComposerCore
+    INCLUDEPATH += /Library/Frameworks/ComposerCore.framework/
 }
 else:unix { 
     LIBS += -L/usr/local/lib/composer \
-        -lComposerCoreControl
-    INCLUDEPATH += $$LOCATION/include/composer/control \
-        $$LOCATION/include/composer
+        -lComposerCore
+    INCLUDEPATH += $$LOCATION/include/composer
 
 }
 SOURCES += main.cpp \
-    src/gui/MainWindow.cpp \
-    src/gui/ProjectTreeWidget.cpp \
-    src/gui/wizard/ProjectWizard.cpp \
-    src/gui/wizard/ProjectEntryPage.cpp \
-    src/gui/wizard/DocumentWizard.cpp \
-    src/gui/wizard/DocumentEntryPage.cpp
+    src/MainWindow.cpp \
+    src/ProjectTreeWidget.cpp \
+    src/wizard/ProjectWizard.cpp \
+    src/wizard/ProjectEntryPage.cpp \
+    src/wizard/DocumentWizard.cpp \
+    src/wizard/DocumentEntryPage.cpp
 
-HEADERS_GUI += include/gui/MainWindow.h \
-    include/gui/ProjectTreeWidget.h \
-    include/gui/wizard/ProjectWizard.h \
-    include/gui/wizard/ProjectEntryPage.h \
-    include/gui/wizard/DocumentWizard.h \
-    include/gui/wizard/DocumentEntryPage.h
+HEADERS_GUI += include/MainWindow.h \
+    include/ProjectTreeWidget.h \
+    include/wizard/ProjectWizard.h \
+    include/wizard/ProjectEntryPage.h \
+    include/wizard/DocumentWizard.h \
+    include/wizard/DocumentEntryPage.h
 
-HEADERS_MANAGER +=
 RESOURCES += images.qrc
 
 HEADERS += $$HEADERS_GUI $$HEADERS_MANAGER

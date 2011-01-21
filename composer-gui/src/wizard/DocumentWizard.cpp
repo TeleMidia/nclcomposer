@@ -1,4 +1,4 @@
-#include "include/gui/wizard/DocumentWizard.h"
+#include "include/wizard/DocumentWizard.h"
 
 
 DocumentWizard::DocumentWizard(QWidget* parent) :

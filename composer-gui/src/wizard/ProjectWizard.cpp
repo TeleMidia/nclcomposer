@@ -1,4 +1,4 @@
-#include "include/gui/wizard/ProjectWizard.h"
+#include "include/wizard/ProjectWizard.h"
 
 
 ProjectWizard::ProjectWizard(QWidget* parent) :
