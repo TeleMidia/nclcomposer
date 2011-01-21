@@ -27,8 +27,8 @@
 #include <QtGui/QListWidget>
 #include <QtGui/QDialog>
 
-#include <control/modules/ProjectControl.h>
-#include <control/modules/PluginControl.h>
+#include <core/modules/ProjectControl.h>
+#include <core/modules/PluginControl.h>
 using namespace composer::core::module;
 
 #include "wizard/ProjectWizard.h"
