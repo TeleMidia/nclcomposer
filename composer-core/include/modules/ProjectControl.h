@@ -9,9 +9,9 @@
 #include <QMap>
 #include <QString>
 
-#include "include/util/Project.h"
-#include "include/util/DocumentParser.h"
-#include "include/util/Singleton.h"
+#include "../util/Project.h"
+#include "../util/DocumentParser.h"
+#include "../util/Singleton.h"
 using namespace composer::core::util;
 
 
