@@ -28,6 +28,7 @@ MainWindow::MainWindow(QWidget *parent)
             this,SLOT(createDocumentInTree(QString,QString)));
 
     splash.finish(this);
+    preferences = new PreferencesWidget(this);
     readSettings();
 }
 
@@ -211,12 +212,13 @@ void MainWindow::createMenus() {
      fileMenu->addAction(newProjectAct);
      fileMenu->addAction(newDocumentAct);
 
+     editMenu = menuBar()->addMenu(tr("&Edit"));
+     editMenu->addAction(editPreferencesAct);
 
      windowMenu = menuBar()->addMenu(tr("&Window"));
 
      menuBar()->addSeparator();
      connect(windowMenu, SIGNAL(aboutToShow()), this, SLOT(updateWindowMenu()));
-
 
      helpMenu = menuBar()->addMenu(tr("&Help"));
      helpMenu->addAction(aboutComposerAct);
@@ -270,6 +272,11 @@ void MainWindow::createActions() {
              SLOT(updateWindowMenu()));
      connect(projectWindowAct,SIGNAL(triggered(bool)),dockTree,
              SLOT(setVisible(bool)));
+
+
+     editPreferencesAct = new QAction(tr("&Preferences"), this);
+     editPreferencesAct->setStatusTip(tr("Edit preferences"));
+     connect (editPreferencesAct, SIGNAL(triggered()), this, SLOT(showEditPreferencesDialog()));
  }
 
 void MainWindow::createStatusBar() {
@@ -324,4 +331,9 @@ void MainWindow::closeEvent(QCloseEvent *event)
      }
     settings.sync();
  }
+
+void MainWindow::showEditPreferencesDialog()
+{
+    preferences->show();
+}
 

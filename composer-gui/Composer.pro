@@ -37,15 +37,20 @@ SOURCES += main.cpp \
     src/wizard/ProjectWizard.cpp \
     src/wizard/ProjectEntryPage.cpp \
     src/wizard/DocumentWizard.cpp \
-    src/wizard/DocumentEntryPage.cpp
+    src/wizard/DocumentEntryPage.cpp \
+    src/PreferencesWidget.cpp
 
 HEADERS_GUI += include/MainWindow.h \
     include/ProjectTreeWidget.h \
     include/wizard/ProjectWizard.h \
     include/wizard/ProjectEntryPage.h \
     include/wizard/DocumentWizard.h \
-    include/wizard/DocumentEntryPage.h
+    include/wizard/DocumentEntryPage.h \
+    include/PreferencesWidget.h \
+    include/IPreferencesPage.h
 
 RESOURCES += images.qrc
 
 HEADERS += $$HEADERS_GUI $$HEADERS_MANAGER
+
+FORMS   += ui/PreferencesWidget.ui

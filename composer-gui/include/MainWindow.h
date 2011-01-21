@@ -34,6 +34,7 @@ using namespace composer::core::module;
 #include "wizard/ProjectWizard.h"
 #include "wizard/DocumentWizard.h"
 #include "ProjectTreeWidget.h"
+#include "PreferencesWidget.h"
 
 class MainWindow : public QMainWindow {
     Q_OBJECT
@@ -44,6 +45,7 @@ class MainWindow : public QMainWindow {
         QMenu *fileMenu;
         QMenu *helpMenu;
         QMenu *windowMenu;
+        QMenu *editMenu;
 
         QToolBar *fileTool;
 
@@ -52,6 +54,7 @@ class MainWindow : public QMainWindow {
         QAction *aboutComposerAct;
         QAction *separatorWindowAct;
         QAction *projectWindowAct;
+        QAction *editPreferencesAct;
 
         ProjectTreeWidget *projectTree;
         QDockWidget *dockTree;
@@ -61,6 +64,8 @@ class MainWindow : public QMainWindow {
 
         ProjectWizard *projectWizard;
         DocumentWizard *documentWizard;
+        PreferencesWidget *preferences;
+
 
         QString defaultEx;
         QString user_directory_ext;
@@ -83,6 +88,7 @@ class MainWindow : public QMainWindow {
         void about();
         void launchProjectWizard();
         void updateWindowMenu();
+        void showEditPreferencesDialog();
 
     public:
         MainWindow(QWidget *parent = 0);
