@@ -19,19 +19,6 @@ release {
     win32:INSTALLBASE = C:\Composer
 }
 
-#macx::MODEL_LOCATION = /Library/Frameworks
-#else:unix:MODEL_LOCATION = /usr/local
-
-#macx {
-#    LIBS += -framework \
-#        ComposerCoreModel
-#    INCLUDEPATH += /Library/Frameworks/ComposerCoreModel.framework/
-#}
-#else:unix {
- #   LIBS += -L/usr/local/lib/composer -lComposerCoreModel
- #  INCLUDEPATH += $$MODEL_LOCATION/include/composer
-#}
-
 DEFINES += COMPOSERCORE_LIBRARY
 
 SOURCES += \
@@ -71,8 +58,9 @@ HEADERS_EXCEPTION +=  include/model/exception/EntityNotFound.h \
 HEADERS_MODEL += include/model/Entity.h \
     include/model/Document.h
 
-HEADERS = $$HEADERS_UTIL $$HEADERS_MAN $$HEADERS_MODEL \
-          $$HEADERS_EXTENSIONS
+HEADERS = $$HEADERS_MAN $$HEADERS_EXTENSIONS $$HEADERS_UTIL \
+          $$HEADERS_EXCEPTION $$HEADERS_MODEL
+
 
 headers_man.files = $$HEADERS_MAN
 headers_extensions.files = $$HEADERS_EXTENSIONS
@@ -87,7 +75,7 @@ macx {
     headers_man.path = core/modules
     headers_extensions.path = core/extensions
     headers_util.path = core/util
-    headers_exception.path=core/util/exception
+    headers_exception.path=core/model/exception
     headers_model.path = core/model
     QMAKE_BUNDLE_DATA += headers_man headers_extensions \
                          headers_util headers_exception headers_model
