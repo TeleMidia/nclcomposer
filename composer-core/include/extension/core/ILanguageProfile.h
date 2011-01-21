@@ -23,6 +23,7 @@ namespace composer {
                             virtual ~ILanguageProfile() {}
                             virtual LanguageType
                                     getLanguageType()  = 0;
+                            virtual QString getProfileName() = 0;
                             virtual QList<QString>
                                     getOutputDocumentTypes() = 0;
                             virtual IDocumentParser*
@@ -39,7 +40,7 @@ namespace composer {
   * This is a require for the QTPlugin system work.
   * Declaring the interface that is going to be used by external plugins.
   */
-Q_DECLARE_INTERFACE(composer::core::extension::ILanguageProfile,
+Q_DECLARE_INTERFACE(ILanguageProfile,
                    "br.telemidia.purcrio.composer.ILanguage")
 
 #endif // ILANGUAGE_H

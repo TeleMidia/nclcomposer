@@ -65,7 +65,7 @@ namespace plugin {
   * This is a require for the QTPlugin system work.
   * Declaring the interface that is going to be used by external plugins.
   */
-Q_DECLARE_INTERFACE(composer::core::extension::plugin::IPluginFactory,
+Q_DECLARE_INTERFACE(IPluginFactory,
                    "br.telemidia.purcrio.composer.IPluginFactory")
 
 #endif // ILAYOUTPLUGIN_H

@@ -15,7 +15,6 @@ namespace composer{
                     Q_OBJECT
 
                 public:
-                    explicit IDocumentParser(Document *doc) {}
                     virtual ~IDocumentParser() {}
                     virtual bool parseDocument() = 0;
 

@@ -72,7 +72,8 @@ HEADERS_EXCEPTION +=  include/util/exception/EntityNotFound.h \
 HEADERS_MODEL += include/model/Entity.h \
     include/model/Document.h
 
-HEADERS = $$HEADERS_UTIL $$HEADERS_PLUGIN $$HEADERS_MAN $$HEADERS_MODEL
+HEADERS = $$HEADERS_UTIL $$HEADERS_PLUGIN $$HEADERS_MAN $$HEADERS_MODEL \
+          $$HEADERS_EXTENSION
 
 headers_man.files = $$HEADERS_MAN
 headers_plugin.files = $$HEADERS_PLUGIN
