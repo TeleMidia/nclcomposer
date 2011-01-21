@@ -2,6 +2,19 @@
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent) {
+    QSplashScreen splash(QPixmap(":/mainwindow/icon"));
+    splash.show();
+
+    user_directory_ext = "";
+
+    #ifdef Q_WS_MAC
+        setUnifiedTitleAndToolBarOnMac(true);
+        defaultEx = "/Library/Application Support/Composer";
+    #else
+        defaultEx = "/usr/local/lib";
+    #endif
+
+    initModules();
     initGUI();
     ProjectControl *pjControl = ProjectControl::getInstance();
     PluginControl  *pgControl = PluginControl::getInstance();
@@ -14,11 +27,66 @@ MainWindow::MainWindow(QWidget *parent)
     connect(pgControl,SIGNAL(newDocumentLaunchedAndCreated(QString,QString)),
             this,SLOT(createDocumentInTree(QString,QString)));
 
+    splash.finish(this);
     readSettings();
 }
 
 MainWindow::~MainWindow() {
 
+}
+
+void MainWindow::initModules()
+{
+    ProjectControl::getInstance();
+    LanguageControl::getInstance();
+    PluginControl::getInstance();
+
+    readExtensions();
+
+}
+
+void MainWindow::readExtensions()
+{
+
+    #ifdef Q_WS_MAC
+       QSettings settings("telemidia.pucrio.br", "composer");
+    #else
+       QSettings settings("telemidia", "composer");
+    #endif
+       settings.beginGroup("extension");
+            if (settings.contains("language"))
+            {
+                user_directory_ext = settings.value("language").toString();
+            } else {
+                user_directory_ext = promptChooseDirectory();
+            }
+            qDebug() << "MainWindow::readExtensions(" << user_directory_ext
+                     << ")";
+            LanguageControl::getInstance()->
+                   loadProfiles(user_directory_ext);
+       //TODO - loadPlugins
+       settings.endGroup();
+}
+
+QString MainWindow::promptChooseDirectory()
+{
+
+    QMessageBox mBox;
+    mBox.setText(tr("The Extension Directory is not set"));
+    mBox.setInformativeText(tr("Do you want to try the default"
+                               "directory (%1)?").arg(defaultEx));
+    mBox.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
+    mBox.setDefaultButton(QMessageBox::Yes);
+    mBox.setIcon(QMessageBox::Question);
+    if (mBox.exec() == QMessageBox::No)
+    {
+        QString dirName = QFileDialog::getExistingDirectory(
+                          this, tr("Select Directory"),
+                          QDir::homePath(), QFileDialog::ShowDirsOnly);
+        return dirName;
+    } else {
+        return defaultEx;
+    }
 }
 
 void MainWindow::readSettings() {
@@ -46,6 +114,9 @@ void MainWindow::readSettings() {
 }
 
 void MainWindow::initGUI() {
+    #ifndef Q_WS_MAC
+        setWindowIcon(QIcon(":/mainwindow/icon"));
+    #endif
     setWindowTitle(tr("Composer 2.0 Revolutionary - by Bruno Modafucker"));
     mdiArea = new QMdiArea(this);
     mdiArea->setHorizontalScrollBarPolicy(Qt::ScrollBarAsNeeded);
@@ -56,7 +127,9 @@ void MainWindow::initGUI() {
     createTreeProject();
     createActions();
     createMenus();
+    createToolBar();
     showMaximized();
+
 
 }
 
@@ -135,10 +208,9 @@ void MainWindow::createTreeProject() {
 
 void MainWindow::createMenus() {
      fileMenu = menuBar()->addMenu(tr("&File"));
-     newMenu  = new QMenu(tr("New"),fileMenu);
-     newMenu->addAction(newProjectAct);
-     newMenu->addAction(newDocumentAct);
-     fileMenu->addMenu(newMenu);
+     fileMenu->addAction(newProjectAct);
+     fileMenu->addAction(newDocumentAct);
+
 
      windowMenu = menuBar()->addMenu(tr("&Window"));
 
@@ -152,6 +224,7 @@ void MainWindow::createMenus() {
  }
 
 void MainWindow::about() {
+    //QDialog
     QMessageBox::about(this, tr("About Composer"),
              tr("The <b>Composer</b> is an IDE for the NCL language."));
  }
@@ -164,13 +237,18 @@ void MainWindow::errorDialog(QString message) {
 
 void MainWindow::createActions() {
 
-     newProjectAct = new QAction(tr("New &Project"), this);
+    newProjectAct = new QAction(QIcon(":/mainwindow/openProject"),
+                                tr("New &Project"), this);
+
+
+
      //newProjectAct->setShortcuts(QKeySequence("CTRL+P"));
      newProjectAct->setStatusTip(tr("Create a new Project"));
      connect(newProjectAct, SIGNAL(triggered()), this,
              SLOT(launchProjectWizard()));
 
-     newDocumentAct = new QAction(tr("New &Document"), this);
+     newDocumentAct = new QAction(QIcon(":/mainwindow/newDocument"),
+                                  tr("New &Document"), this);
      newDocumentAct->setShortcuts(QKeySequence::New);
      newDocumentAct->setStatusTip(tr("Create a new NCL Document"));
 //     connect(newDocumentAct, SIGNAL(triggered()), this,
@@ -183,7 +261,8 @@ void MainWindow::createActions() {
      separatorWindowAct = new QAction(this);
      separatorWindowAct->setSeparator(true);
 
-     projectWindowAct = new QAction(tr("Projects"),this);
+     projectWindowAct = new QAction(QIcon(":/mainwindow/projectTree"),
+                                    tr("Projects"),this);
      projectWindowAct->setCheckable(true);
      projectWindowAct->setChecked(dockTree->isVisible());
 
@@ -195,6 +274,12 @@ void MainWindow::createActions() {
 
 void MainWindow::createStatusBar() {
      statusBar()->showMessage(tr("Ready"));
+}
+
+void MainWindow::createToolBar() {
+    fileTool = addToolBar("File");
+    fileTool->addAction(newProjectAct);
+    fileTool->addAction(newDocumentAct);
 }
 
 void MainWindow::updateWindowMenu()
@@ -217,6 +302,11 @@ void MainWindow::closeEvent(QCloseEvent *event)
  #else
     QSettings settings("telemidia", "composer");
  #endif
+    if (user_directory_ext != "") {
+        settings.beginGroup("extension");
+            settings.setValue("language",user_directory_ext);
+        settings.endGroup();
+    }
     if(ProjectControl::getInstance()->saveProjects()) {
      settings.beginGroup("mainwindow");
         settings.setValue("geometry", saveGeometry());

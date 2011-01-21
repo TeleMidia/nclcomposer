@@ -22,9 +22,10 @@
 #include <QtGui/QLabel>
 #include <QtGui/QGridLayout>
 #include <QtGui/QLineEdit>
-
-//#include <control/util/CoreManager.h>
-//using namespace composer::core::util;
+#include <QtGui/QToolBar>
+#include <QtGui/QSplashScreen>
+#include <QtGui/QListWidget>
+#include <QtGui/QDialog>
 
 #include <control/modules/ProjectControl.h>
 #include <control/modules/PluginControl.h>
@@ -39,27 +40,42 @@ class MainWindow : public QMainWindow {
 
     private:
         QMdiArea *mdiArea;
+
         QMenu *fileMenu;
-        QMenu *newMenu;
         QMenu *helpMenu;
         QMenu *windowMenu;
+
+        QToolBar *fileTool;
+
         QAction *newProjectAct;
         QAction *newDocumentAct;
         QAction *aboutComposerAct;
         QAction *separatorWindowAct;
         QAction *projectWindowAct;
+
         ProjectTreeWidget *projectTree;
         QDockWidget *dockTree;
+
+        QListWidget *profilesExt;
+        //QListWidget *pluginsExt;
+
         ProjectWizard *projectWizard;
         DocumentWizard *documentWizard;
 
+        QString defaultEx;
+        QString user_directory_ext;
+
     private:
+        QString promptChooseDirectory();
+        void initModules();
         void initGUI();
         void createStatusBar();
+        void createToolBar();
         void createMenus();
         void createActions();
         void createTreeProject();
         void readSettings();
+        void readExtensions();
         void closeEvent(QCloseEvent *event);
 
 

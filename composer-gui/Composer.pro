@@ -8,6 +8,8 @@ QT += xml
 MOC_DIR = mocs
 OBJECTS_DIR = objs
 
+macx:ICON = images/Composer.icns
+
 macx:LOCATION = /Library/Frameworks
 else:unix:LOCATION = /usr/local
 
@@ -20,17 +22,13 @@ release {
 
 macx { 
     LIBS += -framework \
-        ComposerCoreModel \
-        -framework \
         ComposerCoreControl
-    INCLUDEPATH += /Library/Frameworks/ComposerCoreModel.framework/ \
-        /Library/Frameworks/ComposerCoreControl.framework/
+    INCLUDEPATH += /Library/Frameworks/ComposerCoreControl.framework/
 }
 else:unix { 
-    LIBS += -L/usr/local/lib/composer -lComposerCoreModel \
+    LIBS += -L/usr/local/lib/composer \
         -lComposerCoreControl
-    INCLUDEPATH += $$LOCATION/include/composer/model \
-        $$LOCATION/include/composer/control \
+    INCLUDEPATH += $$LOCATION/include/composer/control \
         $$LOCATION/include/composer
 
 }

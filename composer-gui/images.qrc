@@ -3,5 +3,12 @@
         <file alias="folder">images/folder.png</file>
         <file alias="folderEmpty">images/folderEmpty.png</file>
         <file alias="document">images/document.png</file>
+        <file>images/closeProject.png</file>
+        <file>images/deleteDoc.png</file>
+        <file alias="newDocument">images/newDoc.png</file>
+        <file alias="openProject">images/openProject.png</file>
+        <file alias="projectTree">images/projectTree.png</file>
+        <file>images/saveDocument.png</file>
+        <file alias="icon">images/icon.png</file>
     </qresource>
 </RCC>
