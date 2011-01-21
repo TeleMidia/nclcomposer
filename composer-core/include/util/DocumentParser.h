@@ -9,7 +9,7 @@
 #include <QStack>
 
 
-#include "../extension/plugin/IPlugin.h"
+#include "../extensions/IPlugin.h"
 using namespace composer::core::extension::plugin;
 
 #include "../model/Entity.h"

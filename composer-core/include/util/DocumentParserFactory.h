@@ -1,7 +1,7 @@
 #ifndef DOCUMENTPARSERFACTORY_H
 #define DOCUMENTPARSERFACTORY_H
 
-#include "../extension/plugin/IPluginFactory.h"
+#include "../extensions/IPluginFactory.h"
 using namespace composer::core::extension::plugin;
 
 #include "DocumentParser.h"

@@ -5,8 +5,8 @@
 #include <QMutexLocker>
 #include <QMutex>
 
-#include "../../model/Entity.h"
-#include "../../model/Document.h"
+#include "../model/Entity.h"
+#include "../model/Document.h"
 using namespace composer::core::model;
 
 //!  The interface for communication between the core and the plugin

@@ -4,7 +4,7 @@
 #QT -= gui
 QT += xml
 TEMPLATE = lib
-TARGET = ComposerCoreControl
+TARGET = ComposerCore
 VERSION = 1.0
 CONFIG += qt release
 MOC_DIR = mocs
@@ -32,7 +32,7 @@ release {
  #  INCLUDEPATH += $$MODEL_LOCATION/include/composer
 #}
 
-DEFINES += COMPOSERCORECONTROL_LIBRARY
+DEFINES += COMPOSERCORE_LIBRARY
 
 SOURCES += \
     src/modules/ProjectControl.cpp \
@@ -52,11 +52,10 @@ HEADERS_MAN += include/modules/ProjectControl.h \
     include/modules/TransactionControl.h \
     include/modules/LanguageControl.h
 
-HEADERS_PLUGIN += include/extension/plugin/IPlugin.h \
-    include/extension/plugin/IPluginFactory.h
-
-HEADERS_EXTENSION += include/extension/core/ILanguageProfile.h \
-    include/extension/core/IDocumentParser.h
+HEADERS_EXTENSIONS += include/extensions/ILanguageProfile.h \
+    include/extensions/IDocumentParser.h \
+    include/extensions/IPlugin.h \
+    include/extensions/IPluginFactory.h
 
 HEADERS_UTIL +=include/util/ComposerCoreControl_global.h \
     include/util/Project.h \
@@ -65,19 +64,18 @@ HEADERS_UTIL +=include/util/ComposerCoreControl_global.h \
     include/util/Singleton.h \
     include/util/Utilities.h
 
-HEADERS_EXCEPTION +=  include/util/exception/EntityNotFound.h \
-    include/util/exception/ParentNotFound.h \
-    include/util/exception/CreationFailed.h
+HEADERS_EXCEPTION +=  include/model/exception/EntityNotFound.h \
+    include/model/exception/ParentNotFound.h \
+    include/model/exception/CreationFailed.h
 
 HEADERS_MODEL += include/model/Entity.h \
     include/model/Document.h
 
-HEADERS = $$HEADERS_UTIL $$HEADERS_PLUGIN $$HEADERS_MAN $$HEADERS_MODEL \
-          $$HEADERS_EXTENSION
+HEADERS = $$HEADERS_UTIL $$HEADERS_MAN $$HEADERS_MODEL \
+          $$HEADERS_EXTENSIONS
 
 headers_man.files = $$HEADERS_MAN
-headers_plugin.files = $$HEADERS_PLUGIN
-headers_extension.files = $$HEADERS_EXTENSION
+headers_extensions.files = $$HEADERS_EXTENSIONS
 headers_util.files = $$HEADERS_UTIL
 headers_exception.files = $$HEADERS_EXCEPTION
 headers_model.files = $$HEADERS_MODEL
@@ -86,25 +84,26 @@ headers_model.files = $$HEADERS_MODEL
 macx { 
     DESTDIR = $$INSTALLBASE/
     QMAKE_FRAMEWORK_BUNDLE_NAME = $$TARGET
-    headers_man.path = control/modules
-    headers_plugin.path = control/extension/plugin
-    headers_extension.path =control/extension/core
-    headers_util.path = control/util
-    headers_exception.path=control/util/exception
-    headers_model.path = control/model
-    QMAKE_BUNDLE_DATA += headers_man headers_plugin headers_extension \
+    headers_man.path = core/modules
+    headers_extensions.path = core/extensions
+    headers_util.path = core/util
+    headers_exception.path=core/util/exception
+    headers_model.path = core/model
+    QMAKE_BUNDLE_DATA += headers_man headers_extensions \
                          headers_util headers_exception headers_model
 
 }
 else:unix { 
     target.path = $$INSTALLBASE/lib/composer
     HEADERS_PATH_UNIX = $$INSTALLBASE/include/composer
-    headers_man.path = $$HEADERS_PATH_UNIX/control/modules
-    headers_plugin.path = $$HEADERS_PATH_UNIX/control/plugin
-    headers_util.path = $$HEADERS_PATH_UNIX/control/util
-    headers_model.path = $$HEADERS_PATH_UNIX/control/model
+
+    headers_model.path = $$HEADERS_PATH_UNIX/core/model
+    headers_man.path = $$HEADERS_PATH_UNIX/core/modules
+    headers_extensions.path = $$HEADERS_PATH_UNIX/core/extensions
+    headers_util.path = $$HEADERS_PATH_UNIX/core/util
+    headers_exception.path = $$HEADERS_PATH_UNIX/core/model/exception
+
     #headers.CONFIG += no_all
-    INSTALLS += headers_man headers_plugin headers_util headers_model target
-    PRE_TARGETDEPS += install_headers_man install_headers_plugin \
-                      install_headers_util install_headers_model
+    INSTALLS += headers_man headers_util headers_model \
+                headers_extensions headers_exception target
 }else:win32:

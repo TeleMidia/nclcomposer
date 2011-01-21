@@ -9,10 +9,10 @@
 #include "IDocumentParser.h"
 using namespace composer::core::extension;
 
-#include "../../util/Utilities.h"
+#include "../util/Utilities.h"
 using namespace composer::core::util;
 
-#include "../../model/Document.h"
+#include "../model/Document.h"
 using namespace composer::core::model;
 
 namespace composer {

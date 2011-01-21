@@ -26,12 +26,12 @@ using namespace composer::core::util;
 #include "LanguageControl.h"
 using namespace composer::core::module;
 
-#include "../extension/core/IDocumentParser.h"
-#include "../extension/core/ILanguageProfile.h"
+#include "../extensions/IDocumentParser.h"
+#include "../extensions/ILanguageProfile.h"
 using namespace composer::core::extension;
 
-#include "../extension/plugin/IPluginFactory.h"
-#include "../extension/plugin/IPlugin.h"
+#include "../extensions/IPluginFactory.h"
+#include "../extensions/IPlugin.h"
 using namespace composer::core::extension::plugin;
 
 

@@ -7,7 +7,7 @@
 #include <QPluginLoader>
 #include <QDir>
 
-#include "../extension/core/ILanguageProfile.h"
+#include "../extensions/ILanguageProfile.h"
 using namespace composer::core::extension;
 
 #include "../util/Singleton.h"

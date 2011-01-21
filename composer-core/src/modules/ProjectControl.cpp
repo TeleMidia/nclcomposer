@@ -103,22 +103,22 @@ namespace module {
         return true;
     }
 
-    bool ProjectControl::closeProject (QString projectId) {
+    bool ProjectControl::closeProject (QString /*projectId*/) {
         //TODO - salvar arquivo de projeto e chamar save para cada NCLDocument
       return true;
     }
-    bool ProjectControl::deleteProject (QString projectId) {
+    bool ProjectControl::deleteProject (QString /*projectId*/) {
         //TODO - deletar todos os NCLDocument e deletar o arquivo de projeto
       return true;
     }
 
 
-    bool ProjectControl::removeDocument (QString projectId,
-                                         QString documentId) {
+    bool ProjectControl::removeDocument (QString /*projectId*/,
+                                         QString /*documentId*/) {
         //TODO - deletar o NclDocument do projeto mas não o arquivo
       return true;
     }
-    bool ProjectControl::deleteDocument (QString projectId, QString documentId) {
+    bool ProjectControl::deleteDocument (QString /*projectId*/, QString /*documentId*/) {
         //TODO - deletar o NclDocument do Projeto e deletar o arquivo do sistema
       return true;
     }

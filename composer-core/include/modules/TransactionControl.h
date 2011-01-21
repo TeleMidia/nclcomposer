@@ -12,7 +12,7 @@ using namespace std;
 #include "../model/Document.h"
 using namespace composer::core::model;
 
-#include "../extension/plugin/IPlugin.h"
+#include "../extensions/IPlugin.h"
 using namespace composer::core::extension::plugin;
 
 namespace composer {

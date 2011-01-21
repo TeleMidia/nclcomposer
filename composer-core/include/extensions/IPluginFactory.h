@@ -4,7 +4,7 @@
 #include <QtPlugin>
 #include <QString>
 
-#include "../../util/Utilities.h"
+#include "../util/Utilities.h"
 using namespace composer::core::util;
 
 #include "IPlugin.h"

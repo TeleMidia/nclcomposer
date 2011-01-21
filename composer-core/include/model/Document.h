@@ -16,8 +16,8 @@ namespace composer {
     }
 }
 
-#include "../util/exception/ParentNotFound.h"
-#include "../util/exception/EntityNotFound.h"
+#include "../model/exception/ParentNotFound.h"
+#include "../model/exception/EntityNotFound.h"
 #include "../util/Utilities.h"
 using namespace composer::core::util;
 
