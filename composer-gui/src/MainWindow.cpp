@@ -20,7 +20,7 @@ MainWindow::MainWindow(QWidget *parent)
     initModules();
 
     splash.finish(this);
-    preferences = new PreferencesWidget(this);
+    preferences = new PreferencesDialog(this);
     readSettings();
 }
 
@@ -308,7 +308,8 @@ void MainWindow::createActions() {
 
      editPreferencesAct = new QAction(tr("&Preferences"), this);
      editPreferencesAct->setStatusTip(tr("Edit preferences"));
-     connect (editPreferencesAct, SIGNAL(triggered()), this, SLOT(showEditPreferencesDialog()));
+     connect (editPreferencesAct, SIGNAL(triggered()), this,
+              SLOT(showEditPreferencesDialog()));
  }
 
 void MainWindow::createStatusBar() {

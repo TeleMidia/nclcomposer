@@ -36,7 +36,7 @@ using namespace composer::core::module;
 #include "wizard/ProjectWizard.h"
 #include "wizard/DocumentWizard.h"
 #include "ProjectTreeWidget.h"
-#include "PreferencesWidget.h"
+#include "PreferencesDialog.h"
 
 class MainWindow : public QMainWindow {
     Q_OBJECT
@@ -66,7 +66,7 @@ class MainWindow : public QMainWindow {
 
         ProjectWizard *projectWizard;
         DocumentWizard *documentWizard;
-        PreferencesWidget *preferences;
+        PreferencesDialog *preferences;
 
         QDialog *aboutDialog;
 
