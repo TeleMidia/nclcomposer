@@ -3,6 +3,7 @@
 
 #include <QtPlugin>
 #include <QString>
+#include <QIcon>
 
 #include "../util/Utilities.h"
 using namespace composer::core::util;
@@ -52,6 +53,16 @@ namespace plugin {
         virtual QList<LanguageType> getSupportLanguages() = 0;
 
         virtual QString getPluginID() = 0;
+
+        virtual QString getPluginName() = 0;
+
+        virtual QIcon getPluginIcon() = 0;
+
+        virtual QWidget* getPreferencePageWidget() = 0;
+
+        virtual void setDefaultValues() = 0;
+
+        virtual void applyValues() = 0;
 
 
 };

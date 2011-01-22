@@ -202,6 +202,18 @@ namespace module {
                 parser, SLOT(onEntityAdded(QString,Entity*)));
     }
 
+    QList<IPluginFactory*> PluginControl::getLoadedPlugins()
+    {
+            QHash<QString,IPluginFactory*>::iterator it;
+            QList<IPluginFactory*> pList;
+            for (it = pluginFactories.begin() ; it != pluginFactories.end();
+                 it++)
+            {
+                pList.append(it.value());
+            }
+            return pList;
+    }
+
 
 
 }

@@ -65,6 +65,7 @@ namespace module {
 
         public:
             void loadPlugins(QString pluginsDirPath);
+            QList<IPluginFactory*> getLoadedPlugins();
 
         public slots:
             void onNewDocument(QString documentId, QString location);
