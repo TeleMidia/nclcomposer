@@ -6,10 +6,6 @@ namespace module {
 
     ProjectControl::ProjectControl() {
         this->activeProject = NULL;
-//        connect(PluginControl::getInstance(),
-//                SIGNAL(newDocumentLaunchedAndCreated(QString,QString)),
-//                this,
-//                SIGNAL(documentAdded(QString,QString)));
     }
 
     ProjectControl::~ProjectControl() {
@@ -25,7 +21,7 @@ namespace module {
         projects.clear();
     }
 
-    Project* ProjectControl::createProject(QString projectId,
+    bool ProjectControl::createProject(QString projectId,
                                        QString location) {
 
         qDebug() << "ProjectControl::createProject(" << projectId << ", "
@@ -38,10 +34,12 @@ namespace module {
             lockProjects.lockForWrite();
             projects[projectId] = p;
             lockProjects.unlock();
-            return p;
+            return true;
+        } else {
+            emit notifyError(tr("Project (%1) already exists!").arg(projectId));
+            return false;
         }
         lockProjects.unlock();
-        return NULL;
     }
 
     bool ProjectControl::activateProject (QString projectId){
@@ -89,6 +87,7 @@ namespace module {
         QSettings settings("telemidia", "composer");
      #endif
         settings.beginGroup("projects");
+        settings.remove("");
         while(it.hasNext()){
             it.next();
             Project *p = it.value();
@@ -99,7 +98,7 @@ namespace module {
             //TODO salvar alterações no NCL
         }
         settings.endGroup();
-        settings.sync();
+        //settings.sync();
         return true;
     }
 
@@ -133,7 +132,7 @@ namespace module {
         QDir dir(location + QDir::separator() + projectId);
 
         if (dir.exists()) {
-            createProject(projectId,location);
+            if(!createProject(projectId,location)) return;
             emit projectCreated(projectId,location);
             //TODO - fazer o filtro certinho
             //QStringList filters;
@@ -183,26 +182,19 @@ namespace module {
         qDebug() << "ProjectControl::addProject(" << projectId << ", "
                  << location << ")";
 
+        if (projects.contains(projectId)) {
+            emit notifyError(tr("Project (%1) already exists!").arg(projectId));
+            return;
+        }
+
         QString fullPath = location + QDir::separator() + projectId;
         QDir dir(fullPath);
 
         if(dir.exists()) {
-            QMessageBox mBox;
-            mBox.setText(tr("The directory (%1) already exists").arg(fullPath));
-            mBox.setInformativeText(tr("Do you want add as Project ?"));
-            mBox.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
-            mBox.setDefaultButton(QMessageBox::Yes);
-            mBox.setIcon(QMessageBox::Question);
-            if ( mBox.exec() == QMessageBox::Yes) {
-                return addExistingProject(projectId,location);
-            } else {
-                emit notifyError(
-                     tr("The project was not created due the user choice!"));
-                return;
-            }
+           addExistingProject(projectId,location);
         } else { //Directory does not exists
             if(dir.mkpath(fullPath)) {
-                createProject(projectId,location);
+                if(!createProject(projectId,location)) return;
                 emit projectCreated(projectId,location);
             } else {
                 emit notifyError(tr("Directory for this project could not be created"));

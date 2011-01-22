@@ -50,7 +50,7 @@ namespace module {
              bool deleteProject (QString projectId);
 
              /* the physical dir already exists, creating the Project* */
-             Project* createProject(QString projectId, QString location);
+             bool createProject(QString projectId, QString location);
 
              /** Fecha a base privada e descarta todo o conteúdo da base
                 privada */
