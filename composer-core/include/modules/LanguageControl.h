@@ -33,6 +33,7 @@ namespace composer {
                                 getProfileFromType(LanguageType type);
                     signals:
                         void notifyError(QString);
+                        void notifyLoadedProfile(QString name,QString fileName);
                     public slots:
 
                     };

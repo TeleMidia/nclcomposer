@@ -17,17 +17,16 @@ namespace composer{
                 public:
                     virtual ~IDocumentParser() {}
                     virtual bool parseDocument() = 0;
+                    virtual QString getParserName() = 0;
 
                 signals:
 
                     void addEntity( QString type, QString parentEntityId,
                                     QMap<QString,QString>& atts, bool force);
-                    void editEntity(Entity *, QMap<QString,QString>& atts,
-                                    bool force);
-                    void removeEntity( Entity *, bool force);
 
                 public slots:
-
+                    virtual void onEntityAddError(QString error) = 0;
+                    virtual void onEntityAdded(QString ID, Entity *entity) = 0;
                 };
         }
     }

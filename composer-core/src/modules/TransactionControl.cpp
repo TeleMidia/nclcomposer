@@ -20,27 +20,33 @@ namespace module {
                    bool force) {
 
         /* Cast to IPlugin to make sure it's a plugin */
-        IPlugin *plugin = qobject_cast<IPlugin *>
-                                                        (QObject::sender());
+        IPlugin *plugin = qobject_cast<IPlugin *> (QObject::sender());
+        IDocumentParser *parser = qobject_cast<IDocumentParser*>
+                                  (QObject::sender());
+        QString ID;
+        if(plugin) ID = plugin->getPluginID();
+        else if (parser) ID = parser->getParserName();
 
-        if(plugin) {
-            QString pluginID = plugin->getPluginID();
-            try {
-                Entity *ent = new Entity(atts);
-                ent->setType(type);
-                //TODO - calll validator to check
-                doc->addEntity(ent,parentEntityId);
-                emit entityAdded(pluginID,ent);
-            }catch(exception e){
-                plugin->onEntityAddError(e.what());
-                return;
-            }
-        } else { //It's not a plugin
-            qDebug() << "TransactionControl::onAddEntity " <<
-                        "Trying to add a entity but is not from a plugin";
+        Entity *ent = NULL;
+
+        try
+        {
+            ent = new Entity(atts);
+            ent->setType(type);
+            //TODO - calll validator to check
+            doc->addEntity(ent,parentEntityId);
+            emit entityAdded(ID,ent);
+
+        } catch(exception& e){
+            if (plugin) plugin->onEntityAddError(e.what());
+            else if (parser) parser->onEntityAddError(e.what());
+            delete ent;
+            ent = NULL;
             return;
         }
     }
+
+
 
     void TransactionControl::onEditEntity(Entity *entity,
                                       QMap<QString,QString>& atts, bool force) {

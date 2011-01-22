@@ -197,12 +197,9 @@ namespace module {
                 SIGNAL(addEntity(QString,QString,QMap<QString,QString>&,bool)),
                 tControl,
                 SLOT(onAddEntity(QString,QString,QMap<QString,QString>&,bool)));
-        connect(parser,SIGNAL(editEntity(Entity*,QMap<QString,QString>&,bool)),
-                tControl,
-                SLOT(onEditEntity(Entity*,QMap<QString,QString>&,bool)));
-        connect(parser,SIGNAL(removeEntity(Entity*,bool)),
-                tControl,
-                SLOT(onRemoveEntity(Entity*,bool)));
+
+        connect(tControl,SIGNAL(entityAdded(QString,Entity*)),
+                parser, SLOT(onEntityAdded(QString,Entity*)));
     }
 
 

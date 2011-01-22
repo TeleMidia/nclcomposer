@@ -9,12 +9,14 @@ namespace composer {
         Entity(parent)
     {
         setType("document");
+        entities[this->getUniqueId()] = this;
     }
 
     Document::Document(QMap<QString,QString> &atts, QObject *parent) :
         Entity(atts, parent)
     {
         setType("document");
+        entities[this->getUniqueId()] = this;
     }
 
     Document::~Document() {
@@ -74,12 +76,12 @@ namespace composer {
     {
         QMutexLocker locker(&lockEntities);
         if (!entities.contains(parentId)) {
-            throw new ParentNotFound(entity->getType(),entity->getType(),
+            throw ParentNotFound(entity->getType(),entity->getType(),
                                      parentId);
             return false;
         }
         if (entities.contains(entity->getUniqueId())) {
-            throw new EntityNotFound(entity->getType(),entity->getUniqueId());
+            throw EntityNotFound(entity->getType(),entity->getUniqueId());
             return false;
         }
 
@@ -106,7 +108,7 @@ namespace composer {
                 return true;
             }
         } else {
-            throw new EntityNotFound(entity->getType(),entity->getUniqueId());
+            throw EntityNotFound(entity->getType(),entity->getUniqueId());
             return false; // entity does not exist in the model
         }
 

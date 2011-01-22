@@ -8,6 +8,9 @@
 #include <exception>
 using namespace std;
 
+#include "../extensions/IDocumentParser.h"
+using namespace composer::core::extension;
+
 #include "../model/Entity.h"
 #include "../model/Document.h"
 using namespace composer::core::model;

@@ -49,6 +49,8 @@ namespace composer {
                                          ") already exists";
                              } else {
                                profiles[type] = lProfile;
+                               emit notifyLoadedProfile(
+                                       lProfile->getProfileName(),fileName);
                              }
                          } else {
                              emit notifyError(tr("ERROR: Language Extension (%1)").
