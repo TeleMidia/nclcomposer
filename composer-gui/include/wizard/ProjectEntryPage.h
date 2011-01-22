@@ -9,6 +9,8 @@
 #include <QFileDialog>
 #include <QString>
 #include <QPushButton>
+#include <QCheckBox>
+#include <QDebug>
 
 class ProjectEntryPage : public QWizardPage
 {
@@ -22,11 +24,15 @@ class ProjectEntryPage : public QWizardPage
         QLineEdit *nameLineEdit;
         QLabel *locationLabel;
         QLineEdit *directoryLine;
+        QPushButton *locatorButton;
         QString defaultLocation;
+        QCheckBox *checkCpy;
+        bool isOpen;
 
         void initGUI();
     private slots:
         void setProjectDirectory();
+        void setOpenProject(int state);
 };
 
 #endif // PROJECTENTRYPAGE_H

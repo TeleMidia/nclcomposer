@@ -26,6 +26,8 @@
 #include <QtGui/QSplashScreen>
 #include <QtGui/QListWidget>
 #include <QtGui/QDialog>
+#include <QtGui/QBitmap>
+#include <QtGui/QPainter>
 
 #include <core/modules/ProjectControl.h>
 #include <core/modules/PluginControl.h>

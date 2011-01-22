@@ -2,7 +2,8 @@
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent) {
-    QSplashScreen splash(QPixmap(":/mainwindow/icon"));
+    QPixmap mPix(":/mainwindow/icon");
+    QSplashScreen splash(mPix);
     splash.show();
 
     user_directory_ext = "";
@@ -254,8 +255,6 @@ void MainWindow::createAbout()
     gLayout->addWidget(profilesExt);
     gLayout->addWidget(bOk);
     aboutDialog->setLayout(gLayout);
-
-
 
 }
 
