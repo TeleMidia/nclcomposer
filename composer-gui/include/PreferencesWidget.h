@@ -5,6 +5,7 @@
 #include <QDebug>
 #include <QPluginLoader>
 #include <QDialog>
+#include <QListWidgetItem>
 
 #include "IPreferencesPage.h"
 
@@ -24,9 +25,13 @@ public:
 
 private:
     Ui::PreferencesWidget *ui;
+    QListWidgetItem *currentItem;
 
     bool loadPreferencesPages();
     QMap <QString, IPreferencesPage *> pages;
+
+private slots:
+    void changeActivePage();
 };
 
 #endif // PREFERENCES_H

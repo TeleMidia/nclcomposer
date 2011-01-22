@@ -1,16 +1,20 @@
 #include "include/PreferencesWidget.h"
 #include "ui_PreferencesWidget.h"
-#include <QListWidgetItem>
 
 QT_BEGIN_NAMESPACE
 
 PreferencesWidget::PreferencesWidget(QWidget *parent) :
-        QDialog(parent),
-        ui(new Ui::PreferencesWidget)
+QDialog(parent),
+ui(new Ui::PreferencesWidget)
 {
     ui->setupUi(this);
+    setWindowTitle(tr("Composer Preferences"));
     this->setModal(true);
     loadPreferencesPages();
+
+    connect(ui->listWidget, SIGNAL(itemSelectionChanged()), this, SLOT(changeActivePage()));
+
+    currentItem = NULL;
 }
 
 PreferencesWidget::~PreferencesWidget()
@@ -47,18 +51,28 @@ bool PreferencesWidget::loadPreferencesPages(){
                     new QListWidgetItem(icon, title, ui->listWidget, 0);
                     QWidget *page = prefPage->getPageWidget();
                     ui->scrollAreaVerticalLayout->addWidget(page);
+                    page->hide();
                 }
             } else {
                 qDebug() << tr("ERROR: Preference Page Extension (%1)").
-                                 arg(fileName);
+                        arg(fileName);
                 return false;
             }
         } else {
             qDebug() << tr("ERROR: Language Extension (%1)").
-                             arg(fileName);
+                    arg(fileName);
             return false;
         }
     }
     return true;
 }
+
+void PreferencesWidget::changeActivePage(){
+    if (currentItem != NULL)
+            pages[currentItem->text()]->getPageWidget()->hide();
+
+    currentItem = ui->listWidget->currentItem();
+    pages[currentItem->text()]->getPageWidget()->show();
+}
+
 QT_END_NAMESPACE

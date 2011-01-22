@@ -119,7 +119,7 @@ void MainWindow::initGUI() {
     #ifndef Q_WS_MAC
         setWindowIcon(QIcon(":/mainwindow/icon"));
     #endif
-    setWindowTitle(tr("Composer 2.0 Revolutionary - by Bruno Modafucker"));
+    setWindowTitle(tr("Composer NCL 3.0"));
     mdiArea = new QMdiArea(this);
     mdiArea->setHorizontalScrollBarPolicy(Qt::ScrollBarAsNeeded);
     mdiArea->setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded);
@@ -247,7 +247,7 @@ void MainWindow::createAbout()
 
     QGridLayout *gLayout = new QGridLayout(aboutDialog);
     gLayout->addWidget(new QLabel(tr("The <b>Composer</b> is an IDE for"
-                                     " the Multimedia languages."),
+                                     " Declarative Multimedia languages."),
                                      aboutDialog));
     gLayout->addWidget(new QLabel(tr("<b>Profile Languages Loaded</b>"),
                                   aboutDialog));
