@@ -1,5 +1,5 @@
 #include "include/PreferencesDialog.h"
-#include "ui_PreferencesWidget.h"
+#include "ui_PreferencesDialog.h"
 #include <QListWidgetItem>
 
 PreferencesDialog::PreferencesDialog(QWidget *parent) :

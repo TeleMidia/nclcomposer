@@ -52,4 +52,4 @@ RESOURCES += images.qrc
 
 #HEADERS += $$HEADERS_GUI
 
-FORMS   += ui/PreferencesWidget.ui
+FORMS   += ui/PreferencesDialog.ui
