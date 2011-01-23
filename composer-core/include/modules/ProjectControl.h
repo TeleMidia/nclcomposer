@@ -4,7 +4,6 @@
 #include <QtDebug>
 #include <QReadWriteLock>
 #include <QSettings>
-#include <QMessageBox>
 #include <QObject>
 #include <QMap>
 #include <QString>

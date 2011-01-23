@@ -3,7 +3,7 @@
 
 #include <QtPlugin>
 #include <QString>
-#include <QIcon>
+#include <QtGui/QIcon>
 
 #include "../util/Utilities.h"
 using namespace composer::core::util;

@@ -1,23 +1,19 @@
 # -------------------------------------------------
 # Project created by QtCreator 2010-03-12T13:06:44
 # -------------------------------------------------
-#QT -= gui
-QT += xml
+QT -= gui
 TEMPLATE = lib
 TARGET = ComposerCore
 VERSION = 1.0
-CONFIG += qt release
+CONFIG += qt debug
 MOC_DIR = mocs
 OBJECTS_DIR = objs
 
 macx:CONFIG += lib_bundle x86
-debug:INSTALLBASE = ./debug
 
-release {
-    macx:INSTALLBASE = /Library/Frameworks
-    else:unix:INSTALLBASE = /usr/local
-    win32:INSTALLBASE = C:\Composer
-}
+macx:INSTALLBASE = /Library/Frameworks
+else:unix:INSTALLBASE = /usr/local
+win32:INSTALLBASE = C:\Composer
 
 DEFINES += COMPOSERCORE_LIBRARY
 

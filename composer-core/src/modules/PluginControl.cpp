@@ -7,8 +7,6 @@ namespace module {
 
     PluginControl::PluginControl() {
         qDebug() << "PluginControl::PluginControl()";
-        //TODO - loadPlugins :D
-        //loadPlugins();
     }
 
     PluginControl::~PluginControl() {
@@ -147,8 +145,7 @@ namespace module {
                 pluginInstance->setDocument(doc);
                 launchNewPlugin(pluginInstance,transControl);
                 pluginInstances.insert(*it,pluginInstance);
-                //TODO - pegar o widget e colocar no QDockWdget
-                // OBS: se for nulo nao eh um plug-in visual
+                emit addPluginWidgetToWindow(pluginInstance,location);
             }
             else {
                 qDebug() << "Could not create a instance for the plugin"

@@ -29,7 +29,7 @@ namespace plugin {
     class IPlugin : public QObject {
         Q_OBJECT
 
-        private:
+        protected:
              //! The Document binded with this particular plugin instance
              Document *doc;
              QString pluginID;

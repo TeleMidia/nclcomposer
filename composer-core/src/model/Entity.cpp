@@ -9,7 +9,7 @@ namespace composer {
         QObject(parent)
     {
         setUniqueID(QUuid::createUuid().toString());
-        QMutexLocker loecker(&lockParent);
+        QMutexLocker locker(&lockParent);
         this->parent = (Entity*)parent;
         this->deleteChildren = true;
     }
@@ -20,7 +20,7 @@ namespace composer {
         QMutexLocker locker(&lockAtts);
         this->atts = atts;
         setUniqueID(QUuid::createUuid().toString());
-        QMutexLocker loecker(&lockParent);
+        QMutexLocker lo(&lockParent);
         this->parent = (Entity*)parent;
         this->deleteChildren = true;
     }
