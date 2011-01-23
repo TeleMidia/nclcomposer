@@ -60,7 +60,10 @@ void NCLProblemsView::addProblem(   QString message,
                                     int severity /*ERROR OR WARNING?*/)
 {
     QTreeWidgetItem *error = new QTreeWidgetItem(problemsList);
-    error->setIcon(0, QIcon(":/images/error-icon-16.png"));
+    if(severity == 0)
+        error->setIcon(0, QIcon(":/images/error-icon-16.png"));
+    else
+        error->setIcon(0, QIcon(":/images/warning-big.png"));
     error->setText(0, message);
     error->setText(1, file);
     error->setText(2, QString::number(line));

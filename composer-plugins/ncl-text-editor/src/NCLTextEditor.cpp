@@ -18,6 +18,8 @@ NCLTextEditor::~NCLTextEditor(){
 }
 
 void NCLTextEditor::initParameters(){
+    tabBehavior = TAB_BEHAVIOR_DEFAULT;
+
     setAutoIndent(true);
     setFolding(QsciScintilla::BoxedTreeFoldStyle);
     setFoldMarginColors(PREF_FOLD_MARGIN_FORE_COLOR, PREF_FOLD_MARGIN_BACK_COLOR);
@@ -122,52 +124,58 @@ void NCLTextEditor::wheelEvent (QWheelEvent *event){
     QsciScintilla::wheelEvent(event);
 }
 
+//FIXME: I DONT KNOW WHERE, BUT THE UNDO IS NOT WORKING EVERY TIME.
 void NCLTextEditor::keyPressEvent(QKeyEvent *event) {
     int begin, end;
-    if(state == FILLING_ATTRIBUTES_STATE) {
-        int line, index;
-        getCursorPosition(&line, &index);
+    int line, index;
+    getCursorPosition(&line, &index);
+    int pos, style, size;
+    pos = SendScintilla(SCI_GETCURRENTPOS);
+    size = SendScintilla(SCI_GETTEXTLENGTH);
 
+    qDebug() << "state = " << state;
+    if(state == FILLING_ATTRIBUTES_STATE) {
         QString strline = text(line);
+
         if(event->key() == Qt::Key_Return){
             clearIndicatorRange(line, 0, line, strline.size(), filling_attribute_indicator);
             state = DEFAULT_STATE;
             setSelection(line, index, line, index);
             return;
         }
+
         if(event->key() == Qt::Key_Tab){
             clearIndicatorRange(line, 0, line, strline.size(), filling_attribute_indicator);
-
             QString strline = text(line);
-            int pos = SendScintilla(SCI_GETCURRENTPOS);
-            int style = SendScintilla(SCI_GETSTYLEAT, pos);
+            pos = SendScintilla(SCI_GETCURRENTPOS);
+            style = SendScintilla(SCI_GETSTYLEAT, pos);
             bool error = false;
 
-            //SHIFT+TAB -> GO TO PREVIOUS ATRIBUTE
+            //CTRL+TAB -> GO TO PREVIOUS ATRIBUTE
             if(event->modifiers() & Qt::ControlModifier) {
-                while (pos > 0 && index > 0 && style == QsciLexerNCL::HTMLDoubleQuotedString) {
+                while (pos > 0 ) {
+                    style = SendScintilla(SCI_GETSTYLEAT, pos);
+                    if(style != QsciLexerNCL::HTMLDoubleQuotedString)
+                        break;
                     pos--;
-                    index--;
-                    if (pos >= 0)
-                        style = SendScintilla(SCI_GETSTYLEAT, pos);
                 }
                 if (pos >= 0)
-                    userFillingPreviousAttribute(line, index-1);
-
+                    userFillingPreviousAttribute(pos);
                 else
-                   error = true;
+                    error = true;
 
             }
             //JUST TAB -> GO TO NEXT ATTRIBUTE
             else if(event->modifiers() == Qt::NoModifier) {
-                while (index < strline.size() && style == QsciLexerNCL::HTMLDoubleQuotedString){
-                    index++;
+                while (pos < size){
+                    style = SendScintilla(SCI_GETSTYLEAT, pos);
+                    if(style != QsciLexerNCL::HTMLDoubleQuotedString)
+                        break;
                     pos++;
-                    if ( index < strline.size())
-                        style = SendScintilla(SCI_GETSTYLEAT, pos);
                 }
-                if(index <= strline.size())
-                    userFillingNextAttribute(line, index+1);
+
+                if(pos < size)
+                    userFillingNextAttribute(pos);
                 else
                     error = true;
             }
@@ -178,14 +186,56 @@ void NCLTextEditor::keyPressEvent(QKeyEvent *event) {
             }
             return;
 
-        } else {
-            QsciScintilla::keyPressEvent(event);
-            getCursorPosition(&line, &index);
-            updateVisualFillingAttributeField(line, index, begin, end);
+        }
+        else {
+
+            QsciScintilla::keyPressEvent ( event ) ;
+            getCursorPosition (&line, &index);
+            pos = SendScintilla(SCI_GETCURRENTPOS);
+            style = SendScintilla(SCI_GETSTYLEAT, pos);
+
+            //Test if pos-1 is also inside the attribute, otherwise it will
+            // treat a text inside the end of previous Quote and the start of
+            // the current one as an attribute
+            if (style == QsciLexerNCL::HTMLDoubleQuotedString &&
+                pos-1 >=0 ) {
+                //TODO: IMPROVE PERFORMANCE
+                recolor();
+                style = SendScintilla(SCI_GETSTYLEAT, pos-1);
+
+                if(style == QsciLexerNCL::HTMLDoubleQuotedString) {
+                    updateVisualFillingAttributeField(line, index, begin, end);
+                    return;
+                }
+            }
+            clearIndicatorRange(line, 0, line, strline.size(), filling_attribute_indicator);
+            state = DEFAULT_STATE;
         }
     }
     else {
         QsciScintilla::keyPressEvent(event);
+        pos = SendScintilla(SCI_GETCURRENTPOS);
+        style = SendScintilla(SCI_GETSTYLEAT, pos);
+
+        //Test if pos-1 is also inside the attribute, otherwise it will
+        // treat a text inside the end of previous Quote and the start of
+        // the current one as an attribute
+        if (style == QsciLexerNCL::HTMLDoubleQuotedString &&
+            pos-1 >=0 ) {
+            //TODO: IMPROVE PERFORMANCE
+            recolor();
+            style = SendScintilla(SCI_GETSTYLEAT, pos-1);
+
+            //FIXME: Attribute also can be between Single quotes
+            if (tabBehavior == TAB_BEHAVIOR_NEXT_ATTR &&
+                (style == QsciLexerNCL::HTMLDoubleQuotedString)) {
+
+                state = FILLING_ATTRIBUTES_STATE;
+                getCursorPosition (&line, &index);
+
+                updateVisualFillingAttributeField(line, index, begin, end);
+            }
+        }
     }
 }
 
@@ -204,42 +254,54 @@ void NCLTextEditor::MarkLine(int margin, int line, Qt::KeyboardModifiers state){
     qDebug() << "NCLTextEditor::MarkLine()";
 }
 
+void NCLTextEditor::userFillingNextAttribute(int pos) {
+    int begin, end, style, i = pos;
+    int size = SendScintilla(SCI_GETTEXTLENGTH);
 
-//TODO: SPLIT AND MERGE THE TWO NEXT FUNCTION
-void NCLTextEditor::userFillingNextAttribute(int line, int pos){
-    QString strline = text(line);
-    int begin, end;
     state = FILLING_ATTRIBUTES_STATE;
-    int i = pos;
-    while( i < strline.size() && strline[i] != '\"')
+
+    while( i < size ) {
+        style = SendScintilla(SCI_GETSTYLEAT, i);
+        if (style == QsciLexerNCL::HTMLDoubleQuotedString)
+            break;
         i++;
+    }
     i++;
 
-    if( i >= strline.size()) {
+    if( i >= size ) {
         state = DEFAULT_STATE;
         return;
     }
-    setCursorPosition(line, i);
 
-    updateVisualFillingAttributeField (line, i, begin, end);
-    setSelection(line, begin, line, end);
+    int newline, newindex;
+    lineIndexFromPosition(i, &newline, &newindex);
+    setCursorPosition(newline, newindex);
+    updateVisualFillingAttributeField (newline, newindex, begin, end);
+    setSelection(newline, begin, newline, end);
 }
 
-void NCLTextEditor::userFillingPreviousAttribute(int line, int pos){
-    QString strline = text(line);
-    int begin, end;
-    state = FILLING_ATTRIBUTES_STATE;
+void NCLTextEditor::userFillingPreviousAttribute(int pos){
+    int begin, end, style;
     int i = pos-1;
-    while( i >= 0 && strline[i] != '\"')
+    state = FILLING_ATTRIBUTES_STATE;
+
+    while( i >= 0) {
+        style = SendScintilla(SCI_GETSTYLEAT, i);
+        if (style == QsciLexerHTML::HTMLDoubleQuotedString)
+            break;
         i--;
+    }
 
     if( i < 0) {
         state = DEFAULT_STATE;
         return;
     }
-    setCursorPosition(line, i);
-    updateVisualFillingAttributeField (line, i, begin, end);
-    setSelection(line, begin, line, end);
+
+    int newline, newindex;
+    lineIndexFromPosition(i, &newline, &newindex);
+    setCursorPosition(newline, newindex);
+    updateVisualFillingAttributeField (newline, newindex, begin, end);
+    setSelection(newline, begin, newline, end);
 }
 
 //FIXME: ESTA INSERINDO UM ESPACO NO FINAL
@@ -272,12 +334,13 @@ void NCLTextEditor::updateVisualFillingAttributeField(int line, int pos, int &be
         end++;
         inserted_space = true;
     }
-    // qDebug() << begin << end;
+    qDebug() << begin << end;
     fillIndicatorRange(line, begin, line, end, filling_attribute_indicator);
 
-    if(inserted_space)
-        setSelection(line, begin, line, end);
+    if(inserted_space) setSelection(line, begin, line, end);
 }
 
-
+void NCLTextEditor::setTabBehavior(TAB_BEHAVIOR tabBehavior){
+    this->tabBehavior = tabBehavior;
+}
 

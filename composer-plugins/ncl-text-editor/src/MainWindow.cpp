@@ -28,6 +28,8 @@
 MainWindow::MainWindow(QWidget *parent):
         QMainWindow(parent)
 {
+    preferences = new Preferences(parent);
+
     createTextView();
     createActions();
     createMenus();
@@ -141,7 +143,7 @@ void MainWindow::createActions()
     exitAct->setStatusTip(tr("Exit the application"));
     connect(exitAct, SIGNAL(triggered()), this, SLOT(close()));
 
-    cutAct = new QAction(QIcon(":/images/cut.png"), tr("Cu&t"), this);
+    cutAct = new QAction(QIcon(":/images/clipboard_cut.png"), tr("Cu&t"), this);
     cutAct->setShortcut(tr("Ctrl+X"));
     cutAct->setStatusTip(tr("Cut the current selection's contents to the "
                             "clipboard"));
@@ -178,6 +180,11 @@ void MainWindow::createActions()
     fullscreenAct->setShortcut(tr("F11"));
     fullscreenAct->setStatusTip(tr("Enable/disable fullscreen mode"));
     connect(fullscreenAct, SIGNAL(triggered()), this, SLOT(showInFullScreen()));
+
+
+    editPreferencesAct = new QAction(tr("&Preferences"), this);
+    editPreferencesAct->setStatusTip(tr("Edit Preferences related to editors."));
+    connect(editPreferencesAct, SIGNAL(triggered()), this, SLOT(showPreferences()));
 }
 
 void MainWindow::createMenus()
@@ -194,6 +201,9 @@ void MainWindow::createMenus()
     editMenu->addAction(cutAct);
     editMenu->addAction(copyAct);
     editMenu->addAction(pasteAct);
+
+    editMenu->addSeparator();
+    editMenu->addAction(editPreferencesAct);
 
     menuBar()->addSeparator();
 
@@ -493,11 +503,16 @@ void MainWindow::createTextView() {
     //                              Qt::RightDockWidgetArea);
 
     textEdit = new NCLTextEditor(this);
+    textEdit->setTabBehavior(NCLTextEditor::TAB_BEHAVIOR_NEXT_ATTR);
     dockTextEdit->setWidget(textEdit);
 
     addDockWidget(Qt::RightDockWidgetArea, dockTextEdit);
 
     // setCentralWidget(textEdit);
+
+    /** Initialize Text Preferences Pages*/
+    textEditorPreferencesPage = preferences->addPreferencesPage("Text Editor");
+    textEditorPreferencesPage->addInputString("teste", "teste");
  }
 
 void MainWindow::createLayoutView()
@@ -514,4 +529,9 @@ void MainWindow::createLayoutView()
     dockLayoutView->setWidget(layoutView);
 
     addDockWidget(Qt::RightDockWidgetArea, dockLayoutView);
+}
+
+void MainWindow::showPreferences()
+{
+    preferences->show();
 }

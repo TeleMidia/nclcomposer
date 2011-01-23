@@ -3,17 +3,21 @@ Reestruturacao do codigo:
     Transformar NCLTreeWidget em NCLTreeView.
     p.s. Tem que herdar de alguem em comum para poder ser tratado como uma visao do Composer.
 
-1. Sugestão de código contextual
+    . Melhorar a performance da navegacao entre atributos.
+
+1. Preferences Page Abstractions
+
+2. Sugestão de código contextual
     Sugestão de valores de atributos: Carregar valores pré-definidos (Como ?)
     Sugestão de valores de atributos: Referencias.
 
-2. Validacao
+3. Validacao
     Tudo
 
-3. Formatacao Automática (Ctrl+Shift+F)
+4. Formatacao Automática (Ctrl+Shift+F)
 
-4. Sugestão de correcao de erros
+5. Sugestão de correcao de erros
 
-5. Hyperlinks (Isso nao deve ser simples de implementar)
+6. Hyperlinks (Isso nao deve ser simples de implementar)
 
-6. Pre-visualizacao de objetos de media, conectores etc.
+7. Pre-visualizacao de objetos de media, conectores etc.

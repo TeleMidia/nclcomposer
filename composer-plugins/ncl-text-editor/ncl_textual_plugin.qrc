@@ -14,5 +14,7 @@
         <file>images/error-icon-24.png</file>
         <file>images/error-icon-16.png</file>
         <file>images/clear-icon.png</file>
+        <file>images/warning-big.png</file>
+        <file>images/clipboard_cut.png</file>
     </qresource>
 </RCC>

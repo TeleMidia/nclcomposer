@@ -162,8 +162,9 @@ void QsciNCLAPIs::autoCompletionSelected(const QString &selection) {
 
     if (suggesting == SUGGESTING_ELEMENTS)
     {
-        lexer()->editor()->getCursorPosition(&line, &pos);
-        ((NCLTextEditor *)lexer()->editor())->userFillingNextAttribute(line, pos);
+        pos = lexer()->editor()->SendScintilla(QsciScintilla::SCI_GETCURRENTPOS);
+
+        ((NCLTextEditor *)lexer()->editor())->userFillingNextAttribute(pos);
     }
 }
 

@@ -16,10 +16,11 @@ HEADERS     =   include/MainWindow.h \
                 include/NCLParser.h \
                 include/NCLProblemsView.h \
                 include/NCLTreeWidget.h \
-    ../layoutView/scribblearea.h \
-    ../layoutView/nclregion.h \
-    ../layoutView/LayoutView.h \
-    ../layoutView/attributes.h
+                ../layoutView/scribblearea.h \
+                ../layoutView/nclregion.h \
+                ../layoutView/LayoutView.h \
+                ../layoutView/attributes.h \
+                include/Preferences.h
 
 SOURCES     =   src/main.cpp \
                 src/MainWindow.cpp \
@@ -32,10 +33,11 @@ SOURCES     =   src/main.cpp \
                 src/NCLParser.cpp \
                 src/NCLProblemsView.cpp \
                 src/NCLTreeWidget.cpp \
-    ../layoutView/scribblearea.cpp \
-    ../layoutView/nclregion.cpp \
-    ../layoutView/LayoutView.cpp \
-    ../layoutView/attributes.cpp
+                ../layoutView/scribblearea.cpp \
+                ../layoutView/nclregion.cpp \
+                ../layoutView/LayoutView.cpp \
+                ../layoutView/attributes.cpp \
+                src/Preferences.cpp
 
 OTHER_FILES +=  TODO \
                 config/NCL_STRUCTURE \

@@ -24,11 +24,18 @@ class NCLTextEditor : public QsciScintilla
     Q_OBJECT
 
 public:
+    typedef enum {
+        TAB_BEHAVIOR_DEFAULT = 1,
+        TAB_BEHAVIOR_NEXT_ATTR_AFTER_AUTOCOMPLETE,
+        TAB_BEHAVIOR_NEXT_ATTR
+    } TAB_BEHAVIOR;
+
     explicit NCLTextEditor(QWidget *parent = 0);
     virtual ~NCLTextEditor();
 
-    void userFillingNextAttribute(int line, int index);
-    void userFillingPreviousAttribute(int line, int index);
+    void setTabBehavior(TAB_BEHAVIOR tabBehavior);
+    void userFillingNextAttribute(int pos);
+    void userFillingPreviousAttribute(int pos);
     void updateVisualFillingAttributeField(int line, int index, int &begin, int &end);
 
 private:
@@ -48,6 +55,8 @@ private:
     int error_indicator;
     int error_marker;
     int filling_attribute_indicator;
+
+    TAB_BEHAVIOR tabBehavior;
 
     void initParameters();
 

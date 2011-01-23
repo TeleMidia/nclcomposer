@@ -34,6 +34,7 @@ using namespace std;
 #include "NCLTreeWidget.h"
 #include "NCLTextEditor.h"
 #include "LayoutView.h"
+#include "Preferences.h"
 
 class QAction;
 class QMenu;
@@ -58,6 +59,7 @@ private slots:
     void showInFullScreen();
     void insertElement();
     void gotoLineOf(QTreeWidgetItem *item, int column);
+    void showPreferences();
 
 private:
     void createActions();
@@ -96,15 +98,22 @@ private:
     QAction *aboutAct;
     QAction *aboutQtAct;
     QAction *fullscreenAct;
+    QAction *editPreferencesAct;
 
+/** VIEWS **/
+    /** Outline View */
     QDockWidget *dockOutlineView;
     NCLTreeWidget *outlineView;
     QMenu *nodeMenu;
     QAction *insertNodeChild;
 
+    /** Problems View */
     NCLProblemsView *problemsView;
     QDockWidget *dockLayoutView;
     LayoutView *layoutView;
+
+    Preferences *preferences;
+    PreferencesPage *textEditorPreferencesPage;
 };
 
 #endif
