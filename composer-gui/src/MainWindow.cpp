@@ -16,12 +16,12 @@ MainWindow::MainWindow(QWidget *parent)
     #endif
 
     initGUI();
-
     initModules();
+    readSettings();
 
     splash.finish(this);
     preferences = new PreferencesDialog(this);
-    readSettings();
+
 }
 
 MainWindow::~MainWindow() {
