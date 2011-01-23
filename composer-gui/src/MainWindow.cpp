@@ -42,6 +42,8 @@ void MainWindow::initModules()
             this,SLOT(errorDialog(QString)));
     connect(pgControl,SIGNAL(newDocumentLaunchedAndCreated(QString,QString)),
             this,SLOT(createDocumentInTree(QString,QString)));
+    connect(pgControl,SIGNAL(addPluginWidgetToWindow(IPlugin*,QString)),
+            this,SLOT(addPluginWidget(IPlugin*,QString)));
     connect(lgControl,SIGNAL(notifyLoadedProfile(QString,QString)),
             this,SLOT(addProfileLoaded(QString,QString)));
     readExtensions();
@@ -57,9 +59,9 @@ void MainWindow::readExtensions()
        QSettings settings("telemidia", "composer");
     #endif
        settings.beginGroup("extension");
-            if (settings.contains("language"))
+            if (settings.contains("path"))
             {
-                user_directory_ext = settings.value("language").toString();
+                user_directory_ext = settings.value("path").toString();
             } else {
                 user_directory_ext = promptChooseDirectory();
             }
@@ -67,7 +69,7 @@ void MainWindow::readExtensions()
                      << ")";
             LanguageControl::getInstance()->
                    loadProfiles(user_directory_ext);
-       //TODO - loadPlugins
+            PluginControl::getInstance()->loadPlugins(user_directory_ext);
        settings.endGroup();
 }
 
@@ -121,10 +123,8 @@ void MainWindow::initGUI() {
         setWindowIcon(QIcon(":/mainwindow/icon"));
     #endif
     setWindowTitle(tr("Composer NCL 3.0"));
-    mdiArea = new QMdiArea(this);
-    mdiArea->setHorizontalScrollBarPolicy(Qt::ScrollBarAsNeeded);
-    mdiArea->setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded);
-    setCentralWidget(mdiArea);
+    tabDocuments = new QTabWidget(this);
+    setCentralWidget(tabDocuments);
     setUnifiedTitleAndToolBarOnMac(true);
     createStatusBar();
     createTreeProject();
@@ -146,8 +146,6 @@ void MainWindow::launchProjectWizard() {
 }
 
 void MainWindow::launchAddDocumentWizard(QString projectId) {
-    //TODO criar somente um ponteiro wizard que vai recebendo os diferentes
-    //wizards
     documentWizard = new DocumentWizard(this);
     documentWizard->setProjectId(projectId);
     qDebug() << "MainWindow::launchAddDocumentWizard (" << projectId << ")";
@@ -164,14 +162,7 @@ void MainWindow::createProjectInTree(QString name,QString location) {
     item->setIcon(0,QIcon(":/mainwindow/folderEmpty"));
     item->setText(1,name);
     item->setToolTip(1,location);
-    projectTree->setCurrentItem(item); //TODO verificar se funciona
-
-    /* The wizard is no long required
-    if(projectWizard != NULL) {
-        delete projectWizard;
-        projectWizard = NULL;
-    }*/
-
+    projectTree->setCurrentItem(item);
 }
 
 void MainWindow::createDocumentInTree(QString name,
@@ -189,6 +180,27 @@ void MainWindow::createDocumentInTree(QString name,
     parent->setIcon(0,QIcon(":/mainwindow/folder"));
 }
 
+void MainWindow::addPluginWidget(IPlugin *plugin, QString location)
+{
+
+    QMainWindow *w;
+
+    if (documentsWidgets.contains(location))
+    {
+        w = documentsWidgets[location];
+    } else {
+        w = new QMainWindow(tabDocuments);
+        int i = tabDocuments->addTab(w,location);
+        tabDocuments->setTabText(i,location);
+    }
+
+    QDockWidget *dock = new QDockWidget("TESTE",w);
+    dock->setAllowedAreas(Qt::AllDockWidgetAreas);
+    QWidget *pW = plugin->getWidget();
+    dock->setWidget(pW);
+    w->addDockWidget(Qt::BottomDockWidgetArea,dock,Qt::Horizontal);
+    w->show();
+}
 
 void MainWindow::createTreeProject() {
     dockTree = new QDockWidget(tr("Projects"), this);
@@ -241,9 +253,13 @@ void MainWindow::createAbout()
     aboutDialog->setWindowTitle(tr("About Composer"));
 
     profilesExt = new QListWidget(aboutDialog);
-    profilesExt->setEnabled(false);
+    profilesExt->setAlternatingRowColors(true);
+    pluginsExt = new QListWidget(aboutDialog);
+    pluginsExt->setAlternatingRowColors(true);
+
 
     QPushButton *bOk = new QPushButton(tr("OK"),aboutDialog);
+    //bOk->setMaximumWidth(5);
     connect(bOk,SIGNAL(clicked()),aboutDialog,SLOT(close()));
 
     QGridLayout *gLayout = new QGridLayout(aboutDialog);
@@ -253,13 +269,26 @@ void MainWindow::createAbout()
     gLayout->addWidget(new QLabel(tr("<b>Profile Languages Loaded</b>"),
                                   aboutDialog));
     gLayout->addWidget(profilesExt);
-    gLayout->addWidget(bOk);
+    gLayout->addWidget(new QLabel(tr("<b>Plug-ins Loaded</b>")));
+    gLayout->addWidget(pluginsExt);
+    gLayout->addWidget(bOk,6,2);
     aboutDialog->setLayout(gLayout);
 
 }
 
 void MainWindow::about() {
-    aboutDialog->exec();
+    QList<IPluginFactory*>::iterator it;
+    QList<IPluginFactory*> pList = PluginControl::getInstance()->
+                                getLoadedPlugins();
+
+    for (it = pList.begin(); it != pList.end(); it++) {
+        IPluginFactory *pF = *it;
+        pluginsExt->addItem(new QListWidgetItem(pF->getPluginIcon(),
+                                                pF->getPluginName()));
+    }
+
+    aboutDialog->setModal(true);
+    aboutDialog->show();
 
  }
 
@@ -329,9 +358,6 @@ void MainWindow::updateWindowMenu()
      windowMenu->addAction(separatorWindowAct);
      projectWindowAct->setChecked(dockTree->isVisible());
 
-     QList<QMdiSubWindow *> windows = mdiArea->subWindowList();
-     separatorWindowAct->setVisible(!windows.isEmpty());
-
  }
 
 void MainWindow::closeEvent(QCloseEvent *event)
@@ -344,7 +370,7 @@ void MainWindow::closeEvent(QCloseEvent *event)
  #endif
     if (user_directory_ext != "") {
         settings.beginGroup("extension");
-            settings.setValue("language",user_directory_ext);
+            settings.setValue("path",user_directory_ext);
         settings.endGroup();
     }
     if(ProjectControl::getInstance()->saveProjects()) {

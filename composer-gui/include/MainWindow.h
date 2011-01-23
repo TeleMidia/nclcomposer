@@ -2,11 +2,13 @@
 #define MAINWINDOW_H
 
 #include <QtDebug>
-#include <QCoreApplication>
 #include <QSettings>
 #include <QStringList>
+#include <QMap>
+
+#include <QCoreApplication>
 #include <QtGui/QMainWindow>
-#include <QtGui/QMdiArea>
+#include <QtGui/QTabWidget>
 #include <QtGui/QStatusBar>
 #include <QtGui/QMenu>
 #include <QtGui/QAction>
@@ -42,7 +44,8 @@ class MainWindow : public QMainWindow {
     Q_OBJECT
 
     private:
-        QMdiArea *mdiArea;
+        QTabWidget *tabDocuments;
+        QMap<QString,QMainWindow*> documentsWidgets;
 
         QMenu *fileMenu;
         QMenu *helpMenu;
@@ -62,7 +65,7 @@ class MainWindow : public QMainWindow {
         QDockWidget *dockTree;
 
         QListWidget *profilesExt;
-        //QListWidget *pluginsExt;
+        QListWidget *pluginsExt;
 
         ProjectWizard *projectWizard;
         DocumentWizard *documentWizard;
@@ -104,6 +107,7 @@ class MainWindow : public QMainWindow {
                                   QString location);
         void errorDialog(QString);
         void launchAddDocumentWizard(QString projectId);
+        void addPluginWidget(IPlugin *plugin, QString documentId);
 
     signals:
         void writeSettings();

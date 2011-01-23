@@ -31,5 +31,5 @@ void ProjectTreeWidget::contextMenuEvent(QContextMenuEvent* event)
 }
 
 void ProjectTreeWidget::onAddDocument() {
-    emit addDocument(item->text(1)); //pass the projectId
+//    emit addDocument(item->text(1)); //pass the projectId
 }

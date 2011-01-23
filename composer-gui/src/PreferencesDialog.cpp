@@ -28,7 +28,7 @@ void PreferencesDialog::loadPreferencesPages(){
     for (it = plugins.begin(); it != plugins.end(); it++)
     {
         IPluginFactory *pF = *it;
-
+        if (pF->getPreferencePageWidget() == NULL) continue;
         new QListWidgetItem(pF->getPluginIcon(),
                             pF->getPluginName(),
                             ui->listWidget, 0);
