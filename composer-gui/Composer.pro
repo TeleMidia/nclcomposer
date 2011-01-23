@@ -38,7 +38,8 @@ SOURCES += main.cpp \
     src/wizard/ProjectEntryPage.cpp \
     src/wizard/DocumentWizard.cpp \
     src/wizard/DocumentEntryPage.cpp \
-    src/PreferencesDialog.cpp
+    src/PreferencesDialog.cpp \
+    src/PreferencesWidget.cpp
 
 HEADERS += include/MainWindow.h \
     include/ProjectTreeWidget.h \
@@ -46,7 +47,8 @@ HEADERS += include/MainWindow.h \
     include/wizard/ProjectEntryPage.h \
     include/wizard/DocumentWizard.h \
     include/wizard/DocumentEntryPage.h \
-    include/PreferencesDialog.h
+    include/PreferencesDialog.h \
+    include/PreferencesWidget.h
 
 RESOURCES += images.qrc
 
