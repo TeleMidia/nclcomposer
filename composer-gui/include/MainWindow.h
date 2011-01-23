@@ -101,12 +101,13 @@ class MainWindow : public QMainWindow {
     public:
         MainWindow(QWidget *parent = 0);
         ~MainWindow();
+
     public slots:
         void createProjectInTree(QString name,QString location);
         void createDocumentInTree(QString name,
                                   QString location);
         void errorDialog(QString);
-        void launchAddDocumentWizard(QString projectId);
+        void launchAddDocumentWizard();
         void addPluginWidget(IPlugin *plugin, QString documentId);
 
     signals:

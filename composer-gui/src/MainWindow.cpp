@@ -8,20 +8,19 @@ MainWindow::MainWindow(QWidget *parent)
 
     user_directory_ext = "";
 
-    #ifdef Q_WS_MAC
-        setUnifiedTitleAndToolBarOnMac(true);
-        defaultEx = "/Library/Application Support/Composer";
-    #else
-        defaultEx = "/usr/local/lib";
-    #endif
+#ifdef Q_WS_MAC
+    setUnifiedTitleAndToolBarOnMac(true);
+    defaultEx = "/Library/Application Support/Composer";
+#else
+    defaultEx = "/usr/local/lib/composer";
+#endif
 
     initGUI();
     initModules();
     readSettings();
-
-    splash.finish(this);
     preferences = new PreferencesDialog(this);
 
+    splash.finish(this);
 }
 
 MainWindow::~MainWindow() {
@@ -53,24 +52,24 @@ void MainWindow::initModules()
 void MainWindow::readExtensions()
 {
 
-    #ifdef Q_WS_MAC
-       QSettings settings("telemidia.pucrio.br", "composer");
-    #else
-       QSettings settings("telemidia", "composer");
-    #endif
-       settings.beginGroup("extension");
-            if (settings.contains("path"))
-            {
-                user_directory_ext = settings.value("path").toString();
-            } else {
-                user_directory_ext = promptChooseDirectory();
-            }
-            qDebug() << "MainWindow::readExtensions(" << user_directory_ext
-                     << ")";
-            LanguageControl::getInstance()->
-                   loadProfiles(user_directory_ext);
-            PluginControl::getInstance()->loadPlugins(user_directory_ext);
-       settings.endGroup();
+#ifdef Q_WS_MAC
+    QSettings settings("telemidia.pucrio.br", "composer");
+#else
+    QSettings settings("telemidia", "composer");
+#endif
+    settings.beginGroup("extension");
+    if (settings.contains("path"))
+    {
+        user_directory_ext = settings.value("path").toString();
+    } else {
+        user_directory_ext = promptChooseDirectory();
+    }
+    qDebug() << "MainWindow::readExtensions(" << user_directory_ext
+            << ")";
+    LanguageControl::getInstance()->
+            loadProfiles(user_directory_ext);
+    PluginControl::getInstance()->loadPlugins(user_directory_ext);
+    settings.endGroup();
 }
 
 QString MainWindow::promptChooseDirectory()
@@ -86,8 +85,8 @@ QString MainWindow::promptChooseDirectory()
     if (mBox.exec() == QMessageBox::No)
     {
         QString dirName = QFileDialog::getExistingDirectory(
-                          this, tr("Select Directory"),
-                          QDir::homePath(), QFileDialog::ShowDirsOnly);
+                this, tr("Select Directory"),
+                QDir::homePath(), QFileDialog::ShowDirsOnly);
         return dirName;
     } else {
         return defaultEx;
@@ -95,33 +94,33 @@ QString MainWindow::promptChooseDirectory()
 }
 
 void MainWindow::readSettings() {
- #ifdef Q_WS_MAC
+#ifdef Q_WS_MAC
     QSettings settings("telemidia.pucrio.br", "composer");
- #else
+#else
     QSettings settings("telemidia", "composer");
- #endif
+#endif
     settings.beginGroup("mainwindow");
-        restoreGeometry(settings.value("geometry").toByteArray());
-        restoreState(settings.value("windowState").toByteArray());
+    restoreGeometry(settings.value("geometry").toByteArray());
+    restoreState(settings.value("windowState").toByteArray());
     settings.endGroup();
     settings.beginGroup("projects");
-        QStringList projects = settings.childKeys();
-        QStringListIterator it(projects);
-        while (it.hasNext()) {
-            QString projectId = it.next();
-            QString location  = settings.value(projectId).toString();
-            qDebug() << "MainWindow::readSettings" <<
-                        "READ projectId: " << projectId <<
-                        "location: " << location;
-            ProjectControl::getInstance()->addProject(projectId,location);
-        }
+    QStringList projects = settings.childKeys();
+    QStringListIterator it(projects);
+    while (it.hasNext()) {
+        QString projectId = it.next();
+        QString location  = settings.value(projectId).toString();
+        qDebug() << "MainWindow::readSettings" <<
+                "READ projectId: " << projectId <<
+                "location: " << location;
+        ProjectControl::getInstance()->addProject(projectId,location);
+    }
     settings.endGroup();
 }
 
 void MainWindow::initGUI() {
-    #ifndef Q_WS_MAC
-        setWindowIcon(QIcon(":/mainwindow/icon"));
-    #endif
+#ifndef Q_WS_MAC
+    setWindowIcon(QIcon(":/mainwindow/icon"));
+#endif
     setWindowTitle(tr("Composer NCL 3.0"));
     tabDocuments = new QTabWidget(this);
     setCentralWidget(tabDocuments);
@@ -145,7 +144,11 @@ void MainWindow::launchProjectWizard() {
     projectWizard->init();
 }
 
-void MainWindow::launchAddDocumentWizard(QString projectId) {
+void MainWindow::launchAddDocumentWizard() {
+    //Get the currentId project
+    ProjectControl *pjControl = ProjectControl::getInstance();
+    QString projectId = pjControl->getCurrentProject()->getProjectId();
+
     documentWizard = new DocumentWizard(this);
     documentWizard->setProjectId(projectId);
     qDebug() << "MainWindow::launchAddDocumentWizard (" << projectId << ")";
@@ -155,9 +158,12 @@ void MainWindow::launchAddDocumentWizard(QString projectId) {
     documentWizard->init();
 }
 
-
-
 void MainWindow::createProjectInTree(QString name,QString location) {
+
+    //Active Project when it is created
+    ProjectControl *pjControl = ProjectControl::getInstance();
+    pjControl->activateProject(name);
+
     QTreeWidgetItem *item = new QTreeWidgetItem(projectTree);
     item->setIcon(0,QIcon(":/mainwindow/folderEmpty"));
     item->setText(1,name);
@@ -166,10 +172,10 @@ void MainWindow::createProjectInTree(QString name,QString location) {
 }
 
 void MainWindow::createDocumentInTree(QString name,
-                          QString location) {
+                                      QString location) {
 
     qDebug() << "MainWindow::createDocumentInTree (" << name << ", "
-             << location << ")";
+            << location << ")";
     QTreeWidgetItem *parent = projectTree->currentItem();
     QTreeWidgetItem *item = new QTreeWidgetItem(parent);
     item->setIcon(0,QIcon(":/mainwindow/document"));
@@ -229,22 +235,22 @@ void MainWindow::addProfileLoaded(QString name, QString fileName)
 }
 
 void MainWindow::createMenus() {
-     fileMenu = menuBar()->addMenu(tr("&File"));
-     fileMenu->addAction(newProjectAct);
-     fileMenu->addAction(newDocumentAct);
+    fileMenu = menuBar()->addMenu(tr("&File"));
+    fileMenu->addAction(newProjectAct);
+    fileMenu->addAction(newDocumentAct);
 
-     editMenu = menuBar()->addMenu(tr("&Edit"));
-     editMenu->addAction(editPreferencesAct);
+    editMenu = menuBar()->addMenu(tr("&Edit"));
+    editMenu->addAction(editPreferencesAct);
 
-     windowMenu = menuBar()->addMenu(tr("&Window"));
+    windowMenu = menuBar()->addMenu(tr("&Window"));
 
-     menuBar()->addSeparator();
-     connect(windowMenu, SIGNAL(aboutToShow()), this, SLOT(updateWindowMenu()));
+    menuBar()->addSeparator();
+    connect(windowMenu, SIGNAL(aboutToShow()), this, SLOT(updateWindowMenu()));
 
-     helpMenu = menuBar()->addMenu(tr("&Help"));
-     helpMenu->addAction(aboutComposerAct);
+    helpMenu = menuBar()->addMenu(tr("&Help"));
+    helpMenu->addAction(aboutComposerAct);
 
- }
+}
 
 
 void MainWindow::createAbout()
@@ -265,7 +271,7 @@ void MainWindow::createAbout()
     QGridLayout *gLayout = new QGridLayout(aboutDialog);
     gLayout->addWidget(new QLabel(tr("The <b>Composer</b> is an IDE for"
                                      " Declarative Multimedia languages."),
-                                     aboutDialog));
+                                  aboutDialog));
     gLayout->addWidget(new QLabel(tr("<b>Profile Languages Loaded</b>"),
                                   aboutDialog));
     gLayout->addWidget(profilesExt);
@@ -279,7 +285,7 @@ void MainWindow::createAbout()
 void MainWindow::about() {
     QList<IPluginFactory*>::iterator it;
     QList<IPluginFactory*> pList = PluginControl::getInstance()->
-                                getLoadedPlugins();
+                                   getLoadedPlugins();
 
     for (it = pList.begin(); it != pList.end(); it++) {
         IPluginFactory *pF = *it;
@@ -290,13 +296,13 @@ void MainWindow::about() {
     aboutDialog->setModal(true);
     aboutDialog->show();
 
- }
+}
 
 void MainWindow::errorDialog(QString message) {
     QMessageBox::warning(this,tr("Error!"),
                          tr(message.toStdString().c_str()));
 
- }
+}
 
 void MainWindow::createActions() {
 
@@ -305,44 +311,44 @@ void MainWindow::createActions() {
 
 
 
-     //newProjectAct->setShortcuts(QKeySequence("CTRL+P"));
-     newProjectAct->setStatusTip(tr("Create a new Project"));
-     connect(newProjectAct, SIGNAL(triggered()), this,
-             SLOT(launchProjectWizard()));
+    //newProjectAct->setShortcuts(QKeySequence("CTRL+P"));
+    newProjectAct->setStatusTip(tr("Create a new Project"));
+    connect(newProjectAct, SIGNAL(triggered()), this,
+            SLOT(launchProjectWizard()));
 
-     newDocumentAct = new QAction(QIcon(":/mainwindow/newDocument"),
-                                  tr("New &Document"), this);
-     newDocumentAct->setShortcuts(QKeySequence::New);
-     newDocumentAct->setStatusTip(tr("Create a new NCL Document"));
-//     connect(newDocumentAct, SIGNAL(triggered()), this,
-//             SLOT(launchAddDocumentWizard(QString)));
+    newDocumentAct = new QAction(QIcon(":/mainwindow/newDocument"),
+                                 tr("New &Document"), this);
+    newDocumentAct->setShortcuts(QKeySequence::New);
+    newDocumentAct->setStatusTip(tr("Create a new NCL Document"));
+    connect(newDocumentAct, SIGNAL(triggered()), this,
+            SLOT(launchAddDocumentWizard()));
 
-     aboutComposerAct = new QAction(tr("&About"), this);
-     aboutComposerAct->setStatusTip(tr("Show the application's About box"));
-     connect(aboutComposerAct, SIGNAL(triggered()), this, SLOT(about()));
+    aboutComposerAct = new QAction(tr("&About"), this);
+    aboutComposerAct->setStatusTip(tr("Show the application's About box"));
+    connect(aboutComposerAct, SIGNAL(triggered()), this, SLOT(about()));
 
-     separatorWindowAct = new QAction(this);
-     separatorWindowAct->setSeparator(true);
+    separatorWindowAct = new QAction(this);
+    separatorWindowAct->setSeparator(true);
 
-     projectWindowAct = new QAction(QIcon(":/mainwindow/projectTree"),
-                                    tr("Projects"),this);
-     projectWindowAct->setCheckable(true);
-     projectWindowAct->setChecked(dockTree->isVisible());
+    projectWindowAct = new QAction(QIcon(":/mainwindow/projectTree"),
+                                   tr("Projects"),this);
+    projectWindowAct->setCheckable(true);
+    projectWindowAct->setChecked(dockTree->isVisible());
 
     connect(dockTree,SIGNAL(visibilityChanged(bool)),this,
-             SLOT(updateWindowMenu()));
-     connect(projectWindowAct,SIGNAL(triggered(bool)),dockTree,
-             SLOT(setVisible(bool)));
+            SLOT(updateWindowMenu()));
+    connect(projectWindowAct,SIGNAL(triggered(bool)),dockTree,
+            SLOT(setVisible(bool)));
 
 
-     editPreferencesAct = new QAction(tr("&Preferences"), this);
-     editPreferencesAct->setStatusTip(tr("Edit preferences"));
-     connect (editPreferencesAct, SIGNAL(triggered()), this,
-              SLOT(showEditPreferencesDialog()));
- }
+    editPreferencesAct = new QAction(tr("&Preferences"), this);
+    editPreferencesAct->setStatusTip(tr("Edit preferences"));
+    connect (editPreferencesAct, SIGNAL(triggered()), this,
+             SLOT(showEditPreferencesDialog()));
+}
 
 void MainWindow::createStatusBar() {
-     statusBar()->showMessage(tr("Ready"));
+    statusBar()->showMessage(tr("Ready"));
 }
 
 void MainWindow::createToolBar() {
@@ -352,44 +358,44 @@ void MainWindow::createToolBar() {
 }
 
 void MainWindow::updateWindowMenu()
- {
-     windowMenu->clear();
-     windowMenu->addAction(projectWindowAct);
-     windowMenu->addAction(separatorWindowAct);
-     projectWindowAct->setChecked(dockTree->isVisible());
+{
+    windowMenu->clear();
+    windowMenu->addAction(projectWindowAct);
+    windowMenu->addAction(separatorWindowAct);
+    projectWindowAct->setChecked(dockTree->isVisible());
 
- }
+}
 
 void MainWindow::closeEvent(QCloseEvent *event)
- {
+{
 
 #ifdef Q_WS_MAC
     QSettings settings("telemidia.pucrio.br", "composer");
- #else
+#else
     QSettings settings("telemidia", "composer");
- #endif
+#endif
     if (user_directory_ext != "") {
         settings.beginGroup("extension");
-            settings.setValue("path",user_directory_ext);
+        settings.setValue("path",user_directory_ext);
         settings.endGroup();
     }
     if(ProjectControl::getInstance()->saveProjects()) {
-     settings.beginGroup("mainwindow");
+        settings.beginGroup("mainwindow");
         settings.setValue("geometry", saveGeometry());
         settings.setValue("windowState", saveState());
-     settings.endGroup();
-     event->accept();
-     } else {
+        settings.endGroup();
+        event->accept();
+    } else {
         if ( QMessageBox::question(this,tr("Could not save some projects."),
-                               tr("Do you want to exit anyway ?"))
+                                   tr("Do you want to exit anyway ?"))
             == QMessageBox::Ok) {
             event->accept();
         } else  {
             event->ignore();
         }
-     }
+    }
     settings.sync();
- }
+}
 
 void MainWindow::showEditPreferencesDialog()
 {
