@@ -21,7 +21,9 @@ macx {
 else:unix {
     LIBS += -L/usr/local/lib/composer \
         -lComposerCore
-    INCLUDEPATH += $$LOCATION/include/composer
+    INCLUDEPATH += ../../include/ \
+                /usr/local/include/composer
+
     DESTDIR = $$quote(/usr/local/lib/composer/extension)
 }
 
