@@ -10,7 +10,6 @@
 #include <QString>
 
 #include "../util/Project.h"
-#include "../util/DocumentParser.h"
 #include "../util/Singleton.h"
 using namespace composer::core::util;
 
@@ -34,7 +33,6 @@ namespace module {
             QReadWriteLock lockProjects;
             Project *activeProject;
             QMap<QString, Project*> projects;
-            QMap<QString, DocumentParser* > parsers;
 
             void addFilesInDirectory(QDir dir, QString projectId);
             void addExistingProject(QString projectId,QString location);

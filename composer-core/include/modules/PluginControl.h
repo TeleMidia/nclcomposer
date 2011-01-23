@@ -18,7 +18,6 @@ using namespace std;
 #include "../model/Document.h"
 using namespace composer::core::model;
 
-#include "../util/DocumentParserFactory.h"
 #include "../util/Singleton.h"
 using namespace composer::core::util;
 

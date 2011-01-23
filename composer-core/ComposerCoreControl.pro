@@ -27,8 +27,6 @@ SOURCES += \
     src/modules/TransactionControl.cpp \
     src/modules/LanguageControl.cpp \
     src/util/Project.cpp \
-    src/util/DocumentParserFactory.cpp \
-    src/util/DocumentParser.cpp \
     src/model/Entity.cpp \
     src/model/Document.cpp \
     src/util/Utilities.cpp
@@ -46,8 +44,6 @@ HEADERS_EXTENSIONS += include/extensions/ILanguageProfile.h \
 
 HEADERS_UTIL +=include/util/ComposerCoreControl_global.h \
     include/util/Project.h \
-    include/util/DocumentParserFactory.h \
-    include/util/DocumentParser.h \
     include/util/Singleton.h \
     include/util/Utilities.h
 
