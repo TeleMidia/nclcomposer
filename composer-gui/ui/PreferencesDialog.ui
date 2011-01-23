@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>PreferencesWidget</class>
- <widget class="QDialog" name="PreferencesWidget">
+ <class>PreferencesDialog</class>
+ <widget class="QDialog" name="PreferencesDialog">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -99,7 +99,7 @@
   <connection>
    <sender>buttonBox</sender>
    <signal>accepted()</signal>
-   <receiver>PreferencesWidget</receiver>
+   <receiver>PreferencesDialog</receiver>
    <slot>accept()</slot>
    <hints>
     <hint type="sourcelabel">
@@ -115,7 +115,7 @@
   <connection>
    <sender>buttonBox</sender>
    <signal>rejected()</signal>
-   <receiver>PreferencesWidget</receiver>
+   <receiver>PreferencesDialog</receiver>
    <slot>reject()</slot>
    <hints>
     <hint type="sourcelabel">

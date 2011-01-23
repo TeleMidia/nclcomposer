@@ -9,6 +9,10 @@ PreferencesDialog::PreferencesDialog(QWidget *parent) :
     ui->setupUi(this);
     this->setModal(true);
     loadPreferencesPages();
+
+    connect(ui->listWidget, SIGNAL(itemSelectionChanged()), this, SLOT(changeActivePage()));
+
+    currentItem = NULL;
 }
 
 PreferencesDialog::~PreferencesDialog()
@@ -24,10 +28,21 @@ void PreferencesDialog::loadPreferencesPages(){
     for (it = plugins.begin(); it != plugins.end(); it++)
     {
         IPluginFactory *pF = *it;
+
         new QListWidgetItem(pF->getPluginIcon(),
-                            pF->getPluginName(), ui->listWidget, 0);
+                            pF->getPluginName(),
+                            ui->listWidget, 0);
         QWidget *page = pF->getPreferencePageWidget();
+        pages[pF->getPluginName()] = page;
+        page->hide();
         ui->scrollAreaVerticalLayout->addWidget(page);
     }
 }
 
+void PreferencesDialog::changeActivePage(){
+    if (currentItem != NULL)
+            pages[currentItem->text()]->hide();
+
+    currentItem = ui->listWidget->currentItem();
+    pages[currentItem->text()]->show();
+}
