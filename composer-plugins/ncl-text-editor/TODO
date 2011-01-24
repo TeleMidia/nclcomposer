@@ -5,19 +5,17 @@ Reestruturacao do codigo:
 
     . Melhorar a performance da navegacao entre atributos.
 
-1. Preferences Page Abstractions
-
-2. Sugestão de código contextual
+1. Sugestão de código contextual
     Sugestão de valores de atributos: Carregar valores pré-definidos (Como ?)
     Sugestão de valores de atributos: Referencias.
 
-3. Validacao
+2. Validacao
     Tudo
 
-4. Formatacao Automática (Ctrl+Shift+F)
+3. Formatacao Automática (Ctrl+Shift+F)
 
-5. Sugestão de correcao de erros
+4. Sugestão de correcao de erros
 
-6. Hyperlinks (Isso nao deve ser simples de implementar)
+5. Hyperlinks (Isso nao deve ser simples de implementar)
 
-7. Pre-visualizacao de objetos de media, conectores etc.
+6. Pre-visualizacao de objetos de media, conectores etc.

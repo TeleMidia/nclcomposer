@@ -4,7 +4,7 @@ QT          +=  xml
 CONFIG      +=  release
 
 INCLUDEPATH +=  include \
-      ../layoutView/
+      ../ncl-layout-view/
 
 HEADERS     =   include/MainWindow.h \
                 include/NCLTextEditor.h \
@@ -16,11 +16,10 @@ HEADERS     =   include/MainWindow.h \
                 include/NCLParser.h \
                 include/NCLProblemsView.h \
                 include/NCLTreeWidget.h \
-                ../layoutView/scribblearea.h \
-                ../layoutView/nclregion.h \
-                ../layoutView/LayoutView.h \
-                ../layoutView/attributes.h \
-                include/Preferences.h
+                ../ncl-layout-view/scribblearea.h \
+                ../ncl-layout-view/nclregion.h \
+                ../ncl-layout-view/LayoutView.h \
+                ../ncl-layout-view/attributes.h
 
 SOURCES     =   src/main.cpp \
                 src/MainWindow.cpp \
@@ -33,11 +32,10 @@ SOURCES     =   src/main.cpp \
                 src/NCLParser.cpp \
                 src/NCLProblemsView.cpp \
                 src/NCLTreeWidget.cpp \
-                ../layoutView/scribblearea.cpp \
-                ../layoutView/nclregion.cpp \
-                ../layoutView/LayoutView.cpp \
-                ../layoutView/attributes.cpp \
-                src/Preferences.cpp
+                ../ncl-layout-view/scribblearea.cpp \
+                ../ncl-layout-view/nclregion.cpp \
+                ../ncl-layout-view/LayoutView.cpp \
+                ../ncl-layout-view/attributes.cpp
 
 OTHER_FILES +=  TODO \
                 config/NCL_STRUCTURE \
@@ -51,4 +49,4 @@ MOC_DIR     =   build
 OBJECTS_DIR =   build
 
 FORMS += \
-    ../layoutView/LayoutView.ui
+    ../ncl-layout-view/LayoutView.ui

@@ -23,25 +23,25 @@
 
 #include <Qsci/qsciscintilla.h>
 
-#include "MainWindow.h"
+#include "NCLTextEditorMainWindow.h"
 
-MainWindow::MainWindow(QWidget *parent):
+NCLTextEditorMainWindow::NCLTextEditorMainWindow(QWidget *parent):
         QMainWindow(parent)
 {
-    preferences = new Preferences(parent);
+    //preferences = new Preferences(parent);
 
     createTextView();
     createActions();
-    createMenus();
+    //createMenus();
     createToolBars();
     createStatusBar();
     createOutlineView();
     createProblemsView();
     // createLayoutView();
 
-    setDockOptions(MainWindow::AllowNestedDocks
-                   | MainWindow::AllowTabbedDocks
-                   | MainWindow::AnimatedDocks);
+    setDockOptions(NCLTextEditorMainWindow::AllowNestedDocks
+                   | NCLTextEditorMainWindow::AllowTabbedDocks
+                   | NCLTextEditorMainWindow::AnimatedDocks);
 
     /* setTabPosition(Qt::LeftDockWidgetArea, QTabWidget::North);
     setTabPosition(Qt::RightDockWidgetArea, QTabWidget::North);
@@ -59,7 +59,7 @@ MainWindow::MainWindow(QWidget *parent):
     setUnifiedTitleAndToolBarOnMac(true);
 }
 
-void MainWindow::closeEvent(QCloseEvent *event)
+void NCLTextEditorMainWindow::closeEvent(QCloseEvent *event)
 {
     if (maybeSave()) {
         writeSettings();
@@ -69,7 +69,7 @@ void MainWindow::closeEvent(QCloseEvent *event)
     }
 }
 
-void MainWindow::newFile()
+void NCLTextEditorMainWindow::newFile()
 {
     if (maybeSave()) {
         textEdit->clear();
@@ -77,7 +77,7 @@ void MainWindow::newFile()
     }
 }
 
-void MainWindow::open()
+void NCLTextEditorMainWindow::open()
 {
     if (maybeSave()) {
         QString fileName = QFileDialog::getOpenFileName(this);
@@ -86,7 +86,7 @@ void MainWindow::open()
     }
 }
 
-bool MainWindow::save()
+bool NCLTextEditorMainWindow::save()
 {
     if (curFile.isEmpty()) {
         return saveAs();
@@ -95,7 +95,7 @@ bool MainWindow::save()
     }
 }
 
-bool MainWindow::saveAs()
+bool NCLTextEditorMainWindow::saveAs()
 {
     QString fileName = QFileDialog::getSaveFileName(this);
     if (fileName.isEmpty())
@@ -104,7 +104,7 @@ bool MainWindow::saveAs()
     return saveFile(fileName);
 }
 
-void MainWindow::about()
+void NCLTextEditorMainWindow::about()
 {
     QMessageBox::about(this, tr("About Application"),
                        tr("The <b>Application</b> example demonstrates how to "
@@ -112,12 +112,12 @@ void MainWindow::about()
                           "toolbars, and a status bar."));
 }
 
-void MainWindow::documentWasModified()
+void NCLTextEditorMainWindow::documentWasModified()
 {
     setWindowModified(textEdit->isModified());
 }
 
-void MainWindow::createActions()
+void NCLTextEditorMainWindow::createActions()
 {
     newAct = new QAction(QIcon(":/images/new.png"), tr("&New"), this);
     newAct->setShortcut(tr("Ctrl+N"));
@@ -187,7 +187,7 @@ void MainWindow::createActions()
     connect(editPreferencesAct, SIGNAL(triggered()), this, SLOT(showPreferences()));
 }
 
-void MainWindow::createMenus()
+void NCLTextEditorMainWindow::createMenus()
 {
     fileMenu = menuBar()->addMenu(tr("&File"));
     fileMenu->addAction(newAct);
@@ -212,7 +212,7 @@ void MainWindow::createMenus()
     helpMenu->addAction(aboutQtAct);
 }
 
-void MainWindow::createToolBars()
+void NCLTextEditorMainWindow::createToolBars()
 {
     fileToolBar = addToolBar(tr("File"));
     fileToolBar->setObjectName(QString("fileToolBar"));
@@ -228,12 +228,12 @@ void MainWindow::createToolBars()
     editToolBar->addAction(pasteAct);
 }
 
-void MainWindow::createStatusBar()
+void NCLTextEditorMainWindow::createStatusBar()
 {
     statusBar()->showMessage(tr("Ready"));
 }
 
-void MainWindow::createOutlineView()
+void NCLTextEditorMainWindow::createOutlineView()
 {
     outlineView = new NCLTreeWidget(this);
     //outlineView->setMaximumWidth(300);
@@ -267,7 +267,7 @@ void MainWindow::createOutlineView()
             textEdit, SLOT(markError(QString, QString, int, int, int)));
 }
 
-void MainWindow::createProblemsView()
+void NCLTextEditorMainWindow::createProblemsView()
 {
     problemsView = new NCLProblemsView(this);
     problemsView->setObjectName(QString("dockProblemsView"));
@@ -278,7 +278,7 @@ void MainWindow::createProblemsView()
             problemsView, SLOT(addProblem(QString, QString, int, int, int)));
 }
 
-void MainWindow::readSettings()
+void NCLTextEditorMainWindow::readSettings()
 {
     QSettings settings("Trolltech", "Application Example");
     QPoint pos = settings.value("pos", QPoint(200, 200)).toPoint();
@@ -295,7 +295,7 @@ void MainWindow::readSettings()
 
 }
 
-void MainWindow::writeSettings()
+void NCLTextEditorMainWindow::writeSettings()
 {
     QSettings settings("Trolltech", "Application Example");
     settings.setValue("pos", pos());
@@ -306,7 +306,7 @@ void MainWindow::writeSettings()
     settings.setValue("qDocksState", saveState());
 }
 
-bool MainWindow::maybeSave()
+bool NCLTextEditorMainWindow::maybeSave()
 {
     if (textEdit->isModified()) {
         int ret = QMessageBox::warning(this, tr("Application"),
@@ -323,7 +323,7 @@ bool MainWindow::maybeSave()
     return true;
 }
 
-void MainWindow::loadFile(const QString &fileName)
+void NCLTextEditorMainWindow::loadFile(const QString &fileName)
 {
     QFile file(fileName);
     if (!file.open(QFile::ReadOnly)) {
@@ -343,7 +343,7 @@ void MainWindow::loadFile(const QString &fileName)
     statusBar()->showMessage(tr("File loaded"), 2000);
 }
 
-bool MainWindow::saveFile(const QString &fileName)
+bool NCLTextEditorMainWindow::saveFile(const QString &fileName)
 {
     QFile file(fileName);
     if (!file.open(QFile::WriteOnly)) {
@@ -366,7 +366,7 @@ bool MainWindow::saveFile(const QString &fileName)
     return true;
 }
 
-void MainWindow::setCurrentFile(const QString &fileName)
+void NCLTextEditorMainWindow::setCurrentFile(const QString &fileName)
 {
     curFile = fileName;
     textEdit->setModified(false);
@@ -382,19 +382,19 @@ void MainWindow::setCurrentFile(const QString &fileName)
     outlineView->updateFromText(textEdit->text());
 }
 
-QString MainWindow::strippedName(const QString &fullFileName)
+QString NCLTextEditorMainWindow::strippedName(const QString &fullFileName)
 {
     return QFileInfo(fullFileName).fileName();
 }
 
-void MainWindow::showInFullScreen(){
+void NCLTextEditorMainWindow::showInFullScreen(){
     if(!isFullScreen())
         showFullScreen();
     else
         showNormal();
 }
 
-void MainWindow::gotoLineOf(QTreeWidgetItem *item, int column)
+void NCLTextEditorMainWindow::gotoLineOf(QTreeWidgetItem *item, int column)
 {
     (void) column;
 
@@ -406,7 +406,7 @@ void MainWindow::gotoLineOf(QTreeWidgetItem *item, int column)
 }
 
 //FIXME:    1. fix line element line numbers.
-void MainWindow::insertElement(){
+void NCLTextEditorMainWindow::insertElement(){
     bool ok;
     QList<QTreeWidgetItem*> selecteds = outlineView->selectedItems ();
     QTreeWidgetItem *item = selecteds.at (0);
@@ -493,7 +493,7 @@ void MainWindow::insertElement(){
 
 }
 
-void MainWindow::createTextView() {
+void NCLTextEditorMainWindow::createTextView() {
     dockTextEdit = new QDockWidget("Text", this);
     dockTextEdit->setObjectName(QString("dockTextView"));
     dockTextEdit->setFeatures(QDockWidget::DockWidgetMovable |
@@ -511,11 +511,11 @@ void MainWindow::createTextView() {
     // setCentralWidget(textEdit);
 
     /** Initialize Text Preferences Pages*/
-    textEditorPreferencesPage = preferences->addPreferencesPage("Text Editor");
-    textEditorPreferencesPage->addInputString("teste", "teste");
+    //textEditorPreferencesPage = preferences->addPreferencesPage("Text Editor");
+    //textEditorPreferencesPage->addInputString("teste", "teste");
  }
 
-void MainWindow::createLayoutView()
+void NCLTextEditorMainWindow::createLayoutView()
 {
     dockLayoutView = new QDockWidget("Layout", this);
     dockLayoutView->setObjectName(QString("dockLayoutView"));
@@ -531,7 +531,7 @@ void MainWindow::createLayoutView()
     addDockWidget(Qt::RightDockWidgetArea, dockLayoutView);
 }
 
-void MainWindow::showPreferences()
+void NCLTextEditorMainWindow::showPreferences()
 {
-    preferences->show();
+    //preferences->show();
 }

@@ -34,17 +34,17 @@ using namespace std;
 #include "NCLTreeWidget.h"
 #include "NCLTextEditor.h"
 #include "LayoutView.h"
-#include "Preferences.h"
+//#include "Preferences.h"
 
 class QAction;
 class QMenu;
 
-class MainWindow : public QMainWindow
+class NCLTextEditorMainWindow : public QMainWindow
 {
     Q_OBJECT
 
 public:
-	explicit MainWindow(QWidget *parent = 0);
+        explicit NCLTextEditorMainWindow(QWidget *parent = 0);
 
 protected:
     void closeEvent(QCloseEvent *event);
@@ -112,8 +112,8 @@ private:
     QDockWidget *dockLayoutView;
     LayoutView *layoutView;
 
-    Preferences *preferences;
-    PreferencesPage *textEditorPreferencesPage;
+    /* Preferences *preferences;
+    PreferencesPage *textEditorPreferencesPage; */
 };
 
 #endif

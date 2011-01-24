@@ -22,7 +22,7 @@
 #include <QApplication>
 #include <QTreeView>
 
-#include "MainWindow.h"
+#include "NCLTextEditorMainWindow.h"
 
 int main(int argc, char *argv[])
 {
@@ -30,7 +30,7 @@ int main(int argc, char *argv[])
 
     Q_INIT_RESOURCE(ncl_textual_plugin);
 
-    MainWindow mainWin;
+    NCLTextEditorMainWindow mainWin;
     mainWin.show();
 
 /*    app.setStyleSheet("QDockWidget {\
