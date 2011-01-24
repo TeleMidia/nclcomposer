@@ -113,6 +113,7 @@ void MainWindow::readSettings() {
         qDebug() << "MainWindow::readSettings" <<
                 "READ projectId: " << projectId <<
                 "location: " << location;
+
         ProjectControl::getInstance()->addProject(projectId,location);
     }
     settings.endGroup();
@@ -201,19 +202,19 @@ void MainWindow::addPluginWidget(IPluginFactory *fac, IPlugin *plugin,
         w = documentsWidgets[documentId];
     } else {
         w = new QMainWindow(tabDocuments);
-        int i = tabDocuments->addTab(w,documentId);
-        tabDocuments->setTabText(i,documentId);
+        int i = tabDocuments->addTab(w, documentId);
+        tabDocuments->setTabText(i, documentId);
         documentsWidgets[documentId] = w;
     }
 
-    QDockWidget *dock = new QDockWidget(fac->getPluginName(),w);
+    QDockWidget *dock = new QDockWidget(fac->getPluginName(), w);
     dock->setAllowedAreas(Qt::AllDockWidgetAreas);
     dock->setFeatures(QDockWidget::DockWidgetClosable |
                       QDockWidget::DockWidgetMovable);
     QWidget *pW = plugin->getWidget();
     dock->setWidget(pW);
-    w->addDockWidget(Qt::BottomDockWidgetArea,dock,Qt::Horizontal);
-    w->show();
+    w->addDockWidget(Qt::BottomDockWidgetArea, dock, Qt::Horizontal);
+    dock->show();
 }
 
 void MainWindow::tabClosed(int index)
@@ -290,7 +291,7 @@ void MainWindow::createAbout()
     gLayout->addWidget(profilesExt);
     gLayout->addWidget(new QLabel(tr("<b>Plug-ins Loaded</b>")));
     gLayout->addWidget(pluginsExt);
-    gLayout->addWidget(bOk,6,2);
+    gLayout->addWidget(bOk, 6, 2);
     aboutDialog->setLayout(gLayout);
 
 }
