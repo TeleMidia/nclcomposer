@@ -41,8 +41,9 @@ void MainWindow::initModules()
             this,SLOT(errorDialog(QString)));
     connect(pgControl,SIGNAL(newDocumentLaunchedAndCreated(QString,QString)),
             this,SLOT(createDocumentInTree(QString,QString)));
-    connect(pgControl,SIGNAL(addPluginWidgetToWindow(IPlugin*,QString)),
-            this,SLOT(addPluginWidget(IPlugin*,QString)));
+    connect(pgControl,SIGNAL(addPluginWidgetToWindow(IPluginFactory*,
+                                                     IPlugin*,QString)),
+            this,SLOT(addPluginWidget(IPluginFactory*,IPlugin*,QString)));
     connect(lgControl,SIGNAL(notifyLoadedProfile(QString,QString)),
             this,SLOT(addProfileLoaded(QString,QString)));
     readExtensions();
@@ -123,6 +124,9 @@ void MainWindow::initGUI() {
 #endif
     setWindowTitle(tr("Composer NCL 3.0"));
     tabDocuments = new QTabWidget(this);
+    tabDocuments->setMovable(true);
+    tabDocuments->setTabsClosable(true);
+    connect(tabDocuments,SIGNAL(tabCloseRequested(int)),SLOT(tabClosed(int)));
     setCentralWidget(tabDocuments);
     setUnifiedTitleAndToolBarOnMac(true);
     createStatusBar();
@@ -186,26 +190,35 @@ void MainWindow::createDocumentInTree(QString name,
     parent->setIcon(0,QIcon(":/mainwindow/folder"));
 }
 
-void MainWindow::addPluginWidget(IPlugin *plugin, QString location)
+void MainWindow::addPluginWidget(IPluginFactory *fac, IPlugin *plugin,
+                                 QString documentId)
 {
 
     QMainWindow *w;
 
-    if (documentsWidgets.contains(location))
+    if (documentsWidgets.contains(documentId))
     {
-        w = documentsWidgets[location];
+        w = documentsWidgets[documentId];
     } else {
         w = new QMainWindow(tabDocuments);
-        int i = tabDocuments->addTab(w,location);
-        tabDocuments->setTabText(i,location);
+        int i = tabDocuments->addTab(w,documentId);
+        tabDocuments->setTabText(i,documentId);
+        documentsWidgets[documentId] = w;
     }
 
-    QDockWidget *dock = new QDockWidget("TESTE",w);
+    QDockWidget *dock = new QDockWidget(fac->getPluginName(),w);
     dock->setAllowedAreas(Qt::AllDockWidgetAreas);
+    dock->setFeatures(QDockWidget::DockWidgetClosable |
+                      QDockWidget::DockWidgetMovable);
     QWidget *pW = plugin->getWidget();
     dock->setWidget(pW);
     w->addDockWidget(Qt::BottomDockWidgetArea,dock,Qt::Horizontal);
     w->show();
+}
+
+void MainWindow::tabClosed(int index)
+{
+    qDebug() << tabDocuments->tabText(index);
 }
 
 void MainWindow::createTreeProject() {
@@ -352,9 +365,9 @@ void MainWindow::createStatusBar() {
 }
 
 void MainWindow::createToolBar() {
-    fileTool = addToolBar("File");
-    fileTool->addAction(newProjectAct);
-    fileTool->addAction(newDocumentAct);
+//    fileTool = addToolBar("File");
+//    fileTool->addAction(newProjectAct);
+//    fileTool->addAction(newDocumentAct);
 }
 
 void MainWindow::updateWindowMenu()

@@ -52,7 +52,7 @@ class MainWindow : public QMainWindow {
         QMenu *windowMenu;
         QMenu *editMenu;
 
-        QToolBar *fileTool;
+        //QToolBar *fileTool;
 
         QAction *newProjectAct;
         QAction *newDocumentAct;
@@ -97,6 +97,7 @@ class MainWindow : public QMainWindow {
         void updateWindowMenu();
         void showEditPreferencesDialog();
         void addProfileLoaded(QString name, QString fileName);
+        void tabClosed(int index);
 
     public:
         MainWindow(QWidget *parent = 0);
@@ -108,7 +109,8 @@ class MainWindow : public QMainWindow {
                                   QString location);
         void errorDialog(QString);
         void launchAddDocumentWizard();
-        void addPluginWidget(IPlugin *plugin, QString documentId);
+        void addPluginWidget(IPluginFactory *fac, IPlugin *plugin,
+                             QString documentId);
 
     signals:
         void writeSettings();
