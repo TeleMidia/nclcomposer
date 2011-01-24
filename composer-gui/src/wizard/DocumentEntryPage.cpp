@@ -1,4 +1,4 @@
-#include "include/wizard/DocumentEntryPage.h"
+#include "wizard/DocumentEntryPage.h"
 
 DocumentEntryPage::DocumentEntryPage(QWidget *parent) :
     QWizardPage(parent)

@@ -1,4 +1,4 @@
-#include "include/ProjectTreeWidget.h"
+#include "ProjectTreeWidget.h"
 
 ProjectTreeWidget::ProjectTreeWidget(QWidget *parent) :
     QTreeWidget(parent) {

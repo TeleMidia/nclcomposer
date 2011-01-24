@@ -12,25 +12,32 @@ macx:ICON = images/Composer.icns
 
 macx:LOCATION = /Library/Frameworks
 else:unix:LOCATION = /usr/local
+else:win32:LOCATION = C:/Composer
 
-debug:INSTALLBASE = ./debug
-release {
-    macx:INSTALLBASE = /Application/Composer
-    else:unix:INSTALLBASE = /usr/local
-    win32:INSTALLBASE = C:\Composer
-}
+macx:INSTALLBASE = /Application/Composer
+else:unix:INSTALLBASE = /usr/local
+win32:INSTALLBASE = C:/Composer
 
 macx { 
     LIBS += -framework \
         ComposerCore
     INCLUDEPATH += /Library/Frameworks/ComposerCore.framework/
 }
-else:unix { 
+else:unix {
     LIBS += -L/usr/local/lib/composer \
         -lComposerCore
-    INCLUDEPATH += $$LOCATION/include/composer
+    INCLUDEPATH += $$LOCATION/include/composer \
+                   include/
+}
+else:win32 {
+    target.path = $$INSTALLBASE
+    LIBS += -L$$LOCATION/lib/composer \
+        -lComposerCore1
+    INCLUDEPATH += $$LOCATION/include/composer \
+                   include/
 
 }
+
 SOURCES += main.cpp \
     src/MainWindow.cpp \
     src/ProjectTreeWidget.cpp \
@@ -53,3 +60,5 @@ RESOURCES += images.qrc
 #HEADERS += $$HEADERS_GUI
 
 FORMS   += ui/PreferencesDialog.ui
+
+INSTALLS += target

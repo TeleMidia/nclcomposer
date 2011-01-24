@@ -1,4 +1,4 @@
-#include "include/wizard/ProjectEntryPage.h"
+#include "wizard/ProjectEntryPage.h"
 
 
 ProjectEntryPage::ProjectEntryPage(QWidget *parent) :

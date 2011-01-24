@@ -1,4 +1,4 @@
-#include "include/PreferencesDialog.h"
+#include "PreferencesDialog.h"
 #include "ui_PreferencesDialog.h"
 #include <QListWidgetItem>
 
