@@ -81,11 +81,11 @@ namespace module {
     bool ProjectControl::saveProjects() {
         QWriteLocker locker(&lockProjects);
         QMapIterator<QString,Project*> it(projects);
-    #ifdef Q_WS_MAC
+#ifdef Q_WS_MAC
         QSettings settings("telemidia.pucrio.br", "composer");
-     #else
+#else
         QSettings settings("telemidia", "composer");
-     #endif
+#endif
         settings.beginGroup("projects");
         settings.remove("");
         while(it.hasNext()){
@@ -241,7 +241,7 @@ namespace module {
         uri = destUri;
 
         //TODO - rever se eh projectLocation mesmo
-        PluginControl::getInstance()->onNewDocument(documentId,uri);
+        PluginControl::getInstance()->onNewDocument(projectId, documentId,uri);
 
     }
 

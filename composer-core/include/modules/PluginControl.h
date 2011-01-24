@@ -23,6 +23,7 @@ using namespace composer::core::util;
 
 #include "TransactionControl.h"
 #include "LanguageControl.h"
+#include "ProjectControl.h"
 using namespace composer::core::module;
 
 #include "../extensions/IDocumentParser.h"
@@ -65,15 +66,19 @@ namespace module {
         public:
             void loadPlugins(QString pluginsDirPath);
             QList<IPluginFactory*> getLoadedPlugins();
+            bool closeDocumentAndReleasePlugins(QString projectId,
+                                                QString documentId);
 
         public slots:
-            void onNewDocument(QString documentId, QString location);
+            void onNewDocument(QString projectId, QString documentId,
+                               QString location);
 
         signals:
             void newDocumentLaunchedAndCreated(QString documentdId,
                                                QString location);
             void notifyError(QString);
-            void addPluginWidgetToWindow(IPluginFactory*,IPlugin*,QString);
+            void addPluginWidgetToWindow(IPluginFactory*,IPlugin*,
+                                    QString projectId, QString documentId);
 
     };
 }

@@ -10,30 +10,40 @@ namespace module {
     }
 
     PluginControl::~PluginControl() {
+         QMultiHash<QString,IPlugin*>::iterator itInst;
          QHash<QString,IPluginFactory*>::iterator itFac;
 
-         IPluginFactory *atualFactory = NULL;
+         IPlugin *inst = NULL;
+         IPluginFactory *fac = NULL;
+
+         for (itInst = pluginInstances.begin() ;
+              itInst != pluginInstances.end() ; itInst++)
+         {
+                 QList<IPlugin*> instances = pluginInstances.values
+                                                            (itInst.key());
+                 QList<IPlugin*>::iterator it;
+
+                 for (it = instances.begin(); it != instances.end(); it++)
+                 {
+                    inst = *it;
+                    fac = pluginFactories[inst->getPluginID()];
+                    fac->releasePluginInstance(inst);
+                    //pluginInstances.remove(itInst.key(),inst);
+                 }
+         }
 
          for (itFac = pluginFactories.begin() ; itFac != pluginFactories.end();
               itFac++)
          {
-                 atualFactory = itFac.value();
-                 QList<IPlugin*> instances = pluginInstances.values
-                                                            (itFac.key());
-                 QList<IPlugin*>::iterator itInst;
-
-                 for (itInst = instances.begin() ; itInst != instances.end();
-                      itInst++)
-                 {
-                     atualFactory->releasePluginInstance(*itInst);
-                 }
-                 delete atualFactory;
-                 atualFactory = NULL;
+                 fac = itFac.value();
+                 delete fac;
+                 fac = NULL;
          }
 
          pluginFactories.clear();
          pluginInstances.clear();
          pluginsByType.clear();
+         transactionControls.clear();
 
     }
 
@@ -80,7 +90,7 @@ namespace module {
         }//fim foreach
     }//fim function
 
-    void PluginControl::onNewDocument(QString documentId,
+    void PluginControl::onNewDocument(QString projectId, QString documentId,
                                       QString location) {
 
         qDebug() << "PluginControl::onNewDocument(" << documentId
@@ -93,8 +103,7 @@ namespace module {
         IDocumentParser *parser;
         QMap<QString,QString> atts;
 
-        if (transactionControls.contains(documentId)) {
-            //TODO - mudar o para a chave da HASH levar em conta o projeto
+        if (transactionControls.contains(location)) {
             qDebug() << tr("Transaction Control could not be created"
                                 "for Document(%1)").arg(documentId);
             return;
@@ -127,7 +136,7 @@ namespace module {
         doc->setDocumentType(type);
 
         transControl = new TransactionControl(doc);
-        transactionControls[documentId] = transControl;
+        transactionControls[location] = transControl;
 
         /* Requests a new DocumentParser for this Document*/
         parser = profile->createDocumentParser(doc);
@@ -144,8 +153,9 @@ namespace module {
                 pluginInstance->setPluginID(factory->getPluginID());
                 pluginInstance->setDocument(doc);
                 launchNewPlugin(pluginInstance,transControl);
-                pluginInstances.insert(*it,pluginInstance);
-                emit addPluginWidgetToWindow(factory,pluginInstance,documentId);
+                pluginInstances.insert(location,pluginInstance);
+                emit addPluginWidgetToWindow(factory,pluginInstance,
+                                             projectId, documentId);
             }
             else {
                 qDebug() << "Could not create a instance for the plugin"
@@ -209,6 +219,27 @@ namespace module {
                 pList.append(it.value());
             }
             return pList;
+    }
+
+    bool PluginControl::closeDocumentAndReleasePlugins(QString projectId,
+                                        QString documentId)
+    {
+            Project *p = ProjectControl::getInstance()->getProject(projectId);
+            if (p == NULL) return false;
+
+            Document *doc = p->getDocument(documentId);
+            if (doc == NULL) return false;
+
+            if (!transactionControls.contains(doc->getLocation()))
+                return false;
+
+            TransactionControl *t = transactionControls.value
+                                    (doc->getLocation());
+            delete t;
+            t = NULL;
+
+            p->removeDocument(documentId);
+
     }
 
 
