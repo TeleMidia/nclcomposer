@@ -515,22 +515,6 @@ void NCLTextEditorMainWindow::createTextView() {
     //textEditorPreferencesPage->addInputString("teste", "teste");
  }
 
-void NCLTextEditorMainWindow::createLayoutView()
-{
-    dockLayoutView = new QDockWidget("Layout", this);
-    dockLayoutView->setObjectName(QString("dockLayoutView"));
-    dockLayoutView->setFeatures(QDockWidget::DockWidgetMovable /*|
-                              QDockWidget::DockWidgetFloatable*/);
-
-    //dockLayoutView->setAllowedAreas(Qt::LeftDockWidgetArea |
-    //                              Qt::RightDockWidgetArea);
-
-    layoutView = new LayoutView(this);
-    dockLayoutView->setWidget(layoutView);
-
-    addDockWidget(Qt::RightDockWidgetArea, dockLayoutView);
-}
-
 void NCLTextEditorMainWindow::showPreferences()
 {
     //preferences->show();

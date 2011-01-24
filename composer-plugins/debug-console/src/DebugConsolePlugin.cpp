@@ -5,9 +5,8 @@ DebugConsolePlugin::DebugConsolePlugin()
     window = new QWidget();
     QGridLayout *layout = new QGridLayout(window);
     QPushButton *bt = new QPushButton(window);
-    bt->setMaximumWidth(5);
     bt->setText(tr("Clear"));
-    layout->addWidget(bt,0,2);
+    layout->addWidget(bt);
     list = new QListWidget(window);
     list->setAlternatingRowColors(true);
     layout->addWidget(list);

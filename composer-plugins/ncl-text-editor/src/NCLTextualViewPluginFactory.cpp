@@ -61,4 +61,4 @@ void NCLTextualViewPluginFactory::applyValues()
 
 }
 
-Q_EXPORT_PLUGIN2(NCLTextualViewPlugin,NCLTextualViewPluginFactory)
+Q_EXPORT_PLUGIN2(ncl_textual_plugin,NCLTextualViewPluginFactory)

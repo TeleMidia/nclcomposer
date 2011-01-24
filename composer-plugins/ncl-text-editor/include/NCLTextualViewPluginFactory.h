@@ -12,7 +12,7 @@ namespace Ui {
     class TextPluginPreferencesWidget;
 }
 
-class TEXTUALVIEWPLUGINSHARED_EXPORT NCLTextualViewPluginFactory : public QObject,
+class NCLTextualViewPluginFactory : public QObject,
                                                       public IPluginFactory
 {
     Q_OBJECT

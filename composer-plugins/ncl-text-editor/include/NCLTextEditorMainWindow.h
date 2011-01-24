@@ -69,7 +69,6 @@ private:
     void createTextView();
     void createOutlineView();
     void createProblemsView();
-    void createLayoutView();
     void readSettings();
     void writeSettings();
     bool maybeSave();

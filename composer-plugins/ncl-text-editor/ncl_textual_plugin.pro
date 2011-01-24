@@ -1,7 +1,7 @@
 TEMPLATE    =   lib
 TARGET      =   ncl_textual_plugin
 QT          +=  xml
-CONFIG      +=  release
+CONFIG      +=  debug plugin
 
 INCLUDEPATH +=  include \
                 ../ncl-layout-view/
