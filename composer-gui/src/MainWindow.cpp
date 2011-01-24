@@ -42,8 +42,9 @@ void MainWindow::initModules()
     connect(pgControl,SIGNAL(newDocumentLaunchedAndCreated(QString,QString)),
             this,SLOT(createDocumentInTree(QString,QString)));
     connect(pgControl,SIGNAL(addPluginWidgetToWindow(IPluginFactory*,
-                                                     IPlugin*,QString)),
-            this,SLOT(addPluginWidget(IPluginFactory*,IPlugin*,QString)));
+                             IPlugin*,QString, QString)),
+            this,SLOT(addPluginWidget(IPluginFactory*,IPlugin*,
+                                      QString, QString)));
     connect(lgControl,SIGNAL(notifyLoadedProfile(QString,QString)),
             this,SLOT(addProfileLoaded(QString,QString)));
     readExtensions();
@@ -192,18 +193,18 @@ void MainWindow::createDocumentInTree(QString name,
 }
 
 void MainWindow::addPluginWidget(IPluginFactory *fac, IPlugin *plugin,
-                                 QString documentId)
+                                 QString projectId, QString documentId)
 {
 
     QMainWindow *w;
 
-    if (documentsWidgets.contains(documentId))
+    if (documentsWidgets.contains(projectId+documentId))
     {
-        w = documentsWidgets[documentId];
+        w = documentsWidgets[projectId+documentId];
     } else {
         w = new QMainWindow(tabDocuments);
-        int i = tabDocuments->addTab(w, documentId);
-        tabDocuments->setTabText(i, documentId);
+        w->setDockOptions(AnimatedDocks | ForceTabbedDocks);
+        tabDocuments->addTab(w,projectId+"("+documentId+")");
         documentsWidgets[documentId] = w;
     }
 

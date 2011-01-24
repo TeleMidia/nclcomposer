@@ -111,7 +111,7 @@ class MainWindow : public QMainWindow {
         void errorDialog(QString);
         void launchAddDocumentWizard();
         void addPluginWidget(IPluginFactory *fac, IPlugin *plugin,
-                             QString documentId);
+                        QString projectId, QString documentId);
 
     signals:
         void writeSettings();
