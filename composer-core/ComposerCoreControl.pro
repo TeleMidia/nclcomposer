@@ -13,7 +13,7 @@ macx:CONFIG += lib_bundle x86
 
 macx:INSTALLBASE = /Library/Frameworks
 else:unix:INSTALLBASE = /usr/local
-win32:INSTALLBASE = C:\Composer
+win32:INSTALLBASE = C:/Composer
 
 DEFINES += COMPOSERCORE_LIBRARY
 
@@ -73,7 +73,7 @@ macx {
                          headers_util headers_exception headers_model
 
 }
-else:unix { 
+else {
     target.path = $$INSTALLBASE/lib/composer
     HEADERS_PATH_UNIX = $$INSTALLBASE/include/composer
 
@@ -83,7 +83,8 @@ else:unix {
     headers_util.path = $$HEADERS_PATH_UNIX/core/util
     headers_exception.path = $$HEADERS_PATH_UNIX/core/model/exception
 
+    INCLUDEPATH += include/
     #headers.CONFIG += no_all
     INSTALLS += headers_man headers_util headers_model \
                 headers_extensions headers_exception target
-}else:win32:
+}

@@ -1,4 +1,4 @@
-#include "include/modules/ProjectControl.h"
+#include "modules/ProjectControl.h"
 
 namespace composer {
 namespace core {

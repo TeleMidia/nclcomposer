@@ -1,4 +1,4 @@
-#include "include/modules/PluginControl.h"
+#include "modules/PluginControl.h"
 
 
 namespace composer {

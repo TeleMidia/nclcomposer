@@ -1,4 +1,4 @@
-#include "include/modules/LanguageControl.h"
+#include "modules/LanguageControl.h"
 
 namespace composer {
     namespace core {
