@@ -20,8 +20,8 @@ QString NCLDocumentParser::getParserName()
 
 bool NCLDocumentParser::parseDocument()
 {
-    qDebug() << "NCLDocumentParser::parseDocument("
-             << doc->getLocation() << ")";
+//    qDebug() << "NCLDocumentParser::parseDocument("
+//             << doc->getLocation() << ")";
 
     QString uri = doc->getLocation();
 
@@ -43,8 +43,8 @@ bool NCLDocumentParser::parseDocument()
 }
 
 
-bool NCLDocumentParser::startElement(const QString &namespaceURI,
-                  const QString &localName,
+bool NCLDocumentParser::startElement(const QString &,
+                  const QString &,
                   const QString &qName,
                   const QXmlAttributes &attributes)
 {
@@ -80,11 +80,12 @@ bool NCLDocumentParser::endElement(const QString &namespaceURI,
     elementStack.pop();
     //sync.wakeAll();
     lockStack.unlock();
+    return true;
 }
 
-bool NCLDocumentParser::characters(const QString &str)
+bool NCLDocumentParser::characters(const QString &)
 {
-
+    return true;
 }
 
 bool NCLDocumentParser::fatalError(const QXmlParseException &exception)
@@ -96,10 +97,10 @@ bool NCLDocumentParser::fatalError(const QXmlParseException &exception)
     return false;
 }
 
-void NCLDocumentParser::onEntityAdded(QString ID, Entity *entity)
+void NCLDocumentParser::onEntityAdded(QString , Entity *entity)
 {
-    qDebug() << "DocumentParser::onEntityAdded(" << ID
-            << ", " << entity->getType() << ")";
+//    qDebug() << "DocumentParser::onEntityAdded(" << ID
+//            << ", " << entity->getType() << ")";
 
     lockStack.lock();
     elementStack.push(entity);

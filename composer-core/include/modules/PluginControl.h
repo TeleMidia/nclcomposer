@@ -73,7 +73,7 @@ namespace module {
             void newDocumentLaunchedAndCreated(QString documentdId,
                                                QString location);
             void notifyError(QString);
-            void addPluginWidgetToWindow(IPlugin*,QString);
+            void addPluginWidgetToWindow(IPluginFactory*,IPlugin*,QString);
 
     };
 }

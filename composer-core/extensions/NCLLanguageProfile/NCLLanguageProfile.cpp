@@ -17,7 +17,9 @@ LanguageType NCLLanguageProfile::getLanguageType()
 
 QList<QString> NCLLanguageProfile::getOutputDocumentTypes()
 {
-
+    QList<QString> list;
+    list.append("ncl");
+    return list;
 }
 
 IDocumentParser* NCLLanguageProfile::createDocumentParser(Document *doc)
@@ -27,7 +29,10 @@ IDocumentParser* NCLLanguageProfile::createDocumentParser(Document *doc)
 
 void NCLLanguageProfile::releaseDocumentParser (IDocumentParser *parser)
 {
-
+    if (parser) {
+        delete parser;
+        parser = NULL;
+    }
 }
 
 QString NCLLanguageProfile::getProfileName()

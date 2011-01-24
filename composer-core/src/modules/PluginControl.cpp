@@ -145,7 +145,7 @@ namespace module {
                 pluginInstance->setDocument(doc);
                 launchNewPlugin(pluginInstance,transControl);
                 pluginInstances.insert(*it,pluginInstance);
-                emit addPluginWidgetToWindow(pluginInstance,location);
+                emit addPluginWidgetToWindow(factory,pluginInstance,documentId);
             }
             else {
                 qDebug() << "Could not create a instance for the plugin"
