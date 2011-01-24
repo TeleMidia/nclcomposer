@@ -35,8 +35,8 @@ else:win32 {
     LIBS += -L$$LOCATION/lib/composer \
         -lComposerCore1
     INCLUDEPATH += $$LOCATION/include/composer
-
 }
+
 
 SOURCES += main.cpp \
     src/MainWindow.cpp \

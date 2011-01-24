@@ -205,7 +205,7 @@ void MainWindow::addPluginWidget(IPluginFactory *fac, IPlugin *plugin,
         w = new QMainWindow(tabDocuments);
         w->setDockOptions(AnimatedDocks | ForceTabbedDocks);
         tabDocuments->addTab(w,projectId+"("+documentId+")");
-        documentsWidgets[documentId] = w;
+        documentsWidgets[projectId+documentId] = w;
     }
 
     QDockWidget *dock = new QDockWidget(fac->getPluginName(), w);
