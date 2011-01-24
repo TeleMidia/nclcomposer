@@ -166,7 +166,7 @@ void MainWindow::createProjectInTree(QString name,QString location) {
 
     QTreeWidgetItem *item = new QTreeWidgetItem(projectTree);
     item->setIcon(0,QIcon(":/mainwindow/folderEmpty"));
-    item->setText(1,name);
+    item->setText(0,name);
     item->setToolTip(1,location);
     projectTree->setCurrentItem(item);
 }
@@ -179,7 +179,7 @@ void MainWindow::createDocumentInTree(QString name,
     QTreeWidgetItem *parent = projectTree->currentItem();
     QTreeWidgetItem *item = new QTreeWidgetItem(parent);
     item->setIcon(0,QIcon(":/mainwindow/document"));
-    item->setText(1,name);
+    item->setText(0,name);
     item->setToolTip(1,location+QDir::separator()+name);
     projectTree->setCurrentItem(parent);
     parent->setExpanded(true);
@@ -213,11 +213,11 @@ void MainWindow::createTreeProject() {
     dockTree->setObjectName("treeProject");
     dockTree->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
     projectTree = new ProjectTreeWidget(this);
-    projectTree->setColumnCount(2);
+    //projectTree->setColumnCount(2);
     projectTree->setSortingEnabled(false);
     //projectTree->setHeaderLabel(tr("Name"));
     projectTree->headerItem()->setHidden(true);
-    projectTree->setIconSize(QSize(35,35));
+    //projectTree->setIconSize(QSize(35,35));
     projectTree->setContextMenuPolicy(Qt::DefaultContextMenu);
     dockTree->setWidget(projectTree);
     addDockWidget(Qt::LeftDockWidgetArea,dockTree,Qt::Horizontal);

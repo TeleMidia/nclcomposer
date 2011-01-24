@@ -10,6 +10,7 @@ int main(int argc, char *argv[])
     QCoreApplication::setOrganizationDomain("telemidia.pucrio.br");
     QCoreApplication::setApplicationName("composer");
     MainWindow w;
+    w.setStyleSheet("font-size: 12px");
     w.show();
     return a.exec();
 }
