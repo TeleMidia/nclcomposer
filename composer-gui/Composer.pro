@@ -18,6 +18,8 @@ macx:INSTALLBASE = /Application/Composer
 else:unix:INSTALLBASE = /usr/local
 win32:INSTALLBASE = C:/Composer
 
+target.path = $$INSTALLBASE
+
 macx { 
     LIBS += -framework \
         ComposerCore
@@ -30,7 +32,6 @@ else:unix {
                    include/
 }
 else:win32 {
-    target.path = $$INSTALLBASE
     LIBS += -L$$LOCATION/lib/composer \
         -lComposerCore1
     INCLUDEPATH += $$LOCATION/include/composer \
