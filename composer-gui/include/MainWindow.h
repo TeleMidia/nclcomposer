@@ -60,6 +60,7 @@ class MainWindow : public QMainWindow {
         QAction *separatorWindowAct;
         QAction *projectWindowAct;
         QAction *editPreferencesAct;
+        QAction *exitAct;
 
         ProjectTreeWidget *projectTree;
         QDockWidget *dockTree;

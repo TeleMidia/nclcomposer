@@ -252,6 +252,8 @@ void MainWindow::createMenus() {
     fileMenu = menuBar()->addMenu(tr("&File"));
     fileMenu->addAction(newProjectAct);
     fileMenu->addAction(newDocumentAct);
+    fileMenu->addSeparator();
+    fileMenu->addAction(exitAct);
 
     editMenu = menuBar()->addMenu(tr("&Edit"));
     editMenu->addAction(editPreferencesAct);
@@ -359,6 +361,11 @@ void MainWindow::createActions() {
     editPreferencesAct->setStatusTip(tr("Edit preferences"));
     connect (editPreferencesAct, SIGNAL(triggered()), this,
              SLOT(showEditPreferencesDialog()));
+
+    exitAct = new QAction(tr("E&xit"), this);
+    exitAct->setShortcut(tr("Ctrl+Q"));
+    exitAct->setStatusTip(tr("Exit Composer application"));
+    connect(exitAct, SIGNAL(triggered()), this, SLOT(close()));
 }
 
 void MainWindow::createStatusBar() {
