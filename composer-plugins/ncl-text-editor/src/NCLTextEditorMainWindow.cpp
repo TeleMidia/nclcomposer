@@ -247,8 +247,8 @@ void NCLTextEditorMainWindow::createOutlineView()
 
     dockOutlineView = new QDockWidget("Outline", this);
     dockOutlineView->setObjectName(QString("dockOutlineView"));
-    dockOutlineView->setFeatures(QDockWidget::DockWidgetMovable |
-                              QDockWidget::DockWidgetFloatable);
+    dockOutlineView->setFeatures(QDockWidget::DockWidgetMovable /*|
+                              QDockWidget::DockWidgetFloatable*/);
     /* dockOutlineView->setAllowedAreas(Qt::LeftDockWidgetArea |
                                   Qt::RightDockWidgetArea); */
     dockOutlineView->setWidget(outlineView);
@@ -496,8 +496,8 @@ void NCLTextEditorMainWindow::insertElement(){
 void NCLTextEditorMainWindow::createTextView() {
     dockTextEdit = new QDockWidget("Text", this);
     dockTextEdit->setObjectName(QString("dockTextView"));
-    dockTextEdit->setFeatures(QDockWidget::DockWidgetMovable |
-                              QDockWidget::DockWidgetFloatable);
+    dockTextEdit->setFeatures(QDockWidget::DockWidgetMovable /*|
+                              QDockWidget::DockWidgetFloatable*/);
 
     //dockTextEdit->setAllowedAreas(Qt::LeftDockWidgetArea |
     //                              Qt::RightDockWidgetArea);
@@ -519,8 +519,8 @@ void NCLTextEditorMainWindow::createLayoutView()
 {
     dockLayoutView = new QDockWidget("Layout", this);
     dockLayoutView->setObjectName(QString("dockLayoutView"));
-    dockLayoutView->setFeatures(QDockWidget::DockWidgetMovable |
-                              QDockWidget::DockWidgetFloatable);
+    dockLayoutView->setFeatures(QDockWidget::DockWidgetMovable /*|
+                              QDockWidget::DockWidgetFloatable*/);
 
     //dockLayoutView->setAllowedAreas(Qt::LeftDockWidgetArea |
     //                              Qt::RightDockWidgetArea);

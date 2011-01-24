@@ -133,19 +133,17 @@ void NCLTextEditor::keyPressEvent(QKeyEvent *event) {
     pos = SendScintilla(SCI_GETCURRENTPOS);
     size = SendScintilla(SCI_GETTEXTLENGTH);
 
-    qDebug() << "state = " << state;
     if(state == FILLING_ATTRIBUTES_STATE) {
         QString strline = text(line);
+        clearIndicatorRange(line, 0, line, strline.size(), filling_attribute_indicator);
 
         if(event->key() == Qt::Key_Return){
-            clearIndicatorRange(line, 0, line, strline.size(), filling_attribute_indicator);
             state = DEFAULT_STATE;
             setSelection(line, index, line, index);
             return;
         }
 
         if(event->key() == Qt::Key_Tab){
-            clearIndicatorRange(line, 0, line, strline.size(), filling_attribute_indicator);
             QString strline = text(line);
             pos = SendScintilla(SCI_GETCURRENTPOS);
             style = SendScintilla(SCI_GETSTYLEAT, pos);
@@ -188,7 +186,6 @@ void NCLTextEditor::keyPressEvent(QKeyEvent *event) {
 
         }
         else {
-
             QsciScintilla::keyPressEvent ( event ) ;
             getCursorPosition (&line, &index);
             pos = SendScintilla(SCI_GETCURRENTPOS);
@@ -334,7 +331,6 @@ void NCLTextEditor::updateVisualFillingAttributeField(int line, int pos, int &be
         end++;
         inserted_space = true;
     }
-    qDebug() << begin << end;
     fillIndicatorRange(line, begin, line, end, filling_attribute_indicator);
 
     if(inserted_space) setSelection(line, begin, line, end);

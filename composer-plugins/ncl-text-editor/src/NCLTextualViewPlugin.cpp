@@ -3,17 +3,6 @@
 NCLTextualViewPlugin::NCLTextualViewPlugin()
 {
     window = new NCLTextEditorMainWindow();
-    /* QGridLayout *layout = new QGridLayout(window);
-    QPushButton *bt = new QPushButton(window);
-    bt->setMaximumWidth(5);
-    bt->setText(tr("Clear"));
-    layout->addWidget(bt,0,2);
-    list = new QListWidget(window);
-    list->setAlternatingRowColors(true);
-    layout->addWidget(list);
-    connect(bt,SIGNAL(clicked()),list,SLOT(clear()));
-    window->setLayout(layout);
-    window->setWindowIcon(QIcon(":/images/icon.png")); */
     doc = NULL;
 
 }
