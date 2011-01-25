@@ -1,4 +1,4 @@
-#include "include/DebugConsolePlugin.h"
+#include "DebugConsolePlugin.h"
 
 DebugConsolePlugin::DebugConsolePlugin()
 {

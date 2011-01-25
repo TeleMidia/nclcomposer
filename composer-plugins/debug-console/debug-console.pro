@@ -12,14 +12,23 @@ TEMPLATE = lib
 macx {
     LIBS += -framework \
         ComposerCore
-    INCLUDEPATH += /Library/Frameworks/ComposerCore.framework/
+    INCLUDEPATH += /Library/Frameworks/ComposerCore.framework/ \
+        include/
     DESTDIR = $$quote(/Library/Application Support/Composer)
 }
 else:unix {
     LIBS += -L/usr/local/lib/composer \
         -lComposerCore
-    INCLUDEPATH += /usr/local/include/composer
+    INCLUDEPATH += /usr/local/include/composer \
+         include/
     DESTDIR = $$quote(/usr/local/lib/composer/extension)
+}
+else:win32 {
+    LIBS += -LC:/composer/lib/composer \
+        -lComposerCore1
+    INCLUDEPATH += C:/composer/include/composer \
+                include/
+    DESTDIR = $$quote(C:/composer/lib/composer/)
 }
 
 DEFINES += DEBUGCONSOLE_LIBRARY

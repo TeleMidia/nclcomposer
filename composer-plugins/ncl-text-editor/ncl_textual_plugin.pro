@@ -18,6 +18,12 @@ else:unix {
     INCLUDEPATH += /usr/local/include/composer
     DESTDIR = $$quote(/usr/local/lib/composer/extension)
 }
+else:win32 {
+    LIBS += -LC:/composer/lib/composer \
+        -lComposerCore1
+    INCLUDEPATH += C:/composer/include/composer
+    DESTDIR = $$quote(C:/composer/lib/composer/)
+}
 
 
 HEADERS     =   include/NCLTextEditorMainWindow.h \
