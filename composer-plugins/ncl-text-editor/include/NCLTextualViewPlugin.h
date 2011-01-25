@@ -10,25 +10,24 @@ using namespace composer::core::extension::plugin;
 
 class NCLTextualViewPlugin : public IPlugin
 {
-        Q_OBJECT
-    private:
-        NCLTextEditorMainWindow *window;
+    Q_OBJECT
+private:
+    NCLTextEditorMainWindow *window;
 
-    public:
-        explicit NCLTextualViewPlugin();
-        ~NCLTextualViewPlugin();
+public:
+    explicit NCLTextualViewPlugin();
+    ~NCLTextualViewPlugin();
 
-        QWidget* getWidget();
+    QWidget* getWidget();
 
-    public slots:
-        void onEntityAdded(QString ID, Entity *);
-        void onEntityAddError(QString error);
-        void onEntityChanged(QString ID, Entity *);
-        void onEntityChangeError(QString error);
-        void onEntityAboutToRemove(Entity *);
-        void onEntityRemoved(QString ID, QString entityID);
-        void onEntityRemoveError(QString error);
-
+public slots:
+    void onEntityAdded(QString ID, Entity *);
+    void onEntityAddError(QString error);
+    void onEntityChanged(QString ID, Entity *);
+    void onEntityChangeError(QString error);
+    void onEntityAboutToRemove(Entity *);
+    void onEntityRemoved(QString ID, QString entityID);
+    void onEntityRemoveError(QString error);
 };
 
 #endif // DEBUGCONSOLEPLUGIN_H

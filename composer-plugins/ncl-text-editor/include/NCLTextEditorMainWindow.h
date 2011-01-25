@@ -46,6 +46,7 @@ class NCLTextEditorMainWindow : public QMainWindow
 public:
         explicit NCLTextEditorMainWindow(QWidget *parent = 0);
         NCLTextEditor *getTextEditor() {return this->textEdit;}
+        NCLTreeWidget *getNCLTreeWidget() {return this->outlineView; }
 
 protected:
     void closeEvent(QCloseEvent *event);
@@ -106,7 +107,7 @@ private:
     QDockWidget *dockOutlineView;
     NCLTreeWidget *outlineView;
     QMenu *nodeMenu;
-    QAction *insertNodeChild;
+    QAction *insertNodeChildAct;
 
     /** Problems View */
     NCLProblemsView *problemsView;
@@ -115,6 +116,9 @@ private:
 
     /* Preferences *preferences;
     PreferencesPage *textEditorPreferencesPage; */
+
+signals:
+    void elementAdded(QString, QString, QMap <QString, QString>&, bool);
 };
 
 #endif

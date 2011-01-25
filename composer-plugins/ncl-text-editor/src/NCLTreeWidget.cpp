@@ -2,7 +2,6 @@
 
 NCLTreeWidget::NCLTreeWidget(QWidget *parent) : QTreeWidget(parent)
 {
-
 }
 
 NCLTreeWidget::~NCLTreeWidget()
@@ -23,7 +22,9 @@ bool NCLTreeWidget::updateFromText(QString text)
     clear();
     setHeaderLabels(labels);
     header()->setStretchLastSection(false);
-    header()->setResizeMode(QHeaderView::ResizeToContents);
+
+    // FIXME:This commented option has
+    // header()->setResizeMode(QHeaderView::ResizeToContents);
 
     //TODO: Transform this parser in a puglin
     NCLParser *handler = new NCLParser(this);
@@ -53,7 +54,6 @@ QTreeWidgetItem* NCLTreeWidget::addElement ( QTreeWidgetItem *father,
 
     QTreeWidgetItem *child;
 
-
     if(father != 0) {
         child = new QTreeWidgetItem(0);
         int p = pos;
@@ -64,10 +64,10 @@ QTreeWidgetItem* NCLTreeWidget::addElement ( QTreeWidgetItem *father,
     }
     else {
         child = new QTreeWidgetItem(this);
-        if(pos != -1)
+        if(pos != -1) {
             this->insertTopLevelItem(pos, child);
+        }
     }
-
     QIcon icon;
     if(tagname == "media")
             icon = QIcon (":/images/media.png");

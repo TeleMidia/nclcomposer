@@ -5,6 +5,8 @@ NCLTextualViewPlugin::NCLTextualViewPlugin()
     window = new NCLTextEditorMainWindow();
     doc = NULL;
 
+    connect(window, SIGNAL(elementAdded(QString,QString,QMap<QString,QString>&,bool)),
+            this, SIGNAL(addEntity(QString,QString,QMap<QString,QString>&,bool)));
 }
 
 NCLTextualViewPlugin::~NCLTextualViewPlugin()
@@ -22,13 +24,14 @@ void NCLTextualViewPlugin::onEntityAdded(QString ID, Entity *entity)
 {
     QString line = "<" + entity->getType() + "> </" + entity->getType() + ">\n";
 
-    window->getTextEditor()->append(line);
+//    window->getTextEditor()->append(line);
+    window->getNCLTreeWidget()->addElement(0, 0, entity->getType(), entity->getUniqueId(), 0, 0);
     //TODO: All
 }
 
 void NCLTextualViewPlugin::onEntityAddError(QString error)
 {
-    //TODO: All
+    qDebug() << "NCLTextualViewPlugin::onEntityAddError(" << error << ")";
 }
 
 void NCLTextualViewPlugin::onEntityChanged(QString ID, Entity * entity)

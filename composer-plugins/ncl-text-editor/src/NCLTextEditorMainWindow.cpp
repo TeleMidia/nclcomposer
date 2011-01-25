@@ -242,13 +242,8 @@ void NCLTextEditorMainWindow::createOutlineView()
 {
     outlineView = new NCLTreeWidget(this);
     //outlineView->setMaximumWidth(300);
-    outlineView->setColumnCount(1);
-    outlineView->setEditTriggers(QAbstractItemView::AllEditTriggers);
-
-    QTreeWidgetItem* item = new QTreeWidgetItem(0);
-    item->setText(0, "hi");
-    item->setFlags(Qt::ItemIsEnabled);
-    outlineView->insertTopLevelItem(0, item);
+    outlineView->setColumnCount(4);
+    // outlineView->setEditTriggers(QAbstractItemView::AllEditTriggers);
 
     dockOutlineView = new QDockWidget("Outline", this);
     dockOutlineView->setObjectName(QString("dockOutlineView"));
@@ -263,10 +258,9 @@ void NCLTextEditorMainWindow::createOutlineView()
     outlineView->setContextMenuPolicy(Qt::ActionsContextMenu);
 
     nodeMenu = new QMenu(outlineView);
-    insertNodeChild = new QAction(QIcon(":/images/save.png"), tr("&Add child"), this);
-    connect(insertNodeChild, SIGNAL(triggered()), this, SLOT(insertElement()));
-    outlineView->addAction(insertNodeChild);
-
+    insertNodeChildAct = new QAction(QIcon(":/images/save.png"), tr("&Add child"), this);
+    connect(insertNodeChildAct, SIGNAL(triggered()), this, SLOT(insertElement()));
+    outlineView->addAction(insertNodeChildAct);
 
     connect(outlineView, SIGNAL(parserErrorNotify(QString, QString, int, int, int)),
             textEdit, SLOT(markError(QString, QString, int, int, int)));
@@ -415,6 +409,7 @@ void NCLTextEditorMainWindow::insertElement(){
     bool ok;
     QList<QTreeWidgetItem*> selecteds = outlineView->selectedItems ();
     QTreeWidgetItem *item = selecteds.at (0);
+    QString id = item->text(1);
     int line = item->text(2).toInt ( &ok, 10 );
     QString tagname = item->text(0);
 
@@ -494,8 +489,9 @@ void NCLTextEditorMainWindow::insertElement(){
         textEdit->setCursorPosition(line, 0);
         textEdit->ensureLineVisible(line);
         textEdit->SendScintilla(QsciScintilla::SCI_SETFOCUS, true);
+        QMap <QString, QString> empty;
+        emit elementAdded(tagname, id, empty, false);
     }
-
 }
 
 void NCLTextEditorMainWindow::createTextView() {
