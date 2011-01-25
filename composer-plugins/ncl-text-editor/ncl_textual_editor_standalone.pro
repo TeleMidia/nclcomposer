@@ -6,7 +6,7 @@ CONFIG      +=  release
 INCLUDEPATH +=  include \
       ../ncl-layout-view/
 
-HEADERS     =   include/MainWindow.h \
+HEADERS     =   include/NCLTextEditorMainWindow.h \
                 include/NCLTextEditor.h \
                 include/QsciLexerNCL.h \
                 include/QsciNCLAPIs.h \
@@ -22,7 +22,7 @@ HEADERS     =   include/MainWindow.h \
                 ../ncl-layout-view/attributes.h
 
 SOURCES     =   src/main.cpp \
-                src/MainWindow.cpp \
+                src/NCLTextEditorMainWindow.cpp \
                 src/NCLTextEditor.cpp \
                 src/QsciLexerNCL.cpp \
                 src/QsciNCLAPIs.cpp \
