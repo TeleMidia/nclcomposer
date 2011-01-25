@@ -4,6 +4,7 @@ MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent) {
     QPixmap mPix(":/mainwindow/icon");
     QSplashScreen splash(mPix);
+    splash.blockSignals(true);
     splash.show();
 
     user_directory_ext = "";
@@ -224,6 +225,7 @@ void MainWindow::tabClosed(int index)
 }
 
 void MainWindow::createTreeProject() {
+
     dockTree = new QDockWidget(tr("Projects"), this);
     dockTree->setObjectName("treeProject");
     dockTree->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
@@ -235,7 +237,9 @@ void MainWindow::createTreeProject() {
     //projectTree->setIconSize(QSize(35,35));
     projectTree->setContextMenuPolicy(Qt::DefaultContextMenu);
     dockTree->setWidget(projectTree);
+
     addDockWidget(Qt::LeftDockWidgetArea,dockTree,Qt::Horizontal);
+
     connect(projectTree,SIGNAL(addDocument(QString)), this,
             SLOT(launchAddDocumentWizard(QString)));
     connect(projectTree,SIGNAL(newProject()), this,
@@ -304,6 +308,7 @@ void MainWindow::about() {
     QList<IPluginFactory*> pList = PluginControl::getInstance()->
                                    getLoadedPlugins();
 
+    pluginsExt->clear();
     for (it = pList.begin(); it != pList.end(); it++) {
         IPluginFactory *pF = *it;
         pluginsExt->addItem(new QListWidgetItem(pF->getPluginIcon(),

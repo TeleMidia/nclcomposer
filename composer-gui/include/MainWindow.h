@@ -5,6 +5,8 @@
 #include <QSettings>
 #include <QStringList>
 #include <QMap>
+#include <QFileSystemModel>
+
 
 #include <QCoreApplication>
 #include <QtGui/QMainWindow>
