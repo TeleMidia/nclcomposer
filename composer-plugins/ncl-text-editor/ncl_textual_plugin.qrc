@@ -16,5 +16,7 @@
         <file>images/clear-icon.png</file>
         <file>images/warning-big.png</file>
         <file>images/clipboard_cut.png</file>
+        <file>images/ncl.png</file>
+        <file>images/synchronize-icon-24.png</file>
     </qresource>
 </RCC>

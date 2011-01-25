@@ -35,8 +35,9 @@ NCLTextEditorMainWindow::NCLTextEditorMainWindow(QWidget *parent):
     //createMenus();
     createToolBars();
     createStatusBar();
+
     createOutlineView();
-    createProblemsView();
+    // createProblemsView();
     // createLayoutView();
 
     setDockOptions(NCLTextEditorMainWindow::AllowNestedDocks
@@ -185,6 +186,9 @@ void NCLTextEditorMainWindow::createActions()
     editPreferencesAct = new QAction(tr("&Preferences"), this);
     editPreferencesAct->setStatusTip(tr("Edit Preferences related to editors."));
     connect(editPreferencesAct, SIGNAL(triggered()), this, SLOT(showPreferences()));
+
+    synchronizeAct = new QAction (QIcon(":/images/synchronize-icon-24.png"), tr("&Synchronize"), this);
+    synchronizeAct->setStatusTip(tr("Synchronize current text with the others plugins."));
 }
 
 void NCLTextEditorMainWindow::createMenus()
@@ -226,6 +230,7 @@ void NCLTextEditorMainWindow::createToolBars()
     editToolBar->addAction(cutAct);
     editToolBar->addAction(copyAct);
     editToolBar->addAction(pasteAct);
+    editToolBar->addAction(synchronizeAct);
 }
 
 void NCLTextEditorMainWindow::createStatusBar()

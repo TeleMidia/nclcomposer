@@ -45,6 +45,7 @@ class NCLTextEditorMainWindow : public QMainWindow
 
 public:
         explicit NCLTextEditorMainWindow(QWidget *parent = 0);
+        NCLTextEditor *getTextEditor() {return this->textEdit;}
 
 protected:
     void closeEvent(QCloseEvent *event);
@@ -98,6 +99,7 @@ private:
     QAction *aboutQtAct;
     QAction *fullscreenAct;
     QAction *editPreferencesAct;
+    QAction *synchronizeAct;
 
 /** VIEWS **/
     /** Outline View */

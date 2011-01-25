@@ -33,15 +33,15 @@ int main(int argc, char *argv[])
     NCLTextEditorMainWindow mainWin;
     mainWin.show();
 
-/*    app.setStyleSheet("QDockWidget {\
-                            border: 1px solid lightgray;\
+    app.setStyleSheet(" QMainWindow{ } \
+                        QDockWidget {\
+                            border: 0.5px solid black;\
                         }\
                         QDockWidget::title {\
-                            text-color: #FFFFFF; \
-                            background: #000000;\
-                            padding-left: 5px;\
-                            padding-top: 5px;\
+                            border: rounded; \
+                            background: #B9D3EE;\
+                            padding-left: 2px;\
+                            padding-top: 2px;\
                         }");
-*/
     return app.exec();
 }

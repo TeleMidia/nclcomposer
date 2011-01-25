@@ -20,8 +20,9 @@ QWidget* NCLTextualViewPlugin::getWidget()
 
 void NCLTextualViewPlugin::onEntityAdded(QString ID, Entity *entity)
 {
-    QString line = "PLUGIN (" + ID + ") added the Entity (" +
-                   entity->getType() + " - " + entity->getUniqueId() +")";
+    QString line = "<" + entity->getType() + "> </" + entity->getType() + ">\n";
+
+    window->getTextEditor()->append(line);
     //TODO: All
 }
 

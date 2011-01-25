@@ -43,7 +43,7 @@ QString NCLTextualViewPluginFactory::getPluginName()
 
 QIcon NCLTextualViewPluginFactory::getPluginIcon()
 {
-    return QIcon(":/images/icon.png");
+    return QIcon(":/images/ncl.png");
 }
 
 QWidget* NCLTextualViewPluginFactory::getPreferencePageWidget()
