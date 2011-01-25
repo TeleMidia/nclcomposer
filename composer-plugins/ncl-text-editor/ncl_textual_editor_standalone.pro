@@ -3,6 +3,10 @@ TARGET      =   bin/ncl_textual_plugin
 QT          +=  xml
 CONFIG      +=  release
 
+MOC_DIR     =   .moc
+OBJECTS_DIR =   .obj
+UI_DIR      =   .ui
+
 INCLUDEPATH +=  include \
       ../ncl-layout-view/
 

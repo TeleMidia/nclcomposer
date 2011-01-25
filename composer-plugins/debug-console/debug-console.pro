@@ -4,31 +4,33 @@
 #
 #-------------------------------------------------
 
-
 CONFIG += plugin
-TARGET = DebugConsole
+TARGET = debug_console
 TEMPLATE = lib
+
+MOC_DIR     =   build
+OBJECTS_DIR =   build
 
 macx {
     LIBS += -framework \
         ComposerCore
     INCLUDEPATH += /Library/Frameworks/ComposerCore.framework/ \
         include/
-    DESTDIR = $$quote(/Library/Application Support/Composer)
+    tagrget.path = $$quote(/Library/Application Support/Composer)
 }
 else:unix {
     LIBS += -L/usr/local/lib/composer \
         -lComposerCore
     INCLUDEPATH += /usr/local/include/composer \
          include/
-    DESTDIR = $$quote(/usr/local/lib/composer/extension)
+    target.path = $$quote(/usr/local/lib/composer/extension)
 }
 else:win32 {
     LIBS += -LC:/composer/lib/composer \
         -lComposerCore1
     INCLUDEPATH += C:/composer/include/composer \
                 include/
-    DESTDIR = $$quote(C:/composer/lib/composer/)
+    target.path = $$quote(C:/composer/lib/composer/)
 }
 
 DEFINES += DEBUGCONSOLE_LIBRARY
@@ -40,5 +42,6 @@ HEADERS += include/DebugConsoleFactory.h\
         include/DebugConsole_global.h \
     include/DebugConsolePlugin.h
 
-RESOURCES += \
-    images.qrc
+RESOURCES += images.qrc
+
+INSTALLS += target

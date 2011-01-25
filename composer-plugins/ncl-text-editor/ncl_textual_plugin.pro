@@ -3,26 +3,35 @@ TARGET      =   ncl_textual_plugin
 QT          +=  xml
 CONFIG      +=  debug plugin
 
+DEPENDPATH += deps/QScintilla-gpl-2.4.6/qscintilla.pro
+
+MOC_DIR     =   .moc
+OBJECTS_DIR =   .obj
+UI_DIR      =   .ui
+
 INCLUDEPATH +=  include \
-                ../ncl-layout-view/
+                ../ncl-layout-view/ \
+                deps/QScintilla-gpl-2.4.6/Qt4
+
+LIBS += -Ldeps/QScintilla-gpl-2.4.6/Qt4
 
 macx {
     LIBS += -framework \
         ComposerCore
     INCLUDEPATH += /Library/Frameworks/ComposerCore.framework/
-    DESTDIR = $$quote(/Library/Application Support/Composer)
+    target.path = $$quote(/Library/Application Support/Composer)
 }
 else:unix {
     LIBS += -L/usr/local/lib/composer \
         -lComposerCore
     INCLUDEPATH += /usr/local/include/composer
-    DESTDIR = $$quote(/usr/local/lib/composer/extension)
+    target.path = $$quote(/usr/local/lib/composer/extension)
 }
 else:win32 {
     LIBS += -LC:/composer/lib/composer \
         -lComposerCore1
     INCLUDEPATH += C:/composer/include/composer
-    DESTDIR = $$quote(C:/composer/lib/composer/)
+    target.path = $$quote(C:/composer/lib/composer/)
 }
 
 
@@ -62,8 +71,7 @@ RESOURCES   =   ncl_textual_plugin.qrc
 
 LIBS        +=  -lqscintilla2
 
-MOC_DIR     =   build
-OBJECTS_DIR =   build
-
 FORMS +=    ../ncl-layout-view/LayoutView.ui \
             ui/TextualPluginPreferencesWidget.ui
+
+INSTALLS += target
