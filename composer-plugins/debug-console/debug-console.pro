@@ -8,8 +8,8 @@ CONFIG += plugin
 TARGET = debug_console
 TEMPLATE = lib
 
-MOC_DIR     =   build
-OBJECTS_DIR =   build
+MOC_DIR     = .mocs
+OBJECTS_DIR = .objs
 
 macx {
     LIBS += -framework \
