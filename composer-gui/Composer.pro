@@ -14,7 +14,7 @@ macx:LOCATION = /Library/Frameworks
 else:unix:LOCATION = /usr/local
 else:win32:LOCATION = C:/Composer
 
-macx:INSTALLBASE = /Application/Composer
+macx:INSTALLBASE = /Applications/Composer
 else:unix:INSTALLBASE = /usr/local
 win32:INSTALLBASE = C:/Composer
 
