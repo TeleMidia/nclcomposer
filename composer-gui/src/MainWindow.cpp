@@ -300,7 +300,7 @@ void MainWindow::tabClosed(int index)
         delete w;
         w = NULL;
         documentsWidgets.remove(location);
-        tabDocuments->removeTab(index);
+        //tabDocuments->removeTab(index);
     }
 }
 
