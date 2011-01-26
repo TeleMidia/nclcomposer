@@ -66,7 +66,6 @@ headers_model.files = $$HEADERS_MODEL
 INCLUDEPATH += include/
 
 macx { 
-    #DESTDIR = $$INSTALLBASE/
     QMAKE_FRAMEWORK_BUNDLE_NAME = $$TARGET
     headers_man.path = core/modules
     headers_extensions.path = core/extensions
@@ -90,7 +89,6 @@ else {
     headers_util.path = $$HEADERS_PATH_UNIX/core/util
     headers_exception.path = $$HEADERS_PATH_UNIX/core/model/exception
 
-    #headers.CONFIG += no_all
     INSTALLS += headers_man headers_util headers_model \
                 headers_extensions headers_exception target
 }

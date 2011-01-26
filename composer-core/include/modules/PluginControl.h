@@ -23,7 +23,6 @@ using namespace composer::core::util;
 
 #include "TransactionControl.h"
 #include "LanguageControl.h"
-#include "ProjectControl.h"
 using namespace composer::core::module;
 
 #include "../extensions/IDocumentParser.h"
