@@ -52,13 +52,7 @@ namespace composer {
                                emit notifyLoadedProfile(
                                        lProfile->getProfileName(),fileName);
                              }
-                         } else {
-                             emit notifyError(tr("ERROR: Language Extension (%1)").
-                                              arg(fileName));
                          }
-                     } else {
-                        emit notifyError(tr("ERROR: Language Extension (%1)").
-                                         arg(fileName));
                      }
                 }
         }
