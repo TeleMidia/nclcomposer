@@ -93,6 +93,8 @@ namespace composer {
 
                 ~Entity();
 
+                void print();
+
             public:
 
                 //! This method is used to get an specific attribute of the element

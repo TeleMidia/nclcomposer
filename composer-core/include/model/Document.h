@@ -12,6 +12,7 @@ namespace composer {
         namespace module {
             class PluginControl;
             class TransactionControl;
+            class DocumentControl;
         }
     }
 }
@@ -33,11 +34,13 @@ namespace composer {
         Q_OBJECT
         friend class composer::core::module::PluginControl;
         friend class composer::core::module::TransactionControl;
+        friend class composer::core::module::DocumentControl;
         friend class composer::core::util::Project;
     public:
         Entity* getEntityBydId(QString _id);
         QList<Entity*> getEntitiesbyType(QString _type);
         QString getLocation();
+        QString getProjectId();
         LanguageType getDocumentType();
 
     private:
@@ -45,6 +48,7 @@ namespace composer {
         QMutex lockLocation;
         QMap<QString, Entity*> entities;
         QString documentLocation;
+        QString projectId;
         LanguageType documentType;
 
     protected:
@@ -54,6 +58,7 @@ namespace composer {
 
         void setLocation(QString location);
         void setDocumentType(LanguageType type);
+        void setProjectId(QString _projectId);
 
         //! This method is used to add an Entity in the map and as child
         //! of the parentId.

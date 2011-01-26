@@ -21,16 +21,7 @@ namespace composer {
 
     Document::~Document() {
         QMutexLocker locker(&lockEntities);
-        QMapIterator<QString,Entity*> it(entities);
-
-        while(it.hasNext()){
-            it.next();
-            Entity *ent = it.value();
-            delete ent;
-            ent = NULL;
-            if (entities.remove(it.key()) != 1)
-                qDebug() << "Entity::~Entity() Não conseguiu remover do mapa";
-        }
+        entities.clear();
     }
 
     LanguageType Document::getDocumentType()
@@ -69,6 +60,16 @@ namespace composer {
     void Document::setLocation(QString location) {
         QMutexLocker locker(&lockLocation);
         this->documentLocation = location;
+    }
+
+    void Document::setProjectId(QString _projectId)
+    {
+        this->projectId = _projectId;
+    }
+
+    QString Document::getProjectId()
+    {
+        return this->projectId;
     }
 
     bool Document::addEntity(Entity* entity, QString parentId)
