@@ -67,9 +67,6 @@ class MainWindow : public QMainWindow {
         QAction *editPreferencesAct;
         QAction *exitAct;
 
-        ProjectTreeWidget *projectTree;
-        QDockWidget *dockTree;
-
         QListWidget *profilesExt;
         QListWidget *pluginsExt;
 
@@ -96,7 +93,6 @@ class MainWindow : public QMainWindow {
         void initGUI();
         void createAbout();
         void createStatusBar();
-        void createToolBar();
         void createMenus();
         void createActions();
         void createTreeProject();
@@ -104,11 +100,11 @@ class MainWindow : public QMainWindow {
         void readSettings();
         void readExtensions();
         void closeEvent(QCloseEvent *event);
+        void cleanUp();
 
 
     private slots:
         void about();
-        void launchProjectWizard();
         void updateWindowMenu();
         void showEditPreferencesDialog();
         void addProfileLoaded(QString name, QString fileName);
@@ -119,13 +115,7 @@ class MainWindow : public QMainWindow {
         ~MainWindow();
 
     public slots:
-        void createProjectInTree(QString name,QString location);
-        void createDocumentInTree(QString name,
-                                  QString location);
         void errorDialog(QString);
-        void launchAddDocumentWizard();
-        void addPluginWidget(IPluginFactory *fac, IPlugin *plugin,
-                        QString projectId, QString documentId);
         void addPluginWidget(IPluginFactory *fac, IPlugin *plugin,
                              Document *doc);
 
