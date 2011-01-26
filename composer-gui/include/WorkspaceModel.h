@@ -10,6 +10,7 @@ private:
     QModelIndex topIndex;
 public:
     WorkspaceModel(QObject *parent = 0);
+    /* RootIndex from sourceModel() */
     inline void setTopIndex(QModelIndex index) { topIndex =index;}
     inline QModelIndex getTopIndex() {return topIndex;}
 

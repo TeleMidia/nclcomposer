@@ -37,6 +37,7 @@ else:win32 {
     INCLUDEPATH += $$LOCATION/include/composer
 }
 
+
 SOURCES += main.cpp \
     src/MainWindow.cpp \
     src/ProjectTreeWidget.cpp \

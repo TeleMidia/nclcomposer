@@ -299,7 +299,7 @@ void MainWindow::createTreeProject() {
     projectTree->setContextMenuPolicy(Qt::DefaultContextMenu);
     dockTree->setWidget(projectTree);
 
-    addDockWidget(Qt::LeftDockWidgetArea, dockTree, Qt::Horizontal);
+    addDockWidget(Qt::LeftDockWidgetArea,dockTree,Qt::Horizontal);
 
     connect(projectTree,SIGNAL(addDocument(QString)), this,
             SLOT(launchAddDocumentWizard(QString)));

@@ -3,15 +3,10 @@
 
 DocumentWizard::DocumentWizard(QWidget* parent) :
         QWizard(parent) {
-#ifdef Q_WS_MAC
-    setWizardStyle(MacStyle);
-#else
-    setWizardStyle(ClassicStyle);
-#endif
-    setModal(true);
-    setWindowTitle("Document Wizard!");
-    entryPage = new DocumentEntryPage(this);
-    addPage(entryPage);
+      setWizardStyle(MacStyle);
+      setWindowTitle("Document Wizard!");
+      entryPage = new DocumentEntryPage(this);
+      addPage(entryPage);
 }
 
 DocumentWizard::~DocumentWizard() {

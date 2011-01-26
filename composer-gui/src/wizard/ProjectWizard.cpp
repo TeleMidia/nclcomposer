@@ -3,12 +3,7 @@
 
 ProjectWizard::ProjectWizard(QWidget* parent) :
         QWizard(parent) {
-#ifdef Q_WS_MAC
-    setWizardStyle(MacStyle);
-#else
-    setWizardStyle(ClassicStyle);
-#endif
-    setModal(true);
+      //setWizardStyle(MacStyle);
       setWindowTitle("Project Wizard!");
       entryPage = new ProjectEntryPage(this);
       addPage(entryPage);
