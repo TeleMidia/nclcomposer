@@ -9,7 +9,7 @@ CONFIG += qt debug
 MOC_DIR = mocs
 OBJECTS_DIR = objs
 
-macx:CONFIG += lib_bundle x86
+macx:CONFIG += lib_bundle
 
 macx:INSTALLBASE = /Library/Frameworks
 else:unix:INSTALLBASE = /usr/local
