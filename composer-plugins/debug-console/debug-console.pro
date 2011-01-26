@@ -16,7 +16,7 @@ macx {
         ComposerCore
     INCLUDEPATH += /Library/Frameworks/ComposerCore.framework/ \
         include/
-    tagrget.path = $$quote(/Library/Application Support/Composer)
+    target.path = $$quote(/Library/Application Support/Composer)
 }
 else:unix {
     LIBS += -L/usr/local/lib/composer \
