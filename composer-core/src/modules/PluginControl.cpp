@@ -51,6 +51,7 @@ namespace module {
         IPluginFactory *pluginFactory = NULL;
 
         QDir pluginsDir = QDir(pluginsDirPath);
+        pluginsDir.setFilter(QDir::Files | QDir::NoSymLinks);
 
         if(!pluginsDir.exists())
         {
@@ -168,6 +169,49 @@ namespace module {
         emit newDocumentLaunchedAndCreated(documentId,location);
     }
 
+    void PluginControl::launchDocument(Document *doc)
+    {
+        TransactionControl *transControl;
+        IDocumentParser *parser;
+        IPluginFactory *factory;
+        IPlugin *pluginInstance;
+        LanguageType type = doc->getDocumentType();
+        ILanguageProfile *profile = LanguageControl::getInstance()->
+                                    getProfileFromType(type);
+        QString location  = doc->getLocation();
+
+        transControl = new TransactionControl(doc);
+        transactionControls[location] = transControl;
+
+        /* Requests a new DocumentParser for this Document*/
+        parser = profile->createDocumentParser(doc);
+
+        QList<QString> plugIDs = pluginsByType.values(type);
+        QList<QString>::iterator it;
+        for (it = plugIDs.begin() ; it != plugIDs.end() ;
+             it++)
+        {
+            factory        = pluginFactories[*it];
+            pluginInstance = factory->createPluginInstance();
+            if (pluginInstance)
+            {
+                pluginInstance->setPluginID(factory->getPluginID());
+                pluginInstance->setDocument(doc);
+                launchNewPlugin(pluginInstance,transControl);
+                pluginInstances.insert(location,pluginInstance);
+                emit addPluginWidgetToWindow(factory,pluginInstance,doc);
+            }
+            else {
+                emit notifyError(tr("Could not create a instance for the"
+                                    "plugin (%1)").arg(*it));
+            }
+        }
+        connectParser(parser,transControl);
+        parser->parseDocument();
+        profile->releaseDocumentParser(parser);
+        //emit newDocumentLaunchedAndCreated(doc);
+    }
+
     void PluginControl::launchNewPlugin(IPlugin *plugin,
                                         TransactionControl *tControl) {
         qDebug() << "PluginControl::launchNewPlugin(" << plugin->getPluginID()
@@ -221,25 +265,37 @@ namespace module {
             return pList;
     }
 
-    bool PluginControl::closeDocumentAndReleasePlugins(QString projectId,
-                                        QString documentId)
+    bool PluginControl::releasePlugins(Document *doc)
     {
-            Project *p = ProjectControl::getInstance()->getProject(projectId);
-            if (p == NULL) return false;
-
-            Document *doc = p->getDocument(documentId);
-            if (doc == NULL) return false;
-
+            if (!doc) return false;
             if (!transactionControls.contains(doc->getLocation()))
                 return false;
 
+            if (!pluginInstances.contains(doc->getLocation())) return false;
+
             TransactionControl *t = transactionControls.value
                                     (doc->getLocation());
-            delete t;
-            t = NULL;
+            if (t)
+            {
+                delete t;
+                t = NULL;
+                transactionControls.remove(doc->getLocation());
+            }
 
-            p->removeDocument(documentId);
+            QList<IPlugin*> instances = pluginInstances.values
+                                                        (doc->getLocation());
+            QList<IPlugin*>::iterator it;
+            for (it = instances.begin(); it != instances.end(); it++)
+            {
+               IPlugin *inst = *it;
+               //TODO - chamar o save antes de dar o release na instancia
+               IPluginFactory *fac = pluginFactories[inst->getPluginID()];
+               qDebug() << "releasePlug( " << fac->getPluginName() << " )";
+               fac->releasePluginInstance(inst);
+            }
+            pluginInstances.remove(doc->getLocation());
 
+            return true;
     }
 
 

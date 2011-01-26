@@ -66,19 +66,22 @@ namespace module {
         public:
             void loadPlugins(QString pluginsDirPath);
             QList<IPluginFactory*> getLoadedPlugins();
-            bool closeDocumentAndReleasePlugins(QString projectId,
-                                                QString documentId);
+            bool releasePlugins(Document *doc);
 
         public slots:
             void onNewDocument(QString projectId, QString documentId,
                                QString location);
+            void launchDocument(Document *doc);
 
         signals:
             void newDocumentLaunchedAndCreated(QString documentdId,
                                                QString location);
+
             void notifyError(QString);
             void addPluginWidgetToWindow(IPluginFactory*,IPlugin*,
                                     QString projectId, QString documentId);
+            void addPluginWidgetToWindow(IPluginFactory*,IPlugin*,
+                                         Document*);
 
     };
 }

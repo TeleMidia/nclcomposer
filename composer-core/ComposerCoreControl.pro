@@ -22,16 +22,19 @@ SOURCES += \
     src/modules/PluginControl.cpp \
     src/modules/TransactionControl.cpp \
     src/modules/LanguageControl.cpp \
+    src/modules/DocumentControl.cpp \
     src/util/Project.cpp \
     src/model/Entity.cpp \
     src/model/Document.cpp \
     src/util/Utilities.cpp
 
 
+
 HEADERS_MAN += include/modules/ProjectControl.h \
     include/modules/PluginControl.h \
     include/modules/TransactionControl.h \
-    include/modules/LanguageControl.h
+    include/modules/LanguageControl.h \
+    include/modules/DocumentControl.h
 
 HEADERS_EXTENSIONS += include/extensions/ILanguageProfile.h \
     include/extensions/IDocumentParser.h \
