@@ -7,16 +7,18 @@ ProjectTreeView::ProjectTreeView(QWidget *parent) : QTreeView(parent)
 void ProjectTreeView::mouseDoubleClickEvent(QMouseEvent *event)
 {
     QTreeView::mouseDoubleClickEvent(event);
-    QModelIndex current = indexAt(event->pos());
 
+    launchDocument();
+}
+
+void ProjectTreeView::launchDocument()
+{
+    QModelIndex current = currentIndex();
     if (current.isValid())
     {
-            qDebug() << "CLICK: " << current.data().toString();
-
             WorkspaceModel *wsModel = (WorkspaceModel*) model();
             QFileSystemModel *fsModel = (QFileSystemModel*)
                                                     wsModel->sourceModel();
-
             QString documentPath = fsModel->filePath
                                    (wsModel->mapToSource(current));
 
@@ -28,8 +30,9 @@ void ProjectTreeView::mouseDoubleClickEvent(QMouseEvent *event)
                     current = cParent;
                     cParent = current.parent();
                 }
-                qDebug() << "FileName: " << documentPath << "PROJECTID: "
-                         << current.data().toString();
+                QString projectId = current.data().toString();
+                DocumentControl::getInstance()->launchDocument
+                                                (projectId,documentPath);
             }
     }
 }
@@ -37,6 +40,7 @@ void ProjectTreeView::mouseDoubleClickEvent(QMouseEvent *event)
 void ProjectTreeView::mouseReleaseEvent(QMouseEvent *event)
 {
     QTreeView::mouseReleaseEvent(event);
+
     if (event->button() == Qt::RightButton)
     {
         QMenu *contextMenu = new QMenu(this);
@@ -62,9 +66,11 @@ void ProjectTreeView::mouseReleaseEvent(QMouseEvent *event)
                                         tr("Delete Document"), contextMenu);
                 QAction *launchDocument = new QAction(
                                         tr("Launch Document"), contextMenu);
+                connect(launchDocument,SIGNAL(triggered()),
+                                       SLOT(launchDocument()));
+
                 contextMenu->addAction(launchDocument);
                 contextMenu->addAction(deleteDocument);
-                qDebug() << "Launch Document " << current.data().toString();
             }
         } else {
             QAction *newProject = new QAction(
@@ -74,4 +80,12 @@ void ProjectTreeView::mouseReleaseEvent(QMouseEvent *event)
         }
         contextMenu->exec(event->globalPos());
     }
+}
+
+void ProjectTreeView::keyReleaseEvent(QKeyEvent *event)
+{
+    QTreeView::keyReleaseEvent(event);
+
+    if (event->key() == Qt::Key_Return || event->key() == Qt::Key_Enter)
+        launchDocument();
 }

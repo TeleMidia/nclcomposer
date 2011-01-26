@@ -126,6 +126,8 @@ class MainWindow : public QMainWindow {
         void launchAddDocumentWizard();
         void addPluginWidget(IPluginFactory *fac, IPlugin *plugin,
                         QString projectId, QString documentId);
+        void addPluginWidget(IPluginFactory *fac, IPlugin *plugin,
+                             Document *doc);
 
     signals:
         void writeSettings();

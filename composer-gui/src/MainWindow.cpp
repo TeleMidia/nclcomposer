@@ -29,21 +29,30 @@ void MainWindow::initModules()
     ProjectControl *pjControl = ProjectControl::getInstance();
     PluginControl  *pgControl = PluginControl::getInstance();
     LanguageControl *lgControl = LanguageControl::getInstance();
+    //DocumentControl *docControl = DocumentControl::getInstance();
 
     connect(pjControl,SIGNAL(projectCreated(QString,QString)),
             this,SLOT(createProjectInTree(QString,QString)));
     connect(pjControl,SIGNAL(notifyError(QString)),
             this,SLOT(errorDialog(QString)));
+
     connect(pgControl,SIGNAL(notifyError(QString)),
             this,SLOT(errorDialog(QString)));
     connect(pgControl,SIGNAL(newDocumentLaunchedAndCreated(QString,QString)),
             this,SLOT(createDocumentInTree(QString,QString)));
+    //TODO - deletar quando terminar de portar a nova VIEW
     connect(pgControl,SIGNAL(addPluginWidgetToWindow(IPluginFactory*,
                              IPlugin*,QString, QString)),
             this,SLOT(addPluginWidget(IPluginFactory*,IPlugin*,
                                       QString, QString)));
+    connect(pgControl,SIGNAL(addPluginWidgetToWindow(IPluginFactory*,
+                                                     IPlugin*,Document*)),
+            this,SLOT(addPluginWidget(IPluginFactory*,IPlugin*,Document*)));
+
     connect(lgControl,SIGNAL(notifyLoadedProfile(QString,QString)),
             this,SLOT(addProfileLoaded(QString,QString)));
+
+
     readExtensions();
 
 }
@@ -123,7 +132,7 @@ void MainWindow::readSettings() {
     settings.endGroup();
     settings.beginGroup("projects");
     QStringList projects = settings.childKeys();
-    QStringListIterator it(projects);
+    /*QStringListIterator it(projects);
     while (it.hasNext()) {
         QString projectId = it.next();
         QString location  = settings.value(projectId).toString();
@@ -132,7 +141,7 @@ void MainWindow::readSettings() {
                 "location: " << location;
 
         ProjectControl::getInstance()->addProject(projectId,location);
-    }
+    }*/
     settings.endGroup();
 
     settings.beginGroup("workspace");
@@ -222,6 +231,8 @@ void MainWindow::createDocumentInTree(QString name,
     parent->setIcon(0,QIcon(":/mainwindow/folder"));
 }
 
+
+//TODO: QUANDO PORTAR PRA NOVA VIEW DELETAR
 void MainWindow::addPluginWidget(IPluginFactory *fac, IPlugin *plugin,
                                  QString projectId, QString documentId)
 {
@@ -248,9 +259,49 @@ void MainWindow::addPluginWidget(IPluginFactory *fac, IPlugin *plugin,
     //dock->show();
 }
 
+void MainWindow::addPluginWidget(IPluginFactory *fac, IPlugin *plugin,
+                                 Document *doc)
+{
+
+    QMainWindow *w;
+    QString location = doc->getLocation();
+    QString documentId = doc->getAttribute("id");
+    QString projectId = doc->getProjectId();
+
+    if (documentsWidgets.contains(location))
+    {
+        w = documentsWidgets[location];
+    } else {
+        w = new QMainWindow(tabDocuments);
+        //w->setDockOptions(AnimatedDocks | ForceTabbedDocks);
+        int index = tabDocuments->addTab(w,projectId + "(" + documentId + ")");
+        tabDocuments->setTabToolTip(index, location);
+        documentsWidgets[location] = w;
+    }
+
+    QDockWidget *dock = new QDockWidget(fac->getPluginName(), w);
+    dock->setAllowedAreas(Qt::AllDockWidgetAreas);
+    dock->setFeatures(QDockWidget::DockWidgetClosable |
+                      QDockWidget::DockWidgetMovable);
+    QWidget *pW = plugin->getWidget();
+    dock->setWidget(pW);
+    w->addDockWidget(Qt::BottomDockWidgetArea, dock, Qt::Horizontal);
+    //dock->show();
+}
+
 void MainWindow::tabClosed(int index)
 {
-    qDebug() << tabDocuments->tabText(index);
+    QString location = tabDocuments->tabToolTip(index);
+    qDebug() << location;
+    DocumentControl::getInstance()->closeDocument(location);
+    QMainWindow *w = documentsWidgets[location];
+    if (w)
+    {
+        delete w;
+        w = NULL;
+        documentsWidgets.remove(location);
+        tabDocuments->removeTab(index);
+    }
 }
 
 void MainWindow::createFileSystem()
@@ -284,8 +335,6 @@ void MainWindow::createFileSystem()
 }
 
 void MainWindow::createTreeProject() {
-
-
 
     dockTree = new QDockWidget(tr("Projects"), this);
     dockTree->setObjectName("treeProject");
