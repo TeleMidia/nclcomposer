@@ -2,10 +2,6 @@
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent) {
-    QPixmap mPix(":/mainwindow/icon");
-    QSplashScreen splash(mPix);
-    splash.blockSignals(true);
-    splash.show();
 
     user_directory_ext = "";
 
@@ -21,7 +17,7 @@ MainWindow::MainWindow(QWidget *parent)
     readSettings();
     preferences = new PreferencesDialog(this);
 
-    splash.finish(this);
+
 }
 
 MainWindow::~MainWindow() {
@@ -65,7 +61,8 @@ void MainWindow::readExtensions()
     {
         user_directory_ext = settings.value("path").toString();
     } else {
-        user_directory_ext = promptChooseDirectory();
+        user_directory_ext = promptChooseExtDirectory();
+        if (user_directory_ext == "") user_directory_ext = defaultEx;
     }
     qDebug() << "MainWindow::readExtensions(" << user_directory_ext
             << ")";
@@ -75,7 +72,7 @@ void MainWindow::readExtensions()
     settings.endGroup();
 }
 
-QString MainWindow::promptChooseDirectory()
+QString MainWindow::promptChooseExtDirectory()
 {
 
     QMessageBox mBox;
@@ -92,8 +89,26 @@ QString MainWindow::promptChooseDirectory()
                 QDir::homePath(), QFileDialog::ShowDirsOnly);
         return dirName;
     } else {
-        return defaultEx;
+        return "";
     }
+}
+
+QString MainWindow::promptChooseWorkspace()
+{
+    QMessageBox mBox;
+    mBox.setText(tr("Previous workspace was not set!"));
+    mBox.setInformativeText(tr("Please set a new workspace to start"));
+    mBox.setStandardButtons(QMessageBox::Ok | QMessageBox::Cancel);
+    mBox.setDefaultButton(QMessageBox::Ok);
+    mBox.setIcon(QMessageBox::Information);
+    if (mBox.exec() == QMessageBox::Cancel) return "";
+    else {
+            QString dirName = QFileDialog::getExistingDirectory(
+                    this, tr("Select Directory"),
+                    QDir::homePath(), QFileDialog::ShowDirsOnly);
+            return dirName;
+
+        }
 }
 
 void MainWindow::readSettings() {
@@ -119,6 +134,21 @@ void MainWindow::readSettings() {
         ProjectControl::getInstance()->addProject(projectId,location);
     }
     settings.endGroup();
+
+    settings.beginGroup("workspace");
+    if (!settings.contains("path"))
+    {
+        work_space_path = promptChooseWorkspace();
+        if(work_space_path == "")
+            work_space_path = QDir::homePath()+QDir::separator()+"composer";
+    } else {
+        work_space_path = settings.value("path").toString();
+        QDir dir(work_space_path);
+        if (!dir.exists())
+            work_space_path = promptChooseWorkspace();
+    }
+    createFileSystem();
+    settings.endGroup();
 }
 
 void MainWindow::initGUI() {
@@ -139,7 +169,6 @@ void MainWindow::initGUI() {
     createToolBar();
     createAbout();
     showMaximized();
-
 
 }
 
@@ -204,7 +233,7 @@ void MainWindow::addPluginWidget(IPluginFactory *fac, IPlugin *plugin,
         w = documentsWidgets[projectId+documentId];
     } else {
         w = new QMainWindow(tabDocuments);
-        w->setDockOptions(AnimatedDocks | ForceTabbedDocks);
+        //w->setDockOptions(AnimatedDocks | ForceTabbedDocks);
         tabDocuments->addTab(w,projectId+"("+documentId+")");
         documentsWidgets[projectId+documentId] = w;
     }
@@ -216,7 +245,7 @@ void MainWindow::addPluginWidget(IPluginFactory *fac, IPlugin *plugin,
     QWidget *pW = plugin->getWidget();
     dock->setWidget(pW);
     w->addDockWidget(Qt::BottomDockWidgetArea, dock, Qt::Horizontal);
-    dock->show();
+    //dock->show();
 }
 
 void MainWindow::tabClosed(int index)
@@ -224,7 +253,39 @@ void MainWindow::tabClosed(int index)
     qDebug() << tabDocuments->tabText(index);
 }
 
+void MainWindow::createFileSystem()
+{
+    fileSystemDock = new QDockWidget(tr("FileSystem"), this);
+    fileSystemDock->setObjectName("fileSystem");
+
+    fileSystemView = new ProjectTreeView(this);
+    workspace_model = new WorkspaceModel(fileSystemView);
+
+    fileSystemModel = new QFileSystemModel();
+    QModelIndex index = fileSystemModel->setRootPath(work_space_path);
+
+    workspace_model->setSourceModel(fileSystemModel);
+    workspace_model->setTopIndex(index);
+
+    fileSystemView->setModel(workspace_model);
+
+    fileSystemView->setRootIndex(workspace_model->mapFromSource
+                                 (index));
+
+    fileSystemView->setSortingEnabled(false);
+    fileSystemView->setHeaderHidden(true);
+    fileSystemView->setColumnHidden(1,true);
+    fileSystemView->setColumnHidden(2,true);
+    fileSystemView->setColumnHidden(3,true);
+    fileSystemDock->setWidget(fileSystemView);
+
+    addDockWidget(Qt::RightDockWidgetArea, fileSystemDock);
+
+}
+
 void MainWindow::createTreeProject() {
+
+
 
     dockTree = new QDockWidget(tr("Projects"), this);
     dockTree->setObjectName("treeProject");
@@ -406,6 +467,13 @@ void MainWindow::closeEvent(QCloseEvent *event)
         settings.setValue("path",user_directory_ext);
         settings.endGroup();
     }
+
+    settings.beginGroup("workspace");
+    if (work_space_path!= "") {
+        settings.setValue("path", work_space_path);
+    }
+    settings.endGroup();
+
     if(ProjectControl::getInstance()->saveProjects()) {
         settings.beginGroup("mainwindow");
         settings.setValue("geometry", saveGeometry());

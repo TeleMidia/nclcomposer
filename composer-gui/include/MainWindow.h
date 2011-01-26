@@ -32,6 +32,7 @@
 #include <QtGui/QDialog>
 #include <QtGui/QBitmap>
 #include <QtGui/QPainter>
+#include <QtGui/QTreeView>
 
 #include <core/modules/ProjectControl.h>
 #include <core/modules/PluginControl.h>
@@ -41,6 +42,8 @@ using namespace composer::core::module;
 #include "wizard/DocumentWizard.h"
 #include "ProjectTreeWidget.h"
 #include "PreferencesDialog.h"
+#include "WorkspaceModel.h"
+#include "ProjectTreeView.h"
 
 class MainWindow : public QMainWindow {
     Q_OBJECT
@@ -74,13 +77,21 @@ class MainWindow : public QMainWindow {
         DocumentWizard *documentWizard;
         PreferencesDialog *preferences;
 
+        QFileSystemModel *fileSystemModel;
+        WorkspaceModel *workspace_model;
+        ProjectTreeView  *fileSystemView;
+        QDockWidget      *fileSystemDock;
+
+
         QDialog *aboutDialog;
 
         QString defaultEx;
         QString user_directory_ext;
+        QString work_space_path;
 
     private:
-        QString promptChooseDirectory();
+        QString promptChooseExtDirectory();
+        QString promptChooseWorkspace();
         void initModules();
         void initGUI();
         void createAbout();
@@ -89,6 +100,7 @@ class MainWindow : public QMainWindow {
         void createMenus();
         void createActions();
         void createTreeProject();
+        void createFileSystem();
         void readSettings();
         void readExtensions();
         void closeEvent(QCloseEvent *event);

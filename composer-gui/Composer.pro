@@ -5,8 +5,8 @@ TARGET = Composer
 TEMPLATE = app
 CONFIG += debug
 QT += xml
-MOC_DIR = mocs
-OBJECTS_DIR = objs
+MOC_DIR = .mocs
+OBJECTS_DIR = .objs
 
 macx:ICON = images/Composer.icns
 
@@ -44,7 +44,9 @@ SOURCES += main.cpp \
     src/wizard/ProjectEntryPage.cpp \
     src/wizard/DocumentWizard.cpp \
     src/wizard/DocumentEntryPage.cpp \
-    src/PreferencesDialog.cpp
+    src/PreferencesDialog.cpp \
+    src/WorkspaceModel.cpp \
+    src/ProjectTreeView.cpp
 
 HEADERS += include/MainWindow.h \
     include/ProjectTreeWidget.h \
@@ -52,7 +54,9 @@ HEADERS += include/MainWindow.h \
     include/wizard/ProjectEntryPage.h \
     include/wizard/DocumentWizard.h \
     include/wizard/DocumentEntryPage.h \
-    include/PreferencesDialog.h
+    include/PreferencesDialog.h \
+    include/WorkspaceModel.h \
+    include/ProjectTreeView.h
 
 RESOURCES += images.qrc
 
