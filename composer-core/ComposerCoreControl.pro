@@ -6,8 +6,8 @@ TEMPLATE = lib
 TARGET = ComposerCore
 VERSION = 1.0
 CONFIG += qt debug
-MOC_DIR = mocs
-OBJECTS_DIR = objs
+MOC_DIR = .mocs
+OBJECTS_DIR = .objs
 
 macx:CONFIG += lib_bundle
 
@@ -18,31 +18,30 @@ win32:INSTALLBASE = C:/Composer
 DEFINES += COMPOSERCORE_LIBRARY
 
 SOURCES += \
-    src/modules/ProjectControl.cpp \
     src/modules/PluginControl.cpp \
     src/modules/TransactionControl.cpp \
     src/modules/LanguageControl.cpp \
     src/modules/DocumentControl.cpp \
-    src/util/Project.cpp \
     src/model/Entity.cpp \
     src/model/Document.cpp \
     src/util/Utilities.cpp
 
 
 
-HEADERS_MAN += include/modules/ProjectControl.h \
+HEADERS_MAN += \
     include/modules/PluginControl.h \
     include/modules/TransactionControl.h \
     include/modules/LanguageControl.h \
     include/modules/DocumentControl.h
 
-HEADERS_EXTENSIONS += include/extensions/ILanguageProfile.h \
+HEADERS_EXTENSIONS += \
+    include/extensions/ILanguageProfile.h \
     include/extensions/IDocumentParser.h \
     include/extensions/IPlugin.h \
     include/extensions/IPluginFactory.h
 
-HEADERS_UTIL +=include/util/ComposerCoreControl_global.h \
-    include/util/Project.h \
+HEADERS_UTIL += \
+    include/util/ComposerCoreControl_global.h \
     include/util/Singleton.h \
     include/util/Utilities.h
 
@@ -67,7 +66,7 @@ headers_model.files = $$HEADERS_MODEL
 INCLUDEPATH += include/
 
 macx { 
-    DESTDIR = $$INSTALLBASE/
+    #DESTDIR = $$INSTALLBASE/
     QMAKE_FRAMEWORK_BUNDLE_NAME = $$TARGET
     headers_man.path = core/modules
     headers_extensions.path = core/extensions
@@ -76,6 +75,9 @@ macx {
     headers_model.path = core/model
     QMAKE_BUNDLE_DATA += headers_man headers_extensions \
                          headers_util headers_exception headers_model
+    QMAKE_BUNDLE_DATA.path = $$INSTALLBASE
+    target.path = $$INSTALLBASE
+    INSTALLS += target
 
 }
 else {
