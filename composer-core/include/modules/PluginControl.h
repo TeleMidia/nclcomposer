@@ -34,12 +34,9 @@ using namespace composer::core::extension;
 using namespace composer::core::extension::plugin;
 
 
-//TODO - fazer um gerenciar de maneira eficiente
-//       quando o usuario fechar o plugin tirar ele da memoria
-
 namespace composer {
-namespace core {
-namespace module {
+    namespace core {
+        namespace module {
 
     class PluginControl : public QObject , public Singleton<PluginControl> {
         Q_OBJECT
@@ -68,14 +65,11 @@ namespace module {
             bool releasePlugins(Document *doc);
 
         public slots:
-            void onNewDocument(QString projectId, QString documentId,
-                               QString location);
             void launchDocument(Document *doc);
 
         signals:
             void newDocumentLaunchedAndCreated(QString documentdId,
                                                QString location);
-
             void notifyError(QString);
             void addPluginWidgetToWindow(IPluginFactory*,IPlugin*,
                                     QString projectId, QString documentId);
@@ -83,7 +77,7 @@ namespace module {
                                          Document*);
 
     };
-}
-}
+        }
+    }
 }
 #endif // PLUGINCONTROL_H

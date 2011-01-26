@@ -77,14 +77,11 @@ void DocumentControl::launchDocument(QString projectId, QString location)
     doc->setDocumentType(type);
     doc->setProjectId(projectId);
 
-    //TODO - call pluginControl to launch plugin
-    //qDebug() << "Good to go :" << doc->getLocation() << " - " << documentId;
     PluginControl::getInstance()->launchDocument(doc);
     openDocuments[location] = doc;
 
 }
-
                 }
         }
-}
+}//end namespaec composer
 

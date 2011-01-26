@@ -2,8 +2,8 @@
 
 
 namespace composer {
-namespace core {
-namespace module {
+    namespace core {
+        namespace module {
 
     TransactionControl::TransactionControl(Document *doc) {
         this->doc = doc;
@@ -93,6 +93,6 @@ namespace module {
 
     }
 
-}
-}
-}
+        }
+    }
+}//end namespace

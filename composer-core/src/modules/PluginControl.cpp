@@ -2,11 +2,10 @@
 
 
 namespace composer {
-namespace core {
-namespace module {
+    namespace core {
+        namespace module {
 
     PluginControl::PluginControl() {
-        qDebug() << "PluginControl::PluginControl()";
     }
 
     PluginControl::~PluginControl() {
@@ -90,84 +89,6 @@ namespace module {
              }
         }//fim foreach
     }//fim function
-
-    void PluginControl::onNewDocument(QString projectId, QString documentId,
-                                      QString location) {
-
-        qDebug() << "PluginControl::onNewDocument(" << documentId
-                 << ", " << location << ")";
-
-        IPluginFactory *factory;
-        IPlugin *pluginInstance;
-        TransactionControl *transControl;
-        ILanguageProfile *profile;
-        IDocumentParser *parser;
-        QMap<QString,QString> atts;
-
-        if (transactionControls.contains(location)) {
-            qDebug() << tr("Transaction Control could not be created"
-                                "for Document(%1)").arg(documentId);
-            return;
-        }
-
-        QString ext = location;
-        ext = ext.remove(0,ext.lastIndexOf(".")+1);
-        LanguageType type = Utilities::getLanguageTypeByExtension(ext);
-
-        if(type == NONE) {
-            emit notifyError(tr("No Language Profile found for (%1)").
-                             arg(ext.toUpper()));
-            return;
-        }
-
-        /*Requests the LanguageProfile associated with this DocumentType */
-        profile = LanguageControl::getInstance()->getProfileFromType(type);
-        if (!profile) {
-            emit notifyError(tr("No Language Profile Extension "
-                                "found for (%1)").
-                             arg(ext.toUpper()));
-            return;
-        }
-
-        atts["id"] = documentId;
-
-        /* create the NCLDocument */
-        Document *doc = new Document(atts);
-        doc->setLocation(location);
-        doc->setDocumentType(type);
-
-        transControl = new TransactionControl(doc);
-        transactionControls[location] = transControl;
-
-        /* Requests a new DocumentParser for this Document*/
-        parser = profile->createDocumentParser(doc);
-
-        QList<QString> plugIDs = pluginsByType.values(type);
-        QList<QString>::iterator it;
-        for (it = plugIDs.begin() ; it != plugIDs.end() ;
-             it++)
-        {
-            factory        = pluginFactories[*it];
-            pluginInstance = factory->createPluginInstance();
-            if (pluginInstance)
-            {
-                pluginInstance->setPluginID(factory->getPluginID());
-                pluginInstance->setDocument(doc);
-                launchNewPlugin(pluginInstance,transControl);
-                pluginInstances.insert(location,pluginInstance);
-                emit addPluginWidgetToWindow(factory,pluginInstance,
-                                             projectId, documentId);
-            }
-            else {
-                qDebug() << "Could not create a instance for the plugin"
-                        << "(" << *it << ")";
-            }
-        }
-        connectParser(parser,transControl);
-        parser->parseDocument();
-        profile->releaseDocumentParser(parser);
-        emit newDocumentLaunchedAndCreated(documentId,location);
-    }
 
     void PluginControl::launchDocument(Document *doc)
     {
@@ -298,8 +219,6 @@ namespace module {
             return true;
     }
 
-
-
-}
-}
-}//fim namespace composer
+        }
+    }
+}//end namespace composer
