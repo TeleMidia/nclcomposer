@@ -34,13 +34,11 @@
 #include <QtGui/QPainter>
 #include <QtGui/QTreeView>
 
-#include <core/modules/ProjectControl.h>
 #include <core/modules/PluginControl.h>
 using namespace composer::core::module;
 
 #include "wizard/ProjectWizard.h"
 #include "wizard/DocumentWizard.h"
-#include "ProjectTreeWidget.h"
 #include "PreferencesDialog.h"
 #include "WorkspaceModel.h"
 #include "ProjectTreeView.h"

@@ -40,7 +40,6 @@ else:win32 {
 
 SOURCES += main.cpp \
     src/MainWindow.cpp \
-    src/ProjectTreeWidget.cpp \
     src/wizard/ProjectWizard.cpp \
     src/wizard/ProjectEntryPage.cpp \
     src/wizard/DocumentWizard.cpp \
@@ -50,7 +49,6 @@ SOURCES += main.cpp \
     src/ProjectTreeView.cpp
 
 HEADERS += include/MainWindow.h \
-    include/ProjectTreeWidget.h \
     include/wizard/ProjectWizard.h \
     include/wizard/ProjectEntryPage.h \
     include/wizard/DocumentWizard.h \
@@ -60,8 +58,6 @@ HEADERS += include/MainWindow.h \
     include/ProjectTreeView.h
 
 RESOURCES += images.qrc
-
-#HEADERS += $$HEADERS_GUI
 
 FORMS   += ui/PreferencesDialog.ui
 
