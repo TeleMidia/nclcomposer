@@ -30,6 +30,7 @@ namespace composer{
                     QMap<QString, Document*> openDocuments;
 
                 signals:
+                    void openDocumentTab(QString);
                     void notifyError(QString);
                 public slots:
                     void closeDocument(QString location);

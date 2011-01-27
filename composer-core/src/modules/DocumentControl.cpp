@@ -43,7 +43,11 @@ void DocumentControl::closeDocument(QString location)
 void DocumentControl::launchDocument(QString projectId, QString location)
 {
 
-    if (openDocuments.contains(location)) return;
+    if (openDocuments.contains(location))
+    {
+        emit openDocumentTab(location);
+        return;
+    }
 
     QString ext = location;
     ext = ext.remove(0,ext.lastIndexOf(".")+1);
