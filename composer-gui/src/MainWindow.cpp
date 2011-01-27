@@ -30,20 +30,20 @@ void MainWindow::initModules()
     DocumentControl *docControl = DocumentControl::getInstance();
 
     connect(pgControl,SIGNAL(notifyError(QString)),
-            this,SLOT(errorDialog(QString)));
-
+                      SLOT(errorDialog(QString)));
     connect(pgControl,SIGNAL(addPluginWidgetToWindow(IPluginFactory*,
                                                      IPlugin*,Document*)),
-            this,SLOT(addPluginWidget(IPluginFactory*,IPlugin*,Document*)));
+                SLOT(addPluginWidget(IPluginFactory*,IPlugin*,Document*)));
 
     connect(lgControl,SIGNAL(notifyLoadedProfile(QString,QString)),
-            this,SLOT(addProfileLoaded(QString,QString)));
+                      SLOT(addProfileLoaded(QString,QString)));
     connect(lgControl,SIGNAL(notifyError(QString)),
-            SLOT(errorDialog(QString)));
+                      SLOT(errorDialog(QString)));
 
     connect(docControl, SIGNAL(notifyError(QString)),
             SLOT(errorDialog(QString)));
-
+    connect(docControl,SIGNAL(openDocumentTab(QString)),
+            SLOT(onOpenDocumentTab(QString)));
 
     readExtensions();
 
@@ -198,6 +198,13 @@ void MainWindow::tabClosed(int index)
         w = NULL;
         documentsWidgets.remove(location);
     }
+}
+
+void MainWindow::onOpenDocumentTab(QString location)
+{
+    if (!documentsWidgets.contains(location)) return;
+    QMainWindow *w = documentsWidgets[location];
+    tabDocuments->setCurrentWidget(w);
 }
 
 void MainWindow::createTreeProject()

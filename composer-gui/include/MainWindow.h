@@ -116,6 +116,7 @@ class MainWindow : public QMainWindow {
         void errorDialog(QString);
         void addPluginWidget(IPluginFactory *fac, IPlugin *plugin,
                              Document *doc);
+        void onOpenDocumentTab(QString location);
 
     signals:
         void writeSettings();
