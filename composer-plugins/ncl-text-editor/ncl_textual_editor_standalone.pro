@@ -1,14 +1,17 @@
+include (../plugins-common.pri)
+
 TEMPLATE    =   app
 TARGET      =   bin/ncl_textual_plugin
 QT          +=  xml
 CONFIG      +=  release
 
-MOC_DIR     =   .moc
-OBJECTS_DIR =   .obj
-UI_DIR      =   .ui
+DEFINES     +=  NCLEDITOR_STANDALONE=\"1\"
+
+LIBS        += -Ldeps/QScintilla-gpl-2.4.6/Qt4
 
 INCLUDEPATH +=  include \
-      ../ncl-layout-view/
+		../outline-view/include/ \
+	      	../ncl-layout-view/
 
 HEADERS     =   include/NCLTextEditorMainWindow.h \
                 include/NCLTextEditor.h \
@@ -19,11 +22,7 @@ HEADERS     =   include/NCLTextEditorMainWindow.h \
                 include/NCLValidator.h \
                 include/NCLParser.h \
                 include/NCLProblemsView.h \
-                include/NCLTreeWidget.h \
-                ../ncl-layout-view/scribblearea.h \
-                ../ncl-layout-view/nclregion.h \
-                ../ncl-layout-view/LayoutView.h \
-                ../ncl-layout-view/attributes.h
+                ../outline-view/include/NCLTreeWidget.h
 
 SOURCES     =   src/main.cpp \
                 src/NCLTextEditorMainWindow.cpp \
@@ -35,11 +34,7 @@ SOURCES     =   src/main.cpp \
                 src/NCLValidator.cpp \
                 src/NCLParser.cpp \
                 src/NCLProblemsView.cpp \
-                src/NCLTreeWidget.cpp \
-                ../ncl-layout-view/scribblearea.cpp \
-                ../ncl-layout-view/nclregion.cpp \
-                ../ncl-layout-view/LayoutView.cpp \
-                ../ncl-layout-view/attributes.cpp
+                ../outline-view/src/NCLTreeWidget.cpp
 
 OTHER_FILES +=  TODO \
                 config/NCL_STRUCTURE \
@@ -48,9 +43,3 @@ OTHER_FILES +=  TODO \
 RESOURCES   =   ncl_textual_plugin.qrc
 
 LIBS        +=  -lqscintilla2
-
-MOC_DIR     =   build
-OBJECTS_DIR =   build
-
-FORMS += \
-    ../ncl-layout-view/LayoutView.ui

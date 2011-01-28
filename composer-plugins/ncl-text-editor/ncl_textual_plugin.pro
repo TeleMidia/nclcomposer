@@ -1,39 +1,14 @@
-TEMPLATE    =   lib
 TARGET      =   ncl_textual_plugin
+include (../plugins-common.pri)
+
 QT          +=  xml
-CONFIG      +=  debug plugin
-
-DEPENDPATH += deps/QScintilla-gpl-2.4.6/qscintilla.pro
-
-MOC_DIR     =   .moc
-OBJECTS_DIR =   .obj
-UI_DIR      =   .ui
 
 INCLUDEPATH +=  include \
-                ../ncl-layout-view/ \
+                ../outline-view/include \
+                ../ncl-layout-view \
                 deps/QScintilla-gpl-2.4.6/Qt4
 
 LIBS += -Ldeps/QScintilla-gpl-2.4.6/Qt4
-
-macx {
-    LIBS += -framework \
-        ComposerCore
-    INCLUDEPATH += /Library/Frameworks/ComposerCore.framework/
-    target.path = $$quote(/Library/Application Support/Composer)
-}
-else:unix {
-    LIBS += -L/usr/local/lib/composer \
-        -lComposerCore
-    INCLUDEPATH += /usr/local/include/composer
-    target.path = $$quote(/usr/local/lib/composer/extension)
-}
-else:win32 {
-    LIBS += -LC:/composer/lib/composer \
-        -lComposerCore1
-    INCLUDEPATH += C:/composer/include/composer
-    target.path = $$quote(C:/composer/lib/composer/)
-}
-
 
 HEADERS     =   include/NCLTextEditorMainWindow.h \
                 include/NCLTextEditor.h \
@@ -42,9 +17,9 @@ HEADERS     =   include/NCLTextEditorMainWindow.h \
                 include/NCLStructure.h \
                 include/MyLexer.h \
                 include/NCLValidator.h \
-                include/NCLParser.h \
                 include/NCLProblemsView.h \
-                include/NCLTreeWidget.h \
+                ../outline-view/include/NCLParser.h \
+                ../outline-view/include/NCLTreeWidget.h \
                 include/NCLTextualViewPlugin.h \
                 include/NCLTextualViewPluginFactory.h \
                 include/NCLTextualViewPlugin_global.h
@@ -57,9 +32,9 @@ SOURCES     =   src/main.cpp \
                 src/NCLStructure.cpp \
                 src/MyLexer.cpp \
                 src/NCLValidator.cpp \
-                src/NCLParser.cpp \
                 src/NCLProblemsView.cpp \
-                src/NCLTreeWidget.cpp \
+                ../outline-view/src/NCLParser.cpp \
+                ../outline-view/src/NCLTreeWidget.cpp \
                 src/NCLTextualViewPlugin.cpp \
                 src/NCLTextualViewPluginFactory.cpp
 
@@ -73,5 +48,9 @@ LIBS        +=  -lqscintilla2
 
 FORMS +=    ../ncl-layout-view/LayoutView.ui \
             ui/TextualPluginPreferencesWidget.ui
+
+ncleditorapp.TEMPLATE    =   app
+ncleditorapp.target      =   ncl_textual_plugin
+QMAKE_EXTRA_TARGETS      +=  ncleditorapp
 
 INSTALLS += target

@@ -1,24 +1,20 @@
-#ifndef NCLTEXTUALVIEWPLUGINFACTORY_H
-#define NCLTEXTUALVIEWPLUGINFACTORY_H
+#ifndef OUTLINEVIEWPLUGINFACTORY_H
+#define OUTLINEVIEWPLUGINFACTORY_H
 
 #include <core/extensions/IPluginFactory.h>
 using namespace composer::core::extension::plugin;
 
 
-#include "NCLTextualViewPlugin_global.h"
-#include "NCLTextualViewPlugin.h"
+#include "OutlineViewPlugin.h"
 
-namespace Ui {
-    class TextPluginPreferencesWidget;
-}
-
-class NCLTextualViewPluginFactory : public QObject,
+class OutlineViewFactory : public QObject,
                                                       public IPluginFactory
 {
     Q_OBJECT
     Q_INTERFACES(IPluginFactory)
+
     public:
-         NCLTextualViewPluginFactory();
+         OutlineViewFactory();
 
          IPlugin* createPluginInstance();
 
@@ -38,10 +34,6 @@ class NCLTextualViewPluginFactory : public QObject,
 
          void applyValues();
 
-private:
-    QFrame *prefPageWidget;
-    Ui::TextPluginPreferencesWidget *prefPageUi;
-
 };
 
-#endif // NCLTEXTUALVIEWPLUGINFACTORY_H
+#endif // OUTLINEVIEWPLUGINFACTORY_H

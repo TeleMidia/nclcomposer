@@ -24,8 +24,7 @@ void NCLTextualViewPlugin::onEntityAdded(QString ID, Entity *entity)
 {
     QString line = "<" + entity->getType() + "> </" + entity->getType() + ">\n";
 
-//    window->getTextEditor()->append(line);
-    window->getNCLTreeWidget()->addElement(0, 0, entity->getType(), entity->getUniqueId(), 0, 0);
+    window->getTextEditor()->append(line);
     //TODO: All
 }
 

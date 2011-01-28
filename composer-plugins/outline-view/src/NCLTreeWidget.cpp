@@ -93,15 +93,3 @@ void NCLTreeWidget::errorNotification(QString message, QString filename, int lin
     emit parserErrorNotify(message, filename, line, column, severity);
 }
 
-/*
-void NCLTreeWidget::showContextMenu(const QPoint& pnt)
-{
-    QList<QAction *> actions;
-    if (m_ui.projectTreeView->indexAt(pnt).isValid()) {
-        actions.append(m_addAction);
-    }
-    if (actions.count() > 0)
-        QMenu::exec(actions, m_ui.projectTreeView->mapToGlobal(pnt));
-}
-*/
-

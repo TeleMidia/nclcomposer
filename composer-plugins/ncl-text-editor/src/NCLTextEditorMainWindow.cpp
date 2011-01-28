@@ -36,8 +36,10 @@ NCLTextEditorMainWindow::NCLTextEditorMainWindow(QWidget *parent):
     createToolBars();
     createStatusBar();
 
+#ifdef NCLEDITOR_STANDALONE
     createOutlineView();
-    // createProblemsView();
+    createProblemsView();
+#endif
     // createLayoutView();
 
     setDockOptions(NCLTextEditorMainWindow::AllowNestedDocks
@@ -53,8 +55,9 @@ NCLTextEditorMainWindow::NCLTextEditorMainWindow(QWidget *parent):
 
     connect(textEdit, SIGNAL(textChanged()),
             this, SLOT(documentWasModified()));
-
+#ifdef NCLEDITOR_STANDALONE
     connect(outlineView, SIGNAL(itemClicked(QTreeWidgetItem*, int)), SLOT(gotoLineOf(QTreeWidgetItem *, int)));
+#endif
 
     setCurrentFile("");
     setUnifiedTitleAndToolBarOnMac(true);
@@ -360,8 +363,9 @@ bool NCLTextEditorMainWindow::saveFile(const QString &fileName)
 
     setCurrentFile(fileName);
     statusBar()->showMessage(tr("File saved"), 2000);
-
+#ifdef NCLEDITOR_STANDALONE
     outlineView->updateFromText(textEdit->text());
+#endif
     return true;
 }
 
@@ -378,7 +382,10 @@ void NCLTextEditorMainWindow::setCurrentFile(const QString &fileName)
         shownName = strippedName(curFile);
 
     setWindowTitle(tr("%1[*] - %2").arg(shownName).arg(tr("Application")));
+
+#ifdef NCLEDITOR_STANDALONE
     outlineView->updateFromText(textEdit->text());
+#endif
 }
 
 QString NCLTextEditorMainWindow::strippedName(const QString &fullFileName)
@@ -424,12 +431,12 @@ void NCLTextEditorMainWindow::insertElement(){
     }
 
     QString element = QInputDialog::getItem(this,
-                                tr("Add child"),
-                                tr("Element name:"),
-                                strlist,
-                                0,
-                                true,
-                                &ok);
+                                            tr("Add child"),
+                                            tr("Element name:"),
+                                            strlist,
+                                            0,
+                                            true,
+                                            &ok);
 
     if(ok && !element.isEmpty()) {
         //Add new Element to OutlineWidget
@@ -514,7 +521,7 @@ void NCLTextEditorMainWindow::createTextView() {
     /** Initialize Text Preferences Pages*/
     //textEditorPreferencesPage = preferences->addPreferencesPage("Text Editor");
     //textEditorPreferencesPage->addInputString("teste", "teste");
- }
+}
 
 void NCLTextEditorMainWindow::showPreferences()
 {
