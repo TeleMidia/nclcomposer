@@ -72,6 +72,10 @@ namespace composer {
                     this->_id = _id;
                 }
 
+                inline void setParent(Entity *entity) {
+                    this->parent = entity;
+                }
+
                 //OBS: This addChild updates the parent referency
                 inline bool addChild(Entity *entity) {
                     QMutexLocker locker(&lockChildren);
@@ -152,12 +156,8 @@ namespace composer {
 
                 inline QString getParentUniqueId() {
                     QMutexLocker loecker(&lockParent);
+                    qDebug() << getType();
                     return parent->getUniqueId();
-                }
-
-                inline QString getParentId() {
-                    QMutexLocker loecker(&lockParent);
-                    return parent->getType();
                 }
 
                 inline void setDeleteChildren(bool _delete) {

@@ -66,6 +66,8 @@ bool NCLDocumentParser::startElement(const QString &,
     for (int i=0 ;i < attributes.count(); i++)
         atts[attributes.qName(i)] = attributes.value(i);
 
+    qDebug() << qName << parentId;
+
     emit addEntity(qName,parentId,atts,false);
 
     return true;

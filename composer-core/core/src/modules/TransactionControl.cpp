@@ -72,8 +72,7 @@ namespace composer {
     void TransactionControl::onRemoveEntity( Entity *entity,
                                          bool force) {
 
-        IPlugin *plugin = qobject_cast<IPlugin *>
-                                                        (QObject::sender());
+        IPlugin *plugin = qobject_cast<IPlugin *> (QObject::sender());
         if(plugin) {
             QString pluginID = plugin->getPluginID();
             try {

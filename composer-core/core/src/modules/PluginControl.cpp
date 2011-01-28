@@ -149,8 +149,7 @@ namespace composer {
         connect(tControl,SIGNAL(entityRemoved(QString,QString)),
                 plugin,SLOT(onEntityRemoved(QString,QString)));
         connect(tControl,SIGNAL(aboutToRemoveEntity(Entity*)),
-                plugin, SLOT(onEntityAboutToRemove(Entity*)),
-                Qt::BlockingQueuedConnection);
+                plugin, SLOT(onEntityAboutToRemove(Entity*)));
 
         /* Connect signals from the plugin to slots of the core */
         connect(plugin,
