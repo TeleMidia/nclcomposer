@@ -1,2 +1,2 @@
 TEMPLATE = subdirs
-SUBDIRS = ncl-text-editor/ncl_textual_plugin.pro debug-console
+SUBDIRS = outline-view ncl-text-editor/ncl_textual_plugin.pro debug-console
