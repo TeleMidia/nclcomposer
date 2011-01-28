@@ -19,11 +19,10 @@ void ProjectTreeView::launchDocument()
             WorkspaceModel *wsModel = (WorkspaceModel*) model();
             QFileSystemModel *fsModel = (QFileSystemModel*)
                                                     wsModel->sourceModel();
-            QString documentPath = fsModel->filePath
-                                   (wsModel->mapToSource(current));
-
             if (! (fsModel->isDir(wsModel->mapToSource(current))) )
             {
+                QString documentPath = fsModel->filePath
+                                           (wsModel->mapToSource(current));
                 QModelIndex cParent = current.parent();
                 while (cParent.isValid() && cParent != rootIndex())
                 {
@@ -32,7 +31,7 @@ void ProjectTreeView::launchDocument()
                 }
                 QString projectId = current.data().toString();
                 DocumentControl::getInstance()->launchDocument
-                                                (projectId,documentPath);
+                                                (projectId, documentPath);
             }
     }
 }

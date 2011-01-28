@@ -25,6 +25,7 @@ public:
 
 private slots:
     void launchDocument();
+    //void newFolder();
 };
 
 #endif // PROJECTTREEVIEW_H

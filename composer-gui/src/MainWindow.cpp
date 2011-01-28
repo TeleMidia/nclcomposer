@@ -20,7 +20,12 @@ MainWindow::MainWindow(QWidget *parent)
 }
 
 MainWindow::~MainWindow() {
-
+    qDebug() << "Destructor MAINWINDOW";
+    if(fileSystemModel)
+    {
+        delete fileSystemModel;
+        fileSystemModel = NULL;
+    }
 }
 
 void MainWindow::initModules()
@@ -145,7 +150,8 @@ void MainWindow::initGUI() {
     tabDocuments = new QTabWidget(this);
     tabDocuments->setMovable(true);
     tabDocuments->setTabsClosable(true);
-    connect(tabDocuments,SIGNAL(tabCloseRequested(int)),SLOT(tabClosed(int)));
+    connect(tabDocuments,SIGNAL(tabCloseRequested(int)),
+            this,SLOT(tabClosed(int)));
     setCentralWidget(tabDocuments);
     createStatusBar();
     createActions();
@@ -169,7 +175,8 @@ void MainWindow::addPluginWidget(IPluginFactory *fac, IPlugin *plugin,
         w = documentsWidgets[location];
     } else {
         w = new QMainWindow(tabDocuments);
-        //w->setDockOptions(AnimatedDocks | ForceTabbedDocks);
+        //w->setDockOptions(AnimatedDocks | AllowTabbedDocks);
+        w->setTabPosition(Qt::AllDockWidgetAreas,QTabWidget::West);
         int index = tabDocuments->addTab(w,projectId + "(" + documentId + ")");
         tabDocuments->setTabToolTip(index, location);
         documentsWidgets[location] = w;
@@ -405,9 +412,9 @@ void MainWindow::closeEvent(QCloseEvent *event)
 
 void MainWindow::cleanUp()
 {
-//    PluginControl::releaseInstance();
-//    LanguageControl::releaseInstance();
-//    DocumentControl::releaseInstance();
+    //PluginControl::releaseInstance();
+    LanguageControl::releaseInstance();
+    DocumentControl::releaseInstance();
 }
 
 void MainWindow::showEditPreferencesDialog()
