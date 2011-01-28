@@ -2,8 +2,7 @@
 #define DOCUMENTCONTROL_H
 
 #include <QObject>
-#include <QtGui/QDesktopServices>
-#include <QUrl>
+#include <QProcess>
 
 #include "PluginControl.h"
 #include "LanguageControl.h"

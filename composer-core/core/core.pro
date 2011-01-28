@@ -5,7 +5,7 @@ QT -= gui
 TEMPLATE = lib
 TARGET = ComposerCore
 VERSION = 1.0
-CONFIG += qt debug
+CONFIG += debug
 MOC_DIR = .mocs
 OBJECTS_DIR = .objs
 

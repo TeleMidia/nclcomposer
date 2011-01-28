@@ -9,7 +9,7 @@ namespace composer {
     }
 
     PluginControl::~PluginControl() {
-         QMultiHash<QString,IPlugin*>::iterator itInst;
+         /*QMultiHash<QString,IPlugin*>::iterator itInst;
          QHash<QString,IPluginFactory*>::iterator itFac;
 
          IPlugin *inst = NULL;
@@ -42,7 +42,7 @@ namespace composer {
          pluginFactories.clear();
          pluginInstances.clear();
          pluginsByType.clear();
-         transactionControls.clear();
+         transactionControls.clear();*/
 
     }
 
@@ -59,10 +59,13 @@ namespace composer {
             return;
         }
         
-        foreach (QString fileName, pluginsDir.entryList(QDir::Files)) {
+        foreach (QString fileName, pluginsDir.entryList(QDir::Files
+                                                     | QDir::NoSymLinks)) {
+
              QPluginLoader loader(pluginsDir.absoluteFilePath(fileName));
              QObject *plugin = loader.instance();
 
+             qDebug() << "loadingPlugin( " << fileName << ")";
              if (plugin)
              {
                  pluginFactory = qobject_cast<IPluginFactory*> (plugin);
@@ -80,8 +83,8 @@ namespace composer {
                              pluginsByType.insert(*it,
                                                   pluginFactory->getPluginID());
                          }
-                     }//fim OK insertMap
-                 }//fim if OK pluginFactory
+                     } else loader.unload();
+                 }
              }//fim OK load
              else {
                 qDebug() << "PluginControl::loadPlugins failed to load"

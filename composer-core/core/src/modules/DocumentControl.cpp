@@ -21,7 +21,7 @@ DocumentControl::~DocumentControl()
             delete doc;
             doc = NULL;
         } else {
-                qDebug() << "Error: Failed to releasePlugins ";
+            qDebug() << "Error: Failed to releasePlugins ";
         }
     }
 }
@@ -54,9 +54,15 @@ void DocumentControl::launchDocument(QString projectId, QString location)
     LanguageType type = Utilities::getLanguageTypeByExtension(ext);
 
     if(type == NONE) {
-        //FIXME: Use QProcess to spawn a process
-        //TEST: test if executable files
-        //QDesktopServices::openUrl(QUrl("file:///"+location));
+        //TEST: WINDOWS
+        QProcess spaw;
+        QStringList args;
+        args.append(location);
+#ifdef Q_WS_MAC
+        spaw.startDetached("/usr/bin/open", args);
+#else
+        spaw.startDetached("/usr/bin/gnome-open", args);
+#endif
         return;
     }
 

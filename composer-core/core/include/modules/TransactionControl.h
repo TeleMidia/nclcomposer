@@ -2,7 +2,6 @@
 #define TRANSACTIONCONTROL_H
 
 #include <QObject>
-#include <QMutex>
 #include <QDebug>
 
 #include <exception>
@@ -25,7 +24,6 @@ namespace module {
         Q_OBJECT
         private:
             Document *doc;
-            QMutex lockAtt;
 
         public:
             TransactionControl(Document *doc);

@@ -11,10 +11,6 @@
 #include <QHashIterator>
 #include <QDebug>
 
-#include <map>
-#include <string>
-using namespace std;
-
 #include "../model/Document.h"
 using namespace composer::core::model;
 

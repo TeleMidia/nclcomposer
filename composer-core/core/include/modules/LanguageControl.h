@@ -3,7 +3,6 @@
 
 #include <QObject>
 #include <QMap>
-#include <QMutex>
 #include <QPluginLoader>
 #include <QDir>
 
@@ -25,7 +24,6 @@ namespace composer {
                     private:
                         LanguageControl();
                         ~LanguageControl();
-                        QMutex lockProfiles;
                         QMap<LanguageType, ILanguageProfile*> profiles;
                     public:
                         void loadProfiles(QString profilesDirPath);

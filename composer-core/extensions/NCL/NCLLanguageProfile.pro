@@ -9,14 +9,14 @@ QT       += xml
 
 TARGET = NCLLanguageProfile
 TEMPLATE = lib
-CONFIG += plugin
+CONFIG += debug plugin
 
 
 macx {
     LIBS += -framework \
         ComposerCore
     INCLUDEPATH += /Library/Frameworks/ComposerCore.framework/
-    DESTDIR = $$quote(/Library/Application Support/Composer)
+    target.path = $$quote(/Library/Application Support/Composer)
 }
 else:unix {
     LIBS += -L/usr/local/lib/composer \
@@ -24,7 +24,7 @@ else:unix {
     INCLUDEPATH += ../../include/ \
                 /usr/local/include/composer
 
-    DESTDIR = $$quote(/usr/local/lib/composer/extension)
+    target.path = $$quote(/usr/local/lib/composer/extension)
 }
 
 DEFINES += NCLLANGUAGEPROFILE_LIBRARY
@@ -35,3 +35,5 @@ SOURCES += NCLLanguageProfile.cpp \
 HEADERS += NCLLanguageProfile.h\
         NCLLanguageProfile_global.h \
     NCLDocumentParser.h
+
+INSTALLS += target
