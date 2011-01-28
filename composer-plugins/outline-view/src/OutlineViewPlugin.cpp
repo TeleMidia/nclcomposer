@@ -11,8 +11,6 @@ OutlineViewPlugin::OutlineViewPlugin()
 
 OutlineViewPlugin::~OutlineViewPlugin()
 {
-    delete window;
-    window = NULL;
 }
 
 QWidget* OutlineViewPlugin::getWidget()

@@ -53,8 +53,7 @@ NCLTextEditorMainWindow::NCLTextEditorMainWindow(QWidget *parent):
 
     readSettings();
 
-    connect(textEdit, SIGNAL(textChanged()),
-            this, SLOT(documentWasModified()));
+    connect(textEdit, SIGNAL(textChanged()), this, SLOT(documentWasModified()));
 #ifdef NCLEDITOR_STANDALONE
     connect(outlineView, SIGNAL(itemClicked(QTreeWidgetItem*, int)), SLOT(gotoLineOf(QTreeWidgetItem *, int)));
 #endif

@@ -2,11 +2,27 @@
 
 NCLTreeWidget::NCLTreeWidget(QWidget *parent) : QTreeWidget(parent)
 {
+    setContextMenuPolicy(Qt::ActionsContextMenu);
+
+    createActions();
+    createMenus();
 }
 
 NCLTreeWidget::~NCLTreeWidget()
 {
 
+}
+
+void NCLTreeWidget::createActions ()
+{
+    insertNodeAct = new QAction(QIcon(":/images/save.png"), tr("&Add child"), this);
+//    connect(insertNodeChildAct, SIGNAL(triggered()), this, SLOT(insertElement()));
+    addAction(insertNodeAct);
+}
+
+void NCLTreeWidget::createMenus ()
+{
+    elementMenu = new QMenu(this);
 }
 
 bool NCLTreeWidget::updateFromText(QString text)
@@ -23,7 +39,7 @@ bool NCLTreeWidget::updateFromText(QString text)
     setHeaderLabels(labels);
     header()->setStretchLastSection(false);
 
-    // FIXME:This commented option has
+    // FIXME: Uncommenting this option brings some performance problems.
     // header()->setResizeMode(QHeaderView::ResizeToContents);
 
     //TODO: Transform this parser in a puglin
