@@ -176,6 +176,7 @@ void MainWindow::addPluginWidget(IPluginFactory *fac, IPlugin *plugin,
     } else {
         w = new QMainWindow(tabDocuments);
         //w->setDockOptions(AnimatedDocks | AllowTabbedDocks);
+        w->setDockNestingEnabled(true);
         w->setTabPosition(Qt::AllDockWidgetAreas,QTabWidget::West);
         int index = tabDocuments->addTab(w,projectId + "(" + documentId + ")");
         tabDocuments->setTabToolTip(index, location);
@@ -209,6 +210,7 @@ void MainWindow::tabClosed(int index)
         delete w;
         w = NULL;
         documentsWidgets.remove(location);
+        firstDock.remove(location);
     }
 }
 
