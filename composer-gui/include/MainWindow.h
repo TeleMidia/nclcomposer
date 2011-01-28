@@ -49,6 +49,7 @@ class MainWindow : public QMainWindow {
     private:
         QTabWidget *tabDocuments;
         QMap<QString,QMainWindow*> documentsWidgets;
+        QMap<QString,QDockWidget*> firstDock;
 
         QMenu *fileMenu;
         QMenu *helpMenu;

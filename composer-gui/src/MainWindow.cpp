@@ -182,7 +182,7 @@ void MainWindow::addPluginWidget(IPluginFactory *fac, IPlugin *plugin,
         documentsWidgets[location] = w;
     }
 
-    QDockWidget *dock = new QDockWidget(fac->getPluginName(), w);
+    QDockWidget *dock = new QDockWidget(fac->getPluginName());
     dock->setAllowedAreas(Qt::AllDockWidgetAreas);
     dock->setFeatures(QDockWidget::DockWidgetClosable |
                       QDockWidget::DockWidgetMovable);
@@ -190,7 +190,12 @@ void MainWindow::addPluginWidget(IPluginFactory *fac, IPlugin *plugin,
     dock->setWidget(pW);
     w->addDockWidget(Qt::BottomDockWidgetArea, dock, Qt::Horizontal);
     tabDocuments->setCurrentWidget(w);
-    //dock->show();
+
+    if(firstDock.contains(location)) {
+        w->tabifyDockWidget(firstDock[location], dock);
+    }
+    else firstDock[location] = dock;
+    // dock->show();
 }
 
 void MainWindow::tabClosed(int index)
