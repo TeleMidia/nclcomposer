@@ -75,7 +75,6 @@ namespace composer {
     bool Document::addEntity(Entity* entity, QString parentId)
         throw (EntityNotFound,ParentNotFound)
     {
-        qDebug() << "Document::addEntity" << parentId;
         QMutexLocker locker(&lockEntities);
         if (!entities.contains(parentId)) {
             throw ParentNotFound(entity->getType(),entity->getType(),
