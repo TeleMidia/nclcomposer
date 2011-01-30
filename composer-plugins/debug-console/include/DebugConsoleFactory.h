@@ -7,13 +7,15 @@
 #include <core/extensions/IPluginFactory.h>
 using namespace composer::core::extension::plugin;
 
-class DEBUGCONSOLESHARED_EXPORT DebugConsoleFactory : public QObject,
-                                                      public IPluginFactory
+class DebugConsoleFactory : public QObject,
+                            public IPluginFactory
 {
     Q_OBJECT
     Q_INTERFACES(IPluginFactory)
     public:
          DebugConsoleFactory();
+
+         ~DebugConsoleFactory();
 
          IPlugin* createPluginInstance();
 

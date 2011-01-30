@@ -6,6 +6,11 @@ DebugConsoleFactory::DebugConsoleFactory()
 
 }
 
+DebugConsoleFactory::~DebugConsoleFactory()
+{
+
+}
+
 IPlugin* DebugConsoleFactory::createPluginInstance()
 {
     return new DebugConsolePlugin();
