@@ -11,14 +11,14 @@ namespace composer {
 
         LanguageControl::~LanguageControl()
         {
-            /*QMap<LanguageType, ILanguageProfile*>::iterator it;
+            QMap<LanguageType, ILanguageProfile*>::iterator it;
 
             for(it = profiles.begin(); it != profiles.end(); it++) {
                 ILanguageProfile *pf = it.value();
                 delete pf;
                 pf = NULL;
             }
-            profiles.clear();*/
+            profiles.clear();
         }
 
         void LanguageControl::loadProfiles(QString profilesDirPath)

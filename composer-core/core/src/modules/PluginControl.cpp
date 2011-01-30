@@ -9,7 +9,7 @@ namespace composer {
     }
 
     PluginControl::~PluginControl() {
-         /*QMultiHash<QString,IPlugin*>::iterator itInst;
+         QMultiHash<QString,IPlugin*>::iterator itInst;
          QHash<QString,IPluginFactory*>::iterator itFac;
 
          IPlugin *inst = NULL;
@@ -42,7 +42,7 @@ namespace composer {
          pluginFactories.clear();
          pluginInstances.clear();
          pluginsByType.clear();
-         transactionControls.clear();*/
+         transactionControls.clear();
 
     }
 
@@ -58,6 +58,12 @@ namespace composer {
                              arg(pluginsDirPath));
             return;
         }
+
+        QStringList filter;
+        filter.append("*.so");
+        filter.append("*.dylib");
+        filter.append("*.dll");
+        pluginsDir.setNameFilters(filter);
         
         foreach (QString fileName, pluginsDir.entryList(QDir::Files
                                                      | QDir::NoSymLinks)) {

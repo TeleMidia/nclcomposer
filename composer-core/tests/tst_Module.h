@@ -4,10 +4,10 @@
 #include <QObject>
 #include <QTest>
 
-#include <modules/DocumentControl.h>
-#include <modules/LanguageControl.h>
-#include <modules/PluginControl.h>
-#include <modules/TransactionControl.h>
+#include <core/modules/DocumentControl.h>
+#include <core/modules/LanguageControl.h>
+#include <core/modules/PluginControl.h>
+#include <core/modules/TransactionControl.h>
 using namespace composer::core::module;
 
 class tst_Module : public QObject
