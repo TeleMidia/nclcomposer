@@ -13,9 +13,11 @@ CONFIG += debug plugin
 
 
 macx {
-    LIBS += -framework \
+    LIBS += -L../../core \
+        -F../../core \
+        -framework \
         ComposerCore
-    INCLUDEPATH += /Library/Frameworks/ComposerCore.framework/
+    INCLUDEPATH +=../../core/include
     target.path = $$quote(/Library/Application Support/Composer)
 }
 else:unix {

@@ -11,14 +11,14 @@ namespace composer {
 
         LanguageControl::~LanguageControl()
         {
-            QMap<LanguageType, ILanguageProfile*>::iterator it;
+            /*QMap<LanguageType, ILanguageProfile*>::iterator it;
 
             for(it = profiles.begin(); it != profiles.end(); it++) {
                 ILanguageProfile *pf = it.value();
                 delete pf;
                 pf = NULL;
             }
-            profiles.clear();
+            profiles.clear();*/
         }
 
         void LanguageControl::loadProfiles(QString profilesDirPath)
@@ -33,6 +33,11 @@ namespace composer {
                          "directory (%1) does not exist!").arg(profilesDirPath));
                     return;
                 }
+                QStringList filter;
+                filter.append("*.so");
+                filter.append("*.dylib");
+                filter.append("*.dll");
+                profileDir.setNameFilters(filter);
 
                 foreach (QString fileName, profileDir.entryList(QDir::Files
                      | QDir::NoSymLinks)) {

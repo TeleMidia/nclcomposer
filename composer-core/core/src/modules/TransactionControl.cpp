@@ -7,8 +7,8 @@ namespace composer {
 
     TransactionControl::TransactionControl(Document *doc) {
         this->doc = doc;
-        qDebug() <<  "TransactionControl::TransactionControl("
-                <<  doc->getAttribute("id") << ")";
+        /*qDebug() <<  "TransactionControl::TransactionControl("
+                <<  doc->getAttribute("id") << ")";*/
     }
 
     TransactionControl::~TransactionControl() {
