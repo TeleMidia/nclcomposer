@@ -4,19 +4,19 @@ MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent) {
 
     user_directory_ext = "";
-
+    fileSystemDock = NULL;
 #ifdef Q_WS_MAC
     defaultEx = "/Library/Application Support/Composer";
 #else
     defaultEx = "/usr/local/lib/composer";
 #endif
 
+    wsSwitch = new WorkspaceSwitch(this);
+    connect(wsSwitch,SIGNAL(accepted()),SLOT(switchWorkspace()));
     initGUI();
     initModules();
     readSettings();
     preferences = new PreferencesDialog(this);
-
-
 }
 
 MainWindow::~MainWindow() {
@@ -97,24 +97,6 @@ QString MainWindow::promptChooseExtDirectory()
     }
 }
 
-QString MainWindow::promptChooseWorkspace()
-{
-    QMessageBox mBox;
-    mBox.setText(tr("Previous workspace was not set!"));
-    mBox.setInformativeText(tr("Please set a new workspace to start"));
-    mBox.setStandardButtons(QMessageBox::Ok | QMessageBox::Cancel);
-    mBox.setDefaultButton(QMessageBox::Ok);
-    mBox.setIcon(QMessageBox::Information);
-    if (mBox.exec() == QMessageBox::Cancel) return "";
-    else {
-            QString dirName = QFileDialog::getExistingDirectory(
-                    this, tr("Select Directory"),
-                    QDir::homePath(), QFileDialog::ShowDirsOnly);
-            return dirName;
-
-        }
-}
-
 void MainWindow::readSettings() {
 #ifdef Q_WS_MAC
     QSettings settings("telemidia.pucrio.br", "composer");
@@ -129,15 +111,19 @@ void MainWindow::readSettings() {
     settings.beginGroup("workspace");
     if (!settings.contains("path"))
     {
-        work_space_path = promptChooseWorkspace();
-        if(work_space_path == "")
-            work_space_path = QDir::homePath()+QDir::separator()+"composer";
+        wsSwitch->exec();
+        if (wsSwitch->result() == QDialog::Accepted)
+            work_space_path = wsSwitch->getWorspacePath();
     } else {
         work_space_path = settings.value("path").toString();
         QDir dir(work_space_path);
         if (!dir.exists())
-            work_space_path = promptChooseWorkspace();
+        {
+            if (wsSwitch->result() == QDialog::Accepted)
+                work_space_path = wsSwitch->getWorspacePath();
+        }
     }
+    qDebug() << "work_space_path" << work_space_path;
     createTreeProject();
     settings.endGroup();
 }
@@ -175,7 +161,6 @@ void MainWindow::addPluginWidget(IPluginFactory *fac, IPlugin *plugin,
         w = documentsWidgets[location];
     } else {
         w = new QMainWindow(tabDocuments);
-        //w->setDockOptions(AnimatedDocks | AllowTabbedDocks);
         w->setDockNestingEnabled(true);
         w->setTabPosition(Qt::AllDockWidgetAreas,QTabWidget::West);
         int index = tabDocuments->addTab(w,projectId + "(" + documentId + ")");
@@ -196,7 +181,6 @@ void MainWindow::addPluginWidget(IPluginFactory *fac, IPlugin *plugin,
         w->tabifyDockWidget(firstDock[location], dock);
     }
     else firstDock[location] = dock;
-    // dock->show();
 }
 
 void MainWindow::tabClosed(int index)
@@ -221,15 +205,12 @@ void MainWindow::onOpenDocumentTab(QString location)
     tabDocuments->setCurrentWidget(w);
 }
 
-void MainWindow::createTreeProject()
+void MainWindow::switchWorkspace()
 {
-    fileSystemDock = new QDockWidget(tr("Projects"), this);
-    fileSystemDock->setObjectName("projectTree");
 
-    fileSystemView = new ProjectTreeView(this);
-    workspace_model = new WorkspaceModel(fileSystemView);
+    if (wsSwitch->getWorspacePath() != "")
+        work_space_path = wsSwitch->getWorspacePath();
 
-    fileSystemModel = new QFileSystemModel();
     QModelIndex index = fileSystemModel->setRootPath(work_space_path);
 
     workspace_model->setSourceModel(fileSystemModel);
@@ -239,6 +220,19 @@ void MainWindow::createTreeProject()
 
     fileSystemView->setRootIndex(workspace_model->mapFromSource
                                  (index));
+}
+
+void MainWindow::createTreeProject()
+{
+    fileSystemDock = new QDockWidget(tr("Projects"), this);
+    fileSystemDock->setObjectName("projectTree");
+
+    fileSystemView = new ProjectTreeView(this);
+    workspace_model = new WorkspaceModel(fileSystemView);
+
+    fileSystemModel = new QFileSystemModel();
+
+    switchWorkspace();
 
     fileSystemView->setSortingEnabled(false);
     fileSystemView->setHeaderHidden(true);
@@ -272,6 +266,8 @@ void MainWindow::createMenus() {
     fileMenu->addAction(newProjectAct);
     fileMenu->addAction(newDocumentAct);
     fileMenu->addSeparator();
+    fileMenu->addAction(switchWS);
+    fileMenu->addSeparator();
     fileMenu->addAction(exitAct);
 
     editMenu = menuBar()->addMenu(tr("&Edit"));
@@ -300,7 +296,6 @@ void MainWindow::createAbout()
 
 
     QPushButton *bOk = new QPushButton(tr("OK"),aboutDialog);
-    //bOk->setMaximumWidth(5);
     connect(bOk,SIGNAL(clicked()),aboutDialog,SLOT(close()));
 
     QGridLayout *gLayout = new QGridLayout(aboutDialog);
@@ -367,6 +362,9 @@ void MainWindow::createActions() {
     connect (editPreferencesAct, SIGNAL(triggered()), this,
              SLOT(showEditPreferencesDialog()));
 
+    switchWS = new QAction(tr("Switch Workspace"),this);
+    connect(switchWS,SIGNAL(triggered()),SLOT(showSwitchWorkspaceDialog()));
+
     exitAct = new QAction(tr("E&xit"), this);
     exitAct->setShortcut(tr("Ctrl+Q"));
     exitAct->setStatusTip(tr("Exit Composer application"));
@@ -419,13 +417,18 @@ void MainWindow::closeEvent(QCloseEvent *event)
 
 void MainWindow::cleanUp()
 {
-    //PluginControl::releaseInstance();
     LanguageControl::releaseInstance();
     DocumentControl::releaseInstance();
+    PluginControl::releaseInstance();
 }
 
 void MainWindow::showEditPreferencesDialog()
 {
     preferences->show();
+}
+
+void MainWindow::showSwitchWorkspaceDialog()
+{
+    wsSwitch->show();
 }
 

@@ -46,7 +46,8 @@ SOURCES += main.cpp \
     src/wizard/DocumentEntryPage.cpp \
     src/PreferencesDialog.cpp \
     src/WorkspaceModel.cpp \
-    src/ProjectTreeView.cpp
+    src/ProjectTreeView.cpp \
+    src/WorkspaceSwitch.cpp
 
 HEADERS += include/MainWindow.h \
     include/wizard/ProjectWizard.h \
@@ -55,7 +56,8 @@ HEADERS += include/MainWindow.h \
     include/wizard/DocumentEntryPage.h \
     include/PreferencesDialog.h \
     include/WorkspaceModel.h \
-    include/ProjectTreeView.h
+    include/ProjectTreeView.h \
+    include/WorkspaceSwitch.h
 
 RESOURCES += images.qrc
 

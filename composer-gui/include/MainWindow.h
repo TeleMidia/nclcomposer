@@ -39,6 +39,7 @@ using namespace composer::core::module;
 
 #include "wizard/ProjectWizard.h"
 #include "wizard/DocumentWizard.h"
+#include "WorkspaceSwitch.h"
 #include "PreferencesDialog.h"
 #include "WorkspaceModel.h"
 #include "ProjectTreeView.h"
@@ -65,6 +66,7 @@ class MainWindow : public QMainWindow {
         QAction *projectWindowAct;
         QAction *editPreferencesAct;
         QAction *exitAct;
+        QAction *switchWS;
 
         QListWidget *profilesExt;
         QListWidget *pluginsExt;
@@ -72,6 +74,7 @@ class MainWindow : public QMainWindow {
         ProjectWizard *projectWizard;
         DocumentWizard *documentWizard;
         PreferencesDialog *preferences;
+        WorkspaceSwitch *wsSwitch;
 
         QFileSystemModel *fileSystemModel;
         WorkspaceModel *workspace_model;
@@ -87,7 +90,6 @@ class MainWindow : public QMainWindow {
 
     private:
         QString promptChooseExtDirectory();
-        QString promptChooseWorkspace();
         void initModules();
         void initGUI();
         void createAbout();
@@ -106,6 +108,7 @@ class MainWindow : public QMainWindow {
         void about();
         void updateWindowMenu();
         void showEditPreferencesDialog();
+        void showSwitchWorkspaceDialog();
         void addProfileLoaded(QString name, QString fileName);
         void tabClosed(int index);
 
@@ -118,6 +121,7 @@ class MainWindow : public QMainWindow {
         void addPluginWidget(IPluginFactory *fac, IPlugin *plugin,
                              Document *doc);
         void onOpenDocumentTab(QString location);
+        void switchWorkspace();
 
     signals:
         void writeSettings();
