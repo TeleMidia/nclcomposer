@@ -32,10 +32,8 @@ namespace composer{
                     void openDocumentTab(QString);
                     void notifyError(QString);
                 public slots:
-                    void closeDocument(QString location);
+                    bool closeDocument(QString location);
                     void launchDocument(QString projectId, QString location);
-                    //void closeDocument(Document *doc) {}
-
                 };
 
                 }

@@ -46,8 +46,40 @@ namespace composer {
 
     }
 
-    void PluginControl::loadPlugins(QString pluginsDirPath) {
+    void PluginControl::loadPlugin(QString fileName)
+    {
         IPluginFactory *pluginFactory = NULL;
+        QPluginLoader loader(fileName);
+        QObject *plugin = loader.instance();
+
+        qDebug() << "loadingPlugin( " << fileName << ")";
+        if (plugin)
+        {
+            pluginFactory = qobject_cast<IPluginFactory*> (plugin);
+            if (pluginFactory)
+            {
+                QString pluginID = pluginFactory->getPluginID();
+                if (!pluginFactories.contains(pluginID))
+                {
+                    pluginFactories[pluginID] = pluginFactory;
+                    QList<LanguageType> types =
+                            pluginFactory->getSupportLanguages();
+                    QList<LanguageType>::iterator it;
+                    for (it = types.begin() ; it!= types.end(); it++)
+                    {
+                        pluginsByType.insert(*it,
+                                             pluginFactory->getPluginID());
+                    }
+                } else loader.unload();
+            }
+        }//fim OK load
+        else {
+           qDebug() << "PluginControl::loadPlugins failed to load"
+                    << "(" << fileName << ")";
+        }
+    }
+
+    void PluginControl::loadPlugins(QString pluginsDirPath) {
 
         QDir pluginsDir = QDir(pluginsDirPath);
         pluginsDir.setFilter(QDir::Files | QDir::NoSymLinks);
@@ -67,35 +99,7 @@ namespace composer {
         
         foreach (QString fileName, pluginsDir.entryList(QDir::Files
                                                      | QDir::NoSymLinks)) {
-
-             QPluginLoader loader(pluginsDir.absoluteFilePath(fileName));
-             QObject *plugin = loader.instance();
-
-             qDebug() << "loadingPlugin( " << fileName << ")";
-             if (plugin)
-             {
-                 pluginFactory = qobject_cast<IPluginFactory*> (plugin);
-                 if (pluginFactory)
-                 {
-                     QString pluginID = pluginFactory->getPluginID();
-                     if (!pluginFactories.contains(pluginID))
-                     {
-                         pluginFactories[pluginID] = pluginFactory;
-                         QList<LanguageType> types =
-                                 pluginFactory->getSupportLanguages();
-                         QList<LanguageType>::iterator it;
-                         for (it = types.begin() ; it!= types.end(); it++)
-                         {
-                             pluginsByType.insert(*it,
-                                                  pluginFactory->getPluginID());
-                         }
-                     } else loader.unload();
-                 }
-             }//fim OK load
-             else {
-                qDebug() << "PluginControl::loadPlugins failed to load"
-                         << "(" << fileName << ")";
-             }
+            loadPlugin(pluginsDir.absoluteFilePath(fileName));
         }//fim foreach
     }//fim function
 

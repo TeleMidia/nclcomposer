@@ -57,6 +57,7 @@ namespace composer {
 
         public:
             void loadPlugins(QString pluginsDirPath);
+            void loadPlugin(QString fileName);
             QList<IPluginFactory*> getLoadedPlugins();
             bool releasePlugins(Document *doc);
 

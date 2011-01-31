@@ -27,8 +27,10 @@ namespace composer {
                         QMap<LanguageType, ILanguageProfile*> profiles;
                     public:
                         void loadProfiles(QString profilesDirPath);
+                        void loadProfile(QString fileName);
                         ILanguageProfile*
                                 getProfileFromType(LanguageType type);
+                        QList<ILanguageProfile*> getLoadedProfiles();
                     signals:
                         void notifyError(QString);
                         void notifyLoadedProfile(QString name,QString fileName);

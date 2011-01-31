@@ -26,9 +26,10 @@ DocumentControl::~DocumentControl()
     }
 }
 
-void DocumentControl::closeDocument(QString location)
+bool DocumentControl::closeDocument(QString location)
 {
-    if (!openDocuments.contains(location)) return;
+    if (!openDocuments.contains(location)) return false;
+
     Document *doc = openDocuments[location];
     if (PluginControl::getInstance()->releasePlugins(doc))
     {
@@ -37,7 +38,9 @@ void DocumentControl::closeDocument(QString location)
         openDocuments.remove(location);
     } else {
         qDebug() << "Error: Failed to close document (" << location << " )";
+        return false;
     }
+    return true;
 }
 
 void DocumentControl::launchDocument(QString projectId, QString location)
