@@ -22,7 +22,9 @@ target.path = $$INSTALLBASE
 INCLUDEPATH += include/
 
 macx { 
-    LIBS += -framework \
+    LIBS += -L/Library/Frameworks \
+            -lqscintilla2 \
+        -framework \
         ComposerCore
     INCLUDEPATH += /Library/Frameworks/ComposerCore.framework/
 }
