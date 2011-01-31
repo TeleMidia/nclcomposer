@@ -4,8 +4,7 @@ namespace composer {
     namespace core {
             namespace module {
 
-DocumentControl::DocumentControl(QObject *parent) :
-QObject(parent)
+DocumentControl::DocumentControl()
 {
 }
 

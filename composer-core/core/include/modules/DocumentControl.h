@@ -24,7 +24,7 @@ namespace composer{
                     Q_OBJECT
                     friend class Singleton<DocumentControl>;
                 private:
-                    explicit DocumentControl(QObject *parent = 0);
+                    DocumentControl();
                     ~DocumentControl();
                     QMap<QString, Document*> openDocuments;
 

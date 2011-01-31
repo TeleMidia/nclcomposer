@@ -52,7 +52,7 @@ namespace composer {
         QPluginLoader loader(fileName);
         QObject *plugin = loader.instance();
 
-        qDebug() << "loadingPlugin( " << fileName << ")";
+        //qDebug() << "loadingPlugin( " << fileName << ")";
         if (plugin)
         {
             pluginFactory = qobject_cast<IPluginFactory*> (plugin);

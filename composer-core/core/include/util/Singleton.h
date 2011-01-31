@@ -2,7 +2,7 @@
 #define __SINGLETON_HPP_
 
 #include <QObject>
-#include <QMutex>
+#include <QDebug>
 
 #include <assert.h>
 
@@ -17,7 +17,6 @@ namespace util {
 
     public:
       static T* getInstance() {
-          QMutexLocker locker(&instMutex);
           if(!m_pInstance) {
               m_pInstance = new T;
           }
@@ -25,7 +24,6 @@ namespace util {
           return m_pInstance;
       }
       static void releaseInstance() {
-          QMutexLocker locker(&instMutex);
           if (m_pInstance != NULL) {
               delete m_pInstance;
               m_pInstance = NULL;
@@ -39,10 +37,9 @@ namespace util {
       Singleton(Singleton const&) {}
       Singleton& operator=(Singleton const&){}
       static T* m_pInstance;
-      static QMutex instMutex;
     };
+
     template <class T> T* Singleton<T>::m_pInstance=NULL;
-    template <class T> QMutex Singleton<T>::instMutex;
 }
 }
 }

@@ -6,7 +6,6 @@ namespace composer {
 
         LanguageControl::LanguageControl()
         {
-
         }
 
         LanguageControl::~LanguageControl()
@@ -15,17 +14,30 @@ namespace composer {
 
             for(it = profiles.begin(); it != profiles.end(); it++) {
                 ILanguageProfile *pf = it.value();
+                assert(pf != NULL);
                 delete pf;
                 pf = NULL;
             }
             profiles.clear();
         }
 
-        void LanguageControl::loadProfile(QString fileName)
+        bool LanguageControl::removeProfile(LanguageType type)
+        {
+            if (!profiles.contains(type)) return false;
+            ILanguageProfile *lp = profiles[type];
+            assert(lp != NULL);
+            if (lp == NULL) return false;
+            delete lp;
+            lp = NULL;
+            profiles.remove(type);
+            return true;
+        }
+
+        ILanguageProfile* LanguageControl::loadProfile(QString fileName)
         {
             ILanguageProfile *lProfile = NULL;
             QPluginLoader loader(fileName);
-            qDebug() << "trying to load: " << fileName;
+            //qDebug() << "trying to load: " << fileName;
             QObject *profile = loader.instance();
             if (profile) {
                 lProfile = qobject_cast<ILanguageProfile*> (profile);
@@ -37,14 +49,13 @@ namespace composer {
                         "Profile for language (" <<
                         Utilities::getExtensionForLanguageType(type) <<
                                 ") already exists";
-                        loader.unload();
                     } else {
                       profiles[type] = lProfile;
-                      emit notifyLoadedProfile(
-                              lProfile->getProfileName(),fileName);
                     }
                 }
-            }
+            } else qDebug() << "Failed to load languageControl ("
+                            << fileName << ")";
+            return lProfile;
         }
 
         void LanguageControl::loadProfiles(QString profilesDirPath)
