@@ -2,8 +2,6 @@
 
 NCLDocumentParser::NCLDocumentParser(Document *doc)
 {
-    qDebug() << "NCLDocumentParser::NCLDocumentParser("
-             << doc->getLocation() << ")";
     this->doc = doc;
 }
 

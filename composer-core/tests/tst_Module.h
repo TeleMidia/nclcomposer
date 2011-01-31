@@ -2,7 +2,9 @@
 #define TST_MODULEALLOC_H
 
 #include <QObject>
-#include <QTest>
+//#include <QtGui>
+#include <QtTest/QtTest>
+
 
 #include <core/modules/DocumentControl.h>
 #include <core/modules/LanguageControl.h>
@@ -25,7 +27,12 @@ public slots:
 
 private slots:
     void initTestCase();
+    void init();
+    void cleanup();
     void languageProfile();
+    void pluginProfile();
+    void launchDocument();
+    void launchDocument_data();
     void cleanupTestCase();
 };
 

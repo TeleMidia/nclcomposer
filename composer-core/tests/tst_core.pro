@@ -1,6 +1,6 @@
-QT -= gui
-QT += testlib
+#QT += testlib
 CONFIG += testcase
+CONFIG  += qtestlib
 
 macx {
     LIBS += -L../core \

@@ -46,7 +46,7 @@ namespace composer {
 
     }
 
-    void PluginControl::loadPlugin(QString fileName)
+    IPluginFactory* PluginControl::loadPlugin(QString fileName)
     {
         IPluginFactory *pluginFactory = NULL;
         QPluginLoader loader(fileName);
@@ -70,13 +70,14 @@ namespace composer {
                         pluginsByType.insert(*it,
                                              pluginFactory->getPluginID());
                     }
-                } else loader.unload();
+                }
             }
         }//fim OK load
         else {
            qDebug() << "PluginControl::loadPlugins failed to load"
                     << "(" << fileName << ")";
         }
+        return pluginFactory;
     }
 
     void PluginControl::loadPlugins(QString pluginsDirPath) {
@@ -148,8 +149,6 @@ namespace composer {
 
     void PluginControl::launchNewPlugin(IPlugin *plugin,
                                         TransactionControl *tControl) {
-        qDebug() << "PluginControl::launchNewPlugin(" << plugin->getPluginID()
-                 << ")";
 
         /* Connect signals from the core to slots in the plugins */
         connect(tControl,SIGNAL(entityAdded(QString,Entity*)),
@@ -223,7 +222,6 @@ namespace composer {
                IPlugin *inst = *it;
                //TODO - chamar o save antes de dar o release na instancia
                IPluginFactory *fac = pluginFactories[inst->getPluginID()];
-               qDebug() << "releasePlug( " << fac->getPluginName() << " )";
                fac->releasePluginInstance(inst);
             }
             pluginInstances.remove(doc->getLocation());

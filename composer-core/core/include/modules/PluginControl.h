@@ -47,7 +47,7 @@ namespace composer {
             QMultiHash<LanguageType, QString> pluginsByType;
             /* TC by DocumentID */
             QHash<QString,TransactionControl*> transactionControls;
-            /* Plugin Instance by DocumentID */
+            /* Plugin Instance by DocumentLocation */
             QMultiHash<QString,IPlugin*> pluginInstances;
 
             void launchNewPlugin(IPlugin *plugin,
@@ -57,7 +57,7 @@ namespace composer {
 
         public:
             void loadPlugins(QString pluginsDirPath);
-            void loadPlugin(QString fileName);
+            IPluginFactory* loadPlugin(QString fileName);
             QList<IPluginFactory*> getLoadedPlugins();
             bool releasePlugins(Document *doc);
 
