@@ -17,13 +17,15 @@ private:
     LanguageControl *lgControl;
     DocumentControl *docControl;
     PluginControl *pgControl;
+    QString profileDir;
+    QString pluginDir;
+    QString documentDir;
 
 public slots:
-    void onLoadedProfile(QString,QString);
 
 private slots:
     void initTestCase();
-    void initCoreModules();
+    void languageProfile();
     void cleanupTestCase();
 };
 
