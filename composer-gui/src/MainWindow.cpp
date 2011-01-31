@@ -40,8 +40,6 @@ void MainWindow::initModules()
                                                      IPlugin*,Document*)),
                 SLOT(addPluginWidget(IPluginFactory*,IPlugin*,Document*)));
 
-    connect(lgControl,SIGNAL(notifyLoadedProfile(QString,QString)),
-                      SLOT(addProfileLoaded(QString,QString)));
     connect(lgControl,SIGNAL(notifyError(QString)),
                       SLOT(errorDialog(QString)));
 
@@ -255,12 +253,6 @@ void MainWindow::createTreeProject()
 
 }
 
-void MainWindow::addProfileLoaded(QString name, QString fileName)
-{
-    qDebug() << "MainWindow::addProfileLoaded(" << name << ")";
-    profilesExt->addItem(new QListWidgetItem(name+"("+fileName+")"));
-}
-
 void MainWindow::createMenus() {
     fileMenu = menuBar()->addMenu(tr("&File"));
     fileMenu->addAction(newProjectAct);
@@ -322,6 +314,18 @@ void MainWindow::about() {
         IPluginFactory *pF = *it;
         pluginsExt->addItem(new QListWidgetItem(pF->getPluginIcon(),
                                                 pF->getPluginName()));
+    }
+
+    QList<ILanguageProfile*>::iterator itL;
+    QList<ILanguageProfile*> lList = LanguageControl::getInstance()->
+                                     getLoadedProfiles();
+
+    profilesExt->clear();
+
+    for(itL = lList.begin(); itL != lList.end(); itL++)
+    {
+        ILanguageProfile *lg = *itL;
+        profilesExt->addItem(new QListWidgetItem(lg->getProfileName()));
     }
 
     aboutDialog->setModal(true);

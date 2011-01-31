@@ -109,7 +109,6 @@ class MainWindow : public QMainWindow {
         void updateWindowMenu();
         void showEditPreferencesDialog();
         void showSwitchWorkspaceDialog();
-        void addProfileLoaded(QString name, QString fileName);
         void tabClosed(int index);
 
     public:
