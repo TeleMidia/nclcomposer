@@ -1,6 +1,6 @@
-#QT += testlib
-CONFIG += testcase
-CONFIG  += qtestlib
+CONFIG += qtestlib testcase
+MOC_DIR = .mocs
+OBJECTS_DIR = .objs
 
 macx {
     LIBS += -L../core \
@@ -15,8 +15,11 @@ else:unix {
     INCLUDEPATH += ../core/include
 }
 
-HEADERS += \
-    tst_Module.h
-
 SOURCES += \
-    tst_Module.cpp
+    tst_ModuleLanguage.cpp \
+    tst_Core.cpp \
+    tst_ModuleInit.cpp
+
+HEADERS += \
+    tst_ModuleInit.h \
+    tst_ModuleLanguage.h
