@@ -21,11 +21,9 @@ macx {
     target.path = $$quote(/Library/Application Support/Composer)
 }
 else:unix {
-    LIBS += -L/usr/local/lib/composer \
+    LIBS += -L../../core \
         -lComposerCore
-    INCLUDEPATH += ../../include/ \
-                /usr/local/include/composer
-
+    INCLUDEPATH += ../../core/include
     target.path = $$quote(/usr/local/lib/composer/extension)
 }
 
