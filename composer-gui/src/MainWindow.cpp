@@ -4,7 +4,9 @@ MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent) {
 
     user_directory_ext = "";
-    fileSystemDock = NULL;
+    work_space_path = QDir::homePath();
+
+    fileSystemModel = NULL;
 #ifdef Q_WS_MAC
     defaultEx = "/Library/Application Support/Composer";
 #else
@@ -20,7 +22,6 @@ MainWindow::MainWindow(QWidget *parent)
 }
 
 MainWindow::~MainWindow() {
-    qDebug() << "Destructor MAINWINDOW";
     if(fileSystemModel)
     {
         delete fileSystemModel;
@@ -205,6 +206,8 @@ void MainWindow::onOpenDocumentTab(QString location)
 
 void MainWindow::switchWorkspace()
 {
+
+    if (fileSystemModel == NULL) return;
 
     if (wsSwitch->getWorspacePath() != "")
         work_space_path = wsSwitch->getWorspacePath();
