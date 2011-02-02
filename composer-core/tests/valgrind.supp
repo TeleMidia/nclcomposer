@@ -1,0 +1,11 @@
+##############################
+# 	Linux
+#############################
+{
+   QT PluginLoader leak BUG (http://bugreports.qt.nokia.com/browse/QTBUG-13544)
+   Memcheck:Leak
+   ...
+   fun:_ZN13QPluginLoader4loadEv
+   fun:_ZN13QPluginLoader8instanceEv
+}
+
