@@ -37,10 +37,8 @@ namespace composer {
     class PluginControl : public QObject //, public Singleton<PluginControl>
     {
         Q_OBJECT
+        SINGLETON(PluginControl)
 
-        MYSINGLETON(PluginControl)
-
-    //    friend class Singleton<PluginControl>;
         private:
             PluginControl();
             ~PluginControl();

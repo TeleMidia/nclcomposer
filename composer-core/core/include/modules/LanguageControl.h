@@ -16,13 +16,10 @@ using namespace composer::core::util;
 namespace composer {
     namespace core {
             namespace module {
-                    class LanguageControl : public QObject //,
-                                            // public Singleton<LanguageControl>
+                    class LanguageControl : public QObject
                     {
                         Q_OBJECT
-
-                        MYSINGLETON(LanguageControl)
-                        // friend class Singleton<LanguageControl>;
+                        SINGLETON(LanguageControl)
                     private:
                         LanguageControl();
                         ~LanguageControl();

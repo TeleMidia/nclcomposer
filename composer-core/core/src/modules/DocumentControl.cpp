@@ -4,7 +4,7 @@ namespace composer {
     namespace core {
             namespace module {
 
-INIT_MYSINGLETON (DocumentControl)
+INIT_SINGLETON (DocumentControl)
 
 DocumentControl::DocumentControl()
 {
@@ -55,13 +55,10 @@ void DocumentControl::launchDocument(QString projectId, QString location)
 
     QString ext = location;
     ext = ext.remove(0, ext.lastIndexOf(".")+1);
-
-    qDebug() << "DocumentControl::launchDocument EXT=" << ext;
-
     LanguageType type = Utilities::getLanguageTypeByExtension(ext);
 
-    qDebug() << "DocumentControl::launchDocument TYPE=" << type;
-    if(type == NONE) {
+    if(type == NONE)
+    {
         //TEST: WINDOWS
         QProcess spaw;
         QStringList args;
@@ -78,9 +75,8 @@ void DocumentControl::launchDocument(QString projectId, QString location)
     ILanguageProfile *profile = LanguageControl::getInstance()->
                                 getProfileFromType(type);
 
-    qDebug() << "DocumentControl LanguageInstance = " << LanguageControl::getInstance();
-
-    if (!profile) {
+    if (!profile)
+    {
         emit notifyError(tr("No Language Profile Extension "
                             "found for (%1)").
                          arg(ext.toUpper()));
