@@ -7,8 +7,12 @@ MainWindow::MainWindow(QWidget *parent)
     work_space_path = QDir::homePath();
 
     fileSystemModel = NULL;
-#ifdef Q_WS_MAC
+
+#if defined(Q_WS_MAC)
+    setUnifiedTitleAndToolBarOnMac(true);
     defaultEx = "/Library/Application Support/Composer";
+#elif defined(Q_WS_WIN32)
+    defaultEx = "C:/Composer/lib/composer";
 #else
     defaultEx = "/usr/local/lib/composer";
 #endif
@@ -62,6 +66,10 @@ void MainWindow::readExtensions()
     QSettings settings("telemidia", "composer");
 #endif
     settings.beginGroup("extension");
+
+#ifdef Q_WS_WIN32
+    user_directory_ext = defaultEx;
+#else
     if (settings.contains("path"))
     {
         user_directory_ext = settings.value("path").toString();
@@ -69,8 +77,13 @@ void MainWindow::readExtensions()
         user_directory_ext = promptChooseExtDirectory();
         if (user_directory_ext == "") user_directory_ext = defaultEx;
     }
+#endif
+    qDebug() << "MainWindow::readExtensions(" << user_directory_ext
+            << ")";
+
     LanguageControl::getInstance()->
             loadProfiles(user_directory_ext);
+
     PluginControl::getInstance()->loadPlugins(user_directory_ext);
     settings.endGroup();
 }
@@ -149,7 +162,6 @@ void MainWindow::initGUI() {
 void MainWindow::addPluginWidget(IPluginFactory *fac, IPlugin *plugin,
                                  Document *doc)
 {
-
     QMainWindow *w;
     QString location = doc->getLocation();
     QString documentId = doc->getAttribute("id");
@@ -322,7 +334,6 @@ void MainWindow::about() {
     QList<ILanguageProfile*>::iterator itL;
     QList<ILanguageProfile*> lList = LanguageControl::getInstance()->
                                      getLoadedProfiles();
-
     profilesExt->clear();
 
     for(itL = lList.begin(); itL != lList.end(); itL++)

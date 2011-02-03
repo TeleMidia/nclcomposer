@@ -35,6 +35,8 @@
 #include <QtGui/QTreeView>
 
 #include <core/modules/PluginControl.h>
+#include <core/modules/DocumentControl.h>
+#include <core/modules/LanguageControl.h>
 using namespace composer::core::module;
 
 #include "wizard/ProjectWizard.h"

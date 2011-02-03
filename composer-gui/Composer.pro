@@ -34,7 +34,7 @@ else:unix {
     INCLUDEPATH += $$LOCATION/include/composer
 }
 else:win32 {
-    LIBS += -L$$LOCATION/lib/composer \
+    LIBS += -L$$LOCATION/ \
         -lComposerCore1
     INCLUDEPATH += $$LOCATION/include/composer
 }
