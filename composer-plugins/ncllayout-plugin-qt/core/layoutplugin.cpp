@@ -104,7 +104,7 @@ void LayoutPlugin::onEntityAdded(QString ID, Entity* entity)
         qDebug() << "height:" << height;
 
         QString entityID = entity->getUniqueId();
-
+        QGraphicsScene* s = view->scene();
         // add entity on local model
 //        if (!items.contains(entityID)){
             if (entity->getParent()->getType() != "region"){
@@ -117,6 +117,7 @@ void LayoutPlugin::onEntityAdded(QString ID, Entity* entity)
 
 
                     items[entityID] = new LayoutItem();
+                    s->addItem(items[entityID]);
 
 //                    qDebug() << s->sceneRect();
 
@@ -131,8 +132,8 @@ void LayoutPlugin::onEntityAdded(QString ID, Entity* entity)
                         items[entity->getParent()->getUniqueId()]);
             }
 
-            QGraphicsScene* s = view->scene();
-            s->addItem(items[entityID]);
+
+
 
             items[entityID]->setpLeft(left);
             items[entityID]->setpTop(top);

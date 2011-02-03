@@ -363,6 +363,9 @@ void LayoutItem::mouseMoveEvent(QGraphicsSceneMouseEvent* event)
 void LayoutItem::mousePressEvent(QGraphicsSceneMouseEvent* event)
 {
     setSelected(true);
+    qDebug() << title << "selected";
+
+     update();
 
     if (event->button() == Qt::RightButton){
         event->ignore();
