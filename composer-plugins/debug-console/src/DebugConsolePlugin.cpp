@@ -19,7 +19,8 @@ DebugConsolePlugin::DebugConsolePlugin()
 
 DebugConsolePlugin::~DebugConsolePlugin()
 {
-    delete window;
+    if(window != NULL)
+        delete window;
     window = NULL;
 }
 

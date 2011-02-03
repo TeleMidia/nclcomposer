@@ -8,18 +8,17 @@ UI_DIR      =   .ui
 macx {
     :   LIBS += -framework \
         ComposerCore
-    INCLUDEPATH += /Library/Frameworks/ComposerCore.framework/
+    INCLUDEPATH += include /Library/Frameworks/ComposerCore.framework/
     target.path = $$quote(/Library/Application Support/Composer)
 }
 else:unix {
     LIBS += -L/usr/local/lib/composer \
         -lComposerCore
-    INCLUDEPATH += /usr/local/include/composer
+    INCLUDEPATH += include /usr/local/include/composer
     target.path = $$quote(/usr/local/lib/composer/extension)
 }
 else:win32 {
-    LIBS += -LC:/composer/lib/composer \
-        -lComposerCore1
-    INCLUDEPATH += C:/composer/include/composer
+    LIBS += -LC:/Composer/ -lComposerCore1
+    INCLUDEPATH += . include C:/composer/include/composer
     target.path = $$quote(C:/composer/lib/composer/)
 }
