@@ -8,8 +8,7 @@ MainWindow::MainWindow(QWidget *parent)
 
     fileSystemModel = NULL;
 
-#if defined(Q_WS_MAC)
-    setUnifiedTitleAndToolBarOnMac(true);
+#ifdef Q_WS_MAC
     defaultEx = "/Library/Application Support/Composer";
 #elif defined(Q_WS_WIN32)
     defaultEx = "C:/Composer/lib/composer";
