@@ -106,8 +106,8 @@ void LayoutPlugin::onEntityAdded(QString ID, Entity* entity)
         QString entityID = entity->getUniqueId();
 
         // add entity on local model
-        if (!items.contains(entityID)){
-//            if (entity->getParent()->getType() != "region"){
+//        if (!items.contains(entityID)){
+            if (entity->getParent()->getType() != "region"){
 //               if (top != -1 &&
 //                   left != -1 &&
 //                   width != -1 &&

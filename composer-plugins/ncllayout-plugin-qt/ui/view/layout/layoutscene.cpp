@@ -95,10 +95,13 @@ void LayoutScene::adjustItems()
     for (int i=0;i<items().size();i++){
         LayoutItem* item = (LayoutItem*) items().at(i);
 
+//        qDebug() << "adjusting" << item->getTile();
         item->adjustItem();
 //        item->setPos(item->pos());
 //        item->setSize(item->getSize());
     }
+
+    qDebug() << "--------------------------";
 }
 
 }

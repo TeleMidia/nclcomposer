@@ -50,6 +50,10 @@ public:
     void setpHeight(const qreal & pheight);
 
     void adjustItem();
+    void adjustItem(LayoutItem* item);
+
+
+    void updatep();
 
 public slots:
     virtual void addItem(AbstractItem* item);
@@ -76,6 +80,8 @@ private:
     void move(QGraphicsSceneMouseEvent* event);
     void resize(QGraphicsSceneMouseEvent* event);
     void resize(LayoutItem* parent, qreal pw, qreal ph);
+
+
 
     void createMenus();
     void createActions();

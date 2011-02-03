@@ -18,12 +18,14 @@ LayoutItem::LayoutItem(QGraphicsItem* parent)
     : AbstractItem(parent)
 {
     setFlag(QGraphicsItem::ItemIsMovable, true);
+//    setFlag(QGraphicsItem::ItemIsSelectable, true);
     setMoving(false);
     setResizing(false);
     setSelected(false);
     rindex = -1;
 
     title = "newregion";
+
 
     topleft  = false;
     createActions();
@@ -142,6 +144,8 @@ void LayoutItem::resize(QGraphicsSceneMouseEvent* event)
 
         }
     }
+
+//    updatep();
 }
 
 void LayoutItem::resize(LayoutItem* parent, qreal pw, qreal ph)
@@ -153,6 +157,9 @@ void LayoutItem::resize(LayoutItem* parent, qreal pw, qreal ph)
             item->setPos(item->pos().x()*pw, item->pos().y()*ph);
             item->setSize(QSizeF(item->getSize().width()*pw,
                                  item->getSize().height()*ph));
+
+
+//            item->updatep();
 
             resize(item, pw,ph);
         }
@@ -211,6 +218,8 @@ void LayoutItem::move(QGraphicsSceneMouseEvent* event)
 
         setPos(nx,ny);
     }
+
+//    updatep();
 }
 
 void LayoutItem::setMoving(bool moving)
@@ -375,6 +384,10 @@ void LayoutItem::mouseReleaseEvent(QGraphicsSceneMouseEvent* event)
     setMoving(false);
     setResizing(false);
 
+    updatep();
+
+    adjustItem();
+
     AbstractItem::mouseReleaseEvent(event);
 }
 
@@ -396,6 +409,8 @@ void LayoutItem::contextMenuEvent(
 
 void LayoutItem::adjustItem()
 {
+//    qDebug() << title << "adjustItem()";
+
     if (parentItem() != NULL){
         LayoutItem* item = (LayoutItem*) parentItem();
 
@@ -411,7 +426,37 @@ void LayoutItem::adjustItem()
         setSize(QSizeF(scene()->width()*pwidth,
                        scene()->height()*pheight));
     }
+
+    adjustItem(this);
 }
+
+void LayoutItem::adjustItem(LayoutItem* parent)
+{
+    for (int i=0;i<parent->childItems().size();i++){
+        LayoutItem* item = (LayoutItem*) parent->childItems().at(i);
+
+        item->adjustItem();
+    }
+}
+
+void LayoutItem::updatep()
+{
+    if (parentItem() != NULL){
+        LayoutItem* item = (LayoutItem*) parentItem();
+
+        setpLeft(pos().x()/item->getSize().width());
+        setpTop(pos().y()/item->getSize().height());
+        setpWidth(getSize().width()/item->getSize().width());
+        setpHeight(getSize().height()/item->getSize().height());
+    }else{
+        setpLeft(pos().x()/scene()->width());
+        setpTop(pos().y()/scene()->height());
+        setpWidth(getSize().width()/scene()->width());
+        setpHeight(getSize().height()/scene()->height());
+    }
+}
+
+
 
 }
 }
