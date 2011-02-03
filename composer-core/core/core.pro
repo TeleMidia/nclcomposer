@@ -79,8 +79,20 @@ macx {
     INSTALLS += target
 
 }
-else {
+else:unix {
     target.path = $$INSTALLBASE/lib/composer
+    HEADERS_PATH_UNIX = $$INSTALLBASE/include/composer
+
+    headers_model.path = $$HEADERS_PATH_UNIX/core/model
+    headers_man.path = $$HEADERS_PATH_UNIX/core/modules
+    headers_extensions.path = $$HEADERS_PATH_UNIX/core/extensions
+    headers_util.path = $$HEADERS_PATH_UNIX/core/util
+    headers_exception.path = $$HEADERS_PATH_UNIX/core/model/exception
+
+    INSTALLS += headers_man headers_util headers_model \
+                headers_extensions headers_exception target
+}else:win32 {
+    target.path = $$INSTALLBASE
     HEADERS_PATH_UNIX = $$INSTALLBASE/include/composer
 
     headers_model.path = $$HEADERS_PATH_UNIX/core/model
