@@ -18,11 +18,12 @@ using namespace composer::core::util;
 namespace composer{
     namespace core {
             namespace module {
-                class DocumentControl : public QObject,
-                                        public Singleton<DocumentControl>
+                class DocumentControl : public QObject //,
+                                        // public Singleton<DocumentControl>
                 {
                     Q_OBJECT
-                    friend class Singleton<DocumentControl>;
+                    MYSINGLETON(DocumentControl)
+                    //friend class Singleton<DocumentControl>;
                 private:
                     DocumentControl();
                     ~DocumentControl();

@@ -4,8 +4,12 @@ namespace composer {
     namespace core {
         namespace module {
 
+        INIT_MYSINGLETON (LanguageControl)
+//        LanguageControl *Singleton <LanguageControl>::m_pInstance = NULL;
+
         LanguageControl::LanguageControl()
         {
+            qDebug() << "LanguageControl::LanguageControl()";
         }
 
         LanguageControl::~LanguageControl()
@@ -50,6 +54,10 @@ namespace composer {
                         Utilities::getExtensionForLanguageType(type) <<
                                 ") already exists";
                     } else {
+                        qDebug() << "LanguageControl::loadProfiles" <<
+                        "Profile for language (" <<
+                        Utilities::getExtensionForLanguageType(type) <<
+                                ") added.";
                       profiles[type] = lProfile;
                     }
                 }
@@ -82,9 +90,18 @@ namespace composer {
         ILanguageProfile* LanguageControl::getProfileFromType
                 (LanguageType type)
         {
-                if (profiles.contains(type))
+
+            QList<ILanguageProfile*> list = getLoadedProfiles();
+            QList<ILanguageProfile*>::iterator it;
+
+            if (profiles.contains(type)) {
                     return profiles[type];
-                else return NULL;
+            }
+            else {
+                qDebug() << " LanguageControl::getProfileFromType"
+                         << "PROFILE DOES NOT EXIST.";
+                return NULL;
+            }
         }
 
         QList<ILanguageProfile*> LanguageControl::getLoadedProfiles()

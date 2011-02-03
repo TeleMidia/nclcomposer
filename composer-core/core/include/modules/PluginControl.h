@@ -34,10 +34,13 @@ namespace composer {
     namespace core {
         namespace module {
 
-    class PluginControl : public QObject , public Singleton<PluginControl> {
+    class PluginControl : public QObject //, public Singleton<PluginControl>
+    {
         Q_OBJECT
 
-        friend class Singleton<PluginControl>;
+        MYSINGLETON(PluginControl)
+
+    //    friend class Singleton<PluginControl>;
         private:
             PluginControl();
             ~PluginControl();

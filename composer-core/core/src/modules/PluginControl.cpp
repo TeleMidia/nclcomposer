@@ -5,6 +5,8 @@ namespace composer {
     namespace core {
         namespace module {
 
+    INIT_MYSINGLETON(PluginControl)
+
     PluginControl::PluginControl() {
     }
 
