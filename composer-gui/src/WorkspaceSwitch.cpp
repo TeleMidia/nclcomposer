@@ -27,12 +27,10 @@ void WorkspaceSwitch::init()
     bCancel = new QPushButton(tr("Cancel"), this);
     connect(bCancel,SIGNAL(clicked()),SLOT(reject()));
 
-    QHBoxLayout *bL = new QHBoxLayout(this);
+    QHBoxLayout *bL = new QHBoxLayout;
     bL->addWidget(bCancel);
     bL->addWidget(bOk);
     layout->addLayout(bL,5,1);
-
-    setLayout(layout);
 
 }
 

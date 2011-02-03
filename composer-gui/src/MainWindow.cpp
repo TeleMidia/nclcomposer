@@ -77,8 +77,8 @@ void MainWindow::readExtensions()
         if (user_directory_ext == "") user_directory_ext = defaultEx;
     }
 #endif
-    qDebug() << "MainWindow::readExtensions(" << user_directory_ext
-            << ")";
+//    qDebug() << "MainWindow::readExtensions(" << user_directory_ext
+//            << ")";
 
     LanguageControl::getInstance()->
             loadProfiles(user_directory_ext);
@@ -134,7 +134,6 @@ void MainWindow::readSettings() {
                 work_space_path = wsSwitch->getWorspacePath();
         }
     }
-    qDebug() << "work_space_path" << work_space_path;
     createTreeProject();
     settings.endGroup();
 }
@@ -196,7 +195,6 @@ void MainWindow::addPluginWidget(IPluginFactory *fac, IPlugin *plugin,
 void MainWindow::tabClosed(int index)
 {
     QString location = tabDocuments->tabToolTip(index);
-    qDebug() << location;
     DocumentControl::getInstance()->closeDocument(location);
     QMainWindow *w = documentsWidgets[location];
     if (w)

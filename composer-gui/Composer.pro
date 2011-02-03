@@ -3,7 +3,7 @@
 # -------------------------------------------------
 TARGET = Composer
 TEMPLATE = app
-CONFIG += debug
+CONFIG += release
 QT += xml
 MOC_DIR = .mocs
 OBJECTS_DIR = .objs
