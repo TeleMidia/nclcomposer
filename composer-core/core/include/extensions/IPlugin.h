@@ -62,15 +62,6 @@ namespace plugin {
                  QMutexLocker locker(&mutex);
                  return this->doc;
              }
-//             //! This is the filter method.
-//             /*!
-//                This call gives the possibilite to the core to filter
-//                wich Entities changes are goign to be notified for this plugin.
-//                Through this mechanism plugins can listen to changes in a specific
-//                set of Entities, and all the filter control is made by the core.
-//                \param the EntityType that is going to be filtered
-//             */
-//             virtual bool listenFilter(QString ) = 0;
 
              //! Return the main Widget
              /*!
@@ -80,13 +71,35 @@ namespace plugin {
                 \return QWidget - wrapping the plugin interface
              */
              virtual QWidget* getWidget() = 0;
+             //! Saves specific settings particular to each plugin
+             /*!
+               The core calls this method to notify the plugin that the user
+               is requesting to save this document.
+               Some plugins need to save special settings for a particular
+               document, in case that document is re-open in a different
+               session.
+                 \return bool - true if the save was successfull,
+                                false otherwise
+             */
+             virtual bool save() = 0;
+
         public slots:
+             //! Calls the plugin to update the internal model from model
+             /*!
+               This call is made by the core in two situations:
+                - When the user resquest an update to all plugins
+                - When the plugin is loaded in runtime
+                In the second case, the plugin is loaded, but did no receive
+                the previous modifications, so it has to be forceed to reload
+                the Document*.
+              */
+             virtual void updateFromModel() = 0;
              //! This is called by the core when a new Entity is added
              /*!
                 This call is invoked by the core when a new Entity that this
                 particular plugin is listening is added.
              */
-             virtual void onEntityAdded(QString ID, Entity *) = 0;
+             virtual void onEntityAdded(QString pluginID, Entity *) = 0;
              //! This is called by the core when the adding a new Entity was ignored
              /*!
                 This call is invoked by the core to notify the plugin that the
@@ -94,12 +107,13 @@ namespace plugin {
                 because of an error.
              */
              virtual void onEntityAddError(QString error) = 0;
-             /** TODO Lembrar se ele tiver mudado o ID */
-             virtual void onEntityChanged(QString ID, Entity *) = 0;
+
+             virtual void onEntityChanged(QString pluginID, Entity *) = 0;
              virtual void onEntityChangeError(QString error) = 0;
-             /** Lembrar de ele apagar a sua referência interna */
+
              virtual void onEntityAboutToRemove(Entity *) = 0;
-             virtual void onEntityRemoved(QString ID, QString entityID) = 0;
+             virtual void onEntityRemoved(QString pluginID,
+                                          QString entityID) = 0;
              virtual void onEntityRemoveError(QString error) = 0;
 
 
