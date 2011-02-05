@@ -64,6 +64,7 @@ class MainWindow : public QMainWindow {
         QAction *newProjectAct;
         QAction *newDocumentAct;
         QAction *aboutComposerAct;
+        QAction *aboutComposerPluginsAct;
         QAction *separatorWindowAct;
         QAction *projectWindowAct;
         QAction *editPreferencesAct;

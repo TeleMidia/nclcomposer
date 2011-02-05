@@ -284,6 +284,7 @@ void MainWindow::createMenus() {
 
     helpMenu = menuBar()->addMenu(tr("&Help"));
     helpMenu->addAction(aboutComposerAct);
+    helpMenu->addAction(aboutComposerPluginsAct);
 
 }
 
@@ -367,7 +368,10 @@ void MainWindow::createActions() {
 
     aboutComposerAct = new QAction(tr("&About"), this);
     aboutComposerAct->setStatusTip(tr("Show the application's About box"));
-    connect(aboutComposerAct, SIGNAL(triggered()), this, SLOT(about()));
+
+    aboutComposerPluginsAct = new QAction(tr("&About Plugins..."), this);
+    aboutComposerPluginsAct->setStatusTip(tr("Show the application Plugins' About box"));
+    connect(aboutComposerPluginsAct, SIGNAL(triggered()), this, SLOT(about()));
 
     separatorWindowAct = new QAction(this);
     separatorWindowAct->setSeparator(true);
