@@ -18,6 +18,11 @@ public:
     ~OutlineViewPlugin();
 
     QWidget* getWidget();
+    QMap <QString, QTreeWidgetItem*> idToItem;
+
+    bool save();
+    void updateFromModel();
+
 
 public slots:
     void onEntityAdded(QString ID, Entity *);
@@ -27,6 +32,10 @@ public slots:
     void onEntityAboutToRemove(Entity *);
     void onEntityRemoved(QString ID, QString entityID);
     void onEntityRemoveError(QString error);
+
+
+private slots:
+    void elementRemovedByUser(QString id);
 };
 
 #endif // OUTLINEVIEWPLUGIN_H

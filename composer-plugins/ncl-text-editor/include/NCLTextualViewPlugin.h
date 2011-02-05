@@ -20,6 +20,9 @@ public:
 
     QWidget* getWidget();
 
+    bool save();
+    void updateFromModel();
+
 public slots:
     void onEntityAdded(QString ID, Entity *);
     void onEntityAddError(QString error);

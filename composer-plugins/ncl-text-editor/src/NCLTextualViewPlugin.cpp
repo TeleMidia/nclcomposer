@@ -62,3 +62,12 @@ void NCLTextualViewPlugin::onEntityRemoveError(QString error)
     //TODO: All
 }
 
+bool NCLTextualViewPlugin::save(){
+    //TODO: All
+}
+
+void NCLTextualViewPlugin::updateFromModel(){
+
+}
+
+

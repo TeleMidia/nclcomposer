@@ -21,6 +21,8 @@ class DebugConsolePlugin : public IPlugin
         ~DebugConsolePlugin();
 
         QWidget* getWidget();
+	bool save();
+	void updateFromModel();
 
     public slots:
         void onEntityAdded(QString ID, Entity *);

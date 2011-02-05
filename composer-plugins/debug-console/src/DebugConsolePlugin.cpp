@@ -70,3 +70,12 @@ void DebugConsolePlugin::onEntityRemoveError(QString error)
     list->addItem(new QListWidgetItem(error));
 }
 
+bool DebugConsolePlugin::save()
+{
+    //TODO: All
+}
+
+void DebugConsolePlugin::updateFromModel()
+{
+    //TODO: All
+}

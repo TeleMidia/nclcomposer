@@ -1,5 +1,7 @@
 #include "NCLTreeWidget.h"
 
+#include <QInputDialog>
+
 NCLTreeWidget::NCLTreeWidget(QWidget *parent) : QTreeWidget(parent)
 {
     setContextMenuPolicy(Qt::ActionsContextMenu);
@@ -16,8 +18,13 @@ NCLTreeWidget::~NCLTreeWidget()
 void NCLTreeWidget::createActions ()
 {
     insertNodeAct = new QAction(QIcon(":/images/save.png"), tr("&Add child"), this);
-//    connect(insertNodeChildAct, SIGNAL(triggered()), this, SLOT(insertElement()));
+    connect(insertNodeAct, SIGNAL(triggered()), this, SLOT(userAddNewElement()));
     addAction(insertNodeAct);
+
+    removeNodeAct = new QAction(QIcon(":/images/delete.png"), tr("&Remove Selected element"), this);
+    connect(removeNodeAct, SIGNAL(triggered()), this, SLOT(userRemoveElement()));
+    addAction(removeNodeAct);
+
 }
 
 void NCLTreeWidget::createMenus ()
@@ -61,11 +68,11 @@ bool NCLTreeWidget::updateFromText(QString text)
 
 //TODO: Add Element with the correct icon
 QTreeWidgetItem* NCLTreeWidget::addElement ( QTreeWidgetItem *father,
-                                 int pos,
-                                 QString tagname,
-                                 QString id,
-                                 int line_in_text,
-                                 int column_in_text)
+                                             int pos,
+                                             QString tagname,
+                                             QString id,
+                                             int line_in_text,
+                                             int column_in_text)
 {
 
     QTreeWidgetItem *child;
@@ -86,7 +93,7 @@ QTreeWidgetItem* NCLTreeWidget::addElement ( QTreeWidgetItem *father,
     }
     QIcon icon;
     if(tagname == "media")
-            icon = QIcon (":/images/media.png");
+        icon = QIcon (":/images/media.png");
     else if(tagname == "descriptor")
         icon = QIcon (":/images/descriptor.png");
     else if(tagname == "link")
@@ -101,6 +108,61 @@ QTreeWidgetItem* NCLTreeWidget::addElement ( QTreeWidgetItem *father,
     child->setText(3, QString::number(column_in_text));
 
     return child;
+}
+
+void NCLTreeWidget::userAddNewElement()
+{
+    bool ok;
+    QList<QTreeWidgetItem*> selecteds = this->selectedItems ();
+    QTreeWidgetItem *item = selecteds.at (0);
+    QString id = item->text(1);
+    int line = item->text(2).toInt ( &ok, 10 );
+    QString tagname = item->text(0);
+
+    QStringList strlist;
+    /*    map <QString, char> * children = NCLStructure::getInstance()->getChildren(tagname);
+
+    if(children != NULL) {
+        map <QString, char>::iterator it;
+        for(it = children->begin(); it != children->end(); ++it){
+            strlist << it->first;
+        }
+    } */
+
+    QString element = QInputDialog::getItem(this,
+                                            tr("Add child"),
+                                            tr("Element name:"),
+                                            strlist,
+                                            0,
+                                            true,
+                                            &ok);
+
+    if(ok) {
+        //Add new Element to OutlineWidget
+        // this->addElement(item, 0, element, QString(""), line, 0);
+
+        QMap<QString,QString> attr;
+        emit elementAddedByUser (element, id, attr, false);
+    }
+}
+
+void NCLTreeWidget::userRemoveElement()
+{
+    QList<QTreeWidgetItem*> selecteds = this->selectedItems ();
+    QTreeWidgetItem *item = selecteds.at (0);
+    QString id = item->text(1);
+
+    int resp = QMessageBox::question(this,
+                                     tr("Deleting Element"),
+                                     tr("Do you really want delete the %1 element ?").arg(id),
+                                     QMessageBox::Yes,
+                                     QMessageBox::No);
+
+    if(resp) {
+        qDebug() << "NCLTreeWidget::userRemoveElement";
+        item->parent()->removeChild(item);
+        emit elementRemovedByUser(id);
+    }
 }
 
 void NCLTreeWidget::errorNotification(QString message, QString filename, int line, int column, int severity)

@@ -176,6 +176,16 @@ void LayoutPlugin::onEntityRemoveError(QString error)
 
 }
 
+bool LayoutPlugin::save()
+{
+    //TODO: All
+}
+
+void LayoutPlugin::updateFromModel()
+{
+    //TODO: All
+}
+
 }
 }
 }

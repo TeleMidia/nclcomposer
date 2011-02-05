@@ -15,6 +15,7 @@ class NCLTreeWidget: public QTreeWidget {
 
 private:
     QAction *insertNodeAct;
+    QAction *removeNodeAct;
     QMenu   *elementMenu;
 
     void createActions();
@@ -37,7 +38,13 @@ public:
 public slots:
     void errorNotification(QString message, QString filename, int line, int column, int severity);
 
+private slots:
+    void userAddNewElement();
+    void userRemoveElement();
+
 signals:
+    void elementAddedByUser(QString, QString, QMap<QString,QString>&,bool);
+    void elementRemovedByUser (QString);
     void parserErrorNotify(QString message, QString filename, int line, int column, int severity);
 
 };

@@ -23,6 +23,8 @@ public:
     virtual ~LayoutPlugin();
 
     QWidget* getWidget();
+    bool save();
+    void updateFromModel();
 
 public slots:
     void onEntityAdded(QString ID, Entity *);

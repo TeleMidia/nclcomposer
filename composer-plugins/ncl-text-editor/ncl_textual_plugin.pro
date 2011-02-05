@@ -50,8 +50,4 @@ LIBS        +=  -lqscintilla2
 FORMS +=    ../ncl-layout-view/LayoutView.ui \
             ui/TextualPluginPreferencesWidget.ui
 
-ncleditorapp.TEMPLATE    =   app
-ncleditorapp.target      =   ncl_textual_plugin
-QMAKE_EXTRA_TARGETS      +=  ncleditorapp
-
 INSTALLS += target
