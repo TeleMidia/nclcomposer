@@ -1,7 +1,7 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
-#include "ui/view/layout/layouteditor.h"
+#include "ui/view/layouteditor.h"
 
 namespace br{
 namespace pucrio{
@@ -14,6 +14,10 @@ class MainWindow : public LayoutEditor
 public:
     MainWindow(QWidget* parent = 0);
     virtual ~MainWindow();
+
+private:
+
+
 };
 
 }

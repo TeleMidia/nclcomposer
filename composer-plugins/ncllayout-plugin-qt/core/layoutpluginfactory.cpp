@@ -42,7 +42,7 @@ QString LayoutPluginFactory::getPluginID()
 
 QString LayoutPluginFactory::getPluginName()
 {
-    return "NCL - Layout View";
+    return "NCL Layout View";
 }
 
 QIcon LayoutPluginFactory::getPluginIcon()

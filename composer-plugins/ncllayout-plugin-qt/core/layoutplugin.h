@@ -5,8 +5,8 @@
 using namespace composer::core::extension::plugin;
 
 #include "ui/mainwindow.h"
-#include "ui/view/layout/layoutview.h"
-#include "ui/view/layout/layoutitem.h"
+#include "ui/view/layoutview.h"
+#include "ui/view/layoutitem.h"
 
 namespace br{
 namespace pucrio{
