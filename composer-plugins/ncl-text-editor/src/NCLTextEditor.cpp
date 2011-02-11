@@ -133,6 +133,13 @@ void NCLTextEditor::keyPressEvent(QKeyEvent *event) {
     pos = SendScintilla(SCI_GETCURRENTPOS);
     size = SendScintilla(SCI_GETTEXTLENGTH);
 
+    // If I receive a Qt::Key_Backtab
+    // change event to Tab+Shift
+    if(event->key() == Qt::Key_Backtab) {
+        event->accept();
+        event = new QKeyEvent(event->type(), Qt::Key_Tab, Qt::ShiftModifier);
+    }
+
     if(state == FILLING_ATTRIBUTES_STATE) {
         QString strline = text(line);
         clearIndicatorRange(line, 0, line, strline.size(), filling_attribute_indicator);
@@ -150,7 +157,7 @@ void NCLTextEditor::keyPressEvent(QKeyEvent *event) {
             bool error = false;
 
             //CTRL+TAB -> GO TO PREVIOUS ATRIBUTE
-            if(event->modifiers() & Qt::ControlModifier) {
+            if(event->modifiers() & Qt::ShiftModifier) {
                 while (pos > 0 ) {
                     style = SendScintilla(SCI_GETSTYLEAT, pos);
                     if(style != QsciLexerNCL::HTMLDoubleQuotedString)
