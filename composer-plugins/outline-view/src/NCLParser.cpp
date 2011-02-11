@@ -11,7 +11,6 @@ bool NCLParser::startElement(const QString & /* namespaceURI */,
                                  const QString &qName,
                                  const QXmlAttributes &attributes)
 {
-    // qDebug() << qName;
     if (currentItem) {
         currentItem = treeWidget->addElement(currentItem,
                                              currentItem->childCount(),

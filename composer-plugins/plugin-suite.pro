@@ -3,6 +3,6 @@ TEMPLATE = \
 
 SUBDIRS = \
     outline-view \
-    ncl-text-editor/ncl_textual_plugin.pro \
+    ncl-text-editor/ncl-textual-plugin.pro \
     debug-console \
-    ncllayout-plugin-qt
+    ncl-layout-view

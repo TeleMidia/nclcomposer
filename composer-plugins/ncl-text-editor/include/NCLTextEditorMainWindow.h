@@ -33,7 +33,7 @@ using namespace std;
 #include "NCLProblemsView.h"
 #include "NCLTreeWidget.h"
 #include "NCLTextEditor.h"
-#include "LayoutView.h"
+//#include "LayoutView.h"
 //#include "Preferences.h"
 
 class QAction;
@@ -111,8 +111,8 @@ private:
 
     /** Problems View */
     NCLProblemsView *problemsView;
-    QDockWidget *dockLayoutView;
-    LayoutView *layoutView;
+    /*QDockWidget *dockLayoutView;
+    LayoutView *layoutView;*/
 
     /* Preferences *preferences;
     PreferencesPage *textEditorPreferencesPage; */

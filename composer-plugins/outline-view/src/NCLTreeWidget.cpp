@@ -2,6 +2,8 @@
 
 #include <QInputDialog>
 
+#include "NCLStructure.h"
+
 NCLTreeWidget::NCLTreeWidget(QWidget *parent) : QTreeWidget(parent)
 {
     setContextMenuPolicy(Qt::ActionsContextMenu);
@@ -120,14 +122,14 @@ void NCLTreeWidget::userAddNewElement()
     QString tagname = item->text(0);
 
     QStringList strlist;
-    /*    map <QString, char> * children = NCLStructure::getInstance()->getChildren(tagname);
+    map <QString, char> * children = NCLStructure::getInstance()->getChildren(tagname);
 
     if(children != NULL) {
         map <QString, char>::iterator it;
         for(it = children->begin(); it != children->end(); ++it){
             strlist << it->first;
         }
-    } */
+    }
 
     QString element = QInputDialog::getItem(this,
                                             tr("Add child"),
@@ -139,8 +141,6 @@ void NCLTreeWidget::userAddNewElement()
 
     if(ok) {
         //Add new Element to OutlineWidget
-        // this->addElement(item, 0, element, QString(""), line, 0);
-
         QMap<QString,QString> attr;
         emit elementAddedByUser (element, id, attr, false);
     }
@@ -152,16 +152,21 @@ void NCLTreeWidget::userRemoveElement()
     QTreeWidgetItem *item = selecteds.at (0);
     QString id = item->text(1);
 
-    int resp = QMessageBox::question(this,
-                                     tr("Deleting Element"),
-                                     tr("Do you really want delete the %1 element ?").arg(id),
-                                     QMessageBox::Yes,
-                                     QMessageBox::No);
+    if (item != NULL) {
+        int resp = QMessageBox::question(this,
+                                         tr("Deleting Element"),
+                                         tr("Do you really want delete the %1 element ?").arg(id),
+                                         QMessageBox::Yes,
+                                         QMessageBox::No);
 
-    if(resp) {
-        qDebug() << "NCLTreeWidget::userRemoveElement";
-        item->parent()->removeChild(item);
-        emit elementRemovedByUser(id);
+        if(resp) {
+            qDebug() << "NCLTreeWidget::userRemoveElement";
+            if (item->parent() != NULL)
+                item->parent()->removeChild(item);
+            else
+                this->removeItemWidget(item, 0);
+            emit elementRemovedByUser(id);
+        }
     }
 }
 
