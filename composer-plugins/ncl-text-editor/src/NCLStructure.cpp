@@ -33,11 +33,11 @@ void NCLStructure::loadStructure(){
             continue;
         }
         if(tokens[0] == "datatype"){
-            qDebug() << "I'm reading a new DATATYPE element" << endl;
+            qDebug() << "I'm reading a new DATATYPE element - This is not supported yet." << endl;
 
         } else if(tokens[0] == "element"){
-            qDebug() << "I'm reading a new ELEMENT element";
-            qDebug() << "Adding Element -- " << tokens[1];
+//            qDebug() << "I'm reading a new ELEMENT element";
+//            qDebug() << "Adding Element -- " << tokens[1];
 
             if(tokens.size() == 5 ){
                 addElement(tokens[1], tokens[2], 0);
@@ -47,7 +47,7 @@ void NCLStructure::loadStructure(){
             }
 
         } else if(tokens[0] == "attribute"){
-            qDebug() << "I'm reading a new ATTRIBUTE element" << endl;
+//            qDebug() << "I'm reading a new ATTRIBUTE element" << endl;
 
             if(tokens.size() == 5) {
                 bool required = false;
@@ -61,10 +61,10 @@ void NCLStructure::loadStructure(){
             }
 
         } else if(tokens[0] == "scope"){
-            qDebug() << "I'm reading a new SCOPE element" << endl;
+            qDebug() << "I'm reading a new SCOPE element - This is not supported yet" << endl;
 
         } else if(tokens[0] == "reference"){
-            qDebug() << "I'm reading a new REFERENCE element" << endl;
+//            qDebug() << "I'm reading a new REFERENCE element" << endl;
             addReference(tokens[1], tokens[2], tokens[3], tokens[4]);
 
         }
@@ -113,35 +113,6 @@ vector <QString> NCLStructure::parseLine(QString line){
         }
         i++;
     }
-    /*
-     Old parser
-    if(!line.startsWith("//")){
-        QString element;
-
-        int i = 0;
-        //get the name of the command
-        while(i < line.size() && line.at(i) != '('){
-            element.append(line.at(i++));
-        }
-        element.remove(' ');
-        qDebug() << element << endl;
-        ret.push_back(element);
-
-        //get the attributes
-        i++;
-        while(i < line.size() && line.at(i) != ')'){
-            QString param;
-            while(i < line.size() && line.at(i) != ',' && line.at(i) != ')'){
-                param.append(line.at(i));
-                i++;
-            }
-            i++;
-            param.remove(" ");
-            qDebug() << "param = " << param;
-            ret.push_back(param);
-        }
-    }
-    */
     return ret;
 }
 
