@@ -1,4 +1,6 @@
-include (../plugins-common.pri)
+MOC_DIR     =   .moc
+OBJECTS_DIR =   .obj
+UI_DIR      =   .ui
 
 TEMPLATE    =   app
 TARGET      =   bin/ncl_textual_plugin
@@ -20,8 +22,8 @@ HEADERS     =   include/NCLTextEditorMainWindow.h \
                 include/NCLStructure.h \
                 include/MyLexer.h \
                 include/NCLValidator.h \
-                include/NCLParser.h \
                 include/NCLProblemsView.h \
+                ../outline-view/include/NCLParser.h \
                 ../outline-view/include/NCLTreeWidget.h
 
 SOURCES     =   src/main.cpp \
@@ -32,8 +34,8 @@ SOURCES     =   src/main.cpp \
                 src/NCLStructure.cpp \
                 src/MyLexer.cpp \
                 src/NCLValidator.cpp \
-                src/NCLParser.cpp \
                 src/NCLProblemsView.cpp \
+                ../outline-view/src/NCLParser.cpp \
                 ../outline-view/src/NCLTreeWidget.cpp
 
 OTHER_FILES +=  TODO \
