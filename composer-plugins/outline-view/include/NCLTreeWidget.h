@@ -16,6 +16,7 @@ class NCLTreeWidget: public QTreeWidget {
 private:
     QAction *insertNodeAct;
     QAction *removeNodeAct;
+    QAction *expandAllAct;
     QMenu   *elementMenu;
 
     void createActions();

@@ -2,8 +2,6 @@
 
 #include <QInputDialog>
 
-#include "NCLStructure.h"
-
 NCLTreeWidget::NCLTreeWidget(QWidget *parent) : QTreeWidget(parent)
 {
     setContextMenuPolicy(Qt::ActionsContextMenu);
@@ -27,11 +25,18 @@ void NCLTreeWidget::createActions ()
     connect(removeNodeAct, SIGNAL(triggered()), this, SLOT(userRemoveElement()));
     addAction(removeNodeAct);
 
+    expandAllAct = new QAction(tr("Expand All"), this);
+    connect(expandAllAct, SIGNAL(triggered()), this, SLOT(expandAll()));
+    addAction(expandAllAct);
+
 }
 
 void NCLTreeWidget::createMenus ()
 {
     elementMenu = new QMenu(this);
+    elementMenu->addAction(insertNodeAct);
+    elementMenu->addAction(removeNodeAct);
+    elementMenu->addAction(expandAllAct);
 }
 
 bool NCLTreeWidget::updateFromText(QString text)
@@ -122,14 +127,14 @@ void NCLTreeWidget::userAddNewElement()
     QString tagname = item->text(0);
 
     QStringList strlist;
-    map <QString, char> * children = NCLStructure::getInstance()->getChildren(tagname);
+    /* map <QString, char> * children = NCLStructure::getInstance()->getChildren(tagname);
 
     if(children != NULL) {
         map <QString, char>::iterator it;
         for(it = children->begin(); it != children->end(); ++it){
             strlist << it->first;
         }
-    }
+    }*/
 
     QString element = QInputDialog::getItem(this,
                                             tr("Add child"),
