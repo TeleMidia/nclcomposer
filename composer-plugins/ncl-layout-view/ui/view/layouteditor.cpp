@@ -118,7 +118,7 @@ void LayoutEditor::createActions()
 void LayoutEditor::createWidgets()
 {
     layoutContainer = new LayoutContainer(this);
-    docktenso = new QDockWidget("Dock Tenso",this);
+//    docktenso = new QDockWidget("Dock Tenso",this);
 
 //    addDockWidget(Qt ::LeftDockWidgetArea,docktenso);
 
@@ -221,9 +221,9 @@ void LayoutEditor::mouseMoveEvent ( QMouseEvent * event ){
 
     if (isFullScreen()){
         if (QRect(0,0,30,rect().height()).contains(event->pos())){
-            docktenso->show();
+//            docktenso->show();
         }else{
-            docktenso->close();
+//            docktenso->close();
         }
     }
 }
@@ -245,7 +245,7 @@ void LayoutEditor::expand()
 
     expandAction->setEnabled(false);
 
-    docktenso->close();
+//    docktenso->close();
 
     this->setWindowFlags(Qt::Window);
     this->setWindowState(Qt::WindowFullScreen);
@@ -257,7 +257,7 @@ void LayoutEditor::backexpand()
 
     expandAction->setEnabled(true);
 
-    docktenso->show();;
+//    docktenso->show();;
 
     this->setWindowState(Qt::WindowNoState);
     this->setWindowFlags(Qt::Widget);
