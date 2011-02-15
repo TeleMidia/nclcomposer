@@ -7,6 +7,7 @@
 
 #include "../model/Entity.h"
 #include "../model/Document.h"
+#include "../modules/LanguageControl.h"
 using namespace composer::core::model;
 
 //!  The interface for communication between the core and the plugin

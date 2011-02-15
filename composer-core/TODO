@@ -6,6 +6,7 @@ TODO file for composer-core
 	- Save project and files
 	- Plugin API: Add plugin provider description
 	- Plugin API: Add plugin version
+	- Generalize NCLStructure to all kinds of languages.
 
 * Optimization and clean up
 

@@ -26,8 +26,6 @@ SOURCES += \
     src/model/Document.cpp \
     src/util/Utilities.cpp
 
-
-
 HEADERS_MAN += \
     include/modules/PluginControl.h \
     include/modules/TransactionControl.h \
@@ -62,8 +60,7 @@ headers_util.files = $$HEADERS_UTIL
 headers_exception.files = $$HEADERS_EXCEPTION
 headers_model.files = $$HEADERS_MODEL
 
-
-INCLUDEPATH += include/
+INCLUDEPATH += include
 
 macx { 
     QMAKE_FRAMEWORK_BUNDLE_NAME = $$TARGET

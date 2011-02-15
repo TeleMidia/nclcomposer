@@ -22,9 +22,9 @@ QList<QString> NCLLanguageProfile::getOutputDocumentTypes()
     return list;
 }
 
-IDocumentParser* NCLLanguageProfile::createDocumentParser(Document *doc)
+IDocumentParser* NCLLanguageProfile::createDocumentParser (Document *doc)
 {
-    return new NCLDocumentParser(doc);
+    return new NCLDocumentParser (doc);
 }
 
 void NCLLanguageProfile::releaseDocumentParser (IDocumentParser *parser)
@@ -41,4 +41,4 @@ QString NCLLanguageProfile::getProfileName()
 }
 
 
-Q_EXPORT_PLUGIN2(NCLLanguageProfile,NCLLanguageProfile)
+Q_EXPORT_PLUGIN2(NCLLanguageProfile, NCLLanguageProfile)
