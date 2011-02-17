@@ -15,7 +15,6 @@ HEADERS     =   include/NCLTextEditorMainWindow.h \
                 include/NCLTextEditor.h \
                 include/QsciLexerNCL.h \
                 include/QsciNCLAPIs.h \
-                include/NCLStructure.h \
                 include/MyLexer.h \
                 include/NCLValidator.h \
                 include/NCLProblemsView.h \
@@ -30,7 +29,6 @@ SOURCES     =   src/main.cpp \
                 src/NCLTextEditor.cpp \
                 src/QsciLexerNCL.cpp \
                 src/QsciNCLAPIs.cpp \
-                src/NCLStructure.cpp \
                 src/MyLexer.cpp \
                 src/NCLValidator.cpp \
                 src/NCLProblemsView.cpp \
@@ -46,7 +44,6 @@ OTHER_FILES +=  TODO \
 RESOURCES   =   ncl_textual_plugin.qrc
 
 LIBS        +=  -lqscintilla2
-
-FORMS +=    ui/TextualPluginPreferencesWidget.ui
+FORMS       +=  ui/TextualPluginPreferencesWidget.ui
 
 INSTALLS += target

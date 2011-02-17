@@ -82,7 +82,8 @@ void QsciNCLAPIs::updateAutoCompletionList(const QStringList &context,
         QString tagname = getCurrentTagName(pos);
         QString attribute = getCurrentAttribute(pos);
 
-        vector <NCLReference *> references = nclStructure->getReferences(tagname, attribute);
+        vector <AttributeReferences *>
+                references = nclStructure->getReferences(tagname, attribute);
 
         for(unsigned int i = 0; i < references.size(); i++)
             qDebug() << "Should refer to " << references[i]->getRefElement() << "." << references[i]->getRefAttribute();

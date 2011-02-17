@@ -13,13 +13,14 @@ LIBS        += -Ldeps/QScintilla-gpl-2.4.6/Qt4
 
 INCLUDEPATH +=  include \
 		../outline-view/include/ \
-	      	../ncl-layout-view/
+                ../ncl-layout-view/ \
+                ../../composer-core/extensions/NCL
 
 HEADERS     =   include/NCLTextEditorMainWindow.h \
                 include/NCLTextEditor.h \
                 include/QsciLexerNCL.h \
                 include/QsciNCLAPIs.h \
-                include/NCLStructure.h \
+                ../../composer-core/extensions/NCL/NCLStructure.h \
                 include/MyLexer.h \
                 include/NCLValidator.h \
                 include/NCLProblemsView.h \
@@ -31,7 +32,7 @@ SOURCES     =   src/main.cpp \
                 src/NCLTextEditor.cpp \
                 src/QsciLexerNCL.cpp \
                 src/QsciNCLAPIs.cpp \
-                src/NCLStructure.cpp \
+                ../../composer-core/extensions/NCL/NCLStructure.cpp \
                 src/MyLexer.cpp \
                 src/NCLValidator.cpp \
                 src/NCLProblemsView.cpp \
