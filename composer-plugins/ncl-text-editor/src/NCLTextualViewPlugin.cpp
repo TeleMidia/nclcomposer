@@ -22,7 +22,16 @@ QWidget* NCLTextualViewPlugin::getWidget()
 
 void NCLTextualViewPlugin::onEntityAdded(QString ID, Entity *entity)
 {
-    QString line = "<" + entity->getType() + "> </" + entity->getType() + ">\n";
+    QString line = "<" + entity->getType() + "";
+
+    QMap <QString, QString>::iterator begin, end, it;
+    entity->getAttributeIterator(begin, end);
+    for (it = begin; it != end; ++it)
+    {
+        line += " " + it.key() + "=\"" + it.value() + "\"";
+    }
+    line += ">";
+    line += "</" + entity->getType() + ">\n";
 
     window->getTextEditor()->append(line);
     //TODO: All
