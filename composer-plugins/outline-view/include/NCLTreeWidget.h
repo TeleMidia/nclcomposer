@@ -1,6 +1,9 @@
 #ifndef NCLTREEWIDGET_H
 #define NCLTREEWIDGET_H
 
+#include <map>
+using namespace std;
+
 #include <QDebug>
 #include <qxml.h>
 #include <QHeaderView>

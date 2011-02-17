@@ -2,7 +2,8 @@ include (../plugins-common.pri)
 TARGET          = outline_view
 QT              += xml
 
-INCLUDEPATH     +=  include ../ncl-text-editor/include
+INCLUDEPATH     +=  include \
+                    ../ncl-text-editor/include \
 
 HEADERS         =   include/NCLTreeWidget.h \
                     include/NCLParser.h \

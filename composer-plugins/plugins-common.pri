@@ -13,7 +13,7 @@ macx {
     target.path = $$quote(/Library/Application Support/Composer)
 }
 else:unix {
-    LIBS += -L/usr/local/lib/composer \
+    LIBS += -L/usr/local/lib/composer -lNCLLanguageProfile \
         -lComposerCore -L/usr/local/lib/composer/extension
 
     INCLUDEPATH += include /usr/local/include/composer \

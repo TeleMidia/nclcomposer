@@ -1,5 +1,6 @@
 #include "NCLTreeWidget.h"
 
+#include "NCLStructure.h"
 #include <QInputDialog>
 
 NCLTreeWidget::NCLTreeWidget(QWidget *parent) : QTreeWidget(parent)
@@ -127,14 +128,15 @@ void NCLTreeWidget::userAddNewElement()
     QString tagname = item->text(0);
 
     QStringList strlist;
-    /* map <QString, char> * children = NCLStructure::getInstance()->getChildren(tagname);
+    map <QString, char> *
+            children = NCLStructure::getInstance()->getChildren(tagname);
 
     if(children != NULL) {
         map <QString, char>::iterator it;
         for(it = children->begin(); it != children->end(); ++it){
             strlist << it->first;
         }
-    }*/
+    }
 
     QString element = QInputDialog::getItem(this,
                                             tr("Add child"),

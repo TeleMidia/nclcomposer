@@ -21,7 +21,7 @@ OutlineViewPlugin::~OutlineViewPlugin()
 
 QWidget* OutlineViewPlugin::getWidget()
 {
-//    ILanguageProfile *profile = LanguageControl::getInstance()->getProfileFromType(0);
+    qDebug() << getLanguageProfile();
     return window;
 }
 
