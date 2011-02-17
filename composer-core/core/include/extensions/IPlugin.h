@@ -35,6 +35,7 @@ namespace plugin {
              Document *doc;
              QString pluginID;
              QMutex mutex;
+             ILanguageProfile *languageProfile;
 
         public:
              inline QString getPluginID() {
@@ -43,6 +44,14 @@ namespace plugin {
 
              inline void setPluginID(QString pluginID) {
                  this->pluginID = pluginID;
+             }
+
+             inline void setLanguageProfile(ILanguageProfile *languageProfile) {
+                 this->languageProfile = languageProfile;
+             }
+
+             inline ILanguageProfile *getLanguageProfile() {
+                 return this->languageProfile;
              }
 
              //! This call is used by the core to bind an existing NclDocument

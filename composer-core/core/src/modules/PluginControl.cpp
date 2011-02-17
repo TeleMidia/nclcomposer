@@ -137,6 +137,7 @@ void PluginControl::launchDocument(Document *doc)
         {
             pluginInstance->setPluginID(factory->getPluginID());
             pluginInstance->setDocument(doc);
+            pluginInstance->setLanguageProfile(profile);
             launchNewPlugin(pluginInstance,transControl);
             pluginInstances.insert(location,pluginInstance);
             emit addPluginWidgetToWindow(factory,pluginInstance,doc);
