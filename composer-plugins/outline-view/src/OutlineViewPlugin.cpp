@@ -1,5 +1,7 @@
 #include "OutlineViewPlugin.h"
 
+#include "core/modules/LanguageControl.h"
+
 OutlineViewPlugin::OutlineViewPlugin()
 {
     window = new NCLTreeWidget(0);
@@ -10,7 +12,6 @@ OutlineViewPlugin::OutlineViewPlugin()
 
     connect (window, SIGNAL(elementRemovedByUser(QString)), this,
              SLOT(elementRemovedByUser(QString)));
-
 }
 
 OutlineViewPlugin::~OutlineViewPlugin()
@@ -20,6 +21,7 @@ OutlineViewPlugin::~OutlineViewPlugin()
 
 QWidget* OutlineViewPlugin::getWidget()
 {
+//    ILanguageProfile *profile = LanguageControl::getInstance()->getProfileFromType(0);
     return window;
 }
 
