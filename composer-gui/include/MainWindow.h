@@ -33,6 +33,7 @@
 #include <QtGui/QBitmap>
 #include <QtGui/QPainter>
 #include <QtGui/QTreeView>
+#include <QWebView>
 
 #include <core/modules/PluginControl.h>
 #include <core/modules/DocumentControl.h>
@@ -90,6 +91,8 @@ class MainWindow : public QMainWindow {
         QString defaultEx;
         QString user_directory_ext;
         QString work_space_path;
+
+        QWebView *welcomeScreen;
 
     private:
         QString promptChooseExtDirectory();

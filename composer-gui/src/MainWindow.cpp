@@ -1,5 +1,7 @@
 #include "MainWindow.h"
 
+#include <QPixmap>
+
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent) {
 
@@ -155,6 +157,12 @@ void MainWindow::initGUI() {
     createAbout();
     showMaximized();
 
+    welcomeScreen = new QWebView(this);
+
+    welcomeScreen->setStyleSheet("background-color:rgb(150,147,88); padding: 7px ; color:rgb(255,255,255)");
+    welcomeScreen->load(QUrl("http://www.ncl.org.br"));
+    welcomeScreen->showMaximized();
+    tabDocuments->addTab(welcomeScreen, "Welcome");
 }
 
 void MainWindow::addPluginWidget(IPluginFactory *fac, IPlugin *plugin,

@@ -4,7 +4,7 @@
 TARGET = Composer
 TEMPLATE = app
 CONFIG += release
-QT += xml
+QT += xml webkit
 MOC_DIR = .mocs
 OBJECTS_DIR = .objs
 
@@ -31,7 +31,8 @@ macx {
 else:unix {
     LIBS += -L/usr/local/lib/composer \
         -lComposerCore
-    INCLUDEPATH += $$LOCATION/include/composer
+    INCLUDEPATH +=  $$LOCATION/include/composer \
+                    $$LOCATION/include/composer/core
 }
 else:win32 {
     LIBS += -L$$LOCATION/ \
