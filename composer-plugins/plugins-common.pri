@@ -9,16 +9,22 @@ macx {
     :   LIBS += -framework \
         ComposerCore
     INCLUDEPATH += include /Library/Frameworks/ComposerCore.framework/
+#TODO: Include extensions dir
     target.path = $$quote(/Library/Application Support/Composer)
 }
 else:unix {
     LIBS += -L/usr/local/lib/composer \
-        -lComposerCore
-    INCLUDEPATH += include /usr/local/include/composer
+        -lComposerCore -L/usr/local/lib/composer/extension
+
+    INCLUDEPATH += include /usr/local/include/composer \
+                    /usr/local/include/composer/core \
+                   /usr/local/include/composer/core/extensions
     target.path = $$quote(/usr/local/lib/composer/extension)
 }
 else:win32 {
     LIBS += -LC:/Composer/ -lComposerCore1
-    INCLUDEPATH += . include C:/composer/include/composer
+    INCLUDEPATH += . include C:/composer/include/composer \
+                    C:/Composer/include/composer/core \
+                    C:/Composer/include/composer/core/extensions
     target.path = $$quote(C:/composer/lib/composer/)
 }
