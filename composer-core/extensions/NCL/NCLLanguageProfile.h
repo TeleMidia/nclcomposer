@@ -25,6 +25,16 @@ using namespace composer::core::extension;
         void releaseDocumentParser
                 (IDocumentParser *parser);
         QString getProfileName();
+
+
+        map <QString, map <QString, char> *> *getNesting();
+
+        map <QString, bool> *getAttributes (QString element);
+
+        map <QString, char> *getChildren (QString tagname);
+
+        vector <AttributeReferences *>
+                getReferences (QString element, QString attr);
     };
 
 

@@ -6,7 +6,7 @@ NCLStructure::NCLStructure() {
     attributes = new map <QString, map <QString, bool > * > ();
     nesting = new map <QString, map <QString, char > * > ();
     dataType = new map <QString, QString> ();
-    references = new QMultiMap <QString, NCLReference*> ();
+    references = new QMultiMap <QString, AttributeReferences*> ();
 }
 
 NCLStructure *NCLStructure::getInstance(){
@@ -136,7 +136,7 @@ void NCLStructure::addAttribute(QString element, QString attr, QString type, boo
 
 void NCLStructure::addReference(QString element, QString attr, QString ref_element, QString ref_attr)
 {
-    NCLReference *ref = new NCLReference (element, attr, ref_element, ref_attr);
+    AttributeReferences *ref = new AttributeReferences (element, attr, ref_element, ref_attr);
     references->insert(element, ref);
 }
 
@@ -156,9 +156,9 @@ map <QString, char> * NCLStructure::getChildren (QString tagname) {
     return NULL;
 }
 
-vector <NCLReference*> NCLStructure::getReferences(QString element, QString attr){
-    vector <NCLReference *> ref;
-    foreach( NCLReference *value, references->values(element) ){
+vector <AttributeReferences*> NCLStructure::getReferences(QString element, QString attr){
+    vector <AttributeReferences *> ref;
+    foreach( AttributeReferences *value, references->values(element) ){
         if(value->getAttribute() == attr)
             ref.push_back(value);
     }
@@ -167,7 +167,7 @@ vector <NCLReference*> NCLStructure::getReferences(QString element, QString attr
 }
 
 /************ NCL REFERENCE **********************/
-NCLReference::NCLReference ( QString element, QString attr,
+AttributeReferences::AttributeReferences ( QString element, QString attr,
                              QString ref_element, QString ref_attr)
 {
     this->element = element;
@@ -176,22 +176,22 @@ NCLReference::NCLReference ( QString element, QString attr,
     this->ref_attr = ref_attr;
 }
 
-QString NCLReference::getElement()
+QString AttributeReferences::getElement()
 {
     return this->element;
 }
 
-QString NCLReference::getAttribute()
+QString AttributeReferences::getAttribute()
 {
     return this->attr;
 }
 
-QString NCLReference::getRefElement()
+QString AttributeReferences::getRefElement()
 {
     return this->ref_element;
 }
 
-QString NCLReference::getRefAttribute()
+QString AttributeReferences::getRefAttribute()
 {
     return this->ref_attr;
 }

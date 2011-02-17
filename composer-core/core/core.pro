@@ -24,7 +24,8 @@ SOURCES += \
     src/modules/DocumentControl.cpp \
     src/model/Entity.cpp \
     src/model/Document.cpp \
-    src/util/Utilities.cpp
+    src/util/Utilities.cpp \
+    src/util/AttributeReferences.cpp
 
 HEADERS_MAN += \
     include/modules/PluginControl.h \
@@ -41,6 +42,7 @@ HEADERS_EXTENSIONS += \
 HEADERS_UTIL += \
     include/util/ComposerCoreControl_global.h \
     include/util/Singleton.h \
+    include/util/AttributeReferences.h \
     include/util/Utilities.h
 
 HEADERS_EXCEPTION +=  include/model/exception/EntityNotFound.h \
