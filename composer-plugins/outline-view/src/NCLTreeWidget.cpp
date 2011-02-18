@@ -9,6 +9,10 @@ NCLTreeWidget::NCLTreeWidget(QWidget *parent) : QTreeWidget(parent)
 
     createActions();
     createMenus();
+
+    QStringList labels;
+    labels << QObject::tr("Element") << QObject::tr("Attributes");
+    setHeaderLabels(labels);
 }
 
 NCLTreeWidget::~NCLTreeWidget()
@@ -44,7 +48,9 @@ bool NCLTreeWidget::updateFromText(QString text)
 {
     qDebug() << "MainWindow::updateTreeWidget()";
     QStringList labels;
-    labels << QObject::tr("Element") << QObject::tr("id") << QObject::tr("Line") << QObject::tr("Column");
+    labels << QObject::tr("Element") << QObject::tr("Attributes")
+            << QObject::tr("id");
+
     QXmlInputSource inputSource;
     inputSource.setData( text );
     QXmlSimpleReader reader;
@@ -52,7 +58,7 @@ bool NCLTreeWidget::updateFromText(QString text)
     this->setStyleSheet("/*background-color: #ffffff;*/ font-size: 11px;");
     clear();
     setHeaderLabels(labels);
-    header()->setStretchLastSection(false);
+    //header()->setStretchLastSection(false);
 
     // FIXME: Uncommenting this option brings some performance problems.
     // header()->setResizeMode(QHeaderView::ResizeToContents);
@@ -61,9 +67,9 @@ bool NCLTreeWidget::updateFromText(QString text)
     NCLParser *handler = new NCLParser(this);
 
     connect (  handler,
-               SIGNAL(fatalErrorFound(QString,QString,int,int,int)),
+               SIGNAL(fatalErrorFound(QString, QString, int, int, int)),
                this,
-               SLOT(errorNotification(QString,QString,int,int,int)));
+               SLOT(errorNotification(QString, QString, int, int, int)));
 
     reader.setContentHandler(handler);
     reader.setErrorHandler(handler);
@@ -79,6 +85,7 @@ QTreeWidgetItem* NCLTreeWidget::addElement ( QTreeWidgetItem *father,
                                              int pos,
                                              QString tagname,
                                              QString id,
+                                             QMap <QString, QString> &attrs,
                                              int line_in_text,
                                              int column_in_text)
 {
@@ -99,6 +106,7 @@ QTreeWidgetItem* NCLTreeWidget::addElement ( QTreeWidgetItem *father,
             this->insertTopLevelItem(pos, child);
         }
     }
+
     QIcon icon;
     if(tagname == "media")
         icon = QIcon (":/images/media.png");
@@ -111,9 +119,20 @@ QTreeWidgetItem* NCLTreeWidget::addElement ( QTreeWidgetItem *father,
 
     child->setIcon(0, icon);
     child->setText(0, tagname);
-    child->setText(1, id);
-    child->setText(2, QString::number(line_in_text));
-    child->setText(3, QString::number(column_in_text));
+    child->setText(2, id);
+
+    QString strAttrList = "";
+    QString key;
+    foreach (key, attrs.keys())
+    {
+        strAttrList += " ";
+        strAttrList += key + "=\"" + attrs[key] + "\"";
+    }
+    qDebug() << strAttrList;
+    child->setText(1, strAttrList);
+
+    //child->setText(2, QString::number(line_in_text));
+    //child->setText(3, QString::number(column_in_text));
 
     return child;
 }
@@ -123,8 +142,8 @@ void NCLTreeWidget::userAddNewElement()
     bool ok;
     QList<QTreeWidgetItem*> selecteds = this->selectedItems ();
     QTreeWidgetItem *item = selecteds.at (0);
-    QString id = item->text(1);
-    int line = item->text(2).toInt ( &ok, 10 );
+    QString id = item->text(2);
+    // int line = item->text(2).toInt ( &ok, 10 );
     QString tagname = item->text(0);
 
     QStringList strlist;
@@ -157,7 +176,7 @@ void NCLTreeWidget::userRemoveElement()
 {
     QList<QTreeWidgetItem*> selecteds = this->selectedItems ();
     QTreeWidgetItem *item = selecteds.at (0);
-    QString id = item->text(1);
+    QString id = item->text(2);
 
     if (item != NULL) {
         int resp = QMessageBox::question(this,

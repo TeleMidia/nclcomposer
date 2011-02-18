@@ -11,11 +11,17 @@ bool NCLParser::startElement(const QString & /* namespaceURI */,
                                  const QString &qName,
                                  const QXmlAttributes &attributes)
 {
+    QMap <QString, QString> attrs;
+    for(int i = 0; i < attributes.length(); i++) {
+        attrs[attributes.localName(i)] = attributes.value(i);
+    }
+
     if (currentItem) {
         currentItem = treeWidget->addElement(currentItem,
                                              currentItem->childCount(),
                                              qName,
                                              attributes.value("id"),
+                                             attrs,
                                              locator->lineNumber(),
                                              locator->columnNumber());
     } else {
@@ -23,6 +29,7 @@ bool NCLParser::startElement(const QString & /* namespaceURI */,
                                             -1,
                                             qName,
                                             attributes.value("id"),
+                                            attrs,
                                             locator->lineNumber(),
                                             locator->columnNumber());
     }

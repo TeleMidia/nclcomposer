@@ -35,21 +35,30 @@ public:
     QTreeWidgetItem* addElement ( QTreeWidgetItem *father,
                                   int pos,
                                   QString tagname,
-                                  QString id = "",
+                                  QString id,
+                                  QMap <QString, QString> &attrs,
                                   int line_in_text = -1,
                                   int column_in_text = -1);
 
 public slots:
-    void errorNotification(QString message, QString filename, int line, int column, int severity);
+    void errorNotification( QString message,
+                            QString filename,
+                            int line,
+                            int column,
+                            int severity);
 
 private slots:
     void userAddNewElement();
     void userRemoveElement();
 
 signals:
-    void elementAddedByUser(QString, QString, QMap<QString,QString>&,bool);
+    void elementAddedByUser(QString, QString, QMap<QString,QString>&, bool);
     void elementRemovedByUser (QString);
-    void parserErrorNotify(QString message, QString filename, int line, int column, int severity);
+    void parserErrorNotify( QString message,
+                            QString filename,
+                            int line,
+                            int column,
+                            int severity);
 
 };
 

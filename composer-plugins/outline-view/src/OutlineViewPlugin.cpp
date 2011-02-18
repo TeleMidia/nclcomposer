@@ -7,7 +7,7 @@ OutlineViewPlugin::OutlineViewPlugin()
     window = new NCLTreeWidget(0);
     doc = NULL;
 
-    connect (window, SIGNAL(elementAddedByUser(QString, QString, QMap<QString,QString>&,bool)),
+    connect (window, SIGNAL(elementAddedByUser(QString, QString, QMap<QString,QString>&, bool)),
              this, SIGNAL(addEntity(QString, QString, QMap<QString,QString>&, bool)));
 
     connect (window, SIGNAL(elementRemovedByUser(QString)), this,
@@ -30,11 +30,30 @@ void OutlineViewPlugin::onEntityAdded(QString ID, Entity *entity)
     QString line = "<" + entity->getType() + "> </" + entity->getType() + ">\n";
 
     QTreeWidgetItem *item;
+    QMap <QString, QString> attrs;
+    QMap <QString, QString>::iterator begin, end, it;
+
+    entity->getAttributeIterator(begin, end);
+    for (it = begin; it != end; ++it)
+    {
+        attrs[it.key()] = it.value();
+    }
+
     if(idToItem.contains(entity->getParentUniqueId())) {
-        item = window->addElement(idToItem[entity->getParentUniqueId()], 0, entity->getType(), entity->getUniqueId(), 0, 0);
+        item = window->addElement( idToItem[entity->getParentUniqueId()],
+                                   0,
+                                   entity->getType(),
+                                   entity->getUniqueId(),
+                                   attrs,
+                                   0, 0);
     }
     else {
-        item = window->addElement(0, 0, entity->getType(), entity->getUniqueId(), 0, 0);
+        item = window->addElement( 0,
+                                   0,
+                                   entity->getType(),
+                                   entity->getUniqueId(),
+                                   attrs,
+                                   0, 0);
     }
     idToItem[entity->getUniqueId()] = item;
 }
