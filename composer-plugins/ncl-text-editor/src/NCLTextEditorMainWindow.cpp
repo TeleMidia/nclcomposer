@@ -418,6 +418,7 @@ void NCLTextEditorMainWindow::insertElement(){
     QString id = item->text(1);
     int line = item->text(2).toInt ( &ok, 10 );
     QString tagname = item->text(0);
+    QMap <QString, QString> empty;
 
     QStringList strlist;
     map <QString, char> * children = NCLStructure::getInstance()->getChildren(tagname);
@@ -439,7 +440,7 @@ void NCLTextEditorMainWindow::insertElement(){
 
     if(ok && !element.isEmpty()) {
         //Add new Element to OutlineWidget
-        outlineView->addElement(item, 0, element, QString(""), line, 0);
+        outlineView->addElement(item, 0, element, QString(""), empty, line, 0);
 
         //Add new Element to texttWidget
         int endLine = textEdit->SendScintilla(QsciScintilla::SCI_GETLINEENDPOSITION, line-1);
@@ -495,7 +496,7 @@ void NCLTextEditorMainWindow::insertElement(){
         textEdit->setCursorPosition(line, 0);
         textEdit->ensureLineVisible(line);
         textEdit->SendScintilla(QsciScintilla::SCI_SETFOCUS, true);
-        QMap <QString, QString> empty;
+
         emit elementAdded(tagname, id, empty, false);
     }
 }

@@ -10,19 +10,23 @@ NCLTextEditor::NCLTextEditor(QWidget *parent) :
     initParameters();
 }
 
-NCLTextEditor::~NCLTextEditor(){
+NCLTextEditor::~NCLTextEditor()
+{
     delete apis;
     delete shortcut_ctrl_space;
     delete shortcut_zoomout;
     delete shortcut_zoomin;
 }
 
-void NCLTextEditor::initParameters(){
+void NCLTextEditor::initParameters()
+{
     tabBehavior = TAB_BEHAVIOR_DEFAULT;
 
     setAutoIndent(true);
     setFolding(QsciScintilla::BoxedTreeFoldStyle);
-    setFoldMarginColors(PREF_FOLD_MARGIN_FORE_COLOR, PREF_FOLD_MARGIN_BACK_COLOR);
+    setFoldMarginColors(PREF_FOLD_MARGIN_FORE_COLOR,
+                        PREF_FOLD_MARGIN_BACK_COLOR);
+
     setMarginLineNumbers(1, true);
     setMarginWidth(1, 25);
     setMarginsBackgroundColor(QColor("#dddddd"));
@@ -47,7 +51,8 @@ void NCLTextEditor::initParameters(){
 
     QRegExp attrValueRegex ("\".*\"");
     QsciStyle attrValueStyle (4, "ATTRIBUTE_VALUE", QColor(0x0, 0x0, 0xFF),
-                              mylexer->defaultPaper(1), mylexer->defaultFont(1));
+                              mylexer->defaultPaper(1),
+                              mylexer->defaultFont(1));
     mylexer->addTextPartition(4, attrValueRegex, attrValueStyle);
 
     QRegExp startTagRegex ("<.[^><.]+>");
@@ -67,13 +72,15 @@ void NCLTextEditor::initParameters(){
     setCaretLineBackgroundColor(QColor(PREF_CARET_LINE_BG_COLOR));
 
     /* Ctrl + Space == Autocomplete */
-    connect(shortcut_ctrl_space, SIGNAL(activated()), this, SLOT(autoCompleteFromAPIs()));
+    connect( shortcut_ctrl_space, SIGNAL(activated()),
+             this, SLOT(autoCompleteFromAPIs()));
 
     /* Zoomin e Zoomout == Ctrl + -  && Ctrl + + */
     connect(shortcut_zoomout, SIGNAL(activated()), this, SLOT(Decreasefont()));
     connect(shortcut_zoomin, SIGNAL(activated()), this, SLOT(Increasefont()));
 
-    //connect(this, SIGNAL(marginClicked(int,int,Qt::KeyboardModifiers)), this, SLOT(MarkLine(int,int,Qt::KeyboardModifiers)));
+    // connect(this, SIGNAL(marginClicked(int,int,Qt::KeyboardModifiers)), this,
+    // SLOT(MarkLine(int,int,Qt::KeyboardModifiers)));
 
     error_marker = markerDefine(QPixmap(":/images/error-icon-16.png"), -1);
     error_indicator = indicatorDefine(RoundBoxIndicator, 1);
@@ -82,15 +89,22 @@ void NCLTextEditor::initParameters(){
     qDebug() << error_marker << " " << error_indicator;
 }
 
-void NCLTextEditor::Increasefont(){
+void NCLTextEditor::Increasefont()
+{
     zoomIn();
 }
 
-void NCLTextEditor::Decreasefont(){
+void NCLTextEditor::Decreasefont()
+{
     zoomOut();
 }
 
-void NCLTextEditor::markError(QString description, QString file, int line, int column, int severity){
+void NCLTextEditor::markError ( QString description,
+                                QString file,
+                                int line,
+                                int column,
+                                int severity)
+{
     //TODO: Show Error Messages
     qDebug() << "MarkError line=" << line;
     QString tmp = this->text(line-1);
@@ -109,12 +123,23 @@ void NCLTextEditor::markError(QString description, QString file, int line, int c
     int indentation = 0;
     while (tmp[indentation].isSpace())
         indentation++;
-    clearIndicatorRange(0, 0, nr_lines, tmp2.size(), error_indicator);
-    fillIndicatorRange(line-1, indentation, line-1, tmp.size()-1, error_indicator);
+
+    clearIndicatorRange (0,
+                         0,
+                         nr_lines,
+                         tmp2.size(),
+                         error_indicator);
+
+    fillIndicatorRange ( line-1,
+                         indentation,
+                         line-1,
+                         tmp.size()-1,
+                         error_indicator);
 
 }
 
-void NCLTextEditor::wheelEvent (QWheelEvent *event){
+void NCLTextEditor::wheelEvent (QWheelEvent *event)
+{
     if(event->modifiers() == Qt::ControlModifier){
         if(event->delta() > 0)
             zoomIn();
@@ -124,8 +149,9 @@ void NCLTextEditor::wheelEvent (QWheelEvent *event){
     QsciScintilla::wheelEvent(event);
 }
 
-//FIXME: I DONT KNOW WHERE, BUT THE UNDO IS NOT WORKING EVERY TIME.
-void NCLTextEditor::keyPressEvent(QKeyEvent *event) {
+//FIXME: I DONT KNOW WHY (or WHERE), BUT THE UNDO IS NOT WORKING EVERY TIME.
+void NCLTextEditor::keyPressEvent(QKeyEvent *event)
+{
     int begin, end;
     int line, index;
     getCursorPosition(&line, &index);
@@ -142,7 +168,11 @@ void NCLTextEditor::keyPressEvent(QKeyEvent *event) {
 
     if(state == FILLING_ATTRIBUTES_STATE) {
         QString strline = text(line);
-        clearIndicatorRange(line, 0, line, strline.size(), filling_attribute_indicator);
+        clearIndicatorRange ( line,
+                              0,
+                              line,
+                              strline.size(),
+                              filling_attribute_indicator);
 
         if(event->key() == Qt::Key_Return){
             state = DEFAULT_STATE;
@@ -186,13 +216,16 @@ void NCLTextEditor::keyPressEvent(QKeyEvent *event) {
             }
 
             if (error) {
-                clearIndicatorRange(line, 0, line, strline.size(), filling_attribute_indicator);
+                clearIndicatorRange( line,
+                                     0,
+                                     line,
+                                     strline.size(),
+                                     filling_attribute_indicator );
                 state = DEFAULT_STATE;
             }
             return;
 
-        }
-        else {
+        } else {
             QsciScintilla::keyPressEvent ( event ) ;
             getCursorPosition (&line, &index);
             pos = SendScintilla(SCI_GETCURRENTPOS);
@@ -201,8 +234,8 @@ void NCLTextEditor::keyPressEvent(QKeyEvent *event) {
             //Test if pos-1 is also inside the attribute, otherwise it will
             // treat a text inside the end of previous Quote and the start of
             // the current one as an attribute
-            if (style == QsciLexerNCL::HTMLDoubleQuotedString &&
-                pos-1 >=0 ) {
+            if (    style == QsciLexerNCL::HTMLDoubleQuotedString
+                 && pos-1 >=0 ) {
                 //TODO: IMPROVE PERFORMANCE
                 recolor();
                 style = SendScintilla(SCI_GETSTYLEAT, pos-1);
@@ -212,7 +245,12 @@ void NCLTextEditor::keyPressEvent(QKeyEvent *event) {
                     return;
                 }
             }
-            clearIndicatorRange(line, 0, line, strline.size(), filling_attribute_indicator);
+            clearIndicatorRange( line,
+                                 0,
+                                 line,
+                                 strline.size(),
+                                 filling_attribute_indicator);
+
             state = DEFAULT_STATE;
         }
     }
@@ -243,26 +281,32 @@ void NCLTextEditor::keyPressEvent(QKeyEvent *event) {
     }
 }
 
-void NCLTextEditor::keyReleaseEvent(QKeyEvent *event) {
+void NCLTextEditor::keyReleaseEvent(QKeyEvent *event)
+{
     QsciScintilla::keyReleaseEvent(event);
 }
 
-void NCLTextEditor::AutoCompleteCompleted(){
+void NCLTextEditor::AutoCompleteCompleted()
+{
     qDebug() << "NCLTextEditor::AutoCompleteCompleted()";
 }
 
-void NCLTextEditor::MarkLine(int margin, int line, Qt::KeyboardModifiers state){
+void NCLTextEditor::MarkLine(int margin, int line, Qt::KeyboardModifiers state)
+{
     (void) margin;
     (void) line;
     (void) state;
     qDebug() << "NCLTextEditor::MarkLine()";
 }
 
-void NCLTextEditor::userFillingNextAttribute(int pos) {
+void NCLTextEditor::userFillingNextAttribute(int pos)
+{
     int begin, end, style, i = pos;
     int size = SendScintilla(SCI_GETTEXTLENGTH);
 
     state = FILLING_ATTRIBUTES_STATE;
+
+    qDebug() << pos;
 
     while( i < size ) {
         style = SendScintilla(SCI_GETSTYLEAT, i);
@@ -271,6 +315,8 @@ void NCLTextEditor::userFillingNextAttribute(int pos) {
         i++;
     }
     i++;
+
+    qDebug() << i;
 
     if( i >= size ) {
         state = DEFAULT_STATE;
@@ -284,7 +330,8 @@ void NCLTextEditor::userFillingNextAttribute(int pos) {
     setSelection(newline, begin, newline, end);
 }
 
-void NCLTextEditor::userFillingPreviousAttribute(int pos){
+void NCLTextEditor::userFillingPreviousAttribute(int pos)
+{
     int begin, end, style;
     int i = pos-1;
     state = FILLING_ATTRIBUTES_STATE;
@@ -309,13 +356,22 @@ void NCLTextEditor::userFillingPreviousAttribute(int pos){
 }
 
 //FIXME: ESTA INSERINDO UM ESPACO NO FINAL
-void NCLTextEditor::updateVisualFillingAttributeField(int line, int pos, int &begin, int &end) {
+void NCLTextEditor::updateVisualFillingAttributeField( int line,
+                                                       int pos,
+                                                       int &begin,
+                                                       int &end)
+{
     QString strline = text(line);
     begin = pos-1;
     end = pos;
     bool inserted_space = false;
 
-    clearIndicatorRange(line, 0, line, strline.size(), filling_attribute_indicator);
+    clearIndicatorRange( line,
+                         0,
+                         line,
+                         strline.size(),
+                         filling_attribute_indicator);
+
     while( begin >= 0 && strline[begin] != '\"')
         begin--;
 
@@ -343,7 +399,8 @@ void NCLTextEditor::updateVisualFillingAttributeField(int line, int pos, int &be
     if(inserted_space) setSelection(line, begin, line, end);
 }
 
-void NCLTextEditor::setTabBehavior(TAB_BEHAVIOR tabBehavior){
+void NCLTextEditor::setTabBehavior(TAB_BEHAVIOR tabBehavior)
+{
     this->tabBehavior = tabBehavior;
 }
 

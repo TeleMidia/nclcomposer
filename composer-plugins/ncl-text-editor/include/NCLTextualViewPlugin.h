@@ -14,6 +14,8 @@ class NCLTextualViewPlugin : public IPlugin
 private:
     NCLTextEditorMainWindow *window;
 
+    QMap <QString, int> lineOfEntity;
+
 public:
     explicit NCLTextualViewPlugin();
     ~NCLTextualViewPlugin();
@@ -24,12 +26,12 @@ public:
     void updateFromModel();
 
 public slots:
-    void onEntityAdded(QString ID, Entity *);
+    void onEntityAdded(QString pluginID, Entity *);
     void onEntityAddError(QString error);
-    void onEntityChanged(QString ID, Entity *);
+    void onEntityChanged(QString pluginID, Entity *);
     void onEntityChangeError(QString error);
     void onEntityAboutToRemove(Entity *);
-    void onEntityRemoved(QString ID, QString entityID);
+    void onEntityRemoved(QString pluginID, QString entityID);
     void onEntityRemoveError(QString error);
 };
 
