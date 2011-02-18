@@ -130,7 +130,7 @@ void NCLStructure::addAttribute(QString element, QString attr, QString type, boo
     if(!attributes->count(element))
         (*attributes)[element] = new map <QString, bool>();
 
-    qDebug() << "NCLStructure::addAttribute (" << element << ", " << attr << ")";
+//    qDebug() << "NCLStructure::addAttribute (" << element << ", " << attr << ")";
     (*(*attributes)[element])[attr] = required;
 }
 

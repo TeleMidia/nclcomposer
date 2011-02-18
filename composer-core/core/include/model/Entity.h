@@ -156,7 +156,7 @@ namespace composer {
 
                 inline QString getParentUniqueId() {
                     QMutexLocker loecker(&lockParent);
-                    qDebug() << getType();
+                    //qDebug() << getType();
                     return parent->getUniqueId();
                 }
 
