@@ -22,12 +22,20 @@ NCLTreeWidget::~NCLTreeWidget()
 
 void NCLTreeWidget::createActions ()
 {
-    insertNodeAct = new QAction(QIcon(":/images/save.png"), tr("&Add child"), this);
-    connect(insertNodeAct, SIGNAL(triggered()), this, SLOT(userAddNewElement()));
+    insertNodeAct = new QAction( QIcon(":/images/save.png"),
+                                 tr("&Add child"),
+                                 this);
+
+    connect( insertNodeAct, SIGNAL(triggered()),
+             this, SLOT(userAddNewElement()));
     addAction(insertNodeAct);
 
-    removeNodeAct = new QAction(QIcon(":/images/delete.png"), tr("&Remove Selected element"), this);
-    connect(removeNodeAct, SIGNAL(triggered()), this, SLOT(userRemoveElement()));
+    removeNodeAct = new QAction( QIcon(":/images/delete.png"),
+                                 tr("&Remove Selected element"),
+                                 this);
+
+    connect( removeNodeAct, SIGNAL(triggered()),
+             this, SLOT(userRemoveElement()));
     addAction(removeNodeAct);
 
     expandAllAct = new QAction(tr("Expand All"), this);
@@ -46,7 +54,7 @@ void NCLTreeWidget::createMenus ()
 
 bool NCLTreeWidget::updateFromText(QString text)
 {
-    qDebug() << "MainWindow::updateTreeWidget()";
+    //qDebug() << "MainWindow::updateTreeWidget()";
     QStringList labels;
     labels << QObject::tr("Element") << QObject::tr("Attributes")
             << QObject::tr("id");
@@ -128,7 +136,7 @@ QTreeWidgetItem* NCLTreeWidget::addElement ( QTreeWidgetItem *father,
         strAttrList += " ";
         strAttrList += key + "=\"" + attrs[key] + "\"";
     }
-    qDebug() << strAttrList;
+    // qDebug() << strAttrList;
     child->setText(1, strAttrList);
 
     //child->setText(2, QString::number(line_in_text));
@@ -157,13 +165,13 @@ void NCLTreeWidget::userAddNewElement()
         }
     }
 
-    QString element = QInputDialog::getItem(this,
-                                            tr("Add child"),
-                                            tr("Element name:"),
-                                            strlist,
-                                            0,
-                                            true,
-                                            &ok);
+    QString element = QInputDialog::getItem( this,
+                                             tr("Add child"),
+                                             tr("Element name:"),
+                                             strlist,
+                                             0,
+                                             true,
+                                             &ok );
 
     if(ok) {
         //Add new Element to OutlineWidget
@@ -179,11 +187,12 @@ void NCLTreeWidget::userRemoveElement()
     QString id = item->text(2);
 
     if (item != NULL) {
-        int resp = QMessageBox::question(this,
-                                         tr("Deleting Element"),
-                                         tr("Do you really want delete the %1 element ?").arg(id),
-                                         QMessageBox::Yes,
-                                         QMessageBox::No);
+        int resp = QMessageBox::question(
+                      this,
+                      tr("Deleting Element"),
+                      tr("Do you really want delete the %1 element ?").arg(id),
+                      QMessageBox::Yes,
+                      QMessageBox::No );
 
         if(resp) {
             qDebug() << "NCLTreeWidget::userRemoveElement";
@@ -196,7 +205,11 @@ void NCLTreeWidget::userRemoveElement()
     }
 }
 
-void NCLTreeWidget::errorNotification(QString message, QString filename, int line, int column, int severity)
+void NCLTreeWidget::errorNotification( QString message,
+                                       QString filename,
+                                       int line,
+                                       int column,
+                                       int severity)
 {
     //this->setStyleSheet("background-color: #aa0000; font-size: 11px;");
     emit parserErrorNotify(message, filename, line, column, severity);

@@ -21,7 +21,6 @@ OutlineViewPlugin::~OutlineViewPlugin()
 
 QWidget* OutlineViewPlugin::getWidget()
 {
-    qDebug() << getLanguageProfile();
     return window;
 }
 
@@ -94,7 +93,7 @@ void OutlineViewPlugin::onEntityRemoveError(QString error)
 
 void OutlineViewPlugin::elementRemovedByUser(QString id)
 {
-    qDebug() << "elementRemovedByUser" << id;
+    // qDebug() << "elementRemovedByUser" << id;
     Entity *entity = doc->getEntityBydId(id);
     emit removeEntity(entity, false);
     idToItem.remove(id);
