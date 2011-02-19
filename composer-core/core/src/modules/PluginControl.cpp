@@ -80,7 +80,7 @@ IPluginFactory* PluginControl::loadPlugin(QString fileName)
     }//fim OK load
     else {
        qDebug() << "PluginControl::loadPlugins failed to load"
-                << "(" << fileName << ")";
+                << "(" << fileName << ")" << " -- " << loader.errorString();
     }
     return pluginFactory;
 }
@@ -225,7 +225,7 @@ bool PluginControl::releasePlugins(Document *doc)
         for (it = instances.begin(); it != instances.end(); it++)
         {
            IPlugin *inst = *it;
-           //TODO - chamar o save antes de dar o release na instancia
+           inst->save();
            IPluginFactory *fac = pluginFactories[inst->getPluginID()];
            fac->releasePluginInstance(inst);
         }
