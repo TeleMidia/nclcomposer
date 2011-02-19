@@ -18,7 +18,8 @@ macx:INSTALLBASE = /Library/Frameworks
 else:unix:INSTALLBASE = /usr/local
 win32:INSTALLBASE = C:/Composer
 
-HEADERS_PATH = $$INSTALLBASE/include/composer
+macx:HEADERS_PATH = $$INSTALLBASE/ComposerCore.framework
+else:unix:HEADERS_PATH = $$INSTALLBASE/include/composer
 
 INCLUDEPATH += ../../core/include
 
@@ -28,6 +29,7 @@ macx {
     LIBS += -L../../core -F../../core \
         -framework ComposerCore
     target.path = $$quote(/Library/Application Support/Composer)
+    headers_nclprofile.path = $$HEADERS_PATH/core/extensions
 }
 else:unix {
     LIBS += -L../../core -lComposerCore
