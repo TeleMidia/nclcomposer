@@ -261,14 +261,14 @@ void MainWindow::createTreeProject()
 
     addDockWidget(Qt::LeftDockWidgetArea, fileSystemDock);
 
-    projectWindowAct = new QAction(QIcon(":/mainwindow/projectTree"),
+    projectViewAct = new QAction(QIcon(":/mainwindow/projectTree"),
                                    tr("Projects"),this);
-    projectWindowAct->setCheckable(true);
-    projectWindowAct->setChecked(fileSystemDock->isVisible());
+    projectViewAct->setCheckable(true);
+    projectViewAct->setChecked(fileSystemDock->isVisible());
 
     connect(fileSystemDock,SIGNAL(visibilityChanged(bool)),this,
-            SLOT(updateWindowMenu()));
-    connect(projectWindowAct,SIGNAL(triggered(bool)),fileSystemDock,
+            SLOT(updateViewMenu()));
+    connect(projectViewAct,SIGNAL(triggered(bool)),fileSystemDock,
             SLOT(setVisible(bool)));
 
 }
@@ -285,10 +285,10 @@ void MainWindow::createMenus() {
     editMenu = menuBar()->addMenu(tr("&Edit"));
     editMenu->addAction(editPreferencesAct);
 
-    windowMenu = menuBar()->addMenu(tr("&Window"));
+    viewMenu = menuBar()->addMenu(tr("&View"));
 
     menuBar()->addSeparator();
-    connect(windowMenu, SIGNAL(aboutToShow()), this, SLOT(updateWindowMenu()));
+    connect(viewMenu, SIGNAL(aboutToShow()), this, SLOT(updateViewMenu()));
 
     helpMenu = menuBar()->addMenu(tr("&Help"));
     helpMenu->addAction(aboutComposerAct);
@@ -381,8 +381,13 @@ void MainWindow::createActions() {
     aboutComposerPluginsAct->setStatusTip(tr("Show the application Plugins' About box"));
     connect(aboutComposerPluginsAct, SIGNAL(triggered()), this, SLOT(about()));
 
-    separatorWindowAct = new QAction(this);
-    separatorWindowAct->setSeparator(true);
+    fullScreenViewAct = new QAction(tr("&FullScreen"),this);
+    //fullScreenViewAct->setShortcut();
+    connect(fullScreenViewAct,SIGNAL(triggered()),this,
+                              SLOT(showCurrentWidgetFullScreen()));
+
+    separatorViewAct = new QAction(this);
+    separatorViewAct->setSeparator(true);
 
     editPreferencesAct = new QAction(tr("&Preferences"), this);
     editPreferencesAct->setStatusTip(tr("Edit preferences"));
@@ -403,12 +408,27 @@ void MainWindow::createStatusBar()
     statusBar()->showMessage(tr("Ready"));
 }
 
-void MainWindow::updateWindowMenu()
+void MainWindow::showCurrentWidgetFullScreen()
 {
-    windowMenu->clear();
-    windowMenu->addAction(projectWindowAct);
-    windowMenu->addAction(separatorWindowAct);
-    projectWindowAct->setChecked(fileSystemDock->isVisible());
+    tabDocuments->setWindowFlags(Qt::Window);
+    tabDocuments->setWindowState(Qt::WindowFullScreen);
+    tabDocuments->show();
+//    QWidget *w = tabDocuments->currentWidget();
+//    if (w != NULL)
+//    {
+//        w->setWindowFlags(Qt::Window);
+//        w->setWindowState(Qt::WindowFullScreen);
+//        w->show();
+//    }
+}
+
+void MainWindow::updateViewMenu()
+{
+    viewMenu->clear();
+    viewMenu->addAction(projectViewAct);
+    viewMenu->addAction(separatorViewAct);
+    viewMenu->addAction(fullScreenViewAct);
+    projectViewAct->setChecked(fileSystemDock->isVisible());
 }
 
 void MainWindow::closeEvent(QCloseEvent *event)

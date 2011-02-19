@@ -57,7 +57,7 @@ class MainWindow : public QMainWindow {
 
         QMenu *fileMenu;
         QMenu *helpMenu;
-        QMenu *windowMenu;
+        QMenu *viewMenu;
         QMenu *editMenu;
 
         //QToolBar *fileTool;
@@ -66,8 +66,9 @@ class MainWindow : public QMainWindow {
         QAction *newDocumentAct;
         QAction *aboutComposerAct;
         QAction *aboutComposerPluginsAct;
-        QAction *separatorWindowAct;
-        QAction *projectWindowAct;
+        QAction *fullScreenViewAct;
+        QAction *separatorViewAct;
+        QAction *projectViewAct;
         QAction *editPreferencesAct;
         QAction *exitAct;
         QAction *switchWS;
@@ -112,10 +113,11 @@ class MainWindow : public QMainWindow {
 
     private slots:
         void about();
-        void updateWindowMenu();
+        void updateViewMenu();
         void showEditPreferencesDialog();
         void showSwitchWorkspaceDialog();
         void tabClosed(int index);
+        void showCurrentWidgetFullScreen();
 
     public:
         MainWindow(QWidget *parent = 0);
