@@ -7,9 +7,7 @@ UI_DIR      =   .ui
 
 macx {
     :   LIBS += -framework \
-        ComposerCore \
-        -L$$quote(/Library/Application Support/Composer) \
-        -lNCLLanguageProfile
+        ComposerCore
         INCLUDEPATH += include /Library/Frameworks/ComposerCore.framework/ \
                        /Library/Frameworks/ComposerCore.framework/core \
                        /Library/Frameworks/ComposerCore.framework/core/extensions

@@ -2,6 +2,9 @@ include (../plugins-common.pri)
 TARGET          = outline_view
 QT              += xml
 
+macx:LIBS+= -L$$quote(/Library/Application Support/Composer) \
+        -lNCLLanguageProfile
+
 INCLUDEPATH     +=  include \
                     ../ncl-text-editor/include \
 

@@ -8,7 +8,9 @@ INCLUDEPATH +=  include \
                 ../ncl-layout-view \
                 deps/QScintilla-gpl-2.4.6/Qt4
 
-macx:LIBS += -L/Library/Frameworks
+macx:LIBS += -L/Library/Frameworks \
+            -L$$quote(/Library/Application Support/Composer) \
+            -lNCLLanguageProfile
 unix:LIBS += -Ldeps/QScintilla-gpl-2.4.6/Qt4
 
 HEADERS     =   include/NCLTextEditorMainWindow.h \
