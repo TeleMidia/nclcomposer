@@ -3,8 +3,8 @@
 # -------------------------------------------------
 TARGET = Composer
 TEMPLATE = app
-CONFIG += release
-QT += xml webkit
+CONFIG += debug
+QT += xml
 MOC_DIR = .mocs
 OBJECTS_DIR = .objs
 
@@ -21,9 +21,8 @@ win32:INSTALLBASE = C:/Composer
 target.path = $$INSTALLBASE
 INCLUDEPATH += include/
 
-macx { 
-    LIBS += -L/Library/Frameworks \
-            -lqscintilla2 \
+macx {
+    LIBS += \
         -framework \
         ComposerCore
     INCLUDEPATH += /Library/Frameworks/ComposerCore.framework/

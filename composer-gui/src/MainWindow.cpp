@@ -377,8 +377,11 @@ void MainWindow::createActions() {
     aboutComposerAct = new QAction(tr("&About"), this);
     aboutComposerAct->setStatusTip(tr("Show the application's About box"));
 
+    connect(aboutComposerAct, SIGNAL(triggered()), this, SLOT(about()));
+
     aboutComposerPluginsAct = new QAction(tr("&About Plugins..."), this);
-    aboutComposerPluginsAct->setStatusTip(tr("Show the application Plugins' About box"));
+    aboutComposerPluginsAct->setStatusTip(tr("Show the application Plugins'"
+                                             "About box"));
     connect(aboutComposerPluginsAct, SIGNAL(triggered()), this, SLOT(about()));
 
     fullScreenViewAct = new QAction(tr("&FullScreen"),this);
