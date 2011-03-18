@@ -36,7 +36,10 @@ public:
     void setTabBehavior(TAB_BEHAVIOR tabBehavior);
     void userFillingNextAttribute(int pos);
     void userFillingPreviousAttribute(int pos);
-    void updateVisualFillingAttributeField(int line, int index, int &begin, int &end);
+    void updateVisualFillingAttributeField( int line,
+                                            int index,
+                                            int &begin,
+                                            int &end);
 
 private:
 
@@ -45,7 +48,7 @@ private:
         FILLING_ATTRIBUTES_STATE
     };
 
-    INTERACTION_STATE state;
+    INTERACTION_STATE interaction_state;
 
     QShortcut *shortcut_ctrl_space;
     QShortcut *shortcut_zoomout;
@@ -64,6 +67,7 @@ private:
     void wheelEvent( QWheelEvent * event );
     void keyPressEvent(QKeyEvent *event);
     void keyReleaseEvent(QKeyEvent *event);
+    void mousePressEvent(QMouseEvent *e);
 
 protected:
     void AutoCompleteCompleted();

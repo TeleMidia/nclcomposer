@@ -82,7 +82,7 @@ void NCLTextualViewPlugin::onEntityAdded(QString pluginID, Entity *entity)
 
 void NCLTextualViewPlugin::onEntityAddError(QString error)
 {
-    qDebug() << "NCLTextualViewPlugin::onEntityAddError(" << error << ")";
+    //qDebug() << "NCLTextualViewPlugin::onEntityAddError(" << error << ")";
 }
 
 void NCLTextualViewPlugin::onEntityChanged(QString ID, Entity *entity)

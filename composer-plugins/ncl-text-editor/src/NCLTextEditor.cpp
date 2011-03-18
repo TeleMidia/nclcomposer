@@ -149,6 +149,38 @@ void NCLTextEditor::wheelEvent (QWheelEvent *event)
     QsciScintilla::wheelEvent(event);
 }
 
+//TODO: Maybe move the mousePressEvent function content, and part of the
+// keyPressEvent, to a function connected to selectionChanged signal.
+void NCLTextEditor::mousePressEvent(QMouseEvent *event)
+{
+    int previousLine, previousIndex;
+    getCursorPosition(&previousLine, &previousIndex);
+
+    QString strline = text(previousLine);
+    clearIndicatorRange ( previousLine,
+                          0,
+                          previousLine,
+                          strline.size(),
+                          filling_attribute_indicator);
+
+    QsciScintilla::mousePressEvent(event);
+
+    int line, index, begin, end;
+    getCursorPosition(&line, &index);
+    int pos, style;
+    pos = SendScintilla(SCI_GETCURRENTPOS);
+    style = SendScintilla(SCI_GETSTYLEAT, pos);
+
+    //FIXME: Attribute also can be between Single quotes
+    if (style == QsciLexerNCL::HTMLDoubleQuotedString) {
+        interaction_state = FILLING_ATTRIBUTES_STATE;
+        getCursorPosition (&line, &index);
+        updateVisualFillingAttributeField(line, index, begin, end);
+    } else {
+        interaction_state = DEFAULT_STATE;
+    }
+}
+
 //FIXME: I DONT KNOW WHY (or WHERE), BUT THE UNDO IS NOT WORKING EVERY TIME.
 void NCLTextEditor::keyPressEvent(QKeyEvent *event)
 {
@@ -166,7 +198,7 @@ void NCLTextEditor::keyPressEvent(QKeyEvent *event)
         event = new QKeyEvent(event->type(), Qt::Key_Tab, Qt::ShiftModifier);
     }
 
-    if(state == FILLING_ATTRIBUTES_STATE) {
+    if (interaction_state == FILLING_ATTRIBUTES_STATE) {
         QString strline = text(line);
         clearIndicatorRange ( line,
                               0,
@@ -175,7 +207,7 @@ void NCLTextEditor::keyPressEvent(QKeyEvent *event)
                               filling_attribute_indicator);
 
         if(event->key() == Qt::Key_Return){
-            state = DEFAULT_STATE;
+            interaction_state = DEFAULT_STATE;
             setSelection(line, index, line, index);
             return;
         }
@@ -186,7 +218,7 @@ void NCLTextEditor::keyPressEvent(QKeyEvent *event)
             style = SendScintilla(SCI_GETSTYLEAT, pos);
             bool error = false;
 
-            //CTRL+TAB -> GO TO PREVIOUS ATRIBUTE
+            //SHIFT+TAB -> GO TO PREVIOUS ATRIBUTE
             if(event->modifiers() & Qt::ShiftModifier) {
                 while (pos > 0 ) {
                     style = SendScintilla(SCI_GETSTYLEAT, pos);
@@ -194,6 +226,7 @@ void NCLTextEditor::keyPressEvent(QKeyEvent *event)
                         break;
                     pos--;
                 }
+
                 if (pos >= 0)
                     userFillingPreviousAttribute(pos);
                 else
@@ -221,7 +254,7 @@ void NCLTextEditor::keyPressEvent(QKeyEvent *event)
                                      line,
                                      strline.size(),
                                      filling_attribute_indicator );
-                state = DEFAULT_STATE;
+                interaction_state = DEFAULT_STATE;
             }
             return;
 
@@ -231,7 +264,7 @@ void NCLTextEditor::keyPressEvent(QKeyEvent *event)
             pos = SendScintilla(SCI_GETCURRENTPOS);
             style = SendScintilla(SCI_GETSTYLEAT, pos);
 
-            //Test if pos-1 is also inside the attribute, otherwise it will
+            // Test if pos-1 is also inside the attribute, otherwise it will
             // treat a text inside the end of previous Quote and the start of
             // the current one as an attribute
             if (    style == QsciLexerNCL::HTMLDoubleQuotedString
@@ -251,7 +284,7 @@ void NCLTextEditor::keyPressEvent(QKeyEvent *event)
                                  strline.size(),
                                  filling_attribute_indicator);
 
-            state = DEFAULT_STATE;
+            interaction_state = DEFAULT_STATE;
         }
     }
     else {
@@ -272,7 +305,7 @@ void NCLTextEditor::keyPressEvent(QKeyEvent *event)
             if (tabBehavior == TAB_BEHAVIOR_NEXT_ATTR &&
                 (style == QsciLexerNCL::HTMLDoubleQuotedString)) {
 
-                state = FILLING_ATTRIBUTES_STATE;
+                interaction_state = FILLING_ATTRIBUTES_STATE;
                 getCursorPosition (&line, &index);
 
                 updateVisualFillingAttributeField(line, index, begin, end);
@@ -304,7 +337,7 @@ void NCLTextEditor::userFillingNextAttribute(int pos)
     int begin, end, style, i = pos;
     int size = SendScintilla(SCI_GETTEXTLENGTH);
 
-    state = FILLING_ATTRIBUTES_STATE;
+    interaction_state = FILLING_ATTRIBUTES_STATE;
 
     qDebug() << pos;
 
@@ -319,7 +352,7 @@ void NCLTextEditor::userFillingNextAttribute(int pos)
     qDebug() << i;
 
     if( i >= size ) {
-        state = DEFAULT_STATE;
+        interaction_state = DEFAULT_STATE;
         return;
     }
 
@@ -334,7 +367,7 @@ void NCLTextEditor::userFillingPreviousAttribute(int pos)
 {
     int begin, end, style;
     int i = pos-1;
-    state = FILLING_ATTRIBUTES_STATE;
+    interaction_state = FILLING_ATTRIBUTES_STATE;
 
     while( i >= 0) {
         style = SendScintilla(SCI_GETSTYLEAT, i);
@@ -344,7 +377,7 @@ void NCLTextEditor::userFillingPreviousAttribute(int pos)
     }
 
     if( i < 0) {
-        state = DEFAULT_STATE;
+        interaction_state = DEFAULT_STATE;
         return;
     }
 
@@ -376,7 +409,7 @@ void NCLTextEditor::updateVisualFillingAttributeField( int line,
         begin--;
 
     if(begin < 0) {
-        state = DEFAULT_STATE;
+        interaction_state = DEFAULT_STATE;
         return;
     }
     begin++;
@@ -385,7 +418,7 @@ void NCLTextEditor::updateVisualFillingAttributeField( int line,
         end++;
 
     if(end >= strline.size()) {
-        state = DEFAULT_STATE;
+        interaction_state = DEFAULT_STATE;
         return;
     }
 
