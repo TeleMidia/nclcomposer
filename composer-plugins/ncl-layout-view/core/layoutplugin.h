@@ -7,6 +7,7 @@ using namespace composer::core::extension::plugin;
 #include "ui/mainwindow.h"
 #include "ui/view/layoutview.h"
 #include "ui/view/layoutitem.h"
+#include "ui/view/layoutscene.h"
 
 namespace br{
 namespace pucrio{
@@ -35,12 +36,21 @@ public slots:
     void onEntityRemoved(QString ID, QString entityID);
     void onEntityRemoveError(QString error);
 
+    void removeRegion(LayoutItem* item);
+    void addRegion(LayoutItem* item);
+
 private:
     LayoutView* view;
 
     MainWindow* window;
 
+    LayoutItem* lasti;
+    LayoutScene* scene;
+
+
+//    QMap<QString, Entity*> idety;
     QMap<QString, LayoutItem*> items;
+    QMap<LayoutItem*, QString> items2;
 };
 
 }

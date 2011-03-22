@@ -9,6 +9,8 @@
 #include <QGraphicsTextItem>
 #include <QLineEdit>
 
+#include "layoutscene.h"
+
 namespace br{
 namespace pucrio{
 namespace telemidia{
@@ -61,6 +63,7 @@ void LayoutItem::createMenus()
     insertMenu->addAction(regionAction);
 
     contextMenu->addMenu(insertMenu);
+    contextMenu->addAction(removeRegionAction);
 }
 
 void LayoutItem::createActions()
@@ -68,12 +71,16 @@ void LayoutItem::createActions()
     //TODO: LayoutDocument::createActions()
     regionAction = new QAction(this);
     regionAction->setText("Region");
+
+    removeRegionAction = new QAction(this);
+    removeRegionAction->setText("Remove");
 }
 
 void LayoutItem::createConnections()
 {
     //TODO: LayoutDocument::createConnections()
     connect(regionAction, SIGNAL(triggered()),SLOT(addItem()));
+     connect(removeRegionAction, SIGNAL(triggered()),SLOT(removeItem()));
 }
 
 
@@ -87,6 +94,15 @@ void LayoutItem::addItem()
     item->setpTop(insertPoint.y()/getSize().height());
     item->adjustItem();
 
+    LayoutScene* s = (LayoutScene*) scene();
+
+    connect(item,SIGNAL(itemAdded(LayoutItem*)),s,SIGNAL(itemAdded(LayoutItem*)));
+    connect(item,SIGNAL(itemRemoved(LayoutItem*)),s,SIGNAL(itemRemoved(LayoutItem*)));
+
+
+    qDebug() << "emit itemAdded from LayoutItem";
+
+    emit itemAdded(item);
 
 //    QGraphicsTextItem* titem = new QGraphicsTextItem(title,item);
 
@@ -100,9 +116,10 @@ void LayoutItem::addItem(QGraphicsItem* item)
     //TODO: LayoutItem::addItem(...)
 }
 
-void LayoutItem::removeItem(QGraphicsItem* item)
+void LayoutItem::removeItem()
 {
-    //TODO: LayoutItem::removeItem(...)
+    //setVisible(false);
+    emit itemRemoved(this);
 }
 
 QPainterPath LayoutItem::shape() const
@@ -441,7 +458,7 @@ void LayoutItem::contextMenuEvent(
         contextMenuEvent->setAccepted(true);
     }
 
-     qDebug() << "region";
+  //   qDebug() << "region";
 }
 
 void LayoutItem::adjustItem()

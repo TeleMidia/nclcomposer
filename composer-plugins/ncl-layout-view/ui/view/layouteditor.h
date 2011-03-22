@@ -37,6 +37,8 @@ public slots:
 protected:
     void mouseMoveEvent ( QMouseEvent * event );
 
+signals:
+    void itemAdded(LayoutItem* item);
 
 private:
     void createActions();

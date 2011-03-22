@@ -2,6 +2,8 @@
 
 #include <QDebug>
 
+#include <math.h>
+
 namespace br{
 namespace pucrio{
 namespace telemidia{
@@ -11,17 +13,49 @@ namespace ui{
 LayoutPlugin::LayoutPlugin()
 {
     view = new LayoutView();
-    view->createScene();
+    scene = view->createScene();
+
+    connect(scene,SIGNAL(itemAdded(LayoutItem*)), SLOT(addRegion(LayoutItem*)));
+    connect(scene,SIGNAL(itemRemoved(LayoutItem*)), SLOT(removeRegion(LayoutItem*)));
 
     window = new MainWindow();
     window->addView(view);
 
+//    idety = QMap<QString, Entity*>();
     items = QMap<QString, LayoutItem*>();
+    items2 = QMap<LayoutItem*, QString>();
 }
 
 LayoutPlugin::~LayoutPlugin()
 {
 
+}
+
+void LayoutPlugin::removeRegion(LayoutItem* item)
+{
+    removeEntity(getDocument()->getEntityBydId(items2[item]),false);
+}
+
+void LayoutPlugin::addRegion(LayoutItem* item)
+{
+    qDebug() << "LayoutPlugin::addRegion";
+
+    if (item->parentItem() != NULL){
+        LayoutItem* p = (LayoutItem*) item->parentItem();
+
+        lasti = item;
+
+        QMap<QString, QString> att;
+        att["top"] = QString::number(ceil(item->getpTop()*100)) + "%";
+        att["left"] = QString::number(ceil(item->getpTop()*100)) + "%";
+        att["width"] = QString::number(ceil(item->getpTop()*100)) + "%";
+        att["bottom"] = QString::number(ceil(item->getpTop()*100)) + "%";
+
+        addEntity("region", items2[p],att, false);
+    }
+
+//    void addEntity( QString type, QString parentEntityId,
+//                           QMap<QString,QString>& atts, bool force);
 }
 
 QWidget* LayoutPlugin::getWidget()
@@ -31,10 +65,12 @@ QWidget* LayoutPlugin::getWidget()
 
 void LayoutPlugin::onEntityAdded(QString ID, Entity* entity)
 {
+    if (getPluginID() != ID){
+
     // is region
     if (entity->getType() == "region"){
 
-        qDebug() << "SETTING:" << entity->getAttribute("id");
+//        qDebug() << "SETTING:" << entity->getAttribute("id");
 
 //        qDebug() << "region";
 
@@ -96,12 +132,12 @@ void LayoutPlugin::onEntityAdded(QString ID, Entity* entity)
             height /= 100;
         }
 
-        qDebug() << "top:" << top;
-        qDebug() << "left:" << left;
-        qDebug() << "right:" << right;
-        qDebug() << "bottom:" << bottom;
-        qDebug() << "width:" << width;
-        qDebug() << "height:" << height;
+//        qDebug() << "top:" << top;
+//        qDebug() << "left:" << left;
+//        qDebug() << "right:" << right;
+//        qDebug() << "bottom:" << bottom;
+//        qDebug() << "width:" << width;
+//        qDebug() << "height:" << height;
 
         QString entityID = entity->getUniqueId();
         QGraphicsScene* s = view->scene();
@@ -117,7 +153,12 @@ void LayoutPlugin::onEntityAdded(QString ID, Entity* entity)
 
 
                     items[entityID] = new LayoutItem();
+                    items2[items[entityID]] = entityID;
                     s->addItem(items[entityID]);
+
+                    connect(items[entityID],SIGNAL(itemAdded(LayoutItem*)),this,SLOT(addRegion(LayoutItem*)));
+                     connect(items[entityID],SIGNAL(itemRemoved(LayoutItem*)),this,SLOT(removeRegion(LayoutItem*)));
+
 
 //                    qDebug() << s->sceneRect();
 
@@ -130,6 +171,12 @@ void LayoutPlugin::onEntityAdded(QString ID, Entity* entity)
             }else{
                 items[entityID] = new LayoutItem(
                         items[entity->getParent()->getUniqueId()]);
+
+                items2[items[entityID]] = entityID;
+
+                connect(items[entityID],SIGNAL(itemAdded(LayoutItem*)),this,SLOT(addRegion(LayoutItem*)));
+                connect(items[entityID],SIGNAL(itemRemoved(LayoutItem*)),this,SLOT(removeRegion(LayoutItem*)));
+
             }
 
 
@@ -142,7 +189,11 @@ void LayoutPlugin::onEntityAdded(QString ID, Entity* entity)
             items[entityID]->setTitle(entity->getAttribute("id"));
 
 
-            qDebug() << "ADDED:" << entity->getAttribute("id");
+           // qDebug() << "ADDED:" << entity->getAttribute("id");
+        }
+    }else{
+        items[entity->getUniqueId()] = lasti;
+        items2[lasti] = entity->getUniqueId();
     }
 }
 
@@ -168,7 +219,13 @@ void LayoutPlugin::onEntityAboutToRemove(Entity *)
 
 void LayoutPlugin::onEntityRemoved(QString ID, QString entityID)
 {
+    qDebug() << "void LayoutPlugin::onEntityRemoved(QString ID, QString entityID)";
 
+    items2.remove(items[entityID]);
+
+    delete(items[entityID]);
+
+    items.remove(entityID);
 }
 
 void LayoutPlugin::onEntityRemoveError(QString error)

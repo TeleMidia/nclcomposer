@@ -217,6 +217,8 @@ void LayoutEditor::exporttoimg()
 void LayoutEditor::mouseMoveEvent ( QMouseEvent * event ){
     QMainWindow::mouseMoveEvent(event);
 
+    qDebug() << "over";
+
     if (isFullScreen()){
         if (QRect(0,0,30,rect().height()).contains(event->pos())){
 //            docktenso->show();

@@ -59,7 +59,19 @@ void LayoutScene::createItem()
     item->setpLeft(insertPoint.x()/width());
     item->setpTop(insertPoint.y()/height());
     item->adjustItem();
+
+    connect(item,SIGNAL(itemAdded(LayoutItem*)),this,SIGNAL(itemAdded(LayoutItem*)));
+    connect(item,SIGNAL(itemRemoved(LayoutItem*)),this,SIGNAL(itemRemoved(LayoutItem*)));
+
+    qDebug() << "emit itemAdded from LayoutScene";
+
+    emit itemAdded(item);
 }
+
+// void LayoutScene::removeItem(LayoutItem* item)
+// {
+
+// }
 
 //void LayoutScene::addItem(AbstractItem* item)
 //{

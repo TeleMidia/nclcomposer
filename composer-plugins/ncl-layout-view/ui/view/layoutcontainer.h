@@ -33,6 +33,8 @@ protected:
 
 
 
+signals:
+    void itemAdded(LayoutItem* item);
 //signals:
 //    void closeDock();
 //    void showDock();

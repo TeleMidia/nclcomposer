@@ -22,12 +22,14 @@ LayoutView::~LayoutView()
 {
 }
 
-void LayoutView::createScene()
+LayoutScene* LayoutView::createScene()
 {
     //TODO: LayoutView::createScene(...)
-    QGraphicsScene* scene = new LayoutScene(this);
+    LayoutScene* scene = new LayoutScene(this);
 
     addScene(scene);
+
+    return scene;
 }
 
 void LayoutView::addScene(QGraphicsScene* scene)

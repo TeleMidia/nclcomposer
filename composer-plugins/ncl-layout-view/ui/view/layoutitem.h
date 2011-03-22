@@ -59,7 +59,11 @@ public:
 
 public slots:
     virtual void addItem(QGraphicsItem* item);
-    virtual void removeItem(QGraphicsItem* item);
+    virtual void removeItem();
+
+signals:
+    void itemAdded(LayoutItem* item);
+    void itemRemoved(LayoutItem* item);
 
 protected:
     virtual QPainterPath shape() const;
@@ -100,6 +104,7 @@ private:
     QSizeF size;
 
     QAction* regionAction;
+    QAction* removeRegionAction;
 
     bool moving;
     bool resizing;

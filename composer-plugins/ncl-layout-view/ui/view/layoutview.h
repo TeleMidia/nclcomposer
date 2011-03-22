@@ -4,6 +4,10 @@
 #include <QResizeEvent>
 #include <QGraphicsView>
 
+
+#include "layoutitem.h"
+#include "layoutscene.h"
+
 namespace br{
 namespace pucrio{
 namespace telemidia{
@@ -19,9 +23,12 @@ public:
     virtual ~LayoutView();
 
 public slots:
-    void createScene();
+    LayoutScene* createScene();
     void addScene(QGraphicsScene* scene);
     void removeScene(QGraphicsScene* scene);
+
+signals:
+    void itemAdded(LayoutItem* item);
 
 protected:
     virtual void resizeEvent(QResizeEvent* event);

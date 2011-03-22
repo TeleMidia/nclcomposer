@@ -5,6 +5,8 @@
 #include <QMenu>
 #include <QAction>
 
+#include "layoutitem.h"
+
 #include <QGraphicsScene>
 
 namespace br{
@@ -26,11 +28,16 @@ public:
 public slots:
     virtual void createItem();
 //    virtual void addItem(AbstractItem* item);
-//    virtual void removeItem(AbstractItem* item);
+//    virtual void removeItem(LayoutItem* item);
 
 protected:
     virtual void contextMenuEvent(
             QGraphicsSceneContextMenuEvent* contextMenuEvent);
+
+signals:
+    void itemAdded(LayoutItem* item);
+    void itemRemoved(LayoutItem* item);
+
 
 private:
     void createMenus();
