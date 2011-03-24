@@ -11,7 +11,7 @@ NCLTreeWidget::NCLTreeWidget(QWidget *parent) : QTreeWidget(parent)
     createMenus();
 
     QStringList labels;
-    labels << QObject::tr("Element") << QObject::tr("Attributes");
+    labels << QObject::tr("Element") << QObject::tr("Attributes") << QObject::tr("Element Id");
     setHeaderLabels(labels);
 }
 
@@ -54,7 +54,7 @@ void NCLTreeWidget::createMenus ()
 
 bool NCLTreeWidget::updateFromText(QString text)
 {
-    //qDebug() << "MainWindow::updateTreeWidget()";
+    // qDebug() << "MainWindow::updateTreeWidget()";
     QStringList labels;
     labels << QObject::tr("Element") << QObject::tr("Attributes")
             << QObject::tr("id");
@@ -66,14 +66,13 @@ bool NCLTreeWidget::updateFromText(QString text)
     this->setStyleSheet("/*background-color: #ffffff;*/ font-size: 11px;");
     clear();
     setHeaderLabels(labels);
-    //header()->setStretchLastSection(false);
+    // header()->setStretchLastSection(false);
 
     // FIXME: Uncommenting this option brings some performance problems.
     // header()->setResizeMode(QHeaderView::ResizeToContents);
 
     //TODO: Transform this parser in a puglin
     NCLParser *handler = new NCLParser(this);
-
     connect (  handler,
                SIGNAL(fatalErrorFound(QString, QString, int, int, int)),
                this,
@@ -140,7 +139,7 @@ QTreeWidgetItem* NCLTreeWidget::addElement ( QTreeWidgetItem *father,
     child->setText(1, strAttrList);
 
     //child->setText(2, QString::number(line_in_text));
-    //child->setText(3, QString::number(column_in_text));
+    // child->setText(3, QString::number(column_in_text));
 
     return child;
 }
@@ -180,6 +179,59 @@ void NCLTreeWidget::userAddNewElement()
     }
 }
 
+
+QTreeWidgetItem *NCLTreeWidget::getItemById(QString itemId)
+{
+    QList <QTreeWidgetItem*> items = findItems( itemId,
+                                               Qt::MatchExactly |
+                                               Qt::MatchRecursive, 2);
+
+    if(items.size() > 1)
+    {
+        qDebug() << "NCLTreeWidget::getItemById Warning - You have more than "
+                 << "one item with id='" << itemId
+                 << "' - All them will be deleted!";
+    }
+
+    for (uint i = 0; i < items.size(); i++)
+    {
+        if(items.at(i)->text(2) == itemId){
+            return items.at(i);
+        }
+    }
+    return NULL;
+}
+
+void NCLTreeWidget::removeItem(QString itemId)
+{
+    QRegExp exp("*");
+    QList <QTreeWidgetItem*> items = this->findItems(itemId, Qt::MatchExactly | Qt::MatchRecursive, 2);
+    QTreeWidgetItem *item;
+
+    if(items.size() > 1)
+    {
+        qDebug() << "NCLTreeWidget::removeItem Warning - You have more than "
+                 << "one item with id='"<< itemId
+                 << "' - All them will be deleted!";
+    }
+    else if(items.size() == 0)
+    {
+        qDebug() << "NCLTreeWidget::removeItem Warning! Item with id ='"
+                 << itemId << "' was not found!";
+    }
+
+    for (int i = 0; i < items.size(); i++)
+    {
+        item  = items.at(i);
+
+        if (item->parent() != NULL)
+            item->parent()->removeChild(item);
+        else
+            this->removeItemWidget(item, 0);
+    }
+
+}
+
 void NCLTreeWidget::userRemoveElement()
 {
     QList<QTreeWidgetItem*> selecteds = this->selectedItems ();
@@ -195,11 +247,6 @@ void NCLTreeWidget::userRemoveElement()
                       QMessageBox::No );
 
         if(resp) {
-            qDebug() << "NCLTreeWidget::userRemoveElement";
-            if (item->parent() != NULL)
-                item->parent()->removeChild(item);
-            else
-                this->removeItemWidget(item, 0);
             emit elementRemovedByUser(id);
         }
     }

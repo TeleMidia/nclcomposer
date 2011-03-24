@@ -40,6 +40,9 @@ public:
                                   int line_in_text = -1,
                                   int column_in_text = -1);
 
+    QTreeWidgetItem* getItemById(QString itemId);
+    void removeItem(QString itemId);
+
 public slots:
     void errorNotification( QString message,
                             QString filename,
