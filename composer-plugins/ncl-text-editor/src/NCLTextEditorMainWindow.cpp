@@ -32,11 +32,11 @@ NCLTextEditorMainWindow::NCLTextEditorMainWindow(QWidget *parent):
 
     createTextView();
     createActions();
-    //createMenus();
-    createToolBars();
+//    createMenus();
     createStatusBar();
 
 #ifdef NCLEDITOR_STANDALONE
+    createToolBars();
     createOutlineView();
     createProblemsView();
 #endif
@@ -55,7 +55,8 @@ NCLTextEditorMainWindow::NCLTextEditorMainWindow(QWidget *parent):
 
     connect(textEdit, SIGNAL(textChanged()), this, SLOT(documentWasModified()));
 #ifdef NCLEDITOR_STANDALONE
-    connect(outlineView, SIGNAL(itemClicked(QTreeWidgetItem*, int)), SLOT(gotoLineOf(QTreeWidgetItem *, int)));
+    connect ( outlineView, SIGNAL(itemClicked(QTreeWidgetItem*, int)),
+              SLOT(gotoLineOf(QTreeWidgetItem *, int)) );
 #endif
 
     setCurrentFile("");
@@ -111,8 +112,8 @@ void NCLTextEditorMainWindow::about()
 {
     QMessageBox::about(this, tr("About Application"),
                        tr("The <b>Application</b> example demonstrates how to "
-                          "write modern GUI applications using Qt, with a menu bar, "
-                          "toolbars, and a status bar."));
+                          "write modern GUI applications using Qt, with a menu "
+                          "bar, toolbars, and a status bar."));
 }
 
 void NCLTextEditorMainWindow::documentWasModified()
@@ -179,18 +180,22 @@ void NCLTextEditorMainWindow::createActions()
     connect(textEdit, SIGNAL(copyAvailable(bool)),
             copyAct, SLOT(setEnabled(bool)));
 
-    fullscreenAct = new QAction(QIcon(":/images/window_fullscreen.png"), tr("&FullScreen"), this);
+    fullscreenAct = new QAction( QIcon(":/images/window_fullscreen.png"),
+                                 tr("&FullScreen"), this);
     fullscreenAct->setShortcut(tr("F11"));
     fullscreenAct->setStatusTip(tr("Enable/disable fullscreen mode"));
     connect(fullscreenAct, SIGNAL(triggered()), this, SLOT(showInFullScreen()));
 
-
     editPreferencesAct = new QAction(tr("&Preferences"), this);
-    editPreferencesAct->setStatusTip(tr("Edit Preferences related to editors."));
-    connect(editPreferencesAct, SIGNAL(triggered()), this, SLOT(showPreferences()));
+    editPreferencesAct->setStatusTip(tr("Edit Preferences related to "
+                                        "editors."));
+    connect ( editPreferencesAct, SIGNAL(triggered()),
+              this, SLOT(showPreferences()));
 
-    synchronizeAct = new QAction (QIcon(":/images/synchronize-icon-24.png"), tr("&Synchronize"), this);
-    synchronizeAct->setStatusTip(tr("Synchronize current text with the others plugins."));
+    synchronizeAct = new QAction ( QIcon(":/images/synchronize-icon-24.png"),
+                                   tr("&Synchronize"), this);
+    synchronizeAct->setStatusTip(tr("Synchronize current text with the others"
+                                    "plugins."));
 }
 
 void NCLTextEditorMainWindow::createMenus()
@@ -260,12 +265,15 @@ void NCLTextEditorMainWindow::createOutlineView()
     outlineView->setContextMenuPolicy(Qt::ActionsContextMenu);
 
     nodeMenu = new QMenu(outlineView);
-    insertNodeChildAct = new QAction(QIcon(":/images/save.png"), tr("&Add child"), this);
-    connect(insertNodeChildAct, SIGNAL(triggered()), this, SLOT(insertElement()));
+    insertNodeChildAct = new QAction( QIcon(":/images/save.png"),
+                                      tr("&Add child"), this);
+    connect ( insertNodeChildAct, SIGNAL(triggered()),
+              this, SLOT(insertElement()));
     outlineView->addAction(insertNodeChildAct);
 
-    connect(outlineView, SIGNAL(parserErrorNotify(QString, QString, int, int, int)),
-            textEdit, SLOT(markError(QString, QString, int, int, int)));
+    connect( outlineView,
+             SIGNAL(parserErrorNotify(QString, QString, int, int, int)),
+             textEdit, SLOT(markError(QString, QString, int, int, int)) );
 }
 
 void NCLTextEditorMainWindow::createProblemsView()
@@ -275,8 +283,10 @@ void NCLTextEditorMainWindow::createProblemsView()
     //problemsView->setMaximumHeight(150);
     addDockWidget(Qt::RightDockWidgetArea, problemsView);
 
-    connect(outlineView, SIGNAL(parserErrorNotify(QString, QString, int, int, int)),
-            problemsView, SLOT(addProblem(QString, QString, int, int, int)));
+    connect( outlineView,
+             SIGNAL(parserErrorNotify(QString, QString, int, int, int)),
+             problemsView,
+             SLOT(addProblem(QString, QString, int, int, int)));
 }
 
 void NCLTextEditorMainWindow::readSettings()
@@ -315,7 +325,7 @@ bool NCLTextEditorMainWindow::maybeSave()
                                           "Do you want to save your changes?"),
                                        QMessageBox::Yes | QMessageBox::Default,
                                        QMessageBox::No,
-                                       QMessageBox::Cancel | QMessageBox::Escape);
+                                       QMessageBox::Cancel|QMessageBox::Escape);
         if (ret == QMessageBox::Yes)
             return save();
         else if (ret == QMessageBox::Cancel)
@@ -421,7 +431,8 @@ void NCLTextEditorMainWindow::insertElement(){
     QMap <QString, QString> empty;
 
     QStringList strlist;
-    map <QString, char> * children = NCLStructure::getInstance()->getChildren(tagname);
+    map <QString, char> * children =
+            NCLStructure::getInstance()->getChildren(tagname);
 
     if(children != NULL) {
         map <QString, char>::iterator it;
@@ -443,14 +454,19 @@ void NCLTextEditorMainWindow::insertElement(){
         outlineView->addElement(item, 0, element, QString(""), empty, line, 0);
 
         //Add new Element to texttWidget
-        int endLine = textEdit->SendScintilla(QsciScintilla::SCI_GETLINEENDPOSITION, line-1);
-        int beginLine = textEdit->SendScintilla(QsciScintilla::SCI_POSITIONFROMLINE, line-1);
+        int endLine = textEdit
+                         ->SendScintilla( QsciScintilla::SCI_GETLINEENDPOSITION,
+                                           line-1);
+        int beginLine = textEdit
+                            ->SendScintilla(QsciScintilla::SCI_POSITIONFROMLINE,
+                                            line-1);
         int end_element_column = item->text(3).toInt(&ok, 10);
         bool fix_next_line_indentation = false;
 
         //find if we are in a "<tagname/>" then open this tag
-        char ch = textEdit->SendScintilla(QsciScintilla::SCI_GETCHARAT, beginLine + end_element_column-1);
-        qDebug() << ch;
+        char ch = textEdit->SendScintilla(
+                                QsciScintilla::SCI_GETCHARAT, beginLine +
+                                end_element_column-1);
         if (ch == '/') {
             QString endtag = ">";
             endtag += "<";
@@ -460,7 +476,8 @@ void NCLTextEditorMainWindow::insertElement(){
 
         //put all the required attributes
         //TODO: remove from here (create a function)
-        map <QString, bool> *attributes = NCLStructure::getInstance()->getAttributes(element);
+        map <QString, bool> *attributes =
+                NCLStructure::getInstance()->getAttributes(element);
         if(attributes != NULL) {
             map <QString, bool>::iterator it;
             for(it = attributes->begin(); it != attributes->end(); ++it){
@@ -480,18 +497,24 @@ void NCLTextEditorMainWindow::insertElement(){
 
         element.prepend("\n");
 
-        qDebug() << line << " " << beginLine << " " << endLine << " " << end_element_column << " ";
+//        qDebug() << line << " " << beginLine << " " << endLine << " "
+//                << end_element_column << " ";
 
         textEdit->insertAt(element, line-1, end_element_column);
 
         //fix indentation
-        int lineident = textEdit->SendScintilla(QsciScintilla::SCI_GETLINEINDENTATION, line-1);
+        int lineident = textEdit->SendScintilla(
+                                        QsciScintilla::SCI_GETLINEINDENTATION,
+                                        line-1);
         textEdit->SendScintilla(QsciScintilla::SCI_GETLINEINDENTATION, line-1);
 
         if(fix_next_line_indentation)
-            textEdit->SendScintilla(QsciScintilla::SCI_SETLINEINDENTATION, line+1, lineident);
+            textEdit->SendScintilla( QsciScintilla::SCI_SETLINEINDENTATION,
+                                     line+1, lineident);
 
-        textEdit->SendScintilla(QsciScintilla::SCI_SETLINEINDENTATION, line, lineident+8);
+        textEdit->SendScintilla(QsciScintilla::SCI_SETLINEINDENTATION,
+                                line,
+                                lineident+8);
 
         textEdit->setCursorPosition(line, 0);
         textEdit->ensureLineVisible(line);
@@ -507,7 +530,7 @@ void NCLTextEditorMainWindow::createTextView() {
     dockTextEdit->setFeatures(QDockWidget::DockWidgetMovable /*|
                               QDockWidget::DockWidgetFloatable*/);
 
-    //dockTextEdit->setAllowedAreas(Qt::LeftDockWidgetArea |
+    // dockTextEdit->setAllowedAreas(Qt::LeftDockWidgetArea |
     //                              Qt::RightDockWidgetArea);
 
     textEdit = new NCLTextEditor(this);

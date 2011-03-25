@@ -321,7 +321,7 @@ void NCLTextEditor::keyReleaseEvent(QKeyEvent *event)
 
 void NCLTextEditor::AutoCompleteCompleted()
 {
-    qDebug() << "NCLTextEditor::AutoCompleteCompleted()";
+//    qDebug() << "NCLTextEditor::AutoCompleteCompleted()";
 }
 
 void NCLTextEditor::MarkLine(int margin, int line, Qt::KeyboardModifiers state)

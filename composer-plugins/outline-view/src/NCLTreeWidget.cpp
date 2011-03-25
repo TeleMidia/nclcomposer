@@ -11,7 +11,8 @@ NCLTreeWidget::NCLTreeWidget(QWidget *parent) : QTreeWidget(parent)
     createMenus();
 
     QStringList labels;
-    labels << QObject::tr("Element") << QObject::tr("Attributes") << QObject::tr("Element Id");
+    labels  << QObject::tr("Element") << QObject::tr("Attributes")
+            << QObject::tr("Element Id");
     setHeaderLabels(labels);
 }
 
@@ -99,7 +100,8 @@ QTreeWidgetItem* NCLTreeWidget::addElement ( QTreeWidgetItem *father,
 
     QTreeWidgetItem *child;
 
-    if(father != 0) {
+    if(father != 0)
+    {
         child = new QTreeWidgetItem(0);
         int p = pos;
         if(pos == -1)
@@ -124,21 +126,28 @@ QTreeWidgetItem* NCLTreeWidget::addElement ( QTreeWidgetItem *father,
     else
         icon = QIcon (":/images/new.png");
 
-    child->setIcon(0, icon);
-    child->setText(0, tagname);
-    child->setText(2, id);
-
     QString strAttrList = "";
     QString key;
+    QString name;
     foreach (key, attrs.keys())
     {
         strAttrList += " ";
         strAttrList += key + "=\"" + attrs[key] + "\"";
+        if(key == "id" || key == "name") {
+            name = attrs[key];
+        }
     }
-    // qDebug() << strAttrList;
+
+    child->setIcon(0, icon);
+    if(name != "")
+    {
+        tagname += "(" + name + ")";
+    }
+    child->setText(0, tagname);
+    child->setText(2, id);
     child->setText(1, strAttrList);
 
-    //child->setText(2, QString::number(line_in_text));
+    // child->setText(2, QString::number(line_in_text));
     // child->setText(3, QString::number(column_in_text));
 
     return child;
@@ -205,7 +214,8 @@ QTreeWidgetItem *NCLTreeWidget::getItemById(QString itemId)
 void NCLTreeWidget::removeItem(QString itemId)
 {
     QRegExp exp("*");
-    QList <QTreeWidgetItem*> items = this->findItems(itemId, Qt::MatchExactly | Qt::MatchRecursive, 2);
+    QList <QTreeWidgetItem*> items = this->findItems(itemId, Qt::MatchExactly
+                                                     | Qt::MatchRecursive, 2);
     QTreeWidgetItem *item;
 
     if(items.size() > 1)
@@ -234,7 +244,7 @@ void NCLTreeWidget::removeItem(QString itemId)
 
 void NCLTreeWidget::userRemoveElement()
 {
-    QList<QTreeWidgetItem*> selecteds = this->selectedItems ();
+    QList<QTreeWidgetItem*> selecteds = this->selectedItems();
     QTreeWidgetItem *item = selecteds.at (0);
     QString id = item->text(2);
 

@@ -4,8 +4,10 @@ NCLTextualViewPlugin::NCLTextualViewPlugin()
 {
     window = new NCLTextEditorMainWindow();
     doc = NULL;
-    connect(window, SIGNAL(elementAdded(QString,QString,QMap<QString,QString>&,bool)),
-            this, SIGNAL(addEntity(QString,QString,QMap<QString,QString>&,bool)));
+    connect( window,
+             SIGNAL(elementAdded(QString,QString,QMap<QString,QString>&,bool)),
+             this,
+             SIGNAL(addEntity(QString,QString,QMap<QString,QString>&,bool)));
 }
 
 NCLTextualViewPlugin::~NCLTextualViewPlugin()
@@ -32,6 +34,7 @@ void NCLTextualViewPlugin::onEntityAdded(QString pluginID, Entity *entity)
     if(entity->getParentUniqueId() != NULL) {
         insertAtLine = lineOfEntity.value(entity->getParentUniqueId());
     }
+
     QMap <QString, QString>::iterator begin, end, it;
     entity->getAttributeIterator(begin, end);
     for (it = begin; it != end; ++it)

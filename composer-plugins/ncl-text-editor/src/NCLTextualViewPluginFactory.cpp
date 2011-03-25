@@ -15,7 +15,8 @@ IPlugin* NCLTextualViewPluginFactory::createPluginInstance()
 
 void NCLTextualViewPluginFactory::releasePluginInstance(IPlugin *plugin)
 {
-    NCLTextualViewPlugin *textualView = qobject_cast<NCLTextualViewPlugin*>(plugin);
+    NCLTextualViewPlugin *textualView =
+            qobject_cast<NCLTextualViewPlugin*>(plugin);
 
     if (textualView)
     {
