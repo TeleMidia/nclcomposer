@@ -2,10 +2,9 @@
 #define NCLLANGUAGEPROFILE_H
 
 #include "NCLLanguageProfile_global.h"
-
 #include "NCLDocumentParser.h"
-
 #include <core/extensions/ILanguageProfile.h>
+
 using namespace composer::core::extension;
 
 

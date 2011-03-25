@@ -9,7 +9,7 @@
 #include <QtScript/QScriptEngine>
 #include <map>
 
-#include <core/extensions/ILanguageProfile.h>
+#include <util/AttributeReferences.h>
 
 using namespace std;
 

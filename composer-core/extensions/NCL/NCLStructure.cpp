@@ -166,7 +166,7 @@ vector <AttributeReferences*> NCLStructure::getReferences(QString element, QStri
     return ref;
 }
 
-/************ NCL REFERENCE **********************/
+/************ NCL REFERENCE *********************
 AttributeReferences::AttributeReferences ( QString element, QString attr,
                              QString ref_element, QString ref_attr)
 {
@@ -195,3 +195,4 @@ QString AttributeReferences::getRefAttribute()
 {
     return this->ref_attr;
 }
+*/
