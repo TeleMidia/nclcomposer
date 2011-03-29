@@ -3,8 +3,8 @@
 # -------------------------------------------------
 TARGET = Composer
 TEMPLATE = app
-CONFIG += debug
-QT += xml
+CONFIG += debug console
+QT += xml webkit
 MOC_DIR = .mocs
 OBJECTS_DIR = .objs
 

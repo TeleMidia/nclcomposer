@@ -6,6 +6,8 @@ int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
     a.setQuitOnLastWindowClosed(true);
+    a.setStyleSheet("QTabWidget::tab-bar { alignment: center; } \
+                     QTabWidget::pane { position: absolute; top: -0.5em; }");
     QResource::registerResource("images.qrc");
     QCoreApplication::setOrganizationName("telemidia");
     QCoreApplication::setOrganizationDomain("telemidia.pucrio.br");
