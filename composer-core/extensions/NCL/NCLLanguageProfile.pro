@@ -23,7 +23,7 @@ else:unix:HEADERS_PATH = $$INSTALLBASE/include/composer
 
 INCLUDEPATH += ../../core/include
 
-headers_nclprofile.files += NCLStructure.h
+headers_nclprofile.files += NCLStructure.h NCLLanguageProfile_global.h
 
 macx {
     LIBS += -L../../core -F../../core \
@@ -38,8 +38,9 @@ else:unix {
 }
 else:win32 {
     LIBS += -L../../core/debug -lComposerCore1
-    HEADERS_PATH_UNIX = $$INSTALLBASE/include/composer
+    HEADERS_PATH = $$INSTALLBASE/include/composer
     INCLUDEPATH += C:/Composer/include/composer
+    headers_nclprofile.path = $$HEADERS_PATH/core/extensions
     target.path = $$quote(C:/Composer/lib/composer)
 }
 

@@ -1,8 +1,8 @@
 #ifndef NCLSTRUCTURE_H
 #define NCLSTRUCTURE_H
 
+#include "NCLLanguageProfile_global.h"
 #include <QtDebug>
-
 #include <QFile>
 #include <QTextStream>
 #include <QtScript/QScriptValue>
@@ -16,10 +16,12 @@ using namespace std;
 #define NCLSTRUCTURE_FILE ":/config/NCL_STRUCTURE"
 
 /**
-    *
-*/
-class NCLStructure
+ *
+ */
+class NCLLANGUAGEPROFILESHARED_EXPORT NCLStructure
 {
+    ;
+
 private:
     static NCLStructure *instance;
     map <QString, map <QString, bool> *> *attributes;
