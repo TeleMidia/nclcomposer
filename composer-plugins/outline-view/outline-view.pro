@@ -4,6 +4,7 @@ QT              += xml
 
 macx:LIBS+= -L$$quote(/Library/Application Support/Composer) \
         -lNCLLanguageProfile
+win32:LIBS+= -lNCLLanguageProfile
 
 INCLUDEPATH     +=  include \
                     ../ncl-text-editor/include \

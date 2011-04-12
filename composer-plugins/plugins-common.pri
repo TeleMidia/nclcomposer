@@ -23,7 +23,8 @@ else:unix {
     target.path = $$quote(/usr/local/lib/composer/extension)
 }
 else:win32 {
-    LIBS += -LC:/Composer/ -lComposerCore1
+    LIBS += -L$$quote(C:/Composer) -lComposerCore1 -L$$quote(C:/Composer/lib/composer) \
+            -L$$quote(C:/Composer/lib/composer)
     INCLUDEPATH += . include C:/composer/include/composer \
                     C:/Composer/include/composer/core \
                     C:/Composer/include/composer/core/extensions
