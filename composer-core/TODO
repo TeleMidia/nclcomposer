@@ -2,13 +2,13 @@ Copyright (C) 2010, 2011 PUC-Rio/Laboratorio Telemidia
 See the end of the file for license conditions.
 
 TODO file for composer-core
-* Features or problems
-	- Save project and files
-	- Plugin API: Add plugin provider description
-	- Plugin API: Add plugin version
+* Features or problems:
+	- Save project and files (and export),
+	- Plugin API: Add plugin provider description.
+	- Plugin API: Add plugin version.
+	- Plugin-to-plugin communication.
 	- Generalize NCLStructure to all kinds of languages.
 
 * Optimization and clean up
-
 
 //TODO: License

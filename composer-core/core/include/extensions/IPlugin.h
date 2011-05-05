@@ -26,7 +26,6 @@ namespace core {
 namespace extension {
 namespace plugin {
 
-
     class IPlugin : public QObject {
         Q_OBJECT
 
@@ -63,6 +62,7 @@ namespace plugin {
                  QMutexLocker locker(&mutex);
                  this->doc = document;
              }
+
              //! This call is used by the core to recover the NclDocument
              //! instance previously binded with this plugin instance.
              /*!
@@ -81,6 +81,7 @@ namespace plugin {
                 \return QWidget - wrapping the plugin interface
              */
              virtual QWidget* getWidget() = 0;
+
              //! Saves specific settings particular to each plugin
              /*!
                The core calls this method to notify the plugin that the user
@@ -94,6 +95,7 @@ namespace plugin {
              virtual bool save() = 0;
 
         public slots:
+
              //! Calls the plugin to update the internal model from model
              /*!
                This call is made by the core in two situations:
@@ -104,33 +106,41 @@ namespace plugin {
                 the Document*.
               */
              virtual void updateFromModel() = 0;
+
              //! This is called by the core when a new Entity is added
              /*!
                 This call is invoked by the core when a new Entity that this
                 particular plugin is listening is added.
              */
              virtual void onEntityAdded(QString pluginID, Entity *) = 0;
-             //! This is called by the core when the adding a new Entity was ignored
+
+             //! This is called by the core when some error occurs
              /*!
-                This call is invoked by the core to notify the plugin that the
-                new Entity it was trying to add to e the NclDocument was ignored
-                because of an error.
+               TODO
              */
-             virtual void onEntityAddError(QString error) = 0;
+             virtual void errorMessage(QString error) = 0;
 
+             //! Called by the core when an Entity is changed
+             /*!
+                TODO:
+             */
              virtual void onEntityChanged(QString pluginID, Entity *) = 0;
-             virtual void onEntityChangeError(QString error) = 0;
 
+
+             //! Called by the core before the Entity passed
+             /*!
+
+             */
              virtual void onEntityAboutToRemove(Entity *) = 0;
+
              virtual void onEntityRemoved(QString pluginID,
                                           QString entityID) = 0;
-             virtual void onEntityRemoveError(QString error) = 0;
-
 
         signals:
              void addEntity( QString type, QString parentEntityId,
                                     QMap<QString,QString>& atts, bool force);
              void editEntity(Entity *, QMap<QString,QString>& atts, bool force);
+
              void removeEntity( Entity *, bool force);
 
     };
