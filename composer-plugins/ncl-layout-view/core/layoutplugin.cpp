@@ -33,7 +33,7 @@ LayoutPlugin::~LayoutPlugin()
 
 void LayoutPlugin::removeRegion(LayoutItem* item)
 {
-    removeEntity(getDocument()->getEntityBydId(items2[item]),false);
+    emit removeEntity(getDocument()->getEntityBydId(items2[item]), false);
 }
 
 void LayoutPlugin::addRegion(LayoutItem* item)
@@ -89,47 +89,57 @@ void LayoutPlugin::onEntityAdded(QString ID, Entity* entity)
         qreal width = -1;
         qreal height = -1;
 
-        if (stop.contains("px")){
-            top = (stop.remove(stop.length()-2,2)).toDouble();
-        }else if (stop.contains("%")){
+        if (stop.contains("%")) {
             top = (stop.remove(stop.length()-1,1)).toDouble();
             top /= 100;
+
+        } else {
+            top = (stop.remove(stop.length()-2,2)).toDouble();
+
         }
 
-
-        if (sbottom.contains("px")){
-            bottom = (sbottom.remove(sbottom.length()-2,2)).toDouble();
-        }else if (sbottom.contains("%")){
+        if (sbottom.contains("%")) {
             bottom = (sbottom.remove(sbottom.length()-1,1)).toDouble();
             bottom /= 100;
+
+        } else {
+            bottom = (sbottom.remove(sbottom.length()-2,2)).toDouble();
+
         }
 
-        if (sleft.contains("px")){
-            left = (sleft.remove(sleft.length()-2,2)).toDouble();
-        }else if (sleft.contains("%")){
+        if (sleft.contains("%")) {
             left = (sleft.remove(sleft.length()-1,1)).toDouble();
             left /= 100;
+
+        } else {
+            left = (sleft.remove(sleft.length()-2,2)).toDouble();
+
         }
 
-        if (sright.contains("px")){
-            right = (sright.remove(sright.length()-2,2)).toDouble();
-        }else if (sright.contains("%")){
+        if (sright.contains("%")) {
             right = (sright.remove(sright.length()-1,1)).toDouble();
             right /= 100;
+
+        } else {
+            right = (sright.remove(sright.length()-2,2)).toDouble();
+
         }
 
-        if (swidth.contains("px")){
-            width = (swidth.remove(swidth.length()-2,2)).toDouble();
-        }else if (swidth.contains("%")){
+        if (swidth.contains("%")){
             width = (swidth.remove(swidth.length()-1,1)).toDouble();
             width /= 100;
+
+        } else {
+            width = (swidth.remove(swidth.length()-2,2)).toDouble();
         }
 
-        if (sheight.contains("px")){
-            height = (sheight.remove(sheight.length()-2,2)).toDouble();
-        }else if (sheight.contains("%")){
+        if (sheight.contains("%")){
             height = (sheight.remove(sheight.length()-1,1)).toDouble();
             height /= 100;
+
+        } else {
+            height = (sheight.remove(sheight.length()-2,2)).toDouble();
+
         }
 
 //        qDebug() << "top:" << top;
@@ -197,17 +207,12 @@ void LayoutPlugin::onEntityAdded(QString ID, Entity* entity)
     }
 }
 
-void LayoutPlugin::onEntityAddError(QString error)
+void LayoutPlugin::errorMessage(QString error)
 {
 
 }
 
 void LayoutPlugin::onEntityChanged(QString ID, Entity* entity)
-{
-
-}
-
-void LayoutPlugin::onEntityChangeError(QString error)
 {
 
 }
@@ -228,14 +233,10 @@ void LayoutPlugin::onEntityRemoved(QString ID, QString entityID)
     items.remove(entityID);
 }
 
-void LayoutPlugin::onEntityRemoveError(QString error)
-{
-
-}
-
 bool LayoutPlugin::save()
 {
     //TODO: All
+    return true;
 }
 
 void LayoutPlugin::updateFromModel()

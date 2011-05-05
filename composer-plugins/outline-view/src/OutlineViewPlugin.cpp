@@ -65,7 +65,7 @@ void OutlineViewPlugin::onEntityAdded(QString ID, Entity *entity)
     idToItem[entity->getUniqueId()] = item;
 }
 
-void OutlineViewPlugin::onEntityAddError(QString error)
+void OutlineViewPlugin::errorMessage(QString error)
 {
     qDebug() << "OutlineViewPlugin::onEntityAddError(" << error << ")";
 }
@@ -74,11 +74,6 @@ void OutlineViewPlugin::onEntityChanged(QString pluginID, Entity * entity)
 {
     QString line = "PLUGIN (" + pluginID + ") changed the Entity (" +
                    entity->getType() + " - " + entity->getUniqueId() +")";
-    //TODO: All
-}
-
-void OutlineViewPlugin::onEntityChangeError(QString error)
-{
     //TODO: All
 }
 
@@ -96,11 +91,6 @@ void OutlineViewPlugin::onEntityRemoved(QString pluginID, QString entityID)
     idToItem.remove(entityID);
     window->removeItem(entityID);
 
-}
-
-void OutlineViewPlugin::onEntityRemoveError(QString error)
-{
-    //TODO: All
 }
 
 void OutlineViewPlugin::elementRemovedByUser(QString itemId)

@@ -113,7 +113,7 @@ void LayoutScene::adjustItems()
 //        item->setSize(item->getSize());
     }
 
-    qDebug() << "--------------------------";
+    // qDebug() << "--------------------------";
 }
 
 }

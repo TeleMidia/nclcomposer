@@ -36,7 +36,7 @@ void DebugConsolePlugin::onEntityAdded(QString ID, Entity *entity)
     list->addItem(new QListWidgetItem(line));
 }
 
-void DebugConsolePlugin::onEntityAddError(QString error)
+void DebugConsolePlugin::errorMessage(QString error)
 {
     list->addItem(new QListWidgetItem(error));
 }
@@ -46,11 +46,6 @@ void DebugConsolePlugin::onEntityChanged(QString ID, Entity * entity)
     QString line = "PLUGIN (" + ID + ") changed the Entity (" +
                     entity->getType() + " - " + entity->getUniqueId() +")";
     list->addItem(new QListWidgetItem(line));
-}
-
-void DebugConsolePlugin::onEntityChangeError(QString error)
-{
-    list->addItem(new QListWidgetItem(error));
 }
 
 void DebugConsolePlugin::onEntityAboutToRemove(Entity *)
@@ -63,11 +58,6 @@ void DebugConsolePlugin::onEntityRemoved(QString ID, QString entityID)
     QString line = "PLUGIN (" + ID + ") removed Entity (" +
                    entityID + ")";
     list->addItem(new QListWidgetItem(line));
-}
-
-void DebugConsolePlugin::onEntityRemoveError(QString error)
-{
-    list->addItem(new QListWidgetItem(error));
 }
 
 bool DebugConsolePlugin::save()

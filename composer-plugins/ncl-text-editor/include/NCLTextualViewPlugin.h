@@ -27,12 +27,11 @@ public:
 
 public slots:
     void onEntityAdded(QString pluginID, Entity *);
-    void onEntityAddError(QString error);
     void onEntityChanged(QString pluginID, Entity *);
-    void onEntityChangeError(QString error);
     void onEntityAboutToRemove(Entity *);
     void onEntityRemoved(QString pluginID, QString entityID);
-    void onEntityRemoveError(QString error);
+
+    void errorMessage(QString error);
 };
 
 #endif // DEBUGCONSOLEPLUGIN_H

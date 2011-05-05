@@ -365,7 +365,7 @@ void LayoutItem::paint(QPainter *painter,
 {
     //TODO: LayoutItem::paint(...)
     painter->setPen(QPen(QBrush(Qt::black), 3));
-    painter->setBrush(QColor("#EAEAAE"));
+    painter->setBrush(QColor("#9FB6CD"));
     painter->drawRect(1.5,1.5,size.width()-1.5,size.height()-1.5);
 
      painter->setBrush(Qt::blue);

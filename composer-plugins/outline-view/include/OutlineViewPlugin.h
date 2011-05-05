@@ -26,13 +26,11 @@ public:
 
 public slots:
     void onEntityAdded(QString ID, Entity *);
-    void onEntityAddError(QString error);
     void onEntityChanged(QString ID, Entity *);
-    void onEntityChangeError(QString error);
     void onEntityAboutToRemove(Entity *);
     void onEntityRemoved(QString ID, QString entityID);
-    void onEntityRemoveError(QString error);
 
+    void errorMessage(QString error);
 
 private slots:
     void elementRemovedByUser(QString id);

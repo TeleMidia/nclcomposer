@@ -83,7 +83,7 @@ void NCLTextualViewPlugin::onEntityAdded(QString pluginID, Entity *entity)
             entity->getType() << " " << insertAtLine; */
 }
 
-void NCLTextualViewPlugin::onEntityAddError(QString error)
+void NCLTextualViewPlugin::errorMessage(QString error)
 {
     //qDebug() << "NCLTextualViewPlugin::onEntityAddError(" << error << ")";
 }
@@ -92,11 +92,6 @@ void NCLTextualViewPlugin::onEntityChanged(QString ID, Entity *entity)
 {
     QString line = "PLUGIN (" + ID + ") changed the Entity (" +
                    entity->getType() + " - " + entity->getUniqueId() +")";
-    //TODO: All
-}
-
-void NCLTextualViewPlugin::onEntityChangeError(QString error)
-{
     //TODO: All
 }
 
@@ -121,11 +116,6 @@ void NCLTextualViewPlugin::onEntityRemoved(QString pluginID, QString entityID)
     window->getTextEditor()->removeSelectedText();
 
     lineOfEntity.remove(entityID);
-}
-
-void NCLTextualViewPlugin::onEntityRemoveError(QString error)
-{
-    //TODO: All
 }
 
 bool NCLTextualViewPlugin::save(){
