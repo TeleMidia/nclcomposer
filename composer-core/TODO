@@ -8,7 +8,15 @@ TODO file for composer-core
 	- Plugin API: Add plugin version.
 	- Plugin-to-plugin communication.
 	- Generalize NCLStructure to all kinds of languages.
+	- ToolGUI integration API.
+				. How should be the integration?!
 
-* Optimization and clean up
+* Optimizations and clean up
+
+* Plugin API Tests:
+  - Performance tests.
+  - Memory Leaks (valgrind)
+	- Security ?!?!
+	- Integration with other plugins ?!
 
 //TODO: License
