@@ -61,6 +61,12 @@ void NCLTextualViewPlugin::onEntityAdded(QString pluginID, Entity *entity)
                         ->SendScintilla( QsciScintilla::SCI_GETLINEINDENTATION,
                                          insertAtLine-1 );
 
+    if(insertAtLine == 0) //The first entity
+        lineident = 0;
+    else
+        lineident += 8;
+
+
     window->getTextEditor()
             ->SendScintilla( QsciScintilla::SCI_GETLINEINDENTATION,
                              insertAtLine-1 );
@@ -68,12 +74,12 @@ void NCLTextualViewPlugin::onEntityAdded(QString pluginID, Entity *entity)
     window->getTextEditor()
             ->SendScintilla( QsciScintilla::SCI_SETLINEINDENTATION,
                              insertAtLine,
-                             lineident+8);
+                             lineident);
 
     window->getTextEditor()
             ->SendScintilla( QsciScintilla::SCI_SETLINEINDENTATION,
                              insertAtLine+1,
-                             lineident+8);
+                             lineident);
 
     window->getTextEditor()->setCursorPosition(insertAtLine, 0);
     window->getTextEditor()->ensureLineVisible(insertAtLine);
@@ -118,7 +124,7 @@ void NCLTextualViewPlugin::onEntityRemoved(QString pluginID, QString entityID)
     lineOfEntity.remove(entityID);
 }
 
-bool NCLTextualViewPlugin::save(){
+bool NCLTextualViewPlugin::saveSubsession(){
     //TODO: All
 }
 

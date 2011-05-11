@@ -21,7 +21,7 @@ class DebugConsoleFactory : public QObject,
 
          void releasePluginInstance(IPlugin *);
 
-         QList<LanguageType> getSupportLanguages();
+         QList<LanguageType> getSupportedLanguages();
 
          QString getPluginID();
 

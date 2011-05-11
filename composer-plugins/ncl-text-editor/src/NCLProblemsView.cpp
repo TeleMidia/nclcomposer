@@ -12,7 +12,9 @@ NCLProblemsView::NCLProblemsView(QWidget *parent):
 
 void NCLProblemsView::createViewActions()
 {
-    clearProblemsAct = new QAction(QIcon(":/images/clear-icon.png"), tr("&Clear Problems"), this);
+    clearProblemsAct = new QAction( QIcon(":/images/clear-icon.png"),
+                                    tr("&Clear Problems"), this);
+
     clearProblemsAct->setStatusTip(tr("Clear All"));
     connect(clearProblemsAct, SIGNAL(triggered()), this, SLOT(clearProblems()));
 }
@@ -27,7 +29,8 @@ void NCLProblemsView::createToolBar()
 void NCLProblemsView::createTreeWidget()
 {
     QStringList labels;
-    labels << QObject::tr("Description") << QObject::tr("file") << QObject::tr("line");
+    labels << QObject::tr("Description") << QObject::tr("file")
+            << QObject::tr("line");
 
     problemsList = new QTreeWidget(this);
     problemsList->setSortingEnabled(1);

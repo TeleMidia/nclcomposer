@@ -26,7 +26,7 @@ public:
 
     virtual void releasePluginInstance(IPlugin* plugin);
 
-    virtual QList<LanguageType> getSupportLanguages();
+    virtual QList<LanguageType> getSupportedLanguages();
 
     virtual QString getPluginID();
 

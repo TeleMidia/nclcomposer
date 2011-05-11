@@ -28,7 +28,7 @@ void LayoutPluginFactory::releasePluginInstance(IPlugin* plugin)
     }
 }
 
-QList<LanguageType> LayoutPluginFactory::getSupportLanguages()
+QList<LanguageType> LayoutPluginFactory::getSupportedLanguages()
 {
     QList<LanguageType> lTypes;
     lTypes.append(NCL);

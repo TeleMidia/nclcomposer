@@ -4,6 +4,7 @@ NCLTextEditor::NCLTextEditor(QWidget *parent) :
         QsciScintilla(parent)
 {
     shortcut_ctrl_space = new QShortcut(QKeySequence("Ctrl+Space"), this);
+    shortcut_ctrl_shift_f = new QShortcut(QKeySequence("Ctrl+Shift+f"), this);
     shortcut_zoomout = new QShortcut(QKeySequence::ZoomOut, this);  /* CTRL- */
     shortcut_zoomin = new QShortcut(QKeySequence::ZoomIn, this);  /* CTRL+ */
 
@@ -14,6 +15,7 @@ NCLTextEditor::~NCLTextEditor()
 {
     delete apis;
     delete shortcut_ctrl_space;
+    delete shortcut_ctrl_shift_f;
     delete shortcut_zoomout;
     delete shortcut_zoomin;
 }
@@ -74,6 +76,10 @@ void NCLTextEditor::initParameters()
     /* Ctrl + Space == Autocomplete */
     connect( shortcut_ctrl_space, SIGNAL(activated()),
              this, SLOT(autoCompleteFromAPIs()));
+
+    /* Ctrl + Space == Autocomplete */
+    connect( shortcut_ctrl_shift_f, SIGNAL(activated()),
+             this, SLOT(formatText()));
 
     /* Zoomin e Zoomout == Ctrl + -  && Ctrl + + */
     connect(shortcut_zoomout, SIGNAL(activated()), this, SLOT(Decreasefont()));
@@ -329,7 +335,7 @@ void NCLTextEditor::MarkLine(int margin, int line, Qt::KeyboardModifiers state)
     (void) margin;
     (void) line;
     (void) state;
-    qDebug() << "NCLTextEditor::MarkLine()";
+//    qDebug() << "NCLTextEditor::MarkLine()";
 }
 
 void NCLTextEditor::userFillingNextAttribute(int pos)
@@ -435,5 +441,10 @@ void NCLTextEditor::updateVisualFillingAttributeField( int line,
 void NCLTextEditor::setTabBehavior(TAB_BEHAVIOR tabBehavior)
 {
     this->tabBehavior = tabBehavior;
+}
+
+void NCLTextEditor::formatText()
+{
+    qDebug() << "NCLTextEditor::formatText()";
 }
 

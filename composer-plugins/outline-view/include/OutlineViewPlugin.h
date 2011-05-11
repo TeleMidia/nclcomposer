@@ -20,7 +20,7 @@ public:
     QWidget* getWidget();
     QMap <QString, QTreeWidgetItem*> idToItem;
 
-    bool save();
+    bool saveSubsession();
     void updateFromModel();
 
 

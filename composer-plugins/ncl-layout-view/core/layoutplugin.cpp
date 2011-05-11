@@ -233,7 +233,7 @@ void LayoutPlugin::onEntityRemoved(QString ID, QString entityID)
     items.remove(entityID);
 }
 
-bool LayoutPlugin::save()
+bool LayoutPlugin::saveSubsession()
 {
     //TODO: All
     return true;

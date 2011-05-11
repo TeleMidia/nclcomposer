@@ -25,7 +25,7 @@ void NCLTextualViewPluginFactory::releasePluginInstance(IPlugin *plugin)
     }
 }
 
-QList<LanguageType> NCLTextualViewPluginFactory::getSupportLanguages()
+QList<LanguageType> NCLTextualViewPluginFactory::getSupportedLanguages()
 {
     QList<LanguageType> lTypes;
     lTypes.append(NCL);

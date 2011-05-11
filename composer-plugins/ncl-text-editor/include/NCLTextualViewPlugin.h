@@ -22,7 +22,7 @@ public:
 
     QWidget* getWidget();
 
-    bool save();
+    bool saveSubsession();
     void updateFromModel();
 
 public slots:

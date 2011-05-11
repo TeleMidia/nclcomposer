@@ -100,7 +100,7 @@ void OutlineViewPlugin::elementRemovedByUser(QString itemId)
     emit removeEntity(entity, false);
 }
 
-bool OutlineViewPlugin::save()
+bool OutlineViewPlugin::saveSubsession()
 {
     //TODO: All
 }

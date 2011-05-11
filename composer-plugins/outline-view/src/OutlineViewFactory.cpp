@@ -20,7 +20,7 @@ void OutlineViewFactory::releasePluginInstance(IPlugin *plugin)
     }
 }
 
-QList<LanguageType> OutlineViewFactory::getSupportLanguages()
+QList<LanguageType> OutlineViewFactory::getSupportedLanguages()
 {
     QList<LanguageType> lTypes;
     lTypes.append(NCL);

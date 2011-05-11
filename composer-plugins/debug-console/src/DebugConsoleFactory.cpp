@@ -28,7 +28,7 @@ void DebugConsoleFactory::releasePluginInstance(IPlugin *plugin)
 
 }
 
-QList<LanguageType> DebugConsoleFactory::getSupportLanguages()
+QList<LanguageType> DebugConsoleFactory::getSupportedLanguages()
 {
     QList<LanguageType> lTypes;
     lTypes.append(NCL);

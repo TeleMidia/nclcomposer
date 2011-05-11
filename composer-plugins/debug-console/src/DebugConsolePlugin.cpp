@@ -60,7 +60,7 @@ void DebugConsolePlugin::onEntityRemoved(QString ID, QString entityID)
     list->addItem(new QListWidgetItem(line));
 }
 
-bool DebugConsolePlugin::save()
+bool DebugConsolePlugin::saveSubsession()
 {
     //TODO: All
 }

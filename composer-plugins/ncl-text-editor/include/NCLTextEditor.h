@@ -51,6 +51,7 @@ private:
     INTERACTION_STATE interaction_state;
 
     QShortcut *shortcut_ctrl_space;
+    QShortcut *shortcut_ctrl_shift_f;
     QShortcut *shortcut_zoomout;
     QShortcut *shortcut_zoomin;
     QsciNCLAPIs *apis;
@@ -75,8 +76,10 @@ protected:
 public slots:
     void Increasefont();
     void Decreasefont();
-    void markError(QString description, QString file, int line, int column = 0, int severity = 0);
+    void markError(QString description, QString file, int line, int column = 0,
+                   int severity = 0);
     void MarkLine(int, int, Qt::KeyboardModifiers);
+    void formatText();
 };
 
 #endif // NCLTEXTEDITOR_H
