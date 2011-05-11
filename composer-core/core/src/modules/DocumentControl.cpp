@@ -46,7 +46,6 @@ bool DocumentControl::closeDocument(QString location)
 
 void DocumentControl::launchDocument(QString projectId, QString location)
 {
-
     if (openDocuments.contains(location))
     {
         emit openDocumentTab(location);

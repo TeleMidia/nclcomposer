@@ -38,15 +38,13 @@ void TransactionControl::onAddEntity( QString type,
         emit entityAdded(ID,ent);
 
     } catch(exception& e){
-        if (plugin) plugin->onEntityAddError(e.what());
+        if (plugin) plugin->errorMessage(e.what());
         else if (parser) parser->onEntityAddError(e.what());
         delete ent;
         ent = NULL;
         return;
     }
 }
-
-
 
 void TransactionControl::onEditEntity(Entity *entity,
                                   QMap<QString,QString>& atts, bool force) {
@@ -59,7 +57,7 @@ void TransactionControl::onEditEntity(Entity *entity,
            entity->setAtrributes(atts);
            emit entityChanged(pluginID,entity);
         }catch(exception e){
-            plugin->onEntityAddError(e.what());
+            plugin->errorMessage(e.what());
             return;
         }
     } else {
@@ -82,7 +80,7 @@ void TransactionControl::onRemoveEntity( Entity *entity,
             doc->removeEntity(entity,true);
             emit entityRemoved(pluginID,_id);
         }catch(exception e){
-            plugin->onEntityRemoveError(e.what());
+            plugin->errorMessage(e.what());
             return;
         }
     } else {
@@ -91,7 +89,6 @@ void TransactionControl::onRemoveEntity( Entity *entity,
     }
 
 }
-
         }
     }
 }//end namespace

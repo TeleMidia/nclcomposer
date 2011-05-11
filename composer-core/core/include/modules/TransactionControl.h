@@ -48,6 +48,8 @@ namespace module {
             void entityRemoved(QString ID, QString entityId);
             void entityRemoveError(QString error);
 
+
+
     };
 }
 }

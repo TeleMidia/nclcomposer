@@ -68,7 +68,7 @@ IPluginFactory* PluginControl::loadPlugin(QString fileName)
             {
                 pluginFactories[pluginID] = pluginFactory;
                 QList<LanguageType> types =
-                        pluginFactory->getSupportLanguages();
+                        pluginFactory->getSupportedLanguages();
                 QList<LanguageType>::iterator it;
                 for (it = types.begin() ; it!= types.end(); it++)
                 {
@@ -135,10 +135,11 @@ void PluginControl::launchDocument(Document *doc)
         pluginInstance = factory->createPluginInstance();
         if (pluginInstance)
         {
-            pluginInstance->setPluginID(factory->getPluginID());
+            // FIXME: Plugin must have a unique ID.
+            // pluginInstance->setPluginID(factory->getPluginID());
             pluginInstance->setDocument(doc);
             pluginInstance->setLanguageProfile(profile);
-            launchNewPlugin(pluginInstance,transControl);
+            launchNewPlugin(pluginInstance, transControl);
             pluginInstances.insert(location,pluginInstance);
             emit addPluginWidgetToWindow(factory,pluginInstance,doc);
         }
@@ -170,7 +171,7 @@ void PluginControl::launchNewPlugin(IPlugin *plugin,
             SIGNAL(addEntity(QString,QString,QMap<QString,QString>&,bool)),
             tControl,
             SLOT(onAddEntity(QString,QString,QMap<QString,QString>&,bool)));
-    connect(plugin,SIGNAL(editEntity(Entity*,QMap<QString,QString>&,bool)),
+    connect(plugin,SIGNAL(setAttributes(Entity*,QMap<QString,QString>&,bool)),
             tControl,
             SLOT(onEditEntity(Entity*,QMap<QString,QString>&,bool)));
     connect(plugin,SIGNAL(removeEntity(Entity*,bool)),
@@ -225,7 +226,7 @@ bool PluginControl::releasePlugins(Document *doc)
         for (it = instances.begin(); it != instances.end(); it++)
         {
            IPlugin *inst = *it;
-           inst->save();
+           inst->saveSubsession();
            IPluginFactory *fac = pluginFactories[inst->getPluginID()];
            fac->releasePluginInstance(inst);
         }
