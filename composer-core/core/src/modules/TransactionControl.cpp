@@ -24,7 +24,7 @@ void TransactionControl::onAddEntity( QString type,
     IDocumentParser *parser = qobject_cast<IDocumentParser*>
                               (QObject::sender());
     QString ID;
-    if(plugin) ID = plugin->getPluginID();
+    if(plugin) ID = plugin->getPluginInstanceID();
     else if (parser) ID = parser->getParserName();
 
     Entity *ent = NULL;
@@ -51,7 +51,7 @@ void TransactionControl::onEditEntity(Entity *entity,
     IPlugin *plugin = qobject_cast<IPlugin *>
                                                     (QObject::sender());
     if(plugin) {
-        QString pluginID = plugin->getPluginID();
+        QString pluginID = plugin->getPluginInstanceID();
         try {
             //TODO - call validator to check
            entity->setAtrributes(atts);
@@ -72,7 +72,7 @@ void TransactionControl::onRemoveEntity( Entity *entity,
 
     IPlugin *plugin = qobject_cast<IPlugin *> (QObject::sender());
     if(plugin) {
-        QString pluginID = plugin->getPluginID();
+        QString pluginID = plugin->getPluginInstanceID();
         try {
             QString _id = entity->getUniqueId();
             emit aboutToRemoveEntity(entity);

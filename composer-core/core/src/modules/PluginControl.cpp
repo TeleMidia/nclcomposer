@@ -1,5 +1,5 @@
 #include "modules/PluginControl.h"
-
+#include <QUuid>
 
 namespace composer {
     namespace core {
@@ -9,10 +9,10 @@ INIT_SINGLETON(PluginControl)
 
 PluginControl::PluginControl()
 {
+
 }
 
 PluginControl::~PluginControl() {
-
      //FIXME: BUG WHEN CLOSING ON WINDOWS
      QMultiHash<QString,IPlugin*>::iterator itInst;
      QHash<QString,IPluginFactory*>::iterator itFac;
@@ -20,19 +20,19 @@ PluginControl::~PluginControl() {
      IPlugin *inst = NULL;
      IPluginFactory *fac = NULL;
 
-     for (itInst = pluginInstances.begin() ;
-          itInst != pluginInstances.end() ; itInst++)
+     for (itInst = pluginInstances.begin();
+          itInst != pluginInstances.end(); itInst++)
      {
-             QList<IPlugin*> instances = pluginInstances.values
-                                                        (itInst.key());
+             QList<IPlugin*> instances = pluginInstances.values(itInst.key());
              QList<IPlugin*>::iterator it;
 
              for (it = instances.begin(); it != instances.end(); it++)
              {
                 inst = *it;
-                fac = pluginFactories[inst->getPluginID()];
+                fac = factoryByPlugin.value(inst);
+                factoryByPlugin.remove(inst);
                 fac->releasePluginInstance(inst);
-                //pluginInstances.remove(itInst.key(),inst);
+                pluginInstances.remove(itInst.key(),inst);
              }
      }
 
@@ -47,6 +47,7 @@ PluginControl::~PluginControl() {
      pluginFactories.clear();
      pluginInstances.clear();
      pluginsByType.clear();
+     factoryByPlugin.clear();
      transactionControls.clear();
 
 }
@@ -57,7 +58,7 @@ IPluginFactory* PluginControl::loadPlugin(QString fileName)
     QPluginLoader loader(fileName);
     QObject *plugin = loader.instance();
 
-    //qDebug() << "loadingPlugin( " << fileName << ")";
+    // qDebug() << "loadingPlugin( " << fileName << ")";
     if (plugin)
     {
         pluginFactory = qobject_cast<IPluginFactory*> (plugin);
@@ -69,11 +70,12 @@ IPluginFactory* PluginControl::loadPlugin(QString fileName)
                 pluginFactories[pluginID] = pluginFactory;
                 QList<LanguageType> types =
                         pluginFactory->getSupportedLanguages();
+
                 QList<LanguageType>::iterator it;
+
                 for (it = types.begin() ; it!= types.end(); it++)
                 {
-                    pluginsByType.insert(*it,
-                                         pluginFactory->getPluginID());
+                    pluginsByType.insert(*it, pluginFactory->getPluginID());
                 }
             }
         }
@@ -111,6 +113,7 @@ void PluginControl::loadPlugins(QString pluginsDirPath) {
 
 void PluginControl::launchDocument(Document *doc)
 {
+
     TransactionControl *transControl;
     IDocumentParser *parser;
     IPluginFactory *factory;
@@ -135,16 +138,16 @@ void PluginControl::launchDocument(Document *doc)
         pluginInstance = factory->createPluginInstance();
         if (pluginInstance)
         {
-            // FIXME: Plugin must have a unique ID.
-            // pluginInstance->setPluginID(factory->getPluginID());
+            pluginInstance->setPluginInstanceID(QUuid::createUuid().toString());
             pluginInstance->setDocument(doc);
             pluginInstance->setLanguageProfile(profile);
             launchNewPlugin(pluginInstance, transControl);
-            pluginInstances.insert(location,pluginInstance);
-            emit addPluginWidgetToWindow(factory,pluginInstance,doc);
+            pluginInstances.insert(location, pluginInstance);
+            factoryByPlugin.insert(pluginInstance, factory);
+            emit addPluginWidgetToWindow(factory, pluginInstance, doc);
         }
         else {
-            emit notifyError(tr("Could not create a instance for the"
+            emit notifyError(tr("Could not create an instance for the"
                                 "plugin (%1)").arg(*it));
         }
     }
@@ -220,21 +223,20 @@ bool PluginControl::releasePlugins(Document *doc)
             transactionControls.remove(doc->getLocation());
         }
 
-        QList<IPlugin*> instances = pluginInstances.values
-                                                    (doc->getLocation());
+        QList<IPlugin*> instances = pluginInstances.values(doc->getLocation());
         QList<IPlugin*>::iterator it;
         for (it = instances.begin(); it != instances.end(); it++)
         {
            IPlugin *inst = *it;
            inst->saveSubsession();
-           IPluginFactory *fac = pluginFactories[inst->getPluginID()];
+           IPluginFactory *fac = factoryByPlugin.value(inst);
+           factoryByPlugin.remove(inst);
            fac->releasePluginInstance(inst);
         }
         pluginInstances.remove(doc->getLocation());
 
         return true;
 }
-
         }
     }
 }//end namespace composer

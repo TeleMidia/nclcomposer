@@ -45,7 +45,8 @@ namespace composer {
 
             protected:
 
-                //! This method is used to set an specific attribute of the element
+                //! This method is used to set an specific attribute of the
+                //! element
                 /*!
                   \param name - The name of the attribute to be set
                   \param value - The value this attribute is going to be set

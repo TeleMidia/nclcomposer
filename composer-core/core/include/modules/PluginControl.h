@@ -50,6 +50,8 @@ namespace composer {
             QHash<QString,TransactionControl*> transactionControls;
             /* Plugin Instance by DocumentLocation */
             QMultiHash<QString,IPlugin*> pluginInstances;
+            /* Relate each IPlugin to its correspondent IPluginFactory */
+            QMultiHash<IPlugin*,IPluginFactory*> factoryByPlugin;
 
             void launchNewPlugin(IPlugin *plugin,
                                  TransactionControl *tControl);
@@ -69,7 +71,7 @@ namespace composer {
             void newDocumentLaunchedAndCreated(QString documentdId,
                                                QString location);
             void notifyError(QString);
-            void addPluginWidgetToWindow(IPluginFactory*,IPlugin*,
+            void addPluginWidgetToWindow(IPluginFactory*, IPlugin*,
                                     QString projectId, QString documentId);
             void addPluginWidgetToWindow(IPluginFactory*,IPlugin*,
                                          Document*);

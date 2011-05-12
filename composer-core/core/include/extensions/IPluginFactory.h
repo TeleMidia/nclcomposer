@@ -38,7 +38,7 @@ namespace plugin {
         */
         virtual IPlugin* createPluginInstance()  = 0;
 
-        //! When an NclDocument is closed by the user, or is no longer needed,
+        //! When an NclDocument is closed by the user and is no longer needed,
         //! the core is going to use this call to release the plugin instance
         //! that was associated with this NclDocument. This call free
         //! the memory been used by plugins.
@@ -50,17 +50,24 @@ namespace plugin {
         virtual QList<LanguageType> getSupportedLanguages() = 0;
 
         virtual QString getPluginID() = 0;
-
         virtual QString getPluginName() = 0;
-
         virtual QIcon getPluginIcon() = 0;
 
         virtual QWidget* getPreferencePageWidget() = 0;
-
         virtual void setDefaultValues() = 0;
-
         virtual void applyValues() = 0;
 
+        /* Informações úteis que devem estar no plugin (em um XML?)
+        QString name() const;
+        QString version() const;
+        QString compatVersion() const;
+        QString vendor() const;
+        QString copyright() const;
+        QString license() const;
+        QString description() const;
+        QString url() const;
+        QString category() const;
+        */
 
 };
 
@@ -74,6 +81,6 @@ namespace plugin {
   * Declaring the interface that is going to be used by external plugins.
   */
 Q_DECLARE_INTERFACE(IPluginFactory,
-                   "br.telemidia.purcrio.composer.IPluginFactory")
+                    "br.telemidia.pucrio.composer.IPluginFactory")
 
 #endif // ILAYOUTPLUGIN_H

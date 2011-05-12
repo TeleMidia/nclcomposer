@@ -35,13 +35,17 @@ namespace plugin {
         protected:
              //! The Document binded with this particular plugin instance
              Document *doc;
-             QString pluginID;
+             QString pluginInstanceID;
              QMutex mutex;
              ILanguageProfile *languageProfile;
 
         public:
-             inline QString getPluginID() {
-                 return this->pluginID;
+             inline QString getPluginInstanceID() {
+                 return this->pluginInstanceID;
+             }
+
+             inline void setPluginInstanceID(QString pluginInstID) {
+                 this->pluginInstanceID = pluginInstID;
              }
 
              inline void setLanguageProfile(ILanguageProfile *languageProfile) {
