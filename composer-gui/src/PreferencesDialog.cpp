@@ -29,11 +29,11 @@ void PreferencesDialog::loadPreferencesPages(){
     {
         IPluginFactory *pF = *it;
         if (pF->getPreferencePageWidget() == NULL) continue;
-        new QListWidgetItem(pF->getPluginIcon(),
-                            pF->getPluginName(),
+        new QListWidgetItem(pF->icon(),
+                            pF->name(),
                             ui->listWidget, 0);
         QWidget *page = pF->getPreferencePageWidget();
-        pages[pF->getPluginName()] = page;
+        pages[pF->name()] = page;
         page->hide();
         ui->scrollAreaVerticalLayout->addWidget(page);
     }

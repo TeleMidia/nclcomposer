@@ -60,7 +60,7 @@ class MainWindow : public QMainWindow {
         QMenu *viewMenu;
         QMenu *editMenu;
 
-        //QToolBar *fileTool;
+        QToolBar *fileToolbar;
 
         QAction *newProjectAct;
         QAction *newDocumentAct;
@@ -103,6 +103,7 @@ class MainWindow : public QMainWindow {
         void createStatusBar();
         void createMenus();
         void createActions();
+        void createToolBar();
         void createTreeProject();
         void createFileSystem();
         void readSettings();

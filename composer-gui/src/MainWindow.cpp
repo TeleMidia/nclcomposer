@@ -151,15 +151,19 @@ void MainWindow::initGUI() {
     connect(tabDocuments,SIGNAL(tabCloseRequested(int)),
             this,SLOT(tabClosed(int)));
     setCentralWidget(tabDocuments);
+
     createStatusBar();
     createActions();
     createMenus();
+    //createToolBar();
     createAbout();
     showMaximized();
 
     welcomeScreen = new QWebView(this);
 
-    welcomeScreen->setStyleSheet("background-color:rgb(150,147,88); padding: 7px ; color:rgb(255,255,255)");
+    welcomeScreen->setStyleSheet("background-color:rgb(150,147,88); \
+                                 padding: 7px ; color:rgb(255,255,255)");
+
     welcomeScreen->load(QUrl("http://www.ncl.org.br"));
     welcomeScreen->showMaximized();
     tabDocuments->addTab(welcomeScreen, "Welcome");
@@ -185,7 +189,7 @@ void MainWindow::addPluginWidget(IPluginFactory *fac, IPlugin *plugin,
         documentsWidgets[location] = w;
     }
 
-    QDockWidget *dock = new QDockWidget(fac->getPluginName());
+    QDockWidget *dock = new QDockWidget(fac->name());
     dock->setAllowedAreas(Qt::AllDockWidgetAreas);
     dock->setFeatures(QDockWidget::DockWidgetClosable |
                       QDockWidget::DockWidgetMovable);
@@ -333,8 +337,8 @@ void MainWindow::about() {
     pluginsExt->clear();
     for (it = pList.begin(); it != pList.end(); it++) {
         IPluginFactory *pF = *it;
-        pluginsExt->addItem(new QListWidgetItem(pF->getPluginIcon(),
-                                                pF->getPluginName()));
+        pluginsExt->addItem(new QListWidgetItem(pF->icon(),
+                                                pF->name()));
     }
 
     QList<ILanguageProfile*>::iterator itL;
@@ -480,5 +484,22 @@ void MainWindow::showEditPreferencesDialog()
 void MainWindow::showSwitchWorkspaceDialog()
 {
     wsSwitch->show();
+}
+
+void MainWindow::createToolBar()
+{
+    fileToolbar = new QToolBar("File");
+    fileToolbar->setAllowedAreas(Qt::LeftToolBarArea);
+    fileToolbar->setStyleSheet(" background: #8af;\
+                               border-right: 1px solid black;\
+                               background: qradialgradient(cx: 0.3, cy: -0.4, \
+                                       fx: 0.3, fy: -0.4, radius: 1.35, \
+                                       stop: 0 #fff, stop: 1 #888);");
+
+    fileToolbar->setMinimumWidth(70);
+    fileToolbar->setMovable(false);
+    addToolBar(Qt::LeftToolBarArea, fileToolbar);
+    fileToolbar->addAction(newProjectAct);
+    fileToolbar->addAction(newDocumentAct);
 }
 
