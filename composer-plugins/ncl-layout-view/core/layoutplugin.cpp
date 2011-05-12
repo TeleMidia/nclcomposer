@@ -65,7 +65,7 @@ QWidget* LayoutPlugin::getWidget()
 
 void LayoutPlugin::onEntityAdded(QString ID, Entity* entity)
 {
-    if (getPluginID() != ID){
+    if (getPluginInstanceID() != ID){
 
     // is region
     if (entity->getType() == "region"){

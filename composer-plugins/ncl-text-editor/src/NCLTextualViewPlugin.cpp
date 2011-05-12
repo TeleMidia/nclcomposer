@@ -24,7 +24,7 @@ QWidget* NCLTextualViewPlugin::getWidget()
 void NCLTextualViewPlugin::onEntityAdded(QString pluginID, Entity *entity)
 {
     //Return if this is my call to onEntityAdded
-    if(pluginID == getPluginID())
+    if(pluginID == getPluginInstanceID())
         return;
 
     QString line = "<" + entity->getType() + "";
@@ -109,7 +109,7 @@ void NCLTextualViewPlugin::onEntityAboutToRemove(Entity *)
 void NCLTextualViewPlugin::onEntityRemoved(QString pluginID, QString entityID)
 {
     //skip if this is my own call to onEntityRemoved
-    if(pluginID == getPluginID())
+    if(pluginID == getPluginInstanceID())
         return;
 
     int lineOfRemovedEntity = lineOfEntity[entityID];
