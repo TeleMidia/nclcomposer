@@ -35,17 +35,17 @@ QList<LanguageType> LayoutPluginFactory::getSupportedLanguages()
     return lTypes;
 }
 
-QString LayoutPluginFactory::getPluginID()
+QString LayoutPluginFactory::id() const
 {
     return "br.puc-rio.telemidia.nclplugin-layout";
 }
 
-QString LayoutPluginFactory::getPluginName()
+QString LayoutPluginFactory::name() const
 {
     return "NCL Layout View";
 }
 
-QIcon LayoutPluginFactory::getPluginIcon()
+QIcon LayoutPluginFactory::icon() const
 {
     return QIcon(":/images/layout");
 }

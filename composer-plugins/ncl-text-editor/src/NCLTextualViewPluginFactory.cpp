@@ -32,17 +32,17 @@ QList<LanguageType> NCLTextualViewPluginFactory::getSupportedLanguages()
     return lTypes;
 }
 
-QString NCLTextualViewPluginFactory::getPluginID()
+QString NCLTextualViewPluginFactory::id() const
 {
     return "br.puc-rio.telemidia.NCLTextualView";
 }
 
-QString NCLTextualViewPluginFactory::getPluginName()
+QString NCLTextualViewPluginFactory::name() const
 {
     return "NCL Textual View";
 }
 
-QIcon NCLTextualViewPluginFactory::getPluginIcon()
+QIcon NCLTextualViewPluginFactory::icon() const
 {
     return QIcon(":/images/ncl.png");
 }

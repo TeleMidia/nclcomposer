@@ -28,11 +28,11 @@ public:
 
     virtual QList<LanguageType> getSupportedLanguages();
 
-    virtual QString getPluginID();
+    virtual QString id() const;
 
-    virtual QString getPluginName();
+    virtual QString name() const;
 
-    virtual QIcon getPluginIcon();
+    virtual QIcon icon() const;
 
     virtual QWidget* getPreferencePageWidget();
 

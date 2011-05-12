@@ -110,3 +110,8 @@ void OutlineViewPlugin::updateFromModel()
     //TODO: All
 }
 
+void OutlineViewPlugin::debugHasSendClearAll()
+{
+    qDebug() << "OutlineViewPlugin::debugHasSendClearAll";
+}
+

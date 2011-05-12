@@ -31,6 +31,8 @@ class DebugConsolePlugin : public IPlugin
         void onEntityRemoved(QString ID, QString entityID);
 
         void errorMessage(QString error);
+
+        void sendToAll();
 };
 
 #endif // DEBUGCONSOLEPLUGIN_H

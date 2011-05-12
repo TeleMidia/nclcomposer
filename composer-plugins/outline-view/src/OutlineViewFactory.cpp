@@ -27,17 +27,17 @@ QList<LanguageType> OutlineViewFactory::getSupportedLanguages()
     return lTypes;
 }
 
-QString OutlineViewFactory::getPluginID()
+QString OutlineViewFactory::id() const
 {
     return "br.puc-rio.telemidia.OutlineView";
 }
 
-QString OutlineViewFactory::getPluginName()
+QString OutlineViewFactory::name() const
 {
     return "Outline View";
 }
 
-QIcon OutlineViewFactory::getPluginIcon()
+QIcon OutlineViewFactory::icon() const
 {
     return QIcon(":/images/ncl.png");
 }

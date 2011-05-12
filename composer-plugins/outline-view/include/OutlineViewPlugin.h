@@ -10,6 +10,7 @@ using namespace composer::core::extension::plugin;
 class OutlineViewPlugin : public IPlugin
 {
     Q_OBJECT
+
 private:
     NCLTreeWidget *window;
 
@@ -31,6 +32,9 @@ public slots:
     void onEntityRemoved(QString ID, QString entityID);
 
     void errorMessage(QString error);
+
+    /* Comunication from Debug to me */
+    void debugHasSendClearAll();
 
 private slots:
     void elementRemovedByUser(QString id);

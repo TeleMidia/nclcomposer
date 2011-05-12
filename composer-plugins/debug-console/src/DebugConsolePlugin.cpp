@@ -10,7 +10,8 @@ DebugConsolePlugin::DebugConsolePlugin()
     list = new QListWidget(window);
     list->setAlternatingRowColors(true);
     layout->addWidget(list);
-    connect(bt,SIGNAL(clicked()),list,SLOT(clear()));
+    connect(bt, SIGNAL(clicked()), list, SLOT(clear()));
+    connect(bt, SIGNAL(clicked()), this, SLOT(sendToAll()));
     window->setLayout(layout);
     window->setWindowIcon(QIcon(":/images/icon.png"));
     doc = NULL;
@@ -68,4 +69,9 @@ bool DebugConsolePlugin::saveSubsession()
 void DebugConsolePlugin::updateFromModel()
 {
     //TODO: All
+}
+
+void DebugConsolePlugin::sendToAll()
+{
+    emit sendBroadcastMessage("debugHasSendClearAll()", NULL);
 }

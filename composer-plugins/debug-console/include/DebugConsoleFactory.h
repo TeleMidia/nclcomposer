@@ -23,11 +23,11 @@ class DebugConsoleFactory : public QObject,
 
          QList<LanguageType> getSupportedLanguages();
 
-         QString getPluginID();
+         QString id()const;
 
-         QString getPluginName();
+         QString name() const;
 
-         QIcon getPluginIcon();
+         QIcon icon() const;
 
          QWidget* getPreferencePageWidget();
 

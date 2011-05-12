@@ -35,17 +35,17 @@ QList<LanguageType> DebugConsoleFactory::getSupportedLanguages()
     return lTypes;
 }
 
-QString DebugConsoleFactory::getPluginID()
+QString DebugConsoleFactory::id() const
 {
     return "br.puc-rio.telemidia.DebugConsole";
 }
 
-QString DebugConsoleFactory::getPluginName()
+QString DebugConsoleFactory::name() const
 {
     return "DebugConsole";
 }
 
-QIcon DebugConsoleFactory::getPluginIcon()
+QIcon DebugConsoleFactory::icon()  const
 {
     return QIcon(":/images/icon.png");
 }
