@@ -1,5 +1,8 @@
 #include "modules/PluginControl.h"
+
 #include <QUuid>
+#include <QMetaObject>
+#include <QMetaMethod>
 
 namespace composer {
     namespace core {
@@ -64,7 +67,7 @@ IPluginFactory* PluginControl::loadPlugin(QString fileName)
         pluginFactory = qobject_cast<IPluginFactory*> (plugin);
         if (pluginFactory)
         {
-            QString pluginID = pluginFactory->getPluginID();
+            QString pluginID = pluginFactory->id();
             if (!pluginFactories.contains(pluginID))
             {
                 pluginFactories[pluginID] = pluginFactory;
@@ -75,7 +78,7 @@ IPluginFactory* PluginControl::loadPlugin(QString fileName)
 
                 for (it = types.begin() ; it!= types.end(); it++)
                 {
-                    pluginsByType.insert(*it, pluginFactory->getPluginID());
+                    pluginsByType.insert(*it, pluginFactory->id());
                 }
             }
         }
@@ -180,6 +183,10 @@ void PluginControl::launchNewPlugin(IPlugin *plugin,
     connect(plugin,SIGNAL(removeEntity(Entity*,bool)),
             tControl,
             SLOT(onRemoveEntity(Entity*,bool)));
+
+    //broadcastMessage
+    connect(plugin, SIGNAL(sendBroadcastMessage(QString, QObject*)),
+            this, SLOT(sendBroadcastMessage(QString, QObject*)));
 }
 
 void PluginControl::connectParser(IDocumentParser *parser,
@@ -237,6 +244,29 @@ bool PluginControl::releasePlugins(Document *doc)
 
         return true;
 }
+
+void PluginControl::sendBroadcastMessage(QString msg, QObject *obj)
+{
+    qDebug() << "PluginControl::sendBroadcastMessage";
+    IPlugin *plugin = qobject_cast<IPlugin *> (QObject::sender());
+
+    QList<IPlugin*>::iterator it;
+    QList<IPlugin*> instances =
+            pluginInstances.values(plugin->getDocument()->getLocation());
+
+    for (it = instances.begin(); it != instances.end(); it++)
+    {
+       IPlugin *inst = *it;
+       int idxSlot = inst->metaObject()->indexOfSlot(msg.toStdString().c_str());
+
+       if(idxSlot != -1) {
+           QMetaMethod method = inst->metaObject()->method(idxSlot);
+           method.invoke(inst, Qt::QueuedConnection);
+       }
+    }
+
+}
+
         }
     }
 }//end namespace composer

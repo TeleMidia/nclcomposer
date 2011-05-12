@@ -67,6 +67,9 @@ namespace composer {
         public slots:
             void launchDocument(Document *doc);
 
+        private slots:
+            void sendBroadcastMessage(QString, QObject*);
+
         signals:
             void newDocumentLaunchedAndCreated(QString documentdId,
                                                QString location);

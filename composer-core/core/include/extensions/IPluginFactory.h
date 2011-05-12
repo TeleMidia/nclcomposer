@@ -49,9 +49,9 @@ namespace plugin {
 
         virtual QList<LanguageType> getSupportedLanguages() = 0;
 
-        virtual QString getPluginID() = 0;
-        virtual QString getPluginName() = 0;
-        virtual QIcon getPluginIcon() = 0;
+        virtual QString id() const = 0;
+        virtual QString name() const = 0;
+        virtual QIcon icon() const = 0;
 
         virtual QWidget* getPreferencePageWidget() = 0;
         virtual void setDefaultValues() = 0;
