@@ -74,7 +74,7 @@ class MainWindow : public QMainWindow {
         QAction *switchWS;
 
         QListWidget *profilesExt;
-        QListWidget *pluginsExt;
+        QTreeWidget *pluginsExt;
 
         ProjectWizard *projectWizard;
         DocumentWizard *documentWizard;

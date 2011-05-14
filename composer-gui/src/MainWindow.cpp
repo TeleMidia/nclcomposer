@@ -1,6 +1,7 @@
 #include "MainWindow.h"
 
 #include <QPixmap>
+#include <QDialogButtonBox>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent) {
@@ -155,18 +156,15 @@ void MainWindow::initGUI() {
     createStatusBar();
     createActions();
     createMenus();
-    //createToolBar();
+    createToolBar();
     createAbout();
     showMaximized();
 
-    welcomeScreen = new QWebView(this);
-
-    welcomeScreen->setStyleSheet("background-color:rgb(150,147,88); \
-                                 padding: 7px ; color:rgb(255,255,255)");
-
-    welcomeScreen->load(QUrl("http://www.ncl.org.br"));
-    welcomeScreen->showMaximized();
-    tabDocuments->addTab(welcomeScreen, "Welcome");
+//    welcomeScreen = new QWebView(this);
+//    welcomeScreen->setStyleSheet("background-color:rgb(150,147,88); padding: 7px ; color:rgb(255,255,255)");
+//    welcomeScreen->load(QUrl("http://www.ncl.org.br"));
+//    welcomeScreen->showMaximized();
+//    tabDocuments->addTab(welcomeScreen, "Welcome");
 }
 
 void MainWindow::addPluginWidget(IPluginFactory *fac, IPlugin *plugin,
@@ -308,23 +306,36 @@ void MainWindow::createAbout()
 
     profilesExt = new QListWidget(aboutDialog);
     profilesExt->setAlternatingRowColors(true);
-    pluginsExt = new QListWidget(aboutDialog);
+
+    pluginsExt = new QTreeWidget(aboutDialog);
     pluginsExt->setAlternatingRowColors(true);
+    QStringList header;
+    header << "Name" << "Load" << "Version" << "Vendor";
+    pluginsExt->setHeaderLabels(header);
 
+    QDialogButtonBox *bOk = new QDialogButtonBox(QDialogButtonBox::Ok |
+                                                 QDialogButtonBox::Close,
+                                                 Qt::Horizontal,
+                                                 aboutDialog);
 
-    QPushButton *bOk = new QPushButton(tr("OK"),aboutDialog);
-    connect(bOk,SIGNAL(clicked()),aboutDialog,SLOT(close()));
+    QPushButton *tmp = bOk->button(QDialogButtonBox::Ok);
+    tmp->setText(tr("Details"));
+    tmp->setIcon(QIcon());
+
+    connect(bOk,SIGNAL(rejected()),aboutDialog,SLOT(close()));
 
     QGridLayout *gLayout = new QGridLayout(aboutDialog);
     gLayout->addWidget(new QLabel(tr("The <b>Composer</b> is an IDE for"
                                      " Declarative Multimedia languages."),
+                                     aboutDialog));
+
+    gLayout->addWidget(new QLabel(tr("<b>Installed Language Profiles</b>"),
                                   aboutDialog));
-    gLayout->addWidget(new QLabel(tr("<b>Profile Languages Loaded</b>"),
-                                  aboutDialog));
+
     gLayout->addWidget(profilesExt);
-    gLayout->addWidget(new QLabel(tr("<b>Plug-ins Loaded</b>")));
+    gLayout->addWidget(new QLabel(tr("<b>Installed Plug-ins</b>")));
     gLayout->addWidget(pluginsExt);
-    gLayout->addWidget(bOk, 6, 2);
+    gLayout->addWidget(bOk);
     aboutDialog->setLayout(gLayout);
 
 }
@@ -335,11 +346,37 @@ void MainWindow::about() {
                                    getLoadedPlugins();
 
     pluginsExt->clear();
+
+    //search for categories
+    QTreeWidgetItem *treeWidgetItem;
+    QMap <QString, QTreeWidgetItem*> categories;
     for (it = pList.begin(); it != pList.end(); it++) {
         IPluginFactory *pF = *it;
-        pluginsExt->addItem(new QListWidgetItem(pF->icon(),
-                                                pF->name()));
+        QString category = pF->category();
+        if(!categories.contains(category)){
+            treeWidgetItem = new QTreeWidgetItem(pluginsExt);
+            categories.insert(category, treeWidgetItem);
+            treeWidgetItem->setText(0, category);
+            treeWidgetItem->setTextColor(0, QColor("#0000FF"));
+        }
     }
+
+    for (it = pList.begin(); it != pList.end(); it++) {
+        IPluginFactory *pF = *it;
+        /** FIXME: This should cause memory leaks */
+        treeWidgetItem = new QTreeWidgetItem(categories.value(pF->category()));
+        treeWidgetItem->setText(0, pF->name());
+        treeWidgetItem->setCheckState(1, Qt::Checked);
+        treeWidgetItem->setText(2, pF->vendor());
+        treeWidgetItem->setText(3, pF->version());
+    }
+
+    pluginsExt->expandAll();
+
+    pluginsExt->setColumnWidth(0, 150);
+    pluginsExt->resizeColumnToContents(1);
+    pluginsExt->resizeColumnToContents(2);
+    pluginsExt->resizeColumnToContents(3);
 
     QList<ILanguageProfile*>::iterator itL;
     QList<ILanguageProfile*> lList = LanguageControl::getInstance()->
@@ -417,8 +454,8 @@ void MainWindow::createStatusBar()
 
 void MainWindow::showCurrentWidgetFullScreen()
 {
-    tabDocuments->setWindowFlags(Qt::Window);
-    tabDocuments->setWindowState(Qt::WindowFullScreen);
+//     tabDocuments->setWindowFlags(Qt::Window);
+//    tabDocuments->setWindowState(Qt::WindowFullScreen);
     tabDocuments->show();
 //    QWidget *w = tabDocuments->currentWidget();
 //    if (w != NULL)
