@@ -57,17 +57,15 @@ namespace plugin {
         virtual void setDefaultValues() = 0;
         virtual void applyValues() = 0;
 
-        /* Informações úteis que devem estar no plugin (em um XML?)
-        QString name() const;
-        QString version() const;
-        QString compatVersion() const;
-        QString vendor() const;
-        QString copyright() const;
-        QString license() const;
-        QString description() const;
-        QString url() const;
-        QString category() const;
-        */
+        /* Informações úteis que devem estar no plugin (em um XML?)*/
+        virtual QString version() { return "Unknown"; }
+        virtual QString compatVersion() {return "Unknown";}
+        virtual QString vendor() {return "Unknown";}
+        virtual QString copyright() {return "Unknown";}
+        virtual QString license() {return "Unknown";}
+        virtual QString description() {return "Unknown";}
+        virtual QString url() {return "Unknown";}
+        virtual QString category() {return "Unknown";}
 
 };
 
