@@ -1,0 +1,320 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>ComposerMainWindow</class>
+ <widget class="QMainWindow" name="ComposerMainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>800</width>
+    <height>600</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>NCL Composer</string>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">#leftToolBar {
+background: #8af;
+border-right: 1px solid black;
+background: qradialgradient(cx: 0.1, cy: -0.9,
+														fx: 0.3, fy: -1.0,
+														radius: 1.35,
+													  stop: 0 #fff,
+														stop: 1 #888);
+}</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <layout class="QHBoxLayout" name="horizontalLayout">
+    <item>
+     <widget class="QListView" name="listView">
+      <property name="styleSheet">
+       <string notr="true">background-color: rgb(227, 227, 227);</string>
+      </property>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>800</width>
+     <height>25</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="menu_File">
+    <property name="title">
+     <string>&amp;File</string>
+    </property>
+    <widget class="QMenu" name="menu_Recent_Files">
+     <property name="title">
+      <string>&amp;Recent Files</string>
+     </property>
+     <addaction name="action_Clear_Recent_Files"/>
+     <addaction name="separator"/>
+    </widget>
+    <addaction name="action_New_Project"/>
+    <addaction name="menu_Recent_Files"/>
+    <addaction name="separator"/>
+    <addaction name="action_Close_All"/>
+    <addaction name="separator"/>
+    <addaction name="action_Exit"/>
+    <addaction name="separator"/>
+   </widget>
+   <widget class="QMenu" name="menu_Edit">
+    <property name="title">
+     <string>&amp;Edit</string>
+    </property>
+   </widget>
+   <widget class="QMenu" name="menu_Help">
+    <property name="title">
+     <string>&amp;Help</string>
+    </property>
+    <addaction name="action_Contents"/>
+    <addaction name="separator"/>
+    <addaction name="action_About"/>
+    <addaction name="action_About_Plugins"/>
+   </widget>
+   <widget class="QMenu" name="menu_Window">
+    <property name="title">
+     <string>Window</string>
+    </property>
+   </widget>
+   <addaction name="menu_File"/>
+   <addaction name="menu_Edit"/>
+   <addaction name="menu_Window"/>
+   <addaction name="menu_Help"/>
+  </widget>
+  <widget class="QDockWidget" name="dockWidget">
+   <property name="enabled">
+    <bool>true</bool>
+   </property>
+   <property name="minimumSize">
+    <size>
+     <width>120</width>
+     <height>330</height>
+    </size>
+   </property>
+   <property name="acceptDrops">
+    <bool>false</bool>
+   </property>
+   <property name="floating">
+    <bool>false</bool>
+   </property>
+   <property name="features">
+    <set>QDockWidget::NoDockWidgetFeatures</set>
+   </property>
+   <property name="windowTitle">
+    <string/>
+   </property>
+   <attribute name="dockWidgetArea">
+    <number>1</number>
+   </attribute>
+   <widget class="QWidget" name="leftToolBar">
+    <property name="minimumSize">
+     <size>
+      <width>80</width>
+      <height>0</height>
+     </size>
+    </property>
+    <layout class="QVBoxLayout" name="verticalLayout">
+     <item>
+      <widget class="QCommandLinkButton" name="commandLinkButton">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="text">
+        <string>Welcome</string>
+       </property>
+       <property name="checkable">
+        <bool>true</bool>
+       </property>
+       <property name="checked">
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QCommandLinkButton" name="commandLinkButton_4">
+       <property name="text">
+        <string>Programmer</string>
+       </property>
+       <property name="icon">
+        <iconset resource="../images.qrc">
+         <normaloff>:/mainwindow/document</normaloff>:/mainwindow/document</iconset>
+       </property>
+       <property name="iconSize">
+        <size>
+         <width>40</width>
+         <height>40</height>
+        </size>
+       </property>
+       <property name="checkable">
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QCommandLinkButton" name="commandLinkButton_2">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Preferred" vsizetype="Minimum">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="text">
+        <string>Designer</string>
+       </property>
+       <property name="icon">
+        <iconset resource="../images.qrc">
+         <normaloff>:/mainwindow/icon</normaloff>:/mainwindow/icon</iconset>
+       </property>
+       <property name="iconSize">
+        <size>
+         <width>40</width>
+         <height>40</height>
+        </size>
+       </property>
+       <property name="checkable">
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <spacer name="verticalSpacer">
+       <property name="orientation">
+        <enum>Qt::Vertical</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>20</width>
+         <height>40</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+     <item>
+      <widget class="Line" name="line_2">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QCommandLinkButton" name="commandLinkButton_5">
+       <property name="text">
+        <string>News</string>
+       </property>
+       <property name="icon">
+        <iconset resource="../images.qrc">
+         <normaloff>:/mainwindow/images/rss_icon.png</normaloff>:/mainwindow/images/rss_icon.png</iconset>
+       </property>
+       <property name="iconSize">
+        <size>
+         <width>40</width>
+         <height>40</height>
+        </size>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="Line" name="line">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QCommandLinkButton" name="commandLinkButton_3">
+       <property name="mouseTracking">
+        <bool>true</bool>
+       </property>
+       <property name="autoFillBackground">
+        <bool>false</bool>
+       </property>
+       <property name="text">
+        <string>Quit</string>
+       </property>
+       <property name="icon">
+        <iconset resource="../images.qrc">
+         <normaloff>:/mainwindow/images/quit.png</normaloff>:/mainwindow/images/quit.png</iconset>
+       </property>
+       <property name="iconSize">
+        <size>
+         <width>40</width>
+         <height>40</height>
+        </size>
+       </property>
+       <property name="checkable">
+        <bool>false</bool>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </widget>
+  </widget>
+  <action name="actionNew_File">
+   <property name="text">
+    <string>&amp;New File</string>
+   </property>
+  </action>
+  <action name="action_New_Project">
+   <property name="text">
+    <string>New &amp;Project</string>
+   </property>
+  </action>
+  <action name="action_Exit">
+   <property name="text">
+    <string>E&amp;xit</string>
+   </property>
+   <property name="toolTip">
+    <string>Exit NCL Composer</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Q</string>
+   </property>
+  </action>
+  <action name="action_Close_All">
+   <property name="text">
+    <string>&amp;Close All</string>
+   </property>
+  </action>
+  <action name="action_Contents">
+   <property name="text">
+    <string>&amp;Contents</string>
+   </property>
+  </action>
+  <action name="action_About">
+   <property name="text">
+    <string>&amp;About</string>
+   </property>
+  </action>
+  <action name="action_About_Plugins">
+   <property name="text">
+    <string>About &amp;Plugins</string>
+   </property>
+   <property name="toolTip">
+    <string>Show the application Plugins &quot;About box&quot;</string>
+   </property>
+  </action>
+  <action name="actionFullScreen">
+   <property name="text">
+    <string>FullScreen</string>
+   </property>
+  </action>
+  <action name="action_Clear_Recent_Files">
+   <property name="text">
+    <string>Clear Recent Files</string>
+   </property>
+  </action>
+ </widget>
+ <resources>
+  <include location="../images.qrc"/>
+ </resources>
+ <connections/>
+</ui>

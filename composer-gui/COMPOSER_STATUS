@@ -1,0 +1,96 @@
+Composer Status 28-03-2011
+
+O que tem feito:
+	- Carregamento dos plugins.
+	- Suporte a preferencias individuais para cada plugin.
+	- Comunicacao simples plugin-nucleo.
+	- Build com Suporte para Linux/MacOS/Windows.
+	- Parser do documento -> geracao do modelo (emitindo mensagens
+	  para os plugins).
+
+	Sobre os Plugins que tem hoje: 
+		- Debug: apenas imprime as mensagens que o núcleo 
+			recebe.
+			- Completo.
+		
+		- OutlineView: apresenta a estrutura do documento.
+			- Permite adicionar/remover elementos.
+		
+		- LayoutView: Apresenta as regioes.
+			- Permite adicionar/remover as regioes.
+		
+		- Textual View: Permite editar texto do documento NCL
+			com coloracão e autocomplete.
+			- Recebe todas as mensagens do nucleo e gera o
+			  texto.
+			- Autocomplete contextual da estrutura do NCL.
+			- Folding de elementos.
+			- Navegacao entre os atributos com TAB e SHIFT+TAB.
+
+O que tem para fazer:
+	- DOCUMENTACAO do NUCLEO
+	- Criacao de documento.
+	- Definir o formato de codificacao para salvar o Projeto.
+	- Criar/Salvar/Editar projeto.
+	- API para permitir ao plugin salvar seus dados
+	  específicos.
+	- Suporte a mensagens tratadas como transações.
+	- Validacao/Marcacao de erros.
+	- Disposicao dos plugins na tela.
+	- Comunicacao plugin-plugin para permitir coisas como
+	  selecionar um elemento no outline e ele receber o foco no
+	  textual.
+
+	Sobre os Plugins: 
+		- Debug: 
+			- Nada.
+
+		- OutlineView:
+			- Implementar as funcoes dos atributos dos 
+			  elementos.
+
+		- Layout:
+			- Preferencias.
+ 			- Emitir sinais de update dos elementos.
+			- Copiar/colar de regioes.
+			- Rotacionar regioes :D.
+			- Colocar todos os 8 Pontos para redimensionar.
+			  Hoje, só tem um.
+			- Aninhar regioes com drag ando drop.
+			- Desenhar regioes quando foram especificadas em 
+			  pixels.
+		
+		- Textual:
+			- Preferencias de cor de texto, tamanho de fonte etc.
+			- Sincronizacao textual -> nucleo
+			  (primeira versão vai ter um botao onde o usuario
+			  manda sincronizar explicitamente - ver discussao 
+			  mais abaixo).
+			- Autocomplete de valores de atributos que são
+			  referencias a outros elementos. 
+
+		- TS:
+			- No código do git não tem nada pronto, não sei se 
+			  Bruno tem alguma coisa 
+
+		- Estrutural:
+			- Tudo para integrar como plugin.
+
+Problemas a serem discutidos/tratados:
+	- Formato de troca de mensagens plugin-plugin para Copiar/colar 
+	  entre diferentes plugins.
+	- Como vai funcionar Undo/Redo? 
+		Existem tarefas nos plugins que podem não ser enviadas para 
+		o núcleo. Cada plugin seria então responsável por controlar
+		undo/redo? Ou o núcleo pode fazer isso?
+	- Estabilidade: quando um plugin voa, tudo voa junto. 
+	- Sincronizacao textual -> nucleo
+	 	Isso eh bem complicado porque tem que ficar mantendo
+		de qual parte do texto representa qual elemento. Muitas 
+		vezes, uma alteracao pode resultar em muitas mensagens ao 
+		núcleo.
+	- Signal/Slot de Qt - PROBLEMA GRAVE!
+		Nao é possível manter a ordem das mensagens que o nucleo
+		envia para os plugins. Assim, é possível, por exemplo, que um 
+		plugin receba uma mensagem onEntityRemoved antes de uma 
+		mensagem onEntityAboutToRemove. 
