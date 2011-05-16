@@ -1,10 +1,14 @@
 #include "MainWindow.h"
+#include "ui_ComposerMainWindow.h"
 
 #include <QPixmap>
 #include <QDialogButtonBox>
 
 MainWindow::MainWindow(QWidget *parent)
-    : QMainWindow(parent) {
+    : QMainWindow(parent),
+    ui(new Ui::ComposerMainWindow)
+{
+    ui->setupUi(this);
 
     user_directory_ext = "";
     work_space_path = QDir::homePath();
@@ -33,6 +37,7 @@ MainWindow::~MainWindow() {
         delete fileSystemModel;
         fileSystemModel = NULL;
     }
+    delete ui;
 }
 
 void MainWindow::initModules()
@@ -153,10 +158,9 @@ void MainWindow::initGUI() {
             this,SLOT(tabClosed(int)));
     setCentralWidget(tabDocuments);
 
-    createStatusBar();
+    // createStatusBar();
     createActions();
     createMenus();
-    createToolBar();
     createAbout();
     showMaximized();
 
@@ -213,6 +217,15 @@ void MainWindow::tabClosed(int index)
         w = NULL;
         documentsWidgets.remove(location);
         firstDock.remove(location);
+    }
+}
+
+void MainWindow::closeAllFiles()
+{
+    while(tabDocuments->count())
+    {
+        tabDocuments->removeTab(0);
+        tabClosed(0);
     }
 }
 
@@ -276,26 +289,19 @@ void MainWindow::createTreeProject()
 }
 
 void MainWindow::createMenus() {
-    fileMenu = menuBar()->addMenu(tr("&File"));
-    fileMenu->addAction(newProjectAct);
-    fileMenu->addAction(newDocumentAct);
-    fileMenu->addSeparator();
-    fileMenu->addAction(switchWS);
-    fileMenu->addSeparator();
-    fileMenu->addAction(exitAct);
+    ui->menu_File->addAction(newProjectAct);
+    ui->menu_File->addAction(newDocumentAct);
+    ui->menu_File->addSeparator();
+    ui->menu_File->addAction(switchWS);
+    ui->menu_File->addSeparator();
+    // ui->menu_File->addAction(exitAct);
 
-    editMenu = menuBar()->addMenu(tr("&Edit"));
-    editMenu->addAction(editPreferencesAct);
-
-    viewMenu = menuBar()->addMenu(tr("&View"));
+    ui->menu_Edit->addAction(editPreferencesAct);
 
     menuBar()->addSeparator();
-    connect(viewMenu, SIGNAL(aboutToShow()), this, SLOT(updateViewMenu()));
+    connect(ui->menu_Window, SIGNAL(aboutToShow()), this, SLOT(updateViewMenu()));
 
-    helpMenu = menuBar()->addMenu(tr("&Help"));
-    helpMenu->addAction(aboutComposerAct);
-    helpMenu->addAction(aboutComposerPluginsAct);
-
+    connect(ui->action_Close_All, SIGNAL(triggered()), this, SLOT(closeAllFiles()));
 }
 
 
@@ -420,10 +426,7 @@ void MainWindow::createActions() {
 
     connect(aboutComposerAct, SIGNAL(triggered()), this, SLOT(about()));
 
-    aboutComposerPluginsAct = new QAction(tr("&About Plugins..."), this);
-    aboutComposerPluginsAct->setStatusTip(tr("Show the application Plugins'"
-                                             "About box"));
-    connect(aboutComposerPluginsAct, SIGNAL(triggered()), this, SLOT(about()));
+    connect(ui->action_About_Plugins, SIGNAL(triggered()), this, SLOT(about()));
 
     fullScreenViewAct = new QAction(tr("&FullScreen"),this);
     //fullScreenViewAct->setShortcut();
@@ -441,10 +444,7 @@ void MainWindow::createActions() {
     switchWS = new QAction(tr("Switch Workspace"),this);
     connect(switchWS,SIGNAL(triggered()),SLOT(showSwitchWorkspaceDialog()));
 
-    exitAct = new QAction(tr("E&xit"), this);
-    exitAct->setShortcut(tr("Ctrl+Q"));
-    exitAct->setStatusTip(tr("Exit Composer application"));
-    connect(exitAct, SIGNAL(triggered()), this, SLOT(close()));
+    connect(ui->action_Exit, SIGNAL(triggered()), this, SLOT(close()));
 }
 
 void MainWindow::createStatusBar()
@@ -468,10 +468,10 @@ void MainWindow::showCurrentWidgetFullScreen()
 
 void MainWindow::updateViewMenu()
 {
-    viewMenu->clear();
-    viewMenu->addAction(projectViewAct);
-    viewMenu->addAction(separatorViewAct);
-    viewMenu->addAction(fullScreenViewAct);
+    ui->menu_Window->clear();
+    ui->menu_Window->addAction(projectViewAct);
+    ui->menu_Window->addAction(separatorViewAct);
+    ui->menu_Window->addAction(fullScreenViewAct);
     projectViewAct->setChecked(fileSystemDock->isVisible());
 }
 
@@ -522,21 +522,3 @@ void MainWindow::showSwitchWorkspaceDialog()
 {
     wsSwitch->show();
 }
-
-void MainWindow::createToolBar()
-{
-    fileToolbar = new QToolBar("File");
-    fileToolbar->setAllowedAreas(Qt::LeftToolBarArea);
-    fileToolbar->setStyleSheet(" background: #8af;\
-                               border-right: 1px solid black;\
-                               background: qradialgradient(cx: 0.3, cy: -0.4, \
-                                       fx: 0.3, fy: -0.4, radius: 1.35, \
-                                       stop: 0 #fff, stop: 1 #888);");
-
-    fileToolbar->setMinimumWidth(70);
-    fileToolbar->setMovable(false);
-    addToolBar(Qt::LeftToolBarArea, fileToolbar);
-    fileToolbar->addAction(newProjectAct);
-    fileToolbar->addAction(newDocumentAct);
-}
-

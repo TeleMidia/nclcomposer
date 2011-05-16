@@ -47,6 +47,10 @@ using namespace composer::core::module;
 #include "WorkspaceModel.h"
 #include "ProjectTreeView.h"
 
+namespace Ui {
+    class ComposerMainWindow;
+}
+
 class MainWindow : public QMainWindow {
     Q_OBJECT
 
@@ -55,22 +59,13 @@ class MainWindow : public QMainWindow {
         QMap<QString,QMainWindow*> documentsWidgets;
         QMap<QString,QDockWidget*> firstDock;
 
-        QMenu *fileMenu;
-        QMenu *helpMenu;
-        QMenu *viewMenu;
-        QMenu *editMenu;
-
-        QToolBar *fileToolbar;
-
         QAction *newProjectAct;
         QAction *newDocumentAct;
         QAction *aboutComposerAct;
-        QAction *aboutComposerPluginsAct;
         QAction *fullScreenViewAct;
         QAction *separatorViewAct;
         QAction *projectViewAct;
         QAction *editPreferencesAct;
-        QAction *exitAct;
         QAction *switchWS;
 
         QListWidget *profilesExt;
@@ -96,6 +91,7 @@ class MainWindow : public QMainWindow {
         QWebView *welcomeScreen;
 
     private:
+        Ui::ComposerMainWindow *ui;
         QString promptChooseExtDirectory();
         void initModules();
         void initGUI();
@@ -103,7 +99,6 @@ class MainWindow : public QMainWindow {
         void createStatusBar();
         void createMenus();
         void createActions();
-        void createToolBar();
         void createTreeProject();
         void createFileSystem();
         void readSettings();
@@ -119,9 +114,10 @@ class MainWindow : public QMainWindow {
         void showSwitchWorkspaceDialog();
         void tabClosed(int index);
         void showCurrentWidgetFullScreen();
+        void closeAllFiles();
 
     public:
-        MainWindow(QWidget *parent = 0);
+        explicit MainWindow(QWidget *parent = 0);
         ~MainWindow();
 
     public slots:

@@ -11,5 +11,7 @@
         <file>images/saveDocument.png</file>
         <file alias="icon">images/icon.png</file>
         <file alias="newFolder">images/createFolder.png</file>
+        <file>images/quit.png</file>
+        <file>images/rss_icon.png</file>
     </qresource>
 </RCC>

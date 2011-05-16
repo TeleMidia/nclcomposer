@@ -63,6 +63,7 @@ HEADERS += include/MainWindow.h \
 
 RESOURCES += images.qrc
 
-FORMS   += ui/PreferencesDialog.ui
+FORMS   += ui/PreferencesDialog.ui \
+    ui/ComposerMainWindow.ui
 
 INSTALLS += target
