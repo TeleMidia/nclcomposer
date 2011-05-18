@@ -147,7 +147,8 @@ void PluginControl::launchDocument(Document *doc)
             launchNewPlugin(pluginInstance, transControl);
             pluginInstances.insert(location, pluginInstance);
             factoryByPlugin.insert(pluginInstance, factory);
-            emit addPluginWidgetToWindow(factory, pluginInstance, doc);
+            emit addPluginWidgetToWindow(factory, pluginInstance, doc,
+                                         factoryByPlugin.size());
         }
         else {
             emit notifyError(tr("Could not create an instance for the"
@@ -247,7 +248,6 @@ bool PluginControl::releasePlugins(Document *doc)
 
 void PluginControl::sendBroadcastMessage(QString msg, QObject *obj)
 {
-    qDebug() << "PluginControl::sendBroadcastMessage";
     IPlugin *plugin = qobject_cast<IPlugin *> (QObject::sender());
 
     QList<IPlugin*>::iterator it;

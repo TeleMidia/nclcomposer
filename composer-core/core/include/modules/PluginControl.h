@@ -34,7 +34,7 @@ namespace composer {
     namespace core {
         namespace module {
 
-    class PluginControl : public QObject //, public Singleton<PluginControl>
+    class PluginControl : public QObject
     {
         Q_OBJECT
         SINGLETON(PluginControl)
@@ -77,7 +77,7 @@ namespace composer {
             void addPluginWidgetToWindow(IPluginFactory*, IPlugin*,
                                     QString projectId, QString documentId);
             void addPluginWidgetToWindow(IPluginFactory*,IPlugin*,
-                                         Document*);
+                                         Document*, int n);
 
     };
         }
