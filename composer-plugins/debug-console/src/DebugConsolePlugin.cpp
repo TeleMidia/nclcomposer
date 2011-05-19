@@ -73,5 +73,12 @@ void DebugConsolePlugin::updateFromModel()
 
 void DebugConsolePlugin::sendToAll()
 {
-    emit sendBroadcastMessage("debugHasSendClearAll()", NULL);
+   /* Invoker <Result> in;
+    in.addArgument<int>(10);
+    in.addArgument<int>(20);
+    in.addArgument<int>(30);
+
+    in.sendBroadcastMessage("debugHasSendClearAll"); */
+
+    emit sendBroadcastMessage("debugHasSendClearAll()");
 }
