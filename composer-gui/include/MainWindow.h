@@ -123,7 +123,7 @@ class MainWindow : public QMainWindow {
     public slots:
         void errorDialog(QString);
         void addPluginWidget(IPluginFactory *fac, IPlugin *plugin,
-                             Document *doc);
+                             Document *doc, int n);
         void onOpenDocumentTab(QString location);
         void switchWorkspace();
 

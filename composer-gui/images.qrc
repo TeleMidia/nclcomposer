@@ -13,5 +13,9 @@
         <file alias="newFolder">images/createFolder.png</file>
         <file>images/quit.png</file>
         <file>images/rss_icon.png</file>
+        <file>images/designer.png</file>
+        <file>images/bg.jpg</file>
+        <file>images/text-icon_256x256.png</file>
+        <file>images/ad_novus-fluid_logo.png</file>
     </qresource>
 </RCC>

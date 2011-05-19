@@ -49,8 +49,8 @@ void MainWindow::initModules()
     connect(pgControl,SIGNAL(notifyError(QString)),
                       SLOT(errorDialog(QString)));
     connect(pgControl,SIGNAL(addPluginWidgetToWindow(IPluginFactory*,
-                                                     IPlugin*,Document*)),
-                SLOT(addPluginWidget(IPluginFactory*,IPlugin*,Document*)));
+                                                     IPlugin*,Document*, int)),
+                SLOT(addPluginWidget(IPluginFactory*,IPlugin*,Document*, int)));
 
     connect(lgControl,SIGNAL(notifyError(QString)),
                       SLOT(errorDialog(QString)));
@@ -172,7 +172,7 @@ void MainWindow::initGUI() {
 }
 
 void MainWindow::addPluginWidget(IPluginFactory *fac, IPlugin *plugin,
-                                 Document *doc)
+                                 Document *doc, int n)
 {
     QMainWindow *w;
     QString location = doc->getLocation();
@@ -185,7 +185,7 @@ void MainWindow::addPluginWidget(IPluginFactory *fac, IPlugin *plugin,
     } else {
         w = new QMainWindow(tabDocuments);
         w->setDockNestingEnabled(true);
-        w->setTabPosition(Qt::AllDockWidgetAreas,QTabWidget::West);
+        w->setTabPosition(Qt::AllDockWidgetAreas, QTabWidget::West);
         int index = tabDocuments->addTab(w,projectId + "(" + documentId + ")");
         tabDocuments->setTabToolTip(index, location);
         documentsWidgets[location] = w;
@@ -197,11 +197,15 @@ void MainWindow::addPluginWidget(IPluginFactory *fac, IPlugin *plugin,
                       QDockWidget::DockWidgetMovable);
     QWidget *pW = plugin->getWidget();
     dock->setWidget(pW);
-    w->addDockWidget(Qt::BottomDockWidgetArea, dock, Qt::Horizontal);
+    qDebug() << n;
+    if (n%2)
+        w->addDockWidget(Qt::RightDockWidgetArea, dock, Qt::Vertical);
+    else
+        w->addDockWidget(Qt::LeftDockWidgetArea, dock, Qt::Vertical);
     tabDocuments->setCurrentWidget(w);
 
     if(firstDock.contains(location)) {
-        w->tabifyDockWidget(firstDock[location], dock);
+        // w->tabifyDockWidget(firstDock[location], dock);
     }
     else firstDock[location] = dock;
 }
@@ -274,7 +278,7 @@ void MainWindow::createTreeProject()
     fileSystemView->setColumnHidden(3,true);
     fileSystemDock->setWidget(fileSystemView);
 
-    addDockWidget(Qt::LeftDockWidgetArea, fileSystemDock);
+    addDockWidget(Qt::LeftDockWidgetArea, fileSystemDock, Qt::Horizontal);
 
     projectViewAct = new QAction(QIcon(":/mainwindow/projectTree"),
                                    tr("Projects"),this);
@@ -444,6 +448,7 @@ void MainWindow::createActions() {
     switchWS = new QAction(tr("Switch Workspace"),this);
     connect(switchWS,SIGNAL(triggered()),SLOT(showSwitchWorkspaceDialog()));
 
+    connect(ui->toolButton_3, SIGNAL(clicked()), this, SLOT(close()));
     connect(ui->action_Exit, SIGNAL(triggered()), this, SLOT(close()));
 }
 
