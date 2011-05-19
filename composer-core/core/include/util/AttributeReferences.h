@@ -4,6 +4,10 @@
 #include <QString>
 /**
   */
+
+namespace composer {
+namespace util {
+
 class AttributeReferences {
 private:
     QString element, attr,
@@ -20,4 +24,6 @@ public:
     QString getRefElement();
     QString getRefAttribute();
 };
+
+}} //end namespace
 #endif

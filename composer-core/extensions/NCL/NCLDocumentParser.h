@@ -11,6 +11,9 @@
 #include <core/extensions/IDocumentParser.h>
 using namespace composer::core::extension;
 
+namespace composer {
+namespace language{
+
 class NCLDocumentParser : public IDocumentParser, public QXmlDefaultHandler
 {
     Q_OBJECT
@@ -45,4 +48,5 @@ public slots:
 
 };
 
+}} //end namespace
 #endif // NCLDOCUMENTPARSER_H

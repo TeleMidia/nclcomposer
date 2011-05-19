@@ -1,5 +1,5 @@
-#ifndef TRANSACTIONCONTROL_H
-#define TRANSACTIONCONTROL_H
+#ifndef MESSAGECONTROL_H
+#define MESSAGECONTROL_H
 
 #include <QObject>
 #include <QDebug>
@@ -20,14 +20,14 @@ using namespace composer::core::extension::plugin;
 namespace composer {
 namespace core {
 namespace module {
-    class TransactionControl : public QObject {
+    class MessageControl : public QObject {
         Q_OBJECT
         private:
             Document *doc;
 
         public:
-            TransactionControl(Document *doc);
-            ~TransactionControl();
+            MessageControl(Document *doc);
+            ~MessageControl();
 
         public slots:
             void onAddEntity( QString type,
@@ -54,4 +54,4 @@ namespace module {
 }
 }
 }
-#endif // TRANSACTIONCONTROL_H
+#endif // MESSAGECONTROL_H

@@ -103,7 +103,7 @@ namespace composer {
                 if (appendChild)
                         parent->removeChildAppendChildren(entity);
                 else parent->deleteChild(entity);
-            } else { //does not have a parent dont append
+            } else { //does not have a parent, so dont append
                 delete entity;
                 entity = NULL;
                 return true;
@@ -118,6 +118,4 @@ namespace composer {
 
     }
 
-        }
-    }
-}
+}}} //end namespace

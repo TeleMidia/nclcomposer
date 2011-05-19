@@ -1,21 +1,21 @@
-#include "modules/TransactionControl.h"
+#include "modules/MessageControl.h"
 
 
 namespace composer {
     namespace core {
         namespace module {
 
-TransactionControl::TransactionControl(Document *doc) {
+MessageControl::MessageControl(Document *doc) {
     this->doc = doc;
-    /*qDebug() <<  "TransactionControl::TransactionControl("
+    /* qDebug() <<  "MessageControl::MessageControl("
             <<  doc->getAttribute("id") << ")";*/
 }
 
-TransactionControl::~TransactionControl() {
+MessageControl::~MessageControl() {
 
 }
 
-void TransactionControl::onAddEntity( QString type,
+void MessageControl::onAddEntity( QString type,
                QString parentEntityId, QMap<QString,QString>& atts,
                bool force) {
 
@@ -46,7 +46,7 @@ void TransactionControl::onAddEntity( QString type,
     }
 }
 
-void TransactionControl::onEditEntity(Entity *entity,
+void MessageControl::onEditEntity(Entity *entity,
                                   QMap<QString,QString>& atts, bool force) {
     IPlugin *plugin = qobject_cast<IPlugin *>
                                                     (QObject::sender());
@@ -67,7 +67,7 @@ void TransactionControl::onEditEntity(Entity *entity,
 
 }
 
-void TransactionControl::onRemoveEntity( Entity *entity,
+void MessageControl::onRemoveEntity( Entity *entity,
                                      bool force) {
 
     IPlugin *plugin = qobject_cast<IPlugin *> (QObject::sender());

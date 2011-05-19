@@ -1,5 +1,8 @@
 #include "NCLDocumentParser.h"
 
+namespace composer {
+namespace language {
+
 NCLDocumentParser::NCLDocumentParser(Document *doc)
 {
     this->doc = doc;
@@ -114,3 +117,4 @@ void NCLDocumentParser::onEntityAddError(QString error)
 }
 
 
+}} //end namespace

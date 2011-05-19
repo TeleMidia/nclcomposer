@@ -1,6 +1,7 @@
 #include "NCLLanguageProfile.h"
 
 #include "NCLStructure.h"
+using namespace composer::language;
 
 NCLLanguageProfile::NCLLanguageProfile()
 {

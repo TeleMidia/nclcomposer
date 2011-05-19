@@ -19,7 +19,7 @@ DEFINES += COMPOSERCORE_LIBRARY
 
 SOURCES += \
     src/modules/PluginControl.cpp \
-    src/modules/TransactionControl.cpp \
+    src/modules/MessageControl.cpp \
     src/modules/LanguageControl.cpp \
     src/modules/DocumentControl.cpp \
     src/model/Entity.cpp \
@@ -29,7 +29,7 @@ SOURCES += \
 
 HEADERS_MAN += \
     include/modules/PluginControl.h \
-    include/modules/TransactionControl.h \
+    include/modules/MessageControl.h \
     include/modules/LanguageControl.h \
     include/modules/DocumentControl.h
 

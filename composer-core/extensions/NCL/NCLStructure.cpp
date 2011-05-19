@@ -1,5 +1,8 @@
 #include "NCLStructure.h"
 
+namespace composer {
+namespace language{
+
 NCLStructure *NCLStructure::instance = NULL;
 
 NCLStructure::NCLStructure() {
@@ -196,3 +199,6 @@ QString AttributeReferences::getRefAttribute()
     return this->ref_attr;
 }
 */
+
+
+}} //end namespace

@@ -16,6 +16,7 @@ using namespace composer::core::util;
 using namespace composer::core::model;
 
 #include "../util/AttributeReferences.h"
+using namespace composer::util;
 
 namespace composer {
     namespace core{

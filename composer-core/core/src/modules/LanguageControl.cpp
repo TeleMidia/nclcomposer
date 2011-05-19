@@ -106,8 +106,6 @@ QList<ILanguageProfile*> LanguageControl::getLoadedProfiles()
     return list;
 }
 
-        }
-    }
-}
+} } } //end namespace
 
 

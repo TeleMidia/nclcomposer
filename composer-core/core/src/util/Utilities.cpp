@@ -11,23 +11,22 @@ QMap<QString,LanguageType> createMap() {
 namespace composer {
     namespace core {
         namespace util {
+            QMap<QString,LanguageType> Utilities::types = createMap();
 
-    QMap<QString,LanguageType> Utilities::types = createMap();
+            LanguageType Utilities::getLanguageTypeByExtension(QString ext)
+            {
+                if (!types.contains(ext)) return NONE;
+                else return types[ext];
+            }
 
-    LanguageType Utilities::getLanguageTypeByExtension(QString ext)
-    {
-        if (!types.contains(ext)) return NONE;
-        else return types[ext];
-    }
-
-    QString Utilities::getExtensionForLanguageType(LanguageType type)
-    {
-            QMap<QString,LanguageType>::iterator it;
-            for (it = types.begin(); it != types.end(); it++)
-                if(type == it.value())
-                    return it.key();
-            return "";
-    }
+            QString Utilities::getExtensionForLanguageType(LanguageType type)
+            {
+                QMap<QString,LanguageType>::iterator it;
+                for (it = types.begin(); it != types.end(); it++)
+                    if(type == it.value())
+                        return it.key();
+                return "";
+            }
 
         }
     }

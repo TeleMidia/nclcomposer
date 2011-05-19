@@ -1,5 +1,8 @@
 #include "util/AttributeReferences.h"
 
+namespace composer {
+namespace util {
+
 AttributeReferences:: AttributeReferences (    QString element,
                                                QString attr,
                                                QString ref_element,
@@ -30,3 +33,5 @@ QString AttributeReferences::getRefAttribute()
 {
     return this->ref_attr;
 }
+
+}} //end namespace

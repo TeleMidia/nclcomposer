@@ -11,7 +11,7 @@
 namespace composer{
     namespace core {
         namespace module {
-            class TransactionControl;
+            class MessageControl;
         }
     }
 }
@@ -23,8 +23,11 @@ namespace composer {
             class Entity : public QObject
             {
                 Q_OBJECT
+
+                // The following classes are "reliable" and can acess the
+                // private and protected members of Entity.
                 friend class composer::core::model::Document;
-                friend class composer::core::module::TransactionControl;
+                friend class composer::core::module::MessageControl;
 
             private:
                 QMutex lockAtts;
@@ -44,7 +47,6 @@ namespace composer {
                 QMap<QString, QString> atts;
 
             protected:
-
                 //! This method is used to set an specific attribute of the
                 //! element
                 /*!
@@ -52,14 +54,14 @@ namespace composer {
                   \param value - The value this attribute is going to be set
                 */
                 inline void setAttribute(QString name, QString value) {
-                        QMutexLocker locker(&lockAtts);
-                        atts[name] = value;
+                    QMutexLocker locker(&lockAtts);
+                    atts[name] = value;
                 }
 
                 inline void setAtrributes(QMap<QString,QString> &atts) {
                     QMutexLocker locker(&lockAtts);
                     for (QMap<QString,QString>::iterator it = atts.begin() ;
-                         it != atts.end() ; it++)
+                    it != atts.end() ; it++)
                         this->setAttribute(it.key(), it.value());
                 }
 
@@ -88,9 +90,11 @@ namespace composer {
                     return true;
                 }
 
-                //! This call deletes the child and his children in a recursive way
+                //! This call deletes the child and his children in a recursive
+                //!     way
                 bool deleteChild(Entity *entity);
-                //! This call removes the child and append his children to his parent
+                //! This call removes the child and append his children to his
+                //!     parent
                 bool removeChildAppendChildren(Entity *entity);
 
                 explicit Entity(QObject *parent = 0);
@@ -102,28 +106,33 @@ namespace composer {
 
             public:
 
-                //! This method is used to get an specific attribute of the element
+                //! This method is used to get an specific attribute of the
+                //!     element
                 /*!
                   \param name - The name of the attribute been requested
                   \return A string with the requested attribute.
                 */
                 inline QString getAttribute(QString name) {
-                        QMutexLocker locker(&lockAtts);
-                        return atts.contains(name) ? atts[name] : "";
+                    QMutexLocker locker(&lockAtts);
+                    return atts.contains(name) ? atts[name] : "";
                 }
-                //! This method is used to get the interetator in the <map> of attributes
+                //! This method is used to get the interetator in the <map> of
+                //!     attributes
                 /*!
-                  \param begin - a reference to be filled with the begin of the map
-                  \param end - a reference to be filled with the end of the map
+                  \param begin - a reference to be filled with the begin of the
+                            map.
+                  \param end - a reference to be filled with the end of the map.
                 */
-                inline void getAttributeIterator(QMap<QString,QString>::iterator &begin,
-                                                 QMap<QString,QString>::iterator &end) {
+                inline void getAttributeIterator (
+                        QMap<QString,QString>::iterator &begin,
+                        QMap<QString,QString>::iterator &end) {
                     QMutexLocker locker(&lockAtts);
                     begin = this->atts.begin();
                     end = this->atts.end();
                 }
 
-                //! This method is used to verify if this element has certain attribute
+                //! This method is used to verify if this element has certain
+                //!     attribute
                 /*!
                   \param name - The name of the attribute to be verified
                   \return an boolean depending of the existence of the attribute
@@ -143,8 +152,10 @@ namespace composer {
                     return this->type;
                 }
 
-                inline void getChildrenIterator(QMap<QString,Entity*>::iterator &begin,
-                                                QMap<QString,Entity*>::iterator &end) {
+                inline void getChildrenIterator(
+                        QMap<QString,Entity*>::iterator &begin,
+                        QMap<QString,Entity*>::iterator &end) {
+
                     QMutexLocker locker(&lockChildren);
                     begin = this->children.begin();
                     end = this->children.end();
@@ -157,7 +168,6 @@ namespace composer {
 
                 inline QString getParentUniqueId() {
                     QMutexLocker loecker(&lockParent);
-                    //qDebug() << getType();
                     return parent->getUniqueId();
                 }
 
@@ -173,6 +183,5 @@ namespace composer {
         }
     }
 }
-
 
 #endif // ENTITY_H

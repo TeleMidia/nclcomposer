@@ -7,6 +7,8 @@
 
 using namespace composer::core::extension;
 
+namespace composer {
+    namespace language {
 
     class NCLLanguageProfile : public QObject,
                                public ILanguageProfile {
@@ -36,5 +38,5 @@ using namespace composer::core::extension;
                 getReferences (QString element, QString attr);
     };
 
-
+}} //end namespace
 #endif // NCLLANGUAGEPROFILE_H

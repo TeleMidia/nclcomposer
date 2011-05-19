@@ -40,7 +40,6 @@ namespace composer {
         }
     }
 
-
     //! This call deletes the child and his children in a recursive way
     bool Entity::deleteChild(Entity *entity) {
         QMutexLocker locker(&lockChildren);
@@ -62,25 +61,16 @@ namespace composer {
         delete entity;
         entity = NULL;
     }
+
+    //! Print the Entity and its children
     void Entity::print()
     {
-            qDebug() << "Type: " << getType() << "ID: " << getUniqueId();
-
             QMap<QString, Entity*>::iterator it;
             for (it = children.begin() ; it != children.end(); it++)
             {
                     Entity *child = it.value();
                     child->print();
-//                    QMap<QString,QString>::iterator itAtt;
-//                    for (itAtt = atts.begin(); itAtt != atts.end(); itAtt)
-//                    {
-//                        qDebug() <<
-//                    }
             }
     }
 
-        }//end namespace declaration
-    }
-
-
-}
+}}} //end namespace

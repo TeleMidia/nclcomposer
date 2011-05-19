@@ -11,7 +11,7 @@ namespace composer {
         }
         namespace module {
             class PluginControl;
-            class TransactionControl;
+            class MessageControl;
             class DocumentControl;
         }
     }
@@ -29,61 +29,69 @@ namespace composer {
     namespace core {
         namespace model {
 
-    class Document : public Entity
-    {
-        Q_OBJECT
-        friend class composer::core::module::PluginControl;
-        friend class composer::core::module::TransactionControl;
-        friend class composer::core::module::DocumentControl;
-        friend class composer::core::util::Project;
-    public:
-        Entity* getEntityBydId(QString _id);
-        QList<Entity*> getEntitiesbyType(QString _type);
-        QString getLocation();
-        QString getProjectId();
-        LanguageType getDocumentType();
+            class Document : public Entity
+            {
+                Q_OBJECT
 
-    private:
-        QMutex lockEntities;
-        QMutex lockLocation;
-        QMap<QString, Entity*> entities;
-        QString documentLocation;
-        QString projectId;
-        LanguageType documentType;
+                // The following classes are "reliable" and can acess the
+                // private and protected members of Document.
+                friend class composer::core::module::PluginControl;
+                friend class composer::core::module::MessageControl;
+                friend class composer::core::module::DocumentControl;
+                friend class composer::core::util::Project;
 
-    protected:
-        explicit Document(QObject *parent = 0);
-        Document(QMap<QString,QString> &atts, QObject *parent = 0);
-        ~Document();
+            public:
+                Entity* getEntityBydId(QString _id);
+                QList<Entity*> getEntitiesbyType(QString _type);
+                QString getLocation();
+                QString getProjectId();
+                LanguageType getDocumentType();
 
-        void setLocation(QString location);
-        void setDocumentType(LanguageType type);
-        void setProjectId(QString _projectId);
+            private:
+                QMutex lockEntities;
+                QMutex lockLocation;
+                QMap<QString, Entity*> entities;
+                QString documentLocation;
+                QString projectId;
+                LanguageType documentType;
 
-        //! This method is used to add an Entity in the map and as child
-        //! of the parentId.
-        /*!
-          \param entity - A Entity to be added
-          \param parentId - A QString identifying the parent to be added as child
-          \return an boolean depending on the success
-        */
-        bool addEntity(Entity* entity, QString parentId) throw (EntityNotFound,
-                                                                ParentNotFound);
-        //! This method is used to remove and delete an Entity from the map
-        /*!
-          \param entity - A Entity to be removed
-          \param appendChild - If true the children of Entity will be appended
-          in the parentEntity. If false all the children are also deleted.
-          \return an boolean depending on the success
-        */
-        bool removeEntity(Entity* entity, bool appendChild) throw (EntityNotFound);
+            protected:
+                explicit Document(QObject *parent = 0);
+                Document(QMap<QString,QString> &atts, QObject *parent = 0);
+                ~Document();
 
+                void setLocation(QString location);
+                void setDocumentType(LanguageType type);
+                void setProjectId(QString _projectId);
 
-    signals:
+                //! This method is used to add an Entity in the map and as child
+                //! of the parentId.
+                /*!
+                \param entity - A Entity to be added
+                \param parentId - A QString identifying the parent to be added
+                               as a child.
+                \return an boolean depending on the success
+                */
+                bool addEntity(Entity* entity, QString parentId)
+                        throw (EntityNotFound, ParentNotFound);
 
-    public slots:
+                //! This method is used to remove and delete an Entity from the
+                //!   map
+                /*!
+                    \param entity - A Entity to be removed
+                    \param appendChild - If true the children of Entity will be
+                                appended in the parentEntity. If false all the
+                                children are also deleted.
+                    \return an boolean depending on the success
+                */
+                bool removeEntity(Entity* entity, bool appendChild)
+                        throw (EntityNotFound);
 
-    };
+            signals:
+
+            public slots:
+
+            };
 
         }
     }

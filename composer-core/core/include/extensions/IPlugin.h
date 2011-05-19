@@ -59,7 +59,7 @@ namespace plugin {
              //! This call is used by the core to bind an existing NclDocument
              //! with this plugin instance.
              /*!
-                   \param document a NclDocument instance
+                   \param document an NclDocument instance
              */
              inline void setDocument(Document *document) {
                  QMutexLocker locker(&mutex);
@@ -69,7 +69,7 @@ namespace plugin {
              //! This call is used by the core to recover the NclDocument
              //! instance previously binded with this plugin instance.
              /*!
-                   \return nclDoc a NclDocument instance
+                   \return nclDoc an NclDocument instance
              */
              inline Document* getDocument() {
                  QMutexLocker locker(&mutex);
@@ -169,7 +169,7 @@ namespace plugin {
                The content of the message can be any QObject and are useful
                to extend the curretn
              */
-             void sendBroadcastMessage(QString message, QObject *content);
+             void sendBroadcastMessage(const char* msg);
 
              //! Is used by the plugin when it want to initiate a
              /*!

@@ -51,7 +51,7 @@ PluginControl::~PluginControl() {
      pluginInstances.clear();
      pluginsByType.clear();
      factoryByPlugin.clear();
-     transactionControls.clear();
+     messageControls.clear();
 
 }
 
@@ -111,13 +111,13 @@ void PluginControl::loadPlugins(QString pluginsDirPath) {
     foreach (QString fileName, pluginsDir.entryList(QDir::Files
                                                  | QDir::NoSymLinks)) {
         loadPlugin(pluginsDir.absoluteFilePath(fileName));
-    }//fim foreach
-}//fim function
+    }//end foreach
+}//end function
 
 void PluginControl::launchDocument(Document *doc)
 {
 
-    TransactionControl *transControl;
+    MessageControl *msgControl;
     IDocumentParser *parser;
     IPluginFactory *factory;
     IPlugin *pluginInstance;
@@ -126,8 +126,8 @@ void PluginControl::launchDocument(Document *doc)
                                 getProfileFromType(type);
     QString location  = doc->getLocation();
 
-    transControl = new TransactionControl(doc);
-    transactionControls[location] = transControl;
+    msgControl = new MessageControl(doc);
+    messageControls[location] = msgControl;
 
     /* Requests a new DocumentParser for this Document*/
     parser = profile->createDocumentParser(doc);
@@ -144,7 +144,7 @@ void PluginControl::launchDocument(Document *doc)
             pluginInstance->setPluginInstanceID(QUuid::createUuid().toString());
             pluginInstance->setDocument(doc);
             pluginInstance->setLanguageProfile(profile);
-            launchNewPlugin(pluginInstance, transControl);
+            launchNewPlugin(pluginInstance, msgControl);
             pluginInstances.insert(location, pluginInstance);
             factoryByPlugin.insert(pluginInstance, factory);
             emit addPluginWidgetToWindow(factory, pluginInstance, doc,
@@ -155,50 +155,50 @@ void PluginControl::launchDocument(Document *doc)
                                 "plugin (%1)").arg(*it));
         }
     }
-    connectParser(parser,transControl);
+    connectParser(parser, msgControl);
     parser->parseDocument();
     profile->releaseDocumentParser(parser);
 }
 
 void PluginControl::launchNewPlugin(IPlugin *plugin,
-                                    TransactionControl *tControl) {
+                                    MessageControl *mControl) {
 
     /* Connect signals from the core to slots in the plugins */
-    connect(tControl,SIGNAL(entityAdded(QString,Entity*)),
+    connect(mControl,SIGNAL(entityAdded(QString,Entity*)),
             plugin, SLOT(onEntityAdded(QString,Entity*)));
-    connect(tControl,SIGNAL(entityChanged(QString,Entity*)),
+    connect(mControl,SIGNAL(entityChanged(QString,Entity*)),
             plugin,SLOT(onEntityChanged(QString,Entity*)));
-    connect(tControl,SIGNAL(entityRemoved(QString,QString)),
+    connect(mControl,SIGNAL(entityRemoved(QString,QString)),
             plugin,SLOT(onEntityRemoved(QString,QString)));
-    connect(tControl,SIGNAL(aboutToRemoveEntity(Entity*)),
+    connect(mControl,SIGNAL(aboutToRemoveEntity(Entity*)),
             plugin, SLOT(onEntityAboutToRemove(Entity*)));
 
     /* Connect signals from the plugin to slots of the core */
     connect(plugin,
             SIGNAL(addEntity(QString,QString,QMap<QString,QString>&,bool)),
-            tControl,
+            mControl,
             SLOT(onAddEntity(QString,QString,QMap<QString,QString>&,bool)));
     connect(plugin,SIGNAL(setAttributes(Entity*,QMap<QString,QString>&,bool)),
-            tControl,
+            mControl,
             SLOT(onEditEntity(Entity*,QMap<QString,QString>&,bool)));
     connect(plugin,SIGNAL(removeEntity(Entity*,bool)),
-            tControl,
+            mControl,
             SLOT(onRemoveEntity(Entity*,bool)));
 
     //broadcastMessage
-    connect(plugin, SIGNAL(sendBroadcastMessage(QString, QObject*)),
-            this, SLOT(sendBroadcastMessage(QString, QObject*)));
+    connect(plugin, SIGNAL(sendBroadcastMessage(const char*)),
+            this, SLOT(sendBroadcastMessage(const char*)));
 }
 
 void PluginControl::connectParser(IDocumentParser *parser,
-                     TransactionControl *tControl)
+                     MessageControl *mControl)
 {
     connect(parser,
             SIGNAL(addEntity(QString,QString,QMap<QString,QString>&,bool)),
-            tControl,
+            mControl,
             SLOT(onAddEntity(QString,QString,QMap<QString,QString>&,bool)));
 
-    connect(tControl,SIGNAL(entityAdded(QString,Entity*)),
+    connect(mControl,SIGNAL(entityAdded(QString,Entity*)),
             parser, SLOT(onEntityAdded(QString,Entity*)));
 }
 
@@ -217,18 +217,18 @@ QList<IPluginFactory*> PluginControl::getLoadedPlugins()
 bool PluginControl::releasePlugins(Document *doc)
 {
         if (!doc) return false;
-        if (!transactionControls.contains(doc->getLocation()))
+        if (!messageControls.contains(doc->getLocation()))
             return false;
 
         if (!pluginInstances.contains(doc->getLocation())) return false;
 
-        TransactionControl *t = transactionControls.value
+        MessageControl *t = messageControls.value
                                 (doc->getLocation());
         if (t)
         {
             delete t;
             t = NULL;
-            transactionControls.remove(doc->getLocation());
+            messageControls.remove(doc->getLocation());
         }
 
         QList<IPlugin*> instances = pluginInstances.values(doc->getLocation());
@@ -246,7 +246,7 @@ bool PluginControl::releasePlugins(Document *doc)
         return true;
 }
 
-void PluginControl::sendBroadcastMessage(QString msg, QObject *obj)
+void PluginControl::sendBroadcastMessage(const char* slot)
 {
     IPlugin *plugin = qobject_cast<IPlugin *> (QObject::sender());
 
@@ -257,7 +257,7 @@ void PluginControl::sendBroadcastMessage(QString msg, QObject *obj)
     for (it = instances.begin(); it != instances.end(); it++)
     {
        IPlugin *inst = *it;
-       int idxSlot = inst->metaObject()->indexOfSlot(msg.toStdString().c_str());
+       int idxSlot = inst->metaObject()->indexOfSlot(slot);
 
        if(idxSlot != -1) {
            QMetaMethod method = inst->metaObject()->method(idxSlot);
@@ -267,6 +267,4 @@ void PluginControl::sendBroadcastMessage(QString msg, QObject *obj)
 
 }
 
-        }
-    }
-}//end namespace composer
+} } }//end namespace

@@ -17,7 +17,7 @@ using namespace composer::core::model;
 #include "../util/Singleton.h"
 using namespace composer::core::util;
 
-#include "TransactionControl.h"
+#include "MessageControl.h"
 #include "LanguageControl.h"
 using namespace composer::core::module;
 
@@ -46,17 +46,22 @@ namespace composer {
             QHash<QString,IPluginFactory*> pluginFactories;
             /* pluginID by LanguageType */
             QMultiHash<LanguageType, QString> pluginsByType;
+
             /* TC by DocumentID */
-            QHash<QString,TransactionControl*> transactionControls;
+            /* TODO: Is this right?? And when we have plugins that are not
+            related to documents???
+            */
+            QHash<QString,MessageControl*> messageControls;
+
             /* Plugin Instance by DocumentLocation */
             QMultiHash<QString,IPlugin*> pluginInstances;
             /* Relate each IPlugin to its correspondent IPluginFactory */
             QMultiHash<IPlugin*,IPluginFactory*> factoryByPlugin;
 
             void launchNewPlugin(IPlugin *plugin,
-                                 TransactionControl *tControl);
+                                 MessageControl *mControl);
             void connectParser(IDocumentParser *parser,
-                                 TransactionControl *tControl);
+                                 MessageControl *mControl);
 
         public:
             void loadPlugins(QString pluginsDirPath);
@@ -68,7 +73,7 @@ namespace composer {
             void launchDocument(Document *doc);
 
         private slots:
-            void sendBroadcastMessage(QString, QObject*);
+            void sendBroadcastMessage(const char *slot);
 
         signals:
             void newDocumentLaunchedAndCreated(QString documentdId,
