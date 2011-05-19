@@ -2,6 +2,8 @@
 #define QSCINCLAPIS_H
 
 #include <NCLStructure.h>
+using namespace composer::language;
+
 #include <Qsci/qsciapis.h>
 #include <QsciLexerNCL.h>
 #include <QtDebug>

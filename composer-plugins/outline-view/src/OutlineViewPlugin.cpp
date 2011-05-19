@@ -20,6 +20,7 @@ OutlineViewPlugin::OutlineViewPlugin()
 
     connect (window, SIGNAL(elementRemovedByUser(QString)), this,
              SLOT(elementRemovedByUser(QString)));
+
 }
 
 OutlineViewPlugin::~OutlineViewPlugin()
@@ -114,4 +115,3 @@ void OutlineViewPlugin::debugHasSendClearAll()
 {
     qDebug() << "OutlineViewPlugin::debugHasSendClearAll";
 }
-

@@ -52,8 +52,6 @@ private:
 
     QShortcut *shortcut_ctrl_space;
     QShortcut *shortcut_ctrl_shift_f;
-    QShortcut *shortcut_zoomout;
-    QShortcut *shortcut_zoomin;
     QsciNCLAPIs *apis;
 
     int error_indicator;

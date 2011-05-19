@@ -1,6 +1,8 @@
 #include "NCLTreeWidget.h"
 
 #include "NCLStructure.h"
+using namespace composer::language;
+
 #include <QInputDialog>
 
 NCLTreeWidget::NCLTreeWidget(QWidget *parent) : QTreeWidget(parent)
@@ -272,3 +274,52 @@ void NCLTreeWidget::errorNotification( QString message,
     emit parserErrorNotify(message, filename, line, column, severity);
 }
 
+
+void NCLTreeWidget::DecreaseFont()
+{
+    qDebug() << "NCLTreeWidget::DecreaseFont";
+    unsigned int newPointSize = font().pointSize()-1;
+    QFont newFont(font());
+    newFont.setPointSize(newPointSize);
+    setFont(newFont);
+}
+
+void NCLTreeWidget::IncreaseFont()
+{
+    qDebug() << "NCLTreeWidget::IncreaseFont";
+    unsigned int newPointSize = font().pointSize()+1;
+    QFont newFont(font());
+    newFont.setPointSize(newPointSize);
+    setFont(newFont);
+}
+
+void NCLTreeWidget::wheelEvent(QWheelEvent *event)
+{
+    if(event->modifiers() == Qt::ControlModifier){
+        if(event->delta() > 0)
+            IncreaseFont();
+        else
+            DecreaseFont();
+    }
+}
+
+void NCLTreeWidget::keyPressEvent(QKeyEvent *event)
+{
+    //check zoomin event.
+    if((event->modifiers() & Qt::ControlModifier) &&
+       (event->key() == Qt::Key_Plus))
+    {
+        event->accept();
+        IncreaseFont();
+        return;
+    }
+
+    //check zoomout event.
+    if((event->modifiers() & Qt::ControlModifier) &&
+       (event->key() == Qt::Key_Minus))
+    {
+        event->accept();
+        DecreaseFont();
+        return;
+    }
+}

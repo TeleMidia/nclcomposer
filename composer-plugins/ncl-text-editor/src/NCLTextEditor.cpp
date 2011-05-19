@@ -5,8 +5,6 @@ NCLTextEditor::NCLTextEditor(QWidget *parent) :
 {
     shortcut_ctrl_space = new QShortcut(QKeySequence("Ctrl+Space"), this);
     shortcut_ctrl_shift_f = new QShortcut(QKeySequence("Ctrl+Shift+f"), this);
-    shortcut_zoomout = new QShortcut(QKeySequence::ZoomOut, this);  /* CTRL- */
-    shortcut_zoomin = new QShortcut(QKeySequence::ZoomIn, this);  /* CTRL+ */
 
     initParameters();
 }
@@ -16,8 +14,6 @@ NCLTextEditor::~NCLTextEditor()
     delete apis;
     delete shortcut_ctrl_space;
     delete shortcut_ctrl_shift_f;
-    delete shortcut_zoomout;
-    delete shortcut_zoomin;
 }
 
 void NCLTextEditor::initParameters()
@@ -80,10 +76,6 @@ void NCLTextEditor::initParameters()
     /* Ctrl + Space == Autocomplete */
     connect( shortcut_ctrl_shift_f, SIGNAL(activated()),
              this, SLOT(formatText()));
-
-    /* Zoomin e Zoomout == Ctrl + -  && Ctrl + + */
-    connect(shortcut_zoomout, SIGNAL(activated()), this, SLOT(Decreasefont()));
-    connect(shortcut_zoomin, SIGNAL(activated()), this, SLOT(Increasefont()));
 
     // connect(this, SIGNAL(marginClicked(int,int,Qt::KeyboardModifiers)), this,
     // SLOT(MarkLine(int,int,Qt::KeyboardModifiers)));
@@ -198,10 +190,28 @@ void NCLTextEditor::keyPressEvent(QKeyEvent *event)
     size = SendScintilla(SCI_GETTEXTLENGTH);
 
     // If I receive a Qt::Key_Backtab
-    // change event to Tab+Shift
+    // change event to Shift+Tab
     if(event->key() == Qt::Key_Backtab) {
         event->accept();
         event = new QKeyEvent(event->type(), Qt::Key_Tab, Qt::ShiftModifier);
+    }
+
+    //check zoomin event.
+    if((event->modifiers() & Qt::ControlModifier) &&
+       (event->key() == Qt::Key_Plus))
+    {
+        event->accept();
+        Increasefont();
+        return;
+    }
+
+    //check zoomout event.
+    if((event->modifiers() & Qt::ControlModifier) &&
+       (event->key() == Qt::Key_Minus))
+    {
+        event->accept();
+        Decreasefont();
+        return;
     }
 
     if (interaction_state == FILLING_ATTRIBUTES_STATE) {
@@ -447,4 +457,3 @@ void NCLTextEditor::formatText()
 {
     qDebug() << "NCLTextEditor::formatText()";
 }
-

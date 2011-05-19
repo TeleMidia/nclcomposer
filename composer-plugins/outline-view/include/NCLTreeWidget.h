@@ -10,6 +10,9 @@ using namespace std;
 #include <QMenu>
 #include <QAction>
 #include <QTreeWidget>
+#include <QShortcut>
+#include <QKeyEvent>
+#include <QWheelEvent>
 
 #include "NCLParser.h"
 
@@ -22,8 +25,15 @@ private:
     QAction *expandAllAct;
     QMenu   *elementMenu;
 
+    QShortcut *shortcut_zoomout;
+    QShortcut *shortcut_zoomin;
+
     void createActions();
     void createMenus();
+
+    /* User events */
+    void wheelEvent(QWheelEvent * event);
+    void keyPressEvent(QKeyEvent *event);
 
 public:
     NCLTreeWidget(QWidget *parent);
@@ -53,6 +63,8 @@ public slots:
 private slots:
     void userAddNewElement();
     void userRemoveElement();
+    void DecreaseFont();
+    void IncreaseFont();
 
 signals:
     void elementAddedByUser(QString, QString, QMap<QString,QString>&, bool);
