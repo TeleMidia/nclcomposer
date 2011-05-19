@@ -18,7 +18,7 @@ NCLTextualViewPlugin::~NCLTextualViewPlugin()
 
 QWidget* NCLTextualViewPlugin::getWidget()
 {
-    return window;
+    return window->getTextEditor();
 }
 
 void NCLTextualViewPlugin::onEntityAdded(QString pluginID, Entity *entity)
