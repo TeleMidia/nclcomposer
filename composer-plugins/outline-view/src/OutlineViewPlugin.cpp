@@ -33,7 +33,7 @@ QWidget* OutlineViewPlugin::getWidget()
     return window;
 }
 
-void OutlineViewPlugin::onEntityAdded(QString ID, Entity *entity)
+void OutlineViewPlugin::onEntityAdded(QString pluginID, Entity *entity)
 {
     QString line = "<" + entity->getType() + "> </" + entity->getType() + ">\n";
 
@@ -49,7 +49,7 @@ void OutlineViewPlugin::onEntityAdded(QString ID, Entity *entity)
 
     if(idToItem.contains(entity->getParentUniqueId())) {
         item = window->addElement( idToItem[entity->getParentUniqueId()],
-                                   0,
+                                   -1,
                                    entity->getType(),
                                    entity->getUniqueId(),
                                    attrs,
@@ -57,7 +57,7 @@ void OutlineViewPlugin::onEntityAdded(QString ID, Entity *entity)
     }
     else {
         item = window->addElement( 0,
-                                   0,
+                                   -1,
                                    entity->getType(),
                                    entity->getUniqueId(),
                                    attrs,

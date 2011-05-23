@@ -32,7 +32,7 @@ void NCLTextualViewPlugin::onEntityAdded(QString pluginID, Entity *entity)
     int insertAtLine = 0;
     //get the number line where the new element must be inserted
     if(entity->getParentUniqueId() != NULL) {
-        insertAtLine = lineOfEntity.value(entity->getParentUniqueId());
+        insertAtLine = endLineOfEntity.value(entity->getParentUniqueId());
     }
 
     QMap <QString, QString>::iterator begin, end, it;
@@ -46,30 +46,29 @@ void NCLTextualViewPlugin::onEntityAdded(QString pluginID, Entity *entity)
 
     //update all previous entities line numbers (when necessary)
     QString key;
-    foreach(key, lineOfEntity.keys())
+    foreach(key, startLineOfEntity.keys())
     {
-        if(lineOfEntity[key] >= insertAtLine+1)
-            lineOfEntity[key] += 2;
+        if(startLineOfEntity[key] >= insertAtLine)
+            startLineOfEntity[key] += 2;
+
+        if(endLineOfEntity[key] >= insertAtLine)
+            endLineOfEntity[key] += 2;
 
     }
 
     window->getTextEditor()->insertAt(line, insertAtLine, 0);
-    lineOfEntity[entity->getUniqueId()] = insertAtLine+1;
+    startLineOfEntity[entity->getUniqueId()] = insertAtLine;
+    endLineOfEntity[entity->getUniqueId()] = insertAtLine+1;
 
     //fix indentation
     int lineident = window->getTextEditor()
                         ->SendScintilla( QsciScintilla::SCI_GETLINEINDENTATION,
-                                         insertAtLine-1 );
+                                         insertAtLine+2);
 
     if(insertAtLine == 0) //The first entity
         lineident = 0;
     else
         lineident += 8;
-
-
-    window->getTextEditor()
-            ->SendScintilla( QsciScintilla::SCI_GETLINEINDENTATION,
-                             insertAtLine-1 );
 
     window->getTextEditor()
             ->SendScintilla( QsciScintilla::SCI_SETLINEINDENTATION,
@@ -112,20 +111,24 @@ void NCLTextualViewPlugin::onEntityRemoved(QString pluginID, QString entityID)
     if(pluginID == getPluginInstanceID())
         return;
 
-    int lineOfRemovedEntity = lineOfEntity[entityID];
-    window->getTextEditor()->setSelection( lineOfRemovedEntity-1,
+    int startLineOfRemovedEntity = startLineOfEntity[entityID];
+    int endLineOfRemovedEntity = endLineOfEntity[entityID];
+
+    window->getTextEditor()->setSelection( startLineOfRemovedEntity,
                                            0,
-                                           lineOfRemovedEntity-1,
+                                           endLineOfRemovedEntity,
                                            window->getTextEditor()
-                                             ->lineLength(lineOfRemovedEntity-1)
+                                             ->lineLength(endLineOfRemovedEntity)
                                           );
     window->getTextEditor()->removeSelectedText();
 
-    lineOfEntity.remove(entityID);
+    startLineOfEntity.remove(entityID);
+    endLineOfEntity.remove(entityID);
 }
 
 bool NCLTextualViewPlugin::saveSubsession(){
     //TODO: All
+    return true;
 }
 
 void NCLTextualViewPlugin::updateFromModel(){

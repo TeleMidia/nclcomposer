@@ -14,7 +14,8 @@ class NCLTextualViewPlugin : public IPlugin
 private:
     NCLTextEditorMainWindow *window;
 
-    QMap <QString, int> lineOfEntity;
+    QMap <QString, int> startLineOfEntity;
+    QMap <QString, int> endLineOfEntity;
 
 public:
     explicit NCLTextualViewPlugin();
