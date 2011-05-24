@@ -300,6 +300,10 @@ void NCLTreeWidget::wheelEvent(QWheelEvent *event)
             IncreaseFont();
         else
             DecreaseFont();
+        event->accept();
+    }
+    else {
+        QTreeWidget::wheelEvent(event);
     }
 }
 
@@ -322,4 +326,6 @@ void NCLTreeWidget::keyPressEvent(QKeyEvent *event)
         DecreaseFont();
         return;
     }
+
+    QTreeWidget::keyPressEvent(event);
 }
