@@ -1,5 +1,8 @@
 #include "../include/ProjectTreeView.h"
 
+namespace composer {
+    namespace ui {
+
 ProjectTreeView::ProjectTreeView(QWidget *parent) : QTreeView(parent)
 {
 }
@@ -7,11 +10,10 @@ ProjectTreeView::ProjectTreeView(QWidget *parent) : QTreeView(parent)
 void ProjectTreeView::mouseDoubleClickEvent(QMouseEvent *event)
 {
     QTreeView::mouseDoubleClickEvent(event);
-
-    launchDocument();
+    launchSelectedDocument();
 }
 
-void ProjectTreeView::launchDocument()
+void ProjectTreeView::launchSelectedDocument()
 {
     QModelIndex current = currentIndex();
     if (current.isValid())
@@ -30,8 +32,7 @@ void ProjectTreeView::launchDocument()
                     cParent = current.parent();
                 }
                 QString projectId = current.data().toString();
-                DocumentControl::getInstance()->launchDocument
-                                                (projectId, documentPath);
+                emit launchDocument(projectId, documentPath);
             }
     }
 }
@@ -63,12 +64,12 @@ void ProjectTreeView::mouseReleaseEvent(QMouseEvent *event)
                 QAction *deleteDocument = new QAction(
                                         QIcon(":/mainwindow/deleteDoc"),
                                         tr("Delete Document"), contextMenu);
-                QAction *launchDocument = new QAction(
+                QAction *launchSelectedDocument = new QAction(
                                         tr("Launch Document"), contextMenu);
-                connect(launchDocument,SIGNAL(triggered()),
-                                       SLOT(launchDocument()));
+                connect(launchSelectedDocument,SIGNAL(triggered()),
+                                       SLOT(launchSelectedDocument()));
 
-                contextMenu->addAction(launchDocument);
+                contextMenu->addAction(launchSelectedDocument);
                 contextMenu->addAction(deleteDocument);
             }
         } else {
@@ -86,5 +87,7 @@ void ProjectTreeView::keyReleaseEvent(QKeyEvent *event)
     QTreeView::keyReleaseEvent(event);
 
     if (event->key() == Qt::Key_Return || event->key() == Qt::Key_Enter)
-        launchDocument();
+        launchSelectedDocument();
 }
+
+}} //end namespace

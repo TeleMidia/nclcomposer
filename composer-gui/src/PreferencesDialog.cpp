@@ -2,6 +2,9 @@
 #include "ui_PreferencesDialog.h"
 #include <QListWidgetItem>
 
+namespace composer {
+    namespace ui {
+
 PreferencesDialog::PreferencesDialog(QWidget *parent) :
         QDialog(parent),
         ui(new Ui::PreferencesDialog)
@@ -46,3 +49,5 @@ void PreferencesDialog::changeActivePage(){
     currentItem = ui->listWidget->currentItem();
     pages[currentItem->text()]->show();
 }
+
+}} //end namespace

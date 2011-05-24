@@ -41,7 +41,7 @@ else:win32 {
 
 
 SOURCES += main.cpp \
-    src/MainWindow.cpp \
+    src/ComposerMainWindow.cpp \
     src/wizard/ProjectWizard.cpp \
     src/wizard/ProjectEntryPage.cpp \
     src/wizard/DocumentWizard.cpp \
@@ -51,7 +51,7 @@ SOURCES += main.cpp \
     src/ProjectTreeView.cpp \
     src/WorkspaceSwitch.cpp
 
-HEADERS += include/MainWindow.h \
+HEADERS += include/ComposerMainWindow.h \
     include/wizard/ProjectWizard.h \
     include/wizard/ProjectEntryPage.h \
     include/wizard/DocumentWizard.h \

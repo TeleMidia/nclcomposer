@@ -11,6 +11,9 @@
 #include <QPushButton>
 #include <QGroupBox>
 
+namespace composer {
+    namespace ui {
+
 class DocumentEntryPage : public QWizardPage
 {
     Q_OBJECT
@@ -36,5 +39,7 @@ private slots:
     inline void setCopy(bool copy) { this->copy = copy; }
 
 };
+
+}} //end namespace
 
 #endif // DOCUMENTENTRYPAGE_H

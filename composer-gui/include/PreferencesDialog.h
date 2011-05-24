@@ -17,6 +17,9 @@ namespace Ui {
     class PreferencesDialog;
 }
 
+namespace composer {
+    namespace ui {
+
 class PreferencesDialog : public QDialog
 {
     Q_OBJECT
@@ -35,5 +38,7 @@ private:
 private slots:
     void changeActivePage();
 };
+
+}} //end namespace
 
 #endif // PREFERENCES_H

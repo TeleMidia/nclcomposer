@@ -1,5 +1,8 @@
 #include "wizard/DocumentEntryPage.h"
 
+namespace composer {
+    namespace ui {
+
 DocumentEntryPage::DocumentEntryPage(QWidget *parent) :
     QWizardPage(parent)
 {
@@ -61,3 +64,5 @@ void DocumentEntryPage::setDocumentLocation() {
     }
 
 }
+
+}} //end namespace

@@ -10,6 +10,8 @@
 #include <QFileDialog>
 #include <QDir>
 
+namespace composer {
+    namespace ui {
 
 class WorkspaceSwitch : public QDialog
 {
@@ -31,5 +33,7 @@ private slots:
     void openDirectory();
 
 };
+
+}} //end namespace
 
 #endif // WORKSPACESWITCH_H

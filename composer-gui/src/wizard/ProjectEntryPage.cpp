@@ -1,5 +1,7 @@
 #include "wizard/ProjectEntryPage.h"
 
+namespace composer {
+    namespace ui {
 
 ProjectEntryPage::ProjectEntryPage(QWidget *parent) :
         QWizardPage(parent)
@@ -91,3 +93,5 @@ void ProjectEntryPage::setOpenProject(int state)
         isOpen = false;
     }
 }
+
+}} //end namespace

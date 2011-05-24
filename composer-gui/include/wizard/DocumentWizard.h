@@ -7,6 +7,8 @@
 #include <QDebug>
 
 #include "DocumentEntryPage.h"
+namespace composer {
+    namespace ui {
 
 class DocumentWizard : public QWizard
 {
@@ -29,4 +31,5 @@ class DocumentWizard : public QWizard
 
 };
 
+}} //end namespace
 #endif // DocumentWizard_H

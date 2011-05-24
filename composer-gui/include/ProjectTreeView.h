@@ -13,6 +13,8 @@ using namespace composer::core::module;
 
 #include "WorkspaceModel.h"
 
+namespace composer {
+    namespace ui {
 
 class ProjectTreeView : public QTreeView
 {
@@ -23,9 +25,13 @@ public:
     void mouseReleaseEvent(QMouseEvent *event);
     void keyReleaseEvent(QKeyEvent *event);
 
+signals:
+    void launchDocument(QString, QString);
+
 private slots:
-    void launchDocument();
+    void launchSelectedDocument();
     //void newFolder();
 };
 
+}} //end namespace
 #endif // PROJECTTREEVIEW_H

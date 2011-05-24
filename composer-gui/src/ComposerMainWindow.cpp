@@ -1,10 +1,15 @@
-#include "MainWindow.h"
+#include "ComposerMainWindow.h"
 #include "ui_ComposerMainWindow.h"
 
 #include <QPixmap>
 #include <QDialogButtonBox>
 
-MainWindow::MainWindow(QWidget *parent)
+using namespace composer::ui;
+
+namespace composer {
+    namespace ui {
+
+ComposerMainWindow::ComposerMainWindow(QWidget *parent)
     : QMainWindow(parent),
     ui(new Ui::ComposerMainWindow)
 {
@@ -29,9 +34,15 @@ MainWindow::MainWindow(QWidget *parent)
     initModules();
     readSettings();
     preferences = new PreferencesDialog(this);
+
+    ui->progressBar->setVisible(false);
+    ui->progressBar->setRange(0, 99);
+
+    timer = new QTimer();
+    connect(timer, SIGNAL(timeout()), this, SLOT(slotTimeout()));
 }
 
-MainWindow::~MainWindow() {
+ComposerMainWindow::~ComposerMainWindow() {
     if(fileSystemModel)
     {
         delete fileSystemModel;
@@ -40,31 +51,38 @@ MainWindow::~MainWindow() {
     delete ui;
 }
 
-void MainWindow::initModules()
+void ComposerMainWindow::initModules()
 {
     PluginControl  *pgControl = PluginControl::getInstance();
     LanguageControl *lgControl = LanguageControl::getInstance();
     DocumentControl *docControl = DocumentControl::getInstance();
 
     connect(pgControl,SIGNAL(notifyError(QString)),
-                      SLOT(errorDialog(QString)));
+            SLOT(errorDialog(QString)));
     connect(pgControl,SIGNAL(addPluginWidgetToWindow(IPluginFactory*,
                                                      IPlugin*,Document*, int)),
-                SLOT(addPluginWidget(IPluginFactory*,IPlugin*,Document*, int)));
+            SLOT(addPluginWidget(IPluginFactory*,IPlugin*,Document*, int)));
 
     connect(lgControl,SIGNAL(notifyError(QString)),
-                      SLOT(errorDialog(QString)));
+            SLOT(errorDialog(QString)));
 
     connect(docControl, SIGNAL(notifyError(QString)),
             SLOT(errorDialog(QString)));
     connect(docControl,SIGNAL(openDocumentTab(QString)),
             SLOT(onOpenDocumentTab(QString)));
 
+
+    connect(docControl, SIGNAL(beginOpenDocument()),
+            this, SLOT(beginOpenDocument()));
+
+    connect(docControl, SIGNAL(endOpenDocument()), this,
+            SLOT(endOpenDocument()));
+
     readExtensions();
 
 }
 
-void MainWindow::readExtensions()
+void ComposerMainWindow::readExtensions()
 {
 
 #ifdef Q_WS_MAC
@@ -85,8 +103,8 @@ void MainWindow::readExtensions()
         if (user_directory_ext == "") user_directory_ext = defaultEx;
     }
 #endif
-//    qDebug() << "MainWindow::readExtensions(" << user_directory_ext
-//            << ")";
+    //    qDebug() << "MainWindow::readExtensions(" << user_directory_ext
+    //            << ")";
 
     LanguageControl::getInstance()->
             loadProfiles(user_directory_ext);
@@ -95,7 +113,7 @@ void MainWindow::readExtensions()
     settings.endGroup();
 }
 
-QString MainWindow::promptChooseExtDirectory()
+QString ComposerMainWindow::promptChooseExtDirectory()
 {
 
     QMessageBox mBox;
@@ -116,7 +134,7 @@ QString MainWindow::promptChooseExtDirectory()
     }
 }
 
-void MainWindow::readSettings() {
+void ComposerMainWindow::readSettings() {
 #ifdef Q_WS_MAC
     QSettings settings("telemidia.pucrio.br", "composer");
 #else
@@ -146,7 +164,7 @@ void MainWindow::readSettings() {
     settings.endGroup();
 }
 
-void MainWindow::initGUI() {
+void ComposerMainWindow::initGUI() {
 #ifndef Q_WS_MAC
     setWindowIcon(QIcon(":/mainwindow/icon"));
 #endif
@@ -164,14 +182,14 @@ void MainWindow::initGUI() {
     createAbout();
     showMaximized();
 
-//    welcomeScreen = new QWebView(this);
-//    welcomeScreen->setStyleSheet("background-color:rgb(150,147,88); padding: 7px ; color:rgb(255,255,255)");
-//    welcomeScreen->load(QUrl("http://www.ncl.org.br"));
-//    welcomeScreen->showMaximized();
-//    tabDocuments->addTab(welcomeScreen, "Welcome");
+    //    welcomeScreen = new QWebView(this);
+    //    welcomeScreen->setStyleSheet("background-color:rgb(150,147,88); padding: 7px ; color:rgb(255,255,255)");
+    //    welcomeScreen->load(QUrl("http://www.ncl.org.br"));
+    //    welcomeScreen->showMaximized();
+    //    tabDocuments->addTab(welcomeScreen, "Welcome");
 }
 
-void MainWindow::addPluginWidget(IPluginFactory *fac, IPlugin *plugin,
+void ComposerMainWindow::addPluginWidget(IPluginFactory *fac, IPlugin *plugin,
                                  Document *doc, int n)
 {
     QMainWindow *w;
@@ -210,7 +228,7 @@ void MainWindow::addPluginWidget(IPluginFactory *fac, IPlugin *plugin,
     else firstDock[location] = dock;
 }
 
-void MainWindow::tabClosed(int index)
+void ComposerMainWindow::tabClosed(int index)
 {
     QString location = tabDocuments->tabToolTip(index);
     DocumentControl::getInstance()->closeDocument(location);
@@ -224,7 +242,7 @@ void MainWindow::tabClosed(int index)
     }
 }
 
-void MainWindow::closeAllFiles()
+void ComposerMainWindow::closeAllFiles()
 {
     while(tabDocuments->count())
     {
@@ -233,14 +251,14 @@ void MainWindow::closeAllFiles()
     }
 }
 
-void MainWindow::onOpenDocumentTab(QString location)
+void ComposerMainWindow::onOpenDocumentTab(QString location)
 {
     if (!documentsWidgets.contains(location)) return;
     QMainWindow *w = documentsWidgets[location];
     tabDocuments->setCurrentWidget(w);
 }
 
-void MainWindow::switchWorkspace()
+void ComposerMainWindow::switchWorkspace()
 {
 
     if (fileSystemModel == NULL) return;
@@ -259,12 +277,17 @@ void MainWindow::switchWorkspace()
                                  (index));
 }
 
-void MainWindow::createTreeProject()
+void ComposerMainWindow::createTreeProject()
 {
     fileSystemDock = new QDockWidget(tr("Projects"), this);
     fileSystemDock->setObjectName("projectTree");
 
     fileSystemView = new ProjectTreeView(this);
+    connect(fileSystemView,
+            SIGNAL(launchDocument(QString,QString)),
+            DocumentControl::getInstance(),
+            SLOT(launchDocument(QString,QString)));
+
     workspace_model = new WorkspaceModel(fileSystemView);
 
     fileSystemModel = new QFileSystemModel();
@@ -281,7 +304,7 @@ void MainWindow::createTreeProject()
     addDockWidget(Qt::LeftDockWidgetArea, fileSystemDock, Qt::Horizontal);
 
     projectViewAct = new QAction(QIcon(":/mainwindow/projectTree"),
-                                   tr("Projects"),this);
+                                 tr("Projects"),this);
     projectViewAct->setCheckable(true);
     projectViewAct->setChecked(fileSystemDock->isVisible());
 
@@ -292,7 +315,7 @@ void MainWindow::createTreeProject()
 
 }
 
-void MainWindow::createMenus() {
+void ComposerMainWindow::createMenus() {
     ui->menu_File->addAction(newProjectAct);
     ui->menu_File->addAction(newDocumentAct);
     ui->menu_File->addSeparator();
@@ -309,7 +332,7 @@ void MainWindow::createMenus() {
 }
 
 
-void MainWindow::createAbout()
+void ComposerMainWindow::createAbout()
 {
     aboutDialog = new QDialog(this);
     aboutDialog->setWindowTitle(tr("About Composer"));
@@ -337,7 +360,7 @@ void MainWindow::createAbout()
     QGridLayout *gLayout = new QGridLayout(aboutDialog);
     gLayout->addWidget(new QLabel(tr("The <b>Composer</b> is an IDE for"
                                      " Declarative Multimedia languages."),
-                                     aboutDialog));
+                                  aboutDialog));
 
     gLayout->addWidget(new QLabel(tr("<b>Installed Language Profiles</b>"),
                                   aboutDialog));
@@ -350,7 +373,7 @@ void MainWindow::createAbout()
 
 }
 
-void MainWindow::about() {
+void ComposerMainWindow::about() {
     QList<IPluginFactory*>::iterator it;
     QList<IPluginFactory*> pList = PluginControl::getInstance()->
                                    getLoadedPlugins();
@@ -404,26 +427,26 @@ void MainWindow::about() {
 
 }
 
-void MainWindow::errorDialog(QString message) {
+void ComposerMainWindow::errorDialog(QString message) {
     QMessageBox::warning(this,tr("Error!"),message);
 
 }
 
-void MainWindow::createActions() {
+void ComposerMainWindow::createActions() {
 
     newProjectAct = new QAction(QIcon(":/mainwindow/openProject"),
                                 tr("New &Project"), this);
 
     newProjectAct->setStatusTip(tr("Create a new Project"));
-//    connect(newProjectAct, SIGNAL(triggered()), this,
-//            SLOT(launchProjectWizard()));
+    //    connect(newProjectAct, SIGNAL(triggered()), this,
+    //            SLOT(launchProjectWizard()));
 
     newDocumentAct = new QAction(QIcon(":/mainwindow/newDocument"),
                                  tr("New &Document"), this);
     newDocumentAct->setShortcuts(QKeySequence::New);
     newDocumentAct->setStatusTip(tr("Create a new NCL Document"));
-//    connect(newDocumentAct, SIGNAL(triggered()), this,
-//            SLOT(launchAddDocumentWizard()));
+    //    connect(newDocumentAct, SIGNAL(triggered()), this,
+    //            SLOT(launchAddDocumentWizard()));
 
     aboutComposerAct = new QAction(tr("&About"), this);
     aboutComposerAct->setStatusTip(tr("Show the application's About box"));
@@ -435,7 +458,7 @@ void MainWindow::createActions() {
     fullScreenViewAct = new QAction(tr("&FullScreen"),this);
     //fullScreenViewAct->setShortcut();
     connect(fullScreenViewAct,SIGNAL(triggered()),this,
-                              SLOT(showCurrentWidgetFullScreen()));
+            SLOT(showCurrentWidgetFullScreen()));
 
     separatorViewAct = new QAction(this);
     separatorViewAct->setSeparator(true);
@@ -452,26 +475,26 @@ void MainWindow::createActions() {
     connect(ui->action_Exit, SIGNAL(triggered()), this, SLOT(close()));
 }
 
-void MainWindow::createStatusBar()
+void ComposerMainWindow::createStatusBar()
 {
     statusBar()->showMessage(tr("Ready"));
 }
 
-void MainWindow::showCurrentWidgetFullScreen()
+void ComposerMainWindow::showCurrentWidgetFullScreen()
 {
-//     tabDocuments->setWindowFlags(Qt::Window);
-//    tabDocuments->setWindowState(Qt::WindowFullScreen);
+    //     tabDocuments->setWindowFlags(Qt::Window);
+    //    tabDocuments->setWindowState(Qt::WindowFullScreen);
     tabDocuments->show();
-//    QWidget *w = tabDocuments->currentWidget();
-//    if (w != NULL)
-//    {
-//        w->setWindowFlags(Qt::Window);
-//        w->setWindowState(Qt::WindowFullScreen);
-//        w->show();
-//    }
+    //    QWidget *w = tabDocuments->currentWidget();
+    //    if (w != NULL)
+    //    {
+    //        w->setWindowFlags(Qt::Window);
+    //        w->setWindowState(Qt::WindowFullScreen);
+    //        w->show();
+    //    }
 }
 
-void MainWindow::updateViewMenu()
+void ComposerMainWindow::updateViewMenu()
 {
     ui->menu_Window->clear();
     ui->menu_Window->addAction(projectViewAct);
@@ -480,7 +503,7 @@ void MainWindow::updateViewMenu()
     projectViewAct->setChecked(fileSystemDock->isVisible());
 }
 
-void MainWindow::closeEvent(QCloseEvent *event)
+void ComposerMainWindow::closeEvent(QCloseEvent *event)
 {
 
 #ifdef Q_WS_MAC
@@ -511,19 +534,47 @@ void MainWindow::closeEvent(QCloseEvent *event)
     event->accept();
 }
 
-void MainWindow::cleanUp()
+void ComposerMainWindow::cleanUp()
 {
     LanguageControl::releaseInstance();
     DocumentControl::releaseInstance();
     PluginControl::releaseInstance();
 }
 
-void MainWindow::showEditPreferencesDialog()
+void ComposerMainWindow::showEditPreferencesDialog()
 {
     preferences->show();
 }
 
-void MainWindow::showSwitchWorkspaceDialog()
+void ComposerMainWindow::showSwitchWorkspaceDialog()
 {
     wsSwitch->show();
 }
+
+void ComposerMainWindow::beginOpenDocument()
+{
+    qDebug() << "MainWindow::beginOpenDocument";
+    ui->progressBar->setVisible(true);
+    openingDocument = true;
+    timer->start(10);
+}
+
+void ComposerMainWindow::endOpenDocument()
+{
+    openingDocument = false;
+    timer->stop();
+    ui->progressBar->setVisible(false);
+}
+
+void ComposerMainWindow::slotTimeout()
+{
+    qDebug() << "MainWindow::slotTimeout (out)" ;
+    if(openingDocument){
+        int v = ui->progressBar->value();
+        qDebug() << "MainWindow::slotTimeout";
+        v %= 100;
+        ui->progressBar->setValue(v);
+    }
+}
+
+} } //end namespace

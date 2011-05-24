@@ -1,5 +1,8 @@
 #include "../include/WorkspaceModel.h"
 
+namespace composer {
+    namespace ui {
+
 WorkspaceModel::WorkspaceModel(QObject *parent) :
         QSortFilterProxyModel(parent)
 {
@@ -19,3 +22,5 @@ bool WorkspaceModel::filterAcceptsRow(int sourceRow,
     return true;
 
 }
+
+}} //end namespace

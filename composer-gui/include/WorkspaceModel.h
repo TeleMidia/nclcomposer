@@ -4,6 +4,9 @@
 #include <QSortFilterProxyModel>
 #include <QDebug>
 
+namespace composer {
+    namespace ui {
+
 class WorkspaceModel : public QSortFilterProxyModel
 {
 private:
@@ -18,5 +21,7 @@ protected:
      bool filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const;
 
 };
+
+}} //end namespace
 
 #endif // WORKSPACEMODEL_H

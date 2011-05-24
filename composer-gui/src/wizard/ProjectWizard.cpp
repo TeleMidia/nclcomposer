@@ -1,5 +1,7 @@
 #include "wizard/ProjectWizard.h"
 
+namespace composer {
+    namespace ui {
 
 ProjectWizard::ProjectWizard(QWidget* parent) :
         QWizard(parent) {
@@ -29,3 +31,5 @@ void ProjectWizard::accept() {
 
     QDialog::accept();
 }
+
+}} //end namespace

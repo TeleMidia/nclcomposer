@@ -1,5 +1,7 @@
 #include "wizard/DocumentWizard.h"
 
+namespace composer {
+    namespace ui {
 
 DocumentWizard::DocumentWizard(QWidget* parent) :
         QWizard(parent) {
@@ -30,3 +32,5 @@ void DocumentWizard::accept() {
 
     QDialog::accept();
 }
+
+}} //end namespace

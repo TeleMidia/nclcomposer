@@ -8,6 +8,9 @@
 
 #include "ProjectEntryPage.h"
 
+namespace composer {
+    namespace ui {
+
 class ProjectWizard : public QWizard
 {
     Q_OBJECT
@@ -28,4 +31,5 @@ class ProjectWizard : public QWizard
 
 };
 
+}} //end namespace
 #endif // PROJECTWIZARD_H

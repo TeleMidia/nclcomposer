@@ -12,6 +12,9 @@
 #include <QCheckBox>
 #include <QDebug>
 
+namespace composer {
+    namespace ui {
+
 class ProjectEntryPage : public QWizardPage
 {
     Q_OBJECT
@@ -35,4 +38,5 @@ class ProjectEntryPage : public QWizardPage
         void setOpenProject(int state);
 };
 
+}} //end namespace
 #endif // PROJECTENTRYPAGE_H

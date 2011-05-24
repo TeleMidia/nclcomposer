@@ -1,5 +1,8 @@
 #include "../include/WorkspaceSwitch.h"
 
+namespace composer {
+    namespace ui {
+
 WorkspaceSwitch::WorkspaceSwitch(QWidget *parent) :
     QDialog(parent)
 {
@@ -44,3 +47,5 @@ void WorkspaceSwitch::openDirectory()
                                 options);
     wsPath->setText(directoryURI);
 }
+
+}} //end namespace
