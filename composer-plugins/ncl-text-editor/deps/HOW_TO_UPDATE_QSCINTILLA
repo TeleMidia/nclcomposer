@@ -1,0 +1,29 @@
+NCL Text Editor customizes some code of original QScintilla. The changes are 
+very simple, and mainly add NCLLexer to Scintilla.
+
+In order to apply the changes provided here you should go to your QScintilla 
+root path. For instance: 
+
+  $ cd QScintilla-gpl-snapshot-2.5.2-d31c561e0b7c/
+
+Then, apply add_ncl_lexer_to_scintilla.patch with:
+
+  $ patch -p0 <../add_ncl_lexer_to_scintilla.patch
+
+See if the src/Catalogue.cpp has a line:
+
+  LINK_LEXER(lmNCL);
+
+Then, go to include dir and run HFacer.py script:
+
+  $ cd include
+  $ python HFacer.py
+
+Now, you are able to go to Qt4 directory inside QScintilla tree, and build and
+install QScintilla:
+
+  $ cd ../Qt4
+  $ qmake 
+  $ make
+  $ sudo make install
+

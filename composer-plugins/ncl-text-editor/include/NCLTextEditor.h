@@ -19,6 +19,14 @@
 #define PREF_FOLD_MARGIN_FORE_COLOR QColor("#B9D3EE")
 #define PREF_FOLD_MARGIN_BACK_COLOR QColor("#FFFFFF")
 
+//! The NCL Editor
+/*!
+ * This is the main class of the NCL Editor program. It inherents from
+ * QScintilla.
+ *
+ * @author Roberto Azevedo
+ * @date 24 May 2011
+ */
 class NCLTextEditor : public QsciScintilla
 {
     Q_OBJECT

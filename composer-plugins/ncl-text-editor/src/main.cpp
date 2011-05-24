@@ -38,7 +38,6 @@ int main(int argc, char *argv[])
                             border: 0.5px solid black;\
                         }\
                         QDockWidget::title {\
-                            border: rounded; \
                             background: #B9D3EE;\
                             padding-left: 2px;\
                             padding-top: 2px;\

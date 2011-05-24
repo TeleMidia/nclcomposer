@@ -1,21 +1,22 @@
-Reestruturacao do codigo:
-    Transformar NCLTextEditor em NCLTextView.
-    Transformar NCLTreeWidget em NCLTreeView.
-    p.s. Tem que herdar de alguem em comum para poder ser tratado como uma visao do Composer.
+1. Code refactoring:
+    * Rename NCLTextEditor to NCLTextView ?!
+    * Rename NCLTreeWidget to NCLTreeView ?!
 
-    . Melhorar a performance da navegacao entre atributos.
+		* All Composer view should inherent from a common class (Composer View?!) 
+		* Improve attribute navigation performance.
 
-1. Sugestão de código contextual
-    Sugestão de valores de atributos: Carregar valores pré-definidos (Como ?)
-    Sugestão de valores de atributos: Referencias.
+2. Contextual code sugestion:
+    * Sugestion of attribute values. (How?!)
+    * Sugestion of references.i
 
-2. Validacao
-    Tudo
+3. Validation.
+    * All.
 
-3. Formatacao Automática (Ctrl+Shift+F)
+4. Code format (Ctrl+Shift+F).
 
-4. Sugestão de correcao de erros
+5. Sugestion of correction.
 
-5. Hyperlinks (Isso nao deve ser simples de implementar)
+6. Hyperlinks (This is not simple!)
 
-6. Pre-visualizacao de objetos de media, conectores etc.
+7. Preview of media objects, connectors, etc.
+

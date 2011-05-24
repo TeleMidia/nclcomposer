@@ -4,6 +4,8 @@
 #include <qfont.h>
 #include <qsettings.h>
 
+#include <QDebug>
+
 
 // The ctor.
 QsciLexerNCL::QsciLexerNCL(QObject *parent)
@@ -12,12 +14,10 @@ QsciLexerNCL::QsciLexerNCL(QObject *parent)
 {
 }
 
-
 // The dtor.
 QsciLexerNCL::~QsciLexerNCL()
 {
 }
-
 
 // Returns the language name.
 const char *QsciLexerNCL::language() const

@@ -1,0 +1,5 @@
+This is NCL Editor, a advanced text editor for NCL Language.
+
+It uses QScintilla as the main API to colourize, autocomplete and other
+features.
+
