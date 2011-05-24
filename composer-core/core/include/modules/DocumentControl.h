@@ -30,6 +30,9 @@ namespace composer{
                 signals:
                     void openDocumentTab(QString);
                     void notifyError(QString);
+                    void beginOpenDocument();
+                    void endOpenDocument();
+
                 public slots:
                     bool closeDocument(QString location);
                     void launchDocument(QString projectId, QString location);

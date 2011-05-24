@@ -58,7 +58,7 @@ void DocumentControl::launchDocument(QString projectId, QString location)
 
     if(type == NONE)
     {
-        //TEST: WINDOWS
+        //TODO: TEST ON WINDOWS
         QProcess spaw;
         QStringList args;
         args.append(location);
@@ -82,9 +82,10 @@ void DocumentControl::launchDocument(QString projectId, QString location)
         return;
     }
 
+    emit beginOpenDocument();
     QMap<QString,QString> atts;
     QString documentId = location;
-    documentId.remove(0,location.lastIndexOf(QDir::separator())+1);
+    documentId.remove(0, location.lastIndexOf(QDir::separator())+1);
     atts["id"] = documentId;
 
     /* create the NCLDocument */
@@ -95,6 +96,8 @@ void DocumentControl::launchDocument(QString projectId, QString location)
 
     PluginControl::getInstance()->launchDocument(doc);
     openDocuments[location] = doc;
+
+    emit endOpenDocument();
 
 }
                 }
