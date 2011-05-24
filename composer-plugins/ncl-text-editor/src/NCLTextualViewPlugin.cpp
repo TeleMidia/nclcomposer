@@ -62,8 +62,8 @@ void NCLTextualViewPlugin::onEntityAdded(QString pluginID, Entity *entity)
 
     //fix indentation
     int lineident = window->getTextEditor()
-                        ->SendScintilla( QsciScintilla::SCI_GETLINEINDENTATION,
-                                         insertAtLine+2);
+                    ->SendScintilla( QsciScintilla::SCI_GETLINEINDENTATION,
+                                     insertAtLine+2);
 
     if(insertAtLine == 0) //The first entity
         lineident = 0;
@@ -118,12 +118,59 @@ void NCLTextualViewPlugin::onEntityRemoved(QString pluginID, QString entityID)
                                            0,
                                            endLineOfRemovedEntity,
                                            window->getTextEditor()
-                                             ->lineLength(endLineOfRemovedEntity)
-                                          );
+                                           ->lineLength(endLineOfRemovedEntity)
+                                           );
+
     window->getTextEditor()->removeSelectedText();
 
-    startLineOfEntity.remove(entityID);
-    endLineOfEntity.remove(entityID);
+    QString key;
+    QList<QString> mustRemoveEntity;
+
+    // check all entities that is removed together with entityID, i.e.
+    // its children
+    // P.S. This could be get from model
+    qDebug() << startLineOfRemovedEntity << " " << endLineOfRemovedEntity;
+    foreach(key, startLineOfEntity.keys())
+    {
+        // if the element is inside the entity that will be removed:
+        if(startLineOfEntity[key] >= startLineOfRemovedEntity &&
+           endLineOfEntity[key] <= endLineOfRemovedEntity)
+        {
+            mustRemoveEntity.append(key);
+        }
+        else {
+            // otherwise if necessary we must update the start and end line of
+            // the entity.
+            if(startLineOfEntity[key] > startLineOfRemovedEntity)
+            {
+                startLineOfEntity[key] -=
+                        (endLineOfRemovedEntity - startLineOfRemovedEntity)+1;
+            }
+
+            if(endLineOfEntity[key] > endLineOfRemovedEntity)
+            {
+                endLineOfEntity[key] -=
+                        (endLineOfRemovedEntity - startLineOfRemovedEntity)+1;
+            }
+        }
+
+    }
+
+    //Remove the content in text and update the structures that keep line number
+    // of all entities.
+    QListIterator<QString> iterator( mustRemoveEntity );
+    while( iterator.hasNext() ){
+        key = iterator.next();
+        startLineOfEntity.remove(key);
+        endLineOfEntity.remove(key);
+    }
+    foreach(key, startLineOfEntity.keys())
+    {
+        qDebug() << doc->getEntityBydId(key)->getType()
+             << " startLine=" << startLineOfEntity[key]
+             << " endLine=" << endLineOfEntity[key];
+
+    }
 }
 
 bool NCLTextualViewPlugin::saveSubsession(){
