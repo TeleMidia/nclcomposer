@@ -73,7 +73,7 @@ namespace composer {
             void launchDocument(Document *doc);
 
         private slots:
-            void sendBroadcastMessage(const char *slot);
+            void sendBroadcastMessage(const char *slot, void *payload);
 
         signals:
             void newDocumentLaunchedAndCreated(QString documentdId,

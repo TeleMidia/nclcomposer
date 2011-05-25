@@ -12,7 +12,8 @@ INIT_SINGLETON(PluginControl)
 
 PluginControl::PluginControl()
 {
-
+    //Register MetaType allowing to be used by invoke
+    qRegisterMetaType<void *>("const void *");
 }
 
 PluginControl::~PluginControl() {
@@ -186,8 +187,8 @@ void PluginControl::launchNewPlugin(IPlugin *plugin,
             SLOT(onRemoveEntity(Entity*,bool)));
 
     //broadcastMessage
-    connect(plugin, SIGNAL(sendBroadcastMessage(const char*)),
-            this, SLOT(sendBroadcastMessage(const char*)));
+    connect(plugin, SIGNAL(sendBroadcastMessage(const char*, void *)),
+            this, SLOT(sendBroadcastMessage(const char*, void*)));
 }
 
 void PluginControl::connectParser(IDocumentParser *parser,
@@ -246,7 +247,7 @@ bool PluginControl::releasePlugins(Document *doc)
         return true;
 }
 
-void PluginControl::sendBroadcastMessage(const char* slot)
+void PluginControl::sendBroadcastMessage(const char* slot, void *obj)
 {
     IPlugin *plugin = qobject_cast<IPlugin *> (QObject::sender());
 
@@ -254,14 +255,18 @@ void PluginControl::sendBroadcastMessage(const char* slot)
     QList<IPlugin*> instances =
             pluginInstances.values(plugin->getDocument()->getLocation());
 
+    QString slotName(slot);
+    slotName.append("(void*)");
     for (it = instances.begin(); it != instances.end(); it++)
     {
        IPlugin *inst = *it;
-       int idxSlot = inst->metaObject()->indexOfSlot(slot);
+       int idxSlot = inst->metaObject()->indexOfSlot(
+               slotName.toStdString().c_str());
 
        if(idxSlot != -1) {
            QMetaMethod method = inst->metaObject()->method(idxSlot);
-           method.invoke(inst, Qt::QueuedConnection);
+           method.invoke(inst, Qt::QueuedConnection,
+                         Q_ARG(void *, obj));
        }
     }
 

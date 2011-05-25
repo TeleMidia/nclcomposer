@@ -53,7 +53,7 @@ void MessageControl::onEditEntity(Entity *entity,
     if(plugin) {
         QString pluginID = plugin->getPluginInstanceID();
         try {
-            //TODO - call validator to check
+            /*! \todo Call validator to check */
            entity->setAtrributes(atts);
            emit entityChanged(pluginID,entity);
         }catch(exception e){
@@ -76,7 +76,9 @@ void MessageControl::onRemoveEntity( Entity *entity,
         try {
             QString _id = entity->getUniqueId();
             emit aboutToRemoveEntity(entity);
-            /* remember to change, the append should come from the plugin*/
+            /*! \todo remember to change, the append should come from the
+                plugin
+            */
             doc->removeEntity(entity,true);
             emit entityRemoved(pluginID,_id);
         }catch(exception e){
@@ -84,7 +86,8 @@ void MessageControl::onRemoveEntity( Entity *entity,
             return;
         }
     } else {
-        //TODO -- erro on casting
+        /*! \todo error on casting management
+        */
         return;
     }
 

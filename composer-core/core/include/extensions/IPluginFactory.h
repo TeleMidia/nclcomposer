@@ -16,8 +16,9 @@ namespace core {
 namespace extension {
 namespace plugin {
 
-    //!A Factory interface for build plugins instances.
     /*!
+      \brief A Factory interface for build plugin instances.
+
       This extension point is used by the core to build multiple
       instances of the same plugin.
       The objective is to allow the plugin manipulates different Documents

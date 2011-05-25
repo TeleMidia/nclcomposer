@@ -40,7 +40,7 @@ namespace module {
         signals:
             void entityAdded(QString ID, Entity *);
             void entityAddError(QString error);
-            /** TODO Lembrar se ele tiver mudado o ID */
+            /** TODO: Lembrar se ele tiver mudado o ID */
             void entityChanged(QString ID, Entity *);
             void entityChangeError(QString error);
             /** Lembrar de ele apagar a sua referência interna */

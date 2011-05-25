@@ -169,7 +169,7 @@ namespace plugin {
                The content of the message can be any QObject and are useful
                to extend the curretn
              */
-             void sendBroadcastMessage(const char* msg);
+             void sendBroadcastMessage(const char* msg, void *obj);
 
              //! Is used by the plugin when it want to initiate a
              /*!
