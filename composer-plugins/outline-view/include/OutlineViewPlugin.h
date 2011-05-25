@@ -13,6 +13,7 @@ class OutlineViewPlugin : public IPlugin
 
 private:
     NCLTreeWidget *window;
+    QString *selectedId;
 
 public:
     explicit OutlineViewPlugin();
@@ -34,10 +35,11 @@ public slots:
     void errorMessage(QString error);
 
     /* Comunication from Debug to me */
-    void debugHasSendClearAll();
+    void debugHasSendClearAll(void *obj);
 
 private slots:
     void elementRemovedByUser(QString id);
+    void itemSelectionChanged();
 };
 
 #endif // OUTLINEVIEWPLUGIN_H

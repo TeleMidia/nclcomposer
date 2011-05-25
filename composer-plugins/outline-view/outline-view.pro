@@ -20,3 +20,6 @@ SOURCES         =   src/NCLTreeWidget.cpp \
                     src/OutlineViewFactory.cpp
 
 INSTALLS        =   target
+
+FORMS += \
+    EditProperties.ui

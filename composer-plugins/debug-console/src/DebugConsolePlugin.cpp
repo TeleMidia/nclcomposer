@@ -80,5 +80,5 @@ void DebugConsolePlugin::sendToAll()
 
     in.sendBroadcastMessage("debugHasSendClearAll"); */
 
-    emit sendBroadcastMessage("debugHasSendClearAll()");
+    emit sendBroadcastMessage("debugHasSendClearAll", NULL);
 }

@@ -21,10 +21,17 @@ OutlineViewPlugin::OutlineViewPlugin()
     connect (window, SIGNAL(elementRemovedByUser(QString)), this,
              SLOT(elementRemovedByUser(QString)));
 
+    connect(window,
+            SIGNAL(itemSelectionChanged()),
+            this,
+            SLOT(itemSelectionChanged()));
+
+    selectedId = NULL;
 }
 
 OutlineViewPlugin::~OutlineViewPlugin()
 {
+    delete selectedId;
     delete window;
 }
 
@@ -75,7 +82,7 @@ void OutlineViewPlugin::onEntityChanged(QString pluginID, Entity * entity)
 {
     QString line = "PLUGIN (" + pluginID + ") changed the Entity (" +
                    entity->getType() + " - " + entity->getUniqueId() +")";
-    //TODO: All
+
 }
 
 void OutlineViewPlugin::onEntityAboutToRemove(Entity *entity)
@@ -104,6 +111,7 @@ void OutlineViewPlugin::elementRemovedByUser(QString itemId)
 bool OutlineViewPlugin::saveSubsession()
 {
     //TODO: All
+    return true;
 }
 
 void OutlineViewPlugin::updateFromModel()
@@ -111,7 +119,23 @@ void OutlineViewPlugin::updateFromModel()
     //TODO: All
 }
 
-void OutlineViewPlugin::debugHasSendClearAll()
+void OutlineViewPlugin::debugHasSendClearAll(void *param)
 {
     qDebug() << "OutlineViewPlugin::debugHasSendClearAll";
+}
+
+void OutlineViewPlugin::itemSelectionChanged()
+{
+    if(selectedId != NULL)
+        delete selectedId;
+
+
+    QList <QTreeWidgetItem*> selecteds = window->selectedItems();
+
+    if(selecteds.size())
+    {
+        selectedId = new QString(selecteds.at(0)->text(2));
+
+        emit sendBroadcastMessage("changeSelectedEntity", selectedId);
+    }
 }

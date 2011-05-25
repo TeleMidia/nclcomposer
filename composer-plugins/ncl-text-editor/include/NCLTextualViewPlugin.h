@@ -33,6 +33,8 @@ public slots:
     void onEntityRemoved(QString pluginID, QString entityID);
 
     void errorMessage(QString error);
+
+    void changeSelectedEntity(void* param);
 };
 
 #endif // DEBUGCONSOLEPLUGIN_H

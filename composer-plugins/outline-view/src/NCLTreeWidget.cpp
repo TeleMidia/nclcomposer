@@ -33,6 +33,9 @@ void NCLTreeWidget::createActions ()
              this, SLOT(userAddNewElement()));
     addAction(insertNodeAct);
 
+    changeAttributes = new QAction(tr("Change attributes"), this);
+    addAction(changeAttributes);
+
     removeNodeAct = new QAction( QIcon(":/images/delete.png"),
                                  tr("&Remove Selected element"),
                                  this);
@@ -51,7 +54,9 @@ void NCLTreeWidget::createMenus ()
 {
     elementMenu = new QMenu(this);
     elementMenu->addAction(insertNodeAct);
+    elementMenu->addAction(changeAttributes);
     elementMenu->addAction(removeNodeAct);
+    elementMenu->addSeparator();
     elementMenu->addAction(expandAllAct);
 }
 
@@ -90,6 +95,9 @@ bool NCLTreeWidget::updateFromText(QString text)
     return ret;
 }
 
+
+
+//! Add an Element to NCLTreeWidget
 //TODO: Add Element with the correct icon
 QTreeWidgetItem* NCLTreeWidget::addElement ( QTreeWidgetItem *father,
                                              int pos,
@@ -118,40 +126,13 @@ QTreeWidgetItem* NCLTreeWidget::addElement ( QTreeWidgetItem *father,
         }
     }
 
-    QIcon icon;
-    if(tagname == "media")
-        icon = QIcon (":/images/media.png");
-    else if(tagname == "descriptor")
-        icon = QIcon (":/images/descriptor.png");
-    else if(tagname == "link")
-        icon = QIcon (":/images/link-icon.png");
-    else
-        icon = QIcon (":/images/new.png");
+    updateItem(child, tagname, attrs);
 
-    QString strAttrList = "";
-    QString key;
-    QString name;
-    foreach (key, attrs.keys())
-    {
-        strAttrList += " ";
-        strAttrList += key + "=\"" + attrs[key] + "\"";
-        if(key == "id" || key == "name") {
-            name = attrs[key];
-        }
-    }
-
-    child->setIcon(0, icon);
-    if(name != "")
-    {
-        tagname += "(" + name + ")";
-    }
-    child->setText(0, tagname);
+    //TODO: This is temporaty (must be removed in the future).
     child->setText(2, id);
-    child->setText(1, strAttrList);
 
     // child->setText(2, QString::number(line_in_text));
     // child->setText(3, QString::number(column_in_text));
-
     return child;
 }
 
@@ -204,7 +185,7 @@ QTreeWidgetItem *NCLTreeWidget::getItemById(QString itemId)
                  << "' - All them will be deleted!";
     }
 
-    for (uint i = 0; i < items.size(); i++)
+    for (int i = 0; i < items.size(); i++)
     {
         if(items.at(i)->text(2) == itemId){
             return items.at(i);
@@ -262,6 +243,41 @@ void NCLTreeWidget::userRemoveElement()
             emit elementRemovedByUser(id);
         }
     }
+}
+
+void NCLTreeWidget::updateItem(QTreeWidgetItem *item, QString tagname,
+                                  QMap <QString, QString> &attrs)
+{
+    QIcon icon;
+    if(tagname == "media")
+        icon = QIcon (":/images/media.png");
+    else if(tagname == "descriptor")
+        icon = QIcon (":/images/descriptor.png");
+    else if(tagname == "link")
+        icon = QIcon (":/images/link-icon.png");
+    else
+        icon = QIcon (":/images/new.png");
+
+    QString strAttrList = "";
+    QString key;
+    QString name;
+    foreach (key, attrs.keys())
+    {
+        strAttrList += " ";
+        strAttrList += key + "=\"" + attrs[key] + "\"";
+        if(key == "id" || key == "name") {
+            name = attrs[key];
+        }
+    }
+
+    item->setIcon(0, icon);
+    if(name != "")
+    {
+        tagname += "(" + name + ")";
+    }
+    item->setText(0, tagname);
+    //item->setText(2, id);
+    item->setText(1, strAttrList);
 }
 
 void NCLTreeWidget::errorNotification( QString message,

@@ -182,4 +182,17 @@ void NCLTextualViewPlugin::updateFromModel(){
 
 }
 
+void NCLTextualViewPlugin::changeSelectedEntity(void *param){
+    QString *id = (QString*)param;
+    int entityLine = startLineOfEntity.value(*id);
+    int size = window->getTextEditor()->lineLength(entityLine);
+
+    qDebug() << "NCLTextualViewPlugin::changeSelectedEntity"
+             << id << " " << entityLine;
+
+    window->getTextEditor()->setCursorPosition(entityLine, 0);
+    window->getTextEditor()->ensureLineVisible(entityLine);
+    window->getTextEditor()->SendScintilla(QsciScintilla::SCI_SETFOCUS, true);
+}
+
 
