@@ -9,7 +9,7 @@ using namespace composer::core::extension::plugin;
 #include "OutlineViewPlugin.h"
 
 /*!
- \brief This class handles the creation and deletion of OutlineView objects.
+ \brief Handles the creation and deletion of OutlineView objects.
 
 */
 class OutlineViewFactory : public QObject, public IPluginFactory

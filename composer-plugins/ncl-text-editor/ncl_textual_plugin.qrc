@@ -18,5 +18,7 @@
         <file>images/clipboard_cut.png</file>
         <file>images/ncl.png</file>
         <file>images/synchronize-icon-24.png</file>
+        <file>images/door_icon.jpg</file>
+        <file>images/property_icon.png</file>
     </qresource>
 </RCC>

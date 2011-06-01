@@ -17,7 +17,7 @@ using namespace std;
 #include "NCLParser.h"
 
 /**
- * @brief This class handles a NCL document as a tree. OutlineView plugin is just
+ * @brief Handles a NCL document as a tree. OutlineView plugin is just
  *          a wrapper over this class to send and receive messsages from
  *          Composer Core.
  *
