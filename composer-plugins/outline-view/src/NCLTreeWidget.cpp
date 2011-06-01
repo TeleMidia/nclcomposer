@@ -249,14 +249,22 @@ void NCLTreeWidget::updateItem(QTreeWidgetItem *item, QString tagname,
                                   QMap <QString, QString> &attrs)
 {
     QIcon icon;
+    /*!
+      \todo Create a method to return an Icon to a given element.
+     */
     if(tagname == "media")
         icon = QIcon (":/images/media.png");
     else if(tagname == "descriptor")
         icon = QIcon (":/images/descriptor.png");
     else if(tagname == "link")
         icon = QIcon (":/images/link-icon.png");
+    else if(tagname == "port")
+        icon = QIcon (":/images/door_icon.jpg");
+    else if(tagname == "property")
+        icon = QIcon (":/images/property_icon.png");
     else
         icon = QIcon (":/images/new.png");
+
 
     QString strAttrList = "";
     QString key;
@@ -293,7 +301,7 @@ void NCLTreeWidget::errorNotification( QString message,
 
 void NCLTreeWidget::DecreaseFont()
 {
-    qDebug() << "NCLTreeWidget::DecreaseFont";
+//    qDebug() << "NCLTreeWidget::DecreaseFont";
     unsigned int newPointSize = font().pointSize()-1;
     QFont newFont(font());
     newFont.setPointSize(newPointSize);
@@ -302,7 +310,7 @@ void NCLTreeWidget::DecreaseFont()
 
 void NCLTreeWidget::IncreaseFont()
 {
-    qDebug() << "NCLTreeWidget::IncreaseFont";
+//    qDebug() << "NCLTreeWidget::IncreaseFont";
     unsigned int newPointSize = font().pointSize()+1;
     QFont newFont(font());
     newFont.setPointSize(newPointSize);
