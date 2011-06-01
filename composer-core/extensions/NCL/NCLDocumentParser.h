@@ -9,10 +9,10 @@
 #include <QWaitCondition>
 
 #include <core/extensions/IDocumentParser.h>
-using namespace composer::core::extension;
+using namespace composer::extension;
 
 namespace composer {
-namespace language{
+    namespace language{
 
 class NCLDocumentParser : public IDocumentParser, public QXmlDefaultHandler
 {
@@ -28,6 +28,8 @@ public:
     ~NCLDocumentParser();
     bool parseDocument();
     QString getParserName();
+
+    bool serialize();
 
 protected:
     bool startElement(const QString &namespaceURI,

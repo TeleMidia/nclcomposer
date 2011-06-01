@@ -6,7 +6,7 @@
   */
 
 namespace composer {
-namespace util {
+        namespace util {
 
 class AttributeReferences {
 private:

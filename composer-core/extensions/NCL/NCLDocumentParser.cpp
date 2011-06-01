@@ -26,7 +26,7 @@ bool NCLDocumentParser::parseDocument()
 
     QString uri = doc->getLocation();
 
-    QFile *file = new QFile(uri,this);
+    QFile *file = new QFile(uri, this);
     if (!file->open(QIODevice::ReadWrite)) {
         qDebug() << "DocumentParser::parseDocument"
                  << tr("Could not open file %1\n").arg(uri);
@@ -56,18 +56,15 @@ bool NCLDocumentParser::startElement(const QString &,
     if (qName != "ncl")
     {
         lockStack.lock();
-
         Entity *parentEntity = elementStack.top();
-
         lockStack.unlock();
-
         parentId = parentEntity->getUniqueId();
     }
 
     for (int i=0 ;i < attributes.count(); i++)
         atts[attributes.qName(i)] = attributes.value(i);
 
-    emit addEntity(qName,parentId,atts,false);
+    emit addEntity(qName, parentId, atts, false);
 
     return true;
 }
@@ -116,5 +113,4 @@ void NCLDocumentParser::onEntityAddError(QString error)
     //sync.wakeAll();
 }
 
-
-}} //end namespace
+} } //end namespace

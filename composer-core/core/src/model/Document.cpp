@@ -1,6 +1,5 @@
 #include "model/Document.h"
 
-
 namespace composer {
     namespace core {
         namespace model {
@@ -116,6 +115,14 @@ namespace composer {
         entities.remove(_id);
         return true;
 
+    }
+
+    /** \todo Save document hard disk. */
+    bool Document::serialize()
+    {
+       QMutexLocker locker(&lockEntities);
+       qDebug() << this->toString();
+       return true;
     }
 
 }}} //end namespace

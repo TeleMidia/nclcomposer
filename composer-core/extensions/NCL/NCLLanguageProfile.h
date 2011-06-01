@@ -5,7 +5,7 @@
 #include "NCLDocumentParser.h"
 #include <core/extensions/ILanguageProfile.h>
 
-using namespace composer::core::extension;
+using namespace composer::extension;
 
 namespace composer {
     namespace language {

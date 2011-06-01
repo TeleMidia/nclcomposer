@@ -2,7 +2,6 @@
 
 namespace composer {
     namespace core {
-        namespace module {
 
 INIT_SINGLETON (LanguageControl)
 
@@ -106,6 +105,6 @@ QList<ILanguageProfile*> LanguageControl::getLoadedProfiles()
     return list;
 }
 
-} } } //end namespace
+} } //end namespace
 
 

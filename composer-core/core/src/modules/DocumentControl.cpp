@@ -2,7 +2,6 @@
 
 namespace composer {
     namespace core {
-            namespace module {
 
 INIT_SINGLETON (DocumentControl)
 
@@ -100,7 +99,11 @@ void DocumentControl::launchDocument(QString projectId, QString location)
     emit endOpenDocument();
 
 }
-                }
-        }
-}//end namespaec composer
+
+void DocumentControl::saveDocument(QString location)
+{
+    Document *doc = openDocuments.value(location);
+    doc->serialize();
+}
+} }//end namespace
 

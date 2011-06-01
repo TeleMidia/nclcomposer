@@ -8,20 +8,20 @@
 using namespace std;
 
 #include "../extensions/IDocumentParser.h"
-using namespace composer::core::extension;
+using namespace composer::extension;
 
 #include "../model/Entity.h"
 #include "../model/Document.h"
 using namespace composer::core::model;
 
 #include "../extensions/IPlugin.h"
-using namespace composer::core::extension::plugin;
+using namespace composer::extension;
 
 namespace composer {
-namespace core {
-namespace module {
-    class MessageControl : public QObject {
-        Q_OBJECT
+    namespace core {
+
+        class MessageControl : public QObject {
+            Q_OBJECT
         private:
             Document *doc;
 
@@ -31,8 +31,8 @@ namespace module {
 
         public slots:
             void onAddEntity( QString type,
-                           QString parentEntityId, QMap<QString,QString>& atts,
-                           bool force);
+                              QString parentEntityId, QMap<QString,QString>& atts,
+                              bool force);
             void onEditEntity(Entity *entity,
                               QMap<QString,QString>& atts, bool force);
             void onRemoveEntity(Entity *, bool force);
@@ -47,11 +47,6 @@ namespace module {
             void aboutToRemoveEntity(Entity *);
             void entityRemoved(QString ID, QString entityId);
             void entityRemoveError(QString error);
-
-
-
-    };
-}
-}
-}
+        };
+    } }
 #endif // MESSAGECONTROL_H

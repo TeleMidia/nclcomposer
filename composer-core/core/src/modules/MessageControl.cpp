@@ -3,7 +3,6 @@
 
 namespace composer {
     namespace core {
-        namespace module {
 
 MessageControl::MessageControl(Document *doc) {
     this->doc = doc;
@@ -92,6 +91,5 @@ void MessageControl::onRemoveEntity( Entity *entity,
     }
 
 }
-        }
-    }
-}//end namespace
+
+}}//end namespace

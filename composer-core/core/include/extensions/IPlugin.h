@@ -11,9 +11,7 @@
 using namespace composer::core::model;
 
 namespace composer {
-namespace core {
-namespace extension {
-namespace plugin {
+    namespace extension {
 
     //!  The interface for communication between the core and the plugin
     /*!
@@ -157,11 +155,15 @@ namespace plugin {
              void setAttributes( Entity *, QMap<QString,QString>& atts,
                                  bool force);
 
-             //! This message can be used to ask the core to remove an Entity
              /*!
-               TODO:
+              \brief This message can be used to ask the core to remove an
+                    Entity.
+
+              \param entity The pointer to the Entity must be removed.
+              \param force It should be true if the user want to remove that
+                        entity even the internal model will not be consistent.
              */
-             void removeEntity(Entity *, bool force);
+             void removeEntity(Entity * entity, bool force);
 
              //! Can be used to extend the current messages of Core
              /*!
@@ -171,23 +173,8 @@ namespace plugin {
              */
              void sendBroadcastMessage(const char* msg, void *obj);
 
-             //! Is used by the plugin when it want to initiate a
-             /*!
-               TODO:
-             */
-             void beginTransaction();
-
-             //! It is used when the plugin want to close a transaction and send
-             //! all the commands that is in the transaction queue.
-             /*!
-               TODO:
-             */
-             void endTransaction();
-
     };
-}
-}
-}
-}
+
+} } //end namespace
 
 #endif // IPLUGIN_H

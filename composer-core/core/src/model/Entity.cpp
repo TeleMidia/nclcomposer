@@ -1,6 +1,5 @@
 #include "model/Entity.h"
 
-
 namespace composer {
     namespace core {
         namespace model {
@@ -20,6 +19,18 @@ namespace composer {
         QMutexLocker locker(&lockAtts);
         this->atts = atts;
         setUniqueID(QUuid::createUuid().toString());
+        QMutexLocker lo(&lockParent);
+        this->parent = (Entity*)parent;
+        this->deleteChildren = true;
+    }
+
+    Entity::Entity(QString uniqueId, QMap<QString,QString> &atts,
+                   QObject *parent) :
+        QObject(parent)
+    {
+        QMutexLocker locker(&lockAtts);
+        this->atts = atts;
+        setUniqueID(uniqueId);
         QMutexLocker lo(&lockParent);
         this->parent = (Entity*)parent;
         this->deleteChildren = true;
@@ -71,6 +82,33 @@ namespace composer {
                     Entity *child = it.value();
                     child->print();
             }
+    }
+
+    QString Entity::toString()
+    {
+        QString out = "<";
+        out .append(getType().toAscii());
+        foreach(QString attr, atts.keys()){
+            out += " ";
+            out.append(attr);
+            out += "=\"";
+            out += atts.value(attr);
+            out += "\"";
+        }
+        out += " uniqueEntityId=\"";
+        out += getUniqueId();
+        out += "\">\n";
+
+        QMap<QString, Entity*>::iterator it;
+        for (it = children.begin() ; it != children.end(); it++)
+        {
+                Entity *child = it.value();
+                out += child->toString();
+        }
+        out += "\n</";
+        out += getType();
+        out += ">\n";
+        return out;
     }
 
 }}} //end namespace

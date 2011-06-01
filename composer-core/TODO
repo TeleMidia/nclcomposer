@@ -19,4 +19,9 @@ TODO file for composer-core
 	- Security ?!?!
 	- Integration with other plugins ?!
 
+* Documentation:
+  - Manual to Develop plugins:
+    . Points to be mentioned:
+		    1. Key handling (pass to father)!
+				
 //TODO: License

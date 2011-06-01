@@ -11,36 +11,33 @@
 #include <QHashIterator>
 #include <QDebug>
 
+
+#include "MessageControl.h"
+#include "LanguageControl.h"
+using namespace composer::core;
+
 #include "../model/Document.h"
 using namespace composer::core::model;
 
 #include "../util/Singleton.h"
 using namespace composer::core::util;
 
-#include "MessageControl.h"
-#include "LanguageControl.h"
-using namespace composer::core::module;
-
 #include "../extensions/IDocumentParser.h"
 #include "../extensions/ILanguageProfile.h"
-using namespace composer::core::extension;
-
 #include "../extensions/IPluginFactory.h"
 #include "../extensions/IPlugin.h"
-using namespace composer::core::extension::plugin;
-
+using namespace composer::extension;
 
 namespace composer {
     namespace core {
-        namespace module {
 
-    class PluginControl : public QObject
-    {
-        Q_OBJECT
-        SINGLETON(PluginControl)
+        class PluginControl : public QObject
+        {
+            Q_OBJECT
+            SINGLETON(PluginControl)
 
         private:
-            PluginControl();
+                    PluginControl();
             ~PluginControl();
             /* PluginFactory by pluginID */
             QHash<QString,IPluginFactory*> pluginFactories;
@@ -61,7 +58,7 @@ namespace composer {
             void launchNewPlugin(IPlugin *plugin,
                                  MessageControl *mControl);
             void connectParser(IDocumentParser *parser,
-                                 MessageControl *mControl);
+                               MessageControl *mControl);
 
         public:
             void loadPlugins(QString pluginsDirPath);
@@ -80,12 +77,11 @@ namespace composer {
                                                QString location);
             void notifyError(QString);
             void addPluginWidgetToWindow(IPluginFactory*, IPlugin*,
-                                    QString projectId, QString documentId);
+                                         QString projectId, QString documentId);
             void addPluginWidgetToWindow(IPluginFactory*,IPlugin*,
                                          Document*, int n);
 
-    };
-        }
-    }
-}
+        };
+} } //end namespace
+
 #endif // PLUGINCONTROL_H

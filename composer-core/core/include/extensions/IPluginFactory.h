@@ -9,12 +9,10 @@
 using namespace composer::core::util;
 
 #include "IPlugin.h"
-using namespace composer::core::extension::plugin;
+using namespace composer::extension;
 
 namespace composer {
-namespace core {
-namespace extension {
-namespace plugin {
+    namespace extension {
 
     /*!
       \brief A Factory interface for build plugin instances.
@@ -70,10 +68,7 @@ namespace plugin {
 
 };
 
-}
-}
-}
-}
+} } //end namespace
 
 /**
   * This is a require for the QTPlugin system work.

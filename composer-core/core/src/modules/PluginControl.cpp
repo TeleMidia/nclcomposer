@@ -6,7 +6,6 @@
 
 namespace composer {
     namespace core {
-        namespace module {
 
 INIT_SINGLETON(PluginControl)
 
@@ -165,23 +164,23 @@ void PluginControl::launchNewPlugin(IPlugin *plugin,
                                     MessageControl *mControl) {
 
     /* Connect signals from the core to slots in the plugins */
-    connect(mControl,SIGNAL(entityAdded(QString,Entity*)),
-            plugin, SLOT(onEntityAdded(QString,Entity*)));
-    connect(mControl,SIGNAL(entityChanged(QString,Entity*)),
-            plugin,SLOT(onEntityChanged(QString,Entity*)));
-    connect(mControl,SIGNAL(entityRemoved(QString,QString)),
-            plugin,SLOT(onEntityRemoved(QString,QString)));
+    connect(mControl,SIGNAL(entityAdded(QString, Entity*)),
+            plugin, SLOT(onEntityAdded(QString, Entity*)));
+    connect(mControl,SIGNAL(entityChanged(QString, Entity*)),
+            plugin,SLOT(onEntityChanged(QString, Entity*)));
+    connect(mControl,SIGNAL(entityRemoved(QString, QString)),
+            plugin,SLOT(onEntityRemoved(QString, QString)));
     connect(mControl,SIGNAL(aboutToRemoveEntity(Entity*)),
             plugin, SLOT(onEntityAboutToRemove(Entity*)));
 
     /* Connect signals from the plugin to slots of the core */
     connect(plugin,
-            SIGNAL(addEntity(QString,QString,QMap<QString,QString>&,bool)),
+            SIGNAL(addEntity(QString, QString, QMap<QString,QString>&, bool)),
             mControl,
-            SLOT(onAddEntity(QString,QString,QMap<QString,QString>&,bool)));
-    connect(plugin,SIGNAL(setAttributes(Entity*,QMap<QString,QString>&,bool)),
+            SLOT(onAddEntity(QString, QString, QMap<QString,QString>&, bool)));
+    connect(plugin,SIGNAL(setAttributes(Entity*, QMap<QString,QString>&, bool)),
             mControl,
-            SLOT(onEditEntity(Entity*,QMap<QString,QString>&,bool)));
+            SLOT(onEditEntity(Entity*, QMap<QString,QString>&, bool)));
     connect(plugin,SIGNAL(removeEntity(Entity*,bool)),
             mControl,
             SLOT(onRemoveEntity(Entity*,bool)));
@@ -272,4 +271,4 @@ void PluginControl::sendBroadcastMessage(const char* slot, void *obj)
 
 }
 
-} } }//end namespace
+} }//end namespace
