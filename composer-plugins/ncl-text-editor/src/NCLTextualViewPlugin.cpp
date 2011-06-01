@@ -18,7 +18,7 @@ NCLTextualViewPlugin::~NCLTextualViewPlugin()
 
 QWidget* NCLTextualViewPlugin::getWidget()
 {
-    return window->getTextEditor();
+    return window;
 }
 
 void NCLTextualViewPlugin::onEntityAdded(QString pluginID, Entity *entity)
@@ -187,8 +187,8 @@ void NCLTextualViewPlugin::changeSelectedEntity(void *param){
     int entityLine = startLineOfEntity.value(*id);
     int size = window->getTextEditor()->lineLength(entityLine);
 
-    qDebug() << "NCLTextualViewPlugin::changeSelectedEntity"
-             << id << " " << entityLine;
+//    qDebug() << "NCLTextualViewPlugin::changeSelectedEntity"
+//             << id << " " << entityLine;
 
     window->getTextEditor()->setCursorPosition(entityLine, 0);
     window->getTextEditor()->ensureLineVisible(entityLine);

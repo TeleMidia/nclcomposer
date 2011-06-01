@@ -32,9 +32,8 @@ NCLTextEditorMainWindow::NCLTextEditorMainWindow(QWidget *parent):
 
     createTextView();
     createActions();
-//    createMenus();
+    //    createMenus();
     createStatusBar();
-
 #ifdef NCLEDITOR_STANDALONE
     createToolBars();
     createOutlineView();
@@ -45,6 +44,11 @@ NCLTextEditorMainWindow::NCLTextEditorMainWindow(QWidget *parent):
     setDockOptions(NCLTextEditorMainWindow::AllowNestedDocks
                    | NCLTextEditorMainWindow::AllowTabbedDocks
                    | NCLTextEditorMainWindow::AnimatedDocks);
+
+    // The "this" is a class that inherit from QWedgit and Ui
+    //    this->setWindowFlags(Qt::MSWindowsFixedSizeDialogHint); //Set window to fixed size
+    this->setWindowFlags(Qt::CustomizeWindowHint); //Set window with no title bar
+    //    this->setWindowFlags(Qt::FramelessWindowHint); //Set a frameless window
 
     /* setTabPosition(Qt::LeftDockWidgetArea, QTabWidget::North);
     setTabPosition(Qt::RightDockWidgetArea, QTabWidget::North);
@@ -455,18 +459,18 @@ void NCLTextEditorMainWindow::insertElement(){
 
         //Add new Element to texttWidget
         int endLine = textEdit
-                         ->SendScintilla( QsciScintilla::SCI_GETLINEENDPOSITION,
-                                           line-1);
+                      ->SendScintilla( QsciScintilla::SCI_GETLINEENDPOSITION,
+                                       line-1);
         int beginLine = textEdit
-                            ->SendScintilla(QsciScintilla::SCI_POSITIONFROMLINE,
-                                            line-1);
+                        ->SendScintilla(QsciScintilla::SCI_POSITIONFROMLINE,
+                                        line-1);
         int end_element_column = item->text(3).toInt(&ok, 10);
         bool fix_next_line_indentation = false;
 
         //find if we are in a "<tagname/>" then open this tag
         char ch = textEdit->SendScintilla(
-                                QsciScintilla::SCI_GETCHARAT, beginLine +
-                                end_element_column-1);
+                QsciScintilla::SCI_GETCHARAT, beginLine +
+                end_element_column-1);
         if (ch == '/') {
             QString endtag = ">";
             endtag += "<";
@@ -497,15 +501,15 @@ void NCLTextEditorMainWindow::insertElement(){
 
         element.prepend("\n");
 
-//        qDebug() << line << " " << beginLine << " " << endLine << " "
-//                << end_element_column << " ";
+        //        qDebug() << line << " " << beginLine << " " << endLine << " "
+        //                << end_element_column << " ";
 
         textEdit->insertAt(element, line-1, end_element_column);
 
         //fix indentation
         int lineident = textEdit->SendScintilla(
-                                        QsciScintilla::SCI_GETLINEINDENTATION,
-                                        line-1);
+                QsciScintilla::SCI_GETLINEINDENTATION,
+                line-1);
         textEdit->SendScintilla(QsciScintilla::SCI_GETLINEINDENTATION, line-1);
 
         if(fix_next_line_indentation)
@@ -529,6 +533,12 @@ void NCLTextEditorMainWindow::createTextView() {
     dockTextEdit->setObjectName(QString("dockTextView"));
     dockTextEdit->setFeatures(QDockWidget::DockWidgetMovable /*|
                               QDockWidget::DockWidgetFloatable*/);
+
+    //Remove the title bar if whe are working in the plugin version.
+#ifndef NCLEDITOR_STANDALONE
+    QWidget* titleWidget = new QWidget(this);/*where this a QMainWindow object*/
+    dockTextEdit->setTitleBarWidget( titleWidget );
+#endif
 
     // dockTextEdit->setAllowedAreas(Qt::LeftDockWidgetArea |
     //                              Qt::RightDockWidgetArea);
