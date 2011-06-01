@@ -1,7 +1,7 @@
 #include "../include/WorkspaceSwitch.h"
 
 namespace composer {
-    namespace ui {
+    namespace gui {
 
 WorkspaceSwitch::WorkspaceSwitch(QWidget *parent) :
     QDialog(parent)

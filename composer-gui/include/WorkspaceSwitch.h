@@ -11,7 +11,7 @@
 #include <QDir>
 
 namespace composer {
-    namespace ui {
+    namespace gui {
 
 class WorkspaceSwitch : public QDialog
 {

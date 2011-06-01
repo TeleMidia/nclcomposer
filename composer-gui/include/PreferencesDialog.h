@@ -8,17 +8,17 @@
 #include <QListWidgetItem>
 
 #include <core/extensions/IPluginFactory.h>
-using namespace composer::core::extension::plugin;
+using namespace composer::extension;
 
 #include <core/modules/PluginControl.h>
-using namespace composer::core::module;
+using namespace composer::core;
 
 namespace Ui {
     class PreferencesDialog;
 }
 
 namespace composer {
-    namespace ui {
+    namespace gui {
 
 class PreferencesDialog : public QDialog
 {

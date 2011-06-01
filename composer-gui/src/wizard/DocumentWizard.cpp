@@ -1,7 +1,7 @@
 #include "wizard/DocumentWizard.h"
 
 namespace composer {
-    namespace ui {
+    namespace gui {
 
 DocumentWizard::DocumentWizard(QWidget* parent) :
         QWizard(parent) {

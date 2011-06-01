@@ -1,7 +1,7 @@
 #include "wizard/ProjectWizard.h"
 
 namespace composer {
-    namespace ui {
+    namespace gui {
 
 ProjectWizard::ProjectWizard(QWidget* parent) :
         QWizard(parent) {

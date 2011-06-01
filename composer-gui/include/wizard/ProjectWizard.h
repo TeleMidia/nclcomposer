@@ -9,7 +9,7 @@
 #include "ProjectEntryPage.h"
 
 namespace composer {
-    namespace ui {
+    namespace gui {
 
 class ProjectWizard : public QWizard
 {

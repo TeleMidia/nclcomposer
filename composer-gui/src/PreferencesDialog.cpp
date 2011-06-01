@@ -3,7 +3,7 @@
 #include <QListWidgetItem>
 
 namespace composer {
-    namespace ui {
+    namespace gui {
 
 PreferencesDialog::PreferencesDialog(QWidget *parent) :
         QDialog(parent),

@@ -1,7 +1,7 @@
 #include "wizard/ProjectEntryPage.h"
 
 namespace composer {
-    namespace ui {
+    namespace gui {
 
 ProjectEntryPage::ProjectEntryPage(QWidget *parent) :
         QWizardPage(parent)

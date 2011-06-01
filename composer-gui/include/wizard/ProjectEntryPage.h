@@ -13,7 +13,7 @@
 #include <QDebug>
 
 namespace composer {
-    namespace ui {
+    namespace gui {
 
 class ProjectEntryPage : public QWizardPage
 {

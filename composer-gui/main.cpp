@@ -2,8 +2,16 @@
 #include <QResource>
 #include "ComposerMainWindow.h"
 
-using namespace composer::ui;
+using namespace composer::gui;
 
+
+/*!
+ \mainpage
+NCL Composer is a multiplataform and flexible multimedia authoring tool of
+interactive applications. It was first developed to NCL (Nested Context
+Language) support, but its flexible architecture allows to extend it to support
+almost all other multimedia languages, e.g. SMIL, SVG, and HTML 5.
+*/
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);

@@ -1,7 +1,7 @@
 #include "../include/ProjectTreeView.h"
 
 namespace composer {
-    namespace ui {
+    namespace gui {
 
 ProjectTreeView::ProjectTreeView(QWidget *parent) : QTreeView(parent)
 {

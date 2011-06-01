@@ -4,10 +4,10 @@
 #include <QPixmap>
 #include <QDialogButtonBox>
 
-using namespace composer::ui;
+using namespace composer::gui;
 
 namespace composer {
-    namespace ui {
+    namespace gui {
 
 ComposerMainWindow::ComposerMainWindow(QWidget *parent)
     : QMainWindow(parent),
@@ -29,7 +29,7 @@ ComposerMainWindow::ComposerMainWindow(QWidget *parent)
 #endif
 
     wsSwitch = new WorkspaceSwitch(this);
-    connect(wsSwitch,SIGNAL(accepted()),SLOT(switchWorkspace()));
+    connect(wsSwitch,SIGNAL(accepted()), SLOT(switchWorkspace()));
     initGUI();
     initModules();
     readSettings();
@@ -70,7 +70,6 @@ void ComposerMainWindow::initModules()
             SLOT(errorDialog(QString)));
     connect(docControl,SIGNAL(openDocumentTab(QString)),
             SLOT(onOpenDocumentTab(QString)));
-
 
     connect(docControl, SIGNAL(beginOpenDocument()),
             this, SLOT(beginOpenDocument()));
@@ -279,7 +278,7 @@ void ComposerMainWindow::switchWorkspace()
 
 void ComposerMainWindow::createTreeProject()
 {
-    fileSystemDock = new QDockWidget(tr("Projects"), this);
+    fileSystemDock = new QDockWidget(tr("Projects View"), this);
     fileSystemDock->setObjectName("projectTree");
 
     fileSystemView = new ProjectTreeView(this);
@@ -326,9 +325,14 @@ void ComposerMainWindow::createMenus() {
     ui->menu_Edit->addAction(editPreferencesAct);
 
     menuBar()->addSeparator();
-    connect(ui->menu_Window, SIGNAL(aboutToShow()), this, SLOT(updateViewMenu()));
+    connect( ui->menu_Window, SIGNAL(aboutToShow()),
+             this, SLOT(updateViewMenu()));
 
-    connect(ui->action_Close_All, SIGNAL(triggered()), this, SLOT(closeAllFiles()));
+    connect(ui->action_Close_All, SIGNAL(triggered()),
+            this, SLOT(closeAllFiles()));
+
+    connect( ui->actionSave, SIGNAL(triggered()),
+             this, SLOT(saveCurrentDocument()));
 }
 
 
@@ -577,4 +581,9 @@ void ComposerMainWindow::slotTimeout()
     }
 }
 
+void ComposerMainWindow::saveCurrentDocument()
+{
+     QString location = tabDocuments->tabToolTip(tabDocuments->currentIndex());
+     DocumentControl::getInstance()->saveDocument(location);
+}
 } } //end namespace

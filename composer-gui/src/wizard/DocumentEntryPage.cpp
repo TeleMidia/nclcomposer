@@ -1,7 +1,7 @@
 #include "wizard/DocumentEntryPage.h"
 
 namespace composer {
-    namespace ui {
+    namespace gui {
 
 DocumentEntryPage::DocumentEntryPage(QWidget *parent) :
     QWizardPage(parent)

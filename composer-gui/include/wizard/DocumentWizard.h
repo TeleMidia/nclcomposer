@@ -8,7 +8,7 @@
 
 #include "DocumentEntryPage.h"
 namespace composer {
-    namespace ui {
+    namespace gui {
 
 class DocumentWizard : public QWizard
 {

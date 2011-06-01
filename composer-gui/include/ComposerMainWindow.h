@@ -39,7 +39,7 @@
 #include <core/modules/PluginControl.h>
 #include <core/modules/DocumentControl.h>
 #include <core/modules/LanguageControl.h>
-using namespace composer::core::module;
+using namespace composer::core;
 
 #include "wizard/ProjectWizard.h"
 #include "wizard/DocumentWizard.h"
@@ -54,94 +54,233 @@ namespace Ui {
 
 
 namespace composer {
-    namespace ui {
+    namespace gui {
 
+/*!
+ \brief The main Window of Composer.
+
+ This class is the main window of Composer.
+
+*/
 class ComposerMainWindow : public QMainWindow {
     Q_OBJECT
 
 private:
-    QTabWidget *tabDocuments;
-    QMap<QString,QMainWindow*> documentsWidgets;
-    QMap<QString,QDockWidget*> firstDock;
+    QTabWidget *tabDocuments; /*!< Each open document is show in a different
+                                tab. tabDocuments contains the list of open
+                                tabs. */
+    QMap<QString, QMainWindow*> documentsWidgets; /*!< deprecated  */
+    QMap<QString, QDockWidget*> firstDock; /*!< TODO */
 
-    QAction *newProjectAct;
-    QAction *newDocumentAct;
-    QAction *aboutComposerAct;
-    QAction *fullScreenViewAct;
-    QAction *separatorViewAct;
-    QAction *projectViewAct;
-    QAction *editPreferencesAct;
-    QAction *switchWS;
+    QAction *newProjectAct; /*!< Acton to create a new Project. */
+    QAction *newDocumentAct; /*!< Action to create a new Document. */
+    QAction *aboutComposerAct; /*!< Action to show About Composer. */
+    QAction *fullScreenViewAct; /*!< Action to show Composer in FullScreen. */
+    QAction *separatorViewAct; /*!< TODO */
+    QAction *projectViewAct; /*!< TODO */
+    QAction *editPreferencesAct; /*!< TODO */
+    QAction *switchWS; /*!< TODO */
 
-    QListWidget *profilesExt;
-    QTreeWidget *pluginsExt;
+    QListWidget *profilesExt; /*!< TODO */
+    QTreeWidget *pluginsExt; /*!< TODO */
 
-    ProjectWizard *projectWizard;
-    DocumentWizard *documentWizard;
-    PreferencesDialog *preferences;
-    WorkspaceSwitch *wsSwitch;
+    ProjectWizard *projectWizard; /*!< TODO */
+    DocumentWizard *documentWizard; /*!< TODO */
+    PreferencesDialog *preferences; /*!< TODO */
+    WorkspaceSwitch *wsSwitch; /*!< TODO */
 
-    QFileSystemModel *fileSystemModel;
-    WorkspaceModel *workspace_model;
-    ProjectTreeView  *fileSystemView;
-    QDockWidget      *fileSystemDock;
+    QFileSystemModel *fileSystemModel; /*!< TODO */
+    WorkspaceModel *workspace_model; /*!< TODO */
+    ProjectTreeView  *fileSystemView; /*!< TODO */
+    QDockWidget      *fileSystemDock; /*!< TODO */
 
 
-    QDialog *aboutDialog;
+    QDialog *aboutDialog; /*!< TODO */
 
-    QString defaultEx;
-    QString user_directory_ext;
-    QString work_space_path;
+    QString defaultEx; /*!< TODO */
+    QString user_directory_ext; /*!< TODO */
+    QString work_space_path; /*!< TODO */
 
-    QWebView *welcomeScreen;
+    QWebView *welcomeScreen; /*!< TODO */
 
-    bool openingDocument;
-    QTimer *timer;
+    bool openingDocument; /*!< TODO */
+    QTimer *timer; /*!< TODO */
 
 private:
-    Ui::ComposerMainWindow *ui;
+    Ui::ComposerMainWindow *ui; /*!< TODO */
+    /*!
+     \brief
+
+     \return QString
+    */
     QString promptChooseExtDirectory();
+    /*!
+     \brief
+
+    */
     void initModules();
+    /*!
+     \brief
+
+    */
     void initGUI();
+    /*!
+     \brief
+
+    */
     void createAbout();
+    /*!
+     \brief
+
+    */
     void createStatusBar();
+    /*!
+     \brief
+
+    */
     void createMenus();
+    /*!
+     \brief
+
+    */
     void createActions();
+    /*!
+     \brief
+
+    */
     void createTreeProject();
+    /*!
+     \brief
+
+    */
     void createFileSystem();
+    /*!
+     \brief
+
+    */
     void readSettings();
+    /*!
+     \brief
+
+    */
     void readExtensions();
+    /*!
+     \brief
+
+     \param event
+    */
     void closeEvent(QCloseEvent *event);
+    /*!
+     \brief
+
+    */
     void cleanUp();
 
 
 private slots:
+    /*!
+     \brief
+
+    */
     void about();
+    /*!
+     \brief
+
+    */
     void updateViewMenu();
+    /*!
+     \brief
+
+    */
     void showEditPreferencesDialog();
+    /*!
+     \brief
+
+    */
     void showSwitchWorkspaceDialog();
+    /*!
+     \brief
+
+     \param index
+    */
     void tabClosed(int index);
+    /*!
+     \brief
+
+    */
     void showCurrentWidgetFullScreen();
+    /*!
+     \brief
+
+    */
     void closeAllFiles();
+    /*!
+     \brief
+
+    */
     void beginOpenDocument();
+    /*!
+     \brief
+
+    */
     void endOpenDocument();
+    /*!
+     \brief
+
+    */
     void slotTimeout();
 
 public:
+    /*!
+     \brief Constructs the Composer Main Window with the given parent.
+
+     \param parent The parent of the Composer Main Window.
+    */
     explicit ComposerMainWindow(QWidget *parent = 0);
+    /*!
+     \brief
+
+    */
     ~ComposerMainWindow();
 
 public slots:
+    /*!
+     \brief
+
+     \param QString
+    */
     void errorDialog(QString);
+    /*!
+     \brief Add a plugin Widget an link it to the given document.
+
+     \param fac
+     \param plugin
+     \param doc
+     \param n
+    */
     void addPluginWidget(IPluginFactory *fac, IPlugin *plugin,
                          Document *doc, int n);
+    /*!
+     \brief Called when a new tab is open.
+
+     \param location
+    */
     void onOpenDocumentTab(QString location);
+    /*!
+     \brief Called to change the current Workspace.
+
+    */
     void switchWorkspace();
 
-signals:
-    void writeSettings();
-    void progressBarValueChanged(int);
+    void saveCurrentDocument();
 
+signals:
+    /*!
+     \brief Send this signal when must be writed the current settings.
+     \deprecated
+
+    */
+    void writeSettings();
 };
 
 } } //end namespace

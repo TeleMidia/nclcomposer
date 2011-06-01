@@ -1,7 +1,7 @@
 #include "../include/WorkspaceModel.h"
 
 namespace composer {
-    namespace ui {
+    namespace gui {
 
 WorkspaceModel::WorkspaceModel(QObject *parent) :
         QSortFilterProxyModel(parent)

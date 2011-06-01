@@ -12,7 +12,7 @@
 #include <QGroupBox>
 
 namespace composer {
-    namespace ui {
+    namespace gui {
 
 class DocumentEntryPage : public QWizardPage
 {

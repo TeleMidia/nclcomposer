@@ -9,12 +9,12 @@
 #include <QFileSystemModel>
 
 #include <core/modules/DocumentControl.h>
-using namespace composer::core::module;
+using namespace composer::core;
 
 #include "WorkspaceModel.h"
 
 namespace composer {
-    namespace ui {
+    namespace gui {
 
 class ProjectTreeView : public QTreeView
 {
