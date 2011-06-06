@@ -18,7 +18,7 @@ using namespace composer::util;
 namespace composer {
 namespace language{
 /**
- * @brief
+ * @brief Class that keep information about the language description.
  *
 */
 class NCLLANGUAGEPROFILESHARED_EXPORT NCLStructure
@@ -136,4 +136,5 @@ public:
 };
 
 }} //end namespace
+
 #endif // NCLSTRUCTURE_H

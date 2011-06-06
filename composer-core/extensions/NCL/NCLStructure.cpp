@@ -36,7 +36,8 @@ void NCLStructure::loadStructure(){
             continue;
         }
         if(tokens[0] == "datatype"){
-            qDebug() << "I'm reading a new DATATYPE element - This is not supported yet." << endl;
+            qDebug() << "I'm reading a new DATATYPE element - This is not \
+                    supported yet." << endl;
 
         } else if(tokens[0] == "element"){
 //            qDebug() << "I'm reading a new ELEMENT element";
@@ -46,7 +47,8 @@ void NCLStructure::loadStructure(){
                 addElement(tokens[1], tokens[2], 0);
             }
             else {
-                qErrnoWarning("element primitive must be exactly 3 arguments (ELEMENT NAME, ELEMENT FATHER, CARDINALITY)");
+                qErrnoWarning("element primitive must have exactly 3 arguments \
+                              (ELEMENT NAME, ELEMENT FATHER, CARDINALITY)");
             }
 
         } else if(tokens[0] == "attribute"){
@@ -64,7 +66,8 @@ void NCLStructure::loadStructure(){
             }
 
         } else if(tokens[0] == "scope"){
-            qDebug() << "I'm reading a new SCOPE element - This is not supported yet" << endl;
+            qDebug() << "I'm reading a new SCOPE element - This is not \
+                    supported yet" << endl;
 
         } else if(tokens[0] == "reference"){
 //            qDebug() << "I'm reading a new REFERENCE element" << endl;
@@ -88,7 +91,8 @@ vector <QString> NCLStructure::parseLine(QString line){
 
         if (ch == '/') {
             if (i+1 < size && line[i+1] == '/') {
-                //comment was found, it will ignore the remaining caracteres in the line
+                // comment was found, it will ignore the remaining caracteres
+                // in the line
                 token = "//";
                 break;
             }
@@ -129,7 +133,9 @@ void NCLStructure::addElement(QString name, QString father, char cardinality){
     (*(*nesting)[father])[name] = cardinality;
 }
 
-void NCLStructure::addAttribute(QString element, QString attr, QString type, bool required){
+void NCLStructure::addAttribute ( QString element, QString attr, QString type,
+                                  bool required){
+
     if(!attributes->count(element))
         (*attributes)[element] = new map <QString, bool>();
 
@@ -137,9 +143,11 @@ void NCLStructure::addAttribute(QString element, QString attr, QString type, boo
     (*(*attributes)[element])[attr] = required;
 }
 
-void NCLStructure::addReference(QString element, QString attr, QString ref_element, QString ref_attr)
+void NCLStructure::addReference ( QString element, QString attr,
+                                  QString ref_element, QString ref_attr)
 {
-    AttributeReferences *ref = new AttributeReferences (element, attr, ref_element, ref_attr);
+    AttributeReferences *ref = new AttributeReferences (element, attr,
+                                                        ref_element, ref_attr);
     references->insert(element, ref);
 }
 
@@ -159,7 +167,8 @@ map <QString, char> * NCLStructure::getChildren (QString tagname) {
     return NULL;
 }
 
-vector <AttributeReferences*> NCLStructure::getReferences(QString element, QString attr){
+vector <AttributeReferences*> NCLStructure::getReferences ( QString element,
+                                                            QString attr){
     vector <AttributeReferences *> ref;
     foreach( AttributeReferences *value, references->values(element) ){
         if(value->getAttribute() == attr)
@@ -168,37 +177,5 @@ vector <AttributeReferences*> NCLStructure::getReferences(QString element, QStri
 
     return ref;
 }
-
-/************ NCL REFERENCE *********************
-AttributeReferences::AttributeReferences ( QString element, QString attr,
-                             QString ref_element, QString ref_attr)
-{
-    this->element = element;
-    this->attr = attr;
-    this->ref_element = ref_element;
-    this->ref_attr = ref_attr;
-}
-
-QString AttributeReferences::getElement()
-{
-    return this->element;
-}
-
-QString AttributeReferences::getAttribute()
-{
-    return this->attr;
-}
-
-QString AttributeReferences::getRefElement()
-{
-    return this->ref_element;
-}
-
-QString AttributeReferences::getRefAttribute()
-{
-    return this->ref_attr;
-}
-*/
-
 
 }} //end namespace
