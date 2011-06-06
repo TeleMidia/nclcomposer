@@ -1,5 +1,5 @@
 <RCC>
     <qresource prefix="/">
-        <file>config/NCL_STRUCTURE</file>
+        <file>../config/NCL_STRUCTURE</file>
     </qresource>
 </RCC>

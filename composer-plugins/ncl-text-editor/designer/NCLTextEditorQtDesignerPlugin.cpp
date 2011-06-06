@@ -1,4 +1,4 @@
-#include "NCLTextEditorPlugin.h"
+#include "NCLTextEditorQtDesignerPlugin.h"
 
 NCLTextEditorPlugin::NCLTextEditorPlugin()
 {
@@ -6,7 +6,7 @@ NCLTextEditorPlugin::NCLTextEditorPlugin()
 
 QString NCLTextEditorPlugin::name() const
 {
-    return "NCLTextEdit";
+    return "NCLTextEditor";
 }
 
 QString NCLTextEditorPlugin::group() const
@@ -26,7 +26,7 @@ QWidget* NCLTextEditorPlugin::createWidget (QWidget* parent)
 
 QString NCLTextEditorPlugin::includeFile() const
 {
-        return "NCLTextEdit.h";
+        return "NCLTextEditor.h";
 }
 
 QIcon NCLTextEditorPlugin::icon() const
