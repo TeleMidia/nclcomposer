@@ -114,15 +114,14 @@ namespace composer {
 
         entities.remove(_id);
         return true;
-
     }
 
-    /** \todo Save document hard disk. */
+    /** \todo Save document to hard disk. */
     bool Document::serialize()
     {
        QMutexLocker locker(&lockEntities);
-       qDebug() << this->toString();
+       qDebug() << Entity::toString(0);
        return true;
     }
 
-}}} //end namespace
+} } } //end namespace

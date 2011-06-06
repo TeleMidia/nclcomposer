@@ -3,6 +3,10 @@
 
 #include <QObject>
 #include <QProcess>
+#include <QFile>
+#include <QTextStream>
+
+#include <iostream>
 
 #include "PluginControl.h"
 #include "LanguageControl.h"
@@ -17,6 +21,7 @@ using namespace composer::core::util;
 
 namespace composer {
     namespace core {
+
         class DocumentControl : public QObject
         {
             Q_OBJECT
@@ -37,6 +42,7 @@ namespace composer {
             void saveDocument(QString location);
             void launchDocument(QString projectId, QString location);
         };
+
 } } //end namespace
 
 

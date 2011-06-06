@@ -51,7 +51,7 @@ namespace composer {
         }
     }
 
-    //! This call deletes the child and his children in a recursive way
+    //! This call deletes the child and its children in a recursive way
     bool Entity::deleteChild(Entity *entity) {
         QMutexLocker locker(&lockChildren);
         entity->setDeleteChildren(true);
@@ -84,10 +84,14 @@ namespace composer {
             }
     }
 
-    QString Entity::toString()
+    QString Entity::toString(int ntab)
     {
-        QString out = "<";
-        out .append(getType().toAscii());
+        QString out = "";
+        for(int i = 0; i < ntab; i++)
+            out += "\t";
+
+        out += "<";
+        out.append(getType().toAscii());
         foreach(QString attr, atts.keys()){
             out += " ";
             out.append(attr);
@@ -103,9 +107,12 @@ namespace composer {
         for (it = children.begin() ; it != children.end(); it++)
         {
                 Entity *child = it.value();
-                out += child->toString();
+                out += child->toString(ntab+1);
         }
-        out += "\n</";
+        out += "\n";
+        for(int i = 0; i < ntab; i++)
+            out += "\t";
+        out += "</";
         out += getType();
         out += ">\n";
         return out;

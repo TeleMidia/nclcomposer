@@ -104,7 +104,7 @@ protected:
 
     void print();
 
-    QString toString();
+    QString toString(int ntabs);
 
 public:
 

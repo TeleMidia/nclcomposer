@@ -68,6 +68,7 @@ namespace composer {
 
         public slots:
             void launchDocument(Document *doc);
+            void saveDocument(QString location);
 
         private slots:
             void sendBroadcastMessage(const char *slot, void *payload);

@@ -271,4 +271,16 @@ void PluginControl::sendBroadcastMessage(const char* slot, void *obj)
 
 }
 
+void PluginControl::saveDocument(QString location)
+{
+    QList<IPlugin*>::iterator it;
+    QList<IPlugin*> instances = pluginInstances.values(location);
+
+    for (it = instances.begin(); it != instances.end(); it++)
+    {
+       IPlugin *inst = *it;
+       inst->saveSubsession();
+    }
+}
+
 } }//end namespace

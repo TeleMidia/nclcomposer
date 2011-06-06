@@ -53,7 +53,7 @@ void DocumentControl::launchDocument(QString projectId, QString location)
 
     QString ext = location;
     ext = ext.remove(0, ext.lastIndexOf(".")+1);
-    LanguageType type = Utilities::getLanguageTypeByExtension(ext);
+    LanguageType type = Utilities::getLanguageTypeByExtension( ext );
 
     if(type == NONE)
     {
@@ -69,9 +69,9 @@ void DocumentControl::launchDocument(QString projectId, QString location)
         return;
     }
 
-    /*Requests the LanguageProfile associated with this DocumentType */
+    /* Requests the LanguageProfile associated with this DocumentType */
     ILanguageProfile *profile = LanguageControl::getInstance()->
-                                getProfileFromType(type);
+                                    getProfileFromType(type);
 
     if (!profile)
     {
@@ -95,7 +95,6 @@ void DocumentControl::launchDocument(QString projectId, QString location)
 
     PluginControl::getInstance()->launchDocument(doc);
     openDocuments[location] = doc;
-
     emit endOpenDocument();
 
 }
@@ -103,7 +102,27 @@ void DocumentControl::launchDocument(QString projectId, QString location)
 void DocumentControl::saveDocument(QString location)
 {
     Document *doc = openDocuments.value(location);
-    doc->serialize();
+    QFile fout(location + ".cp");
+
+    qDebug() << "Trying to save: " << location;
+    if(!fout.exists())
+    {
+        qDebug() << "The file (" << location << ") doesn't exists. It will be\
+                    created.";
+    }
+
+    if( !fout.open( QIODevice::WriteOnly ) )
+    {
+       // It could not open
+       qDebug() << "Failed to open file (" <<  location << ")";
+       return;
+    }
+
+    QTextStream stream( &fout );
+    qDebug() << doc->toString(0);
+    stream << doc->toString(0);
+    fout.close();
 }
+
 } }//end namespace
 

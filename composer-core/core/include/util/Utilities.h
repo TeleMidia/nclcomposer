@@ -8,7 +8,7 @@ typedef enum {
       NCL,
       SMIL,
       HTML,
-      NONE,
+      NONE
 }LanguageType;
 
 namespace composer {
