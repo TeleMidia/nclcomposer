@@ -2,7 +2,7 @@
 #define LAYOUTPLUGIN_H
 
 #include <core/extensions/IPlugin.h>
-using namespace composer::core::extension::plugin;
+using namespace composer::extension;
 
 #include "ui/mainwindow.h"
 #include "ui/view/layoutview.h"

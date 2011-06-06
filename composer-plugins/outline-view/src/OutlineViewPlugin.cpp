@@ -2,6 +2,10 @@
 
 #include "core/modules/LanguageControl.h"
 
+namespace composer {
+    namespace plugin {
+        namespace outline {
+
 OutlineViewPlugin::OutlineViewPlugin()
 {
     window = new NCLTreeWidget(0);
@@ -139,3 +143,5 @@ void OutlineViewPlugin::itemSelectionChanged()
         emit sendBroadcastMessage("changeSelectedEntity", selectedId);
     }
 }
+
+}}} //end namespace

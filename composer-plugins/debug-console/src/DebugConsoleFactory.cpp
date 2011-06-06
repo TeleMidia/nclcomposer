@@ -1,5 +1,8 @@
 #include "DebugConsoleFactory.h"
 
+namespace composer {
+    namespace plugin {
+        namespace debug {
 
 DebugConsoleFactory::DebugConsoleFactory()
 {
@@ -66,3 +69,5 @@ void DebugConsoleFactory::applyValues()
 }
 
 Q_EXPORT_PLUGIN2(DebugConsole,DebugConsoleFactory)
+
+} } } //end namespace

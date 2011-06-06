@@ -5,7 +5,11 @@
 #include "DebugConsolePlugin.h"
 
 #include <core/extensions/IPluginFactory.h>
-using namespace composer::core::extension::plugin;
+using namespace composer::extension;
+
+namespace composer {
+    namespace plugin {
+        namespace debug {
 
 class DebugConsoleFactory : public QObject,
                             public IPluginFactory
@@ -23,7 +27,7 @@ class DebugConsoleFactory : public QObject,
 
          QList<LanguageType> getSupportedLanguages();
 
-         QString id()const;
+         QString id() const;
 
          QString name() const;
 
@@ -36,5 +40,7 @@ class DebugConsoleFactory : public QObject,
          void applyValues();
 
 };
+
+} } } //end namespace
 
 #endif // DEBUGCONSOLE_H

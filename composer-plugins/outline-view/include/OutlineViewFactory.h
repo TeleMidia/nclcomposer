@@ -3,10 +3,14 @@
 #define OUTLINEVIEWPLUGINFACTORY_H
 
 #include <core/extensions/IPluginFactory.h>
-using namespace composer::core::extension::plugin;
+using namespace composer::extension;
 
 
 #include "OutlineViewPlugin.h"
+
+namespace composer {
+    namespace plugin {
+        namespace outline {
 
 /*!
  \brief Handles the creation and deletion of OutlineView objects.
@@ -117,5 +121,7 @@ class OutlineViewFactory : public QObject, public IPluginFactory
          void applyValues();
 
 };
+
+}}} //end namespace
 
 #endif // OUTLINEVIEWPLUGINFACTORY_H

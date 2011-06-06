@@ -1,5 +1,47 @@
-This is NCL Editor, a advanced text editor for NCL Language.
+NCL Text Editor README
+=====================
+This is NCL Text Editor, an advanced text editor for NCL Language.
 
-It uses QScintilla as the main API to colourize, autocomplete and other
-features.
+NCL Text Editor is based on QScintilla as the main API to colourize,
+autocomplete and other advanced features.
 
+To see how to update the QScintilla code go to deps/HOW_TO_UPDATE_QSCINTILLA.
+
+Feedback
+--------
+TODO
+
+Installation
+------------
+TODO
+
+Documentation
+-------------
+TODO
+
+Supported platforms
+-------------------
+Currently we have support for:
+- Windows
+- Linux
+- MacOSX 10.6
+
+The specific platforms that have been used for testing are:
+- Windows: Windows Vista.
+- MacOSX 10.6: Recent Core.
+- Linux: Ubuntu 10.10.
+
+Availability
+------------
+NCL Text Editor is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+LibPlayer is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with LibPlayer.  If not, see <http://www.gnu.org/licenses/>.

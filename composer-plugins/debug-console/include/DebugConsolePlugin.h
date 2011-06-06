@@ -8,7 +8,11 @@
 #include <QListWidgetItem>
 
 #include <core/extensions/IPlugin.h>
-using namespace composer::core::extension::plugin;
+using namespace composer::extension;
+
+namespace composer {
+    namespace plugin {
+        namespace debug {
 
 class DebugConsolePlugin : public IPlugin
 {
@@ -35,4 +39,5 @@ class DebugConsolePlugin : public IPlugin
         void sendToAll();
 };
 
+} } }//end namespace
 #endif // DEBUGCONSOLEPLUGIN_H

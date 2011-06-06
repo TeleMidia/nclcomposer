@@ -2,7 +2,7 @@
 #define LAYOUTPLUGINFACTORY_H
 
 #include "core/extensions/IPluginFactory.h"
-using namespace composer::core::extension::plugin;
+using namespace composer::extension;
 
 #include "layoutplugin.h"
 

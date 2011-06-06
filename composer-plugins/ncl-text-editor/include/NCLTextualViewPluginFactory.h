@@ -2,7 +2,7 @@
 #define NCLTEXTUALVIEWPLUGINFACTORY_H
 
 #include <core/extensions/IPluginFactory.h>
-using namespace composer::core::extension::plugin;
+using namespace composer::extension;
 
 
 #include "NCLTextualViewPlugin_global.h"
@@ -12,8 +12,12 @@ namespace Ui {
     class TextPluginPreferencesWidget;
 }
 
+namespace composer {
+    namespace plugin {
+        namespace textual {
+
 class NCLTextualViewPluginFactory : public QObject,
-                                                      public IPluginFactory
+                                    public IPluginFactory
 {
     Q_OBJECT
     Q_INTERFACES(IPluginFactory)
@@ -38,10 +42,48 @@ class NCLTextualViewPluginFactory : public QObject,
 
          void applyValues();
 
+         /*!
+          \brief Returns the version of Textual View implementation.
+
+          \return QString the version number as string.
+         */
+         QString version() { return "1.0"; }
+         /*!
+          \brief Returns the core version that is compatible with this plugin.
+
+          \return QString the core version that is compatible with this plugin
+                    as a string.
+         */
+         QString compatVersion() {return "1.0";}
+         /*!
+          \brief Returns the vendor of TextualView (i.e. Telemidia Lab).
+
+          \return QString the name of the vendor of OutlineView.
+         */
+         QString vendor() {return "Telemidia Lab";}
+         /*!
+          \brief Returns the copyright of TextualView.
+
+          \return QString the copyright of TextualView.
+         */
+         QString copyright() {return "Telemidia Lab";}
+         /*!
+           \brief Returns the license of TextualView plugin (i.e. GPLv3).
+           \todo The complete license description.
+
+           \return QString the license of TextualView.
+         */
+         QString license() {return "GPLv3";}
+         QString description() {return "Unknown";}
+         QString url() {return "Unknown";}
+         QString category() {return "NCL";}
+
 private:
     QFrame *prefPageWidget;
     Ui::TextPluginPreferencesWidget *prefPageUi;
 
 };
+
+}}} //end namespace
 
 #endif // NCLTEXTUALVIEWPLUGINFACTORY_H

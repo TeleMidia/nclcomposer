@@ -1,6 +1,10 @@
 #include "NCLTextualViewPluginFactory.h"
 #include "ui_TextualPluginPreferencesWidget.h"
 
+namespace composer {
+    namespace plugin {
+        namespace textual {
+
 NCLTextualViewPluginFactory::NCLTextualViewPluginFactory()
 {
     prefPageWidget = new QFrame();
@@ -63,3 +67,5 @@ void NCLTextualViewPluginFactory::applyValues()
 }
 
 Q_EXPORT_PLUGIN2(ncl_textual_plugin,NCLTextualViewPluginFactory)
+
+}}} // end namespace

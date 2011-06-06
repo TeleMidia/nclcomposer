@@ -1,5 +1,9 @@
 #include "OutlineViewFactory.h"
 
+namespace composer {
+    namespace plugin {
+        namespace outline {
+
 OutlineViewFactory::OutlineViewFactory()
 {
 }
@@ -58,3 +62,5 @@ void OutlineViewFactory::applyValues()
 }
 
 Q_EXPORT_PLUGIN2(outline_view, OutlineViewFactory)
+
+}}} //end namespace

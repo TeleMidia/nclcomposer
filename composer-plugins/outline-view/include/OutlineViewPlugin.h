@@ -5,7 +5,12 @@
 
 #include "NCLTreeWidget.h"
 #include <core/extensions/IPlugin.h>
-using namespace composer::core::extension::plugin;
+using namespace composer::extension;
+
+
+namespace composer {
+    namespace plugin {
+        namespace outline {
 
 class OutlineViewPlugin : public IPlugin
 {
@@ -41,5 +46,7 @@ private slots:
     void elementRemovedByUser(QString id);
     void itemSelectionChanged();
 };
+
+}}} //end namespace
 
 #endif // OUTLINEVIEWPLUGIN_H

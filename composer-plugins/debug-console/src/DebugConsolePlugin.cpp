@@ -1,5 +1,9 @@
 #include "DebugConsolePlugin.h"
 
+namespace composer {
+    namespace plugin {
+        namespace debug {
+
 DebugConsolePlugin::DebugConsolePlugin()
 {
     window = new QWidget();
@@ -34,7 +38,7 @@ void DebugConsolePlugin::onEntityAdded(QString ID, Entity *entity)
 {
     QString line = "PLUGIN (" + ID + ") added the Entity (" +
                    entity->getType() + " - " + entity->getUniqueId() +")";
-    list->addItem(new QListWidgetItem(line));
+    list->insertItem(0, new QListWidgetItem(line));
 }
 
 void DebugConsolePlugin::errorMessage(QString error)
@@ -82,3 +86,5 @@ void DebugConsolePlugin::sendToAll()
 
     emit sendBroadcastMessage("debugHasSendClearAll", NULL);
 }
+
+} } } //end namespace

@@ -1,5 +1,9 @@
 #include "NCLTextualViewPlugin.h"
 
+namespace composer {
+    namespace plugin {
+        namespace textual {
+
 NCLTextualViewPlugin::NCLTextualViewPlugin()
 {
     window = new NCLTextEditorMainWindow();
@@ -195,4 +199,4 @@ void NCLTextualViewPlugin::changeSelectedEntity(void *param){
     window->getTextEditor()->SendScintilla(QsciScintilla::SCI_SETFOCUS, true);
 }
 
-
+}}} //end namespace

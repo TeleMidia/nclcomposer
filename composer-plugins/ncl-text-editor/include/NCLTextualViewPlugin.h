@@ -6,7 +6,11 @@
 #include "NCLTextEditor.h"
 #include "NCLTextEditorMainWindow.h"
 #include <core/extensions/IPlugin.h>
-using namespace composer::core::extension::plugin;
+using namespace composer::extension;
+
+namespace composer {
+    namespace plugin {
+        namespace textual {
 
 class NCLTextualViewPlugin : public IPlugin
 {
@@ -36,5 +40,7 @@ public slots:
 
     void changeSelectedEntity(void* param);
 };
+
+}}} //end namespace
 
 #endif // DEBUGCONSOLEPLUGIN_H
