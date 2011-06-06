@@ -9,12 +9,22 @@ using namespace std;
 namespace composer{
     namespace core {
         namespace util {
+
+/*!
+ \brief Exception to inform that the creation of an element failed.
+*/
 class CreationFailed : public exception
 {
     private:
-        QString element;
-        QString id;
+        QString element; /*!< TODO */
+        QString id; /*!< TODO */
     public:
+        /*!
+         \brief
+
+         \param _element
+         \param _id
+        */
         CreationFailed(QString _element, QString _id) :
                 element(_element), id(_id) {}
         ~CreationFailed() throw() {}
