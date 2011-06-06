@@ -585,5 +585,7 @@ void ComposerMainWindow::saveCurrentDocument()
 {
      QString location = tabDocuments->tabToolTip(tabDocuments->currentIndex());
      DocumentControl::getInstance()->saveDocument(location);
+     PluginControl::getInstance()->saveDocument(location);
 }
+
 } } //end namespace
