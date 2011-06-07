@@ -5,7 +5,7 @@
 using namespace std;
 
 #include <QDebug>
-#include <qxml.h>
+#include <QtXml>
 #include <QHeaderView>
 #include <QMenu>
 #include <QAction>
@@ -27,7 +27,6 @@ class NCLTreeWidget: public QTreeWidget {
 
 private:
     QAction *insertNodeAct; /**< TODO */
-    QAction *changeAttributes; /**< TODO */
     QAction *removeNodeAct; /**< TODO */
     QAction *expandAllAct; /**< TODO */
     QMenu   *elementMenu; /**< TODO */

@@ -4,6 +4,7 @@ QT              += xml
 
 macx:LIBS+= -L$$quote(/Library/Application Support/Composer) \
         -lNCLLanguageProfile
+
 win32:LIBS+= -lNCLLanguageProfile
 
 INCLUDEPATH     +=  include \
@@ -21,5 +22,3 @@ SOURCES         =   src/NCLTreeWidget.cpp \
 
 INSTALLS        =   target
 
-FORMS += \
-    EditProperties.ui

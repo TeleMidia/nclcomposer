@@ -251,6 +251,7 @@ void NCLTextEditorMainWindow::createStatusBar()
 
 void NCLTextEditorMainWindow::createOutlineView()
 {
+#ifdef NCLEDITOR_STANDALONE
     outlineView = new NCLTreeWidget(this);
     //outlineView->setMaximumWidth(300);
     outlineView->setColumnCount(4);
@@ -278,6 +279,7 @@ void NCLTextEditorMainWindow::createOutlineView()
     connect( outlineView,
              SIGNAL(parserErrorNotify(QString, QString, int, int, int)),
              textEdit, SLOT(markError(QString, QString, int, int, int)) );
+#endif
 }
 
 void NCLTextEditorMainWindow::createProblemsView()
@@ -287,10 +289,12 @@ void NCLTextEditorMainWindow::createProblemsView()
     //problemsView->setMaximumHeight(150);
     addDockWidget(Qt::RightDockWidgetArea, problemsView);
 
+#ifdef NCLEDITOR_STANDALONE
     connect( outlineView,
              SIGNAL(parserErrorNotify(QString, QString, int, int, int)),
              problemsView,
              SLOT(addProblem(QString, QString, int, int, int)));
+#endif
 }
 
 void NCLTextEditorMainWindow::readSettings()
@@ -426,6 +430,7 @@ void NCLTextEditorMainWindow::gotoLineOf(QTreeWidgetItem *item, int column)
 
 //FIXME:    1. fix line element line numbers.
 void NCLTextEditorMainWindow::insertElement(){
+#ifdef NCLEDITOR_STANDALONE
     bool ok;
     QList<QTreeWidgetItem*> selecteds = outlineView->selectedItems ();
     QTreeWidgetItem *item = selecteds.at (0);
@@ -526,6 +531,8 @@ void NCLTextEditorMainWindow::insertElement(){
 
         emit elementAdded(tagname, id, empty, false);
     }
+#endif
+
 }
 
 void NCLTextEditorMainWindow::createTextView() {

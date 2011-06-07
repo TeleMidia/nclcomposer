@@ -23,22 +23,22 @@ class OutlineViewFactory : public QObject, public IPluginFactory
 
     public:
          /*!
-          \brief
+          \brief Constructor.
 
          */
          OutlineViewFactory();
 
          /*!
-          \brief Creates
+          \brief Creates an OutlineViewPlugin instance.
 
-          \return IPlugin *
+          \return IPlugin* One NEW instance of OutlineViewPlugin.
          */
          IPlugin* createPluginInstance();
 
          /*!
-          \brief Destroy an instance of OutileView class.
+          \brief Destroy an instance of OutlineViewPlugin.
 
-          \param
+          \param IPlugin* the instance that must be destroyed.
          */
          void releasePluginInstance(IPlugin *);
 

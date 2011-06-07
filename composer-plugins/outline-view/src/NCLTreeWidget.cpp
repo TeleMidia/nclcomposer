@@ -1,9 +1,10 @@
 #include "NCLTreeWidget.h"
-
 #include "NCLStructure.h"
+
 using namespace composer::language;
 
 #include <QInputDialog>
+#include <QDialog>
 
 NCLTreeWidget::NCLTreeWidget(QWidget *parent) : QTreeWidget(parent)
 {
@@ -33,9 +34,6 @@ void NCLTreeWidget::createActions ()
              this, SLOT(userAddNewElement()));
     addAction(insertNodeAct);
 
-    changeAttributes = new QAction(tr("Change attributes"), this);
-    addAction(changeAttributes);
-
     removeNodeAct = new QAction( QIcon(":/images/delete.png"),
                                  tr("&Remove Selected element"),
                                  this);
@@ -54,7 +52,6 @@ void NCLTreeWidget::createMenus ()
 {
     elementMenu = new QMenu(this);
     elementMenu->addAction(insertNodeAct);
-    elementMenu->addAction(changeAttributes);
     elementMenu->addAction(removeNodeAct);
     elementMenu->addSeparator();
     elementMenu->addAction(expandAllAct);
@@ -279,10 +276,11 @@ void NCLTreeWidget::updateItem(QTreeWidgetItem *item, QString tagname,
     }
 
     item->setIcon(0, icon);
+    /*
     if(name != "")
     {
         tagname += "(" + name + ")";
-    }
+    }*/
     item->setText(0, tagname);
     //item->setText(2, id);
     item->setText(1, strAttrList);

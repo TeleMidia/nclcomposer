@@ -1,9 +1,10 @@
 #ifndef NCLSAXHANDLER_H
 #define NCLSAXHANDLER_H
 
-#include <QtXml/QtXml>
+#include <QtXml>
 
 #include <QList>
+#include <QtGui>
 #include <QMessageBox>
 #include <NCLTreeWidget.h>
 

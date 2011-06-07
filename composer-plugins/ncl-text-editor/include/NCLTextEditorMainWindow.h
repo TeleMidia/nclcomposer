@@ -31,7 +31,11 @@ using namespace std;
 #include <QListWidget>
 
 #include "NCLProblemsView.h"
+
+#ifdef NCLEDITOR_STANDALONE
 #include "NCLTreeWidget.h"
+#endif
+
 #include "NCLTextEditor.h"
 //#include "LayoutView.h"
 //#include "Preferences.h"
@@ -46,7 +50,9 @@ class NCLTextEditorMainWindow : public QMainWindow
 public:
         explicit NCLTextEditorMainWindow(QWidget *parent = 0);
         NCLTextEditor *getTextEditor() {return this->textEdit;}
+#ifdef NCLEDITOR_STANDALONE
         NCLTreeWidget *getNCLTreeWidget() {return this->outlineView; }
+#endif
 
 protected:
     void closeEvent(QCloseEvent *event);
@@ -105,7 +111,10 @@ private:
 /** VIEWS **/
     /** Outline View */
     QDockWidget *dockOutlineView;
+    
+#ifdef NCLEDITOR_STANDALONE
     NCLTreeWidget *outlineView;
+#endif
     QMenu *nodeMenu;
     QAction *insertNodeChildAct;
 
