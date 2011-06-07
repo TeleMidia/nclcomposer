@@ -6,6 +6,7 @@
 #include <QWidget>
 
 #include "ui_PropertyEditorWidget.h"
+#include "QLineEditFilter.h"
 
 /*!
  \brief PropertyEditor is a Widget that allows to edit individual properties
@@ -18,6 +19,7 @@ private:
     Ui::PropertyEditorWidget *ui; /*!< TODO */
     QMap <QString, int> propertyToLine; /*!< TODO */
     QVector <QTableWidgetItem *> currentItems; /*!< TODO */
+
 public:
     /*!
      \brief Constructor.

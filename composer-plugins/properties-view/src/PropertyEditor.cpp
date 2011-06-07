@@ -5,9 +5,9 @@
 using namespace composer::language;
 
 PropertyEditor::PropertyEditor(QWidget *parent):
-        QWidget(parent),
-        ui(new Ui::PropertyEditorWidget)
+        QWidget(parent)
 {
+    ui = new Ui::PropertyEditorWidget();
     ui->setupUi(this);
 }
 

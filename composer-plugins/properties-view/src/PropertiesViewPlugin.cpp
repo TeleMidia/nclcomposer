@@ -13,7 +13,7 @@ PropertiesViewPlugin::PropertiesViewPlugin()
 
 PropertiesViewPlugin::~PropertiesViewPlugin()
 {
-    delete window;
+    //delete window;
 }
 
 QWidget* PropertiesViewPlugin::getWidget()
