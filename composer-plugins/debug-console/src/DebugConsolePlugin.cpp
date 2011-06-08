@@ -43,14 +43,14 @@ void DebugConsolePlugin::onEntityAdded(QString ID, Entity *entity)
 
 void DebugConsolePlugin::errorMessage(QString error)
 {
-    list->addItem(new QListWidgetItem(error));
+    list->insertItem(0, new QListWidgetItem(error));
 }
 
 void DebugConsolePlugin::onEntityChanged(QString ID, Entity * entity)
 {
     QString line = "PLUGIN (" + ID + ") changed the Entity (" +
                     entity->getType() + " - " + entity->getUniqueId() +")";
-    list->addItem(new QListWidgetItem(line));
+    list->insertItem(0, new QListWidgetItem(line));
 }
 
 void DebugConsolePlugin::onEntityAboutToRemove(Entity *)
@@ -62,7 +62,7 @@ void DebugConsolePlugin::onEntityRemoved(QString ID, QString entityID)
 {
     QString line = "PLUGIN (" + ID + ") removed Entity (" +
                    entityID + ")";
-    list->addItem(new QListWidgetItem(line));
+    list->insertItem(0, new QListWidgetItem(line));
 }
 
 bool DebugConsolePlugin::saveSubsession()
