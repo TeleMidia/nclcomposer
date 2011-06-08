@@ -46,15 +46,15 @@ void MessageControl::onAddEntity( QString type,
 }
 
 void MessageControl::onEditEntity(Entity *entity,
-                                  QMap<QString,QString>& atts, bool force) {
-    IPlugin *plugin = qobject_cast<IPlugin *>
-                                                    (QObject::sender());
+                                  QMap<QString,QString> atts, bool force) {
+    IPlugin *plugin = qobject_cast<IPlugin *>(QObject::sender());
+
     if(plugin) {
         QString pluginID = plugin->getPluginInstanceID();
         try {
             /*! \todo Call validator to check */
            entity->setAtrributes(atts);
-           emit entityChanged(pluginID,entity);
+           emit entityChanged(pluginID, entity);
         }catch(exception e){
             plugin->errorMessage(e.what());
             return;

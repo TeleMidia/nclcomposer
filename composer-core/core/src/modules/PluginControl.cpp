@@ -167,7 +167,8 @@ void PluginControl::launchNewPlugin(IPlugin *plugin,
     connect(mControl,SIGNAL(entityAdded(QString, Entity*)),
             plugin, SLOT(onEntityAdded(QString, Entity*)));
     connect(mControl,SIGNAL(entityChanged(QString, Entity*)),
-            plugin,SLOT(onEntityChanged(QString, Entity*)));
+            plugin,SLOT(onEntityChanged(QString, Entity*)),
+            Qt::DirectConnection);
     connect(mControl,SIGNAL(entityRemoved(QString, QString)),
             plugin,SLOT(onEntityRemoved(QString, QString)));
     connect(mControl,SIGNAL(aboutToRemoveEntity(Entity*)),
@@ -178,9 +179,9 @@ void PluginControl::launchNewPlugin(IPlugin *plugin,
             SIGNAL(addEntity(QString, QString, QMap<QString,QString>&, bool)),
             mControl,
             SLOT(onAddEntity(QString, QString, QMap<QString,QString>&, bool)));
-    connect(plugin,SIGNAL(setAttributes(Entity*, QMap<QString,QString>&, bool)),
+    connect(plugin, SIGNAL(setAttributes(Entity*, QMap<QString,QString>, bool)),
             mControl,
-            SLOT(onEditEntity(Entity*, QMap<QString,QString>&, bool)));
+            SLOT(onEditEntity(Entity*, QMap<QString,QString>, bool)));
     connect(plugin,SIGNAL(removeEntity(Entity*,bool)),
             mControl,
             SLOT(onRemoveEntity(Entity*,bool)));

@@ -152,7 +152,7 @@ namespace composer {
              /*!
                TODO:
              */
-             void setAttributes( Entity *, QMap<QString,QString>& atts,
+             void setAttributes( Entity *, QMap<QString,QString> atts,
                                  bool force);
 
              /*!

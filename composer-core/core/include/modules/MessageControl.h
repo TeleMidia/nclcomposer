@@ -34,7 +34,7 @@ namespace composer {
                               QString parentEntityId, QMap<QString,QString>& atts,
                               bool force);
             void onEditEntity(Entity *entity,
-                              QMap<QString,QString>& atts, bool force);
+                              QMap<QString,QString> atts, bool force);
             void onRemoveEntity(Entity *, bool force);
 
         signals:
