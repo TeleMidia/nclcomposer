@@ -15,10 +15,14 @@
 */
 class PropertyEditor : public QWidget
 {
+    Q_OBJECT
+
 private:
     Ui::PropertyEditorWidget *ui; /*!< TODO */
     QMap <QString, int> propertyToLine; /*!< TODO */
     QVector <QTableWidgetItem *> currentItems; /*!< TODO */
+
+    bool internalPropertyChange;
 
 public:
     /*!
@@ -43,7 +47,7 @@ public:
 
      \param tagname The current tagname.
     */
-    void setTagname(QString tagname);
+    void setTagname(QString tagname, QString name);
 
     /*!
      \brief Set a value of an attribute.
@@ -52,6 +56,14 @@ public:
      \param value The new Value of the property.
     */
     void setAttributeValue(QString property, QString value);
+
+private slots:
+    void udpateEntityWithCellContent(int row, int column);
+
+signals:
+    void propertyChanged(QString property, QString value);
+
+
 };
 
 #endif // PROPERTYEDITOR_H

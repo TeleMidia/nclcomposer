@@ -25,6 +25,8 @@ class PropertiesViewPlugin : public IPlugin
     private:
         QListWidget *list; /*!< TODO */
         PropertyEditor *window; /*!< TODO */
+        Entity *currentEntity;
+
     public:
         /*!
          \brief Constructor.
@@ -97,6 +99,9 @@ class PropertiesViewPlugin : public IPlugin
          \param
         */
         void changeSelectedEntity (void*);
+
+    private slots:
+        void updateCurrentEntityAttr(QString attr, QString value);
 };
 
 } } }//end namespace
