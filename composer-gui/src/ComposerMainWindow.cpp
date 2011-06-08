@@ -203,7 +203,7 @@ void ComposerMainWindow::addPluginWidget(IPluginFactory *fac, IPlugin *plugin,
         w = new QMainWindow(tabDocuments);
         w->setDockNestingEnabled(true);
         w->setTabPosition(Qt::AllDockWidgetAreas, QTabWidget::West);
-        int index = tabDocuments->addTab(w,projectId + "(" + documentId + ")");
+        int index = tabDocuments->addTab(w, projectId + "(" + documentId + ")");
         tabDocuments->setTabToolTip(index, location);
         documentsWidgets[location] = w;
     }
@@ -214,11 +214,14 @@ void ComposerMainWindow::addPluginWidget(IPluginFactory *fac, IPlugin *plugin,
                       QDockWidget::DockWidgetMovable);
     QWidget *pW = plugin->getWidget();
     dock->setWidget(pW);
+    dock->setObjectName(fac->id());
     qDebug() << n;
     if (n%2)
         w->addDockWidget(Qt::RightDockWidgetArea, dock, Qt::Vertical);
     else
         w->addDockWidget(Qt::LeftDockWidgetArea, dock, Qt::Vertical);
+
+    dock->setMinimumSize(150, 150);
     tabDocuments->setCurrentWidget(w);
 
     if(firstDock.contains(location)) {
@@ -464,9 +467,6 @@ void ComposerMainWindow::createActions() {
     connect(fullScreenViewAct,SIGNAL(triggered()),this,
             SLOT(showCurrentWidgetFullScreen()));
 
-    separatorViewAct = new QAction(this);
-    separatorViewAct->setSeparator(true);
-
     editPreferencesAct = new QAction(tr("&Preferences"), this);
     editPreferencesAct->setStatusTip(tr("Edit preferences"));
     connect (editPreferencesAct, SIGNAL(triggered()), this,
@@ -477,6 +477,14 @@ void ComposerMainWindow::createActions() {
 
     connect(ui->toolButton_3, SIGNAL(clicked()), this, SLOT(close()));
     connect(ui->action_Exit, SIGNAL(triggered()), this, SLOT(close()));
+
+    saveCurrentPluginsLayout = new QAction(tr("Save plugins Layout"), this);
+    connect(    saveCurrentPluginsLayout, SIGNAL(triggered()),
+                this, SLOT(saveCurrentLayout()));
+
+    restorePluginsLayout = new QAction(tr("Restore plugins Layout"), this);
+    connect(restorePluginsLayout, SIGNAL(triggered()),
+                this, SLOT(restoreSavedLayout()));
 }
 
 void ComposerMainWindow::createStatusBar()
@@ -502,8 +510,11 @@ void ComposerMainWindow::updateViewMenu()
 {
     ui->menu_Window->clear();
     ui->menu_Window->addAction(projectViewAct);
-    ui->menu_Window->addAction(separatorViewAct);
+    ui->menu_Window->addSeparator();
     ui->menu_Window->addAction(fullScreenViewAct);
+    ui->menu_Window->addSeparator();
+    ui->menu_Window->addAction(saveCurrentPluginsLayout);
+    ui->menu_Window->addAction(restorePluginsLayout);
     projectViewAct->setChecked(fileSystemDock->isVisible());
 }
 
@@ -586,6 +597,32 @@ void ComposerMainWindow::saveCurrentDocument()
      QString location = tabDocuments->tabToolTip(tabDocuments->currentIndex());
      DocumentControl::getInstance()->saveDocument(location);
      PluginControl::getInstance()->saveDocument(location);
+}
+
+void ComposerMainWindow::saveCurrentLayout()
+{
+    if(tabDocuments->count()) //see if there is any open document
+    {
+        QString location = tabDocuments->tabToolTip(tabDocuments->currentIndex());
+        QMainWindow *window = documentsWidgets[location];
+        QSettings settings("telemidia", "composer");
+        settings.beginGroup("pluginslayout");
+        settings.setValue("pluginsstate", window->saveState(0));
+        settings.endGroup();
+    }
+}
+
+void ComposerMainWindow::restoreSavedLayout()
+{
+    if(tabDocuments->count()) //see if there is any open document
+    {
+        QString location = tabDocuments->tabToolTip(tabDocuments->currentIndex());
+        QMainWindow *window = documentsWidgets[location];
+        QSettings settings("telemidia", "composer");
+        settings.beginGroup("pluginslayout");
+        window->restoreState(settings.value("pluginsstate").toByteArray());
+        settings.endGroup();
+    }
 }
 
 } } //end namespace

@@ -76,10 +76,11 @@ private:
     QAction *newDocumentAct; /*!< Action to create a new Document. */
     QAction *aboutComposerAct; /*!< Action to show About Composer. */
     QAction *fullScreenViewAct; /*!< Action to show Composer in FullScreen. */
-    QAction *separatorViewAct; /*!< TODO */
     QAction *projectViewAct; /*!< TODO */
     QAction *editPreferencesAct; /*!< TODO */
     QAction *switchWS; /*!< TODO */
+    QAction *saveCurrentPluginsLayout;
+    QAction *restorePluginsLayout;
 
     QListWidget *profilesExt; /*!< TODO */
     QTreeWidget *pluginsExt; /*!< TODO */
@@ -229,6 +230,10 @@ private slots:
 
     */
     void slotTimeout();
+
+    void saveCurrentLayout();
+    void restoreSavedLayout();
+
 
 public:
     /*!
