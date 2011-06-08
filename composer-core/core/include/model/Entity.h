@@ -57,11 +57,14 @@ protected:
         atts[name] = value;
     }
 
-    inline void setAtrributes(QMap<QString,QString> &atts) {
+    inline void setAtrributes(QMap<QString,QString> &newatts) {
         QMutexLocker locker(&lockAtts);
-        for (QMap<QString,QString>::iterator it = atts.begin() ;
-        it != atts.end() ; it++)
-            this->setAttribute(it.key(), it.value());
+        // this->atts.clear(); // Should it??!
+        for ( QMap<QString,QString>::iterator it = newatts.begin();
+                it != newatts.end(); ++it)
+        {
+            this->atts[it.key()] = it.value();
+        }
     }
 
     inline void setType(QString type) {
