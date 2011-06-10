@@ -9,7 +9,7 @@
     * Improve attribute navigation performance.
 
 2. Contextual code sugestion:
-    * Sugestion of attribute values. (How?!)
+    * Sugestion of default attribute values. (OK!)
     * Sugestion of references.
 
 3. Validation.

@@ -5,7 +5,7 @@ UI_DIR      =   .ui
 TEMPLATE    =   app
 TARGET      =   bin/ncl_textual_plugin
 QT          +=  xml
-CONFIG      +=  release
+CONFIG      +=  debug
 
 DEFINES     +=  NCLEDITOR_STANDALONE=\"1\"
 

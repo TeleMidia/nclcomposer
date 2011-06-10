@@ -85,6 +85,13 @@ void QsciNCLAPIs::updateAutoCompletionList( const QStringList &context,
         suggesting = SUGGESTING_ATTRIBUTE_VALUES;
         QString tagname = getCurrentTagName(pos);
         QString attribute = getCurrentAttribute(pos);
+        QString datatype = nclStructure->getAttributeDatatype(tagname, attribute);
+
+        qDebug() << tagname << ":" << attribute << " -> datatype=" << datatype;
+
+        QStringList defaultSuggestion =
+                nclStructure->getDatatypeDefaultSuggestions(datatype);
+        list.append(defaultSuggestion);
 
         vector <AttributeReferences *>
                 references = nclStructure->getReferences(tagname, attribute);
