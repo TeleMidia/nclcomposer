@@ -4,19 +4,22 @@
 namespace composer {
     namespace core {
 
-MessageControl::MessageControl(Document *doc) {
+MessageControl::MessageControl(Document *doc)
+{
     this->doc = doc;
     /* qDebug() <<  "MessageControl::MessageControl("
             <<  doc->getAttribute("id") << ")";*/
 }
 
-MessageControl::~MessageControl() {
+MessageControl::~MessageControl()
+{
 
 }
 
 void MessageControl::onAddEntity( QString type,
                QString parentEntityId, QMap<QString,QString>& atts,
-               bool force) {
+               bool force)
+{
 
     /* Cast to IPlugin to make sure it's a plugin */
     IPlugin *plugin = qobject_cast<IPlugin *> (QObject::sender());
@@ -46,7 +49,8 @@ void MessageControl::onAddEntity( QString type,
 }
 
 void MessageControl::onEditEntity(Entity *entity,
-                                  QMap<QString,QString> atts, bool force) {
+                                  QMap<QString,QString> atts, bool force)
+{
     IPlugin *plugin = qobject_cast<IPlugin *>(QObject::sender());
 
     if(plugin) {
@@ -67,7 +71,8 @@ void MessageControl::onEditEntity(Entity *entity,
 }
 
 void MessageControl::onRemoveEntity( Entity *entity,
-                                     bool force) {
+                                     bool force)
+{
     IPlugin *plugin = qobject_cast<IPlugin *> (QObject::sender());
     if(plugin) {
         QString pluginID = plugin->getPluginInstanceID();

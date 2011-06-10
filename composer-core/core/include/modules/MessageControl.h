@@ -31,7 +31,8 @@ namespace composer {
 
         public slots:
             void onAddEntity( QString type,
-                              QString parentEntityId, QMap<QString,QString>& atts,
+                              QString parentEntityId,
+                              QMap<QString,QString>& atts,
                               bool force);
             void onEditEntity(Entity *entity,
                               QMap<QString,QString> atts, bool force);
