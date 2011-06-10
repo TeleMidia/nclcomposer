@@ -8,6 +8,7 @@
 #include <QtScript/QScriptValue>
 #include <QtScript/QScriptEngine>
 #include <map>
+#include <QStringList>
 using namespace std;
 
 #include <util/AttributeReferences.h>
@@ -29,7 +30,9 @@ private:
     static NCLStructure *instance; /**< TODO */
     map <QString, map <QString, bool> *> *attributes; /**< TODO */
     map <QString, map <QString, char> *> *nesting; /**< TODO */
-    map <QString, QString > *dataType; /**< TODO */
+    map <QString, QString > *dataTypes; /**< TODO */
+    map <QString, QStringList> *dataTypeDefaultSuggestions;
+    map <QString, map <QString, QString> *> *attributesDatatype; /**< TODO */
     QMultiMap <QString, AttributeReferences* > *references; /**< TODO */
 
     //Default Constructor
@@ -102,6 +105,16 @@ public:
                        QString ref_attr);
 
     /**
+     *
+     */
+    void addDatatype( QString datatype,
+                      QString regex);
+
+    void addDatatypeDefaultSuggestions(QString datatype, QString values);
+
+    QStringList getDatatypeDefaultSuggestions(QString datatype);
+
+    /**
      * @brief
      *
      * @return map<QString, map<QString, char> *>
@@ -133,6 +146,8 @@ public:
              * @return vector<AttributeReferences *>
             */
             getReferences (QString element, QString attr);
+
+    QString getAttributeDatatype(QString element, QString name);
 };
 
 }} //end namespace

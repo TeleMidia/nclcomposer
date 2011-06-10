@@ -8,17 +8,21 @@ NCLStructure *NCLStructure::instance = NULL;
 NCLStructure::NCLStructure() {
     attributes = new map <QString, map <QString, bool > * > ();
     nesting = new map <QString, map <QString, char > * > ();
-    dataType = new map <QString, QString> ();
+    dataTypes = new map <QString, QString> ();
+    dataTypeDefaultSuggestions = new map <QString, QStringList>();
+    attributesDatatype = new map <QString, map<QString, QString> *> ();
     references = new QMultiMap <QString, AttributeReferences*> ();
 }
 
 NCLStructure *NCLStructure::getInstance(){
-    if(instance == NULL){
+    if(instance == NULL) {
         instance = new NCLStructure();
     }
     return instance;
 }
 
+// TODO: This function should be based on lex and yacc to a better
+// implementation.
 void NCLStructure::loadStructure(){
     QFile fInput ( NCLSTRUCTURE_FILE );
     if(!fInput.open(QIODevice::ReadOnly)){
@@ -35,10 +39,22 @@ void NCLStructure::loadStructure(){
         if(tokens.size() == 0) {
             continue;
         }
-        if(tokens[0] == "datatype"){
-            qDebug() << "I'm reading a new DATATYPE element - This is not \
-                    supported yet." << endl;
-
+        if(tokens[0] == "datatype") {
+            bool error = false;
+            if(tokens.size() >= 3) {
+                qDebug() << "I'm reading a new DATATYPE element " << tokens[0]
+                         << tokens[1] << " " << tokens[2];
+                addDatatype(tokens[1], tokens[2]);
+                if (tokens.size() >= 4) {
+                    addDatatypeDefaultSuggestions(tokens[1], tokens[3]);
+                }
+            }
+            else error = true;
+            if (error)
+            {
+                qErrnoWarning("element primitive must have exactly 2 or 3 \
+                          arguments (NAME, REGEX, DEFAULT_SUGGESTIONS)");
+            }
         } else if(tokens[0] == "element"){
 //            qDebug() << "I'm reading a new ELEMENT element";
 //            qDebug() << "Adding Element -- " << tokens[1];
@@ -79,43 +95,56 @@ void NCLStructure::loadStructure(){
     fInput.close();
 }
 
+// TODO: This function should be based on lex and yacc to a better
+// implementation.
 vector <QString> NCLStructure::parseLine(QString line){
     vector <QString> ret;
     QChar ch;
     int size = line.size(), i = 0;
     QString token;
-    bool reading_attributes = false;
+    bool reading_attributes = false, readingstring = false;
 
     while (i < line.size()) {
         ch = line.at(i);
-
-        if (ch == '/') {
-            if (i+1 < size && line[i+1] == '/') {
-                // comment was found, it will ignore the remaining caracteres
-                // in the line
-                token = "//";
-                break;
+        if(!readingstring){
+            if (ch == '/') {
+                if (i+1 < size && line[i+1] == '/') {
+                    // comment was found, it will ignore the remaining
+                    // caracteres in the line
+                    token = "//";
+                    break;
+                }
+            }
+            else if (ch == '\"')
+            {
+                readingstring = true;
+            }
+            else if(ch == '(') {
+                if(token != "")
+                    ret.push_back(token);
+                token = "";
+                reading_attributes = true;
+            }
+            else if(ch == ',') {
+                if(reading_attributes && token != "")
+                    ret.push_back(token);
+                token = "";
+            }
+            else if (ch == ')') {
+                if(reading_attributes && token != "")
+                    ret.push_back(token);
+                reading_attributes = false;
+                token = "";
+            }
+            else {
+                if(!ch.isSpace())
+                    token.append(line.at(i));
             }
         }
-        else if(ch == '(') {
-            if(token != "")
-                ret.push_back(token);
-            token = "";
-            reading_attributes = true;
-        }
-        else if(ch == ',') {
-            if(reading_attributes && token != "")
-                ret.push_back(token);
-            token = "";
-        }
-        else if (ch == ')') {
-            if(reading_attributes && token != "")
-                ret.push_back(token);
-            reading_attributes = false;
-            token = "";
-        }
         else {
-            if(!ch.isSpace())
+            if(ch == '\"')
+                readingstring = false;
+            else
                 token.append(line.at(i));
         }
         i++;
@@ -127,8 +156,12 @@ vector <QString> NCLStructure::parseLine(QString line){
 void NCLStructure::addElement(QString name, QString father, char cardinality){
     if(!nesting->count(father))
         (*nesting)[father] = new map <QString, char>();
+
     if(!attributes->count(name))
         (*attributes)[name] = new map <QString, bool>();
+
+    if(!attributesDatatype->count(name))
+        (*attributesDatatype)[name] = new map <QString, QString>();
 
     (*(*nesting)[father])[name] = cardinality;
 }
@@ -139,8 +172,12 @@ void NCLStructure::addAttribute ( QString element, QString attr, QString type,
     if(!attributes->count(element))
         (*attributes)[element] = new map <QString, bool>();
 
-//    qDebug() << "NCLStructure::addAttribute (" << element << ", " << attr << ")";
+    if(!attributesDatatype->count(element))
+        (*attributesDatatype)[element] = new map <QString, QString>();
+
+// qDebug() << "NCLStructure::addAttribute (" << element << ", " << attr << ")";
     (*(*attributes)[element])[attr] = required;
+    (*(*attributesDatatype)[element])[attr] = type;
 }
 
 void NCLStructure::addReference ( QString element, QString attr,
@@ -149,6 +186,42 @@ void NCLStructure::addReference ( QString element, QString attr,
     AttributeReferences *ref = new AttributeReferences (element, attr,
                                                         ref_element, ref_attr);
     references->insert(element, ref);
+}
+
+void NCLStructure::addDatatype (QString name, QString regex)
+{
+    qDebug() << "NCLStructure::addDatatype (" << name << ", " << regex << ")";
+    (*dataTypes)[name] = regex;
+}
+
+void NCLStructure::addDatatypeDefaultSuggestions( QString datatype,
+                                                  QString values)
+{
+    // qDebug() << "NCLStructure::addDatatypeDefaultSuggestion (" << datatype
+    // << ", " << values << ")";
+    if(values != "")
+        (*dataTypeDefaultSuggestions)[datatype] = values.split(',');
+    else
+        (*dataTypeDefaultSuggestions)[datatype] = QStringList();
+}
+
+QString NCLStructure::getAttributeDatatype(QString element, QString name)
+{
+    if( attributesDatatype->count(element) &&
+        (*attributesDatatype)[element]->count(name))
+    {
+        return (*(*attributesDatatype)[element])[name];
+    }
+    return QString("Unknown");
+}
+
+QStringList NCLStructure::getDatatypeDefaultSuggestions(QString datatype)
+{
+    if( dataTypeDefaultSuggestions->count(datatype))
+    {
+        return (*dataTypeDefaultSuggestions)[datatype];
+    }
+    return QStringList();
 }
 
 map <QString, bool> *NCLStructure::getAttributes(QString element){
