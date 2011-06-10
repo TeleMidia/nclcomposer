@@ -20,9 +20,12 @@ class PropertyEditor : public QWidget
 private:
     Ui::PropertyEditorWidget *ui; /*!< TODO */
     QMap <QString, int> propertyToLine; /*!< TODO */
-    QVector <QTableWidgetItem *> currentItems; /*!< TODO */
+    QMap <QString, QString> propertyToValue; /*!< TODO */
 
     bool internalPropertyChange;
+
+    QString currentTagname, currentName;
+    QString currentFilterString;
 
 public:
     /*!
@@ -59,6 +62,7 @@ public:
 
 private slots:
     void updateWithItemChanges(QTableWidgetItem *item);
+    void filterProperties(const QString&);
 
 signals:
     void propertyChanged(QString property, QString value);

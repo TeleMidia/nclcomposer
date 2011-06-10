@@ -14,6 +14,11 @@ PropertyEditor::PropertyEditor(QWidget *parent):
                 SIGNAL(itemChanged(QTableWidgetItem *)),
                 this,
                 SLOT(updateWithItemChanges(QTableWidgetItem *)));
+
+    connect(    ui->filterLineEdit,
+                SIGNAL(filterTextChanged(const QString&)),
+                this,
+                SLOT(filterProperties(const QString&)));
 }
 
 PropertyEditor::~PropertyEditor()
@@ -23,30 +28,41 @@ PropertyEditor::~PropertyEditor()
 
 void PropertyEditor::setTagname(QString tagname, QString name)
 {
-    //Clear previos items
+    this->currentName = name;
+    this->currentTagname = tagname;
+    this->currentFilterString = "";
+
+    //Clear previous items
     propertyToLine.clear();
-    for(int i = 0; i < currentItems.size(); i++)
-        delete currentItems.at(i);
-    currentItems.clear();
+    propertyToValue.clear();
+
     while(ui->tableWidget->rowCount())
         ui->tableWidget->removeRow(0);
 
-    ui->label->setText(tagname + ":" + name);
+    ui->label->setText(currentTagname + ":" + currentName);
     // add the new ones
     map <QString, bool> *attrs =
-            NCLStructure::getInstance()->getAttributes(tagname);
+            NCLStructure::getInstance()->getAttributes(currentTagname);
     map <QString, bool>::iterator it;
 
     int i;
     for(i=0,it = attrs->begin(); it != attrs->end(); ++it, i++)
     {
-        QTableWidgetItem *item = new QTableWidgetItem((*it).first);
+        QString currentAttr = (*it).first;
+        QTableWidgetItem *item = new QTableWidgetItem(currentAttr);
         /* make the item not editable */
         item->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEnabled);
-        currentItems.push_back(item);
         ui->tableWidget->insertRow(ui->tableWidget->rowCount());
+
+        internalPropertyChange = true;
         ui->tableWidget->setItem(ui->tableWidget->rowCount()-1, 0, item);
-        propertyToLine.insert((*it).first, ui->tableWidget->rowCount()-1);
+        propertyToLine.insert(currentAttr, ui->tableWidget->rowCount()-1);
+
+        QTableWidgetItem *itemValue = new QTableWidgetItem("");
+        internalPropertyChange = true;
+        ui->tableWidget->setItem(ui->tableWidget->rowCount()-1, 1, itemValue);
+
+        propertyToValue[currentAttr] = "";
     }
 }
 
@@ -54,13 +70,13 @@ void PropertyEditor::setAttributeValue(QString property, QString value)
 {
     // Set the attibute just if this property is a valid property of the current
     // tagname.
-    if(propertyToLine.contains(property))
+    if(propertyToValue.contains(property))
     {
         int line = propertyToLine.value(property);
-        QTableWidgetItem *item = new QTableWidgetItem(value);
-        currentItems.push_back(item);
+        QTableWidgetItem *item = ui->tableWidget->item(line, 1);
         internalPropertyChange = true;
-        ui->tableWidget->setItem(line, 1, item);
+        item->setText(value);
+        propertyToValue[property] = value;
     }
 }
 
@@ -88,6 +104,32 @@ void PropertyEditor::updateWithItemChanges(QTableWidgetItem *item)
     {
         value = item->text();
     }
-
+    propertyToValue[name] = value; //update internal map
     emit propertyChanged(name, value);
+}
+
+void PropertyEditor::filterProperties(const QString& text)
+{
+    this->currentFilterString = text;
+    while(ui->tableWidget->rowCount())
+        ui->tableWidget->removeRow(0);
+
+    propertyToLine.clear();
+
+    QString key;
+    foreach( key, propertyToValue.keys() )
+    {
+        if(key.startsWith(text))
+        {
+            QTableWidgetItem *item = new QTableWidgetItem(key);
+            QTableWidgetItem *itemValue = new QTableWidgetItem(propertyToValue[key]);
+
+            ui->tableWidget->insertRow(ui->tableWidget->rowCount());
+            internalPropertyChange = true;
+            ui->tableWidget->setItem(ui->tableWidget->rowCount()-1, 0, item);
+            propertyToLine.insert(key, ui->tableWidget->rowCount()-1);
+            internalPropertyChange = true;
+            ui->tableWidget->setItem(ui->tableWidget->rowCount()-1, 1, itemValue);
+        }
+    }
 }

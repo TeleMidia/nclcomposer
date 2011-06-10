@@ -21,7 +21,7 @@
     <number>2</number>
    </property>
    <item>
-    <widget class="QLineEditFilter" name="lineEdit"/>
+    <widget class="QLineEditFilter" name="filterLineEdit"/>
    </item>
    <item>
     <widget class="QLabel" name="label">
