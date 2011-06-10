@@ -87,6 +87,18 @@ void OutlineViewPlugin::onEntityChanged(QString pluginID, Entity * entity)
     QString line = "PLUGIN (" + pluginID + ") changed the Entity (" +
                    entity->getType() + " - " + entity->getUniqueId() +")";
 
+    QMap <QString, QString> attrs;
+    QMap <QString, QString>::iterator begin, end, it;
+
+    entity->getAttributeIterator(begin, end);
+    for (it = begin; it != end; ++it)
+    {
+        attrs[it.key()] = it.value();
+    }
+
+    window->updateItem(idToItem[entity->getUniqueId()], entity->getType(),
+                       attrs);
+
 }
 
 void OutlineViewPlugin::onEntityAboutToRemove(Entity *entity)
@@ -96,13 +108,11 @@ void OutlineViewPlugin::onEntityAboutToRemove(Entity *entity)
 
 void OutlineViewPlugin::onEntityRemoved(QString pluginID, QString entityID)
 {
-    QString line = "PLUGIN (" + pluginID + ") removed Entity (" +
-                   entityID + ")";
-
-    qDebug() << line;
-    idToItem.remove(entityID);
-    window->removeItem(entityID);
-
+    if(idToItem.contains(entityID))
+    {
+        idToItem.remove(entityID);
+        window->removeItem(entityID);
+    }
 }
 
 void OutlineViewPlugin::elementRemovedByUser(QString itemId)
@@ -139,7 +149,6 @@ void OutlineViewPlugin::itemSelectionChanged()
     if(selecteds.size())
     {
         selectedId = new QString(selecteds.at(0)->text(2));
-
         emit sendBroadcastMessage("changeSelectedEntity", selectedId);
     }
 }
