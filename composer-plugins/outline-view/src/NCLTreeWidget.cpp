@@ -17,6 +17,8 @@ NCLTreeWidget::NCLTreeWidget(QWidget *parent) : QTreeWidget(parent)
     labels  << QObject::tr("Element") << QObject::tr("Attributes")
             << QObject::tr("Element Id");
     setHeaderLabels(labels);
+
+    setColumnHidden(2, true);
 }
 
 NCLTreeWidget::~NCLTreeWidget()
