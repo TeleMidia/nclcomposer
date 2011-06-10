@@ -58,7 +58,7 @@ public:
     void setAttributeValue(QString property, QString value);
 
 private slots:
-    void udpateEntityWithCellContent(int row, int column);
+    void updateWithItemChanges(QTableWidgetItem *item);
 
 signals:
     void propertyChanged(QString property, QString value);

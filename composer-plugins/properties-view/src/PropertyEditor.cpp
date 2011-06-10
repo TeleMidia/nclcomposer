@@ -10,8 +10,10 @@ PropertyEditor::PropertyEditor(QWidget *parent):
     ui = new Ui::PropertyEditorWidget();
     ui->setupUi(this);
 
-    connect(ui->tableWidget, SIGNAL(cellChanged(int,int)),
-            this, SLOT(udpateEntityWithCellContent(int,int)));
+    connect(    ui->tableWidget,
+                SIGNAL(itemChanged(QTableWidgetItem *)),
+                this,
+                SLOT(updateWithItemChanges(QTableWidgetItem *)));
 }
 
 PropertyEditor::~PropertyEditor()
@@ -42,7 +44,6 @@ void PropertyEditor::setTagname(QString tagname, QString name)
         /* make the item not editable */
         item->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEnabled);
         currentItems.push_back(item);
-        internalPropertyChange = true;
         ui->tableWidget->insertRow(ui->tableWidget->rowCount());
         ui->tableWidget->setItem(ui->tableWidget->rowCount()-1, 0, item);
         propertyToLine.insert((*it).first, ui->tableWidget->rowCount()-1);
@@ -63,8 +64,11 @@ void PropertyEditor::setAttributeValue(QString property, QString value)
     }
 }
 
-void PropertyEditor::udpateEntityWithCellContent(int row, int column)
+void PropertyEditor::updateWithItemChanges(QTableWidgetItem *item)
 {
+    int row = ui->tableWidget->row(item);
+    int column = ui->tableWidget->column(item);
+
     if(column == 0) return; //not for me!
 
     if(internalPropertyChange){
@@ -72,14 +76,14 @@ void PropertyEditor::udpateEntityWithCellContent(int row, int column)
         return;
     }
 
-    QTableWidgetItem *item = ui->tableWidget->item(row, column-1);
+    QTableWidgetItem *leftItem = ui->tableWidget->item(row, column-1);
     QString name = "", value = "";
     if(item != NULL)
     {
-        name = item->text();
+        name = leftItem->text();
     }
+    else return; //property with empty name isn't usefull
 
-    item = ui->tableWidget->item(row, column);
     if(item != NULL)
     {
         value = item->text();
