@@ -13,7 +13,10 @@ PreferencesDialog::PreferencesDialog(QWidget *parent) :
     this->setModal(true);
     loadPreferencesPages();
 
-    connect(ui->listWidget, SIGNAL(itemSelectionChanged()), this, SLOT(changeActivePage()));
+    connect( ui->listWidget,
+             SIGNAL(itemSelectionChanged()),
+             this,
+             SLOT(changeActivePage()));
 
     currentItem = NULL;
 }

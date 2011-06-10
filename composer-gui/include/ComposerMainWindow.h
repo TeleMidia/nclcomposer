@@ -43,6 +43,8 @@ using namespace composer::core;
 
 #include "wizard/ProjectWizard.h"
 #include "wizard/DocumentWizard.h"
+#include "PerspectiveManager.h"
+using namespace composer::gui;
 #include "WorkspaceSwitch.h"
 #include "PreferencesDialog.h"
 #include "WorkspaceModel.h"
@@ -79,8 +81,8 @@ private:
     QAction *projectViewAct; /*!< TODO */
     QAction *editPreferencesAct; /*!< TODO */
     QAction *switchWS; /*!< TODO */
-    QAction *saveCurrentPluginsLayout;
-    QAction *restorePluginsLayout;
+    QAction *saveCurrentPluginsLayoutAct;
+    QAction *restorePluginsLayoutAct;
 
     QListWidget *profilesExt; /*!< TODO */
     QTreeWidget *pluginsExt; /*!< TODO */
@@ -106,6 +108,8 @@ private:
 
     bool openingDocument; /*!< TODO */
     QTimer *timer; /*!< TODO */
+
+    PerspectiveManager *perspectiveManager;
 
 private:
     Ui::ComposerMainWindow *ui; /*!< TODO */
@@ -231,8 +235,10 @@ private slots:
     */
     void slotTimeout();
 
-    void saveCurrentLayout();
-    void restoreSavedLayout();
+    void saveCurrentGeometryAsPerspective();
+    void restorePerspective();
+    void savePerspective(QString layoutName);
+    void restorePerspective(QString layoutName);
 
 
 public:

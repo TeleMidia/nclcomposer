@@ -49,7 +49,8 @@ SOURCES += main.cpp \
     src/PreferencesDialog.cpp \
     src/WorkspaceModel.cpp \
     src/ProjectTreeView.cpp \
-    src/WorkspaceSwitch.cpp
+    src/WorkspaceSwitch.cpp \
+    src/PerspectiveManager.cpp
 
 HEADERS += include/ComposerMainWindow.h \
     include/wizard/ProjectWizard.h \
@@ -59,11 +60,13 @@ HEADERS += include/ComposerMainWindow.h \
     include/PreferencesDialog.h \
     include/WorkspaceModel.h \
     include/ProjectTreeView.h \
-    include/WorkspaceSwitch.h
+    include/WorkspaceSwitch.h \
+    include/PerspectiveManager.h
 
 RESOURCES += images.qrc
 
 FORMS   += ui/PreferencesDialog.ui \
-    ui/ComposerMainWindow.ui
+    ui/ComposerMainWindow.ui \
+    ui/PerspectiveManager.ui
 
 INSTALLS += target

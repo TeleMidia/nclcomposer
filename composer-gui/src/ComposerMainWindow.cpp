@@ -23,9 +23,9 @@ ComposerMainWindow::ComposerMainWindow(QWidget *parent)
 #ifdef Q_WS_MAC
     defaultEx = "/Library/Application Support/Composer";
 #elif defined(Q_WS_WIN32)
-    defaultEx = "C:/Composer/lib/composer";
+    defaultEx = "C:/Composer/lib/composer/extension";
 #else
-    defaultEx = "/usr/local/lib/composer";
+    defaultEx = "/usr/local/lib/composer/extension";
 #endif
 
     wsSwitch = new WorkspaceSwitch(this);
@@ -40,6 +40,8 @@ ComposerMainWindow::ComposerMainWindow(QWidget *parent)
 
     timer = new QTimer();
     connect(timer, SIGNAL(timeout()), this, SLOT(slotTimeout()));
+
+    perspectiveManager = new PerspectiveManager(this);
 }
 
 ComposerMainWindow::~ComposerMainWindow() {
@@ -274,6 +276,7 @@ void ComposerMainWindow::switchWorkspace()
     workspace_model->setTopIndex(index);
 
     fileSystemView->setModel(workspace_model);
+    fileSystemView->setMinimumWidth(180);
 
     fileSystemView->setRootIndex(workspace_model->mapFromSource
                                  (index));
@@ -478,13 +481,15 @@ void ComposerMainWindow::createActions() {
     connect(ui->toolButton_3, SIGNAL(clicked()), this, SLOT(close()));
     connect(ui->action_Exit, SIGNAL(triggered()), this, SLOT(close()));
 
-    saveCurrentPluginsLayout = new QAction(tr("Save plugins Layout"), this);
-    connect(    saveCurrentPluginsLayout, SIGNAL(triggered()),
-                this, SLOT(saveCurrentLayout()));
+    saveCurrentPluginsLayoutAct = new QAction(tr("Save current perspective"),
+                                              this);
 
-    restorePluginsLayout = new QAction(tr("Restore plugins Layout"), this);
-    connect(restorePluginsLayout, SIGNAL(triggered()),
-                this, SLOT(restoreSavedLayout()));
+    connect(    saveCurrentPluginsLayoutAct, SIGNAL(triggered()),
+                this, SLOT(saveCurrentGeometryAsPerspective()));
+
+    restorePluginsLayoutAct = new QAction(tr("Restore a perspective"), this);
+    connect(restorePluginsLayoutAct, SIGNAL(triggered()),
+                this, SLOT(restorePerspective()));
 }
 
 void ComposerMainWindow::createStatusBar()
@@ -513,8 +518,8 @@ void ComposerMainWindow::updateViewMenu()
     ui->menu_Window->addSeparator();
     ui->menu_Window->addAction(fullScreenViewAct);
     ui->menu_Window->addSeparator();
-    ui->menu_Window->addAction(saveCurrentPluginsLayout);
-    ui->menu_Window->addAction(restorePluginsLayout);
+    ui->menu_Window->addAction(saveCurrentPluginsLayoutAct);
+    ui->menu_Window->addAction(restorePluginsLayoutAct);
     projectViewAct->setChecked(fileSystemDock->isVisible());
 }
 
@@ -599,7 +604,35 @@ void ComposerMainWindow::saveCurrentDocument()
      PluginControl::getInstance()->saveDocument(location);
 }
 
-void ComposerMainWindow::saveCurrentLayout()
+void ComposerMainWindow::saveCurrentGeometryAsPerspective()
+{
+    if(tabDocuments->count()) { // If there is a document open
+        perspectiveManager->setBehavior(PERSPEC_SAVE);
+        if(perspectiveManager->exec())
+        {
+            savePerspective(perspectiveManager->getSelectedName());
+        }
+    }
+    else {
+        QMessageBox box(QMessageBox::Warning,
+                        tr("Information"),
+                        tr("There aren't a layout openned to be saved."),
+                        QMessageBox::Ok
+                     );
+        box.exec();
+    }
+}
+
+void ComposerMainWindow::restorePerspective()
+{
+    perspectiveManager->setBehavior(PERSPEC_LOAD);
+    if(perspectiveManager->exec())
+    {
+        restorePerspective(perspectiveManager->getSelectedName());
+    }
+}
+
+void ComposerMainWindow::savePerspective(QString layoutName)
 {
     if(tabDocuments->count()) //see if there is any open document
     {
@@ -607,12 +640,12 @@ void ComposerMainWindow::saveCurrentLayout()
         QMainWindow *window = documentsWidgets[location];
         QSettings settings("telemidia", "composer");
         settings.beginGroup("pluginslayout");
-        settings.setValue("pluginsstate", window->saveState(0));
+        settings.setValue(layoutName, window->saveState(0));
         settings.endGroup();
     }
 }
 
-void ComposerMainWindow::restoreSavedLayout()
+void ComposerMainWindow::restorePerspective(QString layoutName)
 {
     if(tabDocuments->count()) //see if there is any open document
     {
@@ -620,7 +653,7 @@ void ComposerMainWindow::restoreSavedLayout()
         QMainWindow *window = documentsWidgets[location];
         QSettings settings("telemidia", "composer");
         settings.beginGroup("pluginslayout");
-        window->restoreState(settings.value("pluginsstate").toByteArray());
+        window->restoreState(settings.value(layoutName).toByteArray());
         settings.endGroup();
     }
 }

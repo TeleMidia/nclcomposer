@@ -24,7 +24,7 @@
   </property>
   <property name="styleSheet">
    <string notr="true">QMainWindow {
-	font-size: 10px;
+	font-size: 8px;
 }
 
 QMainWindow::separator {
@@ -217,13 +217,13 @@ QToolBar {
    </property>
    <property name="minimumSize">
     <size>
-     <width>80</width>
+     <width>70</width>
      <height>502</height>
     </size>
    </property>
    <property name="maximumSize">
     <size>
-     <width>80</width>
+     <width>70</width>
      <height>524287</height>
     </size>
    </property>
@@ -266,8 +266,8 @@ QToolBar {
        </property>
        <property name="iconSize">
         <size>
-         <width>60</width>
-         <height>60</height>
+         <width>45</width>
+         <height>45</height>
         </size>
        </property>
        <property name="autoRaise">
@@ -286,8 +286,8 @@ QToolBar {
        </property>
        <property name="iconSize">
         <size>
-         <width>60</width>
-         <height>60</height>
+         <width>45</width>
+         <height>45</height>
         </size>
        </property>
        <property name="autoRaise">
@@ -306,8 +306,8 @@ QToolBar {
        </property>
        <property name="iconSize">
         <size>
-         <width>60</width>
-         <height>60</height>
+         <width>45</width>
+         <height>45</height>
         </size>
        </property>
        <property name="autoRaise">
@@ -361,6 +361,9 @@ QToolBar {
      </item>
      <item>
       <widget class="Line" name="line_2">
+       <property name="enabled">
+        <bool>true</bool>
+       </property>
        <property name="orientation">
         <enum>Qt::Horizontal</enum>
        </property>
@@ -377,7 +380,7 @@ QToolBar {
        </property>
        <property name="iconSize">
         <size>
-         <width>60</width>
+         <width>45</width>
          <height>60</height>
         </size>
        </property>
@@ -397,8 +400,8 @@ QToolBar {
        </property>
        <property name="iconSize">
         <size>
-         <width>50</width>
-         <height>50</height>
+         <width>45</width>
+         <height>45</height>
         </size>
        </property>
        <property name="autoRaise">
@@ -430,8 +433,8 @@ QToolBar {
        </property>
        <property name="iconSize">
         <size>
-         <width>50</width>
-         <height>50</height>
+         <width>45</width>
+         <height>45</height>
         </size>
        </property>
        <property name="autoRepeat">
