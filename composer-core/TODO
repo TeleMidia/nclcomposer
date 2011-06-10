@@ -6,6 +6,7 @@ TODO file for composer-core
   - Save Project and files (and export).
 
 * Features or problems:
+  - Script to automatically create the Plugin and Factory classes.
 	- Generalize NCLStructure to all kinds of languages.
 	- ToolGUI integration API.
 				. How should be the integration?!

@@ -68,18 +68,24 @@ void MessageControl::onEditEntity(Entity *entity,
 
 void MessageControl::onRemoveEntity( Entity *entity,
                                      bool force) {
-
     IPlugin *plugin = qobject_cast<IPlugin *> (QObject::sender());
     if(plugin) {
         QString pluginID = plugin->getPluginInstanceID();
         try {
-            QString _id = entity->getUniqueId();
-            emit aboutToRemoveEntity(entity);
-            /*! \todo remember to change, the append should come from the
-                plugin
-            */
-            doc->removeEntity(entity,true);
-            emit entityRemoved(pluginID,_id);
+            if(entity)
+            {
+                QString _id = entity->getUniqueId();
+                emit aboutToRemoveEntity(entity);
+                /*! \todo remember to change, the append should come from the
+                    plugin
+                */
+                doc->removeEntity(entity,true);
+                emit entityRemoved(pluginID,_id);
+            }
+            else {
+                plugin->errorMessage(tr("You have tried to remove a NULL \
+                                        entity!!"));
+            }
         }catch(exception e){
             plugin->errorMessage(e.what());
             return;
