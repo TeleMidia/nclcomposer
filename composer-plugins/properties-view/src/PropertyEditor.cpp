@@ -30,7 +30,7 @@ void PropertyEditor::setTagname(QString tagname, QString name)
 {
     this->currentName = name;
     this->currentTagname = tagname;
-    this->currentFilterString = "";
+    //this->currentFilterString = "";
 
     //Clear previous items
     propertyToLine.clear();
@@ -64,6 +64,7 @@ void PropertyEditor::setTagname(QString tagname, QString name)
 
         propertyToValue[currentAttr] = "";
     }
+    filterProperties(this->currentFilterString);
 }
 
 void PropertyEditor::setAttributeValue(QString property, QString value)
@@ -74,9 +75,12 @@ void PropertyEditor::setAttributeValue(QString property, QString value)
     {
         int line = propertyToLine.value(property);
         QTableWidgetItem *item = ui->tableWidget->item(line, 1);
-        internalPropertyChange = true;
-        item->setText(value);
-        propertyToValue[property] = value;
+        if(item)
+        {
+            internalPropertyChange = true;
+            item->setText(value);
+            propertyToValue[property] = value;
+        }
     }
 }
 

@@ -54,7 +54,7 @@
       <number>2</number>
      </property>
      <attribute name="horizontalHeaderVisible">
-      <bool>false</bool>
+      <bool>true</bool>
      </attribute>
      <attribute name="horizontalHeaderCascadingSectionResizes">
       <bool>true</bool>
@@ -102,6 +102,9 @@
        <font>
         <strikeout>false</strikeout>
        </font>
+      </property>
+      <property name="textAlignment">
+       <set>AlignLeft|AlignVCenter</set>
       </property>
      </column>
     </widget>
