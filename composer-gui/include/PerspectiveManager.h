@@ -22,6 +22,8 @@ namespace composer {
  \brief A dialog that allows the user to choose or save one perspective.
 */
 class PerspectiveManager: public QDialog {
+    Q_OBJECT
+
 public:
     /*!
      \brief Constructor.
@@ -46,17 +48,24 @@ public:
     */
     void setBehavior(PERSPEC_BEHAVIOR behavior);
 
-public Q_SLOTS:
+public slots:
     /*!
      \brief
     */
     void accept();
+    void deleteSelectedPerspective();
 
 protected:
     /*!
      \brief Reimplemented to update the dialog with the information of
     */
     void showEvent(QShowEvent *);
+    /*!
+      \brief Removes the perspective with name: name.
+
+      \param name The name of the perspective to be removed.
+     */
+    void deletePerspective(QString name);
 
 private:
     Ui::PerpectiveManager *ui; /*!< The instantiation of the qtcreator designer
@@ -64,6 +73,8 @@ private:
     QString selectedName; /*!< The current selected element. */
     PERSPEC_BEHAVIOR behavior; /*!< The current behavior of the
                                     PerspectiveManager */
+
+    void updateContent();
 };
 } } //end namespace
 #endif // PLUGINSLAYOUTMANAGER_H
