@@ -19,6 +19,12 @@ PerspectiveManager::PerspectiveManager(QWidget *parent):
 
     connect (ui->deleteButton, SIGNAL(clicked()),
              this, SLOT(deleteSelectedPerspective()));
+
+    connect ( ui->treeWidget, SIGNAL(itemChanged(QTreeWidgetItem*, int)),
+              this, SLOT(itemChanged(QTreeWidgetItem*, int)));
+    QSettings settings("telemidia", "composer");
+    defaultPerspective = settings.value("default_perspective").
+                                    toString();
 }
 
 PerspectiveManager::~PerspectiveManager()
@@ -38,26 +44,34 @@ void PerspectiveManager::updateContent()
     QStringList keys = settings.allKeys();
     settings.endGroup();
 
-    while(ui->tableWidget->rowCount())
-        ui->tableWidget->removeRow(0);
+    ui->treeWidget->clear();
 
     int i;
-    for(i = 0; i < keys.size(); i++)
-    {
-        QTableWidgetItem *item = new QTableWidgetItem(keys.at(i));
-        ui->tableWidget->insertRow(i);
-        ui->tableWidget->setItem(0, i, item);
-    }
+    QTreeWidgetItem *item;
 
+    internalChange = true;
     if(behavior == PERSPEC_SAVE) // If the widget is saving a new perspective
     {
-        QTableWidgetItem *item = new QTableWidgetItem("New perspective...");
-        ui->tableWidget->insertRow(i);
-        ui->tableWidget->setItem(i, 0, item);
-        ui->tableWidget->setCurrentCell(i, 0,
-                                        QItemSelectionModel::ToggleCurrent);
+        for(i = 0; i < keys.size(); i++)
+        {
+            item = new QTreeWidgetItem(ui->treeWidget);
+            if(keys.at(i) == defaultPerspective)
+                item->setCheckState(0, Qt::Checked);
+            else
+                item->setCheckState(0, Qt::Unchecked);
 
-        ui->tableWidget->setEditTriggers(QAbstractItemView::AnyKeyPressed |
+            item->setText(1, keys.at(i));
+            item->setFlags(item->flags() | Qt::ItemIsEditable);
+        }
+
+        item = new QTreeWidgetItem(ui->treeWidget);
+        item->setFlags(item->flags() | Qt::ItemIsEditable);
+        item->setCheckState(0, Qt::Unchecked);
+        item->setText(1, "New perspective...");
+        ui->treeWidget->setCurrentItem(item, 1,
+                                       QItemSelectionModel::SelectCurrent);
+
+        ui->treeWidget->setEditTriggers(QAbstractItemView::AnyKeyPressed |
                                          QAbstractItemView::DoubleClicked);
 
         this->setWindowTitle(tr("Saving a perspective"));
@@ -65,13 +79,22 @@ void PerspectiveManager::updateContent()
     }
     else // If it is loading a already saved perspective:
     {
-        ui->tableWidget->setCurrentCell(0, 0,
-                                        QItemSelectionModel::ToggleCurrent);
+        for(i = 0; i < keys.size(); i++)
+        {
+            item = new QTreeWidgetItem(ui->treeWidget);
+            if(keys.at(i) == defaultPerspective)
+                item->setCheckState(0, Qt::Checked);
+            else
+                item->setCheckState(0, Qt::Unchecked);
 
-        ui->tableWidget->setEditTriggers(QAbstractItemView::NoEditTriggers);
+            item->setText(1, keys.at(i));
+            item->setFlags(item->flags());
+        }
+
         this->setWindowTitle(tr("Reloading a perspective"));
         ui->deleteButton->setVisible(true);
     }
+    internalChange = false;
 }
 
 void PerspectiveManager::showEvent(QShowEvent *evt)
@@ -82,9 +105,37 @@ void PerspectiveManager::showEvent(QShowEvent *evt)
 
 void PerspectiveManager::accept()
 {
-    QList<QTableWidgetItem*> items = ui->tableWidget->selectedItems();
-    selectedName = items.at(0)->text();
-    QDialog::accept();
+    QList<QTreeWidgetItem*> items = ui->treeWidget->selectedItems();
+    if(items.size())
+    {
+        selectedName = items.at(0)->text(1);
+        QDialog::accept();
+    }
+    else
+        selectedName = "";
+}
+
+void PerspectiveManager::itemChanged(QTreeWidgetItem *item, int col)
+{
+    if(internalChange) return;
+
+    internalChange = true;
+    if(col == 0) //changed the default
+    {
+        for(int i = 0; i < ui->treeWidget->topLevelItemCount(); i++)
+            ui->treeWidget->topLevelItem(i)->setCheckState(0, Qt::Unchecked);
+        item->setCheckState(0, Qt::Checked);
+        this->defaultPerspective = item->text(1);
+    }
+    else {
+        if(item->checkState(0) == Qt::Checked)
+            this->defaultPerspective = item->text(1);
+
+        if(item->text(1) == "")
+            item->setText(1, "empty");
+
+    }
+    internalChange = false;
 }
 
 QString PerspectiveManager::getSelectedName()
@@ -92,18 +143,24 @@ QString PerspectiveManager::getSelectedName()
     return selectedName;
 }
 
+QString PerspectiveManager::getDefaultPerspective()
+{
+    return defaultPerspective;
+}
+
 void PerspectiveManager::deletePerspective(QString name)
 {
     QSettings settings("telemidia", "composer");
     settings.beginGroup("pluginslayout");
+    //TODO: When the name is empty ("") this remove all the perspectives.
     settings.remove(name);
     settings.endGroup();
 }
 
 void PerspectiveManager::deleteSelectedPerspective()
 {
-    QList<QTableWidgetItem*> items = ui->tableWidget->selectedItems();
-    selectedName = items.at(0)->text();
+    QList<QTreeWidgetItem*> items = ui->treeWidget->selectedItems();
+    selectedName = items.at(0)->text(1);
 
     QMessageBox::StandardButton ret;
     ret = QMessageBox::warning(this, tr("Deleting perspective"),

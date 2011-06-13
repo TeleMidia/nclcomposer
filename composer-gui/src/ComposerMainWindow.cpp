@@ -7,7 +7,6 @@
 #ifdef USE_MDI
 #include <QMdiArea>
 #endif
-using namespace composer::gui;
 
 namespace composer {
     namespace gui {
@@ -171,6 +170,7 @@ void ComposerMainWindow::readSettings() {
     settings.beginGroup("openfiles");
     QStringList openfiles = settings.value("openfiles").toStringList();
     settings.endGroup();
+
     for(int i = 0; i < openfiles.size(); i++)
     {
         //FIXME: SET THE CORRECT PROJECT_ID!!!
@@ -401,7 +401,7 @@ void ComposerMainWindow::createAbout()
     tmp->setText(tr("Details"));
     tmp->setIcon(QIcon());
 
-    connect(bOk,SIGNAL(rejected()),aboutDialog,SLOT(close()));
+    connect(bOk, SIGNAL(rejected()), aboutDialog, SLOT(close()));
 
     QGridLayout *gLayout = new QGridLayout(aboutDialog);
     gLayout->addWidget(new QLabel(tr("The <b>Composer</b> is an IDE for"
@@ -442,7 +442,6 @@ void ComposerMainWindow::about() {
 
     for (it = pList.begin(); it != pList.end(); it++) {
         IPluginFactory *pF = *it;
-        /** FIXME: This should cause memory leaks */
         treeWidgetItem = new QTreeWidgetItem(categories.value(pF->category()));
         treeWidgetItem->setText(0, pF->name());
         treeWidgetItem->setCheckState(1, Qt::Checked);
@@ -470,7 +469,6 @@ void ComposerMainWindow::about() {
 
     aboutDialog->setModal(true);
     aboutDialog->show();
-
 }
 
 void ComposerMainWindow::errorDialog(QString message) {
@@ -541,7 +539,7 @@ void ComposerMainWindow::showCurrentWidgetFullScreen()
     //    QWidget *w = tabDocuments->currentWidget();
     //    if (w != NULL)
     //    {
-    //        w->setWindowFlags(Qt::Window);
+    //        w->setWinowdFlags(Qt::Window);
     //        w->setWindowState(Qt::WindowFullScreen);
     //        w->show();
     //    }
@@ -617,27 +615,37 @@ void ComposerMainWindow::showSwitchWorkspaceDialog()
 
 void ComposerMainWindow::beginOpenDocument()
 {
-    qDebug() << "MainWindow::beginOpenDocument";
+    qDebug() << "ComposerMainWindow::beginOpenDocument";
     ui->progressBar->setVisible(true);
     openingDocument = true;
+    ui->progressBar->repaint();
     timer->start(10);
+    update();
 }
 
 void ComposerMainWindow::endOpenDocument()
 {
+    qDebug() << "ComposerMainWindow::endOpenDocument";
     openingDocument = false;
     timer->stop();
     ui->progressBar->setVisible(false);
+
+    QSettings settings("telemidia", "composer");
+    QString defaultPerspective =
+            settings.value("default_perspective").toString();
+    restorePerspective(defaultPerspective);
+    update();
 }
 
 void ComposerMainWindow::slotTimeout()
 {
-    qDebug() << "MainWindow::slotTimeout (out)" ;
+    qDebug() << "ComposerMainWindow::slotTimeout()" ;
     if(openingDocument){
         int v = ui->progressBar->value();
         qDebug() << "MainWindow::slotTimeout";
         v %= 100;
         ui->progressBar->setValue(v);
+        ui->progressBar->repaint();
     }
 }
 
@@ -655,6 +663,7 @@ void ComposerMainWindow::saveCurrentGeometryAsPerspective()
         if(perspectiveManager->exec())
         {
             savePerspective(perspectiveManager->getSelectedName());
+            saveDefaultPerspective(perspectiveManager->getDefaultPerspective());
         }
     }
     else {
@@ -680,7 +689,9 @@ void ComposerMainWindow::savePerspective(QString layoutName)
 {
     if(tabDocuments->count()) //see if there is any open document
     {
-        QString location = tabDocuments->tabToolTip(tabDocuments->currentIndex());
+        QString location = tabDocuments->tabToolTip(
+                tabDocuments->currentIndex());
+
         QMainWindow *window = documentsWidgets[location];
         QSettings settings("telemidia", "composer");
         settings.beginGroup("pluginslayout");
@@ -689,11 +700,19 @@ void ComposerMainWindow::savePerspective(QString layoutName)
     }
 }
 
+void ComposerMainWindow::saveDefaultPerspective(QString defaultPerspectiveName)
+{
+    QSettings settings("telemidia", "composer");
+    settings.setValue("default_perspective", defaultPerspectiveName);
+}
+
 void ComposerMainWindow::restorePerspective(QString layoutName)
 {
     if(tabDocuments->count()) //see if there is any open document
     {
-        QString location = tabDocuments->tabToolTip(tabDocuments->currentIndex());
+        QString location = tabDocuments->tabToolTip(
+                tabDocuments->currentIndex());
+
         QMainWindow *window = documentsWidgets[location];
         QSettings settings("telemidia", "composer");
         settings.beginGroup("pluginslayout");

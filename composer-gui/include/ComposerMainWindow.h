@@ -44,12 +44,12 @@ using namespace composer::core;
 #include "wizard/ProjectWizard.h"
 #include "wizard/DocumentWizard.h"
 #include "PerspectiveManager.h"
-using namespace composer::gui;
-
 #include "WorkspaceSwitch.h"
 #include "PreferencesDialog.h"
 #include "WorkspaceModel.h"
 #include "ProjectTreeView.h"
+
+using namespace composer::gui;
 
 namespace Ui {
     class ComposerMainWindow;
@@ -240,6 +240,7 @@ private slots:
     void saveCurrentGeometryAsPerspective();
     void restorePerspective();
     void savePerspective(QString layoutName);
+    void saveDefaultPerspective(QString defaultPerspectiveName);
     void restorePerspective(QString layoutName);
 
 

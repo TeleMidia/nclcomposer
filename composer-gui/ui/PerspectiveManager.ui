@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>340</width>
-    <height>333</height>
+    <width>299</width>
+    <height>292</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -30,22 +30,21 @@
        <number>0</number>
       </property>
       <item>
-       <widget class="QTableWidget" name="tableWidget">
+       <widget class="QTreeWidget" name="treeWidget">
         <property name="lineWidth">
          <number>0</number>
         </property>
-        <attribute name="horizontalHeaderVisible">
-         <bool>false</bool>
-        </attribute>
-        <attribute name="horizontalHeaderStretchLastSection">
-         <bool>true</bool>
-        </attribute>
-        <attribute name="verticalHeaderVisible">
-         <bool>false</bool>
+        <attribute name="headerDefaultSectionSize">
+         <number>50</number>
         </attribute>
         <column>
          <property name="text">
-          <string>Perspective Name</string>
+          <string>Default</string>
+         </property>
+        </column>
+        <column>
+         <property name="text">
+          <string>Perspective</string>
          </property>
         </column>
        </widget>

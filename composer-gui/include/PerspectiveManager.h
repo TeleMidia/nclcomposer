@@ -2,6 +2,7 @@
 #define PLUGINSLAYOUTMANAGER_H
 
 #include <QDialog>
+#include <QTreeWidgetItem>
 
 namespace Ui{
     class PerpectiveManager;
@@ -41,6 +42,12 @@ public:
     */
     QString getSelectedName();
     /*!
+     \brief Get the name of the default perspective the user has selected.
+
+     \return QString The name of the default perspective selected.
+    */
+    QString getDefaultPerspective();
+    /*!
      \brief Set the current behavior of the PerpectiveManager. This function
         must be called before the show event to have effect.
 
@@ -50,10 +57,20 @@ public:
 
 public slots:
     /*!
-     \brief
+     \brief Called when the user clicks OK button
     */
     void accept();
+
+private slots:
+    /*!
+     \brief Called when the user select the delete button.
+    */
     void deleteSelectedPerspective();
+
+    /*!
+     \brief Called when the user edit an item.
+    */
+    void itemChanged(QTreeWidgetItem *, int);
 
 protected:
     /*!
@@ -71,9 +88,11 @@ private:
     Ui::PerpectiveManager *ui; /*!< The instantiation of the qtcreator designer
                                     generated class.*/
     QString selectedName; /*!< The current selected element. */
+    QString defaultPerspective;
     PERSPEC_BEHAVIOR behavior; /*!< The current behavior of the
                                     PerspectiveManager */
 
+    bool internalChange;
     void updateContent();
 };
 } } //end namespace
