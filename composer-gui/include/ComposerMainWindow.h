@@ -45,6 +45,7 @@ using namespace composer::core;
 #include "wizard/DocumentWizard.h"
 #include "PerspectiveManager.h"
 using namespace composer::gui;
+
 #include "WorkspaceSwitch.h"
 #include "PreferencesDialog.h"
 #include "WorkspaceModel.h"
@@ -54,6 +55,7 @@ namespace Ui {
     class ComposerMainWindow;
 }
 
+//#define USE_MDI 1
 
 namespace composer {
     namespace gui {

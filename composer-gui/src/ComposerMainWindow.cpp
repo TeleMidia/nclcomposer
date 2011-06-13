@@ -4,6 +4,9 @@
 #include <QPixmap>
 #include <QDialogButtonBox>
 
+#ifdef USE_MDI
+#include <QMdiArea>
+#endif
 using namespace composer::gui;
 
 namespace composer {
@@ -31,17 +34,18 @@ ComposerMainWindow::ComposerMainWindow(QWidget *parent)
     wsSwitch = new WorkspaceSwitch(this);
     connect(wsSwitch,SIGNAL(accepted()), SLOT(switchWorkspace()));
     initGUI();
-    initModules();
-    readSettings();
+
     preferences = new PreferencesDialog(this);
+    perspectiveManager = new PerspectiveManager(this);
+
+    initModules();
 
     ui->progressBar->setVisible(false);
     ui->progressBar->setRange(0, 99);
 
     timer = new QTimer();
     connect(timer, SIGNAL(timeout()), this, SLOT(slotTimeout()));
-
-    perspectiveManager = new PerspectiveManager(this);
+    readSettings();
 }
 
 ComposerMainWindow::~ComposerMainWindow() {
@@ -163,6 +167,15 @@ void ComposerMainWindow::readSettings() {
     }
     createTreeProject();
     settings.endGroup();
+
+    settings.beginGroup("openfiles");
+    QStringList openfiles = settings.value("openfiles").toStringList();
+    settings.endGroup();
+    for(int i = 0; i < openfiles.size(); i++)
+    {
+        //FIXME: SET THE CORRECT PROJECT_ID!!!
+        DocumentControl::getInstance()->launchDocument("", openfiles.at(i));
+    }
 }
 
 void ComposerMainWindow::initGUI() {
@@ -198,23 +211,45 @@ void ComposerMainWindow::addPluginWidget(IPluginFactory *fac, IPlugin *plugin,
     QString documentId = doc->getAttribute("id");
     QString projectId = doc->getProjectId();
 
+#ifdef USE_MDI
+    QMdiArea *mdiArea;
+#endif
     if (documentsWidgets.contains(location))
     {
         w = documentsWidgets[location];
+#ifdef USE_MDI
+        mdiArea = (QMdiArea *)w->centralWidget();
+#endif
     } else {
         w = new QMainWindow(tabDocuments);
+#ifdef USE_MDI
+        mdiArea = new QMdiArea;
+        mdiArea->setHorizontalScrollBarPolicy(Qt::ScrollBarAsNeeded);
+        mdiArea->setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded);
+        w->setCentralWidget(mdiArea);
+#else
         w->setDockNestingEnabled(true);
         w->setTabPosition(Qt::AllDockWidgetAreas, QTabWidget::West);
+#endif
         int index = tabDocuments->addTab(w, projectId + "(" + documentId + ")");
         tabDocuments->setTabToolTip(index, location);
         documentsWidgets[location] = w;
     }
+    QWidget *pW = plugin->getWidget();
 
+#ifdef USE_MDI
+    mdiArea->addSubWindow(pW);
+    pW->setWindowModified(true);
+    pW->setWindowTitle(fac->name()+"[*]");
+    pW->show();
+    pW->setObjectName(fac->id());
+    //tabDocuments->setCurrentWidget(w);
+#else
     QDockWidget *dock = new QDockWidget(fac->name());
     dock->setAllowedAreas(Qt::AllDockWidgetAreas);
     dock->setFeatures(QDockWidget::DockWidgetClosable |
                       QDockWidget::DockWidgetMovable);
-    QWidget *pW = plugin->getWidget();
+
     dock->setWidget(pW);
     dock->setObjectName(fac->id());
     qDebug() << n;
@@ -230,6 +265,7 @@ void ComposerMainWindow::addPluginWidget(IPluginFactory *fac, IPlugin *plugin,
         // w->tabifyDockWidget(firstDock[location], dock);
     }
     else firstDock[location] = dock;
+#endif
 }
 
 void ComposerMainWindow::tabClosed(int index)
@@ -548,8 +584,16 @@ void ComposerMainWindow::closeEvent(QCloseEvent *event)
     settings.setValue("geometry", saveGeometry());
     settings.setValue("windowState", saveState());
     settings.endGroup();
-    settings.sync();
 
+    QStringList openfiles;
+    QString key;
+    foreach (key, documentsWidgets.keys())
+        openfiles << key;
+    settings.beginGroup("openfiles");
+    settings.setValue("openfiles", openfiles);
+    settings.endGroup();
+
+    settings.sync();
     cleanUp();
     event->accept();
 }
