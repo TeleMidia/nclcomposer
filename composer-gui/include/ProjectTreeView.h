@@ -26,7 +26,7 @@ public:
     void keyReleaseEvent(QKeyEvent *event);
 
 signals:
-    void launchDocument(QString, QString);
+    void launchDocument(QString);
 
 private slots:
     void launchSelectedDocument();

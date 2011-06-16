@@ -34,17 +34,20 @@ ComposerMainWindow::ComposerMainWindow(QWidget *parent)
     connect(wsSwitch,SIGNAL(accepted()), SLOT(switchWorkspace()));
     initGUI();
 
-    preferences = new PreferencesDialog(this);
-    perspectiveManager = new PerspectiveManager(this);
-
     initModules();
-
-    ui->progressBar->setVisible(false);
-    ui->progressBar->setRange(0, 99);
+    //ui->progressBar->setVisible(false);
+    //ui->progressBar->setRange(0, 99);
 
     timer = new QTimer();
     connect(timer, SIGNAL(timeout()), this, SLOT(slotTimeout()));
     readSettings();
+
+    preferences = new PreferencesDialog(this);
+    perspectiveManager = new PerspectiveManager(this);
+
+    projectWizard = new ProjectWizard(this);
+
+    connect(ui->action_RunNCL, SIGNAL(triggered()), this, SLOT(runNCL()));
 }
 
 ComposerMainWindow::~ComposerMainWindow() {
@@ -64,23 +67,30 @@ void ComposerMainWindow::initModules()
 
     connect(pgControl,SIGNAL(notifyError(QString)),
             SLOT(errorDialog(QString)));
+
     connect(pgControl,SIGNAL(addPluginWidgetToWindow(IPluginFactory*,
-                                                     IPlugin*,Document*, int)),
-            SLOT(addPluginWidget(IPluginFactory*,IPlugin*,Document*, int)));
+                                                     IPlugin*, Document*, int)),
+            SLOT(addPluginWidget(IPluginFactory*, IPlugin*, Document*, int)));
 
     connect(lgControl,SIGNAL(notifyError(QString)),
             SLOT(errorDialog(QString)));
 
     connect(docControl, SIGNAL(notifyError(QString)),
             SLOT(errorDialog(QString)));
-    connect(docControl,SIGNAL(openDocumentTab(QString)),
+    connect(docControl,SIGNAL(documentOpenned(QString)),
             SLOT(onOpenDocumentTab(QString)));
 
-    connect(docControl, SIGNAL(beginOpenDocument()),
-            this, SLOT(beginOpenDocument()));
+    connect(docControl, SIGNAL(startOpenDocument(QString)),
+            this, SLOT(startOpenDocument(QString)));
 
-    connect(docControl, SIGNAL(endOpenDocument()), this,
-            SLOT(endOpenDocument()));
+    connect(docControl, SIGNAL(endOpenDocument(QString)), this,
+            SLOT(endOpenDocument(QString)));
+
+    connect(docControl,SIGNAL(documentOpenned(QString)),
+                 SLOT(onOpenDocumentTab(QString)));
+
+    connect(tabDocuments,SIGNAL(tabCloseRequested(int)),
+                this,SLOT(tabClosed(int)));
 
     readExtensions();
 
@@ -173,8 +183,7 @@ void ComposerMainWindow::readSettings() {
 
     for(int i = 0; i < openfiles.size(); i++)
     {
-        //FIXME: SET THE CORRECT PROJECT_ID!!!
-        DocumentControl::getInstance()->launchDocument("", openfiles.at(i));
+        DocumentControl::getInstance()->launchDocument(openfiles.at(i));
     }
 }
 
@@ -183,12 +192,13 @@ void ComposerMainWindow::initGUI() {
     setWindowIcon(QIcon(":/mainwindow/icon"));
 #endif
     setWindowTitle(tr("Composer NCL 3.0"));
-    tabDocuments = new QTabWidget(this);
+    // tabDocuments = new QTabWidget(ui->frame);
+    tabDocuments = ui->tabWidget;
+
     tabDocuments->setMovable(true);
     tabDocuments->setTabsClosable(true);
     connect(tabDocuments,SIGNAL(tabCloseRequested(int)),
             this,SLOT(tabClosed(int)));
-    setCentralWidget(tabDocuments);
 
     // createStatusBar();
     createActions();
@@ -231,7 +241,7 @@ void ComposerMainWindow::addPluginWidget(IPluginFactory *fac, IPlugin *plugin,
         w->setDockNestingEnabled(true);
         w->setTabPosition(Qt::AllDockWidgetAreas, QTabWidget::West);
 #endif
-        int index = tabDocuments->addTab(w, projectId + "(" + documentId + ")");
+        int index = tabDocuments->addTab(w, "(" + documentId + ")");
         tabDocuments->setTabToolTip(index, location);
         documentsWidgets[location] = w;
     }
@@ -325,9 +335,10 @@ void ComposerMainWindow::createTreeProject()
 
     fileSystemView = new ProjectTreeView(this);
     connect(fileSystemView,
-            SIGNAL(launchDocument(QString,QString)),
+            SIGNAL(launchDocument(QString)),
             DocumentControl::getInstance(),
-            SLOT(launchDocument(QString,QString)));
+            SLOT(launchDocument(QString)));
+    fileSystemView->setVisible(false);
 
     workspace_model = new WorkspaceModel(fileSystemView);
 
@@ -342,7 +353,7 @@ void ComposerMainWindow::createTreeProject()
     fileSystemView->setColumnHidden(3,true);
     fileSystemDock->setWidget(fileSystemView);
 
-    addDockWidget(Qt::LeftDockWidgetArea, fileSystemDock, Qt::Horizontal);
+    addDockWidget(Qt::LeftDockWidgetArea, fileSystemDock, Qt::Vertical);
 
     projectViewAct = new QAction(QIcon(":/mainwindow/projectTree"),
                                  tr("Projects"),this);
@@ -357,12 +368,8 @@ void ComposerMainWindow::createTreeProject()
 }
 
 void ComposerMainWindow::createMenus() {
-    ui->menu_File->addAction(newProjectAct);
-    ui->menu_File->addAction(newDocumentAct);
-    ui->menu_File->addSeparator();
     ui->menu_File->addAction(switchWS);
     ui->menu_File->addSeparator();
-    // ui->menu_File->addAction(exitAct);
 
     ui->menu_Edit->addAction(editPreferencesAct);
 
@@ -373,8 +380,11 @@ void ComposerMainWindow::createMenus() {
     connect(ui->action_Close_All, SIGNAL(triggered()),
             this, SLOT(closeAllFiles()));
 
-    connect( ui->actionSave, SIGNAL(triggered()),
+    connect( ui->action_Save, SIGNAL(triggered()),
              this, SLOT(saveCurrentDocument()));
+
+    connect ( ui->action_New_Project, SIGNAL(triggered()),
+              this, SLOT(launchProjectWizard()));
 }
 
 
@@ -478,20 +488,6 @@ void ComposerMainWindow::errorDialog(QString message) {
 
 void ComposerMainWindow::createActions() {
 
-    newProjectAct = new QAction(QIcon(":/mainwindow/openProject"),
-                                tr("New &Project"), this);
-
-    newProjectAct->setStatusTip(tr("Create a new Project"));
-    //    connect(newProjectAct, SIGNAL(triggered()), this,
-    //            SLOT(launchProjectWizard()));
-
-    newDocumentAct = new QAction(QIcon(":/mainwindow/newDocument"),
-                                 tr("New &Document"), this);
-    newDocumentAct->setShortcuts(QKeySequence::New);
-    newDocumentAct->setStatusTip(tr("Create a new NCL Document"));
-    //    connect(newDocumentAct, SIGNAL(triggered()), this,
-    //            SLOT(launchAddDocumentWizard()));
-
     aboutComposerAct = new QAction(tr("&About"), this);
     aboutComposerAct->setStatusTip(tr("Show the application's About box"));
 
@@ -500,7 +496,8 @@ void ComposerMainWindow::createActions() {
     connect(ui->action_About_Plugins, SIGNAL(triggered()), this, SLOT(about()));
 
     fullScreenViewAct = new QAction(tr("&FullScreen"),this);
-    //fullScreenViewAct->setShortcut();
+    fullScreenViewAct->setShortcut(tr("F11"));
+
     connect(fullScreenViewAct,SIGNAL(triggered()),this,
             SLOT(showCurrentWidgetFullScreen()));
 
@@ -512,9 +509,7 @@ void ComposerMainWindow::createActions() {
     switchWS = new QAction(tr("Switch Workspace"),this);
     connect(switchWS,SIGNAL(triggered()),SLOT(showSwitchWorkspaceDialog()));
 
-    connect(ui->toolButton_3, SIGNAL(clicked()), this, SLOT(close()));
     connect(ui->action_Exit, SIGNAL(triggered()), this, SLOT(close()));
-
     saveCurrentPluginsLayoutAct = new QAction(tr("Save current perspective"),
                                               this);
 
@@ -524,6 +519,17 @@ void ComposerMainWindow::createActions() {
     restorePluginsLayoutAct = new QAction(tr("Restore a perspective"), this);
     connect(restorePluginsLayoutAct, SIGNAL(triggered()),
                 this, SLOT(restorePerspective()));
+
+    QWidget* spacer = new QWidget();
+    spacer->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Expanding);
+
+    //Add a separator to the toolbar. All actions after preferences (including
+    // it will be aligned in the bottom.
+    ui->toolBar->insertWidget(ui->action_Preferences, spacer);
+
+
+    connect (ui->actionOpen_Project, SIGNAL(triggered()),
+             this, SLOT(openDocument()));
 }
 
 void ComposerMainWindow::createStatusBar()
@@ -533,16 +539,18 @@ void ComposerMainWindow::createStatusBar()
 
 void ComposerMainWindow::showCurrentWidgetFullScreen()
 {
-    //     tabDocuments->setWindowFlags(Qt::Window);
-    //    tabDocuments->setWindowState(Qt::WindowFullScreen);
-    tabDocuments->show();
-    //    QWidget *w = tabDocuments->currentWidget();
-    //    if (w != NULL)
-    //    {
-    //        w->setWinowdFlags(Qt::Window);
-    //        w->setWindowState(Qt::WindowFullScreen);
-    //        w->show();
-    //    }
+    tabDocuments->addAction(fullScreenViewAct);
+
+    if(!tabDocuments->isFullScreen())
+    {
+        tabDocuments->setWindowFlags(Qt::Window);
+        tabDocuments->showFullScreen();
+    }
+    else
+    {
+        tabDocuments->setParent(ui->frame, Qt::Widget);
+        tabDocuments->show();
+    }
 }
 
 void ComposerMainWindow::updateViewMenu()
@@ -613,22 +621,22 @@ void ComposerMainWindow::showSwitchWorkspaceDialog()
     wsSwitch->show();
 }
 
-void ComposerMainWindow::beginOpenDocument()
+void ComposerMainWindow::startOpenDocument(QString document)
 {
     qDebug() << "ComposerMainWindow::beginOpenDocument";
-    ui->progressBar->setVisible(true);
+    //ui->progressBar->setVisible(true);
     openingDocument = true;
-    ui->progressBar->repaint();
+    //ui->progressBar->repaint();
     timer->start(10);
     update();
 }
 
-void ComposerMainWindow::endOpenDocument()
+void ComposerMainWindow::endOpenDocument(QString document)
 {
     qDebug() << "ComposerMainWindow::endOpenDocument";
     openingDocument = false;
     timer->stop();
-    ui->progressBar->setVisible(false);
+    //ui->progressBar->setVisible(false);
 
     QSettings settings("telemidia", "composer");
     QString defaultPerspective =
@@ -641,19 +649,33 @@ void ComposerMainWindow::slotTimeout()
 {
     qDebug() << "ComposerMainWindow::slotTimeout()" ;
     if(openingDocument){
-        int v = ui->progressBar->value();
-        qDebug() << "MainWindow::slotTimeout";
-        v %= 100;
-        ui->progressBar->setValue(v);
-        ui->progressBar->repaint();
+        //int v = ui->progressBar->value();
+        //qDebug() << "MainWindow::slotTimeout";
+        //v %= 100;
+        //ui->progressBar->setValue(v);
+        //ui->progressBar->repaint();
     }
 }
 
 void ComposerMainWindow::saveCurrentDocument()
 {
-     QString location = tabDocuments->tabToolTip(tabDocuments->currentIndex());
-     DocumentControl::getInstance()->saveDocument(location);
-     PluginControl::getInstance()->saveDocument(location);
+    int index = tabDocuments->currentIndex();
+
+    if(index != -1)
+    {
+        QString location = tabDocuments->tabToolTip(index);
+        PluginControl::getInstance()->savePluginsData(location);
+        DocumentControl::getInstance()->saveDocument(location);
+    }
+    else
+    {
+        QMessageBox box(QMessageBox::Warning,
+                        tr("Information"),
+                        tr("There aren't a project to be saved."),
+                        QMessageBox::Ok
+                        );
+        box.exec();
+    }
 }
 
 void ComposerMainWindow::saveCurrentGeometryAsPerspective()
@@ -721,4 +743,42 @@ void ComposerMainWindow::restorePerspective(QString layoutName)
     }
 }
 
+void ComposerMainWindow::runNCL()
+{
+    QProcess *ginga = new QProcess(this);
+    QStringList arguments;
+    QString location = tabDocuments->tabToolTip(
+            tabDocuments->currentIndex());
+
+    if(!location.isEmpty())
+    {
+        arguments << "--ncl"<< location;
+        ginga->start("ginga", arguments);
+        QByteArray result = ginga->readAll();
+    }
+    else
+    {
+        QMessageBox::StandardButton reply;
+        reply = QMessageBox::warning(this, tr("Warning!"),
+                                     tr("There aren't a current NCL document."),
+                                     QMessageBox::Ok);
+    }
+}
+
+void ComposerMainWindow::launchProjectWizard()
+{
+    qDebug() << "ComposerMainWindow::launchProjectWizard";
+    projectWizard->init();
+}
+
+void ComposerMainWindow::openDocument()
+{
+    QString fileName = QFileDialog::getOpenFileName(this,
+                                                    tr("Open NCL Document"),
+                                                    QDir::homePath(),
+                                                    tr("NCL Document (*.ncl)"));
+    if(fileName != "") {
+        DocumentControl::getInstance()->launchDocument(fileName);
+    }
+}
 } } //end namespace

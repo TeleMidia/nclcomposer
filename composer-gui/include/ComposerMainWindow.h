@@ -76,8 +76,6 @@ private:
     QMap<QString, QMainWindow*> documentsWidgets; /*!< deprecated  */
     QMap<QString, QDockWidget*> firstDock; /*!< TODO */
 
-    QAction *newProjectAct; /*!< Acton to create a new Project. */
-    QAction *newDocumentAct; /*!< Action to create a new Document. */
     QAction *aboutComposerAct; /*!< Action to show About Composer. */
     QAction *fullScreenViewAct; /*!< Action to show Composer in FullScreen. */
     QAction *projectViewAct; /*!< TODO */
@@ -192,12 +190,10 @@ private slots:
     void about();
     /*!
      \brief
-
     */
     void updateViewMenu();
     /*!
      \brief
-
     */
     void showEditPreferencesDialog();
     /*!
@@ -213,28 +209,17 @@ private slots:
     void tabClosed(int index);
     /*!
      \brief
-
     */
     void showCurrentWidgetFullScreen();
     /*!
      \brief
-
     */
     void closeAllFiles();
     /*!
      \brief
-
     */
-    void beginOpenDocument();
-    /*!
-     \brief
-
-    */
-    void endOpenDocument();
-    /*!
-     \brief
-
-    */
+    void startOpenDocument(QString document);
+    void endOpenDocument(QString document);
     void slotTimeout();
 
     void saveCurrentGeometryAsPerspective();
@@ -243,6 +228,10 @@ private slots:
     void saveDefaultPerspective(QString defaultPerspectiveName);
     void restorePerspective(QString layoutName);
 
+    /*! Run the current open document. */
+    void runNCL();
+
+    void launchProjectWizard();
 
 public:
     /*!
@@ -286,13 +275,20 @@ public slots:
     */
     void switchWorkspace();
 
+    /*!
+        \brief Save the current document.
+     */
     void saveCurrentDocument();
+
+    /*!
+      \brief Called by the user when he/she wants to open an existent project.
+     */
+    void openDocument();
 
 signals:
     /*!
      \brief Send this signal when must be writed the current settings.
      \deprecated
-
     */
     void writeSettings();
 };
