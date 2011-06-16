@@ -2,6 +2,9 @@
 <ui version="4.0">
  <class>ComposerMainWindow</class>
  <widget class="QMainWindow" name="ComposerMainWindow">
+  <property name="enabled">
+   <bool>true</bool>
+  </property>
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -11,20 +14,23 @@
    </rect>
   </property>
   <property name="sizePolicy">
-   <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
+   <sizepolicy hsizetype="Maximum" vsizetype="Maximum">
     <horstretch>0</horstretch>
     <verstretch>0</verstretch>
    </sizepolicy>
+  </property>
+  <property name="focusPolicy">
+   <enum>Qt::NoFocus</enum>
   </property>
   <property name="windowTitle">
    <string>NCL Composer</string>
   </property>
   <property name="autoFillBackground">
-   <bool>true</bool>
+   <bool>false</bool>
   </property>
   <property name="styleSheet">
    <string notr="true">QMainWindow {
-	font-size: 8px;
+	font: 7pt;
 }
 
 QMainWindow::separator {
@@ -41,10 +47,6 @@ QMainWindow::separator:vertical {
  QMainWindow::separator:hover {
      background: lightgray;
  }
-
-#leftToolBar {
-	background-image: url(:/mainwindow/images/bg.jpg);
-}
 
 QDockWidget{
   color: white;
@@ -127,13 +129,21 @@ background: QLinearGradient( x1: 0, y1: 0, x2: 1, y2: 0,
 
 QToolBar {
   border: none;
+  border-color: rgb(0,0,0);
   color: rgb(255, 255, 255);
-  height: 10px;
-  background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+  background-image: url(:/mainwindow/images/bg.jpg);
+/*  background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
   stop: 0 #a6a6a6, stop: 0.08 #7f7f7f,
   stop: 0.39999 #717171, stop: 0.4 #626262,
-  stop: 0.9 #4c4c4c, stop: 1 #333333);
-}</string>
+  stop: 0.9 #4c4c4c, stop: 1 #333333); */
+}
+</string>
+  </property>
+  <property name="iconSize">
+   <size>
+    <width>42</width>
+    <height>42</height>
+   </size>
   </property>
   <property name="documentMode">
    <bool>true</bool>
@@ -157,6 +167,48 @@ QToolBar {
    <property name="styleSheet">
     <string notr="true"/>
    </property>
+   <layout class="QHBoxLayout" name="horizontalLayout">
+    <property name="spacing">
+     <number>0</number>
+    </property>
+    <property name="margin">
+     <number>0</number>
+    </property>
+    <item>
+     <widget class="QFrame" name="frame">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="frameShape">
+       <enum>QFrame::NoFrame</enum>
+      </property>
+      <property name="frameShadow">
+       <enum>QFrame::Raised</enum>
+      </property>
+      <property name="lineWidth">
+       <number>1</number>
+      </property>
+      <layout class="QHBoxLayout" name="horizontalLayout_2">
+       <property name="spacing">
+        <number>0</number>
+       </property>
+       <property name="margin">
+        <number>0</number>
+       </property>
+       <item>
+        <widget class="QTabWidget" name="tabWidget">
+         <property name="currentIndex">
+          <number>-1</number>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+    </item>
+   </layout>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
@@ -173,19 +225,22 @@ QToolBar {
     </property>
     <widget class="QMenu" name="menu_Recent_Files">
      <property name="title">
-      <string>&amp;Recent Files</string>
+      <string>&amp;Recent Projects</string>
      </property>
      <addaction name="action_Clear_Recent_Files"/>
      <addaction name="separator"/>
     </widget>
     <addaction name="action_New_Project"/>
+    <addaction name="actionOpen_Project"/>
     <addaction name="menu_Recent_Files"/>
-    <addaction name="actionSave"/>
     <addaction name="separator"/>
+    <addaction name="actionClose_Project"/>
     <addaction name="action_Close_All"/>
     <addaction name="separator"/>
-    <addaction name="action_Exit"/>
+    <addaction name="action_Save"/>
+    <addaction name="actionSave_All"/>
     <addaction name="separator"/>
+    <addaction name="action_Exit"/>
    </widget>
    <widget class="QMenu" name="menu_Edit">
     <property name="title">
@@ -196,7 +251,7 @@ QToolBar {
     <property name="title">
      <string>&amp;Help</string>
     </property>
-    <addaction name="action_Contents"/>
+    <addaction name="action_Help"/>
     <addaction name="separator"/>
     <addaction name="action_About"/>
     <addaction name="action_About_Plugins"/>
@@ -211,262 +266,77 @@ QToolBar {
    <addaction name="menu_Window"/>
    <addaction name="menu_Help"/>
   </widget>
-  <widget class="QDockWidget" name="dockWidget">
+  <widget class="QToolBar" name="toolBar">
    <property name="enabled">
     <bool>true</bool>
-   </property>
-   <property name="minimumSize">
-    <size>
-     <width>70</width>
-     <height>502</height>
-    </size>
-   </property>
-   <property name="maximumSize">
-    <size>
-     <width>70</width>
-     <height>524287</height>
-    </size>
    </property>
    <property name="acceptDrops">
     <bool>false</bool>
    </property>
-   <property name="styleSheet">
-    <string notr="true">QCommandLinkButton {
-	color: rgb(255, 255, 255);
-}</string>
+   <property name="windowTitle">
+    <string>toolBar</string>
    </property>
-   <property name="floating">
+   <property name="layoutDirection">
+    <enum>Qt::LeftToRight</enum>
+   </property>
+   <property name="autoFillBackground">
     <bool>false</bool>
    </property>
-   <property name="features">
-    <set>QDockWidget::NoDockWidgetFeatures</set>
+   <property name="styleSheet">
+    <string notr="true">color: white;
+font: 75 7.5pt;</string>
    </property>
-   <property name="windowTitle">
-    <string/>
+   <property name="inputMethodHints">
+    <set>Qt::ImhNone</set>
    </property>
-   <attribute name="dockWidgetArea">
-    <number>1</number>
+   <property name="movable">
+    <bool>false</bool>
+   </property>
+   <property name="allowedAreas">
+    <set>Qt::LeftToolBarArea</set>
+   </property>
+   <property name="iconSize">
+    <size>
+     <width>30</width>
+     <height>30</height>
+    </size>
+   </property>
+   <property name="toolButtonStyle">
+    <enum>Qt::ToolButtonTextUnderIcon</enum>
+   </property>
+   <property name="floatable">
+    <bool>false</bool>
+   </property>
+   <attribute name="toolBarArea">
+    <enum>LeftToolBarArea</enum>
    </attribute>
-   <widget class="QWidget" name="leftToolBar">
-    <property name="minimumSize">
-     <size>
-      <width>80</width>
-      <height>0</height>
-     </size>
-    </property>
-    <layout class="QVBoxLayout" name="verticalLayout">
-     <item>
-      <widget class="QToolButton" name="toolButton_4">
-       <property name="text">
-        <string>...</string>
-       </property>
-       <property name="icon">
-        <iconset resource="../images.qrc">
-         <normaloff>:/mainwindow/icon</normaloff>:/mainwindow/icon</iconset>
-       </property>
-       <property name="iconSize">
-        <size>
-         <width>45</width>
-         <height>45</height>
-        </size>
-       </property>
-       <property name="autoRaise">
-        <bool>true</bool>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QToolButton" name="toolButton_5">
-       <property name="text">
-        <string>...</string>
-       </property>
-       <property name="icon">
-        <iconset resource="../images.qrc">
-         <normaloff>:/mainwindow/images/text-icon_256x256.png</normaloff>:/mainwindow/images/text-icon_256x256.png</iconset>
-       </property>
-       <property name="iconSize">
-        <size>
-         <width>45</width>
-         <height>45</height>
-        </size>
-       </property>
-       <property name="autoRaise">
-        <bool>true</bool>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QToolButton" name="toolButton_6">
-       <property name="text">
-        <string>...</string>
-       </property>
-       <property name="icon">
-        <iconset resource="../images.qrc">
-         <normaloff>:/mainwindow/images/designer.png</normaloff>:/mainwindow/images/designer.png</iconset>
-       </property>
-       <property name="iconSize">
-        <size>
-         <width>45</width>
-         <height>45</height>
-        </size>
-       </property>
-       <property name="autoRaise">
-        <bool>true</bool>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <spacer name="verticalSpacer">
-       <property name="orientation">
-        <enum>Qt::Vertical</enum>
-       </property>
-       <property name="sizeHint" stdset="0">
-        <size>
-         <width>20</width>
-         <height>40</height>
-        </size>
-       </property>
-      </spacer>
-     </item>
-     <item>
-      <widget class="QProgressBar" name="progressBar">
-       <property name="enabled">
-        <bool>true</bool>
-       </property>
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="minimumSize">
-        <size>
-         <width>0</width>
-         <height>20</height>
-        </size>
-       </property>
-       <property name="maximumSize">
-        <size>
-         <width>16777215</width>
-         <height>20</height>
-        </size>
-       </property>
-       <property name="value">
-        <number>24</number>
-       </property>
-       <property name="textVisible">
-        <bool>false</bool>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="Line" name="line_2">
-       <property name="enabled">
-        <bool>true</bool>
-       </property>
-       <property name="orientation">
-        <enum>Qt::Horizontal</enum>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QToolButton" name="toolButton">
-       <property name="text">
-        <string>...</string>
-       </property>
-       <property name="icon">
-        <iconset resource="../images.qrc">
-         <normaloff>:/mainwindow/images/ad_novus-fluid_logo.png</normaloff>:/mainwindow/images/ad_novus-fluid_logo.png</iconset>
-       </property>
-       <property name="iconSize">
-        <size>
-         <width>45</width>
-         <height>60</height>
-        </size>
-       </property>
-       <property name="autoRaise">
-        <bool>true</bool>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QToolButton" name="toolButton_2">
-       <property name="text">
-        <string>...</string>
-       </property>
-       <property name="icon">
-        <iconset resource="../images.qrc">
-         <normaloff>:/mainwindow/images/rss_icon.png</normaloff>:/mainwindow/images/rss_icon.png</iconset>
-       </property>
-       <property name="iconSize">
-        <size>
-         <width>45</width>
-         <height>45</height>
-        </size>
-       </property>
-       <property name="autoRaise">
-        <bool>true</bool>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="Line" name="line">
-       <property name="orientation">
-        <enum>Qt::Horizontal</enum>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QToolButton" name="toolButton_3">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Maximum" vsizetype="Maximum">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="text">
-        <string>...</string>
-       </property>
-       <property name="icon">
-        <iconset resource="../images.qrc">
-         <normaloff>:/mainwindow/images/quit.png</normaloff>:/mainwindow/images/quit.png</iconset>
-       </property>
-       <property name="iconSize">
-        <size>
-         <width>45</width>
-         <height>45</height>
-        </size>
-       </property>
-       <property name="autoRepeat">
-        <bool>false</bool>
-       </property>
-       <property name="popupMode">
-        <enum>QToolButton::DelayedPopup</enum>
-       </property>
-       <property name="autoRaise">
-        <bool>true</bool>
-       </property>
-       <property name="arrowType">
-        <enum>Qt::NoArrow</enum>
-       </property>
-      </widget>
-     </item>
-    </layout>
-   </widget>
+   <attribute name="toolBarBreak">
+    <bool>false</bool>
+   </attribute>
+   <addaction name="action_RunNCL"/>
+   <addaction name="action_Run_remotely"/>
+   <addaction name="separator"/>
+   <addaction name="action_New_Project"/>
+   <addaction name="action_Save"/>
+   <addaction name="action_Preferences"/>
+   <addaction name="action_ShowNews"/>
+   <addaction name="action_Help"/>
   </widget>
-  <action name="actionNew_File">
-   <property name="text">
-    <string>&amp;New File</string>
-   </property>
-  </action>
   <action name="action_New_Project">
+   <property name="icon">
+    <iconset resource="../images.qrc">
+     <normaloff>:/mainwindow/images/new_document_icon.png</normaloff>:/mainwindow/images/new_document_icon.png</iconset>
+   </property>
    <property name="text">
-    <string>New &amp;Project</string>
+    <string>&amp;New Project</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+N</string>
    </property>
   </action>
   <action name="action_Exit">
    <property name="text">
-    <string>&amp;Quit</string>
+    <string>E&amp;xit</string>
    </property>
    <property name="toolTip">
     <string>Exit NCL Composer</string>
@@ -477,7 +347,7 @@ QToolBar {
   </action>
   <action name="action_Close_All">
    <property name="text">
-    <string>&amp;Close All</string>
+    <string>Close All</string>
    </property>
   </action>
   <action name="action_Contents">
@@ -508,9 +378,108 @@ QToolBar {
     <string>Clear Recent Files</string>
    </property>
   </action>
-  <action name="actionSave">
+  <action name="action_Save">
+   <property name="icon">
+    <iconset resource="../images.qrc">
+     <normaloff>:/mainwindow/images/save_document_icon.png</normaloff>:/mainwindow/images/save_document_icon.png</iconset>
+   </property>
    <property name="text">
-    <string>Save</string>
+    <string>&amp;Save</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+S</string>
+   </property>
+  </action>
+  <action name="action_RunNCL">
+   <property name="checkable">
+    <bool>false</bool>
+   </property>
+   <property name="enabled">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset>
+     <normalon>:/mainwindow/images/play_button.png</normalon>
+    </iconset>
+   </property>
+   <property name="text">
+    <string>Run</string>
+   </property>
+   <property name="toolTip">
+    <string>Run NCL Project</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+R</string>
+   </property>
+   <property name="iconVisibleInMenu">
+    <bool>true</bool>
+   </property>
+  </action>
+  <action name="action_ShowNews">
+   <property name="icon">
+    <iconset>
+     <normalon>:/mainwindow/images/rss_icon.png</normalon>
+    </iconset>
+   </property>
+   <property name="text">
+    <string>News</string>
+   </property>
+   <property name="toolTip">
+    <string>Show Composer News</string>
+   </property>
+   <property name="shortcut">
+    <string>Alt+Shift+N</string>
+   </property>
+  </action>
+  <action name="action_Preferences">
+   <property name="icon">
+    <iconset resource="../images.qrc">
+     <normaloff>:/mainwindow/images/preferences_icon.png</normaloff>:/mainwindow/images/preferences_icon.png</iconset>
+   </property>
+   <property name="text">
+    <string>Config.</string>
+   </property>
+   <property name="toolTip">
+    <string>Preferences</string>
+   </property>
+  </action>
+  <action name="action_Run_remotely">
+   <property name="icon">
+    <iconset resource="../images.qrc">
+     <normaloff>:/mainwindow/images/run_remote.png</normaloff>:/mainwindow/images/run_remote.png</iconset>
+   </property>
+   <property name="text">
+    <string>Remotely</string>
+   </property>
+   <property name="toolTip">
+    <string>Run Remotelly</string>
+   </property>
+  </action>
+  <action name="action_Help">
+   <property name="icon">
+    <iconset resource="../images.qrc">
+     <normaloff>:/mainwindow/images/help_icon.png</normaloff>:/mainwindow/images/help_icon.png</iconset>
+   </property>
+   <property name="text">
+    <string>Help</string>
+   </property>
+   <property name="shortcut">
+    <string>F1</string>
+   </property>
+  </action>
+  <action name="actionOpen_Project">
+   <property name="text">
+    <string>Open Project</string>
+   </property>
+  </action>
+  <action name="actionClose_Project">
+   <property name="text">
+    <string>&amp;Close</string>
+   </property>
+  </action>
+  <action name="actionSave_All">
+   <property name="text">
+    <string>Save &amp;All</string>
    </property>
   </action>
  </widget>

@@ -33,6 +33,7 @@ class ProjectEntryPage : public QWizardPage
         bool isOpen;
 
         void initGUI();
+
     private slots:
         void setProjectDirectory();
         void setOpenProject(int state);

@@ -22,7 +22,6 @@ void ProjectWizard::init() {
 }
 
 void ProjectWizard::accept() {
-
     name        = field("name").toString();
     location    = field("location").toString();
 

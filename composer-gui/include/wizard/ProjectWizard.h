@@ -11,24 +11,45 @@
 namespace composer {
     namespace gui {
 
+/*!
+ \brief A Wizard to guide the user to create a new document.
+*/
 class ProjectWizard : public QWizard
 {
     Q_OBJECT
-    public:
-        ProjectWizard(QWidget* parent=0);
-        ~ProjectWizard();
-        void init();
-        void accept();
+public:
+    /*!
+     \brief Constructor.
 
-    private:
-        ProjectEntryPage *entryPage;
-        QString name;
-        QString location;
-    signals:
-        void infoReceived(QString,QString);
+     \param parent The Parent of this Wizard.
+    */
+    ProjectWizard(QWidget* parent=0);
+    /*!
+     \brief Destrutor.
+    */
+    ~ProjectWizard();
+    /*!
+     \brief
+    */
+    void init();
+    /*!
+     \brief
+    */
+    void accept();
 
+private:
+    ProjectEntryPage *entryPage; /*!< TODO */
+    QString name; /*!< TODO */
+    QString location; /*!< TODO */
 
+signals:
+    /*!
+     \brief
 
+     \param QString
+     \param QString
+    */
+    void infoReceived(QString,QString);
 };
 
 }} //end namespace

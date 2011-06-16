@@ -28,7 +28,7 @@ void DocumentWizard::accept() {
     bool checked        = entryPage->isCopy();
 
     qDebug() << "DocumentWizard::accept(" << name << ", " << location << ")";
-    emit infoReceived(name,location,projectId,checked);
+    emit infoReceived(name, location, projectId, checked);
 
     QDialog::accept();
 }
