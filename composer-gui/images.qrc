@@ -17,5 +17,11 @@
         <file>images/bg.jpg</file>
         <file>images/text-icon_256x256.png</file>
         <file>images/ad_novus-fluid_logo.png</file>
+        <file>images/play_button.png</file>
+        <file>images/preferences_icon.png</file>
+        <file>images/run_remote.png</file>
+        <file>images/help_icon.png</file>
+        <file>images/new_document_icon.png</file>
+        <file>images/save_document_icon.png</file>
     </qresource>
 </RCC>

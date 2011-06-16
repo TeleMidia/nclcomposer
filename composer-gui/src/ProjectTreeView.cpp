@@ -5,6 +5,7 @@ namespace composer {
 
 ProjectTreeView::ProjectTreeView(QWidget *parent) : QTreeView(parent)
 {
+
 }
 
 void ProjectTreeView::mouseDoubleClickEvent(QMouseEvent *event)
@@ -31,8 +32,7 @@ void ProjectTreeView::launchSelectedDocument()
                     current = cParent;
                     cParent = current.parent();
                 }
-                QString projectId = current.data().toString();
-                emit launchDocument(projectId, documentPath);
+                emit launchDocument(documentPath);
             }
     }
 }

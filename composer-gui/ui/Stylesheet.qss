@@ -1,0 +1,132 @@
+QWidget {
+}
+
+QSplitter::handle {
+  border: 1px solid #334961;
+  background: #d0dae6;
+  border-radius: 2px;
+}
+QSplitter::handle:hover {
+  background: #6187ac;
+}
+
+QMainWindow::separator {
+  border: 1px solid #334961;
+  background: #d0dae6;
+  border-radius: 2px;
+}
+QMainWindow::separator:hover {
+  background: #6187ac;
+}
+
+QDockWidget,  QDockWidget:floatable {
+  background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 rgba(102, 137, 175, 255), stop:1 rgba(206, 219, 235, 255));
+}
+QDockWidget::title {
+  text-align: left;
+  background: #d0dae6;
+  padding-left: 5px;
+}
+
+QMenuBar {
+  background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 rgba(160, 182, 206, 255), stop:0.6875 rgba(255, 255, 255, 255), stop:1 rgba(255, 255, 255, 255));
+  font-weight: bold;
+  font-size: 15px;
+  background-image: url(:/applogo.png);
+  background-position: right;
+  background-repeat: no-repeat;
+  padding-top: 24px;
+  border: 1px solid #3a4f6a;
+}
+QMenuBar::item {
+  padding-top: 3px;
+  padding-right: 20px;
+  padding-bottom: 3px;
+  padding-left: 15px;
+  background-position: left;
+  background-repeat: no-repeat;
+  margin-left: 5px;
+}
+QMenuBar::item:!selected {
+  background-image: url(:/docs.png);
+}
+QMenuBar::item:selected {
+  background-image: url(:/sdocs.png);
+}
+
+QMenu {
+  background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 rgba(97, 135, 172, 255), stop:1 rgba(147, 174, 204, 255));
+  border: 1px solid #3a4f6a;
+  font-weight: bold;
+}
+QMenu::icon {
+  padding-left: 20px;
+}
+QMenu::item {
+  padding-top: 3px;
+  padding-right: 20px;
+  padding-bottom: 3px;
+  padding-left: 30px;
+  background-position: left;
+  background-repeat: no-repeat;
+  margin-left: 5px;
+}
+QMenu::item:!selected {
+  background-image: url(:/doc.png);
+}
+QMenu::item:selected {
+  background-image: url(:/sdoc.png);
+}
+
+QToolBar {
+  border: 1px solid #3a4f6a;
+  font-weight: bold;
+}
+QToolBar:top, QToolBar:bottom {
+  background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, stop:0 rgba(102, 137, 175, 255), stop:0.596591 rgba(146, 172, 201, 255), stop:1 rgba(206, 219, 235, 255));
+}
+QToolBar:left, QToolBar:right {
+  background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 rgba(102, 137, 175, 255), stop:1 rgba(206, 219, 235, 255));
+}
+QToolBar::handle:horizontal {
+  image: url(:/Hmovetoolbar.png);
+}
+QToolBar::handle:vertical {
+  image: url(:/Vmovetoolbar.png);
+}
+QToolBar::separator:horizontal {
+  image: url(:/Hsepartoolbar.png);
+}
+QToolBar::separator:vertical {
+  image: url(:/Vsepartoolbar.png);
+}
+
+QToolTip {
+  background-color: #e1eaf3;
+  color: darkblue;
+  border: 1px solid #3a4f6a;
+}
+
+QStatusBar {
+  background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, stop:0 rgba(208, 218, 230, 255), stop:1 rgba(126, 162, 198, 255));
+  color: #132951;
+  font-weight: bold;
+}
+QStatusBar::item {
+  border: 1px solid #3a4f6a;
+  border-radius: 2px;
+}
+}
+  color: darkblue;
+  border: 1px solid #3a4f6a;
+}
+
+QStatusBar {
+  background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, stop:0 rgba(208, 218, 230, 255), stop:1 rgba(126, 162, 198, 255));
+  color: #132951;
+  font-weight: bold;
+}
+QStatusBar::item {
+  border: 1px solid #3a4f6a;
+  border-radius: 2px;
+}

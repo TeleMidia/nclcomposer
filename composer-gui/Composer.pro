@@ -5,8 +5,10 @@ TARGET = Composer
 TEMPLATE = app
 CONFIG += debug console
 QT += xml webkit
-MOC_DIR = .mocs
-OBJECTS_DIR = .objs
+
+MOC_DIR     =   .moc
+OBJECTS_DIR =   .obj
+UI_DIR      =   .ui
 
 macx:ICON = images/Composer.icns
 
@@ -67,6 +69,8 @@ RESOURCES += images.qrc
 
 FORMS   += ui/PreferencesDialog.ui \
     ui/ComposerMainWindow.ui \
-    ui/PerspectiveManager.ui
+    ui/PerspectiveManager.ui \
+    ui/RunGingaConfig.ui \
+    ui/NewProjectWizard.ui
 
 INSTALLS += target
