@@ -11,6 +11,7 @@ PreferencesDialog::PreferencesDialog(QWidget *parent) :
 {
     ui->setupUi(this);
     this->setModal(true);
+
     loadPreferencesPages();
 
     connect( ui->listWidget,
@@ -26,6 +27,20 @@ PreferencesDialog::~PreferencesDialog()
     delete ui;
 }
 
+void PreferencesDialog::addPreferencesPage(IPluginFactory *pF)
+{
+    if (pF->getPreferencePageWidget() == NULL) return;
+
+    new QListWidgetItem(pF->icon(),
+                        pF->name(),
+                        ui->listWidget, 0);
+
+    QWidget *page = pF->getPreferencePageWidget();
+    pages[pF->name()] = page;
+    page->hide();
+    ui->scrollAreaVerticalLayout->addWidget(page);
+}
+
 void PreferencesDialog::loadPreferencesPages(){
     QList<IPluginFactory*> plugins = PluginControl::getInstance()->
                                                         getLoadedPlugins();
@@ -35,9 +50,11 @@ void PreferencesDialog::loadPreferencesPages(){
     {
         IPluginFactory *pF = *it;
         if (pF->getPreferencePageWidget() == NULL) continue;
+
         new QListWidgetItem(pF->icon(),
                             pF->name(),
                             ui->listWidget, 0);
+
         QWidget *page = pF->getPreferencePageWidget();
         pages[pF->name()] = page;
         page->hide();

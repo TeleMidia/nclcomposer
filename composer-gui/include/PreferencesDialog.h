@@ -28,6 +28,8 @@ public:
     explicit PreferencesDialog(QWidget *parent = 0);
     ~PreferencesDialog();
 
+    void addPreferencesPage(IPluginFactory *);
+
 private:
     Ui::PreferencesDialog *ui;
     QListWidgetItem *currentItem;
