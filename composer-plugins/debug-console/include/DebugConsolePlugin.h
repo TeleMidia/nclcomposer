@@ -31,7 +31,7 @@ class DebugConsolePlugin : public IPlugin
     public slots:
         void onEntityAdded(QString ID, Entity *);
         void onEntityChanged(QString ID, Entity *);
-        void onEntityAboutToRemove(Entity *);
+        /*void onEntityAboutToRemove(Entity *);*/
         void onEntityRemoved(QString ID, QString entityID);
 
         void errorMessage(QString error);

@@ -53,10 +53,10 @@ void DebugConsolePlugin::onEntityChanged(QString ID, Entity * entity)
     list->insertItem(0, new QListWidgetItem(line));
 }
 
-void DebugConsolePlugin::onEntityAboutToRemove(Entity *)
+/*void DebugConsolePlugin::onEntityAboutToRemove(Entity *)
 {
 
-}
+}*/
 
 void DebugConsolePlugin::onEntityRemoved(QString ID, QString entityID)
 {
