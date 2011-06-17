@@ -51,11 +51,11 @@ ComposerMainWindow::ComposerMainWindow(QWidget *parent)
 }
 
 ComposerMainWindow::~ComposerMainWindow() {
-    if(fileSystemModel)
+    /* if(fileSystemModel)
     {
         delete fileSystemModel;
         fileSystemModel = NULL;
-    }
+    } */
     delete ui;
 }
 
@@ -629,11 +629,13 @@ void ComposerMainWindow::startOpenDocument(QString document)
     openingDocument = true;
     //ui->progressBar->repaint();
     timer->start(10);
+    this->setCursor(QCursor(Qt::WaitCursor));
     update();
 }
 
 void ComposerMainWindow::endOpenDocument(QString document)
 {
+    this->setCursor(QCursor(Qt::ArrowCursor));
     qDebug() << "ComposerMainWindow::endOpenDocument";
     openingDocument = false;
     timer->stop();
