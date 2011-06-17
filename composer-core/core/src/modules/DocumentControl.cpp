@@ -43,21 +43,21 @@ bool DocumentControl::closeDocument(QString location)
     return true;
 }
 
-void DocumentControl::launchDocument(QString projectId, QString location)
+void DocumentControl::launchDocument(QString location)
 {
     if (openDocuments.contains(location))
     {
-        emit openDocumentTab(location);
+        emit documentOpenned(location);
         return;
     }
 
     QString ext = location;
-    ext = ext.remove(0, ext.lastIndexOf(".")+1);
+    ext = ext.remove(0, ext.lastIndexOf(".") + 1);
     LanguageType type = Utilities::getLanguageTypeByExtension( ext );
 
     if(type == NONE)
     {
-        //TODO: TEST ON WINDOWS
+        //\todo TEST ON WINDOWS
         QProcess spaw;
         QStringList args;
         args.append(location);
@@ -81,7 +81,7 @@ void DocumentControl::launchDocument(QString projectId, QString location)
         return;
     }
 
-    emit beginOpenDocument();
+    emit startOpenDocument(location);
     QMap<QString,QString> atts;
     QString documentId = location;
     documentId.remove(0, location.lastIndexOf(QDir::separator())+1);
@@ -91,12 +91,11 @@ void DocumentControl::launchDocument(QString projectId, QString location)
     Document *doc = new Document(atts);
     doc->setLocation(location);
     doc->setDocumentType(type);
-    doc->setProjectId(projectId);
+    // doc->setProjectId(projectId);
 
     PluginControl::getInstance()->launchDocument(doc);
     openDocuments[location] = doc;
-    emit endOpenDocument();
-
+    emit endOpenDocument(location);
 }
 
 void DocumentControl::saveDocument(QString location)
@@ -119,8 +118,8 @@ void DocumentControl::saveDocument(QString location)
     }
 
     QTextStream stream( &fout );
-    qDebug() << doc->toString(0);
-    stream << doc->toString(0);
+    qDebug() << doc->toString();
+    stream << doc->toString();
     fout.close();
 }
 
