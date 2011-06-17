@@ -14,16 +14,12 @@ NCLDocumentParser::~NCLDocumentParser()
 }
 
 QString NCLDocumentParser::getParserName()
-
 {
     return "NCLDocumentParser";
 }
 
 bool NCLDocumentParser::parseDocument()
 {
-//    qDebug() << "NCLDocumentParser::parseDocument("
-//             << doc->getLocation() << ")";
-
     QString uri = doc->getLocation();
 
     QFile *file = new QFile(uri, this);
@@ -39,17 +35,15 @@ bool NCLDocumentParser::parseDocument()
     QXmlSimpleReader reader;
     reader.setContentHandler(this);
     reader.setErrorHandler(this);
+
     return reader.parse(inputSource);
-
 }
-
 
 bool NCLDocumentParser::startElement(const QString &,
                   const QString &,
                   const QString &qName,
                   const QXmlAttributes &attributes)
 {
-
     QMap<QString,QString> atts;
     QString parentId = doc->getUniqueId();
 
@@ -73,10 +67,8 @@ bool NCLDocumentParser::endElement(const QString &namespaceURI,
                 const QString &localName,
                 const QString &qName)
 {
-
     lockStack.lock();
     elementStack.pop();
-    //sync.wakeAll();
     lockStack.unlock();
     return true;
 }
@@ -97,20 +89,14 @@ bool NCLDocumentParser::fatalError(const QXmlParseException &exception)
 
 void NCLDocumentParser::onEntityAdded(QString , Entity *entity)
 {
-//    qDebug() << "DocumentParser::onEntityAdded(" << ID
-//            << ", " << entity->getType() << ")";
-
     lockStack.lock();
     elementStack.push(entity);
-    //sync.wakeAll();
     lockStack.unlock();
 }
-
 
 void NCLDocumentParser::onEntityAddError(QString error)
 {
     qWarning() << "NCLDocumentParser::onEntityAddError(" << error << ")";
-    //sync.wakeAll();
 }
 
 } } //end namespace
