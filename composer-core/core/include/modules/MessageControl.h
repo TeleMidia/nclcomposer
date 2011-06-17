@@ -22,6 +22,7 @@ namespace composer {
 
         class MessageControl : public QObject {
             Q_OBJECT
+
         private:
             Document *doc;
 
@@ -39,14 +40,11 @@ namespace composer {
             void onRemoveEntity(Entity *, bool force);
 
         signals:
-            void entityAdded(QString ID, Entity *);
+            void entityAdded(QString uniqueID, Entity *);
             void entityAddError(QString error);
-            /** TODO: Lembrar se ele tiver mudado o ID */
-            void entityChanged(QString ID, Entity *);
+            void entityChanged(QString uniqueID, Entity *);
             void entityChangeError(QString error);
-            /** Lembrar de ele apagar a sua referência interna */
-            void aboutToRemoveEntity(Entity *);
-            void entityRemoved(QString ID, QString entityId);
+            void entityRemoved(QString uniqueID, QString entityId);
             void entityRemoveError(QString error);
         };
     } }

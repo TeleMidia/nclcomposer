@@ -167,12 +167,11 @@ void PluginControl::launchNewPlugin(IPlugin *plugin,
     connect(mControl,SIGNAL(entityAdded(QString, Entity*)),
             plugin, SLOT(onEntityAdded(QString, Entity*)));
     connect(mControl,SIGNAL(entityChanged(QString, Entity*)),
-            plugin,SLOT(onEntityChanged(QString, Entity*)),
-            Qt::DirectConnection);
+            plugin,SLOT(onEntityChanged(QString, Entity*)));
     connect(mControl,SIGNAL(entityRemoved(QString, QString)),
             plugin,SLOT(onEntityRemoved(QString, QString)));
-    connect(mControl,SIGNAL(aboutToRemoveEntity(Entity*)),
-            plugin, SLOT(onEntityAboutToRemove(Entity*)));
+    /*connect(mControl,SIGNAL(aboutToRemoveEntity(Entity*)),
+            plugin, SLOT(onEntityAboutToRemove(Entity*)));*/
 
     /* Connect signals from the plugin to slots of the core */
     connect(plugin,
@@ -195,12 +194,12 @@ void PluginControl::connectParser(IDocumentParser *parser,
                      MessageControl *mControl)
 {
     connect(parser,
-            SIGNAL(addEntity(QString,QString,QMap<QString,QString>&,bool)),
+            SIGNAL(addEntity(QString, QString, QMap<QString,QString>&, bool)),
             mControl,
-            SLOT(onAddEntity(QString,QString,QMap<QString,QString>&,bool)));
+            SLOT(onAddEntity(QString, QString, QMap<QString,QString>&, bool)));
 
-    connect(mControl,SIGNAL(entityAdded(QString,Entity*)),
-            parser, SLOT(onEntityAdded(QString,Entity*)));
+    connect(mControl,SIGNAL(entityAdded(QString, Entity*)),
+            parser, SLOT(onEntityAdded(QString, Entity*)));
 }
 
 QList<IPluginFactory*> PluginControl::getLoadedPlugins()
@@ -272,7 +271,7 @@ void PluginControl::sendBroadcastMessage(const char* slot, void *obj)
 
 }
 
-void PluginControl::saveDocument(QString location)
+void PluginControl::savePluginsData(QString location)
 {
     QList<IPlugin*>::iterator it;
     QList<IPlugin*> instances = pluginInstances.values(location);

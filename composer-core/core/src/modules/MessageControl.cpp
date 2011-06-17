@@ -80,18 +80,18 @@ void MessageControl::onRemoveEntity( Entity *entity,
             if(entity)
             {
                 QString _id = entity->getUniqueId();
-                emit aboutToRemoveEntity(entity);
-                /*! \todo remember to change, the append should come from the
+                /*!
+                \todo remember to change, the append should come from the
                     plugin
                 */
                 doc->removeEntity(entity,true);
-                emit entityRemoved(pluginID,_id);
+                emit entityRemoved(pluginID, _id);
             }
             else {
                 plugin->errorMessage(tr("You have tried to remove a NULL \
                                         entity!!"));
             }
-        }catch(exception e){
+        } catch(exception e){
             plugin->errorMessage(e.what());
             return;
         }
@@ -100,7 +100,6 @@ void MessageControl::onRemoveEntity( Entity *entity,
         */
         return;
     }
-
 }
 
 }}//end namespace

@@ -27,20 +27,20 @@ namespace composer {
             Q_OBJECT
             SINGLETON(DocumentControl)
         private:
-                    DocumentControl();
+            DocumentControl();
             ~DocumentControl();
             QMap<QString, Document*> openDocuments;
-
-        signals:
-            void openDocumentTab(QString);
-            void notifyError(QString);
-            void beginOpenDocument();
-            void endOpenDocument();
 
          public slots:
             bool closeDocument(QString location);
             void saveDocument(QString location);
-            void launchDocument(QString projectId, QString location);
+            void launchDocument(QString location);
+
+        signals:
+            void startOpenDocument(QString document);
+            void endOpenDocument(QString document);
+            void documentOpenned(QString);
+            void notifyError(QString);
         };
 
 } } //end namespace

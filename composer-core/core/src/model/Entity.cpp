@@ -109,7 +109,6 @@ namespace composer {
                 Entity *child = it.value();
                 out += child->toString(ntab+1);
         }
-        out += "\n";
         for(int i = 0; i < ntab; i++)
             out += "\t";
         out += "</";
