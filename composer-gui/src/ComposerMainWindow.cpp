@@ -25,7 +25,7 @@ ComposerMainWindow::ComposerMainWindow(QWidget *parent)
 #ifdef Q_WS_MAC
     defaultEx = "/Library/Application Support/Composer";
 #elif defined(Q_WS_WIN32)
-    defaultEx = "C:/Composer/lib/composer/extension";
+    defaultEx = "C:/Composer/lib/composer";
 #else
     defaultEx = "/usr/local/lib/composer/extension";
 #endif
@@ -159,7 +159,7 @@ void ComposerMainWindow::readSettings() {
     restoreState(settings.value("windowState").toByteArray());
     settings.endGroup();
 
-    settings.beginGroup("workspace");
+    /*settings.beginGroup("workspace");
     if (!settings.contains("path"))
     {
         wsSwitch->exec();
@@ -174,6 +174,7 @@ void ComposerMainWindow::readSettings() {
                 work_space_path = wsSwitch->getWorspacePath();
         }
     }
+    */
 //    createTreeProject();
     settings.endGroup();
 
@@ -639,10 +640,13 @@ void ComposerMainWindow::endOpenDocument(QString document)
     //ui->progressBar->setVisible(false);
 
     QSettings settings("telemidia", "composer");
-    QString defaultPerspective =
-            settings.value("default_perspective").toString();
-    restorePerspective(defaultPerspective);
-    update();
+    if(settings.contains("default_perspective"))
+    {
+        QString defaultPerspective =
+                settings.value("default_perspective").toString();
+        restorePerspective(defaultPerspective);
+        update();
+    }
 }
 
 void ComposerMainWindow::slotTimeout()
