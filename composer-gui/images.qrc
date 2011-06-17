@@ -23,5 +23,7 @@
         <file>images/help_icon.png</file>
         <file>images/new_document_icon.png</file>
         <file>images/save_document_icon.png</file>
+        <file>images/open_project_icon.png</file>
+        <file>images/import_document_icon.png</file>
     </qresource>
 </RCC>

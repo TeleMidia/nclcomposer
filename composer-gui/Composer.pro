@@ -70,7 +70,6 @@ RESOURCES += images.qrc
 FORMS   += ui/PreferencesDialog.ui \
     ui/ComposerMainWindow.ui \
     ui/PerspectiveManager.ui \
-    ui/RunGingaConfig.ui \
-    ui/NewProjectWizard.ui
+    ui/RunGingaConfig.ui
 
 INSTALLS += target

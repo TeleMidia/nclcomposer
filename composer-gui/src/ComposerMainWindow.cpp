@@ -20,7 +20,7 @@ ComposerMainWindow::ComposerMainWindow(QWidget *parent)
     user_directory_ext = "";
     work_space_path = QDir::homePath();
 
-    fileSystemModel = NULL;
+//    fileSystemModel = NULL;
 
 #ifdef Q_WS_MAC
     defaultEx = "/Library/Application Support/Composer";
@@ -30,8 +30,8 @@ ComposerMainWindow::ComposerMainWindow(QWidget *parent)
     defaultEx = "/usr/local/lib/composer/extension";
 #endif
 
-    wsSwitch = new WorkspaceSwitch(this);
-    connect(wsSwitch,SIGNAL(accepted()), SLOT(switchWorkspace()));
+//    wsSwitch = new WorkspaceSwitch(this);
+//    connect(wsSwitch,SIGNAL(accepted()), SLOT(switchWorkspace()));
     initGUI();
 
     initModules();
@@ -174,7 +174,7 @@ void ComposerMainWindow::readSettings() {
                 work_space_path = wsSwitch->getWorspacePath();
         }
     }
-    createTreeProject();
+//    createTreeProject();
     settings.endGroup();
 
     settings.beginGroup("openfiles");
@@ -368,8 +368,8 @@ void ComposerMainWindow::createTreeProject()
 }
 
 void ComposerMainWindow::createMenus() {
-    ui->menu_File->addAction(switchWS);
-    ui->menu_File->addSeparator();
+//    ui->menu_File->addAction(switchWS);
+//    ui->menu_File->addSeparator();
 
     ui->menu_Edit->addAction(editPreferencesAct);
 
@@ -506,8 +506,8 @@ void ComposerMainWindow::createActions() {
     connect (editPreferencesAct, SIGNAL(triggered()), this,
              SLOT(showEditPreferencesDialog()));
 
-    switchWS = new QAction(tr("Switch Workspace"),this);
-    connect(switchWS,SIGNAL(triggered()),SLOT(showSwitchWorkspaceDialog()));
+//    switchWS = new QAction(tr("Switch Workspace"),this);
+//    connect(switchWS,SIGNAL(triggered()),SLOT(showSwitchWorkspaceDialog()));
 
     connect(ui->action_Exit, SIGNAL(triggered()), this, SLOT(close()));
     saveCurrentPluginsLayoutAct = new QAction(tr("Save current perspective"),
@@ -556,13 +556,13 @@ void ComposerMainWindow::showCurrentWidgetFullScreen()
 void ComposerMainWindow::updateViewMenu()
 {
     ui->menu_Window->clear();
-    ui->menu_Window->addAction(projectViewAct);
-    ui->menu_Window->addSeparator();
+//    ui->menu_Window->addAction(projectViewAct);
+//    ui->menu_Window->addSeparator();
     ui->menu_Window->addAction(fullScreenViewAct);
     ui->menu_Window->addSeparator();
     ui->menu_Window->addAction(saveCurrentPluginsLayoutAct);
     ui->menu_Window->addAction(restorePluginsLayoutAct);
-    projectViewAct->setChecked(fileSystemDock->isVisible());
+//    projectViewAct->setChecked(fileSystemDock->isVisible());
 }
 
 void ComposerMainWindow::closeEvent(QCloseEvent *event)
@@ -767,18 +767,26 @@ void ComposerMainWindow::runNCL()
 
 void ComposerMainWindow::launchProjectWizard()
 {
-    qDebug() << "ComposerMainWindow::launchProjectWizard";
-    projectWizard->init();
+    QString filename = QFileDialog::getSaveFileName(
+            this,
+            tr("Creating a new Project"),
+            QDir::currentPath(),
+            tr("NCL Documents (*.ncl)") );
+
+    if( !filename.isNull() )
+    {
+         DocumentControl::getInstance()->launchDocument(filename);
+    }
 }
 
 void ComposerMainWindow::openDocument()
 {
-    QString fileName = QFileDialog::getOpenFileName(this,
+    QString filename = QFileDialog::getOpenFileName(this,
                                                     tr("Open NCL Document"),
                                                     QDir::homePath(),
                                                     tr("NCL Document (*.ncl)"));
-    if(fileName != "") {
-        DocumentControl::getInstance()->launchDocument(fileName);
+    if(filename != "") {
+        DocumentControl::getInstance()->launchDocument(filename);
     }
 }
 } } //end namespace
