@@ -44,11 +44,6 @@ void PropertiesViewPlugin::onEntityChanged(QString pluginID, Entity * entity)
 
 }
 
-void PropertiesViewPlugin::onEntityAboutToRemove(Entity *entity)
-{
-//    entityToRemoveId = ""
-}
-
 void PropertiesViewPlugin::onEntityRemoved(QString pluginID, QString entityID)
 {
     QString line = "PLUGIN (" + pluginID + ") removed Entity (" +

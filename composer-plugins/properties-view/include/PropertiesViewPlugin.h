@@ -77,13 +77,6 @@ class PropertiesViewPlugin : public IPlugin
 
          \param
         */
-        void onEntityAboutToRemove(Entity *);
-        /*!
-         \brief
-
-         \param ID
-         \param entityID
-        */
         void onEntityRemoved(QString ID, QString entityID);
 
         /*!
