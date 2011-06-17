@@ -119,22 +119,24 @@ QFont QsciLexerNCL::defaultFont(int style) const
     case Entity:
     case CDATA:
 #if defined(Q_OS_WIN)
-        f = QFont("Times New Roman",11);
+        f = QFont("Times New Roman", 10);
 #else
-        f = QFont("Bitstream Charter",10);
+        f = QFont("Bitstream Charter", 9);
 #endif
         break;
 
     case XMLStart:
     case XMLEnd:
     case SGMLCommand:
-        f = QsciLexer::defaultFont(style);
+        f = QsciLexerHTML::defaultFont(style);
         f.setBold(true);
         break;
 
     default:
         f = QsciLexerHTML::defaultFont(style);
     }
+
+    f.setPointSize(8);
 
     return f;
 }

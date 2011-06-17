@@ -21,6 +21,7 @@ class NCLTextualViewPluginFactory : public QObject,
 {
     Q_OBJECT
     Q_INTERFACES(IPluginFactory)
+
     public:
          NCLTextualViewPluginFactory();
 
@@ -74,6 +75,12 @@ class NCLTextualViewPluginFactory : public QObject,
            \return QString the license of TextualView.
          */
          QString license() {return "GPLv3";}
+
+         /*!
+           \brief Returns a description of the textual view plugin
+
+           \return QString the license of TextualView.
+         */
          QString description() {return "Unknown";}
          QString url() {return "Unknown";}
          QString category() {return "NCL";}

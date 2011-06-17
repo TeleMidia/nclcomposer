@@ -104,10 +104,10 @@ void NCLTextualViewPlugin::onEntityChanged(QString ID, Entity *entity)
     //TODO: All
 }
 
-void NCLTextualViewPlugin::onEntityAboutToRemove(Entity *)
+/*void NCLTextualViewPlugin::onEntityAboutToRemove(Entity *)
 {
 
-}
+}*/
 
 void NCLTextualViewPlugin::onEntityRemoved(QString pluginID, QString entityID)
 {
@@ -179,27 +179,8 @@ void NCLTextualViewPlugin::onEntityRemoved(QString pluginID, QString entityID)
 
 bool NCLTextualViewPlugin::saveSubsession()
 {
-    QString loc = doc->getLocation();
-    QFile fout(loc + ".cptext");
-
-    qDebug() << "Trying to save: " << loc;
-    if(!fout.exists())
-    {
-        qDebug() << "The file (" << loc << ") doesn't exists. It will be\
-                    created.";
-    }
-
-    if( !fout.open( QIODevice::WriteOnly ) )
-    {
-       // It could not open
-       qDebug() << "Failed to open file (" <<  loc << ")";
-       return false;
-    }
-
-    QTextStream stream( &fout );
-    stream << window->getTextEditor()->text().toStdString().c_str();
-    fout.close();
-
+    doc->setPluginData(QString("ncl-text-editor"),
+                       window->getTextEditor()->text().toAscii());
     return true;
 }
 

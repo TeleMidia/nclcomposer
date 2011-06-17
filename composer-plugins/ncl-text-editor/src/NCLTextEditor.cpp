@@ -21,13 +21,13 @@ void NCLTextEditor::initParameters()
     tabBehavior = TAB_BEHAVIOR_DEFAULT;
 
     setAutoIndent(true);
-    setFolding(QsciScintilla::BoxedTreeFoldStyle);
+    setFolding(QsciScintilla::CircledTreeFoldStyle);
     setFoldMarginColors(PREF_FOLD_MARGIN_FORE_COLOR,
                         PREF_FOLD_MARGIN_BACK_COLOR);
 
     setMarginLineNumbers(1, true);
     setMarginWidth(1, 25);
-    setMarginsBackgroundColor(QColor("#dddddd"));
+    setMarginsBackgroundColor(QColor("#ffffff"));
 
     setCaretWidth(20);
     setCaretLineBackgroundColor(QColor("#e6fff0"));
