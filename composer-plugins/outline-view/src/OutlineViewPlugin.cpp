@@ -101,10 +101,10 @@ void OutlineViewPlugin::onEntityChanged(QString pluginID, Entity * entity)
 
 }
 
-void OutlineViewPlugin::onEntityAboutToRemove(Entity *entity)
+/*void OutlineViewPlugin::onEntityAboutToRemove(Entity *entity)
 {
 //    entityToRemoveId = ""
-}
+}*/
 
 void OutlineViewPlugin::onEntityRemoved(QString pluginID, QString entityID)
 {

@@ -88,7 +88,7 @@ public slots:
 
      \param
     */
-    void onEntityAboutToRemove(Entity *);
+    /*void onEntityAboutToRemove(Entity *);*/
     /*!
      \brief
 
