@@ -7,12 +7,9 @@
 
 namespace composer {
     namespace core {
-        namespace util {
-            class Project;
-        }
         class PluginControl;
         class MessageControl;
-        class DocumentControl;
+        class ProjectControl;
 } } //end namespace
 
 #include "../model/exception/ParentNotFound.h"
@@ -27,7 +24,7 @@ namespace composer {
     namespace core {
         namespace model {
 
-class Document : public Entity
+class Project : public Entity
 {
     Q_OBJECT
 
@@ -35,15 +32,14 @@ class Document : public Entity
     // private and protected members of Document.
     friend class composer::core::PluginControl;
     friend class composer::core::MessageControl;
-    friend class composer::core::DocumentControl;
-    friend class composer::core::util::Project;
+    friend class composer::core::ProjectControl;
 
 public:
     Entity* getEntityBydId(QString _id);
     QList<Entity*> getEntitiesbyType(QString _type);
     QString getLocation();
     QString getProjectId();
-    LanguageType getDocumentType();
+    LanguageType getProjectType();
 
     /*!
       \brief Set specific plugin data to project file.
@@ -61,17 +57,18 @@ private:
     QMutex lockLocation;
     QMap<QString, Entity*> entities;
     QMap<QString, QByteArray> pluginData;
-    QString documentLocation;
+    QString projectLocation;
     QString projectName;
-    LanguageType documentType;
+    QString projectId;
+    LanguageType projectType;
 
 protected:
-    explicit Document(QObject *parent = 0);
-    Document(QMap<QString,QString> &atts, QObject *parent = 0);
-    ~Document();
+    explicit Project(QObject *parent = 0);
+    Project(QMap<QString,QString> &atts, QObject *parent = 0);
+    ~Project();
 
     void setLocation(QString location);
-    void setDocumentType(LanguageType type);
+    void setProjectType(LanguageType type);
     void setProjectId(QString _projectId);
 
     /*! \brief This method is used to add an Entity in the map and as child of

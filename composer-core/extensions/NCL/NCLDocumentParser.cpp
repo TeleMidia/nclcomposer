@@ -3,9 +3,9 @@
 namespace composer {
 namespace language {
 
-NCLDocumentParser::NCLDocumentParser(Document *doc)
+NCLDocumentParser::NCLDocumentParser(Project *project)
 {
-    this->doc = doc;
+    this->project = project;
 }
 
 NCLDocumentParser::~NCLDocumentParser()
@@ -20,7 +20,7 @@ QString NCLDocumentParser::getParserName()
 
 bool NCLDocumentParser::parseDocument()
 {
-    QString uri = doc->getLocation();
+    QString uri = project->getLocation();
 
     QFile *file = new QFile(uri, this);
     if (!file->open(QIODevice::ReadWrite)) {
@@ -45,7 +45,7 @@ bool NCLDocumentParser::startElement(const QString &,
                   const QXmlAttributes &attributes)
 {
     QMap<QString,QString> atts;
-    QString parentId = doc->getUniqueId();
+    QString parentId = project->getUniqueId();
 
     if (qName != "ncl")
     {

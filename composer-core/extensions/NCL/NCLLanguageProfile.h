@@ -22,7 +22,7 @@ namespace composer {
         QList<QString>
                 getOutputDocumentTypes();
         IDocumentParser*
-                createDocumentParser(Document *doc);
+                createParser(Project *project);
         void releaseDocumentParser
                 (IDocumentParser *parser);
         QString getProfileName();

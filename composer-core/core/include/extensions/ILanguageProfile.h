@@ -12,7 +12,7 @@ using namespace composer::extension;
 #include "../util/Utilities.h"
 using namespace composer::core::util;
 
-#include "../model/Document.h"
+#include "../model/Project.h"
 using namespace composer::core::model;
 
 #include "../util/AttributeReferences.h"
@@ -38,7 +38,7 @@ namespace composer {
                     getOutputDocumentTypes() = 0;
 
             virtual IDocumentParser*
-                    createDocumentParser(Document *doc) = 0;
+                    createParser(Project *project) = 0;
 
             virtual void releaseDocumentParser
                     (IDocumentParser *parser) = 0;

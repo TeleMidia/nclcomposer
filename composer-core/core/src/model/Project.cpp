@@ -1,44 +1,44 @@
-#include "model/Document.h"
+#include "model/Project.h"
 
 namespace composer {
     namespace core {
         namespace model {
 
-Document::Document(QObject *parent) :
+Project::Project(QObject *parent) :
     Entity(parent)
 {
     setType("document");
     entities[this->getUniqueId()] = this;
 }
 
-Document::Document(QMap<QString,QString> &atts, QObject *parent) :
+Project::Project(QMap<QString,QString> &atts, QObject *parent) :
     Entity(atts, parent)
 {
     setType("document");
     entities[this->getUniqueId()] = this;
 }
 
-Document::~Document() {
+Project::~Project() {
     QMutexLocker locker(&lockEntities);
     entities.clear();
 }
 
-LanguageType Document::getDocumentType()
+LanguageType Project::getProjectType()
 {
-    return this->documentType;
+    return this->projectType;
 }
 
-void Document::setDocumentType(LanguageType type)
+void Project::setProjectType(LanguageType type)
 {
-    this->documentType = type;
+    this->projectType = type;
 }
 
-Entity* Document::getEntityBydId(QString _id) {
+Entity* Project::getEntityBydId(QString _id) {
     QMutexLocker locker(&lockEntities);
     return entities.contains(_id) ? entities[_id] : NULL;
 }
 
-QList<Entity*> Document::getEntitiesbyType(QString _type) {
+QList<Entity*> Project::getEntitiesbyType(QString _type) {
     QMutexLocker locker(&lockEntities);
     QMapIterator<QString, Entity*> it(entities);
     QList<Entity*> listRet;
@@ -51,27 +51,27 @@ QList<Entity*> Document::getEntitiesbyType(QString _type) {
     return listRet;
 }
 
-QString Document::getLocation() {
+QString Project::getLocation() {
     QMutexLocker locker(&lockLocation);
-    return this->documentLocation;
+    return this->projectLocation;
 }
 
-void Document::setLocation(QString location) {
+void Project::setLocation(QString location) {
     QMutexLocker locker(&lockLocation);
-    this->documentLocation = location;
+    this->projectLocation = location;
 }
 
-void Document::setProjectId(QString _projectId)
+void Project::setProjectId(QString _projectId)
 {
     this->projectId = _projectId;
 }
 
-QString Document::getProjectId()
+QString Project::getProjectId()
 {
     return this->projectId;
 }
 
-bool Document::addEntity(Entity* entity, QString parentId)
+bool Project::addEntity(Entity* entity, QString parentId)
     throw (EntityNotFound,ParentNotFound)
 {
     QMutexLocker locker(&lockEntities);
@@ -90,7 +90,7 @@ bool Document::addEntity(Entity* entity, QString parentId)
     entities[entity->getUniqueId()] = entity;
 }
 
-bool Document::removeEntity(Entity* entity, bool appendChild)
+bool Project::removeEntity(Entity* entity, bool appendChild)
      throw (EntityNotFound)
 {
     QMutexLocker locker(&lockEntities);
@@ -116,8 +116,8 @@ bool Document::removeEntity(Entity* entity, bool appendChild)
     return true;
 }
 
-/** \todo Save document to the hard disk. */
-QString Document::toString()
+/** \todo Save project to the hard disk. */
+QString Project::toString()
 {
    QMutexLocker locker(&lockEntities);
    QString result = "";
@@ -135,13 +135,13 @@ QString Document::toString()
    return result;
 }
 
-bool Document::setPluginData(QString pluginId, const QByteArray data)
+bool Project::setPluginData(QString pluginId, const QByteArray data)
 {
     this->pluginData[pluginId] = data;
     return true;
 }
 
-QByteArray Document::getPluginData(QString pluginId)
+QByteArray Project::getPluginData(QString pluginId)
 {
     if(pluginData.contains(pluginId))
     {

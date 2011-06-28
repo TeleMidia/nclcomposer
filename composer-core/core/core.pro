@@ -21,9 +21,9 @@ SOURCES += \
     src/modules/PluginControl.cpp \
     src/modules/MessageControl.cpp \
     src/modules/LanguageControl.cpp \
-    src/modules/DocumentControl.cpp \
+    src/modules/ProjectControl.cpp \
     src/model/Entity.cpp \
-    src/model/Document.cpp \
+    src/model/Project.cpp \
     src/util/Utilities.cpp \
     src/util/AttributeReferences.cpp
 
@@ -31,7 +31,7 @@ HEADERS_MAN += \
     include/modules/PluginControl.h \
     include/modules/MessageControl.h \
     include/modules/LanguageControl.h \
-    include/modules/DocumentControl.h
+    include/modules/ProjectControl.h
 
 HEADERS_EXTENSIONS += \
     include/extensions/ILanguageProfile.h \
@@ -50,7 +50,7 @@ HEADERS_EXCEPTION +=  include/model/exception/EntityNotFound.h \
     include/model/exception/CreationFailed.h
 
 HEADERS_MODEL += include/model/Entity.h \
-    include/model/Document.h
+    include/model/Project.h
 
 HEADERS = $$HEADERS_MAN $$HEADERS_EXTENSIONS $$HEADERS_UTIL \
           $$HEADERS_EXCEPTION $$HEADERS_MODEL

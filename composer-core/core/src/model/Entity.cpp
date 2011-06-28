@@ -57,6 +57,8 @@ namespace composer {
         entity->setDeleteChildren(true);
         delete entity;
         entity = NULL;
+
+        return true;
     }
 
     //! This call removes the child and append his children to his parent
@@ -71,6 +73,7 @@ namespace composer {
         entity->setDeleteChildren(false);
         delete entity;
         entity = NULL;
+        return true;
     }
 
     //! Print the Entity and its children

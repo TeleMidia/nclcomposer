@@ -3,7 +3,7 @@
 
 #include <QObject>
 
-#include "../model/Document.h"
+#include "../model/Project.h"
 using namespace composer::core::model;
 
 namespace composer {

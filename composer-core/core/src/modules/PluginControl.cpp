@@ -114,23 +114,23 @@ void PluginControl::loadPlugins(QString pluginsDirPath) {
     }//end foreach
 }//end function
 
-void PluginControl::launchDocument(Document *doc)
+void PluginControl::launchProject(Project *project)
 {
 
     MessageControl *msgControl;
     IDocumentParser *parser;
     IPluginFactory *factory;
     IPlugin *pluginInstance;
-    LanguageType type = doc->getDocumentType();
+    LanguageType type = project->getProjectType();
     ILanguageProfile *profile = LanguageControl::getInstance()->
                                 getProfileFromType(type);
-    QString location  = doc->getLocation();
+    QString location  = project->getLocation();
 
-    msgControl = new MessageControl(doc);
+    msgControl = new MessageControl(project);
     messageControls[location] = msgControl;
 
     /* Requests a new DocumentParser for this Document*/
-    parser = profile->createDocumentParser(doc);
+    parser = profile->createParser(project);
 
     QList<QString> plugIDs = pluginsByType.values(type);
     QList<QString>::iterator it;
@@ -142,12 +142,12 @@ void PluginControl::launchDocument(Document *doc)
         if (pluginInstance)
         {
             pluginInstance->setPluginInstanceID(QUuid::createUuid().toString());
-            pluginInstance->setDocument(doc);
+            pluginInstance->setProject(project);
             pluginInstance->setLanguageProfile(profile);
             launchNewPlugin(pluginInstance, msgControl);
             pluginInstances.insert(location, pluginInstance);
             factoryByPlugin.insert(pluginInstance, factory);
-            emit addPluginWidgetToWindow(factory, pluginInstance, doc,
+            emit addPluginWidgetToWindow(factory, pluginInstance, project,
                                          factoryByPlugin.size());
         }
         else {
@@ -214,24 +214,26 @@ QList<IPluginFactory*> PluginControl::getLoadedPlugins()
         return pList;
 }
 
-bool PluginControl::releasePlugins(Document *doc)
+bool PluginControl::releasePlugins(Project *project)
 {
-        if (!doc) return false;
-        if (!messageControls.contains(doc->getLocation()))
+        if (!project) return false;
+
+        if (!messageControls.contains(project->getLocation()))
             return false;
 
-        if (!pluginInstances.contains(doc->getLocation())) return false;
+        if (!pluginInstances.contains(project->getLocation())) return false;
 
-        MessageControl *t = messageControls.value
-                                (doc->getLocation());
+        MessageControl *t = messageControls.value(project->getLocation());
         if (t)
         {
             delete t;
             t = NULL;
-            messageControls.remove(doc->getLocation());
+            messageControls.remove(project->getLocation());
         }
 
-        QList<IPlugin*> instances = pluginInstances.values(doc->getLocation());
+        QList<IPlugin*> instances =
+                pluginInstances.values(project->getLocation());
+
         QList<IPlugin*>::iterator it;
         for (it = instances.begin(); it != instances.end(); it++)
         {
@@ -241,7 +243,7 @@ bool PluginControl::releasePlugins(Document *doc)
            factoryByPlugin.remove(inst);
            fac->releasePluginInstance(inst);
         }
-        pluginInstances.remove(doc->getLocation());
+        pluginInstances.remove(project->getLocation());
 
         return true;
 }
@@ -252,7 +254,7 @@ void PluginControl::sendBroadcastMessage(const char* slot, void *obj)
 
     QList<IPlugin*>::iterator it;
     QList<IPlugin*> instances =
-            pluginInstances.values(plugin->getDocument()->getLocation());
+            pluginInstances.values(plugin->getProject()->getLocation());
 
     QString slotName(slot);
     slotName.append("(void*)");

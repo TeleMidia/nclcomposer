@@ -17,7 +17,7 @@ namespace composer{
 namespace composer {
     namespace core {
         namespace model {
-            class Document;
+            class Project;
 
 class Entity : public QObject
 {
@@ -25,7 +25,7 @@ class Entity : public QObject
 
     // The following classes are "reliable" and can acess the
     // private and protected members of Entity.
-    friend class composer::core::model::Document;
+    friend class composer::core::model::Project;
     friend class composer::core::MessageControl;
 
 private:

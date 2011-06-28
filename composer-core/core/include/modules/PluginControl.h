@@ -16,7 +16,7 @@
 #include "LanguageControl.h"
 using namespace composer::core;
 
-#include "../model/Document.h"
+#include "../model/Project.h"
 using namespace composer::core::model;
 
 #include "../util/Singleton.h"
@@ -116,7 +116,7 @@ namespace composer {
              \param doc
              \return bool
             */
-            bool releasePlugins(Document *doc);
+            bool releasePlugins(Project *doc);
 
         public slots:
             /*!
@@ -124,7 +124,7 @@ namespace composer {
 
              \param doc
             */
-            void launchDocument(Document *doc);
+            void launchProject(Project *doc);
             /*!
              \brief
 
@@ -148,7 +148,7 @@ namespace composer {
              \param documentdId
              \param location
             */
-            void newDocumentLaunchedAndCreated(QString documentdId,
+            void newProjectLaunchedAndCreated(QString documentdId,
                                                QString location);
             /*!
              \brief
@@ -174,7 +174,7 @@ namespace composer {
              \param n
             */
             void addPluginWidgetToWindow(IPluginFactory*,IPlugin*,
-                                         Document*, int n);
+                                         Project*, int n);
 
         };
 } } //end namespace

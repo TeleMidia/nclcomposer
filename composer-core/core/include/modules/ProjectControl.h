@@ -12,7 +12,7 @@
 #include "LanguageControl.h"
 using namespace composer::core;
 
-#include "../model/Document.h"
+#include "../model/Project.h"
 using namespace composer::core::model;
 
 #include "../util/Singleton.h"
@@ -22,24 +22,25 @@ using namespace composer::core::util;
 namespace composer {
     namespace core {
 
-        class DocumentControl : public QObject
+        class ProjectControl : public QObject
         {
             Q_OBJECT
-            SINGLETON(DocumentControl)
+            SINGLETON(ProjectControl)
+
         private:
-            DocumentControl();
-            ~DocumentControl();
-            QMap<QString, Document*> openDocuments;
+            ProjectControl();
+            ~ProjectControl();
+            QMap<QString, Project*> openProjects;
 
          public slots:
-            bool closeDocument(QString location);
-            void saveDocument(QString location);
-            void launchDocument(QString location);
+            bool closeProject(QString location);
+            void saveProject(QString location);
+            void launchProject(QString location);
 
         signals:
-            void startOpenDocument(QString document);
-            void endOpenDocument(QString document);
-            void documentOpenned(QString);
+            void startOpenProject(QString document);
+            void endOpenProject(QString document);
+            void projectAlreadyOpenned(QString);
             void notifyError(QString);
         };
 

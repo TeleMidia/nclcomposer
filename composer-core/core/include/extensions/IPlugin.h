@@ -6,7 +6,7 @@
 #include <QMutex>
 
 #include "../model/Entity.h"
-#include "../model/Document.h"
+#include "../model/Project.h"
 #include "../modules/LanguageControl.h"
 using namespace composer::core::model;
 
@@ -32,8 +32,9 @@ class IPlugin : public QObject {
     Q_OBJECT
 
 protected:
-     //! The Document binded with this particular plugin instance
-     Document *doc;
+     //! The Project binded with this particular plugin instance
+     Project *project;
+
      /*! Each plugin instance also receives a unique instance ID
         (given by the core).
      */
@@ -63,19 +64,19 @@ public:
      /*!
            \param document an NclDocument instance
      */
-     inline void setDocument(Document *document) {
+     inline void setProject(Project *project) {
          QMutexLocker locker(&mutex);
-         this->doc = document;
+         this->project = project;
      }
 
-     //! This call is used by the core to recover the NclDocument
+     //! This call is used by the core to recover the Project
      //! instance previously binded with this plugin instance.
      /*!
-           \return nclDoc an NclDocument instance
+           \return project aProject instance
      */
-     inline Document* getDocument() {
+     inline Project* getProject() {
          QMutexLocker locker(&mutex);
-         return this->doc;
+         return this->project;
      }
 
      //! Return the main Widget

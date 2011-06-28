@@ -18,13 +18,13 @@ class NCLDocumentParser : public IDocumentParser, public QXmlDefaultHandler
 {
     Q_OBJECT
 private:
-    Document *doc;
+    Project *project;
     QMutex lockStack;
     QWaitCondition sync;
     QStack<Entity*> elementStack;
 
 public:
-    explicit NCLDocumentParser(Document *doc);
+    explicit NCLDocumentParser(Project *project);
     ~NCLDocumentParser();
     bool parseDocument();
     QString getParserName();

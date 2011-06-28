@@ -1,53 +1,53 @@
-#include "modules/DocumentControl.h"
+#include "modules/ProjectControl.h"
 
 namespace composer {
     namespace core {
 
-INIT_SINGLETON (DocumentControl)
+INIT_SINGLETON (ProjectControl)
 
-DocumentControl::DocumentControl()
+ProjectControl::ProjectControl()
 {
 }
 
-DocumentControl::~DocumentControl()
+ProjectControl::~ProjectControl()
 {
-    QMap<QString,Document*>::iterator it;
+    QMap<QString,Project*>::iterator it;
     PluginControl *pg = PluginControl::getInstance();
-    for (it = openDocuments.begin(); it != openDocuments.end(); it++)
+    for (it = openProjects.begin(); it != openProjects.end(); it++)
     {
-        Document *doc = it.value();
-        if (pg->releasePlugins(doc))
+        Project *project = it.value();
+        if (pg->releasePlugins(project))
         {
-            delete doc;
-            doc = NULL;
+            delete project;
+            project = NULL;
         } else {
             qDebug() << "Error: Failed to releasePlugins ";
         }
     }
 }
 
-bool DocumentControl::closeDocument(QString location)
+bool ProjectControl::closeProject(QString location)
 {
-    if (!openDocuments.contains(location)) return false;
+    if (!openProjects.contains(location)) return false;
 
-    Document *doc = openDocuments[location];
-    if (PluginControl::getInstance()->releasePlugins(doc))
+    Project *project = openProjects[location];
+    if (PluginControl::getInstance()->releasePlugins(project))
     {
-        delete doc;
-        doc = NULL;
-        openDocuments.remove(location);
+        delete project;
+        project = NULL;
+        openProjects.remove(location);
     } else {
-        qDebug() << "Error: Failed to close document (" << location << " )";
+        qDebug() << "Error: Failed to close the project :" << location;
         return false;
     }
     return true;
 }
 
-void DocumentControl::launchDocument(QString location)
+void ProjectControl::launchProject(QString location)
 {
-    if (openDocuments.contains(location))
+    if (openProjects.contains(location))
     {
-        emit documentOpenned(location);
+        emit projectAlreadyOpenned(location);
         return;
     }
 
@@ -81,26 +81,26 @@ void DocumentControl::launchDocument(QString location)
         return;
     }
 
-    emit startOpenDocument(location);
+    emit startOpenProject(location);
     QMap<QString,QString> atts;
     QString documentId = location;
     documentId.remove(0, location.lastIndexOf(QDir::separator())+1);
     atts["id"] = documentId;
 
     /* create the NCLDocument */
-    Document *doc = new Document(atts);
-    doc->setLocation(location);
-    doc->setDocumentType(type);
+    Project *project = new Project(atts);
+    project->setLocation(location);
+    project->setProjectType(type);
     // doc->setProjectId(projectId);
 
-    PluginControl::getInstance()->launchDocument(doc);
-    openDocuments[location] = doc;
-    emit endOpenDocument(location);
+    PluginControl::getInstance()->launchProject(project);
+    openProjects[location] = project;
+    emit endOpenProject(location);
 }
 
-void DocumentControl::saveDocument(QString location)
+void ProjectControl::saveProject(QString location)
 {
-    Document *doc = openDocuments.value(location);
+    Project *project = openProjects.value(location);
     QFile fout(location + ".cp");
 
     qDebug() << "Trying to save: " << location;
@@ -118,8 +118,8 @@ void DocumentControl::saveDocument(QString location)
     }
 
     QTextStream stream( &fout );
-    qDebug() << doc->toString();
-    stream << doc->toString();
+    qDebug() << project->toString();
+    stream << project->toString();
     fout.close();
 }
 

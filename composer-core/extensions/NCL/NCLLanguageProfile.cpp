@@ -24,9 +24,9 @@ QList<QString> NCLLanguageProfile::getOutputDocumentTypes()
     return list;
 }
 
-IDocumentParser* NCLLanguageProfile::createDocumentParser (Document *doc)
+IDocumentParser* NCLLanguageProfile::createParser (Project *project)
 {
-    return new NCLDocumentParser (doc);
+    return new NCLDocumentParser (project);
 }
 
 void NCLLanguageProfile::releaseDocumentParser (IDocumentParser *parser)

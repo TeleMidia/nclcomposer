@@ -4,9 +4,9 @@
 namespace composer {
     namespace core {
 
-MessageControl::MessageControl(Document *doc)
+MessageControl::MessageControl(Project *project)
 {
-    this->doc = doc;
+    this->project = project;
     /* qDebug() <<  "MessageControl::MessageControl("
             <<  doc->getAttribute("id") << ")";*/
 }
@@ -36,7 +36,7 @@ void MessageControl::onAddEntity( QString type,
         ent = new Entity(atts);
         ent->setType(type);
         //TODO - calll validator to check
-        doc->addEntity(ent,parentEntityId);
+        project->addEntity(ent,parentEntityId);
         emit entityAdded(ID,ent);
 
     } catch(exception& e){
@@ -84,7 +84,7 @@ void MessageControl::onRemoveEntity( Entity *entity,
                 \todo remember to change, the append should come from the
                     plugin
                 */
-                doc->removeEntity(entity,true);
+                project->removeEntity(entity,true);
                 emit entityRemoved(pluginID, _id);
             }
             else {

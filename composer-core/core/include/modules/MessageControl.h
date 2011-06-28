@@ -11,7 +11,7 @@ using namespace std;
 using namespace composer::extension;
 
 #include "../model/Entity.h"
-#include "../model/Document.h"
+#include "../model/Project.h"
 using namespace composer::core::model;
 
 #include "../extensions/IPlugin.h"
@@ -24,10 +24,10 @@ namespace composer {
             Q_OBJECT
 
         private:
-            Document *doc;
+            Project *project;
 
         public:
-            MessageControl(Document *doc);
+            MessageControl(Project *project);
             ~MessageControl();
 
         public slots:
