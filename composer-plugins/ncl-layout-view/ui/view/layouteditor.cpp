@@ -21,7 +21,7 @@ LayoutEditor::LayoutEditor(QWidget* parent)
 
     createActions();
     createWidgets();
-    createToolbar();
+//    createToolbar();
     createStatubar();
     createConnections();
 }

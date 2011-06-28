@@ -9,7 +9,7 @@ namespace composer {
 OutlineViewPlugin::OutlineViewPlugin()
 {
     window = new NCLTreeWidget(0);
-    doc = NULL;
+    project = NULL;
 
     connect ( window,
               SIGNAL( elementAddedByUser ( QString,
@@ -118,7 +118,7 @@ void OutlineViewPlugin::onEntityRemoved(QString pluginID, QString entityID)
 void OutlineViewPlugin::elementRemovedByUser(QString itemId)
 {
     qDebug() << "elementRemovedByUser (id ='" << itemId << "')";
-    Entity *entity = doc->getEntityBydId(itemId);
+    Entity *entity = project->getEntityBydId(itemId);
     emit removeEntity(entity, false);
 }
 

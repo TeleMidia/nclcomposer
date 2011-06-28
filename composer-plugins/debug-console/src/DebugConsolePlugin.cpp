@@ -18,7 +18,7 @@ DebugConsolePlugin::DebugConsolePlugin()
     connect(bt, SIGNAL(clicked()), this, SLOT(sendToAll()));
     window->setLayout(layout);
     window->setWindowIcon(QIcon(":/images/icon.png"));
-    doc = NULL;
+    project = NULL;
 
 }
 
@@ -68,6 +68,7 @@ void DebugConsolePlugin::onEntityRemoved(QString ID, QString entityID)
 bool DebugConsolePlugin::saveSubsession()
 {
     //TODO: All
+    return true;
 }
 
 void DebugConsolePlugin::updateFromModel()

@@ -33,7 +33,7 @@ LayoutPlugin::~LayoutPlugin()
 
 void LayoutPlugin::removeRegion(LayoutItem* item)
 {
-    emit removeEntity(getDocument()->getEntityBydId(items2[item]), false);
+    emit removeEntity(getProject()->getEntityBydId(items2[item]), false);
 }
 
 void LayoutPlugin::addRegion(LayoutItem* item)
@@ -217,10 +217,10 @@ void LayoutPlugin::onEntityChanged(QString ID, Entity* entity)
 
 }
 
-void LayoutPlugin::onEntityAboutToRemove(Entity *)
+/*void LayoutPlugin::onEntityAboutToRemove(Entity *)
 {
 
-}
+}*/
 
 void LayoutPlugin::onEntityRemoved(QString ID, QString entityID)
 {

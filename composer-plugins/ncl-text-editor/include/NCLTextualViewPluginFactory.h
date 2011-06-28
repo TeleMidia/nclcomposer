@@ -15,7 +15,9 @@ namespace Ui {
 namespace composer {
     namespace plugin {
         namespace textual {
-
+/*!
+  \brief Handles the creation and deletion of NCLTextualView objects.
+ */
 class NCLTextualViewPluginFactory : public QObject,
                                     public IPluginFactory
 {

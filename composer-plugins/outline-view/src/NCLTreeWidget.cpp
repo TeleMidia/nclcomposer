@@ -238,7 +238,7 @@ void NCLTreeWidget::userRemoveElement()
                       QMessageBox::Yes,
                       QMessageBox::No );
 
-        if(resp) {
+        if(resp == QMessageBox::Yes) {
             emit elementRemovedByUser(id);
         }
     }

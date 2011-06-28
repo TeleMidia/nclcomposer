@@ -7,7 +7,7 @@ namespace composer {
 NCLTextualViewPlugin::NCLTextualViewPlugin()
 {
     window = new NCLTextEditorMainWindow();
-    doc = NULL;
+    project = NULL;
     connect( window,
              SIGNAL(elementAdded(QString,QString,QMap<QString,QString>&,bool)),
              this,
@@ -170,7 +170,7 @@ void NCLTextualViewPlugin::onEntityRemoved(QString pluginID, QString entityID)
     }
     foreach(key, startLineOfEntity.keys())
     {
-        qDebug() << doc->getEntityBydId(key)->getType()
+        qDebug() << project->getEntityBydId(key)->getType()
              << " startLine=" << startLineOfEntity[key]
              << " endLine=" << endLineOfEntity[key];
 
@@ -179,7 +179,7 @@ void NCLTextualViewPlugin::onEntityRemoved(QString pluginID, QString entityID)
 
 bool NCLTextualViewPlugin::saveSubsession()
 {
-    doc->setPluginData(QString("ncl-text-editor"),
+    project->setPluginData(QString("ncl-text-editor"),
                        window->getTextEditor()->text().toAscii());
     return true;
 }

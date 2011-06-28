@@ -8,7 +8,7 @@ namespace composer {
 PropertiesViewPlugin::PropertiesViewPlugin()
 {
     window = new PropertyEditor(0);
-    doc = NULL;
+    project = NULL;
     currentEntity = NULL;
 
     connect(window, SIGNAL(propertyChanged(QString, QString)),
@@ -65,7 +65,7 @@ void PropertiesViewPlugin::updateFromModel()
 
 void PropertiesViewPlugin::changeSelectedEntity(void *param){
     QString *id = (QString*)param;
-    currentEntity = doc->getEntityBydId(*id);
+    currentEntity = project->getEntityBydId(*id);
     if(currentEntity != NULL)
     {
         QString name;
