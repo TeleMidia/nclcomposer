@@ -37,17 +37,18 @@
 #include <QWebView>
 
 #include <core/modules/PluginControl.h>
-#include <core/modules/DocumentControl.h>
+#include <core/modules/ProjectControl.h>
 #include <core/modules/LanguageControl.h>
 using namespace composer::core;
 
 #include "wizard/ProjectWizard.h"
 #include "wizard/DocumentWizard.h"
 #include "PerspectiveManager.h"
-#include "WorkspaceSwitch.h"
 #include "PreferencesDialog.h"
-#include "WorkspaceModel.h"
 #include "ProjectTreeView.h"
+
+//#include "WorkspaceModel.h"
+//#include "WorkspaceSwitch.h"
 
 using namespace composer::gui;
 
@@ -72,10 +73,10 @@ class ComposerMainWindow : public QMainWindow {
 private:
     static const int maximumRecentProjectsSize = 10;
 
-    QTabWidget *tabDocuments; /*!< Each open document is show in a different
-                                tab. tabDocuments contains the list of open
+    QTabWidget *tabProjects; /*!< Each open project is show in a different
+                                tab. tabProjects contains the list of open
                                 tabs. */
-    QMap<QString, QMainWindow*> documentsWidgets; /*!< deprecated  */
+    QMap<QString, QMainWindow*> projectsWidgets; /*!< deprecated  */
     QMap<QString, QDockWidget*> firstDock; /*!< TODO */
 
     QAction *aboutComposerAct; /*!< Action to show About Composer. */
@@ -92,24 +93,21 @@ private:
     ProjectWizard *projectWizard; /*!< TODO */
     DocumentWizard *documentWizard; /*!< TODO */
     PreferencesDialog *preferences; /*!< TODO */
-    WorkspaceSwitch *wsSwitch; /*!< TODO */
 
-    QFileSystemModel *fileSystemModel; /*!< TODO */
-    WorkspaceModel *workspace_model; /*!< TODO */
-    ProjectTreeView  *fileSystemView; /*!< TODO */
-    QDockWidget      *fileSystemDock; /*!< TODO */
-
+    //TODO: Remove all this lines
+    // WorkspaceSwitch *wsSwitch; /*!< TODO */
+    // QFileSystemModel *fileSystemModel; /*!< TODO */
+    // WorkspaceModel *workspace_model; /*!< TODO */
+    // ProjectTreeView  *fileSystemView; /*!< TODO */
+    // QDockWidget      *fileSystemDock; /*!< TODO */
 
     QDialog *aboutDialog; /*!< TODO */
 
     QString defaultEx; /*!< TODO */
     QString user_directory_ext; /*!< TODO */
-    QString work_space_path; /*!< TODO */
+    // QString work_space_path; /*!< TODO */
 
     QWebView *welcomeScreen; /*!< TODO */
-
-    bool openingDocument; /*!< TODO */
-    QTimer *timer; /*!< TODO */
 
     PerspectiveManager *perspectiveManager;
 
@@ -155,7 +153,7 @@ private:
      \brief
 
     */
-    void createTreeProject();
+    // void createTreeProject();
     /*!
      \brief
 
@@ -204,7 +202,8 @@ private slots:
      \brief
 
     */
-    void showSwitchWorkspaceDialog();
+    // void showSwitchWorkspaceDialog();
+
     /*!
      \brief
 
@@ -222,8 +221,8 @@ private slots:
     /*!
      \brief
     */
-    void startOpenDocument(QString document);
-    void endOpenDocument(QString document);
+    void startOpenProject(QString projectLoc);
+    void endOpenProject(QString projectLoc);
     void slotTimeout();
 
     void saveCurrentGeometryAsPerspective();
@@ -232,14 +231,14 @@ private slots:
     void saveDefaultPerspective(QString defaultPerspectiveName);
     void restorePerspective(QString layoutName);
 
-    /*! Run the current open document. */
+    /*! Run the current open Project. */
     void runNCL();
 
     void launchProjectWizard();
 
     void addToRecentProjects(QString projectUrl);
 
-    void openRecentDocument();
+    void openRecentProject();
 
     void clearRecentProjects(void);
 
@@ -264,7 +263,7 @@ public slots:
     */
     void errorDialog(QString);
     /*!
-     \brief Add a plugin Widget an link it to the given document.
+     \brief Add a plugin Widget an link it to the given project.
 
      \param fac
      \param plugin
@@ -272,28 +271,28 @@ public slots:
      \param n
     */
     void addPluginWidget(IPluginFactory *fac, IPlugin *plugin,
-                         Document *doc, int n);
+                         Project *project, int n);
     /*!
      \brief Called when a new tab is open.
 
      \param location
     */
-    void onOpenDocumentTab(QString location);
+    void onOpenProjectTab(QString location);
     /*!
      \brief Called to change the current Workspace.
 
     */
-    void switchWorkspace();
+    // void switchWorkspace();
 
     /*!
-        \brief Save the current document.
+        \brief Save the current project.
      */
-    void saveCurrentDocument();
+    void saveCurrentProject();
 
     /*!
       \brief Called by the user when he/she wants to open an existent project.
      */
-    void openDocument();
+    void openProject();
 
 signals:
     /*!

@@ -49,10 +49,10 @@ SOURCES += main.cpp \
     src/wizard/DocumentWizard.cpp \
     src/wizard/DocumentEntryPage.cpp \
     src/PreferencesDialog.cpp \
-    src/WorkspaceModel.cpp \
-    src/ProjectTreeView.cpp \
-    src/WorkspaceSwitch.cpp \
     src/PerspectiveManager.cpp
+    # src/ProjectTreeView.cpp
+    # src/WorkspaceModel.cpp
+    # src/WorkspaceSwitch.cpp
 
 HEADERS += include/ComposerMainWindow.h \
     include/wizard/ProjectWizard.h \
@@ -60,10 +60,10 @@ HEADERS += include/ComposerMainWindow.h \
     include/wizard/DocumentWizard.h \
     include/wizard/DocumentEntryPage.h \
     include/PreferencesDialog.h \
-    include/WorkspaceModel.h \
-    include/ProjectTreeView.h \
-    include/WorkspaceSwitch.h \
     include/PerspectiveManager.h
+    # include/ProjectTreeView.h
+    # include/WorkspaceModel.h
+    # include/WorkspaceSwitch.h
 
 RESOURCES += images.qrc
 
