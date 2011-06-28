@@ -77,6 +77,7 @@ void ComposerMainWindow::initModules()
 
     connect(docControl, SIGNAL(notifyError(QString)),
             SLOT(errorDialog(QString)));
+
     connect(docControl,SIGNAL(documentOpenned(QString)),
             SLOT(onOpenDocumentTab(QString)));
 
@@ -85,6 +86,9 @@ void ComposerMainWindow::initModules()
 
     connect(docControl, SIGNAL(endOpenDocument(QString)), this,
             SLOT(endOpenDocument(QString)));
+
+    connect(docControl,SIGNAL(endOpenDocument(QString)),
+            SLOT(addToRecentProjects(QString)));
 
     connect(docControl,SIGNAL(documentOpenned(QString)),
                  SLOT(onOpenDocumentTab(QString)));
@@ -174,9 +178,8 @@ void ComposerMainWindow::readSettings() {
                 work_space_path = wsSwitch->getWorspacePath();
         }
     }
-    */
-//    createTreeProject();
-    settings.endGroup();
+    createTreeProject();
+    settings.endGroup();*/
 
     settings.beginGroup("openfiles");
     QStringList openfiles = settings.value("openfiles").toStringList();
@@ -184,8 +187,14 @@ void ComposerMainWindow::readSettings() {
 
     for(int i = 0; i < openfiles.size(); i++)
     {
+        qDebug() << openfiles.at(i);
         DocumentControl::getInstance()->launchDocument(openfiles.at(i));
     }
+
+    /* Update Recent Projects on Menu */
+    QStringList recentProjects =
+            settings.value("recentprojects").toStringList();
+    updateRecentProjectsMenu(recentProjects);
 }
 
 void ComposerMainWindow::initGUI() {
@@ -288,9 +297,9 @@ void ComposerMainWindow::tabClosed(int index)
     {
         delete w;
         w = NULL;
-        documentsWidgets.remove(location);
-        firstDock.remove(location);
     }
+    documentsWidgets.remove(location);
+    firstDock.remove(location);
 }
 
 void ComposerMainWindow::closeAllFiles()
@@ -369,12 +378,14 @@ void ComposerMainWindow::createTreeProject()
 }
 
 void ComposerMainWindow::createMenus() {
+//    This is not necessary anymore!
 //    ui->menu_File->addAction(switchWS);
 //    ui->menu_File->addSeparator();
 
     ui->menu_Edit->addAction(editPreferencesAct);
 
     menuBar()->addSeparator();
+
     connect( ui->menu_Window, SIGNAL(aboutToShow()),
              this, SLOT(updateViewMenu()));
 
@@ -528,7 +539,6 @@ void ComposerMainWindow::createActions() {
     // it will be aligned in the bottom.
     ui->toolBar->insertWidget(ui->action_Preferences, spacer);
 
-
     connect (ui->actionOpen_Project, SIGNAL(triggered()),
              this, SLOT(openDocument()));
 }
@@ -596,8 +606,18 @@ void ComposerMainWindow::closeEvent(QCloseEvent *event)
     QString key;
     foreach (key, documentsWidgets.keys())
         openfiles << key;
+
+    qDebug() << openfiles.size();
     settings.beginGroup("openfiles");
-    settings.setValue("openfiles", openfiles);
+    if(openfiles.size())
+    {
+        settings.setValue("openfiles", openfiles);
+    }
+    else {
+        /* If there aren't any openfile, remove this settings, otherwise it will
+           try to load the current path */
+        settings.remove("openfiles");
+    }
     settings.endGroup();
 
     settings.sync();
@@ -795,4 +815,63 @@ void ComposerMainWindow::openDocument()
         DocumentControl::getInstance()->launchDocument(filename);
     }
 }
+
+void ComposerMainWindow::addToRecentProjects(QString projectUrl)
+{
+    QSettings settings("telemidia", "composer");
+    QStringList recentprojects = settings.value("recentProjects").toStringList();
+
+    recentprojects.push_front(projectUrl);
+    recentprojects.removeDuplicates();
+
+    //MAXIMUM SIZE
+    while(recentprojects.size() > this->maximumRecentProjectsSize)
+        recentprojects.pop_back();
+
+    settings.setValue("recentProjects", recentprojects);
+
+    updateRecentProjectsMenu(recentprojects);
+}
+
+void ComposerMainWindow::updateRecentProjectsMenu(QStringList &recentProjects)
+{
+    ui->menu_Recent_Files->clear();
+    if(recentProjects.size() == 0 )
+    {
+        QAction *act = ui->menu_Recent_Files->addAction(tr("empty"));
+        act->setEnabled(false);
+    }
+    else /* There are at least one element in the recentProject list */
+    {
+        for(int i = 0; i < recentProjects.size(); i++)
+        {
+            QAction *act = ui->menu_Recent_Files->addAction(recentProjects.at(i));
+            act->setData(recentProjects.at(i));
+            connect(act, SIGNAL(triggered()), this,
+                    SLOT(openRecentDocument()));
+        }
+        ui->menu_Recent_Files->addSeparator();
+        QAction *clearRecentProjects =
+                ui->menu_Recent_Files->addAction(tr("Clear Recent Projects"));
+
+        connect(clearRecentProjects, SIGNAL(triggered()),
+                this, SLOT(clearRecentProjects()));
+
+    }
+}
+
+void ComposerMainWindow::clearRecentProjects(void)
+{
+    QSettings settings("telemidia", "composer");
+    settings.remove("recentProjects");
+    QStringList empty;
+    updateRecentProjectsMenu(empty);
+}
+
+void ComposerMainWindow::openRecentDocument()
+{
+    QAction *action = qobject_cast<QAction *> (QObject::sender());
+    DocumentControl::getInstance()->launchDocument(action->data().toString());
+}
+
 } } //end namespace

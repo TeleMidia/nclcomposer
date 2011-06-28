@@ -70,6 +70,8 @@ class ComposerMainWindow : public QMainWindow {
     Q_OBJECT
 
 private:
+    static const int maximumRecentProjectsSize = 10;
+
     QTabWidget *tabDocuments; /*!< Each open document is show in a different
                                 tab. tabDocuments contains the list of open
                                 tabs. */
@@ -181,6 +183,8 @@ private:
     */
     void cleanUp();
 
+    void updateRecentProjectsMenu(QStringList &recentProjects);
+
 
 private slots:
     /*!
@@ -232,6 +236,12 @@ private slots:
     void runNCL();
 
     void launchProjectWizard();
+
+    void addToRecentProjects(QString projectUrl);
+
+    void openRecentDocument();
+
+    void clearRecentProjects(void);
 
 public:
     /*!

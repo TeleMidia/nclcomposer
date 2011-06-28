@@ -64,10 +64,20 @@ void PreferencesDialog::loadPreferencesPages(){
 
 void PreferencesDialog::changeActivePage(){
     if (currentItem != NULL)
+    {
+        if(pages.contains(currentItem->text())){
             pages[currentItem->text()]->hide();
+        }
+    }
 
     currentItem = ui->listWidget->currentItem();
-    pages[currentItem->text()]->show();
+    if(currentItem != NULL)
+    {
+        if(pages.contains(currentItem->text()))
+        {
+            pages[currentItem->text()]->show();
+        }
+    }
 }
 
 }} //end namespace
