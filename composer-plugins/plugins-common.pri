@@ -8,7 +8,10 @@ UI_DIR      =   .ui
 macx {
     :   LIBS += -framework \
         ComposerCore
-        INCLUDEPATH += include /Library/Frameworks/ComposerCore.framework/ \
+
+        LIBS += "-L/Library/Application Support/Composer" -lNCLLanguageProfile
+
+        INCLUDEPATH +=  include /Library/Frameworks/ComposerCore.framework/ \
                        /Library/Frameworks/ComposerCore.framework/core \
                        /Library/Frameworks/ComposerCore.framework/core/extensions
         target.path = $$quote(/Library/Application Support/Composer)
