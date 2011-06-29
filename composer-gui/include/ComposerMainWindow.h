@@ -45,7 +45,7 @@ using namespace composer::core;
 #include "wizard/DocumentWizard.h"
 #include "PerspectiveManager.h"
 #include "PreferencesDialog.h"
-#include "ProjectTreeView.h"
+//#include "ProjectTreeView.h"
 
 //#include "WorkspaceModel.h"
 //#include "WorkspaceSwitch.h"

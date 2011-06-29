@@ -2,6 +2,7 @@
 #include "ui_ComposerMainWindow.h"
 
 #include <QPixmap>
+#include <QCloseEvent>
 #include <QDialogButtonBox>
 
 #ifdef USE_MDI
