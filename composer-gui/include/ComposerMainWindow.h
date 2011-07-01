@@ -47,9 +47,6 @@ using namespace composer::core;
 #include "PreferencesDialog.h"
 //#include "ProjectTreeView.h"
 
-//#include "WorkspaceModel.h"
-//#include "WorkspaceSwitch.h"
-
 using namespace composer::gui;
 
 namespace Ui {
@@ -94,18 +91,10 @@ private:
     DocumentWizard *documentWizard; /*!< TODO */
     PreferencesDialog *preferences; /*!< TODO */
 
-    //TODO: Remove all this lines
-    // WorkspaceSwitch *wsSwitch; /*!< TODO */
-    // QFileSystemModel *fileSystemModel; /*!< TODO */
-    // WorkspaceModel *workspace_model; /*!< TODO */
-    // ProjectTreeView  *fileSystemView; /*!< TODO */
-    // QDockWidget      *fileSystemDock; /*!< TODO */
-
     QDialog *aboutDialog; /*!< TODO */
 
     QString defaultEx; /*!< TODO */
     QString user_directory_ext; /*!< TODO */
-    // QString work_space_path; /*!< TODO */
 
     QWebView *welcomeScreen; /*!< TODO */
 
@@ -153,11 +142,6 @@ private:
      \brief
 
     */
-    // void createTreeProject();
-    /*!
-     \brief
-
-    */
     void createFileSystem();
     /*!
      \brief
@@ -198,11 +182,6 @@ private slots:
      \brief
     */
     void showEditPreferencesDialog();
-    /*!
-     \brief
-
-    */
-    // void showSwitchWorkspaceDialog();
 
     /*!
      \brief
@@ -223,7 +202,6 @@ private slots:
     */
     void startOpenProject(QString projectLoc);
     void endOpenProject(QString projectLoc);
-    void slotTimeout();
 
     void saveCurrentGeometryAsPerspective();
     void restorePerspective();
@@ -241,6 +219,8 @@ private slots:
     void openRecentProject();
 
     void clearRecentProjects(void);
+
+    void importFromDocument();
 
 public:
     /*!
@@ -278,11 +258,6 @@ public slots:
      \param location
     */
     void onOpenProjectTab(QString location);
-    /*!
-     \brief Called to change the current Workspace.
-
-    */
-    // void switchWorkspace();
 
     /*!
         \brief Save the current project.

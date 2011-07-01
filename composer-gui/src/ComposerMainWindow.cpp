@@ -19,8 +19,6 @@ ComposerMainWindow::ComposerMainWindow(QWidget *parent)
     ui->setupUi(this);
 
     user_directory_ext = "";
-//  work_space_path = QDir::homePath();
-//  fileSystemModel = NULL;
 
 #ifdef Q_WS_MAC
     defaultEx = "/Library/Application Support/Composer";
@@ -30,13 +28,9 @@ ComposerMainWindow::ComposerMainWindow(QWidget *parent)
     defaultEx = "/usr/local/lib/composer/extension";
 #endif
 
-//    wsSwitch = new WorkspaceSwitch(this);
-//    connect(wsSwitch,SIGNAL(accepted()), SLOT(switchWorkspace()));
     initGUI();
 
     initModules();
-    //ui->progressBar->setVisible(false);
-    //ui->progressBar->setRange(0, 99);
 
     readSettings();
 
@@ -49,11 +43,6 @@ ComposerMainWindow::ComposerMainWindow(QWidget *parent)
 }
 
 ComposerMainWindow::~ComposerMainWindow() {
-    /* if(fileSystemModel)
-    {
-        delete fileSystemModel;
-        fileSystemModel = NULL;
-    } */
     delete ui;
 }
 
@@ -76,7 +65,7 @@ void ComposerMainWindow::initModules()
     connect(projectControl, SIGNAL(notifyError(QString)),
             SLOT(errorDialog(QString)));
 
-    connect(projectControl,SIGNAL(projectAlreadyOpenned(QString)),
+    connect(projectControl,SIGNAL(projectAlreadyOpen(QString)),
             SLOT(onOpenProjectTab(QString)));
 
     connect(projectControl, SIGNAL(startOpenProject(QString)),
@@ -88,7 +77,7 @@ void ComposerMainWindow::initModules()
     connect(projectControl,SIGNAL(endOpenProject(QString)),
             SLOT(addToRecentProjects(QString)));
 
-    connect(projectControl,SIGNAL(projectAlreadyOpenned(QString)),
+    connect(projectControl,SIGNAL(projectAlreadyOpen(QString)),
                  SLOT(onOpenProjectTab(QString)));
 
     connect(tabProjects,SIGNAL(tabCloseRequested(int)),
@@ -161,24 +150,6 @@ void ComposerMainWindow::readSettings() {
     restoreState(settings.value("windowState").toByteArray());
     settings.endGroup();
 
-    /*settings.beginGroup("workspace");
-    if (!settings.contains("path"))
-    {
-        wsSwitch->exec();
-        if (wsSwitch->result() == QDialog::Accepted)
-            work_space_path = wsSwitch->getWorspacePath();
-    } else {
-        work_space_path = settings.value("path").toString();
-        QDir dir(work_space_path);
-        if (!dir.exists())
-        {
-            if (wsSwitch->result() == QDialog::Accepted)
-                work_space_path = wsSwitch->getWorspacePath();
-        }
-    }
-    createTreeProject();
-    settings.endGroup();*/
-
     settings.beginGroup("openfiles");
     QStringList openfiles = settings.value("openfiles").toStringList();
     settings.endGroup();
@@ -214,11 +185,12 @@ void ComposerMainWindow::initGUI() {
     createAbout();
     showMaximized();
 
-    //    welcomeScreen = new QWebView(this);
-    //    welcomeScreen->setStyleSheet("background-color:rgb(150,147,88); padding: 7px ; color:rgb(255,255,255)");
-    //    welcomeScreen->load(QUrl("http://www.ncl.org.br"));
-    //    welcomeScreen->showMaximized();
-    //    tabDocuments->addTab(welcomeScreen, "Welcome");
+//    welcomeScreen = new QWebView(this);
+//    welcomeScreen->setStyleSheet("background-color:rgb(150,147,88); padding: 7px ; color:rgb(255,255,255)");
+//    welcomeScreen->load(QUrl("http://www.ncl.org.br"));
+//    welcomeScreen->showMaximized();
+//    tabDocuments->addTab(welcomeScreen, "Welcome");
+
 }
 
 void ComposerMainWindow::addPluginWidget(IPluginFactory *fac, IPlugin *plugin,
@@ -226,8 +198,7 @@ void ComposerMainWindow::addPluginWidget(IPluginFactory *fac, IPlugin *plugin,
 {
     QMainWindow *w;
     QString location = project->getLocation();
-    QString documentId = project->getAttribute("id");
-    QString projectId = project->getProjectId();
+    QString projectId = project->getAttribute("id");
 
 #ifdef USE_MDI
     QMdiArea *mdiArea;
@@ -249,7 +220,7 @@ void ComposerMainWindow::addPluginWidget(IPluginFactory *fac, IPlugin *plugin,
         w->setDockNestingEnabled(true);
         w->setTabPosition(Qt::AllDockWidgetAreas, QTabWidget::West);
 #endif
-        int index = tabProjects->addTab(w, "(" + documentId + ")");
+        int index = tabProjects->addTab(w, projectId);
         tabProjects->setTabToolTip(index, location);
         projectsWidgets[location] = w;
     }
@@ -261,7 +232,6 @@ void ComposerMainWindow::addPluginWidget(IPluginFactory *fac, IPlugin *plugin,
     pW->setWindowTitle(fac->name()+"[*]");
     pW->show();
     pW->setObjectName(fac->id());
-    //tabDocuments->setCurrentWidget(w);
 #else
     QDockWidget *dock = new QDockWidget(fac->name());
     dock->setAllowedAreas(Qt::AllDockWidgetAreas);
@@ -270,7 +240,6 @@ void ComposerMainWindow::addPluginWidget(IPluginFactory *fac, IPlugin *plugin,
 
     dock->setWidget(pW);
     dock->setObjectName(fac->id());
-    qDebug() << n;
     if (n%2)
         w->addDockWidget(Qt::RightDockWidgetArea, dock, Qt::Vertical);
     else
@@ -316,75 +285,7 @@ void ComposerMainWindow::onOpenProjectTab(QString location)
     tabProjects->setCurrentWidget(w);
 }
 
-/*void ComposerMainWindow::switchWorkspace()
-{
-
-    if (fileSystemModel == NULL) return;
-
-    if (wsSwitch->getWorspacePath() != "")
-        work_space_path = wsSwitch->getWorspacePath();
-
-    QModelIndex index = fileSystemModel->setRootPath(work_space_path);
-
-    workspace_model->setSourceModel(fileSystemModel);
-    workspace_model->setTopIndex(index);
-
-    fileSystemView->setModel(workspace_model);
-    fileSystemView->setMinimumWidth(180);
-
-    fileSystemView->setRootIndex(workspace_model->mapFromSource
-                                 (index));
-}
-
-void ComposerMainWindow::createTreeProject()
-{
-    fileSystemDock = new QDockWidget(tr("Projects View"), this);
-    fileSystemDock->setObjectName("projectTree");
-
-    fileSystemView = new ProjectTreeView(this);
-    connect(fileSystemView,
-            SIGNAL(launchDocument(QString)),
-            DocumentControl::getInstance(),
-            SLOT(launchDocument(QString)));
-    fileSystemView->setVisible(false);
-
-    workspace_model = new WorkspaceModel(fileSystemView);
-
-    fileSystemModel = new QFileSystemModel();
-
-    switchWorkspace();
-
-    fileSystemView->setSortingEnabled(false);
-    fileSystemView->setHeaderHidden(true);
-    fileSystemView->setColumnHidden(1,true);
-    fileSystemView->setColumnHidden(2,true);
-    fileSystemView->setColumnHidden(3,true);
-    fileSystemDock->setWidget(fileSystemView);
-
-    addDockWidget(Qt::LeftDockWidgetArea, fileSystemDock, Qt::Vertical);
-
-    projectViewAct = new QAction(QIcon(":/mainwindow/projectTree"),
-                                 tr("Projects"),this);
-    projectViewAct->setCheckable(true);
-    projectViewAct->setChecked(fileSystemDock->isVisible());
-
-    connect(fileSystemDock,SIGNAL(visibilityChanged(bool)),this,
-            SLOT(updateViewMenu()));
-    connect(projectViewAct,SIGNAL(triggered(bool)),fileSystemDock,
-            SLOT(setVisible(bool)));
-
-}
-
-void ComposerMainWindow::showSwitchWorkspaceDialog()
-{
-    wsSwitch->show();
-}
-*/
-
 void ComposerMainWindow::createMenus() {
-//    This is not necessary anymore!
-//    ui->menu_File->addAction(switchWS);
-//    ui->menu_File->addSeparator();
 
     ui->menu_Edit->addAction(editPreferencesAct);
 
@@ -522,9 +423,6 @@ void ComposerMainWindow::createActions() {
     connect (editPreferencesAct, SIGNAL(triggered()), this,
              SLOT(showEditPreferencesDialog()));
 
-//    switchWS = new QAction(tr("Switch Workspace"),this);
-//    connect(switchWS,SIGNAL(triggered()),SLOT(showSwitchWorkspaceDialog()));
-
     connect(ui->action_Exit, SIGNAL(triggered()), this, SLOT(close()));
     saveCurrentPluginsLayoutAct = new QAction(tr("Save current perspective"),
                                               this);
@@ -545,6 +443,9 @@ void ComposerMainWindow::createActions() {
 
     connect (ui->actionOpen_Project, SIGNAL(triggered()),
              this, SLOT(openProject()));
+
+    connect (ui->actionImport_from_existing_NCL, SIGNAL(triggered()),
+             this, SLOT(importFromDocument()));
 }
 
 void ComposerMainWindow::createStatusBar()
@@ -571,13 +472,10 @@ void ComposerMainWindow::showCurrentWidgetFullScreen()
 void ComposerMainWindow::updateViewMenu()
 {
     ui->menu_Window->clear();
-//    ui->menu_Window->addAction(projectViewAct);
-//    ui->menu_Window->addSeparator();
     ui->menu_Window->addAction(fullScreenViewAct);
     ui->menu_Window->addSeparator();
     ui->menu_Window->addAction(saveCurrentPluginsLayoutAct);
     ui->menu_Window->addAction(restorePluginsLayoutAct);
-//    projectViewAct->setChecked(fileSystemDock->isVisible());
 }
 
 void ComposerMainWindow::closeEvent(QCloseEvent *event)
@@ -595,13 +493,6 @@ void ComposerMainWindow::closeEvent(QCloseEvent *event)
         settings.endGroup();
     }
 
-//  TODO: Remove workspace settings
-//    settings.beginGroup("workspace");
-//    if (work_space_path!= "")
-//    {
-//        settings.setValue("path", work_space_path);
-//    }
-    settings.endGroup();
     settings.beginGroup("mainwindow");
     settings.setValue("geometry", saveGeometry());
     settings.setValue("windowState", saveState());
@@ -643,11 +534,6 @@ void ComposerMainWindow::showEditPreferencesDialog()
 
 void ComposerMainWindow::startOpenProject(QString project)
 {
-//    qDebug() << "ComposerMainWindow::beginOpenDocument";
-    //ui->progressBar->setVisible(true);
-//    openingDocument = true;
-    //ui->progressBar->repaint();
-//    timer->start(10);
     this->setCursor(QCursor(Qt::WaitCursor));
     update();
 }
@@ -655,10 +541,6 @@ void ComposerMainWindow::startOpenProject(QString project)
 void ComposerMainWindow::endOpenProject(QString project)
 {
     this->setCursor(QCursor(Qt::ArrowCursor));
-//    qDebug() << "ComposerMainWindow::endOpenDocument";
-//    openingDocument = false;
-//    timer->stop();
-    //ui->progressBar->setVisible(false);
 
     QSettings settings("telemidia", "composer");
     if(settings.contains("default_perspective"))
@@ -668,17 +550,6 @@ void ComposerMainWindow::endOpenProject(QString project)
         restorePerspective(defaultPerspective);
         update();
     }
-}
-
-void ComposerMainWindow::slotTimeout()
-{
-//    if(openingDocument){
-        //int v = ui->progressBar->value();
-        //qDebug() << "MainWindow::slotTimeout";
-        //v %= 100;
-        //ui->progressBar->setValue(v);
-        //ui->progressBar->repaint();
-//    }
 }
 
 void ComposerMainWindow::saveCurrentProject()
@@ -715,7 +586,7 @@ void ComposerMainWindow::saveCurrentGeometryAsPerspective()
     else {
         QMessageBox box(QMessageBox::Warning,
                         tr("Information"),
-                        tr("There aren't a layout openned to be saved."),
+                        tr("There aren't a layout open to be saved."),
                         QMessageBox::Ok
                      );
         box.exec();
@@ -811,6 +682,30 @@ void ComposerMainWindow::openProject()
                                                     tr("NCL Document (*.ncl)"));
     if(filename != "") {
         ProjectControl::getInstance()->launchProject(filename);
+    }
+}
+
+void ComposerMainWindow::importFromDocument()
+{
+    QString docFilename = QFileDialog::getOpenFileName(
+            this,
+            tr("Choose the NCL file to be imported"),
+            QDir::currentPath(),
+            tr("NCL Documents (*.ncl)") );
+
+    if(docFilename != "")
+    {
+        QString projFilename = QFileDialog::getSaveFileName(
+                this,
+                tr("Choose the Composer Project where the NCL document must be \
+                    imported"),
+                QDir::currentPath(),
+                tr("Composer Projects (*.ncl)") );
+        if(projFilename != "")
+        {
+            ProjectControl::getInstance()->importFromDocument( docFilename,
+                                                           projFilename);
+        }
     }
 }
 
