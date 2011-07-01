@@ -39,6 +39,19 @@ bool NCLDocumentParser::parseDocument()
     return reader.parse(inputSource);
 }
 
+bool NCLDocumentParser::parseContent(const QString &str)
+{
+    QXmlInputSource inputSource;
+    inputSource.setData(str);
+
+    QXmlSimpleReader reader;
+    reader.setContentHandler(this);
+    reader.setErrorHandler(this);
+
+    qDebug() << "NCLDocumentParser::parseContent " << str;
+    return reader.parse(inputSource);
+}
+
 bool NCLDocumentParser::startElement(const QString &,
                   const QString &,
                   const QString &qName,
@@ -49,10 +62,13 @@ bool NCLDocumentParser::startElement(const QString &,
 
     if (qName != "ncl")
     {
-        lockStack.lock();
-        Entity *parentEntity = elementStack.top();
-        lockStack.unlock();
-        parentId = parentEntity->getUniqueId();
+        if(elementStack.size())
+        {
+            lockStack.lock();
+            Entity *parentEntity = elementStack.top();
+            lockStack.unlock();
+            parentId = parentEntity->getUniqueId();
+        }
     }
 
     for (int i=0 ;i < attributes.count(); i++)
@@ -68,8 +84,10 @@ bool NCLDocumentParser::endElement(const QString &namespaceURI,
                 const QString &qName)
 {
     lockStack.lock();
-    elementStack.pop();
+    if(elementStack.size())
+        elementStack.pop();
     lockStack.unlock();
+
     return true;
 }
 

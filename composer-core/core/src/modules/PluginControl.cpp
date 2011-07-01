@@ -116,9 +116,7 @@ void PluginControl::loadPlugins(QString pluginsDirPath) {
 
 void PluginControl::launchProject(Project *project)
 {
-
     MessageControl *msgControl;
-    IDocumentParser *parser;
     IPluginFactory *factory;
     IPlugin *pluginInstance;
     LanguageType type = project->getProjectType();
@@ -128,9 +126,6 @@ void PluginControl::launchProject(Project *project)
 
     msgControl = new MessageControl(project);
     messageControls[location] = msgControl;
-
-    /* Requests a new DocumentParser for this Document*/
-    parser = profile->createParser(project);
 
     QList<QString> plugIDs = pluginsByType.values(type);
     QList<QString>::iterator it;
@@ -145,19 +140,21 @@ void PluginControl::launchProject(Project *project)
             pluginInstance->setProject(project);
             pluginInstance->setLanguageProfile(profile);
             launchNewPlugin(pluginInstance, msgControl);
+
             pluginInstances.insert(location, pluginInstance);
             factoryByPlugin.insert(pluginInstance, factory);
+
             emit addPluginWidgetToWindow(factory, pluginInstance, project,
                                          factoryByPlugin.size());
+
+            //TODO: CREATE A NEW FUNCTION TO UPDATE FROM SAVED CONTENT
+            pluginInstance->updateFromModel();
         }
         else {
             emit notifyError(tr("Could not create an instance for the"
                                 "plugin (%1)").arg(*it));
         }
     }
-    connectParser(parser, msgControl);
-    parser->parseDocument();
-    profile->releaseDocumentParser(parser);
 }
 
 void PluginControl::launchNewPlugin(IPlugin *plugin,
@@ -170,8 +167,6 @@ void PluginControl::launchNewPlugin(IPlugin *plugin,
             plugin,SLOT(onEntityChanged(QString, Entity*)));
     connect(mControl,SIGNAL(entityRemoved(QString, QString)),
             plugin,SLOT(onEntityRemoved(QString, QString)));
-    /*connect(mControl,SIGNAL(aboutToRemoveEntity(Entity*)),
-            plugin, SLOT(onEntityAboutToRemove(Entity*)));*/
 
     /* Connect signals from the plugin to slots of the core */
     connect(plugin,
@@ -185,7 +180,7 @@ void PluginControl::launchNewPlugin(IPlugin *plugin,
             mControl,
             SLOT(onRemoveEntity(Entity*,bool)));
 
-    //broadcastMessage
+    // broadcastMessage
     connect(plugin, SIGNAL(sendBroadcastMessage(const char*, void *)),
             this, SLOT(sendBroadcastMessage(const char*, void*)));
 }
@@ -283,6 +278,11 @@ void PluginControl::savePluginsData(QString location)
        IPlugin *inst = *it;
        inst->saveSubsession();
     }
+}
+
+MessageControl *PluginControl::getMessageControl(QString location)
+{
+    return messageControls.value(location);
 }
 
 } }//end namespace

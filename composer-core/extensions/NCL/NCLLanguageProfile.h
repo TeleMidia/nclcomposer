@@ -27,16 +27,11 @@ namespace composer {
                 (IDocumentParser *parser);
         QString getProfileName();
 
-
         map <QString, map <QString, char> *> *getNesting();
-
         map <QString, bool> *getAttributes (QString element);
-
         map <QString, char> *getChildren (QString tagname);
-
         vector <AttributeReferences *>
                 getReferences (QString element, QString attr);
     };
-
-}} //end namespace
+} } //end namespace
 #endif // NCLLANGUAGEPROFILE_H

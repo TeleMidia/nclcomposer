@@ -25,6 +25,16 @@ namespace composer {
              \return bool returns true if success and false otherwise.
             */
             virtual bool parseDocument() = 0;
+
+            /*!
+             \brief Parses the content of the string passed as parameter. This
+                function must be implemented by concrete Document Parsers.
+
+             \arg str the content to be parsed.
+             \return bool returns true if success and false otherwise.
+            */
+            virtual bool parseContent(const QString &str) = 0;
+
             /*!
              \brief Returns the name of the Document Parser. This name should
                 be unique. This function must be implemented by concrete
@@ -35,7 +45,6 @@ namespace composer {
             virtual QString getParserName() = 0;
 
         signals:
-
             /*!
              \brief Signal emitted when the parser find a new entity. This
                 function must be implemented by concrete Document Parsers.
@@ -51,7 +60,7 @@ namespace composer {
 
         public slots:
             /*!
-             \brief This slot is called when there is a error in the model
+             \brief This slot is called when there is an error in the model
                 (commonly after a addEntity call). This function must be
                 implemented by concrete Document Parsers.
 

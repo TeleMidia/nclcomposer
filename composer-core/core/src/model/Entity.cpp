@@ -38,21 +38,20 @@ namespace composer {
 
     Entity::~Entity() {
         QMutexLocker locker(&lockChildren);
-        QMapIterator<QString,Entity*> it(children);
-
-        while(it.hasNext()){
-            it.next();
-            Entity *child = it.value();
+        while(children.size())
+        {
+            Entity *child = children.at(0);
             if (deleteChildren) {
                 delete child;
                 child = NULL;
             }
-            children.remove(it.key());
+            children.pop_front();
         }
     }
 
     //! This call deletes the child and its children in a recursive way
-    bool Entity::deleteChild(Entity *entity) {
+    bool Entity::deleteChild(Entity *entity)
+    {
         QMutexLocker locker(&lockChildren);
         entity->setDeleteChildren(true);
         delete entity;
@@ -62,29 +61,29 @@ namespace composer {
     }
 
     //! This call removes the child and append his children to his parent
-    bool Entity::removeChildAppendChildren(Entity *entity){
-        QMutexLocker locker(&lockChildren);
-        QMap<QString, Entity*>::iterator it;
-        for(it = entity->children.begin();
-            it != entity->children.end(); it++) {
-            Entity *child = it.value();
+    bool Entity::removeChildAppendChildren(Entity *entity)
+    {
+        for(int i= 0; i < children.size(); i++)
+        {
+            Entity *child = children.at(i);
             child->setParent(this);
         }
+
         entity->setDeleteChildren(false);
         delete entity;
         entity = NULL;
+
         return true;
     }
 
     //! Print the Entity and its children
     void Entity::print()
     {
-            QMap<QString, Entity*>::iterator it;
-            for (it = children.begin() ; it != children.end(); it++)
-            {
-                    Entity *child = it.value();
-                    child->print();
-            }
+        for (int i = 0; i < children.size(); i++)
+        {
+            Entity *child = children.at(i);
+            child->print();
+        }
     }
 
     QString Entity::toString(int ntab)
@@ -106,11 +105,10 @@ namespace composer {
         out += getUniqueId();
         out += "\">\n";
 
-        QMap<QString, Entity*>::iterator it;
-        for (it = children.begin() ; it != children.end(); it++)
+        for (int i = 0; i < children.size(); i++)
         {
-                Entity *child = it.value();
-                out += child->toString(ntab+1);
+            Entity *child = children.at(i);
+            out += child->toString(ntab+1);
         }
         for(int i = 0; i < ntab; i++)
             out += "\t";

@@ -18,6 +18,13 @@ Project::Project(QMap<QString,QString> &atts, QObject *parent) :
     entities[this->getUniqueId()] = this;
 }
 
+Project::Project(QString uniqueId, QMap<QString,QString> &atts, QObject *parent) :
+    Entity(uniqueId, atts, parent)
+{
+    setType("document");
+    entities[this->getUniqueId()] = this;
+}
+
 Project::~Project() {
     QMutexLocker locker(&lockEntities);
     entities.clear();
@@ -33,7 +40,7 @@ void Project::setProjectType(LanguageType type)
     this->projectType = type;
 }
 
-Entity* Project::getEntityBydId(QString _id) {
+Entity* Project::getEntityById(QString _id) {
     QMutexLocker locker(&lockEntities);
     return entities.contains(_id) ? entities[_id] : NULL;
 }
@@ -59,16 +66,6 @@ QString Project::getLocation() {
 void Project::setLocation(QString location) {
     QMutexLocker locker(&lockLocation);
     this->projectLocation = location;
-}
-
-void Project::setProjectId(QString _projectId)
-{
-    this->projectId = _projectId;
-}
-
-QString Project::getProjectId()
-{
-    return this->projectId;
 }
 
 bool Project::addEntity(Entity* entity, QString parentId)
@@ -121,23 +118,27 @@ QString Project::toString()
 {
    QMutexLocker locker(&lockEntities);
    QString result = "";
-   result += "<project name=\"" + this->projectId + "\">\n";
+   result += "#COMPOSER_PROJECT name=\"" + this->projectName
+             + "\" version=\"0.1\"#\n";
+
+   result += "#COMPOSER_MODEL#\n";
    result += Entity::toString(0);
+   result += "#END_COMPOSER_MODEL#\n";
 
    QString key;
    foreach(key, pluginData.keys())
    {
-       result += "<pluginData pluginID=\"" + key + "\">";
+       result += "#COMPOSER_PLUGIN_DATA "+ key + "#\n";
        result += pluginData[key];
-       result += "</pluginData>\n";
+       result += "\n#END_COMPOSER_PLUGIN_DATA#\n";
    }
-   result += "\n</project>";
    return result;
 }
 
 bool Project::setPluginData(QString pluginId, const QByteArray data)
 {
     this->pluginData[pluginId] = data;
+
     return true;
 }
 

@@ -11,13 +11,16 @@
 namespace composer{
     namespace core {
         class MessageControl;
-    }
-}
+        class ProjectReader;
+
+        namespace model {
+            class Project;
+} } } //end namespace
 
 namespace composer {
     namespace core {
         namespace model {
-            class Project;
+
 
 class Entity : public QObject
 {
@@ -27,6 +30,7 @@ class Entity : public QObject
     // private and protected members of Entity.
     friend class composer::core::model::Project;
     friend class composer::core::MessageControl;
+    friend class composer::core::ProjectReader;
 
 private:
     QMutex lockAtts;
@@ -38,7 +42,7 @@ private:
     QString type;
     Entity* parent;
     bool deleteChildren; /* initial value is true */
-    QMap<QString, Entity*> children;
+    QVector <Entity*> children;
     /** This <map> represents the attributes of the element
     *   the Key is the name of the attribute and the Value is
     *   the value that this attribute has.
@@ -85,9 +89,15 @@ protected:
     inline bool addChild(Entity *entity) {
         QMutexLocker locker(&lockChildren);
         QString _id = entity->getUniqueId();
-        if(children.contains(_id))
-            return false;
-        children[_id] = entity;
+
+        // Check if the entity is already children of this entity
+        // TODO: THIS CAN BE IMPROVED!! Maybe checking if the parentUniqueID.
+        for(int i = 0; i < children.size(); i++)
+        {
+            if(children.at(i)->getUniqueId() == _id )
+                return false;
+        }
+        children.push_back(entity);
         entity->setParent(this);
         return true;
     }
@@ -121,7 +131,7 @@ public:
         QMutexLocker locker(&lockAtts);
         return atts.contains(name) ? atts[name] : "";
     }
-    //! This method is used to get the interetator in the <map> of
+    //! This method is used to get the iterator in the <map> of
     //!     attributes
     /*!
       \param begin - a reference to be filled with the begin of the
@@ -157,17 +167,8 @@ public:
         return this->type;
     }
 
-    inline void getChildrenIterator(
-            QMap<QString,Entity*>::iterator &begin,
-            QMap<QString,Entity*>::iterator &end) {
-
-        QMutexLocker locker(&lockChildren);
-        begin = this->children.begin();
-        end = this->children.end();
-    }
-
     inline Entity* getParent() {
-        QMutexLocker loecker(&lockParent);
+        QMutexLocker locker(&lockParent);
         return parent;
     }
 
@@ -179,6 +180,8 @@ public:
     inline void setDeleteChildren(bool _delete) {
         this->deleteChildren = _delete;
     }
+
+    QVector <Entity *> getChildren() { return this->children; }
 
 signals:
 

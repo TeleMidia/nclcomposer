@@ -2,6 +2,7 @@
 # Project created by QtCreator 2010-03-12T13:06:44
 # -------------------------------------------------
 QT -= gui
+QT += xml
 TEMPLATE = lib
 TARGET = ComposerCore
 VERSION = 1.0
@@ -25,13 +26,16 @@ SOURCES += \
     src/model/Entity.cpp \
     src/model/Project.cpp \
     src/util/Utilities.cpp \
-    src/util/AttributeReferences.cpp
+    src/util/AttributeReferences.cpp \
+    src/modules/ProjectReader.cpp
+    # src/model/Model.cpp
 
 HEADERS_MAN += \
     include/modules/PluginControl.h \
     include/modules/MessageControl.h \
     include/modules/LanguageControl.h \
-    include/modules/ProjectControl.h
+    include/modules/ProjectControl.h \
+    include/modules/ProjectReader.h
 
 HEADERS_EXTENSIONS += \
     include/extensions/ILanguageProfile.h \
@@ -51,6 +55,7 @@ HEADERS_EXCEPTION +=  include/model/exception/EntityNotFound.h \
 
 HEADERS_MODEL += include/model/Entity.h \
     include/model/Project.h
+    #include/model/Model.h
 
 HEADERS = $$HEADERS_MAN $$HEADERS_EXTENSIONS $$HEADERS_UTIL \
           $$HEADERS_EXCEPTION $$HEADERS_MODEL

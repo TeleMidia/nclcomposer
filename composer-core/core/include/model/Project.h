@@ -10,6 +10,7 @@ namespace composer {
         class PluginControl;
         class MessageControl;
         class ProjectControl;
+        class ProjectReader;
 } } //end namespace
 
 #include "../model/exception/ParentNotFound.h"
@@ -33,12 +34,15 @@ class Project : public Entity
     friend class composer::core::PluginControl;
     friend class composer::core::MessageControl;
     friend class composer::core::ProjectControl;
+    friend class composer::core::ProjectReader;
 
 public:
-    Entity* getEntityBydId(QString _id);
+    Entity* getEntityById(QString _id);
     QList<Entity*> getEntitiesbyType(QString _type);
+
     QString getLocation();
     QString getProjectId();
+
     LanguageType getProjectType();
 
     /*!
@@ -57,19 +61,23 @@ private:
     QMutex lockLocation;
     QMap<QString, Entity*> entities;
     QMap<QString, QByteArray> pluginData;
+
     QString projectLocation;
     QString projectName;
-    QString projectId;
     LanguageType projectType;
 
 protected:
     explicit Project(QObject *parent = 0);
     Project(QMap<QString,QString> &atts, QObject *parent = 0);
+    Project(QString uniqueId, QMap<QString,QString> &atts, QObject *parent = 0);
     ~Project();
 
     void setLocation(QString location);
     void setProjectType(LanguageType type);
-    void setProjectId(QString _projectId);
+
+    QString model;
+    void setModelString(const QString &model) {this->model = model;}
+    QString getModelString() {return this->model;}
 
     /*! \brief This method is used to add an Entity in the map and as child of
             the parentId.

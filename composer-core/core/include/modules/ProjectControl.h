@@ -37,10 +37,12 @@ namespace composer {
             void saveProject(QString location);
             void launchProject(QString location);
 
+            void importFromDocument(QString docLocation, QString projLocation);
+
         signals:
             void startOpenProject(QString document);
             void endOpenProject(QString document);
-            void projectAlreadyOpenned(QString);
+            void projectAlreadyOpen(QString);
             void notifyError(QString);
         };
 

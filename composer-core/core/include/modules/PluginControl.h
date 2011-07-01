@@ -81,14 +81,6 @@ namespace composer {
             */
             void launchNewPlugin(IPlugin *plugin,
                                  MessageControl *mControl);
-            /*!
-             \brief
-
-             \param parser
-             \param mControl
-            */
-            void connectParser(IDocumentParser *parser,
-                               MessageControl *mControl);
 
         public:
             /*!
@@ -117,6 +109,21 @@ namespace composer {
              \return bool
             */
             bool releasePlugins(Project *doc);
+            /*!
+              \brief TODO
+
+              \param
+              \return
+             */
+            MessageControl *getMessageControl(QString location);
+            /*!
+             \brief
+
+             \param parser
+             \param mControl
+            */
+            void connectParser(IDocumentParser *parser,
+                               MessageControl *mControl);
 
         public slots:
             /*!

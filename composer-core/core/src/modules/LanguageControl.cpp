@@ -84,8 +84,7 @@ void LanguageControl::loadProfiles(QString profilesDirPath)
     }
 }
 
-ILanguageProfile* LanguageControl::getProfileFromType
-        (LanguageType type)
+ILanguageProfile* LanguageControl::getProfileFromType(LanguageType type)
 {
     if (profiles.contains(type))
         return profiles[type];
