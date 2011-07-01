@@ -13,7 +13,9 @@ LIBS += -Ldeps/QScintilla-gpl-2.4.6/Qt4
 macx:LIBS += -L/Library/Frameworks \
             -L$$quote(/Library/Application Support/Composer) \
             -lNCLLanguageProfile
+
 unix:LIBS += -Ldeps/QScintilla-gpl-2.4.6/Qt4
+
 win32:LIBS += -lNCLLanguageProfile
 
 HEADERS     =   include/NCLTextEditorMainWindow.h \

@@ -126,10 +126,7 @@ QTreeWidgetItem* NCLTreeWidget::addElement ( QTreeWidgetItem *father,
     }
 
     updateItem(child, tagname, attrs);
-
-    //TODO: This is temporaty (must be removed in the future).
     child->setText(2, id);
-
     // child->setText(2, QString::number(line_in_text));
     // child->setText(3, QString::number(column_in_text));
     return child;
@@ -139,6 +136,7 @@ void NCLTreeWidget::userAddNewElement()
 {
     bool ok;
     QList<QTreeWidgetItem*> selecteds = this->selectedItems ();
+
     QTreeWidgetItem *item = selecteds.at (0);
     QString id = item->text(2);
     // int line = item->text(2).toInt ( &ok, 10 );
@@ -162,7 +160,6 @@ void NCLTreeWidget::userAddNewElement()
                                              0,
                                              true,
                                              &ok );
-
     if(ok) {
         //Add new Element to OutlineWidget
         QMap<QString,QString> attr;
@@ -301,7 +298,6 @@ void NCLTreeWidget::errorNotification( QString message,
 
 void NCLTreeWidget::DecreaseFont()
 {
-//    qDebug() << "NCLTreeWidget::DecreaseFont";
     unsigned int newPointSize = font().pointSize()-1;
     QFont newFont(font());
     newFont.setPointSize(newPointSize);

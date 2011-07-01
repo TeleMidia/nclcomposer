@@ -77,9 +77,13 @@ void PropertyEditor::setAttributeValue(QString property, QString value)
         QTableWidgetItem *item = ui->tableWidget->item(line, 1);
         if(item)
         {
-            internalPropertyChange = true;
-            item->setText(value);
-            propertyToValue[property] = value;
+            // Try to update if the values are not equal
+            if(item->text() != value)
+            {
+                internalPropertyChange = true;
+                item->setText(value);
+                propertyToValue[property] = value;
+            }
         }
     }
 }
@@ -91,13 +95,14 @@ void PropertyEditor::updateWithItemChanges(QTableWidgetItem *item)
 
     if(column == 0) return; //not for me!
 
-    if(internalPropertyChange){
+    if(internalPropertyChange) {
         internalPropertyChange = false;
         return;
     }
 
     QTableWidgetItem *leftItem = ui->tableWidget->item(row, column-1);
     QString name = "", value = "";
+
     if(item != NULL)
     {
         name = leftItem->text();

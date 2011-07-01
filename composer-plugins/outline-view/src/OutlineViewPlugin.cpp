@@ -101,11 +101,6 @@ void OutlineViewPlugin::onEntityChanged(QString pluginID, Entity * entity)
 
 }
 
-/*void OutlineViewPlugin::onEntityAboutToRemove(Entity *entity)
-{
-//    entityToRemoveId = ""
-}*/
-
 void OutlineViewPlugin::onEntityRemoved(QString pluginID, QString entityID)
 {
     if(idToItem.contains(entityID))
@@ -118,7 +113,7 @@ void OutlineViewPlugin::onEntityRemoved(QString pluginID, QString entityID)
 void OutlineViewPlugin::elementRemovedByUser(QString itemId)
 {
     qDebug() << "elementRemovedByUser (id ='" << itemId << "')";
-    Entity *entity = project->getEntityBydId(itemId);
+    Entity *entity = project->getEntityById(itemId);
     emit removeEntity(entity, false);
 }
 
@@ -130,7 +125,69 @@ bool OutlineViewPlugin::saveSubsession()
 
 void OutlineViewPlugin::updateFromModel()
 {
-    //TODO: All
+    //Clear previous tree
+    QString key;
+    foreach(key, idToItem.keys())
+    {
+        window->removeItem(key);
+    }
+    idToItem.clear();
+
+    //Draw new tree
+    if(!project->getChildren().size()) return;
+
+    QTreeWidgetItem *item;
+    QStack <Entity*> stack;
+    Entity *entity = project->getChildren().at(0);
+
+    QMap <QString, QString> attrs;
+    QMap <QString, QString>::iterator begin, end, it;
+
+    entity->getAttributeIterator(begin, end);
+    for (it = begin; it != end; ++it)
+    {
+        attrs[it.key()] = it.value();
+    }
+
+    item = window->addElement( 0,
+                               -1,
+                               entity->getType(),
+                               entity->getUniqueId(),
+                               attrs,
+                               0, 0);
+
+    idToItem[entity->getUniqueId()] = item;
+    stack.push(entity);
+
+    while(stack.size() > 0)
+    {
+        entity = stack.top();
+        stack.pop();
+
+        QVector <Entity *> children = entity->getChildren();
+        for(int i = 0; i < children.size(); i++)
+        {
+            qDebug() << children.at(i)->getUniqueId();
+            if(idToItem.contains(children.at(i)->getUniqueId())) continue;
+
+            attrs.clear();
+            children.at(i)->getAttributeIterator(begin, end);
+            for (it = begin; it != end; ++it)
+            {
+                attrs[it.key()] = it.value();
+            }
+
+            item = window->addElement( idToItem[entity->getUniqueId()],
+                                        -1,
+                                        children.at(i)->getType(),
+                                        children.at(i)->getUniqueId(),
+                                        attrs,
+                                        0, 0);
+
+            idToItem[children.at(i)->getUniqueId()] = item;
+            stack.push_front(children.at(i));
+        }
+    }
 }
 
 void OutlineViewPlugin::debugHasSendClearAll(void *param)
@@ -142,7 +199,6 @@ void OutlineViewPlugin::itemSelectionChanged()
 {
     if(selectedId != NULL)
         delete selectedId;
-
 
     QList <QTreeWidgetItem*> selecteds = window->selectedItems();
 

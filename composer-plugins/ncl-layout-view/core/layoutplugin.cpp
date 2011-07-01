@@ -33,7 +33,7 @@ LayoutPlugin::~LayoutPlugin()
 
 void LayoutPlugin::removeRegion(LayoutItem* item)
 {
-    emit removeEntity(getProject()->getEntityBydId(items2[item]), false);
+    emit removeEntity(getProject()->getEntityById(items2[item]), false);
 }
 
 void LayoutPlugin::addRegion(LayoutItem* item)

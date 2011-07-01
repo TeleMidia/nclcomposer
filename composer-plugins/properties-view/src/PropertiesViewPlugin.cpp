@@ -63,9 +63,11 @@ void PropertiesViewPlugin::updateFromModel()
     //TODO: All
 }
 
-void PropertiesViewPlugin::changeSelectedEntity(void *param){
+void PropertiesViewPlugin::changeSelectedEntity(void *param)
+{
     QString *id = (QString*)param;
-    currentEntity = project->getEntityBydId(*id);
+    currentEntity = project->getEntityById(*id);
+
     if(currentEntity != NULL)
     {
         QString name;
@@ -104,13 +106,18 @@ void PropertiesViewPlugin::updateCurrentEntityAttr(QString attr, QString value)
             currentEntity->getAttributeIterator(begin, end);
             for (it = begin; it != end; ++it)
             {
-                attrs.insert(it.key(), it.value());
+                if(it.key() == attr)
+                    attrs.insert(attr, value);
+                else
+                    attrs.insert(it.key(), it.value());
             }
-            attrs.insert(attr, value);
+
+            if(!attrs.contains(attr))
+                attrs.insert(attr, value);
 
             emit setAttributes(currentEntity, attrs, false);
         }
     }
 }
 
-}}} //end namespace
+} } } //end namespace

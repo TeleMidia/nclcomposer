@@ -170,10 +170,9 @@ void NCLTextualViewPlugin::onEntityRemoved(QString pluginID, QString entityID)
     }
     foreach(key, startLineOfEntity.keys())
     {
-        qDebug() << project->getEntityBydId(key)->getType()
+        qDebug() << project->getEntityById(key)->getType()
              << " startLine=" << startLineOfEntity[key]
              << " endLine=" << endLineOfEntity[key];
-
     }
 }
 
@@ -185,7 +184,7 @@ bool NCLTextualViewPlugin::saveSubsession()
 }
 
 void NCLTextualViewPlugin::updateFromModel(){
-
+    window->getTextEditor()->setText(QString(project->getPluginData("ncl-text-editor")));
 }
 
 void NCLTextualViewPlugin::changeSelectedEntity(void *param){
