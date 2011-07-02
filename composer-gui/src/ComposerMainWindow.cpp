@@ -156,7 +156,7 @@ void ComposerMainWindow::readSettings() {
 
     for(int i = 0; i < openfiles.size(); i++)
     {
-        qDebug() << openfiles.at(i);
+//        qDebug() << openfiles.at(i);
         ProjectControl::getInstance()->launchProject(openfiles.at(i));
     }
 
@@ -664,9 +664,9 @@ void ComposerMainWindow::launchProjectWizard()
 {
     QString filename = QFileDialog::getSaveFileName(
             this,
-            tr("Creating a new Project"),
+            tr("Creating a new Composer Project"),
             QDir::currentPath(),
-            tr("Composer Projects (*.ncl)") );
+            tr("Composer Projects (*.cpr)") );
 
     if( !filename.isNull() )
     {
@@ -677,9 +677,9 @@ void ComposerMainWindow::launchProjectWizard()
 void ComposerMainWindow::openProject()
 {
     QString filename = QFileDialog::getOpenFileName(this,
-                                                    tr("Open NCL Document"),
-                                                    QDir::homePath(),
-                                                    tr("NCL Document (*.ncl)"));
+                                                tr("Open Composer Project"),
+                                                QDir::homePath(),
+                                                tr("Composer Project (*.cpr)"));
     if(filename != "") {
         ProjectControl::getInstance()->launchProject(filename);
     }
@@ -693,6 +693,7 @@ void ComposerMainWindow::importFromDocument()
             QDir::currentPath(),
             tr("NCL Documents (*.ncl)") );
 
+
     if(docFilename != "")
     {
         QString projFilename = QFileDialog::getSaveFileName(
@@ -700,7 +701,13 @@ void ComposerMainWindow::importFromDocument()
                 tr("Choose the Composer Project where the NCL document must be \
                     imported"),
                 QDir::currentPath(),
-                tr("Composer Projects (*.ncl)") );
+                tr("Composer Projects (*.cpr)") );
+
+        //Create the file
+        QFile f(projFilename);
+        f.open(QIODevice::ReadWrite);
+        f.close();
+
         if(projFilename != "")
         {
             ProjectControl::getInstance()->importFromDocument( docFilename,
