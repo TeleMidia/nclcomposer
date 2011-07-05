@@ -69,11 +69,11 @@ void Project::setLocation(QString location) {
 }
 
 bool Project::addEntity(Entity* entity, QString parentId)
-    throw (EntityNotFound,ParentNotFound)
+    throw (EntityNotFound, ParentNotFound)
 {
     QMutexLocker locker(&lockEntities);
     if (!entities.contains(parentId)) {
-        throw ParentNotFound(entity->getType(),entity->getType(),
+        throw ParentNotFound(entity->getType(), entity->getType(),
                                  parentId);
         return false;
     }
@@ -96,13 +96,15 @@ bool Project::removeEntity(Entity* entity, bool appendChild)
     if (entities.contains(entity->getUniqueId())) {
         Entity *parent = entity->getParent();
         if (parent) {
-            if (appendChild)
+            /* if (appendChild)
                     parent->removeChildAppendChildren(entity);
-            else parent->deleteChild(entity);
-        } else { //does not have a parent, so dont append
+            else */
+                parent->deleteChild(entity);
+        }
+        else
+        {   //does not have a parent, so dont append
             delete entity;
             entity = NULL;
-            return true;
         }
     } else {
         throw EntityNotFound(entity->getType(),entity->getUniqueId());
@@ -113,10 +115,9 @@ bool Project::removeEntity(Entity* entity, bool appendChild)
     return true;
 }
 
-/** \todo Save project to the hard disk. */
+/** \todo Return a string to be saved in hard disk. */
 QString Project::toString()
 {
-   QMutexLocker locker(&lockEntities);
    QString result = "";
    result += "#COMPOSER_PROJECT name=\"" + this->projectName
              + "\" version=\"0.1\"#\n";

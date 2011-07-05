@@ -5,6 +5,7 @@
 #include <QMap>
 
 typedef enum {
+      CPR,
       NCL,
       SMIL,
       HTML,

@@ -26,7 +26,7 @@ Project *ProjectReader::readFile(QString location)
     }
 
     QString content(qUncompress(file.readAll()));
-    qDebug() << content;
+//    qDebug() << content;
     /* READING MODEL */
     QString startCpModelStr = "#COMPOSER_MODEL#\n";
     QString endCpModelStr = "\n#END_COMPOSER_MODEL#";
@@ -86,6 +86,8 @@ Project *ProjectReader::readFile(QString location)
         qWarning() << "ERROR: File is corrupted " << location;
 
     file.close();
+
+    qDebug() << project->toString();
     return project;
 }
 
@@ -169,7 +171,6 @@ bool ProjectReader::fatalError(const QXmlParseException &exception)
     qWarning() << "Fatal error on line" << exception.lineNumber()
                     << ", column" << exception.columnNumber() << ":"
                     << exception.message();
-
     return false;
 }
 

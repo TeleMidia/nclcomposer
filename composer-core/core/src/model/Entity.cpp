@@ -38,29 +38,39 @@ namespace composer {
 
     Entity::~Entity() {
         QMutexLocker locker(&lockChildren);
-        while(children.size())
-        {
-            Entity *child = children.at(0);
-            if (deleteChildren) {
+        if (deleteChildren) {
+            while(children.size())
+            {
+                Entity *child = children.at(0);
                 delete child;
                 child = NULL;
+                children.pop_front();
             }
-            children.pop_front();
         }
     }
 
-    //! This call deletes the child and its children in a recursive way
+    //! Deletes the child and its children in a recursive way
     bool Entity::deleteChild(Entity *entity)
     {
         QMutexLocker locker(&lockChildren);
         entity->setDeleteChildren(true);
+        qDebug() << "deleteChild" << children.size();
+        for(int i = 0; i < children.size(); i++)
+        {
+            if(children.at(i) == entity)
+            {
+                children.remove(i);
+            }
+        }
+        qDebug() << "deleteChild" << children.size();
         delete entity;
         entity = NULL;
 
         return true;
     }
 
-    //! This call removes the child and append his children to his parent
+    //! Removes the child and append his children to his parent
+    // Is this useful ??
     bool Entity::removeChildAppendChildren(Entity *entity)
     {
         for(int i= 0; i < children.size(); i++)
@@ -76,7 +86,7 @@ namespace composer {
         return true;
     }
 
-    //! Print the Entity and its children
+    //! Prints the Entity and its children
     void Entity::print()
     {
         for (int i = 0; i < children.size(); i++)
@@ -94,13 +104,13 @@ namespace composer {
 
         out += "<";
         out.append(getType().toAscii());
-        foreach(QString attr, atts.keys()){
+        /*foreach(QString attr, atts.keys()){
             out += " ";
             out.append(attr);
             out += "=\"";
             out += atts.value(attr);
             out += "\"";
-        }
+        }*/
         out += " uniqueEntityId=\"";
         out += getUniqueId();
         out += "\">\n";

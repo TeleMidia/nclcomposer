@@ -90,6 +90,7 @@ protected:
         QMutexLocker locker(&lockChildren);
         QString _id = entity->getUniqueId();
 
+        qDebug() << children.size();
         // Check if the entity is already children of this entity
         // TODO: THIS CAN BE IMPROVED!! Maybe checking if the parentUniqueID.
         for(int i = 0; i < children.size(); i++)
@@ -177,6 +178,10 @@ public:
         return parent->getUniqueId();
     }
 
+    /**
+     * \brief Tell if the children should be deleted when this entity is deleted
+     *          through destructor.
+     */
     inline void setDeleteChildren(bool _delete) {
         this->deleteChildren = _delete;
     }

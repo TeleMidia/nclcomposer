@@ -120,8 +120,8 @@ void PluginControl::launchProject(Project *project)
     IPluginFactory *factory;
     IPlugin *pluginInstance;
     LanguageType type = project->getProjectType();
-    ILanguageProfile *profile = LanguageControl::getInstance()->
-                                getProfileFromType(type);
+//    ILanguageProfile *profile = LanguageControl::getInstance()->
+//                                getProfileFromType(type);
     QString location  = project->getLocation();
 
     msgControl = new MessageControl(project);
@@ -138,7 +138,7 @@ void PluginControl::launchProject(Project *project)
         {
             pluginInstance->setPluginInstanceID(QUuid::createUuid().toString());
             pluginInstance->setProject(project);
-            pluginInstance->setLanguageProfile(profile);
+//            pluginInstance->setLanguageProfile(profile);
             launchNewPlugin(pluginInstance, msgControl);
 
             pluginInstances.insert(location, pluginInstance);

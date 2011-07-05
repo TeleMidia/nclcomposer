@@ -21,13 +21,15 @@ void MessageControl::onAddEntity( QString type,
                bool force)
 {
 
+    qDebug() << type << " " << parentEntityId << " " << atts;
+
     /* Cast to IPlugin to make sure it's a plugin */
     IPlugin *plugin = qobject_cast<IPlugin *> (QObject::sender());
     IDocumentParser *parser = qobject_cast<IDocumentParser*>
                               (QObject::sender());
-    QString ID;
-    if(plugin) ID = plugin->getPluginInstanceID();
-    else if (parser) ID = parser->getParserName();
+    QString pluginID;
+    if(plugin) pluginID = plugin->getPluginInstanceID();
+    else if (parser) pluginID = parser->getParserName();
 
     Entity *ent = NULL;
 
@@ -36,8 +38,8 @@ void MessageControl::onAddEntity( QString type,
         ent = new Entity(atts);
         ent->setType(type);
         //TODO - calll validator to check
-        project->addEntity(ent,parentEntityId);
-        emit entityAdded(ID,ent);
+        project->addEntity(ent, parentEntityId);
+        emit entityAdded(pluginID, ent);
 
     } catch(exception& e){
         if (plugin) plugin->errorMessage(e.what());
@@ -73,6 +75,8 @@ void MessageControl::onEditEntity(Entity *entity,
 void MessageControl::onRemoveEntity( Entity *entity,
                                      bool force)
 {
+//    qDebug() << "MessageControl::onRemoveEntity";
+
     IPlugin *plugin = qobject_cast<IPlugin *> (QObject::sender());
     if(plugin) {
         QString pluginID = plugin->getPluginInstanceID();
@@ -84,7 +88,7 @@ void MessageControl::onRemoveEntity( Entity *entity,
                 \todo remember to change, the append should come from the
                     plugin
                 */
-                project->removeEntity(entity,true);
+                project->removeEntity(entity, true);
                 emit entityRemoved(pluginID, _id);
             }
             else {

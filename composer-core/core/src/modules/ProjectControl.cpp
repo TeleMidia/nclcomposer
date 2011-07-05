@@ -116,7 +116,7 @@ void ProjectControl::importFromDocument( QString docLocation,
         return;
     }
 
-    QString ext = projLocation;
+    QString ext = docLocation;
     ext = ext.remove(0, ext.lastIndexOf(".") + 1);
     LanguageType type = Utilities::getLanguageTypeByExtension( ext );
 
@@ -147,6 +147,7 @@ void ProjectControl::importFromDocument( QString docLocation,
 
     ProjectReader pr;
     Project *project = pr.readFile(projLocation);
+    project->setAtrributes(atts);
 
     if(project != NULL)
     {

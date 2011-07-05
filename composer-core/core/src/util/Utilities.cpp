@@ -2,6 +2,7 @@
 
 QMap<QString,LanguageType> createMap() {
     QMap<QString,LanguageType> types;
+    types["cpr"]      = NCL;
     types["ncl"]      = NCL;
     types["smil"]     = SMIL;
     types["html"]     = HTML;
