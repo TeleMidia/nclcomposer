@@ -97,11 +97,56 @@ void NCLTextualViewPlugin::errorMessage(QString error)
     //qDebug() << "NCLTextualViewPlugin::onEntityAddError(" << error << ")";
 }
 
-void NCLTextualViewPlugin::onEntityChanged(QString ID, Entity *entity)
+void NCLTextualViewPlugin::onEntityChanged(QString pluginID, Entity *entity)
 {
-    QString line = "PLUGIN (" + ID + ") changed the Entity (" +
+    qDebug() << "PLUGIN (" + pluginID + ") changed the Entity (" +
                    entity->getType() + " - " + entity->getUniqueId() +")";
-    //TODO: All
+
+    //Return if this is my call to onEntityAdded
+    if(pluginID == getPluginInstanceID())
+        return;
+
+    QString line = "<" + entity->getType() + "";
+
+    int insertAtLine = startLineOfEntity.value(entity->getUniqueId());
+
+    QMap <QString, QString>::iterator begin, end, it;
+    entity->getAttributeIterator(begin, end);
+    for (it = begin; it != end; ++it)
+    {
+        if(it.value() != "")
+            line += " " + it.key() + "=\"" + it.value() + "\"";
+    }
+    line += ">";
+
+    int previous_length = window->getTextEditor()->SendScintilla(
+                                                  QsciScintilla::SCI_LINELENGTH,
+                                                  insertAtLine);
+
+    window->getTextEditor()->setSelection(  insertAtLine, 0,
+                                            insertAtLine, previous_length-1);
+    window->getTextEditor()->removeSelectedText();
+
+    window->getTextEditor()->insertAt(line, insertAtLine, 0);
+
+    //fix indentation
+    int lineident = window->getTextEditor()
+                    ->SendScintilla( QsciScintilla::SCI_GETLINEINDENTATION,
+                                     insertAtLine+2);
+
+    if(insertAtLine == 0) //The first entity
+        lineident = 0;
+    else
+        lineident += 8;
+
+    window->getTextEditor()
+            ->SendScintilla( QsciScintilla::SCI_SETLINEINDENTATION,
+                             insertAtLine,
+                             lineident);
+
+    window->getTextEditor()->setCursorPosition(insertAtLine, 0);
+    window->getTextEditor()->ensureLineVisible(insertAtLine);
+    window->getTextEditor()->SendScintilla(QsciScintilla::SCI_SETFOCUS, true);
 }
 
 /*void NCLTextualViewPlugin::onEntityAboutToRemove(Entity *)
