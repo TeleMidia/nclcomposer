@@ -149,11 +149,6 @@ void NCLTextualViewPlugin::onEntityChanged(QString pluginID, Entity *entity)
     window->getTextEditor()->SendScintilla(QsciScintilla::SCI_SETFOCUS, true);
 }
 
-/*void NCLTextualViewPlugin::onEntityAboutToRemove(Entity *)
-{
-
-}*/
-
 void NCLTextualViewPlugin::onEntityRemoved(QString pluginID, QString entityID)
 {
     //skip if this is my own call to onEntityRemoved

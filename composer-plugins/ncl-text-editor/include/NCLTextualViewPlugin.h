@@ -78,7 +78,6 @@ public slots:
      \param
     */
     void onEntityChanged(QString pluginID, Entity *);
-    /*void onEntityAboutToRemove(Entity *);*/
     /*!
      \brief
         This function is part of the IPlugin API.
