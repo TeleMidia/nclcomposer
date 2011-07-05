@@ -21,7 +21,11 @@ namespace composer {
     namespace core {
         namespace model {
 
-
+/*!
+ * \brief An Entity is the main class of the internal Composer core.
+ *
+ * The internal model Composer model is a tree of Entities.
+ */
 class Entity : public QObject
 {
     Q_OBJECT
@@ -43,24 +47,31 @@ private:
     Entity* parent;
     bool deleteChildren; /* initial value is true */
     QVector <Entity*> children;
-    /** This <map> represents the attributes of the element
-    *   the Key is the name of the attribute and the Value is
-    *   the value that this attribute has.
+    /**
+    * \brief This <map> represents the attributes of the element
+    *   the Key is the name of the attribute and Value is the value of that
+    *   attribute.
     */
     QMap<QString, QString> atts;
 
 protected:
-    //! This method is used to set an specific attribute of the
-    //! element
     /*!
-      \param name - The name of the attribute to be set
-      \param value - The value this attribute is going to be set
+     * \brief This method is used to set an specific attribute of the element
+     *
+     * \param name - The name of the attribute to be set
+     * \param value - The value this attribute is going to be set
     */
     inline void setAttribute(QString name, QString value) {
         QMutexLocker locker(&lockAtts);
         atts[name] = value;
     }
 
+    /*!
+     * \brief Set the attributes of the current entity to the value passed as
+     *      parameter.
+     *
+     * \param newAtts the new value of entity's attributes.
+     */
     inline void setAtrributes(QMap<QString,QString> &newatts) {
         QMutexLocker locker(&lockAtts);
         // this->atts.clear(); // Should it??!
@@ -71,14 +82,25 @@ protected:
         }
     }
 
+    /*!
+     * \brief Set the entity's type to the value passed as parameter.
+     *
+     * \param type The type of the entity.
+     */
     inline void setType(QString type) {
         QMutexLocker locker(&lockType);
         this->type = type;
     }
 
-    inline void setUniqueID(QString _id) {
+    /*!
+     *  \brief Set the unique identifier of the entity to the value passed as
+     *      parameter.
+     *
+     * \param _id The new uniqueId of the entity.
+     */
+    inline void setUniqueID(QString uniqueId) {
         QMutexLocker locker(&lockID);
-        this->_id = _id;
+        this->_id = uniqueId;
     }
 
     inline void setParent(Entity *entity) {

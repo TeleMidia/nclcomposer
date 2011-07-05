@@ -10,23 +10,24 @@ typedef enum {
       SMIL,
       HTML,
       NONE
-}LanguageType;
+} LanguageType;
 
 namespace composer {
     namespace core {
         namespace util {
-            class Utilities
-            {
-            private:
-                static QMap<QString,LanguageType> types;
-            public:
-                static LanguageType getLanguageTypeByExtension(QString ext);
-                static QString getExtensionForLanguageType(LanguageType type);
-            };
 
+class Utilities
+{
 
-        }
-    }
-}
+private:
+    static QMap<QString,LanguageType> types;
+
+public:
+    static LanguageType getLanguageTypeByExtension(QString ext);
+    static QString getExtensionForLanguageType(LanguageType type);
+
+};
+
+} } } //end namespace
 
 #endif // DEFINITIONS_H
