@@ -7,4 +7,6 @@ SUBDIRS = \
     debug-console \
     properties-view \
     deps \
-    qnly
+    qnly \
+    qnsb \
+    qnst

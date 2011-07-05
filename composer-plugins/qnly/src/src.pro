@@ -9,7 +9,6 @@ SOURCES += \
     ui/view/qnlygraphicsview.cpp \
     ui/view/qnlygraphicsscene.cpp \
     core/model/qnlydocument.cpp \
-    core/model/qnlylanguage.cpp \
     core/model/qnlyregion.cpp \
     core/model/qnlyregionbase.cpp
 
