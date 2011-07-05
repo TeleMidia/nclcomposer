@@ -102,11 +102,10 @@ void QnlyGraphicsView::selectItem(QnlyGraphicsItem* item)
 
 void QnlyGraphicsView::changeItem(QnlyGraphicsItem* item, const QMap<QString, QString> &attributes)
 {
-    qDebug() << "QnlyGraphicsView::changeItem";
     if (item != NULL){
-//        if (!item->hasChanged()){
-//            scene->changeItem(item, attributes);
-//        }
+        if (!item->hasChanged()){
+            scene->changeItem(item, attributes);
+        }
 
         emit itemChanged(item, this, attributes);
     }

@@ -95,7 +95,7 @@ void QnlyComposerPlugin::addRegion(Entity* entity)
             // setting
             QString entityUID;
 
-            if (entity->getUniqueId() != NULL){
+            if (!entity->getUniqueId().isEmpty()){
                 entityUID = entity->getUniqueId();
 
             }else{
@@ -129,63 +129,63 @@ void QnlyComposerPlugin::addRegion(Entity* entity)
 
             QMap<QString, QString> attributes;
 
-            if (entity->getAttribute("id") != NULL){
+            if (!entity->getAttribute("id").isEmpty()){
                 attributes["id"] =  entity->getAttribute("id");
 
             }else{
                 // no default value
             }
 
-            if (entity->getAttribute("title") != NULL){
+            if (!entity->getAttribute("title").isEmpty()){
                 attributes["title"] =  entity->getAttribute("title");
 
             }else{
                 // no default value
             }
 
-            if (entity->getAttribute("zIndex") != NULL){
+            if (!entity->getAttribute("zIndex").isEmpty()){
                 attributes["zIndex"] =  entity->getAttribute("zIndex");
 
             }else{
                 // no default value
             }
 
-            if (entity->getAttribute("top") != NULL){
+            if (!entity->getAttribute("top").isEmpty()){
                 attributes["top"] =  entity->getAttribute("top");
 
             }else{
                 // no default value
             }
 
-            if (entity->getAttribute("left") != NULL){
+            if (!entity->getAttribute("left").isEmpty()){
                 attributes["left"] =  entity->getAttribute("left");
 
             }else{
                 // no default value
             }
 
-            if (entity->getAttribute("bottom") != NULL){
+            if (!entity->getAttribute("bottom").isEmpty()){
                 attributes["bottom"] =  entity->getAttribute("bottom");
 
             }else{
                 // no default value
             }
 
-            if (entity->getAttribute("right") != NULL){
+            if (!entity->getAttribute("right").isEmpty()){
                 attributes["right"] =  entity->getAttribute("right");
 
             }else{
                 // no default value
             }
 
-            if (entity->getAttribute("width") != NULL){
+            if (!entity->getAttribute("width").isEmpty()){
                 attributes["width"] =  entity->getAttribute("width");
 
             }else{
                 // no default value
             }
 
-            if (entity->getAttribute("height") != NULL){
+            if (!entity->getAttribute("height").isEmpty()){
                 attributes["height"] =  entity->getAttribute("height");
 
             }else{
@@ -561,7 +561,7 @@ void QnlyComposerPlugin::addRegionBase(Entity *entity)
             // setting
             QString entityUID;
 
-            if (entity->getUniqueId() != NULL){
+            if (!entity->getUniqueId().isEmpty()){
                 entityUID = entity->getUniqueId();
 
             }else{
@@ -574,21 +574,21 @@ void QnlyComposerPlugin::addRegionBase(Entity *entity)
 
             QMap<QString, QString> attributes;
 
-            if (entity->getAttribute("id") != NULL){
+            if (!entity->getAttribute("id").isEmpty()){
                 attributes["id"] =  entity->getAttribute("id");
 
             }else{
                 // no default value
             }
 
-            if (entity->getAttribute("region") != NULL){
+            if (!entity->getAttribute("region").isEmpty()){
                 attributes["region"] =  entity->getAttribute("region");
 
             }else{
                 // no default value
             }
 
-            if (entity->getAttribute("device") != NULL){
+            if (!entity->getAttribute("device").isEmpty()){
                 attributes["device"] =  entity->getAttribute("device");
 
             }else{

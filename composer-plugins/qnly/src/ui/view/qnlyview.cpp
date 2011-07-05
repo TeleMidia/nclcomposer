@@ -7,6 +7,10 @@ QnlyView::QnlyView(QWidget* parent) : QStackedWidget(parent)
     createActions();
     createMenus();
     createConnections();
+
+    nregion = 0;
+
+    nregionbase = 0;
 }
 
 QnlyView::~QnlyView()
@@ -16,22 +20,22 @@ QnlyView::~QnlyView()
 
 int QnlyView::getnItem() const
 {
-    return nitem;
+    return nregion;
 }
 
-void QnlyView::setnItem(const int &nitem)
+void QnlyView::setnItem(const int &nregion)
 {
-    this->nitem = nitem;
+    this->nregion = nregion;
 }
 
 int QnlyView::getnView() const
 {
-    return nview;
+    return nregionbase;
 }
 
 void QnlyView::setnView(const int &nview)
 {
-    this->nview = nview;
+    this->nregionbase = nregionbase;
 }
 
 void QnlyView::createActions()
@@ -203,7 +207,7 @@ void QnlyView::addItem(QnlyGraphicsItem* item, QnlyGraphicsItem* parentitem, Qnl
         // validating
         QString itemUID;
 
-        if (item->getUid() != NULL){
+        if (!item->getUid().isEmpty()){
             if (!items.contains(item->getUid())){
                 itemUID = item->getUid();
 
@@ -233,7 +237,7 @@ void QnlyView::addItem(QnlyGraphicsItem* item, QnlyGraphicsItem* parentitem, Qnl
 
         QString viewUID;
 
-        if (view->getUid() != NULL){
+        if (!view->getUid().isEmpty()){
             if (views.contains(view->getUid())){
                 viewUID = view->getUid();
 
@@ -251,20 +255,20 @@ void QnlyView::addItem(QnlyGraphicsItem* item, QnlyGraphicsItem* parentitem, Qnl
         // setting
         QMap<QString, QString> attributes;
 
-        if (item->getId() != NULL){
+        if (!item->getId().isEmpty()){
             attributes["id"] = item->getId();
 
         }else{
-            attributes["id"] = "rg" + QString::number(nitem+1);
+            attributes["id"] = "rg" + QString::number(nregion+1);
 
             item->setId(attributes["id"]); // updating item
         }
 
-        if (item->getTitle() != NULL){
+        if (!item->getTitle().isEmpty()){
             attributes["title"] = item->getTitle();
 
         }else{
-            attributes["title"] = "rg" + QString::number(nitem+1);
+            attributes["title"] = "rg" + QString::number(nregion+1);
 
             item->setTitle(attributes["title"]); // updating item
         }
@@ -328,7 +332,7 @@ void QnlyView::addItem(QnlyGraphicsItem* item, QnlyGraphicsItem* parentitem, Qnl
         // adding
         items[itemUID] = item;
 
-        setnItem(nitem+1);
+        nregion++;
 
         // emitting
         emit itemAdded(itemUID, parentitemUID, viewUID, attributes);
@@ -429,7 +433,7 @@ void QnlyView::changeItem(QnlyGraphicsItem* item, QnlyGraphicsView* view, const 
 
         QString itemUID;
 
-        if (item->getUid() != NULL){
+        if (!item->getUid().isEmpty()){
             if (items.contains(item->getUid())){
                 itemUID = item->getUid();
 
@@ -442,7 +446,7 @@ void QnlyView::changeItem(QnlyGraphicsItem* item, QnlyGraphicsView* view, const 
 
         QString viewUID;
 
-        if (view->getUid() != NULL){
+        if (!view->getUid().isEmpty()){
             if (views.contains(view->getUid())){
                 viewUID = view->getUid();
 
@@ -455,10 +459,9 @@ void QnlyView::changeItem(QnlyGraphicsItem* item, QnlyGraphicsView* view, const 
         }
 
 
-//        if (!item->hasChanged()){
-//            view->changeItem(item, attributes);
-//        }
-
+        if (!item->hasChanged()){
+            view->changeItem(item, attributes);
+        }
 
         emit itemChanged(itemUID, viewUID, attributes);
     }
@@ -466,12 +469,11 @@ void QnlyView::changeItem(QnlyGraphicsItem* item, QnlyGraphicsView* view, const 
 
 void QnlyView::addView(QnlyGraphicsView* view)
 {
-    qDebug() << "::QnlyView";
    if (view != NULL){
 
         QString viewUID;
 
-        if (view->getUid() != NULL){
+        if (!view->getUid().isEmpty()){
             if (!views.contains(view->getUid())){
                 viewUID = view->getUid();
 
@@ -485,23 +487,23 @@ void QnlyView::addView(QnlyGraphicsView* view)
 
         QMap<QString, QString> attributes;
 
-        if (view->getId() != NULL){
+        if (!view->getId().isEmpty()){
             attributes["id"] = view->getId();
 
         }else{
-//            attributes["id"] = "rgbase" + QString::number(nview);
+            attributes["id"] = "rgbase" + QString::number(nregionbase);
 
             view->setId(attributes["id"]); // updating view
         }
 
-        if (view->getDevice() != NULL){
+        if (!view->getDevice().isEmpty()){
             attributes["device"] = view->getDevice();
 
         }else{
             // no default value
         }
 
-        if (view->getRegion() != NULL){
+        if (!view->getRegion().isEmpty()){
             attributes["region"] = view->getRegion();
 
         }else{
@@ -522,6 +524,7 @@ void QnlyView::addView(QnlyGraphicsView* view)
 
         views[viewUID] = view;
 
+        nregionbase++;
 //        setViewCounter(nview+1);
 
 
@@ -846,11 +849,9 @@ void QnlyView::selectRegionbase(const QString viewUID)
 
 void QnlyView::addRegion(const QString regionUID, const QString parentUID, const QString regionbaseUID, const QMap<QString, QString> &attributes)
 {
+     QnlyGraphicsItem* item = NULL;
 
-     qDebug() << "oIII";
-     QnlyGraphicsItem* item;
-
-     if (regionUID != NULL){
+     if (!regionUID.isEmpty()){
          item = new QnlyGraphicsItem();
          item->setUid(regionUID);
 
@@ -858,9 +859,9 @@ void QnlyView::addRegion(const QString regionUID, const QString parentUID, const
          item = new QnlyGraphicsItem();
      }
 
-     QnlyGraphicsItem* parent;
+     QnlyGraphicsItem* parent = NULL;
 
-     if (parentUID != NULL){
+     if (!parentUID.isEmpty()){
          if (items.contains(parentUID)){
             parent = items.value(parentUID);
          }else{
@@ -870,9 +871,9 @@ void QnlyView::addRegion(const QString regionUID, const QString parentUID, const
          parent = NULL;
      }
 
-     QnlyGraphicsView* view;
+     QnlyGraphicsView* view = NULL;
 
-     if (regionbaseUID != NULL){
+     if (!regionbaseUID.isEmpty()){
          if (views.contains(regionbaseUID)){
              view = views.value(regionbaseUID);
          }else{
@@ -883,28 +884,28 @@ void QnlyView::addRegion(const QString regionUID, const QString parentUID, const
          return; // canceling addition
      }
 
-     if (attributes["id"] != NULL){
+     if (!attributes["id"].isEmpty()){
          item->setId(attributes["id"]);
 
      }else{
          // no default value
      }
 
-     if (attributes["title"] != NULL){
+     if (!attributes["title"].isEmpty()){
          item->setTitle(attributes["title"]);
 
      }else{
          // no default value
      }
 
-     if (attributes["color"] != NULL){
+     if (!attributes["color"].isEmpty()){
          item->setColor(attributes["color"]);
 
      }else{
          item->setColor("#e4e4e4");
      }
 
-     if (attributes["top"] != NULL){
+     if (!attributes["top"].isEmpty()){
          if (attributes["top"].contains(QRegExp("\\d+(.\\d+)?%"))){
              QString attribute = attributes["top"];
              attribute.remove(attribute.length()-1,1); // removing '%'
@@ -935,7 +936,7 @@ void QnlyView::addRegion(const QString regionUID, const QString parentUID, const
          item->setRelativeTop(0);
      }
 
-     if (attributes["left"] != NULL){
+     if (!attributes["left"].isEmpty()){
          if (attributes["left"].contains(QRegExp("\\d+(.\\d+)?%"))){
              QString attribute = attributes["left"];
              attribute.remove(attribute.length()-1,1); // removing '%'
@@ -966,7 +967,7 @@ void QnlyView::addRegion(const QString regionUID, const QString parentUID, const
          item->setRelativeLeft(0);
      }
 
-     if (attributes["right"] != NULL){
+     if (!attributes["right"].isEmpty()){
          if (attributes["right"].contains(QRegExp("\\d+(.\\d+)?%"))){
              QString attribute = attributes["right"];
              attribute.remove(attribute.length()-1,1); // removing '%'
@@ -997,7 +998,7 @@ void QnlyView::addRegion(const QString regionUID, const QString parentUID, const
          item->setRelativeRight(0);
      }
 
-     if (attributes["bottom"] != NULL){
+     if (!attributes["bottom"].isEmpty()){
          if (attributes["bottom"].contains(QRegExp("\\d+(.\\d+)?%"))){
              QString attribute = attributes["bottom"];
              attribute.remove(attribute.length()-1,1); // removing '%'
@@ -1028,7 +1029,7 @@ void QnlyView::addRegion(const QString regionUID, const QString parentUID, const
          item->setRelativeBottom(0);
      }
 
-     if (attributes["width"] != NULL){
+     if (!attributes["width"].isEmpty()){
          if (attributes["width"].contains(QRegExp("\\d+(.\\d+)?%"))){
              QString attribute = attributes["width"];
              attribute.remove(attribute.length()-1,1); // removing '%'
@@ -1059,7 +1060,7 @@ void QnlyView::addRegion(const QString regionUID, const QString parentUID, const
          item->setRelativeWidth(1);
      }
 
-     if (attributes["height"] != NULL){
+     if (!attributes["height"].isEmpty()){
          if (attributes["height"].contains(QRegExp("\\d+(.\\d+)?%"))){
              QString attribute = attributes["height"];
              attribute.remove(attribute.length()-1,1); // removing '%'
@@ -1106,36 +1107,35 @@ void QnlyView::changeRegion(const QString regionUID, const QString regionbaseUID
 
 void QnlyView::addRegionbase(const QString regionbaseUID, const QMap<QString, QString> &attributes)
 {
-    QnlyGraphicsView* view;
+    QnlyGraphicsView* view = NULL;
 
-    if (view != NULL){
+    if (!regionbaseUID.isEmpty()){
         if (!views.contains(regionbaseUID)){
             view = new QnlyGraphicsView(this);
         }else{
             return; // canceling addition
         }
-
     }else{
         return; // canceling addition
     }
 
     view->setUid(regionbaseUID);
 
-    if (attributes["id"] != NULL){
+    if (!attributes["id"].isEmpty()){
         view->setId(attributes["id"]);
 
     }else{
         // no default value
     }
 
-    if (attributes["device"] != NULL){
+    if (!attributes["device"].isEmpty()){
         view->setDevice(attributes["device"]);
 
     }else{
         // no default value
     }
 
-    if (attributes["region"] != NULL){
+    if (!attributes["region"].isEmpty()){
         view->setRegion(attributes["region"]);
 
     }else{

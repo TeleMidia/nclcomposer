@@ -364,28 +364,28 @@ void QnlyGraphicsScene::changeItem(QnlyGraphicsItem* item, const QMap<QString, Q
     if (item != NULL){
         if (!item->hasChanged()){
             /* changing */
-            if (attributes["id"] != NULL){
+            if (!attributes["id"].isEmpty()){
                 item->setId(attributes["id"]);
 
             }else{
                 // no default value
             }
 
-            if (attributes["title"] != NULL){
+            if (!attributes["title"].isEmpty()){
                 item->setTitle(attributes["title"]);
 
             }else{
                 // no default value
             }
 
-            if (attributes["color"] != NULL){
+            if (!attributes["color"].isEmpty()){
                 item->setColor(attributes["color"]);
 
             }else{
                 // no default value
             }
 
-            if (attributes["top"] != NULL){
+            if (!attributes["top"].isEmpty()){
                 if (attributes["top"].contains(QRegExp("\\d+(.\\d+)?%"))){
                     QString attribute = attributes["top"];
                     attribute.remove(attribute.length()-1,1); // removing '%'
@@ -406,7 +406,7 @@ void QnlyGraphicsScene::changeItem(QnlyGraphicsItem* item, const QMap<QString, Q
                 }
             }
 
-            if (attributes["left"] != NULL){
+            if (!attributes["left"].isEmpty()){
                 if (attributes["left"].contains(QRegExp("\\d+(.\\d+)?%"))){
                     QString attribute = attributes["left"];
                     attribute.remove(attribute.length()-1,1); // removing '%'
@@ -428,7 +428,7 @@ void QnlyGraphicsScene::changeItem(QnlyGraphicsItem* item, const QMap<QString, Q
                 }
             }
 
-            if (attributes["right"] != NULL){
+            if (!attributes["right"].isEmpty()){
                 if (attributes["right"].contains(QRegExp("\\d+(.\\d+)?%"))){
                     QString attribute = attributes["right"];
                     attribute.remove(attribute.length()-1,1); // removing '%'
@@ -450,7 +450,7 @@ void QnlyGraphicsScene::changeItem(QnlyGraphicsItem* item, const QMap<QString, Q
                 }
             }
 
-            if (attributes["bottom"] != NULL){
+            if (!attributes["bottom"].isEmpty()){
                 if (attributes["bottom"].contains(QRegExp("\\d+(.\\d+)?%"))){
                     QString attribute = attributes["bottom"];
                     attribute.remove(attribute.length()-1,1); // removing '%'
@@ -472,7 +472,7 @@ void QnlyGraphicsScene::changeItem(QnlyGraphicsItem* item, const QMap<QString, Q
                 }
             }
 
-            if (attributes["width"] != NULL){
+            if (!attributes["width"].isEmpty()){
                 if (attributes["width"].contains(QRegExp("\\d+(.\\d+)?%"))){
                     QString attribute = attributes["width"];
                     attribute.remove(attribute.length()-1,1); // removing '%'
@@ -494,7 +494,7 @@ void QnlyGraphicsScene::changeItem(QnlyGraphicsItem* item, const QMap<QString, Q
                 }
             }
 
-            if (attributes["height"] != NULL){
+            if (!attributes["height"].isEmpty()){
                 if (attributes["height"].contains(QRegExp("\\d+(.\\d+)?%"))){
                     QString attribute = attributes["height"];
                     attribute.remove(attribute.length()-1,1); // removing '%'

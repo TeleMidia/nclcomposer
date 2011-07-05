@@ -189,6 +189,10 @@ private:
 
     QAction* propertiesAction;
 
+    int nregionbase;
+
+    int nregion;
+
     QString unit;
 
     QString resolution;
