@@ -61,7 +61,7 @@ void QnlyGraphicsView::createConnections()
 {
     connect(scene, SIGNAL(fullscreenPerformed(bool)), SIGNAL(fullscreenPerformed(bool)));
 
-    connect(scene, SIGNAL(itemAdded(QnlyGraphicsItem*,QnlyGraphicsItem*)), SLOT(addItem(QnlyGraphicsItem*,QnlyGraphicsItem*)));
+//    connect(scene, SIGNAL(itemAdded(QnlyGraphicsItem*,QnlyGraphicsItem*)), SLOT(addItem(QnlyGraphicsItem*,QnlyGraphicsItem*)));
     connect(scene, SIGNAL(itemRemoved(QnlyGraphicsItem*)), SLOT(removeItem(QnlyGraphicsItem*)));
     connect(scene, SIGNAL(itemSelected(QnlyGraphicsItem*)), SLOT(selectItem(QnlyGraphicsItem*)));
     connect(scene, SIGNAL(itemChanged(QnlyGraphicsItem*,QMap<QString,QString>)), SLOT(changeItem(QnlyGraphicsItem*,QMap<QString,QString>)));
@@ -69,13 +69,13 @@ void QnlyGraphicsView::createConnections()
 
 void QnlyGraphicsView::addItem(QnlyGraphicsItem* item, QnlyGraphicsItem* parent)
 {
-    if (item != NULL){
-        if (!item->isPainted()){
-            scene->addItem(item, parent);
-        }
-
+    if (item != NULL)
+    {
+        scene->addItem(item, parent);
         emit itemAdded(item, parent, this);
     }
+    else
+        qDebug() << "QnlyGraphicsView::addItem item is NULL";
 }
 
 void QnlyGraphicsView::removeItem(QnlyGraphicsItem* item)

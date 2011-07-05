@@ -50,7 +50,7 @@ bool QnlyGraphicsItem::isMoving() const
     return moving;
 }
 
-void QnlyGraphicsItem::setMoving(const bool &moving)
+void QnlyGraphicsItem::setMoving(bool moving)
 {
     this->moving = moving;
 }
@@ -60,7 +60,7 @@ bool QnlyGraphicsItem::isResizing() const
     return resizing;
 }
 
-void QnlyGraphicsItem::setResizing(const bool &resizing)
+void QnlyGraphicsItem::setResizing(bool resizing)
 {
     this->resizing = resizing;
 }
@@ -70,11 +70,12 @@ bool QnlyGraphicsItem::isSelected() const
     return selected;
 }
 
-void QnlyGraphicsItem::setSelected(const bool &selected)
+void QnlyGraphicsItem::setSelected(bool selected)
 {
     this->selected = selected;
 
-    setFocus(Qt::MouseFocusReason);
+    if(this->selected)
+        setFocus(Qt::MouseFocusReason);
 }
 
 bool QnlyGraphicsItem::isValidated() const
@@ -82,7 +83,7 @@ bool QnlyGraphicsItem::isValidated() const
     return validated;
 }
 
-void QnlyGraphicsItem::setValidated(const bool &validated)
+void QnlyGraphicsItem::setValidated(bool validated)
 {
     this->validated = validated;
 }
@@ -136,12 +137,12 @@ bool QnlyGraphicsItem::isPainted() const
     return painted;
 }
 
-void QnlyGraphicsItem::setPainted(const bool &painted)
+void QnlyGraphicsItem::setPainted(bool painted)
 {
     this->painted = painted;
 }
 
-void QnlyGraphicsItem::setzIndex(const qreal &zindex)
+void QnlyGraphicsItem::setzIndex(qreal zindex)
 {
     this->zindex = zindex;
 
@@ -153,7 +154,7 @@ qreal QnlyGraphicsItem::getzIndex() const
     return zindex;
 }
 
-void QnlyGraphicsItem::setzIndexTop(const qreal &zindexTop)
+void QnlyGraphicsItem::setzIndexTop(qreal zindexTop)
 {
     this->zindexTop = zindexTop;
 }
@@ -168,7 +169,7 @@ qreal QnlyGraphicsItem::getTop() const
     return top;
 }
 
-void QnlyGraphicsItem::setTop(const qreal &top)
+void QnlyGraphicsItem::setTop(qreal top)
 {
     this->top = top;
 
@@ -180,7 +181,7 @@ qreal QnlyGraphicsItem::getMoveTop() const
     return moveTop;
 }
 
-void QnlyGraphicsItem::setMoveTop(const qreal &moveTop)
+void QnlyGraphicsItem::setMoveTop(qreal moveTop)
 {
     this->moveTop = moveTop;
 }
@@ -190,7 +191,7 @@ qreal QnlyGraphicsItem::getPressTop() const
     return pressTop;
 }
 
-void QnlyGraphicsItem::setPressTop(const qreal &pressTop)
+void QnlyGraphicsItem::setPressTop(qreal pressTop)
 {
     this->pressTop = pressTop;
 }
@@ -200,7 +201,7 @@ qreal QnlyGraphicsItem::getResizeTop() const
     return resizeTop;
 }
 
-void QnlyGraphicsItem::setResizeTop(const qreal &resizeTop)
+void QnlyGraphicsItem::setResizeTop(qreal resizeTop)
 {
     this->resizeTop = resizeTop;
 }
@@ -210,7 +211,7 @@ qreal QnlyGraphicsItem::getRelativeTop() const
     return relativeTop;
 }
 
-void QnlyGraphicsItem::setRelativeTop(const qreal &relativeTop)
+void QnlyGraphicsItem::setRelativeTop(qreal relativeTop)
 {
     this->relativeTop = relativeTop;
 }
@@ -220,7 +221,7 @@ qreal QnlyGraphicsItem::getLeft() const
     return left;
 }
 
-void QnlyGraphicsItem::setLeft(const qreal &left)
+void QnlyGraphicsItem::setLeft(qreal left)
 {
     this->left = left;
 
@@ -232,7 +233,7 @@ qreal QnlyGraphicsItem::getMoveLeft() const
     return moveLeft;
 }
 
-void QnlyGraphicsItem::setMoveLeft(const qreal &moveLeft)
+void QnlyGraphicsItem::setMoveLeft(qreal moveLeft)
 {
     this->moveLeft = moveLeft;
 }
@@ -242,7 +243,7 @@ qreal QnlyGraphicsItem::getPressLeft() const
     return pressLeft;
 }
 
-void QnlyGraphicsItem::setPressLeft(const qreal &pressLeft)
+void QnlyGraphicsItem::setPressLeft(qreal pressLeft)
 {
     this->pressLeft = pressLeft;
 }
@@ -252,7 +253,7 @@ qreal QnlyGraphicsItem::getResizeLeft() const
     return resizeLeft;
 }
 
-void QnlyGraphicsItem::setResizeLeft(const qreal &resizeLeft)
+void QnlyGraphicsItem::setResizeLeft(qreal resizeLeft)
 {
     this->resizeLeft = resizeLeft;
 }
@@ -262,7 +263,7 @@ qreal QnlyGraphicsItem::getRelativeLeft() const
     return relativeLeft;
 }
 
-void QnlyGraphicsItem::setRelativeLeft(const qreal &relativeLeft)
+void QnlyGraphicsItem::setRelativeLeft(qreal relativeLeft)
 {
     this->relativeLeft = relativeLeft;
 }
@@ -272,7 +273,7 @@ qreal QnlyGraphicsItem::getRight() const
     return right;
 }
 
-void QnlyGraphicsItem::setRight(const qreal &right)
+void QnlyGraphicsItem::setRight(qreal right)
 {
     this->right = right;
 }
@@ -282,7 +283,7 @@ qreal QnlyGraphicsItem::getRelativeRight() const
     return relativeRight;
 }
 
-void QnlyGraphicsItem::setRelativeRight(const qreal &relativeRight)
+void QnlyGraphicsItem::setRelativeRight(qreal relativeRight)
 {
     this->relativeRight = relativeRight;
 }
@@ -292,7 +293,7 @@ qreal QnlyGraphicsItem::getBottom() const
     return bottom;
 }
 
-void QnlyGraphicsItem::setBottom(const qreal &bottom)
+void QnlyGraphicsItem::setBottom(qreal bottom)
 {
     this->bottom = bottom;
 }
@@ -302,7 +303,7 @@ qreal QnlyGraphicsItem::getRelativeBottom() const
     return relativeBottom;
 }
 
-void QnlyGraphicsItem::setRelativeBottom(const qreal &relativeBottom)
+void QnlyGraphicsItem::setRelativeBottom(qreal relativeBottom)
 {
     this->relativeBottom = relativeBottom;
 }
@@ -312,7 +313,7 @@ qreal QnlyGraphicsItem::getWidth() const
     return width;
 }
 
-void QnlyGraphicsItem::setWidth(const qreal &width)
+void QnlyGraphicsItem::setWidth(qreal width)
 {
     this->width = width;
 }
@@ -322,7 +323,7 @@ qreal QnlyGraphicsItem::getPressWidth() const
     return pressWidth;
 }
 
-void QnlyGraphicsItem::setPressWidth(const qreal &pressWidth)
+void QnlyGraphicsItem::setPressWidth(qreal pressWidth)
 {
     this->pressWidth = pressWidth;
 }
@@ -337,12 +338,12 @@ bool QnlyGraphicsItem::hasChanged() const
     return changed;
 }
 
-void QnlyGraphicsItem::setChanged(const bool &changed)
+void QnlyGraphicsItem::setChanged(bool changed)
 {
     this->changed = changed;
 }
 
-void QnlyGraphicsItem::setResizeWidth(const qreal &resizeWidth)
+void QnlyGraphicsItem::setResizeWidth(qreal resizeWidth)
 {
     this->resizeWidth = resizeWidth;
 }
@@ -352,7 +353,7 @@ qreal QnlyGraphicsItem::getRelativeWidth() const
     return relativeWidth;
 }
 
-void QnlyGraphicsItem::setRelativeWidth(const qreal &relativeWidth)
+void QnlyGraphicsItem::setRelativeWidth(qreal relativeWidth)
 {
     this->relativeWidth = relativeWidth;
 }
@@ -362,7 +363,7 @@ qreal QnlyGraphicsItem::getHeight() const
     return height;
 }
 
-void QnlyGraphicsItem::setHeight(const qreal &height)
+void QnlyGraphicsItem::setHeight(qreal height)
 {
     this->height = height;
 }
@@ -372,7 +373,7 @@ qreal QnlyGraphicsItem::getPressHeight() const
     return pressHeight;
 }
 
-void QnlyGraphicsItem::setPressHeight(const qreal &pressHeight)
+void QnlyGraphicsItem::setPressHeight(qreal pressHeight)
 {
     this->pressHeight = pressHeight;
 }
@@ -382,7 +383,7 @@ qreal QnlyGraphicsItem::getResizeHeight() const
     return resizeHeight;
 }
 
-void QnlyGraphicsItem::setResizeHeight(const qreal &resizeHeight)
+void QnlyGraphicsItem::setResizeHeight(qreal resizeHeight)
 {
     this->resizeHeight = resizeHeight;
 }
@@ -392,7 +393,7 @@ qreal QnlyGraphicsItem::getRelativeHeight() const
    return relativeHeight;
 }
 
-void QnlyGraphicsItem::setRelativeHeight(const qreal &relativeHeight)
+void QnlyGraphicsItem::setRelativeHeight(qreal relativeHeight)
 {
      this->relativeHeight = relativeHeight;
 }

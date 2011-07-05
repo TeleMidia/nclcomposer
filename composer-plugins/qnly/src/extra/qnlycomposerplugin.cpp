@@ -56,11 +56,14 @@ void QnlyComposerPlugin::errorMessage(QString error)
 void QnlyComposerPlugin::onEntityAdded(QString pluginID, Entity *entity)
 {    
     if (entity != NULL){
-        if (entity->getType() == "region"){
+        if (entity->getType() == "region")
+        {
+            qDebug() << "QnlyComposerPlugin::onEntityAdded (" << entity->getType();
             addRegion(entity);
 
-        }else if (entity->getType() == "regionBase"){
-
+        }
+        else if (entity->getType() == "regionBase")
+        {
             addRegionBase(entity);
         }
     }
@@ -90,6 +93,138 @@ void QnlyComposerPlugin::changeSelectedEntity (void*)
 
 void QnlyComposerPlugin::addRegion(Entity* entity)
 {
+    if (entity != NULL)
+    {
+        if (entity->getType() == "region")
+        {
+            // setting
+            QString entityUID;
+            if (!entity->getUniqueId().isEmpty())
+            {
+                entityUID = entity->getUniqueId();
+            }
+            else
+            {
+                qFatal("QnlyComposerPlugin::addRegion 1");
+                return; // cancelling addition
+            }
+
+            QString regionUID;
+            regionUID = entityUID;
+
+            QString parentregionUID;
+
+            if (regions.contains(entity->getParentUniqueId()))
+            {
+                parentregionUID = entity->getParentUniqueId();
+            }
+            else
+            {
+                parentregionUID = "";
+            }
+
+            QString regionbaseUID;
+            if (regions.contains(parentregionUID))
+            {
+                regionbaseUID = relations[parentregionUID];
+
+            }
+            else if (regionbases.contains(entity->getParentUniqueId()))
+            {
+                regionbaseUID = entity->getParentUniqueId();
+
+            }
+            else
+            {
+                qFatal("QnlyComposerPlugin::addRegion 2");
+                return; // cancelling addition
+            }
+
+            QMap<QString, QString> attributes;
+
+            if (!entity->getAttribute("id").isEmpty())
+                attributes["id"] =  entity->getAttribute("id");
+
+            if (!entity->getAttribute("title").isEmpty())
+                attributes["title"] =  entity->getAttribute("title");
+
+            if (!entity->getAttribute("zIndex").isEmpty())
+                attributes["zIndex"] =  entity->getAttribute("zIndex");
+
+            if (!entity->getAttribute("top").isEmpty())
+                attributes["top"] =  entity->getAttribute("top");
+
+            if (!entity->getAttribute("left").isEmpty())
+                attributes["left"] =  entity->getAttribute("left");
+
+            if (!entity->getAttribute("bottom").isEmpty())
+                attributes["bottom"] =  entity->getAttribute("bottom");
+
+            if (!entity->getAttribute("right").isEmpty())
+                attributes["right"] =  entity->getAttribute("right");
+
+            if (!entity->getAttribute("width").isEmpty())
+                attributes["width"] =  entity->getAttribute("width");
+
+            if (!entity->getAttribute("height").isEmpty())
+                attributes["height"] =  entity->getAttribute("height");
+
+            // adding
+            regions[regionUID] = entity;
+
+            relations[regionUID] = regionbaseUID;
+
+            qDebug() << "Calling view->addRegion";
+            view->addRegion(regionUID, parentregionUID, regionbaseUID,
+                                attributes);
+        }
+    }
+}
+
+void QnlyComposerPlugin::removeRegion(Entity* entity)
+{
+    if (entity != NULL){
+        if (entity->getType() == "region"){
+            // setting
+            QString entityUID;
+
+            if (!entity->getUniqueId().isEmpty()){
+                entityUID = entity->getUniqueId();
+
+            }else{
+                return; // cancelling remotion
+            }
+
+            QString regionUID;
+
+            if (entities.contains(entityUID)){
+                regionUID = entities[entityUID];
+
+            }else{
+                return; // cancelling remotion
+            }
+
+            QString regionbaseUID;
+
+            if (relations.contains(regionUID)){
+                regionbaseUID = relations[regionUID];
+
+            }else{
+                return; // cancelling remotion
+            }
+
+            view->removeRegion(regionUID, regionbaseUID);
+        }
+    }
+}
+
+void QnlyComposerPlugin::selectRegion(Entity *entity)
+{
+
+}
+
+void QnlyComposerPlugin::changeRegion(Entity *entity)
+{
     if (entity != NULL){
         if (entity->getType() == "region"){
             // setting
@@ -104,27 +239,20 @@ void QnlyComposerPlugin::addRegion(Entity* entity)
 
             QString regionUID;
 
-            regionUID = entityUID;
-
-            QString parentregionUID;
-
-            if (regions.contains(entity->getParentUniqueId())){
-                parentregionUID = entity->getParentUniqueId();
+            if (regions.contains(entityUID)){
+                regionUID = entityUID;
 
             }else{
-                parentregionUID = "";
+                return; // canceling changing
             }
 
             QString regionbaseUID;
 
-            if (regions.contains(parentregionUID)){
-                regionbaseUID = relations[parentregionUID];
-
-            }else if (regionbases.contains(entity->getParentUniqueId())){
-                regionbaseUID = entity->getParentUniqueId();
+            if (regionbases.contains(relations[regionUID])){
+                regionbaseUID = relations[regionUID];
 
             }else{
-                return; // cancelling addition
+                return; // canceling changing
             }
 
             QMap<QString, QString> attributes;
@@ -186,156 +314,6 @@ void QnlyComposerPlugin::addRegion(Entity* entity)
             }
 
             if (!entity->getAttribute("height").isEmpty()){
-                attributes["height"] =  entity->getAttribute("height");
-
-            }else{
-                // no default value
-            }
-
-            // adding
-            regions[regionUID] = entity;
-
-            relations[regionUID] = regionbaseUID;
-
-
-            view->addRegion(regionUID, parentregionUID, regionbaseUID, attributes);
-        }
-    }
-}
-
-void QnlyComposerPlugin::removeRegion(Entity* entity)
-{
-    if (entity != NULL){
-        if (entity->getType() == "region"){
-            // setting
-            QString entityUID;
-
-            if (entity->getUniqueId() != NULL){
-                entityUID = entity->getUniqueId();
-
-            }else{
-                return; // cancelling remotion
-            }
-
-            QString regionUID;
-
-            if (entities.contains(entityUID)){
-                regionUID = entities[entityUID];
-
-            }else{
-                return; // cancelling remotion
-            }
-
-            QString regionbaseUID;
-
-            if (relations.contains(regionUID)){
-                regionbaseUID = relations[regionUID];
-
-            }else{
-                return; // cancelling remotion
-            }
-
-            view->removeRegion(regionUID, regionbaseUID);
-        }
-    }
-}
-
-void QnlyComposerPlugin::selectRegion(Entity *entity)
-{
-
-}
-
-void QnlyComposerPlugin::changeRegion(Entity *entity)
-{
-    if (entity != NULL){
-        if (entity->getType() == "region"){
-            // setting
-            QString entityUID;
-
-            if (entity->getUniqueId() != NULL){
-                entityUID = entity->getUniqueId();
-
-            }else{
-                return; // cancelling addition
-            }
-
-            QString regionUID;
-
-            if (regions.contains(entityUID)){
-                regionUID = entityUID;
-
-            }else{
-                return; // canceling changing
-            }
-
-            QString regionbaseUID;
-
-            if (regionbases.contains(relations[regionUID])){
-                regionbaseUID = relations[regionUID];
-
-            }else{
-                return; // canceling changing
-            }
-
-            QMap<QString, QString> attributes;
-
-            if (entity->getAttribute("id") != NULL){
-                attributes["id"] =  entity->getAttribute("id");
-
-            }else{
-                // no default value
-            }
-
-            if (entity->getAttribute("title") != NULL){
-                attributes["title"] =  entity->getAttribute("title");
-
-            }else{
-                // no default value
-            }
-
-            if (entity->getAttribute("zIndex") != NULL){
-                attributes["zIndex"] =  entity->getAttribute("zIndex");
-
-            }else{
-                // no default value
-            }
-
-            if (entity->getAttribute("top") != NULL){
-                attributes["top"] =  entity->getAttribute("top");
-
-            }else{
-                // no default value
-            }
-
-            if (entity->getAttribute("left") != NULL){
-                attributes["left"] =  entity->getAttribute("left");
-
-            }else{
-                // no default value
-            }
-
-            if (entity->getAttribute("bottom") != NULL){
-                attributes["bottom"] =  entity->getAttribute("bottom");
-
-            }else{
-                // no default value
-            }
-
-            if (entity->getAttribute("right") != NULL){
-                attributes["right"] =  entity->getAttribute("right");
-
-            }else{
-                // no default value
-            }
-
-            if (entity->getAttribute("width") != NULL){
-                attributes["width"] =  entity->getAttribute("width");
-
-            }else{
-                // no default value
-            }
-
-            if (entity->getAttribute("height") != NULL){
                 attributes["height"] =  entity->getAttribute("height");
 
             }else{
@@ -418,7 +396,7 @@ void QnlyComposerPlugin::addRegion(const QString regionUID, const QString parent
         }
 
         // emitting
-        if (parentregionUID != NULL){
+        if (!parentregionUID.isEmpty()){
             emit addEntity("region", parentregionUID, standard, false);
 
         }else{

@@ -1,5 +1,7 @@
 include(../configure.pri)
 
+CONFIG += debug
+
 QT += \
     xml
 

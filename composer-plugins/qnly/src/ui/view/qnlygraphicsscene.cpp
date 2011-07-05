@@ -5,6 +5,8 @@ QnlyGraphicsScene::QnlyGraphicsScene(QObject* parent) : QGraphicsScene(parent)
     createActions();
     createMenus();
     createConnections();
+
+    selectedItem = NULL;
 }
 
 QnlyGraphicsScene::~QnlyGraphicsScene()
@@ -303,27 +305,31 @@ void QnlyGraphicsScene::performProperties()
 
 void QnlyGraphicsScene::addItem(QnlyGraphicsItem* item, QnlyGraphicsItem* parent)
 {
-    if (item != NULL){
-        if (!item->isPainted()){
-            /* adding */
-            if (parent != NULL){
-                item->setParent(parent);
-                item->setParentItem(parent);
+    if (item != NULL)
+    {
+        /* adding */
+        if (parent != NULL){
+            item->setParent(parent);
+            item->setParentItem(parent);
 
-            }else{
-                QGraphicsScene::addItem(item);
-            }
-
-            item->setPainted(true);
+        }else{
+            QGraphicsScene::addItem(item);
         }
 
+        item->setPainted(true);
+
         // connections
-        connect(item, SIGNAL(itemAdded(QnlyGraphicsItem*,QnlyGraphicsItem*)), SLOT(addItem(QnlyGraphicsItem*,QnlyGraphicsItem*)));
-        connect(item, SIGNAL(itemSelected(QnlyGraphicsItem*)), SLOT(selectItem(QnlyGraphicsItem*)));
-        connect(item, SIGNAL(itemChanged(QnlyGraphicsItem*,QMap<QString,QString>)), SIGNAL(itemChanged(QnlyGraphicsItem*,QMap<QString,QString>)));
+        connect( item, SIGNAL(itemAdded(QnlyGraphicsItem*,QnlyGraphicsItem*)),
+                 SLOT(addItem(QnlyGraphicsItem*,QnlyGraphicsItem*)));
+
+        connect( item, SIGNAL(itemSelected(QnlyGraphicsItem*)),
+                 SLOT(selectItem(QnlyGraphicsItem*)));
+        connect( item,
+                 SIGNAL(itemChanged(QnlyGraphicsItem*,QMap<QString,QString>)),
+                 SIGNAL(itemChanged(QnlyGraphicsItem*,QMap<QString,QString>)));
 
         /* emitting signals */
-        emit itemAdded(item, parent);
+//        emit itemAdded(item, parent);
     }
 }
 
@@ -342,15 +348,15 @@ void QnlyGraphicsScene::removeItem(QnlyGraphicsItem* item)
 
 void QnlyGraphicsScene::selectItem(QnlyGraphicsItem* item)
 {
-    if (item != NULL){
-        if (!item->isSelected()){
+    if (item != NULL)
+    {
+        if (!item->isSelected())
+        {
             /* selecting */
-            if (selectedItem != NULL){
+            if (selectedItem != NULL)
                 selectedItem->setSelected(false);
-            }
 
             item->setSelected(true);
-
             selectedItem = item;
         }
 

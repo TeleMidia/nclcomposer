@@ -201,47 +201,67 @@ void QnlyView::createConnections()
 
 }
 
-void QnlyView::addItem(QnlyGraphicsItem* item, QnlyGraphicsItem* parentitem, QnlyGraphicsView* view)
+void QnlyView::addItem( QnlyGraphicsItem* item, QnlyGraphicsItem* parentitem,
+                        QnlyGraphicsView* view)
 {
-    if (item != NULL && view != NULL){
+    if (item != NULL && view != NULL)
+    {
         // validating
         QString itemUID;
 
-        if (!item->getUid().isEmpty()){
-            if (!items.contains(item->getUid())){
+        if (!item->getUid().isEmpty())
+        {
+            if (!items.contains(item->getUid()))
+            {
                 itemUID = item->getUid();
 
-            }else{
+            }
+            else
+            {
+                qDebug() << "QnlyView::addItem Item already contains "
+                        << item->getUid();
                 return; // canceling addition
             }
 
-        }else{
+        }
+        else
+        {
             itemUID = (QString) QUuid::createUuid();
-
             item->setUid(itemUID);
         }
 
         QString parentitemUID;
 
-        if (parentitem != NULL){
-            if (items.contains(parentitem->getUid())){
+        if (parentitem != NULL)
+        {
+            if (items.contains(parentitem->getUid()))
+            {
                 parentitemUID = parentitem->getUid();
 
-            }else{
+            }
+            else
+            {
+                qDebug() << "QnlyView::addItem ParentItem doesn't in items  "
+                        << parentitem->getUid();
                 return; // canceling addition
             }
 
-        }else{
+        }
+        else
+        {
             parentitemUID = "";
         }
 
         QString viewUID;
 
-        if (!view->getUid().isEmpty()){
-            if (views.contains(view->getUid())){
+        if (!view->getUid().isEmpty())
+        {
+            if (views.contains(view->getUid()))
+            {
                 viewUID = view->getUid();
-
-            }else{
+            }
+            else
+            {
                 return; // canceling addition
             }
 
@@ -250,7 +270,8 @@ void QnlyView::addItem(QnlyGraphicsItem* item, QnlyGraphicsItem* parentitem, Qnl
         }
 
         // drawing
-        view->addItem(item,parentitem);
+        qDebug() << "Calling internal QnlyView::addItem ";
+        view->addItem(item, parentitem);
 
         // setting
         QMap<QString, QString> attributes;
@@ -315,7 +336,7 @@ void QnlyView::addItem(QnlyGraphicsItem* item, QnlyGraphicsItem* parentitem, Qnl
             // no default values
         }
 
-        if (item->getColor() != NULL){
+        if (!item->getColor().isEmpty()){
             attributes["color"] = item->getColor();
 
         }else{
@@ -847,92 +868,88 @@ void QnlyView::selectRegionbase(const QString viewUID)
 
 }
 
-void QnlyView::addRegion(const QString regionUID, const QString parentUID, const QString regionbaseUID, const QMap<QString, QString> &attributes)
+void QnlyView::addRegion( const QString regionUID,
+                          const QString parentUID,
+                          const QString regionbaseUID,
+                          const QMap<QString, QString> &attributes)
 {
      QnlyGraphicsItem* item = NULL;
 
-     if (!regionUID.isEmpty()){
-         item = new QnlyGraphicsItem();
-         item->setUid(regionUID);
+     item = new QnlyGraphicsItem();
 
-     }else{
-         item = new QnlyGraphicsItem();
-     }
+    if (!regionUID.isEmpty())
+         item->setUid(regionUID);
 
      QnlyGraphicsItem* parent = NULL;
 
-     if (!parentUID.isEmpty()){
-         if (items.contains(parentUID)){
+     if (!parentUID.isEmpty())
+     {
+         if (items.contains(parentUID))
+         {
             parent = items.value(parentUID);
-         }else{
+         }
+         else
+         {
+             qDebug() << "QnlyView::addRegion parentUId=" << parentUID
+                     << "doesn't exists in items.";
              return; // canceling addition
          }
-     }else{
-         parent = NULL;
      }
 
      QnlyGraphicsView* view = NULL;
 
-     if (!regionbaseUID.isEmpty()){
-         if (views.contains(regionbaseUID)){
-             view = views.value(regionbaseUID);
-         }else{
-             return; // canceling addition
-         }
-
-     }else{
+     if (!regionbaseUID.isEmpty() && views.contains(regionbaseUID))
+     {
+         view = views.value(regionbaseUID);
+     }
+     else
+     {
+         qDebug() << "QnlyView::addRegion regionbaseUID=" << regionbaseUID
+                 << "doesn't exists in views.";
          return; // canceling addition
      }
 
-     if (!attributes["id"].isEmpty()){
+     if (!attributes["id"].isEmpty())
          item->setId(attributes["id"]);
 
-     }else{
-         // no default value
-     }
-
-     if (!attributes["title"].isEmpty()){
+     if (!attributes["title"].isEmpty())
          item->setTitle(attributes["title"]);
 
-     }else{
-         // no default value
-     }
-
-     if (!attributes["color"].isEmpty()){
+     if (!attributes["color"].isEmpty())
          item->setColor(attributes["color"]);
+     else
+         item->setColor("#e4e4e4"); //default value
 
-     }else{
-         item->setColor("#e4e4e4");
-     }
-
-     if (!attributes["top"].isEmpty()){
-         if (attributes["top"].contains(QRegExp("\\d+(.\\d+)?%"))){
+     if (!attributes["top"].isEmpty())
+     {
+         if (attributes["top"].contains(QRegExp("\\d+(.\\d+)?%")))
+         {
              QString attribute = attributes["top"];
              attribute.remove(attribute.length()-1,1); // removing '%'
 
              qreal top = attribute.toDouble();
 
-             if (top >= 0 && top <= 100){
+             if (top >= 0 && top <= 100)
                  item->setRelativeTop(top/100);
-
-             }else{
+             else
                  item->setRelativeTop(0);
-             }
 
-         }else if (attributes["top"].contains(QRegExp("\\d+(.\\d+)?"))){
+         }
+         else if (attributes["top"].contains(QRegExp("\\d+(.\\d+)?")))
+         {
              QString attribute = attributes["top"];
 
              qreal top = attribute.toDouble();
 
-             if (top >= 0 && top <= 1){
+             if (top >= 0 && top <= 1)
                  item->setRelativeTop(top);
-
-             }else{
+            else
                  item->setRelativeTop(0);
-             }
          }
 
-     }else{
+     }
+     else
+     {
          item->setRelativeTop(0);
      }
 
@@ -1025,7 +1042,8 @@ void QnlyView::addRegion(const QString regionUID, const QString parentUID, const
              }
          }
 
-     }else{
+     }
+     else {
          item->setRelativeBottom(0);
      }
 
@@ -1092,6 +1110,7 @@ void QnlyView::addRegion(const QString regionUID, const QString parentUID, const
      }
 
 
+     qDebug() << "QnlyView::addRegion calling addItem";
      addItem(item, parent, view);
 }
 

@@ -44,27 +44,27 @@ public:
 
     bool isMoving() const;
 
-    void setMoving(const bool &moving);
+    void setMoving(bool moving);
 
     bool isResizing() const;
 
-    void setResizing(const bool &resizing);
+    void setResizing(bool resizing);
 
     bool isSelected() const;
 
-    void setSelected(const bool &selected);
+    void setSelected(bool selected);
 
     bool isPainted() const;
 
-    void setPainted(const bool &painted);
+    void setPainted(bool painted);
 
     bool hasChanged() const;
 
-    void setChanged(const bool &changed);
+    void setChanged(bool changed);
 
     bool isValidated() const;
 
-    void setValidated(const bool &validated);
+    void setValidated(bool validated);
 
     QString getId() const;
 
@@ -84,7 +84,7 @@ public:
 
     qreal getzIndex() const;
 
-    void setzIndex(const qreal &zindex);
+    void setzIndex(qreal zindex);
 
     qreal getzIndexTop() const;
 
@@ -98,7 +98,7 @@ public:
 
     qreal getRelativeTop() const;
 
-    void setRelativeTop(const qreal &relativeTop);
+    void setRelativeTop(qreal relativeTop);
 
     qreal getLeft() const;
 
@@ -110,19 +110,19 @@ public:
 
     qreal getRelativeLeft() const;
 
-    void setRelativeLeft(const qreal &relativeLeft);
+    void setRelativeLeft(qreal relativeLeft);
 
     qreal getRight() const;
 
     qreal getRelativeRight() const;
 
-    void setRelativeRight(const qreal &relativeRight);
+    void setRelativeRight(qreal relativeRight);
 
     qreal getBottom() const;
 
     qreal getRelativeBottom() const;
 
-    void setRelativeBottom(const qreal &relativeBottom);
+    void setRelativeBottom(qreal relativeBottom);
 
     qreal getWidth() const;
 
@@ -132,7 +132,7 @@ public:
 
     qreal getRelativeWidth() const;
 
-    void setRelativeWidth(const qreal &relativeWidth);
+    void setRelativeWidth(qreal relativeWidth);
 
     qreal getHeight() const;
 
@@ -142,7 +142,7 @@ public:
 
     qreal getRelativeHeight() const;
 
-    void setRelativeHeight(const qreal &relativeHeight);
+    void setRelativeHeight(qreal relativeHeight);
 
     QnlyResizeType getResizeType() const;
 
@@ -247,39 +247,39 @@ protected slots:
 protected:
 
 
-    void setTop(const qreal &top);
+    void setTop(qreal top);
 
-    void setMoveTop(const qreal &moveTop);
+    void setMoveTop(qreal moveTop);
 
-    void setPressTop(const qreal &pressTop);
+    void setPressTop(qreal pressTop);
 
-    void setResizeTop(const qreal &resizeTop);
+    void setResizeTop(qreal resizeTop);
 
-    void setLeft(const qreal &left);
+    void setLeft(qreal left);
 
-    void setMoveLeft(const qreal &moveLeft);
+    void setMoveLeft(qreal moveLeft);
 
-    void setPressLeft(const qreal &pressLeft);
+    void setPressLeft(qreal pressLeft);
 
-    void setResizeLeft(const qreal &resizeLeft);
+    void setResizeLeft(qreal resizeLeft);
 
-    void setRight(const qreal &right);
+    void setRight(qreal right);
 
-    void setBottom(const qreal &bottom);
+    void setBottom(qreal bottom);
 
-    void setWidth(const qreal &width);
+    void setWidth(qreal width);
 
-    void setPressWidth(const qreal &pressWidth);
+    void setPressWidth(qreal pressWidth);
 
-    void setResizeWidth(const qreal &resizeWidth);
+    void setResizeWidth(qreal resizeWidth);
 
-    void setHeight(const qreal &height);
+    void setHeight(qreal height);
 
-    void setPressHeight(const qreal &pressHeight);
+    void setPressHeight(qreal pressHeight);
 
-    void setResizeHeight(const qreal &resizeHeight);
+    void setResizeHeight(qreal resizeHeight);
 
-    void setzIndexTop(const qreal &zindexTop);
+    void setzIndexTop(qreal zindexTop);
 
     void setResizeType(const QnlyResizeType &resizeType);
 
