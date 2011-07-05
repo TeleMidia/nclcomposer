@@ -9,7 +9,7 @@ macx {
     :   LIBS += -framework \
         ComposerCore
 
-        LIBS += "-L/Library/Application Support/Composer" -lNCLLanguageProfile
+        LIBS +=  $$quote(-L/Library/Application Support/Composer) -lNCLLanguageProfile
 
         INCLUDEPATH +=  include /Library/Frameworks/ComposerCore.framework/ \
                        /Library/Frameworks/ComposerCore.framework/core \

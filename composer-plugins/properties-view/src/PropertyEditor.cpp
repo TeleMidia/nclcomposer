@@ -1,6 +1,6 @@
 #include "PropertyEditor.h"
 
-#include <map>
+#include <QMap>
 #include "NCLStructure.h"
 using namespace composer::language;
 
@@ -40,6 +40,7 @@ void PropertyEditor::setTagname(QString tagname, QString name)
         ui->tableWidget->removeRow(0);
 
     ui->label->setText(currentTagname + ":" + currentName);
+
     // add the new ones
     map <QString, bool> *attrs =
             NCLStructure::getInstance()->getAttributes(currentTagname);
@@ -69,6 +70,7 @@ void PropertyEditor::setTagname(QString tagname, QString name)
             propertyToValue[currentAttr] = "";
         }
     }
+
     filterProperties(this->currentFilterString);
 }
 

@@ -3,7 +3,7 @@
 NCLTextEditor::NCLTextEditor(QWidget *parent) :
         QsciScintilla(parent)
 {
-    shortcut_ctrl_space = new QShortcut(QKeySequence("Ctrl+Space"), this);
+    shortcut_ctrl_space = new QShortcut(QKeySequence("Ctrl+Shift+Space"), this);
     shortcut_ctrl_shift_f = new QShortcut(QKeySequence("Ctrl+Shift+f"), this);
 
     initParameters();

@@ -42,6 +42,8 @@ void PropertiesViewPlugin::onEntityChanged(QString pluginID, Entity * entity)
     QString line = "PLUGIN (" + pluginID + ") changed the Entity (" +
                    entity->getType() + " - " + entity->getUniqueId() +")";
 
+    changeSelectedEntity((void*)&entity->getUniqueId());
+
 }
 
 void PropertiesViewPlugin::onEntityRemoved(QString pluginID, QString entityID)
