@@ -13,14 +13,14 @@ OutlineViewPlugin::OutlineViewPlugin()
 
     connect ( window,
               SIGNAL( elementAddedByUser ( QString,
-                                            QString,
-                                            QMap <QString, QString> &,
-                                            bool)),
+                                           QString,
+                                           QMap <QString, QString> &,
+                                           bool)),
               this,
-              SIGNAL( addEntity( QString,
-                                 QString,
-                                 QMap <QString, QString> &,
-                                 bool)));
+              SLOT( elementAddedByUser( QString,
+                                        QString,
+                                        QMap <QString, QString> &,
+                                        bool)));
 
     connect (window, SIGNAL(elementRemovedByUser(QString)), this,
              SLOT(elementRemovedByUser(QString)));
@@ -103,6 +103,10 @@ void OutlineViewPlugin::onEntityChanged(QString pluginID, Entity * entity)
 
 void OutlineViewPlugin::onEntityRemoved(QString pluginID, QString entityID)
 {
+//    qDebug() << "OutlineViewPlugin::onEntityRemoved ("<< pluginID << " "
+//            << entityID << ")";
+//    qDebug() << idToItem.contains(entityID);
+
     if(idToItem.contains(entityID))
     {
         idToItem.remove(entityID);
@@ -112,9 +116,20 @@ void OutlineViewPlugin::onEntityRemoved(QString pluginID, QString entityID)
 
 void OutlineViewPlugin::elementRemovedByUser(QString itemId)
 {
-    qDebug() << "elementRemovedByUser (id ='" << itemId << "')";
     Entity *entity = project->getEntityById(itemId);
     emit removeEntity(entity, false);
+}
+
+void OutlineViewPlugin::elementAddedByUser( QString type,
+                                             QString parentId,
+                                             QMap <QString, QString> & atts,
+                                             bool force)
+{
+    /* If there is no parent, put as child of root */
+    if(parentId == "")
+        parentId = project->getUniqueId();
+
+    emit addEntity(type, parentId, atts, force);
 }
 
 bool OutlineViewPlugin::saveSubsession()
@@ -167,7 +182,6 @@ void OutlineViewPlugin::updateFromModel()
         QVector <Entity *> children = entity->getChildren();
         for(int i = 0; i < children.size(); i++)
         {
-            qDebug() << children.at(i)->getUniqueId();
             if(idToItem.contains(children.at(i)->getUniqueId())) continue;
 
             attrs.clear();
@@ -209,4 +223,4 @@ void OutlineViewPlugin::itemSelectionChanged()
     }
 }
 
-}}} //end namespace
+} } } //end namespace

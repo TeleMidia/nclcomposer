@@ -126,6 +126,15 @@ private slots:
     /*!
      \brief
 
+     \param id
+    */
+    void elementAddedByUser( QString type,
+                             QString parentId,
+                             QMap <QString, QString> & atts,
+                             bool force);
+    /*!
+     \brief
+
     */
     void itemSelectionChanged();
 };

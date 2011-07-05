@@ -50,7 +50,7 @@ void NCLTreeWidget::createActions ()
 
 }
 
-void NCLTreeWidget::createMenus ()
+void NCLTreeWidget::createMenus()
 {
     elementMenu = new QMenu(this);
     elementMenu->addAction(insertNodeAct);
@@ -135,21 +135,25 @@ QTreeWidgetItem* NCLTreeWidget::addElement ( QTreeWidgetItem *father,
 void NCLTreeWidget::userAddNewElement()
 {
     bool ok;
-    QList<QTreeWidgetItem*> selecteds = this->selectedItems ();
+    QList<QTreeWidgetItem*> selecteds = this->selectedItems();
 
-    QTreeWidgetItem *item = selecteds.at (0);
-    QString id = item->text(2);
-    // int line = item->text(2).toInt ( &ok, 10 );
-    QString tagname = item->text(0);
-
+    QTreeWidgetItem *item ;
+    QString parentId = "", tagname = "";
     QStringList strlist;
-    map <QString, char> *
-            children = NCLStructure::getInstance()->getChildren(tagname);
 
-    if(children != NULL) {
-        map <QString, char>::iterator it;
-        for(it = children->begin(); it != children->end(); ++it){
-            strlist << it->first;
+    if(selecteds.size()) {
+        item = selecteds.at(0);
+        parentId = item->text(2);
+        tagname = item->text(0);
+
+        map <QString, char> *
+                children = NCLStructure::getInstance()->getChildren(tagname);
+
+        if(children != NULL) {
+            map <QString, char>::iterator it;
+            for(it = children->begin(); it != children->end(); ++it){
+                strlist << it->first;
+            }
         }
     }
 
@@ -163,7 +167,7 @@ void NCLTreeWidget::userAddNewElement()
     if(ok) {
         //Add new Element to OutlineWidget
         QMap<QString,QString> attr;
-        emit elementAddedByUser (element, id, attr, false);
+        emit elementAddedByUser (element, parentId, attr, false);
     }
 }
 
@@ -212,19 +216,29 @@ void NCLTreeWidget::removeItem(QString itemId)
     for (int i = 0; i < items.size(); i++)
     {
         item  = items.at(i);
-
         if (item->parent() != NULL)
+        {
             item->parent()->removeChild(item);
+            qDeleteAll(item->takeChildren());
+        }
         else
-            this->removeItemWidget(item, 0);
+        {
+//            TODO:
+//            item = currentItem();
+//            int index = indexOfTopLevelItem(item);
+//            takeTopLevelItem(index);
+//            delete item;
+        }
     }
-
 }
 
 void NCLTreeWidget::userRemoveElement()
 {
     QList<QTreeWidgetItem*> selecteds = this->selectedItems();
     QTreeWidgetItem *item = selecteds.at (0);
+
+    if(item->parent() == NULL) return;
+
     QString id = item->text(2);
 
     if (item != NULL) {
@@ -306,7 +320,6 @@ void NCLTreeWidget::DecreaseFont()
 
 void NCLTreeWidget::IncreaseFont()
 {
-//    qDebug() << "NCLTreeWidget::IncreaseFont";
     unsigned int newPointSize = font().pointSize()+1;
     QFont newFont(font());
     newFont.setPointSize(newPointSize);
