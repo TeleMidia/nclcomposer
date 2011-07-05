@@ -1,8 +1,8 @@
 #include "qnlycomposerpluginfactory.h"
 
 namespace composer {
-namespace plugin {
-namespace layout {
+    namespace plugin {
+        namespace layout {
 
 QnlyComposerPluginFactory::QnlyComposerPluginFactory(QObject* parent)
 {
@@ -63,6 +63,4 @@ void QnlyComposerPluginFactory::applyValues()
 
 Q_EXPORT_PLUGIN2(QnclLayout, QnlyComposerPluginFactory)
 
-}
-}
-}
+} } } //end namespace

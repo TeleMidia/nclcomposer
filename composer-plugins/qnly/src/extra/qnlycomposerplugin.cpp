@@ -548,7 +548,7 @@ void QnlyComposerPlugin::changeRegion(const QString regionUID, const QString reg
             }
 
             // emitting
-            emit setAttributes(getProject()->getEntityBydId(regionUID), standard, false);
+            emit setAttributes(getProject()->getEntityById(regionUID), standard, false);
 //        }
 //    }
 }
