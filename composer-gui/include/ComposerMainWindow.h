@@ -45,6 +45,7 @@ using namespace composer::core;
 #include "wizard/DocumentWizard.h"
 #include "PerspectiveManager.h"
 #include "PreferencesDialog.h"
+#include "PluginDetailsDialog.h"
 //#include "ProjectTreeView.h"
 
 using namespace composer::gui;
@@ -99,6 +100,7 @@ private:
     QWebView *welcomeScreen; /*!< TODO */
 
     PerspectiveManager *perspectiveManager;
+    PluginDetailsDialog *pluginDetailsDialog;
 
 private:
     Ui::ComposerMainWindow *ui; /*!< TODO */
@@ -221,6 +223,10 @@ private slots:
     void clearRecentProjects(void);
 
     void importFromDocument();
+    /*!
+        \brief Shows the details of the current selected plugins.
+     */
+    void showPluginDetails();
 
 public:
     /*!

@@ -29,14 +29,12 @@ ComposerMainWindow::ComposerMainWindow(QWidget *parent)
 #endif
 
     initGUI();
-
     initModules();
-
     readSettings();
 
     preferences = new PreferencesDialog(this);
     perspectiveManager = new PerspectiveManager(this);
-
+    pluginDetailsDialog = new PluginDetailsDialog(aboutDialog);
     projectWizard = new ProjectWizard(this);
 
     connect(ui->action_RunNCL, SIGNAL(triggered()), this, SLOT(runNCL()));
@@ -154,9 +152,10 @@ void ComposerMainWindow::readSettings() {
     QStringList openfiles = settings.value("openfiles").toStringList();
     settings.endGroup();
 
+    qDebug() << "Openning files:";
     for(int i = 0; i < openfiles.size(); i++)
     {
-//        qDebug() << openfiles.at(i);
+        qDebug() << openfiles.at(i);
         ProjectControl::getInstance()->launchProject(openfiles.at(i));
     }
 
@@ -171,7 +170,7 @@ void ComposerMainWindow::initGUI() {
     setWindowIcon(QIcon(":/mainwindow/icon"));
 #endif
     setWindowTitle(tr("Composer NCL 3.0"));
-    // tabDocuments = new QTabWidget(ui->frame);
+//    tabDocuments = new QTabWidget(ui->frame);
     tabProjects = ui->tabWidget;
 
     tabProjects->setMovable(true);
@@ -324,11 +323,15 @@ void ComposerMainWindow::createAbout()
                                                  Qt::Horizontal,
                                                  aboutDialog);
 
-    QPushButton *tmp = bOk->button(QDialogButtonBox::Ok);
-    tmp->setText(tr("Details"));
-    tmp->setIcon(QIcon());
+    QPushButton *detailsButton = bOk->button(QDialogButtonBox::Ok);
+    detailsButton->setText(tr("Details"));
+    detailsButton->setIcon(QIcon());
 
     connect(bOk, SIGNAL(rejected()), aboutDialog, SLOT(close()));
+
+    connect(    detailsButton, SIGNAL(pressed()),
+                this, SLOT(showPluginDetails())
+            );
 
     QGridLayout *gLayout = new QGridLayout(aboutDialog);
     gLayout->addWidget(new QLabel(tr("The <b>Composer</b> is an IDE for"
@@ -395,6 +398,7 @@ void ComposerMainWindow::about() {
     }
 
     aboutDialog->setModal(true);
+
     aboutDialog->show();
 }
 
@@ -772,6 +776,11 @@ void ComposerMainWindow::openRecentProject()
 {
     QAction *action = qobject_cast<QAction *> (QObject::sender());
     ProjectControl::getInstance()->launchProject(action->data().toString());
+}
+
+void ComposerMainWindow::showPluginDetails()
+{
+    pluginDetailsDialog->show();
 }
 
 } } //end namespace

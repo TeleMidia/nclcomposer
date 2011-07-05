@@ -49,7 +49,8 @@ SOURCES += main.cpp \
     src/wizard/DocumentWizard.cpp \
     src/wizard/DocumentEntryPage.cpp \
     src/PreferencesDialog.cpp \
-    src/PerspectiveManager.cpp
+    src/PerspectiveManager.cpp \
+    src/PluginDetailsDialog.cpp
     # src/ProjectTreeView.cpp
     # src/WorkspaceModel.cpp
     # src/WorkspaceSwitch.cpp
@@ -60,7 +61,8 @@ HEADERS += include/ComposerMainWindow.h \
     include/wizard/DocumentWizard.h \
     include/wizard/DocumentEntryPage.h \
     include/PreferencesDialog.h \
-    include/PerspectiveManager.h
+    include/PerspectiveManager.h \
+    include/PluginDetailsDialog.h
     # include/ProjectTreeView.h
     # include/WorkspaceModel.h
     # include/WorkspaceSwitch.h
@@ -70,6 +72,7 @@ RESOURCES += images.qrc
 FORMS   += ui/PreferencesDialog.ui \
     ui/ComposerMainWindow.ui \
     ui/PerspectiveManager.ui \
-    ui/RunGingaConfig.ui
+    ui/RunGingaConfig.ui \
+    ui/PluginDetailsDialog.ui
 
 INSTALLS += target
