@@ -29,7 +29,7 @@ void PropertiesViewPlugin::onEntityAdded(QString pluginID, Entity *entity)
 {
     QString line = "<" + entity->getType() + "> </" + entity->getType() + ">\n";
 
-    qDebug() << line;
+//    qDebug() << line;
 }
 
 void PropertiesViewPlugin::errorMessage(QString error)
@@ -49,7 +49,7 @@ void PropertiesViewPlugin::onEntityRemoved(QString pluginID, QString entityID)
     QString line = "PLUGIN (" + pluginID + ") removed Entity (" +
                    entityID + ")";
 
-    qDebug() << line;
+//    qDebug() << line;
 }
 
 bool PropertiesViewPlugin::saveSubsession()

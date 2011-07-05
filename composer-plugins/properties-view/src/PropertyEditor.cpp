@@ -43,26 +43,31 @@ void PropertyEditor::setTagname(QString tagname, QString name)
     // add the new ones
     map <QString, bool> *attrs =
             NCLStructure::getInstance()->getAttributes(currentTagname);
-    map <QString, bool>::iterator it;
 
-    int i;
-    for(i=0,it = attrs->begin(); it != attrs->end(); ++it, i++)
+    if(attrs != NULL)
     {
-        QString currentAttr = (*it).first;
-        QTableWidgetItem *item = new QTableWidgetItem(currentAttr);
-        /* make the item not editable */
-        item->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEnabled);
-        ui->tableWidget->insertRow(ui->tableWidget->rowCount());
+        map <QString, bool>::iterator it;
 
-        internalPropertyChange = true;
-        ui->tableWidget->setItem(ui->tableWidget->rowCount()-1, 0, item);
-        propertyToLine.insert(currentAttr, ui->tableWidget->rowCount()-1);
+        int i;
+        for(i=0,it = attrs->begin(); it != attrs->end(); ++it, i++)
+        {
+            QString currentAttr = (*it).first;
+            QTableWidgetItem *item = new QTableWidgetItem(currentAttr);
+            /* make the item not editable */
+            item->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEnabled);
+            ui->tableWidget->insertRow(ui->tableWidget->rowCount());
 
-        QTableWidgetItem *itemValue = new QTableWidgetItem("");
-        internalPropertyChange = true;
-        ui->tableWidget->setItem(ui->tableWidget->rowCount()-1, 1, itemValue);
+            internalPropertyChange = true;
+            ui->tableWidget->setItem(ui->tableWidget->rowCount()-1, 0, item);
+            propertyToLine.insert(currentAttr, ui->tableWidget->rowCount()-1);
 
-        propertyToValue[currentAttr] = "";
+            QTableWidgetItem *itemValue = new QTableWidgetItem("");
+            internalPropertyChange = true;
+            ui->tableWidget->setItem( ui->tableWidget->rowCount()-1, 1,
+                                      itemValue);
+
+            propertyToValue[currentAttr] = "";
+        }
     }
     filterProperties(this->currentFilterString);
 }
