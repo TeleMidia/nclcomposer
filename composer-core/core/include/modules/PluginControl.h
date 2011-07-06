@@ -31,159 +31,160 @@ using namespace composer::extension;
 namespace composer {
     namespace core {
 
-        /*!
-         \brief Manages all the plugins in the system.
+/*!
+ \brief Manages all the plugins in the system.
 
-         It is part of the PluginControl responsability:
-            - Find the installed plugins in the system.
-            - Load the installed plugins.
-            - And connect each plugin with its respective message controllers.
-        */
-        class PluginControl : public QObject
-        {
-            Q_OBJECT
-            SINGLETON(PluginControl)
+ It is part of the PluginControl responsability:
+    - Find the installed plugins in the system.
+    - Load the installed plugins.
+    - And connect each plugin with its respective message controllers.
+*/
+class PluginControl : public QObject
+{
+    Q_OBJECT
+    SINGLETON(PluginControl)
 
-        private:
-            /*!
-             \brief
+private:
+    /*!
+     \brief Constructor.
+    */
+    explicit PluginControl();
+    /*!
+     \brief Constructor.
+    */
+    virtual ~PluginControl();
+    QHash<QString,IPluginFactory*> pluginFactories;
+    /*!< PluginFactory by pluginID */
+    QMultiHash<LanguageType, QString> pluginsByType;
+    /*!< pluginID given LanguageType */
 
-            */
-            PluginControl();
-            /*!
-             \brief
+    /* TC by DocumentID */
+    /* Is this right??
+       And when we have plugins that are not related to documents???
+    */
+    QHash <QString, MessageControl*> messageControls; /*!< TODO */
 
-            */
-            ~PluginControl();
-            QHash<QString,IPluginFactory*> pluginFactories;
-            /*!< PluginFactory by pluginID */
-            QMultiHash<LanguageType, QString> pluginsByType;
-            /*!< pluginID given LanguageType */
+    QMultiHash<QString, IPlugin*> pluginInstances;
+    /*!< Plugin Instance given project location */
 
-            /* TC by DocumentID */
-            /* TODO: Is this right??
-                And when we have plugins that are not related to documents???
-            */
-            QHash <QString, MessageControl*> messageControls; /*!< TODO */
+    QMultiHash<IPlugin*, IPluginFactory*> factoryByPlugin;
+    /*!< Maps each IPlugin to its corresponding IPluginFactory */
 
-            QMultiHash<QString, IPlugin*> pluginInstances;
-            /*!< Plugin Instance given DocumentLocation */
+    /*!
+     \brief Launchs a new plugin and connect it with the given
+        MessageControl.
 
-            QMultiHash<IPlugin*, IPluginFactory*> factoryByPlugin;
-            /*!< Maps each IPlugin to its corresponding IPluginFactory */
+     \param plugin the plugin instance that must be connected.
+     \param mControl
+    */
+    void launchNewPlugin(IPlugin *plugin, MessageControl *mControl);
 
-            /*!
-             \brief Launchs a new plugin and connect it with the given
-                MessageControl.
+public:
+    /*!
+     \brief
 
-             \param plugin the plugin instance that must be connected.
-             \param mControl
-            */
-            void launchNewPlugin(IPlugin *plugin,
-                                 MessageControl *mControl);
+     \param pluginsDirPath
+    */
+    void loadPlugins(QString pluginsDirPath);
+    /*!
+     \brief
 
-        public:
-            /*!
-             \brief
+     \param fileName
+     \return IPluginFactory *
+    */
+    IPluginFactory* loadPlugin(QString fileName);
+    /*!
+     \brief
 
-             \param pluginsDirPath
-            */
-            void loadPlugins(QString pluginsDirPath);
-            /*!
-             \brief
+     \return QList<IPluginFactory *>
+    */
+    QList<IPluginFactory*> getLoadedPlugins();
+    /*!
+     \brief
 
-             \param fileName
-             \return IPluginFactory *
-            */
-            IPluginFactory* loadPlugin(QString fileName);
-            /*!
-             \brief
+     \param doc
+     \return bool
+    */
+    bool releasePlugins(Project *doc);
+    /*!
+      \brief TODO
 
-             \return QList<IPluginFactory *>
-            */
-            QList<IPluginFactory*> getLoadedPlugins();
-            /*!
-             \brief
+      \param
+      \return
+     */
+    MessageControl *getMessageControl(QString location);
+    /*!
+     \brief
 
-             \param doc
-             \return bool
-            */
-            bool releasePlugins(Project *doc);
-            /*!
-              \brief TODO
+     \param parser
+     \param mControl
+    */
+    void connectParser(IDocumentParser *parser, MessageControl *mControl);
 
-              \param
-              \return
-             */
-            MessageControl *getMessageControl(QString location);
-            /*!
-             \brief
 
-             \param parser
-             \param mControl
-            */
-            void connectParser(IDocumentParser *parser,
-                               MessageControl *mControl);
+    /*!
+     * \brief
+     */
+    QList <IPlugin*> getPluginInstances(QString location);
+    /* Should be private? */
 
-        public slots:
-            /*!
-             \brief
+public slots:
+    /*!
+     \brief
 
-             \param doc
-            */
-            void launchProject(Project *doc);
-            /*!
-             \brief
+     \param doc
+    */
+    void launchProject(Project *doc);
+    /*!
+     \brief
 
-             \param location
-            */
-            void savePluginsData(QString location);
+     \param location
+    */
+    void savePluginsData(QString location);
 
-        private slots:
-            /*!
-             \brief
+private slots:
+    /*!
+     \brief
 
-             \param slot
-             \param payload
-            */
-            void sendBroadcastMessage(const char *slot, void *payload);
+     \param slot
+     \param payload
+    */
+    void sendBroadcastMessage(const char *slot, void *payload);
 
-        signals:
-            /*!
-             \brief
+signals:
+    /*!
+     \brief
 
-             \param documentdId
-             \param location
-            */
-            void newProjectLaunchedAndCreated(QString documentdId,
-                                               QString location);
-            /*!
-             \brief
+     \param documentdId
+     \param location
+    */
+    void newProjectLaunchedAndCreated(QString documentdId, QString location);
+    /*!
+     \brief
 
-             \param QString
-            */
-            void notifyError(QString);
-            /*!
-             \brief
+     \param QString
+    */
+    void notifyError(QString);
+    /*!
+     \brief
 
-             \param
-             \param
-             \param documentId
-            */
-            void addPluginWidgetToWindow(IPluginFactory*, IPlugin*,
-                                         QString documentId);
-            /*!
-             \brief
+     \param
+     \param
+     \param documentId
+    */
+    void addPluginWidgetToWindow(IPluginFactory*, IPlugin*, QString documentId);
+    /*!
+     \brief
 
-             \param
-             \param
-             \param
-             \param n
-            */
-            void addPluginWidgetToWindow(IPluginFactory*,IPlugin*,
-                                         Project*, int n);
+     \param
+     \param
+     \param
+     \param n
+    */
+    void addPluginWidgetToWindow(IPluginFactory*, IPlugin*, Project*, int n);
 
-        };
+};
+
 } } //end namespace
 
 #endif // PLUGINCONTROL_H

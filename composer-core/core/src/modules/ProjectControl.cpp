@@ -141,9 +141,9 @@ void ProjectControl::importFromDocument( QString docLocation,
     emit startOpenProject(projLocation);
 
     QMap<QString,QString> atts;
-    QString documentId = projLocation;
-    documentId.remove(0, projLocation.lastIndexOf(QDir::separator())+1);
-    atts["id"] = documentId;
+    QString projectId = projLocation;
+    projectId.remove(0, projLocation.lastIndexOf(QDir::separator())+1);
+    atts["id"] = projectId;
 
     ProjectReader pr;
     Project *project = pr.readFile(projLocation);

@@ -64,7 +64,6 @@ public:
     virtual QString description() {return "Unknown";}
     virtual QString url() {return "Unknown";}
     virtual QString category() {return "Unknown";}
-
 };
 
 } } //end namespace

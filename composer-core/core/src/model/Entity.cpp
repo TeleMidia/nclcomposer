@@ -140,6 +140,11 @@ bool Entity::hasAttribute(const QString &name)
     return this->atts.contains(name);
 }
 
+QString Entity::getUniqueId()
+{
+    return this->_id;
+}
+
 QString Entity::getType()
 {
     QMutexLocker locker(&lockType);

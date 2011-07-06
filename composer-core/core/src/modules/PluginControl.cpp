@@ -151,9 +151,8 @@ void PluginControl::launchProject(Project *project)
 
             emit addPluginWidgetToWindow(factory, pluginInstance, project,
                                          factoryByPlugin.size());
-
             //TODO: CREATE A NEW FUNCTION TO UPDATE FROM SAVED CONTENT
-            pluginInstance->updateFromModel();
+            pluginInstance->init();
         }
         else {
             emit notifyError(tr("Could not create an instance for the"
@@ -164,26 +163,38 @@ void PluginControl::launchProject(Project *project)
 
 void PluginControl::launchNewPlugin(IPlugin *plugin, MessageControl *mControl)
 {
-
     /* Connect signals from the core to slots in the plugins */
+    /*
+    \deprecated
+
+    Today, the message control is reponsible to call this slots directly.
+
     connect(mControl,SIGNAL(entityAdded(QString, Entity*)),
             plugin, SLOT(onEntityAdded(QString, Entity*)));
     connect(mControl,SIGNAL(entityChanged(QString, Entity*)),
             plugin,SLOT(onEntityChanged(QString, Entity*)));
     connect(mControl,SIGNAL(entityRemoved(QString, QString)),
-            plugin,SLOT(onEntityRemoved(QString, QString)));
+            plugin,SLOT(onEntityRemoved(QString, QString))); */
 
     /* Connect signals from the plugin to slots of the core */
     connect(plugin,
             SIGNAL(addEntity(QString, QString, QMap<QString,QString>&, bool)),
             mControl,
             SLOT(onAddEntity(QString, QString, QMap<QString,QString>&, bool)));
+
     connect(plugin, SIGNAL(setAttributes(Entity*, QMap<QString,QString>, bool)),
             mControl,
             SLOT(onEditEntity(Entity*, QMap<QString,QString>, bool)));
-    connect(plugin,SIGNAL(removeEntity(Entity*,bool)),
+
+    connect(plugin,
+            SIGNAL(removeEntity(Entity*,bool)),
             mControl,
             SLOT(onRemoveEntity(Entity*,bool)));
+
+    connect(plugin,
+            SIGNAL(setListenFilter(QStringList)),
+            mControl,
+            SLOT(setListenFilter(QStringList)));
 
     // broadcastMessage
     connect(plugin, SIGNAL(sendBroadcastMessage(const char*, void *)),
@@ -269,7 +280,6 @@ void PluginControl::sendBroadcastMessage(const char* slot, void *obj)
            method.invoke(inst, Qt::QueuedConnection, Q_ARG(void *, obj));
        }
     }
-
 }
 
 void PluginControl::savePluginsData(QString location)
@@ -287,6 +297,15 @@ void PluginControl::savePluginsData(QString location)
 MessageControl *PluginControl::getMessageControl(QString location)
 {
     return messageControls.value(location);
+}
+
+QList <IPlugin*> PluginControl::getPluginInstances(QString location)
+{
+    QList<IPlugin*> instances;
+    if(pluginInstances.contains(location))
+        instances = pluginInstances.values(location);
+
+    return instances;
 }
 
 } }//end namespace

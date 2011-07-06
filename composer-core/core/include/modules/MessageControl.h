@@ -19,16 +19,16 @@ using namespace composer::extension;
 
 namespace composer {
     namespace core {
-
 /*!
- \brief
-
-*/
+ * \brief
+ */
 class MessageControl : public QObject {
     Q_OBJECT
 
 private:
     Project *project; /*!< TODO */
+    QMap <QString, QStringList> listenEntities;
+    /*!< pluginInstanceId to list of entity this plugin is */
 
 public:
     /*!
@@ -39,9 +39,31 @@ public:
     MessageControl(Project *project);
     /*!
      \brief
-
     */
     ~MessageControl();
+
+private:
+    /*!
+     * \brief TODO
+     */
+    void sendEntityAddedMessageToPlugins( QString pluginInstanceId,
+                                          Entity *entity);
+    /*!
+     * \brief TODO
+     */
+    void sendEntityChangedMessageToPlugins( QString pluginInstanceId,
+                                            Entity *entity);
+    /*!
+     * \brief TODO
+     */
+    void sendEntityRemovedMessageToPlugins( QString pluginInstanceId,
+                                            Entity *entity);
+
+
+    /*!
+     * \brief TODO
+     */
+    bool pluginIsInterestedIn(IPlugin *plugin, Entity *entity);
 
 public slots:
     /*!
@@ -63,8 +85,7 @@ public slots:
      \param atts
      \param force
     */
-    void onEditEntity(Entity *entity,
-                      QMap<QString,QString> atts, bool force);
+    void onEditEntity(Entity *entity, QMap<QString,QString> atts, bool force);
     /*!
      \brief
 
@@ -72,47 +93,10 @@ public slots:
      \param force
     */
     void onRemoveEntity(Entity *, bool force);
-
-signals:
     /*!
-     \brief
-
-     \param uniqueID
-     \param
-    */
-    void entityAdded(QString uniqueID, Entity *);
-    /*!
-     \brief
-
-     \param error
-    */
-    void entityAddError(QString error);
-    /*!
-     \brief
-
-     \param uniqueID
-     \param
-    */
-    void entityChanged(QString uniqueID, Entity *);
-    /*!
-     \brief
-
-     \param error
-    */
-    void entityChangeError(QString error);
-    /*!
-     \brief Emits this signal when an Entity is removed from the internal model.
-
-     \param uniqueID The
-     \param entityId
-    */
-    void entityRemoved(QString uniqueID, QString entityId);
-    /*!
-     \brief
-
-     \param error
-    */
-    void entityRemoveError(QString error);
+     * \brief TODO
+     */
+    void setListenFilter(QStringList list);
 };
 } } //end namespace
 #endif // MESSAGECONTROL_H
