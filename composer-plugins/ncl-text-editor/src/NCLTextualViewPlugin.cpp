@@ -20,6 +20,12 @@ NCLTextualViewPlugin::~NCLTextualViewPlugin()
     window = NULL;
 }
 
+void NCLTextualViewPlugin::init()
+{
+    window->getTextEditor()
+            ->setText(QString(project->getPluginData("ncl-text-editor")));
+}
+
 QWidget* NCLTextualViewPlugin::getWidget()
 {
     return window;
@@ -221,10 +227,6 @@ bool NCLTextualViewPlugin::saveSubsession()
     project->setPluginData(QString("ncl-text-editor"),
                        window->getTextEditor()->text().toAscii());
     return true;
-}
-
-void NCLTextualViewPlugin::updateFromModel(){
-    window->getTextEditor()->setText(QString(project->getPluginData("ncl-text-editor")));
 }
 
 void NCLTextualViewPlugin::changeSelectedEntity(void *param){

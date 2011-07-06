@@ -29,9 +29,9 @@ class PropertiesViewPlugin : public IPlugin
 
     public:
         /*!
-         \brief Constructor.
-
-        */
+         * \brief Constructor.
+         *
+         */
         explicit PropertiesViewPlugin();
         /*!
          \brief Destructor.
@@ -40,57 +40,55 @@ class PropertiesViewPlugin : public IPlugin
         ~PropertiesViewPlugin();
 
         /*!
-         \brief
-
-         \return QWidget *
-        */
+         * \brief
+         *
+         */
+        void init();
+        /*!
+         * \brief
+         *
+         * \return QWidget *
+         */
         QWidget* getWidget();
         /*!
-         \brief
-
-         \return bool
-        */
+         * \brief
+         * \return bool
+         *
+         */
         bool saveSubsession();
-        /*!
-         \brief
-
-        */
-        void updateFromModel();
 
     public slots:
         /*!
-         \brief
-
-         \param ID
-         \param
-        */
+         * \brief
+         *
+         * \param ID
+         * \param
+         */
         void onEntityAdded(QString ID, Entity *);
         /*!
-         \brief
-
-         \param ID
-         \param
-        */
+         * \brief
+         *
+         * \param ID
+         * \param
+         */
         void onEntityChanged(QString ID, Entity *);
         /*!
-         \brief
-
-         \param
-        */
+         * \brief
+         * \param
+         *
+         */
         void onEntityRemoved(QString ID, QString entityID);
-
         /*!
-         \brief
-
-         \param error
-        */
+         * \brief
+         *
+         * \param error
+         */
         void errorMessage(QString error);
-
         /*!
-         \brief
-
-         \param
-        */
+         * \brief
+         *
+         * \param
+         */
         void changeSelectedEntity (void*);
 
     private slots:

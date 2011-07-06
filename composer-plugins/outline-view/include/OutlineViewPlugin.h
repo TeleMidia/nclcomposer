@@ -23,122 +23,110 @@ class OutlineViewPlugin : public IPlugin
 private:
     NCLTreeWidget *window; /*!< TODO */
     QString *selectedId; /*!< TODO */
+    QMap <QString, QTreeWidgetItem*> idToItem; /*!< TODO */
 
 public:
     /*!
-     \brief Constructor.
-    */
+     * \brief Constructor.
+     */
     explicit OutlineViewPlugin();
     /*!
-     \brief Destructor.
-    */
+     * \brief Destructor.
+     */
     ~OutlineViewPlugin();
-
     /*!
-     \brief Returns the widget of that plugin. This widget will be presentated
-                to the user.
-
-        This function is part of the IPlugin API.
-
-     \return QWidget* the widget that represents this plugin. If NULL, the
-                plugin has not a visual representation
-    */
+     * \brief
+     *
+     * This function is part of the IPlugin API.
+     */
+    void init();
+    /*!
+     * \brief Returns the widget of that plugin. This widget will be presentated
+     *      to the user.
+     *
+     *  This function is part of the IPlugin API.
+     *
+     * \return QWidget* the widget that represents this plugin. If NULL, the
+     *      plugin has not a visual representation
+     */
     QWidget* getWidget();
 
-    QMap <QString, QTreeWidgetItem*> idToItem; /*!< TODO */
-
     /*!
-     \brief Save the specific data of this plugin.
-
-        This function is part of the IPlugin API.
-
-     \return bool
-    */
+     * \brief Save the specific data of this plugin.
+     *
+     *  This function is part of the IPlugin API.
+     *
+     * \return bool
+     */
     bool saveSubsession();
-    /*!
-     \brief
-
-        This function is part of the IPlugin API.
-
-    */
-    void updateFromModel();
-
 
 public slots:
     /*!
-     \brief
-
-     \param ID
-     \param
-    */
+     * \brief
+     *
+     * \param ID
+     * \param
+     */
     void onEntityAdded(QString ID, Entity *);
     /*!
-     \brief
-
-        This function is part of the IPlugin API.
-
-     \param ID
-     \param
-    */
+     * \brief
+     *
+     * This function is part of the IPlugin API.
+     *
+     * \param pluginID
+     * \param
+     */
     void onEntityChanged(QString ID, Entity *);
     /*!
-     \brief
-
-        This function is part of the IPlugin API.
-
-     \param
-    */
-    /*void onEntityAboutToRemove(Entity *);*/
-    /*!
-     \brief
-
-        This function is part of the IPlugin API.
-
-     \param ID
-     \param entityID
-    */
+     * \brief
+     *
+     * This function is part of the IPlugin API.
+     *
+     * \param ID
+     * \param entityID
+     */
     void onEntityRemoved(QString ID, QString entityID);
 
     /*!
-     \brief
-
-        This function is part of the IPlugin API.
-
-     \param error
-    */
+     * \brief
+     *
+     * This function is part of the IPlugin API.
+     *
+     * \param error
+     */
     void errorMessage(QString error);
 
     /* Comunication from Debug to me */
     /*!
-     \brief
-
-     \param obj
-    */
+     * \brief
+     *
+     * \param obj
+     */
     void debugHasSendClearAll(void *obj);
 
 private slots:
     /*!
-     \brief
-
-     \param id
-    */
+     * \brief
+     *
+     * \param id
+     *
+     */
     void elementRemovedByUser(QString id);
     /*!
-     \brief
-
-     \param id
-    */
+     * \brief
+     *
+     * \param id
+     */
     void elementAddedByUser( QString type,
                              QString parentId,
                              QMap <QString, QString> & atts,
                              bool force);
     /*!
-     \brief
-
-    */
+     * \brief
+     */
     void itemSelectionChanged();
 };
 
-}}} //end namespace
+} } } //end namespace
 
 #endif // OUTLINEVIEWPLUGIN_H

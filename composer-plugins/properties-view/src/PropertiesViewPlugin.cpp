@@ -60,7 +60,7 @@ bool PropertiesViewPlugin::saveSubsession()
     return true;
 }
 
-void PropertiesViewPlugin::updateFromModel()
+void PropertiesViewPlugin::init()
 {
     //TODO: All
 }

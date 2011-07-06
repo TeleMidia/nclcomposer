@@ -29,6 +29,11 @@ DebugConsolePlugin::~DebugConsolePlugin()
     window = NULL;
 }
 
+void DebugConsolePlugin::init()
+{
+    //TODO: All
+}
+
 QWidget* DebugConsolePlugin::getWidget()
 {
     return window;
@@ -69,11 +74,6 @@ bool DebugConsolePlugin::saveSubsession()
 {
     //TODO: All
     return true;
-}
-
-void DebugConsolePlugin::updateFromModel()
-{
-    //TODO: All
 }
 
 void DebugConsolePlugin::sendToAll()

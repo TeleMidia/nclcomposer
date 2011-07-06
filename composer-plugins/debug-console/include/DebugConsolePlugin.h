@@ -24,9 +24,9 @@ class DebugConsolePlugin : public IPlugin
         explicit DebugConsolePlugin();
         ~DebugConsolePlugin();
 
+        void init();
         QWidget* getWidget();
         bool saveSubsession();
-	void updateFromModel();
 
     public slots:
         void onEntityAdded(QString ID, Entity *);

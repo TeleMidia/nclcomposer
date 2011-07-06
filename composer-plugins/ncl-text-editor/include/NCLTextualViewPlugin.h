@@ -35,16 +35,11 @@ public:
      \brief Destructor.
     */
     ~NCLTextualViewPlugin();
-
     /*!
-     \brief Returns the main widget of the NCLTextEdfitor.
-
+     \brief Init the plugin.
         This function is part of the IPlugin API.
-
-     \return QWidget *
     */
-    QWidget* getWidget();
-
+    void init();
     /*!
      \brief Save the NCL Text Editor specific data.
 
@@ -54,11 +49,13 @@ public:
     */
     bool saveSubsession();
     /*!
-     \brief Update the plugin display with the current model informations.
+     \brief Returns the main widget of the NCLTextEdfitor.
 
         This function is part of the IPlugin API.
+
+     \return QWidget *
     */
-    void updateFromModel();
+    QWidget* getWidget();
 
 public slots:
     /*!

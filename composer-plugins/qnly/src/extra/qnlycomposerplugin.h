@@ -23,13 +23,13 @@ public:
 
     ~QnlyComposerPlugin();
 
+    void init();
+
     virtual QWidget* getWidget();
 
     virtual bool saveSubsession();
 
 public slots:
-    virtual void updateFromModel();
-
     virtual void onEntityAdded(QString pluginID, Entity *entity);
 
     virtual void errorMessage(QString error);

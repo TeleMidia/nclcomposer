@@ -138,7 +138,7 @@ bool OutlineViewPlugin::saveSubsession()
     return true;
 }
 
-void OutlineViewPlugin::updateFromModel()
+void OutlineViewPlugin::init()
 {
     //Clear previous tree
     QString key;
