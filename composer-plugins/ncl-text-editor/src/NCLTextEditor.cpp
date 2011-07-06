@@ -3,17 +3,12 @@
 NCLTextEditor::NCLTextEditor(QWidget *parent) :
         QsciScintilla(parent)
 {
-    shortcut_ctrl_space = new QShortcut(QKeySequence("Ctrl+Shift+Space"), this);
-    shortcut_ctrl_shift_f = new QShortcut(QKeySequence("Ctrl+Shift+f"), this);
-
     initParameters();
 }
 
 NCLTextEditor::~NCLTextEditor()
 {
     delete apis;
-    delete shortcut_ctrl_space;
-    delete shortcut_ctrl_shift_f;
 }
 
 void NCLTextEditor::initParameters()
@@ -68,14 +63,6 @@ void NCLTextEditor::initParameters()
     font.setPointSize(PREF_FONT_SIZE);
     setFont(font);
     setCaretLineBackgroundColor(QColor(PREF_CARET_LINE_BG_COLOR));
-
-    /* Ctrl + Space == Autocomplete */
-    connect( shortcut_ctrl_space, SIGNAL(activated()),
-             this, SLOT(autoCompleteFromAPIs()));
-
-    /* Ctrl + Space == Autocomplete */
-    connect( shortcut_ctrl_shift_f, SIGNAL(activated()),
-             this, SLOT(formatText()));
 
     // connect(this, SIGNAL(marginClicked(int,int,Qt::KeyboardModifiers)), this,
     // SLOT(MarkLine(int,int,Qt::KeyboardModifiers)));
@@ -182,6 +169,25 @@ void NCLTextEditor::mousePressEvent(QMouseEvent *event)
 //FIXME: I DONT KNOW WHY (or WHERE), BUT THE UNDO IS NOT WORKING EVERY TIME.
 void NCLTextEditor::keyPressEvent(QKeyEvent *event)
 {
+    //Ctrl + Space == Autocomplete
+    if((event->modifiers() & Qt::ControlModifier) &&
+       (event->key() == Qt::Key_Space))
+    {
+        autoCompleteFromAPIs();
+        event->accept();
+        return;
+    }
+    //Ctrl + Shift + F == format Text
+    if((event->modifiers() & Qt::ControlModifier) &&
+       (event->modifiers() & Qt::ShiftModifier) &&
+       (event->key() == Qt::Key_F))
+    {
+        formatText();
+        return;
+    }
+
+
+
     int begin, end;
     int line, index;
     getCursorPosition(&line, &index);

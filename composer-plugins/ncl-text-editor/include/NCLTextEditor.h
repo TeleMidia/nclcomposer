@@ -58,8 +58,6 @@ private:
 
     INTERACTION_STATE interaction_state;
 
-    QShortcut *shortcut_ctrl_space;
-    QShortcut *shortcut_ctrl_shift_f;
     QsciNCLAPIs *apis;
 
     int error_indicator;
