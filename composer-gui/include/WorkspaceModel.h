@@ -7,6 +7,9 @@
 namespace composer {
     namespace gui {
 
+/*!
+ * \deprecated
+ */
 class WorkspaceModel : public QSortFilterProxyModel
 {
 private:

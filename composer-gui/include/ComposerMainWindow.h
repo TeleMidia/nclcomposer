@@ -74,7 +74,7 @@ private:
     QTabWidget *tabProjects; /*!< Each open project is show in a different
                                 tab. tabProjects contains the list of open
                                 tabs. */
-    QMap<QString, QMainWindow*> projectsWidgets; /*!< deprecated  */
+    QMap<QString, QMainWindow*> projectsWidgets; /*!< \deprecated  */
     QMap<QString, QDockWidget*> firstDock; /*!< TODO */
 
     QAction *aboutComposerAct; /*!< Action to show About Composer. */

@@ -16,6 +16,9 @@ using namespace composer::core;
 namespace composer {
     namespace gui {
 
+/*!
+ * \deprecated
+ */
 class ProjectTreeView : public QTreeView
 {
     Q_OBJECT

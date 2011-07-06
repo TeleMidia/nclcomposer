@@ -3,6 +3,9 @@
 
 #include <QTreeWidgetItem>
 
+/*!
+ * \deprecated
+ */
 class ProjectTreeItem : public QTreeWidgetItem
 {
 public:

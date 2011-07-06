@@ -13,6 +13,9 @@
 namespace composer {
     namespace gui {
 
+/*!
+ * \deprecated
+ */
 class WorkspaceSwitch : public QDialog
 {
     Q_OBJECT
