@@ -20,7 +20,6 @@ namespace composer{
 namespace composer {
     namespace core {
         namespace model {
-
 /*!
  * \brief An Entity is the main class of the internal Composer core.
  *
@@ -47,24 +46,48 @@ private:
     Entity* parent;
     bool deleteChildren; /* initial value is true */
     QVector <Entity*> children;
-    /**
-    * \brief This <map> represents the attributes of the element
-    *   the Key is the name of the attribute and Value is the value of that
-    *   attribute.
-    */
+    /*!
+     * \brief This <map> represents the attributes of the element
+     *   the Key is the name of the attribute and Value is the value of that
+     *   attribute.
+     */
     QMap<QString, QString> atts;
 
 protected:
+    /*!
+     * \brief Constructor.
+     *
+     * \param parent The QObject parent.
+     */
+    explicit Entity(QObject *parent = 0);
+    /*!
+     * \brief Constructor.
+     *
+     * \param atts attributes to be set to this Entity.
+     * \param parent the QObject parent.
+     */
+    explicit Entity(QMap<QString,QString> &atts, QObject *parent = 0);
+    /*!
+     * \brief Contructor.
+     *
+     * \param uniqueId the uniqueId of this Entiy.
+     * \param atts attributes to be set to this Entity.
+     * \param parent the QObject parent.
+     */
+    explicit Entity(QString uniqueId, QMap<QString,QString> &atts,
+                    QObject *parent = 0);
+
+    /*!
+     * \brief Destructor.
+     */
+    ~Entity();
     /*!
      * \brief This method is used to set an specific attribute of the element
      *
      * \param name - The name of the attribute to be set
      * \param value - The value this attribute is going to be set
-    */
-    inline void setAttribute(QString name, QString value) {
-        QMutexLocker locker(&lockAtts);
-        atts[name] = value;
-    }
+     */
+    void setAttribute(QString name, QString value);
 
     /*!
      * \brief Set the attributes of the current entity to the value passed as
@@ -72,25 +95,14 @@ protected:
      *
      * \param newAtts the new value of entity's attributes.
      */
-    inline void setAtrributes(QMap<QString,QString> &newatts) {
-        QMutexLocker locker(&lockAtts);
-        // this->atts.clear(); // Should it??!
-        for ( QMap<QString,QString>::iterator it = newatts.begin();
-                it != newatts.end(); ++it)
-        {
-            this->atts[it.key()] = it.value();
-        }
-    }
+    void setAtrributes(QMap<QString,QString> &newatts);
 
     /*!
      * \brief Set the entity's type to the value passed as parameter.
      *
      * \param type The type of the entity.
      */
-    inline void setType(QString type) {
-        QMutexLocker locker(&lockType);
-        this->type = type;
-    }
+    void setType(QString type);
 
     /*!
      *  \brief Set the unique identifier of the entity to the value passed as
@@ -98,121 +110,81 @@ protected:
      *
      * \param _id The new uniqueId of the entity.
      */
-    inline void setUniqueID(QString uniqueId) {
-        QMutexLocker locker(&lockID);
-        this->_id = uniqueId;
-    }
+    void setUniqueID(QString uniqueId);
 
-    inline void setParent(Entity *entity) {
-        this->parent = entity;
-    }
+    /*!
+     * \brief Set the parent of the Entity.
+     *
+     * \param parent The new parent of this Entity.
+     */
+    void setParent(Entity *parent);
 
     //OBS: This addChild updates the parent referency
-    inline bool addChild(Entity *entity) {
-        QMutexLocker locker(&lockChildren);
-        QString _id = entity->getUniqueId();
-
-        qDebug() << children.size();
-        // Check if the entity is already children of this entity
-        // TODO: THIS CAN BE IMPROVED!! Maybe checking if the parentUniqueID.
-        for(int i = 0; i < children.size(); i++)
-        {
-            if(children.at(i)->getUniqueId() == _id )
-                return false;
-        }
-        children.push_back(entity);
-        entity->setParent(this);
-        return true;
-    }
-
-    //! This call deletes the child and his children in a recursive
-    //!     way
+    bool addChild(Entity *entity);
+    /*!
+     * \brief This call deletes the child and his children in a recursive way.
+     *
+     * \param entity The Entity child to be removed.
+     */
     bool deleteChild(Entity *entity);
-    //! This call removes the child and append his children to his
-    //!     parent
+    /*!
+     * \brief This call removes the child and append his children to his parent.
+     *
+     * \param entity
+     */
     bool removeChildAppendChildren(Entity *entity);
-
-    explicit Entity(QObject *parent = 0);
-    Entity(QMap<QString,QString> &atts, QObject *parent = 0);
-    Entity(QString uniqueId, QMap<QString,QString> &atts, QObject *parent = 0);
-
-    ~Entity();
-
+    /*!
+     * \brief
+     */
     void print();
-
+    /*!
+     * \brief Convert the current Entity to a XML String.
+     *
+     * \param ntabs the number of tabs to be inserted before the current entity.
+     */
     QString toString(int ntabs);
 
 public:
-
-    //! This method is used to get an specific attribute of the
-    //!     element
     /*!
-      \param name - The name of the attribute been requested
-      \return A string with the requested attribute.
-    */
-    inline QString getAttribute(QString name) {
-        QMutexLocker locker(&lockAtts);
-        return atts.contains(name) ? atts[name] : "";
-    }
-    //! This method is used to get the iterator in the <map> of
-    //!     attributes
+     * \brief This method is used to get an specific attribute of the element.
+     *
+     * \param name - The name of the attribute been requested
+     * \return A string with the requested attribute.
+     */
+    QString getAttribute(QString name);
     /*!
-      \param begin - a reference to be filled with the begin of the
-                map.
-      \param end - a reference to be filled with the end of the map.
-    */
-    inline void getAttributeIterator (
-            QMap<QString,QString>::iterator &begin,
-            QMap<QString,QString>::iterator &end) {
-        QMutexLocker locker(&lockAtts);
-        begin = this->atts.begin();
-        end = this->atts.end();
-    }
-
-    //! This method is used to verify if this element has certain
-    //!     attribute
+     * This method is used to get the iterator in the <map> of attributes.
+     *
+     * \param begin - a reference to be filled with the begin of the map.
+     * \param end - a reference to be filled with the end of the map.
+     */
+    void getAttributeIterator (QMap<QString,QString>::iterator &begin,
+                               QMap<QString,QString>::iterator &end);
     /*!
-      \param name - The name of the attribute to be verified
-      \return an boolean depending of the existence of the attribute
+     * \brief This method is used to verify if this element has certain
+     *      attribute.
+     *
+     * \param name - The name of the attribute to be verified.
+     * \return an boolean depending of the existence of the attribute.
     */
-    inline bool hasAttribute(const QString &name) {
-        QMutexLocker locker(&lockAtts);
-        return this->atts.contains(name);
-    }
+    bool hasAttribute(const QString &name);
 
-    inline QString getUniqueId() {
-        QMutexLocker locker(&lockID);
-        return this->_id;
-    }
+    QString getUniqueId();
 
-    inline QString getType() {
-        QMutexLocker locker(&lockType);
-        return this->type;
-    }
+    QString getType();
 
-    inline Entity* getParent() {
-        QMutexLocker locker(&lockParent);
-        return parent;
-    }
+    Entity* getParent();
 
-    inline QString getParentUniqueId() {
-        QMutexLocker loecker(&lockParent);
-        return parent->getUniqueId();
-    }
-
-    /**
+    QString getParentUniqueId();
+    /*!
      * \brief Tell if the children should be deleted when this entity is deleted
      *          through destructor.
+     *
+     * \param mustDelete tell if the children also must be deleted.
      */
-    inline void setDeleteChildren(bool _delete) {
-        this->deleteChildren = _delete;
-    }
+    void setDeleteChildren(bool mustDelete);
 
-    QVector <Entity *> getChildren() { return this->children; }
-
-signals:
-
-public slots:
+    QVector <Entity *> getChildren();
 
 };
         }

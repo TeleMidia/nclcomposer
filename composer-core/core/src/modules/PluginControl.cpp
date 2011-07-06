@@ -15,7 +15,8 @@ PluginControl::PluginControl()
     qRegisterMetaType<void *>("const void *");
 }
 
-PluginControl::~PluginControl() {
+PluginControl::~PluginControl()
+{
      //FIXME: BUG WHEN CLOSING ON WINDOWS
      QMultiHash<QString,IPlugin*>::iterator itInst;
      QHash<QString,IPluginFactory*>::iterator itFac;
@@ -82,16 +83,18 @@ IPluginFactory* PluginControl::loadPlugin(QString fileName)
                 }
             }
         }
-    }//fim OK load
-    else {
+    }//end load OK
+    else
+    {
        qDebug() << "PluginControl::loadPlugins failed to load"
                 << "(" << fileName << ")" << " -- " << loader.errorString();
     }
+
     return pluginFactory;
 }
 
-void PluginControl::loadPlugins(QString pluginsDirPath) {
-
+void PluginControl::loadPlugins(QString pluginsDirPath)
+{
     QDir pluginsDir = QDir(pluginsDirPath);
     pluginsDir.setFilter(QDir::Files | QDir::NoSymLinks);
 
@@ -109,10 +112,12 @@ void PluginControl::loadPlugins(QString pluginsDirPath) {
     pluginsDir.setNameFilters(filter);
 
     foreach (QString fileName, pluginsDir.entryList(QDir::Files
-                                                 | QDir::NoSymLinks)) {
+                                                 | QDir::NoSymLinks))
+    {
         loadPlugin(pluginsDir.absoluteFilePath(fileName));
-    }//end foreach
-}//end function
+    } //end foreach
+
+} //end function
 
 void PluginControl::launchProject(Project *project)
 {
@@ -157,8 +162,8 @@ void PluginControl::launchProject(Project *project)
     }
 }
 
-void PluginControl::launchNewPlugin(IPlugin *plugin,
-                                    MessageControl *mControl) {
+void PluginControl::launchNewPlugin(IPlugin *plugin, MessageControl *mControl)
+{
 
     /* Connect signals from the core to slots in the plugins */
     connect(mControl,SIGNAL(entityAdded(QString, Entity*)),
@@ -201,8 +206,7 @@ QList<IPluginFactory*> PluginControl::getLoadedPlugins()
 {
         QHash<QString,IPluginFactory*>::iterator it;
         QList<IPluginFactory*> pList;
-        for (it = pluginFactories.begin() ; it != pluginFactories.end();
-             it++)
+        for (it = pluginFactories.begin() ; it != pluginFactories.end(); it++)
         {
             pList.append(it.value());
         }
@@ -256,13 +260,13 @@ void PluginControl::sendBroadcastMessage(const char* slot, void *obj)
     for (it = instances.begin(); it != instances.end(); it++)
     {
        IPlugin *inst = *it;
-       int idxSlot = inst->metaObject()->indexOfSlot(
-               slotName.toStdString().c_str());
+       int idxSlot = inst->metaObject()
+                                ->indexOfSlot( slotName.toStdString().c_str() );
 
-       if(idxSlot != -1) {
+       if(idxSlot != -1)
+       {
            QMetaMethod method = inst->metaObject()->method(idxSlot);
-           method.invoke(inst, Qt::QueuedConnection,
-                         Q_ARG(void *, obj));
+           method.invoke(inst, Qt::QueuedConnection, Q_ARG(void *, obj));
        }
     }
 

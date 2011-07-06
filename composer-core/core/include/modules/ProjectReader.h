@@ -18,7 +18,12 @@ using namespace composer::core::model;
 
 namespace composer {
     namespace core {
-
+/*!
+ * \brief The class responsible to parse the Composer Project and generate fills
+ *   the data of a Project object.
+ *
+ *
+ */
 class ProjectReader: public QXmlDefaultHandler
 {
 public:

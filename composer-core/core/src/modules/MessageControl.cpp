@@ -7,8 +7,6 @@ namespace composer {
 MessageControl::MessageControl(Project *project)
 {
     this->project = project;
-    /* qDebug() <<  "MessageControl::MessageControl("
-            <<  doc->getAttribute("id") << ")";*/
 }
 
 MessageControl::~MessageControl()
@@ -21,13 +19,12 @@ void MessageControl::onAddEntity( QString type,
                bool force)
 {
 
-    qDebug() << type << " " << parentEntityId << " " << atts;
-
     /* Cast to IPlugin to make sure it's a plugin */
     IPlugin *plugin = qobject_cast<IPlugin *> (QObject::sender());
     IDocumentParser *parser = qobject_cast<IDocumentParser*>
                               (QObject::sender());
     QString pluginID;
+
     if(plugin) pluginID = plugin->getPluginInstanceID();
     else if (parser) pluginID = parser->getParserName();
 
@@ -39,13 +36,18 @@ void MessageControl::onAddEntity( QString type,
         ent->setType(type);
         //TODO - calll validator to check
         project->addEntity(ent, parentEntityId);
+
         emit entityAdded(pluginID, ent);
 
     } catch(exception& e){
-        if (plugin) plugin->errorMessage(e.what());
-        else if (parser) parser->onEntityAddError(e.what());
+        if (plugin)
+            plugin->errorMessage(e.what());
+        else if (parser)
+            parser->onEntityAddError(e.what());
+
         delete ent;
         ent = NULL;
+
         return;
     }
 }
@@ -75,31 +77,36 @@ void MessageControl::onEditEntity(Entity *entity,
 void MessageControl::onRemoveEntity( Entity *entity,
                                      bool force)
 {
-//    qDebug() << "MessageControl::onRemoveEntity";
-
     IPlugin *plugin = qobject_cast<IPlugin *> (QObject::sender());
-    if(plugin) {
+    if(plugin)
+    {
         QString pluginID = plugin->getPluginInstanceID();
-        try {
+        try
+        {
             if(entity)
             {
                 QString _id = entity->getUniqueId();
                 /*!
                 \todo remember to change, the append should come from the
-                    plugin
+                    plugin.
                 */
                 project->removeEntity(entity, true);
                 emit entityRemoved(pluginID, _id);
             }
-            else {
+            else
+            {
                 plugin->errorMessage(tr("You have tried to remove a NULL \
                                         entity!!"));
             }
-        } catch(exception e){
+        }
+        catch(exception e)
+        {
             plugin->errorMessage(e.what());
             return;
         }
-    } else {
+    }
+    else
+    {
         /*! \todo error on casting management
         */
         return;

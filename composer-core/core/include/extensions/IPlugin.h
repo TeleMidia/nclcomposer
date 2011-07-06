@@ -12,21 +12,21 @@ using namespace composer::core::model;
 
 namespace composer {
     namespace extension {
-
-//! The interface for communication between the core and the plugin
 /*!
-  This extension point is used by the core to emit and receive signals.
-  These signals are transmited by the plugin to the core, and then the core
-  retransmit this signal to the other plugins associated with the
-  NclDocument.
-  All the communication is performed using the signal/slot mechanism
-  provided by QT. The plugin developer needs to implement all the slots in
-  order to capture the changes in the NclDocument and emit the signals when
-  itself makes a change.
+ * \brief The interface for communication between the core and the plugin.
+ *
+ *
+ * This extension point is used by the core to emit and receive signals.
+ * These signals are transmited by the plugin to the core, and then the core
+ * retransmit this signal to the other plugins associated with the NclDocument.
+ * All the communication is performed using the signal/slot mechanism
+ * provided by QT. The plugin developer needs to implement all the slots in
+ * order to capture the changes in the NclDocument and emit the signals when
+ * itself makes a change.
 
-  In short, the SLOT are messages from the CORE to PLUGIN, while the
-  signals bellow are messages from PLUGIN to CORE.
-*/
+ * In short, the SLOT are messages from the CORE to PLUGIN, while the
+ * signals bellow are messages from PLUGIN to CORE.
+ */
 class IPlugin : public QObject {
 
     Q_OBJECT
@@ -35,9 +35,9 @@ protected:
      //! The Project binded with this particular plugin instance
      Project *project;
 
-     /*! Each plugin instance also receives a unique instance ID
-        (given by the core).
-     */
+     /*! Each plugin instance also receives a unique instance ID (given by the
+      *     core).
+      */
      QString pluginInstanceID;
      QMutex mutex;
      ILanguageProfile *languageProfile;
@@ -122,19 +122,21 @@ public slots:
 
      //! This is called by the core when some error occurs
      /*!
-       TODO:
+       \param error A description of the error.
      */
      virtual void errorMessage(QString error) = 0;
 
      //! Called by the core when an Entity is changed
      /*!
-        TODO:
+        \param pluginID the plugin instance id that first called the changes to
+            the entity.
+        \param entity The entity that was modified.
      */
-     virtual void onEntityChanged(QString pluginID, Entity *) = 0;
+     virtual void onEntityChanged(QString pluginID, Entity *entity) = 0;
 
      //! Called by the core before the Entity is removed.
      /*!
-       Deprecated.
+       \deprecated.
      */
      // virtual void onEntityAboutToRemove(Entity *) = 0;
 

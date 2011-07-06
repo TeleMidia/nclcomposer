@@ -20,32 +20,99 @@ using namespace composer::extension;
 namespace composer {
     namespace core {
 
-        class MessageControl : public QObject {
-            Q_OBJECT
+/*!
+ \brief
 
-        private:
-            Project *project;
+*/
+class MessageControl : public QObject {
+    Q_OBJECT
 
-        public:
-            MessageControl(Project *project);
-            ~MessageControl();
+private:
+    Project *project; /*!< TODO */
 
-        public slots:
-            void onAddEntity( QString type,
-                              QString parentEntityId,
-                              QMap<QString,QString>& atts,
-                              bool force);
-            void onEditEntity(Entity *entity,
-                              QMap<QString,QString> atts, bool force);
-            void onRemoveEntity(Entity *, bool force);
+public:
+    /*!
+     \brief
 
-        signals:
-            void entityAdded(QString uniqueID, Entity *);
-            void entityAddError(QString error);
-            void entityChanged(QString uniqueID, Entity *);
-            void entityChangeError(QString error);
-            void entityRemoved(QString uniqueID, QString entityId);
-            void entityRemoveError(QString error);
-        };
-    } }
+     \param project
+    */
+    MessageControl(Project *project);
+    /*!
+     \brief
+
+    */
+    ~MessageControl();
+
+public slots:
+    /*!
+     \brief
+
+     \param type
+     \param parentEntityId
+     \param atts
+     \param force
+    */
+    void onAddEntity( QString type,
+                      QString parentEntityId,
+                      QMap<QString,QString>& atts,
+                      bool force);
+    /*!
+     \brief
+
+     \param entity
+     \param atts
+     \param force
+    */
+    void onEditEntity(Entity *entity,
+                      QMap<QString,QString> atts, bool force);
+    /*!
+     \brief
+
+     \param
+     \param force
+    */
+    void onRemoveEntity(Entity *, bool force);
+
+signals:
+    /*!
+     \brief
+
+     \param uniqueID
+     \param
+    */
+    void entityAdded(QString uniqueID, Entity *);
+    /*!
+     \brief
+
+     \param error
+    */
+    void entityAddError(QString error);
+    /*!
+     \brief
+
+     \param uniqueID
+     \param
+    */
+    void entityChanged(QString uniqueID, Entity *);
+    /*!
+     \brief
+
+     \param error
+    */
+    void entityChangeError(QString error);
+    /*!
+     \brief Emits this signal when an Entity is removed from the internal model.
+
+     \param uniqueID The
+     \param entityId
+    */
+    void entityRemoved(QString uniqueID, QString entityId);
+    /*!
+     \brief
+
+     \param error
+    */
+    void entityRemoveError(QString error);
+};
+} } //end namespace
 #endif // MESSAGECONTROL_H

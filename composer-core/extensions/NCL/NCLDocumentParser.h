@@ -26,7 +26,7 @@ private:
 public:
     explicit NCLDocumentParser(Project *project);
     ~NCLDocumentParser();
-    bool parseDocument(); //deprecated
+    bool parseDocument(); // \deprecated
     bool parseContent(const QString &str);
     QString getParserName();
 
