@@ -8,8 +8,8 @@ using namespace composer::extension;
 using namespace composer::plugin::layout;
 
 namespace composer {
-namespace plugin {
-namespace layout {
+    namespace plugin {
+        namespace layout {
 
 class QnlyComposerPluginFactory : public QObject, public IPluginFactory
 {
@@ -40,8 +40,6 @@ public:
     void applyValues();
 };
 
-}
-}
-}
+} } } // end namespace
 
 #endif // QNLYCOMPOSERPLUGINFACTORY_H

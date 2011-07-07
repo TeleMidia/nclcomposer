@@ -1,11 +1,12 @@
-#ifndef QNLYGRAPHICSITEM_H
-#define QNLYGRAPHICSITEM_H
+#ifndef QNLYGRAPHICSREGION_H
+#define QNLYGRAPHICSREGION_H
 
 #include <QGraphicsItem>
 #include <QWidget>
 #include <QObject>
 #include <QPainterPath>
 #include <QSizeF>
+#include <QActionGroup>
 #include <QAction>
 #include <QMenu>
 #include <QGraphicsSceneContextMenuEvent>
@@ -16,20 +17,21 @@
 #include <QStyleOptionGraphicsItem>
 #include <QLineEdit>
 #include <QTextDocument>
+#include <QKeyEvent>
 
-#include "qnlygraphicsscene.h"
+#include "qnlygraphicsregionbase.h"
 
-class QnlyGraphicsScene;
+class QnlyGraphicsRegionBase;
 
-class QnlyGraphicsItem : public QObject, public QGraphicsItem
+class QnlyGraphicsRegion : public QObject, public QGraphicsItem
 {
     Q_OBJECT
     Q_INTERFACES(QGraphicsItem)
 
 public:
-    QnlyGraphicsItem(QnlyGraphicsItem* parent = 0);
+    QnlyGraphicsRegion(QMenu* switchMenu, QnlyGraphicsRegion* parent = 0);
 
-    virtual ~QnlyGraphicsItem();
+    virtual ~QnlyGraphicsRegion();
 
     enum QnlyResizeType {
         Top,
@@ -47,6 +49,8 @@ public:
     void setMoving(bool moving);
 
     bool isResizing() const;
+
+    void setParent(QnlyGraphicsRegion* region);
 
     void setResizing(bool resizing);
 
@@ -148,105 +152,25 @@ public:
 
     void adjust(bool repaint = true);
 
+    void addRegion(QnlyGraphicsRegion* region);
 
+    void removeRegion(QnlyGraphicsRegion* region);
+
+    void hideRegion(QnlyGraphicsRegion* region);
 
 signals:
-    void itemAdded(QnlyGraphicsItem* item, QnlyGraphicsItem* parent);
+    void regionAdditionRequested(QnlyGraphicsRegion* parent);
 
-    void itemRemoved(QnlyGraphicsItem* item);
+    void regionSelectionRequested(QnlyGraphicsRegion* region);
 
-    void itemSelected(QnlyGraphicsItem* item);
+    void regionDeletionRequested(QnlyGraphicsRegion* region);
 
-    void itemChanged(QnlyGraphicsItem* item, const QMap<QString, QString> &attributes);
+    void regionChangeRequested(QnlyGraphicsRegion* region,
+                               QMap<QString, QString> attributes);
 
-    void helpPerformed();
-
-    void undoPerformed();
-
-    void redoPerformed();
-
-    void cutPerformed();
-
-    void copyPerformed();
-
-    void pastePerformed();
-
-    void deletePerformed();
-
-    void exportPerformed();
-
-    void zoomInPerformed();
-
-    void zoomOutPerformed();
-
-    void zoomResetPerformed();
-
-    void fullscreenPerformed();
-
-    void regionPerformed();
-
-    void regionBasePerformed();
-
-    void frontPerformed();
-
-    void forwardPerformed();
-
-    void backwardPerformed();
-
-    void backPerformed();
-
-    void switchPerformed();
-
-    void propertiesPerformed();
-
-protected slots:
-    void hide(bool v);
-
-    virtual void performHelp();
-
-    virtual void performUndo();
-
-    virtual void performRedo();
-
-    virtual void performCut();
-
-    virtual void performCopy();
-
-    virtual void performPaste();
-
-    virtual void performDelete();
-
-    virtual void performExport();
-
-    virtual void performZoomIn();
-
-    virtual void performZoomOut();
-
-    virtual void performZoomReset();
-
-    virtual void performFullscreen(bool checked);
-
-    virtual void performRegion();
-
-    virtual void performRegionBase();
-
-    virtual void performFront();
-
-    virtual void performForward();
-
-    virtual void performBackward();
-
-    virtual void performBack();
-
-    virtual void performHide();
-
-    virtual void performSwitch();
-
-    virtual void performProperties();
+    void regionbasePerformed();
 
 protected:
-
-
     void setTop(qreal top);
 
     void setMoveTop(qreal moveTop);
@@ -304,6 +228,15 @@ protected:
     void keyReleaseEvent(QKeyEvent * event);
 
     void keyPressEvent(QKeyEvent * event);
+
+protected slots:
+    void performShow(QAction* action);
+
+    void performRegion();
+
+    void performHide();
+
+    void performDelete();
 
 private:
     void createActions();
@@ -398,11 +331,11 @@ private:
 
     QAction* deleteAction;
 
-    QAction* zoomInAction;
+    QAction* zoominAction;
 
-    QAction* zoomOutAction;
+    QAction* zoomoutAction;
 
-    QAction* zoomResetAction;
+    QAction* zoomresetAction;
 
     QAction* hideAction;
 
@@ -410,17 +343,17 @@ private:
 
     QAction* exportAction;
 
-    QAction* itemAction;
+    QAction* regionAction;
 
-    QAction* viewAction;
+    QAction* regionbaseAction;
 
-    QAction* frontAction;
+    QAction* bringfrontAction;
 
-    QAction* forwardAction;
+    QAction* bringforwardAction;
 
-    QAction* backwardAction;
+    QAction* sendbackwardAction;
 
-    QAction* backAction;
+    QAction* sendbackAction;
 
     QAction* propertiesAction;
 
@@ -433,6 +366,12 @@ private:
     QString color;
 
     QnlyResizeType resizeType;
+
+    QActionGroup* regionActionGroup;
+
+    QMap<QString, QAction*> regionActions;
+
+    QMap<QString, QnlyGraphicsRegion*> regions;
 };
 
-#endif // QNLYGRAPHICSITEM_H
+#endif // QNLYGRAPHICSREGION_H

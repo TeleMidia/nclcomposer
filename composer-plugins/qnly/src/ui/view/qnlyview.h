@@ -2,16 +2,21 @@
 #define QNLYVIEW_H
 
 #include <QStackedWidget>
-#include <QMap>
-#include <QString>
-#include <QDebug>
 #include <QContextMenuEvent>
+#include <QResizeEvent>
+#include <QMenu>
+#include <QAction>
+#include <QMap>
+#include <QSize>
 #include <QUuid>
-#include <QColorDialog>
+#include <QActionGroup>
+#include <QDebug>
+#include <QGraphicsView>
 
-#include "qnlygraphicsitem.h"
-#include "qnlygraphicsview.h"
-#include "qnlygraphicsscene.h"
+#include "qnlycanvas.h"
+#include "qnlygraphicsregion.h"
+#include "qnlygraphicsregionbase.h"
+
 
 class QnlyView : public QStackedWidget
 {
@@ -22,109 +27,99 @@ public:
 
     virtual ~QnlyView();
 
-    int getnItem() const;
-
-    void setnItem(const int &value);
-
-    int getnView() const;
-
-    void setnView(const int &value);
-
-    QString getUnit() const;
-
-    void setUnit(const QString &unit);
-
-    QString getResolution() const;
-
-    void setResolution(const QString &resolution);
-
 public slots:
-    virtual void addItem(const QString itemUID, const QString parentitemUID, const QString viewUID, const QMap<QString, QString> &attributes);
+    void addRegion(const QString regionUID,
+                   const QString parentUID,
+                   const QString regionbaseUID,
+                   const QMap<QString, QString> attributes);
 
-    virtual void removeItem(const QString itemUID, const QString viewUID);
+    void removeRegion(const QString regionUID,
+                      const QString regionbaseUID);
 
-    virtual void selectItem(const QString itemUID, const QString viewUID);
+    void changeRegion(const QString regionUID,
+                      const QString regionbaseUID,
+                      const QMap<QString, QString> attributes);
 
-    virtual void changeItem(const QString itemUID, const QString viewUID, const QMap<QString, QString> &attributes);
+    void selectRegion(const QString regionUID,
+                      const QString regionbaseUID);
 
-    virtual void addRegion(const QString itemUID, const QString parentitemUID, const QString viewUID, const QMap<QString, QString> &attributes);
+    void addRegionBase(const QString regionbaseUID,
+                       const QMap<QString, QString> attributes);
 
-    virtual void removeRegion(const QString itemUID, const QString viewUID);
+    void removeRegionBase(const QString regionbaseUID);
 
-    virtual void selectRegion(const QString itemUID, const QString viewUID);
+    void changeRegionBase(const QString regionbaseUID,
+                          const QMap<QString, QString> attributes);
 
-    virtual void changeRegion(const QString itemUID, const QString viewUID, const QMap<QString, QString> &attributes);
+    void selectRegionBase(const QString regionbaseUID);
 
-    virtual void addView(const QString viewUID, const QMap<QString, QString> &attributes);
+    void performSwitch(QAction* action);
 
-    virtual void removeView(const QString viewUID);
+    void performRegionBase();
 
-    virtual void selectView(const QString viewUID);
+    void requestRegionAddition(const QString regionUID,
+                               const QString parentUID,
+                               const QString regionbaseUID,
+                               QMap<QString, QString> attributes);
 
-    virtual void changeView(const QString viewUID, const QMap<QString, QString> &attributes);
-
-    virtual void addRegionbase(const QString viewUID, const QMap<QString, QString> &attributes);
-
-    virtual void removeRegionbase(const QString viewUID);
-
-    virtual void selectRegionbase(const QString viewUID);
-
-    virtual void changeRegionbase(const QString viewUID, const QMap<QString, QString> &attributes);
+    void requestRegionChange(const QString regionUID,
+                             const QString regionbaseUID,
+                             QMap<QString, QString> attributes);
 
 signals:
-    void itemAdded(const QString itemUID, const QString parentitemUID, const QString viewUID, const QMap<QString, QString> &attributes);
+    void regionAdded(const QString regionUID,
+                     const QString parentUID,
+                     const QString regionbaseUID,
+                     const QMap<QString, QString> attributes);
 
-    void itemRemoved(const QString itemUID, const QString viewUID);
+    void regionRemoved(const QString regionUID,
+                       const QString regionbaseUID);
 
-    void itemSelected(const QString itemUID, const QString viewUID);
+    void regionSelected(const QString regionUID,
+                        const QString regionbaseUID);
 
-    void itemChanged(const QString itemUID, const QString viewUID, const QMap<QString, QString> &attributes);
+    void regionChanged(const QString regionUID,
+                       const QString regionbaseUID,
+                       const QMap<QString, QString> attributes);
 
-    void viewAdded(const QString viewUID, const QMap<QString, QString> &attributes);
+    void regionBaseAdded(const QString regionbaseUID,
+                         const QMap<QString, QString> attributes);
 
-    void viewRemoved(const QString viewUID);
+    void regionBaseRemoved(const QString regionbaseUID);
 
-    void viewSelected(const QString viewUID);
+    void regionBaseSelected(const QString regionbaseUID);
 
-    void viewChanged(const QString viewUID, const QMap<QString, QString> &attributes);
+    void regionBaseChanged(const QString regionbaseUID,
+                           const QMap<QString, QString> attributes);
 
-    void itemAddRequested(const QString itemUID, const QString parentitemUID, const QString viewUID, const QMap<QString, QString> &attributes);
+protected slots:
+    void addRegion(QnlyGraphicsRegion* region,
+                   QnlyGraphicsRegion* parent,
+                   QnlyGraphicsRegionBase* regionBase,
+                   const QMap<QString, QString> attributes);
 
-    void itemRemoveRequested(const QString itemUID, const QString viewUID);
+    void removeRegion(QnlyGraphicsRegion* region,
+                      QnlyGraphicsRegionBase* regionBase);
 
-    void itemSelectRequested(const QString itemUID, const QString viewUID);
+    void changeRegion(QnlyGraphicsRegion* region,
+                      QnlyGraphicsRegionBase* regionBase,
+                      const QMap<QString, QString> attributes);
 
-    void itemChangeRequested(const QString itemUID, const QString viewUID, const QMap<QString, QString> &attributes);
+    void selectRegion(QnlyGraphicsRegion* region,
+                      QnlyGraphicsRegionBase* regionBase);
 
-    void viewAddRequested(const QString viewUID, const QMap<QString, QString> &attributes);
+    void addRegionBase(QnlyGraphicsRegionBase* regionBase,
+                       const QMap<QString, QString> attributes);
 
-    void viewRemoveRequested(const QString viewUID);
+    void removeRegionBase(QnlyGraphicsRegionBase* regionBase);
 
-    void viewSelectRequested(const QString viewUID);
+    void changeRegionBase(QnlyGraphicsRegionBase* regionBase,
+                          const QMap<QString, QString> attributes);
 
-    void viewChangeRequested(const QString viewUID, const QMap<QString, QString> &attributes);
+    void selectRegionBase(QnlyGraphicsRegionBase* regionBase);
 
 protected:
     virtual void contextMenuEvent(QContextMenuEvent *event);
-
-    virtual void keyPressEvent(QKeyEvent *event);
-
-protected slots:
-    virtual void addItem(QnlyGraphicsItem* item, QnlyGraphicsItem* parentitem, QnlyGraphicsView* view);
-
-    virtual void removeItem(QnlyGraphicsItem* item, QnlyGraphicsView* view);
-
-    virtual void selectItem(QnlyGraphicsItem* item, QnlyGraphicsView* view);
-
-    virtual void changeItem(QnlyGraphicsItem* item, QnlyGraphicsView* view, const QMap<QString, QString> &attributes);
-
-    virtual void addView(QnlyGraphicsView* view);
-
-    virtual void removeView(QnlyGraphicsView* view);
-
-    virtual void selectView(QnlyGraphicsView* view);
-
-    virtual void changeView(QnlyGraphicsView* view, const QMap<QString, QString> &attributes);
 
 private:
     void createActions();
@@ -132,10 +127,6 @@ private:
     void createMenus();
 
     void createConnections();
-
-    int nitem;
-
-    int nview;
 
     QMenu* viewMenu;
 
@@ -169,13 +160,15 @@ private:
 
     QAction* zoomresetAction;
 
+    QAction* hideAction;
+
     QAction* fullscreenAction;
 
     QAction* exportAction;
 
-    QAction* itemAction;
+    QAction* regionAction;
 
-    QAction* viewAction;
+    QAction* regionbaseAction;
 
     QAction* bringfrontAction;
 
@@ -185,22 +178,23 @@ private:
 
     QAction* sendbackAction;
 
-    QAction* hideAction;
-
     QAction* propertiesAction;
 
-    int nregionbase;
+    QnlyGraphicsRegion* selectedRegion;
 
-    int nregion;
+    QnlyGraphicsRegionBase* selectedRegionBase;
 
-    QString unit;
+    int nregions;
 
-    QString resolution;
+    int nregionbases;
 
-    QMap<QString, QnlyGraphicsItem*> items;
+    QActionGroup* regionbaseActionGroup;
 
-    QMap<QString, QnlyGraphicsView*> views;
+    QMap<QString, QAction*> regionbaseActions;
 
+    QMap<QString, QnlyGraphicsRegion*> regions;
+
+    QMap<QString, QnlyGraphicsRegionBase*> regionbases;
 };
 
 #endif // QNLYVIEW_H

@@ -8,168 +8,204 @@ QnlyView::QnlyView(QWidget* parent) : QStackedWidget(parent)
     createMenus();
     createConnections();
 
-    nregion = 0;
+    nregions = 0;
+    nregionbases = 0;
 
-    nregionbase = 0;
+    selectedRegion = NULL;
+    selectedRegionBase = NULL;
 }
 
 QnlyView::~QnlyView()
 {
-
-}
-
-int QnlyView::getnItem() const
-{
-    return nregion;
-}
-
-void QnlyView::setnItem(const int &nregion)
-{
-    this->nregion = nregion;
-}
-
-int QnlyView::getnView() const
-{
-    return nregionbase;
-}
-
-void QnlyView::setnView(const int &nview)
-{
-    this->nregionbase = nregionbase;
 }
 
 void QnlyView::createActions()
 {
-    /* help action */
+    // help action
     helpAction = new QAction(this);
     helpAction->setText(tr("Help"));
+
+    helpAction->setEnabled(true);
     helpAction->setShortcut(QKeySequence("F1"));
 
-    /* undo action */
+    // undo action
     undoAction = new QAction(this);
     undoAction->setText(tr("Undo"));
+
+    undoAction->setEnabled(false);
     undoAction->setShortcut(QKeySequence("Ctrl+Z"));
 
-    /* redo action */
+    // redo action
     redoAction = new QAction(this);
     redoAction->setText(tr("Redo"));
+
+    redoAction->setEnabled(false);
     redoAction->setShortcut(QKeySequence("Ctrl+Shift+Z"));
 
-    /* cut action */
+    // cut action
     cutAction = new QAction(this);
     cutAction->setText(tr("Cut"));
+
+    cutAction->setEnabled(false);
     cutAction->setShortcut(QKeySequence("Ctrl+X"));
 
-    /* copy action */
+    // copy action
     copyAction = new QAction(this);
     copyAction->setText(tr("Copy"));
+
+    copyAction->setEnabled(false);
     copyAction->setShortcut(QKeySequence("Ctrl+C"));
 
-    /* paste action */
+    // paste action
     pasteAction = new QAction(this);
     pasteAction->setText(tr("Paste"));
+
+    pasteAction->setEnabled(false);
     pasteAction->setShortcut(QKeySequence("Ctrl+V"));
 
-    /* delete action */
+    // delete action
     deleteAction = new QAction(this);
-    deleteAction->setText(tr("Remove"));
+    deleteAction->setText(tr("Delete"));
+
+    deleteAction->setEnabled(false);
     deleteAction->setShortcut(QKeySequence("Del"));
 
-    /* zoomin action */
+    // zoomin action
     zoominAction = new QAction(this);
     zoominAction->setText(tr("Zoom In"));
+
+    zoominAction->setEnabled(false);
     zoominAction->setShortcut(QKeySequence("Ctrl++"));
 
-    /* zoomout action */
+    // zoomout action
     zoomoutAction = new QAction(this);
     zoomoutAction->setText(tr("Zoom Out"));
+
+    zoomoutAction->setEnabled(false);
     zoomoutAction->setShortcut(QKeySequence("Ctrl+-"));
 
-    /* reset action */
+    // reset action
     zoomresetAction = new QAction(this);
     zoomresetAction->setText(tr("Reset"));
+
+    zoomresetAction->setEnabled(false);
     zoomresetAction->setShortcut(QKeySequence("Ctrl+0"));
 
-    /* fullscreen action */
+    // fullscreen action
     fullscreenAction = new QAction(this);
-    fullscreenAction->setCheckable(true);
     fullscreenAction->setText(tr("Full Screen"));
+
+    fullscreenAction->setEnabled(true);
     fullscreenAction->setShortcut(QKeySequence("Ctrl+F"));
 
-    /* export action */
+    // export action
     exportAction = new QAction(this);
     exportAction->setText(tr("Export..."));
 
-    /* item action */
-    itemAction = new QAction(this);
-    itemAction->setText(tr("Region"));
+    exportAction->setEnabled(false);
 
-    /* view base action */
-    viewAction = new QAction(this);
-    viewAction->setText(tr("Regionbase"));;
+    // region action
+    regionAction = new QAction(this);
+    regionAction->setText(tr("Region"));
 
-    /* bring to front action */
+    regionAction->setEnabled(false);
+
+    // regionbase action
+    regionbaseAction = new QAction(this);
+    regionbaseAction->setText(tr("Region Base"));
+
+    regionbaseAction->setEnabled(true);
+
+    // bring to front action
     bringfrontAction = new QAction(this);
     bringfrontAction->setText(tr("Bring to Front"));
+
+    bringfrontAction->setEnabled(false);
     bringfrontAction->setShortcut(QKeySequence("Shift+Ctrl+]"));
 
-    /* bring forward action */
+    // bring forward action
     bringforwardAction = new QAction(this);
     bringforwardAction->setText(tr("Bring Forward"));
+
+    bringforwardAction->setEnabled(false);
     bringforwardAction->setShortcut(QKeySequence("Ctrl+]"));
 
-    /* send backward action */
+    // send backward action
     sendbackwardAction = new QAction(this);
     sendbackwardAction->setText(tr("Send Backward"));
+
+    sendbackwardAction->setEnabled(false);
     sendbackwardAction->setShortcut(QKeySequence("Ctrl+["));
 
-    /* send to back action */
+    // send to back action
     sendbackAction = new QAction(this);
     sendbackAction->setText(tr("Send to Back"));
+
+    sendbackAction->setEnabled(false);
     sendbackAction->setShortcut(QKeySequence("Shift+Ctrl+["));
 
-    /* hide action */
+    // hide action
     hideAction = new QAction(this);
     hideAction->setText(tr("Hide"));
 
-    /* attributes action */
+    hideAction->setEnabled(false);
+
+    // properties action
     propertiesAction = new QAction(this);
-    propertiesAction->setText(tr("attributes"));
+    propertiesAction->setText(tr("Properties"));
+
+    propertiesAction->setEnabled(false);
+
+    regionbaseActionGroup = new QActionGroup(this);
+    regionbaseActionGroup->setExclusive(true);
 }
 
 void QnlyView::createMenus()
 {
-    /* view menu */
+    // view menu
     viewMenu = new QMenu();
     viewMenu->setTitle(tr("View"));
+
+    viewMenu->setEnabled(false);
+
     viewMenu->addAction(zoominAction);
     viewMenu->addAction(zoomoutAction);
     viewMenu->addAction(zoomresetAction);
     viewMenu->addSeparator();
     viewMenu->addAction(fullscreenAction);
 
-    /* insert menu */
+    // insert menu
     insertMenu = new QMenu();
     insertMenu->setTitle(tr("Insert"));
-    insertMenu->addAction(itemAction);
-    insertMenu->addAction(viewAction);
+
+    insertMenu->setEnabled(true);
+
+    insertMenu->addAction(regionAction);
+    insertMenu->addAction(regionbaseAction);
 
     showMenu = new QMenu();
     showMenu->setTitle(tr("Show"));
 
-    /* arrange menu */
+    showMenu->setEnabled(false);
+
+    // arrange menu
     arrangeMenu = new QMenu();
     arrangeMenu->setTitle(tr("Arrange"));
+
+    arrangeMenu->setEnabled(false);
+
     arrangeMenu->addAction(bringfrontAction);
     arrangeMenu->addAction(bringforwardAction);
     arrangeMenu->addAction(sendbackwardAction);
     arrangeMenu->addAction(sendbackAction);
 
-    /* switch menu */
+    // switch menu
     switchMenu = new QMenu();
     switchMenu->setTitle(tr("Switch"));
 
-    /* context menu */
+    switchMenu->setEnabled(false);
+
+    // context menu
     contextMenu = new QMenu();
     contextMenu->addAction(helpAction);
     contextMenu->addSeparator();
@@ -198,1035 +234,372 @@ void QnlyView::createMenus()
 
 void QnlyView::createConnections()
 {
+    connect(regionbaseActionGroup, SIGNAL(triggered(QAction*)),
+            SLOT(performSwitch(QAction*)));
 
+    connect(regionbaseAction, SIGNAL(triggered()),SLOT(performRegionBase()));
 }
 
-void QnlyView::addItem( QnlyGraphicsItem* item, QnlyGraphicsItem* parentitem,
-                        QnlyGraphicsView* view)
+void QnlyView::requestRegionAddition(const QString regionUID,
+                           const QString parentUID,
+                           const QString regionbaseUID,
+                           QMap<QString, QString> attributes)
 {
-    if (item != NULL && view != NULL)
+    attributes["id"] = "rg" + QString::number(nregions+1);
+    attributes["title"] = "region" + QString::number(nregions+1);
+
+    nregions++;
+
+    emit regionAdded(regionUID, parentUID, regionbaseUID, attributes);
+}
+
+void QnlyView::requestRegionChange(const QString regionUID,
+                                   const QString regionbaseUID,
+                                   QMap<QString, QString> attributes)
+{
+
+    emit regionChanged(regionUID,
+                       regionbaseUID,
+                       attributes);
+}
+
+void QnlyView::performSwitch(QAction* action)
+{
+    emit regionBaseSelected(regionbaseActions.key(action));
+}
+
+void QnlyView::performRegionBase()
+{
+    QMap<QString, QString> attributes;
+
+    attributes["id"] = "rgbase" + QString::number(++nregionbases);
+
+    emit regionBaseAdded((QString) QUuid::createUuid(), attributes);
+}
+
+void QnlyView::addRegion(const QString regionUID,
+               const QString parentUID,
+               const QString regionbaseUID,
+               const QMap<QString, QString> attributes)
+{
+    if (!regions.contains(regionUID) && regionbases.contains(regionbaseUID))
     {
-        // validating
-        QString itemUID;
+        QnlyGraphicsRegion* region = new QnlyGraphicsRegion(switchMenu);
 
-        if (!item->getUid().isEmpty())
+        if (regionUID.isEmpty())
         {
-            if (!items.contains(item->getUid()))
-            {
-                itemUID = item->getUid();
-
-            }
-            else
-            {
-                qDebug() << "QnlyView::addItem Item already contains "
-                        << item->getUid();
-                return; // canceling addition
-            }
-
+            region->setUid((QString) QUuid::createUuid());
         }
-        else
+        else{
+            region->setUid(regionUID);
+        }
+
+        QnlyGraphicsRegion* parent = NULL;
+
+        if (regions.contains(parentUID)){
+            parent = regions[parentUID];
+        }
+
+        QnlyGraphicsRegionBase* regionbase = regionbases[regionbaseUID];
+
+        addRegion(region, parent, regionbase, attributes);
+    }
+}
+
+void QnlyView::removeRegion(const QString regionUID,
+                  const QString regionbaseUID)
+{
+    if (regions.contains(regionUID) && regionbases.contains(regionbaseUID))
+    {
+        removeRegion(regions[regionUID],
+                     regionbases[regionbaseUID]);
+    }
+}
+
+void QnlyView::changeRegion(const QString regionUID,
+                            const QString regionbaseUID,
+                            const QMap<QString, QString> attributes)
+{
+    if (regions.contains(regionUID) && regionbases.contains(regionbaseUID))
+    {
+        changeRegion(regions[regionUID],
+                     regionbases[regionbaseUID],
+                     attributes);
+    }
+}
+
+void QnlyView::selectRegion(const QString regionUID,
+                  const QString regionbaseUID)
+{
+    if (regions.contains(regionUID) && regionbases.contains(regionbaseUID))
+    {
+        selectRegion(regions[regionUID],
+                     regionbases[regionbaseUID]);
+    }
+}
+
+void QnlyView::addRegionBase(const QString regionbaseUID,
+                   const QMap<QString, QString> attributes)
+{
+    if (!regionbases.contains(regionbaseUID))
+    {
+        QnlyCanvas* canvas = new QnlyCanvas(this);
+
+        QnlyGraphicsRegionBase* regionbase =
+                new QnlyGraphicsRegionBase(canvas, switchMenu);
+
+        regionbase->setParent(canvas);
+
+        canvas->setScene(regionbase);
+
+        if (regionbaseUID.isEmpty())
         {
-            itemUID = (QString) QUuid::createUuid();
-            item->setUid(itemUID);
+            regionbase->setUid((QString) QUuid::createUuid());
+        }
+        else{
+            regionbase->setUid(regionbaseUID);
         }
 
-        QString parentitemUID;
+        addRegionBase(regionbase, attributes);
+    }
+}
 
-        if (parentitem != NULL)
+void QnlyView::removeRegionBase(const QString regionbaseUID)
+{
+    if (regionbases.contains(regionbaseUID))
+    {
+        removeRegionBase(regionbases[regionbaseUID]);
+    }
+}
+
+void QnlyView::changeRegionBase(const QString regionbaseUID,
+                      const QMap<QString, QString> attributes)
+{
+    if (regionbases.contains(regionbaseUID))
+    {
+        changeRegionBase(regionbases[regionbaseUID], attributes);
+    }
+}
+
+void QnlyView::selectRegionBase(const QString regionbaseUID)
+{
+    if (regionbases.contains(regionbaseUID))
+    {
+        selectRegionBase(regionbases[regionbaseUID]);
+    }
+}
+
+void QnlyView::addRegion(QnlyGraphicsRegion* region,
+               QnlyGraphicsRegion* parent,
+               QnlyGraphicsRegionBase* regionBase,
+               const QMap<QString, QString> attributes)
+{
+    if (region != NULL && regionBase != NULL)
+    {
+
+
+       regions[region->getUid()] = region;
+
+       regionBase->addRegion(region,
+                             parent,
+                             attributes);
+    }
+}
+
+void QnlyView::removeRegion(QnlyGraphicsRegion* region,
+                  QnlyGraphicsRegionBase* regionBase)
+{
+    if (region != NULL && regionBase != NULL)
+    {
+        foreach(QGraphicsItem* item, region->childItems())
         {
-            if (items.contains(parentitem->getUid()))
-            {
-                parentitemUID = parentitem->getUid();
+            QnlyGraphicsRegion* child = (QnlyGraphicsRegion*) item;
 
-            }
-            else
-            {
-                qDebug() << "QnlyView::addItem ParentItem doesn't in items  "
-                        << parentitem->getUid();
-                return; // canceling addition
-            }
-
+            regions.remove(child->getUid());
         }
-        else
+
+        regions.remove(region->getUid());
+
+        regionBase->removeRegion(region);
+
+//         delete(region);
+    }
+}
+
+void QnlyView::changeRegion(QnlyGraphicsRegion* region,
+                  QnlyGraphicsRegionBase* regionBase,
+                  const QMap<QString, QString> attributes)
+{
+    if (region != NULL && regionBase != NULL)
+    {
+        regionBase->changeRegion(region, attributes);
+    }
+}
+
+void QnlyView::selectRegion(QnlyGraphicsRegion* region,
+                  QnlyGraphicsRegionBase* regionBase)
+{
+    if (region != NULL && regionBase != NULL)
+    {
+        if (selectedRegion != NULL)
         {
-            parentitemUID = "";
+            selectedRegion->setSelected(false);
         }
 
-        QString viewUID;
+        regionBase->selectRegion(region);
 
-        if (!view->getUid().isEmpty())
+        selectedRegion = region;
+
+        QWidget* parent = (QWidget*) regionBase->parent();
+
+        setCurrentWidget(parent);
+    }
+}
+
+void QnlyView::addRegionBase(QnlyGraphicsRegionBase* regionBase,
+                             const QMap<QString, QString> attributes)
+{
+    if (regionBase != NULL){
+        if (attributes.contains("id"))
+            regionBase->setId(attributes["id"]);
+
+        if (attributes.contains("region"))
+            regionBase->setId(attributes["region"]);
+
+        if (attributes.contains("device"))
+            regionBase->setId(attributes["device"]);
+
+        QWidget* parent = (QWidget*) regionBase->parent();
+
+        addWidget(parent);
+        setCurrentWidget(parent);
+
+        regionbases[regionBase->getUid()] = regionBase;
+
+        QAction* action = new QAction(this);
+        action->setText(regionBase->getId());
+
+        switchMenu->addAction(action);
+
+        action->setCheckable(true);
+        action->setEnabled(true);
+
+        regionbaseActionGroup->addAction(action);
+
+        action->trigger();
+
+        regionbaseActions[regionBase->getUid()] = action;
+
+        connect(regionBase, SIGNAL(regionbasePerformed()),
+                SLOT(performRegionBase()));
+
+        connect(regionBase,
+                SIGNAL(regionAdditionRequested(QString,QString,QString
+                                               ,QMap<QString,QString>)),
+                SLOT(requestRegionAddition(QString,QString,QString
+                                           ,QMap<QString,QString>)));
+
+        connect(regionBase,
+        SIGNAL(regionChangeRequested(QString,QString,QMap<QString,QString>)),
+        SLOT(requestRegionChange(QString,QString,QMap<QString,QString>)));
+
+        connect(regionBase,
+                SIGNAL(regionSelectionRequested(QString,QString)),
+                SIGNAL(regionSelected(QString,QString)));
+
+        connect(regionBase,
+                SIGNAL(regionBaseSelectionRequested(QString)),
+                SIGNAL(regionBaseSelected(QString)));
+
+        connect(regionBase,
+                SIGNAL(regionBaseDeletionRequested(QString)),
+                SIGNAL(regionBaseRemoved(QString)));
+
+        connect(regionBase,
+                SIGNAL(regionDeletionRequested(QString,QString)),
+                SIGNAL(regionRemoved(QString,QString)));
+
+        emit regionBaseSelected(regionBase->getUid());;
+    }
+}
+
+void QnlyView::removeRegionBase(QnlyGraphicsRegionBase* regionBase)
+{
+    if (regionBase != NULL)
+    {
+        QWidget* parent = (QWidget*) regionBase->parent();
+
+        removeWidget(parent);
+
+        regionbases.remove(regionBase->getUid());
+
+        QAction* action = regionbaseActions[regionBase->getUid()];
+        switchMenu->removeAction(action);
+
+        regionbaseActionGroup->removeAction(action);
+
+//        delete(action);
+
+        foreach(QGraphicsItem* item, regionBase->items())
         {
-            if (views.contains(view->getUid()))
-            {
-                viewUID = view->getUid();
-            }
-            else
-            {
-                return; // canceling addition
-            }
+            QnlyGraphicsRegion* child = (QnlyGraphicsRegion*) item;
 
-        }else{
-            return; // canceling addition
+            regions.remove(child->getUid());
         }
 
-        // drawing
-        qDebug() << "Calling internal QnlyView::addItem ";
-        view->addItem(item, parentitem);
+//        delete (regionBase);
 
-        // setting
-        QMap<QString, QString> attributes;
+        QnlyGraphicsRegionBase* current =
+        (QnlyGraphicsRegionBase*) ((QGraphicsView*)currentWidget())->scene();
 
-        if (!item->getId().isEmpty()){
-            attributes["id"] = item->getId();
-
-        }else{
-            attributes["id"] = "rg" + QString::number(nregion+1);
-
-            item->setId(attributes["id"]); // updating item
-        }
-
-        if (!item->getTitle().isEmpty()){
-            attributes["title"] = item->getTitle();
-
-        }else{
-            attributes["title"] = "rg" + QString::number(nregion+1);
-
-            item->setTitle(attributes["title"]); // updating item
-        }
-
-        if (item->getRelativeLeft() >= 0 && item->getRelativeLeft() <= 1){
-            attributes["top"] = QString::number(item->getRelativeTop()*100) + "%";
-
-        }else{
-            // no default value
-        }
-
-        if (item->getRelativeLeft() >= 0 && item->getRelativeLeft() <= 1){
-            attributes["left"] = QString::number(item->getRelativeLeft()*100)+"%";
-
-        }else{
-            // no default values
-        }
-
-        if (item->getRelativeRight() >= 0 && item->getRelativeRight() <= 1){
-            attributes["right"] = QString::number(item->getRelativeRight()*100)+"%";
-
-        }else{
-            // no default values
-        }
-
-        if (item->getRelativeBottom() >= 0 && item->getRelativeBottom() <= 1){
-            attributes["bottom"] = QString::number(item->getRelativeBottom()*100)+"%";
-
-        }else{
-            // no default values
-        }
-
-        if (item->getRelativeWidth() >= 0 && item->getRelativeWidth() <= 1){
-            attributes["width"] = QString::number(item->getRelativeWidth()*100)+"%";
-
-        }else{
-            // no default values
-        }
-
-        if (item->getRelativeHeight() >= 0 && item->getRelativeHeight() <= 1){
-            attributes["height"] = QString::number(item->getRelativeHeight()*100)+"%";
-
-        }else{
-            // no default values
-        }
-
-        if (!item->getColor().isEmpty()){
-            attributes["color"] = item->getColor();
-
-        }else{
-            // no default values
-        }
-
-        if (item->getzIndex() >= 0){
-            attributes["zIndex"] = QString::number(item->getzIndex());
-
-        }else{
-            // no default values
-        }
-
-        // adding
-        items[itemUID] = item;
-
-        nregion++;
-
-        // emitting
-        emit itemAdded(itemUID, parentitemUID, viewUID, attributes);
+        emit regionBaseSelected(current->getUid());
     }
 }
 
-void QnlyView::removeItem(QnlyGraphicsItem* item, QnlyGraphicsView* view)
+void QnlyView::changeRegionBase(QnlyGraphicsRegionBase* regionBase,
+                      const QMap<QString, QString> attributes)
 {
-    /*
-    if (item != NULL && view != NULL){
+    if (regionBase != NULL){
+        if (attributes.contains("id"))
+        {
+            regionBase->setId(attributes["id"]);
 
-        QString item;
-
-        if (item->get() != NULL){
-            if (items.contains(item->get())){
-                item = item->get();
-
-            }else{
-                return; // canceling remotion
-            }
-        }else{
-            return; // canceling remotion
+            QAction* action = regionbaseActions[regionBase->getUid()];
+            action->setText(attributes["id"]);
         }
 
-        QString view;
+        if (attributes.contains("region"))
+            regionBase->setId(attributes["region"]);
 
-        if (view->get() != NULL){
-            if (views.contains(view->get())){
-                view = view->get();
-
-            }else{
-                return; // canceling remotion
-            }
-
-        }else{
-            return; // canceling remotion
-        }
-
-
-        if (item->isPainted()){
-            view->removeItem(item);
-        }
-
-        items.remove(item->get());
-
-
-        emit itemRemoved(item, view);
-    }
-    */
-}
-
-void QnlyView::selectItem(QnlyGraphicsItem* item, QnlyGraphicsView* view)
-{
-  /*  if (item != NULL && view != NULL){
-
-        QString item;
-
-        if (item->get() != NULL){
-            if (items.contains(item->get())){
-                item = item->get();
-
-            }else{
-                return; // canceling selection
-            }
-        }else{
-            return; // canceling selection
-        }
-
-        QString view;
-
-        if (view->get() != NULL){
-            if (views.contains(view->get())){
-                view = view->get();
-
-            }else{
-                return; // canceling selection
-            }
-
-        }else{
-            return; // canceling selection
-        }
-
-
-        if (!item->isSelected()){
-            view->selectItem(item);
-        }
-
-
-        emit itemSelected(item, view);
-    }*/
-}
-
-void QnlyView::changeItem(QnlyGraphicsItem* item, QnlyGraphicsView* view, const QMap<QString, QString> &attributes)
-{
-
-    qDebug() << " QnlyView::changeItem";
-    if (item != NULL && view != NULL){
-
-        QString itemUID;
-
-        if (!item->getUid().isEmpty()){
-            if (items.contains(item->getUid())){
-                itemUID = item->getUid();
-
-            }else{
-                return; // canceling change
-            }
-        }else{
-            return; // canceling change
-        }
-
-        QString viewUID;
-
-        if (!view->getUid().isEmpty()){
-            if (views.contains(view->getUid())){
-                viewUID = view->getUid();
-
-            }else{
-                return; // canceling change
-            }
-
-        }else{
-            return; // canceling change
-        }
-
-
-        if (!item->hasChanged()){
-            view->changeItem(item, attributes);
-        }
-
-        emit itemChanged(itemUID, viewUID, attributes);
+        if (attributes.contains("device"))
+            regionBase->setId(attributes["device"]);
     }
 }
 
-void QnlyView::addView(QnlyGraphicsView* view)
+void QnlyView::selectRegionBase(QnlyGraphicsRegionBase* regionBase)
 {
-   if (view != NULL){
+    if (regionBase != NULL){
+        QWidget* parent = (QWidget*) regionBase->parent();
 
-        QString viewUID;
+        setCurrentWidget(parent);
 
-        if (!view->getUid().isEmpty()){
-            if (!views.contains(view->getUid())){
-                viewUID = view->getUid();
+        QAction* action = regionbaseActions[regionBase->getUid()];
+        action->setChecked(true);
 
-            }else{
-                return; // canceling addition
-            }
-        }else{
-
-//            view->setUid(view); // updating view
+        if (selectedRegion != NULL)
+        {
+            selectedRegion->setSelected(false);
         }
-
-        QMap<QString, QString> attributes;
-
-        if (!view->getId().isEmpty()){
-            attributes["id"] = view->getId();
-
-        }else{
-            attributes["id"] = "rgbase" + QString::number(nregionbase);
-
-            view->setId(attributes["id"]); // updating view
-        }
-
-        if (!view->getDevice().isEmpty()){
-            attributes["device"] = view->getDevice();
-
-        }else{
-            // no default value
-        }
-
-        if (!view->getRegion().isEmpty()){
-            attributes["region"] = view->getRegion();
-
-        }else{
-            // no default value
-        }
-
-
-//        connect(view, SIGNAL(fullscreenPerformed(bool)), SLOT(performFullscreen(bool)));
-
-//        connect(view, SIGNAL(itemAdded(QnlyGraphicsItem*,QnlyGraphicsItem*,QnlyGraphicsView*)), SLOT(addItem(QnlyGraphicsItem*,QnlyGraphicsItem*,QnlyGraphicsView*)));
-//        connect(view, SIGNAL(itemRemoved(QnlyGraphicsItem*,QnlyGraphicsView*)), SLOT(removeItem(QnlyGraphicsItem*,QnlyGraphicsView*)));
-//        connect(view, SIGNAL(itemSelected(QnlyGraphicsItem*,QnlyGraphicsView*)), SLOT(selectItem(QnlyGraphicsItem*,QnlyGraphicsView*)));
-        connect(view, SIGNAL(itemChanged(QnlyGraphicsItem*,QnlyGraphicsView*,QMap<QString,QString>)), SLOT(changeItem(QnlyGraphicsItem*,QnlyGraphicsView*,QMap<QString,QString>)));
-
-
-        addWidget(view);
-        setCurrentWidget(view);
-
-        views[viewUID] = view;
-
-        nregionbase++;
-//        setViewCounter(nview+1);
-
-
-//        emit viewAdded(view, attributes);
     }
-}
-
-void QnlyView::removeView(QnlyGraphicsView* view)
-{
-   /* if (view != NULL){
-
-        QString view;
-
-        if (view->get() != NULL){
-            if (views.contains(view->get())){
-                view = view->get();
-
-            }else{
-                return; // canceling remotion
-            }
-
-        }else{
-            return; // canceling remotion
-        }
-
-
-        removeWidget(view);
-
-        views.remove(view);
-
-
-        emit viewRemoved(view);
-    }*/
-}
-
-void QnlyView::selectView(QnlyGraphicsView* view)
-{
-   /* if (view != NULL){
-
-        QString view;
-
-        if (view->get() != NULL){
-            if (views.contains(view->get())){
-                view = view->get();
-
-            }else{
-                return; // canceling selection
-            }
-
-        }else{
-            return; // canceling selection
-        }
-
-
-        setCurrentWidget(view);
-
-
-        emit viewSelected(view);
-    }*/
-}
-
-void QnlyView::changeView(QnlyGraphicsView* view, const QMap<QString, QString> &attributes)
-{
-   /* if (view != NULL){
-
-        QString view;
-
-        if (view->get() != NULL){
-            if (views.contains(view->get())){
-                view = view->get();
-
-            }else{
-                return; // canceling change
-            }
-
-        }else{
-            return; // canceling change
-        }
-
-
-        if (attributes["id"] != NULL){
-            view->setId(attributes["id"]);
-        }
-
-        if (attributes["device"] != NULL){
-            view->setDevice(attributes["device"]);
-        }
-
-        if (attributes["region"] != NULL){
-            view->setRegion(attributes["region"]);
-        }
-
-
-        emit viewChanged(view, attributes);
-    }*/
-}
-
-void QnlyView::addItem(const QString item, const QString parent, const QString view, const QMap<QString, QString> &attributes)
-{
-
-}
-
-void QnlyView::removeItem(const QString item, const QString view)
-{
-    /*
-    QnlyGraphicsItem* item;
-
-    if (item != NULL){
-        if (items.contains(item)){
-           item = items.value(item);
-        }else{
-            return; // canceling addition
-        }
-
-    }else{
-        // no default value
-    }
-
-    QnlyGraphicsView* view;
-
-    if (view != NULL){
-        if (views.contains(view)){
-            view = views.value(view);
-        }else{
-            return; // canceling addition
-        }
-
-    }else{
-        return; // canceling addition
-    }
-
-
-    removeItem(item, view);*/
-}
-
-void QnlyView::selectItem(const QString item, const QString view)
-{
-    /*
-    QnlyGraphicsItem* item;
-
-    if (item != NULL){
-        if (items.contains(item)){
-           item = items.value(item);
-        }else{
-            return; // canceling addition
-        }
-
-    }else{
-        // no default value
-    }
-
-    QnlyGraphicsView* view;
-
-    if (view != NULL){
-        if (views.contains(view)){
-            view = views.value(view);
-        }else{
-            return; // canceling addition
-        }
-
-    }else{
-        return; // canceling addition
-    }
-
-
-    selectItem(item, view);
-    */
-}
-
-void QnlyView::changeItem(const QString item, const QString view, const QMap<QString, QString> &attributes)
-{
-/*
-    QnlyGraphicsItem* item;
-
-    if (item != NULL){
-        if (items.contains(item)){
-           item = items.value(item);
-        }else{
-            return; // canceling addition
-        }
-
-    }else{
-        // no default value
-    }
-
-    QnlyGraphicsView* view;
-
-    if (view != NULL){
-        if (views.contains(view)){
-            view = views.value(view);
-        }else{
-            return; // canceling addition
-        }
-
-    }else{
-        return; // canceling addition
-    }
-
-    item->setChanged(false);
-
-
-    changeItem(item, view, attributes);
-*/
-}
-
-void QnlyView::addView(const QString view, const QMap<QString, QString> &attributes)
-{
-/*
-    qDebug() << "QnlyView::addView";
-
-    QnlyGraphicsView* view;
-
-    if (view != NULL){
-        if (!views.contains(view)){
-            view = new QnlyGraphicsView(this);
-        }else{
-            return; // canceling addition
-        }
-
-    }else{
-        return; // canceling addition
-    }
-
-    if (attributes["id"] != NULL){
-        view->setId(attributes["id"]);
-
-    }else{
-        // no default value
-    }
-
-    if (attributes["device"] != NULL){
-        view->setDevice(attributes["device"]);
-
-    }else{
-        // no default value
-    }
-
-    if (attributes["region"] != NULL){
-        view->setRegion(attributes["region"]);
-
-    }else{
-        // no default value
-    }
-
-
-    addView(view);
-    */
-}
-
-void QnlyView::removeView(const QString view)
-{
-    /*
-    QnlyGraphicsView* view;
-
-    if (view != NULL){
-        if (views.contains(view)){
-            view = views.value(view);
-        }else{
-            return; // canceling addition
-        }
-
-    }else{
-        return; // canceling addition
-    }
-
-
-    removeView(view);
-    */
-}
-
-void QnlyView::selectView(const QString view)
-{
-    /*
-    QnlyGraphicsView* view;
-
-    if (view != NULL){
-        if (views.contains(view)){
-            view = views.value(view);
-        }else{
-            return; // canceling addition
-        }
-
-    }else{
-        return; // canceling addition
-    }
-
-
-    selectView(view);
-    */
-}
-
-void QnlyView::changeView(const QString view, const QMap<QString, QString> &attributes)
-{
-    /*
-    QnlyGraphicsView* view;
-
-    if (view != NULL){
-        if (views.contains(view)){
-            view = views.value(view);
-        }else{
-            return; // canceling addition
-        }
-
-    }else{
-        return; // canceling addition
-    }
-
-
-    changeView(view, attributes);
-    */
-}
-
-void QnlyView::selectRegion(const QString itemUID, const QString viewUID)
-{
-
-}
-
-void QnlyView::selectRegionbase(const QString viewUID)
-{
-
-}
-
-void QnlyView::addRegion( const QString regionUID,
-                          const QString parentUID,
-                          const QString regionbaseUID,
-                          const QMap<QString, QString> &attributes)
-{
-     QnlyGraphicsItem* item = NULL;
-
-     item = new QnlyGraphicsItem();
-
-    if (!regionUID.isEmpty())
-         item->setUid(regionUID);
-
-     QnlyGraphicsItem* parent = NULL;
-
-     if (!parentUID.isEmpty())
-     {
-         if (items.contains(parentUID))
-         {
-            parent = items.value(parentUID);
-         }
-         else
-         {
-             qDebug() << "QnlyView::addRegion parentUId=" << parentUID
-                     << "doesn't exists in items.";
-             return; // canceling addition
-         }
-     }
-
-     QnlyGraphicsView* view = NULL;
-
-     if (!regionbaseUID.isEmpty() && views.contains(regionbaseUID))
-     {
-         view = views.value(regionbaseUID);
-     }
-     else
-     {
-         qDebug() << "QnlyView::addRegion regionbaseUID=" << regionbaseUID
-                 << "doesn't exists in views.";
-         return; // canceling addition
-     }
-
-     if (!attributes["id"].isEmpty())
-         item->setId(attributes["id"]);
-
-     if (!attributes["title"].isEmpty())
-         item->setTitle(attributes["title"]);
-
-     if (!attributes["color"].isEmpty())
-         item->setColor(attributes["color"]);
-     else
-         item->setColor("#e4e4e4"); //default value
-
-     if (!attributes["top"].isEmpty())
-     {
-         if (attributes["top"].contains(QRegExp("\\d+(.\\d+)?%")))
-         {
-             QString attribute = attributes["top"];
-             attribute.remove(attribute.length()-1,1); // removing '%'
-
-             qreal top = attribute.toDouble();
-
-             if (top >= 0 && top <= 100)
-                 item->setRelativeTop(top/100);
-             else
-                 item->setRelativeTop(0);
-
-         }
-         else if (attributes["top"].contains(QRegExp("\\d+(.\\d+)?")))
-         {
-             QString attribute = attributes["top"];
-
-             qreal top = attribute.toDouble();
-
-             if (top >= 0 && top <= 1)
-                 item->setRelativeTop(top);
-            else
-                 item->setRelativeTop(0);
-         }
-
-     }
-     else
-     {
-         item->setRelativeTop(0);
-     }
-
-     if (!attributes["left"].isEmpty()){
-         if (attributes["left"].contains(QRegExp("\\d+(.\\d+)?%"))){
-             QString attribute = attributes["left"];
-             attribute.remove(attribute.length()-1,1); // removing '%'
-
-             qreal left = attribute.toDouble();
-
-             if (left >= 0 && left <= 100){
-                 item->setRelativeLeft(left/100);
-
-             }else{
-                 item->setRelativeLeft(0);
-             }
-
-         }else if (attributes["left"].contains(QRegExp("\\d+(.\\d+)?"))){
-             QString attribute = attributes["left"];
-
-             qreal left = attribute.toDouble();
-
-             if (left >= 0 && left <= 1){
-                 item->setRelativeLeft(left);
-
-             }else{
-                 item->setRelativeLeft(0);
-             }
-         }
-
-     }else{
-         item->setRelativeLeft(0);
-     }
-
-     if (!attributes["right"].isEmpty()){
-         if (attributes["right"].contains(QRegExp("\\d+(.\\d+)?%"))){
-             QString attribute = attributes["right"];
-             attribute.remove(attribute.length()-1,1); // removing '%'
-
-             qreal right = attribute.toDouble();
-
-             if (right >= 0 && right <= 100){
-                 item->setRelativeRight(right/100);
-
-             }else{
-                 item->setRelativeRight(0);
-             }
-
-         }else if (attributes["right"].contains(QRegExp("\\d+(.\\d+)?"))){
-             QString attribute = attributes["right"];
-
-             qreal right = attribute.toDouble();
-
-             if (right >= 0 && right <= 1){
-                 item->setRelativeRight(right);
-
-             }else{
-                 item->setRelativeRight(0);
-             }
-         }
-
-     }else{
-         item->setRelativeRight(0);
-     }
-
-     if (!attributes["bottom"].isEmpty()){
-         if (attributes["bottom"].contains(QRegExp("\\d+(.\\d+)?%"))){
-             QString attribute = attributes["bottom"];
-             attribute.remove(attribute.length()-1,1); // removing '%'
-
-             qreal bottom = attribute.toDouble();
-
-             if (bottom >= 0 && bottom <= 100){
-                 item->setRelativeBottom(bottom/100);
-
-             }else{
-                 item->setRelativeBottom(0);
-             }
-
-         }else if (attributes["bottom"].contains(QRegExp("\\d+(.\\d+)?"))){
-             QString attribute = attributes["bottom"];
-
-             qreal bottom = attribute.toDouble();
-
-             if (bottom >= 0 && bottom <= 1){
-                 item->setRelativeBottom(bottom);
-
-             }else{
-                 item->setRelativeBottom(0);
-             }
-         }
-
-     }
-     else {
-         item->setRelativeBottom(0);
-     }
-
-     if (!attributes["width"].isEmpty()){
-         if (attributes["width"].contains(QRegExp("\\d+(.\\d+)?%"))){
-             QString attribute = attributes["width"];
-             attribute.remove(attribute.length()-1,1); // removing '%'
-
-             qreal width = attribute.toDouble();
-
-             if (width >= 0 && width <= 100){
-                 item->setRelativeWidth(width/100);
-
-             }else{
-                 item->setRelativeWidth(1);
-             }
-
-         }else if (attributes["width"].contains(QRegExp("\\d+(.\\d+)?"))){
-             QString attribute = attributes["width"];
-
-             qreal width = attribute.toDouble();
-
-             if (width >= 0 && width <= 1){
-                 item->setRelativeWidth(width);
-
-             }else{
-                 item->setRelativeWidth(1);
-             }
-         }
-
-     }else{
-         item->setRelativeWidth(1);
-     }
-
-     if (!attributes["height"].isEmpty()){
-         if (attributes["height"].contains(QRegExp("\\d+(.\\d+)?%"))){
-             QString attribute = attributes["height"];
-             attribute.remove(attribute.length()-1,1); // removing '%'
-
-             qreal height = attribute.toDouble();
-
-             if (height >= 0 && height <= 100){
-                 item->setRelativeHeight(height/100);
-
-             }else{
-                 item->setRelativeHeight(1);
-             }
-
-         }else if (attributes["height"].contains(QRegExp("\\d+(.\\d+)?"))){
-             QString attribute = attributes["height"];
-
-             qreal height = attribute.toDouble();
-
-             if (height >= 0 && height <= 1){
-                 item->setRelativeHeight(height);
-
-             }else{
-                 item->setRelativeHeight(1);
-             }
-         }
-
-     }else{
-         item->setRelativeHeight(1);
-     }
-
-
-     qDebug() << "QnlyView::addRegion calling addItem";
-     addItem(item, parent, view);
-}
-
-void QnlyView::removeRegion(const QString regionUID, const QString regionbaseUID)
-{
-
-}
-
-void QnlyView::changeRegion(const QString regionUID, const QString regionbaseUID, const QMap<QString, QString> &attributes)
-{
-
-}
-
-void QnlyView::addRegionbase(const QString regionbaseUID, const QMap<QString, QString> &attributes)
-{
-    QnlyGraphicsView* view = NULL;
-
-    if (!regionbaseUID.isEmpty()){
-        if (!views.contains(regionbaseUID)){
-            view = new QnlyGraphicsView(this);
-        }else{
-            return; // canceling addition
-        }
-    }else{
-        return; // canceling addition
-    }
-
-    view->setUid(regionbaseUID);
-
-    if (!attributes["id"].isEmpty()){
-        view->setId(attributes["id"]);
-
-    }else{
-        // no default value
-    }
-
-    if (!attributes["device"].isEmpty()){
-        view->setDevice(attributes["device"]);
-
-    }else{
-        // no default value
-    }
-
-    if (!attributes["region"].isEmpty()){
-        view->setRegion(attributes["region"]);
-
-    }else{
-        // no default value
-    }
-
-    addView(view);
-}
-
-void QnlyView::removeRegionbase(const QString regionbaseUID)
-{
-
-}
-
-void QnlyView::changeRegionbase(const QString regionbaseUID, const QMap<QString, QString> &attributes)
-{
-
 }
 
 void QnlyView::contextMenuEvent(QContextMenuEvent *event)
 {
     QStackedWidget::contextMenuEvent(event);
 
-    if (!event->isAccepted()){
-        helpAction->setEnabled(true);
-
-        undoAction->setEnabled(false);
-        redoAction->setEnabled(false);
-
-        cutAction->setEnabled(false);
-        copyAction->setEnabled(false);
-        pasteAction->setEnabled(false);
-
-        deleteAction->setEnabled(false);
-
-        exportAction->setEnabled(false);
-
-        viewMenu->setEnabled(false);
-        zoominAction->setEnabled(false);
-        zoomoutAction->setEnabled(false);
-        zoomresetAction->setEnabled(false);
-        fullscreenAction->setEnabled(false);
-
-        insertMenu->setEnabled(true);
-        itemAction->setEnabled(false);
-        viewAction->setEnabled(true);
-
-        showMenu->setEnabled(false);
-
-        arrangeMenu->setEnabled(false);
-        bringfrontAction->setEnabled(false);
-        bringforwardAction->setEnabled(false);
-        sendbackAction->setEnabled(false);
-        sendbackwardAction->setEnabled(false);
-
-        hideAction->setEnabled(false);
-
-        switchMenu->setEnabled(false);
-
-        propertiesAction->setEnabled(false);
-
+    if (!event->isAccepted())
+    {
         contextMenu->exec(event->globalPos());
-
-        event->accept();
-    }
-}
-
-void QnlyView::keyPressEvent(QKeyEvent *event)
-{
-    QStackedWidget::keyPressEvent(event);
-
-    if (!event->isAccepted()){
 
         event->accept();
     }

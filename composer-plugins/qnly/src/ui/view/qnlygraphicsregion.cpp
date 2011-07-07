@@ -1,9 +1,13 @@
-#include "qnlygraphicsitem.h"
+#include "qnlygraphicsregion.h"
 
-#include <QDebug>
-
-QnlyGraphicsItem::QnlyGraphicsItem(QnlyGraphicsItem* parent) : QObject(parent), QGraphicsItem(parent)
+QnlyGraphicsRegion::QnlyGraphicsRegion(QMenu* switchMenu,
+                                       QnlyGraphicsRegion* parent)
+    : QObject(parent), QGraphicsItem(parent)
 {
+    this->switchMenu = switchMenu;
+
+    this->switchMenu->setEnabled(true);
+
     /* creating */
     createActions();
     createMenus();
@@ -37,7 +41,7 @@ QnlyGraphicsItem::QnlyGraphicsItem(QnlyGraphicsItem* parent) : QObject(parent), 
     setColor("#E4E4E4");
 }
 
-QnlyGraphicsItem::~QnlyGraphicsItem()
+QnlyGraphicsRegion::~QnlyGraphicsRegion()
 {
     delete(viewMenu);
     delete(insertMenu);
@@ -45,32 +49,38 @@ QnlyGraphicsItem::~QnlyGraphicsItem()
     delete(contextMenu);
 }
 
-bool QnlyGraphicsItem::isMoving() const
+bool QnlyGraphicsRegion::isMoving() const
 {
     return moving;
 }
 
-void QnlyGraphicsItem::setMoving(bool moving)
+void QnlyGraphicsRegion::setParent(QnlyGraphicsRegion* region)
+{
+    QObject::setParent(region);
+    setParentItem(region);
+}
+
+void QnlyGraphicsRegion::setMoving(bool moving)
 {
     this->moving = moving;
 }
 
-bool QnlyGraphicsItem::isResizing() const
+bool QnlyGraphicsRegion::isResizing() const
 {
     return resizing;
 }
 
-void QnlyGraphicsItem::setResizing(bool resizing)
+void QnlyGraphicsRegion::setResizing(bool resizing)
 {
     this->resizing = resizing;
 }
 
-bool QnlyGraphicsItem::isSelected() const
+bool QnlyGraphicsRegion::isSelected() const
 {
     return selected;
 }
 
-void QnlyGraphicsItem::setSelected(bool selected)
+void QnlyGraphicsRegion::setSelected(bool selected)
 {
     this->selected = selected;
 
@@ -78,471 +88,518 @@ void QnlyGraphicsItem::setSelected(bool selected)
         setFocus(Qt::MouseFocusReason);
 }
 
-bool QnlyGraphicsItem::isValidated() const
+bool QnlyGraphicsRegion::isValidated() const
 {
     return validated;
 }
 
-void QnlyGraphicsItem::setValidated(bool validated)
+void QnlyGraphicsRegion::setValidated(bool validated)
 {
     this->validated = validated;
 }
 
-QString QnlyGraphicsItem::getId() const
+QString QnlyGraphicsRegion::getId() const
 {
     return id;
 }
 
-void QnlyGraphicsItem::setId(const QString &id)
+void QnlyGraphicsRegion::setId(const QString &id)
 {
     this->id = id;
 
     setToolTip(title+" "+"("+id+")");
 }
 
-QString QnlyGraphicsItem::getUid() const
+QString QnlyGraphicsRegion::getUid() const
 {
     return uid;
 }
 
-void QnlyGraphicsItem::setUid(const QString &uid)
+void QnlyGraphicsRegion::setUid(const QString &uid)
 {
     this->uid = uid;
 }
 
-QString QnlyGraphicsItem::getTitle() const
+QString QnlyGraphicsRegion::getTitle() const
 {
     return title;
 }
 
-void QnlyGraphicsItem::setTitle(const QString &title)
+void QnlyGraphicsRegion::setTitle(const QString &title)
 {
     this->title = title;
 
     setToolTip(title+" "+"("+id+")");
 }
 
-QString QnlyGraphicsItem::getColor() const
+QString QnlyGraphicsRegion::getColor() const
 {
     return color;
 }
 
-void QnlyGraphicsItem::setColor(const QString &color)
+void QnlyGraphicsRegion::setColor(const QString &color)
 {
     this->color = color;
 }
 
-bool QnlyGraphicsItem::isPainted() const
+bool QnlyGraphicsRegion::isPainted() const
 {
     return painted;
 }
 
-void QnlyGraphicsItem::setPainted(bool painted)
+void QnlyGraphicsRegion::setPainted(bool painted)
 {
     this->painted = painted;
 }
 
-void QnlyGraphicsItem::setzIndex(qreal zindex)
+void QnlyGraphicsRegion::setzIndex(qreal zindex)
 {
     this->zindex = zindex;
 
     setZValue(zindex);
 }
 
-qreal QnlyGraphicsItem::getzIndex() const
+qreal QnlyGraphicsRegion::getzIndex() const
 {
     return zindex;
 }
 
-void QnlyGraphicsItem::setzIndexTop(qreal zindexTop)
+void QnlyGraphicsRegion::setzIndexTop(qreal zindexTop)
 {
     this->zindexTop = zindexTop;
 }
 
-qreal QnlyGraphicsItem::getzIndexTop() const
+qreal QnlyGraphicsRegion::getzIndexTop() const
 {
     return zindexTop;
 }
 
-qreal QnlyGraphicsItem::getTop() const
+qreal QnlyGraphicsRegion::getTop() const
 {
     return top;
 }
 
-void QnlyGraphicsItem::setTop(qreal top)
+void QnlyGraphicsRegion::setTop(qreal top)
 {
     this->top = top;
 
     setY(top-4);
 }
 
-qreal QnlyGraphicsItem::getMoveTop() const
+qreal QnlyGraphicsRegion::getMoveTop() const
 {
     return moveTop;
 }
 
-void QnlyGraphicsItem::setMoveTop(qreal moveTop)
+void QnlyGraphicsRegion::setMoveTop(qreal moveTop)
 {
     this->moveTop = moveTop;
 }
 
-qreal QnlyGraphicsItem::getPressTop() const
+qreal QnlyGraphicsRegion::getPressTop() const
 {
     return pressTop;
 }
 
-void QnlyGraphicsItem::setPressTop(qreal pressTop)
+void QnlyGraphicsRegion::setPressTop(qreal pressTop)
 {
     this->pressTop = pressTop;
 }
 
-qreal QnlyGraphicsItem::getResizeTop() const
+qreal QnlyGraphicsRegion::getResizeTop() const
 {
     return resizeTop;
 }
 
-void QnlyGraphicsItem::setResizeTop(qreal resizeTop)
+void QnlyGraphicsRegion::setResizeTop(qreal resizeTop)
 {
     this->resizeTop = resizeTop;
 }
 
-qreal QnlyGraphicsItem::getRelativeTop() const
+qreal QnlyGraphicsRegion::getRelativeTop() const
 {
     return relativeTop;
 }
 
-void QnlyGraphicsItem::setRelativeTop(qreal relativeTop)
+void QnlyGraphicsRegion::setRelativeTop(qreal relativeTop)
 {
     this->relativeTop = relativeTop;
 }
 
-qreal QnlyGraphicsItem::getLeft() const
+qreal QnlyGraphicsRegion::getLeft() const
 {
     return left;
 }
 
-void QnlyGraphicsItem::setLeft(qreal left)
+void QnlyGraphicsRegion::setLeft(qreal left)
 {
     this->left = left;
 
     setX(left-4);
 }
 
-qreal QnlyGraphicsItem::getMoveLeft() const
+qreal QnlyGraphicsRegion::getMoveLeft() const
 {
     return moveLeft;
 }
 
-void QnlyGraphicsItem::setMoveLeft(qreal moveLeft)
+void QnlyGraphicsRegion::setMoveLeft(qreal moveLeft)
 {
     this->moveLeft = moveLeft;
 }
 
-qreal QnlyGraphicsItem::getPressLeft() const
+qreal QnlyGraphicsRegion::getPressLeft() const
 {
     return pressLeft;
 }
 
-void QnlyGraphicsItem::setPressLeft(qreal pressLeft)
+void QnlyGraphicsRegion::setPressLeft(qreal pressLeft)
 {
     this->pressLeft = pressLeft;
 }
 
-qreal QnlyGraphicsItem::getResizeLeft() const
+qreal QnlyGraphicsRegion::getResizeLeft() const
 {
     return resizeLeft;
 }
 
-void QnlyGraphicsItem::setResizeLeft(qreal resizeLeft)
+void QnlyGraphicsRegion::setResizeLeft(qreal resizeLeft)
 {
     this->resizeLeft = resizeLeft;
 }
 
-qreal QnlyGraphicsItem::getRelativeLeft() const
+qreal QnlyGraphicsRegion::getRelativeLeft() const
 {
     return relativeLeft;
 }
 
-void QnlyGraphicsItem::setRelativeLeft(qreal relativeLeft)
+void QnlyGraphicsRegion::setRelativeLeft(qreal relativeLeft)
 {
     this->relativeLeft = relativeLeft;
 }
 
-qreal QnlyGraphicsItem::getRight() const
+qreal QnlyGraphicsRegion::getRight() const
 {
     return right;
 }
 
-void QnlyGraphicsItem::setRight(qreal right)
+void QnlyGraphicsRegion::setRight(qreal right)
 {
     this->right = right;
 }
 
-qreal QnlyGraphicsItem::getRelativeRight() const
+qreal QnlyGraphicsRegion::getRelativeRight() const
 {
     return relativeRight;
 }
 
-void QnlyGraphicsItem::setRelativeRight(qreal relativeRight)
+void QnlyGraphicsRegion::setRelativeRight(qreal relativeRight)
 {
     this->relativeRight = relativeRight;
 }
 
-qreal QnlyGraphicsItem::getBottom() const
+qreal QnlyGraphicsRegion::getBottom() const
 {
     return bottom;
 }
 
-void QnlyGraphicsItem::setBottom(qreal bottom)
+void QnlyGraphicsRegion::setBottom(qreal bottom)
 {
     this->bottom = bottom;
 }
 
-qreal QnlyGraphicsItem::getRelativeBottom() const
+qreal QnlyGraphicsRegion::getRelativeBottom() const
 {
     return relativeBottom;
 }
 
-void QnlyGraphicsItem::setRelativeBottom(qreal relativeBottom)
+void QnlyGraphicsRegion::setRelativeBottom(qreal relativeBottom)
 {
     this->relativeBottom = relativeBottom;
 }
 
-qreal QnlyGraphicsItem::getWidth() const
+qreal QnlyGraphicsRegion::getWidth() const
 {
     return width;
 }
 
-void QnlyGraphicsItem::setWidth(qreal width)
+void QnlyGraphicsRegion::setWidth(qreal width)
 {
     this->width = width;
 }
 
-qreal QnlyGraphicsItem::getPressWidth() const
+qreal QnlyGraphicsRegion::getPressWidth() const
 {
     return pressWidth;
 }
 
-void QnlyGraphicsItem::setPressWidth(qreal pressWidth)
+void QnlyGraphicsRegion::setPressWidth(qreal pressWidth)
 {
     this->pressWidth = pressWidth;
 }
 
-qreal QnlyGraphicsItem::getResizeWidth() const
+qreal QnlyGraphicsRegion::getResizeWidth() const
 {
     return resizeWidth;
 }
 
-bool QnlyGraphicsItem::hasChanged() const
+bool QnlyGraphicsRegion::hasChanged() const
 {
     return changed;
 }
 
-void QnlyGraphicsItem::setChanged(bool changed)
+void QnlyGraphicsRegion::setChanged(bool changed)
 {
     this->changed = changed;
 }
 
-void QnlyGraphicsItem::setResizeWidth(qreal resizeWidth)
+void QnlyGraphicsRegion::setResizeWidth(qreal resizeWidth)
 {
     this->resizeWidth = resizeWidth;
 }
 
-qreal QnlyGraphicsItem::getRelativeWidth() const
+qreal QnlyGraphicsRegion::getRelativeWidth() const
 {
     return relativeWidth;
 }
 
-void QnlyGraphicsItem::setRelativeWidth(qreal relativeWidth)
+void QnlyGraphicsRegion::setRelativeWidth(qreal relativeWidth)
 {
     this->relativeWidth = relativeWidth;
 }
 
-qreal QnlyGraphicsItem::getHeight() const
+qreal QnlyGraphicsRegion::getHeight() const
 {
     return height;
 }
 
-void QnlyGraphicsItem::setHeight(qreal height)
+void QnlyGraphicsRegion::setHeight(qreal height)
 {
     this->height = height;
 }
 
-qreal QnlyGraphicsItem::getPressHeight() const
+qreal QnlyGraphicsRegion::getPressHeight() const
 {
     return pressHeight;
 }
 
-void QnlyGraphicsItem::setPressHeight(qreal pressHeight)
+void QnlyGraphicsRegion::setPressHeight(qreal pressHeight)
 {
     this->pressHeight = pressHeight;
 }
 
-qreal QnlyGraphicsItem::getResizeHeight() const
+qreal QnlyGraphicsRegion::getResizeHeight() const
 {
     return resizeHeight;
 }
 
-void QnlyGraphicsItem::setResizeHeight(qreal resizeHeight)
+void QnlyGraphicsRegion::setResizeHeight(qreal resizeHeight)
 {
     this->resizeHeight = resizeHeight;
 }
 
-qreal QnlyGraphicsItem::getRelativeHeight() const
+qreal QnlyGraphicsRegion::getRelativeHeight() const
 {
    return relativeHeight;
 }
 
-void QnlyGraphicsItem::setRelativeHeight(qreal relativeHeight)
+void QnlyGraphicsRegion::setRelativeHeight(qreal relativeHeight)
 {
      this->relativeHeight = relativeHeight;
 }
 
-QnlyGraphicsItem::QnlyResizeType QnlyGraphicsItem::getResizeType() const
+QnlyGraphicsRegion::QnlyResizeType QnlyGraphicsRegion::getResizeType() const
 {
     return resizeType;
 }
 
-void QnlyGraphicsItem::setResizeType(const QnlyResizeType &resizeType)
+void QnlyGraphicsRegion::setResizeType(const QnlyResizeType &resizeType)
 {
     this->resizeType = resizeType;
 }
 
-void QnlyGraphicsItem::createActions()
+void QnlyGraphicsRegion::QnlyGraphicsRegion::createActions()
 {
-    /* help action */
+    // help action
     helpAction = new QAction(this);
     helpAction->setText(tr("Help"));
+
+    helpAction->setEnabled(true);
     helpAction->setShortcut(QKeySequence("F1"));
 
-    /* undo action */
+    // undo action
     undoAction = new QAction(this);
     undoAction->setText(tr("Undo"));
+
+    undoAction->setEnabled(false);
     undoAction->setShortcut(QKeySequence("Ctrl+Z"));
 
-    /* redo action */
+    // redo action
     redoAction = new QAction(this);
     redoAction->setText(tr("Redo"));
+
+    redoAction->setEnabled(false);
     redoAction->setShortcut(QKeySequence("Ctrl+Shift+Z"));
 
-    /* cut action */
+    // cut action
     cutAction = new QAction(this);
     cutAction->setText(tr("Cut"));
+
+    cutAction->setEnabled(false);
     cutAction->setShortcut(QKeySequence("Ctrl+X"));
 
-    /* copy action */
+    // copy action
     copyAction = new QAction(this);
     copyAction->setText(tr("Copy"));
+
+    copyAction->setEnabled(false);
     copyAction->setShortcut(QKeySequence("Ctrl+C"));
 
-    /* paste action */
+    // paste action
     pasteAction = new QAction(this);
     pasteAction->setText(tr("Paste"));
+
+    pasteAction->setEnabled(false);
     pasteAction->setShortcut(QKeySequence("Ctrl+V"));
 
-    /* delete action */
+    // delete action
     deleteAction = new QAction(this);
     deleteAction->setText(tr("Delete"));
+
+    deleteAction->setEnabled(true);
     deleteAction->setShortcut(QKeySequence("Del"));
 
-    /* zoomin action */
-    zoomInAction = new QAction(this);
-    zoomInAction->setText(tr("Zoom In"));
-    zoomInAction->setShortcut(QKeySequence("Ctrl++"));
+    // zoomin action
+    zoominAction = new QAction(this);
+    zoominAction->setText(tr("Zoom In"));
 
-    /* zoomout action */
-    zoomOutAction = new QAction(this);
-    zoomOutAction->setText(tr("Zoom Out"));
-    zoomOutAction->setShortcut(QKeySequence("Ctrl+-"));
+    zoominAction->setEnabled(true);
+    zoominAction->setShortcut(QKeySequence("Ctrl++"));
 
-    /* reset action */
-    zoomResetAction = new QAction(this);
-    zoomResetAction->setText(tr("Reset"));
-    zoomResetAction->setShortcut(QKeySequence("Ctrl+0"));
+    // zoomout action
+    zoomoutAction = new QAction(this);
+    zoomoutAction->setText(tr("Zoom Out"));
 
-    /* hide action */
-    hideAction = new QAction(this);
-    hideAction->setText(tr("Hide"));
-    hideAction->setShortcut(QKeySequence("Ctrl+H"));
+    zoomoutAction->setEnabled(true);
+    zoomoutAction->setShortcut(QKeySequence("Ctrl+-"));
 
-    /* fullscreen action */
+    // reset action
+    zoomresetAction = new QAction(this);
+    zoomresetAction->setText(tr("Reset"));
+
+    zoomresetAction->setEnabled(true);
+    zoomresetAction->setShortcut(QKeySequence("Ctrl+0"));
+
+    // fullscreen action
     fullscreenAction = new QAction(this);
-    fullscreenAction->setCheckable(true);
     fullscreenAction->setText(tr("Full Screen"));
+
+    fullscreenAction->setEnabled(true);
     fullscreenAction->setShortcut(QKeySequence("Ctrl+F"));
 
-    /* export action */
+    // export action
     exportAction = new QAction(this);
     exportAction->setText(tr("Export..."));
 
-    /* region action */
-    itemAction = new QAction(this);
-    itemAction->setText(tr("Region"));
+    exportAction->setEnabled(true);
 
-    /* regionBase action */
-    viewAction = new QAction(this);
-    viewAction->setText(tr("Region Base"));
+    // region action
+    regionAction = new QAction(this);
+    regionAction->setText(tr("Region"));
 
-    /* bring to front action */
-    frontAction = new QAction(this);
-    frontAction->setText(tr("Bring to Front"));
-    frontAction->setShortcutContext(Qt::ApplicationShortcut);
-    frontAction->setShortcut(QKeySequence("Shift+Ctrl+]"));
+    regionAction->setEnabled(true);
 
+    // regionbase action
+    regionbaseAction = new QAction(this);
+    regionbaseAction->setText(tr("Regionbase"));
 
-    /* bring forward action */
-    forwardAction = new QAction(this);
-    forwardAction->setText(tr("Bring Forward"));
-    forwardAction->setShortcut(QKeySequence("Ctrl+]"));
+    regionbaseAction->setEnabled(true);
 
-    /* send backward action */
-    backwardAction = new QAction(this);
-    backwardAction->setText(tr("Send Backward"));
-    backwardAction->setShortcut(QKeySequence("Ctrl+["));
+    // bring to front action
+    bringfrontAction = new QAction(this);
+    bringfrontAction->setText(tr("Bring to Front"));
 
-    /* send to back action */
-    backAction = new QAction(this);
-    backAction->setText(tr("Send to Back"));
-    backAction->setShortcut(QKeySequence("Shift+Ctrl+["));
+    bringfrontAction->setEnabled(false);
+    bringfrontAction->setShortcut(QKeySequence("Shift+Ctrl+]"));
 
-    /* properties action */
+    // bring forward action
+    bringforwardAction = new QAction(this);
+    bringforwardAction->setText(tr("Bring Forward"));
+
+    bringforwardAction->setEnabled(false);
+    bringforwardAction->setShortcut(QKeySequence("Ctrl+]"));
+
+    // send backward action
+    sendbackwardAction = new QAction(this);
+    sendbackwardAction->setText(tr("Send Backward"));
+
+    sendbackwardAction->setEnabled(false);
+    sendbackwardAction->setShortcut(QKeySequence("Ctrl+["));
+
+    // send to back action
+    sendbackAction = new QAction(this);
+    sendbackAction->setText(tr("Send to Back"));
+
+    sendbackAction->setEnabled(false);
+    sendbackAction->setShortcut(QKeySequence("Shift+Ctrl+["));
+
+    // hide action
+    hideAction = new QAction(this);
+    hideAction->setText(tr("Hide"));
+
+    hideAction->setEnabled(true);
+
+    // properties action
     propertiesAction = new QAction(this);
     propertiesAction->setText(tr("Properties"));
+
+    propertiesAction->setEnabled(true);
+
+    regionActionGroup = new QActionGroup(this);
+    regionActionGroup->setExclusive(false);
 }
 
-void QnlyGraphicsItem::createMenus()
+void QnlyGraphicsRegion::createMenus()
 {
-    /* view menu */
+    // view menu
     viewMenu = new QMenu();
     viewMenu->setTitle(tr("View"));
-    viewMenu->addAction(zoomInAction);
-    viewMenu->addAction(zoomOutAction);
-    viewMenu->addAction(zoomResetAction);
+
+    viewMenu->setEnabled(true);
+
+    viewMenu->addAction(zoominAction);
+    viewMenu->addAction(zoomoutAction);
+    viewMenu->addAction(zoomresetAction);
     viewMenu->addSeparator();
     viewMenu->addAction(fullscreenAction);
 
-    /* insert menu */
+    // insert menu
     insertMenu = new QMenu();
     insertMenu->setTitle(tr("Insert"));
-    insertMenu->addAction(itemAction);
-    insertMenu->addAction(viewAction);
 
+    insertMenu->setEnabled(true);
+
+    insertMenu->addAction(regionAction);
+    insertMenu->addAction(regionbaseAction);
+
+    // show menu
     showMenu = new QMenu();
     showMenu->setTitle(tr("Show"));
 
-    /* arrange menu */
+    showMenu->setEnabled(true);
+
+    // arrange menu
     arrangeMenu = new QMenu();
     arrangeMenu->setTitle(tr("Arrange"));
-    arrangeMenu->addAction(frontAction);
-    arrangeMenu->addAction(forwardAction);
-    arrangeMenu->addAction(backwardAction);
-    arrangeMenu->addAction(backAction);
 
-    /* switch menu */
-    switchMenu = new QMenu();
-    switchMenu->setTitle(tr("Switch"));
+    arrangeMenu->setEnabled(false);
 
-    /* context menu */
+    arrangeMenu->addAction(bringfrontAction);
+    arrangeMenu->addAction(bringforwardAction);
+    arrangeMenu->addAction(sendbackwardAction);
+    arrangeMenu->addAction(sendbackAction);
+
+    // context menu
     contextMenu = new QMenu();
     contextMenu->addAction(helpAction);
     contextMenu->addSeparator();
@@ -569,295 +626,96 @@ void QnlyGraphicsItem::createMenus()
     contextMenu->addAction(propertiesAction);
 }
 
-void QnlyGraphicsItem::createConnections()
+void QnlyGraphicsRegion::createConnections()
 {
-    connect(helpAction, SIGNAL(triggered()), SLOT(performHelp()));
-    connect(undoAction, SIGNAL(triggered()), SLOT(performUndo()));
-    connect(redoAction, SIGNAL(triggered()), SLOT(performRedo()));
-    connect(cutAction, SIGNAL(triggered()), SLOT(performCut()));
-    connect(copyAction, SIGNAL(triggered()), SLOT(performCopy()));
-    connect(pasteAction, SIGNAL(triggered()), SLOT(performPaste()));
-    connect(deleteAction, SIGNAL(triggered()), SLOT(performDelete()));
-    connect(exportAction, SIGNAL(triggered()), SLOT(performExport()));
-    connect(zoomInAction, SIGNAL(triggered()), SLOT(performZoomIn()));
-    connect(zoomOutAction, SIGNAL(triggered()), SLOT(performZoomOut()));
-    connect(zoomResetAction, SIGNAL(triggered()), SLOT(performZoomReset()));
-    connect(fullscreenAction, SIGNAL(triggered(bool)), SLOT(performFullscreen(bool)));
-    connect(itemAction, SIGNAL(triggered()), SLOT(performRegion()));
-    connect(viewAction, SIGNAL(triggered()), SLOT(performRegionBase()));
-    connect(frontAction, SIGNAL(triggered()), SLOT(performFront()));
-    connect(forwardAction, SIGNAL(triggered()), SLOT(performForward()));
-    connect(backwardAction, SIGNAL(triggered()), SLOT(performBackward()));
-    connect(backAction, SIGNAL(triggered()), SLOT(performBack()));
-    connect(hideAction, SIGNAL(triggered()), SLOT(performHide()));
-    connect(propertiesAction, SIGNAL(triggered()), SLOT(performProperties()));
+    connect(regionActionGroup, SIGNAL(triggered(QAction*)),
+            SLOT(performShow(QAction*)));
+
+    connect(regionbaseAction, SIGNAL(triggered()),
+                              SIGNAL(regionbasePerformed()));
+
+    connect(regionAction, SIGNAL(triggered()),
+                           SLOT(performRegion()));
+
+    connect(hideAction, SIGNAL(triggered()),
+            SLOT(performHide()));
+
+    connect(deleteAction, SIGNAL(triggered()),
+            SLOT(performDelete()));
 }
 
-void QnlyGraphicsItem::performHelp()
+void QnlyGraphicsRegion::hideRegion(QnlyGraphicsRegion* region)
 {
-    /* performing */
-
-    // nothing to do
-
-    /* emitting signals */
-    emit helpPerformed();
+    regionActions[region->getUid()]->trigger();
 }
 
-void QnlyGraphicsItem::performUndo()
+void QnlyGraphicsRegion::performDelete()
 {
-    /* performing */
-
-    // nothing to do
-
-    /* emitting signals */
-    emit undoPerformed();
+    emit regionDeletionRequested(this);
 }
 
-void QnlyGraphicsItem::performRedo()
+void QnlyGraphicsRegion::performHide()
 {
-    /* performing */
+    if (parentItem() != NULL)
+    {
+        QnlyGraphicsRegion* parent = (QnlyGraphicsRegion*) parentItem();
 
-    // nothing to do
-
-    /* emitting signals */
-    emit redoPerformed();
-}
-
-void QnlyGraphicsItem::performCut()
-{
-    /* performing */
-
-    // nothing to do
-
-    /* emitting signals */
-    emit cutPerformed();
-}
-
-void QnlyGraphicsItem::performCopy()
-{
-    /* performing */
-
-    // nothing to do
-
-    /* emitting signals */
-    emit copyPerformed();
-}
-
-void QnlyGraphicsItem::performPaste()
-{
-    /* performing */
-
-    // nothing to do
-
-    /* emitting signals */
-    emit pastePerformed();
-}
-
-void QnlyGraphicsItem::performDelete()
-{
-    /* performing */
-
-    // nothing to do
-
-    /* emitting signals */
-    emit itemRemoved(this);
-
-    emit deletePerformed();
-}
-
-void QnlyGraphicsItem::performExport()
-{
-    /* performing */
-
-    // nothing to do
-
-    /* emitting signals */
-    emit exportPerformed();
-}
-
-void QnlyGraphicsItem::performZoomIn()
-{
-    /* performing */
-
-    // nothing to do
-
-    /* emitting signals */
-    emit zoomInPerformed();
-}
-
-void QnlyGraphicsItem::performZoomOut()
-{
-    /* performing */
-
-    // nothing to do
-
-    /* emitting signals */
-    emit zoomOutPerformed();
-}
-
-void QnlyGraphicsItem::performZoomReset()
-{
-    /* performing */
-
-    // nothing to do
-
-    /* emitting signals */
-    emit zoomResetPerformed();
-}
-
-void QnlyGraphicsItem::performFullscreen(bool checked)
-{
-    /* performing */
-
-    // nothing to do
-
-    /* emitting signals */
-    emit fullscreenPerformed();
-}
-
-void QnlyGraphicsItem::performRegion()
-{
-    /* performing */
-    QnlyGraphicsItem* item = new QnlyGraphicsItem(this);
-    item->setRelativeTop(0.1);
-    item->setRelativeLeft(0.1);
-    item->setRelativeRight(0.1);
-    item->setRelativeBottom(0.1);
-    item->setRelativeWidth(0.8);
-    item->setRelativeHeight(0.8);
-    item->setzIndex(zindexTop+1);
-    item->setPainted(true);
-
-    setzIndexTop(zindexTop+1);
-
-    item->adjust();
-
-    /* emitting signals */
-    emit itemAdded(item, this);
-    emit itemSelected(item);
-
-    QAction *showAction = new QAction(this);
-
-    showAction->setCheckable(true);
-    showAction->setChecked(true);
-    showAction->setText(item->getTitle()+" "+"("+item->getId()+")");
-
-    showMenu->addAction(showAction);
-
-    connect(showAction,SIGNAL(triggered(bool)),item, SLOT(hide(bool)));
-
-    emit regionPerformed();
-}
-
-void QnlyGraphicsItem::performRegionBase()
-{
-    /* performing */
-
-    /* emitting signals */
-    emit regionBasePerformed();
-}
-
-void QnlyGraphicsItem::performFront()
-{
-    qDebug() << "oi";
-    /* performing */
-    int index = -1;
-
-    int quantity = parentItem()->childItems().size();
-
-    QVector<QnlyGraphicsItem*> zitems(quantity+1);
-
-    for (int i = 0; i < quantity; ++i){
-        QnlyGraphicsItem* item = (QnlyGraphicsItem*) parentItem()->childItems().at(i);
-
-
-        qDebug() << item->getzIndex();
-
-        zitems[item->getzIndex()] =  item;
+        parent->hideRegion(this);
     }
+    else
+    {
+        QnlyGraphicsRegionBase* s = (QnlyGraphicsRegionBase*) scene();
 
-    for (int i = zindex; i <= quantity-1; ++i){
-        QnlyGraphicsItem* item = zitems.at(i);
-        QnlyGraphicsItem* nextItem = zitems.at(i+1);
-
-        qreal zindexTmp = nextItem->getzIndex();
-        nextItem->setzIndex(item->getzIndex());
-        item->setzIndex(zindexTmp);
-
-        qSwap(zitems[i],zitems[i+1]);
+        s->hideRegion(this);
     }
-
-    adjust();
-
-    /* emitting signals */
-
-    emit frontPerformed();
 }
 
-void QnlyGraphicsItem::performForward()
+void QnlyGraphicsRegion::performRegion()
 {
-    /* performing */
-
-    // nothing to do
-
-    /* emitting signals */
-
-    emit forwardPerformed();
+    emit regionAdditionRequested(this);
 }
 
-void QnlyGraphicsItem::performBack()
+void QnlyGraphicsRegion::performShow(QAction* action)
 {
-    /* performing */
+    if (!action->isChecked()){
 
-    // nothing to do
-
-    /* emitting signals */
-
-    emit backPerformed();
+        regions[regionActions.key(action)]->setVisible(false);
+    }else{
+        regions[regionActions.key(action)]->setVisible(true);
+    }
 }
 
-void QnlyGraphicsItem::performBackward()
+void QnlyGraphicsRegion::removeRegion(QnlyGraphicsRegion* region)
 {
-    /* performing */
+    regionActionGroup->removeAction(regionActions[region->getUid()]);
 
-    // nothing to do
-
-    /* emitting signals */
-
-    emit backwardPerformed();
+    regionActions.remove(region->getUid());
 }
 
-void QnlyGraphicsItem::performHide()
+void QnlyGraphicsRegion::addRegion(QnlyGraphicsRegion* region)
 {
-    /* performing */
+    if (region != NULL)
+    {
+        region->setParent(this);
 
-    hide(false);
+        regions[region->getUid()] = region;
 
-    /* emitting signals */
-//    emit switchPerformed();
+        QAction* action = new QAction(this);
+        action->setText(region->getId());
+
+        showMenu->addAction(action);
+
+        action->setCheckable(true);
+        action->setChecked(true);
+        action->setEnabled(true);
+
+        regionActionGroup->addAction(action);
+
+        regionActions[region->getUid()] = action;
+    }
 }
 
-void QnlyGraphicsItem::performSwitch()
-{
-    /* performing */
-
-    // nothing to do
-
-    /* emitting signals */
-    emit switchPerformed();
-}
-
-void QnlyGraphicsItem::performProperties()
-{
-    /* performing */
-
-    // nothing to do
-
-    /* emitting signals */
-    emit propertiesPerformed();
-}
-
-void QnlyGraphicsItem::move(QGraphicsSceneMouseEvent* event)
+void QnlyGraphicsRegion::move(QGraphicsSceneMouseEvent* event)
 {
     /* setting */
     qreal x = left;
@@ -919,7 +777,7 @@ void QnlyGraphicsItem::move(QGraphicsSceneMouseEvent* event)
     scene()->update();
 }
 
-void QnlyGraphicsItem::resize(QGraphicsSceneMouseEvent* event)
+void QnlyGraphicsRegion::resize(QGraphicsSceneMouseEvent* event)
 {
     /* setting bounds */
     qreal x = left;
@@ -979,7 +837,7 @@ void QnlyGraphicsItem::resize(QGraphicsSceneMouseEvent* event)
     switch(resizeType){
 
     /* adjusting TOPLEFT */
-    case QnlyGraphicsItem::TopLeft:{
+    case QnlyGraphicsRegion::TopLeft:{
         if (nextx < minx){
             nextx = minx;
             nextw = x + w - minx;
@@ -994,7 +852,7 @@ void QnlyGraphicsItem::resize(QGraphicsSceneMouseEvent* event)
     }
 
     /* adjusting TOP */
-    case QnlyGraphicsItem::Top:{
+    case QnlyGraphicsRegion::Top:{
         nextx = x; // fixed x
         nextw = w; // fixed width
 
@@ -1007,7 +865,7 @@ void QnlyGraphicsItem::resize(QGraphicsSceneMouseEvent* event)
     }
 
     /* adjusting TOPRIGHT */
-    case QnlyGraphicsItem::TopRight:{
+    case QnlyGraphicsRegion::TopRight:{
         nextx = x; // fixed x
 
         nextw = w - dw;
@@ -1024,7 +882,7 @@ void QnlyGraphicsItem::resize(QGraphicsSceneMouseEvent* event)
     }
 
     /* adjusting RIGHT */
-    case QnlyGraphicsItem::Right:{
+    case QnlyGraphicsRegion::Right:{
         nextx = x; // fixed x
 
         nextw = w - dw;
@@ -1039,7 +897,7 @@ void QnlyGraphicsItem::resize(QGraphicsSceneMouseEvent* event)
     }
 
     /* adjusting BOTTOMRIGHT */
-    case QnlyGraphicsItem::BottomRight:{
+    case QnlyGraphicsRegion::BottomRight:{
         nextx = x; // fixed x
 
         nextw = w - dw;
@@ -1058,7 +916,7 @@ void QnlyGraphicsItem::resize(QGraphicsSceneMouseEvent* event)
     }
 
     /* adjusting BOTTOM */
-    case QnlyGraphicsItem::Bottom:{
+    case QnlyGraphicsRegion::Bottom:{
         nextx = x; // fixed x
         nextw = w; // fixed width
 
@@ -1073,7 +931,7 @@ void QnlyGraphicsItem::resize(QGraphicsSceneMouseEvent* event)
     }
 
     /* adjusting BOTTOMLEFT */
-    case QnlyGraphicsItem::BottomLeft:{
+    case QnlyGraphicsRegion::BottomLeft:{
         if (nextx < minx){
             nextx = minx;
             nextw = x + w - minx;
@@ -1090,7 +948,7 @@ void QnlyGraphicsItem::resize(QGraphicsSceneMouseEvent* event)
     }
 
     /* adjusting LEFT */
-    case QnlyGraphicsItem::Left:{
+    case QnlyGraphicsRegion::Left:{
         if (nextx < minx){
             nextx = minx;
             nextw = x + w - minx;
@@ -1112,10 +970,10 @@ void QnlyGraphicsItem::resize(QGraphicsSceneMouseEvent* event)
     scene()->update();
 }
 
-void QnlyGraphicsItem::adjust(bool repaint)
+void QnlyGraphicsRegion::adjust(bool repaint)
 {
     if (parentItem() != NULL){
-        QnlyGraphicsItem* item = (QnlyGraphicsItem*) parentItem();
+        QnlyGraphicsRegion* item = (QnlyGraphicsRegion*) parentItem();
 
         setTop(qRound(item->getHeight()*relativeTop + 4));
         setLeft(qRound(item->getWidth()*relativeLeft + 4));
@@ -1138,7 +996,7 @@ void QnlyGraphicsItem::adjust(bool repaint)
     }
 
     for (int i=0;i<childItems().size();++i){
-        QnlyGraphicsItem* item = (QnlyGraphicsItem*) childItems().at(i);
+        QnlyGraphicsRegion* item = (QnlyGraphicsRegion*) childItems().at(i);
 
         item->adjust(false);
     }
@@ -1148,7 +1006,7 @@ void QnlyGraphicsItem::adjust(bool repaint)
     }
 }
 
-QPainterPath QnlyGraphicsItem::shape() const
+QPainterPath QnlyGraphicsRegion::shape() const
 {
     QPainterPath path;
 
@@ -1170,7 +1028,7 @@ QPainterPath QnlyGraphicsItem::shape() const
     return path;
 }
 
-QRectF QnlyGraphicsItem::boundingRect() const
+QRectF QnlyGraphicsRegion::boundingRect() const
 {
     QRectF bounds;
 
@@ -1182,7 +1040,7 @@ QRectF QnlyGraphicsItem::boundingRect() const
     return bounds;
 }
 
-void QnlyGraphicsItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
+void QnlyGraphicsRegion::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
     if (selected){
         painter->setBrush(QColor(color));
@@ -1234,12 +1092,7 @@ void QnlyGraphicsItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *
     painter->drawText(4+6,4+6,width-1-4-6,height-1-4-6,Qt::AlignLeft, text);
 }
 
-void QnlyGraphicsItem::hide(bool v)
-{
-    setVisible(v);
-}
-
-void QnlyGraphicsItem::mouseMoveEvent(QGraphicsSceneMouseEvent* event)
+void QnlyGraphicsRegion::mouseMoveEvent(QGraphicsSceneMouseEvent* event)
 {
     if (moving){
         move(event);
@@ -1249,13 +1102,13 @@ void QnlyGraphicsItem::mouseMoveEvent(QGraphicsSceneMouseEvent* event)
     }
 }
 
-void QnlyGraphicsItem::mousePressEvent(QGraphicsSceneMouseEvent* event)
+void QnlyGraphicsRegion::mousePressEvent(QGraphicsSceneMouseEvent* event)
 {
     if (event->button() == Qt::RightButton){
         event->ignore();
 
     }else if (event->button() == Qt::LeftButton){
-        emit itemSelected(this);
+        emit regionSelectionRequested(this);
 
         setPressTop(event->pos().y());
         setPressLeft(event->pos().x());
@@ -1274,42 +1127,42 @@ void QnlyGraphicsItem::mousePressEvent(QGraphicsSceneMouseEvent* event)
 
         /* if over TOPLEFT resize region */
         if (QRectF(0,0,8,8).contains(event->pos())){
-            setResizeType(QnlyGraphicsItem::TopLeft);
+            setResizeType(QnlyGraphicsRegion::TopLeft);
             setResizing(true);
 
         /* if over TOP resize region */
         }else if (QRectF((width+8)/2 - 4,0,8,8).contains(event->pos())){
-            setResizeType(QnlyGraphicsItem::Top);
+            setResizeType(QnlyGraphicsRegion::Top);
             setResizing(true);
 
         /* if over TOPRIGHT resize region */
         }else if (QRectF((width+8) - 8,0,8,8).contains(event->pos())){
-            setResizeType(QnlyGraphicsItem::TopRight);
+            setResizeType(QnlyGraphicsRegion::TopRight);
             setResizing(true);
 
         /* if over RIGHT resize region */
         }else if (QRectF((width+8) - 8,(height+8)/2 - 4,8,8).contains(event->pos())){
-            setResizeType(QnlyGraphicsItem::Right);
+            setResizeType(QnlyGraphicsRegion::Right);
             setResizing(true);
 
         /* if over BOTTOMRIGHT resize region */
         }else if (QRectF((width+8) - 8,(height+8) - 8,8,8).contains(event->pos())){
-            setResizeType(QnlyGraphicsItem::BottomRight);
+            setResizeType(QnlyGraphicsRegion::BottomRight);
             setResizing(true);
 
         /* if over BOTTOM resize region */
         }else if (QRectF((width+8)/2 - 4,(height+8) - 8,8,8).contains(event->pos())){
-            setResizeType(QnlyGraphicsItem::Bottom);
+            setResizeType(QnlyGraphicsRegion::Bottom);
             setResizing(true);
 
         /* if over BOTTOMLEFT resize region */
         }else if (QRectF(0,(height+8) - 8,8,8).contains(event->pos())){
-            setResizeType(QnlyGraphicsItem::BottomLeft);
+            setResizeType(QnlyGraphicsRegion::BottomLeft);
             setResizing(true);
 
         /* if over LEFT resize region */
         }else if (QRectF(0,(height+8)/2 - 4,8,8).contains(event->pos())){
-            setResizeType(QnlyGraphicsItem::Left);
+            setResizeType(QnlyGraphicsRegion::Left);
             setResizing(true);
 
         /* if not over any resize region */
@@ -1321,18 +1174,18 @@ void QnlyGraphicsItem::mousePressEvent(QGraphicsSceneMouseEvent* event)
     QGraphicsItem::mousePressEvent(event);
 }
 
-void QnlyGraphicsItem::mouseReleaseEvent(QGraphicsSceneMouseEvent* event)
+void QnlyGraphicsRegion::mouseReleaseEvent(QGraphicsSceneMouseEvent* event)
 {
     if (moving){
         setMoving(false);
 
         if ((top != moveTop || left != moveLeft)){
-
+/*
             setTop(moveTop);
             setLeft(moveLeft);
 
             if (parentItem() != NULL){
-                QnlyGraphicsItem* item = (QnlyGraphicsItem*) parentItem();
+                QnlyGraphicsRegion* item = (QnlyGraphicsRegion*) parentItem();
 
                 setRelativeTop((top-4)/item->getHeight());
                 setRelativeLeft((left-4)/item->getWidth());
@@ -1353,29 +1206,32 @@ void QnlyGraphicsItem::mouseReleaseEvent(QGraphicsSceneMouseEvent* event)
                 setRelativeRight(1 - (relativeLeft+relativeWidth));
                 setRelativeBottom(1 - (relativeTop+relativeHeight));
             }
-
+*/
              QMap<QString, QString> attributes;
 
              if (parentItem() != NULL){
-                 QnlyGraphicsItem* item = (QnlyGraphicsItem*) parentItem();
+                 QnlyGraphicsRegion* item = (QnlyGraphicsRegion*) parentItem();
 
-                 attributes["top"] = QString::number(((moveTop-4)/item->getHeight())*100)+"%";
-                 attributes["left"] = QString::number(((moveLeft-4)/item->getWidth())*100)+"%";
+                 attributes["top"] = QString::number(((moveTop-4)/item->getHeight())*100,'g',3) + "%";
+                 attributes["left"] = QString::number(((moveLeft-4)/item->getWidth())*100,'g',3) + "%";
 
-                 attributes["right"] = QString::number((1 - (((moveLeft-4)/item->getWidth())+(width/item->getWidth())))*100)+"%";
-                 attributes["bottom"] = QString::number((1 - (((moveTop-4)/item->getHeight())+(height/item->getHeight())))*100)+"%";
+                 attributes["right"] = QString::number((1 - (((moveLeft-4)/item->getWidth())+(width/item->getWidth())))*100,'g',3) + "%";
+                 attributes["bottom"] = QString::number((1 - (((moveTop-4)/item->getHeight())+(height/item->getHeight())))*100,'g',3) + "%";
 
              }else{
-                 attributes["top"] = QString::number(((moveTop-4)/scene()->height())*100)+"%";
-                 attributes["left"] = QString::number(((moveLeft-4)/width/scene()->width())*100)+"%";
 
-                 attributes["right"] = QString::number((1 - (((moveLeft-4)/scene()->width())+(width/scene()->width())))*100)+"%";
-                 attributes["bottom"] = QString::number((1 - (((moveTop-4)/scene()->height())+(height/scene()->height())))*100)+"%";
+
+                 attributes["top"] = QString::number(((moveTop)/scene()->height())*100,'g',3) + "%";
+                 attributes["left"] = QString::number(((moveLeft)/scene()->width())*100,'g',3) + "%";
+
+                 attributes["right"] = QString::number((1 - (((moveLeft)/scene()->width())+(width/scene()->width())))*100,'g',3) + "%";
+                 attributes["bottom"] = QString::number((1 - (((moveTop)/scene()->height())+(height/scene()->height())))*100,'g',3) + "%";
+
              }
 
             setChanged(true);
 
-            emit itemChanged(this,attributes);
+            emit regionChangeRequested(this,attributes);
         }
     }
 
@@ -1402,14 +1258,14 @@ void QnlyGraphicsItem::mouseReleaseEvent(QGraphicsSceneMouseEvent* event)
                 setResizeTop(resizeTop + resizeHeight);
                 setResizeHeight(-resizeHeight);
             }
-
+/*
             setTop(resizeTop);
             setLeft(resizeLeft);
             setWidth(resizeWidth);
             setHeight(resizeHeight);
 
             if (parentItem() != NULL){
-                QnlyGraphicsItem* item = (QnlyGraphicsItem*) parentItem();
+                QnlyGraphicsRegion* item = (QnlyGraphicsRegion*) parentItem();
 
                 setRelativeTop((top-4)/item->getHeight());
                 setRelativeLeft((left-4)/item->getWidth());
@@ -1428,33 +1284,33 @@ void QnlyGraphicsItem::mouseReleaseEvent(QGraphicsSceneMouseEvent* event)
                 setRelativeRight(1 - (relativeLeft+relativeWidth));
                 setRelativeBottom(1 - (relativeTop+relativeHeight));
             }
-
+*/
             QMap<QString, QString> attributes;
 
             if (parentItem() != NULL){
-                QnlyGraphicsItem* item = (QnlyGraphicsItem*) parentItem();
+                QnlyGraphicsRegion* item = (QnlyGraphicsRegion*) parentItem();
 
-                attributes["top"] = QString::number(((top-4)/item->getHeight())*100)+"%";
-                attributes["left"] = QString::number(((left-4)/item->getWidth())*100)+"%";
-                attributes["height"] = QString::number((height/item->getHeight())*100)+"%";
-                attributes["width"] = QString::number((width/item->getWidth())*100)+"%";
+                attributes["top"] = QString::number(((resizeTop-4)/item->getHeight())*100,'g',3) + "%";
+                attributes["left"] = QString::number(((resizeLeft-4)/item->getWidth())*100,'g',3) + "%";
+                attributes["height"] = QString::number((resizeHeight/item->getHeight())*100,'g',3) + "%";
+                attributes["width"] = QString::number((resizeWidth/item->getWidth())*100,'g',3) + "%";
 
-                attributes["right"] = QString::number((1 - (((left-4)/item->getWidth())+(width/item->getWidth())))*100)+"%";
-                attributes["bottom"] = QString::number((1 - (((top-4)/item->getHeight())+(height/item->getHeight())))*100)+"%";
+                attributes["right"] = QString::number((1 - (((resizeLeft-4)/item->getWidth())+(resizeWidth/item->getWidth())))*100,'g',3) + "%";
+                attributes["bottom"] = QString::number((1 - (((resizeTop-4)/item->getHeight())+(resizeHeight/item->getHeight())))*100,'g',3) + "%";
 
             }else{
-                attributes["top"] = QString::number(((top-4)/scene()->height())*100)+"%";
-                attributes["left"] = QString::number(((left-4)/width/scene()->width())*100)+"%";
-                attributes["height"] = QString::number((height/scene()->height())*100)+"%";
-                attributes["width"] = QString::number((width/width/scene()->width())*100)+"%";
+                attributes["top"] = QString::number(((resizeTop)/scene()->height())*100,'g',3) + "%";
+                attributes["left"] = QString::number(((resizeLeft)/scene()->width())*100,'g',3) + "%";
+                attributes["height"] = QString::number((resizeHeight/scene()->height())*100,'g',3) + "%";
+                attributes["width"] = QString::number((resizeWidth/scene()->width())*100,'g',3) + "%";
 
-                attributes["right"] = QString::number((1 - (((left-4)/scene()->width())+(width/scene()->width())))*100)+"%";
-                attributes["bottom"] = QString::number((1 - (((top-4)/scene()->height())+(height/scene()->height())))*100)+"%";
+                attributes["right"] = QString::number((1 - (((resizeLeft)/scene()->width())+(resizeWidth/scene()->width())))*100,'g',3) + "%";
+                attributes["bottom"] = QString::number((1 - (((resizeTop)/scene()->height())+(resizeHeight/scene()->height())))*100,'g',3) + "%";
             }
 
             setChanged(true);
 
-            emit itemChanged(this,attributes);
+            emit regionChangeRequested(this,attributes);
         }
     }
 
@@ -1463,34 +1319,31 @@ void QnlyGraphicsItem::mouseReleaseEvent(QGraphicsSceneMouseEvent* event)
     QGraphicsItem::mouseReleaseEvent(event);
 }
 
-void QnlyGraphicsItem::keyPressEvent( QKeyEvent * event )
+void QnlyGraphicsRegion::keyPressEvent( QKeyEvent * event )
 {
     QGraphicsItem::keyPressEvent(event);
 
     if (!event->isAccepted()){
-        if (event->key() == Qt::Key_BracketRight && event->modifiers() == Qt::ControlModifier + Qt::ShiftModifier){
-            performFront();
-        }
-
         event->accept();
     }
 }
 
-void QnlyGraphicsItem::keyReleaseEvent( QKeyEvent * event )
+void QnlyGraphicsRegion::keyReleaseEvent( QKeyEvent * event )
 {
     QGraphicsItem::keyReleaseEvent(event);
 }
 
 
-void QnlyGraphicsItem::contextMenuEvent(QGraphicsSceneContextMenuEvent* event)
+void QnlyGraphicsRegion::contextMenuEvent(QGraphicsSceneContextMenuEvent* event)
 {
     QGraphicsItem::contextMenuEvent(event);
 
     if (!event->isAccepted()){
-        emit itemSelected(this);
+        emit regionSelectionRequested(this);
 
         contextMenu->exec(event->screenPos());
 
         event->accept();
     }
 }
+
