@@ -23,6 +23,8 @@
 
 class QnlyGraphicsRegionBase;
 
+#define ROUND_DOUBLE(x) x<0.0?x=0.0:(x>100.0?x=0.0:x)
+
 class QnlyGraphicsRegion : public QObject, public QGraphicsItem
 {
     Q_OBJECT

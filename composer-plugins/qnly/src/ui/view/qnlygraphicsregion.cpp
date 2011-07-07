@@ -1209,23 +1209,44 @@ void QnlyGraphicsRegion::mouseReleaseEvent(QGraphicsSceneMouseEvent* event)
 */
              QMap<QString, QString> attributes;
 
+             double value = 0.0;
              if (parentItem() != NULL){
                  QnlyGraphicsRegion* item = (QnlyGraphicsRegion*) parentItem();
 
-                 attributes["top"] = QString::number(((moveTop-4)/item->getHeight())*100,'g',3) + "%";
-                 attributes["left"] = QString::number(((moveLeft-4)/item->getWidth())*100,'g',3) + "%";
+                 value = ((moveTop-4)/item->getHeight()) * 100;
+                 ROUND_DOUBLE(value);
+                 attributes["top"] = QString::number(value, 'f', 2) + "%";
 
-                 attributes["right"] = QString::number((1 - (((moveLeft-4)/item->getWidth())+(width/item->getWidth())))*100,'g',3) + "%";
-                 attributes["bottom"] = QString::number((1 - (((moveTop-4)/item->getHeight())+(height/item->getHeight())))*100,'g',3) + "%";
+                 value = ((moveLeft-4)/item->getWidth()) * 100;
+                 ROUND_DOUBLE(value);
+                 attributes["left"] = QString::number(value, 'f', 2) + "%";
 
-             }else{
+                 value = (1 - (((moveLeft-4)/item->getWidth())+(width/item->getWidth()))) * 100;
+                 ROUND_DOUBLE(value);
+                 attributes["right"] = QString::number(value, 'f', 2) + "%";
 
+                 value = (1 - (((moveTop-4)/item->getHeight())+(height/item->getHeight())))*100;
+                 ROUND_DOUBLE(value);
+                 attributes["bottom"] = QString::number(value, 'f', 2) + "%";
 
-                 attributes["top"] = QString::number(((moveTop)/scene()->height())*100,'g',3) + "%";
-                 attributes["left"] = QString::number(((moveLeft)/scene()->width())*100,'g',3) + "%";
+             }
+             else
+             {
+                 value = ((moveTop)/scene()->height())*100;
+                 ROUND_DOUBLE(value);
+                 attributes["top"] = QString::number(value, 'f', 2) + "%";
 
-                 attributes["right"] = QString::number((1 - (((moveLeft)/scene()->width())+(width/scene()->width())))*100,'g',3) + "%";
-                 attributes["bottom"] = QString::number((1 - (((moveTop)/scene()->height())+(height/scene()->height())))*100,'g',3) + "%";
+                 value = ((moveLeft)/scene()->width())*100;
+                 ROUND_DOUBLE(value);
+                 attributes["left"] = QString::number(value, 'f', 2) + "%";
+
+                 value = (1 - (((moveLeft)/scene()->width())+(width/scene()->width())))*100;
+                 ROUND_DOUBLE(value);
+                 attributes["right"] = QString::number(value, 'f', 2) + "%";
+
+                 value = (1 - (((moveTop)/scene()->height())+(height/scene()->height())))*100;
+                 ROUND_DOUBLE(value);
+                 attributes["bottom"] = QString::number(value, 'f', 2) + "%";
 
              }
 
@@ -1287,25 +1308,60 @@ void QnlyGraphicsRegion::mouseReleaseEvent(QGraphicsSceneMouseEvent* event)
 */
             QMap<QString, QString> attributes;
 
+            double value = 0.0;
             if (parentItem() != NULL){
                 QnlyGraphicsRegion* item = (QnlyGraphicsRegion*) parentItem();
 
-                attributes["top"] = QString::number(((resizeTop-4)/item->getHeight())*100,'g',3) + "%";
-                attributes["left"] = QString::number(((resizeLeft-4)/item->getWidth())*100,'g',3) + "%";
-                attributes["height"] = QString::number((resizeHeight/item->getHeight())*100,'g',3) + "%";
-                attributes["width"] = QString::number((resizeWidth/item->getWidth())*100,'g',3) + "%";
+                value = ((resizeTop-4)/item->getHeight())*100;
+                ROUND_DOUBLE(value);
+                attributes["top"] = QString::number(value, 'f', 2) + "%";
 
-                attributes["right"] = QString::number((1 - (((resizeLeft-4)/item->getWidth())+(resizeWidth/item->getWidth())))*100,'g',3) + "%";
-                attributes["bottom"] = QString::number((1 - (((resizeTop-4)/item->getHeight())+(resizeHeight/item->getHeight())))*100,'g',3) + "%";
+                value = ((resizeLeft-4)/item->getWidth())*100;
+                ROUND_DOUBLE(value);
+                attributes["left"] = QString::number(value, 'f', 2) + "%";
 
-            }else{
-                attributes["top"] = QString::number(((resizeTop)/scene()->height())*100,'g',3) + "%";
-                attributes["left"] = QString::number(((resizeLeft)/scene()->width())*100,'g',3) + "%";
-                attributes["height"] = QString::number((resizeHeight/scene()->height())*100,'g',3) + "%";
-                attributes["width"] = QString::number((resizeWidth/scene()->width())*100,'g',3) + "%";
+                value = (resizeHeight/item->getHeight())*100;
+                ROUND_DOUBLE(value);
+                attributes["height"] = QString::number(value, 'f', 2) + "%";
 
-                attributes["right"] = QString::number((1 - (((resizeLeft)/scene()->width())+(resizeWidth/scene()->width())))*100,'g',3) + "%";
-                attributes["bottom"] = QString::number((1 - (((resizeTop)/scene()->height())+(resizeHeight/scene()->height())))*100,'g',3) + "%";
+                value = (resizeWidth/item->getWidth())*100;
+                ROUND_DOUBLE(value);
+                attributes["width"] = QString::number(value, 'f', 2) + "%";
+
+                value = (1 - (((resizeLeft-4)/item->getWidth())+(resizeWidth/item->getWidth())))*100;
+                ROUND_DOUBLE(value);
+                attributes["right"] = QString::number(value, 'f', 2) + "%";
+
+                value = (1 - (((resizeTop-4)/item->getHeight())+(resizeHeight/item->getHeight())))*100;
+                ROUND_DOUBLE(value);
+                attributes["bottom"] = QString::number(value, 'f', 2) + "%";
+
+            }
+            else
+            {
+                value = ((resizeTop)/scene()->height())*100;
+                ROUND_DOUBLE(value);
+                attributes["top"] = QString::number(value, 'f', 2) + "%";
+
+                value = ((resizeLeft)/scene()->width())*100;
+                ROUND_DOUBLE(value);
+                attributes["left"] = QString::number(value, 'f', 2) + "%";
+
+                value = (resizeHeight/scene()->height())*100;
+                ROUND_DOUBLE(value);
+                attributes["height"] = QString::number(value, 'f', 2) + "%";
+
+                value = (resizeWidth/scene()->width())*100;
+                ROUND_DOUBLE(value);
+                attributes["width"] = QString::number(value, 'f', 2) + "%";
+
+                value = (1 - (((resizeLeft)/scene()->width())+(resizeWidth/scene()->width())))*100;
+                ROUND_DOUBLE(value);
+                attributes["right"] = QString::number(value, 'f', 2) + "%";
+
+                value = (1 - (((resizeTop)/scene()->height())+(resizeHeight/scene()->height())))*100;
+                ROUND_DOUBLE(value);
+                attributes["bottom"] = QString::number(value, 'f', 2) + "%";
             }
 
             setChanged(true);

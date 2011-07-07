@@ -67,7 +67,7 @@ bool QnlyComposerPlugin::saveSubsession()
     return false;
 }
 
-void QnlyComposerPlugin::updateFromModel()
+void QnlyComposerPlugin::init()
 {
     //TODO: void QnlyComposerPlugin::updateFromModel()
 }

@@ -233,6 +233,7 @@ void QnlyGraphicsRegionBase::requestRegionChange(QnlyGraphicsRegion* region,
     // setting
     QMap<QString, QString> full;
 
+    double value = 0.0;
     if (attributes.contains("id"))
         full["id"] = attributes["id"];
     else if (!region->getId().isEmpty())
@@ -251,32 +252,56 @@ void QnlyGraphicsRegionBase::requestRegionChange(QnlyGraphicsRegion* region,
     if (attributes.contains("top"))
         full["top"] = attributes["top"];
     else
-        full["top"] = QString::number(region->getRelativeTop()*100,'g',3) + "%";
+    {
+        value = region->getRelativeTop()*100;
+        ROUND_DOUBLE(value);
+        full["top"] = QString::number(value, 'f', 2) + "%";
+    }
 
     if (attributes.contains("left"))
         full["left"] = attributes["left"];
     else
-        full["left"] = QString::number(region->getRelativeLeft()*100,'g',3) + "%";
+    {
+        value = region->getRelativeLeft()*100;
+        ROUND_DOUBLE(value);
+        full["left"] = QString::number(value, 'f', 2) + "%";
+    }
 
     if (attributes.contains("right"))
         full["right"] = attributes["right"];
     else
-        full["right"] = QString::number(region->getRelativeRight()*100,'g',3) + "%";
+    {
+        value = region->getRelativeRight()*100;
+        ROUND_DOUBLE(value);
+        full["right"] = QString::number(value, 'f', 2) + "%";
+    }
 
     if (attributes.contains("bottom"))
         full["bottom"] = attributes["bottom"];
     else
-        full["bottom"] = QString::number(region->getRelativeBottom()*100,'g',3) + "%";
+    {
+        value = region->getRelativeBottom()*100;
+        ROUND_DOUBLE(value);
+        full["bottom"] = QString::number(value, 'f', 2) + "%";
+    }
 
     if (attributes.contains("width"))
         full["width"] = attributes["width"];
     else
-        full["width"] = QString::number(region->getRelativeWidth()*100,'g',3) + "%";
+    {
+        value = region->getRelativeWidth()*100;
+        ROUND_DOUBLE(value);
+        full["width"] = QString::number(value, 'f', 2) + "%";
+    }
 
     if (attributes.contains("height"))
         full["height"] = attributes["height"];
     else
-        full["height"] = QString::number(region->getRelativeHeight()*100,'g',3) + "%";
+    {
+        value = region->getRelativeHeight()*100;
+        ROUND_DOUBLE(value);
+        full["height"] = QString::number(value, 'f', 2) + "%";
+    }
 
     // TODO: zIndex
 
