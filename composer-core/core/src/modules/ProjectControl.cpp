@@ -204,5 +204,13 @@ void ProjectControl::saveProject(QString location)
     fout.close();
 }
 
+Project *ProjectControl::getOpenProject(QString location)
+{
+    if(openProjects.contains(location))
+        return openProjects.value(location);
+
+    return NULL;
+}
+
 } }//end namespace
 

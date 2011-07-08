@@ -137,12 +137,6 @@ protected:
      * \brief
      */
     void print();
-    /*!
-     * \brief Convert the current Entity to a XML String.
-     *
-     * \param ntabs the number of tabs to be inserted before the current entity.
-     */
-    QString toString(int ntabs);
 
 public:
     /*!
@@ -186,9 +180,14 @@ public:
 
     QVector <Entity *> getChildren();
 
+    /*!
+     * \brief Convert the current Entity to a XML String.
+     *
+     * \param ntabs the number of tabs to be inserted before the current entity.
+     */
+    QString toString(int ntabs);
 };
-        }
-    }
-}
+
+} } } //end namespace
 
 #endif // ENTITY_H

@@ -22,29 +22,32 @@ using namespace composer::core::util;
 namespace composer {
     namespace core {
 
-        class ProjectControl : public QObject
-        {
-            Q_OBJECT
-            SINGLETON(ProjectControl)
+class ProjectControl : public QObject
+{
+    Q_OBJECT
+    SINGLETON(ProjectControl)
 
-        private:
-            ProjectControl();
-            ~ProjectControl();
-            QMap<QString, Project*> openProjects;
+private:
+    ProjectControl();
+    ~ProjectControl();
+    QMap<QString, Project*> openProjects;
 
-         public slots:
-            bool closeProject(QString location);
-            void saveProject(QString location);
-            void launchProject(QString location);
+public:
+    Project *getOpenProject(QString location);
 
-            void importFromDocument(QString docLocation, QString projLocation);
+ public slots:
+    bool closeProject(QString location);
+    void saveProject(QString location);
+    void launchProject(QString location);
 
-        signals:
-            void startOpenProject(QString document);
-            void endOpenProject(QString document);
-            void projectAlreadyOpen(QString);
-            void notifyError(QString);
-        };
+    void importFromDocument(QString docLocation, QString projLocation);
+
+signals:
+    void startOpenProject(QString document);
+    void endOpenProject(QString document);
+    void projectAlreadyOpen(QString);
+    void notifyError(QString);
+};
 
 } } //end namespace
 

@@ -97,6 +97,10 @@ public slots:
      * \brief TODO
      */
     void setListenFilter(QStringList list);
+
+signals:
+    void entityAdded(QString, Entity*);
+
 };
 } } //end namespace
 #endif // MESSAGECONTROL_H

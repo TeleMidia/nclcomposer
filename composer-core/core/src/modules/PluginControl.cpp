@@ -141,7 +141,8 @@ void PluginControl::launchProject(Project *project)
         pluginInstance = factory->createPluginInstance();
         if (pluginInstance)
         {
-            pluginInstance->setPluginInstanceID(QUuid::createUuid().toString());
+            pluginInstance->setPluginInstanceID(
+                           factory->id() + "#" +QUuid::createUuid().toString());
             pluginInstance->setProject(project);
 //            pluginInstance->setLanguageProfile(profile);
             launchNewPlugin(pluginInstance, msgControl);

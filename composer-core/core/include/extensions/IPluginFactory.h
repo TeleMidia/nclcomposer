@@ -69,9 +69,9 @@ public:
 } } //end namespace
 
 /**
-  * This is required for the QTPlugin system works.
-  * Declaring the interface that is going to be used by external plugins.
-  */
+ * This is required for the QTPlugin system works.
+ * Declaring the interface that is going to be used by external plugins.
+ */
 Q_DECLARE_INTERFACE(IPluginFactory,
                     "br.telemidia.pucrio.composer.IPluginFactory")
 

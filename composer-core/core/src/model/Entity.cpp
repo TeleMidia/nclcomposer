@@ -208,13 +208,13 @@ QString Entity::toString(int ntab)
 
     out += "<";
     out.append(getType().toAscii());
-    /*foreach(QString attr, atts.keys()){
+    foreach(QString attr, atts.keys()){
         out += " ";
         out.append(attr);
         out += "=\"";
         out += atts.value(attr);
         out += "\"";
-    }*/
+    }
     out += " uniqueEntityId=\"";
     out += getUniqueId();
     out += "\">\n";

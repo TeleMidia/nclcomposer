@@ -168,6 +168,8 @@ void MessageControl::sendEntityAddedMessageToPlugins( QString pluginInstanceId,
            }
        }
     }
+
+    emit entityAdded(pluginInstanceId, entity);
 }
 
 
