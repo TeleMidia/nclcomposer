@@ -43,15 +43,12 @@ void PropertiesViewPlugin::onEntityChanged(QString pluginID, Entity * entity)
                    entity->getType() + " - " + entity->getUniqueId() +")";
 
     changeSelectedEntity((void*)&entity->getUniqueId());
-
 }
 
 void PropertiesViewPlugin::onEntityRemoved(QString pluginID, QString entityID)
 {
     QString line = "PLUGIN (" + pluginID + ") removed Entity (" +
                    entityID + ")";
-
-//    qDebug() << line;
 }
 
 bool PropertiesViewPlugin::saveSubsession()

@@ -2,6 +2,8 @@ TARGET = properties_view
 
 include (../plugins-common.pri)
 
+win32:LIBS += -lNCLLanguageProfile
+
 DEFINES += PROPERTIESVIEW_LIBRARY
 
 INCLUDEPATH += include
@@ -9,13 +11,13 @@ INCLUDEPATH += include
 SOURCES +=  src/PropertiesViewFactory.cpp \
             src/PropertiesViewPlugin.cpp \
             src/PropertyEditor.cpp \
-    src/QLLineEditFilter.cpp
+            src/QLLineEditFilter.cpp
 
 HEADERS +=  include/PropertiesViewFactory.h\
             include/PropertiesView_global.h \
             include/PropertyEditor.h \
             include/PropertiesViewPlugin.h \
-    include/QLineEditFilter.h
+            include/QLineEditFilter.h
 
 #RESOURCES += images.qrc
 

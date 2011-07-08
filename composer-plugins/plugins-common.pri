@@ -5,6 +5,14 @@ MOC_DIR     =   .moc
 OBJECTS_DIR =   .obj
 UI_DIR      =   .ui
 
+macx:LOCATION = /Library/Frameworks
+else:unix:LOCATION = /usr/local
+else:win32:LOCATION = C:/Composer
+
+macx:INSTALLBASE = /Applications/Composer
+else:unix:INSTALLBASE = /usr/local
+win32:INSTALLBASE = C:/Composer
+
 macx {
     :   LIBS += -framework \
         ComposerCore
@@ -26,8 +34,9 @@ else:unix {
     target.path = $$quote(/usr/local/lib/composer/extension)
 }
 else:win32 {
-    LIBS += -L$$quote(C:/Composer) -lComposerCore1 -L$$quote(C:/Composer/lib/composer) \
+    LIBS += -L$$quote(C:/Composer) -lComposerCore1 \
             -L$$quote(C:/Composer/lib/composer)
+
     INCLUDEPATH += . include C:/composer/include/composer \
                     C:/Composer/include/composer/core \
                     C:/Composer/include/composer/core/extensions
