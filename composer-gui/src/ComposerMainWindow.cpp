@@ -82,7 +82,6 @@ void ComposerMainWindow::initModules()
                 this,SLOT(tabClosed(int)));
 
     readExtensions();
-
 }
 
 void ComposerMainWindow::readExtensions()
@@ -646,21 +645,36 @@ void ComposerMainWindow::runNCL()
 {
     QProcess *ginga = new QProcess(this);
     QStringList arguments;
-    QString location = tabProjects->tabToolTip(
-            tabProjects->currentIndex());
+    QString location = tabProjects->tabToolTip(tabProjects->currentIndex());
 
-    if(!location.isEmpty())
+    if(location.isEmpty())
     {
-        arguments << "--ncl"<< location;
+        QMessageBox::StandardButton reply;
+        reply = QMessageBox::warning(this, tr("Warning!"),
+                              tr("There aren't a current NCL project."),
+                          QMessageBox::Ok);
+        return;
+    }
+    Project *project = ProjectControl::getInstance()->getOpenProject(location);
+    QString nclpath = location.mid(0, location.lastIndexOf("/")) +  "/tmp.ncl";
+    qDebug() << "Running NCL File: " << nclpath;
+
+    QFile file(nclpath);
+    if(file.open(QFile::WriteOnly | QIODevice::Truncate))
+    {
+        /* Write FILE!! */
+        file.write(project->getChildren().at(0)->toString(0).toAscii());
+        file.close();
+
+        /* RUNNING GINA */
+        arguments << "--ncl"<< nclpath;
         ginga->start("ginga", arguments);
         QByteArray result = ginga->readAll();
     }
     else
     {
-        QMessageBox::StandardButton reply;
-        reply = QMessageBox::warning(this, tr("Warning!"),
-                                     tr("There aren't a current NCL project."),
-                                     QMessageBox::Ok);
+        qWarning() << "Error trying to running NCL. Could not create : "
+                << nclpath << " !";
     }
 }
 
