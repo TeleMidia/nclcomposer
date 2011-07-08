@@ -305,9 +305,9 @@ void QnlyGraphicsRegionBase::requestRegionChange(QnlyGraphicsRegion* region,
 
     // TODO: zIndex
 
-    emit regionChangeRequested(region->getUid(),
-                               uid,
-                               full);
+    emit regionChangeRequested( region->getUid(),
+                                uid,
+                                full);
 }
 
 
@@ -678,8 +678,10 @@ void QnlyGraphicsRegionBase::addRegion(QnlyGraphicsRegion* region,
             }
         }
 
-        if (!attributes["left"].isEmpty()){
-            if (attributes["left"].contains(QRegExp("\\d+(.\\d+)?%"))){
+        if (!attributes["left"].isEmpty())
+        {
+            if (attributes["left"].contains(QRegExp("\\d+(.\\d+)?%")))
+            {
                 QString attribute = attributes["left"];
                 attribute.remove(attribute.length()-1,1); // removing '%'
 
@@ -689,7 +691,9 @@ void QnlyGraphicsRegionBase::addRegion(QnlyGraphicsRegion* region,
                     region->setRelativeLeft(left/100);
                 }
 
-            }else if (attributes["left"].contains(QRegExp("\\d+(.\\d+)?"))){
+            }
+            else if (attributes["left"].contains(QRegExp("\\d+(.\\d+)?")))
+            {
                 QString attribute = attributes["left"];
 
                 qreal left = attribute.toDouble();
@@ -701,7 +705,8 @@ void QnlyGraphicsRegionBase::addRegion(QnlyGraphicsRegion* region,
         }
 
         if (!attributes["right"].isEmpty()){
-            if (attributes["right"].contains(QRegExp("\\d+(.\\d+)?%"))){
+            if (attributes["right"].contains(QRegExp("\\d+(.\\d+)?%")))
+            {
                 QString attribute = attributes["right"];
                 attribute.remove(attribute.length()-1,1); // removing '%'
 
@@ -711,7 +716,9 @@ void QnlyGraphicsRegionBase::addRegion(QnlyGraphicsRegion* region,
                     region->setRelativeRight(right/100);
                 }
 
-            }else if (attributes["right"].contains(QRegExp("\\d+(.\\d+)?"))){
+            }
+            else if (attributes["right"].contains(QRegExp("\\d+(.\\d+)?")))
+            {
                 QString attribute = attributes["right"];
 
                 qreal right = attribute.toDouble();
@@ -744,18 +751,22 @@ void QnlyGraphicsRegionBase::addRegion(QnlyGraphicsRegion* region,
             }
         }
 
-        if (!attributes["width"].isEmpty()){
-            if (attributes["width"].contains(QRegExp("\\d+(.\\d+)?%"))){
+        if (!attributes["width"].isEmpty())
+        {
+            if (attributes["width"].contains(QRegExp("\\d+(.\\d+)?%")))
+            {
                 QString attribute = attributes["width"];
                 attribute.remove(attribute.length()-1,1); // removing '%'
 
                 qreal width = attribute.toDouble();
 
-                if (width >= 0 && width <= 100){
+                if (width >= 0.0 &&  width <= 100.0)
+                {
                     region->setRelativeWidth(width/100);
                 }
-
-            }else if (attributes["width"].contains(QRegExp("\\d+(.\\d+)?"))){
+            }
+            else if (attributes["width"].contains(QRegExp("\\d+(.\\d+)?")))
+            {
                 QString attribute = attributes["width"];
 
                 qreal width = attribute.toDouble();
@@ -767,17 +778,19 @@ void QnlyGraphicsRegionBase::addRegion(QnlyGraphicsRegion* region,
         }
 
         if (!attributes["height"].isEmpty()){
-            if (attributes["height"].contains(QRegExp("\\d+(.\\d+)?%"))){
+            if (attributes["height"].contains(QRegExp("\\d+(.\\d+)?%")))
+            {
                 QString attribute = attributes["height"];
                 attribute.remove(attribute.length()-1,1); // removing '%'
 
                 qreal height = attribute.toDouble();
 
-                if (height >= 0 && height <= 100){
+                if (height >= 0 && height <= 100)
                     region->setRelativeHeight(height/100);
-                }
 
-            }else if (attributes["height"].contains(QRegExp("\\d+(.\\d+)?"))){
+            }
+            else if (attributes["height"].contains(QRegExp("\\d+(.\\d+)?")))
+            {
                 QString attribute = attributes["height"];
 
                 qreal height = attribute.toDouble();
@@ -788,9 +801,9 @@ void QnlyGraphicsRegionBase::addRegion(QnlyGraphicsRegion* region,
             }
         }
 
-        if (parent != NULL){
+        if (parent != NULL)
+        {
            parent->addRegion(region);
-
         }
         else
         {
@@ -828,17 +841,17 @@ void QnlyGraphicsRegionBase::addRegion(QnlyGraphicsRegion* region,
 
 
         connect(region,
-    SIGNAL(regionAdditionRequested(QnlyGraphicsRegion*)),
-    SLOT(requestAdditionRegion(QnlyGraphicsRegion*)));
+                SIGNAL(regionAdditionRequested(QnlyGraphicsRegion*)),
+                SLOT(requestAdditionRegion(QnlyGraphicsRegion*)));
 
         connect(region,
-    SIGNAL(regionDeletionRequested(QnlyGraphicsRegion*)),
-    SLOT(requestRegionDeletion(QnlyGraphicsRegion*)));
+                SIGNAL(regionDeletionRequested(QnlyGraphicsRegion*)),
+                SLOT(requestRegionDeletion(QnlyGraphicsRegion*)));
 
-        // FIX! seg fault on Outline
-//        QMap<QString, QString> noChangeAtts;
+        // \fixme seg fault on Outline
+        QMap<QString, QString> noChangeAtts;
 
-////        requestRegionChange(region,noChangeAtts);
+        requestRegionChange(region,noChangeAtts);
 
         emit requestRegionSelection(region);
     }

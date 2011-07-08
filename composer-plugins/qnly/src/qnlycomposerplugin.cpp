@@ -69,7 +69,31 @@ bool QnlyComposerPlugin::saveSubsession()
 
 void QnlyComposerPlugin::init()
 {
-    //TODO: void QnlyComposerPlugin::updateFromModel()
+    // \todo Load specific contents.
+    QStack <Entity*> stack;
+    stack.push(project);
+
+    while(stack.size())
+    {
+        Entity *current = stack.top();
+        stack.pop();
+
+        qDebug() << " QnlyComposerPlugin::init " << current->getType();
+        if(current->getType() == "regionBase")
+        {
+            addRegionBaseToView(current);
+        }
+        else if(current->getType() == "region")
+        {
+            addRegionToView(current);
+        }
+
+        QVector <Entity *> children = current->getChildren();
+        for(int i = 0; i < children.size(); i++)
+        {
+            stack.push(children.at(i));
+        }
+    }
 }
 
 void QnlyComposerPlugin::errorMessage(QString error)
@@ -513,7 +537,6 @@ void QnlyComposerPlugin::changeRegionBaseInView(Entity* entity)
             {
                 qWarning() << "QnlyComposerPlugin::addRegion:"
                            << "Tried to add a region with empty UID.";
-
                 return; // abort addition
             }
 
@@ -656,7 +679,7 @@ void QnlyComposerPlugin::changeRegion(const QString regionUID,
             standard["zIndex"] = attributes["zIndex"];
 
         // emitting
-        emit setAttributes(regions[regionUID],standard, false);
+        emit setAttributes(regions[regionUID], standard, false);
     }
 }
 

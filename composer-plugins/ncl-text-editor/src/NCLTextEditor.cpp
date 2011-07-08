@@ -71,7 +71,8 @@ void NCLTextEditor::initParameters()
     error_indicator = indicatorDefine(RoundBoxIndicator, 1);
     setIndicatorForegroundColor(QColor("#FF0000"), error_indicator);
     filling_attribute_indicator = indicatorDefine (RoundBoxIndicator, 2);
-    qDebug() << error_marker << " " << error_indicator;
+//    qDebug() << error_marker << " " << error_indicator;
+    // setWhitespaceVisibility(QsciScintilla::WsVisible);
 }
 
 void NCLTextEditor::Increasefont()
