@@ -3,10 +3,10 @@
                             and end position.)
 
 1. Code refactoring:
-    * Rename NCLTextEditor to NCLTextView ?!
-    * Rename NCLTreeWidget to NCLTreeView ?!
-    * All Composer view should inherent from a common class (Composer View?!)
-    * Improve attribute navigation performance.
+  * Rename NCLTextEditor to NCLTextView ?!
+  * Rename NCLTreeWidget to NCLTreeView ?!
+  * All Composer view should inherent from a common class (Composer View?!)
+  * Improve attribute navigation performance.
 
 2. Contextual code sugestion:
     * Sugestion of default attribute values. (OK!)
@@ -22,4 +22,10 @@
 6. Hyperlinks (This is not simple!)
 
 7. Preview of media objects, connectors, etc.
+
+8. Preferences.
+  * Default font size.
+  * Font Family.
+  * Font color style.
+  * Whitespace Visibility.
 

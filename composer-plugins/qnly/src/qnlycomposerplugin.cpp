@@ -541,7 +541,6 @@ void QnlyComposerPlugin::changeRegionBaseInView(Entity* entity)
             }
 
             QString regionbaseUID;
-
             regionbaseUID = entityUID;
 
             QMap<QString, QString> attributes;

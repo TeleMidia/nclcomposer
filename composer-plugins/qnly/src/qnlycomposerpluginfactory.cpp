@@ -38,7 +38,7 @@ QString QnlyComposerPluginFactory::id() const
 
 QString QnlyComposerPluginFactory::name() const
 {
-    return "Qnly";
+    return "Layout View";
 }
 
 QIcon QnlyComposerPluginFactory::icon() const
