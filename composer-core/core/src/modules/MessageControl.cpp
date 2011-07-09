@@ -129,7 +129,6 @@ void MessageControl::onRemoveEntity( Entity *entity,
 
 void MessageControl::setListenFilter(QStringList entityList)
 {
-    qDebug() << "MessageControl::setListenFilter";
     IPlugin *plugin = qobject_cast<IPlugin *> (QObject::sender());
     if(plugin)
     {
@@ -158,7 +157,7 @@ void MessageControl::sendEntityAddedMessageToPlugins( QString pluginInstanceId,
        if(pluginIsInterestedIn(inst, entity))
        {
            int idxSlot = inst->metaObject()
-                                     ->indexOfSlot(slotName.toStdString().c_str());
+                                  ->indexOfSlot(slotName.toStdString().c_str());
            if(idxSlot != -1)
            {
                QMetaMethod method = inst->metaObject()->method(idxSlot);
@@ -190,7 +189,7 @@ void MessageControl::sendEntityChangedMessageToPlugins(QString pluginInstanceId,
        if(pluginIsInterestedIn(inst, entity))
        {
            int idxSlot = inst->metaObject()
-                                     ->indexOfSlot(slotName.toStdString().c_str());
+                                  ->indexOfSlot(slotName.toStdString().c_str());
            if(idxSlot != -1)
            {
                QMetaMethod method = inst->metaObject()->method(idxSlot);
@@ -236,6 +235,7 @@ bool MessageControl::pluginIsInterestedIn(IPlugin *plugin, Entity *entity)
 {
     if(!listenEntities.contains(plugin->getPluginInstanceID()))
     {
+        // \todo An empty Entity should means ALL entities too??
         // Default: Plugin is interested in ALL entities
         return true;
     }
@@ -246,6 +246,18 @@ bool MessageControl::pluginIsInterestedIn(IPlugin *plugin, Entity *entity)
         return true;
 
     return false;
+}
+
+void MessageControl::setPluginData(QByteArray data)
+{
+    IPlugin *plugin = qobject_cast<IPlugin *> (QObject::sender());
+
+    //The plugin instance ID is composer of: pluginID#UniqueID
+    //So, we have to take just the pluginID of that String:
+    QString pluginId = plugin->getPluginInstanceID().left(
+                                    plugin->getPluginInstanceID().indexOf("#"));
+
+    project->setPluginData(pluginId, data);
 }
 
 } } //end namespace

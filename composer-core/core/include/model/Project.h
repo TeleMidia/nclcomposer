@@ -44,13 +44,6 @@ public:
     QString getProjectId();
 
     LanguageType getProjectType();
-
-    /*!
-      \brief Set specific plugin data to project file.
-      \param pluginId
-    */
-    bool setPluginData(QString pluginId, const QByteArray data);
-
     /*!
       \brief Get specific plugin data saved in the document.
      */
@@ -90,6 +83,12 @@ protected:
     bool addEntity(Entity* entity, QString parentId)
             throw (EntityNotFound, ParentNotFound);
 
+    /*!
+      \brief Set specific plugin data to project file.
+      \param pluginId
+    */
+    bool setPluginData(QString pluginId, const QByteArray data);
+
     /*! \brief This method is used to remove and delete an Entity from the map.
 
         \param entity - A Entity to be removed
@@ -106,6 +105,7 @@ protected:
     bool serialize();
 
 signals:
+    void dirty();
 
 public slots:
 

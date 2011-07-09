@@ -138,6 +138,7 @@ QString Project::toString()
 
 bool Project::setPluginData(QString pluginId, const QByteArray data)
 {
+
     this->pluginData[pluginId] = data;
 
     return true;
@@ -151,5 +152,12 @@ QByteArray Project::getPluginData(QString pluginId)
     }
     return QByteArray();
 }
+
+/*
+bool Project::isModified()
+{
+    return true;
+}
+*/
 
 } } } //end namespace

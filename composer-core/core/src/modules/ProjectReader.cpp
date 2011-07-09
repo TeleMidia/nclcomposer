@@ -26,7 +26,6 @@ Project *ProjectReader::readFile(QString location)
     }
 
     QString content(qUncompress(file.readAll()));
-//    qDebug() << content;
     /* READING MODEL */
     QString startCpModelStr = "#COMPOSER_MODEL#\n";
     QString endCpModelStr = "\n#END_COMPOSER_MODEL#";
@@ -41,7 +40,6 @@ Project *ProjectReader::readFile(QString location)
     {
         QString modelStr = content.mid(startCpModel, endCpModel-startCpModel);
         parseModelString(modelStr);
-        qDebug() << "ModelSTR = " << modelStr;
     }
     /* FINISH READING MODEL */
 
@@ -54,20 +52,14 @@ Project *ProjectReader::readFile(QString location)
     while(pos >= 0 && pos < pluginsData.size())
     {
         int startPluginData = pluginsData.indexOf(startPluginDataStr, pos);
-
-//        qDebug() << "pluginData = " << pluginsData;
-//        qDebug() << "pluginData size = " << pluginsData.size();
-//        qDebug() << "startPluginData " << startPluginData;
         int endStartPluginData =
                 pluginsData.indexOf("#\n", startPluginData
                                          + startPluginDataStr.size());
-//        qDebug() << "endPluginData " << endStartPluginData;
 
         QString pluginID = pluginsData.mid(
               startPluginData + startPluginDataStr.size(),
               endStartPluginData- (startPluginData + startPluginDataStr.size())
             );
-//        qDebug() << "PluginID = " << pluginID;
 
         int endPluginData = pluginsData.indexOf( endPluginDataStr,
                                                  startPluginData);
@@ -87,7 +79,6 @@ Project *ProjectReader::readFile(QString location)
 
     file.close();
 
-    qDebug() << project->toString();
     return project;
 }
 

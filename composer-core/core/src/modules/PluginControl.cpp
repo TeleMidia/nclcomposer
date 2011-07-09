@@ -86,7 +86,7 @@ IPluginFactory* PluginControl::loadPlugin(QString fileName)
     }//end load OK
     else
     {
-       qDebug() << "PluginControl::loadPlugins failed to load"
+       qWarning() << "PluginControl::loadPlugins failed to load"
                 << "(" << fileName << ")" << " -- " << loader.errorString();
     }
 
@@ -200,6 +200,10 @@ void PluginControl::launchNewPlugin(IPlugin *plugin, MessageControl *mControl)
     // broadcastMessage
     connect(plugin, SIGNAL(sendBroadcastMessage(const char*, void *)),
             this, SLOT(sendBroadcastMessage(const char*, void*)));
+
+    /* setPluginData */
+    connect(plugin, SIGNAL(setPluginData(QByteArray)),
+            mControl, SLOT(setPluginData(QByteArray)));
 }
 
 void PluginControl::connectParser(IDocumentParser *parser,

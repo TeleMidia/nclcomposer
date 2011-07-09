@@ -22,7 +22,7 @@ ProjectControl::~ProjectControl()
             delete project;
             project = NULL;
         } else {
-            qDebug() << "Error: Failed to releasePlugins ";
+            qWarning() << "Error: Failed to releasePlugins ";
         }
     }
 }
@@ -37,8 +37,10 @@ bool ProjectControl::closeProject(QString location)
         delete project;
         project = NULL;
         openProjects.remove(location);
-    } else {
-        qDebug() << "Error: Failed to close the project :" << location;
+    }
+    else
+    {
+        qWarning() << "Error: Failed to close the project :" << location;
         return false;
     }
     return true;
@@ -195,7 +197,7 @@ void ProjectControl::saveProject(QString location)
     if( !fout.open( QIODevice::WriteOnly ) )
     {
        // It could not open
-       qDebug() << "Failed to open file (" <<  location << ")";
+       qWarning() << "Failed to open file (" <<  location << ") for writing.";
        return;
     }
 

@@ -87,7 +87,6 @@ bool Entity::addChild(Entity *entity)
 {
     QMutexLocker locker(&lockChildren);
     QString _id = entity->getUniqueId();
-    qDebug() << children.size();
     // Check if the entity is already children of this entity
     // TODO: THIS CAN BE IMPROVED!! Maybe checking if the parentUniqueID.
     for(int i = 0; i < children.size(); i++)
@@ -105,7 +104,6 @@ bool Entity::deleteChild(Entity *entity)
 {
     QMutexLocker locker(&lockChildren);
     entity->setDeleteChildren(true);
-    qDebug() << "deleteChild" << children.size();
     for(int i = 0; i < children.size(); i++)
     {
         if(children.at(i) == entity)
@@ -113,7 +111,6 @@ bool Entity::deleteChild(Entity *entity)
             children.remove(i);
         }
     }
-    qDebug() << "deleteChild" << children.size();
     delete entity;
     entity = NULL;
 

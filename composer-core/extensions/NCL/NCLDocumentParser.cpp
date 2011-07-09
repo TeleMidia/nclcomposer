@@ -48,7 +48,6 @@ bool NCLDocumentParser::parseContent(const QString &str)
     reader.setContentHandler(this);
     reader.setErrorHandler(this);
 
-    qDebug() << "NCLDocumentParser::parseContent " << str;
     return reader.parse(inputSource);
 }
 

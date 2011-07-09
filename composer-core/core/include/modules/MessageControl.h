@@ -98,6 +98,11 @@ public slots:
      */
     void setListenFilter(QStringList list);
 
+    /*!
+     * \brief TODO
+     */
+    void setPluginData(QByteArray data);
+
 signals:
     void entityAdded(QString, Entity*);
 
