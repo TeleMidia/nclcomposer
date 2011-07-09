@@ -28,8 +28,6 @@ QWidget* PropertiesViewPlugin::getWidget()
 void PropertiesViewPlugin::onEntityAdded(QString pluginID, Entity *entity)
 {
     QString line = "<" + entity->getType() + "> </" + entity->getType() + ">\n";
-
-//    qDebug() << line;
 }
 
 void PropertiesViewPlugin::errorMessage(QString error)

@@ -78,7 +78,6 @@ void QnlyComposerPlugin::init()
         Entity *current = stack.top();
         stack.pop();
 
-        qDebug() << " QnlyComposerPlugin::init " << current->getType();
         if(current->getType() == "regionBase")
         {
             addRegionBaseToView(current);

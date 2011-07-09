@@ -23,7 +23,8 @@ NCLTextualViewPlugin::~NCLTextualViewPlugin()
 void NCLTextualViewPlugin::init()
 {
     window->getTextEditor()
-            ->setText(QString(project->getPluginData("ncl-text-editor")));
+            ->setText(QString(
+                project->getPluginData("br.puc-rio.telemidia.NCLTextualView")));
 }
 
 QWidget* NCLTextualViewPlugin::getWidget()
@@ -224,8 +225,8 @@ void NCLTextualViewPlugin::onEntityRemoved(QString pluginID, QString entityID)
 
 bool NCLTextualViewPlugin::saveSubsession()
 {
-    project->setPluginData(QString("ncl-text-editor"),
-                       window->getTextEditor()->text().toAscii());
+    emit setPluginData(window->getTextEditor()->text().toAscii());
+
     return true;
 }
 
