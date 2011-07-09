@@ -50,14 +50,14 @@ class NCLTextualViewPluginFactory : public QObject,
 
           \return QString the version number as string.
          */
-         QString version() { return "1.0"; }
+         QString version() { return "0.1"; }
          /*!
           \brief Returns the core version that is compatible with this plugin.
 
           \return QString the core version that is compatible with this plugin
                     as a string.
          */
-         QString compatVersion() {return "1.0";}
+         QString compatVersion() {return "0.1";}
          /*!
           \brief Returns the vendor of TextualView (i.e. Telemidia Lab).
 
@@ -69,7 +69,7 @@ class NCLTextualViewPluginFactory : public QObject,
 
           \return QString the copyright of TextualView.
          */
-         QString copyright() {return "Telemidia Lab";}
+         QString copyright() {return "Telemidia/PUC-Rio";}
          /*!
            \brief Returns the license of TextualView plugin (i.e. GPLv3).
            \todo The complete license description.
@@ -81,10 +81,16 @@ class NCLTextualViewPluginFactory : public QObject,
          /*!
            \brief Returns a description of the textual view plugin
 
-           \return QString the license of TextualView.
+           \return QString the description of TextualView.
          */
-         QString description() {return "Unknown";}
-         QString url() {return "Unknown";}
+         QString description() {return "NCL Textual Plugins enable the user to\
+                                    edit the application directly through its \
+                                    source code. Additionally, this plugin \
+                                    brings features like code coloring and \
+                                    autocomplete.";}
+
+         QString url() {return "http://composer.telemidia.puc-rio.br/textual";}
+
          QString category() {return "NCL";}
 
 private:

@@ -68,39 +68,48 @@ class OutlineViewFactory : public QObject, public IPluginFactory
          */
          QIcon icon() const;
          /*!
-          \brief Returns the version of OutlineView implementation.
+          \brief Returns the version of Outline View implementation.
 
           \return QString the version number as string.
          */
-         QString version() { return "1.0 (1.0)"; }
+         QString version() { return "0.1"; }
          /*!
           \brief Returns the core version that is compatible with this plugin.
 
           \return QString the core version that is compatible with this plugin
                     as a string.
          */
-         QString compatVersion() {return "1.0";}
+         QString compatVersion() {return "0.1";}
          /*!
-          \brief Returns the vendor of OutlineView (i.e. Telemidia Lab).
+          \brief Returns the vendor of Outline View (i.e. Telemidia Lab).
 
           \return QString the name of the vendor of OutlineView.
          */
          QString vendor() {return "Telemidia Lab";}
          /*!
-          \brief Returns the copyright of OutlineView.
+          \brief Returns the copyright of Outline View.
 
-          \return QString the copyright of OutlineView.
+          \return QString the copyright of Outline View.
          */
-         QString copyright() {return "Telemidia Lab";}
+         QString copyright() {return "Telemidia/PUC-Rio";}
          /*!
-           \brief Returns the license of OutlineView plugin (i.e. GPLv3).
+           \brief Returns the license of Outline View plugin (i.e. GPLv3).
            \todo The complete license description.
 
-           \return QString the license of OutlineView.
+           \return QString the license of Outline View.
          */
          QString license() {return "GPLv3";}
-         QString description() {return "Unknown";}
-         QString url() {return "Unknown";}
+
+         /*!
+           \brief Returns a description of the Outline View
+
+           \return QString the description of Outline View.
+         */
+         QString description() {return "Outline View enables the user navigates\
+                                in the project as a tree.";}
+
+         QString url() {return "http://composer.telemidia.puc-rio.br/outline";}
+
          QString category() {return "NCL";}
 
          /*!
