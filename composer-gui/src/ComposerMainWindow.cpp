@@ -306,13 +306,18 @@ void ComposerMainWindow::createMenus() {
 void ComposerMainWindow::createAbout()
 {
     aboutDialog = new QDialog(this);
-    aboutDialog->setWindowTitle(tr("About Composer"));
+    aboutDialog->setWindowTitle(tr("Installed Plugins"));
 
     profilesExt = new QListWidget(aboutDialog);
     profilesExt->setAlternatingRowColors(true);
 
+    /* This should be a new Widget and change some code for there */
     pluginsExt = new QTreeWidget(aboutDialog);
     pluginsExt->setAlternatingRowColors(true);
+
+    connect(pluginsExt, SIGNAL(itemSelectionChanged()),
+            this, SLOT(selectedAboutCurrentFactory()));
+
     QStringList header;
     header << "Name" << "Load" << "Version" << "Vendor";
     pluginsExt->setHeaderLabels(header);
@@ -322,15 +327,14 @@ void ComposerMainWindow::createAbout()
                                                  Qt::Horizontal,
                                                  aboutDialog);
 
-    QPushButton *detailsButton = bOk->button(QDialogButtonBox::Ok);
+    detailsButton = bOk->button(QDialogButtonBox::Ok);
     detailsButton->setText(tr("Details"));
     detailsButton->setIcon(QIcon());
 
     connect(bOk, SIGNAL(rejected()), aboutDialog, SLOT(close()));
 
-    connect(    detailsButton, SIGNAL(pressed()),
-                this, SLOT(showPluginDetails())
-            );
+    connect( detailsButton, SIGNAL(pressed()),
+             this, SLOT(showPluginDetails()) );
 
     QGridLayout *gLayout = new QGridLayout(aboutDialog);
     gLayout->addWidget(new QLabel(tr("The <b>Composer</b> is an IDE for"
@@ -348,11 +352,11 @@ void ComposerMainWindow::createAbout()
 
 }
 
-void ComposerMainWindow::about() {
+void ComposerMainWindow::about()
+{
     QList<IPluginFactory*>::iterator it;
     QList<IPluginFactory*> pList = PluginControl::getInstance()->
                                    getLoadedPlugins();
-
     pluginsExt->clear();
 
     //search for categories
@@ -369,13 +373,16 @@ void ComposerMainWindow::about() {
         }
     }
 
+    treeWidgetItem2plFactory.clear();
     for (it = pList.begin(); it != pList.end(); it++) {
         IPluginFactory *pF = *it;
         treeWidgetItem = new QTreeWidgetItem(categories.value(pF->category()));
+        treeWidgetItem2plFactory.insert(treeWidgetItem, pF);
+
         treeWidgetItem->setText(0, pF->name());
         treeWidgetItem->setCheckState(1, Qt::Checked);
-        treeWidgetItem->setText(2, pF->vendor());
-        treeWidgetItem->setText(3, pF->version());
+        treeWidgetItem->setText(2, pF->version());
+        treeWidgetItem->setText(3, pF->vendor());
     }
 
     pluginsExt->expandAll();
@@ -385,6 +392,7 @@ void ComposerMainWindow::about() {
     pluginsExt->resizeColumnToContents(2);
     pluginsExt->resizeColumnToContents(3);
 
+    /* PROFILE LANGUAGE */
     QList<ILanguageProfile*>::iterator itL;
     QList<ILanguageProfile*> lList = LanguageControl::getInstance()->
                                      getLoadedProfiles();
@@ -397,7 +405,6 @@ void ComposerMainWindow::about() {
     }
 
     aboutDialog->setModal(true);
-
     aboutDialog->show();
 }
 
@@ -792,6 +799,21 @@ void ComposerMainWindow::openRecentProject()
     ProjectControl::getInstance()->launchProject(action->data().toString());
 }
 
+void ComposerMainWindow::selectedAboutCurrentFactory()
+{
+    QList<QTreeWidgetItem*> selectedPlugins = pluginsExt->selectedItems();
+    if(selectedPlugins.size())
+    {
+        if(treeWidgetItem2plFactory[selectedPlugins.at(0)] != NULL)
+        {
+            pluginDetailsDialog->setCurrentPlugin(
+                treeWidgetItem2plFactory[selectedPlugins.at(0)]);
+            detailsButton->setEnabled(true);
+        }
+        else
+            detailsButton->setEnabled(false);
+    }
+}
 void ComposerMainWindow::showPluginDetails()
 {
     pluginDetailsDialog->show();

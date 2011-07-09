@@ -59,6 +59,7 @@ QDockWidget::title {
   stop: 0.39999 #717171, stop: 0.4 #626262,
   stop: 0.9 #4c4c4c, stop: 1 #333333);
   color: white;
+  padding-left: 10px;
 }
 
 QTabWidget::tab-bar {
@@ -294,10 +295,10 @@ font: 75 7.5pt;</string>
     <set>Qt::ImhNone</set>
    </property>
    <property name="movable">
-    <bool>false</bool>
+    <bool>true</bool>
    </property>
    <property name="allowedAreas">
-    <set>Qt::LeftToolBarArea</set>
+    <set>Qt::AllToolBarAreas</set>
    </property>
    <property name="iconSize">
     <size>
@@ -312,7 +313,7 @@ font: 75 7.5pt;</string>
     <bool>false</bool>
    </property>
    <attribute name="toolBarArea">
-    <enum>LeftToolBarArea</enum>
+    <enum>TopToolBarArea</enum>
    </attribute>
    <attribute name="toolBarBreak">
     <bool>false</bool>
@@ -409,6 +410,9 @@ font: 75 7.5pt;</string>
    </property>
    <property name="text">
     <string>Run</string>
+   </property>
+   <property name="iconText">
+    <string>Run NCL</string>
    </property>
    <property name="toolTip">
     <string>Run NCL Project</string>

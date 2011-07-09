@@ -3,7 +3,7 @@
 
 #include <QDialog>
 
-#include <core/extensions/IPlugin.h>
+#include <core/extensions/IPluginFactory.h>
 using namespace composer::core;
 
 #include "ui_PluginDetailsDialog.h"
@@ -15,12 +15,13 @@ class PluginDetailsDialog : public QDialog
 {
 private:
     Ui::PluginDetailsDialog *ui;
+    IPluginFactory *currentPluginFactory;
 
 public:
     PluginDetailsDialog(QWidget *parent = 0);
     virtual ~PluginDetailsDialog();
 
-    void setCurrentPlugin(IPlugin *plugin);
+    void setCurrentPlugin(IPluginFactory *plugin);
 };
 
 } }

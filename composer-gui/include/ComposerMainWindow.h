@@ -87,12 +87,15 @@ private:
 
     QListWidget *profilesExt; /*!< TODO */
     QTreeWidget *pluginsExt; /*!< TODO */
+    QMap <QTreeWidgetItem*, IPluginFactory*> treeWidgetItem2plFactory;
 
     ProjectWizard *projectWizard; /*!< TODO */
     DocumentWizard *documentWizard; /*!< TODO */
     PreferencesDialog *preferences; /*!< TODO */
 
+    /* \todo This should be moved to a new Class */
     QDialog *aboutDialog; /*!< TODO */
+    QPushButton *detailsButton;
 
     QString defaultEx; /*!< TODO */
     QString user_directory_ext; /*!< TODO */
@@ -223,6 +226,10 @@ private slots:
     void clearRecentProjects(void);
 
     void importFromDocument();
+    /*!
+     *
+     */
+    void selectedAboutCurrentFactory();
     /*!
         \brief Shows the details of the current selected plugins.
      */
