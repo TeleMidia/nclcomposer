@@ -670,7 +670,9 @@ void ComposerMainWindow::runNCL()
     if(file.open(QFile::WriteOnly | QIODevice::Truncate))
     {
         /* Write FILE!! */
-        file.write(project->getChildren().at(0)->toString(0).toAscii());
+        if(project->getChildren().size())
+            file.write(project->getChildren().at(0)->toString(0).toAscii());
+
         file.close();
 
         /* RUNNING GINA */
