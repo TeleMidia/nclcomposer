@@ -46,7 +46,6 @@ using namespace composer::core;
 #include "PerspectiveManager.h"
 #include "PreferencesDialog.h"
 #include "PluginDetailsDialog.h"
-//#include "ProjectTreeView.h"
 
 using namespace composer::gui;
 
@@ -54,7 +53,7 @@ namespace Ui {
     class ComposerMainWindow;
 }
 
-//#define USE_MDI 1
+#define USE_MDI 1
 
 namespace composer {
     namespace gui {
