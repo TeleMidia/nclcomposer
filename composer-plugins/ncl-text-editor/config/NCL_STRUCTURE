@@ -1,6 +1,7 @@
 // validador NCL
-//ELEMENT (NAME, PARENT, CARDINALITY, DEFINE_SCOPE)
-//ATTRIBUTE (ELEMENT_NAME, NAME, REQUIRED, DATATYPE)
+// ELEMENT (NAME, PARENT, CARDINALITY, DEFINE_SCOPE)
+// ATTRIBUTE (ELEMENT_NAME, NAME, REQUIRED, DATATYPE)
+// reference(ELEMENT_NAME, ATTR_NAME, REF_ELEMENT_NAME, REF_ATTR_NAME, WHICH_PERSPECTIVE)
 
 // tabela 6 (steve)
 element(ncl,NULL,1,false) // ok
@@ -15,7 +16,9 @@ element(body,ncl,?,true) // ok
 // Tabela 7 (Maurício)
 element (regionBase,  head, *, false) // ok
     attribute (regionBase, id , false , ID) // okR
-    attribute (regionBase, device, false,device) //okR
+    attribute (regionBase, device, false, device) //okR
+    attribute (regionBase, region, false, ID) //okR
+        reference(regionBase, region, region, id, ANY_PERSPECTIVE) //okR
 
 element (region, regionBase, *, false) // Working...//okR
 element (region, region, *, false)//okR
