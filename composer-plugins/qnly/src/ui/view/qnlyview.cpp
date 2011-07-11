@@ -549,10 +549,14 @@ void QnlyView::removeRegionBase(QnlyGraphicsRegionBase* regionBase)
 
 //        delete (regionBase);
 
-        QnlyGraphicsRegionBase* current =
-        (QnlyGraphicsRegionBase*) ((QGraphicsView*)currentWidget())->scene();
 
-        emit regionBaseSelected(current->getUid());
+        if (currentWidget() != NULL)
+        {
+            QnlyGraphicsRegionBase* current =
+            (QnlyGraphicsRegionBase*) ((QGraphicsView*)currentWidget())->scene();
+
+            emit regionBaseSelected(current->getUid());
+        }
     }
 }
 
