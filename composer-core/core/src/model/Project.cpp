@@ -49,6 +49,8 @@ QList<Entity*> Project::getEntitiesbyType(QString _type) {
     QMutexLocker locker(&lockEntities);
     QMapIterator<QString, Entity*> it(entities);
     QList<Entity*> listRet;
+    qDebug() << "Project::getEntitiesbyType " << type;
+
     while(it.hasNext()){
         it.next();
         Entity* ent = it.value();
@@ -99,7 +101,23 @@ bool Project::removeEntity(Entity* entity, bool appendChild)
             /* if (appendChild)
                     parent->removeChildAppendChildren(entity);
             else */
-                parent->deleteChild(entity);
+            QStack <Entity*> stack;
+            //remove all children
+            stack.push(entity);
+            while(stack.size())
+            {
+                Entity *currentEntity = stack.top();
+                stack.pop();
+                entities.remove(currentEntity->getUniqueId());
+
+                QVector <Entity *> children = currentEntity->getChildren();
+                for(int i = 0; i < children.size(); i++)
+                {
+                    stack.push(children.at(i));
+                }
+            }
+            //DELETE the entity and its children recursivelly
+            parent->deleteChild(entity);
         }
         else
         {   //does not have a parent, so dont append
@@ -107,11 +125,10 @@ bool Project::removeEntity(Entity* entity, bool appendChild)
             entity = NULL;
         }
     } else {
-        throw EntityNotFound(entity->getType(),entity->getUniqueId());
+        throw EntityNotFound(entity->getType(), entity->getUniqueId());
         return false; // entity does not exist in the model
     }
-
-    entities.remove(_id);
+    qDebug() << entities;
     return true;
 }
 
