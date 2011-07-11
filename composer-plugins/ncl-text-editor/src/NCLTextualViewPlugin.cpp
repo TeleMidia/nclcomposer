@@ -12,6 +12,15 @@ NCLTextualViewPlugin::NCLTextualViewPlugin()
              SIGNAL(elementAdded(QString,QString,QMap<QString,QString>&,bool)),
              this,
              SIGNAL(addEntity(QString,QString,QMap<QString,QString>&,bool)));
+
+
+    QToolBar *toolbar = window->addToolBar("Synchronize");
+    QAction *synchronizeAct = toolbar->addAction(
+                                      QIcon(":/images/synchronize-icon-24.png"),
+                                      tr("&Synchronize"));
+
+    synchronizeAct->setStatusTip(tr("Synchronize current text with the others"
+                                    "plugins."));
 }
 
 NCLTextualViewPlugin::~NCLTextualViewPlugin()
@@ -22,9 +31,42 @@ NCLTextualViewPlugin::~NCLTextualViewPlugin()
 
 void NCLTextualViewPlugin::init()
 {
-    window->getTextEditor()
-            ->setText(QString(
-                project->getPluginData("br.puc-rio.telemidia.NCLTextualView")));
+    QString data = project
+                        ->getPluginData("br.puc-rio.telemidia.NCLTextualView");
+
+    QString startEntitiesSep = "$START_ENTITIES_LINES$";
+    QString endEntitiesSep = "$END_ENTITIES_LINES$";
+    int indexOfStartEntities = data.indexOf(startEntitiesSep);
+    int indexOfEndEntities = data.indexOf(endEntitiesSep);
+
+    // Just for safety clearing start and end line previous saved.
+    QString key;
+    foreach(key, startLineOfEntity.keys())
+        startLineOfEntity.remove(key);
+    foreach(key, startLineOfEntity.keys())
+        endLineOfEntity.remove(key);
+
+    QString text = data.left(indexOfStartEntities);
+    int indexOfStartEntitiesContent = indexOfStartEntities +
+                                      startEntitiesSep.length();
+    QString startLines = data.mid(indexOfStartEntitiesContent,
+                              indexOfEndEntities - indexOfStartEntitiesContent);
+
+    QString endLines = data.right(data.length() -
+                                  (indexOfEndEntities+endEntitiesSep.length()));
+
+    QStringList listStart = startLines.split(",");
+    QStringList listEnd = endLines.split(",");
+
+    qDebug() << "endLines = " << endLines;
+
+    for(int i = 0; i < listStart.size()-1; i +=2)
+    {
+        startLineOfEntity[listStart[i]] = listStart[i+1].toInt();
+        endLineOfEntity[listEnd[i]] = listEnd[i+1].toInt();
+    }
+
+    window->getTextEditor()->setText(text);
 }
 
 QWidget* NCLTextualViewPlugin::getWidget()
@@ -41,9 +83,13 @@ void NCLTextualViewPlugin::onEntityAdded(QString pluginID, Entity *entity)
     QString line = "<" + entity->getType() + "";
 
     int insertAtLine = 0;
+
     //get the number line where the new element must be inserted
     if(entity->getParentUniqueId() != NULL) {
-        insertAtLine = endLineOfEntity.value(entity->getParentUniqueId());
+        // Test if exists before access from operator[] becaus if doesn't exist
+        // this operator will create a new (and we don't want this!).
+        if(endLineOfEntity.count(entity->getParentUniqueId()))
+            insertAtLine = endLineOfEntity[entity->getParentUniqueId()];
     }
 
     QMap <QString, QString>::iterator begin, end, it;
@@ -64,7 +110,6 @@ void NCLTextualViewPlugin::onEntityAdded(QString pluginID, Entity *entity)
 
         if(endLineOfEntity[key] >= insertAtLine)
             endLineOfEntity[key] += 2;
-
     }
 
     window->getTextEditor()->insertAt(line, insertAtLine, 0);
@@ -95,8 +140,8 @@ void NCLTextualViewPlugin::onEntityAdded(QString pluginID, Entity *entity)
     window->getTextEditor()->ensureLineVisible(insertAtLine);
     window->getTextEditor()->SendScintilla(QsciScintilla::SCI_SETFOCUS, true);
 
-    /* qDebug() << "NCLTextualViewPlugin::onEntityAdded" <<
-            entity->getType() << " " << insertAtLine; */
+    /*  qDebug() << "NCLTextualViewPlugin::onEntityAdded" <<
+        entity->getType() << " " << insertAtLine; */
 }
 
 void NCLTextualViewPlugin::errorMessage(QString error)
@@ -129,23 +174,19 @@ void NCLTextualViewPlugin::onEntityChanged(QString pluginID, Entity *entity)
     int previous_length = window->getTextEditor()->SendScintilla(
                                                   QsciScintilla::SCI_LINELENGTH,
                                                   insertAtLine);
+    // store the current identation (this must keep equal even with the
+    //  modifications)
+    int lineident = window->getTextEditor()
+                    ->SendScintilla( QsciScintilla::SCI_GETLINEINDENTATION,
+                                     insertAtLine);
 
-    window->getTextEditor()->setSelection(  insertAtLine, 0,
-                                            insertAtLine, previous_length-1);
+    window->getTextEditor()->setSelection( insertAtLine, 0,
+                                           insertAtLine, previous_length-1);
     window->getTextEditor()->removeSelectedText();
 
     window->getTextEditor()->insertAt(line, insertAtLine, 0);
 
     //fix indentation
-    int lineident = window->getTextEditor()
-                    ->SendScintilla( QsciScintilla::SCI_GETLINEINDENTATION,
-                                     insertAtLine+2);
-
-    if(insertAtLine == 0) //The first entity
-        lineident = 0;
-    else
-        lineident += 8;
-
     window->getTextEditor()
             ->SendScintilla( QsciScintilla::SCI_SETLINEINDENTATION,
                              insertAtLine,
@@ -225,8 +266,32 @@ void NCLTextualViewPlugin::onEntityRemoved(QString pluginID, QString entityID)
 
 bool NCLTextualViewPlugin::saveSubsession()
 {
-    emit setPluginData(window->getTextEditor()->text().toAscii());
+    QByteArray data;
+    data.append(window->getTextEditor()->text());
+    data.append("$START_ENTITIES_LINES$");
+    QString key;
+    bool first = true;
+    foreach (key, startLineOfEntity.keys())
+    {
+        if(!first)
+            data.append(",");
+        else
+            first = false;
+        data.append(key + ", " + QString::number(startLineOfEntity[key]));
+   }
+    data.append("$END_ENTITIES_LINES$");
+    first = true;
+    qDebug() << endLineOfEntity;
+    foreach (key, endLineOfEntity.keys())
+    {
+        if(!first)
+            data.append(",");
+        else
+            first = false;
+        data.append(key + "," + QString::number(endLineOfEntity[key]));
+    }
 
+    emit setPluginData(data);
     return true;
 }
 
