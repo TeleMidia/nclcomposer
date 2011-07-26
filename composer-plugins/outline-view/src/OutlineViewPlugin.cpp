@@ -35,7 +35,8 @@ OutlineViewPlugin::OutlineViewPlugin()
 
 OutlineViewPlugin::~OutlineViewPlugin()
 {
-    delete selectedId;
+    if(selectedId != NULL)
+        delete selectedId;
     delete window;
 }
 
@@ -204,7 +205,7 @@ void OutlineViewPlugin::init()
     }
 }
 
-void OutlineViewPlugin::debugHasSendClearAll(void *param)
+void OutlineViewPlugin::debugHasSendClearAll(QString pluginID, void *param)
 {
     qDebug() << "OutlineViewPlugin::debugHasSendClearAll";
 }
@@ -220,6 +221,19 @@ void OutlineViewPlugin::itemSelectionChanged()
     {
         selectedId = new QString(selecteds.at(0)->text(2));
         emit sendBroadcastMessage("changeSelectedEntity", selectedId);
+    }
+}
+
+void OutlineViewPlugin::changeSelectedEntity(QString pluginID, void *param){
+    if(pluginID != this->pluginInstanceID)
+    {
+        QString *id = (QString*)param;
+        QTreeWidgetItem *item = window->getItemById(*id);
+        if(item != NULL)
+            window->setCurrentItem(item, 0);
+        else
+            qWarning() << "The OutlineViewPlugin receive a message to select an"
+                    << " Entity that it doesn't know.";
     }
 }
 

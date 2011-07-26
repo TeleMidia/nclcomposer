@@ -38,7 +38,7 @@ public slots:
 
     virtual void onEntityRemoved(QString pluginID, QString entityID);
 
-    virtual void changeSelectedEntity(void* entityUID);
+    virtual void changeSelectedEntity(QString pluginID, void* entityUID);
 
 protected slots:
     void addRegionToView(Entity* entity);
@@ -94,6 +94,8 @@ private:
     QMap<QString, Entity*> regionbases;
 
     QMap<QString, QString> relations;
+
+    QString *selectedId;
 };
 
 } } } // end namespace

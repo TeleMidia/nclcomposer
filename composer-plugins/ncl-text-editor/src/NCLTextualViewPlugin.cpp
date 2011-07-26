@@ -58,8 +58,6 @@ void NCLTextualViewPlugin::init()
     QStringList listStart = startLines.split(",");
     QStringList listEnd = endLines.split(",");
 
-    qDebug() << "endLines = " << endLines;
-
     for(int i = 0; i < listStart.size()-1; i +=2)
     {
         startLineOfEntity[listStart[i]] = listStart[i+1].toInt();
@@ -281,7 +279,6 @@ bool NCLTextualViewPlugin::saveSubsession()
    }
     data.append("$END_ENTITIES_LINES$");
     first = true;
-    qDebug() << endLineOfEntity;
     foreach (key, endLineOfEntity.keys())
     {
         if(!first)
@@ -295,14 +292,24 @@ bool NCLTextualViewPlugin::saveSubsession()
     return true;
 }
 
-void NCLTextualViewPlugin::changeSelectedEntity(void *param){
+void NCLTextualViewPlugin::changeSelectedEntity(QString pluginID, void *param)
+{
     QString *id = (QString*)param;
-    int entityLine = startLineOfEntity.value(*id);
-    int size = window->getTextEditor()->lineLength(entityLine);
+    if(startLineOfEntity.contains(*id))
+    {
+        int entityLine = startLineOfEntity.value(*id);
+        int size = window->getTextEditor()->lineLength(entityLine);
 
-    window->getTextEditor()->setCursorPosition(entityLine, 0);
-    window->getTextEditor()->ensureLineVisible(entityLine);
-    window->getTextEditor()->SendScintilla(QsciScintilla::SCI_SETFOCUS, true);
+        window->getTextEditor()->setCursorPosition(entityLine, 0);
+        window->getTextEditor()->ensureLineVisible(entityLine);
+        window->getTextEditor()->SendScintilla(QsciScintilla::SCI_SETFOCUS,
+                                                true);
+    }
+    else
+    {
+        qWarning() << "NCLTextualViewPlugin::changeSelectedEntity() "
+                << "Entity doesn't exists!";
+    }
 }
 
 } } } //end namespace

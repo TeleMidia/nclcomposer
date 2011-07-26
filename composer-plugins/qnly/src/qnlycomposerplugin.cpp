@@ -10,10 +10,14 @@ QnlyComposerPlugin::QnlyComposerPlugin(QObject* parent)
 
     createView();
     createConnections();
+
+    selectedId = NULL;
 }
 
 QnlyComposerPlugin::~QnlyComposerPlugin()
 {
+    if(selectedId != NULL)
+        delete selectedId;
     delete(view);
 }
 
@@ -145,17 +149,16 @@ void QnlyComposerPlugin::onEntityChanged(QString pluginID, Entity *entity)
     }
 }
 
-void QnlyComposerPlugin::changeSelectedEntity (void* param)
+void QnlyComposerPlugin::changeSelectedEntity (QString pluginID, void* param)
 {
-    QString* entityUID = (QString*) param;
+    if(pluginID != this->pluginInstanceID)
+    {
+        QString* entityUID = (QString*) param;
 
-    if (regions.contains(*entityUID))
-    {
-        selectRegionInView(*entityUID);
-    }
-    else if (regionbases.contains(*entityUID))
-    {
-        selectRegionBaseInView(*entityUID);
+        if (regions.contains(*entityUID))
+            selectRegionInView(*entityUID);
+        else if (regionbases.contains(*entityUID))
+            selectRegionBaseInView(*entityUID);
     }
 }
 
@@ -684,10 +687,16 @@ void QnlyComposerPlugin::changeRegion(const QString regionUID,
 void QnlyComposerPlugin::selectRegion(const QString regionUID,
                                       const QString regionbaseUID)
 {
+    if(selectedId != NULL)
+    {
+        delete selectedId;
+        selectedId = NULL;
+    }
+
     if (!regionUID.isEmpty())
     {
-        emit sendBroadcastMessage("changeSelectedEntity",
-                                  new QString(regionUID));
+        selectedId = new QString(regionUID);
+        emit sendBroadcastMessage("changeSelectedEntity", selectedId);
     }
 }
 

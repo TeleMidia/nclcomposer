@@ -93,12 +93,13 @@ public slots:
     void errorMessage(QString error);
 
     /*!
-     \brief
-        This function is part of the IPlugin API.
-
-     \param param
-    */
-    void changeSelectedEntity(void* param);
+     * \brief
+     *
+     * This function is part of the IPlugin API.
+     *
+     * \param param
+     */
+    void changeSelectedEntity(QString pluginID, void* param);
 };
 
 }}} //end namespace

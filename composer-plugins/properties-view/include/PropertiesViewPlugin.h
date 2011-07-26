@@ -17,82 +17,96 @@ namespace composer {
         namespace property {
 
 /*!
- \brief
-*/
+ * \brief PropertiesViewPlugin is a Composer plugin that shows and enable the
+ *      user to edit the a current selected Entity.
+ */
 class PropertiesViewPlugin : public IPlugin
 {
-        Q_OBJECT
-    private:
-        QListWidget *list; /*!< TODO */
-        PropertyEditor *window; /*!< TODO */
-        Entity *currentEntity;
+    Q_OBJECT
+private:
+    QListWidget *list; /*!< TODO */
+    PropertyEditor *window; /*!< TODO */
+    Entity *currentEntity;
 
-    public:
-        /*!
-         * \brief Constructor.
-         *
-         */
-        explicit PropertiesViewPlugin();
-        /*!
-         \brief Destructor.
+public:
+    /*!
+     * \brief Constructor.
+     */
+    explicit PropertiesViewPlugin();
+    /*!
+     * \brief Destructor.
+     */
+    ~PropertiesViewPlugin();
+    /*!
+     * \brief
+     *
+     * This function is part of the IPlugin API.
+     */
+    void init();
+    /*!
+     * \brief Returns the widget of that plugin. This widget will be presentated
+     *      to the user.
+     *
+     *  This function is part of the IPlugin API.
+     *
+     * \return QWidget* the widget that represents this plugin. If NULL, the
+     *      plugin has not a visual representation
+     */
+    QWidget* getWidget();
+    /*!
+     * \brief Save the specific data of this plugin.
+     *
+     *  This function is part of the IPlugin API.
+     *
+     * \return bool
+     */
+    bool saveSubsession();
 
-        */
-        ~PropertiesViewPlugin();
+public slots:
+    /*!
+     * \brief This is called by the core when a new Entity is added.
+     *
+     * This function is part of IPlugin API.
+     *
+     * \param pluginID the plugin instance id that first called the changes to
+     *     the entity.
+     * \param entity the Entity that was added.
+     */
+    void onEntityAdded(QString pluginID, Entity *);
+    /*!
+     * \brief Called by the core when an Entity is changed.
+     *
+     * This function is part of IPlugin API.
+     *
+     * \param pluginID the plugin instance id that first called the changes to
+     *     the entity.
+     * \param entity The entity that was modified.
+     */
+    void onEntityChanged(QString pluginID, Entity *);
+    /*!
+     * \brief Called by the core after the entity entityID is removed.
+     *
+     * \param pluginID the plugin instance id that first called the changes to
+     *     the entity.
+     * \param entityID the entity's identifier that was removed.
+     */
+    void onEntityRemoved(QString pluginID, QString entityID);
+    /*!
+     * \brief This is called by the core when some error triggered by this
+     *      plugin instance occurs.
+     *
+     * \param error A description of the error.
+     */
+    void errorMessage(QString error);
+    /*!
+     * \brief
+     *
+     * \param
+     */
+    void changeSelectedEntity (QString pluginID, void*);
 
-        /*!
-         * \brief
-         *
-         */
-        void init();
-        /*!
-         * \brief
-         *
-         * \return QWidget *
-         */
-        QWidget* getWidget();
-        /*!
-         * \brief
-         * \return bool
-         *
-         */
-        bool saveSubsession();
-
-    public slots:
-        /*!
-         * \brief
-         *
-         * \param ID
-         * \param
-         */
-        void onEntityAdded(QString ID, Entity *);
-        /*!
-         * \brief
-         *
-         * \param ID
-         * \param
-         */
-        void onEntityChanged(QString ID, Entity *);
-        /*!
-         * \brief
-         * \param
-         *
-         */
-        void onEntityRemoved(QString ID, QString entityID);
-        /*!
-         * \brief
-         *
-         * \param error
-         */
-        void errorMessage(QString error);
-        /*!
-         * \brief
-         *
-         * \param
-         */
-        void changeSelectedEntity (void*);
-
-    private slots:
-        void updateCurrentEntityAttr(QString attr, QString value);
+private slots:
+    void updateCurrentEntityAttr(QString attr, QString value);
 };
 
 } } }//end namespace

@@ -50,7 +50,6 @@ public:
      *      plugin has not a visual representation
      */
     QWidget* getWidget();
-
     /*!
      * \brief Save the specific data of this plugin.
      *
@@ -62,12 +61,14 @@ public:
 
 public slots:
     /*!
-     * \brief
+     * \brief This is called by the core when a new Entity is added.
      *
-     * \param ID
-     * \param
+     * This function is part of IPlugin API.
+     *
+     * \param ID The plugin identifier that called to add the Entity.
+     * \param Entity* the Entity that was added.
      */
-    void onEntityAdded(QString ID, Entity *);
+    void onEntityAdded(QString pluginID, Entity *);
     /*!
      * \brief
      *
@@ -102,7 +103,14 @@ public slots:
      *
      * \param obj
      */
-    void debugHasSendClearAll(void *obj);
+    void debugHasSendClearAll(QString pluginIDm, void *obj);
+
+    /*!
+     * \brief
+     *
+     * \param param
+     */
+    void changeSelectedEntity(QString pluginId, void* param);
 
 private slots:
     /*!

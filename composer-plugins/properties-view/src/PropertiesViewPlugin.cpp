@@ -40,7 +40,7 @@ void PropertiesViewPlugin::onEntityChanged(QString pluginID, Entity * entity)
     QString line = "PLUGIN (" + pluginID + ") changed the Entity (" +
                    entity->getType() + " - " + entity->getUniqueId() +")";
 
-    changeSelectedEntity((void*)&entity->getUniqueId());
+    changeSelectedEntity(this->pluginInstanceID, (void*)&entity->getUniqueId());
 }
 
 void PropertiesViewPlugin::onEntityRemoved(QString pluginID, QString entityID)
@@ -60,7 +60,7 @@ void PropertiesViewPlugin::init()
     //TODO: All
 }
 
-void PropertiesViewPlugin::changeSelectedEntity(void *param)
+void PropertiesViewPlugin::changeSelectedEntity(QString pluginID, void *param)
 {
     QString *id = (QString*)param;
     currentEntity = project->getEntityById(*id);
