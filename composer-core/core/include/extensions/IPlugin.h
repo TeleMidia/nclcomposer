@@ -131,7 +131,7 @@ public slots:
      * the previous modifications, so it has to be forceed to reload
      * the Document*.
      */
-    /* This function can be useful inf future! */
+    /* This function can be useful in future! */
     // virtual void updateFromModel() /*= 0*/;
 
     /*!
@@ -143,7 +143,8 @@ public slots:
     virtual void onEntityAdded(QString pluginID, Entity *) = 0;
 
     /*!
-     * \brief This is called by the core when some error occurs.
+     * \brief This is called by the core when some error triggered by this
+     *      plugin instance occurs.
      *
      * \param error A description of the error.
      */
@@ -158,17 +159,17 @@ public slots:
      */
     virtual void onEntityChanged(QString pluginID, Entity *entity) = 0;
 
-    //! Called by the core before the Entity is removed.
-    /*!
-     \deprecated.
-    */
+    /*! \brief Called by the core before the Entity is removed.
+     *
+     * \deprecated.
+     */
     // virtual void onEntityAboutToRemove(Entity *) = 0;
     /*!
      * \brief Called by the core after the entity entityID is removed.
      *
      * \param pluginID the plugin instance id that first called the changes to
      *     the entity.
-     * \param entityID the entityId that was removed.
+     * \param entityID the entity's identifier that was removed.
      */
     virtual void onEntityRemoved( QString pluginID, QString entityID) = 0;
 
@@ -217,11 +218,18 @@ signals:
      * This message is send to all plugins without any validation.
      * The content of the message can be any QObject and are useful to extend
      * the default core message.
+     *
+     * Always, the signature of the method msg implemented by an receiver must
+     * be an public slot like:
+     *      void msg(QString pluginID, void *obj)
+     *
+     * The core will call this msg method to each publin that implements it when
+     * sendBroadcastMethod is called.
      */
     void sendBroadcastMessage(const char* msg, void *obj);
 
     /*!
-     * \brief Each plugin is able to save your specific data by calling this
+     * \brief Each plugin is able to save its specific data by calling this
      *      message.
      *
      * Important: When the plugin send this message, the data overwrite the

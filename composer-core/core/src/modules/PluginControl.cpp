@@ -272,17 +272,19 @@ void PluginControl::sendBroadcastMessage(const char* slot, void *obj)
             pluginInstances.values(plugin->getProject()->getLocation());
 
     QString slotName(slot);
-    slotName.append("(void*)");
+    slotName.append("(QString,void*)");
     for (it = instances.begin(); it != instances.end(); it++)
     {
        IPlugin *inst = *it;
        int idxSlot = inst->metaObject()
                                 ->indexOfSlot( slotName.toStdString().c_str() );
-
        if(idxSlot != -1)
        {
+           qDebug() << "Slot FOUND";
            QMetaMethod method = inst->metaObject()->method(idxSlot);
-           method.invoke(inst, Qt::QueuedConnection, Q_ARG(void *, obj));
+           method.invoke(inst, Qt::QueuedConnection,
+                         Q_ARG(QString, plugin->getPluginInstanceID()),
+                         Q_ARG(void *, obj));
        }
     }
 }
