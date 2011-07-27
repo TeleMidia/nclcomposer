@@ -67,7 +67,8 @@ void MessageControl::onEditEntity(Entity *entity,
 
     if(plugin) {
         QString pluginID = plugin->getPluginInstanceID();
-        try {
+        try
+        {
             /*! \todo Call validator to check */
            entity->setAtrributes(atts);
 
@@ -100,11 +101,37 @@ void MessageControl::onRemoveEntity( Entity *entity,
                 // Send message to all plugins interested in this message.
                 // This message is send before the real delete to try to avoid
                 // the plugins keep pointers to invalid memory location.
-                sendEntityRemovedMessageToPlugins(pluginID, entity);
+                QList <Entity*> willBeRemoved;
+                QStack <Entity*> stack;
+                //remove all children
+
+                /**
+                 * \todo Change the following code to signal/slots with Project.
+                 */
+                stack.push(entity);
+                while(stack.size())
+                {
+                    Entity *currentEntity = stack.top();
+                    willBeRemoved.push_back(currentEntity);
+                    stack.pop();
+
+                    QVector <Entity *> children = currentEntity->getChildren();
+                    for(int i = 0; i < children.size(); i++)
+                    {
+                        stack.push(children.at(i));
+                    }
+                }
+
+                for(int i = willBeRemoved.size()-1; i >= 0; i--)
+                {
+                  sendEntityRemovedMessageToPlugins(pluginID, willBeRemoved[i]);
+                }
+
                 /*!
-                \todo remember to change, the append should come from the
-                    plugin.
-                */
+                 * \todo remember to change, the append should come from the
+                 *   plugin.
+                 */
+               //This function will release the entity instance and its children
                 project->removeEntity(entity, true);
             }
             else
@@ -219,7 +246,7 @@ void MessageControl::sendEntityRemovedMessageToPlugins(QString pluginInstanceId,
        if(pluginIsInterestedIn(inst, entity))
        {
            int idxSlot = inst->metaObject()
-                                     ->indexOfSlot(slotName.toStdString().c_str());
+                                  ->indexOfSlot(slotName.toStdString().c_str());
            if(idxSlot != -1)
            {
                QMetaMethod method = inst->metaObject()->method(idxSlot);

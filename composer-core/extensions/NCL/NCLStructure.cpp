@@ -3,9 +3,10 @@
 namespace composer {
 namespace language{
 
-NCLStructure *NCLStructure::instance = NULL;
+INIT_SINGLETON(NCLStructure)
 
-NCLStructure::NCLStructure() {
+NCLStructure::NCLStructure()
+{
     attributes = new map <QString, map <QString, bool > * > ();
     nesting = new map <QString, map <QString, char > * > ();
     dataTypes = new map <QString, QString> ();
@@ -14,11 +15,48 @@ NCLStructure::NCLStructure() {
     references = new QMultiMap <QString, AttributeReferences*> ();
 }
 
-NCLStructure *NCLStructure::getInstance(){
-    if(instance == NULL) {
-        instance = new NCLStructure();
+NCLStructure::~NCLStructure()
+{
+    //TODO: Destructor
+    map <QString, map <QString, bool> *>::iterator it; /**< TODO */
+    for(it = attributes->begin(); it != attributes->end(); ++it)
+    {
+        map <QString, bool> *content = it->second;
+        content->clear();
+        delete content;
     }
-    return instance;
+    attributes->clear();
+    delete attributes;
+
+    map <QString, map <QString, char> *>::iterator it2; /**< TODO */
+    for(it2 = nesting->begin(); it2 != nesting->end(); ++it2)
+    {
+        map <QString, char> *content = it2->second;
+        content->clear();
+        delete content;
+    }
+    nesting->clear();
+    delete nesting;
+
+    dataTypes->clear();
+    delete dataTypes;
+
+    dataTypeDefaultSuggestions->clear();
+    delete dataTypeDefaultSuggestions;
+
+    map <QString, map<QString, QString> *>::iterator it3;
+    for(it3 = attributesDatatype->begin(); it3 != attributesDatatype->end();
+            ++it3)
+    {
+        map<QString, QString> *content = it3->second;
+        content->clear();
+        delete content;
+    }
+    attributesDatatype->clear();
+    delete attributesDatatype;
+
+    //TODO: DELETE EACH INTERNAL POINTER
+    references->clear();
 }
 
 // TODO: This function should be based on lex and yacc to a better

@@ -18,14 +18,16 @@ Project::Project(QMap<QString,QString> &atts, QObject *parent) :
     entities[this->getUniqueId()] = this;
 }
 
-Project::Project(QString uniqueId, QMap<QString,QString> &atts, QObject *parent) :
+Project::Project( QString uniqueId, QMap<QString,QString> &atts,
+                  QObject *parent) :
     Entity(uniqueId, atts, parent)
 {
     setType("document");
     entities[this->getUniqueId()] = this;
 }
 
-Project::~Project() {
+Project::~Project()
+{
     QMutexLocker locker(&lockEntities);
     entities.clear();
 }
@@ -40,12 +42,14 @@ void Project::setProjectType(LanguageType type)
     this->projectType = type;
 }
 
-Entity* Project::getEntityById(QString _id) {
+Entity* Project::getEntityById(QString _id)
+{
     QMutexLocker locker(&lockEntities);
     return entities.contains(_id) ? entities[_id] : NULL;
 }
 
-QList<Entity*> Project::getEntitiesbyType(QString _type) {
+QList<Entity*> Project::getEntitiesbyType(QString _type)
+{
     QMutexLocker locker(&lockEntities);
     QMapIterator<QString, Entity*> it(entities);
     QList<Entity*> listRet;
@@ -60,12 +64,14 @@ QList<Entity*> Project::getEntitiesbyType(QString _type) {
     return listRet;
 }
 
-QString Project::getLocation() {
+QString Project::getLocation()
+{
     QMutexLocker locker(&lockLocation);
     return this->projectLocation;
 }
 
-void Project::setLocation(QString location) {
+void Project::setLocation(QString location)
+{
     QMutexLocker locker(&lockLocation);
     this->projectLocation = location;
 }
@@ -74,12 +80,14 @@ bool Project::addEntity(Entity* entity, QString parentId)
     throw (EntityNotFound, ParentNotFound)
 {
     QMutexLocker locker(&lockEntities);
-    if (!entities.contains(parentId)) {
+    if (!entities.contains(parentId))
+    {
         throw ParentNotFound(entity->getType(), entity->getType(),
                                  parentId);
         return false;
     }
-    if (entities.contains(entity->getUniqueId())) {
+    if (entities.contains(entity->getUniqueId()))
+    {
         throw EntityNotFound(entity->getType(),entity->getUniqueId());
         return false;
     }
@@ -95,9 +103,11 @@ bool Project::removeEntity(Entity* entity, bool appendChild)
     QMutexLocker locker(&lockEntities);
     QString _id = entity->getUniqueId();
 
-    if (entities.contains(entity->getUniqueId())) {
+    if (entities.contains(entity->getUniqueId()))
+    {
         Entity *parent = entity->getParent();
-        if (parent) {
+        if (parent)
+        {
             /* if (appendChild)
                     parent->removeChildAppendChildren(entity);
             else */
@@ -116,7 +126,7 @@ bool Project::removeEntity(Entity* entity, bool appendChild)
                     stack.push(children.at(i));
                 }
             }
-            //DELETE the entity and its children recursivelly
+            // DELETE the entity and its children recursivelly
             parent->deleteChild(entity);
         }
         else
@@ -124,11 +134,12 @@ bool Project::removeEntity(Entity* entity, bool appendChild)
             delete entity;
             entity = NULL;
         }
-    } else {
+    } else
+    {
         throw EntityNotFound(entity->getType(), entity->getUniqueId());
         return false; // entity does not exist in the model
     }
-    qDebug() << entities;
+//    qDebug() << entities;
     return true;
 }
 
@@ -155,7 +166,6 @@ QString Project::toString()
 
 bool Project::setPluginData(QString pluginId, const QByteArray data)
 {
-
     this->pluginData[pluginId] = data;
 
     return true;

@@ -13,50 +13,47 @@ using namespace std;
 
 #include <util/AttributeReferences.h>
 using namespace composer::util;
+#include <core/util/Singleton.h>
 
 #define NCLSTRUCTURE_FILE ":/config/NCL_STRUCTURE"
 
 namespace composer {
-namespace language{
+    namespace language{
 /**
- * @brief Class that keep information about the language description.
+ * \brief Class that keep information about the language description.
  *
-*/
+ */
 class NCLLANGUAGEPROFILESHARED_EXPORT NCLStructure
 {
-    ;
+    SINGLETON(NCLStructure)
 
 private:
-    static NCLStructure *instance; /**< TODO */
     map <QString, map <QString, bool> *> *attributes; /**< TODO */
     map <QString, map <QString, char> *> *nesting; /**< TODO */
     map <QString, QString > *dataTypes; /**< TODO */
+
     map <QString, QStringList> *dataTypeDefaultSuggestions;
     map <QString, map <QString, QString> *> *attributesDatatype; /**< TODO */
     QMultiMap <QString, AttributeReferences* > *references; /**< TODO */
 
-    //Default Constructor
     /**
-     * @brief
-     *
-    */
+     * \brief Constructor
+     */
     NCLStructure();
 
     /**
+     * \brief Destructor
+     */
+    ~NCLStructure();
+
+    /**
      * @brief
-     *
      * @param line
      * @return vector<QString>
     */
     vector <QString> parseLine(QString line);
 
 public:
-    /**
-     * @brief
-     *
-     * @return NCLStructure *
-    */
-    static NCLStructure *getInstance();
     /**
      * @brief
      *
@@ -147,6 +144,10 @@ public:
             */
             getReferences (QString element, QString attr);
 
+    /**
+     * \brief
+     *
+     */
     QString getAttributeDatatype(QString element, QString name);
 };
 

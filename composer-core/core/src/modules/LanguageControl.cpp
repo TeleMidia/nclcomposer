@@ -36,6 +36,7 @@ bool LanguageControl::removeProfile(LanguageType type)
     delete lp;
     lp = NULL;
     profiles.remove(type);
+
     return true;
 }
 
@@ -55,7 +56,8 @@ ILanguageProfile* LanguageControl::loadProfile(QString fileName)
                 "Profile for language (" <<
                 Utilities::getExtensionForLanguageType(type) <<
                         ") already exists";
-            } else {
+            } else
+            {
               profiles[type] = lProfile;
             }
         }

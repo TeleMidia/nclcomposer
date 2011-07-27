@@ -31,7 +31,8 @@ IDocumentParser* NCLLanguageProfile::createParser (Project *project)
 
 void NCLLanguageProfile::releaseDocumentParser (IDocumentParser *parser)
 {
-    if (parser) {
+    if (parser)
+    {
         delete parser;
         parser = NULL;
     }

@@ -17,43 +17,42 @@ PluginControl::PluginControl()
 
 PluginControl::~PluginControl()
 {
-     //FIXME: BUG WHEN CLOSING ON WINDOWS
-     QMultiHash<QString,IPlugin*>::iterator itInst;
-     QHash<QString,IPluginFactory*>::iterator itFac;
+    //FIXME: BUG WHEN CLOSING ON WINDOWS
+    QMultiHash<QString,IPlugin*>::iterator itInst;
+    QHash<QString,IPluginFactory*>::iterator itFac;
 
-     IPlugin *inst = NULL;
-     IPluginFactory *fac = NULL;
+    IPlugin *inst = NULL;
+    IPluginFactory *fac = NULL;
 
-     for (itInst = pluginInstances.begin();
-          itInst != pluginInstances.end(); itInst++)
-     {
-             QList<IPlugin*> instances = pluginInstances.values(itInst.key());
-             QList<IPlugin*>::iterator it;
+    for (itInst = pluginInstances.begin();
+         itInst != pluginInstances.end(); itInst++)
+    {
+        QList<IPlugin*> instances = pluginInstances.values(itInst.key());
+        QList<IPlugin*>::iterator it;
 
-             for (it = instances.begin(); it != instances.end(); it++)
-             {
-                inst = *it;
-                fac = factoryByPlugin.value(inst);
-                factoryByPlugin.remove(inst);
-                fac->releasePluginInstance(inst);
-                pluginInstances.remove(itInst.key(),inst);
-             }
-     }
+        for (it = instances.begin(); it != instances.end(); it++)
+        {
+            inst = *it;
+            fac = factoryByPlugin.value(inst);
+            factoryByPlugin.remove(inst);
+            fac->releasePluginInstance(inst);
+            pluginInstances.remove(itInst.key(),inst);
+        }
+    }
 
-     for (itFac = pluginFactories.begin() ; itFac != pluginFactories.end();
-          itFac++)
-     {
-             fac = itFac.value();
-             delete fac;
-             fac = NULL;
-     }
+    for (itFac = pluginFactories.begin() ; itFac != pluginFactories.end();
+         itFac++)
+    {
+        fac = itFac.value();
+        delete fac;
+        fac = NULL;
+    }
 
-     pluginFactories.clear();
-     pluginInstances.clear();
-     pluginsByType.clear();
-     factoryByPlugin.clear();
-     messageControls.clear();
-
+    pluginFactories.clear();
+    pluginInstances.clear();
+    pluginsByType.clear();
+    factoryByPlugin.clear();
+    messageControls.clear();
 }
 
 IPluginFactory* PluginControl::loadPlugin(QString fileName)
@@ -86,8 +85,8 @@ IPluginFactory* PluginControl::loadPlugin(QString fileName)
     }//end load OK
     else
     {
-       qWarning() << "PluginControl::loadPlugins failed to load"
-                << "(" << fileName << ")" << " -- " << loader.errorString();
+        qWarning() << "PluginControl::loadPlugins failed to load"
+                   << "(" << fileName << ")" << " -- " << loader.errorString();
     }
 
     return pluginFactory;
@@ -280,7 +279,6 @@ void PluginControl::sendBroadcastMessage(const char* slot, void *obj)
                                 ->indexOfSlot( slotName.toStdString().c_str() );
        if(idxSlot != -1)
        {
-           qDebug() << "Slot FOUND";
            QMetaMethod method = inst->metaObject()->method(idxSlot);
            method.invoke(inst, Qt::QueuedConnection,
                          Q_ARG(QString, plugin->getPluginInstanceID()),
