@@ -23,8 +23,8 @@ class NCLTextualViewPlugin : public IPlugin
 private:
     NCLTextEditorMainWindow *window; /*!< TODO */
 
-    QMap <QString, int> startLineOfEntity; /*!< TODO */
-    QMap <QString, int> endLineOfEntity; /*!< TODO */
+    QMap <QString, int> startEntityOffset; /*!< TODO */
+    QMap <QString, int> endEntityOffset; /*!< TODO */
 
 public:
     /*!

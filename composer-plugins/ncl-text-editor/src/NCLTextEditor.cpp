@@ -4,11 +4,14 @@ NCLTextEditor::NCLTextEditor(QWidget *parent) :
         QsciScintilla(parent)
 {
     initParameters();
+    nclexer = NULL;
+    apis = NULL;
 }
 
 NCLTextEditor::~NCLTextEditor()
 {
-    delete apis;
+//    if(nclexer != NULL) delete nclexer;
+//    if(apis != NULL) delete apis;
 }
 
 void NCLTextEditor::initParameters()
@@ -53,7 +56,8 @@ void NCLTextEditor::initParameters()
                              mylexer->defaultPaper(1), mylexer->defaultFont(1));
     mylexer->addTextPartition(10, startTagRegex, startTagStyle);
     */
-    setLexer(new QsciLexerNCL ());
+    nclexer = new QsciLexerNCL ();
+    setLexer(nclexer);
 
     //APIS
     apis = new QsciNCLAPIs(lexer());

@@ -58,6 +58,7 @@ private:
 
     INTERACTION_STATE interaction_state;
 
+    QsciLexerNCL *nclexer;
     QsciNCLAPIs *apis;
 
     int error_indicator;
