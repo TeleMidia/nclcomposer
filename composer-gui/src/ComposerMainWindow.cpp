@@ -4,6 +4,8 @@
 #include <QPixmap>
 #include <QCloseEvent>
 #include <QDialogButtonBox>
+#include <QToolBar>
+#include <QToolButton>
 
 #ifdef USE_MDI
 #include <QMdiArea>
@@ -42,6 +44,7 @@ ComposerMainWindow::ComposerMainWindow(QWidget *parent)
 
 ComposerMainWindow::~ComposerMainWindow() {
     delete ui;
+    delete menu_Perspective;
 }
 
 void ComposerMainWindow::initModules()
@@ -78,15 +81,11 @@ void ComposerMainWindow::initModules()
     connect(projectControl,SIGNAL(projectAlreadyOpen(QString)),
                  SLOT(onOpenProjectTab(QString)));
 
-    connect(tabProjects,SIGNAL(tabCloseRequested(int)),
-                this,SLOT(tabClosed(int)));
-
     readExtensions();
 }
 
 void ComposerMainWindow::readExtensions()
 {
-
 #ifdef Q_WS_MAC
     QSettings settings("telemidia.pucrio.br", "composer");
 #else
@@ -168,23 +167,31 @@ void ComposerMainWindow::initGUI() {
 #ifndef Q_WS_MAC
     setWindowIcon(QIcon(":/mainwindow/icon"));
 #endif
-    setWindowTitle(tr("Composer NCL 3.0"));
-//    tabDocuments = new QTabWidget(ui->frame);
-    tabProjects = ui->tabWidget;
+    setWindowTitle(tr("Composer NCL"));
+    tabProjects = new QTabWidget(0);
+
+    ui->frame->layout()->addWidget(tabProjects);
 
     tabProjects->setMovable(true);
     tabProjects->setTabsClosable(true);
-    connect(tabProjects,SIGNAL(tabCloseRequested(int)),
-            this,SLOT(tabClosed(int)));
+    tabProjects->setTabShape(QTabWidget::Rounded);
 
-    // createStatusBar();
+    tbPerspectiveDropList = new QToolButton(this);
+    tbPerspectiveDropList->setIcon(QIcon(":/mainwindow/webcam"));
+    tbPerspectiveDropList->setPopupMode(QToolButton::InstantPopup);
+
+    connect( tabProjects, SIGNAL(tabCloseRequested(int)),
+             this, SLOT(tabClosed(int)));
+
+//    createStatusBar();
     createActions();
     createMenus();
     createAbout();
     showMaximized();
 
 //    welcomeScreen = new QWebView(this);
-//    welcomeScreen->setStyleSheet("background-color:rgb(150,147,88); padding: 7px ; color:rgb(255,255,255)");
+//    welcomeScreen->setStyleSheet("background-color:rgb(150,147,88); \
+//                                    padding: 7px ; color:rgb(255,255,255)");
 //    welcomeScreen->load(QUrl("http://www.ncl.org.br"));
 //    welcomeScreen->showMaximized();
 //    tabDocuments->addTab(welcomeScreen, "Welcome");
@@ -227,11 +234,12 @@ void ComposerMainWindow::addPluginWidget(IPluginFactory *fac, IPlugin *plugin,
 #ifdef USE_MDI
     mdiArea->addSubWindow(pW);
     pW->setWindowModified(true);
-    pW->setWindowTitle(fac->name()+"[*]");
+    pW->setWindowTitle(projectId + " - " + fac->name());
     pW->show();
     pW->setObjectName(fac->id());
 #else
     QDockWidget *dock = new QDockWidget(fac->name());
+
     dock->setAllowedAreas(Qt::AllDockWidgetAreas);
     dock->setFeatures(QDockWidget::DockWidgetClosable |
                       QDockWidget::DockWidgetMovable);
@@ -300,6 +308,15 @@ void ComposerMainWindow::createMenus() {
 
     connect ( ui->action_New_Project, SIGNAL(triggered()),
               this, SLOT(launchProjectWizard()));
+
+
+    menu_Perspective = new QMenu(0);
+
+    // assing menu_Perspective to tbPerspectiveDropList
+    tbPerspectiveDropList->setMenu(menu_Perspective);
+    tabProjects->setCornerWidget(tbPerspectiveDropList, Qt::TopRightCorner);
+
+    updateMenuPerspectives();
 }
 
 
@@ -585,7 +602,8 @@ void ComposerMainWindow::saveCurrentProject()
 
 void ComposerMainWindow::saveCurrentGeometryAsPerspective()
 {
-    if(tabProjects->count()) { // If there is a document open
+    if(tabProjects->count()) // If there is a document open
+    {
         perspectiveManager->setBehavior(PERSPEC_SAVE);
         if(perspectiveManager->exec())
         {
@@ -593,7 +611,8 @@ void ComposerMainWindow::saveCurrentGeometryAsPerspective()
             saveDefaultPerspective(perspectiveManager->getDefaultPerspective());
         }
     }
-    else {
+    else
+    {
         QMessageBox box(QMessageBox::Warning,
                         tr("Information"),
                         tr("There aren't a layout open to be saved."),
@@ -601,6 +620,8 @@ void ComposerMainWindow::saveCurrentGeometryAsPerspective()
                      );
         box.exec();
     }
+    /* Update the elements in MENU PERSPECTIVE*/
+    updateMenuPerspectives();
 }
 
 void ComposerMainWindow::restorePerspective()
@@ -610,6 +631,9 @@ void ComposerMainWindow::restorePerspective()
     {
         restorePerspective(perspectiveManager->getSelectedName());
     }
+
+    /* Update the elements in MENU PERSPECTIVE*/
+    updateMenuPerspectives();
 }
 
 void ComposerMainWindow::savePerspective(QString layoutName)
@@ -772,7 +796,8 @@ void ComposerMainWindow::updateRecentProjectsMenu(QStringList &recentProjects)
     {
         for(int i = 0; i < recentProjects.size(); i++)
         {
-            QAction *act = ui->menu_Recent_Files->addAction(recentProjects.at(i));
+            QAction *act = ui->menu_Recent_Files->addAction(
+                                                        recentProjects.at(i));
             act->setData(recentProjects.at(i));
             connect(act, SIGNAL(triggered()), this,
                     SLOT(openRecentProject()));
@@ -816,9 +841,35 @@ void ComposerMainWindow::selectedAboutCurrentFactory()
             detailsButton->setEnabled(false);
     }
 }
+
 void ComposerMainWindow::showPluginDetails()
 {
     pluginDetailsDialog->show();
+}
+
+void ComposerMainWindow::restorePerspectiveFromMenu()
+{
+    QAction *action = qobject_cast<QAction*>(QObject::sender());
+    restorePerspective(action->data().toString());
+}
+
+void ComposerMainWindow::updateMenuPerspectives()
+{
+    QSettings settings("telemidia", "composer");
+    settings.beginGroup("pluginslayout");
+    QStringList keys = settings.allKeys();
+    settings.endGroup();
+
+    menu_Perspective->clear();
+
+    for(int i = 0; i < keys.size(); i++)
+    {
+        QAction *act = menu_Perspective->addAction(keys.at(i),
+                                            this,
+                                            SLOT(restorePerspectiveFromMenu()));
+        act->setData(keys[i]);
+//        act->setCheckable(true);
+    }
 }
 
 } } //end namespace

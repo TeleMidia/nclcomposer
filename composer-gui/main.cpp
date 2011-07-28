@@ -7,10 +7,21 @@ using namespace composer::gui;
 
 /*!
  \mainpage
-NCL Composer is a multiplataform and flexible multimedia authoring tool of
-interactive applications. It was first developed to NCL (Nested Context
-Language) support, but its flexible architecture allows to extend it to support
-almost all other multimedia languages, e.g. SMIL, SVG, and HTML 5.
+This is the online reference for developing with the NCL Composer.
+NCL Composer is a multiplatform and flexible multimedia authoring tool. It was
+first developed for NCL (Nested Context Language) support, but its flexible
+architecture allows to extend it to support almost all other multimedia
+languages, e.g. SMIL, SVG, and HTML 5.
+
+\section sec_features Features
+List of features
+
+\section sec_tutorials Tutorials
+List of tutorials
+
+\section sec_copyright Copyright Policy
+NCL Composer is developed by Telemidia/PUC-Rio since 2011 and available over
+Eclipse Public License.
 */
 int main(int argc, char *argv[])
 {

@@ -50,7 +50,8 @@ SOURCES += main.cpp \
     src/wizard/DocumentEntryPage.cpp \
     src/PreferencesDialog.cpp \
     src/PerspectiveManager.cpp \
-    src/PluginDetailsDialog.cpp
+    src/PluginDetailsDialog.cpp \
+    src/EnvironmentPreferencesWidget.cpp
     # src/ProjectTreeView.cpp
     # src/WorkspaceModel.cpp
     # src/WorkspaceSwitch.cpp
@@ -62,7 +63,9 @@ HEADERS += include/ComposerMainWindow.h \
     include/wizard/DocumentEntryPage.h \
     include/PreferencesDialog.h \
     include/PerspectiveManager.h \
-    include/PluginDetailsDialog.h
+    include/PluginDetailsDialog.h \
+    include/EnvironmentPreferencesWidget.h \
+    include/IPreferencePage.h
     # include/ProjectTreeView.h
     # include/WorkspaceModel.h
     # include/WorkspaceSwitch.h
@@ -73,6 +76,8 @@ FORMS   += ui/PreferencesDialog.ui \
     ui/ComposerMainWindow.ui \
     ui/PerspectiveManager.ui \
     ui/RunGingaConfig.ui \
-    ui/PluginDetailsDialog.ui
+    ui/PluginDetailsDialog.ui \
+    ui/EnvironmentPreferencesWidget.ui \
+    ui/QTabWidgetActions.ui
 
 INSTALLS += target

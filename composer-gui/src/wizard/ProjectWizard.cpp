@@ -31,4 +31,4 @@ void ProjectWizard::accept() {
     QDialog::accept();
 }
 
-}} //end namespace
+} } //end namespace

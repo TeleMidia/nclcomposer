@@ -25,5 +25,7 @@
         <file>images/save_document_icon.png</file>
         <file>images/open_project_icon.png</file>
         <file>images/import_document_icon.png</file>
+        <file alias="webcam">images/webcam.png</file>
+        <file alias="perspective">images/GrandPerspectiveIcon128.png</file>
     </qresource>
 </RCC>

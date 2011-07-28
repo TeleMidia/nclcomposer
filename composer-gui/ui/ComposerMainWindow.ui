@@ -50,6 +50,7 @@ QMainWindow::separator:vertical {
 
 QDockWidget{
   color: white;
+  font: 8pt &quot;Nimbus Sans L&quot;;
 }
 
 QDockWidget::title {
@@ -59,7 +60,7 @@ QDockWidget::title {
   stop: 0.39999 #717171, stop: 0.4 #626262,
   stop: 0.9 #4c4c4c, stop: 1 #333333);
   color: white;
-  padding-left: 10px;
+  padding: 2px;
 }
 
 QTabWidget::tab-bar {
@@ -69,15 +70,19 @@ QTabWidget::tab-bar {
   stop: 0 #a6a6a6, stop: 0.08 #7f7f7f,
   stop: 0.39999 #717171, stop: 0.4 #626262,
   stop: 0.9 #4c4c4c, stop: 1 #333333);
+  font: 8pt &quot;Nimbus Sans L&quot;;
  }
 
  QTabBar::tab {
   background: lightgray;
   color: darkgray;
   padding: 2px;
+  font: 8pt &quot;Nimbus Sans L&quot;;
+  border-top-left-radius: 6px;
+  border-top-right-radius: 6px;
  }
 
- QTabBar::tab:selected {
+QTabBar::tab:selected {
   background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
   stop: 0 #333333, stop: 0.08 #4c4c4c,
   stop: 0.39999 #626262, stop: 0.4 #717171,
@@ -128,16 +133,16 @@ background: QLinearGradient( x1: 0, y1: 0, x2: 1, y2: 0,
  border: 1px solid black;
 }
 
-QToolBar {
+/*QToolBar {
   border: none;
   border-color: rgb(0,0,0);
   color: rgb(255, 255, 255);
   background-image: url(:/mainwindow/images/bg.jpg);
-/*  background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+  background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
   stop: 0 #a6a6a6, stop: 0.08 #7f7f7f,
   stop: 0.39999 #717171, stop: 0.4 #626262,
-  stop: 0.9 #4c4c4c, stop: 1 #333333); */
-}
+  stop: 0.9 #4c4c4c, stop: 1 #333333); 
+}*/
 </string>
   </property>
   <property name="iconSize">
@@ -177,6 +182,9 @@ QToolBar {
     </property>
     <item>
      <widget class="QFrame" name="frame">
+      <property name="enabled">
+       <bool>true</bool>
+      </property>
       <property name="sizePolicy">
        <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
         <horstretch>0</horstretch>
@@ -199,19 +207,72 @@ QToolBar {
        <property name="margin">
         <number>0</number>
        </property>
-       <item>
-        <widget class="QTabWidget" name="tabWidget">
-         <property name="currentIndex">
-          <number>-1</number>
-         </property>
-        </widget>
-       </item>
       </layout>
      </widget>
     </item>
    </layout>
   </widget>
+  <widget class="QToolBar" name="toolBar">
+   <property name="enabled">
+    <bool>true</bool>
+   </property>
+   <property name="acceptDrops">
+    <bool>false</bool>
+   </property>
+   <property name="windowTitle">
+    <string>toolBar</string>
+   </property>
+   <property name="layoutDirection">
+    <enum>Qt::LeftToRight</enum>
+   </property>
+   <property name="autoFillBackground">
+    <bool>false</bool>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">color: white;
+font: 75 7.5pt;</string>
+   </property>
+   <property name="inputMethodHints">
+    <set>Qt::ImhNone</set>
+   </property>
+   <property name="movable">
+    <bool>true</bool>
+   </property>
+   <property name="allowedAreas">
+    <set>Qt::AllToolBarAreas</set>
+   </property>
+   <property name="iconSize">
+    <size>
+     <width>20</width>
+     <height>20</height>
+    </size>
+   </property>
+   <property name="toolButtonStyle">
+    <enum>Qt::ToolButtonIconOnly</enum>
+   </property>
+   <property name="floatable">
+    <bool>false</bool>
+   </property>
+   <attribute name="toolBarArea">
+    <enum>LeftToolBarArea</enum>
+   </attribute>
+   <attribute name="toolBarBreak">
+    <bool>false</bool>
+   </attribute>
+   <addaction name="action_RunNCL"/>
+   <addaction name="action_Run_remotely"/>
+   <addaction name="separator"/>
+   <addaction name="action_New_Project"/>
+   <addaction name="actionOpen_Project"/>
+   <addaction name="action_Save"/>
+   <addaction name="action_Preferences"/>
+   <addaction name="action_ShowNews"/>
+   <addaction name="action_Help"/>
+  </widget>
   <widget class="QMenuBar" name="menubar">
+   <property name="enabled">
+    <bool>true</bool>
+   </property>
    <property name="geometry">
     <rect>
      <x>0</x>
@@ -219,6 +280,15 @@ QToolBar {
      <width>800</width>
      <height>25</height>
     </rect>
+   </property>
+   <property name="layoutDirection">
+    <enum>Qt::LeftToRight</enum>
+   </property>
+   <property name="autoFillBackground">
+    <bool>false</bool>
+   </property>
+   <property name="defaultUp">
+    <bool>false</bool>
    </property>
    <property name="nativeMenuBar">
     <bool>false</bool>
@@ -270,63 +340,6 @@ QToolBar {
    <addaction name="menu_Edit"/>
    <addaction name="menu_Window"/>
    <addaction name="menu_Help"/>
-  </widget>
-  <widget class="QToolBar" name="toolBar">
-   <property name="enabled">
-    <bool>true</bool>
-   </property>
-   <property name="acceptDrops">
-    <bool>false</bool>
-   </property>
-   <property name="windowTitle">
-    <string>toolBar</string>
-   </property>
-   <property name="layoutDirection">
-    <enum>Qt::LeftToRight</enum>
-   </property>
-   <property name="autoFillBackground">
-    <bool>false</bool>
-   </property>
-   <property name="styleSheet">
-    <string notr="true">color: white;
-font: 75 7.5pt;</string>
-   </property>
-   <property name="inputMethodHints">
-    <set>Qt::ImhNone</set>
-   </property>
-   <property name="movable">
-    <bool>true</bool>
-   </property>
-   <property name="allowedAreas">
-    <set>Qt::AllToolBarAreas</set>
-   </property>
-   <property name="iconSize">
-    <size>
-     <width>30</width>
-     <height>30</height>
-    </size>
-   </property>
-   <property name="toolButtonStyle">
-    <enum>Qt::ToolButtonTextUnderIcon</enum>
-   </property>
-   <property name="floatable">
-    <bool>false</bool>
-   </property>
-   <attribute name="toolBarArea">
-    <enum>TopToolBarArea</enum>
-   </attribute>
-   <attribute name="toolBarBreak">
-    <bool>false</bool>
-   </attribute>
-   <addaction name="action_RunNCL"/>
-   <addaction name="action_Run_remotely"/>
-   <addaction name="separator"/>
-   <addaction name="action_New_Project"/>
-   <addaction name="actionOpen_Project"/>
-   <addaction name="action_Save"/>
-   <addaction name="action_Preferences"/>
-   <addaction name="action_ShowNews"/>
-   <addaction name="action_Help"/>
   </widget>
   <action name="action_New_Project">
    <property name="icon">

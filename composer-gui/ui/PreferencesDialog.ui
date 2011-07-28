@@ -95,6 +95,15 @@
      </property>
      <item>
       <property name="text">
+       <string>Environment</string>
+      </property>
+      <property name="icon">
+       <iconset resource="../images.qrc">
+        <normaloff>:/mainwindow/images/preferences_icon.png</normaloff>:/mainwindow/images/preferences_icon.png</iconset>
+      </property>
+     </item>
+     <item>
+      <property name="text">
        <string>Run Configuration</string>
       </property>
       <property name="icon">

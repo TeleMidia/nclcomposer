@@ -41,7 +41,8 @@ void PreferencesDialog::addPreferencesPage(IPluginFactory *pF)
     ui->scrollAreaVerticalLayout->addWidget(page);
 }
 
-void PreferencesDialog::loadPreferencesPages(){
+void PreferencesDialog::loadPreferencesPages()
+{
     QList<IPluginFactory*> plugins = PluginControl::getInstance()->
                                                         getLoadedPlugins();
     QList<IPluginFactory*>::iterator it;
@@ -62,7 +63,8 @@ void PreferencesDialog::loadPreferencesPages(){
     }
 }
 
-void PreferencesDialog::changeActivePage(){
+void PreferencesDialog::changeActivePage()
+{
     if (currentItem != NULL)
     {
         if(pages.contains(currentItem->text())){

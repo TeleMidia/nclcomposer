@@ -77,7 +77,7 @@ void PerspectiveManager::updateContent()
         this->setWindowTitle(tr("Saving a perspective"));
         ui->deleteButton->setVisible(false);
     }
-    else // If it is loading a already saved perspective:
+    else // If it is loading an already saved perspective:
     {
         for(i = 0; i < keys.size(); i++)
         {

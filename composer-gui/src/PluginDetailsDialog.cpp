@@ -1,5 +1,5 @@
 #include "PluginDetailsDialog.h"
-#include "ui_PluginDetailsDialog.h"
+
 namespace composer {
     namespace gui {
 
@@ -11,7 +11,7 @@ PluginDetailsDialog::PluginDetailsDialog(QWidget *parent)
 
 PluginDetailsDialog::~PluginDetailsDialog()
 {
-//    delete ui;
+    delete ui;
 }
 
 void PluginDetailsDialog::setCurrentPlugin(IPluginFactory *currentPluginFactory)

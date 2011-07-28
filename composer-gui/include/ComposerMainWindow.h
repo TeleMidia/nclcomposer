@@ -34,6 +34,7 @@
 #include <QtGui/QBitmap>
 #include <QtGui/QPainter>
 #include <QtGui/QTreeView>
+#include <QToolButton>
 #include <QWebView>
 
 #include <core/modules/PluginControl.h>
@@ -53,17 +54,16 @@ namespace Ui {
     class ComposerMainWindow;
 }
 
-#define USE_MDI 1
+//#define USE_MDI 1
 
 namespace composer {
     namespace gui {
 
 /*!
- \brief The main Window of Composer.
-
- This class is the main window of Composer.
-
-*/
+ * \brief The main Window of Composer.
+ *
+ * This class is the main window of Composer.
+ */
 class ComposerMainWindow : public QMainWindow {
     Q_OBJECT
 
@@ -73,6 +73,12 @@ private:
     QTabWidget *tabProjects; /*!< Each open project is show in a different
                                 tab. tabProjects contains the list of open
                                 tabs. */
+
+    QToolButton *tbPerspectiveDropList; /*!< Action that shows the list of
+                                             perspective as a menu. */
+    QMenu *menu_Perspective; /*!< The menu containing the list of
+                                  perspectives. */
+
     QMap<QString, QMainWindow*> projectsWidgets; /*!< \deprecated  */
     QMap<QString, QDockWidget*> firstDock; /*!< TODO */
 
@@ -233,6 +239,10 @@ private slots:
         \brief Shows the details of the current selected plugins.
      */
     void showPluginDetails();
+
+    void updateMenuPerspectives();
+
+    void restorePerspectiveFromMenu();
 
 public:
     /*!
