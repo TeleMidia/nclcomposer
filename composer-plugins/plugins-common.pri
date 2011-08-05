@@ -17,7 +17,8 @@ macx {
     :   LIBS += -framework \
         ComposerCore
 
-        LIBS +=  $$quote(-L/Library/Application Support/Composer) -lNCLLanguageProfile
+        LIBS +=  $$quote(-L/Library/Application Support/Composer)
+                 -lNCLLanguageProfile
 
         INCLUDEPATH +=  include /Library/Frameworks/ComposerCore.framework/ \
                        /Library/Frameworks/ComposerCore.framework/core \
@@ -26,7 +27,7 @@ macx {
 }
 else:unix {
     LIBS += -L/usr/local/lib/composer -lNCLLanguageProfile \
-        -lComposerCore -L/usr/local/lib/composer/extension
+            -L/usr/local/lib/composer/extension
 
     INCLUDEPATH += include /usr/local/include/composer \
                     /usr/local/include/composer/core \
@@ -34,8 +35,9 @@ else:unix {
     target.path = $$quote(/usr/local/lib/composer/extension)
 }
 else:win32 {
-    LIBS += -L$$quote(C:/Composer) -lComposerCore1 \
-            -L$$quote(C:/Composer/lib/composer)
+    LIBS += -L$$quote(C:/Composer) \
+            -L$$quote(C:/Composer/lib/composer) \
+            -lNCLLanguageProfile
 
     INCLUDEPATH += . include C:/composer/include/composer \
                     C:/Composer/include/composer/core \

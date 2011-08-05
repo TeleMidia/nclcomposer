@@ -1,3 +1,12 @@
+/* Copyright (c) 2011 Telemidia/PUC-Rio.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *    Telemidia/PUC-Rio - initial API and implementation
+ */
 #include "NCLTextEditor.h"
 
 NCLTextEditor::NCLTextEditor(QWidget *parent) :
@@ -25,7 +34,7 @@ void NCLTextEditor::initParameters()
 
     setMarginLineNumbers(1, true);
     setMarginWidth(1, 25);
-    setMarginsBackgroundColor(QColor("#ffffff"));
+    setMarginsBackgroundColor(MARGINS_BACKGROUND_COLOR);
 
     setCaretWidth(20);
     setCaretLineBackgroundColor(QColor("#e6fff0"));
@@ -75,7 +84,7 @@ void NCLTextEditor::initParameters()
     error_indicator = indicatorDefine(RoundBoxIndicator, 1);
     setIndicatorForegroundColor(QColor("#FF0000"), error_indicator);
     filling_attribute_indicator = indicatorDefine (RoundBoxIndicator, 2);
-//    qDebug() << error_marker << " " << error_indicator;
+    // qDebug() << error_marker << " " << error_indicator;
     // setWhitespaceVisibility(QsciScintilla::WsVisible);
 }
 
@@ -190,8 +199,6 @@ void NCLTextEditor::keyPressEvent(QKeyEvent *event)
         formatText();
         return;
     }
-
-
 
     int begin, end;
     int line, index;
@@ -449,7 +456,8 @@ void NCLTextEditor::updateVisualFillingAttributeField( int line,
         return;
     }
 
-    if(begin == end) {
+    if(begin == end)
+    {
         insert(" ");
         end++;
         inserted_space = true;

@@ -1,3 +1,12 @@
+/* Copyright (c) 2011 Telemidia/PUC-Rio.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *    Telemidia/PUC-Rio - initial API and implementation
+ */
 #include "NCLTreeWidget.h"
 #include "NCLStructure.h"
 
@@ -18,6 +27,8 @@ NCLTreeWidget::NCLTreeWidget(QWidget *parent) : QTreeWidget(parent)
             << QObject::tr("Element Id");
     setHeaderLabels(labels);
 
+    setHeaderHidden(true);
+    setColumnHidden(1, true);
     setColumnHidden(2, true);
 }
 
@@ -120,6 +131,7 @@ QTreeWidgetItem* NCLTreeWidget::addElement ( QTreeWidgetItem *father,
     }
     else {
         child = new QTreeWidgetItem(this);
+
         if(pos != -1) {
             this->insertTopLevelItem(pos, child);
         }
@@ -129,6 +141,9 @@ QTreeWidgetItem* NCLTreeWidget::addElement ( QTreeWidgetItem *father,
     child->setText(2, id);
     // child->setText(2, QString::number(line_in_text));
     // child->setText(3, QString::number(column_in_text));
+
+    repaint();
+
     return child;
 }
 
@@ -224,12 +239,14 @@ void NCLTreeWidget::removeItem(QString itemId)
         else
         {
 //            TODO:
-//            item = currentItem();
-//            int index = indexOfTopLevelItem(item);
-//            takeTopLevelItem(index);
-//            delete item;
+//            this->clear();
+              int index = indexOfTopLevelItem(item);
+              QTreeWidgetItem *item = takeTopLevelItem(index);
+              qDebug() << "index=" << index << "item=" << item;
+//              delete item;
         }
     }
+    repaint();
 }
 
 void NCLTreeWidget::userRemoveElement()
@@ -237,7 +254,7 @@ void NCLTreeWidget::userRemoveElement()
     QList<QTreeWidgetItem*> selecteds = this->selectedItems();
     QTreeWidgetItem *item = selecteds.at (0);
 
-    if(item->parent() == NULL) return;
+//    if(item->parent() == NULL) return;
 
     QString id = item->text(2);
 
@@ -253,6 +270,7 @@ void NCLTreeWidget::userRemoveElement()
             emit elementRemovedByUser(id);
         }
     }
+    repaint();
 }
 
 void NCLTreeWidget::updateItem(QTreeWidgetItem *item, QString tagname,
@@ -297,6 +315,7 @@ void NCLTreeWidget::updateItem(QTreeWidgetItem *item, QString tagname,
     item->setText(0, tagname);
     //item->setText(2, id);
     item->setText(1, strAttrList);
+    repaint();
 }
 
 void NCLTreeWidget::errorNotification( QString message,

@@ -1,4 +1,15 @@
+/* Copyright (c) 2011 Telemidia/PUC-Rio.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *    Telemidia/PUC-Rio - initial API and implementation
+ */
 #include "NCLTextualViewPlugin.h"
+#include <QMetaObject>
+#include <QMetaMethod>
 
 namespace composer {
     namespace plugin {
@@ -13,14 +24,11 @@ NCLTextualViewPlugin::NCLTextualViewPlugin()
              this,
              SIGNAL(addEntity(QString,QString,QMap<QString,QString>&,bool)));
 
-
-    QToolBar *toolbar = window->addToolBar("Synchronize");
-    QAction *synchronizeAct = toolbar->addAction(
-                                      QIcon(":/images/synchronize-icon-24.png"),
-                                      tr("&Synchronize"));
-
-    synchronizeAct->setStatusTip(tr("Synchronize current text with the others"
-                                    "plugins."));
+    isSyncing = false;
+    updateModelShortcut = new QShortcut(window);
+    updateModelShortcut->setKey(QKeySequence("F5"));
+    connect( updateModelShortcut, SIGNAL(activated()),
+             this, SLOT(updateCoreModel()) );
 }
 
 NCLTextualViewPlugin::~NCLTextualViewPlugin()
@@ -75,7 +83,8 @@ QWidget* NCLTextualViewPlugin::getWidget()
 void NCLTextualViewPlugin::onEntityAdded(QString pluginID, Entity *entity)
 {
     //Return if this is my call to onEntityAdded
-    if(pluginID == getPluginInstanceID())
+    qDebug() << "isSyncing=" << isSyncing;
+    if(pluginID == getPluginInstanceID() && !isSyncing)
         return;
 
     QString line = "<" + entity->getType() + "";
@@ -115,9 +124,12 @@ void NCLTextualViewPlugin::onEntityAdded(QString pluginID, Entity *entity)
     }
 
     qDebug() << line;
+
     window->getTextEditor()->insertAtPos(line, insertAtOffset);
     startEntityOffset[entity->getUniqueId()] = insertAtOffset;
     endEntityOffset[entity->getUniqueId()] = insertAtOffset + startEntitySize;
+
+    emit TextualPluginHasAddedEntity(pluginID, entity);
 
     //TODO: fix indentation
     /*int lineident = window->getTextEditor()
@@ -197,8 +209,8 @@ void NCLTextualViewPlugin::onEntityChanged(QString pluginID, Entity *entity)
 
     qDebug() << previous_length;
     // store the current identation (this must keep equal even with the
-    //  modifications)
-    /*int lineident = window->getTextEditor()
+    // modifications)
+    /* int lineident = window->getTextEditor()
                     ->SendScintilla( QsciScintilla::SCI_GETLINEINDENTATION,
                                      insertAtLine);*/
 
@@ -223,8 +235,8 @@ void NCLTextualViewPlugin::onEntityChanged(QString pluginID, Entity *entity)
         if(endEntityOffset[key] > insertAtOffset)
             endEntityOffset[key] += diff_size;
     }
-    window->getTextEditor()->SendScintilla(QsciScintilla::SCI_GOTOPOS,
-                                           insertAtOffset);
+    window->getTextEditor()->SendScintilla( QsciScintilla::SCI_GOTOPOS,
+                                            insertAtOffset);
 
     //TODO: fix indentation
 }
@@ -232,7 +244,7 @@ void NCLTextualViewPlugin::onEntityChanged(QString pluginID, Entity *entity)
 void NCLTextualViewPlugin::onEntityRemoved(QString pluginID, QString entityID)
 {
     //skip if this is my own call to onEntityRemoved
-    if(pluginID == getPluginInstanceID())
+    if(pluginID == getPluginInstanceID() && !isSyncing)
         return;
 
     int startOffset = startEntityOffset[entityID];
@@ -276,7 +288,8 @@ void NCLTextualViewPlugin::onEntityRemoved(QString pluginID, QString entityID)
         {
             mustRemoveEntity.append(key);
         }
-        else {
+        else
+        {
             // otherwise if necessary we must update the start and end line of
             // the entity.
             if(startEntityOffset[key] >= startOffset)
@@ -289,7 +302,6 @@ void NCLTextualViewPlugin::onEntityRemoved(QString pluginID, QString entityID)
                 endEntityOffset[key] -= (endOffset - startOffset);
             }
         }
-
     }
 
     //Remove the content in text and update the structures that keep line number
@@ -340,13 +352,15 @@ bool NCLTextualViewPlugin::saveSubsession()
 
 void NCLTextualViewPlugin::changeSelectedEntity(QString pluginID, void *param)
 {
+    return;
+
     QString *id = (QString*)param;
     if(startEntityOffset.contains(*id))
     {
         int entityOffset = startEntityOffset.value(*id);
-        int entityLine = window->getTextEditor()->SendScintilla(
-                                    QsciScintilla::SCI_LINEFROMPOSITION,
-                                    entityOffset);
+//        int entityLine = window->getTextEditor()->SendScintilla(
+//                                    QsciScintilla::SCI_LINEFROMPOSITION,
+//                                    entityOffset);
 
         window->getTextEditor()->SendScintilla(QsciScintilla::SCI_GOTOPOS,
                                                entityOffset);
@@ -358,6 +372,45 @@ void NCLTextualViewPlugin::changeSelectedEntity(QString pluginID, void *param)
         qWarning() << "NCLTextualViewPlugin::changeSelectedEntity() "
                 << "Entity doesn't exists!";
     }
+}
+
+void NCLTextualViewPlugin::updateCoreModel()
+{
+    NCLDocumentParser parser(project);
+    QString text = window->getTextEditor()->text();
+
+    isSyncing = true;
+
+    if(project->getChildren().size())
+        emit removeEntity(project->getChildren().at(0), true);
+
+    connect(this,
+            SIGNAL(TextualPluginHasAddedEntity(QString, Entity*)),
+            &parser,
+            SLOT(onEntityAdded(QString, Entity*)),
+            Qt::DirectConnection);
+
+    connect(&parser,
+            SIGNAL(parseFinished()),
+            this,
+            SLOT(syncFinished()),
+            Qt::QueuedConnection);
+
+    connect( &parser,
+             SIGNAL(addEntity(QString, QString, QMap<QString,QString>&,bool)),
+             this,
+             SIGNAL(addEntity(QString, QString, QMap<QString,QString>&,bool)),
+             Qt::DirectConnection);
+
+    window->getTextEditor()->clear();
+
+    parser.parseContent(text);
+}
+
+void NCLTextualViewPlugin::syncFinished()
+{
+    qDebug() << "isSyncing=" << isSyncing;
+    isSyncing = false;
 }
 
 } } } //end namespace

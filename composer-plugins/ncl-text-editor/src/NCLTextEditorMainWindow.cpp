@@ -1,24 +1,12 @@
-/****************************************************************************
-**
-** Copyright (C) 2004-2006 Trolltech ASA. All rights reserved.
-**
-** This file is part of the example classes of the Qt Toolkit.
-**
-** Licensees holding a valid Qt License Agreement may use this file in
-** accordance with the rights, responsibilities and obligations
-** contained therein.  Please consult your licensing agreement or
-** contact sales@trolltech.com if any conditions of this licensing
-** agreement are not clear to you.
-**
-** Further information about Qt licensing is available at:
-** http://www.trolltech.com/products/qt/licensing.html or by
-** contacting info@trolltech.com.
-**
-** This file is provided AS IS with NO WARRANTY OF ANY KIND, INCLUDING THE
-** WARRANTY OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
-**
-****************************************************************************/
-
+/* Copyright (c) 2011 Telemidia/PUC-Rio.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *    Telemidia/PUC-Rio - initial API and implementation
+ */
 #include <QtGui>
 
 #include <Qsci/qsciscintilla.h>
@@ -29,26 +17,25 @@ NCLTextEditorMainWindow::NCLTextEditorMainWindow(QWidget *parent):
         QMainWindow(parent)
 {
     //preferences = new Preferences(parent);
-
     createTextView();
     createActions();
     //    createMenus();
-    createStatusBar();
 #ifdef NCLEDITOR_STANDALONE
     createToolBars();
     createOutlineView();
     createProblemsView();
+    createStatusBar();
 #endif
     // createLayoutView();
-
     setDockOptions(NCLTextEditorMainWindow::AllowNestedDocks
                    | NCLTextEditorMainWindow::AllowTabbedDocks
                    | NCLTextEditorMainWindow::AnimatedDocks);
 
     // The "this" is a class that inherit from QWedgit and Ui
-    //    this->setWindowFlags(Qt::MSWindowsFixedSizeDialogHint); //Set window to fixed size
-    this->setWindowFlags(Qt::CustomizeWindowHint); //Set window with no title bar
-    //    this->setWindowFlags(Qt::FramelessWindowHint); //Set a frameless window
+    //    this->setWindowFlags(Qt::MSWindowsFixedSizeDialogHint);
+    // Set window to fixed size
+    this->setWindowFlags(Qt::CustomizeWindowHint);//Set window with no title bar
+    //  this->setWindowFlags(Qt::FramelessWindowHint); //Set a frameless window
 
     /* setTabPosition(Qt::LeftDockWidgetArea, QTabWidget::North);
     setTabPosition(Qt::RightDockWidgetArea, QTabWidget::North);
@@ -58,6 +45,7 @@ NCLTextEditorMainWindow::NCLTextEditorMainWindow(QWidget *parent):
     readSettings();
 
     connect(textEdit, SIGNAL(textChanged()), this, SLOT(documentWasModified()));
+
 #ifdef NCLEDITOR_STANDALONE
     connect ( outlineView, SIGNAL(itemClicked(QTreeWidgetItem*, int)),
               SLOT(gotoLineOf(QTreeWidgetItem *, int)) );
@@ -429,7 +417,8 @@ void NCLTextEditorMainWindow::gotoLineOf(QTreeWidgetItem *item, int column)
 }
 
 //FIXME:    1. fix line element line numbers.
-void NCLTextEditorMainWindow::insertElement(){
+void NCLTextEditorMainWindow::insertElement()
+{
 #ifdef NCLEDITOR_STANDALONE
     bool ok;
     QList<QTreeWidgetItem*> selecteds = outlineView->selectedItems ();
@@ -458,7 +447,8 @@ void NCLTextEditorMainWindow::insertElement(){
                                             true,
                                             &ok);
 
-    if(ok && !element.isEmpty()) {
+    if(ok && !element.isEmpty())
+    {
         //Add new Element to OutlineWidget
         outlineView->addElement(item, 0, element, QString(""), empty, line, 0);
 
@@ -506,8 +496,8 @@ void NCLTextEditorMainWindow::insertElement(){
 
         element.prepend("\n");
 
-        //        qDebug() << line << " " << beginLine << " " << endLine << " "
-        //                << end_element_column << " ";
+        // qDebug() << line << " " << beginLine << " " << endLine << " "
+        //          << end_element_column << " ";
 
         textEdit->insertAt(element, line-1, end_element_column);
 
@@ -548,7 +538,7 @@ void NCLTextEditorMainWindow::createTextView() {
 #endif
 
     // dockTextEdit->setAllowedAreas(Qt::LeftDockWidgetArea |
-    //                              Qt::RightDockWidgetArea);
+    //                               Qt::RightDockWidgetArea);
 
     textEdit = new NCLTextEditor(this);
     textEdit->setTabBehavior(NCLTextEditor::TAB_BEHAVIOR_NEXT_ATTR);

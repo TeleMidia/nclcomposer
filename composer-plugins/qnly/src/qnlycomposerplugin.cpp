@@ -1,3 +1,12 @@
+/* Copyright (c) 2011 Telemidia/PUC-Rio.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *    Telemidia/PUC-Rio - initial API and implementation
+ */
 #include "qnlycomposerplugin.h"
 
 namespace composer {
@@ -151,15 +160,18 @@ void QnlyComposerPlugin::onEntityChanged(QString pluginID, Entity *entity)
 
 void QnlyComposerPlugin::changeSelectedEntity (QString pluginID, void* param)
 {
-    if(pluginID != this->pluginInstanceID)
-    {
-        QString* entityUID = (QString*) param;
+    //if(pluginID != this->pluginInstanceID)
+    // {
+    QString* entityUID = (QString*) param;
 
+    if(entityUID != NULL)
+    {
         if (regions.contains(*entityUID))
             selectRegionInView(*entityUID);
         else if (regionbases.contains(*entityUID))
             selectRegionBaseInView(*entityUID);
     }
+    // }
 }
 
 void QnlyComposerPlugin::addRegionToView(Entity* entity)
@@ -795,10 +807,16 @@ void QnlyComposerPlugin::changeRegionBase(const QString regionbaseUID,
 
 void QnlyComposerPlugin::selectRegionBase(const QString regionbaseUID)
 {
+    if(selectedId != NULL)
+    {
+        delete selectedId;
+        selectedId = NULL;
+    }
+
     if (!regionbaseUID.isEmpty())
     {
-        emit sendBroadcastMessage("changeSelectedEntity",
-                                  new QString(regionbaseUID));
+        selectedId = new QString(regionbaseUID);
+        emit sendBroadcastMessage("changeSelectedEntity", selectedId);
     }
 }
 

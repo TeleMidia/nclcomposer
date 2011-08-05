@@ -1,3 +1,12 @@
+/* Copyright (c) 2011 Telemidia/PUC-Rio.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *    Telemidia/PUC-Rio - initial API and implementation
+ */
 #include "OutlineViewPlugin.h"
 
 #include "core/modules/LanguageControl.h"
@@ -47,7 +56,7 @@ QWidget* OutlineViewPlugin::getWidget()
 
 void OutlineViewPlugin::onEntityAdded(QString pluginID, Entity *entity)
 {
-    QString line = "<" + entity->getType() + "> </" + entity->getType() + ">\n";
+//    QString line = "<" + entity->getType() + "> </" + entity->getType() + ">\n";
 
     QTreeWidgetItem *item;
     QMap <QString, QString> attrs;
@@ -75,6 +84,7 @@ void OutlineViewPlugin::onEntityAdded(QString pluginID, Entity *entity)
                                    attrs,
                                    0, 0);
     }
+
     idToItem[entity->getUniqueId()] = item;
 }
 
@@ -112,6 +122,11 @@ void OutlineViewPlugin::onEntityRemoved(QString pluginID, QString entityID)
     {
         idToItem.remove(entityID);
         window->removeItem(entityID);
+        if (selectedId != NULL && entityID == *selectedId)
+        {
+            delete selectedId;
+            selectedId = NULL;
+        }
     }
 }
 
@@ -213,7 +228,10 @@ void OutlineViewPlugin::debugHasSendClearAll(QString pluginID, void *param)
 void OutlineViewPlugin::itemSelectionChanged()
 {
     if(selectedId != NULL)
+    {
         delete selectedId;
+        selectedId = NULL;
+    }
 
     QList <QTreeWidgetItem*> selecteds = window->selectedItems();
 

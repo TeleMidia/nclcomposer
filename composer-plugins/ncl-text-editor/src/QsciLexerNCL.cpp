@@ -1,3 +1,12 @@
+/* Copyright (c) 2011 Telemidia/PUC-Rio.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *    Telemidia/PUC-Rio - initial API and implementation
+ */
 #include "QsciLexerNCL.h"
 
 #include <qcolor.h>
@@ -36,6 +45,8 @@ const char *QsciLexerNCL::lexer() const
 // Returns the foreground colour of the text for a style.
 QColor QsciLexerNCL::defaultColor(int style) const
 {
+//    return QColor(0xff, 0xff, 0xff);
+
     switch (style)
     {
     case Default:
@@ -155,10 +166,12 @@ const char *QsciLexerNCL::keywords(int set) const
 // Returns the background colour of the text for a style.
 QColor QsciLexerNCL::defaultPaper(int style) const
 {
+//    return QColor(0x88,0x88,0x88);
+
     switch (style)
     {
     case CDATA:
-        return QColor(0xff,0xf0,0xf0);
+        return QColor(0xff,0xff,0xff);
 
     case SGMLDefault:
     case SGMLCommand:

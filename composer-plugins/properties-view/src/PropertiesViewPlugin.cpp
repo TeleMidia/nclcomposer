@@ -1,3 +1,12 @@
+/* Copyright (c) 2011 Telemidia/PUC-Rio.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *    Telemidia/PUC-Rio - initial API and implementation
+ */
 #include "PropertiesViewPlugin.h"
 #include "core/modules/LanguageControl.h"
 
@@ -39,8 +48,6 @@ void PropertiesViewPlugin::onEntityChanged(QString pluginID, Entity * entity)
 {
     QString line = "PLUGIN (" + pluginID + ") changed the Entity (" +
                    entity->getType() + " - " + entity->getUniqueId() +")";
-
-    changeSelectedEntity(this->pluginInstanceID, (void*)&entity->getUniqueId());
 }
 
 void PropertiesViewPlugin::onEntityRemoved(QString pluginID, QString entityID)
@@ -62,8 +69,10 @@ void PropertiesViewPlugin::init()
 
 void PropertiesViewPlugin::changeSelectedEntity(QString pluginID, void *param)
 {
-    QString *id = (QString*)param;
-    currentEntity = project->getEntityById(*id);
+    QString *id = (QString*) param;
+    if(id != NULL && *id != "") {
+        currentEntity = project->getEntityById(*id);
+    }
 
     if(currentEntity != NULL)
     {
