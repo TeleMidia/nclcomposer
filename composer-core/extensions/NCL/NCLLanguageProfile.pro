@@ -23,7 +23,10 @@ else:unix:HEADERS_PATH = $$INSTALLBASE/include/composer
 
 INCLUDEPATH += ../../core/include
 
-headers_nclprofile.files += NCLStructure.h NCLLanguageProfile_global.h
+headers_nclprofile.files += NCLLanguageProfile.h\
+                            NCLStructure.h \
+                            NCLLanguageProfile_global.h \
+                            NCLDocumentParser.h
 
 macx {
     LIBS += -L../../core -F../../core \
@@ -50,9 +53,9 @@ SOURCES += NCLLanguageProfile.cpp \
     NCLDocumentParser.cpp \
     NCLStructure.cpp
 
-HEADERS += NCLLanguageProfile.h\
-        NCLStructure.h \
-        NCLLanguageProfile_global.h \
-        NCLDocumentParser.h
+HEADERS +=  NCLLanguageProfile.h\
+            NCLStructure.h \
+            NCLLanguageProfile_global.h \
+            NCLDocumentParser.h
 
 INSTALLS += target headers_nclprofile

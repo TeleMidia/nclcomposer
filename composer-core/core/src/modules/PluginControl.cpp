@@ -1,3 +1,12 @@
+/* Copyright (c) 2011 Telemidia/PUC-Rio.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *    Telemidia/PUC-Rio - initial API and implementation
+ */
 #include "modules/PluginControl.h"
 
 #include <QUuid>
@@ -174,35 +183,42 @@ void PluginControl::launchNewPlugin(IPlugin *plugin, MessageControl *mControl)
     connect(mControl,SIGNAL(entityChanged(QString, Entity*)),
             plugin,SLOT(onEntityChanged(QString, Entity*)));
     connect(mControl,SIGNAL(entityRemoved(QString, QString)),
-            plugin,SLOT(onEntityRemoved(QString, QString))); */
+            plugin,SLOT(onEntityRemoved(QString, QString)));
+    */
 
     /* Connect signals from the plugin to slots of the core */
     connect(plugin,
             SIGNAL(addEntity(QString, QString, QMap<QString,QString>&, bool)),
             mControl,
-            SLOT(onAddEntity(QString, QString, QMap<QString,QString>&, bool)));
+            SLOT(onAddEntity(QString, QString, QMap<QString,QString>&, bool)),
+            Qt::DirectConnection);
 
     connect(plugin, SIGNAL(setAttributes(Entity*, QMap<QString,QString>, bool)),
             mControl,
-            SLOT(onEditEntity(Entity*, QMap<QString,QString>, bool)));
+            SLOT(onEditEntity(Entity*, QMap<QString,QString>, bool)),
+            Qt::DirectConnection);
 
     connect(plugin,
             SIGNAL(removeEntity(Entity*,bool)),
             mControl,
-            SLOT(onRemoveEntity(Entity*,bool)));
+            SLOT(onRemoveEntity(Entity*,bool)),
+            Qt::DirectConnection);
 
     connect(plugin,
             SIGNAL(setListenFilter(QStringList)),
             mControl,
-            SLOT(setListenFilter(QStringList)));
+            SLOT(setListenFilter(QStringList)),
+            Qt::DirectConnection);
 
     // broadcastMessage
     connect(plugin, SIGNAL(sendBroadcastMessage(const char*, void *)),
-            this, SLOT(sendBroadcastMessage(const char*, void*)));
+            this, SLOT(sendBroadcastMessage(const char*, void*)),
+            Qt::DirectConnection);
 
     /* setPluginData */
     connect(plugin, SIGNAL(setPluginData(QByteArray)),
-            mControl, SLOT(setPluginData(QByteArray)));
+            mControl, SLOT(setPluginData(QByteArray)),
+            Qt::DirectConnection);
 }
 
 void PluginControl::connectParser(IDocumentParser *parser,
@@ -280,7 +296,7 @@ void PluginControl::sendBroadcastMessage(const char* slot, void *obj)
        if(idxSlot != -1)
        {
            QMetaMethod method = inst->metaObject()->method(idxSlot);
-           method.invoke(inst, Qt::QueuedConnection,
+           method.invoke(inst, Qt::DirectConnection,
                          Q_ARG(QString, plugin->getPluginInstanceID()),
                          Q_ARG(void *, obj));
        }

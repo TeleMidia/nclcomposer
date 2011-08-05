@@ -1,3 +1,12 @@
+/* Copyright (c) 2011 Telemidia/PUC-Rio.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *    Telemidia/PUC-Rio - initial API and implementation
+ */
 #include "modules/MessageControl.h"
 #include "modules/PluginControl.h"
 
@@ -188,7 +197,7 @@ void MessageControl::sendEntityAddedMessageToPlugins( QString pluginInstanceId,
            if(idxSlot != -1)
            {
                QMetaMethod method = inst->metaObject()->method(idxSlot);
-               method.invoke(inst, Qt::QueuedConnection,
+               method.invoke(inst, Qt::DirectConnection,
                              Q_ARG(QString, pluginInstanceId),
                              Q_ARG(Entity*, entity));
            }
@@ -220,7 +229,7 @@ void MessageControl::sendEntityChangedMessageToPlugins(QString pluginInstanceId,
            if(idxSlot != -1)
            {
                QMetaMethod method = inst->metaObject()->method(idxSlot);
-               method.invoke(inst, Qt::QueuedConnection,
+               method.invoke(inst, Qt::DirectConnection,
                              Q_ARG(QString, pluginInstanceId),
                              Q_ARG(Entity*, entity));
            }
@@ -250,7 +259,7 @@ void MessageControl::sendEntityRemovedMessageToPlugins(QString pluginInstanceId,
            if(idxSlot != -1)
            {
                QMetaMethod method = inst->metaObject()->method(idxSlot);
-               method.invoke(inst, Qt::QueuedConnection,
+               method.invoke(inst, Qt::DirectConnection,
                              Q_ARG(QString, pluginInstanceId),
                              Q_ARG(QString, entityId));
            }
