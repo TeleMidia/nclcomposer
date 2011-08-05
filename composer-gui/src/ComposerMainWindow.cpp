@@ -1,3 +1,12 @@
+/* Copyright (c) 2011 Telemidia/PUC-Rio.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *    Telemidia/PUC-Rio - initial API and implementation
+ */
 #include "ComposerMainWindow.h"
 #include "ui_ComposerMainWindow.h"
 
@@ -6,6 +15,7 @@
 #include <QDialogButtonBox>
 #include <QToolBar>
 #include <QToolButton>
+#include <QApplication>
 
 #ifdef USE_MDI
 #include <QMdiArea>
@@ -14,7 +24,7 @@
 namespace composer {
     namespace gui {
 
-ComposerMainWindow::ComposerMainWindow(QWidget *parent)
+ComposerMainWindow::ComposerMainWindow(QApplication &app, QWidget *parent)
     : QMainWindow(parent),
     ui(new Ui::ComposerMainWindow)
 {
@@ -40,9 +50,13 @@ ComposerMainWindow::ComposerMainWindow(QWidget *parent)
     projectWizard = new ProjectWizard(this);
 
     connect(ui->action_RunNCL, SIGNAL(triggered()), this, SLOT(runNCL()));
+
+    connect(&app, SIGNAL(focusChanged(QWidget *, QWidget *)),
+            this, SLOT(focusChanged(QWidget *, QWidget *)));
 }
 
-ComposerMainWindow::~ComposerMainWindow() {
+ComposerMainWindow::~ComposerMainWindow()
+{
     delete ui;
     delete menu_Perspective;
 }
@@ -135,7 +149,8 @@ QString ComposerMainWindow::promptChooseExtDirectory()
     }
 }
 
-void ComposerMainWindow::readSettings() {
+void ComposerMainWindow::readSettings()
+{
 #ifdef Q_WS_MAC
     QSettings settings("telemidia.pucrio.br", "composer");
 #else
@@ -163,7 +178,8 @@ void ComposerMainWindow::readSettings() {
     updateRecentProjectsMenu(recentProjects);
 }
 
-void ComposerMainWindow::initGUI() {
+void ComposerMainWindow::initGUI()
+{
 #ifndef Q_WS_MAC
     setWindowIcon(QIcon(":/mainwindow/icon"));
 #endif
@@ -174,7 +190,6 @@ void ComposerMainWindow::initGUI() {
 
     tabProjects->setMovable(true);
     tabProjects->setTabsClosable(true);
-    tabProjects->setTabShape(QTabWidget::Rounded);
 
     tbPerspectiveDropList = new QToolButton(this);
     tbPerspectiveDropList->setIcon(QIcon(":/mainwindow/webcam"));
@@ -183,18 +198,25 @@ void ComposerMainWindow::initGUI() {
     connect( tabProjects, SIGNAL(tabCloseRequested(int)),
              this, SLOT(tabClosed(int)));
 
-//    createStatusBar();
+    connect(tabProjects, SIGNAL(currentChanged(int)),
+            this, SLOT(currentTabChanged(int)));
+
+//  createStatusBar();
     createActions();
     createMenus();
     createAbout();
     showMaximized();
 
-//    welcomeScreen = new QWebView(this);
-//    welcomeScreen->setStyleSheet("background-color:rgb(150,147,88); \
-//                                    padding: 7px ; color:rgb(255,255,255)");
-//    welcomeScreen->load(QUrl("http://www.ncl.org.br"));
-//    welcomeScreen->showMaximized();
-//    tabDocuments->addTab(welcomeScreen, "Welcome");
+    /* welcomeScreen = new QWebView(this); */
+    /* welcomeScreen->setStyleSheet("background-color:rgb(150,147,88); \
+                                    padding: 7px ; color:rgb(255,255,255)");*/
+    /* welcomeScreen->load(QUrl("http://www.ncl.org.br"));
+    welcomeScreen->showMaximized();
+    tabProjects->addTab(welcomeScreen, "Welcome");*/
+
+    welcomeWidget = new WelcomeWidget(this);
+    welcomeWidget->show();
+    tabProjects->addTab(welcomeWidget, "Welcome");
 
 }
 
@@ -241,8 +263,7 @@ void ComposerMainWindow::addPluginWidget(IPluginFactory *fac, IPlugin *plugin,
     QDockWidget *dock = new QDockWidget(fac->name());
 
     dock->setAllowedAreas(Qt::AllDockWidgetAreas);
-    dock->setFeatures(QDockWidget::DockWidgetClosable |
-                      QDockWidget::DockWidgetMovable);
+    dock->setFeatures(QDockWidget::AllDockWidgetFeatures);
 
     dock->setWidget(pW);
     dock->setObjectName(fac->id());
@@ -258,7 +279,67 @@ void ComposerMainWindow::addPluginWidget(IPluginFactory *fac, IPlugin *plugin,
         // w->tabifyDockWidget(firstDock[location], dock);
     }
     else firstDock[location] = dock;
+
+    QFrame *titleBar = new QFrame();
+    titleBar->setContentsMargins(0,0,0,0);
+
+    QLabel *titleLabel = new QLabel(fac->name());
+    titleLabel->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Minimum);
+
+    QHBoxLayout *layout = new QHBoxLayout(titleBar);
+    layout->setMargin(0);
+    layout->setSpacing(0);
+
+    layout->addWidget(titleLabel);
+
+    titleBar->setStyleSheet(" QFrame { border: none; \
+                    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,\
+                    stop: 0 #a6a6a6, stop: 0.08 #7f7f7f,\
+                    stop: 0.39999 #717171, stop: 0.4 #626262,\
+                    stop: 0.9 #4c4c4c, stop: 1 #333333);\
+                    color: white;\
+                    padding: 0px;}");
+
+    dock->setTitleBarWidget(titleBar);
+    allDocks.insert(0, dock);
+    QPushButton *refresh = new QPushButton(titleBar);
+    refresh->setIcon(QIcon(":/mainwindow/refreshplugin"));
+    addButtonToDockTitleBar(titleBar, refresh);
+
+    QPushButton *hide = new QPushButton(titleBar);
+    connect(hide, SIGNAL(pressed()), dock, SLOT(close()));
+    hide->setIcon(QIcon(":/mainwindow/closeplugin"));
+    addButtonToDockTitleBar(titleBar, hide);
+
 #endif
+}
+
+void ComposerMainWindow::addButtonToDockTitleBar(QFrame *titleBar,
+                                                 QPushButton *button)
+{
+    button->setIconSize(QSize(22, 22));
+
+    button->setStyleSheet("QPushButton { \
+                    background-color: transparent; \
+                    border: none;\
+                  } \
+                QPushButton:hover { \
+                    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,\
+                    stop: 0 #d6d6d6, stop: 0.08 #afafaf,\
+                    stop: 0.79999 #717171, stop: 0.4 #a2a2a2,\
+                    stop: 0.9 #8c8c8c, stop: 1 #777777);\
+                } \
+                QPushButton:pressed { \
+                    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,\
+                    stop: 0 #868686, stop: 0.08 #5f5f5f,\
+                    stop: 0.19999 #717171, stop: 0.4 #424242,\
+                    stop: 0.9 #2c2c2c, stop: 1 #111111);\
+                } \
+                QPushButton:flat { \
+                    border: none; \
+                } \
+                     ");
+    titleBar->layout()->addWidget(button);
 }
 
 void ComposerMainWindow::tabClosed(int index)
@@ -266,6 +347,7 @@ void ComposerMainWindow::tabClosed(int index)
     QString location = tabProjects->tabToolTip(index);
     ProjectControl::getInstance()->closeProject(location);
     QMainWindow *w = projectsWidgets[location];
+
     if (w)
     {
         delete w;
@@ -273,6 +355,8 @@ void ComposerMainWindow::tabClosed(int index)
     }
     projectsWidgets.remove(location);
     firstDock.remove(location);
+
+    //\todo Remove from allDocks
 }
 
 void ComposerMainWindow::closeAllFiles()
@@ -291,8 +375,8 @@ void ComposerMainWindow::onOpenProjectTab(QString location)
     tabProjects->setCurrentWidget(w);
 }
 
-void ComposerMainWindow::createMenus() {
-
+void ComposerMainWindow::createMenus()
+{
     ui->menu_Edit->addAction(editPreferencesAct);
 
     menuBar()->addSeparator();
@@ -315,6 +399,7 @@ void ComposerMainWindow::createMenus() {
     // assing menu_Perspective to tbPerspectiveDropList
     tbPerspectiveDropList->setMenu(menu_Perspective);
     tabProjects->setCornerWidget(tbPerspectiveDropList, Qt::TopRightCorner);
+//    tabProjects->setCornerWidget(ui->menu_Window, Qt::TopLeftCorner);
 
     updateMenuPerspectives();
 }
@@ -347,6 +432,7 @@ void ComposerMainWindow::createAbout()
     detailsButton = bOk->button(QDialogButtonBox::Ok);
     detailsButton->setText(tr("Details"));
     detailsButton->setIcon(QIcon());
+    detailsButton->setEnabled(false);
 
     connect(bOk, SIGNAL(rejected()), aboutDialog, SLOT(close()));
 
@@ -421,13 +507,14 @@ void ComposerMainWindow::about()
         profilesExt->addItem(new QListWidgetItem(lg->getProfileName()));
     }
 
+    detailsButton->setEnabled(false);
     aboutDialog->setModal(true);
     aboutDialog->show();
 }
 
-void ComposerMainWindow::errorDialog(QString message) {
+void ComposerMainWindow::errorDialog(QString message)
+{
     QMessageBox::warning(this,tr("Error!"),message);
-
 }
 
 void ComposerMainWindow::createActions() {
@@ -462,7 +549,7 @@ void ComposerMainWindow::createActions() {
                 this, SLOT(restorePerspective()));
 
     QWidget* spacer = new QWidget();
-    spacer->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Expanding);
+    spacer->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
 
     //Add a separator to the toolbar. All actions after preferences (including
     // it will be aligned in the bottom.
@@ -761,7 +848,7 @@ void ComposerMainWindow::importFromDocument()
 
         if(projFilename != "")
         {
-            ProjectControl::getInstance()->importFromDocument( docFilename,
+            ProjectControl::getInstance()->importFromDocument(docFilename,
                                                            projFilename);
         }
     }
@@ -868,7 +955,46 @@ void ComposerMainWindow::updateMenuPerspectives()
                                             this,
                                             SLOT(restorePerspectiveFromMenu()));
         act->setData(keys[i]);
-//        act->setCheckable(true);
+    }
+}
+
+void ComposerMainWindow::currentTabChanged(int n)
+{
+    if(n)
+        tbPerspectiveDropList->setEnabled(true);
+    else
+        tbPerspectiveDropList->setEnabled(false);
+}
+
+void ComposerMainWindow::focusChanged(QWidget *old, QWidget *now)
+{
+    for(int i = 0; i < allDocks.size(); i++)
+    {
+        if(allDocks.at(i)->isAncestorOf(old))
+        {
+            allDocks.at(i)->titleBarWidget()
+                    ->setStyleSheet("\
+                        border: none;\
+                        background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,\
+                        stop: 0 #a6a6a6, stop: 0.08 #7f7f7f,\
+                        stop: 0.39999 #717171, stop: 0.4 #626262,\
+                        stop: 0.9 #4c4c4c, stop: 1 #333333);\
+                        color: white;\
+                        padding-left:2px;\
+                    ");
+        }
+
+        if(allDocks.at(i)->isAncestorOf(now))
+        {
+            allDocks.at(i)->titleBarWidget()
+                    ->setStyleSheet("\
+                        background: #6C7B8B;\
+                        color: white;\
+                        font-style: bold;\
+                        padding-left: 2px;\
+                    ");
+            //allDocks.at(i)->setStyleSheet("QDockWidget{ border: 5px solid #6C7B8B;}");
+        }
     }
 }
 

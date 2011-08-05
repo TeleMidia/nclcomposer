@@ -9,8 +9,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>800</width>
-    <height>600</height>
+    <width>776</width>
+    <height>508</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -29,7 +29,45 @@
    <bool>false</bool>
   </property>
   <property name="styleSheet">
-   <string notr="true">QMainWindow {
+   <string notr="true">/* Dark Style QWidget{
+	background-color: #888888;
+	color: white;
+}
+QMenuBar {
+     background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+                                       stop:0 #aaaaaa, stop:1 #888888);
+ }
+
+ QMenuBar::item {
+     spacing: 3px;
+     padding: 1px 4px;
+     background: transparent;
+     border-radius: 4px;
+ }
+
+ QMenuBar::item:selected {
+     background: #a8a8a8;
+ }
+
+ QMenuBar::item:pressed {
+     background: #888888;
+ }
+QMenu {
+     background-color: #ABABAB;
+     border: 1px solid black;
+ }
+
+ QMenu::item {
+     background-color: transparent;
+ }
+
+ QMenu::item:selected {
+     background-color: #778899;
+ }
+
+*/
+
+QMainWindow {
 	font: 7pt;
 }
 
@@ -48,9 +86,10 @@ QMainWindow::separator:vertical {
      background: lightgray;
  }
 
-QDockWidget{
+QDockWidget {
   color: white;
   font: 8pt &quot;Nimbus Sans L&quot;;
+  border: 1px solid lightgray;
 }
 
 QDockWidget::title {
@@ -60,7 +99,7 @@ QDockWidget::title {
   stop: 0.39999 #717171, stop: 0.4 #626262,
   stop: 0.9 #4c4c4c, stop: 1 #333333);
   color: white;
-  padding: 2px;
+  padding-left: 2px;
 }
 
 QTabWidget::tab-bar {
@@ -70,16 +109,16 @@ QTabWidget::tab-bar {
   stop: 0 #a6a6a6, stop: 0.08 #7f7f7f,
   stop: 0.39999 #717171, stop: 0.4 #626262,
   stop: 0.9 #4c4c4c, stop: 1 #333333);
-  font: 8pt &quot;Nimbus Sans L&quot;;
+  font: 9pt &quot;Nimbus Sans L&quot;;
  }
 
  QTabBar::tab {
   background: lightgray;
   color: darkgray;
-  padding: 2px;
-  font: 8pt &quot;Nimbus Sans L&quot;;
-  border-top-left-radius: 6px;
-  border-top-right-radius: 6px;
+  padding: 4px;
+  font: 9pt &quot;Nimbus Sans L&quot;;
+/*  border-top-left-radius: 6px;
+  border-top-right-radius: 6px; */
  }
 
 QTabBar::tab:selected {
@@ -133,8 +172,13 @@ background: QLinearGradient( x1: 0, y1: 0, x2: 1, y2: 0,
  border: 1px solid black;
 }
 
-/*QToolBar {
+QTreeWidget {
+/*	background-color: #888888; */
+}
+
+QToolBar {
   border: none;
+/*
   border-color: rgb(0,0,0);
   color: rgb(255, 255, 255);
   background-image: url(:/mainwindow/images/bg.jpg);
@@ -142,8 +186,12 @@ background: QLinearGradient( x1: 0, y1: 0, x2: 1, y2: 0,
   stop: 0 #a6a6a6, stop: 0.08 #7f7f7f,
   stop: 0.39999 #717171, stop: 0.4 #626262,
   stop: 0.9 #4c4c4c, stop: 1 #333333); 
-}*/
-</string>
+*/
+}
+
+QTableWidget {
+/*  background-color: #888888; */
+}</string>
   </property>
   <property name="iconSize">
    <size>
@@ -236,7 +284,7 @@ font: 75 7.5pt;</string>
     <set>Qt::ImhNone</set>
    </property>
    <property name="movable">
-    <bool>true</bool>
+    <bool>false</bool>
    </property>
    <property name="allowedAreas">
     <set>Qt::AllToolBarAreas</set>
@@ -254,7 +302,7 @@ font: 75 7.5pt;</string>
     <bool>false</bool>
    </property>
    <attribute name="toolBarArea">
-    <enum>LeftToolBarArea</enum>
+    <enum>BottomToolBarArea</enum>
    </attribute>
    <attribute name="toolBarBreak">
     <bool>false</bool>
@@ -277,7 +325,7 @@ font: 75 7.5pt;</string>
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>800</width>
+     <width>776</width>
      <height>25</height>
     </rect>
    </property>

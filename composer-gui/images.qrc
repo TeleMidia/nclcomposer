@@ -27,5 +27,9 @@
         <file>images/import_document_icon.png</file>
         <file alias="webcam">images/webcam.png</file>
         <file alias="perspective">images/GrandPerspectiveIcon128.png</file>
+        <file alias="closeplugin">images/close_icon.png</file>
+        <file alias="refreshplugin">images/refresh_icon.png</file>
+        <file alias="bg_gray">images/bg-gray-one.jpg</file>
+        <file alias="icon2">images/icon2.png</file>
     </qresource>
 </RCC>

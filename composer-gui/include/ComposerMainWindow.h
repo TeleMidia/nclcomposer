@@ -1,3 +1,12 @@
+/* Copyright (c) 2011 Telemidia/PUC-Rio.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *    Telemidia/PUC-Rio - initial API and implementation
+ */
 #ifndef COMPOSERMAINWINDOW_H
 #define COMPOSERMAINWINDOW_H
 
@@ -18,7 +27,6 @@
 #include <QtGui/QMessageBox>
 #include <QtGui/QMenuBar>
 #include <QtGui/QTreeWidget>
-#include <QtGui/QDockWidget>
 #include <QtGui/QWizardPage>
 #include <QtGui/QWizard>
 #include <QtGui/QVBoxLayout>
@@ -47,6 +55,8 @@ using namespace composer::core;
 #include "PerspectiveManager.h"
 #include "PreferencesDialog.h"
 #include "PluginDetailsDialog.h"
+#include "ComposerQDockWidget.h"
+#include "WelcomeWidget.h"
 
 using namespace composer::gui;
 
@@ -80,7 +90,10 @@ private:
                                   perspectives. */
 
     QMap<QString, QMainWindow*> projectsWidgets; /*!< \deprecated  */
+    //QMap<QString, ComposerQDockWidget*> firstDock; /*!< TODO */
     QMap<QString, QDockWidget*> firstDock; /*!< TODO */
+    //QList <ComposerQDockWidget*> allDocks;
+    QList <QDockWidget*> allDocks;
 
     QAction *aboutComposerAct; /*!< Action to show About Composer. */
     QAction *fullScreenViewAct; /*!< Action to show Composer in FullScreen. */
@@ -105,7 +118,7 @@ private:
     QString defaultEx; /*!< TODO */
     QString user_directory_ext; /*!< TODO */
 
-    QWebView *welcomeScreen; /*!< TODO */
+    WelcomeWidget *welcomeWidget; /*!< TODO */
 
     PerspectiveManager *perspectiveManager;
     PluginDetailsDialog *pluginDetailsDialog;
@@ -177,6 +190,8 @@ private:
 
     void updateRecentProjectsMenu(QStringList &recentProjects);
 
+    void addButtonToDockTitleBar(QFrame *titleBar, QPushButton *button);
+
 
 private slots:
     /*!
@@ -244,13 +259,17 @@ private slots:
 
     void restorePerspectiveFromMenu();
 
+    void currentTabChanged(int n);
+
+    void focusChanged(QWidget *old, QWidget *now);
+
 public:
     /*!
      \brief Constructs the Composer Main Window with the given parent.
 
      \param parent The parent of the Composer Main Window.
     */
-    explicit ComposerMainWindow(QWidget *parent = 0);
+    explicit ComposerMainWindow(QApplication &app, QWidget *parent = 0);
     /*!
      \brief
 
