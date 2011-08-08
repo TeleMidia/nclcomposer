@@ -83,7 +83,6 @@ FORMS   += ui/PreferencesDialog.ui \
     ui/RunGingaConfig.ui \
     ui/PluginDetailsDialog.ui \
     ui/EnvironmentPreferencesWidget.ui \
-    ui/QTabWidgetActions.ui \
     ui/WelcomeWidget.ui
 
 INSTALLS += target
