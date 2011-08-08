@@ -10,7 +10,7 @@
 #include "NCLProblemsView.h"
 
 NCLProblemsView::NCLProblemsView(QWidget *parent):
-        QDockWidget("Problems View", parent)
+        QDockWidget("Problems", parent)
 {
     mainWindow = new QMainWindow(parent);
 

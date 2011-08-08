@@ -100,6 +100,7 @@ void QsciNCLAPIs::updateAutoCompletionList( const QStringList &context,
 
         QStringList defaultSuggestion =
                 nclStructure->getDatatypeDefaultSuggestions(datatype);
+
         list.append(defaultSuggestion);
 
         vector <AttributeReferences *>
@@ -170,12 +171,17 @@ void QsciNCLAPIs::autoCompletionSelected(const QString &selection)
                 outputStr.prepend(' ');
         }
     }
+    else if(suggesting == SUGGESTING_ATTRIBUTE_VALUES)
+    {
+        outputStr = selection;
+    }
 
     //insert the new word (already managed)
     pos = lexer()->editor()->SendScintilla(QsciScintilla::SCI_GETCURRENTPOS);
     lexer()->editor()->insert(outputStr);
     //fix identation
-    if(fixidentation){
+    if(fixidentation)
+    {
         int lineident = lexer()->editor()
                                     ->SendScintilla (
                                          QsciScintilla::SCI_GETLINEINDENTATION,

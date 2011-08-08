@@ -172,7 +172,7 @@ void NCLTextEditor::mousePressEvent(QMouseEvent *event)
 
     //FIXME: Attribute also can be between Single quotes
     if (style == QsciLexerNCL::HTMLDoubleQuotedString) {
-        interaction_state = FILLING_ATTRIBUTES_STATE;
+        //interaction_state = FILLING_ATTRIBUTES_STATE;
         getCursorPosition (&line, &index);
         updateVisualFillingAttributeField(line, index, begin, end);
     } else {
@@ -180,7 +180,7 @@ void NCLTextEditor::mousePressEvent(QMouseEvent *event)
     }
 }
 
-//FIXME: I DONT KNOW WHY (or WHERE), BUT THE UNDO IS NOT WORKING EVERY TIME.
+//FIXME: I DONT KNOW WHY (or WHERE), BUT THE UNDO IS NOT WORKING EVERY TIME!
 void NCLTextEditor::keyPressEvent(QKeyEvent *event)
 {
     //Ctrl + Space == Autocomplete
@@ -243,6 +243,7 @@ void NCLTextEditor::keyPressEvent(QKeyEvent *event)
         if(event->key() == Qt::Key_Return){
             interaction_state = DEFAULT_STATE;
             setSelection(line, index, line, index);
+            QsciScintilla::keyPressEvent(event);
             return;
         }
 
@@ -292,7 +293,9 @@ void NCLTextEditor::keyPressEvent(QKeyEvent *event)
             }
             return;
 
-        } else {
+        }
+        else
+        {
             QsciScintilla::keyPressEvent ( event ) ;
             getCursorPosition (&line, &index);
             pos = SendScintilla(SCI_GETCURRENTPOS);
@@ -307,11 +310,13 @@ void NCLTextEditor::keyPressEvent(QKeyEvent *event)
                 recolor();
                 style = SendScintilla(SCI_GETSTYLEAT, pos-1);
 
-                if(style == QsciLexerNCL::HTMLDoubleQuotedString) {
+                if(style == QsciLexerNCL::HTMLDoubleQuotedString)
+                {
                     updateVisualFillingAttributeField(line, index, begin, end);
                     return;
                 }
             }
+
             clearIndicatorRange( line,
                                  0,
                                  line,
@@ -321,7 +326,8 @@ void NCLTextEditor::keyPressEvent(QKeyEvent *event)
             interaction_state = DEFAULT_STATE;
         }
     }
-    else {
+    else
+    {
         QsciScintilla::keyPressEvent(event);
         pos = SendScintilla(SCI_GETCURRENTPOS);
         style = SendScintilla(SCI_GETSTYLEAT, pos);
@@ -363,7 +369,6 @@ void NCLTextEditor::MarkLine(int margin, int line, Qt::KeyboardModifiers state)
     (void) margin;
     (void) line;
     (void) state;
-//    qDebug() << "NCLTextEditor::MarkLine()";
 }
 
 void NCLTextEditor::userFillingNextAttribute(int pos)

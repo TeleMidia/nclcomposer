@@ -243,7 +243,7 @@ void NCLTextualViewPlugin::onEntityChanged(QString pluginID, Entity *entity)
 
 void NCLTextualViewPlugin::onEntityRemoved(QString pluginID, QString entityID)
 {
-    //skip if this is my own call to onEntityRemoved
+    // skip if this is my own call to onEntityRemoved
     if(pluginID == getPluginInstanceID() && !isSyncing)
         return;
 
@@ -352,8 +352,6 @@ bool NCLTextualViewPlugin::saveSubsession()
 
 void NCLTextualViewPlugin::changeSelectedEntity(QString pluginID, void *param)
 {
-    return;
-
     QString *id = (QString*)param;
     if(startEntityOffset.contains(*id))
     {
@@ -409,7 +407,7 @@ void NCLTextualViewPlugin::updateCoreModel()
 
 void NCLTextualViewPlugin::syncFinished()
 {
-    qDebug() << "isSyncing=" << isSyncing;
+//    qDebug() << "isSyncing=" << isSyncing;
     isSyncing = false;
 }
 

@@ -16,25 +16,23 @@
 NCLTextEditorMainWindow::NCLTextEditorMainWindow(QWidget *parent):
         QMainWindow(parent)
 {
-    //preferences = new Preferences(parent);
+    // preferences = new Preferences(parent);
     createTextView();
     createActions();
-    //    createMenus();
 #ifdef NCLEDITOR_STANDALONE
+    createMenus();
     createToolBars();
     createOutlineView();
     createProblemsView();
     createStatusBar();
 #endif
-    // createLayoutView();
     setDockOptions(NCLTextEditorMainWindow::AllowNestedDocks
                    | NCLTextEditorMainWindow::AllowTabbedDocks
                    | NCLTextEditorMainWindow::AnimatedDocks);
-
-    // The "this" is a class that inherit from QWedgit and Ui
-    //    this->setWindowFlags(Qt::MSWindowsFixedSizeDialogHint);
-    // Set window to fixed size
+    //  Set window to fixed size
+#ifndef NCLEDITOR_STANDALONE
     this->setWindowFlags(Qt::CustomizeWindowHint);//Set window with no title bar
+#endif
     //  this->setWindowFlags(Qt::FramelessWindowHint); //Set a frameless window
 
     /* setTabPosition(Qt::LeftDockWidgetArea, QTabWidget::North);
