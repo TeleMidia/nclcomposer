@@ -1,9 +1,6 @@
-# -------------------------------------------------
-# Project created by QtCreator 2010-03-18T18:30:03
-# -------------------------------------------------
 TARGET = Composer
 TEMPLATE = app
-CONFIG += debug console
+CONFIG += qt warn_on release debug console
 QT += xml webkit
 
 MOC_DIR     =   .moc
@@ -30,17 +27,15 @@ macx {
     INCLUDEPATH += /Library/Frameworks/ComposerCore.framework/
 }
 else:unix {
-    LIBS += -L/usr/local/lib/composer \
-        -lComposerCore
+    LIBS += -L$$LOCATION/lib/composer -lComposerCore
     INCLUDEPATH +=  $$LOCATION/include/composer \
                     $$LOCATION/include/composer/core
 }
 else:win32 {
-    LIBS += -L$$LOCATION/ \
-        -lComposerCore1
-    INCLUDEPATH += $$LOCATION/include/composer
+    LIBS += -L$$LOCATION -lComposerCore1
+    INCLUDEPATH += $$LOCATION/include/composer \
+                   $$LOCATION/include/composer/core
 }
-
 
 SOURCES += main.cpp \
     src/ComposerMainWindow.cpp \
@@ -52,8 +47,7 @@ SOURCES += main.cpp \
     src/PerspectiveManager.cpp \
     src/PluginDetailsDialog.cpp \
     src/EnvironmentPreferencesWidget.cpp \
-    src/WelcomeWidget.cpp \
-    src/ComposerQDockWidget.cpp
+    src/WelcomeWidget.cpp
     # src/ProjectTreeView.cpp
     # src/WorkspaceModel.cpp
     # src/WorkspaceSwitch.cpp
@@ -69,8 +63,7 @@ HEADERS += include/ComposerMainWindow.h \
     include/EnvironmentPreferencesWidget.h \
     include/IPreferencePage.h \
     include/WelcomeWidget.h \
-    include/QWelcomeWidgetTab.h \
-    include/ComposerQDockWidget.h
+    include/QWelcomeWidgetTab.h
     # include/ProjectTreeView.h
     # include/WorkspaceModel.h
     # include/WorkspaceSwitch.h
