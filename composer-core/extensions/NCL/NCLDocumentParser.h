@@ -10,6 +10,8 @@
 #ifndef NCLDOCUMENTPARSER_H
 #define NCLDOCUMENTPARSER_H
 
+#include "NCLLanguageProfile_global.h"
+
 #include <QObject>
 #include <QDebug>
 #include <QXmlDefaultHandler>
@@ -23,7 +25,8 @@ using namespace composer::extension;
 namespace composer {
     namespace language{
 
-class NCLDocumentParser : public IDocumentParser, public QXmlDefaultHandler
+class NCLLANGUAGEPROFILESHARED_EXPORT NCLDocumentParser :
+        public IDocumentParser, public QXmlDefaultHandler
 {
     Q_OBJECT
 private:

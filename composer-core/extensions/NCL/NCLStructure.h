@@ -11,6 +11,7 @@
 #define NCLSTRUCTURE_H
 
 #include "NCLLanguageProfile_global.h"
+
 #include <QtDebug>
 #include <QFile>
 #include <QTextStream>
