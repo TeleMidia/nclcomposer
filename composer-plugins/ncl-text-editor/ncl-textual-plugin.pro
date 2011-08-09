@@ -51,6 +51,6 @@ OTHER_FILES +=  TODO \
 RESOURCES   =   ncl_textual_plugin.qrc
 
 LIBS        +=  -lqscintilla2
-FORMS       +=      ui/TextualPluginPreferencesWidget.ui
+FORMS       +=  ui/TextualPluginPreferencesWidget.ui
 
 INSTALLS += target

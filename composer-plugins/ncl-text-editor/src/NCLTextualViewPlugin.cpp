@@ -8,6 +8,7 @@
  *    Telemidia/PUC-Rio - initial API and implementation
  */
 #include "NCLTextualViewPlugin.h"
+
 #include <QMetaObject>
 #include <QMetaMethod>
 

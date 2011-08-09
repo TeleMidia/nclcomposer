@@ -285,7 +285,7 @@ void NCLTextEditorMainWindow::createProblemsView()
 
 void NCLTextEditorMainWindow::readSettings()
 {
-    QSettings settings("Trolltech", "Application Example");
+    QSettings settings(QSettings::IniFormat, QSettings::UserScope, "Trolltech", "Application Example");
     QPoint pos = settings.value("pos", QPoint(200, 200)).toPoint();
     QSize size = settings.value("size", QSize(400, 400)).toSize();
     bool fullscreen = settings.value("fullscreen", true).toBool();
@@ -302,7 +302,7 @@ void NCLTextEditorMainWindow::readSettings()
 
 void NCLTextEditorMainWindow::writeSettings()
 {
-    QSettings settings("Trolltech", "Application Example");
+    QSettings settings(QSettings::IniFormat, QSettings::UserScope, "Trolltech", "Application Example");
     settings.setValue("pos", pos());
     settings.setValue("size", size());
     settings.setValue("fullscreen", isFullScreen());

@@ -15,14 +15,14 @@ win32:INSTALLBASE = C:/Composer
 
 macx {
     :   LIBS += -framework \
-        ComposerCore
+                ComposerCore
 
         LIBS +=  $$quote(-L/Library/Application Support/Composer)
-                 -lNCLLanguageProfile
 
         INCLUDEPATH +=  include /Library/Frameworks/ComposerCore.framework/ \
                        /Library/Frameworks/ComposerCore.framework/core \
-                       /Library/Frameworks/ComposerCore.framework/core/extensions
+                    /Library/Frameworks/ComposerCore.framework/core/extensions
+
         target.path = $$quote(/Library/Application Support/Composer)
 }
 else:unix {
@@ -32,15 +32,18 @@ else:unix {
     INCLUDEPATH += include /usr/local/include/composer \
                     /usr/local/include/composer/core \
                    /usr/local/include/composer/core/extensions
+
     target.path = $$quote(/usr/local/lib/composer/extension)
 }
 else:win32 {
-    LIBS += -L$$quote(C:/Composer) \
-            -L$$quote(C:/Composer/lib/composer) \
-            -lNCLLanguageProfile
+    LIBS += -L$$LOCATION \
+            -lComposerCore1 \
+            -L$$LOCATION/lib/composer \
+            -L$$LOCATION/lib/composer/extensions
 
-    INCLUDEPATH += . include C:/composer/include/composer \
-                    C:/Composer/include/composer/core \
-                    C:/Composer/include/composer/core/extensions
-    target.path = $$quote(C:/composer/lib/composer/)
+    INCLUDEPATH += . include $$LOCATION/include/composer \
+                   $$LOCATION/include/composer/core \
+                   $$LOCATION/include/composer/core/extensions
+
+    target.path = $$LOCATION/lib/composer
 }
