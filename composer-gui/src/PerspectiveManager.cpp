@@ -31,7 +31,7 @@ PerspectiveManager::PerspectiveManager(QWidget *parent):
 
     connect ( ui->treeWidget, SIGNAL(itemChanged(QTreeWidgetItem*, int)),
               this, SLOT(itemChanged(QTreeWidgetItem*, int)));
-    QSettings settings("telemidia", "composer");
+    QSettings settings(QSettings::IniFormat, QSettings::UserScope, "telemidia", "composer");
     defaultPerspective = settings.value("default_perspective").
                                     toString();
 }
@@ -48,7 +48,7 @@ void PerspectiveManager::setBehavior(PERSPEC_BEHAVIOR behavior)
 
 void PerspectiveManager::updateContent()
 {
-    QSettings settings("telemidia", "composer");
+    QSettings settings(QSettings::IniFormat, QSettings::UserScope, "telemidia", "composer");
     settings.beginGroup("pluginslayout");
     QStringList keys = settings.allKeys();
     settings.endGroup();
@@ -159,7 +159,7 @@ QString PerspectiveManager::getDefaultPerspective()
 
 void PerspectiveManager::deletePerspective(QString name)
 {
-    QSettings settings("telemidia", "composer");
+    QSettings settings(QSettings::IniFormat, QSettings::UserScope, "telemidia", "composer");
     settings.beginGroup("pluginslayout");
     //TODO: When the name is empty ("") this remove all the perspectives.
     settings.remove(name);

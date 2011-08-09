@@ -90,9 +90,7 @@ private:
                                   perspectives. */
 
     QMap<QString, QMainWindow*> projectsWidgets; /*!< \deprecated  */
-    //QMap<QString, ComposerQDockWidget*> firstDock; /*!< TODO */
     QMap<QString, QDockWidget*> firstDock; /*!< TODO */
-    //QList <ComposerQDockWidget*> allDocks;
     QList <QDockWidget*> allDocks;
 
     QAction *aboutComposerAct; /*!< Action to show About Composer. */
@@ -190,6 +188,7 @@ private:
 
     void updateRecentProjectsMenu(QStringList &recentProjects);
 
+    void updateDockTitleStyle(QFrame *titleBar, bool selected=false);
     void addButtonToDockTitleBar(QFrame *titleBar, QPushButton *button);
 
 

@@ -43,6 +43,7 @@ int main(int argc, char *argv[])
     QCoreApplication::setApplicationName("composer");
     QPixmap mPix(":/mainwindow/icon");
     QSplashScreen splash(mPix);
+
     splash.blockSignals(true);
     splash.show();
 

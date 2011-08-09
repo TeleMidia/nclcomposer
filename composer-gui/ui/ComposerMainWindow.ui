@@ -29,7 +29,121 @@
    <bool>false</bool>
   </property>
   <property name="styleSheet">
-   <string notr="true">/* Dark Style QWidget{
+   <string notr="true">QMainWindow {
+	font: 7pt;
+}
+
+QMainWindow::separator {
+     background: black;
+     width: 1px; /* when vertical */
+     height: 1px; /* when horizontal */
+     border: 10px;
+ }
+
+QMainWindow::separator:vertical {
+     height: 1px; /* when vertical */
+ }
+
+ QMainWindow::separator:hover {
+     background: lightgray;
+ }
+
+QDockWidget {
+  color: white;
+  font: 8pt &quot;Nimbus Sans L&quot;;
+  border: 1px solid lightgray;
+}
+
+QTabWidget::tab-bar {
+  border: none;
+  color: rgb(255, 255, 255);
+  background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+	  stop: 0 #a6a6a6, stop: 0.08 #7f7f7f,
+	  stop: 0.39999 #717171, stop: 0.4 #626262,
+	  stop: 0.9 #4c4c4c, stop: 1 #333333);
+  font: 9pt &quot;Nimbus Sans L&quot;;
+ }
+
+ QTabBar::tab {
+	background: lightgray;
+	color: darkgray;
+	padding: 4px;
+	font: 9pt &quot;Nimbus Sans L&quot;;
+	border-top-left-radius: 6px;
+ 	border-top-right-radius: 6px;
+ }
+
+QTabBar::tab:selected {
+	background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+ 		stop: 0 #333333, stop: 0.08 #4c4c4c,
+		stop: 0.39999 #626262, stop: 0.4 #717171,
+		stop: 0.9  #7f7f7f, stop: 1 #a6a6a6);
+	color: white;
+ }
+
+QProgressBar {
+	border: 1px solid black;
+	text-align: top;
+	padding: 1px;
+	border-bottom-right-radius: 7px;
+	border-bottom-left-radius: 7px;
+	background: QLinearGradient( x1: 0, y1: 0, x2: 1, y2: 0,
+		stop: 0 #fff,
+		stop: 0.4999 #eee,
+		stop: 0.5 #ddd,
+		stop: 1 #eee);
+	width: 15px;
+}
+
+QProgressBar::chunk {
+	background: QLinearGradient( x1: 0, y1: 0, x2: 1, y2: 0,
+		 stop: 0 #78d,
+		 stop: 0.4999 #46a,
+		 stop: 0.5 #45a,
+		 stop: 1 #238 );
+	 border-bottom-right-radius: 7px;
+	 border-bottom-left-radius: 7px;
+	 border: 1px solid black;
+}
+
+QTreeWidget {
+/*	background-color: #888888; */
+}
+
+QToolBar {
+  border: none;
+/*
+  border-color: rgb(0,0,0);
+  color: rgb(255, 255, 255);
+  background-image: url(:/mainwindow/images/bg.jpg);
+  background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+  stop: 0 #a6a6a6, stop: 0.08 #7f7f7f,
+  stop: 0.39999 #717171, stop: 0.4 #626262,
+  stop: 0.9 #4c4c4c, stop: 1 #333333); 
+*/
+}
+
+QTableWidget {
+/*  background-color: #888888; */
+}
+
+/* QSplitter::handle {
+	background-color: black;
+ }
+
+ QSplitter::handle:horizontal {
+     width: 1px;
+ }
+
+ QSplitter::handle:vertical {
+     height: 1px;
+ }
+
+ QSplitter::handle:pressed {
+	background-color: black;
+ }*/
+
+/* Dark Style QWidget{
 	background-color: #888888;
 	color: white;
 }
@@ -64,134 +178,15 @@ QMenu {
  QMenu::item:selected {
      background-color: #778899;
  }
-
 */
-
-QMainWindow {
-	font: 7pt;
-}
-
-QMainWindow::separator {
-     background: black;
-     width: 1px; /* when vertical */
-     height: 1px; /* when horizontal */
-     border: 10px;
- }
-
-QMainWindow::separator:vertical {
-     height: 1px; /* when vertical */
- }
-
- QMainWindow::separator:hover {
-     background: lightgray;
- }
-
-QDockWidget {
-  color: white;
-  font: 8pt &quot;Nimbus Sans L&quot;;
-  border: 1px solid lightgray;
-}
-
-QDockWidget::title {
-  border: none;
+/* QDockWidget::title {
   background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
-  stop: 0 #a6a6a6, stop: 0.08 #7f7f7f,
-  stop: 0.39999 #717171, stop: 0.4 #626262,
-  stop: 0.9 #4c4c4c, stop: 1 #333333);
+	  stop: 0 #a6a6a6, stop: 0.08 #7f7f7f,
+	  stop: 0.39999 #717171, stop: 0.4 #626262,
+	  stop: 0.9 #4c4c4c, stop: 1 #333333);
   color: white;
   padding-left: 2px;
-}
-
-QTabWidget::tab-bar {
-  border: none;
-  color: rgb(255, 255, 255);
-  background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
-  stop: 0 #a6a6a6, stop: 0.08 #7f7f7f,
-  stop: 0.39999 #717171, stop: 0.4 #626262,
-  stop: 0.9 #4c4c4c, stop: 1 #333333);
-  font: 9pt &quot;Nimbus Sans L&quot;;
- }
-
- QTabBar::tab {
-  background: lightgray;
-  color: darkgray;
-  padding: 4px;
-  font: 9pt &quot;Nimbus Sans L&quot;;
-/*  border-top-left-radius: 6px;
-  border-top-right-radius: 6px; */
- }
-
-QTabBar::tab:selected {
-  background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
-  stop: 0 #333333, stop: 0.08 #4c4c4c,
-  stop: 0.39999 #626262, stop: 0.4 #717171,
-  stop: 0.9  #7f7f7f, stop: 1 #a6a6a6);
-  color: white;
- }
-
- QSplitter::handle {
-	background-color: black;
- }
-
- QSplitter::handle:horizontal {
-     width: 1px;
- }
-
- QSplitter::handle:vertical {
-     height: 1px;
- }
-
- QSplitter::handle:pressed {
-	background-color: black;
- }
-
-QDockWidget {
-    border: 1px;
-}
-QProgressBar {
-border: 1px solid black;
-text-align: top;
-padding: 1px;
-border-bottom-right-radius: 7px;
-border-bottom-left-radius: 7px;
-background: QLinearGradient( x1: 0, y1: 0, x2: 1, y2: 0,
-stop: 0 #fff,
-stop: 0.4999 #eee,
-stop: 0.5 #ddd,
-stop: 1 #eee );
-width: 15px;
-} 
-QProgressBar::chunk {
-background: QLinearGradient( x1: 0, y1: 0, x2: 1, y2: 0,
- stop: 0 #78d,
- stop: 0.4999 #46a,
- stop: 0.5 #45a,
- stop: 1 #238 );
- border-bottom-right-radius: 7px;
- border-bottom-left-radius: 7px;
- border: 1px solid black;
-}
-
-QTreeWidget {
-/*	background-color: #888888; */
-}
-
-QToolBar {
-  border: none;
-/*
-  border-color: rgb(0,0,0);
-  color: rgb(255, 255, 255);
-  background-image: url(:/mainwindow/images/bg.jpg);
-  background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
-  stop: 0 #a6a6a6, stop: 0.08 #7f7f7f,
-  stop: 0.39999 #717171, stop: 0.4 #626262,
-  stop: 0.9 #4c4c4c, stop: 1 #333333); 
-*/
-}
-
-QTableWidget {
-/*  background-color: #888888; */
-}</string>
+}*/</string>
   </property>
   <property name="iconSize">
    <size>
@@ -326,7 +321,7 @@ font: 75 7.5pt;</string>
      <x>0</x>
      <y>0</y>
      <width>776</width>
-     <height>25</height>
+     <height>21</height>
     </rect>
    </property>
    <property name="layoutDirection">

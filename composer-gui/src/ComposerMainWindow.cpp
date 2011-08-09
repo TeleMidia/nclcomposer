@@ -103,7 +103,10 @@ void ComposerMainWindow::readExtensions()
 #ifdef Q_WS_MAC
     QSettings settings("telemidia.pucrio.br", "composer");
 #else
-    QSettings settings("telemidia", "composer");
+    QSettings settings(QSettings::IniFormat,
+                       QSettings::UserScope,
+                       "telemidia",
+                       "composer");
 #endif
 
     settings.beginGroup("extension");
@@ -154,7 +157,10 @@ void ComposerMainWindow::readSettings()
 #ifdef Q_WS_MAC
     QSettings settings("telemidia.pucrio.br", "composer");
 #else
-    QSettings settings("telemidia", "composer");
+    QSettings settings(QSettings::IniFormat,
+                       QSettings::UserScope,
+                       "telemidia",
+                       "composer");
 #endif
     settings.beginGroup("mainwindow");
     restoreGeometry(settings.value("geometry").toByteArray());
@@ -188,7 +194,7 @@ void ComposerMainWindow::initGUI()
 
     ui->frame->layout()->addWidget(tabProjects);
 
-    tabProjects->setMovable(true);
+//    tabProjects->setMovable(true);
     tabProjects->setTabsClosable(true);
 
     tbPerspectiveDropList = new QToolButton(this);
@@ -207,17 +213,10 @@ void ComposerMainWindow::initGUI()
     createAbout();
     showMaximized();
 
-    /* welcomeScreen = new QWebView(this); */
-    /* welcomeScreen->setStyleSheet("background-color:rgb(150,147,88); \
-                                    padding: 7px ; color:rgb(255,255,255)");*/
-    /* welcomeScreen->load(QUrl("http://www.ncl.org.br"));
-    welcomeScreen->showMaximized();
-    tabProjects->addTab(welcomeScreen, "Welcome");*/
-
     welcomeWidget = new WelcomeWidget(this);
     welcomeWidget->show();
     tabProjects->addTab(welcomeWidget, "Welcome");
-
+    tabProjects->setTabIcon(0, QIcon());
 }
 
 void ComposerMainWindow::addPluginWidget(IPluginFactory *fac, IPlugin *plugin,
@@ -292,13 +291,7 @@ void ComposerMainWindow::addPluginWidget(IPluginFactory *fac, IPlugin *plugin,
 
     layout->addWidget(titleLabel);
 
-    titleBar->setStyleSheet(" QFrame { border: none; \
-                    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,\
-                    stop: 0 #a6a6a6, stop: 0.08 #7f7f7f,\
-                    stop: 0.39999 #717171, stop: 0.4 #626262,\
-                    stop: 0.9 #4c4c4c, stop: 1 #333333);\
-                    color: white;\
-                    padding: 0px;}");
+    titleBar->setStyleSheet(" ");
 
     dock->setTitleBarWidget(titleBar);
     allDocks.insert(0, dock);
@@ -311,15 +304,23 @@ void ComposerMainWindow::addPluginWidget(IPluginFactory *fac, IPlugin *plugin,
     hide->setIcon(QIcon(":/mainwindow/closeplugin"));
     addButtonToDockTitleBar(titleBar, hide);
 
+    updateDockTitleStyle(titleBar, false);
 #endif
 }
 
-void ComposerMainWindow::addButtonToDockTitleBar(QFrame *titleBar,
-                                                 QPushButton *button)
+void ComposerMainWindow::updateDockTitleStyle(QFrame *titleBar, bool selected)
 {
-    button->setIconSize(QSize(22, 22));
-
-    button->setStyleSheet("QPushButton { \
+    if(!selected)
+    {
+        titleBar->setStyleSheet(" \
+                QFrame { border: none; \
+                    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,\
+                    stop: 0 #a6a6a6, stop: 0.08 #7f7f7f,\
+                    stop: 0.39999 #717171, stop: 0.4 #626262,\
+                    stop: 0.9 #4c4c4c, stop: 1 #333333);\
+                    color: white;\
+                    padding-left: 2px;} \
+                QPushButton { \
                     background-color: transparent; \
                     border: none;\
                   } \
@@ -337,8 +338,44 @@ void ComposerMainWindow::addButtonToDockTitleBar(QFrame *titleBar,
                 } \
                 QPushButton:flat { \
                     border: none; \
+                }");
+    }
+    else
+    {
+        titleBar->setStyleSheet(" \
+                QFrame { border: none; \
+                     background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,\
+                         stop: 0 #dcebfd, \
+                         stop: 1 #c2dcfd); \
+                         color: black;\
+                         font-style: bold;\
+                         padding-left: 2px; \
+                }\
+                QPushButton { \
+                    background-color: transparent; \
+                    border: none;\
+                  } \
+                QPushButton:hover { \
+                    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,\
+                        stop: 0 #edfcfe, \
+                        stop: 1 #d3edfe); \
                 } \
-                     ");
+                QPushButton:pressed { \
+                    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,\
+                        stop: 0 #dcebfd, \
+                        stop: 1 #c2dcfd); \
+                } \
+                QPushButton:flat { \
+                    border: none; \
+                }");
+    }
+
+}
+void ComposerMainWindow::addButtonToDockTitleBar(QFrame *titleBar,
+                                                 QPushButton *button)
+{
+    button->setIconSize(QSize(22, 22));
+
     titleBar->layout()->addWidget(button);
 }
 
@@ -598,7 +635,10 @@ void ComposerMainWindow::closeEvent(QCloseEvent *event)
 #ifdef Q_WS_MAC
     QSettings settings("telemidia.pucrio.br", "composer");
 #else
-    QSettings settings("telemidia", "composer");
+    QSettings settings(QSettings::IniFormat,
+                       QSettings::UserScope,
+                       "telemidia",
+                       "composer");
 #endif
     if (user_directory_ext != "")
     {
@@ -656,7 +696,10 @@ void ComposerMainWindow::endOpenProject(QString project)
 {
     this->setCursor(QCursor(Qt::ArrowCursor));
 
-    QSettings settings("telemidia", "composer");
+    QSettings settings(QSettings::IniFormat,
+                       QSettings::UserScope,
+                       "telemidia",
+                       "composer");
     if(settings.contains("default_perspective"))
     {
         QString defaultPerspective =
@@ -731,7 +774,11 @@ void ComposerMainWindow::savePerspective(QString layoutName)
                 tabProjects->currentIndex());
 
         QMainWindow *window = projectsWidgets[location];
-        QSettings settings("telemidia", "composer");
+        QSettings settings(QSettings::IniFormat,
+                           QSettings::UserScope,
+                           "telemidia",
+                           "composer");
+
         settings.beginGroup("pluginslayout");
         settings.setValue(layoutName, window->saveState(0));
         settings.endGroup();
@@ -740,7 +787,10 @@ void ComposerMainWindow::savePerspective(QString layoutName)
 
 void ComposerMainWindow::saveDefaultPerspective(QString defaultPerspectiveName)
 {
-    QSettings settings("telemidia", "composer");
+    QSettings settings(QSettings::IniFormat,
+                       QSettings::UserScope,
+                       "telemidia",
+                       "composer");
     settings.setValue("default_perspective", defaultPerspectiveName);
 }
 
@@ -752,7 +802,11 @@ void ComposerMainWindow::restorePerspective(QString layoutName)
                 tabProjects->currentIndex());
 
         QMainWindow *window = projectsWidgets[location];
-        QSettings settings("telemidia", "composer");
+        QSettings settings(QSettings::IniFormat,
+                           QSettings::UserScope,
+                           "telemidia",
+                           "composer");
+
         settings.beginGroup("pluginslayout");
         window->restoreState(settings.value(layoutName).toByteArray());
         settings.endGroup();
@@ -856,7 +910,11 @@ void ComposerMainWindow::importFromDocument()
 
 void ComposerMainWindow::addToRecentProjects(QString projectUrl)
 {
-    QSettings settings("telemidia", "composer");
+    QSettings settings(QSettings::IniFormat,
+                       QSettings::UserScope,
+                       "telemidia",
+                       "composer");
+
     QStringList recentprojects = settings.value("recentProjects").toStringList();
 
     recentprojects.push_front(projectUrl);
@@ -901,7 +959,11 @@ void ComposerMainWindow::updateRecentProjectsMenu(QStringList &recentProjects)
 
 void ComposerMainWindow::clearRecentProjects(void)
 {
-    QSettings settings("telemidia", "composer");
+    QSettings settings(QSettings::IniFormat,
+                       QSettings::UserScope,
+                       "telemidia",
+                       "composer");
+
     settings.remove("recentProjects");
     QStringList empty;
     updateRecentProjectsMenu(empty);
@@ -942,7 +1004,11 @@ void ComposerMainWindow::restorePerspectiveFromMenu()
 
 void ComposerMainWindow::updateMenuPerspectives()
 {
-    QSettings settings("telemidia", "composer");
+    QSettings settings(QSettings::IniFormat,
+                       QSettings::UserScope,
+                       "telemidia",
+                       "composer");
+
     settings.beginGroup("pluginslayout");
     QStringList keys = settings.allKeys();
     settings.endGroup();
@@ -961,9 +1027,17 @@ void ComposerMainWindow::updateMenuPerspectives()
 void ComposerMainWindow::currentTabChanged(int n)
 {
     if(n)
+    {
         tbPerspectiveDropList->setEnabled(true);
+        saveCurrentPluginsLayoutAct->setEnabled(true);
+        restorePluginsLayoutAct->setEnabled(true);
+    }
     else
+    {
         tbPerspectiveDropList->setEnabled(false);
+        saveCurrentPluginsLayoutAct->setEnabled(false);
+        restorePluginsLayoutAct->setEnabled(false);
+    }
 }
 
 void ComposerMainWindow::focusChanged(QWidget *old, QWidget *now)
@@ -971,30 +1045,12 @@ void ComposerMainWindow::focusChanged(QWidget *old, QWidget *now)
     for(int i = 0; i < allDocks.size(); i++)
     {
         if(allDocks.at(i)->isAncestorOf(old))
-        {
-            allDocks.at(i)->titleBarWidget()
-                    ->setStyleSheet("\
-                        border: none;\
-                        background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,\
-                        stop: 0 #a6a6a6, stop: 0.08 #7f7f7f,\
-                        stop: 0.39999 #717171, stop: 0.4 #626262,\
-                        stop: 0.9 #4c4c4c, stop: 1 #333333);\
-                        color: white;\
-                        padding-left:2px;\
-                    ");
-        }
+            updateDockTitleStyle((QFrame*)allDocks.at(i)->titleBarWidget(),
+                                 false);
 
         if(allDocks.at(i)->isAncestorOf(now))
-        {
-            allDocks.at(i)->titleBarWidget()
-                    ->setStyleSheet("\
-                        background: #6C7B8B;\
-                        color: white;\
-                        font-style: bold;\
-                        padding-left: 2px;\
-                    ");
-            //allDocks.at(i)->setStyleSheet("QDockWidget{ border: 5px solid #6C7B8B;}");
-        }
+            updateDockTitleStyle((QFrame*)allDocks.at(i)->titleBarWidget(),
+                                 true);
     }
 }
 

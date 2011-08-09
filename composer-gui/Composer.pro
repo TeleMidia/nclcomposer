@@ -1,6 +1,6 @@
 TARGET = Composer
 TEMPLATE = app
-CONFIG += qt warn_on release debug console
+CONFIG += qt warn_on debug console
 QT += xml webkit
 
 MOC_DIR     =   .moc
