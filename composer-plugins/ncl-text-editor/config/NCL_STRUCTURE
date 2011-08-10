@@ -223,7 +223,7 @@ element (compoundStatement, compoundStatement, + , false)
 
 // Tabela 17 (Maurício)
 element (connectorBase, head, ? , false)
-    attribute (connectorBase,Id,false,ID)
+    attribute (connectorBase,id,false,ID)
 
 // tabela 18(rafael)
 element(ruleBase,head,?,false)
