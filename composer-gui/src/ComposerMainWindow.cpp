@@ -211,7 +211,7 @@ void ComposerMainWindow::initGUI()
     createActions();
     createMenus();
     createAbout();
-    showMaximized();
+    show();
 
     welcomeWidget = new WelcomeWidget(this);
     welcomeWidget->show();

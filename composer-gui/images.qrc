@@ -29,8 +29,8 @@
         <file alias="perspective">images/GrandPerspectiveIcon128.png</file>
         <file alias="closeplugin">images/close_icon.png</file>
         <file alias="refreshplugin">images/refresh_icon.png</file>
-        <file alias="bg_gray">images/bg-gray-one.jpg</file>
         <file alias="icon2">images/icon2.png</file>
         <file alias="ncllogo">images/ncl_logo.png</file>
+        <file alias="bggray">images/bg-gray-one.jpg</file>
     </qresource>
 </RCC>

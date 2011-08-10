@@ -3,6 +3,8 @@ TEMPLATE = app
 CONFIG += qt warn_on debug console
 QT += xml webkit
 
+RC_FILE = images/nclcomposer.rc
+
 MOC_DIR     =   .moc
 OBJECTS_DIR =   .obj
 UI_DIR      =   .ui
