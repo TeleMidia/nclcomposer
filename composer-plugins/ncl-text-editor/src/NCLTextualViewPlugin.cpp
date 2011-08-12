@@ -124,40 +124,41 @@ void NCLTextualViewPlugin::onEntityAdded(QString pluginID, Entity *entity)
             endEntityOffset[key] += line.size();
     }
 
-    qDebug() << line;
-
     window->getTextEditor()->insertAtPos(line, insertAtOffset);
     startEntityOffset[entity->getUniqueId()] = insertAtOffset;
     endEntityOffset[entity->getUniqueId()] = insertAtOffset + startEntitySize;
 
-    emit TextualPluginHasAddedEntity(pluginID, entity);
+/*    int insertAtLine = window->getTextEditor()->SendScintilla(
+                                            QsciScintilla::SCI_LINEFROMPOSITION,
+                                            insertAtOffset + 3);
+    int lineIndent = window->getTextEditor()
+                         ->SendScintilla( QsciScintilla::SCI_GETLINEINDENTATION,
+                                          insertAtLine + 3);
 
-    //TODO: fix indentation
-    /*int lineident = window->getTextEditor()
-                    ->SendScintilla( QsciScintilla::SCI_GETLINEINDENTATION,
-                                     insertAtLine+2);
+    if(insertAtLine) lineIndent += 8;
 
-    if(insertAtOffset == 0) //The first entity
-        lineident = 0;
-    else
-        lineident += 8;
+    qDebug() << "Line: " << insertAtLine;
+    qDebug() << "Line ident: " << lineIndent;
 
     window->getTextEditor()
             ->SendScintilla( QsciScintilla::SCI_SETLINEINDENTATION,
                              insertAtLine,
-                             lineident);
+                             lineIndent);
 
     window->getTextEditor()
             ->SendScintilla( QsciScintilla::SCI_SETLINEINDENTATION,
                              insertAtLine+1,
-                             lineident);
-
+                             lineIndent); */
+/*
     window->getTextEditor()->setCursorPosition(insertAtLine, 0);
     window->getTextEditor()->ensureLineVisible(insertAtLine);
-    window->getTextEditor()->SendScintilla(QsciScintilla::SCI_SETFOCUS, true);*/
+    window->getTextEditor()->SendScintilla(QsciScintilla::SCI_SETFOCUS, true);
+*/
 
-    /*  qDebug() << "NCLTextualViewPlugin::onEntityAdded" <<
-        entity->getType() << " " << insertAtLine; */
+    emit TextualPluginHasAddedEntity(pluginID, entity);
+
+    /* qDebug() << "NCLTextualViewPlugin::onEntityAdded" <<
+       entity->getType() << " " << insertAtLine; */
 }
 
 void NCLTextualViewPlugin::errorMessage(QString error)
