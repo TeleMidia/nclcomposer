@@ -352,7 +352,7 @@ font: 75 7.5pt;</string>
     <addaction name="actionImport_from_existing_NCL"/>
     <addaction name="menu_Recent_Files"/>
     <addaction name="separator"/>
-    <addaction name="actionClose_Project"/>
+    <addaction name="action_Close_Project"/>
     <addaction name="action_Close_All"/>
     <addaction name="separator"/>
     <addaction name="action_Save"/>
@@ -544,7 +544,7 @@ font: 75 7.5pt;</string>
     <string>Ctrl+O</string>
    </property>
   </action>
-  <action name="actionClose_Project">
+  <action name="action_Close_Project">
    <property name="text">
     <string>&amp;Close</string>
    </property>

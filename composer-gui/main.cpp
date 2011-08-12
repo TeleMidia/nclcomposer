@@ -14,7 +14,6 @@
 
 using namespace composer::gui;
 
-
 /*!
  \mainpage
 This is the online reference for developing with the NCL Composer.
@@ -37,6 +36,7 @@ int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
     a.setQuitOnLastWindowClosed(true);
+
     QResource::registerResource("images.qrc");
     QCoreApplication::setOrganizationName("Telemidia Lab");
     QCoreApplication::setOrganizationDomain("telemidia.pucrio.br");

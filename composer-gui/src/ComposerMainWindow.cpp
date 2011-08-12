@@ -396,12 +396,20 @@ void ComposerMainWindow::tabClosed(int index)
     //\todo Remove from allDocks
 }
 
+void ComposerMainWindow::closeCurrentTab()
+{
+    if(tabProjects->currentIndex())
+    {
+        int currentIndex = tabProjects->currentIndex();
+        tabClosed(currentIndex);
+    }
+}
 void ComposerMainWindow::closeAllFiles()
 {
-    while(tabProjects->count())
+    while(tabProjects->count() > 1)
     {
-        tabProjects->removeTab(0);
-        tabClosed(0);
+        tabProjects->removeTab(1);
+        tabClosed(1);
     }
 }
 
@@ -420,6 +428,9 @@ void ComposerMainWindow::createMenus()
 
     connect( ui->menu_Window, SIGNAL(aboutToShow()),
              this, SLOT(updateViewMenu()));
+
+    connect(ui->action_Close_Project, SIGNAL(triggered()),
+            this, SLOT(closeCurrentTab()));
 
     connect(ui->action_Close_All, SIGNAL(triggered()),
             this, SLOT(closeAllFiles()));
@@ -1031,12 +1042,16 @@ void ComposerMainWindow::currentTabChanged(int n)
         tbPerspectiveDropList->setEnabled(true);
         saveCurrentPluginsLayoutAct->setEnabled(true);
         restorePluginsLayoutAct->setEnabled(true);
+        ui->action_Close_Project->setEnabled(true);
+        ui->action_Save->setEnabled(true);
     }
     else
     {
         tbPerspectiveDropList->setEnabled(false);
         saveCurrentPluginsLayoutAct->setEnabled(false);
         restorePluginsLayoutAct->setEnabled(false);
+        ui->action_Close_Project->setEnabled(false);
+        ui->action_Save->setEnabled(false);
     }
 }
 

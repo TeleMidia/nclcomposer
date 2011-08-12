@@ -16,7 +16,6 @@
 #include <QMap>
 #include <QFileSystemModel>
 
-
 #include <QCoreApplication>
 #include <QTimer>
 #include <QtGui/QMainWindow>
@@ -81,28 +80,38 @@ private:
     static const int maximumRecentProjectsSize = 10;
 
     QTabWidget *tabProjects; /*!< Each open project is show in a different
-                                tab. tabProjects contains the list of open
-                                tabs. */
+                                tab. The tabProjects variable keeps the list of
+                                the projects open tabs. */
 
     QToolButton *tbPerspectiveDropList; /*!< Action that shows the list of
                                              perspective as a menu. */
     QMenu *menu_Perspective; /*!< The menu containing the list of
                                   perspectives. */
 
-    QMap<QString, QMainWindow*> projectsWidgets; /*!< \deprecated  */
-    QMap<QString, QDockWidget*> firstDock; /*!< TODO */
-    QList <QDockWidget*> allDocks;
+    QMap<QString, QMainWindow*> projectsWidgets; /*!< Keeps a reference to each
+                                                      project widget. */
+    QMap<QString, QDockWidget*> firstDock; /*!< To each project location
+                                                keeps the reference of the
+                                                first QDockWidget added.*/
+    QList <QDockWidget*> allDocks; /*!< A list with all the QDockWidgets, to
+                                        each plugin. */
 
     QAction *aboutComposerAct; /*!< Action to show About Composer. */
     QAction *fullScreenViewAct; /*!< Action to show Composer in FullScreen. */
     QAction *projectViewAct; /*!< TODO */
     QAction *editPreferencesAct; /*!< TODO */
-    QAction *switchWS; /*!< TODO */
-    QAction *saveCurrentPluginsLayoutAct;
-    QAction *restorePluginsLayoutAct;
 
-    QListWidget *profilesExt; /*!< TODO */
-    QTreeWidget *pluginsExt; /*!< TODO */
+    QAction *saveCurrentPluginsLayoutAct; /*!< Action to save current plugins
+                                                layout as a new perspective. */
+    QAction *restorePluginsLayoutAct; /*!< Action to restore a previously saved
+                                           perspective as the current plugins
+                                           layout. */
+
+    QListWidget *profilesExt; /*!< Shows a list of the current loaded language
+                                   profiles. */
+    QTreeWidget *pluginsExt; /*!< Shows a list with the current loaded
+                                  plugins. */
+
     QMap <QTreeWidgetItem*, IPluginFactory*> treeWidgetItem2plFactory;
 
     ProjectWizard *projectWizard; /*!< TODO */
@@ -122,11 +131,12 @@ private:
     PluginDetailsDialog *pluginDetailsDialog;
 
 private:
-    Ui::ComposerMainWindow *ui; /*!< TODO */
+    Ui::ComposerMainWindow *ui; /*!< A reference to  */
     /*!
-     \brief
+     \brief Shows a prompt where the user can choose where its plugins are
+            located.
 
-     \return QString
+     \return QString the path to the choosen directory.
     */
     QString promptChooseExtDirectory();
     /*!
@@ -206,13 +216,17 @@ private slots:
      \brief
     */
     void showEditPreferencesDialog();
-
     /*!
      \brief
 
      \param index
     */
     void tabClosed(int index);
+
+    /*!
+      \brief
+    */
+    void closeCurrentTab();
     /*!
      \brief
     */
