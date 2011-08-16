@@ -132,6 +132,11 @@ private slots:
 
 signals:
     void TextualPluginHasAddedEntity(QString pluginID, Entity *entity);
+
+protected:
+    void updateEntitiesOffset(int startFrom = 0, int insertedChars = 0);
+    void printEntitiesOffset();
+
 };
 
 }}} //end namespace

@@ -91,7 +91,7 @@ void NCLTextualViewPlugin::onEntityAdded(QString pluginID, Entity *entity)
     QString line = "<" + entity->getType() + "";
     int insertAtOffset = 0;
 
-    //get the number line where the new element must be inserted
+    //get the line number where the new element must be inserted
     if(entity->getParentUniqueId() != NULL) {
         // Test if exists before access from operator[] becaus if doesn't exist
         // this operator will create a new (and we don't want this!).
@@ -111,29 +111,26 @@ void NCLTextualViewPlugin::onEntityAdded(QString pluginID, Entity *entity)
     int startEntitySize = line.size();
     line += "</" + entity->getType() + ">\n";
 
-    //update all previous entities line numbers (when necessary)
-    QString key;
-    foreach(key, startEntityOffset.keys())
-    {
-        if(startEntityOffset[key] >= insertAtOffset)
-        {
-            startEntityOffset[key] += line.size();
-        }
-
-        if(endEntityOffset[key] >= insertAtOffset)
-            endEntityOffset[key] += line.size();
-    }
-
     window->getTextEditor()->insertAtPos(line, insertAtOffset);
+
+    //update all previous offset numbers (when necessary)
+    updateEntitiesOffset(insertAtOffset, line.size());
+
     startEntityOffset[entity->getUniqueId()] = insertAtOffset;
     endEntityOffset[entity->getUniqueId()] = insertAtOffset + startEntitySize;
 
-/*    int insertAtLine = window->getTextEditor()->SendScintilla(
+    qDebug() << "*** Begin ***";
+    printEntitiesOffset();
+
+    /* Fix Indentation */
+    int insertAtLine = window->getTextEditor()->SendScintilla(
                                             QsciScintilla::SCI_LINEFROMPOSITION,
-                                            insertAtOffset + 3);
+                                            insertAtOffset);
+
+    // get the indentation for the next line
     int lineIndent = window->getTextEditor()
                          ->SendScintilla( QsciScintilla::SCI_GETLINEINDENTATION,
-                                          insertAtLine + 3);
+                                          insertAtLine+2);
 
     if(insertAtLine) lineIndent += 8;
 
@@ -144,11 +141,21 @@ void NCLTextualViewPlugin::onEntityAdded(QString pluginID, Entity *entity)
             ->SendScintilla( QsciScintilla::SCI_SETLINEINDENTATION,
                              insertAtLine,
                              lineIndent);
-
     window->getTextEditor()
             ->SendScintilla( QsciScintilla::SCI_SETLINEINDENTATION,
                              insertAtLine+1,
-                             lineIndent); */
+                             lineIndent);
+
+    int previousStarted = startEntityOffset[entity->getUniqueId()]-1;
+    updateEntitiesOffset(previousStarted, lineIndent/8);
+    qDebug() << "*** First pass ***";
+    printEntitiesOffset();
+
+    previousStarted = endEntityOffset[entity->getUniqueId()];
+    qDebug() << "*** Second pass ***";
+    updateEntitiesOffset(previousStarted+1, lineIndent/8);
+//    printEntitiesOffset();
+
 /*
     window->getTextEditor()->setCursorPosition(insertAtLine, 0);
     window->getTextEditor()->ensureLineVisible(insertAtLine);
@@ -224,19 +231,10 @@ void NCLTextualViewPlugin::onEntityChanged(QString pluginID, Entity *entity)
 
     window->getTextEditor()->insertAtPos(line, insertAtOffset);
 
-    int diff_size = line.size() - previous_length;
     //update all previous entities line numbers (when necessary)
-    QString key;
-    foreach(key, startEntityOffset.keys())
-    {
-        if(startEntityOffset[key] > insertAtOffset)
-        {
-            startEntityOffset[key] += diff_size;
-        }
+    int diff_size = line.size() - previous_length;
+    updateEntitiesOffset(insertAtOffset, diff_size);
 
-        if(endEntityOffset[key] > insertAtOffset)
-            endEntityOffset[key] += diff_size;
-    }
     window->getTextEditor()->SendScintilla( QsciScintilla::SCI_GOTOPOS,
                                             insertAtOffset);
 
@@ -403,14 +401,44 @@ void NCLTextualViewPlugin::updateCoreModel()
              Qt::DirectConnection);
 
     window->getTextEditor()->clear();
-
+    startEntityOffset.clear();
+    endEntityOffset.clear();
     parser.parseContent(text);
 }
 
 void NCLTextualViewPlugin::syncFinished()
 {
-//    qDebug() << "isSyncing=" << isSyncing;
     isSyncing = false;
+}
+
+void NCLTextualViewPlugin::updateEntitiesOffset( int startFrom,
+                                                 int insertedChars)
+{
+    qDebug() << "NCLTextualViewPlugin::updateEntitiesOffset(" << startFrom
+             << ", " << insertedChars << ")";
+
+    if(!insertedChars) //nothing to do
+        return;
+
+    QString key;
+    foreach(key, startEntityOffset.keys())
+    {
+        if(startEntityOffset[key] > startFrom)
+            startEntityOffset[key] += insertedChars;
+
+        if(endEntityOffset[key] >= startFrom)
+            endEntityOffset[key] += insertedChars;
+    }
+}
+
+void NCLTextualViewPlugin::printEntitiesOffset()
+{
+    QString key;
+    foreach(key, startEntityOffset.keys())
+    {
+        qDebug() << "key="<< key << "; start=" << startEntityOffset[key]
+                 << "; end=" << endEntityOffset[key];
+    }
 }
 
 } } } //end namespace
