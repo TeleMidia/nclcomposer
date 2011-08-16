@@ -11,6 +11,7 @@
 
 #include <QMetaObject>
 #include <QMetaMethod>
+#include <QMessageBox>
 
 namespace composer {
     namespace plugin {
@@ -26,10 +27,15 @@ NCLTextualViewPlugin::NCLTextualViewPlugin()
              SIGNAL(addEntity(QString,QString,QMap<QString,QString>&,bool)));
 
     isSyncing = false;
+
     updateModelShortcut = new QShortcut(window);
     updateModelShortcut->setKey(QKeySequence("F5"));
+
     connect( updateModelShortcut, SIGNAL(activated()),
              this, SLOT(updateCoreModel()) );
+
+    connect(window->getTextEditor(), SIGNAL(focusLosted(QFocusEvent*)),
+            this, SLOT(manageFocusLost(QFocusEvent*)));
 }
 
 NCLTextualViewPlugin::~NCLTextualViewPlugin()
@@ -439,6 +445,39 @@ void NCLTextualViewPlugin::printEntitiesOffset()
         qDebug() << "key="<< key << "; start=" << startEntityOffset[key]
                  << "; end=" << endEntityOffset[key];
     }
+}
+
+void NCLTextualViewPlugin::manageFocusLost(QFocusEvent *event)
+{
+#ifndef NCLEDITOR_STANDALONE
+    NCLTextEditor *textEditor = window->getTextEditor();
+    if(textEditor->textWithoutUserInteraction() != textEditor->text())
+    {
+        int ret = QMessageBox::question(window,
+                        tr("Text synchronization"),
+                        tr("You have change the textual content of the NCL \
+Document. Do you want to synchronize this text with \
+other views?"),
+                        QMessageBox::Yes |
+                        QMessageBox::No |
+                        QMessageBox::Cancel,
+
+                        QMessageBox::Cancel);
+
+        switch(ret)
+        {
+            case QMessageBox::Yes:
+                updateCoreModel();
+                break;
+            case QMessageBox::No:
+                textEditor->setText(textEditor->textWithoutUserInteraction());
+                break;
+            case QMessageBox::Cancel:
+                textEditor->keepFocused();
+                break;
+        }
+    }
+#endif
 }
 
 } } } //end namespace

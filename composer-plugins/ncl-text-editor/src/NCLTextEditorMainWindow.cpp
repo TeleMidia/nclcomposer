@@ -51,6 +51,7 @@ NCLTextEditorMainWindow::NCLTextEditorMainWindow(QWidget *parent):
 
     setCurrentFile("");
     setUnifiedTitleAndToolBarOnMac(true);
+
 }
 
 void NCLTextEditorMainWindow::closeEvent(QCloseEvent *event)

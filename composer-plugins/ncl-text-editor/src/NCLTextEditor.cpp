@@ -15,6 +15,8 @@ NCLTextEditor::NCLTextEditor(QWidget *parent) :
     initParameters();
     nclexer = NULL;
     apis = NULL;
+    textWithoutUserInter = "";
+    focusInIgnoringCurrentText = false;
 }
 
 NCLTextEditor::~NCLTextEditor()
@@ -361,7 +363,7 @@ void NCLTextEditor::keyReleaseEvent(QKeyEvent *event)
 
 void NCLTextEditor::AutoCompleteCompleted()
 {
-//    qDebug() << "NCLTextEditor::AutoCompleteCompleted()";
+// qDebug() << "NCLTextEditor::AutoCompleteCompleted()";
 }
 
 void NCLTextEditor::MarkLine(int margin, int line, Qt::KeyboardModifiers state)
@@ -480,4 +482,30 @@ void NCLTextEditor::setTabBehavior(TAB_BEHAVIOR tabBehavior)
 void NCLTextEditor::formatText()
 {
     qDebug() << "NCLTextEditor::formatText()";
+}
+
+void NCLTextEditor::keepFocused()
+{
+    focusInIgnoringCurrentText = true;
+    this->setFocus();
+}
+
+void NCLTextEditor::focusOutEvent(QFocusEvent *event)
+{
+    emit focusLosted(event);
+}
+
+void NCLTextEditor::focusInEvent(QFocusEvent *e)
+{
+#ifndef NCLEDITOR_STANDALONE
+    if(!focusInIgnoringCurrentText)
+        textWithoutUserInter = text();
+
+    focusInIgnoringCurrentText = false;
+#endif
+}
+
+QString NCLTextEditor::textWithoutUserInteraction()
+{
+    return textWithoutUserInter;
 }

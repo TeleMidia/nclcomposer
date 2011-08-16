@@ -36,10 +36,11 @@ class NCLTextEditorMainWindow : public QMainWindow
     Q_OBJECT
 
 public:
-        explicit NCLTextEditorMainWindow(QWidget *parent = 0);
-        NCLTextEditor *getTextEditor() {return this->textEdit;}
+    explicit NCLTextEditorMainWindow(QWidget *parent = 0);
+    NCLTextEditor *getTextEditor() {return this->textEdit;}
+
 #ifdef NCLEDITOR_STANDALONE
-        NCLTreeWidget *getNCLTreeWidget() {return this->outlineView; }
+    NCLTreeWidget *getNCLTreeWidget() {return this->outlineView; }
 #endif
 
 protected:
@@ -98,24 +99,26 @@ private:
 
 /** VIEWS **/
     /** Outline View */
-    QDockWidget *dockOutlineView;
-    
 #ifdef NCLEDITOR_STANDALONE
+    QDockWidget *dockOutlineView;
     NCLTreeWidget *outlineView;
 #endif
+
     QMenu *nodeMenu;
     QAction *insertNodeChildAct;
 
     /** Problems View */
     NCLProblemsView *problemsView;
-    /*QDockWidget *dockLayoutView;
-    LayoutView *layoutView;*/
+
+    /*  QDockWidget *dockLayoutView;
+        LayoutView *layoutView; */
 
     /* Preferences *preferences;
     PreferencesPage *textEditorPreferencesPage; */
 
 signals:
     void elementAdded(QString, QString, QMap <QString, QString>&, bool);
+    void focusLosted();
 };
 
 #endif

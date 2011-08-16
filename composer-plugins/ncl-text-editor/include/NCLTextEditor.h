@@ -13,6 +13,7 @@
 #include <QColor>
 #include <QShortcut>
 #include <QWheelEvent>
+#include <QMessageBox>
 #include <Qsci/qsciscintilla.h>
 
 #include "MyLexer.h"
@@ -66,8 +67,10 @@ public:
                                             int &begin,
                                             int &end);
 
-private:
+    void keepFocused();
+    QString textWithoutUserInteraction();
 
+private:
     enum INTERACTION_STATE {
         DEFAULT_STATE = 1,
         FILLING_ATTRIBUTES_STATE
@@ -83,6 +86,8 @@ private:
     int filling_attribute_indicator;
 
     TAB_BEHAVIOR tabBehavior;
+    bool focusInIgnoringCurrentText;
+    QString textWithoutUserInter;
 
     void initParameters();
 
@@ -94,6 +99,8 @@ private:
 
 protected:
     void AutoCompleteCompleted();
+    void focusInEvent(QFocusEvent *e);
+    void focusOutEvent(QFocusEvent *e);
 
 public slots:
     void Increasefont();
@@ -102,6 +109,9 @@ public slots:
                    int severity = 0);
     void MarkLine(int, int, Qt::KeyboardModifiers);
     void formatText();
+
+signals:
+    void focusLosted(QFocusEvent *event);
 };
 
 #endif // NCLTEXTEDITOR_H

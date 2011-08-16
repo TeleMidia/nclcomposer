@@ -130,6 +130,11 @@ private slots:
      */
     void syncFinished();
 
+    /*!
+     * \brief Called when the user change the focus from the textual plugin.
+     */
+    virtual void manageFocusLost(QFocusEvent *event);
+
 signals:
     void TextualPluginHasAddedEntity(QString pluginID, Entity *entity);
 
