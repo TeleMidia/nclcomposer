@@ -42,6 +42,7 @@ private:
 
     QShortcut *shortcut_zoomout; /**< TODO */
     QShortcut *shortcut_zoomin; /**< TODO */
+    bool isExpandedAll;
 
     /**
      * @brief Creates the QActions
@@ -148,6 +149,7 @@ public slots:
                             int line,
                             int column,
                             int severity);
+    void expandAll();
 
 private slots:
     /**

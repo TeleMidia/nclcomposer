@@ -30,6 +30,8 @@ NCLTreeWidget::NCLTreeWidget(QWidget *parent) : QTreeWidget(parent)
     setHeaderHidden(true);
     setColumnHidden(1, true);
     setColumnHidden(2, true);
+
+    isExpandedAll = true;
 }
 
 NCLTreeWidget::~NCLTreeWidget()
@@ -56,6 +58,8 @@ void NCLTreeWidget::createActions ()
     addAction(removeNodeAct);
 
     expandAllAct = new QAction(tr("Expand All"), this);
+    expandAllAct->setCheckable(true);
+    expandAllAct->setChecked(true);
     connect(expandAllAct, SIGNAL(triggered()), this, SLOT(expandAll()));
     addAction(expandAllAct);
 
@@ -186,7 +190,6 @@ void NCLTreeWidget::userAddNewElement()
     }
 }
 
-
 QTreeWidgetItem *NCLTreeWidget::getItemById(QString itemId)
 {
     QList <QTreeWidgetItem*> items = findItems( itemId,
@@ -315,6 +318,9 @@ void NCLTreeWidget::updateItem(QTreeWidgetItem *item, QString tagname,
     item->setText(0, tagname);
     //item->setText(2, id);
     item->setText(1, strAttrList);
+    if(isExpandedAll)
+        QTreeWidget::expandAll();
+
     repaint();
 }
 
@@ -380,4 +386,14 @@ void NCLTreeWidget::keyPressEvent(QKeyEvent *event)
     }
 
     QTreeWidget::keyPressEvent(event);
+}
+
+void NCLTreeWidget::expandAll()
+{
+    if(!isExpandedAll)
+    {
+        isExpandedAll = true;
+        QTreeWidget::expandAll();
+    }
+    else isExpandedAll = false;
 }
