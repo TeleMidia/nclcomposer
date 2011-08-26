@@ -1,0 +1,16 @@
+Copyright (C) 2011 PUC-Rio/Laboratorio Telemidia
+See the end of the file for license conditions.
+
+* Features:
+  - Make a plugin that keeps the GLOBAL actions.
+  - Allow to choose MDI or Dock enviroment.
+      - Includes save the current plugins session inside the project.
+  - Marking dirty project.
+  - Internationalization.
+  - Check for updates.
+  - Plugin repository.
+  - Mark plugins to be loaded.
+  - Add remove perspective action. (ok)
+  - Add set as default perspective action. (ok)
+
+//TODO: License
