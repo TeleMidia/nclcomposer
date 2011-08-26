@@ -22,12 +22,14 @@ The easier way to get the submodules projects is by running:
 in the root directory of this projects.
 
 The first time you run qmake, it will initialize and update the submodules,
-getting all the necessary source code for compile NCL Composer.
+getting all the necessary source code for compile NCL Composer. 
 
-If you want you also can do it:
+By default, every submodule will be changed to branch master.
+
+If you want do it yourself you can execute the following commands:
   $ git submodule init
   $ git submodule update
-
+  $ git submodule foreach "git checkout master"
 
 =======================================
 == Changing and Committing the code  ==

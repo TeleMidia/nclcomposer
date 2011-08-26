@@ -1,8 +1,8 @@
 TEMPLATE = subdirs
 
-unix {
-  system (git submodule init)
-  system (git submodule update)
+!exists(composer-core/.git) {
+  system (git submodule update --init)
+  system (git submodule foreach \"git checkout master\")
 }
 
 SUBDIRS = composer-core \
