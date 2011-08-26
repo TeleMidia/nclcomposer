@@ -1,0 +1,44 @@
+This project is intended to group all NCL Composer projects using the git
+submodulesi featuere. This project does not contain any source code, it just 
+uses the abstraction of git submodules to link to git projects where the code
+of each individual project is available. 
+
+Additionally, this project also brings some useful files and scripts related to
+code documentation, like Doxyfile, scripts to add the License HEAD to files,
+and so on.
+
+Today, there are three main submodules inside this project:
+  * composer-core
+  * composer-gui
+  * composer-plugins
+
+======================================
+=== Getting Submodules Source Code ===
+======================================
+The easier way to get the submodules projects is by running:
+
+  $ qmake
+
+in the root directory of this projects.
+
+The first time you run qmake, it will initialize and update the submodules,
+getting all the necessary source code for compile NCL Composer.
+
+If you want you also can do it:
+  $ git submodule init
+  $ git submodule update
+
+
+=======================================
+== Changing and Committing the code  ==
+=======================================
+Even put together in the same root, each git project is independent. So,
+each change, commit and push must be realized individually to each submodules.
+
+If you need more information about git submodule these links can be useful:
+ http://kernel.org/pub/software/scm/git/docs/git-submodule.html
+ https://git.wiki.kernel.org/index.php/GitSubmoduleTutorial
+
+
+TODO: LICENSE
+
