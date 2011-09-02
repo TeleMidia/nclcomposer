@@ -32,5 +32,7 @@
         <file alias="icon2">images/icon2.png</file>
         <file alias="ncllogo">images/ncl_logo.png</file>
         <file alias="bggray">images/bg-gray-one.jpg</file>
+        <file alias="leftarrow">images/left_arrow.png</file>
+        <file alias="rightarrow">images/right_arrow.png</file>
     </qresource>
 </RCC>
