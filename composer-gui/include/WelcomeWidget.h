@@ -31,7 +31,11 @@ static void expandingTabsStyleSheet(QTabWidget *tw)
                       .arg(tw->size().width()/tw->count()-18));
 }
 
-// On resize events, reapply the expanding tabs style sheet
+/*!
+ * \brief A filter that reapply the expandingTabsStyle function after a resize.
+ *
+ * On resize events, reapply the expanding tabs style sheet
+ */
 class ResizeFilter : public QObject
 {
     QTabWidget *target;

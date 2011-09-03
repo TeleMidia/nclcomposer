@@ -154,7 +154,12 @@ void WelcomeWidget::finishRSSLoad(int connectionId, bool error)
     }
     else
     {
-        qDebug() << "Connection to NCL Club fails";
+        QCommandLinkButton *button =
+                new QCommandLinkButton(this);
+        button->setIconSize(QSize(0,0));
+
+        ui->frame_ClubeNCL->layout()->addWidget(button);
+        button->setText(tr("Connection to NCL Club failed."));
     }
 }
 
