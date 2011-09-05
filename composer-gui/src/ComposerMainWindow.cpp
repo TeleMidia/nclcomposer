@@ -217,6 +217,12 @@ void ComposerMainWindow::initGUI()
     welcomeWidget->show();
     tabProjects->addTab(welcomeWidget, "Welcome");
     tabProjects->setTabIcon(0, QIcon());
+
+    connect(welcomeWidget, SIGNAL(userPressedOpenProject()),
+            this, SLOT(openProject()));
+
+    connect(welcomeWidget, SIGNAL(userPressedNewProject()),
+            this, SLOT(launchProjectWizard()));
 }
 
 void ComposerMainWindow::addPluginWidget(IPluginFactory *fac, IPlugin *plugin,

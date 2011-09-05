@@ -20,6 +20,12 @@ WelcomeWidget::WelcomeWidget(QWidget *parent): QWidget(parent),
     connect(&http, SIGNAL(requestFinished(int,bool)),
             this, SLOT(finishRSSLoad(int, bool)));
 
+    connect(ui->pushButton_OpenProject, SIGNAL(pressed()),
+            this, SIGNAL(userPressedOpenProject()));
+
+    connect(ui->pushButton_NewProject, SIGNAL(pressed()),
+            this, SIGNAL(userPressedNewProject()));
+
     loadRSS();
 }
 
@@ -198,26 +204,6 @@ void composer::gui::WelcomeWidget::on_commandLinkButton_11_clicked()
 void composer::gui::WelcomeWidget::on_commandLinkButton_31_clicked()
 {
     QDesktopServices::openUrl(QUrl("http://www.ncl.org.br/en/relatoriostecnicos"));
-}
-
-void composer::gui::WelcomeWidget::on_commandLinkButton_27_clicked()
-{
-    QDesktopServices::openUrl(QUrl("http://club.ncl.org.br/node/48"));
-}
-
-void composer::gui::WelcomeWidget::on_commandLinkButton_26_clicked()
-{
-    QDesktopServices::openUrl(QUrl("http://club.ncl.org.br/node/28"));
-}
-
-void composer::gui::WelcomeWidget::on_commandLinkButton_25_clicked()
-{
-    QDesktopServices::openUrl(QUrl("http://club.ncl.org.br/node/19"));
-}
-
-void composer::gui::WelcomeWidget::on_commandLinkButton_28_clicked()
-{
-    QDesktopServices::openUrl(QUrl("http://club.ncl.org.br"));
 }
 
 void composer::gui::WelcomeWidget::on_commandLinkButton_7_clicked()

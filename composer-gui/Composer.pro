@@ -1,7 +1,7 @@
 TARGET = Composer
 TEMPLATE = app
 CONFIG += qt warn_on debug console
-QT += xml webkit
+QT += xml webkit network
 
 RC_FILE = images/nclcomposer.rc
 

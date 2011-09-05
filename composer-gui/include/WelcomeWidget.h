@@ -86,10 +86,6 @@ private slots:
     void on_commandLinkButton_10_clicked();
     void on_commandLinkButton_11_clicked();
     void on_commandLinkButton_31_clicked();
-    void on_commandLinkButton_27_clicked();
-    void on_commandLinkButton_26_clicked();
-    void on_commandLinkButton_25_clicked();
-    void on_commandLinkButton_28_clicked();
     void on_commandLinkButton_7_clicked();
     void on_commandLinkButton_8_clicked();
 
@@ -108,6 +104,17 @@ private:
 private slots:
     void readData(const QHttpResponseHeader &resp);
     void finishRSSLoad(int, bool);
+
+signals:
+    /*!
+     * \brief Signal emitted when the user press the Open Project button.
+     */
+    void userPressedOpenProject();
+
+    /*!
+     * \brief Signal emitted when the user press the New Project button.
+     */
+    void userPressedNewProject();
 };
 
 } }
