@@ -29,9 +29,11 @@ using namespace composer::extension;
 namespace composer {
     namespace core {
 /*!
- * \brief
+ \brief Manages the messages send from plugins to NCL Composer Core and
+    vice-versa.
  */
-class MessageControl : public QObject {
+class MessageControl : public QObject
+{
     Q_OBJECT
 
 private:
@@ -41,13 +43,13 @@ private:
 
 public:
     /*!
-     \brief
+     \brief Constructor.
 
      \param project
     */
     MessageControl(Project *project);
     /*!
-     \brief
+     \brief Destructor.
     */
     ~MessageControl();
 

@@ -41,7 +41,7 @@ namespace composer {
     namespace core {
 
 /*!
- \brief Manages all the plugins in the system.
+ \brief Manages the NCL Composer plugins.
 
  It is part of the PluginControl responsability:
     - Find the installed plugins in the system.

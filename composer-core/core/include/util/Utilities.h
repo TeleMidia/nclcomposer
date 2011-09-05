@@ -13,6 +13,9 @@
 #include <QString>
 #include <QMap>
 
+/*!
+ \brief
+*/
 typedef enum {
       CPR,
       NCL,
@@ -25,14 +28,28 @@ namespace composer {
     namespace core {
         namespace util {
 
+
+/*!
+ \brief Groups useful functions.
+*/
 class Utilities
 {
 
 private:
-    static QMap<QString,LanguageType> types;
+    static QMap<QString,LanguageType> types; /*!< TODO */
 
 public:
+    /*!
+     \brief
+
+     \param ext
+    */
     static LanguageType getLanguageTypeByExtension(QString ext);
+    /*!
+     \brief
+
+     \param type
+    */
     static QString getExtensionForLanguageType(LanguageType type);
 
 };

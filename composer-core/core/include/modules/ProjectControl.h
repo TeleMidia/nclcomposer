@@ -31,30 +31,88 @@ using namespace composer::core::util;
 namespace composer {
     namespace core {
 
+
+/*!
+ \brief Manages all the open Projects.
+*/
 class ProjectControl : public QObject
 {
     Q_OBJECT
     SINGLETON(ProjectControl)
 
 private:
+    /*!
+     \brief Constructor.
+    */
     ProjectControl();
+    /*!
+     \brief Destructor.
+    */
     ~ProjectControl();
-    QMap<QString, Project*> openProjects;
+
+    QMap<QString, Project*> openProjects; /*!< A map that keeps all the open
+                                               projects. */
 
 public:
+    /*!
+     \brief
+
+     \param location
+    */
     Project *getOpenProject(QString location);
 
  public slots:
+    /*!
+     \brief
+
+     \param location
+    */
     bool closeProject(QString location);
+    /*!
+     \brief
+
+     \param location
+    */
     void saveProject(QString location);
+    /*!
+     \brief
+
+     \param location
+    */
     void launchProject(QString location);
 
+    /*!
+     \brief
+
+     \param docLocation
+     \param projLocation
+    */
     void importFromDocument(QString docLocation, QString projLocation);
 
 signals:
+    /*!
+     \brief
+
+     \param document
+    */
     void startOpenProject(QString document);
+    /*!
+     \brief
+
+     \param document
+    */
     void endOpenProject(QString document);
+    /*!
+     \brief
+
+     \param QString
+    */
     void projectAlreadyOpen(QString);
+    /*!
+     \brief
+
+     \param QString
+    */
     void notifyError(QString);
 };
 
