@@ -1,4 +1,4 @@
-TARGET = Composer
+TARGET = composer
 TEMPLATE = app
 CONFIG += qt warn_on debug console
 QT += xml webkit network
@@ -19,7 +19,12 @@ macx:INSTALLBASE = /Applications/Composer
 else:unix:INSTALLBASE = /usr/local
 win32:INSTALLBASE = C:/Composer
 
-target.path = $$INSTALLBASE
+unix {
+    target.path = $$INSTALLBASE/bin
+}
+else {
+    taget.path = $$INSTALLBASE
+}
 INCLUDEPATH += include/
 
 macx {
