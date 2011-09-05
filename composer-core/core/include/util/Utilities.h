@@ -28,7 +28,6 @@ namespace composer {
     namespace core {
         namespace util {
 
-
 /*!
  \brief Groups useful functions.
 */

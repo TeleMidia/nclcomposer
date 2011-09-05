@@ -13,7 +13,7 @@
 #include <QString>
 
 namespace composer {
-        namespace util {
+    namespace util {
 
 /*!
  \brief Keep information about which pair (element, attribute) can
