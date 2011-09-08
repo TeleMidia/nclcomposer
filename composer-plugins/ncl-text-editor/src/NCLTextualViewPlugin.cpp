@@ -36,6 +36,9 @@ NCLTextualViewPlugin::NCLTextualViewPlugin()
 
     connect(window->getTextEditor(), SIGNAL(focusLosted(QFocusEvent*)),
             this, SLOT(manageFocusLost(QFocusEvent*)));
+
+    connect(window->getTextEditor(), SIGNAL(textChanged()),
+            this, SIGNAL(setCurrentProjectAsDirty()));
 }
 
 NCLTextualViewPlugin::~NCLTextualViewPlugin()
