@@ -22,7 +22,12 @@ using namespace composer::extension;
 namespace composer {
     namespace plugin {
         namespace debug {
-
+/*!
+ * \brief Debug Console is a simple plugin that just show
+ *    all messages received.
+ *
+ * It also is a simple way to learn how to create a new plugin.
+ */
 class DebugConsolePlugin : public IPlugin
 {
         Q_OBJECT

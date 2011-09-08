@@ -19,7 +19,9 @@ using namespace composer::extension;
 namespace composer {
     namespace plugin {
         namespace debug {
-
+/*!
+ * \brief Handles the creation and deletion of DebugConsolePlugin objects.
+ */
 class DebugConsoleFactory : public QObject,
                             public IPluginFactory
 {
