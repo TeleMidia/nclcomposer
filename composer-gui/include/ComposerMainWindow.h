@@ -42,6 +42,7 @@
 #include <QtGui/QPainter>
 #include <QtGui/QTreeView>
 #include <QToolButton>
+#include <QDockWidget>
 #include <QWebView>
 
 #include <core/modules/PluginControl.h>
@@ -54,7 +55,6 @@ using namespace composer::core;
 #include "PerspectiveManager.h"
 #include "PreferencesDialog.h"
 #include "PluginDetailsDialog.h"
-#include "ComposerQDockWidget.h"
 #include "WelcomeWidget.h"
 
 using namespace composer::gui;
