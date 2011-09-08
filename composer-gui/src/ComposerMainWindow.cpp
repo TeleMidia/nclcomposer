@@ -95,6 +95,9 @@ void ComposerMainWindow::initModules()
     connect(projectControl,SIGNAL(projectAlreadyOpen(QString)),
                  SLOT(onOpenProjectTab(QString)));
 
+    connect(projectControl, SIGNAL(dirtyProject(QString, bool)),
+            this, SLOT(setProjectDirty(QString, bool)));
+
     readExtensions();
 }
 
@@ -388,6 +391,21 @@ void ComposerMainWindow::addButtonToDockTitleBar(QFrame *titleBar,
 void ComposerMainWindow::tabClosed(int index)
 {
     QString location = tabProjects->tabToolTip(index);
+
+    if(ProjectControl::getInstance()->getOpenProject(location)->isDirty())
+    {
+        int ret = QMessageBox::warning(this, tr("Application"),
+                                       tr("The document has been modified.\n"
+                                          "Do you want to save your changes?"),
+                                       QMessageBox::Yes | QMessageBox::Default,
+                                       QMessageBox::No,
+                                       QMessageBox::Cancel|QMessageBox::Escape);
+        if (ret == QMessageBox::Yes)
+            saveCurrentProject();
+        else if (ret == QMessageBox::Cancel)
+            return;
+    }
+
     ProjectControl::getInstance()->closeProject(location);
     QMainWindow *w = projectsWidgets[location];
 
@@ -717,6 +735,7 @@ void ComposerMainWindow::endOpenProject(QString project)
                        QSettings::UserScope,
                        "telemidia",
                        "composer");
+
     if(settings.contains("default_perspective"))
     {
         QString defaultPerspective =
@@ -1072,6 +1091,23 @@ void ComposerMainWindow::focusChanged(QWidget *old, QWidget *now)
         if(allDocks.at(i)->isAncestorOf(now))
             updateDockTitleStyle((QFrame*)allDocks.at(i)->titleBarWidget(),
                                  true);
+    }
+}
+
+void ComposerMainWindow::setProjectDirty(QString location, bool isDirty)
+{
+    QMainWindow *window = projectsWidgets[location];
+    QString projectId =
+            ProjectControl::getInstance()->
+                                getOpenProject(location)->getAttribute("id");
+
+    int index = tabProjects->indexOf(window);
+
+    if(index >= 0) {
+        if(isDirty)
+            tabProjects->setTabText(index, QString("*")+projectId);
+        else
+            tabProjects->setTabText(index, projectId);
     }
 }
 

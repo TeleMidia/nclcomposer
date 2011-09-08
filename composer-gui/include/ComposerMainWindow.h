@@ -276,6 +276,8 @@ private slots:
 
     void focusChanged(QWidget *old, QWidget *now);
 
+    void setProjectDirty(QString location, bool isDirty);
+
 public:
     /*!
      \brief Constructs the Composer Main Window with the given parent.
