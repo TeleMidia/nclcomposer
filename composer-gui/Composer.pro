@@ -21,10 +21,14 @@ win32:INSTALLBASE = C:/Composer
 
 unix {
     target.path = $$INSTALLBASE/bin
+
+    QMAKE_LFLAGS += -Wl,--rpath=\'\$\$ORIGIN/../lib/composer\'
+    QMAKE_LFLAGS += --rpath=\'\$\$ORIGIN/../lib/composer/extension\'
 }
 else {
     taget.path = $$INSTALLBASE
 }
+
 INCLUDEPATH += include/
 
 macx {
@@ -55,9 +59,6 @@ SOURCES += main.cpp \
     src/PluginDetailsDialog.cpp \
     src/EnvironmentPreferencesWidget.cpp \
     src/WelcomeWidget.cpp
-    # src/ProjectTreeView.cpp
-    # src/WorkspaceModel.cpp
-    # src/WorkspaceSwitch.cpp
 
 HEADERS += include/ComposerMainWindow.h \
     include/wizard/ProjectWizard.h \
@@ -69,11 +70,7 @@ HEADERS += include/ComposerMainWindow.h \
     include/PluginDetailsDialog.h \
     include/EnvironmentPreferencesWidget.h \
     include/IPreferencePage.h \
-    include/WelcomeWidget.h \
-    include/QWelcomeWidgetTab.h
-    # include/ProjectTreeView.h
-    # include/WorkspaceModel.h
-    # include/WorkspaceSwitch.h
+    include/WelcomeWidget.h
 
 RESOURCES += images.qrc
 
