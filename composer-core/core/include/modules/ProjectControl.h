@@ -89,6 +89,9 @@ public:
     */
     void importFromDocument(QString docLocation, QString projLocation);
 
+private slots:
+    void projectIsDirty(bool isDirty);
+
 signals:
     /*!
      \brief
@@ -114,6 +117,12 @@ signals:
      \param QString
     */
     void notifyError(QString);
+
+    /*!
+      \brief
+      \param
+     */
+    void dirtyProject(QString, bool);
 };
 
 } } //end namespace

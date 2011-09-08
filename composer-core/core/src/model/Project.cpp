@@ -17,6 +17,7 @@ Project::Project(QObject *parent) :
     Entity(parent)
 {
     setType("document");
+    dirty = false;
     entities[this->getUniqueId()] = this;
 }
 
@@ -24,6 +25,7 @@ Project::Project(QMap<QString,QString> &atts, QObject *parent) :
     Entity(atts, parent)
 {
     setType("document");
+    dirty = false;
     entities[this->getUniqueId()] = this;
 }
 
@@ -32,6 +34,7 @@ Project::Project( QString uniqueId, QMap<QString,QString> &atts,
     Entity(uniqueId, atts, parent)
 {
     setType("document");
+    dirty = false;
     entities[this->getUniqueId()] = this;
 }
 
@@ -104,6 +107,9 @@ bool Project::addEntity(Entity* entity, QString parentId)
     Entity *parent = entities[parentId];
     parent->addChild(entity);
     entities[entity->getUniqueId()] = entity;
+
+    setDirty(true);
+    return true;
 }
 
 bool Project::removeEntity(Entity* entity, bool appendChild)
@@ -148,7 +154,8 @@ bool Project::removeEntity(Entity* entity, bool appendChild)
         throw EntityNotFound(entity->getType(), entity->getUniqueId());
         return false; // entity does not exist in the model
     }
-//    qDebug() << entities;
+//  qDebug() << entities;
+    setDirty(true);
     return true;
 }
 
@@ -177,6 +184,7 @@ bool Project::setPluginData(QString pluginId, const QByteArray data)
 {
     this->pluginData[pluginId] = data;
 
+    setDirty(true);
     return true;
 }
 
@@ -189,11 +197,17 @@ QByteArray Project::getPluginData(QString pluginId)
     return QByteArray();
 }
 
-/*
-bool Project::isModified()
+bool Project::isDirty()
 {
-    return true;
+    return dirty;
 }
-*/
+
+void Project::setDirty(bool isDirty)
+{
+    if(dirty != isDirty) {
+        dirty = isDirty;
+        emit dirtyProject(isDirty);
+    }
+}
 
 } } } //end namespace

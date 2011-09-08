@@ -210,6 +210,12 @@ void PluginControl::launchNewPlugin(IPlugin *plugin, MessageControl *mControl)
             SLOT(setListenFilter(QStringList)),
             Qt::DirectConnection);
 
+    connect(plugin,
+            SIGNAL(setCurrentProjectAsDirty()),
+            mControl,
+            SLOT(setCurrentProjectAsDirty()),
+            Qt::DirectConnection);
+
     // broadcastMessage
     connect(plugin, SIGNAL(sendBroadcastMessage(const char*, void *)),
             this, SLOT(sendBroadcastMessage(const char*, void*)),

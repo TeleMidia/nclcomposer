@@ -248,6 +248,13 @@ signals:
      */
     void setPluginData(QByteArray data);
 
+    /*!
+     * \brief TODO
+     *
+     * \todo This could be done with setBroadcastMessage?!
+     */
+    void setCurrentProjectAsDirty();
+
 };
 
 } } //end namespace

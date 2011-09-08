@@ -114,6 +114,11 @@ public slots:
      */
     void setPluginData(QByteArray data);
 
+    /*!
+     * \brief TODO
+     */
+    void setCurrentProjectAsDirty();
+
 signals:
     void entityAdded(QString, Entity*);
 

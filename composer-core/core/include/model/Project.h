@@ -81,14 +81,13 @@ public:
     */
     LanguageType getProjectType();
     /*!
-      \brief Get specific plugin data saved in the document.
-     */
-    /*!
      \brief Returns the specific data of a plugin.
 
      \param pluginId
     */
     QByteArray getPluginData(QString pluginId);
+
+    bool isDirty();
 
 private:
     QMutex lockEntities; /*!< TODO */
@@ -99,6 +98,8 @@ private:
     QString projectLocation; /*!< TODO */
     QString projectName; /*!< TODO */
     LanguageType projectType; /*!< TODO */
+
+    bool dirty;
 
 protected:
     /*!
@@ -205,8 +206,14 @@ protected:
     */
     QString toString();
 
-public slots:
+    /*!
+      \brief This slot must be called when there are some data (on the plugin data or
+        on the model) that are not synchronized with the saved file.
+     */
+    void setDirty(bool isDirty);
 
+signals:
+    void dirtyProject(bool isDirty);
 };
 
 } } } //end namespace

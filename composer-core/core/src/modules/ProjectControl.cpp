@@ -111,9 +111,14 @@ void ProjectControl::launchProject(QString location)
 
         PluginControl::getInstance()->launchProject(project);
         openProjects[location] = project;
+
+        connect ( project, SIGNAL(dirtyProject(bool)),
+                  this, SLOT(projectIsDirty(bool)));
     }
     else
         qWarning() << tr("Project could not be open!");
+
+    project->setDirty(false);
 
     emit endOpenProject(location);
 }
@@ -188,6 +193,7 @@ void ProjectControl::importFromDocument( QString docLocation,
     else
         qWarning() << tr("Project could not be open!");
 
+    project->setDirty(false);
     emit endOpenProject(projLocation);
 }
 
@@ -213,6 +219,7 @@ void ProjectControl::saveProject(QString location)
     QString content = project->toString();
     fout.write(qCompress(content.toAscii(), content.size()));
     fout.close();
+    project->setDirty(false);
 }
 
 Project *ProjectControl::getOpenProject(QString location)
@@ -221,6 +228,17 @@ Project *ProjectControl::getOpenProject(QString location)
         return openProjects.value(location);
 
     return NULL;
+}
+
+void ProjectControl::projectIsDirty(bool isDirty)
+{
+    Project *project = qobject_cast<Project *> (QObject::sender());
+    if(project != NULL)
+    {
+        emit dirtyProject(project->getLocation(), isDirty);
+    }
+    else qWarning() << "Received a dirtyProject message for a NULL project";
+
 }
 
 } }//end namespace
