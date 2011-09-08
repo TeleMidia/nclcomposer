@@ -35,6 +35,7 @@ macx {
     headers_nclprofile.path = $$HEADERS_PATH/core/extensions
 }
 else:unix {
+    QMAKE_LFLAGS += -Wl,--rpath=\'\$\$ORIGIN/../lib/composer\'
     LIBS += -L../../core -lComposerCore
     target.path = $$quote(/usr/local/lib/composer/extension)
     headers_nclprofile.path = $$HEADERS_PATH/core/extensions
