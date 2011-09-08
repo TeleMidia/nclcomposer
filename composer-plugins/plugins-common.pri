@@ -26,12 +26,16 @@ macx {
         target.path = $$quote(/Library/Application Support/Composer)
 }
 else:unix {
-    LIBS += -L/usr/local/lib/composer -lNCLLanguageProfile \
-            -L/usr/local/lib/composer/extension
+    LIBS += -L/usr/local/lib/composer \
+            -L/usr/local/lib/composer/extension -lNCLLanguageProfile
 
     INCLUDEPATH += include /usr/local/include/composer \
                     /usr/local/include/composer/core \
                    /usr/local/include/composer/core/extensions
+
+    QMAKE_LFLAGS += -Wl,--rpath=\'\$\$ORIGIN\'
+    QMAKE_LFLAGS += --rpath=\'\$\$ORIGIN/../\'
+    QMAKE_LFLAGS += --rpath=\'\$\$ORIGIN/../lib/composer\'
 
     target.path = $$quote(/usr/local/lib/composer/extension)
 }
