@@ -298,7 +298,6 @@ void MessageControl::setPluginData(QByteArray data)
 
 void MessageControl::setCurrentProjectAsDirty()
 {
-    qDebug() << "MessageControl::setCurrentProjectAsDirty";
     project->setDirty(true);
 }
 
