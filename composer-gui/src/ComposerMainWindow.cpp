@@ -44,13 +44,6 @@ ComposerMainWindow::ComposerMainWindow(QApplication &app, QWidget *parent)
     initModules();
     readSettings();
 
-    preferences = new PreferencesDialog(this);
-    perspectiveManager = new PerspectiveManager(this);
-    pluginDetailsDialog = new PluginDetailsDialog(aboutDialog);
-    projectWizard = new ProjectWizard(this);
-
-    connect(ui->action_RunNCL, SIGNAL(triggered()), this, SLOT(runNCL()));
-
     connect(&app, SIGNAL(focusChanged(QWidget *, QWidget *)),
             this, SLOT(focusChanged(QWidget *, QWidget *)));
 }
@@ -214,7 +207,14 @@ void ComposerMainWindow::initGUI()
     createActions();
     createMenus();
     createAbout();
-    show();
+//    show();
+
+    preferences = new PreferencesDialog(this);
+    perspectiveManager = new PerspectiveManager(this);
+    pluginDetailsDialog = new PluginDetailsDialog(aboutDialog);
+    projectWizard = new ProjectWizard(this);
+
+    connect(ui->action_RunNCL, SIGNAL(triggered()), this, SLOT(runNCL()));
 
     welcomeWidget = new WelcomeWidget(this);
     welcomeWidget->show();
@@ -226,6 +226,9 @@ void ComposerMainWindow::initGUI()
 
     connect(welcomeWidget, SIGNAL(userPressedNewProject()),
             this, SLOT(launchProjectWizard()));
+
+    connect(welcomeWidget, SIGNAL(userPressedSeeInstalledPlugins()),
+            this, SLOT(about()));
 }
 
 void ComposerMainWindow::addPluginWidget(IPluginFactory *fac, IPlugin *plugin,
@@ -392,10 +395,11 @@ void ComposerMainWindow::tabClosed(int index)
 {
     QString location = tabProjects->tabToolTip(index);
 
-    if(ProjectControl::getInstance()->getOpenProject(location)->isDirty())
+    Project *project = ProjectControl::getInstance()->getOpenProject(location);
+    if(project->isDirty())
     {
-        int ret = QMessageBox::warning(this, tr("Application"),
-                                       tr("The document has been modified.\n"
+        int ret = QMessageBox::warning(this, project->getAttribute("id"),
+                                       tr("The project has been modified.\n"
                                           "Do you want to save your changes?"),
                                        QMessageBox::Yes | QMessageBox::Default,
                                        QMessageBox::No,
@@ -409,6 +413,19 @@ void ComposerMainWindow::tabClosed(int index)
     ProjectControl::getInstance()->closeProject(location);
     QMainWindow *w = projectsWidgets[location];
 
+    //Remove from allDocks
+    int i = 0;
+    while(i < allDocks.size())
+    {
+        if(w->isAncestorOf(allDocks.at(i)))
+        {
+            allDocks.removeAt(i);
+        }
+        else
+            i++;
+    }
+
+    // Delete QMainWindow
     if (w)
     {
         delete w;
@@ -416,8 +433,6 @@ void ComposerMainWindow::tabClosed(int index)
     }
     projectsWidgets.remove(location);
     firstDock.remove(location);
-
-    //\todo Remove from allDocks
 }
 
 void ComposerMainWindow::closeCurrentTab()
@@ -1084,14 +1099,15 @@ void ComposerMainWindow::focusChanged(QWidget *old, QWidget *now)
 {
     for(int i = 0; i < allDocks.size(); i++)
     {
-        if(allDocks.at(i)->isAncestorOf(old))
+        if(old != NULL && allDocks.at(i)->isAncestorOf(old))
             updateDockTitleStyle((QFrame*)allDocks.at(i)->titleBarWidget(),
                                  false);
 
-        if(allDocks.at(i)->isAncestorOf(now))
+        if(now != NULL && allDocks.at(i)->isAncestorOf(now))
             updateDockTitleStyle((QFrame*)allDocks.at(i)->titleBarWidget(),
                                  true);
     }
+
 }
 
 void ComposerMainWindow::setProjectDirty(QString location, bool isDirty)

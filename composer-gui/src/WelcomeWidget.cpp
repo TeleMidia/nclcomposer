@@ -4,6 +4,7 @@
 namespace composer {
 namespace gui {
 
+
 WelcomeWidget::WelcomeWidget(QWidget *parent): QWidget(parent),
     ui(new Ui::WelcomeWidget)
 {
@@ -214,4 +215,14 @@ void composer::gui::WelcomeWidget::on_commandLinkButton_7_clicked()
 void composer::gui::WelcomeWidget::on_commandLinkButton_8_clicked()
 {
     QDesktopServices::openUrl(QUrl("http://composer.telemidia.puc-rio.br/doku.php/how_to_create_a_plugin_to_ncl_composer"));
+}
+
+void composer::gui::WelcomeWidget::on_commandLinkButton_pressed()
+{
+    QDesktopServices::openUrl(QUrl("http://composer.telemidia.puc-rio.br/doku.php/plugins:index"));
+}
+
+void composer::gui::WelcomeWidget::on_commandLinkButton_2_pressed()
+{
+    emit userPressedSeeInstalledPlugins();
 }

@@ -51,6 +51,14 @@ public:
 };
 /************************************************************************/
 
+/*!
+  \brief WelcomeWidget shows a friendly message to the user when the NCL
+    Composer is open.
+
+    Additionally, this widget allows the user to create new projects based
+    on examples from NCL Club and allows the user to install new plugins
+    and see the news related to the software.
+ */
 class WelcomeWidget: public QWidget {
     Q_OBJECT
 
@@ -104,6 +112,8 @@ private:
 private slots:
     void readData(const QHttpResponseHeader &resp);
     void finishRSSLoad(int, bool);
+    void on_commandLinkButton_pressed();
+    void on_commandLinkButton_2_pressed();
 
 signals:
     /*!
@@ -115,6 +125,12 @@ signals:
      * \brief Signal emitted when the user press the New Project button.
      */
     void userPressedNewProject();
+
+    /*!
+     * \brief Signal emitted when the user press the See installed plugins
+     *   button.
+     */
+    void userPressedSeeInstalledPlugins();
 };
 
 } }
