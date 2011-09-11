@@ -56,7 +56,8 @@ QWidget* OutlineViewPlugin::getWidget()
 
 void OutlineViewPlugin::onEntityAdded(QString pluginID, Entity *entity)
 {
-//    QString line = "<" + entity->getType() + "> </" + entity->getType() + ">\n";
+    (void) pluginID;
+//  QString line = "<" + entity->getType() + "> </" + entity->getType() + ">\n";
 
     QTreeWidgetItem *item;
     QMap <QString, QString> attrs;
@@ -95,9 +96,6 @@ void OutlineViewPlugin::errorMessage(QString error)
 
 void OutlineViewPlugin::onEntityChanged(QString pluginID, Entity * entity)
 {
-    QString line = "PLUGIN (" + pluginID + ") changed the Entity (" +
-                   entity->getType() + " - " + entity->getUniqueId() +")";
-
     QMap <QString, QString> attrs;
     QMap <QString, QString>::iterator begin, end, it;
 
@@ -114,6 +112,7 @@ void OutlineViewPlugin::onEntityChanged(QString pluginID, Entity * entity)
 
 void OutlineViewPlugin::onEntityRemoved(QString pluginID, QString entityID)
 {
+    (void) pluginID;
 //    qDebug() << "OutlineViewPlugin::onEntityRemoved ("<< pluginID << " "
 //            << entityID << ")";
 //    qDebug() << idToItem.contains(entityID);
@@ -222,6 +221,9 @@ void OutlineViewPlugin::init()
 
 void OutlineViewPlugin::debugHasSendClearAll(QString pluginID, void *param)
 {
+    (void) pluginID;
+    (void) param;
+
     qDebug() << "OutlineViewPlugin::debugHasSendClearAll";
 }
 
