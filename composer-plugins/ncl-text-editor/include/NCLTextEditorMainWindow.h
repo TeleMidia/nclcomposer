@@ -31,6 +31,10 @@ using namespace std;
 class QAction;
 class QMenu;
 
+/*!
+ * \brief The main window of the NCL Textual Editor.
+ */
+
 class NCLTextEditorMainWindow : public QMainWindow
 {
     Q_OBJECT
