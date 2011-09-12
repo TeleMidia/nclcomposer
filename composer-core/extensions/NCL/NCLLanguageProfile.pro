@@ -14,9 +14,19 @@ TARGET = NCLLanguageProfile
 TEMPLATE = lib
 CONFIG += debug plugin
 
-macx:INSTALLBASE = /Library/Frameworks
-else:unix:INSTALLBASE = /usr/local
-win32:INSTALLBASE = C:/Composer
+macx {
+  INSTALLBASE = /Library/Frameworks
+}
+else:unix {
+ isEmpty(PREFIX) {
+    PREFIX = /usr/local
+  }
+ 
+  INSTALLBASE = $$PREFIX
+}
+else:win32 {
+  INSTALLBASE = C:/Composer
+}
 
 macx:HEADERS_PATH = $$INSTALLBASE/ComposerCore.framework
 else:unix:HEADERS_PATH = $$INSTALLBASE/include/composer
@@ -37,7 +47,7 @@ macx {
 else:unix {
     QMAKE_LFLAGS += -Wl,--rpath=\'\$\$ORIGIN/../lib/composer\'
     LIBS += -L../../core -lComposerCore
-    target.path = $$quote(/usr/local/lib/composer/extension)
+    target.path = $$quote($$INSTALLBASE/lib/composer/extensions)
     headers_nclprofile.path = $$HEADERS_PATH/core/extensions
 }
 else:win32 {

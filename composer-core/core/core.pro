@@ -12,9 +12,18 @@ OBJECTS_DIR = .objs
 
 macx:CONFIG += lib_bundle
 
-macx:INSTALLBASE = /Library/Frameworks
-else:unix:INSTALLBASE = /usr/local
-win32:INSTALLBASE = C:/Composer
+macx {
+  INSTALLBASE = /Library/Frameworks
+}
+else:unix {
+ isEmpty(PREFIX) {
+    PREFIX = /usr/local
+  } 
+  INSTALLBASE = $$PREFIX
+}
+else:win32 {
+  INSTALLBASE = C:/Composer
+}
 
 DEFINES += COMPOSERCORE_LIBRARY
 
