@@ -30,14 +30,19 @@ ComposerMainWindow::ComposerMainWindow(QApplication &app, QWidget *parent)
 {
     ui->setupUi(this);
 
-    user_directory_ext = "";
-
 #ifdef Q_WS_MAC
-    defaultEx = "/Library/Application Support/Composer";
+    defaultPluginsPath << "/Library/Application Support/Composer";
 #elif defined(Q_WS_WIN32)
-    defaultEx = "C:/Composer/lib/composer";
+    defaultPluginsPath << "C:/Composer/lib/composer";
 #else
-    defaultEx = "/usr/local/lib/composer/extension";
+    // PREFIX Should be defined by the qmake while compiling the source code.
+
+#ifdef EXT_DEFAULT_PATH
+    defaultPluginsPath << QString(EXT_DEFAULT_PATH)
+                          + QString("/lib/composer/extensions");
+#endif
+
+    defaultPluginsPath << QDir::homePath() + QString("/composer/extensions");
 #endif
 
     initGUI();
@@ -106,34 +111,34 @@ void ComposerMainWindow::readExtensions()
 #endif
 
     settings.beginGroup("extension");
-#ifdef Q_WS_WIN32
-    user_directory_ext = defaultEx;
-#else
+
     if (settings.contains("path"))
+        extensions_paths = settings.value("path").toStringList();
+
+    extensions_paths << defaultPluginsPath; //Add default location to extensions
+    extensions_paths.removeDuplicates(); // Remove duplicate paths
+
+    // foreach path where extensions can be installed, try to load profiles.
+    for(int i = 0; i < extensions_paths.size(); i++)
     {
-        user_directory_ext = settings.value("path").toString();
-    } else {
-        user_directory_ext = promptChooseExtDirectory();
-        if (user_directory_ext == "") user_directory_ext = defaultEx;
+        LanguageControl::getInstance()->loadProfiles(extensions_paths.at(i));
     }
-#endif
-    // qDebug() << "MainWindow::readExtensions(" << user_directory_ext
-    //          << ")";
 
-    LanguageControl::getInstance()->
-            loadProfiles(user_directory_ext);
-
-    PluginControl::getInstance()->loadPlugins(user_directory_ext);
+    // foreach path where extensions can be installed, try to load plugins.
+    for(int i = 0; i < extensions_paths.size(); i++)
+    {
+        PluginControl::getInstance()->loadPlugins(extensions_paths.at(i));
+    }
     settings.endGroup();
 }
 
 QString ComposerMainWindow::promptChooseExtDirectory()
 {
-
     QMessageBox mBox;
+
     mBox.setText(tr("The Extension Directory is not set"));
     mBox.setInformativeText(tr("Do you want to try the default"
-                               "directory (%1)?").arg(defaultEx));
+                               "directory (%1)?").arg(QDir::homePath()));
     mBox.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
     mBox.setDefaultButton(QMessageBox::Yes);
     mBox.setIcon(QMessageBox::Question);
@@ -207,7 +212,6 @@ void ComposerMainWindow::initGUI()
     createActions();
     createMenus();
     createAbout();
-//    show();
 
     preferences = new PreferencesDialog(this);
     perspectiveManager = new PerspectiveManager(this);
@@ -418,9 +422,7 @@ void ComposerMainWindow::tabClosed(int index)
     while(i < allDocks.size())
     {
         if(w->isAncestorOf(allDocks.at(i)))
-        {
             allDocks.removeAt(i);
-        }
         else
             i++;
     }
@@ -601,7 +603,8 @@ void ComposerMainWindow::about()
 
 void ComposerMainWindow::errorDialog(QString message)
 {
-    QMessageBox::warning(this,tr("Error!"),message);
+    //QMessageBox::warning(this,tr("Error!"),message);
+    qWarning() << message;
 }
 
 void ComposerMainWindow::createActions() {
@@ -690,12 +693,9 @@ void ComposerMainWindow::closeEvent(QCloseEvent *event)
                        "telemidia",
                        "composer");
 #endif
-    if (user_directory_ext != "")
-    {
-        settings.beginGroup("extension");
-        settings.setValue("path",user_directory_ext);
-        settings.endGroup();
-    }
+    settings.beginGroup("extension");
+    settings.setValue("path", extensions_paths);
+    settings.endGroup();
 
     settings.beginGroup("mainwindow");
     settings.setValue("geometry", saveGeometry());
@@ -859,7 +859,9 @@ void ComposerMainWindow::restorePerspective(QString layoutName)
                            "composer");
 
         settings.beginGroup("pluginslayout");
+#ifndef USE_MDI
         window->restoreState(settings.value(layoutName).toByteArray());
+#endif
         settings.endGroup();
     }
 }

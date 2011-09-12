@@ -122,8 +122,8 @@ private:
     QDialog *aboutDialog; /*!< TODO */
     QPushButton *detailsButton;
 
-    QString defaultEx; /*!< TODO */
-    QString user_directory_ext; /*!< TODO */
+    QStringList defaultPluginsPath; /*!< TODO */
+    QStringList extensions_paths; /*!< TODO */
 
     WelcomeWidget *welcomeWidget; /*!< TODO */
 
