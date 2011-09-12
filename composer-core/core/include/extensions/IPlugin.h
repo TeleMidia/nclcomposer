@@ -24,7 +24,6 @@ namespace composer {
 /*!
  * \brief The interface for communication between the core and the plugin.
  *
- *
  * This extension point is used by the core to emit and receive signals.
  * These signals are transmited by the plugin to the core, and then the core
  * retransmit this signal to the other plugins associated with the NclDocument.

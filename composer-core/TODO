@@ -2,31 +2,38 @@ Copyright (C) 2010, 2011 PUC-Rio/Laboratorio Telemidia
 See the end of the file for license conditions.
 
 TODO file for composer-core
+
 * Working now:
-  - Save Project and files (and export).
 
 * Features or problems:
-  - Script to automatically create the Plugin and Factory classes.
-	- Generalize NCLStructure to all kinds of languages.
-	- ToolGUI integration API.
-				. How should be the integration?!
-
-* Plugin API:
-	- Plugin API: Add plugin provider description. (OK)
-	- Plugin API: Add plugin version. (OK)
-	- Plugin-to-plugin communication. (OK)
+  - Export to NCL.
+  - Generalize NCLStructure to all kinds of languages.
+  - ToolGUI integration API.
+    . How should be the integration?!
+  - Transaction support (plugin should emits N messages as a single 
+    transaction).
+  - Separate each plugin as a different process.
 
 * Optimizations and clean up
 
-* Plugin API Tests:
-  - Performance tests.
-  - Memory Leaks (valgrind)
-	- Security ?!?!
-	- Integration with other plugins ?!
+* Tests:
+  - Plugin API tests:
+    - Performance tests.
+    - Memory Leaks (valgrind)
+      - Security ?!?!
+      - Integration with other plugins ?!
 
 * Documentation:
   - Manual to Develop plugins:
     . Points to be mentioned:
-		    1. Key handling (pass to father)!
-				
+      1. Key handling (pass to father)!
+
+Done
+====
+* Save Project.
+* Plugin API:
+  - Plugin API: Add plugin provider description. (OK)
+  - Plugin API: Add plugin version. (OK)
+  - Plugin-to-plugin communication. (OK)
+
 //TODO: License
