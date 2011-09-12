@@ -8,7 +8,7 @@ root path. For instance:
 
 Then, apply add_ncl_lexer_to_scintilla.patch with:
 
-  $ patch -p0 <../add_ncl_lexer_to_scintilla.patch
+  $ patch -p1 <../add_ncl_lexer_to_scintilla.patch
 
 See if the src/Catalogue.cpp has a line:
 
@@ -18,6 +18,9 @@ Then, go to include dir and run HFacer.py script:
 
   $ cd include
   $ python HFacer.py
+
+The script should print a message like, 
+  $ Maximum ID is $$$
 
 Now, you are able to go to Qt4 directory inside QScintilla tree, and build and
 install QScintilla:
