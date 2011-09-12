@@ -6,6 +6,7 @@ TODO file to composer-plugins
 General
 =======
 * Features:
+  - Try to keep attribute order.
   - New plugins:
     . Global Actions.
     . Lua Scripting plugin.
@@ -36,7 +37,6 @@ Textual View
     . Font colors.
     . Whitespace visibility.
   - Incremental synchronization with composer core.
-  -
 
 * Optimizations and cleanup:
   - Code refactoring:
