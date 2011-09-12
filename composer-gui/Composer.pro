@@ -3,27 +3,35 @@ TEMPLATE = app
 CONFIG += qt warn_on debug console
 QT += xml webkit network
 
+#DEFINES += USE_MDI
+
 RC_FILE = images/nclcomposer.rc
 
 MOC_DIR     =   .moc
 OBJECTS_DIR =   .obj
 UI_DIR      =   .ui
 
-macx:ICON = images/Composer.icns
+macx {
+  INSTALLBASE = /Applications/Composer
+  ICON =  images/Composer.icns
+}
+else:unix {
+  isEmpty(PREFIX) {
+    PREFIX = /usr/local
+  } 
+  INSTALLBASE = $$PREFIX
+}
+else win32 {
+  INSTALLBASE = C:/Composer
+}
 
-macx:LOCATION = /Library/Frameworks
-else:unix:LOCATION = /usr/local
-else:win32:LOCATION = C:/Composer
-
-macx:INSTALLBASE = /Applications/Composer
-else:unix:INSTALLBASE = /usr/local
-win32:INSTALLBASE = C:/Composer
+DEFINES += EXT_DEFAULT_PATH=\"\\\"$$PREFIX\\\"\"
 
 unix {
     target.path = $$INSTALLBASE/bin
 
     QMAKE_LFLAGS += -Wl,--rpath=\'\$\$ORIGIN/../lib/composer\'
-    QMAKE_LFLAGS += --rpath=\'\$\$ORIGIN/../lib/composer/extension\'
+    QMAKE_LFLAGS += --rpath=\'\$\$ORIGIN/../lib/composer/extensions\'
 }
 else {
     taget.path = $$INSTALLBASE
@@ -32,20 +40,18 @@ else {
 INCLUDEPATH += include/
 
 macx {
-    LIBS += \
-        -framework \
-        ComposerCore
+    LIBS += -framework ComposerCore
     INCLUDEPATH += /Library/Frameworks/ComposerCore.framework/
 }
 else:unix {
-    LIBS += -L$$LOCATION/lib/composer -lComposerCore
-    INCLUDEPATH +=  $$LOCATION/include/composer \
-                    $$LOCATION/include/composer/core
+    LIBS += -L$$INSTALLBASE/lib/composer -lComposerCore
+    INCLUDEPATH +=  $$INSTALLBASE/include/composer \
+                    $$INSTALLBASE/include/composer/core
 }
 else:win32 {
-    LIBS += -L$$LOCATION -lComposerCore1
-    INCLUDEPATH += $$LOCATION/include/composer \
-                   $$LOCATION/include/composer/core
+    LIBS += -L$$INSTALLBASE -lComposerCore1
+    INCLUDEPATH += $INSTALLBASE/include/composer \
+                   $$INSTALLBASE/include/composer/core
 }
 
 SOURCES += main.cpp \
