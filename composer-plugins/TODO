@@ -1,31 +1,87 @@
-0. Working Now:
-    * Element position (start_tag begin and end position, and end_tag, begin
-                            and end position.)
+Copyright (C) 2010, 2011 PUC-Rio/Laboratorio Telemidia
+See the end of the file for license conditions.
 
-1. Code refactoring:
-  * Rename NCLTextEditor to NCLTextView ?!
-  * Rename NCLTreeWidget to NCLTreeView ?!
-  * All Composer view should inherent from a common class (Composer View?!)
-  * Improve attribute navigation performance.
+TODO file to composer-plugins
 
-2. Contextual code sugestion:
-    * Sugestion of default attribute values. (OK!)
-    * Sugestion of references.
+General
+=======
+* Features:
+  - New plugins:
+    . Global Actions.
+    . Lua Scripting plugin.
+    . Storeboard plugin.
+  - Script to automatically create the Plugin and Factory classes.
+  - Copy and paste among plugins.
+  - Undo/Redo: How it will work?
 
-3. Validation.
-    * All.
+* Optimizations and cleanup:
+  - All Composer view should inherent from a common class (Composer View?!)
 
-4. Code format (Ctrl+Shift+F).
+* Known bugs:
 
-5. Sugestion of correction.
+Textual View
+============
+* Features:
+  - Contextual code suggestion:
+    . Sugestion of default attribute values. (OK!)
+    . Sugestion of references.
+  - Validation.
+  - Code format(Ctrl+Shift+F).
+  - Suggestion of code corrections.
+  - Hyperlinks navigation.
+  - Preview of media objects, connectors, etc.
+  - Preferences Widget:
+    . Default font size.
+    . Font family.
+    . Font colors.
+    . Whitespace visibility.
+  - Incremental synchronization with composer core.
+  -
 
-6. Hyperlinks (This is not simple!)
+* Optimizations and cleanup:
+  - Code refactoring:
+    . Rename NCLTextEditor to NCLTextView ?!
+    . Rename NCLTreeWidget to NCLTreeView ?!
+    . Improve attribute navigation performance.
 
-7. Preview of media objects, connectors, etc.
+* Known bugs:
 
-8. Preferences.
-  * Default font size.
-  * Font Family.
-  * Font color style.
-  * Whitespace Visibility.
+Outline View
+============
+* Features:
+  - Icons to representing element types.
 
+* Optimizations and cleanup:
+  
+* Known bugs:
+  
+Properties View
+===============
+* Features:
+  - Specific controls for each type of attribute.
+  - Suggestion of attribute values.
+
+* Optimization and cleanup:
+
+* Known bugs:
+
+Layout View
+===========
+* Features:
+  - Plugin preferences.
+  - Rotate regions :D.
+  - Draw regions specified in pixels.
+
+* Optimization and cleanup:
+
+* Known bugs:
+
+Structural View
+===============
+* Features:
+
+* Optimization and cleanup:
+
+* Known bugs:
+ 
+//TODO: License
