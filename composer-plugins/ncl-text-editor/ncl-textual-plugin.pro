@@ -6,15 +6,15 @@ QT          +=  xml
 INCLUDEPATH +=  include \
                 ../outline-view/include \
                 ../ncl-layout-view \
-                deps/QScintilla-gpl-2.4.6/Qt4
+                deps/QScintilla-gpl-2.5.1/Qt4
 
-LIBS += -Ldeps/QScintilla-gpl-2.4.6/Qt4
+LIBS += -Ldeps/QScintilla-gpl-2.5.1/Qt4
 
 macx:LIBS += -L/Library/Frameworks \
             -L$$quote(/Library/Application Support/Composer) \
             -lNCLLanguageProfile
 
-unix:LIBS += -Ldeps/QScintilla-gpl-2.4.6/Qt4
+unix:LIBS += -Ldeps/QScintilla-gpl-2.5.1/Qt4
 
 win32:LIBS += -lNCLLanguageProfile
 

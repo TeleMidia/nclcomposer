@@ -9,8 +9,7 @@ CONFIG      +=  debug
 
 DEFINES     +=  NCLEDITOR_STANDALONE=\"1\"
 
-LIBS        += -Ldeps/QScintilla-gpl-2.4.6/Qt4 -lqscintilla2
-
+LIBS        += -Ldeps/QScintilla-gpl-2.5.1/Qt4 -lqscintilla2
 
 INCLUDEPATH +=  include \
                 ../outline-view/include \

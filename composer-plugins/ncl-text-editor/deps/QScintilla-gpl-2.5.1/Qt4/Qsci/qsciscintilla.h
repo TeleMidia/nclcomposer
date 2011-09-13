@@ -1276,6 +1276,8 @@ public:
     //! \sa read()
     bool write(QIODevice *io) const;
 
+    void insertAtPos(const QString &text, int pos);
+
 public slots:
     //! Appends the text \a text to the end of the text edit.  Note that the
     //! undo/redo history is cleared by this function.
@@ -1858,7 +1860,6 @@ private:
     bool isStartChar(char ch) const;
 
     bool ensureRW();
-    void insertAtPos(const QString &text, int pos);
     static int mapModifiers(int modifiers);
 
     ScintillaString styleText(const QList<QsciStyledText> &styled_text,
