@@ -1,0 +1,11 @@
+[Desktop Entry]
+Name=NCL Composer
+GenericName=NCL Composer
+Comment=Authoring enviroment for GINGA NCL applications
+Categories=AudioVideo
+Exec=/usr/bin/composer
+MimeType=application/x-nclcomposer
+TryExec=/usr/bin/composer
+Terminal=false
+Type=Application
+Icon=composer

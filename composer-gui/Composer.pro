@@ -20,6 +20,18 @@ else:unix {
     PREFIX = /usr/local
   } 
   INSTALLBASE = $$PREFIX
+  
+  DATADIR = $$PREFIX/share
+
+  # set the path to install desktop configuration
+  desktop.path = $$DATADIR/applications/
+  desktop.files = $${TARGET}.desktop
+
+  icon64.path = $$DATADIR/icons/gnome/64x64/apps
+  icon64.files = images/$${TARGET}.png
+
+  icon48.path = $$DATADIR/icons/gnome/48x48/apps
+  icon48.files = images/$${TARGET}.png
 }
 else win32 {
   INSTALLBASE = C:/Composer
@@ -88,4 +100,4 @@ FORMS   += ui/PreferencesDialog.ui \
     ui/EnvironmentPreferencesWidget.ui \
     ui/WelcomeWidget.ui
 
-INSTALLS += target
+INSTALLS += target desktop icon64 icon48
