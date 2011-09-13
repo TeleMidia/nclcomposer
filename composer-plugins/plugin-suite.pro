@@ -8,6 +8,6 @@ SUBDIRS = \
     debug-console \
     properties-view \
     deps \
-    qnly \
-    qnsb \
-    qnst
+    qncllayout \
+    qnstoryboard \
+    qnstructural
