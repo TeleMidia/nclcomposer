@@ -37,26 +37,40 @@ CONFIG += qt warn_off release dll thread
 INCLUDEPATH = . ../include ../lexlib ../src
 DEFINES = QSCINTILLA_MAKE_DLL QT SCI_LEXER
 
+isEmpty(PREFIX) {
+  PREFIX = /usr/local
+}
+
+QSCI_INSTALL_LIBS = $$PREFIX/lib/composer/extensions
+QSCI_INSTALL_HEADERS = $$PREFIX/include/composer
+QSCI_INSTALL_TRANSLATIONS = $$PREFIX/lib/composer/translations
+QSCI_INSTALL_DATA = $$PREFIX/lib/composer/
+
+#QSCI_INSTALL_LIBS = $$[QT_INSTALL_LIBS]
+#QSCI_INSTALL_HEADERS = $$[QT_INSTALL_HEADERS]
+#QSCI_INSTALL_TRANSLATIONS = $$[QT_INSTALL_HEADERS]
+#QSCI_INSTALL_DATA = $$[QT_INSTALL_DATA]
+
 # Handle both Qt v4 and v3.
-target.path = $$[QT_INSTALL_LIBS]
+target.path = $$QSCI_INSTALL_LIBS
 isEmpty(target.path) {
 	target.path = $(QTDIR)/lib
 }
 
-header.path = $$[QT_INSTALL_HEADERS]
+header.path = $$QSCI_INSTALL_HEADERS
 header.files = Qsci
 isEmpty(header.path) {
 	header.path = $(QTDIR)/include/Qsci
 	header.files = Qsci/qsci*.h
 }
 
-trans.path = $$[QT_INSTALL_TRANSLATIONS]
+trans.path = $$QSCI_INSTALL_TRANSLATIONS
 trans.files = qscintilla_*.qm
 isEmpty(trans.path) {
 	trans.path = $(QTDIR)/translations
 }
 
-qsci.path = $$[QT_INSTALL_DATA]
+qsci.path = $$QSCI_INSTALL_DATA
 qsci.files = ../qsci
 isEmpty(qsci.path) {
 	qsci.path = $(QTDIR)

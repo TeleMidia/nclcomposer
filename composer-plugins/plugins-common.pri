@@ -39,6 +39,7 @@ else:unix {
   QMAKE_LFLAGS += -Wl,--rpath=\'\$\$ORIGIN\'
   QMAKE_LFLAGS += --rpath=\'\$\$ORIGIN/../\'
   QMAKE_LFLAGS += --rpath=\'\$\$ORIGIN/../lib/composer\'
+  QMAKE_LFLAGS += --rpath=\'\$\$ORIGIN/../lib/composer/extensions\'
 
   target.path = $$quote($$INSTALLBASE/lib/composer/extensions)
 }
