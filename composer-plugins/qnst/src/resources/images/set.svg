@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 15.1.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1"
+	 id="svg1" xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape" xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd" inkscape:version="0.38.1" sodipodi:docbase="/home/danny/flat/scalable/actions" sodipodi:docname="player_pause.svg" sodipodi:version="0.32"
+	 xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="60px" height="60px"
+	 viewBox="0 0 60 60" enable-background="new 0 0 60 60" xml:space="preserve">
+<sodipodi:namedview  inkscape:window-y="0" inkscape:window-x="0" inkscape:window-width="1016" inkscape:window-height="693" inkscape:pageshadow="2" inkscape:pageopacity="0.0" borderopacity="1.0" bordercolor="#666666" inkscape:zoom="6.9465337" inkscape:cx="46.905586" id="base" pagecolor="#ffffff" inkscape:cy="25.599763">
+	</sodipodi:namedview>
+<path id="path862" fill="#B3B3B3" stroke="#333333" stroke-linecap="round" stroke-linejoin="round" d="M30,0.729
+	C13.836,0.729,0.729,13.835,0.729,30c0,16.163,13.106,29.272,29.271,29.272c16.164,0,29.271-13.109,29.271-29.272
+	C59.271,13.835,46.164,0.729,30,0.729z"/>
+<path fill="#FFFFFF" stroke="#333333" stroke-linecap="round" stroke-linejoin="round" d="M40.984,34.549v5.902
+	c0,0.244-0.141,0.441-0.316,0.441H17.875c-0.176,0-0.316-0.197-0.316-0.441v-5.902c0-0.244,0.141-0.441,0.316-0.441h22.793
+	C40.844,34.107,40.984,34.305,40.984,34.549z"/>
+<path fill="#FFFFFF" stroke="#333333" stroke-linecap="round" stroke-linejoin="round" d="M40.984,19.548v5.903
+	c0,0.244-0.141,0.44-0.316,0.44H17.875c-0.176,0-0.316-0.196-0.316-0.44v-5.903c0-0.244,0.141-0.44,0.316-0.44h22.793
+	C40.844,19.108,40.984,19.304,40.984,19.548z"/>
+</svg>

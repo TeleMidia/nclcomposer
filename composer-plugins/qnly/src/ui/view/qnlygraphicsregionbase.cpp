@@ -868,14 +868,18 @@ void QnlyGraphicsRegionBase::addRegion(QnlyGraphicsRegion* region,
 
 void QnlyGraphicsRegionBase::mousePressEvent(QGraphicsSceneMouseEvent* event)
 {
-    if (event->button() == Qt::RightButton){
-        event->ignore();
-
-    }else if (event->button() == Qt::LeftButton){
-        emit regionBaseSelectionRequested(uid);
-    }
-
     QGraphicsScene::mousePressEvent(event);
+
+    if (!event->isAccepted()){
+        if (event->button() == Qt::RightButton){
+            event->ignore();
+
+        }else if (event->button() == Qt::LeftButton){
+            emit regionBaseSelectionRequested(uid);
+        }
+
+       event->accept();
+    }
 }
 
 void QnlyGraphicsRegionBase::contextMenuEvent(

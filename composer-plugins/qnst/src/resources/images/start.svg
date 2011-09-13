@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 15.1.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1"
+	 id="svg1" sodipodi:version="0.32" sodipodi:docname="player_pause.svg" sodipodi:docbase="/home/danny/flat/scalable/actions" inkscape:version="0.38.1" xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape" xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+	 xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="60px" height="60px"
+	 viewBox="0 0 60 60" enable-background="new 0 0 60 60" xml:space="preserve">
+<sodipodi:namedview  inkscape:cy="25.599763" pagecolor="#ffffff" id="base" inkscape:cx="46.905586" inkscape:zoom="6.9465337" bordercolor="#666666" borderopacity="1.0" inkscape:pageopacity="0.0" inkscape:pageshadow="2" inkscape:window-height="693" inkscape:window-width="1016" inkscape:window-x="0" inkscape:window-y="0">
+	</sodipodi:namedview>
+<path fill="#999999" stroke="#333333" stroke-linecap="round" stroke-linejoin="round" d="M30,0.833
+	C13.894,0.833,0.833,13.892,0.833,30c0,16.105,13.06,29.167,29.167,29.167S59.167,46.104,59.167,30
+	C59.165,13.892,46.107,0.833,30,0.833z"/>
+<path fill="#FFFFFF" stroke="#333333" stroke-linecap="round" stroke-linejoin="round" d="M22,17.58l25.104,13.784L22,44.43
+	c-0.966,0-1.743-0.162-1.743-0.359V17.943C20.256,17.743,21.034,17.58,22,17.58z"/>
+</svg>

@@ -1180,6 +1180,8 @@ void QnlyGraphicsRegion::mousePressEvent(QGraphicsSceneMouseEvent* event)
         }
     }
 
+    event->accept();
+
     QGraphicsItem::mousePressEvent(event);
 }
 

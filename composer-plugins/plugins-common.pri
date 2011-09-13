@@ -55,3 +55,4 @@ else:win32 {
   target.path = $$INSTALLBASE/lib/composer
 }
 
+INSTALLS = target
