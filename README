@@ -53,16 +53,23 @@ Packaging
 =========
 One of the most important feature of the composer-all project is packaging.
 
-* Generating MSI (Windwows installer) package
-  //TODO
+* Generating MSI (Windows installer) package
+  To generate the Windows Package installer, you will need the NSIS (Nullsoft
+  scriptable install system): http://nsis.sourceforge.net/
+
+  To generate the windows installer, got to win32-nsis directory and run:
+
+  $ makensis composer.nsis
 
 * Generating DEBIAN package
-Before generate the debian package you must update the debian files, inside the
-debian directory.
+  Before generate the debian package you must update the debian files, inside 
+  the debian directory.
 
-To generate a new debian package, the only thing you need to do is run:
+  To generate a new debian package, the only thing you need to do is run:
+  
   $ debuild -us -uc
-in your terminal.
+  
+  in your terminal.
 
 
 //TODO: LICENSE
