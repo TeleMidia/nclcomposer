@@ -2,7 +2,7 @@ TARGET = properties_view
 
 include (../plugins-common.pri)
 
-win32:LIBS += -lNCLLanguageProfile
+LIBS += -lNCLLanguageProfile
 
 DEFINES += PROPERTIESVIEW_LIBRARY
 
