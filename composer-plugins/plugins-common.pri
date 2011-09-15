@@ -16,7 +16,7 @@ else:unix {
   INSTALLBASE = $$PREFIX
 }
 else:win32 {
-  INSTALLBASE = C:/Composer
+  INSTALLBASE = "C:/Composer"
 }
 
 macx {

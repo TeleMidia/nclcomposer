@@ -33,26 +33,37 @@
 
 TEMPLATE = lib
 TARGET = qscintilla2
-CONFIG += qt warn_off release dll thread
+CONFIG += qt warn_off debug dll thread
 INCLUDEPATH = . ../include ../lexlib ../src
 DEFINES = QSCINTILLA_MAKE_DLL QT SCI_LEXER
 
 mac {
-   QSCI_INSTALL_LIBS = $$quote(/Library/Application Support/Composer)
-   QSCI_INSTALL_HEADERS = $$[QT_INSTALL_HEADERS]
-   QSCI_INSTALL_TRANSLATIONS = $$[QT_INSTALL_HEADERS]
-   QSCI_INSTALL_DATA = $$[QT_INSTALL_DATA]
+  QSCI_INSTALL_LIBS = $$quote(/Library/Application Support/Composer)
+  QSCI_INSTALL_HEADERS = $$[QT_INSTALL_HEADERS]
+  QSCI_INSTALL_TRANSLATIONS = $$[QT_INSTALL_HEADERS]
+  QSCI_INSTALL_DATA = $$[QT_INSTALL_DATA]
 
-   QMAKE_LFLAGS += -Wl,-install_name,'\'$$QSCI_INSTALL_LIBS/lib'$$TARGET'.dylib\''
-}else unix{
-   isEmpty(PREFIX) {
-      PREFIX = /usr/local
-   }
+  QMAKE_LFLAGS += -Wl,-install_name,'\'$$QSCI_INSTALL_LIBS/lib'$$TARGET'.dylib\''
+}
+else:unix {
+  isEmpty(PREFIX) {
+    PREFIX = /usr/local
+  }
 
-   QSCI_INSTALL_LIBS = $$PREFIX/lib/composer/extensions
-   QSCI_INSTALL_HEADERS = $$PREFIX/include/composer
-   QSCI_INSTALL_TRANSLATIONS = $$PREFIX/lib/composer/translations
-   QSCI_INSTALL_DATA = $$PREFIX/lib/composer/
+  QSCI_INSTALL_LIBS = $$PREFIX/lib/composer/extensions
+  QSCI_INSTALL_HEADERS = $$PREFIX/include/composer
+  QSCI_INSTALL_TRANSLATIONS = $$PREFIX/lib/composer/translations
+  QSCI_INSTALL_DATA = $$PREFIX/lib/composer/
+}
+else:win32 {
+  isEmpty(PREFIX) {
+    PREFIX = "C:/Composer"
+  }
+
+  QSCI_INSTALL_LIBS = $$PREFIX/lib/composer
+  QSCI_INSTALL_HEADERS = $$PREFIX/include/composer
+  QSCI_INSTALL_TRANSLATIONS = $$PREFIX/lib/composer/translations
+  QSCI_INSTALL_DATA = $$PREFIX/lib/composer/
 }
 
 #QSCI_INSTALL_LIBS = $$[QT_INSTALL_LIBS]
