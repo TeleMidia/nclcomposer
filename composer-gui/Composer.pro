@@ -12,7 +12,8 @@ OBJECTS_DIR =   .obj
 UI_DIR      =   .ui
 
 macx {
-  INSTALLBASE = /Applications/Composer
+  TARGET = Composer
+  INSTALLBASE = /Applications
   ICON =  images/Composer.icns
 }
 else:unix {
@@ -39,14 +40,14 @@ else win32 {
 
 DEFINES += EXT_DEFAULT_PATH=\"\\\"$$PREFIX\\\"\"
 
-unix {
+unix:!macx {
     target.path = $$INSTALLBASE/bin
 
     QMAKE_LFLAGS += -Wl,--rpath=\'\$\$ORIGIN/../lib/composer\'
     QMAKE_LFLAGS += --rpath=\'\$\$ORIGIN/../lib/composer/extensions\'
 }
 else {
-    taget.path = $$INSTALLBASE
+    target.path = $$INSTALLBASE
 }
 
 INCLUDEPATH += include/
@@ -100,4 +101,8 @@ FORMS   += ui/PreferencesDialog.ui \
     ui/EnvironmentPreferencesWidget.ui \
     ui/WelcomeWidget.ui
 
-INSTALLS += target desktop icon64 icon48
+unix:!macx {
+    INSTALLS += target desktop icon64 icon48
+}else {
+    INSTALLS += target
+}
