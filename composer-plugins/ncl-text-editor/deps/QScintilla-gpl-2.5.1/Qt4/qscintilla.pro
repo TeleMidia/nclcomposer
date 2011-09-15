@@ -38,12 +38,12 @@ INCLUDEPATH = . ../include ../lexlib ../src
 DEFINES = QSCINTILLA_MAKE_DLL QT SCI_LEXER
 
 mac {
-   QSCI_INSTALL_LIBS = $$[QT_INSTALL_LIBS]
+   QSCI_INSTALL_LIBS = $$quote(/Library/Application Support/Composer)
    QSCI_INSTALL_HEADERS = $$[QT_INSTALL_HEADERS]
    QSCI_INSTALL_TRANSLATIONS = $$[QT_INSTALL_HEADERS]
    QSCI_INSTALL_DATA = $$[QT_INSTALL_DATA]
 
-   QMAKE_LFLAGS += -Wl,-install_name,'\'$$[QT_INSTALL_LIBS]/lib'$$TARGET'.dylib\''
+   QMAKE_LFLAGS += -Wl,-install_name,'\'$$QSCI_INSTALL_LIBS/lib'$$TARGET'.dylib\''
 }else unix{
    isEmpty(PREFIX) {
       PREFIX = /usr/local
