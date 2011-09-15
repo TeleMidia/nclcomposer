@@ -34,8 +34,8 @@ else:unix {
   icon48.path = $$DATADIR/icons/gnome/48x48/apps
   icon48.files = images/$${TARGET}.png
 }
-else win32 {
-  INSTALLBASE = C:/Composer
+else:win32 {
+  INSTALLBASE = "C:/Composer"
 }
 
 DEFINES += EXT_DEFAULT_PATH=\"\\\"$$PREFIX\\\"\"
@@ -63,7 +63,7 @@ else:unix {
 }
 else:win32 {
     LIBS += -L$$INSTALLBASE -lComposerCore1
-    INCLUDEPATH += $INSTALLBASE/include/composer \
+    INCLUDEPATH += $$INSTALLBASE/include/composer \
                    $$INSTALLBASE/include/composer/core
 }
 
