@@ -16,6 +16,7 @@ CONFIG += debug plugin
 
 macx {
   INSTALLBASE = /Library/Frameworks
+  INSTALLSUPPORT = $$quote(/Library/Application Support/Composer)
 }
 else:unix {
  isEmpty(PREFIX) {
@@ -39,10 +40,11 @@ headers_nclprofile.files += NCLLanguageProfile.h\
                             NCLDocumentParser.h
 
 macx {
-    LIBS += -L../../core -F../../core \
-        -framework ComposerCore
-    target.path = $$quote(/Library/Application Support/Composer)
+    LIBS += -L../../core -F../../core -framework ComposerCore
+    target.path = $$INSTALLSUPPORT
     headers_nclprofile.path = $$HEADERS_PATH/core/extensions
+
+    QMAKE_LFLAGS += -Wl,-install_name,'\'$$INSTALLSUPPORT/lib'$$TARGET'.dylib\''
 }
 else:unix {
     QMAKE_LFLAGS += -Wl,--rpath=\'\$\$ORIGIN/../lib/composer\'
