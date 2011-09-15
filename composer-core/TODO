@@ -6,6 +6,7 @@ TODO file for composer-core
 * Working now:
 
 * Features or problems:
+  - Search the plugins on a relative path (mainly for Windows and MAC).
   - Export to NCL.
   - Generalize NCLStructure to all kinds of languages.
   - ToolGUI integration API.
