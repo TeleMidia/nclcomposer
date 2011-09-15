@@ -13,7 +13,7 @@ OutFile "nclcomposer-installer-${VERSION}.exe"
 Icon "../composer-gui/images/icon.ico"
 
 ; The default installation directory
-InstallDir $PROGRAMFILES\Composer
+InstallDir "$PROGRAMFILES\NCL Composer"
 
 ; License informations
 LicenseText "Please review the license terms before installing NCL Composer."
@@ -48,8 +48,14 @@ Section "NCL Composer Core (required)" ; No components page, name is not importa
   SetOutPath $INSTDIR
       
   ; Put file there
-  File "composer.nsi"
+  File "C:\Composer\*.dll"
+  File "C:\Composer\*.exe"
+
   WriteUninstaller "uninstall.exe"
+
+  ; include Files
+  SetoutPath $INSTDIR\include
+  File /r "C:\Composer\include"
 SectionEnd ; end the section
 
 ; Optional section (can be disabled by the user)
@@ -64,18 +70,33 @@ SectionEnd
 SectionGroup /e "Install Default Plugins"
   Section "Textual View"
     SectionIn 1
+    SetOutPath $INSTDIR\lib\composer
+    File "C:\Composer\lib\composer\qscintilla2.dll"
+    File "C:\Composer\lib\composer\ncl_textual_plugin.dll"
   SectionEnd
+
   Section "Layout View"
     SectionIn 1
+    SetOutPath $INSTDIR\lib\composer
+    File "C:\Composer\lib\composer\Qnly0.dll"
   SectionEnd
+
   Section "Properties View"
     SectionIn 1
+    SetOutPath $INSTDIR\lib\composer
+    File "C:\Composer\lib\composer\properties_view.dll"
   SectionEnd
+
   Section "Structural View"
     SectionIn 1
+    SetOutPath $INSTDIR\lib\composer
+    File "C:\Composer\lib\composer\Qnst0.dll"
   SectionEnd
+
   Section "Outline View"
     SectionIn 1
+    SetOutPath $INSTDIR\lib\composer
+    File "C:\Composer\lib\composer\outline_view.dll"
   SectionEnd
 SectionGroupEnd
 
@@ -84,6 +105,12 @@ SectionGroupEnd
 UninstallText "This will uninstall NCL Composer. Hit next to continue"
 Section "Uninstall"
   Delete "$INSTDIR\*"
+  Delete "$INSTDIR\lib\composer\*"
+  RMDir "$INSTDIR\lib\composer"
+  RMDir "$INSTDIR\lib"
+  RMDir "$INSTDIR"
+
+  ;Shortcuts
   Delete "$SMPROGRAMS\NCL Composer\*"
   RMDir "$SMPROGRAMS\NCL Composer"
 SectionEnd
