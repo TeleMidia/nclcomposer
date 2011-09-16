@@ -397,6 +397,9 @@ void ComposerMainWindow::addButtonToDockTitleBar(QFrame *titleBar,
 
 void ComposerMainWindow::tabClosed(int index)
 {
+    if(index == 0)
+        return; // Do nothing
+
     QString location = tabProjects->tabToolTip(index);
 
     Project *project = ProjectControl::getInstance()->getOpenProject(location);
