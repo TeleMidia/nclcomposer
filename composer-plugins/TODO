@@ -71,16 +71,30 @@ Layout View
   - Plugin preferences.
   - Rotate regions :D.
   - Draw regions specified in pixels.
+  - Add color to regions (based on media type).
+  - Draw region base id.
 
 * Optimization and cleanup:
+  - Review code organization and naming.
 
 * Known bugs:
+  - When receive a change signal from core, the item
+  doesn't adjust 'width' property correctly, overlapping
+  the boundary of their parent item.
 
 Structural View
 ===============
 * Features:
+  - Draw complex link (with aggregation item).
+  - Process signals receive from core.
+  - Add hide/show system (as in layout plugin).
+  - Review items looklike (based on user experience?).
+  - Display link option based on core document.
+  - Add macro view for easy navigation.
+  - Prevent addition of more than one body item.
 
 * Optimization and cleanup:
+  - Review code organization and naming.
 
 * Known bugs:
  
