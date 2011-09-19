@@ -31,7 +31,10 @@ ComposerMainWindow::ComposerMainWindow(QApplication &app, QWidget *parent)
     ui->setupUi(this);
 
 #ifdef Q_WS_MAC
-    defaultPluginsPath << "/Library/Application Support/Composer";
+    defaultPluginsPath << "/Library/Application Support/Composer"
+                       << QCoreApplication::applicationDirPath() +
+                          "/../PlugIns/composer";;
+
 #elif defined(Q_WS_WIN32)
     defaultPluginsPath << "C:/Composer/lib/composer";
 #else
@@ -102,7 +105,7 @@ void ComposerMainWindow::initModules()
 void ComposerMainWindow::readExtensions()
 {
 #ifdef Q_WS_MAC
-    QSettings settings("telemidia.pucrio.br", "composer");
+    QSettings settings("br.puc-rio.telemidia", "Composer");
 #else
     QSettings settings(QSettings::IniFormat,
                        QSettings::UserScope,
