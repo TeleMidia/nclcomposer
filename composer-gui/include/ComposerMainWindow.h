@@ -56,14 +56,13 @@ using namespace composer::core;
 #include "PreferencesDialog.h"
 #include "PluginDetailsDialog.h"
 #include "WelcomeWidget.h"
+#include "AboutDialog.h"
 
 using namespace composer::gui;
 
 namespace Ui {
     class ComposerMainWindow;
 }
-
-//#define USE_MDI 1
 
 namespace composer {
     namespace gui {
@@ -95,8 +94,6 @@ private:
                                                 first QDockWidget added.*/
     QList <QDockWidget*> allDocks; /*!< A list with all the QDockWidgets, to
                                         each plugin. */
-
-    QAction *aboutComposerAct; /*!< Action to show About Composer. */
     QAction *fullScreenViewAct; /*!< Action to show Composer in FullScreen. */
     QAction *projectViewAct; /*!< TODO */
     QAction *editPreferencesAct; /*!< TODO */
@@ -118,8 +115,7 @@ private:
     DocumentWizard *documentWizard; /*!< TODO */
     PreferencesDialog *preferences; /*!< TODO */
 
-    /* \todo This should be moved to a new Class */
-    QDialog *aboutDialog; /*!< TODO */
+    QDialog *aboutPluginsDialog; /*!< TODO */
     QPushButton *detailsButton;
 
     QStringList defaultPluginsPath; /*!< TODO */
@@ -153,7 +149,7 @@ private:
      \brief
 
     */
-    void createAbout();
+    void createAboutPlugins();
     /*!
      \brief
 
@@ -205,9 +201,12 @@ private:
 private slots:
     /*!
      \brief
-
     */
     void about();
+    /*!
+     \brief
+    */
+    void aboutPlugins();
     /*!
      \brief
     */
@@ -262,7 +261,7 @@ private slots:
     /*!
      *
      */
-    void selectedAboutCurrentFactory();
+    void selectedAboutCurrentPluginFactory();
     /*!
         \brief Shows the details of the current selected plugins.
      */

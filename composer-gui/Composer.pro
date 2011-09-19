@@ -3,6 +3,8 @@ TEMPLATE = app
 CONFIG += qt warn_on debug console
 QT += xml webkit network
 
+DEFINES += NCLCOMPOSER_GUI_VERSION=\"\\\"0.1.0\\\"\"
+
 #DEFINES += USE_MDI
 
 RC_FILE = images/nclcomposer.rc
@@ -77,7 +79,8 @@ SOURCES += main.cpp \
     src/PerspectiveManager.cpp \
     src/PluginDetailsDialog.cpp \
     src/EnvironmentPreferencesWidget.cpp \
-    src/WelcomeWidget.cpp
+    src/WelcomeWidget.cpp \
+    src/AboutDialog.cpp
 
 HEADERS += include/ComposerMainWindow.h \
     include/wizard/ProjectWizard.h \
@@ -89,7 +92,8 @@ HEADERS += include/ComposerMainWindow.h \
     include/PluginDetailsDialog.h \
     include/EnvironmentPreferencesWidget.h \
     include/IPreferencePage.h \
-    include/WelcomeWidget.h
+    include/WelcomeWidget.h \
+    include/AboutDialog.h
 
 RESOURCES += images.qrc
 
@@ -99,10 +103,23 @@ FORMS   += ui/PreferencesDialog.ui \
     ui/RunGingaConfig.ui \
     ui/PluginDetailsDialog.ui \
     ui/EnvironmentPreferencesWidget.ui \
-    ui/WelcomeWidget.ui
+    ui/WelcomeWidget.ui \
+    ui/AboutDialog.ui
 
 unix:!macx {
     INSTALLS += target desktop icon64 icon48
 }else {
     INSTALLS += target
 }
+
+OTHER_FILES += LICENSE.LGPL
+
+
+
+
+
+
+
+
+
+

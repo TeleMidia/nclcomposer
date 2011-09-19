@@ -211,11 +211,11 @@ void ComposerMainWindow::initGUI()
 //  createStatusBar();
     createActions();
     createMenus();
-    createAbout();
+    createAboutPlugins();
 
     preferences = new PreferencesDialog(this);
     perspectiveManager = new PerspectiveManager(this);
-    pluginDetailsDialog = new PluginDetailsDialog(aboutDialog);
+    pluginDetailsDialog = new PluginDetailsDialog(aboutPluginsDialog);
     projectWizard = new ProjectWizard(this);
 
     connect(ui->action_RunNCL, SIGNAL(triggered()), this, SLOT(runNCL()));
@@ -232,7 +232,7 @@ void ComposerMainWindow::initGUI()
             this, SLOT(launchProjectWizard()));
 
     connect(welcomeWidget, SIGNAL(userPressedSeeInstalledPlugins()),
-            this, SLOT(about()));
+            this, SLOT(aboutPlugins()));
 }
 
 void ComposerMainWindow::addPluginWidget(IPluginFactory *fac, IPlugin *plugin,
@@ -491,26 +491,25 @@ void ComposerMainWindow::createMenus()
     // assing menu_Perspective to tbPerspectiveDropList
     tbPerspectiveDropList->setMenu(menu_Perspective);
     tabProjects->setCornerWidget(tbPerspectiveDropList, Qt::TopRightCorner);
-//    tabProjects->setCornerWidget(ui->menu_Window, Qt::TopLeftCorner);
+//  tabProjects->setCornerWidget(ui->menu_Window, Qt::TopLeftCorner);
 
     updateMenuPerspectives();
 }
 
-
-void ComposerMainWindow::createAbout()
+void ComposerMainWindow::createAboutPlugins()
 {
-    aboutDialog = new QDialog(this);
-    aboutDialog->setWindowTitle(tr("Installed Plugins"));
+    aboutPluginsDialog = new QDialog(this);
+    aboutPluginsDialog->setWindowTitle(tr("Installed Plugins"));
 
-    profilesExt = new QListWidget(aboutDialog);
+    profilesExt = new QListWidget(aboutPluginsDialog);
     profilesExt->setAlternatingRowColors(true);
 
     /* This should be a new Widget and change some code for there */
-    pluginsExt = new QTreeWidget(aboutDialog);
+    pluginsExt = new QTreeWidget(aboutPluginsDialog);
     pluginsExt->setAlternatingRowColors(true);
 
     connect(pluginsExt, SIGNAL(itemSelectionChanged()),
-            this, SLOT(selectedAboutCurrentFactory()));
+            this, SLOT(selectedAboutCurrentPluginFactory()));
 
     QStringList header;
     header << "Name" << "Load" << "Version" << "Vendor";
@@ -519,35 +518,42 @@ void ComposerMainWindow::createAbout()
     QDialogButtonBox *bOk = new QDialogButtonBox(QDialogButtonBox::Ok |
                                                  QDialogButtonBox::Close,
                                                  Qt::Horizontal,
-                                                 aboutDialog);
+                                                 aboutPluginsDialog);
 
     detailsButton = bOk->button(QDialogButtonBox::Ok);
     detailsButton->setText(tr("Details"));
     detailsButton->setIcon(QIcon());
     detailsButton->setEnabled(false);
 
-    connect(bOk, SIGNAL(rejected()), aboutDialog, SLOT(close()));
+    connect(bOk, SIGNAL(rejected()), aboutPluginsDialog, SLOT(close()));
 
     connect( detailsButton, SIGNAL(pressed()),
              this, SLOT(showPluginDetails()) );
 
-    QGridLayout *gLayout = new QGridLayout(aboutDialog);
+    QGridLayout *gLayout = new QGridLayout(aboutPluginsDialog);
     gLayout->addWidget(new QLabel(tr("The <b>Composer</b> is an IDE for"
                                      " Declarative Multimedia languages."),
-                                  aboutDialog));
+                                  aboutPluginsDialog));
 
     gLayout->addWidget(new QLabel(tr("<b>Installed Language Profiles</b>"),
-                                  aboutDialog));
+                                  aboutPluginsDialog));
 
     gLayout->addWidget(profilesExt);
     gLayout->addWidget(new QLabel(tr("<b>Installed Plug-ins</b>")));
     gLayout->addWidget(pluginsExt);
     gLayout->addWidget(bOk);
-    aboutDialog->setLayout(gLayout);
+    aboutPluginsDialog->setLayout(gLayout);
 
+    aboutPluginsDialog->setModal(true);
 }
 
 void ComposerMainWindow::about()
+{
+    AboutDialog dialog(this);
+    dialog.exec();
+}
+
+void ComposerMainWindow::aboutPlugins()
 {
     QList<IPluginFactory*>::iterator it;
     QList<IPluginFactory*> pList = PluginControl::getInstance()->
@@ -600,8 +606,7 @@ void ComposerMainWindow::about()
     }
 
     detailsButton->setEnabled(false);
-    aboutDialog->setModal(true);
-    aboutDialog->show();
+    aboutPluginsDialog->show();
 }
 
 void ComposerMainWindow::errorDialog(QString message)
@@ -612,12 +617,11 @@ void ComposerMainWindow::errorDialog(QString message)
 
 void ComposerMainWindow::createActions() {
 
-    aboutComposerAct = new QAction(tr("&About"), this);
-    aboutComposerAct->setStatusTip(tr("Show the application's About box"));
+    connect(ui->action_About, SIGNAL(triggered()),
+            this, SLOT(about()));
 
-    connect(aboutComposerAct, SIGNAL(triggered()), this, SLOT(about()));
-
-    connect(ui->action_About_Plugins, SIGNAL(triggered()), this, SLOT(about()));
+    connect( ui->action_About_Plugins, SIGNAL(triggered()),
+             this, SLOT(aboutPlugins()));
 
     fullScreenViewAct = new QAction(tr("&FullScreen"),this);
     fullScreenViewAct->setShortcut(tr("F11"));
@@ -941,7 +945,6 @@ void ComposerMainWindow::importFromDocument()
             QDir::currentPath(),
             tr("NCL Documents (*.ncl)") );
 
-
     if(docFilename != "")
     {
         QString projFilename = QFileDialog::getSaveFileName(
@@ -1031,7 +1034,7 @@ void ComposerMainWindow::openRecentProject()
     ProjectControl::getInstance()->launchProject(action->data().toString());
 }
 
-void ComposerMainWindow::selectedAboutCurrentFactory()
+void ComposerMainWindow::selectedAboutCurrentPluginFactory()
 {
     QList<QTreeWidgetItem*> selectedPlugins = pluginsExt->selectedItems();
     if(selectedPlugins.size())
