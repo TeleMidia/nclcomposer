@@ -948,7 +948,10 @@ void ComposerMainWindow::launchProjectWizard()
 
     if( !filename.isNull() )
     {
-         ProjectControl::getInstance()->launchProject(filename);
+        if(!filename.endsWith(".cpr"))
+            filename = filename + QString(".cpr");
+
+        ProjectControl::getInstance()->launchProject(filename);
     }
 }
 
