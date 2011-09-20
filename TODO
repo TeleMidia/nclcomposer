@@ -4,6 +4,7 @@ See the end of the file for license conditions.
 TODO file for composer-gui
 
 * Features:
+  - Message to add new buttons to title bar of composer dock.
   - Message saying that a perspective already exist when trying to save a new
     one with the same name. 
   - Keybinding to save new perspective.
