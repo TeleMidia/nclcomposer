@@ -1,7 +1,7 @@
 TARGET = composer
 TEMPLATE = app
 CONFIG += qt warn_on debug console
-QT += xml webkit network
+QT += xml network
 
 DEFINES += NCLCOMPOSER_GUI_VERSION=\"\\\"0.1.0\\\"\"
 

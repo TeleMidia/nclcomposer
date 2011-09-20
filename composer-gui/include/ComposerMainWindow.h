@@ -43,7 +43,6 @@
 #include <QtGui/QTreeView>
 #include <QToolButton>
 #include <QDockWidget>
-#include <QWebView>
 
 #include <core/modules/PluginControl.h>
 #include <core/modules/ProjectControl.h>
