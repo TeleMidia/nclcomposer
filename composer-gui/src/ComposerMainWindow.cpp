@@ -179,7 +179,28 @@ void ComposerMainWindow::readSettings()
     for(int i = 0; i < openfiles.size(); i++)
     {
         qDebug() << openfiles.at(i);
-        ProjectControl::getInstance()->launchProject(openfiles.at(i));
+        QFile file(openfiles.at(i));
+        bool openCurrentFile = true;
+
+        if(!file.exists())
+        {
+            int resp =
+                    QMessageBox::question(this,
+                                          tr("File does not exists anymore."),
+                                          tr("The File %1 does not exists, but "
+                                          "the last time you have closed NCL"
+                                          " Composer this files was open. "
+                                          "Do you want to create this file "
+                                          "again?").arg(openfiles.at(i)),
+                                          QMessageBox::Yes | QMessageBox::No,
+                                          QMessageBox::No);
+
+            if(resp != QMessageBox::Yes) openCurrentFile = false;
+        }
+        if (openCurrentFile)
+        {
+            ProjectControl::getInstance()->launchProject(openfiles.at(i));
+        }
     }
 
     /* Update Recent Projects on Menu */
