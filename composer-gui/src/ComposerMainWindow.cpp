@@ -240,7 +240,6 @@ void ComposerMainWindow::initGUI()
     preferences = new PreferencesDialog(this);
     perspectiveManager = new PerspectiveManager(this);
     pluginDetailsDialog = new PluginDetailsDialog(aboutPluginsDialog);
-    projectWizard = new ProjectWizard(this);
 
     connect(ui->action_RunNCL, SIGNAL(triggered()), this, SLOT(runNCL()));
 
@@ -769,12 +768,15 @@ void ComposerMainWindow::showEditPreferencesDialog()
 
 void ComposerMainWindow::startOpenProject(QString project)
 {
+    (void) project;
+
     this->setCursor(QCursor(Qt::WaitCursor));
     update();
 }
 
 void ComposerMainWindow::endOpenProject(QString project)
 {
+    (void) project;
     this->setCursor(QCursor(Qt::ArrowCursor));
 
     QSettings settings(QSettings::IniFormat,

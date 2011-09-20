@@ -71,10 +71,6 @@ else:win32 {
 
 SOURCES += main.cpp \
     src/ComposerMainWindow.cpp \
-    src/wizard/ProjectWizard.cpp \
-    src/wizard/ProjectEntryPage.cpp \
-    src/wizard/DocumentWizard.cpp \
-    src/wizard/DocumentEntryPage.cpp \
     src/PreferencesDialog.cpp \
     src/PerspectiveManager.cpp \
     src/PluginDetailsDialog.cpp \
@@ -83,10 +79,6 @@ SOURCES += main.cpp \
     src/AboutDialog.cpp
 
 HEADERS += include/ComposerMainWindow.h \
-    include/wizard/ProjectWizard.h \
-    include/wizard/ProjectEntryPage.h \
-    include/wizard/DocumentWizard.h \
-    include/wizard/DocumentEntryPage.h \
     include/PreferencesDialog.h \
     include/PerspectiveManager.h \
     include/PluginDetailsDialog.h \

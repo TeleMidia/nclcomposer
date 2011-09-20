@@ -49,8 +49,6 @@
 #include <core/modules/LanguageControl.h>
 using namespace composer::core;
 
-#include "wizard/ProjectWizard.h"
-#include "wizard/DocumentWizard.h"
 #include "PerspectiveManager.h"
 #include "PreferencesDialog.h"
 #include "PluginDetailsDialog.h"
@@ -110,8 +108,6 @@ private:
 
     QMap <QTreeWidgetItem*, IPluginFactory*> treeWidgetItem2plFactory;
 
-    ProjectWizard *projectWizard; /*!< TODO */
-    DocumentWizard *documentWizard; /*!< TODO */
     PreferencesDialog *preferences; /*!< TODO */
 
     QDialog *aboutPluginsDialog; /*!< TODO */
