@@ -59,6 +59,8 @@ One of the most important feature of the composer-all project is packaging.
 
   To generate the windows installer, got to win32-nsis directory and run:
 
+  $ qmake
+  $ mingw32-make install
   $ makensis composer.nsis
 
 * Generating DEBIAN package
@@ -70,6 +72,12 @@ One of the most important feature of the composer-all project is packaging.
   $ debuild -us -uc
   
   in your terminal.
+  This will generate a composer_x.x.x.deb file one directory behind the root NCL Composer 
+  directory. This package is what you need to install on other debian/ubuntu systems.
+
+  You can install it, using dpkg, for example:
+
+  $ dpkg -i composer_x.x.x.deb
 
 
 //TODO: LICENSE

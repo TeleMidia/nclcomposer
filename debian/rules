@@ -54,11 +54,12 @@ binary-arch: build install
 	dh_installexamples
 	dh_installman
 	dh_link
-	#dh_strip --dbg-package=my-application-dbg
+	dh_strip
+#	dh_strip --dbg-package=my-application-dbg
 	dh_compress
 	dh_fixperms
 	dh_installdeb
-	#dh_shlibdeps
+	dh_shlibdeps
 	dh_gencontrol
 	dh_md5sums
 	dh_builddeb
