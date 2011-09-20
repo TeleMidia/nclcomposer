@@ -37,6 +37,11 @@ class NCLTextualViewPlugin : public IPlugin
 
 private:
     NCLTextEditorMainWindow *window; /*!< TODO */
+    NCLTextEditor *nclTextEditor; /*! < The current NCLTextEditor */
+    NCLTextEditor *tmpNclTextEditor; /*!< This variable is used to keep a
+                                            buffer with text and syntax coloring
+                                            while the text content is
+                                            synchronized to the core */
     QMap <QString, int> startEntityOffset; /*!< TODO */
     QMap <QString, int> endEntityOffset; /*!< TODO */
 

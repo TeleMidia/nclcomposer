@@ -20,6 +20,9 @@ namespace composer {
 NCLTextualViewPlugin::NCLTextualViewPlugin()
 {
     window = new NCLTextEditorMainWindow();
+    nclTextEditor = window->getTextEditor();
+    tmpNclTextEditor = NULL;
+
     project = NULL;
     connect( window,
              SIGNAL(elementAdded(QString,QString,QMap<QString,QString>&,bool)),
@@ -34,10 +37,10 @@ NCLTextualViewPlugin::NCLTextualViewPlugin()
     connect( updateModelShortcut, SIGNAL(activated()),
              this, SLOT(updateCoreModel()) );
 
-    connect(window->getTextEditor(), SIGNAL(focusLosted(QFocusEvent*)),
+    connect(nclTextEditor, SIGNAL(focusLosted(QFocusEvent*)),
             this, SLOT(manageFocusLost(QFocusEvent*)));
 
-    connect(window->getTextEditor(), SIGNAL(textChanged()),
+    connect(nclTextEditor, SIGNAL(textChanged()),
             this, SIGNAL(setCurrentProjectAsDirty()));
 }
 
@@ -65,7 +68,7 @@ void NCLTextualViewPlugin::init()
         endEntityOffset.remove(key);
 
     QString text = data.left(indexOfStartEntities);
-    window->getTextEditor()->insert(text);
+    nclTextEditor->insert(text);
 
     int indexOfStartEntitiesContent = indexOfStartEntities +
                                       startEntitiesSep.length();
@@ -120,7 +123,7 @@ void NCLTextualViewPlugin::onEntityAdded(QString pluginID, Entity *entity)
     int startEntitySize = line.size();
     line += "</" + entity->getType() + ">\n";
 
-    window->getTextEditor()->insertAtPos(line, insertAtOffset);
+    nclTextEditor->insertAtPos(line, insertAtOffset);
 
     //update all previous offset numbers (when necessary)
     updateEntitiesOffset(insertAtOffset, line.size());
@@ -132,12 +135,12 @@ void NCLTextualViewPlugin::onEntityAdded(QString pluginID, Entity *entity)
     printEntitiesOffset();
 
     /* Fix Indentation */
-    int insertAtLine = window->getTextEditor()->SendScintilla(
+    int insertAtLine = nclTextEditor->SendScintilla(
                                             QsciScintilla::SCI_LINEFROMPOSITION,
                                             insertAtOffset);
 
     // get the indentation for the next line
-    int lineIndent = window->getTextEditor()
+    int lineIndent = nclTextEditor
                          ->SendScintilla( QsciScintilla::SCI_GETLINEINDENTATION,
                                           insertAtLine+2);
 
@@ -146,12 +149,10 @@ void NCLTextualViewPlugin::onEntityAdded(QString pluginID, Entity *entity)
     qDebug() << "Line: " << insertAtLine;
     qDebug() << "Line ident: " << lineIndent;
 
-    window->getTextEditor()
-            ->SendScintilla( QsciScintilla::SCI_SETLINEINDENTATION,
+    nclTextEditor->SendScintilla( QsciScintilla::SCI_SETLINEINDENTATION,
                              insertAtLine,
                              lineIndent);
-    window->getTextEditor()
-            ->SendScintilla( QsciScintilla::SCI_SETLINEINDENTATION,
+    nclTextEditor->SendScintilla( QsciScintilla::SCI_SETLINEINDENTATION,
                              insertAtLine+1,
                              lineIndent);
 
@@ -165,10 +166,11 @@ void NCLTextualViewPlugin::onEntityAdded(QString pluginID, Entity *entity)
     updateEntitiesOffset(previousStarted+1, lineIndent/8);
 //    printEntitiesOffset();
 
+    window->getTextEditor()->SendScintilla(QsciScintilla::SCI_SETFOCUS, true);
 /*
     window->getTextEditor()->setCursorPosition(insertAtLine, 0);
     window->getTextEditor()->ensureLineVisible(insertAtLine);
-    window->getTextEditor()->SendScintilla(QsciScintilla::SCI_SETFOCUS, true);
+
 */
 
     emit TextualPluginHasAddedEntity(pluginID, entity);
@@ -205,20 +207,19 @@ void NCLTextualViewPlugin::onEntityChanged(QString pluginID, Entity *entity)
     line += ">";
 
     int previous_length = 0;
-    char curChar = window->getTextEditor()->SendScintilla(
+    char curChar = nclTextEditor->SendScintilla(
                                                 QsciScintilla::SCI_GETCHARAT,
                                                 insertAtOffset+previous_length);
     while(curChar != '>' &&
-     (insertAtOffset+previous_length) < window->getTextEditor()->text().size())
+     (insertAtOffset+previous_length) < nclTextEditor->text().size())
     {
         previous_length++;
-        curChar = window->getTextEditor()->SendScintilla(
-                                                QsciScintilla::SCI_GETCHARAT,
+        curChar = nclTextEditor->SendScintilla( QsciScintilla::SCI_GETCHARAT,
                                                 insertAtOffset+previous_length);
     }
 
     if((insertAtOffset+previous_length)
-            == window->getTextEditor()->text().size())
+            == nclTextEditor->text().size())
     {
         qWarning() << "TextEditor could not perform the requested action.";
         return;
@@ -232,19 +233,19 @@ void NCLTextualViewPlugin::onEntityChanged(QString pluginID, Entity *entity)
                     ->SendScintilla( QsciScintilla::SCI_GETLINEINDENTATION,
                                      insertAtLine);*/
 
-    window->getTextEditor()->SendScintilla(QsciScintilla::SCI_SETSELECTIONSTART,
+    nclTextEditor->SendScintilla(QsciScintilla::SCI_SETSELECTIONSTART,
                                            insertAtOffset);
-    window->getTextEditor()->SendScintilla(QsciScintilla::SCI_SETSELECTIONEND,
+    nclTextEditor->SendScintilla(QsciScintilla::SCI_SETSELECTIONEND,
                                            insertAtOffset+previous_length);
-    window->getTextEditor()->removeSelectedText();
+    nclTextEditor->removeSelectedText();
 
-    window->getTextEditor()->insertAtPos(line, insertAtOffset);
+    nclTextEditor->insertAtPos(line, insertAtOffset);
 
     //update all previous entities line numbers (when necessary)
     int diff_size = line.size() - previous_length;
     updateEntitiesOffset(insertAtOffset, diff_size);
 
-    window->getTextEditor()->SendScintilla( QsciScintilla::SCI_GOTOPOS,
+    nclTextEditor->SendScintilla( QsciScintilla::SCI_GOTOPOS,
                                             insertAtOffset);
 
     //TODO: fix indentation
@@ -259,29 +260,29 @@ void NCLTextualViewPlugin::onEntityRemoved(QString pluginID, QString entityID)
     int startOffset = startEntityOffset[entityID];
     int endOffset = endEntityOffset[entityID];
 
-    char curChar = window->getTextEditor()->SendScintilla(
+    char curChar = nclTextEditor->SendScintilla(
                                                 QsciScintilla::SCI_GETCHARAT,
                                                 endOffset);
-    while(curChar != '>' && endOffset < window->getTextEditor()->text().size())
+
+    while(curChar != '>' && endOffset < nclTextEditor->text().size())
     {
         endOffset++;
-        curChar = window->getTextEditor()->SendScintilla(
-                                                QsciScintilla::SCI_GETCHARAT,
+        curChar = nclTextEditor->SendScintilla( QsciScintilla::SCI_GETCHARAT,
                                                 endOffset);
     }
 
-    if(endOffset == window->getTextEditor()->text().size())
+    if(endOffset == nclTextEditor->text().size())
     {
         qWarning() << "TextEditor could not perform the requested action.";
         return;
     }
     endOffset += 2;
 
-    window->getTextEditor()->SendScintilla(QsciScintilla::SCI_SETSELECTIONSTART,
+    nclTextEditor->SendScintilla(QsciScintilla::SCI_SETSELECTIONSTART,
                                            startOffset);
-    window->getTextEditor()->SendScintilla(QsciScintilla::SCI_SETSELECTIONEND,
+    nclTextEditor->SendScintilla(QsciScintilla::SCI_SETSELECTIONEND,
                                            endOffset);
-    window->getTextEditor()->removeSelectedText();
+    nclTextEditor->removeSelectedText();
 
     QString key;
     QList<QString> mustRemoveEntity;
@@ -332,7 +333,7 @@ void NCLTextualViewPlugin::onEntityRemoved(QString pluginID, QString entityID)
 bool NCLTextualViewPlugin::saveSubsession()
 {
     QByteArray data;
-    data.append(window->getTextEditor()->text());
+    data.append(nclTextEditor->text());
     data.append("$START_ENTITIES_LINES$");
     QString key;
     bool first = true;
@@ -369,9 +370,9 @@ void NCLTextualViewPlugin::changeSelectedEntity(QString pluginID, void *param)
 //                                    QsciScintilla::SCI_LINEFROMPOSITION,
 //                                    entityOffset);
 
-        window->getTextEditor()->SendScintilla(QsciScintilla::SCI_GOTOPOS,
+        nclTextEditor->SendScintilla(QsciScintilla::SCI_GOTOPOS,
                                                entityOffset);
-        window->getTextEditor()->SendScintilla(QsciScintilla::SCI_SETFOCUS,
+       nclTextEditor->SendScintilla(QsciScintilla::SCI_SETFOCUS,
                                                 true);
     }
     else
@@ -384,9 +385,13 @@ void NCLTextualViewPlugin::changeSelectedEntity(QString pluginID, void *param)
 void NCLTextualViewPlugin::updateCoreModel()
 {
     NCLDocumentParser parser(project);
-    QString text = window->getTextEditor()->text();
+    QString text = nclTextEditor->text();
 
     isSyncing = true;
+
+    tmpNclTextEditor = nclTextEditor;
+    nclTextEditor = new NCLTextEditor(0);
+    nclTextEditor->setText(tmpNclTextEditor->text());
 
     if(project->getChildren().size())
         emit removeEntity(project->getChildren().at(0), true);
@@ -409,7 +414,7 @@ void NCLTextualViewPlugin::updateCoreModel()
              SIGNAL(addEntity(QString, QString, QMap<QString,QString>&,bool)),
              Qt::DirectConnection);
 
-    window->getTextEditor()->clear();
+    nclTextEditor->clear();
     startEntityOffset.clear();
     endEntityOffset.clear();
     parser.parseContent(text);
@@ -417,6 +422,10 @@ void NCLTextualViewPlugin::updateCoreModel()
 
 void NCLTextualViewPlugin::syncFinished()
 {
+    tmpNclTextEditor->setText(nclTextEditor->text());
+    delete nclTextEditor;
+    nclTextEditor = tmpNclTextEditor;
+    tmpNclTextEditor = NULL;
     isSyncing = false;
 }
 
@@ -453,8 +462,7 @@ void NCLTextualViewPlugin::printEntitiesOffset()
 void NCLTextualViewPlugin::manageFocusLost(QFocusEvent *event)
 {
 #ifndef NCLEDITOR_STANDALONE
-    NCLTextEditor *textEditor = window->getTextEditor();
-    if(textEditor->textWithoutUserInteraction() != textEditor->text())
+    if(nclTextEditor->textWithoutUserInteraction() != nclTextEditor->text())
     {
         int ret = QMessageBox::question(window,
                         tr("Text synchronization"),
@@ -473,10 +481,11 @@ other views?"),
                 updateCoreModel();
                 break;
             case QMessageBox::No:
-                textEditor->setText(textEditor->textWithoutUserInteraction());
+                nclTextEditor->setText(
+                                    nclTextEditor->textWithoutUserInteraction());
                 break;
             case QMessageBox::Cancel:
-                textEditor->keepFocused();
+                nclTextEditor->keepFocused();
                 break;
         }
     }
