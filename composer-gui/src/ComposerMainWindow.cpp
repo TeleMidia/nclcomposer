@@ -489,6 +489,8 @@ void ComposerMainWindow::onOpenProjectTab(QString location)
 
 void ComposerMainWindow::createMenus()
 {
+    ui->menubar->setNativeMenuBar(true);
+
     ui->menu_Edit->addAction(editPreferencesAct);
 
     menuBar()->addSeparator();
