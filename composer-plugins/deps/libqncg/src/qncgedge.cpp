@@ -7,6 +7,8 @@
  * Contributors:
  *    Telemidia/PUC-Rio - initial API and implementation
  */
+#include "math.h"
+
 #include "qncgedge.h"
 
 QncgEdge::QncgEdge(QncgEntity* parent)
@@ -20,6 +22,7 @@ QncgEdge::QncgEdge(QncgEntity* parent)
 
     setbSpan(0);
     seteSpan(0);
+    setAngle(0);
 }
 
 QncgEdge::~QncgEdge()
@@ -35,6 +38,7 @@ qreal QncgEdge::getAngle()
 void QncgEdge::setAngle(qreal angle)
 {
     this->angle = angle;
+    this->adjustedangle = angle;
 }
 
 QPointF QncgEdge::getpBegin() const
@@ -126,6 +130,44 @@ void QncgEdge::aux_adjust()
     }
 }
 
+qreal QncgEdge::getAdjustedAngle()
+{
+    return adjustedangle;
+}
+
+QPointF QncgEdge::arcPointAt(QLineF line, qreal at)
+{
+    qreal alfa = getAngle();
+
+    qreal beta = (180 - alfa)/2 + (360 - line.angle());
+
+    qreal PI = 3.14159265;
+
+    qreal R = line.length()/(::sin(((alfa/2)*PI)/180)*2);
+
+
+    QPointF center_p(line.p2().x() - ::sin((beta+alfa-90)*PI/180)*R,
+                     line.p2().y() + ::sin((180-beta-alfa)*PI/180)*R);
+
+    qreal arc_len = alfa*PI*R/180;
+
+    qreal new_arc_len = arc_len - arc_len*at;
+
+
+    qreal new_alfa = (180*new_arc_len)/(PI*R);
+
+
+    qreal gama = (180-beta-alfa);
+
+
+    QPointF new_start_p(center_p.x() + ::cos((new_alfa+gama)*PI/180)*R,
+                        center_p.y() - ::sin((new_alfa+gama)*PI/180)*R);
+
+    this->adjustedangle = new_alfa;
+
+    return new_start_p;
+}
+
 void QncgEdge::adjust()
 {
     setpBegin(QPointF(nbegin->getLeft()+nbegin->getWidth()/2,
@@ -171,7 +213,11 @@ void QncgEdge::adjust()
     while(getnEnd()->collidesWithItem(this)){
         ve -= 0.5;
 
-        pend = line.pointAt(ve);
+        if (angle != 0){
+            pend = arcPointAt(line, ve);
+        }else{
+            pend = line.pointAt(ve);
+        }
 
         aux_adjust();
 
@@ -179,15 +225,23 @@ void QncgEdge::adjust()
 
         ce++;
 
+        qDebug() << "VE:" << ve << "CE:" << ce << "PEND:" << pend;
+
         if (ce > 100){
             break;
         }
     }
+
+    qDebug() << "### END 0.5";
 
     while(!getnEnd()->collidesWithItem(this)){
         ve += 0.1;
 
-        pend = line.pointAt(ve);
+        if (angle != 0){
+            pend = arcPointAt(line, ve);
+        }else{
+            pend = line.pointAt(ve);
+        }
 
         aux_adjust();
 
@@ -195,15 +249,23 @@ void QncgEdge::adjust()
 
         ce++;
 
+        qDebug() << "VE:" << ve << "CE:" << ce << "PEND:" << pend;
+
         if (ce > 100){
             break;
         }
     }
+
+    qDebug() << "### END 0.1";
 
     while(getnEnd()->collidesWithItem(this)){
         ve -= 0.001;
 
-        pend = line.pointAt(ve);
+        if (angle != 0){
+            pend = arcPointAt(line, ve);
+        }else{
+            pend = line.pointAt(ve);
+        }
 
         aux_adjust();
 
@@ -211,12 +273,21 @@ void QncgEdge::adjust()
 
         ce++;
 
+        qDebug() << "VE:" << ve << "CE:" << ce << "PEND:" << pend;
+
         if (ce > 100){
             break;
         }
     }
 
-    pend = line.pointAt(ve+0.001);
+    qDebug() << "### END 0.001";
+
+    if (angle != 0){
+        pend = arcPointAt(line, ve+0.001);
+    }else{
+        pend = line.pointAt(ve+0.001);
+    }
+
 
     aux_adjust();
 
@@ -232,7 +303,11 @@ void QncgEdge::adjust()
     while(getnBegin()->collidesWithItem(this)){
         vb += 0.5;
 
-        pbegin = line.pointAt(vb);
+        if (angle != 0){
+            pbegin = arcPointAt(line, vb);
+        }else{
+            pbegin = line.pointAt(vb);
+        }
 
         aux_adjust();
 
@@ -240,15 +315,23 @@ void QncgEdge::adjust()
 
         cb++;
 
+        qDebug() << "VB:" << vb << "CB:" << ce << "PBEGIN:" << pbegin;
+
         if (cb > 100){
             break;
         }
     }
+
+    qDebug() << "### BEGIN 0.5";
 
     while(!getnBegin()->collidesWithItem(this)){
         vb -= 0.1;
 
-        pbegin = line.pointAt(vb);
+        if (angle != 0){
+            pbegin = arcPointAt(line, vb);
+        }else{
+            pbegin = line.pointAt(vb);
+        }
 
         aux_adjust();
 
@@ -256,15 +339,23 @@ void QncgEdge::adjust()
 
         cb++;
 
+        qDebug() << "VB:" << vb << "CB:" << ce << "PBEGIN:" << pbegin;
+
         if (cb > 100){
             break;
         }
     }
+
+    qDebug() << "### BEGIN 0.1";
 
     while(getnBegin()->collidesWithItem(this)){
         vb += 0.001;
 
-        pbegin = line.pointAt(vb);
+        if (angle != 0){
+            pbegin = arcPointAt(line, vb);
+        }else{
+            pbegin = line.pointAt(vb);
+        }
 
         aux_adjust();
 
@@ -272,12 +363,20 @@ void QncgEdge::adjust()
 
         cb++;
 
+        qDebug() << "VB:" << vb << "CB:" << ce << "PBEGIN:" << pbegin;
+
         if (cb > 100){
             break;
         }
     }
 
-    pbegin = line.pointAt(vb-0.001);
+    qDebug() << "### BEGIN 0.001";
+
+    if (angle != 0){
+        pbegin = arcPointAt(line, vb-0.001);
+    }else{
+        pbegin = line.pointAt(vb-0.001);
+    }
 
     aux_adjust();
 

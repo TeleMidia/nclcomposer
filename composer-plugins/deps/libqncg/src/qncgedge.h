@@ -23,6 +23,8 @@ public:
 
     qreal getAngle();
 
+    qreal getAdjustedAngle();
+
     void setAngle(qreal angle);
 
     QPointF getpBegin() const;
@@ -56,6 +58,8 @@ protected:
 
     virtual void aux_adjust();
 
+    virtual QPointF arcPointAt(QLineF line, qreal at);
+
     virtual void draw(QPainter* painter) = 0;
 
     virtual void delineate(QPainterPath* painter) const = 0;
@@ -68,6 +72,8 @@ protected:
 
 private:
     qreal angle;
+
+    qreal adjustedangle;
 
     QPointF pend;
 

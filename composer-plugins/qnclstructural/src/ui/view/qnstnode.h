@@ -46,6 +46,12 @@ public:
 
     void setName(QString name);
 
+    QMap<QString, QVector<qreal> > getAngles() const;
+
+    void addAngle(QString uid, qreal angle);
+
+    void removeAngle(QString uid);
+
 signals:
     void entitySelected(QnstEntity* e);
 
@@ -132,6 +138,8 @@ private:
     QString color;
 
     QString borderColor;
+
+    QMap<QString, QVector<qreal> > angles;
 
 private slots:
     void internalselection();

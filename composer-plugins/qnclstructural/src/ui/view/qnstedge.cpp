@@ -7,6 +7,9 @@
  * Contributors:
  *    Telemidia/PUC-Rio - initial API and implementation
  */
+
+#include "math.h"
+
 #include "qnstedge.h"
 
 QnstEdge::QnstEdge(QncgEntity* parent)
@@ -145,11 +148,11 @@ int QnstEdge::getActionType()
 
 void QnstEdge::draw(QPainter* painter)
 {
+    qreal PI = 3.1415926535897932;
+
     QPointF p1;
 
     if (getpBegin().x() <= getpEnd().x() && getpBegin().y() <= getpEnd().y()){
-        painter->drawLine(16,16,getWidth()-16,getHeight()-16);
-
         QSvgRenderer svgbegin(conditionimage);
         QSvgRenderer svgend(actionimage);
 
@@ -167,6 +170,38 @@ void QnstEdge::draw(QPainter* painter)
 
         svgbegin.render(&ipbegin,QRectF(0,0,32,32));
         svgend.render(&ipend,QRectF(0,0,32,32));
+
+        if (getAngle() != 0){
+
+            qreal drawangle = getAdjustedAngle();
+
+            QLineF line(getpBegin(),getpEnd());
+
+            if (drawangle < 0){
+                drawangle = -drawangle;
+            }
+
+            qreal R = line.length()/(::sin(((drawangle/2)*PI)/180)*2);
+
+            qreal delta = (180-drawangle)/2 + (360 - line.angle());
+
+
+            QPointF rp((getWidth()-16) - ::sin((delta-90+drawangle)*PI/180)*R,
+                       16 + ::sin((180-delta)*PI/180)*R);
+
+            QPointF rpl(16 + ::sin((delta-90+drawangle)*PI/180)*R,
+                        (getHeight()-16) - ::sin((180-delta)*PI/180)*R);
+
+            if (getAdjustedAngle() < 0){
+                painter->drawArc(rpl.x()-R,rpl.y()-R,2*R,2*R,
+                                 16*((180-delta-drawangle)+180),16*drawangle);
+            }else{
+                painter->drawArc(rp.x()-R,rp.y()-R,2*R,2*R
+                                 ,16*(180-delta-drawangle),16*drawangle);
+            }
+        }else{
+            painter->drawLine(16,16,getWidth()-16,getHeight()-16);
+        }
 
         painter->drawPixmap(0,0,32,32,ibegin);
         painter->drawPixmap(getWidth()-32,getHeight()-32,32,32,iend);
@@ -195,6 +230,12 @@ void QnstEdge::draw(QPainter* painter)
         svgbegin.render(&ipbegin,QRectF(0,0,32,32));
         svgend.render(&ipend,QRectF(0,0,32,32));
 
+        if (getAdjustedAngle() != 0){
+
+        }else{
+
+        }
+
         painter->drawPixmap(getWidth()-32,0,32,32,ibegin);
         painter->drawPixmap(0,getHeight()-32,32,32,iend);
 
@@ -221,6 +262,12 @@ void QnstEdge::draw(QPainter* painter)
 
         svgbegin.render(&ipbegin,QRectF(0,0,32,32));
         svgend.render(&ipend,QRectF(0,0,32,32));
+
+        if (getAdjustedAngle() != 0){
+
+        }else{
+
+        }
 
         painter->drawPixmap(0,getHeight()-32,32,32,ibegin);
         painter->drawPixmap(getWidth()-32,0,32,32,iend);
@@ -249,6 +296,12 @@ void QnstEdge::draw(QPainter* painter)
         svgbegin.render(&ipbegin,QRectF(0,0,32,32));
         svgend.render(&ipend,QRectF(0,0,32,32));
 
+        if (getAdjustedAngle() != 0){
+
+        }else{
+
+        }
+
         painter->drawPixmap(getWidth()-32,getHeight()-32,32,32,ibegin);
         painter->drawPixmap(0,0,32,32,iend);
 
@@ -260,18 +313,24 @@ void QnstEdge::draw(QPainter* painter)
 
     QVector<QPointF> v;
 
-    qreal PI = 3.1415926535897932;
-
     double angle = ::acos(myline.dx() / myline.length());
+
+    if (getAngle() != 0){
+        angle += (90 - (180-getAdjustedAngle())/2)*PI/180;
+    }
 
     if (myline.dy() >= 0){
          angle = (PI * 2) - angle;
     }
 
-    qreal alfa = myline.angle() - 180 - 90;
+    if (getAngle() != 0) {
 
-    p1.setX(p1.x() - ::sin(alfa*PI/180) * 16);
-    p1.setY(p1.y() - ::cos(alfa*PI/180) * 16);
+    }else{
+        qreal alfa = myline.angle() - 180 - 90;
+
+        p1.setX(p1.x() - ::sin(alfa*PI/180) * 16);
+        p1.setY(p1.y() - ::cos(alfa*PI/180) * 16);
+    }
 
     QPointF p2 = p1 - QPointF(sin(angle + PI / 3) * 12,
                               cos(angle + PI / 3) * 12);

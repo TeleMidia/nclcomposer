@@ -25,6 +25,21 @@ QnstNode::~QnstNode()
 
 }
 
+QMap<QString, QVector<qreal> > QnstNode::getAngles() const
+{
+    return angles;
+}
+
+void QnstNode::addAngle(QString uid, qreal angle)
+{
+    angles[uid].append(angle);
+}
+
+void QnstNode::removeAngle(QString uid)
+{
+    angles.remove(uid);
+}
+
 void QnstNode::internalselection()
 {
     emit entitySelected(this);
@@ -389,6 +404,41 @@ void QnstNode::link(QGraphicsSceneMouseEvent* event)
                         edge->setnstParent(getnstParent());
                         edge->setnBegin(bnode);
                         edge->setnEnd(enode);
+
+                        int inv = -1;
+
+                        qreal step = 60;
+
+                        qreal angle = 60;
+
+                        if (angles.contains(enode->getUid())){
+                            while (angles.value(enode->getUid()).contains(angle)){
+
+                                if (inv > 0){
+                                    angle *= inv;
+                                    angle += step;
+                                }else{
+                                    angle *= inv;
+                                }
+
+                                inv *= -1;
+                            }
+
+                            angles[enode->getUid()].append(angle);
+
+                            enode->addAngle(getUid(),-angle);
+
+                        }else{
+                            angle = 0;
+
+                            angles[enode->getUid()].append(0);
+
+                            QVector<qreal> va; va.append(0);
+                        }
+
+                        qDebug() << "ARC ANGLE" << angle;
+
+                        edge->setAngle(angle);
 
                         if (dbind.ccondition->currentText() == "none"){
                             edge->setConditionType(Qnst::NoCondition);
