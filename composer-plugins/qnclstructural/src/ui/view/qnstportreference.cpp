@@ -15,6 +15,8 @@ QnstPortReference::QnstPortReference(QncgEntity* parent)
     setResizable(false);
     setSelectable(false);
 
+    setnstType(Qnst::Link);
+
     setbSpan(6);
 }
 

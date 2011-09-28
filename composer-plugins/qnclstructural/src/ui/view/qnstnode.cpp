@@ -399,6 +399,8 @@ void QnstNode::link(QGraphicsSceneMouseEvent* event)
 
                         d->exec();
 
+                        if (d->result() == QDialog::Accepted){
+
                         QnstEdge* edge = new QnstEdge();
                         edge->setParentItem(parentItem());
                         edge->setnstParent(getnstParent());
@@ -407,15 +409,15 @@ void QnstNode::link(QGraphicsSceneMouseEvent* event)
 
                         int inv = -1;
 
-                        qreal step = 60;
+                        qreal step = 45;
 
-                        qreal angle = 60;
+                        qreal angle = 45;
 
                         if (angles.contains(enode->getUid())){
                             while (angles.value(enode->getUid()).contains(angle)){
 
                                 if (inv > 0){
-                                    angle *= inv;
+                                    angle *= -1;
                                     angle += step;
                                 }else{
                                     angle *= inv;
@@ -433,10 +435,8 @@ void QnstNode::link(QGraphicsSceneMouseEvent* event)
 
                             angles[enode->getUid()].append(0);
 
-                            QVector<qreal> va; va.append(0);
+                            enode->addAngle(getUid(),-angle);
                         }
-
-                        qDebug() << "ARC ANGLE" << angle;
 
                         edge->setAngle(angle);
 
@@ -463,6 +463,9 @@ void QnstNode::link(QGraphicsSceneMouseEvent* event)
 
                         }else if (dbind.ccondition->currentText() == "onAbort"){
                             edge->setConditionType(Qnst::OnAbort);
+
+                        }else if (dbind.ccondition->currentText() == "onKeySelection"){
+                            edge->setConditionType(Qnst::OnKeySelection);
                         }
 
 
@@ -486,6 +489,9 @@ void QnstNode::link(QGraphicsSceneMouseEvent* event)
 
                         }else if (dbind.caction->currentText() == "set"){
                             edge->setActionType(Qnst::Set);
+
+                        }else if (dbind.caction->currentText() == "startDelay"){
+                            edge->setActionType(Qnst::StartDelay);
                         }
 
                         edge->adjust();
@@ -496,6 +502,7 @@ void QnstNode::link(QGraphicsSceneMouseEvent* event)
                         enode->addEndingEdge(edge);
 
                         emit entityAdded(edge);
+                        }
                     }
                 }
                 // else
@@ -519,11 +526,46 @@ void QnstNode::link(QGraphicsSceneMouseEvent* event)
 
                         d->exec();
 
+                     if (d->result() == QDialog::Accepted){
+
                         QnstEdge* edge = new QnstEdge();
                         edge->setParentItem(parentItem());
                         edge->setnstParent(getnstParent());
                         edge->setnBegin(bnode);
                         edge->setnEnd(einterface);
+
+                        int inv = -1;
+
+                        qreal step = 45;
+
+                        qreal angle = 45;
+
+                        if (angles.contains(einterface->getUid())){
+                            while (angles.value(einterface->getUid()).contains(angle)){
+
+                                if (inv > 0){
+                                    angle *= -1;
+                                    angle += step;
+                                }else{
+                                    angle *= inv;
+                                }
+
+                                inv *= -1;
+                            }
+
+                            angles[einterface->getUid()].append(angle);
+
+                            einterface->addAngle(getUid(),-angle);
+
+                        }else{
+                            angle = 0;
+
+                            angles[einterface->getUid()].append(0);
+
+                            einterface->addAngle(getUid(),-angle);
+                        }
+
+                         edge->setAngle(angle);
 
                         if (dbind.ccondition->currentText() == "none"){
                             edge->setConditionType(Qnst::NoCondition);
@@ -548,6 +590,9 @@ void QnstNode::link(QGraphicsSceneMouseEvent* event)
 
                         }else if (dbind.ccondition->currentText() == "onAbort"){
                             edge->setConditionType(Qnst::OnAbort);
+
+                        }else if (dbind.ccondition->currentText() == "onKeySelection"){
+                            edge->setConditionType(Qnst::OnKeySelection);
                         }
 
 
@@ -571,6 +616,9 @@ void QnstNode::link(QGraphicsSceneMouseEvent* event)
 
                         }else if (dbind.caction->currentText() == "set"){
                             edge->setActionType(Qnst::Set);
+
+                        }else if (dbind.caction->currentText() == "startDelay"){
+                            edge->setActionType(Qnst::StartDelay);
                         }
 
                         edge->adjust();
@@ -579,6 +627,9 @@ void QnstNode::link(QGraphicsSceneMouseEvent* event)
 
                         bnode->addBeginningEdge(edge);
                         einterface->addEndingEdge(edge);
+
+                        emit entityAdded(edge);
+                        }
                     }
                 }
             }

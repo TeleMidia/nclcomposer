@@ -32,11 +32,6 @@
     <widget class="QComboBox" name="ccondition">
      <item>
       <property name="text">
-       <string>none</string>
-      </property>
-     </item>
-     <item>
-      <property name="text">
        <string>onBegin</string>
       </property>
      </item>
@@ -57,6 +52,11 @@
      </item>
      <item>
       <property name="text">
+       <string>onKeySelection</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
        <string>onAbort</string>
       </property>
      </item>
@@ -71,12 +71,12 @@
     <widget class="QComboBox" name="caction">
      <item>
       <property name="text">
-       <string>none</string>
+       <string>start</string>
       </property>
      </item>
      <item>
       <property name="text">
-       <string>start</string>
+       <string>startDelay</string>
       </property>
      </item>
      <item>

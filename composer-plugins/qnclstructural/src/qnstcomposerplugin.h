@@ -74,6 +74,8 @@ private:
     QStack<QString> propertyStack;
     QStack<QString> linkStack;
 
+    QStack<QString> bindStack;
+
     QSet<QString> connectors;
 
     QString* selectedId;

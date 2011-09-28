@@ -12,8 +12,9 @@
 
 #include <cmath>
 #include "qncgedge.h"
+#include "qnstentity.h"
 
-class QnstPortReference : public QncgEdge
+class QnstPortReference : public QncgEdge, public QnstEntity
 {
 public:
     QnstPortReference(QncgEntity* parent = 0);

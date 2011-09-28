@@ -152,6 +152,15 @@ void QnstComposerPlugin::onEntityAdded(QString pluginID, Entity *entity)
 
                     m_view_to_comp[UID] = CUID;
         }
+
+        else if (entity->getType() == "bind" && !bindStack.empty()){
+                    QString CUID = entity->getUniqueId();
+                    QString UID = bindStack.pop();
+
+                    m_comp_to_view[CUID] = UID;
+
+                    m_view_to_comp[UID] = CUID;
+        }
     }
 }
 
@@ -341,39 +350,119 @@ void QnstComposerPlugin::requestLinkAddition(const QString entityUID,
 
     QString parentCUID = m_view_to_comp.value(parentUID);
 
+    if (attributes["binterface"] != ""){
+        QString pCUID = m_view_to_comp[attributes["binterface"]];
 
-    QString xcon_id = addConnector(attributes["condition"],
-                                  attributes["action"]);
+        QMap<QString, QString> pattrs;
 
-    QMap<QString, QString> standard;
+        pattrs["component"] = getProject()->getEntityById(
+                    m_view_to_comp[attributes["enode"]])->getAttribute("id");
 
-    standard["xconnector"] = attributes["id"];
+        if (attributes["einterface"] != ""){
+            pattrs["interface"] = getProject()->getEntityById(
+                        m_view_to_comp[attributes["einterface"]])->getAttribute("id");
+        }
 
-    standard["xconnector"] = xcon_id;
+        emit setAttributes(getProject()->getEntityById(pCUID),pattrs,false);
 
-    linkStack.push(entityUID);
+    }else{
 
-    emit addEntity("link",parentCUID,standard, false);
+        QString xcon_id = addConnector(attributes["condition"],
+                                      attributes["action"]);
 
-    QString bparentCUID = m_view_to_comp[entityUID];
+        QMap<QString, QString> standard;
 
-    QMap<QString, QString> b1attrs;
+        standard["xconnector"] = attributes["id"];
 
-    b1attrs["role"] = attributes["condition"];
+        standard["xconnector"] = xcon_id;
 
-    b1attrs["component"] = getProject()->getEntityById(
-                m_view_to_comp[attributes["bnode"]])->getAttribute("id") ;
+        linkStack.push(entityUID);
 
-    QMap<QString, QString> b2attrs;
+        emit addEntity("link",parentCUID,standard, false);
 
-    b2attrs["role"] = attributes["action"];
+        QString bparentCUID = m_view_to_comp[entityUID];
 
-    b2attrs["component"] = getProject()->getEntityById(
-                m_view_to_comp[attributes["enode"]])->getAttribute("id") ;
+        QMap<QString, QString> b1attrs;
 
-    emit addEntity("bind",bparentCUID,b1attrs, false);
+        if ( attributes["condition"] == "onKeySelection"){
+            b1attrs["role"] = "onSelection";
 
-    emit addEntity("bind",bparentCUID,b2attrs, false);
+        }else{
+             b1attrs["role"] = attributes["condition"];
+        }
+
+        b1attrs["role"] = attributes["condition"];
+
+
+
+        b1attrs["component"] = getProject()->getEntityById(
+                    m_view_to_comp[attributes["bnode"]])->getAttribute("id") ;
+
+        if (attributes["binterface"] != ""){
+            b1attrs["interface"] = getProject()->getEntityById(
+                        m_view_to_comp[attributes["einterface"]])->getAttribute("id");
+        }
+
+        QMap<QString, QString> b2attrs;
+
+
+        if ( attributes["action"] == "startDelay"){
+            b2attrs["role"] = "start";
+
+        }else{
+            b2attrs["role"] = attributes["action"];
+        }
+
+        b2attrs["component"] = getProject()->getEntityById(
+                    m_view_to_comp[attributes["enode"]])->getAttribute("id") ;
+
+        if (attributes["einterface"] != ""){
+            b2attrs["interface"] = getProject()->getEntityById(
+                        m_view_to_comp[attributes["einterface"]])->getAttribute("id");
+        }
+
+        bindStack.push("b1"+entityUID);
+
+        emit addEntity("bind",bparentCUID,b1attrs, false);
+
+        QString b1UID = m_view_to_comp["b1"+entityUID];
+
+        bindStack.push("b2"+entityUID);
+
+        emit addEntity("bind",bparentCUID,b2attrs, false);
+
+        QString b2UID = m_view_to_comp["b2"+entityUID];
+
+        if (attributes["condition"] == "onKeySelection"){
+           QMap<QString, QString> bpattrs;
+
+           bpattrs["name"] = "key";
+
+           bpattrs["value"] = attributes["key"];
+
+           emit addEntity("bindParam",b1UID,bpattrs,false);
+        }
+
+        if (attributes["action"] == "startDelay"){
+           QMap<QString, QString> bpattrs;
+
+           bpattrs["name"] = "delay";
+
+           bpattrs["value"] = attributes["delay"];
+
+           emit addEntity("bindParam",b2UID,bpattrs,false);
+        }
+
+        if (attributes["action"] == "set"){
+           QMap<QString, QString> bpattrs;
+
+           bpattrs["name"] = "value";
+
+           bpattrs["value"] = attributes["value"];
+
+           emit addEntity("bindParam",b2UID,bpattrs,false);
+        }
+    }
 }
 
 QString QnstComposerPlugin::addConnector(QString condition, QString action)
@@ -400,6 +489,9 @@ QString QnstComposerPlugin::addConnector(QString condition, QString action)
 
     }else if (condition == "onAbort"){
         conn_name += "OnAbort";
+
+    }else if (condition == "onKeySelection"){
+        conn_name += "OnKeySelection";
     }
 
     if (action == "start"){
@@ -419,6 +511,9 @@ QString QnstComposerPlugin::addConnector(QString condition, QString action)
 
     }else if (action == "abort"){
         conn_name += "Abort";
+
+    }else if (action == "startDelay"){
+        conn_name += "StartDelay";
     }
 
     if (!connectors.contains(conn_name)){
@@ -464,13 +559,46 @@ QString QnstComposerPlugin::addConnector(QString condition, QString action)
 
         QMap<QString, QString> scatts;
 
-        scatts["role"] = condition;
+        if (condition == "onKeySelection"){
+            scatts["role"] = "onSelection";
+
+            scatts["key"] = "$key";
+
+             QMap<QString, QString> cpatts;
+
+             cpatts["name"] = "key";
+
+             emit addEntity("connectorParam",cauConnCUID,cpatts,false);
+        }else{
+            scatts["role"] = condition;
+        }
 
         emit addEntity("simpleCondition",cauConnCUID,scatts,false);
 
         QMap<QString, QString> saatts;
 
-        saatts["role"] = action;
+
+        if (action == "startDelay"){
+            saatts["role"] = "start";
+
+            saatts["delay"] = "$delay";
+
+            QMap<QString, QString> cpatts;
+
+            cpatts["name"] = "delay";
+
+            emit addEntity("connectorParam",cauConnCUID,cpatts,false);
+        }else if (action == "set"){
+            saatts["value"] = "$value";
+
+            QMap<QString, QString> cpatts;
+
+            cpatts["name"] = "value";
+
+            emit addEntity("connectorParam",cauConnCUID,cpatts,false);
+        }else{
+            saatts["role"] = action;
+        }
 
         emit addEntity("simpleAction",cauConnCUID,saatts,false);
 

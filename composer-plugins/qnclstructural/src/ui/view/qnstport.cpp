@@ -47,16 +47,20 @@ void QnstPort::link(QGraphicsSceneMouseEvent* event)
 
                     if (bentity->parentItem() == eentity->parentItem()){
                         QnstPort* bport = (QnstPort*) bentity;
-                        QnstNode* enode = (QnstNode*) eentity;
+                        QnstNode* eport = (QnstNode*) eentity;
 
                         QnstPortReference* edge = new QnstPortReference();
                         edge->setParentItem(parentItem());
                         edge->setnBegin(bport);
-                        edge->setnEnd(enode);
+                        edge->setnEnd(eport);
+                        edge->setnstParent(getnstParent());
+                        edge->setAngle(0);
                         edge->adjust();
 
                         bport->addBeginningEdge(edge);
-                        enode->addEndingEdge(edge);
+                        eport->addEndingEdge(edge);
+
+                        emit entityAdded(edge);
                     }
                 }
 
@@ -71,10 +75,14 @@ void QnstPort::link(QGraphicsSceneMouseEvent* event)
                     edge->setParentItem(parentItem());
                     edge->setnBegin(bport);
                     edge->setnEnd(eport);
+                    edge->setnstParent(getnstParent());
+                    edge->setAngle(0);
                     edge->adjust();
 
                     bport->addBeginningEdge(edge);
                     eport->addEndingEdge(edge);
+
+                    emit entityAdded(edge);
 
                 }else{
                     if (bentity->parentItem()->parentItem() ==
@@ -83,18 +91,122 @@ void QnstPort::link(QGraphicsSceneMouseEvent* event)
                         QnstPort* bport = (QnstPort*) bentity;
                         QnstPort* eport = (QnstPort*) eentity;
 
+                        QDialog* d = new QDialog();
+                        d->setWindowModality(Qt::ApplicationModal);
+
+                        Ui::QnstDBind dbind;
+                        dbind.setupUi(d);
+
+                        d->exec();
+                        if (d->result() == QDialog::Accepted){
+
                         QnstEdge* edge = new QnstEdge();
                         edge->setParentItem(parentItem());
+                        edge->setnstParent(getnstParent());
                         edge->setnBegin(bport);
                         edge->setnEnd(eport);
+
+                        int inv = -1;
+
+                        qreal step = 45;
+
+                        qreal angle = 45;
+
+                        if (getAngles().contains(eport->getUid())){
+                            while (getAngles().value(eport->getUid()).contains(angle)){
+
+                                if (inv > 0){
+                                    angle *= -1;
+                                    angle += step;
+                                }else{
+                                    angle *= inv;
+                                }
+
+                                inv *= -1;
+                            }
+
+                            addAngle(eport->getUid(), angle);
+
+                            eport->addAngle(getUid(),-angle);
+
+                        }else{
+                            angle = 0;
+
+                            addAngle(eport->getUid(), 0);
+
+                            eport->addAngle(getUid(),0);
+                        }
+
+                        edge->setAngle(angle);
+
+                        if (dbind.ccondition->currentText() == "none"){
+                            edge->setConditionType(Qnst::NoCondition);
+
+                        }else if (dbind.ccondition->currentText() == "onBegin"){
+                            edge->setConditionType(Qnst::OnBegin);
+
+                        }else if (dbind.ccondition->currentText() == "onEnd"){
+                            edge->setConditionType(Qnst::OnEnd);
+
+                        }else if (dbind.ccondition->currentText() == "onPause"){
+                            edge->setConditionType(Qnst::OnPause);
+
+                        }else if (dbind.ccondition->currentText() == "onResume"){
+                            edge->setConditionType(Qnst::OnResume);
+
+                        }else if (dbind.ccondition->currentText() == "onSelection"){
+                            edge->setConditionType(Qnst::OnSelection);
+
+                        }else if (dbind.ccondition->currentText() == "onSet"){
+                            edge->setConditionType(Qnst::OnSet);
+
+                        }else if (dbind.ccondition->currentText() == "onAbort"){
+                            edge->setConditionType(Qnst::OnAbort);
+
+                        }else if (dbind.ccondition->currentText() == "onKeySelection"){
+                            edge->setConditionType(Qnst::OnKeySelection);
+                        }
+
+
+                        if (dbind.caction->currentText() == "none"){
+                            edge->setActionType(Qnst::NoAction);
+
+                        }else if (dbind.caction->currentText() == "start"){
+                            edge->setActionType(Qnst::Start);
+
+                        }else if (dbind.caction->currentText() == "stop"){
+                            edge->setActionType(Qnst::Stop);
+
+                        }else if (dbind.caction->currentText() == "pause"){
+                            edge->setActionType(Qnst::Pause);
+
+                        }else if (dbind.caction->currentText() == "resume"){
+                            edge->setActionType(Qnst::Resume);
+
+                        }else if (dbind.caction->currentText() == "abort"){
+                            edge->setActionType(Qnst::Abort);
+
+                        }else if (dbind.caction->currentText() == "set"){
+                            edge->setActionType(Qnst::Set);
+
+                        }else if (dbind.caction->currentText() == "startDelay"){
+                            edge->setActionType(Qnst::StartDelay);
+                        }
+
                         edge->adjust();
 
-                        bport->addBeginningEdge(edge);
-                        eport->addEndingEdge(edge);
-                    }
-                }
+                        delete d;
 
+                        bport->addBeginningEdge(edge);
+                        bport->addEndingEdge(edge);
+
+                        emit entityAdded(edge);
+
+
+                   }
+                }
             }
         }
+    }
     }
 }

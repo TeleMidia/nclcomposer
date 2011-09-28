@@ -33,6 +33,21 @@ void QnstInterface::internalselection()
     emit entitySelected(this);
 }
 
+QMap<QString, QVector<qreal> > QnstInterface::getAngles() const
+{
+    return angles;
+}
+
+void QnstInterface::addAngle(QString uid, qreal angle)
+{
+    angles[uid].append(angle);
+}
+
+void QnstInterface::removeAngle(QString uid)
+{
+    angles.remove(uid);
+}
+
 void QnstInterface::setName(QString name)
 {
     QnstEntity::setName(name);

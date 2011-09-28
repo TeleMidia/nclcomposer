@@ -28,6 +28,7 @@ public:
         OnBegin,
         OnEnd,
         OnSelection,
+        OnKeySelection,
         OnPause,
         OnResume,
         OnSet,
@@ -37,6 +38,7 @@ public:
 
     enum ActionType {
         Start,
+        StartDelay,
         Stop,
         Pause,
         Resume,

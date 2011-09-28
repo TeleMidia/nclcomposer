@@ -40,6 +40,13 @@ void QnstEdge::setConditionType(int contitiontype)
             break;
         }
 
+        case Qnst::OnKeySelection:{
+            conditionimage = ":/images/selection";
+
+            break;
+        }
+
+
         case Qnst::OnSelection:{
             conditionimage = ":/images/selection";
 
@@ -95,6 +102,12 @@ void QnstEdge::setActionType(int actiontype)
 {
     switch(actiontype){
         case Qnst::Start:{
+            actionimage = ":/images/start";
+
+            break;
+        }
+
+        case Qnst::StartDelay:{
             actionimage = ":/images/start";
 
             break;
@@ -210,8 +223,6 @@ void QnstEdge::draw(QPainter* painter)
         p1.setY(getHeight()-16);
 
     }else if (getpBegin().x() > getpEnd().x() && getpBegin().y() < getpEnd().y()){
-        painter->drawLine(getWidth()-16,16,16,getHeight()-16);
-
         QSvgRenderer svgbegin(conditionimage);
         QSvgRenderer svgend(actionimage);
 
@@ -230,10 +241,32 @@ void QnstEdge::draw(QPainter* painter)
         svgbegin.render(&ipbegin,QRectF(0,0,32,32));
         svgend.render(&ipend,QRectF(0,0,32,32));
 
-        if (getAdjustedAngle() != 0){
+        if (getAngle() != 0){
+            qreal drawangle = getAdjustedAngle();
 
+            QLineF line(getpBegin(),getpEnd());
+
+            if (drawangle < 0){
+                drawangle = -drawangle;
+            }
+
+            qreal R = line.length()/(::sin(((drawangle/2)*PI)/180)*2);
+
+            qreal peta = line.angle() - 180 + (180-drawangle)/2;
+
+            qreal gama = 180 - peta - drawangle;
+
+            QPointF rpl(12 + ::cos((gama)*PI/180)*R,  (getHeight()-12) + ::sin((gama)*PI/180)*R);
+
+            QPointF rp((getWidth()-12) - ::cos((gama)*PI/180)*R,  12 - ::sin((gama)*PI/180)*R);
+
+            if (getAdjustedAngle() < 0){
+                painter->drawArc(rpl.x()-R,rpl.y()-R,2*R,2*R,16*(peta),16*drawangle);
+            }else{
+                painter->drawArc(rp.x()-R,rp.y()-R,2*R,2*R,16*(peta+180),16*drawangle);
+            }
         }else{
-
+             painter->drawLine(getWidth()-16,16,16,getHeight()-16);
         }
 
         painter->drawPixmap(getWidth()-32,0,32,32,ibegin);
@@ -243,8 +276,6 @@ void QnstEdge::draw(QPainter* painter)
         p1.setY(getHeight()-16);
 
     }else if (getpBegin().x() < getpEnd().x() && getpBegin().y() > getpEnd().y()){
-        painter->drawLine(16,getHeight()-16,getWidth()-16,16);
-
         QSvgRenderer svgbegin(conditionimage);
         QSvgRenderer svgend(actionimage);
 
@@ -263,10 +294,32 @@ void QnstEdge::draw(QPainter* painter)
         svgbegin.render(&ipbegin,QRectF(0,0,32,32));
         svgend.render(&ipend,QRectF(0,0,32,32));
 
-        if (getAdjustedAngle() != 0){
+        if (getAngle() != 0){
+            qreal drawangle = getAdjustedAngle();
 
+            QLineF line(getpBegin(),getpEnd());
+
+            if (drawangle < 0){
+                drawangle = -drawangle;
+            }
+
+            qreal R = line.length()/(::sin(((drawangle/2)*PI)/180)*2);
+
+            qreal peta = 180 - line.angle() - (180-drawangle)/2;
+
+            qreal gama = peta - drawangle;
+
+            QPointF rp(12 + ::cos((gama)*PI/180)*R,  (getHeight()-12) + ::sin((gama)*PI/180)*R);
+
+            QPointF rpl((getWidth()-12) - ::cos((gama)*PI/180)*R,  12 - ::sin((gama)*PI/180)*R);
+
+            if (getAdjustedAngle() < 0){
+                painter->drawArc(rpl.x()-R,rpl.y()-R,2*R,2*R,16*((180-peta)+180),16*drawangle);
+            }else{
+                painter->drawArc(rp.x()-R,rp.y()-R,2*R,2*R,16*(180-peta),16*drawangle);
+            }
         }else{
-
+            painter->drawLine(16,getHeight()-16,getWidth()-16,16);
         }
 
         painter->drawPixmap(0,getHeight()-32,32,32,ibegin);
@@ -276,7 +329,7 @@ void QnstEdge::draw(QPainter* painter)
         p1.setY(16);
 
     }else if (getpBegin().x() > getpEnd().x() && getpBegin().y() > getpEnd().y()){
-        painter->drawLine(getWidth()-16,getHeight()-16,16,16);
+
 
         QSvgRenderer svgbegin(conditionimage);
         QSvgRenderer svgend(actionimage);
@@ -296,10 +349,34 @@ void QnstEdge::draw(QPainter* painter)
         svgbegin.render(&ipbegin,QRectF(0,0,32,32));
         svgend.render(&ipend,QRectF(0,0,32,32));
 
-        if (getAdjustedAngle() != 0){
+        if (getAngle() != 0){
+            qreal drawangle = getAdjustedAngle();
+
+            QLineF line(getpBegin(),getpEnd());
+
+            if (getAngle() < 0){
+                drawangle = -drawangle;
+            }
+
+            qreal R = line.length()/(::sin(((drawangle/2)*PI)/180)*2);
+
+            qreal angulotenso = (180 - line.angle() + (180-drawangle)/2);
+
+            qreal gama = 180-angulotenso-drawangle;
+
+            QPointF rpl((getWidth()-12) - ::cos((gama)*PI/180)*R,
+                        (getHeight()-12) + ::sin((gama)*PI/180)*R);
+
+            QPointF rp(12 + ::cos((gama)*PI/180)*R, 12 - ::sin((gama)*PI/180)*R);
+
+            if (getAdjustedAngle() < 0){
+                painter->drawArc(rpl.x()-R,rpl.y()-R,2*R,2*R,16*((180-angulotenso-drawangle)),16*drawangle);
+            }else{
+                painter->drawArc(rp.x()-R,rp.y()-R,2*R,2*R,16*((180-angulotenso-drawangle)+180),16*drawangle);
+            }
 
         }else{
-
+             painter->drawLine(getWidth()-16,getHeight()-16,16,16);
         }
 
         painter->drawPixmap(getWidth()-32,getHeight()-32,32,32,ibegin);
@@ -324,6 +401,31 @@ void QnstEdge::draw(QPainter* painter)
     }
 
     if (getAngle() != 0) {
+/*        qreal alfa = getAdjustedAngle();
+
+        qreal beta = (180 - alfa)/2 + (360 - myline.angle());
+
+        qreal R = myline.length()/(::sin(((alfa/2)*PI)/180)*2);
+
+        qreal arc_len = alfa*PI*R/180;
+
+        QPointF center_p(myline.p2().x() - ::sin((beta+alfa-90)*PI/180)*R,
+                         myline.p2().y() + ::sin((180-beta-alfa)*PI/180)*R);
+
+        qreal gama = 2 * ((::asin(8/R) * 180)/PI);
+
+        qreal gama_len = gama*PI*R/180;
+
+        qreal new_arc_len = arc_len - gama_len;
+
+        qreal new_alfa = (180*new_arc_len)/(PI*R);
+
+        qreal peta = (180-beta-alfa);
+
+        QPointF new_p(center_p.x() + ::cos((new_alfa+peta)*PI/180)*R,
+                      center_p.y() - ::sin((new_alfa+peta)*PI/180)*R);
+
+        p1 = new_p;*/
 
     }else{
         qreal alfa = myline.angle() - 180 - 90;

@@ -257,7 +257,7 @@ void QnstView::requestEntityAddition(QnstEntity* e)
 
             property_count++;
 
-            QString name = "p"+QString::number(property_count);
+            QString name = "prop"+QString::number(property_count);
 
             s->setName(name);
 
@@ -311,9 +311,9 @@ void QnstView::requestEntityAddition(QnstEntity* e)
 
             QString sUID = s->getUid();
 
-            area_count++;
+            link_count++;
 
-            QString name = "link"+QString::number(area_count);
+            QString name = "link"+QString::number(link_count);
 
             s->setName(name);
 
@@ -331,6 +331,20 @@ void QnstView::requestEntityAddition(QnstEntity* e)
                 QnstNode* n = (QnstNode*) s->getnEnd();
 
                 attrs["enode"] = n->getUid();
+            }
+
+            if (s->getnBegin()->getEntityType() == Qncg::Interface){
+                QnstInterface* n = (QnstInterface*) s->getnBegin();
+
+                attrs["bnode"] = n->getnstParent()->getUid();
+                attrs["binterface"] = n->getUid();
+            }
+
+            if (s->getnEnd()->getEntityType() == Qncg::Interface){
+                QnstInterface* n = (QnstInterface*) s->getnEnd();
+
+                attrs["enode"] = n->getnstParent()->getUid();
+                attrs["einterface"] = n->getUid();
             }
 
             // todo: attrs
@@ -376,6 +390,13 @@ void QnstView::requestEntityAddition(QnstEntity* e)
 
                     break;
                 }
+
+                case Qnst::OnKeySelection:{
+                    attrs["condition"] = "onKeySelection";
+                    attrs["key"] = "";
+
+                    break;
+                }
             }
 
             switch(s->getActionType()){
@@ -399,6 +420,7 @@ void QnstView::requestEntityAddition(QnstEntity* e)
 
                 case Qnst::Set:{
                     attrs["action"] = "set";
+                    attrs["value"] = "";
 
                     break;
                 }
@@ -411,6 +433,13 @@ void QnstView::requestEntityAddition(QnstEntity* e)
 
                 case Qnst::Abort:{
                     attrs["action"] = "abort";
+
+                    break;
+                }
+
+                case Qnst::StartDelay:{
+                    attrs["action"] = "startDelay";
+                    attrs["delay"] = "";
 
                     break;
                 }
