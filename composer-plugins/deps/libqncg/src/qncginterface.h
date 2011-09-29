@@ -24,7 +24,16 @@ public:
 
     void addBeginningEdge(QncgEdge* edge);
 
+    void removeBeginningEdge(QncgEdge* edge);
+
+    QVector<QncgEdge*> getBeginningEdges() const;
+
     void addEndingEdge(QncgEdge* edge);
+
+    void removeEndingEdge(QncgEdge* edge);
+
+    QVector<QncgEdge*> getEndingEdges() const;
+
 
 protected:
     virtual void validate();

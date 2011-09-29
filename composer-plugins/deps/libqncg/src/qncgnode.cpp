@@ -21,6 +21,34 @@ QncgNode::~QncgNode()
 
 }
 
+QVector<QncgEdge*> QncgNode::getBeginningEdges() const
+{
+    return bedges;
+}
+
+void QncgNode::removeBeginningEdge(QncgEdge* edge)
+{
+    int index = bedges.indexOf(edge);
+
+    if (index >= 0){
+        bedges.remove(index);
+    }
+}
+
+QVector<QncgEdge*> QncgNode::getEndingEdges() const
+{
+    return eedges;
+}
+
+void QncgNode::removeEndingEdge(QncgEdge* edge)
+{
+    int index = eedges.indexOf(edge);
+
+    if (index >= 0){
+        eedges.remove(index);
+    }
+}
+
 void QncgNode::adjust()
 {
     scene()->update();

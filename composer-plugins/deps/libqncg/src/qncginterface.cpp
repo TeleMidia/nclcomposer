@@ -32,6 +32,34 @@ void QncgInterface::addEndingEdge(QncgEdge* edge)
     eedges.append(edge);
 }
 
+QVector<QncgEdge*> QncgInterface::getBeginningEdges() const
+{
+    return bedges;
+}
+
+void QncgInterface::removeBeginningEdge(QncgEdge* edge)
+{
+    int index = bedges.indexOf(edge);
+
+    if (index >= 0){
+        bedges.remove(index);
+    }
+}
+
+QVector<QncgEdge*> QncgInterface::getEndingEdges() const
+{
+    return eedges;
+}
+
+void QncgInterface::removeEndingEdge(QncgEdge* edge)
+{
+    int index = eedges.indexOf(edge);
+
+    if (index >= 0){
+        eedges.remove(index);
+    }
+}
+
 
 void QncgInterface::adjust()
 {
