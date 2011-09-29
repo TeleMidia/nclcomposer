@@ -42,6 +42,9 @@ void QnstSwitch::addContext()
     connect(context,SIGNAL(entityAdded(QnstEntity*)),
             SIGNAL(entityAdded(QnstEntity*)));
 
+    connect(context,SIGNAL(entityRemoved(QnstEntity*)),
+            SIGNAL(entityRemoved(QnstEntity*)));
+
     emit entityAdded(context);
 }
 
@@ -61,6 +64,9 @@ void QnstSwitch::addSwitch()
 
     connect(sswitch,SIGNAL(entityAdded(QnstEntity*)),
             SIGNAL(entityAdded(QnstEntity*)));
+
+    connect(sswitch,SIGNAL(entityRemoved(QnstEntity*)),
+            SIGNAL(entityRemoved(QnstEntity*)));
 
     emit entityAdded(sswitch);
 }
@@ -83,6 +89,9 @@ void QnstSwitch::addPort()
     connect(port,SIGNAL(entityAdded(QnstEntity*)),
             SIGNAL(entityAdded(QnstEntity*)));
 
+    connect(port,SIGNAL(entityRemoved(QnstEntity*)),
+            SIGNAL(entityRemoved(QnstEntity*)));
+
     emit entityAdded(port);
 }
 
@@ -103,6 +112,9 @@ void QnstSwitch::addProperty()
     connect(property,SIGNAL(entityAdded(QnstEntity*)),
             SIGNAL(entityAdded(QnstEntity*)));
 
+    connect(property,SIGNAL(entityRemoved(QnstEntity*)),
+            SIGNAL(entityRemoved(QnstEntity*)));
+
     emit entityAdded(property);
 }
 
@@ -122,6 +134,9 @@ void QnstSwitch::addMedia()
 
     connect(media,SIGNAL(entityAdded(QnstEntity*)),
             SIGNAL(entityAdded(QnstEntity*)));
+
+    connect(media,SIGNAL(entityRemoved(QnstEntity*)),
+            SIGNAL(entityRemoved(QnstEntity*)));
 
     emit entityAdded(media);
 }

@@ -35,9 +35,15 @@ void QnstNode::addAngle(QString uid, qreal angle)
     angles[uid].append(angle);
 }
 
-void QnstNode::removeAngle(QString uid)
+void QnstNode::removeAngle(QString uid, qreal angle)
 {
-    angles.remove(uid);
+    QVector<qreal> v = angles[uid];
+
+    int index = v.indexOf(angle);
+
+    if (index >= 0){
+         angles[uid].remove(index);
+    }
 }
 
 void QnstNode::internalselection()
@@ -75,6 +81,15 @@ void QnstNode::setName(QString name)
 void QnstNode::createConnections()
 {
     connect(this,SIGNAL(entitySelected()),SLOT(internalselection()));
+
+    connect(deleteAction,SIGNAL(triggered()),SLOT(deleteEntity()));
+}
+
+void QnstNode::deleteEntity()
+{
+    scene()->removeItem(this);
+
+    emit entityRemoved(this);
 }
 
 void QnstNode::createActions()
@@ -411,7 +426,7 @@ void QnstNode::link(QGraphicsSceneMouseEvent* event)
 
                         qreal step = 45;
 
-                        qreal angle = 45;
+                        qreal angle = 0;
 
                         if (angles.contains(enode->getUid())){
                             while (angles.value(enode->getUid()).contains(angle)){
@@ -430,12 +445,6 @@ void QnstNode::link(QGraphicsSceneMouseEvent* event)
 
                             enode->addAngle(getUid(),-angle);
 
-                        }else{
-                            angle = 0;
-
-                            angles[enode->getUid()].append(0);
-
-                            enode->addAngle(getUid(),-angle);
                         }
 
                         edge->setAngle(angle);
@@ -495,6 +504,9 @@ void QnstNode::link(QGraphicsSceneMouseEvent* event)
                         }
 
                         edge->adjust();
+
+                        connect(edge, SIGNAL(entityRemoved(QnstEntity*)),
+                                SIGNAL(entityRemoved(QnstEntity*)));
 
                         delete d;
 
@@ -627,6 +639,9 @@ void QnstNode::link(QGraphicsSceneMouseEvent* event)
 
                         bnode->addBeginningEdge(edge);
                         einterface->addEndingEdge(edge);
+
+                        connect(edge, SIGNAL(entityRemoved(QnstEntity*)),
+                                SIGNAL(entityRemoved(QnstEntity*)));
 
                         emit entityAdded(edge);
                         }

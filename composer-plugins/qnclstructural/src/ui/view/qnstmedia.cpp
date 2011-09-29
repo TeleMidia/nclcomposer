@@ -45,6 +45,9 @@ void QnstMedia::addArea()
     connect(area,SIGNAL(entityAdded(QnstEntity*)),
             SIGNAL(entityAdded(QnstEntity*)));
 
+    connect(area,SIGNAL(entityRemoved(QnstEntity*)),
+            SIGNAL(entityRemoved(QnstEntity*)));
+
     emit entityAdded(area);
 }
 

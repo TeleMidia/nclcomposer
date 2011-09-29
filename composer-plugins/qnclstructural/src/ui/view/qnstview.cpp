@@ -117,6 +117,8 @@ void QnstView::requestEntityAddition(QnstEntity* e)
 
             emit bodyAdded(bUID, pbUID,attrs);
 
+            centerOn(b);
+
             break;
         }
 
@@ -482,6 +484,59 @@ void QnstView::requestEntitySelection(QnstEntity* e)
 }
 
 
+void QnstView::requestEntityRemotion(QnstEntity* e)
+{
+    entities.remove(e->getUid());
+
+    if (e->getnstType() != Qnst::Link){
+        QncgEntity* entity;
+
+        if (e->getnstType() == Qnst::Body ||
+            e->getnstType() == Qnst::Media ||
+            e->getnstType() == Qnst::Switch ||
+            e->getnstType() == Qnst::Context){
+
+            entity = (QnstNode*) e;
+
+            foreach(QncgEdge* edge, ((QnstNode*) e)->getBeginningEdges()){
+                ((QnstEdge*) edge)->deleteEntity();
+            }
+
+            foreach(QncgEdge* edge, ((QnstNode*) e)->getEndingEdges()){
+                ((QnstEdge*) edge)->deleteEntity();
+            }
+
+        }else if (e->getnstType() == Qnst::Port ||
+                  e->getnstType() == Qnst::Property ||
+                  e->getnstType() == Qnst::Area){
+
+            entity = (QnstInterface*) e;
+
+            foreach(QncgEdge* edge, ((QnstInterface*) e)->getBeginningEdges()){
+                ((QnstEdge*) edge)->deleteEntity();
+            }
+
+            foreach(QncgEdge* edge, ((QnstInterface*) e)->getEndingEdges()){
+                ((QnstEdge*) edge)->deleteEntity();
+            }
+        }
+
+        foreach (QGraphicsItem* c, entity->childItems()){
+            QncgEntity* cncg = (QncgEntity*) c;
+
+            if (cncg->getEntityType() == Qncg::Node){
+                requestEntityRemotion((QnstNode*) cncg);
+
+            }else if (cncg->getEntityType() == Qncg::Interface){
+                requestEntityRemotion((QnstInterface*) cncg);
+
+            }
+        }
+    }
+
+    emit entityRemoved(e->getUid());
+}
+
 void QnstView::createConnection()
 {
     connect(scene, SIGNAL(entityAdded(QnstEntity*)),
@@ -489,6 +544,9 @@ void QnstView::createConnection()
 
     connect(scene, SIGNAL(entitySelected(QnstEntity*)),
             SLOT(requestEntitySelection(QnstEntity*)));
+
+    connect(scene, SIGNAL(entityRemoved(QnstEntity*)),
+            SLOT(requestEntityRemotion(QnstEntity*)));
 }
 
 //void QnstView::wheelEvent( QWheelEvent * event )

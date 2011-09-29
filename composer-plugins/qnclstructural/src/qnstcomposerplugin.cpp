@@ -62,6 +62,9 @@ void QnstComposerPlugin::createConnections()
 
   connect(view,SIGNAL(entitySelected(QString)),
           SLOT(requestEntitySelection(QString)));
+
+  connect(view,SIGNAL(entityRemoved(QString)),
+          SLOT(requestEntityRemotion(QString)));
 }
 
 void QnstComposerPlugin::init()
@@ -606,6 +609,19 @@ QString QnstComposerPlugin::addConnector(QString condition, QString action)
     }
 
     return conn_name;
+}
+
+void QnstComposerPlugin::requestEntityRemotion(const QString entityUID)
+{
+    qDebug() << "QnstComposerPlugin::requestEntityRemotion()";
+
+    emit removeEntity(getProject()->getEntityById(m_view_to_comp[entityUID]),
+                      false);
+
+    m_comp_to_view.remove(m_view_to_comp[entityUID]);
+    m_view_to_comp.remove(entityUID);
+
+
 }
 
 } } } // end namespace

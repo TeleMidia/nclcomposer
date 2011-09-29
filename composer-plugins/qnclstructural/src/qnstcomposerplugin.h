@@ -114,6 +114,8 @@ private slots:
                              const QMap<QString, QString> attributes);
 
     void requestEntitySelection(const QString entityUID);
+
+    void requestEntityRemotion(const QString entityUID);
 };
 
 } } } // end namespace

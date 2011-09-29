@@ -10,6 +10,9 @@
 #ifndef QNSTINTERFACE_H
 #define QNSTINTERFACE_H
 
+#include <QAction>
+#include <QMenu>
+
 #include "qncginterface.h"
 
 #include "qnstnode.h"
@@ -32,18 +35,74 @@ public:
 
     void addAngle(QString uid, qreal angle);
 
-    void removeAngle(QString uid);
+    void removeAngle(QString uid, qreal angle);
+
+public slots:
+    void deleteEntity();
 
 signals:
     void entitySelected(QnstEntity* e);
 
     void entityAdded(QnstEntity* e);
+
+    void entityRemoved(QnstEntity* e);
+
 protected:
     virtual void draw(QPainter* painter);
 
     virtual void delineate(QPainterPath* painter) const;
 
+    virtual void contextMenuEvent(QGraphicsSceneContextMenuEvent* event);
+
+    QMenu* viewMenu;
+
+    QMenu* showMenu;
+
+    QMenu* arrangeMenu;
+
+    QMenu* contextMenu;
+
+    QAction* helpAction;
+
+    QAction* undoAction;
+
+    QAction* redoAction;
+
+    QAction* cutAction;
+
+    QAction* copyAction;
+
+    QAction* pasteAction;
+
+    QAction* deleteAction;
+
+    QAction* zoominAction;
+
+    QAction* zoomoutAction;
+
+    QAction* zoomresetAction;
+
+    QAction* hideAction;
+
+    QAction* fullscreenAction;
+
+    QAction* exportAction;
+
+    QAction* bringfrontAction;
+
+    QAction* bringforwardAction;
+
+    QAction* sendbackwardAction;
+
+    QAction* sendbackAction;
+
+    QAction* propertiesAction;
+
 private:
+    void createActions();
+
+    void createMenus();
+
     void createConnections();
 
     QMap<QString, QVector<qreal> > angles;

@@ -41,12 +41,16 @@ public slots:
 
     void selectEntity(const QString entityUID);
 
+    void requestEntityRemotion(QnstEntity* e);
+
     void requestEntityAddition(QnstEntity* e);
 
     void requestEntitySelection(QnstEntity* e);
 
 signals:
     void entitySelected(const QString entityUID);
+
+    void entityRemoved(const QString entityUID);
 
     void bodyAdded(const QString entityUID,
                    const QString parentUID,

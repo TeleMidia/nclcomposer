@@ -43,6 +43,11 @@ void QnstScene::addBody()
     connect(body,SIGNAL(entityAdded(QnstEntity*)),
                 SIGNAL(entityAdded(QnstEntity*)));
 
+    connect(body,SIGNAL(entityRemoved(QnstEntity*)),
+                SIGNAL(entityRemoved(QnstEntity*)));
+
+
+
     emit entityAdded(body);
 }
 

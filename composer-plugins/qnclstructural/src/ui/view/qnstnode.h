@@ -50,12 +50,17 @@ public:
 
     void addAngle(QString uid, qreal angle);
 
-    void removeAngle(QString uid);
+    void removeAngle(QString uid, qreal angle);
+
+public slots:
+    void deleteEntity();
 
 signals:
     void entitySelected(QnstEntity* e);
 
     void entityAdded(QnstEntity* e);
+
+    void entityRemoved(QnstEntity* e);
 
 protected:
     virtual void draw(QPainter* painter);

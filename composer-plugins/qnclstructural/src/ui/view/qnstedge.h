@@ -14,6 +14,7 @@
 
 #include "qncgentity.h"
 #include "qnstentity.h"
+#include "qnstnode.h"
 #include "QSvgRenderer"
 
 #include "cmath"
@@ -22,9 +23,12 @@
 
 #include <QBitmap>
 #include <QDialog>
+#include <QAction>
+#include <QMenu>
 
 class QnstEdge : public QncgEdge, public QnstEntity
 {
+    Q_OBJECT
 public:
     QnstEdge(QncgEntity* parent = 0);
 
@@ -38,12 +42,70 @@ public:
 
     int getActionType();
 
+public slots:
+    void deleteEntity();
+
+signals:
+    void entityRemoved(QnstEntity* e);
+
 protected:
     virtual void draw(QPainter* painter);
 
     virtual void delineate(QPainterPath* painter) const;
 
+    virtual void contextMenuEvent(QGraphicsSceneContextMenuEvent* event);
+
+    QMenu* viewMenu;
+
+    QMenu* showMenu;
+
+    QMenu* arrangeMenu;
+
+    QMenu* contextMenu;
+
+    QAction* helpAction;
+
+    QAction* undoAction;
+
+    QAction* redoAction;
+
+    QAction* cutAction;
+
+    QAction* copyAction;
+
+    QAction* pasteAction;
+
+    QAction* deleteAction;
+
+    QAction* zoominAction;
+
+    QAction* zoomoutAction;
+
+    QAction* zoomresetAction;
+
+    QAction* hideAction;
+
+    QAction* fullscreenAction;
+
+    QAction* exportAction;
+
+    QAction* bringfrontAction;
+
+    QAction* bringforwardAction;
+
+    QAction* sendbackwardAction;
+
+    QAction* sendbackAction;
+
+    QAction* propertiesAction;
+
 private:
+    void createActions();
+
+    void createMenus();
+
+    void createConnections();
+
     QString conditionimage;
 
     QString actionimage;

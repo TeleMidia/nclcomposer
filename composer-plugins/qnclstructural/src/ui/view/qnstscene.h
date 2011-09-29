@@ -34,7 +34,7 @@ public slots:
 signals:
     void entityAdded(QnstEntity* e);
 
-    void entityRemoved(QString e);
+    void entityRemoved(QnstEntity* e);
 
     void entityChanged(QnstEntity* e);
 
