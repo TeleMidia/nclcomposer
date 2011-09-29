@@ -262,7 +262,19 @@ void NCLTextualViewPlugin::onEntityRemoved(QString pluginID, QString entityID)
 
     char curChar = nclTextEditor->SendScintilla(
                                                 QsciScintilla::SCI_GETCHARAT,
-                                                endOffset);
+                                                startOffset);
+
+    while(curChar != '>' && startOffset >= 0)
+    {
+        startOffset--;
+        curChar = nclTextEditor->SendScintilla( QsciScintilla::SCI_GETCHARAT,
+                                                startOffset);
+    }
+    if(curChar == '>')
+        startOffset++; // does not include the '>' character
+
+    curChar = nclTextEditor->SendScintilla( QsciScintilla::SCI_GETCHARAT,
+                                            endOffset);
 
     while(curChar != '>' && endOffset < nclTextEditor->text().size())
     {
@@ -270,13 +282,20 @@ void NCLTextualViewPlugin::onEntityRemoved(QString pluginID, QString entityID)
         curChar = nclTextEditor->SendScintilla( QsciScintilla::SCI_GETCHARAT,
                                                 endOffset);
     }
-
     if(endOffset == nclTextEditor->text().size())
     {
         qWarning() << "TextEditor could not perform the requested action.";
         return;
     }
-    endOffset += 2;
+
+    endOffset++; // includes the '>' character
+
+    while(isspace(curChar) && endOffset < nclTextEditor->text().size())
+    {
+        endOffset++;
+        curChar = nclTextEditor->SendScintilla( QsciScintilla::SCI_GETCHARAT,
+                                                endOffset);
+    }
 
     nclTextEditor->SendScintilla(QsciScintilla::SCI_SETSELECTIONSTART,
                                            startOffset);
@@ -357,6 +376,7 @@ bool NCLTextualViewPlugin::saveSubsession()
     }
 
     emit setPluginData(data);
+
     return true;
 }
 
