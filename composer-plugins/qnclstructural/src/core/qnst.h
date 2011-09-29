@@ -21,7 +21,8 @@ public:
         Context,
         Media,
         Property,
-        Area
+        Area,
+        Refer
     };
 
     enum ConditionType {

@@ -293,17 +293,19 @@ void QnstView::requestEntityAddition(QnstEntity* e)
 
             QMap<QString, QString> attrs;
 
-            // todo: attrs
+            attrs["id"] = name;
 
             emit areaAdded(sUID, psUID,attrs);
 
             break;
         }
 
-        case Qnst::Link:{
+        case Qnst::Refer:{
             QnstEdge* s = (QnstEdge*) e;
 
             QString psUID = "";
+
+
 
             if (s->getnstParent() != NULL){
                 QnstEntity* pe = s->getnstParent();
@@ -322,6 +324,172 @@ void QnstView::requestEntityAddition(QnstEntity* e)
             QMap<QString, QString> attrs;
 
             attrs["id"] = name;
+
+            if (e->getnstType() == Qnst::Refer){
+                attrs["type"] = "refer";
+            }else{
+                attrs["type"] = "link";
+            }
+
+            if (s->getnBegin()->getEntityType() == Qncg::Node){
+                QnstNode* n = (QnstNode*) s->getnBegin();
+
+                attrs["bnode"] = n->getUid();
+            }
+
+            if (s->getnEnd()->getEntityType() == Qncg::Node){
+                QnstNode* n = (QnstNode*) s->getnEnd();
+
+                attrs["enode"] = n->getUid();
+            }
+
+            if (s->getnBegin()->getEntityType() == Qncg::Interface){
+                QnstInterface* n = (QnstInterface*) s->getnBegin();
+
+                attrs["bnode"] = n->getnstParent()->getUid();
+                attrs["binterface"] = n->getUid();
+            }
+
+            if (s->getnEnd()->getEntityType() == Qncg::Interface){
+                QnstInterface* n = (QnstInterface*) s->getnEnd();
+
+                attrs["enode"] = n->getnstParent()->getUid();
+                attrs["einterface"] = n->getUid();
+            }
+
+            // todo: attrs
+            switch(s->getConditionType()){
+                case Qnst::OnBegin:{
+                    attrs["condition"] = "onBegin";
+
+                    break;
+                }
+
+                case Qnst::OnSelection:{
+                    attrs["condition"] = "onSelection";
+
+                    break;
+                }
+
+                case Qnst::OnEnd:{
+                    attrs["condition"] = "onEnd";
+
+                    break;
+                }
+
+                case Qnst::OnPause:{
+                    attrs["condition"] = "onPause";
+
+                    break;
+                }
+
+                case Qnst::OnSet:{
+                    attrs["condition"] = "onSet";
+
+                    break;
+                }
+
+                case Qnst::OnResume:{
+                    attrs["condition"] = "onResume";
+
+                    break;
+                }
+
+                case Qnst::OnAbort:{
+                    attrs["condition"] = "onAbort";
+
+                    break;
+                }
+
+                case Qnst::OnKeySelection:{
+                    attrs["condition"] = "onKeySelection";
+                    attrs["key"] = "";
+
+                    break;
+                }
+            }
+
+            switch(s->getActionType()){
+                case Qnst::Start:{
+                    attrs["action"] = "start";
+
+                    break;
+                }
+
+                case Qnst::Stop:{
+                    attrs["action"] = "stop";
+
+                    break;
+                }
+
+                case Qnst::Pause:{
+                    attrs["action"] = "pause";
+
+                    break;
+                }
+
+                case Qnst::Set:{
+                    attrs["action"] = "set";
+                    attrs["value"] = "";
+
+                    break;
+                }
+
+                case Qnst::Resume:{
+                    attrs["action"] = "resume";
+
+                    break;
+                }
+
+                case Qnst::Abort:{
+                    attrs["action"] = "abort";
+
+                    break;
+                }
+
+                case Qnst::StartDelay:{
+                    attrs["action"] = "startDelay";
+                    attrs["delay"] = "";
+
+                    break;
+                }
+            }
+
+            emit linkAdded(sUID, psUID,attrs);
+
+            break;
+        }
+
+        case Qnst::Link:{
+            QnstEdge* s = (QnstEdge*) e;
+
+            QString psUID = "";
+
+
+
+            if (s->getnstParent() != NULL){
+                QnstEntity* pe = s->getnstParent();
+
+                psUID = pe->getUid();
+            }
+
+            QString sUID = s->getUid();
+
+            link_count++;
+
+            QString name = "link"+QString::number(link_count);
+
+            s->setName(name);
+
+            QMap<QString, QString> attrs;
+
+            attrs["id"] = name;
+
+            if (e->getnstType() == Qnst::Refer){
+                attrs["type"] = "refer";
+            }else{
+                attrs["type"] = "link";
+            }
 
             if (s->getnBegin()->getEntityType() == Qncg::Node){
                 QnstNode* n = (QnstNode*) s->getnBegin();

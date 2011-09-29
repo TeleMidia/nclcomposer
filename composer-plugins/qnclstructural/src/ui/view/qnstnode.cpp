@@ -445,6 +445,10 @@ void QnstNode::link(QGraphicsSceneMouseEvent* event)
 
                             enode->addAngle(getUid(),-angle);
 
+                        }else{
+                            angles[enode->getUid()].append(angle);
+
+                            enode->addAngle(getUid(),-angle);
                         }
 
                         edge->setAngle(angle);
@@ -550,7 +554,7 @@ void QnstNode::link(QGraphicsSceneMouseEvent* event)
 
                         qreal step = 45;
 
-                        qreal angle = 45;
+                        qreal angle = 0;
 
                         if (angles.contains(einterface->getUid())){
                             while (angles.value(einterface->getUid()).contains(angle)){
@@ -570,9 +574,7 @@ void QnstNode::link(QGraphicsSceneMouseEvent* event)
                             einterface->addAngle(getUid(),-angle);
 
                         }else{
-                            angle = 0;
-
-                            angles[einterface->getUid()].append(0);
+                            angles[einterface->getUid()].append(angle);
 
                             einterface->addAngle(getUid(),-angle);
                         }

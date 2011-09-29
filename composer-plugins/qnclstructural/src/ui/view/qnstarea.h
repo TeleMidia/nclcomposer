@@ -11,6 +11,7 @@
 #define QNSTAREA_H
 
 #include "qnstinterface.h"
+#include "qnstportreference.h"
 
 class QnstArea : public QnstInterface
 {
@@ -23,6 +24,8 @@ protected:
     virtual void draw(QPainter* painter);
 
     virtual void delineate(QPainterPath* painter) const;
+
+    virtual void link(QGraphicsSceneMouseEvent* event);
 };
 
 #endif // QNSTAREA_H

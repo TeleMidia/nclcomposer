@@ -176,6 +176,10 @@ void QncgEdge::adjust()
     setpEnd(QPointF(nend->getLeft()+nend->getWidth()/2,
                     nend->getTop()+nend->getHeight()/2));
 
+    if (nbegin->getEntityType() == Qncg::Interface){
+        setpBegin(parentItem()->mapFromItem(nbegin->parentItem(),pbegin));
+    }
+
     if (nend->getEntityType() == Qncg::Interface){
         setpEnd(parentItem()->mapFromItem(nend->parentItem(),pend));
     }

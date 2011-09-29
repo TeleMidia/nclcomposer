@@ -326,6 +326,8 @@ void QnstComposerPlugin::requestAreaAddition(const QString entityUID,
 
     QMap<QString, QString> standard;
 
+    standard["id"] = attributes["id"];
+
     areaStack.push(entityUID);
 
     emit addEntity("area",parentCUID,standard, false);
@@ -353,7 +355,7 @@ void QnstComposerPlugin::requestLinkAddition(const QString entityUID,
 
     QString parentCUID = m_view_to_comp.value(parentUID);
 
-    if (attributes["binterface"] != ""){
+    if (attributes["type"] == "refer"){
         QString pCUID = m_view_to_comp[attributes["binterface"]];
 
         QMap<QString, QString> pattrs;
@@ -403,7 +405,7 @@ void QnstComposerPlugin::requestLinkAddition(const QString entityUID,
 
         if (attributes["binterface"] != ""){
             b1attrs["interface"] = getProject()->getEntityById(
-                        m_view_to_comp[attributes["einterface"]])->getAttribute("id");
+                        m_view_to_comp[attributes["binterface"]])->getAttribute("id");
         }
 
         QMap<QString, QString> b2attrs;
