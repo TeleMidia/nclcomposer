@@ -248,9 +248,9 @@ void QnstInterface::setName(QString name)
 
 void QnstInterface::deleteEntity()
 {
-    scene()->removeItem(this);
-
     emit entityRemoved(this);
+
+    scene()->removeItem(this);
 }
 
 void QnstInterface::draw(QPainter* painter)

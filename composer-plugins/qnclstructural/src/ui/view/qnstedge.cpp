@@ -68,9 +68,9 @@ void QnstEdge::deleteEntity()
         ((QnstInterface*) en)->removeEndingEdge(this);
     }
 
-    scene()->removeItem(this);
-
     emit entityRemoved(this);
+
+    scene()->removeItem(this);
 }
 
 void QnstEdge::createActions()

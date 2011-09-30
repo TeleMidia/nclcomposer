@@ -697,7 +697,6 @@ void QnstView::requestEntityRemotion(QnstEntity* e)
 
             }else if (cncg->getEntityType() == Qncg::Interface){
                 requestEntityRemotion((QnstInterface*) cncg);
-
             }
         }
     }
