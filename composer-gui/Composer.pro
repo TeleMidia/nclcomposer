@@ -31,10 +31,10 @@ else:unix {
   desktop.files = $${TARGET}.desktop
 
   icon64.path = $$DATADIR/icons/gnome/64x64/apps
-  icon64.files = images/$${TARGET}.png
+  icon64.files = images/$${TARGET}.svg
 
   icon48.path = $$DATADIR/icons/gnome/48x48/apps
-  icon48.files = images/$${TARGET}.png
+  icon48.files = images/$${TARGET}.svg
 }
 else:win32 {
   INSTALLBASE = "C:/Composer"
