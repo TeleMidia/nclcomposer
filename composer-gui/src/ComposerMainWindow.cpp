@@ -489,7 +489,9 @@ void ComposerMainWindow::onOpenProjectTab(QString location)
 
 void ComposerMainWindow::createMenus()
 {
+#ifdef Q_WS_MAC
     ui->menubar->setNativeMenuBar(true);
+#endif
 
     ui->menu_Edit->addAction(editPreferencesAct);
 
