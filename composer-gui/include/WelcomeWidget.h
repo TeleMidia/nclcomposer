@@ -82,19 +82,6 @@ public:
     */
     virtual ~WelcomeWidget();
 
-    /*!
-      \brief Set the maximum items that will be showed by this WelcomeWidget
-
-      \param maxItems the number of maximum items;
-     */
-    void setMaximumItems(int maxItems);
-
-    /*!
-      \brief Returns the maximum number of items that will be showed by this
-        WelcomeWidget
-     */
-    int getMaximumItems();
-
 private slots:
     void on_commandLinkButton_29_clicked();
     void on_commandLinkButton_6_clicked();
@@ -106,17 +93,24 @@ private slots:
     void on_commandLinkButton_7_clicked();
     void on_commandLinkButton_8_clicked();
 
+    void changeCurrentItem(int item);
+
 private:
     int connectionId;
     QHttp http;
     QXmlStreamReader xmlReader;
-    int n_items;
-    int maxItems;
 
     Ui::WelcomeWidget *ui;
+    int n_items;
 
     void loadRSS();
     void parseXml();
+
+    //TODO: Create a class to handle individual RSS items
+    QVector <QString> description;
+    QVector <QString> imgSrc;
+    QVector <QString> downloadUrl;
+    bool isImageEnclosure;
 
 private slots:
     void readData(const QHttpResponseHeader &resp);

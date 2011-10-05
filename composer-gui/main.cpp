@@ -41,7 +41,7 @@ int main(int argc, char *argv[])
     QCoreApplication::setOrganizationName("Telemidia Lab");
     QCoreApplication::setOrganizationDomain("telemidia.pucrio.br");
     QCoreApplication::setApplicationName("composer");
-    QPixmap mPix(":/mainwindow/icon");
+    QPixmap mPix(":/mainwindow/nclomposer-full");
     QSplashScreen splash(mPix);
 
     splash.blockSignals(true);

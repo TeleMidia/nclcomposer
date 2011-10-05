@@ -29,10 +29,11 @@
         <file alias="perspective">images/GrandPerspectiveIcon128.png</file>
         <file alias="closeplugin">images/close_icon.png</file>
         <file alias="refreshplugin">images/refresh_icon.png</file>
-        <file alias="icon2">images/icon2.png</file>
         <file alias="ncllogo">images/ncl_logo.png</file>
         <file alias="bggray">images/bg-gray-one.jpg</file>
         <file alias="leftarrow">images/left_arrow.png</file>
         <file alias="rightarrow">images/right_arrow.png</file>
+        <file alias="nclomposer-full">images/nclcomposer-full.png</file>
+        <file alias="nclcomposer-full-reflection">images/nclcomposer-full-reflection.png</file>
     </qresource>
 </RCC>

@@ -13,15 +13,11 @@
 namespace composer {
 namespace gui {
 
-
 WelcomeWidget::WelcomeWidget(QWidget *parent): QWidget(parent),
     ui(new Ui::WelcomeWidget)
 {
     ui->setupUi(this);
     ui->tabWidget->installEventFilter(new ResizeFilter(ui->tabWidget));
-
-    this->maxItems = 5;
-    this->n_items = 0;
 
     //Connect the QHttp with
     connect(&http, SIGNAL(readyRead(const QHttpResponseHeader &)),
@@ -36,6 +32,9 @@ WelcomeWidget::WelcomeWidget(QWidget *parent): QWidget(parent),
     connect(ui->pushButton_NewProject, SIGNAL(pressed()),
             this, SIGNAL(userPressedNewProject()));
 
+    connect(ui->listWidget_NCLClub, SIGNAL(currentRowChanged(int)),
+            this, SLOT(changeCurrentItem(int)));
+
     loadRSS();
 }
 
@@ -47,6 +46,12 @@ WelcomeWidget::~WelcomeWidget()
 void WelcomeWidget::loadRSS()
 {
     xmlReader.clear();
+    n_items = 0;
+    isImageEnclosure = true;
+
+    description.clear();
+    imgSrc.clear();
+    downloadUrl.clear();
 
     QUrl url = QUrl::fromUserInput(NCL_CLUB_URL);
 
@@ -70,10 +75,8 @@ void WelcomeWidget::readData(const QHttpResponseHeader &resp)
 
 void WelcomeWidget::parseXml()
 {
-    QString currentTag;
-    QString linkString;
-    QString titleString;
-    QString dateString;
+    QString currentTag, currentLink, currentTitle, currentDate, currentDesc,
+            currentImg, currentDownloadUrl;
 
     qDebug() << "WelcomeWidget::parseXml()";
 
@@ -89,9 +92,25 @@ void WelcomeWidget::parseXml()
             {
                 readingItem = true;
 
-                linkString.clear();
-                titleString.clear();
-                dateString.clear();
+                currentLink.clear();
+                currentTitle.clear();
+                currentDate.clear();
+                currentDesc.clear();
+            }
+            else if(xmlReader.name() == "enclosure")
+            {
+                if(isImageEnclosure)
+                {
+                    currentImg = xmlReader.attributes().value("url").toString();
+                    imgSrc.push_back(currentImg);
+                    isImageEnclosure = false;
+                }
+                else
+                {
+                    isImageEnclosure = true;
+                    currentDownloadUrl = xmlReader.attributes().value("url").toString();
+                    downloadUrl.push_back(currentDownloadUrl);
+                }
             }
 
             currentTag = xmlReader.name().toString();
@@ -100,35 +119,33 @@ void WelcomeWidget::parseXml()
         {
             if (xmlReader.name() == "item")
             {
-                if(n_items < this->maxItems && readingItem)
-                {
+                qDebug() << "#########" << currentTitle
+                         << currentLink << currentDate <<  currentDesc << n_items;
 
-                    qDebug() << "#########" << titleString
-                             << linkString << dateString << n_items;
-                    //TODO: Update UI
-                    QCommandLinkButton *button =
-                            new QCommandLinkButton(ui->frame_ClubeNCL);
-                    button->setText(titleString);
+                ui->listWidget_NCLClub->addItem(currentTitle);
+                description.push_back(currentDesc);
 
-                    ui->frame_ClubeNCL->layout()->addWidget(button);
-                    n_items++;
-                    readingItem = false;
-                }
+                n_items++;
+                readingItem = false;
 
-                titleString.clear();
-                linkString.clear();
-                dateString.clear();
+                currentTitle.clear();
+                currentLink.clear();
+                currentDate.clear();
+                currentImg.clear();
+                currentDesc.clear();
             }
 
         }
         else if (xmlReader.isCharacters() && !xmlReader.isWhitespace())
         {
             if (currentTag == "title" && readingItem)
-                titleString += xmlReader.text().toString();
+                currentTitle += xmlReader.text().toString();
             else if (currentTag == "link")
-                linkString += xmlReader.text().toString();
+                currentLink += xmlReader.text().toString();
             else if (currentTag == "pubDate")
-                dateString += xmlReader.text().toString();
+                currentDate += xmlReader.text().toString();
+            else if(currentTag == "description")
+                currentDesc += xmlReader.text().toString();
         }
     }
 
@@ -142,20 +159,23 @@ void WelcomeWidget::parseXml()
     }
 }
 
-void WelcomeWidget::setMaximumItems(int maxItems)
+void WelcomeWidget::changeCurrentItem(int item)
 {
-    this->maxItems = maxItems;
-}
-
-int WelcomeWidget::getMaximumItems()
-{
-    return maxItems;
+    QString html = "<html><body><img src=\"";
+    html += imgSrc[item];
+    html += "\"/>\n";
+    html += description.at(item);
+    html += "<a href=\"";
+    html += downloadUrl[item];
+    html += "\">Download Application</a>";
+    html += "</body></html>";
+    ui->webView->setHtml(html);
 }
 
 void WelcomeWidget::finishRSSLoad(int connectionId, bool error)
 {
     qDebug() << "finishRSSLoad(" << connectionId << "," << error << ");";
-    if(!error)
+    if(error)
     {
         if(this->connectionId == connectionId)
         {
@@ -163,19 +183,8 @@ void WelcomeWidget::finishRSSLoad(int connectionId, bool error)
                     new QCommandLinkButton(this);
             button->setIconSize(QSize(0,0));
 
-            ui->frame_ClubeNCL->layout()->addWidget(button);
-
-            button->setText(tr("More..."));
+            ui->listWidget_NCLClub->addItem(tr("Connection to NCL Club failed."));
         }
-    }
-    else
-    {
-        QCommandLinkButton *button =
-                new QCommandLinkButton(this);
-        button->setIconSize(QSize(0,0));
-
-        ui->frame_ClubeNCL->layout()->addWidget(button);
-        button->setText(tr("Connection to NCL Club failed."));
     }
 }
 
