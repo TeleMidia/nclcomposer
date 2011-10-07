@@ -75,9 +75,6 @@ void WelcomeWidget::readData(const QHttpResponseHeader &resp)
 
 void WelcomeWidget::parseXml()
 {
-    QString currentTag, currentLink, currentTitle, currentDate, currentDesc,
-            currentImg, currentDownloadUrl;
-
     qDebug() << "WelcomeWidget::parseXml()";
 
     bool readingItem = false;

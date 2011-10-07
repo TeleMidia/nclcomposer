@@ -112,6 +112,9 @@ private:
     QVector <QString> downloadUrl;
     bool isImageEnclosure;
 
+    QString currentTag, currentLink, currentTitle, currentDate, currentDesc,
+            currentImg, currentDownloadUrl;
+
 private slots:
     void readData(const QHttpResponseHeader &resp);
     void finishRSSLoad(int, bool);
