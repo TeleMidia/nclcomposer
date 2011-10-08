@@ -58,13 +58,6 @@ class PropertiesViewFactory : public QObject,
          /*!
           \brief
 
-          \return QList<LanguageType>
-         */
-         QList<LanguageType> getSupportedLanguages();
-
-         /*!
-          \brief
-
           \return QString
          */
          QString id() const;
@@ -82,25 +75,6 @@ class PropertiesViewFactory : public QObject,
           \return QIcon
          */
          QIcon icon() const;
-
-         /*!
-          \brief
-
-          \return QWidget *
-         */
-         QWidget* getPreferencePageWidget();
-
-         /*!
-          \brief
-
-         */
-         void setDefaultValues();
-
-         /*!
-          \brief
-
-         */
-         void applyValues();
 
          /*!
           \brief Returns the version of Property View implementation.
@@ -133,7 +107,7 @@ class PropertiesViewFactory : public QObject,
 
            \return QString the license of Property View.
          */
-         QString license() {return "GPLv3";}
+         QString license() {return "LGPL";}
 
          /*!
            \brief Returns a description of the Property View

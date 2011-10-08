@@ -33,13 +33,6 @@ void QnstComposerPluginFactory::releasePluginInstance(IPlugin* plugin)
     delete(plugin);
 }
 
-QList<LanguageType> QnstComposerPluginFactory::getSupportedLanguages()
-{
-    QList<LanguageType> lTypes;
-    lTypes.append(NCL);
-    return lTypes;
-}
-
 QString QnstComposerPluginFactory::id() const
 {
     return "br.puc-rio.telemidia.qnst";
@@ -48,26 +41,6 @@ QString QnstComposerPluginFactory::id() const
 QString QnstComposerPluginFactory::name() const
 {
     return "Structural View";
-}
-
-QIcon QnstComposerPluginFactory::icon() const
-{
-    return QIcon();
-}
-
-QWidget* QnstComposerPluginFactory::getPreferencePageWidget()
-{
-    return NULL;
-}
-
-void QnstComposerPluginFactory::setDefaultValues()
-{
-
-}
-
-void QnstComposerPluginFactory::applyValues()
-{
-
 }
 
 Q_EXPORT_PLUGIN2(Qnst, QnstComposerPluginFactory)

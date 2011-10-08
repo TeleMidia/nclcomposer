@@ -38,13 +38,6 @@ void NCLTextualViewPluginFactory::releasePluginInstance(IPlugin *plugin)
     }
 }
 
-QList<LanguageType> NCLTextualViewPluginFactory::getSupportedLanguages()
-{
-    QList<LanguageType> lTypes;
-    lTypes.append(NCL);
-    return lTypes;
-}
-
 QString NCLTextualViewPluginFactory::id() const
 {
     return "br.puc-rio.telemidia.NCLTextualView";
@@ -67,12 +60,12 @@ QWidget* NCLTextualViewPluginFactory::getPreferencePageWidget()
 
 void NCLTextualViewPluginFactory::setDefaultValues()
 {
-
+    //TODO
 }
 
 void NCLTextualViewPluginFactory::applyValues()
 {
-
+    //TODO
 }
 
 Q_EXPORT_PLUGIN2(ncl_textual_plugin,NCLTextualViewPluginFactory)

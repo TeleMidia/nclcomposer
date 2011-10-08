@@ -40,8 +40,6 @@ class NCLTextualViewPluginFactory : public QObject,
 
          void releasePluginInstance(IPlugin *);
 
-         QList<LanguageType> getSupportedLanguages();
-
          QString id() const;
 
          QString name() const;
@@ -85,7 +83,7 @@ class NCLTextualViewPluginFactory : public QObject,
 
            \return QString the license of TextualView.
          */
-         QString license() {return "GPLv3";}
+         QString license() {return "LGPL";}
 
          /*!
            \brief Returns a description of the textual view plugin

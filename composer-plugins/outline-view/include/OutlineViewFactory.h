@@ -54,13 +54,6 @@ class OutlineViewFactory : public QObject, public IPluginFactory
          /*!
           \brief
 
-          \return QList<LanguageType>
-         */
-         QList<LanguageType> getSupportedLanguages();
-
-         /*!
-          \brief
-
           \return QString
          */
          QString id() const;
@@ -107,7 +100,7 @@ class OutlineViewFactory : public QObject, public IPluginFactory
 
            \return QString the license of Outline View.
          */
-         QString license() {return "GPLv3";}
+         QString license() {return "LGPL";}
 
          /*!
            \brief Returns a description of the Outline View
@@ -120,24 +113,6 @@ class OutlineViewFactory : public QObject, public IPluginFactory
          QString url() {return "http://composer.telemidia.puc-rio.br/outline";}
 
          QString category() {return "NCL";}
-
-         /*!
-          \brief
-
-          \return QWidget *
-         */
-         QWidget* getPreferencePageWidget();
-         /*!
-          \brief
-
-         */
-         void setDefaultValues();
-         /*!
-          \brief
-
-         */
-         void applyValues();
-
 };
 
 }}} //end namespace

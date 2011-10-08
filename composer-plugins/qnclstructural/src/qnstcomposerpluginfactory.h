@@ -34,19 +34,9 @@ public:
 
     void releasePluginInstance(IPlugin *);
 
-    QList<LanguageType> getSupportedLanguages();
-
     QString id() const;
 
     QString name() const;
-
-    QIcon icon() const;
-
-    QWidget* getPreferencePageWidget();
-
-    void setDefaultValues();
-
-    void applyValues();
 
     /*!
      \brief Returns the version of Layout View implementation.

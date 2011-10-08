@@ -39,13 +39,6 @@ void PropertiesViewFactory::releasePluginInstance(IPlugin *plugin)
 
 }
 
-QList<LanguageType> PropertiesViewFactory::getSupportedLanguages()
-{
-    QList<LanguageType> lTypes;
-    lTypes.append(NCL);
-    return lTypes;
-}
-
 QString PropertiesViewFactory::id() const
 {
     return "br.puc-rio.telemidia.PropertiesView";
@@ -59,21 +52,6 @@ QString PropertiesViewFactory::name() const
 QIcon PropertiesViewFactory::icon()  const
 {
     return QIcon(":/images/icon.png");
-}
-
-QWidget* PropertiesViewFactory::getPreferencePageWidget()
-{
-    return NULL;
-}
-
-void PropertiesViewFactory::setDefaultValues()
-{
-
-}
-
-void PropertiesViewFactory::applyValues()
-{
-
 }
 
 Q_EXPORT_PLUGIN2(PropertiesView, PropertiesViewFactory)
