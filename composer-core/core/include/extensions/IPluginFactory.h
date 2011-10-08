@@ -58,17 +58,22 @@ public:
      */
     virtual void releasePluginInstance(IPlugin *) = 0;
 
-    virtual QList<LanguageType> getSupportedLanguages() = 0;
-
     virtual QString id() const = 0;
     virtual QString name() const = 0;
-    virtual QIcon icon() const = 0;
 
-    virtual QWidget* getPreferencePageWidget() = 0;
-    virtual void setDefaultValues() = 0;
-    virtual void applyValues() = 0;
+    virtual QIcon icon() const { return QIcon(); };
+    virtual QWidget* getPreferencePageWidget() { return NULL; };
+    virtual void setDefaultValues() {};
+    virtual void applyValues() {};
 
-    /* Informações úteis que devem estar no plugin (em um XML?)*/
+    virtual QList<LanguageType> getSupportedLanguages()
+    {
+        QList<LanguageType> lTypes;
+        lTypes.append(NCL);
+        return lTypes;
+    };
+
+    /*Useful information about the plugin (go to XML?)*/
     virtual QString version() { return "Unknown"; }
     virtual QString compatVersion() {return "Unknown";}
     virtual QString vendor() {return "Unknown";}
