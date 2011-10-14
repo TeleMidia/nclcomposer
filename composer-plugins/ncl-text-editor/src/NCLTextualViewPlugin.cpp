@@ -96,7 +96,7 @@ QWidget* NCLTextualViewPlugin::getWidget()
 void NCLTextualViewPlugin::onEntityAdded(QString pluginID, Entity *entity)
 {
     //Return if this is my call to onEntityAdded
-    qDebug() << "isSyncing=" << isSyncing;
+    // qDebug() << "isSyncing=" << isSyncing;
     if(pluginID == getPluginInstanceID() && !isSyncing)
         return;
 
@@ -131,8 +131,8 @@ void NCLTextualViewPlugin::onEntityAdded(QString pluginID, Entity *entity)
     startEntityOffset[entity->getUniqueId()] = insertAtOffset;
     endEntityOffset[entity->getUniqueId()] = insertAtOffset + startEntitySize;
 
-    qDebug() << "*** Begin ***";
-    printEntitiesOffset();
+    // qDebug() << "*** Begin ***";
+    // printEntitiesOffset();
 
     /* Fix Indentation */
     int insertAtLine = nclTextEditor->SendScintilla(
@@ -146,8 +146,8 @@ void NCLTextualViewPlugin::onEntityAdded(QString pluginID, Entity *entity)
 
     if(insertAtLine) lineIndent += 8;
 
-    qDebug() << "Line: " << insertAtLine;
-    qDebug() << "Line ident: " << lineIndent;
+    // qDebug() << "Line: " << insertAtLine;
+    // qDebug() << "Line ident: " << lineIndent;
 
     nclTextEditor->SendScintilla( QsciScintilla::SCI_SETLINEINDENTATION,
                              insertAtLine,
@@ -158,11 +158,11 @@ void NCLTextualViewPlugin::onEntityAdded(QString pluginID, Entity *entity)
 
     int previousStarted = startEntityOffset[entity->getUniqueId()]-1;
     updateEntitiesOffset(previousStarted, lineIndent/8);
-    qDebug() << "*** First pass ***";
-    printEntitiesOffset();
+    // qDebug() << "*** First pass ***";
+    // printEntitiesOffset();
 
     previousStarted = endEntityOffset[entity->getUniqueId()];
-    qDebug() << "*** Second pass ***";
+    // qDebug() << "*** Second pass ***";
     updateEntitiesOffset(previousStarted+1, lineIndent/8);
 //    printEntitiesOffset();
 
@@ -452,8 +452,8 @@ void NCLTextualViewPlugin::syncFinished()
 void NCLTextualViewPlugin::updateEntitiesOffset( int startFrom,
                                                  int insertedChars)
 {
-    qDebug() << "NCLTextualViewPlugin::updateEntitiesOffset(" << startFrom
-             << ", " << insertedChars << ")";
+    /* qDebug() << "NCLTextualViewPlugin::updateEntitiesOffset(" << startFrom
+             << ", " << insertedChars << ")"; */
 
     if(!insertedChars) //nothing to do
         return;
