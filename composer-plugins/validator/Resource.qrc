@@ -1,0 +1,7 @@
+<RCC>
+    <qresource prefix="/config">
+        <file>EDTV_Definition.txt</file>
+        <file>en_messages.txt</file>
+        <file>langstruct.in</file>
+    </qresource>
+</RCC>

@@ -1,0 +1,112 @@
+#Prints
+#1 = ### Warnings ###
+#2 = ### Errors ###
+#3 = Line:
+#4 = Column
+#5 = Element: 
+
+#Parser Errors 
+1001 = Parser return problems: "%s".
+1002 = XML Parser Error: "%s"
+1003 = Error including file: "%s"
+
+#Parser Warnings
+1101 =  XML Parser Warning: "%s"
+
+#DTD Validator
+2001 = Unknown <%s> element. This program does not check its child elements.
+2002 = Invalid attribute '%s' on <%s> element.
+2003 = The attribute '%s' is mandatory but is not present on <%s> element.
+2004 = Invalid data type of attribute '%s' on <%s> element.
+2005 = The <%s> element is an invalid child of <%s> element.
+2006 = The <%s> element has more than one <%s> child element that is optional (0 or 1 occurence).
+2007 = The <%s> element must have at least one <%s> child element.
+2008 = The <%s> element must have exactly one <%s> child element.
+2009 = The <%s> element must have at least one child element of two possible names.
+2010 = The <%s> element must have one child element.
+2011 = The <%s> element must have one child element.
+2012 = The <assessmentStatement> element must have two children <attributeAssessment> elements or an <attributeAssessment> and a <valueAssessment> children elements.
+
+#Semantic Validator
+3001 = There are more than one element with identifier "%s".
+3002 = There are more than one element with alias "%s"
+
+#ImportBase
+3101 = <importBase> element must have a valid 'documentURI' attribute.
+3102 = <importBase> element must have the 'alias' attribute.
+ 
+#Bind
+3201 = The <bind> element has the 'interface' attribute, but not the 'component' attribute.
+3202 = Element pointed by <bind>'s 'interface' attribute must be an <area>, <property>, <port> or <switchPort> element.
+3203 = There are not a <descriptor> or <descriptorSwitch> element with '%s' identifier.
+3204 = The element with '%s' identifier is not a <media>, <context>, <body> or <switch> valid element in this context.
+
+#CausalConnector
+3301 = The 'role' attribute value must be unique in the <causalConnector> with id '%s'.
+
+#Context
+3401 = The 'refer' attribute (with '%s' value) points to an element that is not a <context>.
+
+#DefaultComponent
+3501 = There is not a <media>, <context> or <switch> element with '%s' identifier.
+3502 = The element pointed by the DefaultComponent (%s) isn't in a valid context.
+
+#DefaultDescriptor
+3601 = There is not a <descriptor> element with identifier '%s'.
+
+#Descriptor
+3701 = There is not a <region> element with identifier '%s'.
+
+#Head
+3801 = The <%s> element must appear before the <%s> element.
+
+#Link
+3901 = The role '%s' was not defined on <causalConnector> with id '%s'.
+3902 = There are %s elements with attribute 'role'='%s'. The minimum cardinality is %s.
+3903 = There are %s elements with attribute 'role'='%s'. The maximum cardinality is %s.
+3904 = The <bind> element with 'role' attribute value '%s' must appear at least %s time(s).
+3905 = The 'xconnector' attribute with value '%s' is not a valid identifier of a <causalConnector> element.
+3906 = The parameter with name '%s' must be defined in this link.
+3907 = The attribute 'role' with value '%s' is not defined on 'casualConnector' %s.
+
+#Mapping
+4001 = The <mapping> element has an attribute 'interface', but it has not the attribute 'component'.
+4002 = The element pointed by the attribute 'interface' on <mapping> element must be the identifier of a child element of the node with id='%s'.
+4003 = The element pointed by the attribute 'component' (%s) on <mapping> element must be a <context>, <media> or <switch> element.
+
+#Media
+4101 = Invalid extension for the MIME type "%s" defined on <media> element with id='%s'.
+4102 = The element pointed by the attribute 'refer' (%s) must be a <media> element.
+4103 = The attribute 'src' ("%s") is an invalid filename path.
+4104 = The attribute 'type' is mandatory when the attribute 'src' is not present on <media> element.
+4105 = The value of the attribute 'type' ("%s") is invalid.
+4106 = The element pointed by the attribute 'descriptor' (%s) must be a <descriptor> or <descriptorSwitch> element.
+4107 = The attribute 'refer' is not used when the attribute 'src' is present.
+4108 = The attribute 'type' is mandatory if the attribute 'src' is not present.
+4109 = The refer attribute (with value '%s') can't refer an element that has a refer attribute.
+
+#Port
+4201 = The element pointed by the attribute 'component' (%s) is not a <media>, <context> or <switch> element.
+4202 = The element pointed by the attribute 'component' must be in the same context as the <port> element (%s).
+4203 = The <port> element has an attribute 'interface' but it has not an attribute 'component'.
+4204 = The element pointed by the attribute 'interface' on <port> element (%s) must be an <area>, <property>, <port> or <switchPort> element.
+4205 = The element pointed by the attribute 'interface' on <port> element (%s) must be a child element of the element with id='%s'.
+
+#RegionBase
+4301 = The attribute 'device' must be of the format "systemScreen(i)" or "systemAudio(i)", where i is an integer.
+
+#SimpleAction e SimpleCondition - não está em uso
+4401 = The attribute 'qualifier' is mandatory when the attribute 'max' value is greater than 1 or 'unbounded'.
+
+#Switch
+4501 = The element pointed by the attribute 'refer' (%s) must be a <switch> element.
+4502 = The element (%s) does not have a defaultComponent or bindRule pointing to it.
+#BindParam and LinkParam
+#Warning
+4601 = There isn't the connectorParam with name '%s' in the connector '%s'.
+
+#BindRule
+4701 = The element pointed by the attribute 'constituent' (%s) on <bindRule> element must be a <context>, <media> or <switch> element.
+4702 = The element pointed by the attribute 'constituent' (%s) on <bindRule> element must be a <descriptor> element.
+4703 = The element pointed by the attribute 'constituent' (%s) on <bindRule> element must be in the same perspective that bindRule.
+4704 = The element pointed by the attribute 'rule' (%s) on <bindRule> element must be a <rule> element.
