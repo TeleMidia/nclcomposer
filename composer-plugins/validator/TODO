@@ -1,0 +1,5 @@
+I - Fazer o componente Validator armazenar uma lista dos elementos com erro
+    OBS: com isso é possível limpar a lista de elementos marcados para viabilizar a validação incremental
+
+II - O que fazer qunado o id de um elemento muda?
+    OBS: como ajustar a lista de referências?
