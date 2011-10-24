@@ -25,8 +25,10 @@
 #include <QDesktopServices>
 #include <QMessageBox>
 
+#ifdef WITH_CLUBNCL
 #include <quazip/quazip.h>
 #include <quazip/quazipfile.h>
+#endif
 
 #define NCL_CLUB_URL "http://club.ncl.org.br/rss.xml"
 
