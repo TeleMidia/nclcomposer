@@ -9,6 +9,7 @@
  */
 #include <WelcomeWidget.h>
 #include <ui_WelcomeWidget.h>
+#include <core/modules/ProjectControl.h>
 
 namespace composer {
 namespace gui {
@@ -32,10 +33,23 @@ WelcomeWidget::WelcomeWidget(QWidget *parent): QWidget(parent),
     connect(ui->pushButton_NewProject, SIGNAL(pressed()),
             this, SIGNAL(userPressedNewProject()));
 
+    ui->pushButton_DownloadApp->setEnabled(false);
+
+#ifdef WITH_CLUBENCL
+
+    connect(ui->pushButton_DownloadApp, SIGNAL(pressed()),
+            this, SLOT(downloadApplication()));
+
     connect(ui->listWidget_NCLClub, SIGNAL(currentRowChanged(int)),
             this, SLOT(changeCurrentItem(int)));
 
+    progressDialog = new QProgressDialog(this);
+    connect(progressDialog, SIGNAL(canceled()), this, SLOT(cancelDownload()));
+
+    isDownloading = false;
+
     loadRSS();
+#endif
 }
 
 WelcomeWidget::~WelcomeWidget()
@@ -43,6 +57,7 @@ WelcomeWidget::~WelcomeWidget()
     delete ui;
 }
 
+#ifdef WITH_CLUBENCL
 void WelcomeWidget::loadRSS()
 {
     xmlReader.clear();
@@ -75,7 +90,7 @@ void WelcomeWidget::readData(const QHttpResponseHeader &resp)
 
 void WelcomeWidget::parseXml()
 {
-    qDebug() << "WelcomeWidget::parseXml()";
+//    qDebug() << "WelcomeWidget::parseXml()";
 
     bool readingItem = false;
 
@@ -116,8 +131,8 @@ void WelcomeWidget::parseXml()
         {
             if (xmlReader.name() == "item")
             {
-                qDebug() << "#########" << currentTitle
-                         << currentLink << currentDate <<  currentDesc << n_items;
+//                qDebug() << "#########" << currentTitle
+//                         << currentLink << currentDate <<  currentDesc << n_items;
 
                 ui->listWidget_NCLClub->addItem(currentTitle);
                 description.push_back(currentDesc);
@@ -158,13 +173,15 @@ void WelcomeWidget::parseXml()
 
 void WelcomeWidget::changeCurrentItem(int item)
 {
+    currentNCLClubItem = item;
+
+    if(!isDownloading)
+        ui->pushButton_DownloadApp->setEnabled(true);
+
     QString html = "<html><body><img src=\"";
     html += imgSrc[item];
     html += "\"/>\n";
     html += description.at(item);
-    html += "<a href=\"";
-    html += downloadUrl[item];
-    html += "\">Download Application</a>";
     html += "</body></html>";
     ui->webView->setHtml(html);
 }
@@ -180,11 +197,288 @@ void WelcomeWidget::finishRSSLoad(int connectionId, bool error)
                     new QCommandLinkButton(this);
             button->setIconSize(QSize(0,0));
 
-            ui->listWidget_NCLClub->addItem(tr("Connection to NCL Club failed."));
+            ui->listWidget_NCLClub->addItem(tr("Connection to NCL Club has failed."));
         }
     }
 }
 
+void WelcomeWidget::downloadApplication()
+{
+    QString urlStr = downloadUrl[currentNCLClubItem];
+    url = QUrl(urlStr);
+
+    ui->pushButton_DownloadApp->setEnabled(false);
+    ui->pushButton_DownloadApp->setText(tr("Downloading application..."));
+    downloadFile();
+    progressDialog->show();
+}
+
+void WelcomeWidget::downloadFile()
+{
+    isDownloading = true;
+    QFileInfo fileInfo(url.path());
+    QString fileName = QDir::tempPath() + QDir::separator() + fileInfo.fileName();
+    if (fileName.isEmpty())
+        fileName = "index.html";
+
+    if (QFile::exists(fileName)) {
+        if (QMessageBox::question(this, tr("Application from NCL Club"),
+                                  tr("There already exists a file called %1 in "
+                                     "the current directory. Overwrite?").arg(fileName),
+                                  QMessageBox::Yes|QMessageBox::No, QMessageBox::No)
+                == QMessageBox::No)
+            return;
+        QFile::remove(fileName);
+    }
+
+    file = new QFile(fileName);
+    if (!file->open(QIODevice::WriteOnly)) {
+        QMessageBox::information(this, tr("HTTP"),
+                                 tr("Unable to save the file %1: %2.")
+                                 .arg(fileName).arg(file->errorString()));
+        delete file;
+        file = 0;
+        return;
+    }
+
+    progressDialog->setWindowTitle(tr("Application from NCL Club"));
+    progressDialog->setLabelText(tr("Downloading %1.").arg(fileName));
+    // downloadButton->setEnabled(false);
+
+    // schedule the request
+    httpRequestAborted = false;
+    startRequest(url);
+}
+
+void WelcomeWidget::startRequest(const QUrl &url)
+{
+    reply = qnam.get(QNetworkRequest(url));
+    connect(reply, SIGNAL(finished()),
+            this, SLOT(httpFinished()));
+    connect(reply, SIGNAL(readyRead()),
+            this, SLOT(httpReadyRead()));
+    connect(reply, SIGNAL(downloadProgress(qint64,qint64)),
+            this, SLOT(updateDataReadProgress(qint64,qint64)));
+}
+
+void WelcomeWidget::updateDataReadProgress(qint64 bytesRead, qint64 totalBytes)
+{
+    if (httpRequestAborted)
+        return;
+
+    progressDialog->setMaximum(totalBytes);
+    if(totalBytes > bytesRead)
+        progressDialog->setValue(bytesRead);
+}
+
+void WelcomeWidget::cancelDownload()
+{
+    // statusLabel->setText(tr("Download canceled."));
+    httpRequestAborted = true;
+    if(reply != NULL)
+        reply->abort();
+
+    isDownloading = false;
+    ui->pushButton_DownloadApp->setEnabled(true);
+}
+
+void WelcomeWidget::httpFinished()
+{
+    if (httpRequestAborted) {
+        if (file) {
+            file->close();
+            file->remove();
+            delete file;
+            file = 0;
+        }
+        reply->deleteLater();
+        progressDialog->hide();
+        return;
+    }
+    file->flush();
+    file->close();
+
+    isDownloading = false;
+    ui->pushButton_DownloadApp->setEnabled(true);
+    ui->pushButton_DownloadApp->setText(tr("Download and Import this application"));
+
+    QFileInfo fileInfo(*file);
+
+    QString filename = QFileDialog::getSaveFileName(
+            this,
+            tr("Choose the name of the new project to be created"),
+            QDir::currentPath(),
+            tr("Composer Projects (*.cpr)") );
+
+    if( !filename.isNull())
+    {
+        if(!filename.endsWith(".cpr"))
+            filename = filename + QString(".cpr");
+    }
+    else
+    {
+        qDebug() << "Filename is empty. A project will not be created!" << endl;
+        return;
+    }
+
+    QFileInfo fileInfo2(filename);
+    projectName = filename;
+
+    extract(fileInfo.absoluteFilePath(), fileInfo2.absoluteDir().absolutePath());
+//  file->remove(); //delete the file after unzipping it
+//  progressDialog->hide();
+    reply->deleteLater();
+    reply = 0;
+    delete file;
+    file = 0;
+}
+
+void WelcomeWidget::httpReadyRead()
+{
+    // this slot gets called every time the QNetworkReply has new data.
+    // We read all of its new data and write it into the file.
+    // That way we use less RAM than when reading it at the finished()
+    // signal of the QNetworkReply
+    if (file)
+        file->write(reply->readAll());
+}
+
+bool WelcomeWidget::doExtractCurrentFile( QString extDirPath,
+                                          QString singleFileName,
+                                          bool stop)
+{
+    if(stop) // this is the last call!
+    {
+        zip.close();
+        if (zip.getZipError() != UNZ_OK)
+        {
+            qWarning("testRead(): zip.close(): %d", zip.getZipError());
+            return false;
+        }
+
+        qDebug() << fileNameToImport << projectName;
+        ProjectControl::getInstance()->importFromDocument( fileNameToImport,
+                                                           projectName);
+        progressDialog->hide();
+
+        return true;
+    }
+
+    QuaZipFileInfo info;
+    QFile out;
+    QString name;
+    char c;
+
+    zip.setCurrentFile(zipFile.getActualFileName());
+    if (!zip.getCurrentFileInfo(&info))
+    {
+        qWarning("testRead(): getCurrentFileInfo(): %d\n", zip.getZipError());
+        return false;
+    }
+
+    if (!singleFileName.isEmpty())
+        if (!info.name.contains(singleFileName))
+            return true;
+
+    if (!zipFile.open(QIODevice::ReadOnly))
+    {
+        qWarning("testRead(): file.open(): %d", zipFile.getZipError());
+        return false;
+    }
+
+    name = QString("%1/%2").arg(extDirPath).arg(zipFile.getActualFileName());
+
+    //progressDialog->setLabelText(tr("Unzipping file: %1").arg(name));
+    //progressDialog->setMaximum(zip.getEntriesCount());
+    //progressDialog->setValue(this->currentFile++);
+
+    if(name.endsWith(QDir::separator()))
+    {
+        QDir dir(name);
+        dir.mkdir(name);
+        zipFile.close();
+        emit extractNextFile(extDirPath, singleFileName, !zip.goToNextFile());
+        return true;
+    }
+
+    if (zipFile.getZipError() != UNZ_OK)
+    {
+        qWarning("testRead(): file.getFileName(): %d", zipFile.getZipError());
+        return false;
+    }
+
+    out.setFileName(name);
+
+    // this will fail if "name" contains subdirectories, but we don't mind that
+    out.open(QIODevice::WriteOnly);
+
+    // Slow like hell (on GNU/Linux at least), but it is not my fault.
+    // Not ZIP/UNZIP package's fault either.
+    // The slowest thing here is out.putChar(c).
+    while (zipFile.getChar(&c)) out.putChar(c);
+
+    out.close();
+
+    //out.setFileName("out/" + name);
+    if(name.endsWith(".ncl")) //\fixme This is problematic. It can exists more than one .ncl file.
+    {
+        fileNameToImport = QFileInfo(out).absoluteFilePath();
+    }
+
+    if (zipFile.getZipError() != UNZ_OK)
+    {
+        qWarning("testRead(): file.getFileName(): %d", zipFile.getZipError());
+        return false;
+    }
+
+    if (!zipFile.atEnd())
+    {
+        qWarning("testRead(): read all but not EOF");
+        return false;
+    }
+
+    zipFile.close();
+
+    if (zipFile.getZipError() != UNZ_OK) {
+        qWarning("testRead(): file.close(): %d", zipFile.getZipError());
+        return false;
+    }
+
+    emit extractNextFile(extDirPath, singleFileName, !zip.goToNextFile());
+
+    return true;
+}
+
+bool WelcomeWidget::extract( const QString &filePath,
+                             const QString &extDirPath,
+                             const QString &singleFileName)
+{
+    zip.setZipName(filePath);
+    zipFile.setZip(&zip);
+
+    connect(this, SIGNAL(extractNextFile(QString,QString,bool)),
+            this, SLOT(doExtractCurrentFile(QString,QString,bool)),
+            Qt::QueuedConnection);
+
+    if (!zip.open(QuaZip::mdUnzip))
+    {
+        qWarning() << filePath;
+        qWarning("testRead(): zip.open(): %d", zip.getZipError());
+        return false;
+    }
+
+    zip.setFileNameCodec("IBM866");
+
+    qWarning("%d entries\n", zip.getEntriesCount());
+    qWarning("Global comment: %s\n", zip.getComment().toLocal8Bit().constData());
+
+    this->currentFile = 0;
+
+    emit extractNextFile(extDirPath, singleFileName, !zip.goToFirstFile());
+
+    return true;
+}
+#endif
 } }
 
 void composer::gui::WelcomeWidget::on_commandLinkButton_29_clicked()

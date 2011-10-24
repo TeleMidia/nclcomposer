@@ -609,6 +609,13 @@ font-family: Verdana;</string>
                       <property name="spacing">
                        <number>0</number>
                       </property>
+                      <item>
+                       <widget class="QLabel" name="label">
+                        <property name="text">
+                         <string>...</string>
+                        </property>
+                       </widget>
+                      </item>
                      </layout>
                     </widget>
                    </item>
@@ -976,6 +983,13 @@ font-family: Verdana;</string>
                    </item>
                    <item row="16" column="0">
                     <widget class="QListWidget" name="listWidget_NCLClub"/>
+                   </item>
+                   <item row="17" column="1">
+                    <widget class="QPushButton" name="pushButton_DownloadApp">
+                     <property name="text">
+                      <string>Download and Import this application</string>
+                     </property>
+                    </widget>
                    </item>
                   </layout>
                  </widget>

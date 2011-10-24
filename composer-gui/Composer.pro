@@ -1,11 +1,13 @@
 TARGET = composer
 TEMPLATE = app
 CONFIG += qt warn_on debug console
+
+#CONFIG += clubencl
 QT += xml network webkit
 
 DEFINES += NCLCOMPOSER_GUI_VERSION=\"\\\"0.1.0\\\"\"
 
-#DEFINES += USE_MDI
+# DEFINES += USE_MDI
 
 RC_FILE = images/nclcomposer.rc
 
@@ -67,6 +69,12 @@ else:win32 {
     LIBS += -L$$INSTALLBASE -lComposerCore1
     INCLUDEPATH += $$INSTALLBASE/include/composer \
                    $$INSTALLBASE/include/composer/core
+}
+
+clubencl {
+    DEFINES += WITH_CLUBENCL
+    #if clube ncl
+    LIBS += -lquazip
 }
 
 SOURCES += main.cpp \

@@ -15,11 +15,18 @@
 #include <QEvent>
 #include <QWidget>
 #include <QTableWidget>
+#include <QListWidgetItem>
+#include <QProgressDialog>
+#include <QFileDialog>
 
 #include <QXmlStreamReader>
 #include <QtNetwork>
 #include <QUrl>
 #include <QDesktopServices>
+#include <QMessageBox>
+
+#include <quazip/quazip.h>
+#include <quazip/quazipfile.h>
 
 #define NCL_CLUB_URL "http://club.ncl.org.br/rss.xml"
 
@@ -93,8 +100,6 @@ private slots:
     void on_commandLinkButton_7_clicked();
     void on_commandLinkButton_8_clicked();
 
-    void changeCurrentItem(int item);
-
 private:
     int connectionId;
     QHttp http;
@@ -115,9 +120,56 @@ private:
     QString currentTag, currentLink, currentTitle, currentDate, currentDesc,
             currentImg, currentDownloadUrl;
 
+#ifdef WITH_CLUBENCL
+/* \todo NCL Club download Application (this must be a separated class). */
+    QProgressDialog *progressDialog;
+    QUrl url;
+    QNetworkAccessManager qnam;
+    QNetworkReply *reply;
+    bool httpRequestAborted;
+    QFile *file;
+    int httpGetId;
+    int currentNCLClubItem;
+    int currentFile;
+    QuaZip zip;
+    QuaZipFile zipFile;
+    QString fileNameToImport;
+    QString projectName;
+    bool isDownloading;
+
+    void downloadFile();
+    void startRequest(const QUrl &url);
+    bool extract( const QString & filePath,
+                  const QString & extDirPath,
+                  const QString & singleFileName = QString(""));
+
 private slots:
+    void httpFinished();
+    void httpReadyRead();
+    void updateDataReadProgress(qint64 bytesRead, qint64 totalBytes);
+    void cancelDownload();
+
+/* END NCL Club download Application */
+
+private slots:
+    void changeCurrentItem(int item);
+
     void readData(const QHttpResponseHeader &resp);
     void finishRSSLoad(int, bool);
+    void downloadApplication();
+
+
+    bool doExtractCurrentFile( QString extDirPath,
+                               QString singleFileName,
+                               bool stop);
+
+signals:
+    void extractNextFile( QString extDirPath,
+                          QString singleFileName,
+                          bool stop);
+#endif
+
+private slots:
     void on_commandLinkButton_pressed();
     void on_commandLinkButton_2_pressed();
 
@@ -137,6 +189,8 @@ signals:
      *   button.
      */
     void userPressedSeeInstalledPlugins();
+
+
 };
 
 } }
