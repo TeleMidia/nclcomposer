@@ -12,8 +12,9 @@
 
 void tst_ModuleLanguage::initTestCase()
 {
-    QString baseDir = "resources";
-    profileDir  = baseDir+QDir::separator()+"profiles"+QDir::separator();
+    QString baseDir = "C:";
+    baseDir += QDir::separator()+QString("Composer");
+    profileDir  = baseDir+QDir::separator()+"lib"+QDir::separator()+"composer"+QDir::separator();
     lgControl = LanguageControl::getInstance();
 }
 
@@ -28,7 +29,11 @@ void tst_ModuleLanguage::languageLoadBenchmark_data()
     QTest::addColumn<QString>("fileName");
 
 #ifdef Q_WS_MAC
-    QTest::newRow("NCL Load") << profileDir+"libNCLLanguageProfile.dylib";
+    QTest::newRow("NCL") << profileDir+"libNCLLanguageProfile.dylib";
+#elif WIN32
+    QTest::newRow("NCL") << profileDir+"NCLLanguageProfile.dll";
+#else
+    QTest::newRow("NCL") << profileDir+"libNCLLanguageProfile.so";
 #endif
 }
 
@@ -52,6 +57,10 @@ void tst_ModuleLanguage::languageProfile_data()
 
 #ifdef Q_WS_MAC
     QTest::newRow("NCL") << profileDir+"libNCLLanguageProfile.dylib";
+#elif WIN32
+    QTest::newRow("NCL") << profileDir+"NCLLanguageProfile.dll";
+#else
+    QTest::newRow("NCL") << profileDir+"libNCLLanguageProfile.so";
 #endif
 }
 

@@ -9,7 +9,12 @@ macx {
             ComposerCore
     INCLUDEPATH += ../core/include
 }
-else:unix {
+else:win32 {
+    LIBS += -LC:\Composer\ \
+        -lComposerCore1
+    INCLUDEPATH += ../core/include
+}
+else {
     LIBS += -L../core \
         -lComposerCore
     INCLUDEPATH += ../core/include

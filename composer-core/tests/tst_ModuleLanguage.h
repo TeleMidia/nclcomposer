@@ -13,8 +13,8 @@
 #include <QObject>
 #include <QTest>
 
-#include <core/modules/LanguageControl.h>
-using namespace composer::core::module;
+#include <modules/LanguageControl.h>
+using namespace composer::core;
 
 class tst_ModuleLanguage : public QObject
 {

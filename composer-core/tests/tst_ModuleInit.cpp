@@ -11,12 +11,10 @@
 
 void tst_ModuleInit::initTestCase()
 {
-
-    QString baseDir = "resources";
-    profileDir  = baseDir+QDir::separator()+"profiles"+QDir::separator();
+    QString baseDir = "C:";
+    baseDir += QDir::separator()+QString("Composer");
+    profileDir  = baseDir+QDir::separator()+"lib"+QDir::separator()+"composer"+QDir::separator();
     pluginDir   = baseDir+QDir::separator()+"plugins"+QDir::separator();
-    documentDir = baseDir+QDir::separator()+"documents"+QDir::separator();
-
 }
 
 
@@ -38,26 +36,26 @@ void tst_ModuleInit::initBenchmark()
     if (instanciate)
     {
         QBENCHMARK {
-            docControl = DocumentControl::getInstance();
-            QVERIFY(docControl);
+            // docControl = DocumentControl::getInstance();
+            // QVERIFY(docControl);
             lgControl = LanguageControl::getInstance();
             QVERIFY(lgControl);
             pgControl = PluginControl::getInstance();
             QVERIFY(pgControl);
         }
-        DocumentControl::releaseInstance();
+        // DocumentControl::releaseInstance();
         LanguageControl::releaseInstance();
         PluginControl::releaseInstance();
     } else {
-        docControl = DocumentControl::getInstance();
-        QVERIFY(docControl);
+        // docControl = DocumentControl::getInstance();
+        // QVERIFY(docControl);
         lgControl = LanguageControl::getInstance();
         QVERIFY(lgControl);
         pgControl = PluginControl::getInstance();
         QVERIFY(pgControl);
 
         QBENCHMARK {
-            DocumentControl::releaseInstance();
+           // DocumentControl::releaseInstance();
             LanguageControl::releaseInstance();
             PluginControl::releaseInstance();
         }
@@ -69,14 +67,14 @@ void tst_ModuleInit::initTorture()
 
     for (int i = 0; i < interations ; i++)
     {
-        docControl = DocumentControl::getInstance();
-        QVERIFY(docControl);
+        // docControl = DocumentControl::getInstance();
+        // QVERIFY(docControl);
         lgControl = LanguageControl::getInstance();
         QVERIFY(lgControl);
         pgControl = PluginControl::getInstance();
         QVERIFY(pgControl);
 
-        DocumentControl::releaseInstance();
+        // DocumentControl::releaseInstance();
         LanguageControl::releaseInstance();
         PluginControl::releaseInstance();
     }
@@ -86,15 +84,15 @@ void tst_ModuleInit::initTorture()
 
 
 
-//void tst_ModuleInit::languageProfile()
-//{
-//    QList<ILanguageProfile*> list;
+void tst_ModuleInit::languageProfile()
+{
+    QList<ILanguageProfile*> list;
 
-//    /* Try to load the same profile */
-//    QVERIFY(lgControl->loadProfile
-//            (profileDir+"libNCLLanguageProfile.dylib"));
-//    list = lgControl->getLoadedProfiles();
-//    QCOMPARE(list.size(),1);
+    /* Try to load the same profile */
+    QVERIFY(lgControl->loadProfile
+            (profileDir+"NCLLanguageProfile.dll"));
+    list = lgControl->getLoadedProfiles();
+    QCOMPARE(list.size(),1);
 
 //    /* remove the loaded profile */
 //    QVERIFY(lgControl->removeProfile(NCL));
@@ -112,7 +110,7 @@ void tst_ModuleInit::initTorture()
 //    list = lgControl->getLoadedProfiles();
 //    QCOMPARE(list.size(),1);
 
-//}
+}
 
 //void tst_ModuleInit::pluginProfile()
 //{

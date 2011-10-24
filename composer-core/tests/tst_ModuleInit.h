@@ -14,11 +14,11 @@
 #include <QTest>
 
 
-#include <core/modules/DocumentControl.h>
-#include <core/modules/LanguageControl.h>
-#include <core/modules/PluginControl.h>
-#include <core/modules/TransactionControl.h>
-using namespace composer::core::module;
+// #include <modules/DocumentControl.h>
+#include <modules/LanguageControl.h>
+#include <modules/PluginControl.h>
+// #include <modules/TransactionControl.h>
+using namespace composer::core;
 
 class tst_ModuleInit : public QObject
 {
@@ -28,7 +28,7 @@ public:
     void setBenchmark(bool isBench) { isBenchmark = isBench; }
 private:
     LanguageControl *lgControl;
-    DocumentControl *docControl;
+    // DocumentControl *docControl;
     PluginControl *pgControl;
     int interations;
     bool isBenchmark;
@@ -41,7 +41,7 @@ private slots:
     void initBenchmark_data();
     void initTorture();
     void initBenchmark();
-//    void languageProfile();
+    void languageProfile();
 //    void pluginProfile();
 //    void launchDocument();
 //    void launchDocument_data();
