@@ -318,14 +318,15 @@ void NCLTreeWidget::updateItem(QTreeWidgetItem *item, QString tagname,
     }
 
     item->setIcon(0, icon);
-    /*
+
     if(name != "")
     {
-        tagname += "(" + name + ")";
-    }*/
+        tagname += " (" + name + ")";
+    }
     item->setText(0, tagname);
     //item->setText(2, id);
-    item->setText(1, strAttrList);
+    //item->setText(1, name);
+
     if(isExpandedAll)
         QTreeWidget::expandAll();
 
