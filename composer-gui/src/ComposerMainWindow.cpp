@@ -133,6 +133,14 @@ void ComposerMainWindow::readExtensions()
         PluginControl::getInstance()->loadPlugins(extensions_paths.at(i));
     }
     settings.endGroup();
+
+    /* Load the preferences page */
+    QList<IPluginFactory*> list = PluginControl::getInstance()->getLoadedPlugins();
+    IPluginFactory *currentFactory;
+    foreach(currentFactory, list)
+    {
+        preferences->addPreferencesPage(currentFactory);
+    }
 }
 
 QString ComposerMainWindow::promptChooseExtDirectory()
@@ -334,6 +342,7 @@ void ComposerMainWindow::addPluginWidget(IPluginFactory *fac, IPlugin *plugin,
 
     dock->setTitleBarWidget(titleBar);
     allDocks.insert(0, dock);
+
     QPushButton *refresh = new QPushButton(titleBar);
     refresh->setIcon(QIcon(":/mainwindow/refreshplugin"));
     addButtonToDockTitleBar(titleBar, refresh);
