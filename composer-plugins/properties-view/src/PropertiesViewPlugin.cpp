@@ -18,6 +18,8 @@
 #include "PropertiesViewPlugin.h"
 #include "core/modules/LanguageControl.h"
 
+#include <QDockWidget>
+
 namespace composer {
     namespace plugin {
         namespace property {
@@ -62,6 +64,13 @@ void PropertiesViewPlugin::onEntityRemoved(QString pluginID, QString entityID)
 {
     QString line = "PLUGIN (" + pluginID + ") removed Entity (" +
                    entityID + ")";
+
+    if(entityID == currentEntityId)
+    {
+      currentEntity = NULL;
+      window->setTagname("", "");
+      currentEntityId = "";
+    }
 }
 
 bool PropertiesViewPlugin::saveSubsession()
@@ -73,6 +82,11 @@ bool PropertiesViewPlugin::saveSubsession()
 void PropertiesViewPlugin::init()
 {
     //TODO: All
+    /*
+    QPushButton *refresh = new QPushButton(window);
+    refresh->setIcon(QIcon(":/mainwindow/refreshplugin"));
+    ((QDockWidget*)window->parent())->titleBarWidget()->layout()->addWidget(refresh);
+    */
 }
 
 void PropertiesViewPlugin::changeSelectedEntity(QString pluginID, void *param)
@@ -80,6 +94,7 @@ void PropertiesViewPlugin::changeSelectedEntity(QString pluginID, void *param)
     QString *id = (QString*) param;
     if(id != NULL && *id != "") {
         currentEntity = project->getEntityById(*id);
+        currentEntityId = *id;
     }
 
     if(currentEntity != NULL)
