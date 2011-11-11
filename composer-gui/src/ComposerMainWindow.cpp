@@ -250,6 +250,8 @@ void ComposerMainWindow::initGUI()
     pluginDetailsDialog = new PluginDetailsDialog(aboutPluginsDialog);
 
     connect(ui->action_RunNCL, SIGNAL(triggered()), this, SLOT(runNCL()));
+    connect(ui->action_Run_remotely, SIGNAL(triggered()),
+            this, SLOT(runNCLRemotely()));
 
     welcomeWidget = new WelcomeWidget(this);
     welcomeWidget->show();
@@ -537,8 +539,10 @@ void ComposerMainWindow::createAboutPlugins()
     aboutPluginsDialog = new QDialog(this);
     aboutPluginsDialog->setWindowTitle(tr("Installed Plugins"));
 
+#ifdef SHOW_PROFILES
     profilesExt = new QListWidget(aboutPluginsDialog);
     profilesExt->setAlternatingRowColors(true);
+#endif
 
     /* This should be a new Widget and change some code for there */
     pluginsExt = new QTreeWidget(aboutPluginsDialog);
@@ -574,7 +578,9 @@ void ComposerMainWindow::createAboutPlugins()
     gLayout->addWidget(new QLabel(tr("<b>Installed Language Profiles</b>"),
                                   aboutPluginsDialog));
 
+#ifdef SHOW_PROFILES
     gLayout->addWidget(profilesExt);
+#endif
     gLayout->addWidget(new QLabel(tr("<b>Installed Plug-ins</b>")));
     gLayout->addWidget(pluginsExt);
     gLayout->addWidget(bOk);
@@ -630,6 +636,7 @@ void ComposerMainWindow::aboutPlugins()
     pluginsExt->resizeColumnToContents(3);
 
     /* PROFILE LANGUAGE */
+#ifdef SHOW_PROFILES
     QList<ILanguageProfile*>::iterator itL;
     QList<ILanguageProfile*> lList = LanguageControl::getInstance()->
                                      getLoadedProfiles();
@@ -640,6 +647,7 @@ void ComposerMainWindow::aboutPlugins()
         ILanguageProfile *lg = *itL;
         profilesExt->addItem(new QListWidgetItem(lg->getProfileName()));
     }
+#endif
 
     detailsButton->setEnabled(false);
     aboutPluginsDialog->show();
@@ -949,6 +957,12 @@ void ComposerMainWindow::runNCL()
         qWarning() << "Error trying to running NCL. Could not create : "
                 << nclpath << " !";
     }
+}
+
+void ComposerMainWindow::runNCLRemotely()
+{
+  /*\todo Put the code to run a remote NCL */
+  qDebug() << "TODO";
 }
 
 void ComposerMainWindow::launchProjectWizard()

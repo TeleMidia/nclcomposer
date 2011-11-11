@@ -241,8 +241,9 @@ private slots:
     void saveDefaultPerspective(QString defaultPerspectiveName);
     void restorePerspective(QString layoutName);
 
-    /*! Run the current open Project. */
+    /*! Run the current open Project.*/
     void runNCL();
+    void runNCLRemotely();
 
     void launchProjectWizard();
 
