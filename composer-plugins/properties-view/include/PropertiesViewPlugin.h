@@ -43,7 +43,8 @@ class PropertiesViewPlugin : public IPlugin
 private:
     QListWidget *list; /*!< TODO */
     PropertyEditor *window; /*!< TODO */
-    Entity *currentEntity;
+    Entity *currentEntity; /*!<TODO: I dont need this, just the currentEntityId*/
+    QString currentEntityId;
 
 public:
     /*!

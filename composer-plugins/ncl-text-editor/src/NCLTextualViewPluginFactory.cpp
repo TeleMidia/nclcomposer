@@ -76,6 +76,6 @@ void NCLTextualViewPluginFactory::applyValues()
     //TODO
 }
 
-Q_EXPORT_PLUGIN2(ncl_textual_plugin,NCLTextualViewPluginFactory)
+Q_EXPORT_PLUGIN2(ncl_textual_plugin, NCLTextualViewPluginFactory)
 
 }}} // end namespace

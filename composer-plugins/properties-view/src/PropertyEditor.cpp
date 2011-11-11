@@ -18,6 +18,7 @@
 #include "PropertyEditor.h"
 
 #include <QMap>
+#include <QSpinBox>
 #include "NCLStructure.h"
 using namespace composer::language;
 
@@ -79,10 +80,11 @@ void PropertyEditor::setTagname(QString tagname, QString name)
             ui->tableWidget->setItem(ui->tableWidget->rowCount()-1, 0, item);
             propertyToLine.insert(currentAttr, ui->tableWidget->rowCount()-1);
 
-            QTableWidgetItem *itemValue = new QTableWidgetItem("");
             internalPropertyChange = true;
+
+            QTableWidgetItem *itemValue = new QTableWidgetItem("");
             ui->tableWidget->setItem( ui->tableWidget->rowCount()-1, 1,
-                                      itemValue);
+                                     itemValue);
 
             propertyToValue[currentAttr] = "";
         }
@@ -156,7 +158,6 @@ void PropertyEditor::filterProperties(const QString& text)
         {
             QTableWidgetItem *item = new QTableWidgetItem(key);
             QTableWidgetItem *itemValue = new QTableWidgetItem(propertyToValue[key]);
-
             ui->tableWidget->insertRow(ui->tableWidget->rowCount());
             internalPropertyChange = true;
             ui->tableWidget->setItem(ui->tableWidget->rowCount()-1, 0, item);

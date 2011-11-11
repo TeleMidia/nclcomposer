@@ -75,6 +75,7 @@ void NCLTextEditor::initParameters()
                              mylexer->defaultPaper(1), mylexer->defaultFont(1));
     mylexer->addTextPartition(10, startTagRegex, startTagStyle);
     */
+
     nclexer = new QsciLexerNCL ();
     setLexer(nclexer);
 
@@ -94,6 +95,7 @@ void NCLTextEditor::initParameters()
     error_indicator = indicatorDefine(RoundBoxIndicator, 1);
     setIndicatorForegroundColor(QColor("#FF0000"), error_indicator);
     filling_attribute_indicator = indicatorDefine (RoundBoxIndicator, 2);
+
     // qDebug() << error_marker << " " << error_indicator;
     // setWhitespaceVisibility(QsciScintilla::WsVisible);
 }

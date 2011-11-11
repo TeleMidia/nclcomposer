@@ -30,8 +30,8 @@ PropertiesViewPlugin::PropertiesViewPlugin()
     project = NULL;
     currentEntity = NULL;
 
-    connect(window, SIGNAL(propertyChanged(QString, QString)),
-            this, SLOT(updateCurrentEntityAttr(QString, QString)));
+    connect( window, SIGNAL(propertyChanged(QString, QString)),
+             this, SLOT(updateCurrentEntityAttr(QString, QString)) );
 }
 
 PropertiesViewPlugin::~PropertiesViewPlugin()

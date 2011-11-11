@@ -44,7 +44,6 @@ void PropertiesViewFactory::releasePluginInstance(IPlugin *plugin)
         delete debug;
         debug = NULL;
     }
-
 }
 
 QString PropertiesViewFactory::id() const

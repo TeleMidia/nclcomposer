@@ -255,7 +255,6 @@ void NCLTextualViewPlugin::onEntityChanged(QString pluginID, Entity *entity)
 
     nclTextEditor->SendScintilla( QsciScintilla::SCI_GOTOPOS,
                                             insertAtOffset);
-
     //TODO: fix indentation
 }
 
@@ -437,9 +436,9 @@ void NCLTextualViewPlugin::updateCoreModel()
             Qt::QueuedConnection);
 
     connect( &parser,
-             SIGNAL(addEntity(QString, QString, QMap<QString,QString>&,bool)),
+             SIGNAL(addEntity(QString, QString, QMap<QString,QString>&, bool)),
              this,
-             SIGNAL(addEntity(QString, QString, QMap<QString,QString>&,bool)),
+             SIGNAL(addEntity(QString, QString, QMap<QString,QString>&, bool)),
              Qt::DirectConnection);
 
     nclTextEditor->clear();
