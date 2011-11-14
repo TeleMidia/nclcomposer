@@ -32,12 +32,13 @@ NCLTreeWidget::NCLTreeWidget(QWidget *parent) : QTreeWidget(parent)
 
     QStringList labels;
     labels  << QObject::tr("Element") << QObject::tr("Attributes")
-            << QObject::tr("Element Id");
+            << QObject::tr("Element Id") << QObject::tr("Tagname");
     setHeaderLabels(labels);
 
     setHeaderHidden(true);
     setColumnHidden(1, true);
     setColumnHidden(2, true);
+    setColumnHidden(3, true);
 
     isExpandedAll = true;
 }
@@ -141,16 +142,17 @@ QTreeWidgetItem* NCLTreeWidget::addElement ( QTreeWidgetItem *father,
 
         father->insertChild(p, child);
     }
-    else {
+    else
+    {
         child = new QTreeWidgetItem(this);
 
-        if(pos != -1) {
+        if(pos != -1)
             this->insertTopLevelItem(pos, child);
-        }
     }
 
     updateItem(child, tagname, attrs);
     child->setText(2, id);
+    child->setText(3, tagname);
     // child->setText(2, QString::number(line_in_text));
     // child->setText(3, QString::number(column_in_text));
 
@@ -171,14 +173,16 @@ void NCLTreeWidget::userAddNewElement()
     if(selecteds.size()) {
         item = selecteds.at(0);
         parentId = item->text(2);
-        tagname = item->text(0);
+        tagname = item->text(3);
 
         map <QString, char> *
                 children = NCLStructure::getInstance()->getChildren(tagname);
 
-        if(children != NULL) {
+        if(children != NULL)
+        {
             map <QString, char>::iterator it;
-            for(it = children->begin(); it != children->end(); ++it){
+            for(it = children->begin(); it != children->end(); ++it)
+            {
                 strlist << it->first;
             }
         }
@@ -191,7 +195,8 @@ void NCLTreeWidget::userAddNewElement()
                                              0,
                                              true,
                                              &ok );
-    if(ok) {
+    if(ok)
+    {
         //Add new Element to OutlineWidget
         QMap<QString,QString> attr;
         emit elementAddedByUser (element, parentId, attr, false);
@@ -318,12 +323,15 @@ void NCLTreeWidget::updateItem(QTreeWidgetItem *item, QString tagname,
     }
 
     item->setIcon(0, icon);
+    item->setText(3, tagname);
 
     if(name != "")
     {
-        tagname += " (" + name + ")";
+        item->setText(0, tagname + " (" + name + ")");
     }
-    item->setText(0, tagname);
+    else
+      item->setText(0, tagname);
+
     //item->setText(2, id);
     //item->setText(1, name);
 
