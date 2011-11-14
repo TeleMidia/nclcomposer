@@ -31,6 +31,9 @@
 #Semantic Validator
 3001 = There are more than one element with identifier "%s".
 3002 = There are more than one element with alias "%s"
+3003 = The '%s' attribute of element <%s> point to an invalid element.
+3004 = The '%s' attribute of element <%s> can't point to <%s> element.
+3005 = The element pointed by the attribute '%s' must be in the same context as the <%s> element.
 
 #ImportBase
 3101 = <importBase> element must have a valid 'documentURI' attribute.

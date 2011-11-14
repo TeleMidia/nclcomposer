@@ -13,4 +13,5 @@ SUBDIRS = \
     properties-view \
     qncllayout/qnly.pro \
     qnclstoryboard/qnsb.pro \
-    qnclstructural/qnst.pro
+    qnclstructural/qnst.pro \
+    validator/validator.pro

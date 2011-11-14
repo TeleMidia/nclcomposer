@@ -22,11 +22,11 @@
 
 namespace nclValidator {
 
-map<string, ElementStructure> elements;
-map<string, AttributeStructure> attributes;
-vector<ReferenceStructure> references;
-map<string, string> datatypes;
-
+// Defining static variables
+map<string, ElementStructure> Langstruct::elements;
+map<string, AttributeStructure> Langstruct::attributes;
+map<string, ReferenceStructure> Langstruct::references;
+map<string, string> Langstruct::datatypes;
 
 void showMaps () {
 //
@@ -107,121 +107,115 @@ void Langstruct::init ()
 
     if (!ifs.open(QIODevice::ReadOnly | QIODevice::Text))
         return;
-
-    qDebug() << "Langstruct passou primeiro if";
     
     istringstream strTok;
     
     string line, 
            component;
 
-    qDebug() << "Begin readFile";
     while (!ifs.atEnd()) {
         line = QString (ifs.readLine()).toStdString();
-//        qDebug() << "Begin readFile";
+
         std::cout << line;
-//        qDebug() << QString (line[0]);
-//        ifs >> line;
-//        qDebug() << "End readFile";
+
         strTok.clear ();
         strTok.str(line);
-        
+
         getline(strTok, component, '(');
         
-        assert (component == "ELEMENT" || component == "ATTRIBUTE" 
+        assert (component == "ELEMENT" || component == "ATTRIBUTE"
                 || component == "REFERENCE" || component == "DATATYPE");
         
         if (component == "ELEMENT") {
             string name,
-                   parent,
-                   cardinality,
-                   scope;
+                    parent,
+                    cardinality,
+                    scope;
 
             getline(strTok, name, ',');
             getline(strTok, parent, ',');
             getline(strTok, cardinality, ',');
-            getline(strTok, scope, ')');            
+            getline(strTok, scope, ')');
 
             // Include an ElementStructure
-            if (!elements.count (name)) {
+            if (!Langstruct::elements.count (name)) {
                 ElementStructure el (name, scope == "true");
-                elements[name] = el;
+                Langstruct::elements[name] = el;
             }
-            
-            elements[name].addParent(parent, cardinality[0]);
+
+            Langstruct::elements[name].addParent(parent, cardinality[0]);
         }
-        
+
         else if (component == "ATTRIBUTE") {
             string element,
-                   name,
-                   required,
-                   datatype;
-            
+                    name,
+                    required,
+                    datatype;
+
             getline(strTok, element, ',');
             getline(strTok, name, ',');
             getline(strTok, required, ',');
             getline(strTok, datatype, ')');
 
             // Include an AttributeStructure. All Elements must be already included
-            assert (elements.count (element));
-            if (!attributes.count (name)) {
+            assert (Langstruct::elements.count (element));
+            if (!Langstruct::attributes.count (name)) {
                 AttributeStructure att (name);
-                attributes[name] = att;
+                Langstruct::attributes[name] = att;
             }
 
-            elements[element].addAtt(name, required == "true");
-            attributes[name].addElement(element, required == "true");
-            attributes[name].addRegex(datatype, element);
+            Langstruct::elements[element].addAtt(name, required == "true");
+            Langstruct::attributes[name].addElement(element, required == "true");
+            Langstruct::attributes[name].addRegex(datatype, element);
         }
-        
+
         else if (component == "REFERENCE") {
             string from,
-                   fromAtt,
-                   to,
-                   toAtt,
-                   perspective,
-                   perspectiveAtt;
+                    fromAtt,
+                    to,
+                    toAtt,
+                    perspective,
+                    perspectiveAtt;
 
             getline(strTok, from, ',');
             getline(strTok, fromAtt, ',');
             getline(strTok, to, ',');
             getline(strTok, toAtt, ',');
             getline(strTok, perspective, ')');
-            
+
             int persAttPos = perspective.find('.');
-            if (persAttPos != perspective.npos) {                
+            if (persAttPos != perspective.npos) {
                 perspectiveAtt = perspective.substr(persAttPos + 1, perspective.size() - 1);
                 perspective.erase (persAttPos, perspective.size () - 1);
-            }                
-            
-            assert (elements.count (from));
-            assert (attributes.count (fromAtt));
-            assert (elements.count (to));
-            assert (attributes.count (toAtt));
+            }
+
+            assert (Langstruct::elements.count (from));
+            assert (Langstruct::attributes.count (fromAtt));
+            assert (Langstruct::elements.count (to));
+            assert (Langstruct::attributes.count (toAtt));
 
             ReferenceStructure ref = ReferenceStructure (from, fromAtt,
-                    to, toAtt, perspective, perspectiveAtt);
+                                                         to, toAtt, perspective, perspectiveAtt);
 
-            references.push_back (ref);              
+            Langstruct::references.insert (pair<string, ReferenceStructure> (from + fromAtt + to, ref));
         }
-        
+
         // DATATYPE
         else {
             string datatype,
-                   regex;
+                    regex;
 
             getline(strTok, datatype, ',');
             getline(strTok, regex);
             regex.erase(regex.size () - 1);
-//
-//            RE2 re(regex);
-//            assert(re.ok());  // compiled; if not, see re.error();
+            //
+            //            RE2 re(regex);
+            //            assert(re.ok());  // compiled; if not, see re.error();
 
-            datatypes[datatype] = regex;
+            Langstruct::datatypes[datatype] = regex;
         }
     }
     
-    qDebug() << "End readFile";
     ifs.close();
     
     showMaps();
@@ -232,7 +226,7 @@ void Langstruct::init ()
  */
 bool Langstruct::existElement(const string el)
 {
-    return elements.count (el);
+    return Langstruct::elements.count (el);
 }
 
 
@@ -240,12 +234,12 @@ bool Langstruct::existElement(const string el)
  */
 bool Langstruct::existAttribute(const string element, const string att)
 {
-    if (!elements.count(element)) {
+ if (!Langstruct::elements.count(element)){
 //        throw string ("'" + element + "' element don't exist!");
         return false;
     }
     
-    return elements[element].getAtts ().count (att) != 0;
+    return Langstruct::elements[element].getAtts ().count (att) != 0;
 }
 
 
@@ -253,12 +247,12 @@ bool Langstruct::existAttribute(const string element, const string att)
  */
 bool Langstruct::existParent(const string child, const string parent)
 {
-    if (!elements.count(child)) {
+    if (!Langstruct::elements.count(child)) {
 //        throw string ("'" + child + "' element don't exist!"); // TODO: return false?
         return false;
     }
 
-    return elements[child].getParents().count (parent);
+    return Langstruct::elements[child].getParents().count (parent);
 }
 
 
@@ -268,12 +262,12 @@ set<string> Langstruct::getRequiredAttributes(const string element)
 {
     set<string> requiredAtts;
 
-    if (!elements.count(element)) {
+    if (!Langstruct::elements.count(element)) {
 //        throw string ("'" + element + "' element don't exist!");
         return requiredAtts;
     }
     
-    map<string, bool> atts = elements[element].getAtts ();
+    map<string, bool> atts = Langstruct::elements[element].getAtts ();
 
 
 
@@ -291,12 +285,12 @@ set<string> Langstruct::getRequiredAttributes(const string element)
 vector<string> Langstruct::getChildrenNames(const string element)
 {
     vector<string> childrenNames;
-    if (!elements.count(element)){
+    if (!Langstruct::elements.count(element)){
 //        throw string ("'" + element + "' element don't exist!"); //TODO: return empty vector?
         return childrenNames;
     }
     
-    for (map<string, ElementStructure>::iterator it = elements.begin (); it != elements.end (); ++it) 
+    for (map<string, ElementStructure>::iterator it = Langstruct::elements.begin (); it != Langstruct::elements.end (); ++it)
         if ((it -> second).getParents().count(element)) 
             childrenNames.push_back (it -> first);        
     
@@ -308,10 +302,10 @@ vector<string> Langstruct::getChildrenNames(const string element)
  */
 bool Langstruct::defineScope(const string element)
 {
-    if (!elements.count(element))
+    if (!Langstruct::elements.count(element))
         return false;//throw string ("'" + element + "' element don't exist!");
 
-    return elements[element].isScopeDefined();
+    return Langstruct::elements[element].isScopeDefined();
 }
 
 
@@ -319,12 +313,12 @@ bool Langstruct::defineScope(const string element)
  */
 map<string, bool> Langstruct::getAttributes(const string element)
 {
-    if (!elements.count(element)) {
+    if (!Langstruct::elements.count(element)) {
 //        throw string ("'" + element + "' element don't exist!");
         return *(new map<string,bool> ());
     }
     
-    return elements[element].getAtts();
+    return Langstruct::elements[element].getAtts();
 }
 
 
@@ -332,18 +326,27 @@ map<string, bool> Langstruct::getAttributes(const string element)
  */
 char Langstruct::getCardinality(const string &element, const string &parent)
 {
-    if (!elements.count(element)) {
+    if (!Langstruct::elements.count(element)) {
 //        throw string ("'" + element + "' element don't exist!");
         return '0';
     }
 
     //TODO: colocar retorno como '0' pra esse caso?
-    if (!elements[element].getParents().count (parent)) {
+    if (!Langstruct::elements[element].getParents().count (parent)) {
 //        throw string ("'" + element + "' is not child of '" + parent + "'!");
         return '0';
     }
     
-    return elements[element].getParents().at (parent);
+    return  Langstruct::elements[element].getParents().at (parent);
+}
+
+
+const ReferenceStructure *Langstruct::getReference (const string &elFrom, const string &elFromAtt, const string &elTo)
+{
+   if (!Langstruct::references.count (elFrom + elFromAtt + elTo))
+        return NULL;
+
+    return &Langstruct::references.at (elFrom + elFromAtt + elTo);
 }
 
 
@@ -353,17 +356,17 @@ char Langstruct::getCardinality(const string &element, const string &parent)
 bool Langstruct::isValidAttribute(const string attName, const string attValue, 
         const string element)
 {
-    if (!elements.count(element)) {
+     if (!Langstruct::elements.count(element)) {
 //        throw string ("'" + element + "' element don't exist!");
         return false;
     }
     
-    if (!elements[element].getAtts().count (attName)) {
+    if (!Langstruct::elements[element].getAtts().count (attName)) {
 //        throw string ("'" + attName + "' is not an attribute of '" + element + "'!");
         return false;
-    }
 
-    return RE2::FullMatch (attValue, datatypes[attributes[attName].getDatatype(element)]);
+    }
+    return RE2::FullMatch (attValue, Langstruct::datatypes[Langstruct::attributes[attName].getDatatype(element)]);
 }
 
 
@@ -372,14 +375,15 @@ bool Langstruct::isValidAttribute(const string attName, const string attValue,
 bool Langstruct::isElementReferenceDependent(const string element)
 {
     bool dependent = false;
-    
-    for (vector<ReferenceStructure>::iterator it = references.begin(); it != references.end (); ++it) {
-        if ((*it).getFrom() == element) {
-            dependent = true;        
+
+    map<string, ReferenceStructure>::iterator it = Langstruct::references.begin();
+    for (; it != Langstruct::references.end (); ++it) {
+        if ((it -> second).getFrom() == element) {
+            dependent = true;
             break;
         }
     }
-    
+
     return dependent;
 }
 
@@ -389,13 +393,15 @@ bool Langstruct::isElementReferenceDependent(const string element)
 bool Langstruct::isElementReferenced(const string element)
 {
     bool referenced = false;
-    
-    for (vector<ReferenceStructure>::iterator it = references.begin(); it != references.end (); ++it) 
-        if ((*it).getTo() == element) {
-            referenced = true;        
+
+    map<string, ReferenceStructure>::iterator it = Langstruct::references.begin();
+    for (; it != Langstruct::references.end (); ++it) {
+        if ((it -> second).getTo() == element) {
+            referenced = true;
             break;
-        }    
-    
+        }
+    }
+
     return referenced;
 }
 
@@ -404,26 +410,28 @@ bool Langstruct::isElementReferenced(const string element)
  */
 bool Langstruct::isAttributeReferenceDependent(const string &element, const string &att)
 {    
-    if (!elements.count(element)) {
+    if (!Langstruct::elements.count(element)) {
 //        throw string ("'" + element + "' element don't exist!");
         return false;
     }
 
-    if (!elements[element].getAtts().count (att)) {
+    if (!Langstruct::elements[element].getAtts().count (att)) {
 //        throw string ("'" + att + "' is not an attribute of '" + element + "'!");
         return false;
     }
     
     
     bool dependent = false;
-    
-    for (vector<ReferenceStructure>::iterator it = references.begin(); it != references.end (); ++it) 
-        if ((*it).getFrom() == element) 
-            if ((*it).getFromAtt() == att){
-                dependent = true;        
+
+    map<string, ReferenceStructure>::iterator it = Langstruct::references.begin();
+    for (; it != Langstruct::references.end (); ++it) {
+        if ((it -> second).getFrom() == element)
+            if ((it -> second).getFromAtt() == att){
+                dependent = true;
                 break;
             }
-    
+    }
+
     return dependent;
 }
 

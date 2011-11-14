@@ -24,7 +24,9 @@ SOURCES += \
     message/message.cpp \
     nclmodel/nclmodel.cpp \
     validation/Validator.cpp \
-    composerncladapter.cpp
+    composerncladapter.cpp \
+    validation/semanticvalidation.cpp \
+    validation/structuralvalidation.cpp
 
 HEADERS  += \
     ValidatorPlugin.h \
@@ -37,7 +39,9 @@ HEADERS  += \
     message/message.h \
     nclmodel/nclmodel.h \
     validation/Validator.h \
-    composerncladapter.h
+    composerncladapter.h \
+    validation/semanticvalidation.h \
+    validation/structuralvalidation.h
 
 OTHER_FILES +=
 

@@ -3,7 +3,7 @@
 
 #include <core/extensions/IPlugin.h>
 #include <QWidget>
-#include <QTextEdit>
+#include <QTreeWidget>
 #include <QHBoxLayout>
 #include "nclmodel/nclmodel.h"
 #include "validation/Validator.h"
@@ -22,14 +22,13 @@ class ValidatorPlugin : public IPlugin
 public:
     ValidatorPlugin();
 
-    QWidget* getWidget() { return edit; }
+    QWidget* getWidget() { return table; }
     bool saveSubsession() {return true;}
-    void init() {};
+    void init();
 
 public slots:
     void onEntityAdded(QString ID, Entity *);
     void onEntityChanged(QString ID, Entity *);
-    /*void onEntityAboutToRemove(Entity *);*/
     void onEntityRemoved(QString ID, QString entityID);
 
     void errorMessage(QString error);
@@ -37,8 +36,12 @@ public slots:
     void sendToAll() {};
 
 private:
+    void updateModel(Entity *);
+    void updateMessages (std::vector<pair<void *, string> >);
+
+
     QWidget* window;
-    QTextEdit* edit;
+    QTreeWidget *table;
     ComposerNCLAdapter adapter;
 
 };

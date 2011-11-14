@@ -44,7 +44,7 @@ public:
 
 
     /* Informações úteis que devem estar no plugin (em um XML?)*/
-    QString version() { return "0.8"; }
+    QString version() { return "0.1"; }
     QString compatVersion() {return "0.1";}
     QString vendor() {return "Laws Lab";}
     QString copyright() {return "LAWS/UFMA";}

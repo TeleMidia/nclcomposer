@@ -7,10 +7,69 @@ namespace composer{
 
 ValidatorPlugin::ValidatorPlugin()
 {
-    edit = new QTextEdit;
-    edit->setReadOnly(true);
+    table = new QTreeWidget;
+    table->setColumnCount(2);
+    QStringList headers;
+    headers << "Elemento" << "Mensagem";
+    table->setHeaderLabels(headers);
 
     nclValidator::Langstruct::init();
+}
+
+void ValidatorPlugin::init()
+{
+    qDebug() << "*********************Start Validator init()";
+
+    Project * project = getProject();
+
+    if (!project) return;
+
+    foreach (Entity *entity, project->getChildren())
+        updateModel(entity);
+
+    adapter.getModel().print();
+
+    adapter.validate();
+    adapter.getModel().clearMarkedElements();
+
+    qDebug() << "*********************Endt Validator init()";
+}
+
+void ValidatorPlugin::updateModel (Entity *entity)
+{
+    qDebug() << entity->getType();
+    adapter.addElement(entity);
+
+    foreach (Entity *child, entity->getChildren()){
+        updateModel(child);
+    }
+
+    std::vector <pair<void *, string> > msgs = adapter.validate();
+
+    updateMessages(msgs);
+}
+
+void ValidatorPlugin::updateMessages(std::vector<pair<void *, string> > msgs)
+{
+    table->clear();
+    for (int i = 0; i < msgs.size(); i++){
+        QStringList list;
+        QString first = "";
+
+        Entity *entity = (Entity *) msgs[i].first;
+        if (entity != NULL){
+            qDebug() << entity->getUniqueId();
+            first = entity->getType();
+
+            emit sendBroadcastMessage(msgs [i].second.c_str(), entity);
+        }
+
+        list << first << QString::fromStdString(msgs [i].second);
+        table->addTopLevelItem (new QTreeWidgetItem(list));
+    }
+
+//    edit->setText(txt);
+//    qDebug() << "saiu";
 }
 
 void ValidatorPlugin::onEntityAdded(QString ID, Entity *entity)
@@ -19,43 +78,36 @@ void ValidatorPlugin::onEntityAdded(QString ID, Entity *entity)
 
     qDebug () << "Validator: Entity Added: " << ID;
 
-    adapter.addElement(ID, entity);
+    adapter.addElement(entity);
 
-    edit->clear();
+    adapter.getModel().print();
 
-//    for (int i = 0; i < messages.size(); i++)
-//        edit->append(messages[i].);
 
-    std::vector <string> msgs = adapter.validate();
+    std::vector <pair<void *, string> > msgs = adapter.validate();
 
-    QString txt = "";
-    for (int i = 0; i < msgs.size(); i++){
-        txt += QString::fromStdString(msgs[i] + "\n");
-    }
-
-    qDebug () << txt;
-
-    edit->setText(txt);
+    updateMessages(msgs);
 }
 
-void ValidatorPlugin::onEntityChanged(QString ID, Entity *)
+void ValidatorPlugin::onEntityChanged(QString ID, Entity * entity)
 {
     qDebug () << "Validator: Entity Changed: " << ID;
+    adapter.changeElement(entity);
+    adapter.getModel().print();
+
+    std::vector <pair<void *, string> > msgs = adapter.validate();
+    updateMessages(msgs);
 }
 
 void ValidatorPlugin::onEntityRemoved(QString ID, QString entityID)
 {
-    qDebug () << "Validator: Removed Added: " << ID;
-    adapter.removeElement(ID, entityID);
+    qDebug () << "Validator: Entity Removed: " << ID;
+    adapter.removeElement(entityID);
 
-    std::vector <string> msgs = adapter.validate();
+    adapter.getModel().print();
 
-    edit->clear();
-    QString txt = "";
-    for (int i = 0; i < msgs.size(); i++)
-        txt += QString::fromStdString(msgs[i] + "\n");
+    std::vector <pair<void *, string> > msgs = adapter.validate();
+    updateMessages(msgs);
 
-    edit->setText(txt);
 }
 
 

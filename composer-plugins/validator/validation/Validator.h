@@ -13,12 +13,14 @@
 #include "../nclmodel/nclmodel.h"
 #include "../langstruct/langstruct.h"
 #include "../message/message.h"
+#include <QDebug>
+
 
 namespace nclValidator {
 
 class Validator {
 	public:
-                static vector<string> validate (Model &);
+                static vector<pair<void *, string> > validate (Model &);
 };
 
 }

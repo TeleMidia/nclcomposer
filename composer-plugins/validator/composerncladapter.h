@@ -18,13 +18,15 @@ class ComposerNCLAdapter
 public:
     ComposerNCLAdapter();
 
-    void addElement (QString, Entity *);
-    void removeElement (QString, QString);
-    void changeElement (QString, Entity *);
+    void addElement (Entity *);
+    void removeElement (QString);
+    void changeElement (Entity *);
+    inline nclValidator::Model &getModel () { return nclModel; }
 
-    std::vector <std::string> validate ();
+    std::vector <std::pair<void *, std::string> > validate ();
 
 private:
+    std::vector<nclValidator::Attribute> createVectorAttribute (Entity *);
     nclValidator::Model nclModel;
     QMap <QString, nclValidator::virtualId> idToVirtualId;
 };

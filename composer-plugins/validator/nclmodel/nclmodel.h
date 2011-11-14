@@ -9,6 +9,7 @@
 #define NCLMODEL_H_
 
 #include <vector>
+#include <QString>
 #include <map>
 #include <set>
 #include <list>
@@ -31,7 +32,7 @@ public:
 	void setParent (virtualId);
 	void addAttribute (Attribute&);
 	void addAttribute (string, string);
-	void addAttribute (vector <Attribute>&);
+        void setAttributes (vector <Attribute>&);
 
 	inline const vector<virtualId> children () const { return _children; }
 	inline const vector <virtualId> references () const { return _referencesToMyself; }
@@ -40,6 +41,10 @@ public:
 	inline const string & elementName () const { return _elementName; }
 	inline const string & scope () const { return _scope; }
 
+        inline void setData (void * data) { _data = data; }
+//        inline void setComposerModelId (QString id) { _composerModelId = id; }
+        inline void * data () const { return _data; }
+//        inline QString composerModelId () const { return _composerModelId; }
 
 	inline vector <Attribute> attributes () const { return _attributes; }
 
@@ -62,6 +67,8 @@ private:
 	string _scope;
 	vector <virtualId> _children;
 	vector <virtualId> _referencesToMyself;
+        void * _data;
+//        QString _composerModelId;
 };
 
 
@@ -74,15 +81,22 @@ public:
 	void addChild (virtualId parent, virtualId child);
 	virtualId addElement (string elementName, vector<Attribute> attributes);
 	vector <ModelElement *> elementByIdentifier (string identifier);
+        vector <ModelElement *> elementByPropertyName (string component, string propertyName);
+
+
+        inline void addElementWithErrorInLastPass (virtualId id){_elementsWithErrorInLastPass.insert(id);}
+        inline void clearElementsWithErrorInLastPass () { _elementsWithErrorInLastPass.clear(); }
+
+        set <virtualId> elementsWithErrorInLastPass ();
 
 	bool removeElement (virtualId &);
-	bool editElement (virtualId &, ModelElement &);
+        bool editElement (virtualId &, vector<Attribute> &);
 	ModelElement * element (const virtualId &);
 	set <virtualId> affectedElements ();
 
 
 	inline bool hasElement (virtualId &id) { return _modelElements.count (id) > 0; }
-	inline void clearMarkedElements () {_markedElements.clear(); }
+        inline void clearMarkedElements () {_markedElements.clear(); _affectedEllements.clear();}
 	inline const set <virtualId> & markedElements () { return _markedElements; }
 
 
@@ -92,11 +106,15 @@ private:
 	virtualId randomId ();
 	void setElementId (virtualId, ModelElement &);
 	void adjustScope (virtualId parent, virtualId child);
+        void adjustReference (string, ModelElement &, string &);
 	void addChild (ModelElement *parentElement, ModelElement *childElement);
 
 	int _seed;
 	map <virtualId, ModelElement> _modelElements;
-	set <virtualId> _markedElements;
+
+        set <virtualId> _markedElements;
+        set <virtualId> _affectedEllements;
+        set <virtualId> _elementsWithErrorInLastPass;
 
 	multimap <string, virtualId> _idToElement;
 	multimap <string, virtualId> _elementsNotYetInserted;
