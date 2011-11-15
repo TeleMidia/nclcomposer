@@ -27,6 +27,7 @@
 
 #include <QShortcut>
 #include <QKeySequence>
+#include <QDomElement>
 
 #include <core/extensions/IPlugin.h>
 using namespace composer::extension;
@@ -56,6 +57,7 @@ private:
     QShortcut *updateModelShortcut;
 
     bool isSyncing;
+    Entity *currentEntity;
 
 public:
     /*!
