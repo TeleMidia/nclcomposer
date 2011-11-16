@@ -130,6 +130,7 @@ protected:
 
     //OBS: This addChild updates the parent referency
     bool addChild(Entity *entity);
+
     /*!
      * \brief This call deletes the child and his children in a recursive way.
      *

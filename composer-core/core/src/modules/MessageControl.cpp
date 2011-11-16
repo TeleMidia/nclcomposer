@@ -76,12 +76,13 @@ void MessageControl::onEditEntity(Entity *entity,
 
     if(plugin) {
         QString pluginID = plugin->getPluginInstanceID();
+
         try
         {
             /*! \todo Call validator to check */
            entity->setAtrributes(atts);
 
-           //send message to all plugins interested in this message.
+           // send message to all plugins interested in this message.
            sendEntityChangedMessageToPlugins(pluginID, entity);
         }
         catch(exception e)

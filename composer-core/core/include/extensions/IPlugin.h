@@ -31,7 +31,7 @@ namespace composer {
  * provided by QT. The plugin developer needs to implement all the slots in
  * order to capture the changes in the NclDocument and emit the signals when
  * itself makes a change.
-
+ *
  * In short, the SLOT are messages from the CORE to PLUGIN, while the
  * signals bellow are messages from PLUGIN to CORE.
  */
@@ -139,8 +139,7 @@ public slots:
      * the previous modifications, so it has to be forceed to reload
      * the Document*.
      */
-    /* This function can be useful in future! */
-    // virtual void updateFromModel() /*= 0*/;
+    virtual void updateFromModel() /*= 0*/{};
 
     /*!
      * \brief This is called by the core when a new Entity is added.

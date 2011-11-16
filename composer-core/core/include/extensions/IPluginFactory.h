@@ -23,7 +23,7 @@ using namespace composer::extension;
 namespace composer {
     namespace extension {
 /*!
- * \brief A Factory interface for build plugin instances.
+ * \brief A Factory interface for building plugin instances.
  *
  * This extension point is used by the core to build instances of an specific
  * plugin. Each instance can be related to a different open project. Each plugin
@@ -74,7 +74,7 @@ public:
     };
 
     /*Useful information about the plugin (go to XML?)*/
-    virtual QString version() { return "Unknown"; }
+    virtual QString version() { return "Unknown";}
     virtual QString compatVersion() {return "Unknown";}
     virtual QString vendor() {return "Unknown";}
     virtual QString copyright() {return "Unknown";}
