@@ -36,7 +36,6 @@ namespace composer {
 
 /*!
  \brief Encapsulates the NCLTextEditor as a Composer plugin.
-
 */
 class NCLTextualViewPlugin : public IPlugin
 {
@@ -131,6 +130,11 @@ public slots:
      * \param param
      */
     void changeSelectedEntity(QString pluginID, void* param);
+
+    /*!
+     * \brief This slot calls the textual plugin to update its own model.
+     */
+    void updateFromModel();
 
 private slots:
     /*!

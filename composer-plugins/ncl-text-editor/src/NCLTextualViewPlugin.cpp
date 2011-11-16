@@ -103,6 +103,34 @@ QWidget* NCLTextualViewPlugin::getWidget()
   return window;
 }
 
+void NCLTextualViewPlugin::updateFromModel()
+{
+  nclTextEditor->clear();
+  if(project->getChildren().size())
+  {
+    Entity *entity = project;
+    QList <Entity *> entities;
+    entities.push_back(entity);
+    bool first = true;
+    while(entities.size())
+    {
+      entity = entities.front();
+      entities.pop_front();
+
+      if(!first) //ignore the project root
+        onEntityAdded("xxx", entity);
+      else
+        first = false;
+
+      QVector<Entity *> children = entity->getChildren();
+      for(int i = 0; i < children.size(); i++)
+      {
+        entities.push_back(children.at(i));
+      }
+    }
+  }
+}
+
 void NCLTextualViewPlugin::onEntityAdded(QString pluginID, Entity *entity)
 {
   //Return if this is my call to onEntityAdded
