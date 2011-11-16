@@ -21,6 +21,15 @@ General
 
 * Known bugs:
 
+Debug Console
+=============
+* Features:
+  - Add a window that describe in more details the message from core.
+
+* Optimizations and cleanup:
+
+* Known bugs:
+
 Textual View
 ============
 * Features:
@@ -28,7 +37,8 @@ Textual View
     . Sugestion of default attribute values. (OK!)
     . Sugestion of references.
   - Validation.
-  - Code format(Ctrl+Shift+F).
+  - Code format(Ctrl+Shift+F). (This is done when the text is synchronized 
+    with core).
   - Suggestion of code corrections.
   - Hyperlinks navigation.
   - Preview of media objects, connectors, etc.

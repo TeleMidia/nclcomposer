@@ -23,8 +23,6 @@
 #include "NCLTextEditor.h"
 #include "NCLTextEditorMainWindow.h"
 
-#include "extensions/NCLDocumentParser.h"
-
 #include <QShortcut>
 #include <QKeySequence>
 #include <QDomElement>
