@@ -27,6 +27,7 @@
 2011 = The <%s> element must have one child element.
 2012 = The <assessmentStatement> element must have two children <attributeAssessment> elements or an <attributeAssessment> and a <valueAssessment> children elements.
 2013 = The attibute '%s' is duplicated on <%s> element.
+2014 = The <%s> element must have exactly one <%s> or <%s> child element.
 
 #Semantic Validator
 3001 = There are more than one element with identifier "%s".

@@ -185,19 +185,20 @@ void referenceValidation (const ModelElement &el, const Attribute &att, Model &m
         //TODO: Test if 'pointed.att' can be pointed by 'el.att'? Rodrigo only save ids in his map..
 }
 
-void parseConnector (ModelElement& element, Model& model, set<string>& roles)
+void getConnectorSetRoles (ModelElement& element, Model& model, set<string>& roles)
 {
     vector <virtualId> children = element.children();
     for (int i = 0; i < children.size(); i ++){
         ModelElement *child = model.element(children[i]);
-        if (child)
+        if (child){
             if (child->elementName() == "simpleAction" || child->elementName() == "simpleCondition"
                     || child->elementName() == "attributeAssessment"){
                 Attribute role = child->attribute("role");
                 if (role.value() != "")
                     roles.insert(role.value());
             }
-        parseConnector(*child, model, roles);
+            getConnectorSetRoles(*child, model, roles);
+        }
     }
 }
 
@@ -206,7 +207,7 @@ void bindValidation (const ModelElement &bind, ModelElement &connector, Model &m
                      vector<pair<void *, string> > &msgs, Message &messageFactory)
 {
     set<string> roles;
-    parseConnector(connector, model, roles);
+    getConnectorSetRoles(connector, model, roles);
 
     vector <Attribute> atts = bind.attributes();
 
@@ -219,13 +220,36 @@ void bindValidation (const ModelElement &bind, ModelElement &connector, Model &m
                                                                                           attribute.value().c_str(),
                                                                                           connector.attribute("id").value().
                                                                                           c_str())));
+                model.addElementWithErrorInLastPass(bind.id());
             }
         }
     }
 
 }
 
-//void linkValidation (ModelElement& link, Model& model, )
+void testRepeatedRoles (const ModelElement &element, const ModelElement& connector, Model &model, set <string> &roles,
+                        vector<pair<void *, string> > &msgs, Message &messageFactory)
+{
+    vector<virtualId> children = element.children();
+    for (int i = 0; i < children.size(); i++){
+        ModelElement *child = model.element(children[i]);
+        if (child){
+            Attribute attr = child->attribute("role");
+            if (attr.value() != "")
+                if (roles.count(attr.value()) > 0){
+                    msgs.push_back (pair <void*, string> (connector.data(),
+                                                           messageFactory.createMessage(3301, 1, attr.value().c_str())));
+                    model.addElementWithErrorInLastPass(connector.id());
+
+                }
+                else
+                    roles.insert(attr.value());
+
+            testRepeatedRoles(*child, connector, model, roles, msgs, messageFactory);
+        }
+
+    }
+}
 
 
 /* Perform a semantic validation.*/
@@ -243,6 +267,10 @@ void SemanticValidation::semanticValidation(const ModelElement &el, Model &model
                 }
             }
         }
+    }
+    else if (el.elementName() == "causalConnector"){
+        set <string> roles;
+        testRepeatedRoles(el, el, model, roles, msgs, messageFactory);
     }
 
 

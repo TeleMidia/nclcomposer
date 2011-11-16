@@ -328,12 +328,14 @@ char Langstruct::getCardinality(const string &element, const string &parent)
 {
     if (!Langstruct::elements.count(element)) {
 //        throw string ("'" + element + "' element don't exist!");
+//        qDebug() << "primeiro";
         return '0';
     }
 
     //TODO: colocar retorno como '0' pra esse caso?
     if (!Langstruct::elements[element].getParents().count (parent)) {
 //        throw string ("'" + element + "' is not child of '" + parent + "'!");
+//        qDebug() << "segundo";
         return '0';
     }
     

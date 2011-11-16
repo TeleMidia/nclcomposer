@@ -187,6 +187,26 @@ bool Model::editElement(virtualId &id, vector <Attribute> &newAttributes){
         string _ = "";
         adjustReference(elementEdited->elementName(), *elementEdited, _);
 
+
+        if (elementEdited->elementName() == "simpleAction" || elementEdited->elementName() == "simpleCondition" ||
+            elementEdited->elementName() == "compoundAction" || elementEdited->elementName() == "compoundCondition" ||
+            elementEdited->elementName() == "assessmentStatement" || elementEdited->elementName() == "attributeAssessment" ||
+            elementEdited->elementName() == "connectorParam" || elementEdited->elementName() == "compoundStatement" ||
+            elementEdited->elementName() == "valueAssessment") {
+            ModelElement *parent = this->element(elementEdited->parent());
+            while (parent){
+                if (parent->elementName() == "causalConnector"){
+
+                    _markedElements.insert(parent->id());
+                    for (int i = 0; i < parent->references().size(); i++)
+                        _affectedEllements.insert(parent->references().at(i));
+
+                    break;
+                }
+                parent = this->element(parent->parent());
+            }
+        }
+
         return true;
     }
     return false;
@@ -197,8 +217,23 @@ bool Model::removeElement(virtualId &id){
         ModelElement * element = this->element(id);
         ModelElement * parent = this->element(element->parent());
 
-        if (parent)
+        if (parent){
             parent->removeChild(id);
+
+            if (element->elementName() == "simpleCondition" ||
+                    element->elementName() == "simpleAction" || element->elementName() == "attributeAssessment")
+            {
+                while (parent){
+                    if (parent->elementName() == "causalConnector"){
+                        qDebug() << "sim";
+                        _markedElements.insert(parent->id());
+                        break;
+                    }
+                    parent = this->element(parent->parent());
+                }
+            }
+
+        }
 
         for (int i = 0; i < element->references().size(); i++)
             _affectedEllements.insert(element->references().at(i));
@@ -520,6 +555,8 @@ void Model::addChild(ModelElement *parent, ModelElement *child){
             _markedElements.erase (element->id());
             element = this->element(element->parent());
         }
+        if (element && element->elementName() == "causalConnector")
+            _markedElements.insert(element->id());
 
     }
     if (parent->elementName() == "link")

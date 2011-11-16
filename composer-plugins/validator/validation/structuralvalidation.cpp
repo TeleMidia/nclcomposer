@@ -190,23 +190,46 @@ void testCardinality (const ModelElement &el, Model &model, map<string, int> &ca
     }
 
     // Test a cardinality children
-    if (hasAChild && countAOperator == 0){
-        fprintf (stderr, "'%s' MUST have one of these child: %s\n",
-                 el.elementName().c_str (), aChildren.c_str ());
+    if (hasAChild){
+        if (countAOperator == 0){
+            fprintf (stderr, "'%s' MUST have one of these child: %s\n",
+                     el.elementName().c_str (), aChildren.c_str ());
 
-        msgs.push_back(pair<void *, string> (el.data(),
-                                            messageFactory.createMessage(2007, 2, el.elementName().c_str(), aChildren.c_str())));
-        model.addElementWithErrorInLastPass(el.id());
+            msgs.push_back(pair<void *, string> (el.data(),
+                                                 messageFactory.createMessage(2007, 2,
+                                                                              el.elementName().c_str(), aChildren.c_str())));
+            model.addElementWithErrorInLastPass(el.id());
+        }
+        else if (countAOperator > 1){
+            fprintf (stderr, "'%s' HAS to have just one of these child: %s\n",
+                     el.elementName().c_str (), aChildren.c_str ());
+
+            msgs.push_back(pair<void *, string> (el.data(),
+                                                 messageFactory.createMessage(2014, 2, el.elementName().c_str(),
+                                                                              aChildren.c_str())));
+            model.addElementWithErrorInLastPass(el.id());
+        }
     }
 
     // Test b cardinality children
-    if (hasBChild && countBOperator == 0){
-        fprintf (stderr, "'%s' MUST have one of these child: %s\n",
-                 el.elementName().c_str (), bChildren.c_str ());
+    if (hasBChild){
+        if (countBOperator == 0){
+            fprintf (stderr, "'%s' MUST have one of these child: %s\n",
+                     el.elementName().c_str (), bChildren.c_str ());
 
-        msgs.push_back(pair<void *, string> (el.data(),
-                                            messageFactory.createMessage(2007, 2, el.elementName().c_str(), bChildren.c_str())));
-        model.addElementWithErrorInLastPass(el.id());
+            msgs.push_back(pair<void *, string> (el.data(),
+                                                 messageFactory.createMessage(2007, 2, el.elementName().c_str(), bChildren.c_str())));
+            model.addElementWithErrorInLastPass(el.id());
+        }
+        else if (countBOperator > 1){
+            fprintf (stderr, "'%s' HAS to have just one of these child: %s\n",
+                     el.elementName().c_str (), bChildren.c_str ());
+
+            msgs.push_back(pair<void *, string> (el.data(),
+                                                 messageFactory.createMessage(2014, 2, el.elementName().c_str(),
+                                                                              bChildren.c_str())));
+            model.addElementWithErrorInLastPass(el.id());
+        }
     }
 
     return;
@@ -267,6 +290,26 @@ void StructuralValidation::structuralValidation(const ModelElement &el, Model &m
     }
 
     testCardinality (el, model, cardinalityMap, msgs, messageFactory);
+
+    ModelElement *parentElement = model.element(el.parent());
+    if (parentElement){
+        if (model.markedElements().count(parentElement->id()) > 0)
+            return;
+
+        cardinalityMap.clear();
+        children = parentElement->children();
+        childIt = children.begin ();
+        for (ModelElement *child; childIt != children.end(); ++childIt) {
+            child = model.element(*childIt);
+            assert (child);
+
+            ++cardinalityMap[child -> elementName()];
+
+        }
+
+        testCardinality(*parentElement, model, cardinalityMap, msgs, messageFactory);
+    }
+
 
     return;
 }
