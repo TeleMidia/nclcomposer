@@ -348,6 +348,8 @@ void ComposerMainWindow::addPluginWidget(IPluginFactory *fac, IPlugin *plugin,
     QPushButton *refresh = new QPushButton(titleBar);
     refresh->setIcon(QIcon(":/mainwindow/refreshplugin"));
     addButtonToDockTitleBar(titleBar, refresh);
+    connect(refresh, SIGNAL(pressed()),
+            plugin, SLOT(updateFromModel()));
 
     QPushButton *hide = new QPushButton(titleBar);
     connect(hide, SIGNAL(pressed()), dock, SLOT(close()));
