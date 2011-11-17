@@ -519,3 +519,24 @@ QString NCLTextEditor::textWithoutUserInteraction()
 {
     return textWithoutUserInter;
 }
+
+bool NCLTextEditor::parseDocument()
+{
+  doc.clear();
+  if(!doc.setContent(this->text()))
+  {
+    //could not parse the document
+    return false;
+  }
+  return true;
+}
+
+QDomElement NCLTextEditor::elementById(QString id)
+{
+  return doc.elementById(id);
+}
+
+QDomNodeList NCLTextEditor::elementsByTagname(QString tagname)
+{
+  return doc.elementsByTagName(tagname);
+}

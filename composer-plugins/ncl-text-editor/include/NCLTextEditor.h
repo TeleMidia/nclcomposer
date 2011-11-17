@@ -22,10 +22,10 @@
 #include <QShortcut>
 #include <QWheelEvent>
 #include <QMessageBox>
+#include <QDomDocument>
 #include <Qsci/qsciscintilla.h>
 
 #include "MyLexer.h"
-
 
 #include "QsciLexerNCL.h"
 #include "QsciNCLAPIs.h"
@@ -78,6 +78,10 @@ public:
     void keepFocused();
     QString textWithoutUserInteraction();
 
+    bool parseDocument();
+    QDomElement elementById(QString id);
+    QDomNodeList elementsByTagname(QString tagname);
+
 private:
     enum INTERACTION_STATE {
         DEFAULT_STATE = 1,
@@ -88,6 +92,7 @@ private:
 
     QsciLexerNCL *nclexer;
     QsciNCLAPIs *apis;
+    QDomDocument doc;
 
     int error_indicator;
     int error_marker;

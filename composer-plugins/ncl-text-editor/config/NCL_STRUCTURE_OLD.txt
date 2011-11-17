@@ -1,0 +1,337 @@
+// validador NCL
+// ELEMENT (NAME, PARENT, CARDINALITY, DEFINE_SCOPE)
+// ATTRIBUTE (ELEMENT_NAME, NAME, REQUIRED, DATATYPE)
+// reference(ELEMENT_NAME, ATTR_NAME, REF_ELEMENT_NAME, REF_ATTR_NAME, WHICH_PERSPECTIVE)
+
+// tabela 6 (steve)
+element(ncl,NULL,1,false) // ok
+    attribute(ncl, id, false, ID) // ok
+    attribute(ncl, title, false, string) // ok
+    attribute(ncl, xmlns, false, XMLNS) // ok
+
+element(head, ncl, ?, false) // ok
+element(body,ncl,?,true) // ok
+    attribute(body,id,false,ID) // ok
+
+// Tabela 7 (Maurício)
+element (regionBase,  head, *, false) // ok
+    attribute (regionBase, id , false , ID) // okR
+    attribute (regionBase, device, false, device) //okR
+    attribute (regionBase, region, false, ID) //okR
+        reference(regionBase, region, region, id, ANY_PERSPECTIVE) //okR
+
+element (region, regionBase, *, false) // Working...//okR
+element (region, region, *, false)//okR
+    attribute (region, id, true, ID )//okR
+    attribute (region, title, false, string )//okR
+    attribute (region, left, false, percentualORpixel )//okR
+    attribute (region, right, false, percentualORpixel)//okR
+    attribute (region, top, false, percentualORpixel)//okR
+    attribute (region, bottom, false, percentualORpixel)//okR
+    attribute (region, height, false, percentualORpixel)//okR
+    attribute (region, width, false, percentualORpixel)//okR
+    attribute (region, zIndex  false, int )//okR
+
+// tabela 8(rafael)
+element (media, body, *, false)//okR
+element (media, context, *, false)//okR
+element (media, switch, *, false)//okR
+    attribute(media, id, true, ID)//okR
+    attribute(media, src, false, file)//okR
+    attribute(media, refer, false,ID)//okR
+        reference (media, refer, media, id, ANY_PERSPECTIVE)//checar
+    attribute(media, instance, false, instance)//okR*
+    attribute(media, type, false, type)//okR
+    attribute(media, descriptor, false, ID) //okR
+        reference (media, descriptor, descriptor, id, ANY_PERSPECTIVE)//checar
+
+// tabela 9(rafael)
+element (context, body, *, true)//okR
+element (context, context, *, true)//okR
+element (context, switch, *, true)//okR
+    attribute(context, id, true, ID)//okR
+    attribute(context, refer, false, ID )//okR
+
+reference (context, refer, context, id, ANY_PERSPECTIVE)//checar
+
+// tabela 10 (rafael)
+element(area, media, *, false)//okR
+    attribute(area, id, true, ID)//okR
+    attribute(area, coords, false, coord)//okR
+    attribute(area, begin, false, explicitdur)//okR
+    attribute(area, end, false, explicitdur)//okR
+    attribute(area, text, false, string)//okR
+    attribute(area, position, false, int)//okR
+    attribute(area, first, false, timeframe)//okR
+    attribute(area, last, false, timeframe)//okR
+    attribute(area, label, false, string)//okR
+
+// tabela 11 (rafael)
+element(port, context,*, false) // ok
+element(port, body,*, false) // ok
+    attribute(port, id ,true, ID) //okR
+    attribute(port, component ,true, ID)//okR
+        reference (port, component, media, id, SAME_PERSPECTIVE)
+        reference (port, componet, context, id, SAME_PERSPECTIVE)
+        reference (port, componet, switch, id, SAME_PERSPECTIVE)
+    attribute(port, interface ,false, ID)//okR
+        reference (port, interface, area, id, $THIS.component)
+
+// Tabela 12 (Maurício)
+element (property,body , * , false) // ok
+element (property,media, * , false) // ok
+element (property,context , * , false) // ok
+    attribute (property, name, true, propertyname)
+    attribute (property, value, false, string)//okR
+
+// Tabela 13 (Steve)
+element(switchPort,switch,*,false) // ok
+ attribute(switch,id,true,ID) // ok
+
+element(mapping,switchPort,+,false) // ok
+    attribute(mapping, component, true, ID) // ok
+         reference("mapping", "component","media","id",SAME)
+         reference("mapping", "component","context","id",$THIS.component)
+         reference("mapping", "component","switch","id",$THIS.component)
+         reference("mapping", "inteface","component","id",$THIS.component)
+    attribute(mapping, interface, false, ID) // ok
+         reference("mapping", "interface","switch","id",THIS.component)
+
+// Tabela 14 (Maurício)
+element (descriptor,descriptorBase, + , false) // ok
+element (descriptor,descriptorSwitch, * , false) // ok
+    attribute (descriptor,id ,true , ID ) // ok
+    attribute (descriptor,player , false, string) // ok
+    attribute (descriptor,explicitDur ,false ,  explicitdur) // ok
+    attribute (descriptor,region ,false , id ) // ok
+        reference(descriptor, region, region, id, ANY_PERSPECTIVE)
+    attribute (descriptor,freeze, false,  boolean)  // ok
+    attribute (descriptor,moveLeft ,false , int) // ok
+    attribute (descriptor,moveRight ,false ,  int) // ok
+    attribute (descriptor,moveUp ,false ,  int) // ok
+    attribute (descriptor,moveDown ,false ,  int) // ok
+    attribute (descriptor,focusIndex ,false ,  int) // ok
+    attribute (descriptor,focusBorderColor ,false ,  color) // ok
+    attribute (descriptor,focusBorderWidth ,false ,  int) // ok
+    attribute (descriptor,focusBorderTransparency ,false ,  percentORdecimal) // ok
+    attribute (descriptor,focusSrc ,false ,  file) // ok
+    attribute (descriptor,focusSelSrc ,false ,  file) // ok
+    attribute (descriptor,selBorderColor ,false , color) // ok
+    attribute (descriptor,transIn ,false , FALTA) // ok
+    attribute (descriptor,transOut ,false , FALTA) // ok
+
+element (descriptorParam, descriptor, * , false)//okR
+    attribute (descriptorParam, name,true, propertyname ) // ok
+    attribute (descriptorParam,value ,true ,  string) // ok
+
+element (descriptorBase, head, ? , false)//okR
+    attribute (descriptorBase,id ,false , ID )//okR
+
+// tabela 15 (rafael)
+element(bind, link,+,false) // ok
+    attribute(bind,role,true,string) // ok
+    attribute(bind,component,true, ID) // ok
+        reference (bind, component, media, id, SAME_PERSPECTIVE)
+
+reference (bind, component, context, id, SAME_PERSPECTIVE)
+    attribute(bind,interface,false, ID) // ok
+        reference (bind, interface, property, id, $THIS.component)
+        reference (bind, interface, area, id, $THIS.component)
+
+reference (bind, interface, port, id, $THIS.component)
+    attribute(bind,descriptor,false, ID) // ok
+
+element(bindParam, bind, *, false) // ok
+    attribute(bindParam, name, true, string) // ok
+        reference (bindParam,name, conectorParam, string, $FATHER.xconnector)
+    attribute(bindParam,value,true,string) // ok
+
+element(linkParam, link, *, false) // ok
+    attribute(linkParam,name,true,string) // ok
+        reference (linkParam,name, conectorParam, string, $FATHER.xconnector)
+    attribute(linkParam,value,true,string) // ok
+
+element(link, context, *, false) // ok
+element(link, body, *, false) // ok
+    attribute(link,id,false,ID) // ok
+    attribute(link,xconnector,true,string) // ok
+        reference(link,xconnector,casualConnector,id,ANY_PERSPECTIVE)
+
+// Tabela 16 (Maurício)
+element (causalConnector, connectorBase, * , false) // ok
+    attribute (causalConnector,id,true,ID) // ok
+
+element (connectorParam, causalConnector, * , false) // ok
+    attribute (connectorParam,name,true,string) // ok
+    attribute (connectorParam,type,false, string) //ok
+
+element (simpleCondition, causalConnector, 1 , false) // ok
+element (simpleCondition, compoundCondition, * , false) // ok compoundCondition pode ter somente outr compoundCond como filho
+    attribute (simpleCondition,role,true,string) // ok
+    attribute (simpleCondition,delay,false, seconds) // ok
+    attribute (simpleCondition,eventType,false, eventTypee) // ok
+    attribute (simpleCondition,key,false,keyValue) // ok
+    attribute (simpleCondition,transition,false, transitionValue) // ok
+    attribute (simpleCondition,min,false,int) // ok
+    attribute (simpleCondition,max,false,intOrUnbounded) // ok
+    attribute (simpleCondition,qualifier,false,andor) // ok
+
+element (compoundCondition,causalConnector, 1 , false)
+element (compoundCondition,compoundCondition, + , false)
+    attribute (compoundCondition,operator,true , andor)//okR
+    attribute (compoundCondition,delay,false ,seconds)//okR
+
+element (simpleAction, causalConnector, ?, false) // ok
+element (simpleAction, compoundAction, * , false) // ok
+    attribute (simpleAction, role, true, role) // ok
+    attribute (simpleAction, delay, false, seconds) // ok
+    attribute (simpleAction, eventType, false, eventTypee) // ok
+    attribute (simpleAction, actionType, false, actionTypee) // ok
+    attribute (simpleAction, value, false, string) // ok
+    attribute (simpleAction, min, false, int) // ok
+    attribute (simpleAction, max, false, intOrUnbounded) // ok
+    attribute (simpleAction, qualifier, false,parORseq) // ok
+    attribute (simpleAction, repeat, false, int)  // ok
+    attribute (simpleAction, repeatDelay, false, seconds) // ok
+    attribute (simpleAction, duration, false, int) // ok
+    attribute (simpleAction, by, false, intOrIndefinite) // ok
+
+
+element (compoundAction, causalConnector, 1 , false)//okR
+element (compoundAction,compoundAction, + , false)//okR
+    attribute (compoundAction,operator,true,parORseq)//okR
+    attribute (compoundAction,delay,false,seconds)//okR
+
+element (assessmentStatement, compoundCondition, * , false)
+element (assessmentStatement,compoundStatement, + , false)
+    attribute (assessmentStatement,comparator,true,compare)
+
+element (attributeAssessment,assessmentStatement, 1 , false)
+    attribute (attributeAssessment,role,true,string)
+    attribute (attributeAssessment,eventType,true,eventType)
+    attribute (attributeAssessment,key,false,keyvalue)
+    attribute (attributeAssessment,attributeType,true,attributeType)
+    attribute (attributeAssessment,offset,false,string)
+
+element (valueAssessment,assessmentStatement, 1 , false)
+    attribute (valueAssessment,value,true,valueAssessmentt)
+
+element (compoundStatement,compoundCondition, * , false)
+element (compoundStatement, compoundStatement, + , false)
+    attribute (compoundStatement,operator,true,andor)
+    attribute (compoundStatement,isNegated,false,boolean)
+
+// Tabela 17 (Maurício)
+element (connectorBase, head, ? , false)
+    attribute (connectorBase,id,false,ID)
+
+// tabela 18(rafael)
+element(ruleBase,head,?,false)
+    attribute(ruleBase,id,false,ID)
+
+element(rule,ruleBase,+,false)
+    attribute(rule,id,true,ID)
+    attribute(rule,var,true,string)
+    attribute(rule,comparator,true,compare)
+    attribute(rule,value,true,string)
+
+
+element(compositeRule,rule,+,false)
+element(compositeRule,compositeRule,+,false)
+    attribute(compositeRule,id,true,ID)
+    attribute(compositeRule,operator,true,andor)
+
+//
+// tabela 19 (Steve)  :::Working:::
+element(bindRule,switch,*,false)
+element(bindRule,descriptorSwitch,*,false)
+
+ attribute(bindRule,constituent,true,ID)
+     reference(bindRule,constituent,media,id,THIS.component)
+     reference(bindRule,constituent,context,id,THIS.component)
+     reference(bindRule,constituent,switch,id,THIS.component)
+ attribute(bindRule,rule,true,string)
+    reference(bindRule,constituent,rule,id,THIS.component)
+
+// tabela 20 (Steve) ::Working::
+element(switch,body,*,true)
+element(switch,switch,*,true)
+element(switch,context,*,true)
+  attribute(switch,id,true,ID)
+    reference(switch,id,switch,id,SAME)
+  attribute(switch,refer,false,ID)
+    reference(switch,refer,switch,id,SAME)
+
+element(defaultComponent,switch,?,false)
+    attribute(defaultComponent,component,true,ID)
+    reference(defaultComponent,component,media,id,THIS.component)
+    reference(defaultComponent,component,context,id,THIS.component)
+    reference(defaultComponent,component,switch,id,THIS.component)
+
+// tabela 21 (Steve) ::Working::
+element(descriptorSwitch,descriptorBase,+,false)
+    attribute(descriptorSwitch,id,true,ID)
+
+element(defaultDescriptor,descriptorSwitch,*,false)
+    attribute(defaultDescriptor,descriptor,true,ID)
+    reference(defaultDescriptor,descriptor,descriptor,id,THIS.component)
+
+// tabela 22 (Maurício)
+element (importBase,descriptorBase, + , false) // Working...
+element (importBase, connectorBase, * , false)
+element (importBase, ruleBase, + , false)
+    attribute (importBase,alias ,true ,  ID)
+    attribute (importBase,documentURI ,true , file )
+    attribute (importBase,region ,false ,  ID)
+        reference (mportBase,region ,region, id, ANY_PERSPECTIVE)
+
+element (importedDocumentBase, head, ? , false)
+    attribute (importedDocumentBase,id,false , ID )
+
+
+element (importNCL, importedDocumentBase, + , false)
+    attribute (importNCL,alias,true , ID)
+    attribute (importNCL,documentURI,true , file)
+
+//************************* DATATYPES **************************//
+// DATATYPE (NAME, REGEX, DEFAULT_SUGGESTIONS)
+datatype(ID, "^[a-zA-Z][a-zA-Z0-9_]*")//usar quando alguma coisa pedir o nome de algum ID//
+datatype(file, "[a-zA-Z0-9-\.]+[a-zA-Z0-9-_\.]+\.[a-zA-Z0-9]+$")//endereço de arquivos//
+datatype(fileHTML, "[a-zA-Z0-9-\.]+[a-zA-Z0-9-_\.]+\.html$")//endereço de arquivo no formato html//
+datatype(explicitdur, "^(^([0-1][0-9]|[2][0-3])(:([0-5][0-9])(,[0-9][0-9]?)?){1,2}$|^[0-9]+[s]$)$", "")//duração em hh:mm:ss ou em “X”s anos dias e meses ainda nao implementado//
+datatype(percentual, "^[0-9]+(,[0-9][0-9]?)?%$", "") //valores em porcentagem//
+datatype(device, "^(systemScreen[ ]?[(][0-9]+[)]|(systemAudio)[ ]?[(][0-9]+[)])$","systemScreen(i),systemAudio(i)") //dispositivos//
+datatype(int, "^[0-9]+", "")  //números inteiros simples//
+datatype(string, ".*", "") //strings em geral, pode ser usado em caso de ausência de datatypes//
+datatype(percentORpixel, "^[0-9]+([0-9]*px|((,[0-9][0-9]?)?%))$", "") //quando a porcentagem e o pixel forem opcionais//
+datatype(url, "^(http[s]?://|ftp://)?(www\.)?[a-zA-Z0-9-\.]+\.(com|org|net|mil|edu|ca|co.uk|com.au|gov|br)$", "") //endereço de sites provisórios//
+datatype(instance, "^(instSame|gradSame|new)$", "instSame,gradSame,new") //instância//
+datatype(type, "^(text/(html|css|xml|txt)|image/(bmp|png|gif|jpeg)|audio(basic|x-wav|mpeg|mpeg4|)|video/(mpeg|mp4|x-mng|quicktime|x-msvideo)|application/(x-ginga-NCL|x-ncl-NCL|x-ginga-NCLua|x-ncl-NCLua|x-ginga-NCLet|x-ginga-settings|x-ncl-settings|x-ginga-time|xncl-time))$","text/html,text/css,text/xml,text/txt")
+datatype(coord, "^([0-9]+,[0-9]+)(,[0-9]+,[0-9]+)*$", "")
+datatype(timeframe, "^([0-9]+(s|f|npt))$", "")
+datatype(propertyname, "^(top|left|bottom|right|width|height|zIndex|plan|explicitDur|background|transparency|visible|fit|scroll|style|soundLevel|balanceLevel|bassLevel|fontColor|fontFamily|fontStyle|fontSize|fontVariant|fontWeight|reusePlayer|trebleLevel|playerLife|location|size|bounds)$", "top,left,bottom,right,...") //TODO
+datatype(boolean, "^(true|false)$", "true,false")
+datatype(color, "^(white|black|silver|gray|red|maroon|fuschia|purple|lime|green|yellow|olive|blue|navy|aqua|teal)$", "white,black,silver,...")
+datatype(percentORdecimal, "^((100(,(0)+)*|0(,(0)+)*|[0-9]?[0-9](,[0-9]+)?)%|(0|1|0,[0-9]+))$", "")
+datatype(seconds, "^[0-9]+s$", "")
+datatype(eventType, "^(presentation|selection|attribution)$", "presentation,selection,attribution")
+datatype(keyValue, "^([0-9]|[A-Z]|[*]|[#]|MENU|GUIDE|CURSOR_DOWN|CURSOR_LEFT|CURSOR_RIGHT|CURSOR_UP|CHANNEL_DOWN|CHANNEL_UP|VOLUME_DOWN|VOLUME_UP|ENTER|RED|GREEN|YELLOW|BLUE|BACK|EXIT|POWER|REWIND|STOP|EJECT|PLAY|RECORD|PAUSE)$", "MENU,GUIDE,CURSOR_DOWN,...")
+datatype(transitionValue, "^(starts|stops|aborts|pauses|resumes)$", "starts,stops,aborts,pauses,resumes")
+datatype(intOrUnbounded, "^([0-9]+|unbounded)$", "")
+datatype(andor, "^(and|or)$", "and,or")
+datatype(actionType, "^(start|stop|abort|pause|resume)$", "start,stop,abort,pause,resume")
+datatype(parORseq, "^(par|seq)$", "par,seq")
+datatype(intOrIndefinite, "^([0-9]+|indefinite)$", "indefinite,...")
+datatype(compare, "^(eq|ne|gt|lt|gte|lte)$", "eq,ne,gt,lt,gte,lte")
+datatype(attributeType, "^(state|occurences|repetitions|nodeProperty)$", "state,occurences,repetitions,nodeProperty")
+datatype(valueAssessment, "^(sleeping|occuring|paused)$", "sleeping,occuring,paused")
+datatype(XMLNS, "^(http://www.ncl.org.br/NCL3.0/EDTVProfile|http://www.ncl.org.br/NCL3.0/BDTVProfile|http://www.ncl.org.br/NCL3.0/CausalConnectorProfile){1}$", "http://www.ncl.org.br/NCL3.0/EDTVProfile,http://www.ncl.org.br/NCL3.0/BDTVProfile,http://www.ncl.org.br/NCL3.0/CausalConnectorProfile")
+
+//************************* REFERENCES **************************//
+//reference ( ELEMENT_NAME, ATTR_NAME, REF_ELEMENT_NAME, REF_ATTR_NAME, WHICH_PERSPECTIVE )//
+//reference (bind, component, media, id, SAME_PERSPECTIVE)
+//reference (bind, interface, area, id, $THIS.component)
+//reference (bind, role, simpleCondition, role, $FATHER.xconnector)
+//reference (bind, role, simpleAction, role, $FATHER.xconnector)
+//reference (bind, role, attributeAssessment, role, $FATHER.xconnector)
+//reference (descriptor, region, region, id, ANY_PERSPECTIVE)

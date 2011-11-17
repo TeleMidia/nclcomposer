@@ -23,7 +23,6 @@ QsciNCLAPIs::QsciNCLAPIs(QsciLexer * 	lexer) :
   QsciAPIs(lexer)
 {
   nclStructure = NCLStructure::getInstance();
-  nclStructure->loadStructure();
 
   add (QString("ncl30"));
   prepare();
@@ -56,10 +55,13 @@ void QsciNCLAPIs::updateAutoCompletionList( const QStringList &context,
       map <QString, char> *elements = nclStructure->getChildren(father);
       map <QString, char>::iterator it;
 
-      if(elements != NULL) {
+      if(elements != NULL)
+      {
         it = elements->begin();
-        for (; it != elements->end(); ++it){
-          if(it->first.startsWith(context[i])){
+        for (; it != elements->end(); ++it)
+        {
+          if(it->first.startsWith(context[i]))
+          {
             QString str(it->first);
             list.push_back(str);
             qDebug() << it->first;
@@ -68,7 +70,8 @@ void QsciNCLAPIs::updateAutoCompletionList( const QStringList &context,
       }
     }
   }
-  else if ( isAttribute(pos) ) {
+  else if ( isAttribute(pos) )
+  {
     suggesting = SUGGESTING_ATTRIBUTES;
     QString tagname = getCurrentTagName(pos);
     QStringList current_attrs;
@@ -78,17 +81,19 @@ void QsciNCLAPIs::updateAutoCompletionList( const QStringList &context,
       qDebug() << "Already typed: " << current_attrs.at(i);
 
     qDebug() << "Must suggest attributes to " << tagname;
-    if(tagname != ""){
+    if(tagname != "")
+    {
       map <QString, bool> *attrs = nclStructure->getAttributes(tagname);
-      if(attrs != NULL) {
+      if(attrs != NULL){
         map <QString, bool>::iterator it;
-        for (int i = 0; i < context.count(); ++i) {
+        for (int i = 0; i < context.count(); ++i)
+        {
           it = attrs->begin();
 
           for (; it != attrs->end(); ++it){
             if(     it->first.startsWith(context[i])
-                && !current_attrs.contains(it->first)) {
-
+                && !current_attrs.contains(it->first))
+            {
               QString str(it->first);
               list.push_back(str);
               qDebug() << it->first;
@@ -98,7 +103,8 @@ void QsciNCLAPIs::updateAutoCompletionList( const QStringList &context,
       }
     }
   }
-  else if ( isAttributeValue(pos) ){
+  else if ( isAttributeValue(pos) )
+  {
     suggesting = SUGGESTING_ATTRIBUTE_VALUES;
     QString tagname = getCurrentTagName(pos);
     QString attribute = getCurrentAttribute(pos);
@@ -114,9 +120,40 @@ void QsciNCLAPIs::updateAutoCompletionList( const QStringList &context,
     vector <AttributeReferences *>
         references = nclStructure->getReferences(tagname, attribute);
 
-    for(unsigned int i = 0; i < references.size(); i++)
-      qDebug() << "Should refer to " << references[i]->getRefElement() <<
-                  "." << references[i]->getRefAttribute();
+    NCLTextEditor *nclEditor = ((NCLTextEditor *)lexer()->editor());
+
+    nclEditor->parseDocument();
+
+    if(nclEditor->parseDocument())
+    {
+      for(unsigned int i = 0; i < references.size(); i++)
+      {
+        QDomNodeList elements =
+            nclEditor->elementsByTagname(references[i]->getRefElement());
+        qDebug() << elements.length();
+
+        qDebug() << "Should refer to " << references[i]->getRefElement() <<
+                    "." << references[i]->getRefAttribute();
+        for(int j = 0; j < elements.length(); j++)
+        {
+          QDomElement node = elements.at(j).toElement();
+
+          QString attributeValue =
+              node.attribute(references[i]->getRefAttribute());
+
+          qDebug() << context.count();
+          for (int k = 0; k < context.count(); ++k)
+          {
+            if(attributeValue.startsWith(context[k]))
+              list.append(attributeValue);
+          }
+        }
+      }
+    }
+    else
+    {
+      qDebug() << "Coud not parse the document";
+    }
   }
 }
 
@@ -189,6 +226,45 @@ void QsciNCLAPIs::autoCompletionSelected(const QString &selection)
   }
   else if(suggesting == SUGGESTING_ATTRIBUTE_VALUES)
   {
+    int ps = lexer()->editor()->SendScintilla(QsciScintilla::SCI_GETCURRENTPOS)
+          - 1;
+    int pe = lexer()->editor()->SendScintilla(QsciScintilla::SCI_GETCURRENTPOS);
+    bool quote1_found = false, quote2_found = false;
+    char ch;
+
+    int startline =
+        lexer()->editor()->SendScintilla(
+          QsciScintilla::SCI_GETLINESELSTARTPOSITION, ps);
+    int endline =
+        lexer()->editor()->SendScintilla(QsciScintilla::SCI_GETLINEENDPOSITION,
+                                         pe);
+    //find quote
+    while(ps >= startline && !quote1_found){
+      ch = lexer()->editor()->SendScintilla(QsciScintilla::SCI_GETCHARAT, ps);
+      if(ch == '\'' || ch == '\"')
+        quote1_found = true;
+      ps--;
+    }
+    //find quote
+    while(pe <= endline && !quote2_found){
+      ch = lexer()->editor()->SendScintilla(QsciScintilla::SCI_GETCHARAT, pe);
+      if(ch == '\'' || ch == '\"')
+        quote2_found = true;
+      pe++;
+    }
+
+    qDebug() << quote1_found << quote2_found;
+
+    if(quote1_found && quote2_found)
+    {
+      qDebug() << "eu aqui";
+      lexer()->editor()->SendScintilla(QsciScintilla::SCI_SETSELECTIONSTART,
+                                       ps+2);
+      lexer()->editor()->SendScintilla(QsciScintilla::SCI_SETSELECTIONEND,
+                                       pe-1);
+      lexer()->editor()->removeSelectedText();
+    }
+
     outputStr = selection;
   }
 
@@ -198,8 +274,7 @@ void QsciNCLAPIs::autoCompletionSelected(const QString &selection)
   //fix identation
   if(fixidentation)
   {
-    int lineident = lexer()->editor()
-        ->SendScintilla (
+    int lineident = lexer()->editor()->SendScintilla (
           QsciScintilla::SCI_GETLINEINDENTATION,
           line);
 
@@ -372,22 +447,23 @@ QString QsciNCLAPIs::getCurrentAttribute (int pos)
   int p = pos;
   char ch;
   QString current_attribute = "";
-  if (isAttributeValue(pos)) {
-    bool quote_finded = false, equal_finded = false;
+  if (isAttributeValue(pos))
+  {
+    bool quote_found = false, equal_found = false;
     //find quote
-    while(p >= 0 && !quote_finded){
+    while(p >= 0 && !quote_found){
       ch = lexer()->editor()->SendScintilla( QsciScintilla::SCI_GETCHARAT,
                                             p);
       if(ch == '\'' || ch == '\"')
-        quote_finded = true;
+        quote_found = true;
       p--;
     }
     //find equal
-    while(p >= 0 && !equal_finded){
+    while(p >= 0 && !equal_found){
       ch = lexer()->editor()->SendScintilla( QsciScintilla::SCI_GETCHARAT,
                                             p);
       if(ch == '=')
-        equal_finded = true;
+        equal_found = true;
       p--;
     }
     //remove any whitespace between = and attribute name
