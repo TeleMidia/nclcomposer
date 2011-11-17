@@ -22,6 +22,8 @@ NCLStructure::NCLStructure()
     dataTypeDefaultSuggestions = new map <QString, QStringList>();
     attributesDatatype = new map <QString, map<QString, QString> *> ();
     references = new QMultiMap <QString, AttributeReferences*> ();
+
+    loadStructure();
 }
 
 NCLStructure::~NCLStructure()
@@ -86,7 +88,7 @@ void NCLStructure::loadStructure(){
         if(tokens.size() == 0) {
             continue;
         }
-        if(tokens[0] == "datatype") {
+        if(tokens[0].toLower() == "datatype") {
             bool error = false;
             if(tokens.size() >= 3) {
                 qDebug() << "I'm reading a new DATATYPE element " << tokens[0]
@@ -102,7 +104,7 @@ void NCLStructure::loadStructure(){
                 qErrnoWarning("element primitive must have exactly 2 or 3 \
                           arguments (NAME, REGEX, DEFAULT_SUGGESTIONS)");
             }
-        } else if(tokens[0] == "element"){
+        } else if(tokens[0].toLower() == "element"){
 //            qDebug() << "I'm reading a new ELEMENT element";
 //            qDebug() << "Adding Element -- " << tokens[1];
 
@@ -114,7 +116,7 @@ void NCLStructure::loadStructure(){
                               (ELEMENT NAME, ELEMENT FATHER, CARDINALITY)");
             }
 
-        } else if(tokens[0] == "attribute"){
+        } else if(tokens[0].toLower() == "attribute"){
 //            qDebug() << "I'm reading a new ATTRIBUTE element" << endl;
 
             if(tokens.size() == 5) {
@@ -128,11 +130,11 @@ void NCLStructure::loadStructure(){
                               (ELEMENT NAME, ATTR NAME, ATTR TYPE, REQUIRED)");
             }
 
-        } else if(tokens[0] == "scope"){
+        } else if(tokens[0].toLower() == "scope"){
             qDebug() << "I'm reading a new SCOPE element - This is not \
                     supported yet" << endl;
 
-        } else if(tokens[0] == "reference"){
+        } else if(tokens[0].toLower() == "reference"){
 //            qDebug() << "I'm reading a new REFERENCE element" << endl;
             addReference(tokens[1], tokens[2], tokens[3], tokens[4]);
 
