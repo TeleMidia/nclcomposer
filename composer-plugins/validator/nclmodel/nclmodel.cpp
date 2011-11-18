@@ -126,6 +126,7 @@ bool Model::editElement(virtualId &id, vector <Attribute> &newAttributes){
                                 _elementsNotYetInserted.erase(it);
                                 break;
                             }
+                        it++;
                         }while (it != _elementsNotYetInserted.upper_bound(oldAttribute.value()));
                     }
                 }

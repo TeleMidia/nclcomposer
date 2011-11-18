@@ -5,7 +5,9 @@
 #include "../nclmodel/nclmodel.h"
 #include "../message/message.h"
 #include <cstdio>
+#include <limits>
 #include <QDebug>
+#include <sstream>
 
 namespace nclValidator {
 

@@ -47,3 +47,5 @@ OTHER_FILES +=
 
 RESOURCES += \
     Resource.qrc
+
+
