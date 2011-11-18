@@ -8,7 +8,7 @@ INCLUDEPATH +=  include \
                 ../ncl-layout-view \
                 deps/QScintilla-gpl-2.5.1/Qt4
 
-LIBS += -Ldeps/QScintilla-gpl-2.5.1/Qt4
+LIBS      +=    -Ldeps/QScintilla-gpl-2.5.1/Qt4
 
 macx:LIBS += -L/Library/Frameworks \
             -L$$quote(/Library/Application Support/Composer) \
@@ -46,7 +46,8 @@ SOURCES     =   src/main.cpp \
 
 OTHER_FILES +=  TODO \
                 config/NCL_STRUCTURE \
-                NEWS
+                NEWS \
+    config/NCL_STRUCTURE_OLD.txt
 
 RESOURCES   =   ncl_textual_plugin.qrc
 
