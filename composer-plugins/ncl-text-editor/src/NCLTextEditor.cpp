@@ -498,6 +498,7 @@ void NCLTextEditor::keepFocused()
 {
     focusInIgnoringCurrentText = true;
     this->setFocus();
+    this->SendScintilla(QsciScintilla::SCI_SETFOCUS, true);
 }
 
 void NCLTextEditor::focusOutEvent(QFocusEvent *event)
@@ -512,6 +513,7 @@ void NCLTextEditor::focusInEvent(QFocusEvent *e)
         textWithoutUserInter = text();
 
     focusInIgnoringCurrentText = false;
+    this->SendScintilla(QsciScintilla::SCI_SETFOCUS, true);
 #endif
 }
 
