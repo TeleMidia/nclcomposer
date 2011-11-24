@@ -4,4 +4,7 @@
         <file>en_messages.txt</file>
         <file>langstruct.in</file>
     </qresource>
+    <qresource prefix="/">
+        <file>images/error.png</file>
+    </qresource>
 </RCC>

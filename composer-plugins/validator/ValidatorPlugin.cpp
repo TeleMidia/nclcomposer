@@ -8,10 +8,11 @@ namespace composer{
 ValidatorPlugin::ValidatorPlugin()
 {
     table = new QTreeWidget;
-    table->setColumnCount(2);
+    table->setColumnCount(3);
     QStringList headers;
-    headers << "Elemento" << "Mensagem";
+    headers << "" << "Elemento" << "Mensagem";
     table->setHeaderLabels(headers);
+    table->setColumnWidth(0, 40);
 
     nclValidator::Langstruct::init();
 }
@@ -64,8 +65,11 @@ void ValidatorPlugin::updateMessages(std::vector<pair<void *, string> > msgs)
             emit sendBroadcastMessage(msgs [i].second.c_str(), entity);
         }
 
-        list << first << QString::fromStdString(msgs [i].second);
-        table->addTopLevelItem (new QTreeWidgetItem(list));
+        list << "" << first << QString::fromStdString(msgs [i].second);
+
+        QTreeWidgetItem *item = new QTreeWidgetItem(table, list);
+        item->setIcon(0, QIcon(":/images/error.png"));
+        table->addTopLevelItem (item);
     }
 
 //    edit->setText(txt);
