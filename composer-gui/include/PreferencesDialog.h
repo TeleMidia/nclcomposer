@@ -14,6 +14,7 @@
 #include <QDebug>
 #include <QPluginLoader>
 #include <QDialog>
+#include <QAbstractButton>
 #include <QListWidgetItem>
 
 #include <core/extensions/IPluginFactory.h>
@@ -37,17 +38,20 @@ public:
     explicit PreferencesDialog(QWidget *parent = 0);
     ~PreferencesDialog();
 
-    void addPreferencesPage(IPluginFactory *);
+    void addPreferencePage(IPluginFactory *);
+    void addPreferencePage(QIcon icon, QString name, QWidget *widget);
 
 private:
     Ui::PreferencesDialog *ui;
     QListWidgetItem *currentItem;
+    QWidget *currentPage;
 
     void loadPreferencesPages();
     QMap <QString, QWidget *> pages;
 
 private slots:
     void changeActivePage();
+    void buttonClicked(QAbstractButton*);
 };
 
 }} //end namespace

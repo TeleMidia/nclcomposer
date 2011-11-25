@@ -51,7 +51,7 @@
         <x>0</x>
         <y>0</y>
         <width>392</width>
-        <height>263</height>
+        <height>277</height>
        </rect>
       </property>
       <layout class="QHBoxLayout" name="horizontalLayout">
@@ -93,31 +93,11 @@
      <property name="spacing">
       <number>5</number>
      </property>
-     <item>
-      <property name="text">
-       <string>Environment</string>
-      </property>
-      <property name="icon">
-       <iconset resource="../images.qrc">
-        <normaloff>:/mainwindow/images/preferences_icon.png</normaloff>:/mainwindow/images/preferences_icon.png</iconset>
-      </property>
-     </item>
-     <item>
-      <property name="text">
-       <string>Run Configuration</string>
-      </property>
-      <property name="icon">
-       <iconset resource="../images.qrc">
-        <normaloff>:/mainwindow/images/play_button.png</normaloff>:/mainwindow/images/play_button.png</iconset>
-      </property>
-     </item>
     </widget>
    </item>
   </layout>
  </widget>
- <resources>
-  <include location="../images.qrc"/>
- </resources>
+ <resources/>
  <connections>
   <connection>
    <sender>buttonBox</sender>

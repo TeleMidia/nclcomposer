@@ -3,6 +3,7 @@ TEMPLATE = app
 CONFIG += qt warn_on debug console
 
 #CONFIG += clubencl
+CONFIG += runssh_on
 QT += xml network webkit
 
 DEFINES += NCLCOMPOSER_GUI_VERSION=\"\\\"0.1.0\\\"\"
@@ -54,7 +55,10 @@ else {
     target.path = $$INSTALLBASE
 }
 
-INCLUDEPATH += include/
+INCLUDEPATH +=  include
+
+INCLUDEPATH   +=  ../composer-core/core/include
+LIBS          +=  -L../composer-core/core
 
 macx {
     LIBS += -framework ComposerCore
@@ -77,6 +81,10 @@ clubencl {
     LIBS += -lquazip
 }
 
+runssh_on {
+  LIBS += -lssh2
+}
+
 SOURCES += main.cpp \
     src/ComposerMainWindow.cpp \
     src/PreferencesDialog.cpp \
@@ -84,7 +92,9 @@ SOURCES += main.cpp \
     src/PluginDetailsDialog.cpp \
     src/EnvironmentPreferencesWidget.cpp \
     src/WelcomeWidget.cpp \
-    src/AboutDialog.cpp
+    src/AboutDialog.cpp \
+    src/SimpleSSHClient.cpp \
+    src/RunGingaConfig.cpp
 
 HEADERS += include/ComposerMainWindow.h \
     include/PreferencesDialog.h \
@@ -93,7 +103,9 @@ HEADERS += include/ComposerMainWindow.h \
     include/EnvironmentPreferencesWidget.h \
     include/IPreferencePage.h \
     include/WelcomeWidget.h \
-    include/AboutDialog.h
+    include/AboutDialog.h \
+    include/SimpleSSHClient.h \
+    include/RunGingaConfig.h
 
 RESOURCES += images.qrc
 
@@ -108,18 +120,8 @@ FORMS   += ui/PreferencesDialog.ui \
 
 unix:!macx {
     INSTALLS += target desktop icon64 icon48
-}else {
+} else {
     INSTALLS += target
 }
 
 OTHER_FILES += LICENSE.LGPL
-
-
-
-
-
-
-
-
-
-
