@@ -20,13 +20,6 @@ WelcomeWidget::WelcomeWidget(QWidget *parent): QWidget(parent),
     ui->setupUi(this);
     ui->tabWidget->installEventFilter(new ResizeFilter(ui->tabWidget));
 
-    //Connect the QHttp with
-    connect(&http, SIGNAL(readyRead(const QHttpResponseHeader &)),
-            this, SLOT(readData(const QHttpResponseHeader &)));
-
-    connect(&http, SIGNAL(requestFinished(int,bool)),
-            this, SLOT(finishRSSLoad(int, bool)));
-
     connect(ui->pushButton_OpenProject, SIGNAL(pressed()),
             this, SIGNAL(userPressedOpenProject()));
 
@@ -36,6 +29,12 @@ WelcomeWidget::WelcomeWidget(QWidget *parent): QWidget(parent),
     ui->pushButton_DownloadApp->setEnabled(false);
 
 #ifdef WITH_CLUBENCL
+    //Connect the QHttp with
+    connect(&http, SIGNAL(readyRead(const QHttpResponseHeader &)),
+            this, SLOT(readData(const QHttpResponseHeader &)));
+
+    connect(&http, SIGNAL(requestFinished(int,bool)),
+            this, SLOT(finishRSSLoad(int, bool)));
 
     connect(ui->pushButton_DownloadApp, SIGNAL(pressed()),
             this, SLOT(downloadApplication()));
