@@ -30,7 +30,7 @@ extern "C" {
 #include <errno.h>
 #include <stdio.h>
 #include <ctype.h>
-};
+}
 
 #include <string>
 using namespace std;

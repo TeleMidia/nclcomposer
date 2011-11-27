@@ -17,12 +17,16 @@
 #include <QToolButton>
 #include <QApplication>
 
+#ifdef WITH_LIBSSH2
 #include "RunGingaConfig.h"
 #include "SimpleSSHClient.h"
+#endif
 
 #ifdef USE_MDI
 #include <QMdiArea>
 #endif
+
+#define SHOW_PROFILES
 
 namespace composer {
 namespace gui {
@@ -137,9 +141,11 @@ void ComposerMainWindow::readExtensions()
   }
   settings.endGroup();
 
+#ifdef WITH_LIBSSH2
   /* Load the preferences page */
   preferences->addPreferencePage(QIcon(":/mainwindow/images/play_button.png"),
                                  "Run Configuration", new RunGingaConfig());
+#endif
 
   /* Load PreferencesPages from Plugins */
   QList<IPluginFactory*> list = PluginControl::getInstance()->getLoadedPlugins();
@@ -584,10 +590,9 @@ void ComposerMainWindow::createAboutPlugins()
                                    " Declarative Multimedia languages."),
                                 aboutPluginsDialog));
 
+#ifdef SHOW_PROFILES
   gLayout->addWidget(new QLabel(tr("<b>Installed Language Profiles</b>"),
                                 aboutPluginsDialog));
-
-#ifdef SHOW_PROFILES
   gLayout->addWidget(profilesExt);
 #endif
   gLayout->addWidget(new QLabel(tr("<b>Installed Plug-ins</b>")));
@@ -980,7 +985,7 @@ void ComposerMainWindow::runNCLRemotely()
   QString remotePasswd = settings.value("remote_password").toString();
   QString remoteCmd = settings.value("remote_cmd").toString();
   settings.endGroup();
-
+#ifdef WITH_LIBSSH2
   /*\todo Put the code to run a remote NCL */
   SimpleSSHClient sshclient(remoteUser.toStdString().c_str(),
                             remotePasswd.toStdString().c_str(),
@@ -1020,6 +1025,7 @@ void ComposerMainWindow::runNCLRemotely()
     qWarning() << "Error trying to running NCL. Could not create : "
                << nclpath << " !";
   }
+#endif
 }
 
 void ComposerMainWindow::launchProjectWizard()

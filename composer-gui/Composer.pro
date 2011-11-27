@@ -60,6 +60,7 @@ INCLUDEPATH +=  include
 INCLUDEPATH   +=  ../composer-core/core/include
 LIBS          +=  -L../composer-core/core
 
+
 macx {
     LIBS += -framework ComposerCore
     INCLUDEPATH += /Library/Frameworks/ComposerCore.framework/
@@ -68,11 +69,25 @@ else:unix {
     LIBS += -L$$INSTALLBASE/lib/composer -lComposerCore
     INCLUDEPATH +=  $$INSTALLBASE/include/composer \
                     $$INSTALLBASE/include/composer/core
+
+    runssh_on {
+      DEFINES += WITH_LIBSSH2
+      LIBS += -lssh2
+    }
 }
 else:win32 {
     LIBS += -L$$INSTALLBASE -lComposerCore1
     INCLUDEPATH += $$INSTALLBASE/include/composer \
                    $$INSTALLBASE/include/composer/core
+
+    runssh_on {
+        # Link against libssh2
+        LIBS += deps/libssh2-1.3.0/lib/libssh2.a \
+                deps/libssh2-1.3.0/lib/libgcrypt.a \
+                deps/libssh2-1.3.0/lib/libgpg-error.a \
+                -lws2_32
+        INCLUDEPATH += deps/libssh2-1.3.0/include
+    }
 }
 
 clubencl {
@@ -82,7 +97,10 @@ clubencl {
 }
 
 runssh_on {
-  LIBS += -lssh2
+  DEFINES += WITH_LIBSSH2
+
+  SOURCES += src/SimpleSSHClient.cpp
+  HEADERS += include/SimpleSSHClient.h
 }
 
 SOURCES += main.cpp \
@@ -93,7 +111,6 @@ SOURCES += main.cpp \
     src/EnvironmentPreferencesWidget.cpp \
     src/WelcomeWidget.cpp \
     src/AboutDialog.cpp \
-    src/SimpleSSHClient.cpp \
     src/RunGingaConfig.cpp
 
 HEADERS += include/ComposerMainWindow.h \
@@ -104,7 +121,6 @@ HEADERS += include/ComposerMainWindow.h \
     include/IPreferencePage.h \
     include/WelcomeWidget.h \
     include/AboutDialog.h \
-    include/SimpleSSHClient.h \
     include/RunGingaConfig.h
 
 RESOURCES += images.qrc

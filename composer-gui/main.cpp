@@ -47,6 +47,10 @@ int main(int argc, char *argv[])
     splash.blockSignals(true);
     splash.show();
 
+    //make the library search path include the application dir on windows
+    //this is so the plugins can find the dlls they are linked to at run time
+    QApplication::addLibraryPath(QApplication::applicationDirPath());
+
     ComposerMainWindow w(a);
     splash.finish(&w);
 
