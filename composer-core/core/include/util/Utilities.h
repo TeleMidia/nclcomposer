@@ -10,6 +10,8 @@
 #ifndef DEFINITIONS_H
 #define DEFINITIONS_H
 
+#include "ComposerCoreControl_global.h"
+
 #include <QString>
 #include <QMap>
 
@@ -31,7 +33,7 @@ namespace composer {
 /*!
  \brief Groups useful functions.
 */
-class Utilities
+class COMPOSERCORESHARED_EXPORT Utilities
 {
 
 private:

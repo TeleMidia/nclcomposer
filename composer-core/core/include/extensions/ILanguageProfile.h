@@ -33,7 +33,7 @@ namespace composer {
   * This class must be implemented by anyone that want to support
   * a new language in Composer.
   */
-class ILanguageProfile {
+class COMPOSERCORESHARED_EXPORT ILanguageProfile {
 public:
     virtual ~ILanguageProfile() {}
 

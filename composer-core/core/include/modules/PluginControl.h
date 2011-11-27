@@ -20,6 +20,7 @@
 #include <QHashIterator>
 #include <QDebug>
 
+#include "util/ComposerCoreControl_global.h"
 
 #include "MessageControl.h"
 #include "LanguageControl.h"
@@ -48,7 +49,7 @@ namespace composer {
     - Load the installed plugins.
     - And connect each plugin with its respective message controllers.
 */
-class PluginControl : public QObject
+class COMPOSERCORESHARED_EXPORT PluginControl : public QObject
 {
     Q_OBJECT
     SINGLETON(PluginControl)

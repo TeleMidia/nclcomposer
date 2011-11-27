@@ -10,6 +10,7 @@
 #ifndef PROJECTREADER_H
 #define PROJECTREADER_H
 
+#include "util/ComposerCoreControl_global.h"
 #include "../model/Project.h"
 using namespace composer::core::model;
 
@@ -33,7 +34,7 @@ namespace composer {
  *
  *
  */
-class ProjectReader: public QXmlDefaultHandler
+class COMPOSERCORESHARED_EXPORT ProjectReader: public QXmlDefaultHandler
 {
 public:
     ProjectReader();

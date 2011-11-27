@@ -14,6 +14,8 @@
 #include <QString>
 #include <QtGui/QIcon>
 
+#include "util/ComposerCoreControl_global.h"
+
 #include "../util/Utilities.h"
 using namespace composer::core::util;
 
@@ -30,7 +32,7 @@ namespace composer {
  * instance is binded with its project instance during the setup of this
  * project. The whole process is transparent for plugin developers.
  */
-class IPluginFactory {
+class COMPOSERCORESHARED_EXPORT IPluginFactory {
 
 public:
     virtual ~IPluginFactory() {}
@@ -61,10 +63,10 @@ public:
     virtual QString id() const = 0;
     virtual QString name() const = 0;
 
-    virtual QIcon icon() const { return QIcon(); };
-    virtual QWidget* getPreferencePageWidget() { return NULL; };
-    virtual void setDefaultValues() {};
-    virtual void applyValues() {};
+    virtual QIcon icon() const { return QIcon(); }
+    virtual QWidget* getPreferencePageWidget() { return NULL; }
+    virtual void setDefaultValues() {}
+    virtual void applyValues() {}
 
     virtual QList<LanguageType> getSupportedLanguages()
     {

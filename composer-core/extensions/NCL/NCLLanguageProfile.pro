@@ -12,7 +12,7 @@ OBJECTS_DIR = .objs
 
 TARGET = NCLLanguageProfile
 TEMPLATE = lib
-CONFIG += debug plugin
+CONFIG += debug plugin dll
 
 macx {
   INSTALLBASE = /Library/Frameworks
@@ -53,7 +53,7 @@ else:unix {
     headers_nclprofile.path = $$HEADERS_PATH/core/extensions
 }
 else:win32 {
-    LIBS += -L../../core/debug -lComposerCore1
+    LIBS += -L$$INSTALLBASE -lComposerCore1
     HEADERS_PATH = $$INSTALLBASE/include/composer
     INCLUDEPATH += C:/Composer/include/composer
     headers_nclprofile.path = $$HEADERS_PATH/core/extensions
@@ -63,12 +63,14 @@ else:win32 {
 DEFINES += NCLLANGUAGEPROFILE_LIBRARY
 
 SOURCES += NCLLanguageProfile.cpp \
-    NCLDocumentParser.cpp \
-    NCLStructure.cpp
+           NCLDocumentParser.cpp \
+           NCLStructure.cpp
 
-HEADERS +=  NCLLanguageProfile.h\
-            NCLStructure.h \
+
+HEADERS +=  NCLLanguageProfile.h \
             NCLLanguageProfile_global.h \
-            NCLDocumentParser.h
+            NCLDocumentParser.h \
+            NCLStructure.h
+
 
 INSTALLS += target headers_nclprofile

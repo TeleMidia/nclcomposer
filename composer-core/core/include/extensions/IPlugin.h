@@ -35,7 +35,7 @@ namespace composer {
  * In short, the SLOT are messages from the CORE to PLUGIN, while the
  * signals bellow are messages from PLUGIN to CORE.
  */
-class IPlugin : public QObject {
+class COMPOSERCORESHARED_EXPORT IPlugin : public QObject {
 
     Q_OBJECT
 

@@ -8,8 +8,9 @@
  *    Telemidia/PUC-Rio - initial API and implementation
  */
 #include "NCLLanguageProfile.h"
-
+#include "NCLDocumentParser.h"
 #include "NCLStructure.h"
+
 using namespace composer::language;
 
 NCLLanguageProfile::NCLLanguageProfile()
@@ -24,6 +25,11 @@ NCLLanguageProfile::~NCLLanguageProfile()
 LanguageType NCLLanguageProfile::getLanguageType()
 {
     return NCL;
+}
+
+QString NCLLanguageProfile::getProfileName()
+{
+    return "Nested Context Language Profile";
 }
 
 QList<QString> NCLLanguageProfile::getOutputDocumentTypes()
@@ -47,11 +53,6 @@ void NCLLanguageProfile::releaseDocumentParser (IDocumentParser *parser)
     }
 }
 
-QString NCLLanguageProfile::getProfileName()
-{
-    return "Nested Context Language Profile";
-}
-
 map <QString, map <QString, char> *> *NCLLanguageProfile::getNesting()
 {
     return NCLStructure::getInstance()->getNesting();
@@ -70,8 +71,7 @@ map <QString, char> *NCLLanguageProfile::getChildren (QString tagname)
 vector <AttributeReferences *>
         NCLLanguageProfile::getReferences (QString element, QString attr)
 {
-    return NCLStructure::getInstance()->getReferences(element, attr);
+  return NCLStructure::getInstance()->getReferences(element, attr);
 }
-
 
 Q_EXPORT_PLUGIN2(NCLLanguageProfile, NCLLanguageProfile)

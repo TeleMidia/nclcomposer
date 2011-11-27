@@ -17,6 +17,8 @@
 
 #include <iostream>
 
+#include "util/ComposerCoreControl_global.h"
+
 #include "PluginControl.h"
 #include "LanguageControl.h"
 using namespace composer::core;
@@ -35,7 +37,7 @@ namespace composer {
 /*!
  \brief Manages all the open Projects.
 */
-class ProjectControl : public QObject
+class COMPOSERCORESHARED_EXPORT ProjectControl : public QObject
 {
     Q_OBJECT
     SINGLETON(ProjectControl)

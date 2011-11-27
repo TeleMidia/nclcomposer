@@ -16,6 +16,8 @@
 #include <exception>
 using namespace std;
 
+#include "util/ComposerCoreControl_global.h"
+
 #include "../extensions/IDocumentParser.h"
 using namespace composer::extension;
 
@@ -32,7 +34,7 @@ namespace composer {
  \brief Manages the messages send from plugins to NCL Composer Core and
     vice-versa.
  */
-class MessageControl : public QObject
+class COMPOSERCORESHARED_EXPORT MessageControl : public QObject
 {
     Q_OBJECT
 

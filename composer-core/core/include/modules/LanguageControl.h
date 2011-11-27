@@ -15,6 +15,8 @@
 #include <QPluginLoader>
 #include <QDir>
 
+#include "util/ComposerCoreControl_global.h"
+
 #include "../extensions/ILanguageProfile.h"
 using namespace composer::extension;
 
@@ -30,7 +32,7 @@ namespace composer {
  \brief Manages the installed language profiles (though ILanguageProfile
     interface).
 */
-class LanguageControl : public QObject
+class COMPOSERCORESHARED_EXPORT LanguageControl : public QObject
 {
     Q_OBJECT
     SINGLETON(LanguageControl)

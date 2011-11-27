@@ -21,12 +21,12 @@ namespace composer {
         /*!
          \brief An abstract interface to document parsers.
         */
-        class IDocumentParser : public QObject
+        class COMPOSERCORESHARED_EXPORT IDocumentParser : public QObject
         {
             Q_OBJECT
 
         public:
-            virtual ~IDocumentParser() {}
+            virtual ~IDocumentParser(){}
             /*!
              \brief Parses the content of the document. This function must be
               implemented by concrete Document Parsers.

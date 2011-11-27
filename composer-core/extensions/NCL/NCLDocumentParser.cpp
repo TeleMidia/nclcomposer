@@ -107,6 +107,7 @@ bool NCLDocumentParser::characters(const QString &)
 bool NCLDocumentParser::endDocument()
 {
     emit parseFinished();
+    return true;
 }
 
 bool NCLDocumentParser::fatalError(const QXmlParseException &exception)

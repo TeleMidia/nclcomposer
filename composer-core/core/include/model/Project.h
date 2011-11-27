@@ -10,6 +10,8 @@
 #ifndef DOCUMENT_H
 #define DOCUMENT_H
 
+#include "util/ComposerCoreControl_global.h"
+
 #include <QObject>
 #include <QList>
 #include <QStack>
@@ -38,7 +40,7 @@ namespace composer {
  * \brief A Project is a data structure that will keep all Entities and all
  *      plugin data in a same place.
  */
-class Project : public Entity
+class COMPOSERCORESHARED_EXPORT Project : public Entity
 {
     Q_OBJECT
 

@@ -10,6 +10,8 @@
 #ifndef ENTITY_H
 #define ENTITY_H
 
+#include "util/ComposerCoreControl_global.h"
+
 #include <QObject>
 #include <QMutex>
 #include <QMutexLocker>
@@ -34,7 +36,7 @@ namespace composer {
  *
  * The internal model Composer model is a tree of Entities.
  */
-class Entity : public QObject
+class COMPOSERCORESHARED_EXPORT Entity : public QObject
 {
     Q_OBJECT
 

@@ -58,7 +58,7 @@ ILanguageProfile* LanguageControl::loadProfile(QString fileName)
     if (profile) {
         lProfile = qobject_cast<ILanguageProfile*> (profile);
         if (lProfile) {
-            LanguageType type = lProfile->getLanguageType();
+          LanguageType type = lProfile->getLanguageType();
             if (profiles.contains(type))
             {
                 qDebug() << "LanguageControl::loadProfiles" <<
@@ -70,7 +70,7 @@ ILanguageProfile* LanguageControl::loadProfile(QString fileName)
               profiles[type] = lProfile;
             }
         }
-    } else qDebug() << "Failed to load languageControl (" << fileName << ")";
+    } else qDebug() << "Failed to load languageControl (" << fileName << ")" << loader.errorString();
     return lProfile;
 }
 

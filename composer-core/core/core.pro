@@ -1,12 +1,13 @@
 # -------------------------------------------------
 # Project created by QtCreator 2010-03-12T13:06:44
 # -------------------------------------------------
-QT -= gui
+# QT -= gui
 QT += xml
 TEMPLATE = lib
 TARGET = ComposerCore
 VERSION = 1.0
-CONFIG += debug
+QT += gui
+CONFIG += debug dll
 MOC_DIR = .mocs
 OBJECTS_DIR = .objs
 

@@ -9,6 +9,7 @@
  */
 #ifndef ATTRIBUTEREFERENCES_H
 #define ATTRIBUTEREFERENCES_H
+#include "ComposerCoreControl_global.h"
 
 #include <QString>
 
@@ -21,7 +22,7 @@ namespace composer {
 
  This class is mainly used to described the language profile.
 */
-class AttributeReferences {
+class COMPOSERCORESHARED_EXPORT AttributeReferences {
 private:
     QString element, attr, /*!< TODO */
     ref_element, ref_attr; /*!< TODO */

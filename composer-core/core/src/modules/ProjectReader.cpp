@@ -34,7 +34,8 @@ Project *ProjectReader::readFile(QString location)
         error = true;
     }
 
-    QString content(qUncompress(file.readAll()));
+    QByteArray data = file.readAll();
+    QString content(qUncompress(data));
     /* READING MODEL */
     QString startCpModelStr = "#COMPOSER_MODEL#\n";
     QString endCpModelStr = "\n#END_COMPOSER_MODEL#";
