@@ -14,6 +14,17 @@ QnstGraphicsNode::~QnstGraphicsNode()
 
 }
 
+void QnstGraphicsNode::adjust()
+{
+    fit(50);
+
+    if (getnstParent() != NULL){
+        ((QnstGraphicsNode*) getnstParent())->attract();
+    }
+
+    QncgGraphicsNode::adjust();
+}
+
 void QnstGraphicsNode::requestEntityChange()
 {
     emit entityChanged(this);

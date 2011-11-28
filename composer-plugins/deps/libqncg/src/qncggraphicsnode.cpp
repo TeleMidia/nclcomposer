@@ -236,63 +236,48 @@ void QncgGraphicsNode::compact(qreal padding)
 
 void QncgGraphicsNode::clock(qreal padding)
 {
-    qreal n = 0;
-    qreal length = 0;
-
     QVector<QncgGraphicsEntity*> entities = getncgGraphicsEntities();
 
-    // finding greater width or height
-    foreach(QncgGraphicsEntity* entity, entities){
-        if (entity->getWidth() > length){
-            length = entity->getWidth();
-        }
 
-        if (entity->getHeight() > length){
-            length = entity->getHeight();
-        }
 
-        ++n;
-    }
 
-    if (n == 1){
+    if (entities.size() == 1){
         QncgGraphicsEntity* entity = entities.at(0);
 
         entity->setTop(getHeight()/2 - entity->getHeight()/2);
         entity->setLeft(getWidth()/2 - entity->getWidth()/2);
 
-    }else if (n == 2){
+    }else if (entities.size() > 1){
+        for (int i = 0; i < entities.size(); i++){
 
-        QncgGraphicsEntity* entitya = entities.at(0);
-        QncgGraphicsEntity* entityb = entities.at(1);
+            QncgGraphicsEntity* entity = entities.at(i);
 
-        entitya->setTop(getHeight()/2 - entitya->getHeight()/2);
-        entitya->setLeft(getWidth()/2 - entitya->getWidth()/2 - padding/2 - length);
+            qreal length = 0;
 
-        entityb->setTop(getHeight()/2 - entityb->getHeight()/2);
-        entityb->setLeft(getWidth()/2 - entityb->getWidth()/2 + padding/2 + length);
+            if (entity->getWidth() > length){
+                length = entity->getWidth();
+            }
 
-    }else if (n > 2){
-        qreal A = 360/n;
+            if (entity->getHeight() > length){
+                length = entity->getHeight();
+            }
 
-        qreal R = (length+padding) / (2*sin((A/2)*(PI/180)));
+            qreal A = 360/entities.size();
 
-        QncgGraphicsEntity* entity = entities.at(0);
+            qreal R = (length+padding) / (2*sin((A/2)*(PI/180)));
 
-        entity->setTop(getHeight()/2 - entity->getHeight()/2);
-        entity->setLeft(getWidth()/2 - entity->getWidth()/2 - R);
+            entity->setTop(getHeight()/2 - entity->getHeight()/2);
+            entity->setLeft(getWidth()/2 - entity->getWidth()/2 - R);
 
-        QPointF pa = QPointF(getWidth()/2, getHeight()/2);
-        QPointF pb = QPointF(entity->getLeft() + entity->getWidth()/2, entity->getTop() + entity->getHeight()/2);
+            QPointF pa = QPointF(getWidth()/2, getHeight()/2);
+            QPointF pb = QPointF(entity->getLeft() + entity->getWidth()/2, entity->getTop() + entity->getHeight()/2);
 
-        QLineF line(pa, pb);
+            QLineF line(pa, pb);
 
-        for (int i = 1; i < n; i++){
-            line.setAngle(line.angle() + A);
+            line.setAngle(line.angle() + i*A);
 
-            QncgGraphicsEntity* entityi = entities.at(i);
-
-            entityi->setTop(line.p2().y() - entityi->getHeight()/2);
-            entityi->setLeft(line.p2().x()  - entityi->getWidth()/2);
+            entity->setTop(line.p2().y() - entity->getHeight()/2);
+            entity->setLeft(line.p2().x()  - entity->getWidth()/2);
         }
     }
 }

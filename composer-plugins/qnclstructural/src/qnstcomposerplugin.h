@@ -80,6 +80,10 @@ private:
 
     void requestBodyChange(Entity* entity);
 
+    void requestContextAddition(Entity* entity);
+
+    void requestContextChange(Entity* entity);
+
     void requestMediaAddition(Entity* entity);
 
     void requestMediaChange(Entity* entity);

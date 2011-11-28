@@ -519,11 +519,17 @@ void QnstGraphicsBody::performSettings()
 void QnstGraphicsBody::performCompact()
 {
     compact(50);
+
+    attract();
 }
 
 void QnstGraphicsBody::performClock()
 {
     clock(50);
+
+    fit(50);
+
+    attract();
 }
 
 void QnstGraphicsBody::contextMenuEvent(QGraphicsSceneContextMenuEvent* event)

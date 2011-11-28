@@ -22,6 +22,8 @@ public:
 
     ~QnstGraphicsNode();
 
+    virtual void adjust();
+
 signals:
     void entityAdded(QnstEntity* entity);
 

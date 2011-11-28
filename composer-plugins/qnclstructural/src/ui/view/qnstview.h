@@ -85,6 +85,10 @@ private:
 
     void changeBody(const QString uid, const QMap<QString, QString> properties);
 
+    void addContext(const QString uid, const QString parent, const QMap<QString, QString> properties);
+
+    void changeContext(const QString uid, const QMap<QString, QString> properties);
+
     void addMedia(const QString uid, const QString parent, const QMap<QString, QString> properties);
 
     void changeMedia(const QString uid, const QMap<QString, QString> properties);

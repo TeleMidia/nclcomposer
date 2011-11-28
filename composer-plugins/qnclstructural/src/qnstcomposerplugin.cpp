@@ -106,7 +106,7 @@ void QnstComposerPlugin::requestEntityAddition(Entity* entity)
 
     // if the entity is of type CONTEXT
     }else if (entity->getType() == "context"){
-
+        requestContextAddition(entity);
 
     // if the entity is of type SWITCH
     }else if (entity->getType() == "switch"){
@@ -148,6 +148,28 @@ void QnstComposerPlugin::requestBodyAddition(Entity* entity)
 }
 
 void QnstComposerPlugin::requestBodyChange(Entity* entity)
+{
+    // TODO
+}
+
+void QnstComposerPlugin::requestContextAddition(Entity* entity)
+{
+    QMap<QString, QString> properties;
+
+    properties["TYPE"] = "context";
+
+    if (entity->getAttribute("id") != ""){
+        properties["id"] = entity->getAttribute("id");
+    }
+
+    if (entity->getAttribute("refer") != ""){
+        properties["refer"] = entity->getAttribute("refer");
+    }
+
+    view->addEntity(entity->getUniqueId(), entites[entity->getParentUniqueId()], properties);
+}
+
+void QnstComposerPlugin::requestContextChange(Entity* entity)
 {
     // TODO
 }

@@ -83,6 +83,7 @@ void QnstView::addEntity(const QString uid, const QString parent, const QMap<QSt
 
     // if the entity is of type CONTEXT
     }else if (properties["TYPE"] == "context"){
+        addContext(uid, parent, properties);
 
     // if the entity is of type SWITCH
     }else if (properties["TYPE"] == "switch"){
@@ -138,7 +139,40 @@ void QnstView::addBody(const QString uid, const QString parent, const QMap<QStri
 
 void QnstView::changeBody(const QString uid, const QMap<QString, QString> properties)
 {
-    // TODO:
+    // TODO
+}
+
+void QnstView::addContext(const QString uid, const QString parent, const QMap<QString, QString> properties)
+{
+    QnstGraphicsComposition* composition = (QnstGraphicsComposition*) entities[parent];
+
+    QnstGraphicsContext* entity = new QnstGraphicsContext(composition);
+    entity->setnstUid(uid);
+
+    entity->setTop(composition->getHeight()/2 - 200/2);
+    entity->setLeft(composition->getWidth()/2 - 350/2);
+    entity->setWidth(350);
+    entity->setHeight(200);
+
+    connect(entity, SIGNAL(entityAdded(QnstEntity*)), composition, SIGNAL(entityAdded(QnstEntity*)));
+    connect(entity, SIGNAL(entityChanged(QnstEntity*)), composition, SIGNAL(entityChanged(QnstEntity*)));
+    connect(entity, SIGNAL(entityRemoved(QnstEntity*)), composition, SIGNAL(entityRemoved(QnstEntity*)));
+    connect(entity, SIGNAL(entitySelected(QnstEntity*)), composition, SIGNAL(entitySelected(QnstEntity*)));
+
+    composition->addncgGraphicsEntity(entity);
+
+    composition->clock(50);
+    composition->fit(50);
+
+    composition->attract();
+    composition->adjust();
+
+    entities[uid] = entity;
+}
+
+void QnstView::changeContext(const QString uid, const QMap<QString, QString> properties)
+{
+    // TODO
 }
 
 void QnstView::addMedia(const QString uid, const QString parent, const QMap<QString, QString> properties)
