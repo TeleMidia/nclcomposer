@@ -28,7 +28,7 @@ void ValidatorPlugin::init()
     foreach (Entity *entity, project->getChildren())
         updateModel(entity);
 
-    adapter.getModel().print();
+//    adapter.getModel().print();
 
     adapter.validate();
     adapter.getModel().clearMarkedElements();
@@ -62,7 +62,9 @@ void ValidatorPlugin::updateMessages(std::vector<pair<void *, string> > msgs)
             qDebug() << entity->getUniqueId();
             first = entity->getType();
 
-            emit sendBroadcastMessage(msgs [i].second.c_str(), entity);
+            pair <Entity *, QString> arg = make_pair (entity, QString::fromStdString(msgs [i].second));
+
+//            emit sendBroadcastMessage("validationError", &arg);
         }
 
         list << "" << first << QString::fromStdString(msgs [i].second);
@@ -84,7 +86,7 @@ void ValidatorPlugin::onEntityAdded(QString ID, Entity *entity)
 
     adapter.addElement(entity);
 
-    adapter.getModel().print();
+//    adapter.getModel().print();
 
 
     std::vector <pair<void *, string> > msgs = adapter.validate();
@@ -96,7 +98,7 @@ void ValidatorPlugin::onEntityChanged(QString ID, Entity * entity)
 {
     qDebug () << "Validator: Entity Changed: " << ID;
     adapter.changeElement(entity);
-    adapter.getModel().print();
+//    adapter.getModel().print();
 
     std::vector <pair<void *, string> > msgs = adapter.validate();
     updateMessages(msgs);
@@ -107,7 +109,7 @@ void ValidatorPlugin::onEntityRemoved(QString ID, QString entityID)
     qDebug () << "Validator: Entity Removed: " << ID;
     adapter.removeElement(entityID);
 
-    adapter.getModel().print();
+//    adapter.getModel().print();
 
     std::vector <pair<void *, string> > msgs = adapter.validate();
     updateMessages(msgs);

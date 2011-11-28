@@ -25,23 +25,23 @@ vector<pair<void *, string> >Validator::validate(Model &model)
 
 
     Message messageFactory;
-//    qDebug () << "Begin errorInLastPass";
+//    //qDebug () << "Begin errorInLastPass";
     set<virtualId>::iterator vIds = errorInLastPass.begin();
 
     model.clearElementsWithErrorInLastPass();
 
     for (ModelElement *el = NULL; vIds != errorInLastPass.end(); ++vIds) {
         el = model.element(*vIds);
-        qDebug () << "sdiuhusid";
+        //qDebug () << "sdiuhusid";
         if (el){
             StructuralValidation::structuralValidation (*el, model, msgs, messageFactory);
             SemanticValidation::semanticValidation (*el, model, msgs, messageFactory);
         }
     }
 
-    qDebug () <<  "End errorInLastPass";
+    //qDebug () <<  "End errorInLastPass";
     vIds = markeds.begin();
-    qDebug () << "Begin markeds";
+    //qDebug () << "Begin markeds";
     for (ModelElement *el = NULL; vIds != markeds.end(); ++vIds) {
         el = model.element(*vIds);
 
@@ -50,17 +50,17 @@ vector<pair<void *, string> >Validator::validate(Model &model)
             SemanticValidation::semanticValidation (*el, model, msgs, messageFactory);
         }
     }
-    qDebug () << "End markeds";
+    //qDebug () << "End markeds";
     vIds = affecteds.begin();
 
-    qDebug () << "Begin affecteds";
+    //qDebug () << "Begin affecteds";
     for (ModelElement *el = NULL; vIds != affecteds.end(); ++vIds) {
         el = model.element(*vIds);
 
         if (el)
             SemanticValidation::semanticValidation (*el, model, msgs, messageFactory);
     }
-    qDebug () << "End affecteds";
+    //qDebug () << "End affecteds";
     return msgs;
 
 }

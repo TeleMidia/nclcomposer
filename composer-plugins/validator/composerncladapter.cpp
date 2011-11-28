@@ -6,13 +6,13 @@ ComposerNCLAdapter::ComposerNCLAdapter()
 
 void ComposerNCLAdapter::addElement(Entity *entity)
 {
-    qDebug() << "**********Validator: Begin addElement";
+    ////qDebug() << "**********Validator: Begin addElement";
     if (!entity){
-        qDebug() << "entity = NULL";
+        ////qDebug() << "entity = NULL";
         return;
     }
 
-    qDebug () << entity->getType() << " " << entity->getUniqueId();
+    ////qDebug () << entity->getType() << " " << entity->getUniqueId();
 
 //    QMap <QString, QString>::iterator begin;
 //    QMap <QString, QString>::iterator end;
@@ -25,7 +25,7 @@ void ComposerNCLAdapter::addElement(Entity *entity)
 //        QString name = begin.key();
 //        QString value = begin.value();
 
-//        qDebug() << name << " " << value;
+//        ////qDebug() << name << " " << value;
 
 //        nclValidator::Attribute attr (name.toStdString(), value.toStdString());
 
@@ -59,12 +59,12 @@ void ComposerNCLAdapter::addElement(Entity *entity)
 //        el->setComposerModelId(entity->getUniqueId());
     }
 
-    qDebug() << "**********Validator: End addElement";
+    ////qDebug() << "**********Validator: End addElement";
 }
 
 void ComposerNCLAdapter::changeElement(Entity * entity)
 {
-    qDebug() << "****************************Start editElement()";
+    //qDebug() << "****************************Start editElement()";
 
     nclValidator::virtualId virtualId = idToVirtualId[entity->getUniqueId()];
 
@@ -74,30 +74,30 @@ void ComposerNCLAdapter::changeElement(Entity * entity)
     std::vector <nclValidator::Attribute> attributes = createVectorAttribute(entity);
 
     nclModel.editElement(virtualId, attributes);
-    qDebug() << "****************************End editElement()";
+    //qDebug() << "****************************End editElement()";
 }
 
 void ComposerNCLAdapter::removeElement(QString entityID)
 {
-    qDebug() << "****************************Start removeElement()";
+    //qDebug() << "****************************Start removeElement()";
 
     nclValidator::virtualId virtualId = idToVirtualId [entityID];
 
     if (virtualId != ""){
-        qDebug () << "remove!";
+        //qDebug () << "remove!";
         nclModel.removeElement(virtualId);
     }
 
-    qDebug() << "****************************End removeElement()";
+    //qDebug() << "****************************End removeElement()";
 }
 
 std::vector <std::pair<void *, std::string> > ComposerNCLAdapter::validate()
 {
-    qDebug() << "**********Validator: Begin validate";
+    //qDebug() << "**********Validator: Begin validate";
 
     std::vector<std::pair<void *, std::string> > msgs = nclValidator::Validator::validate(nclModel);
 
-    qDebug() << "**********Validator: End validate";
+    ////qDebug() << "**********Validator: End validate";
 
     nclModel.clearMarkedElements();
 
@@ -117,7 +117,7 @@ std::vector <nclValidator::Attribute> ComposerNCLAdapter::createVectorAttribute(
         QString name = begin.key();
         QString value = begin.value();
 
-        qDebug() << name << " " << value;
+        ////qDebug() << name << " " << value;
 
         nclValidator::Attribute attr (name.toStdString(), value.toStdString());
 
