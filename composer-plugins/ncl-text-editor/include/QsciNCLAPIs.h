@@ -22,8 +22,9 @@
 using namespace composer::language;
 
 #include <Qsci/qsciapis.h>
-#include <QsciLexerNCL.h>
 #include <QtDebug>
+
+#include "QsciLexerNCL.h"
 
 class QsciNCLAPIs : public QsciAPIs
 {
@@ -51,7 +52,7 @@ private:
     int getStartTagLength(int pos);
 
 public:
-    QsciNCLAPIs(QsciLexer * 	lexer	 = 0);
+    QsciNCLAPIs(QsciLexer *lexer	 = 0);
     virtual ~QsciNCLAPIs();
 
     //! Update the list \a list with API entries derived from \a context.  \a

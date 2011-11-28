@@ -76,7 +76,7 @@ void NCLTextEditor::initParameters()
     mylexer->addTextPartition(10, startTagRegex, startTagStyle);
     */
 
-    nclexer = new QsciLexerNCL ();
+    nclexer = new QsciLexerNCL (0);
     setLexer(nclexer);
 
     //APIS

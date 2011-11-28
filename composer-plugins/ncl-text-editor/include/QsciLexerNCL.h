@@ -18,18 +18,12 @@
 #ifndef QSCILEXERNCL_H
 #define QSCILEXERNCL_H
 
-#ifdef __APPLE__
-extern "C++" {
-#endif
-
-#include <qobject.h>
-
+#include <QObject>
 #include <Qsci/qsciglobal.h>
 #include <Qsci/qscilexerhtml.h>
 
-
 //! \brief The QsciLexerNCL class encapsulates the Scintilla NCL lexer.
-class QSCINTILLA_EXPORT QsciLexerNCL : public QsciLexerHTML
+class QsciLexerNCL : public QsciLexerHTML
 {
     Q_OBJECT
 

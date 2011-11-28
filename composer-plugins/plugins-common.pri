@@ -1,6 +1,6 @@
 TEMPLATE    =   lib
-CONFIG      +=  qt debug plugin
-
+CONFIG      +=  qt release plugin dll
+CONFIG      -=  debug
 MOC_DIR     =   .moc
 OBJECTS_DIR =   .obj
 UI_DIR      =   .ui
@@ -12,7 +12,6 @@ else:unix {
   isEmpty(PREFIX) {
     PREFIX = /usr/local
   }
- 
   INSTALLBASE = $$PREFIX
 }
 else:win32 {
@@ -44,14 +43,13 @@ else:unix {
   target.path = $$quote($$INSTALLBASE/lib/composer/extensions)
 }
 else:win32 {
-  LIBS += -L$$INSTALLBASE \
-          -lComposerCore1 \
+  LIBS += -L$$INSTALLBASE -lComposerCore1 \
           -L$$INSTALLBASE/lib/composer \
           -L$$INSTALLBASE/lib/composer/extensions
 
   INCLUDEPATH += . include $$INSTALLBASE/include/composer \
                  $$INSTALLBASE/include/composer/core \
-                   $$INSTALLBASE/include/composer/core/extensions
+                 $$INSTALLBASE/include/composer/core/extensions
 
   target.path = $$INSTALLBASE/lib/composer
 }

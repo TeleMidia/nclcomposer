@@ -23,6 +23,8 @@
 #include "NCLTextEditor.h"
 #include "NCLTextEditorMainWindow.h"
 
+#include "NCLTextualViewPlugin_global.h"
+
 #include <QShortcut>
 #include <QKeySequence>
 #include <QDomElement>
@@ -37,7 +39,8 @@ namespace composer {
 /*!
  \brief Encapsulates the NCLTextEditor as a Composer plugin.
 */
-class NCLTextualViewPlugin : public IPlugin
+class NCLTextualViewPlugin :
+    public IPlugin
 {
     Q_OBJECT
 
@@ -161,6 +164,6 @@ protected:
 
 };
 
-}}} //end namespace
+} } } //end namespace
 
 #endif // DEBUGCONSOLEPLUGIN_H

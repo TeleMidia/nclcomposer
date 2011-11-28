@@ -17,12 +17,11 @@
  */
 #include "QsciLexerNCL.h"
 
-#include <qcolor.h>
-#include <qfont.h>
-#include <qsettings.h>
+#include <QColor>
+#include <QFont>
+#include <QSettings>
 
 #include <QDebug>
-
 
 // The ctor.
 QsciLexerNCL::QsciLexerNCL(QObject *parent)
