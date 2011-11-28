@@ -40,13 +40,7 @@ int SimpleSSHClient::scp_copy_file(const char *localncl)
   found = temp.find_last_of("/\\");
   string nclfile = temp.substr(found+1);
 
-#ifdef WIN32
-  scpfile = scppath + string("\\") + nclfile;
-
-#else
   scpfile = scppath + string("/") + nclfile;
-
-#endif
 
 #ifdef WIN32
   WSADATA wsadata;

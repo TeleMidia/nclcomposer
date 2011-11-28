@@ -48,7 +48,7 @@ public:
    * Configure the machine properties.
    */
   SimpleSSHClient(const char *username, const char *password,
-                       const char *hostip, const char *remotepath);
+                  const char *hostip, const char *remotepath);
 
   /*!
    * Copy the file from localpath to the remotepath

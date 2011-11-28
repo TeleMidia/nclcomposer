@@ -17,10 +17,8 @@ using namespace composer::gui;
 /*!
  \mainpage
 This is the online reference for developing with the NCL Composer.
-NCL Composer is a multiplatform and flexible multimedia authoring tool. It was
-first developed for NCL (Nested Context Language) support, but its flexible
-architecture allows to extend it to support almost all other multimedia
-languages, e.g. SMIL, SVG, and HTML 5.
+NCL Composer is a multiplatform and flexible multimedia authoring tool
+for Interactive Digital TV applications.
 
 \section sec_features Features
 List of features
