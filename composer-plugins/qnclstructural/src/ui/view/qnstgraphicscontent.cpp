@@ -1,50 +1,33 @@
-/*
- * Copyright 2011 TeleMidia/PUC-Rio.
- * 
- * This library is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Lesser General Public
- * License as published by the Free Software Foundation; either 
- * version 2.1 of the License, or (at your option) any later version.
- * 
- * This library is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details.
- * 
- * You should have received a copy of the GNU Lesser General Public 
- * License along with this library.  If not, see
- * <http://www.gnu.org/licenses/>. 
- */
-#include "qnstscene.h"
+#include "qnstgraphicscontent.h"
 
-QnstScene::QnstScene(QObject* parent)
-    : QGraphicsScene(parent)
+QnstGraphicsContent::QnstGraphicsContent(QnstGraphicsNode* parent)
+    : QnstGraphicsNode(parent)
 {
+    setnstType(Qnst::Content);
+
     createActions();
     createMenus();
     createConnections();
 
-    setLinking(false);
+    setResizable(false);
 }
 
-QnstScene::~QnstScene()
+QnstGraphicsContent::~QnstGraphicsContent()
 {
 
 }
 
-void QnstScene::setLinking(bool linking)
+QString QnstGraphicsContent::getIcon() const
 {
-    this->linking = linking;
-
-    // TODO:
+    return icon;
 }
 
-bool QnstScene::isLinking()
+void QnstGraphicsContent::setIcon(QString icon)
 {
-    return linking;
+    this->icon = icon;
 }
 
-void QnstScene::createActions()
+void QnstGraphicsContent::createActions()
 {
     // help action
     helpAction = new QAction(this);
@@ -134,7 +117,7 @@ void QnstScene::createActions()
     bodyAction->setText(tr("Body"));
     bodyAction->setIcon(QIcon(":/icon/composition"));
 
-    bodyAction->setEnabled(true);
+    bodyAction->setEnabled(false);
 
     // context action
     contextAction = new QAction(this);
@@ -204,14 +187,14 @@ void QnstScene::createActions()
     propertyAction->setText(tr("Property"));
     propertyAction->setIcon(QIcon(":/icon/property"));
 
-    propertyAction->setEnabled(false);
+    propertyAction->setEnabled(true);
 
     // area action
     areaAction = new QAction(this);
     areaAction->setText(tr("Area"));
     areaAction->setIcon(QIcon(":/icon/area"));
 
-    areaAction->setEnabled(false);
+    areaAction->setEnabled(true);
 
     // aggregator action
     aggregatorAction = new QAction(this);
@@ -261,7 +244,7 @@ void QnstScene::createActions()
     propertiesAction->setEnabled(false);
 }
 
-void QnstScene::createMenus()
+void QnstGraphicsContent::createMenus()
 {
     // view menu
     viewMenu = new QMenu();
@@ -342,36 +325,33 @@ void QnstScene::createMenus()
     contextMenu->addAction(propertiesAction);
 }
 
-void QnstScene::createConnections()
+void QnstGraphicsContent::createConnections()
 {
-    connect(bodyAction, SIGNAL(triggered()), SLOT(performBody()));
+
 }
 
-void QnstScene::performBody()
-{  
-    QnstGraphicsBody* entity = new QnstGraphicsBody();
-    entity->setTop(height()/2 - 500/2);
-    entity->setLeft(width()/2 - 750/2);
-    entity->setWidth(750);
-    entity->setHeight(500);
+void QnstGraphicsContent::draw(QPainter* painter)
+{
+    painter->setRenderHint(QPainter::SmoothPixmapTransform, true);
+    painter->drawPixmap(4 + 8/2, 4 + 8/2, getWidth()-8, getHeight()-8, QPixmap(icon));
 
-    connect(entity, SIGNAL(entityAdded(QnstEntity*)), SIGNAL(entityAdded(QnstEntity*)));
-    connect(entity, SIGNAL(entityChanged(QnstEntity*)), SIGNAL(entityChanged(QnstEntity*)));
-    connect(entity, SIGNAL(entityRemoved(QnstEntity*)), SIGNAL(entityRemoved(QnstEntity*)));
-    connect(entity, SIGNAL(entitySelected(QnstEntity*)), SIGNAL(entitySelected(QnstEntity*)));
+    if (isMoving()){
+        painter->setBrush(Qt::NoBrush);
+        painter->setPen(QPen(QBrush(Qt::black), 0)); // 0px = cosmetic border
 
-    addItem(entity);
-
-    emit entityAdded(entity);
-
-    insertMenu->setEnabled(false);
-
-    bodyAction->setEnabled(false);
+        painter->setRenderHint(QPainter::Antialiasing,false);
+        painter->drawRect(getMoveLeft()+4-getLeft(), getMoveTop()+4-getTop(), getWidth()-1, getHeight()-1);
+    }
 }
 
-void QnstScene::contextMenuEvent(QGraphicsSceneContextMenuEvent* event)
+void QnstGraphicsContent::delineate(QPainterPath* painter) const
 {
-    QGraphicsScene::contextMenuEvent(event);
+    painter->addRect(4, 4, getWidth(), getHeight());
+}
+
+void QnstGraphicsContent::contextMenuEvent(QGraphicsSceneContextMenuEvent* event)
+{
+    QnstGraphicsNode::contextMenuEvent(event);
 
     if (!event->isAccepted())
     {

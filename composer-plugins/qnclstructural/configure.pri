@@ -4,6 +4,7 @@ QNSTROOT += \
     $$PWD
 
 QNSTINCLUDES += \
+    $$QNSTROOT/src/core \
     $$QNSTROOT/../deps/libqncg/src
 
 QNSTLIBS += \

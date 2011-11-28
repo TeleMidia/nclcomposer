@@ -14,21 +14,21 @@ VERSION = \
 
 CONFIG += \
     debug \
-    staticlib
+    static
 
 HEADERS += \
     qncg.h \
-    qncgentity.h \
-    qncgnode.h \
-    qncginterface.h \
-    qncgedge.h \
-    qncgrectangle.h \
-    qncgrectangleinterface.h
+    qncggraphicsentity.h \
+    qncggraphicsnode.h
 
 SOURCES += \
-    qncgentity.cpp \
-    qncgnode.cpp \
-    qncginterface.cpp \
-    qncgedge.cpp \
-    qncgrectangle.cpp \
-    qncgrectangleinterface.cpp
+    qncggraphicsentity.cpp \
+    qncggraphicsnode.cpp
+
+
+
+
+
+
+
+

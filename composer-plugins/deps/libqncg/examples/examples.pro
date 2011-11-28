@@ -2,3 +2,11 @@ TEMPLATE = \
     subdirs
 
 SUBDIRS += \
+    editor
+
+
+
+
+
+
+

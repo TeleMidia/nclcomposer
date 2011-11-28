@@ -1,50 +1,23 @@
-/*
- * Copyright 2011 TeleMidia/PUC-Rio.
- * 
- * This library is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Lesser General Public
- * License as published by the Free Software Foundation; either 
- * version 2.1 of the License, or (at your option) any later version.
- * 
- * This library is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details.
- * 
- * You should have received a copy of the GNU Lesser General Public 
- * License along with this library.  If not, see
- * <http://www.gnu.org/licenses/>. 
- */
-#include "qnstscene.h"
+#include "qnstgraphicsbody.h"
 
-QnstScene::QnstScene(QObject* parent)
-    : QGraphicsScene(parent)
+QnstGraphicsBody::QnstGraphicsBody(QnstGraphicsNode* parent)
+    : QnstGraphicsComposition(parent)
 {
+    setnstType(Qnst::Body);
+
     createActions();
     createMenus();
     createConnections();
 
-    setLinking(false);
+    setColor("#C1FFC1");
 }
 
-QnstScene::~QnstScene()
+QnstGraphicsBody::~QnstGraphicsBody()
 {
 
 }
 
-void QnstScene::setLinking(bool linking)
-{
-    this->linking = linking;
-
-    // TODO:
-}
-
-bool QnstScene::isLinking()
-{
-    return linking;
-}
-
-void QnstScene::createActions()
+void QnstGraphicsBody::createActions()
 {
     // help action
     helpAction = new QAction(this);
@@ -134,84 +107,84 @@ void QnstScene::createActions()
     bodyAction->setText(tr("Body"));
     bodyAction->setIcon(QIcon(":/icon/composition"));
 
-    bodyAction->setEnabled(true);
+    bodyAction->setEnabled(false);
 
     // context action
     contextAction = new QAction(this);
     contextAction->setText(tr("Context"));
     contextAction->setIcon(QIcon(":/icon/composition"));
 
-    contextAction->setEnabled(false);
+    contextAction->setEnabled(true);
 
     // switch action
     switchAction = new QAction(this);
     switchAction->setText(tr("Switch"));
     switchAction->setIcon(QIcon(":/icon/composition"));
 
-    switchAction->setEnabled(false);
+    switchAction->setEnabled(true);
 
     // image action
     imageAction = new QAction(this);
     imageAction->setText(tr("Image"));
     imageAction->setIcon(QIcon(":/icon/image"));
 
-    imageAction->setEnabled(false);
+    imageAction->setEnabled(true);
 
     // video action
     videoAction = new QAction(this);
     videoAction->setText(tr("Video"));
     videoAction->setIcon(QIcon(":/icon/video"));
 
-    videoAction->setEnabled(false);
+    videoAction->setEnabled(true);
 
     // audio action
     audioAction = new QAction(this);
     audioAction->setText(tr("Audio"));
     audioAction->setIcon(QIcon(":/icon/audio"));
 
-    audioAction->setEnabled(false);
+    audioAction->setEnabled(true);
 
     // text action
     textAction = new QAction(this);
     textAction->setText(tr("Text"));
     textAction->setIcon(QIcon(":/icon/text"));
 
-    textAction->setEnabled(false);
+    textAction->setEnabled(true);
 
     // script action
     scriptAction = new QAction(this);
     scriptAction->setText(tr("Script"));
     scriptAction->setIcon(QIcon(":/icon/script"));
 
-    scriptAction->setEnabled(false);
+    scriptAction->setEnabled(true);
 
     // settings action
     settingsAction = new QAction(this);
     settingsAction->setText(tr("Settings"));
     settingsAction->setIcon(QIcon(":/icon/settings"));
 
-    settingsAction->setEnabled(false);
+    settingsAction->setEnabled(true);
 
     // port action
     portAction = new QAction(this);
     portAction->setText(tr("Port"));
     portAction->setIcon(QIcon(":/icon/port"));
 
-    portAction->setEnabled(false);
+    portAction->setEnabled(true);
 
     // property action
     propertyAction = new QAction(this);
     propertyAction->setText(tr("Property"));
     propertyAction->setIcon(QIcon(":/icon/property"));
 
-    propertyAction->setEnabled(false);
+    propertyAction->setEnabled(true);
 
     // area action
     areaAction = new QAction(this);
     areaAction->setText(tr("Area"));
     areaAction->setIcon(QIcon(":/icon/area"));
 
-    areaAction->setEnabled(false);
+    areaAction->setEnabled(true);
 
     // aggregator action
     aggregatorAction = new QAction(this);
@@ -248,6 +221,18 @@ void QnstScene::createActions()
     sendbackAction->setEnabled(false);
     sendbackAction->setShortcut(QKeySequence("Shift+Ctrl+["));
 
+    // compact action
+    compactAction = new QAction(this);
+    compactAction->setText(tr("Compact"));
+
+    compactAction->setEnabled(true);
+
+    // clock action
+    clockAction = new QAction(this);
+    clockAction->setText(tr("Clock"));
+
+    clockAction->setEnabled(true);
+
     // hide action
     hideAction = new QAction(this);
     hideAction->setText(tr("Hide"));
@@ -261,7 +246,7 @@ void QnstScene::createActions()
     propertiesAction->setEnabled(false);
 }
 
-void QnstScene::createMenus()
+void QnstGraphicsBody::createMenus()
 {
     // view menu
     viewMenu = new QMenu();
@@ -317,6 +302,23 @@ void QnstScene::createMenus()
     arrangeMenu->addAction(sendbackwardAction);
     arrangeMenu->addAction(sendbackAction);
 
+    // adjust menu
+    adjustMenu = new QMenu();
+    adjustMenu->setTitle(tr("Adjust"));
+
+    adjustMenu->setEnabled(true);
+
+    adjustMenu->addAction(compactAction);
+
+
+    // organize menu
+    organizeMenu = new QMenu();
+    organizeMenu->setTitle(tr("Organize"));
+
+    organizeMenu->setEnabled(true);
+
+    organizeMenu->addAction(clockAction);
+
     // context menu
     contextMenu = new QMenu();
     contextMenu->addAction(helpAction);
@@ -336,42 +338,197 @@ void QnstScene::createMenus()
     contextMenu->addMenu(insertMenu);
     contextMenu->addMenu(showMenu);
     contextMenu->addMenu(arrangeMenu);
+    contextMenu->addMenu(adjustMenu);
+    contextMenu->addMenu(organizeMenu);
     contextMenu->addSeparator();
     contextMenu->addAction(hideAction);
     contextMenu->addSeparator();
     contextMenu->addAction(propertiesAction);
 }
 
-void QnstScene::createConnections()
+void QnstGraphicsBody::createConnections()
 {
-    connect(bodyAction, SIGNAL(triggered()), SLOT(performBody()));
+    connect(imageAction, SIGNAL(triggered()), SLOT(performImage()));
+    connect(audioAction, SIGNAL(triggered()), SLOT(performAudio()));
+    connect(textAction, SIGNAL(triggered()), SLOT(performText()));
+    connect(videoAction, SIGNAL(triggered()), SLOT(performVideo()));
+    connect(scriptAction, SIGNAL(triggered()), SLOT(performScript()));
+    connect(settingsAction, SIGNAL(triggered()), SLOT(performSettings()));
+
+    connect(contextAction, SIGNAL(triggered()), SLOT(performContext()));
+    connect(switchAction, SIGNAL(triggered()), SLOT(performSwitch()));
+
+    connect(compactAction, SIGNAL(triggered()), SLOT(performCompact()));
+
+    connect(clockAction, SIGNAL(triggered()), SLOT(performClock()));
 }
 
-void QnstScene::performBody()
-{  
-    QnstGraphicsBody* entity = new QnstGraphicsBody();
-    entity->setTop(height()/2 - 500/2);
-    entity->setLeft(width()/2 - 750/2);
-    entity->setWidth(750);
-    entity->setHeight(500);
+void QnstGraphicsBody::performContext()
+{
+    QnstGraphicsContext* entity = new QnstGraphicsContext(this);
+    entity->setTop(getHeight()/2 - getHeight()/4);
+    entity->setLeft(getWidth()/2 - getWidth()/4);
+    entity->setWidth(getWidth()/2);
+    entity->setHeight(getHeight()/2);
+    entity->adjust();
 
     connect(entity, SIGNAL(entityAdded(QnstEntity*)), SIGNAL(entityAdded(QnstEntity*)));
     connect(entity, SIGNAL(entityChanged(QnstEntity*)), SIGNAL(entityChanged(QnstEntity*)));
     connect(entity, SIGNAL(entityRemoved(QnstEntity*)), SIGNAL(entityRemoved(QnstEntity*)));
     connect(entity, SIGNAL(entitySelected(QnstEntity*)), SIGNAL(entitySelected(QnstEntity*)));
 
-    addItem(entity);
+    addncgGraphicsEntity(entity);
 
     emit entityAdded(entity);
-
-    insertMenu->setEnabled(false);
-
-    bodyAction->setEnabled(false);
 }
 
-void QnstScene::contextMenuEvent(QGraphicsSceneContextMenuEvent* event)
+void QnstGraphicsBody::performSwitch()
 {
-    QGraphicsScene::contextMenuEvent(event);
+    QnstGraphicsSwitch* entity = new QnstGraphicsSwitch(this);
+
+    entity->setTop(getHeight()/2 - getHeight()/4);
+    entity->setLeft(getWidth()/2 - getWidth()/4);
+    entity->setWidth(getWidth()/2);
+    entity->setHeight(getHeight()/2);
+    entity->adjust();
+
+    connect(entity, SIGNAL(entityAdded(QnstEntity*)), SIGNAL(entityAdded(QnstEntity*)));
+    connect(entity, SIGNAL(entityChanged(QnstEntity*)), SIGNAL(entityChanged(QnstEntity*)));
+    connect(entity, SIGNAL(entityRemoved(QnstEntity*)), SIGNAL(entityRemoved(QnstEntity*)));
+    connect(entity, SIGNAL(entitySelected(QnstEntity*)), SIGNAL(entitySelected(QnstEntity*)));
+
+    addncgGraphicsEntity(entity);
+
+    emit entityAdded(entity);
+}
+
+void QnstGraphicsBody::performImage()
+{
+    QnstGraphicsImage* entity = new QnstGraphicsImage(this);
+    entity->setTop(getHeight()/2 - 64/2);
+    entity->setLeft(getWidth()/2 - 64/2);
+    entity->setWidth(56);
+    entity->setHeight(56);
+    entity->adjust();
+
+    connect(entity, SIGNAL(entityAdded(QnstEntity*)), SIGNAL(entityAdded(QnstEntity*)));
+    connect(entity, SIGNAL(entityChanged(QnstEntity*)), SIGNAL(entityChanged(QnstEntity*)));
+    connect(entity, SIGNAL(entityRemoved(QnstEntity*)), SIGNAL(entityRemoved(QnstEntity*)));
+    connect(entity, SIGNAL(entitySelected(QnstEntity*)), SIGNAL(entitySelected(QnstEntity*)));
+
+    addncgGraphicsEntity(entity);
+
+    emit entityAdded(entity);
+}
+
+void QnstGraphicsBody::performAudio()
+{
+    QnstGraphicsAudio* entity = new QnstGraphicsAudio(this);
+    entity->setTop(getHeight()/2 - 56/2);
+    entity->setLeft(getWidth()/2 - 56/2);
+    entity->setWidth(56);
+    entity->setHeight(56);
+    entity->adjust();
+
+    connect(entity, SIGNAL(entityAdded(QnstEntity*)), SIGNAL(entityAdded(QnstEntity*)));
+    connect(entity, SIGNAL(entityChanged(QnstEntity*)), SIGNAL(entityChanged(QnstEntity*)));
+    connect(entity, SIGNAL(entityRemoved(QnstEntity*)), SIGNAL(entityRemoved(QnstEntity*)));
+    connect(entity, SIGNAL(entitySelected(QnstEntity*)), SIGNAL(entitySelected(QnstEntity*)));
+
+    addncgGraphicsEntity(entity);
+
+    emit entityAdded(entity);
+}
+
+void QnstGraphicsBody::performVideo()
+{
+    QnstGraphicsVideo* entity = new QnstGraphicsVideo(this);
+    entity->setTop(getHeight()/2 - 56/2);
+    entity->setLeft(getWidth()/2 - 56/2);
+    entity->setWidth(56);
+    entity->setHeight(56);
+    entity->adjust();
+
+    connect(entity, SIGNAL(entityAdded(QnstEntity*)), SIGNAL(entityAdded(QnstEntity*)));
+    connect(entity, SIGNAL(entityChanged(QnstEntity*)), SIGNAL(entityChanged(QnstEntity*)));
+    connect(entity, SIGNAL(entityRemoved(QnstEntity*)), SIGNAL(entityRemoved(QnstEntity*)));
+    connect(entity, SIGNAL(entitySelected(QnstEntity*)), SIGNAL(entitySelected(QnstEntity*)));
+
+    addncgGraphicsEntity(entity);
+
+    emit entityAdded(entity);
+}
+
+void QnstGraphicsBody::performText()
+{
+    QnstGraphicsText* entity = new QnstGraphicsText(this);
+    entity->setTop(getHeight()/2 - 56/2);
+    entity->setLeft(getWidth()/2 - 56/2);
+    entity->setWidth(56);
+    entity->setHeight(56);
+    entity->adjust();
+
+    connect(entity, SIGNAL(entityAdded(QnstEntity*)), SIGNAL(entityAdded(QnstEntity*)));
+    connect(entity, SIGNAL(entityChanged(QnstEntity*)), SIGNAL(entityChanged(QnstEntity*)));
+    connect(entity, SIGNAL(entityRemoved(QnstEntity*)), SIGNAL(entityRemoved(QnstEntity*)));
+    connect(entity, SIGNAL(entitySelected(QnstEntity*)), SIGNAL(entitySelected(QnstEntity*)));
+
+    addncgGraphicsEntity(entity);
+
+    emit entityAdded(entity);
+}
+
+void QnstGraphicsBody::performScript()
+{
+    QnstGraphicsScript* entity = new QnstGraphicsScript(this);
+    entity->setTop(getHeight()/2 - 56/2);
+    entity->setLeft(getWidth()/2 - 56/2);
+    entity->setWidth(56);
+    entity->setHeight(56);
+    entity->adjust();
+
+    connect(entity, SIGNAL(entityAdded(QnstEntity*)), SIGNAL(entityAdded(QnstEntity*)));
+    connect(entity, SIGNAL(entityChanged(QnstEntity*)), SIGNAL(entityChanged(QnstEntity*)));
+    connect(entity, SIGNAL(entityRemoved(QnstEntity*)), SIGNAL(entityRemoved(QnstEntity*)));
+    connect(entity, SIGNAL(entitySelected(QnstEntity*)), SIGNAL(entitySelected(QnstEntity*)));
+
+    addncgGraphicsEntity(entity);
+
+    emit entityAdded(entity);
+}
+
+void QnstGraphicsBody::performSettings()
+{
+    QnstGraphicsSettings* entity = new QnstGraphicsSettings(this);
+    entity->setTop(getHeight()/2 - 56/2);
+    entity->setLeft(getWidth()/2 - 56/2);
+    entity->setWidth(56);
+    entity->setHeight(56);
+    entity->adjust();
+
+    connect(entity, SIGNAL(entityAdded(QnstEntity*)), SIGNAL(entityAdded(QnstEntity*)));
+    connect(entity, SIGNAL(entityChanged(QnstEntity*)), SIGNAL(entityChanged(QnstEntity*)));
+    connect(entity, SIGNAL(entityRemoved(QnstEntity*)), SIGNAL(entityRemoved(QnstEntity*)));
+    connect(entity, SIGNAL(entitySelected(QnstEntity*)), SIGNAL(entitySelected(QnstEntity*)));
+
+    addncgGraphicsEntity(entity);
+
+    emit entityAdded(entity);
+}
+
+void QnstGraphicsBody::performCompact()
+{
+    compact(50);
+}
+
+void QnstGraphicsBody::performClock()
+{
+    clock(50);
+}
+
+void QnstGraphicsBody::contextMenuEvent(QGraphicsSceneContextMenuEvent* event)
+{
+    QnstGraphicsComposition::contextMenuEvent(event);
 
     if (!event->isAccepted())
     {
@@ -380,3 +537,4 @@ void QnstScene::contextMenuEvent(QGraphicsSceneContextMenuEvent* event)
         event->accept();
     }
 }
+

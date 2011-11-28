@@ -18,9 +18,7 @@
 #ifndef QNSTCOMPOSERPLUGIN_H
 #define QNSTCOMPOSERPLUGIN_H
 
-#include <QString>
 #include <QMap>
-#include <QStack>
 
 #include <core/extensions/IPlugin.h>
 using namespace composer::extension;
@@ -47,7 +45,6 @@ public:
     virtual bool saveSubsession();
 
 public slots:
-
     virtual void onEntityAdded(QString pluginID, Entity *entity);
 
     virtual void errorMessage(QString error);
@@ -58,72 +55,60 @@ public slots:
 
     virtual void changeSelectedEntity(QString pluginID, void* entityUID);
 
+    void requestEntityAddition(Entity* entity);
+
+    void requestEntityRemotion(Entity* entity);
+
+    void requestEntityChange(Entity* entity);
+
+    void requestEntitySelection(Entity* entity);
+
+    void requestEntityAddition(const QString uid, const QString parent, const QMap<QString, QString> properties);
+
+    void requestEntityRemotion(const QString uid);
+
+    void requestEntityChange(const QString uid, const QMap<QString, QString> properties);
+
+    void requestEntitySelection(const QString uid);
+
 private:
     void createWidgets();
 
     void createConnections();
 
-    void addBody();
+    void requestBodyAddition(Entity* entity);
 
-    QString addConnector(QString condition, QString action);
+    void requestBodyChange(Entity* entity);
+
+    void requestMediaAddition(Entity* entity);
+
+    void requestMediaChange(Entity* entity);
+
+    void requestBodyAddition(const QString uid, const QString parent, const QMap<QString, QString> properties);
+
+    void requestBodyChange(const QString uid, const QMap<QString, QString> properties);
+
+    void requestBodyDependence();
+
+    void requestContextAddition(const QString uid, const QString parent, const QMap<QString, QString> properties);
+
+    void requestContextChange(const QString uid, const QMap<QString, QString> properties);
+
+    void requestSwitchAddition(const QString uid, const QString parent, const QMap<QString, QString> properties);
+
+    void requestSwitchChange(const QString uid, const QMap<QString, QString> properties);
+
+    void requestMediaAddition(const QString uid, const QString parent, const QMap<QString, QString> properties);
+
+    void requestMediaChange(const QString uid, const QMap<QString, QString> properties);
+
+    int n;
 
     QnstView* view;
 
-    QMap<QString, QString> m_view_to_comp;
+    QString request;
 
-    QMap<QString, QString> m_comp_to_view;
-
-    QStack<QString> bodyStack;
-    QStack<QString> mediaStack;
-    QStack<QString> contextStack;
-    QStack<QString> switchStack;
-    QStack<QString> portStack;
-    QStack<QString> areaStack;
-    QStack<QString> propertyStack;
-    QStack<QString> linkStack;
-
-    QStack<QString> bindStack;
-
-    QSet<QString> connectors;
-
-    QString* selectedId;
-
-private slots:
-    void requestBodyAddition(const QString entityUID,
-                             const QString parentUID,
-                             const QMap<QString, QString> attributes);
-
-    void requestContextAddition(const QString entityUID,
-                                const QString parentUID,
-                                const QMap<QString, QString> attributes);
-
-    void requestMediaAddition(const QString entityUID,
-                              const QString parentUID,
-                              const QMap<QString, QString> attributes);
-
-    void requestSwitchAddition(const QString entityUID,
-                               const QString parentUID,
-                               const QMap<QString, QString> attributes);
-
-    void requestPortAddition(const QString entityUID,
-                               const QString parentUID,
-                               const QMap<QString, QString> attributes);
-
-    void requestPropertyAddition(const QString entityUID,
-                               const QString parentUID,
-                               const QMap<QString, QString> attributes);
-
-    void requestAreaAddition(const QString entityUID,
-                             const QString parentUID,
-                             const QMap<QString, QString> attributes);
-
-    void requestLinkAddition(const QString entityUID,
-                             const QString parentUID,
-                             const QMap<QString, QString> attributes);
-
-    void requestEntitySelection(const QString entityUID);
-
-    void requestEntityRemotion(const QString entityUID);
+    QMap<QString, QString> entites;
 };
 
 } } } // end namespace

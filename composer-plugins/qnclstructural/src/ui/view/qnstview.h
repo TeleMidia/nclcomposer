@@ -18,13 +18,23 @@
 #ifndef QNSTVIEW_H
 #define QNSTVIEW_H
 
-#include "QGraphicsView"
-#include "QVector"
-#include "QMap"
+#include <QGraphicsView>
+#include <QVector>
+#include <QMap>
+#include <QMouseEvent>
+#include <QKeyEvent>
+#include <QWheelEvent>
+
+#include <QDebug>
 
 #include "qnstscene.h"
+#include "qnstentity.h"
+#include "qnstgraphicsbody.h"
+#include "qnstgraphicscontext.h"
+#include "qnstgraphicsswitch.h"
+#include "qnstgraphicsmedia.h"
 
-#include <QWheelEvent>
+typedef int QnstInt;
 
 class QnstView : public QGraphicsView
 {
@@ -35,84 +45,79 @@ public:
 
     ~QnstView();
 
+    QVector<QnstEntity*> getRoots() const;
 
+    void addRoot(QnstEntity* root);
+
+    void removeRoot(QnstEntity* root);
 
 public slots:
-    QString addEntity(const QString parentUID,
-                      const QMap<QString, QString> attributes);
+    void addEntity(const QString uid, const QString parent, const QMap<QString, QString> properties);
 
-    void removeEntity(const QString entityUID);
+    void removeEntity(const QString uid);
 
-    void changeEntity(const QString entityUID,
-                      const QString parentUID,
-                      const QMap<QString, QString> attributes);
+    void changeEntity(const QString uid, const QMap<QString, QString> properties);
 
-    void selectEntity(const QString entityUID);
+    void selectEntity(const QString uid);
 
-    void requestEntityRemotion(QnstEntity* e);
+    void requestEntityAddition(QnstEntity* entity);
 
-    void requestEntityAddition(QnstEntity* e);
+    void requestEntityRemotion(QnstEntity* entity);
 
-    void requestEntitySelection(QnstEntity* e);
+    void requestEntityChange(QnstEntity* entity);
+
+    void requestEntitySelection(QnstEntity* entity);
 
 signals:
-    void entitySelected(const QString entityUID);
+    void entityAdded(const QString uid, const QString parent, const QMap<QString, QString> properties);
 
-    void entityRemoved(const QString entityUID);
+    void entityChanged(const QString uid, const QMap<QString, QString> properties);
 
-    void bodyAdded(const QString entityUID,
-                   const QString parentUID,
-                   const QMap<QString, QString> attributes);
+    void entityRemoved(const QString uid);
 
-    void contextAdded(const QString entityUID,
-                      const QString parentUID,
-                      const QMap<QString, QString> attributes);
+    void entitySelected(const QString uid);
 
-    void mediaAdded(const QString entityUID,
-                    const QString parentUID,
-                    const QMap<QString, QString> attributes);
-
-    void switchAdded(const QString entityUID,
-                     const QString parentUID,
-                     const QMap<QString, QString> attributes);
-
-    void portAdded(const QString entityUID,
-                     const QString parentUID,
-                     const QMap<QString, QString> attributes);
-
-    void areaAdded(const QString entityUID,
-                     const QString parentUID,
-                     const QMap<QString, QString> attributes);
-
-    void propertyAdded(const QString entityUID,
-                     const QString parentUID,
-                     const QMap<QString, QString> attributes);
-
-    void linkAdded(const QString entityUID,
-                     const QString parentUID,
-                     const QMap<QString, QString> attributes);
-
-
-//protected:
-//    void wheelEvent( QWheelEvent * event );
+protected slots:
+    virtual void mousePressEvent(QMouseEvent* event);
 
 private:
+    void addBody(const QString uid, const QString parent, const QMap<QString, QString> properties);
+
+    void changeBody(const QString uid, const QMap<QString, QString> properties);
+
+    void addMedia(const QString uid, const QString parent, const QMap<QString, QString> properties);
+
+    void changeMedia(const QString uid, const QMap<QString, QString> properties);
+
+    void requestBodyAddition(QnstGraphicsBody* entity);
+
+    void requestBodyChange(QnstGraphicsBody* entity);
+
+    void requestContextAddition(QnstGraphicsContext* entity);
+
+    void requestContextChange(QnstGraphicsContext* entity);
+
+    void requestSwitchAddition(QnstGraphicsSwitch* entity);
+
+    void requestSwitchChange(QnstGraphicsSwitch* entity);
+
+    void requestMediaAddition(QnstGraphicsMedia* entity);
+
+    void requestMediaChange(QnstGraphicsMedia* entity);
+
+    void createObjects();
+
     void createConnection();
+
+    QnstInt n;
+
+    QnstEntity* selected;
 
     QnstScene* scene;
 
-    QncgEntity* selectedEntity;
+    QVector<QnstEntity*> roots;
 
     QMap<QString, QnstEntity*> entities;
-
-    int media_count;
-    int link_count;
-    int context_count;
-    int switch_count;
-    int port_count;
-    int area_count;
-    int property_count;
-
 };
 
 #endif // QNSTVIEW_H

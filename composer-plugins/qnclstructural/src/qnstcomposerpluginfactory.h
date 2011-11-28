@@ -64,7 +64,7 @@ public:
 
      \return QString the name of the vendor of Layout View.
     */
-    QString vendor() {return "Telemidia Lab";}
+    QString vendor() {return "Telemidia Lab.";}
     /*!
      \brief Returns the copyright of Layout View.
 
@@ -87,7 +87,7 @@ public:
     QString description() {return "Structural View enable the user to edit the \
             logical structure of a NCL document visually.";}
 
-    QString url() {return "http://composer.telemidia.puc-rio.br/debug";}
+    QString url() {return "http://composer.telemidia.puc-rio.br/structural";}
 
     QString category() {return "NCL";}
 };

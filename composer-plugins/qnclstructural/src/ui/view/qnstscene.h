@@ -18,12 +18,17 @@
 #ifndef QNSTSCENE_H
 #define QNSTSCENE_H
 
-#include "QGraphicsScene"
-#include "QMenu"
-#include "QAction"
-#include "QGraphicsSceneContextMenuEvent"
+#include <QMenu>
+#include <QAction>
+#include <QGraphicsSceneMouseEvent>
+#include <QGraphicsSceneContextMenuEvent>
 
-#include "qnstbody.h"
+#include <QGraphicsScene>
+
+#include <QDebug>
+
+#include "qnstentity.h"
+#include "qnstgraphicsbody.h"
 
 class QnstScene : public QGraphicsScene
 {
@@ -34,22 +39,24 @@ public:
 
     ~QnstScene();
 
-public slots:
-    void addBody();
+    void setLinking(bool linking);
 
-    void link(bool);
+    bool isLinking();
 
 signals:
-    void entityAdded(QnstEntity* e);
+    void entityAdded(QnstEntity* entity);
 
-    void entityRemoved(QnstEntity* e);
+    void entityRemoved(QnstEntity* entity);
 
-    void entityChanged(QnstEntity* e);
+    void entityChanged(QnstEntity* entity);
 
-    void entitySelected(QnstEntity* e);
+    void entitySelected(QnstEntity* entity);
 
 protected:
-    void contextMenuEvent(QGraphicsSceneContextMenuEvent* event);
+    virtual void contextMenuEvent(QGraphicsSceneContextMenuEvent* event);
+
+protected slots:
+    void performBody();
 
 private:
     void createActions();
@@ -57,6 +64,8 @@ private:
     void createMenus();
 
     void createConnections();
+
+    bool linking;
 
     QMenu* viewMenu;
 
@@ -100,7 +109,17 @@ private:
 
     QAction* switchAction;
 
-    QAction* mediaAction;
+    QAction* imageAction;
+
+    QAction* videoAction;
+
+    QAction* audioAction;
+
+    QAction* textAction;
+
+    QAction* scriptAction;
+
+    QAction* settingsAction;
 
     QAction* portAction;
 
@@ -117,8 +136,6 @@ private:
     QAction* sendbackwardAction;
 
     QAction* sendbackAction;
-
-    QAction* linkAction;
 
     QAction* propertiesAction;
 };

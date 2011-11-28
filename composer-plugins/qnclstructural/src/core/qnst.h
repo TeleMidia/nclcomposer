@@ -22,38 +22,28 @@ class Qnst
 {
 public:
     enum EntityType {
-        Body,
-        Port,
-        Link,
-        Switch,
-        Context,
+        Node,
+
+        Content,
         Media,
-        Property,
+        Image,
+        Audio,
+        Video,
+        Text,
+        Script,
+        Settings,
+
+        Compostion,
+        Body,
+        Context,
+        Switch,
+
+        Interface,
+        Port,
         Area,
-        Refer
-    };
+        Property,
 
-    enum ConditionType {
-        OnBegin,
-        OnEnd,
-        OnSelection,
-        OnKeySelection,
-        OnPause,
-        OnResume,
-        OnSet,
-        OnAbort,
-        NoCondition
-    };
-
-    enum ActionType {
-        Start,
-        StartDelay,
-        Stop,
-        Pause,
-        Resume,
-        Set,
-        Abort,
-        NoAction
+        NoType
     };
 };
 

@@ -23,44 +23,49 @@ HEADERS += \
     qnstcomposerpluginfactory.h \
     ui/view/qnstview.h \
     ui/view/qnstscene.h \
-    ui/view/qnstcomposite.h \
-    ui/view/qnstnode.h \
-    ui/view/qnstbody.h \
-    ui/view/qnstswitch.h \
-    ui/view/qnstcontext.h \
-    ui/view/qnstinterface.h \
-    ui/view/qnstport.h \
-    ui/view/qnstproperty.h \
-    ui/view/qnstarea.h \
-    ui/view/qnstmedia.h \
-    ui/view/qnstcontent.h \
-    ui/view/qnstedge.h \
-    ui/view/qnstportreference.h \
-    ui/view/qnstentity.h \
-    core/qnst.h
+    core/qnst.h \
+    core/qnstentity.h \
+    ui/view/qnstgraphicsnode.h \
+    ui/view/qnstgraphicscomposition.h \
+    ui/view/qnstgraphicsbody.h \
+    ui/view/qnstgraphicscontent.h \
+    ui/view/qnstgraphicsmedia.h \
+    ui/view/qnstgraphicsimage.h \
+    ui/view/qnstgraphicsvideo.h \
+    ui/view/qnstgraphicsaudio.h \
+    ui/view/qnstgraphicstext.h \
+    ui/view/qnstgraphicsscript.h \
+    ui/view/qnstgraphicscontext.h \
+    ui/view/qnstgraphicsswitch.h \
+    ui/view/qnstgraphicssettings.h \
+    ui/view/qnstgraphicsinterface.h \
+    ui/view/qnstgraphicsarea.h \
+    ui/view/qnstgraphicsport.h \
+    ui/view/qnstgraphicsproperty.h
 
 SOURCES += \
     qnstcomposerplugin.cpp \
     qnstcomposerpluginfactory.cpp \
     ui/view/qnstview.cpp \
     ui/view/qnstscene.cpp \
-    ui/view/qnstcomposite.cpp \
-    ui/view/qnstnode.cpp \
-    ui/view/qnstbody.cpp \
-    ui/view/qnstswitch.cpp \
-    ui/view/qnstcontext.cpp \
-    ui/view/qnstinterface.cpp \
-    ui/view/qnstport.cpp \
-    ui/view/qnstproperty.cpp \
-    ui/view/qnstarea.cpp \
-    ui/view/qnstmedia.cpp \
-    ui/view/qnstcontent.cpp \
-    ui/view/qnstedge.cpp \
-    ui/view/qnstportreference.cpp \
-    ui/view/qnstentity.cpp
+    core/qnstentity.cpp \
+    ui/view/qnstgraphicsnode.cpp \
+    ui/view/qnstgraphicscomposition.cpp \
+    ui/view/qnstgraphicsbody.cpp \
+    ui/view/qnstgraphicscontent.cpp \
+    ui/view/qnstgraphicsmedia.cpp \
+    ui/view/qnstgraphicsimage.cpp \
+    ui/view/qnstgraphicsvideo.cpp \
+    ui/view/qnstgraphicsaudio.cpp \
+    ui/view/qnstgraphicstext.cpp \
+    ui/view/qnstgraphicsscript.cpp \
+    ui/view/qnstgraphicscontext.cpp \
+    ui/view/qnstgraphicsswitch.cpp \
+    ui/view/qnstgraphicssettings.cpp \
+    ui/view/qnstgraphicsinterface.cpp \
+    ui/view/qnstgraphicsport.cpp \
+    ui/view/qnstgraphicsproperty.cpp \
+    ui/view/qnstgraphicsarea.cpp
 
 RESOURCES += \
-    resources.qrc
-
-FORMS += \
-    forms/qnstdbind.ui
+    images.qrc
