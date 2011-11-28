@@ -481,6 +481,9 @@ font: 75 7.5pt;</string>
    </property>
   </action>
   <action name="action_ShowNews">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="icon">
     <iconset>
      <normalon>:/mainwindow/images/rss_icon.png</normalon>
@@ -519,8 +522,14 @@ font: 75 7.5pt;</string>
    <property name="toolTip">
     <string>Run Remotelly</string>
    </property>
+   <property name="shortcut">
+    <string>Ctrl+Shift+R</string>
+   </property>
   </action>
   <action name="action_Help">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="icon">
     <iconset resource="../images.qrc">
      <normaloff>:/mainwindow/images/help_icon.png</normaloff>:/mainwindow/images/help_icon.png</iconset>
@@ -567,6 +576,11 @@ font: 75 7.5pt;</string>
    </property>
    <property name="text">
     <string>Import from existing NCL Document</string>
+   </property>
+  </action>
+  <action name="actionPreferences">
+   <property name="text">
+    <string>Preferences</string>
    </property>
   </action>
  </widget>
