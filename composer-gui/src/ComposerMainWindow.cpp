@@ -40,7 +40,7 @@ ComposerMainWindow::ComposerMainWindow(QApplication &app, QWidget *parent)
 #ifdef Q_WS_MAC
   defaultPluginsPath << "/Library/Application Support/Composer"
                      << QCoreApplication::applicationDirPath() +
-                        "/../PlugIns/composer";;
+                        "/../PlugIns/composer";
 
 #elif defined(Q_WS_WIN32)
   defaultPluginsPath << "C:/Composer/lib/composer";
@@ -127,6 +127,14 @@ void ComposerMainWindow::readExtensions()
 
   extensions_paths << defaultPluginsPath; //Add default location to extensions
   extensions_paths.removeDuplicates(); // Remove duplicate paths
+
+  // add all the paths to LibraryPaht, i.e., plugins are allowed to install
+  // dll dependencies in the extensions path.
+  for(unsigned int i = 0; i < extensions_paths.size(); i++)
+  {
+    qDebug() << "Adding library " << extensions_paths.at(i);
+    QApplication::addLibraryPath(extensions_paths.at(i) + "/");
+  }
 
   // foreach path where extensions can be installed, try to load profiles.
   for(int i = 0; i < extensions_paths.size(); i++)
@@ -691,6 +699,9 @@ void ComposerMainWindow::createActions() {
   editPreferencesAct->setStatusTip(tr("Edit preferences"));
   connect (editPreferencesAct, SIGNAL(triggered()), this,
            SLOT(showEditPreferencesDialog()));
+
+  connect(ui->action_Preferences, SIGNAL(triggered()),
+          this, SLOT(showEditPreferencesDialog()));
 
   connect(ui->action_Exit, SIGNAL(triggered()), this, SLOT(close()));
   saveCurrentPluginsLayoutAct = new QAction(tr("Save current perspective"),
