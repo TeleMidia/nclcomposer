@@ -45,6 +45,7 @@ private:
     map <QString, QStringList> *dataTypeDefaultSuggestions;
     map <QString, map <QString, QString> *> *attributesDatatype; /**< TODO */
     QMultiMap <QString, AttributeReferences* > *references; /**< TODO */
+    map <QString, bool> define_scope;
 
     /*!
      * \brief Constructor
@@ -84,7 +85,8 @@ public:
      * \param father
      * \param cardinality
      */
-    void addElement (QString name, QString father, char cardinality);
+    void addElement (QString name, QString father, char cardinality,
+                     bool define_scope = false);
     /*!
      * \brief
      *
@@ -155,6 +157,11 @@ public:
      *
      */
     QString getAttributeDatatype(QString element, QString name);
+
+    /*!
+     * \brief
+     */
+    bool defineScope(QString tagname);
 };
 
 }} //end namespace

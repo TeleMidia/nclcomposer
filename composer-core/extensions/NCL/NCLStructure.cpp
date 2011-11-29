@@ -115,7 +115,10 @@ void NCLStructure::loadStructure(){
 
       if(tokens.size() == 5)
       {
-        addElement(tokens[1], tokens[2], 0);
+        bool define_scope = false;
+        if(tokens[4].toLower() == "true")
+          define_scope = true;
+        addElement(tokens[1], tokens[2], 0, define_scope);
       }
       else
       {
@@ -217,7 +220,8 @@ vector <QString> NCLStructure::parseLine(QString line){
 }
 
 //TODO: SCOPE
-void NCLStructure::addElement(QString name, QString father, char cardinality)
+void NCLStructure::addElement(QString name, QString father, char cardinality,
+                              bool define_scope)
 {
     if(!nesting->count(father))
         (*nesting)[father] = new map <QString, char>();
@@ -229,6 +233,7 @@ void NCLStructure::addElement(QString name, QString father, char cardinality)
         (*attributesDatatype)[name] = new map <QString, QString>();
 
     (*(*nesting)[father])[name] = cardinality;
+    this->define_scope[name] = define_scope;
 }
 
 void NCLStructure::addAttribute ( QString element, QString attr, QString type,
@@ -320,6 +325,13 @@ vector <AttributeReferences*> NCLStructure::getReferences ( QString element,
       ref.push_back(value);
   }
   return ref;
+}
+
+bool NCLStructure::defineScope(QString tagname)
+{
+  if(define_scope.count(tagname))
+    return define_scope[tagname];
+  return false;
 }
 
 } } //end namespace
