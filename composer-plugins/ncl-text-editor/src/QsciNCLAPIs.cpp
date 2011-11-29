@@ -42,12 +42,13 @@ void QsciNCLAPIs::updateAutoCompletionList( const QStringList &context,
       ->SendScintilla(QsciScintilla::SCI_GETSELECTIONSTART);
   qDebug() << "updateAutoCompletionList to";
 
-  if ( isElement(pos) ){
+  if ( isElement(pos) )
+  {
     suggesting = SUGGESTING_ELEMENTS;
     qDebug() << "Must suggest elements" << endl;
     for (int i = 0; i < context.count(); ++i) {
       qDebug() << "'" << context[i] << "'";
-      QString father = getFatherTagName(pos);
+      QString father = getParentTagName(pos);
       qDebug() << "Father = " << father;
       if(father == "")
         father = "NULL";
@@ -120,32 +121,56 @@ void QsciNCLAPIs::updateAutoCompletionList( const QStringList &context,
     vector <AttributeReferences *>
         references = nclStructure->getReferences(tagname, attribute);
 
-    NCLTextEditor *nclEditor = ((NCLTextEditor *)lexer()->editor());
-
-    nclEditor->parseDocument();
-
-    if(nclEditor->parseDocument())
+    if(references.size()) //the attribute is reference to other attributes.
     {
-      for(unsigned int i = 0; i < references.size(); i++)
+      NCLTextEditor *nclEditor = ((NCLTextEditor *)lexer()->editor());
+
+      if(nclEditor->parseDocument()) //parse our current document.
       {
-        QDomNodeList elements =
-            nclEditor->elementsByTagname(references[i]->getRefElement());
-        qDebug() << elements.length();
-
-        qDebug() << "Should refer to " << references[i]->getRefElement() <<
-                    "." << references[i]->getRefAttribute();
-        for(int j = 0; j < elements.length(); j++)
+        for(unsigned int i = 0; i < references.size(); i++)
         {
-          QDomElement node = elements.at(j).toElement();
+          qDebug() << "Should refer to " << references[i]->getRefElement()
+                   << "." << references[i]->getRefAttribute()
+                   << "in the scope: " << references[i]->getScope();
 
-          QString attributeValue =
-              node.attribute(references[i]->getRefAttribute());
+          QList <QDomElement> elements;
 
-          qDebug() << context.count();
-          for (int k = 0; k < context.count(); ++k)
+          //If we have an ANY_SCOPE, it doesn't need any special treatment.
+          if(references[i]->getScope() == AttributeReferences::ANY_SCOPE)
           {
-            if(attributeValue.startsWith(context[k]))
-              list.append(attributeValue);
+            elements = nclEditor->
+                elementsByTagname(references[i]->getRefElement());
+          }
+          else if(references[i]->getScope() == AttributeReferences::SAME_SCOPE)
+          {
+            int parent_offset = getParentOffset(pos);
+            while(!nclStructure->defineScope(getCurrentTagName(parent_offset)))
+            {
+              parent_offset = getParentOffset(parent_offset);
+            }
+
+            QString idValue =
+                getAttributeValueFromCurrentElement(parent_offset, "id");
+
+            // \todo GET THE DIRECT CHILDS OF element with idValue.
+            elements = nclEditor->
+                             elementsByTagname( references[i]->getRefElement(),
+                                                idValue);
+          }
+
+          for(int j = 0; j < elements.length(); j++)
+          {
+            QDomElement node = elements.at(j).toElement();
+
+            QString attributeValue =
+                node.attribute(references[i]->getRefAttribute());
+
+            qDebug() << context.count();
+            for (int k = 0; k < context.count(); ++k)
+            {
+              if(attributeValue.startsWith(context[k]))
+                list.append(attributeValue);
+            }
           }
         }
       }
@@ -173,13 +198,13 @@ void QsciNCLAPIs::autoCompletionSelected(const QString &selection)
   lexer()->editor()->getCursorPosition(&line, &pos);
   //delete original word from text
   start = pos - 1;
-  strline = lexer()->editor()->text(line);
+  strline = lexer()->editor()->text( line );
 
   //if the user already put a word, delete this word
   // (autocomplete will put it entirely)
   if(start >= 0 && strline.at(start).isLetter())
   {
-    lexer()->editor()->SendScintilla(QsciScintilla::SCI_DELWORDLEFT);
+    lexer()->editor()->SendScintilla( QsciScintilla::SCI_DELWORDLEFT );
 
     //update the start position and the content line
     lexer()->editor()->getCursorPosition(&line, &pos);
@@ -227,7 +252,7 @@ void QsciNCLAPIs::autoCompletionSelected(const QString &selection)
   else if(suggesting == SUGGESTING_ATTRIBUTE_VALUES)
   {
     int ps = lexer()->editor()->SendScintilla(QsciScintilla::SCI_GETCURRENTPOS)
-          - 1;
+        - 1;
     int pe = lexer()->editor()->SendScintilla(QsciScintilla::SCI_GETCURRENTPOS);
     bool quote1_found = false, quote2_found = false;
     char ch;
@@ -257,7 +282,6 @@ void QsciNCLAPIs::autoCompletionSelected(const QString &selection)
 
     if(quote1_found && quote2_found)
     {
-      qDebug() << "eu aqui";
       lexer()->editor()->SendScintilla(QsciScintilla::SCI_SETSELECTIONSTART,
                                        ps+2);
       lexer()->editor()->SendScintilla(QsciScintilla::SCI_SETSELECTIONEND,
@@ -268,10 +292,10 @@ void QsciNCLAPIs::autoCompletionSelected(const QString &selection)
     outputStr = selection;
   }
 
-  //insert the new word (already managed)
+  // insert the new word (already managed)
   pos = lexer()->editor()->SendScintilla(QsciScintilla::SCI_GETCURRENTPOS);
   lexer()->editor()->insert(outputStr);
-  //fix identation
+  // fix identation
   if(fixidentation)
   {
     int lineident = lexer()->editor()->SendScintilla (
@@ -283,7 +307,7 @@ void QsciNCLAPIs::autoCompletionSelected(const QString &selection)
                                      lineident);
   }
 
-  //move cursor to the new position
+  // move cursor to the new position
   lexer()->editor()->SendScintilla(QsciScintilla::SCI_WORDRIGHT);
   lexer()->editor()->SendScintilla(QsciScintilla::SCI_WORDRIGHT);
 
@@ -316,7 +340,7 @@ QStringList QsciNCLAPIs::callTips(const QStringList &context, int commas,
 bool QsciNCLAPIs::event(QEvent *e)
 {
   (void) e;
-  //qDebug() << "QsciNCLAPIs::event" << e;
+  // qDebug() << "QsciNCLAPIs::event" << e;
   return true;
 }
 
@@ -343,24 +367,34 @@ QString QsciNCLAPIs::getRequiredAttributesAsStr(const QString &element)
 bool QsciNCLAPIs::isElement(int pos)
 {
   int style = lexer()->editor()
-      ->SendScintilla( QsciScintilla:: SCI_GETSTYLEAT,
-                      pos);
-  // qDebug() << "Style=" << style << endl;
-  if(style == QsciLexerNCL::Default){
+                          ->SendScintilla( QsciScintilla:: SCI_GETSTYLEAT, pos);
+  qDebug() << "Style=" << style;
+  if(style == QsciLexerNCL::Default)
+  {
     return true;
-  } else if( style == QsciLexerNCL::Tag ||
-            style == QsciLexerNCL::XMLTagEnd ||
-            style == QsciLexerNCL::XMLStart ||
-            style == QsciLexerNCL::OtherInTag ||
-            style == QsciLexerNCL::UnknownTag){
+  }
+  else if( style == QsciLexerNCL::Tag ||
+           style == QsciLexerNCL::XMLTagEnd ||
+           style == QsciLexerNCL::XMLStart ||
+           style == QsciLexerNCL::OtherInTag ||
+           style == QsciLexerNCL::UnknownTag)
+  {
     int p = pos-1;
-    while(p >= 0){
+    while(p >= 0)
+    {
       char ch = lexer()->editor()
-          ->SendScintilla( QsciScintilla::SCI_GETCHARAT,
-                          p);
+                            ->SendScintilla( QsciScintilla::SCI_GETCHARAT, p);
+      char previous_ch = lexer()->editor()
+                            ->SendScintilla( QsciScintilla::SCI_GETCHARAT, p-1);
       if(isspace(ch))
         break;
-      if(ch == '<') return true;
+      if(ch == '<')
+      {
+        if(previous_ch == '/')
+          return false; // \todo should return a end_tag
+        else
+          return true;
+      }
       p--;
     }
   }
@@ -371,8 +405,8 @@ bool QsciNCLAPIs::isElement(int pos)
 bool QsciNCLAPIs::isAttribute(int pos)
 {
   qDebug() << "QsciNCLAPIs::isAttribute";
-  int style = lexer()->editor()
-      ->SendScintilla(QsciScintilla:: SCI_GETSTYLEAT, pos);
+  int style = lexer()->editor()->SendScintilla(QsciScintilla::SCI_GETSTYLEAT,
+                                               pos);
   if ( style == QsciLexerNCL::Attribute )
     return true;
   else if( style == QsciLexerNCL::Tag ||
@@ -491,7 +525,7 @@ QString QsciNCLAPIs::getCurrentAttribute (int pos)
 }
 
 //TODO: Eliminate closed tags in the way
-QString QsciNCLAPIs::getFatherTagName(int pos)
+int QsciNCLAPIs::getParentOffset(int pos)
 {
   int p = pos;
   char ch = lexer()->editor()->SendScintilla(QsciScintilla::SCI_GETCHARAT, p);
@@ -506,8 +540,7 @@ QString QsciNCLAPIs::getFatherTagName(int pos)
       reading = QsciLexerNCL::XMLStart;
       p--;
       if (p < 0) break;
-      ch = lexer()->editor()->SendScintilla( QsciScintilla::SCI_GETCHARAT,
-                                            p);
+      ch = lexer()->editor()->SendScintilla(QsciScintilla::SCI_GETCHARAT, p);
       if ( ch == '/')
         reading = QsciLexerNCL::XMLTagEnd;
       else if (ch == '-')
@@ -518,9 +551,7 @@ QString QsciNCLAPIs::getFatherTagName(int pos)
           p--;
           lastch = ch;
           ch = lexer()->editor()
-              ->SendScintilla(
-                QsciScintilla::SCI_GETCHARAT,
-                p);
+              ->SendScintilla(QsciScintilla::SCI_GETCHARAT, p);
         }
         if(lastch == '/') reading = QsciLexerNCL::XMLEnd;
 
@@ -531,11 +562,70 @@ QString QsciNCLAPIs::getFatherTagName(int pos)
 
         qDebug() << "closed_tags = " << closed_tags << " p=" << p;
         if(closed_tags < 0)
-          return getCurrentTagName( p+2 );
+          return p+2;
       }
     }
   }
+  return -1;
+}
 
+QString QsciNCLAPIs::getAttributeValueFromCurrentElement(int pos, QString attr)
+{
+  qDebug() << "QsciNCLAPIs::getAttributeValueFromCurrentElement";
+  int start = getStartTagBegin(pos);
+  int length = getStartTagLength(pos);
+  int end = start + length;
+
+  if(start < 0 || end < 0) return "";
+
+  QString text;
+  char *chars = (char *) malloc ((end - start) * sizeof(char) + 1);
+  lexer()->editor()->SendScintilla( QsciScintilla::SCI_GETTEXTRANGE,
+                                    start,
+                                    end,
+                                    chars);
+  text = QString(chars);
+  qDebug() << "text = " << text;
+
+
+// FIXME: The following regex is not completely correct. Te text inside
+// the attribute will be matched in some cases.
+  QString regex = "\\s*(";
+  regex += attr;
+  regex += ")";
+  regex += "\\s*=\\s*(\"[a-zA-Z]+\")";
+  QRegExp attrRegex(regex, Qt::CaseSensitive, QRegExp::RegExp2);
+
+  int lastIndex = 0;
+  int index = attrRegex.indexIn(text, lastIndex);
+  qDebug() << index;
+  QString attrValue = "";
+
+  while(index != -1)
+  {
+    if (index + attrRegex.matchedLength() > text.size())
+      break;
+
+    qDebug() << index << " " << attrRegex.matchedLength();
+    attrValue = text.mid(index, attrRegex.matchedLength()).trimmed();
+    int start = attrValue.indexOf("\"")+1;
+    int length = attrValue.lastIndexOf("\"") - start;
+    attrValue = attrValue.mid(start, length);
+    qDebug() << attrValue;
+
+    lastIndex = (index + attrRegex.matchedLength());
+    index = attrRegex.indexIn(chars, lastIndex);
+  }
+
+  delete chars;
+  return attrValue;
+}
+
+QString QsciNCLAPIs::getParentTagName(int pos)
+{
+  int p_offset = getParentOffset(pos);
+  if(p_offset > 0)
+    return getCurrentTagName(p_offset);
   return "";
 }
 
@@ -597,9 +687,9 @@ void QsciNCLAPIs::getAttributesTyped(int pos, QStringList &attrs)
   QString text;
   char *chars = (char *) malloc ((end - start) * sizeof(char) + 1);
   lexer()->editor()->SendScintilla( QsciScintilla::SCI_GETTEXTRANGE,
-                                   start,
-                                   end,
-                                   chars);
+                                    start,
+                                    end,
+                                    chars);
   text = QString(chars);
   qDebug() << "text = " << text;
 
@@ -618,6 +708,5 @@ void QsciNCLAPIs::getAttributesTyped(int pos, QStringList &attrs)
     lastIndex = (index + attrRegex.matchedLength());
     index = attrRegex.indexIn(chars, lastIndex);
   }
-
   delete chars;
 }

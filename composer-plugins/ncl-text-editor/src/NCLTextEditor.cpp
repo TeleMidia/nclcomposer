@@ -17,6 +17,8 @@
  */
 #include "NCLTextEditor.h"
 
+#include <QStack>
+
 NCLTextEditor::NCLTextEditor(QWidget *parent) :
         QsciScintilla(parent)
 {
@@ -146,7 +148,6 @@ void NCLTextEditor::markError ( QString description,
                          line-1,
                          tmp.size()-1,
                          error_indicator);
-
 }
 
 void NCLTextEditor::wheelEvent (QWheelEvent *event)
@@ -183,11 +184,14 @@ void NCLTextEditor::mousePressEvent(QMouseEvent *event)
     style = SendScintilla(SCI_GETSTYLEAT, pos);
 
     //FIXME: Attribute also can be between Single quotes
-    if (style == QsciLexerNCL::HTMLDoubleQuotedString) {
+    if (style == QsciLexerNCL::HTMLDoubleQuotedString)
+    {
         //interaction_state = FILLING_ATTRIBUTES_STATE;
         getCursorPosition (&line, &index);
         updateVisualFillingAttributeField(line, index, begin, end);
-    } else {
+    }
+    else
+    {
         interaction_state = DEFAULT_STATE;
     }
 }
@@ -535,10 +539,60 @@ bool NCLTextEditor::parseDocument()
 
 QDomElement NCLTextEditor::elementById(QString id)
 {
+  QStack <QDomNode> stack;
+  stack.push_front(doc);
+  while(stack.size())
+  {
+    QDomNode current = stack.front();
+    stack.pop_front();
+    if(current.isElement())
+    {
+      if(current.toElement().attribute("id") == id)
+        return current.toElement();
+    }
+
+    QDomNode child = current.firstChild();
+    while(!child.isNull())
+    {
+      stack.push_back(child);
+      child = child.nextSibling();
+    }
+  }
+
+  // This will always return a NULL doc. That is why we have to reimplement
+  // this function.
   return doc.elementById(id);
 }
 
-QDomNodeList NCLTextEditor::elementsByTagname(QString tagname)
+QList <QDomElement> NCLTextEditor::elementsByTagname(QString tagname)
 {
-  return doc.elementsByTagName(tagname);
+  QDomNodeList elements = doc.elementsByTagName(tagname);
+  QList <QDomElement> ret;
+  for(int i = 0; i < children().length(); i++)
+  {
+    ret.push_back(elements.at(i).toElement());
+  }
+
+  return ret;
+}
+
+QList <QDomElement> NCLTextEditor::elementsByTagname( QString tagname,
+                                                      QString parentId )
+{
+  QDomNodeList children = elementById(parentId).childNodes();
+
+  QList <QDomElement> ret;
+
+  for(int j = 0; j < children.length(); j++)
+  {
+    //We don't care about nodes that aren't Element.
+    if(!children.at(j).isElement()) continue;
+
+    QDomElement node = children.at(j).toElement();
+
+    if(node.tagName() == tagname)
+      ret.push_back(node);
+  }
+
+  return ret;
 }

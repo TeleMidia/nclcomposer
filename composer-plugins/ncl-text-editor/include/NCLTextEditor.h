@@ -80,7 +80,8 @@ public:
 
     bool parseDocument();
     QDomElement elementById(QString id);
-    QDomNodeList elementsByTagname(QString tagname);
+    QList <QDomElement> elementsByTagname(QString tagname);
+    QList <QDomElement> elementsByTagname(QString tagname, QString parentId);
 
 private:
     enum INTERACTION_STATE {

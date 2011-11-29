@@ -46,8 +46,10 @@ private:
     bool isAttributeValue (int pos);
     QString getCurrentTagName (int pos);
     QString getCurrentAttribute (int pos);
-    QString getFatherTagName (int pos);
+    int getParentOffset(int pos);
+    QString getParentTagName (int pos);
     void getAttributesTyped(int pos, QStringList &attrs);
+    QString getAttributeValueFromCurrentElement(int pos, QString attr);
     int getStartTagBegin(int pos);
     int getStartTagLength(int pos);
 
