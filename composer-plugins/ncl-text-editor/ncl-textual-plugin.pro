@@ -8,8 +8,11 @@ DEFINES     += QSCINTILLA_DLL
 
 INCLUDEPATH +=  include \
                 ../outline-view/include \
-                ../ncl-layout-view \
-                deps/QScintilla-gpl-2.5.1/Qt4
+                ../ncl-layout-view
+
+# We use QMAKE_CXXFLAGS instead of INCLUDEPATH because our qscintilla is
+# modified, and must be found before any other that is installed.
+QMAKE_CXXFLAGS  += -Ideps/QScintilla-gpl-2.5.1/Qt4
 
 release {
 LIBS      +=    -Ldeps/QScintilla-gpl-2.5.1/Qt4/release \

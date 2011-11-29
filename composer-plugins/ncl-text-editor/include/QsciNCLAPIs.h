@@ -21,7 +21,7 @@
 #include <NCLStructure.h>
 using namespace composer::language;
 
-#include <telem/Qsci/qsciapis.h>
+#include <Qsci/qsciapis.h>
 #include <QtDebug>
 
 #include "QsciLexerNCL.h"

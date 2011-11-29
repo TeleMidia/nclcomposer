@@ -23,7 +23,7 @@
 #include <QWheelEvent>
 #include <QMessageBox>
 #include <QDomDocument>
-#include <telem/Qsci/qsciscintilla.h>
+#include <Qsci/qsciscintilla.h>
 
 #include "MyLexer.h"
 

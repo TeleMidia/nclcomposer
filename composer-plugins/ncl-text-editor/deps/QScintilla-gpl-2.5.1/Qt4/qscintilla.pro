@@ -51,7 +51,7 @@ else:unix {
   }
 
   QSCI_INSTALL_LIBS = $$PREFIX/lib/composer/extensions
-  QSCI_INSTALL_HEADERS = $$PREFIX/include/composer/telem
+  QSCI_INSTALL_HEADERS = $$PREFIX/include/composer
   QSCI_INSTALL_TRANSLATIONS = $$PREFIX/lib/composer/translations
   QSCI_INSTALL_DATA = $$PREFIX/lib/composer/
 }
@@ -61,7 +61,7 @@ else:win32 {
   }
 
   QSCI_INSTALL_LIBS = $$PREFIX/lib/composer
-  QSCI_INSTALL_HEADERS = $$PREFIX/include/composer/telem
+  QSCI_INSTALL_HEADERS = $$PREFIX/include/composer
   QSCI_INSTALL_TRANSLATIONS = $$PREFIX/lib/composer/translations
   QSCI_INSTALL_DATA = $$PREFIX/lib/composer/
 }

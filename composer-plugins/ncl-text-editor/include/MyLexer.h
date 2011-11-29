@@ -26,9 +26,9 @@ using namespace std;
 #include <QDebug>
 #include <QColor>
 #include <QFont>
-#include <telem/Qsci/qscilexercustom.h>
-#include <telem/Qsci/qscistyle.h>
-#include <telem/Qsci/qsciscintilla.h>
+#include <Qsci/qscilexercustom.h>
+#include <Qsci/qscistyle.h>
+#include <Qsci/qsciscintilla.h>
 
 class QsciStyle;
 
