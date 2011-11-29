@@ -32,7 +32,7 @@
 !win32:VERSION = 6.1.0
 
 TEMPLATE = lib
-TARGET = qscintilla2
+TARGET = qscintilla2_telem
 CONFIG += qt warn_off debug dll thread
 INCLUDEPATH = . ../include ../lexlib ../src
 DEFINES = QSCINTILLA_MAKE_DLL QT SCI_LEXER
@@ -51,7 +51,7 @@ else:unix {
   }
 
   QSCI_INSTALL_LIBS = $$PREFIX/lib/composer/extensions
-  QSCI_INSTALL_HEADERS = $$PREFIX/include/composer
+  QSCI_INSTALL_HEADERS = $$PREFIX/include/composer/telem
   QSCI_INSTALL_TRANSLATIONS = $$PREFIX/lib/composer/translations
   QSCI_INSTALL_DATA = $$PREFIX/lib/composer/
 }
@@ -61,7 +61,7 @@ else:win32 {
   }
 
   QSCI_INSTALL_LIBS = $$PREFIX/lib/composer
-  QSCI_INSTALL_HEADERS = $$PREFIX/include/composer
+  QSCI_INSTALL_HEADERS = $$PREFIX/include/composer/telem
   QSCI_INSTALL_TRANSLATIONS = $$PREFIX/lib/composer/translations
   QSCI_INSTALL_DATA = $$PREFIX/lib/composer/
 }
@@ -80,8 +80,8 @@ isEmpty(target.path) {
 header.path = $$QSCI_INSTALL_HEADERS
 header.files = Qsci
 isEmpty(header.path) {
-	header.path = $(QTDIR)/include/Qsci
-	header.files = Qsci/qsci*.h
+   header.path = $(QTDIR)/include/Qsci
+   header.files = Qsci/qsci*.h
 }
 
 trans.path = $$QSCI_INSTALL_TRANSLATIONS

@@ -13,10 +13,10 @@ INCLUDEPATH +=  include \
 
 release {
 LIBS      +=    -Ldeps/QScintilla-gpl-2.5.1/Qt4/release \
-                -lqscintilla2
+                -lqscintilla2_telem
 }else:debug {
 LIBS      +=    -L/deps/QScintilla-gpl-2.5.1/Qt4/debug \
-                -lqscintilla2
+                -lqscintilla2_telem
 }
 
 macx:LIBS += -L/Library/Frameworks \

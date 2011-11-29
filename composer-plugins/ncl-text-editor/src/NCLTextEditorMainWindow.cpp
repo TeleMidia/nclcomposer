@@ -17,7 +17,7 @@
  */
 #include <QtGui>
 
-#include <Qsci/qsciscintilla.h>
+#include <telem/Qsci/qsciscintilla.h>
 
 #include "NCLTextEditorMainWindow.h"
 

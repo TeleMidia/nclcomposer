@@ -19,8 +19,8 @@
 #define QSCILEXERNCL_H
 
 #include <QObject>
-#include <Qsci/qsciglobal.h>
-#include <Qsci/qscilexerhtml.h>
+#include <telem/Qsci/qsciglobal.h>
+#include <telem/Qsci/qscilexerhtml.h>
 
 //! \brief The QsciLexerNCL class encapsulates the Scintilla NCL lexer.
 class QsciLexerNCL : public QsciLexerHTML
