@@ -270,7 +270,8 @@ void NCLTreeWidget::userRemoveElement()
     QList<QTreeWidgetItem*> selecteds = this->selectedItems();
     QTreeWidgetItem *item = selecteds.at (0);
 
-//    if(item->parent() == NULL) return;
+    if(item == NULL)
+      return;
 
     QString id = item->text(2);
 
