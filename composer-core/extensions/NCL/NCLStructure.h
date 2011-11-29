@@ -29,7 +29,7 @@ using namespace composer::util;
 
 namespace composer {
     namespace language{
-/**
+/*!
  * \brief Class that keep information about the language description.
  *
  */
@@ -46,72 +46,73 @@ private:
     map <QString, map <QString, QString> *> *attributesDatatype; /**< TODO */
     QMultiMap <QString, AttributeReferences* > *references; /**< TODO */
 
-    /**
+    /*!
      * \brief Constructor
      */
     NCLStructure();
 
-    /**
+    /*!
      * \brief Destructor
      */
     ~NCLStructure();
 
-    /**
-     * @brief
-     * @param line
-     * @return vector<QString>
-    */
+    /*!
+     * \brief
+     *
+     * \param line
+     * \return vector<QString>
+     */
     vector <QString> parseLine(QString line);
 
 public:
-    /**
-     * @brief
+    /*!
+     * \brief
      *
-    */
+     */
     void loadStructure();
-    /**
-     * @brief
+    /*!
+     * \brief
      *
-    */
+     */
     void clear();
 
     //primitives
-    /**
-     * @brief
+    /*!
+     * \brief
      *
-     * @param name
-     * @param father
-     * @param cardinality
-    */
+     * \param name
+     * \param father
+     * \param cardinality
+     */
     void addElement (QString name, QString father, char cardinality);
-
-    /**
-     * @brief
+    /*!
+     * \brief
      *
-     * @param element
-     * @param attr
-     * @param type
-     * @param required
-    */
+     * \param element
+     * \param attr
+     * \param type
+     * \param required
+     */
     void addAttribute (QString element,
                        QString attr,
                        QString type,
                        bool required);
-
-    /**
-     * @brief
+    /*!
+     * \brief
      *
-     * @param element
-     * @param attr
-     * @param ref_element
-     * @param ref_attr
-    */
+     * \param element
+     * \param attr
+     * \param ref_element
+     * \param ref_attr
+     * \param scope
+     */
     void addReference (QString element,
                        QString attr,
                        QString ref_element,
-                       QString ref_attr);
+                       QString ref_attr,
+                       QString scope);
 
-    /**
+    /*!
      *
      */
     void addDatatype( QString datatype,
@@ -120,41 +121,36 @@ public:
     void addDatatypeDefaultSuggestions(QString datatype, QString values);
 
     QStringList getDatatypeDefaultSuggestions(QString datatype);
-
-    /**
-     * @brief
+    /*!
+     * \brief
      *
-     * @return map<QString, map<QString, char> *>
-    */
+     * \return map<QString, map<QString, char> *>
+     */
     map <QString, map <QString, char> *> *getNesting();
-
-    /**
-     * @brief
+    /*!
+     * \brief
      *
-     * @param element
-     * @return map<QString, bool>
-    */
+     * \param element
+     * \return map<QString, bool>
+     */
     map <QString, bool> *getAttributes (QString element);
-
-    /**
-     * @brief
+    /*!
+     * \brief
      *
-     * @param tagname
-     * @return map<QString, char>
-    */
+     * \param tagname
+     * \return map<QString, char>
+     */
     map <QString, char> *getChildren (QString tagname);
+    /*!
+     * \brief
+     *
+     * \param element
+     * \param attr
+     * \return vector<AttributeReferences *>
+     */
+    vector <AttributeReferences *> getReferences (QString element, QString attr);
 
-    vector <AttributeReferences *>
-            /**
-             * @brief
-             *
-             * @param element
-             * @param attr
-             * @return vector<AttributeReferences *>
-            */
-            getReferences (QString element, QString attr);
-
-    /**
+    /*!
      * \brief
      *
      */

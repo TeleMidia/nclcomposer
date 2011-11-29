@@ -12,35 +12,69 @@
 namespace composer {
     namespace util {
 
-AttributeReferences:: AttributeReferences (    QString element,
-                                               QString attr,
-                                               QString ref_element,
-                                               QString ref_attr)
+AttributeReferences::AttributeReferences ( QString element,
+                                           QString attr,
+                                           QString ref_element,
+                                           QString ref_attr,
+                                           REFERENCE_SCOPE scope)
 {
-    this->element = element;
-    this->attr = attr;
-    this->ref_element = ref_element;
-    this->ref_attr = ref_attr;
+  this->element = element;
+  this->attr = attr;
+  this->ref_element = ref_element;
+  this->ref_attr = ref_attr;
+  this->scope = scope;
+
+  initializeStringToScope();
 }
 
-QString AttributeReferences:: getElement()
+AttributeReferences::AttributeReferences ( QString element,
+                                           QString attr,
+                                           QString ref_element,
+                                           QString ref_attr,
+                                           QString scope)
 {
-    return this->element;
+  this->element = element;
+  this->attr = attr;
+  this->ref_element = ref_element;
+  this->ref_attr = ref_attr;
+
+  initializeStringToScope();
+
+  this->scope = stringToScope.value(scope);
+}
+
+QString AttributeReferences::getElement()
+{
+  return this->element;
 }
 
 QString AttributeReferences::getAttribute()
 {
-    return this->attr;
+  return this->attr;
 }
 
 QString AttributeReferences::getRefElement()
 {
-    return this->ref_element;
+  return this->ref_element;
 }
 
 QString AttributeReferences::getRefAttribute()
 {
-    return this->ref_attr;
+  return this->ref_attr;
+}
+
+AttributeReferences::REFERENCE_SCOPE AttributeReferences::getScope()
+{
+  return this->scope;
+}
+
+void AttributeReferences::initializeStringToScope()
+{
+  if(!stringToScope.size())
+  {
+    stringToScope.insert(QString("SAME"), SAME_SCOPE);
+    stringToScope.insert(QString("ANY"), ANY_SCOPE);
+  }
 }
 
 } } //end namespace

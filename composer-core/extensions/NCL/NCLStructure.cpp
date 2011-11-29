@@ -73,75 +73,90 @@ NCLStructure::~NCLStructure()
 // TODO: This function should be based on lex and yacc to a better
 // implementation.
 void NCLStructure::loadStructure(){
-    QFile fInput ( NCLSTRUCTURE_FILE );
-    if(!fInput.open(QIODevice::ReadOnly)){
-        qErrnoWarning("Should not open the NCL_STRUCTURE file.");
-        return;
-    }
+  QFile fInput ( NCLSTRUCTURE_FILE );
+  if(!fInput.open(QIODevice::ReadOnly)){
+    qErrnoWarning("Should not open the NCL_STRUCTURE file.");
+    return;
+  }
 
-    QTextStream in (&fInput);
-    while(!in.atEnd()){
-        QString line = in.readLine();
-        vector <QString> tokens = parseLine(line);
+  QTextStream in (&fInput);
+  while(!in.atEnd()){
+    QString line = in.readLine();
+    vector <QString> tokens = parseLine(line);
 
-        //this is a commentary
-        if(tokens.size() == 0) {
-            continue;
+    //this is a commentary
+    if(tokens.size() == 0)
+      continue;
+
+    if(tokens[0].toLower() == "datatype")
+    {
+      bool error = false;
+      if(tokens.size() >= 3)
+      {
+        qDebug() << "I'm reading a new DATATYPE element " << tokens[0]
+                 << tokens[1] << " " << tokens[2];
+        addDatatype(tokens[1], tokens[2]);
+        if (tokens.size() >= 4)
+        {
+          addDatatypeDefaultSuggestions(tokens[1], tokens[3]);
         }
-        if(tokens[0].toLower() == "datatype") {
-            bool error = false;
-            if(tokens.size() >= 3) {
-                qDebug() << "I'm reading a new DATATYPE element " << tokens[0]
-                         << tokens[1] << " " << tokens[2];
-                addDatatype(tokens[1], tokens[2]);
-                if (tokens.size() >= 4) {
-                    addDatatypeDefaultSuggestions(tokens[1], tokens[3]);
-                }
-            }
-            else error = true;
-            if (error)
-            {
-                qErrnoWarning("element primitive must have exactly 2 or 3 \
-                          arguments (NAME, REGEX, DEFAULT_SUGGESTIONS)");
-            }
-        } else if(tokens[0].toLower() == "element"){
-//            qDebug() << "I'm reading a new ELEMENT element";
-//            qDebug() << "Adding Element -- " << tokens[1];
-
-            if(tokens.size() == 5 ){
-                addElement(tokens[1], tokens[2], 0);
-            }
-            else {
-                qErrnoWarning("element primitive must have exactly 3 arguments \
-                              (ELEMENT NAME, ELEMENT FATHER, CARDINALITY)");
-            }
-
-        } else if(tokens[0].toLower() == "attribute"){
-//            qDebug() << "I'm reading a new ATTRIBUTE element" << endl;
-
-            if(tokens.size() == 5) {
-                bool required = false;
-                if(tokens[3].toLower() == "true")
-                    required = true;
-
-                addAttribute(tokens[1], tokens[2], tokens[4], required);
-            } else {
-                qErrnoWarning("attribute primitive must be exactly 4 arguments \
-                              (ELEMENT NAME, ATTR NAME, ATTR TYPE, REQUIRED)");
-            }
-
-        } else if(tokens[0].toLower() == "scope"){
-            qDebug() << "I'm reading a new SCOPE element - This is not \
-                    supported yet" << endl;
-
-        } else if(tokens[0].toLower() == "reference"){
-//            qDebug() << "I'm reading a new REFERENCE element" << endl;
-            addReference(tokens[1], tokens[2], tokens[3], tokens[4]);
-
-        }
-        //qDebug() << line << endl;
+      }
+      else error = true;
+      if (error)
+      {
+        qErrnoWarning("element primitive must have exactly 2 or 3 \
+                      arguments (NAME, REGEX, DEFAULT_SUGGESTIONS)");
+      }
     }
-    fInput.close();
+    else if(tokens[0].toLower() == "element")
+    {
+      // qDebug() << "I'm reading a new ELEMENT element";
+      // qDebug() << "Adding Element -- " << tokens[1];
+
+      if(tokens.size() == 5)
+      {
+        addElement(tokens[1], tokens[2], 0);
+      }
+      else
+      {
+        qErrnoWarning("element primitive must have exactly 3 arguments \
+                      (ELEMENT NAME, ELEMENT FATHER, CARDINALITY)");
+      }
+
+    }
+    else if(tokens[0].toLower() == "attribute")
+    {
+      // qDebug() << "I'm reading a new ATTRIBUTE element" << endl;
+
+      if(tokens.size() == 5)
+      {
+        bool required = false;
+        if(tokens[3].toLower() == "true")
+          required = true;
+
+        addAttribute(tokens[1], tokens[2], tokens[4], required);
+      }
+      else
+      {
+        qErrnoWarning("attribute primitive must be exactly 4 arguments \
+                      (ELEMENT NAME, ATTR NAME, ATTR TYPE, REQUIRED)");
+      }
+
+    }
+    else if(tokens[0].toLower() == "scope")
+    {
+      qDebug() << "I'm reading a new SCOPE element - This is not supported yet"
+               << endl;
+    }
+    else if(tokens[0].toLower() == "reference")
+    {
+      // qDebug() << "I'm reading a new REFERENCE element" << endl;
+      addReference(tokens[1], tokens[2], tokens[3], tokens[4], tokens[5]);
+
+    }
+    //qDebug() << line << endl;
+  }
+  fInput.close();
 }
 
 // TODO: This function should be based on lex and yacc to a better
@@ -202,7 +217,8 @@ vector <QString> NCLStructure::parseLine(QString line){
 }
 
 //TODO: SCOPE
-void NCLStructure::addElement(QString name, QString father, char cardinality){
+void NCLStructure::addElement(QString name, QString father, char cardinality)
+{
     if(!nesting->count(father))
         (*nesting)[father] = new map <QString, char>();
 
@@ -216,88 +232,94 @@ void NCLStructure::addElement(QString name, QString father, char cardinality){
 }
 
 void NCLStructure::addAttribute ( QString element, QString attr, QString type,
-                                  bool required){
+                                  bool required)
+{
+  if(!attributes->count(element))
+      (*attributes)[element] = new map <QString, bool>();
 
-    if(!attributes->count(element))
-        (*attributes)[element] = new map <QString, bool>();
-
-    if(!attributesDatatype->count(element))
-        (*attributesDatatype)[element] = new map <QString, QString>();
+  if(!attributesDatatype->count(element))
+      (*attributesDatatype)[element] = new map <QString, QString>();
 
 // qDebug() << "NCLStructure::addAttribute (" << element << ", " << attr << ")";
-    (*(*attributes)[element])[attr] = required;
-    (*(*attributesDatatype)[element])[attr] = type;
+  (*(*attributes)[element])[attr] = required;
+  (*(*attributesDatatype)[element])[attr] = type;
 }
 
-void NCLStructure::addReference ( QString element, QString attr,
-                                  QString ref_element, QString ref_attr)
+void NCLStructure::addReference( QString element, QString attr,
+                                 QString ref_element, QString ref_attr,
+                                 QString scope)
 {
-    AttributeReferences *ref = new AttributeReferences (element, attr,
-                                                        ref_element, ref_attr);
-    references->insert(element, ref);
+  AttributeReferences *ref = new AttributeReferences (element, attr,
+                                                      ref_element, ref_attr,
+                                                      scope);
+  references->insert(element, ref);
 }
 
 void NCLStructure::addDatatype (QString name, QString regex)
 {
-    qDebug() << "NCLStructure::addDatatype (" << name << ", " << regex << ")";
-    (*dataTypes)[name] = regex;
+  qDebug() << "NCLStructure::addDatatype (" << name << ", " << regex << ")";
+  (*dataTypes)[name] = regex;
 }
 
 void NCLStructure::addDatatypeDefaultSuggestions( QString datatype,
                                                   QString values)
 {
-    // qDebug() << "NCLStructure::addDatatypeDefaultSuggestion (" << datatype
-    // << ", " << values << ")";
-    if(values != "")
-        (*dataTypeDefaultSuggestions)[datatype] = values.split(',');
-    else
-        (*dataTypeDefaultSuggestions)[datatype] = QStringList();
+  // qDebug() << "NCLStructure::addDatatypeDefaultSuggestion (" << datatype
+  // << ", " << values << ")";
+  if(values != "")
+    (*dataTypeDefaultSuggestions)[datatype] = values.split(',');
+  else
+    (*dataTypeDefaultSuggestions)[datatype] = QStringList();
 }
 
 QString NCLStructure::getAttributeDatatype(QString element, QString name)
 {
-    if( attributesDatatype->count(element) &&
-        (*attributesDatatype)[element]->count(name))
-    {
-        return (*(*attributesDatatype)[element])[name];
-    }
-    return QString("Unknown");
+  if( attributesDatatype->count(element) &&
+      (*attributesDatatype)[element]->count(name))
+  {
+    return (*(*attributesDatatype)[element])[name];
+  }
+  return QString("Unknown");
 }
 
 QStringList NCLStructure::getDatatypeDefaultSuggestions(QString datatype)
 {
-    if( dataTypeDefaultSuggestions->count(datatype))
-    {
-        return (*dataTypeDefaultSuggestions)[datatype];
-    }
-    return QStringList();
+  if( dataTypeDefaultSuggestions->count(datatype))
+  {
+    return (*dataTypeDefaultSuggestions)[datatype];
+  }
+  return QStringList();
 }
 
-map <QString, bool> *NCLStructure::getAttributes(QString element){
-    if(attributes->count(element))
-        return (*attributes)[element];
-    return NULL;
+map <QString, bool> *NCLStructure::getAttributes(QString element)
+{
+  if(attributes->count(element))
+    return (*attributes)[element];
+  return NULL;
 }
 
-map <QString, map <QString, char> *> *NCLStructure::getNesting(){
-    return this->nesting;
+map <QString, map <QString, char> *> *NCLStructure::getNesting()
+{
+  return this->nesting;
 }
 
-map <QString, char> * NCLStructure::getChildren (QString tagname) {
-    if(nesting->count(tagname))
-        return (*nesting)[tagname];
-    return NULL;
+map <QString, char> * NCLStructure::getChildren (QString tagname)
+{
+  if(nesting->count(tagname))
+    return (*nesting)[tagname];
+  return NULL;
 }
 
 vector <AttributeReferences*> NCLStructure::getReferences ( QString element,
-                                                            QString attr){
-    vector <AttributeReferences *> ref;
-    foreach( AttributeReferences *value, references->values(element) ){
-        if(value->getAttribute() == attr)
-            ref.push_back(value);
-    }
-
-    return ref;
+                                                            QString attr)
+{
+  vector <AttributeReferences *> ref;
+  foreach( AttributeReferences *value, references->values(element) )
+  {
+    if(value->getAttribute() == attr)
+      ref.push_back(value);
+  }
+  return ref;
 }
 
-}} //end namespace
+} } //end namespace
