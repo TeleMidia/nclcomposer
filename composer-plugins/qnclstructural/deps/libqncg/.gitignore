@@ -15,4 +15,3 @@ objs
 moc_*
 *.a
 *.so*
-editor
