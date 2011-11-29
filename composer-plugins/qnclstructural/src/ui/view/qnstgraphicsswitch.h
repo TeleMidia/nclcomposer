@@ -1,6 +1,8 @@
 #ifndef QNSTGRAPHICSSWITCH_H
 #define QNSTGRAPHICSSWITCH_H
 
+#include <QKeyEvent>
+
 #include "qnstgraphicscomposition.h"
 
 #include "qnstgraphicscontext.h"
@@ -22,6 +24,8 @@ public:
 
 protected:
     virtual void contextMenuEvent(QGraphicsSceneContextMenuEvent* event);
+
+    virtual void	keyPressEvent(QKeyEvent* event);
 
 protected slots:
     void performContext();

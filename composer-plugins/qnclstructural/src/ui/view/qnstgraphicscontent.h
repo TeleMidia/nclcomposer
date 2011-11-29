@@ -1,6 +1,8 @@
 #ifndef QNSTGRAPHICSCONTENT_H
 #define QNSTGRAPHICSCONTENT_H
 
+#include <QKeyEvent>
+
 #include "qnstgraphicsnode.h"
 
 #include "qnstgraphicsarea.h"
@@ -25,6 +27,11 @@ protected:
     virtual void delineate(QPainterPath* painter) const;
 
     virtual void contextMenuEvent(QGraphicsSceneContextMenuEvent* event);
+
+    virtual void	keyPressEvent(QKeyEvent* event);
+
+protected slots:
+    void performDelete();
 
 private:
     void createActions();

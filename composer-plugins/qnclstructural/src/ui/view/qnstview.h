@@ -18,12 +18,15 @@
 #ifndef QNSTVIEW_H
 #define QNSTVIEW_H
 
+#include <cstdlib>
+
 #include <QGraphicsView>
 #include <QVector>
 #include <QMap>
 #include <QMouseEvent>
 #include <QKeyEvent>
 #include <QWheelEvent>
+#include <QKeyEvent>
 
 #include <QDebug>
 
@@ -60,14 +63,6 @@ public slots:
 
     void selectEntity(const QString uid);
 
-    void requestEntityAddition(QnstEntity* entity);
-
-    void requestEntityRemotion(QnstEntity* entity);
-
-    void requestEntityChange(QnstEntity* entity);
-
-    void requestEntitySelection(QnstEntity* entity);
-
 signals:
     void entityAdded(const QString uid, const QString parent, const QMap<QString, QString> properties);
 
@@ -78,7 +73,17 @@ signals:
     void entitySelected(const QString uid);
 
 protected slots:
+    void requestEntityAddition(QnstEntity* entity);
+
+    void requestEntityRemotion(QnstEntity* entity);
+
+    void requestEntityChange(QnstEntity* entity);
+
+    void requestEntitySelection(QnstEntity* entity);
+
     virtual void mousePressEvent(QMouseEvent* event);
+
+    virtual void keyPressEvent(QKeyEvent* event);
 
 private:
     void addBody(const QString uid, const QString parent, const QMap<QString, QString> properties);
@@ -89,9 +94,17 @@ private:
 
     void changeContext(const QString uid, const QMap<QString, QString> properties);
 
+    void addSwitch(const QString uid, const QString parent, const QMap<QString, QString> properties);
+
+    void changeSwitch(const QString uid, const QMap<QString, QString> properties);
+
     void addMedia(const QString uid, const QString parent, const QMap<QString, QString> properties);
 
     void changeMedia(const QString uid, const QMap<QString, QString> properties);
+
+    void addPort(const QString uid, const QString parent, const QMap<QString, QString> properties);
+
+    void changePort(const QString uid, const QMap<QString, QString> properties);
 
     void requestBodyAddition(QnstGraphicsBody* entity);
 
@@ -108,6 +121,14 @@ private:
     void requestMediaAddition(QnstGraphicsMedia* entity);
 
     void requestMediaChange(QnstGraphicsMedia* entity);
+
+    void requestPortAddition(QnstGraphicsPort* entity);
+
+    void requestPortChange(QnstGraphicsPort* entity);
+
+    void deepRemotion(QnstGraphicsComposition* composition);
+
+    void deepRemotion2(QnstGraphicsComposition* composition);
 
     void createObjects();
 

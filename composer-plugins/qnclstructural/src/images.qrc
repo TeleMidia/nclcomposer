@@ -9,9 +9,9 @@
         <file alias="video">images/icon-video.png</file>
         <file alias="aggregator">images/icon-aggregator.png</file>
         <file alias="composition">images/icon-composition.png</file>
-        <file alias="port">images/icon-port.png</file>
         <file alias="property">images/icon-property.png</file>
         <file alias="area">images/icon-area.png</file>
         <file alias="media">images/icon-media.png</file>
+        <file alias="port">images/icon-port.png</file>
     </qresource>
 </RCC>

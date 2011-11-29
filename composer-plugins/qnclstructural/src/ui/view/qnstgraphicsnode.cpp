@@ -5,7 +5,7 @@ QnstGraphicsNode::QnstGraphicsNode(QnstGraphicsNode* parent)
 {
     setnstType(Qnst::Node);
 
-    connect(this, SIGNAL(entityChanged()), SLOT(requestEntityChange()));
+//    connect(this, SIGNAL(entityChanged()), SLOT(requestEntityChange()));
     connect(this, SIGNAL(entitySelected()), SLOT(requestEntitySelection()));
 }
 
@@ -20,6 +20,7 @@ void QnstGraphicsNode::adjust()
 
     if (getnstParent() != NULL){
         ((QnstGraphicsNode*) getnstParent())->attract();
+        ((QnstGraphicsNode*) getnstParent())->adjust();
     }
 
     QncgGraphicsNode::adjust();
@@ -32,5 +33,7 @@ void QnstGraphicsNode::requestEntityChange()
 
 void QnstGraphicsNode::requestEntitySelection()
 {
+    setFocus(Qt::MouseFocusReason);
+
     emit entitySelected(this);
 }

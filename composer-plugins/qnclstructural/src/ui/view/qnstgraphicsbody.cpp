@@ -65,7 +65,7 @@ void QnstGraphicsBody::createActions()
     deleteAction = new QAction(this);
     deleteAction->setText(tr("Delete"));
 
-    deleteAction->setEnabled(false);
+    deleteAction->setEnabled(true);
     deleteAction->setShortcut(QKeySequence("Del"));
 
     // zoomin action
@@ -358,18 +358,22 @@ void QnstGraphicsBody::createConnections()
     connect(contextAction, SIGNAL(triggered()), SLOT(performContext()));
     connect(switchAction, SIGNAL(triggered()), SLOT(performSwitch()));
 
+    connect(portAction, SIGNAL(triggered()), SLOT(performPort()));
+
     connect(compactAction, SIGNAL(triggered()), SLOT(performCompact()));
 
     connect(clockAction, SIGNAL(triggered()), SLOT(performClock()));
+
+    connect(deleteAction, SIGNAL(triggered()), SLOT(performDelete()));
 }
 
 void QnstGraphicsBody::performContext()
 {
     QnstGraphicsContext* entity = new QnstGraphicsContext(this);
-    entity->setTop(getHeight()/2 - getHeight()/4);
-    entity->setLeft(getWidth()/2 - getWidth()/4);
-    entity->setWidth(getWidth()/2);
-    entity->setHeight(getHeight()/2);
+    entity->setTop(getHeight()/2 - 200/2);
+    entity->setLeft(getWidth()/2 - 250/2);
+    entity->setWidth(250);
+    entity->setHeight(200);
     entity->adjust();
 
     connect(entity, SIGNAL(entityAdded(QnstEntity*)), SIGNAL(entityAdded(QnstEntity*)));
@@ -405,8 +409,8 @@ void QnstGraphicsBody::performSwitch()
 void QnstGraphicsBody::performImage()
 {
     QnstGraphicsImage* entity = new QnstGraphicsImage(this);
-    entity->setTop(getHeight()/2 - 64/2);
-    entity->setLeft(getWidth()/2 - 64/2);
+    entity->setTop(getHeight()/2 - 56/2);
+    entity->setLeft(getWidth()/2 - 56/2);
     entity->setWidth(56);
     entity->setHeight(56);
     entity->adjust();
@@ -516,11 +520,32 @@ void QnstGraphicsBody::performSettings()
     emit entityAdded(entity);
 }
 
+void QnstGraphicsBody::performPort()
+{
+    QnstGraphicsPort* entity = new QnstGraphicsPort(this);
+    entity->setTop(0);
+    entity->setLeft(0);
+    entity->setWidth(32);
+    entity->setHeight(32);
+    entity->adjust();
+
+    connect(entity, SIGNAL(entityAdded(QnstEntity*)), SIGNAL(entityAdded(QnstEntity*)));
+    connect(entity, SIGNAL(entityChanged(QnstEntity*)), SIGNAL(entityChanged(QnstEntity*)));
+    connect(entity, SIGNAL(entityRemoved(QnstEntity*)), SIGNAL(entityRemoved(QnstEntity*)));
+    connect(entity, SIGNAL(entitySelected(QnstEntity*)), SIGNAL(entitySelected(QnstEntity*)));
+
+    addncgGraphicsEntity(entity);
+
+    emit entityAdded(entity);
+}
+
 void QnstGraphicsBody::performCompact()
 {
     compact(50);
 
     attract();
+
+    adjust();
 }
 
 void QnstGraphicsBody::performClock()
@@ -530,6 +555,13 @@ void QnstGraphicsBody::performClock()
     fit(50);
 
     attract();
+
+    adjust();
+}
+
+void QnstGraphicsBody::performDelete()
+{
+    emit entityRemoved(this);
 }
 
 void QnstGraphicsBody::contextMenuEvent(QGraphicsSceneContextMenuEvent* event)
@@ -541,6 +573,19 @@ void QnstGraphicsBody::contextMenuEvent(QGraphicsSceneContextMenuEvent* event)
         contextMenu->exec(event->screenPos());
 
         event->accept();
+    }
+}
+
+void QnstGraphicsBody::keyPressEvent(QKeyEvent* event)
+{
+    QnstGraphicsComposition::keyPressEvent(event);
+
+    if (!event->isAccepted()){
+        if (event->key() == Qt::Key_Backspace){
+            emit entityRemoved(this);
+
+            event->accept();
+        }
     }
 }
 

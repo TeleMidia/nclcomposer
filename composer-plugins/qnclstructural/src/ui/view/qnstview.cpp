@@ -87,10 +87,15 @@ void QnstView::addEntity(const QString uid, const QString parent, const QMap<QSt
 
     // if the entity is of type SWITCH
     }else if (properties["TYPE"] == "switch"){
+        addSwitch(uid, parent, properties);
 
-    // if the entity is of type SWITCH
+    // if the entity is of type MEDIA
     }else if (properties["TYPE"] == "media"){
         addMedia(uid, parent, properties);
+
+    // if the entity is of type PORT
+    }else if (properties["TYPE"] == "port"){
+        addPort(uid, parent, properties);
     }
 }
 
@@ -98,7 +103,42 @@ void QnstView::removeEntity(const QString uid)
 {
     qDebug() << "[QNST]" << "[" << ++n << "]" << ":" << "Removing entity '"+uid+"'";
 
-    // TODO:
+    QnstEntity* entity = entities[uid];
+
+    QnstGraphicsComposition* parent =  (QnstGraphicsComposition*) entity->getnstParent();
+
+    if (parent != NULL){
+        // if the entity is of type COMPOSITION
+        if (entity->getnstType() == Qnst::Body ||
+            entity->getnstType() == Qnst::Context ||
+            entity->getnstType() == Qnst::Switch){
+
+            deepRemotion2((QnstGraphicsComposition*) entity);
+
+            parent->removencgGraphicsEntity((QnstGraphicsComposition*) entity);
+
+        // if the entity is of type MEDIA
+        }else  if (entity->getnstType() == Qnst::Image ||
+               entity->getnstType() == Qnst::Audio ||
+               entity->getnstType() == Qnst::Text ||
+               entity->getnstType() == Qnst::Video ||
+               entity->getnstType() == Qnst::Script ||
+               entity->getnstType() == Qnst::Settings ||
+               entity->getnstType() == Qnst::Media){
+
+            parent->removencgGraphicsEntity((QnstGraphicsMedia*) entity);
+
+        // if the entity is of type INTERFACE
+        }else if (entity->getnstType() == Qnst::Port){
+            parent->removencgGraphicsEntity((QnstGraphicsInterface*) entity);
+        }
+    }else{
+        deepRemotion2((QnstGraphicsComposition*) entity);
+
+        scene->removeItem((QnstGraphicsComposition*) entity);
+    }
+
+    entities.remove(uid);
 }
 
 void QnstView::changeEntity(const QString uid, const QMap<QString, QString> properties)
@@ -112,7 +152,88 @@ void QnstView::selectEntity(const QString uid)
 {
     qDebug() << "[QNST]" << "[" << ++n << "]" << ":" << "Selecting entity '"+uid+"'";
 
-    // TODO:
+    if (selected != NULL){
+        switch(selected->getnstType()){
+        case Qnst::Image:
+
+        case Qnst::Audio:
+
+        case Qnst::Video:
+
+        case Qnst::Text:
+
+        case Qnst::Script:
+
+        case Qnst::Settings:
+
+        case Qnst::Media:
+            ((QnstGraphicsContent*) selected)->setSelected(false);
+            ((QnstGraphicsContent*) selected)->adjust();
+
+            break;
+
+        case Qnst::Body:
+
+        case Qnst::Switch:
+
+        case Qnst::Context:
+            ((QnstGraphicsComposition*) selected)->setSelected(false);
+            ((QnstGraphicsComposition*) selected)->adjust();
+
+            break;
+
+        case Qnst::Port:
+            ((QnstGraphicsInterface*) selected)->setSelected(false);
+            ((QnstGraphicsInterface*) selected)->adjust();
+
+            break;
+        }
+    }
+
+    QnstEntity* entity = entities[uid];
+
+    switch(entity->getnstType()){
+    case Qnst::Image:
+
+    case Qnst::Audio:
+
+    case Qnst::Video:
+
+    case Qnst::Text:
+
+    case Qnst::Script:
+
+    case Qnst::Settings:
+
+    case Qnst::Media:
+        ((QnstGraphicsContent*) entity)->setSelected(true);
+        ((QnstGraphicsContent*) entity)->setFocus(Qt::MouseFocusReason);
+        ((QnstGraphicsContent*) entity)->adjust();
+
+        selected = entity;
+
+        break;
+
+    case Qnst::Body:
+
+    case Qnst::Switch:
+
+    case Qnst::Context:
+        ((QnstGraphicsComposition*) entity)->setSelected(true);
+        ((QnstGraphicsComposition*) entity)->setFocus(Qt::MouseFocusReason);
+        ((QnstGraphicsComposition*) entity)->adjust();
+
+        break;
+
+    case Qnst::Port:
+        ((QnstGraphicsInterface*) entity)->setSelected(true);
+        ((QnstGraphicsInterface*) entity)->setFocus(Qt::MouseFocusReason);
+        ((QnstGraphicsInterface*) entity)->adjust();
+
+        break;
+    }
+
+    selected = entity;
 }
 
 void QnstView::addBody(const QString uid, const QString parent, const QMap<QString, QString> properties)
@@ -150,8 +271,8 @@ void QnstView::addContext(const QString uid, const QString parent, const QMap<QS
     entity->setnstUid(uid);
 
     entity->setTop(composition->getHeight()/2 - 200/2);
-    entity->setLeft(composition->getWidth()/2 - 350/2);
-    entity->setWidth(350);
+    entity->setLeft(composition->getWidth()/2 - 250/2);
+    entity->setWidth(250);
     entity->setHeight(200);
 
     connect(entity, SIGNAL(entityAdded(QnstEntity*)), composition, SIGNAL(entityAdded(QnstEntity*)));
@@ -171,6 +292,39 @@ void QnstView::addContext(const QString uid, const QString parent, const QMap<QS
 }
 
 void QnstView::changeContext(const QString uid, const QMap<QString, QString> properties)
+{
+    // TODO
+}
+
+void QnstView::addSwitch(const QString uid, const QString parent, const QMap<QString, QString> properties)
+{
+    QnstGraphicsComposition* composition = (QnstGraphicsComposition*) entities[parent];
+
+    QnstGraphicsSwitch* entity = new QnstGraphicsSwitch(composition);
+    entity->setnstUid(uid);
+
+    entity->setTop(composition->getHeight()/2 - 200/2);
+    entity->setLeft(composition->getWidth()/2 - 250/2);
+    entity->setWidth(250);
+    entity->setHeight(200);
+
+    connect(entity, SIGNAL(entityAdded(QnstEntity*)), composition, SIGNAL(entityAdded(QnstEntity*)));
+    connect(entity, SIGNAL(entityChanged(QnstEntity*)), composition, SIGNAL(entityChanged(QnstEntity*)));
+    connect(entity, SIGNAL(entityRemoved(QnstEntity*)), composition, SIGNAL(entityRemoved(QnstEntity*)));
+    connect(entity, SIGNAL(entitySelected(QnstEntity*)), composition, SIGNAL(entitySelected(QnstEntity*)));
+
+    composition->addncgGraphicsEntity(entity);
+
+    composition->clock(50);
+    composition->fit(50);
+
+    composition->attract();
+    composition->adjust();
+
+    entities[uid] = entity;
+}
+
+void QnstView::changeSwitch(const QString uid, const QMap<QString, QString> properties)
 {
     // TODO
 }
@@ -208,6 +362,40 @@ void QnstView::changeMedia(const QString uid, const QMap<QString, QString> prope
     // TODO
 }
 
+void QnstView::addPort(const QString uid, const QString parent, const QMap<QString, QString> properties)
+{
+    QnstGraphicsComposition* composition = (QnstGraphicsComposition*) entities[parent];
+
+    srand(time(NULL));
+
+    int w = rand() % ((int) composition->getWidth());
+    int h = rand() % ((int) composition->getHeight());
+
+    QnstGraphicsPort* entity = new QnstGraphicsPort(composition);
+    entity->setnstUid(uid);
+
+    entity->setTop(h);
+    entity->setLeft(w);
+    entity->setWidth(32);
+    entity->setHeight(32);
+
+    connect(entity, SIGNAL(entityAdded(QnstEntity*)), composition, SIGNAL(entityAdded(QnstEntity*)));
+    connect(entity, SIGNAL(entityChanged(QnstEntity*)), composition, SIGNAL(entityChanged(QnstEntity*)));
+    connect(entity, SIGNAL(entityRemoved(QnstEntity*)), composition, SIGNAL(entityRemoved(QnstEntity*)));
+    connect(entity, SIGNAL(entitySelected(QnstEntity*)), composition, SIGNAL(entitySelected(QnstEntity*)));
+
+    composition->addncgGraphicsEntity(entity);
+
+    entity->adjust();
+
+    entities[uid] = entity;
+}
+
+void QnstView::changePort(const QString uid, const QMap<QString, QString> properties)
+{
+    // TODO
+}
+
 void QnstView::requestEntityAddition(QnstEntity* entity)
 {
     qDebug() << "[QNST]" << "[" << ++n << "]" << ":" << "Requesting entity addition '"+entity->getnstUid()+"'";
@@ -235,6 +423,9 @@ void QnstView::requestEntityAddition(QnstEntity* entity)
            entity->getnstType() == Qnst::Settings){
 
         requestMediaAddition((QnstGraphicsMedia*) entity);
+
+    }else if (entity->getnstType() == Qnst::Port){
+        requestPortAddition((QnstGraphicsPort*) entity);
     }
 }
 
@@ -242,7 +433,44 @@ void QnstView::requestEntityRemotion(QnstEntity* entity)
 {
     qDebug() << "[QNST]" << "[" << ++n << "]" << ":" << "Requesting entity remotion '"+entity->getnstUid()+"'";
 
-    // TODO:
+    QString uid = entity->getnstUid();
+
+    QnstGraphicsComposition* parent =  (QnstGraphicsComposition*) entity->getnstParent();
+
+    if (parent != NULL){
+        // if the entity is of type COMPOSITION
+        if (entity->getnstType() == Qnst::Body ||
+            entity->getnstType() == Qnst::Context ||
+            entity->getnstType() == Qnst::Switch){
+
+            deepRemotion((QnstGraphicsComposition*) entity);
+
+            parent->removencgGraphicsEntity((QnstGraphicsComposition*) entity);
+
+        // if the entity is of type MEDIA
+        }else  if (entity->getnstType() == Qnst::Image ||
+               entity->getnstType() == Qnst::Audio ||
+               entity->getnstType() == Qnst::Text ||
+               entity->getnstType() == Qnst::Video ||
+               entity->getnstType() == Qnst::Script ||
+               entity->getnstType() == Qnst::Settings ||
+               entity->getnstType() == Qnst::Media){
+
+            parent->removencgGraphicsEntity((QnstGraphicsMedia*) entity);
+
+        // if the entity is of type INTERFACE
+        }else if (entity->getnstType() == Qnst::Port){
+            parent->removencgGraphicsEntity((QnstGraphicsInterface*) entity);
+        }
+    }else{
+        deepRemotion((QnstGraphicsComposition*) entity);
+
+        scene->removeItem((QnstGraphicsComposition*) entity);
+    }
+
+    entities.remove(uid);
+
+    emit entityRemoved(uid);
 }
 
 void QnstView::requestEntityChange(QnstEntity* entity)
@@ -271,6 +499,10 @@ void QnstView::requestEntityChange(QnstEntity* entity)
                entity->getnstType() == Qnst::Settings){
 
         requestMediaChange((QnstGraphicsMedia*) entity);
+
+    // if the entity is of type INTERFACE
+    }else if (entity->getnstType() == Qnst::Port){
+        requestPortChange((QnstGraphicsPort*) entity);
     }
 }
 
@@ -308,10 +540,18 @@ void QnstView::requestEntitySelection(QnstEntity* entity)
             ((QnstGraphicsComposition*) selected)->adjust();
 
             break;
+
+        case Qnst::Port:
+            ((QnstGraphicsInterface*) selected)->setSelected(false);
+            ((QnstGraphicsInterface*) selected)->adjust();
+
+            break;
         }
     }
 
     selected = entity;
+
+    emit entitySelected(entity->getnstUid());
 }
 
 void QnstView::requestBodyAddition(QnstGraphicsBody* entity)
@@ -456,6 +696,74 @@ void QnstView::requestMediaChange(QnstGraphicsMedia* entity)
     emit entityChanged(entity->getnstUid(), properties);
 }
 
+void QnstView::requestPortAddition(QnstGraphicsPort* entity)
+{
+    QMap<QString, QString> properties;
+
+    properties["TYPE"] = "port";
+
+    properties["id"] = "TODO";
+    properties["component"] = "TODO";
+    properties["interface"] = "TODO";
+
+    properties["top"] = QString::number(entity->getTop());
+    properties["left"] = QString::number(entity->getLeft());
+    properties["width"] = QString::number(entity->getWidth());
+    properties["heigh"] = QString::number(entity->getHeight());
+
+    emit entityAdded(entity->getnstUid(), entity->getnstParent()->getnstUid(), properties);
+}
+
+void QnstView::requestPortChange(QnstGraphicsPort* entity)
+{
+    QMap<QString, QString> properties;
+
+    properties["TYPE"] = "port";
+
+    properties["id"] = "TODO";
+    properties["component"] = "TODO";
+    properties["interface"] = "TODO";
+
+    properties["top"] = QString::number(entity->getTop());
+    properties["left"] = QString::number(entity->getLeft());
+    properties["width"] = QString::number(entity->getWidth());
+    properties["heigh"] = QString::number(entity->getHeight());
+
+    emit entityChanged(entity->getnstUid(), properties);
+}
+
+void QnstView::deepRemotion(QnstGraphicsComposition* composition)
+{
+    foreach(QncgGraphicsEntity* entity, composition->getncgGraphicsEntities()){
+        QnstEntity* e;
+
+        if (entity->getncgType() == Qncg::Node){
+            e = (QnstGraphicsNode*) entity;
+
+        }else if (entity->getncgType() == Qncg::Interface){
+            e = (QnstGraphicsInterface*) entity;
+        }
+
+        requestEntityRemotion(e);
+    }
+}
+
+void QnstView::deepRemotion2(QnstGraphicsComposition* composition)
+{
+    foreach(QncgGraphicsEntity* entity, composition->getncgGraphicsEntities()){
+        QnstEntity* e;
+
+        if (entity->getncgType() == Qncg::Node){
+            e = (QnstGraphicsNode*) entity;
+
+        }else if (entity->getncgType() == Qncg::Interface){
+            e = (QnstGraphicsInterface*) entity;
+        }
+
+        removeEntity(e->getnstUid());
+    }
+}
+
 void QnstView::mousePressEvent(QMouseEvent* event)
 {
     QGraphicsView::mousePressEvent(event);
@@ -474,4 +782,9 @@ void QnstView::mousePressEvent(QMouseEvent* event)
 
         event->accept();
     }
+}
+
+void QnstView::keyPressEvent(QKeyEvent* event)
+{
+    QGraphicsView::keyPressEvent(event);
 }

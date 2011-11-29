@@ -65,7 +65,7 @@ void QnstGraphicsContext::createActions()
     deleteAction = new QAction(this);
     deleteAction->setText(tr("Delete"));
 
-    deleteAction->setEnabled(false);
+    deleteAction->setEnabled(true);
     deleteAction->setShortcut(QKeySequence("Del"));
 
     // zoomin action
@@ -326,6 +326,8 @@ void QnstGraphicsContext::createConnections()
 
     connect(contextAction, SIGNAL(triggered()), SLOT(performContext()));
     connect(switchAction, SIGNAL(triggered()), SLOT(performSwitch()));
+
+    connect(deleteAction, SIGNAL(triggered()), SLOT(performDelete()));
 }
 
 void QnstGraphicsContext::performContext()
@@ -480,6 +482,11 @@ void QnstGraphicsContext::performSettings()
     emit entityAdded(entity);
 }
 
+void QnstGraphicsContext::performDelete()
+{
+    emit entityRemoved(this);
+}
+
 void QnstGraphicsContext::contextMenuEvent(QGraphicsSceneContextMenuEvent* event)
 {
     QnstGraphicsComposition::contextMenuEvent(event);
@@ -489,5 +496,18 @@ void QnstGraphicsContext::contextMenuEvent(QGraphicsSceneContextMenuEvent* event
         contextMenu->exec(event->screenPos());
 
         event->accept();
+    }
+}
+
+void QnstGraphicsContext::keyPressEvent(QKeyEvent* event)
+{
+    QnstGraphicsComposition::keyPressEvent(event);
+
+    if (!event->isAccepted()){
+        if (event->key() == Qt::Key_Backspace){
+            emit entityRemoved(this);
+
+            event->accept();
+        }
     }
 }

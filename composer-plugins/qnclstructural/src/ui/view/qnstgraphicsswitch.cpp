@@ -491,3 +491,16 @@ void QnstGraphicsSwitch::contextMenuEvent(QGraphicsSceneContextMenuEvent* event)
         event->accept();
     }
 }
+
+void QnstGraphicsSwitch::keyPressEvent(QKeyEvent* event)
+{
+    QnstGraphicsComposition::keyPressEvent(event);
+
+    if (!event->isAccepted()){
+        if (event->key() == Qt::Key_Backspace){
+            emit entityRemoved(this);
+
+            event->accept();
+        }
+    }
+}

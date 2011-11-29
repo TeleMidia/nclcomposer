@@ -6,7 +6,7 @@
 class QnstGraphicsPort : public QnstGraphicsInterface
 {
 public:
-    QnstGraphicsPort();
+    QnstGraphicsPort(QnstGraphicsNode* parent = 0);
 
     ~QnstGraphicsPort();
 };

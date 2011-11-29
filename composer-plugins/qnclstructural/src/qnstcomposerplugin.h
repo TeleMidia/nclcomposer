@@ -84,9 +84,17 @@ private:
 
     void requestContextChange(Entity* entity);
 
+    void requestSwitchAddition(Entity* entity);
+
+    void requestSwitchChange(Entity* entity);
+
     void requestMediaAddition(Entity* entity);
 
     void requestMediaChange(Entity* entity);
+
+    void requestPortAddition(Entity* entity);
+
+    void requestPortChange(Entity* entity);
 
     void requestBodyAddition(const QString uid, const QString parent, const QMap<QString, QString> properties);
 
@@ -105,6 +113,10 @@ private:
     void requestMediaAddition(const QString uid, const QString parent, const QMap<QString, QString> properties);
 
     void requestMediaChange(const QString uid, const QMap<QString, QString> properties);
+
+    void requestPortAddition(const QString uid, const QString parent, const QMap<QString, QString> properties);
+
+    void requestPortChange(const QString uid, const QMap<QString, QString> properties);
 
     int n;
 

@@ -70,9 +70,6 @@ void QnstComposerPlugin::onEntityAdded(QString pluginID, Entity *entity)
 {
     if (pluginID != getPluginInstanceID()){
         requestEntityAddition(entity);
-
-        entites[entity->getUniqueId()] = entity->getUniqueId();
-
     }else{
         entites[entity->getUniqueId()] = request;
     }
@@ -90,12 +87,20 @@ void QnstComposerPlugin::onEntityChanged(QString pluginID, Entity *entity)
 
 void QnstComposerPlugin::onEntityRemoved(QString pluginID, QString entityID)
 {
+    if (pluginID != getPluginInstanceID()){
+        requestEntityRemotion(getProject()->getEntityById(entityID));
 
+        entites.remove(entityID);
+    }
 }
 
 void QnstComposerPlugin::changeSelectedEntity(QString pluginID, void* param)
 {
+    QString* entityUID = (QString*) param;
 
+    if(entityUID != NULL){
+        requestEntitySelection(getProject()->getEntityById(*entityUID));
+    }
 }
 
 void QnstComposerPlugin::requestEntityAddition(Entity* entity)
@@ -104,24 +109,44 @@ void QnstComposerPlugin::requestEntityAddition(Entity* entity)
     if (entity->getType() == "body"){
         requestBodyAddition(entity);
 
+        entites[entity->getUniqueId()] = entity->getUniqueId();
+
     // if the entity is of type CONTEXT
     }else if (entity->getType() == "context"){
         requestContextAddition(entity);
 
+        entites[entity->getUniqueId()] = entity->getUniqueId();
+
     // if the entity is of type SWITCH
     }else if (entity->getType() == "switch"){
+        requestSwitchAddition(entity);
 
+        entites[entity->getUniqueId()] = entity->getUniqueId();
 
     // if the entity is of type MEDIA
     }else if (entity->getType() == "media"){
         requestMediaAddition(entity);
 
+        entites[entity->getUniqueId()] = entity->getUniqueId();
+
+    // if the entity is of type PORT
+    }else if (entity->getType() == "port"){
+        requestPortAddition(entity);
+
+        entites[entity->getUniqueId()] = entity->getUniqueId();
     }
 }
 
 void QnstComposerPlugin::requestEntityRemotion(Entity* entity)
 {
+    if (entity->getType() == "body" ||
+        entity->getType() == "context" ||
+        entity->getType() == "media" ||
+        entity->getType() == "switch" ||
+        entity->getType() == "port"){
 
+        view->removeEntity(entites[entity->getUniqueId()]);
+    }
 }
 
 void QnstComposerPlugin::requestEntityChange(Entity* entity)
@@ -131,7 +156,14 @@ void QnstComposerPlugin::requestEntityChange(Entity* entity)
 
 void QnstComposerPlugin::requestEntitySelection(Entity* entity)
 {
+    if (entity->getType() == "body" ||
+        entity->getType() == "context" ||
+        entity->getType() == "media" ||
+        entity->getType() == "switch" ||
+        entity->getType() == "port"){
 
+        view->selectEntity(entites[entity->getUniqueId()]);
+    }
 }
 
 void QnstComposerPlugin::requestBodyAddition(Entity* entity)
@@ -174,6 +206,28 @@ void QnstComposerPlugin::requestContextChange(Entity* entity)
     // TODO
 }
 
+void QnstComposerPlugin::requestSwitchAddition(Entity* entity)
+{
+    QMap<QString, QString> properties;
+
+    properties["TYPE"] = "switch";
+
+    if (entity->getAttribute("id") != ""){
+        properties["id"] = entity->getAttribute("id");
+    }
+
+    if (entity->getAttribute("refer") != ""){
+        properties["refer"] = entity->getAttribute("refer");
+    }
+
+    view->addEntity(entity->getUniqueId(), entites[entity->getParentUniqueId()], properties);
+}
+
+void QnstComposerPlugin::requestSwitchChange(Entity* entity)
+{
+    // TODO
+}
+
 void QnstComposerPlugin::requestMediaAddition(Entity* entity)
 {
     QMap<QString, QString> properties;
@@ -212,6 +266,32 @@ void QnstComposerPlugin::requestMediaChange(Entity* entity)
     // TODO
 }
 
+void QnstComposerPlugin::requestPortAddition(Entity* entity)
+{
+    QMap<QString, QString> properties;
+
+    properties["TYPE"] = "port";
+
+    if (entity->getAttribute("id") != ""){
+        properties["id"] = entity->getAttribute("id");
+    }
+
+    if (entity->getAttribute("component") != ""){
+        properties["component"] = entity->getAttribute("component");
+    }
+
+    if (entity->getAttribute("interface") != ""){
+        properties["interface"] = entity->getAttribute("interface");
+    }
+
+    view->addEntity(entity->getUniqueId(), entites[entity->getParentUniqueId()], properties);
+}
+
+void QnstComposerPlugin::requestPortChange(Entity* entity)
+{
+    // TODO
+}
+
 void QnstComposerPlugin::requestEntityAddition(const QString uid, const QString parent, const QMap<QString, QString> properties)
 {
     // if the entity is of type BODY
@@ -226,15 +306,21 @@ void QnstComposerPlugin::requestEntityAddition(const QString uid, const QString 
     }else if (properties["TYPE"] == "switch"){
         requestSwitchAddition(uid, parent, properties);
 
-    // if the entity is of type SWITCH
+    // if the entity is of type MEDIA
     }else if (properties["TYPE"] == "media"){
         requestMediaAddition(uid, parent, properties);
+
+    // if the entity is of type PORT
+    }else if (properties["TYPE"] == "port"){
+        requestPortAddition(uid, parent, properties);
     }
 }
 
 void QnstComposerPlugin::requestEntityRemotion(const QString uid)
 {
-    // TODO
+    emit removeEntity(getProject()->getEntityById(entites.key(uid)), false);
+
+    entites.remove(entites.key(uid));
 }
 
 void QnstComposerPlugin::requestEntityChange(const QString uid, const QMap<QString, QString> properties)
@@ -254,12 +340,16 @@ void QnstComposerPlugin::requestEntityChange(const QString uid, const QMap<QStri
     // if the entity is of type MEDIA
     }else if (properties["TYPE"] == "media"){
         requestMediaChange(uid, properties);
+
+    // if the entity is of type PORT
+    }else if (properties["TYPE"] == "port"){
+        requestPortChange(uid, properties);
     }
 }
 
 void QnstComposerPlugin::requestEntitySelection(const QString uid)
 {
-    // TODO
+    emit sendBroadcastMessage("changeSelectedEntity", new QString(entites.key(uid)));
 }
 
 void QnstComposerPlugin::requestBodyAddition(const QString uid, const QString parent, const QMap<QString, QString> properties)
@@ -459,6 +549,56 @@ void QnstComposerPlugin::requestMediaChange(const QString uid, const QMap<QStrin
 
         if (properties["descriptor"] != ""){
             attributes["descriptor"] = properties["descriptor"];
+        }
+
+        request = uid;
+
+        emit setAttributes(entity, attributes, false);
+    }
+}
+
+void QnstComposerPlugin::requestPortAddition(const QString uid, const QString parent, const QMap<QString, QString> properties)
+{
+    Entity* entity = getProject()->getEntityById(entites.key(parent));
+
+    if (entity != NULL){
+        QMap<QString, QString> attributes;
+
+        if (properties["id"] != ""){
+            attributes["id"] = properties["id"];
+        }
+
+        if (properties["component"] != ""){
+            attributes["component"] = properties["component"];
+        }
+
+        if (properties["interface"] != ""){
+            attributes["interface"] = properties["interface"];
+        }
+
+        request = uid;
+
+        emit addEntity("port", entity->getUniqueId(), attributes, false);
+    }
+}
+
+void QnstComposerPlugin::requestPortChange(const QString uid, const QMap<QString, QString> properties)
+{
+    Entity* entity = getProject()->getEntityById(entites.key(uid));
+
+    if (entity != NULL){
+        QMap<QString, QString> attributes;
+
+        if (properties["id"] != ""){
+            attributes["id"] = properties["id"];
+        }
+
+        if (properties["component"] != ""){
+            attributes["component"] = properties["component"];
+        }
+
+        if (properties["interface"] != ""){
+            attributes["interface"] = properties["interface"];
         }
 
         request = uid;

@@ -6,6 +6,8 @@ QnstGraphicsComposition::QnstGraphicsComposition(QnstGraphicsNode* parent)
     setnstType(Qnst::Compostion);
 
     setColor("#EEEEEE");
+
+
 }
 
 QnstGraphicsComposition::~QnstGraphicsComposition()
@@ -35,19 +37,13 @@ void QnstGraphicsComposition::draw(QPainter* painter)
         painter->setBrush(Qt::NoBrush);
         painter->setPen(QPen(QBrush(Qt::black), 0)); // 0px = cosmetic border
 
-        painter->drawEllipse(getMoveLeft()+4-getLeft(),
-                             getMoveTop()+4-getTop(),
-                             getWidth()-1,
-                             getHeight()-1);
+        painter->drawEllipse(getMoveLeft()+4-getLeft(), getMoveTop()+4-getTop(), getWidth()-1, getHeight()-1);
 
     }else if (isResizing()){
         painter->setBrush(Qt::NoBrush);
         painter->setPen(QPen(QBrush(Qt::black), 0)); // 0px = cosmetic border
 
-        painter->drawEllipse(getResizeLeft()+4-getLeft(),
-                             getResizeTop()+4-getTop(),
-                             getResizeWidth()-1,
-                             getResizeHeight()-1);
+        painter->drawEllipse(getResizeLeft()+4-getLeft(), getResizeTop()+4-getTop(), getResizeWidth()-1, getResizeHeight()-1);
     }
 }
 

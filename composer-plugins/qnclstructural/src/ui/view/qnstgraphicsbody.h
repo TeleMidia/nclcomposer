@@ -1,6 +1,8 @@
 #ifndef QNSTGRAPHICSBODY_H
 #define QNSTGRAPHICSBODY_H
 
+#include <QKeyEvent>
+
 #include "qnstgraphicscomposition.h"
 
 #include "qnstgraphicscontext.h"
@@ -12,8 +14,6 @@
 #include "qnstgraphicsscript.h"
 #include "qnstgraphicssettings.h"
 #include "qnstgraphicsport.h"
-#include "qnstgraphicsarea.h"
-#include "qnstgraphicsproperty.h"
 
 class QnstGraphicsBody : public QnstGraphicsComposition
 {
@@ -26,6 +26,8 @@ public:
 
 protected:
     virtual void contextMenuEvent(QGraphicsSceneContextMenuEvent* event);
+
+    virtual void	keyPressEvent(QKeyEvent* event);
 
 protected slots:
     void performContext();
@@ -44,9 +46,13 @@ protected slots:
 
     void performSettings();
 
+    void performPort();
+
     void performCompact();
 
     void performClock();
+
+    void performDelete();
 
 private:
     void createActions();
