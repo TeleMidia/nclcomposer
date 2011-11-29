@@ -34,6 +34,7 @@ RunGingaConfig::RunGingaConfig(QWidget *parent):
   ui->lineEdit_RemoteUser->setText(settings.value("remote_user").toString());
   ui->lineEdit_RemotePassword->setText(settings.value("remote_password").toString());
   ui->lineEdit_RemoteCmd->setText(settings.value("remote_cmd").toString());
+  ui->lineEdit_RemotePath->setText(settings.value("remote_path").toString());
   settings.endGroup();
 }
 
@@ -53,6 +54,7 @@ void RunGingaConfig::applyValues()
   settings.setValue("remote_user", ui->lineEdit_RemoteUser->text());
   settings.setValue("remote_password", ui->lineEdit_RemotePassword->text());
   settings.setValue("remote_cmd", ui->lineEdit_RemoteCmd->text());
+  settings.setValue("remote_path", ui->lineEdit_RemotePath->text());
   settings.endGroup();
 }
 

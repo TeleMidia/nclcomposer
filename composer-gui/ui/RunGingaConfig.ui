@@ -49,7 +49,7 @@
         <item row="5" column="0">
          <widget class="QLabel" name="label_5">
           <property name="text">
-           <string>Command</string>
+           <string>Command:</string>
           </property>
          </widget>
         </item>
@@ -90,6 +90,20 @@
           </property>
           <property name="text">
            <string>telemidia</string>
+          </property>
+         </widget>
+        </item>
+        <item row="6" column="0">
+         <widget class="QLabel" name="label_6">
+          <property name="text">
+           <string>Remote Path:</string>
+          </property>
+         </widget>
+        </item>
+        <item row="6" column="1">
+         <widget class="QLineEdit" name="lineEdit_RemotePath">
+          <property name="text">
+           <string>/misc/ncl30/</string>
           </property>
          </widget>
         </item>

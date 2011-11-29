@@ -19,6 +19,10 @@ namespace Ui {
 namespace composer {
 namespace gui {
 
+/*!
+ *
+ * \todo User input validation.
+ */
 class RunGingaConfig : public QWidget
 {
   Q_OBJECT

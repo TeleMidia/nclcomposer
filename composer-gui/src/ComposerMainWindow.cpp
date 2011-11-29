@@ -994,14 +994,16 @@ void ComposerMainWindow::runNCLRemotely()
   QString remoteIp = settings.value("remote_ip").toString();
   QString remoteUser = settings.value("remote_user").toString();
   QString remotePasswd = settings.value("remote_password").toString();
+  QString remotePath = settings.value("remote_path").toString();
   QString remoteCmd = settings.value("remote_cmd").toString();
   settings.endGroup();
+
 #ifdef WITH_LIBSSH2
   /*\todo Put the code to run a remote NCL */
   SimpleSSHClient sshclient(remoteUser.toStdString().c_str(),
                             remotePasswd.toStdString().c_str(),
                             remoteIp.toStdString().c_str(),
-                            "/misc/ncl30");
+                            remotePath.toStdString().c_str());
 
   QString location = tabProjects->tabToolTip(tabProjects->currentIndex());
 
