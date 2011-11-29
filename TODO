@@ -8,9 +8,9 @@ TODO file for composer-gui
   - Message saying that a perspective already exist when trying to save a new
     one with the same name. 
   - Keybinding to save new perspective.
-  - Kebinding to open choose perpective menu.
+  - Keybinding to open "choose perpective menu".
   - Allow to choose MDI or Dock enviroment.
-      - Includes save the current plugins session inside the project.
+      - Including save the current plugins session inside the project.
   - Internationalization.
   - Check for updates.
   - Plugin repository.
@@ -18,9 +18,8 @@ TODO file for composer-gui
   - Install new Plugins
 
 * Done:
-  - Add remove perspective action. (ok)
+  - Add "Remove Perspective" action. (ok)
   - Add set as default perspective action. (ok)
   - Marking dirty project. (ok)
-
 
 //TODO: License
