@@ -156,7 +156,7 @@ void QnstComposerPlugin::requestEntityChange(Entity* entity)
 
 void QnstComposerPlugin::requestEntitySelection(Entity* entity)
 {
-    if (entities.contains(entity->getUniqueId()){
+    if (entites.contains(entity->getUniqueId())){
         if (entity->getType() == "body" ||
             entity->getType() == "context" ||
             entity->getType() == "media" ||
