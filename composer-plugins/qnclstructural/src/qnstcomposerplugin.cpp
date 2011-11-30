@@ -156,13 +156,15 @@ void QnstComposerPlugin::requestEntityChange(Entity* entity)
 
 void QnstComposerPlugin::requestEntitySelection(Entity* entity)
 {
-    if (entity->getType() == "body" ||
-        entity->getType() == "context" ||
-        entity->getType() == "media" ||
-        entity->getType() == "switch" ||
-        entity->getType() == "port"){
+    if (entities.contains(entity->getUniqueId()){
+        if (entity->getType() == "body" ||
+            entity->getType() == "context" ||
+            entity->getType() == "media" ||
+            entity->getType() == "switch" ||
+            entity->getType() == "port"){
 
-        view->selectEntity(entites[entity->getUniqueId()]);
+            view->selectEntity(entites[entity->getUniqueId()]);
+        }
     }
 }
 
