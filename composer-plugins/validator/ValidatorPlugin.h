@@ -33,12 +33,13 @@ public slots:
 
     void errorMessage(QString error);
 
-    void sendToAll() {};
+    void sendToAll() {}
 
 private:
     void updateModel(Entity *);
     void updateMessages (std::vector<pair<void *, string> >);
 
+    QVector <pair<Entity *, QString> > pointers;
 
     QWidget* window;
     QTreeWidget *table;

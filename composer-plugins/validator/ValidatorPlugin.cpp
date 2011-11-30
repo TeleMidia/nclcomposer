@@ -53,6 +53,7 @@ void ValidatorPlugin::updateModel (Entity *entity)
 void ValidatorPlugin::updateMessages(std::vector<pair<void *, string> > msgs)
 {
     table->clear();
+    pointers.clear();
     for (int i = 0; i < msgs.size(); i++){
         QStringList list;
         QString first = "";
@@ -62,9 +63,8 @@ void ValidatorPlugin::updateMessages(std::vector<pair<void *, string> > msgs)
             qDebug() << entity->getUniqueId();
             first = entity->getType();
 
-            pair <Entity *, QString> arg = make_pair (entity, QString::fromStdString(msgs [i].second));
-
-//            emit sendBroadcastMessage("validationError", &arg);
+            pointers.push_back(make_pair (entity, QString::fromStdString(msgs [i].second)));
+//            emit sendBroadcastMessage("validationError", &pointers.back());
         }
 
         list << "" << first << QString::fromStdString(msgs [i].second);
@@ -74,8 +74,6 @@ void ValidatorPlugin::updateMessages(std::vector<pair<void *, string> > msgs)
         table->addTopLevelItem (item);
     }
 
-//    edit->setText(txt);
-//    qDebug() << "saiu";
 }
 
 void ValidatorPlugin::onEntityAdded(QString ID, Entity *entity)

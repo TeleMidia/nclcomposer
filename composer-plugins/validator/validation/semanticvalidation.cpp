@@ -141,6 +141,7 @@ void referenceValidation (const ModelElement &el, const Attribute &att, Model &m
                                                     messageFactory.createMessage(3004, 3, att.name().c_str(),
                                                                                  el.elementName().c_str(),
                                                                                  pointed -> elementName().c_str())));
+                model.addElementWithErrorInLastPass(el.id());
                 return;
         }
 
@@ -203,22 +204,20 @@ void getConnectorSetRoles (ModelElement& element, Model& model, map<string, pair
                     int max = 1;
 
                     if (minAttr.value() != ""){
-                        if (minAttr.value() == "unbounded"){
-                            min = (int) numeric_limits <int>::max ();
-                        }
-                        else{
-                            ss << minAttr.value();
-                            ss >> min;
 
-                            if (!ss)
-                                min = 1;
+                        ss << minAttr.value();
+                        ss >> min;
 
-                            ss.clear();
-                        }
+                        if (!ss)
+                            min = 1;
+
+                        ss.clear();
+
                     }
                     if (maxAttr.value() != ""){
-                        if (minAttr.value() == "unbounded"){
-                            min = (int) numeric_limits <int>::max ();
+                        if (maxAttr.value() == "unbounded"){
+                            max = (int) numeric_limits <int>::max ();
+                            qDebug() << "Max: " << max;
                         }
                         else{
                             ss << maxAttr.value();
@@ -283,7 +282,7 @@ void testRepeatedRoles (const ModelElement &element, const ModelElement& connect
     }
 }
 
-void linkValidation (ModelElement& link, ModelElement& connector, Model& model, vector<pair<void *, string> > &msgs, Message &messageFactory)
+void linkValidation (const ModelElement& link, ModelElement& connector, Model& model, vector<pair<void *, string> > &msgs, Message &messageFactory)
 {
     map <string, pair<int, int> > roles;
     getConnectorSetRoles(connector, model, roles);
@@ -297,19 +296,14 @@ void linkValidation (ModelElement& link, ModelElement& connector, Model& model, 
 
             if (role.value() == "") continue;
 
-//            if (roles.count(role.value()) == 0){
-//                msgs.push_back (pair <void*, string> (child->data(),
-//                                                       messageFactory.createMessage(3301, 1, role.value().c_str())));
-//                model.addElementWithErrorInLastPass(child->id());
-//            }
-//            else{
-                if (roleCount.count(role.value()) == 0)
-                    roleCount [role.value()] = 1;
-                else
-                    roleCount [role.value()]++;
-//            }
+            if (roleCount.count(role.value()) == 0)
+                roleCount [role.value()] = 1;
+            else
+                roleCount [role.value()]++;
+
         }
     }
+
 
     for (map<string, pair <int, int> >::iterator it = roles.begin(); it != roles.end(); it++){
         pair <int, int> quantity = it->second;
@@ -324,15 +318,21 @@ void linkValidation (ModelElement& link, ModelElement& connector, Model& model, 
         else
             count = 0;
 
-//        qDebug () << QString::fromStdString(it->first);
-//        qDebug () << it->second;
-//        qDebug () << quantity.second;
-
         if (min > count){
             msgs.push_back(pair <void *, string> (link.data(),
-                                                  messageFactory.createMessage(3902, 3, ("" + count),
-                                                                               it->first.c_str(), ("" + min))));
+                                                  messageFactory.createMessage(3902, 3, QString::number(count).toStdString().c_str(),
+                                                                               it->first.c_str(),
+                                                                               QString::number(min).toStdString().c_str())));
             model.addElementWithErrorInLastPass(link.id());
+        }
+
+        if (max < count){
+            msgs.push_back(pair <void *, string> (link.data(),
+                                                  messageFactory.createMessage(3903, 3, QString::number(count).toStdString().c_str(),
+                                                                               it->first.c_str(),
+                                                                               QString::number(max).toStdString().c_str())));
+            model.addElementWithErrorInLastPass(link.id());
+
         }
     }
 }
@@ -346,10 +346,23 @@ void SemanticValidation::semanticValidation(const ModelElement &el, Model &model
         if (xconnector.value() != ""){
             vector <ModelElement *> connectors = model.elementByIdentifier(xconnector.value());
             if (connectors.size() > 0){
-//                linkValidation(el, *connectors[0], model, msgs, messageFactory);
+                linkValidation(el, *connectors[0], model, msgs, messageFactory);
             }
         }
 
+    }
+    else if (el.elementName() == "bind"){
+        virtualId parentId = el.parent();
+        const ModelElement *link = model.element(parentId);
+        if (link){
+            Attribute xconnector = link->attribute("xconnector");
+            if (xconnector.value() != ""){
+                vector <ModelElement *> connectors = model.elementByIdentifier(xconnector.value());
+                if (connectors.size() > 0){
+                    linkValidation(*link, *connectors[0], model, msgs, messageFactory);
+                }
+            }
+        }
     }
     else if (el.elementName() == "causalConnector"){
         set <string> roles;

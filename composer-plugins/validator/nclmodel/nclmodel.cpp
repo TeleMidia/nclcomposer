@@ -160,6 +160,8 @@ bool Model::editElement(virtualId &id, vector <Attribute> &newAttributes){
                         }
                     }
                 }
+
+
             }
         }
 
@@ -174,12 +176,12 @@ bool Model::editElement(virtualId &id, vector <Attribute> &newAttributes){
             }while (it != _idToElement.upper_bound(oldId));
         }
 
-        it = _idToElement.find(newId);
-        if (it != _idToElement.end()){
+        it = _elementsNotYetInserted.find(newId);
+        if (it != _elementsNotYetInserted.end()){
             do{
                 elementEdited->addReference((*it).second);
                 it ++;
-            }while (it != _idToElement.upper_bound(oldId));
+            }while (it != _elementsNotYetInserted.upper_bound(oldId));
         }
         _elementsNotYetInserted.erase(newId);
 
@@ -226,13 +228,15 @@ bool Model::removeElement(virtualId &id){
             {
                 while (parent){
                     if (parent->elementName() == "causalConnector"){
-                        qDebug() << "sim";
                         _markedElements.insert(parent->id());
                         break;
                     }
                     parent = this->element(parent->parent());
                 }
             }
+            else if (element->elementName() == "bind")
+                _markedElements.insert(parent->id());
+
 
         }
 
@@ -289,41 +293,41 @@ ModelElement * Model::element(const virtualId & id){
 }
 
 void Model::print(){
-    map<virtualId, ModelElement>::const_iterator iterator = _modelElements.begin();
+//    map<virtualId, ModelElement>::const_iterator iterator = _modelElements.begin();
 
-    for ( ; iterator != _modelElements.end(); iterator ++){
-        cout << "Element: " << (*iterator).second.elementName() << endl;
-        //
-        cout << "VirtualID: " << (*iterator).second.id() << endl;
-        cout << "Perspective: " << (*iterator).second.scope() << endl;
+//    for ( ; iterator != _modelElements.end(); iterator ++){
+//        cout << "Element: " << (*iterator).second.elementName() << endl;
+//        //
+//        cout << "VirtualID: " << (*iterator).second.id() << endl;
+//        cout << "Perspective: " << (*iterator).second.scope() << endl;
 
-        ModelElement * parent = element((*iterator).second.parent());
+//        ModelElement * parent = element((*iterator).second.parent());
 
-        if (parent){
+//        if (parent){
 
-            cout << "Parent: " << parent->elementName() << endl;
-            cout << "Parent virtualId: " << parent->id() << endl;
-        }
+//            cout << "Parent: " << parent->elementName() << endl;
+//            cout << "Parent virtualId: " << parent->id() << endl;
+//        }
 
-        cout << "Children: ";
-        vector <virtualId> children = (*iterator).second.children();
-        for (size_t i = 0; i < children.size(); i++)
-            cout << children[i] << " ";
-        cout << "\nReferences: ";
-        vector <virtualId> references = (*iterator).second.references();
-        for (size_t i = 0; i < references.size(); i++)
-            cout << references[i] << " ";
+//        cout << "Children: ";
+//        vector <virtualId> children = (*iterator).second.children();
+//        for (size_t i = 0; i < children.size(); i++)
+//            cout << children[i] << " ";
+//        cout << "\nReferences: ";
+//        vector <virtualId> references = (*iterator).second.references();
+//        for (size_t i = 0; i < references.size(); i++)
+//            cout << references[i] << " ";
 
 
-        cout << "\n*********************************" << endl;
-    }
-    cout << "\nelementsNotYetInserted size: " << _elementsNotYetInserted.size() << endl;
+//        cout << "\n*********************************" << endl;
+//    }
+//    cout << "\nelementsNotYetInserted size: " << _elementsNotYetInserted.size() << endl;
 
-    for( map<string,virtualId>::iterator ii=_elementsNotYetInserted.begin(); ii!=_elementsNotYetInserted.end(); ++ii)
-    {
-        cout << (*ii).first << " ";
-    }
-    cout << endl;
+//    for( map<string,virtualId>::iterator ii=_elementsNotYetInserted.begin(); ii!=_elementsNotYetInserted.end(); ++ii)
+//    {
+//        cout << (*ii).first << " ";
+//    }
+//    cout << endl;
 
 }
 

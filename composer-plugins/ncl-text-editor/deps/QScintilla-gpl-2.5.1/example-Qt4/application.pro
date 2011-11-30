@@ -3,4 +3,6 @@ HEADERS       = mainwindow.h
 SOURCES       = main.cpp \
                 mainwindow.cpp
 RESOURCES     = application.qrc
-LIBS         += -lqscintilla2
+;INCLUDEPATH   = /usr/local/lib/composer/extensions
+LIBS         += -L/usr/local/lib/composer/extensions \
+	        -lqscintilla2
