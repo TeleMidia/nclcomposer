@@ -6,8 +6,8 @@ namespace nclValidator {
 
 /*
  * Test reference of any scope */
-void anyScopeReferenceValidation (const ModelElement &el, const ModelElement &pointed,
-                                  const Attribute &att, vector<pair<void *, string> > &msg) {
+void anyScopeReferenceValidation (const ModelElement &el, const ModelElement &pointed, const Attribute &att,
+                                   Model &model, vector<pair<void *, string> > &msg, Message &messageFactory) {
 
         // Test 'refer' special case
         if (att.name() == "refer") {
@@ -16,6 +16,9 @@ void anyScopeReferenceValidation (const ModelElement &el, const ModelElement &po
                 if (pointed.attribute("refer").name() != ""){
                         fprintf (stderr, "'refer' attribute of '%s' element can't point to an element that have a 'refer' defined too\n",
                                         el.elementName().c_str());
+
+                        msg.push_back(make_pair (el.data(), messageFactory.createMessage(4109, 1, att.value().c_str())));
+                        model.addElementWithErrorInLastPass(el.id());
 
                 }
 
@@ -163,7 +166,7 @@ void referenceValidation (const ModelElement &el, const Attribute &att, Model &m
         /* ANY scope elements. The pointed element could be at
          * any position on the doc, so perspectives won't be a problem (hope so! =P).*/
         if (ref -> getPerspective() == "ANY")
-                anyScopeReferenceValidation (el, *pointed, att, msgs);
+                anyScopeReferenceValidation (el, *pointed, att, model, msgs, messageFactory);
 
         /* SAME_PERSPECTIVE elements. The pointed element must be at
          * the same perspective of the element who reference him.*/

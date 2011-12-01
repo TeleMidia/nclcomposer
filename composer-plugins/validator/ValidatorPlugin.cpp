@@ -53,22 +53,37 @@ void ValidatorPlugin::updateModel (Entity *entity)
 void ValidatorPlugin::updateMessages(std::vector<pair<void *, string> > msgs)
 {
     table->clear();
-    pointers.clear();
-    for (int i = 0; i < msgs.size(); i++){
-        QStringList list;
-        QString first = "";
+    pairsMessages.clear();
+    emit sendBroadcastMessage("clearValidationMessages", 0);
 
+
+    set <pair <Entity *, QString> > messages;
+    for (int i = 0; i < msgs.size(); i++){
         Entity *entity = (Entity *) msgs[i].first;
         if (entity != NULL){
             qDebug() << entity->getUniqueId();
-            first = entity->getType();
+//            first = entity->getType();
 
-            pointers.push_back(make_pair (entity, QString::fromStdString(msgs [i].second)));
-//            emit sendBroadcastMessage("validationError", &pointers.back());
+            messages.insert(make_pair (entity, QString::fromStdString(msgs [i].second)));
+//            pairsMessages.push_back(make_pair (entity, QString::fromStdString(msgs [i].second)));
+//            emit sendBroadcastMessage("validationError", &pairsMessages.back());
         }
 
-        list << "" << first << QString::fromStdString(msgs [i].second);
 
+
+    }
+
+    for (set <pair <Entity *, QString> >::iterator it = messages.begin(); it != messages.end(); it++){
+        pair <Entity *, QString> p = *it;
+        pairsMessages.push_back(p);
+
+        QStringList list;
+//        QString first = "";
+
+//        if (entity)
+//            first = entity->getType();
+
+        list << "" << p.first->getType() << p.second;
         QTreeWidgetItem *item = new QTreeWidgetItem(table, list);
         item->setIcon(0, QIcon(":/images/error.png"));
         table->addTopLevelItem (item);
@@ -119,6 +134,27 @@ void ValidatorPlugin::errorMessage(QString error)
 {
     qDebug () << "Validator: Error: " << error;
 }
+
+
+void ValidatorPlugin::clearValidationMessages(QString pluginID, void * param)
+{
+    qDebug() << "clearValidationMessages:";
+    qDebug() << pluginID;
+    qDebug() << (param == 0) ;
+}
+
+
+void ValidatorPlugin::validationError(QString pluginID, void * param)
+{
+    qDebug() << "validationError:";
+    qDebug() << pluginID;
+    if (param){
+        pair <Entity *, QString> * p = (pair <Entity *, QString> *) param;
+        qDebug () << p->first->getType() << " " << p->second;
+    }
+
+}
+
 
 
 

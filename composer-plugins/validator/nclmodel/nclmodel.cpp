@@ -176,18 +176,22 @@ bool Model::editElement(virtualId &id, vector <Attribute> &newAttributes){
             }while (it != _idToElement.upper_bound(oldId));
         }
 
+
         it = _elementsNotYetInserted.find(newId);
         if (it != _elementsNotYetInserted.end()){
             do{
                 elementEdited->addReference((*it).second);
                 it ++;
-            }while (it != _elementsNotYetInserted.upper_bound(oldId));
+            }while (it != _elementsNotYetInserted.upper_bound(newId));
         }
+
         _elementsNotYetInserted.erase(newId);
+
 
         elementEdited->setAttributes(newAttributes);
 
         string _ = "";
+
         adjustReference(elementEdited->elementName(), *elementEdited, _);
 
 
