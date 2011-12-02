@@ -116,7 +116,7 @@ void Langstruct::init ()
     while (!ifs.atEnd()) {
         line = QString (ifs.readLine()).toStdString();
 
-        std::cout << line;
+//        std::cout << line;
 
         strTok.clear ();
         strTok.str(line);

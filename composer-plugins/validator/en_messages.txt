@@ -35,6 +35,7 @@
 3003 = The '%s' attribute of element <%s> point to an invalid element.
 3004 = The '%s' attribute of element <%s> can't point to <%s> element.
 3005 = The element pointed by the attribute '%s' must be in the same context as the <%s> element.
+3006 = The element pointed by the attribute 'refer' can't be its ancestor.
 
 #ImportBase
 3101 = <importBase> element must have a valid 'documentURI' attribute.
@@ -45,6 +46,7 @@
 3202 = Element pointed by <bind>'s 'interface' attribute must be an <area>, <property>, <port> or <switchPort> element.
 3203 = There are not a <descriptor> or <descriptorSwitch> element with '%s' identifier.
 3204 = The element with '%s' identifier is not a <media>, <context>, <body> or <switch> valid element in this context.
+3205 = The interface attribute of '%s' element should point to an interface of '%s' element.
 
 #CausalConnector
 3301 = The 'role' attribute value must be unique in the <causalConnector> with id '%s'.

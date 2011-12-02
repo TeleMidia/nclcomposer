@@ -30,7 +30,7 @@ void ValidatorPlugin::init()
 
 //    adapter.getModel().print();
 
-    adapter.validate();
+//    adapter.validate();
     adapter.getModel().clearMarkedElements();
 
     qDebug() << "*********************Endt Validator init()";
@@ -38,7 +38,7 @@ void ValidatorPlugin::init()
 
 void ValidatorPlugin::updateModel (Entity *entity)
 {
-    qDebug() << entity->getType();
+//    qDebug() << entity->getType();
     adapter.addElement(entity);
 
     foreach (Entity *child, entity->getChildren()){
@@ -140,20 +140,20 @@ void ValidatorPlugin::errorMessage(QString error)
 
 void ValidatorPlugin::clearValidationMessages(QString pluginID, void * param)
 {
-    qDebug() << "clearValidationMessages:";
-    qDebug() << pluginID;
-    qDebug() << (param == 0) ;
+//    qDebug() << "clearValidationMessages:";
+//    qDebug() << pluginID;
+//    qDebug() << (param == 0) ;
 }
 
 
 void ValidatorPlugin::validationError(QString pluginID, void * param)
 {
-    qDebug() << "validationError:";
-    qDebug() << pluginID;
-    if (param){
-        pair <Entity *, QString> * p = (pair <Entity *, QString> *) param;
-        qDebug () << p->first->getType() << " " << p->second;
-    }
+//    qDebug() << "validationError:";
+//    qDebug() << pluginID;
+//    if (param){
+//        pair <Entity *, QString> * p = (pair <Entity *, QString> *) param;
+//        qDebug () << p->first->getType() << " " << p->second;
+//    }
 
 }
 

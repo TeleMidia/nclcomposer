@@ -1,5 +1,6 @@
 #include "semanticvalidation.h"
 #include <assert.h>
+#include <QMessageBox>
 
 
 namespace nclValidator {
@@ -23,10 +24,29 @@ void anyScopeReferenceValidation (const ModelElement &el, const ModelElement &po
                 }
 
                 // 'refer' can't point to an ancestor.
-                if (pointed.id() == el.scope()){
+
+                ModelElement *element = model.element(el.parent());
+                while (element){
+                    if (element->id() == pointed.id()){
                         fprintf (stderr, "'refer' attribute of '%s' element can't point to an ancestor\n",
-                                        el.elementName().c_str());
+                                 el.elementName().c_str());
+
+                        msg.push_back(make_pair (el.data(), messageFactory.createMessage(3006, 0, "")));
+                        model.addElementWithErrorInLastPass(el.id());
+
+                        break;
+                    }
+                    element = model.element(element->parent());
                 }
+
+//                if (pointed.id() == el.scope()){
+//                        fprintf (stderr, "'refer' attribute of '%s' element can't point to an ancestor\n",
+//                                        el.elementName().c_str());
+
+//                        msg.push_back(make_pair (el.data(), messageFactory.createMessage(3006, 0, "")));
+//                        model.addElementWithErrorInLastPass(el.id());
+
+//                }
         }
 }
 
@@ -35,8 +55,9 @@ void anyScopeReferenceValidation (const ModelElement &el, const ModelElement &po
  *
  */
 void specificScopeReferenceValidation (const ModelElement &el, const ModelElement &pointed, const Attribute &att,
-                const ReferenceStructure &ref, Model &model, vector<pair<void *, string> > &msgs)
+                const ReferenceStructure &ref, Model &model, vector<pair<void *, string> > &msgs, Message messageFactory)
 {
+
         const ModelElement *scopeElement = NULL;
 
         //////////////////////////////////////////////////////////////////////////////////////////
@@ -71,7 +92,9 @@ void specificScopeReferenceValidation (const ModelElement &el, const ModelElemen
         }
 
         // Test scope att
-        string scopeAtt = scopeElement -> attribute (ref.getPerspectiveAtt()).name();
+
+        string scopeAtt = scopeElement -> attribute (ref.getPerspectiveAtt()).value();
+
         if (scopeAtt.empty()) {
                 fprintf (stderr, "Unknown scope of '%s' attribute of '%s' element\n",
                                 att.name().c_str(), el.elementName().c_str());
@@ -87,6 +110,7 @@ void specificScopeReferenceValidation (const ModelElement &el, const ModelElemen
         if (aux.empty ()) {
                 fprintf (stderr, "Unknown scope of '%s' attribute of '%s' element\n",
                                 att.name().c_str(), el.elementName().c_str());
+
                 return;
         }
 
@@ -96,6 +120,12 @@ void specificScopeReferenceValidation (const ModelElement &el, const ModelElemen
                 fprintf (stderr, "'%s' attribute of '%s' element should point to '%s' '%s'\n",
                         att.name().c_str(), el.elementName().c_str(),
                         scopeAtt.c_str(), scopeElement -> elementName().c_str());
+
+                msgs.push_back(pair<void *, string> (el.data(),
+                                                    messageFactory.createMessage(3205, 2, el.elementName().c_str(),
+                                                                                          scopeAtt.c_str())));
+                model.addElementWithErrorInLastPass(el.id());
+
                 return;
         }
 }
@@ -108,6 +138,7 @@ void referenceValidation (const ModelElement &el, const Attribute &att, Model &m
                           Message& messageFactory)
 {
         vector<ModelElement *> pointedElements = model.elementByIdentifier(att.value());
+
 
         if (att.name() == "interface" && pointedElements.size() == 0){
             pointedElements = model.elementByPropertyName(el.attribute("component").value(), att.value());
@@ -171,9 +202,10 @@ void referenceValidation (const ModelElement &el, const Attribute &att, Model &m
         /* SAME_PERSPECTIVE elements. The pointed element must be at
          * the same perspective of the element who reference him.*/
         else if (ref -> getPerspective() == "SAME") {
-                if (el.scope() != pointed -> scope()){
+                if (el.scope() != pointed -> scope() && el.scope() != pointed->id()){
                         fprintf (stderr, "'%s' element pointed by '%s' attribute of '%s' element MUST be at same perspective of him\n",
                                         pointed -> elementName().c_str(), att.name().c_str(), el.elementName().c_str());
+
                         msgs.push_back(pair<void *, string> (el.data(),
                                                             messageFactory.createMessage(3005, 2, att.name().c_str(),
                                                                                          el.elementName().c_str())));
@@ -184,7 +216,7 @@ void referenceValidation (const ModelElement &el, const Attribute &att, Model &m
         /* $ELEMENT.ATT elements. The pointed element must be
          * a child (just children?) of '$ELEMENT.ATT'.*/
         else
-                specificScopeReferenceValidation(el, *pointed, att, *ref, model, msgs);
+                specificScopeReferenceValidation(el, *pointed, att, *ref, model, msgs, messageFactory);
 
         //TODO: Test if 'pointed.att' can be pointed by 'el.att'? Rodrigo only save ids in his map..
 }
@@ -269,7 +301,7 @@ void testRepeatedRoles (const ModelElement &element, const ModelElement& connect
         ModelElement *child = model.element(children[i]);
         if (child){
             Attribute attr = child->attribute("role");
-            if (attr.value() != "")
+            if (attr.value() != ""){
                 if (roles.count(attr.value()) > 0){
                     msgs.push_back (pair <void*, string> (connector.data(),
                                                            messageFactory.createMessage(3301, 1, attr.value().c_str())));
@@ -278,6 +310,7 @@ void testRepeatedRoles (const ModelElement &element, const ModelElement& connect
                 }
                 else
                     roles.insert(attr.value());
+            }
 
             testRepeatedRoles(*child, connector, model, roles, msgs, messageFactory);
         }
