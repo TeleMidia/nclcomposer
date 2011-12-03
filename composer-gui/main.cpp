@@ -39,11 +39,20 @@ int main(int argc, char *argv[])
     QCoreApplication::setOrganizationName("Telemidia Lab");
     QCoreApplication::setOrganizationDomain("telemidia.pucrio.br");
     QCoreApplication::setApplicationName("composer");
-    QPixmap mPix(":/mainwindow/nclomposer-full");
+    QPixmap mPix(":/mainwindow/nclcomposer-splash");
     QSplashScreen splash(mPix);
+    splash.setMask(mPix.mask());
+    splash.showMessage("Loading NCL Composer...", Qt::AlignRight, Qt::gray);
 
-    splash.blockSignals(true);
+    // splash.blockSignals(true);
     splash.show();
+    a.processEvents();
+    splash.showMessage("Reloading previous session...", Qt::AlignRight,
+                       Qt::gray);
+
+
+    // \todo Remove initModules and readExtensions from ComposerMainWindow
+    //    and change splash message in each of this steps.
 
     //make the library search path include the application dir on windows
     //this is so the plugins can find the dlls they are linked to at run time

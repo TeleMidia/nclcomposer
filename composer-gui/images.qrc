@@ -35,5 +35,6 @@
         <file alias="rightarrow">images/right_arrow.png</file>
         <file alias="nclomposer-full">images/nclcomposer-full.png</file>
         <file alias="nclcomposer-full-reflection">images/nclcomposer-full-reflection.png</file>
+        <file alias="nclcomposer-splash">images/nclcomposer-splash.png</file>
     </qresource>
 </RCC>
