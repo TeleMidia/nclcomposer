@@ -119,6 +119,7 @@ protected:
 public slots:
     void Increasefont();
     void Decreasefont();
+    void clearErrorIndicators();
     void markError(QString description, QString file, int line, int column = 0,
                    int severity = 0);
     void MarkLine(int, int, Qt::KeyboardModifiers);

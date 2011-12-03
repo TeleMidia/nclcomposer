@@ -94,7 +94,7 @@ void NCLTextEditor::initParameters()
     // SLOT(MarkLine(int,int,Qt::KeyboardModifiers)));
 
     error_marker = markerDefine(QPixmap(":/images/error-icon-16.png"), -1);
-    error_indicator = indicatorDefine(RoundBoxIndicator, 1);
+    error_indicator = indicatorDefine(SquiggleIndicator, 1);
     setIndicatorForegroundColor(QColor("#FF0000"), error_indicator);
     filling_attribute_indicator = indicatorDefine (RoundBoxIndicator, 2);
 
@@ -112,6 +112,21 @@ void NCLTextEditor::Decreasefont()
     zoomOut();
 }
 
+void NCLTextEditor::clearErrorIndicators()
+{
+  // clear markers
+  markerDeleteAll(error_marker);
+
+  //clearIndicators
+  int nr_lines = lines();
+  QString tmp2 = this->text(nr_lines);
+  clearIndicatorRange (0,
+                       0,
+                       nr_lines,
+                       tmp2.size(),
+                       error_indicator);
+}
+
 void NCLTextEditor::markError ( QString description,
                                 QString file,
                                 int line,
@@ -120,34 +135,22 @@ void NCLTextEditor::markError ( QString description,
 {
     //TODO: Show Error Messages
     qDebug() << "MarkError line=" << line;
-    QString tmp = this->text(line-1);
+    QString tmp = this->text(line);
 
-    //ADD MARKER
-    markerDeleteAll(error_marker);
-
+    // ADD MARKER
     if (text() != "")
-        markerAdd(line-1, error_marker);
+        markerAdd(line, error_marker);
 
     //ADD INDICATOR
-    int nr_lines = lines();
-    QString tmp2 = this->text(nr_lines);
-
-
     int indentation = 0;
     while (tmp[indentation].isSpace())
         indentation++;
 
-    clearIndicatorRange (0,
-                         0,
-                         nr_lines,
-                         tmp2.size(),
-                         error_indicator);
-
-    fillIndicatorRange ( line-1,
-                         indentation,
-                         line-1,
-                         tmp.size()-1,
-                         error_indicator);
+    fillIndicatorRange(line,
+                       indentation,
+                       line,
+                       tmp.size()-1,
+                       error_indicator);
 }
 
 void NCLTextEditor::wheelEvent (QWheelEvent *event)
@@ -161,7 +164,7 @@ void NCLTextEditor::wheelEvent (QWheelEvent *event)
     QsciScintilla::wheelEvent(event);
 }
 
-//TODO: Maybe move the mousePressEvent function content, and part of the
+// TODO: Maybe move the mousePressEvent function content, and part of the
 // keyPressEvent, to a function connected to selectionChanged signal.
 void NCLTextEditor::mousePressEvent(QMouseEvent *event)
 {
@@ -593,6 +596,5 @@ QList <QDomElement> NCLTextEditor::elementsByTagname( QString tagname,
     if(node.tagName() == tagname)
       ret.push_back(node);
   }
-
   return ret;
 }
