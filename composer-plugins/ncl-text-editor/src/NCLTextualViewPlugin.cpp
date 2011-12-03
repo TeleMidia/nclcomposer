@@ -686,4 +686,24 @@ void NCLTextualViewPlugin::manageFocusLost(QFocusEvent *event)
 #endif
 }
 
+void NCLTextualViewPlugin::clearValidationMessages(QString, void *param)
+{
+  nclTextEditor->clearErrorIndicators();
+}
+
+void NCLTextualViewPlugin::validationError(QString pluginID, void * param)
+{
+  if (param) {
+     pair <Entity *, QString> * p = (pair <Entity *, QString> *) param;
+
+     int offset = startEntityOffset[p->first->getUniqueId()];
+
+     int line = nclTextEditor->SendScintilla(
+                                     QsciScintilla::SCI_LINEFROMPOSITION,
+                                     offset);
+
+     nclTextEditor->markError(p->second,"", line);
+  }
+}
+
 } } } //end namespace

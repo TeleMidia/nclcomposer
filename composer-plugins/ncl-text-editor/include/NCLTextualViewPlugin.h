@@ -116,7 +116,6 @@ public slots:
      \param entityID
     */
     void onEntityRemoved(QString pluginID, QString entityID);
-
     /*!
      \brief
         This function is part of the IPlugin API.
@@ -124,7 +123,6 @@ public slots:
      \param error
     */
     void errorMessage(QString error);
-
     /*!
      * \brief
      *
@@ -133,11 +131,20 @@ public slots:
      * \param param
      */
     void changeSelectedEntity(QString pluginID, void* param);
-
     /*!
      * \brief This slot calls the textual plugin to update its own model.
      */
     void updateFromModel();
+
+    // COMUNICATION WITH VALIDATION PLUGIN
+    /*!
+     * \brief
+     */
+    void clearValidationMessages(QString, void *param);
+    /*!
+     * \brief
+     */
+    void validationError(QString pluginID, void *param);
 
 private slots:
     /*!
