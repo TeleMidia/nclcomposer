@@ -34,11 +34,14 @@ Textual View
 ============
 * Features:
   - Contextual code suggestion:
-    . Sugestion of default attribute values. (OK!)
-    . Sugestion of references.
+    . Sugestion of default attribute values. (ok)
+    . Sugestion of references. (ok)
+    . Suggestion of references based on scope.
   - Validation.
   - Code format(Ctrl+Shift+F). (This is done when the text is synchronized 
     with core).
+  - Split the Textual View, allowing see different parts of the text in the
+    same moment (this is simple).
   - Suggestion of code corrections.
   - Hyperlinks navigation.
   - Preview of media objects, connectors, etc.
@@ -48,6 +51,9 @@ Textual View
     . Font colors.
     . Whitespace visibility.
   - Incremental synchronization with composer core.
+    . xml simple diff based on elements id (ok).
+    . diffx algorithm.
+  - Integration with messages coming from validator.
 
 * Optimizations and cleanup:
   - Code refactoring:
