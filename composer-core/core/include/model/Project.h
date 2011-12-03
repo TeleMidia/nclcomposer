@@ -10,7 +10,7 @@
 #ifndef DOCUMENT_H
 #define DOCUMENT_H
 
-#include "util/ComposerCoreControl_global.h"
+#include "../util/ComposerCoreControl_global.h"
 
 #include <QObject>
 #include <QList>

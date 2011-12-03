@@ -16,7 +16,7 @@
 #include <exception>
 using namespace std;
 
-#include "util/ComposerCoreControl_global.h"
+#include "../util/ComposerCoreControl_global.h"
 
 #include "../extensions/IDocumentParser.h"
 using namespace composer::extension;

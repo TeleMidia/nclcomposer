@@ -10,7 +10,7 @@
 #ifndef ENTITY_H
 #define ENTITY_H
 
-#include "util/ComposerCoreControl_global.h"
+#include "../util/ComposerCoreControl_global.h"
 
 #include <QObject>
 #include <QMutex>

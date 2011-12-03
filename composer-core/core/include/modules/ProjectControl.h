@@ -17,7 +17,7 @@
 
 #include <iostream>
 
-#include "util/ComposerCoreControl_global.h"
+#include "../util/ComposerCoreControl_global.h"
 
 #include "PluginControl.h"
 #include "LanguageControl.h"

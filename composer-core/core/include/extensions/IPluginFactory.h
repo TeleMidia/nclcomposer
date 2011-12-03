@@ -14,7 +14,7 @@
 #include <QString>
 #include <QtGui/QIcon>
 
-#include "util/ComposerCoreControl_global.h"
+#include "../util/ComposerCoreControl_global.h"
 
 #include "../util/Utilities.h"
 using namespace composer::core::util;

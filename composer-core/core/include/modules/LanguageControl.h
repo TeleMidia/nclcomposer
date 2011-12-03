@@ -15,7 +15,7 @@
 #include <QPluginLoader>
 #include <QDir>
 
-#include "util/ComposerCoreControl_global.h"
+#include "../util/ComposerCoreControl_global.h"
 
 #include "../extensions/ILanguageProfile.h"
 using namespace composer::extension;

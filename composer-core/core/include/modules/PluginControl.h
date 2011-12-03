@@ -20,7 +20,7 @@
 #include <QHashIterator>
 #include <QDebug>
 
-#include "util/ComposerCoreControl_global.h"
+#include "../util/ComposerCoreControl_global.h"
 
 #include "MessageControl.h"
 #include "LanguageControl.h"
