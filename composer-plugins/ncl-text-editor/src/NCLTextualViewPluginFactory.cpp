@@ -24,9 +24,7 @@ namespace composer {
 
 NCLTextualViewPluginFactory::NCLTextualViewPluginFactory()
 {
-    prefPageWidget = new QFrame();
-    prefPageUi = new Ui::TextPluginPreferencesWidget();
-    prefPageUi->setupUi(prefPageWidget);
+    prefPageWidget = NULL;
 }
 
 IPlugin* NCLTextualViewPluginFactory::createPluginInstance()
@@ -63,6 +61,12 @@ QIcon NCLTextualViewPluginFactory::icon() const
 
 QWidget* NCLTextualViewPluginFactory::getPreferencePageWidget()
 {
+    if (prefPageWidget == NULL)
+        {
+            prefPageWidget = new QFrame();
+            prefPageUi = new Ui::TextPluginPreferencesWidget();
+            prefPageUi->setupUi(prefPageWidget);
+        }
     return prefPageWidget;
 }
 
