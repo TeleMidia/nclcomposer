@@ -99,7 +99,7 @@ private:
 };
 
 #ifdef __APPLE__
-}
+
 #endif
 
 #endif
