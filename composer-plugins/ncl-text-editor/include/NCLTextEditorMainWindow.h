@@ -86,8 +86,8 @@ private:
     void setCurrentFile(const QString &fileName);
     QString strippedName(const QString &fullFileName);
 
-    QDockWidget *dockTextEdit;
-    NCLTextEditor *textEdit;
+    QDockWidget *dockTextEdit, *dockTextEdit2;
+    NCLTextEditor *textEdit, *textEdit2;
     QString curFile;
 
     QMenu *fileMenu;

@@ -61,7 +61,9 @@ void NCLTextEditor::initParameters()
     setAutoCompletionThreshold(-1);
     setAutoCompletionFillupsEnabled(false);
     setAutoIndent(true);
-
+    setIndentationWidth(2);
+    setIndentationGuides(true);
+    setIndentationsUseTabs(true);
 
     //adding text partitions
     /*MyLexer *mylexer = new MyLexer(this);

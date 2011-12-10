@@ -30,9 +30,9 @@ NCLTextEditorMainWindow::NCLTextEditorMainWindow(QWidget *parent):
 #ifdef NCLEDITOR_STANDALONE
     createMenus();
     createToolBars();
-    createOutlineView();
     createProblemsView();
     createStatusBar();
+    createOutlineView();
 #endif
     setDockOptions(NCLTextEditorMainWindow::AllowNestedDocks
                    | NCLTextEditorMainWindow::AllowTabbedDocks
@@ -269,6 +269,7 @@ void NCLTextEditorMainWindow::createOutlineView()
                                       tr("&Add child"), this);
     connect ( insertNodeChildAct, SIGNAL(triggered()),
               this, SLOT(insertElement()));
+
     outlineView->addAction(insertNodeChildAct);
 
     connect( outlineView,
@@ -544,6 +545,11 @@ void NCLTextEditorMainWindow::createTextView() {
     dockTextEdit->setTitleBarWidget( titleWidget );
 #endif
 
+//    dockTextEdit2 = new QDockWidget("Text", this);
+//    dockTextEdit2->setObjectName(QString("dockTextView2"));
+//    dockTextEdit2->setFeatures(QDockWidget::DockWidgetMovable /*|
+//                              QDockWidget::DockWidgetFloatable*/);
+
     // dockTextEdit->setAllowedAreas(Qt::LeftDockWidgetArea |
     //                               Qt::RightDockWidgetArea);
 
@@ -551,7 +557,13 @@ void NCLTextEditorMainWindow::createTextView() {
     textEdit->setTabBehavior(NCLTextEditor::TAB_BEHAVIOR_NEXT_ATTR);
     dockTextEdit->setWidget(textEdit);
 
+//    textEdit2 = new NCLTextEditor(this);
+//    textEdit2->setTabBehavior(NCLTextEditor::TAB_BEHAVIOR_NEXT_ATTR);
+//    dockTextEdit2->setWidget(textEdit2);
+//    textEdit2->setDocument(textEdit->document());
+
     addDockWidget(Qt::RightDockWidgetArea, dockTextEdit);
+//    addDockWidget(Qt::RightDockWidgetArea, dockTextEdit2);
 
     // setCentralWidget(textEdit);
 
