@@ -1,6 +1,9 @@
 CONFIG += qtestlib testcase
 MOC_DIR = .mocs
 OBJECTS_DIR = .objs
+QT += gui
+
+DEFINES += QT_NO_DEBUG_OUTPUT QT_NO_DEBUG_WARNING
 
 macx {
     LIBS += -L../core \
@@ -23,8 +26,12 @@ else {
 SOURCES += \
     tst_ModuleLanguage.cpp \
     tst_Core.cpp \
+    tst_ModulePlugin.cpp \
+    tst_ModuleProject.cpp \
     tst_ModuleInit.cpp
 
 HEADERS += \
-    tst_ModuleInit.h \
-    tst_ModuleLanguage.h
+    tst_ModuleLanguage.h \
+    tst_ModulePlugin.h \
+    tst_ModuleProject.h \
+    tst_ModuleInit.h

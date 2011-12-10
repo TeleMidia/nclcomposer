@@ -82,15 +82,13 @@ void tst_ModuleInit::initTorture()
 
 }
 
-
-
 void tst_ModuleInit::languageProfile()
 {
     QList<ILanguageProfile*> list;
 
     /* Try to load the same profile */
     QVERIFY(lgControl->loadProfile
-            (profileDir+"NCLLanguageProfile.dll"));
+            (profileDir+"NCLLanguageProfile.so"));
     list = lgControl->getLoadedProfiles();
     QCOMPARE(list.size(),1);
 

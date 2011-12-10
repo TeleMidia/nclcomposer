@@ -112,7 +112,7 @@ bool NCLDocumentParser::endDocument()
 
 bool NCLDocumentParser::fatalError(const QXmlParseException &exception)
 {
-    qWarning() << "Fatal error on line" << exception.lineNumber()
+    qDebug() << "Fatal error on line" << exception.lineNumber()
                     << ", column" << exception.columnNumber() << ":"
                     << exception.message();
 
@@ -128,7 +128,7 @@ void NCLDocumentParser::onEntityAdded(QString , Entity *entity)
 
 void NCLDocumentParser::onEntityAddError(QString error)
 {
-    qWarning() << "NCLDocumentParser::onEntityAddError(" << error << ")";
+    qDebug() << "NCLDocumentParser::onEntityAddError(" << error << ")";
 }
 
 } } //end namespace
