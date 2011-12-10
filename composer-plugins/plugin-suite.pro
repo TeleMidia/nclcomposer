@@ -11,7 +11,6 @@ SUBDIRS = \
     debug-console \
     properties-view \
     qncllayout/qnly.pro \
-#    qnclstoryboard/qnsb.pro \
-#    qnclstructural/qnst.pro \
-    validator/validator.pro \
+    qnclstructural/deps/libqncg/libqncg.pro \
     qnclstructural/qnst.pro
+#    validator
