@@ -29,57 +29,57 @@ using namespace composer::core::model;
 using namespace composer::extension;
 
 namespace composer {
-    namespace core {
+namespace core {
 /*!
  \brief Manages the messages send from plugins to NCL Composer Core and
     vice-versa.
  */
 class COMPOSERCORESHARED_EXPORT MessageControl : public QObject
 {
-    Q_OBJECT
+  Q_OBJECT
 
 private:
-    Project *project; /*!< TODO */
-    QMap <QString, QStringList> listenEntities;
-    /*!< pluginInstanceId to list of entity this plugin is */
+  Project *project; /*!< TODO */
+  QMap <QString, QStringList> listenEntities;
+  /*!< pluginInstanceId to list of entity this plugin is */
 
 public:
-    /*!
+  /*!
      \brief Constructor.
 
      \param project
     */
-    MessageControl(Project *project);
-    /*!
+  MessageControl(Project *project);
+  /*!
      \brief Destructor.
     */
-    ~MessageControl();
+  ~MessageControl();
 
 private:
-    /*!
+  /*!
      * \brief TODO
      */
-    void sendEntityAddedMessageToPlugins( QString pluginInstanceId,
-                                          Entity *entity);
-    /*!
+  void sendEntityAddedMessageToPlugins( QString pluginInstanceId,
+                                       Entity *entity);
+  /*!
      * \brief TODO
      */
-    void sendEntityChangedMessageToPlugins( QString pluginInstanceId,
-                                            Entity *entity);
-    /*!
+  void sendEntityChangedMessageToPlugins( QString pluginInstanceId,
+                                         Entity *entity);
+  /*!
      * \brief TODO
      */
-    void sendEntityRemovedMessageToPlugins( QString pluginInstanceId,
-                                            Entity *entity);
+  void sendEntityRemovedMessageToPlugins( QString pluginInstanceId,
+                                         Entity *entity);
 
 
-    /*!
+  /*!
      * \brief TODO
      */
-    bool pluginIsInterestedIn(IPlugin *plugin, Entity *entity);
+  bool pluginIsInterestedIn(IPlugin *plugin, Entity *entity);
 
 public slots:
-    /*!
+  /*!
      \brief
 
      \param type
@@ -87,42 +87,52 @@ public slots:
      \param atts
      \param force
     */
-    void onAddEntity( QString type,
-                      QString parentEntityId,
-                      QMap<QString,QString>& atts,
-                      bool force);
-    /*!
+  void onAddEntity( QString type,
+                   QString parentEntityId,
+                   QMap<QString,QString>& atts,
+                   bool force);
+  /*!
      \brief
 
      \param entity
      \param atts
      \param force
     */
-    void onEditEntity(Entity *entity, QMap<QString,QString> atts, bool force);
-    /*!
+  void onEditEntity(Entity *entity, QMap<QString,QString> atts, bool force);
+  /*!
      \brief
 
      \param
      \param force
     */
-    void onRemoveEntity(Entity *, bool force);
-    /*!
+  void onRemoveEntity(Entity *, bool force);
+  /*!
      * \brief TODO
      */
-    void setListenFilter(QStringList list);
+  void setListenFilter(QStringList list);
 
-    /*!
+  /*!
      * \brief TODO
      */
-    void setPluginData(QByteArray data);
+  void setPluginData(QByteArray data);
 
-    /*!
+  /*!
      * \brief TODO
      */
-    void setCurrentProjectAsDirty();
+  void setCurrentProjectAsDirty();
+
+  /*!
+   * \brief This message is here, mainly for test purposes.
+   *
+   * It allows anyone send a addEntityMessage, without necessery being a plugin.
+   */
+  void anonymousAddEntity(QString type,
+                          QString parentEntityId,
+                          QMap<QString,QString>& atts,
+                          bool force=false);
 
 signals:
-    void entityAdded(QString, Entity*);
+  void entityAdded(QString, Entity*);
 
 };
 } } //end namespace
