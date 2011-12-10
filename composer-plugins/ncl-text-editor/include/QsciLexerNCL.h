@@ -98,8 +98,4 @@ private:
     QsciLexerNCL &operator=(const QsciLexerNCL &);
 };
 
-#ifdef __APPLE__
-
-#endif
-
 #endif
