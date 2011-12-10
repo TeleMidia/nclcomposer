@@ -31,7 +31,7 @@ ProjectControl::~ProjectControl()
             delete project;
             project = NULL;
         } else {
-            qWarning() << "Error: Failed to releasePlugins ";
+            qDebug() << "Error: Failed to releasePlugins ";
         }
     }
 }
@@ -49,18 +49,18 @@ bool ProjectControl::closeProject(QString location)
     }
     else
     {
-        qWarning() << "Error: Failed to close the project :" << location;
+        qDebug() << "Error: Failed to close the project :" << location;
         return false;
     }
     return true;
 }
 
-void ProjectControl::launchProject(QString location)
+bool ProjectControl::launchProject(QString location)
 {
     if (openProjects.contains(location))
     {
         emit projectAlreadyOpen(location);
-        return;
+        return false;
     }
 
     QString ext = location;
@@ -78,7 +78,7 @@ void ProjectControl::launchProject(QString location)
 //#else
 //        spaw.startDetached("/usr/bin/gnome-open", args);
 //#endif
-        return;
+        return false;
     }
 
     /* Requests the LanguageProfile associated with this DocumentType */
@@ -90,7 +90,7 @@ void ProjectControl::launchProject(QString location)
         emit notifyError(tr("No Language Profile Extension "
                             "found for (%1)").
                          arg(ext.toUpper()));
-        return;
+        return false;
     }
 
     emit startOpenProject(location);
@@ -116,11 +116,13 @@ void ProjectControl::launchProject(QString location)
                   this, SLOT(projectIsDirty(bool)));
     }
     else
-        qWarning() << tr("Project could not be open!");
+        qDebug() << tr("Project could not be open!");
 
     project->setDirty(false);
 
     emit endOpenProject(location);
+
+    return true;
 }
 
 void ProjectControl::importFromDocument( QString docLocation,
@@ -138,7 +140,7 @@ void ProjectControl::importFromDocument( QString docLocation,
 
     if(type == NONE)
     {
-        qWarning() << "File format not recognized.";
+        qDebug() << "File format not recognized.";
         return;
     }
 
@@ -186,12 +188,12 @@ void ProjectControl::importFromDocument( QString docLocation,
         if(input.open(QIODevice::ReadOnly))
             parser->parseContent(input.readAll());
         else
-            qWarning() << tr("File could not be open!");
+            qDebug() << tr("File could not be open!");
 
         input.close();
     }
     else
-        qWarning() << tr("Project could not be open!");
+        qDebug() << tr("Project could not be open!");
 
     project->setDirty(false);
     emit endOpenProject(projLocation);
@@ -202,7 +204,7 @@ void ProjectControl::saveProject(QString location)
     Project *project = openProjects.value(location);
     QFile fout(location);
 
-    qDebug() << "Trying to save: " << location;
+    //qDebug() << "Trying to save: " << location;
     if(!fout.exists())
     {
         qDebug() << "The file (" << location << ") doesn't exists. It will be\
@@ -212,7 +214,7 @@ void ProjectControl::saveProject(QString location)
     if( !fout.open( QIODevice::WriteOnly ) )
     {
        // It could not open
-       qWarning() << "Failed to open file (" <<  location << ") for writing.";
+       qDebug() << "Failed to open file (" <<  location << ") for writing.";
        return;
     }
 
@@ -237,7 +239,7 @@ void ProjectControl::projectIsDirty(bool isDirty)
     {
         emit dirtyProject(project->getLocation(), isDirty);
     }
-    else qWarning() << "Received a dirtyProject message for a NULL project";
+    else qDebug() << "Received a dirtyProject message for a NULL project";
 
 }
 

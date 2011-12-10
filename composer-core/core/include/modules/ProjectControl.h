@@ -81,7 +81,7 @@ public:
 
      \param location
     */
-    void launchProject(QString location);
+    bool launchProject(QString location);
 
     /*!
      \brief
