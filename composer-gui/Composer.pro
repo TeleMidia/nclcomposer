@@ -9,6 +9,7 @@ QT += xml network webkit
 DEFINES += NCLCOMPOSER_GUI_VERSION=\"\\\"0.1.0\\\"\"
 
 # DEFINES += USE_MDI
+DEFINES += QT_NO_DEBUG_OUTPUT QT_NO_DEBUG_WARNING
 
 RC_FILE = images/nclcomposer.rc
 
@@ -24,9 +25,9 @@ macx {
 else:unix {
   isEmpty(PREFIX) {
     PREFIX = /usr/local
-  } 
+  }
   INSTALLBASE = $$PREFIX
-  
+
   DATADIR = $$PREFIX/share
 
   # set the path to install desktop configuration
@@ -48,8 +49,8 @@ DEFINES += EXT_DEFAULT_PATH=\"\\\"$$PREFIX\\\"\"
 unix:!macx {
     target.path = $$INSTALLBASE/bin
 
-    QMAKE_LFLAGS += -Wl,--rpath=\'\$\$ORIGIN/../lib/composer\'
-    QMAKE_LFLAGS += --rpath=\'\$\$ORIGIN/../lib/composer/extensions\'
+    QMAKE_LFLAGS += -Wl,-rpath,\'\$\$ORIGIN/../lib/composer\'
+    QMAKE_LFLAGS += -Wl,-rpath,\'\$\$ORIGIN/../lib/composer/extensions\'
 }
 else {
     target.path = $$INSTALLBASE
@@ -64,6 +65,10 @@ LIBS          +=  -L../composer-core/core
 macx {
     LIBS += -framework ComposerCore
     INCLUDEPATH += /Library/Frameworks/ComposerCore.framework/
+    runssh_on {
+      DEFINES += WITH_LIBSSH2
+      LIBS += -lssh2
+    }
 }
 else:unix {
     LIBS += -L$$INSTALLBASE/lib/composer -lComposerCore
