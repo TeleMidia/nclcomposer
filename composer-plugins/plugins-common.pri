@@ -35,10 +35,9 @@ else:unix {
                  $$INSTALLBASE/include/composer/core \
                  $$INSTALLBASE/include/composer/core/extensions
 
-  QMAKE_LFLAGS += -Wl,--rpath=\'\$\$ORIGIN\'
-  QMAKE_LFLAGS += --rpath=\'\$\$ORIGIN/../\'
-  QMAKE_LFLAGS += --rpath=\'\$\$ORIGIN/../lib/composer\'
-  QMAKE_LFLAGS += --rpath=\'\$\$ORIGIN/../lib/composer/extensions\'
+  QMAKE_LFLAGS += -Wl,-rpath,\'\$\$ORIGIN\':\'\$\$ORIGIN/../\'
+  QMAKE_LFLAGS += -Wl,-rpath,\'\$\$ORIGIN/../lib/composer\'
+  QMAKE_LFLAGS += -Wl,-rpath,\'\$\$ORIGIN/../lib/composer/extensions\'
 
   target.path = $$quote($$INSTALLBASE/lib/composer/extensions)
 }
