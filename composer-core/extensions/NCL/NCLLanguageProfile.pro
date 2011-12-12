@@ -12,7 +12,9 @@ OBJECTS_DIR = .objs
 
 TARGET = NCLLanguageProfile
 TEMPLATE = lib
-CONFIG += debug plugin dll
+CONFIG += release plugin dll
+
+DEFINES += QT_NO_DEBUG_OUTPUT QT_NO_DEBUG_WARNING
 
 macx {
   INSTALLBASE = /Library/Frameworks
@@ -47,7 +49,7 @@ macx {
     QMAKE_LFLAGS += -Wl,-install_name,'\'$$INSTALLSUPPORT/lib'$$TARGET'.dylib\''
 }
 else:unix {
-    QMAKE_LFLAGS += -Wl,--rpath=\'\$\$ORIGIN/../lib/composer\'
+    QMAKE_LFLAGS += -Wl,-rpath,\'\$\$ORIGIN/../lib/composer\'
     LIBS += -L../../core -lComposerCore
     target.path = $$quote($$INSTALLBASE/lib/composer/extensions)
     headers_nclprofile.path = $$HEADERS_PATH/core/extensions
