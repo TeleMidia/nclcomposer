@@ -78,6 +78,43 @@ void QnlyComposerPlugin::createConnections()
         SLOT(removeRegionBase(QString)));
 }
 
+void QnlyComposerPlugin::updateFromModel()
+{
+    clear();
+
+    loadRegionbase();
+}
+
+void QnlyComposerPlugin::loadRegionbase()
+{
+    QList<Entity*> regionbaseList = getProject()->getEntitiesbyType("regionBase");
+
+    if (!regionbaseList.isEmpty()){
+        foreach(Entity* regionbaseEntity, regionbaseList){
+            addRegionBaseToView(regionbaseEntity);
+
+            QVector<Entity*> children = regionbaseEntity->getChildren();
+
+            foreach(Entity* child, children){
+                loadRegion(child);
+            }
+        }
+    }
+}
+
+void QnlyComposerPlugin::loadRegion(Entity* region)
+{
+    if (region != NULL){
+        addRegionToView(region);
+
+        QVector<Entity*> children = region->getChildren();
+
+        foreach(Entity* child, children){
+            loadRegion(child);
+        }
+    }
+}
+
 QWidget* QnlyComposerPlugin::getWidget()
 {
     return view;
@@ -324,6 +361,10 @@ void QnlyComposerPlugin::removeRegionFromView(QString entityUID)
                 return; // abort remotion
             }
 
+            regions.remove(regionbaseUID);
+
+            relations.remove(entityUID);
+
             // removing
             view->removeRegion(regionUID, regionbaseUID);
         }
@@ -535,6 +576,10 @@ void QnlyComposerPlugin::removeRegionBaseFromView(QString entityUID)
             QString regionbaseUID;
 
             regionbaseUID = entityUID;
+
+            regionbases.remove(regionbaseUID);
+
+            relations.remove(entityUID);
 
             // select
             view->removeRegionBase(regionbaseUID);
@@ -811,6 +856,21 @@ void QnlyComposerPlugin::changeRegionBase(const QString regionbaseUID,
         // emitting
         emit setAttributes(regionbases[regionbaseUID],standard, false);
     }
+}
+
+void QnlyComposerPlugin::clear()
+{
+    foreach(Entity* regionEntity, regions.values()){
+        removeRegionFromView(regionEntity->getUniqueId());
+    }
+
+    foreach(Entity* regionbaseEntity, regionbases.values()){
+        removeRegionBaseFromView(regionbaseEntity->getUniqueId());
+    }
+
+    regions.clear();
+    regionbases.clear();
+    relations.clear();
 }
 
 void QnlyComposerPlugin::selectRegionBase(const QString regionbaseUID)

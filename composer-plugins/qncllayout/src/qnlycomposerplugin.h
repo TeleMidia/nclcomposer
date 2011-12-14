@@ -57,6 +57,8 @@ public slots:
 
     virtual void changeSelectedEntity(QString pluginID, void* entityUID);
 
+    virtual void updateFromModel();
+
 protected slots:
     void addRegionToView(Entity* entity);
 
@@ -100,6 +102,12 @@ protected slots:
     void selectRegionBase(const QString regionbaseUID);
 
 private:
+    void clear();
+
+    void loadRegionbase();
+
+    void loadRegion(Entity* region);
+
     void createView();
 
     void createConnections();
