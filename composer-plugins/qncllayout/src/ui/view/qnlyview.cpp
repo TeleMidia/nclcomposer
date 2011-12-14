@@ -413,7 +413,7 @@ void QnlyView::addRegion(QnlyGraphicsRegion* region,
 {
     if (region != NULL && regionBase != NULL)
     {
-
+        qDebug() << "Region Added!";
 
        regions[region->getUid()] = region;
 
@@ -428,11 +428,13 @@ void QnlyView::removeRegion(QnlyGraphicsRegion* region,
 {
     if (region != NULL && regionBase != NULL)
     {
+        qDebug() << "Region Removed!";
+
         foreach(QGraphicsItem* item, region->childItems())
         {
             QnlyGraphicsRegion* child = (QnlyGraphicsRegion*) item;
 
-            regions.remove(child->getUid());
+            removeRegion(child, regionBase);
         }
 
         regions.remove(region->getUid());
@@ -442,6 +444,8 @@ void QnlyView::removeRegion(QnlyGraphicsRegion* region,
 //         delete(region);
     }
 }
+
+
 
 void QnlyView::changeRegion(QnlyGraphicsRegion* region,
                   QnlyGraphicsRegionBase* regionBase,
@@ -477,6 +481,8 @@ void QnlyView::addRegionBase(QnlyGraphicsRegionBase* regionBase,
                              const QMap<QString, QString> attributes)
 {
     if (regionBase != NULL){
+        qDebug() << "RegionBase Added!";
+
         if (attributes.contains("id"))
             regionBase->setId(attributes["id"]);
 
@@ -544,6 +550,8 @@ void QnlyView::removeRegionBase(QnlyGraphicsRegionBase* regionBase)
 {
     if (regionBase != NULL)
     {
+        qDebug() << "RegionBase Removed!";
+
         QWidget* parent = (QWidget*) regionBase->parent();
 
         removeWidget(parent);

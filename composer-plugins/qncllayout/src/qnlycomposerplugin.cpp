@@ -164,11 +164,11 @@ void QnlyComposerPlugin::onEntityAdded(QString pluginID, Entity *entity)
     {
         if (entity->getType() == "region")
         {
-            addRegionToView(entity);
+//            addRegionToView(entity);
         }
         else if (entity->getType() == "regionBase")
         {
-            addRegionBaseToView(entity);
+//            addRegionBaseToView(entity);
         }
     }
 }
@@ -361,7 +361,7 @@ void QnlyComposerPlugin::removeRegionFromView(QString entityUID)
                 return; // abort remotion
             }
 
-            regions.remove(regionbaseUID);
+            regions.remove(regionUID);
 
             relations.remove(entityUID);
 
@@ -860,11 +860,17 @@ void QnlyComposerPlugin::changeRegionBase(const QString regionbaseUID,
 
 void QnlyComposerPlugin::clear()
 {
-    foreach(Entity* regionEntity, regions.values()){
+    while(!regions.empty()){
+        Entity* regionEntity = regions.begin().value();
+
+        qDebug() << regionEntity->getAttribute("id");
+
         removeRegionFromView(regionEntity->getUniqueId());
     }
 
-    foreach(Entity* regionbaseEntity, regionbases.values()){
+    while(!regionbases.empty()){
+        Entity* regionbaseEntity = regionbases.begin().value();
+
         removeRegionBaseFromView(regionbaseEntity->getUniqueId());
     }
 
