@@ -3,7 +3,7 @@ TEMPLATE = app
 CONFIG += qt warn_on debug console
 
 #CONFIG += clubencl
-CONFIG += runssh_on
+#CONFIG += runssh_on
 QT += xml network webkit
 
 DEFINES += NCLCOMPOSER_GUI_VERSION=\"\\\"0.1.0\\\"\"
