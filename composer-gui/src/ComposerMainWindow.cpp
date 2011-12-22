@@ -575,7 +575,9 @@ void ComposerMainWindow::createMenus()
 
   // assing menu_Perspective to tbPerspectiveDropList
   tbPerspectiveDropList->setMenu(menu_Perspective);
-  tabProjects->setCornerWidget(tbPerspectiveDropList, Qt::TopRightCorner);
+  ui->toolBar->addWidget(tbPerspectiveDropList);
+//  tabProjects->setCornerWidget(tbPerspectiveDropList, Qt::TopRightCorner);
+  tabProjects->setCornerWidget(ui->toolBar, Qt::TopRightCorner);
   //  tabProjects->setCornerWidget(ui->menu_Window, Qt::TopLeftCorner);
 
   updateMenuPerspectives();
@@ -1233,8 +1235,8 @@ void ComposerMainWindow::updateMenuPerspectives()
   for(int i = 0; i < keys.size(); i++)
   {
     QAction *act = menu_Perspective->addAction(keys.at(i),
-                                               this,
-                                               SLOT(restorePerspectiveFromMenu()));
+                                            this,
+                                            SLOT(restorePerspectiveFromMenu()));
     act->setData(keys[i]);
   }
 }
@@ -1248,6 +1250,8 @@ void ComposerMainWindow::currentTabChanged(int n)
     restorePluginsLayoutAct->setEnabled(true);
     ui->action_Close_Project->setEnabled(true);
     ui->action_Save->setEnabled(true);
+    ui->action_RunNCL->setEnabled(true);
+    ui->action_Run_remotely->setEnabled(true);
   }
   else
   {
@@ -1256,6 +1260,8 @@ void ComposerMainWindow::currentTabChanged(int n)
     restorePluginsLayoutAct->setEnabled(false);
     ui->action_Close_Project->setEnabled(false);
     ui->action_Save->setEnabled(false);
+    ui->action_RunNCL->setEnabled(false);
+    ui->action_Run_remotely->setEnabled(false);
   }
 }
 
