@@ -13,7 +13,7 @@ VERSION = \
     0.1.0
 
 CONFIG += \
-    debug \
+    release \
     static
 
 HEADERS += \
@@ -27,12 +27,6 @@ SOURCES += \
     qncggraphicsnode.cpp \
     qncggraphicsinterface.cpp
 
+target.path = .
 
-
-
-
-
-
-
-
-
+INSTALLS += target
