@@ -23,6 +23,7 @@
 #include "qnstgraphicsreference.h"
 #include "qnstgraphicslink.h"
 #include "qnstgraphicslinkdialog.h"
+#include "qnstconncetor.h"
 
 class QnstView : public QGraphicsView
 {
@@ -173,6 +174,8 @@ private:
 
     int nmedia;
 
+    int nlink;
+
     bool modified;
 
     bool linking;
@@ -186,6 +189,8 @@ private:
     QnstGraphicsEntity* selected;
 
     QnstGraphicsEntity* clipboard;
+
+    QMap<QString, QnstConncetor*> connectors;
 
     QMap<QString, QnstGraphicsEntity*> entities;
 };

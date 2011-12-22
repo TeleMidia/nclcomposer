@@ -3,6 +3,8 @@
 
 #include <QDialog>
 
+#include  "qnstconncetor.h"
+
 #include "ui_QnstGraphicsLinkForm.h"
 
 class QnstGraphicsLinkDialog : public QDialog
@@ -14,11 +16,15 @@ public:
 
     ~QnstGraphicsLinkDialog();
 
+    void init(QMap<QString, QnstConncetor*> connectors);
+
 protected slots:
     void adjustBinds(QString conn);
 
 public:
     Ui::QnstGraphicsLinkForm form;
+
+    QMap<QString, QnstConncetor*> connectors;
 };
 
 #endif // QNSTGRAPHICSLINKDIALOG_H

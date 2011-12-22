@@ -118,6 +118,14 @@ private:
 
     void requestPortChange(const QString uid, const QMap<QString, QString> properties);
 
+    void requestConnectorAddition(const QString uid, const QString parent, const QMap<QString, QString> properties);
+
+    void requestConnectorDependence();
+
+    void requestConnectorBaseDependence();
+
+    void requestLinkAddition(const QString uid, const QString parent, const QMap<QString, QString> properties);
+
     int n;
 
     QnstView* view;

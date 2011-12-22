@@ -48,7 +48,8 @@ HEADERS += \
     ui/view/qnstgraphicsbind.h \
     ui/view/qnstgraphicsedge.h \
     ui/view/qnstgraphicslink.h \
-    ui/view/qnstgraphicslinkdialog.h
+    ui/view/qnstgraphicslinkdialog.h \
+    ui/view/qnstconncetor.h
 
 SOURCES += \
     qnstcomposerplugin.cpp \
@@ -78,13 +79,16 @@ SOURCES += \
     ui/view/qnstgraphicsbind.cpp \
     ui/view/qnstgraphicsedge.cpp \
     ui/view/qnstgraphicslink.cpp \
-    ui/view/qnstgraphicslinkdialog.cpp
+    ui/view/qnstgraphicslinkdialog.cpp \
+    ui/view/qnstconncetor.cpp
 
 RESOURCES += \
     images.qrc
 
 FORMS += \
     ui/view/QnstGraphicsLinkForm.ui
+
+
 
 
 

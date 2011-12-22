@@ -14,6 +14,8 @@ QnstView::QnstView(QWidget* parent)
 
     nmedia = 0;
 
+    nlink = 0;
+
     linking = false;
 
     modified = false;
@@ -470,8 +472,8 @@ void QnstView::addBody(const QString uid, const QString parent, const QMap<QStri
     QnstGraphicsBody* entity = new QnstGraphicsBody();
     entity->setnstUid(uid);
 
-    entity->setTop(height()/2 - 550/2);
-    entity->setLeft(width()/2 - 750/2);
+    entity->setTop(scene->height()/2 - 550/2);
+    entity->setLeft(scene->width()/2 - 750/2);
     entity->setWidth(750);
     entity->setHeight(550);
 
@@ -653,6 +655,8 @@ void QnstView::addMedia(const QString uid, const QString parent, const QMap<QStr
             entity->setHeight(properties["height"].toDouble());
         }
 
+        ++nmedia;
+
         entities[parent]->addnstGraphicsEntity(entity); entities[uid] = entity; entity->adjust();
     }
 }
@@ -826,6 +830,12 @@ void QnstView::requestEntityRemotion(QnstGraphicsEntity* entity)
                     ((QnstGraphicsInterface*) edge->getEntityB())->removenstGraphicsEdge(edge);
                 }
 
+                if (edge->getnstType() == Qnst::Link){
+                    entities.remove(edge->getnstUid());
+
+                    emit entityRemoved(edge->getnstUid());
+                }
+
                 QnstGraphicsEntity* parent = edge->getEntityA()->getnstGraphicsParent();
 
                 parent->removenstGraphicsEntity(edge);
@@ -845,6 +855,12 @@ void QnstView::requestEntityRemotion(QnstGraphicsEntity* entity)
 
                 }else if (edge->getEntityB()->getncgType() == Qncg::Interface){
                     ((QnstGraphicsInterface*) edge->getEntityB())->removenstGraphicsEdge(edge);
+                }
+
+                if (edge->getnstType() == Qnst::Link){
+                    entities.remove(edge->getnstUid());
+
+                    emit entityRemoved(edge->getnstUid());
                 }
 
                 QnstGraphicsEntity* parent = edge->getEntityA()->getnstGraphicsParent();
@@ -1797,7 +1813,7 @@ void QnstView::performPaste()
                 entity = new QnstGraphicsImage();
                 entity->setnstGraphicsParent(parent);
 
-                entity->setnstId(copy->getnstId());
+                entity->setnstId("m"+QString::number(++nmedia));
 
                 entity->setTop(parent->getHeight()/2 - 56/2);
                 entity->setLeft(parent->getWidth()/2 - 56/2);
@@ -1815,7 +1831,7 @@ void QnstView::performPaste()
                 entity = new QnstGraphicsAudio();
                 entity->setnstGraphicsParent(parent);
 
-                entity->setnstId(copy->getnstId());
+                entity->setnstId("m"+QString::number(++nmedia));
 
                 entity->setTop(parent->getHeight()/2 - 56/2);
                 entity->setLeft(parent->getWidth()/2 - 56/2);
@@ -1833,7 +1849,7 @@ void QnstView::performPaste()
                 entity = new QnstGraphicsVideo();
                 entity->setnstGraphicsParent(parent);
 
-                entity->setnstId(copy->getnstId());
+                entity->setnstId("m"+QString::number(++nmedia));
 
                 entity->setTop(parent->getHeight()/2 - 56/2);
                 entity->setLeft(parent->getWidth()/2 - 56/2);
@@ -1851,7 +1867,7 @@ void QnstView::performPaste()
                 entity = new QnstGraphicsText();
                 entity->setnstGraphicsParent(parent);
 
-                entity->setnstId(copy->getnstId());
+                entity->setnstId("m"+QString::number(++nmedia));
 
                 entity->setTop(parent->getHeight()/2 - 56/2);
                 entity->setLeft(parent->getWidth()/2 - 56/2);
@@ -1869,7 +1885,7 @@ void QnstView::performPaste()
                 entity = new QnstGraphicsScript();
                 entity->setnstGraphicsParent(parent);
 
-                entity->setnstId(copy->getnstId());
+                entity->setnstId("m"+QString::number(++nmedia));
 
                 entity->setTop(parent->getHeight()/2 - 56/2);
                 entity->setLeft(parent->getWidth()/2 - 56/2);
@@ -1905,7 +1921,7 @@ void QnstView::performPaste()
                 entity = new QnstGraphicsMedia();
                 entity->setnstGraphicsParent(parent);
 
-                entity->setnstId(copy->getnstId());
+                entity->setnstId("m"+QString::number(++nmedia));
 
                 entity->setTop(parent->getHeight()/2 - 56/2);
                 entity->setLeft(parent->getWidth()/2 - 56/2);
@@ -1923,7 +1939,7 @@ void QnstView::performPaste()
                 entity = new QnstGraphicsContext();
                 entity->setnstGraphicsParent(parent);
 
-                entity->setnstId(copy->getnstId());
+                entity->setnstId("ctx"+QString::number(++ncontext));
 
                 entity->setTop(parent->getHeight()/2 - copy->getWidth()/2);
                 entity->setLeft(parent->getWidth()/2 - copy->getHeight()/2);
@@ -1941,7 +1957,7 @@ void QnstView::performPaste()
                 entity = new QnstGraphicsSwitch();
                 entity->setnstGraphicsParent(parent);
 
-                entity->setnstId(copy->getnstId());
+                entity->setnstId("swt"+QString::number(++nswitch));
 
                 entity->setTop(parent->getHeight()/2 - copy->getWidth()/2);
                 entity->setLeft(parent->getWidth()/2 - copy->getHeight()/2);
@@ -1959,7 +1975,7 @@ void QnstView::performPaste()
                 entity = new QnstGraphicsPort();
                 entity->setnstGraphicsParent(parent);
 
-                entity->setnstId(copy->getnstId());
+                entity->setnstId("p"+QString::number(++nport));
 
                 entity->setTop(copy->getTop());
                 entity->setLeft(copy->getLeft());
@@ -1992,7 +2008,7 @@ void QnstView::performPaste(QnstGraphicsEntity* copy, QnstGraphicsEntity* parent
         entity = new QnstGraphicsImage();
         entity->setnstGraphicsParent(parent);
 
-        entity->setnstId(copy->getnstId());
+        entity->setnstId("m"+QString::number(++nmedia));
 
         entity->setTop(copy->getTop());
         entity->setLeft(copy->getLeft());
@@ -2010,7 +2026,7 @@ void QnstView::performPaste(QnstGraphicsEntity* copy, QnstGraphicsEntity* parent
         entity = new QnstGraphicsAudio();
         entity->setnstGraphicsParent(parent);
 
-        entity->setnstId(copy->getnstId());
+        entity->setnstId("m"+QString::number(++nmedia));
 
         entity->setTop(copy->getTop());
         entity->setLeft(copy->getLeft());
@@ -2028,7 +2044,7 @@ void QnstView::performPaste(QnstGraphicsEntity* copy, QnstGraphicsEntity* parent
         entity = new QnstGraphicsVideo();
         entity->setnstGraphicsParent(parent);
 
-        entity->setnstId(copy->getnstId());
+        entity->setnstId("m"+QString::number(++nmedia));
 
         entity->setTop(copy->getTop());
         entity->setLeft(copy->getLeft());
@@ -2046,7 +2062,7 @@ void QnstView::performPaste(QnstGraphicsEntity* copy, QnstGraphicsEntity* parent
         entity = new QnstGraphicsText();
         entity->setnstGraphicsParent(parent);
 
-        entity->setnstId(copy->getnstId());
+        entity->setnstId("m"+QString::number(++nmedia));
 
         entity->setTop(copy->getTop());
         entity->setLeft(copy->getLeft());
@@ -2064,7 +2080,7 @@ void QnstView::performPaste(QnstGraphicsEntity* copy, QnstGraphicsEntity* parent
         entity = new QnstGraphicsScript();
         entity->setnstGraphicsParent(parent);
 
-        entity->setnstId(copy->getnstId());
+        entity->setnstId("m"+QString::number(++nmedia));
 
         entity->setTop(copy->getTop());
         entity->setLeft(copy->getLeft());
@@ -2082,7 +2098,7 @@ void QnstView::performPaste(QnstGraphicsEntity* copy, QnstGraphicsEntity* parent
         entity = new QnstGraphicsSettings();
         entity->setnstGraphicsParent(parent);
 
-        entity->setnstId(copy->getnstId());
+        entity->setnstId("m"+QString::number(++nmedia));
 
         entity->setTop(copy->getTop());
         entity->setLeft(copy->getLeft());
@@ -2100,7 +2116,7 @@ void QnstView::performPaste(QnstGraphicsEntity* copy, QnstGraphicsEntity* parent
         entity = new QnstGraphicsMedia();
         entity->setnstGraphicsParent(parent);
 
-        entity->setnstId(copy->getnstId());
+        entity->setnstId("m"+QString::number(++nmedia));
 
         entity->setTop(copy->getTop());
         entity->setLeft(copy->getLeft());
@@ -2118,7 +2134,7 @@ void QnstView::performPaste(QnstGraphicsEntity* copy, QnstGraphicsEntity* parent
         entity = new QnstGraphicsContext();
         entity->setnstGraphicsParent(parent);
 
-        entity->setnstId(copy->getnstId());
+        entity->setnstId("ctx"+QString::number(++ncontext));
 
         entity->setTop(copy->getTop());
         entity->setLeft(copy->getLeft());
@@ -2136,7 +2152,7 @@ void QnstView::performPaste(QnstGraphicsEntity* copy, QnstGraphicsEntity* parent
         entity = new QnstGraphicsSwitch();
         entity->setnstGraphicsParent(parent);
 
-        entity->setnstId(copy->getnstId());
+        entity->setnstId("swt"+QString::number(++nswitch));
 
         entity->setTop(copy->getTop());
         entity->setLeft(copy->getLeft());
@@ -2154,7 +2170,7 @@ void QnstView::performPaste(QnstGraphicsEntity* copy, QnstGraphicsEntity* parent
         entity = new QnstGraphicsPort();
         entity->setnstGraphicsParent(parent);
 
-        entity->setnstId(copy->getnstId());
+        entity->setnstId("p"+QString::number(++nport));
 
         entity->setTop(copy->getTop());
         entity->setLeft(copy->getLeft());
@@ -2338,6 +2354,8 @@ void QnstView::mouseReleaseEvent(QMouseEvent* event)
                         if (parenta == parentb){
                             qDebug() << "NODE to NODE:" << entitya->getnstUid() << "->" << entityb->getnstUid();
 
+                            linkDialog->init(connectors);
+
                             if (linkDialog->exec()){
                                 QString con = linkDialog->form.cbCondition->currentText();
                                 QString act = linkDialog->form.cbAction->currentText();
@@ -2392,9 +2410,52 @@ void QnstView::mouseReleaseEvent(QMouseEvent* event)
                                         entity->setAction(Qnst::NoActionType);
                                     }
 
-                                    modified = false;
+                                    QString connName = linkDialog->form.cbConnector->currentText();;
+
+                                    if (linkDialog->form.cbConnector->currentText() == "Personalized"){
+                                        QnstConncetor* conn = new QnstConncetor();
+                                        conn->setName(con+act+QString::number(connectors.size()));
+                                        conn->addCondition(con);
+                                        conn->addAction(act);
+
+                                        connectors[conn->getName()] = conn;
+
+                                        QMap<QString, QString> properties;
+
+                                        properties["TYPE"] = "connector";
+
+                                        properties["id"] = conn->getName();
+                                        properties["condition"] = con;
+                                        properties["action"] = act;
+
+                                        connName = conn->getName();
+
+                                        emit entityAdded(conn->getnstUid(), "", properties);
+                                    }
+
+                                    QMap<QString, QString> properties;
+
+                                    properties["TYPE"] = "link";
+
+                                    properties["id"] = "link"+QString::number(++nlink);
+
+                                    properties["connector"] = connName;
+
+                                    properties["componentcondition"] = entitya->getnstId();
+                                    properties["componentaction"] = entityb->getnstId();
+
+                                    properties["condition"] = con;
+                                    properties["action"] = act;
+
+                                    entities[entity->getnstUid()] = entity;
+
+                                    ((QnstGraphicsNode*) parenta)->addnstGraphicsEntity(entity);
+
+                                    emit entityAdded(entity->getnstUid(), parenta->getnstUid(), properties);
                                 }
                             }
+
+                            modified = false;
                         }
                     }
 
