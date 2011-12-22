@@ -19,10 +19,11 @@
 
 QnstEntity::QnstEntity(QnstEntity* parent)
 {
+    setnstType(Qnst::NoType);
+
     setnstParent(parent);
 
     setnstUid((QString) QUuid::createUuid());
-    setnstType(Qnst::NoType);
 }
 
 QnstEntity::~QnstEntity()
@@ -68,4 +69,27 @@ QnstEntity* QnstEntity::getnstParent() const
 void QnstEntity::setnstParent(QnstEntity* parent)
 {
     this->parent = parent;
+}
+
+QVector<QnstEntity*> QnstEntity::getnstEntities()
+{
+    return entities;
+}
+
+void QnstEntity::addnstEntity(QnstEntity* entity)
+{
+    if (entity != NULL){
+        entities.append(entity);
+    }
+}
+
+void QnstEntity::removenstEntity(QnstEntity* entity)
+{
+    if (entity != NULL){
+        int index = entities.indexOf(entity);
+
+        if (index >= 0){
+            entities.remove(index);
+        }
+    }
 }

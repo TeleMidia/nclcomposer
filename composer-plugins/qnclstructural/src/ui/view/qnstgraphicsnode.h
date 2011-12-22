@@ -1,47 +1,38 @@
 #ifndef QNSTGRAPHICSNODE_H
 #define QNSTGRAPHICSNODE_H
 
-#include <QMenu>
-#include <QAction>
-#include <QVector>
 #include <QGraphicsSceneMouseEvent>
 #include <QGraphicsSceneContextMenuEvent>
 
-#include <QDebug>
+#include "qnstgraphicsentity.h"
+#include "qnstgraphicsedge.h"
 
-#include "qncggraphicsnode.h"
-
-#include "core/qnstentity.h"
-
-class QnstGraphicsNode : public QncgGraphicsNode, public QnstEntity
+class QnstGraphicsNode : public QnstGraphicsEntity
 {
-    Q_OBJECT
-
 public:
     QnstGraphicsNode(QnstGraphicsNode* parent = 0);
 
     ~QnstGraphicsNode();
 
+    QVector<QnstGraphicsEdge*> getnstGraphicsEdges();
+
+    void addnstGraphicsEdge(QnstGraphicsEdge* edge);
+
+    void removenstGraphicsEdge(QnstGraphicsEdge* edge);
+
     virtual void adjust();
-
-signals:
-    void entityAdded(QnstEntity* entity);
-
-    void entityRemoved(QnstEntity* entity);
-
-    void entityChanged(QnstEntity* entity);
-
-    void entitySelected(QnstEntity* entity);
 
 protected:
     virtual void draw(QPainter* painter) = 0;
 
     virtual void delineate(QPainterPath* painter) const = 0;
 
-protected slots:
-    void requestEntityChange();
+    virtual void move(QGraphicsSceneMouseEvent* event);
 
-    void requestEntitySelection();
+    virtual void resize(QGraphicsSceneMouseEvent* event);
+
+private:
+    QVector<QnstGraphicsEdge*> edges;
 };
 
 #endif // QNSTGRAPHICSNODE_H

@@ -1,7 +1,8 @@
 include("../configure.pri")
 
 QT += \
-    svg
+    svg \
+    xml
 
 TEMPLATE = \
     lib
@@ -38,10 +39,16 @@ HEADERS += \
     ui/view/qnstgraphicscontext.h \
     ui/view/qnstgraphicsswitch.h \
     ui/view/qnstgraphicssettings.h \
+    ui/view/qnstgraphicsentity.h \
+    ui/view/qnstmenu.h \
     ui/view/qnstgraphicsinterface.h \
-    ui/view/qnstgraphicsarea.h \
     ui/view/qnstgraphicsport.h \
-    ui/view/qnstgraphicsproperty.h
+    ui/view/qnstviewlink.h \
+    ui/view/qnstgraphicsreference.h \
+    ui/view/qnstgraphicsbind.h \
+    ui/view/qnstgraphicsedge.h \
+    ui/view/qnstgraphicslink.h \
+    ui/view/qnstgraphicslinkdialog.h
 
 SOURCES += \
     qnstcomposerplugin.cpp \
@@ -62,10 +69,40 @@ SOURCES += \
     ui/view/qnstgraphicscontext.cpp \
     ui/view/qnstgraphicsswitch.cpp \
     ui/view/qnstgraphicssettings.cpp \
+    ui/view/qnstgraphicsentity.cpp \
+    ui/view/qnstmenu.cpp \
     ui/view/qnstgraphicsinterface.cpp \
     ui/view/qnstgraphicsport.cpp \
-    ui/view/qnstgraphicsproperty.cpp \
-    ui/view/qnstgraphicsarea.cpp
+    ui/view/qnstviewlink.cpp \
+    ui/view/qnstgraphicsreference.cpp \
+    ui/view/qnstgraphicsbind.cpp \
+    ui/view/qnstgraphicsedge.cpp \
+    ui/view/qnstgraphicslink.cpp \
+    ui/view/qnstgraphicslinkdialog.cpp
 
 RESOURCES += \
     images.qrc
+
+FORMS += \
+    ui/view/QnstGraphicsLinkForm.ui
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

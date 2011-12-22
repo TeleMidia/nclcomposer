@@ -1,43 +1,28 @@
-/*
- * Copyright 2011 TeleMidia/PUC-Rio.
- * 
- * This library is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Lesser General Public
- * License as published by the Free Software Foundation; either 
- * version 2.1 of the License, or (at your option) any later version.
- * 
- * This library is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details.
- * 
- * You should have received a copy of the GNU Lesser General Public 
- * License along with this library.  If not, see
- * <http://www.gnu.org/licenses/>. 
- */
 #ifndef QNSTVIEW_H
 #define QNSTVIEW_H
-
-#include <cstdlib>
 
 #include <QGraphicsView>
 #include <QVector>
 #include <QMap>
+#include <QDomDocument>
+#include <QDomElement>
 #include <QMouseEvent>
 #include <QKeyEvent>
-#include <QWheelEvent>
-#include <QKeyEvent>
+#include <QMessageBox>
 
 #include <QDebug>
 
 #include "qnstscene.h"
-#include "qnstentity.h"
+#include "qnstviewlink.h"
+#include "qnstgraphicsentity.h"
 #include "qnstgraphicsbody.h"
 #include "qnstgraphicscontext.h"
 #include "qnstgraphicsswitch.h"
 #include "qnstgraphicsmedia.h"
-
-typedef int QnstInt;
+#include "qnstgraphicsport.h"
+#include "qnstgraphicsreference.h"
+#include "qnstgraphicslink.h"
+#include "qnstgraphicslinkdialog.h"
 
 class QnstView : public QGraphicsView
 {
@@ -48,13 +33,15 @@ public:
 
     ~QnstView();
 
-    QVector<QnstEntity*> getRoots() const;
+    void load(QString data);
 
-    void addRoot(QnstEntity* root);
+    QString serialize();
 
-    void removeRoot(QnstEntity* root);
+    void read(QDomElement element, QDomElement parent);
 
-public slots:
+    void write(QDomElement element, QDomDocument* dom, QnstGraphicsEntity* entity);
+
+public:
     void addEntity(const QString uid, const QString parent, const QMap<QString, QString> properties);
 
     void removeEntity(const QString uid);
@@ -62,6 +49,43 @@ public slots:
     void changeEntity(const QString uid, const QMap<QString, QString> properties);
 
     void selectEntity(const QString uid);
+
+public slots:
+    void performHelp();
+
+    void performUndo();
+
+    void performRedo();
+
+    void performCut();
+
+    void performCopy();
+
+    void performPaste();
+
+    void performDelete();
+
+    void performExport();
+
+    void performZoomIn();
+
+    void performZoomOut();
+
+    void performZoomReset();
+
+    void performFullscreen();
+
+    void performBringfront();
+
+    void performBringforward();
+
+    void performSendback();
+
+    void performSendbackward();
+
+    void performHide();
+
+    void performProperties();
 
 signals:
     void entityAdded(const QString uid, const QString parent, const QMap<QString, QString> properties);
@@ -72,39 +96,46 @@ signals:
 
     void entitySelected(const QString uid);
 
-protected slots:
-    void requestEntityAddition(QnstEntity* entity);
-
-    void requestEntityRemotion(QnstEntity* entity);
-
-    void requestEntityChange(QnstEntity* entity);
-
-    void requestEntitySelection(QnstEntity* entity);
+protected:
+    virtual void mouseMoveEvent(QMouseEvent* event);
 
     virtual void mousePressEvent(QMouseEvent* event);
 
-    virtual void keyPressEvent(QKeyEvent* event);
+    virtual void mouseReleaseEvent(QMouseEvent*event);
+
+    virtual void keyPressEvent(QKeyEvent *event);
+
+    virtual void keyReleaseEvent(QKeyEvent *event);
+
+protected slots:
+    void requestEntityAddition(QnstGraphicsEntity* entity);
+
+    void requestEntityRemotion(QnstGraphicsEntity* entity);
+
+    void requestEntityChange(QnstGraphicsEntity* entity);
+
+    void requestEntitySelection(QnstGraphicsEntity* entity);
 
 private:
     void addBody(const QString uid, const QString parent, const QMap<QString, QString> properties);
 
-    void changeBody(const QString uid, const QMap<QString, QString> properties);
+    void changeBody(QnstGraphicsBody* entity, const QMap<QString, QString> properties);
 
     void addContext(const QString uid, const QString parent, const QMap<QString, QString> properties);
 
-    void changeContext(const QString uid, const QMap<QString, QString> properties);
+    void changeContext(QnstGraphicsContext* entity, const QMap<QString, QString> properties);
 
     void addSwitch(const QString uid, const QString parent, const QMap<QString, QString> properties);
 
-    void changeSwitch(const QString uid, const QMap<QString, QString> properties);
+    void changeSwitch(QnstGraphicsSwitch* entity, const QMap<QString, QString> properties);
 
     void addMedia(const QString uid, const QString parent, const QMap<QString, QString> properties);
 
-    void changeMedia(const QString uid, const QMap<QString, QString> properties);
+    void changeMedia(QnstGraphicsMedia* entity, const QMap<QString, QString> properties);
 
     void addPort(const QString uid, const QString parent, const QMap<QString, QString> properties);
 
-    void changePort(const QString uid, const QMap<QString, QString> properties);
+    void changePort(QnstGraphicsPort* entity, const QMap<QString, QString> properties);
 
     void requestBodyAddition(QnstGraphicsBody* entity);
 
@@ -126,23 +157,37 @@ private:
 
     void requestPortChange(QnstGraphicsPort* entity);
 
-    void deepRemotion(QnstGraphicsComposition* composition);
+    void performCopy(QnstGraphicsEntity* entity, QnstGraphicsEntity* parent);
 
-    void deepRemotion2(QnstGraphicsComposition* composition);
+    void performPaste(QnstGraphicsEntity* copy, QnstGraphicsEntity* parent);
 
     void createObjects();
 
     void createConnection();
 
-    QnstInt n;
+    int ncontext;
 
-    QnstEntity* selected;
+    int nswitch;
+
+    int nport;
+
+    int nmedia;
+
+    bool modified;
+
+    bool linking;
 
     QnstScene* scene;
 
-    QVector<QnstEntity*> roots;
+    QnstViewLink* link;
 
-    QMap<QString, QnstEntity*> entities;
+    QnstGraphicsLinkDialog* linkDialog;
+
+    QnstGraphicsEntity* selected;
+
+    QnstGraphicsEntity* clipboard;
+
+    QMap<QString, QnstGraphicsEntity*> entities;
 };
 
 #endif // QNSTVIEW_H

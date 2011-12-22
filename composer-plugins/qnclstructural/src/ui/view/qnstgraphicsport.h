@@ -6,9 +6,14 @@
 class QnstGraphicsPort : public QnstGraphicsInterface
 {
 public:
-    QnstGraphicsPort(QnstGraphicsNode* parent = 0);
+    QnstGraphicsPort(QnstGraphicsEntity* parent = 0);
 
     ~QnstGraphicsPort();
+
+protected:
+    virtual void draw(QPainter* painter);
+
+    virtual void delineate(QPainterPath* painter) const;
 };
 
 #endif // QNSTGRAPHICSPORT_H

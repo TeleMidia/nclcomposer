@@ -5,11 +5,10 @@ QnstGraphicsSwitch::QnstGraphicsSwitch(QnstGraphicsNode* parent)
 {
     setnstType(Qnst::Switch);
 
-    createActions();
-    createMenus();
-    createConnections();
-
     setColor("#C6E2FF");
+
+    createObjects();
+    createConnections();
 }
 
 QnstGraphicsSwitch::~QnstGraphicsSwitch()
@@ -17,353 +16,57 @@ QnstGraphicsSwitch::~QnstGraphicsSwitch()
 
 }
 
-void QnstGraphicsSwitch::createActions()
+void QnstGraphicsSwitch::createObjects()
 {
-    // help action
-    helpAction = new QAction(this);
-    helpAction->setText(tr("Help"));
-
-    helpAction->setEnabled(false);
-    helpAction->setShortcut(QKeySequence("F1"));
-
-    // undo action
-    undoAction = new QAction(this);
-    undoAction->setText(tr("Undo"));
-
-    undoAction->setEnabled(false);
-    undoAction->setShortcut(QKeySequence("Ctrl+Z"));
-
-    // redo action
-    redoAction = new QAction(this);
-    redoAction->setText(tr("Redo"));
-
-    redoAction->setEnabled(false);
-    redoAction->setShortcut(QKeySequence("Ctrl+Shift+Z"));
-
-    // cut action
-    cutAction = new QAction(this);
-    cutAction->setText(tr("Cut"));
-
-    cutAction->setEnabled(false);
-    cutAction->setShortcut(QKeySequence("Ctrl+X"));
-
-    // copy action
-    copyAction = new QAction(this);
-    copyAction->setText(tr("Copy"));
-
-    copyAction->setEnabled(false);
-    copyAction->setShortcut(QKeySequence("Ctrl+C"));
-
-    // paste action
-    pasteAction = new QAction(this);
-    pasteAction->setText(tr("Paste"));
-
-    pasteAction->setEnabled(false);
-    pasteAction->setShortcut(QKeySequence("Ctrl+V"));
-
-    // delete action
-    deleteAction = new QAction(this);
-    deleteAction->setText(tr("Delete"));
-
-    deleteAction->setEnabled(false);
-    deleteAction->setShortcut(QKeySequence("Del"));
-
-    // zoomin action
-    zoominAction = new QAction(this);
-    zoominAction->setText(tr("Zoom In"));
-
-    zoominAction->setEnabled(false);
-    zoominAction->setShortcut(QKeySequence("Ctrl++"));
-
-    // zoomout action
-    zoomoutAction = new QAction(this);
-    zoomoutAction->setText(tr("Zoom Out"));
-
-    zoomoutAction->setEnabled(false);
-    zoomoutAction->setShortcut(QKeySequence("Ctrl+-"));
-
-    // reset action
-    zoomresetAction = new QAction(this);
-    zoomresetAction->setText(tr("Reset"));
-
-    zoomresetAction->setEnabled(false);
-    zoomresetAction->setShortcut(QKeySequence("Ctrl+0"));
-
-    // fullscreen action
-    fullscreenAction = new QAction(this);
-    fullscreenAction->setText(tr("Full Screen"));
-
-    fullscreenAction->setEnabled(false);
-    fullscreenAction->setShortcut(QKeySequence("Ctrl+F"));
-
-    // export action
-    exportAction = new QAction(this);
-    exportAction->setText(tr("Export..."));
-
-    exportAction->setEnabled(false);
-
-    // body action
-    bodyAction = new QAction(this);
-    bodyAction->setText(tr("Body"));
-    bodyAction->setIcon(QIcon(":/icon/composition"));
-
-    bodyAction->setEnabled(false);
-
-    // context action
-    contextAction = new QAction(this);
-    contextAction->setText(tr("Context"));
-    contextAction->setIcon(QIcon(":/icon/composition"));
-
-    contextAction->setEnabled(true);
-
-    // switch action
-    switchAction = new QAction(this);
-    switchAction->setText(tr("Switch"));
-    switchAction->setIcon(QIcon(":/icon/composition"));
-
-    switchAction->setEnabled(true);
-
-    // image action
-    imageAction = new QAction(this);
-    imageAction->setText(tr("Image"));
-    imageAction->setIcon(QIcon(":/icon/image"));
-
-    imageAction->setEnabled(true);
-
-    // video action
-    videoAction = new QAction(this);
-    videoAction->setText(tr("Video"));
-    videoAction->setIcon(QIcon(":/icon/video"));
-
-    videoAction->setEnabled(true);
-
-    // audio action
-    audioAction = new QAction(this);
-    audioAction->setText(tr("Audio"));
-    audioAction->setIcon(QIcon(":/icon/audio"));
-
-    audioAction->setEnabled(true);
-
-    // text action
-    textAction = new QAction(this);
-    textAction->setText(tr("Text"));
-    textAction->setIcon(QIcon(":/icon/text"));
-
-    textAction->setEnabled(true);
-
-    // script action
-    scriptAction = new QAction(this);
-    scriptAction->setText(tr("Script"));
-    scriptAction->setIcon(QIcon(":/icon/script"));
-
-    scriptAction->setEnabled(true);
-
-    // settings action
-    settingsAction = new QAction(this);
-    settingsAction->setText(tr("Settings"));
-    settingsAction->setIcon(QIcon(":/icon/settings"));
-
-    settingsAction->setEnabled(true);
-
-    // port action
-    portAction = new QAction(this);
-    portAction->setText(tr("Port"));
-    portAction->setIcon(QIcon(":/icon/port"));
-
-    portAction->setEnabled(true);
-
-    // property action
-    propertyAction = new QAction(this);
-    propertyAction->setText(tr("Property"));
-    propertyAction->setIcon(QIcon(":/icon/property"));
-
-    propertyAction->setEnabled(true);
-
-    // area action
-    areaAction = new QAction(this);
-    areaAction->setText(tr("Area"));
-    areaAction->setIcon(QIcon(":/icon/area"));
-
-    areaAction->setEnabled(true);
-
-    // aggregator action
-    aggregatorAction = new QAction(this);
-    aggregatorAction->setText(tr("Aggregator"));
-    aggregatorAction->setIcon(QIcon(":/icon/aggregator"));
-
-    aggregatorAction->setEnabled(false);
-
-    // bring to front action
-    bringfrontAction = new QAction(this);
-    bringfrontAction->setText(tr("Bring to Front"));
-
-    bringfrontAction->setEnabled(false);
-    bringfrontAction->setShortcut(QKeySequence("Shift+Ctrl+]"));
-
-    // bring forward action
-    bringforwardAction = new QAction(this);
-    bringforwardAction->setText(tr("Bring Forward"));
-
-    bringforwardAction->setEnabled(false);
-    bringforwardAction->setShortcut(QKeySequence("Ctrl+]"));
-
-    // send backward action
-    sendbackwardAction = new QAction(this);
-    sendbackwardAction->setText(tr("Send Backward"));
-
-    sendbackwardAction->setEnabled(false);
-    sendbackwardAction->setShortcut(QKeySequence("Ctrl+["));
-
-    // send to back action
-    sendbackAction = new QAction(this);
-    sendbackAction->setText(tr("Send to Back"));
-
-    sendbackAction->setEnabled(false);
-    sendbackAction->setShortcut(QKeySequence("Shift+Ctrl+["));
-
-    // hide action
-    hideAction = new QAction(this);
-    hideAction->setText(tr("Hide"));
-
-    hideAction->setEnabled(false);
-
-    // properties action
-    propertiesAction = new QAction(this);
-    propertiesAction->setText(tr("Properties"));
-
-    propertiesAction->setEnabled(false);
-}
-
-void QnstGraphicsSwitch::createMenus()
-{
-    // view menu
-    viewMenu = new QMenu();
-    viewMenu->setTitle(tr("View"));
-
-    viewMenu->setEnabled(false);
-
-    viewMenu->addAction(zoominAction);
-    viewMenu->addAction(zoomoutAction);
-    viewMenu->addAction(zoomresetAction);
-    viewMenu->addSeparator();
-    viewMenu->addAction(fullscreenAction);
-
-    // insert menu
-    insertMenu = new QMenu();
-    insertMenu->setTitle(tr("Insert"));
-
-    insertMenu->addAction(imageAction);
-    insertMenu->addAction(videoAction);
-    insertMenu->addAction(audioAction);
-    insertMenu->addAction(textAction);
-    insertMenu->addSeparator();
-    insertMenu->addAction(scriptAction);
-    insertMenu->addAction(settingsAction);
-    insertMenu->addSeparator();
-    insertMenu->addAction(contextAction);
-    insertMenu->addAction(switchAction);
-    insertMenu->addSeparator();
-    insertMenu->addAction(bodyAction);
-    insertMenu->addSeparator();
-    insertMenu->addAction(portAction);
-    insertMenu->addAction(areaAction);
-    insertMenu->addAction(propertyAction);
-    insertMenu->addSeparator();
-    insertMenu->addAction(aggregatorAction);
-
-    insertMenu->setEnabled(true);
-
-    // show menu
-    showMenu = new QMenu();
-    showMenu->setTitle(tr("Show"));
-
-    showMenu->setEnabled(false);
-
-    // arrange menu
-    arrangeMenu = new QMenu();
-    arrangeMenu->setTitle(tr("Arrange"));
-
-    arrangeMenu->setEnabled(false);
-
-    arrangeMenu->addAction(bringfrontAction);
-    arrangeMenu->addAction(bringforwardAction);
-    arrangeMenu->addAction(sendbackwardAction);
-    arrangeMenu->addAction(sendbackAction);
-
-    // context menu
-    contextMenu = new QMenu();
-    contextMenu->addAction(helpAction);
-    contextMenu->addSeparator();
-    contextMenu->addAction(undoAction);
-    contextMenu->addAction(redoAction);
-    contextMenu->addSeparator();
-    contextMenu->addAction(cutAction);
-    contextMenu->addAction(copyAction);
-    contextMenu->addAction(pasteAction);
-    contextMenu->addSeparator();
-    contextMenu->addAction(deleteAction);
-    contextMenu->addSeparator();
-    contextMenu->addAction(exportAction);
-    contextMenu->addSeparator();
-    contextMenu->addMenu(viewMenu);
-    contextMenu->addMenu(insertMenu);
-    contextMenu->addMenu(showMenu);
-    contextMenu->addMenu(arrangeMenu);
-    contextMenu->addSeparator();
-    contextMenu->addAction(hideAction);
-    contextMenu->addSeparator();
-    contextMenu->addAction(propertiesAction);
+    menu = new QnstMenu();
+    menu->actionCut->setEnabled(true);
+    menu->actionCopy->setEnabled(true);
+
+    menu->actionDelete->setEnabled(true);
+
+    menu->actionExport->setEnabled(true);
+
+    menu->menuInsert->setEnabled(true);
+    menu->actionImage->setEnabled(true);
+    menu->actionVideo->setEnabled(true);
+    menu->actionAudio->setEnabled(true);
+    menu->actionText->setEnabled(true);
+    menu->actionScript->setEnabled(true);
+    menu->actionSettings->setEnabled(true);
+    menu->actionMedia->setEnabled(true);
+    menu->actionContext->setEnabled(true);
+    menu->actionSwitch->setEnabled(true);
+    menu->actionPort->setEnabled(true);
 }
 
 void QnstGraphicsSwitch::createConnections()
 {
-    connect(imageAction, SIGNAL(triggered()), SLOT(performImage()));
-    connect(audioAction, SIGNAL(triggered()), SLOT(performAudio()));
-    connect(textAction, SIGNAL(triggered()), SLOT(performText()));
-    connect(videoAction, SIGNAL(triggered()), SLOT(performVideo()));
-    connect(scriptAction, SIGNAL(triggered()), SLOT(performScript()));
-    connect(settingsAction, SIGNAL(triggered()), SLOT(performSettings()));
+    connect(menu, SIGNAL(undoRequested()), SIGNAL(undoRequested()));
+    connect(menu, SIGNAL(redoRequested()), SIGNAL(redoRequested()));
 
-    connect(contextAction, SIGNAL(triggered()), SLOT(performContext()));
-    connect(switchAction, SIGNAL(triggered()), SLOT(performSwitch()));
-}
+    connect(menu, SIGNAL(cutRequested()), SIGNAL(cutRequested()));
+    connect(menu, SIGNAL(copyRequested()), SIGNAL(copyRequested()));
+    connect(menu, SIGNAL(pasteRequested()), SIGNAL(pasteRequested()));
 
-void QnstGraphicsSwitch::performContext()
-{
-    QnstGraphicsContext* entity = new QnstGraphicsContext(this);
-    entity->setTop(getHeight()/2 - getHeight()/4);
-    entity->setLeft(getWidth()/2 - getWidth()/4);
-    entity->setWidth(getWidth()/2);
-    entity->setHeight(getHeight()/2);
-    entity->adjust();
+    connect(menu, SIGNAL(deleteRequested()), SIGNAL(deleteRequested()));
 
-    connect(entity, SIGNAL(entityAdded(QnstEntity*)), SIGNAL(entityAdded(QnstEntity*)));
-    connect(entity, SIGNAL(entityChanged(QnstEntity*)), SIGNAL(entityChanged(QnstEntity*)));
-    connect(entity, SIGNAL(entityRemoved(QnstEntity*)), SIGNAL(entityRemoved(QnstEntity*)));
-    connect(entity, SIGNAL(entitySelected(QnstEntity*)), SIGNAL(entitySelected(QnstEntity*)));
+    connect(menu, SIGNAL(exportRequested()), SIGNAL(exportRequested()));
 
-    addncgGraphicsEntity(entity);
+    connect(menu, SIGNAL(zoominRequested()), SIGNAL(zoominRequested()));
+    connect(menu, SIGNAL(zoomoutRequested()), SIGNAL(zoomoutRequested()));
+    connect(menu, SIGNAL(zoomresetRequested()), SIGNAL(zoomresetRequested()));
+    connect(menu, SIGNAL(fullscreenRequested()), SIGNAL(fullscreenRequested()));
 
-    emit entityAdded(entity);
-}
-
-void QnstGraphicsSwitch::performSwitch()
-{
-    QnstGraphicsSwitch* entity = new QnstGraphicsSwitch(this);
-    entity->setTop(getHeight()/2 - getHeight()/4);
-    entity->setLeft(getWidth()/2 - getWidth()/4);
-    entity->setWidth(getWidth()/2);
-    entity->setHeight(getHeight()/2);
-    entity->adjust();
-
-    connect(entity, SIGNAL(entityAdded(QnstEntity*)), SIGNAL(entityAdded(QnstEntity*)));
-    connect(entity, SIGNAL(entityChanged(QnstEntity*)), SIGNAL(entityChanged(QnstEntity*)));
-    connect(entity, SIGNAL(entityRemoved(QnstEntity*)), SIGNAL(entityRemoved(QnstEntity*)));
-    connect(entity, SIGNAL(entitySelected(QnstEntity*)), SIGNAL(entitySelected(QnstEntity*)));
-
-    addncgGraphicsEntity(entity);
-
-    emit entityAdded(entity);
+    connect(menu, SIGNAL(imageRequested()), SLOT(performImage()));
+    connect(menu, SIGNAL(audioRequested()), SLOT(performAudio()));
+    connect(menu, SIGNAL(videoRequested()), SLOT(performVideo()));
+    connect(menu, SIGNAL(textRequested()), SLOT(performText()));
+    connect(menu, SIGNAL(scriptRequested()), SLOT(performScript()));
+    connect(menu, SIGNAL(settingsRequested()), SLOT(performSettings()));
+    connect(menu, SIGNAL(mediaRequested()), SLOT(performMedia()));
+    connect(menu, SIGNAL(contextRequested()), SLOT(performContext()));
+    connect(menu, SIGNAL(switchRequested()), SLOT(performSwitch()));
+    connect(menu, SIGNAL(portRequested()), SLOT(performPort()));
 }
 
 void QnstGraphicsSwitch::performImage()
@@ -372,15 +75,11 @@ void QnstGraphicsSwitch::performImage()
     entity->setTop(getHeight()/2 - 56/2);
     entity->setLeft(getWidth()/2 - 56/2);
     entity->setWidth(56);
-    entity->setHeight(56);
-    entity->adjust();
+    entity->setHeight(72);
 
-    connect(entity, SIGNAL(entityAdded(QnstEntity*)), SIGNAL(entityAdded(QnstEntity*)));
-    connect(entity, SIGNAL(entityChanged(QnstEntity*)), SIGNAL(entityChanged(QnstEntity*)));
-    connect(entity, SIGNAL(entityRemoved(QnstEntity*)), SIGNAL(entityRemoved(QnstEntity*)));
-    connect(entity, SIGNAL(entitySelected(QnstEntity*)), SIGNAL(entitySelected(QnstEntity*)));
+    entity->menu->actionPaste->setEnabled(menu->actionPaste->isEnabled());
 
-    addncgGraphicsEntity(entity);
+    addnstGraphicsEntity(entity);
 
     emit entityAdded(entity);
 }
@@ -391,34 +90,11 @@ void QnstGraphicsSwitch::performAudio()
     entity->setTop(getHeight()/2 - 56/2);
     entity->setLeft(getWidth()/2 - 56/2);
     entity->setWidth(56);
-    entity->setHeight(56);
-    entity->adjust();
+    entity->setHeight(72);
 
-    connect(entity, SIGNAL(entityAdded(QnstEntity*)), SIGNAL(entityAdded(QnstEntity*)));
-    connect(entity, SIGNAL(entityChanged(QnstEntity*)), SIGNAL(entityChanged(QnstEntity*)));
-    connect(entity, SIGNAL(entityRemoved(QnstEntity*)), SIGNAL(entityRemoved(QnstEntity*)));
-    connect(entity, SIGNAL(entitySelected(QnstEntity*)), SIGNAL(entitySelected(QnstEntity*)));
+    entity->menu->actionPaste->setEnabled(menu->actionPaste->isEnabled());
 
-    addncgGraphicsEntity(entity);
-
-    emit entityAdded(entity);
-}
-
-void QnstGraphicsSwitch::performVideo()
-{
-    QnstGraphicsVideo* entity = new QnstGraphicsVideo(this);
-    entity->setTop(getHeight()/2 - 56/2);
-    entity->setLeft(getWidth()/2 - 56/2);
-    entity->setWidth(56);
-    entity->setHeight(56);
-    entity->adjust();
-
-    connect(entity, SIGNAL(entityAdded(QnstEntity*)), SIGNAL(entityAdded(QnstEntity*)));
-    connect(entity, SIGNAL(entityChanged(QnstEntity*)), SIGNAL(entityChanged(QnstEntity*)));
-    connect(entity, SIGNAL(entityRemoved(QnstEntity*)), SIGNAL(entityRemoved(QnstEntity*)));
-    connect(entity, SIGNAL(entitySelected(QnstEntity*)), SIGNAL(entitySelected(QnstEntity*)));
-
-    addncgGraphicsEntity(entity);
+    addnstGraphicsEntity(entity);
 
     emit entityAdded(entity);
 }
@@ -429,15 +105,26 @@ void QnstGraphicsSwitch::performText()
     entity->setTop(getHeight()/2 - 56/2);
     entity->setLeft(getWidth()/2 - 56/2);
     entity->setWidth(56);
-    entity->setHeight(56);
-    entity->adjust();
+    entity->setHeight(72);
 
-    connect(entity, SIGNAL(entityAdded(QnstEntity*)), SIGNAL(entityAdded(QnstEntity*)));
-    connect(entity, SIGNAL(entityChanged(QnstEntity*)), SIGNAL(entityChanged(QnstEntity*)));
-    connect(entity, SIGNAL(entityRemoved(QnstEntity*)), SIGNAL(entityRemoved(QnstEntity*)));
-    connect(entity, SIGNAL(entitySelected(QnstEntity*)), SIGNAL(entitySelected(QnstEntity*)));
+    entity->menu->actionPaste->setEnabled(menu->actionPaste->isEnabled());
 
-    addncgGraphicsEntity(entity);
+    addnstGraphicsEntity(entity);
+
+    emit entityAdded(entity);
+}
+
+void QnstGraphicsSwitch::performVideo()
+{
+    QnstGraphicsVideo* entity = new QnstGraphicsVideo(this);
+    entity->setTop(getHeight()/2 - 56/2);
+    entity->setLeft(getWidth()/2 - 56/2);
+    entity->setWidth(56);
+    entity->setHeight(72);
+
+    entity->menu->actionPaste->setEnabled(menu->actionPaste->isEnabled());
+
+    addnstGraphicsEntity(entity);
 
     emit entityAdded(entity);
 }
@@ -448,15 +135,11 @@ void QnstGraphicsSwitch::performScript()
     entity->setTop(getHeight()/2 - 56/2);
     entity->setLeft(getWidth()/2 - 56/2);
     entity->setWidth(56);
-    entity->setHeight(56);
-    entity->adjust();
+    entity->setHeight(72);
 
-    connect(entity, SIGNAL(entityAdded(QnstEntity*)), SIGNAL(entityAdded(QnstEntity*)));
-    connect(entity, SIGNAL(entityChanged(QnstEntity*)), SIGNAL(entityChanged(QnstEntity*)));
-    connect(entity, SIGNAL(entityRemoved(QnstEntity*)), SIGNAL(entityRemoved(QnstEntity*)));
-    connect(entity, SIGNAL(entitySelected(QnstEntity*)), SIGNAL(entitySelected(QnstEntity*)));
+    entity->menu->actionPaste->setEnabled(menu->actionPaste->isEnabled());
 
-    addncgGraphicsEntity(entity);
+    addnstGraphicsEntity(entity);
 
     emit entityAdded(entity);
 }
@@ -467,40 +150,71 @@ void QnstGraphicsSwitch::performSettings()
     entity->setTop(getHeight()/2 - 56/2);
     entity->setLeft(getWidth()/2 - 56/2);
     entity->setWidth(56);
-    entity->setHeight(56);
-    entity->adjust();
+    entity->setHeight(72);
 
-    connect(entity, SIGNAL(entityAdded(QnstEntity*)), SIGNAL(entityAdded(QnstEntity*)));
-    connect(entity, SIGNAL(entityChanged(QnstEntity*)), SIGNAL(entityChanged(QnstEntity*)));
-    connect(entity, SIGNAL(entityRemoved(QnstEntity*)), SIGNAL(entityRemoved(QnstEntity*)));
-    connect(entity, SIGNAL(entitySelected(QnstEntity*)), SIGNAL(entitySelected(QnstEntity*)));
+    entity->menu->actionPaste->setEnabled(menu->actionPaste->isEnabled());
 
-    addncgGraphicsEntity(entity);
+    addnstGraphicsEntity(entity);
 
     emit entityAdded(entity);
 }
 
-void QnstGraphicsSwitch::contextMenuEvent(QGraphicsSceneContextMenuEvent* event)
+void QnstGraphicsSwitch::performMedia()
 {
-    QnstGraphicsComposition::contextMenuEvent(event);
+    QnstGraphicsMedia* entity = new QnstGraphicsMedia(this);
+    entity->setTop(getHeight()/2 - 56/2);
+    entity->setLeft(getWidth()/2 - 56/2);
+    entity->setWidth(56);
+    entity->setHeight(72);
 
-    if (!event->isAccepted())
-    {
-        contextMenu->exec(event->screenPos());
+    entity->menu->actionPaste->setEnabled(menu->actionPaste->isEnabled());
 
-        event->accept();
-    }
+    addnstGraphicsEntity(entity);
+
+    emit entityAdded(entity);
 }
 
-void QnstGraphicsSwitch::keyPressEvent(QKeyEvent* event)
+void QnstGraphicsSwitch::performContext()
 {
-    QnstGraphicsComposition::keyPressEvent(event);
+    QnstGraphicsSwitch* entity = new QnstGraphicsSwitch(this);
+    entity->setTop(getHeight()/2 - 200/2);
+    entity->setLeft(getWidth()/2 - 250/2);
+    entity->setWidth(250);
+    entity->setHeight(200);
 
-    if (!event->isAccepted()){
-        if (event->key() == Qt::Key_Backspace){
-            emit entityRemoved(this);
+    entity->menu->actionPaste->setEnabled(menu->actionPaste->isEnabled());
 
-            event->accept();
-        }
-    }
+    addnstGraphicsEntity(entity);
+
+    emit entityAdded(entity);
 }
+
+void QnstGraphicsSwitch::performSwitch()
+{
+    QnstGraphicsSwitch* entity = new QnstGraphicsSwitch(this);
+    entity->setTop(getHeight()/2 - 200/2);
+    entity->setLeft(getWidth()/2 - 250/2);
+    entity->setWidth(250);
+    entity->setHeight(200);
+
+    entity->menu->actionPaste->setEnabled(menu->actionPaste->isEnabled());
+
+    addnstGraphicsEntity(entity);
+
+    emit entityAdded(entity);
+}
+
+void QnstGraphicsSwitch::performPort()
+{
+    QnstGraphicsPort* entity = new QnstGraphicsPort(this);
+    entity->setTop(0);
+    entity->setLeft(0);
+    entity->setWidth(32);
+    entity->setHeight(32);
+    entity->adjust();
+
+    addnstGraphicsEntity(entity);
+
+    emit entityAdded(entity);
+}
+

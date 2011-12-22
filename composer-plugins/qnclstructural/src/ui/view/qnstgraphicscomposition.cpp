@@ -6,8 +6,6 @@ QnstGraphicsComposition::QnstGraphicsComposition(QnstGraphicsNode* parent)
     setnstType(Qnst::Compostion);
 
     setColor("#EEEEEE");
-
-
 }
 
 QnstGraphicsComposition::~QnstGraphicsComposition()
