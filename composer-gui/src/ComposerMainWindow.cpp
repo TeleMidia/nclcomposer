@@ -55,9 +55,28 @@ ComposerMainWindow::ComposerMainWindow(QApplication &app, QWidget *parent)
   defaultPluginsPath << QDir::homePath() + QString("/composer/extensions");
 #endif
 
+  /* The following code could be in another function */
+  QPixmap mPix(":/mainwindow/nclcomposer-splash");
+  QSplashScreen splash(mPix);
+  splash.setMask(mPix.mask());
+  splash.showMessage(tr("Loading NCL Composer..."), Qt::AlignRight, Qt::gray);
+
+  //splash.blockSignals(true);
+  splash.show();
+  app.processEvents();
+
+  splash.showMessage(tr("Starting GUI..."), Qt::AlignRight, Qt::gray);
   initGUI();
+
+  splash.showMessage(tr("Starting Modules and Plugins..."), Qt::AlignRight,
+                      Qt::gray);
   initModules();
+
+  splash.showMessage(tr("Reloading last session..."), Qt::AlignRight,
+                      Qt::gray);
   readSettings();
+
+  splash.finish(this);
 
   connect(&app, SIGNAL(focusChanged(QWidget *, QWidget *)),
           this, SLOT(focusChanged(QWidget *, QWidget *)));
@@ -128,7 +147,7 @@ void ComposerMainWindow::readExtensions()
   extensions_paths << defaultPluginsPath; //Add default location to extensions
   extensions_paths.removeDuplicates(); // Remove duplicate paths
 
-  // add all the paths to LibraryPaht, i.e., plugins are allowed to install
+  // add all the paths to LibraryPath, i.e., plugins are allowed to install
   // dll dependencies in the extensions path.
   for(unsigned int i = 0; i < extensions_paths.size(); i++)
   {
@@ -156,7 +175,9 @@ void ComposerMainWindow::readExtensions()
 #endif
 
   /* Load PreferencesPages from Plugins */
-  QList<IPluginFactory*> list = PluginControl::getInstance()->getLoadedPlugins();
+  QList<IPluginFactory*> list =
+      PluginControl::getInstance()->getLoadedPlugins();
+
   IPluginFactory *currentFactory;
   foreach(currentFactory, list)
   {
@@ -252,7 +273,7 @@ void ComposerMainWindow::initGUI()
   tabProjects->setTabsClosable(true);
 
   tbPerspectiveDropList = new QToolButton(this);
-  tbPerspectiveDropList->setIcon(QIcon(":/mainwindow/webcam"));
+  tbPerspectiveDropList->setIcon(QIcon(":/mainwindow/perspective"));
   tbPerspectiveDropList->setPopupMode(QToolButton::InstantPopup);
 
   connect( tabProjects, SIGNAL(tabCloseRequested(int)),
@@ -304,6 +325,7 @@ void ComposerMainWindow::addPluginWidget(IPluginFactory *fac, IPlugin *plugin,
     w = projectsWidgets[location];
 #ifdef USE_MDI
     mdiArea = (QMdiArea *)w->centralWidget();
+    mdiArea->setBackground(QBrush(QColor("#FFFFFF")));
 #endif
   } else {
     w = new QMainWindow(tabProjects);
@@ -391,8 +413,9 @@ void ComposerMainWindow::updateDockTitleStyle(QFrame *titleBar, bool selected)
         stop: 0 #a6a6a6, stop: 0.08 #7f7f7f,\
         stop: 0.39999 #717171, stop: 0.4 #626262,\
         stop: 0.9 #4c4c4c, stop: 1 #333333);\
-    color: white;\
-    padding-left: 2px;} \
+        color: white;\
+        padding-left: 2px; \
+        font-size: 12px;} \
   QPushButton { \
     background-color: transparent; \
     border: none;\
@@ -420,9 +443,10 @@ titleBar->setStyleSheet(" \
 background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,\
     stop: 0 #dcebfd, \
     stop: 1 #c2dcfd); \
-color: black;\
-font-style: bold;\
-padding-left: 2px; \
+    color: black;\
+    font-style: bold;\
+   padding-left: 2px;\
+   font-size: 12px;\
 }\
 QPushButton { \
   background-color: transparent; \

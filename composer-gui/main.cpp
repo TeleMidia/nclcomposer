@@ -28,7 +28,8 @@ List of tutorials
 
 \section sec_copyright Copyright Policy
 NCL Composer is developed by Telemidia/PUC-Rio since 2011 and available over
-Eclipse Public License.
+<a target='_blank' href='http://eclipse.org/legal/epl-v10.html'>
+Eclipse Public License</a>.
 */
 int main(int argc, char *argv[])
 {
@@ -39,17 +40,6 @@ int main(int argc, char *argv[])
     QCoreApplication::setOrganizationName("Telemidia Lab");
     QCoreApplication::setOrganizationDomain("telemidia.pucrio.br");
     QCoreApplication::setApplicationName("composer");
-    QPixmap mPix(":/mainwindow/nclcomposer-splash");
-    QSplashScreen splash(mPix);
-    splash.setMask(mPix.mask());
-    splash.showMessage("Loading NCL Composer...", Qt::AlignRight, Qt::gray);
-
-    // splash.blockSignals(true);
-    splash.show();
-    a.processEvents();
-    splash.showMessage("Reloading previous session...", Qt::AlignRight,
-                       Qt::gray);
-
 
     // \todo Remove initModules and readExtensions from ComposerMainWindow
     //    and change splash message in each of this steps.
@@ -59,8 +49,6 @@ int main(int argc, char *argv[])
     QApplication::addLibraryPath(QApplication::applicationDirPath());
 
     ComposerMainWindow w(a);
-    splash.finish(&w);
-
     w.show();
 
     return a.exec();
