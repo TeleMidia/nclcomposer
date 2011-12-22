@@ -12,13 +12,13 @@ INCLUDEPATH +=  include \
 
 # We use QMAKE_CXXFLAGS instead of INCLUDEPATH because our qscintilla is
 # modified, and must be found before any other that is installed.
-QMAKE_CXXFLAGS  += -Ideps/QScintilla-gpl-2.5.1/Qt4
+QMAKE_CXXFLAGS  += -Ideps/QScintilla-gpl-2.6.1/Qt4
 
 release {
-LIBS      +=    -Ldeps/QScintilla-gpl-2.5.1/Qt4/release \
+LIBS      +=    -Ldeps/QScintilla-gpl-2.6.1/Qt4/release \
                 -lqscintilla2_telem
 }else:debug {
-LIBS      +=    -L/deps/QScintilla-gpl-2.5.1/Qt4/debug \
+LIBS      +=    -L/deps/QScintilla-gpl-2.6.1/Qt4/debug \
                 -lqscintilla2_telem
 }
 
@@ -26,7 +26,7 @@ macx:LIBS += -L/Library/Frameworks \
             -L$$quote(/Library/Application Support/Composer) \
             -lNCLLanguageProfile
 
-unix:LIBS += -Ldeps/QScintilla-gpl-2.5.1/Qt4
+unix:LIBS += -Ldeps/QScintilla-gpl-2.6.1/Qt4
 
 win32:LIBS += -lNCLLanguageProfile
 

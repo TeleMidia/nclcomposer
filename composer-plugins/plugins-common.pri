@@ -5,6 +5,8 @@ MOC_DIR     =   .moc
 OBJECTS_DIR =   .obj
 UI_DIR      =   .ui
 
+DEFINES += QT_NO_DEBUG_OUTPUT QT_NO_DEBUG_WARNING
+
 macx {
   INSTALLBASE = /Applications/Composer
 } 
