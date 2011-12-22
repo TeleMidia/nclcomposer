@@ -6,7 +6,9 @@
 #include <QPainter>
 #include <QPainterPath>
 #include <QGraphicsSceneMouseEvent>
+#include <QGraphicsSceneHoverEvent>
 #include <QObject>
+#include <QCursor>
 
 #include <QDebug>
 
@@ -104,6 +106,10 @@ public:
 
     void setResizeHeight(qreal resizeHeight);
 
+    int getzIndex() const;
+
+    void setzIndex(int zindex);
+
     QncgResizeType getncgResize() const;
 
     void setncgResize(QncgResizeType resizeType);
@@ -150,6 +156,8 @@ protected:
 
     virtual void mouseReleaseEvent(QGraphicsSceneMouseEvent*event);
 
+    virtual void hoverMoveEvent(QGraphicsSceneHoverEvent* event);
+
 private:
     bool moveable;
 
@@ -190,6 +198,8 @@ private:
     qreal pressHeight;
 
     qreal resizeHeight;
+
+    int zindex;
 
     QncgEntityType entityType;
 

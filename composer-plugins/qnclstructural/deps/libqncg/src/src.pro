@@ -1,8 +1,5 @@
 include("../configure.pri")
 
-QT += \
-    svg
-
 TEMPLATE = \
     lib
 
@@ -27,6 +24,13 @@ SOURCES += \
     qncggraphicsnode.cpp \
     qncggraphicsinterface.cpp
 
-target.path = .
+RESOURCES +=
+
+
+
+
+
+
+
 
 INSTALLS += target

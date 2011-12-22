@@ -2,11 +2,7 @@ TEMPLATE = \
     subdirs
 
 SUBDIRS += \
-    editor
-
-
-
-
+    qncgdrawing
 
 
 

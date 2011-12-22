@@ -8,7 +8,7 @@ class QncgGraphicsInterface : public QncgGraphicsEntity
 public:
     QncgGraphicsInterface(QncgGraphicsEntity* parent = 0);
 
-    ~QncgGraphicsInterface();
+    virtual ~QncgGraphicsInterface();
 
     virtual void adjust();
 

@@ -15,44 +15,57 @@ void QncgGraphicsInterface::adjust()
 {
     QncgGraphicsEntity* parent = getncgGraphicsParent();
 
-    QPointF pa(parent->getWidth()/2, parent->getHeight()/2);
-    QPointF pb(getLeft() + getWidth()/2, getTop() + getHeight()/2);
+    if (parent != NULL){
+        // setting
+        QPointF pointa(parent->getWidth()/2, parent->getHeight()/2);
+        QPointF pointb(getLeft() + getWidth()/2, getTop() + getHeight()/2);
 
-    QLineF line(pa,pb);
-
-    if (parent->contains(pb)){
-        qreal i = 1.0;
-
-        QPointF pn = pb;
-
-        // attention! infinity loop condition.
-        while(parent->contains(pn)){
-            i += 0.01;
-
-            pn = line.pointAt(i);
+        if (pointa == pointb){
+            pointb.setX(pointa.x());
+            pointb.setY(pointa.y() - 10);
         }
 
-        setTop(pn.y() - getHeight()/2);
-        setLeft(pn.x() - getWidth()/2);
+        QLineF line(pointa,pointb);
 
-    }else{
+        // adjusting
+        if (parent->contains(pointb)){
+            QPointF pointn = pointb;
 
-        qreal i = 1.0;
+            qreal index = 1.0;
 
-        QPointF pn = pb;
+            if (parent->contains(line.pointAt(index+0.01))){
+                while(parent->contains(pointn)){
+                    index += 0.01;
 
-        // attention! infinity loop condition.
-        while(!parent->contains(pn)){
-            i -= 0.01;
+                    pointn = line.pointAt(index);
+                }
+            }
 
-            pn = line.pointAt(i);
+            setTop(pointn.y() - getHeight()/2);
+            setLeft(pointn.x() - getWidth()/2);
+
+        }else{
+            QPointF pointn = pointb;
+
+            qreal index = 1.0;
+
+            if (!parent->contains(line.pointAt(index-0.01))){
+                while(!parent->contains(pointn)){
+                    index -= 0.01;
+
+                    pointn = line.pointAt(index);
+                }
+            }
+
+            setTop(pointn.y() - getHeight()/2);
+            setLeft(pointn.x() - getWidth()/2);
         }
-
-        setTop(pn.y() - getHeight()/2);
-        setLeft(pn.x() - getWidth()/2);
     }
 
-    scene()->update();
+    // redrawing
+    if (scene() != NULL){
+        scene()->update();
+    }
 }
 
 void QncgGraphicsInterface::move(QGraphicsSceneMouseEvent* event)
@@ -61,11 +74,12 @@ void QncgGraphicsInterface::move(QGraphicsSceneMouseEvent* event)
     qreal x = getLeft();
     qreal y = getTop();
 
-    // setting minimal position
+    QncgGraphicsEntity* parent = getncgGraphicsParent();
+
     qreal minx;
     qreal miny;
 
-    if (parentItem() != NULL){
+    if (parent != NULL){
         minx = 4;
         miny = 4;
     }else{
@@ -73,59 +87,43 @@ void QncgGraphicsInterface::move(QGraphicsSceneMouseEvent* event)
         miny = 0;
     }
 
-    // setting maximal position
     qreal maxx;
     qreal maxy;
 
-    if (parentItem() != NULL){
-        maxx = parentItem()->boundingRect().width() - getWidth() - 4;
-        maxy = parentItem()->boundingRect().height() - getHeight() - 4;
+    if (parent != NULL){
+        maxx = parent->getWidth() - getWidth() - 4;
+        maxy = parent->getHeight() - getHeight() - 4;
     }else{
         maxx = scene()->width() - getWidth();
         maxy = scene()->height() - getHeight();
     }
 
-    // setting delta
     qreal dx = event->pos().x() - getPressLeft(); // (x1 - x0)
     qreal dy = event->pos().y() - getPressTop();  // (y1 - y0)
 
-    // setting next position
     qreal nextx = x + dx;
     qreal nexty = y + dy;
-
-    // adjusting
-//    if (nextx < minx){
-//        nextx = minx;
-//    }
-
-//    if (nexty < miny){
-//        nexty = miny;h
-//    }
-
-//    if (nextx > maxx){
-//        nextx = maxx;
-//    }
-
-//    if (nexty > maxy){
-//        nexty = maxy;
-//    }
 
     // moving
     setMoveTop(nexty);
     setMoveLeft(nextx);
 
-    scene()->update();
+    // redrawing
+    if (scene() != NULL){
+        scene()->update();
+    }
 }
 
 void QncgGraphicsInterface::resize(QGraphicsSceneMouseEvent* event)
 {
-    // setting bounds
+    // setting
     qreal x = getLeft();
     qreal y = getTop();
     qreal w = getWidth();
     qreal h = getHeight();
 
-    // setting minimal bounds
+    QncgGraphicsEntity* parent = getncgGraphicsParent();
+
     qreal minx;
     qreal miny;
     qreal minw;
@@ -143,17 +141,16 @@ void QncgGraphicsInterface::resize(QGraphicsSceneMouseEvent* event)
         minh = -1; // not used
     }
 
-    // setting maximal bounds
     qreal maxx;
     qreal maxy;
     qreal maxw;
     qreal maxh;
 
     if (parentItem() != NULL){
-        maxx = parentItem()->boundingRect().width() - getWidth() - 4;
-        maxy = parentItem()->boundingRect().height() - getHeight() - 4;
-        maxw = parentItem()->boundingRect().width() - 4;
-        maxh = parentItem()->boundingRect().height() - 4;
+        maxx = parent->getWidth() - getWidth() - 4;
+        maxy = parent->getHeight() - getHeight() - 4;
+        maxw = parent->getWidth() - 4;
+        maxh = parent->getHeight() - 4;
     }else{
         maxx = scene()->width() - getWidth();
         maxy = scene()->height() - getHeight();
@@ -161,13 +158,11 @@ void QncgGraphicsInterface::resize(QGraphicsSceneMouseEvent* event)
         maxh = scene()->height();
     }
 
-    // setting delta
     qreal dx = event->pos().x() - getPressLeft();    // (x1 - x0)
     qreal dy = event->pos().y() - getPressTop();     // (y1 - y0)
     qreal dw = -dx;
     qreal dh = -dy;
 
-    // setting next bounds
     qreal nextx = x + dx;
     qreal nexty = y + dy;
     qreal nextw = w + dw;
@@ -176,59 +171,29 @@ void QncgGraphicsInterface::resize(QGraphicsSceneMouseEvent* event)
     // adjusting
     switch(getncgResize()){
 
-    // adjusting TOPLEFT
     case Qncg::TopLeft:{
-//        if (nextx < minx){
-//            nextx = minx;
-//            nextw = x + w - minx;
-//        }
-
-//        if (nexty < miny){
-//            nexty = miny;
-//            nexth = y + h - miny;
-//        }
-
         break;
     }
 
-    // adjusting TOP
     case Qncg::Top:{
         nextx = x; // fixed x
         nextw = w; // fixed width
 
-//        if (nexty < miny){
-//            nexty = miny;
-//            nexth = y + h - miny;
-//        }
-
         break;
     }
 
-    // adjusting TOPRIGHT
     case Qncg::TopRight:{
         nextx = x; // fixed x
 
         nextw = w - dw;
-//        if (x + nextw > maxw){
-//            nextw = maxw - x;
-//        }
-
-//        if (nexty < miny){
-//            nexty = miny;
-//            nexth = y + h - miny;
-//        }
 
         break;
     }
 
-    // adjusting RIGHT
     case Qncg::Right:{
         nextx = x; // fixed x
 
         nextw = w - dw;
-//        if (x + nextw > maxw){
-//            nextw = maxw - x;
-//        }
 
         nexty = y; // fixed y
         nexth = h; // fixed height
@@ -236,26 +201,18 @@ void QncgGraphicsInterface::resize(QGraphicsSceneMouseEvent* event)
         break;
     }
 
-    // adjusting BOTTOMRIGHT
     case Qncg::BottomRight:{
         nextx = x; // fixed x
 
         nextw = w - dw;
-//        if (x + nextw > maxw){
-//            nextw = maxw - x;
-//        }
 
         nexty = y; // fixed y
 
         nexth = h - dh;
-//        if (y + nexth > maxh){
-//            nexth = maxh - y;
-//        }
 
         break;
     }
 
-    // adjusting BOTTOM
     case Qncg::Bottom:{
         nextx = x; // fixed x
         nextw = w; // fixed width
@@ -263,37 +220,19 @@ void QncgGraphicsInterface::resize(QGraphicsSceneMouseEvent* event)
         nexty = y; // fixed y
 
         nexth = h - dh;
-//        if (y + nexth > maxh){
-//            nexth = maxh - y;
-//        }
 
         break;
     }
 
-    // adjusting BOTTOMLEFT
     case Qncg::BottomLeft:{
-//        if (nextx < minx){
-//            nextx = minx;
-//            nextw = x + w - minx;
-//        }
-
         nexty = y; // fixed y
 
         nexth = h - dh;
-//        if (y + nexth > maxh){
-//            nexth = maxh - y;
-//        }
 
         break;
     }
 
-    // adjusting LEFT
     case Qncg::Left:{
-//        if (nextx < minx){
-//            nextx = minx;
-//            nextw = x + w - minx;
-//        }
-
         nexty = y; // fixed y
         nexth = h; // fixed height
 
@@ -307,5 +246,8 @@ void QncgGraphicsInterface::resize(QGraphicsSceneMouseEvent* event)
     setResizeWidth(nextw);
     setResizeHeight(nexth);
 
-    scene()->update();
+    // redrawing
+    if (scene() != NULL){
+        scene()->update();
+    }
 }

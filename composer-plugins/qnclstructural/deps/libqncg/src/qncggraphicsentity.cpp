@@ -4,10 +4,14 @@
 QncgGraphicsEntity::QncgGraphicsEntity(QncgGraphicsEntity* parent)
     : QObject(parent), QGraphicsItem(parent)
 {
+    setncgType(Qncg::NoType);
+
     setncgGraphicsParent(parent);
 
     setFlag(QGraphicsItem::ItemIsMovable, true);
     setFlag(QGraphicsItem::ItemIsFocusable, true);
+
+    setAcceptHoverEvents(true);
 
     setMoveable(true);
     setResizable(true);
@@ -34,6 +38,8 @@ QncgGraphicsEntity::QncgGraphicsEntity(QncgGraphicsEntity* parent)
     setPressLeft(0);
     setPressWidth(0);
     setPressHeight(0);
+
+    setzIndex(0);
 }
 
 QncgGraphicsEntity::~QncgGraphicsEntity()
@@ -245,6 +251,18 @@ void QncgGraphicsEntity::setResizeHeight(qreal resizeHeight)
     this->resizeHeight = resizeHeight;
 }
 
+int QncgGraphicsEntity::getzIndex() const
+{
+    return zindex;
+}
+
+void QncgGraphicsEntity::setzIndex(int zindex)
+{
+    this->zindex = zindex;
+
+    setZValue(zindex);
+}
+
 QncgResizeType QncgGraphicsEntity::getncgResize() const
 {
     return resizeType;
@@ -296,9 +314,7 @@ void QncgGraphicsEntity::removencgGraphicsEntity(QncgGraphicsEntity* entity)
         int index = entities.indexOf(entity);
 
         if (index >= 0){
-            entities.remove(index);
-
-            scene()->removeItem(entity);
+            entities.remove(index); scene()->removeItem(entity);
         }
     }
 }
@@ -382,9 +398,7 @@ void QncgGraphicsEntity::mousePressEvent(QGraphicsSceneMouseEvent* event)
 
     }else if (event->button() == Qt::LeftButton){
         if (selectable && !selected){
-            setSelected(true);
-
-            emit entitySelected();
+            setSelected(true); emit entitySelected();
         }
 
         setPressTop(event->pos().y());
@@ -521,4 +535,58 @@ void QncgGraphicsEntity::mouseReleaseEvent(QGraphicsSceneMouseEvent*event)
     }
 
     QGraphicsItem::mouseReleaseEvent(event);
+}
+
+void QncgGraphicsEntity::hoverMoveEvent(QGraphicsSceneHoverEvent* event)
+{
+    if (selected){
+        if (resizable){
+            // if over TOPLEFT resize region
+            if (QRectF(0,0,8,8).contains(event->pos())){
+                setCursor(Qt::SizeFDiagCursor);
+
+            // if over TOP resize region
+            }else if (QRectF((width+8)/2 - 4,0,8,8).contains(event->pos())){
+                setCursor(Qt::SizeVerCursor);
+
+            // if over TOPRIGHT resize region
+            }else if (QRectF((width+8) - 8,0,8,8).contains(event->pos())){
+                setCursor(Qt::SizeBDiagCursor);
+
+            // if over RIGHT resize region
+            }else if (QRectF((width+8) - 8,(height+8)/2 - 4,8,8).contains(event->pos())){
+                setCursor(Qt::SizeHorCursor);
+
+            // if over BOTTOMRIGHT resize region
+            }else if (QRectF((width+8) - 8,(height+8) - 8,8,8).contains(event->pos())){
+                setCursor(Qt::SizeFDiagCursor);
+
+            // if over BOTTOM resize region
+            }else if (QRectF((width+8)/2 - 4,(height+8) - 8,8,8).contains(event->pos())){
+                setCursor(Qt::SizeVerCursor);
+
+            // if over BOTTOMLEFT resize region
+            }else if (QRectF(0,(height+8) - 8,8,8).contains(event->pos())){
+                setCursor(Qt::SizeBDiagCursor);
+
+            // if over LEFT resize region
+            }else if (QRectF(0,(height+8)/2 - 4,8,8).contains(event->pos())){
+                setCursor(Qt::SizeHorCursor);
+
+            // if not over any resize region
+            }else if (moveable){
+                setCursor(Qt::SizeAllCursor);
+            }
+
+        }else if (moveable){
+            setCursor(Qt::SizeAllCursor);
+
+        }else{
+            setCursor(Qt::ArrowCursor);
+        }
+    }else{
+        setCursor(Qt::ArrowCursor);
+    }
+
+    QGraphicsItem::hoverEnterEvent(event);
 }
