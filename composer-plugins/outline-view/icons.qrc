@@ -1,0 +1,41 @@
+<RCC>
+    <qresource prefix="/">
+        <file>images/icon-audio.png</file>
+        <file>images/icon-body.png</file>
+        <file>images/icon-bringforward.png</file>
+        <file>images/icon-bringfront.png</file>
+        <file>images/icon-context.png</file>
+        <file>images/icon-copy.png</file>
+        <file>images/icon-cut.png</file>
+        <file>images/icon-delete.png</file>
+        <file>images/icon-export.png</file>
+        <file>images/icon-fullscreen.png</file>
+        <file>images/icon-help.png</file>
+        <file>images/icon-image.png</file>
+        <file>images/icon-media.png</file>
+        <file>images/icon-noaction.png</file>
+        <file>images/icon-nocondition.png</file>
+        <file>images/icon-onbegin.png</file>
+        <file>images/icon-onend.png</file>
+        <file>images/icon-onpause.png</file>
+        <file>images/icon-onresume.png</file>
+        <file>images/icon-onselection.png</file>
+        <file>images/icon-paste.png</file>
+        <file>images/icon-pause.png</file>
+        <file>images/icon-port.png</file>
+        <file>images/icon-redo.png</file>
+        <file>images/icon-resume.png</file>
+        <file>images/icon-script.png</file>
+        <file>images/icon-sendback.png</file>
+        <file>images/icon-sendbackward.png</file>
+        <file>images/icon-set.png</file>
+        <file>images/icon-settings.png</file>
+        <file>images/icon-start.png</file>
+        <file>images/icon-stop.png</file>
+        <file>images/icon-switch.png</file>
+        <file>images/icon-text.png</file>
+        <file>images/icon-undo.png</file>
+        <file>images/icon-video.png</file>
+        <file>images/icon-zoomin.png</file>
+    </qresource>
+</RCC>

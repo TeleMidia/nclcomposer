@@ -298,18 +298,44 @@ void NCLTreeWidget::updateItem(QTreeWidgetItem *item, QString tagname,
       \todo Create a method to return an Icon to a given element.
      */
     if(tagname == "media")
-        icon = QIcon (":/images/media.png");
+    {
+        if(attrs.contains("type"))
+        {
+          QString type = attrs.value("type");
+          if(type.startsWith("audio"))
+          {
+            icon = QIcon(":/images/icon-audio.png");
+          }
+          else if(type.startsWith("video"))
+          {
+            icon = QIcon(":/images/icon-video.png");
+          }
+          else if(type.startsWith("text"))
+          {
+            icon = QIcon(":/images/icon-text.png");
+          }
+          else
+          {
+            icon = QIcon (":/images/icon-media.png");
+          }
+        }
+        else
+          icon = QIcon (":/images/icon-media.png");
+    }
+    else if(tagname == "context" || tagname == "body")
+      icon = QIcon (":/images/icon-context.png");
+    else if(tagname == "switch")
+      icon = QIcon (":/images/icon-switch.png");
     else if(tagname == "descriptor")
         icon = QIcon (":/images/descriptor.png");
     else if(tagname == "link")
         icon = QIcon (":/images/link-icon.png");
     else if(tagname == "port")
-        icon = QIcon (":/images/door_icon.jpg");
+        icon = QIcon (":/images/icon-port.png");
     else if(tagname == "property")
         icon = QIcon (":/images/property_icon.png");
     else
         icon = QIcon (":/images/new.png");
-
 
     QString strAttrList = "";
     QString key;
