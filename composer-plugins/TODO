@@ -66,9 +66,11 @@ Textual View
 Outline View
 ============
 * Features:
-  - Icons to representing element types.
+  - Update from model.
 
 * Optimizations and cleanup:
+  - Remove duplicate icons (structural and outline have the same icons
+    resources).
   
 * Known bugs:
   
