@@ -787,17 +787,12 @@ void QnstComposerPlugin::requestConnectorAddition(const QString uid, const QStri
 
             cattributes["role"] = properties["condition"];
 
-            request = uid;
-
             emit addEntity("simpleCondition", entites.key(uid), cattributes, false);
-
 
             // action
             QMap<QString, QString> aattributes;
 
             aattributes["role"] = properties["action"].toLower();
-
-            request = uid;
 
             emit addEntity("simpleAction", entites.key(uid), aattributes, false);
         }

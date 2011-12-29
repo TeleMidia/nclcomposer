@@ -34,6 +34,10 @@ QnstView::~QnstView()
 
 void QnstView::load(QString data)
 {
+    qDebug() << "###########################################";
+    qDebug() << data;
+    qDebug() << "###########################################";
+
     QDomDocument* dom = new QDomDocument();
 
     dom->setContent(data);
@@ -125,6 +129,32 @@ void QnstView::read(QDomElement element, QDomElement parent)
         properties["height"] = element.attribute("height");
 
         addPort(uid, parent.attribute("uid"), properties);
+
+    }else if (element.nodeName() == "connector"){
+        QnstConncetor* conn = new QnstConncetor();
+        conn->setnstUid(element.attribute("uid"));
+        conn->setName(element.attribute("id"));
+
+        QDomNodeList list = element.childNodes();
+
+        for (unsigned int i=0;i<list.length();i++)
+        {
+            if (list.item(i).isElement())
+            {
+                QDomElement e = list.item(i).toElement();
+
+                if (e.nodeName() == "condition"){
+                    conn->addCondition(e.attribute("type"));
+
+                }else if (e.nodeName() == "action"){
+                    conn->addAction(e.attribute("type"));
+                }
+            }
+        }
+
+        connectors[conn->getName()] = conn;
+
+        return;
     }
 
     QDomNodeList list = element.childNodes();
@@ -145,6 +175,31 @@ QString QnstView::serialize()
     QDomDocument* dom = new QDomDocument();
 
     QDomElement root = dom->createElement("qnst");
+
+    foreach(QnstConncetor* conn, connectors.values()){
+        QDomElement e = dom->createElement("connector");
+
+        e.setAttribute("id", conn->getName());
+        e.setAttribute("uid", conn->getnstUid());
+
+        foreach(QString condition, conn->getConditions()){
+            QDomElement c = dom->createElement("condition");
+
+            c.setAttribute("type", condition);
+
+            e.appendChild(c);
+        }
+
+        foreach(QString action, conn->getActions()){
+            QDomElement a = dom->createElement("action");
+
+            a.setAttribute("type", action);
+
+            e.appendChild(a);
+        }
+
+        root.appendChild(e);
+    }
 
     foreach(QnstGraphicsEntity* entity, scene->getRoots()){
         QDomElement e = dom->createElement("body");
@@ -606,22 +661,22 @@ void QnstView::addMedia(const QString uid, const QString parent, const QMap<QStr
     if (entities.contains(parent)){
         QnstGraphicsMedia* entity;
 
-        if (properties["type"] == "image"){
+        if (properties["type"].startsWith("image")){
             entity = new QnstGraphicsImage((QnstGraphicsNode*) entities[parent]);
 
-        }else if (properties["type"] == "audio"){
+        }else if (properties["type"].startsWith("audio")){
             entity = new QnstGraphicsAudio((QnstGraphicsNode*) entities[parent]);
 
-        }else if (properties["type"] == "video"){
+        }else if (properties["type"].startsWith("video")){
             entity = new QnstGraphicsVideo((QnstGraphicsNode*) entities[parent]);
 
-        }else if (properties["type"] == "text"){
+        }else if (properties["type"].startsWith("text")){
             entity = new QnstGraphicsText((QnstGraphicsNode*) entities[parent]);
 
-        }else if (properties["type"] == "settings"){
+        }else if (properties["type"] == "application/x-ncl-settings"){
             entity = new QnstGraphicsSettings((QnstGraphicsNode*) entities[parent]);
 
-        }else if (properties["type"] == "script"){
+        }else if (properties["type"] == "application/x-ginga-NCLua"){
             entity = new QnstGraphicsScript((QnstGraphicsNode*) entities[parent]);
 
         }else{
@@ -672,9 +727,43 @@ void QnstView::changeMedia(QnstGraphicsMedia* entity, const QMap<QString, QStrin
 //
 //    }
 
-//    if (properties["type"] != ""){
-//
-//    }
+    if (properties["type"] != ""){
+        if (properties["type"].startsWith("image")){
+            entity->setnstType(Qnst::Image);
+
+            entity->setIcon(":/icon/image");
+
+        }else if (properties["type"].startsWith("audio")){
+            entity->setnstType(Qnst::Audio);
+
+            entity->setIcon(":/icon/audio");
+
+        }else if (properties["type"].startsWith("video")){
+            entity->setnstType(Qnst::Video);
+
+            entity->setIcon(":/icon/video");
+
+        }else if (properties["type"].startsWith("text")){
+            entity->setnstType(Qnst::Text);
+
+            entity->setIcon(":/icon/text");
+
+        }else if (properties["type"] == "application/x-ncl-settings"){
+            entity->setnstType(Qnst::Settings);
+
+            entity->setIcon(":/icon/settings");
+
+        }else if (properties["type"] == "application/x-ginga-NCLua"){
+            entity->setnstType(Qnst::Script);
+
+            entity->setIcon(":/icon/script");
+
+        }else{
+            entity->setnstType(Qnst::Media);
+
+            entity->setIcon(":/icon/media");
+        }
+    }
 
 //    if (properties["refer"] != ""){
 //
@@ -1078,26 +1167,44 @@ void QnstView::requestMediaAddition(QnstGraphicsMedia* entity)
     switch(entity->getnstType()){
     case Qnst::Image:
         properties["SUBTYPE"] = "image";
+
+        properties["type"] = "image/?";
+
         break;
 
     case Qnst::Audio:
         properties["SUBTYPE"] = "audio";
+
+        properties["type"] = "audio/?";
+
         break;
 
     case Qnst::Video:
         properties["SUBTYPE"] = "video";
+
+        properties["type"] = "video/?";
+
         break;
 
     case Qnst::Text:
         properties["SUBTYPE"] = "text";
+
+        properties["type"] = "text/?";
+
         break;
 
     case Qnst::Script:
         properties["SUBTYPE"] = "script";
+
+        properties["type"] = "application/x-ginga-NCLua";
+
         break;
 
     case Qnst::Settings:
         properties["SUBTYPE"] = "settings";
+
+        properties["type"] = "application/x-ncl-settings";
+
         break;
 
     case Qnst::Media:
@@ -2410,6 +2517,8 @@ void QnstView::mouseReleaseEvent(QMouseEvent* event)
                                         entity->setAction(Qnst::NoActionType);
                                     }
 
+                                    ///// connector
+
                                     QString connName = linkDialog->form.cbConnector->currentText();;
 
                                     if (linkDialog->form.cbConnector->currentText() == "Personalized"){
@@ -2432,6 +2541,8 @@ void QnstView::mouseReleaseEvent(QMouseEvent* event)
 
                                         emit entityAdded(conn->getnstUid(), "", properties);
                                     }
+
+                                    ///// link
 
                                     QMap<QString, QString> properties;
 
