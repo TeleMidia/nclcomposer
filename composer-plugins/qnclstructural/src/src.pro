@@ -83,7 +83,7 @@ SOURCES += \
     ui/view/qnstconncetor.cpp
 
 RESOURCES += \
-    images.qrc
+    ../../common-resources/images.qrc
 
 FORMS += \
     ui/view/QnstGraphicsLinkForm.ui
