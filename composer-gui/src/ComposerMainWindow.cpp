@@ -119,6 +119,9 @@ void ComposerMainWindow::initModules()
   connect(projectControl,SIGNAL(endOpenProject(QString)),
           SLOT(addToRecentProjects(QString)));
 
+  connect(projectControl, SIGNAL(endOpenProject(QString)),
+          welcomeWidget, SLOT(addToRecentProjects(QString)));
+
   connect(projectControl,SIGNAL(projectAlreadyOpen(QString)),
           SLOT(onOpenProjectTab(QString)));
 
@@ -264,7 +267,7 @@ void ComposerMainWindow::initGUI()
 #ifndef Q_WS_MAC
   setWindowIcon(QIcon(":/mainwindow/icon"));
 #endif
-  setWindowTitle(tr("Composer NCL"));
+  setWindowTitle(tr("NCL Composer"));
   tabProjects = new QTabWidget(0);
 
   ui->frame->layout()->addWidget(tabProjects);
@@ -282,7 +285,7 @@ void ComposerMainWindow::initGUI()
   connect(tabProjects, SIGNAL(currentChanged(int)),
           this, SLOT(currentTabChanged(int)));
 
-  //  createStatusBar();
+//  createStatusBar();
   createActions();
   createMenus();
   createAboutPlugins();
@@ -296,7 +299,6 @@ void ComposerMainWindow::initGUI()
           this, SLOT(runNCLRemotely()));
 
   welcomeWidget = new WelcomeWidget(this);
-  welcomeWidget->show();
   tabProjects->addTab(welcomeWidget, "Welcome");
   tabProjects->setTabIcon(0, QIcon());
 
@@ -484,7 +486,8 @@ void ComposerMainWindow::tabClosed(int index)
   QString location = tabProjects->tabToolTip(index);
 
   Project *project = ProjectControl::getInstance()->getOpenProject(location);
-  if(project->isDirty())
+  qDebug() << location << project;
+  if(project != NULL && project->isDirty())
   {
     int ret = QMessageBox::warning(this, project->getAttribute("id"),
                                    tr("The project has been modified.\n"
@@ -533,8 +536,8 @@ void ComposerMainWindow::closeAllFiles()
 {
   while(tabProjects->count() > 1)
   {
-    tabProjects->removeTab(1);
     tabClosed(1);
+    tabProjects->removeTab(1);
   }
 }
 
@@ -787,6 +790,33 @@ void ComposerMainWindow::updateViewMenu()
 void ComposerMainWindow::closeEvent(QCloseEvent *event)
 {
 
+  /** Save any dirty project. \todo This must be a function. */
+  for(int index = 1; index < tabProjects->count(); index++)
+  {
+    QString location = tabProjects->tabToolTip(index);
+    Project *project = ProjectControl::getInstance()->getOpenProject(location);
+
+    qDebug() << location << project;
+    if(project != NULL && project->isDirty())
+    {
+      tabProjects->setCurrentIndex(index);
+      int ret = QMessageBox::warning(this, project->getAttribute("id"),
+                                     tr("The project %1 has been modified.\n"
+                                        "Do you want to save your changes?").
+                                     arg(location),
+                                     QMessageBox::Yes | QMessageBox::Default,
+                                     QMessageBox::No,
+                                     QMessageBox::Cancel|QMessageBox::Escape);
+      if (ret == QMessageBox::Yes)
+        saveCurrentProject();
+      else if (ret == QMessageBox::Cancel)
+      {
+        event->ignore();
+        return;
+      }
+    }
+}
+
 #ifdef Q_WS_MAC
   QSettings settings("telemidia.pucrio.br", "composer");
 #else
@@ -816,14 +846,12 @@ void ComposerMainWindow::closeEvent(QCloseEvent *event)
   }
   else {
     /* If there aren't any openfile, remove this settings, otherwise it will
-           try to load the current path */
+       try to load the current path */
     settings.remove("openfiles");
   }
   settings.endGroup();
-
   settings.sync();
   cleanUp();
-  event->accept();
 }
 
 void ComposerMainWindow::cleanUp()

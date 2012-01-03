@@ -309,7 +309,7 @@ font: 75 7.5pt;</string>
    <addaction name="actionOpen_Project"/>
    <addaction name="action_Save"/>
    <addaction name="action_Preferences"/>
-   <addaction name="action_ShowNews"/>
+   <addaction name="separator"/>
    <addaction name="action_Help"/>
   </widget>
   <widget class="QMenuBar" name="menubar">
@@ -321,7 +321,7 @@ font: 75 7.5pt;</string>
      <x>0</x>
      <y>0</y>
      <width>776</width>
-     <height>21</height>
+     <height>25</height>
     </rect>
    </property>
    <property name="layoutDirection">
@@ -478,25 +478,6 @@ font: 75 7.5pt;</string>
    </property>
    <property name="iconVisibleInMenu">
     <bool>true</bool>
-   </property>
-  </action>
-  <action name="action_ShowNews">
-   <property name="enabled">
-    <bool>false</bool>
-   </property>
-   <property name="icon">
-    <iconset>
-     <normalon>:/mainwindow/images/rss_icon.png</normalon>
-    </iconset>
-   </property>
-   <property name="text">
-    <string>News</string>
-   </property>
-   <property name="toolTip">
-    <string>Show Composer News</string>
-   </property>
-   <property name="shortcut">
-    <string>Alt+Shift+N</string>
    </property>
   </action>
   <action name="action_Preferences">
