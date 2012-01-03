@@ -304,42 +304,42 @@ void NCLTreeWidget::updateItem(QTreeWidgetItem *item, QString tagname,
           QString type = attrs.value("type");
           if(type.startsWith("audio"))
           {
-            icon = QIcon(":/images/icon-audio.png");
+            icon = QIcon(":/icon/audio");
           }
           else if(type.startsWith("image"))
           {
-            icon = QIcon(":/images/icon-image.png");
+            icon = QIcon(":/icon/image");
           }
           else if(type.startsWith("video"))
           {
-            icon = QIcon(":/images/icon-video.png");
+            icon = QIcon(":/icon/video");
           }
           else if(type.startsWith("text"))
           {
-            icon = QIcon(":/images/icon-text.png");
+            icon = QIcon(":/icon/text");
           }
           else
           {
-            icon = QIcon (":/images/icon-media.png");
+            icon = QIcon (":/icon/media");
           }
         }
         else
           icon = QIcon (":/images/icon-media.png");
     }
     else if(tagname == "context" || tagname == "body")
-      icon = QIcon (":/images/icon-context.png");
+      icon = QIcon (":/icon/context");
     else if(tagname == "switch")
-      icon = QIcon (":/images/icon-switch.png");
+      icon = QIcon (":/icon/switch");
     else if(tagname == "descriptor")
-        icon = QIcon (":/images/descriptor.png");
+        icon = QIcon (":/icon/descriptor");
     else if(tagname == "link")
-        icon = QIcon (":/images/link-icon.png");
+        icon = QIcon (":/icon/link");
     else if(tagname == "port")
-        icon = QIcon (":/images/icon-port.png");
+        icon = QIcon (":/icon/port");
     else if(tagname == "property")
-        icon = QIcon (":/images/property_icon.png");
+        icon = QIcon (":/icon/property");
     else
-        icon = QIcon (":/images/new.png");
+        icon = QIcon (":/icon/element");
 
     QString strAttrList = "";
     QString key;
