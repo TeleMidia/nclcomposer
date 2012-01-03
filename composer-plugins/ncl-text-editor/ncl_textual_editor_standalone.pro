@@ -50,7 +50,6 @@ SOURCES     =   src/main.cpp \
 
 
 OTHER_FILES +=  TODO \
-                config/NCL_STRUCTURE \
                 NEWS
 
-RESOURCES   =   ncl_textual_plugin.qrc
+RESOURCES   =   ../common-resources/language.qrc

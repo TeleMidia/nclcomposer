@@ -58,10 +58,9 @@ SOURCES     =   src/main.cpp \
 
 OTHER_FILES +=  TODO \
                 config/NCL_STRUCTURE \
-                NEWS \
-                config/NCL_STRUCTURE_OLD.txt
+                NEWS
 
-RESOURCES   =   ncl_textual_plugin.qrc
+RESOURCES   =   ../common-resources/language.qrc
 FORMS       +=  ui/TextualPluginPreferencesWidget.ui
 
 INSTALLS += target

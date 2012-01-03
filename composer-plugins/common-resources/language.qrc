@@ -6,7 +6,6 @@
         <file>images/open.png</file>
         <file>images/paste.png</file>
         <file>images/save.png</file>
-        <file>config/NCL_STRUCTURE</file>
         <file>images/window_fullscreen.png</file>
         <file>images/media.png</file>
         <file>images/descriptor.png</file>
@@ -20,5 +19,8 @@
         <file>images/synchronize-icon-24.png</file>
         <file>images/door_icon.jpg</file>
         <file>images/property_icon.png</file>
+    </qresource>
+    <qresource prefix="/config">
+        <file alias="NCL_STRUCTURE">config/NCL_STRUCTURE</file>
     </qresource>
 </RCC>

@@ -23,4 +23,5 @@ SOURCES         =   src/NCLTreeWidget.cpp \
 INSTALLS        =   target
 
 RESOURCES += \
-    ../common-resources/images.qrc
+    ../common-resources/images.qrc \
+    ../common-resources/language.qrc

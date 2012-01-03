@@ -25,3 +25,6 @@ INSTALLS += target
 
 FORMS += \
     ui/PropertyEditorWidget.ui
+
+RESOURCES += \
+    ../common-resources/language.qrc
