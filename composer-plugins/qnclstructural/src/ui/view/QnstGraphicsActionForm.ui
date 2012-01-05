@@ -1,29 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>QnstGraphicsLinkForm</class>
- <widget class="QDialog" name="QnstGraphicsLinkForm">
+ <class>QnstGraphicsActionForm</class>
+ <widget class="QDialog" name="QnstGraphicsActionForm">
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>260</width>
+    <width>237</width>
     <height>189</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>New Link</string>
+   <string>New Action</string>
   </property>
   <layout class="QGridLayout" name="gridLayout">
-   <item row="1" column="0">
-    <widget class="QDialogButtonBox" name="buttonBox">
-     <property name="orientation">
-      <enum>Qt::Horizontal</enum>
-     </property>
-     <property name="standardButtons">
-      <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
-     </property>
-    </widget>
-   </item>
    <item row="0" column="0">
     <widget class="QGroupBox" name="gpLink">
      <property name="title">
@@ -40,27 +30,10 @@
       <item row="0" column="1">
        <widget class="QComboBox" name="cbConnector"/>
       </item>
-      <item row="2" column="0">
-       <widget class="QLabel" name="lbCondition">
-        <property name="enabled">
-         <bool>false</bool>
-        </property>
-        <property name="text">
-         <string>Condition:</string>
-        </property>
-       </widget>
-      </item>
-      <item row="2" column="1">
-       <widget class="QComboBox" name="cbCondition">
-        <property name="enabled">
-         <bool>false</bool>
-        </property>
-       </widget>
-      </item>
       <item row="3" column="0">
        <widget class="QLabel" name="lbAction">
         <property name="enabled">
-         <bool>false</bool>
+         <bool>true</bool>
         </property>
         <property name="text">
          <string>Action:</string>
@@ -74,14 +47,34 @@
         </property>
        </widget>
       </item>
-      <item row="1" column="0" colspan="2">
+      <item row="2" column="0" colspan="2">
        <widget class="Line" name="line">
         <property name="orientation">
          <enum>Qt::Horizontal</enum>
         </property>
        </widget>
       </item>
+      <item row="1" column="0">
+       <widget class="QLabel" name="lbLink">
+        <property name="text">
+         <string>Link:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="1">
+       <widget class="QComboBox" name="cbLink"/>
+      </item>
      </layout>
+    </widget>
+   </item>
+   <item row="1" column="0">
+    <widget class="QDialogButtonBox" name="buttonBox">
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+     <property name="standardButtons">
+      <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
+     </property>
     </widget>
    </item>
   </layout>
@@ -91,7 +84,7 @@
   <connection>
    <sender>buttonBox</sender>
    <signal>accepted()</signal>
-   <receiver>QnstGraphicsLinkForm</receiver>
+   <receiver>QnstGraphicsActionForm</receiver>
    <slot>accept()</slot>
    <hints>
     <hint type="sourcelabel">
@@ -107,7 +100,7 @@
   <connection>
    <sender>buttonBox</sender>
    <signal>rejected()</signal>
-   <receiver>QnstGraphicsLinkForm</receiver>
+   <receiver>QnstGraphicsActionForm</receiver>
    <slot>reject()</slot>
    <hints>
     <hint type="sourcelabel">

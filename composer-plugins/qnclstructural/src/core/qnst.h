@@ -15,6 +15,7 @@ public:
         Text,
         Script,
         Settings,
+        Aggregator,
 
         Compostion,
         Body,
@@ -29,13 +30,15 @@ public:
         Edge,
         Reference,
         Link,
-        Bind,
+        Condition,
+        Action,
 
         NoType
     };
 
     enum ConditionType {
         onBegin,
+        onSelectiononBegin,
         onEnd,
         onSelection,
         onResume,

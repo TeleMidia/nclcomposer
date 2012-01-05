@@ -25,14 +25,12 @@ void QnstGraphicsLinkDialog::init(QMap<QString, QnstConncetor*> connectors)
     form.cbAction->setEnabled(false);
     form.cbAction->clear();
 
-    form.cbConnector->addItem("");
-
     foreach(QnstConncetor* conn, connectors.values()){
         form.cbConnector->addItem(conn->getName());
     }
 
     form.cbConnector->addItem("----------");
-    form.cbConnector->addItem("Personalized");
+    form.cbConnector->addItem("New...");
 }
 
 void QnstGraphicsLinkDialog::adjustBinds(QString conn)
@@ -44,7 +42,7 @@ void QnstGraphicsLinkDialog::adjustBinds(QString conn)
         form.cbAction->setEnabled(false);
         form.cbAction->clear();
 
-    }else if (conn == "Personalized"){
+    }else if (conn == "New..."){
         form.cbCondition->setEnabled(true);
         form.cbCondition->clear();
 

@@ -59,6 +59,8 @@ signals:
 
     void portRequested();
 
+    void aggregatorRequested();
+
     void bringfrontRequested();
 
     void bringforwardRequested();
@@ -132,6 +134,8 @@ public:
     QAction* actionBody;
 
     QAction* actionPort;
+
+    QAction* actionAggregator;
 
     QAction* actionBringfront;
 

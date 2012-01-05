@@ -13,6 +13,7 @@
 #include "qnstgraphicsscript.h"
 #include "qnstgraphicsmedia.h"
 #include "qnstgraphicsport.h"
+#include "qnstgraphicsaggregator.h"
 
 class QnstGraphicsBody : public QnstGraphicsComposition
 {
@@ -43,6 +44,8 @@ public slots:
     void performSwitch();
 
     void performPort();
+
+    void performAggregator();
 
 private:
     void createObjects();

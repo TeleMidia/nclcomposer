@@ -120,11 +120,15 @@ private:
 
     void requestConnectorAddition(const QString uid, const QString parent, const QMap<QString, QString> properties);
 
+    void requestComplexConnectorAddition(const QString uid, const QString parent, const QMap<QString, QString> properties);
+
     void requestConnectorDependence();
 
     void requestConnectorBaseDependence();
 
     void requestLinkAddition(const QString uid, const QString parent, const QMap<QString, QString> properties);
+
+    void requestBindAddition(const QString uid, const QString parent, const QMap<QString, QString> properties);
 
     int n;
 

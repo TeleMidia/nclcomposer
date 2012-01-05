@@ -128,7 +128,8 @@ void QnstComposerPlugin::onEntityAdded(QString pluginID, Entity *entity)
         requestEntityAddition(entity);
     }else{
         if (entity->getType() != "ncl" &&
-            entity->getType() != "bind" &&
+            entity->getType() != "compoundCondition" &&
+            entity->getType() != "compoundAction" &&
             entity->getType() != "simpleCondition" &&
             entity->getType() != "simpleAction"){
 
@@ -472,6 +473,14 @@ void QnstComposerPlugin::requestEntityAddition(const QString uid, const QString 
     // if the entity is of type LINK
     }else if (properties["TYPE"] == "link"){
         requestLinkAddition(uid, parent, properties);
+
+    // if the entity is of type COMPLEXCONNECTOR
+    }else if (properties["TYPE"] == "complex-connector"){
+        requestComplexConnectorAddition(uid, parent, properties);
+
+    // if the entity is of type BIND
+    }else if (properties["TYPE"] == "bind"){
+        requestBindAddition(uid, parent, properties);
     }
 }
 
@@ -799,6 +808,66 @@ void QnstComposerPlugin::requestConnectorAddition(const QString uid, const QStri
     }
 }
 
+void QnstComposerPlugin::requestComplexConnectorAddition(const QString uid, const QString parent, const QMap<QString, QString> properties)
+{
+    requestConnectorDependence();
+
+    QList<Entity*> list = getProject()->getEntitiesbyType("connectorBase");
+
+    if (!list.isEmpty()){
+        Entity* entity = list.first();
+
+        if (entity != NULL){
+            QMap<QString, QString> attributes;
+
+            attributes["id"] = properties["id"];
+
+            request = uid;
+
+            emit addEntity("causalConnector", entity->getUniqueId(), attributes, false);
+
+
+            QMap<QString, QString> fakemap;
+
+            emit addEntity("compoundCondition", entites.key(uid), fakemap,false);
+            emit addEntity("compoundAction", entites.key(uid), fakemap,false);
+
+            QString cpcUID;
+            QString cpaUID;
+
+            foreach(Entity* child, getProject()->getEntityById(entites.key(uid))->getChildren()){
+
+                if (child->getType() == "compoundCondition"){
+                    cpcUID = child->getUniqueId();
+                }
+
+                if (child->getType() == "compoundAction"){
+                    cpaUID = child->getUniqueId();
+                }
+            }
+
+            // condition
+            if (properties["condition"] != "" && cpcUID != ""){
+                QMap<QString, QString> cattributes;
+
+                cattributes["role"] = properties["condition"];
+
+                emit addEntity("simpleCondition", cpcUID, cattributes, false);
+            }
+
+            // condition
+            if (properties["action"] != ""  && cpaUID != ""){
+                // action
+                QMap<QString, QString> aattributes;
+
+                aattributes["role"] = properties["action"].toLower();
+
+                emit addEntity("simpleAction", cpaUID, aattributes, false);
+            }
+        }
+    }
+}
+
 void QnstComposerPlugin::requestConnectorDependence()
 {
     requestConnectorBaseDependence();
@@ -877,6 +946,128 @@ void QnstComposerPlugin::requestLinkAddition(const QString uid, const QString pa
 
             emit addEntity("bind", parent->getUniqueId(), aattributes, false);
         }
+    }
+}
+
+void QnstComposerPlugin::requestBindAddition(const QString uid, const QString parent, const QMap<QString, QString> properties)
+{
+    // checking connector
+    QList<Entity*> connectors = getProject()->getEntitiesbyType("causalConnector");
+
+    QString connUID = "";
+
+    foreach(Entity* conn, connectors){
+        if (conn->getAttribute("id") == properties["connector"]){
+            connUID = conn->getUniqueId();
+
+            break;
+        }
+    }
+
+    QString cpcUID = "";
+    QString cpaUID = "";
+
+    if (connUID != ""){
+        foreach(Entity* child, getProject()->getEntityById(connUID)->getChildren()){
+
+            if (child->getType() == "compoundCondition"){
+                cpcUID = child->getUniqueId();
+            }
+
+            if (child->getType() == "compoundAction"){
+                cpaUID = child->getUniqueId();
+            }
+        }
+    }
+
+    if (cpcUID != "" && cpaUID != ""){
+        if (properties["condition"] != ""){
+            bool hasCond = false;
+
+            foreach(Entity* child, getProject()->getEntityById(cpcUID)->getChildren()){
+                if (child->getAttribute("role") == properties["condition"]){
+                    hasCond = true;
+                    break;
+                }
+            }
+
+            if (!hasCond){
+                QMap<QString, QString> cattributes;
+
+                cattributes["role"] = properties["condition"];
+
+                emit addEntity("simpleCondition", cpcUID, cattributes, false);
+            }
+        }
+
+        if (properties["action"] != ""){
+            bool hasAct = false;
+
+            foreach(Entity* child, getProject()->getEntityById(cpaUID)->getChildren()){
+                if (child->getAttribute("role") == properties["action"].toLower()){
+                    hasAct = true;
+                    break;
+                }
+            }
+
+            if (!hasAct){
+                QMap<QString, QString> aattributes;
+
+                aattributes["role"] = properties["action"].toLower();
+
+                emit addEntity("simpleAction", cpaUID, aattributes, false);
+            }
+        }
+    }
+
+    //checking link
+    QList<Entity*> links = getProject()->getEntitiesbyType("link");
+
+    QString liknUID = "";
+
+    foreach(Entity* link, links){
+        if (link->getAttribute("id") == properties["link"]){
+            liknUID = link->getUniqueId();
+
+            break;
+        }
+    }
+
+    if (liknUID == ""){
+        QMap<QString, QString> linkattributes;
+
+        linkattributes["id"] = properties["link"];
+        linkattributes["xconnector"] = properties["connector"];
+
+        request = uid;
+
+        emit addEntity("link", getProject()->getEntityById(entites.key(parent))->getUniqueId(), linkattributes, false);
+
+        liknUID = getProject()->getEntityById(entites.key(uid))->getUniqueId();
+    }
+
+    // add bind
+    if (properties["condition"] != ""){
+        // bind condition
+        QMap<QString, QString> cattributes;
+
+        cattributes["role"] = properties["condition"];
+        cattributes["component"] = properties["component"];
+
+        request = uid;
+
+        emit addEntity("bind", liknUID, cattributes, false);
+
+    }else if (properties["action"] != ""){
+        // bind action
+        QMap<QString, QString> aattributes;
+
+        aattributes["role"] = properties["action"];
+        aattributes["component"] = properties["component"];
+
+        request = uid;
+
+        emit addEntity("bind", liknUID, aattributes, false);
     }
 }
 

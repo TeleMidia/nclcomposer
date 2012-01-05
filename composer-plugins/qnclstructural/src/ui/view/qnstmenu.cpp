@@ -232,6 +232,14 @@ void QnstMenu::createActions()
 
     actionPort->setEnabled(false);
 
+    // aggregator action
+    actionAggregator = new QAction(this);
+    actionAggregator->setText(tr("Aggregator"));
+
+    actionAggregator->setIcon(QIcon(":/icon/aggregator"));
+
+    actionAggregator->setEnabled(false);
+
     // bring to front action
     actionBringfront = new QAction(this);
     actionBringfront->setText(tr("Bring to Front"));
@@ -317,6 +325,8 @@ void QnstMenu::createMenus()
     menuInsert->addAction(actionBody);
     menuInsert->addSeparator();
     menuInsert->addAction(actionPort);
+    menuInsert->addSeparator();
+    menuInsert->addAction(actionAggregator);
 
     menuInsert->setEnabled(false);
 
@@ -369,6 +379,7 @@ void QnstMenu::createConnections()
     connect(actionSwitch, SIGNAL(triggered()), SIGNAL(switchRequested()));
     connect(actionBody, SIGNAL(triggered()), SIGNAL(bodyRequested()));
     connect(actionPort, SIGNAL(triggered()), SIGNAL(portRequested()));
+    connect(actionAggregator, SIGNAL(triggered()), SIGNAL(aggregatorRequested()));
 
     connect(actionBringfront, SIGNAL(triggered()), SIGNAL(bringfrontRequested()));
     connect(actionBringforward, SIGNAL(triggered()), SIGNAL(bringforwardRequested()));

@@ -38,18 +38,14 @@ void QnstGraphicsNode::removenstGraphicsEdge(QnstGraphicsEdge* edge)
 void QnstGraphicsNode::adjust()
 {
     foreach(QnstGraphicsEntity* entity, getnstGraphicsEntities()){
-        if (entity->getnstType() == Qnst::Interface ||
-            entity->getnstType() == Qnst::Port ||
-            entity->getnstType() == Qnst::Area ||
-            entity->getnstType() == Qnst::Property){
-
-            entity->adjust();
-        }
+        entity->adjust();
     }
 
     foreach(QnstGraphicsEntity* entity, getnstGraphicsEdges()){
         if (entity->getnstType() == Qnst::Reference ||
-            entity->getnstType() == Qnst::Link){
+            entity->getnstType() == Qnst::Link ||
+            entity->getnstType() == Qnst::Condition ||
+            entity->getnstType() == Qnst::Action){
             entity->adjust();
         }
     }

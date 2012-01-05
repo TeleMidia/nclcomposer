@@ -34,6 +34,7 @@ void QnstGraphicsBody::createObjects()
     menu->actionContext->setEnabled(true);
     menu->actionSwitch->setEnabled(true);
     menu->actionPort->setEnabled(true);
+    menu->actionAggregator->setEnabled(true);
 }
 
 void QnstGraphicsBody::createConnections()
@@ -64,6 +65,7 @@ void QnstGraphicsBody::createConnections()
     connect(menu, SIGNAL(contextRequested()), SLOT(performContext()));
     connect(menu, SIGNAL(switchRequested()), SLOT(performSwitch()));
     connect(menu, SIGNAL(portRequested()), SLOT(performPort()));
+    connect(menu, SIGNAL(aggregatorRequested()), SLOT(performAggregator()));
 }
 
 void QnstGraphicsBody::performImage()
@@ -203,6 +205,20 @@ void QnstGraphicsBody::performPort()
     entity->setLeft(0);
     entity->setWidth(32);
     entity->setHeight(32);
+    entity->adjust();
+
+    addnstGraphicsEntity(entity);
+
+    emit entityAdded(entity);
+}
+
+void QnstGraphicsBody::performAggregator()
+{
+    QnstGraphicsAggregator* entity = new QnstGraphicsAggregator(this);
+    entity->setTop(getHeight()/2 - 28/2);
+    entity->setLeft(getWidth()/2 - 28/2);
+    entity->setWidth(28);
+    entity->setHeight(28);
     entity->adjust();
 
     addnstGraphicsEntity(entity);

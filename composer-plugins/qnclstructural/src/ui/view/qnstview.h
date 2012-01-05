@@ -9,6 +9,7 @@
 #include <QMouseEvent>
 #include <QKeyEvent>
 #include <QMessageBox>
+#include <QSet>
 
 #include <QDebug>
 
@@ -23,6 +24,10 @@
 #include "qnstgraphicsreference.h"
 #include "qnstgraphicslink.h"
 #include "qnstgraphicslinkdialog.h"
+#include "qnstgraphicsconditiondialog.h"
+#include "qnstgraphicsactiondialog.h"
+#include "qnstgraphicscondition.h"
+#include "qnstgraphicsaction.h"
 #include "qnstconncetor.h"
 
 class QnstView : public QGraphicsView
@@ -40,7 +45,11 @@ public:
 
     void read(QDomElement element, QDomElement parent);
 
+    void readLink(QDomElement element, QDomElement parent);
+
     void write(QDomElement element, QDomDocument* dom, QnstGraphicsEntity* entity);
+
+    void writeLink(QDomElement element, QDomDocument* dom, QnstGraphicsEntity* entity);
 
 public:
     void addEntity(const QString uid, const QString parent, const QMap<QString, QString> properties);
@@ -154,6 +163,8 @@ private:
 
     void requestMediaChange(QnstGraphicsMedia* entity);
 
+    void requestAggregatorAddition(QnstGraphicsAggregator* entity);
+
     void requestPortAddition(QnstGraphicsPort* entity);
 
     void requestPortChange(QnstGraphicsPort* entity);
@@ -186,9 +197,21 @@ private:
 
     QnstGraphicsLinkDialog* linkDialog;
 
+    QnstGraphicsConditionDialog* conditionDialog;
+
+    QnstGraphicsActionDialog* actionDialog;
+
     QnstGraphicsEntity* selected;
 
     QnstGraphicsEntity* clipboard;
+
+    QSet<QString> linkWriterAux;
+
+    QMap<QString, QString> link2conn;
+
+    QMap<QString, QString> cod2link;
+
+    QMap<QString, QString> act2link;
 
     QMap<QString, QnstConncetor*> connectors;
 

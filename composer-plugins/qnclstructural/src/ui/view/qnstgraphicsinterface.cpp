@@ -88,10 +88,10 @@ void QnstGraphicsInterface::adjust()
         }
     }
 
-    foreach(QnstGraphicsEntity* entity, getnstGraphicsEdges()){
-        if (entity->getnstType() == Qnst::Reference ||
-            entity->getnstType() == Qnst::Link){
-            entity->adjust();
+    foreach(QnstGraphicsEntity* edges, getnstGraphicsEdges()){
+        if (edges->getnstType() == Qnst::Reference ||
+            edges->getnstType() == Qnst::Link){
+            edges->adjust();
         }
     }
 
