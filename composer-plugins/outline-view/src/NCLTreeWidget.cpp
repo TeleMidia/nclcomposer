@@ -64,6 +64,8 @@ void NCLTreeWidget::createActions ()
 
     connect( removeNodeAct, SIGNAL(triggered()),
              this, SLOT(userRemoveElement()));
+    removeNodeAct->setShortcutContext(Qt::WidgetShortcut);
+    removeNodeAct->setShortcut(QKeySequence::Delete);
     addAction(removeNodeAct);
 
     expandAllAct = new QAction(tr("Expand All"), this);
@@ -328,6 +330,8 @@ void NCLTreeWidget::updateItem(QTreeWidgetItem *item, QString tagname,
     }
     else if(tagname == "context" || tagname == "body")
       icon = QIcon (":/icon/context");
+    else if(tagname == "meta" || tagname == "metadata")
+        icon = QIcon (":/icon/metadata");
     else if(tagname == "switch")
       icon = QIcon (":/icon/switch");
     else if(tagname == "descriptor")
