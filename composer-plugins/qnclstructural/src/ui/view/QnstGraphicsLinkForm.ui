@@ -43,7 +43,7 @@
       <item row="2" column="0">
        <widget class="QLabel" name="lbCondition">
         <property name="enabled">
-         <bool>false</bool>
+         <bool>true</bool>
         </property>
         <property name="text">
          <string>Condition:</string>
@@ -60,7 +60,7 @@
       <item row="3" column="0">
        <widget class="QLabel" name="lbAction">
         <property name="enabled">
-         <bool>false</bool>
+         <bool>true</bool>
         </property>
         <property name="text">
          <string>Action:</string>

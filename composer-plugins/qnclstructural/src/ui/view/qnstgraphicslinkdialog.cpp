@@ -29,7 +29,10 @@ void QnstGraphicsLinkDialog::init(QMap<QString, QnstConncetor*> connectors)
         form.cbConnector->addItem(conn->getName());
     }
 
-    form.cbConnector->addItem("----------");
+    if (form.cbConnector->count() > 0){
+        form.cbConnector->addItem("----------");
+    }
+
     form.cbConnector->addItem("New...");
 }
 

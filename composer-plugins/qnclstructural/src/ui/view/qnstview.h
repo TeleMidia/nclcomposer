@@ -147,6 +147,8 @@ private:
 
     void changePort(QnstGraphicsPort* entity, const QMap<QString, QString> properties);
 
+    void addAggregator(const QString uid, const QString parent, const QMap<QString, QString> properties);
+
     void requestBodyAddition(QnstGraphicsBody* entity);
 
     void requestBodyChange(QnstGraphicsBody* entity);

@@ -122,6 +122,33 @@ bool QnstComposerPlugin::saveSubsession()
     return true;
 }
 
+void QnstComposerPlugin::updateFromModel()
+{
+//    // TODO: clean view data before update.
+
+//    Entity* project = getProject();
+
+//    if (project != NULL){
+//        updateChildren(project);
+//    }
+}
+
+void QnstComposerPlugin::updateChildren(Entity* entity)
+{
+//    if (entity != NULL){
+//        foreach(Entity* child, entity->getChildren()){
+//            // if entity type is BODY
+//            if (child->getType() == "body"){
+//                requestBodyAddition(child);
+
+//            // if entity type is MEDIA
+//            }else if (child->getType() == "media"){
+//                requestMediaAddition(child);
+//            }
+//        }
+//    }
+}
+
 void QnstComposerPlugin::onEntityAdded(QString pluginID, Entity *entity)
 {
     if (pluginID != getPluginInstanceID()){
@@ -1062,7 +1089,7 @@ void QnstComposerPlugin::requestBindAddition(const QString uid, const QString pa
         // bind action
         QMap<QString, QString> aattributes;
 
-        aattributes["role"] = properties["action"];
+        aattributes["role"] = properties["action"].toLower();
         aattributes["component"] = properties["component"];
 
         request = uid;

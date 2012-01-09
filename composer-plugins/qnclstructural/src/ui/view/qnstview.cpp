@@ -126,6 +126,20 @@ void QnstView::read(QDomElement element, QDomElement parent)
 
         addSwitch(uid, parent.attribute("uid"), properties);
 
+    }else if (element.nodeName() == "aggregator"){
+        QString uid = element.attribute("uid");
+
+        QMap<QString, QString> properties;
+
+        properties["id"] = element.attribute("id");
+
+        properties["top"] = element.attribute("top");
+        properties["left"] = element.attribute("left");
+        properties["width"] = element.attribute("width");
+        properties["height"] = element.attribute("height");
+
+        addAggregator(uid, parent.attribute("uid"), properties);
+
     }else if (element.nodeName() == "port"){
         QString uid = element.attribute("uid");
 
@@ -234,8 +248,8 @@ void QnstView::readLink(QDomElement element, QDomElement parent)
 
                 entitya->getnstGraphicsParent()->addnstGraphicsEntity(entity);
 
-                ((QnstGraphicsInterface*) entitya)->addnstGraphicsEdge(entity);
-                ((QnstGraphicsInterface*) entityb)->addnstGraphicsEdge(entity);
+                entitya->addnstGraphicsEdge(entity);
+                entityb->addnstGraphicsEdge(entity);
 
                 QString con = element.attribute("condition");
                 QString act = element.attribute("action");
@@ -281,6 +295,92 @@ void QnstView::readLink(QDomElement element, QDomElement parent)
                 entities[entity->getnstUid()] = entity;
 
                 nlink++;
+            }
+        }
+    }else if (element.nodeName() == "bind"){
+        if (element.attribute("uid") != "" && entities.contains(element.attribute("componentaUID"))&& entities.contains(element.attribute("componentbUID"))){
+            if (!entities.contains(element.attribute("uid"))){
+                QnstGraphicsNode* entitya = (QnstGraphicsNode*) entities[element.attribute("componentaUID")];
+                QnstGraphicsNode* entityb = (QnstGraphicsNode*) entities[element.attribute("componentbUID")];
+
+                if (element.attribute("type") == "condition"){
+                    QnstGraphicsCondition* entity = new QnstGraphicsCondition();
+                    entity->setnstId(element.attribute("id"));
+                    entity->setnstUid(element.attribute("uid"));
+                    entity->setnstGraphicsParent(entitya->getnstGraphicsParent());
+                    entity->setEntityA(entitya);
+                    entity->setEntityB(entityb);
+                    entity->adjust();
+
+                    entitya->getnstGraphicsParent()->addnstGraphicsEntity(entity);
+
+                    entitya->addnstGraphicsEdge(entity);
+                    entityb->addnstGraphicsEdge(entity);
+
+                    QString con = element.attribute("condition");
+
+                    if (con == "onBegin"){
+                        entity->setCondition(Qnst::onBegin);
+
+                    }else if (con == "onEnd"){
+                        entity->setCondition(Qnst::onEnd);
+
+                    }else if (con == "onPause"){
+                        entity->setCondition(Qnst::onPause);
+
+                    }else if (con == "onResume"){
+                        entity->setCondition(Qnst::onResume);
+
+                    }else if (con == "onSelection"){
+                        entity->setCondition(Qnst::onSelection);
+
+                    }else{
+                        entity->setCondition(Qnst::NoConditionType);
+                    }
+
+                    entities[entity->getnstUid()] = entity;
+
+                    nlink++;
+
+                }else if (element.attribute("type") == "action"){
+                    QnstGraphicsAction* entity = new QnstGraphicsAction();
+                    entity->setnstId(element.attribute("id"));
+                    entity->setnstUid(element.attribute("uid"));
+                    entity->setnstGraphicsParent(entitya->getnstGraphicsParent());
+                    entity->setEntityA(entitya);
+                    entity->setEntityB(entityb);
+                    entity->adjust();
+
+                    entitya->getnstGraphicsParent()->addnstGraphicsEntity(entity);
+
+                    entitya->addnstGraphicsEdge(entity);
+                    entityb->addnstGraphicsEdge(entity);
+
+                    QString act = element.attribute("action");
+
+                    if (act == "Start"){
+                        entity->setAction(Qnst::Start);
+
+                    }else if (act == "Stop"){
+                        entity->setAction(Qnst::Stop);
+
+                    }else if (act == "Pause"){
+                        entity->setAction(Qnst::Pause);
+
+                    }else if (act == "Resume"){
+                        entity->setAction(Qnst::Resume);
+
+                    }else if (act == "Set"){
+                        entity->setAction(Qnst::Set);
+
+                    }else{
+                        entity->setAction(Qnst::NoActionType);
+                    }
+
+                    entities[entity->getnstUid()] = entity;
+
+                    nlink++;
+                }
             }
         }
     }
@@ -425,6 +525,11 @@ void QnstView::write(QDomElement element, QDomDocument* dom, QnstGraphicsEntity*
 
         break;
 
+    case Qnst::Aggregator:
+        e = dom->createElement("aggregator");
+
+        break;
+
     case Qnst::Port:
         e = dom->createElement("port");
 
@@ -508,6 +613,94 @@ void QnstView::writeLink(QDomElement element, QDomDocument* dom, QnstGraphicsEnt
                     e.setAttribute("condition", "NoConditionType");
                     break;
                 }
+
+                switch(link->getAction()){
+                case Qnst::Start:
+                    e.setAttribute("action", "Start");
+                    break;
+
+                case Qnst::Stop:
+                    e.setAttribute("action", "Stop");
+                    break;
+
+                case Qnst::Pause:
+                    e.setAttribute("action", "Pause");
+                    break;
+
+                case Qnst::Resume:
+                    e.setAttribute("action", "Resume");
+                    break;
+
+                case Qnst::Set:
+                    e.setAttribute("action", "Set");
+                    break;
+
+                case Qnst::NoActionType:
+                    e.setAttribute("action", "NoActionType");
+                    break;
+                }
+
+                element.appendChild(e);
+
+                linkWriterAux.insert(link->getnstUid());
+
+            }else if (edge->getnstType() == Qnst::Condition && !linkWriterAux.contains(edge->getnstUid())){
+                QnstGraphicsCondition* link = (QnstGraphicsCondition*) edge;
+
+                QDomElement e = dom->createElement("bind");
+
+                e.setAttribute("id", edge->getnstId());
+
+                e.setAttribute("uid", edge->getnstUid());
+
+                e.setAttribute("type", "condition");
+
+                e.setAttribute("componentaUID", link->getEntityA()->getnstUid());
+                e.setAttribute("componentbUID", link->getEntityB()->getnstUid());
+
+                switch(link->getCondition()){
+                case Qnst::onBegin:
+                    e.setAttribute("condition", "onBegin");
+                    break;
+
+                case Qnst::onEnd:
+                    e.setAttribute("condition", "onEnd");
+                    break;
+
+                case Qnst::onPause:
+                    e.setAttribute("condition", "onPause");
+                    break;
+
+                case Qnst::onResume:
+                    e.setAttribute("condition", "onResume");
+                    break;
+
+                case Qnst::onSelection:
+                    e.setAttribute("condition", "onSelection");
+                    break;
+
+                case Qnst::NoConditionType:
+                    e.setAttribute("condition", "NoConditionType");
+                    break;
+                }
+
+                element.appendChild(e);
+
+                linkWriterAux.insert(link->getnstUid());
+
+            }else if (edge->getnstType() == Qnst::Action && !linkWriterAux.contains(edge->getnstUid())){
+                QnstGraphicsAction* link = (QnstGraphicsAction*) edge;
+
+                QDomElement e = dom->createElement("bind");
+
+                e.setAttribute("id", edge->getnstId());
+
+                e.setAttribute("uid", edge->getnstUid());
+
+                e.setAttribute("type", "action");
+
+                e.setAttribute("componentaUID", link->getEntityA()->getnstUid());
+                e.setAttribute("componentbUID", link->getEntityB()->getnstUid());
 
                 switch(link->getAction()){
                 case Qnst::Start:
@@ -1081,6 +1274,41 @@ void QnstView::changePort(QnstGraphicsPort* entity, const QMap<QString, QString>
 //    if (properties["interface"] != ""){
 //
 //    }
+}
+
+void QnstView::addAggregator(const QString uid, const QString parent, const QMap<QString, QString> properties)
+{
+    if (entities.contains(parent)){
+        QnstGraphicsAggregator* entity = new QnstGraphicsAggregator((QnstGraphicsNode*) entities[parent]);
+        entity->setnstUid(uid);
+
+        entity->setTop(entities[parent]->getHeight()/2 - 28/2);
+        entity->setLeft(entities[parent]->getWidth()/2 - 28/2);
+        entity->setWidth(28);
+        entity->setHeight(28);
+
+        if (properties["id"] != ""){
+            entity->setnstId(properties["id"]);
+        }
+
+        if (properties["top"] != ""){
+            entity->setTop(properties["top"].toDouble());
+        }
+
+        if (properties["left"] != ""){
+            entity->setLeft(properties["left"].toDouble());
+        }
+
+        if (properties["width"] != ""){
+            entity->setWidth(properties["width"].toDouble());
+        }
+
+        if (properties["height"] != ""){
+            entity->setHeight(properties["height"].toDouble());
+        }
+
+        entities[parent]->addnstGraphicsEntity(entity); entities[uid] = entity; entity->adjust();
+    }
 }
 
 void QnstView::requestEntityAddition(QnstGraphicsEntity* entity)

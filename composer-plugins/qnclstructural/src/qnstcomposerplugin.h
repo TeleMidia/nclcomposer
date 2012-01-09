@@ -45,6 +45,8 @@ public:
     virtual bool saveSubsession();
 
 public slots:
+    virtual void updateFromModel();
+
     virtual void onEntityAdded(QString pluginID, Entity *entity);
 
     virtual void errorMessage(QString error);
@@ -72,6 +74,8 @@ public slots:
     void requestEntitySelection(const QString uid);
 
 private:
+    void updateChildren(Entity* entity);
+
     void createWidgets();
 
     void createConnections();
