@@ -298,8 +298,12 @@ void ComposerMainWindow::initGUI()
   connect(ui->action_Run_remotely, SIGNAL(triggered()),
           this, SLOT(runNCLRemotely()));
 
+  // UNDO/REDO
+  connect(ui->actionUndo, SIGNAL(triggered()), this, SLOT(undo()));
+  connect(ui->actionRedo, SIGNAL(triggered()), this, SLOT(redo()));
+
   welcomeWidget = new WelcomeWidget(this);
-  tabProjects->addTab(welcomeWidget, "Welcome");
+  tabProjects->addTab(welcomeWidget, tr("Welcome"));
   tabProjects->setTabIcon(0, QIcon());
 
   connect(welcomeWidget, SIGNAL(userPressedOpenProject()),
@@ -1280,6 +1284,8 @@ void ComposerMainWindow::currentTabChanged(int n)
     ui->action_Save->setEnabled(true);
     ui->action_RunNCL->setEnabled(true);
     ui->action_Run_remotely->setEnabled(true);
+    ui->actionUndo->setEnabled(true);
+    ui->actionRedo->setEnabled(true);
   }
   else
   {
@@ -1290,6 +1296,8 @@ void ComposerMainWindow::currentTabChanged(int n)
     ui->action_Save->setEnabled(false);
     ui->action_RunNCL->setEnabled(false);
     ui->action_Run_remotely->setEnabled(false);
+    ui->actionUndo->setEnabled(false);
+    ui->actionRedo->setEnabled(false);
   }
 }
 
@@ -1322,6 +1330,33 @@ void ComposerMainWindow::setProjectDirty(QString location, bool isDirty)
     else
       tabProjects->setTabText(index, projectId);
   }
+}
+
+void ComposerMainWindow::undo()
+{
+  int index = tabProjects->currentIndex();
+
+  if(index != -1)
+  {
+    QString location = tabProjects->tabToolTip(index);
+    MessageControl *msgControl =
+        PluginControl::getInstance()->getMessageControl(location);
+    msgControl->undo();
+  }
+}
+
+void ComposerMainWindow::redo()
+{
+  int index = tabProjects->currentIndex();
+
+  if(index != -1)
+  {
+    QString location = tabProjects->tabToolTip(index);
+    MessageControl *msgControl =
+        PluginControl::getInstance()->getMessageControl(location);
+    msgControl->redo();
+  }
+
 }
 
 } } //end namespace

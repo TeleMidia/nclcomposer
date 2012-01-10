@@ -3,13 +3,13 @@ TEMPLATE = app
 CONFIG += qt warn_on debug console
 
 #CONFIG += clubencl
-#CONFIG += runssh_on
+CONFIG += runssh_on
 QT += xml network webkit
 
 DEFINES += NCLCOMPOSER_GUI_VERSION=\"\\\"0.1.0\\\"\"
 
 # DEFINES += USE_MDI
-DEFINES += QT_NO_DEBUG_OUTPUT QT_NO_DEBUG_WARNING
+# DEFINES += QT_NO_DEBUG_OUTPUT QT_NO_DEBUG_WARNING
 
 RC_FILE = images/nclcomposer.rc
 
@@ -126,7 +126,8 @@ HEADERS += include/ComposerMainWindow.h \
     include/IPreferencePage.h \
     include/WelcomeWidget.h \
     include/AboutDialog.h \
-    include/RunGingaConfig.h
+    include/RunGingaConfig.h \
+    include/ComposerTabWidget.h
 
 RESOURCES += images.qrc
 
@@ -144,5 +145,8 @@ unix:!macx {
 } else {
     INSTALLS += target
 }
+
+TRANSLATIONS += composer_br.ts \
+                composer_sp.ts
 
 OTHER_FILES += LICENSE.LGPL

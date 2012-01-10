@@ -311,6 +311,8 @@ font: 75 7.5pt;</string>
    <addaction name="action_Preferences"/>
    <addaction name="separator"/>
    <addaction name="action_Help"/>
+   <addaction name="actionUndo"/>
+   <addaction name="actionRedo"/>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="enabled">
@@ -564,9 +566,36 @@ font: 75 7.5pt;</string>
     <string>Preferences</string>
    </property>
   </action>
+  <action name="actionUndo">
+   <property name="icon">
+    <iconset>
+     <normalon>:/icon/undo</normalon>
+    </iconset>
+   </property>
+   <property name="text">
+    <string>Undo</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Z</string>
+   </property>
+  </action>
+  <action name="actionRedo">
+   <property name="icon">
+    <iconset resource="../../composer-plugins/common-resources/images.qrc">
+     <normaloff>:/icon/redo</normaloff>:/icon/redo</iconset>
+   </property>
+   <property name="text">
+    <string>Redo</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Shift+Z</string>
+   </property>
+  </action>
  </widget>
  <resources>
   <include location="../images.qrc"/>
+  <include location="../../composer-plugins/common-resources/images.qrc"/>
+  <include location="../../composer-plugins/common-resources/images.qrc"/>
  </resources>
  <connections/>
 </ui>

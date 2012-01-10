@@ -320,6 +320,9 @@ public slots:
      */
     void openProject();
 
+    void undo();
+    void redo();
+
 signals:
     /*!
      \brief Send this signal when must be writed the current settings.
