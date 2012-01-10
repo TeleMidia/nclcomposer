@@ -133,22 +133,43 @@ public slots:
     void changeSelectedEntity(QString pluginID, void* param);
     /*!
      * \brief This slot calls the textual plugin to update its own model.
+     *
      */
     void updateFromModel();
 
-    // COMUNICATION WITH VALIDATION PLUGIN
     /*!
-     * \brief
+     * \brief Incremental update from core model.
+     *
+     * This function will works almost equal the core send each individual
+     * command for add every entity in the model.
+     */
+    void incrementalUpdateFromModel();
+
+    /*!
+     * \brief Non-Incremental update from Composer core model.
+     *
+     * This function will construct the DOM model, and then will generate the
+     *
+     * \todo Update entities indexes cache.
+     */
+    void nonIncrementalUpdateFromModel();
+
+// COMUNICATION WITH VALIDATION PLUGIN //
+    /*!
+     * \brief This message is called by Validator plugin.
+     *
      */
     void clearValidationMessages(QString, void *param);
     /*!
-     * \brief
+     * \brief This message is called by Validator plugin.
      */
     void validationError(QString pluginID, void *param);
+// END COMMUNICATION WITH VALIDATION PLUGIN
 
 private slots:
     /*!
-     * \brief Updates the core model with the content of the NCL Text Editor.
+     * \brief Updates the core model with the current content of the NCL Text
+     * Editor.
      */
     void updateCoreModel();
 

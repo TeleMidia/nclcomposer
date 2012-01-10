@@ -22,6 +22,7 @@
 #include <QMessageBox>
 
 #include <QDomDocument>
+#include <QTextStream>
 
 namespace composer {
 namespace plugin {
@@ -105,6 +106,11 @@ QWidget* NCLTextualViewPlugin::getWidget()
 
 void NCLTextualViewPlugin::updateFromModel()
 {
+  incrementalUpdateFromModel();
+}
+
+void NCLTextualViewPlugin::incrementalUpdateFromModel()
+{
   nclTextEditor->clear();
   if(project->getChildren().size())
   {
@@ -121,13 +127,64 @@ void NCLTextualViewPlugin::updateFromModel()
         onEntityAdded("xxx", entity);
       else
         first = false;
-
       QVector<Entity *> children = entity->getChildren();
       for(int i = 0; i < children.size(); i++)
       {
         entities.push_back(children.at(i));
       }
     }
+  }
+}
+
+void NCLTextualViewPlugin::nonIncrementalUpdateFromModel()
+{
+  nclTextEditor->clear();
+  QDomDocument doc ("document");
+  if(project->getChildren().size())
+  {
+    Entity *entity = project;
+    QList <Entity *> entities;
+    QList <QDomNode> elements;
+    QDomNode current;
+    entities.push_back(entity);
+    elements.push_back(doc);
+
+    bool first = true;
+    while(entities.size())
+    {
+      entity = entities.front();
+      entities.pop_front();
+      current = elements.front();
+      elements.pop_front();
+
+      if(!first) //ignore the project root
+      {
+//      current->appendChild(el);
+//      onEntityAdded("xxx", entity);
+      }
+      else
+      {
+        first = false;
+        elements.push_back(doc);
+      }
+
+      QVector<Entity *> children = entity->getChildren();
+      for(int i = 0; i < children.size(); i++)
+      {
+        entities.push_back(children.at(i));
+        QDomElement el = doc.createElement(children[i]->getType());
+        el.setAttribute("oi", "oi2");
+        el.setAttribute("oi2", "oi3");
+        el.setAttribute("oi3", "oi4");
+        elements.push_back(el);
+        current.appendChild(el);
+      }
+    }
+
+    QString *text = new QString();
+    QTextStream textStream(text);
+    doc.save(textStream, QDomNode::EncodingFromTextStream);
+    nclTextEditor->setText(textStream.readAll());
   }
 }
 
@@ -431,7 +488,7 @@ void NCLTextualViewPlugin::changeSelectedEntity(QString pluginID, void *param)
   }
   else
   {
-    qWarning() << "NCLTextualViewPlugin::changeSelectedEntity() "
+    qDebug() << "NCLTextualViewPlugin::changeSelectedEntity() "
                << "Entity doesn't exists!";
   }
 }
@@ -702,7 +759,7 @@ void NCLTextualViewPlugin::validationError(QString pluginID, void * param)
                                      QsciScintilla::SCI_LINEFROMPOSITION,
                                      offset);
 
-     nclTextEditor->markError(p->second,"", line);
+     nclTextEditor->markError(p->second, "", line);
   }
 }
 
