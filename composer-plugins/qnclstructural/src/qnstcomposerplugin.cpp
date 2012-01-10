@@ -89,7 +89,7 @@ void QnstComposerPlugin::init()
 
         QStringList list = entitypair.split("=");
 
-        entites[list[0]] = list[1];
+        entities[list[0]] = list[1];
 
         lastp = nextp+1;
         nextp = mid.indexOf("~", nextp+1);
@@ -111,8 +111,8 @@ bool QnstComposerPlugin::saveSubsession()
     data.append(view->serialize());
 
     data.append("~~PLUGIN-DATA~~");
-    foreach(QString key, entites.keys()){
-        data.append(key+"="+entites[key]+"~");
+    foreach(QString key, entities.keys()){
+        data.append(key+"="+entities[key]+"~");
     }
 
     data.append("$END_ENTITIES_LINES$");
@@ -160,7 +160,7 @@ void QnstComposerPlugin::onEntityAdded(QString pluginID, Entity *entity)
             entity->getType() != "simpleCondition" &&
             entity->getType() != "simpleAction"){
 
-            entites[entity->getUniqueId()] = request;
+            entities[entity->getUniqueId()] = request;
         }
     }
 }
@@ -182,7 +182,7 @@ void QnstComposerPlugin::onEntityRemoved(QString pluginID, QString entityID)
     if (pluginID != getPluginInstanceID()){
         requestEntityRemotion(getProject()->getEntityById(entityID));
 
-        entites.remove(entityID);
+        entities.remove(entityID);
     }
 }
 
@@ -199,33 +199,33 @@ void QnstComposerPlugin::requestEntityAddition(Entity* entity)
 {
     // if the entity is of type BODY
     if (entity->getType() == "body"){
-        requestBodyAddition(entity);
+        entities[entity->getUniqueId()] = entity->getUniqueId();
 
-        entites[entity->getUniqueId()] = entity->getUniqueId();
+        requestBodyAddition(entity);
 
     // if the entity is of type CONTEXT
     }else if (entity->getType() == "context"){
-        requestContextAddition(entity);
+        entities[entity->getUniqueId()] = entity->getUniqueId();
 
-        entites[entity->getUniqueId()] = entity->getUniqueId();
+        requestContextAddition(entity);
 
     // if the entity is of type SWITCH
     }else if (entity->getType() == "switch"){
-        requestSwitchAddition(entity);
+        entities[entity->getUniqueId()] = entity->getUniqueId();
 
-        entites[entity->getUniqueId()] = entity->getUniqueId();
+        requestSwitchAddition(entity);
 
     // if the entity is of type MEDIA
     }else if (entity->getType() == "media"){
-        requestMediaAddition(entity);
+        entities[entity->getUniqueId()] = entity->getUniqueId();
 
-        entites[entity->getUniqueId()] = entity->getUniqueId();
+        requestMediaAddition(entity);
 
     // if the entity is of type PORT
     }else if (entity->getType() == "port"){
-        requestPortAddition(entity);
+        entities[entity->getUniqueId()] = entity->getUniqueId();
 
-        entites[entity->getUniqueId()] = entity->getUniqueId();
+        requestPortAddition(entity);
     }
 }
 
@@ -237,7 +237,7 @@ void QnstComposerPlugin::requestEntityRemotion(Entity* entity)
         entity->getType() == "switch" ||
         entity->getType() == "port"){
 
-        view->removeEntity(entites[entity->getUniqueId()]);
+        view->removeEntity(entities[entity->getUniqueId()]);
     }
 }
 
@@ -267,14 +267,14 @@ void QnstComposerPlugin::requestEntityChange(Entity* entity)
 
 void QnstComposerPlugin::requestEntitySelection(Entity* entity)
 {
-    if (entites.contains(entity->getUniqueId())){
+    if (entities.contains(entity->getUniqueId())){
         if (entity->getType() == "body" ||
             entity->getType() == "context" ||
             entity->getType() == "media" ||
             entity->getType() == "switch" ||
             entity->getType() == "port"){
 
-            view->selectEntity(entites[entity->getUniqueId()]);
+            view->selectEntity(entities[entity->getUniqueId()]);
         }
     }
 }
@@ -300,7 +300,7 @@ void QnstComposerPlugin::requestBodyChange(Entity* entity)
         properties["id"] = entity->getAttribute("id");
     }
 
-    view->changeEntity(entites[entity->getUniqueId()], properties);
+    view->changeEntity(entities[entity->getUniqueId()], properties);
 }
 
 void QnstComposerPlugin::requestContextAddition(Entity* entity)
@@ -317,7 +317,7 @@ void QnstComposerPlugin::requestContextAddition(Entity* entity)
         properties["refer"] = entity->getAttribute("refer");
     }
 
-    view->addEntity(entity->getUniqueId(), entites[entity->getParentUniqueId()], properties);
+    view->addEntity(entity->getUniqueId(), entities[entity->getParentUniqueId()], properties);
 }
 
 void QnstComposerPlugin::requestContextChange(Entity* entity)
@@ -332,7 +332,7 @@ void QnstComposerPlugin::requestContextChange(Entity* entity)
         properties["refer"] = entity->getAttribute("refer");
     }
 
-    view->changeEntity(entites[entity->getUniqueId()], properties);
+    view->changeEntity(entities[entity->getUniqueId()], properties);
 }
 
 void QnstComposerPlugin::requestSwitchAddition(Entity* entity)
@@ -349,7 +349,7 @@ void QnstComposerPlugin::requestSwitchAddition(Entity* entity)
         properties["refer"] = entity->getAttribute("refer");
     }
 
-    view->addEntity(entity->getUniqueId(), entites[entity->getParentUniqueId()], properties);
+    view->addEntity(entity->getUniqueId(), entities[entity->getParentUniqueId()], properties);
 }
 
 void QnstComposerPlugin::requestSwitchChange(Entity* entity)
@@ -364,7 +364,7 @@ void QnstComposerPlugin::requestSwitchChange(Entity* entity)
         properties["refer"] = entity->getAttribute("refer");
     }
 
-    view->changeEntity(entites[entity->getUniqueId()], properties);
+    view->changeEntity(entities[entity->getUniqueId()], properties);
 }
 
 void QnstComposerPlugin::requestMediaAddition(Entity* entity)
@@ -397,7 +397,19 @@ void QnstComposerPlugin::requestMediaAddition(Entity* entity)
         properties["descriptor"] = entity->getAttribute("descriptor");
     }
 
-    view->addEntity(entity->getUniqueId(), entites[entity->getParentUniqueId()], properties);
+    view->addEntity(entity->getUniqueId(), entities[entity->getParentUniqueId()], properties);
+
+    QList<Entity*> list;
+
+    list = getProject()->getEntitiesbyType("port");
+
+    foreach(Entity* e, list){
+        if (e->getAttribute("component") != ""){
+            if (e->getAttribute("component") == properties["id"]){
+                requestPortChange(e);
+            }
+        }
+    }
 }
 
 void QnstComposerPlugin::requestMediaChange(Entity* entity)
@@ -428,7 +440,19 @@ void QnstComposerPlugin::requestMediaChange(Entity* entity)
         properties["descriptor"] = entity->getAttribute("descriptor");
     }
 
-    view->changeEntity(entites[entity->getUniqueId()], properties);
+    view->changeEntity(entities[entity->getUniqueId()], properties);
+
+    QList<Entity*> list;
+
+    list = getProject()->getEntitiesbyType("port");
+
+    foreach(Entity* e, list){
+        if (e->getAttribute("component") != ""){
+            if (e->getAttribute("component") == properties["id"]){
+                requestPortChange(e);
+            }
+        }
+    }
 }
 
 void QnstComposerPlugin::requestPortAddition(Entity* entity)
@@ -443,13 +467,15 @@ void QnstComposerPlugin::requestPortAddition(Entity* entity)
 
     if (entity->getAttribute("component") != ""){
         properties["component"] = entity->getAttribute("component");
+        properties["componentUid"] = entities[getUidById(properties["component"])];
     }
 
     if (entity->getAttribute("interface") != ""){
         properties["interface"] = entity->getAttribute("interface");
+        properties["interfaceUid"] = entities[getUidById(properties["interface"])];
     }
 
-    view->addEntity(entity->getUniqueId(), entites[entity->getParentUniqueId()], properties);
+    view->addEntity(entity->getUniqueId(), entities[entity->getParentUniqueId()], properties);
 }
 
 void QnstComposerPlugin::requestPortChange(Entity* entity)
@@ -462,13 +488,15 @@ void QnstComposerPlugin::requestPortChange(Entity* entity)
 
     if (entity->getAttribute("component") != ""){
         properties["component"] = entity->getAttribute("component");
+        properties["componentUid"] = entities[getUidById(properties["component"])];
     }
 
     if (entity->getAttribute("interface") != ""){
         properties["interface"] = entity->getAttribute("interface");
+        properties["interfaceUid"] = entities[getUidById(properties["interface"])];
     }
 
-    view->changeEntity(entites[entity->getUniqueId()], properties);
+    view->changeEntity(entities[entity->getUniqueId()], properties);
 }
 
 void QnstComposerPlugin::requestEntityAddition(const QString uid, const QString parent, const QMap<QString, QString> properties)
@@ -513,10 +541,10 @@ void QnstComposerPlugin::requestEntityAddition(const QString uid, const QString 
 
 void QnstComposerPlugin::requestEntityRemotion(const QString uid)
 {
-    if (entites.key(uid, "nil") != "nil"){
-        emit removeEntity(getProject()->getEntityById(entites.key(uid)), false);
+    if (entities.key(uid, "nil") != "nil"){
+        emit removeEntity(getProject()->getEntityById(entities.key(uid)), false);
 
-        entites.remove(entites.key(uid));
+        entities.remove(entities.key(uid));
     }
 }
 
@@ -546,8 +574,8 @@ void QnstComposerPlugin::requestEntityChange(const QString uid, const QMap<QStri
 
 void QnstComposerPlugin::requestEntitySelection(const QString uid)
 {
-    if (entites.key(uid, "nil") != "nil"){
-        emit sendBroadcastMessage("changeSelectedEntity", new QString(entites.key(uid)));
+    if (entities.key(uid, "nil") != "nil"){
+        emit sendBroadcastMessage("changeSelectedEntity", new QString(entities.key(uid)));
     }
 }
 
@@ -589,7 +617,7 @@ void QnstComposerPlugin::requestBodyDependence()
 
 void QnstComposerPlugin::requestBodyChange(const QString uid, const QMap<QString, QString> properties)
 {
-    Entity* entity = getProject()->getEntityById(entites.key(uid));
+    Entity* entity = getProject()->getEntityById(entities.key(uid));
 
     if (entity != NULL){
         QMap<QString, QString> attributes;
@@ -606,7 +634,7 @@ void QnstComposerPlugin::requestBodyChange(const QString uid, const QMap<QString
 
 void QnstComposerPlugin::requestContextAddition(const QString uid, const QString parent, const QMap<QString, QString> properties)
 {
-    Entity* entity = getProject()->getEntityById(entites.key(parent));
+    Entity* entity = getProject()->getEntityById(entities.key(parent));
 
     if (entity != NULL){
         QMap<QString, QString> attributes;
@@ -627,7 +655,7 @@ void QnstComposerPlugin::requestContextAddition(const QString uid, const QString
 
 void QnstComposerPlugin::requestContextChange(const QString uid, const QMap<QString, QString> properties)
 {
-    Entity* entity = getProject()->getEntityById(entites.key(uid));
+    Entity* entity = getProject()->getEntityById(entities.key(uid));
 
     if (entity != NULL){
         QMap<QString, QString> attributes;
@@ -648,7 +676,7 @@ void QnstComposerPlugin::requestContextChange(const QString uid, const QMap<QStr
 
 void QnstComposerPlugin::requestSwitchAddition(const QString uid, const QString parent, const QMap<QString, QString> properties)
 {
-    Entity* entity = getProject()->getEntityById(entites.key(parent));
+    Entity* entity = getProject()->getEntityById(entities.key(parent));
 
     if (entity != NULL){
         QMap<QString, QString> attributes;
@@ -669,7 +697,7 @@ void QnstComposerPlugin::requestSwitchAddition(const QString uid, const QString 
 
 void QnstComposerPlugin::requestSwitchChange(const QString uid, const QMap<QString, QString> properties)
 {
-    Entity* entity = getProject()->getEntityById(entites.key(uid));
+    Entity* entity = getProject()->getEntityById(entities.key(uid));
 
     if (entity != NULL){
         QMap<QString, QString> attributes;
@@ -690,7 +718,7 @@ void QnstComposerPlugin::requestSwitchChange(const QString uid, const QMap<QStri
 
 void QnstComposerPlugin::requestMediaAddition(const QString uid, const QString parent, const QMap<QString, QString> properties)
 {
-    Entity* entity = getProject()->getEntityById(entites.key(parent));
+    Entity* entity = getProject()->getEntityById(entities.key(parent));
 
     if (entity != NULL){
         QMap<QString, QString> attributes;
@@ -727,7 +755,7 @@ void QnstComposerPlugin::requestMediaAddition(const QString uid, const QString p
 
 void QnstComposerPlugin::requestMediaChange(const QString uid, const QMap<QString, QString> properties)
 {
-    Entity* entity = getProject()->getEntityById(entites.key(uid));
+    Entity* entity = getProject()->getEntityById(entities.key(uid));
 
     if (entity != NULL){
         QMap<QString, QString> attributes;
@@ -764,7 +792,7 @@ void QnstComposerPlugin::requestMediaChange(const QString uid, const QMap<QStrin
 
 void QnstComposerPlugin::requestPortAddition(const QString uid, const QString parent, const QMap<QString, QString> properties)
 {
-    Entity* entity = getProject()->getEntityById(entites.key(parent));
+    Entity* entity = getProject()->getEntityById(entities.key(parent));
 
     if (entity != NULL){
         QMap<QString, QString> attributes;
@@ -783,7 +811,7 @@ void QnstComposerPlugin::requestPortAddition(const QString uid, const QString pa
 
 void QnstComposerPlugin::requestPortChange(const QString uid, const QMap<QString, QString> properties)
 {
-    Entity* entity = getProject()->getEntityById(entites.key(uid));
+    Entity* entity = getProject()->getEntityById(entities.key(uid));
 
     if (entity != NULL){
         QMap<QString, QString> attributes;
@@ -823,14 +851,14 @@ void QnstComposerPlugin::requestConnectorAddition(const QString uid, const QStri
 
             cattributes["role"] = properties["condition"];
 
-            emit addEntity("simpleCondition", entites.key(uid), cattributes, false);
+            emit addEntity("simpleCondition", entities.key(uid), cattributes, false);
 
             // action
             QMap<QString, QString> aattributes;
 
             aattributes["role"] = properties["action"].toLower();
 
-            emit addEntity("simpleAction", entites.key(uid), aattributes, false);
+            emit addEntity("simpleAction", entities.key(uid), aattributes, false);
         }
     }
 }
@@ -856,13 +884,13 @@ void QnstComposerPlugin::requestComplexConnectorAddition(const QString uid, cons
 
             QMap<QString, QString> fakemap;
 
-            emit addEntity("compoundCondition", entites.key(uid), fakemap,false);
-            emit addEntity("compoundAction", entites.key(uid), fakemap,false);
+            emit addEntity("compoundCondition", entities.key(uid), fakemap,false);
+            emit addEntity("compoundAction", entities.key(uid), fakemap,false);
 
             QString cpcUID;
             QString cpaUID;
 
-            foreach(Entity* child, getProject()->getEntityById(entites.key(uid))->getChildren()){
+            foreach(Entity* child, getProject()->getEntityById(entities.key(uid))->getChildren()){
 
                 if (child->getType() == "compoundCondition"){
                     cpcUID = child->getUniqueId();
@@ -937,7 +965,7 @@ void QnstComposerPlugin::requestConnectorBaseDependence()
 
 void QnstComposerPlugin::requestLinkAddition(const QString uid, const QString parent, const QMap<QString, QString> properties)
 {
-    Entity* entity = getProject()->getEntityById(entites.key(parent));
+    Entity* entity = getProject()->getEntityById(entities.key(parent));
 
     if (entity != NULL){
         QMap<QString, QString> attributes;
@@ -949,7 +977,7 @@ void QnstComposerPlugin::requestLinkAddition(const QString uid, const QString pa
 
         emit addEntity("link", entity->getUniqueId(), attributes, false);
 
-        Entity* parent = getProject()->getEntityById(entites.key(uid));
+        Entity* parent = getProject()->getEntityById(entities.key(uid));
 
         if (parent != NULL){
             // bind condition
@@ -1068,9 +1096,9 @@ void QnstComposerPlugin::requestBindAddition(const QString uid, const QString pa
 
         request = uid;
 
-        emit addEntity("link", getProject()->getEntityById(entites.key(parent))->getUniqueId(), linkattributes, false);
+        emit addEntity("link", getProject()->getEntityById(entities.key(parent))->getUniqueId(), linkattributes, false);
 
-        liknUID = getProject()->getEntityById(entites.key(uid))->getUniqueId();
+        liknUID = getProject()->getEntityById(entities.key(uid))->getUniqueId();
     }
 
     // add bind
@@ -1096,6 +1124,30 @@ void QnstComposerPlugin::requestBindAddition(const QString uid, const QString pa
 
         emit addEntity("bind", liknUID, aattributes, false);
     }
+}
+
+QString QnstComposerPlugin::getUidById(QString id)
+{
+    return getUidById(id, getProject());
+}
+
+QString QnstComposerPlugin::getUidById(QString id, Entity* entity)
+{
+    QString uid = "";
+
+    if (entity->getAttribute("id") == id){
+        return entity->getUniqueId();
+    }
+
+    foreach(Entity* child, entity->getChildren()){
+        QString result = getUidById(id, child);
+
+        if (result != ""){
+            uid = result; break;
+        }
+    }
+
+    return uid;
 }
 
 } } } // end namespace

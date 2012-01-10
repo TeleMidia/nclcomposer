@@ -74,6 +74,10 @@ public slots:
     void requestEntitySelection(const QString uid);
 
 private:
+    QString getUidById(QString id);
+
+    QString getUidById(QString id, Entity* entity);
+
     void updateChildren(Entity* entity);
 
     void createWidgets();
@@ -140,7 +144,7 @@ private:
 
     QString request;
 
-    QMap<QString, QString> entites;
+    QMap<QString, QString> entities;
 };
 
 } } } // end namespace

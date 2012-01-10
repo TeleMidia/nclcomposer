@@ -9,6 +9,7 @@
 #include <QMouseEvent>
 #include <QKeyEvent>
 #include <QMessageBox>
+#include <QWheelEvent>
 #include <QSet>
 
 #include <QDebug>
@@ -117,6 +118,8 @@ protected:
 
     virtual void keyReleaseEvent(QKeyEvent *event);
 
+    void wheelEvent(QWheelEvent * event);
+
 protected slots:
     void requestEntityAddition(QnstGraphicsEntity* entity);
 
@@ -143,9 +146,13 @@ private:
 
     void changeMedia(QnstGraphicsMedia* entity, const QMap<QString, QString> properties);
 
+    void adjustMedia(QnstGraphicsMedia* entity);
+
     void addPort(const QString uid, const QString parent, const QMap<QString, QString> properties);
 
     void changePort(QnstGraphicsPort* entity, const QMap<QString, QString> properties);
+
+    void adjustPort(QnstGraphicsPort* entity);
 
     void addAggregator(const QString uid, const QString parent, const QMap<QString, QString> properties);
 
@@ -192,6 +199,8 @@ private:
     bool modified;
 
     bool linking;
+
+    int zoomStep;
 
     QnstScene* scene;
 

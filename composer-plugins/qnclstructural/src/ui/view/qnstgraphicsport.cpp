@@ -11,6 +11,46 @@ QnstGraphicsPort::~QnstGraphicsPort()
 
 }
 
+QString QnstGraphicsPort::getComponent() const
+{
+    return component;
+}
+
+void QnstGraphicsPort::setComponent(QString component)
+{
+    this->component = component;
+}
+
+QString QnstGraphicsPort::getComponentUid() const
+{
+    return componentUid;
+}
+
+void QnstGraphicsPort::setComponentUid(QString componentUid)
+{
+    this->componentUid = componentUid;
+}
+
+QString QnstGraphicsPort::getInterface() const
+{
+    return interface;
+}
+
+void QnstGraphicsPort::setInterface(QString interface)
+{
+    this->interface = interface;
+}
+
+QString QnstGraphicsPort::getInterfaceUid() const
+{
+    return interfaceUid;
+}
+
+void QnstGraphicsPort::setInterfaceUid(QString interfaceUid)
+{
+    this->interfaceUid = interfaceUid;
+}
+
 void QnstGraphicsPort::draw(QPainter* painter)
 {
     painter->setRenderHint(QPainter::SmoothPixmapTransform, true);

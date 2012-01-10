@@ -16,6 +16,8 @@ QnstView::QnstView(QWidget* parent)
 
     nlink = 0;
 
+    zoomStep = 0;
+
     linking = false;
 
     modified = false;
@@ -1144,6 +1146,8 @@ void QnstView::addMedia(const QString uid, const QString parent, const QMap<QStr
         ++nmedia;
 
         entities[parent]->addnstGraphicsEntity(entity); entities[uid] = entity; entity->adjust();
+
+        adjustMedia(entity);
     }
 }
 
@@ -1223,10 +1227,17 @@ void QnstView::changeMedia(QnstGraphicsMedia* entity, const QMap<QString, QStrin
 //    if (properties["zindex"] != ""){
 //
 //    }
+
+    adjustMedia(entity);
+}
+
+void QnstView::adjustMedia(QnstGraphicsMedia* entity)
+{
+
 }
 
 void QnstView::addPort(const QString uid, const QString parent, const QMap<QString, QString> properties)
-{
+{ 
     if (entities.contains(parent)){
         QnstGraphicsPort* entity = new QnstGraphicsPort((QnstGraphicsNode*) entities[parent]);
         entity->setnstUid(uid);
@@ -1238,6 +1249,14 @@ void QnstView::addPort(const QString uid, const QString parent, const QMap<QStri
 
         if (properties["id"] != ""){
             entity->setnstId(properties["id"]);
+        }
+
+        if (properties["component"] != ""){
+            entity->setComponent(properties["component"]);
+        }
+
+        if (properties["interface"] != ""){
+            entity->setInterface(properties["interface"]);
         }
 
         if (properties["top"] != ""){
@@ -1256,7 +1275,18 @@ void QnstView::addPort(const QString uid, const QString parent, const QMap<QStri
             entity->setHeight(properties["height"].toDouble());
         }
 
-        entities[parent]->addnstGraphicsEntity(entity); entities[uid] = entity; entity->adjust();
+        if (properties["interfaceUid"] != ""){
+            entity->setInterfaceUid(properties["interfaceUid"]);
+
+        }
+
+        if (properties["componentUid"] != ""){
+            entity->setComponentUid(properties["componentUid"]);
+        }
+
+        entities[parent]->addnstGraphicsEntity(entity); entities[uid] = entity; ++nport;
+
+        adjustPort(entity);
     }
 }
 
@@ -1266,14 +1296,128 @@ void QnstView::changePort(QnstGraphicsPort* entity, const QMap<QString, QString>
         entity->setnstId(properties["id"]);
     }
 
-//    TODO:
-//    if (properties["component"] != ""){
-//
-//    }
+    if (properties["component"] != ""){
+        entity->setComponent(properties["component"]);
+    }
 
-//    if (properties["interface"] != ""){
-//
-//    }
+    if (properties["interface"] != ""){
+        entity->setInterface(properties["interface"]);
+    }
+
+    if (properties["top"] != ""){
+        entity->setTop(properties["top"].toDouble());
+    }
+
+    if (properties["left"] != ""){
+        entity->setLeft(properties["left"].toDouble());
+    }
+
+    if (properties["width"] != ""){
+        entity->setWidth(properties["width"].toDouble());
+    }
+
+    if (properties["height"] != ""){
+        entity->setHeight(properties["height"].toDouble());
+    }
+
+    if (properties["interfaceUid"] != ""){
+        entity->setInterfaceUid(properties["interfaceUid"]);
+
+    }
+
+    if (properties["componentUid"] != ""){
+        entity->setComponentUid(properties["componentUid"]);
+    }
+
+    adjustPort(entity);
+}
+
+void QnstView::adjustPort(QnstGraphicsPort* entity)
+{
+    QnstGraphicsEntity* parent = entity->getnstGraphicsParent();
+
+    if (parent != NULL){
+        // removing previous edge
+        foreach(QnstGraphicsEntity* e, parent->getnstGraphicsEntities()){
+            if (e->getnstType() == Qnst::Reference){
+                QnstGraphicsEdge* edge = (QnstGraphicsEdge*) e;
+
+                if (entity == edge->getEntityA()){
+                    if (edge->getEntityA()->getncgType() == Qncg::Node){
+                        ((QnstGraphicsNode*) edge->getEntityA())->removenstGraphicsEdge(edge);
+
+                    }else if (edge->getEntityA()->getncgType() == Qncg::Interface){
+                        ((QnstGraphicsInterface*) edge->getEntityA())->removenstGraphicsEdge(edge);
+                    }
+
+                    if (edge->getEntityB()->getncgType() == Qncg::Node){
+                        ((QnstGraphicsNode*) edge->getEntityB())->removenstGraphicsEdge(edge);
+
+                    }else if (edge->getEntityB()->getncgType() == Qncg::Interface){
+                        ((QnstGraphicsInterface*) edge->getEntityB())->removenstGraphicsEdge(edge);
+                    }
+
+                    parent->removenstGraphicsEntity(edge); delete (edge);
+
+                    break;
+                }
+            }
+        }
+
+        // adding new edge
+        if (entity->getInterfaceUid() != ""){
+            // changing
+            if (entities.contains(entity->getInterfaceUid())){
+                QnstGraphicsEntity* entitya = (QnstGraphicsEntity*) entity;
+                QnstGraphicsEntity* entityb = (QnstGraphicsEntity*) entities[entity->getInterfaceUid()];
+
+                QnstGraphicsEntity* parenta = entitya->getnstGraphicsParent();
+                QnstGraphicsEntity* parentb = entityb->getnstGraphicsParent();
+
+                if (parenta != NULL && parentb != NULL){
+                    if (entitya != entityb && parenta == parentb->getnstGraphicsParent()){
+                        QnstGraphicsReference* edge = new QnstGraphicsReference();
+                        edge->setnstGraphicsParent(parenta);
+                        edge->setEntityA(entitya);
+                        edge->setEntityB(entityb);
+                        edge->adjust();
+
+                        parent->addnstGraphicsEntity(edge);
+
+                        ((QnstGraphicsInterface*) entitya)->addnstGraphicsEdge(edge);
+                        ((QnstGraphicsInterface*) entityb)->addnstGraphicsEdge(edge);
+                    }
+                }
+            }
+
+        }else if (entity->getComponentUid() != ""){
+            // changing
+            if (entities.contains(entity->getComponentUid())){
+                QnstGraphicsEntity* entitya = (QnstGraphicsEntity*) entity;
+                QnstGraphicsEntity* entityb = (QnstGraphicsEntity*) entities[entity->getComponentUid()];
+
+                QnstGraphicsEntity* parenta = entitya->getnstGraphicsParent();
+                QnstGraphicsEntity* parentb = entityb->getnstGraphicsParent();
+
+                if (parenta != NULL && parentb != NULL){
+                    if (entitya != entityb && parenta == parentb){
+                        QnstGraphicsReference* edge = new QnstGraphicsReference();
+                        edge->setnstGraphicsParent(parenta);
+                        edge->setEntityA(entitya);
+                        edge->setEntityB(entityb);
+                        edge->adjust();
+
+                        parent->addnstGraphicsEntity(edge);
+
+                        ((QnstGraphicsInterface*) entitya)->addnstGraphicsEdge(edge);
+                        ((QnstGraphicsNode*) entityb)->addnstGraphicsEdge(edge);
+                    }
+                }
+            }
+        }
+    }
+
+    entity->adjust();
 }
 
 void QnstView::addAggregator(const QString uid, const QString parent, const QMap<QString, QString> properties)
@@ -2816,17 +2960,29 @@ void QnstView::performExport()
 
 void QnstView::performZoomIn()
 {
-    // TODO
+    if (zoomStep > 0){
+        zoomStep--;
+
+        resetMatrix();
+
+        scale(1 - zoomStep*0.05, 1 - zoomStep*0.05);
+    }
 }
 
 void QnstView::performZoomOut()
 {
-    // TODO
+    if (zoomStep*0.05 < 1){
+        zoomStep++;
+
+        resetMatrix();
+
+        scale(1 - zoomStep*0.05, 1 - zoomStep*0.05);
+    }
 }
 
 void QnstView::performZoomReset()
 {
-    // TODO
+    resetMatrix();
 }
 
 void QnstView::performFullscreen()
@@ -3405,4 +3561,16 @@ void QnstView::keyReleaseEvent(QKeyEvent *event)
     }
 
     QGraphicsView::keyReleaseEvent(event);
+}
+
+void QnstView::wheelEvent(QWheelEvent * event)
+{
+    if (event->delta() > 0){
+        performZoomIn();
+
+    }else{
+        performZoomOut();
+    }
+
+    event->accept();
 }
