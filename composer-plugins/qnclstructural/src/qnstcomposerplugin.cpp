@@ -133,22 +133,6 @@ void QnstComposerPlugin::updateFromModel()
 //    }
 }
 
-void QnstComposerPlugin::updateChildren(Entity* entity)
-{
-//    if (entity != NULL){
-//        foreach(Entity* child, entity->getChildren()){
-//            // if entity type is BODY
-//            if (child->getType() == "body"){
-//                requestBodyAddition(child);
-
-//            // if entity type is MEDIA
-//            }else if (child->getType() == "media"){
-//                requestMediaAddition(child);
-//            }
-//        }
-//    }
-}
-
 void QnstComposerPlugin::onEntityAdded(QString pluginID, Entity *entity)
 {
     if (pluginID != getPluginInstanceID()){
@@ -226,6 +210,18 @@ void QnstComposerPlugin::requestEntityAddition(Entity* entity)
         entities[entity->getUniqueId()] = entity->getUniqueId();
 
         requestPortAddition(entity);
+
+    // if the entity is of type LINK
+    }else if (entity->getType() == "link"){
+        entities[entity->getUniqueId()] = entity->getUniqueId();
+
+        requestLinkAddition(entity);
+
+    // if the entity is of type BIND
+    }else if (entity->getType() == "bind"){
+        entities[entity->getUniqueId()] = entity->getUniqueId();
+
+        requestBindAddition(entity);
     }
 }
 
@@ -262,6 +258,14 @@ void QnstComposerPlugin::requestEntityChange(Entity* entity)
     // if the entity is of type PORT
     }else if (entity->getType() == "port"){
         requestPortChange(entity);
+
+    // if the entity is of type LINK
+    }else if (entity->getType() == "link"){
+        requestLinkChange(entity);
+
+    // if the entity is of type Bind
+    }else if (entity->getType() == "bind"){
+        requestBindChange(entity);
     }
 }
 
@@ -484,6 +488,86 @@ void QnstComposerPlugin::requestPortChange(Entity* entity)
 
     if (entity->getAttribute("id") != ""){
         properties["id"] = entity->getAttribute("id");
+    }
+
+    if (entity->getAttribute("component") != ""){
+        properties["component"] = entity->getAttribute("component");
+        properties["componentUid"] = entities[getUidById(properties["component"])];
+    }
+
+    if (entity->getAttribute("interface") != ""){
+        properties["interface"] = entity->getAttribute("interface");
+        properties["interfaceUid"] = entities[getUidById(properties["interface"])];
+    }
+
+    view->changeEntity(entities[entity->getUniqueId()], properties);
+}
+
+void QnstComposerPlugin::requestLinkAddition(Entity* entity)
+{
+    QMap<QString, QString> properties;
+
+    properties["TYPE"] = "link";
+
+    if (entity->getAttribute("id") != ""){
+        properties["id"] = entity->getAttribute("id");
+    }
+
+    if (entity->getAttribute("xconnector") != ""){
+        properties["xconnector"] = entity->getAttribute("xconnector");
+    }
+
+    view->addEntity(entity->getUniqueId(), entities[entity->getParentUniqueId()], properties);
+}
+
+void QnstComposerPlugin::requestLinkChange(Entity* entity)
+{
+    QMap<QString, QString> properties;
+
+    if (entity->getAttribute("id") != ""){
+        properties["id"] = entity->getAttribute("id");
+    }
+
+    if (entity->getAttribute("xconnector") != ""){
+        properties["xconnector"] = entity->getAttribute("xconnector");
+    }
+
+    view->changeEntity(entities[entity->getUniqueId()], properties);
+}
+
+void QnstComposerPlugin::requestBindAddition(Entity* entity)
+{
+    QMap<QString, QString> properties;
+
+    properties["TYPE"] = "bind";
+
+    properties["linkUid"] = entities[entity->getParentUniqueId()];
+
+    if (entity->getAttribute("role") != ""){
+        properties["role"] = entity->getAttribute("role");
+    }
+
+    if (entity->getAttribute("component") != ""){
+        properties["component"] = entity->getAttribute("component");
+        properties["componentUid"] = entities[getUidById(properties["component"])];
+    }
+
+    if (entity->getAttribute("interface") != ""){
+        properties["interface"] = entity->getAttribute("interface");
+        properties["interfaceUid"] = entities[getUidById(properties["interface"])];
+    }
+
+    view->addEntity(entity->getUniqueId(), entities[entity->getParentUniqueId()], properties);
+}
+
+void QnstComposerPlugin::requestBindChange(Entity* entity)
+{
+    QMap<QString, QString> properties;
+
+    properties["linkUid"] = entities[entity->getParentUniqueId()];
+
+    if (entity->getAttribute("role") != ""){
+        properties["role"] = entity->getAttribute("role");
     }
 
     if (entity->getAttribute("component") != ""){

@@ -30,6 +30,8 @@
 #include "qnstgraphicscondition.h"
 #include "qnstgraphicsaction.h"
 #include "qnstconncetor.h"
+#include "qnstlink.h"
+#include "qnstbind.h"
 
 class QnstView : public QGraphicsView
 {
@@ -154,6 +156,18 @@ private:
 
     void adjustPort(QnstGraphicsPort* entity);
 
+    void addLink(const QString uid, const QString parent, const QMap<QString, QString> properties);
+
+    void changeLink(QnstLink* entity, const QMap<QString, QString> properties);
+
+    void adjustLink(QnstLink* entity);
+
+    void addBind(const QString uid, const QString parent, const QMap<QString, QString> properties);
+
+    void changeBind(QnstBind* entity, const QMap<QString, QString> properties);
+
+    void adjustBind(QnstBind* entity);
+
     void addAggregator(const QString uid, const QString parent, const QMap<QString, QString> properties);
 
     void requestBodyAddition(QnstGraphicsBody* entity);
@@ -217,6 +231,8 @@ private:
     QnstGraphicsEntity* clipboard;
 
     QSet<QString> linkWriterAux;
+
+    QMap<QString, QVector<QnstLink*> > links;
 
     QMap<QString, QString> link2conn;
 

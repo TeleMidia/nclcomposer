@@ -801,6 +801,14 @@ void QnstView::addEntity(const QString uid, const QString parent, const QMap<QSt
     // if the entity type is PORT
     }else if (properties["TYPE"] == "port"){
         addPort(uid, parent, properties);
+
+    // if the entity type is LINK
+    }else if (properties["TYPE"] == "link"){
+        addLink(uid, parent, properties);
+
+    // if the entity type is BIND
+    }else if (properties["TYPE"] == "bind"){
+        addBind(uid, parent, properties);
     }
 }
 
@@ -927,6 +935,16 @@ void QnstView::changeEntity(const QString uid, const QMap<QString, QString> prop
         // if the entity type is PORT
         case Qnst::Port:
             changePort((QnstGraphicsPort*) entity, properties);
+            break;
+
+        // if the entity type is LINK
+        case Qnst::Link:
+            changeLink((QnstLink*) entity, properties);
+            break;
+
+        // if the entity type is BIND
+        case Qnst::Bind:
+            changeBind((QnstBind*) entity, properties);
             break;
         }
     }
@@ -1418,6 +1436,36 @@ void QnstView::adjustPort(QnstGraphicsPort* entity)
     }
 
     entity->adjust();
+}
+
+void QnstView::addLink(const QString uid, const QString parent, const QMap<QString, QString> properties)
+{
+
+}
+
+void QnstView::changeLink(QnstLink* entity, const QMap<QString, QString> properties)
+{
+
+}
+
+void QnstView::adjustLink(QnstLink* entity)
+{
+
+}
+
+void QnstView::addBind(const QString uid, const QString parent, const QMap<QString, QString> properties)
+{
+
+}
+
+void QnstView::changeBind(QnstBind* entity, const QMap<QString, QString> properties)
+{
+
+}
+
+void QnstView::adjustBind(QnstBind* entity)
+{
+
 }
 
 void QnstView::addAggregator(const QString uid, const QString parent, const QMap<QString, QString> properties)

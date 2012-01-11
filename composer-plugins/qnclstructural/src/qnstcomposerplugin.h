@@ -78,8 +78,6 @@ private:
 
     QString getUidById(QString id, Entity* entity);
 
-    void updateChildren(Entity* entity);
-
     void createWidgets();
 
     void createConnections();
@@ -103,6 +101,14 @@ private:
     void requestPortAddition(Entity* entity);
 
     void requestPortChange(Entity* entity);
+
+    void requestLinkAddition(Entity* entity);
+
+    void requestLinkChange(Entity* entity);
+
+    void requestBindAddition(Entity* entity);
+
+    void requestBindChange(Entity* entity);
 
     void requestBodyAddition(const QString uid, const QString parent, const QMap<QString, QString> properties);
 

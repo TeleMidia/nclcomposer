@@ -54,7 +54,9 @@ HEADERS += \
     ui/view/qnstgraphicsconditiondialog.h \
     ui/view/qnstgraphicsactiondialog.h \
     ui/view/qnstgraphicscondition.h \
-    ui/view/qnstgraphicsaction.h
+    ui/view/qnstgraphicsaction.h \
+    ui/view/qnstlink.h \
+    ui/view/qnstbind.h
 
 SOURCES += \
     qnstcomposerplugin.cpp \
@@ -90,7 +92,9 @@ SOURCES += \
     ui/view/qnstgraphicsconditiondialog.cpp \
     ui/view/qnstgraphicsactiondialog.cpp \
     ui/view/qnstgraphicscondition.cpp \
-    ui/view/qnstgraphicsaction.cpp
+    ui/view/qnstgraphicsaction.cpp \
+    ui/view/qnstlink.cpp \
+    ui/view/qnstbind.cpp
 
 RESOURCES += \
     ../../common-resources/images.qrc
@@ -99,6 +103,10 @@ FORMS += \
     ui/view/QnstGraphicsLinkForm.ui \
     ui/view/QnstGraphicsConditionForm.ui \
     ui/view/QnstGraphicsActionForm.ui
+
+
+
+
 
 
 

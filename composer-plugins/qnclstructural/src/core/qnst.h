@@ -32,6 +32,7 @@ public:
         Link,
         Condition,
         Action,
+        Bind,
 
         NoType
     };
