@@ -168,6 +168,20 @@ private:
 
     void adjustBind(QnstBind* entity);
 
+    void addConnector(const QString uid, const QString parent, const QMap<QString, QString> properties);
+
+    void changeConnector(QnstConncetor* entity, const QMap<QString, QString> properties);
+
+    void addCondition(const QString uid, const QString parent, const QMap<QString, QString> properties);
+
+    void changeCondition(QString condition, const QMap<QString, QString> properties);
+
+    void addAction(const QString uid, const QString parent, const QMap<QString, QString> properties);
+
+    void changeAction(QString condition, const QMap<QString, QString> properties);
+
+    void adjustConnector(QnstConncetor* entity);
+
     void addAggregator(const QString uid, const QString parent, const QMap<QString, QString> properties);
 
     void requestBodyAddition(QnstGraphicsBody* entity);
@@ -232,13 +246,19 @@ private:
 
     QSet<QString> linkWriterAux;
 
-    QMap<QString, QVector<QnstLink*> > links;
+    QMap<QString, QnstLink*> links;
+
+    QMap<QString, QnstBind*> binds;
+
+    QMap<QString, QString> brelations;
 
     QMap<QString, QString> link2conn;
 
     QMap<QString, QString> cod2link;
 
     QMap<QString, QString> act2link;
+
+    QMap<QString, QnstConncetor*> connectors2;
 
     QMap<QString, QnstConncetor*> connectors;
 

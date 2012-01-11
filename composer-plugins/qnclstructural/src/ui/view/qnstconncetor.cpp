@@ -20,48 +20,32 @@ void QnstConncetor::setName(QString name)
     this->name = name;
 }
 
-QVector<QString> QnstConncetor::getConditions()
+QMap<QString, QString> QnstConncetor::getConditions()
 {
     return conditions;
 }
 
-void QnstConncetor::addCondition(QString condition)
+void QnstConncetor::addCondition(QString uid, QString condition)
 {
-    if (!conditions.contains(condition)){
-        conditions.append(condition);
-    }
+    conditions[uid] = condition;
 }
 
-void QnstConncetor::removeCondition(QString condition)
+void QnstConncetor::removeCondition(QString uid)
 {
-    if (conditions.contains(condition)){
-        int index = conditions.indexOf(condition);
-
-        if (index >= 0){
-            conditions.remove(index);
-        }
-    }
+    conditions.remove(uid);
 }
 
-QVector<QString> QnstConncetor::getActions()
+QMap<QString, QString> QnstConncetor::getActions()
 {
     return actions;
 }
 
-void QnstConncetor::addAction(QString action)
+void QnstConncetor::addAction(QString uid, QString action)
 {
-    if (!actions.contains(action)){
-        actions.append(action);
-    }
+    actions[uid] = action;
 }
 
-void QnstConncetor::removeAction(QString action)
+void QnstConncetor::removeAction(QString uid)
 {
-    if (actions.contains(action)){
-        int index = actions.indexOf(action);
-
-        if (index >= 0){
-            actions.remove(index);
-        }
-    }
+    actions.remove(uid);
 }

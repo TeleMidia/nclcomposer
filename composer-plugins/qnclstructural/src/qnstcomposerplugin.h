@@ -110,6 +110,18 @@ private:
 
     void requestBindChange(Entity* entity);
 
+    void requestCausalConnectorAddition(Entity* entity);
+
+    void requestCausalConnectorChange(Entity* entity);
+
+    void requestSimpleConditionAddition(Entity* entity);
+
+    void requestSimpleConditionChange(Entity* entity);
+
+    void requestSimpleActionAddition(Entity* entity);
+
+    void requestSimpleActionChange(Entity* entity);
+
     void requestBodyAddition(const QString uid, const QString parent, const QMap<QString, QString> properties);
 
     void requestBodyChange(const QString uid, const QMap<QString, QString> properties);

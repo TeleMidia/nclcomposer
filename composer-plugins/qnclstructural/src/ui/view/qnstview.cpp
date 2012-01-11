@@ -170,10 +170,10 @@ void QnstView::read(QDomElement element, QDomElement parent)
                 QDomElement e = list.item(i).toElement();
 
                 if (e.nodeName() == "condition"){
-                    conn->addCondition(e.attribute("type"));
+                    conn->addCondition(e.attribute("type"), e.attribute("type"));
 
                 }else if (e.nodeName() == "action"){
-                    conn->addAction(e.attribute("type"));
+                    conn->addAction(e.attribute("type"), e.attribute("type"));
                 }
             }
         }
@@ -3156,19 +3156,19 @@ void QnstView::mouseReleaseEvent(QMouseEvent* event)
                                     ((QnstGraphicsInterface*) entitya)->addnstGraphicsEdge(entity);
                                     ((QnstGraphicsInterface*) entityb)->addnstGraphicsEdge(entity);
 
-                                    if (act == "Start"){
+                                    if (act == "start"){
                                         entity->setAction(Qnst::Start);
 
-                                    }else if (act == "Stop"){
+                                    }else if (act == "stop"){
                                         entity->setAction(Qnst::Stop);
 
-                                    }else if (act == "Pause"){
+                                    }else if (act == "pause"){
                                         entity->setAction(Qnst::Pause);
 
-                                    }else if (act == "Resume"){
+                                    }else if (act == "resume"){
                                         entity->setAction(Qnst::Resume);
 
-                                    }else if (act == "Set"){
+                                    }else if (act == "set"){
                                         entity->setAction(Qnst::Set);
 
                                     }else{
@@ -3182,17 +3182,17 @@ void QnstView::mouseReleaseEvent(QMouseEvent* event)
                                     if (actionDialog->form.cbConnector->currentText() == "New..."){
                                         QnstConncetor* conn = new QnstConncetor();
                                         conn->setName("newConnector"+QString::number(connectors.size()));
-                                        conn->addCondition("onBegin");
-                                        conn->addCondition("onEnd");
-                                        conn->addCondition("onSelection");
-                                        conn->addCondition("onResume");
-                                        conn->addCondition("onPause");
+                                        conn->addCondition("onBegin", "onBegin");
+                                        conn->addCondition("onEnd", "onEnd");
+                                        conn->addCondition("onSelection", "onSelection");
+                                        conn->addCondition("onResume", "onResume");
+                                        conn->addCondition("onPause", "onPause");
 
-                                        conn->addAction("Start");
-                                        conn->addAction("Stop");
-                                        conn->addAction("Resume");
-                                        conn->addAction("Pause");
-                                        conn->addAction("Set");
+                                        conn->addAction("start", "start");
+                                        conn->addAction("stop", "stop");
+                                        conn->addAction("resume", "resume");
+                                        conn->addAction("pause", "pause");
+                                        conn->addAction("set", "set");
 
                                         connectors[conn->getName()] = conn;
 
@@ -3281,17 +3281,17 @@ void QnstView::mouseReleaseEvent(QMouseEvent* event)
                                         QnstConncetor* conn = new QnstConncetor();
                                         conn->setName("newConnector"+QString::number(connectors.size()));
 
-                                        conn->addCondition("onBegin");
-                                        conn->addCondition("onEnd");
-                                        conn->addCondition("onSelection");
-                                        conn->addCondition("onResume");
-                                        conn->addCondition("onPause");
+                                        conn->addCondition("onBegin", "onBegin");
+                                        conn->addCondition("onEnd", "onEnd");
+                                        conn->addCondition("onSelection", "onSelection");
+                                        conn->addCondition("onResume", "onResume");
+                                        conn->addCondition("onPause", "onPause");
 
-                                        conn->addAction("Start");
-                                        conn->addAction("Stop");
-                                        conn->addAction("Resume");
-                                        conn->addAction("Pause");
-                                        conn->addAction("Set");
+                                        conn->addAction("start", "start");
+                                        conn->addAction("stop", "stop");
+                                        conn->addAction("resume", "resume");
+                                        conn->addAction("pause", "pause");
+                                        conn->addAction("set", "set");
 
                                         connectors[conn->getName()] = conn;
 
@@ -3371,19 +3371,19 @@ void QnstView::mouseReleaseEvent(QMouseEvent* event)
                                             entity->setCondition(Qnst::NoConditionType);
                                         }
 
-                                        if (act == "Start"){
+                                        if (act == "start"){
                                             entity->setAction(Qnst::Start);
 
-                                        }else if (act == "Stop"){
+                                        }else if (act == "stop"){
                                             entity->setAction(Qnst::Stop);
 
-                                        }else if (act == "Pause"){
+                                        }else if (act == "pause"){
                                             entity->setAction(Qnst::Pause);
 
-                                        }else if (act == "Resume"){
+                                        }else if (act == "resume"){
                                             entity->setAction(Qnst::Resume);
 
-                                        }else if (act == "Set"){
+                                        }else if (act == "set"){
                                             entity->setAction(Qnst::Set);
 
                                         }else{
@@ -3397,8 +3397,8 @@ void QnstView::mouseReleaseEvent(QMouseEvent* event)
                                         if (linkDialog->form.cbConnector->currentText() == "New..."){
                                             QnstConncetor* conn = new QnstConncetor();
                                             conn->setName(con+act+QString::number(connectors.size()));
-                                            conn->addCondition(con);
-                                            conn->addAction(act);
+                                            conn->addCondition(con, con);
+                                            conn->addAction(act, act);
 
                                             connectors[conn->getName()] = conn;
 

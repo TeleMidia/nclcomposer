@@ -1,6 +1,8 @@
 #ifndef QNSTLINK_H
 #define QNSTLINK_H
 
+#include <QMap>
+
 #include "qnstentity.h"
 #include "qnstbind.h"
 
@@ -13,23 +15,23 @@ public:
 
     QString getAggregatorUID() const;
 
-    void setAggregatorUID(QString aggregatorUID) const;
+    void setAggregatorUID(QString aggregatorUID);
 
     QString getxConnector() const;
 
-    void setxConnector(QString xconnector) const;
+    void setxConnector(QString xconnector);
 
     QString getxConnectorUID() const;
 
-    void setxConnectorUID(QString xconnectorUID) const;
+    void setxConnectorUID(QString xconnectorUID);
 
-    QVector<QnstBind*> getActions() const;
+    QMap<QString, QnstBind*> getActions() const;
 
     void addAction(QnstBind* action);
 
     void removeAction(QnstBind* action);
 
-    QVector<QnstBind*> getConditions() const;
+    QMap<QString, QnstBind*> getConditions() const;
 
     void addCondition(QnstBind* condition);
 
@@ -38,11 +40,13 @@ public:
 private:
     QString aggregatorUID;
 
+    QString xconnector;
+
     QString xconnectorUID;
 
-    QVector<QnstBind*> actions;
+    QMap<QString, QnstBind*> actions;
 
-    QVector<QnstBind*> conditions;
+    QMap<QString, QnstBind*> conditions;
 };
 
 #endif // QNSTLINK_H

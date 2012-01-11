@@ -15,7 +15,7 @@ QString QnstLink::getAggregatorUID() const
     return aggregatorUID;
 }
 
-void QnstLink::setAggregatorUID(QString aggregatorUID) const
+void QnstLink::setAggregatorUID(QString aggregatorUID)
 {
     this->aggregatorUID = aggregatorUID;
 }
@@ -25,7 +25,7 @@ QString QnstLink::getxConnector() const
     return xconnector;
 }
 
-void QnstLink::setxConnector(QString xconnector) const
+void QnstLink::setxConnector(QString xconnector)
 {
     this->xconnector = xconnector;
 }
@@ -35,45 +35,45 @@ QString QnstLink::getxConnectorUID() const
     return xconnectorUID;
 }
 
-void QnstLink::setxConnectorUID(QString xconnectorUID) const
+void QnstLink::setxConnectorUID(QString xconnectorUID)
 {
     this->xconnectorUID = xconnectorUID;
 }
 
-QVector<QnstBind*> QnstLink::getActions() const
+QMap<QString, QnstBind*> QnstLink::getActions() const
 {
     return actions;
 }
 
 void QnstLink::addAction(QnstBind* action)
 {
-    actions.append(action);
+    if (action != NULL){
+        actions.insert(action->getnstUid(), action);
+    }
 }
 
 void QnstLink::removeAction(QnstBind* action)
 {
-    int index = actions.indexOf(action);
-
-    if (index >= 0){
-        actions.remove(index);
+    if (action != NULL){
+        actions.remove(action->getnstUid());
     }
 }
 
-QVector<QnstBind*> QnstLink::getConditions() const
+QMap<QString, QnstBind*> QnstLink::getConditions() const
 {
     return conditions;
 }
 
 void QnstLink::addCondition(QnstBind* condition)
 {
-    conditions.append(condition);
+    if (condition != NULL){
+        conditions.insert(condition->getnstUid(), condition);
+    }
 }
 
 void QnstLink::removeCondition(QnstBind* condition)
 {
-    int index = conditions.indexOf(condition);
-
-    if (index >= 0){
-        conditions.remove(index);
+    if (condition != NULL){
+        conditions.remove(condition->getnstUid());
     }
 }

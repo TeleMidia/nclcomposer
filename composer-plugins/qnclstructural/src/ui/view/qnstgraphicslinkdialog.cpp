@@ -58,11 +58,11 @@ void QnstGraphicsLinkDialog::adjustBinds(QString conn)
         form.cbAction->setEnabled(true);
         form.cbAction->clear();
 
-        form.cbAction->addItem("Start");
-        form.cbAction->addItem("Stop");
-        form.cbAction->addItem("Resume");
-        form.cbAction->addItem("Pause");
-        form.cbAction->addItem("Set");
+        form.cbAction->addItem("start");
+        form.cbAction->addItem("stop");
+        form.cbAction->addItem("resume");
+        form.cbAction->addItem("pause");
+        form.cbAction->addItem("set");
     }else{
         QnstConncetor* oconn = connectors[conn];
 
@@ -70,7 +70,7 @@ void QnstGraphicsLinkDialog::adjustBinds(QString conn)
         form.cbCondition->clear();
 
         if (oconn->getName() == conn){
-            foreach(QString cond, oconn->getConditions()){
+            foreach(QString cond, oconn->getConditions().values()){
                 form.cbCondition->addItem(cond);
             }
         }
@@ -79,7 +79,7 @@ void QnstGraphicsLinkDialog::adjustBinds(QString conn)
         form.cbAction->clear();
 
         if (oconn->getName() == conn){
-            foreach(QString act, oconn->getActions()){
+            foreach(QString act, oconn->getActions().values()){
                 form.cbAction->addItem(act);
             }
         }

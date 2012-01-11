@@ -51,16 +51,16 @@ void QnstGraphicsActionDialog::init(QMap<QString, QnstConncetor*> connectors, QM
 
     if (conn != NULL){
         if (conn->getName() == form.cbConnector->currentText()){
-            foreach(QString name, conn->getActions()){
+            foreach(QString name, conn->getActions().values()){
                 form.cbAction->addItem(name);
             }
         }
     }else{
-        form.cbAction->addItem("Start");
-        form.cbAction->addItem("Stop");
-        form.cbAction->addItem("Resume");
-        form.cbAction->addItem("Pause");
-        form.cbAction->addItem("Set");
+        form.cbAction->addItem("start");
+        form.cbAction->addItem("stop");
+        form.cbAction->addItem("resume");
+        form.cbAction->addItem("pause");
+        form.cbAction->addItem("set");
     }
 }
 
@@ -83,11 +83,11 @@ void QnstGraphicsActionDialog::adjust(QString connector)
         form.cbAction->setEnabled(true);
         form.cbAction->clear();
 
-        form.cbAction->addItem("Start");
-        form.cbAction->addItem("Stop");
-        form.cbAction->addItem("Resume");
-        form.cbAction->addItem("Pause");
-        form.cbAction->addItem("Set");
+        form.cbAction->addItem("start");
+        form.cbAction->addItem("stop");
+        form.cbAction->addItem("resume");
+        form.cbAction->addItem("pause");
+        form.cbAction->addItem("set");
 
     }else{
         form.cbLink->setEnabled(true);
@@ -110,7 +110,7 @@ void QnstGraphicsActionDialog::adjust(QString connector)
             form.cbAction->clear();
 
             if (conn->getName() == connector){
-                foreach(QString name, conn->getActions()){
+                foreach(QString name, conn->getActions().values()){
                     form.cbAction->addItem(name);
                 }
             }

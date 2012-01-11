@@ -51,7 +51,7 @@ void QnstGraphicsConditionDialog::init(QMap<QString, QnstConncetor*> connectors,
 
     if (conn != NULL){
         if (conn->getName() == form.cbConnector->currentText()){
-            foreach(QString name, conn->getConditions()){
+            foreach(QString name, conn->getConditions().values()){
                 form.cbCondition->addItem(name);
             }
         }
@@ -110,7 +110,7 @@ void QnstGraphicsConditionDialog::adjust(QString connector)
             form.cbCondition->clear();
 
             if (conn->getName() == connector){
-                foreach(QString name, conn->getConditions()){
+                foreach(QString name, conn->getConditions().values()){
                     form.cbCondition->addItem(name);
                 }
             }

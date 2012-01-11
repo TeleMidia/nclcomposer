@@ -222,6 +222,24 @@ void QnstComposerPlugin::requestEntityAddition(Entity* entity)
         entities[entity->getUniqueId()] = entity->getUniqueId();
 
         requestBindAddition(entity);
+
+    // if the entity is of type CAUSALCONNECTOR
+    }else if (entity->getType() == "causalConnector"){
+        entities[entity->getUniqueId()] = entity->getUniqueId();
+
+        requestCausalConnectorAddition(entity);
+
+    // if the entity is of type simpleCondition
+    }else if (entity->getType() == "simpleCondition"){
+        entities[entity->getUniqueId()] = entity->getUniqueId();
+
+        requestSimpleConditionAddition(entity);
+
+    // if the entity is of type simpleAction
+    }else if (entity->getType() == "simpleAction"){
+        entities[entity->getUniqueId()] = entity->getUniqueId();
+
+        requestSimpleActionAddition(entity);
     }
 }
 
@@ -266,6 +284,18 @@ void QnstComposerPlugin::requestEntityChange(Entity* entity)
     // if the entity is of type Bind
     }else if (entity->getType() == "bind"){
         requestBindChange(entity);
+
+    // if the entity is of type CausalConnector
+    }else if (entity->getType() == "causalConnector"){
+        requestCausalConnectorChange(entity);
+
+    // if the entity is of type SimpleCondition
+    }else if (entity->getType() == "simpleCondition"){
+        requestSimpleConditionChange(entity);
+
+    // if the entity is of type SimpleAction
+    }else if (entity->getType() == "simpleAction"){
+        requestSimpleActionChange(entity);
     }
 }
 
@@ -515,6 +545,7 @@ void QnstComposerPlugin::requestLinkAddition(Entity* entity)
 
     if (entity->getAttribute("xconnector") != ""){
         properties["xconnector"] = entity->getAttribute("xconnector");
+        properties["xconnectorUID"] = entities[getUidById(properties["xconnector"])];
     }
 
     view->addEntity(entity->getUniqueId(), entities[entity->getParentUniqueId()], properties);
@@ -530,6 +561,7 @@ void QnstComposerPlugin::requestLinkChange(Entity* entity)
 
     if (entity->getAttribute("xconnector") != ""){
         properties["xconnector"] = entity->getAttribute("xconnector");
+        properties["xconnectorUID"] = entities[getUidById(properties["xconnector"])];
     }
 
     view->changeEntity(entities[entity->getUniqueId()], properties);
@@ -540,8 +572,6 @@ void QnstComposerPlugin::requestBindAddition(Entity* entity)
     QMap<QString, QString> properties;
 
     properties["TYPE"] = "bind";
-
-    properties["linkUid"] = entities[entity->getParentUniqueId()];
 
     if (entity->getAttribute("role") != ""){
         properties["role"] = entity->getAttribute("role");
@@ -564,8 +594,6 @@ void QnstComposerPlugin::requestBindChange(Entity* entity)
 {
     QMap<QString, QString> properties;
 
-    properties["linkUid"] = entities[entity->getParentUniqueId()];
-
     if (entity->getAttribute("role") != ""){
         properties["role"] = entity->getAttribute("role");
     }
@@ -578,6 +606,88 @@ void QnstComposerPlugin::requestBindChange(Entity* entity)
     if (entity->getAttribute("interface") != ""){
         properties["interface"] = entity->getAttribute("interface");
         properties["interfaceUid"] = entities[getUidById(properties["interface"])];
+    }
+
+    view->changeEntity(entities[entity->getUniqueId()], properties);
+}
+
+void QnstComposerPlugin::requestCausalConnectorAddition(Entity* entity)
+{
+    QMap<QString, QString> properties;
+
+    properties["TYPE"] = "causalConnector";
+
+    if (entity->getAttribute("id") != ""){
+        properties["id"] = entity->getAttribute("id");
+    }
+
+    view->addEntity(entity->getUniqueId(), entities[entity->getParentUniqueId()], properties);
+}
+
+void QnstComposerPlugin::requestCausalConnectorChange(Entity* entity)
+{
+    QMap<QString, QString> properties;
+
+    if (entity->getAttribute("id") != ""){
+        properties["id"] = entity->getAttribute("id");
+    }
+
+    view->changeEntity(entities[entity->getUniqueId()], properties);
+}
+
+void QnstComposerPlugin::requestSimpleConditionAddition(Entity* entity)
+{
+    QMap<QString, QString> properties;
+
+    properties["TYPE"] = "simpleCondition";
+
+    properties["connector"] = entities[entity->getParentUniqueId()];
+
+    if (entity->getAttribute("role") != ""){
+        properties["role"] = entity->getAttribute("role");
+    }
+
+    view->addEntity(entity->getUniqueId(), entities[entity->getParentUniqueId()], properties);
+}
+
+void QnstComposerPlugin::requestSimpleConditionChange(Entity* entity)
+{
+    QMap<QString, QString> properties;
+
+    properties["TYPE"] = "simpleCondition";
+    properties["connector"] = entities[entity->getParentUniqueId()];
+
+    if (entity->getAttribute("role") != ""){
+        properties["role"] = entity->getAttribute("role");
+    }
+
+    view->changeEntity(entities[entity->getUniqueId()], properties);
+}
+
+void QnstComposerPlugin::requestSimpleActionAddition(Entity* entity)
+{
+    QMap<QString, QString> properties;
+
+    properties["TYPE"] = "simpleAction";
+
+    properties["connector"] = entities[entity->getParentUniqueId()];
+
+    if (entity->getAttribute("role") != ""){
+        properties["role"] = entity->getAttribute("role");
+    }
+
+    view->addEntity(entity->getUniqueId(), entities[entity->getParentUniqueId()], properties);
+}
+
+void QnstComposerPlugin::requestSimpleActionChange(Entity* entity)
+{
+    QMap<QString, QString> properties;
+
+    properties["TYPE"] = "simpleAction";
+    properties["connector"] = entities[entity->getParentUniqueId()];
+
+    if (entity->getAttribute("role") != ""){
+        properties["role"] = entity->getAttribute("role");
     }
 
     view->changeEntity(entities[entity->getUniqueId()], properties);
