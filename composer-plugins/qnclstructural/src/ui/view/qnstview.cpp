@@ -3008,7 +3008,7 @@ void QnstView::performExport()
 
 void QnstView::performZoomIn()
 {
-    if (zoomStep > 0){
+    if (zoomStep > 0) {
         zoomStep--;
 
         resetMatrix();
@@ -3019,7 +3019,7 @@ void QnstView::performZoomIn()
 
 void QnstView::performZoomOut()
 {
-    if (zoomStep*0.05 < 1){
+    if (zoomStep*0.05 < 0.9){
         zoomStep++;
 
         resetMatrix();
@@ -3030,7 +3030,8 @@ void QnstView::performZoomOut()
 
 void QnstView::performZoomReset()
 {
-    resetMatrix();
+  zoomStep = 0;
+  resetMatrix();
 }
 
 void QnstView::performFullscreen()
@@ -3587,7 +3588,9 @@ void QnstView::keyPressEvent(QKeyEvent *event)
         performDelete();
 
     // SHIFT - Enabling liking
-    }else if (event->key() == Qt::Key_Shift){
+    }
+    else if (event->key() == Qt::Key_Shift)
+    {
         if (selected != NULL){
             selected->setSelected(false);
             selected->adjust();
@@ -3596,6 +3599,25 @@ void QnstView::keyPressEvent(QKeyEvent *event)
         selected = NULL;
 
         modified = true;
+    }
+    //Ctrl + 0 -> reset to default zoom
+    else if( event->modifiers() == Qt::ControlModifier &&
+             event->key() == Qt::Key_0)
+    {
+      performZoomReset();
+    }
+    //Ctrl + + -> perform zoom in
+    else if((event->modifiers() == Qt::ControlModifier ||
+             event->modifiers() == Qt::ShiftModifier | Qt::ControlModifier) &&
+             event->key() == Qt::Key_Plus)
+    {
+      performZoomIn();
+    }
+    //Ctrl + - -> perform zoom out
+    else if(event->modifiers() == Qt::ControlModifier &&
+            event->key() == Qt::Key_Minus)
+    {
+      performZoomOut();
     }
 
     QGraphicsView::keyPressEvent(event);
@@ -3613,12 +3635,18 @@ void QnstView::keyReleaseEvent(QKeyEvent *event)
 
 void QnstView::wheelEvent(QWheelEvent * event)
 {
-    if (event->delta() > 0){
+  if(event->modifiers() == Qt::ControlModifier)
+  {
+    if (event->delta() > 0)
         performZoomIn();
-
-    }else{
+    else
         performZoomOut();
-    }
 
     event->accept();
+  }
+  else
+  {
+    // call the father wheelEvent
+    QGraphicsView::wheelEvent(event);
+  }
 }
