@@ -1622,10 +1622,10 @@ void QnstView::adjustBind(QnstBind* entity)
                     QnstGraphicsEntity* node = (QnstGraphicsEntity*) parent->getnstParent();
 
                     QnstGraphicsAggregator* aggregator = new QnstGraphicsAggregator((QnstGraphicsNode*)node);
-                    aggregator->setTop(node->getHeight()/2 - 28/2);
-                    aggregator->setLeft(node->getWidth()/2 - 28/2);
-                    aggregator->setWidth(28);
-                    aggregator->setHeight(28);
+                    aggregator->setTop(node->getHeight()/2 - 18/2);
+                    aggregator->setLeft(node->getWidth()/2 - 18/2);
+                    aggregator->setWidth(18);
+                    aggregator->setHeight(18);
                     aggregator->adjust();
 
                     node->addnstGraphicsEntity(aggregator);
@@ -1683,10 +1683,10 @@ void QnstView::adjustBind(QnstBind* entity)
                     QnstGraphicsEntity* node = (QnstGraphicsEntity*) parent->getnstParent();
 
                     QnstGraphicsAggregator* aggregator = new QnstGraphicsAggregator((QnstGraphicsNode*)node);
-                    aggregator->setTop(node->getHeight()/2 - 28/2);
-                    aggregator->setLeft(node->getWidth()/2 - 28/2);
-                    aggregator->setWidth(28);
-                    aggregator->setHeight(28);
+                    aggregator->setTop(node->getHeight()/2 - 18/2);
+                    aggregator->setLeft(node->getWidth()/2 - 18/2);
+                    aggregator->setWidth(18);
+                    aggregator->setHeight(18);
                     aggregator->adjust();
 
                     node->addnstGraphicsEntity(aggregator);
@@ -1846,10 +1846,10 @@ void QnstView::addAggregator(const QString uid, const QString parent, const QMap
         QnstGraphicsAggregator* entity = new QnstGraphicsAggregator((QnstGraphicsNode*) entities[parent]);
         entity->setnstUid(uid);
 
-        entity->setTop(entities[parent]->getHeight()/2 - 28/2);
-        entity->setLeft(entities[parent]->getWidth()/2 - 28/2);
-        entity->setWidth(28);
-        entity->setHeight(28);
+        entity->setTop(entities[parent]->getHeight()/2 - 18/2);
+        entity->setLeft(entities[parent]->getWidth()/2 - 18/2);
+        entity->setWidth(18);
+        entity->setHeight(18);
 
         if (properties["id"] != ""){
             entity->setnstId(properties["id"]);

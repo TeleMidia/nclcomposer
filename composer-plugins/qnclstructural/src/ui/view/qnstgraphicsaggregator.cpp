@@ -48,9 +48,11 @@ void QnstGraphicsAggregator::createConnections()
 
 void QnstGraphicsAggregator::draw(QPainter* painter)
 {
-    painter->setRenderHint(QPainter::SmoothPixmapTransform, true);
+    painter->setRenderHint(QPainter::Antialiasing, true);
 
-    painter->drawPixmap(4 + 8/2, 4 + 8/2, getWidth()-8, getHeight()-8, QPixmap(":/icon/aggregator"));
+    painter->setBrush(Qt::black);
+
+    painter->drawEllipse(4 + 8/2, 4 + 8/2, getWidth()-8, getHeight()-8);
 
     if (isMoving()){
         painter->setBrush(Qt::NoBrush);

@@ -21,6 +21,8 @@ public:
 
     void setActionIcon(QnstActionIcon actionIcon);
 
+    void adjust();
+
 protected:
     virtual void draw(QPainter* painter);
 

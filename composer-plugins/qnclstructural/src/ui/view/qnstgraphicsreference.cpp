@@ -42,8 +42,6 @@ void QnstGraphicsReference::draw(QPainter* painter)
             painter->setBrush(QBrush(QColor("#000000")));
             painter->setPen(Qt::NoPen);
 
-            painter->drawEllipse(4,4,12,12);
-
             p1 = QPointF(4+6+getWidth()-12, 4+6+getHeight()-12);
 
         }else if (pointa.x() > pointb.x() && pointa.y() < pointb.y()){
@@ -53,8 +51,6 @@ void QnstGraphicsReference::draw(QPainter* painter)
 
             painter->setBrush(QBrush(QColor("#000000")));
             painter->setPen(Qt::NoPen);
-
-            painter->drawEllipse(4+getWidth()-12,4,12,12);
 
             p1 = QPointF(4+6, 4+6+getHeight()-12);
 
@@ -66,8 +62,6 @@ void QnstGraphicsReference::draw(QPainter* painter)
             painter->setBrush(QBrush(QColor("#000000")));
             painter->setPen(Qt::NoPen);
 
-            painter->drawEllipse(4, 4+getHeight()-12, 12, 12);
-
             p1 = QPointF(4+6+getWidth()-12, 4+6);
 
         }else if (pointa.x() > pointb.x() && pointa.y() > pointb.y()){
@@ -77,8 +71,6 @@ void QnstGraphicsReference::draw(QPainter* painter)
 
             painter->setBrush(QBrush(QColor("#000000")));
             painter->setPen(Qt::NoPen);
-
-            painter->drawEllipse(4+getWidth()-12, 4+getHeight()-12, 12, 12);
 
             p1 = QPointF(4+6, 4+6);
         }
@@ -124,30 +116,22 @@ void QnstGraphicsReference::delineate(QPainterPath* painter) const
         QPointF pointb = line.p2();
 
         if (pointa.x() <= pointb.x() && pointa.y() <= pointb.y()){
-    //        painter->drawLine(4+6,4+6, 4+6+getWidth()-12-2, 4+6+getHeight()-12-2);
-
-            painter->addEllipse(4,4,12,12);
+            painter->addEllipse(4,4,3,3);
 
             p1 = QPointF(4+6+getWidth()-12, 4+6+getHeight()-12);
 
         }else if (pointa.x() > pointb.x() && pointa.y() < pointb.y()){
-    //        painter->drawLine(4+6+getWidth()-12,4+6, 4+6, 4+6+getHeight()-12);
-
-            painter->addEllipse(4+getWidth()-12,4,12,12);
+            painter->addEllipse(4+getWidth()-3,4,3,3);
 
             p1 = QPointF(4+6, 4+6+getHeight()-12);
 
         }else if (pointa.x() < pointb.x() && pointa.y() > pointb.y()){
-    //        painter->drawLine(4+6, 4+6+getHeight()-12, 4+6+getWidth()-12, 4+6);
-
-            painter->addEllipse(4, 4+getHeight()-12, 12, 12);
+            painter->addEllipse(4, 4+getHeight()-3, 3, 3);
 
             p1 = QPointF(4+6+getWidth()-12, 4+6);
 
         }else if (pointa.x() > pointb.x() && pointa.y() > pointb.y()){
-    //        painter->drawLine(4+6+getWidth()-12, 4+6+getHeight()-12, 4+6, 4+6);
-
-            painter->addEllipse(4+getWidth()-12, 4+getHeight()-12, 12, 12);
+            painter->addEllipse(4+getWidth()-3, 4+getHeight()-3, 3, 3);
 
             p1 = QPointF(4+6, 4+6);
         }

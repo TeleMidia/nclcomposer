@@ -21,6 +21,8 @@ public:
 
     void setConditionIcon(QnstConditionIcon conditionIcon);
 
+    void adjust();
+
 protected:
     virtual void draw(QPainter* painter);
 
