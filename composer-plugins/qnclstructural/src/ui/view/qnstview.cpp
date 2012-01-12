@@ -1251,7 +1251,7 @@ void QnstView::changeMedia(QnstGraphicsMedia* entity, const QMap<QString, QStrin
 
 void QnstView::adjustMedia(QnstGraphicsMedia* entity)
 {
-
+  entity->adjust();
 }
 
 void QnstView::addPort(const QString uid, const QString parent, const QMap<QString, QString> properties)
