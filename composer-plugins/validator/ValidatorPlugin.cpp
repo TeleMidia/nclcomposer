@@ -15,6 +15,10 @@ ValidatorPlugin::ValidatorPlugin()
     table->setColumnWidth(0, 40);
 
     nclValidator::Langstruct::init();
+
+    connect(table, SIGNAL (itemClicked ( QTreeWidgetItem *, int)), this, SLOT (itemSelected (QTreeWidgetItem *)));
+    connect(table, SIGNAL (itemDoubleClicked  ( QTreeWidgetItem *, int)), this, SLOT (itemDoubleClickedSelected (QTreeWidgetItem *)));
+
 }
 
 void ValidatorPlugin::init()
@@ -31,6 +35,11 @@ void ValidatorPlugin::init()
 //    adapter.getModel().print();
 
 //    adapter.validate();
+
+
+    std::vector <pair<void *, string> > msgs = adapter.validate();
+    updateMessages(msgs);
+
     adapter.getModel().clearMarkedElements();
 
     qDebug() << "*********************Endt Validator init()";
@@ -45,9 +54,6 @@ void ValidatorPlugin::updateModel (Entity *entity)
         updateModel(child);
     }
 
-    std::vector <pair<void *, string> > msgs = adapter.validate();
-
-    updateMessages(msgs);
 }
 
 void ValidatorPlugin::updateMessages(std::vector<pair<void *, string> > msgs)
@@ -62,29 +68,16 @@ void ValidatorPlugin::updateMessages(std::vector<pair<void *, string> > msgs)
         Entity *entity = (Entity *) msgs[i].first;
         if (entity != NULL){
             qDebug() << entity->getUniqueId();
-//            first = entity->getType();
-
             messages.insert(make_pair (entity, QString::fromStdString(msgs [i].second)));
-//            pairsMessages.push_back(make_pair (entity, QString::fromStdString(msgs [i].second)));
-//            emit sendBroadcastMessage("validationError", &pairsMessages.back());
         }
-
-
 
     }
 
     for (set <pair <Entity *, QString> >::iterator it = messages.begin(); it != messages.end(); it++){
         pair <Entity *, QString> p = *it;
-        pairsMessages.push_back(p);
+        pairsMessages.push_back(make_pair (p.first->getUniqueId(), p.second));
 
-        QStringList list;
-//        QString first = "";
-
-//        if (entity)
-//            first = entity->getType();
-
-        list << "" << p.first->getType() << p.second;
-        QTreeWidgetItem *item = new QTreeWidgetItem(table, list);
+        ValidatorTreeWidgetItem *item = new ValidatorTreeWidgetItem (table, p.first, p.second);
         item->setIcon(0, QIcon(":/images/error.png"));
         table->addTopLevelItem (item);
 
@@ -103,10 +96,9 @@ void ValidatorPlugin::onEntityAdded(QString ID, Entity *entity)
 
 //    adapter.getModel().print();
 
-
     std::vector <pair<void *, string> > msgs = adapter.validate();
-
     updateMessages(msgs);
+
 }
 
 void ValidatorPlugin::onEntityChanged(QString ID, Entity * entity)
@@ -117,6 +109,7 @@ void ValidatorPlugin::onEntityChanged(QString ID, Entity * entity)
 
     std::vector <pair<void *, string> > msgs = adapter.validate();
     updateMessages(msgs);
+
 }
 
 void ValidatorPlugin::onEntityRemoved(QString ID, QString entityID)
@@ -128,7 +121,6 @@ void ValidatorPlugin::onEntityRemoved(QString ID, QString entityID)
 
     std::vector <pair<void *, string> > msgs = adapter.validate();
     updateMessages(msgs);
-
 }
 
 
@@ -157,7 +149,54 @@ void ValidatorPlugin::validationError(QString pluginID, void * param)
 
 }
 
+void ValidatorPlugin::validationErrorSelected(QString, void *param)
+{
+    if (param){
+        pair <QString, QString> * p = (pair <QString, QString>*) param;
 
+        if (p){
+            qDebug( p->first.toStdString().c_str() );
+            qDebug( p->second.toStdString().c_str() );
+        }
+    }
+}
+
+
+void ValidatorPlugin::itemSelected(QTreeWidgetItem * item)
+{
+    qDebug("Aqui");
+    if (item){
+        ValidatorTreeWidgetItem *validatorTreeItem = dynamic_cast <ValidatorTreeWidgetItem *> (item);
+        if (validatorTreeItem){
+            for (int i = 0; i < pairsMessages.size(); i++){
+                pair<QString, QString> p = pairsMessages[i];
+
+                if (p.first == validatorTreeItem->entity()->getUniqueId() &&
+                    p.second == validatorTreeItem->message()){
+
+                    emit sendBroadcastMessage("validationErrorSelected", &p);
+                    break;
+                }
+            }
+        }
+    }
+}
+
+void ValidatorPlugin::itemDoubleClickedSelected (QTreeWidgetItem *item)
+{
+    if (item){
+        ValidatorTreeWidgetItem *validatorTreeItem = dynamic_cast <ValidatorTreeWidgetItem *> (item);
+        if (validatorTreeItem){
+            for (int i = 0; i < pairsMessages.size(); i++){
+                pair <QString, QString> p = pairsMessages[i];
+
+                if (p.first == validatorTreeItem->entity()->getUniqueId()){
+                    emit sendBroadcastMessage("changeSelectedEntity", &p.first);
+                }
+            }
+        }
+    }
+}
 
 
         }

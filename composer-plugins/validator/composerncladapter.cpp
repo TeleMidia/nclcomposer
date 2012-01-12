@@ -6,34 +6,11 @@ ComposerNCLAdapter::ComposerNCLAdapter()
 
 void ComposerNCLAdapter::addElement(Entity *entity)
 {
-    ////qDebug() << "**********Validator: Begin addElement";
+
     if (!entity){
-        ////qDebug() << "entity = NULL";
         return;
     }
 
-    ////qDebug () << entity->getType() << " " << entity->getUniqueId();
-
-//    QMap <QString, QString>::iterator begin;
-//    QMap <QString, QString>::iterator end;
-
-//    entity->getAttributeIterator(begin, end);
-
-//    std::vector <nclValidator::Attribute> attributes;
-
-//    while (begin != end){
-//        QString name = begin.key();
-//        QString value = begin.value();
-
-//        ////qDebug() << name << " " << value;
-
-//        nclValidator::Attribute attr (name.toStdString(), value.toStdString());
-
-//        std::cout << attr.name() << " " << attr.value();
-
-//        attributes.push_back(attr);
-//        begin++;
-//    }
 
     std::vector <nclValidator::Attribute> attributes = createVectorAttribute(entity);
 

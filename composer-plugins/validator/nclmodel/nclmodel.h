@@ -77,6 +77,8 @@ public:
 	explicit Model ();
 	~Model ();
 
+        void clear ();
+
 	virtualId addChild (virtualId parentId, string elementName, vector<Attribute> attributes);
 	void addChild (virtualId parent, virtualId child);
 	virtualId addElement (string elementName, vector<Attribute> attributes);
@@ -97,7 +99,7 @@ public:
 
 	inline bool hasElement (virtualId &id) { return _modelElements.count (id) > 0; }
         inline void clearMarkedElements () {_markedElements.clear(); _affectedEllements.clear();}
-	inline const set <virtualId> & markedElements () { return _markedElements; }
+        inline const set <virtualId> & markedElements () { return _markedElements; }
 
 
 	void print ();
@@ -111,6 +113,8 @@ private:
 
 	int _seed;
 	map <virtualId, ModelElement> _modelElements;
+
+        set <virtualId> _nonIncrementalMarkedElements;
 
         set <virtualId> _markedElements;
         set <virtualId> _affectedEllements;

@@ -3,8 +3,9 @@
 
 #include <core/extensions/IPlugin.h>
 #include <QWidget>
-#include <QTreeWidget>
+#include <QVector>
 #include <QHBoxLayout>
+#include "validatortreewidgetitem.h"
 #include "nclmodel/nclmodel.h"
 #include "validation/Validator.h"
 #include "composerncladapter.h"
@@ -35,12 +36,17 @@ public slots:
 
     void clearValidationMessages (QString, void *);
     void validationError (QString, void *);
+    void validationErrorSelected (QString, void *);
+
+    void itemSelected (QTreeWidgetItem *);
+    void itemDoubleClickedSelected (QTreeWidgetItem *);
 
 private:
     void updateModel(Entity *);
     void updateMessages (std::vector<pair<void *, string> >);
 
-    QVector <pair<Entity *, QString> > pairsMessages;
+
+    QVector <pair<QString, QString> > pairsMessages;
 
     QWidget* window;
     QTreeWidget *table;

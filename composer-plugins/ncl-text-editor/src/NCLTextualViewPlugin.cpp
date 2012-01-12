@@ -751,9 +751,9 @@ void NCLTextualViewPlugin::clearValidationMessages(QString, void *param)
 void NCLTextualViewPlugin::validationError(QString pluginID, void * param)
 {
   if (param) {
-     pair <Entity *, QString> * p = (pair <Entity *, QString> *) param;
+     pair <QString, QString> * p = (pair <QString, QString> *) param;
 
-     int offset = startEntityOffset[p->first->getUniqueId()];
+     int offset = startEntityOffset[p->first];
 
      int line = nclTextEditor->SendScintilla(
                                      QsciScintilla::SCI_LINEFROMPOSITION,

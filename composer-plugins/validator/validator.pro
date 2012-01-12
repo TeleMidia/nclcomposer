@@ -26,7 +26,8 @@ SOURCES += \
     validation/Validator.cpp \
     composerncladapter.cpp \
     validation/semanticvalidation.cpp \
-    validation/structuralvalidation.cpp
+    validation/structuralvalidation.cpp \
+    validatortreewidgetitem.cpp
 
 HEADERS  += \
     ValidatorPlugin.h \
@@ -41,11 +42,10 @@ HEADERS  += \
     validation/Validator.h \
     composerncladapter.h \
     validation/semanticvalidation.h \
-    validation/structuralvalidation.h
+    validation/structuralvalidation.h \
+    validatortreewidgetitem.h
 
 OTHER_FILES +=
 
 RESOURCES += \
     Resource.qrc
-
-

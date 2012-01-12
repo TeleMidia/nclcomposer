@@ -17,6 +17,8 @@ namespace nclValidator {
 
 vector<pair<void *, string> >Validator::validate(Model &model)
  {
+
+    qDebug("Aquiiiiii");
     vector<pair<void *, string> > msgs;
 
     set<virtualId> markeds = model.markedElements(),

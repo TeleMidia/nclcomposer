@@ -21,7 +21,9 @@ public:
     void addElement (Entity *);
     void removeElement (QString);
     void changeElement (Entity *);
+
     inline nclValidator::Model &getModel () { return nclModel; }
+    inline void clearModel () { nclModel.clear(); }
 
     std::vector <std::pair<void *, std::string> > validate ();
 

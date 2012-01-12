@@ -273,6 +273,10 @@ bool Model::removeElement(virtualId &id){
 
         _markedElements.erase(id);
         _modelElements.erase(id);
+
+        _nonIncrementalMarkedElements.erase(id);
+
+
         return true;
     }
     return false;
@@ -371,7 +375,13 @@ virtualId Model::addElement(string elementName, vector <Attribute> attributes){
         }
 
         _modelElements[newElement.id()] = newElement;
+        _nonIncrementalMarkedElements.insert(newElement.id());
+
+
         _markedElements.insert(newElement.id());
+
+
+
         return newElement.id();
     }
     return "";
@@ -634,6 +644,16 @@ void Model::adjustScope (virtualId parentId, virtualId childId){
     catch (...){
         cerr << "Element doesn't exist!";
     }
+}
+
+void Model::clear()
+{
+    _modelElements.clear();
+    _markedElements.clear();
+    _affectedEllements.clear();
+    _elementsWithErrorInLastPass.clear();
+    _idToElement.clear();
+    _elementsNotYetInserted.clear();
 }
 
 }
