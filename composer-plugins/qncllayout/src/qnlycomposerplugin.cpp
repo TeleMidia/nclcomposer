@@ -164,11 +164,11 @@ void QnlyComposerPlugin::onEntityAdded(QString pluginID, Entity *entity)
     {
         if (entity->getType() == "region")
         {
-//            addRegionToView(entity);
+            addRegionToView(entity);
         }
         else if (entity->getType() == "regionBase")
         {
-//            addRegionBaseToView(entity);
+            addRegionBaseToView(entity);
         }
     }
 }
