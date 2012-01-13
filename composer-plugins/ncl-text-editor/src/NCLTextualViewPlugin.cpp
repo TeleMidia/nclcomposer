@@ -21,6 +21,8 @@
 #include <QMetaMethod>
 #include <QMessageBox>
 
+#include <QApplication>
+#include <QProgressDialog>
 #include <QDomDocument>
 #include <QTextStream>
 
@@ -495,13 +497,11 @@ void NCLTextualViewPlugin::changeSelectedEntity(QString pluginID, void *param)
 
 void NCLTextualViewPlugin::updateCoreModel()
 {
-  bool rebuildComposerModel = false;
+  bool rebuildComposerModelFromScratch = false;
 
   QString text = nclTextEditor->text();
-
   //Create a DOM document with the new content
-  QDomDocument doc("doc1");
-  if(!doc.setContent(text))
+  if(!xmlDoc.setContent(text))
   {
     //if the current XML is not well formed.
     QMessageBox::information(NULL, tr("Error"),
@@ -517,159 +517,196 @@ void NCLTextualViewPlugin::updateCoreModel()
   nclTextEditor = new NCLTextEditor(0);
   nclTextEditor->setText(tmpNclTextEditor->textWithoutUserInteraction());
 
-  if(rebuildComposerModel)
-  {
-    //delete the content of the current project
-    if(project->getChildren().size())
-      emit removeEntity(project->getChildren().at(0), true);
-
-    // clear the entities offset
-    nclTextEditor->clear();
-    startEntityOffset.clear();
-    endEntityOffset.clear();
-
-    QList <QString> parentUids;
-    QString parentUId = project->getUniqueId();
-    parentUids.push_back(parentUId);
-
-    QList <QDomElement> nodes;
-    QDomElement current = doc.firstChildElement();
-    nodes.push_back(current);
-
-    while(!nodes.empty())
-    {
-      current = nodes.front();
-      nodes.pop_front();
-      parentUId = parentUids.front();
-      parentUids.pop_front();
-
-      //Process the node
-      QMap<QString,QString> atts;
-
-      QDomNamedNodeMap attributes = current.attributes();
-      for (int i = 0; i < attributes.length(); i++)
-      {
-        QDomAttr item = attributes.item(i).toAttr();
-        atts[item.name()] = item.value();
-      }
-
-      //Send the addEntity to the core plugin
-      emit addEntity(current.tagName(), parentUId, atts, false);
-      parentUId = currentEntity->getUniqueId();
-
-      QDomElement child = current.firstChildElement();
-      while(!child.isNull())
-      {
-        nodes.push_back(child);
-        parentUids.push_back(parentUId);
-        child = child.nextSiblingElement();
-      }
-    }
-    emit syncFinished();
-  }
+  if(rebuildComposerModelFromScratch)
+    nonIncrementalUpdateCoreModel();
   else
+    incrementalUpdateCoreModel();
+
+  emit syncFinished();
+}
+
+void NCLTextualViewPlugin::nonIncrementalUpdateCoreModel()
+{
+  //delete the content of the current project
+  if(project->getChildren().size())
+    emit removeEntity(project->getChildren().at(0), true);
+
+  // clear the entities offset
+  nclTextEditor->clear();
+  startEntityOffset.clear();
+  endEntityOffset.clear();
+
+  QList <QString> parentUids;
+  QString parentUId = project->getUniqueId();
+  parentUids.push_back(parentUId);
+
+  QList <QDomElement> nodes;
+  QDomElement current = xmlDoc.firstChildElement();
+  nodes.push_back(current);
+
+  while(!nodes.empty())
   {
-    //incremental update
-    QList <QDomNode> nodes;
-    QDomNode current = doc;
-    nodes.push_back(current);
-    Entity *curEntity = project;
-    QList <Entity *> entities;
-    entities.push_back(curEntity);
+    current = nodes.front();
+    nodes.pop_front();
+    parentUId = parentUids.front();
+    parentUids.pop_front();
 
-    while(!nodes.empty())
+    //Process the node
+    QMap<QString,QString> atts;
+
+    QDomNamedNodeMap attributes = current.attributes();
+    for (int i = 0; i < attributes.length(); i++)
     {
-      current = nodes.front();
-      nodes.pop_front();
-      curEntity = entities.front();
-      entities.pop_front();
-
-      QVector <QDomElement> children;
-      QDomElement child = current.firstChildElement();
-      while(!child.isNull())
-      {
-        children.push_back(child);
-        child = child.nextSiblingElement();
-      }
-
-      QVector <Entity *> entityChildren = curEntity->getChildren();
-
-      int i, j;
-      for(i = 0, j = 0;
-          i < children.size() && j < entityChildren.size();
-          i++, j++)
-      {
-        if(children[i].tagName() == entityChildren[j]->getType())
-        {
-          // if the same type, just update the attributes
-          //TODO: Compare attributes
-          QMap<QString, QString> atts;
-          QDomNamedNodeMap attributes = children[i].attributes();
-          for (int k = 0; k < attributes.length(); k++)
-          {
-            QDomNode item = attributes.item(k);
-            qDebug() << item.nodeName() << item.nodeValue();
-            atts.insert(item.nodeName(), item.nodeValue());
-          }
-
-          emit setAttributes(entityChildren[j], atts, false);
-        }
-        else
-        {
-          //if type are differents, then we should change the type
-          //i.e. remove the entity and insert a new entity with the
-          //required type.
-          emit removeEntity(entityChildren[j], true);
-          //add new entity
-          QMap<QString,QString> atts;
-          QDomNamedNodeMap attributes = children[i].attributes();
-          for (int k = 0; k < attributes.length(); k++)
-          {
-            QDomNode item = attributes.item(k);
-            atts[item.nodeName()] = item.nodeValue();
-          }
-          emit addEntity(children[i].tagName(), curEntity->getUniqueId(), atts,
-                         false);
-        }
-      }
-
-      if(i == children.size())
-      {
-        // if there are more entity in the composer model than in the XML
-        for(; j < entityChildren.size(); j++)
-          emit removeEntity(entityChildren[j], true);
-      }
-      else if(j == entityChildren.size())
-      {
-        // if there are more entity in the XML than in the composer model
-        for(; i < children.size(); i++)
-        {
-          //add new entity
-          QMap<QString,QString> atts;
-          QDomNamedNodeMap attributes = children[i].attributes();
-          for (int k = 0; k < attributes.length(); k++)
-          {
-            QDomNode item = attributes.item(k);
-            atts[item.nodeName()] = item.nodeValue();
-          }
-          emit addEntity(children[i].tagName(), curEntity->getUniqueId(), atts,
-                         false);
-        }
-      }
-
-      child = current.firstChildElement();
-      while(!child.isNull())
-      {
-        nodes.push_back(child);
-        child = child.nextSiblingElement();
-      }
-      entityChildren = curEntity->getChildren();
-      for(int i = 0; i < entityChildren.size(); i++)
-        entities.push_back(entityChildren[i]);
+      QDomAttr item = attributes.item(i).toAttr();
+      atts[item.name()] = item.value();
     }
 
-    emit syncFinished();
+    //Send the addEntity to the core plugin
+    emit addEntity(current.tagName(), parentUId, atts, false);
+    parentUId = currentEntity->getUniqueId();
+
+    QDomElement child = current.firstChildElement();
+    while(!child.isNull())
+    {
+      nodes.push_back(child);
+      parentUids.push_back(parentUId);
+      child = child.nextSiblingElement();
+    }
   }
+}
+
+void NCLTextualViewPlugin::incrementalUpdateCoreModel()
+{
+  QProgressDialog dialog(tr("Synchronizing with other plugins..."),
+                         tr("Cancel"), 0, 100,
+                         nclTextEditor);
+  dialog.setAutoClose(true);
+  dialog.show();
+
+  //incremental update
+  QList <QDomNode> nodes;
+  QDomNode current = xmlDoc;
+  nodes.push_back(current);
+  Entity *curEntity = project;
+  QList <Entity *> entities;
+  entities.push_back(curEntity);
+
+  //count how many nodes to update
+  int total_nodes = 0, progress = 0;
+  while(!nodes.empty())
+  {
+    current = nodes.front();
+    nodes.pop_front();
+
+    total_nodes++;
+
+    QDomElement child = current.firstChildElement();
+    while(!child.isNull())
+    {
+      nodes.push_back(child);
+      child = child.nextSiblingElement();
+    }
+  }
+
+  dialog.setRange(0, total_nodes);
+  current = xmlDoc;
+  nodes.push_back(current);
+  while(!nodes.empty())
+  {
+    dialog.setValue(progress++);
+    dialog.update();
+    QApplication::processEvents();
+
+    current = nodes.front();
+    nodes.pop_front();
+    curEntity = entities.front();
+    entities.pop_front();
+
+    QVector <QDomElement> children;
+    QDomElement child = current.firstChildElement();
+    while(!child.isNull())
+    {
+      children.push_back(child);
+      child = child.nextSiblingElement();
+    }
+
+    QVector <Entity *> entityChildren = curEntity->getChildren();
+
+    int i, j;
+    for(i = 0, j = 0;
+        i < children.size() && j < entityChildren.size();
+        i++, j++)
+    {
+      if(children[i].tagName() == entityChildren[j]->getType())
+      {
+        // if the same type, just update the attributes
+        //TODO: Compare attributes
+        QMap<QString, QString> atts;
+        QDomNamedNodeMap attributes = children[i].attributes();
+        for (int k = 0; k < attributes.length(); k++)
+        {
+          QDomNode item = attributes.item(k);
+          qDebug() << item.nodeName() << item.nodeValue();
+          atts.insert(item.nodeName(), item.nodeValue());
+        }
+
+        emit setAttributes(entityChildren[j], atts, false);
+      }
+      else
+      {
+        //if type are differents, then we should change the type
+        //i.e. remove the entity and insert a new entity with the
+        //required type.
+        emit removeEntity(entityChildren[j], true);
+        //add new entity
+        QMap<QString,QString> atts;
+        QDomNamedNodeMap attributes = children[i].attributes();
+        for (int k = 0; k < attributes.length(); k++)
+        {
+          QDomNode item = attributes.item(k);
+          atts[item.nodeName()] = item.nodeValue();
+        }
+        emit addEntity(children[i].tagName(), curEntity->getUniqueId(), atts,
+                       false);
+      }
+    }
+
+    if(i == children.size())
+    {
+      // if there are more entity in the composer model than in the XML
+      for(; j < entityChildren.size(); j++)
+        emit removeEntity(entityChildren[j], true);
+    }
+    else if(j == entityChildren.size())
+    {
+      // if there are more entity in the XML than in the composer model
+      for(; i < children.size(); i++)
+      {
+        //add new entity
+        QMap<QString,QString> atts;
+        QDomNamedNodeMap attributes = children[i].attributes();
+        for (int k = 0; k < attributes.length(); k++)
+        {
+          QDomNode item = attributes.item(k);
+          atts[item.nodeName()] = item.nodeValue();
+        }
+        emit addEntity(children[i].tagName(), curEntity->getUniqueId(), atts,
+                       false);
+      }
+    }
+
+    child = current.firstChildElement();
+    while(!child.isNull())
+    {
+      nodes.push_back(child);
+      child = child.nextSiblingElement();
+    }
+    entityChildren = curEntity->getChildren();
+    for(int i = 0; i < entityChildren.size(); i++)
+      entities.push_back(entityChildren[i]);
+  }
+
+  dialog.setValue(100);
 }
 
 void NCLTextualViewPlugin::syncFinished()
@@ -751,7 +788,7 @@ void NCLTextualViewPlugin::clearValidationMessages(QString, void *param)
 void NCLTextualViewPlugin::validationError(QString pluginID, void * param)
 {
   if (param) {
-     pair <QString, QString> * p = (pair <QString, QString> *) param;
+     pair <QString , QString> *p = (pair <QString, QString> *) param;
 
      int offset = startEntityOffset[p->first];
 

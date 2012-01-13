@@ -59,6 +59,8 @@ private:
     bool isSyncing;
     Entity *currentEntity;
 
+    QDomDocument xmlDoc;
+
 public:
     /*!
      \brief Constructor.
@@ -172,6 +174,18 @@ private slots:
      * Editor.
      */
     void updateCoreModel();
+
+    /*!
+     * \brief Updates the core model with the current content of the NCL Text
+     *    Editor using an incremental approach.
+     */
+    void incrementalUpdateCoreModel();
+
+    /*!
+     * \brief Updates the core model with the current content of the NCL Text
+     *    Editor clearing the core model and rebuilding it from scratch.
+     */
+    void nonIncrementalUpdateCoreModel();
 
     /*!
      * \brief Called when the parser finishes its work.
