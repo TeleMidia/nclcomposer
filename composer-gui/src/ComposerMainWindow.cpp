@@ -26,7 +26,7 @@
 #include <QMdiArea>
 #endif
 
-#define SHOW_PROFILES
+// #define SHOW_PROFILES
 
 namespace composer {
 namespace gui {
@@ -477,7 +477,7 @@ QPushButton:flat { \
 void ComposerMainWindow::addButtonToDockTitleBar(QFrame *titleBar,
                                                  QPushButton *button)
 {
-  button->setIconSize(QSize(22, 22));
+  button->setIconSize(QSize(18, 18));
 
   titleBar->layout()->addWidget(button);
 }
@@ -608,7 +608,7 @@ void ComposerMainWindow::createAboutPlugins()
           this, SLOT(selectedAboutCurrentPluginFactory()));
 
   QStringList header;
-  header << "Name" << "Load" << "Version" << "Vendor";
+  header << tr("Name") << tr("Load") << tr("Version") << tr("Vendor");
   pluginsExt->setHeaderLabels(header);
 
   QDialogButtonBox *bOk = new QDialogButtonBox(QDialogButtonBox::Ok |
@@ -759,6 +759,9 @@ void ComposerMainWindow::createActions() {
 
   connect (ui->actionImport_from_existing_NCL, SIGNAL(triggered()),
            this, SLOT(importFromDocument()));
+
+  connect (ui->actionGo_to_Clube_NCL_Website, SIGNAL(triggered()),
+           this, SLOT(gotoNCLClubWebsite()));
 }
 
 void ComposerMainWindow::createStatusBar()
@@ -906,6 +909,7 @@ void ComposerMainWindow::saveCurrentProject()
     QString location = tabProjects->tabToolTip(index);
     PluginControl::getInstance()->savePluginsData(location);
     ProjectControl::getInstance()->saveProject(location);
+    ui->action_Save->setEnabled(false);
   }
   else
   {
@@ -1121,7 +1125,7 @@ void ComposerMainWindow::openProject()
   QString filename = QFileDialog::getOpenFileName(this,
                                                   tr("Open Composer Project"),
                                                   QDir::homePath(),
-                                                  tr("Composer Project (*.cpr)"));
+                                               tr("Composer Projects (*.cpr)"));
   if(filename != "") {
     ProjectControl::getInstance()->launchProject(filename);
   }
@@ -1324,6 +1328,8 @@ void ComposerMainWindow::setProjectDirty(QString location, bool isDirty)
 
   int index = tabProjects->indexOf(window);
 
+  ui->action_Save->setEnabled(true);
+
   if(index >= 0) {
     if(isDirty)
       tabProjects->setTabText(index, QString("*")+projectId);
@@ -1357,6 +1363,11 @@ void ComposerMainWindow::redo()
     msgControl->redo();
   }
 
+}
+
+void ComposerMainWindow::gotoNCLClubWebsite()
+{
+  QDesktopServices::openUrl(QUrl("http://club.ncl.org.br"));
 }
 
 } } //end namespace

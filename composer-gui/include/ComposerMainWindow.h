@@ -273,6 +273,8 @@ private slots:
 
     void setProjectDirty(QString location, bool isDirty);
 
+    void gotoNCLClubWebsite();
+
 public:
     /*!
      \brief Constructs the Composer Main Window with the given parent.

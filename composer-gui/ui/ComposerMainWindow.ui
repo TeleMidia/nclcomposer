@@ -284,12 +284,6 @@ font: 75 7.5pt;</string>
    <property name="allowedAreas">
     <set>Qt::AllToolBarAreas</set>
    </property>
-   <property name="iconSize">
-    <size>
-     <width>20</width>
-     <height>20</height>
-    </size>
-   </property>
    <property name="toolButtonStyle">
     <enum>Qt::ToolButtonIconOnly</enum>
    </property>
@@ -302,17 +296,13 @@ font: 75 7.5pt;</string>
    <attribute name="toolBarBreak">
     <bool>false</bool>
    </attribute>
+   <addaction name="actionUndo"/>
+   <addaction name="actionRedo"/>
+   <addaction name="action_Save"/>
+   <addaction name="separator"/>
    <addaction name="action_RunNCL"/>
    <addaction name="action_Run_remotely"/>
    <addaction name="separator"/>
-   <addaction name="action_New_Project"/>
-   <addaction name="actionOpen_Project"/>
-   <addaction name="action_Save"/>
-   <addaction name="action_Preferences"/>
-   <addaction name="separator"/>
-   <addaction name="action_Help"/>
-   <addaction name="actionUndo"/>
-   <addaction name="actionRedo"/>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="enabled">
@@ -366,6 +356,9 @@ font: 75 7.5pt;</string>
     <property name="title">
      <string>&amp;Edit</string>
     </property>
+    <addaction name="actionUndo"/>
+    <addaction name="actionRedo"/>
+    <addaction name="separator"/>
    </widget>
    <widget class="QMenu" name="menu_Help">
     <property name="title">
@@ -378,12 +371,23 @@ font: 75 7.5pt;</string>
    </widget>
    <widget class="QMenu" name="menu_Window">
     <property name="title">
-     <string>Window</string>
+     <string>&amp;Window</string>
     </property>
+   </widget>
+   <widget class="QMenu" name="menu_Share">
+    <property name="enabled">
+     <bool>true</bool>
+    </property>
+    <property name="title">
+     <string>&amp;Share</string>
+    </property>
+    <addaction name="actionShare_This_Project_Online"/>
+    <addaction name="actionGo_to_Clube_NCL_Website"/>
    </widget>
    <addaction name="menu_File"/>
    <addaction name="menu_Edit"/>
    <addaction name="menu_Window"/>
+   <addaction name="menu_Share"/>
    <addaction name="menu_Help"/>
   </widget>
   <action name="action_New_Project">
@@ -439,7 +443,7 @@ font: 75 7.5pt;</string>
   </action>
   <action name="action_Clear_Recent_Files">
    <property name="text">
-    <string>Clear Recent Files</string>
+    <string>Clear Recent Projects</string>
    </property>
   </action>
   <action name="action_Save">
@@ -589,6 +593,19 @@ font: 75 7.5pt;</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+Shift+Z</string>
+   </property>
+  </action>
+  <action name="actionShare_This_Project_Online">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>Share This Project Online</string>
+   </property>
+  </action>
+  <action name="actionGo_to_Clube_NCL_Website">
+   <property name="text">
+    <string>Go to NCL Club Website</string>
    </property>
   </action>
  </widget>
