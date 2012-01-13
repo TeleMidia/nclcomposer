@@ -18,6 +18,8 @@
 #include <QApplication>
 
 #ifdef WITH_LIBSSH2
+#include <QDomDocument>
+#include <QStack>
 #include "RunGingaConfig.h"
 #include "SimpleSSHClient.h"
 #endif
@@ -1049,26 +1051,8 @@ void ComposerMainWindow::runNCL()
 
 void ComposerMainWindow::runNCLRemotely()
 {
-  QSettings settings(QSettings::IniFormat, QSettings::UserScope,
-                     "telemidia", "composer");
-
-  settings.beginGroup("runginga");
-  QString remoteIp = settings.value("remote_ip").toString();
-  QString remoteUser = settings.value("remote_user").toString();
-  QString remotePasswd = settings.value("remote_password").toString();
-  QString remotePath = settings.value("remote_path").toString();
-  QString remoteCmd = settings.value("remote_cmd").toString();
-  settings.endGroup();
-
-#ifdef WITH_LIBSSH2
-  /*\todo Put the code to run a remote NCL */
-  SimpleSSHClient sshclient(remoteUser.toStdString().c_str(),
-                            remotePasswd.toStdString().c_str(),
-                            remoteIp.toStdString().c_str(),
-                            remotePath.toStdString().c_str());
-
+  // Checks if there is a current NCL project.
   QString location = tabProjects->tabToolTip(tabProjects->currentIndex());
-
   if(location.isEmpty())
   {
     QMessageBox::StandardButton reply;
@@ -1078,8 +1062,32 @@ void ComposerMainWindow::runNCLRemotely()
     return;
   }
 
+
+  // Getting the settings user data.
+  QSettings settings(QSettings::IniFormat, QSettings::UserScope,
+                     "telemidia", "composer");
+  settings.beginGroup("runginga");
+    QString remoteIp = settings.value("remote_ip").toString();
+    QString remoteUser = settings.value("remote_user").toString();
+    QString remotePasswd = settings.value("remote_password").toString();
+    QString remotePath = settings.value("remote_path").toString();
+    QString remoteCmd = settings.value("remote_cmd").toString();
+  settings.endGroup();
+
+#ifdef WITH_LIBSSH2
+  /*\todo Put the code to run a remote NCL */
+  SimpleSSHClient sshclient(remoteUser.toStdString().c_str(),
+                            remotePasswd.toStdString().c_str(),
+                            remoteIp.toStdString().c_str(),
+                            remotePath.toStdString().c_str());
+
   Project *project = ProjectControl::getInstance()->getOpenProject(location);
-  QString nclpath = location.mid(0, location.lastIndexOf("/")) +  "/tmp.ncl";
+
+  QFileInfo fileNCLInfo (location);
+  QString tmpNCLDir = fileNCLInfo.absoluteDir().absolutePath();
+  QString nclpath = tmpNCLDir;
+  nclpath += QDir::separator();
+  nclpath += "tmp.ncl";
   qDebug() << "Running NCL File (on a remote Machine): " << nclpath;
 
   QFile file(nclpath);
@@ -1091,13 +1099,120 @@ void ComposerMainWindow::runNCLRemotely()
 
     file.close();
 
+    // Search the files for all required files.
+    QStack <Entity*> stack;
+    Entity *current = project;
+    stack.push(current);
+    QStringList filesToSend;
+    while(stack.size())
+    {
+      current = stack.top();
+      stack.pop();
+
+      if(current->hasAttribute("src"))
+        filesToSend << current->getAttribute("src");
+      if(current->hasAttribute("documentURI"))
+        filesToSend << current->getAttribute("documentURI");
+
+      QVector <Entity*> children = current->getChildren();
+      for(int i = 0; i < children.size(); i++)
+      {
+        stack.push(children[i]);
+      }
+    }
+
+    // \todo This search MUST BE RECURSIVE!!!
+    // \todo This also can be a function.
+    qDebug() << "Must send this files:" << filesToSend;
+    for(int i = 0; i < filesToSend.size(); i++)
+    {
+      QString fullpath = "";
+      QFileInfo fileInfo (filesToSend.at(i));
+      if(fileInfo.exists())
+      {
+        fullpath = fileInfo.absoluteFilePath();
+      }
+      else
+      {
+        fileInfo.setFile(nclpath);
+        QString tmp = fileInfo.absoluteDir().absolutePath();
+        tmp += QDir::separator();
+        tmp += filesToSend.at(i);
+        qDebug() << tmp;
+        fileInfo.setFile(tmp);
+
+        if(fileInfo.exists())
+          fullpath = fileInfo.absoluteFilePath();
+      }
+
+      if(fullpath != "")
+      {
+        qDebug() << fullpath;
+        sshclient.scp_copy_file(fullpath.toStdString().c_str());
+      }
+      else
+      {
+        qDebug() << "Error: Could not send the file " << filesToSend.at(i);
+      }
+    }
+
+    // Fix all the paths in the nclFile.
+    QFile tmpXmlFile(nclpath);
+    QDomDocument document("doc");
+    document.setContent(&tmpXmlFile);
+    QStack <QDomElement> elements;
+    elements.push(document.documentElement());
+    while(elements.size())
+    {
+      QDomElement current = elements.top();
+      elements.pop();
+
+      if(current.hasAttribute("uniqueEntityId"))
+        current.removeAttribute("uniqueEntityId");
+
+      if(current.hasAttribute("src"))
+      {
+        QString src = current.attribute("src");
+        int start = src.lastIndexOf(QDir::separator());
+        src = src.mid(start+1);
+        current.setAttribute("src", src);
+        qDebug() << src;
+      }
+      if(current.hasAttribute("documentURI"))
+      {
+        QString src = current.attribute("documentURI");
+        int start = src.lastIndexOf(QDir::separator());
+        src = src.mid(start+1);
+        current.setAttribute("documentURI", src);
+      }
+
+      QDomElement child = current.firstChildElement();
+      while(!child.isNull())
+      {
+        elements.push_back(child);
+        child = child.nextSiblingElement();
+      }
+    }
+    tmpXmlFile.close();
+
+    // Replace the old XML file with the with the source fixed!!!
+    if (tmpXmlFile.open( QIODevice::WriteOnly ))
+    {
+       QTextStream textStream(&tmpXmlFile);
+       textStream << document.toString() ;
+       tmpXmlFile.close();
+    }
+    else
+       qWarning() << "I couldn't fix the path in XML file, probably it will "
+                  << "not run!!";
+
     /* RUNNING GINGA */
     sshclient.scp_copy_file(nclpath.toStdString().c_str());
     sshclient.ssh_start_ncl();
   }
   else
   {
-    qWarning() << "Error trying to running NCL. Could not create : "
+    qWarning() << "Error trying to run NCL. Could not create : "
                << nclpath << " !";
   }
 #endif

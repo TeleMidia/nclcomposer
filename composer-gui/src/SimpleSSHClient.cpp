@@ -44,19 +44,20 @@ int SimpleSSHClient::scp_copy_file(const char *localncl)
 
 #ifdef WIN32
   WSADATA wsadata;
-
   WSAStartup(MAKEWORD(2,0), &wsadata);
 #endif
 
   rc = libssh2_init (0);
 
-  if (rc != 0) {
+  if (rc != 0)
+  {
     fprintf (stderr, "libssh2 initialization failed (%d)\n", rc);
     return 1;
   }
 
   local = fopen(localncl, "rb");
-  if (!local) {
+  if (!local)
+  {
     fprintf(stderr, "Can't open local file %s\n", localncl);
     return -1;
   }
@@ -68,7 +69,8 @@ int SimpleSSHClient::scp_copy_file(const char *localncl)
    * connection
    */
   sock = socket(AF_INET, SOCK_STREAM, 0);
-  if(-1 == sock) {
+  if(-1 == sock)
+  {
     fprintf(stderr, "failed to create socket!\n");
     return -1;
   }
@@ -76,8 +78,8 @@ int SimpleSSHClient::scp_copy_file(const char *localncl)
   sin.sin_family = AF_INET;
   sin.sin_port = htons(22);
   sin.sin_addr.s_addr = hostaddr;
-  if (connect(sock, (struct sockaddr*)(&sin),
-              sizeof(struct sockaddr_in)) != 0) {
+  if (connect(sock, (struct sockaddr*)(&sin), sizeof(struct sockaddr_in)) != 0)
+  {
     fprintf(stderr, "failed to connect!\n");
     return -1;
   }
@@ -94,7 +96,8 @@ int SimpleSSHClient::scp_copy_file(const char *localncl)
    */
   rc = libssh2_session_startup(session, sock);
 
-  if(rc) {
+  if(rc)
+  {
     fprintf(stderr, "Failure establishing SSH session: %d\n", rc);
     return -1;
   }
@@ -107,14 +110,15 @@ int SimpleSSHClient::scp_copy_file(const char *localncl)
   fingerprint = libssh2_hostkey_hash(session, LIBSSH2_HOSTKEY_HASH_SHA1);
 
   fprintf(stderr, "Fingerprint: ");
-  for(i = 0; i < 20; i++) {
+  for(i = 0; i < 20; i++)
+  {
     fprintf(stderr, "%02X ", (unsigned char)fingerprint[i]);
   }
   fprintf(stderr, "\n");
 
   /* We could authenticate via password */
-  if (libssh2_userauth_password(session, username.c_str(), password.c_str())) {
-
+  if (libssh2_userauth_password(session, username.c_str(), password.c_str()))
+  {
     fprintf(stderr, "Authentication by password failed.\n");
     goto shutdown_copy;
   }
@@ -123,7 +127,8 @@ int SimpleSSHClient::scp_copy_file(const char *localncl)
   channel = libssh2_scp_send(session, scpfile.c_str(), fileinfo.st_mode & 0777,
                              (unsigned long)fileinfo.st_size);
 
-  if (!channel) {
+  if (!channel)
+  {
     char *errmsg;
     int errlen;
     int err = libssh2_session_last_error(session, &errmsg, &errlen, 0);
@@ -133,29 +138,33 @@ int SimpleSSHClient::scp_copy_file(const char *localncl)
   }
 
   fprintf(stderr, "SCP session waiting to send file\n");
-  do {
+  do
+  {
     nread = fread(mem, 1, sizeof(mem), local);
-    if (nread <= 0) {
+    if (nread <= 0)
+    {
       /* end of file */
       break;
     }
     ptr = mem;
 
-    do {
+    do
+    {
       /* write the same data over and over, until error or completion */
       rc = libssh2_channel_write(channel, ptr, nread);
 
-      if (rc < 0) {
+      if (rc < 0)
+      {
         fprintf(stderr, "ERROR %d\n", rc);
         break;
       }
-      else {
+      else
+      {
         /* rc indicates how many bytes were written this time */
         ptr += rc;
         nread -= rc;
       }
     } while (nread);
-
   } while (1);
 
 
@@ -172,10 +181,11 @@ int SimpleSSHClient::scp_copy_file(const char *localncl)
 
   channel = NULL;
 
-  shutdown_copy:
-
-    if(session) {
-    libssh2_session_disconnect(session, "Normal Shutdown, Thank you for playing");
+shutdown_copy:
+  if(session)
+  {
+    libssh2_session_disconnect(session,
+                               "Normal Shutdown, Thank you for playing");
 
     libssh2_session_free(session);
 
@@ -189,7 +199,6 @@ int SimpleSSHClient::scp_copy_file(const char *localncl)
     fclose(local);
 
   fprintf(stderr, "all done\n");
-
   libssh2_exit();
 
   return 0;
@@ -223,17 +232,15 @@ int SimpleSSHClient::ssh_start_ncl()
   sin.sin_family = AF_INET;
   sin.sin_port = htons(22);
   sin.sin_addr.s_addr = hostaddr;
-  if (connect(sock, (struct sockaddr*)(&sin),
-              sizeof(struct sockaddr_in)) != 0) {
+  if (connect(sock, (struct sockaddr*)(&sin), sizeof(struct sockaddr_in)) != 0)
+  {
     fprintf(stderr, "failed to connect!\n");
     return -1;
   }
 
   /* Create a session instance */
   session = libssh2_session_init();
-
-  if (!session)
-    return -1;
+  if (!session) return -1;
 
   /* tell libssh2 we want it all done non-blocking */
   libssh2_session_set_blocking(session, 0);
@@ -242,31 +249,29 @@ int SimpleSSHClient::ssh_start_ncl()
    * and setup crypto, compression, and MAC layers
    */
   while ((rc = libssh2_session_startup(session, sock)) == LIBSSH2_ERROR_EAGAIN);
-  if (rc) {
+  if (rc)
+  {
     fprintf(stderr, "Failure establishing SSH session: %d\n", rc);
     return -1;
   }
 
   nh = libssh2_knownhost_init(session);
 
-  if(!nh) {
+  if(!nh)
+  {
     /* eeek, do cleanup here */
     return 2;
   }
 
   /* read all hosts from here */
-  libssh2_knownhost_readfile(nh, "known_hosts",
-
-                             LIBSSH2_KNOWNHOST_FILE_OPENSSH);
+  libssh2_knownhost_readfile(nh, "known_hosts", LIBSSH2_KNOWNHOST_FILE_OPENSSH);
 
   /* store all known hosts to here */
-  libssh2_knownhost_writefile(nh, "dumpfile",
-
-                              LIBSSH2_KNOWNHOST_FILE_OPENSSH);
-
+  libssh2_knownhost_writefile(nh, "dumpfile", LIBSSH2_KNOWNHOST_FILE_OPENSSH);
   fingerprint = libssh2_session_hostkey(session, &len, &type);
 
-  if(fingerprint) {
+  if(fingerprint)
+  {
     struct libssh2_knownhost *host;
 #if LIBSSH2_VERSION_NUM >= 0x010206
     /* introduced in 1.2.6 */
@@ -294,23 +299,26 @@ int SimpleSSHClient::ssh_start_ncl()
      * fine or bail out.
      *****/
   }
-  else {
+  else
+  {
     /* eeek, do cleanup here */
     return 3;
   }
   libssh2_knownhost_free(nh);
 
-  if ( strlen(password.c_str()) != 0 ) {
+  if ( strlen(password.c_str()) != 0 )
+  {
     /* We could authenticate via password */
-    while ((rc = libssh2_userauth_password(session, username.c_str(), password.c_str())) ==
-
-           LIBSSH2_ERROR_EAGAIN);
+    while ((rc = libssh2_userauth_password(session, username.c_str(),
+                                           password.c_str()))
+           == LIBSSH2_ERROR_EAGAIN);
     if (rc) {
       fprintf(stderr, "Authentication by password failed.\n");
       goto shutdown_start;
     }
   }
-  else {
+  else
+  {
     /* Or by public key */
     while ((rc = libssh2_userauth_publickey_fromfile(session, username.c_str(),
 
@@ -320,7 +328,8 @@ int SimpleSSHClient::ssh_start_ncl()
                                                      ".ssh/id_rsa",
                                                      password.c_str())) ==
            LIBSSH2_ERROR_EAGAIN);
-    if (rc) {
+    if (rc)
+    {
       fprintf(stderr, "\tAuthentication by public key failed\n");
       goto shutdown_start;
     }
@@ -332,7 +341,7 @@ int SimpleSSHClient::ssh_start_ncl()
 
   /* Exec non-blocking on the remove host */
   while( (channel = libssh2_channel_open_session(session)) == NULL &&
-        libssh2_session_last_error(session,NULL,NULL,0) == LIBSSH2_ERROR_EAGAIN)
+         libssh2_session_last_error(session,NULL,NULL,0) == LIBSSH2_ERROR_EAGAIN)
   {
     waitsocket(sock, session);
   }
@@ -344,7 +353,7 @@ int SimpleSSHClient::ssh_start_ncl()
 
   while( (rc = libssh2_channel_exec(channel, command.c_str())) ==
 
-        LIBSSH2_ERROR_EAGAIN )
+         LIBSSH2_ERROR_EAGAIN )
   {
     waitsocket(sock, session);
   }
@@ -406,13 +415,11 @@ int SimpleSSHClient::ssh_start_ncl()
     printf("\nEXIT: %d bytecount: %d\n", exitcode, bytecount);
 
 
-  shutdown_start:
-
-    if(session) {
-    libssh2_session_disconnect(session, "Normal Shutdown, Thank you for playing");
-
+shutdown_start:
+  if(session) {
+    libssh2_session_disconnect( session,
+                                "Normal Shutdown, Thank you for playing");
     libssh2_session_free(session);
-
   }
 #ifdef WIN32
   closesocket(sock);
@@ -421,9 +428,7 @@ int SimpleSSHClient::ssh_start_ncl()
 #endif
 
   fprintf(stderr, "all done\n");
-
   libssh2_exit();
-
   return 0;
 }
 
