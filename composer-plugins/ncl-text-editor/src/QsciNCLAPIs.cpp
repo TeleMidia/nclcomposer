@@ -135,7 +135,7 @@ void QsciNCLAPIs::updateAutoCompletionList( const QStringList &context,
 
           QList <QDomElement> elements;
 
-          //If we have an ANY_SCOPE, it doesn't need any special treatment.
+          // If we have an ANY_SCOPE, it doesn't need any special treatment.
           if(references[i]->getScope() == AttributeReferences::ANY_SCOPE)
           {
             elements = nclEditor->
@@ -152,7 +152,7 @@ void QsciNCLAPIs::updateAutoCompletionList( const QStringList &context,
             QString idValue =
                 getAttributeValueFromCurrentElement(parent_offset, "id");
 
-            // \todo GET THE DIRECT CHILDS OF element with idValue.
+            // \todo suggest elements child of an element with no id.
             elements = nclEditor->
                              elementsByTagname( references[i]->getRefElement(),
                                                 idValue);

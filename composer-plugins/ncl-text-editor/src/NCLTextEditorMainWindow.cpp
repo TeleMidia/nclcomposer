@@ -30,9 +30,9 @@ NCLTextEditorMainWindow::NCLTextEditorMainWindow(QWidget *parent):
 #ifdef NCLEDITOR_STANDALONE
     createMenus();
     createToolBars();
+    createOutlineView();
     createProblemsView();
     createStatusBar();
-    createOutlineView();
 #endif
     setDockOptions(NCLTextEditorMainWindow::AllowNestedDocks
                    | NCLTextEditorMainWindow::AllowTabbedDocks
