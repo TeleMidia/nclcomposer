@@ -30,10 +30,11 @@ TEMPLATE = lib
 TARGET = qscintilla2_telem
 CONFIG += qt warn_off release dll thread
 
-# INCLUDEPATH = . ../include ../lexlib ../src
+INCLUDEPATH = . ../include ../lexlib ../src
+
 # We use QMAKE_CXXFLAGS instead of INCLUDEPATH because our qscintilla is
 # modified, and must be found before any other that is installed.
-QMAKE_CXXFLAGS  += -I../include -I../lexlib -I../src
+QMAKE_CXXFLAGS  += -I. -I../include -I../lexlib -I../src
 
 DEFINES = QSCINTILLA_MAKE_DLL QT SCI_LEXER
 
