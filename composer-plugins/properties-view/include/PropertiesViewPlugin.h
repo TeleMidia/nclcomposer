@@ -124,6 +124,16 @@ public slots:
     void changeSelectedEntity (QString pluginID, void*);
 
 private slots:
+    /*!
+     * \brief Update all the attributes from the currentEntity.
+     */
+    void updateCurrentEntity();
+    /*!
+     * \brief Update an individual attribute of the currentEntity.
+     *
+     * \param attr The attribute to be updated.
+     * \param value The new value of this attribute.
+     */
     void updateCurrentEntityAttr(QString attr, QString value);
 };
 

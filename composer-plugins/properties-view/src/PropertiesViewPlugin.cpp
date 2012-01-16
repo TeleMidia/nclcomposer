@@ -58,6 +58,13 @@ void PropertiesViewPlugin::onEntityChanged(QString pluginID, Entity * entity)
 {
     QString line = "PLUGIN (" + pluginID + ") changed the Entity (" +
                    entity->getType() + " - " + entity->getUniqueId() +")";
+
+    if(entity != NULL && currentEntity != NULL)
+    {
+      if(entity->getUniqueId() == currentEntity->getUniqueId())
+        updateCurrentEntity();
+    }
+
 }
 
 void PropertiesViewPlugin::onEntityRemoved(QString pluginID, QString entityID)
@@ -85,7 +92,8 @@ void PropertiesViewPlugin::init()
     /*
     QPushButton *refresh = new QPushButton(window);
     refresh->setIcon(QIcon(":/mainwindow/refreshplugin"));
-    ((QDockWidget*)window->parent())->titleBarWidget()->layout()->addWidget(refresh);
+    ((QDockWidget*)window->parent())->titleBarWidget()->layout()
+        ->addWidget(refresh);
     */
 }
 
@@ -99,23 +107,28 @@ void PropertiesViewPlugin::changeSelectedEntity(QString pluginID, void *param)
 
     if(currentEntity != NULL)
     {
-        QString name;
-        if( currentEntity->hasAttribute("id") )
-            name = currentEntity->getAttribute("id");
-        else if(currentEntity->hasAttribute("name"))
-            name = currentEntity->getAttribute("name");
-        else
-            name = "Unknown";
-
-        window->setTagname(currentEntity->getType(), name);
-
-        QMap <QString, QString>::iterator begin, end, it;
-        currentEntity->getAttributeIterator(begin, end);
-        for (it = begin; it != end; ++it)
-        {
-            window->setAttributeValue(it.key(), it.value());
-        }
+      updateCurrentEntity();
     }
+}
+
+void PropertiesViewPlugin::updateCurrentEntity()
+{
+  QString name;
+  if( currentEntity->hasAttribute("id") )
+      name = currentEntity->getAttribute("id");
+  else if(currentEntity->hasAttribute("name"))
+      name = currentEntity->getAttribute("name");
+  else
+      name = "Unknown";
+
+  window->setTagname(currentEntity->getType(), name);
+
+  QMap <QString, QString>::iterator begin, end, it;
+  currentEntity->getAttributeIterator(begin, end);
+  for (it = begin; it != end; ++it)
+  {
+      window->setAttributeValue(it.key(), it.value());
+  }
 }
 
 void PropertiesViewPlugin::updateCurrentEntityAttr(QString attr, QString value)
