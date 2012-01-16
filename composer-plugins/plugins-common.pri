@@ -1,6 +1,5 @@
 TEMPLATE    =   lib
-CONFIG      +=  qt release plugin dll
-CONFIG      -=  debug
+CONFIG      +=  qt debug plugin dll
 MOC_DIR     =   .moc
 OBJECTS_DIR =   .obj
 UI_DIR      =   .ui
