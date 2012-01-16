@@ -14,6 +14,7 @@ TODO file for composer-core
   - Transaction support (plugin should emits N messages as a single 
     transaction).
   - Separate each plugin as a different process.
+  - Import documents.
 
 * Optimizations and clean up
 
@@ -33,8 +34,8 @@ Done
 ====
 * Save Project.
 * Plugin API:
-  - Plugin API: Add plugin provider description. (OK)
-  - Plugin API: Add plugin version. (OK)
-  - Plugin-to-plugin communication. (OK)
+  - Plugin API: Add plugin provider description.
+  - Plugin API: Add plugin version.
+  - Plugin-to-plugin communication.
 
 //TODO: License
