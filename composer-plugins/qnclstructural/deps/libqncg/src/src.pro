@@ -10,7 +10,7 @@ VERSION = \
     0.1.0
 
 CONFIG += \
-    release \
+    debug \
     static
 
 HEADERS += \
