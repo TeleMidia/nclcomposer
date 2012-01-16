@@ -53,7 +53,7 @@ Textual View
   - Incremental synchronization with composer core.
     . xml simple diff based on elements id (ok).
     . diffx algorithm.
-  - Integration with messages coming from validator.
+  - Integration with messages coming from validator (incomplete).
 
 * Optimizations and cleanup:
   - Code refactoring:
@@ -127,8 +127,9 @@ Structural View
 Validation Plugin
 =================
 * Features:
-  - Send message when an error is detected.
-  - Double click over a error message.
+  - Send message when an error is detected (ok).
+  - Double click over a error message. (ok).
+  - Message to ask for Validator re-send all the error messages.
 
 * Optimization and cleanup:
 
