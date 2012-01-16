@@ -69,17 +69,19 @@ ComposerMainWindow::ComposerMainWindow(QApplication &app, QWidget *parent)
 
   splash.showMessage(tr("Starting GUI..."), Qt::AlignRight, Qt::gray);
   initGUI();
+  app.processEvents();
 
   splash.showMessage(tr("Starting Modules and Plugins..."), Qt::AlignRight,
                       Qt::gray);
   initModules();
+  app.processEvents();
 
   splash.showMessage(tr("Reloading last session..."), Qt::AlignRight,
                       Qt::gray);
   readSettings();
+  app.processEvents();
 
   splash.finish(this);
-
   connect(&app, SIGNAL(focusChanged(QWidget *, QWidget *)),
           this, SLOT(focusChanged(QWidget *, QWidget *)));
 }
@@ -1462,7 +1464,7 @@ void ComposerMainWindow::undo()
     QString location = tabProjects->tabToolTip(index);
     MessageControl *msgControl =
         PluginControl::getInstance()->getMessageControl(location);
-    msgControl->undo();
+//    msgControl->undo();
   }
 }
 
@@ -1475,7 +1477,7 @@ void ComposerMainWindow::redo()
     QString location = tabProjects->tabToolTip(index);
     MessageControl *msgControl =
         PluginControl::getInstance()->getMessageControl(location);
-    msgControl->redo();
+//    msgControl->redo();
   }
 
 }

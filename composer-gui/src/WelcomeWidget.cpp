@@ -48,6 +48,8 @@ WelcomeWidget::WelcomeWidget(QWidget *parent): QWidget(parent),
     isDownloading = false;
 
     loadRSS();
+#else
+    ui->tabWidget->removeTab(2);
 #endif
 }
 
