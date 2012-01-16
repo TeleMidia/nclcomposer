@@ -139,7 +139,7 @@ public slots:
      * the previous modifications, so it has to be forceed to reload
      * the Document*.
      */
-    virtual void updateFromModel() /*= 0*/{};
+    virtual void updateFromModel() /*= 0*/{}
 
     /*!
      * \brief This is called by the core when a new Entity is added.

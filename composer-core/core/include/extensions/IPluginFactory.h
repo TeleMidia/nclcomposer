@@ -73,7 +73,7 @@ public:
         QList<LanguageType> lTypes;
         lTypes.append(NCL);
         return lTypes;
-    };
+    }
 
     /*Useful information about the plugin (go to XML?)*/
     virtual QString version() { return "Unknown";}
