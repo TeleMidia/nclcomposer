@@ -110,6 +110,10 @@ private:
 
     void requestBindChange(Entity* entity);
 
+    void requestImportBaseAddition(Entity* entity);
+
+    void requestImportBaseChange(Entity* entity);
+
     void requestCausalConnectorAddition(Entity* entity);
 
     void requestCausalConnectorChange(Entity* entity);

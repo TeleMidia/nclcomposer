@@ -611,6 +611,58 @@ void QnstComposerPlugin::requestBindChange(Entity* entity)
     view->changeEntity(entities[entity->getUniqueId()], properties);
 }
 
+void QnstComposerPlugin::requestImportBaseAddition(Entity* entity)
+{
+    if (entity != NULL){
+        Entity* parent = entity->getParent();
+
+        if (parent != NULL){
+            if (parent->getType() == "connectorBase"){
+                QMap<QString, QString> properties;
+
+                properties["TYPE"] = "importBase";
+
+                if (entity->getAttribute("documentURI") != ""){
+                    properties["projectURI"] = getProject()->getLocation();
+                    properties["documentURI"] = entity->getAttribute("documentURI");
+                }
+
+                if (entity->getAttribute("alias") != ""){
+                    properties["alias"] = entity->getAttribute("alias");
+                }
+
+                view->addEntity(entity->getUniqueId(), "",properties);
+            }
+        }
+    }
+}
+
+void QnstComposerPlugin::requestImportBaseChange(Entity* entity)
+{
+    if (entity != NULL){
+        Entity* parent = entity->getParent();
+
+        if (parent != NULL){
+            if (parent->getType() == "connectorBase"){
+                QMap<QString, QString> properties;
+
+                properties["TYPE"] = "importBase";
+
+                if (entity->getAttribute("documentURI") != ""){
+                    properties["projectURI"] = getProject()->getLocation();
+                    properties["documentURI"] = entity->getAttribute("documentURI");
+                }
+
+                if (entity->getAttribute("alias") != ""){
+                    properties["alias"] = entity->getAttribute("alias");
+                }
+
+                view->changeEntity(entity->getUniqueId(),properties);
+            }
+        }
+    }
+}
+
 void QnstComposerPlugin::requestCausalConnectorAddition(Entity* entity)
 {
     QMap<QString, QString> properties;
