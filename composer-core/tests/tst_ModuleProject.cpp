@@ -1,5 +1,11 @@
 #include "tst_ModuleProject.h"
 
+#include "tst_Utils.h"
+
+#include <iostream>
+#include <fstream>
+using namespace std;
+
 void tst_ModuleProject::initTestCase()
 {
   pjControl = ProjectControl::getInstance();
@@ -11,32 +17,14 @@ void tst_ModuleProject::initTestCase()
   // +"composer"+QDir::separator();
   lgControl = LanguageControl::getInstance();
 
-#ifdef Q_WS_MAC
-  pluginDir = "/Library/Application Support/Composer/";
-  //    pluginList << (pluginDir + "libncl_textual_plugin.dylib");
-  //    pluginList << (pluginDir + "libdebug_console.dylib");
-  //    pluginList << (pluginDir + "liboutline_view.dylib");
-  //    pluginList << (pluginDir + "libproperties_view.dylib");
-  //    pluginList << (pluginDir + "libQnly.dylib");
-  // pluginList << (pluginDir + "libQnst.dylib");
-#elif WIN32
-  //TODO:
-#else
-  pluginDir = "/usr/local/lib/composer/extensions/";
-  pluginList << ("");
-//  pluginList << (pluginDir + "libdebug_console.so");
-//  pluginList << (pluginDir + "libproperties_view.so");
-//  pluginList << (pluginDir + "libQnly.so");
-//  pluginList << (pluginDir + "libQnst.so");
-//  pluginList << (pluginDir + "liboutline_view.so");
-//  pluginList << (pluginDir + "libncl_textual_plugin.so");
-#endif
+  pluginList = TestUtil::getPluginList();
+
   pgControl = PluginControl::getInstance();
 
-//  connect(pgControl,
-//         SIGNAL(addPluginWidgetToWindow(IPluginFactory*,IPlugin*,Project*,int)),
-//         &showWidgets,
-//         SLOT(showPluginWidget(IPluginFactory*, IPlugin*, Project*, int)));
+  connect(pgControl,
+         SIGNAL(addPluginWidgetToWindow(IPluginFactory*,IPlugin*,Project*,int)),
+         &showWidgets,
+         SLOT(showPluginWidget(IPluginFactory*, IPlugin*, Project*, int)));
 }
 
 void tst_ModuleProject::cleanupTestCase()
@@ -109,7 +97,7 @@ void tst_ModuleProject::importFromExistingNCL_data()
           "projects"+QDir::separator()+
           docFile.baseName()+".cpr";
       int size = docFile.size();
-      QString teste = "teste"+k;
+      QString teste = "teste"+QString::number(k);
       QTest::newRow(teste.toStdString().c_str())
           << absDocFile << absProjFile << size << k;
       //if(i==1) break;
@@ -130,19 +118,28 @@ void tst_ModuleProject::importFromExistingNCL()
     pgControl->loadPlugin(pluginName);
   }
 
+  ofstream myfile;
+  QString filename = "output/composer_";
+  filename += QString::number(numPlugins);
+  filename += "_plugins_importNCL_incremental.txt";
+  myfile.open(filename.toStdString().c_str());
+
   timeval begin, end;
   // QVERIFY(pjControl->launchProject(projectFileName));
   gettimeofday(&begin,NULL);
   pjControl->importFromDocument(docFileName, projectFileName);
   gettimeofday(&end, NULL);
-  long long int interval = timeval_subtract_micro(begin, end);
+  long long int interval = TestUtil::timeval_subtract_micro(begin, end);
   cout << numPlugins << " " << size << " " << (double)interval/1000.0 << " ";
   gettimeofday(&begin,NULL);
   pjControl->saveProject(projectFileName);
   gettimeofday(&end,NULL);
-  interval = timeval_subtract_micro(begin, end);
-  cout << (double)interval / 1000.0 << endl;
+  interval = TestUtil::timeval_subtract_micro(begin, end);
+  cout << (double) interval / 1000.0 << endl;
+  QApplication::processEvents();
+//  showWidgets.redraw();
   QVERIFY(pjControl->closeProject(projectFileName));
+  myfile.close();
 }
 
 void tst_ModuleProject::importNCLForEachPlugin_data()
@@ -187,80 +184,25 @@ void tst_ModuleProject::importNCLForEachPlugin()
   QString pluginName = pluginList.at(pluginPos);
   pgControl->loadPlugin(pluginName);
 
+  ofstream myfile;
+  QString filename = "output/composer_";
+  filename += QString::number(pluginPos);
+  filename += "_plugin_importForEachplugin.txt";
+  myfile.open(filename.toStdString().c_str());
+
   timeval begin, end;
   gettimeofday(&begin,NULL);
   pjControl->importFromDocument(docFileName, projectFileName);
   gettimeofday(&end, NULL);
-  long long int interval = timeval_subtract_micro(begin, end);
-  cout << pluginName.mid(pluginName.lastIndexOf("/")+1).toStdString().c_str()
+  long long int interval = TestUtil::timeval_subtract_micro(begin, end);
+  myfile << pluginName.mid(pluginName.lastIndexOf("/")+1).toStdString().c_str()
        << " " << size << " " << (double)interval/1000.0 << " ";
-
   gettimeofday(&begin,NULL);
   pjControl->saveProject(projectFileName);
   gettimeofday(&end,NULL);
-  interval = timeval_subtract_micro(begin, end);
-  cout << (double)interval / 1000.0 << endl;
+  interval = TestUtil::timeval_subtract_micro(begin, end);
+  myfile << (double)interval / 1000.0 << endl;
   QVERIFY(pjControl->closeProject(projectFileName));
-}
 
-void tst_ModuleProject::insertNode_data()
-{
-  QTest::addColumn<QString>("projectFileName");
-  QTest::addColumn<int>("nNodes");
-  QTest::addColumn<int>("numPlugins");
-
-  int nNodes = 1000;
-
-  for(int i = 0; i < pluginList.size(); i++)
-  {
-    QString testName = "teste" + i;
-    QString projectName = QDir::separator();
-    projectName += "tmp";
-    projectName += QDir::separator();
-    projectName += "project";
-    projectName += ".cpr";
-    QTest::newRow(testName.toStdString().c_str()) << projectName << nNodes << i;
-  }
-}
-
-void tst_ModuleProject::insertNode()
-{
-  QFETCH(QString, projectFileName);
-  QFETCH(int, nNodes);
-  QFETCH(int, numPlugins);
-
-  for (int i = 0; i < numPlugins ;i++)
-  {
-    QString pluginName = pluginList.at(i);
-    pgControl->loadPlugin(pluginName);
-  }
-
-  QVERIFY(pjControl->launchProject(projectFileName));
-  MessageControl *messageControl =
-      pgControl->getMessageControl(projectFileName);
-  Project *project = ProjectControl::getInstance()
-      ->getOpenProject(projectFileName);
-
-  QMap <QString, QString> attrs;
-  messageControl->anonymousAddEntity("ncl", project->getUniqueId(), attrs);
-  Entity *ncl = project->getEntitiesbyType("ncl").first();
-  messageControl->anonymousAddEntity("body", ncl->getUniqueId(), attrs);
-  Entity *body = project->getEntitiesbyType("body").first();
-  timeval begin, end;
-  long long int interval;
-  for(int i = 0; i < nNodes; i++)
-  {
-    attrs.insert("id", "node");
-    gettimeofday(&begin,NULL);
-    messageControl->anonymousAddEntity("media", body->getParentUniqueId(),
-                                       attrs);
-    gettimeofday(&end, NULL);
-    interval = timeval_subtract_micro(begin, end);
-    cout << numPlugins << " " << i << " " << ((double)interval)/1000.0 << endl;
-    showWidgets.redraw();
-  }
-
-//  ProjectControl::getInstance()->saveProject(projectFileName);
-//  QVERIFY(pgControl->releasePlugins(project));
-  QVERIFY(pjControl->closeProject(project->getLocation()));
+  myfile.close();
 }

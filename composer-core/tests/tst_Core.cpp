@@ -11,6 +11,7 @@
 #include "tst_ModuleLanguage.h"
 #include "tst_ModuleProject.h"
 #include "tst_ModulePlugin.h"
+#include "tst_InsertNode.h"
 
 int run_ModuleInit()
 {
@@ -37,31 +38,14 @@ int run_ModuleProject()
     run_ModuleLanguage();
 }
 
-void myMessageOutput(QtMsgType type, const char *msg)
- {
-     /*switch (type) {
-     case QtDebugMsg:
-         fprintf(stderr, "Debug: %s\n", msg);
-         break;
-     case QtWarningMsg:
-         fprintf(stderr, "Warning: %s\n", msg);
-         break;
-     case QtCriticalMsg:
-         fprintf(stderr, "Critical: %s\n", msg);
-         break;
-     case QtFatalMsg:
-         fprintf(stderr, "Fatal: %s\n", msg);
-         abort();
-     }*/
- }
-
-
-int main(int argc, char *argv[])
+int run_InsertNode()
 {
-  qInstallMsgHandler(myMessageOutput);
-  QApplication app(argc, argv);
-  run_ModuleProject();
+    tst_InsertNode testInsertNode;
+    QStringList args;
+    args.append("-v2");
+    return QTest::qExec(&testInsertNode, args);
 }
 
-// QTEST_MAIN(tst_ModuleProject)
+//QTEST_MAIN(tst_ModuleProject)
 //QTEST_MAIN(tst_ModulePlugin)
+QTEST_MAIN(tst_InsertNode)

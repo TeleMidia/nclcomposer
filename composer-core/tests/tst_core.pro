@@ -28,10 +28,13 @@ SOURCES += \
     tst_Core.cpp \
     tst_ModulePlugin.cpp \
     tst_ModuleProject.cpp \
-    tst_ModuleInit.cpp
+    tst_ModuleInit.cpp \
+    tst_InsertNode.cpp
 
 HEADERS += \
     tst_ModuleLanguage.h \
     tst_ModulePlugin.h \
     tst_ModuleProject.h \
-    tst_ModuleInit.h
+    tst_ModuleInit.h \
+    tst_InsertNode.h \
+    tst_Utils.h
