@@ -121,6 +121,8 @@ private:
     PerspectiveManager *perspectiveManager;
     PluginDetailsDialog *pluginDetailsDialog;
 
+    QProcess *proc;
+
 private:
     Ui::ComposerMainWindow *ui; /*!< A reference to  */
     /*!
@@ -321,6 +323,11 @@ public slots:
       \brief Called by the user when he/she wants to open an existent project.
      */
     void openProject();
+
+    /*!
+     * \brief Show the NCL Composer Help.
+     */
+    bool showHelp();
 
     void undo();
     void redo();

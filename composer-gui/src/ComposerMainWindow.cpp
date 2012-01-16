@@ -84,6 +84,8 @@ ComposerMainWindow::ComposerMainWindow(QApplication &app, QWidget *parent)
   splash.finish(this);
   connect(&app, SIGNAL(focusChanged(QWidget *, QWidget *)),
           this, SLOT(focusChanged(QWidget *, QWidget *)));
+
+  proc = NULL;
 }
 
 ComposerMainWindow::~ComposerMainWindow()
@@ -766,6 +768,8 @@ void ComposerMainWindow::createActions() {
 
   connect (ui->actionGo_to_Clube_NCL_Website, SIGNAL(triggered()),
            this, SLOT(gotoNCLClubWebsite()));
+
+  connect (ui->action_Help, SIGNAL(triggered()), this, SLOT(showHelp()));
 }
 
 void ComposerMainWindow::createStatusBar()
@@ -1485,6 +1489,35 @@ void ComposerMainWindow::redo()
 void ComposerMainWindow::gotoNCLClubWebsite()
 {
   QDesktopServices::openUrl(QUrl("http://club.ncl.org.br"));
+}
+
+bool ComposerMainWindow::showHelp()
+{
+  if (!proc)
+    proc = new QProcess();
+
+  if (proc->state() != QProcess::Running) {
+    QString app = QLibraryInfo::location(QLibraryInfo::BinariesPath) + QDir::separator();
+#if !defined(Q_OS_MAC)
+    app += QLatin1String("assistant");
+#else
+    app += QLatin1String("Assistant.app/Contents/MacOS/Assistant");
+#endif
+
+    QStringList args;
+//    args << QLatin1String("-collectionFile")
+//         << QLatin1String("help/composerhelp.qhc")
+//         << QLatin1String("-enableRemoteControl");
+
+    proc->start(app, args);
+
+    if (!proc->waitForStarted()) {
+      QMessageBox::critical(0, QObject::tr("Simple Text Viewer"),
+                    QObject::tr("Unable to launch Qt Assistant (%1)").arg(app));
+      return false;
+    }
+  }
+  return true;
 }
 
 } } //end namespace

@@ -14,27 +14,16 @@
 
 using namespace composer::gui;
 
-/*!
- \mainpage
-This is the online reference for developing with the NCL Composer.
-NCL Composer is a multiplatform and flexible multimedia authoring tool
-for Interactive Digital TV applications.
-
-\section sec_features Features
-List of features
-
-\section sec_tutorials Tutorials
-List of tutorials
-
-\section sec_copyright Copyright Policy
-NCL Composer is developed by Telemidia/PUC-Rio since 2011 and available over
-<a target='_blank' href='http://eclipse.org/legal/epl-v10.html'>
-Eclipse Public License</a>.
-*/
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
     a.setQuitOnLastWindowClosed(true);
+
+    QTranslator composerTranslator;
+    QString filename = "composer_br";
+    filename = filename.toLower();
+    composerTranslator.load(filename);
+    a.installTranslator(&composerTranslator);
 
     QResource::registerResource("images.qrc");
     QCoreApplication::setOrganizationName("Telemidia Lab");

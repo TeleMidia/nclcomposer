@@ -138,7 +138,8 @@ FORMS   += ui/PreferencesDialog.ui \
     ui/PluginDetailsDialog.ui \
     ui/EnvironmentPreferencesWidget.ui \
     ui/WelcomeWidget.ui \
-    ui/AboutDialog.ui
+    ui/AboutDialog.ui \
+    ui/PublishApplication.ui
 
 unix:!macx {
     INSTALLS += target desktop icon64 icon48
