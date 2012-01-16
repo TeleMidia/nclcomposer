@@ -2,7 +2,7 @@ NCL Composer Core
 =================
 This is the NCL Composer Core project.
 
-NCL Composer Core is a minimal plugin based microcore to a hierarchical based 
+NCL Composer Core is a minimal plugin based microkernel to hierarchical-based 
 language.
 
 To more information about the NCL Composer architecture and how the NCL 
