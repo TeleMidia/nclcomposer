@@ -641,7 +641,13 @@ void QnstComposerPlugin::requestSimpleConditionAddition(Entity* entity)
 
     properties["TYPE"] = "simpleCondition";
 
-    properties["connector"] = entities[entity->getParentUniqueId()];
+    Entity* conn = entity->getParent();
+
+    while (conn->getType() != "causalConnector" && conn != getProject()){
+        conn = conn->getParent();
+    }
+
+    properties["connector"] = entities[conn->getUniqueId()];
 
     if (entity->getAttribute("role") != ""){
         properties["role"] = entity->getAttribute("role");
@@ -655,7 +661,14 @@ void QnstComposerPlugin::requestSimpleConditionChange(Entity* entity)
     QMap<QString, QString> properties;
 
     properties["TYPE"] = "simpleCondition";
-    properties["connector"] = entities[entity->getParentUniqueId()];
+
+    Entity* conn = entity->getParent();
+
+    while (conn->getType() != "causalConnector" && conn != getProject()){
+        conn = conn->getParent();
+    }
+
+    properties["connector"] = entities[conn->getUniqueId()];
 
     if (entity->getAttribute("role") != ""){
         properties["role"] = entity->getAttribute("role");
@@ -670,7 +683,13 @@ void QnstComposerPlugin::requestSimpleActionAddition(Entity* entity)
 
     properties["TYPE"] = "simpleAction";
 
-    properties["connector"] = entities[entity->getParentUniqueId()];
+    Entity* conn = entity->getParent();
+
+    while (conn->getType() != "causalConnector" && conn != getProject()){
+        conn = conn->getParent();
+    }
+
+    properties["connector"] = entities[conn->getUniqueId()];
 
     if (entity->getAttribute("role") != ""){
         properties["role"] = entity->getAttribute("role");
@@ -684,7 +703,14 @@ void QnstComposerPlugin::requestSimpleActionChange(Entity* entity)
     QMap<QString, QString> properties;
 
     properties["TYPE"] = "simpleAction";
-    properties["connector"] = entities[entity->getParentUniqueId()];
+
+    Entity* conn = entity->getParent();
+
+    while (conn->getType() != "causalConnector" && conn != getProject()){
+        conn = conn->getParent();
+    }
+
+    properties["connector"] = entities[conn->getUniqueId()];
 
     if (entity->getAttribute("role") != ""){
         properties["role"] = entity->getAttribute("role");
@@ -1303,6 +1329,10 @@ void QnstComposerPlugin::requestBindAddition(const QString uid, const QString pa
         cattributes["role"] = properties["condition"];
         cattributes["component"] = properties["component"];
 
+        if (properties["interface"] != ""){
+            cattributes["interface"] = properties["interface"];
+        }
+
         request = uid;
 
         emit addEntity("bind", liknUID, cattributes, false);
@@ -1313,6 +1343,10 @@ void QnstComposerPlugin::requestBindAddition(const QString uid, const QString pa
 
         aattributes["role"] = properties["action"].toLower();
         aattributes["component"] = properties["component"];
+
+        if (properties["interface"] != ""){
+            aattributes["interface"] = properties["interface"];
+        }
 
         request = uid;
 

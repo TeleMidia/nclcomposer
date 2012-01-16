@@ -1,11 +1,11 @@
-#include "qnstgraphicsbody.h"
+    #include "qnstgraphicsbody.h"
 
 QnstGraphicsBody::QnstGraphicsBody(QnstGraphicsNode* parent)
     : QnstGraphicsComposition(parent)
 {
     setnstType(Qnst::Body);
 
-    setColor("#CCFFE6");
+    setColor("#EEEEEE");
 
     createObjects();
     createConnections();
@@ -203,8 +203,8 @@ void QnstGraphicsBody::performPort()
     QnstGraphicsPort* entity = new QnstGraphicsPort(this);
     entity->setTop(0);
     entity->setLeft(0);
-    entity->setWidth(24);
-    entity->setHeight(24);
+    entity->setWidth(28);
+    entity->setHeight(28);
     entity->adjust();
 
     addnstGraphicsEntity(entity);
@@ -215,10 +215,10 @@ void QnstGraphicsBody::performPort()
 void QnstGraphicsBody::performAggregator()
 {
     QnstGraphicsAggregator* entity = new QnstGraphicsAggregator(this);
-    entity->setTop(getHeight()/2 - 28/2);
-    entity->setLeft(getWidth()/2 - 28/2);
-    entity->setWidth(28);
-    entity->setHeight(28);
+    entity->setTop(getHeight()/2 - 18/2);
+    entity->setLeft(getWidth()/2 - 18/2);
+    entity->setWidth(18);
+    entity->setHeight(18);
     entity->adjust();
 
     addnstGraphicsEntity(entity);

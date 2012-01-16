@@ -13,8 +13,6 @@ QnstGraphicsEdge::QnstGraphicsEdge(QnstGraphicsEntity* parent)
     entitya = NULL;
     entityb = NULL;
 
-    setzIndex(-1);
-
     entityaenabled = true;
     entitybenabled = true;
 }

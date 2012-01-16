@@ -5,7 +5,7 @@ QnstGraphicsContext::QnstGraphicsContext(QnstGraphicsNode* parent)
 {
     setnstType(Qnst::Context);
 
-    setColor("#FFE6CC");
+    setColor("#EEEEEE");
 
     createObjects();
     createConnections();
@@ -37,6 +37,7 @@ void QnstGraphicsContext::createObjects()
     menu->actionContext->setEnabled(true);
     menu->actionSwitch->setEnabled(true);
     menu->actionPort->setEnabled(true);
+    menu->actionAggregator->setEnabled(true);
 }
 
 void QnstGraphicsContext::createConnections()
@@ -67,6 +68,7 @@ void QnstGraphicsContext::createConnections()
     connect(menu, SIGNAL(contextRequested()), SLOT(performContext()));
     connect(menu, SIGNAL(switchRequested()), SLOT(performSwitch()));
     connect(menu, SIGNAL(portRequested()), SLOT(performPort()));
+    connect(menu, SIGNAL(aggregatorRequested()), SLOT(performAggregator()));
 }
 
 void QnstGraphicsContext::performImage()
@@ -195,8 +197,22 @@ void QnstGraphicsContext::performPort()
     QnstGraphicsPort* entity = new QnstGraphicsPort(this);
     entity->setTop(0);
     entity->setLeft(0);
-    entity->setWidth(32);
-    entity->setHeight(32);
+    entity->setWidth(28);
+    entity->setHeight(28);
+    entity->adjust();
+
+    addnstGraphicsEntity(entity);
+
+    emit entityAdded(entity);
+}
+
+void QnstGraphicsContext::performAggregator()
+{
+    QnstGraphicsAggregator* entity = new QnstGraphicsAggregator(this);
+    entity->setTop(getHeight()/2 - 18/2);
+    entity->setLeft(getWidth()/2 - 18/2);
+    entity->setWidth(18);
+    entity->setHeight(18);
     entity->adjust();
 
     addnstGraphicsEntity(entity);

@@ -36,7 +36,7 @@ void QnstGraphicsSwitch::createObjects()
     menu->actionMedia->setEnabled(true);
     menu->actionContext->setEnabled(true);
     menu->actionSwitch->setEnabled(true);
-    menu->actionPort->setEnabled(true);
+    menu->actionPort->setEnabled(false);
 }
 
 void QnstGraphicsSwitch::createConnections()
@@ -209,8 +209,8 @@ void QnstGraphicsSwitch::performPort()
     QnstGraphicsPort* entity = new QnstGraphicsPort(this);
     entity->setTop(0);
     entity->setLeft(0);
-    entity->setWidth(32);
-    entity->setHeight(32);
+    entity->setWidth(24);
+    entity->setHeight(24);
     entity->adjust();
 
     addnstGraphicsEntity(entity);

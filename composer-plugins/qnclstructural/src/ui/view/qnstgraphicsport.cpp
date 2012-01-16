@@ -55,7 +55,7 @@ void QnstGraphicsPort::draw(QPainter* painter)
 {
     painter->setRenderHint(QPainter::SmoothPixmapTransform, true);
 
-    painter->drawPixmap(4 + 8/2, 4 + 8/2, getWidth()-8, getHeight()-8, QPixmap(":/icon/port"));
+    painter->drawPixmap(4 + 4/2, 4 + 4/2, getWidth()-4, getHeight()-4, QPixmap(":/icon/port"));
 
     if (isMoving()){
         painter->setBrush(Qt::NoBrush);
@@ -67,5 +67,5 @@ void QnstGraphicsPort::draw(QPainter* painter)
 
 void QnstGraphicsPort::delineate(QPainterPath* painter) const
 {
-    painter->addRect(4 + 8/2, 4 + 8/2, getWidth()-8, getHeight()-8);
+    painter->addRect(4 + 4/2, 4 + 4/2, getWidth()-4, getHeight()-4);
 }
