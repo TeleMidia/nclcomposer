@@ -1,0 +1,104 @@
+#Set this variable to 1 if you want to draw the original graph as well.
+original_graph <- 0
+myspan <- 0.1
+
+#data_from <- 1 #'1toNPlugins'
+data_from <- 2 #individualPlugins
+
+# Define colors to be used for cars, trucks, suvs
+plot_color <- c(rgb(r=0.0,g=0.0,b=0.9), 
+                 "red", "forestgreen",
+                 "black", "gray", "blue")
+
+#Smooth
+smooth <- TRUE
+render_graph <- c(1, 1, 1, 1, 1)
+
+x <- 1:1000
+
+if (data_from == 1)
+{
+  y0 <- scan('output/composer_0_plugins_1.txt')
+  y1 <- scan('output/composer_1_plugins_1.txt')
+  y2 <- scan('output/composer_2_plugins_1.txt')
+  y3  <- scan('output/composer_3_plugins_1.txt')
+  #y4 <- scan('output/composer_4_plugins_1.txt')
+  #y5 <- scan('output/composer_5_plugins_1.txt')
+}
+if(data_from == 2)
+{
+#  y0 <- scan('output/composer_debug_only_without_rendering.txt')
+#  y1 <- scan('output/composer_layout_only_without_rendering.txt')
+#  y2 <- scan('output/composer_textual_only_without_rendering.txt')
+#  y3 <- scan('output/composer_layout_textual_without_rendering.txt')
+  y0 <- scan('output/composer_debug_only.txt')
+  y1 <- scan('output/composer_layout_only.txt')
+  y2 <- scan('output/composer_textual_only.txt')
+  y3 <- scan('output/composer_layout_textual.txt')
+}
+
+plotSumPlugins <- function(x, y, color, 
+                           lty=1, ylim=range(1:300),
+                           mustplot=TRUE, smooth=TRUE)
+{
+  x_y <- y
+  if(smooth)
+    x_y = loess.smooth(x,y,span=myspan)
+
+  if(mustplot)
+  {
+    plot( x_y, type='l',
+          col=color,
+          ylim=ylim,
+          lty=lty,
+          lwd=2,
+          xlab="nth node",
+          ylab="Time (milliseconds)")
+  }
+  else
+  {
+    points( x_y,
+            type='l',
+            lty=lty,
+            lwd=2,
+            col=color)
+  }
+}
+
+ylim = range(y0,y1,y2,y3)
+
+if(data_from == 1)
+{
+  plotSumPlugins(x, y0, plot_color[1], ylim=ylim, mustplot=TRUE,lty=1)
+  plotSumPlugins(x, y1, plot_color[2], ylim=ylim, mustplot=FALSE,lty=2)
+  plotSumPlugins(x, y2, plot_color[3], ylim=ylim, mustplot=FALSE,lty=4)
+  plotSumPlugins(x, y3, plot_color[4], ylim=ylim, mustplot=FALSE,lty=8)
+}
+if(data_from == 2)
+{
+  plotSumPlugins( x, y0, plot_color[1], ylim=ylim,
+                  mustplot=TRUE,lty=1, smooth=smooth)
+  plotSumPlugins( x, y1, plot_color[2], ylim=ylim,
+                  mustplot=FALSE,lty=2, smooth=smooth)
+  plotSumPlugins( x, y2, plot_color[3], ylim=ylim,
+                  mustplot=FALSE,lty=3, smooth=smooth)
+  plotSumPlugins( x, y3, plot_color[4], ylim=ylim,
+                  mustplot=FALSE,lty=4, smooth=smooth)
+  legend (1, 200,
+        c("Debug", "Layout", "Textual", "Layout+Textual"),
+        lty = c(1,2,3,4))
+
+}
+
+title(main="Time to add the nth node in the document")
+
+if (original_graph == 1)
+{
+  points(x, y0, pch=19)
+  points(x, y1, pch=19)
+  points(x, y2, pch=19)
+  points(x, y3, pch=19)
+  points(x, y4, pch=19)
+  points(x, y5, pch=19)
+}
+

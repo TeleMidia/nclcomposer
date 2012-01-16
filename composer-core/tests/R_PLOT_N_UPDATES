@@ -1,0 +1,56 @@
+#Configuration
+smooth <- TRUE
+myspan <- 0.08
+
+xlab <- "Consecutive modifications in the internal model"
+ylab <- "Time (milliseconds) to perform X modifications"
+
+png("composer_n_updates.png", width=1600, height=900)
+
+# Set default font size
+par(cex=2.3)
+
+# Load the files.
+y1 <- scan('output/composer_1_plugins_incremental_100_nodes.txt')
+y2 <- scan('output/composer_1_plugins_updateFromModel_100_nodes.txt')
+
+x1 <- 1:100
+x2 <- x1
+
+xlim <- range(x1, x2)
+ylim <- range(y1, y2)
+
+# Plot the points
+if(smooth)
+{
+  plot( loess.smooth(x1, y1,span=myspan), ylim=ylim, xlim=xlim,
+        type='l',
+        col='red', lwd=3, lty=1,
+        xlab=xlab, ylab=ylab)
+
+  points( loess.smooth(x2, y2,span=myspan), ylim=ylim, xlim=xlim,
+          type='l', col='blue', lwd=3, lty=2)
+}
+if(smooth == FALSE) 
+{
+  plot( y1, ylim=ylim, xlim=xlim, type='l', 
+        col='red', lwd=3, lty=1,
+        xlab=xlab, ylab=ylab)
+
+  points(y2, ylim=ylim, xlim=xlim, type='l', 
+        col='blue', lwd=3, lty=2)
+
+}
+
+# Load the legend
+title(main="Comparison of incremental and just one non-incremental updates for a
+document with 100 nodes in Textual View")
+
+legend( 1, 120,
+        c("One non-incremental update after X modifications in the model",
+          "Incremental update for X modifications in the model"),
+        lty=c(1,2), lwd=c(2,1),
+        col=c('red', 'blue') );
+
+dev.off();
+

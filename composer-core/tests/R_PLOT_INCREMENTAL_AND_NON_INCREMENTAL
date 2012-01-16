@@ -1,0 +1,42 @@
+#Configuration
+smooth <-TRUE
+myspan <- 0.06
+
+x <- 1:5000
+ylim <- range(0:200)
+
+# Set file name, width and height
+png("composer_incremental_nonincremental.png", width=1600, height=900)
+
+# Set default font size
+par(cex=2.3)
+
+xlab <- "nth node"
+ylab <- "Time (milliseconds) to insert the nth node in a document"
+
+# Load the files.
+y1 <- scan('output/composer_textual_only.txt')
+y2 <- scan('output/composer_textual_only_nonincremental.txt.2')
+
+# Plot the points
+if(smooth)
+{
+  plot( loess.smooth(x,y1,span=myspan), ylim=ylim, type='l', 
+        col='red', lwd=3, lty=1,
+        xlab=xlab, ylab=ylab)
+
+  points(loess.smooth(x,y2,span=myspan), ylim=ylim, type='l', 
+        col='blue', lwd=3, lty=2)
+}
+
+# Load the legend
+title(main="Incremental and non-incremental comparison on Textual View")
+
+legend( 1, 200,
+        c("Textual view with incremental update",
+          "Textual View with non-incremental update"),
+        lty=c(1,2), lwd=c(2,1),
+        col=c('red', 'blue'));
+
+dev.off();
+

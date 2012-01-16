@@ -1,0 +1,59 @@
+# Configuration
+smooth <- TRUE
+myspan <- 0.05
+
+# Set file name, width and height
+png("composer_old_new.png", width=1600, height=900)
+
+# Set default font size
+par(cex=2.3)
+
+xlab <- "nth node"
+ylab <- "Time (milliseconds) to insert the nth node in a document"
+
+# Load the files.
+y1 <- scan('output/composer_old_layout_textual.txt')
+y2 <- scan('output/composer_layout_textual.txt.2')
+
+#yt <- y1
+#y1 <- yt/yt[1]
+#yt <- y2
+#y2 <- yt/yt[3]
+
+ylim <- range(1:2000)
+xlim <- range(1:1000)
+
+x1 <- 1:500
+x2 <- 1:1000
+
+# Plot the points
+if(smooth)
+{
+  plot( loess.smooth(x1, y1,span=myspan), ylim=ylim, xlim=xlim,
+        type='l',
+        col='red', lwd=3, lty=1,
+        xlab=xlab, ylab=ylab)
+
+  points( loess.smooth(x2, y2,span=myspan), ylim=ylim, xlim=xlim,
+          type='l', col='blue', lwd=3, lty=2)
+}
+if(smooth == FALSE) 
+{
+  plot( y1, ylim=ylim, xlim=xlim, type='l', 
+        col='red', lwd=3, lty=1,
+        xlab=xlab, ylab=ylab)
+
+  points(y2, ylim=ylim, xlim=xlim, type='l', 
+        col='blue', lwd=3, lty=2)
+
+}
+
+# Load the legend
+title(main="Composer 1.0 and Composer Microkernel comparison")
+
+legend( 510, 1900,
+        c("Composer 1.0 (Layout+Textual Views)",
+          "Composer Microkernel (Layout+Textual Views)"),
+        lty=c(1,2), lwd=c(2,2),
+        col=c('red', 'blue') );
+dev.off();
