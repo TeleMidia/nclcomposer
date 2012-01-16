@@ -240,6 +240,10 @@ void QnstComposerPlugin::requestEntityAddition(Entity* entity)
         entities[entity->getUniqueId()] = entity->getUniqueId();
 
         requestSimpleActionAddition(entity);
+
+    // if the entity is of type importBase
+    }else if (entity->getType() == "importBase"){
+        requestImportBaseAddition(entity);
     }
 }
 
@@ -296,6 +300,10 @@ void QnstComposerPlugin::requestEntityChange(Entity* entity)
     // if the entity is of type SimpleAction
     }else if (entity->getType() == "simpleAction"){
         requestSimpleActionChange(entity);
+
+    // if the entity is of type ImportBase
+    }else if (entity->getType() == "importBase"){
+        requestImportBaseChange(entity);
     }
 }
 
