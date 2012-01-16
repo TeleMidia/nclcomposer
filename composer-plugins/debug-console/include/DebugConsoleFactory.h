@@ -84,12 +84,12 @@ class DebugConsoleFactory : public QObject,
          */
          QString copyright() {return "Telemidia/PUC-Rio";}
          /*!
-           \brief Returns the license of Debug Console plugin (i.e. GPLv3).
+           \brief Returns the license of Debug Console plugin (i.e. LGPL).
            \todo The complete license description.
 
            \return QString the license of Debug Console.
          */
-         QString license() {return "GPLv3";}
+         QString license() {return "LGPL";}
 
          /*!
            \brief Returns a description of the Debug Console View
@@ -101,7 +101,7 @@ class DebugConsoleFactory : public QObject,
 
          QString url() {return "http://composer.telemidia.puc-rio.br/debug";}
 
-         QString category() {return "Debug";}
+         QString category() {return "General";}
 
 };
 
