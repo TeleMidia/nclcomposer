@@ -26,7 +26,13 @@ namespace composer{
 
         namespace model {
             class Project;
-} } } //end namespace
+        }
+        namespace util {
+          class EditCommand;
+          class AddCommand;
+          class RemoveCommand;
+        }
+} } //end namespace
 
 namespace composer {
     namespace core {
@@ -45,6 +51,10 @@ class COMPOSERCORESHARED_EXPORT Entity : public QObject
     friend class composer::core::model::Project;
     friend class composer::core::MessageControl;
     friend class composer::core::ProjectReader;
+
+    friend class composer::core::util::EditCommand;
+    friend class composer::core::util::AddCommand;
+    friend class composer::core::util::RemoveCommand;
 
 private:
     QMutex lockAtts;
@@ -82,10 +92,11 @@ protected:
      * \brief Contructor.
      *
      * \param uniqueId the uniqueId of this Entiy.
+     * \param type the type of the Entity.
      * \param atts attributes to be set to this Entity.
      * \param parent the QObject parent.
      */
-    explicit Entity(QString uniqueId, QMap<QString,QString> &atts,
+    explicit Entity(QString uniqueId, QString type, QMap<QString,QString> &atts,
                     QObject *parent = 0);
 
     /*!
@@ -198,6 +209,13 @@ public:
      * \param ntabs the number of tabs to be inserted before the current entity.
      */
     QString toString(int ntabs);
+
+    /*!
+     * \brief Creates a clone of the current entity.
+     *
+     * All the content of the entity will be cloned, including its uniqueId.
+     */
+    Entity *cloneEntity();
 };
 
 } } } //end namespace

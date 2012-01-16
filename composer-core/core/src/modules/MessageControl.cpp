@@ -12,6 +12,9 @@
 
 #include <QMetaObject>
 #include <QMetaMethod>
+#include <QApplication>
+
+#include "util/Commands.h"
 
 namespace composer {
 namespace core {
@@ -22,6 +25,8 @@ MessageControl::MessageControl(Project *project)
 
   //Register MetaType allowing to be used by invoke
   qRegisterMetaType<void *>("Entity *");
+
+  qUndoStack = new QUndoStack(this);
 }
 
 MessageControl::~MessageControl()
@@ -30,9 +35,10 @@ MessageControl::~MessageControl()
 }
 
 void MessageControl::anonymousAddEntity( QString type,
-                                        QString parentEntityId,
-                                        QMap<QString,QString>& atts,
-                                        bool force)
+                                         QString parentEntityId,
+                                         QMap<QString,QString>& atts,
+                                         bool force,
+                                         bool notifyPlugins)
 {
   Entity *ent = NULL;
 
@@ -44,7 +50,8 @@ void MessageControl::anonymousAddEntity( QString type,
     project->addEntity(ent, parentEntityId);
 
     //send message to All PLUGINS interested in this message.
-    sendEntityAddedMessageToPlugins("", ent);
+    if(notifyPlugins)
+      sendEntityAddedMessageToPlugins("", ent);
   }
   catch(exception& e)
   {
@@ -55,9 +62,88 @@ void MessageControl::anonymousAddEntity( QString type,
   }
 }
 
-void MessageControl::onAddEntity( QString type,
-                                 QString parentEntityId, QMap<QString,QString>& atts,
-                                 bool force)
+void MessageControl::anonymousAddEntity( Entity *entity,
+                                         QString parentEntityId,
+                                         bool force,
+                                         bool notifyPlugins)
+{
+  try
+  {
+    // \todo call validator to check
+    project->addEntity(entity, parentEntityId);
+
+    //send message to All PLUGINS interested in this message.
+    if(notifyPlugins)
+      sendEntityAddedMessageToPlugins("", entity);
+  }
+  catch(exception& e)
+  {
+    // \todo notify error
+    return;
+  }
+}
+
+void MessageControl::anonymousRemoveEntity( QString entityUniqueId, bool force,
+                            bool notifyPlugins)
+{
+  try
+  {
+    Entity *entity = project->getEntityById(entityUniqueId);
+    if(entity != NULL)
+    {
+      //send message to All PLUGINS interested in this message.
+      if(notifyPlugins)
+        sendEntityRemovedMessageToPlugins("", entity);
+
+      QApplication::processEvents();
+      // \todo call validator to check
+      project->removeEntity(entity, false);
+    }
+  }
+  catch(exception& e)
+  {
+    // \todo notify error
+    return;
+  }
+}
+
+void MessageControl::anonymousChangeEntity( QString entityId,
+                                            QMap<QString,QString>& atts,
+                                            bool force,
+                                            bool notifyPlugins)
+{
+  Entity *ent = project->getEntityById(entityId);
+
+  ent->setAtrributes(atts); //do it!
+
+  //send message to All PLUGINS interested in this message.
+  if(notifyPlugins)
+    sendEntityChangedMessageToPlugins("", ent);
+}
+
+void MessageControl::anonymousUpdateFromModel()
+{
+  QList<IPlugin*>::iterator it;
+  QList<IPlugin*> instances =
+      PluginControl::getInstance()
+      ->getPluginInstances(this->project->getLocation());
+
+  QString slotName("updateFromModel()");
+  for (it = instances.begin(); it != instances.end(); it++)
+  {
+    IPlugin *inst = *it;
+    int idxSlot = inst->metaObject()
+        ->indexOfSlot(slotName.toStdString().c_str());
+    if(idxSlot != -1)
+    {
+      QMetaMethod method = inst->metaObject()->method(idxSlot);
+      method.invoke(inst, Qt::DirectConnection);
+    }
+  }
+}
+
+void MessageControl::onAddEntity( QString type, QString parentEntityId,
+                                  QMap<QString,QString>& atts, bool force)
 {
   /* Cast to IPlugin to make sure it's a plugin */
   IPlugin *plugin = qobject_cast<IPlugin *> (QObject::sender());
@@ -74,8 +160,7 @@ void MessageControl::onAddEntity( QString type,
   {
     ent = new Entity(atts);
     ent->setType(type);
-    //TODO - calll validator to check
-    project->addEntity(ent, parentEntityId);
+    qUndoStack->push(new AddCommand(project, ent, parentEntityId));
 
     //send message to All PLUGINS interested in this message.
     sendEntityAddedMessageToPlugins(pluginID, ent);
@@ -94,8 +179,8 @@ void MessageControl::onAddEntity( QString type,
   }
 }
 
-void MessageControl::onEditEntity(Entity *entity,
-                                  QMap<QString,QString> atts, bool force)
+void MessageControl::onEditEntity(Entity *entity, QMap<QString,QString> atts,
+                                  bool force)
 {
   IPlugin *plugin = qobject_cast<IPlugin *>(QObject::sender());
 
@@ -104,8 +189,10 @@ void MessageControl::onEditEntity(Entity *entity,
 
     try
     {
+      qUndoStack->push(new EditCommand(project, entity, atts));
+
       /*! \todo Call validator to check */
-      entity->setAtrributes(atts);
+      entity->setAtrributes(atts); //do it!
 
       // send message to all plugins interested in this message.
       sendEntityChangedMessageToPlugins(pluginID, entity);
@@ -122,8 +209,7 @@ void MessageControl::onEditEntity(Entity *entity,
 
 }
 
-void MessageControl::onRemoveEntity( Entity *entity,
-                                    bool force)
+void MessageControl::onRemoveEntity(Entity *entity, bool force)
 {
   IPlugin *plugin = qobject_cast<IPlugin *> (QObject::sender());
   if(plugin)
@@ -138,17 +224,18 @@ void MessageControl::onRemoveEntity( Entity *entity,
         // the plugins keep pointers to invalid memory location.
         QList <Entity*> willBeRemoved;
         QStack <Entity*> stack;
-        //remove all children
 
+        //remove all children
         /**
-                 * \todo Change the following code to signal/slots with Project.
-                 */
+         * \todo Change the following code to signal/slots with Project.
+         */
         stack.push(entity);
         while(stack.size())
         {
           Entity *currentEntity = stack.top();
           willBeRemoved.push_back(currentEntity);
           stack.pop();
+//          qDebug() << "Will be removed " << currentEntity;
 
           QVector <Entity *> children = currentEntity->getChildren();
           for(int i = 0; i < children.size(); i++)
@@ -163,16 +250,16 @@ void MessageControl::onRemoveEntity( Entity *entity,
         }
 
         /*!
-                 * \todo remember to change, the append should come from the
-                 *   plugin.
-                 */
-        //This function will release the entity instance and its children
-        project->removeEntity(entity, true);
+         * \todo remember to change, the append should come from the
+         *   plugin.
+         */
+//      This function will release the entity instance and its children
+        qUndoStack->push(new RemoveCommand(project, entity));
+//      project->removeEntity(entity, true);
       }
       else
       {
-        plugin->errorMessage(tr("You have tried to remove a NULL \
-                                entity!!"));
+        plugin->errorMessage(tr("You have tried to remove a NULL entity!!"));
       }
     }
     catch(exception e)
@@ -199,11 +286,11 @@ void MessageControl::setListenFilter(QStringList entityList)
 }
 
 /*
- * \todo The implementation of the folling three implementations should be merge
- *          in one function.
+ * \todo The implementation of the folling three implementations should be
+ *   merged into only one function.
  */
 void MessageControl::sendEntityAddedMessageToPlugins( QString pluginInstanceId,
-                                                     Entity *entity)
+                                                      Entity *entity)
 {
   QList<IPlugin*>::iterator it;
   QList<IPlugin*> instances =
@@ -297,14 +384,14 @@ bool MessageControl::pluginIsInterestedIn(IPlugin *plugin, Entity *entity)
 {
   if(!listenEntities.contains(plugin->getPluginInstanceID()))
   {
-    // \todo An empty Entity should means ALL entities too??
+    // \todo An empty Entity should means ALL entities too?
     // Default: Plugin is interested in ALL entities
     return true;
   }
 
   if(listenEntities.value(
-        plugin->getPluginInstanceID()).contains(entity->getType())
-      )
+       plugin->getPluginInstanceID()).contains(entity->getType())
+     )
     return true;
 
   return false;
@@ -314,8 +401,8 @@ void MessageControl::setPluginData(QByteArray data)
 {
   IPlugin *plugin = qobject_cast<IPlugin *> (QObject::sender());
 
-  //The plugin instance ID is composer of: pluginID#UniqueID
-  //So, we have to take just the pluginID of that String:
+  // The plugin instance ID is composed of: pluginID#UniqueID
+  // So, we have to take just the pluginID of that String:
   QString pluginId = plugin->getPluginInstanceID().left(
         plugin->getPluginInstanceID().indexOf("#"));
 
@@ -325,6 +412,16 @@ void MessageControl::setPluginData(QByteArray data)
 void MessageControl::setCurrentProjectAsDirty()
 {
   project->setDirty(true);
+}
+
+void MessageControl::undo()
+{
+  qUndoStack->undo();
+}
+
+void MessageControl::redo()
+{
+  qUndoStack->redo();
 }
 
 } } //end namespace

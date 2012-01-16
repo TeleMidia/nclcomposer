@@ -12,6 +12,7 @@
 
 #include <QObject>
 #include <QDebug>
+#include <QUndoStack>
 
 #include <exception>
 using namespace std;
@@ -30,8 +31,9 @@ using namespace composer::extension;
 
 namespace composer {
 namespace core {
+
 /*!
- \brief Manages the messages send from plugins to NCL Composer Core and
+ \brief Manages the messages sent from plugins to NCL Composer Core and
     vice-versa.
  */
 class COMPOSERCORESHARED_EXPORT MessageControl : public QObject
@@ -41,41 +43,42 @@ class COMPOSERCORESHARED_EXPORT MessageControl : public QObject
 private:
   Project *project; /*!< TODO */
   QMap <QString, QStringList> listenEntities;
+  QUndoStack *qUndoStack;
   /*!< pluginInstanceId to list of entity this plugin is */
 
 public:
   /*!
-     \brief Constructor.
-
-     \param project
-    */
+   * \brief Constructor.
+   *
+   * \param project
+   */
   MessageControl(Project *project);
   /*!
-     \brief Destructor.
-    */
+   * \brief Destructor.
+   */
   ~MessageControl();
 
 private:
   /*!
-     * \brief TODO
-     */
+   * \brief TODO
+   */
   void sendEntityAddedMessageToPlugins( QString pluginInstanceId,
-                                       Entity *entity);
+                                        Entity *entity);
   /*!
-     * \brief TODO
-     */
+   * \brief TODO
+   */
   void sendEntityChangedMessageToPlugins( QString pluginInstanceId,
-                                         Entity *entity);
+                                          Entity *entity);
   /*!
-     * \brief TODO
-     */
+   * \brief TODO
+   */
   void sendEntityRemovedMessageToPlugins( QString pluginInstanceId,
-                                         Entity *entity);
+                                          Entity *entity);
 
 
   /*!
-     * \brief TODO
-     */
+   * \brief TODO
+   */
   bool pluginIsInterestedIn(IPlugin *plugin, Entity *entity);
 
 public slots:
@@ -88,9 +91,9 @@ public slots:
      \param force
     */
   void onAddEntity( QString type,
-                   QString parentEntityId,
-                   QMap<QString,QString>& atts,
-                   bool force);
+                    QString parentEntityId,
+                    QMap<QString,QString>& atts,
+                    bool force);
   /*!
      \brief
 
@@ -107,29 +110,67 @@ public slots:
     */
   void onRemoveEntity(Entity *, bool force);
   /*!
-     * \brief TODO
-     */
+   * \brief TODO
+   */
   void setListenFilter(QStringList list);
 
   /*!
-     * \brief TODO
-     */
+   * \brief TODO
+   */
   void setPluginData(QByteArray data);
 
   /*!
-     * \brief TODO
-     */
+   * \brief TODO
+   */
   void setCurrentProjectAsDirty();
 
   /*!
    * \brief This message is here, mainly for test purposes.
    *
-   * It allows anyone send a addEntityMessage, without necessery being a plugin.
+   * It allows anyone send a addEntityMessage, even when it is not a plugin.
    */
   void anonymousAddEntity(QString type,
                           QString parentEntityId,
                           QMap<QString,QString>& atts,
-                          bool force=false);
+                          bool force = false,
+                          bool notifyPlugins = true);
+
+  /*!
+   * \brief This is a variation of the previous message, where the user pass the
+   *    pointer to an entity already created.
+   */
+  void anonymousAddEntity( Entity *entity,
+                           QString parentEntityId,
+                           bool force = false,
+                           bool notifyPlugins = true);
+
+  /*!
+   * \brief This message is here, mainly for test purposes.
+   *
+   * It allows anyone send a removeEntityMessage, even if it is not a plugin.
+   */
+  void anonymousRemoveEntity( QString entityUniqueId,
+                              bool force = false,
+                              bool notifyPlugins = true);
+  /*!
+   * \brief This message is here, mainly for test purposes.
+   *
+   * It allows anyone send a addEntityMessage, even if it is not a plugin.
+   */
+  void anonymousUpdateFromModel();
+
+  /*!
+   * \brief This message is here, mainly for test purposes.
+   *
+   * It allows anyone send an addEntityMessage, even if it is not a plugin.
+   */
+  void anonymousChangeEntity( QString entityId,
+                              QMap<QString,QString>& atts,
+                              bool force = false,
+                              bool notifyPlugins = true);
+
+  void undo();
+  void redo();
 
 signals:
   void entityAdded(QString, Entity*);

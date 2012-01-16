@@ -136,8 +136,7 @@ bool ProjectReader::startElement( const QString &namespaceURI,
             qDebug() << "trying to add an entity whithout an uniqueId";
         else
         {
-            entity = new Entity(uniqueId, atts, project);
-            entity->setType(qName);
+            entity = new Entity(uniqueId, qName, atts, project);
             project->addEntity(entity, parentEntity->getUniqueId());
         }
     }

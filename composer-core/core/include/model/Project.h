@@ -22,6 +22,11 @@ namespace composer {
         class MessageControl;
         class ProjectControl;
         class ProjectReader;
+        namespace util {
+          class EditCommand;
+          class AddCommand;
+          class DeleteCommand;
+        }
 } } //end namespace
 
 #include "../model/exception/ParentNotFound.h"
@@ -50,6 +55,10 @@ class COMPOSERCORESHARED_EXPORT Project : public Entity
     friend class composer::core::MessageControl;
     friend class composer::core::ProjectControl;
     friend class composer::core::ProjectReader;
+
+    friend class composer::core::util::EditCommand;
+    friend class composer::core::util::AddCommand;
+    friend class composer::core::util::RemoveCommand;
 
 public:
     /*!
@@ -92,7 +101,7 @@ public:
     bool isDirty();
 
 private:
-    QMutex lockEntities; /*!< TODO */
+    QMutex *lockEntities; /*!< TODO */
     QMutex lockLocation; /*!< TODO */
     QMap<QString, Entity*> entities; /*!< TODO */
     QMap<QString, QByteArray> pluginData; /*!< TODO */

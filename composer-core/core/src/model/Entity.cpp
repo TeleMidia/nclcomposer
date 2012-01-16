@@ -17,7 +17,7 @@ Entity::Entity(QObject *parent) :
     QObject(parent)
 {
     setUniqueID(QUuid::createUuid().toString());
-    QMutexLocker locker(&lockParent);
+//    QMutexLocker locker(&lockParent);
     this->parent = (Entity*)parent;
     this->deleteChildren = true;
 }
@@ -25,7 +25,7 @@ Entity::Entity(QObject *parent) :
 Entity::Entity(QMap<QString,QString> &atts, QObject *parent) :
     QObject(parent)
 {
-    QMutexLocker locker(&lockAtts);
+//    QMutexLocker locker(&lockAtts);
     this->atts = atts;
     setUniqueID(QUuid::createUuid().toString());
     QMutexLocker lo(&lockParent);
@@ -33,20 +33,21 @@ Entity::Entity(QMap<QString,QString> &atts, QObject *parent) :
     this->deleteChildren = true;
 }
 
-Entity::Entity(QString uniqueId, QMap<QString,QString> &atts,
+Entity::Entity(QString uniqueId, QString type, QMap<QString, QString> &atts,
                QObject *parent) :
     QObject(parent)
 {
-    QMutexLocker locker(&lockAtts);
+//    QMutexLocker locker(&lockAtts);
     this->atts = atts;
-    setUniqueID(uniqueId);
+    this->_id = uniqueId;
     QMutexLocker lo(&lockParent);
     this->parent = (Entity*)parent;
     this->deleteChildren = true;
+    this->setType(type);
 }
 
 Entity::~Entity() {
-    QMutexLocker locker(&lockChildren);
+//    QMutexLocker locker(&lockChildren);
     if (deleteChildren) {
         while(children.size())
         {
@@ -60,30 +61,30 @@ Entity::~Entity() {
 
 void Entity::setAttribute(QString name, QString value)
 {
-    QMutexLocker locker(&lockAtts);
-    atts[name] = value;
+//    QMutexLocker locker(&lockAtts);
+  atts[name] = value;
 }
 
 void Entity::setAtrributes(QMap<QString,QString> &newatts)
 {
-    QMutexLocker locker(&lockAtts);
-    // this->atts.clear(); // Should it??!
-    for ( QMap<QString,QString>::iterator it = newatts.begin();
-            it != newatts.end(); ++it)
-    {
-        this->atts[it.key()] = it.value();
-    }
+//    QMutexLocker locker(&lockAtts);
+  this->atts.clear(); // Should it??!
+  for ( QMap<QString,QString>::iterator it = newatts.begin();
+          it != newatts.end(); ++it)
+  {
+      this->atts[it.key()] = it.value();
+  }
 }
 
 void Entity::setType(QString type)
 {
-    QMutexLocker locker(&lockType);
+//    QMutexLocker locker(&lockType);
     this->type = type;
 }
 
 void Entity::setUniqueID(QString uniqueId)
 {
-    QMutexLocker locker(&lockID);
+//    QMutexLocker locker(&lockID);
     this->_id = uniqueId;
 }
 
@@ -111,7 +112,7 @@ bool Entity::addChild(Entity *entity)
 //! Deletes the child and its children in a recursive way
 bool Entity::deleteChild(Entity *entity)
 {
-    QMutexLocker locker(&lockChildren);
+//    QMutexLocker locker(&lockChildren);
     entity->setDeleteChildren(true);
     for(int i = 0; i < children.size(); i++)
     {
@@ -135,14 +136,14 @@ QString Entity::getAttribute(QString name)
 void Entity::getAttributeIterator (QMap<QString,QString>::iterator &begin,
                                    QMap<QString,QString>::iterator &end)
 {
-    QMutexLocker locker(&lockAtts);
+//    QMutexLocker locker(&lockAtts);
     begin = this->atts.begin();
     end = this->atts.end();
 }
 
 bool Entity::hasAttribute(const QString &name)
 {
-    QMutexLocker locker(&lockAtts);
+//    QMutexLocker locker(&lockAtts);
     return this->atts.contains(name);
 }
 
@@ -153,19 +154,19 @@ QString Entity::getUniqueId()
 
 QString Entity::getType()
 {
-    QMutexLocker locker(&lockType);
+//    QMutexLocker locker(&lockType);
     return this->type;
 }
 
 Entity* Entity::getParent()
 {
-    QMutexLocker locker(&lockParent);
+//    QMutexLocker locker(&lockParent);
     return parent;
 }
 
 QString Entity::getParentUniqueId()
 {
-    QMutexLocker loecker(&lockParent);
+//    QMutexLocker loecker(&lockParent);
     return parent->getUniqueId();
 }
 
@@ -236,6 +237,17 @@ QString Entity::toString(int ntab)
     out += getType();
     out += ">\n";
     return out;
+}
+
+Entity *Entity::cloneEntity()
+{
+  QMap <QString, QString>::iterator begin, end, it;
+  QMap <QString, QString> attrs;
+  getAttributeIterator(begin, end);
+  for (it = begin; it != end; ++it)
+      attrs[it.key()] = it.value();
+
+  return new Entity(getUniqueId(), getType(), attrs);
 }
 
 }}} //end namespace

@@ -70,7 +70,8 @@ ILanguageProfile* LanguageControl::loadProfile(QString fileName)
               profiles[type] = lProfile;
             }
         }
-    } else qDebug() << "Failed to load languageControl (" << fileName << ")" << loader.errorString();
+    } else qDebug() << "Failed to load languageControl (" << fileName << ")"
+                    << loader.errorString();
     return lProfile;
 }
 

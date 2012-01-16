@@ -39,5 +39,5 @@ QString Utilities::getExtensionForLanguageType(LanguageType type)
     return "";
 }
 
-} } }//end namespace
+} } } //end namespace
 

@@ -138,43 +138,47 @@ void PluginControl::launchProject(Project *project)
 {
   MessageControl *msgControl;
   IPluginFactory *factory;
-  IPlugin *pluginInstance;
   LanguageType type = project->getProjectType();
-  //    ILanguageProfile *profile = LanguageControl::getInstance()->
-  //                                getProfileFromType(type);
   QString location  = project->getLocation();
 
   msgControl = new MessageControl(project);
   messageControls[location] = msgControl;
 
-  QList<QString> plugIDs = pluginsByType.values(type);
   QList<QString>::iterator it;
+  QList<QString> plugIDs = pluginsByType.values(type);
   for (it = plugIDs.begin() ; it != plugIDs.end() ;
        it++)
   {
     factory        = pluginFactories[*it];
-    pluginInstance = factory->createPluginInstance();
-    if (pluginInstance)
-    {
-      pluginInstance->setPluginInstanceID(
-            factory->id() + "#" +QUuid::createUuid().toString());
-      pluginInstance->setProject(project);
-      //            pluginInstance->setLanguageProfile(profile);
-      launchNewPlugin(pluginInstance, msgControl);
-
-      pluginInstances.insert(location, pluginInstance);
-      factoryByPlugin.insert(pluginInstance, factory);
-
-      emit addPluginWidgetToWindow(factory, pluginInstance, project,
-                                   factoryByPlugin.size());
-      //TODO: CREATE A NEW FUNCTION TO UPDATE FROM SAVED CONTENT
-      pluginInstance->init();
-    }
-    else {
-      emit notifyError(tr("Could not create an instance for the"
-                          "plugin (%1)").arg(*it));
-    }
+    launchNewPlugin(factory, project);
   }
+}
+
+void PluginControl::launchNewPlugin(IPluginFactory *factory, Project *project)
+{
+  IPlugin *pluginInstance = factory->createPluginInstance();
+  QString location  = project->getLocation();
+  if (pluginInstance)
+  {
+    pluginInstance->setPluginInstanceID(
+          factory->id() + "#" +QUuid::createUuid().toString());
+    pluginInstance->setProject(project);
+    launchNewPlugin(pluginInstance, messageControls[location]);
+
+    pluginInstances.insert(location, pluginInstance);
+    factoryByPlugin.insert(pluginInstance, factory);
+
+    emit addPluginWidgetToWindow(factory, pluginInstance, project,
+                                 factoryByPlugin.size());
+
+    //TODO: CREATE A NEW FUNCTION TO UPDATE FROM SAVED CONTENT
+    pluginInstance->init();
+  }
+  else {
+    emit notifyError(tr("Could not create an instance for the"
+                        "plugin (%1)").arg(factory->id()));
+  }
+
 }
 
 void PluginControl::launchNewPlugin(IPlugin *plugin, MessageControl *mControl)

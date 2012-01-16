@@ -270,7 +270,7 @@ void NCLStructure::addDatatypeDefaultSuggestions( QString datatype,
                                                   QString values)
 {
   // qDebug() << "NCLStructure::addDatatypeDefaultSuggestion (" << datatype
-  // << ", " << values << ")";
+  //   << ", " << values << ")";
   if(values != "")
     (*dataTypeDefaultSuggestions)[datatype] = values.split(',');
   else

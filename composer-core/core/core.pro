@@ -11,6 +11,8 @@ CONFIG += debug dll
 MOC_DIR = .mocs
 OBJECTS_DIR = .objs
 
+# DEFINES += QT_NO_DEBUG_OUTPUT QT_NO_DEBUG_WARNING
+
 macx:CONFIG += lib_bundle
 
 macx {
@@ -37,7 +39,8 @@ SOURCES += \
     src/model/Project.cpp \
     src/util/Utilities.cpp \
     src/util/AttributeReferences.cpp \
-    src/modules/ProjectReader.cpp
+    src/modules/ProjectReader.cpp \
+    src/util/Commands.cpp
     # src/model/Model.cpp
 
 HEADERS_MAN += \
@@ -57,7 +60,8 @@ HEADERS_UTIL += \
     include/util/ComposerCoreControl_global.h \
     include/util/Singleton.h \
     include/util/AttributeReferences.h \
-    include/util/Utilities.h
+    include/util/Utilities.h \
+    include/util/Commands.h
 
 HEADERS_EXCEPTION +=  include/model/exception/EntityNotFound.h \
     include/model/exception/ParentNotFound.h \

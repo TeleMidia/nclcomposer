@@ -63,9 +63,9 @@ private:
      \brief Constructor.
     */
     virtual ~PluginControl();
-    QHash<QString,IPluginFactory*> pluginFactories;
+    QHash <QString, IPluginFactory*> pluginFactories;
     /*!< PluginFactory by pluginID */
-    QMultiHash<LanguageType, QString> pluginsByType;
+    QMultiHash <LanguageType, QString> pluginsByType;
     /*!< pluginID given LanguageType */
 
     /* TC by DocumentID */
@@ -79,7 +79,6 @@ private:
 
     QMultiHash<IPlugin*, IPluginFactory*> factoryByPlugin;
     /*!< Maps each IPlugin to its corresponding IPluginFactory */
-
     /*!
      \brief Launchs a new plugin and connect it with the given
         MessageControl.
@@ -90,6 +89,7 @@ private:
     void launchNewPlugin(IPlugin *plugin, MessageControl *mControl);
 
 public:
+    void launchNewPlugin(IPluginFactory *factory, Project *project);
     /*!
      \brief
 

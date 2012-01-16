@@ -12,7 +12,7 @@ OBJECTS_DIR = .objs
 
 TARGET = NCLLanguageProfile
 TEMPLATE = lib
-CONFIG += release plugin dll
+CONFIG += debug plugin dll
 
 DEFINES += QT_NO_DEBUG_OUTPUT QT_NO_DEBUG_WARNING
 
