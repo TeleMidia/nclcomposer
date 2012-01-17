@@ -5,7 +5,7 @@ CONFIG -= release
 
 #CONFIG += clubencl
 CONFIG += runssh_on
-QT += xml network webkit
+QT += core xml network webkit
 
 DEFINES += NCLCOMPOSER_GUI_VERSION=\"\\\"0.1.0\\\"\"
 
@@ -105,8 +105,10 @@ clubencl {
 runssh_on {
   DEFINES += WITH_LIBSSH2
 
-  SOURCES += src/SimpleSSHClient.cpp
-  HEADERS += include/SimpleSSHClient.h
+  SOURCES +=    src/SimpleSSHClient.cpp \
+                src/RunRemoteGingaVM.cpp
+  HEADERS +=    include/SimpleSSHClient.h \
+                include/RunRemoteGingaVM.h
 }
 
 SOURCES += main.cpp \

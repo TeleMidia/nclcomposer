@@ -55,6 +55,10 @@ using namespace composer::core;
 #include "WelcomeWidget.h"
 #include "AboutDialog.h"
 
+#ifdef WITH_LIBSSH2
+#include "RunGingaConfig.h"
+#include "RunRemoteGingaVM.h"
+#endif
 using namespace composer::gui;
 
 namespace Ui {
@@ -63,6 +67,12 @@ namespace Ui {
 
 namespace composer {
     namespace gui {
+
+class QThreadEx : public QThread
+{
+protected:
+    void run() { exec(); }
+};
 
 /*!
  * \brief The main Window of Composer.
@@ -122,6 +132,10 @@ private:
     PluginDetailsDialog *pluginDetailsDialog;
 
     QProcess *proc;
+#ifdef WITH_LIBSSH2
+    QThreadEx runRemoteGingaVMThread;
+    RunRemoteGingaVMAction runRemoteGingaVMAction;
+#endif
 
 private:
     Ui::ComposerMainWindow *ui; /*!< A reference to  */
@@ -193,7 +207,6 @@ private:
 
     void updateDockTitleStyle(QFrame *titleBar, bool selected=false);
     void addButtonToDockTitleBar(QFrame *titleBar, QPushButton *button);
-
 
 private slots:
     /*!

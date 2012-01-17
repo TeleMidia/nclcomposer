@@ -17,13 +17,6 @@
 #include <QToolButton>
 #include <QApplication>
 
-#ifdef WITH_LIBSSH2
-#include <QDomDocument>
-#include <QStack>
-#include "RunGingaConfig.h"
-#include "SimpleSSHClient.h"
-#endif
-
 #ifdef USE_MDI
 #include <QMdiArea>
 #endif
@@ -158,7 +151,7 @@ void ComposerMainWindow::readExtensions()
 
   // add all the paths to LibraryPath, i.e., plugins are allowed to install
   // dll dependencies in the extensions path.
-  for(unsigned int i = 0; i < extensions_paths.size(); i++)
+  for(int i = 0; i < extensions_paths.size(); i++)
   {
     qDebug() << "Adding library " << extensions_paths.at(i);
     QApplication::addLibraryPath(extensions_paths.at(i) + "/");
@@ -301,8 +294,13 @@ void ComposerMainWindow::initGUI()
   pluginDetailsDialog = new PluginDetailsDialog(aboutPluginsDialog);
 
   connect(ui->action_RunNCL, SIGNAL(triggered()), this, SLOT(runNCL()));
+#ifdef WITH_LIBSSH2
   connect(ui->action_Run_remotely, SIGNAL(triggered()),
           this, SLOT(runNCLRemotely()));
+#else
+  ui->action_Run_remotely->setEnabled(true);
+  ui->action_Run_remotely->setToolTip(tr("Run NCL Remotely: Your program was not built with this option!!!"));
+#endif
 
   // UNDO/REDO
   connect(ui->actionUndo, SIGNAL(triggered()), this, SLOT(undo()));
@@ -1057,187 +1055,40 @@ void ComposerMainWindow::runNCL()
 
 void ComposerMainWindow::runNCLRemotely()
 {
-  // Checks if there is a current NCL project.
-  QString location = tabProjects->tabToolTip(tabProjects->currentIndex());
-  if(location.isEmpty())
+#ifdef WITH_LIBSSH2
+  if(runRemoteGingaVMThread.isRunning())
   {
+    // There aren't a current project.
     QMessageBox::StandardButton reply;
-    reply = QMessageBox::warning(this, tr("Warning!"),
-                                 tr("There aren't a current NCL project."),
+    reply = QMessageBox::warning(NULL, tr("Warning!"),
+                                 tr("You already have a NCL application running. Please, stop them before you start a new one."),
                                  QMessageBox::Ok);
     return;
   }
 
-
-  // Getting the settings user data.
-  QSettings settings(QSettings::IniFormat, QSettings::UserScope,
-                     "telemidia", "composer");
-  settings.beginGroup("runginga");
-    QString remoteIp = settings.value("remote_ip").toString();
-    QString remoteUser = settings.value("remote_user").toString();
-    QString remotePasswd = settings.value("remote_password").toString();
-    QString remotePath = settings.value("remote_path").toString();
-    QString remoteCmd = settings.value("remote_cmd").toString();
-  settings.endGroup();
-
-#ifdef WITH_LIBSSH2
-  /*\todo Put the code to run a remote NCL */
-  SimpleSSHClient sshclient(remoteUser.toStdString().c_str(),
-                            remotePasswd.toStdString().c_str(),
-                            remoteIp.toStdString().c_str(),
-                            remotePath.toStdString().c_str());
-
-  Project *project = ProjectControl::getInstance()->getOpenProject(location);
-
-  QFileInfo fileNCLInfo (location);
-  QString tmpNCLDir = fileNCLInfo.absoluteDir().absolutePath();
-  QString nclpath = tmpNCLDir;
-  nclpath += QDir::separator();
-  nclpath += "tmp.ncl";
-  qDebug() << "Running NCL File (on a remote Machine): " << nclpath;
-
-  QFile file(nclpath);
-  if(file.open(QFile::WriteOnly | QIODevice::Truncate))
+  int currentTab = tabProjects->currentIndex();
+  if(currentTab != 0)
   {
-    /* Write FILE!! */
-    if(project->getChildren().size())
-      file.write(project->getChildren().at(0)->toString(0).toAscii());
+    QString location = tabProjects->tabToolTip(currentTab);
+    Project *currentProject = ProjectControl::getInstance()->
+                                                      getOpenProject(location);
+    runRemoteGingaVMAction.setCurrentProject(currentProject);
+    runRemoteGingaVMAction.moveToThread(&runRemoteGingaVMThread);
+    connect(&runRemoteGingaVMThread, SIGNAL(started()),
+            &runRemoteGingaVMAction, SLOT(runCurrentProject()));
 
-    file.close();
+    connect(&runRemoteGingaVMAction, SIGNAL(finished()),
+            &runRemoteGingaVMThread, SLOT(quit()));
 
-    // Search the files for all required files.
-    QStack <Entity*> stack;
-    Entity *current = project;
-    stack.push(current);
-    QStringList filesToSend;
-    while(stack.size())
-    {
-      current = stack.top();
-      stack.pop();
-
-      if(current->hasAttribute("src"))
-        filesToSend << current->getAttribute("src");
-      if(current->hasAttribute("documentURI"))
-        filesToSend << current->getAttribute("documentURI");
-      if(current->hasAttribute("focusSrc"))
-        filesToSend << current->getAttribute("focusSrc");
-      if(current->hasAttribute("focusSelSrc"))
-        filesToSend << current->getAttribute("focusSelSrc");
-
-      QVector <Entity*> children = current->getChildren();
-      for(int i = 0; i < children.size(); i++)
-      {
-        stack.push(children[i]);
-      }
-    }
-
-    // \todo This search MUST BE RECURSIVE!!!
-    // \todo This also can be a function.
-    qDebug() << "Must send this files:" << filesToSend;
-    for(int i = 0; i < filesToSend.size(); i++)
-    {
-      QString fullpath = "";
-      QFileInfo fileInfo (filesToSend.at(i));
-      if(fileInfo.exists())
-      {
-        fullpath = fileInfo.absoluteFilePath();
-      }
-      else
-      {
-        fileInfo.setFile(nclpath);
-        QString tmp = fileInfo.absoluteDir().absolutePath();
-        tmp += QDir::separator();
-        tmp += filesToSend.at(i);
-        qDebug() << tmp;
-        fileInfo.setFile(tmp);
-
-        if(fileInfo.exists())
-          fullpath = fileInfo.absoluteFilePath();
-      }
-
-      if(fullpath != "")
-      {
-        qDebug() << fullpath;
-        sshclient.scp_copy_file(fullpath.toStdString().c_str());
-      }
-      else
-      {
-        qDebug() << "Error: Could not send the file " << filesToSend.at(i);
-      }
-    }
-
-    // Fix all the paths in the nclFile.
-    QFile tmpXmlFile(nclpath);
-    QDomDocument document("doc");
-    document.setContent(&tmpXmlFile);
-    QStack <QDomElement> elements;
-    elements.push(document.documentElement());
-    while(elements.size())
-    {
-      QDomElement current = elements.top();
-      elements.pop();
-
-      if(current.hasAttribute("uniqueEntityId"))
-        current.removeAttribute("uniqueEntityId");
-
-      if(current.hasAttribute("src"))
-      {
-        QString src = current.attribute("src");
-        int start = src.lastIndexOf(QDir::separator());
-        src = src.mid(start+1);
-        current.setAttribute("src", src);
-        qDebug() << src;
-      }
-      if(current.hasAttribute("documentURI"))
-      {
-        QString src = current.attribute("documentURI");
-        int start = src.lastIndexOf(QDir::separator());
-        src = src.mid(start+1);
-        current.setAttribute("documentURI", src);
-      }
-      if(current.hasAttribute("focusSrc"))
-      {
-        QString src = current.attribute("focusSrc");
-        int start = src.lastIndexOf(QDir::separator());
-        src = src.mid(start+1);
-        current.setAttribute("focusSrc", src);
-      }
-      if(current.hasAttribute("focusSelSrc"))
-      {
-        QString src = current.attribute("focusSelSrc");
-        int start = src.lastIndexOf(QDir::separator());
-        src = src.mid(start+1);
-        current.setAttribute("focusSelSrc", src);
-      }
-
-      QDomElement child = current.firstChildElement();
-      while(!child.isNull())
-      {
-        elements.push_back(child);
-        child = child.nextSiblingElement();
-      }
-    }
-    tmpXmlFile.close();
-
-    // Replace the old XML file with the with the source fixed!!!
-    if (tmpXmlFile.open( QIODevice::WriteOnly ))
-    {
-       QTextStream textStream(&tmpXmlFile);
-       textStream << document.toString() ;
-       tmpXmlFile.close();
-    }
-    else
-       qWarning() << "I couldn't fix the path in XML file, probably it will "
-                  << "not run!!";
-
-    /* RUNNING GINGA */
-    sshclient.scp_copy_file(nclpath.toStdString().c_str());
-    sshclient.ssh_start_ncl();
+    runRemoteGingaVMThread.start();
   }
   else
   {
-    qWarning() << "Error trying to run NCL. Could not create : "
-               << nclpath << " !";
+    // There aren't a current project.
+    QMessageBox::StandardButton reply;
+    reply = QMessageBox::warning(NULL, tr("Warning!"),
+                                 tr("There aren't a current NCL project."),
+                                 QMessageBox::Ok);
   }
 #endif
 }
