@@ -96,7 +96,9 @@ bool ProjectControl::launchProject(QString location)
     emit startOpenProject(location);
     QMap<QString,QString> atts;
     QString documentId = location;
-    documentId.remove(0, location.lastIndexOf(QDir::separator())+1);
+//    documentId = documentId.remove(0,
+//                                   location.lastIndexOf(QDir::separator())+1);
+    documentId = documentId.remove(0, location.lastIndexOf("/") + 1);
     atts["id"] = documentId;
 
     ProjectReader pr;

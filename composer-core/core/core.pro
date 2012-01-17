@@ -8,6 +8,7 @@ TARGET = ComposerCore
 VERSION = 1.0
 QT += gui
 CONFIG += debug dll
+CONFIG -= release
 MOC_DIR = .mocs
 OBJECTS_DIR = .objs
 
