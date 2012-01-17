@@ -1119,6 +1119,10 @@ void ComposerMainWindow::runNCLRemotely()
         filesToSend << current->getAttribute("src");
       if(current->hasAttribute("documentURI"))
         filesToSend << current->getAttribute("documentURI");
+      if(current->hasAttribute("focusSrc"))
+        filesToSend << current->getAttribute("focusSrc");
+      if(current->hasAttribute("focusSelSrc"))
+        filesToSend << current->getAttribute("focusSelSrc");
 
       QVector <Entity*> children = current->getChildren();
       for(int i = 0; i < children.size(); i++)
@@ -1190,6 +1194,20 @@ void ComposerMainWindow::runNCLRemotely()
         int start = src.lastIndexOf(QDir::separator());
         src = src.mid(start+1);
         current.setAttribute("documentURI", src);
+      }
+      if(current.hasAttribute("focusSrc"))
+      {
+        QString src = current.attribute("focusSrc");
+        int start = src.lastIndexOf(QDir::separator());
+        src = src.mid(start+1);
+        current.setAttribute("focusSrc", src);
+      }
+      if(current.hasAttribute("focusSelSrc"))
+      {
+        QString src = current.attribute("focusSelSrc");
+        int start = src.lastIndexOf(QDir::separator());
+        src = src.mid(start+1);
+        current.setAttribute("focusSelSrc", src);
       }
 
       QDomElement child = current.firstChildElement();
@@ -1468,7 +1486,7 @@ void ComposerMainWindow::undo()
     QString location = tabProjects->tabToolTip(index);
     MessageControl *msgControl =
         PluginControl::getInstance()->getMessageControl(location);
-//    msgControl->undo();
+    msgControl->undo();
   }
 }
 
@@ -1481,7 +1499,7 @@ void ComposerMainWindow::redo()
     QString location = tabProjects->tabToolTip(index);
     MessageControl *msgControl =
         PluginControl::getInstance()->getMessageControl(location);
-//    msgControl->redo();
+    msgControl->redo();
   }
 
 }
