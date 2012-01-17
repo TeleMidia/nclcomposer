@@ -1,6 +1,7 @@
 TARGET = composer
 TEMPLATE = app
 CONFIG += qt warn_on debug console
+CONFIG -= release
 
 #CONFIG += clubencl
 CONFIG += runssh_on
@@ -126,8 +127,7 @@ HEADERS += include/ComposerMainWindow.h \
     include/IPreferencePage.h \
     include/WelcomeWidget.h \
     include/AboutDialog.h \
-    include/RunGingaConfig.h \
-    include/ComposerTabWidget.h
+    include/RunGingaConfig.h
 
 RESOURCES += images.qrc
 
@@ -138,8 +138,7 @@ FORMS   += ui/PreferencesDialog.ui \
     ui/PluginDetailsDialog.ui \
     ui/EnvironmentPreferencesWidget.ui \
     ui/WelcomeWidget.ui \
-    ui/AboutDialog.ui \
-    ui/PublishApplication.ui
+    ui/AboutDialog.ui
 
 unix:!macx {
     INSTALLS += target desktop icon64 icon48
