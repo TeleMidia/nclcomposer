@@ -10,7 +10,7 @@ QT += core xml network webkit
 DEFINES += NCLCOMPOSER_GUI_VERSION=\"\\\"0.1.0\\\"\"
 
 # DEFINES += USE_MDI
-# DEFINES += QT_NO_DEBUG_OUTPUT QT_NO_DEBUG_WARNING
+DEFINES += QT_NO_DEBUG_OUTPUT QT_NO_DEBUG_WARNING
 
 RC_FILE = images/nclcomposer.rc
 
@@ -62,13 +62,12 @@ INCLUDEPATH +=  include
 INCLUDEPATH   +=  ../composer-core/core/include
 LIBS          +=  -L../composer-core/core
 
-
 macx {
     LIBS += -framework ComposerCore
     INCLUDEPATH += /Library/Frameworks/ComposerCore.framework/
     runssh_on {
       DEFINES += WITH_LIBSSH2
-      LIBS += -lssh2 -lgcrypt-11.dll
+      LIBS += -lssh2
     }
 }
 else:unix {
