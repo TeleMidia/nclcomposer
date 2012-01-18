@@ -138,11 +138,7 @@ void QnstComposerPlugin::onEntityAdded(QString pluginID, Entity *entity)
     if (pluginID != getPluginInstanceID()){
         requestEntityAddition(entity);
     }else{
-        if (entity->getType() != "ncl" &&
-            entity->getType() != "compoundCondition" &&
-            entity->getType() != "compoundAction" &&
-            entity->getType() != "simpleCondition" &&
-            entity->getType() != "simpleAction"){
+        if (request != ""){
 
             entities[entity->getUniqueId()] = request;
         }
@@ -249,11 +245,15 @@ void QnstComposerPlugin::requestEntityAddition(Entity* entity)
 
 void QnstComposerPlugin::requestEntityRemotion(Entity* entity)
 {
+
+    // still missing connector, simpleCondition and simpleAction
     if (entity->getType() == "body" ||
         entity->getType() == "context" ||
         entity->getType() == "media" ||
         entity->getType() == "switch" ||
-        entity->getType() == "port"){
+        entity->getType() == "port" ||
+        entity->getType() == "link" ||
+        entity->getType() == "bind"){
 
         view->removeEntity(entities[entity->getUniqueId()]);
     }
@@ -822,6 +822,8 @@ void QnstComposerPlugin::requestEntityAddition(const QString uid, const QString 
 void QnstComposerPlugin::requestEntityRemotion(const QString uid)
 {
     if (entities.key(uid, "nil") != "nil"){
+        qDebug() << "REMOVA:" << getProject()->getEntityById(entities.key(uid))->getType();
+
         emit removeEntity(getProject()->getEntityById(entities.key(uid)), false);
 
         entities.remove(entities.key(uid));
@@ -877,6 +879,8 @@ void QnstComposerPlugin::requestBodyAddition(const QString uid, const QString pa
         request = uid;
 
         emit addEntity("body", entity->getUniqueId(), attributes, false);
+
+        request = "";
     }
 }
 
@@ -906,8 +910,6 @@ void QnstComposerPlugin::requestBodyChange(const QString uid, const QMap<QString
             attributes["id"] = properties["id"];
         }
 
-        request = uid;
-
         emit setAttributes(entity, attributes, false);
     }
 }
@@ -930,6 +932,8 @@ void QnstComposerPlugin::requestContextAddition(const QString uid, const QString
         request = uid;
 
         emit addEntity("context", entity->getUniqueId(), attributes, false);
+
+        request = "";
     }
 }
 
@@ -947,8 +951,6 @@ void QnstComposerPlugin::requestContextChange(const QString uid, const QMap<QStr
         if (properties["refer"] != ""){
             attributes["refer"] = properties["refer"];
         }
-
-        request = uid;
 
         emit setAttributes(entity, attributes, false);
     }
@@ -972,6 +974,8 @@ void QnstComposerPlugin::requestSwitchAddition(const QString uid, const QString 
         request = uid;
 
         emit addEntity("switch", entity->getUniqueId(), attributes, false);
+
+        request = "";
     }
 }
 
@@ -989,8 +993,6 @@ void QnstComposerPlugin::requestSwitchChange(const QString uid, const QMap<QStri
         if (properties["refer"] != ""){
             attributes["refer"] = properties["refer"];
         }
-
-        request = uid;
 
         emit setAttributes(entity, attributes, false);
     }
@@ -1030,6 +1032,8 @@ void QnstComposerPlugin::requestMediaAddition(const QString uid, const QString p
         request = uid;
 
         emit addEntity("media", entity->getUniqueId(), attributes, false);
+
+        request = "";
     }
 }
 
@@ -1064,8 +1068,6 @@ void QnstComposerPlugin::requestMediaChange(const QString uid, const QMap<QStrin
             attributes["descriptor"] = properties["descriptor"];
         }
 
-        request = uid;
-
         emit setAttributes(entity, attributes, false);
     }
 }
@@ -1086,6 +1088,8 @@ void QnstComposerPlugin::requestPortAddition(const QString uid, const QString pa
         request = uid;
 
         emit addEntity("port", entity->getUniqueId(), attributes, false);
+
+        request = "";
     }
 }
 
@@ -1101,8 +1105,6 @@ void QnstComposerPlugin::requestPortChange(const QString uid, const QMap<QString
         attributes["component"] = properties["component"];
 
         attributes["interface"] = properties["interface"];
-
-        request = uid;
 
         emit setAttributes(entity, attributes, false);
     }
@@ -1126,10 +1128,13 @@ void QnstComposerPlugin::requestConnectorAddition(const QString uid, const QStri
 
             emit addEntity("causalConnector", entity->getUniqueId(), attributes, false);
 
+            request = "";
+
             // condition
             QMap<QString, QString> cattributes;
 
             cattributes["role"] = properties["condition"];
+            cattributes["max"] = properties["unbounded"];
 
             emit addEntity("simpleCondition", entities.key(uid), cattributes, false);
 
@@ -1137,6 +1142,7 @@ void QnstComposerPlugin::requestConnectorAddition(const QString uid, const QStri
             QMap<QString, QString> aattributes;
 
             aattributes["role"] = properties["action"].toLower();
+            aattributes["max"] = properties["unbounded"];
 
             emit addEntity("simpleAction", entities.key(uid), aattributes, false);
         }
@@ -1161,6 +1167,7 @@ void QnstComposerPlugin::requestComplexConnectorAddition(const QString uid, cons
 
             emit addEntity("causalConnector", entity->getUniqueId(), attributes, false);
 
+            request = "";
 
             QMap<QString, QString> fakemap;
 
@@ -1186,6 +1193,7 @@ void QnstComposerPlugin::requestComplexConnectorAddition(const QString uid, cons
                 QMap<QString, QString> cattributes;
 
                 cattributes["role"] = properties["condition"];
+                cattributes["max"] = properties["unbounded"];
 
                 emit addEntity("simpleCondition", cpcUID, cattributes, false);
             }
@@ -1196,6 +1204,7 @@ void QnstComposerPlugin::requestComplexConnectorAddition(const QString uid, cons
                 QMap<QString, QString> aattributes;
 
                 aattributes["role"] = properties["action"].toLower();
+                aattributes["max"] = properties["unbounded"];
 
                 emit addEntity("simpleAction", cpaUID, aattributes, false);
             }
@@ -1257,6 +1266,8 @@ void QnstComposerPlugin::requestLinkAddition(const QString uid, const QString pa
 
         emit addEntity("link", entity->getUniqueId(), attributes, false);
 
+        request = "";
+
         Entity* parent = getProject()->getEntityById(entities.key(uid));
 
         if (parent != NULL){
@@ -1270,6 +1281,8 @@ void QnstComposerPlugin::requestLinkAddition(const QString uid, const QString pa
 
             emit addEntity("bind", parent->getUniqueId(), cattributes, false);
 
+            request = "";
+
             // bind action
 
             QMap<QString, QString> aattributes;
@@ -1280,6 +1293,8 @@ void QnstComposerPlugin::requestLinkAddition(const QString uid, const QString pa
             request = uid;
 
             emit addEntity("bind", parent->getUniqueId(), aattributes, false);
+
+            request = "";
         }
     }
 }
@@ -1374,11 +1389,17 @@ void QnstComposerPlugin::requestBindAddition(const QString uid, const QString pa
         linkattributes["id"] = properties["link"];
         linkattributes["xconnector"] = properties["connector"];
 
-        request = uid;
+        if (properties["linkUID"] != ""){
+            request = properties["linkUID"];
+        }else{
+            request = QUuid::createUuid().toString();
+        }
 
         emit addEntity("link", getProject()->getEntityById(entities.key(parent))->getUniqueId(), linkattributes, false);
 
-        liknUID = getProject()->getEntityById(entities.key(uid))->getUniqueId();
+        request = "";
+
+        liknUID = getUidById(linkattributes["id"]);
     }
 
     // add bind
@@ -1397,6 +1418,8 @@ void QnstComposerPlugin::requestBindAddition(const QString uid, const QString pa
 
         emit addEntity("bind", liknUID, cattributes, false);
 
+        request = "";
+
     }else if (properties["action"] != ""){
         // bind action
         QMap<QString, QString> aattributes;
@@ -1411,6 +1434,8 @@ void QnstComposerPlugin::requestBindAddition(const QString uid, const QString pa
         request = uid;
 
         emit addEntity("bind", liknUID, aattributes, false);
+
+        request = "";
     }
 }
 
