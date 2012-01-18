@@ -84,6 +84,8 @@ void ValidatorPlugin::updateMessages(std::vector<pair<void *, string> > msgs)
         emit sendBroadcastMessage("validationError", &pairsMessages.back());
     }
 
+    emit sendBroadcastMessage("askAllValidationMessages", 0);
+
 }
 
 void ValidatorPlugin::onEntityAdded(QString ID, Entity *entity)
@@ -146,6 +148,13 @@ void ValidatorPlugin::validationError(QString pluginID, void * param)
 //        pair <Entity *, QString> * p = (pair <Entity *, QString> *) param;
 //        qDebug () << p->first->getType() << " " << p->second;
 //    }
+
+}
+
+void ValidatorPlugin::askAllValidationMessages(QString, void *)
+{
+    for (int i = 0; i < pairsMessages.size(); i++)
+        emit sendBroadcastMessage("validationError", &pairsMessages[i]);
 
 }
 

@@ -34,12 +34,15 @@ public slots:
 
     void errorMessage(QString error);
 
+    void itemSelected (QTreeWidgetItem *);
+    void itemDoubleClickedSelected (QTreeWidgetItem *);
+
+//Composer Messages
     void clearValidationMessages (QString, void *);
     void validationError (QString, void *);
     void validationErrorSelected (QString, void *);
+    void askAllValidationMessages (QString, void *);
 
-    void itemSelected (QTreeWidgetItem *);
-    void itemDoubleClickedSelected (QTreeWidgetItem *);
 
 private:
     void updateModel(Entity *);
