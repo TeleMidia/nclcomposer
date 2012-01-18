@@ -41,4 +41,13 @@ public slots:
 public:
   void setCurrentProject(Project* project);
 };
+
+class StopRemoteGingaVMAction : public QObject
+{
+  Q_OBJECT
+
+public slots:
+  void stopRunningApplication();
+
+};
 #endif // RUNREMOTEGINGAVM_H

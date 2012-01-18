@@ -35,7 +35,10 @@ extern "C" {
 #include <string>
 using namespace std;
 
-class SimpleSSHClient {
+#include <QMutex>
+
+class SimpleSSHClient
+{
 private:
   string username;
   string password;
@@ -43,25 +46,38 @@ private:
   string scppath;
   string scpfile;
 
+  static int libssh2_init_rc; /* Keeps the value returned by lissh2_init */
+  static QMutex mutex;
+
 public:
   /*!
-   * Configure the machine properties.
+   * \brief Configures the machine properties.
    */
   SimpleSSHClient(const char *username, const char *password,
                   const char *hostip, const char *remotepath);
 
   /*!
-   * Copy the file from localpath to the remotepath
+   * \brief Initialize the libssh2 library. This function must be called only
+   *  one time (possible in the beginning of your program).
+   */
+  static int init();
+
+  /*!
+   * \brief Free all data of libssh2.
+   */
+  static void exit();
+
+  /*!
+   * \brief Copy the file from localpath to the remotepath.
    */
   int scp_copy_file(const char *localncl);
 
   /*!
-   * Execute the command
+   * \brief Executes a command in the remote machine.
    */
-  int ssh_start_ncl();
+  int exec_cmd(const char *command);
 
   static int waitsocket(int socket_fd, LIBSSH2_SESSION *session);
-
 };
 
 #endif // SIMPLESSHCLIENT_H

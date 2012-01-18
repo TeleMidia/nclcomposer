@@ -68,7 +68,7 @@ macx {
     INCLUDEPATH += /Library/Frameworks/ComposerCore.framework/
     runssh_on {
       DEFINES += WITH_LIBSSH2
-      LIBS += -lssh2
+      LIBS += -lssh2 -lgcrypt-11.dll
     }
 }
 else:unix {

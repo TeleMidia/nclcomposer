@@ -28,12 +28,14 @@ RunGingaConfig::RunGingaConfig(QWidget *parent):
   setTabOrder(ui->lineEdit_RemoteIP, ui->lineEdit_RemoteUser);
   setTabOrder(ui->lineEdit_RemoteUser, ui->lineEdit_RemotePassword);
   setTabOrder(ui->lineEdit_RemotePassword, ui->lineEdit_RemoteCmd);
+  setTabOrder(ui->lineEdit_RemoteCmd, ui->lineEdit_RemoteStopCmd);
 
   settings.beginGroup("runginga");
   ui->lineEdit_RemoteIP->setText(settings.value("remote_ip").toString());
   ui->lineEdit_RemoteUser->setText(settings.value("remote_user").toString());
   ui->lineEdit_RemotePassword->setText(settings.value("remote_password").toString());
-  ui->lineEdit_RemoteCmd->setText(settings.value("remote_cmd").toString());
+  ui->lineEdit_RemoteCmd->setText(settings.value("remote_start_cmd").toString());
+  ui->lineEdit_RemoteStopCmd->setText(settings.value("remote_stop_cmd").toString());
   ui->lineEdit_RemotePath->setText(settings.value("remote_path").toString());
   settings.endGroup();
 }
@@ -45,7 +47,6 @@ RunGingaConfig::~RunGingaConfig()
 
 void RunGingaConfig::applyValues()
 {
-  qDebug() << "oi";
   QSettings settings(QSettings::IniFormat, QSettings::UserScope,
                      "telemidia", "composer");
 
@@ -53,7 +54,8 @@ void RunGingaConfig::applyValues()
   settings.setValue("remote_ip", ui->lineEdit_RemoteIP->text());
   settings.setValue("remote_user", ui->lineEdit_RemoteUser->text());
   settings.setValue("remote_password", ui->lineEdit_RemotePassword->text());
-  settings.setValue("remote_cmd", ui->lineEdit_RemoteCmd->text());
+  settings.setValue("remote_start_cmd", ui->lineEdit_RemoteCmd->text());
+  settings.setValue("remote_stop_cmd", ui->lineEdit_RemoteStopCmd->text());
   settings.setValue("remote_path", ui->lineEdit_RemotePath->text());
   settings.endGroup();
 }

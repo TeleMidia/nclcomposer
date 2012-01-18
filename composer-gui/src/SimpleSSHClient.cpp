@@ -8,6 +8,61 @@
  *    Telemidia/PUC-Rio - initial API and implementation
  */
 #include "SimpleSSHClient.h"
+#include <gcrypt.h>
+
+// This variable tell us if the libssh2 was initialized properly. This value
+// will be equal to zero only if the libssh2 are safely initialized through
+// \ref SimpleSSHClient::init()
+int SimpleSSHClient::libssh2_init_rc = -1;
+QMutex SimpleSSHClient::mutex;
+
+// QMutex thread callbacks for libgcrypt
+static int boost_mutex_init(void **priv)
+{
+  QMutex *lock = new QMutex();
+  if (!lock)
+    return ENOMEM;
+  *priv = lock;
+  return 0;
+}
+
+static int boost_mutex_destroy(void **lock)
+{
+  delete reinterpret_cast<QMutex*>(*lock);
+  return 0;
+}
+
+static int boost_mutex_lock(void **lock)
+{
+  reinterpret_cast<QMutex*>(*lock)->lock();
+  return 0;
+}
+
+static int boost_mutex_unlock(void **lock)
+{
+  reinterpret_cast<QMutex*>(*lock)->unlock();
+  return 0;
+}
+
+static struct gcry_thread_cbs gcry_threads_boost =
+{ GCRY_THREAD_OPTION_USER, NULL,
+  boost_mutex_init, boost_mutex_destroy,
+  boost_mutex_lock, boost_mutex_unlock };
+
+int SimpleSSHClient::init()
+{
+  // make libgcrypt thread safe
+  // this must be called before any other libgcrypt call
+  gcry_control( GCRYCTL_SET_THREAD_CBS, &gcry_threads_boost );
+
+  SimpleSSHClient::libssh2_init_rc = libssh2_init (0);
+  return libssh2_init_rc;
+}
+
+void SimpleSSHClient::exit()
+{
+  libssh2_exit();
+}
 
 SimpleSSHClient::SimpleSSHClient(const char *username_,
                                  const char *password_,
@@ -22,7 +77,7 @@ SimpleSSHClient::SimpleSSHClient(const char *username_,
 
 int SimpleSSHClient::scp_copy_file(const char *localncl)
 {
-  int sock, i;
+  int sock, i, rc;
   LIBSSH2_SESSION *session;
   LIBSSH2_CHANNEL *channel;
   unsigned long hostaddr = inet_addr(hostip.c_str());
@@ -31,7 +86,6 @@ int SimpleSSHClient::scp_copy_file(const char *localncl)
   const char *fingerprint;
   FILE *local;
   struct stat fileinfo;
-  int rc;
   char mem[1024];
   char *ptr;
 
@@ -47,11 +101,10 @@ int SimpleSSHClient::scp_copy_file(const char *localncl)
   WSAStartup(MAKEWORD(2,0), &wsadata);
 #endif
 
-  rc = libssh2_init (0);
-
-  if (rc != 0)
+  mutex.lock();
+  if (libssh2_init_rc != 0)
   {
-    fprintf (stderr, "libssh2 initialization failed (%d)\n", rc);
+    fprintf (stderr, "libssh2 initialization failed (%d)\n", libssh2_init_rc);
     return 1;
   }
 
@@ -136,6 +189,7 @@ int SimpleSSHClient::scp_copy_file(const char *localncl)
     fprintf(stderr, "Unable to open a session: (%d) %s\n", err, errmsg);
     goto shutdown_copy;
   }
+  mutex.unlock();
 
   fprintf(stderr, "SCP session waiting to send file\n");
   do
@@ -182,6 +236,7 @@ int SimpleSSHClient::scp_copy_file(const char *localncl)
   channel = NULL;
 
 shutdown_copy:
+  mutex.lock();
   if(session)
   {
     libssh2_session_disconnect(session,
@@ -197,32 +252,29 @@ shutdown_copy:
 #endif
   if (local)
     fclose(local);
-
-  fprintf(stderr, "all done\n");
-  libssh2_exit();
-
+  mutex.unlock();
   return 0;
 }
 
-int SimpleSSHClient::ssh_start_ncl()
+int SimpleSSHClient::exec_cmd(const char *command)
 {
-  int sock, i;
+  int sock, rc;
   LIBSSH2_SESSION *session;
   LIBSSH2_CHANNEL *channel;
   LIBSSH2_KNOWNHOSTS *nh;
   unsigned long hostaddr = inet_addr(hostip.c_str());
   struct sockaddr_in sin;
   const char *fingerprint;
-  size_t nread;
-  int rc;
+  // size_t nread;
   size_t len;
   int type;
 
   int exitcode;
   char *exitsignal=(char *)"none";
   int bytecount = 0;
-  string command = "/misc/launcher.sh " + scpfile;
+//  string command = "/misc/launcher.sh " + scpfile;
 
+  mutex.lock();
   /* Ultra basic "connect to port 22 on localhost"
    * Your code is responsible for creating the socket establishing the
    * connection
@@ -276,7 +328,6 @@ int SimpleSSHClient::ssh_start_ncl()
 #if LIBSSH2_VERSION_NUM >= 0x010206
     /* introduced in 1.2.6 */
     int check = libssh2_knownhost_checkp(nh, hostip.c_str(), 22,
-
                                          fingerprint, len,
                                          LIBSSH2_KNOWNHOST_TYPE_PLAIN|
                                          LIBSSH2_KNOWNHOST_KEYENC_RAW,
@@ -284,7 +335,6 @@ int SimpleSSHClient::ssh_start_ncl()
 #else
     /* 1.2.5 or older */
     int check = libssh2_knownhost_check(nh, hostip.c_str(),
-
                                         fingerprint, len,
                                         LIBSSH2_KNOWNHOST_TYPE_PLAIN|
                                         LIBSSH2_KNOWNHOST_KEYENC_RAW,
@@ -306,6 +356,8 @@ int SimpleSSHClient::ssh_start_ncl()
   }
   libssh2_knownhost_free(nh);
 
+  mutex.unlock();
+
   if ( strlen(password.c_str()) != 0 )
   {
     /* We could authenticate via password */
@@ -321,7 +373,6 @@ int SimpleSSHClient::ssh_start_ncl()
   {
     /* Or by public key */
     while ((rc = libssh2_userauth_publickey_fromfile(session, username.c_str(),
-
                                                      "/home/user/"
                                                      ".ssh/id_rsa.pub",
                                                      "/home/user/"
@@ -348,10 +399,10 @@ int SimpleSSHClient::ssh_start_ncl()
   if( channel == NULL )
   {
     fprintf(stderr,"Error\n");
-    exit( 1 );
+    ::exit( 1 );
   }
 
-  while( (rc = libssh2_channel_exec(channel, command.c_str())) ==
+  while( (rc = libssh2_channel_exec(channel, command)) ==
 
          LIBSSH2_ERROR_EAGAIN )
   {
@@ -360,7 +411,7 @@ int SimpleSSHClient::ssh_start_ncl()
   if( rc != 0 )
   {
     fprintf(stderr,"Error\n");
-    exit( 1 );
+    ::exit( 1 );
   }
   for( ;; )
   {
@@ -416,6 +467,7 @@ int SimpleSSHClient::ssh_start_ncl()
 
 
 shutdown_start:
+  mutex.lock();
   if(session) {
     libssh2_session_disconnect( session,
                                 "Normal Shutdown, Thank you for playing");
@@ -426,9 +478,8 @@ shutdown_start:
 #else
   close(sock);
 #endif
+  mutex.unlock();
 
-  fprintf(stderr, "all done\n");
-  libssh2_exit();
   return 0;
 }
 

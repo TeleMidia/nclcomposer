@@ -20,7 +20,6 @@
 #include <QMessageBox>
 #include <QSettings>
 
-
 void RunRemoteGingaVMAction::setCurrentProject(Project *project)
 {
   this->project = project;
@@ -215,7 +214,10 @@ void RunRemoteGingaVMAction::runCurrentProject()
 
       /* RUNNING GINGA */
       sshclient.scp_copy_file(nclLocalPath.toStdString().c_str());
-      sshclient.ssh_start_ncl();
+      QString cmd = remoteCmd;
+      cmd += " ";
+      cmd += remotePath + "/tmp.ncl";
+      sshclient.exec_cmd(cmd.toStdString().c_str());
     }
     else
     {
@@ -229,5 +231,27 @@ void RunRemoteGingaVMAction::runCurrentProject()
   }
 
   emit finished();
+}
+
+void StopRemoteGingaVMAction::stopRunningApplication()
+{
+  // Getting the settings user data.
+  QSettings settings(QSettings::IniFormat, QSettings::UserScope,
+                     "telemidia", "composer");
+  settings.beginGroup("runginga");
+  QString remoteIp = settings.value("remote_ip").toString();
+  QString remoteUser = settings.value("remote_user").toString();
+  QString remotePasswd = settings.value("remote_password").toString();
+  QString remotePath = settings.value("remote_path").toString();
+  QString remoteStopCmd = settings.value("remote_stop_cmd").toString();
+  settings.endGroup();
+
+  /*\todo Put the code to run the remote NCL */
+  SimpleSSHClient sshclient(remoteUser.toStdString().c_str(),
+                            remotePasswd.toStdString().c_str(),
+                            remoteIp.toStdString().c_str(),
+                            remotePath.toStdString().c_str());
+
+  sshclient.exec_cmd(remoteStopCmd.toStdString().c_str());
 
 }

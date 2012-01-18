@@ -55,22 +55,22 @@ QDockWidget {
 }
 
 QTabWidget::tab-bar {
-  border: none;
+/*  border: none; */
   color: rgb(255, 255, 255);
   background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
 	  stop: 0 #a6a6a6, stop: 0.08 #7f7f7f,
 	  stop: 0.39999 #717171, stop: 0.4 #626262,
 	  stop: 0.9 #4c4c4c, stop: 1 #333333);
-  font: 9pt &quot;Nimbus Sans L&quot;;
+  font: 9pt &quot;Nimbus Sans L&quot;;  
  }
 
- QTabBar::tab {
+QTabBar::tab {
 	background: lightgray;
 	color: darkgray;
-	padding: 4px;
-	font: 9pt &quot;Nimbus Sans L&quot;;
+	padding: 4px; 
 	border-top-left-radius: 6px;
  	border-top-right-radius: 6px;
+    border: 2px solid #C4C4C3; 
  }
 
 QTabBar::tab:selected {
@@ -302,6 +302,7 @@ font: 75 7.5pt;</string>
    <addaction name="separator"/>
    <addaction name="action_RunNCL"/>
    <addaction name="action_Run_remotely"/>
+   <addaction name="action_StopRemoteNCL"/>
    <addaction name="separator"/>
   </widget>
   <widget class="QMenuBar" name="menubar">
@@ -313,7 +314,7 @@ font: 75 7.5pt;</string>
      <x>0</x>
      <y>0</y>
      <width>776</width>
-     <height>25</height>
+     <height>21</height>
     </rect>
    </property>
    <property name="layoutDirection">
@@ -606,6 +607,18 @@ font: 75 7.5pt;</string>
   <action name="actionGo_to_Clube_NCL_Website">
    <property name="text">
     <string>Go to NCL Club Website</string>
+   </property>
+  </action>
+  <action name="action_StopRemoteNCL">
+   <property name="icon">
+    <iconset resource="../images.qrc">
+     <normaloff>:/mainwindow/stop</normaloff>:/mainwindow/stop</iconset>
+   </property>
+   <property name="text">
+    <string>Stop</string>
+   </property>
+   <property name="toolTip">
+    <string>Stop the current document.</string>
    </property>
   </action>
  </widget>

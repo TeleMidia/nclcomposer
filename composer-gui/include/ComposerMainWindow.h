@@ -135,6 +135,7 @@ private:
 #ifdef WITH_LIBSSH2
     QThreadEx runRemoteGingaVMThread;
     RunRemoteGingaVMAction runRemoteGingaVMAction;
+    StopRemoteGingaVMAction stopRemoteGingaVMAction;
 #endif
 
 private:
@@ -259,6 +260,7 @@ private slots:
     /*! Run the current open Project.*/
     void runNCL();
     void runNCLRemotely();
+    void stopRemoteNCL();
 
     void launchProjectWizard();
 

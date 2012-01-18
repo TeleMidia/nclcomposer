@@ -79,12 +79,26 @@ ComposerMainWindow::ComposerMainWindow(QApplication &app, QWidget *parent)
           this, SLOT(focusChanged(QWidget *, QWidget *)));
 
   proc = NULL;
+#ifdef WITH_LIBSSH2
+  runRemoteGingaVMAction.moveToThread(&runRemoteGingaVMThread);
+
+  connect(&runRemoteGingaVMThread, SIGNAL(started()),
+          &runRemoteGingaVMAction, SLOT(runCurrentProject()));
+
+  connect(&runRemoteGingaVMAction, SIGNAL(finished()),
+          &runRemoteGingaVMThread, SLOT(quit()));
+
+  SimpleSSHClient::init(); // Initializes the libssh2 library
+#endif
 }
 
 ComposerMainWindow::~ComposerMainWindow()
 {
   delete ui;
   delete menu_Perspective;
+#ifdef WITH_LIBSSH2
+  SimpleSSHClient::exit();
+#endif
 }
 
 void ComposerMainWindow::initModules()
@@ -297,6 +311,8 @@ void ComposerMainWindow::initGUI()
 #ifdef WITH_LIBSSH2
   connect(ui->action_Run_remotely, SIGNAL(triggered()),
           this, SLOT(runNCLRemotely()));
+  connect(ui->action_StopRemoteNCL, SIGNAL(triggered()),
+          this, SLOT(stopRemoteNCL()));
 #else
   ui->action_Run_remotely->setEnabled(true);
   ui->action_Run_remotely->setToolTip(tr("Run NCL Remotely: Your program was not built with this option!!!"));
@@ -1073,12 +1089,6 @@ void ComposerMainWindow::runNCLRemotely()
     Project *currentProject = ProjectControl::getInstance()->
                                                       getOpenProject(location);
     runRemoteGingaVMAction.setCurrentProject(currentProject);
-    runRemoteGingaVMAction.moveToThread(&runRemoteGingaVMThread);
-    connect(&runRemoteGingaVMThread, SIGNAL(started()),
-            &runRemoteGingaVMAction, SLOT(runCurrentProject()));
-
-    connect(&runRemoteGingaVMAction, SIGNAL(finished()),
-            &runRemoteGingaVMThread, SLOT(quit()));
 
     runRemoteGingaVMThread.start();
   }
@@ -1090,6 +1100,13 @@ void ComposerMainWindow::runNCLRemotely()
                                  tr("There aren't a current NCL project."),
                                  QMessageBox::Ok);
   }
+#endif
+}
+
+void ComposerMainWindow::stopRemoteNCL()
+{
+#ifdef WITH_LIBSSH2
+  stopRemoteGingaVMAction.stopRunningApplication();
 #endif
 }
 
@@ -1365,8 +1382,10 @@ bool ComposerMainWindow::showHelp()
   if (!proc)
     proc = new QProcess();
 
-  if (proc->state() != QProcess::Running) {
-    QString app = QLibraryInfo::location(QLibraryInfo::BinariesPath) + QDir::separator();
+  if (proc->state() != QProcess::Running)
+  {
+    QString app = QLibraryInfo::location(QLibraryInfo::BinariesPath) +
+        QDir::separator();
 #if !defined(Q_OS_MAC)
     app += QLatin1String("assistant");
 #else
@@ -1374,9 +1393,9 @@ bool ComposerMainWindow::showHelp()
 #endif
 
     QStringList args;
-//    args << QLatin1String("-collectionFile")
-//         << QLatin1String("help/composerhelp.qhc")
-//         << QLatin1String("-enableRemoteControl");
+//  args << QLatin1String("-collectionFile")
+//       << QLatin1String("help/composerhelp.qhc")
+//       << QLatin1String("-enableRemoteControl");
 
     proc->start(app, args);
 
