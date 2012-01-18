@@ -44,8 +44,7 @@ HEADERS     =   include/NCLTextEditorMainWindow.h \
                 include/NCLTextualViewPluginFactory.h \
                 include/NCLTextualViewPlugin_global.h
 
-SOURCES     =   src/main.cpp \
-                src/NCLTextEditorMainWindow.cpp \
+SOURCES     =   src/NCLTextEditorMainWindow.cpp \
                 src/NCLTextEditor.cpp \
                 src/QsciLexerNCL.cpp \
                 src/QsciNCLAPIs.cpp \
