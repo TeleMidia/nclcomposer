@@ -35,7 +35,6 @@
         <file alias="nclomposer-full">images/nclcomposer-full.png</file>
         <file alias="nclcomposer-full-reflection">images/nclcomposer-full-reflection.png</file>
         <file alias="nclcomposer-splash">images/nclcomposer-splash.png</file>
-        <file alias="logo_telemidia_anim">images/logo_tele.gif</file>
         <file alias="perspective">images/perspective.png</file>
     </qresource>
 </RCC>
