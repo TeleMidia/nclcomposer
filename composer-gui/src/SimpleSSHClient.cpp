@@ -17,7 +17,7 @@ int SimpleSSHClient::libssh2_init_rc = -1;
 QMutex SimpleSSHClient::mutex;
 
 // QMutex thread callbacks for libgcrypt
-static int boost_mutex_init(void **priv)
+static int qmutex_mutex_init(void **priv)
 {
   QMutex *lock = new QMutex();
   if (!lock)
@@ -26,34 +26,34 @@ static int boost_mutex_init(void **priv)
   return 0;
 }
 
-static int boost_mutex_destroy(void **lock)
+static int qmutex_mutex_destroy(void **lock)
 {
   delete reinterpret_cast<QMutex*>(*lock);
   return 0;
 }
 
-static int boost_mutex_lock(void **lock)
+static int qmutex_mutex_lock(void **lock)
 {
   reinterpret_cast<QMutex*>(*lock)->lock();
   return 0;
 }
 
-static int boost_mutex_unlock(void **lock)
+static int qmutex_mutex_unlock(void **lock)
 {
   reinterpret_cast<QMutex*>(*lock)->unlock();
   return 0;
 }
 
-static struct gcry_thread_cbs gcry_threads_boost =
+static struct gcry_thread_cbs gcry_threads_qmutex =
 { GCRY_THREAD_OPTION_USER, NULL,
-  boost_mutex_init, boost_mutex_destroy,
-  boost_mutex_lock, boost_mutex_unlock };
+  qmutex_mutex_init, qmutex_mutex_destroy,
+  qmutex_mutex_lock, qmutex_mutex_unlock };
 
 int SimpleSSHClient::init()
 {
   // make libgcrypt thread safe
   // this must be called before any other libgcrypt call
-  gcry_control( GCRYCTL_SET_THREAD_CBS, &gcry_threads_boost );
+  gcry_control( GCRYCTL_SET_THREAD_CBS, &gcry_threads_qmutex );
 
   SimpleSSHClient::libssh2_init_rc = libssh2_init (0);
   return libssh2_init_rc;
