@@ -64,10 +64,14 @@ LIBS          +=  -L../composer-core/core
 
 macx {
     LIBS += -framework ComposerCore
-    INCLUDEPATH += /Library/Frameworks/ComposerCore.framework/
+   
+   INCLUDEPATH += \
+        /Library/Frameworks/ComposerCore.framework/ \
+        /opt/local/include/
+
     runssh_on {
       DEFINES += WITH_LIBSSH2
-      LIBS += -lssh2
+      LIBS += -L/opt/local/lib -lssh2 -lgcrypt
     }
 }
 else:unix {
