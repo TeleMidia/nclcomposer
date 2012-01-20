@@ -253,7 +253,8 @@ void QnstComposerPlugin::requestEntityRemotion(Entity* entity)
         entity->getType() == "switch" ||
         entity->getType() == "port" ||
         entity->getType() == "link" ||
-        entity->getType() == "bind"){
+        entity->getType() == "bind" ||
+        entity->getType() == "causalConnector"){
 
         view->removeEntity(entities[entity->getUniqueId()]);
     }
@@ -1135,7 +1136,7 @@ void QnstComposerPlugin::requestConnectorAddition(const QString uid, const QStri
             QMap<QString, QString> cattributes;
 
             cattributes["role"] = properties["condition"];
-            cattributes["max"] = properties["unbounded"];
+            cattributes["max"] = "unbounded";
 
             emit addEntity("simpleCondition", entities.key(uid), cattributes, false);
 
@@ -1143,7 +1144,7 @@ void QnstComposerPlugin::requestConnectorAddition(const QString uid, const QStri
             QMap<QString, QString> aattributes;
 
             aattributes["role"] = properties["action"].toLower();
-            aattributes["max"] = properties["unbounded"];
+            aattributes["max"] = "unbounded";
 
             emit addEntity("simpleAction", entities.key(uid), aattributes, false);
         }
@@ -1194,7 +1195,7 @@ void QnstComposerPlugin::requestComplexConnectorAddition(const QString uid, cons
                 QMap<QString, QString> cattributes;
 
                 cattributes["role"] = properties["condition"];
-                cattributes["max"] = properties["unbounded"];
+                cattributes["max"] = "unbounded";
 
                 emit addEntity("simpleCondition", cpcUID, cattributes, false);
             }
@@ -1205,7 +1206,7 @@ void QnstComposerPlugin::requestComplexConnectorAddition(const QString uid, cons
                 QMap<QString, QString> aattributes;
 
                 aattributes["role"] = properties["action"].toLower();
-                aattributes["max"] = properties["unbounded"];
+                aattributes["max"] = "unbounded";
 
                 emit addEntity("simpleAction", cpaUID, aattributes, false);
             }

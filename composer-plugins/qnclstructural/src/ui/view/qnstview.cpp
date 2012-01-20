@@ -942,6 +942,24 @@ void QnstView::removeEntity(const QString uid)
                     clipboard = NULL;
                 }
 
+                if (entity->getnstType() == Qnst::Aggregator){
+                    if (links.contains(entity->getnstUid())){
+                        foreach(QnstBind* b, links[entity->getnstUid()]->getActions()){
+                            binds.remove(b->getnstUid());
+                            brelations.remove(b->getnstUid());
+                        }
+
+                        foreach(QnstBind* b, links[entity->getnstUid()]->getConditions()){
+                            binds.remove(b->getnstUid());
+                            brelations.remove(b->getnstUid());
+                        }
+
+                        link2conn.remove(links[entity->getnstUid()]->getnstId());
+
+                        links.remove(entity->getnstUid());
+                    }
+                }
+
                 entities.remove(uid); delete entity;
 
             }else if (entity->getncgType() == Qncg::Edge){
@@ -968,6 +986,9 @@ void QnstView::removeEntity(const QString uid)
                 entities.remove(edge->getnstUid());
             }
         }
+    }else if (connectors2.contains(uid)){
+        connectors.remove(connectors2[uid]->getName());
+        connectors2.remove(uid);
     }
 }
 
@@ -2104,6 +2125,21 @@ void QnstView::requestEntityRemotion(QnstGraphicsEntity* entity)
                 QnstGraphicsEntity* parent = edge->getEntityA()->getnstGraphicsParent();
 
                 parent->removenstGraphicsEntity(edge);
+
+                if (entity->getnstType() == Qnst::Aggregator){
+                    if (links.contains(entity->getnstUid())){
+                        foreach(QnstBind* b, links[entity->getnstUid()]->getActions()){
+                            binds.remove(b->getnstUid());
+                        }
+
+                        foreach(QnstBind* b, links[entity->getnstUid()]->getConditions()){
+                            binds.remove(b->getnstUid());
+                        }
+
+                        link2conn.remove(links[entity->getnstUid()]->getnstId());
+                        links.remove(entity->getnstUid());
+                    }
+                }
 
                 entities.remove(edge->getnstUid());
             }
