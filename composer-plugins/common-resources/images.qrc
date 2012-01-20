@@ -42,5 +42,6 @@
         <file alias="aggregator">images/icon-aggregator.png</file>
         <file alias="port">images/icon-port.png</file>
         <file alias="metadata">images/icon-metadata.png</file>
+        <file alias="alert">images/icon-alert.png</file>
     </qresource>
 </RCC>
