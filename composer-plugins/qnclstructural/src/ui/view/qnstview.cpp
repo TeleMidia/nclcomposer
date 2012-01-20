@@ -88,10 +88,11 @@ void QnstView::read(QDomElement element, QDomElement parent)
     }else if (element.nodeName() == "media"){
         QString uid = element.attribute("uid");
 
-        QMap<QString, QString> properties;
+        QMap<QString, QString> properties;    
 
         properties["id"] = element.attribute("id");
         properties["type"] = element.attribute("type");
+        properties["src"] = element.attribute("src");
 
         properties["top"] = element.attribute("top");
         properties["left"] = element.attribute("left");
@@ -484,12 +485,20 @@ void QnstView::write(QDomElement element, QDomDocument* dom, QnstGraphicsEntity*
 
         e.setAttribute("type", "media");
 
+        if (((QnstGraphicsMedia*) entity)->getSource() != "" ){
+            e.setAttribute("src", ((QnstGraphicsMedia*) entity)->getSource());
+        }
+
         break;
 
     case Qnst::Image:
         e = dom->createElement("media");
 
         e.setAttribute("type", "image");
+
+        if (((QnstGraphicsMedia*) entity)->getSource() != "" ){
+            e.setAttribute("src", ((QnstGraphicsMedia*) entity)->getSource());
+        }
 
         break;
 
@@ -498,12 +507,20 @@ void QnstView::write(QDomElement element, QDomDocument* dom, QnstGraphicsEntity*
 
         e.setAttribute("type", "video");
 
+        if (((QnstGraphicsMedia*) entity)->getSource() != "" ){
+            e.setAttribute("src", ((QnstGraphicsMedia*) entity)->getSource());
+        }
+
         break;
 
     case Qnst::Text:
         e = dom->createElement("media");
 
         e.setAttribute("type", "text");
+
+        if (((QnstGraphicsMedia*) entity)->getSource() != "" ){
+            e.setAttribute("src", ((QnstGraphicsMedia*) entity)->getSource());
+        }
 
         break;
 
@@ -512,6 +529,10 @@ void QnstView::write(QDomElement element, QDomDocument* dom, QnstGraphicsEntity*
 
         e.setAttribute("type", "settings");
 
+        if (((QnstGraphicsMedia*) entity)->getSource() != "" ){
+            e.setAttribute("src", ((QnstGraphicsMedia*) entity)->getSource());
+        }
+
         break;
 
     case Qnst::Audio:
@@ -519,12 +540,20 @@ void QnstView::write(QDomElement element, QDomDocument* dom, QnstGraphicsEntity*
 
         e.setAttribute("type", "audio");
 
+        if (((QnstGraphicsMedia*) entity)->getSource() != "" ){
+            e.setAttribute("src", ((QnstGraphicsMedia*) entity)->getSource());
+        }
+
         break;
 
     case Qnst::Script:
         e = dom->createElement("media");
 
         e.setAttribute("type", "script");
+
+        if (((QnstGraphicsMedia*) entity)->getSource() != "" ){
+            e.setAttribute("src", ((QnstGraphicsMedia*) entity)->getSource());
+        }
 
         break;
 
@@ -845,7 +874,7 @@ void QnstView::removeEntity(const QString uid)
                         e->getnstType() != Qnst::Action &&
                         e->getnstType() != Qnst::Reference){
 
-                        requestEntityRemotion(e);
+                        removeEntity(e->getnstUid());
                     }
                 }
 
@@ -946,7 +975,13 @@ void QnstView::changeEntity(const QString uid, const QMap<QString, QString> prop
 {
     qDebug() << "[QNST]" << ":" << "Changing entity '"+uid+"'";
 
-    if (entities.contains(uid)){
+    if (links.contains(uid)){
+            changeLink(links[uid], properties);
+
+    }else if (binds.contains(uid)){
+        changeBind(binds[uid], properties);
+
+    }else if (entities.contains(uid)){
         QnstGraphicsEntity* entity = entities[uid];
 
         switch(entity->getnstType()){
@@ -985,12 +1020,6 @@ void QnstView::changeEntity(const QString uid, const QMap<QString, QString> prop
 
     }else if (connectors2.contains(uid)){
         changeConnector(connectors2[uid], properties);
-
-    }else if (links.contains(uid)){
-        changeLink(links[uid], properties);
-
-    }else if (binds.contains(uid)){
-        changeBind(binds[uid], properties);
 
     }else if (properties["TYPE"] == "simpleCondition"){
         changeCondition(uid, properties);
@@ -1297,6 +1326,10 @@ void QnstView::addMedia(const QString uid, const QString parent, const QMap<QStr
             entity->setnstId(properties["id"]);
         }
 
+//        if (properties["src"] != ""){
+            entity->setSource(properties["src"]);
+//        }
+
         if (properties["top"] != ""){
             entity->setTop(properties["top"].toDouble());
         }
@@ -1327,9 +1360,8 @@ void QnstView::changeMedia(QnstGraphicsMedia* entity, const QMap<QString, QStrin
         entity->setnstId(properties["id"]);
     }
 
-//    TODO:
 //    if (properties["src"] != ""){
-//
+        entity->setSource(properties["src"]);
 //    }
 
     if (properties["type"] != ""){
@@ -1369,34 +1401,6 @@ void QnstView::changeMedia(QnstGraphicsMedia* entity, const QMap<QString, QStrin
             entity->setIcon(":/icon/media");
         }
     }
-
-//    if (properties["refer"] != ""){
-//
-//    }
-
-//    if (properties["top"] != ""){
-//
-//    }
-
-//    if (properties["id"] != ""){
-//
-//    }
-
-//    if (properties["left"] != ""){
-//
-//    }
-
-//    if (properties["width"] != ""){
-//
-//    }
-
-//    if (properties["heigh"] != ""){
-//
-//    }
-
-//    if (properties["zindex"] != ""){
-//
-//    }
 
     adjustMedia(entity);
 }
@@ -1664,6 +1668,8 @@ void QnstView::addBind(const QString uid, const QString parent, const QMap<QStri
 
 void QnstView::changeBind(QnstBind* entity, const QMap<QString, QString> properties)
 {
+    qDebug() << "========================== 001";
+
     if (entity != NULL){
         if (properties["role"] != ""){
             entity->setRole(properties["role"]);
@@ -1724,11 +1730,11 @@ void QnstView::adjustBind(QnstBind* entity)
             }
 
             if (parent->getConditions().contains(entity->getnstUid())){
-                parent->getConditions().remove(entity->getnstUid());
+                parent->removeCondition(entity);
             }
 
             if (parent->getActions().contains(entity->getnstUid())){
-                parent->getActions().remove(entity->getnstUid());
+                parent->removeAction(entity);
             }
 
             if (connectors.contains(parent->getxConnector())){
@@ -1756,6 +1762,7 @@ void QnstView::adjustBind(QnstBind* entity)
                     QnstGraphicsEntity* node = (QnstGraphicsEntity*) parent->getnstParent();
 
                     QnstGraphicsAggregator* aggregator = new QnstGraphicsAggregator((QnstGraphicsNode*)node);
+                    aggregator->setnstUid(parent->getnstUid());
                     aggregator->setTop(node->getHeight()/2 - 18/2);
                     aggregator->setLeft(node->getWidth()/2 - 18/2);
                     aggregator->setWidth(18);
@@ -1817,6 +1824,7 @@ void QnstView::adjustBind(QnstBind* entity)
                     QnstGraphicsEntity* node = (QnstGraphicsEntity*) parent->getnstParent();
 
                     QnstGraphicsAggregator* aggregator = new QnstGraphicsAggregator((QnstGraphicsNode*)node);
+                    aggregator->setnstUid(parent->getnstUid());
                     aggregator->setTop(node->getHeight()/2 - 18/2);
                     aggregator->setLeft(node->getWidth()/2 - 18/2);
                     aggregator->setWidth(18);
@@ -3730,10 +3738,25 @@ void QnstView::mouseReleaseEvent(QMouseEvent* event)
 
                                     properties["TYPE"] = "bind";
 
+                                    QnstLink* lo;
+
                                     if (link == "New..."){
                                         properties["link"] = "link"+QString::number(++nlink);
+
+                                        lo = new QnstLink();
+                                        lo->setnstParent(entitya->getnstGraphicsParent());
+                                        lo->setnstId(properties["link"]);
+                                        lo->setnstUid(entitya->getnstUid());
+                                        lo->setxConnector(connName);
+                                        lo->setxConnectorUID(connectors[connName]->getnstUid());
+                                        lo->setAggregatorUID(entitya->getnstUid());
+
+                                        links[lo->getnstUid()] = lo;
+
                                     }else{
                                         properties["link"] = link;
+
+                                        lo = links[entitya->getnstUid()];
                                     }
 
                                     properties["linkUID"] = entitya->getnstUid();
@@ -3745,6 +3768,18 @@ void QnstView::mouseReleaseEvent(QMouseEvent* event)
                                     properties["component"] = entityb->getnstId();
 
                                     properties["role"] = act;
+
+                                    QnstBind* bo = new QnstBind();
+                                    bo->setnstParent(lo);
+                                    bo->setnstUid(entity->getnstUid());
+                                    bo->setRole(properties["action"]);
+                                    bo->setComponent(properties["component"]);
+                                    bo->setComponentUid(entityb->getnstUid());
+
+                                    lo->addAction(bo);
+
+                                    binds[bo->getnstUid()] = bo;
+                                    brelations[bo->getnstUid()] = entity->getnstUid();
 
                                     link2conn[properties["link"]] = connName;
 
@@ -3832,12 +3867,26 @@ void QnstView::mouseReleaseEvent(QMouseEvent* event)
 
                                     properties["TYPE"] = "bind";
 
+                                    QnstLink* lo;
+
                                     if (link == "New..."){
                                         properties["link"] = "link"+QString::number(++nlink);
 
 
+                                        lo = new QnstLink();
+                                        lo->setnstParent(entityb->getnstGraphicsParent());
+                                        lo->setnstId(properties["link"]);
+                                        lo->setnstUid(entityb->getnstUid());
+                                        lo->setxConnector(connName);
+                                        lo->setxConnectorUID(connectors[connName]->getnstUid());
+                                        lo->setAggregatorUID(entityb->getnstUid());
+
+                                        links[lo->getnstUid()] = lo;
+
                                     }else{
                                         properties["link"] = link;
+
+                                        lo = links[entityb->getnstUid()];
                                     }
 
                                     properties["linkUID"] = entityb->getnstUid();
@@ -3849,6 +3898,18 @@ void QnstView::mouseReleaseEvent(QMouseEvent* event)
                                     properties["component"] = entitya->getnstId();
 
                                     properties["role"] = cond;
+
+                                    QnstBind* bo = new QnstBind();
+                                    bo->setnstParent(lo);
+                                    bo->setnstUid(entity->getnstUid());
+                                    bo->setRole(properties["condition"]);
+                                    bo->setComponent(properties["component"]);
+                                    bo->setComponentUid(entitya->getnstUid());
+
+                                    lo->addCondition(bo);
+
+                                    binds[bo->getnstUid()] = bo;
+                                    brelations[bo->getnstUid()] = entity->getnstUid();
 
                                     link2conn[properties["link"]] = connName;
 
@@ -4004,8 +4065,20 @@ void QnstView::mouseReleaseEvent(QMouseEvent* event)
 
                                         QMap<QString, QString> properties;
 
-                                        properties["TYPE"] = "bind";
                                         properties["link"] = "link"+QString::number(++nlink);
+
+                                        QnstLink* lo = new QnstLink();
+                                        lo->setnstParent(aggregator->getnstGraphicsParent());
+                                        lo->setnstId(properties["link"]);
+                                        lo->setnstUid(aggregator->getnstUid());
+                                        lo->setxConnector(connName);
+                                        lo->setxConnectorUID(connectors[connName]->getnstUid());
+                                        lo->setAggregatorUID(aggregator->getnstUid());
+
+                                        links[lo->getnstUid()] = lo;
+
+                                        properties["TYPE"] = "bind";
+
 
                                         properties["connector"] = connName;
                                         properties["condition"] = con;
@@ -4016,7 +4089,20 @@ void QnstView::mouseReleaseEvent(QMouseEvent* event)
 
                                         properties["linkUID"] = aggregator->getnstUid();
 
+
                                         link2conn[properties["link"]] = connName;
+
+                                        QnstBind* bo = new QnstBind();
+                                        bo->setnstParent(lo);
+                                        bo->setnstUid(condition->getnstUid());
+                                        bo->setRole(properties["condition"]);
+                                        bo->setComponent(properties["component"]);
+                                        bo->setComponentUid(entitya->getnstUid());
+
+                                        lo->addCondition(bo);
+
+                                        binds[bo->getnstUid()] = bo;
+                                        brelations[bo->getnstUid()] = condition->getnstUid();
 
                                         emit entityAdded(condition->getnstUid(), parenta->getnstUid(), properties);
 
@@ -4024,10 +4110,21 @@ void QnstView::mouseReleaseEvent(QMouseEvent* event)
 
                                         properties["action"] = act;
 
-                                        properties["component"] = parentb->getnstId();
-                                        properties["interface"] = entityb->getnstId();
+                                        properties["component"] = entityb->getnstId();
 
                                         properties["role"] = act;
+
+                                        QnstBind* bo2 = new QnstBind();
+                                        bo2->setnstParent(lo);
+                                        bo2->setnstUid(action->getnstUid());
+                                        bo2->setRole(properties["action"]);
+                                        bo2->setComponent(properties["component"]);
+                                        bo2->setComponentUid(entityb->getnstUid());
+
+                                        lo->addAction(bo2);
+
+                                        binds[bo2->getnstUid()] = bo2;
+                                        brelations[bo2->getnstUid()] = action->getnstUid();
 
                                         emit entityAdded(action->getnstUid(), parenta->getnstUid(), properties);
                                     }

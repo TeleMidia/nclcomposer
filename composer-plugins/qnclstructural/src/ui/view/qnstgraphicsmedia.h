@@ -14,6 +14,10 @@ public:
 
     void setIcon(QString icon);
 
+    void setSource(QString source);
+
+    QString getSource() const;
+
 protected:
     virtual void draw(QPainter* painter);
 
@@ -25,6 +29,8 @@ private:
     void createConnections();
 
     QString icon;
+
+    QString source;
 };
 
 #endif // QNSTGRAPHICSMEDIA_H

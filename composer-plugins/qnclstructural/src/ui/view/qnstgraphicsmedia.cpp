@@ -9,6 +9,8 @@ QnstGraphicsMedia::QnstGraphicsMedia(QnstGraphicsNode* parent)
 
     setResizable(false);
 
+    source = "";
+
     createObjects();
     createConnections();
 }
@@ -26,6 +28,16 @@ QString QnstGraphicsMedia::getIcon() const
 void QnstGraphicsMedia::setIcon(QString icon)
 {
     this->icon = icon;
+}
+
+QString QnstGraphicsMedia::getSource() const
+{
+    return source;
+}
+
+void QnstGraphicsMedia::setSource(QString source)
+{
+    this->source = source;
 }
 
 void QnstGraphicsMedia::createObjects()
@@ -63,6 +75,10 @@ void QnstGraphicsMedia::draw(QPainter* painter)
     painter->setRenderHint(QPainter::SmoothPixmapTransform, true);
 
     painter->drawPixmap(4 + 8/2, 4 + 8/2, getWidth()-8, getHeight()-16-8, QPixmap(icon));
+
+    if (source == ""){
+        painter->drawPixmap((getWidth()-8)/2 + 16, (getHeight()-16-8)/2 + 16, 16, 16, QPixmap(":/icon/alert"));
+    }
 
     painter->drawText(4 + 8/2, 4 + 8/2 + getHeight()-16-8, getWidth()-8, 16, Qt::AlignCenter, getnstId());
 

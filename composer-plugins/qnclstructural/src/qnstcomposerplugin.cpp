@@ -314,7 +314,8 @@ void QnstComposerPlugin::requestEntitySelection(Entity* entity)
             entity->getType() == "context" ||
             entity->getType() == "media" ||
             entity->getType() == "switch" ||
-            entity->getType() == "port"){
+            entity->getType() == "port" ||
+            entity->getType() == "link"){
 
             view->selectEntity(entities[entity->getUniqueId()]);
         }
@@ -419,9 +420,9 @@ void QnstComposerPlugin::requestMediaAddition(Entity* entity)
         properties["id"] = entity->getAttribute("id");
     }
 
-    if (entity->getAttribute("src") != ""){
+//    if (entity->getAttribute("src") != ""){
         properties["src"] = entity->getAttribute("src");
-    }
+//    }
 
     if (entity->getAttribute("refer") != ""){
         properties["refer"] = entity->getAttribute("refer");
@@ -462,9 +463,9 @@ void QnstComposerPlugin::requestMediaChange(Entity* entity)
         properties["id"] = entity->getAttribute("id");
     }
 
-    if (entity->getAttribute("src") != ""){
+//    if (entity->getAttribute("src") != ""){
         properties["src"] = entity->getAttribute("src");
-    }
+//    }
 
     if (entity->getAttribute("refer") != ""){
         properties["refer"] = entity->getAttribute("refer");
