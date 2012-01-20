@@ -14,7 +14,6 @@
 // will be equal to zero only if the libssh2 are safely initialized through
 // \ref SimpleSSHClient::init()
 int SimpleSSHClient::libssh2_init_rc = -1;
-QMutex SimpleSSHClient::mutex;
 
 // QMutex thread callbacks for libgcrypt
 static int qmutex_mutex_init(void **priv)
@@ -101,7 +100,6 @@ int SimpleSSHClient::scp_copy_file(const char *localncl)
   WSAStartup(MAKEWORD(2,0), &wsadata);
 #endif
 
-  mutex.lock();
   if (libssh2_init_rc != 0)
   {
     fprintf (stderr, "libssh2 initialization failed (%d)\n", libssh2_init_rc);
@@ -189,7 +187,6 @@ int SimpleSSHClient::scp_copy_file(const char *localncl)
     fprintf(stderr, "Unable to open a session: (%d) %s\n", err, errmsg);
     goto shutdown_copy;
   }
-  mutex.unlock();
 
   fprintf(stderr, "SCP session waiting to send file\n");
   do
@@ -236,7 +233,6 @@ int SimpleSSHClient::scp_copy_file(const char *localncl)
   channel = NULL;
 
 shutdown_copy:
-  mutex.lock();
   if(session)
   {
     libssh2_session_disconnect(session,
@@ -252,7 +248,6 @@ shutdown_copy:
 #endif
   if (local)
     fclose(local);
-  mutex.unlock();
   return 0;
 }
 
@@ -274,7 +269,6 @@ int SimpleSSHClient::exec_cmd(const char *command)
   int bytecount = 0;
 //  string command = "/misc/launcher.sh " + scpfile;
 
-  mutex.lock();
   /* Ultra basic "connect to port 22 on localhost"
    * Your code is responsible for creating the socket establishing the
    * connection
@@ -355,8 +349,6 @@ int SimpleSSHClient::exec_cmd(const char *command)
     return 3;
   }
   libssh2_knownhost_free(nh);
-
-  mutex.unlock();
 
   if ( strlen(password.c_str()) != 0 )
   {
@@ -467,7 +459,6 @@ int SimpleSSHClient::exec_cmd(const char *command)
 
 
 shutdown_start:
-  mutex.lock();
   if(session) {
     libssh2_session_disconnect( session,
                                 "Normal Shutdown, Thank you for playing");
@@ -478,7 +469,6 @@ shutdown_start:
 #else
   close(sock);
 #endif
-  mutex.unlock();
 
   return 0;
 }

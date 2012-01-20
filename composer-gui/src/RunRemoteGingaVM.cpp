@@ -117,7 +117,7 @@ void RunRemoteGingaVMAction::runCurrentProject()
   QString remoteUser = settings.value("remote_user").toString();
   QString remotePasswd = settings.value("remote_password").toString();
   QString remotePath = settings.value("remote_path").toString();
-  QString remoteCmd = settings.value("remote_cmd").toString();
+  QString remoteCmd = settings.value("remote_start_cmd").toString();
   settings.endGroup();
 
   /*\todo Put the code to run the remote NCL */

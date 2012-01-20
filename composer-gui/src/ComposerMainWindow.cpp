@@ -1295,8 +1295,10 @@ void ComposerMainWindow::currentTabChanged(int n)
     ui->action_Save->setEnabled(true);
     ui->action_RunNCL->setEnabled(true);
     ui->action_Run_remotely->setEnabled(true);
+    ui->action_StopRemoteNCL->setEnabled(true);
     ui->actionUndo->setEnabled(true);
     ui->actionRedo->setEnabled(true);
+
   }
   else
   {
@@ -1309,6 +1311,7 @@ void ComposerMainWindow::currentTabChanged(int n)
     ui->action_Run_remotely->setEnabled(false);
     ui->actionUndo->setEnabled(false);
     ui->actionRedo->setEnabled(false);
+    ui->action_StopRemoteNCL->setEnabled(false);
   }
 }
 

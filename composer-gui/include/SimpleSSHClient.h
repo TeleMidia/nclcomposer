@@ -47,7 +47,6 @@ private:
   string scpfile;
 
   static int libssh2_init_rc; /* Keeps the value returned by lissh2_init */
-  static QMutex mutex;
 
 public:
   /*!
