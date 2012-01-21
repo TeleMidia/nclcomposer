@@ -1,19 +1,19 @@
 /*
  * Copyright 2011 TeleMidia/PUC-Rio.
- * 
+ *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
- * License as published by the Free Software Foundation; either 
+ * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
- * You should have received a copy of the GNU Lesser General Public 
+ *
+ * You should have received a copy of the GNU Lesser General Public
  * License along with this library.  If not, see
- * <http://www.gnu.org/licenses/>. 
+ * <http://www.gnu.org/licenses/>.
  */
 #include "QsciNCLAPIs.h"
 
@@ -34,7 +34,7 @@ QsciNCLAPIs::~QsciNCLAPIs()
 }
 
 void QsciNCLAPIs::updateAutoCompletionList( const QStringList &context,
-                                           QStringList &list)
+                                            QStringList &list)
 {
   suggesting = SUGGESTING_OTHER;
 
@@ -93,7 +93,7 @@ void QsciNCLAPIs::updateAutoCompletionList( const QStringList &context,
 
           for (; it != attrs->end(); ++it){
             if(     it->first.startsWith(context[i])
-                && !current_attrs.contains(it->first))
+                    && !current_attrs.contains(it->first))
             {
               QString str(it->first);
               list.push_back(str);
@@ -121,11 +121,13 @@ void QsciNCLAPIs::updateAutoCompletionList( const QStringList &context,
     vector <AttributeReferences *>
         references = nclStructure->getReferences(tagname, attribute);
 
-    if(references.size()) //the attribute is reference to other attributes.
+    if(references.size()) //the attribute should be a reference to other
+      //attribute
     {
       NCLTextEditor *nclEditor = ((NCLTextEditor *)lexer()->editor());
 
-      if(nclEditor->parseDocument()) //parse our current document.
+      if(nclEditor->parseDocument()) //parse our current document (and the
+        //included ones).
       {
         for(unsigned int i = 0; i < references.size(); i++)
         {
@@ -154,8 +156,50 @@ void QsciNCLAPIs::updateAutoCompletionList( const QStringList &context,
 
             // \todo suggest elements child of an element with no id.
             elements = nclEditor->
-                             elementsByTagname( references[i]->getRefElement(),
-                                                idValue);
+                elementsByTagname( references[i]->getRefElement(),
+                                   idValue);
+          }
+          else if(references[i]->getScope() ==
+                  AttributeReferences::USERDEFINED_SCOPE)
+          {
+            QString attr;
+            QString userDefinedScope = references[i]->getUserDefinedScope();
+
+            qDebug() << "User defined scope" << userDefinedScope;
+            // \todo The user defined must be recursive, i.e., the user could
+            // define $PARENT.$PARENT.$PARENT...
+            if(userDefinedScope.startsWith("$THIS"))
+            {
+              attr = userDefinedScope.mid(6);
+              qDebug() << "$THIS" << attr;
+              QString idValue = getAttributeValueFromCurrentElement(pos, attr);
+              elements = nclEditor->elementsByTagname(
+                                       references[i]->getRefElement(), idValue);
+            }
+            else if(userDefinedScope.startsWith("$PARENT"))
+            {
+              attr = userDefinedScope.mid(8);
+              qDebug() << "$PARENT" << attr;
+              int parent_offset = getParentOffset(pos);
+              qDebug() << "parent_offset" << parent_offset;
+              QString idValue = getAttributeValueFromCurrentElement(
+                                                          parent_offset, attr);
+
+              qDebug() << "idValue = " << idValue;
+              elements = nclEditor->elementsByTagname(
+                                       references[i]->getRefElement(), idValue);
+
+            }
+            else if(userDefinedScope.startsWith("$GRANDPARENT"))
+            {
+              attr = userDefinedScope.mid(13);
+              qDebug() << "$GRANDPARENT" << attr;
+              int grandparent_offset = getParentOffset(getParentOffset(pos));
+              QString idValue = getAttributeValueFromCurrentElement(
+                                                      grandparent_offset, attr);
+              elements = nclEditor->elementsByTagname(
+                                       references[i]->getRefElement(), idValue);
+            }
           }
 
           for(int j = 0; j < elements.length(); j++)
@@ -180,6 +224,7 @@ void QsciNCLAPIs::updateAutoCompletionList( const QStringList &context,
       qDebug() << "Coud not parse the document";
     }
   }
+  list.removeDuplicates();
 }
 
 //TODO: END ELEMENT, ATTRIBUTE VALUE
@@ -303,8 +348,8 @@ void QsciNCLAPIs::autoCompletionSelected(const QString &selection)
           line);
 
     lexer()->editor()->SendScintilla( QsciScintilla::SCI_SETLINEINDENTATION,
-                                     line+1,
-                                     lineident);
+                                      line+1,
+                                      lineident);
   }
 
   // move cursor to the new position
@@ -367,7 +412,7 @@ QString QsciNCLAPIs::getRequiredAttributesAsStr(const QString &element)
 bool QsciNCLAPIs::isElement(int pos)
 {
   int style = lexer()->editor()
-                          ->SendScintilla( QsciScintilla:: SCI_GETSTYLEAT, pos);
+      ->SendScintilla( QsciScintilla:: SCI_GETSTYLEAT, pos);
   qDebug() << "Style=" << style;
   if(style == QsciLexerNCL::Default)
   {
@@ -383,9 +428,9 @@ bool QsciNCLAPIs::isElement(int pos)
     while(p >= 0)
     {
       char ch = lexer()->editor()
-                            ->SendScintilla( QsciScintilla::SCI_GETCHARAT, p);
+          ->SendScintilla( QsciScintilla::SCI_GETCHARAT, p);
       char previous_ch = lexer()->editor()
-                            ->SendScintilla( QsciScintilla::SCI_GETCHARAT, p-1);
+          ->SendScintilla( QsciScintilla::SCI_GETCHARAT, p-1);
       if(isspace(ch))
         break;
       if(ch == '<')
@@ -410,10 +455,10 @@ bool QsciNCLAPIs::isAttribute(int pos)
   if ( style == QsciLexerNCL::Attribute )
     return true;
   else if( style == QsciLexerNCL::Tag ||
-          style == QsciLexerNCL::XMLTagEnd ||
-          style == QsciLexerNCL::XMLStart ||
-          style == QsciLexerNCL::OtherInTag ||
-          style == QsciLexerNCL::UnknownTag){
+           style == QsciLexerNCL::XMLTagEnd ||
+           style == QsciLexerNCL::XMLStart ||
+           style == QsciLexerNCL::OtherInTag ||
+           style == QsciLexerNCL::UnknownTag){
     int p = pos-1;
     while(p >= 0){
       char ch = lexer()->editor()
@@ -438,20 +483,20 @@ QString QsciNCLAPIs::getCurrentTagName(int pos)
     while (p >= 0 && ch != '<'){
       p--;
       ch = lexer()->editor()->SendScintilla( QsciScintilla::SCI_GETCHARAT,
-                                            p);
+                                             p);
     }
 
     if(p >= 0){
       p++;
       ch = lexer()->editor()->SendScintilla( QsciScintilla::SCI_GETCHARAT,
-                                            p);
+                                             p);
       QString word("");
       while(isalnum(ch)){
         word += ch;
         p++;
         ch = lexer()->editor()
             ->SendScintilla( QsciScintilla::SCI_GETCHARAT,
-                            p);
+                             p);
       }
       return word;
     }
@@ -460,13 +505,13 @@ QString QsciNCLAPIs::getCurrentTagName(int pos)
     while(p >= 0){
       QString word("");
       ch = lexer()->editor()->SendScintilla( QsciScintilla::SCI_GETCHARAT,
-                                            p);
+                                             p);
       while(p >= 0 && isalnum(ch)){
         word.prepend(ch);
         p--;
         ch = lexer()->editor()
             ->SendScintilla( QsciScintilla::SCI_GETCHARAT,
-                            p);
+                             p);
       }
       if(ch == '<') return word;
       p--;
@@ -487,7 +532,7 @@ QString QsciNCLAPIs::getCurrentAttribute (int pos)
     //find quote
     while(p >= 0 && !quote_found){
       ch = lexer()->editor()->SendScintilla( QsciScintilla::SCI_GETCHARAT,
-                                            p);
+                                             p);
       if(ch == '\'' || ch == '\"')
         quote_found = true;
       p--;
@@ -495,7 +540,7 @@ QString QsciNCLAPIs::getCurrentAttribute (int pos)
     //find equal
     while(p >= 0 && !equal_found){
       ch = lexer()->editor()->SendScintilla( QsciScintilla::SCI_GETCHARAT,
-                                            p);
+                                             p);
       if(ch == '=')
         equal_found = true;
       p--;
@@ -503,7 +548,7 @@ QString QsciNCLAPIs::getCurrentAttribute (int pos)
     //remove any whitespace between = and attribute name
     while (p >= 0) {
       ch = lexer()->editor()->SendScintilla( QsciScintilla::SCI_GETCHARAT,
-                                            p);
+                                             p);
       if(!isspace(ch))
         break;
       p--;
@@ -511,7 +556,7 @@ QString QsciNCLAPIs::getCurrentAttribute (int pos)
     //get the attribute name
     while(p >= 0){
       ch = lexer()->editor()->SendScintilla( QsciScintilla::SCI_GETCHARAT,
-                                            p);
+                                             p);
       if(!isalnum(ch))
         break;
       current_attribute.prepend(ch);
@@ -575,6 +620,7 @@ QString QsciNCLAPIs::getAttributeValueFromCurrentElement(int pos, QString attr)
   int start = getStartTagBegin(pos);
   int length = getStartTagLength(pos);
   int end = start + length;
+  QString attrValue = "";
 
   if(start < 0 || end < 0) return "";
 
@@ -588,35 +634,17 @@ QString QsciNCLAPIs::getAttributeValueFromCurrentElement(int pos, QString attr)
   qDebug() << "text = " << text;
 
 
-// FIXME: The following regex is not completely correct. Te text inside
-// the attribute will be matched in some cases.
-  QString regex = "\\s*(";
-  regex += attr;
-  regex += ")";
-  regex += "\\s*=\\s*(\"[a-zA-Z]+\")";
-  QRegExp attrRegex(regex, Qt::CaseSensitive, QRegExp::RegExp2);
-
-  int lastIndex = 0;
-  int index = attrRegex.indexIn(text, lastIndex);
-  qDebug() << index;
-  QString attrValue = "";
-
-  while(index != -1)
+  QDomDocument domDoc;
+  QString tagname = getCurrentTagName(pos);
+  // \fixme I am assuming that the text is not closing the tag. This will
+  // probably cause some problem.
+  text += "</";
+  text += tagname;
+  text += ">";
+  if(domDoc.setContent(text))
   {
-    if (index + attrRegex.matchedLength() > text.size())
-      break;
-
-    qDebug() << index << " " << attrRegex.matchedLength();
-    attrValue = text.mid(index, attrRegex.matchedLength()).trimmed();
-    int start = attrValue.indexOf("\"")+1;
-    int length = attrValue.lastIndexOf("\"") - start;
-    attrValue = attrValue.mid(start, length);
-    qDebug() << attrValue;
-
-    lastIndex = (index + attrRegex.matchedLength());
-    index = attrRegex.indexIn(chars, lastIndex);
+    attrValue = domDoc.firstChildElement().attribute(attr);
   }
-
   delete chars;
   return attrValue;
 }
@@ -636,10 +664,10 @@ bool QsciNCLAPIs::isAttributeValue(int pos)
   qDebug() << "QsciNCLAPIs::isAttributeValue";
   int style = lexer()->editor()
       ->SendScintilla( QsciScintilla:: SCI_GETSTYLEAT,
-                      pos);
+                       pos);
 
   if (    style == QsciLexerNCL::HTMLDoubleQuotedString
-      || style == QsciLexerNCL::HTMLSingleQuotedString )
+          || style == QsciLexerNCL::HTMLSingleQuotedString )
 
     return true;
 
