@@ -26,14 +26,16 @@ class COMPOSERCORESHARED_EXPORT AttributeReferences {
 public:
   enum REFERENCE_SCOPE {
     ANY_SCOPE = 0,
-    SAME_SCOPE
+    SAME_SCOPE,
+    USERDEFINED_SCOPE
   };
 
 private:
   QString element, attr, /*!< TODO */
-  ref_element, ref_attr; /*!< TODO */
+          ref_element, ref_attr; /*!< TODO */
 
   REFERENCE_SCOPE scope;
+  QString userDefinedScope;
   QMap <QString, REFERENCE_SCOPE> stringToScope;
 
 public:
@@ -97,13 +99,18 @@ public:
    * \return QString the name of the scope.
    */
   void setScope(QString scope);
-
   /*!
    * \brief Gets the scope of the object as a REFERENCE_SCOPE.
    *
    * \return REFERENCE_SCOPE the type of the scope.
    */
   REFERENCE_SCOPE getScope();
+  /*!
+   * \brief Gets the string where the user define the scope.
+   *
+   * \return QString the user defined scope.
+   */
+  QString getUserDefinedScope();
 
 private:
   void initializeStringToScope();

@@ -16,58 +16,58 @@ INIT_SINGLETON(NCLStructure)
 
 NCLStructure::NCLStructure()
 {
-    attributes = new map <QString, map <QString, bool > * > ();
-    nesting = new map <QString, map <QString, char > * > ();
-    dataTypes = new map <QString, QString> ();
-    dataTypeDefaultSuggestions = new map <QString, QStringList>();
-    attributesDatatype = new map <QString, map<QString, QString> *> ();
-    references = new QMultiMap <QString, AttributeReferences*> ();
+  attributes = new map <QString, map <QString, bool > * > ();
+  nesting = new map <QString, map <QString, char > * > ();
+  dataTypes = new map <QString, QString> ();
+  dataTypeDefaultSuggestions = new map <QString, QStringList>();
+  attributesDatatype = new map <QString, map<QString, QString> *> ();
+  references = new QMultiMap <QString, AttributeReferences*> ();
 
-    loadStructure();
+  loadStructure();
 }
 
 NCLStructure::~NCLStructure()
 {
-    //TODO: Destructor
-    map <QString, map <QString, bool> *>::iterator it; /**< TODO */
-    for(it = attributes->begin(); it != attributes->end(); ++it)
-    {
-        map <QString, bool> *content = it->second;
-        content->clear();
-        delete content;
-    }
-    attributes->clear();
-    delete attributes;
+  //TODO: Destructor
+  map <QString, map <QString, bool> *>::iterator it; /**< TODO */
+  for(it = attributes->begin(); it != attributes->end(); ++it)
+  {
+    map <QString, bool> *content = it->second;
+    content->clear();
+    delete content;
+  }
+  attributes->clear();
+  delete attributes;
 
-    map <QString, map <QString, char> *>::iterator it2; /**< TODO */
-    for(it2 = nesting->begin(); it2 != nesting->end(); ++it2)
-    {
-        map <QString, char> *content = it2->second;
-        content->clear();
-        delete content;
-    }
-    nesting->clear();
-    delete nesting;
+  map <QString, map <QString, char> *>::iterator it2; /**< TODO */
+  for(it2 = nesting->begin(); it2 != nesting->end(); ++it2)
+  {
+    map <QString, char> *content = it2->second;
+    content->clear();
+    delete content;
+  }
+  nesting->clear();
+  delete nesting;
 
-    dataTypes->clear();
-    delete dataTypes;
+  dataTypes->clear();
+  delete dataTypes;
 
-    dataTypeDefaultSuggestions->clear();
-    delete dataTypeDefaultSuggestions;
+  dataTypeDefaultSuggestions->clear();
+  delete dataTypeDefaultSuggestions;
 
-    map <QString, map<QString, QString> *>::iterator it3;
-    for(it3 = attributesDatatype->begin(); it3 != attributesDatatype->end();
-            ++it3)
-    {
-        map<QString, QString> *content = it3->second;
-        content->clear();
-        delete content;
-    }
-    attributesDatatype->clear();
-    delete attributesDatatype;
+  map <QString, map<QString, QString> *>::iterator it3;
+  for(it3 = attributesDatatype->begin(); it3 != attributesDatatype->end();
+      ++it3)
+  {
+    map<QString, QString> *content = it3->second;
+    content->clear();
+    delete content;
+  }
+  attributesDatatype->clear();
+  delete attributesDatatype;
 
-    //TODO: DELETE EACH INTERNAL POINTER
-    references->clear();
+  //TODO: DELETE EACH INTERNAL POINTER
+  references->clear();
 }
 
 // TODO: This function should be based on lex and yacc to a better
@@ -164,88 +164,89 @@ void NCLStructure::loadStructure(){
 
 // TODO: This function should be based on lex and yacc to a better
 // implementation.
-vector <QString> NCLStructure::parseLine(QString line){
-    vector <QString> ret;
-    QChar ch;
-    int size = line.size(), i = 0;
-    QString token;
-    bool reading_attributes = false, readingstring = false;
+vector <QString> NCLStructure::parseLine(QString line)
+{
+  vector <QString> ret;
+  QChar ch;
+  int size = line.size(), i = 0;
+  QString token;
+  bool reading_attributes = false, readingstring = false;
 
-    while (i < line.size()) {
-        ch = line.at(i);
-        if(!readingstring){
-            if (ch == '/') {
-                if (i+1 < size && line[i+1] == '/') {
-                    // comment was found, it will ignore the remaining
-                    // caracteres in the line
-                    token = "//";
-                    break;
-                }
-            }
-            else if (ch == '\"')
-            {
-                readingstring = true;
-            }
-            else if(ch == '(') {
-                if(token != "")
-                    ret.push_back(token);
-                token = "";
-                reading_attributes = true;
-            }
-            else if(ch == ',') {
-                if(reading_attributes && token != "")
-                    ret.push_back(token);
-                token = "";
-            }
-            else if (ch == ')') {
-                if(reading_attributes && token != "")
-                    ret.push_back(token);
-                reading_attributes = false;
-                token = "";
-            }
-            else {
-                if(!ch.isSpace())
-                    token.append(line.at(i));
-            }
+  while (i < line.size()) {
+    ch = line.at(i);
+    if(!readingstring){
+      if (ch == '/') {
+        if (i+1 < size && line[i+1] == '/') {
+          // comment was found, it will ignore the remaining
+          // caracteres in the line
+          token = "//";
+          break;
         }
-        else {
-            if(ch == '\"')
-                readingstring = false;
-            else
-                token.append(line.at(i));
-        }
-        i++;
+      }
+      else if (ch == '\"')
+      {
+        readingstring = true;
+      }
+      else if(ch == '(') {
+        if(token != "")
+          ret.push_back(token);
+        token = "";
+        reading_attributes = true;
+      }
+      else if(ch == ',') {
+        if(reading_attributes && token != "")
+          ret.push_back(token);
+        token = "";
+      }
+      else if (ch == ')') {
+        if(reading_attributes && token != "")
+          ret.push_back(token);
+        reading_attributes = false;
+        token = "";
+      }
+      else {
+        if(!ch.isSpace())
+          token.append(line.at(i));
+      }
     }
-    return ret;
+    else {
+      if(ch == '\"')
+        readingstring = false;
+      else
+        token.append(line.at(i));
+    }
+    i++;
+  }
+  return ret;
 }
 
 //TODO: SCOPE
 void NCLStructure::addElement(QString name, QString father, char cardinality,
                               bool define_scope)
 {
-    if(!nesting->count(father))
-        (*nesting)[father] = new map <QString, char>();
+  if(!nesting->count(father))
+    (*nesting)[father] = new map <QString, char>();
 
-    if(!attributes->count(name))
-        (*attributes)[name] = new map <QString, bool>();
+  if(!attributes->count(name))
+    (*attributes)[name] = new map <QString, bool>();
 
-    if(!attributesDatatype->count(name))
-        (*attributesDatatype)[name] = new map <QString, QString>();
+  if(!attributesDatatype->count(name))
+    (*attributesDatatype)[name] = new map <QString, QString>();
 
-    (*(*nesting)[father])[name] = cardinality;
-    this->define_scope[name] = define_scope;
+  (*(*nesting)[father])[name] = cardinality;
+  this->define_scope[name] = define_scope;
 }
 
 void NCLStructure::addAttribute ( QString element, QString attr, QString type,
                                   bool required)
 {
   if(!attributes->count(element))
-      (*attributes)[element] = new map <QString, bool>();
+    (*attributes)[element] = new map <QString, bool>();
 
   if(!attributesDatatype->count(element))
-      (*attributesDatatype)[element] = new map <QString, QString>();
+    (*attributesDatatype)[element] = new map <QString, QString>();
 
-// qDebug() << "NCLStructure::addAttribute (" << element << ", " << attr << ")";
+//qDebug() << "NCLStructure::addAttribute (" << element << ", " << attr << ")";
   (*(*attributes)[element])[attr] = required;
   (*(*attributesDatatype)[element])[attr] = type;
 }

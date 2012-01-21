@@ -40,7 +40,13 @@ AttributeReferences::AttributeReferences ( QString element,
 
   initializeStringToScope();
 
-  this->scope = stringToScope.value(scope);
+  if(stringToScope.contains(scope))
+    this->scope = stringToScope.value(scope);
+  else
+  {
+    this->scope = USERDEFINED_SCOPE;
+    this->userDefinedScope = scope;
+  }
 }
 
 QString AttributeReferences::getElement()
@@ -75,6 +81,11 @@ void AttributeReferences::initializeStringToScope()
     stringToScope.insert(QString("SAME"), SAME_SCOPE);
     stringToScope.insert(QString("ANY"), ANY_SCOPE);
   }
+}
+
+QString AttributeReferences::getUserDefinedScope()
+{
+  return this->userDefinedScope;
 }
 
 } } //end namespace
