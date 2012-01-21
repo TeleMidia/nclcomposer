@@ -824,8 +824,6 @@ void QnstComposerPlugin::requestEntityAddition(const QString uid, const QString 
 void QnstComposerPlugin::requestEntityRemotion(const QString uid)
 {
     if (entities.key(uid, "nil") != "nil"){
-        qDebug() << "REMOVA:" << getProject()->getEntityById(entities.key(uid))->getType();
-
         emit removeEntity(getProject()->getEntityById(entities.key(uid)), false);
 
         entities.remove(entities.key(uid));

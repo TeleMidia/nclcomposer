@@ -43,5 +43,6 @@
         <file alias="port">images/icon-port.png</file>
         <file alias="metadata">images/icon-metadata.png</file>
         <file alias="alert">images/icon-alert.png</file>
+        <file alias="html">images/icon-html.png</file>
     </qresource>
 </RCC>

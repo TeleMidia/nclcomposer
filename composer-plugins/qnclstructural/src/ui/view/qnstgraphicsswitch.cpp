@@ -34,6 +34,7 @@ void QnstGraphicsSwitch::createObjects()
     menu->actionScript->setEnabled(true);
     menu->actionSettings->setEnabled(true);
     menu->actionMedia->setEnabled(true);
+    menu->actionHTML->setEnabled(true);
     menu->actionContext->setEnabled(true);
     menu->actionSwitch->setEnabled(true);
     menu->actionPort->setEnabled(false);

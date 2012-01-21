@@ -14,6 +14,7 @@
 #include "qnstgraphicsmedia.h"
 #include "qnstgraphicsport.h"
 #include "qnstgraphicsaggregator.h"
+#include "qnstgraphicshtml.h"
 
 class QnstGraphicsBody : public QnstGraphicsComposition
 {
@@ -25,6 +26,8 @@ public:
     ~QnstGraphicsBody();
 
 public slots:
+    void performHtml();
+
     void performImage();
 
     void performAudio();

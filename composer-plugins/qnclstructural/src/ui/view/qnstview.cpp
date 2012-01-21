@@ -1030,6 +1030,7 @@ void QnstView::changeEntity(const QString uid, const QMap<QString, QString> prop
         case Qnst::Script:
         case Qnst::Settings:
         case Qnst::Media:
+        case Qnst::Html:
             changeMedia((QnstGraphicsMedia*) entity, properties);
             break;
 
@@ -1121,7 +1122,7 @@ void QnstView::addImportBase(const QMap<QString, QString> properties)
     if (properties["documentURI"] != "" && properties["projectURI"] != "" && properties["alias"] != ""){
         int n = properties["projectURI"].lastIndexOf("/");
 
-        QFile* file = new QFile(properties["projectURI"].left(n)+"/"+properties["documentURI"]);
+        QFile* file = new QFile(properties["projectURI"].left(n)+QDir::separator()+properties["documentURI"]);
 
         if (file->open(QIODevice::ReadOnly)){
             QDomDocument* domdoc = new QDomDocument();
@@ -1142,7 +1143,9 @@ void QnstView::changeImportBase(const QMap<QString, QString> properties)
         connectors2.clear();
         connectors.clear();
 
-        QFile* file = new QFile(properties["projectURI"]+properties["documentURI"]);
+        int n = properties["projectURI"].lastIndexOf("/");
+
+        QFile* file = new QFile(properties["projectURI"].left(n)+QDir::separator()+properties["documentURI"]);
 
         if (file->open(QIODevice::ReadOnly)){
             QDomDocument* domdoc = new QDomDocument();
@@ -1323,6 +1326,9 @@ void QnstView::addMedia(const QString uid, const QString parent, const QMap<QStr
         }else if (properties["type"].startsWith("video")){
             entity = new QnstGraphicsVideo((QnstGraphicsNode*) entities[parent]);
 
+        }else if (properties["type"] == "text/html"){
+            entity = new QnstGraphicsHTML((QnstGraphicsNode*) entities[parent]);
+
         }else if (properties["type"].startsWith("text")){
             entity = new QnstGraphicsText((QnstGraphicsNode*) entities[parent]);
 
@@ -1400,6 +1406,11 @@ void QnstView::changeMedia(QnstGraphicsMedia* entity, const QMap<QString, QStrin
             entity->setnstType(Qnst::Video);
 
             entity->setIcon(":/icon/video");
+
+        }else if (properties["type"].startsWith("text/html")){
+            entity->setnstType(Qnst::Html);
+
+            entity->setIcon(":/icon/html");
 
         }else if (properties["type"].startsWith("text")){
             entity->setnstType(Qnst::Text);
@@ -2067,6 +2078,7 @@ void QnstView::requestEntityAddition(QnstGraphicsEntity* entity)
         case Qnst::Image:
         case Qnst::Script:
         case Qnst::Settings:
+        case Qnst::Html:
         case Qnst::Media:
             requestMediaAddition((QnstGraphicsMedia*) entity);
             break;
@@ -2409,6 +2421,13 @@ void QnstView::requestMediaAddition(QnstGraphicsMedia* entity)
 
         break;
 
+    case Qnst::Html:
+        properties["SUBTYPE"] = "html";
+
+        properties["type"] = "text/html";
+
+        break;
+
     case Qnst::Script:
         properties["SUBTYPE"] = "script";
 
@@ -2480,12 +2499,15 @@ void QnstView::requestMediaChange(QnstGraphicsMedia* entity)
     case Qnst::Media:
         properties["TYPE"] = "media";
         break;
+
+    case Qnst::Html:
+        properties["TYPE"] = "html";
+        break;
     }
 
     properties["id"] = entity->getnstId();
+    properties["src"] = entity->getSource();
 
-//    TODO:
-//    properties["src"] = "";
 //    properties["type"] = "";
 //    properties["refer"] = "";
 //    properties["instance"] = "";

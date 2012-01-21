@@ -11,6 +11,7 @@
 #include <QMessageBox>
 #include <QWheelEvent>
 #include <QSet>
+#include <QDir>
 
 #include <QDebug>
 

@@ -30,6 +30,7 @@ void QnstGraphicsBody::createObjects()
     menu->actionText->setEnabled(true);
     menu->actionScript->setEnabled(true);
     menu->actionSettings->setEnabled(true);
+    menu->actionHTML->setEnabled(true);
     menu->actionMedia->setEnabled(true);
     menu->actionContext->setEnabled(true);
     menu->actionSwitch->setEnabled(true);
@@ -61,11 +62,26 @@ void QnstGraphicsBody::createConnections()
     connect(menu, SIGNAL(textRequested()), SLOT(performText()));
     connect(menu, SIGNAL(scriptRequested()), SLOT(performScript()));
     connect(menu, SIGNAL(settingsRequested()), SLOT(performSettings()));
+    connect(menu, SIGNAL(htmlRequested()), SLOT(performHtml()));
     connect(menu, SIGNAL(mediaRequested()), SLOT(performMedia()));
     connect(menu, SIGNAL(contextRequested()), SLOT(performContext()));
     connect(menu, SIGNAL(switchRequested()), SLOT(performSwitch()));
     connect(menu, SIGNAL(portRequested()), SLOT(performPort()));
     connect(menu, SIGNAL(aggregatorRequested()), SLOT(performAggregator()));
+}
+
+void QnstGraphicsBody::performHtml()
+{
+    QnstGraphicsHTML* entity = new QnstGraphicsHTML(this);
+    entity->setTop(getHeight()/2 - 56/2);
+    entity->setLeft(getWidth()/2 - 56/2);
+    entity->setWidth(56);
+    entity->setHeight(72);
+    entity->adjust();
+
+    addnstGraphicsEntity(entity);
+
+    emit entityAdded(entity);
 }
 
 void QnstGraphicsBody::performImage()

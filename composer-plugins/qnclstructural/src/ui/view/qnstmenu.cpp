@@ -200,6 +200,14 @@ void QnstMenu::createActions()
 
     actionMedia->setEnabled(false);
 
+    // media HTML
+    actionHTML = new QAction(this);
+    actionHTML->setText(tr("HTML"));
+
+    actionHTML->setIcon(QIcon(":/icon/html"));
+
+    actionHTML->setEnabled(false);
+
     // context action
     actionContext = new QAction(this);
     actionContext->setText(tr("Context"));
@@ -316,6 +324,7 @@ void QnstMenu::createMenus()
     menuInsert->addSeparator();
     menuInsert->addAction(actionScript);
     menuInsert->addAction(actionSettings);
+    menuInsert->addAction(actionHTML);
     menuInsert->addSeparator();
     menuInsert->addAction(actionMedia);
     menuInsert->addSeparator();
@@ -375,6 +384,7 @@ void QnstMenu::createConnections()
     connect(actionScript, SIGNAL(triggered()), SIGNAL(scriptRequested()));
     connect(actionSettings, SIGNAL(triggered()), SIGNAL(settingsRequested()));
     connect(actionMedia, SIGNAL(triggered()), SIGNAL(mediaRequested()));
+    connect(actionHTML, SIGNAL(triggered()), SIGNAL(htmlRequested()));
     connect(actionContext, SIGNAL(triggered()), SIGNAL(contextRequested()));
     connect(actionSwitch, SIGNAL(triggered()), SIGNAL(switchRequested()));
     connect(actionBody, SIGNAL(triggered()), SIGNAL(bodyRequested()));

@@ -95,3 +95,33 @@ void QnstGraphicsMedia::delineate(QPainterPath* painter) const
 {
     painter->addRect(4, 4, getWidth(), getHeight());
 }
+
+void QnstGraphicsMedia::dragEnterEvent(QGraphicsSceneDragDropEvent *event)
+{
+    foreach(QUrl url, event->mimeData()->urls()){
+        if (QFileInfo(url.toLocalFile()).suffix().toUpper()=="PNG")
+        {
+            event->acceptProposedAction();
+
+            return;
+        }
+    }
+}
+
+void QnstGraphicsMedia::dropEvent(QGraphicsSceneDragDropEvent *event)
+{
+    foreach(QUrl url, event->mimeData()->urls())
+    {
+        QString filename = url.toLocalFile();
+        QString suffix = QFileInfo(filename).suffix().toUpper();
+
+        if(suffix=="PNG")
+        {
+            event->acceptProposedAction();
+
+            setSource(filename);
+
+            emit entityChanged(this);
+        }
+    }
+}

@@ -49,6 +49,8 @@ signals:
 
     void settingsRequested();
 
+    void htmlRequested();
+
     void mediaRequested();
 
     void contextRequested();
@@ -124,6 +126,8 @@ public:
     QAction* actionScript;
 
     QAction* actionSettings;
+
+    QAction* actionHTML;
 
     QAction* actionMedia;
 

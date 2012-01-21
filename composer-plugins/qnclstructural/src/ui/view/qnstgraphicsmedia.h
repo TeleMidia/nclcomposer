@@ -1,6 +1,12 @@
 #ifndef QNSTGRAPHICSMEDIA_H
 #define QNSTGRAPHICSMEDIA_H
 
+#include <QGraphicsSceneDragDropEvent>
+#include <QMimeData>
+#include <QList>
+#include <QUrl>
+#include <QFileInfo>
+
 #include "qnstgraphicscontent.h"
 
 class QnstGraphicsMedia : public QnstGraphicsContent
@@ -22,6 +28,10 @@ protected:
     virtual void draw(QPainter* painter);
 
     virtual void delineate(QPainterPath* painter) const;
+
+    virtual void dragEnterEvent(QGraphicsSceneDragDropEvent *event);
+
+    virtual void dropEvent(QGraphicsSceneDragDropEvent *event);
 
 private:
     void createObjects();

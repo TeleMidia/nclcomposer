@@ -12,6 +12,7 @@ public:
         Image,
         Audio,
         Video,
+        Html,
         Text,
         Script,
         Settings,
