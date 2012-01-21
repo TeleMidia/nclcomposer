@@ -28,6 +28,7 @@
 #include <QShortcut>
 #include <QKeySequence>
 #include <QDomElement>
+#include <QMutex>
 
 #include <core/extensions/IPlugin.h>
 using namespace composer::extension;
@@ -60,6 +61,7 @@ private:
     Entity *currentEntity;
 
     QDomDocument xmlDoc;
+    QMutex syncMutex;
 
 public:
     /*!

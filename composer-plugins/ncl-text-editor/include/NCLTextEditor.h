@@ -55,78 +55,91 @@
  */
 class NCLTextEditor : public QsciScintilla
 {
-    Q_OBJECT
+  Q_OBJECT
 
 public:
-    typedef enum {
-        TAB_BEHAVIOR_DEFAULT = 1,
-        TAB_BEHAVIOR_NEXT_ATTR_AFTER_AUTOCOMPLETE,
-        TAB_BEHAVIOR_NEXT_ATTR
-    } TAB_BEHAVIOR;
+  typedef enum
+  {
+    TAB_BEHAVIOR_DEFAULT = 1,
+    TAB_BEHAVIOR_NEXT_ATTR_AFTER_AUTOCOMPLETE,
+    TAB_BEHAVIOR_NEXT_ATTR
+  } TAB_BEHAVIOR;
 
-    explicit NCLTextEditor(QWidget *parent = 0);
-    virtual ~NCLTextEditor();
+  explicit NCLTextEditor(QWidget *parent = 0);
+  virtual ~NCLTextEditor();
 
-    void setTabBehavior(TAB_BEHAVIOR tabBehavior);
-    void userFillingNextAttribute(int pos);
-    void userFillingPreviousAttribute(int pos);
-    void updateVisualFillingAttributeField( int line,
-                                            int index,
-                                            int &begin,
-                                            int &end);
+  void setTabBehavior(TAB_BEHAVIOR tabBehavior);
+  void userFillingNextAttribute(int pos);
+  void userFillingPreviousAttribute(int pos);
+  void updateVisualFillingAttributeField( int line,
+                                          int index,
+                                          int &begin,
+                                          int &end);
 
-    void keepFocused();
-    QString textWithoutUserInteraction();
+  void keepFocused();
+  QString textWithoutUserInteraction();
 
-    bool parseDocument();
-    QDomElement elementById(QString id);
-    QList <QDomElement> elementsByTagname(QString tagname);
-    QList <QDomElement> elementsByTagname(QString tagname, QString parentId);
+  void setDocumentUrl(QString docURL);
+  bool parseDocument(bool recursive = true);
+  void updateElementsIDWithAlias(QDomDocument doc, QString alias);
+
+  QDomElement elementById(const QDomDocument &domDoc, QString id);
+  QDomElement elementById(QString id, bool recursive = true);
+  QList <QDomElement> elementsByTagname(QString tagname);
+  QList <QDomElement> elementsByTagname(const QDomDocument &domDoc,
+                                        QString tagname);
+  QList <QDomElement> elementsByTagname(QString tagname, QString parentId);
 
 private:
-    enum INTERACTION_STATE {
-        DEFAULT_STATE = 1,
-        FILLING_ATTRIBUTES_STATE
-    };
+  enum INTERACTION_STATE
+  {
+    DEFAULT_STATE = 1,
+    FILLING_ATTRIBUTES_STATE
+  };
 
-    INTERACTION_STATE interaction_state;
+  INTERACTION_STATE interaction_state;
 
-    QsciLexerNCL *nclexer;
-    QsciNCLAPIs *apis;
-    QDomDocument doc;
+  QsciLexerNCL *nclexer;
+  QsciNCLAPIs *apis;
+  QDomDocument domDoc;
+  QString docURL;
+  QMap <QString, QDomDocument> domDocs;
 
-    int error_indicator;
-    int error_marker;
-    int filling_attribute_indicator;
+  int error_indicator;
+  int error_marker;
+  int filling_attribute_indicator;
 
-    TAB_BEHAVIOR tabBehavior;
-    bool focusInIgnoringCurrentText;
-    QString textWithoutUserInter;
+  TAB_BEHAVIOR tabBehavior;
+  bool focusInIgnoringCurrentText;
+  QString textWithoutUserInter;
 
-    void initParameters();
+  void initParameters();
 
-    /* events */
-    void wheelEvent( QWheelEvent * event );
-    void keyPressEvent(QKeyEvent *event);
-    void keyReleaseEvent(QKeyEvent *event);
-    void mousePressEvent(QMouseEvent *e);
+  /* events */
+  void wheelEvent( QWheelEvent * event );
+  void keyPressEvent(QKeyEvent *event);
+  void keyReleaseEvent(QKeyEvent *event);
+  void mousePressEvent(QMouseEvent *e);
+
+  bool parseImportedDocuments( QString currentFileURI,
+                               QDomDocument &doc, bool recursive = true);
 
 protected:
-    void AutoCompleteCompleted();
-    void focusInEvent(QFocusEvent *e);
-    void focusOutEvent(QFocusEvent *e);
+  void AutoCompleteCompleted();
+  void focusInEvent(QFocusEvent *e);
+  void focusOutEvent(QFocusEvent *e);
 
 public slots:
-    void Increasefont();
-    void Decreasefont();
-    void clearErrorIndicators();
-    void markError(QString description, QString file, int line, int column = 0,
-                   int severity = 0);
-    void MarkLine(int, int, Qt::KeyboardModifiers);
-    void formatText();
+  void Increasefont();
+  void Decreasefont();
+  void clearErrorIndicators();
+  void markError(QString description, QString file, int line, int column = 0,
+                 int severity = 0);
+  void MarkLine(int, int, Qt::KeyboardModifiers);
+  void formatText();
 
 signals:
-    void focusLosted(QFocusEvent *event);
+  void focusLosted(QFocusEvent *event);
 };
 
 #endif // NCLTEXTEDITOR_H

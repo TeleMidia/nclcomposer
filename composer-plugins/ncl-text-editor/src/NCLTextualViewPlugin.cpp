@@ -99,6 +99,8 @@ void NCLTextualViewPlugin::init()
     startEntityOffset[listStart[i]] = listStart[i+1].toInt();
     endEntityOffset[listEnd[i]] = listEnd[i+1].toInt();
   }
+
+  nclTextEditor->setDocumentUrl(project->getLocation());
 }
 
 QWidget* NCLTextualViewPlugin::getWidget()
@@ -515,6 +517,7 @@ void NCLTextualViewPlugin::updateCoreModel()
   //double-buffering
   tmpNclTextEditor = nclTextEditor;
   nclTextEditor = new NCLTextEditor(0);
+  nclTextEditor->setDocumentUrl(project->getLocation());
   nclTextEditor->setText(tmpNclTextEditor->textWithoutUserInteraction());
 
   if(rebuildComposerModelFromScratch)
@@ -577,6 +580,7 @@ void NCLTextualViewPlugin::nonIncrementalUpdateCoreModel()
 
 void NCLTextualViewPlugin::incrementalUpdateCoreModel()
 {
+  syncMutex.lock();
   QProgressDialog dialog(tr("Synchronizing with other plugins..."),
                          tr("Cancel"), 0, 100,
                          nclTextEditor);
@@ -707,6 +711,7 @@ void NCLTextualViewPlugin::incrementalUpdateCoreModel()
   }
 
   dialog.setValue(100);
+  syncMutex.unlock();
 }
 
 void NCLTextualViewPlugin::syncFinished()
