@@ -115,7 +115,7 @@ private:
 	void adjustScope (virtualId parent, virtualId child);
         void adjustReference (string, ModelElement &, string &);
 	void addChild (ModelElement *parentElement, ModelElement *childElement);
-        ModelElement findElementInImportedFile (string fileName, string idToFind    );
+        ModelElement findElementInImportedFile (string fileName, string idToFind);
 
 	int _seed;
 	map <virtualId, ModelElement> _modelElements;

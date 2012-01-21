@@ -416,6 +416,25 @@ void SemanticValidation::semanticValidation(const ModelElement &el, Model &model
         if (att.name() == "role" || att.name() == "name")
             continue;
 
+        if (att.name() == "id"){
+            string value = att.value();
+            vector <ModelElement *> els = model.elementByIdentifier(value);
+            if (els.size() > 1){
+                for (int i = 0; i < els.size(); i++){
+                    ModelElement *e = els[i];
+                    if (e->id() != ""){
+                        msgs.push_back(pair <void *, string> (e->data(),
+                                                      messageFactory.createMessage(3001, 1, value.c_str())));
+
+
+                        model.addElementWithErrorInLastPass(e->id());
+                    }
+                }
+
+            }
+
+        }
+
         // Att make reference?
         if (Langstruct::isAttributeReferenceDependent(el.elementName(), att.name()))
             referenceValidation(el, att, model, msgs, messageFactory);
