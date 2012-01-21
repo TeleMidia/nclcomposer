@@ -14,6 +14,11 @@
 #include <set>
 #include <list>
 #include <sstream>
+#include <xercesc/parsers/SAXParser.hpp>
+#include <xercesc/sax/HandlerBase.hpp>
+#include <xercesc/util/XMLString.hpp>
+#include <xercesc/util/PlatformUtils.hpp>
+#include "textualparser.h"
 #include "../definitions/definitions.h"
 #include "../langstruct/langstruct.h"
 
@@ -110,6 +115,7 @@ private:
 	void adjustScope (virtualId parent, virtualId child);
         void adjustReference (string, ModelElement &, string &);
 	void addChild (ModelElement *parentElement, ModelElement *childElement);
+        ModelElement findElementInImportedFile (string fileName, string idToFind    );
 
 	int _seed;
 	map <virtualId, ModelElement> _modelElements;
@@ -122,6 +128,9 @@ private:
 
 	multimap <string, virtualId> _idToElement;
 	multimap <string, virtualId> _elementsNotYetInserted;
+
+        vector <pair<string, string> > _importedDocuments;
+        vector <ModelElement> _importedElements; //provisorio
 };
 
 }

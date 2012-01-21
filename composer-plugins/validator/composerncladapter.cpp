@@ -14,6 +14,15 @@ void ComposerNCLAdapter::addElement(Entity *entity)
 
     std::vector <nclValidator::Attribute> attributes = createVectorAttribute(entity);
 
+//    if (entity->getType() == "importBase"){
+//        for (int i = 0; i < attributes.size(); i++)
+//            if (attributes[i].name() == "documentURI"){
+//                QString fileName = QString::fromStdString(attributes[i].value ());
+
+//                fprintf (stderr, "\nIMPORTURI: %s\n", fileName.toStdString().c_str());
+//            }
+//    }
+
     if (!idToVirtualId.count(entity->getParentUniqueId())){
         Entity *parent = entity->getParent();
 

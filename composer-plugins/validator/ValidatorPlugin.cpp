@@ -84,8 +84,6 @@ void ValidatorPlugin::updateMessages(std::vector<pair<void *, string> > msgs)
         emit sendBroadcastMessage("validationError", &pairsMessages.back());
     }
 
-    emit sendBroadcastMessage("askAllValidationMessages", 0);
-
 }
 
 void ValidatorPlugin::onEntityAdded(QString ID, Entity *entity)

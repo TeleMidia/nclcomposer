@@ -100,6 +100,17 @@ bool Model::editElement(virtualId &id, vector <Attribute> &newAttributes){
         string oldId = "";
         string newId = "";
 
+        if (elementEdited->elementName() == "importBase" || elementEdited->elementName() == "importNCL"){
+            string alias = elementEdited->attribute("alias").value();
+            string uri = elementEdited->attribute("documentURI").value();
+            for (int i = 0; i < _importedDocuments.size(); i++){
+                if (_importedDocuments[i].first == alias){
+                    _importedDocuments[i].second = uri;
+                    break;
+                }
+            }
+        }
+
         for (int i = 0; i < elementEdited->references().size(); i++)
             _affectedEllements.insert(elementEdited->references().at(i));
         _markedElements.insert(id);
@@ -223,6 +234,16 @@ bool Model::removeElement(virtualId &id){
     if (_modelElements.count(id)){
         ModelElement * element = this->element(id);
         ModelElement * parent = this->element(element->parent());
+
+        if (element->elementName() == "importBase" || element->elementName() == "importNCL"){
+            string alias = element->attribute("alias").value();
+            for (int i = 0; i < _importedDocuments.size(); i++)
+                if (_importedDocuments[i].first == alias){
+                    _importedDocuments.erase(_importedDocuments.begin() + i);
+                    break;
+                }
+
+        }
 
         if (parent){
             parent->removeChild(id);
@@ -359,6 +380,13 @@ virtualId Model::addElement(string elementName, vector <Attribute> attributes){
         if (elementName == "ncl")
             newElement.setScope(newElement.id());
 
+        if (elementName == "importBase" || elementName == "importNCL"){
+            string alias = newElement.attribute("alias").value();
+            string uri = newElement.attribute("documentURI").value();
+
+            _importedDocuments.push_back(make_pair(alias, uri));
+        }
+
         string attributeIdentifier = "";
         adjustReference(elementName, newElement, attributeIdentifier);
 
@@ -486,24 +514,96 @@ set <virtualId> Model::affectedElements(){
     for (set<virtualId>::iterator it = _markedElements.begin(); it != _markedElements.end(); it++)
         _affectedEllements.erase(*it);
 
-    std::cout <<"affectedElements: " << _affectedEllements.size() << endl;
+//    std::cout <<"affectedElements: " << _affectedEllements.size() << endl;
     return _affectedEllements;
 }
 
 vector <ModelElement *>  Model::elementByIdentifier(string identifier){
-    multimap <string, virtualId>::iterator it = _idToElement.find(identifier);
     vector <ModelElement *> elements;
 
-    if (it != _idToElement.end()){
-        do{
-            ModelElement *e = this->element ((*it).second);
-            if (e)
-                elements.push_back(e);
-            it ++;
-        }while (it != _idToElement.upper_bound(identifier));
+    int index = int (identifier.find("#"));
+    if (index == string::npos){ //se não tiver alias
+        multimap <string, virtualId>::iterator it = _idToElement.find(identifier);
+        if (it != _idToElement.end()){
+            do{
+                ModelElement *e = this->element ((*it).second);
+                if (e)
+                    elements.push_back(e);
+                it ++;
+            }while (it != _idToElement.upper_bound(identifier));
+        }
     }
 
+    else{
+        string alias = identifier.substr(0, index);
+        string id =  identifier.substr(index + 1);
+        for (int i = 0; i < _importedDocuments.size(); i++){
+            if (_importedDocuments[i].first == alias){
+                string fileName = _importedDocuments[i].second.c_str();
+
+                _importedElements.push_back(findElementInImportedFile(fileName, id));
+
+                ModelElement elementFound = _importedElements.back();
+
+                if (elementFound.elementName() != "causalConnector")
+                    elements.push_back(& elementFound);
+
+                break;
+            }
+        }
+    }
+
+
     return elements;
+}
+
+
+ModelElement Model::findElementInImportedFile(string fileName, string idToFind){
+
+//    fprintf(stderr, "\n\n%s %s\n\n", fileName.c_str(), idToFind.c_str());
+
+
+    ModelElement el;
+    try {
+        XMLPlatformUtils::Initialize();
+    }
+    catch (const XMLException& toCatch) {
+        char* message = XMLString::transcode(toCatch.getMessage());
+        cerr << "Error during initialization! :\n"
+             << message << "\n";
+        XMLString::release(&message);
+        return el;
+    }
+
+    xercesc::SAXParser* parser = new SAXParser();
+    TextualParser* docHandler = new TextualParser(&el, idToFind);
+    xercesc::ErrorHandler* errHandler = (ErrorHandler*) docHandler;
+    parser->setDocumentHandler(docHandler);
+    parser->setErrorHandler(errHandler);
+
+    try {
+        parser->parse(fileName.c_str());
+    }
+    catch (const XMLException& toCatch) {
+        char* message = XMLString::transcode(toCatch.getMessage());
+        cout << "Exception message is: \n"
+             << message << "\n";
+        XMLString::release(&message);
+        return el;
+    }
+    catch (const SAXParseException& toCatch) {
+        char* message = XMLString::transcode(toCatch.getMessage());
+        cout << "Exception message is: \n"
+             << message << "\n";
+        XMLString::release(&message);
+        return el;
+    }
+
+//    fprintf(stderr, "\nElement: %s\n\n", el.elementName().c_str());
+
+    XMLPlatformUtils::Terminate();
+
+    return el;
 }
 
 vector <ModelElement *> Model::elementByPropertyName(string component, string propertyName){
@@ -526,6 +626,9 @@ vector <ModelElement *> Model::elementByPropertyName(string component, string pr
             it ++;
         }while (it != _idToElement.upper_bound(component));
     }
+
+
+
 
     return elements;
 

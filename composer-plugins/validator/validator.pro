@@ -8,7 +8,7 @@ include (../plugins-common.pri)
 
 INCLUDEPATH += "/usr/lib/"
 
-LIBS += -lre2
+LIBS += -lre2 -lxerces-c
 
 TARGET = ValidatorPlugin
 
@@ -27,7 +27,8 @@ SOURCES += \
     composerncladapter.cpp \
     validation/semanticvalidation.cpp \
     validation/structuralvalidation.cpp \
-    validatortreewidgetitem.cpp
+    validatortreewidgetitem.cpp \
+    nclmodel/textualparser.cpp
 
 HEADERS  += \
     ValidatorPlugin.h \
@@ -43,7 +44,8 @@ HEADERS  += \
     composerncladapter.h \
     validation/semanticvalidation.h \
     validation/structuralvalidation.h \
-    validatortreewidgetitem.h
+    validatortreewidgetitem.h \
+    nclmodel/textualparser.h
 
 OTHER_FILES +=
 

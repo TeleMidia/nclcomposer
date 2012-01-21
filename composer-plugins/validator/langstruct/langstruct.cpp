@@ -368,6 +368,7 @@ bool Langstruct::isValidAttribute(const string attName, const string attValue,
         return false;
 
     }
+
     return RE2::FullMatch (attValue, Langstruct::datatypes[Langstruct::attributes[attName].getDatatype(element)]);
 }
 
