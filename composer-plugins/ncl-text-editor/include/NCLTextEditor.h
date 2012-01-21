@@ -80,6 +80,7 @@ public:
   QString textWithoutUserInteraction();
 
   void setDocumentUrl(QString docURL);
+  QString getDocumentUrl();
   bool parseDocument(bool recursive = true);
   void updateElementsIDWithAlias(QDomDocument doc, QString alias);
 
@@ -128,6 +129,10 @@ protected:
   void AutoCompleteCompleted();
   void focusInEvent(QFocusEvent *e);
   void focusOutEvent(QFocusEvent *e);
+  bool canInsertFromMimeData(const QMimeData *source) const;
+  QByteArray fromMimeData(const QMimeData *source, bool &rectangular) const;
+  /*void dragEnterEvent(QDragEnterEvent *event);
+  void dropEvent(QDropEvent *event);*/
 
 public slots:
   void Increasefont();

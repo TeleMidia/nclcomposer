@@ -18,6 +18,7 @@
 #include "NCLTextEditor.h"
 
 #include <QDir>
+#include <QUrl>
 #include <QFileInfo>
 #include <QStack>
 
@@ -29,6 +30,8 @@ NCLTextEditor::NCLTextEditor(QWidget *parent) :
   apis = NULL;
   textWithoutUserInter = "";
   focusInIgnoringCurrentText = false;
+
+  setAcceptDrops(true);
 }
 
 NCLTextEditor::~NCLTextEditor()
@@ -384,7 +387,7 @@ void NCLTextEditor::keyReleaseEvent(QKeyEvent *event)
 
 void NCLTextEditor::AutoCompleteCompleted()
 {
-  // qDebug() << "NCLTextEditor::AutoCompleteCompleted()";
+  //qDebug() << "NCLTextEditor::AutoCompleteCompleted()";
 }
 
 void NCLTextEditor::MarkLine(int margin, int line, Qt::KeyboardModifiers state)
@@ -536,6 +539,11 @@ QString NCLTextEditor::textWithoutUserInteraction()
 void NCLTextEditor::setDocumentUrl(QString docURL)
 {
   this->docURL = docURL;
+}
+
+QString NCLTextEditor::getDocumentUrl()
+{
+  return this->docURL;
 }
 
 bool NCLTextEditor::parseDocument(bool recursive)
@@ -742,3 +750,42 @@ QList <QDomElement> NCLTextEditor::elementsByTagname( QString tagname,
   }
   return ret;
 }
+
+bool NCLTextEditor::canInsertFromMimeData(const QMimeData *source) const
+{
+  if(!QsciScintillaBase::canInsertFromMimeData(source))
+  {
+    foreach(QUrl url, source->urls())
+      if (QFileInfo(url.toLocalFile()).exists())
+      {
+        return true;
+      }
+  }
+}
+
+// Create text from a MIME data object.
+QByteArray NCLTextEditor::fromMimeData(const QMimeData *source, bool &rectangular) const
+{
+  QByteArray array = QsciScintillaBase::fromMimeData(source, rectangular);
+  if(!array.size())
+  {
+    rectangular = false;
+    QString media = "<media src=\"";
+    media += source->urls().at(0).toString();
+    media += "\"></media>";
+    return media.toAscii();
+  }
+}
+
+/*void NCLTextEditor::dropEvent(QDropEvent *event)
+{
+  foreach(QUrl url, event->mimeData()->urls())
+  {
+    QString filename = url.toLocalFile();
+    event->acceptProposedAction();
+    QString media = "<media src=\"";
+    media += filename;
+    media += "\">\n</media>";
+    insert(media);
+  }
+}*/
