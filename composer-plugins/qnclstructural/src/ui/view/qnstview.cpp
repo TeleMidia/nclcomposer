@@ -18,6 +18,10 @@ QnstView::QnstView(QWidget* parent)
 
     zoomStep = 0;
 
+    nproperty = 0;
+
+    narea = 0;
+
     linking = false;
 
     modified = false;
@@ -855,6 +859,14 @@ void QnstView::addEntity(const QString uid, const QString parent, const QMap<QSt
     // if the entity type is IMPORTBASE
     }else if (properties["TYPE"] == "importBase"){
         addImportBase(properties);
+
+    // if the entity type is AREA
+    }else if (properties["TYPE"] == "area"){
+        addArea(uid, parent, properties);
+
+    // if the entity type is PROPERTY
+    }else if (properties["TYPE"] == "property"){
+        addProperty(uid, parent, properties);
     }
 }
 
@@ -1037,6 +1049,16 @@ void QnstView::changeEntity(const QString uid, const QMap<QString, QString> prop
         // if the entity type is PORT
         case Qnst::Port:
             changePort((QnstGraphicsPort*) entity, properties);
+            break;
+
+        // if the entity type is AREA
+        case Qnst::Area:
+            changeArea((QnstGraphicsArea*) entity, properties);
+            break;
+
+        // if the entity type is PROPERTY
+        case Qnst::Property:
+            changeProperty((QnstGraphicsProperty*) entity, properties);
             break;
         }
 
@@ -1344,10 +1366,10 @@ void QnstView::addMedia(const QString uid, const QString parent, const QMap<QStr
 
         entity->setnstUid(uid);
 
-        entity->setTop(entities[parent]->getHeight()/2 - 56/2);
-        entity->setLeft(entities[parent]->getWidth()/2 - 56/2);
-        entity->setWidth(56);
-        entity->setHeight(72);
+        entity->setTop(entities[parent]->getHeight()/2 - 48/2);
+        entity->setLeft(entities[parent]->getWidth()/2 - 48/2);
+        entity->setWidth(48);
+        entity->setHeight(64);
 
         if (properties["id"] != ""){
             entity->setnstId(properties["id"]);
@@ -1450,20 +1472,14 @@ void QnstView::addPort(const QString uid, const QString parent, const QMap<QStri
 
         entity->setTop(0);
         entity->setLeft(0);
-        entity->setWidth(24);
-        entity->setHeight(24);
+        entity->setWidth(18);
+        entity->setHeight(18);
 
-        if (properties["id"] != ""){
-            entity->setnstId(properties["id"]);
-        }
+        entity->setnstId(properties["id"]);
 
-        if (properties["component"] != ""){
-            entity->setComponent(properties["component"]);
-        }
+        entity->setComponent(properties["component"]);
 
-        if (properties["interface"] != ""){
-            entity->setInterface(properties["interface"]);
-        }
+        entity->setInterface(properties["interface"]);
 
         if (properties["top"] != ""){
             entity->setTop(properties["top"].toDouble());
@@ -1483,11 +1499,14 @@ void QnstView::addPort(const QString uid, const QString parent, const QMap<QStri
 
         if (properties["interfaceUid"] != ""){
             entity->setInterfaceUid(properties["interfaceUid"]);
-
+        }else{
+            entity->setInterfaceUid("");
         }
 
         if (properties["componentUid"] != ""){
             entity->setComponentUid(properties["componentUid"]);
+        }else{
+            entity->setComponentUid("");
         }
 
         entities[parent]->addnstGraphicsEntity(entity); entities[uid] = entity; ++nport;
@@ -1498,17 +1517,11 @@ void QnstView::addPort(const QString uid, const QString parent, const QMap<QStri
 
 void QnstView::changePort(QnstGraphicsPort* entity, const QMap<QString, QString> properties)
 {
-    if (properties["id"] != ""){
-        entity->setnstId(properties["id"]);
-    }
+    entity->setnstId(properties["id"]);
 
-    if (properties["component"] != ""){
-        entity->setComponent(properties["component"]);
-    }
+    entity->setComponent(properties["component"]);
 
-    if (properties["interface"] != ""){
-        entity->setInterface(properties["interface"]);
-    }
+    entity->setInterface(properties["interface"]);
 
     if (properties["top"] != ""){
         entity->setTop(properties["top"].toDouble());
@@ -1528,11 +1541,14 @@ void QnstView::changePort(QnstGraphicsPort* entity, const QMap<QString, QString>
 
     if (properties["interfaceUid"] != ""){
         entity->setInterfaceUid(properties["interfaceUid"]);
-
+    }else{
+        entity->setInterfaceUid("");
     }
 
     if (properties["componentUid"] != ""){
         entity->setComponentUid(properties["componentUid"]);
+    }else{
+        entity->setComponentUid("");
     }
 
     adjustPort(entity);
@@ -1624,6 +1640,120 @@ void QnstView::adjustPort(QnstGraphicsPort* entity)
     }
 
     entity->adjust();
+}
+
+void QnstView::addArea(const QString uid, const QString parent, const QMap<QString, QString> properties)
+{
+    if (entities.contains(parent)){
+        QnstGraphicsArea* entity = new QnstGraphicsArea(entities[parent]);
+        entity->setnstUid(uid);
+        entity->setnstGraphicsParent(entities[parent]);
+
+        entity->setTop(0);
+        entity->setLeft(0);
+        entity->setWidth(16);
+        entity->setHeight(16);
+
+        entity->setnstId(properties["id"]);
+
+        if (properties["top"] != ""){
+            entity->setTop(properties["top"].toDouble());
+        }
+
+        if (properties["left"] != ""){
+            entity->setLeft(properties["left"].toDouble());
+        }
+
+        if (properties["width"] != ""){
+            entity->setWidth(properties["width"].toDouble());
+        }
+
+        if (properties["height"] != ""){
+            entity->setHeight(properties["height"].toDouble());
+        }
+
+        entities[parent]->addnstGraphicsEntity(entity); entities[uid] = entity; ++narea;
+
+        entity->adjust();
+    }
+}
+
+void QnstView::changeArea(QnstGraphicsArea* entity, const QMap<QString, QString> properties)
+{
+    entity->setnstId(properties["id"]);
+
+    if (properties["top"] != ""){
+        entity->setTop(properties["top"].toDouble());
+    }
+
+    if (properties["left"] != ""){
+        entity->setLeft(properties["left"].toDouble());
+    }
+
+    if (properties["width"] != ""){
+        entity->setWidth(properties["width"].toDouble());
+    }
+
+    if (properties["height"] != ""){
+        entity->setHeight(properties["height"].toDouble());
+    }
+}
+
+void QnstView::addProperty(const QString uid, const QString parent, const QMap<QString, QString> properties)
+{
+    if (entities.contains(parent)){
+        QnstGraphicsProperty* entity = new QnstGraphicsProperty(entities[parent]);
+        entity->setnstUid(uid);
+        entity->setnstGraphicsParent(entities[parent]);
+
+        entity->setTop(0);
+        entity->setLeft(0);
+        entity->setWidth(16);
+        entity->setHeight(16);
+
+        entity->setnstId(properties["id"]);
+
+        if (properties["top"] != ""){
+            entity->setTop(properties["top"].toDouble());
+        }
+
+        if (properties["left"] != ""){
+            entity->setLeft(properties["left"].toDouble());
+        }
+
+        if (properties["width"] != ""){
+            entity->setWidth(properties["width"].toDouble());
+        }
+
+        if (properties["height"] != ""){
+            entity->setHeight(properties["height"].toDouble());
+        }
+
+        entities[parent]->addnstGraphicsEntity(entity); entities[uid] = entity; ++nproperty;
+
+        entity->adjust();
+    }
+}
+
+void QnstView::changeProperty(QnstGraphicsProperty* entity, const QMap<QString, QString> properties)
+{
+    entity->setnstId(properties["id"]);
+
+    if (properties["top"] != ""){
+        entity->setTop(properties["top"].toDouble());
+    }
+
+    if (properties["left"] != ""){
+        entity->setLeft(properties["left"].toDouble());
+    }
+
+    if (properties["width"] != ""){
+        entity->setWidth(properties["width"].toDouble());
+    }
+
+    if (properties["height"] != ""){
+        entity->setHeight(properties["height"].toDouble());
+    }
 }
 
 void QnstView::addLink(const QString uid, const QString parent, const QMap<QString, QString> properties)
@@ -1795,10 +1925,10 @@ void QnstView::adjustBind(QnstBind* entity)
 
                     QnstGraphicsAggregator* aggregator = new QnstGraphicsAggregator((QnstGraphicsNode*)node);
                     aggregator->setnstUid(parent->getnstUid());
-                    aggregator->setTop(node->getHeight()/2 - 18/2);
-                    aggregator->setLeft(node->getWidth()/2 - 18/2);
-                    aggregator->setWidth(18);
-                    aggregator->setHeight(18);
+                    aggregator->setTop(node->getHeight()/2 - 14/2);
+                    aggregator->setLeft(node->getWidth()/2 - 14/2);
+                    aggregator->setWidth(14);
+                    aggregator->setHeight(14);
                     aggregator->adjust();
 
                     node->addnstGraphicsEntity(aggregator);
@@ -1857,10 +1987,10 @@ void QnstView::adjustBind(QnstBind* entity)
 
                     QnstGraphicsAggregator* aggregator = new QnstGraphicsAggregator((QnstGraphicsNode*)node);
                     aggregator->setnstUid(parent->getnstUid());
-                    aggregator->setTop(node->getHeight()/2 - 18/2);
-                    aggregator->setLeft(node->getWidth()/2 - 18/2);
-                    aggregator->setWidth(18);
-                    aggregator->setHeight(18);
+                    aggregator->setTop(node->getHeight()/2 - 14/2);
+                    aggregator->setLeft(node->getWidth()/2 - 14/2);
+                    aggregator->setWidth(14);
+                    aggregator->setHeight(14);
                     aggregator->adjust();
 
                     node->addnstGraphicsEntity(aggregator);
@@ -2020,10 +2150,10 @@ void QnstView::addAggregator(const QString uid, const QString parent, const QMap
         QnstGraphicsAggregator* entity = new QnstGraphicsAggregator((QnstGraphicsNode*) entities[parent]);
         entity->setnstUid(uid);
 
-        entity->setTop(entities[parent]->getHeight()/2 - 18/2);
-        entity->setLeft(entities[parent]->getWidth()/2 - 18/2);
-        entity->setWidth(18);
-        entity->setHeight(18);
+        entity->setTop(entities[parent]->getHeight()/2 - 14/2);
+        entity->setLeft(entities[parent]->getWidth()/2 - 14/2);
+        entity->setWidth(14);
+        entity->setHeight(14);
 
         if (properties["id"] != ""){
             entity->setnstId(properties["id"]);
@@ -2086,6 +2216,16 @@ void QnstView::requestEntityAddition(QnstGraphicsEntity* entity)
         // if the entity type is PORT
         case Qnst::Port:
             requestPortAddition((QnstGraphicsPort*) entity);
+            break;
+
+        // if the entity type is AREA
+        case Qnst::Area:
+            requestAreaAddition((QnstGraphicsArea*) entity);
+            break;
+
+        // if the entity type is PROPERTY
+        case Qnst::Property:
+            requestPropertyAddition((QnstGraphicsProperty*) entity);
             break;
 
         // if the entity type is AGGREGATOR
@@ -2450,7 +2590,7 @@ void QnstView::requestMediaAddition(QnstGraphicsMedia* entity)
     properties["id"] = entity->getnstId();
 
 //    TODO:
-//    properties["src"] = "";
+    properties["src"] = entity->getSource();
 //    properties["type"] = "";
 //    properties["refer"] = "";
 //    properties["instance"] = "";
@@ -2473,35 +2613,35 @@ void QnstView::requestMediaChange(QnstGraphicsMedia* entity)
 
     switch(entity->getnstType()){
     case Qnst::Image:
-        properties["TYPE"] = "image";
+        properties["SUBTYPE"] = "image";
         break;
 
     case Qnst::Audio:
-        properties["TYPE"] = "audio";
+        properties["SUBTYPE"] = "audio";
         break;
 
     case Qnst::Video:
-        properties["TYPE"] = "video";
+        properties["SUBTYPE"] = "video";
         break;
 
     case Qnst::Text:
-        properties["TYPE"] = "text";
+        properties["SUBTYPE"] = "text";
         break;
 
     case Qnst::Script:
-        properties["TYPE"] = "script";
+        properties["SUBTYPE"] = "script";
         break;
 
     case Qnst::Settings:
-        properties["TYPE"] = "settings";
+        properties["SUBTYPE"] = "settings";
         break;
 
     case Qnst::Media:
-        properties["TYPE"] = "media";
+        properties["SUBTYPE"] = "media";
         break;
 
     case Qnst::Html:
-        properties["TYPE"] = "html";
+        properties["SUBTYPE"] = "html";
         break;
     }
 
@@ -2601,6 +2741,46 @@ void QnstView::requestPortChange(QnstGraphicsPort* entity)
 //    properties["zindex"] = QString::number(entity->getzIndex());
 
     emit entityChanged(entity->getnstUid(), properties);
+}
+
+void QnstView::requestAreaAddition(QnstGraphicsArea* entity)
+{
+    if (entity->getnstId() == ""){
+        entity->setnstId("area"+QString::number(++narea));
+    }
+
+    QMap<QString, QString> properties;
+
+    properties["TYPE"] = "area";
+
+    properties["id"] = entity->getnstId();
+
+    emit entityAdded(entity->getnstUid(), entity->getnstGraphicsParent()->getnstUid(), properties);
+}
+
+void QnstView::requestAreaChange(QnstGraphicsArea* entity)
+{
+    // TODO
+}
+
+void QnstView::requestPropertyAddition(QnstGraphicsProperty* entity)
+{
+    if (entity->getnstId() == ""){
+        entity->setnstId("prop"+QString::number(++narea));
+    }
+
+    QMap<QString, QString> properties;
+
+    properties["TYPE"] = "property";
+
+    properties["id"] = entity->getnstId();
+
+    emit entityAdded(entity->getnstUid(), entity->getnstGraphicsParent()->getnstUid(), properties);
+}
+
+void QnstView::requestPropertyChange(QnstGraphicsProperty* entity)
+{
+    // TODO
 }
 
 void QnstView::performHelp()
@@ -3165,10 +3345,10 @@ void QnstView::performPaste()
 
                 entity->setnstId("m"+QString::number(++nmedia));
 
-                entity->setTop(parent->getHeight()/2 - 56/2);
-                entity->setLeft(parent->getWidth()/2 - 56/2);
-                entity->setWidth(56);
-                entity->setHeight(72);
+                entity->setTop(parent->getHeight()/2 - 48/2);
+                entity->setLeft(parent->getWidth()/2 - 48/2);
+                entity->setWidth(48);
+                entity->setHeight(64);
 
                 parent->addnstGraphicsEntity(entity);
 
@@ -3183,10 +3363,10 @@ void QnstView::performPaste()
 
                 entity->setnstId("m"+QString::number(++nmedia));
 
-                entity->setTop(parent->getHeight()/2 - 56/2);
-                entity->setLeft(parent->getWidth()/2 - 56/2);
-                entity->setWidth(56);
-                entity->setHeight(72);
+                entity->setTop(parent->getHeight()/2 - 48/2);
+                entity->setLeft(parent->getWidth()/2 - 48/2);
+                entity->setWidth(48);
+                entity->setHeight(64);
 
                 parent->addnstGraphicsEntity(entity);
 
@@ -3201,10 +3381,10 @@ void QnstView::performPaste()
 
                 entity->setnstId("m"+QString::number(++nmedia));
 
-                entity->setTop(parent->getHeight()/2 - 56/2);
-                entity->setLeft(parent->getWidth()/2 - 56/2);
-                entity->setWidth(56);
-                entity->setHeight(72);
+                entity->setTop(parent->getHeight()/2 - 48/2);
+                entity->setLeft(parent->getWidth()/2 - 48/2);
+                entity->setWidth(48);
+                entity->setHeight(64);
 
                 parent->addnstGraphicsEntity(entity);
 
@@ -3219,10 +3399,10 @@ void QnstView::performPaste()
 
                 entity->setnstId("m"+QString::number(++nmedia));
 
-                entity->setTop(parent->getHeight()/2 - 56/2);
-                entity->setLeft(parent->getWidth()/2 - 56/2);
-                entity->setWidth(56);
-                entity->setHeight(72);
+                entity->setTop(parent->getHeight()/2 - 48/2);
+                entity->setLeft(parent->getWidth()/2 - 48/2);
+                entity->setWidth(48);
+                entity->setHeight(64);
 
                 parent->addnstGraphicsEntity(entity);
 
@@ -3237,10 +3417,10 @@ void QnstView::performPaste()
 
                 entity->setnstId("m"+QString::number(++nmedia));
 
-                entity->setTop(parent->getHeight()/2 - 56/2);
-                entity->setLeft(parent->getWidth()/2 - 56/2);
-                entity->setWidth(56);
-                entity->setHeight(72);
+                entity->setTop(parent->getHeight()/2 - 48/2);
+                entity->setLeft(parent->getWidth()/2 - 48/2);
+                entity->setWidth(48);
+                entity->setHeight(64);
 
                 parent->addnstGraphicsEntity(entity);
 
@@ -3255,10 +3435,10 @@ void QnstView::performPaste()
 
                 entity->setnstId(copy->getnstId());
 
-                entity->setTop(parent->getHeight()/2 - 56/2);
-                entity->setLeft(parent->getWidth()/2 - 56/2);
-                entity->setWidth(56);
-                entity->setHeight(72);
+                entity->setTop(parent->getHeight()/2 - 48/2);
+                entity->setLeft(parent->getWidth()/2 - 48/2);
+                entity->setWidth(48);
+                entity->setHeight(64);
 
                 parent->addnstGraphicsEntity(entity);
 
@@ -3273,10 +3453,10 @@ void QnstView::performPaste()
 
                 entity->setnstId("m"+QString::number(++nmedia));
 
-                entity->setTop(parent->getHeight()/2 - 56/2);
-                entity->setLeft(parent->getWidth()/2 - 56/2);
-                entity->setWidth(56);
-                entity->setHeight(72);
+                entity->setTop(parent->getHeight()/2 - 48/2);
+                entity->setLeft(parent->getWidth()/2 - 48/2);
+                entity->setWidth(48);
+                entity->setHeight(64);
 
                 parent->addnstGraphicsEntity(entity);
 
@@ -4015,10 +4195,10 @@ void QnstView::mouseReleaseEvent(QMouseEvent* event)
 
 
                                         QnstGraphicsAggregator* aggregator = new QnstGraphicsAggregator((QnstGraphicsNode*) parenta);
-                                        aggregator->setTop(ycenter - 18/2);
-                                        aggregator->setLeft(xcenter - 18/2);
-                                        aggregator->setWidth(18);
-                                        aggregator->setHeight(18);
+                                        aggregator->setTop(ycenter - 14/2);
+                                        aggregator->setLeft(xcenter - 14/2);
+                                        aggregator->setWidth(14);
+                                        aggregator->setHeight(14);
                                         aggregator->adjust();
 
                                         parenta->addnstGraphicsEntity(aggregator);
@@ -4239,10 +4419,10 @@ void QnstView::mouseReleaseEvent(QMouseEvent* event)
 
 
                                         QnstGraphicsAggregator* aggregator = new QnstGraphicsAggregator((QnstGraphicsNode*) parenta);
-                                        aggregator->setTop(ycenter - 18/2);
-                                        aggregator->setLeft(xcenter - 18/2);
-                                        aggregator->setWidth(18);
-                                        aggregator->setHeight(18);
+                                        aggregator->setTop(ycenter - 14/2);
+                                        aggregator->setLeft(xcenter - 14/2);
+                                        aggregator->setWidth(14);
+                                        aggregator->setHeight(14);
                                         aggregator->adjust();
 
                                         parenta->addnstGraphicsEntity(aggregator);

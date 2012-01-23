@@ -79,28 +79,28 @@ void QnstGraphicsAction::adjust()
         QPointF pointb = line.p2();
 
         if (pointa.x() <= pointb.x() && pointa.y() <= pointb.y()){
-            setTop(pointa.y()-6);
-            setLeft(pointa.x()-6);
-            setWidth((pointb.x()-6)-(pointa.x()-6) + 12);
-            setHeight((pointb.y()-6)-(pointa.y()-6) + 12);
+            setTop(pointa.y()-4);
+            setLeft(pointa.x()-4);
+            setWidth((pointb.x()-4)-(pointa.x()-4) + 8);
+            setHeight((pointb.y()-4)-(pointa.y()-4) + 8);
 
         }else if (pointa.x() > pointb.x() && pointa.y() < pointb.y()){
-            setTop(pointa.y()-6);
-            setLeft(pointb.x()-6);
-            setWidth((pointa.x()-6)-(pointb.x()-6) + 12);
-            setHeight((pointb.y()-6)-(pointa.y()-6) + 12);
+            setTop(pointa.y()-4);
+            setLeft(pointb.x()-4);
+            setWidth((pointa.x()-4)-(pointb.x()-4) + 8);
+            setHeight((pointb.y()-4)-(pointa.y()-4) + 8);
 
         }else if (pointa.x() < pointb.x() && pointa.y() > pointb.y()){
-            setTop(pointb.y()-6);
-            setLeft((pointa.x()-6));
-            setWidth((pointb.x()-6)-(pointa.x()-6) + 12);
-            setHeight((pointa.y()-6)-(pointb.y()-6) + 12);
+            setTop(pointb.y()-4);
+            setLeft((pointa.x()-4));
+            setWidth((pointb.x()-4)-(pointa.x()-4) + 8);
+            setHeight((pointa.y()-4)-(pointb.y()-4) + 8);
 
         }else if (pointa.x() > pointb.x() && pointa.y() > pointb.y()){
-            setTop(pointb.y()-6);
-            setLeft(pointb.x()-6);
-            setWidth((pointa.x()-6)-(pointb.x()-6) + 12);
-            setHeight((pointa.y()-6)-(pointb.y()-6) + 12);
+            setTop(pointb.y()-4);
+            setLeft(pointb.x()-4);
+            setWidth((pointa.x()-4)-(pointb.x()-4) + 8);
+            setHeight((pointa.y()-4)-(pointb.y()-4) + 8);
         }
 
         getEntityB()->setSelectable(false);
@@ -118,28 +118,28 @@ void QnstGraphicsAction::adjust()
                 pointb = line.pointAt(index);
 
                 if (pointa.x() <= pointb.x() && pointa.y() <= pointb.y()){
-                    setTop(pointa.y()-6);
-                    setLeft(pointa.x()-6);
-                    setWidth((pointb.x()-6)-(pointa.x()-6) + 12);
-                    setHeight((pointb.y()-6)-(pointa.y()-6) + 12);
+                    setTop(pointa.y()-4);
+                    setLeft(pointa.x()-4);
+                    setWidth((pointb.x()-4)-(pointa.x()-4) + 8);
+                    setHeight((pointb.y()-4)-(pointa.y()-4) + 8);
 
                 }else if (pointa.x() > pointb.x() && pointa.y() < pointb.y()){
-                    setTop(pointa.y()-6);
-                    setLeft(pointb.x()-6);
-                    setWidth((pointa.x()-6)-(pointb.x()-6) + 12);
-                    setHeight((pointb.y()-6)-(pointa.y()-6) + 12);
+                    setTop(pointa.y()-4);
+                    setLeft(pointb.x()-4);
+                    setWidth((pointa.x()-4)-(pointb.x()-4) + 8);
+                    setHeight((pointb.y()-4)-(pointa.y()-4) + 8);
 
                 }else if (pointa.x() < pointb.x() && pointa.y() > pointb.y()){
-                    setTop(pointb.y()-6);
-                    setLeft((pointa.x()-6));
-                    setWidth((pointb.x()-6)-(pointa.x()-6) + 12);
-                    setHeight((pointa.y()-6)-(pointb.y()-6) + 12);
+                    setTop(pointb.y()-4);
+                    setLeft((pointa.x()-4));
+                    setWidth((pointb.x()-4)-(pointa.x()-4) + 8);
+                    setHeight((pointa.y()-4)-(pointb.y()-4) + 8);
 
                 }else if (pointa.x() > pointb.x() && pointa.y() > pointb.y()){
-                    setTop(pointb.y()-6);
-                    setLeft(pointb.x()-6);
-                    setWidth((pointa.x()-6)-(pointb.x()-6) + 12);
-                    setHeight((pointa.y()-6)-(pointb.y()-6) + 12);
+                    setTop(pointb.y()-4);
+                    setLeft(pointb.x()-4);
+                    setWidth((pointa.x()-4)-(pointb.x()-4) + 8);
+                    setHeight((pointa.y()-4)-(pointb.y()-4) + 8);
                 }
 
                 if (++n > 100){ // avoiding infinity loop
@@ -181,43 +181,43 @@ void QnstGraphicsAction::draw(QPainter* painter)
         if (pointa.x() <= pointb.x() && pointa.y() <= pointb.y()){
             painter->setPen(QPen(QBrush(QColor("#000000")), 1));
 
-            painter->drawLine(4+6,4+6, 4+12+getWidth()-24, 4+12+getHeight()-24);
+            painter->drawLine(4+4,4+4, 4+8+getWidth()-16, 4+8+getHeight()-16);
 
             painter->setBrush(QBrush(QColor("#000000")));
             painter->setPen(Qt::NoPen);
 
-            painter->drawPixmap(4+getWidth()-24, 4+getHeight()-24, 24, 24, QPixmap(actionIcon));
+            painter->drawPixmap(4+getWidth()-16, 4+getHeight()-16, 16, 16, QPixmap(actionIcon));
 
         }else if (pointa.x() > pointb.x() && pointa.y() < pointb.y()){
             painter->setPen(QPen(QBrush(QColor("#000000")), 1));
 
-            painter->drawLine(4+6+getWidth()-12,4+6, 4+12, 4+12+getHeight()-24);
+            painter->drawLine(4+4+getWidth()-8,4+4, 4+8, 4+8+getHeight()-16);
 
             painter->setBrush(QBrush(QColor("#000000")));
             painter->setPen(Qt::NoPen);
 
-            painter->drawPixmap(4, 4+getHeight()-24, 24, 24, QPixmap(actionIcon));
+            painter->drawPixmap(4, 4+getHeight()-16, 16, 16, QPixmap(actionIcon));
 
 
         }else if (pointa.x() < pointb.x() && pointa.y() > pointb.y()){
             painter->setPen(QPen(QBrush(QColor("#000000")), 1));
 
-            painter->drawLine(4+6, 4+6+getHeight()-12, 4+12+getWidth()-24, 4+12);
+            painter->drawLine(4+4, 4+4+getHeight()-8, 4+8+getWidth()-16, 4+8);
 
             painter->setBrush(QBrush(QColor("#000000")));
             painter->setPen(Qt::NoPen);
 
-            painter->drawPixmap(4+getWidth()-24,4,24,24, QPixmap(actionIcon));
+            painter->drawPixmap(4+getWidth()-16,4,16,16, QPixmap(actionIcon));
 
         }else if (pointa.x() > pointb.x() && pointa.y() > pointb.y()){
             painter->setPen(QPen(QBrush(QColor("#000000")), 1));
 
-            painter->drawLine(4+6+getWidth()-12, 4+6+getHeight()-12, 4+12, 4+12);
+            painter->drawLine(4+4+getWidth()-8, 4+4+getHeight()-8, 4+8, 4+8);
 
             painter->setBrush(QBrush(QColor("#000000")));
             painter->setPen(Qt::NoPen);
 
-            painter->drawPixmap(4,4,24,24, QPixmap(actionIcon));
+            painter->drawPixmap(4,4,16,16, QPixmap(actionIcon));
         }
     }
 }
@@ -243,19 +243,19 @@ void QnstGraphicsAction::delineate(QPainterPath* painter) const
 
         if (pointa.x() <= pointb.x() && pointa.y() <= pointb.y()){
 
-            painter->addEllipse(4+getWidth()-24, 4+getHeight()-24, 24, 24);
+            painter->addEllipse(4+getWidth()-16, 4+getHeight()-16, 16, 16);
 
         }else if (pointa.x() > pointb.x() && pointa.y() < pointb.y()){
 
-            painter->addEllipse(4, 4+getHeight()-24, 24, 24);
+            painter->addEllipse(4, 4+getHeight()-16, 16, 16);
 
         }else if (pointa.x() < pointb.x() && pointa.y() > pointb.y()){
 
-            painter->addEllipse(4+getWidth()-24,4,24,24);
+            painter->addEllipse(4+getWidth()-16,4,16,16);
 
         }else if (pointa.x() > pointb.x() && pointa.y() > pointb.y()){
 
-            painter->addEllipse(4,4,24,24);
+            painter->addEllipse(4,4,16,16);
         }
     }
 }

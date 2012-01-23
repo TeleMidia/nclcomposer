@@ -61,6 +61,10 @@ signals:
 
     void portRequested();
 
+    void areaRequested();
+
+    void propertyRequested();
+
     void aggregatorRequested();
 
     void bringfrontRequested();
@@ -138,6 +142,10 @@ public:
     QAction* actionBody;
 
     QAction* actionPort;
+
+    QAction* actionArea;
+
+    QAction* actionProperty;
 
     QAction* actionAggregator;
 

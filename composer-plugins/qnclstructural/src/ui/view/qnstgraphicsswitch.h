@@ -43,10 +43,17 @@ public slots:
 
     void performPort();
 
+protected:
+    virtual void dragEnterEvent(QGraphicsSceneDragDropEvent *event);
+
+    virtual void dropEvent(QGraphicsSceneDragDropEvent *event);
+
 private:
     void createObjects();
 
     void createConnections();
+
+        QString dropsrc;
 };
 
 

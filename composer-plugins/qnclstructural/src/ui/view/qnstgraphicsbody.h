@@ -1,6 +1,12 @@
 #ifndef QNSTGRAPHICSBODY_H
 #define QNSTGRAPHICSBODY_H
 
+#include <QGraphicsSceneDragDropEvent>
+#include <QMimeData>
+#include <QList>
+#include <QUrl>
+#include <QFileInfo>
+
 #include "qnstgraphicscomposition.h"
 
 #include "qnstgraphicscontext.h"
@@ -50,10 +56,17 @@ public slots:
 
     void performAggregator();
 
+protected:
+    virtual void dragEnterEvent(QGraphicsSceneDragDropEvent *event);
+
+    virtual void dropEvent(QGraphicsSceneDragDropEvent *event);
+
 private:
     void createObjects();
 
     void createConnections();
+
+    QString dropsrc;
 };
 
 #endif // QNSTGRAPHICSBODY_H

@@ -33,6 +33,8 @@
 #include "qnstconncetor.h"
 #include "qnstlink.h"
 #include "qnstbind.h"
+#include "qnstgraphicsproperty.h"
+#include "qnstgraphicsarea.h"
 
 class QnstView : public QGraphicsView
 {
@@ -161,6 +163,14 @@ private:
 
     void adjustPort(QnstGraphicsPort* entity);
 
+    void addArea(const QString uid, const QString parent, const QMap<QString, QString> properties);
+
+    void changeArea(QnstGraphicsArea* entity, const QMap<QString, QString> properties);
+
+    void addProperty(const QString uid, const QString parent, const QMap<QString, QString> properties);
+
+    void changeProperty(QnstGraphicsProperty* entity, const QMap<QString, QString> properties);
+
     void addLink(const QString uid, const QString parent, const QMap<QString, QString> properties);
 
     void changeLink(QnstLink* entity, const QMap<QString, QString> properties);
@@ -211,6 +221,14 @@ private:
 
     void requestPortChange(QnstGraphicsPort* entity);
 
+    void requestAreaAddition(QnstGraphicsArea* entity);
+
+    void requestAreaChange(QnstGraphicsArea* entity);
+
+    void requestPropertyAddition(QnstGraphicsProperty* entity);
+
+    void requestPropertyChange(QnstGraphicsProperty* entity);
+
     void performCopy(QnstGraphicsEntity* entity, QnstGraphicsEntity* parent);
 
     void performPaste(QnstGraphicsEntity* copy, QnstGraphicsEntity* parent);
@@ -232,6 +250,10 @@ private:
     int nmedia;
 
     int nlink;
+
+    int nproperty;
+
+    int narea;
 
     bool modified;
 

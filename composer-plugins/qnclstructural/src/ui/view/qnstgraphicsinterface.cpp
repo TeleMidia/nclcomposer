@@ -7,6 +7,8 @@ QnstGraphicsInterface::QnstGraphicsInterface(QnstGraphicsEntity* parent)
     setnstType(Qnst::Interface);
 
     setResizable(false);
+
+    setnstId("");
 }
 
 QnstGraphicsInterface::~QnstGraphicsInterface()
@@ -35,6 +37,29 @@ void QnstGraphicsInterface::removenstGraphicsEdge(QnstGraphicsEdge* edge)
             links.remove(index);
         }
     }
+}
+
+void QnstGraphicsInterface::setnstId(QString id)
+{
+    QnstGraphicsEntity::setnstId(id);
+
+    QString tip = "";
+    QString name = (getnstId() != "" ? getnstId() : "?");
+
+    if (getnstType() == Qnst::Port){
+        tip += "Port ("+name+")";
+
+    }else if (getnstType() == Qnst::Area){
+        tip += "Area ("+name+")";
+
+    }else if (getnstType() == Qnst::Property){
+        tip += "Property ("+name+")";
+
+    }else{
+        tip += "Interface ("+name+")";
+    }
+
+    setToolTip(tip);
 }
 
 void QnstGraphicsInterface::adjust()

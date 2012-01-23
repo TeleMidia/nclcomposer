@@ -46,10 +46,17 @@ public slots:
 
     void performAggregator();
 
+protected:
+    virtual void dragEnterEvent(QGraphicsSceneDragDropEvent *event);
+
+    virtual void dropEvent(QGraphicsSceneDragDropEvent *event);
+
 private:
     void createObjects();
 
     void createConnections();
+
+        QString dropsrc;
 };
 
 #endif // QNSTGRAPHICSCONTEXT_H

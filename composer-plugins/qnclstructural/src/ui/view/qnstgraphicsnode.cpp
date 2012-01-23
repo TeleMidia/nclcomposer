@@ -5,6 +5,8 @@ QnstGraphicsNode::QnstGraphicsNode(QnstGraphicsNode* parent)
 {
     setncgType(Qncg::Node);
     setnstType(Qnst::Node);
+
+    hover = false;
 }
 
 QnstGraphicsNode::~QnstGraphicsNode()
@@ -247,4 +249,44 @@ void QnstGraphicsNode::resize(QGraphicsSceneMouseEvent* event)
     setResizeHeight(nexth);
 
     scene()->update();
+}
+
+bool QnstGraphicsNode::hasMouseHover()
+{
+    return hover;
+}
+
+void QnstGraphicsNode::setMouseHover(bool hover)
+{
+    this->hover = hover;
+}
+
+void QnstGraphicsNode::hoverEnterEvent(QGraphicsSceneHoverEvent* event)
+{
+    QnstGraphicsEntity::hoverEnterEvent(event);
+
+//    QnstGraphicsNode* parent = (QnstGraphicsNode*) getnstGraphicsParent();
+
+//    while(parent != NULL){
+//        parent->setMouseHover(false);
+//        parent->update();
+
+//        parent = (QnstGraphicsNode*) parent->getnstGraphicsParent();
+//    }
+
+    hover = true;
+}
+
+void QnstGraphicsNode::hoverLeaveEvent(QGraphicsSceneHoverEvent* event)
+{
+    QnstGraphicsEntity::hoverLeaveEvent(event);
+
+//    QnstGraphicsNode* parent = (QnstGraphicsNode*) getnstGraphicsParent();
+
+//    if (parent != NULL){
+//        parent->setMouseHover(true);
+//        parent->update();
+//    }
+
+    hover = false;
 }

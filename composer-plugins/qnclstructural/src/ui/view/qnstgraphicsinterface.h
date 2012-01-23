@@ -19,6 +19,8 @@ public:
 
     virtual void adjust();
 
+    void setnstId(QString id);
+
 protected:
     virtual void draw(QPainter* painter) = 0;
 

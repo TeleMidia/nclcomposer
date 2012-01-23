@@ -4,6 +4,8 @@ QnstGraphicsPort::QnstGraphicsPort(QnstGraphicsEntity* parent)
     : QnstGraphicsInterface(parent)
 {
     setnstType(Qnst::Port);
+
+    setnstId("");
 }
 
 QnstGraphicsPort::~QnstGraphicsPort()
@@ -53,9 +55,9 @@ void QnstGraphicsPort::setInterfaceUid(QString interfaceUid)
 
 void QnstGraphicsPort::draw(QPainter* painter)
 {
-    painter->setRenderHint(QPainter::SmoothPixmapTransform, true);
+    painter->setBrush(Qt::black);
 
-    painter->drawPixmap(4 + 4/2, 4 + 4/2, getWidth()-4, getHeight()-4, QPixmap(":/icon/port"));
+    painter->drawRect(4 + 8/2, 4 + 8/2, getWidth()-8, getHeight()-8);
 
     if (isMoving()){
         painter->setBrush(Qt::NoBrush);
@@ -67,5 +69,5 @@ void QnstGraphicsPort::draw(QPainter* painter)
 
 void QnstGraphicsPort::delineate(QPainterPath* painter) const
 {
-    painter->addRect(4 + 4/2, 4 + 4/2, getWidth()-4, getHeight()-4);
+    painter->addRect(4 + 8/2, 4 + 8/2, getWidth()-8, getHeight()-8);
 }

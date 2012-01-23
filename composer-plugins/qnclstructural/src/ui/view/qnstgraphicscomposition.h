@@ -14,6 +14,8 @@ public:
 
     void setColor(QString color);
 
+    void setnstId(QString id);
+
 protected:
     virtual void draw(QPainter* painter);
 

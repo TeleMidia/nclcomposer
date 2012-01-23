@@ -139,7 +139,6 @@ void QnstComposerPlugin::onEntityAdded(QString pluginID, Entity *entity)
         requestEntityAddition(entity);
     }else{
         if (request != ""){
-
             entities[entity->getUniqueId()] = request;
         }
     }
@@ -240,6 +239,18 @@ void QnstComposerPlugin::requestEntityAddition(Entity* entity)
     // if the entity is of type importBase
     }else if (entity->getType() == "importBase"){
         requestImportBaseAddition(entity);
+
+    // if the entity is of type AREA
+    }else if (entity->getType() == "area"){
+        entities[entity->getUniqueId()] = entity->getUniqueId();
+
+        requestAreaAddition(entity);
+
+    // if the entity is of type PROPERTY
+    }else if (entity->getType() == "property"){
+        entities[entity->getUniqueId()] = entity->getUniqueId();
+
+        requestPropertyAddition(entity);
     }
 }
 
@@ -305,6 +316,14 @@ void QnstComposerPlugin::requestEntityChange(Entity* entity)
     // if the entity is of type ImportBase
     }else if (entity->getType() == "importBase"){
         requestImportBaseChange(entity);
+
+    // if the entity is of type AREA
+    }else if (entity->getType() == "area"){
+        requestAreaChange(entity);
+
+    // if the entity is of type PROPERTY
+    }else if (entity->getType() == "property"){
+        requestPropertyChange(entity);
     }
 }
 
@@ -316,7 +335,9 @@ void QnstComposerPlugin::requestEntitySelection(Entity* entity)
             entity->getType() == "media" ||
             entity->getType() == "switch" ||
             entity->getType() == "port" ||
-            entity->getType() == "link"){
+            entity->getType() == "link" ||
+            entity->getType() == "area" ||
+           entity->getType() == "property"){
 
             view->selectEntity(entities[entity->getUniqueId()]);
         }
@@ -505,17 +526,17 @@ void QnstComposerPlugin::requestPortAddition(Entity* entity)
 
     properties["TYPE"] = "port";
 
-    if (entity->getAttribute("id") != ""){
-        properties["id"] = entity->getAttribute("id");
-    }
+    properties["id"] = entity->getAttribute("id");
+
+    properties["component"] = entity->getAttribute("component");
 
     if (entity->getAttribute("component") != ""){
-        properties["component"] = entity->getAttribute("component");
         properties["componentUid"] = entities[getUidById(properties["component"])];
     }
 
+    properties["interface"] = entity->getAttribute("interface");
+
     if (entity->getAttribute("interface") != ""){
-        properties["interface"] = entity->getAttribute("interface");
         properties["interfaceUid"] = entities[getUidById(properties["interface"])];
     }
 
@@ -526,21 +547,65 @@ void QnstComposerPlugin::requestPortChange(Entity* entity)
 {
     QMap<QString, QString> properties;
 
-    if (entity->getAttribute("id") != ""){
-        properties["id"] = entity->getAttribute("id");
-    }
+    properties["id"] = entity->getAttribute("id");
+
+    properties["component"] = entity->getAttribute("component");
 
     if (entity->getAttribute("component") != ""){
-        properties["component"] = entity->getAttribute("component");
         properties["componentUid"] = entities[getUidById(properties["component"])];
     }
 
+    properties["interface"] = entity->getAttribute("interface");
+
     if (entity->getAttribute("interface") != ""){
-        properties["interface"] = entity->getAttribute("interface");
         properties["interfaceUid"] = entities[getUidById(properties["interface"])];
     }
 
     view->changeEntity(entities[entity->getUniqueId()], properties);
+}
+
+void QnstComposerPlugin::requestAreaAddition(Entity* entity)
+{
+    QMap<QString, QString> properties;
+
+    properties["TYPE"] = "area";
+
+    properties["id"] = entity->getAttribute("id");
+
+    view->addEntity(entity->getUniqueId(), entities[entity->getParentUniqueId()], properties);
+}
+
+void QnstComposerPlugin::requestAreaChange(Entity* entity)
+{
+    QMap<QString, QString> properties;
+
+    properties["TYPE"] = "area";
+
+    properties["id"] = entity->getAttribute("id");
+
+    view->changeEntity(entities[entity->getUniqueId()], properties);
+}
+
+void QnstComposerPlugin::requestPropertyAddition(Entity* entity)
+{
+    QMap<QString, QString> properties;
+
+    properties["TYPE"] = "property";
+
+    properties["id"] = entity->getAttribute("id");
+
+    view->addEntity(entity->getUniqueId(), entities[entity->getParentUniqueId()], properties);
+}
+
+void QnstComposerPlugin::requestPropertyChange(Entity* entity)
+{
+    QMap<QString, QString> properties;
+
+    properties["TYPE"] = "property";
+
+    properties["id"] = entity->getAttribute("id");
+
+   view->changeEntity(entities[entity->getUniqueId()], properties);
 }
 
 void QnstComposerPlugin::requestLinkAddition(Entity* entity)
@@ -818,6 +883,14 @@ void QnstComposerPlugin::requestEntityAddition(const QString uid, const QString 
     // if the entity is of type BIND
     }else if (properties["TYPE"] == "bind"){
         requestBindAddition(uid, parent, properties);
+
+    // if the entity is of type AREA
+    }else if (properties["TYPE"] == "area"){
+        requestAreaAddition(uid, parent, properties);
+
+    // if the entity is of type PROPERTY
+    }else if (properties["TYPE"] == "property"){
+        requestPropertyAddition(uid, parent, properties);
     }
 }
 
@@ -1108,6 +1181,50 @@ void QnstComposerPlugin::requestPortChange(const QString uid, const QMap<QString
 
         emit setAttributes(entity, attributes, false);
     }
+}
+
+void QnstComposerPlugin::requestAreaAddition(const QString uid, const QString parent, const QMap<QString, QString> properties)
+{
+    Entity* entity = getProject()->getEntityById(entities.key(parent));
+
+    if (entity != NULL){
+        QMap<QString, QString> attributes;
+
+        attributes["id"] = properties["id"];
+
+        request = uid;
+
+        emit addEntity("area", entity->getUniqueId(), attributes, false);
+
+        request = "";
+    }
+}
+
+void QnstComposerPlugin::requestAreaChange(const QString uid, const QMap<QString, QString> properties)
+{
+
+}
+
+void QnstComposerPlugin::requestPropertyAddition(const QString uid, const QString parent, const QMap<QString, QString> properties)
+{
+    Entity* entity = getProject()->getEntityById(entities.key(parent));
+
+    if (entity != NULL){
+        QMap<QString, QString> attributes;
+
+        attributes["id"] = properties["id"];
+
+        request = uid;
+
+        emit addEntity("property", entity->getUniqueId(), attributes, false);
+
+        request = "";
+    }
+}
+
+void QnstComposerPlugin::requestPropertyChange(const QString uid, const QMap<QString, QString> properties)
+{
+
 }
 
 void QnstComposerPlugin::requestConnectorAddition(const QString uid, const QString parent, const QMap<QString, QString> properties)

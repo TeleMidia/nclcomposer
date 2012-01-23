@@ -23,11 +23,42 @@ void QnstGraphicsComposition::setColor(QString color)
     this->color = color;
 }
 
+void QnstGraphicsComposition::setnstId(QString id)
+{
+    QnstGraphicsNode::setnstId(id);
+
+    QString tip = "";
+    QString name = (getnstId() != "" ? getnstId() : "?");
+
+    if (getnstType() == Qnst::Context){
+        tip += "Context ("+name+")";
+
+    }else if (getnstType() == Qnst::Switch){
+        tip += "Switch ("+name+")";
+
+    }else if (getnstType() == Qnst::Body){
+        tip += "Body ("+name+")";
+
+    }else{
+        tip += "Composition ("+name+")";
+    }
+
+    setToolTip(tip);
+}
+
 void QnstGraphicsComposition::draw(QPainter* painter)
 {
+//    if (!isSelected() && hasMouseHover() && getnstType() != Qnst::Body){
+//        painter->setBrush(Qt::NoBrush);
+//        painter->setPen(QPen(QBrush(QColor("#999999")), 0, Qt::DashLine)); // 0px = cosmetic border
+
+//        painter->drawRect(4, 4, getWidth(), getHeight());
+//    }
+
     painter->setRenderHint(QPainter::Antialiasing,true);
 
     painter->setBrush(QColor(color));
+    painter->setPen(QPen(QBrush(Qt::black), 0));
 
     painter->drawEllipse(4, 4, getWidth()-1, getHeight()-1);
 

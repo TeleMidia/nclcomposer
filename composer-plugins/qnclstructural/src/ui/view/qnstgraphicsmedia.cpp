@@ -9,10 +9,10 @@ QnstGraphicsMedia::QnstGraphicsMedia(QnstGraphicsNode* parent)
 
     setResizable(false);
 
-    source = "";
-
     createObjects();
     createConnections();
+
+    setnstId("");
 }
 
 QnstGraphicsMedia::~QnstGraphicsMedia()
@@ -40,6 +40,45 @@ void QnstGraphicsMedia::setSource(QString source)
     this->source = source;
 }
 
+void QnstGraphicsMedia::setnstId(QString id)
+{
+    QnstGraphicsContent::setnstId(id);
+
+    QString tip = "";
+    QString name = (getnstId() != "" ? getnstId() : "?");
+
+    if (getnstType() == Qnst::Image){
+        tip += "Image ("+name+")";
+
+    }else if (getnstType() == Qnst::Audio){
+        tip += "Audio ("+name+")";
+
+    }else if (getnstType() == Qnst::Text){
+        tip += "Text ("+name+")";
+
+    }else if (getnstType() == Qnst::Video){
+        tip += "Video ("+name+")";
+
+    }else if (getnstType() == Qnst::Script){
+        tip += "Script ("+name+")";
+
+    }else if (getnstType() == Qnst::Html){
+        tip += "Html ("+name+")";
+
+    }else if (getnstType() == Qnst::Settings){
+        tip += "Settings ("+name+")";
+
+    }else{
+        tip += "Media ("+name+")";
+    }
+
+    if (source == ""){
+        tip += " - Alert: Missing 'src' attribute";
+    }
+
+    setToolTip(tip);
+}
+
 void QnstGraphicsMedia::createObjects()
 {
     menu = new QnstMenu();
@@ -49,6 +88,10 @@ void QnstGraphicsMedia::createObjects()
     menu->actionDelete->setEnabled(true);
 
     menu->actionExport->setEnabled(true);
+
+    menu->menuInsert->setEnabled(true);
+    menu->actionArea->setEnabled(true);
+    menu->actionProperty->setEnabled(true);
 }
 
 void QnstGraphicsMedia::createConnections()
@@ -64,10 +107,42 @@ void QnstGraphicsMedia::createConnections()
 
     connect(menu, SIGNAL(exportRequested()), SIGNAL(exportRequested()));
 
+    connect(menu, SIGNAL(areaRequested()), SLOT(performArea()));
+
+    connect(menu, SIGNAL(propertyRequested()), SLOT(performProperty()));
+
     connect(menu, SIGNAL(zoominRequested()), SIGNAL(zoominRequested()));
     connect(menu, SIGNAL(zoomoutRequested()), SIGNAL(zoomoutRequested()));
     connect(menu, SIGNAL(zoomresetRequested()), SIGNAL(zoomresetRequested()));
     connect(menu, SIGNAL(fullscreenRequested()), SIGNAL(fullscreenRequested()));
+}
+
+void QnstGraphicsMedia::performArea()
+{
+    QnstGraphicsArea* entity = new QnstGraphicsArea(this);
+    entity->setTop(0);
+    entity->setLeft(0);
+    entity->setWidth(16);
+    entity->setHeight(16);
+    entity->adjust();
+
+    addnstGraphicsEntity(entity);
+
+    emit entityAdded(entity);
+}
+
+void QnstGraphicsMedia::performProperty()
+{
+    QnstGraphicsProperty* entity = new QnstGraphicsProperty(this);
+    entity->setTop(0);
+    entity->setLeft(0);
+    entity->setWidth(16);
+    entity->setHeight(16);
+    entity->adjust();
+
+    addnstGraphicsEntity(entity);
+
+    emit entityAdded(entity);
 }
 
 void QnstGraphicsMedia::draw(QPainter* painter)
@@ -76,11 +151,27 @@ void QnstGraphicsMedia::draw(QPainter* painter)
 
     painter->drawPixmap(4 + 8/2, 4 + 8/2, getWidth()-8, getHeight()-16-8, QPixmap(icon));
 
-    if (source == ""){
-        painter->drawPixmap((getWidth()-8)/2 + 16, (getHeight()-16-8)/2 + 16, 16, 16, QPixmap(":/icon/alert"));
+    if (!isSelected() && hasMouseHover()){
+        painter->setBrush(Qt::NoBrush);
+        painter->setPen(QPen(QBrush(QColor("#999999")), 0, Qt::DashLine)); // 0px = cosmetic border
+
+        painter->drawRect(4, 4, getWidth(), getHeight());
     }
 
-    painter->drawText(4 + 8/2, 4 + 8/2 + getHeight()-16-8, getWidth()-8, 16, Qt::AlignCenter, getnstId());
+    painter->setPen(QPen(QBrush(Qt::black),0));
+
+    if (source == ""){
+        painter->drawPixmap((getWidth()-8)/2 + 12, (getHeight()-8)/2 + 4, 12, 12, QPixmap(":/icon/alert"));
+    }
+
+    if (getnstId().length() > 5){
+
+        QString localid = getnstId().replace(3,getnstId().length()-3,"...");
+        painter->drawText(4 + 8/2, 4 + 8/2 + getHeight()-16-8, getWidth()-8, 16, Qt::AlignLeft, localid);
+
+    }else{
+        painter->drawText(4 + 8/2, 4 + 8/2 + getHeight()-16-8, getWidth()-8, 16, Qt::AlignCenter, getnstId());
+    }
 
     if (isMoving()){
         painter->setBrush(Qt::NoBrush);
@@ -94,34 +185,4 @@ void QnstGraphicsMedia::draw(QPainter* painter)
 void QnstGraphicsMedia::delineate(QPainterPath* painter) const
 {
     painter->addRect(4, 4, getWidth(), getHeight());
-}
-
-void QnstGraphicsMedia::dragEnterEvent(QGraphicsSceneDragDropEvent *event)
-{
-    foreach(QUrl url, event->mimeData()->urls()){
-        if (QFileInfo(url.toLocalFile()).suffix().toUpper()=="PNG")
-        {
-            event->acceptProposedAction();
-
-            return;
-        }
-    }
-}
-
-void QnstGraphicsMedia::dropEvent(QGraphicsSceneDragDropEvent *event)
-{
-    foreach(QUrl url, event->mimeData()->urls())
-    {
-        QString filename = url.toLocalFile();
-        QString suffix = QFileInfo(filename).suffix().toUpper();
-
-        if(suffix=="PNG")
-        {
-            event->acceptProposedAction();
-
-            setSource(filename);
-
-            emit entityChanged(this);
-        }
-    }
 }

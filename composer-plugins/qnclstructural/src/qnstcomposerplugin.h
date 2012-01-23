@@ -102,6 +102,14 @@ private:
 
     void requestPortChange(Entity* entity);
 
+    void requestAreaAddition(Entity* entity);
+
+    void requestAreaChange(Entity* entity);
+
+    void requestPropertyAddition(Entity* entity);
+
+    void requestPropertyChange(Entity* entity);
+
     void requestLinkAddition(Entity* entity);
 
     void requestLinkChange(Entity* entity);
@@ -147,6 +155,14 @@ private:
     void requestPortAddition(const QString uid, const QString parent, const QMap<QString, QString> properties);
 
     void requestPortChange(const QString uid, const QMap<QString, QString> properties);
+
+    void requestAreaAddition(const QString uid, const QString parent, const QMap<QString, QString> properties);
+
+    void requestAreaChange(const QString uid, const QMap<QString, QString> properties);
+
+    void requestPropertyAddition(const QString uid, const QString parent, const QMap<QString, QString> properties);
+
+    void requestPropertyChange(const QString uid, const QMap<QString, QString> properties);
 
     void requestConnectorAddition(const QString uid, const QString parent, const QMap<QString, QString> properties);
 

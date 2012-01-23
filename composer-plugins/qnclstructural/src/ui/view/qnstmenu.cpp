@@ -240,6 +240,22 @@ void QnstMenu::createActions()
 
     actionPort->setEnabled(false);
 
+    // area action
+    actionArea = new QAction(this);
+    actionArea->setText(tr("Area"));
+
+    actionArea->setIcon(QIcon(":/icon/area"));
+
+    actionArea->setEnabled(false);
+
+    // property action
+    actionProperty = new QAction(this);
+    actionProperty->setText(tr("Property"));
+
+    actionProperty->setIcon(QIcon(":/icon/property"));
+
+    actionProperty->setEnabled(false);
+
     // aggregator action
     actionAggregator = new QAction(this);
     actionAggregator->setText(tr("Aggregator"));
@@ -334,6 +350,8 @@ void QnstMenu::createMenus()
     menuInsert->addAction(actionBody);
     menuInsert->addSeparator();
     menuInsert->addAction(actionPort);
+    menuInsert->addAction(actionArea);
+    menuInsert->addAction(actionProperty);
     menuInsert->addSeparator();
     menuInsert->addAction(actionAggregator);
 
@@ -389,6 +407,8 @@ void QnstMenu::createConnections()
     connect(actionSwitch, SIGNAL(triggered()), SIGNAL(switchRequested()));
     connect(actionBody, SIGNAL(triggered()), SIGNAL(bodyRequested()));
     connect(actionPort, SIGNAL(triggered()), SIGNAL(portRequested()));
+    connect(actionArea, SIGNAL(triggered()), SIGNAL(areaRequested()));
+    connect(actionProperty, SIGNAL(triggered()), SIGNAL(propertyRequested()));
     connect(actionAggregator, SIGNAL(triggered()), SIGNAL(aggregatorRequested()));
 
     connect(actionBringfront, SIGNAL(triggered()), SIGNAL(bringfrontRequested()));

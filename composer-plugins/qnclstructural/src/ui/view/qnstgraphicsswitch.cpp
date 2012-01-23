@@ -9,6 +9,8 @@ QnstGraphicsSwitch::QnstGraphicsSwitch(QnstGraphicsNode* parent)
 
     createObjects();
     createConnections();
+
+    dropsrc = "";
 }
 
 QnstGraphicsSwitch::~QnstGraphicsSwitch()
@@ -73,10 +75,10 @@ void QnstGraphicsSwitch::createConnections()
 void QnstGraphicsSwitch::performImage()
 {
     QnstGraphicsImage* entity = new QnstGraphicsImage(this);
-    entity->setTop(getHeight()/2 - 56/2);
-    entity->setLeft(getWidth()/2 - 56/2);
-    entity->setWidth(56);
-    entity->setHeight(72);
+    entity->setTop(getHeight()/2 - 48/2);
+    entity->setLeft(getWidth()/2 - 48/2);
+    entity->setWidth(48);
+    entity->setHeight(64);
 
     entity->menu->actionPaste->setEnabled(menu->actionPaste->isEnabled());
 
@@ -88,10 +90,10 @@ void QnstGraphicsSwitch::performImage()
 void QnstGraphicsSwitch::performAudio()
 {
     QnstGraphicsAudio* entity = new QnstGraphicsAudio(this);
-    entity->setTop(getHeight()/2 - 56/2);
-    entity->setLeft(getWidth()/2 - 56/2);
-    entity->setWidth(56);
-    entity->setHeight(72);
+    entity->setTop(getHeight()/2 - 48/2);
+    entity->setLeft(getWidth()/2 - 48/2);
+    entity->setWidth(48);
+    entity->setHeight(64);
 
     entity->menu->actionPaste->setEnabled(menu->actionPaste->isEnabled());
 
@@ -103,10 +105,10 @@ void QnstGraphicsSwitch::performAudio()
 void QnstGraphicsSwitch::performText()
 {
     QnstGraphicsText* entity = new QnstGraphicsText(this);
-    entity->setTop(getHeight()/2 - 56/2);
-    entity->setLeft(getWidth()/2 - 56/2);
-    entity->setWidth(56);
-    entity->setHeight(72);
+    entity->setTop(getHeight()/2 - 48/2);
+    entity->setLeft(getWidth()/2 - 48/2);
+    entity->setWidth(48);
+    entity->setHeight(64);
 
     entity->menu->actionPaste->setEnabled(menu->actionPaste->isEnabled());
 
@@ -118,10 +120,10 @@ void QnstGraphicsSwitch::performText()
 void QnstGraphicsSwitch::performVideo()
 {
     QnstGraphicsVideo* entity = new QnstGraphicsVideo(this);
-    entity->setTop(getHeight()/2 - 56/2);
-    entity->setLeft(getWidth()/2 - 56/2);
-    entity->setWidth(56);
-    entity->setHeight(72);
+    entity->setTop(getHeight()/2 - 48/2);
+    entity->setLeft(getWidth()/2 - 48/2);
+    entity->setWidth(48);
+    entity->setHeight(64);
 
     entity->menu->actionPaste->setEnabled(menu->actionPaste->isEnabled());
 
@@ -133,10 +135,10 @@ void QnstGraphicsSwitch::performVideo()
 void QnstGraphicsSwitch::performScript()
 {
     QnstGraphicsScript* entity = new QnstGraphicsScript(this);
-    entity->setTop(getHeight()/2 - 56/2);
-    entity->setLeft(getWidth()/2 - 56/2);
-    entity->setWidth(56);
-    entity->setHeight(72);
+    entity->setTop(getHeight()/2 - 48/2);
+    entity->setLeft(getWidth()/2 - 48/2);
+    entity->setWidth(48);
+    entity->setHeight(64);
 
     entity->menu->actionPaste->setEnabled(menu->actionPaste->isEnabled());
 
@@ -148,10 +150,10 @@ void QnstGraphicsSwitch::performScript()
 void QnstGraphicsSwitch::performSettings()
 {
     QnstGraphicsSettings* entity = new QnstGraphicsSettings(this);
-    entity->setTop(getHeight()/2 - 56/2);
-    entity->setLeft(getWidth()/2 - 56/2);
-    entity->setWidth(56);
-    entity->setHeight(72);
+    entity->setTop(getHeight()/2 - 48/2);
+    entity->setLeft(getWidth()/2 - 48/2);
+    entity->setWidth(48);
+    entity->setHeight(64);
 
     entity->menu->actionPaste->setEnabled(menu->actionPaste->isEnabled());
 
@@ -163,10 +165,10 @@ void QnstGraphicsSwitch::performSettings()
 void QnstGraphicsSwitch::performMedia()
 {
     QnstGraphicsMedia* entity = new QnstGraphicsMedia(this);
-    entity->setTop(getHeight()/2 - 56/2);
-    entity->setLeft(getWidth()/2 - 56/2);
-    entity->setWidth(56);
-    entity->setHeight(72);
+    entity->setTop(getHeight()/2 - 48/2);
+    entity->setLeft(getWidth()/2 - 48/2);
+    entity->setWidth(48);
+    entity->setHeight(64);
 
     entity->menu->actionPaste->setEnabled(menu->actionPaste->isEnabled());
 
@@ -210,12 +212,78 @@ void QnstGraphicsSwitch::performPort()
     QnstGraphicsPort* entity = new QnstGraphicsPort(this);
     entity->setTop(0);
     entity->setLeft(0);
-    entity->setWidth(24);
-    entity->setHeight(24);
+    entity->setWidth(18);
+    entity->setHeight(18);
     entity->adjust();
 
     addnstGraphicsEntity(entity);
 
     emit entityAdded(entity);
+}
+
+void QnstGraphicsSwitch::dragEnterEvent(QGraphicsSceneDragDropEvent *event)
+{
+    foreach(QUrl url, event->mimeData()->urls()){
+            event->acceptProposedAction();
+
+            return;
+    }
+}
+
+void QnstGraphicsSwitch::dropEvent(QGraphicsSceneDragDropEvent *event)
+{
+    foreach(QUrl url, event->mimeData()->urls())
+    {
+        QString filename = url.toLocalFile();
+        QString suffix = QFileInfo(filename).suffix().toUpper();
+
+        if(suffix=="PNG" ||
+           suffix=="JPEG"){
+            event->acceptProposedAction();
+
+            dropsrc = filename;
+
+            performImage();
+
+        }else if(suffix=="MP3" ||
+                 suffix=="WAV"){
+          event->acceptProposedAction();
+
+          dropsrc = filename;
+
+          performAudio();
+
+        }else if(suffix=="AVI" ||
+                 suffix=="MPEG4" ||
+                 suffix=="MP4" ||
+                 suffix=="MPEG"){
+          event->acceptProposedAction();
+
+          dropsrc = filename;
+
+          performVideo();
+
+        }else if(suffix=="TXT"){
+          event->acceptProposedAction();
+
+          dropsrc = filename;
+
+          performText();
+
+        }else if(suffix=="LUA"){
+            event->acceptProposedAction();
+
+            dropsrc = filename;
+
+            performScript();
+
+        }else if(suffix=="HTML"){
+            event->acceptProposedAction();
+
+            dropsrc = filename;
+
+//            performHtml();
+         }
+    }
 }
 

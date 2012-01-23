@@ -8,9 +8,13 @@
 #include <QFileInfo>
 
 #include "qnstgraphicscontent.h"
+#include "qnstgraphicsproperty.h"
+#include "qnstgraphicsarea.h"
 
 class QnstGraphicsMedia : public QnstGraphicsContent
 {
+    Q_OBJECT
+
 public:
     QnstGraphicsMedia(QnstGraphicsNode* parent = 0);
 
@@ -22,16 +26,19 @@ public:
 
     void setSource(QString source);
 
+    void setnstId(QString id);
+
     QString getSource() const;
+
+public slots:
+    void performArea();
+
+    void performProperty();
 
 protected:
     virtual void draw(QPainter* painter);
 
     virtual void delineate(QPainterPath* painter) const;
-
-    virtual void dragEnterEvent(QGraphicsSceneDragDropEvent *event);
-
-    virtual void dropEvent(QGraphicsSceneDragDropEvent *event);
 
 private:
     void createObjects();
