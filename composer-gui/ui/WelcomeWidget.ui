@@ -21,48 +21,40 @@
 	font: 12pt &quot;Arial&quot;;
 	color: rgb(0, 0, 171)
 }
+
 #frame_3 {
 	background: url(:/mainwindow/bggray);
     border: 0px;
 }
 
-QTabWidget::tab-bar {
-	border: 1px solid;
- }
-
- QTabBar::tab {
-  background: gray;
-  color: white;
+QTabBar::tab {
   padding: 10px;
-  width: 100%;
-  border-top-left-radius: 0px;
-  border-top-right-radius: 0px;
   font-size: 10pt;
+  background-color: gray;
+  color: #999999;
+   border: 1px solid black;
  }
 
- QTabBar::tab:selected {
-  background: lightgray;
+QTabBar::tab::first {
+  border-left-width: 0px;
+ }
+
+QTabBar::tab::selected {
+  font-size: 10pt;
+  background-color: white;
+  border-bottom-color: white;
   color: black;
  }
 
-#frame_2 {
-	background-color: white;
-}
-
-#pageGettingStarted {
-	background-color: white;
-}
-
-#pageInstallNewPlugins {
-	background-color: white;
-}
-
-#pageNewsAndSupport {
-	background-color: white;
-}
-
 #widget {
 	background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, stop:0 rgba(50, 50, 50, 255), stop:1 rgba(255, 255, 255, 255));
+}
+
+#mainFrame {
+	background: white;
+}
+#tabWidget {
+  border: 0px;
 }</string>
   </property>
   <layout class="QGridLayout" name="gridLayout">
@@ -82,7 +74,7 @@ QTabWidget::tab-bar {
      </property>
      <layout class="QHBoxLayout" name="horizontalLayout">
       <item>
-       <widget class="QFrame" name="frame_2">
+       <widget class="QFrame" name="mainFrame">
         <property name="minimumSize">
          <size>
           <width>768</width>
@@ -298,10 +290,10 @@ font-family: Verdana;</string>
             <enum>QTabWidget::Rounded</enum>
            </property>
            <property name="currentIndex">
-            <number>2</number>
+            <number>0</number>
            </property>
            <property name="elideMode">
-            <enum>Qt::ElideMiddle</enum>
+            <enum>Qt::ElideLeft</enum>
            </property>
            <property name="usesScrollButtons">
             <bool>false</bool>
@@ -313,15 +305,18 @@ font-family: Verdana;</string>
             <bool>false</bool>
            </property>
            <widget class="QWidget" name="pageGettingStarted">
+            <property name="autoFillBackground">
+             <bool>false</bool>
+            </property>
             <attribute name="title">
              <string>Getting Started</string>
             </attribute>
             <layout class="QVBoxLayout" name="verticalLayout_3">
              <property name="spacing">
-              <number>0</number>
+              <number>2</number>
              </property>
              <property name="margin">
-              <number>0</number>
+              <number>2</number>
              </property>
              <item>
               <widget class="QFrame" name="frame_4">
@@ -712,8 +707,8 @@ font-family: Verdana;</string>
                     <rect>
                      <x>0</x>
                      <y>0</y>
-                     <width>104</width>
-                     <height>244</height>
+                     <width>738</width>
+                     <height>248</height>
                     </rect>
                    </property>
                    <attribute name="label">
@@ -760,8 +755,8 @@ font-family: Verdana;</string>
                     <rect>
                      <x>0</x>
                      <y>0</y>
-                     <width>85</width>
-                     <height>392</height>
+                     <width>83</width>
+                     <height>404</height>
                     </rect>
                    </property>
                    <attribute name="label">

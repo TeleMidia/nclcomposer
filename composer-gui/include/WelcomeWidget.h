@@ -46,7 +46,7 @@ http://www.streamreader.org/stackoverflow/questions/2480773/qt-styling-qtabwidge
 static void expandingTabsStyleSheet(QTabWidget *tw)
 {
     tw->setStyleSheet(QString("QTabBar::tab { width: %1px;} ")
-                      .arg(tw->size().width()/tw->count()-18));
+                      .arg(tw->size().width()/tw->count() - 20));
 }
 
 /*!

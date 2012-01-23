@@ -48,7 +48,7 @@ QMainWindow::separator:vertical {
      background: lightgray;
  }
 
-QDockWidget {
+.QDockWidget {
   color: white;
   font: 8pt &quot;Nimbus Sans L&quot;;
   border: 1px solid lightgray;
@@ -270,10 +270,6 @@ QMenu {
    </property>
    <property name="autoFillBackground">
     <bool>false</bool>
-   </property>
-   <property name="styleSheet">
-    <string notr="true">color: white;
-font: 75 7.5pt;</string>
    </property>
    <property name="inputMethodHints">
     <set>Qt::ImhNone</set>
