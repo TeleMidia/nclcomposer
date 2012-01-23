@@ -53,6 +53,10 @@ private:
     int getStartTagBegin(int pos);
     int getStartTagLength(int pos);
 
+    // \todo this function must be moved from here.
+    QString relativePath( QString absolutePath, QString relativeTo,
+                                       bool bIsFile = false);
+
 public:
     QsciNCLAPIs(QsciLexer *lexer	 = 0);
     virtual ~QsciNCLAPIs();

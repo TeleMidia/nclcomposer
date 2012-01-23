@@ -19,6 +19,8 @@
 
 #include "NCLTextEditor.h"
 
+#include <QFileDialog>
+
 QsciNCLAPIs::QsciNCLAPIs(QsciLexer * 	lexer) :
   QsciAPIs(lexer)
 {
@@ -110,6 +112,7 @@ void QsciNCLAPIs::updateAutoCompletionList( const QStringList &context,
     QString tagname = getCurrentTagName(pos);
     QString attribute = getCurrentAttribute(pos);
     QString datatype = nclStructure->getAttributeDatatype(tagname, attribute);
+    NCLTextEditor *nclEditor = ((NCLTextEditor *)lexer()->editor());
 
     qDebug() << tagname << ":" << attribute << " -> datatype=" << datatype;
 
@@ -121,13 +124,26 @@ void QsciNCLAPIs::updateAutoCompletionList( const QStringList &context,
     vector <AttributeReferences *>
         references = nclStructure->getReferences(tagname, attribute);
 
+    if(datatype == "URI")
+    {
+      QString filename = QFileDialog::getOpenFileName(nclEditor,
+                                                    tr("Select file"),
+                                          nclEditor->getDocumentUrl());
+
+      if(filename.size())
+      {
+        filename = relativePath(nclEditor->getDocumentUrl(), filename, true);
+        nclEditor->removeSelectedText();
+        nclEditor->insert(filename);
+      }
+    }
+
     if(references.size()) //the attribute should be a reference to other
       //attribute
     {
-      NCLTextEditor *nclEditor = ((NCLTextEditor *)lexer()->editor());
-
+//      NCLTextEditor *nclEditor = ((NCLTextEditor *)lexer()->editor());
       if(nclEditor->parseDocument()) //parse our current document (and the
-        //included ones).
+                                     //included ones).
       {
         for(unsigned int i = 0; i < references.size(); i++)
         {
@@ -737,4 +753,44 @@ void QsciNCLAPIs::getAttributesTyped(int pos, QStringList &attrs)
     index = attrRegex.indexIn(chars, lastIndex);
   }
   delete chars;
+}
+
+QString QsciNCLAPIs::relativePath( QString absolutePath, QString relativeTo,
+                                   bool bIsFile /*= false*/ )
+{
+  QStringList absoluteDirectories = absolutePath.split( '/', QString::SkipEmptyParts );
+  QStringList relativeDirectories = relativeTo.split( '/', QString::SkipEmptyParts );
+
+  //Get the shortest of the two paths
+  int length = absoluteDirectories.count() < relativeDirectories.count() ? absoluteDirectories.count() : relativeDirectories.count();
+
+  //Use to determine where in the loop we exited
+  int lastCommonRoot = -1;
+  int index;
+
+  //Find common root
+  for (index = 0; index < length; index++)
+    if (absoluteDirectories[index] == relativeDirectories[index])
+      lastCommonRoot = index;
+    else
+      break;
+
+  //If we didn't find a common prefix then throw
+  if (lastCommonRoot == -1)
+    throw QString("Paths do not have a common base");
+
+  //Build up the relative path
+  QString relativePath;
+
+  //Add on the ..
+  for (index = lastCommonRoot + 1; index < absoluteDirectories.count() - (bIsFile?1:0); index++)
+    if (absoluteDirectories[index].length() > 0)
+      relativePath.append("../");
+
+  //Add on the folders
+  for (index = lastCommonRoot + 1; index < relativeDirectories.count() - 1; index++)
+    relativePath.append( relativeDirectories[index] ).append( "/" );
+  relativePath.append(relativeDirectories[relativeDirectories.count() - 1]);
+
+  return relativePath;
 }
