@@ -648,18 +648,22 @@ void QnstComposerPlugin::requestBindAddition(Entity* entity)
 
     properties["TYPE"] = "bind";
 
-    if (entity->getAttribute("role") != ""){
-        properties["role"] = entity->getAttribute("role");
-    }
+    properties["role"] = entity->getAttribute("role");
+
+    properties["component"] = entity->getAttribute("component");
 
     if (entity->getAttribute("component") != ""){
-        properties["component"] = entity->getAttribute("component");
         properties["componentUid"] = entities[getUidById(properties["component"])];
+    }else{
+        properties["componentUid"] = "";
     }
 
+    properties["interface"] = entity->getAttribute("interface");
+
     if (entity->getAttribute("interface") != ""){
-        properties["interface"] = entity->getAttribute("interface");
         properties["interfaceUid"] = entities[getUidById(properties["interface"])];
+    }else{
+        properties["interfaceUid"] = "";
     }
 
     view->addEntity(entity->getUniqueId(), entities[entity->getParentUniqueId()], properties);
@@ -669,18 +673,22 @@ void QnstComposerPlugin::requestBindChange(Entity* entity)
 {
     QMap<QString, QString> properties;
 
-    if (entity->getAttribute("role") != ""){
-        properties["role"] = entity->getAttribute("role");
-    }
+    properties["role"] = entity->getAttribute("role");
+
+    properties["component"] = entity->getAttribute("component");
 
     if (entity->getAttribute("component") != ""){
-        properties["component"] = entity->getAttribute("component");
         properties["componentUid"] = entities[getUidById(properties["component"])];
+    }else{
+        properties["componentUid"] = "";
     }
 
+    properties["interface"] = entity->getAttribute("interface");
+
     if (entity->getAttribute("interface") != ""){
-        properties["interface"] = entity->getAttribute("interface");
         properties["interfaceUid"] = entities[getUidById(properties["interface"])];
+    }else{
+        properties["interfaceUid"] = "";
     }
 
     view->changeEntity(entities[entity->getUniqueId()], properties);
@@ -1508,6 +1516,8 @@ void QnstComposerPlugin::requestBindAddition(const QString uid, const QString pa
 
         if (properties["linkUID"] != ""){
             request = properties["linkUID"];
+
+            qDebug() << "========================= linkUID";
         }else{
             request = QUuid::createUuid().toString();
         }

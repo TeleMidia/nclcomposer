@@ -241,6 +241,14 @@ private:
 
     void readConnector(QDomElement e, QnstConncetor* conn);
 
+    void addNodetoNodeEdge(QnstGraphicsEntity* entitya, QnstGraphicsEntity* entityb);
+
+    void addNodetoInterfaceEdge(QnstGraphicsEntity* entitya, QnstGraphicsEntity* entityb);
+
+    void addInterfacetoNodeEdge(QnstGraphicsEntity* entitya, QnstGraphicsEntity* entityb);
+
+    void addInterfacetoInterfaceEdge(QnstGraphicsEntity* entitya, QnstGraphicsEntity* entityb);
+
     int ncontext;
 
     int nswitch;
