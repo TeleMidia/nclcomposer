@@ -17,6 +17,19 @@ Today, there are three main submodules inside this project:
 If you want specific information about one of the above subproject go to its
 specfic README file.
 
+Dependencies
+============
+The main dependency of NCL Composer is:
+  * Qt >= 4.6
+
+If you want to enable the Run your application on Ginga Virtual Set-top box,
+then you should uncomment the line 
+  * #CONFIG += runssh_on
+
+By doing so, you have to be installed the following:
+  * libssh2
+  * libcrypt
+
 Getting Submodules Source Code
 ==============================
 Prerequisites:
@@ -78,7 +91,6 @@ One of the most important feature of the composer-all project is packaging.
   You can install it, using dpkg, for example:
 
   $ dpkg -i composer_x.x.x.deb
-
 
 //TODO: LICENSE
 

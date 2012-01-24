@@ -4,22 +4,29 @@ See the end of the file for license conditions.
 TODO file for composer-gui
 
 * Features:
+  - Some defaults:
+    . Structural, Textual and Layout default perspectives.
   - Message to add new buttons to title bar of composer dock.
   - Message saying that a perspective already exist when trying to save a new
     one with the same name. 
   - Keybinding to save new perspective.
   - Keybinding to open "choose perpective menu".
   - Allow to choose MDI or Dock enviroment.
-      - Including save the current plugins session inside the project.
-  - Internationalization.
+    - Include save the current plugins session inside the project.
+  - Internationalisation.
   - Check for updates.
   - Plugin repository.
   - Marking plugins to be loaded.
-  - Install new Plugins
+  - Install new Plugins.
+  - Run features:
+    . Local Run
+    . Remote Run
+      . Check md5sum for local and remote files and send it again only if they
+        are differents.
 
 * Done:
-  - Add "Remove Perspective" action. (ok)
-  - Add set as default perspective action. (ok)
-  - Marking dirty project. (ok)
+  - Add "Remove Perspective" action.
+  - Add set as default perspective action.
+  - Marking dirty project.
 
 //TODO: License
