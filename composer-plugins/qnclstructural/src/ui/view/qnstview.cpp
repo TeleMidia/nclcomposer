@@ -1371,9 +1371,9 @@ void QnstView::addMedia(const QString uid, const QString parent, const QMap<QStr
         entity->setWidth(48);
         entity->setHeight(64);
 
-        if (properties["id"] != ""){
+//        if (properties["id"] != ""){
             entity->setnstId(properties["id"]);
-        }
+//        }
 
 //        if (properties["src"] != ""){
             entity->setSource(properties["src"]);
@@ -1405,9 +1405,9 @@ void QnstView::addMedia(const QString uid, const QString parent, const QMap<QStr
 
 void QnstView::changeMedia(QnstGraphicsMedia* entity, const QMap<QString, QString> properties)
 {
-    if (properties["id"] != ""){
+//    if (properties["id"] != ""){
         entity->setnstId(properties["id"]);
-    }
+//    }
 
 //    if (properties["src"] != ""){
         entity->setSource(properties["src"]);
@@ -2765,15 +2765,9 @@ void QnstView::requestAreaChange(QnstGraphicsArea* entity)
 
 void QnstView::requestPropertyAddition(QnstGraphicsProperty* entity)
 {
-    if (entity->getnstId() == ""){
-        entity->setnstId("prop"+QString::number(++narea));
-    }
-
     QMap<QString, QString> properties;
 
     properties["TYPE"] = "property";
-
-    properties["id"] = entity->getnstId();
 
     emit entityAdded(entity->getnstUid(), entity->getnstGraphicsParent()->getnstUid(), properties);
 }

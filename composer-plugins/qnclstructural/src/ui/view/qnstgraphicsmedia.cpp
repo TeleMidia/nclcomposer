@@ -164,14 +164,13 @@ void QnstGraphicsMedia::draw(QPainter* painter)
         painter->drawPixmap((getWidth()-8)/2 + 12, (getHeight()-8)/2 + 4, 12, 12, QPixmap(":/icon/alert"));
     }
 
-    if (getnstId().length() > 5){
+    QString localid = (getnstId() != "" ? getnstId() : "?");
 
-        QString localid = getnstId().replace(3,getnstId().length()-3,"...");
-        painter->drawText(4 + 8/2, 4 + 8/2 + getHeight()-16-8, getWidth()-8, 16, Qt::AlignLeft, localid);
-
-    }else{
-        painter->drawText(4 + 8/2, 4 + 8/2 + getHeight()-16-8, getWidth()-8, 16, Qt::AlignCenter, getnstId());
+    if (localid.length() > 5){
+        localid = getnstId().replace(3,getnstId().length()-3,"...");
     }
+
+    painter->drawText(4 + 8/2, 4 + 8/2 + getHeight()-16-8, getWidth()-8, 16, Qt::AlignCenter, localid);
 
     if (isMoving()){
         painter->setBrush(Qt::NoBrush);

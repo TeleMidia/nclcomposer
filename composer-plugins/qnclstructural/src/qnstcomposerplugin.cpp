@@ -438,9 +438,9 @@ void QnstComposerPlugin::requestMediaAddition(Entity* entity)
 
     properties["TYPE"] = "media";
 
-    if (entity->getAttribute("id") != ""){
+//    if (entity->getAttribute("id") != ""){
         properties["id"] = entity->getAttribute("id");
-    }
+//    }
 
 //    if (entity->getAttribute("src") != ""){
         properties["src"] = entity->getAttribute("src");
@@ -481,9 +481,9 @@ void QnstComposerPlugin::requestMediaChange(Entity* entity)
 {
     QMap<QString, QString> properties;
 
-    if (entity->getAttribute("id") != ""){
+//    if (entity->getAttribute("id") != ""){
         properties["id"] = entity->getAttribute("id");
-    }
+//    }
 
 //    if (entity->getAttribute("src") != ""){
         properties["src"] = entity->getAttribute("src");
@@ -592,7 +592,7 @@ void QnstComposerPlugin::requestPropertyAddition(Entity* entity)
 
     properties["TYPE"] = "property";
 
-    properties["id"] = entity->getAttribute("id");
+    properties["id"] = entity->getAttribute("name");
 
     view->addEntity(entity->getUniqueId(), entities[entity->getParentUniqueId()], properties);
 }
@@ -603,7 +603,7 @@ void QnstComposerPlugin::requestPropertyChange(Entity* entity)
 
     properties["TYPE"] = "property";
 
-    properties["id"] = entity->getAttribute("id");
+    properties["id"] = entity->getAttribute("name");
 
    view->changeEntity(entities[entity->getUniqueId()], properties);
 }
