@@ -54,6 +54,10 @@ public slots:
 
     void performPort();
 
+    void performArea();
+
+    void performProperty();
+
     void performAggregator();
 
 protected:

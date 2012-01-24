@@ -41,7 +41,9 @@ public slots:
 
     void performSwitch();
 
-    void performPort();
+    void performArea();
+
+    void performProperty();
 
 protected:
     virtual void dragEnterEvent(QGraphicsSceneDragDropEvent *event);

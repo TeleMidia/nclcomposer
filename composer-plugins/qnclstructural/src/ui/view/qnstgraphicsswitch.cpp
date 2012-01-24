@@ -39,7 +39,8 @@ void QnstGraphicsSwitch::createObjects()
     menu->actionHTML->setEnabled(true);
     menu->actionContext->setEnabled(true);
     menu->actionSwitch->setEnabled(true);
-    menu->actionPort->setEnabled(false);
+    menu->actionArea->setEnabled(true);
+    menu->actionProperty->setEnabled(true);
 }
 
 void QnstGraphicsSwitch::createConnections()
@@ -69,7 +70,8 @@ void QnstGraphicsSwitch::createConnections()
     connect(menu, SIGNAL(mediaRequested()), SLOT(performMedia()));
     connect(menu, SIGNAL(contextRequested()), SLOT(performContext()));
     connect(menu, SIGNAL(switchRequested()), SLOT(performSwitch()));
-    connect(menu, SIGNAL(portRequested()), SLOT(performPort()));
+    connect(menu, SIGNAL(areaRequested()), SLOT(performArea()));
+    connect(menu, SIGNAL(propertyRequested()), SLOT(performProperty()));
 }
 
 void QnstGraphicsSwitch::performImage()
@@ -207,13 +209,27 @@ void QnstGraphicsSwitch::performSwitch()
     emit entityAdded(entity);
 }
 
-void QnstGraphicsSwitch::performPort()
+void QnstGraphicsSwitch::performArea()
 {
-    QnstGraphicsPort* entity = new QnstGraphicsPort(this);
+    QnstGraphicsArea* entity = new QnstGraphicsArea(this);
     entity->setTop(0);
     entity->setLeft(0);
-    entity->setWidth(18);
-    entity->setHeight(18);
+    entity->setWidth(16);
+    entity->setHeight(16);
+    entity->adjust();
+
+    addnstGraphicsEntity(entity);
+
+    emit entityAdded(entity);
+}
+
+void QnstGraphicsSwitch::performProperty()
+{
+    QnstGraphicsProperty* entity = new QnstGraphicsProperty(this);
+    entity->setTop(0);
+    entity->setLeft(0);
+    entity->setWidth(16);
+    entity->setHeight(16);
     entity->adjust();
 
     addnstGraphicsEntity(entity);
