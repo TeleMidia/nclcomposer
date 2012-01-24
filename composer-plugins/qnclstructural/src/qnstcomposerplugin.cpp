@@ -652,8 +652,12 @@ void QnstComposerPlugin::requestBindAddition(Entity* entity)
 
     properties["component"] = entity->getAttribute("component");
 
+    QString comUID = "";
+
     if (entity->getAttribute("component") != ""){
-        properties["componentUid"] = entities[getUidById(properties["component"])];
+        comUID = getUidById(properties["component"]);
+
+        properties["componentUid"] = entities[comUID];
     }else{
         properties["componentUid"] = "";
     }
@@ -661,7 +665,20 @@ void QnstComposerPlugin::requestBindAddition(Entity* entity)
     properties["interface"] = entity->getAttribute("interface");
 
     if (entity->getAttribute("interface") != ""){
-        properties["interfaceUid"] = entities[getUidById(properties["interface"])];
+        Entity* cmp = getProject()->getEntityById(comUID);
+
+        QString intUID = "";
+
+        foreach(Entity* c, cmp->getChildren()){
+            if (c->getAttribute("id") == entity->getAttribute("interface") ||
+                c->getAttribute("name") == entity->getAttribute("interface")){
+
+                intUID = c->getUniqueId();
+                break;
+            }
+        }
+
+        properties["interfaceUid"] = entities[intUID];
     }else{
         properties["interfaceUid"] = "";
     }
@@ -677,8 +694,12 @@ void QnstComposerPlugin::requestBindChange(Entity* entity)
 
     properties["component"] = entity->getAttribute("component");
 
+    QString comUID = "";
+
     if (entity->getAttribute("component") != ""){
-        properties["componentUid"] = entities[getUidById(properties["component"])];
+        comUID = getUidById(properties["component"]);
+
+        properties["componentUid"] = entities[comUID];
     }else{
         properties["componentUid"] = "";
     }
@@ -686,7 +707,20 @@ void QnstComposerPlugin::requestBindChange(Entity* entity)
     properties["interface"] = entity->getAttribute("interface");
 
     if (entity->getAttribute("interface") != ""){
-        properties["interfaceUid"] = entities[getUidById(properties["interface"])];
+        Entity* cmp = getProject()->getEntityById(comUID);
+
+        QString intUID = "";
+
+        foreach(Entity* c, cmp->getChildren()){
+            if (c->getAttribute("id") == entity->getAttribute("interface") ||
+                c->getAttribute("name") == entity->getAttribute("interface")){
+
+                intUID = c->getUniqueId();
+                break;
+            }
+        }
+
+        properties["interfaceUid"] = entities[intUID];
     }else{
         properties["interfaceUid"] = "";
     }
@@ -1516,8 +1550,6 @@ void QnstComposerPlugin::requestBindAddition(const QString uid, const QString pa
 
         if (properties["linkUID"] != ""){
             request = properties["linkUID"];
-
-            qDebug() << "========================= linkUID";
         }else{
             request = QUuid::createUuid().toString();
         }
