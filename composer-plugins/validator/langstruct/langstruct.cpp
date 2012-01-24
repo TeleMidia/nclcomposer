@@ -14,7 +14,7 @@
 #include <fstream>
 #include <sstream>
 #include <exception>
-#include <re2/re2.h>
+#include <boost/regex.hpp>
 #include <QDebug>
 #include <QFile>
 
@@ -369,7 +369,13 @@ bool Langstruct::isValidAttribute(const string attName, const string attValue,
 
     }
 
-    return RE2::FullMatch (attValue, Langstruct::datatypes[Langstruct::attributes[attName].getDatatype(element)]);
+    string pattern = Langstruct::datatypes[Langstruct::attributes[attName].getDatatype(element)];
+    const boost::regex reg (pattern);
+
+//    fprintf (stderr, "\n\n%s\n%s\n%d\n",attValue.c_str(), reg.expression(), boost::regex_match (attValue, reg));
+
+    return boost::regex_match (attValue, reg);
+//    return RE2::FullMatch (attValue, Langstruct::datatypes[Langstruct::attributes[attName].getDatatype(element)]);
 }
 
 
