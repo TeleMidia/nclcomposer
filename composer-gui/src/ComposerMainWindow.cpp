@@ -290,6 +290,7 @@ void ComposerMainWindow::initGUI()
 
   tbPerspectiveDropList = new QToolButton(this);
   tbPerspectiveDropList->setIcon(QIcon(":/mainwindow/perspective"));
+  tbPerspectiveDropList->setToolTip(tr("Change your current perspective"));
   tbPerspectiveDropList->setPopupMode(QToolButton::InstantPopup);
 
   connect( tabProjects, SIGNAL(tabCloseRequested(int)),
