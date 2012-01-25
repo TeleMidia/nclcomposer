@@ -129,9 +129,9 @@ protected:
   void AutoCompleteCompleted();
   void focusInEvent(QFocusEvent *e);
   void focusOutEvent(QFocusEvent *e);
-  bool canInsertFromMimeData(const QMimeData *source) const;
+  /*bool canInsertFromMimeData(const QMimeData *source) const;
   QByteArray fromMimeData(const QMimeData *source, bool &rectangular) const;
-  /*void dragEnterEvent(QDragEnterEvent *event);
+  void dragEnterEvent(QDragEnterEvent *event);
   void dropEvent(QDropEvent *event);*/
 
 public slots:

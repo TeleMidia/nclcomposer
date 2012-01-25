@@ -751,6 +751,7 @@ QList <QDomElement> NCLTextEditor::elementsByTagname( QString tagname,
   return ret;
 }
 
+/*
 bool NCLTextEditor::canInsertFromMimeData(const QMimeData *source) const
 {
   if(!QsciScintillaBase::canInsertFromMimeData(source))
@@ -777,7 +778,7 @@ QByteArray NCLTextEditor::fromMimeData(const QMimeData *source, bool &rectangula
   }
 }
 
-/*void NCLTextEditor::dropEvent(QDropEvent *event)
+void NCLTextEditor::dropEvent(QDropEvent *event)
 {
   foreach(QUrl url, event->mimeData()->urls())
   {

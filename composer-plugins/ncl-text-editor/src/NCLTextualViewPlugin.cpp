@@ -47,7 +47,7 @@ NCLTextualViewPlugin::NCLTextualViewPlugin()
   updateModelShortcut = new QShortcut(window);
   updateModelShortcut->setKey(QKeySequence("F5"));
 
-  connect( updateModelShortcut, SIGNAL(activated()),
+  connect(updateModelShortcut, SIGNAL(activated()),
           this, SLOT(updateCoreModel()) );
 
   connect(nclTextEditor, SIGNAL(focusLosted(QFocusEvent*)),
@@ -717,10 +717,11 @@ void NCLTextualViewPlugin::incrementalUpdateCoreModel()
 
 void NCLTextualViewPlugin::syncFinished()
 {
-  tmpNclTextEditor->setText(nclTextEditor->text());
+  // tmpNclTextEditor->setText(nclTextEditor->text());
   delete nclTextEditor;
   nclTextEditor = tmpNclTextEditor;
   tmpNclTextEditor = NULL;
+  updateFromModel();
   isSyncing = false;
 
   updateErrorMessages();
@@ -759,12 +760,20 @@ void NCLTextualViewPlugin::printEntitiesOffset()
 void NCLTextualViewPlugin::manageFocusLost(QFocusEvent *event)
 {
 #ifndef NCLEDITOR_STANDALONE
+
+  // When AutoComplete list gets the focus, the QApplication::focusWidget
+  // has a NULL value. This is an QScintilla issues.
+  // When the focus goes to AutoComplete list we don't want to synchronize with
+  // the core, that is why the test "QApplication::focusWidget() != NULL" is
+  // here.
+  // qDebug() << nclTextEditor << QApplication::focusWidget();
   if(nclTextEditor->textWithoutUserInteraction() != nclTextEditor->text()
-     && !isSyncing)
+     && !isSyncing
+     && (QApplication::focusWidget() != NULL))
   {
     int ret = QMessageBox::question(window,
-                                    tr("Text synchronization"),
-                                    tr("You have change the textual content of the NCL \
+                                    tr("Textual View synchronization"),
+                                    tr("You have changed the textual content of the NCL \
                                        Document. Do you want to synchronize this text with \
                                        other views?"),
                                                     QMessageBox::Yes |
@@ -785,6 +794,12 @@ void NCLTextualViewPlugin::manageFocusLost(QFocusEvent *event)
         nclTextEditor->keepFocused();
         break;
     }
+  }
+  else if(QApplication::focusWidget() == NULL)
+  {
+    // If the focus goes to AutoComplete list we force Qt keeps the focus in the
+    // NCLTextEditor!!!
+    nclTextEditor->keepFocused();
   }
 #endif
 }
