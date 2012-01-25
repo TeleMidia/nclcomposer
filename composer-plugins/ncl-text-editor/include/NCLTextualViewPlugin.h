@@ -158,6 +158,12 @@ public slots:
      */
     void nonIncrementalUpdateFromModel();
 
+    /*!
+     * \brief Clear all error messages and calls the validator to send all
+     *  messages again.
+     */
+    void updateErrorMessages();
+
 // COMUNICATION WITH VALIDATION PLUGIN //
     /*!
      * \brief This message is called by Validator plugin.

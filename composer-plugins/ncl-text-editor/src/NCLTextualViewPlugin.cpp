@@ -499,6 +499,7 @@ void NCLTextualViewPlugin::changeSelectedEntity(QString pluginID, void *param)
 
 void NCLTextualViewPlugin::updateCoreModel()
 {
+  syncMutex.lock();
   bool rebuildComposerModelFromScratch = false;
 
   QString text = nclTextEditor->text();
@@ -526,6 +527,8 @@ void NCLTextualViewPlugin::updateCoreModel()
     incrementalUpdateCoreModel();
 
   emit syncFinished();
+
+  syncMutex.unlock();
 }
 
 void NCLTextualViewPlugin::nonIncrementalUpdateCoreModel()
@@ -580,7 +583,6 @@ void NCLTextualViewPlugin::nonIncrementalUpdateCoreModel()
 
 void NCLTextualViewPlugin::incrementalUpdateCoreModel()
 {
-  syncMutex.lock();
   QProgressDialog dialog(tr("Synchronizing with other plugins..."),
                          tr("Cancel"), 0, 100,
                          nclTextEditor);
@@ -711,7 +713,6 @@ void NCLTextualViewPlugin::incrementalUpdateCoreModel()
   }
 
   dialog.setValue(100);
-  syncMutex.unlock();
 }
 
 void NCLTextualViewPlugin::syncFinished()
@@ -721,6 +722,8 @@ void NCLTextualViewPlugin::syncFinished()
   nclTextEditor = tmpNclTextEditor;
   tmpNclTextEditor = NULL;
   isSyncing = false;
+
+  updateErrorMessages();
 }
 
 void NCLTextualViewPlugin::updateEntitiesOffset( int startFrom,
@@ -756,7 +759,8 @@ void NCLTextualViewPlugin::printEntitiesOffset()
 void NCLTextualViewPlugin::manageFocusLost(QFocusEvent *event)
 {
 #ifndef NCLEDITOR_STANDALONE
-  if(nclTextEditor->textWithoutUserInteraction() != nclTextEditor->text())
+  if(nclTextEditor->textWithoutUserInteraction() != nclTextEditor->text()
+     && !isSyncing)
   {
     int ret = QMessageBox::question(window,
                                     tr("Text synchronization"),
@@ -783,6 +787,13 @@ void NCLTextualViewPlugin::manageFocusLost(QFocusEvent *event)
     }
   }
 #endif
+}
+
+void NCLTextualViewPlugin::updateErrorMessages()
+{
+  clearValidationMessages(this->pluginInstanceID, NULL);
+
+  emit sendBroadcastMessage("askAllValidationMessages", NULL);
 }
 
 void NCLTextualViewPlugin::clearValidationMessages(QString, void *param)
