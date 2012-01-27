@@ -9,23 +9,28 @@
 #define NCLMODEL_H_
 
 #include <vector>
-#include <QString>
 #include <map>
 #include <set>
 #include <list>
+#include <limits>
 #include <sstream>
+#include <fstream>
 #include <xercesc/parsers/SAXParser.hpp>
 #include <xercesc/sax/HandlerBase.hpp>
 #include <xercesc/util/XMLString.hpp>
 #include <xercesc/util/PlatformUtils.hpp>
+#include <xercesc/sax/HandlerBase.hpp>
 #include "textualparser.h"
+#include "connectorparser.h"
 #include "../definitions/definitions.h"
 #include "../langstruct/langstruct.h"
 
 namespace nclValidator {
 
 class Model;
+class ConnectorParser;
 
+using namespace xercesc;
 
 class ModelElement {
 public:
@@ -47,9 +52,7 @@ public:
 	inline const string & scope () const { return _scope; }
 
         inline void setData (void * data) { _data = data; }
-//        inline void setComposerModelId (QString id) { _composerModelId = id; }
         inline void * data () const { return _data; }
-//        inline QString composerModelId () const { return _composerModelId; }
 
 	inline vector <Attribute> attributes () const { return _attributes; }
 
@@ -73,7 +76,6 @@ private:
 	vector <virtualId> _children;
 	vector <virtualId> _referencesToMyself;
         void * _data;
-//        QString _composerModelId;
 };
 
 
@@ -106,6 +108,9 @@ public:
         inline void clearMarkedElements () {_markedElements.clear(); _affectedEllements.clear();}
         inline const set <virtualId> & markedElements () { return _markedElements; }
 
+        inline void setRelativePath (const string & relativePath) { _relativePath = relativePath; }
+        map<string, pair<int, int> > getConnectorSetRoles (string identifier);
+        void parseConnectorChild (ModelElement *child, map <string, pair <int, int> > &roles);
 
 	void print ();
 
@@ -115,7 +120,9 @@ private:
 	void adjustScope (virtualId parent, virtualId child);
         void adjustReference (string, ModelElement &, string &);
 	void addChild (ModelElement *parentElement, ModelElement *childElement);
-        ModelElement findElementInImportedFile (string fileName, string idToFind);
+        void parseAllConnectorChildren (ModelElement *, ModelElement *, map <string, pair <int, int> > &);
+
+        void findElementInImportedFile (string, HandlerBase *);
 
 	int _seed;
 	map <virtualId, ModelElement> _modelElements;
@@ -129,8 +136,10 @@ private:
 	multimap <string, virtualId> _idToElement;
 	multimap <string, virtualId> _elementsNotYetInserted;
 
-        vector <pair<string, string> > _importedDocuments;
+//        vector <pair<string, string> > _importedDocuments;
         vector <ModelElement> _importedElements; //provisorio
+
+        string _relativePath;
 };
 
 }

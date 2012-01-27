@@ -107,7 +107,7 @@ std::vector <nclValidator::Attribute> ComposerNCLAdapter::createVectorAttribute(
 
         nclValidator::Attribute attr (name.toStdString(), value.toStdString());
 
-        std::cout << attr.name() << " " << attr.value();
+//        std::cout << attr.name() << " " << attr.value();
 
         attributes.push_back(attr);
         begin++;

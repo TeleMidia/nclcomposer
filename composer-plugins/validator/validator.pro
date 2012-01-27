@@ -28,7 +28,8 @@ SOURCES += \
     validation/semanticvalidation.cpp \
     validation/structuralvalidation.cpp \
     validatortreewidgetitem.cpp \
-    nclmodel/textualparser.cpp
+    nclmodel/textualparser.cpp \
+    nclmodel/connectorparser.cpp
 
 HEADERS  += \
     ValidatorPlugin.h \
@@ -45,7 +46,8 @@ HEADERS  += \
     validation/semanticvalidation.h \
     validation/structuralvalidation.h \
     validatortreewidgetitem.h \
-    nclmodel/textualparser.h
+    nclmodel/textualparser.h \
+    nclmodel/connectorparser.h
 
 OTHER_FILES +=
 

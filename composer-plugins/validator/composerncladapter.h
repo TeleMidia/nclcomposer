@@ -24,6 +24,7 @@ public:
 
     inline nclValidator::Model &getModel () { return nclModel; }
     inline void clearModel () { nclModel.clear(); }
+    inline void setRelativePath (QString path) { nclModel.setRelativePath(path.toStdString()); }
 
     std::vector <std::pair<void *, std::string> > validate ();
 

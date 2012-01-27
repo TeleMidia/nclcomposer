@@ -27,6 +27,13 @@ void ValidatorPlugin::init()
 
     Project * project = getProject();
 
+    QString location = project->getLocation();
+    int index = location.lastIndexOf("/");
+    location.remove(index + 1, location.size() - (index + 1));
+
+//    fprintf (stderr, "\n%s\n", location.toStdString().c_str());
+    adapter.setRelativePath(location);
+
     if (!project) return;
 
     foreach (Entity *entity, project->getChildren())

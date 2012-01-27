@@ -218,58 +218,8 @@ void referenceValidation (const ModelElement &el, const Attribute &att, Model &m
         else
                 specificScopeReferenceValidation(el, *pointed, att, *ref, model, msgs, messageFactory);
 
-        //TODO: Test if 'pointed.att' can be pointed by 'el.att'? Rodrigo only save ids in his map..
-}
+   }
 
-void getConnectorSetRoles (ModelElement& element, Model& model, map<string, pair<int, int> >& roles)
-{
-    vector <virtualId> children = element.children();
-    for (int i = 0; i < children.size(); i ++){
-        ModelElement *child = model.element(children[i]);
-        if (child){
-            if (child->elementName() == "simpleAction" || child->elementName() == "simpleCondition"
-                    || child->elementName() == "attributeAssessment"){
-                Attribute role = child->attribute("role");
-                if (role.value() != ""){
-                    stringstream ss;
-                    Attribute minAttr = child->attribute("min");
-                    Attribute maxAttr = child->attribute("max");
-
-                    int min = 1;
-                    int max = 1;
-
-                    if (minAttr.value() != ""){
-
-                        ss << minAttr.value();
-                        ss >> min;
-
-                        if (!ss)
-                            min = 1;
-
-                        ss.clear();
-
-                    }
-                    if (maxAttr.value() != ""){
-                        if (maxAttr.value() == "unbounded"){
-                            max = (int) numeric_limits <int>::max ();
-                            qDebug() << "Max: " << max;
-                        }
-                        else{
-                            ss << maxAttr.value();
-                            ss >> max;
-
-                            if (!ss)
-                                max = 1;
-                        }
-                    }
-
-                    roles[role.value()] = pair <int, int> (min, max);
-                }
-            }
-            getConnectorSetRoles(*child, model, roles);
-        }
-    }
-}
 
 
 //void bindValidation (const ModelElement &bind, Model &model, map <string, pair <int, int> > &roles,
@@ -318,10 +268,12 @@ void testRepeatedRoles (const ModelElement &element, const ModelElement& connect
     }
 }
 
-void linkValidation (const ModelElement& link, ModelElement& connector, Model& model, vector<pair<void *, string> > &msgs, Message &messageFactory)
+void linkValidation (const ModelElement& link, string connectorId, Model& model, vector<pair<void *, string> > &msgs, Message &messageFactory)
 {
     map <string, pair<int, int> > roles;
-    getConnectorSetRoles(connector, model, roles);
+//    getConnectorSetRoles(connector, model, roles);
+
+    roles = model.getConnectorSetRoles(connectorId);
 
     map <string, int> roleCount;
     vector <virtualId> children = link.children();
@@ -380,10 +332,8 @@ void SemanticValidation::semanticValidation(const ModelElement &el, Model &model
     if (el.elementName() == "link") {
         Attribute xconnector = el.attribute("xconnector");
         if (xconnector.value() != ""){
-            vector <ModelElement *> connectors = model.elementByIdentifier(xconnector.value());
-            if (connectors.size() > 0){
-                linkValidation(el, *connectors[0], model, msgs, messageFactory);
-            }
+            linkValidation(el, xconnector.value(), model, msgs, messageFactory);
+//          return;
         }
 
     }
@@ -393,10 +343,7 @@ void SemanticValidation::semanticValidation(const ModelElement &el, Model &model
         if (link){
             Attribute xconnector = link->attribute("xconnector");
             if (xconnector.value() != ""){
-                vector <ModelElement *> connectors = model.elementByIdentifier(xconnector.value());
-                if (connectors.size() > 0){
-                    linkValidation(*link, *connectors[0], model, msgs, messageFactory);
-                }
+                linkValidation(*link, xconnector.value(), model, msgs, messageFactory);
             }
         }
     }

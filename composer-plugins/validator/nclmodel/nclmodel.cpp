@@ -100,16 +100,16 @@ bool Model::editElement(virtualId &id, vector <Attribute> &newAttributes){
         string oldId = "";
         string newId = "";
 
-        if (elementEdited->elementName() == "importBase" || elementEdited->elementName() == "importNCL"){
-            string alias = elementEdited->attribute("alias").value();
-            string uri = elementEdited->attribute("documentURI").value();
-            for (int i = 0; i < _importedDocuments.size(); i++){
-                if (_importedDocuments[i].first == alias){
-                    _importedDocuments[i].second = uri;
-                    break;
-                }
-            }
-        }
+//        if (elementEdited->elementName() == "importBase" || elementEdited->elementName() == "importNCL"){
+//            string alias = elementEdited->attribute("alias").value();
+//            string uri = elementEdited->attribute("documentURI").value();
+//            for (int i = 0; i < _importedDocuments.size(); i++){
+//                if (_importedDocuments[i].first == alias){
+//                    _importedDocuments[i].second = uri;
+//                    break;
+//                }
+//            }
+//        }
 
         for (int i = 0; i < elementEdited->references().size(); i++)
             _affectedEllements.insert(elementEdited->references().at(i));
@@ -235,15 +235,15 @@ bool Model::removeElement(virtualId &id){
         ModelElement * element = this->element(id);
         ModelElement * parent = this->element(element->parent());
 
-        if (element->elementName() == "importBase" || element->elementName() == "importNCL"){
-            string alias = element->attribute("alias").value();
-            for (int i = 0; i < _importedDocuments.size(); i++)
-                if (_importedDocuments[i].first == alias){
-                    _importedDocuments.erase(_importedDocuments.begin() + i);
-                    break;
-                }
+//        if (element->elementName() == "importBase" || element->elementName() == "importNCL"){
+//            string alias = element->attribute("alias").value();
+//            for (int i = 0; i < _importedDocuments.size(); i++)
+//                if (_importedDocuments[i].first == alias){
+//                    _importedDocuments.erase(_importedDocuments.begin() + i);
+//                    break;
+//                }
 
-        }
+//        }
 
         if (parent){
             parent->removeChild(id);
@@ -380,12 +380,12 @@ virtualId Model::addElement(string elementName, vector <Attribute> attributes){
         if (elementName == "ncl")
             newElement.setScope(newElement.id());
 
-        if (elementName == "importBase" || elementName == "importNCL"){
-            string alias = newElement.attribute("alias").value();
-            string uri = newElement.attribute("documentURI").value();
+//        if (elementName == "importBase" || elementName == "importNCL"){
+//            string alias = newElement.attribute("alias").value();
+//            string uri = newElement.attribute("documentURI").value();
 
-            _importedDocuments.push_back(make_pair(alias, uri));
-        }
+//            _importedDocuments.push_back(make_pair(alias, uri));
+//        }
 
         string attributeIdentifier = "";
         adjustReference(elementName, newElement, attributeIdentifier);
@@ -482,15 +482,27 @@ void Model::adjustReference(string elementName, ModelElement & newElement, strin
             }
 
             if (Langstruct::isAttributeReferenceDependent(elementName, attributes[i].name())){ //se o atributo faz referência a outro elemento
-                vector <ModelElement *> elements = elementByIdentifier(attributes[i].value());
 
-                if (elements.size() == 0){
-                    _elementsNotYetInserted.insert(pair <string, virtualId> (attributes[i].value(), newElement.id()));
+                vector <ModelElement *> elements;
+                string attributeValue = attributes[i].value();
+                string toInsert = attributeValue;
+
+                int index = attributeValue.find("#");
+                if ( index == string::npos){
+                    elements = elementByIdentifier(attributeValue);
                 }
                 else{
-                    cout << "not empy" << endl;
+                     string alias = attributeValue.substr(0, index);
+                     toInsert = alias;
+                     elements = elementByIdentifier(alias);
+                }
+
+                if (elements.size() == 0){
+                    _elementsNotYetInserted.insert(pair <string, virtualId> (toInsert, newElement.id()));
+                }
+                else{
                     for (size_t i = 0; i < elements.size(); i++) {
-                        cout << "el name: " << elements[i]->elementName() << endl;
+//                        cout << "el name: " << elements[i]->elementName() << endl;
                         elements[i]->_referencesToMyself.push_back(newElement.id());
                     }
                 }
@@ -537,20 +549,31 @@ vector <ModelElement *>  Model::elementByIdentifier(string identifier){
     else{
         string alias = identifier.substr(0, index);
         string id =  identifier.substr(index + 1);
-        for (int i = 0; i < _importedDocuments.size(); i++){
-            if (_importedDocuments[i].first == alias){
-                string fileName = _importedDocuments[i].second.c_str();
+        ModelElement *baseImported = 0;
 
-                _importedElements.push_back(findElementInImportedFile(fileName, id));
+        multimap<string, virtualId>::iterator it;
+        it = _idToElement.find(alias);
 
-                ModelElement elementFound = _importedElements.back();
+        if (it == _idToElement.end())
+            return elements; // no elements associated with key, so return immediately
+        baseImported = this->element(it->second);
 
-                if (elementFound.elementName() != "causalConnector")
-                    elements.push_back(& elementFound);
+        if (baseImported){
+            string path = baseImported->attribute("documentURI").value();
 
-                break;
+            ModelElement elementFound;
+            HandlerBase* docHandler = new TextualParser(&elementFound, id);
+
+            findElementInImportedFile(path, docHandler);
+
+            if (elementFound.elementName() != "" /*&& elementFound.elementName() != "causalConnector"*/){
+                _importedElements.push_back(elementFound);
+//                fprintf  (stderr, "%s\n\n", _importedElements.back().elementName().c_str());
+                elements.push_back(& _importedElements.back());
             }
+
         }
+
     }
 
 
@@ -558,12 +581,21 @@ vector <ModelElement *>  Model::elementByIdentifier(string identifier){
 }
 
 
-ModelElement Model::findElementInImportedFile(string fileName, string idToFind){
+void Model::findElementInImportedFile(string fileName, HandlerBase *docHandler){
+    ifstream ifile (fileName.c_str());
+    if (!ifile){
+        fileName = _relativePath + fileName;
+
+        ifstream ifile2 (fileName.c_str());
+        if (!ifile2)
+            return;
+    }
 
 //    fprintf(stderr, "\n\n%s %s\n\n", fileName.c_str(), idToFind.c_str());
+//    fprintf (stderr, "\n%s\n\n", fileName.c_str());
 
 
-    ModelElement el;
+//    ModelElement el;
     try {
         XMLPlatformUtils::Initialize();
     }
@@ -572,11 +604,10 @@ ModelElement Model::findElementInImportedFile(string fileName, string idToFind){
         cerr << "Error during initialization! :\n"
              << message << "\n";
         XMLString::release(&message);
-        return el;
     }
 
     xercesc::SAXParser* parser = new SAXParser();
-    TextualParser* docHandler = new TextualParser(&el, idToFind);
+//    TextualParser* docHandler = new TextualParser(&el, idToFind);
     xercesc::ErrorHandler* errHandler = (ErrorHandler*) docHandler;
     parser->setDocumentHandler(docHandler);
     parser->setErrorHandler(errHandler);
@@ -586,24 +617,18 @@ ModelElement Model::findElementInImportedFile(string fileName, string idToFind){
     }
     catch (const XMLException& toCatch) {
         char* message = XMLString::transcode(toCatch.getMessage());
-        cout << "Exception message is: \n"
-             << message << "\n";
+        fprintf(stderr, "\nXMLException message is: %s\n", message);
         XMLString::release(&message);
-        return el;
     }
     catch (const SAXParseException& toCatch) {
         char* message = XMLString::transcode(toCatch.getMessage());
-        cout << "Exception message is: \n"
-             << message << "\n";
+        fprintf(stderr, "\nSAXParseException message is: %s\n", message);
         XMLString::release(&message);
-        return el;
     }
 
 //    fprintf(stderr, "\nElement: %s\n\n", el.elementName().c_str());
 
     XMLPlatformUtils::Terminate();
-
-    return el;
 }
 
 vector <ModelElement *> Model::elementByPropertyName(string component, string propertyName){
@@ -631,9 +656,111 @@ vector <ModelElement *> Model::elementByPropertyName(string component, string pr
 
 
     return elements;
-
-
 }
+
+void Model::parseConnectorChild (ModelElement *child, map <string, pair <int, int> > &roles){
+    if (!child)
+        return;
+
+    if (child->elementName() == "simpleAction" || child->elementName() == "simpleCondition"
+            || child->elementName() == "attributeAssessment"){
+        string role = child->attribute("role").value();
+
+        if (role != ""){
+            stringstream ss;
+            Attribute minAttr = child->attribute("min");
+            Attribute maxAttr = child->attribute("max");
+
+            int min = 1;
+            int max = 1;
+
+            if (minAttr.value() != ""){
+                ss << minAttr.value();
+                ss >> min;
+
+                if (!ss)
+                    min = 1;
+                ss.clear();
+            }
+            if (maxAttr.value() != ""){
+                if (maxAttr.value() == "unbounded"){
+                    max = (int) numeric_limits <int>::max ();
+                }
+                else{
+                    ss << maxAttr.value();
+                    ss >> max;
+
+                    if (!ss)
+                        max = 1;
+                }
+            }
+            roles[role] = make_pair (min, max);
+        }
+    }
+}
+
+
+void Model::parseAllConnectorChildren (ModelElement *connector, ModelElement *element,
+                                       map <string, pair <int, int> > &roles){
+    vector<virtualId> children = element->children();
+    for (int i = 0; i < children.size(); i++){
+        ModelElement *child = this->element(children[i]);
+        if (child){
+            parseConnectorChild(child, roles);
+
+            parseAllConnectorChildren(connector, child, roles);
+        }
+    }
+}
+
+map<string, pair<int, int> > Model::getConnectorSetRoles (string identifier){
+    int index = identifier.find("#");
+    map <string, pair <int, int> > roles;
+    if (index == string::npos){
+
+//        fprintf (stderr, "\n\n%s", identifier.c_str());
+        vector <ModelElement *> els = elementByIdentifier(identifier);
+
+        if (els.size() == 0){
+            map<string, pair<int, int> > temp;
+            return (temp);
+        }
+
+        ModelElement *connector = els[0];
+
+        parseAllConnectorChildren(connector, connector, roles);
+
+    }
+    else{
+        string alias = identifier.substr(0, index);
+        string id =  identifier.substr(index + 1);
+        ModelElement *baseImported = 0;
+
+        multimap<string, virtualId>::iterator it;
+        it = _idToElement.find(alias);
+
+        if (it == _idToElement.end())
+            return roles; // no elements associated with key, so return immediately
+
+        baseImported = this->element(it->second);
+
+        if (baseImported){
+            string path = baseImported->attribute("documentURI").value();
+            HandlerBase* docHandler = new ConnectorParser (this, id);
+
+            findElementInImportedFile(path, docHandler);
+
+            ConnectorParser *connParser = dynamic_cast <ConnectorParser *> (docHandler);
+            roles = connParser->getRolesMap ();
+
+            for (map<string, pair <int, int> >::iterator it = roles.begin(); it != roles.end(); it++ )
+                fprintf (stderr, "%s %d %d\n", it->first.c_str(), it->second.first, it->second.second);
+
+        }
+    }
+    return roles;
+}
+
 
 virtualId Model::addChild(virtualId parentId, string elementName, vector <Attribute> attributes){
     virtualId childId = addElement(elementName, attributes);
@@ -758,5 +885,6 @@ void Model::clear()
     _idToElement.clear();
     _elementsNotYetInserted.clear();
 }
+
 
 }
