@@ -320,8 +320,8 @@ void ComposerMainWindow::initGUI()
 #endif
 
   // UNDO/REDO
-  connect(ui->actionUndo, SIGNAL(triggered()), this, SLOT(undo()));
-  connect(ui->actionRedo, SIGNAL(triggered()), this, SLOT(redo()));
+//  connect(ui->actionUndo, SIGNAL(triggered()), this, SLOT(undo()));
+//  connect(ui->actionRedo, SIGNAL(triggered()), this, SLOT(redo()));
 
   welcomeWidget = new WelcomeWidget(this);
   tabProjects->addTab(welcomeWidget, tr("Welcome"));
@@ -1297,8 +1297,8 @@ void ComposerMainWindow::currentTabChanged(int n)
     ui->action_RunNCL->setEnabled(true);
     ui->action_Run_remotely->setEnabled(true);
     ui->action_StopRemoteNCL->setEnabled(true);
-    ui->actionUndo->setEnabled(true);
-    ui->actionRedo->setEnabled(true);
+//    ui->actionUndo->setEnabled(true);
+//    ui->actionRedo->setEnabled(true);
 
   }
   else
@@ -1310,8 +1310,8 @@ void ComposerMainWindow::currentTabChanged(int n)
     ui->action_Save->setEnabled(false);
     ui->action_RunNCL->setEnabled(false);
     ui->action_Run_remotely->setEnabled(false);
-    ui->actionUndo->setEnabled(false);
-    ui->actionRedo->setEnabled(false);
+//    ui->actionUndo->setEnabled(false);
+//    ui->actionRedo->setEnabled(false);
     ui->action_StopRemoteNCL->setEnabled(false);
   }
 }

@@ -292,8 +292,6 @@ QMenu {
    <attribute name="toolBarBreak">
     <bool>false</bool>
    </attribute>
-   <addaction name="actionUndo"/>
-   <addaction name="actionRedo"/>
    <addaction name="action_Save"/>
    <addaction name="separator"/>
    <addaction name="action_RunNCL"/>
@@ -310,7 +308,7 @@ QMenu {
      <x>0</x>
      <y>0</y>
      <width>776</width>
-     <height>21</height>
+     <height>25</height>
     </rect>
    </property>
    <property name="layoutDirection">
@@ -353,8 +351,6 @@ QMenu {
     <property name="title">
      <string>&amp;Edit</string>
     </property>
-    <addaction name="actionUndo"/>
-    <addaction name="actionRedo"/>
     <addaction name="separator"/>
    </widget>
    <widget class="QMenu" name="menu_Help">
@@ -567,31 +563,6 @@ QMenu {
     <string>Preferences</string>
    </property>
   </action>
-  <action name="actionUndo">
-   <property name="icon">
-    <iconset>
-     <normalon>:/icon/undo</normalon>
-    </iconset>
-   </property>
-   <property name="text">
-    <string>Undo</string>
-   </property>
-   <property name="shortcut">
-    <string>Ctrl+Z</string>
-   </property>
-  </action>
-  <action name="actionRedo">
-   <property name="icon">
-    <iconset resource="../../composer-plugins/common-resources/images.qrc">
-     <normaloff>:/icon/redo</normaloff>:/icon/redo</iconset>
-   </property>
-   <property name="text">
-    <string>Redo</string>
-   </property>
-   <property name="shortcut">
-    <string>Ctrl+Shift+Z</string>
-   </property>
-  </action>
   <action name="actionShare_This_Project_Online">
    <property name="enabled">
     <bool>false</bool>
@@ -620,8 +591,6 @@ QMenu {
  </widget>
  <resources>
   <include location="../images.qrc"/>
-  <include location="../../composer-plugins/common-resources/images.qrc"/>
-  <include location="../../composer-plugins/common-resources/images.qrc"/>
  </resources>
  <connections/>
 </ui>
