@@ -480,6 +480,14 @@ void QncgGraphicsEntity::mouseReleaseEvent(QGraphicsSceneMouseEvent*event)
         setMoving(false);
 
         if ((top != moveTop || left != moveLeft)){
+
+            QMap<QString, QString> properties;
+
+            properties["top"] = QString::number(moveTop);
+            properties["left"] = QString::number(moveLeft);
+
+            emit entityAboutToChange(properties);
+
             setTop(moveTop);
             setLeft(moveLeft);
 
@@ -519,6 +527,15 @@ void QncgGraphicsEntity::mouseReleaseEvent(QGraphicsSceneMouseEvent*event)
                 entity->setTop(entity->getTop() - (resizeTop - top));
                 entity->setLeft(entity->getLeft() - (resizeLeft - left));
             }
+
+            QMap<QString, QString> properties;
+
+            properties["top"] = QString::number(moveTop);
+            properties["left"] = QString::number(moveLeft);
+            properties["width"] = QString::number(resizeWidth);
+            properties["height"] = QString::number(resizeHeight);
+
+            emit entityAboutToChange(properties);
 
             setTop(resizeTop);
             setLeft(resizeLeft);

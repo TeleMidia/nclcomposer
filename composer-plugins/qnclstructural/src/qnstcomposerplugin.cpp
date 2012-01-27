@@ -265,6 +265,8 @@ void QnstComposerPlugin::requestEntityRemotion(Entity* entity)
         entity->getType() == "port" ||
         entity->getType() == "link" ||
         entity->getType() == "bind" ||
+        entity->getType() == "area" ||
+        entity->getType() == "property" ||
         entity->getType() == "causalConnector"){
 
         view->removeEntity(entities[entity->getUniqueId()]);
@@ -1378,7 +1380,7 @@ void QnstComposerPlugin::requestConnectorDependence()
     QList<Entity*> list = getProject()->getEntitiesbyType("connectorBase");
 
     if (list.isEmpty()){
-        Entity* parent;
+        Entity* parent = NULL;
 
         if (!getProject()->getEntitiesbyType("head").isEmpty()){
             parent = getProject()->getEntitiesbyType("head").first();
@@ -1397,7 +1399,7 @@ void QnstComposerPlugin::requestConnectorBaseDependence()
     QList<Entity*> list = getProject()->getEntitiesbyType("head");
 
     if (list.isEmpty()){
-        Entity* parent;
+        Entity* parent = NULL;
 
         if (!getProject()->getEntitiesbyType("ncl").isEmpty()){
             parent = getProject()->getEntitiesbyType("ncl").first();

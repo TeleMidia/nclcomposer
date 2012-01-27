@@ -36,6 +36,8 @@ signals:
 
     void entitySelected(QnstGraphicsEntity* entity);
 
+    void entityAboutToChange(QnstGraphicsEntity* entity, QMap<QString, QString> properties);
+
     void undoRequested();
 
     void redoRequested();

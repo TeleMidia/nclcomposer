@@ -131,6 +131,8 @@ public:
     virtual void adjust() = 0;
 
 signals:
+    void entityAboutToChange(QMap<QString, QString> properties);
+
     void entityChanged();
 
     void entitySelected();

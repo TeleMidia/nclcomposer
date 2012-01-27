@@ -39,6 +39,8 @@ signals:
 
     void entityChanged(QnstGraphicsEntity* entity);
 
+    void entityAboutToChange(QnstGraphicsEntity* entity, QMap<QString, QString> properties);
+
     void entitySelected(QnstGraphicsEntity* entity);
 
     void undoRequested();
@@ -76,6 +78,8 @@ protected:
 
 protected slots:
     void requestEntityChange();
+
+    void requestEntityPreparation(QMap<QString, QString> properties);
 
     void requestEntitySelection();
 

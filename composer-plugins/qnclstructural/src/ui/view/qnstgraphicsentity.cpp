@@ -8,6 +8,7 @@ QnstGraphicsEntity::QnstGraphicsEntity(QnstGraphicsEntity* parent)
     setnstGraphicsParent(parent);
 
     connect(this, SIGNAL(entitySelected()), SLOT(requestEntitySelection()));
+    connect(this, SIGNAL(entityAboutToChange(QMap<QString,QString>)), SLOT(requestEntityPreparation(QMap<QString,QString>)));
 
     menu = NULL;
 }
@@ -59,6 +60,7 @@ void QnstGraphicsEntity::addnstGraphicsEntity(QnstGraphicsEntity* entity)
 
         connect(entity, SIGNAL(entityAdded(QnstGraphicsEntity*)), SIGNAL(entityAdded(QnstGraphicsEntity*)));
         connect(entity, SIGNAL(entityChanged(QnstGraphicsEntity*)), SIGNAL(entityChanged(QnstGraphicsEntity*)));
+        connect(entity, SIGNAL(entityAboutToChange(QnstGraphicsEntity*,QMap<QString,QString>)), SIGNAL(entityAboutToChange(QnstGraphicsEntity*,QMap<QString,QString>)));
         connect(entity, SIGNAL(entityRemoved(QnstGraphicsEntity*)), SIGNAL(entityRemoved(QnstGraphicsEntity*)));
         connect(entity, SIGNAL(entitySelected(QnstGraphicsEntity*)), SIGNAL(entitySelected(QnstGraphicsEntity*)));
 
@@ -84,6 +86,11 @@ void QnstGraphicsEntity::removenstGraphicsEntity(QnstGraphicsEntity* entity)
 void QnstGraphicsEntity::requestEntityChange()
 {
     emit entityChanged(this);
+}
+
+void QnstGraphicsEntity::requestEntityPreparation(QMap<QString, QString> properties)
+{
+    emit entityAboutToChange(this, properties);
 }
 
 void QnstGraphicsEntity::requestEntitySelection()

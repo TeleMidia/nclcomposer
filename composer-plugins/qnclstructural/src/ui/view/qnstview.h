@@ -11,6 +11,7 @@
 #include <QMessageBox>
 #include <QWheelEvent>
 #include <QSet>
+#include <QUndoStack>
 #include <QDir>
 
 #include <QDebug>
@@ -35,6 +36,11 @@
 #include "qnstbind.h"
 #include "qnstgraphicsproperty.h"
 #include "qnstgraphicsarea.h"
+#include "qnstaddcommand.h"
+#include "qnstchangecommand.h"
+#include "qnstremovecommand.h"
+
+class QnstAddCommand;
 
 class QnstView : public QGraphicsView
 {
@@ -60,11 +66,13 @@ public:
 public:
     void addEntity(const QString uid, const QString parent, const QMap<QString, QString> properties);
 
-    void removeEntity(const QString uid);
+    void removeEntity(const QString uid, bool undo = false);
 
     void changeEntity(const QString uid, const QMap<QString, QString> properties);
 
     void selectEntity(const QString uid);
+
+    QMap<QString, QnstGraphicsEntity*> entities;
 
 public slots:
     void performHelp();
@@ -125,17 +133,19 @@ protected:
 
     void wheelEvent(QWheelEvent * event);
 
-protected slots:
-    void requestEntityAddition(QnstGraphicsEntity* entity);
+public slots:
+    void requestEntityAddition(QnstGraphicsEntity* entity, bool undo = false);
 
-    void requestEntityRemotion(QnstGraphicsEntity* entity);
+    void requestEntityRemotion(QnstGraphicsEntity* entity, bool undo = false);
 
     void requestEntityChange(QnstGraphicsEntity* entity);
+
+    void requestEntityPreparation(QnstGraphicsEntity* entity, QMap<QString, QString> properties);
 
     void requestEntitySelection(QnstGraphicsEntity* entity);
 
 private:
-    void addBody(const QString uid, const QString parent, const QMap<QString, QString> properties);
+    void addBody(const QString uid, const QString parent, const QMap<QString, QString> properties, bool undo = false);
 
     void changeBody(QnstGraphicsBody* entity, const QMap<QString, QString> properties);
 
@@ -143,31 +153,31 @@ private:
 
     void changeImportBase(const QMap<QString, QString> properties);
 
-    void addContext(const QString uid, const QString parent, const QMap<QString, QString> properties);
+    void addContext(const QString uid, const QString parent, const QMap<QString, QString> properties, bool undo = false);
 
     void changeContext(QnstGraphicsContext* entity, const QMap<QString, QString> properties);
 
-    void addSwitch(const QString uid, const QString parent, const QMap<QString, QString> properties);
+    void addSwitch(const QString uid, const QString parent, const QMap<QString, QString> properties, bool undo = false);
 
     void changeSwitch(QnstGraphicsSwitch* entity, const QMap<QString, QString> properties);
 
-    void addMedia(const QString uid, const QString parent, const QMap<QString, QString> properties);
+    void addMedia(const QString uid, const QString parent, const QMap<QString, QString> properties, bool undo = false);
 
     void changeMedia(QnstGraphicsMedia* entity, const QMap<QString, QString> properties);
 
     void adjustMedia(QnstGraphicsMedia* entity);
 
-    void addPort(const QString uid, const QString parent, const QMap<QString, QString> properties);
+    void addPort(const QString uid, const QString parent, const QMap<QString, QString> properties, bool undo = false);
 
     void changePort(QnstGraphicsPort* entity, const QMap<QString, QString> properties);
 
     void adjustPort(QnstGraphicsPort* entity);
 
-    void addArea(const QString uid, const QString parent, const QMap<QString, QString> properties);
+    void addArea(const QString uid, const QString parent, const QMap<QString, QString> properties, bool undo = false);
 
     void changeArea(QnstGraphicsArea* entity, const QMap<QString, QString> properties);
 
-    void addProperty(const QString uid, const QString parent, const QMap<QString, QString> properties);
+    void addProperty(const QString uid, const QString parent, const QMap<QString, QString> properties, bool undo = false);
 
     void changeProperty(QnstGraphicsProperty* entity, const QMap<QString, QString> properties);
 
@@ -197,31 +207,31 @@ private:
 
     void adjustConnector(QnstConncetor* entity);
 
-    void addAggregator(const QString uid, const QString parent, const QMap<QString, QString> properties);
+    void addAggregator(const QString uid, const QString parent, const QMap<QString, QString> properties, bool undo = false);
 
     void requestBodyAddition(QnstGraphicsBody* entity);
 
     void requestBodyChange(QnstGraphicsBody* entity);
 
-    void requestContextAddition(QnstGraphicsContext* entity);
+    void requestContextAddition(QnstGraphicsContext* entity, bool undo = false);
 
     void requestContextChange(QnstGraphicsContext* entity);
 
-    void requestSwitchAddition(QnstGraphicsSwitch* entity);
+    void requestSwitchAddition(QnstGraphicsSwitch* entity, bool undo = false);
 
     void requestSwitchChange(QnstGraphicsSwitch* entity);
 
-    void requestMediaAddition(QnstGraphicsMedia* entity);
+    void requestMediaAddition(QnstGraphicsMedia* entity, bool undo = false);
 
     void requestMediaChange(QnstGraphicsMedia* entity);
 
     void requestAggregatorAddition(QnstGraphicsAggregator* entity);
 
-    void requestPortAddition(QnstGraphicsPort* entity);
+    void requestPortAddition(QnstGraphicsPort* entity, bool undo = false);
 
     void requestPortChange(QnstGraphicsPort* entity);
 
-    void requestAreaAddition(QnstGraphicsArea* entity);
+    void requestAreaAddition(QnstGraphicsArea* entity, bool undo = false);
 
     void requestAreaChange(QnstGraphicsArea* entity);
 
@@ -269,6 +279,10 @@ private:
 
     int zoomStep;
 
+    QAction* undoAct;
+
+    QAction* redoAct;
+
     QnstScene* scene;
 
     QnstViewLink* link;
@@ -301,7 +315,7 @@ private:
 
     QMap<QString, QnstConncetor*> connectors;
 
-    QMap<QString, QnstGraphicsEntity*> entities;
+    QUndoStack history;
 };
 
 #endif // QNSTVIEW_H

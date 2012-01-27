@@ -41,6 +41,7 @@ void QnstScene::addRoot(QnstGraphicsEntity* entity)
         connect(entity, SIGNAL(entityAdded(QnstGraphicsEntity*)), SIGNAL(entityAdded(QnstGraphicsEntity*)));
         connect(entity, SIGNAL(entityChanged(QnstGraphicsEntity*)), SIGNAL(entityChanged(QnstGraphicsEntity*)));
         connect(entity, SIGNAL(entityRemoved(QnstGraphicsEntity*)), SIGNAL(entityRemoved(QnstGraphicsEntity*)));
+        connect(entity, SIGNAL(entityAboutToChange(QnstGraphicsEntity*,QMap<QString,QString>)), SIGNAL(entityAboutToChange(QnstGraphicsEntity*,QMap<QString,QString>)));
         connect(entity, SIGNAL(entitySelected(QnstGraphicsEntity*)), SIGNAL(entitySelected(QnstGraphicsEntity*)));
 
         addItem(entity);
