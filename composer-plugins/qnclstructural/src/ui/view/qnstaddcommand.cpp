@@ -56,6 +56,12 @@ void QnstAddCommand::copy(QnstGraphicsEntity* entity)
 
         break;
 
+    // if the entity type is HTML
+    case Qnst::Html:
+        this->entity = new QnstGraphicsHTML();
+
+        break;
+
     // if the entity type is MEDIA
     case Qnst::Media:
         this->entity = new QnstGraphicsMedia();
@@ -150,7 +156,7 @@ void QnstAddCommand::redo()
             case Qnst::Audio:
                 e = new QnstGraphicsAudio();
 
-                ((QnstGraphicsImage*) e)->setnstId(entity->getnstId());
+                ((QnstGraphicsAudio*) e)->setnstId(entity->getnstId());
 
                 break;
 
@@ -158,7 +164,7 @@ void QnstAddCommand::redo()
             case Qnst::Video:
                 e = new QnstGraphicsVideo();
 
-                ((QnstGraphicsImage*) e)->setnstId(entity->getnstId());
+                ((QnstGraphicsVideo*) e)->setnstId(entity->getnstId());
 
                 break;
 
@@ -174,7 +180,7 @@ void QnstAddCommand::redo()
             case Qnst::Script:
                 e = new QnstGraphicsScript();
 
-                ((QnstGraphicsImage*) e)->setnstId(entity->getnstId());
+                ((QnstGraphicsScript*) e)->setnstId(entity->getnstId());
 
                 break;
 
@@ -182,7 +188,15 @@ void QnstAddCommand::redo()
             case Qnst::Settings:
                 e = new QnstGraphicsSettings();
 
-                ((QnstGraphicsImage*) e)->setnstId(entity->getnstId());
+                ((QnstGraphicsSettings*) e)->setnstId(entity->getnstId());
+
+                break;
+
+            // if the entity type is HTML
+            case Qnst::Html:
+                e = new QnstGraphicsHTML();
+
+                ((QnstGraphicsHTML*) e)->setnstId(entity->getnstId());
 
                 break;
 
@@ -190,7 +204,7 @@ void QnstAddCommand::redo()
             case Qnst::Media:
                 e = new QnstGraphicsMedia();
 
-                ((QnstGraphicsImage*) e)->setnstId(entity->getnstId());
+                ((QnstGraphicsMedia*) e)->setnstId(entity->getnstId());
 
                 break;
 

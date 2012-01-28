@@ -56,6 +56,12 @@ void QnstRemoveCommand::copy(QnstGraphicsEntity* entity)
 
         break;
 
+    // if the entity type is HTML
+    case Qnst::Html:
+        this->entity = new QnstGraphicsHTML();
+
+        break;
+
     // if the entity type is MEDIA
     case Qnst::Media:
         this->entity = new QnstGraphicsMedia();
@@ -166,6 +172,12 @@ void QnstRemoveCommand::copy(QnstGraphicsEntity* entity, QnstGraphicsEntity* par
 
         break;
 
+    // if the entity type is HTML
+    case Qnst::Html:
+        c = new QnstGraphicsHTML();
+
+        break;
+
     // if the entity type is MEDIA
     case Qnst::Media:
         c = new QnstGraphicsMedia();
@@ -254,7 +266,7 @@ void QnstRemoveCommand::undo()
         case Qnst::Audio:
             e = new QnstGraphicsAudio();
 
-            ((QnstGraphicsImage*) e)->setnstId(entity->getnstId());
+            ((QnstGraphicsAudio*) e)->setnstId(entity->getnstId());
 
             break;
 
@@ -262,7 +274,7 @@ void QnstRemoveCommand::undo()
         case Qnst::Video:
             e = new QnstGraphicsVideo();
 
-            ((QnstGraphicsImage*) e)->setnstId(entity->getnstId());
+            ((QnstGraphicsVideo*) e)->setnstId(entity->getnstId());
 
             break;
 
@@ -270,7 +282,7 @@ void QnstRemoveCommand::undo()
         case Qnst::Text:
             e = new QnstGraphicsText();
 
-            ((QnstGraphicsImage*) e)->setnstId(entity->getnstId());
+            ((QnstGraphicsText*) e)->setnstId(entity->getnstId());
 
             break;
 
@@ -278,7 +290,7 @@ void QnstRemoveCommand::undo()
         case Qnst::Script:
             e = new QnstGraphicsScript();
 
-            ((QnstGraphicsImage*) e)->setnstId(entity->getnstId());
+            ((QnstGraphicsScript*) e)->setnstId(entity->getnstId());
 
             break;
 
@@ -286,7 +298,15 @@ void QnstRemoveCommand::undo()
         case Qnst::Settings:
             e = new QnstGraphicsSettings();
 
-            ((QnstGraphicsImage*) e)->setnstId(entity->getnstId());
+            ((QnstGraphicsSettings*) e)->setnstId(entity->getnstId());
+
+            break;
+
+        // if the entity type is HTML
+        case Qnst::Html:
+            e = new QnstGraphicsHTML();
+
+            ((QnstGraphicsHTML*) e)->setnstId(entity->getnstId());
 
             break;
 
@@ -401,7 +421,7 @@ void QnstRemoveCommand::paste(QnstGraphicsEntity* entity, QnstGraphicsEntity* pa
     case Qnst::Audio:
         e = new QnstGraphicsAudio();
 
-        ((QnstGraphicsImage*) e)->setnstId(entity->getnstId());
+        ((QnstGraphicsAudio*) e)->setnstId(entity->getnstId());
 
         break;
 
@@ -409,7 +429,7 @@ void QnstRemoveCommand::paste(QnstGraphicsEntity* entity, QnstGraphicsEntity* pa
     case Qnst::Video:
         e = new QnstGraphicsVideo();
 
-        ((QnstGraphicsImage*) e)->setnstId(entity->getnstId());
+        ((QnstGraphicsVideo*) e)->setnstId(entity->getnstId());
 
         break;
 
@@ -417,7 +437,7 @@ void QnstRemoveCommand::paste(QnstGraphicsEntity* entity, QnstGraphicsEntity* pa
     case Qnst::Text:
         e = new QnstGraphicsText();
 
-        ((QnstGraphicsImage*) e)->setnstId(entity->getnstId());
+        ((QnstGraphicsText*) e)->setnstId(entity->getnstId());
 
         break;
 
@@ -425,7 +445,7 @@ void QnstRemoveCommand::paste(QnstGraphicsEntity* entity, QnstGraphicsEntity* pa
     case Qnst::Script:
         e = new QnstGraphicsScript();
 
-        ((QnstGraphicsImage*) e)->setnstId(entity->getnstId());
+        ((QnstGraphicsScript*) e)->setnstId(entity->getnstId());
 
         break;
 
@@ -433,7 +453,15 @@ void QnstRemoveCommand::paste(QnstGraphicsEntity* entity, QnstGraphicsEntity* pa
     case Qnst::Settings:
         e = new QnstGraphicsSettings();
 
-        ((QnstGraphicsImage*) e)->setnstId(entity->getnstId());
+        ((QnstGraphicsSettings*) e)->setnstId(entity->getnstId());
+
+        break;
+
+    // if the entity type is HTML
+    case Qnst::Html:
+        e = new QnstGraphicsHTML();
+
+        ((QnstGraphicsHTML*) e)->setnstId(entity->getnstId());
 
         break;
 
