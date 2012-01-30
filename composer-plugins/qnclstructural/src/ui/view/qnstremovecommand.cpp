@@ -101,6 +101,8 @@ void QnstRemoveCommand::copy(QnstGraphicsEntity* entity)
     case Qnst::Aggregator:
         this->entity = new QnstGraphicsAggregator();
 
+        qDebug() << "COPY:" << "AGGREGATOR";
+
         break;
     }
 
@@ -126,7 +128,7 @@ void QnstRemoveCommand::copy(QnstGraphicsEntity* entity)
 
 void QnstRemoveCommand::copy(QnstGraphicsEntity* entity, QnstGraphicsEntity* parent)
 {
-    QnstGraphicsEntity* c;
+    QnstGraphicsEntity* c = NULL;
 
     switch(entity->getnstType()){
 
@@ -217,30 +219,38 @@ void QnstRemoveCommand::copy(QnstGraphicsEntity* entity, QnstGraphicsEntity* par
     case Qnst::Aggregator:
         c = new QnstGraphicsAggregator();
 
+        qDebug() << "COPY:" << "AGGREGATOR";
+
         break;
     }
 
-    c->setnstUid(entity->getnstUid());
+    if (c != NULL){
+        c->setnstUid(entity->getnstUid());
 
-    c->setnstGraphicsParent(parent);
+        c->setnstGraphicsParent(parent);
 
-    c->setnstId(entity->getnstId());
+        c->setnstId(entity->getnstId());
 
-    c->setTop(entity->getTop());
-    c->setLeft(entity->getLeft());
-    c->setWidth(entity->getWidth());
-    c->setHeight(entity->getHeight());
+        c->setTop(entity->getTop());
+        c->setLeft(entity->getLeft());
+        c->setWidth(entity->getWidth());
+        c->setHeight(entity->getHeight());
 
-    parent->addnstGraphicsEntity(c);
+        if (c->getnstType() == Qnst::Aggregator){
+            qDebug() << entity->getnstId() << entity->getWidth() << "x" << entity->getHeight();
+        }
 
-    foreach(QnstGraphicsEntity* e, entity->getnstGraphicsEntities()){
-        copy(e, c);
+        parent->addnstGraphicsEntity(c);
+
+        foreach(QnstGraphicsEntity* e, entity->getnstGraphicsEntities()){
+            copy(e, c);
+        }
     }
 }
 
 void QnstRemoveCommand::undo()
 {
-    QnstGraphicsEntity* e;
+    QnstGraphicsEntity* e = NULL;
 
     if (view->entities.contains(parent) || entity->getnstType() == Qnst::Body){
 
@@ -364,40 +374,43 @@ void QnstRemoveCommand::undo()
 
             e->setnstId(entity->getnstId());
 
+            qDebug() << "PASTE:" << "AGGREGATOR";
+
             break;
         }
 
+        if (e != NULL){
+            e->setnstUid(entity->getnstUid());
 
-        e->setnstUid(entity->getnstUid());
+            if (parent != ""){
+                QnstGraphicsEntity* gparent = view->entities[parent];
 
-        if (parent != ""){
-            QnstGraphicsEntity* gparent = view->entities[parent];
+                gparent->addnstGraphicsEntity(e);
 
-            gparent->addnstGraphicsEntity(e);
+                e->setnstGraphicsParent(gparent);
+            }else{
 
-            e->setnstGraphicsParent(gparent);
-        }else{
+                e->setnstGraphicsParent(NULL);
+            }
 
-            e->setnstGraphicsParent(NULL);
-        }
+            e->setTop(entity->getTop());
+            e->setLeft(entity->getLeft());
+            e->setWidth(entity->getWidth());
+            e->setHeight(entity->getHeight());
+            e->adjust();
 
-        e->setTop(entity->getTop());
-        e->setLeft(entity->getLeft());
-        e->setWidth(entity->getWidth());
-        e->setHeight(entity->getHeight());
-        e->adjust();
+            view->requestEntityAddition(e, true);
 
-        view->requestEntityAddition(e, true);
-
-        foreach(QnstGraphicsEntity* c, entity->getnstGraphicsEntities()){
-            paste(c, e);
+            foreach(QnstGraphicsEntity* c, entity->getnstGraphicsEntities()){
+                paste(c, e);
+            }
         }
    }
 }
 
 void QnstRemoveCommand::paste(QnstGraphicsEntity* entity, QnstGraphicsEntity* parent)
 {
-    QnstGraphicsEntity* e;
+    QnstGraphicsEntity* e = NULL;
 
     switch(entity->getnstType()){
 
@@ -519,24 +532,32 @@ void QnstRemoveCommand::paste(QnstGraphicsEntity* entity, QnstGraphicsEntity* pa
 
         e->setnstId(entity->getnstId());
 
+        qDebug() << "PASTE:" << "AGGREGATOR";
+
         break;
     }
 
-    e->setnstUid(entity->getnstUid());
-    e->setnstGraphicsParent(parent);
+    if (e != NULL){
+        e->setnstUid(entity->getnstUid());
+        e->setnstGraphicsParent(parent);
 
-    parent->addnstGraphicsEntity(e);
+        parent->addnstGraphicsEntity(e);
 
-    e->setTop(entity->getTop());
-    e->setLeft(entity->getLeft());
-    e->setWidth(entity->getWidth());
-    e->setHeight(entity->getHeight());
-    e->adjust();
+        e->setTop(entity->getTop());
+        e->setLeft(entity->getLeft());
+        e->setWidth(entity->getWidth());
+        e->setHeight(entity->getHeight());
+        e->adjust();
 
-    view->requestEntityAddition(e, true);
+        if (e->getnstType() == Qnst::Aggregator){
+            qDebug() << entity->getWidth() << "x" << entity->getHeight();
+        }
 
-    foreach(QnstGraphicsEntity* c, entity->getnstGraphicsEntities()){
-        paste(c, e);
+        view->requestEntityAddition(e, true);
+
+        foreach(QnstGraphicsEntity* c, entity->getnstGraphicsEntities()){
+            paste(c, e);
+        }
     }
 }
 

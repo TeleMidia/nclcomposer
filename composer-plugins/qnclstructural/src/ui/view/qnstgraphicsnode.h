@@ -21,6 +21,10 @@ public:
 
     void removenstGraphicsEdge(QnstGraphicsEdge* edge);
 
+    virtual void fit(qreal padding);
+
+    virtual void inside();
+
     virtual void adjust();
 
     bool hasMouseHover();

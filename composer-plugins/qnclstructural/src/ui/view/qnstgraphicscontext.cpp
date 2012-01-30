@@ -85,6 +85,7 @@ void QnstGraphicsContext::performImage()
     entity->setLeft(getWidth()/2 - 48/2);
     entity->setWidth(48);
     entity->setHeight(64);
+    entity->adjust();
 
     addnstGraphicsEntity(entity);
 
@@ -98,6 +99,7 @@ void QnstGraphicsContext::performAudio()
     entity->setLeft(getWidth()/2 - 48/2);
     entity->setWidth(48);
     entity->setHeight(64);
+    entity->adjust();
 
     addnstGraphicsEntity(entity);
 
@@ -111,6 +113,7 @@ void QnstGraphicsContext::performText()
     entity->setLeft(getWidth()/2 - 48/2);
     entity->setWidth(48);
     entity->setHeight(64);
+    entity->adjust();
 
     addnstGraphicsEntity(entity);
 
@@ -124,6 +127,7 @@ void QnstGraphicsContext::performVideo()
     entity->setLeft(getWidth()/2 - 48/2);
     entity->setWidth(48);
     entity->setHeight(64);
+    entity->adjust();
 
     addnstGraphicsEntity(entity);
 
@@ -137,6 +141,7 @@ void QnstGraphicsContext::performScript()
     entity->setLeft(getWidth()/2 - 48/2);
     entity->setWidth(48);
     entity->setHeight(64);
+    entity->adjust();
 
     addnstGraphicsEntity(entity);
 
@@ -150,6 +155,7 @@ void QnstGraphicsContext::performSettings()
     entity->setLeft(getWidth()/2 - 48/2);
     entity->setWidth(48);
     entity->setHeight(64);
+    entity->adjust();
 
     addnstGraphicsEntity(entity);
 
@@ -163,6 +169,7 @@ void QnstGraphicsContext::performMedia()
     entity->setLeft(getWidth()/2 - 48/2);
     entity->setWidth(48);
     entity->setHeight(64);
+    entity->adjust();
 
     addnstGraphicsEntity(entity);
 
@@ -176,6 +183,7 @@ void QnstGraphicsContext::performContext()
     entity->setLeft(getWidth()/2 - 250/2);
     entity->setWidth(250);
     entity->setHeight(200);
+    entity->adjust();
 
     entity->menu->actionPaste->setEnabled(menu->actionPaste->isEnabled());
 
@@ -191,6 +199,7 @@ void QnstGraphicsContext::performSwitch()
     entity->setLeft(getWidth()/2 - 250/2);
     entity->setWidth(250);
     entity->setHeight(200);
+    entity->adjust();
 
     entity->menu->actionPaste->setEnabled(menu->actionPaste->isEnabled());
 

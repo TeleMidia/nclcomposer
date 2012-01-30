@@ -37,11 +37,121 @@ void QnstGraphicsNode::removenstGraphicsEdge(QnstGraphicsEdge* edge)
     }
 }
 
+void QnstGraphicsNode::fit(qreal padding)
+{
+    qreal top = getTop();
+    qreal left = getLeft();
+    qreal width = getWidth();
+    qreal height = getHeight();
+
+    qreal nextTop = top;
+    qreal nextLeft = left;
+    qreal nextWidth = width;
+    qreal nextHeight = height;
+
+    foreach(QncgGraphicsEntity* entity, getncgGraphicsEntities()){
+        if (entity->getncgType() == Qncg::Node){
+            if ((entity->getTop()-4) + top < nextTop + padding){
+                nextTop = (entity->getTop()-4) + top - padding;
+            }
+
+            if ((entity->getLeft()-4) + left < nextLeft + padding){
+                nextLeft = (entity->getLeft()-4) + left - padding;
+            }
+
+            if ((entity->getLeft()-4) + entity->getWidth() > nextWidth - padding){
+                nextWidth = (entity->getLeft()-4) + entity->getWidth() + padding;
+            }
+
+            if ((entity->getTop()-4) + entity->getHeight() > nextHeight - padding){
+                nextHeight = (entity->getTop()-4) + entity->getHeight() + padding;
+            }
+        }
+    }
+
+    if (nextWidth != width){
+        setWidth(nextWidth);
+    }
+
+    if (nextHeight != height){
+        setHeight(nextHeight);
+    }
+
+    if (nextTop != top){
+        foreach(QncgGraphicsEntity* entity, getncgGraphicsEntities()){
+            if (entity->getncgType() == Qncg::Node){
+                entity->setTop(entity->getTop() + (top - nextTop));
+            }
+        }
+
+        setHeight(getHeight() + (top - nextTop));
+        setTop(nextTop);
+    }
+
+    if (nextLeft != left){
+        foreach(QncgGraphicsEntity* entity, getncgGraphicsEntities()){
+            if (entity->getncgType() == Qncg::Node){
+                entity->setLeft(entity->getLeft() + (left - nextLeft));
+            }
+        }
+
+        setWidth(getWidth() + (left - nextLeft));
+        setLeft(nextLeft);
+    }
+
+    QnstGraphicsNode* parent = (QnstGraphicsNode*) getnstGraphicsParent();
+
+    if (parent != NULL){
+        parent->fit(padding);
+    }
+}
+
+void QnstGraphicsNode::inside()
+{
+    QncgGraphicsEntity* parent = getncgGraphicsParent();
+
+    if (parent != NULL){
+        QPointF pa(getLeft()+getWidth()/2, getTop()+getHeight()/2);
+        QPointF pb(parent->getWidth()/2, parent->getHeight()/2);
+
+        QLineF line(pa, pb);
+
+        qreal n = 0;
+
+        qreal i = 0.0;
+
+        setSelectable(false); update();
+
+        while(!collidesWithItem(parent,Qt::ContainsItemShape)){
+
+            i += 0.01;
+
+            setTop(getTop()+line.pointAt(i).y()-pa.y());
+            setLeft(getLeft()+line.pointAt(i).x()-pa.x());
+
+            if (++n > 1000){
+                n = -1; break;
+            }
+        }
+
+        if (n < 0){
+            setTop(pb.x()-getHeight()/2);
+            setLeft(pb.y()-getWidth()/2);
+        }
+
+        setSelectable(true); update();
+    }
+}
+
 void QnstGraphicsNode::adjust()
 {
+
+
     foreach(QnstGraphicsEntity* entity, getnstGraphicsEntities()){
         entity->adjust();
     }
+
+    inside();
 
     foreach(QnstGraphicsEntity* entity, getnstGraphicsEdges()){
         if (entity->getnstType() == Qnst::Reference ||

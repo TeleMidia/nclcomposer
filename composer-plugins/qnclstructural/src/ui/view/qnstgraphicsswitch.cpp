@@ -81,6 +81,7 @@ void QnstGraphicsSwitch::performImage()
     entity->setLeft(getWidth()/2 - 48/2);
     entity->setWidth(48);
     entity->setHeight(64);
+    entity->adjust();
 
     entity->menu->actionPaste->setEnabled(menu->actionPaste->isEnabled());
 
@@ -96,6 +97,7 @@ void QnstGraphicsSwitch::performAudio()
     entity->setLeft(getWidth()/2 - 48/2);
     entity->setWidth(48);
     entity->setHeight(64);
+    entity->adjust();
 
     entity->menu->actionPaste->setEnabled(menu->actionPaste->isEnabled());
 
@@ -111,6 +113,7 @@ void QnstGraphicsSwitch::performText()
     entity->setLeft(getWidth()/2 - 48/2);
     entity->setWidth(48);
     entity->setHeight(64);
+    entity->adjust();
 
     entity->menu->actionPaste->setEnabled(menu->actionPaste->isEnabled());
 
@@ -126,6 +129,7 @@ void QnstGraphicsSwitch::performVideo()
     entity->setLeft(getWidth()/2 - 48/2);
     entity->setWidth(48);
     entity->setHeight(64);
+    entity->adjust();
 
     entity->menu->actionPaste->setEnabled(menu->actionPaste->isEnabled());
 
@@ -141,6 +145,7 @@ void QnstGraphicsSwitch::performScript()
     entity->setLeft(getWidth()/2 - 48/2);
     entity->setWidth(48);
     entity->setHeight(64);
+    entity->adjust();
 
     entity->menu->actionPaste->setEnabled(menu->actionPaste->isEnabled());
 
@@ -156,6 +161,7 @@ void QnstGraphicsSwitch::performSettings()
     entity->setLeft(getWidth()/2 - 48/2);
     entity->setWidth(48);
     entity->setHeight(64);
+    entity->adjust();
 
     entity->menu->actionPaste->setEnabled(menu->actionPaste->isEnabled());
 
@@ -171,6 +177,7 @@ void QnstGraphicsSwitch::performMedia()
     entity->setLeft(getWidth()/2 - 48/2);
     entity->setWidth(48);
     entity->setHeight(64);
+    entity->adjust();
 
     entity->menu->actionPaste->setEnabled(menu->actionPaste->isEnabled());
 
@@ -186,6 +193,7 @@ void QnstGraphicsSwitch::performContext()
     entity->setLeft(getWidth()/2 - 250/2);
     entity->setWidth(250);
     entity->setHeight(200);
+    entity->adjust();
 
     entity->menu->actionPaste->setEnabled(menu->actionPaste->isEnabled());
 
@@ -201,6 +209,7 @@ void QnstGraphicsSwitch::performSwitch()
     entity->setLeft(getWidth()/2 - 250/2);
     entity->setWidth(250);
     entity->setHeight(200);
+    entity->adjust();
 
     entity->menu->actionPaste->setEnabled(menu->actionPaste->isEnabled());
 

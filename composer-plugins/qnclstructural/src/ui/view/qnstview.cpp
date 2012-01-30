@@ -336,22 +336,45 @@ void QnstView::readLink(QDomElement element, QDomElement parent)
     }else if (element.nodeName() == "bind"){
         if (element.attribute("uid") != "" && entities.contains(element.attribute("componentaUID"))&& entities.contains(element.attribute("componentbUID"))){
             if (!entities.contains(element.attribute("uid"))){
-                QnstGraphicsNode* entitya = (QnstGraphicsNode*) entities[element.attribute("componentaUID")];
-                QnstGraphicsNode* entityb = (QnstGraphicsNode*) entities[element.attribute("componentbUID")];
+                QnstGraphicsEntity* entitya = entities[element.attribute("componentaUID")];
+                QnstGraphicsEntity* entityb = entities[element.attribute("componentbUID")];
 
                 if (element.attribute("type") == "condition"){
                     QnstGraphicsCondition* entity = new QnstGraphicsCondition();
                     entity->setnstId(element.attribute("id"));
                     entity->setnstUid(element.attribute("uid"));
-                    entity->setnstGraphicsParent(entitya->getnstGraphicsParent());
                     entity->setEntityA(entitya);
                     entity->setEntityB(entityb);
+
+                    // if linking NODE to NODE
+                    if (entitya->getncgType() == Qncg::Node && entityb->getncgType() == Qncg::Node){
+                        entity->setnstGraphicsParent(entitya->getnstGraphicsParent());
+
+                        entitya->getnstGraphicsParent()->addnstGraphicsEntity(entity);
+
+                    // if linking NODE to INTERFACE
+                    }else if (entitya->getncgType() == Qncg::Node && entityb->getncgType() == Qncg::Interface){
+                        entity->setnstGraphicsParent(entitya->getnstGraphicsParent());
+
+                        entitya->getnstGraphicsParent()->addnstGraphicsEntity(entity);
+
+                    // if linking INTERFACE to NODE
+                    }else if (entitya->getncgType() == Qncg::Interface && entityb->getncgType() == Qncg::Node){
+                        entity->setnstGraphicsParent(entityb->getnstGraphicsParent());
+
+                        entityb->getnstGraphicsParent()->addnstGraphicsEntity(entity);
+
+                    // if linking INTERFACE to INTERFACE
+                    }else if (entitya->getncgType() == Qncg::Interface && entityb->getncgType() == Qncg::Interface){
+                        entity->setnstGraphicsParent(entitya->getnstGraphicsParent()->getnstGraphicsParent());
+
+                        entitya->getnstGraphicsParent()->getnstGraphicsParent()->addnstGraphicsEntity(entity);
+                    }
+
                     entity->adjust();
 
-                    entitya->getnstGraphicsParent()->addnstGraphicsEntity(entity);
-
-                    entitya->addnstGraphicsEdge(entity);
-                    entityb->addnstGraphicsEdge(entity);
+                    ((QnstGraphicsNode*) entitya)->addnstGraphicsEdge(entity);
+                    ((QnstGraphicsNode*) entityb)->addnstGraphicsEdge(entity);
 
                     QString con = element.attribute("condition");
 
@@ -382,15 +405,38 @@ void QnstView::readLink(QDomElement element, QDomElement parent)
                     QnstGraphicsAction* entity = new QnstGraphicsAction();
                     entity->setnstId(element.attribute("id"));
                     entity->setnstUid(element.attribute("uid"));
-                    entity->setnstGraphicsParent(entitya->getnstGraphicsParent());
                     entity->setEntityA(entitya);
                     entity->setEntityB(entityb);
+
+                    // if linking NODE to NODE
+                    if (entitya->getncgType() == Qncg::Node && entityb->getncgType() == Qncg::Node){
+                        entity->setnstGraphicsParent(entitya->getnstGraphicsParent());
+
+                        entitya->getnstGraphicsParent()->addnstGraphicsEntity(entity);
+
+                    // if linking NODE to INTERFACE
+                    }else if (entitya->getncgType() == Qncg::Node && entityb->getncgType() == Qncg::Interface){
+                        entity->setnstGraphicsParent(entitya->getnstGraphicsParent());
+
+                        entitya->getnstGraphicsParent()->addnstGraphicsEntity(entity);
+
+                    // if linking INTERFACE to NODE
+                    }else if (entitya->getncgType() == Qncg::Interface && entityb->getncgType() == Qncg::Node){
+                        entity->setnstGraphicsParent(entityb->getnstGraphicsParent());
+
+                        entityb->getnstGraphicsParent()->addnstGraphicsEntity(entity);
+
+                    // if linking INTERFACE to INTERFACE
+                    }else if (entitya->getncgType() == Qncg::Interface && entityb->getncgType() == Qncg::Interface){
+                        entity->setnstGraphicsParent(entitya->getnstGraphicsParent()->getnstGraphicsParent());
+
+                        entitya->getnstGraphicsParent()->getnstGraphicsParent()->addnstGraphicsEntity(entity);
+                    }
+
                     entity->adjust();
 
-                    entitya->getnstGraphicsParent()->addnstGraphicsEntity(entity);
-
-                    entitya->addnstGraphicsEdge(entity);
-                    entityb->addnstGraphicsEdge(entity);
+                    ((QnstGraphicsNode*) entitya)->addnstGraphicsEdge(entity);
+                    ((QnstGraphicsNode*) entityb)->addnstGraphicsEdge(entity);
 
                     QString act = element.attribute("action");
 
@@ -3145,6 +3191,34 @@ void QnstView::performCut()
             // if the entity type is PORT
             case Qnst::Port:
                 clipboard = new QnstGraphicsPort();
+//                clipboard->setnstGraphicsParent(entity->getnstGraphicsParent());
+
+                clipboard->setnstId(entity->getnstId());
+
+                clipboard->setTop(entity->getTop());
+                clipboard->setLeft(entity->getLeft());
+                clipboard->setWidth(entity->getWidth());
+                clipboard->setHeight(entity->getHeight());
+
+                break;
+
+            // if the entity type is PROPERTY
+            case Qnst::Property:
+                clipboard = new QnstGraphicsProperty();
+//                clipboard->setnstGraphicsParent(entity->getnstGraphicsParent());
+
+                clipboard->setnstId(entity->getnstId());
+
+                clipboard->setTop(entity->getTop());
+                clipboard->setLeft(entity->getLeft());
+                clipboard->setWidth(entity->getWidth());
+                clipboard->setHeight(entity->getHeight());
+
+                break;
+
+            // if the entity type is AREA
+            case Qnst::Area:
+                clipboard = new QnstGraphicsArea();
 //                clipboard->setnstGraphicsParent(entity->getnstGraphicsParent());
 
                 clipboard->setnstId(entity->getnstId());
