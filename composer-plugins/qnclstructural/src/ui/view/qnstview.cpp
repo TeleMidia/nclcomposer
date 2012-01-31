@@ -609,6 +609,17 @@ void QnstView::write(QDomElement element, QDomDocument* dom, QnstGraphicsEntity*
 
         break;
 
+    case Qnst::Html:
+        e = dom->createElement("media");
+
+        e.setAttribute("type", "text/html");
+
+        if (((QnstGraphicsMedia*) entity)->getSource() != "" ){
+            e.setAttribute("src", ((QnstGraphicsMedia*) entity)->getSource());
+        }
+
+        break;
+
     case Qnst::Settings:
         e = dom->createElement("media");
 
@@ -1957,6 +1968,7 @@ void QnstView::addBind(const QString uid, const QString parent, const QMap<QStri
             entity->setComponent(properties["component"]);
 
             entity->setComponentUid(properties["componentUid"]);
+
 
             entity->setInterface(properties["interface"]);
 
