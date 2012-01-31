@@ -315,6 +315,10 @@ void NCLTreeWidget::updateItem(QTreeWidgetItem *item, QString tagname,
       {
         icon = QIcon(":/icon/video");
       }
+      else if(type.startsWith("text/html"))
+      {
+        icon = QIcon(":/icon/html");
+      }
       else if(type.startsWith("text"))
       {
         icon = QIcon(":/icon/text");
