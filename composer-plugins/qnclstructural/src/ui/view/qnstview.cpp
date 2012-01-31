@@ -283,7 +283,7 @@ void QnstView::readLink(QDomElement element, QDomElement parent)
 
     }else if (element.nodeName() == "bind"){
         if (element.attribute("uid") != "" && entities.contains(element.attribute("componentaUID"))&& entities.contains(element.attribute("componentbUID"))){
-            if (!entities.contains(element.attribute("uid"))){
+            if (!entities.contains(element.attribute("uid")) && links.contains(element.attribute("linkUID"))){
                 QnstGraphicsEntity* entitya = entities[element.attribute("componentaUID")];
                 QnstGraphicsEntity* entityb = entities[element.attribute("componentbUID")];
 
@@ -5119,7 +5119,6 @@ void QnstView::addInterfacetoNodeEdge(QnstGraphicsEntity* entitya, QnstGraphicsE
         if (parenta != NULL && parentb != NULL){
             if (parenta == parentb){
                 qDebug() << "INTERFACE to NODE:" << entitya->getnstUid() << "->" << entityb->getnstUid();
-
 
                 foreach(QnstGraphicsEntity* entity, parenta->getnstGraphicsEntities()){
                     if (entity->getnstType() == Qnst::Reference){
