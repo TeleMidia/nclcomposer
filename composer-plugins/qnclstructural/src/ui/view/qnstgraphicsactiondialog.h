@@ -4,27 +4,23 @@
 #include <QDialog>
 
 #include "qnstconncetor.h"
+#include "qnstlink.h"
 
 #include "ui_QnstGraphicsActionForm.h"
 
 class QnstGraphicsActionDialog : public QDialog
 {
-    Q_OBJECT
-
 public:
     QnstGraphicsActionDialog(QWidget* parent = 0);
 
     ~QnstGraphicsActionDialog();
 
-    void init(QMap<QString, QnstConncetor*> connectors, QMap<QString, QString> links);
-
-protected slots:
-    void adjust(QString connector);
+    void init(QMap<QString, QnstConncetor*> connectors, QnstLink* link);
 
 public:
     Ui::QnstGraphicsActionForm form;
 
-    QMap<QString, QString> links;
+    QnstLink* link;
 
     QMap<QString, QnstConncetor*> connectors;
 };

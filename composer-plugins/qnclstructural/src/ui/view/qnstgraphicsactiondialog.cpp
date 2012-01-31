@@ -4,8 +4,6 @@ QnstGraphicsActionDialog::QnstGraphicsActionDialog(QWidget* parent)
     : QDialog(parent)
 {
     form.setupUi(this);
-
-    connect(form.cbConnector, SIGNAL(currentIndexChanged(QString)), SLOT(adjust(QString)));
 }
 
 QnstGraphicsActionDialog::~QnstGraphicsActionDialog()
@@ -13,41 +11,39 @@ QnstGraphicsActionDialog::~QnstGraphicsActionDialog()
 
 }
 
-void QnstGraphicsActionDialog::init(QMap<QString, QnstConncetor*> connectors, QMap<QString, QString> links)
+void QnstGraphicsActionDialog::init(QMap<QString, QnstConncetor*> connectors, QnstLink* link)
 {
     this->connectors = connectors;
-    this->links = links;
+    this->link = link;
 
     form.cbConnector->clear();
+    form.cbConnector->setEnabled(false);
 
-    foreach(QnstConncetor* connector, connectors.values()){
-        form.cbConnector->addItem(connector->getName());
+    if (link != NULL){
+        form.cbConnector->addItem(link->getxConnector());
+    }else{
+        form.cbConnector->addItem("New...");
     }
-
-    if (form.cbConnector->count() > 0){
-        form.cbConnector->addItem("----------");
-    }
-
-    form.cbConnector->addItem("New...");
 
     form.cbLink->clear();
+    form.cbLink->setEnabled(false);
 
-    if (form.cbConnector->currentText() != "----------"){
-        foreach(QString link, links.keys(form.cbConnector->currentText())){
-            form.cbLink->addItem(link);
-        }
+    if (link != NULL){
+        form.cbLink->addItem(link->getnstId());
+    }else{
+        form.cbLink->addItem("New...");
     }
 
-    if (form.cbLink->count() > 0){
-        form.cbLink->addItem("----------");
-    }
-
-    form.cbLink->addItem("New...");
-
-    form.cbAction->setEnabled(true);
     form.cbAction->clear();
+    form.cbAction->setEnabled(true);
 
-    QnstConncetor* conn = connectors[form.cbConnector->currentText()];
+    QnstConncetor* conn;
+
+    if (link != NULL){
+        conn = connectors[link->getxConnector()];
+    }else{
+        conn = NULL;
+    }
 
     if (conn != NULL){
         if (conn->getName() == form.cbConnector->currentText()){
@@ -61,59 +57,5 @@ void QnstGraphicsActionDialog::init(QMap<QString, QnstConncetor*> connectors, QM
         form.cbAction->addItem("resume");
         form.cbAction->addItem("pause");
         form.cbAction->addItem("set");
-    }
-}
-
-
-void QnstGraphicsActionDialog::adjust(QString connector)
-{
-    if (connector == "----------"){
-        form.cbLink->setEnabled(false);
-        form.cbLink->clear();
-
-        form.cbAction->setEnabled(false);
-        form.cbAction->clear();
-
-    }else if (connector == "New..."){
-        form.cbLink->setEnabled(true);
-        form.cbLink->clear();
-
-        form.cbLink->addItem("New...");
-
-        form.cbAction->setEnabled(true);
-        form.cbAction->clear();
-
-        form.cbAction->addItem("start");
-        form.cbAction->addItem("stop");
-        form.cbAction->addItem("resume");
-        form.cbAction->addItem("pause");
-        form.cbAction->addItem("set");
-
-    }else{
-        form.cbLink->setEnabled(true);
-        form.cbLink->clear();
-
-        foreach(QString link, links.keys(connector)){
-            form.cbLink->addItem(link);
-        }
-
-        if (form.cbLink->count() > 0){
-            form.cbLink->addItem("----------");
-        }
-
-        form.cbLink->addItem("New...");
-
-        QnstConncetor* conn = connectors[connector];
-
-        if (conn != NULL){
-            form.cbAction->setEnabled(true);
-            form.cbAction->clear();
-
-            if (conn->getName() == connector){
-                foreach(QString name, conn->getActions().values()){
-                    form.cbAction->addItem(name);
-                }
-            }
-        }
     }
 }
