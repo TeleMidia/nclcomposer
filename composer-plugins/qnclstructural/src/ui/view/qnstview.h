@@ -307,9 +307,7 @@ private:
 
     QMap<QString, QString> link2conn;
 
-    QMap<QString, QString> cod2link;
-
-    QMap<QString, QString> act2link;
+    QMap<QString, QString> refers;
 
     QMap<QString, QnstConncetor*> connectors2;
 

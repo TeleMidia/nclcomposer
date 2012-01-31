@@ -79,6 +79,36 @@ void QnstGraphicsMedia::setnstId(QString id)
     setToolTip(tip);
 }
 
+QString QnstGraphicsMedia::getRefer() const
+{
+    return refer;
+}
+
+void QnstGraphicsMedia::setRefer(QString refer)
+{
+    this->refer = refer;
+}
+
+QString QnstGraphicsMedia::getReferUID() const
+{
+    return referUID;
+}
+
+void QnstGraphicsMedia::setReferUID(QString refetUID)
+{
+    this->referUID = refetUID;
+}
+
+QString QnstGraphicsMedia::getInstance() const
+{
+    return instance;
+}
+
+void QnstGraphicsMedia::setInstance(QString instance)
+{
+    this->instance = instance;
+}
+
 void QnstGraphicsMedia::createObjects()
 {
     menu = new QnstMenu();
