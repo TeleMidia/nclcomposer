@@ -34,6 +34,8 @@ public:
 public slots:
     void performHtml();
 
+    void performNCL();
+
     void performImage();
 
     void performAudio();

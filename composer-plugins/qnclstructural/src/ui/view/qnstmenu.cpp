@@ -208,6 +208,14 @@ void QnstMenu::createActions()
 
     actionHTML->setEnabled(false);
 
+    // media NCL
+    actionNCL = new QAction(this);
+    actionNCL->setText(tr("NCL"));
+
+    actionNCL->setIcon(QIcon(":/icon/ncl"));
+
+    actionNCL->setEnabled(false);
+
     // context action
     actionContext = new QAction(this);
     actionContext->setText(tr("Context"));
@@ -239,6 +247,14 @@ void QnstMenu::createActions()
     actionPort->setIcon(QIcon(":/icon/port"));
 
     actionPort->setEnabled(false);
+
+    // mapping action
+    actionMapping = new QAction(this);
+    actionMapping->setText(tr("Mapping"));
+
+    actionMapping->setIcon(QIcon(":/icon/mapping"));
+
+    actionMapping->setEnabled(false);
 
     // area action
     actionArea = new QAction(this);
@@ -341,6 +357,7 @@ void QnstMenu::createMenus()
     menuInsert->addAction(actionScript);
     menuInsert->addAction(actionSettings);
     menuInsert->addAction(actionHTML);
+    menuInsert->addAction(actionNCL);
     menuInsert->addSeparator();
     menuInsert->addAction(actionMedia);
     menuInsert->addSeparator();
@@ -350,6 +367,7 @@ void QnstMenu::createMenus()
     menuInsert->addAction(actionBody);
     menuInsert->addSeparator();
     menuInsert->addAction(actionPort);
+    menuInsert->addAction(actionMapping);
     menuInsert->addAction(actionArea);
     menuInsert->addAction(actionProperty);
     menuInsert->addSeparator();
@@ -403,10 +421,12 @@ void QnstMenu::createConnections()
     connect(actionSettings, SIGNAL(triggered()), SIGNAL(settingsRequested()));
     connect(actionMedia, SIGNAL(triggered()), SIGNAL(mediaRequested()));
     connect(actionHTML, SIGNAL(triggered()), SIGNAL(htmlRequested()));
+    connect(actionNCL, SIGNAL(triggered()), SIGNAL(nclRequested()));
     connect(actionContext, SIGNAL(triggered()), SIGNAL(contextRequested()));
     connect(actionSwitch, SIGNAL(triggered()), SIGNAL(switchRequested()));
     connect(actionBody, SIGNAL(triggered()), SIGNAL(bodyRequested()));
     connect(actionPort, SIGNAL(triggered()), SIGNAL(portRequested()));
+    connect(actionMapping, SIGNAL(triggered()), SIGNAL(mappingRequested()));
     connect(actionArea, SIGNAL(triggered()), SIGNAL(areaRequested()));
     connect(actionProperty, SIGNAL(triggered()), SIGNAL(propertyRequested()));
     connect(actionAggregator, SIGNAL(triggered()), SIGNAL(aggregatorRequested()));

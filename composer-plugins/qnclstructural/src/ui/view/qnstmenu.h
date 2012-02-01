@@ -51,6 +51,8 @@ signals:
 
     void htmlRequested();
 
+    void nclRequested();
+
     void mediaRequested();
 
     void contextRequested();
@@ -60,6 +62,8 @@ signals:
     void bodyRequested();
 
     void portRequested();
+
+    void mappingRequested();
 
     void areaRequested();
 
@@ -133,6 +137,8 @@ public:
 
     QAction* actionHTML;
 
+    QAction* actionNCL;
+
     QAction* actionMedia;
 
     QAction* actionContext;
@@ -146,6 +152,8 @@ public:
     QAction* actionArea;
 
     QAction* actionProperty;
+
+    QAction* actionMapping;
 
     QAction* actionAggregator;
 
