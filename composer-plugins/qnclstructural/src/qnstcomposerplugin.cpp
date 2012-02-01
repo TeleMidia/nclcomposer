@@ -289,8 +289,12 @@ void QnstComposerPlugin::requestEntityRemotion(Entity* entity)
   // still missing connector, simpleCondition and simpleAction
   if (isEntityHandled(entity))
   {
-    view->removeEntity(entities[entity->getUniqueId()]);
-    entities.remove(entityID);
+    QString entityID = entity->getUniqueId();
+    if(entities.contains(entityID))
+    {
+      view->removeEntity(entities[entityID]);
+      entities.remove(entityID);
+    }
   }
 }
 
