@@ -176,13 +176,26 @@ private:
 
     void requestBindAddition(const QString uid, const QString parent, const QMap<QString, QString> properties);
 
+private:
     int n;
 
     QnstView* view;
 
     QString request;
+    QMap<QString, QString> entities; // core -> structural
+    QMap<QString, QString> nclIDtoStructural; // nclId -> structural ID
 
-    QMap<QString, QString> entities;
+
+/* Functions to handle the "sinchronization with core" */
+    bool isSyncingFromTextual;
+    void cacheNCLIds();
+    bool isEntityHandled(Entity *entity);
+    void syncNCLIdsWithStructuralIds();
+
+public slots:
+    void textualStartSync(QString, void*); /* from textual plugin */
+    void textualFinishSync(QString, void*); /* from textual plugin */
+/* End "synchronization with core". */
 };
 
 } } } // end namespace

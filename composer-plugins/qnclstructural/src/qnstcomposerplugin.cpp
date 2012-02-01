@@ -31,6 +31,8 @@ QnstComposerPlugin::QnstComposerPlugin(QObject* parent)
     n = 0;
 
     request = "";
+
+    isSyncingFromTextual = false;
 }
 
 QnstComposerPlugin::~QnstComposerPlugin()
@@ -125,9 +127,7 @@ bool QnstComposerPlugin::saveSubsession()
 void QnstComposerPlugin::updateFromModel()
 {
 //    // TODO: clean view data before update.
-
 //    Entity* project = getProject();
-
 //    if (project != NULL){
 //        updateChildren(project);
 //    }
@@ -135,6 +135,8 @@ void QnstComposerPlugin::updateFromModel()
 
 void QnstComposerPlugin::onEntityAdded(QString pluginID, Entity *entity)
 {
+  if(isSyncingFromTextual) return;
+
     if (pluginID != getPluginInstanceID()){
         requestEntityAddition(entity);
     }else{
@@ -151,126 +153,144 @@ void QnstComposerPlugin::errorMessage(QString error)
 
 void QnstComposerPlugin::onEntityChanged(QString pluginID, Entity *entity)
 {
-    if (pluginID != getPluginInstanceID()){
-        requestEntityChange(entity);
-    }
+  if(isSyncingFromTextual) return;
+
+  if (pluginID != getPluginInstanceID()){
+      requestEntityChange(entity);
+  }
 }
 
 void QnstComposerPlugin::onEntityRemoved(QString pluginID, QString entityID)
 {
-    if (pluginID != getPluginInstanceID()){
-        requestEntityRemotion(getProject()->getEntityById(entityID));
+  if(isSyncingFromTextual) return;
 
-        entities.remove(entityID);
-    }
+  if (pluginID != getPluginInstanceID())
+  {
+      requestEntityRemotion(getProject()->getEntityById(entityID));
+      entities.remove(entityID);
+  }
 }
 
 void QnstComposerPlugin::changeSelectedEntity(QString pluginID, void* param)
 {
-    QString* entityUID = (QString*) param;
+  if(isSyncingFromTextual) return;
+  QString* entityUID = (QString*) param;
 
-    if(entityUID != NULL){
-        requestEntitySelection(getProject()->getEntityById(*entityUID));
+  if(entityUID != NULL)
+  {
+    Entity *entity = getProject()->getEntityById(*entityUID);
+    if(entity != NULL)
+    {
+      requestEntitySelection(entity);
     }
+    else
+      qWarning() << "QnstComposerPlugin is trying to select a entity that are not in the core"
+                 << *entityUID;
+  }
 }
 
 void QnstComposerPlugin::requestEntityAddition(Entity* entity)
 {
     // if the entity is of type BODY
-    if (entity->getType() == "body"){
+    if (entity->getType() == "body")
+    {
         entities[entity->getUniqueId()] = entity->getUniqueId();
-
         requestBodyAddition(entity);
-
     // if the entity is of type CONTEXT
-    }else if (entity->getType() == "context"){
+    }
+    else if (entity->getType() == "context")
+    {
         entities[entity->getUniqueId()] = entity->getUniqueId();
-
         requestContextAddition(entity);
 
     // if the entity is of type SWITCH
-    }else if (entity->getType() == "switch"){
+    }
+    else if (entity->getType() == "switch")
+    {
         entities[entity->getUniqueId()] = entity->getUniqueId();
 
         requestSwitchAddition(entity);
 
     // if the entity is of type MEDIA
-    }else if (entity->getType() == "media"){
+    }
+    else if (entity->getType() == "media")
+    {
         entities[entity->getUniqueId()] = entity->getUniqueId();
 
         requestMediaAddition(entity);
 
     // if the entity is of type PORT
-    }else if (entity->getType() == "port"){
+    }
+    else if (entity->getType() == "port")
+    {
         entities[entity->getUniqueId()] = entity->getUniqueId();
-
         requestPortAddition(entity);
 
     // if the entity is of type LINK
-    }else if (entity->getType() == "link"){
+    }else if (entity->getType() == "link")
+    {
         entities[entity->getUniqueId()] = entity->getUniqueId();
-
         requestLinkAddition(entity);
 
     // if the entity is of type BIND
-    }else if (entity->getType() == "bind"){
+    }
+    else if (entity->getType() == "bind")
+    {
         entities[entity->getUniqueId()] = entity->getUniqueId();
-
         requestBindAddition(entity);
 
     // if the entity is of type CAUSALCONNECTOR
-    }else if (entity->getType() == "causalConnector"){
+    }
+    else if (entity->getType() == "causalConnector")
+    {
         entities[entity->getUniqueId()] = entity->getUniqueId();
 
         requestCausalConnectorAddition(entity);
 
     // if the entity is of type simpleCondition
-    }else if (entity->getType() == "simpleCondition"){
+    }
+    else if (entity->getType() == "simpleCondition")
+    {
         entities[entity->getUniqueId()] = entity->getUniqueId();
 
         requestSimpleConditionAddition(entity);
 
     // if the entity is of type simpleAction
-    }else if (entity->getType() == "simpleAction"){
+    }
+    else if (entity->getType() == "simpleAction")
+    {
         entities[entity->getUniqueId()] = entity->getUniqueId();
 
         requestSimpleActionAddition(entity);
 
     // if the entity is of type importBase
-    }else if (entity->getType() == "importBase"){
+    }
+    else if (entity->getType() == "importBase")
+    {
         requestImportBaseAddition(entity);
 
     // if the entity is of type AREA
-    }else if (entity->getType() == "area"){
+    }
+    else if (entity->getType() == "area")
+    {
         entities[entity->getUniqueId()] = entity->getUniqueId();
-
         requestAreaAddition(entity);
-
     // if the entity is of type PROPERTY
-    }else if (entity->getType() == "property"){
+    }
+    else if (entity->getType() == "property")
+    {
         entities[entity->getUniqueId()] = entity->getUniqueId();
-
         requestPropertyAddition(entity);
     }
 }
 
 void QnstComposerPlugin::requestEntityRemotion(Entity* entity)
 {
-
-    // still missing connector, simpleCondition and simpleAction
-    if (entity->getType() == "body" ||
-        entity->getType() == "context" ||
-        entity->getType() == "media" ||
-        entity->getType() == "switch" ||
-        entity->getType() == "port" ||
-        entity->getType() == "link" ||
-        entity->getType() == "bind" ||
-        entity->getType() == "area" ||
-        entity->getType() == "property" ||
-        entity->getType() == "causalConnector"){
-
-        view->removeEntity(entities[entity->getUniqueId()]);
-    }
+  // still missing connector, simpleCondition and simpleAction
+  if (isEntityHandled(entity))
+  {
+    view->removeEntity(entities[entity->getUniqueId()]);
+  }
 }
 
 void QnstComposerPlugin::requestEntityChange(Entity* entity)
@@ -943,9 +963,9 @@ void QnstComposerPlugin::requestEntityAddition(const QString uid, const QString 
 
 void QnstComposerPlugin::requestEntityRemotion(const QString uid)
 {
-    if (entities.key(uid, "nil") != "nil"){
+    if (entities.key(uid, "nil") != "nil")
+    {
         emit removeEntity(getProject()->getEntityById(entities.key(uid)), false);
-
         entities.remove(entities.key(uid));
     }
 }
@@ -1625,6 +1645,139 @@ QString QnstComposerPlugin::getUidById(QString id, Entity* entity)
     }
 
     return uid;
+}
+
+void QnstComposerPlugin::cacheNCLIds()
+{
+  Entity *current;
+  QString coreUID, structuralID, nclID;
+
+  nclIDtoStructural.clear();
+  foreach(coreUID, entities.keys())
+  {
+    structuralID = entities.value(coreUID);
+    current = project->getEntityById(coreUID);
+    if(current != NULL)
+    {
+      nclID = current->getAttribute("id");
+      if(!nclID.isEmpty() && !nclID.isNull())
+      {
+        nclIDtoStructural.insert(nclID, structuralID);
+      }
+    }
+  }
+}
+
+bool QnstComposerPlugin::isEntityHandled(Entity *entity)
+{
+  QString type = entity->getType();
+
+  // \todo This could be a map or an array
+  if( type == "body" || type == "context" || type == "media" ||
+      type == "switch" || type == "port" || type == "link" || type == "bind" ||
+      type == "area" || type == "property" || type == "causalConnector")
+    return true;
+  return false;
+}
+
+void QnstComposerPlugin::syncNCLIdsWithStructuralIds()
+{
+  QMap <QString, QString> nclIDtoCoreID;
+  QStack <Entity*> stack;
+  Entity *currentEntity;
+  QString currentNCLId;
+
+  // I will keep all nclIDs -> coreIDs that I'm interested in nclIDtoCoreID map.
+  stack.push(project);
+  while(stack.size())
+  {
+    currentEntity = stack.front();
+    stack.pop_front();
+
+    currentNCLId = currentEntity->getAttribute("id");
+
+    if(isEntityHandled(currentEntity) &&
+       !currentNCLId.isEmpty() && !currentNCLId.isNull())
+    {
+      nclIDtoCoreID.insert(currentNCLId, currentEntity->getUniqueId());
+    }
+
+    QVector<Entity *> children = currentEntity->getChildren();
+    for(int i = 0; i < children.size(); i++)
+    {
+      stack.push_back(children.at(i));
+    }
+  }
+
+  qDebug() << "Entities before sync" << entities;
+  qDebug() << "nclIDtoCoreID" << nclIDtoCoreID;
+  qDebug() << "nclIDtoStructural" << nclIDtoStructural;
+
+  QStringList entitiesCoreUIDToRemove;
+  QString nclID, structuralID, coreID;
+  //for each old entity that are in the structural (not necessarily in the core)
+  foreach (nclID, nclIDtoStructural.keys())
+  {
+    structuralID = nclIDtoStructural.value(nclID);
+
+    // \todo compare parents!
+    if(nclIDtoCoreID.contains(nclID))
+    {
+      //remove the previous mention to coreID
+      entities.remove(entities.key(structuralID));
+      //gets the new coreId for currentStructuralId
+      coreID = nclIDtoCoreID.value(nclID);
+      //update the map with the new coreID
+      entities[coreID] = structuralID;
+
+      currentEntity = project->getEntityById(coreID);
+      if(currentEntity != NULL)
+        requestEntityChange(currentEntity);
+    }
+    else
+    {
+      // keep track of all entities that must be removed from structural
+      view->removeEntity(structuralID);
+      entities.remove(entities.key(structuralID));
+//      entitiesCoreUIDToRemove << structuralID;
+    }
+  }
+
+  // search for the entities that are in the core, but not in the structural
+  // view
+  foreach(nclID, nclIDtoCoreID.keys())
+  {
+    coreID = nclIDtoCoreID.value(nclID);
+    currentEntity = project->getEntityById(coreID);
+    if(!entities.contains(coreID) && currentEntity != NULL)
+    {
+      requestEntityAddition(currentEntity);
+    }
+  }
+
+  qDebug() << "Entities to be removed: " << entitiesCoreUIDToRemove;
+  //remove the entities that are not present anymore in the core
+//  for(int i = 0; i < entitiesCoreUIDToRemove.size(); i++)
+//  {
+//    requestEntityRemotion(entitiesCoreUIDToRemove.at(i));
+//    view->removeEntity(entitiesCoreUIDToRemove.at(i));
+//  }
+
+  qDebug() << "Entities after sync" << entities;
+}
+
+void QnstComposerPlugin::textualStartSync(QString, void*)
+{
+  qDebug() << "QnstComposerPlugin::textualStartSync";
+  cacheNCLIds();
+  isSyncingFromTextual = true;
+}
+
+void QnstComposerPlugin::textualFinishSync(QString, void*)
+{
+  qDebug() << "QnstComposerPlugin::textualFinishSync";
+  isSyncingFromTextual = false;
+  syncNCLIdsWithStructuralIds();
 }
 
 } } } // end namespace
