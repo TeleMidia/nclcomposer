@@ -290,6 +290,7 @@ void QnstComposerPlugin::requestEntityRemotion(Entity* entity)
   if (isEntityHandled(entity))
   {
     view->removeEntity(entities[entity->getUniqueId()]);
+    entities.remove(entityID);
   }
 }
 
