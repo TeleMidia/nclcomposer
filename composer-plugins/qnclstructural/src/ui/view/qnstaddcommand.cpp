@@ -62,6 +62,12 @@ void QnstAddCommand::copy(QnstGraphicsEntity* entity)
 
         break;
 
+    // if the entity type is NCL
+    case Qnst::NCL:
+        this->entity = new QnstGraphicsNCL();
+
+        break;
+
     // if the entity type is MEDIA
     case Qnst::Media:
         this->entity = new QnstGraphicsMedia();
@@ -197,6 +203,14 @@ void QnstAddCommand::redo()
                 e = new QnstGraphicsHTML();
 
                 ((QnstGraphicsHTML*) e)->setnstId(entity->getnstId());
+
+                break;
+
+            // if the entity type is NCL
+            case Qnst::NCL:
+                e = new QnstGraphicsNCL();
+
+                ((QnstGraphicsNCL*) e)->setnstId(entity->getnstId());
 
                 break;
 

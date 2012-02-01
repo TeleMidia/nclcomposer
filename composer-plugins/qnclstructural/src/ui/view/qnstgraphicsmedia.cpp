@@ -65,6 +65,9 @@ void QnstGraphicsMedia::setnstId(QString id)
     }else if (getnstType() == Qnst::Html){
         tip += "Html ("+name+")";
 
+    }else if (getnstType() == Qnst::NCL){
+        tip += "NCL ("+name+")";
+
     }else if (getnstType() == Qnst::Settings){
         tip += "Settings ("+name+")";
 

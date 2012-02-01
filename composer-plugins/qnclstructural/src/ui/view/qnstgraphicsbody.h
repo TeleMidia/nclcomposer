@@ -21,6 +21,7 @@
 #include "qnstgraphicsport.h"
 #include "qnstgraphicsaggregator.h"
 #include "qnstgraphicshtml.h"
+#include "qnstgraphicsncl.h"
 
 class QnstGraphicsBody : public QnstGraphicsComposition
 {

@@ -12,6 +12,8 @@
 #include "qnstgraphicsscript.h"
 #include "qnstgraphicsmedia.h"
 #include "qnstgraphicsport.h"
+#include "qnstgraphicshtml.h"
+#include "qnstgraphicsncl.h"
 
 class QnstGraphicsSwitch : public QnstGraphicsComposition
 {
@@ -23,6 +25,10 @@ public:
     ~QnstGraphicsSwitch();
 
 public slots:
+    void performHtml();
+
+    void performNCL();
+
     void performImage();
 
     void performAudio();

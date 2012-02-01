@@ -62,6 +62,12 @@ void QnstRemoveCommand::copy(QnstGraphicsEntity* entity)
 
         break;
 
+    // if the entity type is NCL
+    case Qnst::NCL:
+        this->entity = new QnstGraphicsNCL();
+
+        break;
+
     // if the entity type is MEDIA
     case Qnst::Media:
         this->entity = new QnstGraphicsMedia();
@@ -177,6 +183,12 @@ void QnstRemoveCommand::copy(QnstGraphicsEntity* entity, QnstGraphicsEntity* par
     // if the entity type is HTML
     case Qnst::Html:
         c = new QnstGraphicsHTML();
+
+        break;
+
+    // if the entity type is NCL
+    case Qnst::NCL:
+        c = new QnstGraphicsNCL();
 
         break;
 
@@ -317,6 +329,14 @@ void QnstRemoveCommand::undo()
             e = new QnstGraphicsHTML();
 
             ((QnstGraphicsHTML*) e)->setnstId(entity->getnstId());
+
+            break;
+
+        // if the entity type is NCL
+        case Qnst::NCL:
+            e = new QnstGraphicsNCL();
+
+            ((QnstGraphicsNCL*) e)->setnstId(entity->getnstId());
 
             break;
 
@@ -475,6 +495,14 @@ void QnstRemoveCommand::paste(QnstGraphicsEntity* entity, QnstGraphicsEntity* pa
         e = new QnstGraphicsHTML();
 
         ((QnstGraphicsHTML*) e)->setnstId(entity->getnstId());
+
+        break;
+
+    // if the entity type is NCL
+    case Qnst::NCL:
+        e = new QnstGraphicsNCL();
+
+        ((QnstGraphicsNCL*) e)->setnstId(entity->getnstId());
 
         break;
 

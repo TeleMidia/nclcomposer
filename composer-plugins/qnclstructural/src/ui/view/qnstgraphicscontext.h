@@ -13,6 +13,8 @@
 #include "qnstgraphicsmedia.h"
 #include "qnstgraphicsport.h"
 #include "qnstgraphicsaggregator.h"
+#include "qnstgraphicshtml.h"
+#include "qnstgraphicsncl.h"
 
 class QnstGraphicsContext : public QnstGraphicsComposition
 {
@@ -24,6 +26,10 @@ public:
     ~QnstGraphicsContext();
 
 public slots:
+    void performHtml();
+
+    void performNCL();
+
     void performImage();
 
     void performAudio();

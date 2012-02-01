@@ -13,6 +13,7 @@ public:
         Audio,
         Video,
         Html,
+        NCL,
         Text,
         Script,
         Settings,

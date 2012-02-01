@@ -37,6 +37,7 @@ void QnstGraphicsSwitch::createObjects()
     menu->actionSettings->setEnabled(true);
     menu->actionMedia->setEnabled(true);
     menu->actionHTML->setEnabled(true);
+    menu->actionNCL->setEnabled(true);
     menu->actionContext->setEnabled(true);
     menu->actionSwitch->setEnabled(true);
     menu->actionArea->setEnabled(true);
@@ -63,6 +64,8 @@ void QnstGraphicsSwitch::createConnections()
 
     connect(menu, SIGNAL(imageRequested()), SLOT(performImage()));
     connect(menu, SIGNAL(audioRequested()), SLOT(performAudio()));
+    connect(menu, SIGNAL(htmlRequested()), SLOT(performHtml()));
+    connect(menu, SIGNAL(nclRequested()), SLOT(performNCL()));
     connect(menu, SIGNAL(videoRequested()), SLOT(performVideo()));
     connect(menu, SIGNAL(textRequested()), SLOT(performText()));
     connect(menu, SIGNAL(scriptRequested()), SLOT(performScript()));
@@ -72,6 +75,46 @@ void QnstGraphicsSwitch::createConnections()
     connect(menu, SIGNAL(switchRequested()), SLOT(performSwitch()));
     connect(menu, SIGNAL(areaRequested()), SLOT(performArea()));
     connect(menu, SIGNAL(propertyRequested()), SLOT(performProperty()));
+}
+
+void QnstGraphicsSwitch::performHtml()
+{
+    QnstGraphicsHTML* entity = new QnstGraphicsHTML(this);
+    entity->setTop(getHeight()/2 - 48/2);
+    entity->setLeft(getWidth()/2 - 48/2);
+    entity->setWidth(48);
+    entity->setHeight(64);
+    entity->adjust();
+
+    if (dropsrc != ""){
+        entity->setSource(dropsrc);
+
+        dropsrc = "";
+    }
+
+    addnstGraphicsEntity(entity);
+
+    emit entityAdded(entity);
+}
+
+void QnstGraphicsSwitch::performNCL()
+{
+    QnstGraphicsNCL* entity = new QnstGraphicsNCL(this);
+    entity->setTop(getHeight()/2 - 48/2);
+    entity->setLeft(getWidth()/2 - 48/2);
+    entity->setWidth(48);
+    entity->setHeight(64);
+    entity->adjust();
+
+    if (dropsrc != ""){
+        entity->setSource(dropsrc);
+
+        dropsrc = "";
+    }
+
+    addnstGraphicsEntity(entity);
+
+    emit entityAdded(entity);
 }
 
 void QnstGraphicsSwitch::performImage()
@@ -307,8 +350,14 @@ void QnstGraphicsSwitch::dropEvent(QGraphicsSceneDragDropEvent *event)
 
             dropsrc = filename;
 
-//            performHtml();
+            performHtml();
+
+        }else if(suffix=="NCL"){
+            event->acceptProposedAction();
+
+            dropsrc = filename;
+
+            performNCL();
          }
     }
 }
-

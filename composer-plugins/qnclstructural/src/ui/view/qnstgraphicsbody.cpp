@@ -37,6 +37,7 @@ void QnstGraphicsBody::createObjects()
     menu->actionScript->setEnabled(true);
     menu->actionSettings->setEnabled(true);
     menu->actionHTML->setEnabled(true);
+    menu->actionNCL->setEnabled(true);
     menu->actionMedia->setEnabled(true);
     menu->actionContext->setEnabled(true);
     menu->actionSwitch->setEnabled(true);
@@ -71,6 +72,7 @@ void QnstGraphicsBody::createConnections()
     connect(menu, SIGNAL(scriptRequested()), SLOT(performScript()));
     connect(menu, SIGNAL(settingsRequested()), SLOT(performSettings()));
     connect(menu, SIGNAL(htmlRequested()), SLOT(performHtml()));
+    connect(menu, SIGNAL(nclRequested()), SLOT(performNCL()));
     connect(menu, SIGNAL(mediaRequested()), SLOT(performMedia()));
     connect(menu, SIGNAL(contextRequested()), SLOT(performContext()));
     connect(menu, SIGNAL(switchRequested()), SLOT(performSwitch()));
@@ -83,6 +85,26 @@ void QnstGraphicsBody::createConnections()
 void QnstGraphicsBody::performHtml()
 {
     QnstGraphicsHTML* entity = new QnstGraphicsHTML(this);
+    entity->setTop(getHeight()/2 - 48/2);
+    entity->setLeft(getWidth()/2 - 48/2);
+    entity->setWidth(48);
+    entity->setHeight(64);
+    entity->adjust();
+
+    if (dropsrc != ""){
+        entity->setSource(dropsrc);
+
+        dropsrc = "";
+    }
+
+    addnstGraphicsEntity(entity);
+
+    emit entityAdded(entity);
+}
+
+void QnstGraphicsBody::performNCL()
+{
+    QnstGraphicsNCL* entity = new QnstGraphicsNCL(this);
     entity->setTop(getHeight()/2 - 48/2);
     entity->setLeft(getWidth()/2 - 48/2);
     entity->setWidth(48);
@@ -378,6 +400,13 @@ void QnstGraphicsBody::dropEvent(QGraphicsSceneDragDropEvent *event)
             dropsrc = filename;
 
             performHtml();
+
+        }else if(suffix=="NCL"){
+            event->acceptProposedAction();
+
+            dropsrc = filename;
+
+            performNCL();
          }
     }
 }
