@@ -1284,7 +1284,7 @@ void QnstComposerPlugin::requestPropertyAddition(const QString uid, const QStrin
     if (entity != NULL){
         QMap<QString, QString> attributes;
 
-        attributes["id"] = properties["id"];
+        attributes["name"] = properties["id"];
 
         request = uid;
 
