@@ -1413,6 +1413,11 @@ void QnstView::changeContext(QnstGraphicsContext* entity, const QMap<QString, QS
 //    }
 }
 
+void QnstView::adjustContext(QnstGraphicsContext* entity)
+{
+
+}
+
 void QnstView::addSwitch(const QString uid, const QString parent, const QMap<QString, QString> properties, bool undo)
 {
     if (entities.contains(parent)){
@@ -1593,50 +1598,11 @@ void QnstView::changeMedia(QnstGraphicsMedia* entity, const QMap<QString, QStrin
 
 void QnstView::adjustMedia(QnstGraphicsMedia* entity)
 {
-    qDebug() << "=================" << entity->getRefer() << entity->getReferUID() << entity->getInstance();
-
-    // TODO: gradSame?
-
-    if (entity->getInstance() == "instSame"){
-        foreach (QnstGraphicsEntity* e, entity->getnstGraphicsEntities()){
-            removeEntity(e->getnstUid(), true);
-        }
-
-    }else if (entity->getInstance() == "new"){
-        if (refers.contains(entity->getnstUid())){
-
-            QnstGraphicsEntity* eg = entities[refers[entity->getnstUid()]];
-
-            if (eg != NULL){
-
-                // n^2 : bad!
-                foreach (QnstGraphicsEntity* e, entity->getnstGraphicsEntities()){
-                    foreach (QnstGraphicsEntity* eg, eg->getnstGraphicsEntities()){
-                        if (eg->getnstId() == e->getnstId()){
-                            removeEntity(e->getnstUid(), true);
-                        }
-                    }
-                }
-            }
-        }
-    }else{
-        foreach (QnstGraphicsEntity* e, entity->getnstGraphicsEntities()){
-            removeEntity(e->getnstUid(), true);
-        }
-    }
-
-    if (refers.contains(entity->getnstUid())){
-
-
-        foreach (QnstGraphicsEntity* e, entity->getnstGraphicsEntities()){
-            removeEntity(e->getnstUid(), true);
-        }
-
-        refers.remove(entity->getnstUid());
-    }
-
     if (entity->getRefer() != "" && entity->getReferUID() != "" && entity->getInstance() != ""){
         if (entities.contains(entity->getReferUID())){
+            foreach (QnstGraphicsEntity* e, entity->getnstGraphicsEntities()){
+                removeEntity(e->getnstUid(), true);
+            }
 
             QnstGraphicsEntity* refer = entities[entity->getReferUID()];
 
@@ -1692,8 +1658,6 @@ void QnstView::adjustMedia(QnstGraphicsMedia* entity)
                     }
                 }
             }
-
-            qDebug() << "=================" << entity->getnstGraphicsEntities().size();
         }
     }
 
@@ -1917,6 +1881,22 @@ void QnstView::addArea(const QString uid, const QString parent, const QMap<QStri
 
         entity->adjust();
 
+        foreach (QString key, refers.keys(entity->getnstGraphicsParent()->getnstUid())){
+            if (entities.contains(key)){
+                if (entities[key]->getnstType() == Qnst::Video ||
+                    entities[key]->getnstType() == Qnst::Image ||
+                    entities[key]->getnstType() == Qnst::Text ||
+                    entities[key]->getnstType() == Qnst::Audio ||
+                    entities[key]->getnstType() == Qnst::Html ||
+                    entities[key]->getnstType() == Qnst::Script ||
+                    entities[key]->getnstType() == Qnst::Settings ||
+                    entities[key]->getnstType() == Qnst::Media){
+
+                    adjustMedia((QnstGraphicsMedia*) entities[key]);
+                }
+            }
+        }
+
         if (!undo){
             QnstAddCommand* cmd = new QnstAddCommand(this, entity);
             history.push(cmd);
@@ -1978,6 +1958,22 @@ void QnstView::addProperty(const QString uid, const QString parent, const QMap<Q
         entities[parent]->addnstGraphicsEntity(entity); entities[uid] = entity; ++nproperty;
 
         entity->adjust();
+
+        foreach (QString key, refers.keys(entity->getnstGraphicsParent()->getnstUid())){
+            if (entities.contains(key)){
+                if (entities[key]->getnstType() == Qnst::Video ||
+                    entities[key]->getnstType() == Qnst::Image ||
+                    entities[key]->getnstType() == Qnst::Text ||
+                    entities[key]->getnstType() == Qnst::Audio ||
+                    entities[key]->getnstType() == Qnst::Html ||
+                    entities[key]->getnstType() == Qnst::Script ||
+                    entities[key]->getnstType() == Qnst::Settings ||
+                    entities[key]->getnstType() == Qnst::Media){
+
+                    adjustMedia((QnstGraphicsMedia*) entities[key]);
+                }
+            }
+        }
 
         if (!undo){
             QnstAddCommand* cmd = new QnstAddCommand(this, entity);
@@ -2596,23 +2592,24 @@ void QnstView::requestEntityRemotion(QnstGraphicsEntity* entity, bool undo)
     qDebug() << "[QNST]" << ":" << "Requesting entity remotion '"+entity->getnstUid()+"'";
 
     if (entity != NULL){
-        if (!undo){
-            QnstRemoveCommand* cmd = new QnstRemoveCommand(this, entity);
-            history.push(cmd);
-        }
-
-        foreach(QnstGraphicsEntity* e, entity->getnstGraphicsEntities()){
-            if (e->getnstType() != Qnst::Link &&
-                e->getnstType() != Qnst::Edge &&
-                e->getnstType() != Qnst::Condition &&
-                e->getnstType() != Qnst::Action &&
-                e->getnstType() != Qnst::Reference){
-
-                requestEntityRemotion(e, true);
-            }
-        }
 
         if (entity->getncgType() == Qncg::Node){
+            if (!undo){
+                QnstRemoveCommand* cmd = new QnstRemoveCommand(this, entity);
+                history.push(cmd);
+            }
+
+            foreach(QnstGraphicsEntity* e, entity->getnstGraphicsEntities()){
+                if (e->getnstType() != Qnst::Link &&
+                    e->getnstType() != Qnst::Edge &&
+                    e->getnstType() != Qnst::Condition &&
+                    e->getnstType() != Qnst::Action &&
+                    e->getnstType() != Qnst::Reference){
+
+                    requestEntityRemotion(e, true);
+                }
+            }
+
             foreach(QnstGraphicsEdge* edge, ((QnstGraphicsNode*) entity)->getnstGraphicsEdges()){
                 if (edge->getEntityA()->getncgType() == Qncg::Node){
                     ((QnstGraphicsNode*) edge->getEntityA())->removenstGraphicsEdge(edge);
@@ -2659,6 +2656,32 @@ void QnstView::requestEntityRemotion(QnstGraphicsEntity* entity, bool undo)
 
                 entities.remove(edge->getnstUid());
             }
+
+            QnstGraphicsEntity* parent = entity->getnstGraphicsParent();
+
+            if (parent != NULL){
+                parent->removenstGraphicsEntity(entity);
+
+            }else{
+                scene->removeRoot(entity);
+            }
+
+            if (selected == entity){
+                selected = NULL;
+            }
+
+            if (clipboard == entity){
+                clipboard = NULL;
+            }
+
+            if (entity->getnstType() == Qnst::Aggregator){
+                if (links.contains(entity->getnstUid())){
+                    link2conn.remove(links[entity->getnstUid()]->getnstId());
+                    links.remove(entity->getnstUid());
+                }
+            }
+
+            entities.remove(entity->getnstUid()); emit entityRemoved(entity->getnstUid()); delete entity;
 
         }else if (entity->getncgType() == Qncg::Interface){
             foreach(QnstGraphicsEdge* edge, ((QnstGraphicsInterface*) entity)->getnstGraphicsEdges()){
@@ -2709,33 +2732,97 @@ void QnstView::requestEntityRemotion(QnstGraphicsEntity* entity, bool undo)
 
                 entities.remove(edge->getnstUid());
             }
-        }
 
-        QnstGraphicsEntity* parent = entity->getnstGraphicsParent();
+            QnstGraphicsEntity* parent = entity->getnstGraphicsParent();
 
-        if (parent != NULL){
-            parent->removenstGraphicsEntity(entity);
+            if (parent != NULL){
+                parent->removenstGraphicsEntity(entity);
 
-        }else{
-            scene->removeRoot(entity);
-        }
+            }else{
+                scene->removeRoot(entity);
+            }
 
-        if (selected == entity){
-            selected = NULL;
-        }
+            if (selected == entity){
+                selected = NULL;
+            }
 
-        if (entity->getnstType() == Qnst::Aggregator){
-            if (links.contains(entity->getnstUid())){
-                link2conn.remove(links[entity->getnstUid()]->getnstId());
-                links.remove(entity->getnstUid());
+            if (clipboard == entity){
+                clipboard = NULL;
+            }
+
+            if (entity->getnstType() == Qnst::Aggregator){
+                if (links.contains(entity->getnstUid())){
+                    link2conn.remove(links[entity->getnstUid()]->getnstId());
+                    links.remove(entity->getnstUid());
+                }
+            }
+
+            entities.remove(entity->getnstUid()); emit entityRemoved(entity->getnstUid()); delete entity;
+        }else if (entity->getncgType() == Qncg::Edge){
+            QnstGraphicsEdge* edge = (QnstGraphicsEdge*) entity;
+
+            if (edge->getEntityA()->getncgType() == Qncg::Node){
+                ((QnstGraphicsNode*) edge->getEntityA())->removenstGraphicsEdge(edge);
+
+            }else if (edge->getEntityA()->getncgType() == Qncg::Interface){
+                ((QnstGraphicsInterface*) edge->getEntityA())->removenstGraphicsEdge(edge);
+            }
+
+            if (edge->getEntityB()->getncgType() == Qncg::Node){
+                ((QnstGraphicsNode*) edge->getEntityB())->removenstGraphicsEdge(edge);
+
+            }else if (edge->getEntityB()->getncgType() == Qncg::Interface){
+                ((QnstGraphicsInterface*) edge->getEntityB())->removenstGraphicsEdge(edge);
+            }
+
+            if (edge->getnstType() == Qnst::Condition || edge->getnstType() == Qnst::Action){
+
+                QnstBind* bb = binds[edge->getnstUid()];
+
+                if (bb != NULL){
+                    QnstLink* ll = (QnstLink*) bb->getnstParent();
+
+                    if (ll != NULL){
+                        if (ll->getConditions().contains(bb->getnstUid())){
+                            ll->removeCondition(bb);
+                        }
+
+                        if (ll->getActions().contains(bb->getnstUid())){
+                            ll->removeAction(bb);
+                        }
+
+                    }
+
+                    QnstGraphicsEntity* parent = entity->getnstGraphicsParent();
+                    parent->removenstGraphicsEntity(edge);
+
+                    emit entityRemoved(brelations.key(entity->getnstUid()));
+
+                    binds.remove(bb->getnstUid());
+                    brelations.remove(bb->getnstUid());
+
+                    entities.remove(edge->getnstUid());
+                }
+
+            }else if (edge->getnstType() == Qnst::Reference){
+                QnstGraphicsPort* p = (QnstGraphicsPort*) edge->getEntityA();
+                p->setComponent("");
+                p->setComponentUid("");
+
+                p->setInterface("");
+                p->setInterfaceUid("");
+
+                requestPortChange(p);
+            }
+
+            if (selected == entity){
+                selected = NULL;
+            }
+
+            if (clipboard == entity){
+                clipboard = NULL;
             }
         }
-
-        entities.remove(entity->getnstUid());
-
-        emit entityRemoved(entity->getnstUid());
-
-        delete entity;
     }
 }
 
@@ -3159,8 +3246,16 @@ void QnstView::requestAreaAddition(QnstGraphicsArea* entity, bool undo)
 
     foreach (QString key, refers.keys(entity->getnstGraphicsParent()->getnstUid())){
         if (entities.contains(key)){
-            if (entities[key]->getnstType() == Qnst::Video){
+            if (entities[key]->getnstType() == Qnst::Video ||
+                entities[key]->getnstType() == Qnst::Image ||
+                entities[key]->getnstType() == Qnst::Text ||
+                entities[key]->getnstType() == Qnst::Audio ||
+                entities[key]->getnstType() == Qnst::Html ||
+                entities[key]->getnstType() == Qnst::Script ||
+                entities[key]->getnstType() == Qnst::Settings ||
+                entities[key]->getnstType() == Qnst::Media){
 
+                adjustMedia((QnstGraphicsMedia*) entities[key]);
             }
         }
     }
@@ -3178,6 +3273,22 @@ void QnstView::requestPropertyAddition(QnstGraphicsProperty* entity)
     QMap<QString, QString> properties;
 
     properties["TYPE"] = "property";
+
+    foreach (QString key, refers.keys(entity->getnstGraphicsParent()->getnstUid())){
+        if (entities.contains(key)){
+            if (entities[key]->getnstType() == Qnst::Video ||
+                entities[key]->getnstType() == Qnst::Image ||
+                entities[key]->getnstType() == Qnst::Text ||
+                entities[key]->getnstType() == Qnst::Audio ||
+                entities[key]->getnstType() == Qnst::Html ||
+                entities[key]->getnstType() == Qnst::Script ||
+                entities[key]->getnstType() == Qnst::Settings ||
+                entities[key]->getnstType() == Qnst::Media){
+
+                adjustMedia((QnstGraphicsMedia*) entities[key]);
+            }
+        }
+    }
 
     emit entityAdded(entity->getnstUid(), entity->getnstGraphicsParent()->getnstUid(), properties);
 }

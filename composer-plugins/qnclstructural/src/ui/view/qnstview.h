@@ -157,6 +157,8 @@ private:
 
     void changeContext(QnstGraphicsContext* entity, const QMap<QString, QString> properties);
 
+    void adjustContext(QnstGraphicsContext* entity);
+
     void addSwitch(const QString uid, const QString parent, const QMap<QString, QString> properties, bool undo = false);
 
     void changeSwitch(QnstGraphicsSwitch* entity, const QMap<QString, QString> properties);

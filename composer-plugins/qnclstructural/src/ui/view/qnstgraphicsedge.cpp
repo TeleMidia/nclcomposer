@@ -6,7 +6,7 @@ QnstGraphicsEdge::QnstGraphicsEdge(QnstGraphicsEntity* parent)
     setncgType(Qncg::Edge);
     setnstType(Qnst::Edge);
 
-    setSelectable(false);
+    setSelectable(true);
     setResizable(false);
     setMoveable(false);
 

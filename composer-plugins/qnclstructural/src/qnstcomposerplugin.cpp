@@ -448,21 +448,23 @@ void QnstComposerPlugin::requestMediaAddition(Entity* entity)
         properties["src"] = entity->getAttribute("src");
 //    }
 
-    if (entity->getAttribute("refer") != ""){
+//    if (entity->getAttribute("refer") != ""){
         properties["refer"] = entity->getAttribute("refer");
-    }
+//    }
 
-    if (entity->getAttribute("instance") != ""){
+        properties["referUID"] = entities[getUidById(properties["refer"])];
+
+//    if (entity->getAttribute("instance") != ""){
         properties["instance"] = entity->getAttribute("instance");
-    }
+//    }
 
-    if (entity->getAttribute("type") != ""){
+//    if (entity->getAttribute("type") != ""){
         properties["type"] = entity->getAttribute("type");
-    }
+//    }
 
-    if (entity->getAttribute("descriptor") != ""){
+//    if (entity->getAttribute("descriptor") != ""){
         properties["descriptor"] = entity->getAttribute("descriptor");
-    }
+//    }
 
     view->addEntity(entity->getUniqueId(), entities[entity->getParentUniqueId()], properties);
 
@@ -483,30 +485,31 @@ void QnstComposerPlugin::requestMediaChange(Entity* entity)
 {
     QMap<QString, QString> properties;
 
-//    if (entity->getAttribute("id") != ""){
-        properties["id"] = entity->getAttribute("id");
-//    }
+    //    if (entity->getAttribute("id") != ""){
+            properties["id"] = entity->getAttribute("id");
+    //    }
 
-//    if (entity->getAttribute("src") != ""){
-        properties["src"] = entity->getAttribute("src");
-//    }
+    //    if (entity->getAttribute("src") != ""){
+            properties["src"] = entity->getAttribute("src");
+    //    }
 
-    if (entity->getAttribute("refer") != ""){
-        properties["refer"] = entity->getAttribute("refer");
-    }
+    //    if (entity->getAttribute("refer") != ""){
+            properties["refer"] = entity->getAttribute("refer");
+    //    }
 
-    if (entity->getAttribute("instance") != ""){
-        properties["instance"] = entity->getAttribute("instance");
-    }
+            properties["referUID"] = entities[getUidById(properties["refer"])];
 
-    if (entity->getAttribute("type") != ""){
-        properties["type"] = entity->getAttribute("type");
-    }
+    //    if (entity->getAttribute("instance") != ""){
+            properties["instance"] = entity->getAttribute("instance");
+    //    }
 
-    if (entity->getAttribute("descriptor") != ""){
-        properties["descriptor"] = entity->getAttribute("descriptor");
-    }
+    //    if (entity->getAttribute("type") != ""){
+            properties["type"] = entity->getAttribute("type");
+    //    }
 
+    //    if (entity->getAttribute("descriptor") != ""){
+            properties["descriptor"] = entity->getAttribute("descriptor");
+    //    }
     view->changeEntity(entities[entity->getUniqueId()], properties);
 
     QList<Entity*> list;
