@@ -65,8 +65,7 @@ NCLTextualViewPlugin::~NCLTextualViewPlugin()
 
 void NCLTextualViewPlugin::init()
 {
-  QString data = project
-      ->getPluginData("br.puc-rio.telemidia.NCLTextualView");
+  QString data = project->getPluginData("br.puc-rio.telemidia.NCLTextualView");
 
   QString startEntitiesSep = "$START_ENTITIES_LINES$";
   QString endEntitiesSep = "$END_ENTITIES_LINES$";
@@ -194,8 +193,8 @@ void NCLTextualViewPlugin::nonIncrementalUpdateFromModel()
 
 void NCLTextualViewPlugin::onEntityAdded(QString pluginID, Entity *entity)
 {
-  //Return if this is my call to onEntityAdded
-  // qDebug() << "isSyncing=" << isSyncing;
+  // Return if this is my call to onEntityAdded
+  // qDebug() << " isSyncing= " << isSyncing;
   if(pluginID == getPluginInstanceID() && !isSyncing)
     return;
 
@@ -263,7 +262,7 @@ void NCLTextualViewPlugin::onEntityAdded(QString pluginID, Entity *entity)
   previousStarted = endEntityOffset[entity->getUniqueId()];
   // qDebug() << "*** Second pass ***";
   updateEntitiesOffset(previousStarted+1, lineIndent/8);
-  //    printEntitiesOffset();
+  // printEntitiesOffset();
 
   window->getTextEditor()->SendScintilla(QsciScintilla::SCI_SETFOCUS, true);
   /*
@@ -279,7 +278,7 @@ void NCLTextualViewPlugin::onEntityAdded(QString pluginID, Entity *entity)
 
 void NCLTextualViewPlugin::errorMessage(QString error)
 {
-  //qDebug() << "NCLTextualViewPlugin::onEntityAddError(" << error << ")";
+  //  qDebug() << "NCLTextualViewPlugin::onEntityAddError(" << error << ")";
 }
 
 void NCLTextualViewPlugin::onEntityChanged(QString pluginID, Entity *entity)
@@ -437,11 +436,11 @@ void NCLTextualViewPlugin::onEntityRemoved(QString pluginID, QString entityID)
     endEntityOffset.remove(key);
   }
 
-  /*foreach(key, startEntityOffset.keys())
-    {
+  /* foreach(key, startEntityOffset.keys())
+     {
         qDebug() << " startOffset=" << startEntityOffset[key]
              << " endOffset=" << endEntityOffset[key];
-    }*/
+     } */
 }
 
 bool NCLTextualViewPlugin::saveSubsession()
@@ -485,10 +484,13 @@ void NCLTextualViewPlugin::changeSelectedEntity(QString pluginID, void *param)
     //                                  QsciScintilla::SCI_LINEFROMPOSITION,
     //                                  entityOffset);
 
-    nclTextEditor->SendScintilla(QsciScintilla::SCI_GOTOPOS,
-                                 entityOffset);
-    nclTextEditor->SendScintilla(QsciScintilla::SCI_SETFOCUS,
-                                 true);
+    if(entityOffset < nclTextEditor->text().size())
+    {
+      nclTextEditor->SendScintilla(QsciScintilla::SCI_GOTOPOS,
+                                   entityOffset);
+      nclTextEditor->SendScintilla(QsciScintilla::SCI_SETFOCUS,
+                                   true);
+    }
   }
   else
   {
@@ -515,6 +517,8 @@ void NCLTextualViewPlugin::updateCoreModel()
 
   isSyncing = true; //set our current state as syncing
 
+  sendBroadcastMessage("textualStartSync", NULL);
+
   //double-buffering
   tmpNclTextEditor = nclTextEditor;
   nclTextEditor = new NCLTextEditor(0);
@@ -527,6 +531,7 @@ void NCLTextualViewPlugin::updateCoreModel()
     incrementalUpdateCoreModel();
 
   emit syncFinished();
+  sendBroadcastMessage("textualFinishSync", NULL);
 
   syncMutex.unlock();
 }

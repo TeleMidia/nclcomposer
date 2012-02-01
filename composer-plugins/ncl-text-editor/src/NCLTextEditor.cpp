@@ -36,8 +36,8 @@ NCLTextEditor::NCLTextEditor(QWidget *parent) :
 
 NCLTextEditor::~NCLTextEditor()
 {
-  //    if(nclexer != NULL) delete nclexer;
-  //    if(apis != NULL) delete apis;
+//    if(nclexer != NULL) delete nclexer;
+//    if(apis != NULL) delete apis;
 }
 
 void NCLTextEditor::initParameters()
@@ -46,8 +46,7 @@ void NCLTextEditor::initParameters()
 
   setAutoIndent(true);
   setFolding(QsciScintilla::CircledTreeFoldStyle);
-  setFoldMarginColors(PREF_FOLD_MARGIN_FORE_COLOR,
-                      PREF_FOLD_MARGIN_BACK_COLOR);
+  setFoldMarginColors(PREF_FOLD_MARGIN_FORE_COLOR, PREF_FOLD_MARGIN_BACK_COLOR);
 
   setMarginLineNumbers(1, true);
   setMarginWidth(1, 25);
@@ -74,9 +73,9 @@ void NCLTextEditor::initParameters()
   /*MyLexer *mylexer = new MyLexer(this);
 
     QRegExp attrValueRegex ("\".*\"");
-    QsciStyle attrValueStyle (4, "ATTRIBUTE_VALUE", QColor(0x0, 0x0, 0xFF),
-                              mylexer->defaultPaper(1),
-                              mylexer->defaultFont(1));
+    QsciStyle attrValueStyle ( 4, "ATTRIBUTE_VALUE", QColor(0x0, 0x0, 0xFF),
+                               mylexer->defaultPaper(1),
+                               mylexer->defaultFont(1));
     mylexer->addTextPartition(4, attrValueRegex, attrValueStyle);
 
     QRegExp startTagRegex ("<.[^><.]+>");
@@ -241,8 +240,9 @@ void NCLTextEditor::keyPressEvent(QKeyEvent *event)
   }
 
   //check zoomin event.
-  if((event->modifiers() & Qt::ControlModifier) &&
-     (event->key() == Qt::Key_Plus))
+  //if((event->modifiers() & Qt::ControlModifier) &&
+  //   (event->key() == Qt::Key_Plus))
+  if(event->key() == Qt::Key_ZoomIn)
   {
     event->accept();
     Increasefont();
@@ -250,8 +250,10 @@ void NCLTextEditor::keyPressEvent(QKeyEvent *event)
   }
 
   //check zoomout event.
-  if((event->modifiers() & Qt::ControlModifier) &&
-     (event->key() == Qt::Key_Minus))
+
+  //if((event->modifiers() & Qt::ControlModifier) &&
+  //   (event->key() == Qt::Key_Minus))
+  if(event->key() == Qt::Key_ZoomOut)
   {
     event->accept();
     Decreasefont();
