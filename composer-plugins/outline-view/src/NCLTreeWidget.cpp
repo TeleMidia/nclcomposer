@@ -304,29 +304,21 @@ void NCLTreeWidget::updateItem(QTreeWidgetItem *item, QString tagname,
     {
       QString type = attrs.value("type");
       if(type.startsWith("audio"))
-      {
         icon = QIcon(":/icon/audio");
-      }
       else if(type.startsWith("image"))
-      {
         icon = QIcon(":/icon/image");
-      }
       else if(type.startsWith("video"))
-      {
         icon = QIcon(":/icon/video");
-      }
       else if(type.startsWith("text/html"))
-      {
         icon = QIcon(":/icon/html");
-      }
       else if(type.startsWith("text"))
-      {
         icon = QIcon(":/icon/text");
-      }
-      else
-      {
-        icon = QIcon (":/icon/media");
-      }
+      else if(type.startsWith("application/x-ginga-NCLua"))
+        icon = QIcon(":/icon/script");
+      else if(type.startsWith("application/x-ncl-settings") ||
+              type.startsWith("application/x-ncl-settings"))
+        icon = QIcon(":/icon/settings");
+      else icon = QIcon (":/icon/media");
     }
     else
       icon = QIcon (":/icon/media");
