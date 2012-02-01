@@ -191,16 +191,20 @@ void QnstComposerPlugin::changeSelectedEntity(QString pluginID, void* param)
 
 void QnstComposerPlugin::requestEntityAddition(Entity* entity)
 {
+    qDebug() << "QnstComposerPlugin::requestEntityAddition" << entity->getType();
+
     // if the entity is of type BODY
     if (entity->getType() == "body")
     {
         entities[entity->getUniqueId()] = entity->getUniqueId();
+
         requestBodyAddition(entity);
     // if the entity is of type CONTEXT
     }
     else if (entity->getType() == "context")
     {
         entities[entity->getUniqueId()] = entity->getUniqueId();
+
         requestContextAddition(entity);
 
     // if the entity is of type SWITCH
@@ -392,7 +396,10 @@ void QnstComposerPlugin::requestBodyChange(Entity* entity)
         properties["id"] = entity->getAttribute("id");
     }
 
-    view->changeEntity(entities[entity->getUniqueId()], properties);
+    if(entities.contains(entity->getUniqueId()))
+      view->changeEntity(entities[entity->getUniqueId()], properties);
+    else
+      qWarning() << "QnstPlugin:: You are trying to EDIT an entity that does not exists.";
 }
 
 void QnstComposerPlugin::requestContextAddition(Entity* entity)
@@ -409,13 +416,17 @@ void QnstComposerPlugin::requestContextAddition(Entity* entity)
         properties["refer"] = entity->getAttribute("refer");
     }
 
-    view->addEntity(entity->getUniqueId(), entities[entity->getParentUniqueId()], properties);
+    if(entities.contains(entity->getParentUniqueId()))
+      view->addEntity( entity->getUniqueId(),
+                       entities[entity->getParentUniqueId()],
+                       properties);
+    else
+      qWarning() << "QnstPlugin:: You are trying to insert an entity as a child of a entity that does not exists.";
 }
 
 void QnstComposerPlugin::requestContextChange(Entity* entity)
 {
     QMap<QString, QString> properties;
-
     if (entity->getAttribute("id") != ""){
         properties["id"] = entity->getAttribute("id");
     }
@@ -424,7 +435,10 @@ void QnstComposerPlugin::requestContextChange(Entity* entity)
         properties["refer"] = entity->getAttribute("refer");
     }
 
-    view->changeEntity(entities[entity->getUniqueId()], properties);
+    if(entities.contains(entity->getUniqueId()))
+      view->changeEntity(entities[entity->getUniqueId()], properties);
+    else
+      qWarning() << "QnstPlugin:: You are trying to EDIT an entity that does not exists.";
 }
 
 void QnstComposerPlugin::requestSwitchAddition(Entity* entity)
@@ -441,7 +455,12 @@ void QnstComposerPlugin::requestSwitchAddition(Entity* entity)
         properties["refer"] = entity->getAttribute("refer");
     }
 
-    view->addEntity(entity->getUniqueId(), entities[entity->getParentUniqueId()], properties);
+    if(entities.contains(entity->getParentUniqueId()))
+      view->addEntity(entity->getUniqueId(),
+                      entities[entity->getParentUniqueId()],
+                      properties);
+    else
+      qWarning() << "QnstPlugin:: You are trying to insert an entity as a child of an entity that does not exists.";
 }
 
 void QnstComposerPlugin::requestSwitchChange(Entity* entity)
@@ -456,204 +475,222 @@ void QnstComposerPlugin::requestSwitchChange(Entity* entity)
         properties["refer"] = entity->getAttribute("refer");
     }
 
-    view->changeEntity(entities[entity->getUniqueId()], properties);
+    if(entities.contains(entity->getUniqueId()))
+    {
+      view->changeEntity(entities[entity->getUniqueId()], properties);
+    }
+    else
+      qWarning() << "QnstPlugin:: You are trying to EDIT an entity that does not exists.";
 }
 
 void QnstComposerPlugin::requestMediaAddition(Entity* entity)
 {
-    QMap<QString, QString> properties;
+  QMap<QString, QString> properties;
+  properties["TYPE"] = "media";
+  properties["id"] = entity->getAttribute("id");
+  properties["src"] = entity->getAttribute("src");
+  properties["refer"] = entity->getAttribute("refer");
+  properties["instance"] = entity->getAttribute("instance");
+  properties["type"] = entity->getAttribute("type");
+  properties["descriptor"] = entity->getAttribute("descriptor");
 
-    properties["TYPE"] = "media";
-
-//    if (entity->getAttribute("id") != ""){
-        properties["id"] = entity->getAttribute("id");
-//    }
-
-//    if (entity->getAttribute("src") != ""){
-        properties["src"] = entity->getAttribute("src");
-//    }
-
-//    if (entity->getAttribute("refer") != ""){
-        properties["refer"] = entity->getAttribute("refer");
-//    }
-
-        properties["referUID"] = entities[getUidById(properties["refer"])];
-
-//    if (entity->getAttribute("instance") != ""){
-        properties["instance"] = entity->getAttribute("instance");
-//    }
-
-//    if (entity->getAttribute("type") != ""){
-        properties["type"] = entity->getAttribute("type");
-//    }
-
-//    if (entity->getAttribute("descriptor") != ""){
-        properties["descriptor"] = entity->getAttribute("descriptor");
-//    }
-
-    view->addEntity(entity->getUniqueId(), entities[entity->getParentUniqueId()], properties);
+  if (entity->getAttribute("refer") != "")
+  {
+    QString referUID = getUidById(properties["refer"]);
+    if(entities.contains(referUID))
+      properties["referUID"] = entities[referUID];
+  }
+  else
+  {
+    properties["referUID"] = "";
+  }
+  if(entities.contains(entity->getParentUniqueId()))
+  {
+    view->addEntity(entity->getUniqueId(),
+                    entities[entity->getParentUniqueId()],
+                    properties);
 
     QList<Entity*> list;
 
     list = getProject()->getEntitiesbyType("port");
-
-    foreach(Entity* e, list){
-        if (e->getAttribute("component") != ""){
-            if (e->getAttribute("component") == properties["id"]){
-                requestPortChange(e);
-            }
-        }
+    foreach(Entity* e, list)
+    {
+      if (e->getAttribute("component") != "" &&
+          e->getAttribute("component") == properties["id"])
+      {
+        requestPortChange(e);
+      }
     }
+  }
 }
 
 void QnstComposerPlugin::requestMediaChange(Entity* entity)
 {
-    QMap<QString, QString> properties;
+  QMap<QString, QString> properties;
 
-    //    if (entity->getAttribute("id") != ""){
-            properties["id"] = entity->getAttribute("id");
-    //    }
+  properties["id"] = entity->getAttribute("id");
+  properties["src"] = entity->getAttribute("src");
+  properties["refer"] = entity->getAttribute("refer");
+  properties["instance"] = entity->getAttribute("instance");
+  properties["type"] = entity->getAttribute("type");
+  properties["descriptor"] = entity->getAttribute("descriptor");
 
-    //    if (entity->getAttribute("src") != ""){
-            properties["src"] = entity->getAttribute("src");
-    //    }
+  if(properties["refer"] != "")
+  {
+    QString referUID = getUidById(properties["refer"]);
+    if(entities.contains(referUID))
+      properties["referUID"] = entities[referUID];
 
-    //    if (entity->getAttribute("refer") != ""){
-            properties["refer"] = entity->getAttribute("refer");
-    //    }
+    if(entities.contains(entity->getUniqueId()))
+      view->changeEntity( entities[entity->getUniqueId()],
+                          properties);
+  }
+  else
+  {
+    properties["referUID"] = "";
+  }
 
-            properties["referUID"] = entities[getUidById(properties["refer"])];
+  QList<Entity*> list;
+  list = getProject()->getEntitiesbyType("port");
 
-    //    if (entity->getAttribute("instance") != ""){
-            properties["instance"] = entity->getAttribute("instance");
-    //    }
-
-    //    if (entity->getAttribute("type") != ""){
-            properties["type"] = entity->getAttribute("type");
-    //    }
-
-    //    if (entity->getAttribute("descriptor") != ""){
-            properties["descriptor"] = entity->getAttribute("descriptor");
-    //    }
-    view->changeEntity(entities[entity->getUniqueId()], properties);
-
-    QList<Entity*> list;
-
-    list = getProject()->getEntitiesbyType("port");
-
-    foreach(Entity* e, list){
-        if (e->getAttribute("component") != ""){
-            if (e->getAttribute("component") == properties["id"]){
-                requestPortChange(e);
-            }
-        }
-    }
+  foreach(Entity* e, list){
+      if (e->getAttribute("component") != ""){
+          if (e->getAttribute("component") == properties["id"]){
+              requestPortChange(e);
+          }
+      }
+  }
 }
 
 void QnstComposerPlugin::requestPortAddition(Entity* entity)
-{
-    QMap<QString, QString> properties;
+{ 
+  QMap<QString, QString> properties;
+  properties["TYPE"] = "port";
+  properties["id"] = entity->getAttribute("id");
 
-    properties["TYPE"] = "port";
+  properties["component"] = entity->getAttribute("component");
+  if (entity->getAttribute("component") != "")
+  {
+    QString componentUID = getUidById(properties["component"]);
+    if(entities.contains(componentUID))
+      properties["componentUid"] = entities[componentUID];
+  }
 
-    properties["id"] = entity->getAttribute("id");
+  properties["interface"] = entity->getAttribute("interface");
+  if (entity->getAttribute("interface") != "")
+  {
+      QString interfaceUID = getUidById(properties["interface"]);
+      if(entities.contains(interfaceUID))
+        properties["interfaceUid"] = entities[interfaceUID];
+  }
 
-    properties["component"] = entity->getAttribute("component");
-
-    if (entity->getAttribute("component") != ""){
-        properties["componentUid"] = entities[getUidById(properties["component"])];
-    }
-
-    properties["interface"] = entity->getAttribute("interface");
-
-    if (entity->getAttribute("interface") != ""){
-        properties["interfaceUid"] = entities[getUidById(properties["interface"])];
-    }
-
-    view->addEntity(entity->getUniqueId(), entities[entity->getParentUniqueId()], properties);
+  QString parentUID = entity->getParentUniqueId();
+  if(entities.contains(parentUID))
+    view->addEntity(entity->getUniqueId(), entities[parentUID], properties);
+  else
+     qWarning() << "QnstPlugin:: You are trying to add a PORT inside an entity that does not exists.";
 }
 
 void QnstComposerPlugin::requestPortChange(Entity* entity)
 {
-    QMap<QString, QString> properties;
+  QMap<QString, QString> properties;
+  properties["id"] = entity->getAttribute("id");
+  properties["component"] = entity->getAttribute("component");
+  if (entity->getAttribute("component") != "")
+  {
+    QString componentUID = getUidById(properties["component"]);
+    if(entities.contains(componentUID))
+      properties["componentUid"] = entities[componentUID];
+  }
 
-    properties["id"] = entity->getAttribute("id");
+  properties["interface"] = entity->getAttribute("interface");
+  if (entity->getAttribute("interface") != "")
+  {
+    QString interfaceUID = getUidById(properties["interface"]);
+    if(entities.contains(interfaceUID))
+      properties["interfaceUid"] = entities[interfaceUID];
+  }
 
-    properties["component"] = entity->getAttribute("component");
-
-    if (entity->getAttribute("component") != ""){
-        properties["componentUid"] = entities[getUidById(properties["component"])];
-    }
-
-    properties["interface"] = entity->getAttribute("interface");
-
-    if (entity->getAttribute("interface") != ""){
-        properties["interfaceUid"] = entities[getUidById(properties["interface"])];
-    }
-
+  if(entities.contains(entity->getUniqueId()))
     view->changeEntity(entities[entity->getUniqueId()], properties);
+  else
+    qWarning() << "QnstPlugin:: You are trying to change a PORT that does not exists.";
 }
 
 void QnstComposerPlugin::requestAreaAddition(Entity* entity)
 {
-    QMap<QString, QString> properties;
+  QMap<QString, QString> properties;
+  properties["TYPE"] = "area";
+  properties["id"] = entity->getAttribute("id");
 
-    properties["TYPE"] = "area";
-
-    properties["id"] = entity->getAttribute("id");
-
-    view->addEntity(entity->getUniqueId(), entities[entity->getParentUniqueId()], properties);
+  QString parentUID = entity->getParentUniqueId();
+  if(entities.contains(parentUID))
+    view->addEntity(entity->getUniqueId(), entities[parentUID], properties);
+  else
+    qWarning() << "QnstPlugin:: You are trying to add an AREA as child of an entity that does not exists.";
 }
 
 void QnstComposerPlugin::requestAreaChange(Entity* entity)
 {
-    QMap<QString, QString> properties;
+  QMap<QString, QString> properties;
+  properties["TYPE"] = "area";
+  properties["id"] = entity->getAttribute("id");
 
-    properties["TYPE"] = "area";
-
-    properties["id"] = entity->getAttribute("id");
-
+  if(entities.contains(entity->getUniqueId()))
     view->changeEntity(entities[entity->getUniqueId()], properties);
+  else
+    qWarning() << "QnstPlugin:: You are trying to change an AREA that does not exists.";
 }
 
 void QnstComposerPlugin::requestPropertyAddition(Entity* entity)
 {
-    QMap<QString, QString> properties;
+  QMap<QString, QString> properties;
+  properties["TYPE"] = "property";
+  properties["id"] = entity->getAttribute("name");
 
-    properties["TYPE"] = "property";
+  QString parentUID = entity->getParentUniqueId();
+  if(entities.contains(parentUID))
+    view->addEntity(entity->getUniqueId(),
+                    entities[entity->getParentUniqueId()],
+                    properties);
+  else
+    qWarning() << "QnstPlugin:: You are trying to add a PROPERTY as child of an entity that does not exists.";
 
-    properties["id"] = entity->getAttribute("name");
-
-    view->addEntity(entity->getUniqueId(), entities[entity->getParentUniqueId()], properties);
 }
 
 void QnstComposerPlugin::requestPropertyChange(Entity* entity)
 {
-    QMap<QString, QString> properties;
+  QMap<QString, QString> properties;
+  properties["TYPE"] = "property";
+  properties["id"] = entity->getAttribute("name");
 
-    properties["TYPE"] = "property";
-
-    properties["id"] = entity->getAttribute("name");
-
-   view->changeEntity(entities[entity->getUniqueId()], properties);
+  if(entities.contains(entity->getUniqueId()))
+    view->changeEntity(entities[entity->getUniqueId()], properties);
+  else
+    qWarning() << "QnstPlugin:: You are trying to change a PROPERTY that does not exists.";
 }
 
 void QnstComposerPlugin::requestLinkAddition(Entity* entity)
 {
-    QMap<QString, QString> properties;
+  QMap<QString, QString> properties;
+  properties["TYPE"] = "link";
 
-    properties["TYPE"] = "link";
+  if (entity->getAttribute("id") != ""){
+    properties["id"] = entity->getAttribute("id");
+  }
 
-    if (entity->getAttribute("id") != ""){
-        properties["id"] = entity->getAttribute("id");
-    }
+  if (entity->getAttribute("xconnector") != "")
+  {
+    properties["xconnector"] = entity->getAttribute("xconnector");
 
-    if (entity->getAttribute("xconnector") != ""){
-        properties["xconnector"] = entity->getAttribute("xconnector");
-        properties["xconnectorUID"] = entities[getUidById(properties["xconnector"])];
-    }
+    QString xconnectorUID = getUidById(properties["xconnector"]);
+    if(entities.contains(xconnectorUID))
+      properties["xconnectorUID"] = entities[xconnectorUID];
+    else
+      properties["xconnectorUID"] = "";
+  }
 
-    view->addEntity(entity->getUniqueId(), entities[entity->getParentUniqueId()], properties);
+  view->addEntity(entity->getUniqueId(), entities[entity->getParentUniqueId()], properties);
 }
 
 void QnstComposerPlugin::requestLinkChange(Entity* entity)
@@ -1662,32 +1699,75 @@ void QnstComposerPlugin::cacheNCLIds()
   {
     structuralID = entities.value(coreUID);
     current = project->getEntityById(coreUID);
-    if(current != NULL)
+    nclID = getNCLIdFromEntity(current);
+    if(!nclID.isEmpty() && !nclID.isNull())
     {
-      nclID = current->getAttribute("id");
-      if(!nclID.isEmpty() && !nclID.isNull())
-      {
-        nclIDtoStructural.insert(nclID, structuralID);
-      }
+      nclIDtoStructural.insert(nclID, structuralID);
     }
   }
 }
 
+QString QnstComposerPlugin::insertNCLIDIfEmpty(Entity *entity)
+{
+  const QString defaultID = "idBody000";
+  QString id = entity->getAttribute("id");
+  if(id.isEmpty() || id.isNull())
+  {
+    QMap <QString, QString> attrsTmp;
+    QMap <QString, QString>::iterator begin, end, it;
+    entity->getAttributeIterator(begin, end);
+    for (it = begin; it != end; ++it)
+    {
+      attrsTmp.insert(it.key(), it.value());
+    }
+    attrsTmp.insert("id", defaultID); // \fixme this id should be unique
+    emit setAttributes(entity, attrsTmp, false);
+    return defaultID;
+  }
+}
+
+QString QnstComposerPlugin::getNCLIdFromEntity(Entity *entity)
+{
+  QString nclID;
+  if(entity != NULL)
+  {
+    if(entity->getType() == "body") // forces an ID if it not exists for body!
+      nclID = insertNCLIDIfEmpty(entity);
+
+    if(entity->hasAttribute("id"))
+      nclID = entity->getAttribute("id");
+    else if(entity->hasAttribute("name"))
+      nclID = entity->getAttribute("name");
+
+    // \fixme this should be improved to handle all the perspective of the
+    //    element.
+    if(entity->getParent() != NULL && entity->getParent()->hasAttribute("id"))
+    {
+      nclID = entity->getParent()->getAttribute("id") + "#" + nclID;
+    }
+  }
+  return nclID;
+}
+
 bool QnstComposerPlugin::isEntityHandled(Entity *entity)
 {
-  QString type = entity->getType();
+  if(entity != NULL)
+  {
+    QString type = entity->getType();
 
-  // \todo This could be a map or an array
-  if( type == "body" || type == "context" || type == "media" ||
-      type == "switch" || type == "port" || type == "link" || type == "bind" ||
-      type == "area" || type == "property" || type == "causalConnector")
-    return true;
+    // \todo This could be a map or an array
+    if(type == "body" || type == "context" || type == "media" ||
+       type == "switch" || type == "port" || type == "link" || type == "bind" ||
+       type == "area" || type == "property" || type == "causalConnector")
+      return true;
+  }
   return false;
 }
 
 void QnstComposerPlugin::syncNCLIdsWithStructuralIds()
 {
   QMap <QString, QString> nclIDtoCoreID;
+  QList <QString> nclCoreID_Oredered;
   QStack <Entity*> stack;
   Entity *currentEntity;
   QString currentNCLId;
@@ -1699,12 +1779,13 @@ void QnstComposerPlugin::syncNCLIdsWithStructuralIds()
     currentEntity = stack.front();
     stack.pop_front();
 
-    currentNCLId = currentEntity->getAttribute("id");
+    currentNCLId = getNCLIdFromEntity(currentEntity);
 
     if(isEntityHandled(currentEntity) &&
        !currentNCLId.isEmpty() && !currentNCLId.isNull())
     {
       nclIDtoCoreID.insert(currentNCLId, currentEntity->getUniqueId());
+      nclCoreID_Oredered.push_back(currentEntity->getUniqueId());
     }
 
     QVector<Entity *> children = currentEntity->getChildren();
@@ -1718,7 +1799,6 @@ void QnstComposerPlugin::syncNCLIdsWithStructuralIds()
   qDebug() << "nclIDtoCoreID" << nclIDtoCoreID;
   qDebug() << "nclIDtoStructural" << nclIDtoStructural;
 
-  QStringList entitiesCoreUIDToRemove;
   QString nclID, structuralID, coreID;
   //for each old entity that are in the structural (not necessarily in the core)
   foreach (nclID, nclIDtoStructural.keys())
@@ -1728,31 +1808,32 @@ void QnstComposerPlugin::syncNCLIdsWithStructuralIds()
     // \todo compare parents!
     if(nclIDtoCoreID.contains(nclID))
     {
-      //remove the previous mention to coreID
+      // remove the previous mention to coreID
       entities.remove(entities.key(structuralID));
-      //gets the new coreId for currentStructuralId
+      // gets the new coreId for currentStructuralId
       coreID = nclIDtoCoreID.value(nclID);
-      //update the map with the new coreID
+      // update the map with the new coreID
       entities[coreID] = structuralID;
 
       currentEntity = project->getEntityById(coreID);
       if(currentEntity != NULL)
+      {
         requestEntityChange(currentEntity);
+      }
     }
     else
     {
       // keep track of all entities that must be removed from structural
       view->removeEntity(structuralID);
       entities.remove(entities.key(structuralID));
-//      entitiesCoreUIDToRemove << structuralID;
     }
   }
 
   // search for the entities that are in the core, but not in the structural
   // view
-  foreach(nclID, nclIDtoCoreID.keys())
+  for(int i = 0; i < nclCoreID_Oredered.size(); i++)
   {
-    coreID = nclIDtoCoreID.value(nclID);
+    coreID = nclCoreID_Oredered.at(i);
     currentEntity = project->getEntityById(coreID);
     if(!entities.contains(coreID) && currentEntity != NULL)
     {
@@ -1760,13 +1841,11 @@ void QnstComposerPlugin::syncNCLIdsWithStructuralIds()
     }
   }
 
-  qDebug() << "Entities to be removed: " << entitiesCoreUIDToRemove;
-  //remove the entities that are not present anymore in the core
-//  for(int i = 0; i < entitiesCoreUIDToRemove.size(); i++)
-//  {
-//    requestEntityRemotion(entitiesCoreUIDToRemove.at(i));
-//    view->removeEntity(entitiesCoreUIDToRemove.at(i));
-//  }
+  //Remove all binds and insert them again
+  foreach(currentEntity, project->getEntitiesbyType("bind"))
+  {
+    requestEntityAddition(currentEntity);
+  }
 
   qDebug() << "Entities after sync" << entities;
 }
