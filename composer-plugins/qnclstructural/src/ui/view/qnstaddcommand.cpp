@@ -2,7 +2,11 @@
 
 QnstAddCommand::QnstAddCommand(QnstView* view, QnstGraphicsEntity* entity)
 {
-    this->view = view; parent = ""; copy(entity); ignore = true;
+    this->view = view; parent = "";
+
+    this->entity = NULL;
+
+    copy(entity); ignore = true;
 }
 
 QnstAddCommand::~QnstAddCommand()
@@ -110,20 +114,22 @@ void QnstAddCommand::copy(QnstGraphicsEntity* entity)
         break;
     }
 
-    this->entity->setnstUid(entity->getnstUid());
+    if (this->entity != NULL){
+        this->entity->setnstUid(entity->getnstUid());
 
-    this->entity->setnstId(entity->getnstId());
+        this->entity->setnstId(entity->getnstId());
 
-    this->entity->setTop(entity->getTop());
-    this->entity->setLeft(entity->getLeft());
-    this->entity->setWidth(entity->getWidth());
-    this->entity->setHeight(entity->getHeight());
+        this->entity->setTop(entity->getTop());
+        this->entity->setLeft(entity->getLeft());
+        this->entity->setWidth(entity->getWidth());
+        this->entity->setHeight(entity->getHeight());
 
-    if (entity->getnstGraphicsParent() != NULL){
-        parent = QString(entity->getnstGraphicsParent()->getnstUid());
+        if (entity->getnstGraphicsParent() != NULL){
+            parent = QString(entity->getnstGraphicsParent()->getnstUid());
+        }
+
+        this->entity->setnstGraphicsParent(NULL);
     }
-
-    this->entity->setnstGraphicsParent(NULL);
 }
 
 void QnstAddCommand::undo()
@@ -136,7 +142,7 @@ void QnstAddCommand::undo()
 void QnstAddCommand::redo()
 {
     if (!ignore){
-        QnstGraphicsEntity* e;
+        QnstGraphicsEntity* e = NULL;
 
         if (view->entities.contains(parent) || entity->getnstType() == Qnst::Body){
 
@@ -271,26 +277,27 @@ void QnstAddCommand::redo()
                 break;
             }
 
+            if (e != NULL){
+                e->setnstUid(entity->getnstUid());
 
-            e->setnstUid(entity->getnstUid());
+                if (parent != ""){
+                    QnstGraphicsEntity* gparent = view->entities[parent];
 
-            if (parent != ""){
-                QnstGraphicsEntity* gparent = view->entities[parent];
+                    gparent->addnstGraphicsEntity(e);
 
-                gparent->addnstGraphicsEntity(e);
+                    e->setnstGraphicsParent(gparent);
+                }else{
+                    e->setnstGraphicsParent(NULL);
+                }
 
-                e->setnstGraphicsParent(gparent);
-            }else{
-                e->setnstGraphicsParent(NULL);
+                e->setTop(entity->getTop());
+                e->setLeft(entity->getLeft());
+                e->setWidth(entity->getWidth());
+                e->setHeight(entity->getHeight());
+                e->adjust();
+
+                view->requestEntityAddition(e, true);
             }
-
-            e->setTop(entity->getTop());
-            e->setLeft(entity->getLeft());
-            e->setWidth(entity->getWidth());
-            e->setHeight(entity->getHeight());
-            e->adjust();
-
-            view->requestEntityAddition(e, true);
        }
 
     }else{

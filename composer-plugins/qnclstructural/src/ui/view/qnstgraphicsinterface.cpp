@@ -116,6 +116,7 @@ void QnstGraphicsInterface::adjust()
     foreach(QnstGraphicsEntity* edges, getnstGraphicsEdges()){
         if (edges->getnstType() == Qnst::Reference ||
             edges->getnstType() == Qnst::Link ||
+            edges->getnstType() == Qnst::Mapping ||
             edges->getnstType() == Qnst::Action ||
             edges->getnstType() == Qnst::Condition){
             edges->adjust();

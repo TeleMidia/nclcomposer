@@ -937,6 +937,7 @@ void QnstView::removeEntity(const QString uid, bool undo)
                     if (e->getnstType() != Qnst::Link &&
                         e->getnstType() != Qnst::Edge &&
                         e->getnstType() != Qnst::Condition &&
+                        e->getnstType() != Qnst::Mapping &&
                         e->getnstType() != Qnst::Action &&
                         e->getnstType() != Qnst::Reference){
 
@@ -2626,6 +2627,7 @@ void QnstView::requestEntityRemotion(QnstGraphicsEntity* entity, bool undo)
                 if (e->getnstType() != Qnst::Link &&
                     e->getnstType() != Qnst::Edge &&
                     e->getnstType() != Qnst::Condition &&
+                    e->getnstType() != Qnst::Mapping &&
                     e->getnstType() != Qnst::Action &&
                     e->getnstType() != Qnst::Reference){
 
@@ -3257,12 +3259,41 @@ void QnstView::requestPortChange(QnstGraphicsPort* entity)
         }
     }
 
-//    TODO:
-//    properties["top"] = QString::number(entity->getTop());
-//    properties["left"] = QString::number(entity->getLeft());
-//    properties["width"] = QString::number(entity->getWidth());
-//    properties["heigh"] = QString::number(entity->getHeight());
-//    properties["zindex"] = QString::number(entity->getzIndex());
+    emit entityChanged(entity->getnstUid(), properties);
+}
+
+void QnstView::requestMappingAddition(QnstGraphicsMapping* entity, bool undo)
+{
+
+}
+
+void QnstView::requestMappingChange(QnstGraphicsMapping* entity)
+{
+
+}
+
+void QnstView::requestSwitchPortAddition(QnstGraphicsSwitchPort* entity, bool undo)
+{
+    if (entity->getnstId() == "" && !undo){
+        entity->setnstId("swp"+QString::number(++nport));
+    }
+
+    QMap<QString, QString> properties;
+
+    properties["TYPE"] = "switchPort";
+
+    properties["id"] = entity->getnstId();
+
+    emit entityAdded(entity->getnstUid(), entity->getnstGraphicsParent()->getnstUid(), properties);
+}
+
+void QnstView::requestSwitchPortChange(QnstGraphicsSwitchPort* entity)
+{
+    QMap<QString, QString> properties;
+
+    properties["TYPE"] = "switchPort";
+
+    properties["id"] = entity->getnstId();
 
     emit entityChanged(entity->getnstUid(), properties);
 }
@@ -3317,6 +3348,7 @@ void QnstView::requestPropertyAddition(QnstGraphicsProperty* entity)
                 entities[key]->getnstType() == Qnst::Text ||
                 entities[key]->getnstType() == Qnst::Audio ||
                 entities[key]->getnstType() == Qnst::Html ||
+                entities[key]->getnstType() == Qnst::NCL ||
                 entities[key]->getnstType() == Qnst::Script ||
                 entities[key]->getnstType() == Qnst::Settings ||
                 entities[key]->getnstType() == Qnst::Media){
@@ -5540,6 +5572,38 @@ void QnstView::addInterfacetoNodeEdge(QnstGraphicsEntity* entitya, QnstGraphicsE
             }
         }
 
+    }if (entitya->getnstType() == Qnst::SwitchPort){
+        QnstGraphicsEntity* parenta = entitya->getnstGraphicsParent();
+        QnstGraphicsEntity* parentb = entityb->getnstGraphicsParent();
+
+        if (parenta != NULL && parentb != NULL){
+            if (parenta == parentb){
+                qDebug() << "INTERFACE to NODE:" << entitya->getnstUid() << "->" << entityb->getnstUid();
+
+                QnstGraphicsMapping* entity = new QnstGraphicsMapping();
+                entity->setnstGraphicsParent(parenta);
+                entity->setEntityA(entitya);
+                entity->setEntityB(entityb);
+                entity->setComponent(entityb->getnstId());
+                entity->setComponentUid(entityb->getnstUid());
+                entity->adjust();
+
+                parenta->addnstGraphicsEntity(entity);
+
+                ((QnstGraphicsInterface*) entitya)->addnstGraphicsEdge(entity);
+                ((QnstGraphicsNode*) entityb)->addnstGraphicsEdge(entity);
+
+                QMap<QString, QString> properties;
+
+                properties["TYPE"] = "mapping";
+
+                properties["component"] = entityb->getnstId();
+                properties["componentUID"] = entityb->getnstUid();
+
+                // parent is has the strucUID from the switchPort entity in this case
+//                emit entityAdded(entity->getnstUid(), entitya->getnstUid(), properties);
+            }
+        }
     }else{
         QnstGraphicsEntity* parenta = entitya->getnstGraphicsParent();
         QnstGraphicsEntity* parentb = entityb->getnstGraphicsParent();
@@ -6036,6 +6100,41 @@ void QnstView::addInterfacetoInterfaceEdge(QnstGraphicsEntity* entitya, QnstGrap
             }
         }
 
+    }if (entitya->getnstType() == Qnst::Mapping){
+        QnstGraphicsEntity* parenta = entitya->getnstGraphicsParent();
+        QnstGraphicsEntity* parentb = entityb->getnstGraphicsParent();
+
+        if (parenta != NULL && parentb != NULL){
+            if (parenta == parentb->getnstGraphicsParent()){
+                qDebug() << "INTERFACE to INTERFACE:" << entitya->getnstUid() << "->" << entityb->getnstUid();
+
+                QnstGraphicsMapping* entity = new QnstGraphicsMapping();
+                entity->setnstGraphicsParent(parenta);
+                entity->setEntityA(entitya);
+                entity->setEntityB(entityb);
+                entity->setComponent(parentb->getnstId());
+                entity->setComponentUid(parentb->getnstUid());
+                entity->setInterface(entityb->getnstId());
+                entity->setInterfaceUid(entityb->getnstUid());
+                entity->adjust();
+
+                parenta->addnstGraphicsEntity(entity);
+
+                ((QnstGraphicsInterface*) entitya)->addnstGraphicsEdge(entity);
+                ((QnstGraphicsNode*) entityb)->addnstGraphicsEdge(entity);
+
+                QMap<QString, QString> properties;
+
+                properties["TYPE"] = "mapping";
+
+
+                properties["component"] = entityb->getnstId();
+                properties["componentUID"] = entityb->getnstUid();
+
+                // parent is has the strucUID from the switchPort entity in this case
+//                emit entityAdded(entity->getnstUid(), entitya->getnstUid(), properties);
+            }
+        }
     }else{
         QnstGraphicsEntity* parenta = entitya->getnstGraphicsParent();
         QnstGraphicsEntity* parentb = entityb->getnstGraphicsParent();

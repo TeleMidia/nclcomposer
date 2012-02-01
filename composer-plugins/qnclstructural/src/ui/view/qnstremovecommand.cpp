@@ -2,7 +2,11 @@
 
 QnstRemoveCommand::QnstRemoveCommand(QnstView* view, QnstGraphicsEntity* entity)
 {
-    this->view = view; parent = ""; copy(entity); ignore = true;
+    this->view = view; parent = "";
+
+    this->entity = NULL;
+
+    copy(entity); ignore = true;
 }
 
 QnstRemoveCommand::~QnstRemoveCommand()
@@ -112,23 +116,25 @@ void QnstRemoveCommand::copy(QnstGraphicsEntity* entity)
         break;
     }
 
-    this->entity->setnstUid(entity->getnstUid());
+    if (this->entity != NULL){
+        this->entity->setnstUid(entity->getnstUid());
 
-    this->entity->setnstId(entity->getnstId());
+        this->entity->setnstId(entity->getnstId());
 
-    this->entity->setTop(entity->getTop());
-    this->entity->setLeft(entity->getLeft());
-    this->entity->setWidth(entity->getWidth());
-    this->entity->setHeight(entity->getHeight());
+        this->entity->setTop(entity->getTop());
+        this->entity->setLeft(entity->getLeft());
+        this->entity->setWidth(entity->getWidth());
+        this->entity->setHeight(entity->getHeight());
 
-    this->entity->setnstGraphicsParent(NULL);
+        this->entity->setnstGraphicsParent(NULL);
 
-    foreach(QnstGraphicsEntity* e, entity->getnstGraphicsEntities()){
-        copy(e, this->entity);
-    }
+        foreach(QnstGraphicsEntity* e, entity->getnstGraphicsEntities()){
+            copy(e, this->entity);
+        }
 
-    if (entity->getnstGraphicsParent() != NULL){
-        parent = QString(entity->getnstGraphicsParent()->getnstUid());
+        if (entity->getnstGraphicsParent() != NULL){
+            parent = QString(entity->getnstGraphicsParent()->getnstUid());
+        }
     }
 }
 

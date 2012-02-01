@@ -14,6 +14,7 @@
 #include "qnstgraphicsport.h"
 #include "qnstgraphicshtml.h"
 #include "qnstgraphicsncl.h"
+#include "qnstgraphicsswitchport.h"
 
 class QnstGraphicsSwitch : public QnstGraphicsComposition
 {
@@ -28,6 +29,8 @@ public slots:
     void performHtml();
 
     void performNCL();
+
+    void performSwitchPort();
 
     void performImage();
 
@@ -61,7 +64,7 @@ private:
 
     void createConnections();
 
-        QString dropsrc;
+    QString dropsrc;
 };
 
 

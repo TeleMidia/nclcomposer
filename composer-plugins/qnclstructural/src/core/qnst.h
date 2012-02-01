@@ -27,11 +27,13 @@ public:
         Interface,
         Port,
         Area,
+        SwitchPort,
         Property,
 
         Edge,
         Reference,
         Link,
+        Mapping,
         Condition,
         Action,
         Bind,

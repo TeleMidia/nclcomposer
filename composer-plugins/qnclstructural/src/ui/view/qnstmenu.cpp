@@ -249,12 +249,12 @@ void QnstMenu::createActions()
     actionPort->setEnabled(false);
 
     // mapping action
-    actionMapping = new QAction(this);
-    actionMapping->setText(tr("Mapping"));
+    actionSwitchPort = new QAction(this);
+    actionSwitchPort->setText(tr("Switch Port"));
 
-    actionMapping->setIcon(QIcon(":/icon/mapping"));
+    actionSwitchPort->setIcon(QIcon(":/icon/swichport"));
 
-    actionMapping->setEnabled(false);
+    actionSwitchPort->setEnabled(false);
 
     // area action
     actionArea = new QAction(this);
@@ -367,7 +367,7 @@ void QnstMenu::createMenus()
     menuInsert->addAction(actionBody);
     menuInsert->addSeparator();
     menuInsert->addAction(actionPort);
-    menuInsert->addAction(actionMapping);
+    menuInsert->addAction(actionSwitchPort);
     menuInsert->addAction(actionArea);
     menuInsert->addAction(actionProperty);
     menuInsert->addSeparator();
@@ -426,7 +426,7 @@ void QnstMenu::createConnections()
     connect(actionSwitch, SIGNAL(triggered()), SIGNAL(switchRequested()));
     connect(actionBody, SIGNAL(triggered()), SIGNAL(bodyRequested()));
     connect(actionPort, SIGNAL(triggered()), SIGNAL(portRequested()));
-    connect(actionMapping, SIGNAL(triggered()), SIGNAL(mappingRequested()));
+    connect(actionSwitchPort, SIGNAL(triggered()), SIGNAL(switchportRequested()));
     connect(actionArea, SIGNAL(triggered()), SIGNAL(areaRequested()));
     connect(actionProperty, SIGNAL(triggered()), SIGNAL(propertyRequested()));
     connect(actionAggregator, SIGNAL(triggered()), SIGNAL(aggregatorRequested()));

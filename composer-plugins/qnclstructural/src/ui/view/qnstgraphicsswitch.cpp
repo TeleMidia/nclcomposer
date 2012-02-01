@@ -40,6 +40,7 @@ void QnstGraphicsSwitch::createObjects()
     menu->actionNCL->setEnabled(true);
     menu->actionContext->setEnabled(true);
     menu->actionSwitch->setEnabled(true);
+    menu->actionSwitchPort->setEnabled(true);
     menu->actionArea->setEnabled(true);
     menu->actionProperty->setEnabled(true);
 }
@@ -65,6 +66,8 @@ void QnstGraphicsSwitch::createConnections()
     connect(menu, SIGNAL(imageRequested()), SLOT(performImage()));
     connect(menu, SIGNAL(audioRequested()), SLOT(performAudio()));
     connect(menu, SIGNAL(htmlRequested()), SLOT(performHtml()));
+    connect(menu, SIGNAL(portRequested()), SLOT(performPort()));
+    connect(menu, SIGNAL(switchportRequested()), SLOT(performSwitchPort()));
     connect(menu, SIGNAL(nclRequested()), SLOT(performNCL()));
     connect(menu, SIGNAL(videoRequested()), SLOT(performVideo()));
     connect(menu, SIGNAL(textRequested()), SLOT(performText()));
@@ -127,6 +130,20 @@ void QnstGraphicsSwitch::performImage()
     entity->adjust();
 
     entity->menu->actionPaste->setEnabled(menu->actionPaste->isEnabled());
+
+    addnstGraphicsEntity(entity);
+
+    emit entityAdded(entity);
+}
+
+void QnstGraphicsSwitch::performSwitchPort()
+{
+    QnstGraphicsSwitchPort* entity = new QnstGraphicsSwitchPort(this);
+    entity->setTop(0);
+    entity->setLeft(0);
+    entity->setWidth(18);
+    entity->setHeight(18);
+    entity->adjust();
 
     addnstGraphicsEntity(entity);
 

@@ -63,7 +63,7 @@ signals:
 
     void portRequested();
 
-    void mappingRequested();
+    void switchportRequested();
 
     void areaRequested();
 
@@ -153,7 +153,7 @@ public:
 
     QAction* actionProperty;
 
-    QAction* actionMapping;
+    QAction* actionSwitchPort;
 
     QAction* actionAggregator;
 

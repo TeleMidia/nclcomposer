@@ -39,6 +39,7 @@
 #include "qnstaddcommand.h"
 #include "qnstchangecommand.h"
 #include "qnstremovecommand.h"
+#include "qnstgraphicsmapping.h"
 
 class QnstAddCommand;
 
@@ -232,6 +233,14 @@ private:
     void requestPortAddition(QnstGraphicsPort* entity, bool undo = false);
 
     void requestPortChange(QnstGraphicsPort* entity);
+
+    void requestMappingAddition(QnstGraphicsMapping* entity, bool undo = false);
+
+    void requestMappingChange(QnstGraphicsMapping* entity);
+
+    void requestSwitchPortAddition(QnstGraphicsSwitchPort* entity, bool undo = false);
+
+    void requestSwitchPortChange(QnstGraphicsSwitchPort* entity);
 
     void requestAreaAddition(QnstGraphicsArea* entity, bool undo = false);
 
