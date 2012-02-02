@@ -59,6 +59,7 @@ using namespace composer::core;
 #include "RunGingaConfig.h"
 #include "RunRemoteGingaVM.h"
 #endif
+
 using namespace composer::gui;
 
 namespace Ui {
@@ -137,6 +138,8 @@ private:
     RunRemoteGingaVMAction runRemoteGingaVMAction;
     StopRemoteGingaVMAction stopRemoteGingaVMAction;
 #endif
+
+    QTimer *autoSaveTimer;
 
 private:
     Ui::ComposerMainWindow *ui; /*!< A reference to  */
@@ -291,6 +294,8 @@ private slots:
     void setProjectDirty(QString location, bool isDirty);
 
     void gotoNCLClubWebsite();
+
+    void autoSaveCurrentProjects();
 
 public:
     /*!

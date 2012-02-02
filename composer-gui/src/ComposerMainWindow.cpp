@@ -26,6 +26,8 @@
 namespace composer {
 namespace gui {
 
+const int autoSaveInterval = 180000; //ms
+
 ComposerMainWindow::ComposerMainWindow(QApplication &app, QWidget *parent)
   : QMainWindow(parent),
     ui(new Ui::ComposerMainWindow)
@@ -38,6 +40,7 @@ ComposerMainWindow::ComposerMainWindow(QApplication &app, QWidget *parent)
                         "/../PlugIns/composer";
 
 #elif defined(Q_WS_WIN32)
+  defaultPluginsPath << QApplication::applicationDirPath() + "/lib/composer";
   defaultPluginsPath << "C:/Composer/lib/composer";
 #else
   // PREFIX Should be defined by the qmake while compiling the source code.
@@ -90,6 +93,12 @@ ComposerMainWindow::ComposerMainWindow(QApplication &app, QWidget *parent)
 
   SimpleSSHClient::init(); // Initializes the libssh2 library
 #endif
+
+  autoSaveTimer = new QTimer(this);
+  connect(autoSaveTimer, SIGNAL(timeout()),
+          this, SLOT(autoSaveCurrentProjects()));
+
+  autoSaveTimer->start(autoSaveInterval);
 }
 
 ComposerMainWindow::~ComposerMainWindow()
@@ -157,10 +166,12 @@ void ComposerMainWindow::readExtensions()
 
   settings.beginGroup("extension");
 
+
+  extensions_paths << defaultPluginsPath; //Add default location to extensions
+  // This should be uncommented in fut
   if (settings.contains("path"))
     extensions_paths = settings.value("path").toStringList();
 
-  extensions_paths << defaultPluginsPath; //Add default location to extensions
   extensions_paths.removeDuplicates(); // Remove duplicate paths
 
   // add all the paths to LibraryPath, i.e., plugins are allowed to install
@@ -1124,7 +1135,40 @@ void ComposerMainWindow::launchProjectWizard()
     if(!filename.endsWith(".cpr"))
       filename = filename + QString(".cpr");
 
-    ProjectControl::getInstance()->launchProject(filename);
+    if(ProjectControl::getInstance()->launchProject(filename))
+    {
+      // After launch the project we will insert NCL, HEAD and BODY elements
+      // by default
+      Project *project = ProjectControl::getInstance()
+                          ->getOpenProject(filename);
+
+
+      const QString defaultNCLID = "myNCLDocID";
+      const QString defaultBodyID = "myBodyID";
+
+      QMap <QString, QString> nclAttrs, headAttrs, bodyAttrs;
+      nclAttrs.insert("id", defaultNCLID);
+
+      Entity *nclEntity;
+      MessageControl *msgControl = PluginControl::getInstance()
+          ->getMessageControl(filename);
+      msgControl->anonymousAddEntity("ncl", project->getUniqueId(), nclAttrs);
+
+      nclEntity = project->getEntitiesbyType("ncl").first();
+
+      if(nclEntity != NULL)
+      {
+        QString nclEntityId = nclEntity->getUniqueId();
+        msgControl->anonymousAddEntity("head", nclEntityId, headAttrs);
+
+        bodyAttrs.insert("id", defaultBodyID);
+        msgControl->anonymousAddEntity("body", nclEntityId, bodyAttrs);
+      }
+    }
+    else
+    {
+      // \todo a report to this problem (we should track the error message).
+    }
   }
 }
 
@@ -1410,6 +1454,20 @@ bool ComposerMainWindow::showHelp()
     }
   }
   return true;
+}
+
+void ComposerMainWindow::autoSaveCurrentProjects()
+{
+  for(int i = 1; i < tabProjects->count(); i++)
+  {
+    QString location = tabProjects->tabToolTip(i);
+    Project *project = ProjectControl::getInstance()->getOpenProject(location);
+    if(project->isDirty())
+    {
+      PluginControl::getInstance()->savePluginsData(location);
+      ProjectControl::getInstance()->saveTemporaryProject(location);
+    }
+  }
 }
 
 } } //end namespace
