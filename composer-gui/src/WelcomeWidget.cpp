@@ -51,6 +51,13 @@ WelcomeWidget::WelcomeWidget(QWidget *parent): QWidget(parent),
 #else
     ui->tabWidget->removeTab(2);
 #endif
+
+#ifdef WITH_TEST_VERSION_MESSAGE
+#define LABEL_BUILD "This is a test version. Version: " NCLCOMPOSER_GUI_VERSION \
+  " Build Date and time:" BUILD_DATE
+    ui->label_BuildMessage->setText(LABEL_BUILD);
+    ui->label_BuildMessage->setStyleSheet("color:white; font-size:13px; text-align: right;");
+#endif
 }
 
 WelcomeWidget::~WelcomeWidget()

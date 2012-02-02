@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>826</width>
-    <height>618</height>
+    <width>907</width>
+    <height>713</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -74,8 +74,8 @@ QTabBar::tab::selected {
      <property name="frameShadow">
       <enum>QFrame::Raised</enum>
      </property>
-     <layout class="QHBoxLayout" name="horizontalLayout">
-      <item>
+     <layout class="QGridLayout" name="gridLayout_2">
+      <item row="1" column="2">
        <widget class="QFrame" name="mainFrame">
         <property name="minimumSize">
          <size>
@@ -523,7 +523,7 @@ font-family: Verdana;</string>
                    <property name="verticalSpacing">
                     <number>0</number>
                    </property>
-                   <item row="12" column="0">
+                   <item row="11" column="0">
                     <widget class="QLabel" name="label_7">
                      <property name="text">
                       <string>Recent Projects</string>
@@ -533,62 +533,7 @@ font-family: Verdana;</string>
                      </property>
                     </widget>
                    </item>
-                   <item row="15" column="0">
-                    <spacer name="verticalSpacer_2">
-                     <property name="orientation">
-                      <enum>Qt::Vertical</enum>
-                     </property>
-                     <property name="sizeHint" stdset="0">
-                      <size>
-                       <width>20</width>
-                       <height>40</height>
-                      </size>
-                     </property>
-                    </spacer>
-                   </item>
-                   <item row="17" column="0">
-                    <widget class="QLabel" name="label_5">
-                     <property name="sizePolicy">
-                      <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
-                       <horstretch>0</horstretch>
-                       <verstretch>0</verstretch>
-                      </sizepolicy>
-                     </property>
-                     <property name="text">
-                      <string>Developers</string>
-                     </property>
-                    </widget>
-                   </item>
-                   <item row="19" column="0">
-                    <widget class="QCommandLinkButton" name="commandLinkButton_7">
-                     <property name="sizePolicy">
-                      <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
-                       <horstretch>0</horstretch>
-                       <verstretch>0</verstretch>
-                      </sizepolicy>
-                     </property>
-                     <property name="layoutDirection">
-                      <enum>Qt::LeftToRight</enum>
-                     </property>
-                     <property name="text">
-                      <string>NCL Composer Official Web Site</string>
-                     </property>
-                    </widget>
-                   </item>
-                   <item row="20" column="0">
-                    <widget class="QCommandLinkButton" name="commandLinkButton_8">
-                     <property name="sizePolicy">
-                      <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
-                       <horstretch>0</horstretch>
-                       <verstretch>0</verstretch>
-                      </sizepolicy>
-                     </property>
-                     <property name="text">
-                      <string>Extending NCL Composer through plugins</string>
-                     </property>
-                    </widget>
-                   </item>
-                   <item row="14" column="0" colspan="2">
+                   <item row="13" column="0" colspan="2">
                     <widget class="QFrame" name="frame_RecentProjects">
                      <property name="sizePolicy">
                       <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
@@ -620,6 +565,61 @@ font-family: Verdana;</string>
                        </widget>
                       </item>
                      </layout>
+                    </widget>
+                   </item>
+                   <item row="14" column="0">
+                    <spacer name="verticalSpacer_2">
+                     <property name="orientation">
+                      <enum>Qt::Vertical</enum>
+                     </property>
+                     <property name="sizeHint" stdset="0">
+                      <size>
+                       <width>20</width>
+                       <height>40</height>
+                      </size>
+                     </property>
+                    </spacer>
+                   </item>
+                   <item row="16" column="0">
+                    <widget class="QLabel" name="label_5">
+                     <property name="sizePolicy">
+                      <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
+                       <horstretch>0</horstretch>
+                       <verstretch>0</verstretch>
+                      </sizepolicy>
+                     </property>
+                     <property name="text">
+                      <string>Developers</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="18" column="0">
+                    <widget class="QCommandLinkButton" name="commandLinkButton_7">
+                     <property name="sizePolicy">
+                      <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
+                       <horstretch>0</horstretch>
+                       <verstretch>0</verstretch>
+                      </sizepolicy>
+                     </property>
+                     <property name="layoutDirection">
+                      <enum>Qt::LeftToRight</enum>
+                     </property>
+                     <property name="text">
+                      <string>NCL Composer Official Web Site</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="19" column="0">
+                    <widget class="QCommandLinkButton" name="commandLinkButton_8">
+                     <property name="sizePolicy">
+                      <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
+                       <horstretch>0</horstretch>
+                       <verstretch>0</verstretch>
+                      </sizepolicy>
+                     </property>
+                     <property name="text">
+                      <string>Extending NCL Composer through plugins</string>
+                     </property>
                     </widget>
                    </item>
                   </layout>
@@ -715,8 +715,8 @@ font-family: Verdana;</string>
                     <rect>
                      <x>0</x>
                      <y>0</y>
-                     <width>740</width>
-                     <height>233</height>
+                     <width>738</width>
+                     <height>247</height>
                     </rect>
                    </property>
                    <attribute name="label">
@@ -763,8 +763,8 @@ font-family: Verdana;</string>
                     <rect>
                      <x>0</x>
                      <y>0</y>
-                     <width>87</width>
-                     <height>394</height>
+                     <width>83</width>
+                     <height>404</height>
                     </rect>
                    </property>
                    <attribute name="label">
@@ -1005,6 +1005,68 @@ font-family: Verdana;</string>
           </widget>
          </item>
         </layout>
+       </widget>
+      </item>
+      <item row="0" column="2">
+       <spacer name="verticalSpacer_3">
+        <property name="orientation">
+         <enum>Qt::Vertical</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>20</width>
+          <height>40</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+      <item row="1" column="0">
+       <spacer name="horizontalSpacer_3">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>40</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+      <item row="1" column="3">
+       <spacer name="horizontalSpacer_4">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>40</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+      <item row="2" column="2">
+       <spacer name="verticalSpacer_4">
+        <property name="orientation">
+         <enum>Qt::Vertical</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>20</width>
+          <height>40</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+      <item row="3" column="0" colspan="4">
+       <widget class="QLabel" name="label_BuildMessage">
+        <property name="text">
+         <string>This is a test version. Build:</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+        </property>
        </widget>
       </item>
      </layout>

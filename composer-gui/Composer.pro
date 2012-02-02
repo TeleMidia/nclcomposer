@@ -1,15 +1,29 @@
 TARGET = composer
 TEMPLATE = app
-CONFIG += qt warn_on debug console
-CONFIG -= release
+
+# Uses FORCERELEASE variable because CONFIG and SUBDIR force three executions
+# if qmake and the last one does not preserves CONFIG from command line.
+contains(FORCERELEASE, true) {
+  CONFIG += qt warn_on release
+  CONFIG -= debug
+  DEFINES += QT_NO_DEBUG_OUTPUT QT_NO_DEBUG_WARNING
+  message ("Composer.pro RELEASE build!")
+}
+else {
+  CONFIG += qt warn_on debug console
+  CONFIG -= release
+  message ("Composer.pro DEBUG build!")
+}
 
 #CONFIG += clubencl
 CONFIG += runssh_on
 QT += core xml network webkit
 
 DEFINES += NCLCOMPOSER_GUI_VERSION=\"\\\"0.1.0\\\"\"
+DEFINES += BUILD_DATE=\"\\\"$${_DATE_}\"\\\"
+DEFINES += WITH_TEST_VERSION_MESSAGE=\"\\\"1\\\"\"
 
-# DEFINES += USE_MDI
+#DEFINES += USE_MDI
 DEFINES += QT_NO_DEBUG_OUTPUT QT_NO_DEBUG_WARNING
 
 RC_FILE = images/nclcomposer.rc
@@ -155,3 +169,4 @@ TRANSLATIONS += composer_br.ts \
                 composer_sp.ts
 
 OTHER_FILES += LICENSE.LGPL
+
