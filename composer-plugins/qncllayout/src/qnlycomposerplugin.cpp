@@ -18,6 +18,7 @@
 #include "qnlycomposerplugin.h"
 
 #include <QAbstractButton>
+#include <QPushButton>
 #include <QMessageBox>
 
 namespace composer {
@@ -931,17 +932,29 @@ void QnlyComposerPlugin::performMediaOverRegionAction(const QString mediaId,
     error = 1;
   }
 
-  int resp = QMessageBox::question(NULL,
-                        tr("Please, tell what do you want to do"),
-                        tr("What do you want to do?"),
-                        tr("Create a new descriptor"),
-                        tr("Import region properties to media object"),
-                        tr("Nothing!")
-                        );
-
   if(!error)
   {
-    if(resp == 0) // create a new descriptor
+    QMessageBox msgBox;
+    msgBox.setText(tr("Please, tell what do you want to do"));
+    // \todo Enable detailed text.
+//    msgBox.setDetailedText(tr("Detailed text"));
+
+    QPushButton *createDescButton =
+        msgBox.addButton( tr("Create a new descriptor"),
+                          QMessageBox::ActionRole);
+
+    QPushButton *importPropButton =
+        msgBox.addButton(tr("Import region properties to media object"),
+                         QMessageBox::ActionRole);
+    importPropButton->setEnabled(false);
+
+    QPushButton *cancelButton =
+        msgBox.addButton(tr("Nothing!"),
+                         QMessageBox::ActionRole);
+
+//    msgBox.setIcon(QMessageBox::Question);
+    msgBox.exec();
+    if (msgBox.clickedButton() == createDescButton) // create a new descriptor
     {
       qDebug() << "Creating a new descriptor";
       QMap <QString,QString> attrs;
@@ -971,9 +984,22 @@ void QnlyComposerPlugin::performMediaOverRegionAction(const QString mediaId,
       attrs["descriptor"] = newDescriptorID;
       emit setAttributes(media, attrs, false);
     }
-    else if(resp == 1) // import properies from region to media element
+    // import properties from region to media element
+    else if (msgBox.clickedButton() == importPropButton)
     {
-      qDebug() << "Import attributes as property for media element.";
+      QMap <QString, QString> propertyNameToUID;
+      QVector <Entity *> currentProperties = media->getChildren();
+      for(int i = 0; i < currentProperties.size(); i++)
+      {
+        Entity *propEntity = currentProperties.at(i);
+        if(propEntity->hasAttribute("name"))
+        {
+          propertyNameToUID.insert(propEntity->getAttribute("name"),
+                                   propEntity->getUniqueId());
+        }
+      }
+
+      qDebug() << "Import attributes as properties of media element.";
       QMap <QString, QString>::iterator begin, end, it;
       region->getAttributeIterator(begin, end);
       for (it = begin; it != end; ++it)
@@ -985,7 +1011,13 @@ void QnlyComposerPlugin::performMediaOverRegionAction(const QString mediaId,
         attrs.insert("name", it.key());
         attrs.insert("value", it.value());
 
-        emit addEntity("property", media->getUniqueId(), attrs, false);
+        if(propertyNameToUID.keys().contains(it.key()))
+        {
+          QString propUID = propertyNameToUID.value(it.key());
+          emit setAttributes(project->getEntityById(propUID), attrs, false);
+        }
+        else
+          emit addEntity("property", media->getUniqueId(), attrs, false);
       }
     }
   }
