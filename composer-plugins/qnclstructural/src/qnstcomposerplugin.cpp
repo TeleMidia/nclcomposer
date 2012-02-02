@@ -286,6 +286,16 @@ void QnstComposerPlugin::requestEntityAddition(Entity* entity)
         entities[entity->getUniqueId()] = entity->getUniqueId();
         requestPropertyAddition(entity);
     }
+    else if (entity->getType() == "switchPort")
+    {
+        entities[entity->getUniqueId()] = entity->getUniqueId();
+        requestSwitchPortAddition(entity);
+    }
+    else if (entity->getType() == "mapping")
+    {
+        entities[entity->getUniqueId()] = entity->getUniqueId();
+        requestMappingAddition(entity);
+    }
 }
 
 void QnstComposerPlugin::requestEntityRemotion(Entity* entity)
@@ -356,6 +366,13 @@ void QnstComposerPlugin::requestEntityChange(Entity* entity)
     }else if (entity->getType() == "property"){
         requestPropertyChange(entity);
     }
+    else if (entity->getType() == "switchPort"){
+        requestSwitchPortChange(entity);
+    }
+
+    else if (entity->getType() == "mapping"){
+        requestMappingChange(entity);
+    }
 }
 
 void QnstComposerPlugin::requestEntitySelection(Entity* entity)
@@ -368,6 +385,9 @@ void QnstComposerPlugin::requestEntitySelection(Entity* entity)
             entity->getType() == "port" ||
             entity->getType() == "link" ||
             entity->getType() == "area" ||
+            entity->getType() == "mapping" ||
+            entity->getType() == "bind" ||
+            entity->getType() == "switchPort" ||
            entity->getType() == "property"){
 
             view->selectEntity(entities[entity->getUniqueId()]);
@@ -540,15 +560,15 @@ void QnstComposerPlugin::requestMediaChange(Entity* entity)
     QString referUID = getUidById(properties["refer"]);
     if(entities.contains(referUID))
       properties["referUID"] = entities[referUID];
-
-    if(entities.contains(entity->getUniqueId()))
-      view->changeEntity( entities[entity->getUniqueId()],
-                          properties);
   }
   else
   {
     properties["referUID"] = "";
   }
+
+  if(entities.contains(entity->getUniqueId()))
+    view->changeEntity( entities[entity->getUniqueId()],
+                        properties);
 
   QList<Entity*> list;
   list = getProject()->getEntitiesbyType("port");
@@ -615,6 +635,84 @@ void QnstComposerPlugin::requestPortChange(Entity* entity)
     view->changeEntity(entities[entity->getUniqueId()], properties);
   else
     qWarning() << "QnstPlugin:: You are trying to change a PORT that does not exists.";
+}
+
+void QnstComposerPlugin::requestMappingAddition(Entity* entity)
+{
+    QMap<QString, QString> properties;
+    properties["TYPE"] = "mapping";
+
+    properties["component"] = entity->getAttribute("component");
+    if (entity->getAttribute("component") != "")
+    {
+      QString componentUID = getUidById(properties["component"]);
+      if(entities.contains(componentUID))
+        properties["componentUid"] = entities[componentUID];
+    }
+
+    properties["interface"] = entity->getAttribute("interface");
+    if (entity->getAttribute("interface") != "")
+    {
+        QString interfaceUID = getUidById(properties["interface"]);
+        if(entities.contains(interfaceUID))
+          properties["interfaceUid"] = entities[interfaceUID];
+    }
+
+    QString parentUID = entity->getParentUniqueId();
+    if(entities.contains(parentUID))
+      view->addEntity(entity->getUniqueId(), entities[parentUID], properties);
+    else
+       qWarning() << "QnstPlugin:: You are trying to add a MAPPING inside an entity that does not exists.";
+}
+
+void QnstComposerPlugin::requestMappingChange(Entity* entity)
+{
+    QMap<QString, QString> properties;
+
+    properties["component"] = entity->getAttribute("component");
+    if (entity->getAttribute("component") != "")
+    {
+      QString componentUID = getUidById(properties["component"]);
+      if(entities.contains(componentUID))
+        properties["componentUid"] = entities[componentUID];
+    }
+
+    properties["interface"] = entity->getAttribute("interface");
+    if (entity->getAttribute("interface") != "")
+    {
+      QString interfaceUID = getUidById(properties["interface"]);
+      if(entities.contains(interfaceUID))
+        properties["interfaceUid"] = entities[interfaceUID];
+    }
+
+    if(entities.contains(entity->getUniqueId()))
+      view->changeEntity(entities[entity->getUniqueId()], properties);
+    else
+      qWarning() << "QnstPlugin:: You are trying to change a PORT that does not exists.";
+}
+
+void QnstComposerPlugin::requestSwitchPortAddition(Entity* entity)
+{
+    QMap<QString, QString> properties;
+    properties["TYPE"] = "switchPort";
+    properties["id"] = entity->getAttribute("id");
+
+    QString parentUID = entity->getParentUniqueId();
+    if(entities.contains(parentUID))
+      view->addEntity(entity->getUniqueId(), entities[parentUID], properties);
+    else
+       qWarning() << "QnstPlugin:: You are trying to add a SWITCHPORT inside an entity that does not exists.";
+}
+
+void QnstComposerPlugin::requestSwitchPortChange(Entity* entity)
+{
+    QMap<QString, QString> properties;
+    properties["id"] = entity->getAttribute("id");
+
+    if(entities.contains(entity->getUniqueId()))
+      view->changeEntity(entities[entity->getUniqueId()], properties);
+    else
+      qWarning() << "QnstPlugin:: You are trying to change a SWITCHPORT that does not exists.";
 }
 
 void QnstComposerPlugin::requestAreaAddition(Entity* entity)
@@ -1000,7 +1098,14 @@ void QnstComposerPlugin::requestEntityAddition(const QString uid, const QString 
     // if the entity is of type PROPERTY
     }else if (properties["TYPE"] == "property"){
         requestPropertyAddition(uid, parent, properties);
+
+    // if the entity is of type SWITCHPORT
+    }else if (properties["TYPE"] == "switchPort"){
+        requestSwitchPortAddition(uid, parent, properties);
     }
+    else if (properties["TYPE"] == "mapping"){
+            requestMappingAddition(uid, parent, properties);
+        }
 }
 
 void QnstComposerPlugin::requestEntityRemotion(const QString uid)
@@ -1174,6 +1279,82 @@ void QnstComposerPlugin::requestSwitchChange(const QString uid, const QMap<QStri
 
         if (properties["refer"] != ""){
             attributes["refer"] = properties["refer"];
+        }
+
+        emit setAttributes(entity, attributes, false);
+    }
+}
+
+void QnstComposerPlugin::requestSwitchPortAddition(const QString uid, const QString parent, const QMap<QString, QString> properties)
+{
+    Entity* entity = getProject()->getEntityById(entities.key(parent));
+
+    if (entity != NULL){
+        QMap<QString, QString> attributes;
+
+        if (properties["id"] != ""){
+            attributes["id"] = properties["id"];
+        }
+
+        request = uid;
+
+        emit addEntity("switchPort", entity->getUniqueId(), attributes, false);
+
+        request = "";
+    }
+}
+
+void QnstComposerPlugin::requestSwitchPortChange(const QString uid, const QMap<QString, QString> properties)
+{
+    Entity* entity = getProject()->getEntityById(entities.key(uid));
+
+    if (entity != NULL){
+        QMap<QString, QString> attributes;
+
+        if (properties["id"] != ""){
+            attributes["id"] = properties["id"];
+        }
+
+        emit setAttributes(entity, attributes, false);
+    }
+}
+
+void QnstComposerPlugin::requestMappingAddition(const QString uid, const QString parent, const QMap<QString, QString> properties)
+{
+    Entity* entity = getProject()->getEntityById(entities.key(parent));
+
+    if (entity != NULL){
+        QMap<QString, QString> attributes;
+
+        if (properties["component"] != ""){
+            attributes["component"] = properties["component"];
+        }
+
+        if (properties["interface"] != ""){
+            attributes["interface"] = properties["interface"];
+        }
+
+        request = uid;
+
+        emit addEntity("mapping", entity->getUniqueId(), attributes, false);
+
+        request = "";
+    }
+}
+
+void QnstComposerPlugin::requestMappingChange(const QString uid, const QMap<QString, QString> properties)
+{
+    Entity* entity = getProject()->getEntityById(entities.key(uid));
+
+    if (entity != NULL){
+        QMap<QString, QString> attributes;
+
+        if (properties["component"] != ""){
+            attributes["component"] = properties["component"];
+        }
+
+        if (properties["interface"] != ""){
+            attributes["interface"] = properties["interface"];
         }
 
         emit setAttributes(entity, attributes, false);

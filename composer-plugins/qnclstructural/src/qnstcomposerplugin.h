@@ -102,6 +102,14 @@ private:
 
     void requestPortChange(Entity* entity);
 
+    void requestMappingAddition(Entity* entity);
+
+    void requestMappingChange(Entity* entity);
+
+    void requestSwitchPortAddition(Entity* entity);
+
+    void requestSwitchPortChange(Entity* entity);
+
     void requestAreaAddition(Entity* entity);
 
     void requestAreaChange(Entity* entity);
@@ -148,6 +156,14 @@ private:
 
     void requestSwitchChange(const QString uid, const QMap<QString, QString> properties);
 
+    void requestSwitchPortAddition(const QString uid, const QString parent, const QMap<QString, QString> properties);
+
+    void requestSwitchPortChange(const QString uid, const QMap<QString, QString> properties);
+
+    void requestMappingAddition(const QString uid, const QString parent, const QMap<QString, QString> properties);
+
+    void requestMappingChange(const QString uid, const QMap<QString, QString> properties);
+
     void requestMediaAddition(const QString uid, const QString parent, const QMap<QString, QString> properties);
 
     void requestMediaChange(const QString uid, const QMap<QString, QString> properties);
@@ -192,6 +208,10 @@ private:
     QString getNCLIdFromEntity(Entity *entity);
     bool isEntityHandled(Entity *entity);
     void syncNCLIdsWithStructuralIds();
+
+    QString getNCLIdFromEntity(Entity *entity);
+
+    QString insertNCLIDIfEmpty(Entity *entity);
 
 public slots:
     void textualStartSync(QString, void*); /* from textual plugin */

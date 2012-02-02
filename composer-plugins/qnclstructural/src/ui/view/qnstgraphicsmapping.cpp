@@ -32,6 +32,16 @@ void QnstGraphicsMapping::setComponentUid(QString componentUid)
     this->componentUid = componentUid;
 }
 
+QString QnstGraphicsMapping::getSwitchPortUid() const
+{
+    return switchportUid;
+}
+
+void QnstGraphicsMapping::setSwitchPortUid(QString switchportUid)
+{
+    this->switchportUid = switchportUid;
+}
+
 QString QnstGraphicsMapping::getInterface() const
 {
     return interface;

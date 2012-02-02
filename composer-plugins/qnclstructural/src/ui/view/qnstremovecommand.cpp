@@ -95,6 +95,12 @@ void QnstRemoveCommand::copy(QnstGraphicsEntity* entity)
 
         break;
 
+    // if the entity type is SWPORT
+    case Qnst::SwitchPort:
+        this->entity = new QnstGraphicsSwitchPort();
+
+        break;
+
     // if the entity type is AREA
     case Qnst::Area:
         this->entity = new QnstGraphicsArea();
@@ -218,6 +224,12 @@ void QnstRemoveCommand::copy(QnstGraphicsEntity* entity, QnstGraphicsEntity* par
     // if the entity type is PORT
     case Qnst::Port:
         c = new QnstGraphicsPort();
+
+        break;
+
+    // if the entity type is SWPORT
+    case Qnst::SwitchPort:
+        c = new QnstGraphicsSwitchPort();
 
         break;
 
@@ -373,6 +385,14 @@ void QnstRemoveCommand::undo()
         // if the entity type is PORT
         case Qnst::Port:
             e = new QnstGraphicsPort();
+
+            e->setnstId(entity->getnstId());
+
+            break;
+
+        // if the entity type is SWPORT
+        case Qnst::SwitchPort:
+            e = new QnstGraphicsSwitchPort();
 
             e->setnstId(entity->getnstId());
 
@@ -539,6 +559,14 @@ void QnstRemoveCommand::paste(QnstGraphicsEntity* entity, QnstGraphicsEntity* pa
     // if the entity type is PORT
     case Qnst::Port:
         e = new QnstGraphicsPort();
+
+        e->setnstId(entity->getnstId());
+
+        break;
+
+    // if the entity type is SWPORT
+    case Qnst::SwitchPort:
+        e = new QnstGraphicsSwitchPort();
 
         e->setnstId(entity->getnstId());
 

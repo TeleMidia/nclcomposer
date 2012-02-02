@@ -18,6 +18,10 @@ public:
 
     void setComponentUid(QString componentUid);
 
+    QString getSwitchPortUid() const;
+
+    void setSwitchPortUid(QString switchportUid);
+
     QString getInterface() const;
 
     void setInterface(QString interface);
@@ -31,6 +35,8 @@ private:
     QString component;
 
     QString componentUid;
+
+    QString switchportUid;
 
     QString interface;
 

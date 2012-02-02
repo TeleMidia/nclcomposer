@@ -95,6 +95,12 @@ void QnstAddCommand::copy(QnstGraphicsEntity* entity)
 
         break;
 
+    // if the entity type is SWPORT
+    case Qnst::SwitchPort:
+        this->entity = new QnstGraphicsSwitchPort();
+
+        break;
+
     // if the entity type is AREA
     case Qnst::Area:
         this->entity = new QnstGraphicsArea();
@@ -247,6 +253,14 @@ void QnstAddCommand::redo()
             // if the entity type is PORT
             case Qnst::Port:
                 e = new QnstGraphicsPort();
+
+                e->setnstId(entity->getnstId());
+
+                break;
+
+            // if the entity type is SWPORT
+            case Qnst::SwitchPort:
+                e = new QnstGraphicsSwitchPort();
 
                 e->setnstId(entity->getnstId());
 

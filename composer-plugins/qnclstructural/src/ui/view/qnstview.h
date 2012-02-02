@@ -176,6 +176,16 @@ private:
 
     void adjustPort(QnstGraphicsPort* entity);
 
+    void addMapping(const QString uid, const QString parent, const QMap<QString, QString> properties, bool undo = false);
+
+    void changeMapping(QnstGraphicsMapping* entity, const QMap<QString, QString> properties);
+
+    void adjustMapping(QnstGraphicsMapping* entity);
+
+    void addSwitchPort(const QString uid, const QString parent, const QMap<QString, QString> properties, bool undo = false);
+
+    void changeSwitchPort(QnstGraphicsSwitchPort* entity, const QMap<QString, QString> properties);
+
     void addArea(const QString uid, const QString parent, const QMap<QString, QString> properties, bool undo = false);
 
     void changeArea(QnstGraphicsArea* entity, const QMap<QString, QString> properties);
@@ -281,6 +291,8 @@ private:
     int nlink;
 
     int nproperty;
+
+    int nswitchport;
 
     int narea;
 
