@@ -23,14 +23,14 @@ QVector<QnstGraphicsEdge*> QnstGraphicsInterface::getnstGraphicsEdges()
 
 void QnstGraphicsInterface::addnstGraphicsEdge(QnstGraphicsEdge* edge)
 {
-    if (link != NULL){
+    if (edge != NULL){
         links.append(edge);
     }
 }
 
 void QnstGraphicsInterface::removenstGraphicsEdge(QnstGraphicsEdge* edge)
 {
-    if (link != NULL){
+    if (edge != NULL){
         int index = links.indexOf(edge);
 
         if (index >= 0){
