@@ -78,30 +78,7 @@ void QnstGraphicsAction::adjust()
         QPointF pointa = line.p1();
         QPointF pointb = line.p2();
 
-        if (pointa.x() <= pointb.x() && pointa.y() <= pointb.y()){
-            setTop(pointa.y()-4);
-            setLeft(pointa.x()-4);
-            setWidth((pointb.x()-4)-(pointa.x()-4) + 8);
-            setHeight((pointb.y()-4)-(pointa.y()-4) + 8);
-
-        }else if (pointa.x() > pointb.x() && pointa.y() < pointb.y()){
-            setTop(pointa.y()-4);
-            setLeft(pointb.x()-4);
-            setWidth((pointa.x()-4)-(pointb.x()-4) + 8);
-            setHeight((pointb.y()-4)-(pointa.y()-4) + 8);
-
-        }else if (pointa.x() < pointb.x() && pointa.y() > pointb.y()){
-            setTop(pointb.y()-4);
-            setLeft((pointa.x()-4));
-            setWidth((pointb.x()-4)-(pointa.x()-4) + 8);
-            setHeight((pointa.y()-4)-(pointb.y()-4) + 8);
-
-        }else if (pointa.x() > pointb.x() && pointa.y() > pointb.y()){
-            setTop(pointb.y()-4);
-            setLeft(pointb.x()-4);
-            setWidth((pointa.x()-4)-(pointb.x()-4) + 8);
-            setHeight((pointa.y()-4)-(pointb.y()-4) + 8);
-        }
+        aux_adjust(pointa, pointb);
 
         getEntityB()->setSelectable(false);
 
@@ -115,32 +92,12 @@ void QnstGraphicsAction::adjust()
             while(getEntityB()->collidesWithItem(this)){
                 index -= 0.01;
 
-                pointb = line.pointAt(index);
+                if (getAngle() == 0)
+                    pointb = line.pointAt(index);
+                else
+                    pointb = arcPointAt(line , index);
 
-                if (pointa.x() <= pointb.x() && pointa.y() <= pointb.y()){
-                    setTop(pointa.y()-4);
-                    setLeft(pointa.x()-4);
-                    setWidth((pointb.x()-4)-(pointa.x()-4) + 8);
-                    setHeight((pointb.y()-4)-(pointa.y()-4) + 8);
-
-                }else if (pointa.x() > pointb.x() && pointa.y() < pointb.y()){
-                    setTop(pointa.y()-4);
-                    setLeft(pointb.x()-4);
-                    setWidth((pointa.x()-4)-(pointb.x()-4) + 8);
-                    setHeight((pointb.y()-4)-(pointa.y()-4) + 8);
-
-                }else if (pointa.x() < pointb.x() && pointa.y() > pointb.y()){
-                    setTop(pointb.y()-4);
-                    setLeft((pointa.x()-4));
-                    setWidth((pointb.x()-4)-(pointa.x()-4) + 8);
-                    setHeight((pointa.y()-4)-(pointb.y()-4) + 8);
-
-                }else if (pointa.x() > pointb.x() && pointa.y() > pointb.y()){
-                    setTop(pointb.y()-4);
-                    setLeft(pointb.x()-4);
-                    setWidth((pointa.x()-4)-(pointb.x()-4) + 8);
-                    setHeight((pointa.y()-4)-(pointb.y()-4) + 8);
-                }
+                aux_adjust(pointa, pointb);
 
                 if (++n > 100){ // avoiding infinity loop
                     break;
@@ -155,6 +112,35 @@ void QnstGraphicsAction::adjust()
         }
     }
 }
+
+void QnstGraphicsAction::aux_adjust(QPointF pointa, QPointF pointb)
+{
+    if (pointa.x() <= pointb.x() && pointa.y() <= pointb.y()){
+        setTop(pointa.y()-4);
+        setLeft(pointa.x()-4);
+        setWidth((pointb.x()-4)-(pointa.x()-4) + 8);
+        setHeight((pointb.y()-4)-(pointa.y()-4) + 8);
+
+    }else if (pointa.x() > pointb.x() && pointa.y() < pointb.y()){
+        setTop(pointa.y()-4);
+        setLeft(pointb.x()-4);
+        setWidth((pointa.x()-4)-(pointb.x()-4) + 8);
+        setHeight((pointb.y()-4)-(pointa.y()-4) + 8);
+
+    }else if (pointa.x() < pointb.x() && pointa.y() > pointb.y()){
+        setTop(pointb.y()-4);
+        setLeft((pointa.x()-4));
+        setWidth((pointb.x()-4)-(pointa.x()-4) + 8);
+        setHeight((pointa.y()-4)-(pointb.y()-4) + 8);
+
+    }else if (pointa.x() > pointb.x() && pointa.y() > pointb.y()){
+        setTop(pointb.y()-4);
+        setLeft(pointb.x()-4);
+        setWidth((pointa.x()-4)-(pointb.x()-4) + 8);
+        setHeight((pointa.y()-4)-(pointb.y()-4) + 8);
+    }
+}
+
 
 void QnstGraphicsAction::draw(QPainter* painter)
 {
@@ -179,19 +165,78 @@ void QnstGraphicsAction::draw(QPainter* painter)
         QPointF pointb = line.p2();
 
         if (pointa.x() <= pointb.x() && pointa.y() <= pointb.y()){
+
             painter->setPen(QPen(QBrush(QColor("#000000")), 1));
 
-            painter->drawLine(4+4,4+4, 4+8+getWidth()-16, 4+8+getHeight()-16);
+            if (getAngle() != 0){
+               qreal drawangle = getAdjAngle();
+
+               QLineF localline(4+4,4+4, 4+8+getWidth()-16, 4+8+getHeight()-16);
+
+               if (drawangle < 0){
+                   drawangle = -drawangle;
+               }
+
+               qreal R = localline.length()/(::sin(((drawangle/2)*PI)/180)*2);
+
+               qreal delta = (180-drawangle)/2 + (360 - localline.angle());
+
+               QPointF center_a(localline.p2().x() - ::cos((180-delta-drawangle)*PI/180)*R,
+                                localline.p2().y() + ::sin((180-delta-drawangle)*PI/180)*R);
+
+               QPointF center_b(localline.p1().x() + ::cos((180-delta-drawangle)*PI/180)*R,
+                                localline.p1().y() - ::sin((180-delta-drawangle)*PI/180)*R);
+
+               if (getAdjAngle() < 0){
+                   painter->drawArc(center_b.x()-R,center_b.y()-R,2*R,2*R,
+                                    16*((180-delta-drawangle)+180),16*drawangle);
+               }else{
+                   painter->drawArc(center_a.x()-R,center_a.y()-R,2*R,2*R
+                                    ,16*(180-delta-drawangle),16*drawangle);
+               }
+
+            }else{
+                painter->drawLine(4+4,4+4, 4+8+getWidth()-16, 4+8+getHeight()-16);
+            }
 
             painter->setBrush(QBrush(QColor("#000000")));
             painter->setPen(Qt::NoPen);
 
             painter->drawPixmap(4+getWidth()-16, 4+getHeight()-16, 16, 16, QPixmap(actionIcon));
 
-        }else if (pointa.x() > pointb.x() && pointa.y() < pointb.y()){
+        }else if (pointa.x() > pointb.x() && pointa.y() <= pointb.y()){
             painter->setPen(QPen(QBrush(QColor("#000000")), 1));
 
-            painter->drawLine(4+4+getWidth()-8,4+4, 4+8, 4+8+getHeight()-16);
+            if (getAngle() != 0){
+               qreal drawangle = getAdjAngle();
+
+               QLineF localline(4+4+getWidth()-8,4+4, 4+8, 4+8+getHeight()-16);
+
+               if (drawangle < 0){
+                   drawangle = -drawangle;
+               }
+
+               qreal R = localline.length()/(::sin(((drawangle/2)*PI)/180)*2);
+
+               qreal delta = (180-drawangle)/2 + (360 - localline.angle());
+
+               QPointF center_a(localline.p2().x() - ::cos((180-delta-drawangle)*PI/180)*R,
+                                localline.p2().y() + ::sin((180-delta-drawangle)*PI/180)*R);
+
+               QPointF center_b(localline.p1().x() + ::cos((180-delta-drawangle)*PI/180)*R,
+                                localline.p1().y() - ::sin((180-delta-drawangle)*PI/180)*R);
+
+               if (getAdjAngle() < 0){
+                   painter->drawArc(center_b.x()-R,center_b.y()-R,2*R,2*R,
+                                    16*((180-delta-drawangle)+180),16*drawangle);
+               }else{
+                   painter->drawArc(center_a.x()-R,center_a.y()-R,2*R,2*R
+                                    ,16*(180-delta-drawangle),16*drawangle);
+               }
+
+            }else{
+                painter->drawLine(4+4+getWidth()-8,4+4, 4+8, 4+8+getHeight()-16);
+            }
 
             painter->setBrush(QBrush(QColor("#000000")));
             painter->setPen(Qt::NoPen);
@@ -199,10 +244,39 @@ void QnstGraphicsAction::draw(QPainter* painter)
             painter->drawPixmap(4, 4+getHeight()-16, 16, 16, QPixmap(actionIcon));
 
 
-        }else if (pointa.x() < pointb.x() && pointa.y() > pointb.y()){
+        }else if (pointa.x() <= pointb.x() && pointa.y() > pointb.y()){
             painter->setPen(QPen(QBrush(QColor("#000000")), 1));
 
-            painter->drawLine(4+4, 4+4+getHeight()-8, 4+8+getWidth()-16, 4+8);
+            if (getAngle() != 0){
+               qreal drawangle = getAdjAngle();
+
+               QLineF localline(4+4, 4+4+getHeight()-8, 4+8+getWidth()-16, 4+8);
+
+               if (drawangle < 0){
+                   drawangle = -drawangle;
+               }
+
+               qreal R = localline.length()/(::sin(((drawangle/2)*PI)/180)*2);
+
+               qreal delta = (180-drawangle)/2 + (360 - localline.angle());
+
+               QPointF center_a(localline.p2().x() - ::cos((180-delta-drawangle)*PI/180)*R,
+                                localline.p2().y() + ::sin((180-delta-drawangle)*PI/180)*R);
+
+               QPointF center_b(localline.p1().x() + ::cos((180-delta-drawangle)*PI/180)*R,
+                                localline.p1().y() - ::sin((180-delta-drawangle)*PI/180)*R);
+
+               if (getAdjAngle() < 0){
+                   painter->drawArc(center_b.x()-R,center_b.y()-R,2*R,2*R,
+                                    16*((180-delta-drawangle)+180),16*drawangle);
+               }else{
+                   painter->drawArc(center_a.x()-R,center_a.y()-R,2*R,2*R
+                                    ,16*(180-delta-drawangle),16*drawangle);
+               }
+
+            }else{
+                painter->drawLine(4+4, 4+4+getHeight()-8, 4+8+getWidth()-16, 4+8);
+            }
 
             painter->setBrush(QBrush(QColor("#000000")));
             painter->setPen(Qt::NoPen);
@@ -212,7 +286,36 @@ void QnstGraphicsAction::draw(QPainter* painter)
         }else if (pointa.x() > pointb.x() && pointa.y() > pointb.y()){
             painter->setPen(QPen(QBrush(QColor("#000000")), 1));
 
-            painter->drawLine(4+4+getWidth()-8, 4+4+getHeight()-8, 4+8, 4+8);
+            if (getAngle() != 0){
+               qreal drawangle = getAdjAngle();
+
+               QLineF localline(4+4+getWidth()-8, 4+4+getHeight()-8, 4+8, 4+8);
+
+               if (drawangle < 0){
+                   drawangle = -drawangle;
+               }
+
+               qreal R = localline.length()/(::sin(((drawangle/2)*PI)/180)*2);
+
+               qreal delta = (180-drawangle)/2 + (360 - localline.angle());
+
+               QPointF center_a(localline.p2().x() - ::cos((180-delta-drawangle)*PI/180)*R,
+                                localline.p2().y() + ::sin((180-delta-drawangle)*PI/180)*R);
+
+               QPointF center_b(localline.p1().x() + ::cos((180-delta-drawangle)*PI/180)*R,
+                                localline.p1().y() - ::sin((180-delta-drawangle)*PI/180)*R);
+
+               if (getAdjAngle() < 0){
+                   painter->drawArc(center_b.x()-R,center_b.y()-R,2*R,2*R,
+                                    16*((180-delta-drawangle)+180),16*drawangle);
+               }else{
+                   painter->drawArc(center_a.x()-R,center_a.y()-R,2*R,2*R
+                                    ,16*(180-delta-drawangle),16*drawangle);
+               }
+
+            }else{
+                painter->drawLine(4+4+getWidth()-8, 4+4+getHeight()-8, 4+8, 4+8);
+            }
 
             painter->setBrush(QBrush(QColor("#000000")));
             painter->setPen(Qt::NoPen);

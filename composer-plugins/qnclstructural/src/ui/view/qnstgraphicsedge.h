@@ -4,6 +4,7 @@
 #define PI 3.14159265
 
 #include <cmath>
+#include <QLineF>
 
 #include "qnstgraphicsentity.h"
 
@@ -32,6 +33,18 @@ public:
 
     virtual void adjust();
 
+    void aux_adjust(QPointF pointa, QPointF pointb);
+
+    QPointF arcPointAt(QLineF line, qreal at, bool toend = true);
+
+    qreal getAngle();
+
+    void setAngle(qreal angle);
+
+    qreal getAdjAngle();
+
+    void setAdjAngle(qreal adjangle);
+
 protected:
     virtual void draw(QPainter* painter) = 0;
 
@@ -42,6 +55,10 @@ protected:
     virtual void resize(QGraphicsSceneMouseEvent* event);
 
 private:
+    qreal angle;
+
+    qreal adjustedangle;
+
     bool entityaenabled;
 
     bool entitybenabled;

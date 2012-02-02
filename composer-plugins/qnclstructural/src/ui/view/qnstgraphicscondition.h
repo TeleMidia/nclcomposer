@@ -23,6 +23,8 @@ public:
 
     void adjust();
 
+    void aux_adjust(QPointF pointa, QPointF pointb);
+
 protected:
     virtual void draw(QPainter* painter);
 

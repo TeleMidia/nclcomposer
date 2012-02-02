@@ -15,6 +15,8 @@ QnstGraphicsEdge::QnstGraphicsEdge(QnstGraphicsEntity* parent)
 
     entityaenabled = true;
     entitybenabled = true;
+
+    angle = 0;
 }
 
 QnstGraphicsEdge::~QnstGraphicsEdge()
@@ -62,6 +64,26 @@ void QnstGraphicsEdge::setEntityBEnabled(bool enable)
     this->entitybenabled = enable;
 }
 
+qreal QnstGraphicsEdge::getAngle()
+{
+    return angle;
+}
+
+void QnstGraphicsEdge::setAngle(qreal angle)
+{
+    this->angle = angle;
+}
+
+qreal QnstGraphicsEdge::getAdjAngle()
+{
+    return adjustedangle;
+}
+
+void QnstGraphicsEdge::setAdjAngle(qreal adjangle)
+{
+    this->adjustedangle = adjangle;
+}
+
 void QnstGraphicsEdge::adjust()
 {
     if (entitya != NULL && entityb != NULL){
@@ -81,30 +103,7 @@ void QnstGraphicsEdge::adjust()
         QPointF pointa = line.p1();
         QPointF pointb = line.p2();
 
-        if (pointa.x() <= pointb.x() && pointa.y() <= pointb.y()){
-            setTop(pointa.y()-6);
-            setLeft(pointa.x()-6);
-            setWidth((pointb.x()-6)-(pointa.x()-6) + 12);
-            setHeight((pointb.y()-6)-(pointa.y()-6) + 12);
-
-        }else if (pointa.x() > pointb.x() && pointa.y() < pointb.y()){
-            setTop(pointa.y()-6);
-            setLeft(pointb.x()-6);
-            setWidth((pointa.x()-6)-(pointb.x()-6) + 12);
-            setHeight((pointb.y()-6)-(pointa.y()-6) + 12);
-
-        }else if (pointa.x() < pointb.x() && pointa.y() > pointb.y()){
-            setTop(pointb.y()-6);
-            setLeft((pointa.x()-6));
-            setWidth((pointb.x()-6)-(pointa.x()-6) + 12);
-            setHeight((pointa.y()-6)-(pointb.y()-6) + 12);
-
-        }else if (pointa.x() > pointb.x() && pointa.y() > pointb.y()){
-            setTop(pointb.y()-6);
-            setLeft(pointb.x()-6);
-            setWidth((pointa.x()-6)-(pointb.x()-6) + 12);
-            setHeight((pointa.y()-6)-(pointb.y()-6) + 12);
-        }
+        aux_adjust(pointa, pointb);
 
         entitya->setSelectable(false);
         entityb->setSelectable(false);
@@ -119,32 +118,12 @@ void QnstGraphicsEdge::adjust()
             while(entityb->collidesWithItem(this)){
                 index -= 0.01;
 
-                pointb = line.pointAt(index);
+                if (angle == 0)
+                    pointb = line.pointAt(index);
+                else
+                    pointb = arcPointAt(line , index);
 
-                if (pointa.x() <= pointb.x() && pointa.y() <= pointb.y()){
-                    setTop(pointa.y()-6);
-                    setLeft(pointa.x()-6);
-                    setWidth((pointb.x()-6)-(pointa.x()-6) + 12);
-                    setHeight((pointb.y()-6)-(pointa.y()-6) + 12);
-
-                }else if (pointa.x() > pointb.x() && pointa.y() < pointb.y()){
-                    setTop(pointa.y()-6);
-                    setLeft(pointb.x()-6);
-                    setWidth((pointa.x()-6)-(pointb.x()-6) + 12);
-                    setHeight((pointb.y()-6)-(pointa.y()-6) + 12);
-
-                }else if (pointa.x() < pointb.x() && pointa.y() > pointb.y()){
-                    setTop(pointb.y()-6);
-                    setLeft((pointa.x()-6));
-                    setWidth((pointb.x()-6)-(pointa.x()-6) + 12);
-                    setHeight((pointa.y()-6)-(pointb.y()-6) + 12);
-
-                }else if (pointa.x() > pointb.x() && pointa.y() > pointb.y()){
-                    setTop(pointb.y()-6);
-                    setLeft(pointb.x()-6);
-                    setWidth((pointa.x()-6)-(pointb.x()-6) + 12);
-                    setHeight((pointa.y()-6)-(pointb.y()-6) + 12);
-                }
+                aux_adjust(pointa, pointb);
 
                 if (++n > 100){ // avoiding infinity loop
                     break;
@@ -158,32 +137,12 @@ void QnstGraphicsEdge::adjust()
             while(entitya->collidesWithItem(this)){
                 index += 0.01;
 
-                pointa = line.pointAt(index);
+                if (angle == 0)
+                    pointa = line.pointAt(index);
+                else
+                    pointa = arcPointAt(line , index);
 
-                if (pointa.x() <= pointb.x() && pointa.y() <= pointb.y()){
-                    setTop(pointa.y()-6);
-                    setLeft(pointa.x()-6);
-                    setWidth((pointb.x()-6)-(pointa.x()-6) + 12);
-                    setHeight((pointb.y()-6)-(pointa.y()-6) + 12);
-
-                }else if (pointa.x() > pointb.x() && pointa.y() < pointb.y()){
-                    setTop(pointa.y()-6);
-                    setLeft(pointb.x()-6);
-                    setWidth((pointa.x()-6)-(pointb.x()-6) + 12);
-                    setHeight((pointb.y()-6)-(pointa.y()-6) + 12);
-
-                }else if (pointa.x() < pointb.x() && pointa.y() > pointb.y()){
-                    setTop(pointb.y()-6);
-                    setLeft((pointa.x()-6));
-                    setWidth((pointb.x()-6)-(pointa.x()-6) + 12);
-                    setHeight((pointa.y()-6)-(pointb.y()-6) + 12);
-
-                }else if (pointa.x() > pointb.x() && pointa.y() > pointb.y()){
-                    setTop(pointb.y()-6);
-                    setLeft(pointb.x()-6);
-                    setWidth((pointa.x()-6)-(pointb.x()-6) + 12);
-                    setHeight((pointa.y()-6)-(pointb.y()-6) + 12);
-                }
+                aux_adjust(pointa, pointb);
 
                 if (++n > 100){ // avoiding infinity loop
                     break;
@@ -197,6 +156,68 @@ void QnstGraphicsEdge::adjust()
         if (scene() != NULL){
             scene()->update();
         }
+    }
+}
+
+QPointF QnstGraphicsEdge::arcPointAt(QLineF line, qreal at, bool toend)
+{
+    qreal alfa = getAngle();
+
+    qreal beta = (180 - alfa)/2 + (360 - line.angle());
+
+    qreal R = line.length()/(::sin(((alfa/2)*PI)/180)*2);
+
+    QPointF center_p(line.p2().x() - ::cos((180-beta-alfa)*PI/180)*R,
+                     line.p2().y() + ::sin((180-beta-alfa)*PI/180)*R);
+
+    qreal arc_len = alfa*PI*R/180;
+
+    qreal new_arc_len = arc_len*at;
+
+
+    qreal new_alfa = (180*new_arc_len)/(PI*R);
+
+
+    qreal gama = (180-beta-new_alfa);
+
+
+    QPointF new_start_p(center_p.x() + ::cos((gama)*PI/180)*R,
+                        center_p.y() - ::sin((gama)*PI/180)*R);
+
+    if (toend){
+        this->adjustedangle = new_alfa;
+    }else{
+        this->adjustedangle = (180*(arc_len-arc_len*at))/(PI*R);
+    }
+
+    return new_start_p;
+}
+
+void QnstGraphicsEdge::aux_adjust(QPointF pointa, QPointF pointb)
+{
+    if (pointa.x() <= pointb.x() && pointa.y() <= pointb.y()){
+        setTop(pointa.y()-6);
+        setLeft(pointa.x()-6);
+        setWidth((pointb.x()-6)-(pointa.x()-6) + 12);
+        setHeight((pointb.y()-6)-(pointa.y()-6) + 12);
+
+    }else if (pointa.x() > pointb.x() && pointa.y() < pointb.y()){
+        setTop(pointa.y()-6);
+        setLeft(pointb.x()-6);
+        setWidth((pointa.x()-6)-(pointb.x()-6) + 12);
+        setHeight((pointb.y()-6)-(pointa.y()-6) + 12);
+
+    }else if (pointa.x() < pointb.x() && pointa.y() > pointb.y()){
+        setTop(pointb.y()-6);
+        setLeft((pointa.x()-6));
+        setWidth((pointb.x()-6)-(pointa.x()-6) + 12);
+        setHeight((pointa.y()-6)-(pointb.y()-6) + 12);
+
+    }else if (pointa.x() > pointb.x() && pointa.y() > pointb.y()){
+        setTop(pointb.y()-6);
+        setLeft(pointb.x()-6);
+        setWidth((pointa.x()-6)-(pointb.x()-6) + 12);
+        setHeight((pointa.y()-6)-(pointb.y()-6) + 12);
     }
 }
 
