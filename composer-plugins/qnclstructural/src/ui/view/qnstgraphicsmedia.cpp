@@ -221,30 +221,11 @@ void QnstGraphicsMedia::delineate(QPainterPath* painter) const
     painter->addRect(4, 4, getWidth(), getHeight());
 }
 
-void QnstGraphicsMedia::keyPressEvent(QKeyEvent *event)
-{
-  QnstGraphicsContent::keyPressEvent(event);
-  if(event->key() == Qt::Key_Control)
-  {
-    enableDrag = true;
-    event->accept();
-  }    
-}
-
-void QnstGraphicsMedia::keyReleaseEvent(QKeyEvent *event)
-{
-  QnstGraphicsContent::keyReleaseEvent(event);
-  if(event->key() == Qt::Key_Control)
-  {
-    enableDrag = false;
-    event->accept();
-  }
-}
-
 
 void QnstGraphicsMedia::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
-  if(enableDrag)
+  qDebug() << "QnstGraphicsMedia::mousePressEvent" << isDraggable();
+  if(isDraggable())
   {
     QMimeData *data = new QMimeData;
     data->setColorData(Qt::green);

@@ -5159,6 +5159,12 @@ void QnstView::mouseReleaseEvent(QMouseEvent* event)
         linking = false;
     }
 
+    QnstGraphicsEntity *entity;
+    foreach(entity, entities.values())
+    {
+      entity->setDraggable(false);
+    }
+
     QGraphicsView::mouseReleaseEvent(event);
 }
 
@@ -6734,27 +6740,41 @@ void QnstView::keyPressEvent(QKeyEvent *event)
         performCopy();
 
     // CTRL+V - Paste
-    }else if (event->modifiers() == Qt::ControlModifier && event->key() == Qt::Key_V){
+    }
+    else if (event->modifiers() == Qt::ControlModifier && event->key() == Qt::Key_V)
+    {
         performPaste();
 
     // DELETE - Delete
-    }else if (event->key() == Qt::Key_Delete){
+    }
+    else if (event->key() == Qt::Key_Delete)
+    {
         performDelete();
 
     // BACKSPACE - Delete
-    }else if (event->key() == Qt::Key_Backspace){
+    }
+    else if (event->key() == Qt::Key_Backspace)
+    {
         performDelete();
 
     // SHIFT - Enabling liking
-    }else if (event->key() == Qt::Key_Shift){
-        if (selected != NULL){
-            selected->setSelected(false);
-            selected->adjust();
-        }
-
-        selected = NULL;
-
-        modified = true;
+    } else if (event->key() == Qt::Key_Shift)
+    {
+      if (selected != NULL){
+          selected->setSelected(false);
+          selected->adjust();
+      }
+      selected = NULL;
+      modified = true;
+    }
+    else if(event->key() == Qt::Key_Control)
+    {
+//      modified = true;
+      QnstGraphicsEntity *entity;
+      foreach(entity, entities.values())
+      {
+        entity->setDraggable(true);
+      }
     }
     //Ctrl + 0 -> reset to default zoom
     else if( event->modifiers() == Qt::ControlModifier &&
@@ -6796,6 +6816,14 @@ void QnstView::keyReleaseEvent(QKeyEvent *event)
     if (event->key() == Qt::Key_Shift){
         modified = false;
     }
+    else if(event->key() == Qt::Key_Control)
+    {
+      QnstGraphicsEntity *entity;
+      foreach(entity, entities.values())
+      {
+        entity->setDraggable(false);
+      }
+    }
 
     QGraphicsView::keyReleaseEvent(event);
 }
@@ -6815,5 +6843,14 @@ void QnstView::wheelEvent(QWheelEvent * event)
   {
     // call the father wheelEvent
     QGraphicsView::wheelEvent(event);
+  }
+}
+
+void QnstView::focusOutEvent(QFocusEvent *event)
+{
+  QnstGraphicsEntity *entity;
+  foreach(entity, entities.values())
+  {
+    entity->setDraggable(false);
   }
 }

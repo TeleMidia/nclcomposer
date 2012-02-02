@@ -132,6 +132,8 @@ protected:
 
     virtual void keyReleaseEvent(QKeyEvent *event);
 
+    virtual void focusOutEvent(QFocusEvent *event);
+
     void wheelEvent(QWheelEvent * event);
 
 public slots:

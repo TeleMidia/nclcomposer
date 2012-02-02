@@ -85,8 +85,11 @@ protected slots:
 
 public:
     QnstMenu* menu;
+    bool isDraggable();
+    void setDraggable(bool isDraggable);
 
 private:
+    bool draggable;
     QnstGraphicsEntity* parent;
 
     QVector<QnstGraphicsEntity*> entities;

@@ -1,7 +1,7 @@
 #include "qnstgraphicsentity.h"
 
 QnstGraphicsEntity::QnstGraphicsEntity(QnstGraphicsEntity* parent)
-    : QncgGraphicsEntity(parent), QnstEntity(parent)
+  : QncgGraphicsEntity(parent), QnstEntity(parent)
 {
     setnstType(Qnst::NoType);
 
@@ -11,6 +11,7 @@ QnstGraphicsEntity::QnstGraphicsEntity(QnstGraphicsEntity* parent)
     connect(this, SIGNAL(entityAboutToChange(QMap<QString,QString>)), SLOT(requestEntityPreparation(QMap<QString,QString>)));
 
     menu = NULL;
+    draggable = false;
 }
 
 
@@ -35,6 +36,16 @@ void QnstGraphicsEntity::setnstGraphicsParent(QnstGraphicsEntity* parent)
 QVector<QnstGraphicsEntity*> QnstGraphicsEntity::getnstGraphicsEntities()
 {
     return entities;
+}
+
+bool QnstGraphicsEntity::isDraggable()
+{
+  return draggable;
+}
+
+void QnstGraphicsEntity::setDraggable(bool isDraggable)
+{
+  this->draggable = isDraggable;
 }
 
 void QnstGraphicsEntity::addnstGraphicsEntity(QnstGraphicsEntity* entity)

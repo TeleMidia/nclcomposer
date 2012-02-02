@@ -209,10 +209,6 @@ private:
     bool isEntityHandled(Entity *entity);
     void syncNCLIdsWithStructuralIds();
 
-    QString getNCLIdFromEntity(Entity *entity);
-
-    QString insertNCLIDIfEmpty(Entity *entity);
-
 public slots:
     void textualStartSync(QString, void*); /* from textual plugin */
     void textualFinishSync(QString, void*); /* from textual plugin */
