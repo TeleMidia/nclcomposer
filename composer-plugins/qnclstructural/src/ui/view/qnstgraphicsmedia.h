@@ -6,6 +6,7 @@
 #include <QList>
 #include <QUrl>
 #include <QFileInfo>
+#include <QKeyEvent>
 
 #include "qnstgraphicscontent.h"
 #include "qnstgraphicsproperty.h"
@@ -52,6 +53,10 @@ protected:
 
     virtual void delineate(QPainterPath* painter) const;
 
+    virtual void keyPressEvent(QKeyEvent *event);
+    virtual void keyReleaseEvent(QKeyEvent *event);
+    virtual void mousePressEvent(QGraphicsSceneMouseEvent *event);
+
 private:
     void createObjects();
 
@@ -66,6 +71,8 @@ private:
     QString icon;
 
     QString source;
+
+    bool enableDrag;
 };
 
 #endif // QNSTGRAPHICSMEDIA_H

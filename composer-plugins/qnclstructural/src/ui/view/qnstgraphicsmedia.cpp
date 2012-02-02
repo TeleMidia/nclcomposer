@@ -1,7 +1,9 @@
 #include "qnstgraphicsmedia.h"
 
+#include <QDrag>
+
 QnstGraphicsMedia::QnstGraphicsMedia(QnstGraphicsNode* parent)
-    : QnstGraphicsContent(parent)
+  : QnstGraphicsContent(parent), enableDrag(false)
 {
     setnstType(Qnst::Media);
 
@@ -217,4 +219,42 @@ void QnstGraphicsMedia::draw(QPainter* painter)
 void QnstGraphicsMedia::delineate(QPainterPath* painter) const
 {
     painter->addRect(4, 4, getWidth(), getHeight());
+}
+
+void QnstGraphicsMedia::keyPressEvent(QKeyEvent *event)
+{
+  QnstGraphicsContent::keyPressEvent(event);
+  if(event->key() == Qt::Key_Control)
+  {
+    enableDrag = true;
+    event->accept();
+  }    
+}
+
+void QnstGraphicsMedia::keyReleaseEvent(QKeyEvent *event)
+{
+  QnstGraphicsContent::keyReleaseEvent(event);
+  if(event->key() == Qt::Key_Control)
+  {
+    enableDrag = false;
+    event->accept();
+  }
+}
+
+
+void QnstGraphicsMedia::mousePressEvent(QGraphicsSceneMouseEvent *event)
+{
+  if(enableDrag)
+  {
+    QMimeData *data = new QMimeData;
+    data->setColorData(Qt::green);
+    data->setData("nclcomposer/mediaid", getnstId().toAscii());
+    data->setData("nclcomposer/qnstuid", getnstUid().toAscii());
+
+    QDrag *drag = new QDrag(event->widget());
+    drag->setMimeData(data);
+    drag->start();
+  }
+  else
+    QnstGraphicsContent::mousePressEvent(event);
 }

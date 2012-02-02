@@ -542,6 +542,10 @@ void QnlyView::addRegionBase(QnlyGraphicsRegionBase* regionBase,
                 SIGNAL(regionDeletionRequested(QString,QString)),
                 SIGNAL(regionRemoved(QString,QString)));
 
+        connect(regionBase,
+                SIGNAL(mediaOverRegion(QString,QString)),
+                SIGNAL(mediaOverRegionAction(QString,QString)));
+
         emit regionBaseSelected(regionBase->getUid());;
     }
 }

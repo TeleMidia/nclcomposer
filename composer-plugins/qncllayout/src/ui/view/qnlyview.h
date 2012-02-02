@@ -109,6 +109,8 @@ signals:
     void regionBaseChanged(const QString regionbaseUID,
                            const QMap<QString, QString> attributes);
 
+    void mediaOverRegionAction(QString mediaID, QString regionUID);
+
 protected slots:
     void addRegion(QnlyGraphicsRegion* region,
                    QnlyGraphicsRegion* parent,

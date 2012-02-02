@@ -327,11 +327,9 @@ void QnlyGraphicsRegionBase::requestRegionChange(QnlyGraphicsRegion* region,
                                 full);
 }
 
-
-void QnlyGraphicsRegionBase::requestRegionSelection(
-        QnlyGraphicsRegion* region)
+void QnlyGraphicsRegionBase::requestRegionSelection(QnlyGraphicsRegion* region)
 {
-    emit regionSelectionRequested(region->getUid(),uid);
+  emit regionSelectionRequested(region->getUid(),uid);
 }
 
 void QnlyGraphicsRegionBase::QnlyGraphicsRegionBase::createActions()
@@ -865,6 +863,12 @@ void QnlyGraphicsRegionBase::addRegion(QnlyGraphicsRegion* region,
                 SIGNAL(regionDeletionRequested(QnlyGraphicsRegion*)),
                 SLOT(requestRegionDeletion(QnlyGraphicsRegion*)));
 
+        connect(region,
+                SIGNAL(dragMediaOverRegion(QString,QnlyGraphicsRegion*)),
+                this,
+                SLOT(requestMediaOverRegionAction(QString,QnlyGraphicsRegion*))
+                );
+
         // \fixme seg fault on Outline
         QMap<QString, QString> noChangeAtts;
 
@@ -903,4 +907,10 @@ void QnlyGraphicsRegionBase::contextMenuEvent(
 
         event->accept();
     }
+}
+
+void QnlyGraphicsRegionBase::requestMediaOverRegionAction(QString mediaId,
+                                                    QnlyGraphicsRegion* region)
+{
+  emit mediaOverRegion(mediaId, region->getUid());
 }

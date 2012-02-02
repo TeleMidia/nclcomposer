@@ -574,6 +574,8 @@ void QnlyGraphicsRegion::QnlyGraphicsRegion::createActions()
 
     regionActionGroup = new QActionGroup(this);
     regionActionGroup->setExclusive(false);
+
+    setAcceptDrops(true);
 }
 
 void QnlyGraphicsRegion::createMenus()
@@ -1413,7 +1415,8 @@ void QnlyGraphicsRegion::contextMenuEvent(QGraphicsSceneContextMenuEvent* event)
 {
     QGraphicsItem::contextMenuEvent(event);
 
-    if (!event->isAccepted()){
+    if (!event->isAccepted())
+    {
         emit regionSelectionRequested(this);
 
         contextMenu->exec(event->screenPos());
@@ -1422,3 +1425,18 @@ void QnlyGraphicsRegion::contextMenuEvent(QGraphicsSceneContextMenuEvent* event)
     }
 }
 
+void QnlyGraphicsRegion::dragEnterEvent(QGraphicsSceneDragDropEvent *event)
+{
+  if (event->mimeData()->hasFormat("nclcomposer/mediaid"))
+    event->acceptProposedAction();
+}
+
+void QnlyGraphicsRegion::dropEvent(QGraphicsSceneDragDropEvent *event)
+{
+  qDebug() << "dropEvent " << event->mimeData()->data("nclcomposer/mediaid")
+              << event->mimeData()->data("nclcomposer/qnstuid");
+
+
+  emit dragMediaOverRegion(event->mimeData()->data("nclcomposer/mediaid"),
+                           this);
+}

@@ -187,6 +187,8 @@ signals:
     void regionChangeRequested(QnlyGraphicsRegion* region,
                                QMap<QString, QString> attributes);
 
+    void dragMediaOverRegion(QString mediaid, QnlyGraphicsRegion *region);
+
     void regionbasePerformed();
 
 protected:
@@ -247,6 +249,10 @@ protected:
     void keyReleaseEvent(QKeyEvent * event);
 
     void keyPressEvent(QKeyEvent * event);
+
+    void dragEnterEvent(QGraphicsSceneDragDropEvent *event);
+
+    void dropEvent(QGraphicsSceneDragDropEvent *event);
 
 protected slots:
     void performShow(QAction* action);

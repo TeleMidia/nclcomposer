@@ -17,6 +17,9 @@
  */
 #include "qnlycomposerplugin.h"
 
+#include <QAbstractButton>
+#include <QMessageBox>
+
 namespace composer {
     namespace plugin {
         namespace layout {
@@ -76,6 +79,10 @@ void QnlyComposerPlugin::createConnections()
     connect(view,
         SIGNAL(regionBaseRemoved(QString)),
         SLOT(removeRegionBase(QString)));
+
+    connect(view,
+            SIGNAL(mediaOverRegionAction(QString, QString)),
+            SLOT(performMediaOverRegionAction(QString, QString)));
 }
 
 void QnlyComposerPlugin::updateFromModel()
@@ -780,32 +787,8 @@ void QnlyComposerPlugin::addRegionBase(const QString regionbaseUID,
     if (attributes.contains("device"))
         standard["device"] = attributes["device"];
 
-    if (getProject()->getEntitiesbyType("head").isEmpty())
-    {
-        if (getProject()->getEntitiesbyType("ncl").isEmpty())
-        {
-            QMap<QString, QString> atts;
 
-            emit addEntity("ncl",
-                           getProject()->getUniqueId(),
-                           atts,
-                           false);
-        }
-
-        QString nclUID =
-            getProject()->getEntitiesbyType("ncl").at(0)->getUniqueId();
-
-        QMap<QString, QString> atts;
-
-        emit addEntity("head",
-                       nclUID,
-                       atts,
-                       false);
-    }
-
-    QString headUID =
-        getProject()->getEntitiesbyType("head").at(0)->getUniqueId();
-
+    QString headUID = getHeadUid();
     // emitting
     emit addEntity("regionBase", headUID, standard, false);
 }
@@ -892,6 +875,135 @@ void QnlyComposerPlugin::selectRegionBase(const QString regionbaseUID)
         selectedId = new QString(regionbaseUID);
         emit sendBroadcastMessage("changeSelectedEntity", selectedId);
     }
+}
+
+QString QnlyComposerPlugin::getHeadUid()
+{
+  if (getProject()->getEntitiesbyType("head").isEmpty())
+  {
+    if (getProject()->getEntitiesbyType("ncl").isEmpty())
+    {
+      QMap<QString, QString> atts;
+
+      emit addEntity("ncl",
+                     getProject()->getUniqueId(),
+                     atts,
+                     false);
+    }
+
+    QString nclUID =
+        getProject()->getEntitiesbyType("ncl").at(0)->getUniqueId();
+
+    QMap<QString, QString> atts;
+
+    emit addEntity("head", nclUID, atts, false);
+  }
+
+  return getProject()->getEntitiesbyType("head").at(0)->getUniqueId();
+}
+
+void QnlyComposerPlugin::performMediaOverRegionAction(const QString mediaId,
+                                                      const QString regionUID)
+{
+  bool error = false;
+  Entity *region = project->getEntityById(regionUID);
+  Entity *media;
+  QList <Entity*> medias = project->getEntitiesbyType("media");
+  for(int i = 0; i < medias.size(); i++)
+  {
+    if(medias.at(i)->hasAttribute("id") &&
+       medias.at(i)->getAttribute("id") == mediaId)
+    {
+      media = medias.at(i);
+      break;
+    }
+  }
+
+  if(region == NULL)
+  {
+    qWarning() << "QnlyComposerPlugin::performMediaOverRegionAction Region does not exists. Nothing will be done." ;
+    error = 1;
+  }
+
+  if(media == NULL)
+  {
+    qWarning() << "QnlyComposerPlugin::performMediaOverRegionAction Media was not found! Nothing will be done." ;
+    error = 1;
+  }
+
+  int resp = QMessageBox::question(NULL,
+                        tr("Please, tell what do you want to do"),
+                        tr("What do you want to do?"),
+                        tr("Create a new descriptor"),
+                        tr("Import region properties to media object"),
+                        tr("Nothing!")
+                        );
+
+  if(!error)
+  {
+    if(resp == 0) // create a new descriptor
+    {
+      qDebug() << "Creating a new descriptor";
+      QMap <QString,QString> attrs;
+      QList <Entity*> descritorBases =
+          project->getEntitiesbyType("descriptorBase");
+
+      if(!descritorBases.size())//if does not exists any descriptorBase create one
+        emit addEntity("descriptorBase", getHeadUid(), attrs, false);
+
+      Entity *descriptorBase =
+          project->getEntitiesbyType("descriptorBase").at(0);
+
+      // create the descriptor
+      QString newDescriptorID = generateUniqueNCLId("descriptor");
+      attrs.insert("id", newDescriptorID);
+      attrs.insert("region", region->getAttribute("id"));
+      emit addEntity("descriptor", descriptorBase->getUniqueId(), attrs, false);
+
+      //update the media to refer to this descriptor
+      attrs.clear();
+      QMap <QString, QString>::iterator begin, end, it;
+      media->getAttributeIterator(begin, end);
+      for (it = begin; it != end; ++it)
+      {
+        attrs[it.key()] = it.value();
+      }
+      attrs["descriptor"] = newDescriptorID;
+      emit setAttributes(media, attrs, false);
+    }
+    else if(resp == 1) // import properies from region to media element
+    {
+      qDebug() << "Import attributes as property for media element.";
+      QMap <QString, QString>::iterator begin, end, it;
+      region->getAttributeIterator(begin, end);
+      for (it = begin; it != end; ++it)
+      {
+        QMap <QString, QString> attrs;
+        attrs.insert("name", it.key());
+        attrs.insert("value", it.value());
+
+        emit addEntity("property", media->getUniqueId(), attrs, false);
+      }
+    }
+  }
+}
+
+QString QnlyComposerPlugin::generateUniqueNCLId(const QString &tagname)
+{
+  QList <Entity*> elements = project->getEntitiesbyType(tagname);
+  QList <QString> currentElementsNCLID;
+  for(int i = 0; i < elements.size(); i++)
+  {
+    if(elements.at(i)->hasAttribute("id"))
+      currentElementsNCLID.push_back(elements.at(i)->getAttribute("id"));
+  }
+
+  for(int i = 1; ; i++)
+  {
+    QString retNCLID = tagname + QString::number(i);
+    if(!currentElementsNCLID.contains(retNCLID))
+      return retNCLID;
+  }
 }
 
 } } } // end namespace

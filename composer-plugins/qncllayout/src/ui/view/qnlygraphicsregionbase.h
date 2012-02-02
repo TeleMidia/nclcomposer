@@ -93,15 +93,16 @@ signals:
 
     void regionBaseSelectionRequested(const QString regionbaseUID);
 
+    void mediaOverRegion(const QString &mediaId, const QString &regionUID);
+
     void regionbasePerformed();
 
 protected:
     virtual void contextMenuEvent(QGraphicsSceneContextMenuEvent* event);
-
     void mousePressEvent(QGraphicsSceneMouseEvent* event);
 
 protected slots:
-      void performShow(QAction* action);
+    void performShow(QAction* action);
 
     void requestAdditionRegion(QnlyGraphicsRegion* parent);
 
@@ -115,6 +116,9 @@ protected slots:
     void performRegion();
 
     void performDelete();
+
+    void requestMediaOverRegionAction(QString mediaId,
+                                      QnlyGraphicsRegion* region);
 
 private:
     void createActions();

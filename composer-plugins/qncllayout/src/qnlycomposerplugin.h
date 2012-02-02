@@ -101,12 +101,26 @@ protected slots:
 
     void selectRegionBase(const QString regionbaseUID);
 
+    void performMediaOverRegionAction(const QString mediaId,
+                                      const QString regionUID);
+
 private:
     void clear();
 
     void loadRegionbase();
 
     void loadRegion(Entity* region);
+
+    /*!
+     * \brief Get the head id of the document. If this head does not exists
+     *  this function will create it.
+     */
+    QString getHeadUid();
+
+    /*!
+     * \brief Generate a descritor NCLID that are not present in the core.
+     */
+    QString generateUniqueNCLId(const QString &tagname);
 
     void createView();
 
