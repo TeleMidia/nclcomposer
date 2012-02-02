@@ -81,6 +81,12 @@ public:
 
      \param location
     */
+    void saveTemporaryProject(QString location);
+    /*!
+     \brief
+
+     \param location
+    */
     bool launchProject(QString location);
 
     /*!

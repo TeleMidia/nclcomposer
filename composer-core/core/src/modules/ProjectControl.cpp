@@ -226,6 +226,31 @@ void ProjectControl::saveProject(QString location)
     project->setDirty(false);
 }
 
+void ProjectControl::saveTemporaryProject(QString location)
+{
+  Project *project = openProjects.value(location);
+  QFile fout(location+"~");
+
+  qDebug() << "Trying to autosave: " << location;
+  if(!fout.exists())
+  {
+      qDebug() << "The file (" << location << ") doesn't exists. It will be\
+                   created.";
+  }
+
+  if( !fout.open( QIODevice::WriteOnly ) )
+  {
+     // It could not open
+     qDebug() << "Failed to open file (" <<  location << ") for writing.";
+     return;
+  }
+
+  QString content = project->toString();
+  fout.write(qCompress(content.toAscii(), content.size()));
+  fout.close();
+//  project->setDirty(false);
+}
+
 Project *ProjectControl::getOpenProject(QString location)
 {
     if(openProjects.contains(location))
