@@ -274,6 +274,8 @@ void NCLTextualViewPlugin::onEntityAdded(QString pluginID, Entity *entity)
 
   /* qDebug() << "NCLTextualViewPlugin::onEntityAdded" <<
        entity->getType() << " " << insertAtLine; */
+
+  currentEntity = entity;
 }
 
 void NCLTextualViewPlugin::errorMessage(QString error)
@@ -502,16 +504,21 @@ void NCLTextualViewPlugin::changeSelectedEntity(QString pluginID, void *param)
 void NCLTextualViewPlugin::updateCoreModel()
 {
   syncMutex.lock();
-  bool rebuildComposerModelFromScratch = false;
+  bool rebuildComposerModelFromScratch = true;
 
   QString text = nclTextEditor->text();
+  QString errorMessage;
+  int errorLine, errorColumn;
   //Create a DOM document with the new content
-  if(!xmlDoc.setContent(text))
+  nclTextEditor->clearErrorIndicators();
+  if(!xmlDoc.setContent(text, &errorMessage, &errorLine, &errorColumn))
   {
     //if the current XML is not well formed.
     QMessageBox::information(NULL, tr("Error"),
                              tr("Your document is not a Well-formed XML"));
     nclTextEditor->keepFocused();
+    nclTextEditor->markError(errorMessage, "", errorLine-1, errorColumn);
+    syncMutex.unlock();
     return;
   }
 
@@ -561,6 +568,11 @@ void NCLTextualViewPlugin::nonIncrementalUpdateCoreModel()
     nodes.pop_front();
     parentUId = parentUids.front();
     parentUids.pop_front();
+
+    if(current.tagName() == "ncl" && !current.hasAttribute("id"))
+    {
+      current.setAttribute("id", "myNCLDocID");
+    }
 
     //Process the node
     QMap<QString,QString> atts;
@@ -650,7 +662,7 @@ void NCLTextualViewPlugin::incrementalUpdateCoreModel()
     {
       if(children[i].tagName() == entityChildren[j]->getType())
       {
-        // if the same type, just update the attributes
+        //if the same type, just update the attributes
         //TODO: Compare attributes
         QMap<QString, QString> atts;
         QDomNamedNodeMap attributes = children[i].attributes();
@@ -666,10 +678,9 @@ void NCLTextualViewPlugin::incrementalUpdateCoreModel()
       else
       {
         //if type are differents, then we should change the type
-        //i.e. remove the entity and insert a new entity with the
-        //required type.
+        //i.e. remove the entity
         emit removeEntity(entityChildren[j], true);
-        //add new entity
+        //and insert a new entity with the required type.
         QMap<QString,QString> atts;
         QDomNamedNodeMap attributes = children[i].attributes();
         for (int k = 0; k < attributes.length(); k++)
@@ -684,13 +695,13 @@ void NCLTextualViewPlugin::incrementalUpdateCoreModel()
 
     if(i == children.size())
     {
-      // if there are more entity in the composer model than in the XML
+      // if there are more entities in the composer model than in the XML
       for(; j < entityChildren.size(); j++)
         emit removeEntity(entityChildren[j], true);
     }
     else if(j == entityChildren.size())
     {
-      // if there are more entity in the XML than in the composer model
+      // if there are more entities in the XML than in the composer model
       for(; i < children.size(); i++)
       {
         //add new entity

@@ -21,6 +21,7 @@
 #include <QUrl>
 #include <QFileInfo>
 #include <QStack>
+#include <Qsci/qscistyledtext.h>
 
 NCLTextEditor::NCLTextEditor(QWidget *parent) :
   QsciScintilla(parent)
@@ -69,6 +70,8 @@ void NCLTextEditor::initParameters()
   //  setIndentationGuides(true);
   setIndentationsUseTabs(true);
 
+
+  setAnnotationDisplay(QsciScintilla::AnnotationBoxed);
   //adding text partitions
   /*MyLexer *mylexer = new MyLexer(this);
 
@@ -131,6 +134,7 @@ void NCLTextEditor::clearErrorIndicators()
                        nr_lines,
                        tmp2.size(),
                        error_indicator);
+  clearAnnotations();
 }
 
 void NCLTextEditor::markError ( QString description,
@@ -157,6 +161,7 @@ void NCLTextEditor::markError ( QString description,
                      line,
                      tmp.size()-1,
                      error_indicator);
+  annotate(line, QsciStyledText(description, 0));
 }
 
 void NCLTextEditor::wheelEvent (QWheelEvent *event)

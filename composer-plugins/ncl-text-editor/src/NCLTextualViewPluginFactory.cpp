@@ -61,13 +61,14 @@ QIcon NCLTextualViewPluginFactory::icon() const
 
 QWidget* NCLTextualViewPluginFactory::getPreferencePageWidget()
 {
-    if (prefPageWidget == NULL)
+    /* if (prefPageWidget == NULL)
         {
             prefPageWidget = new QFrame();
             prefPageUi = new Ui::TextPluginPreferencesWidget();
             prefPageUi->setupUi(prefPageWidget);
         }
-    return prefPageWidget;
+    return prefPageWidget; */
+  return NULL;
 }
 
 void NCLTextualViewPluginFactory::setDefaultValues()
