@@ -1,10 +1,23 @@
 TEMPLATE    =   lib
-CONFIG      +=  qt debug plugin dll
+CONFIG      +=  plugin dll
+CONFIG      -=  debug
 MOC_DIR     =   .moc
 OBJECTS_DIR =   .obj
 UI_DIR      =   .ui
 
-DEFINES += QT_NO_DEBUG_OUTPUT QT_NO_DEBUG_WARNING
+# Uses FORCERELEASE variable because CONFIG and SUBDIR force three executions
+# if qmake and the last one does not preserves CONFIG from command line.
+contains(FORCERELEASE, true) {
+  CONFIG += qt warn_on release
+  CONFIG -= debug
+  DEFINES += QT_NO_DEBUG_OUTPUT QT_NO_DEBUG_WARNING
+  message ("plugins-common.pri RELEASE build!")
+}
+else {
+  CONFIG += qt warn_on debug console
+  CONFIG -= release
+  message ("plugins-common.pri DEBUG build!")
+}
 
 macx {
   INSTALLBASE = /Applications/Composer

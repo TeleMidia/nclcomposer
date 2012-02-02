@@ -12,6 +12,7 @@ INCLUDEPATH +=  include \
 
 # We use QMAKE_CXXFLAGS instead of INCLUDEPATH because our qscintilla is
 # modified, and must be found before any other that is installed.
+# If you know a better way to do that, please report us.
 QMAKE_CXXFLAGS  += -Ideps/QScintilla-gpl-2.6.1/Qt4 \
                    -Ideps/QScintilla-gpl-2.6.1/include
 
@@ -19,7 +20,7 @@ release {
 LIBS      +=    -Ldeps/QScintilla-gpl-2.6.1/Qt4/release \
                 -lqscintilla2_telem
 }else:debug {
-LIBS      +=    -L/deps/QScintilla-gpl-2.6.1/Qt4/debug \
+LIBS      +=    -Ldeps/QScintilla-gpl-2.6.1/Qt4/debug \
                 -lqscintilla2_telem
 }
 
