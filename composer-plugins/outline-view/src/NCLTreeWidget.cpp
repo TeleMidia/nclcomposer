@@ -171,7 +171,8 @@ void NCLTreeWidget::userAddNewElement()
   QString parentId = "", tagname = "";
   QStringList strlist;
 
-  if(selecteds.size()) {
+  if(selecteds.size())
+  {
     item = selecteds.at(0);
     parentId = item->text(2);
     tagname = item->text(3);
@@ -188,6 +189,8 @@ void NCLTreeWidget::userAddNewElement()
       }
     }
   }
+  else
+    strlist << "ncl"; //\fixme this should be loaded from element that has not parents.
 
   QString element = QInputDialog::getItem( this,
                                            tr("Add child"),
@@ -200,6 +203,8 @@ void NCLTreeWidget::userAddNewElement()
   {
     //Add new Element to OutlineWidget
     QMap<QString,QString> attr;
+    if(element == "ncl")
+      attr.insert("id", "myNCLID");
     emit elementAddedByUser (element, parentId, attr, false);
   }
 }
