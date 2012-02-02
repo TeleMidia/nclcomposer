@@ -29,11 +29,15 @@ QnlyGraphicsRegionBase::QnlyGraphicsRegionBase(QObject* parent,
     createMenus();
     createConnections();
 
+    graphicsRegionBaseId = addText("regionBaseId");
+    graphicsRegionBaseId->setPos(100,100);
+
     selectedRegion = NULL;
 }
 
 QnlyGraphicsRegionBase::~QnlyGraphicsRegionBase()
 {
+
 }
 
 QString QnlyGraphicsRegionBase::getId() const
@@ -43,7 +47,9 @@ QString QnlyGraphicsRegionBase::getId() const
 
 void QnlyGraphicsRegionBase::setId(const QString &id)
 {
-    this->id = id;
+  this->id = id;
+  graphicsRegionBaseId->setToolTip(id);
+  graphicsRegionBaseId->setPlainText(id);
 }
 
 QString QnlyGraphicsRegionBase::getUid() const

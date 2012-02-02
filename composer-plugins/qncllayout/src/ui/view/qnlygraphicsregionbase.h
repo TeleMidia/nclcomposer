@@ -181,6 +181,8 @@ private:
 
     QActionGroup* regionActionGroup;
 
+    QGraphicsTextItem *graphicsRegionBaseId;
+
     QString id;
 
     QString uid;
