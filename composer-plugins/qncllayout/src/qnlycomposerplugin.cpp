@@ -978,6 +978,9 @@ void QnlyComposerPlugin::performMediaOverRegionAction(const QString mediaId,
       region->getAttributeIterator(begin, end);
       for (it = begin; it != end; ++it)
       {
+        if(it.key() == "id" || it.key() == "title")
+          continue; //this attributes will not became a property of the media
+
         QMap <QString, QString> attrs;
         attrs.insert("name", it.key());
         attrs.insert("value", it.value());
