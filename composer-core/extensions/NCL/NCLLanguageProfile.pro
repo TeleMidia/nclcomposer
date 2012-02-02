@@ -12,10 +12,21 @@ OBJECTS_DIR = .objs
 
 TARGET = NCLLanguageProfile
 TEMPLATE = lib
-CONFIG += debug plugin dll
-CONFIG -= release
+CONFIG += plugin dll
 
-DEFINES += QT_NO_DEBUG_OUTPUT QT_NO_DEBUG_WARNING
+# Uses FORCERELEASE variable because CONFIG and SUBDIR force three executions
+# if qmake and the last one does not preserves CONFIG from command line.
+contains(FORCERELEASE, true) {
+  CONFIG += qt warn_on release
+  CONFIG -= debug
+  DEFINES += QT_NO_DEBUG_OUTPUT QT_NO_DEBUG_WARNING
+  message ("NCLLanguageProfile.pro RELEASE build!")
+}
+else {
+  CONFIG += qt warn_on debug console
+  CONFIG -= release
+  message ("NCLLanguageProfile.pro DEBUG build!")
+}
 
 macx {
   INSTALLBASE = /Library/Frameworks

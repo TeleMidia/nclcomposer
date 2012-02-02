@@ -7,12 +7,23 @@ TEMPLATE = lib
 TARGET = ComposerCore
 VERSION = 1.0
 QT += gui
-CONFIG += debug dll
-CONFIG -= release
+CONFIG += dll
 MOC_DIR = .mocs
 OBJECTS_DIR = .objs
 
-# DEFINES += QT_NO_DEBUG_OUTPUT QT_NO_DEBUG_WARNING
+# Uses FORCERELEASE variable because CONFIG and SUBDIR force three executions
+# if qmake and the last one does not preserves CONFIG from command line.
+contains(FORCERELEASE, true) {
+  CONFIG += qt warn_on release
+  CONFIG -= debug
+  DEFINES += QT_NO_DEBUG_OUTPUT QT_NO_DEBUG_WARNING
+  message ("core.pro RELEASE build!")
+}
+else {
+  CONFIG += qt warn_on debug console
+  CONFIG -= release
+  message ("core.pro DEBUG build!")
+}
 
 macx:CONFIG += lib_bundle
 
