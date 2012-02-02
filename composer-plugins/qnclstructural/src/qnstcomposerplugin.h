@@ -185,10 +185,11 @@ private:
     QMap<QString, QString> entities; // core -> structural
     QMap<QString, QString> nclIDtoStructural; // nclId -> structural ID
 
-
 /* Functions to handle the "sinchronization with core" */
     bool isSyncingFromTextual;
     void cacheNCLIds();
+    QString insertNCLIDIfEmpty(Entity *entity);
+    QString getNCLIdFromEntity(Entity *entity);
     bool isEntityHandled(Entity *entity);
     void syncNCLIdsWithStructuralIds();
 
