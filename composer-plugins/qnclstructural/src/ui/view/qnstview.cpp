@@ -2366,6 +2366,12 @@ void QnstView::changeBind(QnstBind* entity, const QMap<QString, QString> propert
 
         entity->setInterfaceUid(properties["interfaceUid"]);
 
+        selected = NULL;  // \fixme This fix temporarily a BUG.
+                          // The bug is related with the fact that when the bind
+                          // is selected, and the adjustBind bellow is called
+                          // the value pointed by "selected" is deleted and
+                          // it stay points to garbage.
+
         adjustBind(entity);
     }
 }
@@ -3175,7 +3181,8 @@ void QnstView::requestEntitySelection(QnstGraphicsEntity* entity)
 
     if (entity != NULL){
         if (entity->isSelected()){
-            if (selected != NULL){
+            if (selected != NULL)
+            {
                 selected->setSelected(false);
                 selected->adjust();
             }
