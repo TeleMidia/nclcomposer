@@ -1966,6 +1966,7 @@ QString QnstComposerPlugin::insertNCLIDIfEmpty(Entity *entity)
     emit setAttributes(entity, attrsTmp, false);
     return defaultID;
   }
+  return id;
 }
 
 QString QnstComposerPlugin::getNCLIdFromEntity(Entity *entity)
@@ -1980,11 +1981,11 @@ QString QnstComposerPlugin::getNCLIdFromEntity(Entity *entity)
       nclID = entity->getAttribute("id");
     else if(entity->hasAttribute("name"))
       nclID = entity->getAttribute("name");
-    else if(entity->getType() == "bind")
-    {
-      nclID = entity->getType() + "_" + entity->getAttribute("component") + "_"
-          + entity->getAttribute("interface");
-    }
+//    else if(entity->getType() == "bind")
+//    {
+//      nclID = entity->getType() + "_" + entity->getAttribute("component") + "_"
+//          + entity->getAttribute("interface");
+//    }
     else
       nclID = QUuid::createUuid().toString();
 
@@ -2060,7 +2061,7 @@ void QnstComposerPlugin::syncNCLIdsWithStructuralIds()
       currentEntity = project->getEntityById(coreID);
       if(currentEntity != NULL)
       {
-        if(dirtyEntities.contains(currentEntity->getUniqueId()))
+//        if(dirtyEntities.contains(currentEntity->getUniqueId()))
           requestEntityChange(currentEntity); //just update it
 
         alreadyUpdatedCoreId.push_back(coreID);

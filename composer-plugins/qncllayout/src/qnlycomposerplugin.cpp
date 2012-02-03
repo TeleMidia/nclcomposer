@@ -20,6 +20,7 @@
 #include <QAbstractButton>
 #include <QPushButton>
 #include <QMessageBox>
+#include <QInputDialog>
 
 namespace composer {
     namespace plugin {
@@ -902,12 +903,75 @@ QString QnlyComposerPlugin::getHeadUid()
   return getProject()->getEntitiesbyType("head").at(0)->getUniqueId();
 }
 
+QMap <QString, QString> QnlyComposerPlugin::getRegionAttributes(Entity *region)
+{
+  QMap <QString, QString>::iterator begin, end, it;
+  QVector <double> widths;
+  QVector <double> heights;
+  QVector <double> tops;
+  QVector <double> lefts;
+
+  double top = 1.0, left = 1.0;
+  double cvalue = 0.0;
+
+  Entity *currentRegion = region;
+  while(currentRegion != NULL && currentRegion->getType() == "region")
+  {
+    currentRegion->getAttributeIterator(begin, end);
+    for (it = begin; it != end; ++it)
+    {
+      QString name = it.key();
+      QString value = it.value();
+      if(value.endsWith("%"))
+        cvalue = value.mid(0, value.indexOf("%")).toDouble();
+      else
+        cvalue = 100.0;
+
+      cvalue /= 100.0;
+
+      if(name == "width") widths.push_back(cvalue);
+      else if(name == "height") heights.push_back(cvalue);
+      else if(name == "top") tops.push_back(cvalue);
+      else if(name == "left") lefts.push_back(cvalue);
+    }
+    currentRegion = currentRegion->getParent();
+  }
+
+  int i;
+  //width
+  heights.push_back(1.0f);
+  widths.push_back(1.0f);
+
+  for(i = widths.size()-1; i > 0; --i)
+    widths[i-1] *= widths[i];
+  //height
+  for(i = heights.size()-1; i > 0; --i)
+    heights[i-1] *= heights[i];
+
+  //left
+  left = top = 0.0;
+  for(i = lefts.size()-1; i >= 0; --i)
+    left += lefts[i] * widths[i+1];
+
+  qDebug() << tops;
+  for(i = tops.size()-1; i >= 0; --i)
+    top += tops[i] * heights[i+1];
+
+  QMap <QString, QString> attrs;
+  attrs.insert("width", QString::number(widths[0]*100.0)+"%");
+  attrs.insert("height", QString::number(heights[0]*100.0)+"%");
+  attrs.insert("left", QString::number(left*100.0)+"%");
+  attrs.insert("top", QString::number(top*100.0)+"%");
+
+  return attrs;
+}
+
 void QnlyComposerPlugin::performMediaOverRegionAction(const QString mediaId,
                                                       const QString regionUID)
 {
   bool error = false;
   Entity *region = project->getEntityById(regionUID);
-  Entity *media;
+  Entity *media = NULL;
   QList <Entity*> medias = project->getEntitiesbyType("media");
   for(int i = 0; i < medias.size(); i++)
   {
@@ -945,13 +1009,13 @@ void QnlyComposerPlugin::performMediaOverRegionAction(const QString mediaId,
     QPushButton *importPropButton =
         msgBox.addButton(tr("Import region properties to media object"),
                          QMessageBox::ActionRole);
-    importPropButton->setEnabled(false);
+//     importPropButton->setEnabled(false);
 
     QPushButton *cancelButton =
         msgBox.addButton(tr("Nothing!"),
                          QMessageBox::ActionRole);
 
-//    msgBox.setIcon(QMessageBox::Question);
+//  msgBox.setIcon(QMessageBox::Question);
     msgBox.exec();
     if (msgBox.clickedButton() == createDescButton) // create a new descriptor
     {
@@ -960,28 +1024,41 @@ void QnlyComposerPlugin::performMediaOverRegionAction(const QString mediaId,
       QList <Entity*> descritorBases =
           project->getEntitiesbyType("descriptorBase");
 
-      if(!descritorBases.size())//if does not exists any descriptorBase create one
-        emit addEntity("descriptorBase", getHeadUid(), attrs, false);
-
-      Entity *descriptorBase =
-          project->getEntitiesbyType("descriptorBase").at(0);
-
       // create the descriptor
       QString newDescriptorID = project->generateUniqueNCLId("descriptor");
-      attrs.insert("id", newDescriptorID);
-      attrs.insert("region", region->getAttribute("id"));
-      emit addEntity("descriptor", descriptorBase->getUniqueId(), attrs, false);
 
-      //update the media to refer to this descriptor
-      attrs.clear();
-      QMap <QString, QString>::iterator begin, end, it;
-      media->getAttributeIterator(begin, end);
-      for (it = begin; it != end; ++it)
+      bool ok;
+      newDescriptorID = QInputDialog::getText(NULL,
+                                              "Descriptor id:",
+                                              "Please, enter the descriptor id",
+                                              QLineEdit::Normal,
+                                              newDescriptorID,
+                                              &ok);
+
+      if(ok)
       {
-        attrs[it.key()] = it.value();
+        if(!descritorBases.size()) // if does not exists any descriptorBase
+                                   // create one
+          emit addEntity("descriptorBase", getHeadUid(), attrs, false);
+
+        Entity *descriptorBase =
+            project->getEntitiesbyType("descriptorBase").at(0);
+        attrs.insert("id", newDescriptorID);
+        attrs.insert("region", region->getAttribute("id"));
+
+        emit addEntity("descriptor", descriptorBase->getUniqueId(), attrs, false);
+
+        //update the media to refer to this descriptor
+        attrs.clear();
+        QMap <QString, QString>::iterator begin, end, it;
+        media->getAttributeIterator(begin, end);
+        for (it = begin; it != end; ++it)
+        {
+          attrs[it.key()] = it.value();
+        }
+        attrs["descriptor"] = newDescriptorID;
+        emit setAttributes(media, attrs, false);
       }
-      attrs["descriptor"] = newDescriptorID;
-      emit setAttributes(media, attrs, false);
     }
     // import properties from region to media element
     else if (msgBox.clickedButton() == importPropButton)
@@ -999,20 +1076,17 @@ void QnlyComposerPlugin::performMediaOverRegionAction(const QString mediaId,
       }
 
       qDebug() << "Import attributes as properties of media element.";
-      QMap <QString, QString>::iterator begin, end, it;
-      region->getAttributeIterator(begin, end);
-      for (it = begin; it != end; ++it)
+      QMap <QString, QString> newAttrs = getRegionAttributes(region);
+      QString key;
+      foreach(key, newAttrs.keys())
       {
-        if(it.key() == "id" || it.key() == "title")
-          continue; //this attributes will not became a property of the media
-
         QMap <QString, QString> attrs;
-        attrs.insert("name", it.key());
-        attrs.insert("value", it.value());
+        attrs.insert("name", key);
+        attrs.insert("value", newAttrs.value(key));
 
-        if(propertyNameToUID.keys().contains(it.key()))
+        if(propertyNameToUID.keys().contains(key))
         {
-          QString propUID = propertyNameToUID.value(it.key());
+          QString propUID = propertyNameToUID.value(key);
           emit setAttributes(project->getEntityById(propUID), attrs, false);
         }
         else

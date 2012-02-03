@@ -117,6 +117,8 @@ private:
      */
     QString getHeadUid();
 
+    QMap <QString, QString> getRegionAttributes(Entity *region);
+
     void createView();
 
     void createConnections();
