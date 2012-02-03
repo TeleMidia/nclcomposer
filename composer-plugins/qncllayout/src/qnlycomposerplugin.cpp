@@ -568,8 +568,7 @@ void QnlyComposerPlugin::addRegionBaseToView(Entity* entity)
             // adding
             regionbases[regionbaseUID] = entity;
 
-            view->addRegionBase(regionbaseUID,
-                                attributes);
+            view->addRegionBase(regionbaseUID, attributes);
         }
     }
 }
