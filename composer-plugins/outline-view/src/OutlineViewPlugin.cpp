@@ -26,6 +26,7 @@ namespace composer {
 OutlineViewPlugin::OutlineViewPlugin()
 {
     window = new NCLTreeWidget(0);
+    windowBuffering = new NCLTreeWidget(0);
     project = NULL;
 
     connect ( window,
@@ -95,6 +96,18 @@ void OutlineViewPlugin::onEntityAdded(QString pluginID, Entity *entity)
     }
 
     idToItem[entity->getUniqueId()] = item;
+
+    if(entity->getType() == "ncl" ||
+       entity->getType() == "body" ||
+       entity->getType() == "link" ||
+       entity->getType() == "media" )
+    {
+      if(!attrs.keys().contains("id"))
+      {
+        attrs.insert("id", project->generateUniqueNCLId(entity->getType()));
+        emit setAttributes(entity, attrs, false);
+      }
+    }
 }
 
 void OutlineViewPlugin::errorMessage(QString error)
@@ -264,5 +277,19 @@ void OutlineViewPlugin::changeSelectedEntity(QString pluginID, void *param){
                     << " Entity that it doesn't know.";
     }
 }
+
+/*void OutlineViewPlugin::textualStartSync(QString, void*)
+{
+  NCLTreeWidget *tmp = window;
+  window = windowBuffering;
+  windowBuffering = tmp;
+}
+
+void QnstComposerPlugin::textualFinishSync(QString, void*)
+{
+  NCLTreeWidget *tmp = window;
+  window = windowBuffering;
+  windowBuffering = tmp;
+}*/
 
 } } } //end namespace
