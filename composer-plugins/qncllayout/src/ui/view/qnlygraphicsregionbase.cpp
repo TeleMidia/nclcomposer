@@ -33,9 +33,9 @@ QnlyGraphicsRegionBase::QnlyGraphicsRegionBase(QObject* parent,
 
     selectedRegion = NULL;
 
-    setSceneRect(0,0,640,480);
+    setSceneRect(0,0,854,480);
 
-    bgrect = new QGraphicsRectItem(0,0,640,480,0,this);
+    bgrect = new QGraphicsRectItem(0,0,854,480,0,this);
     bgrect->setBrush(QBrush(QColor("#FFFFFF")));
     bgrect->setPen(QPen(QColor("#BBBBBB")));
     bgrect->setZValue(-1);
@@ -113,13 +113,13 @@ void QnlyGraphicsRegionBase::changeRegion(QnlyGraphicsRegion* region,
 {
     if (region != NULL)
     {
-        if (!attributes["id"].isEmpty()){
+//        if (!attributes["id"].isEmpty()){
             region->setId(attributes["id"]);
-        }
+//        }
 
-        if (!attributes["title"].isEmpty()){
+//        if (!attributes["title"].isEmpty()){
             region->setTitle(attributes["title"]);
-        }
+//        }
 
         if (!attributes["color"].isEmpty()){
             region->setColor(attributes["color"]);
@@ -273,10 +273,10 @@ void QnlyGraphicsRegionBase::requestRegionChange(QnlyGraphicsRegion* region,
     else if (!region->getId().isEmpty())
         full["id"] = region->getId();
 
-    if (attributes.contains("title"))
-        full["title"] = attributes["title"];
-    else if (!region->getTitle().isEmpty())
-        full["title"] = region->getTitle();
+//    if (attributes.contains("title"))
+//        full["title"] = attributes["title"];
+//    else if (!region->getTitle().isEmpty())
+//        full["title"] = region->getTitle();
 
     if (attributes.contains("color"))
         full["color"] = attributes["color"];
@@ -301,23 +301,23 @@ void QnlyGraphicsRegionBase::requestRegionChange(QnlyGraphicsRegion* region,
         full["left"] = QString::number(value, 'f', 2) + "%";
     }
 
-    if (attributes.contains("right"))
-        full["right"] = attributes["right"];
-    else
-    {
-        value = region->getRelativeRight()*100;
-        ROUND_DOUBLE(value);
-        full["right"] = QString::number(value, 'f', 2) + "%";
-    }
+//    if (attributes.contains("right"))
+//        full["right"] = attributes["right"];
+//    else
+//    {
+//        value = region->getRelativeRight()*100;
+//        ROUND_DOUBLE(value);
+//        full["right"] = QString::number(value, 'f', 2) + "%";
+//    }
 
-    if (attributes.contains("bottom"))
-        full["bottom"] = attributes["bottom"];
-    else
-    {
-        value = region->getRelativeBottom()*100;
-        ROUND_DOUBLE(value);
-        full["bottom"] = QString::number(value, 'f', 2) + "%";
-    }
+//    if (attributes.contains("bottom"))
+//        full["bottom"] = attributes["bottom"];
+//    else
+//    {
+//        value = region->getRelativeBottom()*100;
+//        ROUND_DOUBLE(value);
+//        full["bottom"] = QString::number(value, 'f', 2) + "%";
+//    }
 
     if (attributes.contains("width"))
         full["width"] = attributes["width"];
@@ -659,8 +659,8 @@ void QnlyGraphicsRegionBase::requestAdditionRegion(QnlyGraphicsRegion* parent)
 
     attributes["top"] = "10%";
     attributes["left"] = "10%";
-    attributes["right"] = "10%";
-    attributes["bottom"] = "10%";
+//    attributes["right"] = "10%";
+//    attributes["bottom"] = "10%";
     attributes["width"] = "80%";
     attributes["height"] = "80%";
 
@@ -719,6 +719,11 @@ void QnlyGraphicsRegionBase::removeRegion(QnlyGraphicsRegion* region)
 
         emit regionBaseSelectionRequested(uid);
     }
+}
+
+QGraphicsItem* QnlyGraphicsRegionBase::getBackgroundItem()
+{
+    return bgrect;
 }
 
 void QnlyGraphicsRegionBase::performDelete()

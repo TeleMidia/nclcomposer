@@ -70,6 +70,8 @@ public:
 
     void removeRegion(QnlyGraphicsRegion* region);
 
+    QGraphicsItem* getBackgroundItem();
+
 signals:
     void regionAdditionRequested(const QString regionUID,
                      const QString parentUID,
@@ -213,13 +215,13 @@ private:
 
     QString device;
 
+    QGraphicsRectItem* bgrect;
+
     QnlyGraphicsRegion* selectedRegion;
 
     QMap<QString, QAction*> regionActions;
 
     QMap<QString, QnlyGraphicsRegion*> regions;
-
-    QGraphicsRectItem* bgrect;
 };
 
 #endif // QNLYGRAPHICSREGIONBASE_H

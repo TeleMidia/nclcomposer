@@ -265,7 +265,6 @@ void QnlyView::requestRegionAddition(const QString regionUID,
                            QMap<QString, QString> attributes)
 {
     attributes["id"] = "rg" + QString::number(nregions+1);
-    attributes["title"] = "region" + QString::number(nregions+1);
 
     nregions++;
 
@@ -320,6 +319,8 @@ void QnlyView::addRegion(const QString regionUID,
         }
 
         QnlyGraphicsRegionBase* regionbase = regionbases[regionbaseUID];
+
+        nregions++;
 
         addRegion(region, parent, regionbase, attributes);
     }
@@ -573,9 +574,11 @@ void QnlyView::removeRegionBase(QnlyGraphicsRegionBase* regionBase)
 
         foreach(QGraphicsItem* item, regionBase->items())
         {
-            QnlyGraphicsRegion* child = (QnlyGraphicsRegion*) item;
+            if (item != regionBase->getBackgroundItem()){
+                QnlyGraphicsRegion* child = (QnlyGraphicsRegion*) item;
 
-            regions.remove(child->getUid());
+                regions.remove(child->getUid());
+            }
         }
 
 //        delete (regionBase);
