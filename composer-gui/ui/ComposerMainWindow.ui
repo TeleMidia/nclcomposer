@@ -308,7 +308,7 @@ QMenu {
      <x>0</x>
      <y>0</y>
      <width>776</width>
-     <height>25</height>
+     <height>21</height>
     </rect>
    </property>
    <property name="layoutDirection">
@@ -334,10 +334,24 @@ QMenu {
      <addaction name="action_Clear_Recent_Files"/>
      <addaction name="separator"/>
     </widget>
+    <widget class="QMenu" name="menuImport">
+     <property name="title">
+      <string>Import</string>
+     </property>
+     <addaction name="actionImport_from_existing_NCL"/>
+    </widget>
+    <widget class="QMenu" name="menuExport">
+     <property name="title">
+      <string>Export</string>
+     </property>
+     <addaction name="actionTo_NCL_Document"/>
+    </widget>
     <addaction name="action_New_Project"/>
     <addaction name="actionOpen_Project"/>
-    <addaction name="actionImport_from_existing_NCL"/>
     <addaction name="menu_Recent_Files"/>
+    <addaction name="separator"/>
+    <addaction name="menuImport"/>
+    <addaction name="menuExport"/>
     <addaction name="separator"/>
     <addaction name="action_Close_Project"/>
     <addaction name="action_Close_All"/>
@@ -555,7 +569,7 @@ QMenu {
      <normaloff>:/mainwindow/images/import_document_icon.png</normaloff>:/mainwindow/images/import_document_icon.png</iconset>
    </property>
    <property name="text">
-    <string>Import from existing NCL Document</string>
+    <string>From NCL Document</string>
    </property>
   </action>
   <action name="actionPreferences">
@@ -586,6 +600,14 @@ QMenu {
    </property>
    <property name="toolTip">
     <string>Stop the current document.</string>
+   </property>
+  </action>
+  <action name="actionTo_NCL_Document">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>To NCL Document</string>
    </property>
   </action>
  </widget>

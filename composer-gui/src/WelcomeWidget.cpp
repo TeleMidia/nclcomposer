@@ -53,9 +53,10 @@ WelcomeWidget::WelcomeWidget(QWidget *parent): QWidget(parent),
 #endif
 
 #ifdef WITH_TEST_VERSION_MESSAGE
-#define LABEL_BUILD "This is a test version. Version: " NCLCOMPOSER_GUI_VERSION \
-  " Build Date and time:" BUILD_DATE
-    ui->label_BuildMessage->setText(LABEL_BUILD);
+#define LABEL_BUILD "This is an ALPHA version. Version: " \
+    NCLCOMPOSER_GUI_VERSION  " Build Date and time:" BUILD_DATE
+
+        ui->label_BuildMessage->setText(LABEL_BUILD);
     ui->label_BuildMessage->setStyleSheet("color:white; font-size:13px; text-align: right;");
 #endif
 }

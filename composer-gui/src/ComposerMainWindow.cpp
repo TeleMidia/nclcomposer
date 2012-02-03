@@ -520,7 +520,6 @@ void ComposerMainWindow::tabClosed(int index)
     return; // Do nothing
 
   QString location = tabProjects->tabToolTip(index);
-
   Project *project = ProjectControl::getInstance()->getOpenProject(location);
   qDebug() << location << project;
   if(project != NULL && project->isDirty())
@@ -538,26 +537,29 @@ void ComposerMainWindow::tabClosed(int index)
   }
 
   ProjectControl::getInstance()->closeProject(location);
-  QMainWindow *w = projectsWidgets[location];
-
-  //Remove from allDocks
-  int i = 0;
-  while(i < allDocks.size())
+  if(projectsWidgets.contains(location))
   {
-    if(w->isAncestorOf(allDocks.at(i)))
-      allDocks.removeAt(i);
-    else
-      i++;
-  }
+    QMainWindow *w = projectsWidgets[location];
 
-  // Delete QMainWindow
-  if (w)
-  {
-    delete w;
-    w = NULL;
+    //Remove from allDocks
+    int i = 0;
+    while(i < allDocks.size())
+    {
+      if(w->isAncestorOf(allDocks.at(i)))
+        allDocks.removeAt(i);
+      else
+        i++;
+    }
+
+    // Delete QMainWindow
+    if (w)
+    {
+      delete w;
+      w = NULL;
+    }
+    projectsWidgets.remove(location);
+    firstDock.remove(location);
   }
-  projectsWidgets.remove(location);
-  firstDock.remove(location);
 }
 
 void ComposerMainWindow::closeCurrentTab()
@@ -937,13 +939,29 @@ void ComposerMainWindow::endOpenProject(QString project)
 void ComposerMainWindow::saveCurrentProject()
 {
   int index = tabProjects->currentIndex();
+  bool saveAlsoNCLDocument = true;
 
-  if(index != -1)
+  if(index != 0)
   {
     QString location = tabProjects->tabToolTip(index);
     PluginControl::getInstance()->savePluginsData(location);
     ProjectControl::getInstance()->saveProject(location);
     ui->action_Save->setEnabled(false);
+
+    if(saveAlsoNCLDocument)
+    {
+      Project *project = ProjectControl::getInstance()->getOpenProject(location);
+      QString nclfilepath = location.mid(0, location.lastIndexOf(".")) + ".ncl";
+      QFile file(nclfilepath);
+      if(file.open(QFile::WriteOnly | QIODevice::Truncate))
+      {
+        // Write FILE!!
+        if(project->getChildren().size())
+          file.write(project->getChildren().at(0)->toString(0, false).toAscii());
+
+        file.close();
+      }
+    }
   }
   else
   {
@@ -1065,7 +1083,7 @@ void ComposerMainWindow::runNCL()
   {
     /* Write FILE!! */
     if(project->getChildren().size())
-      file.write(project->getChildren().at(0)->toString(0).toAscii());
+      file.write(project->getChildren().at(0)->toString(0, false).toAscii());
 
     file.close();
 
