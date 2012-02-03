@@ -32,6 +32,13 @@ QnlyGraphicsRegionBase::QnlyGraphicsRegionBase(QObject* parent,
     graphicsRegionBaseId = NULL;
 
     selectedRegion = NULL;
+
+    setSceneRect(0,0,640,480);
+
+    bgrect = new QGraphicsRectItem(0,0,640,480,0,this);
+    bgrect->setBrush(QBrush(QColor("#FFFFFF")));
+    bgrect->setPen(QPen(QColor("#BBBBBB")));
+    bgrect->setZValue(-1);
 }
 
 QnlyGraphicsRegionBase::~QnlyGraphicsRegionBase()
@@ -467,6 +474,41 @@ void QnlyGraphicsRegionBase::QnlyGraphicsRegionBase::createActions()
     sendbackAction->setEnabled(false);
     sendbackAction->setShortcut(QKeySequence("Shift+Ctrl+["));
 
+    re640x480 = new QAction(this);
+    re640x480->setText(tr("640x480 (4:3)"));
+    re640x480->setCheckable(true);
+    re640x480->setChecked(true);
+
+    re800x600 = new QAction(this);
+    re800x600->setText(tr("800x600 (4:3)"));
+    re800x600->setCheckable(true);
+    re800x600->setChecked(false);
+
+    re1024x768 = new QAction(this);
+    re1024x768->setText(tr("1024x768 (4:3)"));
+    re1024x768->setCheckable(true);
+    re1024x768->setChecked(false);
+
+    re854x480 = new QAction(this);
+    re854x480->setText(tr("854x480 (16:9)"));
+    re854x480->setCheckable(true);
+    re854x480->setChecked(false);
+
+    re1280x720 = new QAction(this);
+    re1280x720->setText(tr("1280x720 (16:9)"));
+    re1280x720->setCheckable(true);
+    re1280x720->setChecked(false);
+
+    re1920x1080 = new QAction(this);
+    re1920x1080->setText(tr("1920x1080 (16:9)"));
+    re1920x1080->setCheckable(true);
+    re1920x1080->setChecked(false);
+
+    re320x400 = new QAction(this);
+    re320x400->setText(tr("320x400 (4:5)"));
+    re320x400->setCheckable(true);
+    re320x400->setChecked(false);
+
     // hide action
     hideAction = new QAction(this);
     hideAction->setText(tr("Hide"));
@@ -481,6 +523,17 @@ void QnlyGraphicsRegionBase::QnlyGraphicsRegionBase::createActions()
 
     regionActionGroup = new QActionGroup(this);
     regionActionGroup->setExclusive(false);
+
+    screensizeGroup  = new QActionGroup(this);
+    screensizeGroup->setExclusive(true);
+
+    screensizeGroup->addAction(re640x480);
+    screensizeGroup->addAction(re800x600);
+    screensizeGroup->addAction(re1024x768);
+    screensizeGroup->addAction(re854x480);
+    screensizeGroup->addAction(re1280x720);
+    screensizeGroup->addAction(re1920x1080);
+    screensizeGroup->addAction(re320x400);
 }
 
 void QnlyGraphicsRegionBase::createMenus()
@@ -523,6 +576,21 @@ void QnlyGraphicsRegionBase::createMenus()
     arrangeMenu->addAction(sendbackwardAction);
     arrangeMenu->addAction(sendbackAction);
 
+    // screensize menu
+    screensizeMenu = new QMenu();
+    screensizeMenu->setTitle(tr("Screen Size"));
+
+    screensizeMenu->setEnabled(true);
+
+    screensizeMenu->addAction(re640x480);
+    screensizeMenu->addAction(re800x600);
+    screensizeMenu->addAction(re1024x768);
+    screensizeMenu->addAction(re854x480);
+    screensizeMenu->addAction(re1280x720);
+    screensizeMenu->addAction(re1920x1080);
+    screensizeMenu->addAction(re320x400);
+
+
     // context menu
     contextMenu = new QMenu();
     contextMenu->addAction(helpAction);
@@ -541,6 +609,7 @@ void QnlyGraphicsRegionBase::createMenus()
     contextMenu->addMenu(viewMenu);
     contextMenu->addMenu(insertMenu);
     contextMenu->addMenu(showMenu);
+    contextMenu->addMenu(screensizeMenu);
     contextMenu->addMenu(arrangeMenu);
     contextMenu->addSeparator();
     contextMenu->addAction(hideAction);
@@ -563,6 +632,14 @@ void QnlyGraphicsRegionBase::createConnections()
 
     connect(deleteAction, SIGNAL(triggered()),
             SLOT(performDelete()));
+
+    connect(re640x480, SIGNAL(triggered()), SLOT(perform640x480()));
+    connect(re800x600, SIGNAL(triggered()), SLOT(perform800x600()));
+    connect(re1024x768, SIGNAL(triggered()), SLOT(perform1024x768()));
+    connect(re854x480, SIGNAL(triggered()), SLOT(perform854x480()));
+    connect(re1280x720, SIGNAL(triggered()), SLOT(perform1280x720()));
+    connect(re1920x1080, SIGNAL(triggered()), SLOT(perform1920x1080()));
+    connect(re320x400, SIGNAL(triggered()), SLOT(perform320x400()));
 }
 
 void QnlyGraphicsRegionBase::performShow(QAction* action)
@@ -834,7 +911,7 @@ void QnlyGraphicsRegionBase::addRegion(QnlyGraphicsRegion* region,
         {
             addItem(region);
 
-            QAction* action = new QAction(this);
+            action = new QAction(this);
             action->setText(region->getId());
 
             showMenu->addAction(action);
@@ -885,6 +962,76 @@ void QnlyGraphicsRegionBase::addRegion(QnlyGraphicsRegion* region,
         requestRegionChange(region,noChangeAtts);
 
         emit requestRegionSelection(region);
+    }
+}
+
+void QnlyGraphicsRegionBase::perform640x480()
+{
+    setSceneRect(0,0,640,480);
+    bgrect->setRect(0,0,640,480);
+
+    foreach(QnlyGraphicsRegion* r, regions.values()){
+        r->adjust();
+    }
+}
+
+void QnlyGraphicsRegionBase::perform800x600()
+{
+    setSceneRect(0,0,800,600);
+    bgrect->setRect(0,0,800,600);
+
+    foreach(QnlyGraphicsRegion* r, regions.values()){
+        r->adjust();
+    }
+}
+
+void QnlyGraphicsRegionBase::perform1024x768()
+{
+    setSceneRect(0,0,1024,768);
+    bgrect->setRect(0,0,1024,768);
+
+    foreach(QnlyGraphicsRegion* r, regions.values()){
+        r->adjust();
+    }
+}
+
+void QnlyGraphicsRegionBase::perform854x480()
+{
+    setSceneRect(0,0,854,480);
+    bgrect->setRect(0,0,854,480);
+
+    foreach(QnlyGraphicsRegion* r, regions.values()){
+        r->adjust();
+    }
+}
+
+void QnlyGraphicsRegionBase::perform1280x720()
+{
+    setSceneRect(0,0,1280,720);
+    bgrect->setRect(0,0,1280,720);
+
+    foreach(QnlyGraphicsRegion* r, regions.values()){
+        r->adjust();
+    }
+}
+
+void QnlyGraphicsRegionBase::perform1920x1080()
+{
+    setSceneRect(0,0,1920,1080);
+    bgrect->setRect(0,0,1920,1080);
+
+    foreach(QnlyGraphicsRegion* r, regions.values()){
+        r->adjust();
+    }
+}
+
+void QnlyGraphicsRegionBase::perform320x400()
+{
+    setSceneRect(0,0,320,400);
+    bgrect->setRect(0,0,320,400);
+
+    foreach(QnlyGraphicsRegion* r, regions.values()){
+        r->adjust();
     }
 }
 

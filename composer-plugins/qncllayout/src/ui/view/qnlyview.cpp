@@ -25,6 +25,8 @@ QnlyView::QnlyView(QWidget* parent) : QStackedWidget(parent)
     createMenus();
     createConnections();
 
+
+
     nregions = 0;
     nregionbases = 0;
 

@@ -19,7 +19,9 @@
 
 QnlyCanvas::QnlyCanvas(QWidget* parent) : QGraphicsView(parent)
 {
+    setBackgroundBrush(QBrush(QColor("#DDDDDD")));
 
+    setBaseSize(4000,4000);
 }
 
 QnlyCanvas::~QnlyCanvas()
@@ -31,16 +33,16 @@ void QnlyCanvas::resizeEvent(QResizeEvent* event)
 {
     QGraphicsView::resizeEvent(event);
 
-    QSize size = event->size();
+//    QSize size = event->size();
 
-    QGraphicsScene* s = scene();
+//    QGraphicsScene* s = scene();
 
-    s->setSceneRect(0,0,size.width(),size.height());
+//    s->setSceneRect(0,0,size.width(),size.height());
 
-    foreach(QGraphicsItem* item, s->items())
-    {
-        QnlyGraphicsRegion* region = (QnlyGraphicsRegion*) item;
+//    foreach(QGraphicsItem* item, s->items())
+//    {
+//        QnlyGraphicsRegion* region = (QnlyGraphicsRegion*) item;
 
-        region->adjust();
-    }
+//        region->adjust();
+//    }
 }

@@ -120,6 +120,14 @@ protected slots:
     void requestMediaOverRegionAction(QString mediaId,
                                       QnlyGraphicsRegion* region);
 
+    void perform640x480();
+    void perform800x600();
+    void perform1024x768();
+    void perform854x480();
+    void perform1280x720();
+    void perform1920x1080();
+    void perform320x400();
+
 private:
     void createActions();
 
@@ -134,6 +142,8 @@ private:
     QMenu* showMenu;
 
     QMenu* arrangeMenu;
+
+    QMenu* screensizeMenu;
 
     QMenu* switchMenu;
 
@@ -179,6 +189,18 @@ private:
 
     QAction* propertiesAction;
 
+    QAction* action;
+
+    QAction* re640x480;
+    QAction* re800x600;
+    QAction* re1024x768;
+    QAction* re854x480;
+    QAction* re1280x720;
+    QAction* re1920x1080;
+    QAction* re320x400;
+
+    QActionGroup* screensizeGroup;
+
     QActionGroup* regionActionGroup;
 
     QGraphicsTextItem *graphicsRegionBaseId;
@@ -196,6 +218,8 @@ private:
     QMap<QString, QAction*> regionActions;
 
     QMap<QString, QnlyGraphicsRegion*> regions;
+
+    QGraphicsRectItem* bgrect;
 };
 
 #endif // QNLYGRAPHICSREGIONBASE_H
