@@ -90,7 +90,6 @@ public:
    * \brief Destroys the tree widget and all its items.
    */
   virtual ~NCLTreeWidget();
-
   /*!
    * \brief Sets the default font of the TreeWidget.
    */
