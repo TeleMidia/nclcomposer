@@ -2353,8 +2353,6 @@ void QnstView::addBind(const QString uid, const QString parent, const QMap<QStri
 
 void QnstView::changeBind(QnstBind* entity, const QMap<QString, QString> properties)
 {
-    qDebug() << "========================== 001";
-
     if (entity != NULL){
         entity->setRole(properties["role"]);
 
@@ -2476,6 +2474,7 @@ void QnstView::adjustBind(QnstBind* entity)
 
                             if (parenta != NULL && parentb != NULL && parenta->getnstGraphicsParent() == parentb){
                                 QnstGraphicsCondition* graphics = new QnstGraphicsCondition();
+                                graphics->setnstUid(entity->getnstUid());
                                 graphics->setnstGraphicsParent(parentb);
                                 graphics->setEntityA(entitya);
                                 graphics->setEntityB(entityb);
@@ -2519,6 +2518,7 @@ void QnstView::adjustBind(QnstBind* entity)
 
                         if (parenta == parentb && parenta != NULL && parentb != NULL){
                             QnstGraphicsCondition* graphics = new QnstGraphicsCondition();
+                            graphics->setnstUid(entity->getnstUid());
                             graphics->setnstGraphicsParent(parenta);
                             graphics->setEntityA(entitya);
                             graphics->setEntityB(entityb);
@@ -2585,6 +2585,7 @@ void QnstView::adjustBind(QnstBind* entity)
 
                             if (parenta != NULL && parentb != NULL && parenta == parentb->getnstGraphicsParent()){
                                 QnstGraphicsAction* graphics = new QnstGraphicsAction();
+                                graphics->setnstUid(entity->getnstUid());
                                 graphics->setnstGraphicsParent(parenta);
                                 graphics->setEntityA(entitya);
                                 graphics->setEntityB(entityb);
@@ -2628,6 +2629,7 @@ void QnstView::adjustBind(QnstBind* entity)
 
                         if (parenta == parentb && parenta != NULL && parentb != NULL){
                             QnstGraphicsAction* graphics = new QnstGraphicsAction();
+                            graphics->setnstUid(entity->getnstUid());
                             graphics->setnstGraphicsParent(parentb);
                             graphics->setEntityA(entitya);
                             graphics->setEntityB(entityb);
