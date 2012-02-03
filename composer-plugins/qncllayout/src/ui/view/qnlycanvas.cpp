@@ -19,9 +19,7 @@
 
 QnlyCanvas::QnlyCanvas(QWidget* parent) : QGraphicsView(parent)
 {
-    setBackgroundBrush(QBrush(QColor("#DDDDDD")));
-
-    setBaseSize(4000,4000);
+    setBackgroundBrush(QBrush(QPixmap(":/bg/layout")));
 }
 
 QnlyCanvas::~QnlyCanvas()
