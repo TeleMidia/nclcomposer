@@ -880,11 +880,9 @@ void QnstComposerPlugin::requestBindChange(Entity* entity)
     QMap<QString, QString> properties;
 
     properties["role"] = entity->getAttribute("role");
-
     properties["component"] = entity->getAttribute("component");
 
     QString comUID = "";
-
     if (entity->getAttribute("component") != "")
     {
         comUID = getUidById(properties["component"]);
@@ -905,7 +903,8 @@ void QnstComposerPlugin::requestBindChange(Entity* entity)
         Entity* cmp = getProject()->getEntityById(comUID);
 
         QString intUID = "";
-        foreach(Entity* c, cmp->getChildren()){
+        foreach(Entity* c, cmp->getChildren())
+        {
             if (c->getAttribute("id") == entity->getAttribute("interface") ||
                 c->getAttribute("name") == entity->getAttribute("interface")){
 
@@ -924,6 +923,8 @@ void QnstComposerPlugin::requestBindChange(Entity* entity)
     {
         properties["interfaceUid"] = "";
     }
+
+    qDebug() << "QnstComposerPlugin::requestBindChange" << properties;
 
     if(entities.contains(entity->getUniqueId()))
       view->changeEntity(entities[entity->getUniqueId()], properties);
@@ -1930,6 +1931,7 @@ void QnstComposerPlugin::cacheNCLIds()
   QString coreUID, structuralID, nclID;
 
   nclIDtoStructural.clear();
+  previousCoreID.clear();
   foreach(coreUID, entities.keys())
   {
     structuralID = entities.value(coreUID);
@@ -1938,6 +1940,7 @@ void QnstComposerPlugin::cacheNCLIds()
     if(!nclID.isEmpty() && !nclID.isNull())
     {
       nclIDtoStructural.insert(nclID, structuralID);
+      previousCoreID.push_back(coreUID);
     }
   }
 }
@@ -1997,7 +2000,9 @@ bool QnstComposerPlugin::isEntityHandled(Entity *entity)
     // \todo This could be a map or an array
     if(type == "body" || type == "context" || type == "media" ||
        type == "switch" || type == "port" || type == "link" || type == "bind" ||
-       type == "area" || type == "property" || type == "causalConnector")
+       type == "area" || type == "property" || type == "causalConnector" ||
+       type == "switchPort" || type == "mapping")
+
       return true;
   }
   return false;
@@ -2006,10 +2011,12 @@ bool QnstComposerPlugin::isEntityHandled(Entity *entity)
 void QnstComposerPlugin::syncNCLIdsWithStructuralIds()
 {
   QMap <QString, QString> nclIDtoCoreID;
-  QList <QString> nclCoreID_Ordered;
+  QList <QString> nclCoreID_Ordered, alreadyUpdatedCoreId;
   QStack <Entity*> stack;
   Entity *currentEntity;
   QString currentNCLId;
+
+  QString nclID, structuralID, coreID;
 
   // I will keep all nclIDs -> coreIDs that I'm interested in nclIDtoCoreID map.
   stack.push(project);
@@ -2035,35 +2042,53 @@ void QnstComposerPlugin::syncNCLIdsWithStructuralIds()
   }
 
   qDebug() << "#### nclIDtoCoreID " << nclCoreID_Ordered;
+  qDebug() << "#### previousCoreID " << previousCoreID;
+
+  foreach(coreID, nclCoreID_Ordered)
+  {
+    if(previousCoreID.contains(coreID)) // if previousCoreID coreID is still in the core
+    {
+      currentEntity = project->getEntityById(coreID);
+      if(currentEntity != NULL)
+      {
+        requestEntityChange(currentEntity); //just update it
+        qDebug() << "********" << currentEntity->getType();
+        alreadyUpdatedCoreId.push_back(coreID);
+      }
+    }
+  }
 
 //  qDebug() << "Entities before sync" << entities;
-  qDebug() << "nclIDtoCoreID" << nclIDtoCoreID.keys();
-  qDebug() << "nclIDtoStructural" << nclIDtoStructural.keys();
-
-  QString nclID, structuralID, coreID;
+//  qDebug() << "nclIDtoCoreID" << nclIDtoCoreID.keys();
+//  qDebug() << "nclIDtoStructural" << nclIDtoStructural.keys();
   //for each old entity that are in the structural (not necessarily in the core)
   foreach (nclID, nclIDtoStructural.keys())
   {
     structuralID = nclIDtoStructural.value(nclID);
-
-    // \todo compare parents!
     if(nclIDtoCoreID.contains(nclID))
     {
-      // remove the previous mention to coreID
-      entities.remove(entities.key(structuralID));
       // gets the new coreId for currentStructuralId
       coreID = nclIDtoCoreID.value(nclID);
-      // update the map with the new coreID
-      entities[coreID] = structuralID;
 
+      if(alreadyUpdatedCoreId.contains(coreID))// this entity is already up to date.
+        continue;
+
+      //remove the previous mention to coreID
+      entities.remove(entities.key(structuralID));
+      //update the map with the new coreID
+      entities[coreID] = structuralID;
       currentEntity = project->getEntityById(coreID);
       if(currentEntity != NULL)
       {
         requestEntityChange(currentEntity);
+        alreadyUpdatedCoreId.push_back(coreID);
       }
     }
     else
     {
+      if(alreadyUpdatedCoreId.contains(entities.key(structuralID)))
+        continue;
+
       // keep track of all entities that must be removed from structural
       view->removeEntity(structuralID);
       entities.remove(entities.key(structuralID));
@@ -2075,6 +2100,9 @@ void QnstComposerPlugin::syncNCLIdsWithStructuralIds()
   for(int i = 0; i < nclCoreID_Ordered.size(); i++)
   {
     coreID = nclCoreID_Ordered.at(i);
+    if(alreadyUpdatedCoreId.contains(coreID))// this enity is already up to date.
+      continue;
+
     currentEntity = project->getEntityById(coreID);
     if(!entities.contains(coreID) && currentEntity != NULL)
     {

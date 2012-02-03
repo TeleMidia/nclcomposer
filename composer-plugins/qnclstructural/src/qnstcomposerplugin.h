@@ -198,8 +198,9 @@ private:
     QnstView* view;
 
     QString request;
-    QMap<QString, QString> entities; // core -> structural
-    QMap<QString, QString> nclIDtoStructural; // nclId -> structural ID
+    QMap <QString, QString> entities; // core -> structural
+    QMap <QString, QString> nclIDtoStructural; // nclId -> structural ID
+    QList <QString> previousCoreID;
 
 /* Functions to handle the "sinchronization with core" */
     bool isSyncingFromTextual;
