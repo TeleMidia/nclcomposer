@@ -46,6 +46,10 @@ void QnstGraphicsEntity::addAngle(QString uid, int angle)
 void QnstGraphicsEntity::removeAngle(QString uid, int angle)
 {
     angles[uid].remove(angle);
+
+    if (angles[uid].isEmpty()){
+        angles.remove(uid);
+    }
 }
 
 QVector<QnstGraphicsEntity*> QnstGraphicsEntity::getnstGraphicsEntities()

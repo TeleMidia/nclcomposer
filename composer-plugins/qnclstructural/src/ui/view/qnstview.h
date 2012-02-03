@@ -282,6 +282,8 @@ private:
 
     void addInterfacetoInterfaceEdge(QnstGraphicsEntity* entitya, QnstGraphicsEntity* entityb);
 
+    void adjustAngle(QnstGraphicsEdge* edge, QnstGraphicsEntity* entitya, QnstGraphicsEntity* entityb);
+
     int ncontext;
 
     int nswitch;
