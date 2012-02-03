@@ -1211,6 +1211,12 @@ void QnstView::changeEntity(const QString uid, const QMap<QString, QString> prop
 {
     qDebug() << "[QNST]" << ":" << "Changing entity '"+uid+"'";
 
+    if (selected != NULL){
+        selected->setSelected(false);
+        selected->adjust();
+    }
+    selected = NULL;
+
     if (links.contains(uid)){
             changeLink(links[uid], properties);
 
@@ -1358,6 +1364,9 @@ void QnstView::changeBody(QnstGraphicsBody* entity, const QMap<QString, QString>
 void QnstView::addImportBase(const QMap<QString, QString> properties)
 {
     if (properties["documentURI"] != "" && properties["projectURI"] != "" && properties["alias"] != ""){
+        connectors2.clear();
+        connectors.clear();
+
         int n = properties["projectURI"].lastIndexOf("/");
 
         QFile* file = new QFile(properties["projectURI"].left(n)+QDir::separator()+properties["documentURI"]);
@@ -1378,6 +1387,7 @@ void QnstView::addImportBase(const QMap<QString, QString> properties)
 void QnstView::changeImportBase(const QMap<QString, QString> properties)
 {
     if (properties["documentURI"] != "" && properties["projectURI"] != "" && properties["alias"] != ""){
+
         connectors2.clear();
         connectors.clear();
 
@@ -1401,6 +1411,8 @@ void QnstView::changeImportBase(const QMap<QString, QString> properties)
 void QnstView::readImportBase(QDomElement element, QString alias)
 {
     if (element.tagName() == "causalConnector"){
+
+        qDebug() << "=========================== readImportBase";
         QDomNodeList list = element.childNodes();
 
         QnstConncetor* conn = new QnstConncetor();
@@ -5226,7 +5238,7 @@ void QnstView::mouseReleaseEvent(QMouseEvent* event)
     QGraphicsView::mouseReleaseEvent(event);
 }
 
-void QnstView::addNodetoNodeEdge(QnstGraphicsEntity* entitya, QnstGraphicsEntity* entityb)
+void QnstView:: addNodetoNodeEdge(QnstGraphicsEntity* entitya, QnstGraphicsEntity* entityb)
 {
     QnstGraphicsEntity* parenta = entitya->getnstGraphicsParent();
     QnstGraphicsEntity* parentb = entityb->getnstGraphicsParent();

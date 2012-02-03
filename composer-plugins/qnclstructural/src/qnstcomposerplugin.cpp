@@ -953,7 +953,7 @@ void QnstComposerPlugin::requestImportBaseAddition(Entity* entity)
                 if (entity->getAttribute("alias") != ""){
                     properties["alias"] = entity->getAttribute("alias");
                 }
-                if(entities.contains(entity->getUniqueId()))
+//                if(entities.contains(entity->getUniqueId()))
                   view->addEntity(entity->getUniqueId(), "",properties);
             }
         }
@@ -979,7 +979,7 @@ void QnstComposerPlugin::requestImportBaseChange(Entity* entity)
                 if (entity->getAttribute("alias") != ""){
                     properties["alias"] = entity->getAttribute("alias");
                 }
-                if(entities.contains(entity->getUniqueId()))
+//                if(entities.contains(entity->getUniqueId()))
                   view->changeEntity(entity->getUniqueId(),properties);
             }
         }
@@ -2010,7 +2010,7 @@ bool QnstComposerPlugin::isEntityHandled(Entity *entity)
     if(type == "body" || type == "context" || type == "media" ||
        type == "switch" || type == "port" || type == "link" || type == "bind" ||
        type == "area" || type == "property" || type == "causalConnector" ||
-       type == "switchPort" || type == "mapping")
+       type == "switchPort" || type == "mapping" || type == "importBase")
 
       return true;
   }
