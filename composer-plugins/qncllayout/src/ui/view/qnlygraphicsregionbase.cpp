@@ -477,7 +477,7 @@ void QnlyGraphicsRegionBase::QnlyGraphicsRegionBase::createActions()
     re640x480 = new QAction(this);
     re640x480->setText(tr("640x480 (4:3)"));
     re640x480->setCheckable(true);
-    re640x480->setChecked(true);
+    re640x480->setChecked(false);
 
     re800x600 = new QAction(this);
     re800x600->setText(tr("800x600 (4:3)"));
@@ -492,7 +492,7 @@ void QnlyGraphicsRegionBase::QnlyGraphicsRegionBase::createActions()
     re854x480 = new QAction(this);
     re854x480->setText(tr("854x480 (16:9)"));
     re854x480->setCheckable(true);
-    re854x480->setChecked(false);
+    re854x480->setChecked(true);
 
     re1280x720 = new QAction(this);
     re1280x720->setText(tr("1280x720 (16:9)"));
