@@ -504,7 +504,7 @@ void NCLTextualViewPlugin::changeSelectedEntity(QString pluginID, void *param)
 void NCLTextualViewPlugin::updateCoreModel()
 {
   syncMutex.lock();
-  bool rebuildComposerModelFromScratch = true;
+  bool rebuildComposerModelFromScratch = false;
 
   isSyncing = true; //set our current state as syncing
 
@@ -526,8 +526,8 @@ void NCLTextualViewPlugin::updateCoreModel()
     return;
   }
 
-  int line, column;
-  tmpNclTextEditor->getCursorPosition(&line, &column);
+//  int line, column;
+//  nclTextEditor->getCursorPosition(&line, &column);
   sendBroadcastMessage("textualStartSync", NULL);
   //double-buffering
   tmpNclTextEditor = nclTextEditor;
@@ -542,7 +542,9 @@ void NCLTextualViewPlugin::updateCoreModel()
     incrementalUpdateCoreModel();
   emit syncFinished();
   sendBroadcastMessage("textualFinishSync", NULL);
-  tmpNclTextEditor->setCursorPosition(line, column);
+
+//  nclTextEditor->setCursorPosition(line, column); //go back to the previous position
+
   syncMutex.unlock();
 }
 
@@ -663,7 +665,23 @@ void NCLTextualViewPlugin::incrementalUpdateCoreModel()
         i < children.size() && j < entityChildren.size();
         i++, j++)
     {
-      if(children[i].tagName() == entityChildren[j]->getType())
+      bool sameNCLID = false;
+
+      if(children[i].hasAttribute("id") && entityChildren[j]->hasAttribute("id"))
+      {
+        if(children[i].attribute("id") == entityChildren[j]->getAttribute("id"))
+          sameNCLID = true;
+      }
+      else if(children[i].hasAttribute("name") && entityChildren[j]->hasAttribute("name"))
+      {
+        if(children[i].attribute("name") == entityChildren[j]->getAttribute("name"))
+          sameNCLID = true;
+      }
+      else
+        sameNCLID = true;
+
+      if(   children[i].tagName() == entityChildren[j]->getType()
+         && sameNCLID)
       {
         //if the same type, just update the attributes
         //TODO: Compare attributes
