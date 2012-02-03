@@ -153,7 +153,11 @@ void QnstComposerPlugin::errorMessage(QString error)
 
 void QnstComposerPlugin::onEntityChanged(QString pluginID, Entity *entity)
 {
-  if(isSyncingFromTextual) return;
+  if(isSyncingFromTextual)
+  {
+    dirtyEntities.push_back(entity->getUniqueId());
+    return;
+  }
 
   if (pluginID != getPluginInstanceID()){
       requestEntityChange(entity);
@@ -1976,6 +1980,11 @@ QString QnstComposerPlugin::getNCLIdFromEntity(Entity *entity)
       nclID = entity->getAttribute("id");
     else if(entity->hasAttribute("name"))
       nclID = entity->getAttribute("name");
+    else if(entity->getType() == "bind")
+    {
+      nclID = entity->getType() + "_" + entity->getAttribute("component") + "_"
+          + entity->getAttribute("interface");
+    }
     else
       nclID = QUuid::createUuid().toString();
 
@@ -2041,26 +2050,27 @@ void QnstComposerPlugin::syncNCLIdsWithStructuralIds()
     }
   }
 
-  qDebug() << "#### nclIDtoCoreID " << nclCoreID_Ordered;
-  qDebug() << "#### previousCoreID " << previousCoreID;
+//  qDebug() << "#### nclIDtoCoreID " << nclCoreID_Ordered;
+//  qDebug() << "#### previousCoreID " << previousCoreID;
 
   foreach(coreID, nclCoreID_Ordered)
   {
-    if(previousCoreID.contains(coreID)) // if previousCoreID coreID is still in the core
+    if(previousCoreID.contains(coreID)) // if previousCoreID is still in the core
     {
       currentEntity = project->getEntityById(coreID);
       if(currentEntity != NULL)
       {
-        requestEntityChange(currentEntity); //just update it
-        qDebug() << "********" << currentEntity->getType();
+        if(dirtyEntities.contains(currentEntity->getUniqueId()))
+          requestEntityChange(currentEntity); //just update it
+
         alreadyUpdatedCoreId.push_back(coreID);
       }
     }
   }
 
-//  qDebug() << "Entities before sync" << entities;
-//  qDebug() << "nclIDtoCoreID" << nclIDtoCoreID.keys();
-//  qDebug() << "nclIDtoStructural" << nclIDtoStructural.keys();
+// qDebug() << "Entities before sync" << entities;
+// qDebug() << "nclIDtoCoreID" << nclIDtoCoreID.keys();
+// qDebug() << "nclIDtoStructural" << nclIDtoStructural.keys();
   //for each old entity that are in the structural (not necessarily in the core)
   foreach (nclID, nclIDtoStructural.keys())
   {
@@ -2073,9 +2083,9 @@ void QnstComposerPlugin::syncNCLIdsWithStructuralIds()
       if(alreadyUpdatedCoreId.contains(coreID))// this entity is already up to date.
         continue;
 
-      //remove the previous mention to coreID
+      // remove the previous mention to coreID
       entities.remove(entities.key(structuralID));
-      //update the map with the new coreID
+      // update the map with the new coreID
       entities[coreID] = structuralID;
       currentEntity = project->getEntityById(coreID);
       if(currentEntity != NULL)
@@ -2100,7 +2110,7 @@ void QnstComposerPlugin::syncNCLIdsWithStructuralIds()
   for(int i = 0; i < nclCoreID_Ordered.size(); i++)
   {
     coreID = nclCoreID_Ordered.at(i);
-    if(alreadyUpdatedCoreId.contains(coreID))// this enity is already up to date.
+    if(alreadyUpdatedCoreId.contains(coreID))// this entity is already up to date.
       continue;
 
     currentEntity = project->getEntityById(coreID);
@@ -2117,6 +2127,7 @@ void QnstComposerPlugin::textualStartSync(QString, void*)
 {
   qDebug() << "QnstComposerPlugin::textualStartSync";
   cacheNCLIds();
+  dirtyEntities.clear();
   isSyncingFromTextual = true;
 }
 

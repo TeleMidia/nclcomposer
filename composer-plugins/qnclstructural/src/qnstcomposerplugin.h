@@ -200,6 +200,7 @@ private:
     QString request;
     QMap <QString, QString> entities; // core -> structural
     QMap <QString, QString> nclIDtoStructural; // nclId -> structural ID
+    QList <QString> dirtyEntities;
     QList <QString> previousCoreID;
 
 /* Functions to handle the "sinchronization with core" */

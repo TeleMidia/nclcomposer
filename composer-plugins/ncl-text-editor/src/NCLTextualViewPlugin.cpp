@@ -534,6 +534,7 @@ void NCLTextualViewPlugin::updateCoreModel()
   nclTextEditor = new NCLTextEditor(0);
   nclTextEditor->setDocumentUrl(project->getLocation());
   nclTextEditor->setText(tmpNclTextEditor->textWithoutUserInteraction());
+  updateFromModel();  // this is just a precaution
 
   if(rebuildComposerModelFromScratch)
     nonIncrementalUpdateCoreModel();
@@ -694,7 +695,25 @@ void NCLTextualViewPlugin::incrementalUpdateCoreModel()
           atts.insert(item.nodeName(), item.nodeValue());
         }
 
-        emit setAttributes(entityChildren[j], atts, false);
+        QMap <QString, QString>::iterator begin, end, it;
+        entityChildren[j]->getAttributeIterator(begin, end);
+
+        bool changed = false;
+        int entityChildrenAttrSize = 0;
+        for (it = begin; it != end; ++it)
+        {
+          if(atts.contains(it.key()) && atts[it.key()]== it.value())
+            continue;
+          else
+            changed = true;
+          entityChildrenAttrSize++;
+        }
+
+        if(entityChildrenAttrSize != atts.size())
+          changed = true;
+
+        if(changed)
+          emit setAttributes(entityChildren[j], atts, false);
       }
       else
       {
