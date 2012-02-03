@@ -5733,152 +5733,76 @@ void QnstView::addNodetoInterfaceEdge(QnstGraphicsEntity* entitya, QnstGraphicsE
 
     if (parenta != NULL && parentb != NULL){
         if (parenta == parentb->getnstGraphicsParent()){
-            //////////////////////////////////////////
-            linkDialog->init(connectors);
+            if (entitya->getnstType() == Qnst::Aggregator){
+                ///////////////////
+                actionDialog->init(connectors, links[entitya->getnstUid()]);
 
-            if (linkDialog->exec()){
-                QString con = linkDialog->form.cbCondition->currentText();
-                QString act = linkDialog->form.cbAction->currentText();
+                if (actionDialog->exec()){
+                    QString link = actionDialog->form.cbLink->currentText();
+                    QString act = actionDialog->form.cbAction->currentText();
 
-                if (con != "" && act != ""){
-                    qreal xcenter = -1;
-                    qreal ycenter = -1;
-
-                    QPointF pointa(entitya->getLeft() + entitya->getWidth()/2,
-                                   entitya->getTop() + entitya->getHeight()/2);
-
-                    QPointF pointb(entityb->getLeft() + entityb->getWidth()/2,
-                                   entityb->getTop() + entityb->getHeight()/2);
-
-
-                    pointb = parenta->mapFromItem(parentb, pointb);
-
-                    if (pointa.x() <= pointb.x() && pointa.y() <= pointb.y()){
-                        xcenter = pointa.x() + (pointb.x() - pointa.x())/2;
-                        ycenter = pointa.y() + (pointb.y() - pointa.y())/2;
-
-                    }else if (pointa.x() > pointb.x() && pointa.y() < pointb.y()){
-                        xcenter = pointb.x() + (pointa.x() - pointb.x())/2;
-                        ycenter = pointa.y() + (pointb.y() - pointa.y())/2;
-
-                    }else if (pointa.x() < pointb.x() && pointa.y() > pointb.y()){
-                        xcenter = pointa.x() + (pointb.x() - pointa.x())/2;
-                        ycenter = pointb.y() + (pointa.y() - pointb.y())/2;
-
-                    }else if (pointa.x() > pointb.x() && pointa.y() > pointb.y()){
-                        xcenter = pointb.x() + (pointa.x() - pointb.x())/2;
-                        ycenter = pointb.y() + (pointa.y() - pointb.y())/2;
-                    }
-
-
-                    QnstGraphicsAggregator* aggregator = new QnstGraphicsAggregator((QnstGraphicsNode*) parenta);
-                    aggregator->setTop(ycenter - 14/2);
-                    aggregator->setLeft(xcenter - 14/2);
-                    aggregator->setWidth(14);
-                    aggregator->setHeight(14);
-                    aggregator->adjust();
-
-                    parenta->addnstGraphicsEntity(aggregator);
-
-                    entities[aggregator->getnstUid()] = aggregator;
-
-                    ///
-
-                    QnstGraphicsCondition* condition = new QnstGraphicsCondition();
-                    condition->setnstGraphicsParent(parenta);
-                    condition->setEntityA(entitya);
-                    condition->setEntityB(aggregator);
+                    QnstGraphicsAction* entity = new QnstGraphicsAction();
+                    entity->setnstGraphicsParent(parenta);
+                    entity->setEntityA(entitya);
+                    entity->setEntityB(entityb);
 
                     // adjusting angle
-                    adjustAngle(condition, entitya, aggregator);
+                    adjustAngle(entity, entitya, entityb);
 
-                    condition->adjust();
+                    entity->adjust();
 
-                    parenta->addnstGraphicsEntity(condition);
+                    parenta->addnstGraphicsEntity(entity);
 
-                    ((QnstGraphicsNode*) entitya)->addnstGraphicsEdge(condition);
-                    ((QnstGraphicsNode*) aggregator)->addnstGraphicsEdge(condition);
-
-                    if (con == "onBegin"){
-                        condition->setCondition(Qnst::onBegin);
-
-                    }else if (con == "onEnd"){
-                        condition->setCondition(Qnst::onEnd);
-
-                    }else if (con == "onPause"){
-                        condition->setCondition(Qnst::onPause);
-
-                    }else if (con == "onResume"){
-                        condition->setCondition(Qnst::onResume);
-
-                    }else if (con == "onSelection"){
-                        condition->setCondition(Qnst::onSelection);
-
-                    }else{
-                        condition->setCondition(Qnst::NoConditionType);
-                    }
-
-                    entities[condition->getnstUid()] = condition;
-
-                    ///
-
-                    QnstGraphicsAction* action = new QnstGraphicsAction();
-                    action->setnstGraphicsParent(parenta);
-                    action->setEntityA(aggregator);
-                    action->setEntityB(entityb);
-
-                    // adjusting angle
-                    adjustAngle(action, aggregator, entityb);
-
-                    action->adjust();
-
-                    parenta->addnstGraphicsEntity(action);
-
-                    ((QnstGraphicsNode*) aggregator)->addnstGraphicsEdge(action);
-                    ((QnstGraphicsInterface*) entityb)->addnstGraphicsEdge(action);
+                    ((QnstGraphicsInterface*) entitya)->addnstGraphicsEdge(entity);
+                    ((QnstGraphicsInterface*) entityb)->addnstGraphicsEdge(entity);
 
                     if (act == "start"){
-                        action->setAction(Qnst::Start);
+                        entity->setAction(Qnst::Start);
 
                     }else if (act == "stop"){
-                        action->setAction(Qnst::Stop);
+                        entity->setAction(Qnst::Stop);
 
                     }else if (act == "pause"){
-                        action->setAction(Qnst::Pause);
+                        entity->setAction(Qnst::Pause);
 
                     }else if (act == "resume"){
-                        action->setAction(Qnst::Resume);
+                        entity->setAction(Qnst::Resume);
 
                     }else if (act == "set"){
-                        action->setAction(Qnst::Set);
+                        entity->setAction(Qnst::Set);
 
                     }else{
-                        action->setAction(Qnst::NoActionType);
+                        entity->setAction(Qnst::NoActionType);
                     }
-
-                    entities[action->getnstUid()] = action;
 
                     ///// connector
 
-                    QString connName = linkDialog->form.cbConnector->currentText();;
+                    QString connName = actionDialog->form.cbConnector->currentText();;
 
-                    if (linkDialog->form.cbConnector->currentText() == "New..."){
+                    if (actionDialog->form.cbConnector->currentText() == "New..."){
                         QnstConncetor* conn = new QnstConncetor();
-                        conn->setName(con+act+QString::number(connectors.size()));
-                        conn->addCondition(con, con);
-                        conn->addAction(act, act);
+                        conn->setName("newConnector"+QString::number(connectors.size()));
+                        conn->addCondition("onBegin", "onBegin");
+                        conn->addCondition("onEnd", "onEnd");
+                        conn->addCondition("onSelection", "onSelection");
+                        conn->addCondition("onResume", "onResume");
+                        conn->addCondition("onPause", "onPause");
+
+                        conn->addAction("start", "start");
+                        conn->addAction("stop", "stop");
+                        conn->addAction("resume", "resume");
+                        conn->addAction("pause", "pause");
+                        conn->addAction("set", "set");
 
                         connectors[conn->getName()] = conn;
                         connectors2[conn->getnstUid()] = conn;
 
                         QMap<QString, QString> properties;
 
-                        properties["TYPE"] = "connector";
+                        properties["TYPE"] = "complex-connector";
 
                         properties["id"] = conn->getName();
-                        properties["condition"] = con;
                         properties["action"] = act;
-
 
                         connName = conn->getName();
 
@@ -5890,43 +5814,31 @@ void QnstView::addNodetoInterfaceEdge(QnstGraphicsEntity* entitya, QnstGraphicsE
                     QMap<QString, QString> properties;
 
                     properties["TYPE"] = "bind";
-                    properties["link"] = "link"+QString::number(++nlink);
-                    properties["linkUID"] = aggregator->getnstUid();
 
-                    QnstLink* lo = new QnstLink();
-                    lo->setnstParent(aggregator->getnstGraphicsParent());
-                    lo->setnstId(properties["link"]);
-                    lo->setnstUid(aggregator->getnstUid());
-                    lo->setxConnector(connName);
-                    lo->setxConnectorUID(connectors[connName]->getnstUid());
-                    lo->setAggregatorUID(aggregator->getnstUid());
+                    QnstLink* lo;
 
-                    links[lo->getnstUid()] = lo;
+                    if (link == "New..."){
+                        properties["link"] = "link"+QString::number(++nlink);
 
-                    link2conn[properties["link"]] = connName;
+                        lo = new QnstLink();
+                        lo->setnstParent(entitya->getnstGraphicsParent());
+                        lo->setnstId(properties["link"]);
+                        lo->setnstUid(entitya->getnstUid());
+                        lo->setxConnector(connName);
+                        lo->setxConnectorUID(connectors[connName]->getnstUid());
+                        lo->setAggregatorUID(entitya->getnstUid());
+
+                        links[lo->getnstUid()] = lo;
+
+                    }else{
+                        properties["link"] = link;
+
+                        lo = links[entitya->getnstUid()];
+                    }
+
+                    properties["linkUID"] = entitya->getnstUid();
 
                     properties["connector"] = connName;
-                    properties["condition"] = con;
-
-                    properties["component"] = entitya->getnstId();
-
-                    properties["role"] = con;
-
-                    QnstBind* bo = new QnstBind();
-                    bo->setnstParent(lo);
-                    bo->setnstUid(condition->getnstUid());
-                    bo->setRole(properties["condition"]);
-                    bo->setComponent(properties["component"]);
-                    bo->setComponentUid(entitya->getnstUid());
-
-                    lo->addCondition(bo);
-
-                    binds[bo->getnstUid()] = bo;
-                    brelations[bo->getnstUid()] = condition->getnstUid();
-
-                    emit entityAdded(condition->getnstUid(), parenta->getnstUid(), properties);
-
-                    properties["condition"] = "";
 
                     properties["action"] = act;
 
@@ -5936,23 +5848,250 @@ void QnstView::addNodetoInterfaceEdge(QnstGraphicsEntity* entitya, QnstGraphicsE
                     properties["role"] = act;
 
 
-                    QnstBind* bo2 = new QnstBind();
-                    bo2->setnstParent(lo);
-                    bo2->setnstUid(action->getnstUid());
-                    bo2->setRole(properties["action"]);
-                    bo2->setComponent(properties["component"]);
-                    bo2->setComponentUid(parentb->getnstUid());
-                    bo2->setInterface(properties["interface"]);
-                    bo2->setInterfaceUid(entityb->getnstUid());
+                    QnstBind* bo = new QnstBind();
+                    bo->setnstParent(lo);
+                    bo->setnstUid(entity->getnstUid());
+                    bo->setRole(properties["action"]);
+                    bo->setComponent(properties["component"]);
+                    bo->setComponentUid(parentb->getnstUid());
+                    bo->setInterface(properties["interface"]);
+                    bo->setInterfaceUid(entityb->getnstUid());
 
-                    lo->addAction(bo2);
+                    lo->addAction(bo);
 
-                    binds[bo2->getnstUid()] = bo2;
-                    brelations[bo2->getnstUid()] = action->getnstUid();
+                    binds[bo->getnstUid()] = bo;
+                    brelations[bo->getnstUid()] = entity->getnstUid();
 
-                    emit entityAdded(action->getnstUid(), parenta->getnstUid(), properties);
+                    link2conn[properties["link"]] = connName;
+
+                    entities[entity->getnstUid()] = entity;
+
+                    emit entityAdded(entity->getnstUid(), parenta->getnstUid(), properties);
+                }
+
+                //////////////////
+            }else {
+                linkDialog->init(connectors);
+
+                if (linkDialog->exec()){
+                    QString con = linkDialog->form.cbCondition->currentText();
+                    QString act = linkDialog->form.cbAction->currentText();
+
+                    if (con != "" && act != ""){
+                        qreal xcenter = -1;
+                        qreal ycenter = -1;
+
+                        QPointF pointa(entitya->getLeft() + entitya->getWidth()/2,
+                                       entitya->getTop() + entitya->getHeight()/2);
+
+                        QPointF pointb(entityb->getLeft() + entityb->getWidth()/2,
+                                       entityb->getTop() + entityb->getHeight()/2);
+
+
+                        pointb = parenta->mapFromItem(parentb, pointb);
+
+                        if (pointa.x() <= pointb.x() && pointa.y() <= pointb.y()){
+                            xcenter = pointa.x() + (pointb.x() - pointa.x())/2;
+                            ycenter = pointa.y() + (pointb.y() - pointa.y())/2;
+
+                        }else if (pointa.x() > pointb.x() && pointa.y() < pointb.y()){
+                            xcenter = pointb.x() + (pointa.x() - pointb.x())/2;
+                            ycenter = pointa.y() + (pointb.y() - pointa.y())/2;
+
+                        }else if (pointa.x() < pointb.x() && pointa.y() > pointb.y()){
+                            xcenter = pointa.x() + (pointb.x() - pointa.x())/2;
+                            ycenter = pointb.y() + (pointa.y() - pointb.y())/2;
+
+                        }else if (pointa.x() > pointb.x() && pointa.y() > pointb.y()){
+                            xcenter = pointb.x() + (pointa.x() - pointb.x())/2;
+                            ycenter = pointb.y() + (pointa.y() - pointb.y())/2;
+                        }
+
+
+                        QnstGraphicsAggregator* aggregator = new QnstGraphicsAggregator((QnstGraphicsNode*) parenta);
+                        aggregator->setTop(ycenter - 14/2);
+                        aggregator->setLeft(xcenter - 14/2);
+                        aggregator->setWidth(14);
+                        aggregator->setHeight(14);
+                        aggregator->adjust();
+
+                        parenta->addnstGraphicsEntity(aggregator);
+
+                        entities[aggregator->getnstUid()] = aggregator;
+
+                        ///
+
+                        QnstGraphicsCondition* condition = new QnstGraphicsCondition();
+                        condition->setnstGraphicsParent(parenta);
+                        condition->setEntityA(entitya);
+                        condition->setEntityB(aggregator);
+
+                        // adjusting angle
+                        adjustAngle(condition, entitya, aggregator);
+
+                        condition->adjust();
+
+                        parenta->addnstGraphicsEntity(condition);
+
+                        ((QnstGraphicsNode*) entitya)->addnstGraphicsEdge(condition);
+                        ((QnstGraphicsNode*) aggregator)->addnstGraphicsEdge(condition);
+
+                        if (con == "onBegin"){
+                            condition->setCondition(Qnst::onBegin);
+
+                        }else if (con == "onEnd"){
+                            condition->setCondition(Qnst::onEnd);
+
+                        }else if (con == "onPause"){
+                            condition->setCondition(Qnst::onPause);
+
+                        }else if (con == "onResume"){
+                            condition->setCondition(Qnst::onResume);
+
+                        }else if (con == "onSelection"){
+                            condition->setCondition(Qnst::onSelection);
+
+                        }else{
+                            condition->setCondition(Qnst::NoConditionType);
+                        }
+
+                        entities[condition->getnstUid()] = condition;
+
+                        ///
+
+                        QnstGraphicsAction* action = new QnstGraphicsAction();
+                        action->setnstGraphicsParent(parenta);
+                        action->setEntityA(aggregator);
+                        action->setEntityB(entityb);
+
+                        // adjusting angle
+                        adjustAngle(action, aggregator, entityb);
+
+                        action->adjust();
+
+                        parenta->addnstGraphicsEntity(action);
+
+                        ((QnstGraphicsNode*) aggregator)->addnstGraphicsEdge(action);
+                        ((QnstGraphicsInterface*) entityb)->addnstGraphicsEdge(action);
+
+                        if (act == "start"){
+                            action->setAction(Qnst::Start);
+
+                        }else if (act == "stop"){
+                            action->setAction(Qnst::Stop);
+
+                        }else if (act == "pause"){
+                            action->setAction(Qnst::Pause);
+
+                        }else if (act == "resume"){
+                            action->setAction(Qnst::Resume);
+
+                        }else if (act == "set"){
+                            action->setAction(Qnst::Set);
+
+                        }else{
+                            action->setAction(Qnst::NoActionType);
+                        }
+
+                        entities[action->getnstUid()] = action;
+
+                        ///// connector
+
+                        QString connName = linkDialog->form.cbConnector->currentText();;
+
+                        if (linkDialog->form.cbConnector->currentText() == "New..."){
+                            QnstConncetor* conn = new QnstConncetor();
+                            conn->setName(con+act+QString::number(connectors.size()));
+                            conn->addCondition(con, con);
+                            conn->addAction(act, act);
+
+                            connectors[conn->getName()] = conn;
+                            connectors2[conn->getnstUid()] = conn;
+
+                            QMap<QString, QString> properties;
+
+                            properties["TYPE"] = "connector";
+
+                            properties["id"] = conn->getName();
+                            properties["condition"] = con;
+                            properties["action"] = act;
+
+
+                            connName = conn->getName();
+
+                            emit entityAdded(conn->getnstUid(), "", properties);
+                        }
+
+                        ///// link
+
+                        QMap<QString, QString> properties;
+
+                        properties["TYPE"] = "bind";
+                        properties["link"] = "link"+QString::number(++nlink);
+                        properties["linkUID"] = aggregator->getnstUid();
+
+                        QnstLink* lo = new QnstLink();
+                        lo->setnstParent(aggregator->getnstGraphicsParent());
+                        lo->setnstId(properties["link"]);
+                        lo->setnstUid(aggregator->getnstUid());
+                        lo->setxConnector(connName);
+                        lo->setxConnectorUID(connectors[connName]->getnstUid());
+                        lo->setAggregatorUID(aggregator->getnstUid());
+
+                        links[lo->getnstUid()] = lo;
+
+                        link2conn[properties["link"]] = connName;
+
+                        properties["connector"] = connName;
+                        properties["condition"] = con;
+
+                        properties["component"] = entitya->getnstId();
+
+                        properties["role"] = con;
+
+                        QnstBind* bo = new QnstBind();
+                        bo->setnstParent(lo);
+                        bo->setnstUid(condition->getnstUid());
+                        bo->setRole(properties["condition"]);
+                        bo->setComponent(properties["component"]);
+                        bo->setComponentUid(entitya->getnstUid());
+
+                        lo->addCondition(bo);
+
+                        binds[bo->getnstUid()] = bo;
+                        brelations[bo->getnstUid()] = condition->getnstUid();
+
+                        emit entityAdded(condition->getnstUid(), parenta->getnstUid(), properties);
+
+                        properties["condition"] = "";
+
+                        properties["action"] = act;
+
+                        properties["component"] = parentb->getnstId();
+                        properties["interface"] = entityb->getnstId();
+
+                        properties["role"] = act;
+
+
+                        QnstBind* bo2 = new QnstBind();
+                        bo2->setnstParent(lo);
+                        bo2->setnstUid(action->getnstUid());
+                        bo2->setRole(properties["action"]);
+                        bo2->setComponent(properties["component"]);
+                        bo2->setComponentUid(parentb->getnstUid());
+                        bo2->setInterface(properties["interface"]);
+                        bo2->setInterfaceUid(entityb->getnstUid());
+
+                        lo->addAction(bo2);
+
+                        binds[bo2->getnstUid()] = bo2;
+                        brelations[bo2->getnstUid()] = action->getnstUid();
+
+                        emit entityAdded(action->getnstUid(), parenta->getnstUid(), properties);
+                    }
                 }
             }
+
             modified = false;
         }
     }
@@ -6052,152 +6191,78 @@ void QnstView::addInterfacetoNodeEdge(QnstGraphicsEntity* entitya, QnstGraphicsE
 
         if (parenta != NULL && parentb != NULL){
             if (parenta->getnstGraphicsParent() == parentb){
-                //////////////////////////////////////////
-                linkDialog->init(connectors);
+                if (entityb->getnstType() == Qnst::Aggregator){
 
-                if (linkDialog->exec()){
-                    QString con = linkDialog->form.cbCondition->currentText();
-                    QString act = linkDialog->form.cbAction->currentText();
+                    conditionDialog->init(connectors, links[entityb->getnstUid()]);
 
-                    if (con != "" && act != ""){
-                        qreal xcenter = -1;
-                        qreal ycenter = -1;
+                    if (conditionDialog->exec()){
+                        QString conn = conditionDialog->form.cbConnector->currentText();
+                        QString link = conditionDialog->form.cbLink->currentText();
+                        QString cond = conditionDialog->form.cbCondition->currentText();
 
-                        QPointF pointa(entitya->getLeft() + entitya->getWidth()/2,
-                                       entitya->getTop() + entitya->getHeight()/2);
-
-                        QPointF pointb(entityb->getLeft() + entityb->getWidth()/2,
-                                       entityb->getTop() + entityb->getHeight()/2);
-
-
-                        pointa = parentb->mapFromItem(parenta, pointa);
-
-                        if (pointa.x() <= pointb.x() && pointa.y() <= pointb.y()){
-                            xcenter = pointa.x() + (pointb.x() - pointa.x())/2;
-                            ycenter = pointa.y() + (pointb.y() - pointa.y())/2;
-
-                        }else if (pointa.x() > pointb.x() && pointa.y() < pointb.y()){
-                            xcenter = pointb.x() + (pointa.x() - pointb.x())/2;
-                            ycenter = pointa.y() + (pointb.y() - pointa.y())/2;
-
-                        }else if (pointa.x() < pointb.x() && pointa.y() > pointb.y()){
-                            xcenter = pointa.x() + (pointb.x() - pointa.x())/2;
-                            ycenter = pointb.y() + (pointa.y() - pointb.y())/2;
-
-                        }else if (pointa.x() > pointb.x() && pointa.y() > pointb.y()){
-                            xcenter = pointb.x() + (pointa.x() - pointb.x())/2;
-                            ycenter = pointb.y() + (pointa.y() - pointb.y())/2;
-                        }
-
-
-                        QnstGraphicsAggregator* aggregator = new QnstGraphicsAggregator((QnstGraphicsNode*) parentb);
-                        aggregator->setTop(ycenter - 14/2);
-                        aggregator->setLeft(xcenter - 14/2);
-                        aggregator->setWidth(14);
-                        aggregator->setHeight(14);
-                        aggregator->adjust();
-
-                        parentb->addnstGraphicsEntity(aggregator);
-
-                        entities[aggregator->getnstUid()] = aggregator;
-
-                        ///
-
-                        QnstGraphicsCondition* condition = new QnstGraphicsCondition();
-                        condition->setnstGraphicsParent(parentb);
-                        condition->setEntityA(entitya);
-                        condition->setEntityB(aggregator);
+                        QnstGraphicsCondition* entity = new QnstGraphicsCondition();
+                        entity->setnstGraphicsParent(parentb);
+                        entity->setEntityA(entitya);
+                        entity->setEntityB(entityb);
 
                         // adjusting angle
-                        adjustAngle(condition, entitya, aggregator);
+                        adjustAngle(entity, entitya, entityb);
 
-                        condition->adjust();
+                        entity->adjust();
 
-                        parentb->addnstGraphicsEntity(condition);
+                        parentb->addnstGraphicsEntity(entity);
 
-                        ((QnstGraphicsInterface*) entitya)->addnstGraphicsEdge(condition);
-                        ((QnstGraphicsNode*) aggregator)->addnstGraphicsEdge(condition);
+                        ((QnstGraphicsInterface*) entitya)->addnstGraphicsEdge(entity);
+                        ((QnstGraphicsNode*) entityb)->addnstGraphicsEdge(entity);
 
-                        if (con == "onBegin"){
-                            condition->setCondition(Qnst::onBegin);
+                        if (cond == "onBegin"){
+                            entity->setCondition(Qnst::onBegin);
 
-                        }else if (con == "onEnd"){
-                            condition->setCondition(Qnst::onEnd);
+                        }else if (cond == "onEnd"){
+                            entity->setCondition(Qnst::onEnd);
 
-                        }else if (con == "onPause"){
-                            condition->setCondition(Qnst::onPause);
+                        }else if (cond == "onPause"){
+                            entity->setCondition(Qnst::onPause);
 
-                        }else if (con == "onResume"){
-                            condition->setCondition(Qnst::onResume);
+                        }else if (cond == "onResume"){
+                            entity->setCondition(Qnst::onResume);
 
-                        }else if (con == "onSelection"){
-                            condition->setCondition(Qnst::onSelection);
-
-                        }else{
-                            condition->setCondition(Qnst::NoConditionType);
-                        }
-
-                        entities[condition->getnstUid()] = condition;
-
-                        ///
-
-                        QnstGraphicsAction* action = new QnstGraphicsAction();
-                        action->setnstGraphicsParent(parentb);
-                        action->setEntityA(aggregator);
-                        action->setEntityB(entityb);
-
-                        // adjusting angle
-                        adjustAngle(action, aggregator, entityb);
-
-                        action->adjust();
-
-                        parentb->addnstGraphicsEntity(action);
-
-                        ((QnstGraphicsNode*) aggregator)->addnstGraphicsEdge(action);
-                        ((QnstGraphicsNode*) entityb)->addnstGraphicsEdge(action);
-
-                        if (act == "start"){
-                            action->setAction(Qnst::Start);
-
-                        }else if (act == "stop"){
-                            action->setAction(Qnst::Stop);
-
-                        }else if (act == "pause"){
-                            action->setAction(Qnst::Pause);
-
-                        }else if (act == "resume"){
-                            action->setAction(Qnst::Resume);
-
-                        }else if (act == "set"){
-                            action->setAction(Qnst::Set);
+                        }else if (cond == "onSelection"){
+                            entity->setCondition(Qnst::onSelection);
 
                         }else{
-                            action->setAction(Qnst::NoActionType);
+                            entity->setCondition(Qnst::NoConditionType);
                         }
-
-                        entities[action->getnstUid()] = action;
 
                         ///// connector
 
-                        QString connName = linkDialog->form.cbConnector->currentText();;
+                        QString connName = conditionDialog->form.cbConnector->currentText();;
 
-                        if (linkDialog->form.cbConnector->currentText() == "New..."){
+                        if (conditionDialog->form.cbConnector->currentText() == "New..."){
                             QnstConncetor* conn = new QnstConncetor();
-                            conn->setName(con+act+QString::number(connectors.size()));
-                            conn->addCondition(con, con);
-                            conn->addAction(act, act);
+                            conn->setName("newConnector"+QString::number(connectors.size()));
+
+                            conn->addCondition("onBegin", "onBegin");
+                            conn->addCondition("onEnd", "onEnd");
+                            conn->addCondition("onSelection", "onSelection");
+                            conn->addCondition("onResume", "onResume");
+                            conn->addCondition("onPause", "onPause");
+
+                            conn->addAction("start", "start");
+                            conn->addAction("stop", "stop");
+                            conn->addAction("resume", "resume");
+                            conn->addAction("pause", "pause");
+                            conn->addAction("set", "set");
 
                             connectors[conn->getName()] = conn;
                             connectors2[conn->getnstUid()] = conn;
 
                             QMap<QString, QString> properties;
 
-                            properties["TYPE"] = "connector";
+                            properties["TYPE"] = "complex-connector";
 
                             properties["id"] = conn->getName();
-                            properties["condition"] = con;
-                            properties["action"] = act;
-
+                            properties["condition"] = cond;
 
                             connName = conn->getName();
 
@@ -6209,33 +6274,42 @@ void QnstView::addInterfacetoNodeEdge(QnstGraphicsEntity* entitya, QnstGraphicsE
                         QMap<QString, QString> properties;
 
                         properties["TYPE"] = "bind";
-                        properties["link"] = "link"+QString::number(++nlink);
 
-                        properties["linkUID"] = aggregator->getnstUid();
+                        QnstLink* lo;
 
-                        QnstLink* lo = new QnstLink();
-                        lo->setnstParent(aggregator->getnstGraphicsParent());
-                        lo->setnstId(properties["link"]);
-                        lo->setnstUid(aggregator->getnstUid());
-                        lo->setxConnector(connName);
-                        lo->setxConnectorUID(connectors[connName]->getnstUid());
-                        lo->setAggregatorUID(aggregator->getnstUid());
+                        if (link == "New..."){
+                            properties["link"] = "link"+QString::number(++nlink);
 
-                        links[lo->getnstUid()] = lo;
 
-                        link2conn[properties["link"]] = connName;
+                            lo = new QnstLink();
+                            lo->setnstParent(entityb->getnstGraphicsParent());
+                            lo->setnstId(properties["link"]);
+                            lo->setnstUid(entityb->getnstUid());
+                            lo->setxConnector(connName);
+                            lo->setxConnectorUID(connectors[connName]->getnstUid());
+                            lo->setAggregatorUID(entityb->getnstUid());
+
+                            links[lo->getnstUid()] = lo;
+
+                        }else{
+                            properties["link"] = link;
+
+                            lo = links[entityb->getnstUid()];
+                        }
+
+                        properties["linkUID"] = entityb->getnstUid();
 
                         properties["connector"] = connName;
-                        properties["condition"] = con;
+                        properties["condition"] = cond;
 
                         properties["component"] = parenta->getnstId();
                         properties["interface"] = entitya->getnstId();
 
-                        properties["role"] = con;
+                        properties["role"] = cond;
 
                         QnstBind* bo = new QnstBind();
                         bo->setnstParent(lo);
-                        bo->setnstUid(condition->getnstUid());
+                        bo->setnstUid(entity->getnstUid());
                         bo->setRole(properties["condition"]);
                         bo->setComponent(properties["component"]);
                         bo->setComponentUid(parenta->getnstUid());
@@ -6245,34 +6319,237 @@ void QnstView::addInterfacetoNodeEdge(QnstGraphicsEntity* entitya, QnstGraphicsE
                         lo->addCondition(bo);
 
                         binds[bo->getnstUid()] = bo;
-                        brelations[bo->getnstUid()] = condition->getnstUid();
+                        brelations[bo->getnstUid()] = entity->getnstUid();
 
-                        emit entityAdded(condition->getnstUid(), parentb->getnstUid(), properties);
+                        link2conn[properties["link"]] = connName;
 
-                        properties["condition"] = "";
+                        entities[entity->getnstUid()] = entity;
 
-                        properties["action"] = act;
+                        emit entityAdded(entity->getnstUid(), parenta->getnstUid(), properties);
+                    }
+                }else{
+                    linkDialog->init(connectors);
 
-                        properties["component"] = entityb->getnstId();
-                        properties["interface"] = "";
+                    if (linkDialog->exec()){
+                        QString con = linkDialog->form.cbCondition->currentText();
+                        QString act = linkDialog->form.cbAction->currentText();
 
-                        properties["role"] = act;
+                        if (con != "" && act != ""){
+                            qreal xcenter = -1;
+                            qreal ycenter = -1;
 
-                        QnstBind* bo2 = new QnstBind();
-                        bo2->setnstParent(lo);
-                        bo2->setnstUid(action->getnstUid());
-                        bo2->setRole(properties["action"]);
-                        bo2->setComponent(properties["component"]);
-                        bo2->setComponentUid(parentb->getnstUid());
+                            QPointF pointa(entitya->getLeft() + entitya->getWidth()/2,
+                                           entitya->getTop() + entitya->getHeight()/2);
 
-                        lo->addAction(bo2);
+                            QPointF pointb(entityb->getLeft() + entityb->getWidth()/2,
+                                           entityb->getTop() + entityb->getHeight()/2);
 
-                        binds[bo2->getnstUid()] = bo2;
-                        brelations[bo2->getnstUid()] = action->getnstUid();
 
-                        emit entityAdded(action->getnstUid(), parentb->getnstUid(), properties);
+                            pointa = parentb->mapFromItem(parenta, pointa);
+
+                            if (pointa.x() <= pointb.x() && pointa.y() <= pointb.y()){
+                                xcenter = pointa.x() + (pointb.x() - pointa.x())/2;
+                                ycenter = pointa.y() + (pointb.y() - pointa.y())/2;
+
+                            }else if (pointa.x() > pointb.x() && pointa.y() < pointb.y()){
+                                xcenter = pointb.x() + (pointa.x() - pointb.x())/2;
+                                ycenter = pointa.y() + (pointb.y() - pointa.y())/2;
+
+                            }else if (pointa.x() < pointb.x() && pointa.y() > pointb.y()){
+                                xcenter = pointa.x() + (pointb.x() - pointa.x())/2;
+                                ycenter = pointb.y() + (pointa.y() - pointb.y())/2;
+
+                            }else if (pointa.x() > pointb.x() && pointa.y() > pointb.y()){
+                                xcenter = pointb.x() + (pointa.x() - pointb.x())/2;
+                                ycenter = pointb.y() + (pointa.y() - pointb.y())/2;
+                            }
+
+
+                            QnstGraphicsAggregator* aggregator = new QnstGraphicsAggregator((QnstGraphicsNode*) parentb);
+                            aggregator->setTop(ycenter - 14/2);
+                            aggregator->setLeft(xcenter - 14/2);
+                            aggregator->setWidth(14);
+                            aggregator->setHeight(14);
+                            aggregator->adjust();
+
+                            parentb->addnstGraphicsEntity(aggregator);
+
+                            entities[aggregator->getnstUid()] = aggregator;
+
+                            ///
+
+                            QnstGraphicsCondition* condition = new QnstGraphicsCondition();
+                            condition->setnstGraphicsParent(parentb);
+                            condition->setEntityA(entitya);
+                            condition->setEntityB(aggregator);
+
+                            // adjusting angle
+                            adjustAngle(condition, entitya, aggregator);
+
+                            condition->adjust();
+
+                            parentb->addnstGraphicsEntity(condition);
+
+                            ((QnstGraphicsInterface*) entitya)->addnstGraphicsEdge(condition);
+                            ((QnstGraphicsNode*) aggregator)->addnstGraphicsEdge(condition);
+
+                            if (con == "onBegin"){
+                                condition->setCondition(Qnst::onBegin);
+
+                            }else if (con == "onEnd"){
+                                condition->setCondition(Qnst::onEnd);
+
+                            }else if (con == "onPause"){
+                                condition->setCondition(Qnst::onPause);
+
+                            }else if (con == "onResume"){
+                                condition->setCondition(Qnst::onResume);
+
+                            }else if (con == "onSelection"){
+                                condition->setCondition(Qnst::onSelection);
+
+                            }else{
+                                condition->setCondition(Qnst::NoConditionType);
+                            }
+
+                            entities[condition->getnstUid()] = condition;
+
+                            ///
+
+                            QnstGraphicsAction* action = new QnstGraphicsAction();
+                            action->setnstGraphicsParent(parentb);
+                            action->setEntityA(aggregator);
+                            action->setEntityB(entityb);
+
+                            // adjusting angle
+                            adjustAngle(action, aggregator, entityb);
+
+                            action->adjust();
+
+                            parentb->addnstGraphicsEntity(action);
+
+                            ((QnstGraphicsNode*) aggregator)->addnstGraphicsEdge(action);
+                            ((QnstGraphicsNode*) entityb)->addnstGraphicsEdge(action);
+
+                            if (act == "start"){
+                                action->setAction(Qnst::Start);
+
+                            }else if (act == "stop"){
+                                action->setAction(Qnst::Stop);
+
+                            }else if (act == "pause"){
+                                action->setAction(Qnst::Pause);
+
+                            }else if (act == "resume"){
+                                action->setAction(Qnst::Resume);
+
+                            }else if (act == "set"){
+                                action->setAction(Qnst::Set);
+
+                            }else{
+                                action->setAction(Qnst::NoActionType);
+                            }
+
+                            entities[action->getnstUid()] = action;
+
+                            ///// connector
+
+                            QString connName = linkDialog->form.cbConnector->currentText();;
+
+                            if (linkDialog->form.cbConnector->currentText() == "New..."){
+                                QnstConncetor* conn = new QnstConncetor();
+                                conn->setName(con+act+QString::number(connectors.size()));
+                                conn->addCondition(con, con);
+                                conn->addAction(act, act);
+
+                                connectors[conn->getName()] = conn;
+                                connectors2[conn->getnstUid()] = conn;
+
+                                QMap<QString, QString> properties;
+
+                                properties["TYPE"] = "connector";
+
+                                properties["id"] = conn->getName();
+                                properties["condition"] = con;
+                                properties["action"] = act;
+
+
+                                connName = conn->getName();
+
+                                emit entityAdded(conn->getnstUid(), "", properties);
+                            }
+
+                            ///// link
+
+                            QMap<QString, QString> properties;
+
+                            properties["TYPE"] = "bind";
+                            properties["link"] = "link"+QString::number(++nlink);
+
+                            properties["linkUID"] = aggregator->getnstUid();
+
+                            QnstLink* lo = new QnstLink();
+                            lo->setnstParent(aggregator->getnstGraphicsParent());
+                            lo->setnstId(properties["link"]);
+                            lo->setnstUid(aggregator->getnstUid());
+                            lo->setxConnector(connName);
+                            lo->setxConnectorUID(connectors[connName]->getnstUid());
+                            lo->setAggregatorUID(aggregator->getnstUid());
+
+                            links[lo->getnstUid()] = lo;
+
+                            link2conn[properties["link"]] = connName;
+
+                            properties["connector"] = connName;
+                            properties["condition"] = con;
+
+                            properties["component"] = parenta->getnstId();
+                            properties["interface"] = entitya->getnstId();
+
+                            properties["role"] = con;
+
+                            QnstBind* bo = new QnstBind();
+                            bo->setnstParent(lo);
+                            bo->setnstUid(condition->getnstUid());
+                            bo->setRole(properties["condition"]);
+                            bo->setComponent(properties["component"]);
+                            bo->setComponentUid(parenta->getnstUid());
+                            bo->setInterface(properties["interface"]);
+                            bo->setInterfaceUid(entitya->getnstUid());
+
+                            lo->addCondition(bo);
+
+                            binds[bo->getnstUid()] = bo;
+                            brelations[bo->getnstUid()] = condition->getnstUid();
+
+                            emit entityAdded(condition->getnstUid(), parentb->getnstUid(), properties);
+
+                            properties["condition"] = "";
+
+                            properties["action"] = act;
+
+                            properties["component"] = entityb->getnstId();
+                            properties["interface"] = "";
+
+                            properties["role"] = act;
+
+                            QnstBind* bo2 = new QnstBind();
+                            bo2->setnstParent(lo);
+                            bo2->setnstUid(action->getnstUid());
+                            bo2->setRole(properties["action"]);
+                            bo2->setComponent(properties["component"]);
+                            bo2->setComponentUid(parentb->getnstUid());
+
+                            lo->addAction(bo2);
+
+                            binds[bo2->getnstUid()] = bo2;
+                            brelations[bo2->getnstUid()] = action->getnstUid();
+
+                            emit entityAdded(action->getnstUid(), parentb->getnstUid(), properties);
+                        }
                     }
                 }
+
                 modified = false;
             }
         }
