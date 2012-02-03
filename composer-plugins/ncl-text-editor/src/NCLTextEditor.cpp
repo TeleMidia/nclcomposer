@@ -542,6 +542,10 @@ QString NCLTextEditor::textWithoutUserInteraction()
 {
   return textWithoutUserInter;
 }
+void NCLTextEditor::setTextWithoutUserInteraction(QString text)
+{
+  textWithoutUserInter = text;
+}
 
 void NCLTextEditor::setDocumentUrl(QString docURL)
 {

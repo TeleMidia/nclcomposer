@@ -78,6 +78,7 @@ public:
 
   void keepFocused();
   QString textWithoutUserInteraction();
+  void setTextWithoutUserInteraction(QString text);
 
   void setDocumentUrl(QString docURL);
   QString getDocumentUrl();

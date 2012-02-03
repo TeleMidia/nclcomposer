@@ -506,6 +506,8 @@ void NCLTextualViewPlugin::updateCoreModel()
   syncMutex.lock();
   bool rebuildComposerModelFromScratch = true;
 
+  isSyncing = true; //set our current state as syncing
+
   QString text = nclTextEditor->text();
   QString errorMessage;
   int errorLine, errorColumn;
@@ -514,18 +516,19 @@ void NCLTextualViewPlugin::updateCoreModel()
   if(!xmlDoc.setContent(text, &errorMessage, &errorLine, &errorColumn))
   {
     //if the current XML is not well formed.
-    QMessageBox::information(NULL, tr("Error"),
+    QMessageBox::warning(nclTextEditor, tr("Error"),
                              tr("Your document is not a Well-formed XML"));
     nclTextEditor->keepFocused();
     nclTextEditor->markError(errorMessage, "", errorLine-1, errorColumn);
+
+    isSyncing = false;
     syncMutex.unlock();
     return;
   }
 
-  isSyncing = true; //set our current state as syncing
-
+  int line, column;
+  tmpNclTextEditor->getCursorPosition(&line, &column);
   sendBroadcastMessage("textualStartSync", NULL);
-
   //double-buffering
   tmpNclTextEditor = nclTextEditor;
   nclTextEditor = new NCLTextEditor(0);
@@ -535,11 +538,11 @@ void NCLTextualViewPlugin::updateCoreModel()
   if(rebuildComposerModelFromScratch)
     nonIncrementalUpdateCoreModel();
   else
+//    incrementalUpdateCoreModelById();
     incrementalUpdateCoreModel();
-
   emit syncFinished();
   sendBroadcastMessage("textualFinishSync", NULL);
-
+  tmpNclTextEditor->setCursorPosition(line, column);
   syncMutex.unlock();
 }
 
@@ -677,7 +680,7 @@ void NCLTextualViewPlugin::incrementalUpdateCoreModel()
       }
       else
       {
-        //if type are differents, then we should change the type
+        //if type are not equal, then we should change the type
         //i.e. remove the entity
         emit removeEntity(entityChildren[j], true);
         //and insert a new entity with the required type.
@@ -738,6 +741,7 @@ void NCLTextualViewPlugin::syncFinished()
   nclTextEditor = tmpNclTextEditor;
   tmpNclTextEditor = NULL;
   updateFromModel();
+  nclTextEditor->setTextWithoutUserInteraction(nclTextEditor->text());
   isSyncing = false;
 
   updateErrorMessages();
