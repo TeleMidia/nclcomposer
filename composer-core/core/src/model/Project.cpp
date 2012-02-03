@@ -219,4 +219,22 @@ void Project::setDirty(bool isDirty)
     }
 }
 
+QString Project::generateUniqueNCLId(const QString &tagname)
+{
+  QList <Entity*> elements = getEntitiesbyType(tagname);
+  QList <QString> currentElementsNCLID;
+  for(int i = 0; i < elements.size(); i++)
+  {
+    if(elements.at(i)->hasAttribute("id"))
+      currentElementsNCLID.push_back(elements.at(i)->getAttribute("id"));
+  }
+
+  for(int i = 1; ; i++)
+  {
+    QString retNCLID = tagname + QString::number(i);
+    if(!currentElementsNCLID.contains(retNCLID))
+      return retNCLID;
+  }
+}
+
 } } } //end namespace

@@ -98,6 +98,11 @@ public:
     */
     QByteArray getPluginData(QString pluginId);
 
+    /*!
+     * \brief Generate a descritor NCLID that are not present in the core.
+     */
+    QString generateUniqueNCLId(const QString &tagname);
+
     bool isDirty();
 
 private:
