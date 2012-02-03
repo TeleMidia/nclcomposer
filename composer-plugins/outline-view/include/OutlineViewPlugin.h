@@ -38,7 +38,7 @@ class OutlineViewPlugin : public IPlugin
     Q_OBJECT
 
 private:
-    NCLTreeWidget *window; /*!< TODO */
+    NCLTreeWidget *window, *windowBuffering; /*!< TODO */
     QString *selectedId; /*!< TODO */
     QMap <QString, QTreeWidgetItem*> idToItem; /*!< TODO */
 
@@ -128,6 +128,17 @@ public slots:
      * \param param
      */
     void changeSelectedEntity(QString pluginId, void* param);
+
+
+    /*!
+     * \brief
+     */
+    void textualStartSync(QString, void*);
+
+    /*!
+     * \brief
+     */
+    void textualFinishSync(QString, void*);
 
 private slots:
     /*!

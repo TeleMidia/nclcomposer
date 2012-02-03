@@ -23,10 +23,9 @@ namespace composer {
     namespace plugin {
         namespace outline {
 
-OutlineViewPlugin::OutlineViewPlugin()
+OutlineViewPlugin::OutlineViewPlugin() :
+  window(new NCLTreeWidget(0)), windowBuffering(new NCLTreeWidget(0))
 {
-    window = new NCLTreeWidget(0);
-    windowBuffering = new NCLTreeWidget(0);
     project = NULL;
 
     connect ( window,
@@ -56,6 +55,7 @@ OutlineViewPlugin::~OutlineViewPlugin()
     if(selectedId != NULL)
         delete selectedId;
     delete window;
+    delete windowBuffering;
 }
 
 QWidget* OutlineViewPlugin::getWidget()
@@ -100,7 +100,16 @@ void OutlineViewPlugin::onEntityAdded(QString pluginID, Entity *entity)
     if(entity->getType() == "ncl" ||
        entity->getType() == "body" ||
        entity->getType() == "link" ||
-       entity->getType() == "media" )
+       entity->getType() == "media" ||
+       entity->getType() == "context" ||
+       entity->getType() == "switch" ||
+       entity->getType() == "port" ||
+       entity->getType() == "switchPort" ||
+       entity->getType() == "regionBase" ||
+       entity->getType() == "descriptorBase" ||
+       entity->getType() == "connectorBase" ||
+       entity->getType() == "ruleBase" ||
+       entity->getType() == "transitionBase" )
     {
       if(!attrs.keys().contains("id"))
       {
@@ -278,18 +287,14 @@ void OutlineViewPlugin::changeSelectedEntity(QString pluginID, void *param){
     }
 }
 
-/*void OutlineViewPlugin::textualStartSync(QString, void*)
+void OutlineViewPlugin::textualStartSync(QString, void*)
 {
-  NCLTreeWidget *tmp = window;
-  window = windowBuffering;
-  windowBuffering = tmp;
+  window->collapseAll();
 }
 
-void QnstComposerPlugin::textualFinishSync(QString, void*)
+void OutlineViewPlugin::textualFinishSync(QString, void*)
 {
-  NCLTreeWidget *tmp = window;
-  window = windowBuffering;
-  windowBuffering = tmp;
-}*/
+  window->expandAll();
+}
 
 } } } //end namespace
