@@ -117,11 +117,6 @@ private:
      */
     QString getHeadUid();
 
-    /*!
-     * \brief Generate a descritor NCLID that are not present in the core.
-     */
-    QString generateUniqueNCLId(const QString &tagname);
-
     void createView();
 
     void createConnections();

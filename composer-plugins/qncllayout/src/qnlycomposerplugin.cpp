@@ -968,7 +968,7 @@ void QnlyComposerPlugin::performMediaOverRegionAction(const QString mediaId,
           project->getEntitiesbyType("descriptorBase").at(0);
 
       // create the descriptor
-      QString newDescriptorID = generateUniqueNCLId("descriptor");
+      QString newDescriptorID = project->generateUniqueNCLId("descriptor");
       attrs.insert("id", newDescriptorID);
       attrs.insert("region", region->getAttribute("id"));
       emit addEntity("descriptor", descriptorBase->getUniqueId(), attrs, false);
@@ -1020,24 +1020,6 @@ void QnlyComposerPlugin::performMediaOverRegionAction(const QString mediaId,
           emit addEntity("property", media->getUniqueId(), attrs, false);
       }
     }
-  }
-}
-
-QString QnlyComposerPlugin::generateUniqueNCLId(const QString &tagname)
-{
-  QList <Entity*> elements = project->getEntitiesbyType(tagname);
-  QList <QString> currentElementsNCLID;
-  for(int i = 0; i < elements.size(); i++)
-  {
-    if(elements.at(i)->hasAttribute("id"))
-      currentElementsNCLID.push_back(elements.at(i)->getAttribute("id"));
-  }
-
-  for(int i = 1; ; i++)
-  {
-    QString retNCLID = tagname + QString::number(i);
-    if(!currentElementsNCLID.contains(retNCLID))
-      return retNCLID;
   }
 }
 
