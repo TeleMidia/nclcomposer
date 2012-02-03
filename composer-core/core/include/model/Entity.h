@@ -208,7 +208,7 @@ public:
      *
      * \param ntabs the number of tabs to be inserted before the current entity.
      */
-    QString toString(int ntabs);
+    QString toString(int ntabs, bool writeuid = true);
 
     /*!
      * \brief Creates a clone of the current entity.

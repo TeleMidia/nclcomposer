@@ -207,7 +207,7 @@ void Entity::print()
     }
 }
 
-QString Entity::toString(int ntab)
+QString Entity::toString(int ntab, bool writeuid)
 {
     QString out = "";
     for(int i = 0; i < ntab; i++)
@@ -222,14 +222,17 @@ QString Entity::toString(int ntab)
         out += atts.value(attr);
         out += "\"";
     }
-    out += " uniqueEntityId=\"";
-    out += getUniqueId();
+    if(writeuid)
+    {
+      out += " uniqueEntityId=\"";
+      out += getUniqueId();
+    }
     out += "\">\n";
 
     for (int i = 0; i < children.size(); i++)
     {
         Entity *child = children.at(i);
-        out += child->toString(ntab+1);
+        out += child->toString(ntab+1, writeuid);
     }
     for(int i = 0; i < ntab; i++)
         out += "\t";
