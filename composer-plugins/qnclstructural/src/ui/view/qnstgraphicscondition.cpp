@@ -171,7 +171,7 @@ void QnstGraphicsCondition::draw(QPainter* painter)
             if (getAngle() != 0){
                qreal drawangle = getAdjAngle();
 
-               QLineF localline(4+8,4+8, 4+4+getWidth()-8, 4+4+getHeight()-8);
+               QLineF localline(4+8,4+8, 4+getWidth()-4, 4+getHeight()-4);
 
                if (drawangle < 0){
                    drawangle = -drawangle;
@@ -196,7 +196,7 @@ void QnstGraphicsCondition::draw(QPainter* painter)
                }
 
             }else{
-                painter->drawLine(4+4,4+4, 4+8+getWidth()-16, 4+8+getHeight()-16);
+                painter->drawLine(4+8,4+8, 4+getWidth()-4, 4+getHeight()-4);
             }
 
             painter->setBrush(QBrush(QColor("#000000")));
@@ -205,13 +205,13 @@ void QnstGraphicsCondition::draw(QPainter* painter)
             painter->drawPixmap(4,4,16,16, QPixmap(conditionIcon));
 
 
-        }else if (pointa.x() > pointb.x() && pointa.y() < pointb.y()){
+        }else if (pointa.x() >= pointb.x() && pointa.y() <= pointb.y()){
             painter->setPen(QPen(QBrush(QColor("#000000")), 1));
 
             if (getAngle() != 0){
                qreal drawangle = getAdjAngle();
 
-               QLineF localline(4+8+getWidth()-16,4+4, 4+4, 4+4+getHeight()-8);
+               QLineF localline(4+getWidth()-8,4+8, 4+4, 4+getHeight()-4);
 
                if (drawangle < 0){
                    drawangle = -drawangle;
@@ -236,7 +236,7 @@ void QnstGraphicsCondition::draw(QPainter* painter)
                }
 
             }else{
-                painter->drawLine(4+8+getWidth()-16,4+4, 4+4, 4+4+getHeight()-8);
+                painter->drawLine(4+getWidth()-8,4+8, 4+4, 4+getHeight()-4);
             }
 
             painter->setBrush(QBrush(QColor("#000000")));
@@ -247,10 +247,11 @@ void QnstGraphicsCondition::draw(QPainter* painter)
         }else if (pointa.x() < pointb.x() && pointa.y() > pointb.y()){
             painter->setPen(QPen(QBrush(QColor("#000000")), 1));
 
+
             if (getAngle() != 0){
                qreal drawangle = getAdjAngle();
 
-               QLineF localline(4+8, 4+8+getHeight()-16, 4+4+getWidth()-8, 4+4);
+               QLineF localline(4+8, 4+getHeight()-8, 4+getWidth()-4, 4+4);
 
                if (drawangle < 0){
                    drawangle = -drawangle;
@@ -275,7 +276,7 @@ void QnstGraphicsCondition::draw(QPainter* painter)
                }
 
             }else{
-                painter->drawLine(4+8, 4+8+getHeight()-16, 4+4+getWidth()-8, 4+4);
+                painter->drawLine(4+8, 4+getHeight()-8, 4+getWidth()-4, 4+4);
             }
 
             painter->setBrush(QBrush(QColor("#000000")));
@@ -284,12 +285,13 @@ void QnstGraphicsCondition::draw(QPainter* painter)
             painter->drawPixmap(4, 4+getHeight()-16, 16, 16, QPixmap(conditionIcon));
 
         }else if (pointa.x() > pointb.x() && pointa.y() > pointb.y()){
+
             painter->setPen(QPen(QBrush(QColor("#000000")), 1));
 
             if (getAngle() != 0){
                qreal drawangle = getAdjAngle();
 
-               QLineF localline(4+8+getWidth()-16, 4+8+getHeight()-16, 4+4, 4+4);
+               QLineF localline(4+getWidth()-8, 4+getHeight()-8, 4+4, 4+4);
 
                if (drawangle < 0){
                    drawangle = -drawangle;
@@ -314,7 +316,7 @@ void QnstGraphicsCondition::draw(QPainter* painter)
                }
 
             }else{
-                painter->drawLine(4+8+getWidth()-16, 4+8+getHeight()-16, 4+4, 4+4);
+                painter->drawLine(4+getWidth()-8, 4+getHeight()-8, 4+4, 4+4);
             }
 
             painter->setBrush(QBrush(QColor("#000000")));

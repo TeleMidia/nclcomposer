@@ -174,12 +174,9 @@ QPointF QnstGraphicsEdge::arcPointAt(QLineF line, qreal at, bool toend)
 
     qreal new_arc_len = arc_len*at;
 
-
     qreal new_alfa = (180*new_arc_len)/(PI*R);
 
-
     qreal gama = (180-beta-new_alfa);
-
 
     QPointF new_start_p(center_p.x() + ::cos((gama)*PI/180)*R,
                         center_p.y() - ::sin((gama)*PI/180)*R);

@@ -5188,6 +5188,34 @@ void QnstView::addNodetoNodeEdge(QnstGraphicsEntity* entitya, QnstGraphicsEntity
                     entity->setnstGraphicsParent(parenta);
                     entity->setEntityA(entitya);
                     entity->setEntityB(entityb);
+
+                    if (entitya->getAngles().contains(entityb->getnstUid())){
+                        int angle = 60;
+
+                        while(1){
+                            if (!entitya->getAngles()[entityb->getnstUid()].contains(angle)){
+                                break;
+
+                            }else if (!entitya->getAngles()[entityb->getnstUid()].contains(-angle)){
+                                angle = -angle;
+                                break;
+                            }
+
+                            angle += 60;
+                        }
+
+                        entitya->addAngle(entityb->getnstUid(), angle);
+                        entityb->addAngle(entitya->getnstUid(), -angle);
+
+                        entity->setAngle(angle);
+
+                    }else{
+                        entitya->addAngle(entityb->getnstUid(), 0);
+                        entityb->addAngle(entitya->getnstUid(), 0);
+
+                        entity->setAngle(0);
+                    }
+
                     entity->adjust();
 
                     parenta->addnstGraphicsEntity(entity);
@@ -5316,6 +5344,35 @@ void QnstView::addNodetoNodeEdge(QnstGraphicsEntity* entitya, QnstGraphicsEntity
                     entity->setnstGraphicsParent(parenta);
                     entity->setEntityA(entitya);
                     entity->setEntityB(entityb);
+                    entity->adjust();
+
+                    if (entitya->getAngles().contains(entityb->getnstUid())){
+                        int angle = 60;
+
+                        while(1){
+                            if (!entitya->getAngles()[entityb->getnstUid()].contains(angle)){
+                                break;
+
+                            }else if (!entitya->getAngles()[entityb->getnstUid()].contains(-angle)){
+                                angle = -angle;
+                                break;
+                            }
+
+                            angle += 60;
+                        }
+
+                        entitya->addAngle(entityb->getnstUid(), angle);
+                        entityb->addAngle(entitya->getnstUid(), -angle);
+
+                        entity->setAngle(angle);
+
+                    }else{
+                        entitya->addAngle(entityb->getnstUid(), 0);
+                        entityb->addAngle(entitya->getnstUid(), 0);
+
+                        entity->setAngle(0);
+                    }
+
                     entity->adjust();
 
                     parenta->addnstGraphicsEntity(entity);
@@ -5489,6 +5546,34 @@ void QnstView::addNodetoNodeEdge(QnstGraphicsEntity* entitya, QnstGraphicsEntity
                         condition->setnstGraphicsParent(parenta);
                         condition->setEntityA(entitya);
                         condition->setEntityB(aggregator);
+
+                        if (entitya->getAngles().contains(aggregator->getnstUid())){
+                            int angle = 60;
+
+                            while(1){
+                                if (!entitya->getAngles()[aggregator->getnstUid()].contains(angle)){
+                                    break;
+
+                                }else if (!entitya->getAngles()[aggregator->getnstUid()].contains(-angle)){
+                                    angle = -angle;
+                                    break;
+                                }
+
+                                angle += 60;
+                            }
+
+                            entitya->addAngle(aggregator->getnstUid(), angle);
+                            aggregator->addAngle(entitya->getnstUid(), -angle);
+
+                            condition->setAngle(angle);
+
+                        }else{
+                            entitya->addAngle(aggregator->getnstUid(), 0);
+                            aggregator->addAngle(entitya->getnstUid(), 0);
+
+                            condition->setAngle(0);
+                        }
+
                         condition->adjust();
 
                         parenta->addnstGraphicsEntity(condition);
@@ -5523,6 +5608,34 @@ void QnstView::addNodetoNodeEdge(QnstGraphicsEntity* entitya, QnstGraphicsEntity
                         action->setnstGraphicsParent(parenta);
                         action->setEntityA(aggregator);
                         action->setEntityB(entityb);
+
+                        if (aggregator->getAngles().contains(entityb->getnstUid())){
+                            int angle = 60;
+
+                            while(1){
+                                if (!aggregator->getAngles()[entityb->getnstUid()].contains(angle)){
+                                    break;
+
+                                }else if (!aggregator->getAngles()[entityb->getnstUid()].contains(-angle)){
+                                    angle = -angle;
+                                    break;
+                                }
+
+                                angle += 60;
+                            }
+
+                            aggregator->addAngle(entityb->getnstUid(), angle);
+                            entityb->addAngle(aggregator->getnstUid(), -angle);
+
+                            action->setAngle(angle);
+
+                        }else{
+                            aggregator->addAngle(entityb->getnstUid(), 0);
+                            entityb->addAngle(aggregator->getnstUid(), 0);
+
+                            action->setAngle(0);
+                        }
+
                         action->adjust();
 
                         parenta->addnstGraphicsEntity(action);
@@ -5714,6 +5827,34 @@ void QnstView::addNodetoInterfaceEdge(QnstGraphicsEntity* entitya, QnstGraphicsE
                     condition->setnstGraphicsParent(parenta);
                     condition->setEntityA(entitya);
                     condition->setEntityB(aggregator);
+
+                    if (entitya->getAngles().contains(aggregator->getnstUid())){
+                        int angle = 60;
+
+                        while(1){
+                            if (!entitya->getAngles()[aggregator->getnstUid()].contains(angle)){
+                                break;
+
+                            }else if (!entitya->getAngles()[aggregator->getnstUid()].contains(-angle)){
+                                angle = -angle;
+                                break;
+                            }
+
+                            angle += 60;
+                        }
+
+                        entitya->addAngle(aggregator->getnstUid(), angle);
+                        aggregator->addAngle(entitya->getnstUid(), -angle);
+
+                        condition->setAngle(angle);
+
+                    }else{
+                        entitya->addAngle(aggregator->getnstUid(), 0);
+                        aggregator->addAngle(entitya->getnstUid(), 0);
+
+                        condition->setAngle(0);
+                    }
+
                     condition->adjust();
 
                     parenta->addnstGraphicsEntity(condition);
@@ -5748,6 +5889,34 @@ void QnstView::addNodetoInterfaceEdge(QnstGraphicsEntity* entitya, QnstGraphicsE
                     action->setnstGraphicsParent(parenta);
                     action->setEntityA(aggregator);
                     action->setEntityB(entityb);
+
+                    if (aggregator->getAngles().contains(entityb->getnstUid())){
+                        int angle = 60;
+
+                        while(1){
+                            if (!aggregator->getAngles()[entityb->getnstUid()].contains(angle)){
+                                break;
+
+                            }else if (!aggregator->getAngles()[entityb->getnstUid()].contains(-angle)){
+                                angle = -angle;
+                                break;
+                            }
+
+                            angle += 60;
+                        }
+
+                        aggregator->addAngle(entityb->getnstUid(), angle);
+                        entityb->addAngle(aggregator->getnstUid(), -angle);
+
+                        action->setAngle(angle);
+
+                    }else{
+                        aggregator->addAngle(entityb->getnstUid(), 0);
+                        entityb->addAngle(aggregator->getnstUid(), 0);
+
+                        action->setAngle(0);
+                    }
+
                     action->adjust();
 
                     parenta->addnstGraphicsEntity(action);
@@ -6025,6 +6194,34 @@ void QnstView::addInterfacetoNodeEdge(QnstGraphicsEntity* entitya, QnstGraphicsE
                         condition->setnstGraphicsParent(parentb);
                         condition->setEntityA(entitya);
                         condition->setEntityB(aggregator);
+
+                        if (entitya->getAngles().contains(aggregator->getnstUid())){
+                            int angle = 60;
+
+                            while(1){
+                                if (!entitya->getAngles()[aggregator->getnstUid()].contains(angle)){
+                                    break;
+
+                                }else if (!entitya->getAngles()[aggregator->getnstUid()].contains(-angle)){
+                                    angle = -angle;
+                                    break;
+                                }
+
+                                angle += 60;
+                            }
+
+                            entitya->addAngle(aggregator->getnstUid(), angle);
+                            aggregator->addAngle(entitya->getnstUid(), -angle);
+
+                            condition->setAngle(angle);
+
+                        }else{
+                            entitya->addAngle(aggregator->getnstUid(), 0);
+                            aggregator->addAngle(entitya->getnstUid(), 0);
+
+                            condition->setAngle(0);
+                        }
+
                         condition->adjust();
 
                         parentb->addnstGraphicsEntity(condition);
@@ -6059,6 +6256,34 @@ void QnstView::addInterfacetoNodeEdge(QnstGraphicsEntity* entitya, QnstGraphicsE
                         action->setnstGraphicsParent(parentb);
                         action->setEntityA(aggregator);
                         action->setEntityB(entityb);
+
+                        if (aggregator->getAngles().contains(entityb->getnstUid())){
+                            int angle = 60;
+
+                            while(1){
+                                if (!aggregator->getAngles()[entityb->getnstUid()].contains(angle)){
+                                    break;
+
+                                }else if (!aggregator->getAngles()[entityb->getnstUid()].contains(-angle)){
+                                    angle = -angle;
+                                    break;
+                                }
+
+                                angle += 60;
+                            }
+
+                            aggregator->addAngle(entityb->getnstUid(), angle);
+                            entityb->addAngle(aggregator->getnstUid(), -angle);
+
+                            action->setAngle(angle);
+
+                        }else{
+                            aggregator->addAngle(entityb->getnstUid(), 0);
+                            entityb->addAngle(aggregator->getnstUid(), 0);
+
+                            action->setAngle(0);
+                        }
+
                         action->adjust();
 
                         parentb->addnstGraphicsEntity(action);
@@ -6296,6 +6521,34 @@ void QnstView::addInterfacetoInterfaceEdge(QnstGraphicsEntity* entitya, QnstGrap
                         condition->setnstGraphicsParent(parents);
                         condition->setEntityA(entitya);
                         condition->setEntityB(aggregator);
+
+                        if (entitya->getAngles().contains(aggregator->getnstUid())){
+                            int angle = 60;
+
+                            while(1){
+                                if (!entitya->getAngles()[aggregator->getnstUid()].contains(angle)){
+                                    break;
+
+                                }else if (!entitya->getAngles()[aggregator->getnstUid()].contains(-angle)){
+                                    angle = -angle;
+                                    break;
+                                }
+
+                                angle += 60;
+                            }
+
+                            entitya->addAngle(aggregator->getnstUid(), angle);
+                            aggregator->addAngle(entitya->getnstUid(), -angle);
+
+                            condition->setAngle(angle);
+
+                        }else{
+                            entitya->addAngle(aggregator->getnstUid(), 0);
+                            aggregator->addAngle(entitya->getnstUid(), 0);
+
+                            condition->setAngle(0);
+                        }
+
                         condition->adjust();
 
                         parents->addnstGraphicsEntity(condition);
@@ -6330,7 +6583,36 @@ void QnstView::addInterfacetoInterfaceEdge(QnstGraphicsEntity* entitya, QnstGrap
                         action->setnstGraphicsParent(parents);
                         action->setEntityA(aggregator);
                         action->setEntityB(entityb);
+
+                        if (aggregator->getAngles().contains(entityb->getnstUid())){
+                            int angle = 60;
+
+                            while(1){
+                                if (!aggregator->getAngles()[entityb->getnstUid()].contains(angle)){
+                                    break;
+
+                                }else if (!aggregator->getAngles()[entityb->getnstUid()].contains(-angle)){
+                                    angle = -angle;
+                                    break;
+                                }
+
+                                angle += 60;
+                            }
+
+                            aggregator->addAngle(entityb->getnstUid(), angle);
+                            entityb->addAngle(aggregator->getnstUid(), -angle);
+
+                            action->setAngle(angle);
+
+                        }else{
+                            aggregator->addAngle(entityb->getnstUid(), 0);
+                            entityb->addAngle(aggregator->getnstUid(), 0);
+
+                            action->setAngle(0);
+                        }
+
                         action->adjust();
+
 
                         parents->addnstGraphicsEntity(action);
 
@@ -6564,7 +6846,36 @@ void QnstView::addInterfacetoInterfaceEdge(QnstGraphicsEntity* entitya, QnstGrap
                     condition->setnstGraphicsParent(parents);
                     condition->setEntityA(entitya);
                     condition->setEntityB(aggregator);
+
+                    if (entitya->getAngles().contains(aggregator->getnstUid())){
+                        int angle = 60;
+
+                        while(1){
+                            if (!entitya->getAngles()[aggregator->getnstUid()].contains(angle)){
+                                break;
+
+                            }else if (!entitya->getAngles()[aggregator->getnstUid()].contains(-angle)){
+                                angle = -angle;
+                                break;
+                            }
+
+                            angle += 60;
+                        }
+
+                        entitya->addAngle(aggregator->getnstUid(), angle);
+                        aggregator->addAngle(entitya->getnstUid(), -angle);
+
+                        condition->setAngle(angle);
+
+                    }else{
+                        entitya->addAngle(aggregator->getnstUid(), 0);
+                        aggregator->addAngle(entitya->getnstUid(), 0);
+
+                        condition->setAngle(0);
+                    }
+
                     condition->adjust();
+
 
                     parents->addnstGraphicsEntity(condition);
 
@@ -6598,7 +6909,36 @@ void QnstView::addInterfacetoInterfaceEdge(QnstGraphicsEntity* entitya, QnstGrap
                     action->setnstGraphicsParent(parents);
                     action->setEntityA(aggregator);
                     action->setEntityB(entityb);
+
+                    if (aggregator->getAngles().contains(entityb->getnstUid())){
+                        int angle = 60;
+
+                        while(1){
+                            if (!aggregator->getAngles()[entityb->getnstUid()].contains(angle)){
+                                break;
+
+                            }else if (!aggregator->getAngles()[entityb->getnstUid()].contains(-angle)){
+                                angle = -angle;
+                                break;
+                            }
+
+                            angle += 60;
+                        }
+
+                        aggregator->addAngle(entityb->getnstUid(), angle);
+                        entityb->addAngle(aggregator->getnstUid(), -angle);
+
+                        action->setAngle(angle);
+
+                    }else{
+                        aggregator->addAngle(entityb->getnstUid(), 0);
+                        entityb->addAngle(aggregator->getnstUid(), 0);
+
+                        action->setAngle(0);
+                    }
+
                     action->adjust();
+
 
                     parents->addnstGraphicsEntity(action);
 
