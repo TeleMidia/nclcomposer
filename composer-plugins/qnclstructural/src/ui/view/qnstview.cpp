@@ -1190,13 +1190,13 @@ void QnstView::removeEntity(const QString uid, bool undo)
 
                         }
 
-                        QnstGraphicsEntity* parent = entity->getnstGraphicsParent();
-                        parent->removenstGraphicsEntity(edge);
-
                         binds.remove(bb->getnstUid());
                         brelations.remove(bb->getnstUid());
                     }
                 }
+
+                QnstGraphicsEntity* parent = entity->getnstGraphicsParent();
+                parent->removenstGraphicsEntity(edge);
 
                 entities.remove(edge->getnstUid());
             }
