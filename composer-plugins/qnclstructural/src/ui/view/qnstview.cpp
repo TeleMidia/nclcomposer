@@ -1715,11 +1715,16 @@ void QnstView::adjustMedia(QnstGraphicsMedia* entity)
 {
     if (entity->getRefer() != "" && entity->getReferUID() != "" && entity->getInstance() != ""){
         if (entities.contains(entity->getReferUID())){
-            foreach (QnstGraphicsEntity* e, entity->getnstGraphicsEntities()){
-                removeEntity(e->getnstUid(), true);
-            }
-
             QnstGraphicsEntity* refer = entities[entity->getReferUID()];
+
+            // O(n^2) - BAD!
+            foreach (QnstGraphicsEntity* e, entity->getnstGraphicsEntities()){
+                foreach (QnstGraphicsEntity* re, refer->getnstGraphicsEntities()){
+                    if (e->getnstId() == re->getnstId()){
+                        removeEntity(e->getnstUid(), true);
+                    }
+                }
+            }
 
             refers[entity->getnstUid()] = refer->getnstUid();
 
