@@ -166,11 +166,12 @@ void ComposerMainWindow::readExtensions()
 
   settings.beginGroup("extension");
 
+  extensions_paths.clear();
 
   extensions_paths << defaultPluginsPath; //Add default location to extensions
   // This should be uncommented in fut
   if (settings.contains("path"))
-    extensions_paths = settings.value("path").toStringList();
+    extensions_paths << settings.value("path").toStringList();
 
   extensions_paths.removeDuplicates(); // Remove duplicate paths
 
@@ -1107,7 +1108,7 @@ void ComposerMainWindow::runNCLRemotely()
     // There aren't a current project.
     QMessageBox::StandardButton reply;
     reply = QMessageBox::warning(NULL, tr("Warning!"),
-                                 tr("You already have a NCL application running. Please, stop them before you start a new one."),
+                                 tr("You already have an NCL application running. Please, stop them before you start a new one."),
                                  QMessageBox::Ok);
     return;
   }
