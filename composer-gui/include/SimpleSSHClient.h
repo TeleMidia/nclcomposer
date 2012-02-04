@@ -69,7 +69,7 @@ public:
   /*!
    * \brief Copy the file from localpath to the remotepath.
    */
-  int scp_copy_file(const char *localncl);
+  int scp_copy_file(const char *localfile, const char* destpath);
 
   /*!
    * \brief Executes a command in the remote machine.

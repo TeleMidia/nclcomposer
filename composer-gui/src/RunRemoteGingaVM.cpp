@@ -19,6 +19,7 @@
 
 #include <QMessageBox>
 #include <QSettings>
+#include <iostream>
 
 void RunRemoteGingaVMAction::setCurrentProject(Project *project)
 {
@@ -28,13 +29,25 @@ void RunRemoteGingaVMAction::setCurrentProject(Project *project)
 QStringList RunRemoteGingaVMAction::filesToSendToGingaVM(Project *project,
                                                          QString nclLocalPath)
 {
+  QStringList filesToSend;
+  QFileInfo fileInfo(project->getLocation());
+  QString absoluteFilePath = fileInfo.path();
+
+  qDebug() << "############ ABSOLUTE PATH: " << absoluteFilePath << endl;
+  QDirIterator it(absoluteFilePath, QDirIterator::Subdirectories);
+  while (it.hasNext()) {
+    QString file = it.next();
+    if(!file.endsWith("."))
+    {
+      filesToSend << file;
+      qDebug() << file;
+    }
+  }
+
   // Search the files for all required files.
-  QStack <Entity*> stack;
+  /* QStack <Entity*> stack;
   Entity *current = project;
   stack.push(current);
-
-  QStringList filesToSend;
-
   while(stack.size())
   {
     current = stack.top();
@@ -52,7 +65,7 @@ QStringList RunRemoteGingaVMAction::filesToSendToGingaVM(Project *project,
 
     qDebug() << "path " << path;
 
-    /* Fix the fullpath if it is necessary */
+    // Fix the fullpath if it is necessary
     if(path != "")
     {
       fullpath = path;
@@ -82,11 +95,13 @@ QStringList RunRemoteGingaVMAction::filesToSendToGingaVM(Project *project,
     {
       stack.push(children[i]);
     }
-  }
+  }*/
   return filesToSend;
 }
 
 bool RunRemoteGingaVMAction::sendFilesToGingaVM(SimpleSSHClient &sshclient,
+                                                QString baseLocalPath,
+                                                QString baseRemotePath,
                                                 QStringList filesToSend)
 {
   int ret = 1;
@@ -95,13 +110,102 @@ bool RunRemoteGingaVMAction::sendFilesToGingaVM(SimpleSSHClient &sshclient,
   qDebug() << "Must send this files:" << filesToSend;
   for(int i = 0; i < filesToSend.size(); i++)
   {
+    int resp = 0;
     QString fullpath = filesToSend.at(i);
-    qDebug() << " FULLPATH = " << fullpath;
-    int resp = sshclient.scp_copy_file(fullpath.toStdString().c_str());
+    if(fullpath.contains(baseLocalPath))
+    {
+      QString relativePath = fullpath.mid(baseLocalPath.size()+1);
+      QString relativePathDir = relativePath.mid(0, relativePath.lastIndexOf("/")+1);
+      QFileInfo fileInfo(fullpath);
+      if(fileInfo.isFile())
+      {
+        qDebug() << "Sending file = " << fullpath <<
+                    " to " << baseRemotePath + relativePathDir;
+        resp = sshclient.scp_copy_file( fullpath.toStdString().c_str(),
+                         (baseRemotePath+relativePathDir).toStdString().c_str());
+      }
+      else
+      {
+        QString mkdir = "mkdir -p ";
+        mkdir += baseRemotePath + relativePath;
+
+        qDebug() << "Running command = " << mkdir;
+//        resp = sshclient.exec_cmd(mkdir.toStdString().c_str());
+      }
+    }
     ret = ret && !resp;
   }
 
   return ret;
+}
+
+bool RunRemoteGingaVMAction::fixSrcsFromNCLFile(const QString &nclLocalPath)
+{
+  // Fix all the paths in the nclFile.
+  QFile tmpXmlFile(nclLocalPath);
+  QDomDocument document("doc");
+  document.setContent(&tmpXmlFile);
+  QStack <QDomElement> elements;
+  elements.push(document.documentElement());
+  while(elements.size())
+  {
+    QDomElement current = elements.top();
+    elements.pop();
+
+    if(current.hasAttribute("uniqueEntityId"))
+      current.removeAttribute("uniqueEntityId");
+
+    if(current.hasAttribute("src"))
+    {
+      QString src = current.attribute("src");
+      int start = src.lastIndexOf(QDir::separator());
+      src = src.mid(start+1);
+      current.setAttribute("src", src);
+      qDebug() << src;
+    }
+    if(current.hasAttribute("documentURI"))
+    {
+      QString src = current.attribute("documentURI");
+      int start = src.lastIndexOf(QDir::separator());
+      src = src.mid(start+1);
+      current.setAttribute("documentURI", src);
+    }
+    if(current.hasAttribute("focusSrc"))
+    {
+      QString src = current.attribute("focusSrc");
+      int start = src.lastIndexOf(QDir::separator());
+      src = src.mid(start+1);
+      current.setAttribute("focusSrc", src);
+    }
+    if(current.hasAttribute("focusSelSrc"))
+    {
+      QString src = current.attribute("focusSelSrc");
+      int start = src.lastIndexOf(QDir::separator());
+      src = src.mid(start+1);
+      current.setAttribute("focusSelSrc", src);
+    }
+
+    QDomElement child = current.firstChildElement();
+    while(!child.isNull())
+    {
+      elements.push_back(child);
+      child = child.nextSiblingElement();
+    }
+  }
+  tmpXmlFile.close();
+
+  // Replace the old XML file with the with the new source fixed!!!
+  if (tmpXmlFile.open( QIODevice::WriteOnly ))
+  {
+    QTextStream textStream(&tmpXmlFile);
+    textStream << document.toString() ;
+    tmpXmlFile.close();
+  }
+  else
+    qWarning() << "I couldn't fix the path in XML file, probably it will "
+               << "not run!!";
+
+  return true;
 }
 
 void RunRemoteGingaVMAction::runCurrentProject()
@@ -136,7 +240,7 @@ void RunRemoteGingaVMAction::runCurrentProject()
   /* First, get the list of files to send */
   QStringList filesToSend = filesToSendToGingaVM(project, nclLocalPath);
   /* and send them to Ginga VM*/
-  if(sendFilesToGingaVM(sshclient, filesToSend))
+  if(sendFilesToGingaVM(sshclient, tmpNCLDir, remotePath, filesToSend))
   {
     /* Now, fix all the paths from NCL, and send the NCL file*/
     QFile file(nclLocalPath);
@@ -148,76 +252,16 @@ void RunRemoteGingaVMAction::runCurrentProject()
 
       file.close();
 
-      // Fix all the paths in the nclFile.
-      QFile tmpXmlFile(nclLocalPath);
-      QDomDocument document("doc");
-      document.setContent(&tmpXmlFile);
-      QStack <QDomElement> elements;
-      elements.push(document.documentElement());
-      while(elements.size())
-      {
-        QDomElement current = elements.top();
-        elements.pop();
-
-        if(current.hasAttribute("uniqueEntityId"))
-          current.removeAttribute("uniqueEntityId");
-
-        if(current.hasAttribute("src"))
-        {
-          QString src = current.attribute("src");
-          int start = src.lastIndexOf(QDir::separator());
-          src = src.mid(start+1);
-          current.setAttribute("src", src);
-          qDebug() << src;
-        }
-        if(current.hasAttribute("documentURI"))
-        {
-          QString src = current.attribute("documentURI");
-          int start = src.lastIndexOf(QDir::separator());
-          src = src.mid(start+1);
-          current.setAttribute("documentURI", src);
-        }
-        if(current.hasAttribute("focusSrc"))
-        {
-          QString src = current.attribute("focusSrc");
-          int start = src.lastIndexOf(QDir::separator());
-          src = src.mid(start+1);
-          current.setAttribute("focusSrc", src);
-        }
-        if(current.hasAttribute("focusSelSrc"))
-        {
-          QString src = current.attribute("focusSelSrc");
-          int start = src.lastIndexOf(QDir::separator());
-          src = src.mid(start+1);
-          current.setAttribute("focusSelSrc", src);
-        }
-
-        QDomElement child = current.firstChildElement();
-        while(!child.isNull())
-        {
-          elements.push_back(child);
-          child = child.nextSiblingElement();
-        }
-      }
-      tmpXmlFile.close();
-
-      // Replace the old XML file with the with the source fixed!!!
-      if (tmpXmlFile.open( QIODevice::WriteOnly ))
-      {
-        QTextStream textStream(&tmpXmlFile);
-        textStream << document.toString() ;
-        tmpXmlFile.close();
-      }
-      else
-        qWarning() << "I couldn't fix the path in XML file, probably it will "
-                   << "not run!!";
-
-      /* RUNNING GINGA */
-      sshclient.scp_copy_file(nclLocalPath.toStdString().c_str());
-      QString cmd = remoteCmd;
-      cmd += " ";
-      cmd += remotePath + "/tmp.ncl";
-      sshclient.exec_cmd(cmd.toStdString().c_str());
+//      if(fixSrcsFromNCLFile(nclLocalPath))
+//      {
+        /* RUNNING GINGA */
+        sshclient.scp_copy_file(nclLocalPath.toStdString().c_str(),
+                                remotePath.toStdString().c_str());
+        QString cmd = remoteCmd;
+        cmd += " ";
+        cmd += remotePath + "/tmp.ncl";
+        sshclient.exec_cmd(cmd.toStdString().c_str());
+//      }
     }
     else
     {

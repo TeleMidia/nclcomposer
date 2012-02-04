@@ -74,7 +74,7 @@ SimpleSSHClient::SimpleSSHClient(const char *username_,
   this->scppath = scppath_;
 }
 
-int SimpleSSHClient::scp_copy_file(const char *localncl)
+int SimpleSSHClient::scp_copy_file(const char *localncl, const char *destpath)
 {
   int sock, i, rc;
   LIBSSH2_SESSION *session;
@@ -93,7 +93,7 @@ int SimpleSSHClient::scp_copy_file(const char *localncl)
   found = temp.find_last_of("/\\");
   string nclfile = temp.substr(found+1);
 
-  scpfile = scppath + string("/") + nclfile;
+  scpfile = destpath + string("/") + nclfile;
 
 #ifdef WIN32
   WSADATA wsadata;
@@ -378,7 +378,7 @@ int SimpleSSHClient::exec_cmd(const char *command)
     }
   }
 
-#if 0
+#if 1
   libssh2_trace(session, ~0 );
 #endif
 

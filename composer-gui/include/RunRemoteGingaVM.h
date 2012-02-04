@@ -30,7 +30,10 @@ private:
    */
   QStringList filesToSendToGingaVM(Project *project, QString nclLocalPath);
 
-  bool sendFilesToGingaVM(SimpleSSHClient &sshclient, QStringList filesToSend);
+  bool sendFilesToGingaVM(SimpleSSHClient &sshclient, QString baseLocalPath,
+                          QString baseRemotePath, QStringList filesToSend);
+
+  bool fixSrcsFromNCLFile(const QString &nclLocalPath);
 
 signals:
   void finished();
