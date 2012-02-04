@@ -33,14 +33,14 @@ QStringList RunRemoteGingaVMAction::filesToSendToGingaVM(Project *project,
   QFileInfo fileInfo(project->getLocation());
   QString absoluteFilePath = fileInfo.path();
 
-  qDebug() << "############ ABSOLUTE PATH: " << absoluteFilePath << endl;
+//  qDebug() << "############ ABSOLUTE PATH: " << absoluteFilePath << endl;
   QDirIterator it(absoluteFilePath, QDirIterator::Subdirectories);
   while (it.hasNext()) {
     QString file = it.next();
     if(!file.endsWith("."))
     {
       filesToSend << file;
-      qDebug() << file;
+//      qDebug() << file;
     }
   }
 
@@ -130,7 +130,7 @@ bool RunRemoteGingaVMAction::sendFilesToGingaVM(SimpleSSHClient &sshclient,
         mkdir += baseRemotePath + relativePath;
 
         qDebug() << "Running command = " << mkdir;
-//        resp = sshclient.exec_cmd(mkdir.toStdString().c_str());
+        resp = sshclient.exec_cmd(mkdir.toStdString().c_str());
       }
     }
     ret = ret && !resp;
@@ -248,7 +248,7 @@ void RunRemoteGingaVMAction::runCurrentProject()
     {
       /* Write FILE!! */
       if(project->getChildren().size())
-        file.write(project->getChildren().at(0)->toString(0).toAscii());
+        file.write(project->getChildren().at(0)->toString(0, false).toAscii());
 
       file.close();
 
