@@ -24,8 +24,6 @@ DEFINES += BUILD_DATE=\"\\\"$${_DATE_}\"\\\"
 DEFINES += WITH_TEST_VERSION_MESSAGE=\"\\\"1\\\"\"
 
 #DEFINES += USE_MDI
-DEFINES += QT_NO_DEBUG_OUTPUT QT_NO_DEBUG_WARNING
-
 RC_FILE = images/nclcomposer.rc
 
 MOC_DIR     =   .moc
