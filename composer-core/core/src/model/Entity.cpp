@@ -226,8 +226,9 @@ QString Entity::toString(int ntab, bool writeuid)
     {
       out += " uniqueEntityId=\"";
       out += getUniqueId();
+      out += "\"";
     }
-    out += "\">\n";
+    out += ">\n";
 
     for (int i = 0; i < children.size(); i++)
     {
