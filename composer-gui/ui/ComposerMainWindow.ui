@@ -350,14 +350,14 @@ QMenu {
     <addaction name="actionOpen_Project"/>
     <addaction name="menu_Recent_Files"/>
     <addaction name="separator"/>
+    <addaction name="action_Save"/>
+    <addaction name="actionSave_All"/>
+    <addaction name="separator"/>
     <addaction name="menuImport"/>
     <addaction name="menuExport"/>
     <addaction name="separator"/>
     <addaction name="action_Close_Project"/>
     <addaction name="action_Close_All"/>
-    <addaction name="separator"/>
-    <addaction name="action_Save"/>
-    <addaction name="actionSave_All"/>
     <addaction name="separator"/>
     <addaction name="action_Exit"/>
    </widget>
