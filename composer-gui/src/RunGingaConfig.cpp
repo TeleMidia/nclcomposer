@@ -31,12 +31,23 @@ RunGingaConfig::RunGingaConfig(QWidget *parent):
   setTabOrder(ui->lineEdit_RemoteCmd, ui->lineEdit_RemoteStopCmd);
 
   settings.beginGroup("runginga");
-  ui->lineEdit_RemoteIP->setText(settings.value("remote_ip").toString());
-  ui->lineEdit_RemoteUser->setText(settings.value("remote_user").toString());
-  ui->lineEdit_RemotePassword->setText(settings.value("remote_password").toString());
-  ui->lineEdit_RemoteCmd->setText(settings.value("remote_start_cmd").toString());
-  ui->lineEdit_RemoteStopCmd->setText(settings.value("remote_stop_cmd").toString());
-  ui->lineEdit_RemotePath->setText(settings.value("remote_path").toString());
+  if(settings.contains("remote_ip"))
+    ui->lineEdit_RemoteIP->setText(settings.value("remote_ip").toString());
+
+  if(settings.contains("remote_user"))
+    ui->lineEdit_RemoteUser->setText(settings.value("remote_user").toString());
+
+  if(settings.contains("remote_password"))
+    ui->lineEdit_RemotePassword->setText(settings.value("remote_password").toString());
+
+  if(settings.contains("remote_start_cmd"))
+    ui->lineEdit_RemoteCmd->setText(settings.value("remote_start_cmd").toString());
+
+  if(settings.contains("remote_stop_cmd"))
+    ui->lineEdit_RemoteStopCmd->setText(settings.value("remote_stop_cmd").toString());
+
+  if(settings.contains("remote_path"))
+    ui->lineEdit_RemotePath->setText(settings.value("remote_path").toString());
   settings.endGroup();
 }
 
