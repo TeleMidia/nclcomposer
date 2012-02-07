@@ -38,6 +38,7 @@ int main(int argc, char *argv[])
     QApplication::addLibraryPath(QApplication::applicationDirPath());
 
     ComposerMainWindow w(a);
+    w.setWindowIcon(QIcon(":/mainwindow/icon"));
     w.show();
 
     return a.exec();
