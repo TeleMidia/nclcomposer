@@ -82,7 +82,7 @@ One of the most important feature of the composer-all project is packaging.
 
   To generate a new debian package, the only thing you need to do is run:
   
-  $ debuild -us -uc
+  $ ./deb-package.sh
   
   in your terminal.
   This will generate a composer_x.x.x.deb file one directory behind the root NCL Composer 
