@@ -16,7 +16,7 @@ builddir:
 	mkdir -p builddir
 
 builddir/Makefile: builddir
-	cd builddir && $(QMAKE) PREFIX=/usr ../composer-all.pro
+	cd builddir && $(QMAKE) PREFIX=/usr FORCERELEASE=true ../composer-all.pro
 	dh_auto_configure
 
 build: build-stamp
@@ -39,9 +39,9 @@ install: build
 	dh_testroot
 	dh_clean -k
 	dh_installdirs
+# Add here commands to install the package into debian/your_appname
+	cd builddir && $(MAKE) install  INSTALL_ROOT=$(CURDIR)/debian/tmp install
 
-	# Add here commands to install the package into debian/your_appname
-	cd builddir && $(MAKE) INSTALL_ROOT=$(CURDIR)/debian/$(APPNAME) install
 # Build architecture-independent files here.
 binary-indep: build install
 # We have nothing to do by default.
@@ -50,22 +50,19 @@ binary-indep: build install
 binary-arch: build install
 	dh_testdir
 	dh_testroot
+	dh_installchangelogs
 	dh_installdocs
 	dh_installexamples
 	dh_installman
 	dh_link
 	dh_strip
-#	dh_strip --dbg-package=my-application-dbg
 	dh_compress
 	dh_fixperms
 	dh_installdeb
-	dh_shlibdeps
+#	dh_shlibdeps
 	dh_gencontrol
 	dh_md5sums
 	dh_builddeb
-
-#install:
-#	dh_install -v debian/composer.desktop usr/share/applications/
 
 binary: binary-indep binary-arch
 .PHONY: build clean binary-indep binary-arch binary install configure
