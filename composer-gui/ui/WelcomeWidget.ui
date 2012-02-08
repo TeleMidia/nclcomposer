@@ -32,6 +32,10 @@ QFrame {
     border: 0px;
 }
 
+#frame_5 {
+	background: white;
+}
+
 QTabBar::tab {
   padding: 10px;
   font-size: 10pt;
@@ -57,7 +61,8 @@ QTabBar::tab::selected {
 
 #mainFrame {
 	background: white;
-}</string>
+}
+</string>
   </property>
   <layout class="QGridLayout" name="gridLayout">
    <property name="margin">
@@ -350,7 +355,7 @@ font-family: Verdana;</string>
                    <bool>false</bool>
                   </property>
                   <property name="styleSheet">
-                   <string notr="true">background-color: white;</string>
+                   <string notr="true"/>
                   </property>
                   <property name="frameShape">
                    <enum>QFrame::NoFrame</enum>
@@ -715,8 +720,8 @@ font-family: Verdana;</string>
                     <rect>
                      <x>0</x>
                      <y>0</y>
-                     <width>738</width>
-                     <height>247</height>
+                     <width>740</width>
+                     <height>233</height>
                     </rect>
                    </property>
                    <attribute name="label">
@@ -763,8 +768,8 @@ font-family: Verdana;</string>
                     <rect>
                      <x>0</x>
                      <y>0</y>
-                     <width>83</width>
-                     <height>404</height>
+                     <width>87</width>
+                     <height>394</height>
                     </rect>
                    </property>
                    <attribute name="label">

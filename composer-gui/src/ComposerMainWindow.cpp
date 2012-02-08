@@ -321,9 +321,8 @@ void ComposerMainWindow::initGUI()
   pluginDetailsDialog = new PluginDetailsDialog(aboutPluginsDialog);
 
   connect(ui->action_RunNCL, SIGNAL(triggered()), this, SLOT(runNCL()));
+
 #ifdef WITH_LIBSSH2
-  connect(ui->action_Run_remotely, SIGNAL(triggered()),
-          this, SLOT(runNCLRemotely()));
   connect(ui->action_StopRemoteNCL, SIGNAL(triggered()),
           this, SLOT(stopRemoteNCL()));
 #else
@@ -331,7 +330,7 @@ void ComposerMainWindow::initGUI()
   ui->action_Run_remotely->setToolTip(tr("Run NCL Remotely: Your program was not built with this option!!!"));
 #endif
 
-  // UNDO/REDO
+// UNDO/REDO
 //  connect(ui->actionUndo, SIGNAL(triggered()), this, SLOT(undo()));
 //  connect(ui->actionRedo, SIGNAL(triggered()), this, SLOT(redo()));
 
@@ -1062,6 +1061,11 @@ void ComposerMainWindow::restorePerspective(QString layoutName)
 
 void ComposerMainWindow::runNCL()
 {
+  runOnRemoteGingaVM();
+}
+
+void ComposerMainWindow::runOnLocalGinga()
+{
   QProcess *ginga = new QProcess(this);
   QStringList arguments;
   QString location = tabProjects->tabToolTip(tabProjects->currentIndex());
@@ -1100,7 +1104,7 @@ void ComposerMainWindow::runNCL()
   }
 }
 
-void ComposerMainWindow::runNCLRemotely()
+void ComposerMainWindow::runOnRemoteGingaVM()
 {
 #ifdef WITH_LIBSSH2
   if(runRemoteGingaVMThread.isRunning())
@@ -1358,11 +1362,7 @@ void ComposerMainWindow::currentTabChanged(int n)
     ui->action_Close_Project->setEnabled(true);
     ui->action_Save->setEnabled(true);
     ui->action_RunNCL->setEnabled(true);
-    ui->action_Run_remotely->setEnabled(true);
     ui->action_StopRemoteNCL->setEnabled(true);
-//    ui->actionUndo->setEnabled(true);
-//    ui->actionRedo->setEnabled(true);
-
   }
   else
   {
@@ -1372,9 +1372,6 @@ void ComposerMainWindow::currentTabChanged(int n)
     ui->action_Close_Project->setEnabled(false);
     ui->action_Save->setEnabled(false);
     ui->action_RunNCL->setEnabled(false);
-    ui->action_Run_remotely->setEnabled(false);
-//    ui->actionUndo->setEnabled(false);
-//    ui->actionRedo->setEnabled(false);
     ui->action_StopRemoteNCL->setEnabled(false);
   }
 }

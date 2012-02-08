@@ -24,7 +24,7 @@ RunGingaConfig::RunGingaConfig(QWidget *parent):
   QSettings settings(QSettings::IniFormat, QSettings::UserScope,
                      "telemidia", "composer");
 
-  // fix the tab order
+  // \fixme fix the tab order
   setTabOrder(ui->lineEdit_RemoteIP, ui->lineEdit_RemoteUser);
   setTabOrder(ui->lineEdit_RemoteUser, ui->lineEdit_RemotePassword);
   setTabOrder(ui->lineEdit_RemotePassword, ui->lineEdit_RemoteCmd);
@@ -48,7 +48,14 @@ RunGingaConfig::RunGingaConfig(QWidget *parent):
 
   if(settings.contains("remote_path"))
     ui->lineEdit_RemotePath->setText(settings.value("remote_path").toString());
+
+  if(settings.contains("run_remote"))
+    ui->remotevm_Group->setChecked(settings.value("run_remote").toBool());
+
   settings.endGroup();
+
+  connect(ui->remotevm_Group, SIGNAL(clicked(bool)),
+          this, SLOT(changeCurrentPlayMode(bool)));
 }
 
 RunGingaConfig::~RunGingaConfig()
@@ -68,6 +75,8 @@ void RunGingaConfig::applyValues()
   settings.setValue("remote_start_cmd", ui->lineEdit_RemoteCmd->text());
   settings.setValue("remote_stop_cmd", ui->lineEdit_RemoteStopCmd->text());
   settings.setValue("remote_path", ui->lineEdit_RemotePath->text());
+
+  settings.setValue("run_remote", ui->remotevm_Group->isChecked());
   settings.endGroup();
 }
 

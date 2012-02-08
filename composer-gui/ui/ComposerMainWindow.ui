@@ -295,7 +295,6 @@ QMenu {
    <addaction name="action_Save"/>
    <addaction name="separator"/>
    <addaction name="action_RunNCL"/>
-   <addaction name="action_Run_remotely"/>
    <addaction name="action_StopRemoteNCL"/>
    <addaction name="separator"/>
   </widget>
@@ -308,7 +307,7 @@ QMenu {
      <x>0</x>
      <y>0</y>
      <width>776</width>
-     <height>21</height>
+     <height>25</height>
     </rect>
    </property>
    <property name="layoutDirection">
@@ -503,21 +502,6 @@ QMenu {
    </property>
    <property name="toolTip">
     <string>Preferences</string>
-   </property>
-  </action>
-  <action name="action_Run_remotely">
-   <property name="icon">
-    <iconset resource="../images.qrc">
-     <normaloff>:/mainwindow/images/run_remote.png</normaloff>:/mainwindow/images/run_remote.png</iconset>
-   </property>
-   <property name="text">
-    <string>Remotely</string>
-   </property>
-   <property name="toolTip">
-    <string>Run Remotelly</string>
-   </property>
-   <property name="shortcut">
-    <string>Ctrl+Shift+R</string>
    </property>
   </action>
   <action name="action_Help">

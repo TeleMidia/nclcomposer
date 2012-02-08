@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>391</width>
-    <height>253</height>
+    <height>319</height>
    </rect>
   </property>
   <property name="focusPolicy">
@@ -18,9 +18,12 @@
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
-    <widget class="QGroupBox" name="groupBox_2">
+    <widget class="QGroupBox" name="remotevm_Group">
      <property name="title">
       <string>Remote: Ginga-NCL Virtual Set-top box</string>
+     </property>
+     <property name="checkable">
+      <bool>true</bool>
      </property>
      <layout class="QHBoxLayout" name="horizontalLayout_2">
       <item>
@@ -127,7 +130,7 @@
     </widget>
    </item>
    <item>
-    <widget class="QGroupBox" name="groupBox">
+    <widget class="QGroupBox" name="localginga_Group">
      <property name="autoFillBackground">
       <bool>false</bool>
      </property>
@@ -138,6 +141,9 @@
       <bool>false</bool>
      </property>
      <property name="checkable">
+      <bool>true</bool>
+     </property>
+     <property name="checked">
       <bool>false</bool>
      </property>
      <layout class="QHBoxLayout" name="horizontalLayout">

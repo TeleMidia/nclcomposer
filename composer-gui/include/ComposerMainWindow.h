@@ -262,7 +262,8 @@ private slots:
 
     /*! Run the current open Project.*/
     void runNCL();
-    void runNCLRemotely();
+    void runOnLocalGinga();
+    void runOnRemoteGingaVM();
     void stopRemoteNCL();
 
     void launchProjectWizard();
