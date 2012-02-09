@@ -37,5 +37,6 @@
         <file alias="nclcomposer-splash">images/nclcomposer-splash.png</file>
         <file alias="perspective">images/perspective.png</file>
         <file alias="stop">images/stop.png</file>
+        <file alias="language">images/language.png</file>
     </qresource>
 </RCC>

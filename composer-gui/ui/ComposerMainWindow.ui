@@ -594,6 +594,11 @@ QMenu {
     <string>To NCL Document</string>
    </property>
   </action>
+  <action name="actionOi">
+   <property name="text">
+    <string>oi</string>
+   </property>
+  </action>
  </widget>
  <resources>
   <include location="../images.qrc"/>

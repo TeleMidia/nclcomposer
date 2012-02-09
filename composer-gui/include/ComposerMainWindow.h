@@ -16,6 +16,7 @@
 #include <QFileSystemModel>
 
 #include <QCoreApplication>
+#include <QApplication>
 #include <QTimer>
 #include <QtGui/QMainWindow>
 #include <QtGui/QTabWidget>
@@ -63,248 +64,277 @@ using namespace composer::core;
 using namespace composer::gui;
 
 namespace Ui {
-    class ComposerMainWindow;
+class ComposerMainWindow;
 }
 
 namespace composer {
-    namespace gui {
+namespace gui {
 
 class QThreadEx : public QThread
 {
 protected:
-    void run() { exec(); }
+  void run() { exec(); }
 };
 
 /*!
- * \brief The main Window of Composer.
+ * \brief The main Window of NCL Composer.
  *
- * This class is the main window of Composer.
+ * This class is the main window of NCL Composer.
  */
 class ComposerMainWindow : public QMainWindow {
-    Q_OBJECT
+  Q_OBJECT
 
 private:
-    static const int maximumRecentProjectsSize = 10;
+  static const int maximumRecentProjectsSize = 10;
 
-    QTabWidget *tabProjects; /*!< Each open project is show in a different
+  Ui::ComposerMainWindow *ui; /*!< A reference to Ui class. */
+  QTabWidget  *tabProjects; /*!< Each open project is show in a different
                                 tab. The tabProjects variable keeps the list of
                                 the projects open tabs. */
-
-    QToolButton *tbPerspectiveDropList; /*!< Action that shows the list of
+  QToolButton  *tbPerspectiveDropList; /*!< Action that shows the list of
                                              perspective as a menu. */
-    QMenu *menu_Perspective; /*!< The menu containing the list of
+  QMenu        *menu_Perspective; /*!< The menu containing the list of
                                   perspectives. */
+  QToolButton  *tbLanguageDropList; /*!< Action that shows the list of
+                                             languages as a menu. */
+  QMenu         *menu_Language; /*!< The menu containing the list of languages.*/
 
-    QMap<QString, QMainWindow*> projectsWidgets; /*!< Keeps a reference to each
+  QMap<QString, QMainWindow*> projectsWidgets; /*!< Keeps a reference to each
                                                       project widget. */
-    QMap<QString, QDockWidget*> firstDock; /*!< To each project location
+  QMap<QString, QDockWidget*> firstDock; /*!< To each project location
                                                 keeps the reference of the
                                                 first QDockWidget added.*/
-    QList <QDockWidget*> allDocks; /*!< A list with all the QDockWidgets, to
+  QList <QDockWidget*> allDocks; /*!< A list with all the QDockWidgets, to
                                         each plugin. */
-    QAction *fullScreenViewAct; /*!< Action to show Composer in FullScreen. */
-    QAction *projectViewAct; /*!< TODO */
-    QAction *editPreferencesAct; /*!< TODO */
+  QAction *fullScreenViewAct; /*!< Action to show Composer in FullScreen. */
+  QAction *projectViewAct; /*!< TODO */
+  QAction *editPreferencesAct; /*!< TODO */
 
-    QAction *saveCurrentPluginsLayoutAct; /*!< Action to save current plugins
+  QAction *saveCurrentPluginsLayoutAct; /*!< Action to save current plugins
                                                 layout as a new perspective. */
-    QAction *restorePluginsLayoutAct; /*!< Action to restore a previously saved
+  QAction *restorePluginsLayoutAct; /*!< Action to restore a previously saved
                                            perspective as the current plugins
                                            layout. */
 
-    QListWidget *profilesExt; /*!< Shows a list of the current loaded language
+  QListWidget *profilesExt; /*!< Shows a list of the current loaded language
                                    profiles. */
-    QTreeWidget *pluginsExt; /*!< Shows a list with the current loaded
+  QTreeWidget *pluginsExt; /*!< Shows a list with the current loaded
                                   plugins. */
 
-    QMap <QTreeWidgetItem*, IPluginFactory*> treeWidgetItem2plFactory;
+  QMap <QTreeWidgetItem*, IPluginFactory*> treeWidgetItem2plFactory;
 
-    PreferencesDialog *preferences; /*!< TODO */
+  PreferencesDialog *preferences; /*!< TODO */
 
-    QDialog *aboutPluginsDialog; /*!< TODO */
-    QPushButton *detailsButton;
+  QDialog *aboutPluginsDialog; /*!< TODO */
+  QPushButton *detailsButton;
 
-    QStringList defaultPluginsPath; /*!< TODO */
-    QStringList extensions_paths; /*!< TODO */
+  QStringList defaultPluginsPath; /*!< TODO */
+  QStringList extensions_paths; /*!< TODO */
 
-    WelcomeWidget *welcomeWidget; /*!< TODO */
+  WelcomeWidget *welcomeWidget; /*!< TODO */
 
-    PerspectiveManager *perspectiveManager;
-    PluginDetailsDialog *pluginDetailsDialog;
+  PerspectiveManager *perspectiveManager;
+  PluginDetailsDialog *pluginDetailsDialog;
 
-    QProcess *proc;
+  QProcess *proc;
+
 #ifdef WITH_LIBSSH2
-    QThreadEx runRemoteGingaVMThread;
-    RunRemoteGingaVMAction runRemoteGingaVMAction;
-    StopRemoteGingaVMAction stopRemoteGingaVMAction;
+  QThreadEx runRemoteGingaVMThread;
+  RunRemoteGingaVMAction runRemoteGingaVMAction;
+  StopRemoteGingaVMAction stopRemoteGingaVMAction;
 #endif
 
-    QTimer *autoSaveTimer;
+  QTimer *autoSaveTimer;
 
 private:
-    Ui::ComposerMainWindow *ui; /*!< A reference to  */
-    /*!
-     \brief Shows a prompt where the user can choose where its plugins are
-            located.
+  /*!
+   * \brief Shows a prompt where the user can choose where its plugins are
+   *    located.
+   *
+   * \return QString the path to the choosen directory.
+   */
+  QString promptChooseExtDirectory();
+  /*!
+   * \brief
+   */
+  void initModules();
+  /*!
+   * \brief
+   */
+  void initGUI();
+  /*!
+   * \brief
+   */
+  void createAboutPlugins();
+  /*!
+   * \brief
+   */
+  void createStatusBar();
+  /*!
+   * \brief
+   */
+  void createMenus();
+  /*!
+   * \brief
+   */
+  void createActions();
+  /*!
+   * \brief
+   */
+  void createFileSystem();
+  /*!
+   * \brief
+   */
+  void readSettings();
+  /*!
+   * \brief
+   */
+  void readExtensions();
+  /*!
+   * \brief
+   *
+   * \param event
+   */
+  void closeEvent(QCloseEvent *event);
+  /*!
+   * \brief
+   */
+  void cleanUp();
+  void updateRecentProjectsMenu(QStringList &recentProjects);
+  void updateDockTitleStyle(QFrame *titleBar, bool selected=false);
+  void addButtonToDockTitleBar(QFrame *titleBar, QPushButton *button);
 
-     \return QString the path to the choosen directory.
-    */
-    QString promptChooseExtDirectory();
-    /*!
-     * \brief
-     */
-    void initModules();
-    /*!
-     * \brief
-     */
-    void initGUI();
-    /*!
-     * \brief
-     */
-    void createAboutPlugins();
-    /*!
-     * \brief
-     */
-    void createStatusBar();
-    /*!
-     * \brief
-     */
-    void createMenus();
-    /*!
-     * \brief
-     */
-    void createActions();
-    /*!
-     * \brief
-     */
-    void createFileSystem();
-    /*!
-     * \brief
-     */
-    void readSettings();
-    /*!
-     * \brief
-     */
-    void readExtensions();
-    /*!
-     * \brief
-     *
-     * \param event
-     */
-    void closeEvent(QCloseEvent *event);
-    /*!
-     \brief
+  QTranslator m_translator;   /**< contains the translations for this application */
+  QTranslator m_translatorQt; /**< contains the translations for qt */
+  QString m_currLang;     /**< contains the currently loaded language */
+  QString m_langPath;     /**< Path of language files. This is always fixed to
+                               /languages. */
 
-    */
-    void cleanUp();
-    void updateRecentProjectsMenu(QStringList &recentProjects);
-    void updateDockTitleStyle(QFrame *titleBar, bool selected=false);
-    void addButtonToDockTitleBar(QFrame *titleBar, QPushButton *button);
+  /*!
+   * \brief Loads a language by the given language shortcurt (e.g. de, en, ...)
+   */
+  void loadLanguage(const QString& rLanguage);
+  /*!
+   * \brief Creates the language menu dynamically from the content of m_langPath
+   */
+  void createLanguageMenu(void);
+
+  void switchTranslator(QTranslator& translator, const QString& filename);
+
+protected:
+  /*!
+   * \brief This event is called, when a new translator is loaded or the system
+   *    language is changed.
+   */
+  void changeEvent(QEvent*);
+
+protected slots:
+  /*!
+   * \brief This slot is called by the language menu actions
+   */
+  void slotLanguageChanged(QAction* action);
 
 private slots:
-    /*!
+  /*!
+   * \brief Shows the about dialog.
+   */
+  void about();
+  /*!
+   * \brief Shows the about plugins dialog.
+   */
+  void aboutPlugins();
+  /*!
+   * \brief
+   */
+  void updateViewMenu();
+  /*!
      * \brief
      */
-    void about();
-    /*!
-     * \brief
-     */
-    void aboutPlugins();
-    /*!
-     * \brief
-     */
-    void updateViewMenu();
-    /*!
-     * \brief
-     */
-    void showEditPreferencesDialog();
-    /*!
+  void showEditPreferencesDialog();
+  /*!
      * \brief
      * \param index
      */
-    void tabClosed(int index);
-    /*!
+  void tabClosed(int index);
+  /*!
      * \brief
      */
-    void closeCurrentTab();
-    /*!
+  void closeCurrentTab();
+  /*!
      * \brief
      */
-    void showCurrentWidgetFullScreen();
-    /*!
+  void showCurrentWidgetFullScreen();
+  /*!
      \brief
     */
-    void closeAllFiles();
-    /*!
+  void closeAllFiles();
+  /*!
      * \brief
      */
-    void startOpenProject(QString projectLoc);
-    void endOpenProject(QString projectLoc);
+  void startOpenProject(QString projectLoc);
+  void endOpenProject(QString projectLoc);
 
-    void saveCurrentGeometryAsPerspective();
-    void restorePerspective();
-    void savePerspective(QString layoutName);
-    void saveDefaultPerspective(QString defaultPerspectiveName);
-    void restorePerspective(QString layoutName);
+  void saveCurrentGeometryAsPerspective();
+  void restorePerspective();
+  void savePerspective(QString layoutName);
+  void saveDefaultPerspective(QString defaultPerspectiveName);
+  void restorePerspective(QString layoutName);
 
-    /*! Run the current open Project.*/
-    void runNCL();
-    void runOnLocalGinga();
-    void runOnRemoteGingaVM();
-    void stopRemoteNCL();
+  /*! Run the current open Project.*/
+  void runNCL();
+  void runOnLocalGinga();
+  void runOnRemoteGingaVM();
+  void stopRemoteNCL();
 
-    void launchProjectWizard();
-
-    void addToRecentProjects(QString projectUrl);
-
-    void openRecentProject();
-
-    void clearRecentProjects(void);
-
-    void importFromDocument();
-    /*!
+  void launchProjectWizard();
+  void addToRecentProjects(QString projectUrl);
+  void openRecentProject();
+  void clearRecentProjects(void);
+  void importFromDocument();
+  /*!
      *
      */
-    void selectedAboutCurrentPluginFactory();
-    /*!
+  void selectedAboutCurrentPluginFactory();
+  /*!
      * \brief Shows the details of the current selected plugins.
      */
-    void showPluginDetails();
+  void showPluginDetails();
 
-    void updateMenuPerspectives();
+  void updateMenuPerspectives();
+  void updateMenuLanguages();
 
-    void restorePerspectiveFromMenu();
+  void restorePerspectiveFromMenu();
 
-    void currentTabChanged(int n);
+  void currentTabChanged(int n);
 
-    void focusChanged(QWidget *old, QWidget *now);
+  void focusChanged(QWidget *old, QWidget *now);
 
-    void setProjectDirty(QString location, bool isDirty);
+  void setProjectDirty(QString location, bool isDirty);
 
-    void gotoNCLClubWebsite();
+  void gotoNCLClubWebsite();
 
-    void autoSaveCurrentProjects();
+  void autoSaveCurrentProjects();
 
 public:
-    /*!
+  /*!
      * \brief Constructs the Composer Main Window with the given parent.
      *
      * \param parent The parent of the Composer Main Window.
      */
-    explicit ComposerMainWindow(QApplication &app, QWidget *parent = 0);
-    /*!
+  explicit ComposerMainWindow(QApplication &app, QWidget *parent = 0);
+  /*!
      * \brief
      */
-    ~ComposerMainWindow();
+  ~ComposerMainWindow();
 
 public slots:
-    /*!
+  /*!
      * \brief
      *
      * \param QString
      */
-    void errorDialog(QString);
-    /*!
+  void errorDialog(QString);
+  /*!
      * \brief Add a plugin Widget an link it to the given project.
      *
      * \param fac
@@ -312,41 +342,41 @@ public slots:
      * \param doc
      * \param n
      */
-    void addPluginWidget(IPluginFactory *fac, IPlugin *plugin,
-                         Project *project, int n);
-    /*!
+  void addPluginWidget(IPluginFactory *fac, IPlugin *plugin,
+                       Project *project, int n);
+  /*!
      * \brief Called when a new tab is open.
      *
      * \param location
      */
-    void onOpenProjectTab(QString location);
+  void onOpenProjectTab(QString location);
 
-    /*!
+  /*!
      * \brief Save the current project.
      */
-    void saveCurrentProject();
+  void saveCurrentProject();
 
-    /*!
+  /*!
      * \brief Called by the user when he/she wants to open an existent project.
      */
-    void openProject();
+  void openProject();
 
-    /*!
+  /*!
      * \brief Show the NCL Composer Help.
      */
-    bool showHelp();
+  bool showHelp();
 
-    void undo();
-    void redo();
+  void undo();
+  void redo();
 
-    void openProjects(const QStringList &projects);
+  void openProjects(const QStringList &projects);
 
 signals:
-    /*!
+  /*!
      \brief Send this signal when must be writed the current settings.
      \deprecated
     */
-    void writeSettings();
+  void writeSettings();
 };
 
 } } //end namespace

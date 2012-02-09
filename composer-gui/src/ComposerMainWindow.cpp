@@ -244,7 +244,6 @@ void ComposerMainWindow::openProjects(const QStringList &projects)
   qDebug() << "Openning files:";
   for(int i = 0; i < projects.size(); i++)
   {
-    qDebug() << projects.at(i);
     QFile file(projects.at(i));
     bool openCurrentFile = true;
 
@@ -270,14 +269,7 @@ void ComposerMainWindow::openProjects(const QStringList &projects)
   }
 
   /* Update Recent Projects on Menu */
-#ifdef Q_WS_MAC
-  QSettings settings("telemidia.pucrio.br", "composer");
-#else
-  QSettings settings(QSettings::IniFormat,
-                     QSettings::UserScope,
-                     "telemidia",
-                     "composer");
-#endif
+  ComposerSettings settings;
   QStringList recentProjects = settings.value("recentprojects").toStringList();
   updateRecentProjectsMenu(recentProjects);
 }
@@ -295,6 +287,11 @@ void ComposerMainWindow::initGUI()
   //    tabProjects->setMovable(true);
   tabProjects->setTabsClosable(true);
 
+  tbLanguageDropList = new QToolButton(this);
+  tbLanguageDropList->setIcon(QIcon(":/mainwindow/language"));
+  tbLanguageDropList->setToolTip(tr("Change your current language"));
+  tbLanguageDropList->setPopupMode(QToolButton::InstantPopup);
+
   tbPerspectiveDropList = new QToolButton(this);
   tbPerspectiveDropList->setIcon(QIcon(":/mainwindow/perspective"));
   tbPerspectiveDropList->setToolTip(tr("Change your current perspective"));
@@ -309,6 +306,7 @@ void ComposerMainWindow::initGUI()
 //  createStatusBar();
   createActions();
   createMenus();
+  createLanguageMenu();
   createAboutPlugins();
 
   preferences = new PreferencesDialog(this);
@@ -606,16 +604,20 @@ void ComposerMainWindow::createMenus()
   connect ( ui->action_New_Project, SIGNAL(triggered()),
            this, SLOT(launchProjectWizard()));
 
+  menu_Language = new QMenu(0);
+  tbLanguageDropList->setMenu(menu_Language);
+  ui->toolBar->addWidget(tbLanguageDropList);
 
   menu_Perspective = new QMenu(0);
-
   // assing menu_Perspective to tbPerspectiveDropList
   tbPerspectiveDropList->setMenu(menu_Perspective);
   ui->toolBar->addWidget(tbPerspectiveDropList);
-//  tabProjects->setCornerWidget(tbPerspectiveDropList, Qt::TopRightCorner);
-  tabProjects->setCornerWidget(ui->toolBar, Qt::TopRightCorner);
-  //  tabProjects->setCornerWidget(ui->menu_Window, Qt::TopLeftCorner);
 
+  // tabProjects->setCornerWidget(tbPerspectiveDropList, Qt::TopRightCorner);
+  tabProjects->setCornerWidget(ui->toolBar, Qt::TopRightCorner);
+  // tabProjects->setCornerWidget(ui->menu_Window, Qt::TopLeftCorner);
+
+//  updateMenuLanguages();
   updateMenuPerspectives();
 }
 
@@ -1320,11 +1322,7 @@ void ComposerMainWindow::restorePerspectiveFromMenu()
 
 void ComposerMainWindow::updateMenuPerspectives()
 {
-  QSettings settings(QSettings::IniFormat,
-                     QSettings::UserScope,
-                     "telemidia",
-                     "composer");
-
+  ComposerSettings settings;
   settings.beginGroup("pluginslayout");
   QStringList keys = settings.allKeys();
   settings.endGroup();
@@ -1337,6 +1335,20 @@ void ComposerMainWindow::updateMenuPerspectives()
                                             this,
                                             SLOT(restorePerspectiveFromMenu()));
     act->setData(keys[i]);
+  }
+}
+
+void ComposerMainWindow::updateMenuLanguages()
+{
+  QStringList languages;
+  languages << tr("English") << tr("Portugues (Brasil)");
+
+  for(int i = 0; i < languages.size(); i++)
+  {
+    QAction *act = menu_Language->addAction(languages.at(i),
+                                            this,
+                                            SLOT(changeLanguageFromMenu()));
+    act->setData(languages[i]);
   }
 }
 
@@ -1473,5 +1485,116 @@ void ComposerMainWindow::autoSaveCurrentProjects()
     }
   }
 }
+
+// we create the menu entries dynamically, dependant on the existing translations
+void ComposerMainWindow::createLanguageMenu(void)
+{
+  QActionGroup* langGroup = new QActionGroup(menu_Language);
+  langGroup->setExclusive(true);
+
+  connect(langGroup, SIGNAL(triggered(QAction *)), this, SLOT(slotLanguageChanged(QAction *)));
+
+  // format systems language
+  QString defaultLocale = QLocale::system().name();       // e.g. "de_DE"
+  defaultLocale.truncate(defaultLocale.lastIndexOf('_')); // e.g. "de"
+
+  m_langPath = QApplication::applicationDirPath();
+  m_langPath.append("/languages");
+  QDir dir(m_langPath);
+  QStringList fileNames = dir.entryList(QStringList("composer_*.qm"));
+
+  qDebug() << fileNames;
+  for (int i = 0; i < fileNames.size(); ++i)
+  {
+    // get locale extracted by filename
+    QString locale;
+    locale = fileNames[i];                  // "TranslationExample_de.qm"
+    locale.truncate(locale.lastIndexOf('.'));   // "TranslationExample_de"
+    locale.remove(0, locale.indexOf('_') + 1);   // "de"
+
+    QString lang = QLocale::languageToString(QLocale(locale).language());
+    QIcon ico(QString("%1/%2.png").arg(m_langPath).arg(locale));
+
+    QAction *action = new QAction(ico, lang, this);
+    action->setCheckable(true);
+    action->setData(locale);
+
+//    ui->menu_Languages->addAction(action);
+    menu_Language->addAction(action);
+    langGroup->addAction(action);
+
+    // set default translators and language checked
+    if (defaultLocale == locale)
+    {
+      action->setChecked(true);
+    }
+  }
+}
+
+// Called every time, when a menu entry of the language menu is called
+void ComposerMainWindow::slotLanguageChanged(QAction* action)
+{
+  if(0 != action)
+  {
+    // load the language dependant on the action content
+    loadLanguage(action->data().toString());
+    setWindowIcon(action->icon());
+  }
+}
+
+void ComposerMainWindow::switchTranslator(QTranslator& translator, const QString& filename)
+{
+  // remove the old translator
+  qApp->removeTranslator(&translator);
+
+  // load the new translator
+  if(translator.load(filename))
+    qApp->installTranslator(&translator);
+}
+
+void ComposerMainWindow::loadLanguage(const QString& rLanguage)
+{
+  qDebug() << rLanguage;
+  if(m_currLang != rLanguage)
+  {
+    m_currLang = rLanguage;
+    QLocale locale = QLocale(m_currLang);
+    QLocale::setDefault(locale);
+    QString languageName = QLocale::languageToString(locale.language());
+    switchTranslator(m_translator,
+                     m_langPath + "/" + QString("composer_%1.qm").arg(rLanguage));
+    switchTranslator(m_translatorQt, QString("qt_%1.qm").arg(rLanguage));
+
+//  ui->statusBar->showMessage(tr("Current Language changed to %1").arg(languageName));
+  }
+}
+
+void ComposerMainWindow::changeEvent(QEvent* event)
+{
+  if(0 != event)
+  {
+    switch(event->type())
+    {
+    // this event is send if a translator is loaded
+    case QEvent::LanguageChange:
+      ui->retranslateUi(this);
+      break;
+      // this event is send, if the system, language changes
+    case QEvent::LocaleChange:
+    {
+      QString locale = QLocale::system().name();
+      locale.truncate(locale.lastIndexOf('_'));
+      loadLanguage(locale);
+    }
+    break;
+    default:
+      break;
+    }
+  }
+
+  QMainWindow::changeEvent(event);
+}
+
+
 
 } } //end namespace
