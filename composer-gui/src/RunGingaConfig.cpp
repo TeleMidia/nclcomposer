@@ -11,7 +11,8 @@
 #include "ui_RunGingaConfig.h"
 
 #include <QDebug>
-#include <QSettings>
+
+#include "ComposerSettings.h"
 
 namespace composer {
 namespace gui {
@@ -21,8 +22,7 @@ RunGingaConfig::RunGingaConfig(QWidget *parent):
 {
   ui->setupUi(this);
 
-  QSettings settings(QSettings::IniFormat, QSettings::UserScope,
-                     "telemidia", "composer");
+  ComposerSettings settings;
 
   // \fixme fix the tab order
   setTabOrder(ui->lineEdit_RemoteIP, ui->lineEdit_RemoteUser);
@@ -65,8 +65,7 @@ RunGingaConfig::~RunGingaConfig()
 
 void RunGingaConfig::applyValues()
 {
-  QSettings settings(QSettings::IniFormat, QSettings::UserScope,
-                     "telemidia", "composer");
+  ComposerSettings settings;
 
   settings.beginGroup("runginga");
   settings.setValue("remote_ip", ui->lineEdit_RemoteIP->text());

@@ -134,7 +134,8 @@ SOURCES += main.cpp \
     src/EnvironmentPreferencesWidget.cpp \
     src/WelcomeWidget.cpp \
     src/AboutDialog.cpp \
-    src/RunGingaConfig.cpp
+    src/RunGingaConfig.cpp \
+    src/ComposerSettings.cpp
 
 HEADERS += include/ComposerMainWindow.h \
     include/PreferencesDialog.h \
@@ -144,7 +145,8 @@ HEADERS += include/ComposerMainWindow.h \
     include/IPreferencePage.h \
     include/WelcomeWidget.h \
     include/AboutDialog.h \
-    include/RunGingaConfig.h
+    include/RunGingaConfig.h \
+    include/ComposerSettings.h
 
 RESOURCES += images.qrc
 
@@ -167,4 +169,3 @@ TRANSLATIONS += composer_br.ts \
                 composer_sp.ts
 
 OTHER_FILES += LICENSE.LGPL
-

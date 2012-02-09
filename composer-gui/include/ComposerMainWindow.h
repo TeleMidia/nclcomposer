@@ -11,7 +11,6 @@
 #define COMPOSERMAINWINDOW_H
 
 #include <QtDebug>
-#include <QSettings>
 #include <QStringList>
 #include <QMap>
 #include <QFileSystemModel>
@@ -54,6 +53,7 @@ using namespace composer::core;
 #include "PluginDetailsDialog.h"
 #include "WelcomeWidget.h"
 #include "AboutDialog.h"
+#include "ComposerSettings.h"
 
 #ifdef WITH_LIBSSH2
 #include "RunGingaConfig.h"
@@ -151,106 +151,93 @@ private:
     */
     QString promptChooseExtDirectory();
     /*!
-     \brief
-
-    */
+     * \brief
+     */
     void initModules();
     /*!
-     \brief
-
-    */
+     * \brief
+     */
     void initGUI();
     /*!
-     \brief
-
-    */
+     * \brief
+     */
     void createAboutPlugins();
     /*!
-     \brief
-
-    */
+     * \brief
+     */
     void createStatusBar();
     /*!
-     \brief
-
-    */
+     * \brief
+     */
     void createMenus();
     /*!
-     \brief
-
-    */
+     * \brief
+     */
     void createActions();
     /*!
-     \brief
-
-    */
+     * \brief
+     */
     void createFileSystem();
     /*!
-     \brief
-
-    */
+     * \brief
+     */
     void readSettings();
     /*!
-     \brief
-
-    */
+     * \brief
+     */
     void readExtensions();
     /*!
-     \brief
-
-     \param event
-    */
+     * \brief
+     *
+     * \param event
+     */
     void closeEvent(QCloseEvent *event);
     /*!
      \brief
 
     */
     void cleanUp();
-
     void updateRecentProjectsMenu(QStringList &recentProjects);
-
     void updateDockTitleStyle(QFrame *titleBar, bool selected=false);
     void addButtonToDockTitleBar(QFrame *titleBar, QPushButton *button);
 
 private slots:
     /*!
-     \brief
-    */
+     * \brief
+     */
     void about();
     /*!
-     \brief
-    */
+     * \brief
+     */
     void aboutPlugins();
     /*!
-     \brief
-    */
+     * \brief
+     */
     void updateViewMenu();
     /*!
-     \brief
-    */
+     * \brief
+     */
     void showEditPreferencesDialog();
     /*!
-     \brief
-
-     \param index
-    */
+     * \brief
+     * \param index
+     */
     void tabClosed(int index);
-
     /*!
-      \brief
-    */
+     * \brief
+     */
     void closeCurrentTab();
     /*!
-     \brief
-    */
+     * \brief
+     */
     void showCurrentWidgetFullScreen();
     /*!
      \brief
     */
     void closeAllFiles();
     /*!
-     \brief
-    */
+     * \brief
+     */
     void startOpenProject(QString projectLoc);
     void endOpenProject(QString projectLoc);
 
@@ -280,7 +267,7 @@ private slots:
      */
     void selectedAboutCurrentPluginFactory();
     /*!
-        \brief Shows the details of the current selected plugins.
+     * \brief Shows the details of the current selected plugins.
      */
     void showPluginDetails();
 
@@ -300,48 +287,47 @@ private slots:
 
 public:
     /*!
-     \brief Constructs the Composer Main Window with the given parent.
-
-     \param parent The parent of the Composer Main Window.
-    */
+     * \brief Constructs the Composer Main Window with the given parent.
+     *
+     * \param parent The parent of the Composer Main Window.
+     */
     explicit ComposerMainWindow(QApplication &app, QWidget *parent = 0);
     /*!
-     \brief
-
-    */
+     * \brief
+     */
     ~ComposerMainWindow();
 
 public slots:
     /*!
-     \brief
-
-     \param QString
-    */
+     * \brief
+     *
+     * \param QString
+     */
     void errorDialog(QString);
     /*!
-     \brief Add a plugin Widget an link it to the given project.
-
-     \param fac
-     \param plugin
-     \param doc
-     \param n
-    */
+     * \brief Add a plugin Widget an link it to the given project.
+     *
+     * \param fac
+     * \param plugin
+     * \param doc
+     * \param n
+     */
     void addPluginWidget(IPluginFactory *fac, IPlugin *plugin,
                          Project *project, int n);
     /*!
-     \brief Called when a new tab is open.
-
-     \param location
-    */
+     * \brief Called when a new tab is open.
+     *
+     * \param location
+     */
     void onOpenProjectTab(QString location);
 
     /*!
-        \brief Save the current project.
+     * \brief Save the current project.
      */
     void saveCurrentProject();
 
     /*!
-      \brief Called by the user when he/she wants to open an existent project.
+     * \brief Called by the user when he/she wants to open an existent project.
      */
     void openProject();
 
@@ -352,6 +338,8 @@ public slots:
 
     void undo();
     void redo();
+
+    void openProjects(const QStringList &projects);
 
 signals:
     /*!

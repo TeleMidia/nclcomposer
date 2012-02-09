@@ -18,8 +18,10 @@
 #include <QFileInfo>
 
 #include <QMessageBox>
-#include <QSettings>
 #include <iostream>
+
+#include "ComposerSettings.h"
+using namespace composer::gui;
 
 void RunRemoteGingaVMAction::setCurrentProject(Project *project)
 {
@@ -214,8 +216,7 @@ void RunRemoteGingaVMAction::runCurrentProject()
   QString location = project->getLocation();
 
   // Getting the settings user data.
-  QSettings settings(QSettings::IniFormat, QSettings::UserScope,
-                     "telemidia", "composer");
+  ComposerSettings settings;
   settings.beginGroup("runginga");
   QString remoteIp = settings.value("remote_ip").toString();
   QString remoteUser = settings.value("remote_user").toString();
@@ -280,8 +281,7 @@ void RunRemoteGingaVMAction::runCurrentProject()
 void StopRemoteGingaVMAction::stopRunningApplication()
 {
   // Getting the settings user data.
-  QSettings settings(QSettings::IniFormat, QSettings::UserScope,
-                     "telemidia", "composer");
+  ComposerSettings settings;
   settings.beginGroup("runginga");
   QString remoteIp = settings.value("remote_ip").toString();
   QString remoteUser = settings.value("remote_user").toString();

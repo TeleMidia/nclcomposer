@@ -155,21 +155,12 @@ void ComposerMainWindow::initModules()
 
 void ComposerMainWindow::readExtensions()
 {
-#ifdef Q_WS_MAC
-  QSettings settings("br.puc-rio.telemidia", "Composer");
-#else
-  QSettings settings(QSettings::IniFormat,
-                     QSettings::UserScope,
-                     "telemidia",
-                     "composer");
-#endif
+  ComposerSettings settings;
 
   settings.beginGroup("extension");
-
   extensions_paths.clear();
 
   extensions_paths << defaultPluginsPath; //Add default location to extensions
-  // This should be uncommented in fut
   if (settings.contains("path"))
     extensions_paths << settings.value("path").toStringList();
 
@@ -236,14 +227,7 @@ QString ComposerMainWindow::promptChooseExtDirectory()
 
 void ComposerMainWindow::readSettings()
 {
-#ifdef Q_WS_MAC
-  QSettings settings("telemidia.pucrio.br", "composer");
-#else
-  QSettings settings(QSettings::IniFormat,
-                     QSettings::UserScope,
-                     "telemidia",
-                     "composer");
-#endif
+  ComposerSettings settings;
   settings.beginGroup("mainwindow");
   restoreGeometry(settings.value("geometry").toByteArray());
   restoreState(settings.value("windowState").toByteArray());
@@ -252,12 +236,16 @@ void ComposerMainWindow::readSettings()
   settings.beginGroup("openfiles");
   QStringList openfiles = settings.value("openfiles").toStringList();
   settings.endGroup();
+  openProjects(openfiles);
+}
 
+void ComposerMainWindow::openProjects(const QStringList &projects)
+{
   qDebug() << "Openning files:";
-  for(int i = 0; i < openfiles.size(); i++)
+  for(int i = 0; i < projects.size(); i++)
   {
-    qDebug() << openfiles.at(i);
-    QFile file(openfiles.at(i));
+    qDebug() << projects.at(i);
+    QFile file(projects.at(i));
     bool openCurrentFile = true;
 
     if(!file.exists())
@@ -269,7 +257,7 @@ void ComposerMainWindow::readSettings()
                                    "the last time you have closed NCL"
                                    " Composer this files was open. "
                                    "Do you want to create this file "
-                                   "again?").arg(openfiles.at(i)),
+                                   "again?").arg(projects.at(i)),
                                 QMessageBox::Yes | QMessageBox::No,
                                 QMessageBox::No);
 
@@ -277,13 +265,20 @@ void ComposerMainWindow::readSettings()
     }
     if (openCurrentFile)
     {
-      ProjectControl::getInstance()->launchProject(openfiles.at(i));
+      ProjectControl::getInstance()->launchProject(projects.at(i));
     }
   }
 
   /* Update Recent Projects on Menu */
-  QStringList recentProjects =
-      settings.value("recentprojects").toStringList();
+#ifdef Q_WS_MAC
+  QSettings settings("telemidia.pucrio.br", "composer");
+#else
+  QSettings settings(QSettings::IniFormat,
+                     QSettings::UserScope,
+                     "telemidia",
+                     "composer");
+#endif
+  QStringList recentProjects = settings.value("recentprojects").toStringList();
   updateRecentProjectsMenu(recentProjects);
 }
 
@@ -1031,10 +1026,7 @@ void ComposerMainWindow::savePerspective(QString layoutName)
 
 void ComposerMainWindow::saveDefaultPerspective(QString defaultPerspectiveName)
 {
-  QSettings settings(QSettings::IniFormat,
-                     QSettings::UserScope,
-                     "telemidia",
-                     "composer");
+  ComposerSettings settings;
   settings.setValue("default_perspective", defaultPerspectiveName);
 }
 
@@ -1046,11 +1038,7 @@ void ComposerMainWindow::restorePerspective(QString layoutName)
           tabProjects->currentIndex());
 
     QMainWindow *window = projectsWidgets[location];
-    QSettings settings(QSettings::IniFormat,
-                       QSettings::UserScope,
-                       "telemidia",
-                       "composer");
-
+    ComposerSettings settings;
     settings.beginGroup("pluginslayout");
 #ifndef USE_MDI
     window->restoreState(settings.value(layoutName).toByteArray());

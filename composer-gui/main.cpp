@@ -30,9 +30,6 @@ int main(int argc, char *argv[])
     QCoreApplication::setOrganizationDomain("telemidia.pucrio.br");
     QCoreApplication::setApplicationName("composer");
 
-    // \todo Remove initModules and readExtensions from ComposerMainWindow
-    //    and change splash message in each of this steps.
-
     //make the library search path include the application dir on windows
     //this is so the plugins can find the dlls they are linked to at run time
     QApplication::addLibraryPath(QApplication::applicationDirPath());
