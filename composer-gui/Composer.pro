@@ -165,7 +165,7 @@ unix:!macx {
     INSTALLS += target
 }
 
-TRANSLATIONS += composer_br.ts \
-                composer_sp.ts
+TRANSLATIONS += languages/composer_pt_BR.ts \
+                languages/composer_es.ts
 
 OTHER_FILES += LICENSE.LGPL
