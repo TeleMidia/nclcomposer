@@ -38,5 +38,15 @@ int main(int argc, char *argv[])
     w.setWindowIcon(QIcon(":/mainwindow/icon"));
     w.show();
 
+    QStringList argList = a.arguments();
+    QStringList filesToOpen;
+    for(int i = 0; i < argList.size(); i++)
+    {
+      if(argList.at(i).endsWith(".cpr"))
+        filesToOpen << argList.at(i);
+    }
+
+    w.openProjects(filesToOpen);
+
     return a.exec();
 }
