@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mime-info xmlns="http://www.freedesktop.org/standards/shared-mime-info">
+  <mime-type type="application/x-nclcomposer">
+    <comment>NCL Composer Project</comment>
+    <comment xml:lang="pt_BR">Projeto do NCL Composer</comment>
+    <glob pattern="*.cpr"/>
+    <glob pattern="*.CPR"/>
+  </mime-type>
+  <!-- sudo xdg-mime install x-nclcomposer.xml -->
+  <!-- sudo xdg-mime update-mime-database /usr/share/mime -->
+</mime-info>
