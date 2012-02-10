@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<QHelpCollectionProject version="1.0">
+  <assistant>
+    <startPage>qthelp://br.puc-rio.telemidia.composer/index.html</startPage>
+  </assistant>
+  <docFiles>
+    <register>
+      <file>nclcomposer.qch</file>
+    </register>
+  </docFiles>
+</QHelpCollectionProject>
