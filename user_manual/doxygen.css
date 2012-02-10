@@ -2,7 +2,7 @@
 
 body, table, div, p, dl {
 	font-family: Lucida Grande, Verdana, Geneva, Arial, sans-serif;
-	font-size: 12px;
+	font-size: 14px;
 }
 
 /* @group Heading Levels */
@@ -221,6 +221,14 @@ tr.memlist {
 
 p.formulaDsp {
 	text-align: center;
+}
+
+.image img {
+  width: 786px;
+}
+
+#logo img {
+  width: 400px;
 }
 
 img.formulaDsp {
