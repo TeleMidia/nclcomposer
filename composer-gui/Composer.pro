@@ -16,7 +16,7 @@ else {
 }
 
 #CONFIG += clubencl
-CONFIG += runssh_on
+CONFIG += runssh_on help
 QT += core xml network webkit
 
 DEFINES += NCLCOMPOSER_GUI_VERSION=\"\\\"0.1.0\\\"\"
@@ -135,7 +135,8 @@ SOURCES += main.cpp \
     src/WelcomeWidget.cpp \
     src/AboutDialog.cpp \
     src/RunGingaConfig.cpp \
-    src/ComposerSettings.cpp
+    src/ComposerSettings.cpp \
+    src/ComposerHelpWidget.cpp
 
 HEADERS += include/ComposerMainWindow.h \
     include/PreferencesDialog.h \
@@ -146,7 +147,8 @@ HEADERS += include/ComposerMainWindow.h \
     include/WelcomeWidget.h \
     include/AboutDialog.h \
     include/RunGingaConfig.h \
-    include/ComposerSettings.h
+    include/ComposerSettings.h \
+    include/ComposerHelpWidget.h
 
 RESOURCES += images.qrc
 

@@ -55,6 +55,7 @@ using namespace composer::core;
 #include "WelcomeWidget.h"
 #include "AboutDialog.h"
 #include "ComposerSettings.h"
+#include "ComposerHelpWidget.h"
 
 #ifdef WITH_LIBSSH2
 #include "RunGingaConfig.h"
@@ -145,6 +146,8 @@ private:
 #endif
 
   QTimer *autoSaveTimer;
+
+  ComposerHelpWidget composerHelpWidget;
 
 private:
   /*!

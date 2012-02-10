@@ -1443,7 +1443,8 @@ void ComposerMainWindow::gotoNCLClubWebsite()
 
 bool ComposerMainWindow::showHelp()
 {
-  if (!proc)
+  composerHelpWidget.show();
+  /*if (!proc)
     proc = new QProcess();
 
   if (proc->state() != QProcess::Running)
@@ -1469,7 +1470,7 @@ bool ComposerMainWindow::showHelp()
       return false;
     }
   }
-  return true;
+  return true;*/
 }
 
 void ComposerMainWindow::autoSaveCurrentProjects()

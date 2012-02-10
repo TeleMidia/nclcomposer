@@ -506,7 +506,7 @@ QMenu {
   </action>
   <action name="action_Help">
    <property name="enabled">
-    <bool>false</bool>
+    <bool>true</bool>
    </property>
    <property name="icon">
     <iconset resource="../images.qrc">
