@@ -65,7 +65,7 @@ Section "NCL Composer Core (required)" ; No components page, name is not importa
   File "C:\Composer\lib\composer\NCLLanguageProfile.dll"
 
   ; Associate .cpr files with NCL Composer
-  ${registerExtension} $INSTDIR\composer.exe ".cpr" "NCL_Composer_file"
+  ${registerExtension} $INSTDIR\composer.exe ".cpr" "NCL Composer project"
 SectionEnd ; end the section
 
 ; Optional section (can be disabled by the user)
@@ -126,5 +126,5 @@ Section "Uninstall"
   RMDir "$SMPROGRAMS\NCL Composer"
 
   ;Remove file association
-  ${unregisterExtension} ".cpr" "NCL Composer file"
+  ${unregisterExtension} ".cpr" "NCL Composer project"
 SectionEnd
