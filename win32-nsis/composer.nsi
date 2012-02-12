@@ -4,6 +4,8 @@
 ; Windows.
 ;  
 
+!include "FileAssociation.nsh"
+
 ;--------------------------------
 
 !define VERSION "0.1.0"
@@ -41,7 +43,7 @@ InstType "Full"
 InstType "Minimal"
 
 ;--------------------------------
-; The stuff to install
+; The stuffs to install
 
 Section "NCL Composer Core (required)" ; No components page, name is not important
   SectionIn RO
@@ -61,6 +63,9 @@ Section "NCL Composer Core (required)" ; No components page, name is not importa
   ; install NCL Language Profile
   SetOutPath $INSTDIR\lib\composer
   File "C:\Composer\lib\composer\NCLLanguageProfile.dll"
+
+  ; Associate .cpr files with NCL Composer
+  ${registerExtension} $INSTDIR\composer.exe ".cpr" "NCL_Composer_file"
 SectionEnd ; end the section
 
 ; Optional section (can be disabled by the user)
@@ -119,4 +124,7 @@ Section "Uninstall"
   ;Shortcuts
   Delete "$SMPROGRAMS\NCL Composer\*"
   RMDir "$SMPROGRAMS\NCL Composer"
+
+  ;Remove file association
+  ${unregisterExtension} ".cpr" "NCL Composer file"
 SectionEnd
