@@ -18,6 +18,15 @@
 #include<VideoWidget>
 #include<QFont>
 #include<QMovie>
+#include<QFile>
+#include<QtWebKit/QWebView>
+#include<QTextStream>
+#include<QTextEdit>
+#include<QTextDocument>
+#include<QBoxLayout>
+#include<QSizePolicy>
+#include<QHBoxLayout>
+
 
 using namespace composer::core;
 
@@ -37,18 +46,25 @@ private:
   QWidget *window;
   QWidget *windowg;
   QFont *f;
+  QTextEdit *textedit;
+  QTextEdit  *texteditncl;
+  QTextEdit *texteditlua;
 
   Phonon::MediaObject *mediaobject;
   Phonon::VideoWidget *vwidget;
   Phonon::MediaObject *media;
   Phonon::VideoPlayer *videoPlayer;
 
+
   QLabel *picture;
   QLabel *picture1;
+  QLabel *text;
   QPushButton *button1;
-
   QPushButton *button2;
   QPushButton *button3;
+  QWebView *view;
+
+
 
 public slots:
   void changeSelectedEntity(QString pluginID, void *entity);
