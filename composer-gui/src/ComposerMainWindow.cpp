@@ -216,9 +216,10 @@ QString ComposerMainWindow::promptChooseExtDirectory()
   mBox.setIcon(QMessageBox::Question);
   if (mBox.exec() == QMessageBox::No)
   {
-    QString dirName = QFileDialog::getExistingDirectory(
-          this, tr("Select Directory"),
-          QDir::homePath(), QFileDialog::ShowDirsOnly);
+    QString dirName = QFileDialog::getExistingDirectory(this,
+                                                        tr("Select Directory"),
+                                                  getLastFileDialogPath(),
+                                                  QFileDialog::ShowDirsOnly);
     return dirName;
   } else {
     return "";
@@ -857,14 +858,7 @@ void ComposerMainWindow::closeEvent(QCloseEvent *event)
     }
 }
 
-#ifdef Q_WS_MAC
-  QSettings settings("telemidia.pucrio.br", "composer");
-#else
-  QSettings settings(QSettings::IniFormat,
-                     QSettings::UserScope,
-                     "telemidia",
-                     "composer");
-#endif
+  ComposerSettings settings;
   settings.beginGroup("extension");
   settings.setValue("path", extensions_paths);
   settings.endGroup();
@@ -1140,11 +1134,14 @@ void ComposerMainWindow::launchProjectWizard()
   QString filename = QFileDialog::getSaveFileName(
         this,
         tr("Creating a new Composer Project"),
-        QDir::currentPath(),
+        getLastFileDialogPath(),
         tr("Composer Projects (*.cpr)") );
 
   if( !filename.isNull() )
   {
+
+    updateLastFileDialogPath(filename);
+
     if(!filename.endsWith(".cpr"))
       filename = filename + QString(".cpr");
 
@@ -1188,12 +1185,41 @@ void ComposerMainWindow::launchProjectWizard()
 void ComposerMainWindow::openProject()
 {
   QString filename = QFileDialog::getOpenFileName(this,
-                                                  tr("Open Composer Project"),
-                                                  QDir::homePath(),
+                                               tr("Open Composer Project"),
+                                               getLastFileDialogPath(),
                                                tr("Composer Projects (*.cpr)"));
   if(filename != "") {
     ProjectControl::getInstance()->launchProject(filename);
+
+    updateLastFileDialogPath(filename);
   }
+}
+
+void ComposerMainWindow::updateLastFileDialogPath(QString filepath)
+{
+  QFileInfo fileInfo(filepath);
+  if(fileInfo.exists())
+  {
+    ComposerSettings settings;
+    settings.beginGroup("mainwindow");
+    settings.setValue("lastFileDialogPath", fileInfo.absolutePath());
+    settings.endGroup();
+  }
+}
+
+QString ComposerMainWindow::getLastFileDialogPath()
+{
+  ComposerSettings settings;
+  QString lastFileDialogPath = QDir::homePath();
+
+  settings.beginGroup("mainwindow");
+  if(settings.contains("lastFileDialogPath"))
+    lastFileDialogPath = settings.value("lastFileDialogPath").toString();
+  settings.endGroup();
+
+  qDebug() << lastFileDialogPath;
+
+  return lastFileDialogPath;
 }
 
 void ComposerMainWindow::importFromDocument()
@@ -1201,7 +1227,7 @@ void ComposerMainWindow::importFromDocument()
   QString docFilename = QFileDialog::getOpenFileName(
         this,
         tr("Choose the NCL file to be imported"),
-        QDir::currentPath(),
+        getLastFileDialogPath(),
         tr("NCL Documents (*.ncl)") );
 
   if(docFilename != "")
@@ -1210,7 +1236,7 @@ void ComposerMainWindow::importFromDocument()
           this,
           tr("Choose the Composer Project where the NCL document must be \
              imported"),
-             QDir::currentPath(),
+             getLastFileDialogPath(),
              tr("Composer Projects (*.cpr)") );
 
         //Create the file
@@ -1222,6 +1248,8 @@ void ComposerMainWindow::importFromDocument()
     {
       ProjectControl::getInstance()->importFromDocument(docFilename,
                                                         projFilename);
+
+      updateLastFileDialogPath(projFilename);
     }
   }
 }
@@ -1444,6 +1472,9 @@ void ComposerMainWindow::gotoNCLClubWebsite()
 bool ComposerMainWindow::showHelp()
 {
   composerHelpWidget.show();
+  return true;
+
+  // Old implementation based on Assistant
   /*if (!proc)
     proc = new QProcess();
 

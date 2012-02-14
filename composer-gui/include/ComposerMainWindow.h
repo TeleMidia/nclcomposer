@@ -295,12 +295,12 @@ private slots:
   void clearRecentProjects(void);
   void importFromDocument();
   /*!
-     *
-     */
+   *
+   */
   void selectedAboutCurrentPluginFactory();
   /*!
-     * \brief Shows the details of the current selected plugins.
-     */
+   * \brief Shows the details of the current selected plugins.
+   */
   void showPluginDetails();
 
   void updateMenuPerspectives();
@@ -317,6 +317,9 @@ private slots:
   void gotoNCLClubWebsite();
 
   void autoSaveCurrentProjects();
+
+  void updateLastFileDialogPath(QString filepath);
+  QString getLastFileDialogPath();
 
 public:
   /*!
