@@ -856,7 +856,7 @@ void ComposerMainWindow::closeEvent(QCloseEvent *event)
         return;
       }
     }
-}
+  }
 
   ComposerSettings settings;
   settings.beginGroup("extension");
@@ -886,6 +886,8 @@ void ComposerMainWindow::closeEvent(QCloseEvent *event)
   settings.endGroup();
   settings.sync();
   cleanUp();
+
+  qApp->quit(); // close the application
 }
 
 void ComposerMainWindow::cleanUp()
