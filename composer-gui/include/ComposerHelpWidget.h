@@ -11,29 +11,45 @@
 #define COMPOSERHELPWIDGET_H
 
 #include <QWidget>
-#include <QTextBrowser>
+
 #include <QtHelp/QHelpEngine>
 #include <QtHelp/QHelpIndexWidget>
 #include <QtHelp/QHelpContentWidget>
 
+#include <QTimer>
+#include <QNetworkReply>
+#include <QNetworkAccessManager>
+#include <QWebView>
+
 namespace composer {
 namespace gui {
 
-class HelpBrowser : public QTextBrowser
+
+/*!
+ * The HelpBrowser will shows the HTML content of the current selected Help.
+ */
+class HelpBrowser : public QWebView
 {
+  Q_OBJECT
+
 public:
   explicit HelpBrowser(QHelpEngine &helpEngine, QWidget *parent = 0);
 
-protected:
-  virtual QVariant loadResource(int type, const QUrl &url);
+public Q_SLOTS:
+  virtual void setSource(const QUrl &name);
 
 private:
   QHelpEngine &helpEngine;
 
 };
 
+/*!
+ * A widget to handle NCL Composer Help.
+ */
 class ComposerHelpWidget : public QWidget
 {
+  Q_OBJECT
+
 public:
   explicit ComposerHelpWidget(QWidget *parent = 0);
 
