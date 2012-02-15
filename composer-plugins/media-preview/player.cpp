@@ -13,8 +13,7 @@ player::player(QString ue)
   mediaobject = Phonon::createPlayer(Phonon::MusicCategory,
                                      Phonon::MediaSource(ue));
 
-  mediaobject2= Phonon::createPlayer(Phonon::VideoCategory,
-                                     Phonon::MediaSource(ue));
+
 }
 
 void player::play()
