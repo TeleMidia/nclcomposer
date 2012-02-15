@@ -208,7 +208,7 @@ void MediaPreviewPlugin::changeSelectedEntity(QString plugID, void *param)
 
 
 
-                        window->resize(400,100);
+
                         window->setVisible(true);
 
                         if(videoPlayer->isVisible())

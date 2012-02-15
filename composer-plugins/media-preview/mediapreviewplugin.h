@@ -8,7 +8,6 @@
 #include<QPushButton>
 #include<QLabel>
 #include<QWidget>
-#include<QFont>
 #include<QMovie>
 #include<QtWebKit/QWebView>
 #include<QTextEdit>
@@ -33,7 +32,7 @@ private:
     QWidget *window;
     QWidget *windowg;
     QWidget *windowv;
-    QFont *f;
+
     QTextEdit *textedit;
     QTextEdit  *texteditncl;
     QTextEdit *texteditlua;
