@@ -101,7 +101,7 @@ public:
      *
      * \return QWidget - wrapping the plugin interface
      */
-    virtual QWidget* getWidget() = 0;
+    virtual QWidget* getWidget() { return NULL; }
 
     /*!
      * \brief Says to plugin save its settings.
@@ -115,7 +115,7 @@ public:
      *   \return bool - true if the save was successfull,
      *                  false otherwise
      */
-    virtual bool saveSubsession() = 0;
+    virtual bool saveSubsession() { return true; }
 
 public slots:
     /*!
@@ -126,7 +126,7 @@ public slots:
      * core.
      * Messages send to core befor this call are IGNORED.
      */
-    virtual void init() = 0;
+    virtual void init() /* = 0; */ { }
 
     /*!
      * \brief Calls the plugin to update its internal model from model.
@@ -147,15 +147,11 @@ public slots:
      * This call is invoked by the core when a new Entity (from that
      * particular types the plugin is listening) is added in the model.
      */
-    virtual void onEntityAdded(QString pluginID, Entity *) = 0;
-
-    /*!
-     * \brief This is called by the core when some error triggered by this
-     *      plugin instance occurs.
-     *
-     * \param error A description of the error.
-     */
-    virtual void errorMessage(QString error) = 0;
+    virtual void onEntityAdded(QString pluginID, Entity *entity) /*= 0*/
+    {
+      (void) pluginID;
+      (void) entity;
+    }
 
     /*!
      * \brief Called by the core when an Entity is changed.
@@ -164,7 +160,11 @@ public slots:
      *     the entity.
      * \param entity The entity that was modified.
      */
-    virtual void onEntityChanged(QString pluginID, Entity *entity) = 0;
+    virtual void onEntityChanged(QString pluginID, Entity *entity) /*= 0*/
+    {
+      (void) pluginID;
+      (void) entity;
+    }
 
     /*! \brief Called by the core before the Entity is removed.
      *
@@ -178,7 +178,22 @@ public slots:
      *     the entity.
      * \param entityID the entity's identifier that was removed.
      */
-    virtual void onEntityRemoved( QString pluginID, QString entityID) = 0;
+    virtual void onEntityRemoved( QString pluginID, QString entityID) /*= 0*/
+    {
+      (void) pluginID;
+      (void) entityID;
+    }
+
+    /*!
+     * \brief This is called by the core when some error triggered by this
+     *      plugin instance occurs.
+     *
+     * \param error A description of the error.
+     */
+    virtual void errorMessage(QString error) /*= 0*/
+    {
+      (void) error;
+    }
 
 signals:
     /*!
