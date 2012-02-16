@@ -203,9 +203,14 @@ private:
    * \brief
    */
   void cleanUp();
+
   void updateRecentProjectsMenu(QStringList &recentProjects);
+
   void updateDockTitleStyle(QFrame *titleBar, bool selected=false);
+
   void addButtonToDockTitleBar(QFrame *titleBar, QPushButton *button);
+
+  void updateTabWithProject(int index, QString newLocation);
 
   QTranslator m_translator;   /**< contains the translations for this application */
   QTranslator m_translatorQt; /**< contains the translations for qt */
@@ -358,13 +363,17 @@ public slots:
   void onOpenProjectTab(QString location);
 
   /*!
-     * \brief Save the current project.
-     */
+   * \brief Save the current project.
+   */
   void saveCurrentProject();
+  /*!
+   * \brief Save the current project.
+   */
+  void saveAsCurrentProject();
 
   /*!
-     * \brief Called by the user when he/she wants to open an existent project.
-     */
+   * \brief Called by the user when he/she wants to open an existent project.
+   */
   void openProject();
 
   /*!

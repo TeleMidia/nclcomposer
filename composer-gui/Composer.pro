@@ -1,8 +1,9 @@
 TARGET = composer
 TEMPLATE = app
 
-# Uses FORCERELEASE variable because CONFIG and SUBDIR force three executions
-# if qmake and the last one does not preserves CONFIG from command line.
+# I'm using FORCERELEASE variable because CONFIG and SUBDIR force three
+# executions if qmake and the last one does not preserves CONFIG from command
+# line.
 contains(FORCERELEASE, true) {
   CONFIG += qt warn_on release
   CONFIG -= debug

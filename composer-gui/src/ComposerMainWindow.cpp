@@ -320,8 +320,8 @@ void ComposerMainWindow::initGUI()
   connect(ui->action_StopRemoteNCL, SIGNAL(triggered()),
           this, SLOT(stopRemoteNCL()));
 #else
-  ui->action_Run_remotely->setEnabled(true);
-  ui->action_Run_remotely->setToolTip(tr("Run NCL Remotely: Your program was not built with this option!!!"));
+  // ui->action_RunNCL->setEnabled(true);
+  // ui->action_RunNCL->setToolTip(tr("Run NCL Remotely: Your program was not built with this option!!!"));
 #endif
 
 // UNDO/REDO
@@ -371,7 +371,7 @@ void ComposerMainWindow::addPluginWidget(IPluginFactory *fac, IPlugin *plugin,
     w->setTabPosition(Qt::AllDockWidgetAreas, QTabWidget::West);
 #endif
     int index = tabProjects->addTab(w, projectId);
-    tabProjects->setTabToolTip(index, location);
+    updateTabWithProject(index, location);
     projectsWidgets[location] = w;
   }
   QWidget *pW = plugin->getWidget();
@@ -423,8 +423,7 @@ void ComposerMainWindow::addPluginWidget(IPluginFactory *fac, IPlugin *plugin,
   QPushButton *refresh = new QPushButton(titleBar);
   refresh->setIcon(QIcon(":/mainwindow/refreshplugin"));
   addButtonToDockTitleBar(titleBar, refresh);
-  connect(refresh, SIGNAL(pressed()),
-          plugin, SLOT(updateFromModel()));
+  connect(refresh, SIGNAL(pressed()), plugin, SLOT(updateFromModel()));
 
   QPushButton *hide = new QPushButton(titleBar);
   connect(hide, SIGNAL(pressed()), dock, SLOT(close()));
@@ -593,16 +592,19 @@ void ComposerMainWindow::createMenus()
   connect( ui->menu_Window, SIGNAL(aboutToShow()),
           this, SLOT(updateViewMenu()));
 
-  connect(ui->action_Close_Project, SIGNAL(triggered()),
+  connect(ui->action_CloseProject, SIGNAL(triggered()),
           this, SLOT(closeCurrentTab()));
 
-  connect(ui->action_Close_All, SIGNAL(triggered()),
+  connect(ui->action_CloseAll, SIGNAL(triggered()),
           this, SLOT(closeAllFiles()));
 
   connect( ui->action_Save, SIGNAL(triggered()),
           this, SLOT(saveCurrentProject()));
 
-  connect ( ui->action_New_Project, SIGNAL(triggered()),
+  connect( ui->action_SaveAs, SIGNAL(triggered()),
+          this, SLOT(saveAsCurrentProject()));
+
+  connect ( ui->action_NewProject, SIGNAL(triggered()),
            this, SLOT(launchProjectWizard()));
 
   menu_Language = new QMenu(0);
@@ -748,11 +750,10 @@ void ComposerMainWindow::errorDialog(QString message)
 
 void ComposerMainWindow::createActions() {
 
-  connect(ui->action_About, SIGNAL(triggered()),
-          this, SLOT(about()));
+  connect(ui->action_About, SIGNAL(triggered()), this, SLOT(about()));
 
-  connect( ui->action_About_Plugins, SIGNAL(triggered()),
-          this, SLOT(aboutPlugins()));
+  connect( ui->action_AboutPlugins, SIGNAL(triggered()),
+           this, SLOT(aboutPlugins()));
 
   fullScreenViewAct = new QAction(tr("&FullScreen"),this);
   fullScreenViewAct->setShortcut(tr("F11"));
@@ -786,13 +787,13 @@ void ComposerMainWindow::createActions() {
   // it will be aligned in the bottom.
   ui->toolBar->insertWidget(ui->action_Preferences, spacer);
 
-  connect (ui->actionOpen_Project, SIGNAL(triggered()),
+  connect (ui->action_OpenProject, SIGNAL(triggered()),
            this, SLOT(openProject()));
 
-  connect (ui->actionImport_from_existing_NCL, SIGNAL(triggered()),
+  connect (ui->action_ImportFromExistingNCL, SIGNAL(triggered()),
            this, SLOT(importFromDocument()));
 
-  connect (ui->actionGo_to_Clube_NCL_Website, SIGNAL(triggered()),
+  connect (ui->action_GoToClubeNCLWebsite, SIGNAL(triggered()),
            this, SLOT(gotoNCLClubWebsite()));
 
   connect (ui->action_Help, SIGNAL(triggered()), this, SLOT(showHelp()));
@@ -937,13 +938,15 @@ void ComposerMainWindow::saveCurrentProject()
   if(index != 0)
   {
     QString location = tabProjects->tabToolTip(index);
-    PluginControl::getInstance()->savePluginsData(location);
+    Project *project = ProjectControl::getInstance()->getOpenProject(location);
+
+    PluginControl::getInstance()->savePluginsData(project);
     ProjectControl::getInstance()->saveProject(location);
     ui->action_Save->setEnabled(false);
 
     if(saveAlsoNCLDocument)
     {
-      Project *project = ProjectControl::getInstance()->getOpenProject(location);
+
       QString nclfilepath = location.mid(0, location.lastIndexOf(".")) + ".ncl";
       QFile file(nclfilepath);
       if(file.open(QFile::WriteOnly | QIODevice::Truncate))
@@ -954,6 +957,73 @@ void ComposerMainWindow::saveCurrentProject()
 
         file.close();
       }
+    }
+  }
+  else
+  {
+    QMessageBox box(QMessageBox::Warning,
+                    tr("Information"),
+                    tr("There aren't a project to be saved."),
+                    QMessageBox::Ok
+                    );
+    box.exec();
+  }
+}
+
+void ComposerMainWindow::saveAsCurrentProject()
+{
+  int index = tabProjects->currentIndex();
+  bool saveAlsoNCLDocument = true;
+
+  if(index != 0)
+  {
+    QString location = tabProjects->tabToolTip(index);
+
+    QString destFileName = QFileDialog::getSaveFileName(
+          this,
+          tr("Save as Composer Project"),
+          getLastFileDialogPath(),
+          tr("Composer Projects (*.cpr)") );
+
+    if(!destFileName.isNull() && !destFileName.isEmpty())
+    {
+      updateLastFileDialogPath(destFileName);
+
+      if(!destFileName.endsWith(".cpr"))
+        destFileName  = destFileName + ".cpr";
+
+      /* Move the location of the current project to destFileName */
+      ProjectControl::getInstance()->moveProject(location, destFileName);
+
+      /* Get the project */
+      Project *project =
+          ProjectControl::getInstance()->getOpenProject(destFileName);
+
+      PluginControl::getInstance()->savePluginsData(project);
+      ProjectControl::getInstance()->saveProject(destFileName);
+
+      /* Update Tab Text and Index */
+      updateTabWithProject(index, destFileName);
+
+      ui->action_Save->setEnabled(false);
+
+      if(saveAlsoNCLDocument)
+      {
+        QString nclfilepath =
+            location.mid(0, destFileName.lastIndexOf(".")) + ".ncl";
+
+        QFile file(nclfilepath);
+        if(file.open(QFile::WriteOnly | QIODevice::Truncate))
+        {
+          // Write FILE!!
+          if(project->getChildren().size())
+            file.write(project->getChildren().at(0)->toString(0, false).toAscii());
+
+          file.close();
+        }
+      }
+
+      addToRecentProjects(destFileName);
     }
   }
   else
@@ -1007,8 +1077,7 @@ void ComposerMainWindow::savePerspective(QString layoutName)
 {
   if(tabProjects->count()) //see if there is any open document
   {
-    QString location = tabProjects->tabToolTip(
-          tabProjects->currentIndex());
+    QString location = tabProjects->tabToolTip(tabProjects->currentIndex());
 
     QMainWindow *window = projectsWidgets[location];
     QSettings settings(QSettings::IniFormat,
@@ -1139,7 +1208,7 @@ void ComposerMainWindow::launchProjectWizard()
         getLastFileDialogPath(),
         tr("Composer Projects (*.cpr)") );
 
-  if( !filename.isNull() )
+  if( !filename.isNull() && !filename.isEmpty())
   {
 
     updateLastFileDialogPath(filename);
@@ -1163,7 +1232,7 @@ void ComposerMainWindow::launchProjectWizard()
 
       Entity *nclEntity;
       MessageControl *msgControl = PluginControl::getInstance()
-          ->getMessageControl(filename);
+          ->getMessageControl(project);
       msgControl->anonymousAddEntity("ncl", project->getUniqueId(), nclAttrs);
 
       nclEntity = project->getEntitiesbyType("ncl").first();
@@ -1190,7 +1259,8 @@ void ComposerMainWindow::openProject()
                                                tr("Open Composer Project"),
                                                getLastFileDialogPath(),
                                                tr("Composer Projects (*.cpr)"));
-  if(filename != "") {
+  if(filename != "")
+  {
     ProjectControl::getInstance()->launchProject(filename);
 
     updateLastFileDialogPath(filename);
@@ -1389,8 +1459,9 @@ void ComposerMainWindow::currentTabChanged(int n)
     tbPerspectiveDropList->setEnabled(true);
     saveCurrentPluginsLayoutAct->setEnabled(true);
     restorePluginsLayoutAct->setEnabled(true);
-    ui->action_Close_Project->setEnabled(true);
+    ui->action_CloseProject->setEnabled(true);
     ui->action_Save->setEnabled(true);
+    ui->action_SaveAs->setEnabled(true);
     ui->action_RunNCL->setEnabled(true);
     ui->action_StopRemoteNCL->setEnabled(true);
   }
@@ -1399,8 +1470,9 @@ void ComposerMainWindow::currentTabChanged(int n)
     tbPerspectiveDropList->setEnabled(false);
     saveCurrentPluginsLayoutAct->setEnabled(false);
     restorePluginsLayoutAct->setEnabled(false);
-    ui->action_Close_Project->setEnabled(false);
+    ui->action_CloseProject->setEnabled(false);
     ui->action_Save->setEnabled(false);
+    ui->action_SaveAs->setEnabled(false);
     ui->action_RunNCL->setEnabled(false);
     ui->action_StopRemoteNCL->setEnabled(false);
   }
@@ -1446,8 +1518,9 @@ void ComposerMainWindow::undo()
   if(index != -1)
   {
     QString location = tabProjects->tabToolTip(index);
+    Project *project = ProjectControl::getInstance()->getOpenProject(location);
     MessageControl *msgControl =
-        PluginControl::getInstance()->getMessageControl(location);
+        PluginControl::getInstance()->getMessageControl(project);
     msgControl->undo();
   }
 }
@@ -1459,8 +1532,9 @@ void ComposerMainWindow::redo()
   if(index != -1)
   {
     QString location = tabProjects->tabToolTip(index);
+    Project *project = ProjectControl::getInstance()->getOpenProject(location);
     MessageControl *msgControl =
-        PluginControl::getInstance()->getMessageControl(location);
+        PluginControl::getInstance()->getMessageControl(project);
     msgControl->redo();
   }
 
@@ -1514,7 +1588,7 @@ void ComposerMainWindow::autoSaveCurrentProjects()
     Project *project = ProjectControl::getInstance()->getOpenProject(location);
     if(project->isDirty())
     {
-      PluginControl::getInstance()->savePluginsData(location);
+      PluginControl::getInstance()->savePluginsData(project);
       ProjectControl::getInstance()->saveTemporaryProject(location);
     }
   }
@@ -1576,7 +1650,8 @@ void ComposerMainWindow::slotLanguageChanged(QAction* action)
   }
 }
 
-void ComposerMainWindow::switchTranslator(QTranslator& translator, const QString& filename)
+void ComposerMainWindow::switchTranslator(QTranslator& translator,
+                                          const QString& filename)
 {
   // remove the old translator
   qApp->removeTranslator(&translator);
@@ -1629,6 +1704,39 @@ void ComposerMainWindow::changeEvent(QEvent* event)
   QMainWindow::changeEvent(event);
 }
 
+void ComposerMainWindow::updateTabWithProject(int index, QString newLocation)
+{
+  QString oldLocation = tabProjects->tabToolTip(index);
+
+  if(oldLocation == newLocation) return; /* do nothing */
+
+  /* Already had a project in this tab */
+  if(!oldLocation.isNull() && !oldLocation.isEmpty())
+  {
+    // Update projectsWidgets
+    if(projectsWidgets.contains(oldLocation))
+    {
+      projectsWidgets.insert(newLocation, projectsWidgets.value(oldLocation));
+      projectsWidgets.remove(oldLocation);
+    }
+
+    //update firstDock
+    if(firstDock.contains(oldLocation))
+    {
+      firstDock.insert(newLocation, firstDock.value(oldLocation));
+      firstDock.remove(oldLocation);
+
+    };
+  }
+
+  tabProjects->setTabToolTip(index, newLocation);
+  Project *project = ProjectControl::getInstance()->getOpenProject(newLocation);
+  if(project != NULL)
+  {
+    QString projectId = project->getAttribute("id");
+    tabProjects->setTabText(index, projectId);
+  }
+}
 
 
 } } //end namespace
