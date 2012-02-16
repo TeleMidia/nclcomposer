@@ -29,8 +29,7 @@ EditCommand::EditCommand(Project *project, Entity *entity,
       attrs[it.key()] = it.value();
   this->newAttrs = newAttrs;
 
-  msgControl = PluginControl::getInstance()
-      ->getMessageControl(project->getLocation());
+  msgControl = PluginControl::getInstance()->getMessageControl(project);
 }
 
 void EditCommand::undo()
@@ -50,8 +49,7 @@ RemoveCommand::RemoveCommand(Project *project, Entity *entity,
   this->entity = entity;
   this->project = project;
 
-  msgControl = PluginControl::getInstance()
-      ->getMessageControl(project->getLocation());
+  msgControl = PluginControl::getInstance()->getMessageControl(project);
 
   first = true;
 }
@@ -70,12 +68,12 @@ void RemoveCommand::undo()
 
 void RemoveCommand::redo()
 {
-  // I have to do this because the core is responsible to Remove the entity.
+  //I have to do this because the core is responsible to Remove the entity.
   Entity *entityTmp = this->entity->cloneEntity();
   if(first)
     project->removeEntity(this->entity, false);
   else
-    msgControl->anonymousRemoveEntity(this->entity->getUniqueId());
+    msgControl->anonymousRemoveEntity(entityTmp->getUniqueId());
 
   this->entity = entityTmp;
 }
@@ -89,8 +87,7 @@ AddCommand::AddCommand(Project *project, Entity *entity, QString parentUniqueId,
 
   first = true;
 
-  msgControl = PluginControl::getInstance()
-      ->getMessageControl(project->getLocation());
+  msgControl = PluginControl::getInstance()->getMessageControl(project);
 }
 
 void AddCommand::undo()

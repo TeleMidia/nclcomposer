@@ -184,7 +184,7 @@ void ProjectControl::importFromDocument( QString docLocation,
         parser = profile->createParser(project);
         PluginControl::getInstance()->
                 connectParser(parser, PluginControl::getInstance()->
-                                               getMessageControl(projLocation));
+                                               getMessageControl(project));
 
         QFile input(docLocation);
         if(input.open(QIODevice::ReadOnly))
@@ -224,6 +224,30 @@ void ProjectControl::saveProject(QString location)
     fout.write(qCompress(content.toAscii(), content.size()));
     fout.close();
     project->setDirty(false);
+}
+
+void ProjectControl::moveProject(QString location, QString dest, bool saveDest)
+{
+  QFileInfo fileInfo(dest);
+  if(fileInfo.absoluteDir().exists())
+  {
+    Project *project = openProjects.value(location);
+    project->setLocation(dest);
+    openProjects.insert(dest, project);
+    openProjects.remove(location); //remove de old
+
+    if(saveDest)
+      saveProject(dest);
+
+    QMap<QString,QString> atts;
+    QString documentId = dest;
+    documentId = documentId.remove(0, location.lastIndexOf("/") + 1);
+    atts["id"] = documentId;
+    project->setAtrributes(atts);
+  }
+  else
+    qWarning() << "Could not copy the current project from  " << location
+               << " to " << dest;
 }
 
 void ProjectControl::saveTemporaryProject(QString location)

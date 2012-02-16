@@ -72,9 +72,9 @@ private:
     /* Is this right??
        And when we have plugins that are not related to documents???
     */
-    QHash <QString, MessageControl*> messageControls; /*!< TODO */
+    QHash <Project *, MessageControl*> messageControls; /*!< TODO */
 
-    QMultiHash<QString, IPlugin*> pluginInstances;
+    QMultiHash<Project *, IPlugin*> pluginInstances;
     /*!< Plugin Instance given project location */
 
     QMultiHash<IPlugin*, IPluginFactory*> factoryByPlugin;
@@ -122,7 +122,7 @@ public:
       \param
       \return
      */
-    MessageControl *getMessageControl(QString location);
+    MessageControl *getMessageControl(Project *project);
     /*!
      \brief
 
@@ -135,7 +135,7 @@ public:
     /*!
      * \brief
      */
-    QList <IPlugin*> getPluginInstances(QString location);
+    QList <IPlugin*> getPluginInstances(Project *project);
     /* Should be private? */
 
 public slots:
@@ -150,7 +150,7 @@ public slots:
 
      \param location
     */
-    void savePluginsData(QString location);
+    void savePluginsData(Project* project);
 
 private slots:
     /*!

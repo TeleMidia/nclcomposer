@@ -81,6 +81,12 @@ public:
 
      \param location
     */
+    void moveProject(QString location, QString dest, bool saveDesc = false);
+    /*!
+     \brief
+
+     \param location
+    */
     void saveTemporaryProject(QString location);
     /*!
      \brief

@@ -17,7 +17,9 @@ namespace composer {
   namespace core {
     namespace util {
 
-//! [0]
+/*!
+ * \brief An internal command of Composer Core to edit an Entity.
+ */
 class EditCommand : public QUndoCommand
 {
 public:
@@ -33,9 +35,10 @@ private:
     QMap <QString, QString> attrs, newAttrs;
     MessageControl *msgControl;
 };
-//! [0]
 
-//! [1]
+/*!
+ * \brief An internal command of Composer Core to remove an Entity.
+ */
 class RemoveCommand : public QUndoCommand
 {
 public:
@@ -51,9 +54,10 @@ private:
     MessageControl *msgControl;
     bool first;
 };
-//! [1]
 
-//! [2]
+/*!
+ * \brief An internal command of Composer Coreto add an Entity.
+ */
 class AddCommand : public QUndoCommand
 {
 public:
@@ -70,7 +74,6 @@ private:
     MessageControl *msgControl;
     bool first;
 };
-//! [2]
 
 //QString createCommandString(DiagramItem *item, const QPointF &point);
 

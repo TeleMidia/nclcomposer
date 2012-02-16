@@ -27,7 +27,7 @@ PluginControl::PluginControl()
 PluginControl::~PluginControl()
 {
   //FIXME: BUG WHEN CLOSING ON WINDOWS
-  QMultiHash<QString,IPlugin*>::iterator itInst;
+  QMultiHash<Project*,IPlugin*>::iterator itInst;
   QHash<QString,IPluginFactory*>::iterator itFac;
 
   IPlugin *inst = NULL;
@@ -139,10 +139,9 @@ void PluginControl::launchProject(Project *project)
   MessageControl *msgControl;
   IPluginFactory *factory;
   LanguageType type = project->getProjectType();
-  QString location  = project->getLocation();
 
   msgControl = new MessageControl(project);
-  messageControls[location] = msgControl;
+  messageControls[project] = msgControl;
 
   QList<QString>::iterator it;
   QList<QString> plugIDs = pluginsByType.values(type);
@@ -163,9 +162,9 @@ void PluginControl::launchNewPlugin(IPluginFactory *factory, Project *project)
     pluginInstance->setPluginInstanceID(
           factory->id() + "#" +QUuid::createUuid().toString());
     pluginInstance->setProject(project);
-    launchNewPlugin(pluginInstance, messageControls[location]);
+    launchNewPlugin(pluginInstance, messageControls[project]);
 
-    pluginInstances.insert(location, pluginInstance);
+    pluginInstances.insert(project, pluginInstance);
     factoryByPlugin.insert(pluginInstance, factory);
 
     emit addPluginWidgetToWindow(factory, pluginInstance, project,
@@ -268,7 +267,7 @@ bool PluginControl::releasePlugins(Project *project)
     return false;
   }
 
-  if (!messageControls.contains(project->getLocation()))
+  if (!messageControls.contains(project))
   {
     qDebug() << "Message Control does not know the project";
     return false;
@@ -280,16 +279,15 @@ bool PluginControl::releasePlugins(Project *project)
   //          return false;
   //        }
 
-  MessageControl *t = messageControls.value(project->getLocation());
+  MessageControl *t = messageControls.value(project);
   if (t)
   {
     delete t;
     t = NULL;
-    messageControls.remove(project->getLocation());
+    messageControls.remove(project);
   }
 
-  QList<IPlugin*> instances =
-      pluginInstances.values(project->getLocation());
+  QList<IPlugin*> instances = pluginInstances.values(project);
 
   QList<IPlugin*>::iterator it;
   for (it = instances.begin(); it != instances.end(); it++)
@@ -300,7 +298,7 @@ bool PluginControl::releasePlugins(Project *project)
     factoryByPlugin.remove(inst);
     fac->releasePluginInstance(inst);
   }
-  pluginInstances.remove(project->getLocation());
+  pluginInstances.remove(project);
 
   return true;
 }
@@ -310,8 +308,7 @@ void PluginControl::sendBroadcastMessage(const char* slot, void *obj)
   IPlugin *plugin = qobject_cast<IPlugin *> (QObject::sender());
 
   QList<IPlugin*>::iterator it;
-  QList<IPlugin*> instances =
-      pluginInstances.values(plugin->getProject()->getLocation());
+  QList<IPlugin*> instances = pluginInstances.values(plugin->getProject());
 
   QString slotName(slot);
   slotName.append("(QString,void*)");
@@ -330,10 +327,10 @@ void PluginControl::sendBroadcastMessage(const char* slot, void *obj)
   }
 }
 
-void PluginControl::savePluginsData(QString location)
+void PluginControl::savePluginsData(Project *project)
 {
   QList<IPlugin*>::iterator it;
-  QList<IPlugin*> instances = pluginInstances.values(location);
+  QList<IPlugin*> instances = pluginInstances.values(project);
 
   for (it = instances.begin(); it != instances.end(); it++)
   {
@@ -342,16 +339,16 @@ void PluginControl::savePluginsData(QString location)
   }
 }
 
-MessageControl *PluginControl::getMessageControl(QString location)
+MessageControl *PluginControl::getMessageControl(Project *project)
 {
-  return messageControls.value(location);
+  return messageControls.value(project);
 }
 
-QList <IPlugin*> PluginControl::getPluginInstances(QString location)
+QList <IPlugin*> PluginControl::getPluginInstances(Project *project)
 {
   QList<IPlugin*> instances;
-  if(pluginInstances.contains(location))
-    instances = pluginInstances.values(location);
+  if(pluginInstances.contains(project))
+    instances = pluginInstances.values(project);
 
   return instances;
 }

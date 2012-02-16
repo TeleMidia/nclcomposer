@@ -125,8 +125,7 @@ void MessageControl::anonymousUpdateFromModel()
 {
   QList<IPlugin*>::iterator it;
   QList<IPlugin*> instances =
-      PluginControl::getInstance()
-      ->getPluginInstances(this->project->getLocation());
+      PluginControl::getInstance()->getPluginInstances(this->project);
 
   QString slotName("updateFromModel()");
   for (it = instances.begin(); it != instances.end(); it++)
@@ -294,8 +293,7 @@ void MessageControl::sendEntityAddedMessageToPlugins( QString pluginInstanceId,
 {
   QList<IPlugin*>::iterator it;
   QList<IPlugin*> instances =
-      PluginControl::getInstance()
-      ->getPluginInstances(this->project->getLocation());
+      PluginControl::getInstance()->getPluginInstances(this->project);
 
   QString slotName("onEntityAdded(QString,Entity*)");
 
@@ -326,8 +324,7 @@ void MessageControl::sendEntityChangedMessageToPlugins(QString pluginInstanceId,
 {
   QList<IPlugin*>::iterator it;
   QList<IPlugin*> instances =
-      PluginControl::getInstance()
-      ->getPluginInstances(this->project->getLocation());
+      PluginControl::getInstance()->getPluginInstances(this->project);
 
   QString slotName("onEntityChanged(QString,Entity*)");
 
@@ -355,8 +352,7 @@ void MessageControl::sendEntityRemovedMessageToPlugins(QString pluginInstanceId,
 {
   QList<IPlugin*>::iterator it;
   QList<IPlugin*> instances =
-      PluginControl::getInstance()
-      ->getPluginInstances(this->project->getLocation());
+      PluginControl::getInstance()->getPluginInstances(this->project);
 
   QString slotName("onEntityRemoved(QString,QString)");
   QString entityId = entity->getUniqueId();
