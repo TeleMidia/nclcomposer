@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>400</width>
-    <height>200</height>
+    <width>421</width>
+    <height>201</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -80,13 +80,6 @@
        <number>0</number>
       </property>
       <item>
-       <widget class="QPushButton" name="button_License">
-        <property name="text">
-         <string>License</string>
-        </property>
-       </widget>
-      </item>
-      <item>
        <spacer name="horizontalSpacer">
         <property name="orientation">
          <enum>Qt::Horizontal</enum>
@@ -115,7 +108,7 @@
       <string notr="true">font-size: 12px;</string>
      </property>
      <property name="text">
-      <string>Copyright (C) 2011 TeleMídia Laboratory</string>
+      <string>Copyright (C) 2011-2012 TeleMídia/PUC-Rio</string>
      </property>
      <property name="alignment">
       <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
