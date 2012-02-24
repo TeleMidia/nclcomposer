@@ -1,7 +1,7 @@
 #ifndef CONNECTORPARSER_H
 #define CONNECTORPARSER_H
 
-#include <xercesc/sax/HandlerBase.hpp>
+#include <QXmlDefaultHandler>
 #include "nclmodel.h"
 
 
@@ -10,17 +10,15 @@ namespace nclValidator {
 class ModelElement;
 class Model;
 
-using namespace xercesc;
 using namespace std;
 
-class ConnectorParser : public HandlerBase
+class ConnectorParser : public QXmlDefaultHandler
 {
 public:
     ConnectorParser(Model *, string);
-    void startDocument () {}
-    void startElement(const XMLCh* const, AttributeList&);
-    void endElement(const XMLCh* const);
-    void endDocument() {}
+    bool startElement(const QString &namespaceURI, const QString &localName, const QString &qName, const QXmlAttributes &atts);
+    bool endElement(const QString &namespaceURI, const QString &localName, const QString &qName);
+
     map <string, pair <int, int> > getRolesMap () const {return _roles; }
 
 private:

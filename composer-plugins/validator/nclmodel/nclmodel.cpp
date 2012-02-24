@@ -562,7 +562,7 @@ vector <ModelElement *>  Model::elementByIdentifier(string identifier){
             string path = baseImported->attribute("documentURI").value();
 
             ModelElement elementFound;
-            HandlerBase* docHandler = new TextualParser(&elementFound, id);
+            QXmlContentHandler* docHandler = new TextualParser(&elementFound, id);
 
             findElementInImportedFile(path, docHandler);
 
@@ -581,14 +581,19 @@ vector <ModelElement *>  Model::elementByIdentifier(string identifier){
 }
 
 
-void Model::findElementInImportedFile(string fileName, HandlerBase *docHandler){
-    ifstream ifile (fileName.c_str());
-    if (!ifile){
+void Model::findElementInImportedFile(string fileName, QXmlContentHandler *docHandler){
+    QFile ifile (QString::fromStdString(fileName));
+//    ifstream ifile (fileName.c_str());
+    if (!ifile.exists()){
         fileName = _relativePath + fileName;
 
-        ifstream ifile2 (fileName.c_str());
-        if (!ifile2)
+        QFile ifile2 (QString::fromStdString(fileName));
+//        ifstream ifile2 (fileName.c_str());
+        if (!ifile2.exists())
             return;
+
+        ifile.setFileName(QString::fromStdString(fileName));
+
     }
 
 //    fprintf(stderr, "\n\n%s %s\n\n", fileName.c_str(), idToFind.c_str());
@@ -596,39 +601,45 @@ void Model::findElementInImportedFile(string fileName, HandlerBase *docHandler){
 
 
 //    ModelElement el;
-    try {
-        XMLPlatformUtils::Initialize();
-    }
-    catch (const XMLException& toCatch) {
-        char* message = XMLString::transcode(toCatch.getMessage());
-        cerr << "Error during initialization! :\n"
-             << message << "\n";
-        XMLString::release(&message);
-    }
 
-    xercesc::SAXParser* parser = new SAXParser();
-//    TextualParser* docHandler = new TextualParser(&el, idToFind);
-    xercesc::ErrorHandler* errHandler = (ErrorHandler*) docHandler;
-    parser->setDocumentHandler(docHandler);
-    parser->setErrorHandler(errHandler);
+    QXmlSimpleReader reader;
+    reader.setContentHandler(docHandler);
 
-    try {
-        parser->parse(fileName.c_str());
-    }
-    catch (const XMLException& toCatch) {
-        char* message = XMLString::transcode(toCatch.getMessage());
-        fprintf(stderr, "\nXMLException message is: %s\n", message);
-        XMLString::release(&message);
-    }
-    catch (const SAXParseException& toCatch) {
-        char* message = XMLString::transcode(toCatch.getMessage());
-        fprintf(stderr, "\nSAXParseException message is: %s\n", message);
-        XMLString::release(&message);
-    }
+    reader.parse(QXmlInputSource (&ifile));
+
+//    try {
+//        XMLPlatformUtils::Initialize();
+//    }
+//    catch (const XMLException& toCatch) {
+//        char* message = XMLString::transcode(toCatch.getMessage());
+//        cerr << "Error during initialization! :\n"
+//             << message << "\n";
+//        XMLString::release(&message);
+//    }
+
+//    xercesc::SAXParser* parser = new SAXParser();
+////    TextualParser* docHandler = new TextualParser(&el, idToFind);
+//    xercesc::ErrorHandler* errHandler = (ErrorHandler*) docHandler;
+//    parser->setDocumentHandler(docHandler);
+//    parser->setErrorHandler(errHandler);
+
+//    try {
+//        parser->parse(fileName.c_str());
+//    }
+//    catch (const XMLException& toCatch) {
+//        char* message = XMLString::transcode(toCatch.getMessage());
+//        fprintf(stderr, "\nXMLException message is: %s\n", message);
+//        XMLString::release(&message);
+//    }
+//    catch (const SAXParseException& toCatch) {
+//        char* message = XMLString::transcode(toCatch.getMessage());
+//        fprintf(stderr, "\nSAXParseException message is: %s\n", message);
+//        XMLString::release(&message);
+//    }
 
 //    fprintf(stderr, "\nElement: %s\n\n", el.elementName().c_str());
 
-    XMLPlatformUtils::Terminate();
+//    XMLPlatformUtils::Terminate();
 }
 
 vector <ModelElement *> Model::elementByPropertyName(string component, string propertyName){
@@ -746,10 +757,10 @@ map<string, pair<int, int> > Model::getConnectorSetRoles (string identifier){
 
         if (baseImported){
             string path = baseImported->attribute("documentURI").value();
-            HandlerBase* docHandler = new ConnectorParser (this, id);
+            QXmlContentHandler* docHandler = new ConnectorParser (this, id);
+
 
             findElementInImportedFile(path, docHandler);
-
             ConnectorParser *connParser = dynamic_cast <ConnectorParser *> (docHandler);
             roles = connParser->getRolesMap ();
 

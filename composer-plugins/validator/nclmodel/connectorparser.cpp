@@ -11,17 +11,17 @@ ConnectorParser::ConnectorParser(Model *model, string connectorId)
 }
 
 
-void ConnectorParser::startElement(const XMLCh *const name, AttributeList &attr)
+bool ConnectorParser::startElement(const QString &, const QString &, const QString &qName, const QXmlAttributes &atts)
 {
-    if (completed) return;
+    if (completed) return true;
 
-    char* elementName = XMLString::transcode(name);
+
     string id = "";
 
     vector <Attribute> att;
-    for (XMLSize_t i = 0; i < attr.getLength(); i++) {
-        string name (XMLString::transcode(attr.getName(i)));
-        string value(XMLString::transcode(attr.getValue(i)));
+    for (int i = 0; i < atts.count(); i++) {
+        string name (atts.qName(i).toStdString());
+        string value(atts.value(i).toStdString());
 
         if (name == "id")
             id = value;
@@ -31,27 +31,30 @@ void ConnectorParser::startElement(const XMLCh *const name, AttributeList &attr)
 
     ModelElement element;
     element.setAttributes(att);
-    element.setElementName(elementName);
+    element.setElementName(qName.toStdString());
 
 
-    if (id == _connectorId && strcmp (elementName, "causalConnector") == 0){
+    if (id == _connectorId && strcmp (qName.toStdString().c_str(), "causalConnector") == 0){
         flag = true;
     }
 
     if (flag){
         _model->parseConnectorChild(&element, _roles);
     }
+
+    return true;
 }
 
-void ConnectorParser::endElement(const XMLCh *const name)
+bool ConnectorParser::endElement(const QString &namespaceURI, const QString &localName, const QString &qName)
 {
-    string elementName = XMLString::transcode(name);
-    if (elementName == "causalConnector" && flag){
+    if (qName.toStdString() == "causalConnector" && flag){
         completed = true;
 
 //        for (map<string, pair <int, int> >::iterator it = _rolesPointed->begin(); it != _rolesPointed->end(); it++ )
 //            fprintf (stderr, "%s %d %d\n", it->first.c_str(), it->second.first, it->second.second);
     }
+
+    return true;
 }
 
 

@@ -15,11 +15,6 @@
 #include <limits>
 #include <sstream>
 #include <fstream>
-#include <xercesc/parsers/SAXParser.hpp>
-#include <xercesc/sax/HandlerBase.hpp>
-#include <xercesc/util/XMLString.hpp>
-#include <xercesc/util/PlatformUtils.hpp>
-#include <xercesc/sax/HandlerBase.hpp>
 #include "textualparser.h"
 #include "connectorparser.h"
 #include "../definitions/definitions.h"
@@ -29,8 +24,6 @@ namespace nclValidator {
 
 class Model;
 class ConnectorParser;
-
-using namespace xercesc;
 
 class ModelElement {
 public:
@@ -122,7 +115,7 @@ private:
 	void addChild (ModelElement *parentElement, ModelElement *childElement);
         void parseAllConnectorChildren (ModelElement *, ModelElement *, map <string, pair <int, int> > &);
 
-        void findElementInImportedFile (string, HandlerBase *);
+        void findElementInImportedFile (string, QXmlContentHandler *);
 
 	int _seed;
 	map <virtualId, ModelElement> _modelElements;
