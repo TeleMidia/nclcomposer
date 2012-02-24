@@ -999,6 +999,8 @@ void QnstComposerPlugin::requestCausalConnectorAddition(Entity* entity)
     if(entities.contains(entity->getParentUniqueId()))
       view->addEntity(entity->getUniqueId(),
                       entities[entity->getParentUniqueId()], properties);
+    else
+        view->addEntity(entity->getUniqueId(),"", properties);
 }
 
 void QnstComposerPlugin::requestCausalConnectorChange(Entity* entity)
@@ -1036,6 +1038,9 @@ void QnstComposerPlugin::requestSimpleConditionAddition(Entity* entity)
     if(entities.contains(entity->getParentUniqueId()))
       view->addEntity(entity->getUniqueId(),
                       entities[entity->getParentUniqueId()], properties);
+    else
+        view->addEntity(entity->getUniqueId(),
+                        "", properties);
 }
 
 void QnstComposerPlugin::requestSimpleConditionChange(Entity* entity)
@@ -1085,6 +1090,9 @@ void QnstComposerPlugin::requestSimpleActionAddition(Entity* entity)
     if(entities.contains(entity->getParentUniqueId()))
       view->addEntity(entity->getUniqueId(),
                       entities[entity->getParentUniqueId()], properties);
+    else
+        view->addEntity(entity->getUniqueId(),
+                        "", properties);
 }
 
 void QnstComposerPlugin::requestSimpleActionChange(Entity* entity)

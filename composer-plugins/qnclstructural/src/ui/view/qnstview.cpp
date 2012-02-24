@@ -2726,6 +2726,8 @@ void QnstView::adjustBind(QnstBind* entity)
 void QnstView::addConnector(const QString uid, const QString parent, const QMap<QString, QString> properties)
 {
     if (!connectors2.contains(uid)){
+        qDebug() << "=================================" << "adding connector";
+
         QnstConncetor* entity = new QnstConncetor();
         entity->setnstUid(uid);
 
@@ -2797,6 +2799,8 @@ void QnstView::changeCondition(QString uid, const QMap<QString, QString> propert
 void QnstView::addAction(const QString uid, const QString parent, const QMap<QString, QString> properties)
 {
     if (connectors2.contains(properties["connector"])){
+        qDebug() << "=================================" << "adding action";
+
         QnstConncetor* connector = connectors2[properties["connector"]];
 
         if (properties["role"] != ""){
