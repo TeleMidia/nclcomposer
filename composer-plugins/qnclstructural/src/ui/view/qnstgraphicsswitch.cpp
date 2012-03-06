@@ -66,7 +66,7 @@ void QnstGraphicsSwitch::createConnections()
     connect(menu, SIGNAL(imageRequested()), SLOT(performImage()));
     connect(menu, SIGNAL(audioRequested()), SLOT(performAudio()));
     connect(menu, SIGNAL(htmlRequested()), SLOT(performHtml()));
-    connect(menu, SIGNAL(portRequested()), SLOT(performPort()));
+//    connect(menu, SIGNAL(portRequested()), SLOT(performPort()));
     connect(menu, SIGNAL(switchportRequested()), SLOT(performSwitchPort()));
     connect(menu, SIGNAL(nclRequested()), SLOT(performNCL()));
     connect(menu, SIGNAL(videoRequested()), SLOT(performVideo()));
@@ -80,60 +80,60 @@ void QnstGraphicsSwitch::createConnections()
     connect(menu, SIGNAL(propertyRequested()), SLOT(performProperty()));
 }
 
+
 void QnstGraphicsSwitch::performHtml()
 {
-    QnstGraphicsHTML* entity = new QnstGraphicsHTML(this);
-    entity->setTop(getHeight()/2 - 48/2);
-    entity->setLeft(getWidth()/2 - 48/2);
-    entity->setWidth(48);
-    entity->setHeight(64);
-    entity->adjust();
-
-    if (dropsrc != ""){
-        entity->setSource(dropsrc);
-
-        dropsrc = "";
-    }
-
-    addnstGraphicsEntity(entity);
-
-    emit entityAdded(entity);
+  createEntity(Qnst::Html);
 }
 
 void QnstGraphicsSwitch::performNCL()
 {
-    QnstGraphicsNCL* entity = new QnstGraphicsNCL(this);
-    entity->setTop(getHeight()/2 - 48/2);
-    entity->setLeft(getWidth()/2 - 48/2);
-    entity->setWidth(48);
-    entity->setHeight(64);
-    entity->adjust();
-
-    if (dropsrc != ""){
-        entity->setSource(dropsrc);
-
-        dropsrc = "";
-    }
-
-    addnstGraphicsEntity(entity);
-
-    emit entityAdded(entity);
+  createEntity(Qnst::NCL);
 }
 
 void QnstGraphicsSwitch::performImage()
 {
-    QnstGraphicsImage* entity = new QnstGraphicsImage(this);
-    entity->setTop(getHeight()/2 - 48/2);
-    entity->setLeft(getWidth()/2 - 48/2);
-    entity->setWidth(48);
-    entity->setHeight(64);
-    entity->adjust();
+  createEntity(Qnst::Image);
+}
 
-    entity->menu->actionPaste->setEnabled(menu->actionPaste->isEnabled());
+void QnstGraphicsSwitch::performAudio()
+{
+  createEntity(Qnst::Audio);
+}
 
-    addnstGraphicsEntity(entity);
+void QnstGraphicsSwitch::performText()
+{
+  createEntity(Qnst::Text);
+}
 
-    emit entityAdded(entity);
+void QnstGraphicsSwitch::performVideo()
+{
+  createEntity(Qnst::Video);
+}
+
+void QnstGraphicsSwitch::performScript()
+{
+  createEntity(Qnst::Script);
+}
+
+void QnstGraphicsSwitch::performSettings()
+{
+  createEntity(Qnst::Settings);
+}
+
+void QnstGraphicsSwitch::performMedia()
+{
+  createEntity(Qnst::Media);
+}
+
+void QnstGraphicsSwitch::performContext()
+{
+  createEntity(Qnst::Context);
+}
+
+void QnstGraphicsSwitch::performSwitch()
+{
+  createEntity(Qnst::Switch);
 }
 
 void QnstGraphicsSwitch::performSwitchPort()
@@ -144,134 +144,6 @@ void QnstGraphicsSwitch::performSwitchPort()
     entity->setWidth(18);
     entity->setHeight(18);
     entity->adjust();
-
-    addnstGraphicsEntity(entity);
-
-    emit entityAdded(entity);
-}
-
-void QnstGraphicsSwitch::performAudio()
-{
-    QnstGraphicsAudio* entity = new QnstGraphicsAudio(this);
-    entity->setTop(getHeight()/2 - 48/2);
-    entity->setLeft(getWidth()/2 - 48/2);
-    entity->setWidth(48);
-    entity->setHeight(64);
-    entity->adjust();
-
-    entity->menu->actionPaste->setEnabled(menu->actionPaste->isEnabled());
-
-    addnstGraphicsEntity(entity);
-
-    emit entityAdded(entity);
-}
-
-void QnstGraphicsSwitch::performText()
-{
-    QnstGraphicsText* entity = new QnstGraphicsText(this);
-    entity->setTop(getHeight()/2 - 48/2);
-    entity->setLeft(getWidth()/2 - 48/2);
-    entity->setWidth(48);
-    entity->setHeight(64);
-    entity->adjust();
-
-    entity->menu->actionPaste->setEnabled(menu->actionPaste->isEnabled());
-
-    addnstGraphicsEntity(entity);
-
-    emit entityAdded(entity);
-}
-
-void QnstGraphicsSwitch::performVideo()
-{
-    QnstGraphicsVideo* entity = new QnstGraphicsVideo(this);
-    entity->setTop(getHeight()/2 - 48/2);
-    entity->setLeft(getWidth()/2 - 48/2);
-    entity->setWidth(48);
-    entity->setHeight(64);
-    entity->adjust();
-
-    entity->menu->actionPaste->setEnabled(menu->actionPaste->isEnabled());
-
-    addnstGraphicsEntity(entity);
-
-    emit entityAdded(entity);
-}
-
-void QnstGraphicsSwitch::performScript()
-{
-    QnstGraphicsScript* entity = new QnstGraphicsScript(this);
-    entity->setTop(getHeight()/2 - 48/2);
-    entity->setLeft(getWidth()/2 - 48/2);
-    entity->setWidth(48);
-    entity->setHeight(64);
-    entity->adjust();
-
-    entity->menu->actionPaste->setEnabled(menu->actionPaste->isEnabled());
-
-    addnstGraphicsEntity(entity);
-
-    emit entityAdded(entity);
-}
-
-void QnstGraphicsSwitch::performSettings()
-{
-    QnstGraphicsSettings* entity = new QnstGraphicsSettings(this);
-    entity->setTop(getHeight()/2 - 48/2);
-    entity->setLeft(getWidth()/2 - 48/2);
-    entity->setWidth(48);
-    entity->setHeight(64);
-    entity->adjust();
-
-    entity->menu->actionPaste->setEnabled(menu->actionPaste->isEnabled());
-
-    addnstGraphicsEntity(entity);
-
-    emit entityAdded(entity);
-}
-
-void QnstGraphicsSwitch::performMedia()
-{
-    QnstGraphicsMedia* entity = new QnstGraphicsMedia(this);
-    entity->setTop(getHeight()/2 - 48/2);
-    entity->setLeft(getWidth()/2 - 48/2);
-    entity->setWidth(48);
-    entity->setHeight(64);
-    entity->adjust();
-
-    entity->menu->actionPaste->setEnabled(menu->actionPaste->isEnabled());
-
-    addnstGraphicsEntity(entity);
-
-    emit entityAdded(entity);
-}
-
-void QnstGraphicsSwitch::performContext()
-{
-    QnstGraphicsSwitch* entity = new QnstGraphicsSwitch(this);
-    entity->setTop(getHeight()/2 - 200/2);
-    entity->setLeft(getWidth()/2 - 250/2);
-    entity->setWidth(250);
-    entity->setHeight(200);
-    entity->adjust();
-
-    entity->menu->actionPaste->setEnabled(menu->actionPaste->isEnabled());
-
-    addnstGraphicsEntity(entity);
-
-    emit entityAdded(entity);
-}
-
-void QnstGraphicsSwitch::performSwitch()
-{
-    QnstGraphicsSwitch* entity = new QnstGraphicsSwitch(this);
-    entity->setTop(getHeight()/2 - 200/2);
-    entity->setLeft(getWidth()/2 - 250/2);
-    entity->setWidth(250);
-    entity->setHeight(200);
-    entity->adjust();
-
-    entity->menu->actionPaste->setEnabled(menu->actionPaste->isEnabled());
 
     addnstGraphicsEntity(entity);
 
@@ -304,77 +176,4 @@ void QnstGraphicsSwitch::performProperty()
     addnstGraphicsEntity(entity);
 
     emit entityAdded(entity);
-}
-
-void QnstGraphicsSwitch::dragEnterEvent(QGraphicsSceneDragDropEvent *event)
-{
-    foreach(QUrl url, event->mimeData()->urls()){
-            event->acceptProposedAction();
-
-            return;
-    }
-}
-
-void QnstGraphicsSwitch::dropEvent(QGraphicsSceneDragDropEvent *event)
-{
-    foreach(QUrl url, event->mimeData()->urls())
-    {
-        QString filename = url.toLocalFile();
-        QString suffix = QFileInfo(filename).suffix().toUpper();
-
-        if(suffix=="PNG" ||
-           suffix=="JPEG"){
-            event->acceptProposedAction();
-
-            dropsrc = filename;
-
-            performImage();
-
-        }else if(suffix=="MP3" ||
-                 suffix=="WAV"){
-          event->acceptProposedAction();
-
-          dropsrc = filename;
-
-          performAudio();
-
-        }else if(suffix=="AVI" ||
-                 suffix=="MPEG4" ||
-                 suffix=="MP4" ||
-                 suffix=="MPEG"){
-          event->acceptProposedAction();
-
-          dropsrc = filename;
-
-          performVideo();
-
-        }else if(suffix=="TXT"){
-          event->acceptProposedAction();
-
-          dropsrc = filename;
-
-          performText();
-
-        }else if(suffix=="LUA"){
-            event->acceptProposedAction();
-
-            dropsrc = filename;
-
-            performScript();
-
-        }else if(suffix=="HTML" || suffix=="HTM"){
-            event->acceptProposedAction();
-
-            dropsrc = filename;
-
-            performHtml();
-
-        }else if(suffix=="NCL"){
-            event->acceptProposedAction();
-
-            dropsrc = filename;
-
-            performNCL();
-         }
-    }
 }

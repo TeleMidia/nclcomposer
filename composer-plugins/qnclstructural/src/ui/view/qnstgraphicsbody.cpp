@@ -84,202 +84,57 @@ void QnstGraphicsBody::createConnections()
 
 void QnstGraphicsBody::performHtml()
 {
-    QnstGraphicsHTML* entity = new QnstGraphicsHTML(this);
-    entity->setTop(getHeight()/2 - 48/2);
-    entity->setLeft(getWidth()/2 - 48/2);
-    entity->setWidth(48);
-    entity->setHeight(64);
-    entity->adjust();
-
-    if (dropsrc != ""){
-        entity->setSource(dropsrc);
-
-        dropsrc = "";
-    }
-
-    addnstGraphicsEntity(entity);
-
-    emit entityAdded(entity);
+  createEntity(Qnst::Html);
 }
 
 void QnstGraphicsBody::performNCL()
 {
-    QnstGraphicsNCL* entity = new QnstGraphicsNCL(this);
-    entity->setTop(getHeight()/2 - 48/2);
-    entity->setLeft(getWidth()/2 - 48/2);
-    entity->setWidth(48);
-    entity->setHeight(64);
-    entity->adjust();
-
-    if (dropsrc != ""){
-        entity->setSource(dropsrc);
-
-        dropsrc = "";
-    }
-
-    addnstGraphicsEntity(entity);
-
-    emit entityAdded(entity);
+  createEntity(Qnst::NCL);
 }
 
 void QnstGraphicsBody::performImage()
 {
-    QnstGraphicsImage* entity = new QnstGraphicsImage(this);
-    entity->setTop(getHeight()/2 - 48/2);
-    entity->setLeft(getWidth()/2 - 48/2);
-    entity->setWidth(48);
-    entity->setHeight(64);
-    entity->adjust();
-
-    if (dropsrc != ""){
-        entity->setSource(dropsrc);
-
-        dropsrc = "";
-    }
-
-    addnstGraphicsEntity(entity);
-
-    emit entityAdded(entity);
+  createEntity(Qnst::Image);
 }
 
 void QnstGraphicsBody::performAudio()
 {
-    QnstGraphicsAudio* entity = new QnstGraphicsAudio(this);
-    entity->setTop(getHeight()/2 - 48/2);
-    entity->setLeft(getWidth()/2 - 48/2);
-    entity->setWidth(48);
-    entity->setHeight(64);
-    entity->adjust();
-
-    if (dropsrc != ""){
-        entity->setSource(dropsrc);
-
-        dropsrc = "";
-    }
-
-    addnstGraphicsEntity(entity);
-
-    emit entityAdded(entity);
+  createEntity(Qnst::Audio);
 }
 
 void QnstGraphicsBody::performText()
 {
-    QnstGraphicsText* entity = new QnstGraphicsText(this);
-    entity->setTop(getHeight()/2 - 48/2);
-    entity->setLeft(getWidth()/2 - 48/2);
-    entity->setWidth(48);
-    entity->setHeight(64);
-    entity->adjust();
-
-    if (dropsrc != ""){
-        entity->setSource(dropsrc);
-
-        dropsrc = "";
-    }
-
-    addnstGraphicsEntity(entity);
-
-    emit entityAdded(entity);
+  createEntity(Qnst::Text);
 }
 
 void QnstGraphicsBody::performVideo()
 {
-    QnstGraphicsVideo* entity = new QnstGraphicsVideo(this);
-    entity->setTop(getHeight()/2 - 48/2);
-    entity->setLeft(getWidth()/2 - 48/2);
-    entity->setWidth(48);
-    entity->setHeight(64);
-    entity->adjust();
-
-    if (dropsrc != ""){
-        entity->setSource(dropsrc);
-
-        dropsrc = "";
-    }
-
-    addnstGraphicsEntity(entity);
-
-    emit entityAdded(entity);
+  createEntity(Qnst::Video);
 }
 
 void QnstGraphicsBody::performScript()
 {
-    QnstGraphicsScript* entity = new QnstGraphicsScript(this);
-    entity->setTop(getHeight()/2 - 48/2);
-    entity->setLeft(getWidth()/2 - 48/2);
-    entity->setWidth(48);
-    entity->setHeight(64);
-    entity->adjust();
-
-    if (dropsrc != ""){
-        entity->setSource(dropsrc);
-
-        dropsrc = "";
-    }
-
-    addnstGraphicsEntity(entity);
-
-    emit entityAdded(entity);
+  createEntity(Qnst::Script);
 }
 
 void QnstGraphicsBody::performSettings()
 {
-    QnstGraphicsSettings* entity = new QnstGraphicsSettings(this);
-    entity->setTop(getHeight()/2 - 48/2);
-    entity->setLeft(getWidth()/2 - 48/2);
-    entity->setWidth(48);
-    entity->setHeight(64);
-    entity->adjust();
-
-    addnstGraphicsEntity(entity);
-
-    emit entityAdded(entity);
+  createEntity(Qnst::Settings);
 }
 
 void QnstGraphicsBody::performMedia()
 {
-    QnstGraphicsMedia* entity = new QnstGraphicsMedia(this);
-    entity->setTop(getHeight()/2 - 48/2);
-    entity->setLeft(getWidth()/2 - 48/2);
-    entity->setWidth(48);
-    entity->setHeight(64);
-    entity->adjust();
-
-    addnstGraphicsEntity(entity);
-
-    emit entityAdded(entity);
+  createEntity(Qnst::Media);
 }
 
 void QnstGraphicsBody::performContext()
 {
-    QnstGraphicsContext* entity = new QnstGraphicsContext(this);
-    entity->setTop(getHeight()/2 - 200/2);
-    entity->setLeft(getWidth()/2 - 250/2);
-    entity->setWidth(250);
-    entity->setHeight(200);
-    entity->adjust();
-
-    entity->menu->actionPaste->setEnabled(menu->actionPaste->isEnabled());
-
-    addnstGraphicsEntity(entity);
-
-    emit entityAdded(entity);
+  createEntity(Qnst::Context);
 }
 
 void QnstGraphicsBody::performSwitch()
 {
-    QnstGraphicsSwitch* entity = new QnstGraphicsSwitch(this);
-    entity->setTop(getHeight()/2 - 200/2);
-    entity->setLeft(getWidth()/2 - 250/2);
-    entity->setWidth(250);
-    entity->setHeight(200);
-    entity->adjust();
-
-    entity->menu->actionPaste->setEnabled(menu->actionPaste->isEnabled());
-
-    addnstGraphicsEntity(entity);
-
-    emit entityAdded(entity);
+  createEntity(Qnst::Switch);
 }
 
 void QnstGraphicsBody::performPort()
@@ -289,20 +144,6 @@ void QnstGraphicsBody::performPort()
     entity->setLeft(0);
     entity->setWidth(18);
     entity->setHeight(18);
-    entity->adjust();
-
-    addnstGraphicsEntity(entity);
-
-    emit entityAdded(entity);
-}
-
-void QnstGraphicsBody::performAggregator()
-{
-    QnstGraphicsAggregator* entity = new QnstGraphicsAggregator(this);
-    entity->setTop(getHeight()/2 - 14/2);
-    entity->setLeft(getWidth()/2 - 14/2);
-    entity->setWidth(14);
-    entity->setHeight(14);
     entity->adjust();
 
     addnstGraphicsEntity(entity);
@@ -338,75 +179,16 @@ void QnstGraphicsBody::performProperty()
     emit entityAdded(entity);
 }
 
-void QnstGraphicsBody::dragEnterEvent(QGraphicsSceneDragDropEvent *event)
+void QnstGraphicsBody::performAggregator()
 {
-    foreach(QUrl url, event->mimeData()->urls()){
-            event->acceptProposedAction();
+    QnstGraphicsAggregator* entity = new QnstGraphicsAggregator(this);
+    entity->setTop(getHeight()/2 - 14/2);
+    entity->setLeft(getWidth()/2 - 14/2);
+    entity->setWidth(14);
+    entity->setHeight(14);
+    entity->adjust();
 
-            return;
-    }
-}
+    addnstGraphicsEntity(entity);
 
-void QnstGraphicsBody::dropEvent(QGraphicsSceneDragDropEvent *event)
-{
-    foreach(QUrl url, event->mimeData()->urls())
-    {
-        QString filename = url.toLocalFile();
-        QString suffix = QFileInfo(filename).suffix().toUpper();
-
-        if(suffix=="PNG" ||
-           suffix=="JPEG"){
-            event->acceptProposedAction();
-
-            dropsrc = filename;
-
-            performImage();
-
-        }else if(suffix=="MP3" ||
-                 suffix=="WAV"){
-          event->acceptProposedAction();
-
-          dropsrc = filename;
-
-          performAudio();
-
-        }else if(suffix=="AVI" ||
-                 suffix=="MPEG4" ||
-                 suffix=="MP4" ||
-                 suffix=="MPEG"){
-          event->acceptProposedAction();
-
-          dropsrc = filename;
-
-          performVideo();
-
-        }else if(suffix=="TXT"){
-          event->acceptProposedAction();
-
-          dropsrc = filename;
-
-          performText();
-
-        }else if(suffix=="LUA"){
-            event->acceptProposedAction();
-
-            dropsrc = filename;
-
-            performScript();
-
-        }else if(suffix=="HTML"){
-            event->acceptProposedAction();
-
-            dropsrc = filename;
-
-            performHtml();
-
-        }else if(suffix=="NCL"){
-            event->acceptProposedAction();
-
-            dropsrc = filename;
-
-            performNCL();
-         }
-    }
+    emit entityAdded(entity);
 }

@@ -56,11 +56,6 @@ public slots:
 
     void performAggregator();
 
-protected:
-    virtual void dragEnterEvent(QGraphicsSceneDragDropEvent *event);
-
-    virtual void dropEvent(QGraphicsSceneDragDropEvent *event);
-
 private:
     void createObjects();
 
