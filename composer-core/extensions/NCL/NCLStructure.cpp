@@ -246,8 +246,12 @@ void NCLStructure::addAttribute ( QString element, QString attr, QString type,
   if(!attributesDatatype->count(element))
     (*attributesDatatype)[element] = new map <QString, QString>();
 
+  if(!attributes_ordered->count(element))
+    (*attributes_ordered)[element] = new deque <QString>();
+
 //qDebug() << "NCLStructure::addAttribute (" << element << ", " << attr << ")";
   (*(*attributes)[element])[attr] = required;
+  (*(*attributes_ordered)[element]).push_back(attr);
   (*(*attributesDatatype)[element])[attr] = type;
 }
 
@@ -301,6 +305,13 @@ map <QString, bool> *NCLStructure::getAttributes(QString element)
 {
   if(attributes->count(element))
     return (*attributes)[element];
+  return NULL;
+}
+
+deque <QString> *NCLStructure::getAttributesOrdered(QString element)
+{
+  if(attributes_ordered->count(element))
+    return (*attributes_ordered)[element];
   return NULL;
 }
 

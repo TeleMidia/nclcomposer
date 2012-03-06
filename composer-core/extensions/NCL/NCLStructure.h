@@ -17,6 +17,7 @@
 #include <QTextStream>
 #include <QtScript/QScriptValue>
 #include <QtScript/QScriptEngine>
+#include <deque>
 #include <map>
 #include <QStringList>
 using namespace std;
@@ -39,6 +40,7 @@ class NCLLANGUAGEPROFILESHARED_EXPORT NCLStructure
 
 private:
     map <QString, map <QString, bool> *> *attributes; /**< TODO */
+    map <QString, deque <QString> *>      *attributes_ordered; /**< TODO */
     map <QString, map <QString, char> *> *nesting; /**< TODO */
     map <QString, QString > *dataTypes; /**< TODO */
 
@@ -136,6 +138,13 @@ public:
      * \return map<QString, bool>
      */
     map <QString, bool> *getAttributes (QString element);
+    /*!
+     * \brief
+     *
+     * \param element
+     * \return deque<QString>
+     */
+    deque <QString> *getAttributesOrdered (QString element);
     /*!
      * \brief
      *
