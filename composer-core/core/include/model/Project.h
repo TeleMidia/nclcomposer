@@ -102,6 +102,7 @@ public:
      * \brief Generate a descritor NCLID that are not present in the core.
      */
     QString generateUniqueNCLId(const QString &tagname);
+    QList<Entity*> getEntityByAttrId(const QString &id);
 
     bool isDirty();
 

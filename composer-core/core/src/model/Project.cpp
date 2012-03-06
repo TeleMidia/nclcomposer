@@ -237,4 +237,21 @@ QString Project::generateUniqueNCLId(const QString &tagname)
   }
 }
 
+QList<Entity*> Project::getEntityByAttrId(const QString &id)
+{
+    QMutexLocker locker(lockEntities);
+    QMapIterator<QString, Entity*> it(entities);
+    QList<Entity*> listRet;
+    qDebug() << "Project::getEntitiesbyType " << type;
+
+    while(it.hasNext()){
+        it.next();
+        Entity* ent = it.value();
+        if(ent->hasAttribute("id") &&
+           ent->getAttribute("id") == id)
+            listRet.append(ent);
+    }
+    return listRet;
+}
+
 } } } //end namespace
