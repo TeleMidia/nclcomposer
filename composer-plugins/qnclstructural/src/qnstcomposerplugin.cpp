@@ -1440,7 +1440,9 @@ void QnstComposerPlugin::requestMediaAddition(const QString uid, const QString p
         }
 
         if (properties["src"] != ""){
-            attributes["src"] = properties["src"];
+          QString src = properties["src"];
+          attributes["src"] = Utilities::relativePath(project->getLocation(),
+                                                      src, true);
         }
 
         if (properties["refer"] != ""){
