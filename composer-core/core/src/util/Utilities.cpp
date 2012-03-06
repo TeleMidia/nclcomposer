@@ -9,6 +9,8 @@
  */
 #include "util/Utilities.h"
 
+#include <QStringList>
+
 QMap<QString,LanguageType> createMap() {
     QMap<QString,LanguageType> types;
     types["cpr"]      = NCL;
@@ -37,6 +39,46 @@ QString Utilities::getExtensionForLanguageType(LanguageType type)
         if(type == it.value())
             return it.key();
     return "";
+}
+
+QString Utilities::relativePath( QString absolutePath, QString relativeTo,
+                                 bool bIsFile /*= false*/ )
+{
+  QStringList absoluteDirectories = absolutePath.split( '/', QString::SkipEmptyParts );
+  QStringList relativeDirectories = relativeTo.split( '/', QString::SkipEmptyParts );
+
+  //Get the shortest of the two paths
+  int length = absoluteDirectories.count() < relativeDirectories.count() ? absoluteDirectories.count() : relativeDirectories.count();
+
+  //Use to determine where in the loop we exited
+  int lastCommonRoot = -1;
+  int index;
+
+  //Find common root
+  for (index = 0; index < length; index++)
+    if (absoluteDirectories[index] == relativeDirectories[index])
+      lastCommonRoot = index;
+    else
+      break;
+
+  //If we didn't find a common prefix then throw
+  if (lastCommonRoot == -1)
+    throw QString("Paths do not have a common base");
+
+  //Build up the relative path
+  QString relativePath;
+
+  //Add on the ..
+  for (index = lastCommonRoot + 1; index < absoluteDirectories.count() - (bIsFile?1:0); index++)
+    if (absoluteDirectories[index].length() > 0)
+      relativePath.append("../");
+
+  //Add on the folders
+  for (index = lastCommonRoot + 1; index < relativeDirectories.count() - 1; index++)
+    relativePath.append( relativeDirectories[index] ).append( "/" );
+  relativePath.append(relativeDirectories[relativeDirectories.count() - 1]);
+
+  return relativePath;
 }
 
 } } } //end namespace

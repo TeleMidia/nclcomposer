@@ -41,17 +41,20 @@ private:
 
 public:
     /*!
-     \brief
-
-     \param ext
-    */
+     * \brief
+     * \param ext
+     */
     static LanguageType getLanguageTypeByExtension(QString ext);
     /*!
-     \brief
-
-     \param type
-    */
+     * \brief
+     * \param type
+     */
     static QString getExtensionForLanguageType(LanguageType type);
+    /*!
+     * \brief
+     */
+    static QString relativePath( QString absolutePath, QString relativeTo,
+                                         bool bIsFile = false );
 
 };
 
