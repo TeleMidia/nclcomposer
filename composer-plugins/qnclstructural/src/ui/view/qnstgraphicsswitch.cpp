@@ -362,7 +362,7 @@ void QnstGraphicsSwitch::dropEvent(QGraphicsSceneDragDropEvent *event)
 
             performScript();
 
-        }else if(suffix=="HTML"){
+        }else if(suffix=="HTML" || suffix=="HTM"){
             event->acceptProposedAction();
 
             dropsrc = filename;
