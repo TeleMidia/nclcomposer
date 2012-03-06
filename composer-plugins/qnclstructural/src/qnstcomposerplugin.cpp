@@ -1515,7 +1515,8 @@ void QnstComposerPlugin::requestPortAddition(const QString uid, const QString pa
 
         attributes["component"] = properties["component"];
 
-        attributes["interface"] = properties["interface"];
+        if(properties["interface"] != "")
+            attributes["interface"] = properties["interface"];
 
         request = uid;
 
@@ -1536,7 +1537,8 @@ void QnstComposerPlugin::requestPortChange(const QString uid, const QMap<QString
 
         attributes["component"] = properties["component"];
 
-        attributes["interface"] = properties["interface"];
+        if(properties["interface"] != "")
+            attributes["interface"] = properties["interface"];
 
         emit setAttributes(entity, attributes, false);
     }
