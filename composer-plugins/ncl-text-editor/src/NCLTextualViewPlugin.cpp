@@ -25,6 +25,8 @@
 #include <QProgressDialog>
 #include <QDomDocument>
 #include <QTextStream>
+#include <deque>
+using namespace std;
 
 namespace composer {
 namespace plugin {
@@ -211,12 +213,36 @@ void NCLTextualViewPlugin::onEntityAdded(QString pluginID, Entity *entity)
     }
   }
 
+  /*
+  // fill the attributes (ordered)
+  deque <QString> *attributes_ordered =
+          NCLStructure::getInstance()->getAttributesOrdered(entity->getType());
+
+  if(attributes_ordered != NULL)
+  {
+    for(int i = 0; i < attributes_ordered->size(); i++)
+    {
+      if(entity->hasAttribute((*attributes_ordered)[i]))
+      {
+          line += " " + (*attributes_ordered)[i] +
+                "=\"" + entity->getAttribute((*attributes_ordered)[i]) + "\"";
+      }
+    }
+  }
+
+  map <QString, bool> *attributes =
+          NCLStructure::getInstance()->getAttributes(entity->getType());
+  // Search if there is any other attribute that is not part of NCL Language
+  // but the user fills it.
   QMap <QString, QString>::iterator begin, end, it;
   entity->getAttributeIterator(begin, end);
   for (it = begin; it != end; ++it)
   {
-    line += " " + it.key() + "=\"" + it.value() + "\"";
+    if(attributes == NULL || !attributes->count(it.key()))
+      line += " " + it.key() + "=\"" + it.value() + "\"";
   }
+  */
+
   line += ">\n";
   int startEntitySize = line.size();
   line += "</" + entity->getType() + ">\n";
@@ -429,7 +455,7 @@ void NCLTextualViewPlugin::onEntityRemoved(QString pluginID, QString entityID)
     }
   }
 
-  //Remove the content in text and update the structures that keep line number
+  // Remove the content in text and update the structures that keep line number
   // of all entities.
   QListIterator<QString> iterator( mustRemoveEntity );
   while( iterator.hasNext() ){
@@ -673,9 +699,11 @@ void NCLTextualViewPlugin::incrementalUpdateCoreModel()
         if(children[i].attribute("id") == entityChildren[j]->getAttribute("id"))
           sameNCLID = true;
       }
-      else if(children[i].hasAttribute("name") && entityChildren[j]->hasAttribute("name"))
+      else if(    children[i].hasAttribute("name")
+              && entityChildren[j]->hasAttribute("name"))
       {
-        if(children[i].attribute("name") == entityChildren[j]->getAttribute("name"))
+        if(children[i].attribute("name")
+                == entityChildren[j]->getAttribute("name"))
           sameNCLID = true;
       }
       else
