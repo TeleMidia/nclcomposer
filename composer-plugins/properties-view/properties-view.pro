@@ -11,13 +11,15 @@ INCLUDEPATH += include
 SOURCES +=  src/PropertiesViewFactory.cpp \
             src/PropertiesViewPlugin.cpp \
             src/PropertyEditor.cpp \
-            src/QLLineEditFilter.cpp
+            src/QLLineEditFilter.cpp \
+    src/propertybuttons.cpp
 
 HEADERS +=  include/PropertiesViewFactory.h\
             include/PropertiesView_global.h \
             include/PropertyEditor.h \
             include/PropertiesViewPlugin.h \
-            include/QLineEditFilter.h
+            include/QLineEditFilter.h \
+    include/propertybuttons.h
 
 #RESOURCES += images.qrc
 
