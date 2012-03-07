@@ -213,7 +213,7 @@ void NCLTextualViewPlugin::onEntityAdded(QString pluginID, Entity *entity)
     }
   }
 
-  /*
+
   // fill the attributes (ordered)
   deque <QString> *attributes_ordered =
           NCLStructure::getInstance()->getAttributesOrdered(entity->getType());
@@ -241,7 +241,6 @@ void NCLTextualViewPlugin::onEntityAdded(QString pluginID, Entity *entity)
     if(attributes == NULL || !attributes->count(it.key()))
       line += " " + it.key() + "=\"" + it.value() + "\"";
   }
-  */
 
   line += ">\n";
   int startEntitySize = line.size();
