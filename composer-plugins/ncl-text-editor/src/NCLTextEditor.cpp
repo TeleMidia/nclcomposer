@@ -217,8 +217,8 @@ void NCLTextEditor::keyPressEvent(QKeyEvent *event)
   if((event->modifiers() & Qt::ControlModifier) &&
      (event->key() == Qt::Key_Space))
   {
-    autoCompleteFromAPIs();
     event->accept();
+    autoCompleteFromAPIs();
     return;
   }
   //Ctrl + Shift + F == format Text
@@ -226,6 +226,7 @@ void NCLTextEditor::keyPressEvent(QKeyEvent *event)
      (event->modifiers() & Qt::ShiftModifier) &&
      (event->key() == Qt::Key_F))
   {
+    event->accept();
     formatText();
     return;
   }
@@ -726,7 +727,6 @@ QList <QDomElement> NCLTextEditor::elementsByTagname(const QDomDocument &domDoc,
   {
     ret.push_back(elements.at(i).toElement());
   }
-
   return ret;
 }
 
@@ -746,7 +746,6 @@ QList <QDomElement> NCLTextEditor::elementsByTagname( QString tagname,
                                                       QString parentId )
 {
   QDomNodeList children = elementById(parentId).childNodes();
-
   QList <QDomElement> ret;
 
   for(int j = 0; j < children.length(); j++)

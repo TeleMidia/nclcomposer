@@ -1,19 +1,19 @@
 /*
  * Copyright 2011 TeleMidia/PUC-Rio.
- * 
+ *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
- * License as published by the Free Software Foundation; either 
+ * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
- * You should have received a copy of the GNU Lesser General Public 
+ *
+ * You should have received a copy of the GNU Lesser General Public
  * License along with this library.  If not, see
- * <http://www.gnu.org/licenses/>. 
+ * <http://www.gnu.org/licenses/>.
  */
 #include <QtGui>
 
@@ -22,11 +22,13 @@
 #include "NCLTextEditorMainWindow.h"
 
 NCLTextEditorMainWindow::NCLTextEditorMainWindow(QWidget *parent):
-        QMainWindow(parent)
+  QMainWindow(parent), searchBox(this)
 {
     // preferences = new Preferences(parent);
     createTextView();
     createActions();
+    createSearchBox();
+
 #ifdef NCLEDITOR_STANDALONE
     createMenus();
     createToolBars();
@@ -195,6 +197,13 @@ void NCLTextEditorMainWindow::createActions()
                                    tr("&Synchronize"), this);
     synchronizeAct->setStatusTip(tr("Synchronize current text with the others"
                                     "plugins."));
+
+    showSearchBoxAct = new QAction(QIcon(), tr("Search"), textEdit);
+    showSearchBoxAct->setShortcut(tr("Ctrl+F"));
+    showSearchBoxAct->setShortcutContext(Qt::WindowShortcut);
+    connect(showSearchBoxAct, SIGNAL(triggered()), this, SLOT(showSearchBox()));
+
+    addAction(showSearchBoxAct);
 }
 
 void NCLTextEditorMainWindow::createMenus()
@@ -211,6 +220,7 @@ void NCLTextEditorMainWindow::createMenus()
     editMenu->addAction(cutAct);
     editMenu->addAction(copyAct);
     editMenu->addAction(pasteAct);
+    editMenu->addAction(showSearchBoxAct);
 
     editMenu->addSeparator();
     editMenu->addAction(editPreferencesAct);
@@ -291,6 +301,19 @@ void NCLTextEditorMainWindow::createProblemsView()
              problemsView,
              SLOT(addProblem(QString, QString, int, int, int)));
 #endif
+}
+
+void NCLTextEditorMainWindow::createSearchBox()
+{
+  doSearchButton.setText(tr("Search"));
+  searchBox.setWindowTitle(tr("Search..."));
+
+  QGridLayout *layout = new QGridLayout(&searchBox);
+  layout->addWidget(&searchBoxText, 0, 0);
+  layout->addWidget(&doSearchButton, 0, 1);
+  searchBox.setLayout(layout);
+
+  connect(&doSearchButton, SIGNAL(pressed()), this, SLOT(findNext()));
 }
 
 void NCLTextEditorMainWindow::readSettings()
@@ -575,4 +598,15 @@ void NCLTextEditorMainWindow::createTextView() {
 void NCLTextEditorMainWindow::showPreferences()
 {
     //preferences->show();
+}
+
+void NCLTextEditorMainWindow::showSearchBox()
+{
+  searchBox.show();
+}
+
+void NCLTextEditorMainWindow::findNext()
+{
+  QString text = searchBoxText.text();
+  textEdit->findFirst(text, true, false, true, true);
 }

@@ -25,6 +25,9 @@ using namespace std;
 #include <QMainWindow>
 #include <QDockWidget>
 #include <QListWidget>
+#include <QDialog>
+#include <QPushButton>
+#include <QLineEdit>
 
 #include "NCLProblemsView.h"
 
@@ -70,6 +73,9 @@ private slots:
     void gotoLineOf(QTreeWidgetItem *item, int column);
     void showPreferences();
 
+    void showSearchBox();
+    void findNext();
+
 private:
     void createActions();
     void createMenus();
@@ -78,6 +84,7 @@ private:
     void createTextView();
     void createOutlineView();
     void createProblemsView();
+    void createSearchBox();
     void readSettings();
     void writeSettings();
     bool maybeSave();
@@ -108,6 +115,11 @@ private:
     QAction *fullscreenAct;
     QAction *editPreferencesAct;
     QAction *synchronizeAct;
+    QAction *showSearchBoxAct;
+
+    QDialog searchBox;
+    QPushButton doSearchButton;
+    QLineEdit searchBoxText;
 
 /** VIEWS **/
     /** Outline View */
