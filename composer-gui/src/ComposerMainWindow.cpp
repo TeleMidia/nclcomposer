@@ -288,10 +288,10 @@ void ComposerMainWindow::initGUI()
   //    tabProjects->setMovable(true);
   tabProjects->setTabsClosable(true);
 
-  tbLanguageDropList = new QToolButton(this);
+  /* tbLanguageDropList = new QToolButton(this);
   tbLanguageDropList->setIcon(QIcon(":/mainwindow/language"));
   tbLanguageDropList->setToolTip(tr("Change your current language"));
-  tbLanguageDropList->setPopupMode(QToolButton::InstantPopup);
+  tbLanguageDropList->setPopupMode(QToolButton::InstantPopup); */
 
   tbPerspectiveDropList = new QToolButton(this);
   tbPerspectiveDropList->setIcon(QIcon(":/mainwindow/perspective"));
@@ -307,7 +307,7 @@ void ComposerMainWindow::initGUI()
 //  createStatusBar();
   createActions();
   createMenus();
-  createLanguageMenu();
+//  createLanguageMenu();
   createAboutPlugins();
 
   preferences = new PreferencesDialog(this);
@@ -607,9 +607,9 @@ void ComposerMainWindow::createMenus()
   connect ( ui->action_NewProject, SIGNAL(triggered()),
            this, SLOT(launchProjectWizard()));
 
-  menu_Language = new QMenu(0);
+  /* menu_Language = new QMenu(0);
   tbLanguageDropList->setMenu(menu_Language);
-  ui->toolBar->addWidget(tbLanguageDropList);
+  ui->toolBar->addWidget(tbLanguageDropList); */
 
   menu_Perspective = new QMenu(0);
   // assing menu_Perspective to tbPerspectiveDropList
@@ -1627,7 +1627,7 @@ void ComposerMainWindow::createLanguageMenu(void)
     action->setCheckable(true);
     action->setData(locale);
 
-//    ui->menu_Languages->addAction(action);
+//    ui->menu_Language->addAction(action);
     menu_Language->addAction(action);
     langGroup->addAction(action);
 
