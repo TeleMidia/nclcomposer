@@ -963,7 +963,7 @@ void QnstView::addEntity(const QString uid, const QString parent, const QMap<QSt
 
     // if the entity type is IMPORTBASE
     }else if (properties["TYPE"] == "importBase"){
-        addImportBase(properties);
+        addImportBase(uid, properties);
 
     // if the entity type is AREA
     }else if (properties["TYPE"] == "area"){
@@ -1291,7 +1291,7 @@ void QnstView::changeEntity(const QString uid, const QMap<QString, QString> prop
         changeAction(uid, properties);
 
     }else if (properties["TYPE"] == "importBase"){
-        changeImportBase(properties);
+        changeImportBase(uid, properties);
     }
 }
 
@@ -1361,11 +1361,22 @@ void QnstView::changeBody(QnstGraphicsBody* entity, const QMap<QString, QString>
     }
 }
 
-void QnstView::addImportBase(const QMap<QString, QString> properties)
+void QnstView::addImportBase(QString uid, const QMap<QString, QString> properties)
 {
     if (properties["documentURI"] != "" && properties["projectURI"] != "" && properties["alias"] != ""){
-        connectors2.clear();
-        connectors.clear();
+
+        foreach(QnstConncetor* cc, connectors.values()){
+            if (cc->getnstUid() == uid){
+                connectors.remove(cc->getName());
+            }
+        }
+
+        foreach(QnstConncetor* cc, connectors2.values()){
+            if (cc->getnstUid() == uid){
+                connectors2.remove(cc->getnstId());
+            }
+        }
+
 
         int n = properties["projectURI"].lastIndexOf("/");
 
@@ -1375,7 +1386,7 @@ void QnstView::addImportBase(const QMap<QString, QString> properties)
             QDomDocument* domdoc = new QDomDocument();
 
             if (domdoc->setContent(file)){
-                readImportBase(domdoc->firstChildElement(), properties["alias"]);
+                readImportBase(uid, domdoc->firstChildElement(), properties["alias"]);
             }
         }
 
@@ -1384,12 +1395,21 @@ void QnstView::addImportBase(const QMap<QString, QString> properties)
 }
 
 
-void QnstView::changeImportBase(const QMap<QString, QString> properties)
+void QnstView::changeImportBase(QString uid, const QMap<QString, QString> properties)
 {
     if (properties["documentURI"] != "" && properties["projectURI"] != "" && properties["alias"] != ""){
 
-        connectors2.clear();
-        connectors.clear();
+        foreach(QnstConncetor* cc, connectors.values()){
+            if (cc->getnstUid() == uid){
+                connectors.remove(cc->getName());
+            }
+        }
+
+        foreach(QnstConncetor* cc, connectors2.values()){
+            if (cc->getnstUid() == uid){
+                connectors2.remove(cc->getnstId());
+            }
+        }
 
         int n = properties["projectURI"].lastIndexOf("/");
 
@@ -1399,7 +1419,7 @@ void QnstView::changeImportBase(const QMap<QString, QString> properties)
             QDomDocument* domdoc = new QDomDocument();
 
             if (domdoc->setContent(file)){
-                readImportBase(domdoc->firstChildElement(), properties["alias"]);
+                readImportBase(uid, domdoc->firstChildElement(), properties["alias"]);
             }
         }
 
@@ -1408,7 +1428,7 @@ void QnstView::changeImportBase(const QMap<QString, QString> properties)
 }
 
 
-void QnstView::readImportBase(QDomElement element, QString alias)
+void QnstView::readImportBase(QString uid, QDomElement element, QString alias)
 {
     if (element.tagName() == "causalConnector"){
 
@@ -1418,6 +1438,7 @@ void QnstView::readImportBase(QDomElement element, QString alias)
         QnstConncetor* conn = new QnstConncetor();
         conn->setnstId(alias+"#"+element.attribute("id"));
         conn->setName(alias+"#"+element.attribute("id"));
+        conn->setnstUid(uid);
 
         for (unsigned int i=0;i<list.length();i++){
             if (list.item(i).isElement()){
@@ -1437,7 +1458,7 @@ void QnstView::readImportBase(QDomElement element, QString alias)
             if (list.item(i).isElement()){
                 QDomElement e = list.item(i).toElement();
 
-                readImportBase(e, alias);
+                readImportBase(uid, e, alias);
             }
         }
     }
@@ -1623,6 +1644,15 @@ void QnstView::addMedia(const QString uid, const QString parent, const QMap<QStr
         entity->setReferUID(properties["referUID"]);
         entity->setInstance(properties["instance"]);
 
+        if (properties["referUID"] != ""){
+            if (entities.contains(properties["referUID"])){
+                entity->setSource(((QnstGraphicsMedia*)
+                                   entities[properties["referUID"]])->getSource());
+            }
+
+        }
+
+
         if (properties["top"] != ""){
             entity->setTop(properties["top"].toDouble());
         }
@@ -1659,6 +1689,14 @@ void QnstView::changeMedia(QnstGraphicsMedia* entity, const QMap<QString, QStrin
     entity->setRefer(properties["refer"]);
     entity->setReferUID(properties["referUID"]);
     entity->setInstance(properties["instance"]);
+
+    if (properties["referUID"] != ""){
+        if (entities.contains(properties["referUID"])){
+            entity->setSource(((QnstGraphicsMedia*)
+                               entities[properties["referUID"]])->getSource());
+        }
+
+    }
 
     if (properties["type"] != ""){
         if (properties["type"].startsWith("image")){

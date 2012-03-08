@@ -152,9 +152,9 @@ private:
 
     void changeBody(QnstGraphicsBody* entity, const QMap<QString, QString> properties);
 
-    void addImportBase(const QMap<QString, QString> properties);
+    void addImportBase(QString uid, const QMap<QString, QString> properties);
 
-    void changeImportBase(const QMap<QString, QString> properties);
+    void changeImportBase(QString uid, const QMap<QString, QString> properties);
 
     void addContext(const QString uid, const QString parent, const QMap<QString, QString> properties, bool undo = false);
 
@@ -270,7 +270,7 @@ private:
 
     void createConnection();
 
-    void readImportBase(QDomElement e, const QString alias);
+    void readImportBase(QString uid, QDomElement e, const QString alias);
 
     void readConnector(QDomElement e, QnstConncetor* conn);
 
