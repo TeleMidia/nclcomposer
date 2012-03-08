@@ -39,13 +39,14 @@ using namespace std;
 //#include "LayoutView.h"
 //#include "Preferences.h"
 
+#include "SearchLineEdit.h"
+
 class QAction;
 class QMenu;
 
 /*!
  * \brief The main window of the NCL Textual Editor.
  */
-
 class NCLTextEditorMainWindow : public QMainWindow
 {
     Q_OBJECT
@@ -75,6 +76,7 @@ private slots:
 
     void showSearchBox();
     void findNext();
+    void findNext(QString text);
 
 private:
     void createActions();
@@ -117,9 +119,10 @@ private:
     QAction *synchronizeAct;
     QAction *showSearchBoxAct;
 
-    QDialog searchBox;
+    QFrame searchBox;
     QPushButton doSearchButton;
-    QLineEdit searchBoxText;
+    QDockWidget *dockSearchBox;
+    SearchLineEdit searchBoxText;
 
 /** VIEWS **/
     /** Outline View */

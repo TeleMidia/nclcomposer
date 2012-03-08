@@ -45,7 +45,7 @@ int main(int argc, char *argv[])
 {
     QApplication app(argc, argv);
 
-    Q_INIT_RESOURCE(ncl_textual_plugin);
+//    Q_INIT_RESOURCE(ncl_textual_plugin);
 
     NCLTextEditorMainWindow mainWin;
     mainWin.show();

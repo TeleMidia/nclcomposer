@@ -305,15 +305,28 @@ void NCLTextEditorMainWindow::createProblemsView()
 
 void NCLTextEditorMainWindow::createSearchBox()
 {
-  doSearchButton.setText(tr("Search"));
+  dockSearchBox = new QDockWidget("Search", this);
+  dockSearchBox->setVisible(false);
+  dockSearchBox->setMaximumHeight(65);
+  dockSearchBox->setObjectName(QString("dockSearchBox"));
+  dockSearchBox->setFeatures(QDockWidget::DockWidgetClosable );
+
+//  doSearchButton.setText(tr("Search"));
   searchBox.setWindowTitle(tr("Search..."));
 
   QGridLayout *layout = new QGridLayout(&searchBox);
   layout->addWidget(&searchBoxText, 0, 0);
-  layout->addWidget(&doSearchButton, 0, 1);
+  // layout->addWidget(&doSearchButton, 0, 1);
   searchBox.setLayout(layout);
 
-  connect(&doSearchButton, SIGNAL(pressed()), this, SLOT(findNext()));
+//  connect(&doSearchButton, SIGNAL(pressed()), this, SLOT(findNext()));
+  connect(&searchBoxText, SIGNAL(textChanged(QString)),
+          SLOT(findNext(QString)));
+
+  connect(&searchBoxText, SIGNAL(returnPressed()), SLOT(findNext()));
+
+  dockSearchBox->setWidget(&searchBox);
+  addDockWidget(Qt::RightDockWidgetArea, dockSearchBox);
 }
 
 void NCLTextEditorMainWindow::readSettings()
@@ -559,8 +572,7 @@ void NCLTextEditorMainWindow::insertElement()
 void NCLTextEditorMainWindow::createTextView() {
     dockTextEdit = new QDockWidget("Text", this);
     dockTextEdit->setObjectName(QString("dockTextView"));
-    dockTextEdit->setFeatures(QDockWidget::DockWidgetMovable /*|
-                              QDockWidget::DockWidgetFloatable*/);
+    dockTextEdit->setFeatures(QDockWidget::DockWidgetMovable);
 
     //Remove the title bar if whe are working in the plugin version.
 #ifndef NCLEDITOR_STANDALONE
@@ -602,11 +614,17 @@ void NCLTextEditorMainWindow::showPreferences()
 
 void NCLTextEditorMainWindow::showSearchBox()
 {
-  searchBox.show();
+  dockSearchBox->show();
+  searchBoxText.setFocus();
 }
 
 void NCLTextEditorMainWindow::findNext()
 {
   QString text = searchBoxText.text();
+  findNext(text);
+}
+
+void NCLTextEditorMainWindow::findNext(QString text)
+{
   textEdit->findFirst(text, true, false, true, true);
 }

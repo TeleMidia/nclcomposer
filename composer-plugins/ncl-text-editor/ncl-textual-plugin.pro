@@ -43,7 +43,8 @@ HEADERS     =   include/NCLTextEditorMainWindow.h \
                 ../outline-view/include/NCLTreeWidget.h \
                 include/NCLTextualViewPlugin.h \
                 include/NCLTextualViewPluginFactory.h \
-                include/NCLTextualViewPlugin_global.h
+                include/NCLTextualViewPlugin_global.h \
+                include/SearchLineEdit.h
 
 SOURCES     =   src/NCLTextEditorMainWindow.cpp \
                 src/NCLTextEditor.cpp \
@@ -55,7 +56,8 @@ SOURCES     =   src/NCLTextEditorMainWindow.cpp \
                 ../outline-view/src/NCLParser.cpp \
                 ../outline-view/src/NCLTreeWidget.cpp \
                 src/NCLTextualViewPlugin.cpp \
-                src/NCLTextualViewPluginFactory.cpp
+                src/NCLTextualViewPluginFactory.cpp \
+                src/SearchLineEdit.cpp
 
 OTHER_FILES +=  TODO \
                 config/NCL_STRUCTURE \
