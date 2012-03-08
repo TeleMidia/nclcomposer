@@ -17,6 +17,7 @@ INIT_SINGLETON(NCLStructure)
 NCLStructure::NCLStructure()
 {
   attributes = new map <QString, map <QString, bool > * > ();
+  attributes_ordered = new map<QString, deque <QString> * > ();
   nesting = new map <QString, map <QString, char > * > ();
   dataTypes = new map <QString, QString> ();
   dataTypeDefaultSuggestions = new map <QString, QStringList>();
