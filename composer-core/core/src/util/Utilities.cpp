@@ -10,6 +10,8 @@
 #include "util/Utilities.h"
 
 #include <QStringList>
+#include <QDir>
+#include <QDebug>
 
 QMap<QString,LanguageType> createMap() {
     QMap<QString,LanguageType> types;
@@ -44,11 +46,15 @@ QString Utilities::getExtensionForLanguageType(LanguageType type)
 QString Utilities::relativePath( QString absolutePath, QString relativeTo,
                                  bool bIsFile /*= false*/ )
 {
-  QStringList absoluteDirectories = absolutePath.split( '/', QString::SkipEmptyParts );
-  QStringList relativeDirectories = relativeTo.split( '/', QString::SkipEmptyParts );
+  QStringList absoluteDirectories = absolutePath.split(QDir::separator(),
+                                                       QString::SkipEmptyParts);
+  QStringList relativeDirectories = relativeTo.split(QDir::separator(),
+                                                     QString::SkipEmptyParts);
 
   //Get the shortest of the two paths
-  int length = absoluteDirectories.count() < relativeDirectories.count() ? absoluteDirectories.count() : relativeDirectories.count();
+  int length =
+      absoluteDirectories.count() < relativeDirectories.count() ?
+        absoluteDirectories.count() : relativeDirectories.count();
 
   //Use to determine where in the loop we exited
   int lastCommonRoot = -1;
@@ -69,13 +75,23 @@ QString Utilities::relativePath( QString absolutePath, QString relativeTo,
   QString relativePath;
 
   //Add on the ..
-  for (index = lastCommonRoot + 1; index < absoluteDirectories.count() - (bIsFile?1:0); index++)
+  for (index = lastCommonRoot + 1;
+       index < absoluteDirectories.count() - (bIsFile?1:0); index++)
+  {
     if (absoluteDirectories[index].length() > 0)
+    {
       relativePath.append("../");
+//      relativePath.append(QDir::separator());
+    }
+  }
 
   //Add on the folders
-  for (index = lastCommonRoot + 1; index < relativeDirectories.count() - 1; index++)
-    relativePath.append( relativeDirectories[index] ).append( "/" );
+  for (index = lastCommonRoot + 1; index < relativeDirectories.count() - 1;
+       index++)
+  {
+    relativePath.append( relativeDirectories[index] ).append("/");
+  }
+
   relativePath.append(relativeDirectories[relativeDirectories.count() - 1]);
 
   return relativePath;
