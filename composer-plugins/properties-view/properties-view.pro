@@ -12,14 +12,16 @@ SOURCES +=  src/PropertiesViewFactory.cpp \
             src/PropertiesViewPlugin.cpp \
             src/PropertyEditor.cpp \
             src/QLLineEditFilter.cpp \
-    src/propertybuttons.cpp
+            src/LineEditWithButton.cpp \
+            src/PropertyButton.cpp
 
 HEADERS +=  include/PropertiesViewFactory.h\
             include/PropertiesView_global.h \
             include/PropertyEditor.h \
             include/PropertiesViewPlugin.h \
             include/QLineEditFilter.h \
-    include/propertybuttons.h
+            include/LineEditWithButton.h \
+            include/PropertyButton.h
 
 #RESOURCES += images.qrc
 

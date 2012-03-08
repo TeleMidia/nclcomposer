@@ -32,60 +32,68 @@
 */
 class PropertyEditor : public QWidget
 {
-    Q_OBJECT
+  Q_OBJECT
 
 private:
-    Ui::PropertyEditorWidget *ui; /*!< TODO */
-    QMap <QString, int> propertyToLine; /*!< TODO */
-    QMap <QString, QString> propertyToValue; /*!< TODO */
+  Ui::PropertyEditorWidget *ui; /*!< TODO */
+  QMap <QString, int> propertyToLine; /*!< TODO */
+  QMap <QString, QString> propertyToValue; /*!< TODO */
 
-    bool internalPropertyChange;
+  bool internalPropertyChange;
 
-    QString currentTagname, currentName;
-    QString currentFilterString;
+  QString currentTagname, currentName;
+  QString currentFilterString;
 
 public:
-    /*!
-     \brief Constructor.
+  /*!
+   * \brief Constructor.
+   *
+   * \param parent The QObject parent.
+   */
+  explicit PropertyEditor(QWidget *parent=0);
 
-     \param parent The QObject parent.
-    */
-    explicit PropertyEditor(QWidget *parent=0);
+  /*!
+   * \brief Destructor.
+   */
+  virtual ~PropertyEditor();
+  /*!
+   * \brief Set the current tagname and update the available properties
+   *  according to that tagname.
+   *
+   * The available properties are loaded from the configuration file of the
+   * current language.
+   *
+   * \param tagname The current tagname.
+   */
+  void setTagname(QString tagname, QString name);
+  /*!
+   * \brief Set a value of an attribute.
+   *
+   * \param property Which property must be changed.
+   * \param value The new Value of the property.
+   */
+  void setAttributeValue(QString property, QString value);
 
-    /*!
-     \brief Destructor.
-
-    */
-    virtual ~PropertyEditor();
-
-    /*!
-     \brief Set the current tagname and update the available properties
-                according to that tagname.
-
-     The available properties are loaded from the configuration file of the
-     current language.
-
-     \param tagname The current tagname.
-    */
-    void setTagname(QString tagname, QString name);
-
-    /*!
-     \brief Set a value of an attribute.
-
-     \param property Which property must be changed.
-     \param value The new Value of the property.
-    */
-    void setAttributeValue(QString property, QString value);
+  /*!
+   * \brief
+   */
+  static bool isURL(const QString &tagname, const QString &attr);
 
 private slots:
-    void updateWithItemChanges(QTableWidgetItem *item);
-    void filterProperties(const QString&);
+  /*!
+   * \brief This SLOT must be called when the user changes the value of an item.
+   *
+   * The changes will then be sent to NCL Composer core.
+   */
+  void updateWithItemChanges(QTableWidgetItem *item);
+
+  /*!
+   * \brief This SLOT allows filter the current properties that are been showed.
+   */
+  void filterProperties(const QString&);
 
 signals:
-    void propertyChanged(QString property, QString value);
-
-
-
+  void propertyChanged(QString property, QString value);
 };
 
 #endif // PROPERTYEDITOR_H

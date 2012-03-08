@@ -15,32 +15,33 @@
  * License along with this library.  If not, see
  * <http://www.gnu.org/licenses/>.
  */
-#ifndef PROPERTYBUTTONS_H
-#define PROPERTYBUTTONS_H
+#ifndef LINEEDITWITHBUTTON_H
+#define LINEEDITWITHBUTTON_H
 
-#include "LineEditWithButton.h"
+#include <QLineEdit>
 
-class PropertyButtons : public LineEditWithButton
+class QToolButton;
+
+class LineEditWithButton : public QLineEdit
 {
   Q_OBJECT
 
-private:
-  QWidget *window;
-
 public:
-  explicit PropertyButtons(QString propName, QWidget *parent = 0);
-  QString key, value;
-
-public slots:
-  void openfile();
-
-private slots:
-  void emitNewValue();
-  void emitNewValue(QString);
+  explicit LineEditWithButton(QWidget *parent = NULL,
+                              const QString &iconPath = "");
 
 signals:
-  void newValue(QString name, QString value);
+  void buttonPressed();
 
+protected:
+  void resizeEvent(QResizeEvent *event);
+
+  QToolButton *mButton;
+  QString iconPath;
+
+private:
+  QString styleSheetForCurrentState() const;
+  QString buttonStyleSheetForCurrentState() const;
 };
 
-#endif // PROPERTYBUTTONS_H
+#endif // LineEditWithButton_H
