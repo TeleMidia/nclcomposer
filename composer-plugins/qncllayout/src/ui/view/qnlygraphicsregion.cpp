@@ -512,7 +512,7 @@ void QnlyGraphicsRegion::QnlyGraphicsRegion::createActions()
     fullscreenAction->setText(tr("Full Screen"));
 
     fullscreenAction->setEnabled(true);
-    fullscreenAction->setShortcut(QKeySequence("Ctrl+F"));
+    fullscreenAction->setShortcut(QKeySequence("F11"));
 
     // export action
     exportAction = new QAction(this);

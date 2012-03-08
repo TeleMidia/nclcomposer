@@ -132,7 +132,7 @@ void QnstMenu::createActions()
     actionFullscreen->setText(tr("Full Screen"));
 
     actionFullscreen->setIcon(QIcon(":/icon/fullscreen"));
-    actionFullscreen->setShortcut(QKeySequence("Ctrl+F"));
+    actionFullscreen->setShortcut(QKeySequence("F11"));
 
     actionFullscreen->setEnabled(false);
 
