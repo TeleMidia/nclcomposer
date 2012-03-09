@@ -19,6 +19,11 @@
         <file>images/synchronize-icon-24.png</file>
         <file>images/door_icon.jpg</file>
         <file>images/property_icon.png</file>
+        <file>images/esf-border.png</file>
+        <file>images/esf-clear.png</file>
+        <file>images/esf-clear-active.png</file>
+        <file>images/esf-clear-hover.png</file>
+        <file>images/esf-search.png</file>
     </qresource>
     <qresource prefix="/config">
         <file alias="NCL_STRUCTURE">config/NCL_STRUCTURE</file>
