@@ -973,6 +973,9 @@ void QnlyComposerPlugin::performMediaOverRegionAction(const QString mediaId,
   Entity *region = project->getEntityById(regionUID);
   Entity *media = NULL;
   QList <Entity*> medias = project->getEntitiesbyType("media");
+
+  const bool askDescOrProperties = true;
+
   for(int i = 0; i < medias.size(); i++)
   {
     if(medias.at(i)->hasAttribute("id") &&
@@ -997,52 +1000,123 @@ void QnlyComposerPlugin::performMediaOverRegionAction(const QString mediaId,
 
   if(!error)
   {
-    QMessageBox msgBox;
-    msgBox.setText(tr("Please, tell what do you want to do"));
-    // \todo Enable detailed text.
-//    msgBox.setDetailedText(tr("Detailed text"));
 
-    QPushButton *createDescButton =
-        msgBox.addButton( tr("Create a new descriptor"),
-                          QMessageBox::ActionRole);
-
-    QPushButton *importPropButton =
-        msgBox.addButton(tr("Import region properties to media object"),
-                         QMessageBox::ActionRole);
-//     importPropButton->setEnabled(false);
-
-    QPushButton *cancelButton =
-        msgBox.addButton(tr("Nothing!"),
-                         QMessageBox::ActionRole);
-
-//  msgBox.setIcon(QMessageBox::Question);
-    msgBox.exec();
-    if (msgBox.clickedButton() == createDescButton) // create a new descriptor
+    if(askDescOrProperties)
     {
-      qDebug() << "Creating a new descriptor";
-      QMap <QString,QString> attrs;
-      QList <Entity*> descritorBases =
-          project->getEntitiesbyType("descriptorBase");
+        QMessageBox msgBox;
+        msgBox.setText(tr("Please, tell what do you want to do"));
+        // \todo Enable detailed text.
+    //    msgBox.setDetailedText(tr("Detailed text"));
 
-      // create the descriptor
-      QString newDescriptorID = project->generateUniqueNCLId("descriptor");
+        QPushButton *createDescButton =
+            msgBox.addButton( tr("Create a new descriptor"),
+                              QMessageBox::ActionRole);
 
-      bool ok;
-      newDescriptorID = QInputDialog::getText(NULL,
-                                              "Descriptor id:",
-                                              "Please, enter the descriptor id",
-                                              QLineEdit::Normal,
-                                              newDescriptorID,
-                                              &ok);
+        QPushButton *importPropButton =
+            msgBox.addButton(tr("Import region properties to media object"),
+                             QMessageBox::ActionRole);
+    //     importPropButton->setEnabled(false);
 
-      if(ok)
-      {
+        QPushButton *cancelButton =
+            msgBox.addButton(tr("Nothing!"),
+                             QMessageBox::ActionRole);
+
+    //  msgBox.setIcon(QMessageBox::Question);
+        msgBox.exec();
+        if (msgBox.clickedButton() == createDescButton) // create a new descriptor
+        {
+          qDebug() << "Creating a new descriptor";
+          QMap <QString,QString> attrs;
+          QList <Entity*> descritorBases =
+              project->getEntitiesbyType("descriptorBase");
+
+          // create the descriptor
+          QString newDescriptorID = project->generateUniqueNCLId("descriptor");
+
+          bool ok;
+          newDescriptorID = QInputDialog::getText(NULL,
+                                                  "Descriptor id:",
+                                                  "Please, enter the descriptor id",
+                                                  QLineEdit::Normal,
+                                                  newDescriptorID,
+                                                  &ok);
+
+          if(ok)
+          {
+            if(!descritorBases.size()) // if does not exists any descriptorBase
+                                       // create one
+              emit addEntity("descriptorBase", getHeadUid(), attrs, false);
+
+            Entity *descriptorBase =
+                project->getEntitiesbyType("descriptorBase").at(0);
+            attrs.insert("id", newDescriptorID);
+            attrs.insert("region", region->getAttribute("id"));
+
+            emit addEntity("descriptor", descriptorBase->getUniqueId(), attrs, false);
+
+            //update the media to refer to this descriptor
+            attrs.clear();
+            QMap <QString, QString>::iterator begin, end, it;
+            media->getAttributeIterator(begin, end);
+            for (it = begin; it != end; ++it)
+            {
+              attrs[it.key()] = it.value();
+            }
+            attrs["descriptor"] = newDescriptorID;
+            emit setAttributes(media, attrs, false);
+          }
+        }
+        // import properties from region to media element
+        else if (msgBox.clickedButton() == importPropButton)
+        {
+          QMap <QString, QString> propertyNameToUID;
+          QVector <Entity *> currentProperties = media->getChildren();
+          for(int i = 0; i < currentProperties.size(); i++)
+          {
+            Entity *propEntity = currentProperties.at(i);
+            if(propEntity->hasAttribute("name"))
+            {
+              propertyNameToUID.insert(propEntity->getAttribute("name"),
+                                       propEntity->getUniqueId());
+            }
+          }
+
+          qDebug() << "Import attributes as properties of media element.";
+          QMap <QString, QString> newAttrs = getRegionAttributes(region);
+          QString key;
+          foreach(key, newAttrs.keys())
+          {
+            QMap <QString, QString> attrs;
+            attrs.insert("name", key);
+            attrs.insert("value", newAttrs.value(key));
+
+            if(propertyNameToUID.keys().contains(key))
+            {
+              QString propUID = propertyNameToUID.value(key);
+              emit setAttributes(project->getEntityById(propUID), attrs, false);
+            }
+            else
+              emit addEntity("property", media->getUniqueId(), attrs, false);
+          }
+        }
+    }
+    else
+    { //does not ask the descriptor or media propertie
+        qDebug() << "Creating a new descriptor";
+
+        QMap <QString,QString> attrs;
+        QList <Entity*> descritorBases =
+            project->getEntitiesbyType("descriptorBase");
+
+        // create the descriptor
+        QString newDescriptorID = project->generateUniqueNCLId("descriptor");
+
         if(!descritorBases.size()) // if does not exists any descriptorBase
                                    // create one
           emit addEntity("descriptorBase", getHeadUid(), attrs, false);
 
         Entity *descriptorBase =
-            project->getEntitiesbyType("descriptorBase").at(0);
+                project->getEntitiesbyType("descriptorBase").at(0);
         attrs.insert("id", newDescriptorID);
         attrs.insert("region", region->getAttribute("id"));
 
@@ -1058,40 +1132,27 @@ void QnlyComposerPlugin::performMediaOverRegionAction(const QString mediaId,
         }
         attrs["descriptor"] = newDescriptorID;
         emit setAttributes(media, attrs, false);
-      }
-    }
-    // import properties from region to media element
-    else if (msgBox.clickedButton() == importPropButton)
-    {
-      QMap <QString, QString> propertyNameToUID;
-      QVector <Entity *> currentProperties = media->getChildren();
-      for(int i = 0; i < currentProperties.size(); i++)
-      {
-        Entity *propEntity = currentProperties.at(i);
-        if(propEntity->hasAttribute("name"))
-        {
-          propertyNameToUID.insert(propEntity->getAttribute("name"),
-                                   propEntity->getUniqueId());
-        }
-      }
 
-      qDebug() << "Import attributes as properties of media element.";
-      QMap <QString, QString> newAttrs = getRegionAttributes(region);
-      QString key;
-      foreach(key, newAttrs.keys())
-      {
-        QMap <QString, QString> attrs;
-        attrs.insert("name", key);
-        attrs.insert("value", newAttrs.value(key));
-
-        if(propertyNameToUID.keys().contains(key))
+        if(media->hasAttribute("type") &&
+           media->getAttribute("type") == "text/html")
         {
-          QString propUID = propertyNameToUID.value(key);
-          emit setAttributes(project->getEntityById(propUID), attrs, false);
+          attrs.clear();
+          QMap <QString, QString>::iterator begin, end, it;
+          QList <Entity*> descriptors = project->getEntityByAttrId(newDescriptorID);
+
+          if(descriptors.size())
+          {
+            Entity *desc = descriptors.at(0);
+            desc->getAttributeIterator(begin, end);
+            for (it = begin; it != end; ++it)
+            {
+              attrs[it.key()] = it.value();
+            }
+            attrs["focusIndex"] = "1";
+            if(descriptors.size())
+              emit setAttributes(desc, attrs, false);
+          }
         }
-        else
-          emit addEntity("property", media->getUniqueId(), attrs, false);
-      }
     }
   }
 }
