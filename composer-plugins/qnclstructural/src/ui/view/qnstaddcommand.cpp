@@ -118,6 +118,10 @@ void QnstAddCommand::copy(QnstGraphicsEntity* entity)
         this->entity = new QnstGraphicsAggregator();
 
         break;
+
+    default:
+      // do nothing
+      break;
     }
 
     if (this->entity != NULL){
@@ -289,6 +293,10 @@ void QnstAddCommand::redo()
                 e->setnstId(entity->getnstId());
 
                 break;
+
+            default:
+              // do nothing
+              break;
             }
 
             if (e != NULL){

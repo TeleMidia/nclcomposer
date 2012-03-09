@@ -720,6 +720,7 @@ void QnstView::write(QDomElement element, QDomDocument* dom, QnstGraphicsEntity*
         break;
 
     case Qnst::Port:
+    {
         e = dom->createElement("port");
 
         QnstGraphicsPort* pentity = ((QnstGraphicsPort*) entity);
@@ -737,8 +738,12 @@ void QnstView::write(QDomElement element, QDomDocument* dom, QnstGraphicsEntity*
                 break;
             }
         }
+    }
+      break;
 
-        break;
+    default:
+      // do nothing
+      break;
     }
 
     e.setAttribute("id", entity->getnstId());
@@ -804,6 +809,10 @@ void QnstView::writeLink(QDomElement element, QDomDocument* dom, QnstGraphicsEnt
                 case Qnst::NoConditionType:
                     e.setAttribute("condition", "NoConditionType");
                     break;
+
+                default:
+                  // do nothing
+                  break;
                 }
 
                 element.appendChild(e);
@@ -850,6 +859,10 @@ void QnstView::writeLink(QDomElement element, QDomDocument* dom, QnstGraphicsEnt
                 case Qnst::NoActionType:
                     e.setAttribute("action", "NoActionType");
                     break;
+
+                default:
+                  // do nothing
+                  break;
                 }
 
                 element.appendChild(e);
@@ -1279,6 +1292,10 @@ void QnstView::changeEntity(const QString uid, const QMap<QString, QString> prop
         case Qnst::Mapping:
             changeMapping((QnstGraphicsMapping*) entity, properties);
             break;
+
+        default:
+          // do nothing
+          break;
         }
 
     }else if (connectors2.contains(uid)){
@@ -2963,6 +2980,10 @@ void QnstView::requestEntityAddition(QnstGraphicsEntity* entity, bool undo)
         case Qnst::SwitchPort:
             requestSwitchPortAddition((QnstGraphicsSwitchPort*) entity);
             break;
+
+        default:
+          // do nothing
+          break;
         }
 
         entities[entity->getnstUid()] = entity;
@@ -3281,6 +3302,10 @@ void QnstView::requestEntityChange(QnstGraphicsEntity* entity)
         case Qnst::Port:
             requestPortChange((QnstGraphicsPort*) entity);
             break;
+
+        default:
+          // do nothing
+          break;
         }
     }
 }
@@ -3493,6 +3518,10 @@ void QnstView::requestMediaAddition(QnstGraphicsMedia* entity, bool undo)
         properties["SUBTYPE"] = "media";
 
         break;
+
+    default:
+      // do nothing
+      break;
     }
 
     properties["id"] = entity->getnstId();
@@ -3555,6 +3584,10 @@ void QnstView::requestMediaChange(QnstGraphicsMedia* entity)
     case Qnst::NCL:
         properties["SUBTYPE"] = "ncl";
         break;
+
+    default:
+      // do nothing
+      break;
     }
 
     properties["id"] = entity->getnstId();
@@ -3995,6 +4028,10 @@ void QnstView::performCut()
                 clipboard->setHeight(entity->getHeight());
 
                 break;
+
+            default:
+              //do nothing
+              break;
             }
 
             if (clipboard != NULL){
@@ -4243,6 +4280,10 @@ void QnstView::performCopy()
                 clipboard->setHeight(entity->getHeight());
 
                 break;
+
+            default:
+              // do nothing
+              break;
             }
 
             if (clipboard != NULL){
@@ -4513,6 +4554,10 @@ void QnstView::performCopy(QnstGraphicsEntity* entity, QnstGraphicsEntity* paren
         parent->addnstGraphicsEntity(copy);
 
         break;
+
+    default:
+      // do nothing
+      break;
     }
 
     if (copy != NULL){
@@ -4822,6 +4867,10 @@ void QnstView::performPaste()
                 requestEntityAddition(entity);
 
                 break;
+
+            default:
+              // do nothing
+              break;
             }
 
             foreach(QnstGraphicsEntity* e, copy->getnstGraphicsEntities()){
@@ -5072,6 +5121,10 @@ void QnstView::performPaste(QnstGraphicsEntity* copy, QnstGraphicsEntity* parent
         requestEntityAddition(entity);
 
         break;
+
+    default:
+      // do nothing
+      break;
     }
 
     foreach(QnstGraphicsEntity* e, copy->getnstGraphicsEntities()){
@@ -7457,7 +7510,7 @@ void QnstView::keyPressEvent(QKeyEvent *event)
     }
     //Ctrl + + -> perform zoom in
     else if((event->modifiers() == Qt::ControlModifier ||
-             event->modifiers() == Qt::ShiftModifier | Qt::ControlModifier) &&
+             event->modifiers() == (Qt::ShiftModifier | Qt::ControlModifier)) &&
              event->key() == Qt::Key_Plus)
     {
       performZoomIn();

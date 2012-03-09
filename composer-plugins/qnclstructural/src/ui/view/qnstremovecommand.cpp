@@ -120,6 +120,10 @@ void QnstRemoveCommand::copy(QnstGraphicsEntity* entity)
         qDebug() << "COPY:" << "AGGREGATOR";
 
         break;
+
+    default:
+      // do nothing
+      break;
     }
 
     if (this->entity != NULL){
@@ -252,6 +256,10 @@ void QnstRemoveCommand::copy(QnstGraphicsEntity* entity, QnstGraphicsEntity* par
         qDebug() << "COPY:" << "AGGREGATOR";
 
         break;
+
+    default:
+      // do nothing
+      break;
     }
 
     if (c != NULL){
@@ -423,6 +431,10 @@ void QnstRemoveCommand::undo()
             qDebug() << "PASTE:" << "AGGREGATOR";
 
             break;
+
+        default:
+          // do nothing
+          break;
         }
 
         if (e != NULL){
@@ -597,6 +609,10 @@ void QnstRemoveCommand::paste(QnstGraphicsEntity* entity, QnstGraphicsEntity* pa
         qDebug() << "PASTE:" << "AGGREGATOR";
 
         break;
+
+    default:
+      // do nothing
+      break;
     }
 
     if (e != NULL){
