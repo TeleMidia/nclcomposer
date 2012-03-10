@@ -110,7 +110,7 @@ ATTRIBUTE(attributeAssessment,offset,false,POSITIVE_INTEGER)
 
 //BIND
 ATTRIBUTE(bind,role,true,STRING)
-ATTRIBUTE(bind,component,true,
+ATTRIBUTE(bind,component,true,STRING)
 ATTRIBUTE(bind,interface,false,STRING)
 ATTRIBUTE(bind,descriptor,false,STRING)
 
