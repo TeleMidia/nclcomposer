@@ -40,12 +40,15 @@ PropertyEditor::PropertyEditor(QWidget *parent):
   connect(ui->tableWidget,
           SIGNAL(itemChanged(QTableWidgetItem *)),
           this,
-          SLOT(updateWithItemChanges(QTableWidgetItem *)));
+          SLOT(updateWithItemChanges(QTableWidgetItem *)),
+          Qt::DirectConnection);
 
   connect(ui->filterLineEdit,
           SIGNAL(filterTextChanged(const QString&)),
           this,
           SLOT(filterProperties(const QString&)));
+
+  internalPropertyChange = false;
 }
 
 PropertyEditor::~PropertyEditor()
@@ -103,7 +106,7 @@ void PropertyEditor::setAttributeValue(QString property, QString value)
         // Try to update if the values are not equal
         if(item->text() != value)
         {
-          internalPropertyChange = true;
+//          internalPropertyChange = true;
           item->setText(value);
           propertyToValue[property] = value;
         }
@@ -128,6 +131,7 @@ void PropertyEditor::setAttributeValue(QString property, QString value)
 
 void PropertyEditor::updateWithItemChanges(QTableWidgetItem *item)
 {
+//  qDebug() << "updateWithItemChanges " << internalPropertyChange;
   int row = ui->tableWidget->row(item);
   int column = ui->tableWidget->column(item);
 
@@ -151,12 +155,14 @@ void PropertyEditor::updateWithItemChanges(QTableWidgetItem *item)
   {
     value = item->text();
   }
+
   propertyToValue[name] = value; //update internal map
   emit propertyChanged(name, value);
 }
 
 void PropertyEditor::filterProperties(const QString& text)
 {
+  qDebug() << "filterProperties";
   this->currentFilterString = text;
   while(ui->tableWidget->rowCount())
     ui->tableWidget->removeRow(0);
@@ -175,6 +181,7 @@ void PropertyEditor::filterProperties(const QString& text)
       internalPropertyChange = true;
       ui->tableWidget->setItem(ui->tableWidget->rowCount()-1, 0, item);
       propertyToLine.insert(attr, ui->tableWidget->rowCount()-1);
+
       internalPropertyChange = true;
       ui->tableWidget->setItem(ui->tableWidget->rowCount()-1, 1, itemValue);
 
