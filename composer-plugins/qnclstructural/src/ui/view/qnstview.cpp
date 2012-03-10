@@ -3461,28 +3461,28 @@ void QnstView::requestMediaAddition(QnstGraphicsMedia* entity, bool undo)
     case Qnst::Image:
         properties["SUBTYPE"] = "image";
 
-        properties["type"] = "image/?";
+        properties["type"] = "image/png";
 
         break;
 
     case Qnst::Audio:
         properties["SUBTYPE"] = "audio";
 
-        properties["type"] = "audio/?";
+        properties["type"] = "audio/mp3";
 
         break;
 
     case Qnst::Video:
         properties["SUBTYPE"] = "video";
 
-        properties["type"] = "video/?";
+        properties["type"] = "video/mp4";
 
         break;
 
     case Qnst::Text:
         properties["SUBTYPE"] = "text";
 
-        properties["type"] = "text/?";
+        properties["type"] = "text/plain";
 
         break;
 
@@ -7274,6 +7274,7 @@ void QnstView::addInterfacetoInterfaceEdge(QnstGraphicsEntity* entitya, QnstGrap
                     parents->addnstGraphicsEntity(aggregator);
 
                     entities[aggregator->getnstUid()] = aggregator;
+
 
                     ///
 
