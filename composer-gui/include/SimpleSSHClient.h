@@ -45,8 +45,11 @@ private:
   string hostip;
   string scppath;
   string scpfile;
-
   static int libssh2_init_rc; /* Keeps the value returned by lissh2_init */
+
+  int sock;
+
+  LIBSSH2_SESSION *session;
 
 public:
   /*!
@@ -65,6 +68,16 @@ public:
    * \brief Free all data of libssh2.
    */
   static void exit();
+
+  /*!
+   * \brief Connect to a remote machine
+   */
+  int doConnect(); // I do not call connect because it conflicts with win32
+                   // connect.
+  /*!
+   * \brief Disconnect from the current connected remote machine.
+   */
+  void doDisconnect(); // For consistency I also call this doDisconnect.
 
   /*!
    * \brief Copy the file from localpath to the remotepath.

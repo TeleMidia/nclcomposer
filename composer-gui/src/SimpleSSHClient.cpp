@@ -8,7 +8,10 @@
  *    Telemidia/PUC-Rio - initial API and implementation
  */
 #include "SimpleSSHClient.h"
+
+extern "C" {
 #include <gcrypt.h>
+}
 
 // This variable tell us if the libssh2 was initialized properly. This value
 // will be equal to zero only if the libssh2 are safely initialized through
@@ -72,28 +75,20 @@ SimpleSSHClient::SimpleSSHClient(const char *username_,
   this->password = password_;
   this->hostip = hostip_;
   this->scppath = scppath_;
+
+  this->session = 0;
 }
 
-int SimpleSSHClient::scp_copy_file(const char *localncl, const char *destpath)
+int SimpleSSHClient::doConnect()
 {
-  int sock, i, rc;
-  LIBSSH2_SESSION *session;
-  LIBSSH2_CHANNEL *channel;
+  int rc;
+  LIBSSH2_KNOWNHOSTS *nh;
   unsigned long hostaddr = inet_addr(hostip.c_str());
   struct sockaddr_in sin;
-  size_t nread;
   const char *fingerprint;
-  FILE *local;
-  struct stat fileinfo;
-  char mem[1024];
-  char *ptr;
-
-  size_t found;
-  string temp = localncl;
-  found = temp.find_last_of("/\\");
-  string nclfile = temp.substr(found+1);
-
-  scpfile = destpath + string("/") + nclfile;
+  // size_t nread;
+  size_t len;
+  int type;
 
 #ifdef WIN32
   WSADATA wsadata;
@@ -106,168 +101,7 @@ int SimpleSSHClient::scp_copy_file(const char *localncl, const char *destpath)
     return 1;
   }
 
-  local = fopen(localncl, "rb");
-  if (!local)
-  {
-    fprintf(stderr, "Can't open local file %s\n", localncl);
-    return -1;
-  }
-
-  stat(localncl, &fileinfo);
-
-  /* Ultra basic "connect to port 22 on localhost"
-   * Your code is responsible for creating the socket establishing the
-   * connection
-   */
-  sock = socket(AF_INET, SOCK_STREAM, 0);
-  if(-1 == sock)
-  {
-    fprintf(stderr, "failed to create socket!\n");
-    return -1;
-  }
-
-  sin.sin_family = AF_INET;
-  sin.sin_port = htons(22);
-  sin.sin_addr.s_addr = hostaddr;
-  if (connect(sock, (struct sockaddr*)(&sin), sizeof(struct sockaddr_in)) != 0)
-  {
-    fprintf(stderr, "failed to connect!\n");
-    return -1;
-  }
-
-  /* Create a session instance
-   */
-  session = libssh2_session_init();
-
-  if(!session)
-    return -1;
-
-  /* ... start it up. This will trade welcome banners, exchange keys,
-   * and setup crypto, compression, and MAC layers
-   */
-  rc = libssh2_session_startup(session, sock);
-
-  if(rc)
-  {
-    fprintf(stderr, "Failure establishing SSH session: %d\n", rc);
-    return -1;
-  }
-
-  /* At this point we havn't yet authenticated.  The first thing to do
-   * is check the hostkey's fingerprint against our known hosts Your app
-   * may have it hard coded, may go to a file, may present it to the
-   * user, that's your call
-   */
-  fingerprint = libssh2_hostkey_hash(session, LIBSSH2_HOSTKEY_HASH_SHA1);
-
-  fprintf(stderr, "Fingerprint: ");
-  for(i = 0; i < 20; i++)
-  {
-    fprintf(stderr, "%02X ", (unsigned char)fingerprint[i]);
-  }
-  fprintf(stderr, "\n");
-
-  /* We could authenticate via password */
-  if (libssh2_userauth_password(session, username.c_str(), password.c_str()))
-  {
-    fprintf(stderr, "Authentication by password failed.\n");
-    goto shutdown_copy;
-  }
-
-  /* Send a file via scp. The mode parameter must only have permissions! */
-  channel = libssh2_scp_send(session, scpfile.c_str(), fileinfo.st_mode & 0777,
-                             (unsigned long)fileinfo.st_size);
-
-  if (!channel)
-  {
-    char *errmsg;
-    int errlen;
-    int err = libssh2_session_last_error(session, &errmsg, &errlen, 0);
-
-    fprintf(stderr, "Unable to open a session: (%d) %s\n", err, errmsg);
-    goto shutdown_copy;
-  }
-
-  fprintf(stderr, "SCP session waiting to send file\n");
-  do
-  {
-    nread = fread(mem, 1, sizeof(mem), local);
-    if (nread <= 0)
-    {
-      /* end of file */
-      break;
-    }
-    ptr = mem;
-
-    do
-    {
-      /* write the same data over and over, until error or completion */
-      rc = libssh2_channel_write(channel, ptr, nread);
-
-      if (rc < 0)
-      {
-        fprintf(stderr, "ERROR %d\n", rc);
-        break;
-      }
-      else
-      {
-        /* rc indicates how many bytes were written this time */
-        ptr += rc;
-        nread -= rc;
-      }
-    } while (nread);
-  } while (1);
-
-
-  fprintf(stderr, "Sending EOF\n");
-  libssh2_channel_send_eof(channel);
-
-  fprintf(stderr, "Waiting for EOF\n");
-  libssh2_channel_wait_eof(channel);
-
-  fprintf(stderr, "Waiting for channel to close\n");
-  libssh2_channel_wait_closed(channel);
-
-  libssh2_channel_free(channel);
-
-  channel = NULL;
-
-shutdown_copy:
-  if(session)
-  {
-    libssh2_session_disconnect(session,
-                               "Normal Shutdown, Thank you for playing");
-
-    libssh2_session_free(session);
-
-  }
-#ifdef WIN32
-  closesocket(sock);
-#else
-  close(sock);
-#endif
-  if (local)
-    fclose(local);
-  return 0;
-}
-
-int SimpleSSHClient::exec_cmd(const char *command)
-{
-  int sock, rc;
-  LIBSSH2_SESSION *session;
-  LIBSSH2_CHANNEL *channel;
-  LIBSSH2_KNOWNHOSTS *nh;
-  unsigned long hostaddr = inet_addr(hostip.c_str());
-  struct sockaddr_in sin;
-  const char *fingerprint;
-  // size_t nread;
-  size_t len;
-  int type;
-
-  int exitcode;
-  char *exitsignal=(char *)"none";
-  int bytecount = 0;
-//  string command = "/misc/launcher.sh " + scpfile;
+  //  string command = "/misc/launcher.sh " + scpfile;
 
   /* Ultra basic "connect to port 22 on localhost"
    * Your code is responsible for creating the socket establishing the
@@ -287,9 +121,6 @@ int SimpleSSHClient::exec_cmd(const char *command)
   /* Create a session instance */
   session = libssh2_session_init();
   if (!session) return -1;
-
-  /* tell libssh2 we want it all done non-blocking */
-  libssh2_session_set_blocking(session, 0);
 
   /* ... start it up. This will trade welcome banners, exchange keys,
    * and setup crypto, compression, and MAC layers
@@ -350,6 +181,7 @@ int SimpleSSHClient::exec_cmd(const char *command)
   }
   libssh2_knownhost_free(nh);
 
+  fprintf(stderr, "I'm here.\n");
   if ( strlen(password.c_str()) != 0 )
   {
     /* We could authenticate via password */
@@ -358,7 +190,9 @@ int SimpleSSHClient::exec_cmd(const char *command)
            == LIBSSH2_ERROR_EAGAIN);
     if (rc) {
       fprintf(stderr, "Authentication by password failed.\n");
-      goto shutdown_start;
+
+      // shutdowns
+      doDisconnect();
     }
   }
   else
@@ -374,7 +208,9 @@ int SimpleSSHClient::exec_cmd(const char *command)
     if (rc)
     {
       fprintf(stderr, "\tAuthentication by public key failed\n");
-      goto shutdown_start;
+
+      // shutdown
+      doDisconnect();
     }
   }
 
@@ -382,17 +218,210 @@ int SimpleSSHClient::exec_cmd(const char *command)
   libssh2_trace(session, ~0 );
 #endif
 
-  /* Exec non-blocking on the remove host */
-  while( (channel = libssh2_channel_open_session(session)) == NULL &&
-         libssh2_session_last_error(session,NULL,NULL,0) == LIBSSH2_ERROR_EAGAIN)
+  return 0;
+
+  /*
+   * Ultra basic "connect to port 22 on localhost"
+   * Your code is responsible for creating the socket establishing the
+   * connection
+   */
+  sock = socket(AF_INET, SOCK_STREAM, 0);
+  if(-1 == sock)
   {
-    waitsocket(sock, session);
+    fprintf(stderr, "failed to create socket!\n");
+    return -1;
   }
+
+  sin.sin_family = AF_INET;
+  sin.sin_port = htons(22);
+  sin.sin_addr.s_addr = hostaddr;
+  if (connect(sock, (struct sockaddr*)(&sin), sizeof(struct sockaddr_in))!= 0)
+  {
+    fprintf(stderr, "failed to connect!\n");
+    return -1;
+  }
+
+  /* Create a session instance */
+  session = libssh2_session_init();
+
+  if(!session)
+    return -1;
+
+  /* ... start it up. This will trade welcome banners, exchange keys,
+         * and setup crypto, compression, and MAC layers
+         */
+  rc = libssh2_session_startup(session, sock);
+
+  if(rc)
+  {
+    fprintf(stderr, "Failure establishing SSH session: %d\n", rc);
+    return -1;
+  }
+
+  /* At this point we havn't yet authenticated.  The first thing to do
+   * is check the hostkey's fingerprint against our known hosts Your app
+   * may have it hard coded, may go to a file, may present it to the
+   * user, that's your call
+   */
+  fingerprint = libssh2_hostkey_hash(session, LIBSSH2_HOSTKEY_HASH_SHA1);
+
+//  fprintf(stderr, "Fingerprint: ");
+//  for(i = 0; i < 20; i++)
+//  {
+//    fprintf(stderr, "%02X ", (unsigned char)fingerprint[i]);
+//  }
+//  fprintf(stderr, "\n");
+
+  /* We could authenticate via password */
+  if (libssh2_userauth_password(session, username.c_str(), password.c_str()))
+  {
+    fprintf(stderr, "Authentication by password failed.\n");
+
+    //call disconnect to free all data
+    doDisconnect();
+  }
+
+  return 0;
+}
+
+void SimpleSSHClient::doDisconnect()
+{
+  if(session)
+  {
+    libssh2_session_disconnect(session,
+                               "Normal Shutdown, Thank you for playing");
+
+    libssh2_session_free(session);
+  }
+
+#ifdef WIN32
+  closesocket(sock);
+#else
+  close(sock);
+#endif
+}
+
+int SimpleSSHClient::scp_copy_file(const char *localncl, const char *destpath)
+{
+  int rc;
+  LIBSSH2_CHANNEL *channel;
+  size_t nread;
+  FILE *local;
+  struct stat fileinfo;
+  char mem[1024];
+  char *ptr;
+
+  size_t found;
+  string temp = localncl;
+  found = temp.find_last_of("/\\");
+  string nclfile = temp.substr(found+1);
+
+  scpfile = destpath + string("/") + nclfile;
+
+  /* tell libssh2 we want it done non-blocking */
+  libssh2_session_set_blocking(session, 1);
+
+  // \todo Make sure we are connected.
+
+  local = fopen(localncl, "rb");
+  if (!local)
+  {
+    fprintf(stderr, "Can't open local file %s\n", localncl);
+    return -1;
+  }
+
+  stat(localncl, &fileinfo);
+
+  /* Send a file via scp. The mode parameter must only have permissions! */
+  channel = libssh2_scp_send(session, scpfile.c_str(), fileinfo.st_mode & 0777,
+                             (unsigned long)fileinfo.st_size);
+
+  if (!channel)
+  {
+    char *errmsg;
+    int errlen;
+    int err = libssh2_session_last_error(session, &errmsg, &errlen, 0);
+
+    fprintf(stderr, "Unable to open a session: (%d) %s\n", err, errmsg);
+    goto shutdown_copy;
+  }
+
+  /* tell libssh2 we want it done blocking */
+  libssh2_channel_set_blocking(channel, 1);
+
+  fprintf(stderr, "SCP session waiting to send file\n");
+  do
+  {
+    nread = fread(mem, 1, sizeof(mem), local);
+    if (nread <= 0)
+    {
+      /* end of file */
+      break;
+    }
+    ptr = mem;
+
+    do
+    {
+      /* write the same data over and over, until error or completion */
+      rc = libssh2_channel_write(channel, ptr, nread);
+
+      if (rc < 0)
+      {
+        fprintf(stderr, "ERROR %d\n", rc);
+        break;
+      }
+      else
+      {
+        /* rc indicates how many bytes were written this time */
+        ptr += rc;
+        nread -= rc;
+      }
+    } while (nread);
+  } while (1);
+
+
+  fprintf(stderr, "Sending EOF\n");
+  libssh2_channel_send_eof(channel);
+
+  fprintf(stderr, "Waiting for EOF\n");
+  libssh2_channel_wait_eof(channel);
+
+  fprintf(stderr, "Waiting for channel to close\n");
+  libssh2_channel_wait_closed(channel);
+
+  libssh2_channel_free(channel);
+
+  channel = NULL;
+
+shutdown_copy:
+  if (local)
+    fclose(local);
+
+  return 0;
+}
+
+int SimpleSSHClient::exec_cmd(const char *command)
+{
+  int rc;
+  LIBSSH2_CHANNEL *channel;
+
+  int exitcode;
+  char *exitsignal=(char *)"none";
+  int bytecount = 0;
+
+  // \todo Make sure we are connected.
+
+  /* Exec non-blocking on the remove host */
+  channel = libssh2_channel_open_session(session);
+
   if( channel == NULL )
   {
     fprintf(stderr,"Error\n");
     ::exit( 1 );
   }
+
+  /* tell libssh2 we want it done non-blocking */
+  libssh2_channel_set_blocking(channel, 0);
 
   while( (rc = libssh2_channel_exec(channel, command)) ==
 
@@ -457,18 +486,6 @@ int SimpleSSHClient::exec_cmd(const char *command)
   else
     printf("\nEXIT: %d bytecount: %d\n", exitcode, bytecount);
 
-
-shutdown_start:
-  if(session) {
-    libssh2_session_disconnect( session,
-                                "Normal Shutdown, Thank you for playing");
-    libssh2_session_free(session);
-  }
-#ifdef WIN32
-  closesocket(sock);
-#else
-  close(sock);
-#endif
 
   return 0;
 }

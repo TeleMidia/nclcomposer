@@ -110,6 +110,7 @@ bool RunRemoteGingaVMAction::sendFilesToGingaVM(SimpleSSHClient &sshclient,
   // \todo This search MUST BE RECURSIVE!!!
   // \todo This also can be a function.
   qDebug() << "Must send this files:" << filesToSend;
+
   for(int i = 0; i < filesToSend.size(); i++)
   {
     int resp = 0;
@@ -231,6 +232,13 @@ void RunRemoteGingaVMAction::runCurrentProject()
                             remoteIp.toStdString().c_str(),
                             remotePath.toStdString().c_str());
 
+  int connRet = sshclient.doConnect();
+  if( connRet != 0)
+  {
+    qWarning() << "Could not connect to remote machine...";
+    return;
+  }
+
   QFileInfo fileNCLInfo (location);
   QString tmpNCLDir = fileNCLInfo.absoluteDir().absolutePath();
   QString nclLocalPath = tmpNCLDir;
@@ -275,6 +283,8 @@ void RunRemoteGingaVMAction::runCurrentProject()
     qDebug() << "Error copying the dependency files";
   }
 
+  sshclient.doDisconnect();
+
   emit finished();
 }
 
@@ -296,6 +306,13 @@ void StopRemoteGingaVMAction::stopRunningApplication()
                             remoteIp.toStdString().c_str(),
                             remotePath.toStdString().c_str());
 
-  sshclient.exec_cmd(remoteStopCmd.toStdString().c_str());
+  int connRet = sshclient.doConnect();
+  if( connRet != 0)
+  {
+    qWarning() << "Could not connect to remote machine...";
+    return;
+  }
 
+  sshclient.exec_cmd(remoteStopCmd.toStdString().c_str());
+  sshclient.doDisconnect();
 }
