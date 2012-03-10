@@ -25,8 +25,9 @@ LineEditWithButton::LineEditWithButton(QWidget *parent,
 {
   // Create the search button and set its icon, cursor, and stylesheet
   this->mButton = new QToolButton(this);
-  this->mButton->setIcon(QIcon(iconPath));
+  // this->mButton->setIcon(QIcon(iconPath));
 //  this->mButton->setFixedSize(18, 18);
+  this->mButton->setText("...");
   this->mButton->setCursor(Qt::ArrowCursor);
   this->mButton->setStyleSheet(this->buttonStyleSheetForCurrentState());
 
