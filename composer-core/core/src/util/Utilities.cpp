@@ -10,7 +10,6 @@
 #include "util/Utilities.h"
 
 #include <QStringList>
-#include <QDir>
 #include <QDebug>
 
 QMap<QString,LanguageType> createMap() {
@@ -46,9 +45,9 @@ QString Utilities::getExtensionForLanguageType(LanguageType type)
 QString Utilities::relativePath( QString absolutePath, QString relativeTo,
                                  bool bIsFile /*= false*/ )
 {
-  QStringList absoluteDirectories = absolutePath.split(QDir::separator(),
+    QStringList absoluteDirectories = absolutePath.split("/",
                                                        QString::SkipEmptyParts);
-  QStringList relativeDirectories = relativeTo.split(QDir::separator(),
+    QStringList relativeDirectories = relativeTo.split("/",
                                                      QString::SkipEmptyParts);
 
   //Get the shortest of the two paths
