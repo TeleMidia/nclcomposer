@@ -853,20 +853,24 @@ void QnstComposerPlugin::requestBindAddition(Entity* entity)
     if (entity->getAttribute("interface") != "")
     {
         Entity* cmp = getProject()->getEntityById(comUID);
-        QString intUID = "";
-        foreach(Entity* c, cmp->getChildren()){
-            if (c->getAttribute("id") == entity->getAttribute("interface") ||
-                c->getAttribute("name") == entity->getAttribute("interface")){
+        if(cmp != NULL)
+        {
+          QString intUID = "";
+          foreach(Entity* c, cmp->getChildren())
+          {
+              if (c->getAttribute("id") == entity->getAttribute("interface") ||
+                  c->getAttribute("name") == entity->getAttribute("interface")){
 
-                intUID = c->getUniqueId();
-                break;
-            }
+                  intUID = c->getUniqueId();
+                  break;
+              }
+          }
+
+          if(entities.contains(intUID))
+           properties["interfaceUid"] = entities[intUID];
+          else
+            properties["interfaceUid"] = "";
         }
-
-        if(entities.contains(intUID))
-          properties["interfaceUid"] = entities[intUID];
-        else
-          properties["interfaceUid"] = "";
     }
     else{
         properties["interfaceUid"] = "";
@@ -1313,7 +1317,6 @@ void QnstComposerPlugin::requestContextChange(const QString uid, const QMap<QStr
 void QnstComposerPlugin::requestSwitchAddition(const QString uid, const QString parent, const QMap<QString, QString> properties)
 {
     Entity* entity = getProject()->getEntityById(entities.key(parent));
-
     if (entity != NULL){
         QMap<QString, QString> attributes;
 
@@ -1661,8 +1664,11 @@ void QnstComposerPlugin::requestComplexConnectorAddition(const QString uid, cons
             QString cpcUID;
             QString cpaUID;
 
-            foreach(Entity* child, getProject()->getEntityById(entities.key(uid))->getChildren()){
-
+            Entity *cmp = getProject()->getEntityById(entities.key(uid));
+            if(cmp != NULL)
+            {
+              foreach(Entity* child, cmp->getChildren())
+              {
                 if (child->getType() == "compoundCondition"){
                     cpcUID = child->getUniqueId();
                 }
@@ -1670,6 +1676,7 @@ void QnstComposerPlugin::requestComplexConnectorAddition(const QString uid, cons
                 if (child->getType() == "compoundAction"){
                     cpaUID = child->getUniqueId();
                 }
+              }
             }
 
             // condition
@@ -1801,29 +1808,39 @@ void QnstComposerPlugin::requestBindAddition(const QString uid, const QString pa
     QString cpcUID = "";
     QString cpaUID = "";
 
-    if (connUID != ""){
-        foreach(Entity* child, getProject()->getEntityById(connUID)->getChildren()){
+    if (connUID != "")
+    {
+      Entity *cmp = getProject()->getEntityById(connUID);
+      if(cmp != NULL)
+      {
+        foreach(Entity* child, cmp->getChildren())
+        {
 
-            if (child->getType() == "compoundCondition"){
-                cpcUID = child->getUniqueId();
-            }
+          if (child->getType() == "compoundCondition"){
+            cpcUID = child->getUniqueId();
+          }
 
-            if (child->getType() == "compoundAction"){
-                cpaUID = child->getUniqueId();
-            }
+          if (child->getType() == "compoundAction"){
+            cpaUID = child->getUniqueId();
+          }
         }
+      }
     }
 
     if (cpcUID != "" && cpaUID != ""){
         if (properties["condition"] != ""){
-            bool hasCond = false;
-
-            foreach(Entity* child, getProject()->getEntityById(cpcUID)->getChildren()){
-                if (child->getAttribute("role") == properties["condition"]){
-                    hasCond = true;
-                    break;
-                }
+          bool hasCond = false;
+          Entity *cmp = getProject()->getEntityById(cpcUID);
+          if(cmp != NULL)
+          {
+            foreach(Entity* child, cmp->getChildren())
+            {
+              if (child->getAttribute("role") == properties["condition"]){
+                hasCond = true;
+                break;
+              }
             }
+          }
 
             if (!hasCond){
                 QMap<QString, QString> cattributes;
@@ -1837,11 +1854,15 @@ void QnstComposerPlugin::requestBindAddition(const QString uid, const QString pa
         if (properties["action"] != ""){
             bool hasAct = false;
 
-            foreach(Entity* child, getProject()->getEntityById(cpaUID)->getChildren()){
+            Entity *cmp = getProject()->getEntityById(cpaUID);
+            if(cmp != NULL)
+            {
+              foreach(Entity* child, cmp->getChildren()){
                 if (child->getAttribute("role") == properties["action"].toLower()){
                     hasAct = true;
                     break;
                 }
+              }
             }
 
             if (!hasAct){
@@ -1879,6 +1900,7 @@ void QnstComposerPlugin::requestBindAddition(const QString uid, const QString pa
             request = QUuid::createUuid().toString();
         }
 
+        // \todo This could results in a Null pointer.
         emit addEntity("link", getProject()->getEntityById(entities.key(parent))->getUniqueId(), linkattributes, false);
 
         request = "";
@@ -1958,11 +1980,14 @@ void QnstComposerPlugin::cacheNCLIds()
   {
     structuralID = entities.value(coreUID);
     current = project->getEntityById(coreUID);
-    nclID = getNCLIdFromEntity(current);
-    if(!nclID.isEmpty() && !nclID.isNull())
+    if(current != NULL)
     {
-      nclIDtoStructural.insert(nclID, structuralID);
-      previousCoreID.push_back(coreUID);
+      nclID = getNCLIdFromEntity(current);
+      if(!nclID.isEmpty() && !nclID.isNull())
+      {
+        nclIDtoStructural.insert(nclID, structuralID);
+        previousCoreID.push_back(coreUID);
+      }
     }
   }
 }

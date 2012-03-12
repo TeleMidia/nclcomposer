@@ -1,4 +1,4 @@
-    #include "qnstgraphicsbody.h"
+#include "qnstgraphicsbody.h"
 
 QnstGraphicsBody::QnstGraphicsBody(QnstGraphicsNode* parent)
     : QnstGraphicsComposition(parent)
