@@ -3461,35 +3461,35 @@ void QnstView::requestMediaAddition(QnstGraphicsMedia* entity, bool undo)
     case Qnst::Image:
         properties["SUBTYPE"] = "image";
 
-        properties["type"] = "image/png";
+//        properties["type"] = "image/png";
 
         break;
 
     case Qnst::Audio:
         properties["SUBTYPE"] = "audio";
 
-        properties["type"] = "audio/mp3";
+//        properties["type"] = "audio/mp3";
 
         break;
 
     case Qnst::Video:
         properties["SUBTYPE"] = "video";
 
-        properties["type"] = "video/mp4";
+//        properties["type"] = "video/mp4";
 
         break;
 
     case Qnst::Text:
         properties["SUBTYPE"] = "text";
 
-        properties["type"] = "text/plain";
+//        properties["type"] = "text/plain";
 
         break;
 
     case Qnst::Html:
         properties["SUBTYPE"] = "html";
 
-        properties["type"] = "text/html";
+//        properties["type"] = "text/html";
 
         break;
 
