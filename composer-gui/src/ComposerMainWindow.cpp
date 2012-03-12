@@ -242,10 +242,15 @@ void ComposerMainWindow::readSettings()
 
 void ComposerMainWindow::openProjects(const QStringList &projects)
 {
-  qDebug() << "Openning files:";
+  qDebug() << "Openning files:" << projects;
   for(int i = 0; i < projects.size(); i++)
   {
-    QFile file(projects.at(i));
+    QString src = projects.at(i);
+#ifdef WIN32
+    src = src.replace(QDir::separator(), "/");
+#endif
+
+    QFile file(src);
     bool openCurrentFile = true;
 
     if(!file.exists())
@@ -257,15 +262,16 @@ void ComposerMainWindow::openProjects(const QStringList &projects)
                                    "the last time you have closed NCL"
                                    " Composer this files was open. "
                                    "Do you want to create this file "
-                                   "again?").arg(projects.at(i)),
+                                   "again?").arg(src),
                                 QMessageBox::Yes | QMessageBox::No,
                                 QMessageBox::No);
 
       if(resp != QMessageBox::Yes) openCurrentFile = false;
     }
+
     if (openCurrentFile)
     {
-      ProjectControl::getInstance()->launchProject(projects.at(i));
+      ProjectControl::getInstance()->launchProject(src);
     }
   }
 
@@ -1577,7 +1583,7 @@ bool ComposerMainWindow::showHelp()
       return false;
     }
   }
-  return true;*/
+  return true; */
 }
 
 void ComposerMainWindow::autoSaveCurrentProjects()
