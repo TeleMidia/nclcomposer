@@ -10,8 +10,6 @@ QnstGraphicsBody::QnstGraphicsBody(QnstGraphicsNode* parent)
     createObjects();
     createConnections();
 
-    setAcceptDrops(true);
-
     dropsrc = "";
 
     setnstId("");

@@ -19,6 +19,8 @@ QnstGraphicsComposition::QnstGraphicsComposition(QnstGraphicsNode* parent)
     setnstType(Qnst::Compostion);
 
     setColor("#EEEEEE");
+
+    setAcceptDrops(true);
 }
 
 QnstGraphicsComposition::~QnstGraphicsComposition()
