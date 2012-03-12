@@ -754,7 +754,7 @@ void QsciScintilla::startAutoCompletion(AutoCompletionSource acs,
     if (wlist.isEmpty())
         return;
 
-    wlist.sort();
+//    wlist.sort();
 
     SendScintilla(SCI_AUTOCSETCHOOSESINGLE, choose_single);
     SendScintilla(SCI_AUTOCSETSEPARATOR, acSeparator);
