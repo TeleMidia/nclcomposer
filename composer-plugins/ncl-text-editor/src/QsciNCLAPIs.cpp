@@ -87,19 +87,22 @@ void QsciNCLAPIs::updateAutoCompletionList( const QStringList &context,
     if(tagname != "")
     {
       map <QString, bool> *attrs = nclStructure->getAttributes(tagname);
+      deque <QString> *attrs_ordered =
+          nclStructure->getAttributesOrdered(tagname);
+
       if(attrs != NULL){
-        map <QString, bool>::iterator it;
+        deque <QString>::iterator it;
         for (int i = 0; i < context.count(); ++i)
         {
-          it = attrs->begin();
+          it = attrs_ordered->begin();
 
-          for (; it != attrs->end(); ++it){
-            if(     it->first.startsWith(context[i])
-                    && !current_attrs.contains(it->first))
+          for (; it != attrs_ordered->end(); ++it){
+            if(     it->startsWith(context[i])
+                    && !current_attrs.contains(*it))
             {
-              QString str(it->first);
+              QString str = *it;
               list.push_back(str);
-              qDebug() << it->first;
+              qDebug() << *it;
             }
           }
         }
@@ -423,15 +426,19 @@ QString QsciNCLAPIs::getRequiredAttributesAsStr(const QString &element)
   QString ret("");
   map <QString, bool> *attributes = NCLStructure::getInstance()
       ->getAttributes(element);
+  deque <QString> *attrs_ordered = NCLStructure::getInstance()
+      ->getAttributesOrdered(element);
+
   if(attributes != NULL) {
-    map <QString, bool>::iterator it;
+    deque <QString>::iterator it;
     bool first = true;
-    for(it = attributes->begin(); it != attributes->end(); ++it){
-      if(it->second) {
+    for(it = attrs_ordered->begin(); it != attrs_ordered->end(); ++it){
+      QString str = *it;
+      if(attributes->count(str) && (*attributes)[str]) { //if it is required
         if(!first)
           ret += " ";
         first = false;
-        ret += it->first + "=\"\"";
+        ret += *it + "=\"\"";
       }
     }
   }
