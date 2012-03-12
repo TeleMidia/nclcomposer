@@ -2020,6 +2020,9 @@ QString QnstComposerPlugin::getNCLIdFromEntity(Entity *entity)
     if(entity->getType() == "body") // forces an ID if it not exists for body!
       nclID = insertNCLIDIfEmpty(entity);
 
+//    if(entity->getType() == "head")
+//      nclID = "head_id";
+
     if(entity->hasAttribute("id"))
       nclID = entity->getAttribute("id");
     else if(entity->hasAttribute("name"))
@@ -2183,3 +2186,4 @@ void QnstComposerPlugin::textualFinishSync(QString, void*)
 }
 
 } } } // end namespace
+
