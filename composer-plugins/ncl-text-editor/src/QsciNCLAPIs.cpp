@@ -132,7 +132,13 @@ void QsciNCLAPIs::updateAutoCompletionList( const QStringList &context,
 
       if(filename.size())
       {
-        filename = relativePath(nclEditor->getDocumentUrl(), filename, true);
+        try
+        {
+          filename = relativePath(nclEditor->getDocumentUrl(), filename, true);
+        }
+        catch(...)
+        {
+        }
         nclEditor->removeSelectedText();
         //Removes an empty space automatically inserted by fillingAttributes.
         if(nclEditor->SendScintilla(QsciScintilla::SCI_GETCHARAT, pos) == ' ')
