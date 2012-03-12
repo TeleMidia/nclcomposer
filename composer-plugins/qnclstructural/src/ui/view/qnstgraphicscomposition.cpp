@@ -107,6 +107,7 @@ bool QnstGraphicsComposition::createEntity(Qnst::EntityType type)
 
   case Qnst::Switch:
     entity = new QnstGraphicsSwitch(this);
+    break;
 
 
   default:
