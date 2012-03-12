@@ -280,6 +280,8 @@ private:
 
     void addInterfacetoNodeEdge(QnstGraphicsEntity* entitya, QnstGraphicsEntity* entityb);
 
+    void addInterfacetoNodeLink(QnstGraphicsEntity* entitya, QnstGraphicsEntity* entityb);
+
     void addInterfacetoInterfaceEdge(QnstGraphicsEntity* entitya, QnstGraphicsEntity* entityb);
 
     void adjustAngle(QnstGraphicsEdge* edge, QnstGraphicsEntity* entitya, QnstGraphicsEntity* entityb);
