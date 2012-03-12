@@ -242,6 +242,7 @@ ATTRIBUTE(port,interface,false,STRING)
 //property
 ATTRIBUTE(property,name,true,STRING)
 ATTRIBUTE(property,value,false,STRING)
+ATTRIBUTE(property,externable,false,BOOLEAN)
 
 //region
 ATTRIBUTE(region,id,true,ID)
