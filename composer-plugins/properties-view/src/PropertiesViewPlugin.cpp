@@ -162,8 +162,8 @@ void PropertiesViewPlugin::updateCurrentEntityAttr(QString attr, QString value)
                 qDebug() << "Do not changing to a relative path";
               }
             }
+            attrs.insert(attr, value);
           }
-          attrs.insert(attr, value);
         }
         else
           attrs.insert(it.key(), it.value());
@@ -171,7 +171,7 @@ void PropertiesViewPlugin::updateCurrentEntityAttr(QString attr, QString value)
 
       if(!attrs.contains(attr))
       {
-        if(!value.isNull() && !value.isEmpty())
+        if(!value.isNull() && !value.isEmpty() && value != "")
         {
           if(PropertyEditor::isURL(currentEntity->getType(), attr))
           {
@@ -183,10 +183,11 @@ void PropertiesViewPlugin::updateCurrentEntityAttr(QString attr, QString value)
               qDebug() << "Do not changing to a relative path";
             }
           }
+          attrs.insert(attr, value);
         }
-        attrs.insert(attr, value);
       }
 
+      qWarning() << attrs;
       emit setAttributes(currentEntity, attrs, false);
     }
   }
