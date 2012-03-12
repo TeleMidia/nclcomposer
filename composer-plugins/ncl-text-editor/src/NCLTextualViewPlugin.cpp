@@ -32,10 +32,13 @@ namespace composer {
 namespace plugin {
 namespace textual {
 
+const QString PROLOG ("<?xml version=\"1.0\" encoding=\"ISO-8859-1\"?>\n");
+
 NCLTextualViewPlugin::NCLTextualViewPlugin()
 {
   window = new NCLTextEditorMainWindow();
   nclTextEditor = window->getTextEditor();
+
   tmpNclTextEditor = NULL;
 
   project = NULL;
@@ -82,7 +85,10 @@ void NCLTextualViewPlugin::init()
     endEntityOffset.remove(key);
 
   QString text = data.left(indexOfStartEntities);
-  nclTextEditor->insert(text);
+  if(text.isEmpty() || text.isNull())
+    nclTextEditor->setText(PROLOG);
+  else
+    nclTextEditor->setText(text);
 
   int indexOfStartEntitiesContent = indexOfStartEntities +
       startEntitiesSep.length();
@@ -117,6 +123,7 @@ void NCLTextualViewPlugin::updateFromModel()
 void NCLTextualViewPlugin::incrementalUpdateFromModel()
 {
   nclTextEditor->clear();
+  nclTextEditor->setText(PROLOG);
   if(project->getChildren().size())
   {
     Entity *entity = project;
@@ -144,6 +151,7 @@ void NCLTextualViewPlugin::incrementalUpdateFromModel()
 void NCLTextualViewPlugin::nonIncrementalUpdateFromModel()
 {
   nclTextEditor->clear();
+  nclTextEditor->setText(PROLOG);
   QDomDocument doc ("document");
   if(project->getChildren().size())
   {
@@ -189,7 +197,8 @@ void NCLTextualViewPlugin::nonIncrementalUpdateFromModel()
     QString *text = new QString();
     QTextStream textStream(text);
     doc.save(textStream, QDomNode::EncodingFromTextStream);
-    nclTextEditor->setText(textStream.readAll());
+    nclTextEditor->setText(PROLOG);
+    nclTextEditor->insertAtPos(textStream.readAll(), PROLOG.size());
   }
 }
 
@@ -201,7 +210,7 @@ void NCLTextualViewPlugin::onEntityAdded(QString pluginID, Entity *entity)
     return;
 
   QString line = "<" + entity->getType() + "";
-  int insertAtOffset = 0;
+  int insertAtOffset = PROLOG.size();
 
   //get the line number where the new element must be inserted
   if(entity->getParentUniqueId() != NULL) {
@@ -267,7 +276,7 @@ void NCLTextualViewPlugin::onEntityAdded(QString pluginID, Entity *entity)
       ->SendScintilla( QsciScintilla::SCI_GETLINEINDENTATION,
                       insertAtLine+2);
 
-  if(insertAtLine) lineIndent += 8;
+  if(insertAtLine > 1) lineIndent += 8;
 
   // qDebug() << "Line: " << insertAtLine;
   // qDebug() << "Line ident: " << lineIndent;
@@ -582,6 +591,7 @@ void NCLTextualViewPlugin::nonIncrementalUpdateCoreModel()
 
   // clear the entities offset
   nclTextEditor->clear();
+  nclTextEditor->setText("<?xml version=1.0 encoding=ISO-8859-1?>");
   startEntityOffset.clear();
   endEntityOffset.clear();
 
@@ -744,6 +754,7 @@ void NCLTextualViewPlugin::incrementalUpdateCoreModel()
       }
       else
       {
+        qDebug() << entityChildren[j]->getType() << children[i].tagName();
         //if type are not equal, then we should change the type
         //i.e. remove the entity
         emit removeEntity(entityChildren[j], true);
