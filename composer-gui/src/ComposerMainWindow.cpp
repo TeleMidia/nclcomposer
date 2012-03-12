@@ -1235,6 +1235,7 @@ void ComposerMainWindow::launchProjectWizard()
 
       QMap <QString, QString> nclAttrs, headAttrs, bodyAttrs;
       nclAttrs.insert("id", defaultNCLID);
+      nclAttrs.insert("xmlns", "http://www.ncl.org.br/NCL3.0/EDTVProfile");
 
       Entity *nclEntity;
       MessageControl *msgControl = PluginControl::getInstance()
