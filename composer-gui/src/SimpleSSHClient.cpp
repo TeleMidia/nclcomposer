@@ -181,7 +181,6 @@ int SimpleSSHClient::doConnect()
   }
   libssh2_knownhost_free(nh);
 
-  fprintf(stderr, "I'm here.\n");
   if ( strlen(password.c_str()) != 0 )
   {
     /* We could authenticate via password */

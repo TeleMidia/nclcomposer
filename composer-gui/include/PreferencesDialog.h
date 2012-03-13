@@ -51,7 +51,12 @@ private:
 
 private slots:
     void changeActivePage();
+    void applyCurrentValues();
     void buttonClicked(QAbstractButton*);
+
+/*public Q_SLOTS:
+    void show();
+    void selectFirst(); */
 };
 
 }} //end namespace

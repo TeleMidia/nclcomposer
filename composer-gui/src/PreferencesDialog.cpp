@@ -38,6 +38,9 @@ PreferencesDialog::PreferencesDialog(QWidget *parent) :
           this,
           SLOT(buttonClicked(QAbstractButton*)));
 
+
+  connect(this, SIGNAL(accepted()), this, SLOT(applyCurrentValues()));
+
   currentItem = NULL;
 }
 
@@ -111,18 +114,34 @@ void PreferencesDialog::buttonClicked(QAbstractButton* button)
   QDialogButtonBox::StandardButton std = ui->buttonBox_2->standardButton(button);
 
   if(std == QDialogButtonBox::Apply)
-  {
-    QString slotName("applyValues()");
+    applyCurrentValues();
+}
 
-    QWidget *inst = currentPage;
-    int idxSlot = inst->metaObject()
-        ->indexOfSlot( slotName.toStdString().c_str() );
-    if(idxSlot != -1)
-    {
-      QMetaMethod method = inst->metaObject()->method(idxSlot);
-      method.invoke(inst, Qt::DirectConnection);
-    }
+void PreferencesDialog::applyCurrentValues()
+{
+  QString slotName("applyValues()");
+
+  QWidget *inst = currentPage;
+  int idxSlot = inst->metaObject()
+      ->indexOfSlot( slotName.toStdString().c_str() );
+  if(idxSlot != -1)
+  {
+    QMetaMethod method = inst->metaObject()->method(idxSlot);
+    method.invoke(inst, Qt::DirectConnection);
   }
 }
+
+/* void PreferencesDialog::show()
+{
+  qDebug() << "eu aqui1";
+  QDialog::show();
+  selectFirst();
+}
+
+void PreferencesDialog::selectFirst()
+{
+  // \todo And if we do not have any child?
+  ui->listWidget->item(0)->setSelected(true);
+} */
 
 }} //end namespace
