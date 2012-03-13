@@ -1311,6 +1311,8 @@ void ComposerMainWindow::importFromDocument()
 
   if(docFilename != "")
   {
+    updateLastFileDialogPath(docFilename);
+
     QString projFilename = QFileDialog::getSaveFileName(
           this,
           tr("Choose the Composer Project where the NCL document must be \
@@ -1318,13 +1320,16 @@ void ComposerMainWindow::importFromDocument()
              getLastFileDialogPath(),
              tr("Composer Projects (*.cpr)") );
 
-        //Create the file
-        QFile f(projFilename);
+    //Create the file
+    QFile f(projFilename);
     f.open(QIODevice::ReadWrite);
     f.close();
 
     if(projFilename != "")
     {
+#ifdef WIN32
+      projFilename = projFilename.replace(QDir::separator(), "/");
+#endif
       ProjectControl::getInstance()->importFromDocument(docFilename,
                                                         projFilename);
 
