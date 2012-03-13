@@ -6438,10 +6438,10 @@ void QnstView::addInterfacetoNodeLink(QnstGraphicsEntity* entitya, QnstGraphicsE
 
 void QnstView::addInterfacetoNodeEdge(QnstGraphicsEntity* entitya, QnstGraphicsEntity* entityb)
 {
-    if (entitya->getnstType() == Qnst::Port){
-        QnstGraphicsEntity* parenta = entitya->getnstGraphicsParent();
-        QnstGraphicsEntity* parentb = entityb->getnstGraphicsParent();
+    QnstGraphicsEntity* parenta = entitya->getnstGraphicsParent();
+    QnstGraphicsEntity* parentb = entityb->getnstGraphicsParent();
 
+    if (entitya->getnstType() == Qnst::Port){
         if (parenta != NULL && parentb != NULL){
             if (parenta == parentb){
                 qDebug() << "INTERFACE to NODE:" << entitya->getnstUid() << "->" << entityb->getnstUid();
@@ -6492,8 +6492,6 @@ void QnstView::addInterfacetoNodeEdge(QnstGraphicsEntity* entitya, QnstGraphicsE
         }
 
     }else if (entitya->getnstType() == Qnst::SwitchPort){
-        QnstGraphicsEntity* parenta = entitya->getnstGraphicsParent();
-        QnstGraphicsEntity* parentb = entityb->getnstGraphicsParent();
 
         if (parenta != NULL && parentb != NULL){
             if (parenta == parentb){
@@ -6530,6 +6528,8 @@ void QnstView::addInterfacetoNodeEdge(QnstGraphicsEntity* entitya, QnstGraphicsE
                 addInterfacetoNodeLink(entitya, entityb);
             }
         }
+    }else if (parenta->getnstGraphicsParent() == parentb && parenta != entityb){
+        addInterfacetoNodeLink(entitya, entityb);
     }
 
     modified = false;
