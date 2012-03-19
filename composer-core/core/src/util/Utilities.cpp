@@ -96,5 +96,30 @@ QString Utilities::relativePath( QString absolutePath, QString relativeTo,
   return relativePath;
 }
 
+QString Utilities::getLastFileDialogPath()
+{
+  ComposerSettings settings;
+  QString lastFileDialogPath = QDir::homePath();
+
+  settings.beginGroup("mainwindow"); // TODO: A better name to mainwindow.
+  if(settings.contains("lastFileDialogPath"))
+    lastFileDialogPath = settings.value("lastFileDialogPath").toString();
+  settings.endGroup();
+
+  qDebug() << lastFileDialogPath;
+
+  return lastFileDialogPath;
+}
+
+void Utilities::updateLastFileDialogPath(QString filepath)
+{
+  QFileInfo fileInfo(filepath);
+
+  ComposerSettings settings;
+  settings.beginGroup("mainwindow");
+  settings.setValue("lastFileDialogPath", fileInfo.absolutePath());
+  settings.endGroup();
+}
+
 } } } //end namespace
 

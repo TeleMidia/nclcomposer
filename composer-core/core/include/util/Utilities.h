@@ -14,6 +14,10 @@
 
 #include <QString>
 #include <QMap>
+#include <QDir>
+#include <QFileInfo>
+
+#include "util/ComposerSettings.h"
 
 /*!
  \brief
@@ -55,7 +59,15 @@ public:
      */
     static QString relativePath( QString absolutePath, QString relativeTo,
                                          bool bIsFile = false );
+    /*!
+     * \brief
+     */
+    static QString getLastFileDialogPath();
 
+    /*!
+     * \brief
+     */
+    static void updateLastFileDialogPath(QString filepath);
 };
 
 } } } //end namespace

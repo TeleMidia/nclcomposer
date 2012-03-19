@@ -52,6 +52,7 @@ SOURCES += \
     src/util/Utilities.cpp \
     src/util/AttributeReferences.cpp \
     src/modules/ProjectReader.cpp \
+    src/util/ComposerSettings.cpp \
     src/util/Commands.cpp
     # src/model/Model.cpp
 
@@ -73,6 +74,7 @@ HEADERS_UTIL += \
     include/util/Singleton.h \
     include/util/AttributeReferences.h \
     include/util/Utilities.h \
+    include/util/ComposerSettings.h \
     include/util/Commands.h
 
 HEADERS_EXCEPTION +=  include/model/exception/EntityNotFound.h \
