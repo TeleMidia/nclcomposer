@@ -21,6 +21,9 @@
 
 #include <QFileDialog>
 
+#include <core/util/Utilities.h>
+using namespace composer::core::util;
+
 QsciNCLAPIs::QsciNCLAPIs(QsciLexer * 	lexer) :
   QsciAPIs(lexer)
 {
@@ -131,10 +134,13 @@ void QsciNCLAPIs::updateAutoCompletionList( const QStringList &context,
     {
       QString filename = QFileDialog::getOpenFileName(nclEditor,
                                                     tr("Select file"),
-                                          nclEditor->getDocumentUrl());
+                                          // nclEditor->getDocumentUrl()
+                                           Utilities::getLastFileDialogPath());
 
-      if(filename.size())
+      if(!filename.isEmpty() && !filename.isNull())
       {
+        Utilities::updateLastFileDialogPath(filename);
+
         try
         {
           filename = relativePath(nclEditor->getDocumentUrl(), filename, true);
