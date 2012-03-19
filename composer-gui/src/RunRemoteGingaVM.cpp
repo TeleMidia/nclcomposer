@@ -232,10 +232,12 @@ void RunRemoteGingaVMAction::runCurrentProject()
                             remoteIp.toStdString().c_str(),
                             remotePath.toStdString().c_str());
 
+  qWarning() << "Trying to connect to remote machine...";
   int connRet = sshclient.doConnect();
   if( connRet != 0)
   {
     qWarning() << "Could not connect to remote machine...";
+    emit finished();
     return;
   }
 

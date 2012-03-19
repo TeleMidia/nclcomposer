@@ -28,7 +28,8 @@ QFrame {
 }
 
 #frame_3 {
-	background: url(:/mainwindow/bggray);
+   background: url(:/mainwindow/bggray);
+    background-color: #333333;
     border: 0px;
 }
 
@@ -720,8 +721,8 @@ font-family: Verdana;</string>
                     <rect>
                      <x>0</x>
                      <y>0</y>
-                     <width>740</width>
-                     <height>233</height>
+                     <width>738</width>
+                     <height>247</height>
                     </rect>
                    </property>
                    <attribute name="label">
@@ -768,8 +769,8 @@ font-family: Verdana;</string>
                     <rect>
                      <x>0</x>
                      <y>0</y>
-                     <width>87</width>
-                     <height>394</height>
+                     <width>83</width>
+                     <height>404</height>
                     </rect>
                    </property>
                    <attribute name="label">
