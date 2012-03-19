@@ -121,7 +121,7 @@ bool ProjectReader::startElement( const QString &namespaceURI,
         lockStack.unlock();
     }
 
-    for (int i=0 ;i < attributes.count(); i++)
+    for (int i=0; i < attributes.count(); i++)
     {
         if(attributes.qName(i) != "uniqueEntityId")
             atts[attributes.qName(i)] = attributes.value(i);
