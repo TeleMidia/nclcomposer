@@ -66,6 +66,22 @@ public:
    * \param tagname The current tagname.
    */
   void setTagname(QString tagname, QString name);
+
+  /*!
+   * \brief Get the current tagname.
+   */
+  QString getTagname() { return this->currentTagname; }
+
+  /*!
+   * \brief Set the current name (id, name, ...) of the selected entity.
+   */
+  void setCurrentName(QString name);
+
+  /*!
+   * \brief Get the current name.
+   */
+  QString getCurrentName(){ return this->currentName; }
+
   /*!
    * \brief Set a value of an attribute.
    *

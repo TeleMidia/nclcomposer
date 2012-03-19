@@ -58,7 +58,6 @@ PropertyEditor::~PropertyEditor()
 
 void PropertyEditor::setTagname(QString tagname, QString name)
 {
-  this->currentName = name;
   this->currentTagname = tagname;
   //this->currentFilterString = "";
 
@@ -69,7 +68,7 @@ void PropertyEditor::setTagname(QString tagname, QString name)
   while(ui->tableWidget->rowCount())
     ui->tableWidget->removeRow(0);
 
-  ui->label->setText(currentTagname + ":" + currentName);
+  setCurrentName(name);
 
   // add the new ones
   map <QString, bool> *attrs =
@@ -86,16 +85,26 @@ void PropertyEditor::setTagname(QString tagname, QString name)
       propertyToValue[currentAttr] = "";
     }
   }
+
   filterProperties(this->currentFilterString);
+}
+
+void PropertyEditor::setCurrentName(QString name)
+{
+  this->currentName = name;
+  ui->label->setText(currentTagname + ":" + currentName);
 }
 
 void PropertyEditor::setAttributeValue(QString property, QString value)
 {
   // Set the attibute just if this property is a valid property of the current
   // tagname.
-  if(propertyToValue.contains(property))
+  // Also, if propertyToLine does not contains property it is not been showed by
+  // the filter.
+  if(propertyToValue.contains(property) && propertyToLine.contains(property))
   {
     int line = propertyToLine.value(property);
+
     // \todo This must be improved to use NCLStructure
     if(isURL(currentTagname, property))
     {

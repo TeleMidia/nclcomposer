@@ -120,7 +120,10 @@ void PropertiesViewPlugin::updateCurrentEntity()
   else
     name = "Unknown";
 
-  window->setTagname(currentEntity->getType(), name);
+  if(currentEntity->getType() != window->getTagname())
+    window->setTagname(currentEntity->getType(), name);
+  else if(window->getCurrentName() != name)
+    window->setCurrentName(name);
 
   QMap <QString, QString>::iterator begin, end, it;
   currentEntity->getAttributeIterator(begin, end);
