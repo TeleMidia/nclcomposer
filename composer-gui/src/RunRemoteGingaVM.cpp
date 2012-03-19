@@ -20,8 +20,8 @@
 #include <QMessageBox>
 #include <iostream>
 
-#include "ComposerSettings.h"
-using namespace composer::gui;
+#include <core/util/ComposerSettings.h>
+using namespace composer::core::util;
 
 void RunRemoteGingaVMAction::setCurrentProject(Project *project)
 {

@@ -1276,29 +1276,12 @@ void ComposerMainWindow::openProject()
 
 void ComposerMainWindow::updateLastFileDialogPath(QString filepath)
 {
-  QFileInfo fileInfo(filepath);
-  if(fileInfo.exists())
-  {
-    ComposerSettings settings;
-    settings.beginGroup("mainwindow");
-    settings.setValue("lastFileDialogPath", fileInfo.absolutePath());
-    settings.endGroup();
-  }
+  Utilities::updateLastFileDialogPath(filepath);
 }
 
 QString ComposerMainWindow::getLastFileDialogPath()
 {
-  ComposerSettings settings;
-  QString lastFileDialogPath = QDir::homePath();
-
-  settings.beginGroup("mainwindow");
-  if(settings.contains("lastFileDialogPath"))
-    lastFileDialogPath = settings.value("lastFileDialogPath").toString();
-  settings.endGroup();
-
-  qDebug() << lastFileDialogPath;
-
-  return lastFileDialogPath;
+  return Utilities::getLastFileDialogPath();
 }
 
 void ComposerMainWindow::importFromDocument()

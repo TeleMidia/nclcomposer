@@ -49,12 +49,14 @@
 #include <core/modules/LanguageControl.h>
 using namespace composer::core;
 
+#include <core/util/ComposerSettings.h>
+using namespace composer::core::util;
+
 #include "PerspectiveManager.h"
 #include "PreferencesDialog.h"
 #include "PluginDetailsDialog.h"
 #include "WelcomeWidget.h"
 #include "AboutDialog.h"
-#include "ComposerSettings.h"
 #include "ComposerHelpWidget.h"
 
 #ifdef WITH_LIBSSH2
@@ -323,7 +325,10 @@ private slots:
 
   void autoSaveCurrentProjects();
 
+  // TODO: Remove this function.
   void updateLastFileDialogPath(QString filepath);
+
+  // TODO: Remove this function.
   QString getLastFileDialogPath();
 
 public:

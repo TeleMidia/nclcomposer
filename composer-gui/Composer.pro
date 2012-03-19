@@ -136,7 +136,6 @@ SOURCES += main.cpp \
     src/WelcomeWidget.cpp \
     src/AboutDialog.cpp \
     src/RunGingaConfig.cpp \
-    src/ComposerSettings.cpp \
     src/ComposerHelpWidget.cpp
 
 HEADERS += include/ComposerMainWindow.h \
@@ -148,7 +147,6 @@ HEADERS += include/ComposerMainWindow.h \
     include/WelcomeWidget.h \
     include/AboutDialog.h \
     include/RunGingaConfig.h \
-    include/ComposerSettings.h \
     include/ComposerHelpWidget.h
 
 RESOURCES += images.qrc

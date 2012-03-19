@@ -14,7 +14,8 @@
 #include <QAbstractItemModel>
 #include <QMessageBox>
 
-#include "ComposerSettings.h"
+#include <core/util/ComposerSettings.h>
+using namespace composer::core::util;
 
 namespace composer {
 namespace gui {
