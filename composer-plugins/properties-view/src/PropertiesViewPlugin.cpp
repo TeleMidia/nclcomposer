@@ -106,6 +106,7 @@ void PropertiesViewPlugin::changeSelectedEntity(QString pluginID, void *param)
 
   if(currentEntity != NULL)
   {
+    window->setTagname(currentEntity->getType(), "");
     updateCurrentEntity();
   }
 }
