@@ -23,6 +23,9 @@
 
 #include <QDebug>
 
+#include <core/util/Utilities.h>
+using namespace composer::core::util;
+
 PropertyButtons::PropertyButtons(QString propName, QWidget *parent) :
   key(propName), LineEditWithButton(parent, ":/images/esf-search.png")
 {
@@ -39,10 +42,12 @@ void PropertyButtons::openfile()
   QFileDialog dialog;
   dialog.setFileMode(QFileDialog::AnyFile);
 
-  QString filename = dialog.getOpenFileName(NULL);
+  QString filename = dialog.getOpenFileName(NULL, tr("Select file"),
+                                            Utilities::getLastFileDialogPath());
 
   if(!filename.isEmpty() && !filename.isNull())
   {
+    Utilities::updateLastFileDialogPath(filename);
     value = filename;
     emitNewValue(value);
   }
