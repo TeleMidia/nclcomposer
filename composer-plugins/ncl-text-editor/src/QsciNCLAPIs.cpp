@@ -435,7 +435,7 @@ QString QsciNCLAPIs::getRequiredAttributesAsStr(const QString &element)
   deque <QString> *attrs_ordered = NCLStructure::getInstance()
       ->getAttributesOrdered(element);
 
-  if(attributes != NULL) {
+  if(attributes != NULL && attrs_ordered != NULL) {
     deque <QString>::iterator it;
     bool first = true;
     for(it = attrs_ordered->begin(); it != attrs_ordered->end(); ++it){
