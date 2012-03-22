@@ -234,6 +234,9 @@ void NCLStructure::addElement(QString name, QString father, char cardinality,
   if(!attributesDatatype->count(name))
     (*attributesDatatype)[name] = new map <QString, QString>();
 
+  if(!attributes_ordered->count(name))
+    (*attributes_ordered)[name] = new deque <QString>();
+
   (*(*nesting)[father])[name] = cardinality;
   this->define_scope[name] = define_scope;
 }
