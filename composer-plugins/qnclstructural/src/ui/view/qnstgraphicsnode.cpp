@@ -1,5 +1,7 @@
 #include "qnstgraphicsnode.h"
 
+#include <QDebug>
+
 QnstGraphicsNode::QnstGraphicsNode(QnstGraphicsNode* parent)
     : QnstGraphicsEntity(parent)
 {
@@ -143,12 +145,71 @@ void QnstGraphicsNode::inside()
     }
 }
 
+
 void QnstGraphicsNode::adjust()
 {
 
 
     foreach(QnstGraphicsEntity* entity, getnstGraphicsEntities()){
         entity->adjust();
+    }
+
+    if(getnstGraphicsParent() != NULL)
+    {
+
+      int colliding;
+      int maxInter = 10, inter = 0;
+      do
+      {
+        if(inter > maxInter) break;
+        inter++;
+
+        colliding = false;
+        foreach(QnstGraphicsEntity *entity, getnstGraphicsParent()->getnstGraphicsEntities())
+        {
+          if(this != entity && entity->getnstType() >= Qnst::Node &&
+             entity->getnstType() <= Qnst::Switch)
+          {
+            qreal n = 0;
+            qreal i = 0.0;
+
+            entity->setSelectable(false); update();
+            // check collision
+            while(collidesWithItem(entity, Qt::IntersectsItemBoundingRect))
+            {
+
+              QPointF pa(getLeft()+getWidth()/2, getTop()+getHeight()/2);
+              QPointF pb(entity->getWidth()/2, entity->getHeight()/2);
+
+              QLineF line(pa, pb);
+
+              line.setAngle(qrand()%360);
+
+              i += (double)(qrand()%100)/10000.0;
+
+              setTop(getTop()+line.pointAt(i/2).y()-pa.y());
+              setLeft(getLeft()+line.pointAt(i/2).x()-pa.x());
+
+              if (++n > 1000){
+                  n = -1; break;
+              }
+            }
+
+            inside();
+
+            entity->setSelectable(true); update();
+          }
+        }
+
+        foreach(QnstGraphicsEntity *entity, getnstGraphicsParent()->getnstGraphicsEntities())
+        {
+          if(collidesWithItem(entity, Qt::IntersectsItemBoundingRect))
+          {
+            colliding = true;
+          }
+        }
+      }
+      while(colliding);
     }
 
     inside();
@@ -211,6 +272,7 @@ void QnstGraphicsNode::move(QGraphicsSceneMouseEvent* event)
     // moving
     setMoveTop(nexty);
     setMoveLeft(nextx);
+
 
     scene()->update();
 }
