@@ -672,6 +672,13 @@ void QnlyGraphicsRegionBase::requestRegionDeletion(QnlyGraphicsRegion* region)
     emit regionDeletionRequested(region->getUid(), uid);
 }
 
+void QnlyGraphicsRegionBase::updateActionText(QnlyGraphicsRegion *region)
+{
+  // Update Show Menu
+  if(regionActions.contains(region->getUid()))
+    regionActions[region->getUid()]->setText(region->getId());
+}
+
 void QnlyGraphicsRegionBase::hideRegion(QnlyGraphicsRegion* region)
 {
     regionActions[region->getUid()]->trigger();

@@ -68,6 +68,8 @@ public:
 
     void hideRegion(QnlyGraphicsRegion* region);
 
+    void updateActionText(QnlyGraphicsRegion *region);
+
     void removeRegion(QnlyGraphicsRegion* region);
 
     QGraphicsItem* getBackgroundItem();

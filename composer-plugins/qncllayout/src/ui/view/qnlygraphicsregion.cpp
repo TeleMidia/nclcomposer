@@ -125,6 +125,19 @@ void QnlyGraphicsRegion::setId(const QString &id)
     this->id = id;
 
     setToolTip(title+" "+"("+id+")");
+
+    if (parentItem() != NULL)
+    {
+        QnlyGraphicsRegion* parent = (QnlyGraphicsRegion*) parentItem();
+        parent->updateActionText(this);
+    }
+    else
+    {
+      QnlyGraphicsRegionBase* s = (QnlyGraphicsRegionBase*) scene();
+
+      if(s != NULL)
+        s->updateActionText(this);
+    }
 }
 
 QString QnlyGraphicsRegion::getUid() const
@@ -661,6 +674,13 @@ void QnlyGraphicsRegion::createConnections()
 
     connect(deleteAction, SIGNAL(triggered()),
             SLOT(performDelete()));
+}
+
+void QnlyGraphicsRegion::updateActionText(QnlyGraphicsRegion *region)
+{
+  // Update Show Menu
+  if(regionActions.contains(region->getUid()))
+    regionActions[region->getUid()]->setText(region->getId());
 }
 
 void QnlyGraphicsRegion::hideRegion(QnlyGraphicsRegion* region)

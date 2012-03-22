@@ -177,6 +177,8 @@ public:
 
     void hideRegion(QnlyGraphicsRegion* region);
 
+    void updateActionText(QnlyGraphicsRegion *region);
+
 signals:
     void regionAdditionRequested(QnlyGraphicsRegion* parent);
 
