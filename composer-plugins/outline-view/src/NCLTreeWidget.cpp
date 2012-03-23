@@ -23,6 +23,9 @@ using namespace composer::language;
 #include <QInputDialog>
 #include <QDialog>
 
+#include <core/util/ComposerSettings.h>
+using namespace composer::core::util;
+
 NCLTreeWidget::NCLTreeWidget(QWidget *parent) : QTreeWidget(parent)
 {
   setContextMenuPolicy(Qt::ActionsContextMenu);
@@ -305,10 +308,25 @@ void NCLTreeWidget::updateItem(QTreeWidgetItem *item, QString tagname,
      */
   if(tagname == "media")
   {
+    QString type = "";
+
     if(attrs.contains("type") && !attrs.values("type").empty())
     {
-      QString type = attrs.value("type");
-      qWarning() << "eu aqui" << "type = " << type;
+      type = attrs.value("type");
+    }
+    else if(attrs.contains("src") && !attrs.values("src").empty())
+    {
+      QString src = attrs.value("src");
+      QString ext = src.mid(src.lastIndexOf(".") + 1);
+      ComposerSettings settings;
+      settings.beginGroup("mimetypes");
+      type = settings.value(ext).toString();
+      settings.endGroup();
+
+    }
+
+    if(!type.isEmpty())
+    {
       if(type.startsWith("audio"))
         icon = QIcon(":/icon/audio");
       else if(type.startsWith("image"))
@@ -321,30 +339,11 @@ void NCLTreeWidget::updateItem(QTreeWidgetItem *item, QString tagname,
         icon = QIcon(":/icon/text");
       else if(type.startsWith("application/x-ginga-NCLua"))
         icon = QIcon(":/icon/script");
+      else if(type.startsWith("application/x-ginga-ncl"))
+        icon = QIcon(":/icon/ncl");
       else if(type.startsWith("application/x-ncl-settings") ||
-              type.startsWith("application/x-ncl-settings"))
+              type.startsWith("application/x-ginga-settings"))
         icon = QIcon(":/icon/settings");
-      else icon = QIcon (":/icon/media");
-    }
-    else if(attrs.contains("src") && !attrs.values("src").empty())
-    {
-      QString src = attrs.value("src");
-      qWarning() << "eu aqui 2" << "src = " << src;
-      if(src.endsWith(".mp3") || src.endsWith(".mp2") ||
-         src.endsWith(".wav"))
-        icon = QIcon(":/icon/audio");
-      else if(src.endsWith(".jpg") || src.endsWith(".jpeg") ||
-              src.endsWith(".png"))
-        icon = QIcon(":/icon/image");
-      else if(src.endsWith(".mp4") || src.endsWith(".avi") ||
-              src.endsWith(".mov"))
-        icon = QIcon(":/icon/video");
-      else if(src.endsWith(".html") || src.endsWith(".htm"))
-        icon = QIcon(":/icon/html");
-      else if(src.endsWith(".txt"))
-        icon = QIcon(":/icon/text");
-      else if(src.endsWith(".lua"))
-        icon = QIcon(":/icon/script");
       else icon = QIcon (":/icon/media");
     }
     else
