@@ -8,46 +8,46 @@ namespace nclValidator {
 /*
  * Test reference of any scope */
 void anyScopeReferenceValidation (const ModelElement &el, const ModelElement &pointed, const Attribute &att,
-                                   Model &model, vector<pair<void *, string> > &msg, Message &messageFactory) {
+                                  Model &model, vector<pair<void *, string> > &msg, Message &messageFactory) {
 
-        // Test 'refer' special case
-        if (att.name() == "refer") {
+    // Test 'refer' special case
+    if (att.name() == "refer") {
 
-                // 'refer' can't point to an element that defined a 'refer' att too
-                if (pointed.attribute("refer").name() != ""){
-                        fprintf (stderr, "'refer' attribute of '%s' element can't point to an element that have a 'refer' defined too\n",
-                                        el.elementName().c_str());
+        // 'refer' can't point to an element that defined a 'refer' att too
+        if (pointed.attribute("refer").name() != ""){
+            fprintf (stderr, "'refer' attribute of '%s' element can't point to an element that have a 'refer' defined too\n",
+                     el.elementName().c_str());
 
-                        msg.push_back(make_pair (el.data(), messageFactory.createMessage(4109, 1, att.value().c_str())));
-                        model.addElementWithErrorInLastPass(el.id());
+            msg.push_back(make_pair (el.data(), messageFactory.createMessage(4109, 1, att.value().c_str())));
+            model.addElementWithErrorInLastPass(el.id());
 
-                }
-
-                // 'refer' can't point to an ancestor.
-
-                ModelElement *element = model.element(el.parent());
-                while (element){
-                    if (element->id() == pointed.id()){
-                        fprintf (stderr, "'refer' attribute of '%s' element can't point to an ancestor\n",
-                                 el.elementName().c_str());
-
-                        msg.push_back(make_pair (el.data(), messageFactory.createMessage(3006, 0, "")));
-                        model.addElementWithErrorInLastPass(el.id());
-
-                        break;
-                    }
-                    element = model.element(element->parent());
-                }
-
-//                if (pointed.id() == el.scope()){
-//                        fprintf (stderr, "'refer' attribute of '%s' element can't point to an ancestor\n",
-//                                        el.elementName().c_str());
-
-//                        msg.push_back(make_pair (el.data(), messageFactory.createMessage(3006, 0, "")));
-//                        model.addElementWithErrorInLastPass(el.id());
-
-//                }
         }
+
+        // 'refer' can't point to an ancestor.
+
+        ModelElement *element = model.element(el.parent());
+        while (element){
+            if (element->id() == pointed.id()){
+                fprintf (stderr, "'refer' attribute of '%s' element can't point to an ancestor\n",
+                         el.elementName().c_str());
+
+                msg.push_back(make_pair (el.data(), messageFactory.createMessage(3006, 0, "")));
+                model.addElementWithErrorInLastPass(el.id());
+
+                break;
+            }
+            element = model.element(element->parent());
+        }
+
+        //                if (pointed.id() == el.scope()){
+        //                        fprintf (stderr, "'refer' attribute of '%s' element can't point to an ancestor\n",
+        //                                        el.elementName().c_str());
+
+        //                        msg.push_back(make_pair (el.data(), messageFactory.createMessage(3006, 0, "")));
+        //                        model.addElementWithErrorInLastPass(el.id());
+
+        //                }
+    }
 }
 
 
@@ -55,79 +55,95 @@ void anyScopeReferenceValidation (const ModelElement &el, const ModelElement &po
  *
  */
 void specificScopeReferenceValidation (const ModelElement &el, const ModelElement &pointed, const Attribute &att,
-                const ReferenceStructure &ref, Model &model, vector<pair<void *, string> > &msgs, Message messageFactory)
+                                       const ReferenceStructure &ref, Model &model, vector<pair<void *, string> > &msgs, Message messageFactory)
 {
 
-        const ModelElement *scopeElement = NULL;
+    const ModelElement *scopeElement = NULL;
 
-        //////////////////////////////////////////////////////////////////////////////////////////
-        //						RETRIEVE THE ELEMENT THAT DEFINE THE SCOPE 						//
-        //////////////////////////////////////////////////////////////////////////////////////////
+    //////////////////////////////////////////////////////////////////////////////////////////
+    //						RETRIEVE THE ELEMENT THAT DEFINE THE SCOPE 						//
+    //////////////////////////////////////////////////////////////////////////////////////////
 
-        // Scope is defined by an attribute of 'el'
-        if (ref.getPerspective() == "$THIS")
-                scopeElement = &el;
+    // Scope is defined by an attribute of 'el'
+    if (ref.getPerspective() == "$THIS")
+        scopeElement = &el;
 
-        // Scope is defined by an attribute of parent
-        else if (ref.getPerspective() == "$PARENT")
-                scopeElement = model.element(el.parent());
+    // Scope is defined by an attribute of parent
+    else if (ref.getPerspective() == "$PARENT")
+        scopeElement = model.element(el.parent());
 
-        // Scope is defined by an attribute of grandparent
-        else if (ref.getPerspective() == "$GRANDPARENT") {
-                scopeElement = model.element(el.parent());
+    // Scope is defined by an attribute of grandparent
+    else if (ref.getPerspective() == "$GRANDPARENT") {
+        scopeElement = model.element(el.parent());
 
-                // scopeElement can be NULL here. This is why have this condition
-                scopeElement = scopeElement ? model.element (scopeElement -> parent()) : scopeElement;
+        // scopeElement can be NULL here. This is why have this condition
+        scopeElement = scopeElement ? model.element (scopeElement -> parent()) : scopeElement;
+    }
+
+    //////////////////////////////////////////////////////////////////////////////////////////
+    //						TEST THE SCOPE ELEMENT											//
+    //////////////////////////////////////////////////////////////////////////////////////////
+
+    // Test if scope was defined
+    if (!scopeElement) {
+        fprintf (stderr, "Unknown scope of '%s' attribute of '%s' element\n",
+                 att.name().c_str(), el.elementName().c_str());
+        return;
+    }
+
+    // Test scope att
+
+    string scopeAtt = scopeElement -> attribute (ref.getPerspectiveAtt()).value();
+
+    if (scopeAtt.empty()) {
+        fprintf (stderr, "Unknown scope of '%s' attribute of '%s' element\n",
+                 att.name().c_str(), el.elementName().c_str());
+        return;
+    }
+
+    //////////////////////////////////////////////////////////////////////////////////////////
+    //						VALIDATE THE REFERENCE WITH THE SCOPE							//
+    //////////////////////////////////////////////////////////////////////////////////////////
+
+    // Retrieve the element pointed by $ELEMENT.att
+    vector<ModelElement *> aux = model.elementByIdentifier (scopeAtt);
+    if (aux.empty ()) {
+        fprintf (stderr, "Unknown scope of '%s' attribute of '%s' element\n",
+                 att.name().c_str(), el.elementName().c_str());
+
+        return;
+    }
+
+    // Test if 'pointed.scope' is 'scopeElement.id'
+    scopeElement = aux.front();
+
+    if (pointed.scope() != scopeElement -> id()) {
+
+        Attribute att = scopeElement->attribute("refer");
+        if (att.value() != ""){
+
+            vector <ModelElement *> refs = model.elementByIdentifier(att.value());
+            if (!refs.empty()){
+                ModelElement *refer = refs.front();
+                if (refer && pointed.scope() == refer->id())
+                    return;
+            }
+
         }
 
-        //////////////////////////////////////////////////////////////////////////////////////////
-        //						TEST THE SCOPE ELEMENT											//
-        //////////////////////////////////////////////////////////////////////////////////////////
 
-        // Test if scope was defined
-        if (!scopeElement) {
-                fprintf (stderr, "Unknown scope of '%s' attribute of '%s' element\n",
-                                att.name().c_str(), el.elementName().c_str());
-                return;
-        }
+        fprintf (stderr, "'%s' attribute of '%s' element should point to '%s' '%s'\n",
+                 att.name().c_str(), el.elementName().c_str(),
+                 scopeAtt.c_str(), scopeElement -> elementName().c_str());
 
-        // Test scope att
+        msgs.push_back(pair<void *, string> (el.data(),
+                                             messageFactory.createMessage(3205, 2, el.elementName().c_str(),
+                                                                          scopeAtt.c_str())));
+        model.addElementWithErrorInLastPass(el.id());
 
-        string scopeAtt = scopeElement -> attribute (ref.getPerspectiveAtt()).value();
 
-        if (scopeAtt.empty()) {
-                fprintf (stderr, "Unknown scope of '%s' attribute of '%s' element\n",
-                                att.name().c_str(), el.elementName().c_str());
-                return;
-        }
-
-        //////////////////////////////////////////////////////////////////////////////////////////
-        //						VALIDATE THE REFERENCE WITH THE SCOPE							//
-        //////////////////////////////////////////////////////////////////////////////////////////
-
-        // Retrieve the element pointed by $ELEMENT.att
-        vector<ModelElement *> aux = model.elementByIdentifier (scopeAtt);
-        if (aux.empty ()) {
-                fprintf (stderr, "Unknown scope of '%s' attribute of '%s' element\n",
-                                att.name().c_str(), el.elementName().c_str());
-
-                return;
-        }
-
-        // Test if 'pointed.scope' is 'scopeElement.id'
-        scopeElement = aux.front();
-        if (pointed.scope() != scopeElement -> id()) {
-                fprintf (stderr, "'%s' attribute of '%s' element should point to '%s' '%s'\n",
-                        att.name().c_str(), el.elementName().c_str(),
-                        scopeAtt.c_str(), scopeElement -> elementName().c_str());
-
-                msgs.push_back(pair<void *, string> (el.data(),
-                                                    messageFactory.createMessage(3205, 2, el.elementName().c_str(),
-                                                                                          scopeAtt.c_str())));
-                model.addElementWithErrorInLastPass(el.id());
-
-                return;
-        }
+        return;
+    }
 }
 
 
@@ -137,88 +153,88 @@ void specificScopeReferenceValidation (const ModelElement &el, const ModelElemen
 void referenceValidation (const ModelElement &el, const Attribute &att, Model &model, vector<pair<void *, string> > &msgs,
                           Message& messageFactory)
 {
-        vector<ModelElement *> pointedElements = model.elementByIdentifier(att.value());
+    vector<ModelElement *> pointedElements = model.elementByIdentifier(att.value());
 
 
-        if (att.name() == "interface" && pointedElements.size() == 0){
-            pointedElements = model.elementByPropertyName(el.attribute("component").value(), att.value());
-        }
+    if (att.name() == "interface" && pointedElements.size() == 0){
+        pointedElements = model.elementByPropertyName(el.attribute("component").value(), att.value());
+    }
 
-        ///////////////////////////////////////////////////////////////////////////
-        //  Um elemento que faz referncia, sempre ter que fazer refer?ncia,
-        //  ou ele pode assumir um outro valor que no a referncia?
-        ///////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////
+    //  Um elemento que faz referncia, sempre ter que fazer refer?ncia,
+    //  ou ele pode assumir um outro valor que no a referncia?
+    ///////////////////////////////////////////////////////////////////////////
 
-        // Elements points to nobody
-        if (pointedElements.empty()) {
-                fprintf (stderr, "'%s' attribute of '%s' element point to anybody\n",
-                                att.name().c_str(), el.elementName().c_str());
-                msgs.push_back(pair<void *, string> (el.data(),
-                                                    messageFactory.createMessage(3003, 2, att.name().c_str(),
-                                                                                 el.elementName().c_str())));
-                model.addElementWithErrorInLastPass(el.id());
-                return;
-        }
+    // Elements points to nobody
+    if (pointedElements.empty()) {
+        fprintf (stderr, "'%s' attribute of '%s' element point to anybody\n",
+                 att.name().c_str(), el.elementName().c_str());
+        msgs.push_back(pair<void *, string> (el.data(),
+                                             messageFactory.createMessage(3003, 2, att.name().c_str(),
+                                                                          el.elementName().c_str())));
+        model.addElementWithErrorInLastPass(el.id());
+        return;
+    }
 
-        ModelElement *pointed = pointedElements.front();
-//        assert (pointed);
-        if (!pointed) return;
+    ModelElement *pointed = pointedElements.front();
+    //        assert (pointed);
+    if (!pointed) return;
 
-        const ReferenceStructure *ref = Langstruct::getReference(el.elementName(), att.name(), pointed -> elementName());
+    const ReferenceStructure *ref = Langstruct::getReference(el.elementName(), att.name(), pointed -> elementName());
 
-        /* Test if 'pointed' element can be pointed by 'el'.
+    /* Test if 'pointed' element can be pointed by 'el'.
          * If 'ref' is NULL, then don't exist a reference 'el.att.name' -> pointed.*/
-        if (!ref) {
-                fprintf (stderr, "'%s' attribute of '%s' element can't point to '%s' element\n",
-                         att.name().c_str(), el.elementName().c_str(), pointed -> elementName().c_str());
-                msgs.push_back(pair<void *, string> (el.data(),
-                                                    messageFactory.createMessage(3004, 3, att.name().c_str(),
-                                                                                 el.elementName().c_str(),
-                                                                                 pointed -> elementName().c_str())));
-                model.addElementWithErrorInLastPass(el.id());
-                return;
-        }
+    if (!ref) {
+        fprintf (stderr, "'%s' attribute of '%s' element can't point to '%s' element\n",
+                 att.name().c_str(), el.elementName().c_str(), pointed -> elementName().c_str());
+        msgs.push_back(pair<void *, string> (el.data(),
+                                             messageFactory.createMessage(3004, 3, att.name().c_str(),
+                                                                          el.elementName().c_str(),
+                                                                          pointed -> elementName().c_str())));
+        model.addElementWithErrorInLastPass(el.id());
+        return;
+    }
 
 
-        //////////////////////////////////////////////////////////////////////////////////////////////
-        // 								SCOPE TEST													//
-        //                                                                                          //
-        //	This patch will validate the scope of the reference.									//
-        //  One reference may be in 5 different scopes:												//
-        //																							//
-        //	* ANY: The pointed element can be anywhere in the doc									//
-        //	* SAME: The 'pointed.scope' must be equal to 'el.scope' 								//
-        //																							//
-        //	* $THIS.att: The scope element is defined by the 'att' of 'el'							//
-        //	* $PARENT.att: The scope element is defined by the 'att' of 'el.parent'					//
-        //	* $GRANDPARENT.att: The scope element is defined by the 'att' of 'el.parent.parent'		//
-        //////////////////////////////////////////////////////////////////////////////////////////////
+    //////////////////////////////////////////////////////////////////////////////////////////////
+    // 								SCOPE TEST													//
+    //                                                                                          //
+    //	This patch will validate the scope of the reference.									//
+    //  One reference may be in 5 different scopes:												//
+    //																							//
+    //	* ANY: The pointed element can be anywhere in the doc									//
+    //	* SAME: The 'pointed.scope' must be equal to 'el.scope' 								//
+    //																							//
+    //	* $THIS.att: The scope element is defined by the 'att' of 'el'							//
+    //	* $PARENT.att: The scope element is defined by the 'att' of 'el.parent'					//
+    //	* $GRANDPARENT.att: The scope element is defined by the 'att' of 'el.parent.parent'		//
+    //////////////////////////////////////////////////////////////////////////////////////////////
 
-        /* ANY scope elements. The pointed element could be at
+    /* ANY scope elements. The pointed element could be at
          * any position on the doc, so perspectives won't be a problem (hope so! =P).*/
-        if (ref -> getPerspective() == "ANY")
-                anyScopeReferenceValidation (el, *pointed, att, model, msgs, messageFactory);
+    if (ref -> getPerspective() == "ANY")
+        anyScopeReferenceValidation (el, *pointed, att, model, msgs, messageFactory);
 
-        /* SAME_PERSPECTIVE elements. The pointed element must be at
+    /* SAME_PERSPECTIVE elements. The pointed element must be at
          * the same perspective of the element who reference him.*/
-        else if (ref -> getPerspective() == "SAME") {
-                if (el.scope() != pointed -> scope() && el.scope() != pointed->id()){
-                        fprintf (stderr, "'%s' element pointed by '%s' attribute of '%s' element MUST be at same perspective of him\n",
-                                        pointed -> elementName().c_str(), att.name().c_str(), el.elementName().c_str());
+    else if (ref -> getPerspective() == "SAME") {
+        if (el.scope() != pointed -> scope() && el.scope() != pointed->id()){
+            fprintf (stderr, "'%s' element pointed by '%s' attribute of '%s' element MUST be at same perspective of him\n",
+                     pointed -> elementName().c_str(), att.name().c_str(), el.elementName().c_str());
 
-                        msgs.push_back(pair<void *, string> (el.data(),
-                                                            messageFactory.createMessage(3005, 2, att.name().c_str(),
-                                                                                         el.elementName().c_str())));
-                        model.addElementWithErrorInLastPass(el.id());
-                }
+            msgs.push_back(pair<void *, string> (el.data(),
+                                                 messageFactory.createMessage(3005, 2, att.name().c_str(),
+                                                                              el.elementName().c_str())));
+            model.addElementWithErrorInLastPass(el.id());
         }
+    }
 
-        /* $ELEMENT.ATT elements. The pointed element must be
+    /* $ELEMENT.ATT elements. The pointed element must be
          * a child (just children?) of '$ELEMENT.ATT'.*/
-        else
-                specificScopeReferenceValidation(el, *pointed, att, *ref, model, msgs, messageFactory);
+    else
+        specificScopeReferenceValidation(el, *pointed, att, *ref, model, msgs, messageFactory);
 
-   }
+}
 
 
 
@@ -254,7 +270,7 @@ void testRepeatedRoles (const ModelElement &element, const ModelElement& connect
             if (attr.value() != ""){
                 if (roles.count(attr.value()) > 0){
                     msgs.push_back (pair <void*, string> (connector.data(),
-                                                           messageFactory.createMessage(3301, 1, attr.value().c_str())));
+                                                          messageFactory.createMessage(3301, 1, attr.value().c_str())));
                     model.addElementWithErrorInLastPass(connector.id());
 
                 }
@@ -271,7 +287,7 @@ void testRepeatedRoles (const ModelElement &element, const ModelElement& connect
 void linkValidation (const ModelElement& link, string connectorId, Model& model, vector<pair<void *, string> > &msgs, Message &messageFactory)
 {
     map <string, pair<int, int> > roles;
-//    getConnectorSetRoles(connector, model, roles);
+    //    getConnectorSetRoles(connector, model, roles);
 
     roles = model.getConnectorSetRoles(connectorId);
 
@@ -333,7 +349,7 @@ void SemanticValidation::semanticValidation(const ModelElement &el, Model &model
         Attribute xconnector = el.attribute("xconnector");
         if (xconnector.value() != ""){
             linkValidation(el, xconnector.value(), model, msgs, messageFactory);
-//          return;
+            //          return;
         }
 
     }
@@ -371,7 +387,7 @@ void SemanticValidation::semanticValidation(const ModelElement &el, Model &model
                     ModelElement *e = els[i];
                     if (e->id() != ""){
                         msgs.push_back(pair <void *, string> (e->data(),
-                                                      messageFactory.createMessage(3001, 1, value.c_str())));
+                                                              messageFactory.createMessage(3001, 1, value.c_str())));
 
 
                         model.addElementWithErrorInLastPass(e->id());
