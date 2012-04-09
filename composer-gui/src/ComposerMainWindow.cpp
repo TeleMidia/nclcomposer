@@ -701,8 +701,7 @@ void ComposerMainWindow::createAboutPlugins()
 
   connect(bOk, SIGNAL(rejected()), aboutPluginsDialog, SLOT(close()));
 
-  connect( detailsButton, SIGNAL(pressed()),
-          this, SLOT(showPluginDetails()) );
+  connect( detailsButton, SIGNAL(pressed()), this, SLOT(showPluginDetails()) );
 
   QGridLayout *gLayout = new QGridLayout(aboutPluginsDialog);
   gLayout->addWidget(new QLabel(tr("The <b>Composer</b> is an IDE for"
@@ -720,6 +719,9 @@ void ComposerMainWindow::createAboutPlugins()
   aboutPluginsDialog->setLayout(gLayout);
 
   aboutPluginsDialog->setModal(true);
+
+  connect(aboutPluginsDialog, SIGNAL(finished(int)),
+          this, SLOT(saveLoadPluginData(int)));
 }
 
 void ComposerMainWindow::about()
@@ -756,7 +758,16 @@ void ComposerMainWindow::aboutPlugins()
     treeWidgetItem2plFactory.insert(treeWidgetItem, pF);
 
     treeWidgetItem->setText(0, pF->name());
-    treeWidgetItem->setCheckState(1, Qt::Checked);
+
+    // Set checked (or not) based on the settings
+    ComposerSettings settings;
+    settings.beginGroup("loadPlugins");
+    if(!settings.contains(pF->id()) || settings.value(pF->id()).toBool())
+      treeWidgetItem->setCheckState(1, Qt::Checked);
+    else
+      treeWidgetItem->setCheckState(1, Qt::Unchecked);
+
+    settings.endGroup();
     treeWidgetItem->setText(2, pF->version());
     treeWidgetItem->setText(3, pF->vendor());
   }
@@ -1794,6 +1805,25 @@ void ComposerMainWindow::updateTabWithProject(int index, QString newLocation)
     QString projectId = project->getAttribute("id");
     tabProjects->setTabText(index, projectId);
   }
+}
+
+void ComposerMainWindow::saveLoadPluginData(int)
+{
+  ComposerSettings settings;
+  settings.beginGroup("loadPlugins");
+  QTreeWidgetItem *item;
+  foreach(item, treeWidgetItem2plFactory.keys())
+  {
+    if(item->checkState(1))
+    {
+      settings.setValue(treeWidgetItem2plFactory.value(item)->id(), true);
+    }
+    else
+    {
+      settings.setValue(treeWidgetItem2plFactory.value(item)->id(), false);
+    }
+  }
+  settings.endGroup();
 }
 
 } } //end namespace
