@@ -80,8 +80,7 @@ IPluginFactory* PluginControl::loadPlugin(QString fileName)
       if (!pluginFactories.contains(pluginID))
       {
         pluginFactories[pluginID] = pluginFactory;
-        QList<LanguageType> types =
-            pluginFactory->getSupportedLanguages();
+        QList<LanguageType> types = pluginFactory->getSupportedLanguages();
 
         QList<LanguageType>::iterator it;
 
@@ -149,7 +148,14 @@ void PluginControl::launchProject(Project *project)
        it++)
   {
     factory        = pluginFactories[*it];
-    launchNewPlugin(factory, project);
+
+    ComposerSettings settings;
+    settings.beginGroup("loadPlugins");
+    if(!settings.contains(*it) || settings.value(*it).toBool() == true)
+    {
+      launchNewPlugin(factory, project);
+    }
+    settings.endGroup();
   }
 }
 
