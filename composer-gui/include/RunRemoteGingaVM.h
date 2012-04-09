@@ -11,6 +11,7 @@
 #define RUNREMOTEGINGAVM_H
 
 #include <QThread>
+#include <QProgressBar>
 #include <core/model/Project.h>
 
 #include "SimpleSSHClient.h"
@@ -35,11 +36,20 @@ private:
 
   bool fixSrcsFromNCLFile(const QString &nclLocalPath);
 
+  bool mustStop;
+
 signals:
   void finished();
+  void copyFinished();
+
+  void startTask();
+  void taskDescription(QString);
+  void taskMaximumValue(int);
+  void taskValue(int);
 
 public slots:
   void runCurrentProject();
+  void stopExecution();
 
 public:
   void setCurrentProject(Project* project);

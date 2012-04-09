@@ -18,6 +18,7 @@
 #include <QFileInfo>
 
 #include <QMessageBox>
+#include <QApplication>
 #include <iostream>
 
 #include <core/util/ComposerSettings.h>
@@ -109,16 +110,25 @@ bool RunRemoteGingaVMAction::sendFilesToGingaVM(SimpleSSHClient &sshclient,
   int ret = 1;
   // \todo This search MUST BE RECURSIVE!!!
   // \todo This also can be a function.
+
+  emit taskDescription(tr("Sending files to remote machine..."));
+  emit taskMaximumValue(filesToSend.size());
+
   qDebug() << "Must send this files:" << filesToSend;
 
   for(int i = 0; i < filesToSend.size(); i++)
   {
+    if(mustStop) break;
+
+    emit taskValue(i);
+
     int resp = 0;
     QString fullpath = filesToSend.at(i);
     if(fullpath.contains(baseLocalPath))
     {
       QString relativePath = fullpath.mid(baseLocalPath.size()+1);
-      QString relativePathDir = relativePath.mid(0, relativePath.lastIndexOf("/")+1);
+      QString relativePathDir =
+          relativePath.mid(0, relativePath.lastIndexOf("/")+1);
       QFileInfo fileInfo(fullpath);
       if(fileInfo.isFile())
       {
@@ -136,6 +146,7 @@ bool RunRemoteGingaVMAction::sendFilesToGingaVM(SimpleSSHClient &sshclient,
         resp = sshclient.exec_cmd(mkdir.toStdString().c_str());
       }
     }
+
     ret = ret && !resp;
   }
 
@@ -213,9 +224,15 @@ bool RunRemoteGingaVMAction::fixSrcsFromNCLFile(const QString &nclLocalPath)
 
 void RunRemoteGingaVMAction::runCurrentProject()
 {
+  mustStop = false;
+
+  emit startTask();
+//  emit taskMaximumValue(3);
+
   // Checks if there is a current NCL project.
   QString location = project->getLocation();
 
+  emit taskDescription(tr("Getting remote connection configuration"));
   // Getting the settings user data.
   ComposerSettings settings;
   settings.beginGroup("runginga");
@@ -232,9 +249,16 @@ void RunRemoteGingaVMAction::runCurrentProject()
                             remoteIp.toStdString().c_str(),
                             remotePath.toStdString().c_str());
 
+  // emit taskValue(1);
+  emit taskDescription(tr("Trying to connect to machine from IP: %1").
+                       arg(remoteIp));
+
+
   qWarning() << "Trying to connect to remote machine...";
+
   int connRet = sshclient.doConnect();
-  if( connRet != 0)
+
+  if( connRet != 0 && !mustStop)
   {
     qWarning() << "Could not connect to remote machine...";
     emit finished();
@@ -246,13 +270,15 @@ void RunRemoteGingaVMAction::runCurrentProject()
   QString nclLocalPath = tmpNCLDir;
   nclLocalPath += "/";
   nclLocalPath += "tmp.ncl";
-  qDebug() << "Running NCL File (on a remote Machine): " << nclLocalPath;
 
   /* First, get the list of files to send */
   QStringList filesToSend = filesToSendToGingaVM(project, nclLocalPath);
   /* and send them to Ginga VM*/
-  if(sendFilesToGingaVM(sshclient, tmpNCLDir, remotePath, filesToSend))
+
+  if(!mustStop &&
+     sendFilesToGingaVM(sshclient, tmpNCLDir, remotePath, filesToSend))
   {
+    emit copyFinished();
     /* Now, fix all the paths from NCL, and send the NCL file*/
     QFile file(nclLocalPath);
     if(file.open(QFile::WriteOnly | QIODevice::Truncate))
@@ -271,7 +297,8 @@ void RunRemoteGingaVMAction::runCurrentProject()
         QString cmd = remoteCmd;
         cmd += " ";
         cmd += remotePath + "/tmp.ncl";
-        sshclient.exec_cmd(cmd.toStdString().c_str());
+        if(!mustStop)
+          sshclient.exec_cmd(cmd.toStdString().c_str());
 //      }
     }
     else
@@ -288,6 +315,12 @@ void RunRemoteGingaVMAction::runCurrentProject()
   sshclient.doDisconnect();
 
   emit finished();
+}
+
+void RunRemoteGingaVMAction::stopExecution()
+{
+  qDebug() << "RunRemoteGingaVMAction::stopExecution";
+  mustStop = true;
 }
 
 void StopRemoteGingaVMAction::stopRunningApplication()

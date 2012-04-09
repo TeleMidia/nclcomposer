@@ -43,6 +43,7 @@
 #include <QtGui/QTreeView>
 #include <QToolButton>
 #include <QDockWidget>
+#include <QAtomicInt>
 
 #include <core/modules/PluginControl.h>
 #include <core/modules/ProjectControl.h>
@@ -140,6 +141,7 @@ private:
   PluginDetailsDialog *pluginDetailsDialog;
 
   QProcess *proc;
+  QProgressDialog *taskProgressBar;
 
 #ifdef WITH_LIBSSH2
   QThreadEx runRemoteGingaVMThread;

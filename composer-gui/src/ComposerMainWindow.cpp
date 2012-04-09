@@ -82,6 +82,7 @@ ComposerMainWindow::ComposerMainWindow(QApplication &app, QWidget *parent)
           this, SLOT(focusChanged(QWidget *, QWidget *)));
 
   proc = NULL;
+
 #ifdef WITH_LIBSSH2
   runRemoteGingaVMAction.moveToThread(&runRemoteGingaVMThread);
 
@@ -346,6 +347,43 @@ void ComposerMainWindow::initGUI()
 
   connect(welcomeWidget, SIGNAL(userPressedSeeInstalledPlugins()),
           this, SLOT(aboutPlugins()));
+
+
+  //Task Progress Bar
+
+#ifdef WITH_LIBSSH2
+  taskProgressBar = new QProgressDialog(this);
+  taskProgressBar->setWindowTitle(tr("Copy content to Ginga VM."));
+  taskProgressBar->setModal(true);
+
+  // start taskProgressBar
+  connect(&runRemoteGingaVMAction, SIGNAL(startTask()),
+          taskProgressBar, SLOT(show()));
+
+  connect(&runRemoteGingaVMAction, SIGNAL(taskDescription(QString)),
+          taskProgressBar, SLOT(setLabelText(QString)));
+
+  connect(&runRemoteGingaVMAction, SIGNAL(taskMaximumValue(int)),
+          taskProgressBar, SLOT(setMaximum(int)));
+
+  connect(&runRemoteGingaVMAction, SIGNAL(taskValue(int)),
+          taskProgressBar, SLOT(setValue(int)));
+
+  connect(&runRemoteGingaVMAction, SIGNAL(copyFinished()),
+          taskProgressBar, SLOT(hide()));
+
+  connect(&runRemoteGingaVMAction, SIGNAL(finished()),
+          taskProgressBar, SLOT(hide()));
+
+  connect(taskProgressBar, SIGNAL(canceled()),
+          &runRemoteGingaVMAction, SLOT(stopExecution()), Qt::DirectConnection);
+
+// This shows the taskBar inside the toolBar. In the future, this can
+//  taskProgressBarAction = ui->toolBar->insertWidget(ui->action_Save,
+//                                                    taskProgressBar);
+// taskProgressBarAction->setVisible(false);
+#endif
+
 }
 
 void ComposerMainWindow::addPluginWidget(IPluginFactory *fac, IPlugin *plugin,
@@ -615,7 +653,7 @@ void ComposerMainWindow::createMenus()
 
   /* menu_Language = new QMenu(0);
   tbLanguageDropList->setMenu(menu_Language);
-  ui->toolBar->addWidget(tbLanguageDropList); */
+  ui->toolBar->addWidget(tbLanguageDropList);*/
 
   menu_Perspective = new QMenu(0);
   // assing menu_Perspective to tbPerspectiveDropList
@@ -1127,6 +1165,8 @@ void ComposerMainWindow::runNCL()
 
 void ComposerMainWindow::runOnLocalGinga()
 {
+  // TODO: Ask to Save current project before send it to Ginga VM.
+
   QProcess *ginga = new QProcess(this);
   QStringList arguments;
   QString location = tabProjects->tabToolTip(tabProjects->currentIndex());
@@ -1173,7 +1213,9 @@ void ComposerMainWindow::runOnRemoteGingaVM()
     // There aren't a current project.
     QMessageBox::StandardButton reply;
     reply = QMessageBox::warning(NULL, tr("Warning!"),
-                                 tr("You already have an NCL application running. Please, stop them before you start a new one."),
+                                 tr("You already have an NCL application"
+                                    "running. Please, stop it before you start"
+                                    "a new one."),
                                  QMessageBox::Ok);
     return;
   }
@@ -1184,6 +1226,27 @@ void ComposerMainWindow::runOnRemoteGingaVM()
     QString location = tabProjects->tabToolTip(currentTab);
     Project *currentProject = ProjectControl::getInstance()->
                                                       getOpenProject(location);
+
+    if(currentProject->isDirty())
+    {
+      /*QMessageBox::StandardButton reply;
+      reply = QMessageBox::warning(this, tr("Warning!"),
+                                     tr("Your document is not saved."
+                                        "Do you want to save it now?"),
+                                     QMessageBox::Yes, QMessageBox::No);*/
+
+      int reply;
+      reply = QMessageBox::warning(NULL, tr("Warning!"),
+                                   tr("Your document is not saved."
+                                      "Do you want to save it now?"),
+                                   QMessageBox::Yes, QMessageBox::No);
+
+      if(reply == QMessageBox::Yes)
+      {
+        // save the current project before send it to Ginga VM
+        saveCurrentProject();
+      }
+    }
     runRemoteGingaVMAction.setCurrentProject(currentProject);
 
     runRemoteGingaVMThread.start();
@@ -1732,6 +1795,5 @@ void ComposerMainWindow::updateTabWithProject(int index, QString newLocation)
     tabProjects->setTabText(index, projectId);
   }
 }
-
 
 } } //end namespace

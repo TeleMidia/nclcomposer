@@ -10,12 +10,23 @@
 #include <QtGui/QApplication>
 #include <QResource>
 #include <QObject>
+
+#include <QX11EmbedWidget>
+
 #include "ComposerMainWindow.h"
+
+#ifdef Q_WS_X11
+#include <X11/Xlib.h>
+#endif
 
 using namespace composer::gui;
 
 int main(int argc, char *argv[])
 {
+#ifdef Q_WS_X11
+XInitThreads();
+#endif
+
     QApplication a(argc, argv);
     a.setQuitOnLastWindowClosed(true);
 
