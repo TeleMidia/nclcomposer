@@ -212,6 +212,20 @@ protected:
     void updateEntitiesOffset(int startFrom = 0, int insertedChars = 0);
     void printEntitiesOffset();
 
+    /*!
+     * \brief
+     */
+    bool isStartEndTag(Entity *entity);
+
+    /*!
+     * \brief
+     */
+    void openStartEndTag(Entity *entity);
+
+    /*!
+     * \brief
+     */
+    void fixIdentation(int offset);
 };
 
 } } } //end namespace

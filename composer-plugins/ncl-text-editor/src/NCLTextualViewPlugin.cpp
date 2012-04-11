@@ -224,10 +224,15 @@ void NCLTextualViewPlugin::onEntityAdded(QString pluginID, Entity *entity)
     // this operator will create a new (and we don't want this!).
     if(endEntityOffset.count(entity->getParentUniqueId()))
     {
+      if(isStartEndTag(entity->getParent()))
+      {
+        openStartEndTag(entity->getParent());
+//        printEntitiesOffset();
+      }
+
       insertAtOffset = endEntityOffset[entity->getParentUniqueId()];
     }
   }
-
 
   // fill the attributes (ordered)
   deque <QString> *attributes_ordered =
@@ -257,9 +262,8 @@ void NCLTextualViewPlugin::onEntityAdded(QString pluginID, Entity *entity)
       line += " " + it.key() + "=\"" + it.value() + "\"";
   }
 
-  line += ">\n";
+  line += "/>\n";
   int startEntitySize = line.size();
-  line += "</" + entity->getType() + ">\n";
 
   if(insertAtOffset >= 0 && insertAtOffset <= nclTextEditor->text().length())
   {
@@ -269,53 +273,11 @@ void NCLTextualViewPlugin::onEntityAdded(QString pluginID, Entity *entity)
     updateEntitiesOffset(insertAtOffset, line.size());
 
     startEntityOffset[entity->getUniqueId()] = insertAtOffset;
-    endEntityOffset[entity->getUniqueId()] = insertAtOffset + startEntitySize;
-
-    // qDebug() << "*** Begin ***";
-    // printEntitiesOffset();
-
-    /* Fix Indentation */
-    int insertAtLine = nclTextEditor->SendScintilla(
-          QsciScintilla::SCI_LINEFROMPOSITION,
-          insertAtOffset);
-
-    // get the indentation for the next line
-    int lineIndent = nclTextEditor
-        ->SendScintilla( QsciScintilla::SCI_GETLINEINDENTATION,
-                         insertAtLine+2);
-
-    if(insertAtLine > 1) lineIndent += 8;
-
-    // qDebug() << "Line: " << insertAtLine;
-    // qDebug() << "Line ident: " << lineIndent;
-
-    nclTextEditor->SendScintilla( QsciScintilla::SCI_SETLINEINDENTATION,
-                                  insertAtLine,
-                                  lineIndent);
-    nclTextEditor->SendScintilla( QsciScintilla::SCI_SETLINEINDENTATION,
-                                  insertAtLine+1,
-                                  lineIndent);
-
-    int previousStarted = startEntityOffset[entity->getUniqueId()]-1;
-    updateEntitiesOffset(previousStarted, lineIndent/8);
-    // qDebug() << "*** First pass ***";
-    // printEntitiesOffset();
-
-    previousStarted = endEntityOffset[entity->getUniqueId()];
-    // qDebug() << "*** Second pass ***";
-    updateEntitiesOffset(previousStarted+1, lineIndent/8);
-    // printEntitiesOffset();
+    endEntityOffset[entity->getUniqueId()] = insertAtOffset + startEntitySize-2;
 
     window->getTextEditor()->SendScintilla(QsciScintilla::SCI_SETFOCUS, true);
-    /*
-    window->getTextEditor()->setCursorPosition(insertAtLine, 0);
-    window->getTextEditor()->ensureLineVisible(insertAtLine);
-  */
 
-    //  emit TextualPluginHasAddedEntity(pluginID, entity);
-
-    /* qDebug() << "NCLTextualViewPlugin::onEntityAdded" <<
-       entity->getType() << " " << insertAtLine; */
+    fixIdentation(insertAtOffset);
 
     currentEntity = entity;
   }
@@ -323,6 +285,8 @@ void NCLTextualViewPlugin::onEntityAdded(QString pluginID, Entity *entity)
     qWarning() << "NCLTextEditor::onEntityAdded Trying to insert a media in a "
                   "position greater than the text size. It will be ignored!"
                << insertAtOffset;
+
+//  printEntitiesOffset();
 }
 
 void NCLTextualViewPlugin::errorMessage(QString error)
@@ -348,7 +312,6 @@ void NCLTextualViewPlugin::onEntityChanged(QString pluginID, Entity *entity)
     if(it.value() != "")
       line += " " + it.key() + "=\"" + it.value() + "\"";
   }
-  line += ">";
 
   int insertAtOffset = 0;
   if(startEntityOffset.contains(entity->getUniqueId()))
@@ -367,12 +330,21 @@ void NCLTextualViewPlugin::onEntityChanged(QString pluginID, Entity *entity)
                                              insertAtOffset+previous_length);
     }
 
-    if((insertAtOffset+previous_length)
-        == nclTextEditor->text().size())
+    curChar = nclTextEditor->SendScintilla(QsciScintilla::SCI_GETCHARAT,
+                                           insertAtOffset+previous_length-1);
+    if(curChar == '/')
+    {
+      line += "/>";
+    }
+    else
+      line += ">";
+
+    if((insertAtOffset+previous_length) == nclTextEditor->text().size())
     {
       qWarning() << "TextEditor could not perform the requested action.";
       return;
     }
+
     previous_length+=1;
 
     // qDebug() << previous_length;
@@ -844,6 +816,80 @@ void NCLTextualViewPlugin::syncFinished()
   updateErrorMessages();
 }
 
+bool NCLTextualViewPlugin::isStartEndTag(Entity *entity)
+{
+  int endOffset = endEntityOffset[entity->getUniqueId()];
+
+  //Check if I am at a START_END_TAG />
+  char curChar = nclTextEditor->SendScintilla(QsciScintilla::SCI_GETCHARAT,
+                                              endOffset-1);
+
+  if(curChar == '/')
+  {
+    qDebug() << "isStartEndTag returns true";
+    return true;
+  }
+  else return false;
+}
+
+void NCLTextualViewPlugin::openStartEndTag(Entity *entity)
+{
+  if(isStartEndTag(entity))
+  {
+    int endOffset = endEntityOffset[entity->getUniqueId()];
+
+//    printEntitiesOffset(); qDebug() << endl;
+    // If the parent is a START_END, then we should separate the START from
+    // the END.
+    nclTextEditor->SendScintilla(QsciScintilla::SCI_SETSELECTIONSTART,
+                                 endOffset-1);
+
+    nclTextEditor->SendScintilla(QsciScintilla::SCI_SETSELECTIONEND,
+                                 endOffset+1);
+
+    nclTextEditor->removeSelectedText();
+
+    QString endTag = ">\n</" + entity->getType() + ">";
+    // Openning the START_END_TAG
+    nclTextEditor->insertAtPos(endTag, endOffset-1);
+    // before we have "/>\n" and now we have to remove update with the difference
+    // i.e. endtag.size() - 3
+//    printEntitiesOffset();
+//    qDebug() << endl;
+    updateEntitiesOffset(endOffset, endTag.size() - 2);
+//    printEntitiesOffset(); qDebug() << endl;
+
+    fixIdentation(endOffset+2);
+    endEntityOffset[entity->getUniqueId()] = endOffset + 1;
+  }
+}
+
+void NCLTextualViewPlugin::fixIdentation(int offset)
+{
+  /* Fix Indentation */
+  int insertAtLine = nclTextEditor->SendScintilla(
+        QsciScintilla::SCI_LINEFROMPOSITION, offset);
+
+  int totalLines = nclTextEditor->
+      SendScintilla( QsciScintilla::SCI_GETLINECOUNT);
+
+  qDebug () << totalLines << insertAtLine;
+  if(insertAtLine + 2 >= totalLines) return; // do nothing
+
+  // get the identation for the next line
+  int lineIndent = nclTextEditor
+      ->SendScintilla( QsciScintilla::SCI_GETLINEINDENTATION,
+                       insertAtLine+1);
+
+  if(insertAtLine > 1) lineIndent += 8;
+
+  nclTextEditor->SendScintilla( QsciScintilla::SCI_SETLINEINDENTATION,
+                                insertAtLine,
+                                lineIndent);
+
+  updateEntitiesOffset(offset-1, lineIndent/8);
+}
+
 void NCLTextualViewPlugin::updateEntitiesOffset( int startFrom,
                                                 int insertedChars)
 {
@@ -869,8 +915,17 @@ void NCLTextualViewPlugin::printEntitiesOffset()
   QString key;
   foreach(key, startEntityOffset.keys())
   {
-    qDebug() << "key="<< key << "; start=" << startEntityOffset[key]
-             << "; end=" << endEntityOffset[key];
+    int startOffSet = startEntityOffset[key];
+    char startChar = nclTextEditor->SendScintilla(QsciScintilla::SCI_GETCHARAT,
+                                                  startOffSet);
+    int endOffSet = endEntityOffset[key];
+    char endChar = nclTextEditor->SendScintilla(QsciScintilla::SCI_GETCHARAT,
+                                                endOffSet);
+
+    qDebug() << "key="<< key << "(" << project->getEntityById(key)->getType()
+                << "; start=" << startOffSet
+                << "; start_char=" << startChar << "; end=" << endOffSet
+                << "; end_char=" << endChar << endl;
   }
 }
 
