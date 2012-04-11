@@ -246,6 +246,11 @@ protected slots:
    */
   void slotLanguageChanged(QAction* action);
 
+  /*!
+   * \brief TODO
+   */
+  void saveLoadPluginData(int);
+
 private slots:
   /*!
    * \brief Shows the about dialog.
