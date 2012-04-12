@@ -40,7 +40,6 @@ void QnstGraphicsBody::createObjects()
     menu->actionContext->setEnabled(true);
     menu->actionSwitch->setEnabled(true);
     menu->actionPort->setEnabled(true);
-    menu->actionArea->setEnabled(true);
     menu->actionProperty->setEnabled(true);
     menu->actionAggregator->setEnabled(true);
 }

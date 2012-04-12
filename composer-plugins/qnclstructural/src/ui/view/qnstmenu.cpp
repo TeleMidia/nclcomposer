@@ -349,16 +349,16 @@ void QnstMenu::createMenus()
     menuInsert = new QMenu();
     menuInsert->setTitle(tr("Insert"));
 
-    menuInsert->addAction(actionImage);
-    menuInsert->addAction(actionVideo);
-    menuInsert->addAction(actionAudio);
-    menuInsert->addAction(actionText);
-    menuInsert->addSeparator();
-    menuInsert->addAction(actionScript);
-    menuInsert->addAction(actionSettings);
-    menuInsert->addAction(actionHTML);
-    menuInsert->addAction(actionNCL);
-    menuInsert->addSeparator();
+//    menuInsert->addAction(actionImage);
+//    menuInsert->addAction(actionVideo);
+//    menuInsert->addAction(actionAudio);
+//    menuInsert->addAction(actionText);
+//    menuInsert->addSeparator();
+//    menuInsert->addAction(actionScript);
+//    menuInsert->addAction(actionSettings);
+//    menuInsert->addAction(actionHTML);
+//    menuInsert->addAction(actionNCL);
+//    menuInsert->addSeparator();
     menuInsert->addAction(actionMedia);
     menuInsert->addSeparator();
     menuInsert->addAction(actionContext);

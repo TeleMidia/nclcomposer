@@ -1699,71 +1699,114 @@ void QnstView::addMedia(const QString uid, const QString parent, const QMap<QStr
     }
 }
 
-void QnstView::changeMedia(QnstGraphicsMedia* entity, const QMap<QString, QString> properties)
+void QnstView::changeMedia(QnstGraphicsMedia* entity, const
+QMap<QString, QString> properties)
 {
-    entity->setnstId(properties["id"]);
-    entity->setSource(properties["src"]);
-    entity->setRefer(properties["refer"]);
-    entity->setReferUID(properties["referUID"]);
-    entity->setInstance(properties["instance"]);
+   entity->setnstId(properties["id"]);
+   entity->setSource(properties["src"]);
+   entity->setRefer(properties["refer"]);
+   entity->setReferUID(properties["referUID"]);
+   entity->setInstance(properties["instance"]);
 
-    if (properties["referUID"] != ""){
-        if (entities.contains(properties["referUID"])){
-            entity->setSource(((QnstGraphicsMedia*)
-                               entities[properties["referUID"]])->getSource());
-        }
+   if (properties["referUID"] != ""){
+       if (entities.contains(properties["referUID"])){
+           entity->setSource(((QnstGraphicsMedia*)
+                              entities[properties["referUID"]])->getSource());
+       }
 
-    }
+   }
 
-    if (properties["type"] != ""){
-        if (properties["type"].startsWith("image")){
-            entity->setnstType(Qnst::Image);
+   if (properties["type"].startsWith("image")){
+       entity->setnstType(Qnst::Image);
 
-            entity->setIcon(":/icon/image");
+       entity->setIcon(":/icon/image");
 
-        }else if (properties["type"].startsWith("audio")){
-            entity->setnstType(Qnst::Audio);
+   }else if (properties["type"].startsWith("audio")){
+       entity->setnstType(Qnst::Audio);
 
-            entity->setIcon(":/icon/audio");
+       entity->setIcon(":/icon/audio");
 
-        }else if (properties["type"].startsWith("video")){
-            entity->setnstType(Qnst::Video);
+   }else if (properties["type"].startsWith("video")){
+       entity->setnstType(Qnst::Video);
 
-            entity->setIcon(":/icon/video");
+       entity->setIcon(":/icon/video");
 
-        }else if (properties["type"] == "text/html"){
-            entity->setnstType(Qnst::Html);
+   }else if (properties["type"] == "text/html"){
+       entity->setnstType(Qnst::Html);
 
-            entity->setIcon(":/icon/html");
+       entity->setIcon(":/icon/html");
 
-        }else if (properties["type"] == "application/x-ginga-NCL"){
-            entity->setnstType(Qnst::NCL);
+   }else if (properties["type"] == "application/x-ginga-NCL"){
+       entity->setnstType(Qnst::NCL);
 
-            entity->setIcon(":/icon/ncl");
+       entity->setIcon(":/icon/ncl");
 
-        }else if (properties["type"].startsWith("text")){
-            entity->setnstType(Qnst::Text);
+   }else if (properties["type"].startsWith("text")){
+       entity->setnstType(Qnst::Text);
 
-            entity->setIcon(":/icon/text");
+       entity->setIcon(":/icon/text");
 
-        }else if (properties["type"] == "application/x-ncl-settings"){
-            entity->setnstType(Qnst::Settings);
+   }else if (properties["type"] == "application/x-ncl-settings"){
+       entity->setnstType(Qnst::Settings);
 
-            entity->setIcon(":/icon/settings");
+       entity->setIcon(":/icon/settings");
 
-        }else if (properties["type"] == "application/x-ginga-NCLua"){
-            entity->setnstType(Qnst::Script);
+   }else if (properties["type"] == "application/x-ginga-NCLua"){
+       entity->setnstType(Qnst::Script);
 
-            entity->setIcon(":/icon/script");
+       entity->setIcon(":/icon/script");
 
-        }else{
-            entity->setnstType(Qnst::Media);
+   }else if(properties["src"].endsWith(".png") ||
+            properties["src"].endsWith(".jpg") ||
+            properties["src"].endsWith(".jpeg") ||
+            properties["src"].endsWith(".gif")){
+       entity->setnstType(Qnst::Image);
 
-            entity->setIcon(":/icon/media");
-        }
-    }
+       entity->setIcon(":/icon/image");
 
-    adjustMedia(entity);
+   }else if(properties["src"].endsWith(".mp4") ||
+            properties["src"].endsWith(".avi") ||
+            properties["src"].endsWith(".mpeg4") ||
+            properties["src"].endsWith(".mpeg") ||
+            properties["src"].endsWith(".mpg") ||
+            properties["src"].endsWith(".mov")){
+       entity->setnstType(Qnst::Video);
+
+       entity->setIcon(":/icon/video");
+
+   }else if(properties["src"].endsWith(".mp3") ||
+            properties["src"].endsWith(".wav")){
+       entity->setnstType(Qnst::Audio);
+
+       entity->setIcon(":/icon/audio");
+
+   }else if(properties["src"].endsWith(".htm") ||
+            properties["src"].endsWith(".html")){
+       entity->setnstType(Qnst::Html);
+
+       entity->setIcon(":/icon/html");
+
+   }else if(properties["src"].endsWith(".ncl")){
+       entity->setnstType(Qnst::NCL);
+
+       entity->setIcon(":/icon/ncl");
+
+   }else if(properties["src"].endsWith(".txt")){
+       entity->setnstType(Qnst::Text);
+
+       entity->setIcon(":/icon/text");
+
+   }else if(properties["src"].endsWith(".lua")){
+       entity->setnstType(Qnst::Script);
+
+       entity->setIcon(":/icon/script");
+   }else{
+       entity->setnstType(Qnst::Media);
+
+       entity->setIcon(":/icon/media");
+   }
+
+   adjustMedia(entity);
 }
 
 void QnstView::adjustMedia(QnstGraphicsMedia* entity)

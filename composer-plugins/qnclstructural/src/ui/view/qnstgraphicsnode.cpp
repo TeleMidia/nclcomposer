@@ -148,7 +148,7 @@ void QnstGraphicsNode::inside()
 
 void QnstGraphicsNode::adjust()
 {
-
+    bool c = true;
 
     foreach(QnstGraphicsEntity* entity, getnstGraphicsEntities()){
         entity->adjust();
@@ -157,60 +157,62 @@ void QnstGraphicsNode::adjust()
     if(getnstGraphicsParent() != NULL)
     {
 
-      int colliding;
-      int maxInter = 10, inter = 0;
-      do
-      {
-        if(inter > maxInter) break;
-        inter++;
-
-        colliding = false;
-        foreach(QnstGraphicsEntity *entity, getnstGraphicsParent()->getnstGraphicsEntities())
-        {
-          if(this != entity && entity->getnstType() >= Qnst::Node &&
-             entity->getnstType() <= Qnst::Switch)
+        if (c){
+          int colliding;
+          int maxInter = 10, inter = 0;
+          do
           {
-            qreal n = 0;
-            qreal i = 0.0;
+            if(inter > maxInter) break;
+            inter++;
 
-            entity->setSelectable(false); update();
-            // check collision
-            while(collidesWithItem(entity, Qt::IntersectsItemBoundingRect))
+            colliding = false;
+            foreach(QnstGraphicsEntity *entity, getnstGraphicsParent()->getnstGraphicsEntities())
             {
+              if(this != entity && entity->getnstType() >= Qnst::Node &&
+                 entity->getnstType() <= Qnst::Switch)
+              {
+                qreal n = 0;
+                qreal i = 0.0;
 
-              QPointF pa(getLeft()+getWidth()/2, getTop()+getHeight()/2);
-              QPointF pb(entity->getWidth()/2, entity->getHeight()/2);
+                entity->setSelectable(false); update();
+                // check collision
+                while(collidesWithItem(entity, Qt::IntersectsItemBoundingRect))
+                {
 
-              QLineF line(pa, pb);
+                  QPointF pa(getLeft()+getWidth()/2, getTop()+getHeight()/2);
+                  QPointF pb(entity->getWidth()/2, entity->getHeight()/2);
 
-              line.setAngle(qrand()%360);
+                  QLineF line(pa, pb);
 
-              i += (double)(qrand()%100)/10000.0;
+                  line.setAngle(qrand()%360);
 
-              setTop(getTop()+line.pointAt(i/2).y()-pa.y());
-              setLeft(getLeft()+line.pointAt(i/2).x()-pa.x());
+                  i += (double)(qrand()%100)/10000.0;
 
-              if (++n > 1000){
-                  n = -1; break;
+                  setTop(getTop()+line.pointAt(i/2).y()-pa.y());
+                  setLeft(getLeft()+line.pointAt(i/2).x()-pa.x());
+
+                  if (++n > 1000){
+                      n = -1; break;
+                  }
+                }
+
+                inside();
+
+                entity->setSelectable(true); update();
               }
             }
 
-            inside();
-
-            entity->setSelectable(true); update();
+            foreach(QnstGraphicsEntity *entity, getnstGraphicsParent()->getnstGraphicsEntities())
+            {
+              if(collidesWithItem(entity, Qt::IntersectsItemBoundingRect))
+              {
+                colliding = true;
+              }
+            }
           }
+          while(colliding);
         }
-
-        foreach(QnstGraphicsEntity *entity, getnstGraphicsParent()->getnstGraphicsEntities())
-        {
-          if(collidesWithItem(entity, Qt::IntersectsItemBoundingRect))
-          {
-            colliding = true;
-          }
-        }
-      }
-      while(colliding);
-    }
+       }
 
     inside();
 

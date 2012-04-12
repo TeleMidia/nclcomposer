@@ -21,6 +21,16 @@ QnstGraphicsComposition::QnstGraphicsComposition(QnstGraphicsNode* parent)
     setColor("#EEEEEE");
 
     setAcceptDrops(true);
+
+    lastw = 0;
+    lasth = 0;
+
+    collapsed = false;
+
+    tmp = NULL;
+
+//    tmp = new QnstGraphicsComposition();
+//    tmp->hide();
 }
 
 QnstGraphicsComposition::~QnstGraphicsComposition()
@@ -36,6 +46,16 @@ QString QnstGraphicsComposition::getColor() const
 void QnstGraphicsComposition::setColor(QString color)
 {
     this->color = color;
+}
+
+void QnstGraphicsComposition::setCollpsed(bool collapsed)
+{
+    this->collapsed = collapsed;
+}
+
+bool QnstGraphicsComposition::isCollpsed()
+{
+    return collapsed;
 }
 
 void QnstGraphicsComposition::setnstId(QString id)
@@ -174,24 +194,56 @@ void QnstGraphicsComposition::draw(QPainter* painter)
 //        painter->drawRect(4, 4, getWidth(), getHeight());
 //    }
 
-    painter->setRenderHint(QPainter::Antialiasing,true);
+    if (!collapsed){
+        painter->setRenderHint(QPainter::Antialiasing,true);
 
-    painter->setBrush(QColor(color));
-    painter->setPen(QPen(QBrush(Qt::black), 0));
+        painter->setBrush(QColor(color));
+        painter->setPen(QPen(QBrush(Qt::black), 0));
 
-    painter->drawEllipse(4, 4, getWidth()-1, getHeight()-1);
+        painter->drawEllipse(4, 4, getWidth()-1, getHeight()-1);
 
-    if (isMoving()){
-        painter->setBrush(Qt::NoBrush);
-        painter->setPen(QPen(QBrush(Qt::black), 0)); // 0px = cosmetic border
+        if (isMoving()){
+            painter->setBrush(Qt::NoBrush);
+            painter->setPen(QPen(QBrush(Qt::black), 0)); // 0px = cosmetic border
 
-        painter->drawEllipse(getMoveLeft()+4-getLeft(), getMoveTop()+4-getTop(), getWidth()-1, getHeight()-1);
+            painter->drawEllipse(getMoveLeft()+4-getLeft(), getMoveTop()+4-getTop(), getWidth()-1, getHeight()-1);
 
-    }else if (isResizing()){
-        painter->setBrush(Qt::NoBrush);
-        painter->setPen(QPen(QBrush(Qt::black), 0)); // 0px = cosmetic border
+        }else if (isResizing()){
+            painter->setBrush(Qt::NoBrush);
+            painter->setPen(QPen(QBrush(Qt::black), 0)); // 0px = cosmetic border
 
-        painter->drawEllipse(getResizeLeft()+4-getLeft(), getResizeTop()+4-getTop(), getResizeWidth()-1, getResizeHeight()-1);
+            painter->drawEllipse(getResizeLeft()+4-getLeft(), getResizeTop()+4-getTop(), getResizeWidth()-1, getResizeHeight()-1);
+        }
+
+    }else{
+        painter->setRenderHint(QPainter::SmoothPixmapTransform, true);
+
+        painter->drawPixmap(4 + 8/2, 4 + 8/2, getWidth()-8, getHeight()-16-8, QPixmap(":/icon/context"));
+
+        if (!isSelected() && hasMouseHover()){
+            painter->setBrush(Qt::NoBrush);
+            painter->setPen(QPen(QBrush(QColor("#999999")), 0, Qt::DashLine)); // 0px = cosmetic border
+
+            painter->drawRect(4, 4, getWidth(), getHeight());
+        }
+
+        painter->setPen(QPen(QBrush(Qt::black),0));
+
+        QString localid = (getnstId() != "" ? getnstId() : "?");
+
+        if (localid.length() > 5){
+            localid = getnstId().replace(3,getnstId().length()-3,"...");
+        }
+
+        painter->drawText(4 + 8/2, 4 + 8/2 + getHeight()-16-8, getWidth()-8, 16, Qt::AlignCenter, localid);
+
+        if (isMoving()){
+            painter->setBrush(Qt::NoBrush);
+            painter->setPen(QPen(QBrush(Qt::black), 0)); // 0px = cosmetic border
+
+            painter->setRenderHint(QPainter::Antialiasing,false);
+            painter->drawRect(getMoveLeft()+4-getLeft(), getMoveTop()+4-getTop(), getWidth()-1, getHeight()-1);
+        }
     }
 }
 
@@ -208,6 +260,69 @@ void QnstGraphicsComposition::dragEnterEvent(QGraphicsSceneDragDropEvent *event)
 
             return;
     }
+}
+
+void QnstGraphicsComposition::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
+{
+    if (tmp == NULL){
+        tmp = new QnstGraphicsComposition();
+        tmp->hide();
+    }
+
+    if (collapsed){
+        setTop(getTop() - (lasth/2 - 64/2));
+        setLeft(getLeft() - (lastw/2 - 48/2));
+        setWidth(lastw);
+        setHeight(lasth);
+
+        foreach(QnstGraphicsEntity* e, getnstGraphicsEntities()){
+//            if (e->getncgType() == Qncg::Interface){
+//                e->setTop(e->getTop() + lasth/2);
+//                e->setLeft(e->getLeft() + lastw/2);
+//            }
+
+            e->setnstGraphicsParent(this);
+            e->show();
+            e->adjust();
+        }
+
+        setResizable(true);
+
+    }else{
+        tmp->setTop(getTop());
+        tmp->setLeft(getLeft());
+        tmp->setWidth(getWidth());
+        tmp->setHeight(getHeight());
+
+        lastw = getWidth();
+        lasth = getHeight();
+
+        setResizable(false);
+
+        foreach(QnstGraphicsEntity* e, getnstGraphicsEntities()){
+            if (e->getncgType() != Qncg::Interface){
+                e->hide();
+                e->setnstGraphicsParent(tmp);
+            }
+        }
+
+        setTop(getTop() + lasth/2 - 64/2);
+        setLeft(getLeft() + lastw/2 - 48/2);
+        setWidth(48);
+        setHeight(64);
+
+//        foreach(QnstGraphicsEntity* e, getnstGraphicsEntities()){
+//            if (e->getncgType() == Qncg::Interface){
+//                e->adjust();
+//            }
+//        }
+    }
+
+    if (getnstGraphicsParent() != NULL){
+        getnstGraphicsParent()->adjust();
+    }
+
+    setCollpsed(!collapsed);
 }
 
 void QnstGraphicsComposition::dropEvent(QGraphicsSceneDragDropEvent *event)

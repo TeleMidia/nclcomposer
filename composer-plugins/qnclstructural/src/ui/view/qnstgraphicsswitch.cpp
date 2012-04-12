@@ -41,7 +41,6 @@ void QnstGraphicsSwitch::createObjects()
     menu->actionContext->setEnabled(true);
     menu->actionSwitch->setEnabled(true);
     menu->actionSwitchPort->setEnabled(true);
-    menu->actionArea->setEnabled(true);
     menu->actionProperty->setEnabled(true);
 }
 

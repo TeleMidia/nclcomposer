@@ -4,6 +4,8 @@
 #include "qnst.h"
 #include "qnstgraphicsnode.h"
 
+#include <QGraphicsSceneMouseEvent>
+
 class QnstGraphicsComposition : public QnstGraphicsNode
 {
 public:
@@ -17,6 +19,10 @@ public:
 
     void setnstId(QString id);
 
+    void setCollpsed(bool collapsed);
+
+    bool isCollpsed();
+
 protected:
     virtual void draw(QPainter* painter);
 
@@ -26,12 +32,22 @@ protected:
 
     virtual void dropEvent(QGraphicsSceneDragDropEvent *event);
 
+    virtual void mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event);
+
     virtual bool createEntity(Qnst::EntityType type);
 
 private:
+    bool collapsed;
+
     QString color;
 
     QString dropsrc;
+
+    qreal lastw;
+
+    qreal lasth;
+
+    QnstGraphicsNode* tmp;
 };
 
 #endif // QNSTGRAPHICSCOMPOSITION_H
