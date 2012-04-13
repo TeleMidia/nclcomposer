@@ -276,14 +276,18 @@ void QnstGraphicsComposition::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *ev
         setHeight(lasth);
 
         foreach(QnstGraphicsEntity* e, getnstGraphicsEntities()){
-//            if (e->getncgType() == Qncg::Interface){
-//                e->setTop(e->getTop() + lasth/2);
-//                e->setLeft(e->getLeft() + lastw/2);
-//            }
+            if (e->getncgType() == Qncg::Interface){
+                e->setTop(((e->getTop()*lasth)/64));
+                e->setLeft(((e->getLeft()*lastw)/48));
+            }
 
             e->setnstGraphicsParent(this);
             e->show();
             e->adjust();
+
+            if (e->getncgType() == Qncg::Interface){
+                qDebug() << e->getLeft() << e->getTop() << e->getWidth() << e->getHeight();
+            }
         }
 
         setResizable(true);
@@ -297,8 +301,6 @@ void QnstGraphicsComposition::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *ev
         lastw = getWidth();
         lasth = getHeight();
 
-        setResizable(false);
-
         foreach(QnstGraphicsEntity* e, getnstGraphicsEntities()){
             if (e->getncgType() != Qncg::Interface){
                 e->hide();
@@ -311,11 +313,16 @@ void QnstGraphicsComposition::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *ev
         setWidth(48);
         setHeight(64);
 
-//        foreach(QnstGraphicsEntity* e, getnstGraphicsEntities()){
-//            if (e->getncgType() == Qncg::Interface){
-//                e->adjust();
-//            }
-//        }
+        foreach(QnstGraphicsEntity* e, getnstGraphicsEntities()){
+            if (e->getncgType() == Qncg::Interface){
+                e->setTop(((e->getTop()*64)/lasth));
+                e->setLeft(((e->getLeft()*48)/lastw));
+
+                e->adjust();
+            }
+        }
+
+        setResizable(false);
     }
 
     if (getnstGraphicsParent() != NULL){
