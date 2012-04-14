@@ -36,7 +36,7 @@ public:
 
     void removenstGraphicsEntity(QnstGraphicsEntity* entity);
 
-    virtual void adjust() = 0;
+    virtual void adjust(bool avoidCollision = false) = 0;
 
 signals:
     void entityAdded(QnstGraphicsEntity* entity);

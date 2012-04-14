@@ -31,7 +31,7 @@ public:
 
     void setEntityBEnabled(bool enable);
 
-    virtual void adjust();
+    void adjust(bool avoidCollision = false);
 
     void aux_adjust(QPointF pointa, QPointF pointb);
 

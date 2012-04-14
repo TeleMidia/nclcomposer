@@ -11,7 +11,7 @@ QncgGraphicsNode::~QncgGraphicsNode()
 
 }
 
-void QncgGraphicsNode::adjust()
+void QncgGraphicsNode::adjust(bool avoidCollision)
 {
     if (scene() != NULL){
         scene()->update();

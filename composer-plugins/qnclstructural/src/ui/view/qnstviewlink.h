@@ -18,7 +18,7 @@ public:
 
     void setLine(QLineF line);
 
-    virtual void adjust();
+    virtual void adjust(bool avoidCollision = false);
 
 protected:
     virtual void draw(QPainter* painter);

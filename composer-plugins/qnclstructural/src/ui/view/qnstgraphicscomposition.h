@@ -4,10 +4,21 @@
 #include "qnst.h"
 #include "qnstgraphicsnode.h"
 
+#include <cmath>
+
 #include <QGraphicsSceneMouseEvent>
+
+// Spring Algoritms Params
+#define SPRING_LENGTH 100
+#define SPRING_CONSTANT 0.1
+#define SPRING_DAMPING 0.5
+
+#define SPRING_INTERATION 50
 
 class QnstGraphicsComposition : public QnstGraphicsNode
 {
+    Q_OBJECT
+
 public:
     QnstGraphicsComposition(QnstGraphicsNode* parent = 0);
 
@@ -22,6 +33,9 @@ public:
     void setCollpsed(bool collapsed);
 
     bool isCollpsed();
+
+protected slots:
+    void adjustWithSpring();
 
 protected:
     virtual void draw(QPainter* painter);

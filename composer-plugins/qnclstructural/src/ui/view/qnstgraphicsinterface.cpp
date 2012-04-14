@@ -62,7 +62,7 @@ void QnstGraphicsInterface::setnstId(QString id)
     setToolTip(tip);
 }
 
-void QnstGraphicsInterface::adjust()
+void QnstGraphicsInterface::adjust(bool avoidCollision)
 {
     QnstGraphicsEntity* parent = getnstGraphicsParent();
 

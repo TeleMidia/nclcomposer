@@ -11,7 +11,7 @@ QncgGraphicsInterface::~QncgGraphicsInterface()
 
 }
 
-void QncgGraphicsInterface::adjust()
+void QncgGraphicsInterface::adjust(bool avoidCollision)
 {
     QncgGraphicsEntity* parent = getncgGraphicsParent();
 
@@ -238,6 +238,8 @@ void QncgGraphicsInterface::resize(QGraphicsSceneMouseEvent* event)
 
         break;
     }
+    default:
+        break;
     }
 
     // resizing

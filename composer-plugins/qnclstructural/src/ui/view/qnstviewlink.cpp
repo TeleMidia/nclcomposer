@@ -25,7 +25,7 @@ void QnstViewLink::setLine(QLineF line)
     adjust();
 }
 
-void QnstViewLink::adjust()
+void QnstViewLink::adjust(bool avoidCollision)
 {
     QPointF pointa = line.p1();
     QPointF pointb = line.p2();

@@ -84,7 +84,7 @@ void QnstGraphicsEdge::setAdjAngle(qreal adjangle)
     this->adjustedangle = adjangle;
 }
 
-void QnstGraphicsEdge::adjust()
+void QnstGraphicsEdge::adjust(bool avoidCollision)
 {
     if (entitya != NULL && entityb != NULL){
         QLineF line = QLineF(QPointF(entitya->getLeft() + entitya->getWidth()/2,

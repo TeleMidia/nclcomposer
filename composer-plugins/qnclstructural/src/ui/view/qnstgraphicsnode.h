@@ -25,7 +25,7 @@ public:
 
     virtual void inside();
 
-    virtual void adjust();
+    void adjust(bool avoidCollision = false);
 
     bool hasMouseHover();
 

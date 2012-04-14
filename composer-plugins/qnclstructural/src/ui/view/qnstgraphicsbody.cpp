@@ -28,20 +28,15 @@ void QnstGraphicsBody::createObjects()
     menu->actionExport->setEnabled(true);
 
     menu->menuInsert->setEnabled(true);
-    menu->actionImage->setEnabled(true);
-    menu->actionVideo->setEnabled(true);
-    menu->actionAudio->setEnabled(true);
-    menu->actionText->setEnabled(true);
-    menu->actionScript->setEnabled(true);
-    menu->actionSettings->setEnabled(true);
-    menu->actionHTML->setEnabled(true);
-    menu->actionNCL->setEnabled(true);
     menu->actionMedia->setEnabled(true);
     menu->actionContext->setEnabled(true);
     menu->actionSwitch->setEnabled(true);
     menu->actionPort->setEnabled(true);
     menu->actionProperty->setEnabled(true);
     menu->actionAggregator->setEnabled(true);
+
+    menu->menuAdjust->setEnabled(true);
+    menu->actionSpring->setEnabled(true);
 }
 
 void QnstGraphicsBody::createConnections()
@@ -77,6 +72,8 @@ void QnstGraphicsBody::createConnections()
     connect(menu, SIGNAL(areaRequested()), SLOT(performArea()));
     connect(menu, SIGNAL(propertyRequested()), SLOT(performProperty()));
     connect(menu, SIGNAL(aggregatorRequested()), SLOT(performAggregator()));
+
+    connect(menu, SIGNAL(springRequested()), SLOT(adjustWithSpring()));
 }
 
 void QnstGraphicsBody::performHtml()

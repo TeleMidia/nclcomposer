@@ -83,6 +83,8 @@ signals:
 
     void propertiesRequested();
 
+    void springRequested();
+
 private:
     void createActions();
 
@@ -98,6 +100,8 @@ public:
     QMenu* menuShow;
 
     QMenu* menuArrange;
+
+    QMenu* menuAdjust;
 
     QAction* actionHelp;
 
@@ -166,6 +170,8 @@ public:
     QAction* actionSendback;
 
     QAction* actionHide;
+
+    QAction* actionSpring;
 
     QAction* actionProperties;
 };

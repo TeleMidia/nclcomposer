@@ -1343,9 +1343,9 @@ void QnstView::addBody(const QString uid, const QString parent, const QMap<QStri
     entity->setWidth(750);
     entity->setHeight(550);
 
-    if (properties["id"] != ""){
+//    if (properties["id"] != ""){
         entity->setnstId(properties["id"]);
-    }
+//    }
 
     if (properties["top"] != ""){
         entity->setTop(properties["top"].toDouble());
@@ -1373,9 +1373,11 @@ void QnstView::addBody(const QString uid, const QString parent, const QMap<QStri
 
 void QnstView::changeBody(QnstGraphicsBody* entity, const QMap<QString, QString> properties)
 {
-    if (properties["id"] != ""){
+//    if (properties["id"] != ""){
         entity->setnstId(properties["id"]);
-    }
+//    }
+
+    entity->adjust();
 }
 
 void QnstView::addImportBase(QString uid, const QMap<QString, QString> properties)
@@ -1934,6 +1936,7 @@ void QnstView::addPort(const QString uid, const QString parent, const QMap<QStri
         if (!undo){
             QnstAddCommand* cmd = new QnstAddCommand(this, entity);
             history.push(cmd);
+
         }
     }
 }

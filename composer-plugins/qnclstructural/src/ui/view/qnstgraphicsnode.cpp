@@ -146,18 +146,17 @@ void QnstGraphicsNode::inside()
 }
 
 
-void QnstGraphicsNode::adjust()
+void QnstGraphicsNode::adjust(bool avoidCollision)
 {
-    bool c = true;
-
     foreach(QnstGraphicsEntity* entity, getnstGraphicsEntities()){
         entity->adjust();
     }
 
+//    qDebug() << "===========================================" << avoidCollision;
+
     if(getnstGraphicsParent() != NULL)
     {
-
-        if (c){
+        if (avoidCollision){
           int colliding;
           int maxInter = 10, inter = 0;
           do

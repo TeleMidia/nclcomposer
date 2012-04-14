@@ -10,7 +10,7 @@ public:
 
     virtual ~QncgGraphicsInterface();
 
-    virtual void adjust();
+    virtual void adjust(bool avoidCollision = false);
 
 protected:
     virtual void draw(QPainter* painter) = 0;

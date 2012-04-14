@@ -411,6 +411,8 @@ void QnstComposerPlugin::requestBodyAddition(Entity* entity)
         properties["id"] = entity->getAttribute("id");
     }
 
+    qDebug() << "=============================" << entity->getAttribute("id");
+
     view->addEntity(entity->getUniqueId(), "", properties);
 }
 

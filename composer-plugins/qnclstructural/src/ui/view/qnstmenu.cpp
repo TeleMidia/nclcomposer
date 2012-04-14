@@ -24,6 +24,7 @@ QnstMenu::QnstMenu(QWidget* parent)
     addMenu(menuInsert);
     addMenu(menuShow);
     addMenu(menuArrange);
+    addMenu(menuAdjust);
     addSeparator();
     addAction(actionHide);
     addSeparator();
@@ -329,6 +330,12 @@ void QnstMenu::createActions()
     actionProperties->setText(tr("Properties"));
 
     actionProperties->setEnabled(false);
+
+    // adjust action
+    actionSpring = new QAction(this);
+    actionSpring->setText(tr("Spring"));
+
+    actionSpring->setEnabled(false);
 }
 
 void QnstMenu::createMenus()
@@ -391,6 +398,14 @@ void QnstMenu::createMenus()
     menuArrange->addAction(actionSendback);
 
     menuArrange->setEnabled(false);
+
+    // adjust menu
+    menuAdjust = new QMenu();
+    menuAdjust->setTitle(tr("Adjust"));
+
+    menuAdjust->addAction(actionSpring);
+
+    menuAdjust->setEnabled(false);
 }
 
 void QnstMenu::createConnections()
@@ -439,4 +454,6 @@ void QnstMenu::createConnections()
     connect(actionHide, SIGNAL(triggered()), SIGNAL(hideRequested()));
 
     connect(actionProperties, SIGNAL(triggered()), SIGNAL(propertiesRequested()));
+
+    connect(actionSpring, SIGNAL(triggered()), SIGNAL(springRequested()));
 }

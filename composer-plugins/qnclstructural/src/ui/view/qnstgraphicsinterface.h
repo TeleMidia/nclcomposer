@@ -17,7 +17,7 @@ public:
 
     void removenstGraphicsEdge(QnstGraphicsEdge* edge);
 
-    virtual void adjust();
+    virtual void adjust(bool avoidCollision = false);
 
     void setnstId(QString id);
 

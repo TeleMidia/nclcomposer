@@ -128,7 +128,7 @@ public:
 
     void removencgGraphicsEntity(QncgGraphicsEntity* entity);
 
-    virtual void adjust() = 0;
+    virtual void adjust(bool avoidCollision = false) = 0;
 
 signals:
     void entityAboutToChange(QMap<QString, QString> properties);
