@@ -18,7 +18,8 @@ else {
 
 #CONFIG += clubencl
 #CONFIG += runssh_on
-QT += core xml network webkit help
+CONFIG += help
+QT += core xml network webkit
 
 DEFINES += NCLCOMPOSER_GUI_VERSION=\"\\\"0.1.0\\\"\"
 DEFINES += BUILD_DATE=\"\\\"$${_DATE_}\"\\\"
