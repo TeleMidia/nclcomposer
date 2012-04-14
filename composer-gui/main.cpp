@@ -11,7 +11,9 @@
 #include <QResource>
 #include <QObject>
 
+#ifdef Q_WS_X11
 #include <QX11EmbedWidget>
+#endif
 
 #include "ComposerMainWindow.h"
 
