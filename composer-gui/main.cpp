@@ -26,37 +26,87 @@
 
 using namespace composer::gui;
 
-
-void addDefaultPluginsPaths()
+/*!
+ * \brief Add the default paths to ComposerSettings.
+ */
+void updateSettingsWithDefaults()
 {
+/* Defaults plugins paths */
   QStringList defaultPluginsPath;
 
+  // The first path will be at user's home.
+  defaultPluginsPath << QDir::homePath() + QString("/composer/extensions");
+
+  // After that we will look for plugins in the default system path
 #ifdef Q_WS_MAC
   defaultPluginsPath << "/Library/Application Support/Composer"
                      << QCoreApplication::applicationDirPath() +
                         "/../PlugIns/composer";
-
 #elif defined(Q_WS_WIN32)
   defaultPluginsPath << QApplication::applicationDirPath() + "/lib/composer";
   defaultPluginsPath << "C:/Composer/lib/composer";
 #else
   // PREFIX Should be defined by the qmake while compiling the source code.
-
 #ifdef EXT_DEFAULT_PATH
   defaultPluginsPath << QString(EXT_DEFAULT_PATH)
                         + QString("/lib/composer/extensions");
 #endif
 
-  defaultPluginsPath << QDir::homePath() + QString("/composer/extensions");
 #endif
 
   ComposerSettings settings;
-  settings.beginGroup("extension");
+  settings.beginGroup("extensions");
     QStringList extensions_path = settings.value("path").toStringList();
     extensions_path << defaultPluginsPath; //add default to extensions path
     extensions_path.removeDuplicates();
   settings.setValue("path", extensions_path); //udpate with the new value
   settings.endGroup();
+/* End defaults plugin path */
+
+/* Default language */
+  settings.beginGroup("languages");
+  if(!settings.contains("currentLanguage"))
+    settings.setValue("currentLanguage", "en");
+  settings.endGroup();
+/* End default language */
+}
+
+void loadTranslations(QApplication *app)
+{
+  /* Get the current language code */
+  ComposerSettings settings;
+  settings.beginGroup("languages");
+  QString language_code = settings.value("currentLanguage",
+                                         QString("en")).toString();
+  settings.endGroup();
+  qDebug() << "[GUI] Current Language = " << language_code;
+
+  /* Get all paths were can be translations */
+  settings.beginGroup("extensions");
+  QStringList extensions_paths = settings.value("path").toStringList();
+  settings.endGroup();
+
+  qDebug() << "[GUI]" <<  extensions_paths;
+
+  /* Go in each path and search for files from that language */
+  foreach(QString curPath, extensions_paths)
+  {
+    qDebug() << curPath;
+    QDir curDir(curPath);
+    //filter only the files for the current language code
+    curDir.setNameFilters(QStringList() << "*_" + language_code + ".qm");
+
+    QFileInfoList fileInfoList = curDir.entryInfoList();
+
+    // for each translation file install in the application.
+    foreach(QFileInfo fileInfo, fileInfoList)
+    {
+      qDebug() << "[GUI] translation file = " << fileInfo.absoluteFilePath();
+      QTranslator *composerTranslator = new QTranslator(qApp);
+      composerTranslator->load(fileInfo.absoluteFilePath());
+      app->installTranslator(composerTranslator);
+    }
+  }
 }
 
 
@@ -68,19 +118,9 @@ XInitThreads();
     QApplication a(argc, argv);
     a.setQuitOnLastWindowClosed(true);
 
-    addDefaultPluginsPaths();
+    updateSettingsWithDefaults();
 
-    ComposerSettings settings;
-    settings.beginGroup("languages");
-    QString language_code = settings.value("currentLanguage",
-                                           QString("en")).toString();
-    settings.endGroup();
-
-    QTranslator composerTranslator;
-    QString filename = "composer" + language_code;
-    filename = filename.toLower();
-    composerTranslator.load(filename);
-    a.installTranslator(&composerTranslator);
+    loadTranslations(&a);
 
     QResource::registerResource("images.qrc");
     QCoreApplication::setOrganizationName("Telemidia Lab");

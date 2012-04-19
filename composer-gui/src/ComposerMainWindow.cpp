@@ -139,7 +139,7 @@ void ComposerMainWindow::readExtensions()
 {
   ComposerSettings settings;
 
-  settings.beginGroup("extension");
+  settings.beginGroup("extensions");
   extensions_paths.clear();
 
   //Remember: The dafault paths are been added in main.cpp
@@ -896,7 +896,7 @@ void ComposerMainWindow::closeEvent(QCloseEvent *event)
   }
 
   ComposerSettings settings;
-  settings.beginGroup("extension");
+  settings.beginGroup("extensions");
   settings.setValue("path", extensions_paths);
   settings.endGroup();
 
