@@ -10,6 +10,9 @@
 #include <QtGui/QApplication>
 #include <QResource>
 #include <QObject>
+#include <QStringList>
+
+#include <core/util/ComposerSettings.h>
 
 #ifdef Q_WS_X11
 #include <QX11EmbedWidget>
@@ -23,17 +26,58 @@
 
 using namespace composer::gui;
 
+
+void addDefaultPluginsPaths()
+{
+  QStringList defaultPluginsPath;
+
+#ifdef Q_WS_MAC
+  defaultPluginsPath << "/Library/Application Support/Composer"
+                     << QCoreApplication::applicationDirPath() +
+                        "/../PlugIns/composer";
+
+#elif defined(Q_WS_WIN32)
+  defaultPluginsPath << QApplication::applicationDirPath() + "/lib/composer";
+  defaultPluginsPath << "C:/Composer/lib/composer";
+#else
+  // PREFIX Should be defined by the qmake while compiling the source code.
+
+#ifdef EXT_DEFAULT_PATH
+  defaultPluginsPath << QString(EXT_DEFAULT_PATH)
+                        + QString("/lib/composer/extensions");
+#endif
+
+  defaultPluginsPath << QDir::homePath() + QString("/composer/extensions");
+#endif
+
+  ComposerSettings settings;
+  settings.beginGroup("extension");
+    QStringList extensions_path = settings.value("path").toStringList();
+    extensions_path << defaultPluginsPath; //add default to extensions path
+    extensions_path.removeDuplicates();
+  settings.setValue("path", extensions_path); //udpate with the new value
+  settings.endGroup();
+}
+
+
 int main(int argc, char *argv[])
 {
 #ifdef Q_WS_X11
 XInitThreads();
 #endif
-
     QApplication a(argc, argv);
     a.setQuitOnLastWindowClosed(true);
 
+    addDefaultPluginsPaths();
+
+    ComposerSettings settings;
+    settings.beginGroup("languages");
+    QString language_code = settings.value("currentLanguage",
+                                           QString("en")).toString();
+    settings.endGroup();
+
     QTranslator composerTranslator;
-    QString filename = "composer_br";
+    QString filename = "composer" + language_code;
     filename = filename.toLower();
     composerTranslator.load(filename);
     a.installTranslator(&composerTranslator);

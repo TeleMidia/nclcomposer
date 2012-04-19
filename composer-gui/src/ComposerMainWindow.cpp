@@ -34,25 +34,6 @@ ComposerMainWindow::ComposerMainWindow(QApplication &app, QWidget *parent)
 {
   ui->setupUi(this);
 
-#ifdef Q_WS_MAC
-  defaultPluginsPath << "/Library/Application Support/Composer"
-                     << QCoreApplication::applicationDirPath() +
-                        "/../PlugIns/composer";
-
-#elif defined(Q_WS_WIN32)
-  defaultPluginsPath << QApplication::applicationDirPath() + "/lib/composer";
-  defaultPluginsPath << "C:/Composer/lib/composer";
-#else
-  // PREFIX Should be defined by the qmake while compiling the source code.
-
-#ifdef EXT_DEFAULT_PATH
-  defaultPluginsPath << QString(EXT_DEFAULT_PATH)
-                        + QString("/lib/composer/extensions");
-#endif
-
-  defaultPluginsPath << QDir::homePath() + QString("/composer/extensions");
-#endif
-
   /* The following code could be in another function */
   QPixmap mPix(":/mainwindow/nclcomposer-splash");
   QSplashScreen splash(mPix);
@@ -161,7 +142,7 @@ void ComposerMainWindow::readExtensions()
   settings.beginGroup("extension");
   extensions_paths.clear();
 
-  extensions_paths << defaultPluginsPath; //Add default location to extensions
+  //Remember: The dafault paths are been added in main.cpp
   if (settings.contains("path"))
     extensions_paths << settings.value("path").toStringList();
 
