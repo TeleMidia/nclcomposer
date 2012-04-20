@@ -1448,10 +1448,10 @@ void ComposerMainWindow::selectedAboutCurrentPluginFactory()
   QList<QTreeWidgetItem*> selectedPlugins = pluginsExt->selectedItems();
   if(selectedPlugins.size())
   {
-    if(treeWidgetItem2plFactory[selectedPlugins.at(0)] != NULL)
+    if(treeWidgetItem2plFactory.value(selectedPlugins.at(0)) != NULL)
     {
       pluginDetailsDialog->setCurrentPlugin(
-            treeWidgetItem2plFactory[selectedPlugins.at(0)]);
+            treeWidgetItem2plFactory.value(selectedPlugins.at(0)));
       detailsButton->setEnabled(true);
     }
     else
@@ -1793,6 +1793,7 @@ void ComposerMainWindow::saveLoadPluginData(int)
   ComposerSettings settings;
   settings.beginGroup("loadPlugins");
   QTreeWidgetItem *item;
+  qDebug() << treeWidgetItem2plFactory.keys();
   foreach(item, treeWidgetItem2plFactory.keys())
   {
     if(item->checkState(1))
@@ -1801,6 +1802,7 @@ void ComposerMainWindow::saveLoadPluginData(int)
     }
     else
     {
+      qDebug() << treeWidgetItem2plFactory.value(item) << "2";
       settings.setValue(treeWidgetItem2plFactory.value(item)->id(), false);
     }
   }
