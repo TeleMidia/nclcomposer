@@ -33,10 +33,6 @@
 #include <core/extensions/IPlugin.h>
 using namespace composer::extension;
 
-namespace composer {
-    namespace plugin {
-        namespace textual {
-
 /*!
  \brief Encapsulates the NCLTextEditor as a Composer plugin.
 */
@@ -227,7 +223,5 @@ protected:
      */
     void fixIdentation(int offset);
 };
-
-} } } //end namespace
 
 #endif // DEBUGCONSOLEPLUGIN_H

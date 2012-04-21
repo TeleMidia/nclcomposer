@@ -26,10 +26,6 @@ using namespace composer::extension;
 
 #include "ui/view/qnlyview.h"
 
-namespace composer {
-    namespace plugin {
-        namespace layout {
-
 class QnlyComposerPlugin : public IPlugin
 {
     Q_OBJECT
@@ -133,7 +129,5 @@ private:
 
     QString *selectedId;
 };
-
-} } } // end namespace
 
 #endif // QNLYCOMPOSERPLUGIN_H

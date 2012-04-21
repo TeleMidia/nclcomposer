@@ -27,9 +27,6 @@
 #include <core/extensions/IPlugin.h>
 using namespace composer::extension;
 
-namespace composer {
-    namespace plugin {
-        namespace debug {
 /*!
  * \brief Debug Console is a simple plugin that just show
  *    all messages received.
@@ -38,28 +35,28 @@ namespace composer {
  */
 class DebugConsolePlugin : public IPlugin
 {
-        Q_OBJECT
-    private:
-        QListWidget *list;
-        QWidget *window;
-    public:
-        explicit DebugConsolePlugin();
-        ~DebugConsolePlugin();
+  Q_OBJECT
 
-        void init();
-        QWidget* getWidget();
-        bool saveSubsession();
+  private:
+      QListWidget *list;
+      QWidget *window;
+  public:
+      explicit DebugConsolePlugin();
+      ~DebugConsolePlugin();
 
-    public slots:
-        void onEntityAdded(QString ID, Entity *);
-        void onEntityChanged(QString ID, Entity *);
-        /*void onEntityAboutToRemove(Entity *);*/
-        void onEntityRemoved(QString ID, QString entityID);
+      void init();
+      QWidget* getWidget();
+      bool saveSubsession();
 
-        void errorMessage(QString error);
+  public slots:
+      void onEntityAdded(QString ID, Entity *);
+      void onEntityChanged(QString ID, Entity *);
+      /*void onEntityAboutToRemove(Entity *);*/
+      void onEntityRemoved(QString ID, QString entityID);
 
-        void sendToAll();
+      void errorMessage(QString error);
+
+      void sendToAll();
 };
 
-} } }//end namespace
 #endif // DEBUGCONSOLEPLUGIN_H

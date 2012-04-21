@@ -19,10 +19,6 @@
 
 #include "core/modules/LanguageControl.h"
 
-namespace composer {
-    namespace plugin {
-        namespace outline {
-
 OutlineViewPlugin::OutlineViewPlugin() :
   window(new NCLTreeWidget(0)), windowBuffering(new NCLTreeWidget(0))
 {
@@ -296,5 +292,3 @@ void OutlineViewPlugin::textualFinishSync(QString, void*)
 {
   window->expandAll();
 }
-
-} } } //end namespace

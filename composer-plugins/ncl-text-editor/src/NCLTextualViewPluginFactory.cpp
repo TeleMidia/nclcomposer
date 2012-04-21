@@ -18,10 +18,6 @@
 #include "NCLTextualViewPluginFactory.h"
 #include "ui_TextualPluginPreferencesWidget.h"
 
-namespace composer {
-    namespace plugin {
-        namespace textual {
-
 NCLTextualViewPluginFactory::NCLTextualViewPluginFactory()
 {
     prefPageWidget = NULL;
@@ -51,7 +47,7 @@ QString NCLTextualViewPluginFactory::id() const
 
 QString NCLTextualViewPluginFactory::name() const
 {
-    return "NCL Textual View";
+    return tr("NCL Textual View");
 }
 
 QIcon NCLTextualViewPluginFactory::icon() const
@@ -82,5 +78,3 @@ void NCLTextualViewPluginFactory::applyValues()
 }
 
 Q_EXPORT_PLUGIN2(ncl_textual_plugin, NCLTextualViewPluginFactory)
-
-}}} // end namespace

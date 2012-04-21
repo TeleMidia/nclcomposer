@@ -74,7 +74,7 @@ void NCLTreeWidget::createActions ()
   removeNodeAct->setShortcut(QKeySequence::Delete);
   addAction(removeNodeAct);
 
-  expandAllAct = new QAction(tr("Expand All"), this);
+  expandAllAct = new QAction(tr("&Expand All"), this);
   expandAllAct->setCheckable(true);
   expandAllAct->setChecked(true);
   connect(expandAllAct, SIGNAL(triggered()), this, SLOT(expandAll()));
@@ -196,7 +196,7 @@ void NCLTreeWidget::userAddNewElement()
     strlist << "ncl"; //\fixme this should be loaded from element that has not parents.
 
   QString element = QInputDialog::getItem( this,
-                                           tr("Add child"),
+                                           tr("&Add child"),
                                            tr("Element name:"),
                                            strlist,
                                            0,
@@ -322,7 +322,6 @@ void NCLTreeWidget::updateItem(QTreeWidgetItem *item, QString tagname,
       settings.beginGroup("mimetypes");
       type = settings.value(ext).toString();
       settings.endGroup();
-
     }
 
     if(!type.isEmpty())

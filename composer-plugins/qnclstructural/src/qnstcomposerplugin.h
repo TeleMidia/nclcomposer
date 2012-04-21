@@ -25,10 +25,6 @@ using namespace composer::extension;
 
 #include "ui/view/qnstview.h"
 
-namespace composer {
-    namespace plugin {
-        namespace layout {
-
 class QnstComposerPlugin : public IPlugin
 {
     Q_OBJECT
@@ -216,7 +212,5 @@ public slots:
     void textualFinishSync(QString, void*); /* from textual plugin */
 /* End "synchronization with core". */
 };
-
-} } } // end namespace
 
 #endif // QNSTCOMPOSERPLUGIN_H

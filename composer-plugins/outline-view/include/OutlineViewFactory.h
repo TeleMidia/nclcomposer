@@ -25,13 +25,8 @@ using namespace composer::extension;
 
 #include "OutlineViewPlugin.h"
 
-namespace composer {
-    namespace plugin {
-        namespace outline {
-
 /*!
  \brief Handles the creation and deletion of OutlineView objects.
-
 */
 class OutlineViewFactory : public QObject, public IPluginFactory
 {
@@ -122,7 +117,5 @@ class OutlineViewFactory : public QObject, public IPluginFactory
 
          QString category() {return "NCL";}
 };
-
-}}} //end namespace
 
 #endif // OUTLINEVIEWPLUGINFACTORY_H

@@ -17,10 +17,6 @@
  */
 #include "qnstcomposerplugin.h"
 
-namespace composer {
-    namespace plugin {
-        namespace layout {
-
 QnstComposerPlugin::QnstComposerPlugin(QObject* parent)
 {
     setParent(parent);
@@ -2186,6 +2182,3 @@ void QnstComposerPlugin::textualFinishSync(QString, void*)
   isSyncingFromTextual = false;
   syncNCLIdsWithStructuralIds();
 }
-
-} } } // end namespace
-

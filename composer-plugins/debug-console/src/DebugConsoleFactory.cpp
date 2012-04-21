@@ -17,10 +17,6 @@
  */
 #include "DebugConsoleFactory.h"
 
-namespace composer {
-    namespace plugin {
-        namespace debug {
-
 DebugConsoleFactory::DebugConsoleFactory()
 {
 
@@ -62,7 +58,7 @@ QString DebugConsoleFactory::id() const
 
 QString DebugConsoleFactory::name() const
 {
-    return "DebugConsole";
+    return tr("Debug Console");
 }
 
 QIcon DebugConsoleFactory::icon()  const
@@ -86,5 +82,3 @@ void DebugConsoleFactory::applyValues()
 }
 
 Q_EXPORT_PLUGIN2(DebugConsole,DebugConsoleFactory)
-
-} } } //end namespace

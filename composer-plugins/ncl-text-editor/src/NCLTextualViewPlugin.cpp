@@ -28,10 +28,6 @@
 #include <deque>
 using namespace std;
 
-namespace composer {
-namespace plugin {
-namespace textual {
-
 const QString PROLOG ("<?xml version=\"1.0\" encoding=\"ISO-8859-1\"?>\n");
 
 NCLTextualViewPlugin::NCLTextualViewPlugin()
@@ -1002,5 +998,3 @@ void NCLTextualViewPlugin::validationError(QString pluginID, void * param)
      nclTextEditor->markError(p->second, "", line);
   }
 }
-
-} } } //end namespace

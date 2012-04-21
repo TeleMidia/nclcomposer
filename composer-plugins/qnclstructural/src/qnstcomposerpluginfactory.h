@@ -22,11 +22,6 @@
 using namespace composer::extension;
 
 #include "qnstcomposerplugin.h"
-using namespace composer::plugin::layout;
-
-namespace composer {
-    namespace plugin {
-        namespace layout {
 
 class QnstComposerPluginFactory : public QObject, public IPluginFactory
 {
@@ -84,14 +79,13 @@ public:
 
       \return QString the description of Layout View.
     */
-    QString description() {return "Structural View enable the user to edit the \
-            logical structure of a NCL document visually.";}
+    QString description() {return tr("Structural View enable the user to edit "
+                                     "the logical structure of a NCL document "
+                                     "visually.");}
 
     QString url() {return "http://composer.telemidia.puc-rio.br/structural";}
 
     QString category() {return "NCL";}
 };
-
-} } } // end namespace
 
 #endif // QNSTCOMPOSERPLUGINFACTORY_H

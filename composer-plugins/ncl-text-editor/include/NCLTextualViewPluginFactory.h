@@ -31,9 +31,6 @@ namespace Ui {
 class TextPluginPreferencesWidget;
 }
 
-namespace composer {
-namespace plugin {
-namespace textual {
 /*!
   \brief Handles the creation and deletion of NCLTextualView objects.
  */
@@ -120,7 +117,5 @@ private:
   Ui::TextPluginPreferencesWidget *prefPageUi;
 
 };
-
-}}} //end namespace
 
 #endif // NCLTEXTUALVIEWPLUGINFACTORY_H

@@ -29,10 +29,6 @@ using namespace composer::extension;
 
 #include "PropertyEditor.h"
 
-namespace composer {
-    namespace plugin {
-        namespace property {
-
 /*!
  * \brief PropertiesViewPlugin is a Composer plugin that shows and enable the
  *      user to edit the a current selected Entity.
@@ -137,5 +133,4 @@ private slots:
     void updateCurrentEntityAttr(QString attr, QString value);
 };
 
-} } }//end namespace
 #endif // PROPERTIESVIEWPLUGIN_H

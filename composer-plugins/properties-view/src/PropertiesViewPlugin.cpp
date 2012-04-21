@@ -20,10 +20,6 @@
 
 #include <QDockWidget>
 
-namespace composer {
-namespace plugin {
-namespace property {
-
 PropertiesViewPlugin::PropertiesViewPlugin()
 {
   window = new PropertyEditor(0);
@@ -196,5 +192,3 @@ void PropertiesViewPlugin::updateCurrentEntityAttr(QString attr, QString value)
     }
   }
 }
-
-} } } //end namespace

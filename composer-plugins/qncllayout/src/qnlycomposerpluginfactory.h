@@ -22,11 +22,6 @@
 using namespace composer::extension;
 
 #include "qnlycomposerplugin.h"
-using namespace composer::plugin::layout;
-
-namespace composer {
-    namespace plugin {
-        namespace layout {
 
 class QnlyComposerPluginFactory : public QObject, public IPluginFactory
 {
@@ -91,7 +86,5 @@ public:
 
     QString category() {return "NCL";}
 };
-
-} } } // end namespace
 
 #endif // QNLYCOMPOSERPLUGINFACTORY_H

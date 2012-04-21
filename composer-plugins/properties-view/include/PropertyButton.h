@@ -29,6 +29,7 @@ private:
 
 public:
   explicit PropertyButtons(QString propName, QWidget *parent = 0);
+
   QString key, value;
 
 public slots:

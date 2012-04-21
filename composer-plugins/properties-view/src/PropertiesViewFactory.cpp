@@ -16,9 +16,6 @@
  * <http://www.gnu.org/licenses/>. 
  */
 #include "PropertiesViewFactory.h"
-namespace composer {
-    namespace plugin {
-        namespace property {
 
 PropertiesViewFactory::PropertiesViewFactory()
 {
@@ -62,8 +59,6 @@ QIcon PropertiesViewFactory::icon()  const
 }
 
 Q_EXPORT_PLUGIN2(PropertiesView, PropertiesViewFactory)
-
-} } } //end namespace
 
 
 

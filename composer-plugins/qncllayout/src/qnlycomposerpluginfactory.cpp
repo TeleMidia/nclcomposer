@@ -17,10 +17,6 @@
  */
 #include "qnlycomposerpluginfactory.h"
 
-namespace composer {
-    namespace plugin {
-        namespace layout {
-
 QnlyComposerPluginFactory::QnlyComposerPluginFactory(QObject* parent)
 {
     setParent(parent);
@@ -48,9 +44,7 @@ QString QnlyComposerPluginFactory::id() const
 
 QString QnlyComposerPluginFactory::name() const
 {
-    return "Layout View";
+    return tr("Layout View");
 }
 
 Q_EXPORT_PLUGIN2(QnclLayout, QnlyComposerPluginFactory)
-
-} } } //end namespace

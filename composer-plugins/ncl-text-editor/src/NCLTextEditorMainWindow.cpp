@@ -484,7 +484,7 @@ void NCLTextEditorMainWindow::insertElement()
     }
 
     QString element = QInputDialog::getItem(this,
-                                            tr("Add child"),
+                                            tr("&Add child"),
                                             tr("Element name:"),
                                             strlist,
                                             0,

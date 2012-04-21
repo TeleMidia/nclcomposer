@@ -17,10 +17,6 @@
  */
 #include "qnstcomposerpluginfactory.h"
 
-namespace composer {
-    namespace plugin {
-        namespace layout {
-
 QnstComposerPluginFactory::QnstComposerPluginFactory(QObject* parent)
 {
     setParent(parent);
@@ -48,9 +44,7 @@ QString QnstComposerPluginFactory::id() const
 
 QString QnstComposerPluginFactory::name() const
 {
-    return "Structural View";
+    return tr("Structural View");
 }
 
 Q_EXPORT_PLUGIN2(Qnst, QnstComposerPluginFactory)
-
-} } } //end namespace

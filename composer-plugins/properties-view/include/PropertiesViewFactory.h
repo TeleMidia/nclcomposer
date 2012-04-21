@@ -24,10 +24,6 @@
 #include <core/extensions/IPluginFactory.h>
 using namespace composer::extension;
 
-namespace composer {
-    namespace plugin {
-        namespace property {
-
 /*!
  \brief Handles the creation and deletion of PropertyView objects.
 
@@ -131,7 +127,5 @@ class PropertiesViewFactory : public QObject,
          QString category() {return "NCL";}
 
 };
-
-} } } //end namespace
 
 #endif // DEBUGCONSOLE_H

@@ -24,11 +24,6 @@
 #include <core/extensions/IPlugin.h>
 using namespace composer::extension;
 
-
-namespace composer {
-    namespace plugin {
-        namespace outline {
-
 /*!
  \brief OutlineViewPlugin is a Composer plugin that shows the internal model
             as a tree allowing ease navigation.
@@ -162,7 +157,5 @@ private slots:
      */
     void itemSelectionChanged();
 };
-
-} } } //end namespace
 
 #endif // OUTLINEVIEWPLUGIN_H

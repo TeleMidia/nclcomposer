@@ -17,10 +17,6 @@
  */
 #include "DebugConsolePlugin.h"
 
-namespace composer {
-namespace plugin {
-namespace debug {
-
 DebugConsolePlugin::DebugConsolePlugin()
 {
   window = new QWidget();
@@ -121,4 +117,3 @@ void DebugConsolePlugin::sendToAll()
   emit sendBroadcastMessage("debugHasSendClearAll", NULL);
 }
 
-} } } //end namespace

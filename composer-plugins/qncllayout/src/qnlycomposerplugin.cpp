@@ -22,10 +22,6 @@
 #include <QMessageBox>
 #include <QInputDialog>
 
-namespace composer {
-    namespace plugin {
-        namespace layout {
-
 QnlyComposerPlugin::QnlyComposerPlugin(QObject* parent)
 {
     setParent(parent);
@@ -1156,5 +1152,3 @@ void QnlyComposerPlugin::performMediaOverRegionAction(const QString mediaId,
     }
   }
 }
-
-} } } // end namespace
