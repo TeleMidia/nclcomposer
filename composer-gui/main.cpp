@@ -8,6 +8,7 @@
  *    Telemidia/PUC-Rio - initial API and implementation
  */
 #include <QtGui/QApplication>
+#include <QApplication>
 #include <QResource>
 #include <QObject>
 #include <QStringList>
@@ -81,6 +82,9 @@ void loadTranslations(QApplication *app)
   settings.endGroup();
   qDebug() << "[GUI] Current Language = " << language_code;
 
+  QLocale locale = QLocale(language_code);
+  QLocale::setDefault(locale);
+
   /* Get all paths were can be translations */
   settings.beginGroup("extensions");
   QStringList extensions_paths = settings.value("path").toStringList();
@@ -104,7 +108,7 @@ void loadTranslations(QApplication *app)
       qDebug() << "[GUI] translation file = " << fileInfo.absoluteFilePath();
       QTranslator *composerTranslator = new QTranslator(qApp);
       composerTranslator->load(fileInfo.absoluteFilePath());
-      app->installTranslator(composerTranslator);
+      QCoreApplication::installTranslator(composerTranslator);
     }
   }
 }
@@ -119,7 +123,6 @@ XInitThreads();
     a.setQuitOnLastWindowClosed(true);
 
     updateSettingsWithDefaults();
-
     loadTranslations(&a);
 
     QResource::registerResource("images.qrc");
