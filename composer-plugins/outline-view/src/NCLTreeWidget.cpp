@@ -227,7 +227,8 @@ QTreeWidgetItem *NCLTreeWidget::getItemById(QString itemId)
 
   for (int i = 0; i < items.size(); i++)
   {
-    if(items.at(i)->text(2) == itemId){
+    if(items.at(i)->text(2) == itemId)
+    {
       return items.at(i);
     }
   }
@@ -318,10 +319,45 @@ void NCLTreeWidget::updateItem(QTreeWidgetItem *item, QString tagname,
     {
       QString src = attrs.value("src");
       QString ext = src.mid(src.lastIndexOf(".") + 1);
-      ComposerSettings settings;
+
+      //TODO: The mapping between extension and media type should be in the
+      // settings file.
+
+      /* ComposerSettings settings;
       settings.beginGroup("mimetypes");
       type = settings.value(ext).toString();
-      settings.endGroup();
+      settings.endGroup(); */
+
+      if(ext == "png" || ext == "jpg" || ext == "jpeg" || ext == "gif")
+      {
+        type = "image";
+      }
+      else if(ext == "mp4" || ext == "avi" || ext == "mpeg4" || ext == "mpeg"
+              || ext == "mpg" || ext == "mov" || ext == "ts")
+      {
+        type = "video";
+      }
+      else if(ext == "mp3" || ext == "wav" || ext == "ac3" || ext == "mpa"
+              || ext == "mp2")
+      {
+        type = "audio";
+      }
+      else if(ext == "htm" || ext == "html")
+      {
+        type = "text/html";
+      }
+      else if(ext == "ncl")
+      {
+        type = "application/x-ginga-ncl";
+      }
+      else if(ext == "txt")
+      {
+        type = "text/plain";
+      }
+      else if(ext == "lua")
+      {
+        type = "application/x-ginga-NCLua";
+      }
     }
 
     if(!type.isEmpty())
