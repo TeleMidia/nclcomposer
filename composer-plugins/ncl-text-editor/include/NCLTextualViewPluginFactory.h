@@ -97,11 +97,9 @@ public:
    *
    * \return QString the description of TextualView.
    */
-  QString description() {return "NCL Textual Plugins enable the user to\
-        edit the application directly through its \
-        source code. Additionally, this plugin \
-        brings features like code coloring and \
-        autocomplete.";}
+  QString description() {return tr("NCL Textual plugin enable the user to "
+        "edit the application directly through its source code. Additionally, "
+        "this plugin brings features like code coloring and autocomplete.");}
 
         QString url() {return "http://composer.telemidia.puc-rio.br/textual";}
 

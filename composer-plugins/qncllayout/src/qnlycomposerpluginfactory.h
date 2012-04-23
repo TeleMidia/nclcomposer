@@ -79,8 +79,8 @@ public:
 
       \return QString the description of Layout View.
     */
-    QString description() {return "Layout View enable the user to edit the \
-                                NCL regions visually.";}
+    QString description() {return tr("Layout View enable the user to edit the "
+                                     "NCL regions visually.");}
 
     QString url() {return "http://composer.telemidia.puc-rio.br/debug";}
 

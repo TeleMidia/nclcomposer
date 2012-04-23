@@ -8,6 +8,16 @@
         <source>Debug Console</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <location filename="../debug-console/include/DebugConsoleFactory.h" line="96"/>
+        <source>Debug Console View prints all the  messages send by composer-core to plugins.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../debug-console/include/DebugConsoleFactory.h" line="101"/>
+        <source>General</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>DebugConsolePlugin</name>
@@ -214,7 +224,7 @@
     </message>
     <message>
         <location filename="../ncl-text-editor/src/NCLTextEditorMainWindow.cpp" line="198"/>
-        <source>Synchronize current text with the othersplugins.</source>
+        <source>Synchronize current text with the others plugins.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -355,6 +365,11 @@ Do you want to save your changes?</source>
         <source>NCL Textual View</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <location filename="../ncl-text-editor/include/NCLTextualViewPluginFactory.h" line="100"/>
+        <source>NCL Textual plugin enable the user to edit the application directly through its source code. Additionally, this plugin brings features like code coloring and autocomplete.</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>NCLTreeWidget</name>
@@ -400,6 +415,32 @@ Do you want to save your changes?</source>
     <message>
         <location filename="../qnclstructural/deps/libqncg/examples/qncgdrawing/ui/node.cpp" line="29"/>
         <source>Insert</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>OutlineViewFactory</name>
+    <message>
+        <location filename="../outline-view/include/OutlineViewFactory.h" line="113"/>
+        <source>Outline View enables the user navigates in the project as a tree.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../outline-view/src/OutlineViewFactory.cpp" line="47"/>
+        <source>Outline View</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>PropertiesViewFactory</name>
+    <message>
+        <location filename="../properties-view/include/PropertiesViewFactory.h" line="121"/>
+        <source>Property View shows the attributes of a current selected entity and enables the user to change its values.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../properties-view/src/PropertiesViewFactory.cpp" line="53"/>
+        <source>Properties View</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -522,6 +563,11 @@ Do you want to save your changes?</source>
     <message>
         <location filename="../qncllayout/src/qnlycomposerpluginfactory.cpp" line="47"/>
         <source>Layout View</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qncllayout/src/qnlycomposerpluginfactory.h" line="82"/>
+        <source>Layout View enable the user to edit the NCL regions visually.</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

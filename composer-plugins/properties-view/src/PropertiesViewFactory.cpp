@@ -50,7 +50,7 @@ QString PropertiesViewFactory::id() const
 
 QString PropertiesViewFactory::name() const
 {
-    return "PropertiesView";
+    return tr("Properties View");
 }
 
 QIcon PropertiesViewFactory::icon()  const

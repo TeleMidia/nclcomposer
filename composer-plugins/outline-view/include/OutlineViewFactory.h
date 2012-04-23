@@ -110,8 +110,8 @@ class OutlineViewFactory : public QObject, public IPluginFactory
 
            \return QString the description of Outline View.
          */
-         QString description() {return "Outline View enables the user navigates\
-                                in the project as a tree.";}
+         QString description() {return tr("Outline View enables the user "
+                                        "navigates in the project as a tree.");}
 
          QString url() {return "http://composer.telemidia.puc-rio.br/outline";}
 

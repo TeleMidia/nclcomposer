@@ -44,7 +44,7 @@ QString OutlineViewFactory::id() const
 
 QString OutlineViewFactory::name() const
 {
-    return "Outline View";
+    return tr("Outline View");
 }
 
 QIcon OutlineViewFactory::icon() const

@@ -196,7 +196,7 @@ void NCLTextEditorMainWindow::createActions()
     synchronizeAct = new QAction ( QIcon(":/images/synchronize-icon-24.png"),
                                    tr("&Synchronize"), this);
     synchronizeAct->setStatusTip(tr("Synchronize current text with the others"
-                                    "plugins."));
+                                    " plugins."));
 
     showSearchBoxAct = new QAction(QIcon(), tr("Search"), textEdit);
     showSearchBoxAct->setShortcut(tr("Ctrl+F"));

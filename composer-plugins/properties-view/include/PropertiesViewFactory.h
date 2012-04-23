@@ -118,9 +118,10 @@ class PropertiesViewFactory : public QObject,
 
            \return QString the description of Property View.
          */
-         QString description() {return "Property View shows the attributes of \
-                                a current selected entity and enables the user \
-                                to change its values.";}
+         QString description() {return tr("Property View shows the attributes "
+                                          "of a current selected entity and "
+                                          "enables the user to change its "
+                                          "values.");}
 
          QString url() {return "http://composer.telemidia.puc-rio.br/debug";}
 

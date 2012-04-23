@@ -93,12 +93,12 @@ class DebugConsoleFactory : public QObject,
 
            \return QString the description of Debug Console View.
          */
-         QString description() {return "Debug Console View prints all the \
-                                   messages send by composer-core to plugins.";}
+         QString description() {return tr("Debug Console View prints all the "
+               " messages send by composer-core to plugins.");}
 
          QString url() {return "http://composer.telemidia.puc-rio.br/debug";}
 
-         QString category() {return "General";}
+         QString category() {return tr("General");}
 
 };
 
