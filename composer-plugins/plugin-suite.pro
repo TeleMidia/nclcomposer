@@ -13,4 +13,10 @@ SUBDIRS = \
     qncllayout/qnly.pro \
     qnclstructural/deps/libqncg/libqncg.pro \
     qnclstructural/qnst.pro
+#    media-preview/mediapreview.pro
+#    clube-ncl
 #    validator
+
+TRANSLATIONS = \
+    translations/plugin_suite_es.ts \
+    translations/plugin_suite_pt_BR.ts
