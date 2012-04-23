@@ -595,11 +595,6 @@ QMenu {
     <string>To NCL Document</string>
    </property>
   </action>
-  <action name="actionOi">
-   <property name="text">
-    <string>oi</string>
-   </property>
-  </action>
   <action name="action_SaveAs">
    <property name="text">
     <string>Save &amp;As...</string>

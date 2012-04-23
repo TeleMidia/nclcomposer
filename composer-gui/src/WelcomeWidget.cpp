@@ -56,9 +56,16 @@ WelcomeWidget::WelcomeWidget(QWidget *parent): QWidget(parent),
 #define LABEL_BUILD "This is an ALPHA version. Version: " \
     NCLCOMPOSER_GUI_VERSION  " Build Date and time:" BUILD_DATE
 
-        ui->label_BuildMessage->setText(LABEL_BUILD);
-    ui->label_BuildMessage->setStyleSheet("color:white; font-size:13px; text-align: right;");
+    ui->label_BuildMessage->setText(LABEL_BUILD);
+    ui->label_BuildMessage->setStyleSheet("color:white; font-size:13px; "
+                                          "text-align: right;");
 #endif
+
+    //TODO: By now, we have disable GUI to install new plugins
+    ui->tabWidget->removeTab(1);
+
+    //TODO: Enable NCL Composer Tips
+    ui->frame_Tips->setVisible(false);
 }
 
 WelcomeWidget::~WelcomeWidget()
@@ -317,7 +324,7 @@ void WelcomeWidget::httpFinished()
             this,
             tr("Choose the name of the new project to be created"),
             QDir::currentPath(),
-            tr("Composer Projects (*.cpr)") );
+            tr("NCL Composer Projects (*.cpr)") );
 
     if( !filename.isNull())
     {

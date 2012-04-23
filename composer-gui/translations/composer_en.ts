@@ -61,12 +61,12 @@
     <message>
         <location filename="../ui/ComposerMainWindow.ui" line="338"/>
         <source>Import</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../ui/ComposerMainWindow.ui" line="344"/>
         <source>Export</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../ui/ComposerMainWindow.ui" line="365"/>
@@ -76,7 +76,7 @@
     <message>
         <location filename="../ui/ComposerMainWindow.ui" line="371"/>
         <source>&amp;Help</source>
-        <translation type="unfinished">Aju&amp;da</translation>
+        <translation>Aju&amp;da</translation>
     </message>
     <message>
         <location filename="../ui/ComposerMainWindow.ui" line="380"/>
@@ -87,7 +87,7 @@
     <message>
         <location filename="../ui/ComposerMainWindow.ui" line="388"/>
         <source>&amp;Share</source>
-        <translation type="unfinished">&amp;Compartilhar</translation>
+        <translation>&amp;Compartilhar</translation>
     </message>
     <message>
         <location filename="../ui/ComposerMainWindow.ui" line="405"/>
@@ -473,7 +473,7 @@
     <message>
         <location filename="../ui/RunGingaConfig.ui" line="55"/>
         <source>Start Command:</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Commando de início:</translation>
     </message>
     <message>
         <location filename="../ui/RunGingaConfig.ui" line="116"/>
@@ -483,7 +483,7 @@
     <message>
         <location filename="../ui/RunGingaConfig.ui" line="123"/>
         <source>Stop Command:</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Comando para finalizar aplicação:</translation>
     </message>
     <message>
         <location filename="../ui/RunGingaConfig.ui" line="155"/>
@@ -848,7 +848,7 @@ Do you want to save your changes?</source>
     <message>
         <location filename="../src/ComposerMainWindow.cpp" line="778"/>
         <source>Save current perspective</source>
-        <translation type="unfinished">Salvar a perspectiva corrente</translation>
+        <translation type="unfinished">Salvar a perspectiva atual</translation>
     </message>
     <message>
         <location filename="../src/ComposerMainWindow.cpp" line="784"/>
@@ -864,7 +864,7 @@ Do you want to save your changes?</source>
         <location filename="../src/ComposerMainWindow.cpp" line="851"/>
         <source>The project %1 has been modified.
 Do you want to save your changes?</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">O projeto %1 foi modificado. Você deseja salvar as alterações?</translation>
     </message>
     <message>
         <location filename="../src/ComposerMainWindow.cpp" line="973"/>

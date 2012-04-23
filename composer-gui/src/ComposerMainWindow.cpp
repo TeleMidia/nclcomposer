@@ -171,8 +171,9 @@ void ComposerMainWindow::readExtensions()
 
 #ifdef WITH_LIBSSH2
   /* Load the preferences page */
-  preferences->addPreferencePage(QIcon(":/mainwindow/images/play_button.png"),
-                                 "Run Configuration", new RunGingaConfig());
+  preferences->addPreferencePage( QIcon(":/mainwindow/images/play_button.png"),
+                                  tr("Run Configuration"),
+                                  new RunGingaConfig());
 #endif
 
   /* Load PreferencesPages from Plugins */
@@ -1017,9 +1018,9 @@ void ComposerMainWindow::saveAsCurrentProject()
 
     QString destFileName = QFileDialog::getSaveFileName(
           this,
-          tr("Save as Composer Project"),
+          tr("Save as NCL Composer Project"),
           getLastFileDialogPath(),
-          tr("Composer Projects (*.cpr)") );
+          tr("NCL Composer Projects (*.cpr)") );
 
     if(!destFileName.isNull() && !destFileName.isEmpty())
     {
@@ -1205,8 +1206,8 @@ void ComposerMainWindow::runOnRemoteGingaVM()
     // There aren't a current project.
     QMessageBox::StandardButton reply;
     reply = QMessageBox::warning(NULL, tr("Warning!"),
-                                 tr("You already have an NCL application"
-                                    "running. Please, stop it before you start"
+                                 tr("You already have an NCL application "
+                                    "running. Please, stop it before you start "
                                     "a new one."),
                                  QMessageBox::Ok);
     return;
@@ -1223,7 +1224,7 @@ void ComposerMainWindow::runOnRemoteGingaVM()
     {
       /*QMessageBox::StandardButton reply;
       reply = QMessageBox::warning(this, tr("Warning!"),
-                                     tr("Your document is not saved."
+                                     tr("Your document is not saved. "
                                         "Do you want to save it now?"),
                                      QMessageBox::Yes, QMessageBox::No);*/
 
@@ -1267,7 +1268,7 @@ void ComposerMainWindow::launchProjectWizard()
         this,
         tr("Creating a new Composer Project"),
         getLastFileDialogPath(),
-        tr("Composer Projects (*.cpr)") );
+        tr("NCL Composer Projects (*.cpr)") );
 
   if( !filename.isNull() && !filename.isEmpty())
   {
@@ -1318,9 +1319,9 @@ void ComposerMainWindow::launchProjectWizard()
 void ComposerMainWindow::openProject()
 {
   QString filename = QFileDialog::getOpenFileName(this,
-                                               tr("Open Composer Project"),
+                                               tr("Open NCL Composer Project"),
                                                getLastFileDialogPath(),
-                                               tr("Composer Projects (*.cpr)"));
+                                           tr("NCL Composer Projects (*.cpr)"));
   if(filename != "")
   {
     ProjectControl::getInstance()->launchProject(filename);
@@ -1353,10 +1354,10 @@ void ComposerMainWindow::importFromDocument()
 
     QString projFilename = QFileDialog::getSaveFileName(
           this,
-          tr("Choose the Composer Project where the NCL document must be \
-             imported"),
+          tr("Choose the NCL Composer Project where the NCL document must be "
+             "imported"),
              getLastFileDialogPath(),
-             tr("Composer Projects (*.cpr)") );
+             tr("NCL Composer Projects (*.cpr)") );
 
     //Create the file
     QFile f(projFilename);
