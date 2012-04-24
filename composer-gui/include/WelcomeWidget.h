@@ -191,6 +191,17 @@ signals:
    *   button.
    */
   void userPressedSeeInstalledPlugins();
+
+  /*!
+   *
+   */
+  void userPressedRecentProject(QString project);
+
+private slots:
+  void sendRecentProjectClicked();
+
+public slots:
+  void updateRecentProjects(QStringList recentProjects);
 };
 
 } }

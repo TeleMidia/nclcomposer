@@ -126,6 +126,9 @@ void ComposerMainWindow::initModules()
   connect(projectControl, SIGNAL(endOpenProject(QString)),
           welcomeWidget, SLOT(addToRecentProjects(QString)));
 
+  connect(welcomeWidget, SIGNAL(userPressedRecentProject(QString)),
+          projectControl, SLOT(launchProject(QString)));
+
   connect(projectControl,SIGNAL(projectAlreadyOpen(QString)),
           SLOT(onOpenProjectTab(QString)));
 
@@ -212,15 +215,18 @@ QString ComposerMainWindow::promptChooseExtDirectory()
 void ComposerMainWindow::readSettings()
 {
   ComposerSettings settings;
+  settings.beginGroup("openfiles");
+  QStringList openfiles = settings.value("openfiles").toStringList();
+  settings.endGroup();
+
+  openProjects(openfiles);
+
+  QApplication::processEvents();
+
   settings.beginGroup("mainwindow");
   restoreGeometry(settings.value("geometry").toByteArray());
   restoreState(settings.value("windowState").toByteArray());
   settings.endGroup();
-
-  settings.beginGroup("openfiles");
-  QStringList openfiles = settings.value("openfiles").toStringList();
-  settings.endGroup();
-  openProjects(openfiles);
 }
 
 void ComposerMainWindow::openProjects(const QStringList &projects)
@@ -262,6 +268,7 @@ void ComposerMainWindow::openProjects(const QStringList &projects)
   ComposerSettings settings;
   QStringList recentProjects = settings.value("recentprojects").toStringList();
   updateRecentProjectsMenu(recentProjects);
+  welcomeWidget->updateRecentProjects(recentProjects);
 }
 
 void ComposerMainWindow::initGUI()
@@ -953,10 +960,7 @@ void ComposerMainWindow::endOpenProject(QString project)
   (void) project;
   this->setCursor(QCursor(Qt::ArrowCursor));
 
-  QSettings settings(QSettings::IniFormat,
-                     QSettings::UserScope,
-                     "telemidia",
-                     "composer");
+  ComposerSettings settings;
 
   if(settings.contains("default_perspective"))
   {
@@ -1379,23 +1383,20 @@ void ComposerMainWindow::importFromDocument()
 
 void ComposerMainWindow::addToRecentProjects(QString projectUrl)
 {
-  QSettings settings(QSettings::IniFormat,
-                     QSettings::UserScope,
-                     "telemidia",
-                     "composer");
+  ComposerSettings settings;
+  QStringList recentProjects = settings.value("recentProjects").toStringList();
 
-  QStringList recentprojects = settings.value("recentProjects").toStringList();
-
-  recentprojects.push_front(projectUrl);
-  recentprojects.removeDuplicates();
+  recentProjects.push_front(projectUrl);
+  recentProjects.removeDuplicates();
 
   //MAXIMUM SIZE
-  while(recentprojects.size() > this->maximumRecentProjectsSize)
-    recentprojects.pop_back();
+  while(recentProjects.size() > this->maximumRecentProjectsSize)
+    recentProjects.pop_back();
 
-  settings.setValue("recentProjects", recentprojects);
+  settings.setValue("recentProjects", recentProjects);
 
-  updateRecentProjectsMenu(recentprojects);
+  updateRecentProjectsMenu(recentProjects);
+  welcomeWidget->updateRecentProjects(recentProjects);
 }
 
 void ComposerMainWindow::updateRecentProjectsMenu(QStringList &recentProjects)
@@ -1413,9 +1414,9 @@ void ComposerMainWindow::updateRecentProjectsMenu(QStringList &recentProjects)
       QAction *act = ui->menu_Recent_Files->addAction(
             recentProjects.at(i));
       act->setData(recentProjects.at(i));
-      connect(act, SIGNAL(triggered()), this,
-              SLOT(openRecentProject()));
+      connect(act, SIGNAL(triggered()), this, SLOT(openRecentProject()));
     }
+
     ui->menu_Recent_Files->addSeparator();
     QAction *clearRecentProjects =
         ui->menu_Recent_Files->addAction(tr("Clear Recent Projects"));
@@ -1428,10 +1429,7 @@ void ComposerMainWindow::updateRecentProjectsMenu(QStringList &recentProjects)
 
 void ComposerMainWindow::clearRecentProjects(void)
 {
-  QSettings settings(QSettings::IniFormat,
-                     QSettings::UserScope,
-                     "telemidia",
-                     "composer");
+  ComposerSettings settings;
 
   settings.remove("recentProjects");
   QStringList empty;

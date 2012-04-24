@@ -73,6 +73,39 @@ WelcomeWidget::~WelcomeWidget()
     delete ui;
 }
 
+void WelcomeWidget::updateRecentProjects(QStringList recentProjects)
+{
+  foreach (QCommandLinkButton *button,
+           ui->frame_RecentProjects->findChildren<QCommandLinkButton*>())
+  {
+    button->hide();
+    button->deleteLater();
+  }
+
+  for(int i = 0; i < recentProjects.size(); i++)
+  {
+    QString file = recentProjects.at(i);
+    QCommandLinkButton *button = new QCommandLinkButton(
+          file.mid(file.lastIndexOf("/")+1), file, ui->frame_RecentProjects);
+    button->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+    button->setToolTip(file);
+    connect(button, SIGNAL(pressed()), this, SLOT(sendRecentProjectClicked()));
+
+    ui->frame_RecentProjects->layout()->addWidget(button);
+  }
+}
+
+void WelcomeWidget::sendRecentProjectClicked()
+{
+  QCommandLinkButton *button =
+      static_cast<QCommandLinkButton*> (QObject::sender());
+
+  if(button != NULL)
+  {
+    emit userPressedRecentProject(button->description());
+  }
+}
+
 #ifdef WITH_CLUBENCL
 void WelcomeWidget::loadRSS()
 {
