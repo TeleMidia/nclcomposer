@@ -10,7 +10,7 @@
 #ifndef RUNGINGACONFIG_H
 #define RUNGINGACONFIG_H
 
-#include <QWidget>
+#include "IPreferencesPage.h"
 
 namespace Ui {
   class RunGingaConfig;
@@ -23,9 +23,8 @@ namespace gui {
  *
  * \todo User input validation.
  */
-class RunGingaConfig : public QWidget
+class RunGingaConfig : public IPreferencesPage
 {
-  Q_OBJECT
 private:
   Ui::RunGingaConfig *ui;
 
@@ -33,8 +32,12 @@ public:
   explicit RunGingaConfig(QWidget *parent = 0);
   ~RunGingaConfig();
 
+  const QString getName() {return tr("Run Configuration");}
+  const QIcon getIcon() {return QIcon(":/mainwindow/images/play_button.png");}
+
 public slots:
   void applyValues();
+  void setDefaultValues();
 };
 
 } } //end namespace

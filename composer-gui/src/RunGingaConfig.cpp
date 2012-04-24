@@ -19,7 +19,7 @@ namespace composer {
 namespace gui {
 
 RunGingaConfig::RunGingaConfig(QWidget *parent):
-  QWidget(parent), ui(new Ui::RunGingaConfig)
+  IPreferencesPage(parent), ui(new Ui::RunGingaConfig)
 {
   ui->setupUi(this);
 
@@ -78,6 +78,11 @@ void RunGingaConfig::applyValues()
 
   settings.setValue("run_remote", ui->remotevm_Group->isChecked());
   settings.endGroup();
+}
+
+void RunGingaConfig::setDefaultValues()
+{
+
 }
 
 } } //end namespace

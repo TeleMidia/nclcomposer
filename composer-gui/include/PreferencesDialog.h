@@ -23,6 +23,8 @@ using namespace composer::extension;
 #include <core/modules/PluginControl.h>
 using namespace composer::core;
 
+#include "IPreferencesPage.h"
+
 namespace Ui {
     class PreferencesDialog;
 }
@@ -39,6 +41,10 @@ public:
     ~PreferencesDialog();
 
     void addPreferencePage(IPluginFactory *);
+    void addPreferencePage(IPreferencesPage *page);
+    /*!
+     * \deprecated
+     */
     void addPreferencePage(QIcon icon, QString name, QWidget *widget);
 
 private:

@@ -67,6 +67,15 @@ void PreferencesDialog::addPreferencePage(QIcon icon, QString name,
   ui->scrollAreaVerticalLayout->addWidget(page);
 }
 
+void PreferencesDialog::addPreferencePage(IPreferencesPage *page)
+{
+  new QListWidgetItem(page->getIcon(), page->getName(), ui->listWidget, 0);
+
+  pages[page->getName()] = page;
+  page->hide();
+  ui->scrollAreaVerticalLayout->addWidget(page);
+}
+
 void PreferencesDialog::loadPreferencesPages()
 {
   QList<IPluginFactory*> plugins = PluginControl::getInstance()->

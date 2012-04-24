@@ -24,7 +24,6 @@
 namespace composer {
 namespace gui {
 
-
 /*!
  * The HelpBrowser will shows the HTML content of the current selected Help.
  */

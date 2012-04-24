@@ -137,18 +137,20 @@ SOURCES += main.cpp \
     src/WelcomeWidget.cpp \
     src/AboutDialog.cpp \
     src/RunGingaConfig.cpp \
-    src/ComposerHelpWidget.cpp
+    src/ComposerHelpWidget.cpp \
+    src/GeneralPreferences.cpp
 
 HEADERS += include/ComposerMainWindow.h \
     include/PreferencesDialog.h \
     include/PerspectiveManager.h \
     include/PluginDetailsDialog.h \
     include/EnvironmentPreferencesWidget.h \
-    include/IPreferencePage.h \
+    include/IPreferencesPage.h \
     include/WelcomeWidget.h \
     include/AboutDialog.h \
     include/RunGingaConfig.h \
-    include/ComposerHelpWidget.h
+    include/ComposerHelpWidget.h \
+    include/GeneralPreferences.h
 
 RESOURCES += images.qrc
 
@@ -159,7 +161,8 @@ FORMS   += ui/PreferencesDialog.ui \
     ui/PluginDetailsDialog.ui \
     ui/EnvironmentPreferencesWidget.ui \
     ui/WelcomeWidget.ui \
-    ui/AboutDialog.ui
+    ui/AboutDialog.ui \
+    ui/GeneralPreferences.ui
 
 unix:!macx {
     INSTALLS += target desktop icon64 icon48

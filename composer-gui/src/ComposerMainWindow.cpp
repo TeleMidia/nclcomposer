@@ -17,6 +17,8 @@
 #include <QToolButton>
 #include <QApplication>
 
+#include "GeneralPreferences.h"
+
 #ifdef USE_MDI
 #include <QMdiArea>
 #endif
@@ -172,11 +174,11 @@ void ComposerMainWindow::readExtensions()
   }
   settings.endGroup();
 
+  preferences->addPreferencePage(new GeneralPreferences());
+
 #ifdef WITH_LIBSSH2
   /* Load the preferences page */
-  preferences->addPreferencePage( QIcon(":/mainwindow/images/play_button.png"),
-                                  tr("Run Configuration"),
-                                  new RunGingaConfig());
+  preferences->addPreferencePage(new RunGingaConfig());
 #endif
 
   /* Load PreferencesPages from Plugins */

@@ -68,6 +68,14 @@ void updateSettingsWithDefaults()
   settings.beginGroup("languages");
   if(!settings.contains("currentLanguage"))
     settings.setValue("currentLanguage", "en");
+
+  // Set the defaults supported languages
+  if(!settings.contains("supportedLanguages"))
+  {
+    QStringList list;
+    list << "en_US" << "pt_BR" << "es_ES";
+    settings.setValue("supportedLanguages", list);
+  }
   settings.endGroup();
 /* End default language */
 }
