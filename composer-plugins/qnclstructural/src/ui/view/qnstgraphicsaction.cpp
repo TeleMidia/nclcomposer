@@ -6,11 +6,13 @@ QnstGraphicsAction::QnstGraphicsAction(QnstGraphicsEntity* parent)
     setnstType(Qnst::Action);
 
     setAction(Qnst::NoActionType);
+
+    dialog = new QnstGraphicsBindDialog();
 }
 
 QnstGraphicsAction::~QnstGraphicsAction()
 {
-
+    delete dialog;
 }
 
 QnstAction QnstGraphicsAction::getAction()
@@ -360,5 +362,19 @@ void QnstGraphicsAction::delineate(QPainterPath* painter) const
 
             painter->addEllipse(4,4,16,16);
         }
+    }
+}
+
+void QnstGraphicsAction::setParams(QMap<QString, QString> params)
+{
+    this->params = params;
+}
+
+void QnstGraphicsAction::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
+{
+    dialog->init(params);
+
+    if (dialog->exec()){
+        // todo
     }
 }

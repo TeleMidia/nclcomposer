@@ -3,6 +3,8 @@
 
 #include "qnstgraphicsedge.h"
 
+#include "qnstgraphicsbinddialog.h"
+
 typedef QString QnstActionIcon;
 typedef Qnst::ActionType QnstAction;
 
@@ -25,15 +27,23 @@ public:
 
     void aux_adjust(QPointF pointa, QPointF pointb);
 
+    void setParams(QMap<QString, QString> params);
+
 protected:
     virtual void draw(QPainter* painter);
 
     virtual void delineate(QPainterPath* painter) const;
 
+    virtual void mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event);
+
 private:
     QnstAction action;
 
     QnstActionIcon actionIcon;
+
+    QMap<QString, QString> params;
+
+    QnstGraphicsBindDialog* dialog;
 };
 
 #endif // QNSTGRAPHICSACTION_H

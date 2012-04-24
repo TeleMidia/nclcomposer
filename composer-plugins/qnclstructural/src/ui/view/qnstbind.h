@@ -3,6 +3,8 @@
 
 #include "qnstentity.h"
 
+#include <QMap>
+
 class QnstBind : public QnstEntity
 {
 public:
@@ -30,6 +32,12 @@ public:
 
     void setInterfaceUid(QString interfaceUid);
 
+    QMap<QString, QString> getParams();
+
+    QString getParam(QString name);
+
+    void setParam(QString name, QString value);
+
 private:
     QString role;
 
@@ -40,6 +48,8 @@ private:
     QString interface;
 
     QString interfaceUID;
+
+    QMap<QString, QString> params;
 };
 
 #endif // QNSTBIND_H

@@ -3,6 +3,8 @@
 
 #include "qnstgraphicsedge.h"
 
+#include "qnstgraphicsbinddialog.h"
+
 typedef QString QnstConditionIcon;
 typedef Qnst::ConditionType QnstCondition;
 
@@ -25,15 +27,23 @@ public:
 
     void aux_adjust(QPointF pointa, QPointF pointb);
 
+    void setParams(QMap<QString, QString> params);
+
 protected:
     virtual void draw(QPainter* painter);
 
     virtual void delineate(QPainterPath* painter) const;
 
+    virtual void mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event);
+
 private:
     QnstCondition condition;
 
     QnstConditionIcon conditionIcon;
+
+    QMap<QString, QString> params;
+
+    QnstGraphicsBindDialog* dialog;
 };
 
 #endif // QNSTGRAPHICSCONDITION_H

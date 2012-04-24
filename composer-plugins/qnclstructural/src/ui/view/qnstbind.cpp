@@ -59,3 +59,18 @@ void QnstBind::setInterfaceUid(QString interfaceUID)
 {
     this->interfaceUID = interfaceUID;
 }
+
+QMap<QString, QString> QnstBind::getParams()
+{
+    return params;
+}
+
+QString QnstBind::getParam(QString name)
+{
+    return params[name];
+}
+
+void QnstBind::setParam(QString name, QString value)
+{
+    params[name] = value;
+}

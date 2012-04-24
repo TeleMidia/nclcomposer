@@ -36,7 +36,7 @@ void QnstGraphicsBody::createObjects()
     menu->actionAggregator->setEnabled(true);
 
     menu->menuAdjust->setEnabled(true);
-    menu->actionSpring->setEnabled(true);
+    menu->actionAuto->setEnabled(true);
 }
 
 void QnstGraphicsBody::createConnections()
@@ -73,7 +73,7 @@ void QnstGraphicsBody::createConnections()
     connect(menu, SIGNAL(propertyRequested()), SLOT(performProperty()));
     connect(menu, SIGNAL(aggregatorRequested()), SLOT(performAggregator()));
 
-    connect(menu, SIGNAL(springRequested()), SLOT(adjustWithSpring()));
+    connect(menu, SIGNAL(autoRequested()), SLOT(adjustWithSpring()));
 }
 
 void QnstGraphicsBody::performHtml()

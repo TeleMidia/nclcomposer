@@ -266,6 +266,8 @@ private:
 
     void performPaste(QnstGraphicsEntity* copy, QnstGraphicsEntity* parent);
 
+    void performReference(QnstGraphicsEntity* copy, QnstGraphicsEntity* parent);
+
     void createObjects();
 
     void createConnection();
@@ -285,6 +287,8 @@ private:
     void addInterfacetoInterfaceEdge(QnstGraphicsEntity* entitya, QnstGraphicsEntity* entityb);
 
     void adjustAngle(QnstGraphicsEdge* edge, QnstGraphicsEntity* entitya, QnstGraphicsEntity* entityb);
+
+    void collapseCompositions(QDomElement element, QDomElement parent);
 
     int ncontext;
 

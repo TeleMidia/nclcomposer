@@ -9,7 +9,7 @@
 #include <QGraphicsSceneMouseEvent>
 
 // Spring Algoritms Params
-#define SPRING_LENGTH 100
+#define SPRING_LENGTH 125
 #define SPRING_CONSTANT 0.1
 #define SPRING_DAMPING 0.5
 
@@ -32,7 +32,17 @@ public:
 
     void setCollpsed(bool collapsed);
 
+    qreal getLastW();
+
+    qreal getLastH();
+
+    void setLastW(qreal lastW);
+
+    void setLastH(qreal lastH);
+
     bool isCollpsed();
+
+    void collapse();
 
 protected slots:
     void adjustWithSpring();

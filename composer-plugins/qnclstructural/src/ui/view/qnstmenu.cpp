@@ -331,11 +331,11 @@ void QnstMenu::createActions()
 
     actionProperties->setEnabled(false);
 
-    // adjust action
-    actionSpring = new QAction(this);
-    actionSpring->setText(tr("Spring"));
+    // auto action
+    actionAuto = new QAction(this);
+    actionAuto->setText(tr("Auto (Unstable)"));
 
-    actionSpring->setEnabled(false);
+    actionAuto->setEnabled(false);
 }
 
 void QnstMenu::createMenus()
@@ -403,7 +403,7 @@ void QnstMenu::createMenus()
     menuAdjust = new QMenu();
     menuAdjust->setTitle(tr("Adjust"));
 
-    menuAdjust->addAction(actionSpring);
+    menuAdjust->addAction(actionAuto);
 
     menuAdjust->setEnabled(false);
 }
@@ -455,5 +455,5 @@ void QnstMenu::createConnections()
 
     connect(actionProperties, SIGNAL(triggered()), SIGNAL(propertiesRequested()));
 
-    connect(actionSpring, SIGNAL(triggered()), SIGNAL(springRequested()));
+    connect(actionAuto, SIGNAL(triggered()), SIGNAL(autoRequested()));
 }

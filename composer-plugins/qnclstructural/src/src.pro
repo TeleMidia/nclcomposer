@@ -65,7 +65,8 @@ HEADERS += \
     ui/view/qnstremovecommand.h \
     ui/view/qnstgraphicsmapping.h \
     ui/view/qnstgraphicsncl.h \
-    ui/view/qnstgraphicsswitchport.h
+    ui/view/qnstgraphicsswitchport.h \
+    ui/view/qnstgraphicsbinddialog.h
 
 SOURCES += \
     qnstcomposerplugin.cpp \
@@ -112,7 +113,8 @@ SOURCES += \
     ui/view/qnstremovecommand.cpp \
     ui/view/qnstgraphicsmapping.cpp \
     ui/view/qnstgraphicsncl.cpp \
-    ui/view/qnstgraphicsswitchport.cpp
+    ui/view/qnstgraphicsswitchport.cpp \
+    ui/view/qnstgraphicsbinddialog.cpp
 
 RESOURCES += \
     ../../common-resources/images.qrc
@@ -120,7 +122,11 @@ RESOURCES += \
 FORMS += \
     ui/view/QnstGraphicsLinkForm.ui \
     ui/view/QnstGraphicsConditionForm.ui \
-    ui/view/QnstGraphicsActionForm.ui
+    ui/view/QnstGraphicsActionForm.ui \
+    ui/view/QnstGraphicsBindForm.ui
+
+
+
 
 
 

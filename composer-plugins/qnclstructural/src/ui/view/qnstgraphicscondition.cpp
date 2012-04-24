@@ -6,6 +6,8 @@ QnstGraphicsCondition::QnstGraphicsCondition(QnstGraphicsEntity* parent)
     setnstType(Qnst::Condition);
 
     setCondition(Qnst::NoConditionType);
+
+    dialog = new QnstGraphicsBindDialog();
 }
 
 QnstGraphicsCondition::~QnstGraphicsCondition()
@@ -367,5 +369,19 @@ void QnstGraphicsCondition::delineate(QPainterPath* painter) const
 
             painter->addEllipse(4+getWidth()-16, 4+getHeight()-16, 16, 16);
         }
+    }
+}
+
+void QnstGraphicsCondition::setParams(QMap<QString, QString> params)
+{
+    this->params = params;
+}
+
+void QnstGraphicsCondition::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
+{
+    dialog->init(params);
+
+    if (dialog->exec()){
+        // todo
     }
 }

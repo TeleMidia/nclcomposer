@@ -262,6 +262,11 @@ void QnstGraphicsComposition::dragEnterEvent(QGraphicsSceneDragDropEvent *event)
     }
 }
 
+void QnstGraphicsComposition::collapse()
+{
+    mouseDoubleClickEvent(NULL);
+}
+
 void QnstGraphicsComposition::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
 {
     if (tmp == NULL){
@@ -392,8 +397,6 @@ void QnstGraphicsComposition::dropEvent(QGraphicsSceneDragDropEvent *event)
 
 void QnstGraphicsComposition::adjustWithSpring()
 {
-//    qDebug() << "[QNST]" << "QnstGraphicsComposition::adjustWithSpring()";
-
     int it = 0;
 
     while(it++ < SPRING_INTERATION){
@@ -421,16 +424,16 @@ void QnstGraphicsComposition::adjustWithSpring()
 
                 foreach(QnstGraphicsEdge* edge, node->getnstGraphicsEdges()){
 
-//                    qDebug() << "[SPRING]" << "rF:" << rforce << "rA:" << rangle;
-
                     // setting entities
                     QnstGraphicsEntity* entitya;
                     QnstGraphicsEntity* entityb;
 
                     if (edge->getEntityA() != node){
-                        continue; // TODO
+                        entitya = edge->getEntityB();
+                        entityb = edge->getEntityA();
 
                     }else{
+                        continue;
                         entitya = edge->getEntityA();
                         entityb = edge->getEntityB();
                     }
@@ -444,16 +447,7 @@ void QnstGraphicsComposition::adjustWithSpring()
                     line.setP2(QPointF(entityb->getLeft() + entityb->getWidth()/2,
                                        entityb->getTop() + entityb->getHeight()/2));
 
-
-                    // calculating distance
-                    qreal xa = line.p1().x();
-                    qreal ya = line.p1().y();
-                    qreal xb = line.p2().x();
-                    qreal yb = line.p2().y();
-
                     qreal d = line.length();
-
-//                    qDebug() << "[SPRING]" << "D:" << d;
 
                     // calculating attraction
                     qreal cforce; // current vector magnitude
@@ -464,126 +458,76 @@ void QnstGraphicsComposition::adjustWithSpring()
                     cforce = SPRING_CONSTANT*(d - SPRING_LENGTH >= 0 ? d - SPRING_LENGTH : (d - SPRING_LENGTH)*(-1));
                     cangle = line.angle();
 
-//                    qDebug() << "[SPRING]" << "cF:" << cforce << "cA:" << cangle;
-
-                    // calculating result force
-//                    qDebug() << "AX:" << cos(cangle*(PI / 180));
-//                    qDebug() << "AY:" << sin(cangle*(PI / 180));
-
-
                     qreal fxa = rforce*cos(rangle*(PI / 180));
                     qreal fya = rforce*sin(rangle*(PI / 180));
                     qreal fxb = cforce*cos(cangle*(PI / 180));
                     qreal fyb = cforce*sin(cangle*(PI / 180));
 
-//                    qDebug();
-//                    qDebug() << "[SPRING]" << "fxa:" << fxa << "fya:" << fya;
-//                    qDebug() << "[SPRING]" << "fxb:" << fxb << "fxb:" << fyb;
-//                    qDebug();
-
                     qreal fxr = fxa + fxb;
                     qreal fyr = fya + fyb;
 
-//                    qDebug() << "[SPRING]" << "fyr:" << fxr << "fyr:" << fyr;
-//                    qDebug();
-
                     rforce = sqrt(pow(fxr,2) + pow(fyr,2));
 
-                    // calculating result angle (direction)
-                    rangle = cangle;
 
-//                    if (rforce == 0){
-//                        rangle = 0;
-//                    }else if (fabs(fxr) > fabs(fyr)){
-//                        rangle = ((180 / PI)*tanh(fxr/fyr));
-//                    }else{
-//                        rangle = 90 - ((180 / PI)*tanh(fxr/fyr));
-//                    }
+                    if (rforce == 0){
+                        rangle = 0;
+                    }else if (fabs(fxr) > fabs(fyr)){
+                        rangle = ((180 / PI)*tanh(fyr/fxr));
+                    }else{
+                        rangle = 90 - ((180 / PI)*tanh(fxr/fyr));
+                    }
 
-//                    if (fxr < 0 && (fyr < 0 || cangle < 0)){
-//                        rangle += 180;
-//                    }else if (fyr < 0 && cangle >= 0){
-//                        rangle += 180;
-//                    }
+                    if (fxr < 0){
+                        rangle += 180;
+                    }else if (fyr < 0 && rangle < 0){
+                        rangle += 360;
+                    }
 
-//                    qDebug() << "[SPRING]" << "RESULT A:" << rangle;
                 }
 
-                //////////////////////////// applying velocity
-//                qreal fxa = vf[I]*cos(va[I]*(PI / 180));
-//                qreal fya = vf[I]*sin(va[I]*(PI / 180));
-//                qreal fxb = rforce*cos(rangle*(PI / 180));
-//                qreal fyb = rforce*sin(rangle*(PI / 180));
+                qreal fxa = vf[I]*cos(va[I]*(PI / 180));
+                qreal fya = vf[I]*sin(va[I]*(PI / 180));
+                qreal fxb = rforce*cos(rangle*(PI / 180));
+                qreal fyb = rforce*sin(rangle*(PI / 180));
 
-//                qreal fxr = fxa + fxb;
-//                qreal fyr = fya + fyb;
+                qreal fxr = fxa + fxb;
+                qreal fyr = fya + fyb;
 
-//                rforce = sqrt(pow(fxr,2) + pow(fyr,2));
+                rforce = sqrt(pow(fxr,2) + pow(fyr,2));
 
-//                vf[I] = rforce*SPRING_DAMPING;
+                vf[I] = rforce*SPRING_DAMPING;
 
-//                rangle = va[I];
+                if (rforce == 0){
+                    rangle = 0;
+                }else if (fabs(fxr) > fabs(fyr)){
+                    rangle = ((180 / PI)*tanh(fyr/fxr));
+                }else{
+                    rangle = 90 - ((180 / PI)*tanh(fxr/fyr));
+                }
 
-//                if (rforce == 0){
-//                    rangle = 0;
-//                }else if (fabs(fxr) > fabs(fyr)){
-//                    rangle = ((180 / PI)*tanh(fxr/fyr));
-//                }else{
-//                    rangle = 90 - ((180 / PI)*tanh(fxr/fyr));
-//                }
+                if (fxr < 0){
+                    rangle += 180;
+                }else if (fyr < 0 && rangle < 0){
+                    rangle += 360;
+                }
 
-//                if (fxr < 0 && (fyr < 0 || va[I] < 0)){
-//                    rangle += 180;
-//                }else if (fyr < 0 && va[I] >= 0){
-//                    rangle += 180;
-//                }
+                va[I] = rangle;
 
-//                va[I] = rangle;
-
-                /////////////////////////////////////////////////
-//                qDebug();
-//                qDebug() << "[SPRING]" << "rF:" << rforce << "rA:" << rangle;
-
-                // calculating positions
-//                qreal rx = rforce*cos(rangle*(PI / 180));
-//                qreal ry = rforce*sin(rangle*(PI / 180));
-
-                qreal rx = rforce*cos(rangle*(PI / 180));
-                qreal ry = rforce*sin(rangle*(PI / 180));
-
-                qDebug() << "[SPRING]" << "x:" << entity->getLeft() << "y:" << entity->getTop();
+                qreal rx = vf[I]*cos(va[I]*(PI / 180));
+                qreal ry = vf[I]*sin(va[I]*(PI / 180));
 
                 if (rangle < 90){
-                    qDebug() << "[SPRING]" << "Nx:" << entity->getLeft()+  rx*attr << "Ny:" << entity->getTop()  - ry*attr;
-                    qDebug();
-                    qDebug() << "[SPRING]" << "rx:" << rx*attr << "ry:" << -ry*attr;
-
                     next[I] = QPointF(entity->getLeft() +  rx*attr, entity->getTop() - ry*attr);
 
                 }else if (rangle < 180){
-                    qDebug() << "[SPRING]" << "Nx:" << entity->getLeft() + rx*attr << "Ny:" << entity->getTop() - ry*attr;
-                    qDebug();
-                    qDebug() << "[SPRING]" << "rx:" << rx*attr << "ry:" << - ry*attr;
-
                     next[I] = QPointF(entity->getLeft() + rx*attr, entity->getTop() - ry*attr);
 
                 }else if (rangle < 270){
-                    qDebug() << "[SPRING]" << "Nx:" << entity->getLeft()+  rx*attr << "Ny:" << entity->getTop()  - ry*attr;
-                    qDebug();
-                    qDebug() << "[SPRING]" << "rx:" << rx*attr << "ry:" << -ry*attr;
-
                     next[I] = QPointF(entity->getLeft() + rx*attr, entity->getTop() - ry*attr);
 
                 }else{
-                    qDebug() << "[SPRING]" << "rx:" << rx*attr << "ry:" << -ry*attr;
-                    qDebug();
-                    qDebug() << "[SPRING]" << "Nx:" << entity->getLeft()+  rx*attr << "Ny:" << entity->getTop()  - ry*attr;
-
                     next[I] = QPointF(entity->getLeft() + rx*attr, entity->getTop() - ry*attr);
                 }
-
-                qDebug() << "============================";
-//                qDebug();
             }
         }
 
@@ -592,8 +536,33 @@ void QnstGraphicsComposition::adjustWithSpring()
 
             entity->setLeft(next[I].x());
             entity->setTop(next[I].y());
-
-            entity->adjust();
         }
+
+        adjust();
     }
 }
+
+qreal QnstGraphicsComposition::getLastW()
+{
+    return lastw;
+}
+
+qreal QnstGraphicsComposition::getLastH()
+{
+    return lasth;
+}
+
+void QnstGraphicsComposition::setLastW(qreal lastW)
+{
+    this->lastw = lastW;
+}
+
+void QnstGraphicsComposition::setLastH(qreal lastH)
+{
+    this->lasth = lastH;
+}
+
+//void QnstGraphicsComposition::setCollpsed(bool collapsed)
+//{
+//    this->collapsed = collapsed;
+//}

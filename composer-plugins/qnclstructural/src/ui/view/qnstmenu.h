@@ -83,7 +83,7 @@ signals:
 
     void propertiesRequested();
 
-    void springRequested();
+    void autoRequested();
 
 private:
     void createActions();
@@ -171,7 +171,7 @@ public:
 
     QAction* actionHide;
 
-    QAction* actionSpring;
+    QAction* actionAuto;
 
     QAction* actionProperties;
 };
