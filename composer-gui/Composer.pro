@@ -79,7 +79,7 @@ LIBS          +=  -L../composer-core/core
 macx {
     LIBS += -framework ComposerCore
    
-   INCLUDEPATH += \
+    INCLUDEPATH += \
         /Library/Frameworks/ComposerCore.framework/ \
         /opt/local/include/
 
@@ -164,13 +164,20 @@ FORMS   += ui/PreferencesDialog.ui \
     ui/AboutDialog.ui \
     ui/GeneralPreferences.ui
 
-unix:!macx {
-    INSTALLS += target desktop icon64 icon48
-} else {
-    INSTALLS += target
+#TRANSLATIONS
+trans.path = $$INSTALLBASE/extensions
+trans.files = translations/*.qm
+isEmpty(trans.path) {
+    trans.path = $(QTDIR)/translations
 }
 
 TRANSLATIONS += translations/composer_pt_BR.ts \
                 translations/composer_es.ts
+
+unix:!macx {
+    INSTALLS += target desktop icon64 icon48
+} else {
+    INSTALLS += target trans
+}
 
 OTHER_FILES += LICENSE.LGPL

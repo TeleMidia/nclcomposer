@@ -44,8 +44,8 @@ void updateSettingsWithDefaults()
                      << QCoreApplication::applicationDirPath() +
                         "/../PlugIns/composer";
 #elif defined(Q_WS_WIN32)
-  defaultPluginsPath << QApplication::applicationDirPath() + "/lib/composer";
-  defaultPluginsPath << "C:/Composer/lib/composer";
+  defaultPluginsPath << QApplication::applicationDirPath() + "/extensions";
+  defaultPluginsPath << "C:/Composer/extensions";
 #else
   // PREFIX Should be defined by the qmake while compiling the source code.
 #ifdef EXT_DEFAULT_PATH
