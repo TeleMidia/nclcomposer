@@ -31,6 +31,7 @@
 #endif
 
 #define NCL_CLUB_URL "http://club.ncl.org.br/rss.xml"
+#define MAX_RECENT_PROJECTS 6
 
 namespace Ui{
 class WelcomeWidget;

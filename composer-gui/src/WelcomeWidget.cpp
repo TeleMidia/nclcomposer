@@ -82,7 +82,7 @@ void WelcomeWidget::updateRecentProjects(QStringList recentProjects)
     button->deleteLater();
   }
 
-  for(int i = 0; i < recentProjects.size(); i++)
+  for(int i = 0; i < recentProjects.size() && i < MAX_RECENT_PROJECTS; i++)
   {
     QString file = recentProjects.at(i);
     QCommandLinkButton *button = new QCommandLinkButton(
