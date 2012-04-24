@@ -75,10 +75,13 @@ else:win32 {
     PREFIX = "C:/Composer"
   }
 
-  QSCI_INSTALL_LIBS = $$PREFIX/lib/composer
+  #TODO: This should be $$PREFIX/extensions, but on Windows we cannot link
+  # against a lib inside the $$PREFIX/extensions path.
+  QSCI_INSTALL_LIBS = $$PREFIX
   QSCI_INSTALL_HEADERS = $$PREFIX/include/composer
-  QSCI_INSTALL_TRANSLATIONS = $$PREFIX/lib/composer/translations
-  QSCI_INSTALL_DATA = $$PREFIX/lib/composer/
+  #QSCI_INSTALL_TRANSLATIONS = $$PREFIX/translations
+  QSCI_INSTALL_TRANSLATIONS = $$PREFIX/extensions
+  QSCI_INSTALL_DATA = $$PREFIX/extensions
 }
 
 #QSCI_INSTALL_LIBS = $$[QT_INSTALL_LIBS]

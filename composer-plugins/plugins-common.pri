@@ -64,7 +64,7 @@ else:win32 {
                  $$INSTALLBASE/include/composer/core \
                  $$INSTALLBASE/include/composer/core/extensions
 
-  target.path = $$INSTALLBASE/lib/composer
+  target.path = $$INSTALLBASE/extensions
 }
 
 INSTALLS = target
