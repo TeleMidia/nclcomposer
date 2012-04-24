@@ -314,7 +314,11 @@ void QncgGraphicsEntity::removencgGraphicsEntity(QncgGraphicsEntity* entity)
         int index = entities.indexOf(entity);
 
         if (index >= 0){
-            entities.remove(index); scene()->removeItem(entity);
+            entities.remove(index);
+
+            if (entity->isVisible())
+                scene()->removeItem(entity);
+
         }
     }
 }
