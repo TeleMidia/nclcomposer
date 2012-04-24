@@ -71,7 +71,7 @@ else:win32 {
     HEADERS_PATH = $$INSTALLBASE/include/composer
     INCLUDEPATH += C:/Composer/include/composer
     headers_nclprofile.path = $$HEADERS_PATH/core/extensions
-    target.path = $$quote(C:/Composer/lib/composer)
+    target.path = $$INSTALLBASE/extensions
 }
 
 DEFINES += NCLLANGUAGEPROFILE_LIBRARY
