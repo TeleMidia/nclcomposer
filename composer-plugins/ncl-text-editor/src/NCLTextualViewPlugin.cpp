@@ -115,6 +115,8 @@ void NCLTextualViewPlugin::updateFromModel()
 {
 //  qDebug() << "NCLTextualViewPlugin::updateFromModel";
   incrementalUpdateFromModel();
+
+  updateErrorMessages();
 }
 
 void NCLTextualViewPlugin::incrementalUpdateFromModel()

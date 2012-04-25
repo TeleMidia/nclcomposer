@@ -57,8 +57,7 @@ else:unix {
 }
 else:win32 {
   LIBS += -L$$INSTALLBASE -lComposerCore1 \
-          -L$$INSTALLBASE/lib/composer \
-          -L$$INSTALLBASE/lib/composer/extensions
+          -L$$INSTALLBASE/extensions
 
   INCLUDEPATH += . include $$INSTALLBASE/include/composer \
                  $$INSTALLBASE/include/composer/core \
