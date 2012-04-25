@@ -321,6 +321,7 @@ void RunRemoteGingaVMAction::stopExecution()
 {
   qDebug() << "RunRemoteGingaVMAction::stopExecution";
   mustStop = true;
+  emit taskDescription(tr("Cancelling..."));
 }
 
 void StopRemoteGingaVMAction::stopRunningApplication()

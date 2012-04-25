@@ -369,6 +369,12 @@ void ComposerMainWindow::initGUI()
   connect(taskProgressBar, SIGNAL(canceled()),
           &runRemoteGingaVMAction, SLOT(stopExecution()), Qt::DirectConnection);
 
+  disconnect(taskProgressBar, SIGNAL(canceled()),
+             taskProgressBar, SLOT(cancel()));
+
+  connect(&runRemoteGingaVMAction, SIGNAL(finished()),
+          taskProgressBar, SLOT(hide()));
+
 // This shows the taskBar inside the toolBar. In the future, this can
 //  taskProgressBarAction = ui->toolBar->insertWidget(ui->action_Save,
 //                                                    taskProgressBar);
@@ -1246,6 +1252,7 @@ void ComposerMainWindow::runOnRemoteGingaVM()
         saveCurrentProject();
       }
     }
+
     runRemoteGingaVMAction.setCurrentProject(currentProject);
 
     runRemoteGingaVMThread.start();
