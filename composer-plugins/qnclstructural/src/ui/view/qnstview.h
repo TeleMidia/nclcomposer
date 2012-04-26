@@ -312,6 +312,8 @@ private:
 
     int zoomStep;
 
+    bool hasCutted;
+
     QAction* undoAct;
 
     QAction* redoAct;

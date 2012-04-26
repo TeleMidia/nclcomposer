@@ -33,6 +33,8 @@ QnstView::QnstView(QWidget* parent)
     selected = NULL;
 
     clipboard = NULL;
+
+    hasCutted = false;
 }
 
 QnstView::~QnstView()
@@ -4373,6 +4375,8 @@ void QnstView::performCut()
                         e->menu->actionPaste->setEnabled(true);
                     }
                 }
+
+                hasCutted = true;
             }
 
         }else{
@@ -4638,6 +4642,8 @@ void QnstView::performCopy()
                         e->menu->actionPaste->setEnabled(true);
                     }
                 }
+
+                hasCutted = false;
             }
 
         }else{
@@ -4943,24 +4949,29 @@ void QnstView::performPaste()
 
             qDebug() << "============================" << copy->getnstUid();
 
-            int result = QMessageBox::question(
-                        this,
-                        tr("Copy"),
-                        tr("Would you like to make a reference instead?"),
-                        tr("Cancel"),
-                        tr("No"),
-                        tr("Yes"),
-                        1);
+            int result = 1;
+            if(!hasCutted) // if the user has cutted obviously he/she does not
+                           // want to make a reference
+            {
+              result = QMessageBox::question(
+                    this,
+                    tr("Copy"),
+                    tr("Would you like to make a reference instead?"),
+                    tr("Cancel"),
+                    tr("No"),
+                    tr("Yes"),
+                    1);
+            }
 
-            if (result == 0){ // Cancel operation
+            if (result == 0) { // Cancel operation
                 return;
 
-            }else if (result == 2
+            } else if (result == 2
                       && copy->getnstType() != Qnst::Property
                       && copy->getnstType() != Qnst::Area ){ // Make reference
                 performReference(copy, parent);
 
-            }else{ // Copy
+            }else { // Copy
 
             QnstGraphicsEntity* entity;
 
