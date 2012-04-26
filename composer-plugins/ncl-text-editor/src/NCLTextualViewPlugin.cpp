@@ -213,6 +213,7 @@ void NCLTextualViewPlugin::onEntityAdded(QString pluginID, Entity *entity)
 
   QString line = "<" + entity->getType() + "";
   int insertAtOffset = PROLOG.size();
+  bool hasOpennedTag = false;
 
   //get the line number where the new element must be inserted
   if(entity->getParentUniqueId() != NULL &&
@@ -225,6 +226,7 @@ void NCLTextualViewPlugin::onEntityAdded(QString pluginID, Entity *entity)
       if(isStartEndTag(entity->getParent()))
       {
         openStartEndTag(entity->getParent());
+        hasOpennedTag = true;
 //        printEntitiesOffset();
       }
 
@@ -275,7 +277,10 @@ void NCLTextualViewPlugin::onEntityAdded(QString pluginID, Entity *entity)
 
     window->getTextEditor()->SendScintilla(QsciScintilla::SCI_SETFOCUS, true);
 
-    fixIdentation(insertAtOffset);
+    if(hasOpennedTag) //Add a new tab to the new inserted element.
+      fixIdentation(insertAtOffset, true);
+    else              // keep the previous tabulation
+      fixIdentation(insertAtOffset, false);
 
     currentEntity = entity;
   }
@@ -857,12 +862,12 @@ void NCLTextualViewPlugin::openStartEndTag(Entity *entity)
     updateEntitiesOffset(endOffset, endTag.size() - 2);
 //    printEntitiesOffset(); qDebug() << endl;
 
-    fixIdentation(endOffset+2);
+    fixIdentation(endOffset+2, false);
     endEntityOffset[entity->getUniqueId()] = endOffset + 1;
   }
 }
 
-void NCLTextualViewPlugin::fixIdentation(int offset)
+void NCLTextualViewPlugin::fixIdentation(int offset, bool mustAddTab)
 {
   /* Fix Indentation */
   int insertAtLine = nclTextEditor->SendScintilla(
@@ -872,14 +877,15 @@ void NCLTextualViewPlugin::fixIdentation(int offset)
       SendScintilla( QsciScintilla::SCI_GETLINECOUNT);
 
   qDebug () << totalLines << insertAtLine;
-  if(insertAtLine + 2 >= totalLines) return; // do nothing
 
+  if(insertAtLine + 1 >= totalLines) return; // do nothing
   // get the identation for the next line
   int lineIndent = nclTextEditor
       ->SendScintilla( QsciScintilla::SCI_GETLINEINDENTATION,
-                       insertAtLine+1);
+                       insertAtLine-1);
 
-  if(insertAtLine > 1) lineIndent += 8;
+  if(insertAtLine > 1 && mustAddTab)
+    lineIndent += 8;
 
   nclTextEditor->SendScintilla( QsciScintilla::SCI_SETLINEINDENTATION,
                                 insertAtLine,

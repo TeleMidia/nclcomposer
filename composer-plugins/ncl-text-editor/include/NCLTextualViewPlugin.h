@@ -221,7 +221,7 @@ protected:
     /*!
      * \brief
      */
-    void fixIdentation(int offset);
+    void fixIdentation(int offset, bool mustAddTab = false);
 };
 
 #endif // DEBUGCONSOLEPLUGIN_H
