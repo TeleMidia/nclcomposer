@@ -165,8 +165,13 @@ FORMS   += ui/PreferencesDialog.ui \
     ui/GeneralPreferences.ui
 
 #TRANSLATIONS
-trans.path = $$INSTALLBASE/extensions
+win32 {
+    trans.path = $$INSTALLBASE/extensions
+} else:unix {
+    trans.path = $$INSTALLBASE/lib/composer/extensions
+}
 trans.files = translations/*.qm
+
 isEmpty(trans.path) {
     trans.path = $(QTDIR)/translations
 }
@@ -174,10 +179,10 @@ isEmpty(trans.path) {
 TRANSLATIONS += translations/composer_pt_BR.ts \
                 translations/composer_es.ts
 
+INSTALLS += target trans
+
 unix:!macx {
     INSTALLS += target desktop icon64 icon48
-} else {
-    INSTALLS += target trans
 }
 
 OTHER_FILES += LICENSE.LGPL
