@@ -87,7 +87,30 @@ void QnstComposerPlugin::init()
 
         QStringList list = entitypair.split("=");
 
-        entities[list[0]] = list[1];
+        QString coreID = list[0], structuralID = list[1];
+
+        entities[coreID] = structuralID;
+
+        //Update user data
+        if(view->entities.contains(structuralID))
+        {
+          QnstGraphicsEntity *graphicsEntity =
+              view->entities.value(structuralID);
+
+          if(graphicsEntity != NULL)
+          {
+            QMap <QString, QString>::iterator begin, end, it;
+            QMap <QString, QString> userData;
+
+            Entity *entity = project->getEntityById(coreID);
+            entity->getAttributeIterator(begin, end);
+
+            for (it = begin; it != end; ++it)
+              userData[it.key()] = it.value();
+
+            graphicsEntity->setUsrData(userData);
+          }
+        }
 
         lastp = nextp+1;
         nextp = mid.indexOf("~", nextp+1);
@@ -134,12 +157,43 @@ void QnstComposerPlugin::onEntityAdded(QString pluginID, Entity *entity)
   if(isSyncingFromTextual) return;
 
     if (pluginID != getPluginInstanceID()){
-        requestEntityAddition(entity);
-    }else{
-        if (request != ""){
-            entities[entity->getUniqueId()] = request;
-        }
+      requestEntityAddition(entity);
     }
+    else
+    {
+      if (request != "")
+      {
+        entities[entity->getUniqueId()] = request;
+      }
+    }
+
+    //Add user data
+    if(entities.contains(entity->getUniqueId()))
+    {
+      QString structuralId = entities.value(entity->getUniqueId());
+
+      if(view->entities.contains(structuralId))
+      {
+        QnstGraphicsEntity *graphicsEntity = view->entities.value(structuralId);
+
+        QMap <QString, QString>::iterator begin, end, it;
+        QMap <QString, QString> userData = graphicsEntity->getUsrData();
+        entity->getAttributeIterator(begin, end);
+        for (it = begin; it != end; ++it)
+          userData.insert(it.key(), it.value());
+
+        graphicsEntity->setUsrData(userData);
+
+        qDebug() << "[QNST] QnstComposerPlugin::onEntityAdded" << userData;
+
+      }
+      else
+        qWarning() << "[QNST] QnsComposerPlugin::onEntityAdded entity "
+                   << request << "is not in the view.";
+    }
+    else
+      qWarning() << "[QNST] QnsComposerPlugin::onEntityAdded Entity was not "
+                 << "added";
 }
 
 void QnstComposerPlugin::errorMessage(QString error)
@@ -157,6 +211,30 @@ void QnstComposerPlugin::onEntityChanged(QString pluginID, Entity *entity)
 
   if (pluginID != getPluginInstanceID()){
       requestEntityChange(entity);
+  }
+
+  //Update user data
+  if(entities.contains(entity->getUniqueId()))
+  {
+    QString structuralId = entities.value(entity->getUniqueId());
+
+    if(view->entities.contains(structuralId))
+    {
+      QnstGraphicsEntity *graphicsEntity = view->entities.value(structuralId);
+
+      if(graphicsEntity != NULL)
+      {
+        QMap <QString, QString>::iterator begin, end, it;
+        QMap <QString, QString> userData;
+        entity->getAttributeIterator(begin, end);
+        for (it = begin; it != end; ++it)
+          userData[it.key()] = it.value();
+
+        graphicsEntity->setUsrData(userData);
+
+        qDebug() << "[QNST] QnstComposerPlugin::onEntityChanged" << userData;
+      }
+    }
   }
 }
 
@@ -1175,6 +1253,16 @@ void QnstComposerPlugin::requestEntityAddition(const QString uid, const QString 
     else if (properties["TYPE"] == "mapping"){
             requestMappingAddition(uid, parent, properties);
         }
+
+    QString coreID = entities.key(uid);
+    QnstEntity *qnstEntity = view->entities.value(uid);
+
+    qDebug() << "[QNST] qnstEntity = " << qnstEntity;
+    if(qnstEntity != NULL)
+    {
+      emit setAttributes(project->getEntityById(coreID),
+                         qnstEntity->getUsrData(), false);
+    }
 }
 
 void QnstComposerPlugin::requestEntityRemotion(const QString uid)
@@ -1207,6 +1295,15 @@ void QnstComposerPlugin::requestEntityChange(const QString uid, const QMap<QStri
     // if the entity is of type PORT
     }else if (properties["TYPE"] == "port"){
         requestPortChange(uid, properties);
+    }
+
+    QString coreID = entities.key(uid);
+    QnstEntity *qnstEntity = view->entities.value(uid);
+
+    if(qnstEntity != NULL)
+    {
+      emit setAttributes(project->getEntityById(coreID),
+                         qnstEntity->getUsrData(), false);
     }
 }
 

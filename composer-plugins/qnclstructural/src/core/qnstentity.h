@@ -4,6 +4,7 @@
 #include <QUuid>
 #include <QString>
 #include <QVector>
+#include <QMap>
 
 #include "qnst.h"
 
@@ -28,6 +29,10 @@ public:
 
     void setnstType(QnstType type);
 
+    QMap <QString, QString> getUsrData();
+
+    void setUsrData(QMap <QString, QString> userData);
+
     QnstEntity* getnstParent() const;
 
     void setnstParent(QnstEntity* parent);
@@ -48,6 +53,9 @@ private:
     QnstEntity* parent;
 
     QVector<QnstEntity*> entities;
+
+    // FIXME: Maybe, this is not needed!! We could use the
+    QMap <QString, QString> userData;
 };
 
 #endif // QNSTENTITY_H

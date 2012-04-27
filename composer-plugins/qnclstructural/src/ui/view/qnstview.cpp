@@ -1855,7 +1855,9 @@ void QnstView::addMedia(const QString uid, const QString parent, const QMap<QStr
 
         ++nmedia;
 
-        entities[parent]->addnstGraphicsEntity(entity); entities[uid] = entity; entity->adjust();
+        entities[parent]->addnstGraphicsEntity(entity);
+        entities[uid] = entity;
+        entity->adjust();
 
         adjustMedia(entity);
 
@@ -3249,6 +3251,8 @@ void QnstView::requestEntityAddition(QnstGraphicsEntity* entity, bool undo)
     qDebug() << "[QNST]" << ":" << "Requesting entity addition '"+entity->getnstUid()+"'";
 
     if (entity != NULL){
+        entities[entity->getnstUid()] = entity;
+
         switch(entity->getnstType()){
 
         // if the entity type is BODY
@@ -3310,8 +3314,6 @@ void QnstView::requestEntityAddition(QnstGraphicsEntity* entity, bool undo)
           // do nothing
           break;
         }
-
-        entities[entity->getnstUid()] = entity;
 
         if (!undo){
             QnstAddCommand* cmd = new QnstAddCommand(this, entity);
@@ -3667,6 +3669,12 @@ void QnstView::requestBodyAddition(QnstGraphicsBody* entity)
     properties["heigh"] = QString::number(entity->getHeight());
     properties["zindex"] = QString::number(entity->getzIndex());
 
+    QMap <QString, QString> additionalData = entity->getUsrData();
+    foreach(QString key, additionalData.keys())
+    {
+      properties.insert(key, additionalData.value(key));
+    }
+
     emit entityAdded(entity->getnstUid(), "", properties);
 }
 
@@ -3683,6 +3691,12 @@ void QnstView::requestBodyChange(QnstGraphicsBody* entity)
     properties["width"] = QString::number(entity->getWidth());
     properties["heigh"] = QString::number(entity->getHeight());
     properties["zindex"] = QString::number(entity->getzIndex());
+
+    QMap <QString, QString> additionalData = entity->getUsrData();
+    foreach(QString key, additionalData.keys())
+    {
+      properties.insert(key, additionalData.value(key));
+    }
 
     emit entityChanged(entity->getnstUid(), properties);
 }
@@ -3707,6 +3721,12 @@ void QnstView::requestContextAddition(QnstGraphicsContext* entity, bool undo)
     properties["heigh"] = QString::number(entity->getHeight());
     properties["zindex"] = QString::number(entity->getzIndex());
 
+    QMap <QString, QString> additionalData = entity->getUsrData();
+    foreach(QString key, additionalData.keys())
+    {
+      properties.insert(key, additionalData.value(key));
+    }
+
     emit entityAdded(entity->getnstUid(), entity->getnstGraphicsParent()->getnstUid(), properties);
 }
 
@@ -3725,6 +3745,12 @@ void QnstView::requestContextChange(QnstGraphicsContext* entity)
     properties["width"] = QString::number(entity->getWidth());
     properties["heigh"] = QString::number(entity->getHeight());
     properties["zindex"] = QString::number(entity->getzIndex());
+
+    QMap <QString, QString> additionalData = entity->getUsrData();
+    foreach(QString key, additionalData.keys())
+    {
+      properties.insert(key, additionalData.value(key));
+    }
 
     emit entityChanged(entity->getnstUid(), properties);
 }
@@ -3749,6 +3775,12 @@ void QnstView::requestSwitchAddition(QnstGraphicsSwitch* entity, bool undo)
     properties["heigh"] = QString::number(entity->getHeight());
     properties["zindex"] = QString::number(entity->getzIndex());
 
+    QMap <QString, QString> additionalData = entity->getUsrData();
+    foreach(QString key, additionalData.keys())
+    {
+      properties.insert(key, additionalData.value(key));
+    }
+
     emit entityAdded(entity->getnstUid(), entity->getnstGraphicsParent()->getnstUid(), properties);
 }
 
@@ -3767,6 +3799,12 @@ void QnstView::requestSwitchChange(QnstGraphicsSwitch* entity)
     properties["width"] = QString::number(entity->getWidth());
     properties["heigh"] = QString::number(entity->getHeight());
     properties["zindex"] = QString::number(entity->getzIndex());
+
+    QMap <QString, QString> additionalData = entity->getUsrData();
+    foreach(QString key, additionalData.keys())
+    {
+      properties.insert(key, additionalData.value(key));
+    }
 
     emit entityChanged(entity->getnstUid(), properties);
 }
@@ -3863,6 +3901,12 @@ void QnstView::requestMediaAddition(QnstGraphicsMedia* entity, bool undo)
 //    properties["heigh"] = QString::number(entity->getHeight());
 //    properties["zindex"] = QString::number(entity->getzIndex());
 
+    QMap <QString, QString> additionalData = entity->getUsrData();
+    foreach(QString key, additionalData.keys())
+    {
+      properties.insert(key, additionalData.value(key));
+    }
+
     emit entityAdded(entity->getnstUid(), entity->getnstGraphicsParent()->getnstUid(), properties);
 }
 
@@ -3927,6 +3971,12 @@ void QnstView::requestMediaChange(QnstGraphicsMedia* entity)
 //    properties["heigh"] = QString::number(entity->getHeight());
 //    properties["zindex"] = QString::number(entity->getzIndex());
 
+    QMap <QString, QString> additionalData = entity->getUsrData();
+    foreach(QString key, additionalData.keys())
+    {
+      properties.insert(key, additionalData.value(key));
+    }
+
     emit entityChanged(entity->getnstUid(), properties);
 }
 
@@ -3969,6 +4019,12 @@ void QnstView::requestPortAddition(QnstGraphicsPort* entity, bool undo)
 //    properties["heigh"] = QString::number(entity->getHeight());
 //    properties["zindex"] = QString::number(entity->getzIndex());
 
+    QMap <QString, QString> additionalData = entity->getUsrData();
+    foreach(QString key, additionalData.keys())
+    {
+      properties.insert(key, additionalData.value(key));
+    }
+
     emit entityAdded(entity->getnstUid(), entity->getnstGraphicsParent()->getnstUid(), properties);
 }
 
@@ -4002,6 +4058,12 @@ void QnstView::requestPortChange(QnstGraphicsPort* entity)
         }
     }
 
+    QMap <QString, QString> additionalData = entity->getUsrData();
+    foreach(QString key, additionalData.keys())
+    {
+      properties.insert(key, additionalData.value(key));
+    }
+
     emit entityChanged(entity->getnstUid(), properties);
 }
 
@@ -4027,6 +4089,12 @@ void QnstView::requestSwitchPortAddition(QnstGraphicsSwitchPort* entity, bool un
 
     properties["id"] = entity->getnstId();
 
+    QMap <QString, QString> additionalData = entity->getUsrData();
+    foreach(QString key, additionalData.keys())
+    {
+      properties.insert(key, additionalData.value(key));
+    }
+
     emit entityAdded(entity->getnstUid(), entity->getnstGraphicsParent()->getnstUid(), properties);
 }
 
@@ -4037,6 +4105,12 @@ void QnstView::requestSwitchPortChange(QnstGraphicsSwitchPort* entity)
     properties["TYPE"] = "switchPort";
 
     properties["id"] = entity->getnstId();
+
+    QMap <QString, QString> additionalData = entity->getUsrData();
+    foreach(QString key, additionalData.keys())
+    {
+      properties.insert(key, additionalData.value(key));
+    }
 
     emit entityChanged(entity->getnstUid(), properties);
 }
@@ -4070,6 +4144,12 @@ void QnstView::requestAreaAddition(QnstGraphicsArea* entity, bool undo)
         }
     }
 
+    QMap <QString, QString> additionalData = entity->getUsrData();
+    foreach(QString key, additionalData.keys())
+    {
+      properties.insert(key, additionalData.value(key));
+    }
+
     emit entityAdded(entity->getnstUid(), entity->getnstGraphicsParent()->getnstUid(), properties);
 }
 
@@ -4099,6 +4179,12 @@ void QnstView::requestPropertyAddition(QnstGraphicsProperty* entity)
                 adjustMedia((QnstGraphicsMedia*) entities[key]);
             }
         }
+    }
+
+    QMap <QString, QString> additionalData = entity->getUsrData();
+    foreach(QString key, additionalData.keys())
+    {
+      properties.insert(key, additionalData.value(key));
     }
 
     emit entityAdded(entity->getnstUid(), entity->getnstGraphicsParent()->getnstUid(), properties);
@@ -4142,241 +4228,54 @@ void QnstView::performCut()
 
             QnstGraphicsEntity* entity = selected;
 
-            switch(entity->getnstType()){
-
-            // if the entity type is IMAGE
-            case Qnst::Image:
-                clipboard = new QnstGraphicsImage();
-//                clipboard->setnstGraphicsParent(entity->getnstGraphicsParent());
-
-                clipboard->setnstId(entity->getnstId());
-
-                clipboard->setTop(entity->getTop());
-                clipboard->setLeft(entity->getLeft());
-                clipboard->setWidth(entity->getWidth());
-                clipboard->setHeight(entity->getHeight());
-
-                break;
-
-            // if the entity type is HTML
-            case Qnst::Html:
-                clipboard = new QnstGraphicsHTML();
-//                clipboard->setnstGraphicsParent(entity->getnstGraphicsParent());
-
-                clipboard->setnstId(entity->getnstId());
-
-                clipboard->setTop(entity->getTop());
-                clipboard->setLeft(entity->getLeft());
-                clipboard->setWidth(entity->getWidth());
-                clipboard->setHeight(entity->getHeight());
-
-                break;
-
-            // if the entity type is NCL
-            case Qnst::NCL:
-                clipboard = new QnstGraphicsNCL();
-//                clipboard->setnstGraphicsParent(entity->getnstGraphicsParent());
-
-                clipboard->setnstId(entity->getnstId());
-
-                clipboard->setTop(entity->getTop());
-                clipboard->setLeft(entity->getLeft());
-                clipboard->setWidth(entity->getWidth());
-                clipboard->setHeight(entity->getHeight());
-
-                break;
-
-            // if the entity type is AUDIO
-            case Qnst::Audio:
-                clipboard = new QnstGraphicsAudio();
-//                clipboard->setnstGraphicsParent(entity->getnstGraphicsParent());
-
-                clipboard->setnstId(entity->getnstId());
-
-                clipboard->setTop(entity->getTop());
-                clipboard->setLeft(entity->getLeft());
-                clipboard->setWidth(entity->getWidth());
-                clipboard->setHeight(entity->getHeight());
-
-                break;
-
-            // if the entity type is VIDEO
-            case Qnst::Video:
-                clipboard = new QnstGraphicsVideo();
-//                clipboard->setnstGraphicsParent(entity->getnstGraphicsParent());
-
-                clipboard->setnstId(entity->getnstId());
-
-                clipboard->setTop(entity->getTop());
-                clipboard->setLeft(entity->getLeft());
-                clipboard->setWidth(entity->getWidth());
-                clipboard->setHeight(entity->getHeight());
-
-                break;
-
-            // if the entity type is TEXT
-            case Qnst::Text:
-                clipboard = new QnstGraphicsText();
-//                clipboard->setnstGraphicsParent(entity->getnstGraphicsParent());
-
-                clipboard->setnstId(entity->getnstId());
-
-                clipboard->setTop(entity->getTop());
-                clipboard->setLeft(entity->getLeft());
-                clipboard->setWidth(entity->getWidth());
-                clipboard->setHeight(entity->getHeight());
-
-                break;
-
-            // if the entity type is SCRIPT
-            case Qnst::Script:
-                clipboard = new QnstGraphicsScript();
-//                clipboard->setnstGraphicsParent(entity->getnstGraphicsParent());
-
-                clipboard->setnstId(entity->getnstId());
-
-                clipboard->setTop(entity->getTop());
-                clipboard->setLeft(entity->getLeft());
-                clipboard->setWidth(entity->getWidth());
-                clipboard->setHeight(entity->getHeight());
-
-                break;
-
-            // if the entity type is SETTINGS
-            case Qnst::Settings:
-                clipboard = new QnstGraphicsSettings();
-//                clipboard->setnstGraphicsParent(entity->getnstGraphicsParent());
-
-                clipboard->setnstId(entity->getnstId());
-
-                clipboard->setTop(entity->getTop());
-                clipboard->setLeft(entity->getLeft());
-                clipboard->setWidth(entity->getWidth());
-                clipboard->setHeight(entity->getHeight());
-                break;
-
-            // if the entity type is MEDIA
-            case Qnst::Media:
-                clipboard = new QnstGraphicsMedia();
-//                clipboard->setnstGraphicsParent(entity->getnstGraphicsParent());
-
-                clipboard->setnstId(entity->getnstId());
-
-                clipboard->setTop(entity->getTop());
-                clipboard->setLeft(entity->getLeft());
-                clipboard->setWidth(entity->getWidth());
-                clipboard->setHeight(entity->getHeight());
-
-                break;
-
-            // if the entity type is CONTEXT
-            case Qnst::Context:
-                clipboard = new QnstGraphicsContext();
-//                clipboard->setnstGraphicsParent(entity->getnstGraphicsParent());
-
-                clipboard->setnstId(entity->getnstId());
-
-                clipboard->setTop(entity->getTop());
-                clipboard->setLeft(entity->getLeft());
-                clipboard->setWidth(entity->getWidth());
-                clipboard->setHeight(entity->getHeight());
-
-                break;
-
-            // if the entity type is SWITCH
-            case Qnst::Switch:
-                clipboard = new QnstGraphicsSwitch();
-//                clipboard->setnstGraphicsParent(entity->getnstGraphicsParent());
-
-                clipboard->setnstId(entity->getnstId());
-
-                clipboard->setTop(entity->getTop());
-                clipboard->setLeft(entity->getLeft());
-                clipboard->setWidth(entity->getWidth());
-                clipboard->setHeight(entity->getHeight());
-
-                break;
-
-            // if the entity type is PORT
-            case Qnst::Port:
-                clipboard = new QnstGraphicsPort();
-//                clipboard->setnstGraphicsParent(entity->getnstGraphicsParent());
-
-                clipboard->setnstId(entity->getnstId());
-
-                clipboard->setTop(entity->getTop());
-                clipboard->setLeft(entity->getLeft());
-                clipboard->setWidth(entity->getWidth());
-                clipboard->setHeight(entity->getHeight());
-
-                break;
-
-            // if the entity type is PORT
-            case Qnst::SwitchPort:
-                clipboard = new QnstGraphicsSwitchPort();
-//                clipboard->setnstGraphicsParent(entity->getnstGraphicsParent());
-
-                clipboard->setnstId(entity->getnstId());
-
-                clipboard->setTop(entity->getTop());
-                clipboard->setLeft(entity->getLeft());
-                clipboard->setWidth(entity->getWidth());
-                clipboard->setHeight(entity->getHeight());
-
-                break;
-
-            // if the entity type is PROPERTY
-            case Qnst::Property:
-                clipboard = new QnstGraphicsProperty();
-//                clipboard->setnstGraphicsParent(entity->getnstGraphicsParent());
-
-                clipboard->setnstId(entity->getnstId());
-
-                clipboard->setTop(entity->getTop());
-                clipboard->setLeft(entity->getLeft());
-                clipboard->setWidth(entity->getWidth());
-                clipboard->setHeight(entity->getHeight());
-
-                break;
-
-            // if the entity type is AREA
-            case Qnst::Area:
-                clipboard = new QnstGraphicsArea();
-//                clipboard->setnstGraphicsParent(entity->getnstGraphicsParent());
-
-                clipboard->setnstId(entity->getnstId());
-
-                clipboard->setTop(entity->getTop());
-                clipboard->setLeft(entity->getLeft());
-                clipboard->setWidth(entity->getWidth());
-                clipboard->setHeight(entity->getHeight());
-
-                break;
-
-            default:
-              //do nothing
-              break;
+            switch(entity->getnstType())
+            {
+            case Qnst::Image: clipboard = new QnstGraphicsImage(); break;
+            case Qnst::Html: clipboard = new QnstGraphicsHTML(); break;
+            case Qnst::NCL: clipboard = new QnstGraphicsNCL(); break;
+            case Qnst::Audio: clipboard = new QnstGraphicsAudio(); break;
+            case Qnst::Video: clipboard = new QnstGraphicsVideo(); break;
+            case Qnst::Text: clipboard = new QnstGraphicsText(); break;
+            case Qnst::Script: clipboard = new QnstGraphicsScript(); break;
+            case Qnst::Settings: clipboard = new QnstGraphicsSettings(); break;
+            case Qnst::Media: clipboard = new QnstGraphicsMedia(); break;
+            case Qnst::Context: clipboard = new QnstGraphicsContext(); break;
+            case Qnst::Switch: clipboard = new QnstGraphicsSwitch(); break;
+            case Qnst::Port: clipboard = new QnstGraphicsPort(); break;
+            case Qnst::SwitchPort: clipboard = new QnstGraphicsSwitchPort(); break;
+            case Qnst::Property: clipboard = new QnstGraphicsProperty(); break;
+            case Qnst::Area: clipboard = new QnstGraphicsArea(); break;
+            default: break; //do nothing break;
             }
 
-            if (clipboard != NULL){
-                clipboard->setnstGraphicsParent(NULL);
+            if (clipboard != NULL)
+            {
+              clipboard->setnstId(entity->getnstId());
 
-                foreach(QnstGraphicsEntity* e, entity->getnstGraphicsEntities()){
-                    performCopy(e, clipboard);
-                }
+              clipboard->setTop(entity->getTop());
+              clipboard->setLeft(entity->getLeft());
+              clipboard->setWidth(entity->getWidth());
+              clipboard->setHeight(entity->getHeight());
+              clipboard->setnstGraphicsParent(NULL);
 
-                requestEntityRemotion(selected);
+              clipboard->setUsrData(entity->getUsrData());
 
-                foreach(QnstGraphicsEntity* e, entities.values()){
-                    if (e->getnstType() == Qnst::Body ||
-                        e->getnstType() == Qnst::Context ||
-                        e->getnstType() == Qnst::Switch){
+              foreach(QnstGraphicsEntity* e, entity->getnstGraphicsEntities()){
+                  performCopy(e, clipboard);
+              }
 
-                        e->menu->actionPaste->setEnabled(true);
-                    }
-                }
+              requestEntityRemotion(selected);
 
-                hasCutted = true;
+              foreach(QnstGraphicsEntity* e, entities.values()){
+                  if (e->getnstType() == Qnst::Body ||
+                      e->getnstType() == Qnst::Context ||
+                      e->getnstType() == Qnst::Switch){
+
+                      e->menu->actionPaste->setEnabled(true);
+                  }
+              }
+
+              hasCutted = true;
             }
 
         }else{
@@ -4396,254 +4295,53 @@ void QnstView::performCopy()
 
             QnstGraphicsEntity* entity = selected;
 
-            switch(entity->getnstType()){
-
-            // if the entity type is IMAGE
-            case Qnst::Image:
-                clipboard = new QnstGraphicsImage();
-//                clipboard->setnstGraphicsParent(entity->getnstGraphicsParent());
-
-                clipboard->setnstId(entity->getnstId());
-                clipboard->setnstUid(entity->getnstUid());
-
-                clipboard->setTop(entity->getTop());
-                clipboard->setLeft(entity->getLeft());
-                clipboard->setWidth(entity->getWidth());
-                clipboard->setHeight(entity->getHeight());
-
-                break;
-
-            // if the entity type is HTML
-            case Qnst::Html:
-                clipboard = new QnstGraphicsHTML();
-//                clipboard->setnstGraphicsParent(entity->getnstGraphicsParent());
-
-                clipboard->setnstId(entity->getnstId());
-                clipboard->setnstUid(entity->getnstUid());
-
-                clipboard->setTop(entity->getTop());
-                clipboard->setLeft(entity->getLeft());
-                clipboard->setWidth(entity->getWidth());
-                clipboard->setHeight(entity->getHeight());
-
-                break;
-
-            // if the entity type is NCL
-            case Qnst::NCL:
-                clipboard = new QnstGraphicsNCL();
-//                clipboard->setnstGraphicsParent(entity->getnstGraphicsParent());
-
-                clipboard->setnstId(entity->getnstId());
-                clipboard->setnstUid(entity->getnstUid());
-
-                clipboard->setTop(entity->getTop());
-                clipboard->setLeft(entity->getLeft());
-                clipboard->setWidth(entity->getWidth());
-                clipboard->setHeight(entity->getHeight());
-
-                break;
-
-            // if the entity type is AUDIO
-            case Qnst::Audio:
-                clipboard = new QnstGraphicsAudio();
-//                clipboard->setnstGraphicsParent(entity->getnstGraphicsParent());
-
-                clipboard->setnstId(entity->getnstId());
-                clipboard->setnstUid(entity->getnstUid());
-
-                clipboard->setTop(entity->getTop());
-                clipboard->setLeft(entity->getLeft());
-                clipboard->setWidth(entity->getWidth());
-                clipboard->setHeight(entity->getHeight());
-
-                break;
-
-            // if the entity type is VIDEO
-            case Qnst::Video:
-                clipboard = new QnstGraphicsVideo();
-//                clipboard->setnstGraphicsParent(entity->getnstGraphicsParent());
-
-                clipboard->setnstId(entity->getnstId());
-                clipboard->setnstUid(entity->getnstUid());
-
-                clipboard->setTop(entity->getTop());
-                clipboard->setLeft(entity->getLeft());
-                clipboard->setWidth(entity->getWidth());
-                clipboard->setHeight(entity->getHeight());
-
-                break;
-
-            // if the entity type is TEXT
-            case Qnst::Text:
-                clipboard = new QnstGraphicsText();
-//                clipboard->setnstGraphicsParent(entity->getnstGraphicsParent());
-
-                clipboard->setnstId(entity->getnstId());
-                clipboard->setnstUid(entity->getnstUid());
-
-                clipboard->setTop(entity->getTop());
-                clipboard->setLeft(entity->getLeft());
-                clipboard->setWidth(entity->getWidth());
-                clipboard->setHeight(entity->getHeight());
-
-                break;
-
-            // if the entity type is SCRIPT
-            case Qnst::Script:
-                clipboard = new QnstGraphicsScript();
-//                clipboard->setnstGraphicsParent(entity->getnstGraphicsParent());
-
-                clipboard->setnstId(entity->getnstId());
-                clipboard->setnstUid(entity->getnstUid());
-
-                clipboard->setTop(entity->getTop());
-                clipboard->setLeft(entity->getLeft());
-                clipboard->setWidth(entity->getWidth());
-                clipboard->setHeight(entity->getHeight());
-
-                break;
-
-            // if the entity type is SETTINGS
-            case Qnst::Settings:
-                clipboard = new QnstGraphicsSettings();
-//                clipboard->setnstGraphicsParent(entity->getnstGraphicsParent());
-
-                clipboard->setnstId(entity->getnstId());
-                clipboard->setnstUid(entity->getnstUid());
-
-                clipboard->setTop(entity->getTop());
-                clipboard->setLeft(entity->getLeft());
-                clipboard->setWidth(entity->getWidth());
-                clipboard->setHeight(entity->getHeight());
-                break;
-
-            // if the entity type is MEDIA
-            case Qnst::Media:
-                clipboard = new QnstGraphicsMedia();
-//                clipboard->setnstGraphicsParent(entity->getnstGraphicsParent());
-
-                clipboard->setnstId(entity->getnstId());
-                clipboard->setnstUid(entity->getnstUid());
-
-                clipboard->setTop(entity->getTop());
-                clipboard->setLeft(entity->getLeft());
-                clipboard->setWidth(entity->getWidth());
-                clipboard->setHeight(entity->getHeight());
-
-                break;
-
-            // if the entity type is CONTEXT
-            case Qnst::Context:
-                clipboard = new QnstGraphicsContext();
-//                clipboard->setnstGraphicsParent(entity->getnstGraphicsParent());
-
-                clipboard->setnstId(entity->getnstId());
-                clipboard->setnstUid(entity->getnstUid());
-
-                clipboard->setTop(entity->getTop());
-                clipboard->setLeft(entity->getLeft());
-                clipboard->setWidth(entity->getWidth());
-                clipboard->setHeight(entity->getHeight());
-
-                break;
-
-            // if the entity type is SWITCH
-            case Qnst::Switch:
-                clipboard = new QnstGraphicsSwitch();
-//                clipboard->setnstGraphicsParent(entity->getnstGraphicsParent());
-
-                clipboard->setnstId(entity->getnstId());
-                clipboard->setnstUid(entity->getnstUid());
-
-                clipboard->setTop(entity->getTop());
-                clipboard->setLeft(entity->getLeft());
-                clipboard->setWidth(entity->getWidth());
-                clipboard->setHeight(entity->getHeight());
-
-                break;
-
-            // if the entity type is PORT
-            case Qnst::Port:
-                clipboard = new QnstGraphicsPort();
-//                clipboard->setnstGraphicsParent(entity->getnstGraphicsParent());
-
-                clipboard->setnstId(entity->getnstId());
-                clipboard->setnstUid(entity->getnstUid());
-
-                clipboard->setTop(entity->getTop());
-                clipboard->setLeft(entity->getLeft());
-                clipboard->setWidth(entity->getWidth());
-                clipboard->setHeight(entity->getHeight());
-
-                break;
-
-            // if the entity type is SWITCHPORT
-            case Qnst::SwitchPort:
-                clipboard = new QnstGraphicsSwitchPort();
-//                clipboard->setnstGraphicsParent(entity->getnstGraphicsParent());
-
-                clipboard->setnstId(entity->getnstId());
-                clipboard->setnstUid(entity->getnstUid());
-
-                clipboard->setTop(entity->getTop());
-                clipboard->setLeft(entity->getLeft());
-                clipboard->setWidth(entity->getWidth());
-                clipboard->setHeight(entity->getHeight());
-
-                break;
-
-            // if the entity type is AREA
-            case Qnst::Area:
-                clipboard = new QnstGraphicsArea();
-//                clipboard->setnstGraphicsParent(entity->getnstGraphicsParent());
-
-                clipboard->setnstId(entity->getnstId());
-                clipboard->setnstUid(entity->getnstUid());
-
-                clipboard->setTop(entity->getTop());
-                clipboard->setLeft(entity->getLeft());
-                clipboard->setWidth(entity->getWidth());
-                clipboard->setHeight(entity->getHeight());
-
-                break;
-
-            // if the entity type is PROPERTY
-            case Qnst::Property:
-                clipboard = new QnstGraphicsProperty();
-//                clipboard->setnstGraphicsParent(entity->getnstGraphicsParent());
-
-                clipboard->setnstId(entity->getnstId());
-                clipboard->setnstUid(entity->getnstUid());
-
-                clipboard->setTop(entity->getTop());
-                clipboard->setLeft(entity->getLeft());
-                clipboard->setWidth(entity->getWidth());
-                clipboard->setHeight(entity->getHeight());
-
-                break;
-
-            default:
-              // do nothing
-              break;
+            switch(entity->getnstType())
+            {
+            case Qnst::Image: clipboard = new QnstGraphicsImage(); break;
+            case Qnst::Html: clipboard = new QnstGraphicsHTML(); break;
+            case Qnst::NCL: clipboard = new QnstGraphicsNCL(); break;
+            case Qnst::Audio: clipboard = new QnstGraphicsAudio(); break;
+            case Qnst::Video: clipboard = new QnstGraphicsVideo(); break;
+            case Qnst::Text: clipboard = new QnstGraphicsText(); break;
+            case Qnst::Script: clipboard = new QnstGraphicsScript(); break;
+            case Qnst::Settings: clipboard = new QnstGraphicsSettings(); break;
+            case Qnst::Media: clipboard = new QnstGraphicsMedia(); break;
+            case Qnst::Context: clipboard = new QnstGraphicsContext(); break;
+            case Qnst::Switch: clipboard = new QnstGraphicsSwitch(); break;
+            case Qnst::Port: clipboard = new QnstGraphicsPort(); break;
+            case Qnst::SwitchPort: clipboard = new QnstGraphicsSwitchPort(); break;
+            case Qnst::Area: clipboard = new QnstGraphicsArea(); break;
+            case Qnst::Property:clipboard = new QnstGraphicsProperty(); break;
+            default: break; // do nothing
             }
 
             if (clipboard != NULL){
-                clipboard->setnstGraphicsParent(NULL);
+              clipboard->setnstId(entity->getnstId());
+              clipboard->setnstUid(entity->getnstUid());
 
-                foreach(QnstGraphicsEntity* e, entity->getnstGraphicsEntities()){
-                    performCopy(e, clipboard);
-                }
+              clipboard->setTop(entity->getTop());
+              clipboard->setLeft(entity->getLeft());
+              clipboard->setWidth(entity->getWidth());
+              clipboard->setHeight(entity->getHeight());
 
-                foreach(QnstGraphicsEntity* e, entities.values()){
-                    if (e->getnstType() == Qnst::Body ||
-                        e->getnstType() == Qnst::Context ||
-                        e->getnstType() == Qnst::Switch){
+              clipboard->setnstGraphicsParent(NULL);
+              clipboard->setUsrData(entity->getUsrData());
 
-                        e->menu->actionPaste->setEnabled(true);
-                    }
-                }
+              qDebug() << "[QNST]" << clipboard->getUsrData();
+              foreach(QnstGraphicsEntity* e, entity->getnstGraphicsEntities()){
+                  performCopy(e, clipboard);
+              }
 
-                hasCutted = false;
+              foreach(QnstGraphicsEntity* e, entities.values()){
+                  if (e->getnstType() == Qnst::Body ||
+                      e->getnstType() == Qnst::Context ||
+                      e->getnstType() == Qnst::Switch){
+
+                      e->menu->actionPaste->setEnabled(true);
+                  }
+              }
+
+              hasCutted = false;
             }
 
         }else{
@@ -4918,15 +4616,20 @@ void QnstView::performCopy(QnstGraphicsEntity* entity, QnstGraphicsEntity* paren
     }
 
     if (copy != NULL){
-        foreach(QnstGraphicsEntity* e, entity->getnstGraphicsEntities()){
-            performCopy(e, copy);
-        }
+
+      qDebug() << "[QNST]" << entity->getUsrData();
+      copy->setUsrData(entity->getUsrData());
+
+      foreach(QnstGraphicsEntity* e, entity->getnstGraphicsEntities()){
+        performCopy(e, copy);
+      }
     }
 }
 
 void QnstView::performPaste()
 {
     QnstGraphicsEntity* copy = clipboard;
+    qDebug() << "[QNST] performPaste() cliboard userdata = " << clipboard->getUsrData();
 
     QnstGraphicsEntity* parent = selected;
 
@@ -4975,7 +4678,7 @@ void QnstView::performPaste()
 
             QnstGraphicsEntity* entity;
 
-            switch(copy->getnstType()){
+            switch(copy->getnstType()) {
 
             // if the entity type is IMAGE
             case Qnst::Image:
@@ -4988,10 +4691,6 @@ void QnstView::performPaste()
                 entity->setLeft(parent->getWidth()/2 - 48/2);
                 entity->setWidth(48);
                 entity->setHeight(64);
-
-                parent->addnstGraphicsEntity(entity);
-
-                requestEntityAddition(entity);
 
                 break;
 
@@ -5007,10 +4706,6 @@ void QnstView::performPaste()
                 entity->setWidth(48);
                 entity->setHeight(64);
 
-                parent->addnstGraphicsEntity(entity);
-
-                requestEntityAddition(entity);
-
                 break;
 
             // if the entity type is VIDEO
@@ -5024,10 +4719,6 @@ void QnstView::performPaste()
                 entity->setLeft(parent->getWidth()/2 - 48/2);
                 entity->setWidth(48);
                 entity->setHeight(64);
-
-                parent->addnstGraphicsEntity(entity);
-
-                requestEntityAddition(entity);
 
                 break;
 
@@ -5043,10 +4734,6 @@ void QnstView::performPaste()
                 entity->setWidth(48);
                 entity->setHeight(64);
 
-                parent->addnstGraphicsEntity(entity);
-
-                requestEntityAddition(entity);
-
                 break;
 
             // if the entity type is NCL
@@ -5060,10 +4747,6 @@ void QnstView::performPaste()
                 entity->setLeft(parent->getWidth()/2 - 48/2);
                 entity->setWidth(48);
                 entity->setHeight(64);
-
-                parent->addnstGraphicsEntity(entity);
-
-                requestEntityAddition(entity);
 
                 break;
 
@@ -5079,10 +4762,6 @@ void QnstView::performPaste()
                 entity->setWidth(48);
                 entity->setHeight(64);
 
-                parent->addnstGraphicsEntity(entity);
-
-                requestEntityAddition(entity);
-
                 break;
 
             // if the entity type is SCRIPT
@@ -5096,10 +4775,6 @@ void QnstView::performPaste()
                 entity->setLeft(parent->getWidth()/2 - 48/2);
                 entity->setWidth(48);
                 entity->setHeight(64);
-
-                parent->addnstGraphicsEntity(entity);
-
-                requestEntityAddition(entity);
 
                 break;
 
@@ -5115,10 +4790,6 @@ void QnstView::performPaste()
                 entity->setWidth(48);
                 entity->setHeight(64);
 
-                parent->addnstGraphicsEntity(entity);
-
-                requestEntityAddition(entity);
-
                 break;
 
             // if the entity type is MEDIA
@@ -5132,10 +4803,6 @@ void QnstView::performPaste()
                 entity->setLeft(parent->getWidth()/2 - 48/2);
                 entity->setWidth(48);
                 entity->setHeight(64);
-
-                parent->addnstGraphicsEntity(entity);
-
-                requestEntityAddition(entity);
 
                 break;
 
@@ -5151,10 +4818,6 @@ void QnstView::performPaste()
                 entity->setWidth(copy->getWidth());
                 entity->setHeight(copy->getHeight());
 
-                parent->addnstGraphicsEntity(entity);
-
-                requestEntityAddition(entity);
-
                 break;
 
             // if the entity type is SWITCH
@@ -5168,10 +4831,6 @@ void QnstView::performPaste()
                 entity->setLeft(parent->getWidth()/2 - copy->getHeight()/2);
                 entity->setWidth(copy->getWidth());
                 entity->setHeight(copy->getHeight());
-
-                parent->addnstGraphicsEntity(entity);
-
-                requestEntityAddition(entity);
 
                 break;
 
@@ -5188,10 +4847,6 @@ void QnstView::performPaste()
                 entity->setHeight(copy->getHeight());
                 entity->adjust();
 
-                parent->addnstGraphicsEntity(entity);
-
-                requestEntityAddition(entity);
-
                 break;
 
             // if the entity type is SWPORT
@@ -5205,11 +4860,6 @@ void QnstView::performPaste()
                 entity->setLeft(copy->getLeft());
                 entity->setWidth(copy->getWidth());
                 entity->setHeight(copy->getHeight());
-                entity->adjust();
-
-                parent->addnstGraphicsEntity(entity);
-
-                requestEntityAddition(entity);
 
                 break;
 
@@ -5226,10 +4876,6 @@ void QnstView::performPaste()
                 entity->setHeight(copy->getHeight());
                 entity->adjust();
 
-                parent->addnstGraphicsEntity(entity);
-
-                requestEntityAddition(entity);
-
                 break;
 
             // if the entity type is PROPERTY
@@ -5245,16 +4891,20 @@ void QnstView::performPaste()
                 entity->setHeight(copy->getHeight());
                 entity->adjust();
 
-                parent->addnstGraphicsEntity(entity);
-
-                requestEntityAddition(entity);
-
                 break;
 
             default:
               // do nothing
-              break;
+              return;
             }
+
+            parent->addnstGraphicsEntity(entity);
+
+            requestEntityAddition(entity);
+
+            qDebug() << "[QNST]" << entity->getUsrData();
+            entity->setUsrData(copy->getUsrData());
+            requestEntityChange(entity);
 
             foreach(QnstGraphicsEntity* e, copy->getnstGraphicsEntities()){
                 performPaste(e, entity);
@@ -5512,6 +5162,11 @@ void QnstView::performPaste(QnstGraphicsEntity* copy, QnstGraphicsEntity* parent
       // do nothing
       break;
     }
+
+    entity->setUsrData(copy->getUsrData());
+    qDebug() << "[QNST]" << entity->getUsrData();
+    requestEntityChange(entity);
+
 
     foreach(QnstGraphicsEntity* e, copy->getnstGraphicsEntities()){
         performPaste(e, entity);
