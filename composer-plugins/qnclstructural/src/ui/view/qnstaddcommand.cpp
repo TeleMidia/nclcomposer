@@ -124,21 +124,24 @@ void QnstAddCommand::copy(QnstGraphicsEntity* entity)
       break;
     }
 
-    if (this->entity != NULL){
-        this->entity->setnstUid(entity->getnstUid());
+    if (this->entity != NULL)
+    {
+      this->entity->setnstUid(entity->getnstUid());
+      this->entity->setnstId(entity->getnstId());
 
-        this->entity->setnstId(entity->getnstId());
+      this->entity->setUsrData(entity->getUsrData());
 
-        this->entity->setTop(entity->getTop());
-        this->entity->setLeft(entity->getLeft());
-        this->entity->setWidth(entity->getWidth());
-        this->entity->setHeight(entity->getHeight());
+      this->entity->setTop(entity->getTop());
+      this->entity->setLeft(entity->getLeft());
+      this->entity->setWidth(entity->getWidth());
+      this->entity->setHeight(entity->getHeight());
 
-        if (entity->getnstGraphicsParent() != NULL){
-            parent = QString(entity->getnstGraphicsParent()->getnstUid());
-        }
+      if (entity->getnstGraphicsParent() != NULL)
+      {
+        parent = QString(entity->getnstGraphicsParent()->getnstUid());
+      }
 
-        this->entity->setnstGraphicsParent(NULL);
+      this->entity->setnstGraphicsParent(NULL);
     }
 }
 
@@ -151,178 +154,68 @@ void QnstAddCommand::undo()
 
 void QnstAddCommand::redo()
 {
-    if (!ignore){
-        QnstGraphicsEntity* e = NULL;
+  if (!ignore)
+  {
+    QnstGraphicsEntity* e = NULL;
 
-        if (view->entities.contains(parent) || entity->getnstType() == Qnst::Body){
+    if (view->entities.contains(parent) ||
+        entity->getnstType() == Qnst::Body)
+    {
+      // instantiate the new entity
+      switch(entity->getnstType())
+      {
+      case Qnst::Body: e = new QnstGraphicsBody(); break;
+      case Qnst::Image: e = new QnstGraphicsImage(); break;
+      case Qnst::Audio: e = new QnstGraphicsAudio(); break;
+      case Qnst::Video: e = new QnstGraphicsVideo(); break;
+      case Qnst::Text: e = new QnstGraphicsText(); break;
+      case Qnst::Script: e = new QnstGraphicsScript(); break;
+      case Qnst::Settings: e = new QnstGraphicsSettings(); break;
+      case Qnst::Html: e = new QnstGraphicsHTML(); break;
+      case Qnst::NCL: e = new QnstGraphicsNCL(); break;
+      case Qnst::Media: e = new QnstGraphicsMedia(); break;
+      case Qnst::Context: e = new QnstGraphicsContext(); break;
+      case Qnst::Switch: e = new QnstGraphicsSwitch(); break;
+      case Qnst::Port: e = new QnstGraphicsPort(); break;
+      case Qnst::SwitchPort: e = new QnstGraphicsSwitchPort(); break;
+      case Qnst::Area: e = new QnstGraphicsArea(); break;
+      case Qnst::Property: e = new QnstGraphicsProperty(); break;
+      case Qnst::Aggregator: e = new QnstGraphicsAggregator(); break;
 
-            switch(entity->getnstType()){
+      default:
+        // do nothing
+        break;
+      }
 
-            // if the entity type is BODY
-            case Qnst::Body:
-                e = new QnstGraphicsBody();
+      if (e != NULL)
+      {
+        e->setnstUid(entity->getnstUid());
+        e->setUsrData(entity->getUsrData());
 
-                e->setnstId(entity->getnstId());
+        if (parent != "")
+        {
+          QnstGraphicsEntity* gparent = view->entities[parent];
+          gparent->addnstGraphicsEntity(e);
 
-                break;
+          e->setnstGraphicsParent(gparent);
+        }
+        else
+        {
+          e->setnstGraphicsParent(NULL);
+        }
 
-            // if the entity type is IMAGE
-            case Qnst::Image:
-                e = new QnstGraphicsImage();
+        e->setTop(entity->getTop());
+        e->setLeft(entity->getLeft());
+        e->setWidth(entity->getWidth());
+        e->setHeight(entity->getHeight());
+        e->adjust();
 
-                ((QnstGraphicsImage*) e)->setnstId(entity->getnstId());
-
-                break;
-
-            // if the entity type is AUDIO
-            case Qnst::Audio:
-                e = new QnstGraphicsAudio();
-
-                ((QnstGraphicsAudio*) e)->setnstId(entity->getnstId());
-
-                break;
-
-            // if the entity type is VIDEO
-            case Qnst::Video:
-                e = new QnstGraphicsVideo();
-
-                ((QnstGraphicsVideo*) e)->setnstId(entity->getnstId());
-
-                break;
-
-            // if the entity type is TEXT
-            case Qnst::Text:
-                e = new QnstGraphicsText();
-
-                ((QnstGraphicsImage*) e)->setnstId(entity->getnstId());
-
-                break;
-
-            // if the entity type is SCRIPT
-            case Qnst::Script:
-                e = new QnstGraphicsScript();
-
-                ((QnstGraphicsScript*) e)->setnstId(entity->getnstId());
-
-                break;
-
-            // if the entity type is SETTINGS
-            case Qnst::Settings:
-                e = new QnstGraphicsSettings();
-
-                ((QnstGraphicsSettings*) e)->setnstId(entity->getnstId());
-
-                break;
-
-            // if the entity type is HTML
-            case Qnst::Html:
-                e = new QnstGraphicsHTML();
-
-                ((QnstGraphicsHTML*) e)->setnstId(entity->getnstId());
-
-                break;
-
-            // if the entity type is NCL
-            case Qnst::NCL:
-                e = new QnstGraphicsNCL();
-
-                ((QnstGraphicsNCL*) e)->setnstId(entity->getnstId());
-
-                break;
-
-            // if the entity type is MEDIA
-            case Qnst::Media:
-                e = new QnstGraphicsMedia();
-
-                ((QnstGraphicsMedia*) e)->setnstId(entity->getnstId());
-
-                break;
-
-            // if the entity type is CONTEXT
-            case Qnst::Context:
-                e = new QnstGraphicsContext();
-
-                e->setnstId(entity->getnstId());
-
-                break;
-
-            // if the entity type is SWITCH
-            case Qnst::Switch:
-                e = new QnstGraphicsSwitch();
-
-                e->setnstId(entity->getnstId());
-
-                break;
-
-            // if the entity type is PORT
-            case Qnst::Port:
-                e = new QnstGraphicsPort();
-
-                e->setnstId(entity->getnstId());
-
-                break;
-
-            // if the entity type is SWPORT
-            case Qnst::SwitchPort:
-                e = new QnstGraphicsSwitchPort();
-
-                e->setnstId(entity->getnstId());
-
-                break;
-
-            // if the entity type is AREA
-            case Qnst::Area:
-                e = new QnstGraphicsArea();
-
-                e->setnstId(entity->getnstId());
-
-                break;
-
-            // if the entity type is PROPERTY
-            case Qnst::Property:
-                e = new QnstGraphicsProperty();
-
-                e->setnstId(entity->getnstId());
-
-                break;
-
-            // if the entity type is AGGREGATOR
-            case Qnst::Aggregator:
-                e = new QnstGraphicsAggregator();
-
-                e->setnstId(entity->getnstId());
-
-                break;
-
-            default:
-              // do nothing
-              break;
-            }
-
-            if (e != NULL){
-                e->setnstUid(entity->getnstUid());
-
-                if (parent != ""){
-                    QnstGraphicsEntity* gparent = view->entities[parent];
-
-                    gparent->addnstGraphicsEntity(e);
-
-                    e->setnstGraphicsParent(gparent);
-                }else{
-                    e->setnstGraphicsParent(NULL);
-                }
-
-                e->setTop(entity->getTop());
-                e->setLeft(entity->getLeft());
-                e->setWidth(entity->getWidth());
-                e->setHeight(entity->getHeight());
-                e->adjust();
-
-                view->requestEntityAddition(e, true);
-            }
-       }
-
-    }else{
-        ignore = false;
+        view->requestEntityAddition(e, true);
+      }
     }
+  }
+  else
+  {
+    ignore = false;
+  }
 }

@@ -16,7 +16,8 @@ QnstRemoveCommand::~QnstRemoveCommand()
 
 void QnstRemoveCommand::copy(QnstGraphicsEntity* entity)
 {
-    switch(entity->getnstType()){
+    switch(entity->getnstType())
+    {
 
     // if the entity type is BODY
     case Qnst::Body:
@@ -126,10 +127,12 @@ void QnstRemoveCommand::copy(QnstGraphicsEntity* entity)
       break;
     }
 
-    if (this->entity != NULL){
+    if (this->entity != NULL)
+    {
         this->entity->setnstUid(entity->getnstUid());
-
         this->entity->setnstId(entity->getnstId());
+
+        this->entity->setUsrData(entity->getUsrData());
 
         this->entity->setTop(entity->getTop());
         this->entity->setLeft(entity->getLeft());
@@ -266,6 +269,8 @@ void QnstRemoveCommand::copy(QnstGraphicsEntity* entity, QnstGraphicsEntity* par
         c->setnstUid(entity->getnstUid());
 
         c->setnstGraphicsParent(parent);
+
+        this->entity->setUsrData(entity->getUsrData());
 
         c->setnstId(entity->getnstId());
 
@@ -439,6 +444,8 @@ void QnstRemoveCommand::undo()
 
         if (e != NULL){
             e->setnstUid(entity->getnstUid());
+
+            e->setUsrData(entity->getUsrData());
 
             if (parent != ""){
                 QnstGraphicsEntity* gparent = view->entities[parent];
@@ -618,6 +625,8 @@ void QnstRemoveCommand::paste(QnstGraphicsEntity* entity, QnstGraphicsEntity* pa
     if (e != NULL){
         e->setnstUid(entity->getnstUid());
         e->setnstGraphicsParent(parent);
+
+        e->setUsrData(entity->getUsrData());
 
         parent->addnstGraphicsEntity(e);
 
