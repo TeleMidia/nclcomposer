@@ -17,6 +17,33 @@ SUBDIRS = \
 #    clube-ncl
 #    validator
 
+macx {
+  INSTALLBASE = /Applications/Composer
+}
+else:unix {
+  isEmpty(PREFIX) {
+    PREFIX = /usr/local
+  }
+  INSTALLBASE = $$PREFIX
+}
+else:win32 {
+  INSTALLBASE = "C:/Composer"
+}
+
+#TRANSLATIONS
+win32 {
+    trans.path = $$INSTALLBASE/extensions
+} else:unix {
+    trans.path = $$INSTALLBASE/lib/composer/extensions
+}
+trans.files = translations/*.qm
+
+isEmpty(trans.path) {
+    trans.path = $(QTDIR)/translations
+}
+
 TRANSLATIONS = \
     translations/plugin_suite_es.ts \
     translations/plugin_suite_pt_BR.ts
+
+INSTALLS += trans
