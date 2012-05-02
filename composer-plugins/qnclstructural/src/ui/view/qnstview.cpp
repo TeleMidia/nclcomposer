@@ -3672,7 +3672,8 @@ void QnstView::requestBodyAddition(QnstGraphicsBody* entity)
     QMap <QString, QString> additionalData = entity->getUsrData();
     foreach(QString key, additionalData.keys())
     {
-      properties.insert(key, additionalData.value(key));
+      if(!properties.contains(key))
+        properties.insert(key, additionalData.value(key));
     }
 
     emit entityAdded(entity->getnstUid(), "", properties);
@@ -3695,7 +3696,8 @@ void QnstView::requestBodyChange(QnstGraphicsBody* entity)
     QMap <QString, QString> additionalData = entity->getUsrData();
     foreach(QString key, additionalData.keys())
     {
-      properties.insert(key, additionalData.value(key));
+      if(!properties.contains(key))
+        properties.insert(key, additionalData.value(key));
     }
 
     emit entityChanged(entity->getnstUid(), properties);
@@ -3724,7 +3726,8 @@ void QnstView::requestContextAddition(QnstGraphicsContext* entity, bool undo)
     QMap <QString, QString> additionalData = entity->getUsrData();
     foreach(QString key, additionalData.keys())
     {
-      properties.insert(key, additionalData.value(key));
+      if(!properties.contains(key))
+        properties.insert(key, additionalData.value(key));
     }
 
     emit entityAdded(entity->getnstUid(), entity->getnstGraphicsParent()->getnstUid(), properties);
@@ -3749,7 +3752,8 @@ void QnstView::requestContextChange(QnstGraphicsContext* entity)
     QMap <QString, QString> additionalData = entity->getUsrData();
     foreach(QString key, additionalData.keys())
     {
-      properties.insert(key, additionalData.value(key));
+      if(!properties.contains(key))
+        properties.insert(key, additionalData.value(key));
     }
 
     emit entityChanged(entity->getnstUid(), properties);
@@ -3778,7 +3782,8 @@ void QnstView::requestSwitchAddition(QnstGraphicsSwitch* entity, bool undo)
     QMap <QString, QString> additionalData = entity->getUsrData();
     foreach(QString key, additionalData.keys())
     {
-      properties.insert(key, additionalData.value(key));
+      if(!properties.contains(key))
+        properties.insert(key, additionalData.value(key));
     }
 
     emit entityAdded(entity->getnstUid(), entity->getnstGraphicsParent()->getnstUid(), properties);
@@ -3803,7 +3808,8 @@ void QnstView::requestSwitchChange(QnstGraphicsSwitch* entity)
     QMap <QString, QString> additionalData = entity->getUsrData();
     foreach(QString key, additionalData.keys())
     {
-      properties.insert(key, additionalData.value(key));
+      if(!properties.contains(key))
+        properties.insert(key, additionalData.value(key));
     }
 
     emit entityChanged(entity->getnstUid(), properties);
@@ -3904,7 +3910,8 @@ void QnstView::requestMediaAddition(QnstGraphicsMedia* entity, bool undo)
     QMap <QString, QString> additionalData = entity->getUsrData();
     foreach(QString key, additionalData.keys())
     {
-      properties.insert(key, additionalData.value(key));
+      if(!properties.contains(key))
+        properties.insert(key, additionalData.value(key));
     }
 
     emit entityAdded(entity->getnstUid(), entity->getnstGraphicsParent()->getnstUid(), properties);
@@ -3974,7 +3981,8 @@ void QnstView::requestMediaChange(QnstGraphicsMedia* entity)
     QMap <QString, QString> additionalData = entity->getUsrData();
     foreach(QString key, additionalData.keys())
     {
-      properties.insert(key, additionalData.value(key));
+      if(!properties.contains(key))
+        properties.insert(key, additionalData.value(key));
     }
 
     emit entityChanged(entity->getnstUid(), properties);
@@ -4022,7 +4030,8 @@ void QnstView::requestPortAddition(QnstGraphicsPort* entity, bool undo)
     QMap <QString, QString> additionalData = entity->getUsrData();
     foreach(QString key, additionalData.keys())
     {
-      properties.insert(key, additionalData.value(key));
+      if(!properties.contains(key))
+        properties.insert(key, additionalData.value(key));
     }
 
     emit entityAdded(entity->getnstUid(), entity->getnstGraphicsParent()->getnstUid(), properties);
@@ -4037,7 +4046,7 @@ void QnstView::requestPortChange(QnstGraphicsPort* entity)
     properties["id"] = entity->getnstId();
 
     foreach(QnstGraphicsEdge* edge, entity->getnstGraphicsEdges()){
-        if (edge->getnstType() == Qnst::Reference){
+        if (edge->getnstType() == Qnst::Reference) {
             if (edge->getEntityB()->getnstType() == Qnst::Port ||
                 edge->getEntityB()->getnstType() == Qnst::Property ||
                 edge->getEntityB()->getnstType() == Qnst::Area){
@@ -4061,7 +4070,8 @@ void QnstView::requestPortChange(QnstGraphicsPort* entity)
     QMap <QString, QString> additionalData = entity->getUsrData();
     foreach(QString key, additionalData.keys())
     {
-      properties.insert(key, additionalData.value(key));
+      if(!properties.contains(key))
+        properties.insert(key, additionalData.value(key));
     }
 
     emit entityChanged(entity->getnstUid(), properties);
@@ -4092,7 +4102,8 @@ void QnstView::requestSwitchPortAddition(QnstGraphicsSwitchPort* entity, bool un
     QMap <QString, QString> additionalData = entity->getUsrData();
     foreach(QString key, additionalData.keys())
     {
-      properties.insert(key, additionalData.value(key));
+      if(!properties.contains(key))
+        properties.insert(key, additionalData.value(key));
     }
 
     emit entityAdded(entity->getnstUid(), entity->getnstGraphicsParent()->getnstUid(), properties);
@@ -4109,7 +4120,8 @@ void QnstView::requestSwitchPortChange(QnstGraphicsSwitchPort* entity)
     QMap <QString, QString> additionalData = entity->getUsrData();
     foreach(QString key, additionalData.keys())
     {
-      properties.insert(key, additionalData.value(key));
+      if(!properties.contains(key))
+        properties.insert(key, additionalData.value(key));
     }
 
     emit entityChanged(entity->getnstUid(), properties);
@@ -4147,7 +4159,8 @@ void QnstView::requestAreaAddition(QnstGraphicsArea* entity, bool undo)
     QMap <QString, QString> additionalData = entity->getUsrData();
     foreach(QString key, additionalData.keys())
     {
-      properties.insert(key, additionalData.value(key));
+      if(!properties.contains(key))
+        properties.insert(key, additionalData.value(key));
     }
 
     emit entityAdded(entity->getnstUid(), entity->getnstGraphicsParent()->getnstUid(), properties);
@@ -4184,7 +4197,8 @@ void QnstView::requestPropertyAddition(QnstGraphicsProperty* entity)
     QMap <QString, QString> additionalData = entity->getUsrData();
     foreach(QString key, additionalData.keys())
     {
-      properties.insert(key, additionalData.value(key));
+      if(!properties.contains(key))
+        properties.insert(key, additionalData.value(key));
     }
 
     emit entityAdded(entity->getnstUid(), entity->getnstGraphicsParent()->getnstUid(), properties);
