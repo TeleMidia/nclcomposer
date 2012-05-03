@@ -32,6 +32,7 @@ private:
     std::vector<nclValidator::Attribute> createVectorAttribute (Entity *);
     nclValidator::Model nclModel;
     QMap <QString, nclValidator::virtualId> idToVirtualId;
+    QString language;
 };
 
 #endif // COMPOSERNCLADAPTER_H

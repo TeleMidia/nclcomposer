@@ -13,14 +13,16 @@
 #include "../nclmodel/nclmodel.h"
 #include "../langstruct/langstruct.h"
 #include "../message/message.h"
+#include <core/util/ComposerSettings.h>
 #include <QDebug>
 
+using namespace composer::core::util;
 
 namespace nclValidator {
 
 class Validator {
 	public:
-                static vector<pair<void *, string> > validate (Model &);
+                static vector<pair<void *, string> > validate (Model &, string messagesLanguage);
 };
 
 }

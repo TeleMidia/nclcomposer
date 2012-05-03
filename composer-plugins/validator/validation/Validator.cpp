@@ -15,18 +15,16 @@
 
 namespace nclValidator {
 
-vector<pair<void *, string> >Validator::validate(Model &model)
+vector<pair<void *, string> >Validator::validate(Model &model, string messagesLanguage = "en")
  {
 
-    qDebug("Aquiiiiii");
     vector<pair<void *, string> > msgs;
 
     set<virtualId> markeds = model.markedElements(),
                    affecteds = model.affectedElements(),
                    errorInLastPass = model.elementsWithErrorInLastPass();
 
-
-    Message messageFactory;
+    Message messageFactory (messagesLanguage);
 //    //qDebug () << "Begin errorInLastPass";
     set<virtualId>::iterator vIds = errorInLastPass.begin();
 
@@ -34,14 +32,12 @@ vector<pair<void *, string> >Validator::validate(Model &model)
 
     for (ModelElement *el = NULL; vIds != errorInLastPass.end(); ++vIds) {
         el = model.element(*vIds);
-        //qDebug () << "sdiuhusid";
         if (el){
             StructuralValidation::structuralValidation (*el, model, msgs, messageFactory);
             SemanticValidation::semanticValidation (*el, model, msgs, messageFactory);
         }
     }
 
-    //qDebug () <<  "End errorInLastPass";
     vIds = markeds.begin();
     //qDebug () << "Begin markeds";
     for (ModelElement *el = NULL; vIds != markeds.end(); ++vIds) {

@@ -16,7 +16,6 @@
 #include <stdarg.h>
 #include <vector>
 
-
 namespace nclValidator {
 
 using namespace std;

@@ -2,6 +2,8 @@
     <qresource prefix="/config">
         <file>en_messages.txt</file>
         <file>langstruct.in</file>
+        <file>es_messages.txt</file>
+        <file>pt_BR_messages.txt</file>
     </qresource>
     <qresource prefix="/">
         <file>images/error.png</file>

@@ -2,6 +2,10 @@
 
 ComposerNCLAdapter::ComposerNCLAdapter()
 {
+    ComposerSettings settings;
+    settings.beginGroup("languages");
+    language = settings.value("currentLanguage",QString("en")).toString();
+    settings.endGroup();
 }
 
 void ComposerNCLAdapter::addElement(Entity *entity)
@@ -81,7 +85,7 @@ std::vector <std::pair<void *, std::string> > ComposerNCLAdapter::validate()
 {
     //qDebug() << "**********Validator: Begin validate";
 
-    std::vector<std::pair<void *, std::string> > msgs = nclValidator::Validator::validate(nclModel);
+    std::vector<std::pair<void *, std::string> > msgs = nclValidator::Validator::validate(nclModel, language.toStdString());
 
     ////qDebug() << "**********Validator: End validate";
 
