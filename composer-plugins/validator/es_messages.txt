@@ -1,0 +1,112 @@
+#Prints
+#1= ### Alertas ###
+#2= ### Erros ###
+#3= Linha:
+#4= Coluna
+#5= Elemento: 
+
+
+#DTD Validator
+2001 = Elemento desconocido <%s>. Este programa no verifica sus elementos hijos.
+2002 = Atributo inválido '%s' en el elemento <%s>.
+2003 = El atributo '%s' es obligatorio pero no se encuentra presente en el elemento <%s>.
+2004 = Tipo de dato inválido para el atributo '%s' del elemento <%s>.
+2005 = El elemento <%s> no es un hijo válido del elemento <%s>.
+2006 = El elemento <%s> posee más de un hijo <%s> cuya cardinalidad es opcional (0 o 1 suceso).
+2007 = El elemento <%s> debe poseer, por lo menos, un hijo <%s>.
+2008 = El elemento <%s> debe poseer exactamente un hijo <%s>.
+2009 = El elemento <%s> debe poseer, por lo menos, un elemento hijo con dos nombres diferentes.
+2010 = El elemento <%s> debe poseer un elemento hijo.
+2011 = El elemento <%s> debe poseer un elemento hijo.
+2012 = El elemento <assessmentStatement> debe poseer dos elementos hijos. <attributeAssessment> o un elemento hijo <attributeAssessment> y otro <valueAssessment>.
+2013 = El elemento <%s> no es un elemento raiz válido.
+2014 = El elemento <%s> debe tener exactamente un elemento hijo <%s> o <%s>.
+
+#Semantic Validator
+3001 = Existe más de un elemento con identificador "%s"
+3002 = Existe más de un elemento con el mismo alias "%s"
+3003 = El atributo '%s' del elemento <%s> hace referencia a un elemento inválido.
+3004 = El atributo '%s' del elemento <%s> no puede hacer referencia a un elemento <%s>.
+3005 = El elemento apuntado por el atributo '%s' debe estar en el mismo contexto del elemento <%s>.
+3006 = El elemento referenciado por el atributo "refer" no puede apuntar a un elemento de su jerarquía.
+
+#ImportBase
+3101 = El elemento <importBase> debe poseer un atributo 'documentURI' válido.
+3102 = El elemento <importBase> debe poseer un atributo 'alias'.
+ 
+#Bind
+3201 = El elemento <bind> posee un atributo 'interface', pero no tiene un atributo 'component'.
+3202 = El elemento indicado por el atributo 'interface' en el elemento <bind> debe ser un elemento <area>, <property>, <port> o <switchPort>.
+3203 = No existe un elemento <descriptor> o <descriptorSwitch> con identificador '%s'.
+3204 = El elemento con identificador '%s' no es un elemento <media>, <context>, <body> o <switch> válido en el este contexto.
+3205 = El atrinuto 'interface' del elemento '%s' no puede apuntar a una interface del elemento '%s'.
+
+#CausalConnector
+3301 = El valor del atributo role '%s' debe ser único en el <causalConnector> con id '%s'.
+
+#Context
+3401 = El atributo refer (con valor '%s') hace referencia a un elemento que no es un <contexto>.
+
+#DefaultComponent
+3501 = No existe un elemento <media>, <context> o <switch> con identificador '%s'.
+3502 = El elemento indicado por el defaultComponent (%s) debe está en el mismo <switch>.
+
+#DefaultDescriptor
+3601 = No existe un elemento <descriptor> o <descriptorSwitch> con identificador '%s'.
+
+#Descriptor
+3701 = No existe un elemento <region> con identificador '%s'.
+
+#Head
+3801 = El elemento <%s> debe aparecer antes que el elemento <%s>.
+
+#Link
+3901 = El papel '%s' no fue definido en el elemento <causalConnector> con id '%s'.
+3902 = Fueron definidos %s elementos con atributo 'role'='%s'. La cantidad mínima debería ser de %s.
+3903 = Fueron definidos %s elementos con atributo 'role'='%s'. La cantidad máxima debería ser de %s.
+3904 = El elemento <bind> con atributo role='%s' debe aparecer, por lo menos, %s vece(s).
+3905 = El atributo 'xconnector' con valor '%s' no es un identificador válido de un elemento <causalConnector>.
+3906 = O parametro com nome '%s' deveria ter sido declarado neste connector.
+3907 = O atributo 'role' com valor '%s' não está definido no 'casualConnector' %s.
+
+#Mapping
+4001 = El elemento <mapping> posee un atributo 'interface', pero no posee un atributo 'component'.
+4002 = El elemento indicado por el atributo 'interface' en el elemento <mapping> debe ser el identificador de un elemento hijo del nudo con id '%s'.
+4003 = El elemento indicado por el atributo 'component' (id='%s') del  elemento <mapping> debe ser un elemento <context>, <media> o <switch>.
+
+#Media
+4101 = Extensión inválida para el tipo MIME "%s" definido en <media> con id='%s'.
+4102 = El elemento indicado por el atributo 'refer' (%s) debe ser un elemento <media>.
+4103 = El atributo src ("%s") es un camino de archivo inválido.
+4104 = El atributo 'type' es obligatorio cuando el atributo 'src' no está presente en el elemento <media>.
+4105 = El valor do atributo type ("%s") es inválido.
+4106 = El elemento indicado por el atributo descriptor (%s) debe ser un elemento <descriptor> o <descriptorSwitch>.
+4107 = El atributo 'refer' no tiene ninguna utilidad cuando el atributo 'src' está definido.
+4108 = El atributo 'type' es necesario si 'src' no fue definido.
+4109 = El elemento indicado por el atributo refer (%s) no debe ser un elemento que referenciar otro.
+
+#Port
+4201 = El elemento indicado por el atributo 'component' (%s) no es un elemento <media>, <context> o <switch>.
+4202 = El elemento indicado por el atributo 'component' debe estar en el mismo contexto del elemento <port> (%s).
+4203 = El elemento <port> posee un atributo 'interface', pero no tiene un atributo 'component'.
+4204 = El elemento indicado por el atributo 'interface' del elemento <port> (%s) debe ser un elemento <area>, <property>, <port> o <switchPort>.
+4205 = El elemento indicado por el atributo 'interface' del elemento <port> (%s) debe ser un elemento hijo del elemento con id='%s'.
+
+#RegionBase
+4301 = El atributo 'device' debe ser del formato "systemScreen(i)" o "systemAudio(i)", donde i es un entero.
+
+#SimpleAction e SimpleCondition - não está em uso
+4401 = El atributo 'qualifier' es obligatorio cuando el valor del atributo 'max' es mayor que 1 o 'unbounded'.
+
+#Switch
+4501 = El elemento indicado por el atributo refer (%s) debe ser un elemento <switch>.
+4502 = O elemento (%s) não tem nenhum bindRule ou defaultComponent apontando para ele.
+#BindParam and LinkParam
+#Warning
+4601 = No existe un connectorParam '%s' en el connector '%s'.
+
+#BindRule
+4701 = El elemento indicado por el atributo 'constituent' (%s) en el <bindRule> debe ser un <context>, <media> or <switch> element.
+4702 = El elemento indicado por el atributo 'constituent' (%s) en el <bindRule> debe ser un <descriptor> element.
+4703 = El elemento indicado por el atributo 'constituent' (%s) en el <bindRule> debe estar en el mismo <switch> que el <bindRule>.
+4704 = El elemento indicado por el atributo 'rule' (%s) en el <bindRule> debe ser un elemento <rule>.
