@@ -12,15 +12,16 @@ namespace nclValidator {
 Message::Message (string language){
 	_language = language;
 
-	string fileName = "";
-        if (_language == "pt_BR"){
-                fileName = ":/config/pt_BR_messages.txt";
-	}
-        if (_language == "es"){
-                fileName = ":/config/es_messages.txt";
-        }
-	else { // default: en
-                fileName = ":/config/en_messages.txt";
+  string fileName = "";
+
+  if (_language == "pt_BR") {
+    fileName = ":/config/pt_BR_messages.txt";
+  }
+  else if (_language == "es") {
+    fileName = ":/config/es_messages.txt";
+  }
+  else { // default: en
+    fileName = ":/config/en_messages.txt";
 	}
 
 //	ifstream messageFile;
