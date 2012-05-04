@@ -184,7 +184,7 @@ void QnstComposerPlugin::onEntityAdded(QString pluginID, Entity *entity)
 
         graphicsEntity->setUsrData(userData);
 
-        qDebug() << "[QNST] QnstComposerPlugin::onEntityAdded" << userData;
+//        qDebug() << "[QNST] QnstComposerPlugin::onEntityAdded" << userData;
 
       }
       else

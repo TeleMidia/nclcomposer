@@ -281,6 +281,9 @@ void QnstView::read(QDomElement element, QDomElement parent)
 
                 }else if (e.nodeName() == "action"){
                     conn->addAction(e.attribute("type"), e.attribute("type"));
+
+                }else if (e.nodeName() == "param"){
+                    conn->addParam(e.attribute("name"));
                 }
             }
         }
@@ -452,12 +455,51 @@ void QnstView::readLink(QDomElement element, QDomElement parent)
                         bo->setComponentUid(entitya->getnstUid());
                     }
 
+
+                    QMap<QString, QString> params;
+                    QMap<QString, QString> name_uid;
+
+                    QDomNodeList list = element.childNodes();
+
+                    for (unsigned int i=0;i<list.length();i++)
+                    {
+                        if (list.item(i).isElement())
+                        {
+                            QDomElement e = list.item(i).toElement();
+
+                            if (e.nodeName() == "param"){
+                                params[e.attribute("name")] = e.attribute("value");
+                                name_uid[e.attribute("name")] = e.attribute("uid");
+                            }
+                        }
+                    }
+
+                    bo->setParams(params);
+                    bo->setNameUIDs(name_uid);
+
                     lo->addCondition(bo);
+
 
                     binds[bo->getnstUid()] = bo;
                     brelations[bo->getnstUid()] = entity->getnstUid();
 
                     entities[entity->getnstUid()] = entity;
+
+                    entity->setConn(connectors[lo->getxConnector()]);
+
+                    entity->setParams(bo->getParams());
+                    entity->setNameUids(bo->getNameUIDs());
+
+
+
+
+                    connect(entity,
+                            SIGNAL(bindParamAdded(QString,QString,QMap<QString, QString>)),
+                            SLOT(requestBindParamAdjust(QString,QString,QMap<QString, QString>)));
+
+                    connect(entity,
+                            SIGNAL(bindParamUpdated(QString,QMap<QString,QString>,QMap<QString,QString>)),
+                            SLOT(updateBindParams(QString,QMap<QString,QString>,QMap<QString,QString>)));
 
                     nlink++;
 
@@ -539,12 +581,47 @@ void QnstView::readLink(QDomElement element, QDomElement parent)
                         bo->setComponentUid(entitya->getnstUid());
                     }
 
+                    QMap<QString, QString> params;
+                    QMap<QString, QString> name_uid;
+
+                    QDomNodeList list = element.childNodes();
+
+                    for (unsigned int i=0;i<list.length();i++)
+                    {
+                        if (list.item(i).isElement())
+                        {
+                            QDomElement e = list.item(i).toElement();
+
+                            if (e.nodeName() == "param"){
+                                params[e.attribute("name")] = e.attribute("value");
+                                name_uid[e.attribute("name")] = e.attribute("uid");
+                            }
+                        }
+                    }
+
+                    bo->setParams(params);
+                    bo->setNameUIDs(name_uid);
+
                     lo->addAction(bo);
 
                     binds[bo->getnstUid()] = bo;
                     brelations[bo->getnstUid()] = entity->getnstUid();
 
                     entities[entity->getnstUid()] = entity;
+
+                    entity->setConn(connectors[lo->getxConnector()]);
+
+                    entity->setParams(bo->getParams());
+                    entity->setNameUids(bo->getNameUIDs());
+
+
+                    connect(entity,
+                            SIGNAL(bindParamAdded(QString,QString,QMap<QString, QString>)),
+                            SLOT(requestBindParamAdjust(QString,QString,QMap<QString, QString>)));
+
+                    connect(entity,
+                            SIGNAL(bindParamUpdated(QString,QMap<QString,QString>,QMap<QString,QString>)),
+                            SLOT(updateBindParams(QString,QMap<QString,QString>,QMap<QString,QString>)));
 
                     nlink++;
                 }
@@ -591,6 +668,15 @@ QString QnstView::serialize()
             a.setAttribute("type", action);
 
             e.appendChild(a);
+        }
+
+
+        foreach(QString param, conn->getParams()){
+            QDomElement p = dom->createElement("param");
+
+            p.setAttribute("name", param);
+
+            e.appendChild(p);
         }
 
         root.appendChild(e);
@@ -893,6 +979,18 @@ void QnstView::writeLink(QDomElement element, QDomDocument* dom, QnstGraphicsEnt
                   break;
                 }
 
+                QnstBind* b = binds[brelations.key(link->getnstUid())];
+
+                foreach(QString param, b->getParams().keys()){
+                    QDomElement ebp = dom->createElement("param");
+
+                    ebp.setAttribute("name", param);
+                    ebp.setAttribute("value", b->getParams()[param]);
+                    ebp.setAttribute("uid", b->getNameUIDs()[param]);
+
+                    e.appendChild(ebp);
+                }
+
                 element.appendChild(e);
 
                 linkWriterAux.insert(link->getnstUid());
@@ -942,6 +1040,19 @@ void QnstView::writeLink(QDomElement element, QDomDocument* dom, QnstGraphicsEnt
                   // do nothing
                   break;
                 }
+
+                QnstBind* b = binds[brelations.key(link->getnstUid())];
+
+                foreach(QString param, b->getParams().keys()){
+                    QDomElement ebp = dom->createElement("param");
+
+                    ebp.setAttribute("name", param);
+                    ebp.setAttribute("value", b->getParams()[param]);
+                    ebp.setAttribute("uid", b->getNameUIDs()[param]);
+
+                    e.appendChild(ebp);
+                }
+
 
                 element.appendChild(e);
 

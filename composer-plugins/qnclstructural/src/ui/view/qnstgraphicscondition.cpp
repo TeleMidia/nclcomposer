@@ -424,6 +424,7 @@ void QnstGraphicsCondition::removeUId(QString uid)
 
 void QnstGraphicsCondition::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
 {
+
     if (conn != NULL){
         QVector<QString> names = conn->getParams();
 

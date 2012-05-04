@@ -429,7 +429,6 @@ void QnstGraphicsAction::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
 
             if (!name_uid.contains(name)){
 
-                qDebug() << "======================= creating UID";
                 name_uid[name] = QUuid::createUuid().toString();
             }
         }
