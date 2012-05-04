@@ -1730,7 +1730,7 @@ void QnstView::readConnector(QDomElement element, QnstConncetor* conn)
         }
     }
 
-    if (element.tagName() == "simpleCondition"){
+    if (element.tagName() == "simpleCondition" || element.tagName() == "attributeAssessment"){
         if (element.attribute("role") != ""){
             conn->addCondition(element.attribute("role"), element.attribute("role"));
         }
