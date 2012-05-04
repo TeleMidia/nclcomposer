@@ -65,12 +65,17 @@ QMap<QString, QString> QnstBind::getParams()
     return params;
 }
 
-QString QnstBind::getParam(QString name)
+void QnstBind::setParams(QMap<QString, QString> params)
 {
-    return params[name];
+    this->params = params;
 }
 
-void QnstBind::setParam(QString name, QString value)
+QMap<QString, QString> QnstBind::getNameUIDs()
 {
-    params[name] = value;
+    return name_uids;
+}
+
+void QnstBind::setNameUIDs(QMap<QString, QString> name_uids)
+{
+    this->name_uids = name_uids;
 }

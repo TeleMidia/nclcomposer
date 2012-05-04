@@ -4,8 +4,10 @@
 #include <QDialog>
 #include "qnstconncetor.h"
 
+#include <QDebug>
 #include <QStandardItemModel>
 #include <QStandardItem>
+#include <QCheckBox>
 
 #include "ui_QnstGraphicsBindForm.h"
 

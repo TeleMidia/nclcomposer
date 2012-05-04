@@ -25,7 +25,6 @@ void QnstGraphicsBindDialog::init(QMap<QString, QString> params)
     model->setHorizontalHeaderItem(0, new QStandardItem("Name"));
     model->setHorizontalHeaderItem(1, new QStandardItem("Value"));
 
-
     int i = 0;
 
     foreach(QString name, params.keys()){
@@ -41,4 +40,23 @@ void QnstGraphicsBindDialog::init(QMap<QString, QString> params)
     }
 
     form.table->setModel(model);
+}
+
+QMap<QString, QString> QnstGraphicsBindDialog::getProperties()
+{
+    QMap<QString, QString> p;
+
+    QAbstractItemModel* model = form.table->model();
+
+    int nrow = model->rowCount();
+
+    for (int i=0; i<nrow; ++i){
+        p[model->data(model->index(i,0)).toString()] =
+                model->data(model->index(i,1)).toString();
+
+        qDebug() << model->data(model->index(i,0)).toString();
+        qDebug() << model->data(model->index(i,1)).toString();
+    }
+
+    return p;
 }

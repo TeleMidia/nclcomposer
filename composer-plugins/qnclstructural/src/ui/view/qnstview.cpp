@@ -1070,6 +1070,9 @@ void QnstView::addEntity(const QString uid, const QString parent, const QMap<QSt
 
     }else if (properties["TYPE"] == "mapping"){
         addMapping(uid, parent, properties);
+
+    }else if (properties["TYPE"] == "bindParam"){
+        addBindParam(uid, parent, properties);
     }
 
 }
@@ -1295,6 +1298,21 @@ void QnstView::removeEntity(const QString uid, bool undo)
     }else if (connectors2.contains(uid)){
         connectors.remove(connectors2[uid]->getName());
         connectors2.remove(uid);
+    }else if (bindParamUIDToBindUID.contains(uid)){
+        QnstGraphicsEntity* e = entities[brelations[bindParamUIDToBindUID[uid]]];
+
+        if (e->getnstType() == Qnst::Action){
+            QnstGraphicsAction* a = (QnstGraphicsAction*) e;
+
+            a->removeUId(uid);
+        }else if (e->getnstType() == Qnst::Condition){
+            QnstGraphicsCondition* c = (QnstGraphicsCondition*) e;
+
+            c->removeUId(uid);
+        }
+
+
+        bindParamUIDToBindUID.remove(uid);
     }
 }
 
@@ -1387,6 +1405,9 @@ void QnstView::changeEntity(const QString uid, const QMap<QString, QString> prop
 
     }else if (properties["TYPE"] == "importBase"){
         changeImportBase(uid, properties);
+
+    }else if (properties["TYPE"] == "bindParam"){
+        changeBindParam(uid, properties);
     }
 }
 
@@ -1592,6 +1613,12 @@ void QnstView::readImportBase(QString uid, QDomElement element, QString alias)
 
 void QnstView::readConnector(QDomElement element, QnstConncetor* conn)
 {
+    if (element.tagName() == "connectorParam"){
+        if (element.attribute("name") != ""){
+            conn->addParam(element.attribute("name"));
+        }
+    }
+
     if (element.tagName() == "simpleCondition"){
         if (element.attribute("role") != ""){
             conn->addCondition(element.attribute("role"), element.attribute("role"));
@@ -2926,6 +2953,20 @@ void QnstView::adjustBind(QnstBind* entity)
                                     graphics->setCondition(Qnst::NoConditionType);
                                 }
 
+                                graphics->setConn(connectors[parent->getxConnector()]);
+
+                                graphics->setParams(entity->getParams());
+                                graphics->setNameUids(entity->getNameUIDs());
+
+
+                                connect(graphics,
+                                        SIGNAL(bindParamAdded(QString,QString,QMap<QString, QString>)),
+                                        SLOT(requestBindParamAdjust(QString,QString,QMap<QString, QString>)));
+
+                                connect(graphics,
+                                        SIGNAL(bindParamUpdated(QString,QMap<QString,QString>,QMap<QString,QString>)),
+                                        SLOT(updateBindParams(QString,QMap<QString,QString>,QMap<QString,QString>)));
+
                                 entities[graphics->getnstUid()] = graphics;
                                 brelations[entity->getnstUid()] = graphics->getnstUid();
                             }
@@ -2974,6 +3015,19 @@ void QnstView::adjustBind(QnstBind* entity)
                             }else{
                                 graphics->setCondition(Qnst::NoConditionType);
                             }
+
+                            graphics->setConn(connectors[parent->getxConnector()]);
+
+                            graphics->setParams(entity->getParams());
+                            graphics->setNameUids(entity->getNameUIDs());
+
+                            connect(graphics,
+                                    SIGNAL(bindParamAdded(QString,QString,QMap<QString, QString>)),
+                                    SLOT(requestBindParamAdjust(QString,QString,QMap<QString, QString>)));
+
+                            connect(graphics,
+                                    SIGNAL(bindParamUpdated(QString,QMap<QString,QString>,QMap<QString,QString>)),
+                                    SLOT(updateBindParams(QString,QMap<QString,QString>,QMap<QString,QString>)));
 
                             entities[graphics->getnstUid()] = graphics;
                             brelations[entity->getnstUid()] = graphics->getnstUid();
@@ -3047,6 +3101,19 @@ void QnstView::adjustBind(QnstBind* entity)
                                     graphics->setAction(Qnst::NoActionType);
                                 }
 
+                                graphics->setConn(connectors[parent->getxConnector()]);
+
+                                graphics->setParams(entity->getParams());
+                                graphics->setNameUids(entity->getNameUIDs());
+
+                                connect(graphics,
+                                        SIGNAL(bindParamAdded(QString,QString,QMap<QString, QString>)),
+                                        SLOT(requestBindParamAdjust(QString,QString,QMap<QString, QString>)));
+
+                                connect(graphics,
+                                        SIGNAL(bindParamUpdated(QString,QMap<QString,QString>,QMap<QString,QString>)),
+                                        SLOT(updateBindParams(QString,QMap<QString,QString>,QMap<QString,QString>)));
+
                                 entities[graphics->getnstUid()] = graphics;
                                 brelations[entity->getnstUid()] = graphics->getnstUid();
                             }
@@ -3095,6 +3162,19 @@ void QnstView::adjustBind(QnstBind* entity)
                             }else{
                                 graphics->setAction(Qnst::NoActionType);
                             }
+
+                            graphics->setConn(connectors[parent->getxConnector()]);
+
+                            graphics->setParams(entity->getParams());
+                            graphics->setNameUids(entity->getNameUIDs());
+
+                            connect(graphics,
+                                    SIGNAL(bindParamAdded(QString,QString,QMap<QString, QString>)),
+                                    SLOT(requestBindParamAdjust(QString,QString,QMap<QString, QString>)));
+
+                            connect(graphics,
+                                    SIGNAL(bindParamUpdated(QString,QMap<QString,QString>,QMap<QString,QString>)),
+                                    SLOT(updateBindParams(QString,QMap<QString,QString>,QMap<QString,QString>)));
 
                             entities[graphics->getnstUid()] = graphics;
                             brelations[entity->getnstUid()] = graphics->getnstUid();
@@ -3242,6 +3322,48 @@ void QnstView::addAggregator(const QString uid, const QString parent, const QMap
         if (!undo){
             QnstAddCommand* cmd = new QnstAddCommand(this, entity);
             history.push(cmd);
+        }
+    }
+}
+
+void QnstView::addBindParam(const QString uid, const QString parent, const QMap<QString, QString> properties)
+{
+    qDebug() << "========================================== ADD - BINDPARAM" ;
+
+    if (entities.contains(parent)){
+        QnstGraphicsEntity* e = entities[parent];
+
+        if (e->getnstType() == Qnst::Action){
+            QnstGraphicsAction* action = (QnstGraphicsAction*) e;
+
+            action->addParam(uid, properties["name"], properties["value"]);
+
+        }else if (e->getnstType() == Qnst::Condition){
+            QnstGraphicsCondition* condition = (QnstGraphicsCondition*) e;
+
+            condition->addParam(uid, properties["name"], properties["value"]);
+        }
+
+        bindParamUIDToBindUID[uid] = brelations.key(parent);
+    }
+}
+
+void QnstView::changeBindParam(const QString uid, const QMap<QString, QString> properties)
+{
+    qDebug() << "==================================== CHANGE - BINDPARAM" ;
+
+    if (entities.contains(properties.value("parent"))){
+        QnstGraphicsEntity* e = entities[properties.value("parent")];
+
+        if (e->getnstType() == Qnst::Action){
+            QnstGraphicsAction* action = (QnstGraphicsAction*) e;
+
+            action->setParam(properties["name"], properties["value"]);
+
+        }else if (e->getnstType() == Qnst::Condition){
+            QnstGraphicsCondition* condition = (QnstGraphicsCondition*) e;
+
+            condition->setParam(properties["name"], properties["value"]);
         }
     }
 }
@@ -5792,6 +5914,16 @@ void QnstView:: addNodetoNodeEdge(QnstGraphicsEntity* entitya, QnstGraphicsEntit
                         entity->setAction(Qnst::NoActionType);
                     }
 
+                    /////
+                    connect(entity,
+                            SIGNAL(bindParamAdded(QString,QString,QMap<QString, QString>)),
+                            SLOT(requestBindParamAdjust(QString,QString,QMap<QString, QString>)));
+
+                    connect(entity,
+                            SIGNAL(bindParamUpdated(QString,QMap<QString,QString>,QMap<QString,QString>)),
+                            SLOT(updateBindParams(QString,QMap<QString,QString>,QMap<QString,QString>)));
+                    /////
+
                     ///// connector
 
                     QString connName = actionDialog->form.cbConnector->currentText();;
@@ -5825,6 +5957,9 @@ void QnstView:: addNodetoNodeEdge(QnstGraphicsEntity* entitya, QnstGraphicsEntit
 
                         emit entityAdded(conn->getnstUid(), "", properties);
                     }
+
+                    // associating connector to bind
+                    entity->setConn(connectors[connName]);
 
                     ///// link
 
@@ -5924,6 +6059,16 @@ void QnstView:: addNodetoNodeEdge(QnstGraphicsEntity* entitya, QnstGraphicsEntit
                         entity->setCondition(Qnst::NoConditionType);
                     }
 
+                    /////
+                    connect(entity,
+                            SIGNAL(bindParamAdded(QString,QString,QMap<QString, QString>)),
+                            SLOT(requestBindParamAdjust(QString,QString,QMap<QString, QString>)));
+
+                    connect(entity,
+                            SIGNAL(bindParamUpdated(QString,QMap<QString,QString>,QMap<QString,QString>)),
+                            SLOT(updateBindParams(QString,QMap<QString,QString>,QMap<QString,QString>)));
+                    /////
+
                     ///// connector
 
                     QString connName = conditionDialog->form.cbConnector->currentText();;
@@ -5958,6 +6103,9 @@ void QnstView:: addNodetoNodeEdge(QnstGraphicsEntity* entitya, QnstGraphicsEntit
 
                         emit entityAdded(conn->getnstUid(), "", properties);
                     }
+
+                    // associating connector to bind
+                    entity->setConn(connectors[connName]);
 
                     ///// link
 
@@ -6141,6 +6289,24 @@ void QnstView:: addNodetoNodeEdge(QnstGraphicsEntity* entitya, QnstGraphicsEntit
 
                         entities[action->getnstUid()] = action;
 
+                        /////
+                        connect(condition,
+                                SIGNAL(bindParamAdded(QString,QString,QMap<QString, QString>)),
+                                SLOT(requestBindParamAdjust(QString,QString,QMap<QString, QString>)));
+
+                        connect(condition,
+                                SIGNAL(bindParamUpdated(QString,QMap<QString,QString>,QMap<QString,QString>)),
+                                SLOT(updateBindParams(QString,QMap<QString,QString>,QMap<QString,QString>)));
+
+                        connect(action,
+                                SIGNAL(bindParamAdded(QString,QString,QMap<QString, QString>)),
+                                SLOT(requestBindParamAdjust(QString,QString,QMap<QString, QString>)));
+
+                        connect(action,
+                                SIGNAL(bindParamUpdated(QString,QMap<QString,QString>,QMap<QString,QString>)),
+                                SLOT(updateBindParams(QString,QMap<QString,QString>,QMap<QString,QString>)));
+                        /////
+
                         ///// connector
 
                         QString connName = linkDialog->form.cbConnector->currentText();;
@@ -6166,6 +6332,10 @@ void QnstView:: addNodetoNodeEdge(QnstGraphicsEntity* entitya, QnstGraphicsEntit
 
                             emit entityAdded(conn->getnstUid(), "", properties);
                         }
+
+                        // associating connector to bind
+                        action->setConn(connectors[connName]);
+                        condition->setConn(connectors[connName]);
 
                         ///// link
 
@@ -6291,6 +6461,16 @@ void QnstView::addNodetoInterfaceEdge(QnstGraphicsEntity* entitya, QnstGraphicsE
                         entity->setAction(Qnst::NoActionType);
                     }
 
+                    /////
+                    connect(entity,
+                            SIGNAL(bindParamAdded(QString,QString,QMap<QString, QString>)),
+                            SLOT(requestBindParamAdjust(QString,QString,QMap<QString, QString>)));
+
+                    connect(entity,
+                            SIGNAL(bindParamUpdated(QString,QMap<QString,QString>,QMap<QString,QString>)),
+                            SLOT(updateBindParams(QString,QMap<QString,QString>,QMap<QString,QString>)));
+                    /////
+
                     ///// connector
 
                     QString connName = actionDialog->form.cbConnector->currentText();;
@@ -6324,6 +6504,9 @@ void QnstView::addNodetoInterfaceEdge(QnstGraphicsEntity* entitya, QnstGraphicsE
 
                         emit entityAdded(conn->getnstUid(), "", properties);
                     }
+
+                    // associating connector to bind
+                    entity->setConn(connectors[connName]);
 
                     ///// link
 
@@ -6511,6 +6694,24 @@ void QnstView::addNodetoInterfaceEdge(QnstGraphicsEntity* entitya, QnstGraphicsE
 
                         entities[action->getnstUid()] = action;
 
+                        /////
+                        connect(condition,
+                                SIGNAL(bindParamAdded(QString,QString,QMap<QString, QString>)),
+                                SLOT(requestBindParamAdjust(QString,QString,QMap<QString, QString>)));
+
+                        connect(condition,
+                                SIGNAL(bindParamUpdated(QString,QMap<QString,QString>,QMap<QString,QString>)),
+                                SLOT(updateBindParams(QString,QMap<QString,QString>,QMap<QString,QString>)));
+
+                        connect(action,
+                                SIGNAL(bindParamAdded(QString,QString,QMap<QString, QString>)),
+                                SLOT(requestBindParamAdjust(QString,QString,QMap<QString, QString>)));
+
+                        connect(action,
+                                SIGNAL(bindParamUpdated(QString,QMap<QString,QString>,QMap<QString,QString>)),
+                                SLOT(updateBindParams(QString,QMap<QString,QString>,QMap<QString,QString>)));
+                        /////
+
                         ///// connector
 
                         QString connName = linkDialog->form.cbConnector->currentText();;
@@ -6537,6 +6738,10 @@ void QnstView::addNodetoInterfaceEdge(QnstGraphicsEntity* entitya, QnstGraphicsE
 
                             emit entityAdded(conn->getnstUid(), "", properties);
                         }
+
+                        // associating connector to bind
+                        action->setConn(connectors[connName]);
+                        condition->setConn(connectors[connName]);
 
                         ///// link
 
@@ -6742,6 +6947,25 @@ void QnstView::addInterfacetoNodeLink(QnstGraphicsEntity* entitya, QnstGraphicsE
 
             entities[action->getnstUid()] = action;
 
+            ///
+            connect(condition,
+                    SIGNAL(bindParamAdded(QString,QString,QMap<QString, QString>)),
+                    SLOT(requestBindParamAdjust(QString,QString,QMap<QString, QString>)));
+
+            connect(condition,
+                    SIGNAL(bindParamUpdated(QString,QMap<QString,QString>,QMap<QString,QString>)),
+                    SLOT(updateBindParams(QString,QMap<QString,QString>,QMap<QString,QString>)));
+
+            connect(action,
+                    SIGNAL(bindParamAdded(QString,QString,QMap<QString, QString>)),
+                    SLOT(requestBindParamAdjust(QString,QString,QMap<QString, QString>)));
+
+            connect(action,
+                    SIGNAL(bindParamUpdated(QString,QMap<QString,QString>,QMap<QString,QString>)),
+                    SLOT(updateBindParams(QString,QMap<QString,QString>,QMap<QString,QString>)));
+            ///
+
+
             ///// connector
 
             QString connName = linkDialog->form.cbConnector->currentText();;
@@ -6768,6 +6992,10 @@ void QnstView::addInterfacetoNodeLink(QnstGraphicsEntity* entitya, QnstGraphicsE
 
                 emit entityAdded(conn->getnstUid(), "", properties);
             }
+
+            // associating connector to bind
+            action->setConn(connectors[connName]);
+            condition->setConn(connectors[connName]);
 
             ///// link
 
@@ -7117,6 +7345,25 @@ void QnstView::addInterfacetoInterfaceEdge(QnstGraphicsEntity* entitya, QnstGrap
 
                         entities[action->getnstUid()] = action;
 
+                        ////
+                        connect(condition,
+                                SIGNAL(bindParamAdded(QString,QString,QMap<QString, QString>)),
+                                SLOT(requestBindParamAdjust(QString,QString,QMap<QString, QString>)));
+
+                        connect(condition,
+                                SIGNAL(bindParamUpdated(QString,QMap<QString,QString>,QMap<QString,QString>)),
+                                SLOT(updateBindParams(QString,QMap<QString,QString>,QMap<QString,QString>)));
+
+                        connect(action,
+                                SIGNAL(bindParamAdded(QString,QString,QMap<QString, QString>)),
+                                SLOT(requestBindParamAdjust(QString,QString,QMap<QString, QString>)));
+
+                        connect(action,
+                                SIGNAL(bindParamUpdated(QString,QMap<QString,QString>,QMap<QString,QString>)),
+                                SLOT(updateBindParams(QString,QMap<QString,QString>,QMap<QString,QString>)));
+                        ///
+
+
                         ///// connector
 
                         QString connName = linkDialog->form.cbConnector->currentText();;
@@ -7143,6 +7390,10 @@ void QnstView::addInterfacetoInterfaceEdge(QnstGraphicsEntity* entitya, QnstGrap
 
                             emit entityAdded(conn->getnstUid(), "", properties);
                         }
+
+                        // associating connector to bind
+                        action->setConn(connectors[connName]);
+                        condition->setConn(connectors[connName]);
 
                         ///// link
 
@@ -7389,6 +7640,26 @@ void QnstView::addInterfacetoInterfaceEdge(QnstGraphicsEntity* entitya, QnstGrap
 
                         entities[action->getnstUid()] = action;
 
+                        /////
+
+                        connect(condition,
+                                SIGNAL(bindParamAdded(QString,QString,QMap<QString, QString>)),
+                                SLOT(requestBindParamAdjust(QString,QString,QMap<QString, QString>)));
+
+                        connect(condition,
+                                SIGNAL(bindParamUpdated(QString,QMap<QString,QString>,QMap<QString,QString>)),
+                                SLOT(updateBindParams(QString,QMap<QString,QString>,QMap<QString,QString>)));
+
+                        connect(action,
+                                SIGNAL(bindParamAdded(QString,QString,QMap<QString, QString>)),
+                                SLOT(requestBindParamAdjust(QString,QString,QMap<QString, QString>)));
+
+                        connect(action,
+                                SIGNAL(bindParamUpdated(QString,QMap<QString,QString>,QMap<QString,QString>)),
+                                SLOT(updateBindParams(QString,QMap<QString,QString>,QMap<QString,QString>)));
+
+                        ///
+
                         ///// connector
 
                         QString connName = linkDialog->form.cbConnector->currentText();;
@@ -7415,6 +7686,10 @@ void QnstView::addInterfacetoInterfaceEdge(QnstGraphicsEntity* entitya, QnstGrap
 
                             emit entityAdded(conn->getnstUid(), "", properties);
                         }
+
+                        // associating connector to bind
+                        action->setConn(connectors[connName]);
+                        condition->setConn(connectors[connName]);
 
                         ///// link
 
@@ -7624,6 +7899,24 @@ void QnstView::addInterfacetoInterfaceEdge(QnstGraphicsEntity* entitya, QnstGrap
 
                     entities[action->getnstUid()] = action;
 
+                    ///
+
+                    connect(condition,
+                            SIGNAL(bindParamAdded(QString,QString,QMap<QString, QString>)),
+                            SLOT(requestBindParamAdjust(QString,QString,QMap<QString, QString>)));
+
+                    connect(condition,
+                            SIGNAL(bindParamUpdated(QString,QMap<QString,QString>,QMap<QString,QString>)),
+                            SLOT(updateBindParams(QString,QMap<QString,QString>,QMap<QString,QString>)));
+
+                    connect(action,
+                            SIGNAL(bindParamAdded(QString,QString,QMap<QString, QString>)),
+                            SLOT(requestBindParamAdjust(QString,QString,QMap<QString, QString>)));
+
+                    connect(action,
+                            SIGNAL(bindParamUpdated(QString,QMap<QString,QString>,QMap<QString,QString>)),
+                            SLOT(updateBindParams(QString,QMap<QString,QString>,QMap<QString,QString>)));
+
                     ///// connector
 
                     QString connName = linkDialog->form.cbConnector->currentText();;
@@ -7650,6 +7943,10 @@ void QnstView::addInterfacetoInterfaceEdge(QnstGraphicsEntity* entitya, QnstGrap
 
                         emit entityAdded(conn->getnstUid(), "", properties);
                     }
+
+                    // associating connector to bind
+                    action->setConn(connectors[connName]);
+                    condition->setConn(connectors[connName]);
 
                     ///// link
 
@@ -7873,4 +8170,37 @@ void QnstView::adjustAngle(QnstGraphicsEdge* edge, QnstGraphicsEntity* entitya, 
     entityb->addAngle(entitya->getnstUid(), -angle);
 
     edge->setAngle(angle);
+}
+
+
+void QnstView::requestBindParamAdjust(QString uid,
+                                        QString parent,
+                                        QMap<QString, QString> properties)
+{
+    properties["TYPE"] = "bindParam";
+
+    if (!properties["name"].isEmpty() && !properties["value"].isEmpty()){
+
+        if (bindParamUIDToBindUID.contains(uid)){
+            emit entityChanged(uid, properties);
+
+        }else{
+            bindParamUIDToBindUID[uid] = brelations.key(parent);;
+
+            emit entityAdded(uid, parent,properties );
+        }
+
+    }else if (!properties["name"].isEmpty()){
+        bindParamUIDToBindUID.remove(uid);
+
+        emit entityRemoved(uid);
+    }
+}
+
+void QnstView::updateBindParams(QString bindUID, QMap<QString, QString> params, QMap<QString, QString> name_uids)
+{
+    if (binds.contains(brelations.key(bindUID))){
+        binds[brelations.key(bindUID)]->setParams(params);
+        binds[brelations.key(bindUID)]->setNameUIDs(name_uids);
+    }
 }

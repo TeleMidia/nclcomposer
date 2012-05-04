@@ -10,6 +10,8 @@ typedef Qnst::ActionType QnstAction;
 
 class QnstGraphicsAction : public QnstGraphicsEdge
 {
+    Q_OBJECT
+
 public:
     QnstGraphicsAction(QnstGraphicsEntity* parent = 0);
 
@@ -27,7 +29,24 @@ public:
 
     void aux_adjust(QPointF pointa, QPointF pointb);
 
+    void setConn(QnstConncetor* conn);
+
+    void setNameUids(QMap<QString, QString> nameUids);
+
     void setParams(QMap<QString, QString> params);
+
+    void addParam(QString uid, QString name, QString value);
+
+    void setParam(QString name, QString value);
+
+    void removeParam(QString name);
+
+    void removeUId(QString uid);
+
+signals:
+    void bindParamAdded(QString uid, QString parent, QMap<QString, QString> properties);
+
+    void bindParamUpdated(QString bindUid, QMap<QString, QString> params,  QMap<QString, QString> name_uids);
 
 protected:
     virtual void draw(QPainter* painter);
@@ -40,6 +59,10 @@ private:
     QnstAction action;
 
     QnstActionIcon actionIcon;
+
+    QnstConncetor* conn;
+
+    QMap<QString, QString> name_uid;
 
     QMap<QString, QString> params;
 

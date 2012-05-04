@@ -374,6 +374,11 @@ void QnstComposerPlugin::requestEntityAddition(Entity* entity)
         entities[entity->getUniqueId()] = entity->getUniqueId();
         requestMappingAddition(entity);
     }
+    else if (entity->getType() == "bindParam")
+    {
+        entities[entity->getUniqueId()] = entity->getUniqueId();
+        requestBindParamAddition(entity);
+    }
 }
 
 void QnstComposerPlugin::requestEntityRemotion(Entity* entity)
@@ -452,6 +457,9 @@ void QnstComposerPlugin::requestEntityChange(Entity* entity)
 
     else if (entity->getType() == "mapping"){
         requestMappingChange(entity);
+    }
+    else if (entity->getType() == "bindParam"){
+        requestBindParamChange(entity);
     }
 }
 
@@ -1200,6 +1208,37 @@ void QnstComposerPlugin::requestSimpleActionChange(Entity* entity)
       view->changeEntity(entities[entity->getUniqueId()], properties);
 }
 
+void QnstComposerPlugin::requestBindParamAddition(Entity* entity)
+{
+    QMap<QString, QString> properties;
+
+    properties["TYPE"] = "bindParam";
+
+    properties["name"] = entity->getAttribute("name");
+    properties["value"] = entity->getAttribute("value");
+
+    QString parentUID = entity->getParentUniqueId();
+    if(entities.contains(parentUID))
+      view->addEntity(entity->getUniqueId(), entities[parentUID], properties);
+    else
+      qWarning() << "QnstPlugin:: You are trying to add an BINDPARAM as child of an entity that does not exists.";
+
+}
+
+void QnstComposerPlugin::requestBindParamChange(Entity* entity)
+{
+    QMap<QString, QString> properties;
+
+    properties["TYPE"] = "bindParam";
+
+    properties["name"] = entity->getAttribute("name");
+    properties["value"] = entity->getAttribute("value");
+    properties["parent"] = entities[entity->getParentUniqueId()];
+
+    if(entities.contains(entity->getUniqueId()))
+      view->changeEntity(entities[entity->getUniqueId()], properties);
+}
+
 void QnstComposerPlugin::requestEntityAddition(const QString uid, const QString parent, const QMap<QString, QString> properties)
 {
     // if the entity is of type BODY
@@ -1251,17 +1290,10 @@ void QnstComposerPlugin::requestEntityAddition(const QString uid, const QString 
         requestSwitchPortAddition(uid, parent, properties);
     }
     else if (properties["TYPE"] == "mapping"){
-            requestMappingAddition(uid, parent, properties);
-        }
-
-    QString coreID = entities.key(uid);
-    QnstEntity *qnstEntity = view->entities.value(uid);
-
-    qDebug() << "[QNST] qnstEntity = " << qnstEntity;
-    if(qnstEntity != NULL)
-    {
-      emit setAttributes(project->getEntityById(coreID),
-                         qnstEntity->getUsrData(), false);
+        requestMappingAddition(uid, parent, properties);
+    }
+    else if (properties["TYPE"] == "bindParam"){
+        requestBindParamAddition(uid, parent, properties);
     }
 }
 
@@ -1296,14 +1328,8 @@ void QnstComposerPlugin::requestEntityChange(const QString uid, const QMap<QStri
     }else if (properties["TYPE"] == "port"){
         requestPortChange(uid, properties);
     }
-
-    QString coreID = entities.key(uid);
-    QnstEntity *qnstEntity = view->entities.value(uid);
-
-    if(qnstEntity != NULL)
-    {
-      emit setAttributes(project->getEntityById(coreID),
-                         qnstEntity->getUsrData(), false);
+    else if (properties["TYPE"] == "bindParam"){
+        requestBindParamChange(uid,properties);
     }
 }
 
@@ -2152,7 +2178,8 @@ bool QnstComposerPlugin::isEntityHandled(Entity *entity)
     if(type == "body" || type == "context" || type == "media" ||
        type == "switch" || type == "port" || type == "link" || type == "bind" ||
        type == "area" || type == "property" || type == "causalConnector" ||
-       type == "switchPort" || type == "mapping" || type == "importBase")
+       type == "switchPort" || type == "mapping" || type == "importBase"
+            || type == "bindParam" )
 
       return true;
   }
@@ -2278,4 +2305,46 @@ void QnstComposerPlugin::textualFinishSync(QString, void*)
   qDebug() << "QnstComposerPlugin::textualFinishSync";
   isSyncingFromTextual = false;
   syncNCLIdsWithStructuralIds();
+}
+
+void QnstComposerPlugin::requestBindParamAddition(const QString uid, const QString parent, const QMap<QString, QString> properties)
+{
+    Entity* entity = getProject()->getEntityById(entities.key(parent));
+
+    if (entity != NULL){
+        QMap<QString, QString> attributes;
+
+        if (properties["name"] != ""){
+            attributes["name"] = properties["name"];
+        }
+
+        if (properties["value"] != ""){
+            attributes["value"] = properties["value"];
+        }
+
+        request = uid;
+
+        emit addEntity("bindParam", entity->getUniqueId(), attributes, false);
+
+        request = "";
+    }
+}
+
+void QnstComposerPlugin::requestBindParamChange(const QString uid, const QMap<QString, QString> properties)
+{
+    Entity* entity = getProject()->getEntityById(entities.key(uid));
+
+    if (entity != NULL){
+        QMap<QString, QString> attributes;
+
+        if (properties["name"] != ""){
+            attributes["name"] = properties["name"];
+        }
+
+        if (properties["value"] != ""){
+            attributes["value"] = properties["value"];
+        }
+
+        emit setAttributes(entity, attributes, false);
+    }
 }

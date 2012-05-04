@@ -34,9 +34,11 @@ public:
 
     QMap<QString, QString> getParams();
 
-    QString getParam(QString name);
+    void setParams(QMap<QString, QString> params);
 
-    void setParam(QString name, QString value);
+    QMap<QString, QString> getNameUIDs();
+
+    void setNameUIDs(QMap<QString, QString> name_uids);
 
 private:
     QString role;
@@ -50,6 +52,8 @@ private:
     QString interfaceUID;
 
     QMap<QString, QString> params;
+
+    QMap<QString, QString> name_uids;
 };
 
 #endif // QNSTBIND_H

@@ -49,3 +49,22 @@ void QnstConncetor::removeAction(QString uid)
 {
     actions.remove(uid);
 }
+
+QVector<QString> QnstConncetor::getParams()
+{
+    return params;
+}
+
+void QnstConncetor::addParam(QString param)
+{
+    params.append(param);
+}
+
+void QnstConncetor::removeParam(QString param)
+{
+    int index = params.indexOf(param);
+
+    if (index >= 0){
+        params.remove(index);
+    }
+}

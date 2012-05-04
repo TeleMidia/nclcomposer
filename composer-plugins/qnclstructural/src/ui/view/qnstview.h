@@ -147,6 +147,12 @@ public slots:
 
     void requestEntitySelection(QnstGraphicsEntity* entity);
 
+    void requestBindParamAdjust(QString uid, QString parent, QMap<QString, QString> properties);
+
+    void updateBindParams(QString bindUID,QMap<QString, QString> params, QMap<QString, QString> name_uids);
+
+
+
 private:
     void addBody(const QString uid, const QString parent, const QMap<QString, QString> properties, bool undo = false);
 
@@ -224,6 +230,10 @@ private:
 
     void addAggregator(const QString uid, const QString parent, const QMap<QString, QString> properties, bool undo = false);
 
+    void addBindParam(const QString uid, const QString parent, const QMap<QString, QString> properties);
+
+    void changeBindParam(const QString uid, const QMap<QString, QString> properties);
+
     void requestBodyAddition(QnstGraphicsBody* entity);
 
     void requestBodyChange(QnstGraphicsBody* entity);
@@ -290,6 +300,7 @@ private:
 
     void collapseCompositions(QDomElement element, QDomElement parent);
 
+
     int ncontext;
 
     int nswitch;
@@ -343,6 +354,8 @@ private:
     QMap<QString, QString> link2conn;
 
     QMap<QString, QString> refers;
+
+    QMap<QString, QString> bindParamUIDToBindUID;
 
     QMap<QString, QnstConncetor*> connectors2;
 
