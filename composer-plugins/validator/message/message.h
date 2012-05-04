@@ -12,6 +12,7 @@
 #include <sstream>
 #include <iostream>
 #include <QFile>
+#include <QDir>
 #include <map>
 #include <stdarg.h>
 #include <vector>
