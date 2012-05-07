@@ -1665,10 +1665,13 @@ void QnstComposerPlugin::requestPortChange(const QString uid, const QMap<QString
 
         attributes["id"] = properties["id"];
 
-        attributes["component"] = properties["component"];
+        if(properties["component"] != "")
+            attributes["component"] = properties["component"];
 
         if(properties["interface"] != "")
             attributes["interface"] = properties["interface"];
+
+        qDebug() << "=======================" << attributes;
 
         emit setAttributes(entity, attributes, false);
     }

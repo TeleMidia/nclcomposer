@@ -3798,6 +3798,8 @@ void QnstView::requestEntityRemotion(QnstGraphicsEntity* entity, bool undo)
                 p->setInterface("");
                 p->setInterfaceUid("");
 
+//                adjustPort(p);
+
                 requestPortChange(p);
             }else if (edge->getnstType() == Qnst::Mapping){
                 QnstGraphicsEntity* parent = entity->getnstGraphicsParent();
@@ -4297,14 +4299,16 @@ void QnstView::requestPortChange(QnstGraphicsPort* entity)
                 properties["INTERFACE"] = "";
                 properties["interface"] = "";
             }
-        }
-    }
 
-    QMap <QString, QString> additionalData = entity->getUsrData();
-    foreach(QString key, additionalData.keys())
-    {
-      if(!properties.contains(key))
-        properties.insert(key, additionalData.value(key));
+            QMap <QString, QString> additionalData = entity->getUsrData();
+            foreach(QString key, additionalData.keys())
+            {
+              if(!properties.contains(key))
+                properties.insert(key, additionalData.value(key));
+            }
+
+            break; // there is only one match, so 'break'.
+        }
     }
 
     emit entityChanged(entity->getnstUid(), properties);
