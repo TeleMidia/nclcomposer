@@ -1165,13 +1165,30 @@ void ComposerMainWindow::restorePerspective(QString layoutName)
 
 void ComposerMainWindow::runNCL()
 {
-  runOnRemoteGingaVM();
+  bool runRemote = false;
+  ComposerSettings settings;
+  settings.beginGroup("runginga");
+  if(settings.contains("run_remote") && settings.value("run_remote").toBool())
+    runRemote = true;
+  else
+    runRemote = false;
+  settings.endGroup();
+
+  if(runRemote)
+    runOnRemoteGingaVM();
+  else
+    runOnLocalGinga();
 }
 
 void ComposerMainWindow::runOnLocalGinga()
 {
-  // TODO: Ask to Save current project before send it to Ginga VM.
+  ComposerSettings settings;
+  QString command;
+  settings.beginGroup("runginga");
+  command = settings.value("local_ginga_cmd").toString();
+  settings.endGroup();
 
+  // TODO: Ask to Save current project before send it to Ginga VM.
   QProcess *ginga = new QProcess(this);
   QStringList arguments;
   QString location = tabProjects->tabToolTip(tabProjects->currentIndex());
@@ -1198,7 +1215,7 @@ void ComposerMainWindow::runOnLocalGinga()
 
     file.close();
 
-    /* RUNNING GINA */
+    /* RUNNING GINGA */
     arguments << "--ncl"<< nclpath;
     ginga->start("ginga", arguments);
     QByteArray result = ginga->readAll();
