@@ -131,6 +131,9 @@
    </item>
    <item>
     <widget class="QGroupBox" name="localginga_Group">
+     <property name="enabled">
+      <bool>true</bool>
+     </property>
      <property name="autoFillBackground">
       <bool>false</bool>
      </property>
@@ -157,7 +160,7 @@
          </widget>
         </item>
         <item row="0" column="1">
-         <widget class="QLineEdit" name="lineEdit">
+         <widget class="QLineEdit" name="lineEdit_local_command">
           <property name="text">
            <string>ginga --ncl ${location}</string>
           </property>

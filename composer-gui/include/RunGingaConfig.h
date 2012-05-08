@@ -20,11 +20,12 @@ namespace composer {
 namespace gui {
 
 /*!
- *
  * \todo User input validation.
  */
 class RunGingaConfig : public IPreferencesPage
 {
+  Q_OBJECT
+
 private:
   Ui::RunGingaConfig *ui;
 
@@ -38,6 +39,9 @@ public:
 public slots:
   void applyValues();
   void setDefaultValues();
+
+  void changeToLocal(bool);
+  void changeToRemote(bool);
 };
 
 } } //end namespace

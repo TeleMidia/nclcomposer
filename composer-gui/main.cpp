@@ -15,13 +15,10 @@
 
 #include <core/util/ComposerSettings.h>
 
-#ifdef Q_WS_X11
-#include <QX11EmbedWidget>
-#endif
-
 #include "ComposerMainWindow.h"
 
 #ifdef Q_WS_X11
+#include <QX11EmbedWidget>
 #include <X11/Xlib.h>
 #endif
 

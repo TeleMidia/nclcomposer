@@ -39,24 +39,40 @@ RunGingaConfig::RunGingaConfig(QWidget *parent):
     ui->lineEdit_RemoteUser->setText(settings.value("remote_user").toString());
 
   if(settings.contains("remote_password"))
-    ui->lineEdit_RemotePassword->setText(settings.value("remote_password").toString());
+    ui->lineEdit_RemotePassword->setText(
+          settings.value("remote_password").toString());
 
   if(settings.contains("remote_start_cmd"))
-    ui->lineEdit_RemoteCmd->setText(settings.value("remote_start_cmd").toString());
+    ui->lineEdit_RemoteCmd->setText(
+          settings.value("remote_start_cmd").toString());
 
   if(settings.contains("remote_stop_cmd"))
-    ui->lineEdit_RemoteStopCmd->setText(settings.value("remote_stop_cmd").toString());
+    ui->lineEdit_RemoteStopCmd->setText(
+          settings.value("remote_stop_cmd").toString());
 
   if(settings.contains("remote_path"))
     ui->lineEdit_RemotePath->setText(settings.value("remote_path").toString());
 
   if(settings.contains("run_remote"))
+  {
     ui->remotevm_Group->setChecked(settings.value("run_remote").toBool());
+    ui->localginga_Group->setChecked(!settings.value("run_remote").toBool());
+  }
+
+  if(settings.contains("local_ginga_cmd"))
+    ui->lineEdit_local_command->setText(
+          settings.value("local_ginga_cmd").toString());
 
   settings.endGroup();
 
   connect(ui->remotevm_Group, SIGNAL(clicked(bool)),
           this, SLOT(changeCurrentPlayMode(bool)));
+
+  connect(ui->localginga_Group, SIGNAL(toggled(bool)),
+          this, SLOT(changeToLocal(bool)));
+
+  connect(ui->remotevm_Group, SIGNAL(toggled(bool)),
+          this, SLOT(changeToRemote(bool)));
 }
 
 RunGingaConfig::~RunGingaConfig()
@@ -77,12 +93,29 @@ void RunGingaConfig::applyValues()
   settings.setValue("remote_path", ui->lineEdit_RemotePath->text());
 
   settings.setValue("run_remote", ui->remotevm_Group->isChecked());
+
+  settings.setValue("local_ginga_cmd", ui->lineEdit_local_command->text());
+
   settings.endGroup();
 }
 
 void RunGingaConfig::setDefaultValues()
 {
 
+}
+
+void RunGingaConfig::changeToLocal(bool toLocal)
+{
+  qDebug() << "RunGingaConfig::changeToLocal" << toLocal;
+  if(ui->remotevm_Group->isChecked() == toLocal)
+    ui->remotevm_Group->setChecked(!toLocal);
+}
+
+void RunGingaConfig::changeToRemote(bool toRemote)
+{
+  qDebug() << "RunGingaConfig::changeToRemote" << toRemote;
+  if(ui->localginga_Group->isChecked() ==  toRemote)
+    ui->localginga_Group->setChecked(!toRemote);
 }
 
 } } //end namespace
