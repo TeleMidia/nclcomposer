@@ -60,9 +60,12 @@ RunGingaConfig::RunGingaConfig(QWidget *parent):
   }
 
   if(settings.contains("local_ginga_cmd"))
-    ui->lineEdit_local_command->setText(
+    ui->lineEdit_local_Command->setText(
           settings.value("local_ginga_cmd").toString());
 
+  if(settings.contains("local_ginga_args"))
+    ui->plainTextEdit_local_Args->setPlainText(
+          settings.value("local_ginga_args").toString());
   settings.endGroup();
 
   connect(ui->remotevm_Group, SIGNAL(clicked(bool)),
@@ -94,7 +97,9 @@ void RunGingaConfig::applyValues()
 
   settings.setValue("run_remote", ui->remotevm_Group->isChecked());
 
-  settings.setValue("local_ginga_cmd", ui->lineEdit_local_command->text());
+  settings.setValue("local_ginga_cmd", ui->lineEdit_local_Command->text());
+  settings.setValue("local_ginga_args",
+                    ui->plainTextEdit_local_Args->toPlainText());
 
   settings.endGroup();
 }

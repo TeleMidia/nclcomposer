@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>391</width>
-    <height>319</height>
+    <width>400</width>
+    <height>400</height>
    </rect>
   </property>
   <property name="focusPolicy">
@@ -160,9 +160,26 @@
          </widget>
         </item>
         <item row="0" column="1">
-         <widget class="QLineEdit" name="lineEdit_local_command">
+         <widget class="QLineEdit" name="lineEdit_local_Command">
           <property name="text">
-           <string>ginga --ncl ${location}</string>
+           <string>ginga</string>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="0">
+         <widget class="QLabel" name="label_local_Args">
+          <property name="text">
+           <string>Arguments: 
+(each line is handled 
+as a different argument)</string>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="1">
+         <widget class="QPlainTextEdit" name="plainTextEdit_local_Args">
+          <property name="plainText">
+           <string>--ncl
+${nclpath}</string>
           </property>
          </widget>
         </item>

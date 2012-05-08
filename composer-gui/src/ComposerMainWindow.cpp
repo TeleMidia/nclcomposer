@@ -176,10 +176,8 @@ void ComposerMainWindow::readExtensions()
 
   preferences->addPreferencePage(new GeneralPreferences());
 
-#ifdef WITH_LIBSSH2
   /* Load the preferences page */
   preferences->addPreferencePage(new RunGingaConfig());
-#endif
 
   /* Load PreferencesPages from Plugins */
   QList<IPluginFactory*> list =
@@ -1183,14 +1181,15 @@ void ComposerMainWindow::runNCL()
 void ComposerMainWindow::runOnLocalGinga()
 {
   ComposerSettings settings;
-  QString command;
+  QString command, args;
   settings.beginGroup("runginga");
   command = settings.value("local_ginga_cmd").toString();
+  args = settings.value("local_ginga_args").toString();
   settings.endGroup();
 
   // TODO: Ask to Save current project before send it to Ginga VM.
   QProcess *ginga = new QProcess(this);
-  QStringList arguments;
+  QStringList args_list;
   QString location = tabProjects->tabToolTip(tabProjects->currentIndex());
 
   if(location.isEmpty())
@@ -1215,9 +1214,13 @@ void ComposerMainWindow::runOnLocalGinga()
 
     file.close();
 
+    /* PARAMETERS */
+    //\todo Other parameters
+    args.replace("${nclpath}", nclpath);
+    args_list << args.split("\n");
+
     /* RUNNING GINGA */
-    arguments << "--ncl"<< nclpath;
-    ginga->start("ginga", arguments);
+    ginga->start(command, args_list);
     QByteArray result = ginga->readAll();
   }
   else
@@ -1282,6 +1285,13 @@ void ComposerMainWindow::runOnRemoteGingaVM()
                                  tr("There aren't a current NCL project."),
                                  QMessageBox::Ok);
   }
+
+#else
+  QMessageBox::StandardButton reply;
+  reply = QMessageBox::warning(NULL, tr("Warning!"),
+                               tr("Your NCL Composer was not build with Remote "
+                                  "Run support."),
+                               QMessageBox::Ok);
 #endif
 }
 
