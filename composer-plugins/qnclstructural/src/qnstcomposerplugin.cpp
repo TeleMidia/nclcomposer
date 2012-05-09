@@ -379,6 +379,11 @@ void QnstComposerPlugin::requestEntityAddition(Entity* entity)
         entities[entity->getUniqueId()] = entity->getUniqueId();
         requestBindParamAddition(entity);
     }
+    else if (entity->getType() == "connectorParam")
+    {
+        entities[entity->getUniqueId()] = entity->getUniqueId();
+        requestConnectorParamAddition(entity);
+    }
 }
 
 void QnstComposerPlugin::requestEntityRemotion(Entity* entity)
@@ -1233,6 +1238,36 @@ void QnstComposerPlugin::requestBindParamChange(Entity* entity)
 
     properties["name"] = entity->getAttribute("name");
     properties["value"] = entity->getAttribute("value");
+    properties["parent"] = entities[entity->getParentUniqueId()];
+
+    if(entities.contains(entity->getUniqueId()))
+      view->changeEntity(entities[entity->getUniqueId()], properties);
+}
+
+
+void QnstComposerPlugin::requestConnectorParamAddition(Entity* entity)
+{
+    QMap<QString, QString> properties;
+
+    properties["TYPE"] = "connectorParam";
+
+    properties["name"] = entity->getAttribute("name");
+
+    QString parentUID = entity->getParentUniqueId();
+    if(entities.contains(parentUID))
+      view->addEntity(entity->getUniqueId(), entities[parentUID], properties);
+    else
+      qWarning() << "QnstPlugin:: You are trying to add an CONNECTORPARAM as child of an entity that does not exists.";
+
+}
+
+void QnstComposerPlugin::requestConnectorParamChange(Entity* entity)
+{
+    QMap<QString, QString> properties;
+
+    properties["TYPE"] = "connectorParam";
+
+    properties["name"] = entity->getAttribute("name");
     properties["parent"] = entities[entity->getParentUniqueId()];
 
     if(entities.contains(entity->getUniqueId()))
@@ -2182,7 +2217,7 @@ bool QnstComposerPlugin::isEntityHandled(Entity *entity)
        type == "switch" || type == "port" || type == "link" || type == "bind" ||
        type == "area" || type == "property" || type == "causalConnector" ||
        type == "switchPort" || type == "mapping" || type == "importBase"
-            || type == "bindParam" )
+            || type == "bindParam" || type == "connectorParam"  )
 
       return true;
   }

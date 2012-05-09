@@ -426,7 +426,7 @@ void QnstGraphicsCondition::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *even
 {
 
     if (conn != NULL){
-        QVector<QString> names = conn->getParams();
+        QList<QString> names = conn->getParams().values();
 
         QMap<QString, QString> values;
 

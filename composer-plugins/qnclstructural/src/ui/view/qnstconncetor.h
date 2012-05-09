@@ -28,16 +28,16 @@ public:
 
     void removeAction(QString uid);
 
-    QVector<QString> getParams();
+    QMap<QString, QString> getParams();
 
-    void addParam(QString param);
+    void addParam(QString uid, QString name);
 
-    void removeParam(QString param);
+    void removeParam(QString uid);
 
 private:
     QString name;
 
-    QVector<QString> params;
+    QMap<QString, QString> params;
 
     QMap<QString, QString> conditions;
 

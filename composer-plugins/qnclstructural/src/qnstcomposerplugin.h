@@ -142,6 +142,10 @@ private:
 
     void requestBindParamChange(Entity* entity);
 
+    void requestConnectorParamAddition(Entity* entity);
+
+    void requestConnectorParamChange(Entity* entity);
+
     void requestBodyAddition(const QString uid, const QString parent, const QMap<QString, QString> properties);
 
     void requestBodyChange(const QString uid, const QMap<QString, QString> properties);
@@ -187,6 +191,10 @@ private:
     void requestBindParamAddition(const QString uid, const QString parent, const QMap<QString, QString> properties);
 
     void requestBindParamChange(const QString uid, const QMap<QString, QString> properties);
+
+    void requestConnectorParamAddition(const QString uid, const QString parent, const QMap<QString, QString> properties);
+
+    void requestConnectorParamChange(const QString uid, const QString parent, const QMap<QString, QString> properties);
 
     void requestConnectorDependence();
 

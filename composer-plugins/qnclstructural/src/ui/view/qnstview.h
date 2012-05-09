@@ -232,6 +232,10 @@ private:
 
     void changeBindParam(const QString uid, const QMap<QString, QString> properties);
 
+    void addConnectorParam(const QString uid, const QString parent, const QMap<QString, QString> properties);
+
+    void changeConnectorParam(const QString uid, const QMap<QString, QString> properties);
+
     void requestBodyAddition(QnstGraphicsBody* entity);
 
     void requestBodyChange(QnstGraphicsBody* entity);
@@ -353,11 +357,13 @@ private:
 
     QMap<QString, QString> refers;
 
+    QMap<QString, QString> interfaceRefers;
+
     QMap<QString, QString> bindParamUIDToBindUID;
 
-    QMap<QString, QnstConncetor*> connectors2;
+    QMap<QString, QnstConncetor*> connectors2; // uid - conn
 
-    QMap<QString, QnstConncetor*> connectors;
+    QMap<QString, QnstConncetor*> connectors; // id - conn
 
     QUndoStack history;
 };

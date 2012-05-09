@@ -283,7 +283,7 @@ void QnstView::read(QDomElement element, QDomElement parent)
                     conn->addAction(e.attribute("type"), e.attribute("type"));
 
                 }else if (e.nodeName() == "param"){
-                    conn->addParam(e.attribute("name"));
+                    conn->addParam(e.attribute("uid"), e.attribute("name"));
                 }
             }
         }
@@ -671,10 +671,11 @@ QString QnstView::serialize()
         }
 
 
-        foreach(QString param, conn->getParams()){
-            QDomElement p = dom->createElement("param");
+        foreach(QString key, conn->getParams().keys()){
+            QDomElement p = dom->createElement(conn->getParams()[key]);
 
-            p.setAttribute("name", param);
+            p.setAttribute("uid", key);
+            p.setAttribute("name", conn->getParams()[key]);
 
             e.appendChild(p);
         }
@@ -1184,6 +1185,9 @@ void QnstView::addEntity(const QString uid, const QString parent, const QMap<QSt
 
     }else if (properties["TYPE"] == "bindParam"){
         addBindParam(uid, parent, properties);
+
+    }else if (properties["TYPE"] == "connectorParam"){
+        addConnectorParam(uid, parent, properties);
     }
 
 }
@@ -1519,6 +1523,9 @@ void QnstView::changeEntity(const QString uid, const QMap<QString, QString> prop
 
     }else if (properties["TYPE"] == "bindParam"){
         changeBindParam(uid, properties);
+
+    }else if (properties["TYPE"] == "bindParam"){
+        changeConnectorParam(uid, properties);
     }
 }
 
@@ -1726,7 +1733,7 @@ void QnstView::readConnector(QDomElement element, QnstConncetor* conn)
 {
     if (element.tagName() == "connectorParam"){
         if (element.attribute("name") != ""){
-            conn->addParam(element.attribute("name"));
+            conn->addParam(QUuid::createUuid().toString(), element.attribute("name"));
         }
     }
 
@@ -2124,19 +2131,23 @@ void QnstView::adjustMedia(QnstGraphicsMedia* entity)
             QnstGraphicsEntity* refer = entities[entity->getReferUID()];
 
             foreach (QnstGraphicsEntity* re, refer->getnstGraphicsEntities()){
+
                 if (re->getncgType() == Qncg::Interface){
                     bool contains = false;
 
                     foreach (QnstGraphicsEntity* e, entity->getnstGraphicsEntities()){
-                        if (re->getnstId() == e->getnstId()){
+                        if (interfaceRefers[e->getnstUid()] == re->getnstUid()){
                             contains = true;
                             break;
                         }
                     }
 
                     if (!contains){
+
                         if (re->getnstType() == Qnst::Port){
-                            QnstGraphicsPort *i = new QnstGraphicsPort(entity);
+                            QnstGraphicsPort* i = new QnstGraphicsPort(entity);
+                            QnstGraphicsPort* p = (QnstGraphicsPort*) re;
+
 
                             i->setnstId(re->getnstId());
 
@@ -2144,11 +2155,14 @@ void QnstView::adjustMedia(QnstGraphicsMedia* entity)
                             i->setLeft(re->getLeft());
                             i->setWidth(re->getWidth());
                             i->setHeight(re->getHeight());
+
                             i->adjust();
 
                             entity->addnstGraphicsEntity(i);
 
                             entities[i->getnstUid()] = i;
+
+                            interfaceRefers[i->getnstUid()] = re->getnstUid();
 
                         }else if (re->getnstType() == Qnst::Area){
                             QnstGraphicsArea *i = new QnstGraphicsArea(entity);
@@ -2159,11 +2173,15 @@ void QnstView::adjustMedia(QnstGraphicsMedia* entity)
                             i->setLeft(re->getLeft());
                             i->setWidth(re->getWidth());
                             i->setHeight(re->getHeight());
+
                             i->adjust();
 
                             entity->addnstGraphicsEntity(i);
 
                             entities[i->getnstUid()] = i;
+
+                            interfaceRefers[i->getnstUid()] = re->getnstUid();
+
 
                         }else if (re->getnstType() == Qnst::Property){
                             QnstGraphicsProperty *i = new QnstGraphicsProperty(entity);
@@ -2179,6 +2197,8 @@ void QnstView::adjustMedia(QnstGraphicsMedia* entity)
                             entity->addnstGraphicsEntity(i);
 
                             entities[i->getnstUid()] = i;
+
+                            interfaceRefers[i->getnstUid()] = re->getnstUid();
                         }
                     }
                 }
@@ -2188,8 +2208,9 @@ void QnstView::adjustMedia(QnstGraphicsMedia* entity)
                 if (e->getncgType() == Qncg::Interface){
                     bool contains = false;
 
-                    foreach (QnstGraphicsEntity* re, refer->getnstGraphicsEntities()){
-                        if (re->getnstId() == e->getnstId()){
+                    foreach (QnstGraphicsEntity* re, entity->getnstGraphicsEntities()){
+                        if (interfaceRefers[re->getnstUid()] == e->getnstUid() ||
+                            interfaceRefers.contains(e->getnstUid())){
                             contains = true;
                             break;
                         }
@@ -2211,6 +2232,8 @@ void QnstView::adjustMedia(QnstGraphicsMedia* entity)
 
                             entities[i->getnstUid()] = i;
 
+                            interfaceRefers[i->getnstUid()] = e->getnstUid();
+
                         }else if (e->getnstType() == Qnst::Area){
                             QnstGraphicsArea *i = new QnstGraphicsArea(refer);
 
@@ -2226,6 +2249,8 @@ void QnstView::adjustMedia(QnstGraphicsMedia* entity)
 
                             entities[i->getnstUid()] = i;
 
+                            interfaceRefers[i->getnstUid()] = e->getnstUid();
+
                         }else if (e->getnstType() == Qnst::Property){
                             QnstGraphicsProperty *i = new QnstGraphicsProperty(refer);
 
@@ -2240,12 +2265,15 @@ void QnstView::adjustMedia(QnstGraphicsMedia* entity)
                             entity->addnstGraphicsEntity(i);
 
                             entities[i->getnstUid()] = i;
+
+                            interfaceRefers[i->getnstUid()] = e->getnstUid();
                         }
                     }
                 }
             }
 
             refers[entity->getnstUid()] = refer->getnstUid();
+//            refers[refer->getnstUid()] = entity->getnstUid();
 /*
             foreach (QnstGraphicsEntity* e, refer->getnstGraphicsEntities()){
                 if (e->getncgType() == Qncg::Interface){
@@ -2395,6 +2423,10 @@ void QnstView::changePort(QnstGraphicsPort* entity, const QMap<QString, QString>
         entity->setComponentUid(properties["componentUid"]);
     }else{
         entity->setComponentUid("");
+    }
+
+    foreach (QString key, interfaceRefers.keys(entity->getnstUid())){
+        entities[key]->setnstId(entity->getnstId());
     }
 
     adjustPort(entity);
@@ -2754,6 +2786,10 @@ void QnstView::changeArea(QnstGraphicsArea* entity, const QMap<QString, QString>
     if (properties["height"] != ""){
         entity->setHeight(properties["height"].toDouble());
     }
+
+    foreach (QString key, interfaceRefers.keys(entity->getnstUid())){
+        entities[key]->setnstId(entity->getnstId());
+    }
 }
 
 void QnstView::addProperty(const QString uid, const QString parent, const QMap<QString, QString> properties, bool undo)
@@ -2832,6 +2868,10 @@ void QnstView::changeProperty(QnstGraphicsProperty* entity, const QMap<QString, 
 
     if (properties["height"] != ""){
         entity->setHeight(properties["height"].toDouble());
+    }
+
+    foreach (QString key, interfaceRefers.keys(entity->getnstUid())){
+        entities[key]->setnstId(entity->getnstId());
     }
 }
 
@@ -3461,8 +3501,6 @@ void QnstView::addBindParam(const QString uid, const QString parent, const QMap<
 
 void QnstView::changeBindParam(const QString uid, const QMap<QString, QString> properties)
 {
-    qDebug() << "==================================== CHANGE - BINDPARAM" ;
-
     if (entities.contains(properties.value("parent"))){
         QnstGraphicsEntity* e = entities[properties.value("parent")];
 
@@ -3476,6 +3514,24 @@ void QnstView::changeBindParam(const QString uid, const QMap<QString, QString> p
 
             condition->setParam(properties["name"], properties["value"]);
         }
+    }
+}
+
+void QnstView::addConnectorParam(const QString uid, const QString parent, const QMap<QString, QString> properties)
+{
+    if (connectors2.contains(parent)){
+        QnstConncetor* conn = connectors2[parent];
+
+        conn->addParam(uid, properties["name"]);
+    }
+}
+
+void QnstView::changeConnectorParam(const QString uid, const QMap<QString, QString> properties)
+{
+    if (connectors2.contains(properties["parent"])){
+        QnstConncetor* conn = connectors2[properties["parent"]];
+
+        conn->addParam(uid, properties["name"]);
     }
 }
 

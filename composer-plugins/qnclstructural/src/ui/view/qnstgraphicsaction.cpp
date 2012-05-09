@@ -420,7 +420,7 @@ void QnstGraphicsAction::setParams(QMap<QString, QString> params)
 void QnstGraphicsAction::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
 {
     if (conn != NULL){
-        QVector<QString> names = conn->getParams();
+        QList<QString> names = conn->getParams().values();
 
         QMap<QString, QString> values;
 

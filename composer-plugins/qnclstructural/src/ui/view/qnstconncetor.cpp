@@ -50,21 +50,17 @@ void QnstConncetor::removeAction(QString uid)
     actions.remove(uid);
 }
 
-QVector<QString> QnstConncetor::getParams()
+QMap<QString, QString> QnstConncetor::getParams()
 {
     return params;
 }
 
-void QnstConncetor::addParam(QString param)
+void QnstConncetor::addParam(QString uid, QString value)
 {
-    params.append(param);
+    params[uid] = value;
 }
 
-void QnstConncetor::removeParam(QString param)
+void QnstConncetor::removeParam(QString uid)
 {
-    int index = params.indexOf(param);
-
-    if (index >= 0){
-        params.remove(index);
-    }
+    params.remove(uid);
 }
