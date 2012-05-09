@@ -17,7 +17,7 @@ else {
 }
 
 #CONFIG += clubencl
-#CONFIG += runssh_on
+CONFIG += runssh_on
 CONFIG += help
 QT += core xml network webkit
 
@@ -47,16 +47,20 @@ else:unix {
 
   # set the path to install desktop configuration
   desktop.path = $$DATADIR/applications/
-  desktop.files = $${TARGET}.desktop
+  desktop.files = data/$${TARGET}.desktop
 
   icon64.path = $$DATADIR/icons/gnome/64x64/apps
   icon64.files = images/$${TARGET}.png
 
   icon48.path = $$DATADIR/icons/gnome/48x48/apps
   icon48.files = images/$${TARGET}.png
+
+  bases.path = $$DATADIR/composer
+  bases.files = data/causalConnBase.ncl
 }
 else:win32 {
   INSTALLBASE = "C:/Composer"
+  bases.path = $$INSTALBASE/bases
 }
 
 DEFINES += EXT_DEFAULT_PATH=\"\\\"$$PREFIX\\\"\"
@@ -138,7 +142,9 @@ SOURCES += main.cpp \
     src/AboutDialog.cpp \
     src/RunGingaConfig.cpp \
     src/ComposerHelpWidget.cpp \
-    src/GeneralPreferences.cpp
+    src/GeneralPreferences.cpp \
+    src/NewProjectWizard.cpp
+#   src/ImportBasePreferences.cpp
 
 HEADERS += include/ComposerMainWindow.h \
     include/PreferencesDialog.h \
@@ -150,7 +156,9 @@ HEADERS += include/ComposerMainWindow.h \
     include/AboutDialog.h \
     include/RunGingaConfig.h \
     include/ComposerHelpWidget.h \
-    include/GeneralPreferences.h
+    include/GeneralPreferences.h \
+    include/NewProjectWizard.h
+#   include/ImportBasePreferences.h
 
 RESOURCES += images.qrc
 
@@ -162,7 +170,9 @@ FORMS   += ui/PreferencesDialog.ui \
     ui/EnvironmentPreferencesWidget.ui \
     ui/WelcomeWidget.ui \
     ui/AboutDialog.ui \
-    ui/GeneralPreferences.ui
+    ui/GeneralPreferences.ui \
+    ui/ImportBasePreferences.ui \
+    ui/NewProjectWizard.ui
 
 #TRANSLATIONS
 win32 {
@@ -170,6 +180,7 @@ win32 {
 } else:unix {
     trans.path = $$INSTALLBASE/lib/composer/extensions
 }
+
 trans.files = translations/*.qm
 
 isEmpty(trans.path) {
@@ -179,7 +190,7 @@ isEmpty(trans.path) {
 TRANSLATIONS += translations/composer_pt_BR.ts \
                 translations/composer_es.ts
 
-INSTALLS += target trans
+INSTALLS += target trans bases
 
 unix:!macx {
     INSTALLS += target desktop icon64 icon48

@@ -339,12 +339,6 @@ QMenu {
      </property>
      <addaction name="action_ImportFromExistingNCL"/>
     </widget>
-    <widget class="QMenu" name="menuExport">
-     <property name="title">
-      <string>Export</string>
-     </property>
-     <addaction name="actionTo_NCL_Document"/>
-    </widget>
     <addaction name="action_NewProject"/>
     <addaction name="action_OpenProject"/>
     <addaction name="menu_Recent_Files"/>
@@ -354,7 +348,6 @@ QMenu {
     <addaction name="action_SaveAll"/>
     <addaction name="separator"/>
     <addaction name="menuImport"/>
-    <addaction name="menuExport"/>
     <addaction name="separator"/>
     <addaction name="action_CloseProject"/>
     <addaction name="action_CloseAll"/>
@@ -550,7 +543,7 @@ QMenu {
   </action>
   <action name="action_ImportFromExistingNCL">
    <property name="icon">
-    <iconset resource="../images.qrc">
+    <iconset>
      <normaloff>:/mainwindow/images/import_document_icon.png</normaloff>:/mainwindow/images/import_document_icon.png</iconset>
    </property>
    <property name="text">

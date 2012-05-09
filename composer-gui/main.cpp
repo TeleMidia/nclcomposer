@@ -75,6 +75,29 @@ void updateSettingsWithDefaults()
   }
   settings.endGroup();
 /* End default language */
+
+/* Import Bases */
+  QString defaultConnBaseDir;
+  settings.beginGroup("importBases");
+  if(!settings.contains("default_connector_base"))
+  {
+    // \todo Fix the path for MACOS
+    #ifdef Q_WS_MAC
+      defaultConnBaseDir = "/../PlugIns/composer";
+    #elif defined(Q_WS_WIN32)
+      defaultConnBaseDir = QApplication::applicationDirPath() + "/data/";
+    #else
+      // PREFIX Should be defined by the qmake while compiling the source code.
+      #ifdef EXT_DEFAULT_PATH
+        defaultConnBaseDir = QString(EXT_DEFAULT_PATH)
+                            + QString("/share/composer/");
+      #endif
+    #endif
+  }
+  settings.setValue("default_conn_base",
+                    defaultConnBaseDir + "causalConnBase.ncl");
+  settings.endGroup();
+/*End Import Bases*/
 }
 
 void loadTranslations(QApplication *app)
