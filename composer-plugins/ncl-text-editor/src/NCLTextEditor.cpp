@@ -751,6 +751,7 @@ QList <QDomElement> NCLTextEditor::elementsByTagname( QString tagname,
   QStack <QDomElement> stack;
   stack.push(current);
 
+  bool first = true;
   while(stack.size())
   {
     current = stack.front();
@@ -760,12 +761,16 @@ QList <QDomElement> NCLTextEditor::elementsByTagname( QString tagname,
     if(node.tagName() == tagname)
       ret.push_back(node);
 
-    QDomElement child = current.firstChildElement();
-    while(!child.isNull())
+    if(first || !NCLStructure::getInstance()->defineScope(node.tagName()))
     {
-      // \todo We must not continue if the current element define a scope
-      stack.push_back(child);
-      child = child.nextSiblingElement();
+      first = false;
+      QDomElement child = current.firstChildElement();
+      while(!child.isNull())
+      {
+        // \todo We must not continue if the current element define a scope
+        stack.push_back(child);
+        child = child.nextSiblingElement();
+      }
     }
   }
 

@@ -320,6 +320,7 @@ ATTRIBUTE(transitionBase,id,false,ID)
 //valueAssessment
 ATTRIBUTE(valueAssessment,value,true,STRING)
 
+REFERENCE(bind,component,body,id,SAME)
 REFERENCE(bind,component,context,id,SAME)
 REFERENCE(bind,component,media,id,SAME)
 REFERENCE(bind,component,switch,id,SAME)
