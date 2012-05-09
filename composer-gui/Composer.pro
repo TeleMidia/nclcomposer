@@ -36,6 +36,9 @@ macx {
   TARGET = Composer
   INSTALLBASE = /Applications
   ICON =  images/Composer.icns
+
+  bases.path = "/Library/Application Support/Composer/Data/"
+  bases.files = data/causalConnBase.ncl
 }
 else:unix {
   isEmpty(PREFIX) {
@@ -171,7 +174,7 @@ FORMS   += ui/PreferencesDialog.ui \
     ui/WelcomeWidget.ui \
     ui/AboutDialog.ui \
     ui/GeneralPreferences.ui \
-    ui/ImportBasePreferences.ui \
+    #ui/ImportBasePreferences.ui \
     ui/NewProjectWizard.ui
 
 #TRANSLATIONS

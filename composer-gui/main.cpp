@@ -37,7 +37,7 @@ void updateSettingsWithDefaults()
 
   // After that we will look for plugins in the default system path
 #ifdef Q_WS_MAC
-  defaultPluginsPath << "/Library/Application Support/Composer"
+  defaultPluginsPath << "/Library/Application Support/Composer/Extensions"
                      << QCoreApplication::applicationDirPath() +
                         "/../PlugIns/composer";
 #elif defined(Q_WS_WIN32)
@@ -81,9 +81,8 @@ void updateSettingsWithDefaults()
   settings.beginGroup("importBases");
   if(!settings.contains("default_connector_base"))
   {
-    // \todo Fix the path for MACOS
     #ifdef Q_WS_MAC
-      defaultConnBaseDir = "/../PlugIns/composer";
+      defaultConnBaseDir = "/Library/Application Support/Composer/Data/";
     #elif defined(Q_WS_WIN32)
       defaultConnBaseDir = QApplication::applicationDirPath() + "/data/";
     #else
