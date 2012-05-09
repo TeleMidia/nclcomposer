@@ -59,12 +59,14 @@ else:unix {
   icon48.files = images/$${TARGET}.png
 
   bases.path = $$DATADIR/composer
-  bases.files = data/causalConnBase.ncl
 }
 else:win32 {
   INSTALLBASE = "C:/Composer"
-  bases.path = $$INSTALBASE/bases
+
+  bases.path = $$INSTALLBASE/data
 }
+
+bases.files = data/causalConnBase.ncl
 
 DEFINES += EXT_DEFAULT_PATH=\"\\\"$$PREFIX\\\"\"
 
@@ -174,7 +176,6 @@ FORMS   += ui/PreferencesDialog.ui \
     ui/WelcomeWidget.ui \
     ui/AboutDialog.ui \
     ui/GeneralPreferences.ui \
-    #ui/ImportBasePreferences.ui \
     ui/NewProjectWizard.ui
 
 #TRANSLATIONS

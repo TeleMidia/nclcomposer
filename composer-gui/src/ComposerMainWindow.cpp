@@ -1317,6 +1317,8 @@ void ComposerMainWindow::launchProjectWizard()
   {
     QString filename = wizard.getProjectFullPath();
 
+    filename.replace("\\", "/"); //Force the use of "/"
+
     if( !filename.isNull() && !filename.isEmpty())
     {
 

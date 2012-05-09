@@ -1,4 +1,4 @@
-#include "include/NewProjectWizard.h"
+#include "NewProjectWizard.h"
 #include "ui_NewProjectWizard.h"
 
 #include <QFileDialog>
