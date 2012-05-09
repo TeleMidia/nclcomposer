@@ -745,19 +745,30 @@ QList <QDomElement> NCLTextEditor::elementsByTagname(QString tagname)
 QList <QDomElement> NCLTextEditor::elementsByTagname( QString tagname,
                                                       QString parentId )
 {
-  QDomNodeList children = elementById(parentId).childNodes();
+  QDomElement current = elementById(parentId);
   QList <QDomElement> ret;
 
-  for(int j = 0; j < children.length(); j++)
+  QStack <QDomElement> stack;
+  stack.push(current);
+
+  while(stack.size())
   {
-    //We don't care about nodes that aren't Element.
-    if(!children.at(j).isElement()) continue;
+    current = stack.front();
+    stack.pop_front();
 
-    QDomElement node = children.at(j).toElement();
-
+    QDomElement node = current.toElement();
     if(node.tagName() == tagname)
       ret.push_back(node);
+
+    QDomElement child = current.firstChildElement();
+    while(!child.isNull())
+    {
+      // \todo We must not continue if the current element define a scope
+      stack.push_back(child);
+      child = child.nextSiblingElement();
+    }
   }
+
   return ret;
 }
 
