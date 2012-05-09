@@ -25,7 +25,7 @@ LIBS      +=    -Ldeps/QScintilla-gpl-2.6.1/Qt4/debug \
 }
 
 macx:LIBS += -L/Library/Frameworks \
-            -L$$quote(/Library/Application Support/Composer) \
+            -L$$quote(/Library/Application Support/Composer/Extensions) \
             -lNCLLanguageProfile
 
 unix:LIBS += -Ldeps/QScintilla-gpl-2.6.1/Qt4

@@ -34,12 +34,12 @@ else:win32 {
 
 macx {
   LIBS += -framework ComposerCore
-  LIBS +=  $$quote(-L/Library/Application Support/Composer)
+  LIBS +=  $$quote(-L/Library/Application Support/Composer/Extensions)
   INCLUDEPATH +=  include /Library/Frameworks/ComposerCore.framework/ \
                   /Library/Frameworks/ComposerCore.framework/core \
                   /Library/Frameworks/ComposerCore.framework/core/extensions
 
-  target.path = $$quote(/Library/Application Support/Composer)
+  target.path = $$quote(/Library/Application Support/Composer/Extensions)
 }
 else:unix {
   LIBS += -L$$INSTALLBASE/lib/composer \

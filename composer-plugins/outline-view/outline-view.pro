@@ -2,7 +2,7 @@ include (../plugins-common.pri)
 TARGET          = outline_view
 QT              += xml
 
-macx:LIBS +=    -L$$quote(/Library/Application Support/Composer) \
+macx:LIBS +=    -L$$quote(/Library/Application Support/Composer/Extensions) \
                 -lNCLLanguageProfile
 
 win32:LIBS +=   -lNCLLanguageProfile

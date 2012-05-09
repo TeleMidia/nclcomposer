@@ -53,7 +53,7 @@ QMAKE_CXXFLAGS  += -I. -I../include -I../lexlib -I../src
 DEFINES = QSCINTILLA_MAKE_DLL QT SCI_LEXER
 
 mac {
-  QSCI_INSTALL_LIBS = $$quote(/Library/Application Support/Composer)
+  QSCI_INSTALL_LIBS = $$quote(/Library/Application Support/Composer/Extensions)
   QSCI_INSTALL_HEADERS = $$[QT_INSTALL_HEADERS]
   QSCI_INSTALL_TRANSLATIONS = $$[QT_INSTALL_HEADERS]
   QSCI_INSTALL_DATA = $$[QT_INSTALL_DATA]
