@@ -2006,6 +2006,8 @@ void QnstView::addMedia(const QString uid, const QString parent, const QMap<QStr
 
         adjustMedia(entity);
 
+        entity->updateToolTip();
+
         if (!undo){
             QnstAddCommand* cmd = new QnstAddCommand(this, entity);
             history.push(cmd);
@@ -5003,6 +5005,8 @@ void QnstView::performPaste()
                 entity->setWidth(48);
                 entity->setHeight(64);
 
+                ((QnstGraphicsMedia*) entity)->setSource(copy->getUsrData()["src"]);
+
                 break;
 
             // if the entity type is AUDIO
@@ -5016,6 +5020,8 @@ void QnstView::performPaste()
                 entity->setLeft(parent->getWidth()/2 - 48/2);
                 entity->setWidth(48);
                 entity->setHeight(64);
+
+                ((QnstGraphicsMedia*) entity)->setSource(copy->getUsrData()["src"]);
 
                 break;
 
@@ -5031,6 +5037,8 @@ void QnstView::performPaste()
                 entity->setWidth(48);
                 entity->setHeight(64);
 
+                ((QnstGraphicsMedia*) entity)->setSource(copy->getUsrData()["src"]);
+
                 break;
 
             // if the entity type is TEXT
@@ -5044,6 +5052,8 @@ void QnstView::performPaste()
                 entity->setLeft(parent->getWidth()/2 - 48/2);
                 entity->setWidth(48);
                 entity->setHeight(64);
+
+                ((QnstGraphicsMedia*) entity)->setSource(copy->getUsrData()["src"]);
 
                 break;
 
@@ -5059,6 +5069,8 @@ void QnstView::performPaste()
                 entity->setWidth(48);
                 entity->setHeight(64);
 
+                ((QnstGraphicsMedia*) entity)->setSource(copy->getUsrData()["src"]);
+
                 break;
 
             // if the entity type is HTML
@@ -5072,6 +5084,8 @@ void QnstView::performPaste()
                 entity->setLeft(parent->getWidth()/2 - 48/2);
                 entity->setWidth(48);
                 entity->setHeight(64);
+
+                ((QnstGraphicsMedia*) entity)->setSource(copy->getUsrData()["src"]);
 
                 break;
 
@@ -5087,6 +5101,8 @@ void QnstView::performPaste()
                 entity->setWidth(48);
                 entity->setHeight(64);
 
+                ((QnstGraphicsMedia*) entity)->setSource(copy->getUsrData()["src"]);
+
                 break;
 
             // if the entity type is SETTINGS
@@ -5101,6 +5117,8 @@ void QnstView::performPaste()
                 entity->setWidth(48);
                 entity->setHeight(64);
 
+                ((QnstGraphicsMedia*) entity)->setSource(copy->getUsrData()["src"]);
+
                 break;
 
             // if the entity type is MEDIA
@@ -5114,6 +5132,8 @@ void QnstView::performPaste()
                 entity->setLeft(parent->getWidth()/2 - 48/2);
                 entity->setWidth(48);
                 entity->setHeight(64);
+
+                ((QnstGraphicsMedia*) entity)->setSource(copy->getUsrData()["src"]);
 
                 break;
 
@@ -5211,13 +5231,10 @@ void QnstView::performPaste()
 
             parent->addnstGraphicsEntity(entity);
 
-            qDebug() << "[QNST]" << "=====================" << "USERDATA" << copy->getUsrData();
-
-
             entity->setUsrData(copy->getUsrData());
-
-            qDebug() << "[QNST]" << "=====================" << "USERDATA" << entity->getUsrData();
             requestEntityAddition(entity);
+
+            entity->setnstId(entity->getUsrData()["id"]);
 
 //            requestEntityChange(entity);
 
@@ -5249,6 +5266,8 @@ void QnstView::performPaste(QnstGraphicsEntity* copy, QnstGraphicsEntity* parent
         entity->setWidth(copy->getWidth());
         entity->setHeight(copy->getHeight());
 
+        ((QnstGraphicsMedia*) entity)->setSource(copy->getUsrData()["src"]);
+
         parent->addnstGraphicsEntity(entity);
 
         break;
@@ -5264,6 +5283,8 @@ void QnstView::performPaste(QnstGraphicsEntity* copy, QnstGraphicsEntity* parent
         entity->setLeft(copy->getLeft());
         entity->setWidth(copy->getWidth());
         entity->setHeight(copy->getHeight());
+
+        ((QnstGraphicsMedia*) entity)->setSource(copy->getUsrData()["src"]);
 
         parent->addnstGraphicsEntity(entity);
 
@@ -5283,6 +5304,8 @@ void QnstView::performPaste(QnstGraphicsEntity* copy, QnstGraphicsEntity* parent
         entity->setWidth(copy->getWidth());
         entity->setHeight(copy->getHeight());
 
+        ((QnstGraphicsMedia*) entity)->setSource(copy->getUsrData()["src"]);
+
         parent->addnstGraphicsEntity(entity);
 
 
@@ -5300,6 +5323,8 @@ void QnstView::performPaste(QnstGraphicsEntity* copy, QnstGraphicsEntity* parent
         entity->setLeft(copy->getLeft());
         entity->setWidth(copy->getWidth());
         entity->setHeight(copy->getHeight());
+
+        ((QnstGraphicsMedia*) entity)->setSource(copy->getUsrData()["src"]);
 
         parent->addnstGraphicsEntity(entity);
 
@@ -5319,6 +5344,8 @@ void QnstView::performPaste(QnstGraphicsEntity* copy, QnstGraphicsEntity* parent
         entity->setWidth(copy->getWidth());
         entity->setHeight(copy->getHeight());
 
+        ((QnstGraphicsMedia*) entity)->setSource(copy->getUsrData()["src"]);
+
         parent->addnstGraphicsEntity(entity);
 
 
@@ -5337,6 +5364,8 @@ void QnstView::performPaste(QnstGraphicsEntity* copy, QnstGraphicsEntity* parent
         entity->setWidth(copy->getWidth());
         entity->setHeight(copy->getHeight());
 
+        ((QnstGraphicsMedia*) entity)->setSource(copy->getUsrData()["src"]);
+
         parent->addnstGraphicsEntity(entity);
 
 
@@ -5354,6 +5383,8 @@ void QnstView::performPaste(QnstGraphicsEntity* copy, QnstGraphicsEntity* parent
         entity->setLeft(copy->getLeft());
         entity->setWidth(copy->getWidth());
         entity->setHeight(copy->getHeight());
+
+        ((QnstGraphicsMedia*) entity)->setSource(copy->getUsrData()["src"]);
 
         parent->addnstGraphicsEntity(entity);
 
@@ -5479,6 +5510,8 @@ void QnstView::performPaste(QnstGraphicsEntity* copy, QnstGraphicsEntity* parent
 
     entity->setUsrData(copy->getUsrData());
     requestEntityAddition(entity);
+
+    entity->setnstId(entity->getUsrData()["id"]);
 
 //    qDebug() << "[QNST]" << entity->getUsrData();
 //    requestEntityChange(entity);

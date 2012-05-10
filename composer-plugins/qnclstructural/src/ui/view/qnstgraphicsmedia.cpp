@@ -87,6 +87,9 @@ void QnstGraphicsMedia::updateToolTip()
     }
 
     setToolTip(tip);
+
+    qDebug() << "===============================" << getSource();
+    qDebug() << "===============================" << tip;
 }
 
 QString QnstGraphicsMedia::getRefer() const
