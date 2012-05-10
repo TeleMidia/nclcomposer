@@ -263,6 +263,11 @@ void QnstView::read(QDomElement element, QDomElement parent)
 
         addSwitchPort(uid, parent.attribute("uid"), properties, true);
 
+    }else if (element.nodeName() == "importBase"){
+        importBases[element.attribute("uid")] = element.attribute("connUID");
+
+        qDebug() << "============================" << element.attribute("uid") << "-" << element.attribute("connUID");
+
     }else if (element.nodeName() == "connector"){
         QnstConncetor* conn = new QnstConncetor();
         conn->setnstUid(element.attribute("uid"));
@@ -647,6 +652,16 @@ QString QnstView::serialize()
     QDomDocument* dom = new QDomDocument();
 
     QDomElement root = dom->createElement("qnst");
+
+    foreach(QString key, importBases.keys()){
+        QDomElement e = dom->createElement("importBase");
+
+        e.setAttribute("uid", key);
+
+        e.setAttribute("connUID", importBases[key]);
+
+        root.appendChild(e);
+    }
 
     foreach(QnstConncetor* conn, connectors.values()){
         QDomElement e = dom->createElement("connector");
@@ -1196,7 +1211,10 @@ void QnstView::removeEntity(const QString uid, bool undo)
 {
     qDebug() << "[QNST]" << ":" << "Removing entity '"+uid+"'";
 
+    qDebug() << "=================================";
+
     if (entities.contains(uid)){
+
         QnstGraphicsEntity* entity = entities[uid];
 
         if (entity != NULL){
@@ -1410,10 +1428,32 @@ void QnstView::removeEntity(const QString uid, bool undo)
                 entities.remove(edge->getnstUid());
             }
         }
+    }else if (importBases.contains(uid)){
+        qDebug() << "================================= IMPORTBASE";
+
+        foreach(QnstConncetor* cc, connectors.values()){
+            if (cc->getnstUid() == importBases[uid]){
+                connectors.remove(cc->getName());
+            }
+        }
+
+        foreach(QnstConncetor* cc, connectors2.values()){
+            if (cc->getnstUid() == importBases[uid]){
+                connectors2.remove(cc->getnstId());
+            }
+        }
+
+        importBases.remove(uid);
+
+        foreach(QnstBind* b, binds.values()){
+            adjustBind(b);
+        }
     }else if (connectors2.contains(uid)){
+
         connectors.remove(connectors2[uid]->getName());
         connectors2.remove(uid);
     }else if (bindParamUIDToBindUID.contains(uid)){
+
         QnstGraphicsEntity* e = entities[brelations[bindParamUIDToBindUID[uid]]];
 
         if (e->getnstType() == Qnst::Action){
@@ -1433,7 +1473,7 @@ void QnstView::removeEntity(const QString uid, bool undo)
 
 void QnstView::changeEntity(const QString uid, const QMap<QString, QString> properties)
 {
-    qDebug() << "[QNST]" << ":" << "Changing entity '"+uid+"'";
+    qDebug() << "[QNST]" << ":" << "Changing entity '"+uid+"'" << properties["TYPE"];
 
     if (selected != NULL){
         selected->setSelected(false);
@@ -1509,6 +1549,9 @@ void QnstView::changeEntity(const QString uid, const QMap<QString, QString> prop
           break;
         }
 
+    }else if (properties["TYPE"] == "importBase"){
+        changeImportBase(uid, properties);
+
     }else if (connectors2.contains(uid)){
         changeConnector(connectors2[uid], properties);
 
@@ -1518,13 +1561,10 @@ void QnstView::changeEntity(const QString uid, const QMap<QString, QString> prop
     }else if (properties["TYPE"] == "simpleAction"){
         changeAction(uid, properties);
 
-    }else if (properties["TYPE"] == "importBase"){
-        changeImportBase(uid, properties);
-
     }else if (properties["TYPE"] == "bindParam"){
         changeBindParam(uid, properties);
 
-    }else if (properties["TYPE"] == "bindParam"){
+    }else if (properties["TYPE"] == "connectorParam"){
         changeConnectorParam(uid, properties);
     }
 }
@@ -1628,67 +1668,71 @@ void QnstView::changeBody(QnstGraphicsBody* entity, const QMap<QString, QString>
 
 void QnstView::addImportBase(QString uid, const QMap<QString, QString> properties)
 {
+    QString connUID = QUuid::createUuid().toString();
+
+    importBases[uid] = connUID;
+
     if (properties["documentURI"] != "" && properties["projectURI"] != "" && properties["alias"] != ""){
-
-        foreach(QnstConncetor* cc, connectors.values()){
-            if (cc->getnstUid() == uid){
-                connectors.remove(cc->getName());
-            }
-        }
-
-        foreach(QnstConncetor* cc, connectors2.values()){
-            if (cc->getnstUid() == uid){
-                connectors2.remove(cc->getnstId());
-            }
-        }
-
 
         int n = properties["projectURI"].lastIndexOf("/");
 
         QFile* file = new QFile(properties["projectURI"].left(n)+QDir::separator()+properties["documentURI"]);
 
-        if (file->open(QIODevice::ReadOnly)){
-            QDomDocument* domdoc = new QDomDocument();
+        if (file->exists()){
+            if (file->open(QIODevice::ReadOnly)){
+                QDomDocument* domdoc = new QDomDocument();
 
-            if (domdoc->setContent(file)){
-                readImportBase(uid, domdoc->firstChildElement(), properties["alias"]);
+                if (domdoc->setContent(file)){
+                    readImportBase(connUID, domdoc->firstChildElement(), properties["alias"]);
+                }
             }
         }
 
         delete file;
+
+
+        foreach(QnstBind* b, binds.values()){
+            adjustBind(b);
+        }
     }
 }
 
 
 void QnstView::changeImportBase(QString uid, const QMap<QString, QString> properties)
 {
+    foreach(QnstConncetor* cc, connectors.values()){
+        if (cc->getnstUid() == importBases[uid]){
+            connectors.remove(cc->getName());
+        }
+    }
+
+    foreach(QnstConncetor* cc, connectors2.values()){
+        if (cc->getnstUid() == importBases[uid]){
+            connectors2.remove(cc->getnstId());
+        }
+    }
+
     if (properties["documentURI"] != "" && properties["projectURI"] != "" && properties["alias"] != ""){
-
-        foreach(QnstConncetor* cc, connectors.values()){
-            if (cc->getnstUid() == uid){
-                connectors.remove(cc->getName());
-            }
-        }
-
-        foreach(QnstConncetor* cc, connectors2.values()){
-            if (cc->getnstUid() == uid){
-                connectors2.remove(cc->getnstId());
-            }
-        }
 
         int n = properties["projectURI"].lastIndexOf("/");
 
         QFile* file = new QFile(properties["projectURI"].left(n)+QDir::separator()+properties["documentURI"]);
 
-        if (file->open(QIODevice::ReadOnly)){
-            QDomDocument* domdoc = new QDomDocument();
+        if (file->exists()){
+            if (file->open(QIODevice::ReadOnly)){
+                QDomDocument* domdoc = new QDomDocument();
 
-            if (domdoc->setContent(file)){
-                readImportBase(uid, domdoc->firstChildElement(), properties["alias"]);
+                if (domdoc->setContent(file)){
+                    readImportBase(importBases[uid], domdoc->firstChildElement(), properties["alias"]);
+                }
             }
         }
 
         delete file;
+    }
+
+    foreach(QnstBind* b, binds.values()){
+        adjustBind(b);
     }
 }
 
@@ -1697,7 +1741,6 @@ void QnstView::readImportBase(QString uid, QDomElement element, QString alias)
 {
     if (element.tagName() == "causalConnector"){
 
-        qDebug() << "=========================== readImportBase";
         QDomNodeList list = element.childNodes();
 
         QnstConncetor* conn = new QnstConncetor();
@@ -3345,7 +3388,6 @@ void QnstView::adjustBind(QnstBind* entity)
 void QnstView::addConnector(const QString uid, const QString parent, const QMap<QString, QString> properties)
 {
     if (!connectors2.contains(uid)){
-        qDebug() << "=================================" << "adding connector";
 
         QnstConncetor* entity = new QnstConncetor();
         entity->setnstUid(uid);
@@ -3484,7 +3526,6 @@ void QnstView::addAggregator(const QString uid, const QString parent, const QMap
 
 void QnstView::addBindParam(const QString uid, const QString parent, const QMap<QString, QString> properties)
 {
-    qDebug() << "========================================== ADD - BINDPARAM" ;
 
     if (entities.contains(parent)){
         QnstGraphicsEntity* e = entities[parent];
@@ -4739,7 +4780,8 @@ void QnstView::performPaste()
                   (copy->getnstType() == Qnst::Area ||
                       copy->getnstType() == Qnst::Property))){
 
-            qDebug() << "============================" << copy->getnstUid();
+
+
 
             int result = 1;
             if(!hasCutted) // if the user has cutted obviously he/she does not

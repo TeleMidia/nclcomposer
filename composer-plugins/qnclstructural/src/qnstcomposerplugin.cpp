@@ -203,7 +203,7 @@ void QnstComposerPlugin::errorMessage(QString error)
 }
 
 void QnstComposerPlugin::onEntityChanged(QString pluginID, Entity *entity)
-{
+{    
   if(isSyncingFromTextual)
   {
     dirtyEntities.push_back(entity->getUniqueId());
@@ -350,6 +350,7 @@ void QnstComposerPlugin::requestEntityAddition(Entity* entity)
     }
     else if (entity->getType() == "importBase")
     {
+        entities[entity->getUniqueId()] = entity->getUniqueId();
         requestImportBaseAddition(entity);
 
     // if the entity is of type AREA
@@ -447,6 +448,8 @@ void QnstComposerPlugin::requestEntityChange(Entity* entity)
 
     // if the entity is of type ImportBase
     }else if (entity->getType() == "importBase"){
+        qDebug() << "============================== QnstComposerPlugin::requestEntityChange IMPORTBASE";
+
         requestImportBaseChange(entity);
 
     // if the entity is of type AREA
@@ -1074,6 +1077,7 @@ void QnstComposerPlugin::requestImportBaseChange(Entity* entity)
                     properties["alias"] = entity->getAttribute("alias");
                 }
 //                if(entities.contains(entity->getUniqueId()))
+
                   view->changeEntity(entity->getUniqueId(),properties);
             }
         }
@@ -1090,9 +1094,8 @@ void QnstComposerPlugin::requestCausalConnectorAddition(Entity* entity)
         properties["id"] = entity->getAttribute("id");
     }
 
-    if(entities.contains(entity->getParentUniqueId()))
-      view->addEntity(entity->getUniqueId(),
-                      entities[entity->getParentUniqueId()], properties);
+    if(entity->getParent()->getType() == "importBase")
+      view->addEntity(entity->getUniqueId(), entity->getParentUniqueId(), properties);
     else
         view->addEntity(entity->getUniqueId(),"", properties);
 }
@@ -2204,6 +2207,8 @@ QString QnstComposerPlugin::getNCLIdFromEntity(Entity *entity)
 //      nclID = entity->getType() + "_" + entity->getAttribute("component") + "_"
 //          + entity->getAttribute("interface");
 //    }
+    else if(entity->hasAttribute("alias"))
+        nclID = entity->getAttribute("alias");
     else
       nclID = QUuid::createUuid().toString();
 
@@ -2229,8 +2234,8 @@ bool QnstComposerPlugin::isEntityHandled(Entity *entity)
     if(type == "body" || type == "context" || type == "media" ||
        type == "switch" || type == "port" || type == "link" || type == "bind" ||
        type == "area" || type == "property" || type == "causalConnector" ||
-       type == "switchPort" || type == "mapping" || type == "importBase"
-            || type == "bindParam" || type == "connectorParam"  )
+       type == "switchPort" || type == "mapping" || type == "importBase"||
+       type == "bindParam" || type == "connectorParam"  )
 
       return true;
   }

@@ -358,6 +358,8 @@ private:
 
     QMap<QString, QString> refers;
 
+    QMap<QString, QString> importBases; // importBaseUid - ConnUid
+
     QMap<QString, QString> interfaceRefers;
 
     QMap<QString, QString> bindParamUIDToBindUID;

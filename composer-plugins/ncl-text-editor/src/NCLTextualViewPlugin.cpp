@@ -714,6 +714,14 @@ void NCLTextualViewPlugin::incrementalUpdateCoreModel()
                 == entityChildren[j]->getAttribute("name"))
           sameNCLID = true;
       }
+      // testing for alias - remove after
+      else if(children[i].hasAttribute("alias")
+              && entityChildren[j]->hasAttribute("alias"))
+      {
+        if(children[i].attribute("alias")
+                == entityChildren[j]->getAttribute("alias"))
+          sameNCLID = true;
+      }
       else
         sameNCLID = true;
 
