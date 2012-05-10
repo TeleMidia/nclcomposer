@@ -970,7 +970,7 @@ void QnlyComposerPlugin::performMediaOverRegionAction(const QString mediaId,
   Entity *media = NULL;
   QList <Entity*> medias = project->getEntitiesbyType("media");
 
-  const bool askDescOrProperties = true;
+  const bool askDescOrProperties = true; // \todo This must be a preference.
 
   for(int i = 0; i < medias.size(); i++)
   {
@@ -996,7 +996,6 @@ void QnlyComposerPlugin::performMediaOverRegionAction(const QString mediaId,
 
   if(!error)
   {
-
     if(askDescOrProperties)
     {
         QMessageBox msgBox;
@@ -1005,13 +1004,13 @@ void QnlyComposerPlugin::performMediaOverRegionAction(const QString mediaId,
     //    msgBox.setDetailedText(tr("Detailed text"));
 
         QPushButton *createDescButton =
-            msgBox.addButton( tr("Create a new descriptor"),
+            msgBox.addButton( tr("Use a descriptor"),
                               QMessageBox::ActionRole);
 
         QPushButton *importPropButton =
             msgBox.addButton(tr("Import region properties to media object"),
                              QMessageBox::ActionRole);
-    //     importPropButton->setEnabled(false);
+    //  importPropButton->setEnabled(false);
 
         QPushButton *cancelButton =
             msgBox.addButton(tr("Nothing!"),
@@ -1028,13 +1027,29 @@ void QnlyComposerPlugin::performMediaOverRegionAction(const QString mediaId,
 
           // create the descriptor
           QString newDescriptorID = project->generateUniqueNCLId("descriptor");
+          QStringList alredyExistentsDescriptorsIds, descriptorsIds;
+          descriptorsIds << newDescriptorID;
+
+          QList <Entity*> descriptors = project->getEntitiesbyType("descriptor");
+          foreach (Entity *desc, descriptors) {
+            if(desc != NULL)
+            {
+              if(desc->getAttribute("region") == region->getAttribute("id"))
+              {
+                alredyExistentsDescriptorsIds << desc->getAttribute("id");
+                descriptorsIds << desc->getAttribute("id");
+              }
+            }
+          }
 
           bool ok;
-          newDescriptorID = QInputDialog::getText(NULL,
-                                                  "Descriptor id:",
-                                                  "Please, enter the descriptor id",
-                                                  QLineEdit::Normal,
-                                                  newDescriptorID,
+          newDescriptorID = QInputDialog::getItem(NULL,
+                                                  tr("Descriptor id:"),
+                                                  tr("Please, enter the "
+                                                     "descriptor id"),
+                                                  descriptorsIds,
+                                                  0,
+                                                  true,
                                                   &ok);
 
           if(ok)
@@ -1043,12 +1058,17 @@ void QnlyComposerPlugin::performMediaOverRegionAction(const QString mediaId,
                                        // create one
               emit addEntity("descriptorBase", getHeadUid(), attrs, false);
 
-            Entity *descriptorBase =
-                project->getEntitiesbyType("descriptorBase").at(0);
-            attrs.insert("id", newDescriptorID);
-            attrs.insert("region", region->getAttribute("id"));
+            // If we choose the new descriptor (create it)
+            if(!alredyExistentsDescriptorsIds.contains(newDescriptorID))
+            {
+              Entity *descriptorBase =
+                  project->getEntitiesbyType("descriptorBase").at(0);
+              attrs.insert("id", newDescriptorID);
+              attrs.insert("region", region->getAttribute("id"));
 
-            emit addEntity("descriptor", descriptorBase->getUniqueId(), attrs, false);
+              emit addEntity("descriptor", descriptorBase->getUniqueId(), attrs,
+                             false);
+            }
 
             //update the media to refer to this descriptor
             attrs.clear();
@@ -1097,7 +1117,8 @@ void QnlyComposerPlugin::performMediaOverRegionAction(const QString mediaId,
         }
     }
     else
-    { //does not ask the descriptor or media propertie
+    {
+        // Does not ask the descriptor or media properties
         qDebug() << "Creating a new descriptor";
 
         QMap <QString,QString> attrs;
