@@ -95,6 +95,23 @@ void PropertyEditor::setCurrentName(QString name)
   ui->label->setText(currentTagname + ":" + currentName);
 }
 
+void PropertyEditor::setErrorMessage(QString errorMessage)
+{
+  if(!errorMessage.isEmpty())
+    ui->label_ErrorMessage->setText(" (" + errorMessage + ")");
+  else
+    ui->label_ErrorMessage->setText("");
+
+  if(!errorMessage.isNull() && !errorMessage.isEmpty())
+  {
+    ui->frame_Name->setStyleSheet("color: red;");
+  }
+  else
+    ui->frame_Name->setStyleSheet("color: black;");
+
+  // ui->frame_Name->adjustSize();
+}
+
 void PropertyEditor::setAttributeValue(QString property, QString value)
 {
   // Set the attibute just if this property is a valid property of the current
@@ -146,7 +163,8 @@ void PropertyEditor::updateWithItemChanges(QTableWidgetItem *item)
 
   if(column == 0) return; //not for me!
 
-  if(internalPropertyChange) {
+  if(internalPropertyChange)
+  {
     internalPropertyChange = false;
     return;
   }

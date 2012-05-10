@@ -105,9 +105,11 @@ void PropertiesViewPlugin::changeSelectedEntity(QString pluginID, void *param)
     window->setTagname(currentEntity->getType(), "");
     updateCurrentEntity();
   }
+
+  emit sendBroadcastMessage("askAllValidationMessages", NULL);
 }
 
-void PropertiesViewPlugin::updateCurrentEntity()
+void PropertiesViewPlugin::updateCurrentEntity(QString errorMessage)
 {
   QString name;
   if( currentEntity->hasAttribute("id") )
@@ -121,6 +123,8 @@ void PropertiesViewPlugin::updateCurrentEntity()
     window->setTagname(currentEntity->getType(), name);
   else if(window->getCurrentName() != name)
     window->setCurrentName(name);
+
+  window->setErrorMessage(errorMessage);
 
   QMap <QString, QString>::iterator begin, end, it;
   currentEntity->getAttributeIterator(begin, end);
@@ -190,5 +194,18 @@ void PropertiesViewPlugin::updateCurrentEntityAttr(QString attr, QString value)
       qWarning() << attrs;
       emit setAttributes(currentEntity, attrs, false);
     }
+  }
+}
+
+void PropertiesViewPlugin::validationError(QString pluginID, void * param)
+{
+  if (param)
+  {
+     pair <QString , QString> *p = (pair <QString, QString> *) param;
+
+     QString uid = p->first;
+
+     if(currentEntity == project->getEntityById(uid))
+       updateCurrentEntity(p->second);
   }
 }

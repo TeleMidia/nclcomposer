@@ -119,11 +119,16 @@ public slots:
      */
     void changeSelectedEntity (QString pluginID, void*);
 
+    /*!
+     * \brief
+     */
+    void validationError(QString pluginID, void * param);
+
 private slots:
     /*!
      * \brief Update all the attributes from the currentEntity.
      */
-    void updateCurrentEntity();
+    void updateCurrentEntity(QString errorMessage="");
     /*!
      * \brief Update an individual attribute of the currentEntity.
      *

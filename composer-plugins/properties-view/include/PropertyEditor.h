@@ -78,6 +78,12 @@ public:
   void setCurrentName(QString name);
 
   /*!
+   * \brief Set the current error message (and change the color of the text) if
+   *  the errorMessage is not empty.
+   */
+  void setErrorMessage(QString errorMessage);
+
+  /*!
    * \brief Get the current name.
    */
   QString getCurrentName(){ return this->currentName; }
