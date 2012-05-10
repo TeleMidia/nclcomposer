@@ -47,6 +47,7 @@ void QnstComposerPlugin::createConnections()
     connect(view, SIGNAL(entityRemoved(QString)), SLOT(requestEntityRemotion(QString)));
     connect(view, SIGNAL(entityChanged(QString,QMap<QString,QString>)), SLOT(requestEntityChange(QString,QMap<QString,QString>)));
     connect(view, SIGNAL(entitySelected(QString)), SLOT(requestEntitySelection(QString)));
+    connect(view, SIGNAL(viewChanged()), SIGNAL(setCurrentProjectAsDirty()));
 }
 
 void QnstComposerPlugin::init()

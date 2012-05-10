@@ -3885,6 +3885,8 @@ void QnstView::requestEntityPreparation(QnstGraphicsEntity* entity, QMap<QString
 {
     QnstChangeCommand* cmd = new QnstChangeCommand(this, entity->getnstUid(), properties);
     history.push(cmd);
+
+    emit viewChanged();
 }
 
 void QnstView::requestEntityChange(QnstGraphicsEntity* entity)

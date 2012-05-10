@@ -121,6 +121,8 @@ signals:
 
     void entitySelected(const QString uid);
 
+    void viewChanged();
+
 protected:
     virtual void mouseMoveEvent(QMouseEvent* event);
 
