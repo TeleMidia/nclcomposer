@@ -135,6 +135,11 @@ public slots:
      */
     void textualFinishSync(QString, void*);
 
+    /*!
+     * \brief
+     */
+    void validationError(QString pluginID, void * param);
+
 private slots:
     /*!
      * \brief

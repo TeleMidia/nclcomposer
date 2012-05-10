@@ -131,6 +131,9 @@ void OutlineViewPlugin::onEntityChanged(QString pluginID, Entity * entity)
         attrs[it.key()] = it.value();
     }
 
+    idToItem[entity->getUniqueId()]->setTextColor(0, Qt::black);
+    idToItem[entity->getUniqueId()]->setToolTip(0, "");
+
     window->updateItem(idToItem[entity->getUniqueId()], entity->getType(),
                        attrs);
 
@@ -291,4 +294,18 @@ void OutlineViewPlugin::textualStartSync(QString, void*)
 void OutlineViewPlugin::textualFinishSync(QString, void*)
 {
   window->expandAll();
+}
+
+void OutlineViewPlugin::validationError(QString pluginID, void * param)
+{
+  if (param)
+  {
+     pair <QString , QString> *p = (pair <QString, QString> *) param;
+
+     QString uid = p->first;
+
+     QTreeWidgetItem *item = window->getItemById(uid);
+     item->setTextColor(0, Qt::red);
+     item->setToolTip(0, p->second);
+  }
 }
