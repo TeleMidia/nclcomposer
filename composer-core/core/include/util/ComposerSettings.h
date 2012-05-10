@@ -10,13 +10,14 @@
 #ifndef COMPOSERSETTINGS_H
 #define COMPOSERSETTINGS_H
 
+#include "ComposerCoreControl_global.h"
 #include <QSettings>
 
 namespace composer {
     namespace core {
         namespace util {
 
-class ComposerSettings: public QSettings
+class COMPOSERCORESHARED_EXPORT ComposerSettings: public QSettings
 {
 public:
   ComposerSettings();
