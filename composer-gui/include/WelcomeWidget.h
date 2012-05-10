@@ -201,6 +201,8 @@ signals:
 private slots:
   void sendRecentProjectClicked();
 
+  void on_commandLinkButton_3_pressed();
+
 public slots:
   void updateRecentProjects(QStringList recentProjects);
 };

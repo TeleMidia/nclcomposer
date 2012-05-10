@@ -584,3 +584,8 @@ void composer::gui::WelcomeWidget::on_commandLinkButton_2_pressed()
 {
     emit userPressedSeeInstalledPlugins();
 }
+
+void composer::gui::WelcomeWidget::on_commandLinkButton_3_pressed()
+{
+  QDesktopServices::openUrl(QUrl("http://www.telemidia.puc-rio.br/sites/telemidia.puc-rio.br/files/Programando_em_NCL_30.pdf"));
+}

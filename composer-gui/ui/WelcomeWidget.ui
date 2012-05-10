@@ -453,7 +453,7 @@ font-family: Verdana;</string>
                    <property name="verticalSpacing">
                     <number>0</number>
                    </property>
-                   <item row="20" column="0">
+                   <item row="21" column="0">
                     <widget class="QLabel" name="label_5">
                      <property name="sizePolicy">
                       <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
@@ -466,7 +466,7 @@ font-family: Verdana;</string>
                      </property>
                     </widget>
                    </item>
-                   <item row="22" column="0">
+                   <item row="23" column="0">
                     <widget class="QCommandLinkButton" name="commandLinkButton_7">
                      <property name="sizePolicy">
                       <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
@@ -482,7 +482,7 @@ font-family: Verdana;</string>
                      </property>
                     </widget>
                    </item>
-                   <item row="23" column="0">
+                   <item row="24" column="0">
                     <widget class="QCommandLinkButton" name="commandLinkButton_8">
                      <property name="sizePolicy">
                       <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
@@ -495,28 +495,28 @@ font-family: Verdana;</string>
                      </property>
                     </widget>
                    </item>
-                   <item row="25" column="0">
+                   <item row="26" column="0">
                     <widget class="QLabel" name="label_6">
                      <property name="text">
                       <string>NCL Specifications</string>
                      </property>
                     </widget>
                    </item>
-                   <item row="26" column="0">
+                   <item row="27" column="0">
                     <widget class="QCommandLinkButton" name="commandLinkButton_10">
                      <property name="text">
                       <string>NCL 3.0 Part 8 - NCL Digital TV Profiles</string>
                      </property>
                     </widget>
                    </item>
-                   <item row="27" column="0">
+                   <item row="28" column="0">
                     <widget class="QCommandLinkButton" name="commandLinkButton_11">
                      <property name="text">
                       <string>NCL 3.0 Part 8 - NCL Live Editing Commands</string>
                      </property>
                     </widget>
                    </item>
-                   <item row="28" column="0">
+                   <item row="29" column="0">
                     <widget class="QCommandLinkButton" name="commandLinkButton_31">
                      <property name="sizePolicy">
                       <sizepolicy hsizetype="Maximum" vsizetype="Maximum">
@@ -535,7 +535,7 @@ font-family: Verdana;</string>
                      </property>
                     </widget>
                    </item>
-                   <item row="24" column="0">
+                   <item row="25" column="0">
                     <spacer name="verticalSpacer_2">
                      <property name="orientation">
                       <enum>Qt::Vertical</enum>
@@ -561,14 +561,14 @@ font-family: Verdana;</string>
                      </property>
                     </widget>
                    </item>
-                   <item row="17" column="0">
+                   <item row="18" column="0">
                     <widget class="QCommandLinkButton" name="commandLinkButton_29">
                      <property name="text">
                       <string>Introduction to Digital TV and to Ginga-NCL</string>
                      </property>
                     </widget>
                    </item>
-                   <item row="18" column="0">
+                   <item row="19" column="0">
                     <widget class="QCommandLinkButton" name="commandLinkButton_6">
                      <property name="sizePolicy">
                       <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
@@ -581,7 +581,7 @@ font-family: Verdana;</string>
                      </property>
                     </widget>
                    </item>
-                   <item row="19" column="0">
+                   <item row="20" column="0">
                     <spacer name="verticalSpacer">
                      <property name="orientation">
                       <enum>Qt::Vertical</enum>
@@ -596,6 +596,13 @@ font-family: Verdana;</string>
                       </size>
                      </property>
                     </spacer>
+                   </item>
+                   <item row="17" column="0">
+                    <widget class="QCommandLinkButton" name="commandLinkButton_3">
+                     <property name="text">
+                      <string>Book: Programming in NCL 3.0 (in Portuguese)</string>
+                     </property>
+                    </widget>
                    </item>
                   </layout>
                  </widget>
@@ -696,8 +703,8 @@ font-family: Verdana;</string>
                     <rect>
                      <x>0</x>
                      <y>0</y>
-                     <width>740</width>
-                     <height>233</height>
+                     <width>99</width>
+                     <height>243</height>
                     </rect>
                    </property>
                    <attribute name="label">
@@ -744,8 +751,8 @@ font-family: Verdana;</string>
                     <rect>
                      <x>0</x>
                      <y>0</y>
-                     <width>87</width>
-                     <height>394</height>
+                     <width>83</width>
+                     <height>404</height>
                     </rect>
                    </property>
                    <attribute name="label">
