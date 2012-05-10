@@ -38,7 +38,6 @@ macx {
   ICON =  images/Composer.icns
 
   bases.path = "/Library/Application Support/Composer/Data/"
-  bases.files = data/causalConnBase.ncl
 }
 else:unix {
   isEmpty(PREFIX) {
@@ -66,7 +65,7 @@ else:win32 {
   bases.path = $$INSTALLBASE/data
 }
 
-bases.files = data/causalConnBase.ncl
+bases.files = data/defaultConnBase.ncl
 
 DEFINES += EXT_DEFAULT_PATH=\"\\\"$$PREFIX\\\"\"
 

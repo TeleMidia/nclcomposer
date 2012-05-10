@@ -1388,7 +1388,7 @@ void ComposerMainWindow::launchProjectWizard()
             //copy the defaultConnBase to the project dir
             if(QFile::copy(defaultConnBase, newConnBase))
             {
-              //If everything is OK we import the new causalConnBase to NCL
+              //If everything is OK we import the new defaultConnBase to NCL
               // document.
 
               QMap <QString, QString> connBaseAttrs, importBaseAttrs;

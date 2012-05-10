@@ -94,7 +94,7 @@ void updateSettingsWithDefaults()
     #endif
   }
   settings.setValue("default_conn_base",
-                    defaultConnBaseDir + "causalConnBase.ncl");
+                    defaultConnBaseDir + "defaultConnBase.ncl");
   settings.endGroup();
 /*End Import Bases*/
 }
