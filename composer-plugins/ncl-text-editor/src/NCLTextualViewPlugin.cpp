@@ -104,6 +104,8 @@ void NCLTextualViewPlugin::init()
   }
 
   nclTextEditor->setDocumentUrl(project->getLocation());
+
+  updateErrorMessages();
 }
 
 QWidget* NCLTextualViewPlugin::getWidget()
