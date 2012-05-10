@@ -46,6 +46,11 @@ void QnstGraphicsMedia::setnstId(QString id)
 {
     QnstGraphicsContent::setnstId(id);
 
+    updateToolTip();
+}
+
+void QnstGraphicsMedia::updateToolTip()
+{
     QString tip = "";
     QString name = (getnstId() != "" ? getnstId() : "?");
 
@@ -77,7 +82,7 @@ void QnstGraphicsMedia::setnstId(QString id)
         tip += "Media ("+name+")";
     }
 
-    if (source == ""){
+    if (getSource() == "" && getRefer() == ""){
         tip += " - Alert: Missing 'src' attribute";
     }
 
@@ -195,7 +200,7 @@ void QnstGraphicsMedia::draw(QPainter* painter)
 
     painter->setPen(QPen(QBrush(Qt::black),0));
 
-    if (source == ""){
+    if (getSource() == "" && getRefer() == ""){
         painter->drawPixmap((getWidth()-8)/2 + 12, (getHeight()-8)/2 + 4, 12, 12, QPixmap(":/icon/alert"));
     }
 

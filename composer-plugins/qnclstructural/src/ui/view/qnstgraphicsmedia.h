@@ -43,6 +43,8 @@ public:
 
     void setInstance(QString instance);
 
+    void updateToolTip();
+
 public slots:
     void performArea();
 

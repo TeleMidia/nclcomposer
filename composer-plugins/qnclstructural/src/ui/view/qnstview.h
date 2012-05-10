@@ -172,7 +172,7 @@ private:
 
     void addMedia(const QString uid, const QString parent, const QMap<QString, QString> properties, bool undo = false);
 
-    void changeMedia(QnstGraphicsMedia* entity, const QMap<QString, QString> properties);
+    void changeMedia(QnstGraphicsMedia* entity, QMap<QString, QString> properties);
 
     void adjustMedia(QnstGraphicsMedia* entity);
 
@@ -301,7 +301,6 @@ private:
     void adjustAngle(QnstGraphicsEdge* edge, QnstGraphicsEntity* entitya, QnstGraphicsEntity* entityb);
 
     void collapseCompositions(QDomElement element, QDomElement parent);
-
 
     int ncontext;
 

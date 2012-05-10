@@ -2022,6 +2022,7 @@ QMap<QString, QString> properties)
    entity->setReferUID(properties["referUID"]);
    entity->setInstance(properties["instance"]);
 
+
    if (properties["referUID"] != ""){
        if (entities.contains(properties["referUID"])){
            entity->setSource(((QnstGraphicsMedia*)
@@ -2029,6 +2030,8 @@ QMap<QString, QString> properties)
        }
 
    }
+
+   QString src = entity->getSource();
 
    if (properties["type"].startsWith("image")){
        entity->setnstType(Qnst::Image);
@@ -2070,47 +2073,47 @@ QMap<QString, QString> properties)
 
        entity->setIcon(":/icon/script");
 
-   }else if(properties["src"].endsWith(".png") ||
-            properties["src"].endsWith(".jpg") ||
-            properties["src"].endsWith(".jpeg") ||
-            properties["src"].endsWith(".gif")){
+   }else if(src.endsWith(".png") ||
+            src.endsWith(".jpg") ||
+            src.endsWith(".jpeg") ||
+            src.endsWith(".gif")){
        entity->setnstType(Qnst::Image);
 
        entity->setIcon(":/icon/image");
 
-   }else if(properties["src"].endsWith(".mp4") ||
-            properties["src"].endsWith(".avi") ||
-            properties["src"].endsWith(".mpeg4") ||
-            properties["src"].endsWith(".mpeg") ||
-            properties["src"].endsWith(".mpg") ||
-            properties["src"].endsWith(".mov")){
+   }else if(src.endsWith(".mp4") ||
+            src.endsWith(".avi") ||
+            src.endsWith(".mpeg4") ||
+            src.endsWith(".mpeg") ||
+            src.endsWith(".mpg") ||
+            src.endsWith(".mov")){
        entity->setnstType(Qnst::Video);
 
        entity->setIcon(":/icon/video");
 
-   }else if(properties["src"].endsWith(".mp3") ||
-            properties["src"].endsWith(".wav")){
+   }else if(src.endsWith(".mp3") ||
+            src.endsWith(".wav")){
        entity->setnstType(Qnst::Audio);
 
        entity->setIcon(":/icon/audio");
 
-   }else if(properties["src"].endsWith(".htm") ||
-            properties["src"].endsWith(".html")){
+   }else if(src.endsWith(".htm") ||
+            src.endsWith(".html")){
        entity->setnstType(Qnst::Html);
 
        entity->setIcon(":/icon/html");
 
-   }else if(properties["src"].endsWith(".ncl")){
+   }else if(src.endsWith(".ncl")){
        entity->setnstType(Qnst::NCL);
 
        entity->setIcon(":/icon/ncl");
 
-   }else if(properties["src"].endsWith(".txt")){
+   }else if(src.endsWith(".txt")){
        entity->setnstType(Qnst::Text);
 
        entity->setIcon(":/icon/text");
 
-   }else if(properties["src"].endsWith(".lua")){
+   }else if(src.endsWith(".lua")){
        entity->setnstType(Qnst::Script);
 
        entity->setIcon(":/icon/script");
@@ -4191,6 +4194,7 @@ void QnstView::requestMediaAddition(QnstGraphicsMedia* entity, bool undo)
     properties["refer"] = entity->getRefer();
     properties["instance"] = entity->getInstance();
  //    properties["descriptor"] = "";
+    entity->updateToolTip();
 
 //    properties["top"] = QString::number(entity->getTop());
 //    properties["left"] = QString::number(entity->getLeft());
@@ -4201,7 +4205,7 @@ void QnstView::requestMediaAddition(QnstGraphicsMedia* entity, bool undo)
     QMap <QString, QString> additionalData = entity->getUsrData();
     foreach(QString key, additionalData.keys())
     {
-      if(!properties.contains(key))
+//      if(!properties.contains(key))
         properties.insert(key, additionalData.value(key));
     }
 
@@ -5207,11 +5211,15 @@ void QnstView::performPaste()
 
             parent->addnstGraphicsEntity(entity);
 
+            qDebug() << "[QNST]" << "=====================" << "USERDATA" << copy->getUsrData();
+
+
+            entity->setUsrData(copy->getUsrData());
+
+            qDebug() << "[QNST]" << "=====================" << "USERDATA" << entity->getUsrData();
             requestEntityAddition(entity);
 
-            qDebug() << "[QNST]" << entity->getUsrData();
-            entity->setUsrData(copy->getUsrData());
-            requestEntityChange(entity);
+//            requestEntityChange(entity);
 
             foreach(QnstGraphicsEntity* e, copy->getnstGraphicsEntities()){
                 performPaste(e, entity);
@@ -5243,8 +5251,6 @@ void QnstView::performPaste(QnstGraphicsEntity* copy, QnstGraphicsEntity* parent
 
         parent->addnstGraphicsEntity(entity);
 
-        requestEntityAddition(entity);
-
         break;
 
     // if the entity type is AUDIO
@@ -5261,7 +5267,7 @@ void QnstView::performPaste(QnstGraphicsEntity* copy, QnstGraphicsEntity* parent
 
         parent->addnstGraphicsEntity(entity);
 
-        requestEntityAddition(entity);
+
 
         break;
 
@@ -5279,7 +5285,7 @@ void QnstView::performPaste(QnstGraphicsEntity* copy, QnstGraphicsEntity* parent
 
         parent->addnstGraphicsEntity(entity);
 
-        requestEntityAddition(entity);
+
 
         break;
 
@@ -5297,7 +5303,7 @@ void QnstView::performPaste(QnstGraphicsEntity* copy, QnstGraphicsEntity* parent
 
         parent->addnstGraphicsEntity(entity);
 
-        requestEntityAddition(entity);
+
 
         break;
 
@@ -5315,7 +5321,7 @@ void QnstView::performPaste(QnstGraphicsEntity* copy, QnstGraphicsEntity* parent
 
         parent->addnstGraphicsEntity(entity);
 
-        requestEntityAddition(entity);
+
 
         break;
 
@@ -5333,7 +5339,7 @@ void QnstView::performPaste(QnstGraphicsEntity* copy, QnstGraphicsEntity* parent
 
         parent->addnstGraphicsEntity(entity);
 
-        requestEntityAddition(entity);
+
 
         break;
 
@@ -5351,7 +5357,7 @@ void QnstView::performPaste(QnstGraphicsEntity* copy, QnstGraphicsEntity* parent
 
         parent->addnstGraphicsEntity(entity);
 
-        requestEntityAddition(entity);
+
 
         break;
 
@@ -5369,7 +5375,7 @@ void QnstView::performPaste(QnstGraphicsEntity* copy, QnstGraphicsEntity* parent
 
         parent->addnstGraphicsEntity(entity);
 
-        requestEntityAddition(entity);
+
 
         break;
 
@@ -5387,7 +5393,7 @@ void QnstView::performPaste(QnstGraphicsEntity* copy, QnstGraphicsEntity* parent
 
         parent->addnstGraphicsEntity(entity);
 
-        requestEntityAddition(entity);
+
 
         break;
 
@@ -5405,7 +5411,7 @@ void QnstView::performPaste(QnstGraphicsEntity* copy, QnstGraphicsEntity* parent
 
         parent->addnstGraphicsEntity(entity);
 
-        requestEntityAddition(entity);
+
 
         break;
 
@@ -5423,7 +5429,7 @@ void QnstView::performPaste(QnstGraphicsEntity* copy, QnstGraphicsEntity* parent
 
         parent->addnstGraphicsEntity(entity);
 
-        requestEntityAddition(entity);
+
 
         break;
 
@@ -5442,7 +5448,7 @@ void QnstView::performPaste(QnstGraphicsEntity* copy, QnstGraphicsEntity* parent
 
         parent->addnstGraphicsEntity(entity);
 
-        requestEntityAddition(entity);
+
 
         break;
 
@@ -5461,7 +5467,7 @@ void QnstView::performPaste(QnstGraphicsEntity* copy, QnstGraphicsEntity* parent
 
         parent->addnstGraphicsEntity(entity);
 
-        requestEntityAddition(entity);
+
 
         break;
 
@@ -5470,9 +5476,12 @@ void QnstView::performPaste(QnstGraphicsEntity* copy, QnstGraphicsEntity* parent
       break;
     }
 
+
     entity->setUsrData(copy->getUsrData());
-    qDebug() << "[QNST]" << entity->getUsrData();
-    requestEntityChange(entity);
+    requestEntityAddition(entity);
+
+//    qDebug() << "[QNST]" << entity->getUsrData();
+//    requestEntityChange(entity);
 
 
     foreach(QnstGraphicsEntity* e, copy->getnstGraphicsEntities()){

@@ -1330,6 +1330,18 @@ void QnstComposerPlugin::requestEntityAddition(const QString uid, const QString 
     else if (properties["TYPE"] == "bindParam"){
         requestBindParamAddition(uid, parent, properties);
     }
+
+//    QString coreID = entities.key(uid);
+//    QnstEntity *qnstEntity = view->entities.value(uid);
+
+//    qDebug() << "[QNST] qnstEntity = " << qnstEntity;
+//    if(qnstEntity != NULL)
+//    {
+//        qDebug() << "[QNST] USERDATA = " << qnstEntity->getUsrData();
+
+//      emit setAttributes(project->getEntityById(coreID),
+//                         qnstEntity->getUsrData(), false);
+//    }
 }
 
 void QnstComposerPlugin::requestEntityRemotion(const QString uid)
