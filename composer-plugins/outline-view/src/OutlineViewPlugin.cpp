@@ -113,6 +113,10 @@ void OutlineViewPlugin::onEntityAdded(QString pluginID, Entity *entity)
         emit setAttributes(entity, attrs, false);
       }
     }
+
+    // \todo This must be incremental
+    clearErrorMessages();
+//    emit sendBroadcastMessage("askAllValidationMessages", NULL);
 }
 
 void OutlineViewPlugin::errorMessage(QString error)
@@ -137,6 +141,9 @@ void OutlineViewPlugin::onEntityChanged(QString pluginID, Entity * entity)
     window->updateItem(idToItem[entity->getUniqueId()], entity->getType(),
                        attrs);
 
+    // \todo This must be incremental
+    clearErrorMessages();
+//    emit sendBroadcastMessage("askAllValidationMessages", NULL);
 }
 
 void OutlineViewPlugin::onEntityRemoved(QString pluginID, QString entityID)
@@ -294,6 +301,15 @@ void OutlineViewPlugin::textualStartSync(QString, void*)
 void OutlineViewPlugin::textualFinishSync(QString, void*)
 {
   window->expandAll();
+}
+
+void OutlineViewPlugin::clearErrorMessages()
+{
+  foreach (QTreeWidgetItem *item, idToItem.values())
+  {
+    item->setTextColor(0, Qt::black);
+    item->setToolTip(0, "");
+  }
 }
 
 void OutlineViewPlugin::validationError(QString pluginID, void * param)

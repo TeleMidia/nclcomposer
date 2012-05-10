@@ -140,6 +140,11 @@ public slots:
      */
     void validationError(QString pluginID, void * param);
 
+    /*!
+     * \brief
+     */
+    void clearErrorMessages();
+
 private slots:
     /*!
      * \brief
