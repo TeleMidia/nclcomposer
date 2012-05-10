@@ -35,18 +35,22 @@ NCLTreeWidget::NCLTreeWidget(QWidget *parent) : QTreeWidget(parent)
 
   QStringList labels;
   labels  << QObject::tr("Element") << QObject::tr("Attributes")
-          << QObject::tr("Element Id") << QObject::tr("Tagname");
+          << QObject::tr("Element UId") << QObject::tr("Element Id")
+          << QObject::tr("Tagname");
   setHeaderLabels(labels);
 
   setHeaderHidden(true);
   setColumnHidden(1, true);
   setColumnHidden(2, true);
   setColumnHidden(3, true);
+  setColumnHidden(4, true);
 
   isExpandedAll = true;
 
   /* \todo This defaultFontSize must be configurable. */
   defaultFont = QFont();
+
+  setDragEnabled(true);
 }
 
 NCLTreeWidget::~NCLTreeWidget()
@@ -156,7 +160,8 @@ QTreeWidgetItem* NCLTreeWidget::addElement ( QTreeWidgetItem *father,
 
   updateItem(child, tagname, attrs);
   child->setText(2, id);
-  child->setText(3, tagname);
+  // child->setText(3, name) // this is done inside update item
+  child->setText(4, tagname);
   // child->setText(2, QString::number(line_in_text));
   // child->setText(3, QString::number(column_in_text));
 
@@ -178,7 +183,7 @@ void NCLTreeWidget::userAddNewElement()
   {
     item = selecteds.at(0);
     parentId = item->text(2);
-    tagname = item->text(3);
+    tagname = item->text(4);
 
     map <QString, char> *
         children = NCLStructure::getInstance()->getChildren(tagname);
@@ -414,11 +419,12 @@ void NCLTreeWidget::updateItem(QTreeWidgetItem *item, QString tagname,
   }
 
   item->setIcon(0, icon);
-  item->setText(3, tagname);
+  item->setText(4, tagname);
 
   if(name != "")
   {
     item->setText(0, tagname + " (" + name + ")");
+    item->setText(3, name);
   }
   else
     item->setText(0, tagname);
@@ -531,4 +537,26 @@ void NCLTreeWidget::zoomOut()
 void NCLTreeWidget::resetZoom()
 {
   resetFont();
+}
+
+void NCLTreeWidget::mouseMoveEvent(QMouseEvent *event)
+{
+  QTreeWidgetItem *selectedItem = currentItem();
+
+  // if not left button - return
+  if (!(event->buttons() & Qt::LeftButton)) return;
+
+  // If the selected Item exists
+  if (selectedItem)
+  {
+    QDrag *drag = new QDrag(this);
+    QMimeData *mimeData = new QMimeData;
+    mimeData->setColorData(Qt::green);
+    mimeData->setData("nclcomposer/mediaid", currentItem()->text(3).toAscii());
+    mimeData->setData("nclcomposer/qnstuid", currentItem()->text(2).toAscii());
+
+    drag->setMimeData(mimeData);
+    // start drag
+    drag->start(Qt::CopyAction | Qt::MoveAction);
+  }
 }

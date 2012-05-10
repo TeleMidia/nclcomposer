@@ -94,6 +94,10 @@ public:
    * \brief Sets the default font of the TreeWidget.
    */
   void setDefaultFont(const QFont &defaultFont);
+  /*!
+   * Reimplementation of mouseMoveEvent.
+   */
+  void mouseMoveEvent(QMouseEvent *event);
 
 public slots:
   /**

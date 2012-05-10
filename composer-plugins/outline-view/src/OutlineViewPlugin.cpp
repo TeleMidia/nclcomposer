@@ -163,6 +163,8 @@ void OutlineViewPlugin::onEntityRemoved(QString pluginID, QString entityID)
             selectedId = NULL;
         }
     }
+
+    clearErrorMessages();
 }
 
 void OutlineViewPlugin::elementRemovedByUser(QString itemId)
