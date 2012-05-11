@@ -52,7 +52,7 @@ vector<pair<void *, string> >Validator::validate(Model &model, string messagesLa
     vIds = affecteds.begin();
 
     //qDebug () << "Begin affecteds";
-    for (ModelElement *el = NULL; vIds != affecteds.end(); ++vIds) {
+    for (ModelElement *el = NULL ; vIds != affecteds.end(); ++vIds) {
         el = model.element(*vIds);
 
         if (el)

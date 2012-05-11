@@ -235,16 +235,6 @@ bool Model::removeElement(virtualId &id){
         ModelElement * element = this->element(id);
         ModelElement * parent = this->element(element->parent());
 
-//        if (element->elementName() == "importBase" || element->elementName() == "importNCL"){
-//            string alias = element->attribute("alias").value();
-//            for (int i = 0; i < _importedDocuments.size(); i++)
-//                if (_importedDocuments[i].first == alias){
-//                    _importedDocuments.erase(_importedDocuments.begin() + i);
-//                    break;
-//                }
-
-//        }
-
         if (parent){
             parent->removeChild(id);
 
@@ -263,6 +253,7 @@ bool Model::removeElement(virtualId &id){
                 _markedElements.insert(parent->id());
 
 
+            _markedElements.insert(parent->id());
         }
 
         for (int i = 0; i < element->references().size(); i++)
