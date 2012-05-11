@@ -8064,28 +8064,33 @@ void QnstView::keyPressEvent(QKeyEvent *event)
     if (event->modifiers() == Qt::ControlModifier && event->key() == Qt::Key_X){
         performCut();
 
+        event->accept();
     // CTRL+C - Copy
     }else if (event->modifiers() == Qt::ControlModifier && event->key() == Qt::Key_C){
         performCopy();
 
+        event->accept();
     // CTRL+V - Paste
     }
     else if (event->modifiers() == Qt::ControlModifier && event->key() == Qt::Key_V)
     {
         performPaste();
 
+        event->accept();
     // DELETE - Delete
     }
     else if (event->key() == Qt::Key_Delete)
     {
         performDelete();
 
+        event->accept();
     // BACKSPACE - Delete
     }
     else if (event->key() == Qt::Key_Backspace)
     {
         performDelete();
 
+        event->accept();
     // SHIFT - Enabling liking
     } else if (event->key() == Qt::Key_Shift)
     {
@@ -8095,6 +8100,8 @@ void QnstView::keyPressEvent(QKeyEvent *event)
       }
       selected = NULL;
       modified = true;
+
+      event->accept();
     }
     else if(event->key() == Qt::Key_Control)
     {
@@ -8104,6 +8111,8 @@ void QnstView::keyPressEvent(QKeyEvent *event)
       {
         entity->setDraggable(true);
       }
+
+      event->accept();
     }
     //Ctrl + 0 -> reset to default zoom
     else if( event->modifiers() == Qt::ControlModifier &&
@@ -8117,12 +8126,16 @@ void QnstView::keyPressEvent(QKeyEvent *event)
              event->key() == Qt::Key_Plus)
     {
       performZoomIn();
+
+      event->accept();
     }
     //Ctrl + - -> perform zoom out
     else if(event->modifiers() == Qt::ControlModifier &&
             event->key() == Qt::Key_Minus)
     {
       performZoomOut();
+
+      event->accept();
     }
     //Ctrl + Z
     else if(event->modifiers() == Qt::ControlModifier &&
@@ -8130,13 +8143,18 @@ void QnstView::keyPressEvent(QKeyEvent *event)
     {
         performUndo();
 
+        event->accept();
+
     //Ctrl + Y
     }else if(event->modifiers() == Qt::ControlModifier &&
                                     event->key() == Qt::Key_Y){
         performRedo();
+
+        event->accept();
     }
 
-    QGraphicsView::keyPressEvent(event);
+    if(!event->isAccepted())
+      QGraphicsView::keyPressEvent(event);
 }
 
 void QnstView::keyReleaseEvent(QKeyEvent *event)

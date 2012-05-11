@@ -1418,11 +1418,11 @@ void QnlyGraphicsRegion::mouseReleaseEvent(QGraphicsSceneMouseEvent* event)
 
 void QnlyGraphicsRegion::keyPressEvent( QKeyEvent * event )
 {
-    QGraphicsItem::keyPressEvent(event);
+    //if (!event->isAccepted()){
+    //  event->accept();
+    //}
 
-    if (!event->isAccepted()){
-        event->accept();
-    }
+    QGraphicsItem::keyPressEvent(event);
 }
 
 void QnlyGraphicsRegion::keyReleaseEvent( QKeyEvent * event )
