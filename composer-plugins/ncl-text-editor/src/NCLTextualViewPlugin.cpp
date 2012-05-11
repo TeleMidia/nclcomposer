@@ -895,13 +895,13 @@ void NCLTextualViewPlugin::fixIdentation(int offset, bool mustAddTab)
                        insertAtLine-1);
 
   if(insertAtLine > 1 && mustAddTab)
-    lineIndent += 8;
+    lineIndent += nclTextEditor->tabWidth();
 
   nclTextEditor->SendScintilla( QsciScintilla::SCI_SETLINEINDENTATION,
                                 insertAtLine,
                                 lineIndent);
 
-  updateEntitiesOffset(offset-1, lineIndent/8);
+  updateEntitiesOffset(offset-1, lineIndent/nclTextEditor->tabWidth());
 }
 
 void NCLTextualViewPlugin::updateEntitiesOffset( int startFrom,
