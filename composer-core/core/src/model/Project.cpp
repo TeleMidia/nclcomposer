@@ -213,10 +213,10 @@ bool Project::isDirty()
 
 void Project::setDirty(bool isDirty)
 {
-    if(dirty != isDirty) {
+//    if(dirty != isDirty) {
         dirty = isDirty;
         emit dirtyProject(isDirty);
-    }
+//    }
 }
 
 QString Project::generateUniqueNCLId(const QString &tagname)

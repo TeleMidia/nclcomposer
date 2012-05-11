@@ -103,24 +103,23 @@ bool ProjectControl::launchProject(QString location)
 
     ProjectReader pr;
     Project *project = pr.readFile(location);
-    project->setAtrributes(atts);
 
     if(project != NULL)
     {
-        // The project was readed without a problem.
-        project->setLocation(location);
-        project->setProjectType(type);
+      project->setAtrributes(atts);
+      // The project was readed without a problem.
+      project->setLocation(location);
+      project->setProjectType(type);
 
-        PluginControl::getInstance()->launchProject(project);
-        openProjects[location] = project;
-
-        connect ( project, SIGNAL(dirtyProject(bool)),
-                  this, SLOT(projectIsDirty(bool)));
+      PluginControl::getInstance()->launchProject(project);
+      openProjects[location] = project;
+      connect ( project, SIGNAL(dirtyProject(bool)),
+                this, SLOT(projectIsDirty(bool)));
     }
     else
         qDebug() << tr("Project could not be open!");
 
-    project->setDirty(false);
+
 
     emit endOpenProject(location);
 
@@ -162,7 +161,7 @@ void ProjectControl::importFromDocument( QString docLocation,
 
     QMap<QString,QString> atts;
     QString projectId = projLocation;
-    projectId.remove(0, projLocation.lastIndexOf(QDir::separator())+1);
+    projectId.remove(0, projLocation.lastIndexOf("/")+1);
     atts["id"] = projectId;
 
     ProjectReader pr;
@@ -197,8 +196,12 @@ void ProjectControl::importFromDocument( QString docLocation,
     else
         qDebug() << tr("Project could not be open!");
 
-    project->setDirty(false);
     emit endOpenProject(projLocation);
+
+    project->setDirty(false);
+
+/*    PluginControl::getInstance()->getMessageControl(project)
+        ->setCurrentProjectAsDirty(); */
 }
 
 void ProjectControl::saveProject(QString location)
