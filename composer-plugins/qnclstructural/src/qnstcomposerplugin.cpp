@@ -474,7 +474,7 @@ void QnstComposerPlugin::requestEntityChange(Entity* entity)
 
 void QnstComposerPlugin::requestEntitySelection(Entity* entity)
 {
-    if (entities.contains(entity->getUniqueId())){
+    if (entities.contains(entity->getUniqueId()) && lastSelected != entity->getUniqueId()){
         if (entity->getType() == "body" ||
             entity->getType() == "context" ||
             entity->getType() == "media" ||
@@ -1387,6 +1387,8 @@ void QnstComposerPlugin::requestEntityChange(const QString uid, const QMap<QStri
 void QnstComposerPlugin::requestEntitySelection(const QString uid)
 {
     if (entities.key(uid, "nil") != "nil"){
+        lastSelected = entities.key(uid);
+
         emit sendBroadcastMessage("changeSelectedEntity", new QString(entities.key(uid)));
     }
 }

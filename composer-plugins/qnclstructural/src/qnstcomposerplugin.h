@@ -215,6 +215,8 @@ private:
     QList <QString> dirtyEntities;
     QList <QString> previousCoreID;
 
+    QString lastSelected;
+
 /* Functions to handle the "sinchronization with core" */
     bool isSyncingFromTextual;
     void cacheNCLIds();
