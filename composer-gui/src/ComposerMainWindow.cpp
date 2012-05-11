@@ -326,8 +326,8 @@ void ComposerMainWindow::initGUI()
 #endif
 
 // UNDO/REDO
-//  connect(ui->actionUndo, SIGNAL(triggered()), this, SLOT(undo()));
-//  connect(ui->actionRedo, SIGNAL(triggered()), this, SLOT(redo()));
+  // connect(ui->action_Undo, SIGNAL(triggered()), this, SLOT(undo()));
+  // connect(ui->action_Redo, SIGNAL(triggered()), this, SLOT(redo()));
 
   welcomeWidget = new WelcomeWidget(this);
   tabProjects->addTab(welcomeWidget, tr("Welcome"));
@@ -384,6 +384,21 @@ void ComposerMainWindow::initGUI()
 // taskProgressBarAction->setVisible(false);
 #endif
 
+}
+
+void ComposerMainWindow::keyPressEvent(QKeyEvent *event)
+{
+  if(event->modifiers() == Qt::ControlModifier && event->key() == Qt::Key_Z)
+  {
+    undo();
+    event->accept();
+  }
+  else if(event->modifiers() == Qt::ControlModifier &&
+          event->key() == Qt::Key_Y)
+  {
+    redo();
+    event->accept();
+  }
 }
 
 void ComposerMainWindow::addPluginWidget(IPluginFactory *fac, IPlugin *plugin,
@@ -1447,6 +1462,9 @@ void ComposerMainWindow::openProject()
                                            tr("NCL Composer Projects (*.cpr)"));
   if(filename != "")
   {
+#ifdef WIN32
+    filename = filename.replace("\\", "/");
+#endif
     ProjectControl::getInstance()->launchProject(filename);
 
     updateLastFileDialogPath(filename);

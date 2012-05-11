@@ -239,6 +239,8 @@ protected:
    */
   void changeEvent(QEvent*);
 
+  virtual void keyPressEvent(QKeyEvent *event);
+
 protected slots:
   /*!
    * \brief This slot is called by the language menu actions
