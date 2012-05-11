@@ -159,7 +159,7 @@ void QnstView::read(QDomElement element, QDomElement parent)
         properties["referUID"] = element.attribute("referUID");
         properties["instance"] = element.attribute("instance");
 
-        addMedia(uid, parent.attribute("uid"), properties, true);
+        addMedia(uid, parent.attribute("uid"), properties, true, false);
 
     }else if (element.nodeName() == "context"){
         QString uid = element.attribute("uid");
@@ -223,7 +223,7 @@ void QnstView::read(QDomElement element, QDomElement parent)
         properties["width"] = element.attribute("width");
         properties["height"] = element.attribute("height");
 
-        addArea(uid, parent.attribute("uid"), properties, true);
+        addArea(uid, parent.attribute("uid"), properties, true, false);
 
     }else if (element.nodeName() == "property"){
         QString uid = element.attribute("uid");
@@ -237,7 +237,7 @@ void QnstView::read(QDomElement element, QDomElement parent)
         properties["width"] = element.attribute("width");
         properties["height"] = element.attribute("height");
 
-        addProperty(uid, parent.attribute("uid"), properties, true);
+        addProperty(uid, parent.attribute("uid"), properties, true, false);
 
     }else if (element.nodeName() == "port"){
         QString uid = element.attribute("uid");
@@ -2062,7 +2062,7 @@ void QnstView::changeSwitch(QnstGraphicsSwitch* entity, const QMap<QString, QStr
 //    }
 }
 
-void QnstView::addMedia(const QString uid, const QString parent, const QMap<QString, QString> properties, bool undo)
+void QnstView::addMedia(const QString uid, const QString parent, const QMap<QString, QString> properties, bool undo, bool adjust)
 {
     if (entities.contains(parent)){
         QnstGraphicsMedia* entity;
@@ -2139,7 +2139,9 @@ void QnstView::addMedia(const QString uid, const QString parent, const QMap<QStr
         entities[uid] = entity;
         entity->adjust();
 
-        adjustMedia(entity);
+        if (adjust){
+            adjustMedia(entity);
+        }
 
         entity->updateToolTip();
 
@@ -2862,7 +2864,7 @@ void QnstView::changeSwitchPort(QnstGraphicsSwitchPort* entity, const QMap<QStri
     entity->adjust();
 }
 
-void QnstView::addArea(const QString uid, const QString parent, const QMap<QString, QString> properties, bool undo)
+void QnstView::addArea(const QString uid, const QString parent, const QMap<QString, QString> properties, bool undo, bool adjust)
 {
     if (entities.contains(parent)){
         QnstGraphicsArea* entity = new QnstGraphicsArea(entities[parent]);
@@ -2896,21 +2898,25 @@ void QnstView::addArea(const QString uid, const QString parent, const QMap<QStri
 
         entity->adjust();
 
-        adjustMedia((QnstGraphicsMedia*) entities[parent]);
+        if (adjust){
+            qDebug() << "================================ Adjust from ADD AREA";
 
-        foreach (QString key, refers.keys(entity->getnstGraphicsParent()->getnstUid())){
-            if (entities.contains(key)){
-                if (entities[key]->getnstType() == Qnst::Video ||
-                    entities[key]->getnstType() == Qnst::Image ||
-                    entities[key]->getnstType() == Qnst::Text ||
-                    entities[key]->getnstType() == Qnst::Audio ||
-                    entities[key]->getnstType() == Qnst::Html ||
-                    entities[key]->getnstType() == Qnst::NCL ||
-                    entities[key]->getnstType() == Qnst::Script ||
-                    entities[key]->getnstType() == Qnst::Settings ||
-                    entities[key]->getnstType() == Qnst::Media){
+            adjustMedia((QnstGraphicsMedia*) entities[parent]);
 
-                    adjustMedia((QnstGraphicsMedia*) entities[key]);
+            foreach (QString key, refers.keys(entity->getnstGraphicsParent()->getnstUid())){
+                if (entities.contains(key)){
+                    if (entities[key]->getnstType() == Qnst::Video ||
+                        entities[key]->getnstType() == Qnst::Image ||
+                        entities[key]->getnstType() == Qnst::Text ||
+                        entities[key]->getnstType() == Qnst::Audio ||
+                        entities[key]->getnstType() == Qnst::Html ||
+                        entities[key]->getnstType() == Qnst::NCL ||
+                        entities[key]->getnstType() == Qnst::Script ||
+                        entities[key]->getnstType() == Qnst::Settings ||
+                        entities[key]->getnstType() == Qnst::Media){
+
+                        adjustMedia((QnstGraphicsMedia*) entities[key]);
+                    }
                 }
             }
         }
@@ -2947,7 +2953,7 @@ void QnstView::changeArea(QnstGraphicsArea* entity, const QMap<QString, QString>
     }
 }
 
-void QnstView::addProperty(const QString uid, const QString parent, const QMap<QString, QString> properties, bool undo)
+void QnstView::addProperty(const QString uid, const QString parent, const QMap<QString, QString> properties, bool undo, bool adjust)
 {
     if (entities.contains(parent)){
         QnstGraphicsProperty* entity = new QnstGraphicsProperty(entities[parent]);
@@ -2981,21 +2987,25 @@ void QnstView::addProperty(const QString uid, const QString parent, const QMap<Q
 
         entity->adjust();
 
-        adjustMedia((QnstGraphicsMedia*) entities[parent]);
+        if (adjust){
+            qDebug() << "================================ Adjust from ADD PROPERTY";
 
-        foreach (QString key, refers.keys(entity->getnstGraphicsParent()->getnstUid())){
-            if (entities.contains(key)){
-                if (entities[key]->getnstType() == Qnst::Video ||
-                    entities[key]->getnstType() == Qnst::Image ||
-                    entities[key]->getnstType() == Qnst::Text ||
-                    entities[key]->getnstType() == Qnst::Audio ||
-                    entities[key]->getnstType() == Qnst::Html ||
-                    entities[key]->getnstType() == Qnst::NCL ||
-                    entities[key]->getnstType() == Qnst::Script ||
-                    entities[key]->getnstType() == Qnst::Settings ||
-                    entities[key]->getnstType() == Qnst::Media){
+            adjustMedia((QnstGraphicsMedia*) entities[parent]);
 
-                    adjustMedia((QnstGraphicsMedia*) entities[key]);
+            foreach (QString key, refers.keys(entity->getnstGraphicsParent()->getnstUid())){
+                if (entities.contains(key)){
+                    if (entities[key]->getnstType() == Qnst::Video ||
+                        entities[key]->getnstType() == Qnst::Image ||
+                        entities[key]->getnstType() == Qnst::Text ||
+                        entities[key]->getnstType() == Qnst::Audio ||
+                        entities[key]->getnstType() == Qnst::Html ||
+                        entities[key]->getnstType() == Qnst::NCL ||
+                        entities[key]->getnstType() == Qnst::Script ||
+                        entities[key]->getnstType() == Qnst::Settings ||
+                        entities[key]->getnstType() == Qnst::Media){
+
+                        adjustMedia((QnstGraphicsMedia*) entities[key]);
+                    }
                 }
             }
         }
@@ -4121,7 +4131,15 @@ void QnstView::requestEntitySelection(QnstGraphicsEntity* entity)
 
             selected = entity;
 
-            emit entitySelected(entity->getnstUid());
+//            if (interfaceRefers.contains(entity->getnstUid())){
+//                emit entitySelected(interfaceRefers[entity->getnstUid()]);
+
+//            }else if (refers.contains(entity->getnstUid())){
+//                emit entitySelected(refers[entity->getnstUid()]);
+
+//            }else{
+                emit entitySelected(entity->getnstUid());
+//            }
         }
     }
 }

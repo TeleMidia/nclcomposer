@@ -172,7 +172,7 @@ private:
 
     void changeSwitch(QnstGraphicsSwitch* entity, const QMap<QString, QString> properties);
 
-    void addMedia(const QString uid, const QString parent, const QMap<QString, QString> properties, bool undo = false);
+    void addMedia(const QString uid, const QString parent, const QMap<QString, QString> properties, bool undo = false, bool adjust = true);
 
     void changeMedia(QnstGraphicsMedia* entity, QMap<QString, QString> properties);
 
@@ -194,11 +194,11 @@ private:
 
     void changeSwitchPort(QnstGraphicsSwitchPort* entity, const QMap<QString, QString> properties);
 
-    void addArea(const QString uid, const QString parent, const QMap<QString, QString> properties, bool undo = false);
+    void addArea(const QString uid, const QString parent, const QMap<QString, QString> properties, bool undo = false, bool adjust = true);
 
     void changeArea(QnstGraphicsArea* entity, const QMap<QString, QString> properties);
 
-    void addProperty(const QString uid, const QString parent, const QMap<QString, QString> properties, bool undo = false);
+    void addProperty(const QString uid, const QString parent, const QMap<QString, QString> properties, bool undo = false, bool adjust = true);
 
     void changeProperty(QnstGraphicsProperty* entity, const QMap<QString, QString> properties);
 
