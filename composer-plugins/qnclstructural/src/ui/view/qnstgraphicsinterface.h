@@ -17,7 +17,7 @@ public:
 
     void removenstGraphicsEdge(QnstGraphicsEdge* edge);
 
-    virtual void adjust(bool avoidCollision = false);
+    virtual void adjust(bool avoidCollision = true);
 
     void setnstId(QString id);
 
@@ -31,6 +31,8 @@ protected:
     virtual void resize(QGraphicsSceneMouseEvent* event);
 
 private:
+    void adjustToBorder();
+
     QVector<QnstGraphicsEdge*> links;
 };
 

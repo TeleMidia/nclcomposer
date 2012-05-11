@@ -66,6 +66,87 @@ void QnstGraphicsInterface::adjust(bool avoidCollision)
 {
     QnstGraphicsEntity* parent = getnstGraphicsParent();
 
+    if (parent != NULL) {
+        adjustToBorder();
+
+        if (avoidCollision){
+          qDebug() << "=================" << "AVOIDING INTERFACE COLLISION";
+
+          int colliding;
+          int maxInter = 10, inter = 0;
+          do
+          {
+            if(inter > maxInter) break;
+            inter++;
+
+            colliding = false;
+            foreach(QnstGraphicsEntity *entity, getnstGraphicsParent()->getnstGraphicsEntities())
+            {
+              if(this != entity && entity->getncgType() == Qncg::Interface)
+              {
+                qreal n = 0;
+                qreal i = 0.0;
+
+                entity->setSelectable(false); update();
+                // check collision
+                while(collidesWithItem(entity, Qt::IntersectsItemBoundingRect))
+                {
+
+                  QPointF pa(getLeft()+getWidth()/2, getTop()+getHeight()/2);
+                  QPointF pb(entity->getWidth()/2, entity->getHeight()/2);
+
+                  QLineF line(pa, pb);
+
+                  line.setAngle(qrand()%360);
+
+                  i += (double)(qrand()%100)/10000.0;
+
+                  setTop(getTop()+line.pointAt(i/2).y()-pa.y());
+                  setLeft(getLeft()+line.pointAt(i/2).x()-pa.x());
+
+                  if (++n > 1000){
+                      n = -1; break;
+                  }
+                }
+
+                adjustToBorder();
+
+                entity->setSelectable(true); update();
+              }
+            }
+
+            foreach(QnstGraphicsEntity *entity, getnstGraphicsParent()->getnstGraphicsEntities())
+            {
+              if(collidesWithItem(entity, Qt::IntersectsItemBoundingRect))
+              {
+                colliding = true;
+              }
+            }
+          }
+          while(colliding);
+        }
+    }
+
+    foreach(QnstGraphicsEntity* edges, getnstGraphicsEdges()){
+        if (edges->getnstType() == Qnst::Reference ||
+            edges->getnstType() == Qnst::Link ||
+            edges->getnstType() == Qnst::Mapping ||
+            edges->getnstType() == Qnst::Action ||
+            edges->getnstType() == Qnst::Condition){
+            edges->adjust();
+        }
+    }
+
+    // redrawing
+    if (scene() != NULL){
+        scene()->update();
+    }
+}
+
+void QnstGraphicsInterface::adjustToBorder()
+{
+    QnstGraphicsEntity* parent = getnstGraphicsParent();
+
     if (parent != NULL){
         // setting
         QPointF pointa(parent->getWidth()/2, parent->getHeight()/2);
@@ -111,21 +192,6 @@ void QnstGraphicsInterface::adjust(bool avoidCollision)
             setTop(pointn.y() - getHeight()/2);
             setLeft(pointn.x() - getWidth()/2);
         }
-    }
-
-    foreach(QnstGraphicsEntity* edges, getnstGraphicsEdges()){
-        if (edges->getnstType() == Qnst::Reference ||
-            edges->getnstType() == Qnst::Link ||
-            edges->getnstType() == Qnst::Mapping ||
-            edges->getnstType() == Qnst::Action ||
-            edges->getnstType() == Qnst::Condition){
-            edges->adjust();
-        }
-    }
-
-    // redrawing
-    if (scene() != NULL){
-        scene()->update();
     }
 }
 
