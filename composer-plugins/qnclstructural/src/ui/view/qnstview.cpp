@@ -155,6 +155,10 @@ void QnstView::read(QDomElement element, QDomElement parent)
         properties["width"] = element.attribute("width");
         properties["height"] = element.attribute("height");
 
+        properties["refer"] = element.attribute("refer");
+        properties["referUID"] = element.attribute("referUID");
+        properties["instance"] = element.attribute("instance");
+
         addMedia(uid, parent.attribute("uid"), properties, true);
 
     }else if (element.nodeName() == "context"){
@@ -263,10 +267,14 @@ void QnstView::read(QDomElement element, QDomElement parent)
 
         addSwitchPort(uid, parent.attribute("uid"), properties, true);
 
+    }else if (element.nodeName() == "interfaceReference"){
+        interfaceRefers[element.attribute("interfaceReferUID")] = element.attribute("interfaceOriginUID");
+
+    }else if (element.nodeName() == "nodeReference"){
+        refers[element.attribute("nodeReferUID")] = element.attribute("nodeOriginUID");
+
     }else if (element.nodeName() == "importBase"){
         importBases[element.attribute("uid")] = element.attribute("connUID");
-
-        qDebug() << "============================" << element.attribute("uid") << "-" << element.attribute("connUID");
 
     }else if (element.nodeName() == "connector"){
         QnstConncetor* conn = new QnstConncetor();
@@ -698,6 +706,26 @@ QString QnstView::serialize()
         root.appendChild(e);
     }
 
+    foreach(QString key, interfaceRefers.keys()){
+        QDomElement e = dom->createElement("interfaceReference");
+
+        e.setAttribute("interfaceReferUID", key);
+
+        e.setAttribute("interfaceOriginUID", interfaceRefers[key]);
+
+        root.appendChild(e);
+    }
+
+    foreach(QString key, refers.keys()){
+        QDomElement e = dom->createElement("nodeReference");
+
+        e.setAttribute("nodeReferUID", key);
+
+        e.setAttribute("nodeOriginUID", refers[key]);
+
+        root.appendChild(e);
+    }
+
     foreach(QnstLink* link, links.values()){
         QDomElement e = dom->createElement("linkdata");
 
@@ -789,6 +817,10 @@ void QnstView::write(QDomElement element, QDomDocument* dom, QnstGraphicsEntity*
             e.setAttribute("src", ((QnstGraphicsMedia*) entity)->getSource());
         }
 
+        e.setAttribute("refer", ((QnstGraphicsMedia*) entity)->getRefer());
+        e.setAttribute("referUID", ((QnstGraphicsMedia*) entity)->getReferUID());
+        e.setAttribute("instance", ((QnstGraphicsMedia*) entity)->getInstance());
+
         break;
 
     case Qnst::Image:
@@ -799,6 +831,10 @@ void QnstView::write(QDomElement element, QDomDocument* dom, QnstGraphicsEntity*
         if (((QnstGraphicsMedia*) entity)->getSource() != "" ){
             e.setAttribute("src", ((QnstGraphicsMedia*) entity)->getSource());
         }
+
+        e.setAttribute("refer", ((QnstGraphicsMedia*) entity)->getRefer());
+        e.setAttribute("referUID", ((QnstGraphicsMedia*) entity)->getReferUID());
+        e.setAttribute("instance", ((QnstGraphicsMedia*) entity)->getInstance());
 
         break;
 
@@ -811,6 +847,10 @@ void QnstView::write(QDomElement element, QDomDocument* dom, QnstGraphicsEntity*
             e.setAttribute("src", ((QnstGraphicsMedia*) entity)->getSource());
         }
 
+        e.setAttribute("refer", ((QnstGraphicsMedia*) entity)->getRefer());
+        e.setAttribute("referUID", ((QnstGraphicsMedia*) entity)->getReferUID());
+        e.setAttribute("instance", ((QnstGraphicsMedia*) entity)->getInstance());
+
         break;
 
     case Qnst::Text:
@@ -821,6 +861,10 @@ void QnstView::write(QDomElement element, QDomDocument* dom, QnstGraphicsEntity*
         if (((QnstGraphicsMedia*) entity)->getSource() != "" ){
             e.setAttribute("src", ((QnstGraphicsMedia*) entity)->getSource());
         }
+
+        e.setAttribute("refer", ((QnstGraphicsMedia*) entity)->getRefer());
+        e.setAttribute("referUID", ((QnstGraphicsMedia*) entity)->getReferUID());
+        e.setAttribute("instance", ((QnstGraphicsMedia*) entity)->getInstance());
 
         break;
 
@@ -833,6 +877,10 @@ void QnstView::write(QDomElement element, QDomDocument* dom, QnstGraphicsEntity*
             e.setAttribute("src", ((QnstGraphicsMedia*) entity)->getSource());
         }
 
+        e.setAttribute("refer", ((QnstGraphicsMedia*) entity)->getRefer());
+        e.setAttribute("referUID", ((QnstGraphicsMedia*) entity)->getReferUID());
+        e.setAttribute("instance", ((QnstGraphicsMedia*) entity)->getInstance());
+
         break;
 
     case Qnst::NCL:
@@ -843,6 +891,10 @@ void QnstView::write(QDomElement element, QDomDocument* dom, QnstGraphicsEntity*
         if (((QnstGraphicsMedia*) entity)->getSource() != "" ){
             e.setAttribute("src", ((QnstGraphicsMedia*) entity)->getSource());
         }
+
+        e.setAttribute("refer", ((QnstGraphicsMedia*) entity)->getRefer());
+        e.setAttribute("referUID", ((QnstGraphicsMedia*) entity)->getReferUID());
+        e.setAttribute("instance", ((QnstGraphicsMedia*) entity)->getInstance());
 
         break;
 
@@ -855,6 +907,10 @@ void QnstView::write(QDomElement element, QDomDocument* dom, QnstGraphicsEntity*
             e.setAttribute("src", ((QnstGraphicsMedia*) entity)->getSource());
         }
 
+        e.setAttribute("refer", ((QnstGraphicsMedia*) entity)->getRefer());
+        e.setAttribute("referUID", ((QnstGraphicsMedia*) entity)->getReferUID());
+        e.setAttribute("instance", ((QnstGraphicsMedia*) entity)->getInstance());
+
         break;
 
     case Qnst::Audio:
@@ -866,6 +922,10 @@ void QnstView::write(QDomElement element, QDomDocument* dom, QnstGraphicsEntity*
             e.setAttribute("src", ((QnstGraphicsMedia*) entity)->getSource());
         }
 
+        e.setAttribute("refer", ((QnstGraphicsMedia*) entity)->getRefer());
+        e.setAttribute("referUID", ((QnstGraphicsMedia*) entity)->getReferUID());
+        e.setAttribute("instance", ((QnstGraphicsMedia*) entity)->getInstance());
+
         break;
 
     case Qnst::Script:
@@ -876,6 +936,10 @@ void QnstView::write(QDomElement element, QDomDocument* dom, QnstGraphicsEntity*
         if (((QnstGraphicsMedia*) entity)->getSource() != "" ){
             e.setAttribute("src", ((QnstGraphicsMedia*) entity)->getSource());
         }
+
+        e.setAttribute("refer", ((QnstGraphicsMedia*) entity)->getRefer());
+        e.setAttribute("referUID", ((QnstGraphicsMedia*) entity)->getReferUID());
+        e.setAttribute("instance", ((QnstGraphicsMedia*) entity)->getInstance());
 
         break;
 
@@ -1366,7 +1430,35 @@ void QnstView::removeEntity(const QString uid, bool undo)
 
                 QnstGraphicsEntity* parent = entity->getnstGraphicsParent();
 
-                parent->removenstGraphicsEntity(entity);
+                if (parent != NULL){
+
+                    if (parent->getnstType() == Qnst::Video ||
+                        parent->getnstType() == Qnst::Image ||
+                        parent->getnstType() == Qnst::Text ||
+                        parent->getnstType() == Qnst::Audio ||
+                        parent->getnstType() == Qnst::Html ||
+                        parent->getnstType() == Qnst::NCL ||
+                        parent->getnstType() == Qnst::Script ||
+                        parent->getnstType() == Qnst::Settings ||
+                        parent->getnstType() == Qnst::Media){
+
+                        QnstGraphicsMedia* m = (QnstGraphicsMedia*) parent;
+
+                        if (m->getInstance() != "new"){
+                            // remove interface tha "I" make a reference
+                            if (interfaceRefers.contains(entity->getnstUid())){
+                                removeEntity(interfaceRefers[entity->getnstUid()]);
+                            }
+                        }
+
+//                        // remove interfaces that reference "ME"
+//                        foreach(QString rUID, interfaceRefers.keys(entity->getnstUid())){
+//                            removeEntity(rUID);
+//                        }
+                    }
+
+                    parent->removenstGraphicsEntity(entity);
+                }
 
                 if (selected == entity){
                     selected = NULL;
@@ -2173,18 +2265,20 @@ QMap<QString, QString> properties)
 
 void QnstView::adjustMedia(QnstGraphicsMedia* entity)
 {
+    qDebug() << "=================" << entity->getnstId() << "->" << entity->getRefer() << entity->getReferUID() << entity->getInstance();
+
     if (entity->getRefer() != "" && entity->getReferUID() != "" && entity->getInstance() != ""){
 
         if (entities.contains(entity->getReferUID())){
-            QnstGraphicsEntity* refer = entities[entity->getReferUID()];
+            QnstGraphicsEntity* origin = entities[entity->getReferUID()];
 
-            foreach (QnstGraphicsEntity* re, refer->getnstGraphicsEntities()){
+            foreach (QnstGraphicsEntity* oe, origin->getnstGraphicsEntities()){
 
-                if (re->getncgType() == Qncg::Interface){
+                if (oe->getncgType() == Qncg::Interface){
                     bool contains = false;
 
                     foreach (QnstGraphicsEntity* e, entity->getnstGraphicsEntities()){
-                        if (interfaceRefers[e->getnstUid()] == re->getnstUid()){
+                        if (interfaceRefers[e->getnstUid()] == oe->getnstUid()){
                             contains = true;
                             break;
                         }
@@ -2192,17 +2286,17 @@ void QnstView::adjustMedia(QnstGraphicsMedia* entity)
 
                     if (!contains){
 
-                        if (re->getnstType() == Qnst::Port){
+                        if (oe->getnstType() == Qnst::Port){
                             QnstGraphicsPort* i = new QnstGraphicsPort(entity);
-                            QnstGraphicsPort* p = (QnstGraphicsPort*) re;
+                            QnstGraphicsPort* p = (QnstGraphicsPort*) oe;
 
 
-                            i->setnstId(re->getnstId());
+                            i->setnstId(oe->getnstId());
 
-                            i->setTop(re->getTop());
-                            i->setLeft(re->getLeft());
-                            i->setWidth(re->getWidth());
-                            i->setHeight(re->getHeight());
+                            i->setTop(oe->getTop());
+                            i->setLeft(oe->getLeft());
+                            i->setWidth(oe->getWidth());
+                            i->setHeight(oe->getHeight());
 
                             i->adjust();
 
@@ -2210,17 +2304,17 @@ void QnstView::adjustMedia(QnstGraphicsMedia* entity)
 
                             entities[i->getnstUid()] = i;
 
-                            interfaceRefers[i->getnstUid()] = re->getnstUid();
+                            interfaceRefers[i->getnstUid()] = oe->getnstUid();
 
-                        }else if (re->getnstType() == Qnst::Area){
+                        }else if (oe->getnstType() == Qnst::Area){
                             QnstGraphicsArea *i = new QnstGraphicsArea(entity);
 
-                            i->setnstId(re->getnstId());
+                            i->setnstId(oe->getnstId());
 
-                            i->setTop(re->getTop());
-                            i->setLeft(re->getLeft());
-                            i->setWidth(re->getWidth());
-                            i->setHeight(re->getHeight());
+                            i->setTop(oe->getTop());
+                            i->setLeft(oe->getLeft());
+                            i->setWidth(oe->getWidth());
+                            i->setHeight(oe->getHeight());
 
                             i->adjust();
 
@@ -2228,25 +2322,25 @@ void QnstView::adjustMedia(QnstGraphicsMedia* entity)
 
                             entities[i->getnstUid()] = i;
 
-                            interfaceRefers[i->getnstUid()] = re->getnstUid();
+                            interfaceRefers[i->getnstUid()] = oe->getnstUid();
 
 
-                        }else if (re->getnstType() == Qnst::Property){
+                        }else if (oe->getnstType() == Qnst::Property){
                             QnstGraphicsProperty *i = new QnstGraphicsProperty(entity);
 
-                            i->setnstId(re->getnstId());
+                            i->setnstId(oe->getnstId());
 
-                            i->setTop(re->getTop());
-                            i->setLeft(re->getLeft());
-                            i->setWidth(re->getWidth());
-                            i->setHeight(re->getHeight());
+                            i->setTop(oe->getTop());
+                            i->setLeft(oe->getLeft());
+                            i->setWidth(oe->getWidth());
+                            i->setHeight(oe->getHeight());
                             i->adjust();
 
                             entity->addnstGraphicsEntity(i);
 
                             entities[i->getnstUid()] = i;
 
-                            interfaceRefers[i->getnstUid()] = re->getnstUid();
+                            interfaceRefers[i->getnstUid()] = oe->getnstUid();
                         }
                     }
                 }
@@ -2256,17 +2350,22 @@ void QnstView::adjustMedia(QnstGraphicsMedia* entity)
                 if (e->getncgType() == Qncg::Interface){
                     bool contains = false;
 
-                    foreach (QnstGraphicsEntity* re, entity->getnstGraphicsEntities()){
-                        if (interfaceRefers[re->getnstUid()] == e->getnstUid() ||
-                            interfaceRefers.contains(e->getnstUid())){
-                            contains = true;
-                            break;
-                        }
-                    }
+//                    foreach (QnstGraphicsEntity* oe, origin->getnstGraphicsEntities()){
+//                        if (interfaceRefers[e->getnstUid()] == oe->getnstUid() ||
+//                            interfaceRefers.contains(e->getnstUid())){
+//                            contains = true;
+//                            break;
+//                        }
+//                    }
 
-                    if (!contains && entity->getInstance() != "new"){
+                    qDebug() << "==================================== ID:" << entity->getnstId();
+                    qDebug() << "==================================== CONTAIN:" << interfaceRefers.contains(e->getnstUid());
+
+                    if (!interfaceRefers.contains(e->getnstUid()) && entity->getInstance() != "new"){
+                        qDebug() << "==================================== ENTREI";
+
                         if (e->getnstType() == Qnst::Port){
-                            QnstGraphicsPort *i = new QnstGraphicsPort(refer);
+                            QnstGraphicsPort *i = new QnstGraphicsPort(origin);
 
                             i->setnstId(e->getnstId());
 
@@ -2276,14 +2375,16 @@ void QnstView::adjustMedia(QnstGraphicsMedia* entity)
                             i->setHeight(e->getHeight());
                             i->adjust();
 
-                            entity->addnstGraphicsEntity(i);
+                            origin->addnstGraphicsEntity(i);
 
                             entities[i->getnstUid()] = i;
 
-                            interfaceRefers[i->getnstUid()] = e->getnstUid();
+                            interfaceRefers[e->getnstUid()] = i->getnstUid();
+
+                            origin->adjust();
 
                         }else if (e->getnstType() == Qnst::Area){
-                            QnstGraphicsArea *i = new QnstGraphicsArea(refer);
+                            QnstGraphicsArea *i = new QnstGraphicsArea(origin);
 
                             i->setnstId(e->getnstId());
 
@@ -2293,14 +2394,16 @@ void QnstView::adjustMedia(QnstGraphicsMedia* entity)
                             i->setHeight(e->getHeight());
                             i->adjust();
 
-                            entity->addnstGraphicsEntity(i);
+                            origin->addnstGraphicsEntity(i);
 
                             entities[i->getnstUid()] = i;
 
-                            interfaceRefers[i->getnstUid()] = e->getnstUid();
+                            interfaceRefers[e->getnstUid()] = i->getnstUid();
+
+                            origin->adjust();
 
                         }else if (e->getnstType() == Qnst::Property){
-                            QnstGraphicsProperty *i = new QnstGraphicsProperty(refer);
+                            QnstGraphicsProperty *i = new QnstGraphicsProperty(origin);
 
                             i->setnstId(e->getnstId());
 
@@ -2310,17 +2413,19 @@ void QnstView::adjustMedia(QnstGraphicsMedia* entity)
                             i->setHeight(e->getHeight());
                             i->adjust();
 
-                            entity->addnstGraphicsEntity(i);
+                            origin->addnstGraphicsEntity(i);
 
                             entities[i->getnstUid()] = i;
 
-                            interfaceRefers[i->getnstUid()] = e->getnstUid();
+                            interfaceRefers[e->getnstUid()] = i->getnstUid();
+
+                            origin->adjust();
                         }
                     }
                 }
             }
 
-            refers[entity->getnstUid()] = refer->getnstUid();
+            refers[entity->getnstUid()] = origin->getnstUid();
 //            refers[refer->getnstUid()] = entity->getnstUid();
 /*
             foreach (QnstGraphicsEntity* e, refer->getnstGraphicsEntities()){
@@ -2791,6 +2896,8 @@ void QnstView::addArea(const QString uid, const QString parent, const QMap<QStri
 
         entity->adjust();
 
+        adjustMedia((QnstGraphicsMedia*) entities[parent]);
+
         foreach (QString key, refers.keys(entity->getnstGraphicsParent()->getnstUid())){
             if (entities.contains(key)){
                 if (entities[key]->getnstType() == Qnst::Video ||
@@ -2873,6 +2980,8 @@ void QnstView::addProperty(const QString uid, const QString parent, const QMap<Q
         entities[parent]->addnstGraphicsEntity(entity); entities[uid] = entity; ++nproperty;
 
         entity->adjust();
+
+        adjustMedia((QnstGraphicsMedia*) entities[parent]);
 
         foreach (QString key, refers.keys(entity->getnstGraphicsParent()->getnstUid())){
             if (entities.contains(key)){
@@ -3818,6 +3927,28 @@ void QnstView::requestEntityRemotion(QnstGraphicsEntity* entity, bool undo)
                 }
             }
 
+            // remove interface that "I" make a reference
+            if (interfaceRefers.contains(entity->getnstUid())){
+                QString oUID = interfaceRefers[entity->getnstUid()];
+
+                interfaceRefers.remove(entity->getnstUid());
+
+                if (entities.contains(oUID)){
+                    requestEntityRemotion(entities[oUID]);
+                }
+
+
+            }
+
+            // remove interfaces that reference "ME"
+            foreach(QString rUID, interfaceRefers.keys(entity->getnstUid())){
+                interfaceRefers.remove(rUID);
+
+                if (entities.contains(rUID)){
+                    requestEntityRemotion(entities[rUID]);
+                }
+            }
+
             QnstGraphicsEntity* parent = entity->getnstGraphicsParent();
 
             if (parent != NULL){
@@ -3843,6 +3974,7 @@ void QnstView::requestEntityRemotion(QnstGraphicsEntity* entity, bool undo)
             }
 
             entities.remove(entity->getnstUid()); emit entityRemoved(entity->getnstUid()); delete entity;
+
         }else if (entity->getncgType() == Qncg::Edge){
             QnstGraphicsEdge* edge = (QnstGraphicsEdge*) entity;
 
@@ -4483,6 +4615,8 @@ void QnstView::requestAreaAddition(QnstGraphicsArea* entity, bool undo)
 
     properties["id"] = entity->getnstId();
 
+    adjustMedia((QnstGraphicsMedia*) entity->getnstGraphicsParent());
+
     foreach (QString key, refers.keys(entity->getnstGraphicsParent()->getnstUid())){
         if (entities.contains(key)){
             if (entities[key]->getnstType() == Qnst::Video ||
@@ -4520,6 +4654,8 @@ void QnstView::requestPropertyAddition(QnstGraphicsProperty* entity)
     QMap<QString, QString> properties;
 
     properties["TYPE"] = "property";
+
+    adjustMedia((QnstGraphicsMedia*) entity->getnstGraphicsParent());
 
     foreach (QString key, refers.keys(entity->getnstGraphicsParent()->getnstUid())){
         if (entities.contains(key)){
