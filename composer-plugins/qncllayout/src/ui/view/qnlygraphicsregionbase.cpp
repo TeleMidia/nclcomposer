@@ -711,9 +711,16 @@ void QnlyGraphicsRegionBase::removeRegion(QnlyGraphicsRegion* region)
                 regions.remove(child->getUid());
             }
 
-            regionActionGroup->removeAction(regionActions[region->getUid()]);
+            if(regionActions.contains(region->getUid()))
+            {
+              QAction *action = regionActions[region->getUid()];
 
-            regionActions.remove(region->getUid());
+              showMenu->removeAction(action);
+
+              regionActionGroup->removeAction(action);
+
+              regionActions.remove(region->getUid());
+            }
         }
 
         removeItem(region);
