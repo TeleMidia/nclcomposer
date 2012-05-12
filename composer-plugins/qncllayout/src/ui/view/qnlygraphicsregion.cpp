@@ -1418,9 +1418,11 @@ void QnlyGraphicsRegion::mouseReleaseEvent(QGraphicsSceneMouseEvent* event)
 
 void QnlyGraphicsRegion::keyPressEvent( QKeyEvent * event )
 {
-    //if (!event->isAccepted()){
-    //  event->accept();
-    //}
+    if (event->key() == Qt::Key_Delete || event->key() == Qt::Key_Backspace){
+        performDelete();
+
+        event->accept();
+    }
 
     QGraphicsItem::keyPressEvent(event);
 }

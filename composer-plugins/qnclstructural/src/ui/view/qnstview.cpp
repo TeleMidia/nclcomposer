@@ -4137,9 +4137,6 @@ void QnstView::requestEntitySelection(QnstGraphicsEntity* entity)
             if (interfaceRefers.contains(entity->getnstUid())){
                 emit entitySelected(interfaceRefers[entity->getnstUid()]);
 
-            }else if (refers.contains(entity->getnstUid())){
-                emit entitySelected(refers[entity->getnstUid()]);
-
             }else{
                 emit entitySelected(entity->getnstUid());
             }
