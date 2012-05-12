@@ -67,7 +67,7 @@ public:
 public:
     void addEntity(const QString uid, const QString parent, const QMap<QString, QString> properties);
 
-    void removeEntity(const QString uid, bool undo = false);
+    void removeEntity(const QString uid, bool undo = false, bool rmRef = true);
 
     void changeEntity(const QString uid, const QMap<QString, QString> properties);
 
@@ -141,7 +141,7 @@ protected:
 public slots:
     void requestEntityAddition(QnstGraphicsEntity* entity, bool undo = false);
 
-    void requestEntityRemotion(QnstGraphicsEntity* entity, bool undo = false);
+    void requestEntityRemotion(QnstGraphicsEntity* entity, bool undo = false, bool rmRefs = true);
 
     void requestEntityChange(QnstGraphicsEntity* entity);
 

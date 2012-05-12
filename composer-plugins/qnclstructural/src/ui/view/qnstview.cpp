@@ -1271,7 +1271,7 @@ void QnstView::addEntity(const QString uid, const QString parent, const QMap<QSt
 
 }
 
-void QnstView::removeEntity(const QString uid, bool undo)
+void QnstView::removeEntity(const QString uid, bool undo, bool rmRef)
 {
     qDebug() << "[QNST]" << ":" << "Removing entity '"+uid+"'";
 
@@ -1296,7 +1296,25 @@ void QnstView::removeEntity(const QString uid, bool undo)
                         e->getnstType() != Qnst::Action &&
                         e->getnstType() != Qnst::Reference){
 
-                        removeEntity(e->getnstUid(), true);
+                        if (entity->getnstType() == Qnst::Video ||
+                            entity->getnstType() == Qnst::Image ||
+                            entity->getnstType() == Qnst::Text ||
+                            entity->getnstType() == Qnst::Audio ||
+                            entity->getnstType() == Qnst::Html ||
+                            entity->getnstType() == Qnst::NCL ||
+                            entity->getnstType() == Qnst::Script ||
+                            entity->getnstType() == Qnst::Settings ||
+                            entity->getnstType() == Qnst::Media){
+
+                            QnstGraphicsMedia* m = (QnstGraphicsMedia*) entity;
+
+                            if (m->getReferUID() != "")
+                               removeEntity(e->getnstUid(), true, false);
+                            else
+                               removeEntity(e->getnstUid(), true, false);
+                        }else{
+                            removeEntity(e->getnstUid(), true, false);
+                        }
                     }
                 }
 
@@ -2363,11 +2381,7 @@ void QnstView::adjustMedia(QnstGraphicsMedia* entity)
 //                        }
 //                    }
 
-                    qDebug() << "==================================== ID:" << entity->getnstId();
-                    qDebug() << "==================================== CONTAIN:" << interfaceRefers.contains(e->getnstUid());
-
                     if (!interfaceRefers.contains(e->getnstUid()) && entity->getInstance() != "new"){
-                        qDebug() << "==================================== ENTREI";
 
                         if (e->getnstType() == Qnst::Port){
                             QnstGraphicsPort *i = new QnstGraphicsPort(origin);
@@ -2384,7 +2398,8 @@ void QnstView::adjustMedia(QnstGraphicsMedia* entity)
 
                             entities[i->getnstUid()] = i;
 
-                            interfaceRefers[e->getnstUid()] = i->getnstUid();
+//                            interfaceRefers[e->getnstUid()] = i->getnstUid();
+                            interfaceRefers[i->getnstUid()] = e->getnstUid();
 
                             origin->adjust();
 
@@ -2403,7 +2418,8 @@ void QnstView::adjustMedia(QnstGraphicsMedia* entity)
 
                             entities[i->getnstUid()] = i;
 
-                            interfaceRefers[e->getnstUid()] = i->getnstUid();
+//                            interfaceRefers[e->getnstUid()] = i->getnstUid();
+                            interfaceRefers[i->getnstUid()] = e->getnstUid();
 
                             origin->adjust();
 
@@ -2422,7 +2438,8 @@ void QnstView::adjustMedia(QnstGraphicsMedia* entity)
 
                             entities[i->getnstUid()] = i;
 
-                            interfaceRefers[e->getnstUid()] = i->getnstUid();
+//                            interfaceRefers[e->getnstUid()] = i->getnstUid();
+                            interfaceRefers[i->getnstUid()] = e->getnstUid();
 
                             origin->adjust();
                         }
@@ -3780,7 +3797,7 @@ void QnstView::requestEntityAddition(QnstGraphicsEntity* entity, bool undo)
     }
 }
 
-void QnstView::requestEntityRemotion(QnstGraphicsEntity* entity, bool undo)
+void QnstView::requestEntityRemotion(QnstGraphicsEntity* entity, bool undo, bool rmRefs)
 {
     qDebug() << "[QNST]" << ":" << "Requesting entity remotion '"+entity->getnstUid()+"'";
 
@@ -3800,7 +3817,26 @@ void QnstView::requestEntityRemotion(QnstGraphicsEntity* entity, bool undo)
                     e->getnstType() != Qnst::Action &&
                     e->getnstType() != Qnst::Reference){
 
-                    requestEntityRemotion(e, true);
+                    if (entity->getnstType() == Qnst::Video ||
+                        entity->getnstType() == Qnst::Image ||
+                        entity->getnstType() == Qnst::Text ||
+                        entity->getnstType() == Qnst::Audio ||
+                        entity->getnstType() == Qnst::Html ||
+                        entity->getnstType() == Qnst::NCL ||
+                        entity->getnstType() == Qnst::Script ||
+                        entity->getnstType() == Qnst::Settings ||
+                        entity->getnstType() == Qnst::Media){
+
+                        QnstGraphicsMedia* m = (QnstGraphicsMedia*) entity;
+
+                        if (m->getReferUID() != "")
+                           requestEntityRemotion(e, true, false);
+                        else
+                           requestEntityRemotion(e, true, false);
+
+                    }else{
+                        requestEntityRemotion(e, true, false);
+                    }
                 }
             }
 
@@ -3940,17 +3976,19 @@ void QnstView::requestEntityRemotion(QnstGraphicsEntity* entity, bool undo)
                 }
             }
 
-            // remove interface that "I" make a reference
-            if (interfaceRefers.contains(entity->getnstUid())){
-                QString oUID = interfaceRefers[entity->getnstUid()];
+            if (rmRefs){
+                // remove interface that "I" make a reference
+                if (interfaceRefers.contains(entity->getnstUid())){
+                    QString oUID = interfaceRefers[entity->getnstUid()];
 
-                interfaceRefers.remove(entity->getnstUid());
+                    interfaceRefers.remove(entity->getnstUid());
 
-                if (entities.contains(oUID)){
-                    requestEntityRemotion(entities[oUID]);
+                    if (entities.contains(oUID)){
+                        requestEntityRemotion(entities[oUID]);
+                    }
+
+
                 }
-
-
             }
 
             // remove interfaces that reference "ME"
@@ -4135,10 +4173,13 @@ void QnstView::requestEntitySelection(QnstGraphicsEntity* entity)
             selected = entity;
 
             if (interfaceRefers.contains(entity->getnstUid())){
-                emit entitySelected(interfaceRefers[entity->getnstUid()]);
+
+                    emit entitySelected(interfaceRefers[entity->getnstUid()]);
 
             }else{
-                emit entitySelected(entity->getnstUid());
+
+
+                    emit entitySelected(entity->getnstUid());
             }
         }
     }
