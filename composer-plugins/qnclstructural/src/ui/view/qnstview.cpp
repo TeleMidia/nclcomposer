@@ -695,7 +695,7 @@ QString QnstView::serialize()
 
 
         foreach(QString key, conn->getParams().keys()){
-            QDomElement p = dom->createElement(conn->getParams()[key]);
+            QDomElement p = dom->createElement("param");
 
             p.setAttribute("uid", key);
             p.setAttribute("name", conn->getParams()[key]);
