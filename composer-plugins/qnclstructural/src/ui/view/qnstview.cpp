@@ -504,8 +504,6 @@ void QnstView::readLink(QDomElement element, QDomElement parent)
                     entity->setNameUids(bo->getNameUIDs());
 
 
-
-
                     connect(entity,
                             SIGNAL(bindParamAdded(QString,QString,QMap<QString, QString>)),
                             SLOT(requestBindParamAdjust(QString,QString,QMap<QString, QString>)));
@@ -585,13 +583,13 @@ void QnstView::readLink(QDomElement element, QDomElement parent)
                     bo->setRole(act);
 
                     if (entitya->getncgType() == Qncg::Interface){
-                        bo->setComponent(entitya->getnstGraphicsParent()->getnstId());
-                        bo->setComponentUid(entitya->getnstGraphicsParent()->getnstUid());
-                        bo->setInterface(entitya->getnstId());
-                        bo->setInterfaceUid(entitya->getnstUid());
+                        bo->setComponent(entityb->getnstGraphicsParent()->getnstId());
+                        bo->setComponentUid(entityb->getnstGraphicsParent()->getnstUid());
+                        bo->setInterface(entityb->getnstId());
+                        bo->setInterfaceUid(entityb->getnstUid());
                     }else{
-                        bo->setComponent(entitya->getnstId());
-                        bo->setComponentUid(entitya->getnstUid());
+                        bo->setComponent(entityb->getnstId());
+                        bo->setComponentUid(entityb->getnstUid());
                     }
 
                     QMap<QString, QString> params;
@@ -1093,23 +1091,23 @@ void QnstView::writeLink(QDomElement element, QDomDocument* dom, QnstGraphicsEnt
 
                 switch(link->getAction()){
                 case Qnst::Start:
-                    e.setAttribute("action", "Start");
+                    e.setAttribute("action", "start");
                     break;
 
                 case Qnst::Stop:
-                    e.setAttribute("action", "Stop");
+                    e.setAttribute("action", "stop");
                     break;
 
                 case Qnst::Pause:
-                    e.setAttribute("action", "Pause");
+                    e.setAttribute("action", "pause");
                     break;
 
                 case Qnst::Resume:
-                    e.setAttribute("action", "Resume");
+                    e.setAttribute("action", "resume");
                     break;
 
                 case Qnst::Set:
-                    e.setAttribute("action", "Set");
+                    e.setAttribute("action", "set");
                     break;
 
                 case Qnst::NoActionType:
@@ -1813,6 +1811,7 @@ void QnstView::addImportBase(QString uid, const QMap<QString, QString> propertie
 
 void QnstView::changeImportBase(QString uid, const QMap<QString, QString> properties)
 {
+
     foreach(QnstConncetor* cc, connectors.values()){
         if (cc->getnstUid() == importBases[uid]){
             connectors.remove(cc->getName());
@@ -1825,7 +1824,11 @@ void QnstView::changeImportBase(QString uid, const QMap<QString, QString> proper
         }
     }
 
+    qDebug() << "===========================" << properties["documentURI"] << properties["projectURI"] << properties["alias"];
+
     if (properties["documentURI"] != "" && properties["projectURI"] != "" && properties["alias"] != ""){
+
+        qDebug() << "=========================== LOADING";
 
         int n = properties["projectURI"].lastIndexOf("/");
 
@@ -1833,11 +1836,17 @@ void QnstView::changeImportBase(QString uid, const QMap<QString, QString> proper
 
         if (file->exists()){
             if (file->open(QIODevice::ReadOnly)){
+                qDebug() << "=========================== NOW";
+
                 QDomDocument* domdoc = new QDomDocument();
+
+                qDebug() << "=========================== " << connectors.size();
 
                 if (domdoc->setContent(file)){
                     readImportBase(importBases[uid], domdoc->firstChildElement(), properties["alias"]);
                 }
+
+                qDebug() << "=========================== " << connectors.size();
             }
         }
 
@@ -2300,12 +2309,17 @@ void QnstView::adjustMedia(QnstGraphicsMedia* entity)
                 if (oe->getncgType() == Qncg::Interface){
                     bool contains = false;
 
-                    foreach (QnstGraphicsEntity* e, entity->getnstGraphicsEntities()){
-                        if (interfaceRefers[e->getnstUid()] == oe->getnstUid()){
-                            contains = true;
-                            break;
+//                    if (interfaceRefers.contains(oe->getnstUid())){
+//                        contains = true;
+
+//                    }else{
+                        foreach (QnstGraphicsEntity* e, entity->getnstGraphicsEntities()){
+                            if (interfaceRefers[e->getnstUid()] == oe->getnstUid()){
+                                contains = true;
+                                break;
+                            }
                         }
-                    }
+//                    }
 
                     if (!contains){
 
@@ -2374,14 +2388,18 @@ void QnstView::adjustMedia(QnstGraphicsMedia* entity)
                     bool contains = false;
 
 //                    foreach (QnstGraphicsEntity* oe, origin->getnstGraphicsEntities()){
-//                        if (interfaceRefers[e->getnstUid()] == oe->getnstUid() ||
-//                            interfaceRefers.contains(e->getnstUid())){
+//                        if (interfaceRefers[e->getnstUid()] == oe->getnstUid()){
 //                            contains = true;
 //                            break;
 //                        }
 //                    }
 
-                    if (!interfaceRefers.contains(e->getnstUid()) && entity->getInstance() != "new"){
+
+                    if (interfaceRefers.contains(e->getnstUid())){
+                        contains = true;
+                    }
+
+                        if (!contains && entity->getInstance() != "new"){
 
                         if (e->getnstType() == Qnst::Port){
                             QnstGraphicsPort *i = new QnstGraphicsPort(origin);
@@ -2601,7 +2619,9 @@ void QnstView::changePort(QnstGraphicsPort* entity, const QMap<QString, QString>
     }
 
     foreach (QString key, interfaceRefers.keys(entity->getnstUid())){
-        entities[key]->setnstId(entity->getnstId());
+        if (entities.contains(key)){
+            entities[key]->setnstId(entity->getnstId());
+        }
     }
 
     adjustPort(entity);
@@ -2969,7 +2989,9 @@ void QnstView::changeArea(QnstGraphicsArea* entity, const QMap<QString, QString>
     }
 
     foreach (QString key, interfaceRefers.keys(entity->getnstUid())){
-        entities[key]->setnstId(entity->getnstId());
+        if (entities.contains(key)){
+            entities[key]->setnstId(entity->getnstId());
+        }
     }
 }
 
@@ -3058,7 +3080,9 @@ void QnstView::changeProperty(QnstGraphicsProperty* entity, const QMap<QString, 
     }
 
     foreach (QString key, interfaceRefers.keys(entity->getnstUid())){
-        entities[key]->setnstId(entity->getnstId());
+        if (entities.contains(key)){
+            entities[key]->setnstId(entity->getnstId());
+        }
     }
 }
 
@@ -3210,24 +3234,43 @@ void QnstView::adjustBind(QnstBind* entity)
             if (connectors.contains(parent->getxConnector())){
                 QnstConncetor* connector = connectors[parent->getxConnector()];
 
-                foreach(QString type, connector->getConditions()){
-                    if (type == entity->getRole()){
-                        parent->addCondition(entity);
+                qDebug() << "==========================" << "ROLE:" << entity->getRole();
 
-                        break;
+                if (entity->getRole() == "NoConditionType"){
+                    parent->addCondition(entity);
+
+                }else{
+                    foreach(QString type, connector->getConditions()){
+
+                        qDebug() << "==========================" << "CTYPE:" << type;
+                        if (type == entity->getRole()){
+                            parent->addCondition(entity);
+
+                            break;
+                        }
                     }
                 }
 
-                foreach(QString type, connector->getActions()){
-                    if (type == entity->getRole()){
-                        parent->addAction(entity);
+                if (entity->getRole() == "NoActionType"){
+                    parent->addAction(entity);
+                }else{
+                    foreach(QString type, connector->getActions()){
+                        qDebug() << "==========================" << "ATYPE:" << type;
 
-                        break;
+                        if (type == entity->getRole()){
+                            parent->addAction(entity);
+
+                            break;
+                        }
                     }
                 }
+
+                qDebug();
             }
 
             if (parent->getConditions().contains(entity->getnstUid())){
+                qDebug() << "======================" << "CONDITION:";
+
                 if (parent->getAggregatorUID() == ""){
                     QnstGraphicsEntity* node = (QnstGraphicsEntity*) parent->getnstParent();
 
@@ -3247,6 +3290,9 @@ void QnstView::adjustBind(QnstBind* entity)
                 }
 
                 if (entities.contains(entity->getComponentUid()) && entities.contains(parent->getAggregatorUID())){
+                    qDebug() << "======================" << "DRAWING";
+
+
                     if (entity->getInterface() != ""){
                         if (entities.contains(entity->getInterfaceUid()) && entities[entity->getComponentUid()]->getnstGraphicsEntities().contains(entities[entity->getInterfaceUid()])){
                             QnstGraphicsEntity* entitya = entities[entity->getInterfaceUid()];
@@ -3255,7 +3301,10 @@ void QnstView::adjustBind(QnstBind* entity)
                             QnstGraphicsEntity* parenta = entitya->getnstGraphicsParent();
                             QnstGraphicsEntity* parentb = entityb->getnstGraphicsParent();
 
+                            qDebug() << "======================" << "1";
+
                             if (parenta != NULL && parentb != NULL && parenta->getnstGraphicsParent() == parentb){
+                                qDebug() << "======================" << "1.1";
                                 QnstGraphicsCondition* graphics = new QnstGraphicsCondition();
                                 graphics->setnstUid(entity->getnstUid());
                                 graphics->setnstGraphicsParent(parentb);
@@ -3311,6 +3360,7 @@ void QnstView::adjustBind(QnstBind* entity)
                         }
 
                     }else{
+                        qDebug() << "======================" << "2";
                         QnstGraphicsEntity* entitya = entities[entity->getComponentUid()];
                         QnstGraphicsEntity* entityb = entities[parent->getAggregatorUID()];
 
@@ -3318,11 +3368,14 @@ void QnstView::adjustBind(QnstBind* entity)
                         QnstGraphicsEntity* parentb = entityb->getnstGraphicsParent();
 
                         if (parenta == parentb && parenta != NULL && parentb != NULL){
+                            qDebug() << "======================" << "2.1";
                             QnstGraphicsCondition* graphics = new QnstGraphicsCondition();
                             graphics->setnstUid(entity->getnstUid());
                             graphics->setnstGraphicsParent(parenta);
                             graphics->setEntityA(entitya);
                             graphics->setEntityB(entityb);
+
+
 
 
                             // adjusting angle
@@ -3374,6 +3427,8 @@ void QnstView::adjustBind(QnstBind* entity)
                 }
 
             }else if (parent->getActions().contains(entity->getnstUid())){
+                qDebug() << "======================" << "ACTION:";
+
                 if (parent->getAggregatorUID() == ""){
                     QnstGraphicsEntity* node = (QnstGraphicsEntity*) parent->getnstParent();
 
@@ -3396,6 +3451,8 @@ void QnstView::adjustBind(QnstBind* entity)
 
                     if (entity->getInterface() != ""){
                         if (entities.contains(entity->getInterfaceUid()) &&  entities[entity->getComponentUid()]->getnstGraphicsEntities().contains(entities[entity->getInterfaceUid()])){
+                            qDebug() << "======================" << "3";
+
                             QnstGraphicsEntity* entitya = entities[parent->getAggregatorUID()];
                             QnstGraphicsEntity* entityb = entities[entity->getInterfaceUid()];
 
@@ -3403,6 +3460,7 @@ void QnstView::adjustBind(QnstBind* entity)
                             QnstGraphicsEntity* parentb = entityb->getnstGraphicsParent();
 
                             if (parenta != NULL && parentb != NULL && parenta == parentb->getnstGraphicsParent()){
+                                qDebug() << "======================" << "3.1";
                                 QnstGraphicsAction* graphics = new QnstGraphicsAction();
                                 graphics->setnstUid(entity->getnstUid());
                                 graphics->setnstGraphicsParent(parenta);
@@ -3458,6 +3516,8 @@ void QnstView::adjustBind(QnstBind* entity)
                         }
 
                     }else{
+                        qDebug() << "======================" << "4";
+
                         QnstGraphicsEntity* entitya = entities[parent->getAggregatorUID()];
                         QnstGraphicsEntity* entityb = entities[entity->getComponentUid()];
 
@@ -3465,11 +3525,16 @@ void QnstView::adjustBind(QnstBind* entity)
                         QnstGraphicsEntity* parentb = entityb->getnstGraphicsParent();
 
                         if (parenta == parentb && parenta != NULL && parentb != NULL){
+                            qDebug() << "======================" << "4.1";
+
                             QnstGraphicsAction* graphics = new QnstGraphicsAction();
                             graphics->setnstUid(entity->getnstUid());
                             graphics->setnstGraphicsParent(parentb);
                             graphics->setEntityA(entitya);
                             graphics->setEntityB(entityb);
+
+                            qDebug() << "======================" << entitya->getnstId() << entitya->getnstUid();
+                            qDebug() << "======================" << entityb->getnstId() << entityb->getnstUid();
 
 
                             // adjusting angle
@@ -3692,12 +3757,12 @@ void QnstView::changeBindParam(const QString uid, const QMap<QString, QString> p
         if (e->getnstType() == Qnst::Action){
             QnstGraphicsAction* action = (QnstGraphicsAction*) e;
 
-            action->setParam(properties["name"], properties["value"]);
+            action->setParam(properties.value("name",""), properties.value("value",""));
 
         }else if (e->getnstType() == Qnst::Condition){
             QnstGraphicsCondition* condition = (QnstGraphicsCondition*) e;
 
-            condition->setParam(properties["name"], properties["value"]);
+            condition->setParam(properties.value("name",""), properties.value("value",""));
         }
     }
 }

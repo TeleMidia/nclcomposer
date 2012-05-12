@@ -379,25 +379,31 @@ void QnstGraphicsCondition::setConn(QnstConncetor* conn)
 
 void QnstGraphicsCondition::addParam(QString uid, QString name, QString value)
 {
-    params[name] = value;
-    name_uid[name] = uid;
+    if (name != ""){
+        params[name] = value;
+        name_uid[name] = uid;
 
-    emit bindParamUpdated(getnstUid() ,params, name_uid);
+        emit bindParamUpdated(getnstUid() ,params, name_uid);
+    }
 }
 
 void QnstGraphicsCondition::setParam(QString name, QString value)
 {
-    params[name] = value;
+    if (name != ""){
+        params[name] = value;
 
-    emit bindParamUpdated(getnstUid() ,params, name_uid);
+        emit bindParamUpdated(getnstUid() ,params, name_uid);
+    }
 }
 
 void QnstGraphicsCondition::removeParam(QString name)
 {
-    params.remove(name);
-    name_uid.remove(name);
+    if (name != ""){
+        params.remove(name);
+        name_uid.remove(name);
 
-    emit bindParamUpdated(getnstUid() ,params, name_uid);
+        emit bindParamUpdated(getnstUid() ,params, name_uid);
+    }
 }
 
 void QnstGraphicsCondition::setParams(QMap<QString, QString> params)
