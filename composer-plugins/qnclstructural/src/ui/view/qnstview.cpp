@@ -2309,17 +2309,19 @@ void QnstView::adjustMedia(QnstGraphicsMedia* entity)
                 if (oe->getncgType() == Qncg::Interface){
                     bool contains = false;
 
-//                    if (interfaceRefers.contains(oe->getnstUid())){
-//                        contains = true;
+                    if (interfaceRefers.contains(oe->getnstUid())){
+                        contains = true;
 
-//                    }else{
+                    }else{
                         foreach (QnstGraphicsEntity* e, entity->getnstGraphicsEntities()){
-                            if (interfaceRefers[e->getnstUid()] == oe->getnstUid()){
-                                contains = true;
-                                break;
+                            if (interfaceRefers.contains(e->getnstUid())){
+                                if (interfaceRefers[e->getnstUid()] == oe->getnstUid()){
+                                    contains = true;
+                                    break;
+                                }
                             }
                         }
-//                    }
+                    }
 
                     if (!contains){
 
@@ -2387,19 +2389,22 @@ void QnstView::adjustMedia(QnstGraphicsMedia* entity)
                 if (e->getncgType() == Qncg::Interface){
                     bool contains = false;
 
-//                    foreach (QnstGraphicsEntity* oe, origin->getnstGraphicsEntities()){
-//                        if (interfaceRefers[e->getnstUid()] == oe->getnstUid()){
-//                            contains = true;
-//                            break;
-//                        }
-//                    }
+                    foreach (QnstGraphicsEntity* oe, origin->getnstGraphicsEntities()){
+                        if (interfaceRefers.contains(oe->getnstUid())){
+                            if (interfaceRefers[oe->getnstUid()] == e->getnstUid()){
+                                contains = true;
+                                break;
+                            }
+                        }
+                    }
 
-
+                    if (!contains){
                     if (interfaceRefers.contains(e->getnstUid())){
                         contains = true;
                     }
+                    }
 
-                        if (!contains && entity->getInstance() != "new"){
+                    if (!contains && entity->getInstance() != "new"){
 
                         if (e->getnstType() == Qnst::Port){
                             QnstGraphicsPort *i = new QnstGraphicsPort(origin);
