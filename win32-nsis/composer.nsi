@@ -8,7 +8,7 @@
 
 ;--------------------------------
 
-!define VERSION "0.1.0"
+!define VERSION "0.1.1"
 Name "NCL Composer ${VERSION}"
 Caption "NCL Composer Installer"
 OutFile "nclcomposer-installer-${VERSION}.exe"
@@ -58,11 +58,19 @@ Section "NCL Composer Core (required)" ; No components page, name is not importa
 
   ; include Files
   SetoutPath $INSTDIR\include
-  File /r "C:\Composer\include"
+  File /r "C:\Composer\include\*"
+
+  ; data Files
+  SetOutPath $INSTDIR\data
+  File "C:\Composer\data\*"
 
   ; install NCL Language Profile
-  SetOutPath $INSTDIR\lib\composer
-  File "C:\Composer\lib\composer\NCLLanguageProfile.dll"
+  SetOutPath $INSTDIR\extensions
+  File "C:\Composer\extensions\NCLLanguageProfile.dll"
+
+  ; translation files
+  SetOutPath $INSTDIR\extensions
+  File "C:\Composer\extensions\*.qm"
 
   ; Associate .cpr files with NCL Composer
   ${registerExtension} $INSTDIR\composer.exe ".cpr" "NCL Composer project"
@@ -81,33 +89,39 @@ SectionEnd
 SectionGroup /e "Install Default Plugins"
   Section "Textual View"
     SectionIn 1
-    SetOutPath $INSTDIR\lib\composer
-    ; File "C:\Composer\lib\composer\qscintilla2.dll"
-    File "C:\Composer\lib\composer\ncl_textual_plugin.dll"
+    SetOutPath $INSTDIR\extensions
+    ; File "C:\Composer\extensions\qscintilla2.dll"
+    File "C:\Composer\extensions\ncl_textual_plugin.dll"
   SectionEnd
 
   Section "Layout View"
     SectionIn 1
-    SetOutPath $INSTDIR\lib\composer
-    File "C:\Composer\lib\composer\Qnly0.dll"
+    SetOutPath $INSTDIR\extensions
+    File "C:\Composer\\extensions\Qnly0.dll"
   SectionEnd
 
   Section "Properties View"
     SectionIn 1
-    SetOutPath $INSTDIR\lib\composer
-    File "C:\Composer\lib\composer\properties_view.dll"
+    SetOutPath $INSTDIR\extensions
+    File "C:\Composer\extensions\properties_view.dll"
   SectionEnd
 
   Section "Structural View"
     SectionIn 1
-    SetOutPath $INSTDIR\lib\composer
-    File "C:\Composer\lib\composer\Qnst0.dll"
+    SetOutPath $INSTDIR\extensions
+    File "C:\Composer\extensions\Qnst0.dll"
   SectionEnd
 
   Section "Outline View"
     SectionIn 1
-    SetOutPath $INSTDIR\lib\composer
-    File "C:\Composer\lib\composer\outline_view.dll"
+    SetOutPath $INSTDIR\extensions
+    File "C:\Composer\extensions\outline_view.dll"
+  SectionEnd
+
+  Section "Validator Plugin"
+    SectionIn 1
+    SetOutPath $INSTDIR\extensions
+    File "C:\Composer\extensions\ValidatorPlugin.dll"
   SectionEnd
 SectionGroupEnd
 
@@ -116,9 +130,8 @@ SectionGroupEnd
 UninstallText "This will uninstall NCL Composer. Hit next to continue"
 Section "Uninstall"
   Delete "$INSTDIR\*"
-  Delete "$INSTDIR\lib\composer\*"
-  RMDir "$INSTDIR\lib\composer"
-  RMDir "$INSTDIR\lib"
+  Delete "$INSTDIR\extensions\*"
+  RMDir "$INSTDIR\extensions"
   RMDir "$INSTDIR"
 
   ;Shortcuts
