@@ -5,6 +5,8 @@ MOC_DIR     =   .moc
 OBJECTS_DIR =   .obj
 UI_DIR      =   .ui
 
+DEFINES += NCLCOMPOSER_PLUGINS_VERSION=\"\\\"0.1.1\\\"\"
+
 # Uses FORCERELEASE variable because CONFIG and SUBDIR force three executions
 # if qmake and the last one does not preserves CONFIG from command line.
 contains(FORCERELEASE, true) {

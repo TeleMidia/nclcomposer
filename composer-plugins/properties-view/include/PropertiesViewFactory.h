@@ -85,7 +85,7 @@ class PropertiesViewFactory : public QObject,
 
           \return QString the version number as string.
          */
-         QString version() { return "0.1"; }
+         QString version() { return NCLCOMPOSER_PLUGINS_VERSION; }
          /*!
           \brief Returns the core version that is compatible with this plugin.
 

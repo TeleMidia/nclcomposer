@@ -46,7 +46,7 @@ public:
 
      \return QString the version number as string.
     */
-    QString version() { return "0.1"; }
+    QString version() { return NCLCOMPOSER_PLUGINS_VERSION; }
     /*!
      \brief Returns the core version that is compatible with this plugin.
 
@@ -59,7 +59,7 @@ public:
 
      \return QString the name of the vendor of Layout View.
     */
-    QString vendor() {return "Telemidia Lab.";}
+    QString vendor() {return "Telemidia Lab";}
     /*!
      \brief Returns the copyright of Layout View.
 
