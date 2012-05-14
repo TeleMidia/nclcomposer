@@ -30,13 +30,12 @@
 #include "QsciLexerNCL.h"
 #include "QsciNCLAPIs.h"
 
-
 #define PREF_FONT_FAMILY "Courier"
 #define PREF_FONT_SIZE 10
 
-//#define LIGTHSTYLE
+#define LIGTHSTYLE 1
 
-#ifdef LIGHTSTYLE
+#ifdef LIGTHSTYLE
 /* Light Style */
   #define PREF_CARET_LINE_BG_COLOR QColor("#B9D3EE")
   #define PREF_FOLD_MARGIN_FORE_COLOR QColor("#B9D3EE")
