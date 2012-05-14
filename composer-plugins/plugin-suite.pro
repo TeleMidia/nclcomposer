@@ -43,7 +43,7 @@ isEmpty(trans.path) {
 }
 
 TRANSLATIONS = \
-    translations/plugin_suite_es.ts \
+    translations/plugin_suite_es_ES.ts \
     translations/plugin_suite_pt_BR.ts
 
 INSTALLS += trans
