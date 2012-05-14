@@ -28,8 +28,8 @@ QFrame {
 }
 
 #frame_3 {
-   background: url(:/mainwindow/bggray);
-    background-color: #333333;
+   background: url(:/mainwindow/bggray); 
+   background-color: qlineargradient(spread:reflect, x1:0, y1:0, x2:0, y2:0.756, stop:0 rgba(0, 0, 0, 255), stop:1 rgba(122, 122, 122, 254));
     border: 0px;
 }
 
