@@ -180,7 +180,11 @@ FORMS   += ui/PreferencesDialog.ui \
 #TRANSLATIONS
 win32 {
     trans.path = $$INSTALLBASE/extensions
-} else:unix {
+
+} else:macx{
+    trans.path = "/Library/Application Support/Composer/Extensions"
+
+}else:unix {
     trans.path = $$INSTALLBASE/lib/composer/extensions
 }
 
