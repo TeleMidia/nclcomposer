@@ -21,9 +21,9 @@ CONFIG += runssh_on
 CONFIG += help
 QT += core xml network webkit
 
-DEFINES += NCLCOMPOSER_GUI_VERSION=\"\\\"0.1.0\\\"\"
+DEFINES += NCLCOMPOSER_GUI_VERSION=\"\\\"0.1.1\\\"\"
 DEFINES += BUILD_DATE=\"\\\"$${_DATE_}\"\\\"
-DEFINES += WITH_TEST_VERSION_MESSAGE=\"\\\"1\\\"\"
+#DEFINES += WITH_TEST_VERSION_MESSAGE=\"\\\"1\\\"\"
 
 #DEFINES += USE_MDI
 RC_FILE = images/nclcomposer.rc
