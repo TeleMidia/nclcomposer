@@ -677,8 +677,8 @@ void NCLTextualViewPlugin::incrementalUpdateCoreModel()
   while(!nodes.empty())
   {
     dialog.setValue(progress++);
-    dialog.update();
-    QApplication::processEvents();
+    //dialog.update();
+    //QApplication::processEvents();
 
     current = nodes.front();
     nodes.pop_front();

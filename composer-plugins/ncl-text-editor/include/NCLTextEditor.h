@@ -33,17 +33,22 @@
 
 #define PREF_FONT_FAMILY "Courier"
 #define PREF_FONT_SIZE 10
-/* Light Style */
-#define PREF_CARET_LINE_BG_COLOR QColor("#B9D3EE")
-#define PREF_FOLD_MARGIN_FORE_COLOR QColor("#B9D3EE")
-#define PREF_FOLD_MARGIN_BACK_COLOR QColor("#FFFFFF")
-#define MARGINS_BACKGROUND_COLOR QColor("#ffffff")
 
-/* Dark Style */
-/*#define PREF_CARET_LINE_BG_COLOR QColor("#B9D3EE")
-#define PREF_FOLD_MARGIN_FORE_COLOR QColor("#FFFFFF")
-#define PREF_FOLD_MARGIN_BACK_COLOR QColor("#AAAAAA")
-#define MARGINS_BACKGROUND_COLOR QColor("#BBBBBB")*/
+//#define LIGTHSTYLE
+
+#ifdef LIGHTSTYLE
+/* Light Style */
+  #define PREF_CARET_LINE_BG_COLOR QColor("#B9D3EE")
+  #define PREF_FOLD_MARGIN_FORE_COLOR QColor("#B9D3EE")
+  #define PREF_FOLD_MARGIN_BACK_COLOR QColor("#FFFFFF")
+  #define MARGINS_BACKGROUND_COLOR QColor("#ffffff")
+#else
+  /* Dark Style */
+  #define PREF_CARET_LINE_BG_COLOR QColor("#B9D3EE")
+  #define PREF_FOLD_MARGIN_FORE_COLOR QColor("#FFFFFF")
+  #define PREF_FOLD_MARGIN_BACK_COLOR QColor("#AAAAAA")
+  #define MARGINS_BACKGROUND_COLOR QColor("#BBBBBB")
+#endif
 
 //! The NCL Text Editor
 /*!

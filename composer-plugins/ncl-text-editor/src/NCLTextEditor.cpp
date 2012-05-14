@@ -65,10 +65,12 @@ void NCLTextEditor::initParameters()
   /* AutoCompletetion parameters */
   setAutoCompletionThreshold(-1);
   setAutoCompletionFillupsEnabled(false);
-  setAutoIndent(true);
-  setIndentationWidth(2);
-  //  setIndentationGuides(true);
-  setIndentationsUseTabs(true);
+  // setAutoIndent(true);
+  // setIndentationWidth(0);
+  // setIndentationGuides(true);
+  // setTabIndents(true);
+  setTabWidth(8);
+  // setIndentationsUseTabs(true);
 
 
   setAnnotationDisplay(QsciScintilla::AnnotationBoxed);
