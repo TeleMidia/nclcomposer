@@ -331,32 +331,32 @@ Desea guardar los cambios realizados?</translation>
 <context>
     <name>NCLTextualViewPlugin</name>
     <message>
-        <location filename="../ncl-text-editor/src/NCLTextualViewPlugin.cpp" line="550"/>
+        <location filename="../ncl-text-editor/src/NCLTextualViewPlugin.cpp" line="552"/>
         <source>Error</source>
         <translation>Error</translation>
     </message>
     <message>
-        <location filename="../ncl-text-editor/src/NCLTextualViewPlugin.cpp" line="551"/>
+        <location filename="../ncl-text-editor/src/NCLTextualViewPlugin.cpp" line="553"/>
         <source>Your document is not a Well-formed XML</source>
         <translation>Su documento no es un XML bien estructurado</translation>
     </message>
     <message>
-        <location filename="../ncl-text-editor/src/NCLTextualViewPlugin.cpp" line="641"/>
+        <location filename="../ncl-text-editor/src/NCLTextualViewPlugin.cpp" line="643"/>
         <source>Synchronizing with other plugins...</source>
         <translation>Sincronizando con otros plugins...</translation>
     </message>
     <message>
-        <location filename="../ncl-text-editor/src/NCLTextualViewPlugin.cpp" line="642"/>
+        <location filename="../ncl-text-editor/src/NCLTextualViewPlugin.cpp" line="644"/>
         <source>Cancel</source>
         <translation>Cancelar</translation>
     </message>
     <message>
-        <location filename="../ncl-text-editor/src/NCLTextualViewPlugin.cpp" line="951"/>
+        <location filename="../ncl-text-editor/src/NCLTextualViewPlugin.cpp" line="961"/>
         <source>Textual View synchronization</source>
         <translation>Sincronización -Visión Textual</translation>
     </message>
     <message>
-        <location filename="../ncl-text-editor/src/NCLTextualViewPlugin.cpp" line="952"/>
+        <location filename="../ncl-text-editor/src/NCLTextualViewPlugin.cpp" line="962"/>
         <source>You have changed the textual content of the NCL                                        Document. Do you want to synchronize this text with                                        other views?</source>
         <translation>Usted ha modificado el contenido textual del Documento NCL. Usted desea sincronizar este texto con las otras visiones?</translation>
     </message>
@@ -377,33 +377,33 @@ Desea guardar los cambios realizados?</translation>
 <context>
     <name>NCLTreeWidget</name>
     <message>
-        <location filename="../outline-view/src/NCLTreeWidget.cpp" line="60"/>
-        <location filename="../outline-view/src/NCLTreeWidget.cpp" line="199"/>
+        <location filename="../outline-view/src/NCLTreeWidget.cpp" line="64"/>
+        <location filename="../outline-view/src/NCLTreeWidget.cpp" line="204"/>
         <source>&amp;Add child</source>
         <translation>&amp;Adicionar elemento hijo</translation>
     </message>
     <message>
-        <location filename="../outline-view/src/NCLTreeWidget.cpp" line="68"/>
+        <location filename="../outline-view/src/NCLTreeWidget.cpp" line="72"/>
         <source>&amp;Remove Selected element</source>
         <translation>&amp;Remover el Elemento Seleccionado</translation>
     </message>
     <message>
-        <location filename="../outline-view/src/NCLTreeWidget.cpp" line="77"/>
+        <location filename="../outline-view/src/NCLTreeWidget.cpp" line="81"/>
         <source>&amp;Expand All</source>
         <translation>&amp;Expandir Todo</translation>
     </message>
     <message>
-        <location filename="../outline-view/src/NCLTreeWidget.cpp" line="200"/>
+        <location filename="../outline-view/src/NCLTreeWidget.cpp" line="205"/>
         <source>Element name:</source>
         <translation>Nombre del Elemento:</translation>
     </message>
     <message>
-        <location filename="../outline-view/src/NCLTreeWidget.cpp" line="291"/>
+        <location filename="../outline-view/src/NCLTreeWidget.cpp" line="296"/>
         <source>Deleting Element</source>
         <translation>Eliminando Elemento</translation>
     </message>
     <message>
-        <location filename="../outline-view/src/NCLTreeWidget.cpp" line="292"/>
+        <location filename="../outline-view/src/NCLTreeWidget.cpp" line="297"/>
         <source>Do you really want delete the %1 element ?</source>
         <translation>Usted está seguro que desea eliminar el %1 elemento?</translation>
     </message>
@@ -463,17 +463,17 @@ Desea guardar los cambios realizados?</translation>
         <translation>Formulário</translation>
     </message>
     <message>
-        <location filename="../properties-view/ui/PropertyEditorWidget.ui" line="29"/>
+        <location filename="../properties-view/ui/PropertyEditorWidget.ui" line="59"/>
         <source>None</source>
         <translation>Ninguno</translation>
     </message>
     <message>
-        <location filename="../properties-view/ui/PropertyEditorWidget.ui" line="91"/>
+        <location filename="../properties-view/ui/PropertyEditorWidget.ui" line="152"/>
         <source>Attribute</source>
         <translation>Atributo</translation>
     </message>
     <message>
-        <location filename="../properties-view/ui/PropertyEditorWidget.ui" line="99"/>
+        <location filename="../properties-view/ui/PropertyEditorWidget.ui" line="160"/>
         <source>Value</source>
         <translation>Valor</translation>
     </message>
@@ -497,13 +497,13 @@ Desea guardar los cambios realizados?</translation>
     </message>
     <message>
         <location filename="../outline-view/src/NCLTreeWidget.cpp" line="37"/>
-        <location filename="../outline-view/src/NCLTreeWidget.cpp" line="98"/>
+        <location filename="../outline-view/src/NCLTreeWidget.cpp" line="102"/>
         <source>Element</source>
         <translation>Elemento</translation>
     </message>
     <message>
         <location filename="../outline-view/src/NCLTreeWidget.cpp" line="37"/>
-        <location filename="../outline-view/src/NCLTreeWidget.cpp" line="98"/>
+        <location filename="../outline-view/src/NCLTreeWidget.cpp" line="102"/>
         <source>Attributes</source>
         <translation>Atributo</translation>
     </message>
@@ -514,11 +514,16 @@ Desea guardar los cambios realizados?</translation>
     </message>
     <message>
         <location filename="../outline-view/src/NCLTreeWidget.cpp" line="38"/>
+        <source>Element UId</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../outline-view/src/NCLTreeWidget.cpp" line="39"/>
         <source>Tagname</source>
         <translation>Tagname</translation>
     </message>
     <message>
-        <location filename="../outline-view/src/NCLTreeWidget.cpp" line="99"/>
+        <location filename="../outline-view/src/NCLTreeWidget.cpp" line="103"/>
         <source>id</source>
         <translation>id</translation>
     </message>
@@ -541,24 +546,38 @@ Desea guardar los cambios realizados?</translation>
 <context>
     <name>QnlyComposerPlugin</name>
     <message>
-        <location filename="../qncllayout/src/qnlycomposerplugin.cpp" line="1003"/>
+        <location filename="../qncllayout/src/qnlycomposerplugin.cpp" line="1002"/>
         <source>Please, tell what do you want to do</source>
         <translation>Por favor, diga lo que usted desea hacer</translation>
     </message>
     <message>
-        <location filename="../qncllayout/src/qnlycomposerplugin.cpp" line="1008"/>
         <source>Create a new descriptor</source>
-        <translation>Crear un nuevo descriptor</translation>
+        <translation type="obsolete">Crear un nuevo descriptor</translation>
     </message>
     <message>
-        <location filename="../qncllayout/src/qnlycomposerplugin.cpp" line="1012"/>
+        <location filename="../qncllayout/src/qnlycomposerplugin.cpp" line="1007"/>
+        <source>Use a descriptor</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qncllayout/src/qnlycomposerplugin.cpp" line="1011"/>
         <source>Import region properties to media object</source>
         <translation>Importar las propiedades de la region para el objeto de media</translation>
     </message>
     <message>
-        <location filename="../qncllayout/src/qnlycomposerplugin.cpp" line="1017"/>
+        <location filename="../qncllayout/src/qnlycomposerplugin.cpp" line="1016"/>
         <source>Nothing!</source>
         <translation>Nada!</translation>
+    </message>
+    <message>
+        <location filename="../qncllayout/src/qnlycomposerplugin.cpp" line="1047"/>
+        <source>Descriptor id:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qncllayout/src/qnlycomposerplugin.cpp" line="1048"/>
+        <source>Please, enter the descriptor id</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -1315,32 +1334,32 @@ Desea guardar los cambios realizados?</translation>
 <context>
     <name>QnstView</name>
     <message>
-        <location filename="../qnclstructural/src/ui/view/qnstview.cpp" line="4958"/>
+        <location filename="../qnclstructural/src/ui/view/qnstview.cpp" line="4946"/>
         <source>Copy</source>
         <translation>Copiar</translation>
     </message>
     <message>
-        <location filename="../qnclstructural/src/ui/view/qnstview.cpp" line="4959"/>
+        <location filename="../qnclstructural/src/ui/view/qnstview.cpp" line="4947"/>
         <source>Would you like to make a reference instead?</source>
         <translation>Le gustaria hacer una referencia en lugar de?</translation>
     </message>
     <message>
-        <location filename="../qnclstructural/src/ui/view/qnstview.cpp" line="4960"/>
+        <location filename="../qnclstructural/src/ui/view/qnstview.cpp" line="4948"/>
         <source>Cancel</source>
         <translation>Cancelar</translation>
     </message>
     <message>
-        <location filename="../qnclstructural/src/ui/view/qnstview.cpp" line="4961"/>
+        <location filename="../qnclstructural/src/ui/view/qnstview.cpp" line="4949"/>
         <source>No</source>
         <translation>No</translation>
     </message>
     <message>
-        <location filename="../qnclstructural/src/ui/view/qnstview.cpp" line="4962"/>
+        <location filename="../qnclstructural/src/ui/view/qnstview.cpp" line="4950"/>
         <source>Yes</source>
         <translation>Si</translation>
     </message>
     <message>
-        <location filename="../qnclstructural/src/ui/view/qnstview.cpp" line="5881"/>
+        <location filename="../qnclstructural/src/ui/view/qnstview.cpp" line="5860"/>
         <source>Images (*.png)</source>
         <translation>Imágenes(*.png)</translation>
     </message>
