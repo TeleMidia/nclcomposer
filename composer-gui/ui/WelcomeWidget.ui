@@ -1050,7 +1050,7 @@ font-family: Verdana;</string>
       <item row="3" column="0" colspan="4">
        <widget class="QLabel" name="label_BuildMessage">
         <property name="text">
-         <string>This is a test version. Build:</string>
+         <string/>
         </property>
         <property name="alignment">
          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
