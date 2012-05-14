@@ -191,7 +191,7 @@ isEmpty(trans.path) {
 }
 
 TRANSLATIONS += translations/composer_pt_BR.ts \
-                translations/composer_es.ts
+                translations/composer_es_ES.ts
 
 INSTALLS += target trans bases
 
