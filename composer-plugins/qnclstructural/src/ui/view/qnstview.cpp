@@ -556,19 +556,19 @@ void QnstView::readLink(QDomElement element, QDomElement parent)
 
                     QString act = element.attribute("action");
 
-                    if (act == "Start"){
+                    if (act == "start"){
                         entity->setAction(Qnst::Start);
 
-                    }else if (act == "Stop"){
+                    }else if (act == "stop"){
                         entity->setAction(Qnst::Stop);
 
-                    }else if (act == "Pause"){
+                    }else if (act == "pause"){
                         entity->setAction(Qnst::Pause);
 
-                    }else if (act == "Resume"){
+                    }else if (act == "resume"){
                         entity->setAction(Qnst::Resume);
 
-                    }else if (act == "Set"){
+                    }else if (act == "set"){
                         entity->setAction(Qnst::Set);
 
                     }else{
