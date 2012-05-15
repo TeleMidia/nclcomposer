@@ -33,9 +33,14 @@ else:win32 {
 #TRANSLATIONS
 win32 {
     trans.path = $$INSTALLBASE/extensions
-} else:unix {
+
+} else:macx{
+    trans.path = "/Library/Application Support/Composer/Extensions"
+
+}else:unix {
     trans.path = $$INSTALLBASE/lib/composer/extensions
 }
+
 trans.files = translations/*.qm
 
 isEmpty(trans.path) {
