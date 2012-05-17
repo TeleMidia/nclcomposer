@@ -25,6 +25,10 @@ using namespace composer::extension;
 
 #include "ui/view/qnstview.h"
 
+//
+// ATTENTION: This code needs a refactoring.
+//
+
 class QnstComposerPlugin : public IPlugin
 {
     Q_OBJECT

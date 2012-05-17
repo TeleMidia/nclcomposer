@@ -11,6 +11,10 @@
 #include "qnstmenu.h"
 #include "qncggraphicsentity.h"
 
+//
+// ATTENTION: This code needs a refactoring.
+//
+
 class QnstGraphicsEntity : public QncgGraphicsEntity, public QnstEntity
 {
     Q_OBJECT

@@ -70,7 +70,6 @@ void QnstGraphicsInterface::adjust(bool avoidCollision)
         adjustToBorder();
 
         if (avoidCollision){
-          qDebug() << "=================" << "AVOIDING INTERFACE COLLISION";
 
           int colliding;
           int maxInter = 10, inter = 0;

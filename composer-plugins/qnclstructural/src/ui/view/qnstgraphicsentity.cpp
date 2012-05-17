@@ -1,5 +1,9 @@
 #include "qnstgraphicsentity.h"
 
+//
+// ATTENTION: This code needs a refactoring.
+//
+
 QnstGraphicsEntity::QnstGraphicsEntity(QnstGraphicsEntity* parent)
   : QncgGraphicsEntity(parent), QnstEntity(parent)
 {

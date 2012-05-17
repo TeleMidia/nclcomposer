@@ -43,6 +43,10 @@
 
 class QnstAddCommand;
 
+//
+// ATTENTION: This code needs a refactoring.
+//
+
 class QnstView : public QGraphicsView
 {
     Q_OBJECT

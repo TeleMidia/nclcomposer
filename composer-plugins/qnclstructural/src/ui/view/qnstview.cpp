@@ -1,5 +1,9 @@
 #include "qnstview.h"
 
+//
+// ATTENTION: This code needs a refactoring.
+//
+
 QnstView::QnstView(QWidget* parent)
     : QGraphicsView(parent)
 {
@@ -1273,8 +1277,6 @@ void QnstView::removeEntity(const QString uid, bool undo, bool rmRef)
 {
     qDebug() << "[QNST]" << ":" << "Removing entity '"+uid+"'";
 
-    qDebug() << "=================================";
-
     if (entities.contains(uid)){
 
         QnstGraphicsEntity* entity = entities[uid];
@@ -1540,7 +1542,6 @@ void QnstView::removeEntity(const QString uid, bool undo, bool rmRef)
             }
         }
     }else if (importBases.contains(uid)){
-        qDebug() << "================================= IMPORTBASE";
 
         foreach(QnstConncetor* cc, connectors.values()){
             if (cc->getnstUid() == importBases[uid]){
@@ -1824,11 +1825,7 @@ void QnstView::changeImportBase(QString uid, const QMap<QString, QString> proper
         }
     }
 
-    qDebug() << "===========================" << properties["documentURI"] << properties["projectURI"] << properties["alias"];
-
     if (properties["documentURI"] != "" && properties["projectURI"] != "" && properties["alias"] != ""){
-
-        qDebug() << "=========================== LOADING";
 
         int n = properties["projectURI"].lastIndexOf("/");
 
@@ -1836,17 +1833,13 @@ void QnstView::changeImportBase(QString uid, const QMap<QString, QString> proper
 
         if (file->exists()){
             if (file->open(QIODevice::ReadOnly)){
-                qDebug() << "=========================== NOW";
 
                 QDomDocument* domdoc = new QDomDocument();
-
-                qDebug() << "=========================== " << connectors.size();
 
                 if (domdoc->setContent(file)){
                     readImportBase(importBases[uid], domdoc->firstChildElement(), properties["alias"]);
                 }
 
-                qDebug() << "=========================== " << connectors.size();
             }
         }
 
@@ -2297,7 +2290,6 @@ QMap<QString, QString> properties)
 
 void QnstView::adjustMedia(QnstGraphicsMedia* entity)
 {
-    qDebug() << "=================" << entity->getnstId() << "->" << entity->getRefer() << entity->getReferUID() << entity->getInstance();
 
     if (entity->getRefer() != "" && entity->getReferUID() != "" && entity->getInstance() != ""){
 
@@ -2776,7 +2768,6 @@ void QnstView::changeMapping(QnstGraphicsMapping* entity, const QMap<QString, QS
 
 void QnstView::adjustMapping(QnstGraphicsMapping* entity)
 {
-    qDebug() << "========" << entity->getComponentUid() << entity->getSwitchPortUid();
 
     if (entities.contains(entity->getComponentUid()) && entities.contains(entity->getSwitchPortUid())){
         QnstGraphicsEdge* edge = (QnstGraphicsEdge*) entity;
@@ -2944,7 +2935,6 @@ void QnstView::addArea(const QString uid, const QString parent, const QMap<QStri
         entity->adjust();
 
         if (adjust){
-            qDebug() << "================================ Adjust from ADD AREA";
 
             adjustMedia((QnstGraphicsMedia*) entities[parent]);
 
@@ -3035,7 +3025,6 @@ void QnstView::addProperty(const QString uid, const QString parent, const QMap<Q
         entity->adjust();
 
         if (adjust){
-            qDebug() << "================================ Adjust from ADD PROPERTY";
 
             adjustMedia((QnstGraphicsMedia*) entities[parent]);
 
@@ -3239,15 +3228,12 @@ void QnstView::adjustBind(QnstBind* entity)
             if (connectors.contains(parent->getxConnector())){
                 QnstConncetor* connector = connectors[parent->getxConnector()];
 
-                qDebug() << "==========================" << "ROLE:" << entity->getRole();
-
                 if (entity->getRole() == "NoConditionType"){
                     parent->addCondition(entity);
 
                 }else{
                     foreach(QString type, connector->getConditions()){
 
-                        qDebug() << "==========================" << "CTYPE:" << type;
                         if (type == entity->getRole()){
                             parent->addCondition(entity);
 
@@ -3260,7 +3246,6 @@ void QnstView::adjustBind(QnstBind* entity)
                     parent->addAction(entity);
                 }else{
                     foreach(QString type, connector->getActions()){
-                        qDebug() << "==========================" << "ATYPE:" << type;
 
                         if (type == entity->getRole()){
                             parent->addAction(entity);
@@ -3274,7 +3259,6 @@ void QnstView::adjustBind(QnstBind* entity)
             }
 
             if (parent->getConditions().contains(entity->getnstUid())){
-                qDebug() << "======================" << "CONDITION:";
 
                 if (parent->getAggregatorUID() == ""){
                     QnstGraphicsEntity* node = (QnstGraphicsEntity*) parent->getnstParent();
@@ -3295,7 +3279,7 @@ void QnstView::adjustBind(QnstBind* entity)
                 }
 
                 if (entities.contains(entity->getComponentUid()) && entities.contains(parent->getAggregatorUID())){
-                    qDebug() << "======================" << "DRAWING";
+
 
 
                     if (entity->getInterface() != ""){
@@ -3306,10 +3290,10 @@ void QnstView::adjustBind(QnstBind* entity)
                             QnstGraphicsEntity* parenta = entitya->getnstGraphicsParent();
                             QnstGraphicsEntity* parentb = entityb->getnstGraphicsParent();
 
-                            qDebug() << "======================" << "1";
+
 
                             if (parenta != NULL && parentb != NULL && parenta->getnstGraphicsParent() == parentb){
-                                qDebug() << "======================" << "1.1";
+
                                 QnstGraphicsCondition* graphics = new QnstGraphicsCondition();
                                 graphics->setnstUid(entity->getnstUid());
                                 graphics->setnstGraphicsParent(parentb);
@@ -3365,7 +3349,7 @@ void QnstView::adjustBind(QnstBind* entity)
                         }
 
                     }else{
-                        qDebug() << "======================" << "2";
+
                         QnstGraphicsEntity* entitya = entities[entity->getComponentUid()];
                         QnstGraphicsEntity* entityb = entities[parent->getAggregatorUID()];
 
@@ -3373,7 +3357,7 @@ void QnstView::adjustBind(QnstBind* entity)
                         QnstGraphicsEntity* parentb = entityb->getnstGraphicsParent();
 
                         if (parenta == parentb && parenta != NULL && parentb != NULL){
-                            qDebug() << "======================" << "2.1";
+
                             QnstGraphicsCondition* graphics = new QnstGraphicsCondition();
                             graphics->setnstUid(entity->getnstUid());
                             graphics->setnstGraphicsParent(parenta);
@@ -3432,7 +3416,7 @@ void QnstView::adjustBind(QnstBind* entity)
                 }
 
             }else if (parent->getActions().contains(entity->getnstUid())){
-                qDebug() << "======================" << "ACTION:";
+
 
                 if (parent->getAggregatorUID() == ""){
                     QnstGraphicsEntity* node = (QnstGraphicsEntity*) parent->getnstParent();
@@ -3456,7 +3440,7 @@ void QnstView::adjustBind(QnstBind* entity)
 
                     if (entity->getInterface() != ""){
                         if (entities.contains(entity->getInterfaceUid()) &&  entities[entity->getComponentUid()]->getnstGraphicsEntities().contains(entities[entity->getInterfaceUid()])){
-                            qDebug() << "======================" << "3";
+
 
                             QnstGraphicsEntity* entitya = entities[parent->getAggregatorUID()];
                             QnstGraphicsEntity* entityb = entities[entity->getInterfaceUid()];
@@ -3465,7 +3449,7 @@ void QnstView::adjustBind(QnstBind* entity)
                             QnstGraphicsEntity* parentb = entityb->getnstGraphicsParent();
 
                             if (parenta != NULL && parentb != NULL && parenta == parentb->getnstGraphicsParent()){
-                                qDebug() << "======================" << "3.1";
+
                                 QnstGraphicsAction* graphics = new QnstGraphicsAction();
                                 graphics->setnstUid(entity->getnstUid());
                                 graphics->setnstGraphicsParent(parenta);
@@ -3521,7 +3505,7 @@ void QnstView::adjustBind(QnstBind* entity)
                         }
 
                     }else{
-                        qDebug() << "======================" << "4";
+
 
                         QnstGraphicsEntity* entitya = entities[parent->getAggregatorUID()];
                         QnstGraphicsEntity* entityb = entities[entity->getComponentUid()];
@@ -3530,17 +3514,12 @@ void QnstView::adjustBind(QnstBind* entity)
                         QnstGraphicsEntity* parentb = entityb->getnstGraphicsParent();
 
                         if (parenta == parentb && parenta != NULL && parentb != NULL){
-                            qDebug() << "======================" << "4.1";
 
                             QnstGraphicsAction* graphics = new QnstGraphicsAction();
                             graphics->setnstUid(entity->getnstUid());
                             graphics->setnstGraphicsParent(parentb);
                             graphics->setEntityA(entitya);
                             graphics->setEntityB(entityb);
-
-                            qDebug() << "======================" << entitya->getnstId() << entitya->getnstUid();
-                            qDebug() << "======================" << entityb->getnstId() << entityb->getnstUid();
-
 
                             // adjusting angle
                             adjustAngle(graphics, entitya, entityb);
@@ -4825,7 +4804,7 @@ void QnstView::performHelp()
 
 void QnstView::performUndo()
 {
-    qDebug() << "============================ undo";
+
 
     if (history.canUndo()){
         history.undo();
@@ -4834,7 +4813,7 @@ void QnstView::performUndo()
 
 void QnstView::performRedo()
 {
-    qDebug() << "============================ redo";
+
 
     if (history.canRedo()){
         history.redo();

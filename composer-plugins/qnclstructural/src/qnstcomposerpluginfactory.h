@@ -23,6 +23,10 @@ using namespace composer::extension;
 
 #include "qnstcomposerplugin.h"
 
+//
+// ATTENTION: This code needs a refactoring.
+//
+
 class QnstComposerPluginFactory : public QObject, public IPluginFactory
 {
     Q_OBJECT

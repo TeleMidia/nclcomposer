@@ -152,7 +152,6 @@ void QnstGraphicsNode::adjust(bool avoidCollision)
         entity->adjust();
     }
 
-//    qDebug() << "===========================================" << avoidCollision;
 
     if(getnstGraphicsParent() != NULL)
     {

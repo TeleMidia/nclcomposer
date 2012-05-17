@@ -15,6 +15,11 @@
  * License along with this library.  If not, see
  * <http://www.gnu.org/licenses/>. 
  */
+
+//
+// ATTENTION: This code needs a refactoring.
+//
+
 #include "qnstcomposerpluginfactory.h"
 
 QnstComposerPluginFactory::QnstComposerPluginFactory(QObject* parent)

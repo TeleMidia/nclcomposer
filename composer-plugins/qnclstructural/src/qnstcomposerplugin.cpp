@@ -17,6 +17,10 @@
  */
 #include "qnstcomposerplugin.h"
 
+//
+// ATTENTION: This code needs a refactoring.
+//
+
 QnstComposerPlugin::QnstComposerPlugin(QObject* parent)
 {
     setParent(parent);
@@ -448,8 +452,6 @@ void QnstComposerPlugin::requestEntityChange(Entity* entity)
 
     // if the entity is of type ImportBase
     }else if (entity->getType() == "importBase"){
-        qDebug() << "============================== QnstComposerPlugin::requestEntityChange IMPORTBASE";
-
         requestImportBaseChange(entity);
 
     // if the entity is of type AREA
@@ -501,8 +503,6 @@ void QnstComposerPlugin::requestBodyAddition(Entity* entity)
     if (entity->getAttribute("id") != ""){
         properties["id"] = entity->getAttribute("id");
     }
-
-    qDebug() << "=============================" << entity->getAttribute("id");
 
     view->addEntity(entity->getUniqueId(), "", properties);
 }
@@ -1334,18 +1334,6 @@ void QnstComposerPlugin::requestEntityAddition(const QString uid, const QString 
     else if (properties["TYPE"] == "bindParam"){
         requestBindParamAddition(uid, parent, properties);
     }
-
-//    QString coreID = entities.key(uid);
-//    QnstEntity *qnstEntity = view->entities.value(uid);
-
-//    qDebug() << "[QNST] qnstEntity = " << qnstEntity;
-//    if(qnstEntity != NULL)
-//    {
-//        qDebug() << "[QNST] USERDATA = " << qnstEntity->getUsrData();
-
-//      emit setAttributes(project->getEntityById(coreID),
-//                         qnstEntity->getUsrData(), false);
-//    }
 }
 
 void QnstComposerPlugin::requestEntityRemotion(const QString uid)
@@ -1723,8 +1711,6 @@ void QnstComposerPlugin::requestPortChange(const QString uid, const QMap<QString
 
         if(properties["interface"] != "")
             attributes["interface"] = properties["interface"];
-
-        qDebug() << "=======================" << attributes;
 
         emit setAttributes(entity, attributes, false);
     }
@@ -2197,18 +2183,12 @@ QString QnstComposerPlugin::getNCLIdFromEntity(Entity *entity)
     if(entity->getType() == "body") // forces an ID if it not exists for body!
       nclID = insertNCLIDIfEmpty(entity);
 
-//    if(entity->getType() == "head")
-//      nclID = "head_id";
 
     if(entity->hasAttribute("id"))
       nclID = entity->getAttribute("id");
     else if(entity->hasAttribute("name"))
       nclID = entity->getAttribute("name");
-//    else if(entity->getType() == "bind")
-//    {
-//      nclID = entity->getType() + "_" + entity->getAttribute("component") + "_"
-//          + entity->getAttribute("interface");
-//    }
+
     else if(entity->hasAttribute("alias"))
         nclID = entity->getAttribute("alias");
     else
