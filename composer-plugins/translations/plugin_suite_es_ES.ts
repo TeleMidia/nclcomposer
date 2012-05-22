@@ -515,7 +515,7 @@ Desea guardar los cambios realizados?</translation>
     <message>
         <location filename="../outline-view/src/NCLTreeWidget.cpp" line="38"/>
         <source>Element UId</source>
-        <translation type="unfinished"></translation>
+        <translation>UID del Elemento</translation>
     </message>
     <message>
         <location filename="../outline-view/src/NCLTreeWidget.cpp" line="39"/>
@@ -557,7 +557,7 @@ Desea guardar los cambios realizados?</translation>
     <message>
         <location filename="../qncllayout/src/qnlycomposerplugin.cpp" line="1007"/>
         <source>Use a descriptor</source>
-        <translation type="unfinished"></translation>
+        <translation>Use un descriptor</translation>
     </message>
     <message>
         <location filename="../qncllayout/src/qnlycomposerplugin.cpp" line="1011"/>
@@ -572,12 +572,12 @@ Desea guardar los cambios realizados?</translation>
     <message>
         <location filename="../qncllayout/src/qnlycomposerplugin.cpp" line="1047"/>
         <source>Descriptor id:</source>
-        <translation type="unfinished"></translation>
+        <translation>Id de Descriptor</translation>
     </message>
     <message>
         <location filename="../qncllayout/src/qnlycomposerplugin.cpp" line="1048"/>
         <source>Please, enter the descriptor id</source>
-        <translation type="unfinished"></translation>
+        <translation>Por favor, ingrese el id de descriptor</translation>
     </message>
 </context>
 <context>
