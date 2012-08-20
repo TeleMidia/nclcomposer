@@ -45,9 +45,13 @@ QString Utilities::getExtensionForLanguageType(LanguageType type)
 QString Utilities::relativePath( QString absolutePath, QString relativeTo,
                                  bool bIsFile /*= false*/ )
 {
-    QStringList absoluteDirectories = absolutePath.split("/",
+  //force the "/" instead of "\\"
+  absolutePath = absolutePath.replace("\\", "/");
+  relativeTo = relativeTo.replace("\\", "/");
+
+  QStringList absoluteDirectories = absolutePath.split("/",
                                                        QString::SkipEmptyParts);
-    QStringList relativeDirectories = relativeTo.split("/",
+  QStringList relativeDirectories = relativeTo.split("/",
                                                      QString::SkipEmptyParts);
 
   //Get the shortest of the two paths
