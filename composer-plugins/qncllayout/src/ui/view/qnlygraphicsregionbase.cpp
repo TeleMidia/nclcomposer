@@ -1070,6 +1070,16 @@ void QnlyGraphicsRegionBase::mousePressEvent(QGraphicsSceneMouseEvent* event)
     }
 }
 
+void QnlyGraphicsRegionBase::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
+{
+  if(selectedRegion != NULL)
+  {
+    selectedRegion->updateCursor(event);
+  }
+
+  QGraphicsScene::mouseMoveEvent(event);
+}
+
 void QnlyGraphicsRegionBase::contextMenuEvent(
         QGraphicsSceneContextMenuEvent* event)
 {

@@ -17,6 +17,8 @@
  */
 #include "qnlygraphicsregion.h"
 
+#include <QCursor>
+
 QnlyGraphicsRegion::QnlyGraphicsRegion(QMenu* switchMenu,
                                        QnlyGraphicsRegion* parent)
     : QObject(parent), QGraphicsItem(parent)
@@ -80,6 +82,10 @@ void QnlyGraphicsRegion::setParent(QnlyGraphicsRegion* region)
 void QnlyGraphicsRegion::setMoving(bool moving)
 {
     this->moving = moving;
+    if(moving)
+      setCursor(QCursor(Qt::ClosedHandCursor));
+    else
+      setCursor(QCursor(Qt::ArrowCursor));
 }
 
 bool QnlyGraphicsRegion::isResizing() const
@@ -1138,14 +1144,64 @@ void QnlyGraphicsRegion::paint(QPainter *painter, const QStyleOptionGraphicsItem
     painter->drawText(4+6,4+6,width-1-4-6,height-1-4-6,Qt::AlignLeft, text);
 }
 
+void QnlyGraphicsRegion::updateCursor(QGraphicsSceneMouseEvent* event)
+{
+  Qt::CursorShape newShape;
+  if(!resizing && !moving)
+  {
+    QPointF pos = mapFromScene(event->scenePos());
+
+    // in the middle (UP or DOWN)
+    if (QRectF((width+8)/2 - 4,0,8,8).contains(pos) ||
+        QRectF((width+8)/2 - 4,(height+8) - 8,8,8).contains(pos))
+    {
+        newShape = Qt::SizeVerCursor;
+    }
+
+    // TOPLEFT or BOTTOM RIGHT
+    else if (QRectF(0,0,8,8).contains(pos) ||
+             QRectF((width+8) - 8,(height+8) - 8,8,8).contains(pos))
+
+    {
+      newShape = Qt::SizeFDiagCursor;
+    }
+
+    // TOPRIGHT or BOTTOMLEFT
+    else if (QRectF((width+8) - 8,0,8,8).contains(pos) ||
+             QRectF(0,(height+8) - 8,8,8).contains(pos))
+    {
+      newShape = Qt::SizeBDiagCursor;
+    }
+
+    // RIGHT OR LEFT
+    else if (QRectF((width+8)-8-1,(height+8)/2-4-1,8,8).contains(pos) ||
+             QRectF(0,(height+8)/2-4-1,8,8).contains(pos))
+    {
+      newShape = Qt::SizeHorCursor;
+    }
+
+    else
+    {
+      newShape = Qt::ArrowCursor;
+    }
+
+    if(newShape != cursor().shape())
+    {
+      setCursor(newShape);
+    }
+  }
+}
+
 void QnlyGraphicsRegion::mouseMoveEvent(QGraphicsSceneMouseEvent* event)
 {
-    if (moving){
-        move(event);
-
-    }else if (resizing){
-        resize(event);
-    }
+  if (moving)
+  {
+    move(event);
+  }
+  else if (resizing)
+  {
+    resize(event);
+  }
 }
 
 void QnlyGraphicsRegion::mousePressEvent(QGraphicsSceneMouseEvent* event)

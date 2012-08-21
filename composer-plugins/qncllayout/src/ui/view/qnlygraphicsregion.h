@@ -35,6 +35,7 @@
 #include <QLineEdit>
 #include <QTextDocument>
 #include <QKeyEvent>
+#include <QGraphicsSceneMouseEvent>
 
 #include "qnlygraphicsregionbase.h"
 
@@ -178,6 +179,8 @@ public:
     void hideRegion(QnlyGraphicsRegion* region);
 
     void updateActionText(QnlyGraphicsRegion *region);
+
+    void updateCursor(QGraphicsSceneMouseEvent* event);
 
 signals:
     void regionAdditionRequested(QnlyGraphicsRegion* parent);

@@ -177,6 +177,8 @@ void QnlyView::createActions()
 
     regionbaseActionGroup = new QActionGroup(this);
     regionbaseActionGroup->setExclusive(true);
+
+    setMouseTracking(true);
 }
 
 void QnlyView::createMenus()
