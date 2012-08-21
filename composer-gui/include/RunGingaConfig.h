@@ -42,6 +42,7 @@ public slots:
 
   void changeToLocal(bool);
   void changeToRemote(bool);
+  void browseButtonPressed();
 };
 
 } } //end namespace

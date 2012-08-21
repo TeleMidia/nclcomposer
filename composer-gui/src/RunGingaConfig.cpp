@@ -11,6 +11,7 @@
 #include "ui_RunGingaConfig.h"
 
 #include <QDebug>
+#include <QFileDialog>
 
 #include <core/util/ComposerSettings.h>
 using namespace composer::core::util;
@@ -24,7 +25,6 @@ RunGingaConfig::RunGingaConfig(QWidget *parent):
   ui->setupUi(this);
 
   ComposerSettings settings;
-
   // \fixme fix the tab order
   setTabOrder(ui->lineEdit_RemoteIP, ui->lineEdit_RemoteUser);
   setTabOrder(ui->lineEdit_RemoteUser, ui->lineEdit_RemotePassword);
@@ -76,6 +76,11 @@ RunGingaConfig::RunGingaConfig(QWidget *parent):
 
   connect(ui->remotevm_Group, SIGNAL(toggled(bool)),
           this, SLOT(changeToRemote(bool)));
+
+  connect(ui->pushButton_Browse, SIGNAL(pressed()),
+          this, SLOT(browseButtonPressed()));
+
+  ui->pushButton_Browse->setEnabled(true);
 }
 
 RunGingaConfig::~RunGingaConfig()
@@ -121,6 +126,20 @@ void RunGingaConfig::changeToRemote(bool toRemote)
   qDebug() << "RunGingaConfig::changeToRemote" << toRemote;
   if(ui->localginga_Group->isChecked() ==  toRemote)
     ui->localginga_Group->setChecked(!toRemote);
+}
+
+void RunGingaConfig::browseButtonPressed()
+{
+  QString gingaPath = QFileDialog::getOpenFileName(this,
+                                            tr("Ginga executable location"),
+                                            ui->lineEdit_local_Command->text());
+  if(gingaPath != "")
+  {
+#ifdef WIN32
+    gingaPath = gingaPath.replace("\\", "/");
+#endif
+    ui->lineEdit_local_Command->setText(gingaPath);
+  }
 }
 
 } } //end namespace

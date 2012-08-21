@@ -152,21 +152,7 @@
      <layout class="QHBoxLayout" name="horizontalLayout">
       <item>
        <layout class="QGridLayout" name="gridLayout">
-        <item row="0" column="0">
-         <widget class="QLabel" name="label">
-          <property name="text">
-           <string>Command:</string>
-          </property>
-         </widget>
-        </item>
-        <item row="0" column="1">
-         <widget class="QLineEdit" name="lineEdit_local_Command">
-          <property name="text">
-           <string>ginga</string>
-          </property>
-         </widget>
-        </item>
-        <item row="1" column="0">
+        <item row="3" column="0">
          <widget class="QLabel" name="label_local_Args">
           <property name="text">
            <string>Arguments: 
@@ -175,7 +161,31 @@ as a different argument)</string>
           </property>
          </widget>
         </item>
+        <item row="1" column="0">
+         <widget class="QLabel" name="label">
+          <property name="text">
+           <string>Command:</string>
+          </property>
+         </widget>
+        </item>
         <item row="1" column="1">
+         <widget class="QLineEdit" name="lineEdit_local_Command">
+          <property name="text">
+           <string>ginga</string>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="2">
+         <widget class="QPushButton" name="pushButton_Browse">
+          <property name="enabled">
+           <bool>false</bool>
+          </property>
+          <property name="text">
+           <string>Browse...</string>
+          </property>
+         </widget>
+        </item>
+        <item row="3" column="1" colspan="2">
          <widget class="QPlainTextEdit" name="plainTextEdit_local_Args">
           <property name="plainText">
            <string>--ncl
