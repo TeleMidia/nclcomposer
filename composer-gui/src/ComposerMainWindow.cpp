@@ -132,7 +132,7 @@ void ComposerMainWindow::initModules()
           welcomeWidget, SLOT(addToRecentProjects(QString)));
 
   connect(welcomeWidget, SIGNAL(userPressedRecentProject(QString)),
-          projectControl, SLOT(launchProject(QString)));
+          this, SLOT(userPressedRecentProject(QString)));
 
   connect(projectControl,SIGNAL(projectAlreadyOpen(QString)),
           SLOT(onOpenProjectTab(QString)));
@@ -1347,104 +1347,10 @@ void ComposerMainWindow::launchProjectWizard()
         // After launch the project we will insert NCL, HEAD and BODY elements
         // by default
         Project *project = ProjectControl::getInstance()
-                            ->getOpenProject(filename);
+                                               ->getOpenProject(filename);
 
-
-        const QString defaultNCLID = "myNCLDocID";
-        const QString defaultBodyID = "myBodyID";
-        const QString defaultConnBaseID = "connBaseId";
-
-        QMap <QString, QString> nclAttrs, headAttrs, bodyAttrs;
-        nclAttrs.insert("id", defaultNCLID);
-        nclAttrs.insert("xmlns", "http://www.ncl.org.br/NCL3.0/EDTVProfile");
-
-        Entity *nclEntity;
-        MessageControl *msgControl = PluginControl::getInstance()
-            ->getMessageControl(project);
-        msgControl->anonymousAddEntity("ncl", project->getUniqueId(), nclAttrs);
-
-        nclEntity = project->getEntitiesbyType("ncl").first();
-
-        if(nclEntity != NULL)
-        {
-          QString nclEntityId = nclEntity->getUniqueId();
-          msgControl->anonymousAddEntity("head", nclEntityId, headAttrs);
-
-          bodyAttrs.insert("id", defaultBodyID);
-          msgControl->anonymousAddEntity("body", nclEntityId, bodyAttrs);
-        }
-
-        // Copy the default connectro
-        if(wizard.shouldCopyDefaultConnBase())
-        {
-          ComposerSettings settings;
-          settings.beginGroup("importBases");
-          QString defaultConnBase =
-              settings.value("default_conn_base").toString();
-          settings.endGroup();
-
-          qDebug() << "[GUI] DefaultConnBase " << defaultConnBase;
-
-          QFileInfo defaultConnBaseInfo(defaultConnBase);
-          if(defaultConnBaseInfo.exists())
-          {
-            QString newConnBase = filename.mid(0, filename.lastIndexOf("/")+1)
-                + defaultConnBaseInfo.fileName();
-
-            qDebug() << "[GUI] Copy " << defaultConnBase << " to "
-                     << newConnBase;
-
-            //remove the file if it already exists
-            if(QFile::exists(newConnBase))
-            {
-              QFile::remove(newConnBase);
-            }
-
-            //copy the defaultConnBase to the project dir
-            if(QFile::copy(defaultConnBase, newConnBase))
-            {
-              //If everything is OK we import the new defaultConnBase to NCL
-              // document.
-
-              QMap <QString, QString> connBaseAttrs, importBaseAttrs;
-              connBaseAttrs.insert("id", defaultConnBaseID);
-              importBaseAttrs.insert("alias", "conn");
-              importBaseAttrs.insert("documentURI",
-                                     defaultConnBaseInfo.fileName());
-
-              //add connectorBase element
-              Entity *head = project->getEntitiesbyType("head").at(0);
-              msgControl->anonymousAddEntity("connectorBase",
-                                             head->getUniqueId(),
-                                             connBaseAttrs);
-
-              //add importBase element
-              Entity *connectorBase =
-                  project->getEntitiesbyType("connectorBase").at(0);
-              msgControl->anonymousAddEntity("importBase",
-                                             connectorBase->getUniqueId(),
-                                             importBaseAttrs);
-            }
-            else //error
-            {
-              QMessageBox::warning(this, tr("Error!"),
-                                   tr("There was an error copying the default"
-                                      "Connector Base. You will need to add a "
-                                      "Connector Base by hand in your NCL "
-                                      "code."),
-                                   tr("Ok"));
-            }
-          }
-          else //error
-          {
-            QMessageBox::warning(this, tr("Error!"),
-                                 tr("The default Connect Base %1 does not"
-                                    "exists").arg(defaultConnBase),
-                                 tr("Ok"));
-          }
-        }
-
-        saveCurrentProject(); //Save the just created basic file!
+        addDefaultStructureToProject( project,
+                                      wizard.shouldCopyDefaultConnBase() );
       }
       else
       {
@@ -1452,6 +1358,109 @@ void ComposerMainWindow::launchProjectWizard()
       }
     }
   }
+}
+
+void ComposerMainWindow::addDefaultStructureToProject(Project *project,
+                                                 bool shouldCopyDefaultConnBase,
+                                                 bool save)
+{
+  const QString defaultNCLID = "myNCLDocID";
+  const QString defaultBodyID = "myBodyID";
+  const QString defaultConnBaseID = "connBaseId";
+
+  QMap <QString, QString> nclAttrs, headAttrs, bodyAttrs;
+  nclAttrs.insert("id", defaultNCLID);
+  nclAttrs.insert("xmlns", "http://www.ncl.org.br/NCL3.0/EDTVProfile");
+
+  Entity *nclEntity;
+  MessageControl *msgControl = PluginControl::getInstance()
+      ->getMessageControl(project);
+  msgControl->anonymousAddEntity("ncl", project->getUniqueId(), nclAttrs);
+
+  nclEntity = project->getEntitiesbyType("ncl").first();
+
+  if(nclEntity != NULL)
+  {
+    QString nclEntityId = nclEntity->getUniqueId();
+    msgControl->anonymousAddEntity("head", nclEntityId, headAttrs);
+
+    bodyAttrs.insert("id", defaultBodyID);
+    msgControl->anonymousAddEntity("body", nclEntityId, bodyAttrs);
+  }
+
+  // Copy the default connectro
+  if(shouldCopyDefaultConnBase)
+  {
+    ComposerSettings settings;
+    settings.beginGroup("importBases");
+    QString defaultConnBase =
+        settings.value("default_conn_base").toString();
+    settings.endGroup();
+
+    qDebug() << "[GUI] DefaultConnBase " << defaultConnBase;
+
+    QFileInfo defaultConnBaseInfo(defaultConnBase);
+    if(defaultConnBaseInfo.exists())
+    {
+      QString filename = project->getLocation();
+      QString newConnBase = filename. mid(0, filename.lastIndexOf("/")+1) +
+                            defaultConnBaseInfo.fileName();
+
+      qDebug() << "[GUI] Copy " << defaultConnBase << " to "
+               << newConnBase;
+
+      //remove the file if it already exists
+      if(QFile::exists(newConnBase))
+      {
+        QFile::remove(newConnBase);
+      }
+
+      //copy the defaultConnBase to the project dir
+      if(QFile::copy(defaultConnBase, newConnBase))
+      {
+        //If everything is OK we import the new defaultConnBase to NCL
+        // document.
+
+        QMap <QString, QString> connBaseAttrs, importBaseAttrs;
+        connBaseAttrs.insert("id", defaultConnBaseID);
+        importBaseAttrs.insert("alias", "conn");
+        importBaseAttrs.insert("documentURI",
+                               defaultConnBaseInfo.fileName());
+
+        //add connectorBase element
+        Entity *head = project->getEntitiesbyType("head").at(0);
+        msgControl->anonymousAddEntity("connectorBase",
+                                       head->getUniqueId(),
+                                       connBaseAttrs);
+
+        //add importBase element
+        Entity *connectorBase =
+            project->getEntitiesbyType("connectorBase").at(0);
+        msgControl->anonymousAddEntity("importBase",
+                                       connectorBase->getUniqueId(),
+                                       importBaseAttrs);
+      }
+      else //error
+      {
+        QMessageBox::warning(this, tr("Error!"),
+                             tr("There was an error copying the default"
+                                "Connector Base. You will need to add a "
+                                "Connector Base by hand in your NCL "
+                                "code."),
+                             tr("Ok"));
+      }
+    }
+    else //error
+    {
+      QMessageBox::warning(this, tr("Error!"),
+                           tr("The default Connect Base %1 does not"
+                              "exists").arg(defaultConnBase),
+                           tr("Ok"));
+    }
+  }
+
+  if(save)
+    saveCurrentProject(); //Save the just created basic file!
 }
 
 void ComposerMainWindow::openProject()
@@ -1551,7 +1560,7 @@ void ComposerMainWindow::updateRecentProjectsMenu(QStringList &recentProjects)
       QAction *act = ui->menu_Recent_Files->addAction(
             recentProjects.at(i));
       act->setData(recentProjects.at(i));
-      connect(act, SIGNAL(triggered()), this, SLOT(openRecentProject()));
+      connect(act, SIGNAL(triggered()), this, SLOT(userPressedRecentProject()));
     }
 
     ui->menu_Recent_Files->addSeparator();
@@ -1564,6 +1573,54 @@ void ComposerMainWindow::updateRecentProjectsMenu(QStringList &recentProjects)
   }
 }
 
+void ComposerMainWindow::userPressedRecentProject(QString src)
+{
+#ifdef WIN32
+  src = src.replace(QDir::separator(), "/");
+#endif
+
+  QFile file(src);
+  bool openCurrentFile = true, recreateFile = false;
+  if(!file.exists())
+  {
+    int resp =
+        QMessageBox::question(this,
+                              tr("File does not exists anymore."),
+                              tr("The File %1 does not exists anymore. "
+                                 "Do you want to create recreate this file "
+                                 "again?").arg(src),
+                              QMessageBox::Yes | QMessageBox::No,
+                              QMessageBox::No);
+
+    if(resp != QMessageBox::Yes)
+      openCurrentFile = false;
+    else
+      recreateFile = true;
+  }
+
+  if(openCurrentFile)
+  {
+    ProjectControl::getInstance()->launchProject(src);
+    if(recreateFile)
+    {
+      // \todo Ask for the import or not of the defaultConnBase.
+      addDefaultStructureToProject(
+            ProjectControl::getInstance()->getOpenProject(src),
+            false,
+            true);
+    }
+  }
+}
+
+void ComposerMainWindow::userPressedRecentProject()
+{
+  QAction *action = qobject_cast<QAction *> (QObject::sender());
+
+  QString src = action->data().toString();
+
+  userPressedRecentProject(src);
+}
+
 void ComposerMainWindow::clearRecentProjects(void)
 {
   ComposerSettings settings;
@@ -1571,12 +1628,6 @@ void ComposerMainWindow::clearRecentProjects(void)
   settings.remove("recentProjects");
   QStringList empty;
   updateRecentProjectsMenu(empty);
-}
-
-void ComposerMainWindow::openRecentProject()
-{
-  QAction *action = qobject_cast<QAction *> (QObject::sender());
-  ProjectControl::getInstance()->launchProject(action->data().toString());
 }
 
 void ComposerMainWindow::selectedAboutCurrentPluginFactory()

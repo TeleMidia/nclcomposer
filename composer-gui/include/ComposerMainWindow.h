@@ -306,7 +306,8 @@ private slots:
 
   void launchProjectWizard();
   void addToRecentProjects(QString projectUrl);
-  void openRecentProject();
+  void userPressedRecentProject(QString src);
+  void userPressedRecentProject();
   void clearRecentProjects(void);
   void importFromDocument();
   /*!
@@ -338,6 +339,10 @@ private slots:
 
   // TODO: Remove this function.
   QString getLastFileDialogPath();
+
+  void addDefaultStructureToProject(Project *project,
+                                    bool shouldCopyDefaultConnBase = true,
+                                    bool save = true);
 
 public:
   /*!
