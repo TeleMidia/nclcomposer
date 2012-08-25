@@ -31,7 +31,7 @@
 namespace composer {
 namespace gui {
 
-const int autoSaveInterval = 180000; //ms
+const int autoSaveInterval = 1 * 60 * 1000; //ms
 
 ComposerMainWindow::ComposerMainWindow(QApplication &app, QWidget *parent)
   : QMainWindow(parent),
@@ -265,6 +265,8 @@ void ComposerMainWindow::openProjects(const QStringList &projects)
 
     if (openCurrentFile)
     {
+      checkTemporaryFileLastModified(src);
+
       ProjectControl::getInstance()->launchProject(src);
     }
   }
@@ -589,6 +591,10 @@ void ComposerMainWindow::tabClosed(int index)
   }
 
   ProjectControl::getInstance()->closeProject(location);
+
+  //Remove temporary file
+  removeTemporaryFile(location);
+
   if(projectsWidgets.contains(location))
   {
     QMainWindow *w = projectsWidgets[location];
@@ -1342,6 +1348,8 @@ void ComposerMainWindow::launchProjectWizard()
       if(!filename.endsWith(".cpr"))
         filename = filename + QString(".cpr");
 
+      checkTemporaryFileLastModified(filename);
+
       if(ProjectControl::getInstance()->launchProject(filename))
       {
         // After launch the project we will insert NCL, HEAD and BODY elements
@@ -1474,10 +1482,48 @@ void ComposerMainWindow::openProject()
 #ifdef WIN32
     filename = filename.replace("\\", "/");
 #endif
+
+    checkTemporaryFileLastModified(filename);
+
     ProjectControl::getInstance()->launchProject(filename);
 
     updateLastFileDialogPath(filename);
   }
+}
+
+void ComposerMainWindow::checkTemporaryFileLastModified(QString filename)
+{
+  QFileInfo temporaryFileInfo(filename + "~");
+  QFileInfo fileInfo(filename);
+
+  if(temporaryFileInfo.exists() &&
+     temporaryFileInfo.lastModified() > fileInfo.lastModified())
+  {
+      bool replace = QMessageBox::question(this,
+                            tr("Temporary file is newer."),
+                            tr("There is a temporary file related to %1 that is"
+                               " newer. Do you want replace the %1 file with "
+                               " this temporary one?").arg(filename),
+                            QMessageBox::Yes | QMessageBox::No,
+                            QMessageBox::No);
+
+      if(replace)
+      {
+          QFile file (filename + "~");
+          if(!file.copy(filename))
+          {
+              QFile oldfile (filename);
+              oldfile.remove();
+              file.copy(filename);
+          }
+      }
+  }
+}
+
+bool ComposerMainWindow::removeTemporaryFile(QString location)
+{
+  QFile file(location + "~");
+  return file.remove();
 }
 
 void ComposerMainWindow::updateLastFileDialogPath(QString filepath)
@@ -1600,6 +1646,8 @@ void ComposerMainWindow::userPressedRecentProject(QString src)
 
   if(openCurrentFile)
   {
+    checkTemporaryFileLastModified(src);
+
     ProjectControl::getInstance()->launchProject(src);
     if(recreateFile)
     {

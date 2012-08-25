@@ -395,6 +395,18 @@ public slots:
   void openProject();
 
   /*!
+   * \brief
+   * \todo Move this function from here!
+   */
+  void checkTemporaryFileLastModified(QString filename);
+
+  /*!
+   * \brief Remove the temporary file related to location.
+   * \todo Move this function from here!
+   */
+  bool removeTemporaryFile(QString location);
+
+  /*!
      * \brief Show the NCL Composer Help.
      */
   bool showHelp();
