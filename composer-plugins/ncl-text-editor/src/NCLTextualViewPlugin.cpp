@@ -97,11 +97,22 @@ void NCLTextualViewPlugin::init()
   QStringList listStart = startLines.split(",");
   QStringList listEnd = endLines.split(",");
 
-  for(int i = 0; i < listStart.size()-1; i +=2)
+  int i;
+
+  for(i = 0; i < listStart.size()-1 && i < listEnd.size()-1; i +=2)
   {
     startEntityOffset[listStart[i]] = listStart[i+1].toInt();
     endEntityOffset[listEnd[i]] = listEnd[i+1].toInt();
   }
+
+	// qDebug() << i << listStart.size() << listEnd.size();
+	if( i != listStart.size() || i != listEnd.size())
+	{
+	  qDebug() << "The data saved in the file is corrupted. Forcing"
+						 << " updateFromModel";
+
+		updateFromModel();
+	}
 
   nclTextEditor->setDocumentUrl(project->getLocation());
 
