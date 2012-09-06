@@ -20,7 +20,7 @@ specfic README file.
 Dependencies
 ============
 The main dependency of NCL Composer is:
-  * Qt >= 4.6
+  * Qt >= 4.7.1
 
 If you want to enable the Run your application on Ginga Virtual Set-top box,
 then you should uncomment the line 
