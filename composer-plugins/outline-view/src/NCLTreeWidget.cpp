@@ -289,12 +289,13 @@ void NCLTreeWidget::userRemoveElement()
     return;
 
   QString id = item->text(2);
+  QString name = item->text(0);
 
   if (item != NULL) {
     int resp = QMessageBox::question(
           this,
           tr("Deleting Element"),
-          tr("Do you really want delete the %1 element ?").arg(id),
+          tr("Do you really want delete the \"%1\" element ?").arg(name),
           QMessageBox::Yes,
           QMessageBox::No );
 
