@@ -25,6 +25,9 @@ public:
     Ui::QnstGraphicsLinkForm form;
 
     QMap<QString, QnstConncetor*> connectors;
+
+private:
+    bool firstTime;
 };
 
 #endif // QNSTGRAPHICSLINKDIALOG_H

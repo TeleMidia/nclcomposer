@@ -1,7 +1,10 @@
 #include "qnstgraphicslinkdialog.h"
 
+#include <QDesktopWidget>
+#include <QApplication>
+
 QnstGraphicsLinkDialog::QnstGraphicsLinkDialog(QWidget* parent)
-    : QDialog(parent)
+    : QDialog(parent), firstTime(true)
 {
     form.setupUi(this);
 
@@ -34,6 +37,21 @@ void QnstGraphicsLinkDialog::init(QMap<QString, QnstConncetor*> connectors)
     }
 
     form.cbConnector->addItem("New...");
+
+    // Center the Dialog if this is the first time that we are openning QnstGraphicsLinkDialog
+    if(firstTime) {
+        updateGeometry();
+        QDesktopWidget *desktop = QApplication::desktop();
+
+        int screenWidth = desktop->width();
+        int screenHeight = desktop->height();
+
+        int x = (screenWidth - this->width()) / 2;
+        int y = (screenHeight - this->height()) / 2;
+
+        this->move(x, y);
+        firstTime = false;
+    }
 }
 
 void QnstGraphicsLinkDialog::adjustBinds(QString conn)
