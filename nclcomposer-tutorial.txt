@@ -1,0 +1,178 @@
+Tutorial: Introdução à NCL 3.0 utilizando o NCL Composer
+========================================================
+Roberto Gerson de Albuquerque Azevedo
+v1.0, 2012-09
+:doctype: book
+
+
+[[sec:intro]]
+Introdução
+----------
+A http://www.ncl.org.br[NCL (Nested Context Language)] é uma linguagem 
+declarativa, uma aplicação http://www.xml.org[XML], para a criação de
+aplicações multimídia interativas. A NCL traz uma separação clara entre 
+os conteúdos de mídia (áudio, vídeo, imagem etc.) e a estrutura de uma
+aplicação. Um documento NCL apenas define como os objetos de mídia são 
+estruturados e relacionados, no tempo e no espaço.
+
+O http://composer.telemidia.puc-rio.br[NCL Composer] é uma ferramenta de
+autoria para NCL que visa facilitar o desenvolvimento de aplicações 
+interativas para usuário não-programadores. Para isso, ele utiliza-se de
+várias abstrações gráficas (visões) que permitem ao autor focar em apenas um
+determinado ponto, durante cada fase distinta da autoria.
+
+// O intuito principal deste tutorial é fornecer ao leitor a habilidade de 
+// desenvolver programas NCL simples, usando o NCL Composer, e capacitá-lo a 
+// melhor entender e exercitar os principais conceitos da NCL, no ambiente de
+// autoria NCL Composer.
+
+Baseado nos exemplos apresentados no Capítulo 3 do livro 
+http://www.telemidia.puc-rio.br[Programando em NCL 3.0], este tutorial traz uma
+introdução passo a passo de como utilizar o NCL Composer para o 
+desenvolvimento de aplicações interativa usando o perfil NCL
+3.0 para TV digital. Neste tutorial, não existe a preocupação nem de definir a
+linguagem NCL completamente e nem todas as funcionalidades do NCL Composer.
+
+Para uma referência completa sobre a linguagem NCL, recomendamos:
+
+  * O livro http://www.telemidia.puc-rio.br[Programando em NCL 3.0]
+(português)
+  * ou o http://handbook.ncl.org.br[NCL Handbook] (inglês).
+
+Para uma referência completa sobre o NCL Composer, é possível consultar o:
+
+  * http://composer.telemidia.puc-rio.br[NCL Composer User Manual] (inglês).
+
+Sempre que necessário, entretanto, no decorrer deste tutorial, buscamos
+inserir ponteiros para partes específicas do http://handbook.ncl.org.br[NCL
+Handbook] ou para o http://composer.telemidia.puc-rio.br[NCL Composer User
+Manual] onde o leitor pode encontrar mais informações.
+
+[[sec:iniciando]]
+Iniciando
+--------
+Para tirar total proveito deste tutorial é necessário que você tenha
+instalado e configurado em sua máquina os seguintes softwares:
+  
+	* Algum player NCL (recomendamos o uso da 
+http://www.softwarepublico.gov.br[Implementação de Referência do Ginga-NCL]);
+  * http://composer.telemidia.puc-rio.br[NCL Composer]
+
+Instalando o NCL Composer
+~~~~~~~~~~~~~~~~~~~~~~~~~
+TODO
+
+Windows
+^^^^^^^
+TODO
+
+Linux (Ubuntu/Debian)
+^^^^^^^^^^^^^^^^^^^^^
+TODO
+
+Instalando o player NCL
+~~~~~~~~~~~~~~~~~~~~~~~
+TODO
+
+Windows
+^^^^^^^
+TODO
+
+Linux
+^^^^^
+TODO
+
+Configuração do Ambiente
+~~~~~~~~~~~~~~~~~~~~~~~~
+TODO
+
+[[sec:tutorial]]
+O Primeiro João
+---------------
+Assim como no Capítulo 3 do Livro Programando em NCL, para introduzir a
+programação em NCL, usando o NCL Composer, iremos utilizar um único exemplo,
+que será construído passo a passo: _O Primeiro João_.
+
+Olá Garrincha!
+~~~~~~~~~~~~~~
+Todos os nossos
+
+Sincronismo de Mídia sem Interatividade
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Nosso próximo exemplo ilustra como é possível introduzir vários objetos de
+mídia sincronizados no tempo. Vamos acrescentar:
+
+  1. uma música de fundo (um chorinho), que deverá começar assim que terminar a
+apresentação inicial do vídeo e começar a animação propriamente dita;
+  2. um outro objeto de vídeo, que deverá ser exibido em paralelo e sincronizado
+com o famoso “drible do vaivém” do Mané, retratado na animação; e ainda
+  3. uma outra imagem, uma foto, que deverá ser exibida junto com a cena do
+marcador caído no chão.
+
+image::images/temporal-view.png[width="50%",align="center"]
+
+Para demonstrar algumas funcionalidades de NCL, iremos desenvolver esse
+primeiro exemplo de duas formas:
+
+  * Na primeira, não iremos reutilizar nenhuma definição de região;
+	* enquanto na segunda, 
+
+Reúso Apenas de Relação
+^^^^^^^^^^^^^^^^^^^^^^^
+TODO
+
+Reúso de Características de Apresentação e Importação de Base
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TODO
+
+Adicionando Sincronismo com Interatividade
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+TODO
+
+Adicionando o Uso de Contextos
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+TODO
+
+Adicionando Reúso de Objetos de Mídia
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+TODO
+
+Usando o Canal de Interatividade
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+TODO
+
+Uso de Múltiplos Dispositivos de Exibição
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+TODO
+
+Adaptação de Conteúdo
+~~~~~~~~~~~~~~~~~~~~~
+TODO
+
+O Uso do Nó Settings
+~~~~~~~~~~~~~~~~~~~~
+TODO
+
+Efeitos de Transição e Animação
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+TODO
+
+Navegação por Teclas
+~~~~~~~~~~~~~~~~~~~~
+TODO
+
+Acrescentando um Objeto NCLua
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+TODO
+
+Conclusões
+----------
+TODO
+
+[appendix]
+Onde encontrar mais informações
+-------------------------------
+
+[appendix]
+Licença
+-------
