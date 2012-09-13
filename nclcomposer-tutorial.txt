@@ -3,6 +3,7 @@ Tutorial: Introdução à NCL 3.0 utilizando o NCL Composer
 Roberto Gerson de Albuquerque Azevedo
 v1.0, 2012-09
 :doctype: book
+:lang: pt-BR
 
 
 [[sec:intro]]
@@ -30,14 +31,15 @@ Baseado nos exemplos apresentados no Capítulo 3 do livro
 http://www.telemidia.puc-rio.br[Programando em NCL 3.0], este tutorial traz uma
 introdução passo a passo de como utilizar o NCL Composer para o 
 desenvolvimento de aplicações interativa usando o perfil NCL
-3.0 para TV digital. Neste tutorial, não existe a preocupação nem de definir a
-linguagem NCL completamente e nem todas as funcionalidades do NCL Composer.
+3.0 para TV digital.
 
-Para uma referência completa sobre a linguagem NCL, recomendamos:
+Neste tutorial, não existe a preocupação nem de definir a linguagem NCL
+completamente e nem todas as funcionalidades do NCL Composer. Para uma
+referência completa sobre a linguagem NCL, recomendamos:
 
   * O livro http://www.telemidia.puc-rio.br[Programando em NCL 3.0]
-(português)
-  * ou o http://handbook.ncl.org.br[NCL Handbook] (inglês).
+(português); ou
+  * o http://handbook.ncl.org.br[NCL Handbook] (inglês).
 
 Para uma referência completa sobre o NCL Composer, é possível consultar o:
 
@@ -52,7 +54,7 @@ Manual] onde o leitor pode encontrar mais informações.
 Iniciando
 --------
 Para tirar total proveito deste tutorial é necessário que você tenha
-instalado e configurado em sua máquina os seguintes softwares:
+instalados e configurados em sua máquina os seguintes softwares:
   
 	* Algum player NCL (recomendamos o uso da 
 http://www.softwarepublico.gov.br[Implementação de Referência do Ginga-NCL]);
@@ -90,12 +92,57 @@ TODO
 O Primeiro João
 ---------------
 Assim como no Capítulo 3 do Livro Programando em NCL, para introduzir a
-programação em NCL, usando o NCL Composer, iremos utilizar um único exemplo,
+programação em NCL usando o NCL Composer, iremos utilizar um único exemplo,
 que será construído passo a passo: _O Primeiro João_.
+
+_O Primeiro João_ é baseado em um vídeo, uma animação de mesmo nome
+produzida por André Castelão, que por sua vez foi baseado nas crônicas de 
+Mané Garrincha, escritas por Gerson Soares. 
 
 Olá Garrincha!
 ~~~~~~~~~~~~~~
-Todos os nossos
+Em nosso primeiro exemplo, iremos apenas exibir o vídeo da animação. Para
+isso, vamos abrir o NCL Composer. Depois de carregado, o NCL Composer
+apresenta a seguinte tela de boas-vindas:
+
+image::images/nclcomposer-welcomescreen.png[width="70%",align="center"]
+
+Nessa tela de boas-vindas podemos criar o nosso primeiro projeto. Para isso,
+selecione pressione o botão _New Project_ no canto esquerdo inferior da tela
+de boas-vindas. A seguinte tela será exibida:
+
+image::images/nclcomposer-newproject.png["Criação de um novo projeto.",width="50%",align="center"]
+
+TIP: Outra possibilidade para criar um novo projeto é através do menu
+_File->New Project_.
+
+Nesta janela, atribua um nome para o projeto que você está criando, selecione
+o diretório onde deseja salvá-lo e também marque a opção _Copy and Import the
+default Connector Base_. Nas próximas seções voltaremos a discutir mais 
+sobre o que são os conectores e também sobre as bases de conectores. Por 
+enquanto, apenas marque esta opção, pois ela será útil para os próximos
+exemplos que iremos desenvolver.
+
+Feito isso, pressione o botão _Finish_ e a seguinte tela será apresentada:
+
+image::images/nclcomposer-body.png[width="70%",align="center"]
+
+TODO: O que é essa tela?!
+
+TODO: Sobre o seguinte código-fonte:
+
+[source,xml]
+-------------------------------------------
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<ncl id="myNCLDocID" xmlns="http://www.ncl.org.br/NCL3.0/EDTVProfile">
+  <head>
+    <connectorBase id="connBaseId">
+      <importBase alias="conn" documentURI="defaultConnBase.ncl"/>
+    </connectorBase>
+  </head>
+  <body id="myBodyID"/>
+</ncl>
+-------------------------------------------
 
 Sincronismo de Mídia sem Interatividade
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -172,7 +219,14 @@ TODO
 [appendix]
 Onde encontrar mais informações
 -------------------------------
+TODO
+
+[appendix]
+Outras ferramentas de autoria
+-----------------------------
+TODO
 
 [appendix]
 Licença
 -------
+TODO
