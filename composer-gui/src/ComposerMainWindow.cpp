@@ -491,12 +491,13 @@ void ComposerMainWindow::addPluginWidget(IPluginFactory *fac, IPlugin *plugin,
   hide->setIcon(QIcon(":/mainwindow/closeplugin"));
   addButtonToDockTitleBar(titleBar, hide);
 
-  updateDockTitleStyle(titleBar, false);
+  updateDockStyle(dock, false);
 #endif
 }
 
-void ComposerMainWindow::updateDockTitleStyle(QFrame *titleBar, bool selected)
+void ComposerMainWindow::updateDockStyle(QDockWidget *dock, bool selected)
 {
+  QFrame *titleBar = (QFrame*)dock->titleBarWidget();
   if(!selected)
   {
     titleBar->setStyleSheet(" \
@@ -1768,12 +1769,10 @@ void ComposerMainWindow::focusChanged(QWidget *old, QWidget *now)
   for(int i = 0; i < allDocks.size(); i++)
   {
     if(old != NULL && allDocks.at(i)->isAncestorOf(old))
-      updateDockTitleStyle((QFrame*)allDocks.at(i)->titleBarWidget(),
-                           false);
+      updateDockStyle(allDocks.at(i), false);
 
     if(now != NULL && allDocks.at(i)->isAncestorOf(now))
-      updateDockTitleStyle((QFrame*)allDocks.at(i)->titleBarWidget(),
-                           true);
+      updateDockStyle(allDocks.at(i), true);
   }
 }
 
