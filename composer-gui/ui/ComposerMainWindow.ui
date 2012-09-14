@@ -51,7 +51,6 @@ QMainWindow::separator:vertical {
 .QDockWidget {
   color: white;
   font: 8pt &quot;Nimbus Sans L&quot;;
-  border: 1px solid lightgray;
 }
 
 QTabWidget::tab-bar {
@@ -307,7 +306,7 @@ QMenu {
      <x>0</x>
      <y>0</y>
      <width>776</width>
-     <height>25</height>
+     <height>27</height>
     </rect>
    </property>
    <property name="layoutDirection">
@@ -365,6 +364,8 @@ QMenu {
      <string>&amp;Help</string>
     </property>
     <addaction name="action_Help"/>
+    <addaction name="separator"/>
+    <addaction name="actionReport_Bug"/>
     <addaction name="separator"/>
     <addaction name="action_About"/>
     <addaction name="action_AboutPlugins"/>
@@ -425,12 +426,12 @@ QMenu {
   </action>
   <action name="action_About">
    <property name="text">
-    <string>&amp;About</string>
+    <string>&amp;About...</string>
    </property>
   </action>
   <action name="action_AboutPlugins">
    <property name="text">
-    <string>About &amp;Plugins</string>
+    <string>About &amp;Plugins...</string>
    </property>
    <property name="toolTip">
     <string>Show the application Plugins &quot;About box&quot;</string>
@@ -543,7 +544,7 @@ QMenu {
   </action>
   <action name="action_ImportFromExistingNCL">
    <property name="icon">
-    <iconset>
+    <iconset resource="../images.qrc">
      <normaloff>:/mainwindow/images/import_document_icon.png</normaloff>:/mainwindow/images/import_document_icon.png</iconset>
    </property>
    <property name="text">
@@ -591,6 +592,18 @@ QMenu {
   <action name="action_SaveAs">
    <property name="text">
     <string>Save &amp;As...</string>
+   </property>
+  </action>
+  <action name="actionReport_Bug">
+   <property name="icon">
+    <iconset resource="../images.qrc">
+     <normaloff>:/mainwindow/reportbug</normaloff>:/mainwindow/reportbug</iconset>
+   </property>
+   <property name="text">
+    <string>Report &amp;Bug...</string>
+   </property>
+   <property name="toolTip">
+    <string>Report a BUG</string>
    </property>
   </action>
  </widget>

@@ -449,8 +449,14 @@ void ComposerMainWindow::addPluginWidget(IPluginFactory *fac, IPlugin *plugin,
   dock->setAllowedAreas(Qt::AllDockWidgetAreas);
   dock->setFeatures(QDockWidget::AllDockWidgetFeatures);
 
-  dock->setWidget(pW);
+  QFrame *borderFrame = new QFrame();
+  QVBoxLayout *layoutBorderFrame = new QVBoxLayout();
+  layoutBorderFrame->addWidget(pW);
+  borderFrame->setLayout(layoutBorderFrame);
+
+  dock->setWidget(borderFrame);
   dock->setObjectName(fac->id());
+
   if (n%2)
     w->addDockWidget(Qt::RightDockWidgetArea, dock, Qt::Vertical);
   else
@@ -497,11 +503,39 @@ void ComposerMainWindow::addPluginWidget(IPluginFactory *fac, IPlugin *plugin,
 
 void ComposerMainWindow::updateDockStyle(QDockWidget *dock, bool selected)
 {
+#define BLUE_VIEW_THEME 1
+
   QFrame *titleBar = (QFrame*)dock->titleBarWidget();
   if(!selected)
   {
+    dock->setStyleSheet(".QFrame {border: none;}");
+
+#ifdef BLUE_VIEW_THEME
     titleBar->setStyleSheet(" \
-                            QFrame { border: none; \
+      QFrame { border: none; \
+        background: #cccccc;\
+        color: white;\
+        padding-left: 2px; \
+        font-size: 12px;} \
+      QPushButton { \
+        background-color: transparent; \
+        border: none;\
+      } \
+      QPushButton:hover { \
+        background: #aaaaaa;\
+      } \
+      QPushButton:pressed { \
+        background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,\
+        stop: 0 #868686, stop: 0.08 #5f5f5f,\
+        stop: 0.19999 #717171, stop: 0.4 #424242,\
+        stop: 0.9 #2c2c2c, stop: 1 #111111);\
+      } \
+      QPushButton:flat { \
+        border: none; \
+      }");
+#else
+    titleBar->setStyleSheet(" \
+      QFrame { border: none; \
         background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,\
         stop: 0 #a6a6a6, stop: 0.08 #7f7f7f,\
         stop: 0.39999 #717171, stop: 0.4 #626262,\
@@ -509,57 +543,91 @@ void ComposerMainWindow::updateDockStyle(QDockWidget *dock, bool selected)
         color: white;\
         padding-left: 2px; \
         font-size: 12px;} \
-  QPushButton { \
-    background-color: transparent; \
-    border: none;\
-  } \
-  QPushButton:hover { \
-    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,\
+      QPushButton { \
+        background-color: transparent; \
+        border: none;\
+      } \
+      QPushButton:hover { \
+        background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,\
         stop: 0 #d6d6d6, stop: 0.08 #afafaf,\
         stop: 0.79999 #717171, stop: 0.4 #a2a2a2,\
         stop: 0.9 #8c8c8c, stop: 1 #777777);\
-  } \
-  QPushButton:pressed { \
-    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,\
+      } \
+      QPushButton:pressed { \
+        background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,\
         stop: 0 #868686, stop: 0.08 #5f5f5f,\
         stop: 0.19999 #717171, stop: 0.4 #424242,\
         stop: 0.9 #2c2c2c, stop: 1 #111111);\
-  } \
-  QPushButton:flat { \
-    border: none; \
-  }");
-}
-else
-{
-titleBar->setStyleSheet(" \
-                        QFrame { border: none; \
-background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,\
-    stop: 0 #dcebfd, \
-    stop: 1 #c2dcfd); \
-    color: black;\
-    font-style: bold;\
-   padding-left: 2px;\
-   font-size: 12px;\
-}\
-QPushButton { \
-  background-color: transparent; \
-  border: none;\
-} \
-QPushButton:hover { \
-  background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,\
-      stop: 0 #edfcfe, \
-      stop: 1 #d3edfe); \
-} \
-QPushButton:pressed { \
-  background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,\
-      stop: 0 #dcebfd, \
-      stop: 1 #c2dcfd); \
-} \
-QPushButton:flat { \
-  border: none; \
-}");
-}
+      } \
+      QPushButton:flat { \
+        border: none; \
+      }");
+#endif
+  }
+  else
+  {
+#ifdef BLUE_VIEW_THEME
+    dock->setStyleSheet(".QFrame {border: 5px solid rgba(130, 175, 233, 255); border-top: 0;}");
+    titleBar->setStyleSheet(" \
+      QFrame { border: none; \
+        background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,\
+         /*stop: 0 #dcebfd, stop: 1 #c2dcfd); */ \
+         stop: 0 rgba(130, 175, 233, 255), \
+         stop: 1 rgba(130, 175, 233, 255)); \
+         color: white; \
+         font-style: bold;\
+         padding-left: 2px;\
+         font-size: 12px;\
+      }\
+      QPushButton { \
+        background-color: transparent; \
+        border: none;\
+      } \
+      QPushButton:hover { \
+        background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,\
+        stop: 0 #edfcfe, \
+        stop: 1 #d3edfe); \
+      } \
+      QPushButton:pressed { \
+        background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,\
+        stop: 0 #dcebfd, \
+        stop: 1 #c2dcfd); \
+      } \
+      QPushButton:flat { \
+        border: none; \
+      }");
+#else
+    dock->setStyleSheet(".QFrame {border: 5px solid rgba(226, 127, 46, 255); border-top: 0;}");
+    titleBar->setStyleSheet(" \
+      QFrame { border: none; \
+        background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,\
+         stop: 0 rgba(255, 172, 70, 255), \
+         stop: 1 rgba(226, 127, 46, 255)); \
+         color: black;\
+         font-style: bold;\
+          padding-left: 2px;\
+          font-size: 12px;\
+      }\
+      QPushButton { \
+        background-color: transparent; \
+        border: none;\
+      } \
+      QPushButton:hover { \
+        background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,\
+        stop: 0 #edfcfe, \
+        stop: 1 #d3edfe); \
+      } \
+      QPushButton:pressed { \
+        background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,\
+        stop: 0 #dcebfd, \
+        stop: 1 #c2dcfd); \
+      } \
+      QPushButton:flat { \
+        border: none; \
+      }");
+#endif
 
+  }
 }
 void ComposerMainWindow::addButtonToDockTitleBar(QFrame *titleBar,
                                                  QPushButton *button)
