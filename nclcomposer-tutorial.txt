@@ -1,6 +1,6 @@
 Tutorial: Introdução à NCL 3.0 utilizando o NCL Composer
 ========================================================
-Roberto Gerson de Albuquerque Azevedo
+Roberto Gerson de Albuquerque Azevedo and Luiz Fernando Gomes Soares
 v1.0, 2012-09
 :doctype: book
 :lang: pt-BR
@@ -9,7 +9,7 @@ v1.0, 2012-09
 [[sec:intro]]
 Introdução
 ----------
-A http://www.ncl.org.br[NCL (Nested Context Language)] é uma linguagem 
+http://www.ncl.org.br[NCL (Nested Context Language)] é uma linguagem 
 declarativa, uma aplicação http://www.xml.org[XML], para a criação de
 aplicações multimídia interativas. A NCL traz uma separação clara entre 
 os conteúdos de mídia (áudio, vídeo, imagem etc.) e a estrutura de uma
@@ -37,8 +37,7 @@ Neste tutorial, não existe a preocupação nem de definir a linguagem NCL
 completamente e nem todas as funcionalidades do NCL Composer. Para uma
 referência completa sobre a linguagem NCL, recomendamos:
 
-  * O livro http://www.telemidia.puc-rio.br[Programando em NCL 3.0]
-(português); ou
+  * O livro Programando em NCL 3.0 <<Soares2012>> (português); ou
   * o http://handbook.ncl.org.br[NCL Handbook] (inglês).
 
 Para uma referência completa sobre o NCL Composer, é possível consultar o:
@@ -88,6 +87,14 @@ Configuração do Ambiente
 ~~~~~~~~~~~~~~~~~~~~~~~~
 TODO
 
+Configurando a disposição das visões 
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TODO
+
+Integração com o player NCL
+^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TODO
+
 [[sec:tutorial]]
 O Primeiro João
 ---------------
@@ -99,37 +106,47 @@ _O Primeiro João_ é baseado em um vídeo, uma animação de mesmo nome
 produzida por André Castelão, que por sua vez foi baseado nas crônicas de 
 Mané Garrincha, escritas por Gerson Soares. 
 
+NOTE: Uma descrição completa da animação _O Primeiro João_ pode ser encontrada
+em: 
+
 Olá Garrincha!
 ~~~~~~~~~~~~~~
 Em nosso primeiro exemplo, iremos apenas exibir o vídeo da animação. Para
 isso, vamos abrir o NCL Composer. Depois de carregado, o NCL Composer
 apresenta a seguinte tela de boas-vindas:
 
-image::images/nclcomposer-welcomescreen.png[width="70%",align="center"]
+image::images/nclcomposer-welcomescreen.png[title="Tela de boas-vindas do NCL Composer.",width="70%",align="center"]
 
 Nessa tela de boas-vindas podemos criar o nosso primeiro projeto. Para isso,
 selecione pressione o botão _New Project_ no canto esquerdo inferior da tela
 de boas-vindas. A seguinte tela será exibida:
 
-image::images/nclcomposer-newproject.png["Criação de um novo projeto.",width="50%",align="center"]
-
 TIP: Outra possibilidade para criar um novo projeto é através do menu
 _File->New Project_.
 
-Nesta janela, atribua um nome para o projeto que você está criando, selecione
+image::images/nclcomposer-newproject.png[title="Criação de um novo projeto.",width="50%",align="center"]
+
+
+Nessa janela, atribua um nome para o projeto que você está criando, selecione
 o diretório onde deseja salvá-lo e também marque a opção _Copy and Import the
-default Connector Base_. Nas próximas seções voltaremos a discutir mais 
-sobre o que são os conectores e também sobre as bases de conectores. Por 
-enquanto, apenas marque esta opção, pois ela será útil para os próximos
-exemplos que iremos desenvolver.
+default Connector Base_. 
+
+NOTE: Nas próximas seções discutiremos em detalhes o que são os conectores
+e também as bases de conectores. Por enquanto, apenas marque esta opção,
+pois ela será útil para os próximos exemplos que iremos desenvolver.
 
 Feito isso, pressione o botão _Finish_ e a seguinte tela será apresentada:
 
-image::images/nclcomposer-body.png[width="70%",align="center"]
+image::images/nclcomposer-body.png[title="Body",width="70%",align="center"]
 
-TODO: O que é essa tela?!
+Com o nosso projeto criado, podemos ter acesso às visões que já vem instaladas
+por default no NCL Composer: _Outline_, _Propriedades_,  _Estrutural_,
+_Layout_ e _Textual_.
 
-TODO: Sobre o seguinte código-fonte:
+Como é possível observar, quando criamos um novo projeto, o NCL Composer
+automaticamente já o cria com o cabeçalho e o corpo da aplicação. Se você for
+para a visão _Textual_ poderá ver o código que já foi gerado por
+padrão: 
 
 [source,xml]
 -------------------------------------------
@@ -144,6 +161,63 @@ TODO: Sobre o seguinte código-fonte:
 </ncl>
 -------------------------------------------
 
+.Para saber mais...
+************************************************
+Todo documento NCL é composto por um cabeçalho (<head>) e um corpo (<body>).
+No cabeçalho são definidos os elementos que serão reutilizados no corpo.
+Enquanto no corpo, define-se quais os objetos de mídia e quando eles serão
+apresentados.
+************************************************
+
+Adicionando um objeto de mídia
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Para inserir os nossos objetos de mídia, a forma mais simples é apenas
+arrastar os objetos de mídia do seu Gerenciador de Arquivos para dentro da
+visão estrutural do NCL Composer.
+
+image::images/nclcomposer-drag_and_drop_animGar.png[title="Arraste os objetos de mídia do seu gerenciador de arquivos para a visão estrutural do NCL Composer para inserí-lo como objetos de mídia da aplicação.", width="70%", align="center"]
+
+TIP: Outra forma de inserir um objeto de mídia, na _Visão Estrutural_ é 
+clicar com o botão direito sobre o corpo do documento e selecionar o menu 
+_Insert -> Media_. Neste caso, é importante não esquecer de definir o caminho 
+para o objeto de mídia, o que poder ser realizado selecionando o objeto que 
+você acabou de editar e alterando o valor do atributo _src_ (ou na _Visão de
+Propriedades_ ou na _Visão Textual_).
+
+.Para saber mais...
+************************************************
+Objetos de mídia em NCL.
+************************************************
+
+Informando o(s) objeto(s) de mídia que serão inicialmente exibidos
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Para informar que o objeto de mídia que acabamos de inserir deve iniciar
+quanto a nossa aplicação multimídia iniciar, é suficiente criarmos uma porta
+no corpo do documento, mapeando-a para o objeto de mídia.
+
+Para inserirmos uma porta no corpo do documento pela _Visão
+Estrutural_ é suficiente clicarmos com o botão direito sobre o corpo e
+selecionarmos o menu _Insert->Port_.
+
+image::images/nclcomposer-addport.png[title="Adicionando porta.", width="70%", align="center"]
+
+Para mapearmos a porta que acabamos de criar para o objeto de mídia, devemos, 
+segurando a tecla _SHIFT_, clicar sobre a porta e arrastar o ponteiro
+do mouse para o objeto de mídia.  
+
+image::images/nclcomposer-portcomponent.png[title="Mapeando porta para objeto de mídia.", width="70%", align="center"]
+
+Com isso, já definimos que nossa aplicação é constituída apenas do objeto de
+mídia _animGar_ e que quando a aplicação começará por esse objeto de mídia. 
+
+Propriedades e dimensões dos objetos de mídia
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TODO: Adicionar as dimensões (WxH). Propriedades?
+
+image::images/nclcomposer-addproperty.png[title="Adicionando propriedade à um objeto de mídia.", width="70%", align="center"]
+
+image::images/nclcomposer-property-width.png[title="Definindo largura do objeto de mídia.", width="70%", align="center"]
+
 Sincronismo de Mídia sem Interatividade
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Nosso próximo exemplo ilustra como é possível introduzir vários objetos de
@@ -156,13 +230,7 @@ com o famoso “drible do vaivém” do Mané, retratado na animação; e ainda
   3. uma outra imagem, uma foto, que deverá ser exibida junto com a cena do
 marcador caído no chão.
 
-image::images/temporal-view.png[width="50%",align="center"]
-
-Para demonstrar algumas funcionalidades de NCL, iremos desenvolver esse
-primeiro exemplo de duas formas:
-
-  * Na primeira, não iremos reutilizar nenhuma definição de região;
-	* enquanto na segunda, 
+image::images/temporal-view.png[title="Visão temporal do exemplo 02.", width="50%",align="center"]
 
 Reúso Apenas de Relação
 ^^^^^^^^^^^^^^^^^^^^^^^
@@ -216,6 +284,12 @@ Conclusões
 ----------
 TODO
 
+[bibliography]
+Bibliografia
+------------
+- [[[Soares2012]]] Luiz Fernando Gomes Soares and Simone Diniz Junqueira.
+	'Programando em NCL 3.0'. PUC-Rio.
+
 [appendix]
 Onde encontrar mais informações
 -------------------------------
@@ -224,7 +298,8 @@ TODO
 [appendix]
 Outras ferramentas de autoria
 -----------------------------
-TODO
+  * NCL Eclipse
+	* CreaTVDigital
 
 [appendix]
 Licença
