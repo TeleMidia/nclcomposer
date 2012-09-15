@@ -94,6 +94,7 @@ public:
     setFocusPolicy(Qt::StrongFocus);
 
     connect(this, SIGNAL(visibilityChanged(bool)), this, SLOT(visibilityHasChange(bool)));
+    connect(this, SIGNAL(topLevelChanged(bool)), this, SLOT(topLevelHasChanged(bool)));
   }
 
 protected:
@@ -112,6 +113,13 @@ private slots:
   {
     if(visible)
       emit clicked();
+  }
+
+  void topLevelHasChanged(bool a)
+  {
+    emit clicked();
+    raise();
+    setFocus();
   }
 
 signals:

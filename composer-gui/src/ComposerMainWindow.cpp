@@ -454,7 +454,11 @@ void ComposerMainWindow::addPluginWidget(IPluginFactory *fac, IPlugin *plugin,
   connect(dock, SIGNAL(clicked()), dock, SLOT(setFocus()));
 
   QFrame *borderFrame = new QFrame();
+  borderFrame->setFrameShape(QFrame::NoFrame);
+  borderFrame->setFrameShadow(QFrame::Plain);
+
   QVBoxLayout *layoutBorderFrame = new QVBoxLayout();
+  layoutBorderFrame->setMargin(0);
   layoutBorderFrame->addWidget(pW);
   borderFrame->setLayout(layoutBorderFrame);
 
@@ -509,7 +513,6 @@ void ComposerMainWindow::addPluginWidget(IPluginFactory *fac, IPlugin *plugin,
 void ComposerMainWindow::updateDockStyle(QDockWidget *dock, bool selected)
 {
 #define BLUE_VIEW_THEME 1
-  QFrame *titleBar = (QFrame*)dock->titleBarWidget();
   QList <QTabBar*> tabBars = this->findChildren <QTabBar *>();
 
   foreach (QTabBar * tabBar, tabBars)
@@ -525,7 +528,7 @@ void ComposerMainWindow::updateDockStyle(QDockWidget *dock, bool selected)
 #ifdef BLUE_VIEW_THEME
           tabBar->setStyleSheet("QTabBar::tab:selected { \
                       background: rgba(130, 175, 233, 255); \
-                      color: white; }");
+                      color: white;}");
 #else
           //TODO:
 #endif
@@ -534,15 +537,16 @@ void ComposerMainWindow::updateDockStyle(QDockWidget *dock, bool selected)
         {
           tabBar->setStyleSheet("QTabBar::tab:selected { \
                       background: lightgray; \
-                      color: darkgray; }");
+                      color: darkgray;}");
         }
       }
     }
   }
 
+  QFrame *titleBar = (QFrame*) dock->titleBarWidget();
   if(!selected)
   {
-    dock->setStyleSheet(".QFrame {border: none;}");
+    dock->setStyleSheet(".QFrame {border: none; margin: 0;}");
 
 #ifdef BLUE_VIEW_THEME
     titleBar->setStyleSheet(" \
@@ -550,7 +554,9 @@ void ComposerMainWindow::updateDockStyle(QDockWidget *dock, bool selected)
         background: #cccccc;\
         color: white;\
         padding-left: 2px; \
-        font-size: 12px;} \
+        font-size: 9px; \
+        border-top-left-radius: 8px; \
+        border-top-right-radius: 8px;} \
       QPushButton { \
         background-color: transparent; \
         border: none;\
@@ -601,9 +607,14 @@ void ComposerMainWindow::updateDockStyle(QDockWidget *dock, bool selected)
   else
   {
 #ifdef BLUE_VIEW_THEME
-    dock->setStyleSheet(".QFrame {border: 3px solid rgba(130, 175, 233, 255); border-top: 0;}");
+    dock->setStyleSheet(".QFrame {border: 3px solid rgba(130, 175, 233, 255); border-top: 0; margin: 0;}");
     titleBar->setStyleSheet(" \
       QFrame { border: none; \
+        /*background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, \
+                    stop: 0 #6DB3F2, \
+                    stop: 0.5 #54A3EE, \
+                    stop: 0.51 #3690F0, \
+                    stop: 1 #1E69DE);*/ \
         background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,\
          /*stop: 0 #dcebfd, stop: 1 #c2dcfd); */ \
          stop: 0 rgba(130, 175, 233, 255), \
@@ -611,7 +622,9 @@ void ComposerMainWindow::updateDockStyle(QDockWidget *dock, bool selected)
          color: white; \
          font-style: bold;\
          padding-left: 2px;\
-         font-size: 12px;\
+         font-size: 9px;\
+         border-top-left-radius: 5px; \
+         border-top-right-radius: 5px; \
       }\
       QPushButton { \
         background-color: transparent; \
@@ -631,7 +644,7 @@ void ComposerMainWindow::updateDockStyle(QDockWidget *dock, bool selected)
         border: none; \
       }");
 #else
-    dock->setStyleSheet(".QFrame {border: 3px solid rgba(226, 127, 46, 255); border-top: 0;}");
+    dock->setStyleSheet(".QFrame {border: 3px solid rgba(226, 127, 46, 255); border-top: 0; margin: 0;}");
     titleBar->setStyleSheet(" \
       QFrame { border: none; \
         background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,\
