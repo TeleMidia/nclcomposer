@@ -33,6 +33,8 @@
 #define NCL_CLUB_URL "http://club.ncl.org.br/rss.xml"
 #define MAX_RECENT_PROJECTS 6
 
+#define NCL_COMPOSER_NOTIFY_URL "http://composer.telemidia.puc-rio.br/update/CURRENT_VERSION"
+
 namespace Ui{
 class WelcomeWidget;
 }
@@ -123,7 +125,16 @@ private:
   QString currentTag, currentLink, currentTitle, currentDate, currentDesc,
   currentImg, currentDownloadUrl;
 
+/* Loading Notify Messages */
+  QHttp httpNotifyMessages;
+  void updateNotifyMessages();
+
+private slots:
+  void notifyMessagesReadData(const QHttpResponseHeader &);
+/* END Notify loading messages */
+
 #ifdef WITH_CLUBENCL
+private:
   /* \todo NCL Club download Application (this must be a separated class). */
   QProgressDialog *progressDialog;
   QUrl url;
@@ -175,6 +186,7 @@ signals:
 private slots:
   void on_commandLinkButton_pressed();
   void on_commandLinkButton_2_pressed();
+
 
 signals:
   /*!

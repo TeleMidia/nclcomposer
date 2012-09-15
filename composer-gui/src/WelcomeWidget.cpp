@@ -28,6 +28,9 @@ WelcomeWidget::WelcomeWidget(QWidget *parent): QWidget(parent),
 
     ui->pushButton_DownloadApp->setEnabled(false);
 
+    connect(&httpNotifyMessages, SIGNAL(readyRead(const QHttpResponseHeader &)),
+            this, SLOT(notifyMessagesReadData(const QHttpResponseHeader &)));
+
 #ifdef WITH_CLUBENCL
     //Connect the QHttp with
     connect(&http, SIGNAL(readyRead(const QHttpResponseHeader &)),
@@ -66,6 +69,10 @@ WelcomeWidget::WelcomeWidget(QWidget *parent): QWidget(parent),
 
     //TODO: Enable NCL Composer Tips
     ui->frame_Tips->setVisible(false);
+
+    //This will be visible only if there is messages to read
+    ui->labelNotifyMessage->setVisible(false);
+    updateNotifyMessages();
 }
 
 WelcomeWidget::~WelcomeWidget()
@@ -92,6 +99,30 @@ void WelcomeWidget::updateRecentProjects(QStringList recentProjects)
     connect(button, SIGNAL(pressed()), this, SLOT(sendRecentProjectClicked()));
 
     ui->frame_RecentProjects->layout()->addWidget(button);
+  }
+}
+
+void WelcomeWidget::updateNotifyMessages()
+{
+  QUrl url = QUrl::fromUserInput(NCL_COMPOSER_NOTIFY_URL);
+  httpNotifyMessages.setHost(url.host());
+  connectionId = httpNotifyMessages.get(url.path());
+}
+
+void WelcomeWidget::notifyMessagesReadData(const QHttpResponseHeader &resp)
+{
+  if (resp.statusCode() != 200)
+  {
+    httpNotifyMessages.abort();
+  }
+  else
+  {
+    QByteArray bytes = httpNotifyMessages.readAll();
+    if (bytes.size())
+    {
+      ui->labelNotifyMessage->setText(bytes);
+      ui->labelNotifyMessage->setVisible(true);
+    }
   }
 }
 
