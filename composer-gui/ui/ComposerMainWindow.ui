@@ -56,27 +56,31 @@ QMainWindow::separator:vertical {
 QTabWidget::tab-bar {
 /*  border: none; */
   color: rgb(255, 255, 255);
-  background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+/*  background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
 	  stop: 0 #a6a6a6, stop: 0.08 #7f7f7f,
 	  stop: 0.39999 #717171, stop: 0.4 #626262,
-	  stop: 0.9 #4c4c4c, stop: 1 #333333);
+	  stop: 0.9 #4c4c4c, stop: 1 #333333);*/
   font: 9pt &quot;Nimbus Sans L&quot;;  
  }
+
+/* QTabBar {
+  qproperty-movable: true;
+} */
 
 QTabBar::tab {
 	background: lightgray;
 	color: darkgray;
 	padding: 4px; 
-	border-top-left-radius: 6px;
- 	border-top-right-radius: 6px;
-    border: 2px solid #C4C4C3; 
+    border: 2px solid #C4C4C3;
+    border-right: 0px;
  }
 
 QTabBar::tab:selected {
-	background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+/*	background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
  		stop: 0 #333333, stop: 0.08 #4c4c4c,
 		stop: 0.39999 #626262, stop: 0.4 #717171,
-		stop: 0.9  #7f7f7f, stop: 1 #a6a6a6);
+		stop: 0.9  #7f7f7f, stop: 1 #a6a6a6); */
+    background: rgba(130, 175, 233, 255);
 	color: white;
  }
 
@@ -306,7 +310,7 @@ QMenu {
      <x>0</x>
      <y>0</y>
      <width>776</width>
-     <height>27</height>
+     <height>21</height>
     </rect>
    </property>
    <property name="layoutDirection">
@@ -596,7 +600,7 @@ QMenu {
   </action>
   <action name="actionReport_Bug">
    <property name="icon">
-    <iconset resource="../images.qrc">
+    <iconset>
      <normaloff>:/mainwindow/reportbug</normaloff>:/mainwindow/reportbug</iconset>
    </property>
    <property name="text">

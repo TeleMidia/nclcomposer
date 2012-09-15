@@ -179,8 +179,10 @@ void ComposerMainWindow::readExtensions()
 
   preferences->addPreferencePage(new GeneralPreferences());
 
+#ifdef WITH_LIBSSH2
   /* Load the preferences page */
   preferences->addPreferencePage(new RunGingaConfig());
+#endif
 
   // preferences->addPreferencePage(new ImportBasePreferences());
 
@@ -444,10 +446,12 @@ void ComposerMainWindow::addPluginWidget(IPluginFactory *fac, IPlugin *plugin,
   pW->show();
   pW->setObjectName(fac->id());
 #else
-  QDockWidget *dock = new QDockWidget(fac->name());
+  ClickableQDockWidget *dock = new ClickableQDockWidget(fac->name());
 
   dock->setAllowedAreas(Qt::AllDockWidgetAreas);
   dock->setFeatures(QDockWidget::AllDockWidgetFeatures);
+
+  connect(dock, SIGNAL(clicked()), dock, SLOT(setFocus()));
 
   QFrame *borderFrame = new QFrame();
   QVBoxLayout *layoutBorderFrame = new QVBoxLayout();
@@ -501,11 +505,41 @@ void ComposerMainWindow::addPluginWidget(IPluginFactory *fac, IPlugin *plugin,
 #endif
 }
 
+
 void ComposerMainWindow::updateDockStyle(QDockWidget *dock, bool selected)
 {
 #define BLUE_VIEW_THEME 1
-
   QFrame *titleBar = (QFrame*)dock->titleBarWidget();
+  QList <QTabBar*> tabBars = this->findChildren <QTabBar *>();
+
+  foreach (QTabBar * tabBar, tabBars)
+  {
+    for(int index = 0; index < tabBar->count(); index++)
+    {
+      QVariant tmp = tabBar->tabData(index);
+      QDockWidget * dockWidget = reinterpret_cast<QDockWidget *>(tmp.toULongLong());
+      if(dockWidget == dock)
+      {
+        if(selected)
+        {
+#ifdef BLUE_VIEW_THEME
+          tabBar->setStyleSheet("QTabBar::tab:selected { \
+                      background: rgba(130, 175, 233, 255); \
+                      color: white; }");
+#else
+          //TODO:
+#endif
+        }
+        else
+        {
+          tabBar->setStyleSheet("QTabBar::tab:selected { \
+                      background: lightgray; \
+                      color: darkgray; }");
+        }
+      }
+    }
+  }
+
   if(!selected)
   {
     dock->setStyleSheet(".QFrame {border: none;}");
@@ -567,7 +601,7 @@ void ComposerMainWindow::updateDockStyle(QDockWidget *dock, bool selected)
   else
   {
 #ifdef BLUE_VIEW_THEME
-    dock->setStyleSheet(".QFrame {border: 5px solid rgba(130, 175, 233, 255); border-top: 0;}");
+    dock->setStyleSheet(".QFrame {border: 3px solid rgba(130, 175, 233, 255); border-top: 0;}");
     titleBar->setStyleSheet(" \
       QFrame { border: none; \
         background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,\
@@ -597,7 +631,7 @@ void ComposerMainWindow::updateDockStyle(QDockWidget *dock, bool selected)
         border: none; \
       }");
 #else
-    dock->setStyleSheet(".QFrame {border: 5px solid rgba(226, 127, 46, 255); border-top: 0;}");
+    dock->setStyleSheet(".QFrame {border: 3px solid rgba(226, 127, 46, 255); border-top: 0;}");
     titleBar->setStyleSheet(" \
       QFrame { border: none; \
         background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,\
@@ -626,7 +660,6 @@ void ComposerMainWindow::updateDockStyle(QDockWidget *dock, bool selected)
         border: none; \
       }");
 #endif
-
   }
 }
 void ComposerMainWindow::addButtonToDockTitleBar(QFrame *titleBar,
@@ -1836,9 +1869,12 @@ void ComposerMainWindow::focusChanged(QWidget *old, QWidget *now)
 {
   for(int i = 0; i < allDocks.size(); i++)
   {
-    if(old != NULL && allDocks.at(i)->isAncestorOf(old))
+    // if(old != NULL && allDocks.at(i)->isAncestorOf(old))
       updateDockStyle(allDocks.at(i), false);
+  }
 
+  for(int i = 0 ; i < allDocks.size(); i++)
+  {
     if(now != NULL && allDocks.at(i)->isAncestorOf(now))
       updateDockStyle(allDocks.at(i), true);
   }

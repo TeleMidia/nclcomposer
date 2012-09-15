@@ -81,6 +81,45 @@ protected:
 };
 
 /*!
+ * \brief A DockWidget that emit signals when clicked.
+ */
+class ClickableQDockWidget : public QDockWidget
+{
+  Q_OBJECT
+
+public:
+  ClickableQDockWidget (const QString &title, QWidget *parent = 0, Qt::WindowFlags flags = 0)
+    : QDockWidget(title, parent, flags)
+  {
+    setFocusPolicy(Qt::StrongFocus);
+
+    connect(this, SIGNAL(visibilityChanged(bool)), this, SLOT(visibilityHasChange(bool)));
+  }
+
+protected:
+  bool event(QEvent *event)
+  {
+    if(event->type() == QEvent::MouseButtonPress)
+    {
+      emit clicked();
+    }
+
+    return QDockWidget::event(event);
+  }
+
+private slots:
+  void visibilityHasChange(bool visible)
+  {
+    if(visible)
+      emit clicked();
+  }
+
+signals:
+    void clicked();
+
+};
+
+/*!
  * \brief The main Window of NCL Composer.
  *
  * This class is the main window of NCL Composer.
