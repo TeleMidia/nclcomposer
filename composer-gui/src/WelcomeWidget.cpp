@@ -120,8 +120,28 @@ void WelcomeWidget::notifyMessagesReadData(const QHttpResponseHeader &resp)
     QByteArray bytes = httpNotifyMessages.readAll();
     if (bytes.size())
     {
-      ui->labelNotifyMessage->setText(bytes);
-      ui->labelNotifyMessage->setVisible(true);
+      QStringList messages = QString(bytes).split("\n");
+      QString messageToShow = "";
+
+      for(int i = 0; i < messages.size(); i++)
+      {
+        if( i > MAX_NOTIFY_MESSAGES ) break;
+        QStringList msgSplittedId = messages[i].split("\t");
+
+        if(msgSplittedId.size() >= 2)
+        {
+          if( msgSplittedId[0].toInt() >= MIN_MESSAGE_ID_TO_SHOW )
+            messageToShow += msgSplittedId[1];
+          else
+            break;
+        }
+      }
+
+      if(messageToShow.size())
+      {
+        ui->labelNotifyMessage->setText(messageToShow);
+        ui->labelNotifyMessage->setVisible(true);
+      }
     }
   }
 }

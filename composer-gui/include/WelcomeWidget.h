@@ -33,6 +33,8 @@
 #define NCL_CLUB_URL "http://club.ncl.org.br/rss.xml"
 #define MAX_RECENT_PROJECTS 6
 
+#define MAX_NOTIFY_MESSAGES 4
+#define MIN_MESSAGE_ID_TO_SHOW 1
 #define NCL_COMPOSER_NOTIFY_URL "http://composer.telemidia.puc-rio.br/update/CURRENT_VERSION"
 
 namespace Ui{
