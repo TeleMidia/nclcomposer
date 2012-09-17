@@ -27,7 +27,6 @@
 #endif
 
 // #define SHOW_PROFILES
-
 namespace composer {
 namespace gui {
 
@@ -65,7 +64,7 @@ ComposerMainWindow::ComposerMainWindow(QApplication &app, QWidget *parent)
 
   splash.finish(this);
   connect(&app, SIGNAL(focusChanged(QWidget *, QWidget *)),
-          this, SLOT(focusChanged(QWidget *, QWidget *)));
+          this, SLOT(focusChanged(QWidget *, QWidget *)), Qt::DirectConnection);
 
   proc = NULL;
 
@@ -304,7 +303,7 @@ void ComposerMainWindow::initGUI()
   tbPerspectiveDropList->setPopupMode(QToolButton::InstantPopup);
 
   connect( tabProjects, SIGNAL(tabCloseRequested(int)),
-          this, SLOT(tabClosed(int)));
+          this, SLOT(tabClosed(int)), Qt::DirectConnection);
 
   connect(tabProjects, SIGNAL(currentChanged(int)),
           this, SLOT(currentTabChanged(int)));
@@ -451,7 +450,8 @@ void ComposerMainWindow::addPluginWidget(IPluginFactory *fac, IPlugin *plugin,
   dock->setAllowedAreas(Qt::AllDockWidgetAreas);
   dock->setFeatures(QDockWidget::AllDockWidgetFeatures);
 
-  connect(dock, SIGNAL(clicked()), dock, SLOT(setFocus()));
+  connect(dock, SIGNAL(clicked()), pW, SLOT(setFocus()));
+  pW->setFocusPolicy(Qt::StrongFocus);
 
   QFrame *borderFrame = new QFrame();
   borderFrame->setFrameShape(QFrame::NoFrame);
@@ -505,6 +505,9 @@ void ComposerMainWindow::addPluginWidget(IPluginFactory *fac, IPlugin *plugin,
   hide->setIcon(QIcon(":/mainwindow/closeplugin"));
   addButtonToDockTitleBar(titleBar, hide);
 
+  connect(dock, SIGNAL(topLevelChanged(bool)),
+          this, SLOT(viewVisibilityChanged(bool)));
+
   updateDockStyle(dock, false);
 #endif
 }
@@ -554,7 +557,7 @@ void ComposerMainWindow::updateDockStyle(QDockWidget *dock, bool selected)
         background: #cccccc;\
         color: white;\
         padding-left: 2px; \
-        font-size: 9px; \
+        font-size: 10px; \
         border-top-left-radius: 8px; \
         border-top-right-radius: 8px;} \
       QPushButton { \
@@ -622,7 +625,7 @@ void ComposerMainWindow::updateDockStyle(QDockWidget *dock, bool selected)
          color: white; \
          font-style: bold;\
          padding-left: 2px;\
-         font-size: 9px;\
+         font-size: 10px;\
          border-top-left-radius: 5px; \
          border-top-right-radius: 5px; \
       }\
@@ -1880,6 +1883,9 @@ void ComposerMainWindow::currentTabChanged(int n)
 
 void ComposerMainWindow::focusChanged(QWidget *old, QWidget *now)
 {
+  QList<QTabWidget *> tabList = findChildren<QTabWidget *>();
+  qDebug() << tabList.contains((QTabWidget*)now);
+
   for(int i = 0; i < allDocks.size(); i++)
   {
     // if(old != NULL && allDocks.at(i)->isAncestorOf(old))

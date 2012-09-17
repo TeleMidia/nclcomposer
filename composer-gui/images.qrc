@@ -38,5 +38,6 @@
         <file alias="perspective">images/perspective.png</file>
         <file alias="stop">images/stop.png</file>
         <file alias="config">images/config.png</file>
+        <file alias="reportbug">images/ladybug.png</file>
     </qresource>
 </RCC>
