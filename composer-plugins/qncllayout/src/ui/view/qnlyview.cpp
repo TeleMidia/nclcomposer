@@ -266,7 +266,8 @@ void QnlyView::requestRegionAddition(const QString regionUID,
                            const QString regionbaseUID,
                            QMap<QString, QString> attributes)
 {
-    attributes["id"] = "rg" + QString::number(nregions+1);
+    // attributes["id"] = "rg" + QString::number(nregions+1);
+    // attributes["id"] =
 
     emit regionAdded(regionUID, parentUID, regionbaseUID, attributes);
 }

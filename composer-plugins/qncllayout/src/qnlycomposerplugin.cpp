@@ -667,6 +667,8 @@ void QnlyComposerPlugin::addRegion(const QString regionUID,
 
     if (attributes.contains("id"))
         standard["id"] = attributes["id"];
+    else
+        standard["id"] = project->generateUniqueNCLId("region");
 
     if (attributes.contains("title"))
         standard["title"] = attributes["title"];
