@@ -30,13 +30,13 @@ else {
 
 macx {
   INSTALLBASE = /Library/Frameworks
-  INSTALLSUPPORT = $$quote(/Library/Application Support/Composer)
+  INSTALLSUPPORT = $$quote(/Library/Application Support/Composer/Extensions)
 }
 else:unix {
  isEmpty(PREFIX) {
     PREFIX = /usr/local
   }
- 
+
   INSTALLBASE = $$PREFIX
 }
 else:win32 {
