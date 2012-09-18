@@ -493,11 +493,13 @@ void ComposerMainWindow::addPluginWidget(IPluginFactory *fac, IPlugin *plugin,
   titleBar->setStyleSheet(" ");
 
   dock->setTitleBarWidget(titleBar);
+  allDocksMutex.lock();
   allDocks.insert(0, dock);
+  allDocksMutex.unlock();
 
   QPushButton *refresh = new QPushButton(titleBar);
   refresh->setIcon(QIcon(":/mainwindow/refreshplugin"));
-  refresh->setToolTip(tr("Refresh the View"));
+  refresh->setToolTip(tr("Reload View Model"));
   addButtonToDockTitleBar(titleBar, refresh);
   connect(refresh, SIGNAL(pressed()), plugin, SLOT(updateFromModel()));
 
@@ -720,15 +722,19 @@ void ComposerMainWindow::tabClosed(int index)
   {
     QMainWindow *w = projectsWidgets[location];
 
-    //Remove from allDocks
-    int i = 0;
-    while(i < allDocks.size())
-    {
-      if(w->isAncestorOf(allDocks.at(i)))
-        allDocks.removeAt(i);
-      else
-        i++;
-    }
+    allDocksMutex.lock();
+      QList<QDockWidget*> newAllDocks;
+      //Remove from allDocks
+      int i = 0;
+      for( int i = 0; i < allDocks.size(); i++)
+      {
+        if(w->isAncestorOf(allDocks.at(i)))
+          allDocks.removeAt(i);
+        else
+          newAllDocks.push_back(allDocks.at(i));
+      }
+      allDocks = newAllDocks;
+    allDocksMutex.unlock();
 
     // Delete QMainWindow
     if (w)

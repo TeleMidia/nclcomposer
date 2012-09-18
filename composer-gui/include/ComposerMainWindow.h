@@ -157,6 +157,8 @@ private:
                                                 first QDockWidget added.*/
   QList <QDockWidget*> allDocks; /*!< A list with all the QDockWidgets, to
                                         each plugin. */
+  QMutex allDocksMutex;
+
   QAction *fullScreenViewAct; /*!< Action to show Composer in FullScreen. */
   QAction *projectViewAct; /*!< TODO */
   QAction *editPreferencesAct; /*!< TODO */
