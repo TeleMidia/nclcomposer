@@ -392,6 +392,8 @@ private slots:
   void addDefaultStructureToProject(Project *project,
                                     bool shouldCopyDefaultConnBase = true,
                                     bool save = true);
+  void on_actionReport_Bug_triggered();
+
 public:
   /*!
      * \brief Constructs the Composer Main Window with the given parent.

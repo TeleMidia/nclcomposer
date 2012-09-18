@@ -17,6 +17,8 @@
 #include <QToolButton>
 #include <QApplication>
 
+#include <QDesktopServices>
+
 #include "GeneralPreferences.h"
 // #include "ImportBasePreferences.h"
 
@@ -2172,6 +2174,11 @@ void ComposerMainWindow::saveLoadPluginData(int)
     }
   }
   settings.endGroup();
+}
+
+void ComposerMainWindow::on_actionReport_Bug_triggered()
+{
+  QDesktopServices::openUrl(QUrl("http://composer.telemidia.puc-rio.br/en/contact"));
 }
 
 } } //end namespace
