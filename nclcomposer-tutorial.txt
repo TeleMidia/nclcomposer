@@ -49,9 +49,24 @@ inserir ponteiros para partes específicas do http://handbook.ncl.org.br[NCL
 Handbook] ou para o http://composer.telemidia.puc-rio.br[NCL Composer User
 Manual] onde o leitor pode encontrar mais informações.
 
+Estrutura de um documento Hipermídia
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+O que tocar?
+^^^^^^^^^^^^
+
+Onde tocar?
+^^^^^^^^^^^
+
+Como tocar?
+^^^^^^^^^^^
+
+Quando tocar?
+^^^^^^^^^^^^^
+
 [[sec:iniciando]]
-Iniciando
---------
+Configuração do Ambiente
+------------------------
 Para tirar total proveito deste tutorial é necessário que você tenha
 instalados e configurados em sua máquina os seguintes softwares:
   
@@ -107,7 +122,7 @@ produzida por André Castelão, que por sua vez foi baseado nas crônicas de
 Mané Garrincha, escritas por Gerson Soares. 
 
 NOTE: Uma descrição completa da animação _O Primeiro João_ pode ser encontrada
-em: 
+em: <<Soares2012>>.
 
 Olá Garrincha!
 ~~~~~~~~~~~~~~
@@ -137,7 +152,7 @@ pois ela será útil para os próximos exemplos que iremos desenvolver.
 
 Feito isso, pressione o botão _Finish_ e a seguinte tela será apresentada:
 
-image::images/nclcomposer-body.png[title="Body",width="70%",align="center"]
+image::images/nclcomposer-body.png[title="Visão estrutural de um projeto recém-criado.",width="70%",align="center"]
 
 Com o nosso projeto criado, podemos ter acesso às visões que já vem instaladas
 por default no NCL Composer: _Outline_, _Propriedades_,  _Estrutural_,
@@ -161,12 +176,14 @@ padrão:
 </ncl>
 -------------------------------------------
 
-.Para saber mais...
+.Para saber mais: Estrutura do documento NCL
 ************************************************
 Todo documento NCL é composto por um cabeçalho (<head>) e um corpo (<body>).
 No cabeçalho são definidos os elementos que serão reutilizados no corpo.
 Enquanto no corpo, define-se quais os objetos de mídia e quando eles serão
 apresentados.
+
+TODO
 ************************************************
 
 Adicionando um objeto de mídia
@@ -184,9 +201,9 @@ para o objeto de mídia, o que poder ser realizado selecionando o objeto que
 você acabou de editar e alterando o valor do atributo _src_ (ou na _Visão de
 Propriedades_ ou na _Visão Textual_).
 
-.Para saber mais...
+.Para saber mais: Objetos de Mídia
 ************************************************
-Objetos de mídia em NCL.
+TODO
 ************************************************
 
 Informando o(s) objeto(s) de mídia que serão inicialmente exibidos
@@ -208,15 +225,32 @@ do mouse para o objeto de mídia.
 image::images/nclcomposer-portcomponent.png[title="Mapeando porta para objeto de mídia.", width="70%", align="center"]
 
 Com isso, já definimos que nossa aplicação é constituída apenas do objeto de
-mídia _animGar_ e que quando a aplicação começará por esse objeto de mídia. 
+mídia _animGar_ e que quando a aplicação começar, o primeiro objeto de mídia a
+ser apresentado será o vídeo da animação _O Primeiro João_. 
 
 Propriedades e dimensões dos objetos de mídia
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-TODO: Adicionar as dimensões (WxH). Propriedades?
+Para finalizar o nosso exemplo inicial _Alô Garrincha_ só falta agora
+definirmos onde esse vídeo da animação será exibido. A forma mais simples de
+definir as dimensões do objeto de mídia, é por meio de propriedades.
+
+Para inserirmos propriedades nos objetos de mídia por meio da _Visão
+Estrutural_ a forma mais direta é clicando com o botão direto do mouse sobre o
+objeto de mídia no qual queremos inserir uma nova propriedade e selecionando o
+menu _Insert->Property_.
 
 image::images/nclcomposer-addproperty.png[title="Adicionando propriedade à um objeto de mídia.", width="70%", align="center"]
 
+Neste nosso primeiro exemplo estamos especialmente interessados nas
+propriedades que definem a dimensão dos objeto: _top_, _left_, _width_ e
+_height_.
+
 image::images/nclcomposer-property-width.png[title="Definindo largura do objeto de mídia.", width="70%", align="center"]
+
+.Para saber mais: Propriedades dos Objetos de Mídia
+***************************************************
+TODO
+***************************************************
 
 Sincronismo de Mídia sem Interatividade
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -289,6 +323,29 @@ Bibliografia
 ------------
 - [[[Soares2012]]] Luiz Fernando Gomes Soares and Simone Diniz Junqueira.
 	'Programando em NCL 3.0'. PUC-Rio.
+
+[appendix]
+Lista de Connectores pré-definidos
+----------------------------------
+Ao criar um novo projeto no NCL Composer é possível adicionar uma base de
+conectores pré-definidos (_defaultConnBase.ncl_). Esta base de conectores
+pré-definidos traz um conjunto de 
+
+
+[width="100%",frame="topbot",options="header"]
+|=======
+|          | *start*      | *stop*      | *pause*      | *resume*      | *set* + parâmetro _var_
+|*onBegin* | onBeginStart | onBeginStop | onBeginPause | onBeginResume | onBeginSet
+|*onEnd*   | onEndStart   | onEndStop   | onEndPause   | onEndResume   | onEndSet
+|*onSelection* (seleção por mouse) | onSelectionStart  | onSelectionStop |
+onSelectionPause | onSelectionResume | onSelectionSet
+|*onSelection* + parâmetro _key_ (seleção por tecla) | onKeySelectionStart |
+onKeySelectionStop | onKeySelectionPause | onKeySelectionResume |
+onKeySelectionSet
+|=======
+
+  * TODO: Como definir minha própria base de conectores???
+  * TODO: Como editar minha base de conectores default??
 
 [appendix]
 Onde encontrar mais informações
