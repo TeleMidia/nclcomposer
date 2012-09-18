@@ -497,12 +497,14 @@ void ComposerMainWindow::addPluginWidget(IPluginFactory *fac, IPlugin *plugin,
 
   QPushButton *refresh = new QPushButton(titleBar);
   refresh->setIcon(QIcon(":/mainwindow/refreshplugin"));
+  refresh->setToolTip(tr("Refresh the View"));
   addButtonToDockTitleBar(titleBar, refresh);
   connect(refresh, SIGNAL(pressed()), plugin, SLOT(updateFromModel()));
 
   QPushButton *hide = new QPushButton(titleBar);
   connect(hide, SIGNAL(pressed()), dock, SLOT(close()));
   hide->setIcon(QIcon(":/mainwindow/closeplugin"));
+  hide->setToolTip(tr("Hide View"));
   addButtonToDockTitleBar(titleBar, hide);
 
   connect(dock, SIGNAL(topLevelChanged(bool)),
@@ -533,7 +535,9 @@ void ComposerMainWindow::updateDockStyle(QDockWidget *dock, bool selected)
                       background: rgba(130, 175, 233, 255); \
                       color: white;}");
 #else
-          //TODO:
+            tabBar->setStyleSheet("QTabBar::tab:selected { \
+                        background: #2D2D2D; \
+                        color: white;}");
 #endif
         }
         else
@@ -579,13 +583,12 @@ void ComposerMainWindow::updateDockStyle(QDockWidget *dock, bool selected)
 #else
     titleBar->setStyleSheet(" \
       QFrame { border: none; \
-        background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,\
-        stop: 0 #a6a6a6, stop: 0.08 #7f7f7f,\
-        stop: 0.39999 #717171, stop: 0.4 #626262,\
-        stop: 0.9 #4c4c4c, stop: 1 #333333);\
-        color: white;\
+        background: #cccccc;\
+        color: #555555;\
         padding-left: 2px; \
-        font-size: 12px;} \
+        font-size: 10px; \
+        border-top-left-radius: 8px; \
+        border-top-right-radius: 8px;} \
       QPushButton { \
         background-color: transparent; \
         border: none;\
@@ -626,8 +629,8 @@ void ComposerMainWindow::updateDockStyle(QDockWidget *dock, bool selected)
          font-style: bold;\
          padding-left: 2px;\
          font-size: 10px;\
-         border-top-left-radius: 5px; \
-         border-top-right-radius: 5px; \
+         border-top-left-radius: 8px; \
+         border-top-right-radius: 8px; \
       }\
       QPushButton { \
         background-color: transparent; \
@@ -647,16 +650,16 @@ void ComposerMainWindow::updateDockStyle(QDockWidget *dock, bool selected)
         border: none; \
       }");
 #else
-    dock->setStyleSheet(".QFrame {border: 3px solid rgba(226, 127, 46, 255); border-top: 0; margin: 0;}");
+    dock->setStyleSheet(".QFrame {border: 3px solid black; border-top: 0; margin: 0;}");
     titleBar->setStyleSheet(" \
       QFrame { border: none; \
-        background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,\
-         stop: 0 rgba(255, 172, 70, 255), \
-         stop: 1 rgba(226, 127, 46, 255)); \
-         color: black;\
-         font-style: bold;\
-          padding-left: 2px;\
-          font-size: 12px;\
+        background: #2D2D2D; \
+        color: white;\
+        font-style: bold;\
+        padding-left: 2px;\
+         font-size: 10px; \
+         border-top-left-radius: 8px; \
+         border-top-right-radius: 8px;\
       }\
       QPushButton { \
         background-color: transparent; \
