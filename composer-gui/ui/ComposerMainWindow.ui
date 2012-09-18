@@ -83,10 +83,21 @@ QTabBar::tab:selected {
  		stop: 0 #333333, stop: 0.08 #4c4c4c,
 		stop: 0.39999 #626262, stop: 0.4 #717171,
 		stop: 0.9  #7f7f7f, stop: 1 #a6a6a6); */
-    background: rgba(130, 175, 233, 255);
+    background: #2D2D2D;
 	color: white;
     font-size: 10px;
- }
+}
+
+QTabBar[activeTabBar=&quot;true&quot;]::tab::selected {
+  background: rgba(130, 175, 233, 255);
+  color: white;
+}
+
+QTabBar[activeTabBar=&quot;false&quot;]::tab::selected {
+  background: #cccccc;
+  color: white;
+}
+
 
 /* QProgressBar {
 	border: 1px solid black;

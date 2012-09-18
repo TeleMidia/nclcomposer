@@ -533,9 +533,8 @@ void ComposerMainWindow::updateDockStyle(QDockWidget *dock, bool selected)
         if(selected)
         {
 #ifdef BLUE_VIEW_THEME
-          tabBar->setStyleSheet("QTabBar::tab:selected { \
-                      background: rgba(130, 175, 233, 255); \
-                      color: white;}");
+          tabBar->setProperty("activeTabBar", "true");
+
 #else
             tabBar->setStyleSheet("QTabBar::tab:selected { \
                         background: #2D2D2D; \
@@ -544,10 +543,10 @@ void ComposerMainWindow::updateDockStyle(QDockWidget *dock, bool selected)
         }
         else
         {
-          tabBar->setStyleSheet("QTabBar::tab:selected { \
-                      background: lightgray; \
-                      color: darkgray;}");
+          tabBar->setProperty("activeTabBar", "false");
         }
+        style()->unpolish(tabBar);
+        style()->polish(tabBar);
       }
     }
   }
