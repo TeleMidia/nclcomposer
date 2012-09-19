@@ -323,7 +323,10 @@ void OutlineViewPlugin::validationError(QString pluginID, void * param)
      QString uid = p->first;
 
      QTreeWidgetItem *item = window->getItemById(uid);
-     item->setTextColor(0, Qt::red);
-     item->setToolTip(0, p->second);
+     if(item != NULL)
+     {
+       item->setTextColor(0, Qt::red);
+       item->setToolTip(0, p->second);
+     }
   }
 }
