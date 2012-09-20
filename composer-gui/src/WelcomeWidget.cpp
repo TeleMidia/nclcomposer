@@ -125,7 +125,7 @@ void WelcomeWidget::notifyMessagesReadData(const QHttpResponseHeader &resp)
 
       for(int i = 0; i < messages.size(); i++)
       {
-        if( i > MAX_NOTIFY_MESSAGES ) break;
+        if( i > MAX_NOTIFY_MESSAGES - 1 ) break;
         QStringList msgSplittedId = messages[i].split("\t");
 
         if(msgSplittedId.size() >= 2)

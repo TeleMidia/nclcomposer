@@ -16,14 +16,21 @@ else {
   message ("Composer.pro DEBUG build!")
 }
 
+#WHAT FEATURES TO COMPILE?
 #CONFIG += clubencl
 CONFIG += runssh_on
 CONFIG += help
 QT += core xml network webkit
 
+#VERSION INFORMATION
 DEFINES += NCLCOMPOSER_GUI_VERSION=\"\\\"0.1.1\\\"\"
 DEFINES += BUILD_DATE=\"\\\"$${_DATE_}\"\\\"
 #DEFINES += WITH_TEST_VERSION_MESSAGE=\"\\\"1\\\"\"
+
+#NOTIFY SYSTEM
+DEFINES += MAX_NOTIFY_MESSAGES=\"4\"
+DEFINES += MIN_MESSAGE_ID_TO_SHOW=\"1\"
+DEFINES += NCL_COMPOSER_NOTIFY_URL=\"\\\"http://composer.telemidia.puc-rio.br/update/CURRENT_VERSION\\\"\"
 
 #DEFINES += USE_MDI
 RC_FILE = images/nclcomposer.rc
