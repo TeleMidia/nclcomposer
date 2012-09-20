@@ -48,12 +48,12 @@ void QnstGraphicsComposition::setColor(QString color)
     this->color = color;
 }
 
-void QnstGraphicsComposition::setCollpsed(bool collapsed)
+void QnstGraphicsComposition::setCollapsed(bool collapsed)
 {
     this->collapsed = collapsed;
 }
 
-bool QnstGraphicsComposition::isCollpsed()
+bool QnstGraphicsComposition::isCollapsed()
 {
     return collapsed;
 }
@@ -334,7 +334,7 @@ void QnstGraphicsComposition::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *ev
         getnstGraphicsParent()->adjust();
     }
 
-    setCollpsed(!collapsed);
+    setCollapsed(!collapsed);
 }
 
 void QnstGraphicsComposition::dropEvent(QGraphicsSceneDragDropEvent *event)

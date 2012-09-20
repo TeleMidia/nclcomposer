@@ -30,7 +30,7 @@ public:
 
     void setnstId(QString id);
 
-    void setCollpsed(bool collapsed);
+    void setCollapsed(bool collapsed);
 
     qreal getLastW();
 
@@ -40,7 +40,7 @@ public:
 
     void setLastH(qreal lastH);
 
-    bool isCollpsed();
+    bool isCollapsed();
 
     void collapse();
 

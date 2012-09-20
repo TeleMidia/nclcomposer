@@ -754,7 +754,7 @@ QString QnstView::serialize()
         e.setAttribute("width", entity->getWidth());
         e.setAttribute("height", entity->getHeight());
 
-        e.setAttribute("collapsed", ((QnstGraphicsComposition*) entity)->isCollpsed());
+        e.setAttribute("collapsed", ((QnstGraphicsComposition*) entity)->isCollapsed());
 
         e.setAttribute("expandWidth", ((QnstGraphicsComposition*) entity)->getLastW());
         e.setAttribute("expandHeight", ((QnstGraphicsComposition*) entity)->getLastH());
@@ -783,7 +783,7 @@ void QnstView::write(QDomElement element, QDomDocument* dom, QnstGraphicsEntity*
     case Qnst::Body:
         e = dom->createElement("body");
 
-        e.setAttribute("collapsed", ((QnstGraphicsComposition*) entity)->isCollpsed());
+        e.setAttribute("collapsed", ((QnstGraphicsComposition*) entity)->isCollapsed());
 
         e.setAttribute("expandWidth", ((QnstGraphicsComposition*) entity)->getLastW());
         e.setAttribute("expandHeight", ((QnstGraphicsComposition*) entity)->getLastH());
@@ -793,7 +793,7 @@ void QnstView::write(QDomElement element, QDomDocument* dom, QnstGraphicsEntity*
     case Qnst::Context:
         e = dom->createElement("context");
 
-        e.setAttribute("collapsed", ((QnstGraphicsComposition*) entity)->isCollpsed());
+        e.setAttribute("collapsed", ((QnstGraphicsComposition*) entity)->isCollapsed());
 
         e.setAttribute("expandWidth", ((QnstGraphicsComposition*) entity)->getLastW());
         e.setAttribute("expandHeight", ((QnstGraphicsComposition*) entity)->getLastH());
@@ -803,7 +803,7 @@ void QnstView::write(QDomElement element, QDomDocument* dom, QnstGraphicsEntity*
     case Qnst::Switch:
         e = dom->createElement("switch");
 
-        e.setAttribute("collapsed", ((QnstGraphicsComposition*) entity)->isCollpsed());
+        e.setAttribute("collapsed", ((QnstGraphicsComposition*) entity)->isCollapsed());
 
         e.setAttribute("expandWidth", ((QnstGraphicsComposition*) entity)->getLastW());
         e.setAttribute("expandHeight", ((QnstGraphicsComposition*) entity)->getLastH());
