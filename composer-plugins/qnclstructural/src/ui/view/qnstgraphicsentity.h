@@ -42,6 +42,10 @@ public:
 
     virtual void adjust(bool avoidCollision = false) = 0;
 
+    bool hasMouseHover();
+
+    void setMouseHover(bool hover);
+
 signals:
     void entityAdded(QnstGraphicsEntity* entity);
 
@@ -86,6 +90,10 @@ protected:
 
     virtual void contextMenuEvent(QGraphicsSceneContextMenuEvent* event);
 
+    virtual void hoverEnterEvent(QGraphicsSceneHoverEvent* event);
+
+    virtual void hoverLeaveEvent(QGraphicsSceneHoverEvent* event);
+
 protected slots:
     void requestEntityChange();
 
@@ -105,6 +113,9 @@ private:
     QMap<QString, QSet<int> > angles;
 
     QVector<QnstGraphicsEntity*> entities;
+
+protected:
+    bool hover;
 };
 
 #endif // QNSTGRAPHICSENTITY_H

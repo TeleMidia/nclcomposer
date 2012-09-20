@@ -390,7 +390,7 @@ void QncgGraphicsEntity::mouseMoveEvent(QGraphicsSceneMouseEvent* event)
     if (moveable && moving){
         move(event);
 
-    }else if (resizable && resizing){
+    } else if (resizable && resizing){
         resize(event);
     }
 }

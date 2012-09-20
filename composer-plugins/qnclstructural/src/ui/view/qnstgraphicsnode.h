@@ -27,10 +27,6 @@ public:
 
     void adjust(bool avoidCollision = true);
 
-    bool hasMouseHover();
-
-    void setMouseHover(bool hover);
-
 protected:
     virtual void draw(QPainter* painter) = 0;
 
@@ -40,14 +36,9 @@ protected:
 
     virtual void resize(QGraphicsSceneMouseEvent* event);
 
-    virtual void hoverEnterEvent(QGraphicsSceneHoverEvent* event);
-
-    virtual void hoverLeaveEvent(QGraphicsSceneHoverEvent* event);
-
 private:
     QVector<QnstGraphicsEdge*> edges;
 
-    bool hover;
 };
 
 #endif // QNSTGRAPHICSNODE_H

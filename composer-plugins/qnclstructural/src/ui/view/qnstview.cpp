@@ -6050,7 +6050,10 @@ void QnstView::performProperties()
 
 void QnstView::mouseMoveEvent(QMouseEvent* event)
 {
-    if (linking){
+    if (linking) {
+
+        //TODO: Highlight the "target" nodes
+
         link->setLine(QLineF(link->getLine().p1(), mapToScene(event->pos())));
     }
 

@@ -14,6 +14,7 @@ QnstGraphicsEntity::QnstGraphicsEntity(QnstGraphicsEntity* parent)
     connect(this, SIGNAL(entitySelected()), SLOT(requestEntitySelection()));
     connect(this, SIGNAL(entityAboutToChange(QMap<QString,QString>)), SLOT(requestEntityPreparation(QMap<QString,QString>)));
 
+    hover = false;
     menu = NULL;
     draggable = false;
 }
@@ -150,4 +151,43 @@ void QnstGraphicsEntity::contextMenuEvent(QGraphicsSceneContextMenuEvent* event)
     }
 }
 
+bool QnstGraphicsEntity::hasMouseHover()
+{
+    return hover;
+}
+
+void QnstGraphicsEntity::setMouseHover(bool hover)
+{
+    this->hover = hover;
+}
+
+void QnstGraphicsEntity::hoverEnterEvent(QGraphicsSceneHoverEvent* event)
+{
+    QncgGraphicsEntity::hoverEnterEvent(event);
+
+//    QnstGraphicsNode* parent = (QnstGraphicsNode*) getnstGraphicsParent();
+
+//    while(parent != NULL){
+//        parent->setMouseHover(false);
+//        parent->update();
+
+//        parent = (QnstGraphicsNode*) parent->getnstGraphicsParent();
+//    }
+
+    hover = true;
+}
+
+void QnstGraphicsEntity::hoverLeaveEvent(QGraphicsSceneHoverEvent* event)
+{
+    QncgGraphicsEntity::hoverLeaveEvent(event);
+
+//    QnstGraphicsNode* parent = (QnstGraphicsNode*) getnstGraphicsParent();
+
+//    if (parent != NULL){
+//        parent->setMouseHover(true);
+//        parent->update();
+//    }
+
+    hover = false;
+}
 
