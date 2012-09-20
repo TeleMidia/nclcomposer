@@ -42,6 +42,9 @@ void QnstGraphicsSwitch::createObjects()
     menu->actionSwitch->setEnabled(true);
     menu->actionSwitchPort->setEnabled(true);
     menu->actionProperty->setEnabled(true);
+
+    menu->menuAdjust->setEnabled(true);
+    menu->actionAuto->setEnabled(true);
 }
 
 void QnstGraphicsSwitch::createConnections()
@@ -77,6 +80,8 @@ void QnstGraphicsSwitch::createConnections()
     connect(menu, SIGNAL(switchRequested()), SLOT(performSwitch()));
     connect(menu, SIGNAL(areaRequested()), SLOT(performArea()));
     connect(menu, SIGNAL(propertyRequested()), SLOT(performProperty()));
+
+    connect(menu, SIGNAL(autoRequested()), SLOT(adjustWithSpring()));
 }
 
 
