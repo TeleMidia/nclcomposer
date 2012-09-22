@@ -39,6 +39,8 @@ QnstView::QnstView(QWidget* parent)
     clipboard = NULL;
 
     hasCutted = false;
+
+    lastLinkMouseOver = NULL;
 }
 
 QnstView::~QnstView()
@@ -148,7 +150,7 @@ void QnstView::read(QDomElement element, QDomElement parent)
     }else if (element.nodeName() == "media"){
         QString uid = element.attribute("uid");
 
-        QMap<QString, QString> properties;    
+        QMap<QString, QString> properties;
 
         properties["id"] = element.attribute("id");
         properties["type"] = element.attribute("type");
@@ -2523,7 +2525,7 @@ void QnstView::adjustMedia(QnstGraphicsMedia* entity)
 }
 
 void QnstView::addPort(const QString uid, const QString parent, const QMap<QString, QString> properties, bool undo)
-{ 
+{
     if (entities.contains(parent)){
         QnstGraphicsPort* entity = new QnstGraphicsPort((QnstGraphicsNode*) entities[parent]);
         entity->setnstUid(uid);
@@ -4012,7 +4014,7 @@ void QnstView::requestEntityRemotion(QnstGraphicsEntity* entity, bool undo, bool
 
                         binds.remove(bb->getnstUid());
                         brelations.remove(bb->getnstUid());
-                    }   
+                    }
                 }
 
                 QnstGraphicsEntity* parent = edge->getnstGraphicsParent();
@@ -6051,8 +6053,35 @@ void QnstView::performProperties()
 void QnstView::mouseMoveEvent(QMouseEvent* event)
 {
     if (linking) {
+        if (lastLinkMouseOver != NULL){
+            lastLinkMouseOver->setMouseHover(false);
 
-        //TODO: Highlight the "target" nodes
+            lastLinkMouseOver = NULL;
+        }
+
+        QList<QGraphicsItem *> itemsa = scene->items(link->getLine().p1());
+
+        if (itemsa.count() && itemsa.first() == link){
+            itemsa.removeFirst();
+        }
+
+        if (itemsa.count()) {
+            QnstGraphicsEntity* entitya = (QnstGraphicsEntity*) itemsa.first();
+            entitya->setMouseHover(true);
+        }
+
+        QList<QGraphicsItem*> itemsb = scene->items(link->getLine().p2());
+
+        if (itemsb.count() && itemsb.first() == link){
+            itemsb.removeFirst();
+        }
+
+        if (itemsb.count()){
+            QnstGraphicsEntity* entityb = (QnstGraphicsEntity*) itemsb.first();
+            entityb->setMouseHover(true);
+
+            lastLinkMouseOver = entityb;
+        }
 
         link->setLine(QLineF(link->getLine().p1(), mapToScene(event->pos())));
     }
@@ -6127,6 +6156,9 @@ void QnstView::mouseReleaseEvent(QMouseEvent* event)
                    addInterfacetoInterfaceEdge(entitya, entityb);
                 }
             }
+
+            entitya->setMouseHover(false);
+            entityb->setMouseHover(false);
         }
 
         if (link != NULL){

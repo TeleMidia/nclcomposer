@@ -373,6 +373,8 @@ private:
     QMap<QString, QnstConncetor*> connectors; // id - conn
 
     QUndoStack history;
+
+    QnstGraphicsEntity* lastLinkMouseOver;
 };
 
 #endif // QNSTVIEW_H

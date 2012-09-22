@@ -165,6 +165,9 @@ void QnstGraphicsEntity::hoverEnterEvent(QGraphicsSceneHoverEvent* event)
 {
     QncgGraphicsEntity::hoverEnterEvent(event);
 
+    if (!event->isAccepted()){
+
+
 //    QnstGraphicsNode* parent = (QnstGraphicsNode*) getnstGraphicsParent();
 
 //    while(parent != NULL){
@@ -174,7 +177,10 @@ void QnstGraphicsEntity::hoverEnterEvent(QGraphicsSceneHoverEvent* event)
 //        parent = (QnstGraphicsNode*) parent->getnstGraphicsParent();
 //    }
 
-    hover = true;
+        hover = true;
+    }
+
+    event->accept();
 }
 
 void QnstGraphicsEntity::hoverLeaveEvent(QGraphicsSceneHoverEvent* event)
