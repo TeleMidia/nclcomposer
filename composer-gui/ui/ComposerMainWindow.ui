@@ -83,7 +83,7 @@ QTabBar::tab:selected {
  		stop: 0 #333333, stop: 0.08 #4c4c4c,
 		stop: 0.39999 #626262, stop: 0.4 #717171,
 		stop: 0.9  #7f7f7f, stop: 1 #a6a6a6); */
-    background: #2D2D2D;
+    background: rgba(130, 175, 233, 255);
 	color: white;
     font-size: 10px;
 }
@@ -325,7 +325,7 @@ QMenu {
      <x>0</x>
      <y>0</y>
      <width>776</width>
-     <height>27</height>
+     <height>29</height>
     </rect>
    </property>
    <property name="layoutDirection">
