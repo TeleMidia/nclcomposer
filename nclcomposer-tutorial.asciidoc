@@ -5,6 +5,15 @@ v1.0, 2012-09
 :doctype: book
 :lang: pt-BR
 
+// Atribute List
+:nclcomposer: NCL Composer
+:default_views: Estrutural, Leiaute, Outline, Propriedades, Textual e Validador
+:structural_view: Visão Estrutural
+:layout_view: Visão de Leiaute
+:outline_view: Visão de Outline
+:properties_view: Visão de Propriedades
+:textual_view: Visão Textual
+//End Attribute List
 
 [[sec:intro]]
 Introdução
@@ -16,41 +25,48 @@ os conteúdos de mídia (áudio, vídeo, imagem etc.) e a estrutura de uma
 aplicação. Um documento NCL apenas define como os objetos de mídia são 
 estruturados e relacionados, no tempo e no espaço.
 
-O http://composer.telemidia.puc-rio.br[NCL Composer] é uma ferramenta de
+O http://composer.telemidia.puc-rio.br[{nclcomposer}] é uma ferramenta de
 autoria para NCL que visa facilitar o desenvolvimento de aplicações 
 interativas para usuário não-programadores. Para isso, ele utiliza-se de
 várias abstrações gráficas (visões) que permitem ao autor focar em apenas um
 determinado ponto, durante cada fase distinta da autoria.
 
 // O intuito principal deste tutorial é fornecer ao leitor a habilidade de 
-// desenvolver programas NCL simples, usando o NCL Composer, e capacitá-lo a 
+// desenvolver programas NCL simples, usando o {nclcomposer}, e capacitá-lo a 
 // melhor entender e exercitar os principais conceitos da NCL, no ambiente de
-// autoria NCL Composer.
+// autoria {nclcomposer}.
 
 Baseado nos exemplos apresentados no Capítulo 3 do livro 
 http://www.telemidia.puc-rio.br[Programando em NCL 3.0], este tutorial traz uma
-introdução passo a passo de como utilizar o NCL Composer para o 
+introdução passo a passo de como utilizar o {nclcomposer} para o 
 desenvolvimento de aplicações interativa usando o perfil NCL
 3.0 para TV digital.
 
+NOTE
+****
 Neste tutorial, não existe a preocupação nem de definir a linguagem NCL
-completamente e nem todas as funcionalidades do NCL Composer. Para uma
-referência completa sobre a linguagem NCL, recomendamos:
+completamente e nem de apresentar todas as funcionalidades do {nclcomposer}. Os
+exemplos são desenvolvidos seguindo o que os autores acreditam que seja a
+forma mais prática de utilização da ferramenta.
+
+Para uma referência completa sobre a linguagem NCL, recomendamos:
 
   * O livro Programando em NCL 3.0 <<Soares2012>> (português); ou
   * o http://handbook.ncl.org.br[NCL Handbook] (inglês).
 
-Para uma referência completa sobre o NCL Composer, é possível consultar o:
+Para uma referência completa sobre o {nclcomposer}, é possível consultar o:
 
-  * http://composer.telemidia.puc-rio.br[NCL Composer User Manual] (inglês).
+  * http://composer.telemidia.puc-rio.br[{nclcomposer} User Manual] (inglês).
 
 Sempre que necessário, entretanto, no decorrer deste tutorial, buscamos
 inserir ponteiros para partes específicas do http://handbook.ncl.org.br[NCL
-Handbook] ou para o http://composer.telemidia.puc-rio.br[NCL Composer User
+Handbook] ou para o http://composer.telemidia.puc-rio.br[{nclcomposer} User
 Manual] onde o leitor pode encontrar mais informações.
+****
 
 Estrutura de um documento Hipermídia
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Precisamos disso ?
 
 O que tocar?
 ^^^^^^^^^^^^
@@ -64,17 +80,74 @@ Como tocar?
 Quando tocar?
 ^^^^^^^^^^^^^
 
+{nclcomposer}
+~~~~~~~~~~~~
+O {nclcomposer} é composto por várias visões, cada uma permitindo a
+visualização de uma característica específica do documento hipermídia.
+
+[[sec:structural_view]]
+Visão Estrutural
+^^^^^^^^^^^^^^^^
+A {structural_view} permite que os autores de aplicações interajam visualmente
+com a estrutura lógica do documento NCL. Em NCL, a estrutura lógica é
+representada pelos seus objetos (nós de conteúdo e nós de composição) e os
+elos entre esses objetos (representadas pelos elementos <link>).
+
+TODO: Inserir FIGURA!
+
+[[sec:layout_view]]
+Visão de Leiaute
+^^^^^^^^^^^^^^^^
+A {layout_view} permite que os autores de aplicações NCL interajam visualmente
+com as regiões onde os objetos de mídia serão inicialmente apresentados. Nesta
+visão, os autores podem criar e manipular as regiões e a hierarquia de regiões
+do documento.
+
+TODO: Inserir FIGURA!
+
+[[sec:outline_view]]
+Visão de Outline
+^^^^^^^^^^^^^^^^
+A {outline_view} apresenta a estrutura do documento NCL como uma árvore,
+permitindo aos autores navegarem no documento.
+
+TODO: Inserir FIGURA!
+
+[[sec:properties_view]]
+Visão de Propriedades
+^^^^^^^^^^^^^^^^^^^^^
+A {properties_view}
+
+[[sec:textual_view]]
+Visão Textual
+^^^^^^^^^^^^^
+A {textual_view} permite aos usuários interagirem diretamente com o
+código-fonte da aplicação NCL. Ela é um editor de texto avançado focado na
+linguagem NCL e traz funcionalidades como: coloração sintática, sugestão de
+código contextual e formatação de código.
+
+A {textual_view} é recomendada especialmente para usuários avançados e que se
+sentem à vontade com a sintaxe XML.
+
+TODO: Inserir FIGURA!
+
+[[sec:validator]]
+Validador
+^^^^^^^^^
+TODO: Descrição
+TODO: Inserir FIGURA!
+
 [[sec:iniciando]]
-Configuração do Ambiente
-------------------------
+Configurando o Ambiente
+-----------------------
 Para tirar total proveito deste tutorial é necessário que você tenha
 instalados e configurados em sua máquina os seguintes softwares:
   
 	* Algum player NCL (recomendamos o uso da 
 http://www.softwarepublico.gov.br[Implementação de Referência do Ginga-NCL]);
-  * http://composer.telemidia.puc-rio.br[NCL Composer]
+  * http://composer.telemidia.puc-rio.br[{nclcomposer}]
 
-Instalando o NCL Composer
+Instalando o {nclcomposer}
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 TODO
 
@@ -114,7 +187,7 @@ TODO
 O Primeiro João
 ---------------
 Assim como no Capítulo 3 do Livro Programando em NCL, para introduzir a
-programação em NCL usando o NCL Composer, iremos utilizar um único exemplo,
+programação em NCL usando o {nclcomposer}, iremos utilizar um único exemplo,
 que será construído passo a passo: _O Primeiro João_.
 
 _O Primeiro João_ é baseado em um vídeo, uma animação de mesmo nome
@@ -127,14 +200,14 @@ em: <<Soares2012>>.
 Olá Garrincha!
 ~~~~~~~~~~~~~~
 Em nosso primeiro exemplo, iremos apenas exibir o vídeo da animação. Para
-isso, vamos abrir o NCL Composer. Depois de carregado, o NCL Composer
+isso, vamos abrir o {nclcomposer}. Depois de carregado, o {nclcomposer}
 apresenta a seguinte tela de boas-vindas:
 
-image::images/nclcomposer-welcomescreen.png[title="Tela de boas-vindas do NCL Composer.",width="70%",align="center"]
+image::images/nclcomposer-welcomescreen.png[title="Tela de boas-vindas do {nclcomposer}.",width="70%",align="center"]
 
 Nessa tela de boas-vindas podemos criar o nosso primeiro projeto. Para isso,
-selecione pressione o botão _New Project_ no canto esquerdo inferior da tela
-de boas-vindas. A seguinte tela será exibida:
+pressione o botão _New Project_ no canto esquerdo inferior da tela de
+boas-vindas. A seguinte tela será exibida:
 
 TIP: Outra possibilidade para criar um novo projeto é através do menu
 _File->New Project_.
@@ -155,12 +228,12 @@ Feito isso, pressione o botão _Finish_ e a seguinte tela será apresentada:
 image::images/nclcomposer-body.png[title="Visão estrutural de um projeto recém-criado.",width="70%",align="center"]
 
 Com o nosso projeto criado, podemos ter acesso às visões que já vem instaladas
-por default no NCL Composer: _Outline_, _Propriedades_,  _Estrutural_,
-_Layout_ e _Textual_.
+por default no {nclcomposer}: {default_views}.
 
-Como é possível observar, quando criamos um novo projeto, o NCL Composer
-automaticamente já o cria com o cabeçalho e o corpo da aplicação. Se você for
-para a visão _Textual_ poderá ver o código que já foi gerado por
+Como é possível observar, quando criamos um novo projeto, o {nclcomposer}
+automaticamente já o cria com o cabeçalho e o corpo da aplicação.
+
+Se você for para a visão _Textual_ poderá ver o código que já foi gerado por
 padrão: 
 
 [source,xml]
@@ -176,6 +249,11 @@ padrão:
 </ncl>
 -------------------------------------------
 
+.Para saber mais: eXtensible Markup Language
+********************************************
+TODO: O que é XML?
+********************************************
+
 .Para saber mais: Estrutura do documento NCL
 ************************************************
 Todo documento NCL é composto por um cabeçalho (<head>) e um corpo (<body>).
@@ -190,11 +268,11 @@ Adicionando um objeto de mídia
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 Para inserir os nossos objetos de mídia, a forma mais simples é apenas
 arrastar os objetos de mídia do seu Gerenciador de Arquivos para dentro da
-visão estrutural do NCL Composer.
+{structural_view} do {nclcomposer}.
 
-image::images/nclcomposer-drag_and_drop_animGar.png[title="Arraste os objetos de mídia do seu gerenciador de arquivos para a visão estrutural do NCL Composer para inserí-lo como objetos de mídia da aplicação.", width="70%", align="center"]
+image::images/nclcomposer-drag_and_drop_animGar.png[title="Arraste os objetos de mídia do seu gerenciador de arquivos para a {structural_view} do {nclcomposer} para inserí-lo como objetos de mídia da aplicação.", width="70%", align="center"]
 
-TIP: Outra forma de inserir um objeto de mídia, na _Visão Estrutural_ é 
+TIP: Outra forma de inserir um objeto de mídia, na {structural_view} é 
 clicar com o botão direito sobre o corpo do documento e selecionar o menu 
 _Insert -> Media_. Neste caso, é importante não esquecer de definir o caminho 
 para o objeto de mídia, o que poder ser realizado selecionando o objeto que 
@@ -242,8 +320,17 @@ menu _Insert->Property_.
 image::images/nclcomposer-addproperty.png[title="Adicionando propriedade à um objeto de mídia.", width="70%", align="center"]
 
 Neste nosso primeiro exemplo estamos especialmente interessados nas
-propriedades que definem a dimensão dos objeto: _top_, _left_, _width_ e
+propriedades que definem a dimensão dos objetos: _top_, _left_, _width_ e
 _height_.
+
+Para editar a propriedade inserirmos anteriormente é suficiente a
+selecionarmos pela {structural_view} e, depois, a partir da visão de
+propriedades podemos definir o seu nome e seu valor.
+
+No caso do nosso exemplo, devemos definir a propriedade _width_ e o valor
+100%. Da mesma forma podemos devemos criar uma propriedade _height_, também
+com o valor de 100%. Definindo assim, que nossa mídia irá ocupar toda a tela
+quando for apresentada.
 
 image::images/nclcomposer-property-width.png[title="Definindo largura do objeto de mídia.", width="70%", align="center"]
 
@@ -263,6 +350,8 @@ apresentação inicial do vídeo e começar a animação propriamente dita;
 com o famoso “drible do vaivém” do Mané, retratado na animação; e ainda
   3. uma outra imagem, uma foto, que deverá ser exibida junto com a cena do
 marcador caído no chão.
+
+A imagem a seguir apresenta a visão temporal do nosso segundo exemplo:
 
 image::images/temporal-view.png[title="Visão temporal do exemplo 02.", width="50%",align="center"]
 
@@ -327,7 +416,7 @@ Bibliografia
 [appendix]
 Lista de Connectores pré-definidos
 ----------------------------------
-Ao criar um novo projeto no NCL Composer é possível adicionar uma base de
+Ao criar um novo projeto no {nclcomposer} é possível adicionar uma base de
 conectores pré-definidos (_defaultConnBase.ncl_). Esta base de conectores
 pré-definidos traz um conjunto de 
 
@@ -355,8 +444,21 @@ TODO
 [appendix]
 Outras ferramentas de autoria
 -----------------------------
-  * NCL Eclipse
-	* CreaTVDigital
+Dado que existem diferente pefis de usuários para a linguagem NCL, é natural
+que também existam várias ferramentas, cada uma focada em um determinado
+perfil. O objetivo do {nclcomposer}, ao ser extensível por meio de plugins é
+possibilitar que todas essas diferentes abstra
+
+NCL Eclipse
+~~~~~~~~~~~
+
+CreaTVDigital
+~~~~~~~~~~~~~
+
+O {nclcomposer} não é a única ferramenta de autoria disponível para NCL. A
+proposta do NCL Composer é servir como base para a criação de diversas visões
+ {nclcomposer} não é a única ferramenta de autoria disponível para NCL. A
+proposta do NCL Composer é servir como base para a criação de diversas visões
 
 [appendix]
 Licença
