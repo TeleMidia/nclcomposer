@@ -6622,9 +6622,9 @@ void QnstView:: addNodetoNodeEdge(QnstGraphicsEntity* entitya, QnstGraphicsEntit
 
                         ///// connector
 
-                        QString connName = linkDialog->form.cbConnector->currentText();;
+                        QString connName = linkDialog->getCurrentConnector();;
 
-                        if (linkDialog->form.cbConnector->currentText() == "New..."){
+                        if (linkDialog->getCurrentConnector() == "New..."){
                             QnstConncetor* conn = new QnstConncetor();
                             conn->setName(con+act+QString::number(connectors.size()));
                             conn->addCondition(con, con);
@@ -7027,9 +7027,9 @@ void QnstView::addNodetoInterfaceEdge(QnstGraphicsEntity* entitya, QnstGraphicsE
 
                         ///// connector
 
-                        QString connName = linkDialog->form.cbConnector->currentText();;
+                        QString connName = linkDialog->getCurrentConnector();;
 
-                        if (linkDialog->form.cbConnector->currentText() == "New..."){
+                        if (linkDialog->getCurrentConnector() == "New..."){
                             QnstConncetor* conn = new QnstConncetor();
                             conn->setName(con+act+QString::number(connectors.size()));
                             conn->addCondition(con, con);
@@ -7436,9 +7436,9 @@ void QnstView::addInterfacetoNodeLink(QnstGraphicsEntity* entitya, QnstGraphicsE
 
             ///// connector
 
-            QString connName = linkDialog->form.cbConnector->currentText();;
+            QString connName = linkDialog->getCurrentConnector();;
 
-            if (linkDialog->form.cbConnector->currentText() == "New..."){
+            if (linkDialog->getCurrentConnector() == "New..."){
                 QnstConncetor* conn = new QnstConncetor();
                 conn->setName(con+act+QString::number(connectors.size()));
                 conn->addCondition(con, con);
@@ -7836,9 +7836,9 @@ void QnstView::addInterfacetoInterfaceEdge(QnstGraphicsEntity* entitya, QnstGrap
 
                         ///// connector
 
-                        QString connName = linkDialog->form.cbConnector->currentText();;
+                        QString connName = linkDialog->getCurrentConnector();
 
-                        if (linkDialog->form.cbConnector->currentText() == "New..."){
+                        if (linkDialog->getCurrentConnector() == "New..."){
                             QnstConncetor* conn = new QnstConncetor();
                             conn->setName(con+act+QString::number(connectors.size()));
                             conn->addCondition(con, con);
@@ -8132,9 +8132,9 @@ void QnstView::addInterfacetoInterfaceEdge(QnstGraphicsEntity* entitya, QnstGrap
 
                         ///// connector
 
-                        QString connName = linkDialog->form.cbConnector->currentText();;
+                        QString connName = linkDialog->getCurrentConnector();;
 
-                        if (linkDialog->form.cbConnector->currentText() == "New..."){
+                        if (linkDialog->getCurrentConnector() == "New..."){
                             QnstConncetor* conn = new QnstConncetor();
                             conn->setName(con+act+QString::number(connectors.size()));
                             conn->addCondition(con, con);
@@ -8389,9 +8389,9 @@ void QnstView::addInterfacetoInterfaceEdge(QnstGraphicsEntity* entitya, QnstGrap
 
                     ///// connector
 
-                    QString connName = linkDialog->form.cbConnector->currentText();;
+                    QString connName = linkDialog->getCurrentConnector();;
 
-                    if (linkDialog->form.cbConnector->currentText() == "New..."){
+                    if (linkDialog->getCurrentConnector() == "New..."){
                         QnstConncetor* conn = new QnstConncetor();
                         conn->setName(con+act+QString::number(connectors.size()));
                         conn->addCondition(con, con);
