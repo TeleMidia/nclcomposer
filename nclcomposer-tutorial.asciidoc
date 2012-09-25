@@ -214,7 +214,6 @@ _File->New Project_.
 
 image::images/nclcomposer-newproject.png[title="Criação de um novo projeto.",width="50%",align="center"]
 
-
 Nessa janela, atribua um nome para o projeto que você está criando, selecione
 o diretório onde deseja salvá-lo e também marque a opção _Copy and Import the
 default Connector Base_. 
@@ -251,17 +250,53 @@ padrão:
 
 .Para saber mais: eXtensible Markup Language
 ********************************************
-TODO: O que é XML?
+A linguagem NCL é uma aplicação XML. Isso significa que ela segue a sintaxe
+definida por esse padrão. Alguns pontos que você deve saber sobre XML são:
+
+  * XML significa _EXtensible Markup Language_.
+	* XML é uma linguagem de marcação.
+	* XML foi desenvolvida para o transporte de dados. 
+	* XML é uma recomendação W3C.
+	* As tags XML não são predefinidas. Cada aplicação XML define as suas
+	  próprias tags.
+	* NCL é uma aplicação XML.
+
+.TAG ou Elemento XML (<tag>...</tag> OU <tag />):
+------------------------------------------------------
+	<media id="video1" descriptor="dVideoWholeScreen">
+		...
+	</media>
+
+	<media id="v ideo1" descriptor="dVideoWholeScreen"/>
+------------------------------------------------------
+
+.Atributo (formato: atributo="valor")
+-------------------------------------
+	* id
+	* descriptor
+-------------------------------------
+
+.Valor de atributo (entre aspas "")
+-----------------------------------
+	  * "video1"
+		* "dVideoWhole Screen"
+-----------------------------------
 ********************************************
 
 .Para saber mais: Estrutura do documento NCL
 ************************************************
-Todo documento NCL é composto por um cabeçalho (<head>) e um corpo (<body>).
-No cabeçalho são definidos os elementos que serão reutilizados no corpo.
-Enquanto no corpo, define-se quais os objetos de mídia e quando eles serão
-apresentados.
+Um documento NCL é um arquivo escrito em XML. Todo documento NCL possui a
+seguinte estrutura:
 
-TODO
+  * uma seção de prólogo, definindo a codificação do arquivo.
+	* um cabeçalho de arquivo NCL.
+	* uma seção de cabeçalho, onde são definidos os elementos que serão
+	  reutilizados no corpo.
+	* o corpo do programa, (<body>).
+	* pelo menos uma porta que indica onde o programa começa a ser exibido.
+	* a conclusão do documento.
+
+TODO: Figura com o esqueleto de um documento NCL.
 ************************************************
 
 Adicionando um objeto de mídia
