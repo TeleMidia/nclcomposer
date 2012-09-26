@@ -512,9 +512,6 @@ void ComposerMainWindow::addPluginWidget(IPluginFactory *fac, IPlugin *plugin,
   hide->setToolTip(tr("Hide View"));
   addButtonToDockTitleBar(titleBar, hide);
 
-  connect(dock, SIGNAL(topLevelChanged(bool)),
-          this, SLOT(viewVisibilityChanged(bool)));
-
   // dock->installEventFilter(this);
 
   updateDockStyle(dock, false);
