@@ -146,7 +146,6 @@ void NCLTextEditor::markError ( QString description,
                                 int severity)
 {
   //TODO: Show Error Messages
-  qDebug() << "MarkError line=" << line;
   QString tmp = this->text(line);
 
   // ADD MARKER

@@ -221,7 +221,7 @@ void NCLTextualViewPlugin::onEntityAdded(QString pluginID, Entity *entity)
 {
   // Return if this is my call to onEntityAdded
   // qDebug() << " isSyncing= " << isSyncing;
-  if(pluginID == getPluginInstanceID() && !isSyncing)
+  if(pluginID == getPluginInstanceID())
     return;
 
   QString line = "<" + entity->getType() + "";
@@ -522,6 +522,9 @@ bool NCLTextualViewPlugin::saveSubsession()
 
 void NCLTextualViewPlugin::changeSelectedEntity(QString pluginID, void *param)
 {
+  if(isSyncing)
+    return; // do nothing;
+
   QString *id = (QString*)param;
   if(startEntityOffset.contains(*id))
   {
@@ -1003,6 +1006,9 @@ void NCLTextualViewPlugin::manageFocusLost(QFocusEvent *event)
 
 void NCLTextualViewPlugin::updateErrorMessages()
 {
+  if(isSyncing)
+    return;
+
   clearValidationMessages(this->pluginInstanceID, NULL);
 
   emit sendBroadcastMessage("askAllValidationMessages", NULL);
@@ -1015,6 +1021,9 @@ void NCLTextualViewPlugin::clearValidationMessages(QString, void *param)
 
 void NCLTextualViewPlugin::validationError(QString pluginID, void * param)
 {
+  if(isSyncing)
+    return;
+
   if (param) {
      pair <QString , QString> *p = (pair <QString, QString> *) param;
 
