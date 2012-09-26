@@ -66,7 +66,8 @@ ComposerMainWindow::ComposerMainWindow(QApplication &app, QWidget *parent)
 
   splash.finish(this);
   connect(&app, SIGNAL(focusChanged(QWidget *, QWidget *)),
-          this, SLOT(focusChanged(QWidget *, QWidget *)), Qt::DirectConnection);
+          this, SLOT(focusChanged(QWidget *, QWidget *)),
+          Qt::DirectConnection);
 
   proc = NULL;
 
@@ -514,10 +515,11 @@ void ComposerMainWindow::addPluginWidget(IPluginFactory *fac, IPlugin *plugin,
   connect(dock, SIGNAL(topLevelChanged(bool)),
           this, SLOT(viewVisibilityChanged(bool)));
 
+  // dock->installEventFilter(this);
+
   updateDockStyle(dock, false);
 #endif
 }
-
 
 void ComposerMainWindow::updateDockStyle(QDockWidget *dock, bool selected)
 {
@@ -726,7 +728,6 @@ void ComposerMainWindow::tabClosed(int index)
     allDocksMutex.lock();
       QList<QDockWidget*> newAllDocks;
       //Remove from allDocks
-      int i = 0;
       for( int i = 0; i < allDocks.size(); i++)
       {
         if(w->isAncestorOf(allDocks.at(i)))
@@ -1893,20 +1894,44 @@ void ComposerMainWindow::currentTabChanged(int n)
 
 void ComposerMainWindow::focusChanged(QWidget *old, QWidget *now)
 {
-  QList<QTabWidget *> tabList = findChildren<QTabWidget *>();
-  qDebug() << tabList.contains((QTabWidget*)now);
+  if(!isActiveWindow())
+      return; // Do nothing!!
 
+  // qDebug() << "Locking allDocksMutex 1";
+  allDocksMutex.lock();
   for(int i = 0; i < allDocks.size(); i++)
   {
     // if(old != NULL && allDocks.at(i)->isAncestorOf(old))
-      updateDockStyle(allDocks.at(i), false);
+    updateDockStyle(allDocks.at(i), false);
   }
+  allDocksMutex.unlock();
+  // qDebug() << "Unlocked allDocksMutex 1";
 
+  // qDebug() << "Locking allDocksMutex 2";
+  allDocksMutex.lock();
   for(int i = 0 ; i < allDocks.size(); i++)
   {
-    if(now != NULL && allDocks.at(i)->isAncestorOf(now))
-      updateDockStyle(allDocks.at(i), true);
+    if(now != NULL)
+    {
+      bool isAncestor = false;
+      QWidget *child = now;
+      // qDebug() << "Start";
+      while (child)
+      {
+        // qDebug() << "child pointer" << child;
+        // qDebug() << child->metaObject()->className();
+        if (child == allDocks.at(i))
+          isAncestor = true;
+        child = child->parentWidget();
+      }
+      // qDebug() << "End";
+
+      if(isAncestor)
+        updateDockStyle(allDocks.at(i), true);
+    }
   }
+  allDocksMutex.unlock();
+  // qDebug() << "Unlocked allDocksMutex 2";
 }
 
 void ComposerMainWindow::setProjectDirty(QString location, bool isDirty)
