@@ -738,8 +738,8 @@ void ComposerMainWindow::tabClosed(int index)
     // Delete QMainWindow
     if (w)
     {
-      delete w;
-      w = NULL;
+        w->close();
+        w->deleteLater();
     }
     projectsWidgets.remove(location);
     firstDock.remove(location);
@@ -1891,7 +1891,7 @@ void ComposerMainWindow::currentTabChanged(int n)
 
 void ComposerMainWindow::focusChanged(QWidget *old, QWidget *now)
 {
-  if(!isActiveWindow())
+  if(!isActiveWindow() || now == NULL)
       return; // Do nothing!!
 
   // qDebug() << "Locking allDocksMutex 1";
@@ -1918,7 +1918,10 @@ void ComposerMainWindow::focusChanged(QWidget *old, QWidget *now)
         // qDebug() << "child pointer" << child;
         // qDebug() << child->metaObject()->className();
         if (child == allDocks.at(i))
+        {
           isAncestor = true;
+          break;
+        }
         child = child->parentWidget();
       }
       // qDebug() << "End";
