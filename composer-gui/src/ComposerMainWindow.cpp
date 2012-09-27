@@ -1474,7 +1474,21 @@ void ComposerMainWindow::launchProjectWizard()
       if(!filename.endsWith(".cpr"))
         filename = filename + QString(".cpr");
 
-      checkTemporaryFileLastModified(filename);
+      QFileInfo info(filename);
+      // If the file already exist ask the user if it want to overwrite it
+      if(info.exists())
+      {
+          if(QMessageBox::question(this, tr("File already exists!"),
+                                    tr("The file \"%1\" already exists. Do you want overwrite it?").arg(filename),
+                                    QMessageBox::Yes|QMessageBox::No, QMessageBox::No) == QMessageBox::No)
+            return; // Do not overwrite!
+
+          QFile::remove(filename); // Remove the OLD file (only if the user accept it)
+      }
+
+      // We dont need to check this, when creating a new project
+      // checkTemporaryFileLastModified(filename);
+
 
       if(ProjectControl::getInstance()->launchProject(filename))
       {
