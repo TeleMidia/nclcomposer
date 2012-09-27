@@ -32,6 +32,7 @@ protected:
     virtual void keyPressEvent(QKeyEvent *e);
     virtual void focusInEvent(QFocusEvent *e);
     virtual void focusOutEvent(QFocusEvent *e);
+    virtual bool eventFilter(QObject *object, QEvent *event);
 
 private:
     QStringList words;

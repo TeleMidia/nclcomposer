@@ -16,6 +16,8 @@ CompleteLineEdit::CompleteLineEdit(QStringList words, QWidget *parent)
   model = new QStringListModel(this);
   listView->setWindowFlags(Qt::ToolTip);
 
+  installEventFilter(this);
+
   connect(this, SIGNAL(textChanged(const QString &)), this, SLOT(setCompleter(const QString &)));
   connect(listView, SIGNAL(clicked(const QModelIndex &)), this, SLOT(completeText(const QModelIndex &)));
 }
@@ -23,6 +25,26 @@ CompleteLineEdit::CompleteLineEdit(QStringList words, QWidget *parent)
 void CompleteLineEdit::setStringList(const QStringList &words)
 {
   this->words = words;
+}
+
+bool CompleteLineEdit::eventFilter(QObject *object, QEvent *event)
+{
+  if (object == this && event->type() == QEvent::KeyPress) {
+    QKeyEvent *keyEvent = static_cast<QKeyEvent *>(event);
+    if (keyEvent->key() == Qt::Key_Tab) {
+      if(!listView->isHidden())
+      {
+        QModelIndex currentIndex = listView->currentIndex();
+        if (currentIndex.isValid())
+        {
+          QString text = listView->currentIndex().data().toString();
+          setText(text);
+        }
+        listView->hide();
+      }
+   }
+  }
+  return false;
 }
 
 void CompleteLineEdit::focusOutEvent(QFocusEvent *e)
@@ -69,7 +91,8 @@ void CompleteLineEdit::keyPressEvent(QKeyEvent *e)
     {
       listView->hide();
     }
-    else if (Qt::Key_Enter == key || Qt::Key_Return == key)
+    else if (Qt::Key_Enter == key ||
+             Qt::Key_Return == key )
     {
       if (currentIndex.isValid())
       {
@@ -80,7 +103,7 @@ void CompleteLineEdit::keyPressEvent(QKeyEvent *e)
     }
     else
     {
-      listView->hide();
+      // listView->hide();
       QLineEdit::keyPressEvent(e);
     }
   }
@@ -179,6 +202,7 @@ void QnstGraphicsLinkDialog::init(QMap<QString, QnstConncetor*> connectors)
     // Center the Dialog if this is the first time that we are openning QnstGraphicsLinkDialog
     if(firstTime)
     {
+      setMinimumWidth(350);
       updateGeometry();
       QDesktopWidget *desktop = QApplication::desktop();
 
