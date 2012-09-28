@@ -520,7 +520,6 @@ void ComposerMainWindow::addPluginWidget(IPluginFactory *fac, IPlugin *plugin,
 
 void ComposerMainWindow::updateDockStyle(QDockWidget *dock, bool selected)
 {
-#define BLUE_VIEW_THEME 1
   QList <QTabBar*> tabBars = this->findChildren <QTabBar *>();
 
   foreach (QTabBar * tabBar, tabBars)
@@ -532,22 +531,11 @@ void ComposerMainWindow::updateDockStyle(QDockWidget *dock, bool selected)
       if(dockWidget == dock)
       {
         if(selected)
-        {
-#ifdef BLUE_VIEW_THEME
-          tabBar->setProperty("activeTabBar", "true");
-
-#else
-            tabBar->setStyleSheet("QTabBar::tab:selected { \
-                        background: #2D2D2D; \
-                        color: white;}");
-#endif
-        }
+          tabBar->setProperty("activePlugin", "true");
         else
-        {
-          tabBar->setProperty("activeTabBar", "false");
-        }
-        style()->unpolish(tabBar);
-        style()->polish(tabBar);
+          tabBar->setProperty("activePlugin", "false");
+
+        tabBar->setStyleSheet(styleSheet());
       }
     }
   }
@@ -555,134 +543,18 @@ void ComposerMainWindow::updateDockStyle(QDockWidget *dock, bool selected)
   QFrame *titleBar = (QFrame*) dock->titleBarWidget();
   if(!selected)
   {
-    dock->setStyleSheet(".QFrame {border: none; margin: 0;}");
-
-#ifdef BLUE_VIEW_THEME
-    titleBar->setStyleSheet(" \
-      QFrame { border: none; \
-        background: #cccccc;\
-        color: white;\
-        padding-left: 2px; \
-        font-size: 10px; \
-        border-top-left-radius: 8px; \
-        border-top-right-radius: 8px;} \
-      QPushButton { \
-        background-color: transparent; \
-        border: none;\
-      } \
-      QPushButton:hover { \
-        background: #aaaaaa;\
-      } \
-      QPushButton:pressed { \
-        background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,\
-        stop: 0 #868686, stop: 0.08 #5f5f5f,\
-        stop: 0.19999 #717171, stop: 0.4 #424242,\
-        stop: 0.9 #2c2c2c, stop: 1 #111111);\
-      } \
-      QPushButton:flat { \
-        border: none; \
-      }");
-#else
-    titleBar->setStyleSheet(" \
-      QFrame { border: none; \
-        background: #cccccc;\
-        color: #555555;\
-        padding-left: 2px; \
-        font-size: 10px; \
-        border-top-left-radius: 8px; \
-        border-top-right-radius: 8px;} \
-      QPushButton { \
-        background-color: transparent; \
-        border: none;\
-      } \
-      QPushButton:hover { \
-        background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,\
-        stop: 0 #d6d6d6, stop: 0.08 #afafaf,\
-        stop: 0.79999 #717171, stop: 0.4 #a2a2a2,\
-        stop: 0.9 #8c8c8c, stop: 1 #777777);\
-      } \
-      QPushButton:pressed { \
-        background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,\
-        stop: 0 #868686, stop: 0.08 #5f5f5f,\
-        stop: 0.19999 #717171, stop: 0.4 #424242,\
-        stop: 0.9 #2c2c2c, stop: 1 #111111);\
-      } \
-      QPushButton:flat { \
-        border: none; \
-      }");
-#endif
+    titleBar->setProperty("activePluginTitleBar", "false");
+    dock->setProperty("activePluginBorder", "false");
   }
   else
   {
-#ifdef BLUE_VIEW_THEME
-    dock->setStyleSheet(".QFrame {border: 3px solid rgba(130, 175, 233, 255); border-top: 0; margin: 0;}");
-    titleBar->setStyleSheet(" \
-      QFrame { border: none; \
-        /*background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, \
-                    stop: 0 #6DB3F2, \
-                    stop: 0.5 #54A3EE, \
-                    stop: 0.51 #3690F0, \
-                    stop: 1 #1E69DE);*/ \
-        background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,\
-         /*stop: 0 #dcebfd, stop: 1 #c2dcfd); */ \
-         stop: 0 rgba(130, 175, 233, 255), \
-         stop: 1 rgba(130, 175, 233, 255)); \
-         color: white; \
-         font-style: bold;\
-         padding-left: 2px;\
-         font-size: 10px;\
-         border-top-left-radius: 8px; \
-         border-top-right-radius: 8px; \
-      }\
-      QPushButton { \
-        background-color: transparent; \
-        border: none;\
-      } \
-      QPushButton:hover { \
-        background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,\
-        stop: 0 #edfcfe, \
-        stop: 1 #d3edfe); \
-      } \
-      QPushButton:pressed { \
-        background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,\
-        stop: 0 #dcebfd, \
-        stop: 1 #c2dcfd); \
-      } \
-      QPushButton:flat { \
-        border: none; \
-      }");
-#else
-    dock->setStyleSheet(".QFrame {border: 3px solid black; border-top: 0; margin: 0;}");
-    titleBar->setStyleSheet(" \
-      QFrame { border: none; \
-        background: #2D2D2D; \
-        color: white;\
-        font-style: bold;\
-        padding-left: 2px;\
-         font-size: 10px; \
-         border-top-left-radius: 8px; \
-         border-top-right-radius: 8px;\
-      }\
-      QPushButton { \
-        background-color: transparent; \
-        border: none;\
-      } \
-      QPushButton:hover { \
-        background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,\
-        stop: 0 #edfcfe, \
-        stop: 1 #d3edfe); \
-      } \
-      QPushButton:pressed { \
-        background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,\
-        stop: 0 #dcebfd, \
-        stop: 1 #c2dcfd); \
-      } \
-      QPushButton:flat { \
-        border: none; \
-      }");
-#endif
+    titleBar->setProperty("activePluginTitleBar", "true");
+    dock->setProperty("activePluginBorder", "true");
   }
+
+  dock->setStyleSheet(styleSheet());
 }
+
 void ComposerMainWindow::addButtonToDockTitleBar(QFrame *titleBar,
                                                  QPushButton *button)
 {
