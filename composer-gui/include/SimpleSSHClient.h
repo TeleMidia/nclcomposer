@@ -13,6 +13,7 @@
 extern "C" {
 // #include "libssh2_config.h"
 #include <libssh2.h>
+#include <libssh2_sftp.h>
 
 #ifdef WIN32
 #include <winsock2.h>
@@ -37,19 +38,21 @@ using namespace std;
 
 #include <QMutex>
 
+//\todo A better way to send error report than fprintf
 class SimpleSSHClient
 {
 private:
   string username;
   string password;
   string hostip;
-  string scppath;
-  string scpfile;
+  string sftp_path;
+  string sftp_file;
   static int libssh2_init_rc; /* Keeps the value returned by lissh2_init */
 
   int sock;
 
   LIBSSH2_SESSION *session;
+  LIBSSH2_SFTP *sftp_session;
 
 public:
   /*!
@@ -82,7 +85,7 @@ public:
   /*!
    * \brief Copy the file from localpath to the remotepath.
    */
-  int scp_copy_file(const char *localfile, const char* destpath);
+  int sftp_copy_file(const char *localfile, const char* destpath);
 
   /*!
    * \brief Executes a command in the remote machine.

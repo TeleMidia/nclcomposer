@@ -11,6 +11,7 @@
 
 extern "C" {
 #include <gcrypt.h>
+#include <time.h>
 }
 
 // This variable tell us if the libssh2 was initialized properly. This value
@@ -69,12 +70,12 @@ void SimpleSSHClient::exit()
 SimpleSSHClient::SimpleSSHClient(const char *username_,
                                  const char *password_,
                                  const char *hostip_,
-                                 const char *scppath_)
+                                 const char *sftp_path_)
 {
   this->username = username_;
   this->password = password_;
   this->hostip = hostip_;
-  this->scppath = scppath_;
+  this->sftp_path = sftp_path_;
 
   this->session = 0;
 }
@@ -100,8 +101,6 @@ int SimpleSSHClient::doConnect()
     fprintf (stderr, "libssh2 initialization failed (%d)\n", libssh2_init_rc);
     return 1;
   }
-
-  //  string command = "/misc/launcher.sh " + scpfile;
 
   /* Ultra basic "connect to port 22 on localhost"
    * Your code is responsible for creating the socket establishing the
@@ -213,78 +212,30 @@ int SimpleSSHClient::doConnect()
     }
   }
 
+  fprintf(stderr, "Before sftp_init session.\n");
+  sftp_session = libssh2_sftp_init(session);
+
+  if(!sftp_session) {
+      fprintf(stderr, "Unable to init sftp session.\n");
+      doDisconnect();
+  }
+
+  fprintf(stderr, "sftp_init session ok.\n");
+
 #if 1
   libssh2_trace(session, ~0 );
 #endif
-
-  return 0;
-
-  /*
-   * Ultra basic "connect to port 22 on localhost"
-   * Your code is responsible for creating the socket establishing the
-   * connection
-   */
-  sock = socket(AF_INET, SOCK_STREAM, 0);
-  if(-1 == sock)
-  {
-    fprintf(stderr, "failed to create socket!\n");
-    return -1;
-  }
-
-  sin.sin_family = AF_INET;
-  sin.sin_port = htons(22);
-  sin.sin_addr.s_addr = hostaddr;
-  if (connect(sock, (struct sockaddr*)(&sin), sizeof(struct sockaddr_in))!= 0)
-  {
-    fprintf(stderr, "failed to connect!\n");
-    return -1;
-  }
-
-  /* Create a session instance */
-  session = libssh2_session_init();
-
-  if(!session)
-    return -1;
-
-  /* ... start it up. This will trade welcome banners, exchange keys,
-         * and setup crypto, compression, and MAC layers
-         */
-  rc = libssh2_session_startup(session, sock);
-
-  if(rc)
-  {
-    fprintf(stderr, "Failure establishing SSH session: %d\n", rc);
-    return -1;
-  }
-
-  /* At this point we havn't yet authenticated.  The first thing to do
-   * is check the hostkey's fingerprint against our known hosts Your app
-   * may have it hard coded, may go to a file, may present it to the
-   * user, that's your call
-   */
-  fingerprint = libssh2_hostkey_hash(session, LIBSSH2_HOSTKEY_HASH_SHA1);
-
-//  fprintf(stderr, "Fingerprint: ");
-//  for(i = 0; i < 20; i++)
-//  {
-//    fprintf(stderr, "%02X ", (unsigned char)fingerprint[i]);
-//  }
-//  fprintf(stderr, "\n");
-
-  /* We could authenticate via password */
-  if (libssh2_userauth_password(session, username.c_str(), password.c_str()))
-  {
-    fprintf(stderr, "Authentication by password failed.\n");
-
-    //call disconnect to free all data
-    doDisconnect();
-  }
 
   return 0;
 }
 
 void SimpleSSHClient::doDisconnect()
 {
+  if(sftp_session)
+  {
+    libssh2_sftp_shutdown(sftp_session);
+  }
+
   if(session)
   {
     libssh2_session_disconnect(session,
@@ -300,28 +251,30 @@ void SimpleSSHClient::doDisconnect()
 #endif
 }
 
-int SimpleSSHClient::scp_copy_file(const char *localncl, const char *destpath)
+int SimpleSSHClient::sftp_copy_file(const char *localncl, const char *destpath)
 {
   int rc;
-  LIBSSH2_CHANNEL *channel;
   size_t nread;
   FILE *local;
   struct stat fileinfo;
-  char mem[1024];
+  char mem[1024 * 100];
   char *ptr;
+
+  LIBSSH2_SFTP_HANDLE *sftp_handle;
+  LIBSSH2_SFTP_ATTRIBUTES attrs;
+  bool isModified = true;
 
   size_t found;
   string temp = localncl;
   found = temp.find_last_of("/\\");
   string nclfile = temp.substr(found+1);
 
-  scpfile = destpath + string("/") + nclfile;
-
-  /* tell libssh2 we want it done non-blocking */
-  libssh2_session_set_blocking(session, 1);
+  sftp_file = destpath + string("/") + nclfile;
 
   // \todo Make sure we are connected.
+  // \todo create subpath when it does not exists
 
+  // Open local file
   local = fopen(localncl, "rb");
   if (!local)
   {
@@ -329,68 +282,86 @@ int SimpleSSHClient::scp_copy_file(const char *localncl, const char *destpath)
     return -1;
   }
 
+  // Get info from local file
   stat(localncl, &fileinfo);
 
-  /* Send a file via scp. The mode parameter must only have permissions! */
-  channel = libssh2_scp_send(session, scpfile.c_str(), fileinfo.st_mode & 0777,
-                             (unsigned long)fileinfo.st_size);
+  libssh2_session_set_blocking(session, 1);
 
-  if (!channel)
+  rc = libssh2_sftp_stat(sftp_session, sftp_file.c_str(), &attrs);
+
+  if(rc == 0) // sftp_stat success
   {
-    char *errmsg;
-    int errlen;
-    int err = libssh2_session_last_error(session, &errmsg, &errlen, 0);
-
-    fprintf(stderr, "Unable to open a session: (%d) %s\n", err, errmsg);
-    goto shutdown_copy;
+      if(attrs.mtime < fileinfo.st_mtime) // The remote file is older than the local file
+        isModified = true;
+      else
+        isModified = false;
   }
 
-  /* tell libssh2 we want it done blocking */
-  libssh2_channel_set_blocking(channel, 1);
-
-  fprintf(stderr, "SCP session waiting to send file\n");
-  do
+  if(isModified) // I will copy the file
   {
-    nread = fread(mem, 1, sizeof(mem), local);
-    if (nread <= 0)
+    // Open the remote file
+    sftp_handle = libssh2_sftp_open(sftp_session,
+                                    sftp_file.c_str(),
+                                    LIBSSH2_FXF_WRITE|LIBSSH2_FXF_CREAT|LIBSSH2_FXF_TRUNC,
+                                    LIBSSH2_SFTP_S_IRUSR|LIBSSH2_SFTP_S_IWUSR|
+                                    LIBSSH2_SFTP_S_IRGRP|LIBSSH2_SFTP_S_IROTH);
+
+    if(!sftp_handle)
     {
-      /* end of file */
-      break;
+      fprintf(stderr, "Unable to open file with SFTP.\n");
+      goto shutdown_copy;
     }
-    ptr = mem;
 
-    do
+    fprintf(stderr, "libssh2_sftp_open() is done, now send data.\n");
+
+    do {
+      nread = fread(mem, 1, sizeof(mem), local);
+        if (nread <= 0) /* end of file */
+          break;
+
+        ptr = mem;
+
+        do {
+          /* write data in a loop until we block */
+          rc = libssh2_sftp_write(sftp_handle, ptr, nread);
+
+          if(rc < 0) break;
+
+          ptr += rc;
+          nread -= rc;
+        } while (nread);
+    } while (rc > 0);
+
+    libssh2_sftp_close(sftp_handle);
+
+    rc = libssh2_sftp_stat(sftp_session, sftp_file.c_str(), &attrs);
+    if(rc < 0)
     {
-      /* write the same data over and over, until error or completion */
-      rc = libssh2_channel_write(channel, ptr, nread);
+        fprintf(stderr, "I could not check if the file was copied correctly.\n");
+        goto shutdown_copy;
+    }
 
-      if (rc < 0)
-      {
-        fprintf(stderr, "ERROR %d\n", rc);
-        break;
-      }
-      else
-      {
-        /* rc indicates how many bytes were written this time */
-        ptr += rc;
-        nread -= rc;
-      }
-    } while (nread);
-  } while (1);
+    fprintf(stderr, "Modification time is: %s.\n", ctime((const time_t*)&attrs.mtime));
 
+    // Update the remote file with the same mtime of the local file.
+    attrs.mtime = fileinfo.st_mtime;
+    rc = libssh2_sftp_setstat(sftp_session, sftp_file.c_str(), &attrs);
 
-  fprintf(stderr, "Sending EOF\n");
-  libssh2_channel_send_eof(channel);
+    // Checking if we have modified the mtime correctly.
+    rc = libssh2_sftp_stat(sftp_session, sftp_file.c_str(), &attrs);
+    if(rc < 0)
+    {
+        fprintf(stderr, "I could not check if the mtime file was copied correctly.\n");
+        goto shutdown_copy;
+    }
 
-  fprintf(stderr, "Waiting for EOF\n");
-  libssh2_channel_wait_eof(channel);
+    fprintf(stderr, "Updated modification time is: %s", ctime((const time_t*)&attrs.mtime));
 
-  fprintf(stderr, "Waiting for channel to close\n");
-  libssh2_channel_wait_closed(channel);
-
-  libssh2_channel_free(channel);
-
-  channel = NULL;
+  }
+  else
+  {
+    fprintf(stderr, "I will not copy the file %s, because it was not modified.\n", sftp_file.c_str());
+  }
 
 shutdown_copy:
   if (local)

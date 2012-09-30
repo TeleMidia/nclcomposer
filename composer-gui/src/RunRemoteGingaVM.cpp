@@ -114,13 +114,13 @@ bool RunRemoteGingaVMAction::sendFilesToGingaVM(SimpleSSHClient &sshclient,
   emit taskDescription(tr("Sending files to remote machine..."));
   emit taskMaximumValue(filesToSend.size());
 
-  qDebug() << "Must send this files:" << filesToSend;
+  qWarning() << "Must send this files:" << filesToSend;
 
   for(int i = 0; i < filesToSend.size(); i++)
   {
     if(mustStop) break;
 
-    emit taskValue(i);
+   // emit taskValue(i);
 
     int resp = 0;
     QString fullpath = filesToSend.at(i);
@@ -134,7 +134,8 @@ bool RunRemoteGingaVMAction::sendFilesToGingaVM(SimpleSSHClient &sshclient,
       {
         qDebug() << "Sending file = " << fullpath <<
                     " to " << baseRemotePath + relativePathDir;
-        resp = sshclient.scp_copy_file( fullpath.toStdString().c_str(),
+
+        resp = sshclient.sftp_copy_file( fullpath.toStdString().c_str(),
                          (baseRemotePath+relativePathDir).toStdString().c_str());
       }
       else
@@ -292,7 +293,7 @@ void RunRemoteGingaVMAction::runCurrentProject()
 //      if(fixSrcsFromNCLFile(nclLocalPath))
 //      {
         /* RUNNING GINGA */
-        sshclient.scp_copy_file(nclLocalPath.toStdString().c_str(),
+        sshclient.sftp_copy_file(nclLocalPath.toStdString().c_str(),
                                 remotePath.toStdString().c_str());
         QString cmd = remoteCmd;
         cmd += " ";
