@@ -108,31 +108,45 @@ bool RunRemoteGingaVMAction::sendFilesToGingaVM(SimpleSSHClient &sshclient,
                                                 QStringList filesToSend)
 {
   int ret = 1;
+
   // \todo This search MUST BE RECURSIVE!!!
   // \todo This also can be a function.
+
+  if(!baseRemotePath.endsWith("/"))
+    baseRemotePath.append("/");
+
+  // This will force the creation of the baseRemotePath if it does not exists
+  // filesToSend.prepend(baseRemotePath);
+  qWarning() << "Must send these files:" << filesToSend;
 
   emit taskDescription(tr("Sending files to remote machine..."));
   emit taskMaximumValue(filesToSend.size());
 
-  qWarning() << "Must send this files:" << filesToSend;
+  // Force the creation of remotePath (in case it does not exist)
+  QString mkdir = "mkdir -p ";
+  mkdir += baseRemotePath;
+
+  qWarning() << "Running command = " << mkdir;
+  ret = !sshclient.exec_cmd(mkdir.toStdString().c_str());
 
   for(int i = 0; i < filesToSend.size(); i++)
   {
     if(mustStop) break;
 
-   // emit taskValue(i);
+    qWarning() << i << "from" << filesToSend.size();
+    emit taskValue(i);
 
     int resp = 0;
     QString fullpath = filesToSend.at(i);
     if(fullpath.contains(baseLocalPath))
     {
       QString relativePath = fullpath.mid(baseLocalPath.size()+1);
-      QString relativePathDir =
-          relativePath.mid(0, relativePath.lastIndexOf("/")+1);
+      QString relativePathDir = relativePath.mid(0, relativePath.lastIndexOf("/")+1);
       QFileInfo fileInfo(fullpath);
+
       if(fileInfo.isFile())
       {
-        qDebug() << "Sending file = " << fullpath <<
+        qWarning() << "Sending file = " << fullpath <<
                     " to " << baseRemotePath + relativePathDir;
 
         resp = sshclient.sftp_copy_file( fullpath.toStdString().c_str(),
@@ -143,7 +157,7 @@ bool RunRemoteGingaVMAction::sendFilesToGingaVM(SimpleSSHClient &sshclient,
         QString mkdir = "mkdir -p ";
         mkdir += baseRemotePath + relativePath;
 
-        qDebug() << "Running command = " << mkdir;
+        qWarning() << "Running command = " << mkdir;
         resp = sshclient.exec_cmd(mkdir.toStdString().c_str());
       }
     }
@@ -271,6 +285,8 @@ void RunRemoteGingaVMAction::runCurrentProject()
   QString nclLocalPath = tmpNCLDir;
   nclLocalPath += "/";
   nclLocalPath += "tmp.ncl";
+
+  emit taskDescription(tr("Computing files to transmit..."));
 
   /* First, get the list of files to send */
   QStringList filesToSend = filesToSendToGingaVM(project, nclLocalPath);

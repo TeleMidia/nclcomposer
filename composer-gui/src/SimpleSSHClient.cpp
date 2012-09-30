@@ -271,6 +271,8 @@ int SimpleSSHClient::sftp_copy_file(const char *localncl, const char *destpath)
 
   sftp_file = destpath + string("/") + nclfile;
 
+  //fprintf(stderr, "Copying %s to %s.\n", localncl, sftp_file.c_str());
+
   // \todo Make sure we are connected.
   // \todo create subpath when it does not exists
 
@@ -386,24 +388,24 @@ int SimpleSSHClient::exec_cmd(const char *command)
 
   if( channel == NULL )
   {
-    fprintf(stderr,"Error\n");
-    ::exit( 1 );
+    fprintf(stderr,"Error 1\n");
+    ::exit(1);
   }
 
   /* tell libssh2 we want it done non-blocking */
-  libssh2_channel_set_blocking(channel, 0);
+  libssh2_channel_set_blocking(channel, 1);
 
-  while( (rc = libssh2_channel_exec(channel, command)) ==
-
-         LIBSSH2_ERROR_EAGAIN )
+  while( (rc = libssh2_channel_exec(channel, command)) == LIBSSH2_ERROR_EAGAIN )
   {
     waitsocket(sock, session);
   }
+
   if( rc != 0 )
   {
-    fprintf(stderr,"Error\n");
+    fprintf(stderr, "Error 2\n");
     ::exit( 1 );
   }
+
   for( ;; )
   {
     /* loop until we block */
@@ -437,6 +439,7 @@ int SimpleSSHClient::exec_cmd(const char *command)
     else
       break;
   }
+
   exitcode = 127;
 
   while( (rc = libssh2_channel_close(channel)) == LIBSSH2_ERROR_EAGAIN )
@@ -451,11 +454,10 @@ int SimpleSSHClient::exec_cmd(const char *command)
     //                                NULL, NULL, NULL, NULL, NULL);
   }
 
-  if (exitsignal)
-    printf("\nGot signal: %s\n", exitsignal);
-  else
+  if (!exitcode)
     printf("\nEXIT: %d bytecount: %d\n", exitcode, bytecount);
-
+  else
+    printf("\nExit channel was ok!\n");
 
   return 0;
 }
