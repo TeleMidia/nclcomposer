@@ -473,7 +473,7 @@ void ComposerMainWindow::addPluginWidget(IPluginFactory *fac, IPlugin *plugin,
   else
     w->addDockWidget(Qt::LeftDockWidgetArea, dock, Qt::Vertical);
 
-  dock->setMinimumSize(150, 150);
+  dock->setMinimumSize(0, 0);
   tabProjects->setCurrentWidget(w);
 
   if(firstDock.contains(location)) {
