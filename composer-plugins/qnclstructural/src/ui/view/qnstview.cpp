@@ -5983,7 +5983,7 @@ void QnstView::performExport()
 
         painter.end();
 
-        image.save(location);
+        image.save(location, "PNG");
     }
 }
 
@@ -6497,6 +6497,9 @@ void QnstView:: addNodetoNodeEdge(QnstGraphicsEntity* entitya, QnstGraphicsEntit
 
                         pointb = parenta->mapFromItem(parentb, pointb);
 
+                        qreal wa = entitya->getWidth()/2;
+                        qreal wb = entityb->getWidth()/2;
+
                         if (pointa.x() <= pointb.x() && pointa.y() <= pointb.y()){
                             xcenter = pointa.x() + (pointb.x() - pointa.x())/2;
                             ycenter = pointa.y() + (pointb.y() - pointa.y())/2;
@@ -6619,6 +6622,8 @@ void QnstView:: addNodetoNodeEdge(QnstGraphicsEntity* entitya, QnstGraphicsEntit
                                 SIGNAL(bindParamUpdated(QString,QMap<QString,QString>,QMap<QString,QString>)),
                                 SLOT(updateBindParams(QString,QMap<QString,QString>,QMap<QString,QString>)));
                         /////
+
+
 
                         ///// connector
 
@@ -7645,6 +7650,7 @@ void QnstView::addInterfacetoInterfaceEdge(QnstGraphicsEntity* entitya, QnstGrap
 
         if (parenta != NULL && parentb != NULL){
             if (parenta == parentb->getnstGraphicsParent()){
+
                 qDebug() << "INTERFACE to INTERFACE:" << entitya->getnstUid() << "->" << entityb->getnstUid();
 
                 foreach(QnstGraphicsEntity* entity, parenta->getnstGraphicsEntities()){
