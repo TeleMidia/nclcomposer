@@ -27,6 +27,7 @@
 #include <QObject>
 #include <QMap>
 #include <QGraphicsSceneMouseEvent>
+#include <QFileDialog>
 
 #include "qnlygraphicsregion.h"
 
@@ -124,6 +125,8 @@ protected slots:
 
     void requestMediaOverRegionAction(QString mediaId,
                                       QnlyGraphicsRegion* region);
+
+    void performExport();
 
     void perform640x480();
     void perform800x600();

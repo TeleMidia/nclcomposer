@@ -595,13 +595,13 @@ void QnlyGraphicsRegionBase::createMenus()
     contextMenu = new QMenu();
     contextMenu->addAction(helpAction);
     contextMenu->addSeparator();
-    contextMenu->addAction(undoAction);
-    contextMenu->addAction(redoAction);
-    contextMenu->addSeparator();
-    contextMenu->addAction(cutAction);
-    contextMenu->addAction(copyAction);
-    contextMenu->addAction(pasteAction);
-    contextMenu->addSeparator();
+//    contextMenu->addAction(undoAction);
+//    contextMenu->addAction(redoAction);
+//    contextMenu->addSeparator();
+//    contextMenu->addAction(cutAction);
+//    contextMenu->addAction(copyAction);
+//    contextMenu->addAction(pasteAction);
+//    contextMenu->addSeparator();
     contextMenu->addAction(deleteAction);
     contextMenu->addSeparator();
     contextMenu->addAction(exportAction);
@@ -640,6 +640,8 @@ void QnlyGraphicsRegionBase::createConnections()
     connect(re1280x720, SIGNAL(triggered()), SLOT(perform1280x720()));
     connect(re1920x1080, SIGNAL(triggered()), SLOT(perform1920x1080()));
     connect(re320x400, SIGNAL(triggered()), SLOT(perform320x400()));
+
+    connect(exportAction, SIGNAL(triggered()), SLOT(performExport()));
 }
 
 void QnlyGraphicsRegionBase::performShow(QAction* action)
@@ -1051,6 +1053,23 @@ void QnlyGraphicsRegionBase::perform320x400()
 
     foreach(QnlyGraphicsRegion* r, regions.values()){
         r->adjust();
+    }
+}
+
+void QnlyGraphicsRegionBase::performExport()
+{
+    QString location = QFileDialog::getSaveFileName(NULL, "Export...", "", tr("Images (*.png)"));
+
+    if (location != ""){
+        QImage image(width(), height(), QImage::Format_ARGB32_Premultiplied);
+
+        QPainter painter(&image);
+
+        render(&painter, QRect(), QRect(0,0,width(),height()));
+
+        painter.end();
+
+        image.save(location, "PNG");
     }
 }
 

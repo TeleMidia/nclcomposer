@@ -268,6 +268,8 @@ protected slots:
 
     void performDelete();
 
+    void performExport();
+
 private:
     void createActions();
 

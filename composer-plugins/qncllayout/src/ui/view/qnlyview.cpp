@@ -44,7 +44,7 @@ void QnlyView::createActions()
     helpAction = new QAction(this);
     helpAction->setText(tr("Help"));
 
-    helpAction->setEnabled(true);
+    helpAction->setEnabled(false);
     helpAction->setShortcut(QKeySequence("F1"));
 
     // undo action
@@ -229,14 +229,14 @@ void QnlyView::createMenus()
     // context menu
     contextMenu = new QMenu();
     contextMenu->addAction(helpAction);
-    contextMenu->addSeparator();
-    contextMenu->addAction(undoAction);
-    contextMenu->addAction(redoAction);
-    contextMenu->addSeparator();
-    contextMenu->addAction(cutAction);
-    contextMenu->addAction(copyAction);
-    contextMenu->addAction(pasteAction);
-    contextMenu->addSeparator();
+//    contextMenu->addSeparator();
+//    contextMenu->addAction(undoAction);
+//    contextMenu->addAction(redoAction);
+//    contextMenu->addSeparator();
+//    contextMenu->addAction(cutAction);
+//    contextMenu->addAction(copyAction);
+//    contextMenu->addAction(pasteAction);
+//    contextMenu->addSeparator();
     contextMenu->addAction(deleteAction);
     contextMenu->addSeparator();
     contextMenu->addAction(exportAction);

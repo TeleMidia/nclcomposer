@@ -460,7 +460,7 @@ void QnlyGraphicsRegion::QnlyGraphicsRegion::createActions()
     helpAction = new QAction(this);
     helpAction->setText(tr("Help"));
 
-    helpAction->setEnabled(true);
+    helpAction->setEnabled(false);
     helpAction->setShortcut(QKeySequence("F1"));
 
     // undo action
@@ -641,13 +641,13 @@ void QnlyGraphicsRegion::createMenus()
     contextMenu = new QMenu();
     contextMenu->addAction(helpAction);
     contextMenu->addSeparator();
-    contextMenu->addAction(undoAction);
-    contextMenu->addAction(redoAction);
-    contextMenu->addSeparator();
-    contextMenu->addAction(cutAction);
-    contextMenu->addAction(copyAction);
-    contextMenu->addAction(pasteAction);
-    contextMenu->addSeparator();
+//    contextMenu->addAction(undoAction);
+//    contextMenu->addAction(redoAction);
+//    contextMenu->addSeparator();
+//    contextMenu->addAction(cutAction);
+//    contextMenu->addAction(copyAction);
+//    contextMenu->addAction(pasteAction);
+//    contextMenu->addSeparator();
     contextMenu->addAction(deleteAction);
     contextMenu->addSeparator();
     contextMenu->addAction(exportAction);
@@ -680,6 +680,8 @@ void QnlyGraphicsRegion::createConnections()
 
     connect(deleteAction, SIGNAL(triggered()),
             SLOT(performDelete()));
+
+    connect(exportAction, SIGNAL(triggered()), SLOT(performExport()));
 }
 
 void QnlyGraphicsRegion::updateActionText(QnlyGraphicsRegion *region)
@@ -697,6 +699,29 @@ void QnlyGraphicsRegion::hideRegion(QnlyGraphicsRegion* region)
 void QnlyGraphicsRegion::performDelete()
 {
     emit regionDeletionRequested(this);
+}
+
+void QnlyGraphicsRegion::performExport()
+{
+    QString location = QFileDialog::getSaveFileName(NULL, "Export...", "", tr("Images (*.png)"));
+
+    if (location != ""){
+
+        qreal w = getWidth()+8;
+        qreal h = getHeight()+8;
+
+        QImage image(w, h, QImage::Format_ARGB32_Premultiplied);
+
+        QPainter painter(&image);
+
+        QPointF p = mapToScene(0,0);
+
+        scene()->render(&painter, QRect(), QRect(p.x(),p.y(),w,h));
+
+        painter.end();
+
+        image.save(location, "PNG");
+    }
 }
 
 void QnlyGraphicsRegion::performHide()
