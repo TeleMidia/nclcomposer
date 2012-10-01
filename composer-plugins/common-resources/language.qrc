@@ -24,6 +24,8 @@
         <file>images/esf-clear-active.png</file>
         <file>images/esf-clear-hover.png</file>
         <file>images/esf-search.png</file>
+        <file>images/next_icon.png</file>
+        <file>images/previous_icon.png</file>
     </qresource>
     <qresource prefix="/config">
         <file alias="NCL_STRUCTURE">config/NCL_STRUCTURE</file>

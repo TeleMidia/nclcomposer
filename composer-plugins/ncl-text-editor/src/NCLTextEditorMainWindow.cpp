@@ -318,12 +318,30 @@ void NCLTextEditorMainWindow::createSearchBox()
   layout->addWidget(&searchBoxText, 0, 0);
   // layout->addWidget(&doSearchButton, 0, 1);
   searchBox.setLayout(layout);
+  layout->setMargin(0);
+
+  QPushButton *nextButton = new QPushButton(QIcon(":/images/next_icon.png"), "");
+  nextButton->setFlat(true);
+  connect(nextButton, SIGNAL(pressed()), SLOT(findNext()));
+
+  QPushButton *previousButton = new QPushButton(QIcon(":/images/previous_icon.png"), "");
+  previousButton->setFlat(true);
+  connect(previousButton, SIGNAL(pressed()), SLOT(findPrevious()));
+
+  nextButton->setMaximumSize(16, 16);
+  previousButton->setMaximumSize(16, 16);
+  layout->addWidget(previousButton, 0, 1);
+  layout->addWidget(nextButton, 0, 2);
 
 //  connect(&doSearchButton, SIGNAL(pressed()), this, SLOT(findNext()));
   connect(&searchBoxText, SIGNAL(textChanged(QString)),
           SLOT(findNext(QString)));
 
   connect(&searchBoxText, SIGNAL(returnPressed()), SLOT(findNext()));
+
+  connect(&searchBoxText, SIGNAL(shiftReturnPressed()), SLOT(findPrevious()));
+
+  connect(&searchBoxText, SIGNAL(escPressed()), SLOT(hideSearchBox()));
 
   dockSearchBox->setWidget(&searchBox);
   addDockWidget(Qt::RightDockWidgetArea, dockSearchBox);
@@ -609,13 +627,19 @@ void NCLTextEditorMainWindow::createTextView() {
 
 void NCLTextEditorMainWindow::showPreferences()
 {
-    //preferences->show();
+  //preferences->show();
 }
 
 void NCLTextEditorMainWindow::showSearchBox()
 {
   dockSearchBox->show();
   searchBoxText.setFocus();
+}
+
+void NCLTextEditorMainWindow::hideSearchBox()
+{
+  dockSearchBox->hide();
+  textEdit->setFocus();
 }
 
 void NCLTextEditorMainWindow::findNext()
@@ -627,4 +651,20 @@ void NCLTextEditorMainWindow::findNext()
 void NCLTextEditorMainWindow::findNext(QString text)
 {
   textEdit->findFirst(text, true, false, true, true);
+}
+
+void NCLTextEditorMainWindow::findPrevious()
+{
+  QString text = searchBoxText.text();
+  findPrevious(text);
+}
+
+void NCLTextEditorMainWindow::findPrevious(QString text)
+{
+  int line, index;
+  textEdit->getCursorPosition(&line, &index);
+  index -= text.size();
+  if(index < 0) line--;
+
+  textEdit->findFirst(text, true, false, true, true, false, line, index);
 }

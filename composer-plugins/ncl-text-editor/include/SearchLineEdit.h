@@ -19,6 +19,7 @@
 #define SEARCHLINEEDIT_H
 
 #include <QLineEdit>
+#include <QKeyEvent>
 
 class QToolButton;
 
@@ -34,6 +35,7 @@ public:
 
 protected:
   void resizeEvent(QResizeEvent *event);
+  virtual void keyPressEvent(QKeyEvent *keyEvent);
 
 private slots:
   void updateSearchButton(const QString &text);
@@ -43,6 +45,11 @@ private:
   QString buttonStyleSheetForCurrentState() const;
 
   QToolButton *mSearchButton;
+
+signals:
+  void escPressed();
+  void shiftReturnPressed();
+
 };
 
 #endif // SEARCHLINEEDIT_H

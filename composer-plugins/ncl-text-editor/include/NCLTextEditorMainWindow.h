@@ -75,8 +75,11 @@ private slots:
     void showPreferences();
 
     void showSearchBox();
+    void hideSearchBox();
     void findNext();
     void findNext(QString text);
+    void findPrevious();
+    void findPrevious(QString text);
 
 private:
     void createActions();

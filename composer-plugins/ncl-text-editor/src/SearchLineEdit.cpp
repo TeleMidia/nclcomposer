@@ -19,6 +19,8 @@
 #include <QToolButton>
 #include <QStyle>
 
+#include <QDebug>
+
 SearchLineEdit::SearchLineEdit(QWidget *parent) :
   QLineEdit(parent)
 {
@@ -121,4 +123,27 @@ QString SearchLineEdit::buttonStyleSheetForCurrentState() const
   }
 
   return style;
+}
+
+void SearchLineEdit::keyPressEvent(QKeyEvent *event)
+{
+  if(event->key() == Qt::Key_Escape)
+  {
+    emit escPressed();
+  }
+  else if(event->key() == Qt::Key_Return)
+  {
+    if(event->modifiers() & Qt::ShiftModifier)
+    {
+      emit shiftReturnPressed();
+    }
+    else
+    {
+      emit returnPressed();
+    }
+  }
+  else
+  {
+    QLineEdit::keyPressEvent(event);
+  }
 }
