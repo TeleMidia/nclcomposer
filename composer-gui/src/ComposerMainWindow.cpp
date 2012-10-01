@@ -20,7 +20,6 @@
 #include <QDesktopServices>
 
 #include "GeneralPreferences.h"
-// #include "ImportBasePreferences.h"
 
 #include "NewProjectWizard.h"
 
@@ -181,10 +180,8 @@ void ComposerMainWindow::readExtensions()
 
   preferences->addPreferencePage(new GeneralPreferences());
 
-#ifdef WITH_LIBSSH2
   /* Load the preferences page */
   preferences->addPreferencePage(new RunGingaConfig());
-#endif
 
   // preferences->addPreferencePage(new ImportBasePreferences());
 

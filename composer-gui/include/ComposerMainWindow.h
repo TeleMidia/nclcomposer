@@ -60,8 +60,9 @@ using namespace composer::core::util;
 #include "AboutDialog.h"
 #include "ComposerHelpWidget.h"
 
-#ifdef WITH_LIBSSH2
 #include "RunGingaConfig.h"
+
+#ifdef WITH_LIBSSH2
 #include "RunRemoteGingaVM.h"
 #endif
 

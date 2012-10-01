@@ -36,6 +36,10 @@ public:
   const QString getName() {return tr("Run Configuration");}
   const QIcon getIcon() {return QIcon(":/mainwindow/images/play_button.png");}
 
+private:
+  void initializeDefaultValues();
+  void loadValuesFromSettings();
+
 public slots:
   void applyValues();
   void setDefaultValues();

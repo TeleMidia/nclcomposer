@@ -62,7 +62,7 @@
            <enum>Qt::StrongFocus</enum>
           </property>
           <property name="text">
-           <string>/misc/launcher.sh</string>
+           <string/>
           </property>
          </widget>
         </item>
@@ -72,17 +72,7 @@
            <enum>Qt::StrongFocus</enum>
           </property>
           <property name="text">
-           <string>root</string>
-          </property>
-         </widget>
-        </item>
-        <item row="4" column="1">
-         <widget class="QLineEdit" name="lineEdit_RemotePassword">
-          <property name="focusPolicy">
-           <enum>Qt::StrongFocus</enum>
-          </property>
-          <property name="text">
-           <string>telemidia</string>
+           <string/>
           </property>
          </widget>
         </item>
@@ -92,7 +82,7 @@
            <enum>Qt::StrongFocus</enum>
           </property>
           <property name="text">
-           <string>192.168.1.101</string>
+           <string/>
           </property>
          </widget>
         </item>
@@ -106,14 +96,14 @@
         <item row="7" column="1">
          <widget class="QLineEdit" name="lineEdit_RemotePath">
           <property name="text">
-           <string>/misc/ncl30/</string>
+           <string/>
           </property>
          </widget>
         </item>
         <item row="6" column="1">
          <widget class="QLineEdit" name="lineEdit_RemoteStopCmd">
           <property name="text">
-           <string>killall -9 ginga</string>
+           <string/>
           </property>
          </widget>
         </item>
@@ -121,6 +111,16 @@
          <widget class="QLabel" name="label_7">
           <property name="text">
            <string>Stop Command:</string>
+          </property>
+         </widget>
+        </item>
+        <item row="4" column="1">
+         <widget class="QLineEdit" name="lineEdit_RemotePassword">
+          <property name="focusPolicy">
+           <enum>Qt::StrongFocus</enum>
+          </property>
+          <property name="text">
+           <string/>
           </property>
          </widget>
         </item>
@@ -171,7 +171,7 @@ as a different argument)</string>
         <item row="1" column="1">
          <widget class="QLineEdit" name="lineEdit_local_Command">
           <property name="text">
-           <string>ginga</string>
+           <string/>
           </property>
          </widget>
         </item>
@@ -188,8 +188,7 @@ as a different argument)</string>
         <item row="3" column="1" colspan="2">
          <widget class="QPlainTextEdit" name="plainTextEdit_local_Args">
           <property name="plainText">
-           <string>--ncl
-${nclpath}</string>
+           <string/>
           </property>
          </widget>
         </item>
