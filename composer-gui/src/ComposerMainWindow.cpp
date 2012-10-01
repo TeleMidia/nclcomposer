@@ -841,7 +841,7 @@ void ComposerMainWindow::createActions() {
           this, SLOT(showEditPreferencesDialog()));
 
   connect(ui->action_Exit, SIGNAL(triggered()), this, SLOT(close()));
-  saveCurrentPluginsLayoutAct = new QAction(tr("Save current perspective"),
+  saveCurrentPluginsLayoutAct = new QAction(tr("Save current perspective..."),
                                             this);
 
   connect(    saveCurrentPluginsLayoutAct, SIGNAL(triggered()),
@@ -1730,6 +1730,10 @@ void ComposerMainWindow::updateMenuPerspectives()
                                             SLOT(restorePerspectiveFromMenu()));
     act->setData(keys[i]);
   }
+
+  // Add Option to save current Perspective
+  menu_Perspective->addSeparator();
+  menu_Perspective->addAction(saveCurrentPluginsLayoutAct);
 }
 
 void ComposerMainWindow::updateMenuLanguages()
