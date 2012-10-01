@@ -42,7 +42,7 @@ introdução passo a passo de como utilizar o {nclcomposer} para o
 desenvolvimento de aplicações interativa usando o perfil NCL
 3.0 para TV digital.
 
-NOTE
+Importante
 ****
 Neste tutorial, não existe a preocupação nem de definir a linguagem NCL
 completamente e nem de apresentar todas as funcionalidades do {nclcomposer}. Os
@@ -248,39 +248,61 @@ padrão:
 </ncl>
 -------------------------------------------
 
+Como é possível observar, a linguagem NCL é uma aplicação XML. Isso significa
+que ela segue a sintaxe definida por esse padrão. Por isso, todos os elementos
+da linguagem são delimitados por marcações utilizando "<", ">" e "/>".
+
 .Para saber mais: eXtensible Markup Language
 ********************************************
-A linguagem NCL é uma aplicação XML. Isso significa que ela segue a sintaxe
-definida por esse padrão. Alguns pontos que você deve saber sobre XML são:
+Alguns pontos que você deve saber sobre XML são:
 
   * XML significa _EXtensible Markup Language_.
-	* XML é uma linguagem de marcação.
-	* XML foi desenvolvida para o transporte de dados. 
+	* XML é uma linguagem textual para descrição de dados.
 	* XML é uma recomendação W3C.
+
+**Tags, elements, and attributes**
+
+Existem três termos comumente utilizados para descrever partes de um documento
+XML: tags, elementos e atributos. Segue um exemplo que ilustra tais termos:
+
+--------
+<address>
+  <name>
+    <title>Mrs.</title>
+    <first-name>
+      Mary
+    </first-name>
+    <last-name>
+      McGoon
+    </last-name>
+  </name>
+  <street>
+    1401 Main Street
+  </street>
+  <city state="NC">Anytown</city>
+  <postal-code>
+    34829
+  </postal-code>
+</address>
+---------
+
+Uma **tag** é o texto entre os símbolos "<", à esquerda, e ">", à direita. Existem
+tags de início (como <name>) e tags de final (</name).
+
+Um **elemento** é composto por uma tag de início, uma tag de final e tudo entre
+essas. No exemplo acima, o elemento <name> contém três elementos-filhos: <title>,
+<first-name> e <last-name>.
+
+Um atributo é par nome-valor dentro de uma tag de início de um elemento. No
+exemplo acima, state é um atributo do elemento <city> element.
+
+	* Um documento XML é um documento textual composto por um conjunto de
+	* elementos aninhados.
 	* As tags XML não são predefinidas. Cada aplicação XML define as suas
 	  próprias tags.
-	* NCL é uma aplicação XML.
+	* NCL é um exemplo de aplicação XML que define suas próprias
+		tags (<ncl>, <head>, <body>, <media>, ...).
 
-.TAG ou Elemento XML (<tag>...</tag> OU <tag />):
-------------------------------------------------------
-	<media id="video1" descriptor="dVideoWholeScreen">
-		...
-	</media>
-
-	<media id="v ideo1" descriptor="dVideoWholeScreen"/>
-------------------------------------------------------
-
-.Atributo (formato: atributo="valor")
--------------------------------------
-	* id
-	* descriptor
--------------------------------------
-
-.Valor de atributo (entre aspas "")
------------------------------------
-	  * "video1"
-		* "dVideoWhole Screen"
------------------------------------
 ********************************************
 
 .Para saber mais: Estrutura do documento NCL
@@ -289,11 +311,13 @@ Um documento NCL é um arquivo escrito em XML. Todo documento NCL possui a
 seguinte estrutura:
 
   * uma seção de prólogo, definindo a codificação do arquivo.
-	* um cabeçalho de arquivo NCL.
+	* um cabeçalho de arquivo NCL (<ncl>).
 	* uma seção de cabeçalho, onde são definidos os elementos que serão
-	  reutilizados no corpo.
-	* o corpo do programa, (<body>).
+	  reutilizados no corpo (<head>).
+	* o corpo do programa, (<body>), onde são definidos os diversos objetos de
+	  mídia (<media) e como eles se relacionam.
 	* pelo menos uma porta que indica onde o programa começa a ser exibido.
+	  (<port>).
 	* a conclusão do documento.
 
 TODO: Figura com o esqueleto de um documento NCL.
