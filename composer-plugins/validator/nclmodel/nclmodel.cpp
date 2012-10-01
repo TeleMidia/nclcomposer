@@ -351,7 +351,7 @@ void Model::print(){
 
 }
 
-//***************************Novos métodos********************************
+//***************************Novos mÃ©todos********************************
 
 virtualId Model::addElement(string elementName, vector <Attribute> attributes){
     if (elementName != ""){
@@ -383,7 +383,7 @@ virtualId Model::addElement(string elementName, vector <Attribute> attributes){
 
         multimap <string, virtualId>::iterator it = _elementsNotYetInserted.find(attributeIdentifier);
 
-        if (it != _elementsNotYetInserted.end()){ //se alguém tiver feito referência a esse elemento antes dele ser inserido
+        if (it != _elementsNotYetInserted.end()){ //se alguÃ©m tiver feito referÃªncia a esse elemento antes dele ser inserido
             //coloca-se tal elemento na lista dos elementos que referenciam
             do{
                 newElement.addReference((*it).second);
@@ -472,7 +472,7 @@ void Model::adjustReference(string elementName, ModelElement & newElement, strin
                 attributeIdentifier = attributes[i].value();
             }
 
-            if (Langstruct::isAttributeReferenceDependent(elementName, attributes[i].name())){ //se o atributo faz referência a outro elemento
+            if (Langstruct::isAttributeReferenceDependent(elementName, attributes[i].name())){ //se o atributo faz referÃªncia a outro elemento
 
                 vector <ModelElement *> elements;
                 string attributeValue = attributes[i].value();
@@ -525,7 +525,7 @@ vector <ModelElement *>  Model::elementByIdentifier(string identifier){
     vector <ModelElement *> elements;
 
     int index = int (identifier.find("#"));
-    if (index == string::npos){ //se n�o tiver alias
+    if (index == string::npos){ //se não tiver alias
         multimap <string, virtualId>::iterator it = _idToElement.find(identifier);
         if (it != _idToElement.end()){
             do{
@@ -634,6 +634,7 @@ void Model::findElementInImportedFile(string fileName, QXmlContentHandler *docHa
 }
 
 vector <ModelElement *> Model::elementByPropertyName(string component, string propertyName){
+//    fprintf (stderr, "\n\n%s %s\n\n", component.c_str(), propertyName.c_str());
     multimap <string, virtualId>::iterator it = _idToElement.find(component);
     vector <ModelElement *> elements;
     if (it != _idToElement.end()){
@@ -649,13 +650,29 @@ vector <ModelElement *> Model::elementByPropertyName(string component, string pr
                     if (attribute.value() == propertyName)
                         elements.push_back(child);
                 }
+                Attribute refer = e->attribute("refer");
+                if (refer.value() != ""){
+                    multimap <string, virtualId>::iterator it2 = _idToElement.find(refer.value());
+                    do{
+                        ModelElement *eRefer = this->element((*it2).second);
+                        if (eRefer){
+                            children = eRefer->children();
+                            for (int i = 0; i < children.size(); i++){
+                                ModelElement *child =  this->element(children[i]);
+                                if (!child || child->elementName() != "property") continue;
+
+                                Attribute attribute = child->attribute("name");
+                                if (attribute.value() == propertyName)
+                                    elements.push_back(child);
+                            }
+                        }
+                        it2++;
+                    }while (it2 != _idToElement.upper_bound(refer.value()));
+                }
             }
             it ++;
         }while (it != _idToElement.upper_bound(component));
     }
-
-
-
 
     return elements;
 }

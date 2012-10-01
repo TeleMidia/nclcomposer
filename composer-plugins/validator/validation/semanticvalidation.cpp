@@ -119,10 +119,9 @@ void specificScopeReferenceValidation (const ModelElement &el, const ModelElemen
 
     if (pointed.scope() != scopeElement -> id()) {
 
-        Attribute att = scopeElement->attribute("refer");
-        if (att.value() != ""){
-
-            vector <ModelElement *> refs = model.elementByIdentifier(att.value());
+        Attribute attr = scopeElement->attribute("refer");
+        if (attr.value() != ""){
+            vector <ModelElement *> refs = model.elementByIdentifier(attr.value());
             if (!refs.empty()){
                 ModelElement *refer = refs.front();
                 if (refer && pointed.scope() == refer->id())
