@@ -507,10 +507,10 @@ void ComposerMainWindow::addPluginWidget(IPluginFactory *fac, IPlugin *plugin,
   connect(hide, SIGNAL(pressed()), dock, SLOT(close()));
   hide->setIcon(QIcon(":/mainwindow/closeplugin"));
   hide->setToolTip(tr("Hide View"));
+
   addButtonToDockTitleBar(titleBar, hide);
 
   // dock->installEventFilter(this);
-
   updateDockStyle(dock, false);
 #endif
 }
@@ -519,7 +519,8 @@ void ComposerMainWindow::updateDockStyle(QDockWidget *dock, bool selected)
 {
   QList <QTabBar*> tabBars = this->findChildren <QTabBar *>();
 
-  foreach (QTabBar * tabBar, tabBars)
+  // \todo We can improve this foreach
+  foreach (QTabBar *tabBar, tabBars)
   {
     for(int index = 0; index < tabBar->count(); index++)
     {
@@ -527,29 +528,60 @@ void ComposerMainWindow::updateDockStyle(QDockWidget *dock, bool selected)
       QDockWidget * dockWidget = reinterpret_cast<QDockWidget *>(tmp.toULongLong());
       if(dockWidget == dock)
       {
-        if(selected)
-          tabBar->setProperty("activePlugin", "true");
-        else
+        if(!tabBar->property("activePlugin").isValid())
+        {
           tabBar->setProperty("activePlugin", "false");
+          tabBar->setStyleSheet(styleSheet());
+        }
 
-        tabBar->setStyleSheet(styleSheet());
+        bool activePlugin = tabBar->property("activePlugin").toBool();
+        if(selected)
+        {
+          if(!activePlugin)
+          {
+            tabBar->setProperty("activePlugin", "true");
+            tabBar->setStyleSheet(styleSheet());
+          }
+        }
+        else
+        {
+          if(activePlugin)
+          {
+            tabBar->setProperty("activePlugin", "false");
+            tabBar->setStyleSheet(styleSheet());
+          }
+        }
       }
     }
   }
 
   QFrame *titleBar = (QFrame*) dock->titleBarWidget();
-  if(!selected)
+  if(!titleBar->property("activePluginTitleBar").isValid())
   {
     titleBar->setProperty("activePluginTitleBar", "false");
     dock->setProperty("activePluginBorder", "false");
+    dock->setStyleSheet(styleSheet());
+  }
+
+  bool activePluginTitleBar = titleBar->property("activePluginTitleBar").toBool();
+  if(!selected)
+  {
+    if(activePluginTitleBar)
+    {
+      titleBar->setProperty("activePluginTitleBar", "false");
+      dock->setProperty("activePluginBorder", "false");
+      dock->setStyleSheet(styleSheet());
+    }
   }
   else
   {
-    titleBar->setProperty("activePluginTitleBar", "true");
-    dock->setProperty("activePluginBorder", "true");
+    if(!activePluginTitleBar)
+    {
+      titleBar->setProperty("activePluginTitleBar", "true");
+      dock->setProperty("activePluginBorder", "true");
+      dock->setStyleSheet(styleSheet());
+    }
   }
-
-  dock->setStyleSheet(styleSheet());
 }
 
 void ComposerMainWindow::addButtonToDockTitleBar(QFrame *titleBar,
