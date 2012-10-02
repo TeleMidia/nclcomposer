@@ -3324,9 +3324,6 @@ void QnstView::adjustBind(QnstBind* entity)
                                 graphics->setEntityA(entitya);
                                 graphics->setEntityB(entityb);
 
-                                if (invalid)
-                                    graphics->setInvalid(true);
-
                                 // adjusting angle
                                 adjustAngle(graphics, entitya, entityb);
 
@@ -3337,25 +3334,30 @@ void QnstView::adjustBind(QnstBind* entity)
                                 ((QnstGraphicsInterface*) entitya)->addnstGraphicsEdge(graphics);
                                 ((QnstGraphicsNode*) entityb)->addnstGraphicsEdge(graphics);
 
-                                if (entity->getRole() == "onBegin"){
-                                    graphics->setCondition(Qnst::onBegin);
-
-                                }else if (entity->getRole() == "onEnd"){
-                                    graphics->setCondition(Qnst::onEnd);
-
-                                }else if (entity->getRole() == "onPause"){
-                                    graphics->setCondition(Qnst::onPause);
-
-                                }else if (entity->getRole() == "onResume"){
-                                    graphics->setCondition(Qnst::onResume);
-
-                                }else if (entity->getRole() == "onSelection"){
-                                    graphics->setCondition(Qnst::onSelection);
+                                if (invalid){
+                                    graphics->setInvalid(true);
+                                    graphics->setCondition(Qnst::NoConditionType);
 
                                 }else{
-                                    graphics->setCondition(Qnst::NoConditionType);
-                                }
+                                    if (entity->getRole() == "onBegin"){
+                                        graphics->setCondition(Qnst::onBegin);
 
+                                    }else if (entity->getRole() == "onEnd"){
+                                        graphics->setCondition(Qnst::onEnd);
+
+                                    }else if (entity->getRole() == "onPause"){
+                                        graphics->setCondition(Qnst::onPause);
+
+                                    }else if (entity->getRole() == "onResume"){
+                                        graphics->setCondition(Qnst::onResume);
+
+                                    }else if (entity->getRole() == "onSelection"){
+                                        graphics->setCondition(Qnst::onSelection);
+
+                                    }else{
+                                        graphics->setCondition(Qnst::NoConditionType);
+                                    }
+                                }
                                 graphics->setConn(connectors[parent->getxConnector()]);
 
                                 graphics->setParams(entity->getParams());
@@ -3391,9 +3393,6 @@ void QnstView::adjustBind(QnstBind* entity)
                             graphics->setEntityA(entitya);
                             graphics->setEntityB(entityb);
 
-                            if (invalid)
-                                graphics->setInvalid(true);
-
                             // adjusting angle
                             adjustAngle(graphics, entitya, entityb);
 
@@ -3404,23 +3403,29 @@ void QnstView::adjustBind(QnstBind* entity)
                             ((QnstGraphicsNode*) entitya)->addnstGraphicsEdge(graphics);
                             ((QnstGraphicsNode*) entityb)->addnstGraphicsEdge(graphics);
 
-                            if (entity->getRole() == "onBegin"){
-                                graphics->setCondition(Qnst::onBegin);
-
-                            }else if (entity->getRole() == "onEnd"){
-                                graphics->setCondition(Qnst::onEnd);
-
-                            }else if (entity->getRole() == "onPause"){
-                                graphics->setCondition(Qnst::onPause);
-
-                            }else if (entity->getRole() == "onResume"){
-                                graphics->setCondition(Qnst::onResume);
-
-                            }else if (entity->getRole() == "onSelection"){
-                                graphics->setCondition(Qnst::onSelection);
+                            if (invalid){
+                                graphics->setInvalid(true);
+                                graphics->setCondition(Qnst::NoConditionType);
 
                             }else{
-                                graphics->setCondition(Qnst::NoConditionType);
+                                if (entity->getRole() == "onBegin"){
+                                    graphics->setCondition(Qnst::onBegin);
+
+                                }else if (entity->getRole() == "onEnd"){
+                                    graphics->setCondition(Qnst::onEnd);
+
+                                }else if (entity->getRole() == "onPause"){
+                                    graphics->setCondition(Qnst::onPause);
+
+                                }else if (entity->getRole() == "onResume"){
+                                    graphics->setCondition(Qnst::onResume);
+
+                                }else if (entity->getRole() == "onSelection"){
+                                    graphics->setCondition(Qnst::onSelection);
+
+                                }else{
+                                    graphics->setCondition(Qnst::NoConditionType);
+                                }
                             }
 
                             graphics->setConn(connectors[parent->getxConnector()]);
@@ -3483,9 +3488,6 @@ void QnstView::adjustBind(QnstBind* entity)
                                 graphics->setEntityA(entitya);
                                 graphics->setEntityB(entityb);
 
-                                if (invalid)
-                                    graphics->setInvalid(true);
-
                                 // adjusting angle
                                 adjustAngle(graphics, entitya, entityb);
 
@@ -3496,24 +3498,31 @@ void QnstView::adjustBind(QnstBind* entity)
                                 ((QnstGraphicsNode*) entitya)->addnstGraphicsEdge(graphics);
                                 ((QnstGraphicsInterface*) entityb)->addnstGraphicsEdge(graphics);
 
-                                if (entity->getRole() == "start"){
-                                    graphics->setAction(Qnst::Start);
-
-                                }else if (entity->getRole() == "stop"){
-                                    graphics->setAction(Qnst::Stop);
-
-                                }else if (entity->getRole() == "pause"){
-                                    graphics->setAction(Qnst::Pause);
-
-                                }else if (entity->getRole() == "resume"){
-                                    graphics->setAction(Qnst::Resume);
-
-                                }else if (entity->getRole() == "set"){
-                                    graphics->setAction(Qnst::Set);
+                                if (invalid){
+                                    graphics->setInvalid(true);
+                                    graphics->setAction(Qnst::NoActionType);
 
                                 }else{
-                                    graphics->setAction(Qnst::NoActionType);
+                                    if (entity->getRole() == "start"){
+                                        graphics->setAction(Qnst::Start);
+
+                                    }else if (entity->getRole() == "stop"){
+                                        graphics->setAction(Qnst::Stop);
+
+                                    }else if (entity->getRole() == "pause"){
+                                        graphics->setAction(Qnst::Pause);
+
+                                    }else if (entity->getRole() == "resume"){
+                                        graphics->setAction(Qnst::Resume);
+
+                                    }else if (entity->getRole() == "set"){
+                                        graphics->setAction(Qnst::Set);
+
+                                    }else{
+                                        graphics->setAction(Qnst::NoActionType);
+                                    }
                                 }
+
 
                                 graphics->setConn(connectors[parent->getxConnector()]);
 
@@ -3550,9 +3559,6 @@ void QnstView::adjustBind(QnstBind* entity)
                             graphics->setEntityA(entitya);
                             graphics->setEntityB(entityb);
 
-                            if (invalid)
-                                graphics->setInvalid(true);
-
                             // adjusting angle
                             adjustAngle(graphics, entitya, entityb);
 
@@ -3563,23 +3569,29 @@ void QnstView::adjustBind(QnstBind* entity)
                             ((QnstGraphicsNode*) entitya)->addnstGraphicsEdge(graphics);
                             ((QnstGraphicsNode*) entityb)->addnstGraphicsEdge(graphics);
 
-                            if (entity->getRole() == "start"){
-                                graphics->setAction(Qnst::Start);
-
-                            }else if (entity->getRole() == "stop"){
-                                graphics->setAction(Qnst::Stop);
-
-                            }else if (entity->getRole() == "pause"){
-                                graphics->setAction(Qnst::Pause);
-
-                            }else if (entity->getRole() == "resume"){
-                                graphics->setAction(Qnst::Resume);
-
-                            }else if (entity->getRole() == "set"){
-                                graphics->setAction(Qnst::Set);
+                            if (invalid){
+                                graphics->setInvalid(true);
+                                graphics->setAction(Qnst::NoActionType);
 
                             }else{
-                                graphics->setAction(Qnst::NoActionType);
+                                if (entity->getRole() == "start"){
+                                    graphics->setAction(Qnst::Start);
+
+                                }else if (entity->getRole() == "stop"){
+                                    graphics->setAction(Qnst::Stop);
+
+                                }else if (entity->getRole() == "pause"){
+                                    graphics->setAction(Qnst::Pause);
+
+                                }else if (entity->getRole() == "resume"){
+                                    graphics->setAction(Qnst::Resume);
+
+                                }else if (entity->getRole() == "set"){
+                                    graphics->setAction(Qnst::Set);
+
+                                }else{
+                                    graphics->setAction(Qnst::NoActionType);
+                                }
                             }
 
                             graphics->setConn(connectors[parent->getxConnector()]);
