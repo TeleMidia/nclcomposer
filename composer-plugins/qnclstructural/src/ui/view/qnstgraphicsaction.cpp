@@ -168,10 +168,13 @@ void QnstGraphicsAction::draw(QPainter* painter)
         QPointF pointa = line.p1();
         QPointF pointb = line.p2();
 
-        if (pointa.x() <= pointb.x() && pointa.y() <= pointb.y()){
-
+        if (!isInvalid()){
             painter->setPen(QPen(QBrush(QColor("#000000")), 1));
+        }else{
+            painter->setPen(QPen(QBrush(QColor(255,0,0,200)), 1, Qt::DashLine));
+        }
 
+        if (pointa.x() <= pointb.x() && pointa.y() <= pointb.y()){
             if (getAngle() != 0){
                qreal drawangle = getAdjAngle();
 
@@ -203,13 +206,18 @@ void QnstGraphicsAction::draw(QPainter* painter)
                 painter->drawLine(4+4,4+4, 4+8+getWidth()-16, 4+8+getHeight()-16);
             }
 
-            painter->setBrush(QBrush(QColor("#000000")));
             painter->setPen(Qt::NoPen);
 
             painter->drawPixmap(4+getWidth()-16, 4+getHeight()-16, 16, 16, QPixmap(actionIcon));
 
+            if (!isInvalid()){
+                painter->setBrush(QBrush(QColor("#000000")));
+            }else{
+                painter->setBrush(QBrush(QColor(255,0,0,75)));
+                painter->drawEllipse(3+getWidth()-16, 3+getHeight()-16, 18, 18);
+            }
+
         }else if (pointa.x() > pointb.x() && pointa.y() <= pointb.y()){
-            painter->setPen(QPen(QBrush(QColor("#000000")), 1));
 
             if (getAngle() != 0){
                qreal drawangle = getAdjAngle();
@@ -242,15 +250,18 @@ void QnstGraphicsAction::draw(QPainter* painter)
                 painter->drawLine(4+4+getWidth()-8,4+4, 4+8, 4+8+getHeight()-16);
             }
 
-            painter->setBrush(QBrush(QColor("#000000")));
             painter->setPen(Qt::NoPen);
 
             painter->drawPixmap(4, 4+getHeight()-16, 16, 16, QPixmap(actionIcon));
 
+            if (!isInvalid()){
+                painter->setBrush(QBrush(QColor("#000000")));
+            }else{
+                painter->setBrush(QBrush(QColor(255,0,0,75)));
+                painter->drawEllipse(3, 3+getHeight()-16, 18, 18);
+            }
 
         }else if (pointa.x() <= pointb.x() && pointa.y() > pointb.y()){
-            painter->setPen(QPen(QBrush(QColor("#000000")), 1));
-
             if (getAngle() != 0){
                qreal drawangle = getAdjAngle();
 
@@ -282,14 +293,18 @@ void QnstGraphicsAction::draw(QPainter* painter)
                 painter->drawLine(4+4, 4+4+getHeight()-8, 4+8+getWidth()-16, 4+8);
             }
 
-            painter->setBrush(QBrush(QColor("#000000")));
             painter->setPen(Qt::NoPen);
 
             painter->drawPixmap(4+getWidth()-16,4,16,16, QPixmap(actionIcon));
 
-        }else if (pointa.x() > pointb.x() && pointa.y() > pointb.y()){
-            painter->setPen(QPen(QBrush(QColor("#000000")), 1));
+            if (!isInvalid()){
+                painter->setBrush(QBrush(QColor("#000000")));
+            }else{
+                painter->setBrush(QBrush(QColor(255,0,0,75)));
+                painter->drawEllipse(3+getWidth()-16,3,18,18);
+            }
 
+        }else if (pointa.x() > pointb.x() && pointa.y() > pointb.y()){
             if (getAngle() != 0){
                qreal drawangle = getAdjAngle();
 
@@ -321,10 +336,16 @@ void QnstGraphicsAction::draw(QPainter* painter)
                 painter->drawLine(4+4+getWidth()-8, 4+4+getHeight()-8, 4+8, 4+8);
             }
 
-            painter->setBrush(QBrush(QColor("#000000")));
             painter->setPen(Qt::NoPen);
 
             painter->drawPixmap(4,4,16,16, QPixmap(actionIcon));
+
+            if (!isInvalid()){
+                painter->setBrush(QBrush(QColor("#000000")));
+            }else{
+                painter->setBrush(QBrush(QColor(255,0,0,75)));
+                painter->drawEllipse(3,3,18,18);
+            }
         }
     }
 }

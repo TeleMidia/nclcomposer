@@ -63,12 +63,12 @@ void QnstEntity::setnstType(QnstType type)
 
 QMap <QString, QString> QnstEntity::getUsrData()
 {
-  return this->userData;
+  return userData;
 }
 
 void QnstEntity::setUsrData(QMap <QString, QString> newUserData)
 {
-  this->userData = newUserData;
+    userData = newUserData;
 }
 
 QnstEntity* QnstEntity::getnstParent() const

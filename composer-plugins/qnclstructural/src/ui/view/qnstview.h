@@ -77,6 +77,10 @@ public:
 
     void selectEntity(const QString uid);
 
+    bool hasEntity(QString uid);
+
+    QnstEntity* getEntity(QString uid);
+
     QMap<QString, QnstGraphicsEntity*> entities;
 
 public slots:

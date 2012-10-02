@@ -1203,6 +1203,33 @@ void QnstView::createConnection()
     connect(scene, SIGNAL(entityAboutToChange(QnstGraphicsEntity*,QMap<QString,QString>)), SLOT(requestEntityPreparation(QnstGraphicsEntity*,QMap<QString,QString>)));
 }
 
+bool QnstView::hasEntity(QString uid)
+{
+    if (entities.contains(uid)  ||
+        binds.contains(uid) ||
+        links.contains(uid)){
+
+        return true;
+    }
+
+    return false;
+}
+
+QnstEntity* QnstView::getEntity(QString uid)
+{
+     if (links.contains(uid)){
+         return links.value(uid);
+
+     }else if (binds.contains(uid)){
+         return binds.value(uid);
+
+     }else if (entities.contains(uid)){
+         return entities.value(uid);
+     }
+
+     return NULL;
+}
+
 void QnstView::addEntity(const QString uid, const QString parent, const QMap<QString, QString> properties)
 {
     qDebug() << "[QNST]" << ":" << "Adding entity '"+uid+"'";
@@ -3155,13 +3182,9 @@ void QnstView::changeBind(QnstBind* entity, const QMap<QString, QString> propert
 {
     if (entity != NULL){
         entity->setRole(properties["role"]);
-
         entity->setComponent(properties["component"]);
-
         entity->setComponentUid(properties["componentUid"]);
-
         entity->setInterface(properties["interface"]);
-
         entity->setInterfaceUid(properties["interfaceUid"]);
 
         selected = NULL;  // \fixme This fix temporarily a BUG.
@@ -3180,12 +3203,14 @@ void QnstView::adjustBind(QnstBind* entity)
         if (entity->getnstParent() != NULL){
             QnstLink* parent = (QnstLink*) entity->getnstParent();
 
+            // is there a graphical bind?
             if (brelations.contains(entity->getnstUid())){
 
                 QnstGraphicsEntity* graphics = entities[brelations[entity->getnstUid()]];
 
                 if (graphics != NULL){
 
+                    // removing graphical bind
                     QnstGraphicsEntity* graparent = graphics->getnstGraphicsParent();
 
                     foreach(QnstGraphicsEntity* entity, graparent->getnstGraphicsEntities()){
@@ -3217,8 +3242,12 @@ void QnstView::adjustBind(QnstBind* entity)
                 }
 
                 brelations.remove(entity->getnstUid());
+
+                entities.remove(entity->getnstUid());
             }
 
+            /*
+            // removing bind link
             if (parent->getConditions().contains(entity->getnstUid())){
                 parent->removeCondition(entity);
             }
@@ -3226,40 +3255,35 @@ void QnstView::adjustBind(QnstBind* entity)
             if (parent->getActions().contains(entity->getnstUid())){
                 parent->removeAction(entity);
             }
+            */
 
+            bool invalid = true;
+
+            // add bind to link if has a valid type
             if (connectors.contains(parent->getxConnector())){
                 QnstConncetor* connector = connectors[parent->getxConnector()];
 
-                if (entity->getRole() == "NoConditionType"){
-                    parent->addCondition(entity);
 
-                }else{
-                    foreach(QString type, connector->getConditions()){
+                foreach(QString type, connector->getConditions()){
 
-                        if (type == entity->getRole()){
-                            parent->addCondition(entity);
+                    if (type == entity->getRole()){
+                        invalid = false;
 
-                            break;
-                        }
+                        break;
                     }
                 }
 
-                if (entity->getRole() == "NoActionType"){
-                    parent->addAction(entity);
-                }else{
-                    foreach(QString type, connector->getActions()){
+                foreach(QString type, connector->getActions()){
 
-                        if (type == entity->getRole()){
-                            parent->addAction(entity);
+                    if (type == entity->getRole()){
+                        invalid = false;
 
-                            break;
-                        }
+                        break;
                     }
                 }
-
-                qDebug();
             }
 
+            // creating graphical bind
             if (parent->getConditions().contains(entity->getnstUid())){
 
                 if (parent->getAggregatorUID() == ""){
@@ -3282,8 +3306,6 @@ void QnstView::adjustBind(QnstBind* entity)
 
                 if (entities.contains(entity->getComponentUid()) && entities.contains(parent->getAggregatorUID())){
 
-
-
                     if (entity->getInterface() != ""){
                         if (entities.contains(entity->getInterfaceUid()) && entities[entity->getComponentUid()]->getnstGraphicsEntities().contains(entities[entity->getInterfaceUid()])){
                             QnstGraphicsEntity* entitya = entities[entity->getInterfaceUid()];
@@ -3301,6 +3323,9 @@ void QnstView::adjustBind(QnstBind* entity)
                                 graphics->setnstGraphicsParent(parentb);
                                 graphics->setEntityA(entitya);
                                 graphics->setEntityB(entityb);
+
+                                if (invalid)
+                                    graphics->setInvalid(true);
 
                                 // adjusting angle
                                 adjustAngle(graphics, entitya, entityb);
@@ -3366,8 +3391,8 @@ void QnstView::adjustBind(QnstBind* entity)
                             graphics->setEntityA(entitya);
                             graphics->setEntityB(entityb);
 
-
-
+                            if (invalid)
+                                graphics->setInvalid(true);
 
                             // adjusting angle
                             adjustAngle(graphics, entitya, entityb);
@@ -3458,6 +3483,8 @@ void QnstView::adjustBind(QnstBind* entity)
                                 graphics->setEntityA(entitya);
                                 graphics->setEntityB(entityb);
 
+                                if (invalid)
+                                    graphics->setInvalid(true);
 
                                 // adjusting angle
                                 adjustAngle(graphics, entitya, entityb);
@@ -3522,6 +3549,9 @@ void QnstView::adjustBind(QnstBind* entity)
                             graphics->setnstGraphicsParent(parentb);
                             graphics->setEntityA(entitya);
                             graphics->setEntityB(entityb);
+
+                            if (invalid)
+                                graphics->setInvalid(true);
 
                             // adjusting angle
                             adjustAngle(graphics, entitya, entityb);

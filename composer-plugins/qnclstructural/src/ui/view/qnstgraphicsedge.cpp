@@ -17,11 +17,23 @@ QnstGraphicsEdge::QnstGraphicsEdge(QnstGraphicsEntity* parent)
     entitybenabled = true;
 
     angle = 0;
+
+    invalid = false;
 }
 
 QnstGraphicsEdge::~QnstGraphicsEdge()
 {
 
+}
+
+bool QnstGraphicsEdge::isInvalid()
+{
+    return invalid;
+}
+
+void QnstGraphicsEdge::setInvalid(bool invalid)
+{
+    this->invalid = invalid;
 }
 
 QnstGraphicsEntity* QnstGraphicsEdge::getEntityA() const

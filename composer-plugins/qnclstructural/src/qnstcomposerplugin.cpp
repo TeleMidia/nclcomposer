@@ -97,12 +97,12 @@ void QnstComposerPlugin::init()
         entities[coreID] = structuralID;
 
         //Update user data
-        if(view->entities.contains(structuralID))
+        if(view->hasEntity(structuralID))
         {
-          QnstGraphicsEntity *graphicsEntity =
-              view->entities.value(structuralID);
+          QnstEntity* nstEntity =
+              view->getEntity(structuralID);
 
-          if(graphicsEntity != NULL)
+          if(nstEntity != NULL)
           {
             QMap <QString, QString>::iterator begin, end, it;
             QMap <QString, QString> userData;
@@ -113,7 +113,7 @@ void QnstComposerPlugin::init()
             for (it = begin; it != end; ++it)
               userData[it.key()] = it.value();
 
-            graphicsEntity->setUsrData(userData);
+            nstEntity->setUsrData(userData);
           }
         }
 
@@ -177,17 +177,17 @@ void QnstComposerPlugin::onEntityAdded(QString pluginID, Entity *entity)
     {
       QString structuralId = entities.value(entity->getUniqueId());
 
-      if(view->entities.contains(structuralId))
+      if(view->hasEntity(structuralId))
       {
-        QnstGraphicsEntity *graphicsEntity = view->entities.value(structuralId);
+        QnstEntity *nsEntity = view->getEntity(structuralId);
 
         QMap <QString, QString>::iterator begin, end, it;
-        QMap <QString, QString> userData = graphicsEntity->getUsrData();
+        QMap <QString, QString> userData = nsEntity->getUsrData();
         entity->getAttributeIterator(begin, end);
         for (it = begin; it != end; ++it)
           userData.insert(it.key(), it.value());
 
-        graphicsEntity->setUsrData(userData);
+        nsEntity->setUsrData(userData);
 
 //        qDebug() << "[QNST] QnstComposerPlugin::onEntityAdded" << userData;
 
@@ -223,11 +223,13 @@ void QnstComposerPlugin::onEntityChanged(QString pluginID, Entity *entity)
   {
     QString structuralId = entities.value(entity->getUniqueId());
 
-    if(view->entities.contains(structuralId))
-    {
-      QnstGraphicsEntity *graphicsEntity = view->entities.value(structuralId);
+    qDebug() << "===================" << structuralId;
 
-      if(graphicsEntity != NULL)
+    if(view->hasEntity(structuralId))
+    {
+      QnstEntity *nstEntity = view->getEntity(structuralId);
+
+      if(nstEntity != NULL)
       {
         QMap <QString, QString>::iterator begin, end, it;
         QMap <QString, QString> userData;
@@ -235,7 +237,7 @@ void QnstComposerPlugin::onEntityChanged(QString pluginID, Entity *entity)
         for (it = begin; it != end; ++it)
           userData[it.key()] = it.value();
 
-        graphicsEntity->setUsrData(userData);
+        nstEntity->setUsrData(userData);
 
         qDebug() << "[QNST] QnstComposerPlugin::onEntityChanged" << userData;
       }

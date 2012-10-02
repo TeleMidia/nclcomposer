@@ -15,6 +15,10 @@ public:
 
     ~QnstGraphicsEdge();
 
+    bool isInvalid();
+
+    void setInvalid(bool invalid);
+
     QnstGraphicsEntity* getEntityA() const;
 
     void setEntityA(QnstGraphicsEntity* entity);
@@ -55,6 +59,8 @@ protected:
     virtual void resize(QGraphicsSceneMouseEvent* event);
 
 private:
+    bool invalid;
+
     qreal angle;
 
     qreal adjustedangle;

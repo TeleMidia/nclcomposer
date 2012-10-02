@@ -56,6 +56,7 @@ protected:
     virtual void mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event);
 
 private:
+
     QnstAction action;
 
     QnstActionIcon actionIcon;
