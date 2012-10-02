@@ -3,7 +3,8 @@
 
 #include <QDebug>
 #include <QDialog>
-#include <QCompleter>
+#include <QShowEvent>
+
 #include <QStringListModel>
 #include <QSortFilterProxyModel>
 
@@ -40,69 +41,6 @@ private:
     QStringListModel *model;
 };
 
-class MySortFilterProxyModel : public QSortFilterProxyModel
-{
-  Q_OBJECT
-
-public:
-  MySortFilterProxyModel(QObject *parent = 0) :
-    QSortFilterProxyModel(parent)
-  {
-
-  }
-
-protected:
-  virtual bool filterAcceptsRow(int source_row, const QModelIndex &source_parent) const
-  {
-    qDebug() << "aq";
-    // QString key = d->model->data(source_index, d->filter_role).toString();
-    // qDebug(key);
-
-    return true;
-  }
-};
-
-class MyCompleter : public QCompleter
-{
-    Q_OBJECT
-
-public:
-    inline MyCompleter(const QStringList& words, QObject * parent) :
-            QCompleter(parent), m_list(words), m_model()
-    {
-        setModel(&m_model);
-        setCompletionMode(QCompleter::UnfilteredPopupCompletion);
-        connect(completionModel(), SIGNAL(layoutChanged()), SLOT(completionModelChanged()));
-    }
-
-
-    inline void update(QString word)
-    {
-      // Do any filtering you like.
-      // Here we just include all items that contain word.
-      QStringList filtered;
-      foreach (QString str, m_list)
-      {
-        if(str.contains(word))
-          filtered << str;
-      }
-
-      m_model.setStringList(filtered);
-      m_word = word;
-      complete();
-    }
-
-    inline QString word()
-    {
-        return m_word;
-    }
-
-private:
-    QStringList m_list;
-    QStringListModel m_model;
-    QString m_word;
-};
-
 class QnstGraphicsLinkDialog : public QDialog
 {
     Q_OBJECT
@@ -116,6 +54,9 @@ public:
 
 protected slots:
     void adjustBinds(QString conn);
+
+protected:
+    virtual void showEvent(QShowEvent *evt);
 
 public:
     //TODO: This shouldn't be public

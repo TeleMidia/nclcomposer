@@ -285,6 +285,11 @@ void QnstGraphicsLinkDialog::adjustBinds(QString conn)
   }
 }
 
+void QnstGraphicsLinkDialog::showEvent(QShowEvent *evt)
+{
+  this->connLineEdit->setFocus();
+}
+
 QString QnstGraphicsLinkDialog::getCurrentConnector()
 {
   return this->connLineEdit->text();
