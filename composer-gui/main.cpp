@@ -163,6 +163,14 @@ XInitThreads();
 
     ComposerMainWindow w(a);
     w.setWindowIcon(QIcon(":/mainwindow/icon"));
+
+    QFile style(QString(STYLE_PATH)+"/style.qss");
+
+    if (style.open(QFile::ReadOnly)){
+        w.setStyleSheet(style.readAll());
+        style.close();
+    }
+
     w.show();
 
     QStringList argList = a.arguments();

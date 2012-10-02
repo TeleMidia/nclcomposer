@@ -74,7 +74,12 @@ else:win32 {
 
 bases.files = data/defaultConnBase.ncl
 
+#StyleSheets
+style.path = $$bases.path
+style.files = data/style.qss
+
 DEFINES += EXT_DEFAULT_PATH=\"\\\"$$PREFIX\\\"\"
+DEFINES += STYLE_PATH=\"\\\"$$style.path\\\"\"
 
 unix:!macx {
     target.path = $$INSTALLBASE/bin
@@ -207,7 +212,7 @@ TRANSLATIONS += translations/composer_pt_BR.ts \
 INSTALLS += target trans bases
 
 unix:!macx {
-    INSTALLS += target desktop icon64 icon48
+    INSTALLS += target desktop icon64 icon48 style
 }
 
 OTHER_FILES += LICENSE.LGPL
