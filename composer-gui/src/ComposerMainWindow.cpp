@@ -1502,7 +1502,7 @@ void ComposerMainWindow::addDefaultStructureToProject(Project *project,
     else //error
     {
       QMessageBox::warning(this, tr("Error!"),
-                           tr("The default Connect Base %1 does not"
+                           tr("The default Connector Base %1 does not "
                               "exists").arg(defaultConnBase),
                            tr("Ok"));
     }

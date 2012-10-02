@@ -300,7 +300,7 @@ QTabBar[activePlugin=&quot;true&quot;]::tab::selected {
      <x>0</x>
      <y>0</y>
      <width>776</width>
-     <height>21</height>
+     <height>23</height>
     </rect>
    </property>
    <property name="layoutDirection">
@@ -597,7 +597,7 @@ QTabBar[activePlugin=&quot;true&quot;]::tab::selected {
     <string>Report &amp;Bug...</string>
    </property>
    <property name="toolTip">
-    <string>Report a BUG</string>
+    <string>Go to our WebSite and Report a BUG</string>
    </property>
   </action>
  </widget>
