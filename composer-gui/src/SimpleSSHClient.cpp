@@ -14,6 +14,8 @@ extern "C" {
 #include <time.h>
 }
 
+#include <QDebug>
+
 // This variable tell us if the libssh2 was initialized properly. This value
 // will be equal to zero only if the libssh2 are safely initialized through
 // \ref SimpleSSHClient::init()
@@ -254,12 +256,15 @@ void SimpleSSHClient::doDisconnect()
 int SimpleSSHClient::sftp_copy_file(const char *localncl, const char *destpath)
 {
   int rc;
-  size_t nread;
   FILE *local;
   struct stat fileinfo;
   char mem[1024 * 100];
   char *ptr;
+  size_t memuse;
+  size_t nread;
+  int total = 0;
 
+  LIBSSH2_CHANNEL *channel;
   LIBSSH2_SFTP_HANDLE *sftp_handle;
   LIBSSH2_SFTP_ATTRIBUTES attrs;
   bool isModified = true;
@@ -270,6 +275,12 @@ int SimpleSSHClient::sftp_copy_file(const char *localncl, const char *destpath)
   string nclfile = temp.substr(found+1);
 
   sftp_file = destpath + string("/") + nclfile;
+
+#ifdef WIN32
+    WSADATA wsadata;
+
+    WSAStartup(MAKEWORD(2,0), &wsadata);
+#endif
 
   //fprintf(stderr, "Copying %s to %s.\n", localncl, sftp_file.c_str());
 
@@ -301,6 +312,8 @@ int SimpleSSHClient::sftp_copy_file(const char *localncl, const char *destpath)
 
   if(isModified) // I will copy the file
   {
+
+/* \todo: Send file through SFTP only
     // Open the remote file
     sftp_handle = libssh2_sftp_open(sftp_session,
                                     sftp_file.c_str(),
@@ -317,24 +330,86 @@ int SimpleSSHClient::sftp_copy_file(const char *localncl, const char *destpath)
     fprintf(stderr, "libssh2_sftp_open() is done, now send data.\n");
 
     do {
-      nread = fread(mem, 1, sizeof(mem), local);
-        if (nread <= 0) /* end of file */
-          break;
+        nread = fread(mem, 1, sizeof(mem), local);
+        total += nread;
 
+        qDebug() << nread << total << fileinfo.st_size;
+
+        if (nread <= 0) {
+            // end of file
+            break;
+        }
         ptr = mem;
 
         do {
-          /* write data in a loop until we block */
-          rc = libssh2_sftp_write(sftp_handle, ptr, nread);
+            // write data in a loop until we block
+            rc = libssh2_sftp_write(sftp_handle, ptr, nread);
 
-          if(rc < 0) break;
-
-          ptr += rc;
-          nread -= rc;
+            if(rc < 0)
+                break;
+            ptr += rc;
+            nread -= rc;
         } while (nread);
-    } while (rc > 0);
 
-    libssh2_sftp_close(sftp_handle);
+    } while (rc > 0);
+    libssh2_sftp_close(sftp_handle); */
+
+    /* BEGIN SEND FILE THROUGH SCP */
+         /* Send a file via scp. The mode parameter must only have permissions! */
+         channel = libssh2_scp_send(session, sftp_file.c_str(), fileinfo.st_mode & 0777,
+                                    (unsigned long)fileinfo.st_size);
+
+         if (!channel) {
+             char *errmsg;
+             int errlen;
+             int err = libssh2_session_last_error(session, &errmsg, &errlen, 0);
+
+             fprintf(stderr, "Unable to open a session: (%d) %s\n", err, errmsg);
+             goto shutdown_copy;
+         }
+
+         fprintf(stderr, "SCP session waiting to send file\n");
+         do {
+             nread = fread(mem, 1, sizeof(mem), local);
+             if (nread <= 0) {
+                 /* end of file */
+                 break;
+             }
+             ptr = mem;
+
+             do {
+                 /* write the same data over and over, until error or completion */
+                 rc = libssh2_channel_write(channel, ptr, nread);
+
+                 if (rc < 0) {
+                     fprintf(stderr, "ERROR %d\n", rc);
+                     break;
+                 }
+                 else {
+                     /* rc indicates how many bytes were written this time */
+                     ptr += rc;
+                     nread -= rc;
+                 }
+             } while (nread);
+
+         } while (1);
+
+         fprintf(stderr, "Sending EOF\n");
+         libssh2_channel_send_eof(channel);
+
+
+         fprintf(stderr, "Waiting for EOF\n");
+         libssh2_channel_wait_eof(channel);
+
+
+         fprintf(stderr, "Waiting for channel to close\n");
+         libssh2_channel_wait_closed(channel);
+
+
+         libssh2_channel_free(channel);
+
+         channel = NULL;
+    /* End SEND FILE THROUGH SCP */
 
     rc = libssh2_sftp_stat(sftp_session, sftp_file.c_str(), &attrs);
     if(rc < 0)
