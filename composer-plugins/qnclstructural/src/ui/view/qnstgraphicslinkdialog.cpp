@@ -14,12 +14,17 @@ CompleteLineEdit::CompleteLineEdit(QStringList words, QWidget *parent)
 {
   listView = new QListView(this);
   model = new QStringListModel(this);
+
   listView->setWindowFlags(Qt::ToolTip);
+  listView->setUniformItemSizes(true);
 
   installEventFilter(this);
 
-  connect(this, SIGNAL(textChanged(const QString &)), this, SLOT(setCompleter(const QString &)));
-  connect(listView, SIGNAL(clicked(const QModelIndex &)), this, SLOT(completeText(const QModelIndex &)));
+  connect(this, SIGNAL(textChanged(const QString &)),
+          this, SLOT(setCompleter(const QString &)));
+
+  connect(listView, SIGNAL(clicked(const QModelIndex &)),
+          this, SLOT(completeText(const QModelIndex &)));
 }
 
 void CompleteLineEdit::setStringList(const QStringList &words)
@@ -47,11 +52,16 @@ bool CompleteLineEdit::eventFilter(QObject *object, QEvent *event)
   return false;
 }
 
-void CompleteLineEdit::focusOutEvent(QFocusEvent *e)
+void CompleteLineEdit::hideEvent ( QHideEvent * event )
 {
   listView->hide();
-  QLineEdit::focusOutEvent(e);
 }
+
+// void CompleteLineEdit::focusOutEvent(QFocusEvent *e)
+// {
+//  QLineEdit::focusOutEvent(e);
+//  listView->hide();
+// }
 
 void CompleteLineEdit::focusInEvent(QFocusEvent *e)
 {
@@ -152,10 +162,11 @@ void CompleteLineEdit::setCompleter(const QString &text)
   listView->show();
 }
 
-void CompleteLineEdit::completeText(const QModelIndex &index) {
-    QString text = index.data().toString();
-    setText(text);
-    listView->hide();
+void CompleteLineEdit::completeText(const QModelIndex &index)
+{
+  QString text = index.data().toString();
+  setText(text);
+  listView->hide();
 }
 
 QnstGraphicsLinkDialog::QnstGraphicsLinkDialog(QWidget* parent)
@@ -166,7 +177,8 @@ QnstGraphicsLinkDialog::QnstGraphicsLinkDialog(QWidget* parent)
     connLineEdit = new CompleteLineEdit(QStringList());
     this->form.gridLayout_2->addWidget(connLineEdit, 0, 1);
 
-    connect(connLineEdit, SIGNAL(textChanged(QString)), SLOT(adjustBinds(QString)));
+    connect(connLineEdit, SIGNAL(textChanged(QString)),
+            SLOT(adjustBinds(QString)));
 
     changeModel = true;
 }
@@ -199,7 +211,8 @@ void QnstGraphicsLinkDialog::init(QMap<QString, QnstConncetor*> connectors)
 
     connLineEdit->setStringList(strConn);
 
-    // Center the Dialog if this is the first time that we are openning QnstGraphicsLinkDialog
+    // Center the Dialog if this is the first time that we are openning
+    // QnstGraphicsLinkDialog
     if(firstTime)
     {
       setMinimumWidth(350);
