@@ -4,6 +4,8 @@
 // ATTENTION: This code needs a refactoring.
 //
 
+#include <assert.h>
+
 QnstView::QnstView(QWidget* parent)
     : QGraphicsView(parent)
 {
@@ -117,13 +119,16 @@ void QnstView::collapseCompositions(QDomElement element, QDomElement parent){
     }
 
     if (element.attribute("collapsed") == "1"){
-        QnstGraphicsComposition* c = ((QnstGraphicsComposition*) entities[element.attribute("uid")]);
+        if(entities.contains(element.attribute("uid")))
+        {
+          QnstGraphicsComposition* c = ((QnstGraphicsComposition*) entities[element.attribute("uid")]);
 
-        c->collapse();
+          c->collapse();
 
 
-        c->setTop(element.attribute("top").toDouble());
-        c->setLeft(element.attribute("left").toDouble());
+          c->setTop(element.attribute("top").toDouble());
+          c->setLeft(element.attribute("left").toDouble());
+        }
     }
 }
 
@@ -332,14 +337,20 @@ void QnstView::readLink(QDomElement element, QDomElement parent)
             QnstLink* link = new QnstLink();
             link->setnstId(element.attribute("id"));
             link->setnstUid(element.attribute("uid"));
-            link->setnstParent(entities[element.attribute("parent")]);
 
-            link->setxConnector(element.attribute("xconnetor"));
-            link->setxConnectorUID(element.attribute("xconnetorUID"));
-            link->setAggregatorUID(element.attribute("aggregatorUID"));
+            if(entities.contains(element.attribute("parent")))
+            {
+              link->setnstParent(entities[element.attribute("parent")]);
 
-            links[link->getnstUid()] = link;
-            link2conn[link->getnstId()] = link->getxConnector();
+              link->setxConnector(element.attribute("xconnetor"));
+              link->setxConnectorUID(element.attribute("xconnetorUID"));
+              link->setAggregatorUID(element.attribute("aggregatorUID"));
+
+              links[link->getnstUid()] = link;
+              link2conn[link->getnstId()] = link->getxConnector();
+            }
+            else
+              qWarning() << "Error trying to add a link inside" << element.attribute("parent") << "that does not exists.";
 
     }if (element.nodeName() == "mapping"){
         QMap<QString, QString> properties;
@@ -2116,16 +2127,16 @@ void QnstView::changeSwitch(QnstGraphicsSwitch* entity, const QMap<QString, QStr
 
 void QnstView::addMedia(const QString uid, const QString parent, const QMap<QString, QString> properties, bool undo, bool adjust)
 {
-    if (entities.contains(parent)){
+    if (entities.contains(parent)) {
         QnstGraphicsMedia* entity;
 
-        if (properties["type"].startsWith("image")){
+        if (properties["type"].startsWith("image")) {
             entity = new QnstGraphicsImage((QnstGraphicsNode*) entities[parent]);
 
-        }else if (properties["type"].startsWith("audio")){
+        }else if (properties["type"].startsWith("audio")) {
             entity = new QnstGraphicsAudio((QnstGraphicsNode*) entities[parent]);
 
-        }else if (properties["type"].startsWith("video")){
+        }else if (properties["type"].startsWith("video")) {
             entity = new QnstGraphicsVideo((QnstGraphicsNode*) entities[parent]);
 
         }else if (properties["type"] == "text/html"){
@@ -2161,7 +2172,7 @@ void QnstView::addMedia(const QString uid, const QString parent, const QMap<QStr
         entity->setInstance(properties["instance"]);
 
         if (properties["referUID"] != ""){
-            if (entities.contains(properties["referUID"])){
+            if (entities.contains(properties["referUID"])) {
                 entity->setSource(((QnstGraphicsMedia*)
                                    entities[properties["referUID"]])->getSource());
             }
@@ -2204,8 +2215,7 @@ void QnstView::addMedia(const QString uid, const QString parent, const QMap<QStr
     }
 }
 
-void QnstView::changeMedia(QnstGraphicsMedia* entity, const
-QMap<QString, QString> properties)
+void QnstView::changeMedia(QnstGraphicsMedia* entity, const QMap<QString, QString> properties)
 {
    entity->setnstId(properties["id"]);
    entity->setSource(properties["src"]);
@@ -6199,6 +6209,7 @@ void QnstView::mouseReleaseEvent(QMouseEvent* event)
     QnstGraphicsEntity *entity;
     foreach(entity, entities.values())
     {
+      assert(entity != NULL);
       entity->setDraggable(false);
     }
 

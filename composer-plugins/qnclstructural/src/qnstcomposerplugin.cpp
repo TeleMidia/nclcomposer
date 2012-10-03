@@ -108,12 +108,15 @@ void QnstComposerPlugin::init()
             QMap <QString, QString> userData;
 
             Entity *entity = project->getEntityById(coreID);
-            entity->getAttributeIterator(begin, end);
+            if(entity != NULL)
+            {
+              entity->getAttributeIterator(begin, end);
 
-            for (it = begin; it != end; ++it)
-              userData[it.key()] = it.value();
+              for (it = begin; it != end; ++it)
+                userData[it.key()] = it.value();
 
-            nstEntity->setUsrData(userData);
+              nstEntity->setUsrData(userData);
+            }
           }
         }
 
