@@ -68,8 +68,12 @@ ComposerMainWindow::ComposerMainWindow(QApplication &app, QWidget *parent)
           this, SLOT(focusChanged(QWidget *, QWidget *)),
           Qt::DirectConnection);
 
-  proc = NULL;
+  // Local Ginga Run
+  localGingaProcess = new QProcess(this);
+  connect(localGingaProcess, SIGNAL(finished(int)),
+          this, SLOT(runHasFinished()));
 
+  // Remote Ginga Run
 #ifdef WITH_LIBSSH2
   runRemoteGingaVMAction.moveToThread(&runRemoteGingaVMThread);
 
@@ -78,6 +82,12 @@ ComposerMainWindow::ComposerMainWindow(QApplication &app, QWidget *parent)
 
   connect(&runRemoteGingaVMAction, SIGNAL(finished()),
           &runRemoteGingaVMThread, SLOT(quit()));
+
+  connect(&runRemoteGingaVMThread, SIGNAL(finished()),
+          this, SLOT(runHasFinished()));
+
+  connect(&runRemoteGingaVMThread, SIGNAL(terminated()),
+          this, SLOT(runHasFinished()));
 
   SimpleSSHClient::init(); // Initializes the libssh2 library
 #endif
@@ -319,14 +329,9 @@ void ComposerMainWindow::initGUI()
   pluginDetailsDialog = new PluginDetailsDialog(aboutPluginsDialog);
 
   connect(ui->action_RunNCL, SIGNAL(triggered()), this, SLOT(runNCL()));
+  connect(ui->action_StopNCL, SIGNAL(triggered()), this, SLOT(stopNCL()));
 
-#ifdef WITH_LIBSSH2
-  connect(ui->action_StopRemoteNCL, SIGNAL(triggered()),
-          this, SLOT(stopRemoteNCL()));
-#else
-  // ui->action_RunNCL->setEnabled(true);
-  // ui->action_RunNCL->setToolTip(tr("Run NCL Remotely: Your program was not built with this option!!!"));
-#endif
+  ui->action_RunNCL->setEnabled(true);
 
 // UNDO/REDO
   // connect(ui->action_Undo, SIGNAL(triggered()), this, SLOT(undo()));
@@ -373,7 +378,8 @@ void ComposerMainWindow::initGUI()
           taskProgressBar, SLOT(hide()));
 
   connect(taskProgressBar, SIGNAL(canceled()),
-          &runRemoteGingaVMAction, SLOT(stopExecution()), Qt::DirectConnection);
+          &runRemoteGingaVMAction, SLOT(stopExecution()),
+          Qt::DirectConnection);
 
   disconnect(taskProgressBar, SIGNAL(canceled()),
              taskProgressBar, SLOT(cancel()));
@@ -382,7 +388,7 @@ void ComposerMainWindow::initGUI()
           taskProgressBar, SLOT(hide()));
 
 // This shows the taskBar inside the toolBar. In the future, this can
-//  taskProgressBarAction = ui->toolBar->insertWidget(ui->action_Save,
+//   taskProgressBarAction = ui->toolBar->insertWidget(ui->action_Save,
 //                                                    taskProgressBar);
 // taskProgressBarAction->setVisible(false);
 #endif
@@ -1216,6 +1222,25 @@ void ComposerMainWindow::restorePerspective(QString layoutName)
 
 void ComposerMainWindow::runNCL()
 {
+  // check if there is other instance already running
+  if(localGingaProcess->state() == QProcess::Running
+#ifdef WITH_LIBSSH2
+        || runRemoteGingaVMThread.isRunning()
+#endif
+        )
+  {
+    QMessageBox::StandardButton reply;
+    reply = QMessageBox::warning(NULL, tr("Warning!"),
+                               tr("You already have an NCL application "
+                                  "running. Please, stop it before you start "
+                                  "a new one."),
+                               QMessageBox::Ok);
+    return;
+  }
+
+  ui->action_RunNCL->setEnabled(false);
+
+  // There is no other instance running, so let's run
   bool runRemote = false;
   ComposerSettings settings;
   settings.beginGroup("runginga");
@@ -1229,6 +1254,8 @@ void ComposerMainWindow::runNCL()
     runOnRemoteGingaVM();
   else
     runOnLocalGinga();
+
+  ui->action_StopNCL->setEnabled(true);
 }
 
 void ComposerMainWindow::runOnLocalGinga()
@@ -1241,7 +1268,6 @@ void ComposerMainWindow::runOnLocalGinga()
   settings.endGroup();
 
   // TODO: Ask to Save current project before send it to Ginga VM.
-  QProcess *ginga = new QProcess(this);
   QStringList args_list;
   QString location = tabProjects->tabToolTip(tabProjects->currentIndex());
 
@@ -1271,10 +1297,9 @@ void ComposerMainWindow::runOnLocalGinga()
     //\todo Other parameters
     args.replace("${nclpath}", nclpath);
     args_list << args.split("\n");
-
     /* RUNNING GINGA */
-    ginga->start(command, args_list);
-    QByteArray result = ginga->readAll();
+    localGingaProcess->start(command, args_list);
+    QByteArray result = localGingaProcess->readAll();
   }
   else
   {
@@ -1286,21 +1311,12 @@ void ComposerMainWindow::runOnLocalGinga()
 void ComposerMainWindow::runOnRemoteGingaVM()
 {
 #ifdef WITH_LIBSSH2
-  if(runRemoteGingaVMThread.isRunning())
-  {
-    // There aren't a current project.
-    QMessageBox::StandardButton reply;
-    reply = QMessageBox::warning(NULL, tr("Warning!"),
-                                 tr("You already have an NCL application "
-                                    "running. Please, stop it before you start "
-                                    "a new one."),
-                                 QMessageBox::Ok);
-    return;
-  }
-
   int currentTab = tabProjects->currentIndex();
   if(currentTab != 0)
   {
+    //Disable a future Run (while the current one does not finish)!!
+    ui->action_RunNCL->setEnabled(false);
+
     QString location = tabProjects->tabToolTip(currentTab);
     Project *currentProject = ProjectControl::getInstance()->
                                                       getOpenProject(location);
@@ -1348,11 +1364,46 @@ void ComposerMainWindow::runOnRemoteGingaVM()
 #endif
 }
 
-void ComposerMainWindow::stopRemoteNCL()
+void ComposerMainWindow::stopNCL()
 {
 #ifdef WITH_LIBSSH2
   stopRemoteGingaVMAction.stopRunningApplication();
 #endif
+  updateRunActions();
+}
+
+bool ComposerMainWindow::isRunningNCL()
+{
+  // check if there is other instance already running
+  if(localGingaProcess->state() == QProcess::Running
+#ifdef WITH_LIBSSH2
+        || runRemoteGingaVMThread.isRunning()
+#endif
+    )
+  {
+      return true;
+  }
+  return false;
+}
+
+void ComposerMainWindow::updateRunActions()
+{
+  if(isRunningNCL())
+  {
+    ui->action_RunNCL->setEnabled(false);
+    ui->action_StopNCL->setEnabled(true);
+  }
+  else
+  {
+    ui->action_RunNCL->setEnabled(true);
+    ui->action_StopNCL->setEnabled(false);
+  }
+}
+
+void ComposerMainWindow::runHasFinished()
+{
+  qDebug() << "ComposerMainWindow::runHasFinished()";
+  updateRunActions();
 }
 
 void ComposerMainWindow::launchProjectWizard()
@@ -1437,7 +1488,7 @@ void ComposerMainWindow::addDefaultStructureToProject(Project *project,
     msgControl->anonymousAddEntity("body", nclEntityId, bodyAttrs);
   }
 
-  // Copy the default connectro
+  // Copy the default connector
   if(shouldCopyDefaultConnBase)
   {
     ComposerSettings settings;
@@ -1792,8 +1843,9 @@ void ComposerMainWindow::currentTabChanged(int n)
     ui->action_CloseProject->setEnabled(true);
     ui->action_Save->setEnabled(true);
     ui->action_SaveAs->setEnabled(true);
-    ui->action_RunNCL->setEnabled(true);
-    ui->action_StopRemoteNCL->setEnabled(true);
+
+    // \todo: This should check if there is already running application
+    updateRunActions();
   }
   else
   {
@@ -1804,7 +1856,7 @@ void ComposerMainWindow::currentTabChanged(int n)
     ui->action_Save->setEnabled(false);
     ui->action_SaveAs->setEnabled(false);
     ui->action_RunNCL->setEnabled(false);
-    ui->action_StopRemoteNCL->setEnabled(false);
+    ui->action_StopNCL->setEnabled(false);
   }
 }
 

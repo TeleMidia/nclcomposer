@@ -189,16 +189,15 @@ private:
   PerspectiveManager *perspectiveManager;
   PluginDetailsDialog *pluginDetailsDialog;
 
-  QProcess *proc;
-  QProgressDialog *taskProgressBar;
-
+  QProcess *localGingaProcess;
 #ifdef WITH_LIBSSH2
   QThreadEx runRemoteGingaVMThread;
   RunRemoteGingaVMAction runRemoteGingaVMAction;
   StopRemoteGingaVMAction stopRemoteGingaVMAction;
 #endif
+  QProgressDialog *taskProgressBar;
 
-  QTimer *autoSaveTimer;
+  QTimer *autoSaveTimer; // auto save timer
 
   ComposerHelpWidget composerHelpWidget;
 
@@ -350,9 +349,12 @@ private slots:
 
   /*! Run the current open Project.*/
   void runNCL();
+  void stopNCL();
+  bool isRunningNCL();
   void runOnLocalGinga();
   void runOnRemoteGingaVM();
-  void stopRemoteNCL();
+  void runHasFinished();
+  void updateRunActions();
 
   void launchProjectWizard();
   void addToRecentProjects(QString projectUrl);
