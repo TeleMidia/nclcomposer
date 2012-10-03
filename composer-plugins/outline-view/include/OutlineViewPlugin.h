@@ -101,6 +101,12 @@ public slots:
     void onEntityRemoved(QString ID, QString entityID);
 
     /*!
+     * \brief This slot calls the outline plugin to update its own model.
+     *
+     */
+    void updateFromModel();
+
+    /*!
      * \brief
      *
      * This function is part of the IPlugin API.
