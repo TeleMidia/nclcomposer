@@ -35,7 +35,8 @@ const int autoSaveInterval = 1 * 60 * 1000; //ms
 
 ComposerMainWindow::ComposerMainWindow(QApplication &app, QWidget *parent)
   : QMainWindow(parent),
-    ui(new Ui::ComposerMainWindow)
+    ui(new Ui::ComposerMainWindow),
+    allDocksMutex(QMutex::Recursive)
 {
   ui->setupUi(this);
 
@@ -523,6 +524,7 @@ void ComposerMainWindow::addPluginWidget(IPluginFactory *fac, IPlugin *plugin,
 
 void ComposerMainWindow::updateDockStyle(QDockWidget *dock, bool selected)
 {
+
   QList <QTabBar*> tabBars = this->findChildren <QTabBar *>();
 
   // \todo We can improve this foreach
@@ -1862,10 +1864,13 @@ void ComposerMainWindow::currentTabChanged(int n)
 
 void ComposerMainWindow::focusChanged(QWidget *old, QWidget *now)
 {
-  if(!isActiveWindow() || now == NULL)
-      return; // Do nothing!!
+  if(now == NULL)
+    return; // Do nothing!!
 
-  // qDebug() << "Locking allDocksMutex 1";
+  if(qApp->activeModalWidget() != NULL)
+    return; // Do nothing!! (Wait for the popup to end)
+
+  qDebug() << "Locking allDocksMutex 1";
   allDocksMutex.lock();
   for(int i = 0; i < allDocks.size(); i++)
   {
@@ -1873,21 +1878,22 @@ void ComposerMainWindow::focusChanged(QWidget *old, QWidget *now)
     updateDockStyle(allDocks.at(i), false);
   }
   allDocksMutex.unlock();
-  // qDebug() << "Unlocked allDocksMutex 1";
+  qDebug() << "Unlocked allDocksMutex 1";
 
-  // qDebug() << "Locking allDocksMutex 2";
+  qDebug() << "Locking allDocksMutex 2";
   allDocksMutex.lock();
-  for(int i = 0 ; i < allDocks.size(); i++)
+
+  if(now != NULL)
   {
-    if(now != NULL)
+    for(int i = 0 ; i < allDocks.size(); i++)
     {
       bool isAncestor = false;
       QWidget *child = now;
-      // qDebug() << "Start";
-      while (child)
+      qDebug() << "Start" << i << allDocks.size();
+      while (child && child != this)
       {
-        // qDebug() << "child pointer" << child;
-        // qDebug() << child->metaObject()->className();
+        qDebug() << "child pointer" << child;
+        qDebug() << child->metaObject()->className();
         if (child == allDocks.at(i))
         {
           isAncestor = true;
@@ -1895,14 +1901,14 @@ void ComposerMainWindow::focusChanged(QWidget *old, QWidget *now)
         }
         child = child->parentWidget();
       }
-      // qDebug() << "End";
+      qDebug() << "End";
 
       if(isAncestor)
         updateDockStyle(allDocks.at(i), true);
     }
   }
   allDocksMutex.unlock();
-  // qDebug() << "Unlocked allDocksMutex 2";
+  qDebug() << "Unlocked allDocksMutex 2";
 }
 
 void ComposerMainWindow::setProjectDirty(QString location, bool isDirty)
