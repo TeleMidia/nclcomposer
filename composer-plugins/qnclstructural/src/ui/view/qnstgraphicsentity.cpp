@@ -17,6 +17,7 @@ QnstGraphicsEntity::QnstGraphicsEntity(QnstGraphicsEntity* parent)
     hover = false;
     menu = NULL;
     draggable = false;
+    hasError = false;
 }
 
 
@@ -197,3 +198,7 @@ void QnstGraphicsEntity::hoverLeaveEvent(QGraphicsSceneHoverEvent* event)
     hover = false;
 }
 
+void QnstGraphicsEntity::setError(bool hasError)
+{
+  this->hasError = hasError;
+}

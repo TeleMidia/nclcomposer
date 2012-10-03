@@ -201,8 +201,13 @@ void QnstGraphicsMedia::draw(QPainter* painter)
 
     painter->setPen(QPen(QBrush(Qt::black),0));
 
-    if (getSource() == "" && getRefer() == ""){
-        painter->drawPixmap((getWidth()-8)/2 + 12, (getHeight()-8)/2 + 4, 12, 12, QPixmap(":/icon/alert"));
+    if(hasError)
+    {
+      painter->drawPixmap((getWidth()-8)/2 + 12, (getHeight()-8)/2 + 4, 12, 12, QPixmap(":/icon/delete"));
+    }
+    else if (getSource() == "" && getRefer() == "")
+    {
+      painter->drawPixmap((getWidth()-8)/2 + 12, (getHeight()-8)/2 + 4, 12, 12, QPixmap(":/icon/alert"));
     }
 
     QString localid = (getnstId() != "" ? getnstId() : "?");
@@ -211,7 +216,14 @@ void QnstGraphicsMedia::draw(QPainter* painter)
         localid = getnstId().replace(3,getnstId().length()-3,"...");
     }
 
+// \todo draw a formated text with underline when there is error
+//    if(hasError)
+//      painter->setPen(QPen(QBrush(Qt::red), 0));
+//    else
+//      painter->setPen(QPen(QBrush(Qt::black), 0));
+
     painter->drawText(4 + 8/2, 4 + 8/2 + getHeight()-16-8, getWidth()-8, 16, Qt::AlignCenter, localid);
+
 
     if (isMoving()){
         painter->setBrush(Qt::NoBrush);

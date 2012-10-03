@@ -8737,3 +8737,22 @@ void QnstView::updateBindParams(QString bindUID, QMap<QString, QString> params, 
         binds[brelations.key(bindUID)]->setNameUIDs(name_uids);
     }
 }
+
+void QnstView::markError(QString uid)
+{
+  if(entities.contains(uid))
+  {
+      QnstGraphicsEntity *entity = entities[uid];
+      assert(entity != NULL);
+      entity->setError(true);
+  }
+}
+
+void QnstView::clearValidationErrors()
+{
+  foreach(QnstGraphicsEntity *entity, entities.values())
+  {
+    assert(entity != NULL);
+    entity->setError(false);
+  }
+}

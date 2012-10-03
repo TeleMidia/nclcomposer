@@ -73,6 +73,10 @@ public slots:
 
     void requestEntitySelection(const QString uid);
 
+    void clearValidationError(QString pluginID, void *param);
+
+    void validationError(QString pluginID, void *param);
+
 private:
     QString getUidById(QString id);
 

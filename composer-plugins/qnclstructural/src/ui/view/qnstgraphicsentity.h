@@ -105,6 +105,7 @@ public:
     QnstMenu* menu;
     bool isDraggable();
     void setDraggable(bool isDraggable);
+    void setError(bool hasError);
 
 private:
     bool draggable;
@@ -115,7 +116,7 @@ private:
     QVector<QnstGraphicsEntity*> entities;
 
 protected:
-    bool hover;
+    bool hover, hasError;
 };
 
 #endif // QNSTGRAPHICSENTITY_H

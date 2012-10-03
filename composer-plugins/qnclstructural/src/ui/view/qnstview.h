@@ -161,6 +161,10 @@ public slots:
 
     void updateBindParams(QString bindUID,QMap<QString, QString> params, QMap<QString, QString> name_uids);
 
+    void markError(QString uid);
+
+    void clearValidationErrors();
+
 private:
     void addBody(const QString uid, const QString parent, const QMap<QString, QString> properties, bool undo = false);
 

@@ -202,6 +202,9 @@ void QnstComposerPlugin::onEntityAdded(QString pluginID, Entity *entity)
     else
       qWarning() << "[QNST] QnsComposerPlugin::onEntityAdded Entity was not "
                  << "added";
+
+    // \todo This must be incremental
+    view->clearValidationErrors();
 }
 
 void QnstComposerPlugin::errorMessage(QString error)
@@ -246,6 +249,9 @@ void QnstComposerPlugin::onEntityChanged(QString pluginID, Entity *entity)
       }
     }
   }
+
+  // \todo This must be incremental
+  view->clearValidationErrors();
 }
 
 void QnstComposerPlugin::onEntityRemoved(QString pluginID, QString entityID)
@@ -2390,4 +2396,21 @@ void QnstComposerPlugin::requestBindParamChange(const QString uid, const QMap<QS
 
         emit setAttributes(entity, attributes, false);
     }
+}
+
+void QnstComposerPlugin::clearValidationError(QString, void *param)
+{
+  view->clearValidationErrors();
+}
+
+void QnstComposerPlugin::validationError(QString pluginID, void *param)
+{
+  if(isSyncingFromTextual)
+    return;
+
+  if(param)
+  {
+      pair <QString, QString> *p = (pair <QString, QString> *)param;
+      view->markError(p->first);
+  }
 }
