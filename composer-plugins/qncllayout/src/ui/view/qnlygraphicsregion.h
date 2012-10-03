@@ -182,6 +182,8 @@ public:
 
     void updateCursor(QGraphicsSceneMouseEvent* event);
 
+    void setGridAction(QAction* action);
+
 signals:
     void regionAdditionRequested(QnlyGraphicsRegion* parent);
 
@@ -388,6 +390,8 @@ private:
     QAction* sendbackAction;
 
     QAction* propertiesAction;
+
+    QAction* gridAction;
 
     QString id;
 

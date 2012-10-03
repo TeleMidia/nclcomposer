@@ -30,6 +30,7 @@
 #include <QFileDialog>
 
 #include "qnlygraphicsregion.h"
+#include "qnlygraphicsgrid.h"
 
 class QnlyGraphicsRegion;
 
@@ -126,6 +127,8 @@ protected slots:
     void requestMediaOverRegionAction(QString mediaId,
                                       QnlyGraphicsRegion* region);
 
+
+
     void performExport();
 
     void perform640x480();
@@ -135,6 +138,8 @@ protected slots:
     void perform1280x720();
     void perform1920x1080();
     void perform320x400();
+
+    void performGrid();
 
 private:
     void createActions();
@@ -197,6 +202,8 @@ private:
 
     QAction* propertiesAction;
 
+    QAction* gridAction;
+
     QAction* action;
 
     QAction* re640x480;
@@ -222,6 +229,8 @@ private:
     QString device;
 
     QGraphicsRectItem* bgrect;
+
+    QnlyGraphicsGrid* grid;
 
     QnlyGraphicsRegion* selectedRegion;
 

@@ -22,7 +22,7 @@
 QnlyGraphicsRegion::QnlyGraphicsRegion(QMenu* switchMenu,
                                        QnlyGraphicsRegion* parent)
     : QObject(parent), QGraphicsItem(parent)
-{
+{   
     this->switchMenu = switchMenu;
 
     this->switchMenu->setEnabled(true);
@@ -597,6 +597,14 @@ void QnlyGraphicsRegion::QnlyGraphicsRegion::createActions()
     setAcceptDrops(true);
 }
 
+void QnlyGraphicsRegion::setGridAction(QAction* action)
+{
+    gridAction = action;
+
+    showMenu->addAction(gridAction);
+
+}
+
 void QnlyGraphicsRegion::createMenus()
 {
     // view menu
@@ -775,12 +783,20 @@ void QnlyGraphicsRegion::addRegion(QnlyGraphicsRegion* region)
     {
         region->setParent(this);
 
+        region->setGridAction(gridAction);
+
         regions[region->getUid()] = region;
 
         QAction* action = new QAction(this);
         action->setText(region->getId());
 
         showMenu->addAction(action);
+
+        showMenu->insertAction(showMenu->actions().front(), action);
+
+        if (showMenu->actions().size() <= 2){
+            showMenu->insertSeparator(showMenu->actions().back());
+        }
 
         action->setCheckable(true);
         action->setChecked(true);

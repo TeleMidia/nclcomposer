@@ -1,6 +1,7 @@
 <RCC>
     <qresource prefix="/bg">
         <file alias="layout">images/bg-layout.png</file>
+        <file alias="layout2">images/bg-layout2.png</file>
     </qresource>
     <qresource prefix="/icon">
         <file alias="audio">images/icon-audio.png</file>

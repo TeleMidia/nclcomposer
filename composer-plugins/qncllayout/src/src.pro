@@ -14,7 +14,8 @@ SOURCES +=  qnlycomposerplugin.cpp \
             ui/view/qnlyview.cpp \
             ui/view/qnlygraphicsregion.cpp \
             ui/view/qnlygraphicsregionbase.cpp \
-            ui/view/qnlycanvas.cpp
+            ui/view/qnlycanvas.cpp \
+    ui/view/qnlygraphicsgrid.cpp
 
 HEADERS +=  qnlycomposerplugin.h \
             qnlycomposerpluginfactory.h \
@@ -25,6 +26,7 @@ HEADERS +=  qnlycomposerplugin.h \
             ui/view/qnlyview.h \
             ui/view/qnlygraphicsregion.h \
             ui/view/qnlygraphicsregionbase.h \
-            ui/view/qnlycanvas.h
+            ui/view/qnlycanvas.h \
+    ui/view/qnlygraphicsgrid.h
 
 INSTALLS =  target

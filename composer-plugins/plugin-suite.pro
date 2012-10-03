@@ -52,3 +52,6 @@ TRANSLATIONS = \
     translations/plugin_suite_pt_BR.ts
 
 INSTALLS += trans
+
+RESOURCES += \
+    common-resources/images.qrc

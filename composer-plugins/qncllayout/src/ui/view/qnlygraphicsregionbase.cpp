@@ -35,10 +35,18 @@ QnlyGraphicsRegionBase::QnlyGraphicsRegionBase(QObject* parent,
 
     setSceneRect(0,0,854,480);
 
-    bgrect = new QGraphicsRectItem(0,0,854,480,0,this);
-    bgrect->setBrush(QBrush(QColor("#FFFFFF")));
+    bgrect = new QGraphicsRectItem(0,this);
+    bgrect->setRect(0,0,854,480);
+    bgrect->setBrush(QBrush(QPixmap(":/bg/layout")));
     bgrect->setPen(QPen(QColor("#BBBBBB")));
     bgrect->setZValue(-1);
+
+    grid = new QnlyGraphicsGrid(0,this);
+    grid->setStep(25);
+    grid->setPen(QPen(QBrush(QColor("#00FFFF")), 1.5,Qt::DotLine));
+    grid->setRect(0,0,854,480);
+    grid->setZValue(1000);
+    grid->setVisible(false);
 }
 
 QnlyGraphicsRegionBase::~QnlyGraphicsRegionBase()
@@ -515,6 +523,13 @@ void QnlyGraphicsRegionBase::QnlyGraphicsRegionBase::createActions()
 
     hideAction->setEnabled(false);
 
+    gridAction = new QAction(this);
+    gridAction->setText(tr("Grid"));
+
+    gridAction->setEnabled(true);
+    gridAction->setCheckable(true);
+    gridAction->setChecked(false);
+
     // properties action
     propertiesAction = new QAction(this);
     propertiesAction->setText(tr("Properties"));
@@ -562,6 +577,8 @@ void QnlyGraphicsRegionBase::createMenus()
     // show menu
     showMenu = new QMenu();
     showMenu->setTitle(tr("Show"));
+
+    showMenu->addAction(gridAction);
 
     showMenu->setEnabled(true);
 
@@ -642,6 +659,8 @@ void QnlyGraphicsRegionBase::createConnections()
     connect(re320x400, SIGNAL(triggered()), SLOT(perform320x400()));
 
     connect(exportAction, SIGNAL(triggered()), SLOT(performExport()));
+
+    connect(gridAction, SIGNAL(triggered()), SLOT(performGrid()));
 }
 
 void QnlyGraphicsRegionBase::performShow(QAction* action)
@@ -924,6 +943,8 @@ void QnlyGraphicsRegionBase::addRegion(QnlyGraphicsRegion* region,
             }
         }
 
+        region->setGridAction(gridAction);
+
         if (parent != NULL)
         {
            parent->addRegion(region);
@@ -935,7 +956,11 @@ void QnlyGraphicsRegionBase::addRegion(QnlyGraphicsRegion* region,
             action = new QAction(this);
             action->setText(region->getId());
 
-            showMenu->addAction(action);
+            showMenu->insertAction(showMenu->actions().front(), action);
+
+            if (showMenu->actions().size() <= 2){
+                showMenu->insertSeparator(showMenu->actions().back());
+            }
 
             action->setCheckable(true);
             action->setChecked(true);
@@ -1000,6 +1025,7 @@ void QnlyGraphicsRegionBase::perform800x600()
 {
     setSceneRect(0,0,800,600);
     bgrect->setRect(0,0,800,600);
+    grid->setRect(0,0,800,600);
 
     foreach(QnlyGraphicsRegion* r, regions.values()){
         r->adjust();
@@ -1010,6 +1036,7 @@ void QnlyGraphicsRegionBase::perform1024x768()
 {
     setSceneRect(0,0,1024,768);
     bgrect->setRect(0,0,1024,768);
+    grid->setRect(0,0,1024,768);
 
     foreach(QnlyGraphicsRegion* r, regions.values()){
         r->adjust();
@@ -1020,6 +1047,7 @@ void QnlyGraphicsRegionBase::perform854x480()
 {
     setSceneRect(0,0,854,480);
     bgrect->setRect(0,0,854,480);
+    grid->setRect(0,0,854,480);
 
     foreach(QnlyGraphicsRegion* r, regions.values()){
         r->adjust();
@@ -1030,6 +1058,7 @@ void QnlyGraphicsRegionBase::perform1280x720()
 {
     setSceneRect(0,0,1280,720);
     bgrect->setRect(0,0,1280,720);
+    grid->setRect(0,0,1280,720);
 
     foreach(QnlyGraphicsRegion* r, regions.values()){
         r->adjust();
@@ -1040,6 +1069,7 @@ void QnlyGraphicsRegionBase::perform1920x1080()
 {
     setSceneRect(0,0,1920,1080);
     bgrect->setRect(0,0,1920,1080);
+    grid->setRect(0,0,1920,1080);
 
     foreach(QnlyGraphicsRegion* r, regions.values()){
         r->adjust();
@@ -1050,10 +1080,16 @@ void QnlyGraphicsRegionBase::perform320x400()
 {
     setSceneRect(0,0,320,400);
     bgrect->setRect(0,0,320,400);
+    grid->setRect(0,0,320,400);
 
     foreach(QnlyGraphicsRegion* r, regions.values()){
         r->adjust();
     }
+}
+
+void QnlyGraphicsRegionBase::performGrid()
+{
+    grid->setVisible(!grid->isVisible());
 }
 
 void QnlyGraphicsRegionBase::performExport()
