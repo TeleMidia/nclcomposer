@@ -300,6 +300,7 @@ void QnstGraphicsLinkDialog::adjustBinds(QString conn)
 
 void QnstGraphicsLinkDialog::showEvent(QShowEvent *evt)
 {
+  this->connLineEdit->setText("");
   this->connLineEdit->setFocus();
 }
 
