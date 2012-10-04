@@ -186,7 +186,7 @@ private:
 
     void addMedia(const QString uid, const QString parent, const QMap<QString, QString> properties, bool undo = false, bool adjust = true);
 
-    void changeMedia(QnstGraphicsMedia* entity, QMap<QString, QString> properties);
+    void changeMedia(QnstGraphicsMedia* entity, QMap<QString, QString> properties, bool adjust=true);
 
     void adjustMedia(QnstGraphicsMedia* entity);
 

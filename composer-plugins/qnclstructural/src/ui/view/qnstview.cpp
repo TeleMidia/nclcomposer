@@ -2165,21 +2165,6 @@ void QnstView::addMedia(const QString uid, const QString parent, const QMap<QStr
         entity->setWidth(48);
         entity->setHeight(64);
 
-        entity->setnstId(properties["id"]);
-        entity->setSource(properties["src"]);
-        entity->setRefer(properties["refer"]);
-        entity->setReferUID(properties["referUID"]);
-        entity->setInstance(properties["instance"]);
-
-        if (properties["referUID"] != ""){
-            if (entities.contains(properties["referUID"])) {
-                entity->setSource(((QnstGraphicsMedia*)
-                                   entities[properties["referUID"]])->getSource());
-            }
-
-        }
-
-
         if (properties["top"] != ""){
             entity->setTop(properties["top"].toDouble());
         }
@@ -2200,14 +2185,14 @@ void QnstView::addMedia(const QString uid, const QString parent, const QMap<QStr
 
         entities[parent]->addnstGraphicsEntity(entity);
         entities[uid] = entity;
-        entity->adjust();
 
-        if (adjust){
-            adjustMedia(entity);
-        }
+        // Update the entity properties
+        changeMedia(entity, properties);
 
         entity->updateToolTip();
+        entity->adjust();
 
+        // Handle UNDO
         if (!undo){
             QnstAddCommand* cmd = new QnstAddCommand(this, entity);
             history.push(cmd);
@@ -2215,7 +2200,8 @@ void QnstView::addMedia(const QString uid, const QString parent, const QMap<QStr
     }
 }
 
-void QnstView::changeMedia(QnstGraphicsMedia* entity, const QMap<QString, QString> properties)
+void QnstView::changeMedia(QnstGraphicsMedia* entity, const QMap<QString, QString> properties,
+                           bool adjust)
 {
    entity->setnstId(properties["id"]);
    entity->setSource(properties["src"]);
@@ -2324,7 +2310,8 @@ void QnstView::changeMedia(QnstGraphicsMedia* entity, const QMap<QString, QStrin
        entity->setIcon(":/icon/media");
    }
 
-   adjustMedia(entity);
+   if(adjust)
+     adjustMedia(entity);
 }
 
 void QnstView::adjustMedia(QnstGraphicsMedia* entity)
