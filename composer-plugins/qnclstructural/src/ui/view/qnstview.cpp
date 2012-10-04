@@ -3256,27 +3256,25 @@ void QnstView::adjustBind(QnstBind* entity)
                 entities.remove(entity->getnstUid());
             }
 
-            /*
-            // removing bind link
-            if (parent->getConditions().contains(entity->getnstUid())){
-                parent->removeCondition(entity);
-            }
-
-            if (parent->getActions().contains(entity->getnstUid())){
-                parent->removeAction(entity);
-            }
-            */
-
             bool invalid = true;
 
             // add bind to link if has a valid type
             if (connectors.contains(parent->getxConnector())){
                 QnstConncetor* connector = connectors[parent->getxConnector()];
 
-
                 foreach(QString type, connector->getConditions()){
-
                     if (type == entity->getRole()){
+                        if (parent->getConditions().contains(entity->getnstUid())){
+                            parent->removeCondition(entity);
+                        }
+
+                        if (parent->getActions().contains(entity->getnstUid())){
+                            parent->removeAction(entity);
+                        }
+
+
+                        parent->addCondition(entity);
+
                         invalid = false;
 
                         break;
@@ -3284,8 +3282,17 @@ void QnstView::adjustBind(QnstBind* entity)
                 }
 
                 foreach(QString type, connector->getActions()){
-
                     if (type == entity->getRole()){
+                        if (parent->getConditions().contains(entity->getnstUid())){
+                            parent->removeCondition(entity);
+                        }
+
+                        if (parent->getActions().contains(entity->getnstUid())){
+                            parent->removeAction(entity);
+                        }
+
+                        parent->addAction(entity);
+
                         invalid = false;
 
                         break;
@@ -3297,6 +3304,7 @@ void QnstView::adjustBind(QnstBind* entity)
             if (parent->getConditions().contains(entity->getnstUid())){
 
                 if (parent->getAggregatorUID() == ""){
+
                     QnstGraphicsEntity* node = (QnstGraphicsEntity*) parent->getnstParent();
 
                     QnstGraphicsAggregator* aggregator = new QnstGraphicsAggregator((QnstGraphicsNode*)node);
@@ -3459,8 +3467,8 @@ void QnstView::adjustBind(QnstBind* entity)
 
             }else if (parent->getActions().contains(entity->getnstUid())){
 
-
                 if (parent->getAggregatorUID() == ""){
+
                     QnstGraphicsEntity* node = (QnstGraphicsEntity*) parent->getnstParent();
 
                     QnstGraphicsAggregator* aggregator = new QnstGraphicsAggregator((QnstGraphicsNode*)node);

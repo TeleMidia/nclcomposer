@@ -229,8 +229,6 @@ void QnstComposerPlugin::onEntityChanged(QString pluginID, Entity *entity)
   {
     QString structuralId = entities.value(entity->getUniqueId());
 
-    qDebug() << "===================" << structuralId;
-
     if(view->hasEntity(structuralId))
     {
       QnstEntity *nstEntity = view->getEntity(structuralId);
