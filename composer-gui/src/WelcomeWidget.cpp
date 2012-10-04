@@ -117,6 +117,22 @@ void WelcomeWidget::notifyMessagesReadData(const QHttpResponseHeader &resp)
   }
   else
   {
+    int min_message_id_to_show = DEFAULT_MIN_MESSAGE_ID_TO_SHOW;
+    int max_notify_messages = DEFAULT_MAX_NOTIFY_MESSAGES;
+
+    // Get settings values
+    ComposerSettings settings;
+    settings.beginGroup("notify_system");
+    if(settings.contains("min_message_id_to_show"))
+        min_message_id_to_show = settings.value("min_message_id_to_show").toInt();
+    else
+        settings.setValue("min_message_id_to_show", min_message_id_to_show);
+
+    if(settings.contains("max_notify_messages"))
+        max_notify_messages = settings.value("max_notify_messages").toInt();
+    else
+        settings.setValue("max_notify_messages", max_notify_messages);
+
     QByteArray bytes = httpNotifyMessages.readAll();
     if (bytes.size())
     {
@@ -125,12 +141,12 @@ void WelcomeWidget::notifyMessagesReadData(const QHttpResponseHeader &resp)
 
       for(int i = 0; i < messages.size(); i++)
       {
-        if( i > MAX_NOTIFY_MESSAGES - 1 ) break;
+        if( i > max_notify_messages - 1 ) break;
         QStringList msgSplittedId = messages[i].split("\t");
 
         if(msgSplittedId.size() >= 2)
         {
-          if( msgSplittedId[0].toInt() >= MIN_MESSAGE_ID_TO_SHOW )
+          if( msgSplittedId[0].toInt() >= min_message_id_to_show )
             messageToShow += msgSplittedId[1];
           else
             break;
