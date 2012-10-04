@@ -44,7 +44,7 @@ macx {
   INSTALLBASE = /Applications
   ICON =  images/Composer.icns
 
-  bases.path = "/Library/Application Support/Composer/Data/"
+  data.path = "/Library/Application Support/Composer/Data/"
 }
 else:unix {
   isEmpty(PREFIX) {
@@ -64,19 +64,15 @@ else:unix {
   icon48.path = $$DATADIR/icons/gnome/48x48/apps
   icon48.files = images/$${TARGET}.png
 
-  bases.path = $$DATADIR/composer
+  data.path = $$DATADIR/composer
 }
 else:win32 {
   INSTALLBASE = "C:/Composer"
 
-  bases.path = $$INSTALLBASE/data
+  data.path = $$INSTALLBASE/data
 }
 
-bases.files = data/defaultConnBase.ncl
-
-#StyleSheets
-style.path = $$bases.path
-style.files = data/style.qss
+data.files = data/defaultConnBase.ncl data/style.qss
 
 DEFINES += EXT_DEFAULT_PATH=\"\\\"$$PREFIX\\\"\"
 DEFINES += STYLE_PATH=\"\\\"$$style.path\\\"\"
@@ -209,10 +205,10 @@ isEmpty(trans.path) {
 TRANSLATIONS += translations/composer_pt_BR.ts \
                 translations/composer_es_ES.ts
 
-INSTALLS += target trans bases
+INSTALLS += target trans data
 
 unix:!macx {
-    INSTALLS += target desktop icon64 icon48 style
+    INSTALLS += target desktop icon64 icon48
 }
 
 OTHER_FILES += LICENSE.LGPL
