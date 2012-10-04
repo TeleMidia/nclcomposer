@@ -75,7 +75,7 @@ else:win32 {
 data.files = data/defaultConnBase.ncl data/style.qss
 
 DEFINES += EXT_DEFAULT_PATH=\"\\\"$$PREFIX\\\"\"
-DEFINES += STYLE_PATH=\"\\\"$$style.path\\\"\"
+DEFINES += STYLE_PATH=\"\\\"$$data.path\\\"\"
 
 unix:!macx {
     target.path = $$INSTALLBASE/bin
