@@ -269,7 +269,7 @@
     </message>
     <message>
         <location filename="../ncl-text-editor/src/NCLTextEditorMainWindow.cpp" line="279"/>
-        <location filename="../ncl-text-editor/src/NCLTextEditorMainWindow.cpp" line="487"/>
+        <location filename="../ncl-text-editor/src/NCLTextEditorMainWindow.cpp" line="505"/>
         <source>&amp;Add child</source>
         <translation>&amp;Adicionar elemento hijo</translation>
     </message>
@@ -279,51 +279,51 @@
         <translation>Buscar...</translation>
     </message>
     <message>
-        <location filename="../ncl-text-editor/src/NCLTextEditorMainWindow.cpp" line="363"/>
         <location filename="../ncl-text-editor/src/NCLTextEditorMainWindow.cpp" line="381"/>
-        <location filename="../ncl-text-editor/src/NCLTextEditorMainWindow.cpp" line="401"/>
-        <location filename="../ncl-text-editor/src/NCLTextEditorMainWindow.cpp" line="433"/>
+        <location filename="../ncl-text-editor/src/NCLTextEditorMainWindow.cpp" line="399"/>
+        <location filename="../ncl-text-editor/src/NCLTextEditorMainWindow.cpp" line="419"/>
+        <location filename="../ncl-text-editor/src/NCLTextEditorMainWindow.cpp" line="451"/>
         <source>Application</source>
         <translation>Aplicación</translation>
     </message>
     <message>
-        <location filename="../ncl-text-editor/src/NCLTextEditorMainWindow.cpp" line="364"/>
+        <location filename="../ncl-text-editor/src/NCLTextEditorMainWindow.cpp" line="382"/>
         <source>The document has been modified.
 Do you want to save your changes?</source>
         <translation>El documento ha sido modificado.
 Desea guardar los cambios realizados?</translation>
     </message>
     <message>
-        <location filename="../ncl-text-editor/src/NCLTextEditorMainWindow.cpp" line="382"/>
+        <location filename="../ncl-text-editor/src/NCLTextEditorMainWindow.cpp" line="400"/>
         <source>Cannot read file %1:
 %2.</source>
         <translation>No se puede leer el archivo %1:
 %2.</translation>
     </message>
     <message>
-        <location filename="../ncl-text-editor/src/NCLTextEditorMainWindow.cpp" line="394"/>
+        <location filename="../ncl-text-editor/src/NCLTextEditorMainWindow.cpp" line="412"/>
         <source>File loaded</source>
         <translation>Achivo Cargado</translation>
     </message>
     <message>
-        <location filename="../ncl-text-editor/src/NCLTextEditorMainWindow.cpp" line="402"/>
+        <location filename="../ncl-text-editor/src/NCLTextEditorMainWindow.cpp" line="420"/>
         <source>Cannot write file %1:
 %2.</source>
         <translation>No se puede escribir el archivo%1:
 %2.</translation>
     </message>
     <message>
-        <location filename="../ncl-text-editor/src/NCLTextEditorMainWindow.cpp" line="414"/>
+        <location filename="../ncl-text-editor/src/NCLTextEditorMainWindow.cpp" line="432"/>
         <source>File saved</source>
         <translation>Archivo guardado</translation>
     </message>
     <message>
-        <location filename="../ncl-text-editor/src/NCLTextEditorMainWindow.cpp" line="433"/>
+        <location filename="../ncl-text-editor/src/NCLTextEditorMainWindow.cpp" line="451"/>
         <source>%1[*] - %2</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../ncl-text-editor/src/NCLTextEditorMainWindow.cpp" line="488"/>
+        <location filename="../ncl-text-editor/src/NCLTextEditorMainWindow.cpp" line="506"/>
         <source>Element name:</source>
         <translation>Nombre del elemento:</translation>
     </message>
@@ -331,32 +331,32 @@ Desea guardar los cambios realizados?</translation>
 <context>
     <name>NCLTextualViewPlugin</name>
     <message>
-        <location filename="../ncl-text-editor/src/NCLTextualViewPlugin.cpp" line="552"/>
+        <location filename="../ncl-text-editor/src/NCLTextualViewPlugin.cpp" line="566"/>
         <source>Error</source>
         <translation>Error</translation>
     </message>
     <message>
-        <location filename="../ncl-text-editor/src/NCLTextualViewPlugin.cpp" line="553"/>
+        <location filename="../ncl-text-editor/src/NCLTextualViewPlugin.cpp" line="567"/>
         <source>Your document is not a Well-formed XML</source>
         <translation>Su documento no es un XML bien estructurado</translation>
     </message>
     <message>
-        <location filename="../ncl-text-editor/src/NCLTextualViewPlugin.cpp" line="643"/>
+        <location filename="../ncl-text-editor/src/NCLTextualViewPlugin.cpp" line="657"/>
         <source>Synchronizing with other plugins...</source>
         <translation>Sincronizando con otros plugins...</translation>
     </message>
     <message>
-        <location filename="../ncl-text-editor/src/NCLTextualViewPlugin.cpp" line="644"/>
+        <location filename="../ncl-text-editor/src/NCLTextualViewPlugin.cpp" line="658"/>
         <source>Cancel</source>
         <translation>Cancelar</translation>
     </message>
     <message>
-        <location filename="../ncl-text-editor/src/NCLTextualViewPlugin.cpp" line="961"/>
+        <location filename="../ncl-text-editor/src/NCLTextualViewPlugin.cpp" line="975"/>
         <source>Textual View synchronization</source>
         <translation>Sincronización -Visión Textual</translation>
     </message>
     <message>
-        <location filename="../ncl-text-editor/src/NCLTextualViewPlugin.cpp" line="962"/>
+        <location filename="../ncl-text-editor/src/NCLTextualViewPlugin.cpp" line="976"/>
         <source>You have changed the textual content of the NCL                                        Document. Do you want to synchronize this text with                                        other views?</source>
         <translation>Usted ha modificado el contenido textual del Documento NCL. Usted desea sincronizar este texto con las otras visiones?</translation>
     </message>
@@ -398,14 +398,18 @@ Desea guardar los cambios realizados?</translation>
         <translation>Nombre del Elemento:</translation>
     </message>
     <message>
-        <location filename="../outline-view/src/NCLTreeWidget.cpp" line="296"/>
+        <location filename="../outline-view/src/NCLTreeWidget.cpp" line="297"/>
         <source>Deleting Element</source>
         <translation>Eliminando Elemento</translation>
     </message>
     <message>
-        <location filename="../outline-view/src/NCLTreeWidget.cpp" line="297"/>
+        <location filename="../outline-view/src/NCLTreeWidget.cpp" line="298"/>
+        <source>Do you really want delete the &quot;%1&quot; element ?</source>
+        <translation>Realmente desea eliminar el elemento %1 ?</translation>
+    </message>
+    <message>
         <source>Do you really want delete the %1 element ?</source>
-        <translation>Usted está seguro que desea eliminar el %1 elemento?</translation>
+        <translation type="obsolete">Usted está seguro que desea eliminar el %1 elemento?</translation>
     </message>
 </context>
 <context>
@@ -546,7 +550,7 @@ Desea guardar los cambios realizados?</translation>
 <context>
     <name>QnlyComposerPlugin</name>
     <message>
-        <location filename="../qncllayout/src/qnlycomposerplugin.cpp" line="1002"/>
+        <location filename="../qncllayout/src/qnlycomposerplugin.cpp" line="1004"/>
         <source>Please, tell what do you want to do</source>
         <translation>Por favor, diga lo que usted desea hacer</translation>
     </message>
@@ -555,27 +559,27 @@ Desea guardar los cambios realizados?</translation>
         <translation type="obsolete">Crear un nuevo descriptor</translation>
     </message>
     <message>
-        <location filename="../qncllayout/src/qnlycomposerplugin.cpp" line="1007"/>
+        <location filename="../qncllayout/src/qnlycomposerplugin.cpp" line="1009"/>
         <source>Use a descriptor</source>
         <translation>Use un descriptor</translation>
     </message>
     <message>
-        <location filename="../qncllayout/src/qnlycomposerplugin.cpp" line="1011"/>
+        <location filename="../qncllayout/src/qnlycomposerplugin.cpp" line="1013"/>
         <source>Import region properties to media object</source>
         <translation>Importar las propiedades de la region para el objeto de media</translation>
     </message>
     <message>
-        <location filename="../qncllayout/src/qnlycomposerplugin.cpp" line="1016"/>
+        <location filename="../qncllayout/src/qnlycomposerplugin.cpp" line="1018"/>
         <source>Nothing!</source>
         <translation>Nada!</translation>
     </message>
     <message>
-        <location filename="../qncllayout/src/qnlycomposerplugin.cpp" line="1047"/>
+        <location filename="../qncllayout/src/qnlycomposerplugin.cpp" line="1049"/>
         <source>Descriptor id:</source>
         <translation>Id de Descriptor</translation>
     </message>
     <message>
-        <location filename="../qncllayout/src/qnlycomposerplugin.cpp" line="1048"/>
+        <location filename="../qncllayout/src/qnlycomposerplugin.cpp" line="1050"/>
         <source>Please, enter the descriptor id</source>
         <translation>Por favor, ingrese el id de descriptor</translation>
     </message>
@@ -596,125 +600,130 @@ Desea guardar los cambios realizados?</translation>
 <context>
     <name>QnlyGraphicsRegion</name>
     <message>
-        <location filename="../qncllayout/src/ui/view/qnlygraphicsregion.cpp" line="598"/>
+        <location filename="../qncllayout/src/ui/view/qnlygraphicsregion.cpp" line="612"/>
         <source>View</source>
         <translation>Visión</translation>
     </message>
     <message>
-        <location filename="../qncllayout/src/ui/view/qnlygraphicsregion.cpp" line="610"/>
+        <location filename="../qncllayout/src/ui/view/qnlygraphicsregion.cpp" line="624"/>
         <source>Insert</source>
         <translation>Insertar</translation>
     </message>
     <message>
-        <location filename="../qncllayout/src/ui/view/qnlygraphicsregion.cpp" line="619"/>
+        <location filename="../qncllayout/src/ui/view/qnlygraphicsregion.cpp" line="633"/>
         <source>Show</source>
         <translation>Mostrar</translation>
     </message>
     <message>
-        <location filename="../qncllayout/src/ui/view/qnlygraphicsregion.cpp" line="625"/>
+        <location filename="../qncllayout/src/ui/view/qnlygraphicsregion.cpp" line="639"/>
         <source>Arrange</source>
         <translation>Organizar</translation>
+    </message>
+    <message>
+        <location filename="../qncllayout/src/ui/view/qnlygraphicsregion.cpp" line="714"/>
+        <source>Images (*.png)</source>
+        <translation>Imágenes(*.png)</translation>
     </message>
 </context>
 <context>
     <name>QnlyGraphicsRegion::QnlyGraphicsRegion</name>
     <message>
-        <location filename="../qncllayout/src/ui/view/qnlygraphicsregion.cpp" line="455"/>
+        <location filename="../qncllayout/src/ui/view/qnlygraphicsregion.cpp" line="461"/>
         <source>Help</source>
         <translation>Ayuda</translation>
     </message>
     <message>
-        <location filename="../qncllayout/src/ui/view/qnlygraphicsregion.cpp" line="462"/>
+        <location filename="../qncllayout/src/ui/view/qnlygraphicsregion.cpp" line="468"/>
         <source>Undo</source>
         <translation>Deshacer</translation>
     </message>
     <message>
-        <location filename="../qncllayout/src/ui/view/qnlygraphicsregion.cpp" line="469"/>
+        <location filename="../qncllayout/src/ui/view/qnlygraphicsregion.cpp" line="475"/>
         <source>Redo</source>
         <translation>Rehacer</translation>
     </message>
     <message>
-        <location filename="../qncllayout/src/ui/view/qnlygraphicsregion.cpp" line="476"/>
+        <location filename="../qncllayout/src/ui/view/qnlygraphicsregion.cpp" line="482"/>
         <source>Cut</source>
         <translation>Cortar</translation>
     </message>
     <message>
-        <location filename="../qncllayout/src/ui/view/qnlygraphicsregion.cpp" line="483"/>
+        <location filename="../qncllayout/src/ui/view/qnlygraphicsregion.cpp" line="489"/>
         <source>Copy</source>
         <translation>Copiar</translation>
     </message>
     <message>
-        <location filename="../qncllayout/src/ui/view/qnlygraphicsregion.cpp" line="490"/>
+        <location filename="../qncllayout/src/ui/view/qnlygraphicsregion.cpp" line="496"/>
         <source>Paste</source>
         <translation>Pegar</translation>
     </message>
     <message>
-        <location filename="../qncllayout/src/ui/view/qnlygraphicsregion.cpp" line="497"/>
+        <location filename="../qncllayout/src/ui/view/qnlygraphicsregion.cpp" line="503"/>
         <source>Delete</source>
         <translation>Eliminar</translation>
     </message>
     <message>
-        <location filename="../qncllayout/src/ui/view/qnlygraphicsregion.cpp" line="504"/>
+        <location filename="../qncllayout/src/ui/view/qnlygraphicsregion.cpp" line="510"/>
         <source>Zoom In</source>
         <translation>Zoom in </translation>
     </message>
     <message>
-        <location filename="../qncllayout/src/ui/view/qnlygraphicsregion.cpp" line="511"/>
+        <location filename="../qncllayout/src/ui/view/qnlygraphicsregion.cpp" line="517"/>
         <source>Zoom Out</source>
         <translation>Zoom Out</translation>
     </message>
     <message>
-        <location filename="../qncllayout/src/ui/view/qnlygraphicsregion.cpp" line="518"/>
+        <location filename="../qncllayout/src/ui/view/qnlygraphicsregion.cpp" line="524"/>
         <source>Reset</source>
         <translation>Resetear</translation>
     </message>
     <message>
-        <location filename="../qncllayout/src/ui/view/qnlygraphicsregion.cpp" line="525"/>
+        <location filename="../qncllayout/src/ui/view/qnlygraphicsregion.cpp" line="531"/>
         <source>Full Screen</source>
         <translation>Pantalla Completa</translation>
     </message>
     <message>
-        <location filename="../qncllayout/src/ui/view/qnlygraphicsregion.cpp" line="532"/>
+        <location filename="../qncllayout/src/ui/view/qnlygraphicsregion.cpp" line="538"/>
         <source>Export...</source>
         <translation>Exportar...</translation>
     </message>
     <message>
-        <location filename="../qncllayout/src/ui/view/qnlygraphicsregion.cpp" line="538"/>
+        <location filename="../qncllayout/src/ui/view/qnlygraphicsregion.cpp" line="544"/>
         <source>Region</source>
         <translation>Region</translation>
     </message>
     <message>
-        <location filename="../qncllayout/src/ui/view/qnlygraphicsregion.cpp" line="544"/>
+        <location filename="../qncllayout/src/ui/view/qnlygraphicsregion.cpp" line="550"/>
         <source>Regionbase</source>
         <translation>Regionbase</translation>
     </message>
     <message>
-        <location filename="../qncllayout/src/ui/view/qnlygraphicsregion.cpp" line="550"/>
+        <location filename="../qncllayout/src/ui/view/qnlygraphicsregion.cpp" line="556"/>
         <source>Bring to Front</source>
         <translation>Traer al frente</translation>
     </message>
     <message>
-        <location filename="../qncllayout/src/ui/view/qnlygraphicsregion.cpp" line="557"/>
+        <location filename="../qncllayout/src/ui/view/qnlygraphicsregion.cpp" line="563"/>
         <source>Bring Forward</source>
         <translation>Traer hacia adelante</translation>
     </message>
     <message>
-        <location filename="../qncllayout/src/ui/view/qnlygraphicsregion.cpp" line="564"/>
+        <location filename="../qncllayout/src/ui/view/qnlygraphicsregion.cpp" line="570"/>
         <source>Send Backward</source>
         <translation>Enviar atrás</translation>
     </message>
     <message>
-        <location filename="../qncllayout/src/ui/view/qnlygraphicsregion.cpp" line="571"/>
+        <location filename="../qncllayout/src/ui/view/qnlygraphicsregion.cpp" line="577"/>
         <source>Send to Back</source>
         <translation>Enviar al fondo</translation>
     </message>
     <message>
-        <location filename="../qncllayout/src/ui/view/qnlygraphicsregion.cpp" line="578"/>
+        <location filename="../qncllayout/src/ui/view/qnlygraphicsregion.cpp" line="584"/>
         <source>Hide</source>
         <translation>Esconder</translation>
     </message>
     <message>
-        <location filename="../qncllayout/src/ui/view/qnlygraphicsregion.cpp" line="584"/>
+        <location filename="../qncllayout/src/ui/view/qnlygraphicsregion.cpp" line="590"/>
         <source>Properties</source>
         <translation>Propiedades</translation>
     </message>
@@ -722,165 +731,175 @@ Desea guardar los cambios realizados?</translation>
 <context>
     <name>QnlyGraphicsRegionBase</name>
     <message>
-        <location filename="../qncllayout/src/ui/view/qnlygraphicsregionbase.cpp" line="543"/>
+        <location filename="../qncllayout/src/ui/view/qnlygraphicsregionbase.cpp" line="558"/>
         <source>View</source>
         <translation>Visión</translation>
     </message>
     <message>
-        <location filename="../qncllayout/src/ui/view/qnlygraphicsregionbase.cpp" line="555"/>
+        <location filename="../qncllayout/src/ui/view/qnlygraphicsregionbase.cpp" line="570"/>
         <source>Insert</source>
         <translation>Insertar</translation>
     </message>
     <message>
-        <location filename="../qncllayout/src/ui/view/qnlygraphicsregionbase.cpp" line="564"/>
+        <location filename="../qncllayout/src/ui/view/qnlygraphicsregionbase.cpp" line="579"/>
         <source>Show</source>
         <translation>Mostrar</translation>
     </message>
     <message>
-        <location filename="../qncllayout/src/ui/view/qnlygraphicsregionbase.cpp" line="570"/>
+        <location filename="../qncllayout/src/ui/view/qnlygraphicsregionbase.cpp" line="587"/>
         <source>Arrange</source>
         <translation>Organizar</translation>
     </message>
     <message>
-        <location filename="../qncllayout/src/ui/view/qnlygraphicsregionbase.cpp" line="581"/>
+        <location filename="../qncllayout/src/ui/view/qnlygraphicsregionbase.cpp" line="598"/>
         <source>Screen Size</source>
         <translation>Tamaño de la Pantalla</translation>
+    </message>
+    <message>
+        <location filename="../qncllayout/src/ui/view/qnlygraphicsregionbase.cpp" line="1097"/>
+        <source>Images (*.png)</source>
+        <translation>Imágenes(*.png)</translation>
     </message>
 </context>
 <context>
     <name>QnlyGraphicsRegionBase::QnlyGraphicsRegionBase</name>
     <message>
-        <location filename="../qncllayout/src/ui/view/qnlygraphicsregionbase.cpp" line="356"/>
+        <location filename="../qncllayout/src/ui/view/qnlygraphicsregionbase.cpp" line="364"/>
         <source>Help</source>
         <translation>Ayuda</translation>
     </message>
     <message>
-        <location filename="../qncllayout/src/ui/view/qnlygraphicsregionbase.cpp" line="363"/>
+        <location filename="../qncllayout/src/ui/view/qnlygraphicsregionbase.cpp" line="371"/>
         <source>Undo</source>
         <translation>Deshacer</translation>
     </message>
     <message>
-        <location filename="../qncllayout/src/ui/view/qnlygraphicsregionbase.cpp" line="370"/>
+        <location filename="../qncllayout/src/ui/view/qnlygraphicsregionbase.cpp" line="378"/>
         <source>Redo</source>
         <translation>Rehacer </translation>
     </message>
     <message>
-        <location filename="../qncllayout/src/ui/view/qnlygraphicsregionbase.cpp" line="377"/>
+        <location filename="../qncllayout/src/ui/view/qnlygraphicsregionbase.cpp" line="385"/>
         <source>Cut</source>
         <translation>Cortar</translation>
     </message>
     <message>
-        <location filename="../qncllayout/src/ui/view/qnlygraphicsregionbase.cpp" line="384"/>
+        <location filename="../qncllayout/src/ui/view/qnlygraphicsregionbase.cpp" line="392"/>
         <source>Copy</source>
         <translation>Copiar</translation>
     </message>
     <message>
-        <location filename="../qncllayout/src/ui/view/qnlygraphicsregionbase.cpp" line="391"/>
+        <location filename="../qncllayout/src/ui/view/qnlygraphicsregionbase.cpp" line="399"/>
         <source>Paste</source>
         <translation>Pegar</translation>
     </message>
     <message>
-        <location filename="../qncllayout/src/ui/view/qnlygraphicsregionbase.cpp" line="398"/>
+        <location filename="../qncllayout/src/ui/view/qnlygraphicsregionbase.cpp" line="406"/>
         <source>Delete</source>
         <translation>Eliminar</translation>
     </message>
     <message>
-        <location filename="../qncllayout/src/ui/view/qnlygraphicsregionbase.cpp" line="405"/>
+        <location filename="../qncllayout/src/ui/view/qnlygraphicsregionbase.cpp" line="413"/>
         <source>Zoom In</source>
         <translation>Zoom in </translation>
     </message>
     <message>
-        <location filename="../qncllayout/src/ui/view/qnlygraphicsregionbase.cpp" line="412"/>
+        <location filename="../qncllayout/src/ui/view/qnlygraphicsregionbase.cpp" line="420"/>
         <source>Zoom Out</source>
         <translation>Zoom Out</translation>
     </message>
     <message>
-        <location filename="../qncllayout/src/ui/view/qnlygraphicsregionbase.cpp" line="419"/>
+        <location filename="../qncllayout/src/ui/view/qnlygraphicsregionbase.cpp" line="427"/>
         <source>Reset</source>
         <translation>Resetear</translation>
     </message>
     <message>
-        <location filename="../qncllayout/src/ui/view/qnlygraphicsregionbase.cpp" line="426"/>
+        <location filename="../qncllayout/src/ui/view/qnlygraphicsregionbase.cpp" line="434"/>
         <source>Full Screen</source>
         <translation>Pantalla Completa</translation>
     </message>
     <message>
-        <location filename="../qncllayout/src/ui/view/qnlygraphicsregionbase.cpp" line="433"/>
+        <location filename="../qncllayout/src/ui/view/qnlygraphicsregionbase.cpp" line="441"/>
         <source>Export...</source>
         <translation>Exportar...</translation>
     </message>
     <message>
-        <location filename="../qncllayout/src/ui/view/qnlygraphicsregionbase.cpp" line="439"/>
+        <location filename="../qncllayout/src/ui/view/qnlygraphicsregionbase.cpp" line="447"/>
         <source>Region</source>
         <translation>Region</translation>
     </message>
     <message>
-        <location filename="../qncllayout/src/ui/view/qnlygraphicsregionbase.cpp" line="445"/>
+        <location filename="../qncllayout/src/ui/view/qnlygraphicsregionbase.cpp" line="453"/>
         <source>Regionbase</source>
         <translation>Regionbase</translation>
     </message>
     <message>
-        <location filename="../qncllayout/src/ui/view/qnlygraphicsregionbase.cpp" line="451"/>
+        <location filename="../qncllayout/src/ui/view/qnlygraphicsregionbase.cpp" line="459"/>
         <source>Bring to Front</source>
         <translation>Traer al frente</translation>
     </message>
     <message>
-        <location filename="../qncllayout/src/ui/view/qnlygraphicsregionbase.cpp" line="458"/>
+        <location filename="../qncllayout/src/ui/view/qnlygraphicsregionbase.cpp" line="466"/>
         <source>Bring Forward</source>
         <translation>Traer hacia adelante</translation>
     </message>
     <message>
-        <location filename="../qncllayout/src/ui/view/qnlygraphicsregionbase.cpp" line="465"/>
+        <location filename="../qncllayout/src/ui/view/qnlygraphicsregionbase.cpp" line="473"/>
         <source>Send Backward</source>
         <translation>Enviar atrás</translation>
     </message>
     <message>
-        <location filename="../qncllayout/src/ui/view/qnlygraphicsregionbase.cpp" line="472"/>
+        <location filename="../qncllayout/src/ui/view/qnlygraphicsregionbase.cpp" line="480"/>
         <source>Send to Back</source>
         <translation>Enviar al Fondo</translation>
     </message>
     <message>
-        <location filename="../qncllayout/src/ui/view/qnlygraphicsregionbase.cpp" line="478"/>
+        <location filename="../qncllayout/src/ui/view/qnlygraphicsregionbase.cpp" line="486"/>
         <source>640x480 (4:3)</source>
         <translation>640x480 (4:3)</translation>
     </message>
     <message>
-        <location filename="../qncllayout/src/ui/view/qnlygraphicsregionbase.cpp" line="483"/>
+        <location filename="../qncllayout/src/ui/view/qnlygraphicsregionbase.cpp" line="491"/>
         <source>800x600 (4:3)</source>
         <translation>800x600 (4:3)</translation>
     </message>
     <message>
-        <location filename="../qncllayout/src/ui/view/qnlygraphicsregionbase.cpp" line="488"/>
+        <location filename="../qncllayout/src/ui/view/qnlygraphicsregionbase.cpp" line="496"/>
         <source>1024x768 (4:3)</source>
         <translation>1024x768 (4:3)</translation>
     </message>
     <message>
-        <location filename="../qncllayout/src/ui/view/qnlygraphicsregionbase.cpp" line="493"/>
+        <location filename="../qncllayout/src/ui/view/qnlygraphicsregionbase.cpp" line="501"/>
         <source>854x480 (16:9)</source>
         <translation>854x480 (16:9)</translation>
     </message>
     <message>
-        <location filename="../qncllayout/src/ui/view/qnlygraphicsregionbase.cpp" line="498"/>
+        <location filename="../qncllayout/src/ui/view/qnlygraphicsregionbase.cpp" line="506"/>
         <source>1280x720 (16:9)</source>
         <translation>1280x720 (16:9)</translation>
     </message>
     <message>
-        <location filename="../qncllayout/src/ui/view/qnlygraphicsregionbase.cpp" line="503"/>
+        <location filename="../qncllayout/src/ui/view/qnlygraphicsregionbase.cpp" line="511"/>
         <source>1920x1080 (16:9)</source>
         <translation>1920x1080 (16:9)</translation>
     </message>
     <message>
-        <location filename="../qncllayout/src/ui/view/qnlygraphicsregionbase.cpp" line="508"/>
+        <location filename="../qncllayout/src/ui/view/qnlygraphicsregionbase.cpp" line="516"/>
         <source>320x400 (4:5)</source>
         <translation>320x400 (4:5)</translation>
     </message>
     <message>
-        <location filename="../qncllayout/src/ui/view/qnlygraphicsregionbase.cpp" line="514"/>
+        <location filename="../qncllayout/src/ui/view/qnlygraphicsregionbase.cpp" line="522"/>
         <source>Hide</source>
         <translation>Esconder</translation>
     </message>
     <message>
-        <location filename="../qncllayout/src/ui/view/qnlygraphicsregionbase.cpp" line="520"/>
+        <location filename="../qncllayout/src/ui/view/qnlygraphicsregionbase.cpp" line="527"/>
+        <source>Grid</source>
+        <translation>cuadrícula</translation>
+    </message>
+    <message>
+        <location filename="../qncllayout/src/ui/view/qnlygraphicsregionbase.cpp" line="535"/>
         <source>Properties</source>
         <translation>Propiedades</translation>
     </message>
@@ -988,27 +1007,27 @@ Desea guardar los cambios realizados?</translation>
         <translation>Propiedades</translation>
     </message>
     <message>
-        <location filename="../qncllayout/src/ui/view/qnlyview.cpp" line="186"/>
+        <location filename="../qncllayout/src/ui/view/qnlyview.cpp" line="188"/>
         <source>View</source>
         <translation>Visión</translation>
     </message>
     <message>
-        <location filename="../qncllayout/src/ui/view/qnlyview.cpp" line="198"/>
+        <location filename="../qncllayout/src/ui/view/qnlyview.cpp" line="200"/>
         <source>Insert</source>
         <translation>Insertar</translation>
     </message>
     <message>
-        <location filename="../qncllayout/src/ui/view/qnlyview.cpp" line="206"/>
+        <location filename="../qncllayout/src/ui/view/qnlyview.cpp" line="208"/>
         <source>Show</source>
         <translation>Mostrar</translation>
     </message>
     <message>
-        <location filename="../qncllayout/src/ui/view/qnlyview.cpp" line="212"/>
+        <location filename="../qncllayout/src/ui/view/qnlyview.cpp" line="214"/>
         <source>Arrange</source>
         <translation>Organizar</translation>
     </message>
     <message>
-        <location filename="../qncllayout/src/ui/view/qnlyview.cpp" line="223"/>
+        <location filename="../qncllayout/src/ui/view/qnlyview.cpp" line="225"/>
         <source>Switch</source>
         <translation>Cambiar</translation>
     </message>
@@ -1016,12 +1035,12 @@ Desea guardar los cambios realizados?</translation>
 <context>
     <name>QnstComposerPluginFactory</name>
     <message>
-        <location filename="../qnclstructural/src/qnstcomposerpluginfactory.cpp" line="47"/>
+        <location filename="../qnclstructural/src/qnstcomposerpluginfactory.cpp" line="52"/>
         <source>Structural View</source>
         <translation>Visión Estructural</translation>
     </message>
     <message>
-        <location filename="../qnclstructural/src/qnstcomposerpluginfactory.h" line="82"/>
+        <location filename="../qnclstructural/src/qnstcomposerpluginfactory.h" line="86"/>
         <source>Structural View enable the user to edit the logical structure of a NCL document visually.</source>
         <translation>La Visión Estructural permite al usuario editar la estructura lógica de un documento NCL. </translation>
     </message>
@@ -1113,12 +1132,12 @@ Desea guardar los cambios realizados?</translation>
         <translation>Conector:</translation>
     </message>
     <message>
-        <location filename="../qnclstructural/src/ui/view/QnstGraphicsLinkForm.ui" line="49"/>
+        <location filename="../qnclstructural/src/ui/view/QnstGraphicsLinkForm.ui" line="46"/>
         <source>Condition:</source>
         <translation>Condición:</translation>
     </message>
     <message>
-        <location filename="../qnclstructural/src/ui/view/QnstGraphicsLinkForm.ui" line="66"/>
+        <location filename="../qnclstructural/src/ui/view/QnstGraphicsLinkForm.ui" line="63"/>
         <source>Action:</source>
         <translation>Acción:</translation>
     </message>
@@ -1334,32 +1353,32 @@ Desea guardar los cambios realizados?</translation>
 <context>
     <name>QnstView</name>
     <message>
-        <location filename="../qnclstructural/src/ui/view/qnstview.cpp" line="4946"/>
+        <location filename="../qnclstructural/src/ui/view/qnstview.cpp" line="5084"/>
         <source>Copy</source>
         <translation>Copiar</translation>
     </message>
     <message>
-        <location filename="../qnclstructural/src/ui/view/qnstview.cpp" line="4947"/>
+        <location filename="../qnclstructural/src/ui/view/qnstview.cpp" line="5085"/>
         <source>Would you like to make a reference instead?</source>
         <translation>Le gustaria hacer una referencia en lugar de?</translation>
     </message>
     <message>
-        <location filename="../qnclstructural/src/ui/view/qnstview.cpp" line="4948"/>
+        <location filename="../qnclstructural/src/ui/view/qnstview.cpp" line="5086"/>
         <source>Cancel</source>
         <translation>Cancelar</translation>
     </message>
     <message>
-        <location filename="../qnclstructural/src/ui/view/qnstview.cpp" line="4949"/>
+        <location filename="../qnclstructural/src/ui/view/qnstview.cpp" line="5087"/>
         <source>No</source>
         <translation>No</translation>
     </message>
     <message>
-        <location filename="../qnclstructural/src/ui/view/qnstview.cpp" line="4950"/>
+        <location filename="../qnclstructural/src/ui/view/qnstview.cpp" line="5088"/>
         <source>Yes</source>
         <translation>Si</translation>
     </message>
     <message>
-        <location filename="../qnclstructural/src/ui/view/qnstview.cpp" line="5860"/>
+        <location filename="../qnclstructural/src/ui/view/qnstview.cpp" line="5998"/>
         <source>Images (*.png)</source>
         <translation>Imágenes(*.png)</translation>
     </message>
@@ -1388,7 +1407,7 @@ Desea guardar los cambios realizados?</translation>
 <context>
     <name>SearchLineEdit</name>
     <message>
-        <location filename="../ncl-text-editor/src/SearchLineEdit.cpp" line="36"/>
+        <location filename="../ncl-text-editor/src/SearchLineEdit.cpp" line="38"/>
         <source>Search</source>
         <translation>Buscar</translation>
     </message>
