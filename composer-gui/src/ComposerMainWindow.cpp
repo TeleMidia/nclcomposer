@@ -59,16 +59,6 @@ ComposerMainWindow::ComposerMainWindow(QApplication &app, QWidget *parent)
   initModules();
   app.processEvents();
 
-  splash.showMessage(tr("Reloading last session..."), Qt::AlignRight,
-                      Qt::gray);
-  readSettings();
-  app.processEvents();
-
-  splash.finish(this);
-  connect(&app, SIGNAL(focusChanged(QWidget *, QWidget *)),
-          this, SLOT(focusChanged(QWidget *, QWidget *)),
-          Qt::DirectConnection);
-
   // Local Ginga Run
   localGingaProcess = new QProcess(this);
   connect(localGingaProcess, SIGNAL(finished(int)),
@@ -98,6 +88,16 @@ ComposerMainWindow::ComposerMainWindow(QApplication &app, QWidget *parent)
           this, SLOT(autoSaveCurrentProjects()));
 
   autoSaveTimer->start(autoSaveInterval);
+
+  splash.showMessage(tr("Reloading last session..."), Qt::AlignRight,
+                      Qt::gray);
+  readSettings();
+  app.processEvents();
+
+  splash.finish(this);
+  connect(&app, SIGNAL(focusChanged(QWidget *, QWidget *)),
+          this, SLOT(focusChanged(QWidget *, QWidget *)),
+          Qt::DirectConnection);
 }
 
 ComposerMainWindow::~ComposerMainWindow()
