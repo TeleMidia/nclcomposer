@@ -58,11 +58,29 @@ else:unix {
   desktop.path = $$DATADIR/applications/
   desktop.files = data/$${TARGET}.desktop
 
-  icon64.path = $$DATADIR/icons/gnome/64x64/apps
-  icon64.files = images/$${TARGET}.png
+  icon256.files = images/256x256/$${TARGET}.png
+  icon256.path = $$DATADIR/icons/gnome/256x256/apps
+  
+  icon128.files = images/128x128/$${TARGET}.png
+  icon128.path = $$DATADIR/icons/gnome/128x128/apps
 
-  icon48.path = $$DATADIR/icons/gnome/48x48/apps
-  icon48.files = images/$${TARGET}.png
+  icon64.files = images/64x64/$${TARGET}.png
+  icon64.path = $$DATADIR/icons/gnome/64x64/apps
+	
+	icon48.path = $$DATADIR/icons/gnome/48x48/apps
+  icon48.files = images/48x48/$${TARGET}.png
+
+	icon32.path = $$DATADIR/icons/gnome/32x32/apps
+  icon32.files = images/32x32/$${TARGET}.png
+
+	icon24.path = $$DATADIR/icons/gnome/24x24/apps
+  icon24.files = images/24x24/$${TARGET}.png
+
+	icon22.path = $$DATADIR/icons/gnome/22x22/apps
+  icon22.files = images/22x22/$${TARGET}.png
+
+	icon16.path = $$DATADIR/icons/gnome/16x16/apps
+  icon24.files = images/16x16/$${TARGET}.png
 
   data.path = $$DATADIR/composer
 }
@@ -208,7 +226,8 @@ TRANSLATIONS += translations/composer_pt_BR.ts \
 INSTALLS += target trans data
 
 unix:!macx {
-    INSTALLS += target desktop icon64 icon48
+    INSTALLS += target desktop
+		INSTALLS += icon256 icon128 icon64 icon48 icon32 icon24 icon22 icon16
 }
 
 OTHER_FILES += LICENSE.LGPL
