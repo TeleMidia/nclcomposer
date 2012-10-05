@@ -18,12 +18,12 @@ else {
 
 #WHAT FEATURES TO COMPILE?
 #CONFIG += clubencl
-#CONFIG += runssh_on
+CONFIG += runssh_on
 CONFIG += help
 QT += core xml network webkit
 
 #VERSION INFORMATION
-DEFINES += NCLCOMPOSER_GUI_VERSION=\"\\\"0.1.1\\\"\"
+DEFINES += NCLCOMPOSER_GUI_VERSION=\"\\\"0.1.2\\\"\"
 DEFINES += BUILD_DATE=\"\\\"$${_DATE_}\"\\\"
 #DEFINES += WITH_TEST_VERSION_MESSAGE=\"\\\"1\\\"\"
 
