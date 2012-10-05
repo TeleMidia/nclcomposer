@@ -11,7 +11,7 @@
 export PREFIX=/usr
 QMAKE = qmake FORCERELEASE=true
 
-APPNAME := composer
+APPNAME := nclcomposer
 builddir:
 	mkdir -p builddir
 
