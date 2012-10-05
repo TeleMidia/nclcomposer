@@ -11,7 +11,7 @@
     <message>
         <location filename="../debug-console/include/DebugConsoleFactory.h" line="96"/>
         <source>Debug Console View prints all the  messages send by composer-core to plugins.</source>
-        <translation>La Vista de Consola de Depuración imprime todos los mensajes enviados por composer-core a plugins</translation>
+        <translation>La Vista de Consola de Depuración imprime todos los mensajes enviados por composer-core a plugins.</translation>
     </message>
     <message>
         <location filename="../debug-console/include/DebugConsoleFactory.h" line="101"/>
@@ -215,7 +215,7 @@
     <message>
         <location filename="../ncl-text-editor/src/NCLTextEditorMainWindow.cpp" line="191"/>
         <source>Edit Preferences related to editors.</source>
-        <translation>Editar Preferencias relacionadas con los editores</translation>
+        <translation>Editar Preferencias relacionadas con los editores.</translation>
     </message>
     <message>
         <location filename="../ncl-text-editor/src/NCLTextEditorMainWindow.cpp" line="197"/>
@@ -371,7 +371,7 @@ Desea guardar los cambios realizados?</translation>
     <message>
         <location filename="../ncl-text-editor/include/NCLTextualViewPluginFactory.h" line="100"/>
         <source>NCL Textual plugin enable the user to edit the application directly through its source code. Additionally, this plugin brings features like code coloring and autocomplete.</source>
-        <translation>El Plugin Textual NCL permite al usuario editar directamente la aplicación a través de su código fuente. Adicionalmente, este plugin trae características como colorear código y autocompletar </translation>
+        <translation>El Plugin Textual NCL permite al usuario editar directamente la aplicación a través de su código fuente. Adicionalmente, este plugin trae características como colorear código y autocompletar.</translation>
     </message>
 </context>
 <context>
@@ -430,7 +430,7 @@ Desea guardar los cambios realizados?</translation>
     <message>
         <location filename="../outline-view/include/OutlineViewFactory.h" line="113"/>
         <source>Outline View enables the user navigates in the project as a tree.</source>
-        <translation>La Visión de Esquema permite al usuario navegar en el proyecto como un árbol</translation>
+        <translation>La Visión de Esquema permite al usuario navegar en el proyecto como un árbol.</translation>
     </message>
     <message>
         <location filename="../outline-view/src/OutlineViewFactory.cpp" line="47"/>
@@ -497,7 +497,7 @@ Desea guardar los cambios realizados?</translation>
         <location filename="../outline-view/src/NCLParser.cpp" line="79"/>
         <source>Parse error at line %1, column %2:
 %3.</source>
-        <translation>Analizar error en la línea %1, columna %2:</translation>
+        <translation>Analizar error en la línea %1, columna %2: %3.</translation>
     </message>
     <message>
         <location filename="../outline-view/src/NCLTreeWidget.cpp" line="37"/>
@@ -576,7 +576,7 @@ Desea guardar los cambios realizados?</translation>
     <message>
         <location filename="../qncllayout/src/qnlycomposerplugin.cpp" line="1049"/>
         <source>Descriptor id:</source>
-        <translation>Id de Descriptor</translation>
+        <translation>Id de Descriptor:</translation>
     </message>
     <message>
         <location filename="../qncllayout/src/qnlycomposerplugin.cpp" line="1050"/>
@@ -594,7 +594,7 @@ Desea guardar los cambios realizados?</translation>
     <message>
         <location filename="../qncllayout/src/qnlycomposerpluginfactory.h" line="82"/>
         <source>Layout View enable the user to edit the NCL regions visually.</source>
-        <translation>Visión de Layout permite al usuario editar de forma gráfica las regiones NCL</translation>
+        <translation>Visión de Layout permite al usuario editar de forma gráfica las regiones NCL.</translation>
     </message>
 </context>
 <context>
@@ -756,7 +756,7 @@ Desea guardar los cambios realizados?</translation>
         <translation>Tamaño de la Pantalla</translation>
     </message>
     <message>
-        <location filename="../qncllayout/src/ui/view/qnlygraphicsregionbase.cpp" line="1097"/>
+        <location filename="../qncllayout/src/ui/view/qnlygraphicsregionbase.cpp" line="1098"/>
         <source>Images (*.png)</source>
         <translation>Imágenes(*.png)</translation>
     </message>
@@ -1353,32 +1353,32 @@ Desea guardar los cambios realizados?</translation>
 <context>
     <name>QnstView</name>
     <message>
-        <location filename="../qnclstructural/src/ui/view/qnstview.cpp" line="5084"/>
+        <location filename="../qnclstructural/src/ui/view/qnstview.cpp" line="5071"/>
         <source>Copy</source>
         <translation>Copiar</translation>
     </message>
     <message>
-        <location filename="../qnclstructural/src/ui/view/qnstview.cpp" line="5085"/>
+        <location filename="../qnclstructural/src/ui/view/qnstview.cpp" line="5072"/>
         <source>Would you like to make a reference instead?</source>
         <translation>Le gustaria hacer una referencia en lugar de?</translation>
     </message>
     <message>
-        <location filename="../qnclstructural/src/ui/view/qnstview.cpp" line="5086"/>
+        <location filename="../qnclstructural/src/ui/view/qnstview.cpp" line="5073"/>
         <source>Cancel</source>
         <translation>Cancelar</translation>
     </message>
     <message>
-        <location filename="../qnclstructural/src/ui/view/qnstview.cpp" line="5087"/>
+        <location filename="../qnclstructural/src/ui/view/qnstview.cpp" line="5074"/>
         <source>No</source>
         <translation>No</translation>
     </message>
     <message>
-        <location filename="../qnclstructural/src/ui/view/qnstview.cpp" line="5088"/>
+        <location filename="../qnclstructural/src/ui/view/qnstview.cpp" line="5075"/>
         <source>Yes</source>
         <translation>Si</translation>
     </message>
     <message>
-        <location filename="../qnclstructural/src/ui/view/qnstview.cpp" line="5998"/>
+        <location filename="../qnclstructural/src/ui/view/qnstview.cpp" line="5985"/>
         <source>Images (*.png)</source>
         <translation>Imágenes(*.png)</translation>
     </message>
@@ -1442,7 +1442,7 @@ Desea guardar los cambios realizados?</translation>
     <message>
         <location filename="../ncl-text-editor/ui/TextualPluginPreferencesWidget.ui" line="71"/>
         <source>Font</source>
-        <translation>Fuente:</translation>
+        <translation>Fuente</translation>
     </message>
     <message>
         <location filename="../ncl-text-editor/ui/TextualPluginPreferencesWidget.ui" line="80"/>
