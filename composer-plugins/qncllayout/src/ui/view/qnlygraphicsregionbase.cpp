@@ -1015,6 +1015,7 @@ void QnlyGraphicsRegionBase::perform640x480()
 {
     setSceneRect(0,0,640,480);
     bgrect->setRect(0,0,640,480);
+    grid->setRect(0,0,640,480);
 
     foreach(QnlyGraphicsRegion* r, regions.values()){
         r->adjust();
