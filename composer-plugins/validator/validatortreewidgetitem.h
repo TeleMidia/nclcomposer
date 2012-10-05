@@ -2,7 +2,7 @@
 #define VALIDATORTREEWIDGETITEM_H
 
 #include <QTreeWidgetItem>
-#include <composer/core/model/Entity.h>
+#include <model/Entity.h>
 
 using namespace composer::core::model;
 
