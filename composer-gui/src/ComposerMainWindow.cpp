@@ -1368,9 +1368,14 @@ void ComposerMainWindow::runOnRemoteGingaVM()
 
 void ComposerMainWindow::stopNCL()
 {
+  if(localGingaProcess->state() == QProcess::Running)
+      localGingaProcess->close();
+
 #ifdef WITH_LIBSSH2
-  stopRemoteGingaVMAction.stopRunningApplication();
+  if(runRemoteGingaVMThread.isRunning())
+    stopRemoteGingaVMAction.stopRunningApplication();
 #endif
+
   updateRunActions();
 }
 
@@ -1727,7 +1732,7 @@ void ComposerMainWindow::userPressedRecentProject(QString src)
         QMessageBox::question(this,
                               tr("File does not exists anymore."),
                               tr("The File %1 does not exists anymore. "
-                                 "Do you want to create recreate this file "
+                                 "Do you want to create create this file "
                                  "again?").arg(src),
                               QMessageBox::Yes | QMessageBox::No,
                               QMessageBox::No);

@@ -50,22 +50,22 @@
         <translation>NCL Composer</translation>
     </message>
     <message>
-        <location filename="../ui/ComposerMainWindow.ui" line="259"/>
+        <location filename="../ui/ComposerMainWindow.ui" line="109"/>
         <source>toolBar</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../ui/ComposerMainWindow.ui" line="320"/>
+        <location filename="../ui/ComposerMainWindow.ui" line="170"/>
         <source>&amp;File</source>
         <translation>&amp;Arquivo</translation>
     </message>
     <message>
-        <location filename="../ui/ComposerMainWindow.ui" line="324"/>
+        <location filename="../ui/ComposerMainWindow.ui" line="174"/>
         <source>&amp;Recent Projects</source>
         <translation>Projetos &amp;Recentes</translation>
     </message>
     <message>
-        <location filename="../ui/ComposerMainWindow.ui" line="331"/>
+        <location filename="../ui/ComposerMainWindow.ui" line="181"/>
         <source>Import</source>
         <translation>Importar</translation>
     </message>
@@ -74,12 +74,12 @@
         <translation type="obsolete">Exportar</translation>
     </message>
     <message>
-        <location filename="../ui/ComposerMainWindow.ui" line="352"/>
+        <location filename="../ui/ComposerMainWindow.ui" line="202"/>
         <source>&amp;Edit</source>
         <translation>&amp;Editar</translation>
     </message>
     <message>
-        <location filename="../ui/ComposerMainWindow.ui" line="358"/>
+        <location filename="../ui/ComposerMainWindow.ui" line="208"/>
         <source>&amp;Help</source>
         <translation>Aju&amp;da</translation>
     </message>
@@ -88,48 +88,48 @@
         <translation type="obsolete">Línguas</translation>
     </message>
     <message>
-        <location filename="../ui/ComposerMainWindow.ui" line="369"/>
+        <location filename="../ui/ComposerMainWindow.ui" line="219"/>
         <source>&amp;Window</source>
         <oldsource>Window</oldsource>
         <translation>&amp;Janela</translation>
     </message>
     <message>
-        <location filename="../ui/ComposerMainWindow.ui" line="377"/>
+        <location filename="../ui/ComposerMainWindow.ui" line="227"/>
         <source>&amp;Share</source>
         <translation>&amp;Compartilhar</translation>
     </message>
     <message>
-        <location filename="../ui/ComposerMainWindow.ui" line="394"/>
+        <location filename="../ui/ComposerMainWindow.ui" line="244"/>
         <source>&amp;New Project</source>
         <translation>&amp;Novo projeto</translation>
     </message>
     <message>
-        <location filename="../ui/ComposerMainWindow.ui" line="397"/>
+        <location filename="../ui/ComposerMainWindow.ui" line="247"/>
         <source>Ctrl+N</source>
         <translation>Ctrl+N</translation>
     </message>
     <message>
-        <location filename="../ui/ComposerMainWindow.ui" line="402"/>
+        <location filename="../ui/ComposerMainWindow.ui" line="252"/>
         <source>E&amp;xit</source>
         <translation>&amp;Sair</translation>
     </message>
     <message>
-        <location filename="../ui/ComposerMainWindow.ui" line="405"/>
+        <location filename="../ui/ComposerMainWindow.ui" line="255"/>
         <source>Exit NCL Composer</source>
         <translation>Sair do NCL Compose</translation>
     </message>
     <message>
-        <location filename="../ui/ComposerMainWindow.ui" line="408"/>
+        <location filename="../ui/ComposerMainWindow.ui" line="258"/>
         <source>Ctrl+Q</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../ui/ComposerMainWindow.ui" line="413"/>
+        <location filename="../ui/ComposerMainWindow.ui" line="263"/>
         <source>Close All</source>
         <translation>Fechar todos os projetos</translation>
     </message>
     <message>
-        <location filename="../ui/ComposerMainWindow.ui" line="418"/>
+        <location filename="../ui/ComposerMainWindow.ui" line="268"/>
         <source>&amp;Contents</source>
         <translation>&amp;Conteúdo</translation>
     </message>
@@ -142,108 +142,108 @@
         <translation type="obsolete">Sobre os &amp;plugins</translation>
     </message>
     <message>
-        <location filename="../ui/ComposerMainWindow.ui" line="423"/>
+        <location filename="../ui/ComposerMainWindow.ui" line="273"/>
         <source>&amp;About...</source>
         <translation>&amp;Sobre...</translation>
     </message>
     <message>
-        <location filename="../ui/ComposerMainWindow.ui" line="428"/>
+        <location filename="../ui/ComposerMainWindow.ui" line="278"/>
         <source>About &amp;Plugins...</source>
         <translation>Sobre os &amp;Plugins...</translation>
     </message>
     <message>
-        <location filename="../ui/ComposerMainWindow.ui" line="431"/>
+        <location filename="../ui/ComposerMainWindow.ui" line="281"/>
         <source>Show the application Plugins &quot;About box&quot;</source>
         <translation>Mostra o &quot;Sobre&quot; dos plugins</translation>
     </message>
     <message>
-        <location filename="../ui/ComposerMainWindow.ui" line="436"/>
+        <location filename="../ui/ComposerMainWindow.ui" line="286"/>
         <source>FullScreen</source>
         <translation>Modo em tela cheia</translation>
     </message>
     <message>
-        <location filename="../ui/ComposerMainWindow.ui" line="441"/>
+        <location filename="../ui/ComposerMainWindow.ui" line="291"/>
         <source>Clear Recent Projects</source>
         <translation>Apagar a lista de projetos recentes</translation>
     </message>
     <message>
-        <location filename="../ui/ComposerMainWindow.ui" line="450"/>
+        <location filename="../ui/ComposerMainWindow.ui" line="300"/>
         <source>&amp;Save</source>
         <translation>&amp;Salvar</translation>
     </message>
     <message>
-        <location filename="../ui/ComposerMainWindow.ui" line="453"/>
+        <location filename="../ui/ComposerMainWindow.ui" line="303"/>
         <source>Ctrl+S</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../ui/ComposerMainWindow.ui" line="469"/>
+        <location filename="../ui/ComposerMainWindow.ui" line="319"/>
         <source>Run</source>
         <translation>Executar</translation>
     </message>
     <message>
-        <location filename="../ui/ComposerMainWindow.ui" line="472"/>
+        <location filename="../ui/ComposerMainWindow.ui" line="322"/>
         <source>Run NCL</source>
         <translation>Executar NCL</translation>
     </message>
     <message>
-        <location filename="../ui/ComposerMainWindow.ui" line="475"/>
+        <location filename="../ui/ComposerMainWindow.ui" line="325"/>
         <source>Run NCL Project</source>
         <translation>Executar Projeto NCL</translation>
     </message>
     <message>
-        <location filename="../ui/ComposerMainWindow.ui" line="478"/>
+        <location filename="../ui/ComposerMainWindow.ui" line="328"/>
         <source>Ctrl+R</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../ui/ComposerMainWindow.ui" line="490"/>
+        <location filename="../ui/ComposerMainWindow.ui" line="340"/>
         <source>Config.</source>
         <translation>Config.</translation>
     </message>
     <message>
-        <location filename="../ui/ComposerMainWindow.ui" line="493"/>
-        <location filename="../ui/ComposerMainWindow.ui" line="550"/>
+        <location filename="../ui/ComposerMainWindow.ui" line="343"/>
+        <location filename="../ui/ComposerMainWindow.ui" line="400"/>
         <source>Preferences</source>
         <translation>Preferências</translation>
     </message>
     <message>
-        <location filename="../ui/ComposerMainWindow.ui" line="533"/>
+        <location filename="../ui/ComposerMainWindow.ui" line="383"/>
         <source>Save A&amp;ll</source>
         <translation>Salvar &amp;Todos</translation>
     </message>
     <message>
-        <location filename="../ui/ComposerMainWindow.ui" line="545"/>
+        <location filename="../ui/ComposerMainWindow.ui" line="395"/>
         <source>From NCL Document</source>
         <translation>De um documento NCL</translation>
     </message>
     <message>
-        <location filename="../ui/ComposerMainWindow.ui" line="572"/>
+        <location filename="../ui/ComposerMainWindow.ui" line="422"/>
         <source>Stop</source>
         <translation>Parar</translation>
     </message>
     <message>
-        <location filename="../ui/ComposerMainWindow.ui" line="575"/>
+        <location filename="../ui/ComposerMainWindow.ui" line="425"/>
         <source>Stop the current document.</source>
         <translation>Parar o documento corrente.</translation>
     </message>
     <message>
-        <location filename="../ui/ComposerMainWindow.ui" line="583"/>
+        <location filename="../ui/ComposerMainWindow.ui" line="433"/>
         <source>To NCL Document</source>
         <translation>Para um documento NCL</translation>
     </message>
     <message>
-        <location filename="../ui/ComposerMainWindow.ui" line="588"/>
+        <location filename="../ui/ComposerMainWindow.ui" line="438"/>
         <source>Save &amp;As...</source>
         <translation>Salvar &amp;como...</translation>
     </message>
     <message>
-        <location filename="../ui/ComposerMainWindow.ui" line="597"/>
+        <location filename="../ui/ComposerMainWindow.ui" line="447"/>
         <source>Report &amp;Bug...</source>
         <translation>&amp;Reportar Problemas...</translation>
     </message>
     <message>
-        <location filename="../ui/ComposerMainWindow.ui" line="600"/>
+        <location filename="../ui/ComposerMainWindow.ui" line="450"/>
         <source>Go to our WebSite and Report a BUG</source>
         <translation>Vá ao nosso WebSite e Reporte qualquer problema</translation>
     </message>
@@ -252,32 +252,32 @@
         <translation type="obsolete">Executar em máquina remota</translation>
     </message>
     <message>
-        <location filename="../ui/ComposerMainWindow.ui" line="505"/>
+        <location filename="../ui/ComposerMainWindow.ui" line="355"/>
         <source>Help</source>
         <translation>Ajuda</translation>
     </message>
     <message>
-        <location filename="../ui/ComposerMainWindow.ui" line="508"/>
+        <location filename="../ui/ComposerMainWindow.ui" line="358"/>
         <source>F1</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../ui/ComposerMainWindow.ui" line="517"/>
+        <location filename="../ui/ComposerMainWindow.ui" line="367"/>
         <source>Open Project</source>
         <translation>Abrir Projeto</translation>
     </message>
     <message>
-        <location filename="../ui/ComposerMainWindow.ui" line="520"/>
+        <location filename="../ui/ComposerMainWindow.ui" line="370"/>
         <source>Ctrl+O</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../ui/ComposerMainWindow.ui" line="525"/>
+        <location filename="../ui/ComposerMainWindow.ui" line="375"/>
         <source>&amp;Close</source>
         <translation>&amp;Fechar</translation>
     </message>
     <message>
-        <location filename="../ui/ComposerMainWindow.ui" line="528"/>
+        <location filename="../ui/ComposerMainWindow.ui" line="378"/>
         <source>Ctrl+F4</source>
         <translation></translation>
     </message>
@@ -286,7 +286,7 @@
         <translation type="obsolete">S&amp;alvar todos os projetos</translation>
     </message>
     <message>
-        <location filename="../ui/ComposerMainWindow.ui" line="536"/>
+        <location filename="../ui/ComposerMainWindow.ui" line="386"/>
         <source>Ctrl+Shift+S</source>
         <translation></translation>
     </message>
@@ -303,12 +303,12 @@
         <translation type="obsolete">Refazer</translation>
     </message>
     <message>
-        <location filename="../ui/ComposerMainWindow.ui" line="558"/>
+        <location filename="../ui/ComposerMainWindow.ui" line="408"/>
         <source>Share This Project Online</source>
         <translation>Compartilhe este projeto online</translation>
     </message>
     <message>
-        <location filename="../ui/ComposerMainWindow.ui" line="563"/>
+        <location filename="../ui/ComposerMainWindow.ui" line="413"/>
         <source>Go to NCL Club Website</source>
         <translation>Visite o site do Clube NCL</translation>
     </message>
@@ -809,22 +809,31 @@ diferente)</translation>
         <translation></translation>
     </message>
     <message>
-        <location filename="../ui/WelcomeWidget.ui" line="348"/>
+        <location filename="../ui/WelcomeWidget.ui" line="310"/>
+        <source>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;Arial&apos;; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;A new version of NCL Composer is available (&lt;a href=&quot;composer.telemidia.puc-rio.br&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;Changelog&lt;/span&gt;&lt;/a&gt;)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../ui/WelcomeWidget.ui" line="352"/>
         <source>Getting Started</source>
         <translation>Iniciando</translation>
     </message>
     <message>
-        <location filename="../ui/WelcomeWidget.ui" line="570"/>
+        <location filename="../ui/WelcomeWidget.ui" line="574"/>
         <source>Learn NCL</source>
         <translation>Aprenda NCL</translation>
     </message>
     <message>
-        <location filename="../ui/WelcomeWidget.ui" line="583"/>
+        <location filename="../ui/WelcomeWidget.ui" line="587"/>
         <source>Introduction to Digital TV and to Ginga-NCL</source>
         <translation>Introdução à TV Digital e ao Middleware Ginga-NCL (em Inglês)</translation>
     </message>
     <message>
-        <location filename="../ui/WelcomeWidget.ui" line="596"/>
+        <location filename="../ui/WelcomeWidget.ui" line="600"/>
         <source>Curso Ginga Brasil 2011</source>
         <translation></translation>
     </message>
@@ -833,127 +842,122 @@ diferente)</translation>
         <translation type="obsolete">Desenvolvimento de Aplicações Declarativas para TV Digital Interativa</translation>
     </message>
     <message>
-        <location filename="../ui/WelcomeWidget.ui" line="544"/>
+        <location filename="../ui/WelcomeWidget.ui" line="548"/>
         <source>More...</source>
         <translation>Mais...</translation>
     </message>
     <message>
-        <location filename="../ui/WelcomeWidget.ui" line="517"/>
+        <location filename="../ui/WelcomeWidget.ui" line="521"/>
         <source>NCL Specifications</source>
         <translation>Especificações NCL</translation>
     </message>
     <message>
-        <location filename="../ui/WelcomeWidget.ui" line="524"/>
+        <location filename="../ui/WelcomeWidget.ui" line="528"/>
         <source>NCL 3.0 Part 8 - NCL Digital TV Profiles</source>
         <translation>NCL 3.0 Pat 8 - NCL Perfis para TV Digital</translation>
     </message>
     <message>
-        <location filename="../ui/WelcomeWidget.ui" line="531"/>
+        <location filename="../ui/WelcomeWidget.ui" line="535"/>
         <source>NCL 3.0 Part 8 - NCL Live Editing Commands</source>
         <translation>NCL 3.0 Part 8 - Comandos de Edição em NCL</translation>
     </message>
     <message>
-        <location filename="../ui/WelcomeWidget.ui" line="411"/>
+        <location filename="../ui/WelcomeWidget.ui" line="415"/>
         <source>Recent Projects</source>
         <translation>Projetos Recentes</translation>
     </message>
     <message>
-        <location filename="../ui/WelcomeWidget.ui" line="310"/>
-        <source>A new version of NCL Composer is availabe (&lt;a href=&quot;composer.telemidia.puc-rio.br&quot;&gt;Changelog&lt;/a&gt;)</source>
-        <translation></translation>
-    </message>
-    <message>
-        <location filename="../ui/WelcomeWidget.ui" line="481"/>
+        <location filename="../ui/WelcomeWidget.ui" line="485"/>
         <source>Developers</source>
         <translation>Desenvolvedores</translation>
     </message>
     <message>
-        <location filename="../ui/WelcomeWidget.ui" line="497"/>
+        <location filename="../ui/WelcomeWidget.ui" line="501"/>
         <source>NCL Composer Official Web Site</source>
         <translation>Site oficial do NCL Composer</translation>
     </message>
     <message>
-        <location filename="../ui/WelcomeWidget.ui" line="510"/>
+        <location filename="../ui/WelcomeWidget.ui" line="514"/>
         <source>Extending NCL Composer through plugins</source>
         <translation>Estender o NCL Composer por meio de plugins</translation>
     </message>
     <message>
-        <location filename="../ui/WelcomeWidget.ui" line="619"/>
+        <location filename="../ui/WelcomeWidget.ui" line="623"/>
         <source>Book: Programming in NCL 3.0 (in Portuguese)</source>
         <translation>Livro: Programando em NCL 3.0 (em Português)</translation>
     </message>
     <message>
-        <location filename="../ui/WelcomeWidget.ui" line="659"/>
+        <location filename="../ui/WelcomeWidget.ui" line="663"/>
         <source>New Project</source>
         <translation>Novo Projeto</translation>
     </message>
     <message>
-        <location filename="../ui/WelcomeWidget.ui" line="670"/>
+        <location filename="../ui/WelcomeWidget.ui" line="674"/>
         <source>Open Project</source>
         <translation>Abrir Projeto</translation>
     </message>
     <message>
-        <location filename="../ui/WelcomeWidget.ui" line="688"/>
+        <location filename="../ui/WelcomeWidget.ui" line="692"/>
         <source>Install New Plugins</source>
         <translation>Instalar novos plugins</translation>
     </message>
     <message>
-        <location filename="../ui/WelcomeWidget.ui" line="727"/>
+        <location filename="../ui/WelcomeWidget.ui" line="731"/>
         <source>Choose from a local file</source>
         <translation>Escolha de um arquivo local</translation>
     </message>
     <message>
-        <location filename="../ui/WelcomeWidget.ui" line="733"/>
+        <location filename="../ui/WelcomeWidget.ui" line="737"/>
         <source>If you already download the plugin, you can choose it from your local file system:</source>
         <translation>Se você já baixou o plugin, você pode selecioná-lo em seu sistema de arquivos local:</translation>
     </message>
     <message>
-        <location filename="../ui/WelcomeWidget.ui" line="749"/>
+        <location filename="../ui/WelcomeWidget.ui" line="753"/>
         <source>Choose File</source>
         <translation>Escolher arquivo</translation>
     </message>
     <message>
-        <location filename="../ui/WelcomeWidget.ui" line="775"/>
+        <location filename="../ui/WelcomeWidget.ui" line="779"/>
         <source>Choose from a Remote File</source>
         <translation>Escolher um arquivo remoto</translation>
     </message>
     <message>
-        <location filename="../ui/WelcomeWidget.ui" line="781"/>
+        <location filename="../ui/WelcomeWidget.ui" line="785"/>
         <source>If your provider give you an URL where the plugin can be installed copy and paste this URL here:</source>
         <translation>Se o fornecedor do plugin forneceu uma URL, copie e cole-a aqui:</translation>
     </message>
     <message>
-        <location filename="../ui/WelcomeWidget.ui" line="826"/>
+        <location filename="../ui/WelcomeWidget.ui" line="830"/>
         <source>Install the New Plugin</source>
         <translation>Instalar um novo plugin</translation>
     </message>
     <message>
-        <location filename="../ui/WelcomeWidget.ui" line="845"/>
+        <location filename="../ui/WelcomeWidget.ui" line="849"/>
         <source>See the installed plugins</source>
         <translation>Veja os plugins instalados</translation>
     </message>
     <message>
-        <location filename="../ui/WelcomeWidget.ui" line="852"/>
+        <location filename="../ui/WelcomeWidget.ui" line="856"/>
         <source>Search for more plugins online</source>
         <translation>Procurar mais plugins online</translation>
     </message>
     <message>
-        <location filename="../ui/WelcomeWidget.ui" line="884"/>
+        <location filename="../ui/WelcomeWidget.ui" line="888"/>
         <source>Examples</source>
         <translation>Exemplos</translation>
     </message>
     <message>
-        <location filename="../ui/WelcomeWidget.ui" line="976"/>
+        <location filename="../ui/WelcomeWidget.ui" line="980"/>
         <source>about:blank</source>
         <translation>sobre:vazio</translation>
     </message>
     <message>
-        <location filename="../ui/WelcomeWidget.ui" line="984"/>
+        <location filename="../ui/WelcomeWidget.ui" line="988"/>
         <source>Learn from NCL Club Examples</source>
         <translation>Aprenda a partir dos exemplos disponíveis no Clube NCL</translation>
     </message>
     <message>
-        <location filename="../ui/WelcomeWidget.ui" line="997"/>
+        <location filename="../ui/WelcomeWidget.ui" line="1001"/>
         <source>Download and Import this application</source>
         <translation>Baixe e importe essa aplicação</translation>
     </message>
@@ -1005,22 +1009,22 @@ diferente)</translation>
 <context>
     <name>composer::gui::ComposerMainWindow</name>
     <message>
-        <location filename="../src/ComposerMainWindow.cpp" line="46"/>
+        <location filename="../src/ComposerMainWindow.cpp" line="47"/>
         <source>Loading NCL Composer...</source>
         <translation>Carregando NCL Composer...</translation>
     </message>
     <message>
-        <location filename="../src/ComposerMainWindow.cpp" line="52"/>
+        <location filename="../src/ComposerMainWindow.cpp" line="53"/>
         <source>Starting GUI...</source>
         <translation>Iniciando interface gráfica...</translation>
     </message>
     <message>
-        <location filename="../src/ComposerMainWindow.cpp" line="56"/>
+        <location filename="../src/ComposerMainWindow.cpp" line="57"/>
         <source>Starting Modules and Plugins...</source>
         <translation>Iniciando módulos e plugins...</translation>
     </message>
     <message>
-        <location filename="../src/ComposerMainWindow.cpp" line="61"/>
+        <location filename="../src/ComposerMainWindow.cpp" line="92"/>
         <source>Reloading last session...</source>
         <translation>Recarregando última sessão...</translation>
     </message>
@@ -1029,229 +1033,234 @@ diferente)</translation>
         <translation type="obsolete">Configurar Execução</translation>
     </message>
     <message>
-        <location filename="../src/ComposerMainWindow.cpp" line="203"/>
+        <location filename="../src/ComposerMainWindow.cpp" line="214"/>
         <source>The Extension Directory is not set</source>
         <translation>O diretório das extensões não foi definido</translation>
     </message>
     <message>
-        <location filename="../src/ComposerMainWindow.cpp" line="204"/>
+        <location filename="../src/ComposerMainWindow.cpp" line="215"/>
         <source>Do you want to try the defaultdirectory (%1)?</source>
         <translation>Você deseja tentar o diretório padrão (%1)?</translation>
     </message>
     <message>
-        <location filename="../src/ComposerMainWindow.cpp" line="212"/>
+        <location filename="../src/ComposerMainWindow.cpp" line="223"/>
         <source>Select Directory</source>
         <translation>Selecionar Diretório</translation>
     </message>
     <message>
-        <location filename="../src/ComposerMainWindow.cpp" line="255"/>
-        <location filename="../src/ComposerMainWindow.cpp" line="1643"/>
+        <location filename="../src/ComposerMainWindow.cpp" line="266"/>
+        <location filename="../src/ComposerMainWindow.cpp" line="1733"/>
         <source>File does not exists anymore.</source>
         <translation>Arquivo não existe mais.</translation>
     </message>
     <message>
-        <location filename="../src/ComposerMainWindow.cpp" line="256"/>
+        <location filename="../src/ComposerMainWindow.cpp" line="267"/>
         <source>The File %1 does not exists, but the last time you have closed NCL Composer this files was open. Do you want to create this file again?</source>
         <translation>O arquivo %1 não existe. Mas da última vez que o NCL Composer foi fechado esse arquivo estava aberto. Você deseja criá-lo de novo?</translation>
     </message>
     <message>
-        <location filename="../src/ComposerMainWindow.cpp" line="287"/>
+        <location filename="../src/ComposerMainWindow.cpp" line="298"/>
         <source>NCL Composer</source>
         <translation>NCL Composer</translation>
     </message>
     <message>
-        <location filename="../src/ComposerMainWindow.cpp" line="302"/>
+        <location filename="../src/ComposerMainWindow.cpp" line="313"/>
         <source>Change your current perspective</source>
         <translation>Altera a sua perpectiva atual</translation>
     </message>
     <message>
-        <location filename="../src/ComposerMainWindow.cpp" line="336"/>
+        <location filename="../src/ComposerMainWindow.cpp" line="342"/>
         <source>Welcome</source>
         <translation>Bem Vindo</translation>
     </message>
     <message>
-        <location filename="../src/ComposerMainWindow.cpp" line="353"/>
+        <location filename="../src/ComposerMainWindow.cpp" line="359"/>
         <source>Copy content to Ginga VM.</source>
         <translation>Copiar conteúdo para a Máquina Virtual Ginga.</translation>
     </message>
     <message>
-        <location filename="../src/ComposerMainWindow.cpp" line="502"/>
+        <location filename="../src/ComposerMainWindow.cpp" line="509"/>
         <source>Reload View Model</source>
         <translation>Recarregar modelo da Visão</translation>
     </message>
     <message>
-        <location filename="../src/ComposerMainWindow.cpp" line="509"/>
+        <location filename="../src/ComposerMainWindow.cpp" line="516"/>
         <source>Hide View</source>
         <translation>Esconder Visão</translation>
     </message>
     <message>
-        <location filename="../src/ComposerMainWindow.cpp" line="574"/>
+        <location filename="../src/ComposerMainWindow.cpp" line="614"/>
         <source>The project has been modified.
 Do you want to save your changes?</source>
         <translation>O projeto foi modificado. Você deseja salvar suas alterações?</translation>
     </message>
     <message>
-        <location filename="../src/ComposerMainWindow.cpp" line="690"/>
+        <location filename="../src/ComposerMainWindow.cpp" line="730"/>
         <source>Installed Plugins</source>
         <translation>Plugins instalados</translation>
     </message>
     <message>
-        <location filename="../src/ComposerMainWindow.cpp" line="705"/>
+        <location filename="../src/ComposerMainWindow.cpp" line="745"/>
         <source>Name</source>
         <translation>Nome</translation>
     </message>
     <message>
-        <location filename="../src/ComposerMainWindow.cpp" line="705"/>
+        <location filename="../src/ComposerMainWindow.cpp" line="745"/>
         <source>Load</source>
         <translation>Carregar</translation>
     </message>
     <message>
-        <location filename="../src/ComposerMainWindow.cpp" line="705"/>
+        <location filename="../src/ComposerMainWindow.cpp" line="745"/>
         <source>Version</source>
         <translation>Versão</translation>
     </message>
     <message>
-        <location filename="../src/ComposerMainWindow.cpp" line="705"/>
+        <location filename="../src/ComposerMainWindow.cpp" line="745"/>
         <source>Vendor</source>
         <translation>Fornecedor</translation>
     </message>
     <message>
-        <location filename="../src/ComposerMainWindow.cpp" line="714"/>
+        <location filename="../src/ComposerMainWindow.cpp" line="754"/>
         <source>Details</source>
         <translation>Detalhes</translation>
     </message>
     <message>
-        <location filename="../src/ComposerMainWindow.cpp" line="723"/>
+        <location filename="../src/ComposerMainWindow.cpp" line="763"/>
         <source>The &lt;b&gt;Composer&lt;/b&gt; is an IDE for Declarative Multimedia languages.</source>
         <translation>&lt;b&gt;NCL Composer&lt;/b&gt; é um ambiente de desenvolvimento para Nested Context Language.</translation>
     </message>
     <message>
-        <location filename="../src/ComposerMainWindow.cpp" line="728"/>
+        <location filename="../src/ComposerMainWindow.cpp" line="768"/>
         <source>&lt;b&gt;Installed Language Profiles&lt;/b&gt;</source>
         <translation>&lt;b&gt;Perfis de linguagem instalados&lt;/b&gt;</translation>
     </message>
     <message>
-        <location filename="../src/ComposerMainWindow.cpp" line="732"/>
+        <location filename="../src/ComposerMainWindow.cpp" line="772"/>
         <source>&lt;b&gt;Installed Plug-ins&lt;/b&gt;</source>
         <translation>&lt;b&gt;Plugins Instalados&lt;/b&gt;</translation>
     </message>
     <message>
-        <location filename="../src/ComposerMainWindow.cpp" line="829"/>
+        <location filename="../src/ComposerMainWindow.cpp" line="869"/>
         <source>&amp;FullScreen</source>
         <translation>Modo em Tela &amp;Cheia</translation>
     </message>
     <message>
-        <location filename="../src/ComposerMainWindow.cpp" line="830"/>
+        <location filename="../src/ComposerMainWindow.cpp" line="870"/>
         <source>F11</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/ComposerMainWindow.cpp" line="835"/>
+        <location filename="../src/ComposerMainWindow.cpp" line="875"/>
         <source>&amp;Preferences</source>
         <translation>&amp;Preferências</translation>
     </message>
     <message>
-        <location filename="../src/ComposerMainWindow.cpp" line="836"/>
+        <location filename="../src/ComposerMainWindow.cpp" line="876"/>
         <source>Edit preferences</source>
         <translation>Editar Preferências</translation>
     </message>
     <message>
-        <location filename="../src/ComposerMainWindow.cpp" line="844"/>
+        <location filename="../src/ComposerMainWindow.cpp" line="884"/>
         <source>Save current perspective...</source>
         <translation>Salvar a perspectiva corrente...</translation>
     </message>
     <message>
-        <location filename="../src/ComposerMainWindow.cpp" line="1313"/>
+        <location filename="../src/ComposerMainWindow.cpp" line="1363"/>
         <source>Your NCL Composer was not build with Remote Run support.</source>
         <translation>A suas versão do NCL Composer não foi construída com suporte a Execução Remota.</translation>
     </message>
     <message>
-        <location filename="../src/ComposerMainWindow.cpp" line="1350"/>
+        <location filename="../src/ComposerMainWindow.cpp" line="1440"/>
         <source>File already exists!</source>
         <translation>Arquivo já existe!</translation>
     </message>
     <message>
-        <location filename="../src/ComposerMainWindow.cpp" line="1351"/>
+        <location filename="../src/ComposerMainWindow.cpp" line="1441"/>
         <source>The file &quot;%1&quot; already exists. Do you want overwrite it?</source>
         <translation>O arquivo %1 já existe. Você deseja sobreescrevê-lo?</translation>
     </message>
     <message>
-        <location filename="../src/ComposerMainWindow.cpp" line="1462"/>
-        <location filename="../src/ComposerMainWindow.cpp" line="1472"/>
+        <location filename="../src/ComposerMainWindow.cpp" line="1552"/>
+        <location filename="../src/ComposerMainWindow.cpp" line="1562"/>
         <source>Error!</source>
         <translation>Erro!</translation>
     </message>
     <message>
-        <location filename="../src/ComposerMainWindow.cpp" line="1463"/>
+        <location filename="../src/ComposerMainWindow.cpp" line="1553"/>
         <source>There was an error copying the defaultConnector Base. You will need to add a Connector Base by hand in your NCL code.</source>
         <translation>Ocorreu um erro copiando a base de connectores padrão. Você irá precisar adicionar a sua base de conectores explicitamente no código NCL.</translation>
     </message>
     <message>
-        <location filename="../src/ComposerMainWindow.cpp" line="1467"/>
-        <location filename="../src/ComposerMainWindow.cpp" line="1475"/>
+        <location filename="../src/ComposerMainWindow.cpp" line="1557"/>
+        <location filename="../src/ComposerMainWindow.cpp" line="1565"/>
         <source>Ok</source>
         <translation>Ok</translation>
     </message>
     <message>
-        <location filename="../src/ComposerMainWindow.cpp" line="1473"/>
+        <location filename="../src/ComposerMainWindow.cpp" line="1563"/>
         <source>The default Connector Base %1 does not exists</source>
         <translation>A base de conectores %1 não existe</translation>
+    </message>
+    <message>
+        <location filename="../src/ComposerMainWindow.cpp" line="1734"/>
+        <source>The File %1 does not exists anymore. Do you want to create create this file again?</source>
+        <translation>O arquivo %1 não existe mais. Você deseja recriar este arquivo?</translation>
     </message>
     <message>
         <source>Save current perspective</source>
         <translation type="obsolete">Salvar a perspectiva corrente</translation>
     </message>
     <message>
-        <location filename="../src/ComposerMainWindow.cpp" line="850"/>
+        <location filename="../src/ComposerMainWindow.cpp" line="890"/>
         <source>Restore a perspective</source>
         <translation>Restaurar perspectiva</translation>
     </message>
     <message>
-        <location filename="../src/ComposerMainWindow.cpp" line="875"/>
+        <location filename="../src/ComposerMainWindow.cpp" line="915"/>
         <source>Ready</source>
         <translation>Pronto</translation>
     </message>
     <message>
-        <location filename="../src/ComposerMainWindow.cpp" line="917"/>
+        <location filename="../src/ComposerMainWindow.cpp" line="957"/>
         <source>The project %1 has been modified.
 Do you want to save your changes?</source>
         <translation>O projeto %1 foi modificado. Você deseja salvar as alterações?</translation>
     </message>
     <message>
-        <location filename="../src/ComposerMainWindow.cpp" line="1033"/>
-        <location filename="../src/ComposerMainWindow.cpp" line="1100"/>
-        <location filename="../src/ComposerMainWindow.cpp" line="1122"/>
+        <location filename="../src/ComposerMainWindow.cpp" line="1073"/>
+        <location filename="../src/ComposerMainWindow.cpp" line="1140"/>
+        <location filename="../src/ComposerMainWindow.cpp" line="1162"/>
         <source>Information</source>
         <translation>Informações</translation>
     </message>
     <message>
-        <location filename="../src/ComposerMainWindow.cpp" line="1034"/>
-        <location filename="../src/ComposerMainWindow.cpp" line="1101"/>
+        <location filename="../src/ComposerMainWindow.cpp" line="1074"/>
+        <location filename="../src/ComposerMainWindow.cpp" line="1141"/>
         <source>There aren&apos;t a project to be saved.</source>
         <translation>Não existe um projeto selecionado para ser salvo.</translation>
     </message>
     <message>
-        <location filename="../src/ComposerMainWindow.cpp" line="1123"/>
+        <location filename="../src/ComposerMainWindow.cpp" line="1163"/>
         <source>There aren&apos;t a layout open to be saved.</source>
         <translation>Não existe uma perpectiva aberta para ser salva.</translation>
     </message>
     <message>
-        <location filename="../src/ComposerMainWindow.cpp" line="1219"/>
-        <location filename="../src/ComposerMainWindow.cpp" line="1261"/>
-        <location filename="../src/ComposerMainWindow.cpp" line="1285"/>
-        <location filename="../src/ComposerMainWindow.cpp" line="1305"/>
-        <location filename="../src/ComposerMainWindow.cpp" line="1312"/>
+        <location filename="../src/ComposerMainWindow.cpp" line="1235"/>
+        <location filename="../src/ComposerMainWindow.cpp" line="1279"/>
+        <location filename="../src/ComposerMainWindow.cpp" line="1335"/>
+        <location filename="../src/ComposerMainWindow.cpp" line="1355"/>
+        <location filename="../src/ComposerMainWindow.cpp" line="1362"/>
         <source>Warning!</source>
         <translation>Aviso!</translation>
     </message>
     <message>
-        <location filename="../src/ComposerMainWindow.cpp" line="1220"/>
-        <location filename="../src/ComposerMainWindow.cpp" line="1306"/>
+        <location filename="../src/ComposerMainWindow.cpp" line="1280"/>
+        <location filename="../src/ComposerMainWindow.cpp" line="1356"/>
         <source>There aren&apos;t a current NCL project.</source>
         <translation>Não existe um projeto NCL corrente.</translation>
     </message>
     <message>
-        <location filename="../src/ComposerMainWindow.cpp" line="1286"/>
+        <location filename="../src/ComposerMainWindow.cpp" line="1336"/>
         <source>Your document is not saved.Do you want to save it now?</source>
         <translation>O seu documento não está salvo. Você deseja salvá-lo agora?</translation>
     </message>
@@ -1260,37 +1269,36 @@ Do you want to save your changes?</source>
         <translation type="obsolete">Criando um novo projeto do Composer</translation>
     </message>
     <message>
-        <location filename="../src/ComposerMainWindow.cpp" line="1486"/>
+        <location filename="../src/ComposerMainWindow.cpp" line="1576"/>
         <source>Open NCL Composer Project</source>
         <translation>Abrir projeto do NCL Composer</translation>
     </message>
     <message>
-        <location filename="../src/ComposerMainWindow.cpp" line="1512"/>
+        <location filename="../src/ComposerMainWindow.cpp" line="1602"/>
         <source>Temporary file is newer.</source>
         <translation>O arquivo temporário é mais novo.</translation>
     </message>
     <message>
-        <location filename="../src/ComposerMainWindow.cpp" line="1513"/>
+        <location filename="../src/ComposerMainWindow.cpp" line="1603"/>
         <source>There is a temporary file related to %1 that is newer. Do you want replace the %1 file with  this temporary one?</source>
         <translation>Existe um arquivo temporário relacionado à %1 que é mais novo. Você deseja substituir o arquivo %1 por esse arquivo temporário?</translation>
     </message>
     <message>
-        <location filename="../src/ComposerMainWindow.cpp" line="1562"/>
+        <location filename="../src/ComposerMainWindow.cpp" line="1652"/>
         <source>Choose the NCL Composer Project where the NCL document must be imported</source>
         <translation>Escolha o projeto do NCL Composer onde o documento deve ser importado</translation>
     </message>
     <message>
-        <location filename="../src/ComposerMainWindow.cpp" line="1644"/>
         <source>The File %1 does not exists anymore. Do you want to create recreate this file again?</source>
-        <translation>O arquivo %1 não existe mais. Você deseja recriar este arquivo?</translation>
+        <translation type="obsolete">O arquivo %1 não existe mais. Você deseja recriar este arquivo?</translation>
     </message>
     <message>
-        <location filename="../src/ComposerMainWindow.cpp" line="1742"/>
+        <location filename="../src/ComposerMainWindow.cpp" line="1832"/>
         <source>English</source>
         <translation>Inglês</translation>
     </message>
     <message>
-        <location filename="../src/ComposerMainWindow.cpp" line="1742"/>
+        <location filename="../src/ComposerMainWindow.cpp" line="1832"/>
         <source>Portugues (Brasil)</source>
         <translation>Português (Brasil)</translation>
     </message>
@@ -1299,19 +1307,19 @@ Do you want to save your changes?</source>
         <translation type="obsolete">Projetos do Composer (*.cpr)</translation>
     </message>
     <message>
-        <location filename="../src/ComposerMainWindow.cpp" line="1052"/>
+        <location filename="../src/ComposerMainWindow.cpp" line="1092"/>
         <source>Save as NCL Composer Project</source>
         <translation>Salvar como um projeto do NCL Composer</translation>
     </message>
     <message>
-        <location filename="../src/ComposerMainWindow.cpp" line="1054"/>
-        <location filename="../src/ComposerMainWindow.cpp" line="1488"/>
-        <location filename="../src/ComposerMainWindow.cpp" line="1565"/>
+        <location filename="../src/ComposerMainWindow.cpp" line="1094"/>
+        <location filename="../src/ComposerMainWindow.cpp" line="1578"/>
+        <location filename="../src/ComposerMainWindow.cpp" line="1655"/>
         <source>NCL Composer Projects (*.cpr)</source>
         <translation>Projetos do NCL Compose (*.cpr)</translation>
     </message>
     <message>
-        <location filename="../src/ComposerMainWindow.cpp" line="1262"/>
+        <location filename="../src/ComposerMainWindow.cpp" line="1236"/>
         <source>You already have an NCL application running. Please, stop it before you start a new one.</source>
         <translation>Você já possui uma aplicação NCL executando. Por favor, pare a sua execução antes de iniciar uma nova.</translation>
     </message>
@@ -1320,22 +1328,22 @@ Do you want to save your changes?</source>
         <translation type="obsolete">Abrir um projeto</translation>
     </message>
     <message>
-        <location filename="../src/ComposerMainWindow.cpp" line="1552"/>
+        <location filename="../src/ComposerMainWindow.cpp" line="1642"/>
         <source>Choose the NCL file to be imported</source>
         <translation>Escolha o arquivo NCL para ser importado</translation>
     </message>
     <message>
-        <location filename="../src/ComposerMainWindow.cpp" line="1554"/>
+        <location filename="../src/ComposerMainWindow.cpp" line="1644"/>
         <source>NCL Documents (*.ncl)</source>
         <translation>Documentos NCL (*.ncl)</translation>
     </message>
     <message>
-        <location filename="../src/ComposerMainWindow.cpp" line="1608"/>
+        <location filename="../src/ComposerMainWindow.cpp" line="1698"/>
         <source>empty</source>
         <translation>vazio</translation>
     </message>
     <message>
-        <location filename="../src/ComposerMainWindow.cpp" line="1623"/>
+        <location filename="../src/ComposerMainWindow.cpp" line="1713"/>
         <source>Clear Recent Projects</source>
         <translation>Apagar a lista de projetos recentes</translation>
     </message>
@@ -1398,53 +1406,53 @@ Do you want to save your changes?</source>
 <context>
     <name>composer::gui::WelcomeWidget</name>
     <message>
-        <location filename="../src/WelcomeWidget.cpp" line="300"/>
+        <location filename="../src/WelcomeWidget.cpp" line="316"/>
         <source>Connection to NCL Club has failed.</source>
         <translation>Conexão com Clube NCL falhou.</translation>
     </message>
     <message>
-        <location filename="../src/WelcomeWidget.cpp" line="311"/>
+        <location filename="../src/WelcomeWidget.cpp" line="327"/>
         <source>Downloading application...</source>
         <translation>Baixando aplicação...</translation>
     </message>
     <message>
-        <location filename="../src/WelcomeWidget.cpp" line="325"/>
-        <location filename="../src/WelcomeWidget.cpp" line="344"/>
+        <location filename="../src/WelcomeWidget.cpp" line="341"/>
+        <location filename="../src/WelcomeWidget.cpp" line="360"/>
         <source>Application from NCL Club</source>
         <translation>Aplicação do Clube NCL</translation>
     </message>
     <message>
-        <location filename="../src/WelcomeWidget.cpp" line="326"/>
+        <location filename="../src/WelcomeWidget.cpp" line="342"/>
         <source>There already exists a file called %1 in the current directory. Overwrite?</source>
         <translation>Já existe um arquivo chamado %1 no diretório corrente. Você deseja sobreescrevê-lo?</translation>
     </message>
     <message>
-        <location filename="../src/WelcomeWidget.cpp" line="336"/>
+        <location filename="../src/WelcomeWidget.cpp" line="352"/>
         <source>HTTP</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/WelcomeWidget.cpp" line="337"/>
+        <location filename="../src/WelcomeWidget.cpp" line="353"/>
         <source>Unable to save the file %1: %2.</source>
         <translation>Não foi possível salvar arquivo %1: %2.</translation>
     </message>
     <message>
-        <location filename="../src/WelcomeWidget.cpp" line="345"/>
+        <location filename="../src/WelcomeWidget.cpp" line="361"/>
         <source>Downloading %1.</source>
         <translation>Baixando %1.</translation>
     </message>
     <message>
-        <location filename="../src/WelcomeWidget.cpp" line="403"/>
+        <location filename="../src/WelcomeWidget.cpp" line="419"/>
         <source>Download and Import this application</source>
         <translation>Baixe e importe essa aplicação</translation>
     </message>
     <message>
-        <location filename="../src/WelcomeWidget.cpp" line="409"/>
+        <location filename="../src/WelcomeWidget.cpp" line="425"/>
         <source>Choose the name of the new project to be created</source>
         <translation>Escolha o nome do novo projeto a ser criado</translation>
     </message>
     <message>
-        <location filename="../src/WelcomeWidget.cpp" line="411"/>
+        <location filename="../src/WelcomeWidget.cpp" line="427"/>
         <source>NCL Composer Projects (*.cpr)</source>
         <translation>Projetos do NCL Composer (*.cpr)</translation>
     </message>
