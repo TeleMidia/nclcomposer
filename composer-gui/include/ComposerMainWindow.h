@@ -189,7 +189,7 @@ private:
   PerspectiveManager *perspectiveManager;
   PluginDetailsDialog *pluginDetailsDialog;
 
-  QProcess *localGingaProcess;
+  QProcess localGingaProcess;
 #ifdef WITH_LIBSSH2
   QThreadEx runRemoteGingaVMThread;
   RunRemoteGingaVMAction runRemoteGingaVMAction;
@@ -403,7 +403,15 @@ public:
      *
      * \param parent The parent of the Composer Main Window.
      */
-  explicit ComposerMainWindow(QApplication &app, QWidget *parent = 0);
+  explicit ComposerMainWindow(QWidget *parent = 0);
+
+  /*!
+   * \brief You should call this method to initialize the NCL Composer Main Window and
+   *    show the SplashScreen
+   *
+   * \param app QApplication instance
+   */
+  void init(const QApplication &app);
   /*!
      * \brief
      */

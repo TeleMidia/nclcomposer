@@ -33,35 +33,16 @@ namespace gui {
 
 const int autoSaveInterval = 1 * 60 * 1000; //ms
 
-ComposerMainWindow::ComposerMainWindow(QApplication &app, QWidget *parent)
+ComposerMainWindow::ComposerMainWindow(QWidget *parent)
   : QMainWindow(parent),
     ui(new Ui::ComposerMainWindow),
-    allDocksMutex(QMutex::Recursive)
+    allDocksMutex(QMutex::Recursive),
+    localGingaProcess(this)
 {
   ui->setupUi(this);
 
-  /* The following code could be in another function */
-  QPixmap mPix(":/mainwindow/nclcomposer-splash");
-  QSplashScreen splash(mPix);
-  splash.setMask(mPix.mask());
-  splash.showMessage(tr("Loading NCL Composer..."), Qt::AlignRight, Qt::gray);
-
-  //splash.blockSignals(true);
-  splash.show();
-  app.processEvents();
-
-  splash.showMessage(tr("Starting GUI..."), Qt::AlignRight, Qt::gray);
-  initGUI();
-  app.processEvents();
-
-  splash.showMessage(tr("Starting Modules and Plugins..."), Qt::AlignRight,
-                      Qt::gray);
-  initModules();
-  app.processEvents();
-
   // Local Ginga Run
-  localGingaProcess = new QProcess(this);
-  connect(localGingaProcess, SIGNAL(finished(int)),
+  connect(&localGingaProcess, SIGNAL(finished(int)),
           this, SLOT(runHasFinished()));
 
   // Remote Ginga Run
@@ -79,9 +60,33 @@ ComposerMainWindow::ComposerMainWindow(QApplication &app, QWidget *parent)
 
   connect(&runRemoteGingaVMThread, SIGNAL(terminated()),
           this, SLOT(runHasFinished()));
+#endif
+
+}
+
+void ComposerMainWindow::init(const QApplication &app)
+{
+  /* The following code could be in another function */
+  QPixmap mPix(":/mainwindow/nclcomposer-splash");
+  QSplashScreen splash(mPix);
+  splash.setMask(mPix.mask());
+  splash.showMessage(tr("Loading NCL Composer..."), Qt::AlignRight, Qt::gray);
+
+  //splash.blockSignals(true);
+  splash.show();
+  app.processEvents();
+
+  splash.showMessage(tr("Starting GUI..."), Qt::AlignRight, Qt::gray);
+
+  initGUI();
+  app.processEvents();
+
+  splash.showMessage(tr("Starting Modules and Plugins..."), Qt::AlignRight,
+                      Qt::gray);
+  initModules();
+  app.processEvents();
 
   SimpleSSHClient::init(); // Initializes the libssh2 library
-#endif
 
   autoSaveTimer = new QTimer(this);
   connect(autoSaveTimer, SIGNAL(timeout()),
@@ -98,6 +103,8 @@ ComposerMainWindow::ComposerMainWindow(QApplication &app, QWidget *parent)
   connect(&app, SIGNAL(focusChanged(QWidget *, QWidget *)),
           this, SLOT(focusChanged(QWidget *, QWidget *)),
           Qt::DirectConnection);
+
+  show();
 }
 
 ComposerMainWindow::~ComposerMainWindow()
@@ -1225,7 +1232,7 @@ void ComposerMainWindow::restorePerspective(QString layoutName)
 void ComposerMainWindow::runNCL()
 {
   // check if there is other instance already running
-  if(localGingaProcess->state() == QProcess::Running
+  if(localGingaProcess.state() == QProcess::Running
 #ifdef WITH_LIBSSH2
         || runRemoteGingaVMThread.isRunning()
 #endif
@@ -1300,8 +1307,8 @@ void ComposerMainWindow::runOnLocalGinga()
     args.replace("${nclpath}", nclpath);
     args_list << args.split("\n");
     /* RUNNING GINGA */
-    localGingaProcess->start(command, args_list);
-    QByteArray result = localGingaProcess->readAll();
+    localGingaProcess.start(command, args_list);
+    QByteArray result = localGingaProcess.readAll();
   }
   else
   {
@@ -1368,8 +1375,8 @@ void ComposerMainWindow::runOnRemoteGingaVM()
 
 void ComposerMainWindow::stopNCL()
 {
-  if(localGingaProcess->state() == QProcess::Running)
-      localGingaProcess->close();
+  if(localGingaProcess.state() == QProcess::Running)
+      localGingaProcess.close();
 
 #ifdef WITH_LIBSSH2
   if(runRemoteGingaVMThread.isRunning())
@@ -1382,7 +1389,7 @@ void ComposerMainWindow::stopNCL()
 bool ComposerMainWindow::isRunningNCL()
 {
   // check if there is other instance already running
-  if(localGingaProcess->state() == QProcess::Running
+  if(localGingaProcess.state() == QProcess::Running
 #ifdef WITH_LIBSSH2
         || runRemoteGingaVMThread.isRunning()
 #endif

@@ -161,7 +161,7 @@ XInitThreads();
     //this is so the plugins can find the dlls they are linked to at run time
     QApplication::addLibraryPath(QApplication::applicationDirPath());
 
-    ComposerMainWindow w(a);
+    ComposerMainWindow w;
     w.setWindowIcon(QIcon(":/mainwindow/icon"));
 
     QFile style(QString(STYLE_PATH)+"/style.qss");
@@ -171,7 +171,7 @@ XInitThreads();
         style.close();
     }
 
-    w.show();
+    w.init(a);
 
     QStringList argList = a.arguments();
     QStringList filesToOpen;
