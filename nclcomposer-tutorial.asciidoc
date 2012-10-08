@@ -31,11 +31,6 @@ interativas para usuário não-programadores. Para isso, ele utiliza-se de
 várias abstrações gráficas (visões) que permitem ao autor focar em apenas um
 determinado ponto, durante cada fase distinta da autoria.
 
-// O intuito principal deste tutorial é fornecer ao leitor a habilidade de 
-// desenvolver programas NCL simples, usando o {nclcomposer}, e capacitá-lo a 
-// melhor entender e exercitar os principais conceitos da NCL, no ambiente de
-// autoria {nclcomposer}.
-
 Baseado nos exemplos apresentados no Capítulo 3 do livro 
 http://www.telemidia.puc-rio.br[Programando em NCL 3.0], este tutorial traz uma
 introdução passo a passo de como utilizar o {nclcomposer} para o 
@@ -149,11 +144,29 @@ http://www.softwarepublico.gov.br[Implementação de Referência do Ginga-NCL]);
 
 Instalando o {nclcomposer}
 ~~~~~~~~~~~~~~~~~~~~~~~~~
-TODO
+Para instalar o NCL Composer, vá até a página:
+http://composer.telemidia.puc-rio.br/en/download e baixe a versão mais nova
+para o seu sistema (atualmente são suportados Window, Linux (Debian e Ubuntu)
+e Mac OS X.
 
 Windows
 ^^^^^^^
-TODO
+Para Windows são disponíveis duas versões:
+
+  * Um arquivo compactado (.ZIP), e um
+	* instalador (.EXE).
+
+Baixe a versão que melhor lhe convier. Recomendamos a versão .ZIP se você
+deseja apenas testar o NCL Composer, ou não tem permissão de administrador no
+sistema onde deseja instalar. Se você tem permissão de administrador,
+recomendamos o instalador .EXE pois nele você terá a opcão de já criar atalhos
+na Área de Trabalho e no Menu Iniciar.
+
+Para instalar a partir do .ZIP é suficiente extraí-lo em qualquer pasta do seu
+sistema onde queira instalar o NCL Composer.
+
+Para instalar a partir do .EXE, execute esse arquivo, que você será guiado por
+um passo-a-passo de instalacão.
 
 Linux (Ubuntu/Debian)
 ^^^^^^^^^^^^^^^^^^^^^
@@ -197,6 +210,20 @@ Mané Garrincha, escritas por Gerson Soares.
 NOTE: Uma descrição completa da animação _O Primeiro João_ pode ser encontrada
 em: <<Soares2012>>.
 
+Código-fonte dos Exemplos
+^^^^^^^^^^^^^^^^^^^^^^^^^
+No decorrer deste tutorial iremos criar uma única aplicação que evoluirá em
+cada um dos nossos exemplos. Para tirar total proveito deste tutorial, você
+precisará dos objetos de mídia que compõe essa aplicação. Um pacote apenas com
+os objetos de mídia que farão parte da aplicação pode ser encontrado em:
+
+  * link:exemplos/garrincha_nclcomposer_media_only.zip[garrincha_nclcomposer_media_only.zip] 
+
+Enquanto um pacote completo, com todos os objetos de mídia e os projetos no
+NCL Composer de cada um dos exemplos está disponível em:
+
+  * link:exemplos/garrincha_nclcomposer_full.zip[garrincha_nclcomposer_full.zip] 
+
 Olá Garrincha!
 ~~~~~~~~~~~~~~
 Em nosso primeiro exemplo, iremos apenas exibir o vídeo da animação. Para
@@ -232,8 +259,8 @@ por default no {nclcomposer}: {default_views}.
 Como é possível observar, quando criamos um novo projeto, o {nclcomposer}
 automaticamente já o cria com o cabeçalho e o corpo da aplicação.
 
-Se você for para a visão _Textual_ poderá ver o código que já foi gerado por
-padrão: 
+Se você for para a visão _Textual_ poderá ver o código XML do documento que já
+foi gerado por padrão: 
 
 [source,xml]
 -------------------------------------------
@@ -247,10 +274,6 @@ padrão:
   <body id="myBodyID"/>
 </ncl>
 -------------------------------------------
-
-Como é possível observar, a linguagem NCL é uma aplicação XML. Isso significa
-que ela segue a sintaxe definida por esse padrão. Por isso, todos os elementos
-da linguagem são delimitados por marcações utilizando "<", ">" e "/>".
 
 .Para saber mais: eXtensible Markup Language
 ********************************************
@@ -367,8 +390,8 @@ ser apresentado será o vídeo da animação _O Primeiro João_.
 
 Propriedades e dimensões dos objetos de mídia
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-Para finalizar o nosso exemplo inicial _Alô Garrincha_ só falta agora
-definirmos onde esse vídeo da animação será exibido. A forma mais simples de
+Para finalizar o nosso exemplo inicial _Alô Garrincha_ só falta definirmos
+onde esse vídeo da animação será exibido. A forma mais simples de
 definir as dimensões do objeto de mídia, é por meio de propriedades.
 
 Para inserirmos propriedades nos objetos de mídia por meio da _Visão
@@ -404,15 +427,23 @@ Nosso próximo exemplo ilustra como é possível introduzir vários objetos de
 mídia sincronizados no tempo. Vamos acrescentar:
 
   1. uma música de fundo (um chorinho), que deverá começar assim que terminar a
-apresentação inicial do vídeo e começar a animação propriamente dita;
+apresentação inicial do vídeo e começar a animação propriamente dita (i.e. 5s
+após o início do vídeo da animação);
   2. um outro objeto de vídeo, que deverá ser exibido em paralelo e sincronizado
-com o famoso “drible do vaivém” do Mané, retratado na animação; e ainda
+com o famoso "drible do vaivém" do Mané, retratado na animação; e ainda
   3. uma outra imagem, uma foto, que deverá ser exibida junto com a cena do
 marcador caído no chão.
 
 A imagem a seguir apresenta a visão temporal do nosso segundo exemplo:
 
 image::images/temporal-view.png[title="Visão temporal do exemplo 02.", width="50%",align="center"]
+
+Para desenvolver esse exemplo, vamos partir do exemplo anterior, no qual já
+temos o nosso objeto de mídia da animaćão. Sendo assim, temos que inserir os
+outros objetos de mídia que também farão parte deste exemplo:
+
+	* media/chorinho.mp3 (A música de fundo)
+	* media/shoes.mp3
 
 Reúso Apenas de Relação
 ^^^^^^^^^^^^^^^^^^^^^^^
