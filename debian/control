@@ -10,7 +10,7 @@ Vcs-Browser: http://git.telemidia.puc-rio.br
 
 Package: composer
 Architecture: any
-Depends: libssh2-1, libqt4-core, libqt4-gui, libqt4-network, libqt4-xml, libqt4-svg, libqtwebkit4, libqt4-help
+Depends: libssh2-1, libqt4-core, libqt4-gui, libqt4-network, libqt4-xml, libqt4-svg, libqtwebkit4, libqt4-help, libboost-regex1.46.1
 Description: NCL Composer is an extensible authoring tool for NCL.
  NCL Composer allows you to create interactive digital applications
  for Digital Television using NCL through a simple way. Its extensible

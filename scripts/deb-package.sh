@@ -2,7 +2,7 @@
 set -e
 
 #We need to install before to be able to compile the plugins.
-qmake FORCERELEASE=true PREFIX=/usr && make && make install
+qmake FORCERELEASE=true PREFIX=/usr && make install
 
 #Now, we start to generate the deb.
 debuild -us -uc
