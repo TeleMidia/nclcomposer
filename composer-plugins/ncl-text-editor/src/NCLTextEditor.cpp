@@ -180,15 +180,18 @@ void NCLTextEditor::wheelEvent (QWheelEvent *event)
 // keyPressEvent, to a function connected to selectionChanged signal.
 void NCLTextEditor::mousePressEvent(QMouseEvent *event)
 {
-  int previousLine, previousIndex;
-  getCursorPosition(&previousLine, &previousIndex);
+  int selBegin = SendScintilla(SCI_GETSELECTIONSTART);
+  int selEnd = SendScintilla(SCI_GETSELECTIONEND);
 
-  QString strline = text(previousLine);
-  clearIndicatorRange ( previousLine,
-                        0,
-                        previousLine,
-                        strline.size(),
-                        filling_attribute_indicator);
+  int clearBegin = SendScintilla(SCI_POSITIONFROMLINE, SendScintilla(SCI_LINEFROMPOSITION, selBegin));
+  int clearEnd  = SendScintilla(SCI_GETLINEENDPOSITION, SendScintilla(SCI_LINEFROMPOSITION, selEnd));
+
+  // if(selEnd)
+  //  clearEnd = SendScintilla(SCI_LINEEND, SendScintilla(SCI_LINEFROMPOSITION, selBegin));
+
+  qDebug() << clearBegin << clearEnd;
+
+  SendScintilla(SCI_INDICATORCLEARRANGE, clearBegin, clearEnd);
 
   QsciScintilla::mousePressEvent(event);
 
@@ -526,7 +529,21 @@ void NCLTextEditor::keepFocused()
 
 void NCLTextEditor::focusOutEvent(QFocusEvent *event)
 {
+  clearFillingAttributeIndicator();
+
   emit focusLosted(event);
+}
+
+void NCLTextEditor::clearFillingAttributeIndicator()
+{
+  int nr_lines = lines();
+  QString tmp2 = this->text(nr_lines);
+
+  clearIndicatorRange (0,
+                       0,
+                       nr_lines,
+                       tmp2.size(),
+                       filling_attribute_indicator);
 }
 
 void NCLTextEditor::focusInEvent(QFocusEvent *e)
