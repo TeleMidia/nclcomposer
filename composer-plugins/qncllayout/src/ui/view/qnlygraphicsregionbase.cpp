@@ -650,13 +650,26 @@ void QnlyGraphicsRegionBase::createConnections()
     connect(deleteAction, SIGNAL(triggered()),
             SLOT(performDelete()));
 
-    connect(re640x480, SIGNAL(triggered()), SLOT(perform640x480()));
-    connect(re800x600, SIGNAL(triggered()), SLOT(perform800x600()));
-    connect(re1024x768, SIGNAL(triggered()), SLOT(perform1024x768()));
-    connect(re854x480, SIGNAL(triggered()), SLOT(perform854x480()));
-    connect(re1280x720, SIGNAL(triggered()), SLOT(perform1280x720()));
-    connect(re1920x1080, SIGNAL(triggered()), SLOT(perform1920x1080()));
-    connect(re320x400, SIGNAL(triggered()), SLOT(perform320x400()));
+    re640x480->setData(QSize(640, 480));
+    connect(re640x480, SIGNAL(triggered()), SLOT(performChangeResolution()));
+
+    re800x600->setData(QSize(800, 600));
+    connect(re800x600, SIGNAL(triggered()), SLOT(performChangeResolution()));
+
+    re1024x768->setData(QSize(1024, 768));
+    connect(re1024x768, SIGNAL(triggered()), SLOT(performChangeResolution()));
+
+    re854x480->setData(QSize(854, 480));
+    connect(re854x480, SIGNAL(triggered()), SLOT(performChangeResolution()));
+
+    re1280x720->setData(QSize(1280, 720));
+    connect(re1280x720, SIGNAL(triggered()), SLOT(performChangeResolution()));
+
+    re1920x1080->setData(QSize(1920, 1080));
+    connect(re1920x1080, SIGNAL(triggered()), SLOT(performChangeResolution()));
+
+    re320x400->setData(QSize(320, 400));
+    connect(re320x400, SIGNAL(triggered()), SLOT(performChangeResolution()));
 
     connect(exportAction, SIGNAL(triggered()), SLOT(performExport()));
 
@@ -1011,81 +1024,25 @@ void QnlyGraphicsRegionBase::addRegion(QnlyGraphicsRegion* region,
     }
 }
 
-void QnlyGraphicsRegionBase::perform640x480()
+void QnlyGraphicsRegionBase::performChangeResolution()
 {
-    setSceneRect(0,0,640,480);
-    bgrect->setRect(0,0,640,480);
-    grid->setRect(0,0,640,480);
-
-    foreach(QnlyGraphicsRegion* r, regions.values()){
-        r->adjust();
-    }
+  QAction* action = dynamic_cast<QAction*> (QObject::sender());
+  if(action != NULL)
+  {
+    QSize size = action->data().toSize();
+    changeResolution(size.width(), size.height());
+  }
 }
 
-void QnlyGraphicsRegionBase::perform800x600()
+void QnlyGraphicsRegionBase::changeResolution(int w, int h)
 {
-    setSceneRect(0,0,800,600);
-    bgrect->setRect(0,0,800,600);
-    grid->setRect(0,0,800,600);
+  setSceneRect(0, 0, w, h);
+  bgrect->setRect(0, 0, w, h);
+  grid->setRect(0, 0, w, h);
 
-    foreach(QnlyGraphicsRegion* r, regions.values()){
-        r->adjust();
-    }
-}
-
-void QnlyGraphicsRegionBase::perform1024x768()
-{
-    setSceneRect(0,0,1024,768);
-    bgrect->setRect(0,0,1024,768);
-    grid->setRect(0,0,1024,768);
-
-    foreach(QnlyGraphicsRegion* r, regions.values()){
-        r->adjust();
-    }
-}
-
-void QnlyGraphicsRegionBase::perform854x480()
-{
-    setSceneRect(0,0,854,480);
-    bgrect->setRect(0,0,854,480);
-    grid->setRect(0,0,854,480);
-
-    foreach(QnlyGraphicsRegion* r, regions.values()){
-        r->adjust();
-    }
-}
-
-void QnlyGraphicsRegionBase::perform1280x720()
-{
-    setSceneRect(0,0,1280,720);
-    bgrect->setRect(0,0,1280,720);
-    grid->setRect(0,0,1280,720);
-
-    foreach(QnlyGraphicsRegion* r, regions.values()){
-        r->adjust();
-    }
-}
-
-void QnlyGraphicsRegionBase::perform1920x1080()
-{
-    setSceneRect(0,0,1920,1080);
-    bgrect->setRect(0,0,1920,1080);
-    grid->setRect(0,0,1920,1080);
-
-    foreach(QnlyGraphicsRegion* r, regions.values()){
-        r->adjust();
-    }
-}
-
-void QnlyGraphicsRegionBase::perform320x400()
-{
-    setSceneRect(0,0,320,400);
-    bgrect->setRect(0,0,320,400);
-    grid->setRect(0,0,320,400);
-
-    foreach(QnlyGraphicsRegion* r, regions.values()){
-        r->adjust();
-    }
+  foreach(QnlyGraphicsRegion* r, regions.values()) {
+      r->adjust();
+  }
 }
 
 void QnlyGraphicsRegionBase::performGrid()

@@ -131,13 +131,8 @@ protected slots:
 
     void performExport();
 
-    void perform640x480();
-    void perform800x600();
-    void perform1024x768();
-    void perform854x480();
-    void perform1280x720();
-    void perform1920x1080();
-    void perform320x400();
+    void performChangeResolution();
+    void changeResolution(int w, int h);
 
     void performGrid();
 
