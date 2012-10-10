@@ -306,16 +306,13 @@ void QnlyView::addRegion(const QString regionUID,
         QnlyGraphicsRegion* region = new QnlyGraphicsRegion(switchMenu);
 
         if (regionUID.isEmpty())
-        {
-            region->setUid((QString) QUuid::createUuid());
-        }
-        else{
-            region->setUid(regionUID);
-        }
+          region->setUid((QString) QUuid::createUuid());
+        else
+          region->setUid(regionUID);
 
         QnlyGraphicsRegion* parent = NULL;
 
-        if (regions.contains(parentUID)){
+        if (regions.contains(parentUID)) {
             parent = regions[parentUID];
         }
 
@@ -436,9 +433,12 @@ void QnlyView::removeRegion(QnlyGraphicsRegion* region,
 
         foreach(QGraphicsItem* item, region->childItems())
         {
-            QnlyGraphicsRegion* child = (QnlyGraphicsRegion*) item;
+            QnlyGraphicsRegion* child = dynamic_cast<QnlyGraphicsRegion*> (item);
 
-            removeRegion(child, regionBase);
+            if(item != NULL)
+              removeRegion(child, regionBase);
+            else
+              qWarning() << "Trying to remove an element that is not of the type QnlyGraphicsRegion " << __FILE__ << __LINE__;
         }
 
         regions.remove(region->getUid());
@@ -558,13 +558,7 @@ void QnlyView::removeRegionBase(QnlyGraphicsRegionBase* regionBase)
 {
     if (regionBase != NULL)
     {
-        qDebug() << "RegionBase Removed!";
-
-        QWidget* parent = (QWidget*) regionBase->parent();
-
-        removeWidget(parent);
-
-        regionbases.remove(regionBase->getUid());
+        qWarning() << "RegionBase removed!";
 
         QAction* action = regionbaseActions[regionBase->getUid()];
         switchMenu->removeAction(action);
@@ -575,15 +569,26 @@ void QnlyView::removeRegionBase(QnlyGraphicsRegionBase* regionBase)
 
         foreach(QGraphicsItem* item, regionBase->items())
         {
-            if (item != regionBase->getBackgroundItem()){
-                QnlyGraphicsRegion* child = (QnlyGraphicsRegion*) item;
+            if (item != regionBase->getBackgroundItem()) {
+                QnlyGraphicsRegion* child = dynamic_cast<QnlyGraphicsRegion *> (item);
 
-                regions.remove(child->getUid());
+                if (child != NULL)
+                {
+                  regions.remove(child->getUid());
+                }
+                else
+                  qWarning() << "Trying to remove an element that is not of the type QnlyGraphicsRegion " << __FILE__ << __LINE__;
             }
         }
 
 //        delete (regionBase);
 
+
+        QWidget* parent = (QWidget*) regionBase->parent();
+
+        removeWidget(parent);
+
+        regionbases.remove(regionBase->getUid());
 
         if (currentWidget() != NULL)
         {

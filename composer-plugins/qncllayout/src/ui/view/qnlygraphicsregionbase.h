@@ -201,6 +201,7 @@ private:
 
     QAction* action;
 
+    // \todo This could be an array (and the user could also add its own size)
     QAction* re640x480;
     QAction* re800x600;
     QAction* re1024x768;

@@ -729,9 +729,12 @@ void QnlyGraphicsRegionBase::removeRegion(QnlyGraphicsRegion* region)
 
             foreach(QGraphicsItem* item, region->childItems())
             {
-                QnlyGraphicsRegion* child = (QnlyGraphicsRegion*) item;
+                QnlyGraphicsRegion* child = dynamic_cast<QnlyGraphicsRegion*> (item);
 
-                regions.remove(child->getUid());
+                if(child != NULL)
+                  regions.remove(child->getUid());
+                else
+                  qWarning() << "Trying to remove an element that is not of the type QnlyGraphicsRegion " << __FILE__ << __LINE__;
             }
 
             parent->removeRegion(region);
@@ -740,9 +743,12 @@ void QnlyGraphicsRegionBase::removeRegion(QnlyGraphicsRegion* region)
         {
             foreach(QGraphicsItem* item, region->childItems())
             {
-                QnlyGraphicsRegion* child = (QnlyGraphicsRegion*) item;
+                QnlyGraphicsRegion* child = dynamic_cast<QnlyGraphicsRegion*> (item);
 
-                regions.remove(child->getUid());
+                if(child != NULL)
+                  regions.remove(child->getUid());
+                else
+                  qWarning() << "Trying to remove an element that is not of the type QnlyGraphicsRegion " << __FILE__ << __LINE__;
             }
 
             if(regionActions.contains(region->getUid()))
