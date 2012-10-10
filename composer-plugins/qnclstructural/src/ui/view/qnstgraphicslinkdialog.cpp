@@ -138,7 +138,7 @@ void CompleteLineEdit::setCompleter(const QString &text)
   QStringList sl;
   foreach(QString word, words)
   {
-    if (word.contains(text))
+    if (word.toLower().contains(text.toLower()))
     {
       sl << word;
     }
