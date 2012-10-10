@@ -100,7 +100,7 @@ void QnlyComposerPlugin::loadRegionbase()
 
             QVector<Entity*> children = regionbaseEntity->getChildren();
 
-            foreach(Entity* child, children){
+            foreach(Entity* child, children) {
                 loadRegion(child);
             }
         }
@@ -581,12 +581,13 @@ void QnlyComposerPlugin::removeRegionBaseFromView(QString entityUID)
 
             regionbaseUID = entityUID;
 
+            // select
+            view->removeRegionBase(regionbaseUID);
+
             regionbases.remove(regionbaseUID);
 
             relations.remove(entityUID);
 
-            // select
-            view->removeRegionBase(regionbaseUID);
         }
     }
 }
@@ -913,6 +914,9 @@ QMap <QString, QString> QnlyComposerPlugin::getRegionAttributes(Entity *region)
   double cvalue = 0.0;
 
   Entity *currentRegion = region;
+
+  // Here, we will compose all the hierachy values to get the final values of
+  // left, top, width and height.
   while(currentRegion != NULL && currentRegion->getType() == "region")
   {
     currentRegion->getAttributeIterator(begin, end);
@@ -960,6 +964,10 @@ QMap <QString, QString> QnlyComposerPlugin::getRegionAttributes(Entity *region)
   attrs.insert("height", QString::number(heights[0]*100.0)+"%");
   attrs.insert("left", QString::number(left*100.0)+"%");
   attrs.insert("top", QString::number(top*100.0)+"%");
+
+  // Add also the zIndex to the list of properties.
+  if(region->hasAttribute("zIndex"))
+    attrs.insert("zIndex", region->getAttribute("zIndex"));
 
   return attrs;
 }
