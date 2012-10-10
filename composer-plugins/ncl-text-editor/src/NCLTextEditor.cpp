@@ -186,9 +186,6 @@ void NCLTextEditor::mousePressEvent(QMouseEvent *event)
   int clearBegin = SendScintilla(SCI_POSITIONFROMLINE, SendScintilla(SCI_LINEFROMPOSITION, selBegin));
   int clearEnd  = SendScintilla(SCI_GETLINEENDPOSITION, SendScintilla(SCI_LINEFROMPOSITION, selEnd));
 
-  // if(selEnd)
-  //  clearEnd = SendScintilla(SCI_LINEEND, SendScintilla(SCI_LINEFROMPOSITION, selBegin));
-
   qDebug() << clearBegin << clearEnd;
 
   SendScintilla(SCI_INDICATORCLEARRANGE, clearBegin, clearEnd);
@@ -494,7 +491,7 @@ void NCLTextEditor::updateVisualFillingAttributeField( int line,
   while( end < strline.size() && strline[end] != '\"')
     end++;
 
-  if(end >= strline.size()) {
+  if(end >= strline.size() || begin == end) {
     interaction_state = DEFAULT_STATE;
     return;
   }
