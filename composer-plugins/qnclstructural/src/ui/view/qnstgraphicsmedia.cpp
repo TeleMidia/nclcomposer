@@ -210,6 +210,11 @@ void QnstGraphicsMedia::draw(QPainter* painter)
       painter->drawPixmap((getWidth()-8)/2 + 12, (getHeight()-8)/2 + 4, 12, 12, QPixmap(":/icon/alert"));
     }
 
+    if(!getReferUID().isEmpty() && getReferUID() != "")
+    {
+      painter->drawPixmap(0, 0, getWidth(), getHeight(), QPixmap(":/icon/alias"));
+    }
+
     QString localid = (getnstId() != "" ? getnstId() : "?");
 
     if (localid.length() > 5){
