@@ -18,7 +18,7 @@ else {
 
 #WHAT FEATURES TO COMPILE?
 #CONFIG += clubencl
-CONFIG += runssh_on
+#CONFIG += runssh_on
 CONFIG += help
 QT += core xml network webkit
 

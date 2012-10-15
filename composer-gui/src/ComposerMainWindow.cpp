@@ -86,7 +86,9 @@ void ComposerMainWindow::init(const QApplication &app)
   initModules();
   app.processEvents();
 
+#ifdef WITH_LIBSSH2
   SimpleSSHClient::init(); // Initializes the libssh2 library
+#endif
 
   autoSaveTimer = new QTimer(this);
   connect(autoSaveTimer, SIGNAL(timeout()),
