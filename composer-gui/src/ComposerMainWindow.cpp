@@ -943,10 +943,36 @@ void ComposerMainWindow::showCurrentWidgetFullScreen()
 void ComposerMainWindow::updateViewMenu()
 {
   ui->menu_Window->clear();
+
   ui->menu_Window->addAction(fullScreenViewAct);
+
+  ui->menu_Window->addSeparator();
+
+  //Update menu Views.
+  ui->menu_Views->clear();
+  ui->menu_Window->addMenu(ui->menu_Views);
+  if(tabProjects->count()) //see if there is any open document
+  {
+    QString location = tabProjects->tabToolTip(tabProjects->currentIndex());
+
+    QMainWindow *window = projectsWidgets[location];
+
+    for(int i = 0; i < allDocks.size(); i++)
+    {
+      if(window->isAncestorOf(allDocks.at(i)))
+        ui->menu_Views->addAction(allDocks.at(i)->toggleViewAction());
+    }
+  }
+
+  if(ui->menu_Views->isEmpty())
+    ui->menu_Views->setEnabled(false);
+  else
+    ui->menu_Views->setEnabled(true);
+
   ui->menu_Window->addSeparator();
   ui->menu_Window->addAction(saveCurrentPluginsLayoutAct);
   ui->menu_Window->addAction(restorePluginsLayoutAct);
+
 }
 
 void ComposerMainWindow::closeEvent(QCloseEvent *event)

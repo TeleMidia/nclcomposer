@@ -386,10 +386,10 @@ private slots:
 
   void autoSaveCurrentProjects();
 
-  // TODO: Remove this function.
+  // TODO: Remove this function from here.
   void updateLastFileDialogPath(QString filepath);
 
-  // TODO: Remove this function.
+  // TODO: Remove this function from here.
   QString getLastFileDialogPath();
 
   void addDefaultStructureToProject(Project *project,
