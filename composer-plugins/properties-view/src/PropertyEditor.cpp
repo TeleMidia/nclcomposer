@@ -199,7 +199,7 @@ void PropertyEditor::filterProperties(const QString& text)
   QString attr;
   foreach( attr, propertyToValue.keys() )
   {
-    if(attr.startsWith(text))
+    if(attr.toLower().startsWith(text.toLower()))
     {
       QTableWidgetItem *item = new QTableWidgetItem(attr);
       QTableWidgetItem *itemValue = new QTableWidgetItem(propertyToValue[attr]);
