@@ -189,7 +189,6 @@ void PropertyEditor::updateWithItemChanges(QTableWidgetItem *item)
 
 void PropertyEditor::filterProperties(const QString& text)
 {
-  qDebug() << "filterProperties";
   this->currentFilterString = text;
   while(ui->tableWidget->rowCount())
     ui->tableWidget->removeRow(0);
