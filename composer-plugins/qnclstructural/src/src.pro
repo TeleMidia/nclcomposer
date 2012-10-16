@@ -31,14 +31,8 @@ HEADERS += \
     ui/view/qnstgraphicsbody.h \
     ui/view/qnstgraphicscontent.h \
     ui/view/qnstgraphicsmedia.h \
-    ui/view/qnstgraphicsimage.h \
-    ui/view/qnstgraphicsvideo.h \
-    ui/view/qnstgraphicsaudio.h \
-    ui/view/qnstgraphicstext.h \
-    ui/view/qnstgraphicsscript.h \
     ui/view/qnstgraphicscontext.h \
     ui/view/qnstgraphicsswitch.h \
-    ui/view/qnstgraphicssettings.h \
     ui/view/qnstgraphicsentity.h \
     ui/view/qnstmenu.h \
     ui/view/qnstgraphicsinterface.h \
@@ -57,14 +51,12 @@ HEADERS += \
     ui/view/qnstgraphicsaction.h \
     ui/view/qnstlink.h \
     ui/view/qnstbind.h \
-    ui/view/qnstgraphicshtml.h \
     ui/view/qnstgraphicsarea.h \
     ui/view/qnstgraphicsproperty.h \
     ui/view/qnstaddcommand.h \
     ui/view/qnstchangecommand.h \
     ui/view/qnstremovecommand.h \
     ui/view/qnstgraphicsmapping.h \
-    ui/view/qnstgraphicsncl.h \
     ui/view/qnstgraphicsswitchport.h \
     ui/view/qnstgraphicsbinddialog.h
 
@@ -79,14 +71,8 @@ SOURCES += \
     ui/view/qnstgraphicsbody.cpp \
     ui/view/qnstgraphicscontent.cpp \
     ui/view/qnstgraphicsmedia.cpp \
-    ui/view/qnstgraphicsimage.cpp \
-    ui/view/qnstgraphicsvideo.cpp \
-    ui/view/qnstgraphicsaudio.cpp \
-    ui/view/qnstgraphicstext.cpp \
-    ui/view/qnstgraphicsscript.cpp \
     ui/view/qnstgraphicscontext.cpp \
     ui/view/qnstgraphicsswitch.cpp \
-    ui/view/qnstgraphicssettings.cpp \
     ui/view/qnstgraphicsentity.cpp \
     ui/view/qnstmenu.cpp \
     ui/view/qnstgraphicsinterface.cpp \
@@ -105,14 +91,12 @@ SOURCES += \
     ui/view/qnstgraphicsaction.cpp \
     ui/view/qnstlink.cpp \
     ui/view/qnstbind.cpp \
-    ui/view/qnstgraphicshtml.cpp \
     ui/view/qnstgraphicsarea.cpp \
     ui/view/qnstgraphicsproperty.cpp \
     ui/view/qnstaddcommand.cpp \
     ui/view/qnstchangecommand.cpp \
     ui/view/qnstremovecommand.cpp \
     ui/view/qnstgraphicsmapping.cpp \
-    ui/view/qnstgraphicsncl.cpp \
     ui/view/qnstgraphicsswitchport.cpp \
     ui/view/qnstgraphicsbinddialog.cpp
 

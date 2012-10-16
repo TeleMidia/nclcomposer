@@ -21,61 +21,26 @@ void QnstRemoveCommand::copy(QnstGraphicsEntity* entity)
 
     // if the entity type is BODY
     case Qnst::Body:
-        this->entity = new QnstGraphicsBody();
-
-        break;
-
-    // if the entity type is IMAGE
+    // or if the entity type is IMAGE
     case Qnst::Image:
-        this->entity = new QnstGraphicsImage();
-
-        break;
-
-    // if the entity type is AUDIO
+    // or if the entity type is AUDIO
     case Qnst::Audio:
-        this->entity = new QnstGraphicsAudio();
-
-        break;
-
-    // if the entity type is VIDEO
+    // or if the entity type is VIDEO
     case Qnst::Video:
-        this->entity = new QnstGraphicsVideo();
-
-        break;
-
-    // if the entity type is TEXT
+    // or if the entity type is TEXT
     case Qnst::Text:
-        this->entity = new QnstGraphicsText();
-
-        break;
-
-    // if the entity type is SCRIPT
+    // or if the entity type is SCRIPT
     case Qnst::Script:
-        this->entity = new QnstGraphicsScript();
-
-        break;
-
-    // if the entity type is SETTINGS
+    // or if the entity type is SETTINGS
     case Qnst::Settings:
-        this->entity = new QnstGraphicsSettings();
-
-        break;
-
-    // if the entity type is HTML
+    // or if the entity type is HTML
     case Qnst::Html:
-        this->entity = new QnstGraphicsHTML();
-
-        break;
-
     // if the entity type is NCL
     case Qnst::NCL:
-        this->entity = new QnstGraphicsNCL();
-
-        break;
-
     // if the entity type is MEDIA
     case Qnst::Media:
         this->entity = new QnstGraphicsMedia();
+        this->entity->setnstType(entity->getnstType());
         break;
 
     // if the entity type is CONTEXT
@@ -157,64 +122,33 @@ void QnstRemoveCommand::copy(QnstGraphicsEntity* entity, QnstGraphicsEntity* par
 
     switch(entity->getnstType()){
 
+      // if the entity type is IMAGE
+      case Qnst::Image:
+      // or if the entity type is AUDIO
+      case Qnst::Audio:
+      // or if the entity type is VIDEO
+      case Qnst::Video:
+      // or if the entity type is TEXT
+      case Qnst::Text:
+      // or if the entity type is SCRIPT
+      case Qnst::Script:
+      // or if the entity type is SETTINGS
+      case Qnst::Settings:
+      // or if the entity type is HTML
+      case Qnst::Html:
+      // or if the entity type is NCL
+      case Qnst::NCL:
+      // or if the entity type is MEDIA
+      case Qnst::Media:
+          c = new QnstGraphicsMedia();
+          c->setnstType(entity->getnstType());
+          break;
+
     // if the entity type is BODY
     case Qnst::Body:
         c = new QnstGraphicsBody();
 
-        break;
-
-    // if the entity type is IMAGE
-    case Qnst::Image:
-        c = new QnstGraphicsImage();
-
-        break;
-
-    // if the entity type is AUDIO
-    case Qnst::Audio:
-        c = new QnstGraphicsAudio();
-
-        break;
-
-    // if the entity type is VIDEO
-    case Qnst::Video:
-        c = new QnstGraphicsVideo();
-
-        break;
-
-    // if the entity type is TEXT
-    case Qnst::Text:
-        c = new QnstGraphicsText();
-
-        break;
-
-    // if the entity type is SCRIPT
-    case Qnst::Script:
-        c = new QnstGraphicsScript();
-
-        break;
-
-    // if the entity type is SETTINGS
-    case Qnst::Settings:
-        c = new QnstGraphicsSettings();
-
-        break;
-
-    // if the entity type is HTML
-    case Qnst::Html:
-        c = new QnstGraphicsHTML();
-
-        break;
-
-    // if the entity type is NCL
-    case Qnst::NCL:
-        c = new QnstGraphicsNCL();
-
-        break;
-
-    // if the entity type is MEDIA
-    case Qnst::Media:
-        c = new QnstGraphicsMedia();
-        break;
+        break;    
 
     // if the entity type is CONTEXT
     case Qnst::Context:
@@ -301,81 +235,28 @@ void QnstRemoveCommand::undo()
 
         // if the entity type is BODY
         case Qnst::Body:
-            e = new QnstGraphicsBody();
-
-            e->setnstId(entity->getnstId());
-
-            break;
-
         // if the entity type is IMAGE
         case Qnst::Image:
-            e = new QnstGraphicsImage();
-
-            ((QnstGraphicsImage*) e)->setnstId(entity->getnstId());
-
-            break;
-
         // if the entity type is AUDIO
         case Qnst::Audio:
-            e = new QnstGraphicsAudio();
-
-            ((QnstGraphicsAudio*) e)->setnstId(entity->getnstId());
-
-            break;
-
         // if the entity type is VIDEO
         case Qnst::Video:
-            e = new QnstGraphicsVideo();
-
-            ((QnstGraphicsVideo*) e)->setnstId(entity->getnstId());
-
-            break;
-
         // if the entity type is TEXT
         case Qnst::Text:
-            e = new QnstGraphicsText();
-
-            ((QnstGraphicsText*) e)->setnstId(entity->getnstId());
-
-            break;
-
         // if the entity type is SCRIPT
         case Qnst::Script:
-            e = new QnstGraphicsScript();
-
-            ((QnstGraphicsScript*) e)->setnstId(entity->getnstId());
-
-            break;
-
         // if the entity type is SETTINGS
         case Qnst::Settings:
-            e = new QnstGraphicsSettings();
-
-            ((QnstGraphicsSettings*) e)->setnstId(entity->getnstId());
-
-            break;
-
         // if the entity type is HTML
         case Qnst::Html:
-            e = new QnstGraphicsHTML();
-
-            ((QnstGraphicsHTML*) e)->setnstId(entity->getnstId());
-
-            break;
-
         // if the entity type is NCL
         case Qnst::NCL:
-            e = new QnstGraphicsNCL();
-
-            ((QnstGraphicsNCL*) e)->setnstId(entity->getnstId());
-
-            break;
-
         // if the entity type is MEDIA
         case Qnst::Media:
             e = new QnstGraphicsMedia();
+            e->setnstType(entity->getnstType());
 
-            ((QnstGraphicsImage*) e)->setnstId(entity->getnstId());
+            ((QnstGraphicsMedia*) e)->setnstId(entity->getnstId());
 
             break;
 
@@ -479,83 +360,36 @@ void QnstRemoveCommand::paste(QnstGraphicsEntity* entity, QnstGraphicsEntity* pa
 
     switch(entity->getnstType()){
 
+    // if the entity type is IMAGE
+    case Qnst::Image:
+    // if the entity type is AUDIO
+    case Qnst::Audio:
+    // if the entity type is VIDEO
+    case Qnst::Video:
+    // if the entity type is TEXT
+    case Qnst::Text:
+    // if the entity type is SCRIPT
+    case Qnst::Script:
+    // if the entity type is SETTINGS
+    case Qnst::Settings:
+    // if the entity type is HTML
+    case Qnst::Html:
+    // if the entity type is NCL
+    case Qnst::NCL:
+    // if the entity type is MEDIA
+    case Qnst::Media:
+        e = new QnstGraphicsMedia();
+        e->setnstType(entity->getnstType());
+
+        ((QnstGraphicsMedia*) e)->setnstId(entity->getnstId());
+
+        break;
+
     // if the entity type is BODY
     case Qnst::Body:
         e = new QnstGraphicsBody();
 
         e->setnstId(entity->getnstId());
-
-        break;
-
-    // if the entity type is IMAGE
-    case Qnst::Image:
-        e = new QnstGraphicsImage();
-
-        ((QnstGraphicsImage*) e)->setnstId(entity->getnstId());
-
-        break;
-
-    // if the entity type is AUDIO
-    case Qnst::Audio:
-        e = new QnstGraphicsAudio();
-
-        ((QnstGraphicsAudio*) e)->setnstId(entity->getnstId());
-
-        break;
-
-    // if the entity type is VIDEO
-    case Qnst::Video:
-        e = new QnstGraphicsVideo();
-
-        ((QnstGraphicsVideo*) e)->setnstId(entity->getnstId());
-
-        break;
-
-    // if the entity type is TEXT
-    case Qnst::Text:
-        e = new QnstGraphicsText();
-
-        ((QnstGraphicsText*) e)->setnstId(entity->getnstId());
-
-        break;
-
-    // if the entity type is SCRIPT
-    case Qnst::Script:
-        e = new QnstGraphicsScript();
-
-        ((QnstGraphicsScript*) e)->setnstId(entity->getnstId());
-
-        break;
-
-    // if the entity type is SETTINGS
-    case Qnst::Settings:
-        e = new QnstGraphicsSettings();
-
-        ((QnstGraphicsSettings*) e)->setnstId(entity->getnstId());
-
-        break;
-
-    // if the entity type is HTML
-    case Qnst::Html:
-        e = new QnstGraphicsHTML();
-
-        ((QnstGraphicsHTML*) e)->setnstId(entity->getnstId());
-
-        break;
-
-    // if the entity type is NCL
-    case Qnst::NCL:
-        e = new QnstGraphicsNCL();
-
-        ((QnstGraphicsNCL*) e)->setnstId(entity->getnstId());
-
-        break;
-
-    // if the entity type is MEDIA
-    case Qnst::Media:
-        e = new QnstGraphicsMedia();
-
-        ((QnstGraphicsImage*) e)->setnstId(entity->getnstId());
 
         break;
 

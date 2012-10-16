@@ -1,13 +1,5 @@
 #include "qnstgraphicscomposition.h"
 
-#include "qnstgraphicshtml.h"
-#include "qnstgraphicsncl.h"
-#include "qnstgraphicsimage.h"
-#include "qnstgraphicsaudio.h"
-#include "qnstgraphicstext.h"
-#include "qnstgraphicsvideo.h"
-#include "qnstgraphicsscript.h"
-#include "qnstgraphicssettings.h"
 #include "qnstgraphicsmedia.h"
 #include "qnstgraphicscontext.h"
 
@@ -88,39 +80,16 @@ bool QnstGraphicsComposition::createEntity(Qnst::EntityType type)
   switch(type)
   {
   case Qnst::Html:
-    entity = new QnstGraphicsHTML(this);
-    break;
-
   case Qnst::NCL:
-    entity = new QnstGraphicsNCL(this);
-    break;
-
   case Qnst::Image:
-    entity = new QnstGraphicsImage(this);
-    break;
-
   case Qnst::Audio:
-    entity = new QnstGraphicsAudio(this);
-    break;
-
   case Qnst::Text:
-    entity = new QnstGraphicsText(this);
-    break;
-
   case Qnst::Video:
-    entity = new QnstGraphicsVideo(this);
-    break;
-
   case Qnst::Script:
-    entity = new QnstGraphicsScript(this);
-    break;
-
   case Qnst::Settings:
-    entity = new QnstGraphicsSettings(this);
-    break;
-
   case Qnst::Media:
     entity = new QnstGraphicsMedia(this);
+    entity->setnstType(type);
     break;
 
   case Qnst::Context:

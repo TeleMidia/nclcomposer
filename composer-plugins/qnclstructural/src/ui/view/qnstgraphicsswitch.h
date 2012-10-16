@@ -4,16 +4,8 @@
 #include "qnstgraphicscomposition.h"
 
 #include "qnstgraphicscontext.h"
-#include "qnstgraphicsimage.h"
-#include "qnstgraphicstext.h"
-#include "qnstgraphicsaudio.h"
-#include "qnstgraphicsvideo.h"
-#include "qnstgraphicssettings.h"
-#include "qnstgraphicsscript.h"
 #include "qnstgraphicsmedia.h"
 #include "qnstgraphicsport.h"
-#include "qnstgraphicshtml.h"
-#include "qnstgraphicsncl.h"
 #include "qnstgraphicsswitchport.h"
 
 class QnstGraphicsSwitch : public QnstGraphicsComposition

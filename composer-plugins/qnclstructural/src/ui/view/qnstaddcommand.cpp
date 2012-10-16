@@ -16,65 +16,34 @@ QnstAddCommand::~QnstAddCommand()
 
 void QnstAddCommand::copy(QnstGraphicsEntity* entity)
 {
-    switch(entity->getnstType()){
+    switch(entity->getnstType())
+    {
+      // if the entity type is IMAGE
+      case Qnst::Image:
+      // or if the entity type is AUDIO
+      case Qnst::Audio:
+      // or if the entity type is VIDEO
+      case Qnst::Video:
+      // or if the entity type is TEXT
+      case Qnst::Text:
+      // or if the entity type is SCRIPT
+      case Qnst::Script:
+      // or if the entity type is SETTINGS
+      case Qnst::Settings:
+      // or if the entity type is HTML
+      case Qnst::Html:
+      // or if the entity type is NCL
+      case Qnst::NCL:
+      // if the entity type is MEDIA
+      case Qnst::Media:
+          this->entity = new QnstGraphicsMedia();
+          this->entity->setnstType(entity->getnstType());
+          break;
 
     // if the entity type is BODY
     case Qnst::Body:
         this->entity = new QnstGraphicsBody();
 
-        break;
-
-    // if the entity type is IMAGE
-    case Qnst::Image:
-        this->entity = new QnstGraphicsImage();
-
-        break;
-
-    // if the entity type is AUDIO
-    case Qnst::Audio:
-        this->entity = new QnstGraphicsAudio();
-
-        break;
-
-    // if the entity type is VIDEO
-    case Qnst::Video:
-        this->entity = new QnstGraphicsVideo();
-
-        break;
-
-    // if the entity type is TEXT
-    case Qnst::Text:
-        this->entity = new QnstGraphicsText();
-
-        break;
-
-    // if the entity type is SCRIPT
-    case Qnst::Script:
-        this->entity = new QnstGraphicsScript();
-
-        break;
-
-    // if the entity type is SETTINGS
-    case Qnst::Settings:
-        this->entity = new QnstGraphicsSettings();
-
-        break;
-
-    // if the entity type is HTML
-    case Qnst::Html:
-        this->entity = new QnstGraphicsHTML();
-
-        break;
-
-    // if the entity type is NCL
-    case Qnst::NCL:
-        this->entity = new QnstGraphicsNCL();
-
-        break;
-
-    // if the entity type is MEDIA
-    case Qnst::Media:
-        this->entity = new QnstGraphicsMedia();
         break;
 
     // if the entity type is CONTEXT
@@ -164,23 +133,28 @@ void QnstAddCommand::redo()
       // instantiate the new entity
       switch(entity->getnstType())
       {
-      case Qnst::Body: e = new QnstGraphicsBody(); break;
-      case Qnst::Image: e = new QnstGraphicsImage(); break;
-      case Qnst::Audio: e = new QnstGraphicsAudio(); break;
-      case Qnst::Video: e = new QnstGraphicsVideo(); break;
-      case Qnst::Text: e = new QnstGraphicsText(); break;
-      case Qnst::Script: e = new QnstGraphicsScript(); break;
-      case Qnst::Settings: e = new QnstGraphicsSettings(); break;
-      case Qnst::Html: e = new QnstGraphicsHTML(); break;
-      case Qnst::NCL: e = new QnstGraphicsNCL(); break;
-      case Qnst::Media: e = new QnstGraphicsMedia(); break;
-      case Qnst::Context: e = new QnstGraphicsContext(); break;
-      case Qnst::Switch: e = new QnstGraphicsSwitch(); break;
-      case Qnst::Port: e = new QnstGraphicsPort(); break;
-      case Qnst::SwitchPort: e = new QnstGraphicsSwitchPort(); break;
-      case Qnst::Area: e = new QnstGraphicsArea(); break;
-      case Qnst::Property: e = new QnstGraphicsProperty(); break;
-      case Qnst::Aggregator: e = new QnstGraphicsAggregator(); break;
+        case Qnst::Image:
+        case Qnst::Audio:
+        case Qnst::Video:
+        case Qnst::Text:
+        case Qnst::Script:
+        case Qnst::Settings:
+        case Qnst::Html:
+        case Qnst::NCL:
+        case Qnst::Media:
+          e = new QnstGraphicsMedia();
+          e->setnstType(entity->getnstType());
+          break;
+
+        case Qnst::Body: e = new QnstGraphicsBody(); break;
+
+        case Qnst::Context: e = new QnstGraphicsContext(); break;
+        case Qnst::Switch: e = new QnstGraphicsSwitch(); break;
+        case Qnst::Port: e = new QnstGraphicsPort(); break;
+        case Qnst::SwitchPort: e = new QnstGraphicsSwitchPort(); break;
+        case Qnst::Area: e = new QnstGraphicsArea(); break;
+        case Qnst::Property: e = new QnstGraphicsProperty(); break;
+        case Qnst::Aggregator: e = new QnstGraphicsAggregator(); break;
 
       default:
         // do nothing
