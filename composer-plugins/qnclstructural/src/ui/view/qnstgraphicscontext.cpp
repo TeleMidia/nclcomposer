@@ -1,6 +1,6 @@
 #include "qnstgraphicscontext.h"
 
-QnstGraphicsContext::QnstGraphicsContext(QnstGraphicsNode* parent)
+QnstGraphicsContext::QnstGraphicsContext(QnstGraphicsEntity* parent)
     : QnstGraphicsComposition(parent)
 {
     setnstType(Qnst::Context);

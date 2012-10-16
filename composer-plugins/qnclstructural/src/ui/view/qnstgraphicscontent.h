@@ -6,7 +6,7 @@
 class QnstGraphicsContent : public QnstGraphicsNode
 {
 public:
-    QnstGraphicsContent(QnstGraphicsNode* parent = 0);
+    QnstGraphicsContent(QnstGraphicsEntity* parent = 0);
 
     ~QnstGraphicsContent();
 };

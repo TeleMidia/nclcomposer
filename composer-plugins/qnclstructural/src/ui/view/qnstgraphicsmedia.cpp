@@ -2,7 +2,7 @@
 
 #include <QDrag>
 
-QnstGraphicsMedia::QnstGraphicsMedia(QnstGraphicsNode* parent)
+QnstGraphicsMedia::QnstGraphicsMedia(QnstGraphicsEntity* parent)
   : QnstGraphicsContent(parent), enableDrag(false)
 {
     setnstType(Qnst::Media);

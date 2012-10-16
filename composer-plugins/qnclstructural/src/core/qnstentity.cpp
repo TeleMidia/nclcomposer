@@ -19,11 +19,11 @@
 
 QnstEntity::QnstEntity(QnstEntity* parent)
 {
-    setnstType(Qnst::NoType);
+  setnstType(Qnst::NoType);
 
-    setnstParent(parent);
+  setnstParent(parent);
 
-    setnstUid((QString) QUuid::createUuid());
+  setnstUid((QString) QUuid::createUuid());
 }
 
 QnstEntity::~QnstEntity()
@@ -33,32 +33,32 @@ QnstEntity::~QnstEntity()
 
 QString QnstEntity::getnstUid() const
 {
-    return uid;
+  return uid;
 }
 
 void QnstEntity::setnstUid(QString uid)
 {
-    this->uid = uid;
+  this->uid = uid;
 }
 
 QString QnstEntity::getnstId() const
 {
-    return id;
+  return id;
 }
 
 void QnstEntity::setnstId(QString id)
 {
-    this->id = id;
+  this->id = id;
 }
 
 QnstType QnstEntity::getnstType() const
 {
-    return type;
+  return type;
 }
 
 void QnstEntity::setnstType(QnstType type)
 {
-    this->type = type;
+  this->type = type;
 }
 
 QMap <QString, QString> QnstEntity::getUsrData()
@@ -68,38 +68,38 @@ QMap <QString, QString> QnstEntity::getUsrData()
 
 void QnstEntity::setUsrData(QMap <QString, QString> newUserData)
 {
-    userData = newUserData;
+  userData = newUserData;
 }
 
 QnstEntity* QnstEntity::getnstParent() const
 {
-    return parent;
+  return parent;
 }
 
 void QnstEntity::setnstParent(QnstEntity* parent)
 {
-    this->parent = parent;
+  this->parent = parent;
 }
 
 QVector<QnstEntity*> QnstEntity::getnstEntities()
 {
-    return entities;
+  return entities;
 }
 
 void QnstEntity::addnstEntity(QnstEntity* entity)
 {
-    if (entity != NULL){
-        entities.append(entity);
-    }
+  if (entity != NULL)
+    entities.append(entity);
 }
 
 void QnstEntity::removenstEntity(QnstEntity* entity)
 {
-    if (entity != NULL){
-        int index = entities.indexOf(entity);
+  if (entity != NULL)
+  {
+    int index = entities.indexOf(entity);
 
-        if (index >= 0){
-            entities.remove(index);
-        }
-    }
+    if (index >= 0)
+      entities.remove(index);
+
+  }
 }

@@ -17,7 +17,7 @@ class QnstGraphicsMedia : public QnstGraphicsContent
     Q_OBJECT
 
 public:
-    QnstGraphicsMedia(QnstGraphicsNode* parent = 0);
+    QnstGraphicsMedia(QnstGraphicsEntity* parent = 0);
 
     ~QnstGraphicsMedia();
 

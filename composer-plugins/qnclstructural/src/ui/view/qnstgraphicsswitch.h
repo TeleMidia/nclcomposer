@@ -13,7 +13,7 @@ class QnstGraphicsSwitch : public QnstGraphicsComposition
     Q_OBJECT
 
 public:
-    QnstGraphicsSwitch(QnstGraphicsNode* parent = 0);
+    QnstGraphicsSwitch(QnstGraphicsEntity* parent = 0);
 
     ~QnstGraphicsSwitch();
 

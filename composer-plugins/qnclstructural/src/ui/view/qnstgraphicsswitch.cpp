@@ -1,6 +1,6 @@
 #include "qnstgraphicsswitch.h"
 
-QnstGraphicsSwitch::QnstGraphicsSwitch(QnstGraphicsNode* parent)
+QnstGraphicsSwitch::QnstGraphicsSwitch(QnstGraphicsEntity* parent)
     : QnstGraphicsComposition(parent)
 {
     setnstType(Qnst::Switch);

@@ -13,7 +13,7 @@ class QnstGraphicsContext : public QnstGraphicsComposition
     Q_OBJECT
 
 public:
-    QnstGraphicsContext(QnstGraphicsNode* parent = 0);
+    QnstGraphicsContext(QnstGraphicsEntity* parent = 0);
 
     ~QnstGraphicsContext();
 

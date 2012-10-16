@@ -7,7 +7,7 @@
 class QnstGraphicsAggregator : public QnstGraphicsContent
 {
 public:
-    QnstGraphicsAggregator(QnstGraphicsNode* parent = 0);
+    QnstGraphicsAggregator(QnstGraphicsEntity* parent = 0);
 
     ~QnstGraphicsAggregator();
 

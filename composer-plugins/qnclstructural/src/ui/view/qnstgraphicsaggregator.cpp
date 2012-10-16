@@ -1,6 +1,6 @@
 #include "qnstgraphicsaggregator.h"
 
-QnstGraphicsAggregator::QnstGraphicsAggregator(QnstGraphicsNode* parent)
+QnstGraphicsAggregator::QnstGraphicsAggregator(QnstGraphicsEntity* parent)
     : QnstGraphicsContent(parent)
 {
     setnstType(Qnst::Aggregator);

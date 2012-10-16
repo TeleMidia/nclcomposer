@@ -19,7 +19,7 @@ class QnstGraphicsBody : public QnstGraphicsComposition
     Q_OBJECT
 
 public:
-    QnstGraphicsBody(QnstGraphicsNode* parent = 0);
+    QnstGraphicsBody(QnstGraphicsEntity* parent = 0);
 
     ~QnstGraphicsBody();
 

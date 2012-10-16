@@ -1,6 +1,6 @@
 #include "qnstgraphicsbody.h"
 
-QnstGraphicsBody::QnstGraphicsBody(QnstGraphicsNode* parent)
+QnstGraphicsBody::QnstGraphicsBody(QnstGraphicsEntity* parent)
     : QnstGraphicsComposition(parent)
 {
     setnstType(Qnst::Body);

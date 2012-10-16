@@ -2,10 +2,11 @@
 
 #include "qnstgraphicsmedia.h"
 #include "qnstgraphicscontext.h"
+#include "qnstutil.h"
 
 #include <QDebug>
 
-QnstGraphicsComposition::QnstGraphicsComposition(QnstGraphicsNode* parent)
+QnstGraphicsComposition::QnstGraphicsComposition(QnstGraphicsEntity* parent)
     : QnstGraphicsNode(parent)
 {
     setnstType(Qnst::Compostion);
@@ -75,38 +76,9 @@ void QnstGraphicsComposition::setnstId(QString id)
 
 bool QnstGraphicsComposition::createEntity(Qnst::EntityType type)
 {
-  QnstGraphicsEntity *entity;
-
-  switch(type)
-  {
-  case Qnst::Html:
-  case Qnst::NCL:
-  case Qnst::Image:
-  case Qnst::Audio:
-  case Qnst::Text:
-  case Qnst::Video:
-  case Qnst::Script:
-  case Qnst::Settings:
-  case Qnst::Media:
-    entity = new QnstGraphicsMedia(this);
-    entity->setnstType(type);
-    break;
-
-  case Qnst::Context:
-    entity = new QnstGraphicsContext(this);
-    break;
-
-  case Qnst::Switch:
-    entity = new QnstGraphicsSwitch(this);
-    break;
-
-
-  default:
-    entity = NULL;
-  }
+  QnstGraphicsEntity *entity = QnstUtil::makeGraphicsEntity(type, this);
 
   if(entity == NULL) return false;
-
 
   QnstGraphicsMedia *content  = dynamic_cast<QnstGraphicsMedia*>(entity);
   qDebug() << (bool) content;
