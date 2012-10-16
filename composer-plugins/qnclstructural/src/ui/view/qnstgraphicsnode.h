@@ -11,7 +11,7 @@
 class QnstGraphicsNode : public QnstGraphicsEntity
 {
 public:
-    QnstGraphicsNode(QnstGraphicsNode* parent = 0);
+    QnstGraphicsNode(QnstGraphicsEntity* parent = 0);
 
     ~QnstGraphicsNode();
 

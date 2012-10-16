@@ -2,7 +2,7 @@
 
 #include <QDebug>
 
-QnstGraphicsNode::QnstGraphicsNode(QnstGraphicsNode* parent)
+QnstGraphicsNode::QnstGraphicsNode(QnstGraphicsEntity* parent)
     : QnstGraphicsEntity(parent)
 {
     setncgType(Qncg::Node);
