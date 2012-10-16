@@ -188,14 +188,14 @@ void QnlyGraphicsRegion::setPainted(bool painted)
     this->painted = painted;
 }
 
-void QnlyGraphicsRegion::setzIndex(qreal zindex)
+void QnlyGraphicsRegion::setzIndex(int zindex)
 {
     this->zindex = zindex;
 
     setZValue(zindex);
 }
 
-qreal QnlyGraphicsRegion::getzIndex() const
+int QnlyGraphicsRegion::getzIndex() const
 {
     return zindex;
 }
@@ -1395,9 +1395,11 @@ void QnlyGraphicsRegion::mouseReleaseEvent(QGraphicsSceneMouseEvent* event)
 
              }
 
-            setChanged(true);
+             attributes["zIndex"] = QString::number(getzIndex());
 
-            emit regionChangeRequested(this,attributes);
+             setChanged(true);
+
+             emit regionChangeRequested(this,attributes);
         }
     }
 
@@ -1508,6 +1510,8 @@ void QnlyGraphicsRegion::mouseReleaseEvent(QGraphicsSceneMouseEvent* event)
                 ROUND_DOUBLE(value);
                 attributes["bottom"] = QString::number(value, 'f', 2) + "%";
             }
+
+            attributes["zIndex"] = QString::number(getzIndex());
 
             setChanged(true);
 

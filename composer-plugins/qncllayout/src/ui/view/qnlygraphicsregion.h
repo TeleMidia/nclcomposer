@@ -106,9 +106,9 @@ public:
 
     void setColor(const QString &color);
 
-    qreal getzIndex() const;
+    int getzIndex() const;
 
-    void setzIndex(qreal zindex);
+    void setzIndex(int zindex);
 
     qreal getzIndexTop() const;
 

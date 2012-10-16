@@ -264,6 +264,9 @@ void QnlyGraphicsRegionBase::changeRegion(QnlyGraphicsRegion* region,
             }
         }
 
+        if(attributes.contains("zIndex"))
+          region->setzIndex(attributes["zIndex"].toInt());
+
         region->adjust();
     }
 }
@@ -346,6 +349,11 @@ void QnlyGraphicsRegionBase::requestRegionChange(QnlyGraphicsRegion* region,
     }
 
     // TODO: zIndex
+    if(attributes.contains("zIndex"))
+    {
+      value = region->getzIndex();
+      full["zIndex"] = QString::number(value);
+    }
 
     emit regionChangeRequested( region->getUid(),
                                 uid,
@@ -697,6 +705,7 @@ void QnlyGraphicsRegionBase::requestAdditionRegion(QnlyGraphicsRegion* parent)
 //    attributes["bottom"] = "10%";
     attributes["width"] = "80%";
     attributes["height"] = "80%";
+    attributes["zIndex"] = "0";
 
     emit regionAdditionRequested("", parent->getUid(),uid,attributes);
 }
@@ -795,6 +804,7 @@ void QnlyGraphicsRegionBase::performRegion()
     attributes["bottom"] = "10%";
     attributes["width"] = "80%";
     attributes["height"] = "80%";
+    attributes["zIndex"] = "0";
 
     emit regionAdditionRequested("", "",uid,attributes);
 }
@@ -961,6 +971,9 @@ void QnlyGraphicsRegionBase::addRegion(QnlyGraphicsRegion* region,
                 }
             }
         }
+
+        if(attributes.contains("zIndex"))
+          region->setzIndex(attributes["zIndex"].toInt());
 
         region->setGridAction(gridAction);
 
