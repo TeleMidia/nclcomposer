@@ -43,6 +43,8 @@ public:
 
     void removenstEntity(QnstEntity* entity);
 
+    bool isMedia();
+
 private:
     QString id;
 

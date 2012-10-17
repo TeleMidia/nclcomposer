@@ -61,6 +61,12 @@ void QnstEntity::setnstType(QnstType type)
   this->type = type;
 }
 
+bool QnstEntity::isMedia()
+{
+  return ( (this->type >= Qnst::Media) &&
+           (this->type <= Qnst::Settings) );
+}
+
 QMap <QString, QString> QnstEntity::getUsrData()
 {
   return userData;
