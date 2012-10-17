@@ -1,16 +1,16 @@
-#ifndef QNSTCONNCETOR_H
-#define QNSTCONNCETOR_H
+#ifndef QNSTCONNECTOR_H
+#define QNSTCONNECTOR_H
 
 #include <QMap>
 
 #include  "qnstentity.h"
 
-class QnstConncetor : public QnstEntity
+class QnstConnector : public QnstEntity
 {
 public:
-    QnstConncetor();
+    QnstConnector();
 
-    ~QnstConncetor();
+    ~QnstConnector();
 
     QString getName();
 
@@ -44,4 +44,4 @@ private:
     QMap<QString, QString> actions;
 };
 
-#endif // QNSTCONNCETOR_H
+#endif // QNSTCONNECTOR_H

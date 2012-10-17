@@ -395,7 +395,7 @@ void QnstGraphicsCondition::delineate(QPainterPath* painter) const
     }
 }
 
-void QnstGraphicsCondition::setConn(QnstConncetor* conn)
+void QnstGraphicsCondition::setConn(QnstConnector* conn)
 {
     this->conn = conn;
 }

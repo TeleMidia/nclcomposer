@@ -11,7 +11,7 @@ QnstGraphicsConditionDialog::~QnstGraphicsConditionDialog()
 
 }
 
-void QnstGraphicsConditionDialog::init(QMap<QString, QnstConncetor*> connectors, QnstLink* link)
+void QnstGraphicsConditionDialog::init(QMap<QString, QnstConnector*> connectors, QnstLink* link)
 {
     this->connectors = connectors;
     this->link = link;
@@ -37,7 +37,7 @@ void QnstGraphicsConditionDialog::init(QMap<QString, QnstConncetor*> connectors,
     form.cbCondition->setEnabled(true);
     form.cbCondition->clear();
 
-    QnstConncetor* conn;
+    QnstConnector* conn;
 
     if (link != NULL){
         conn = connectors[link->getxConnector()];

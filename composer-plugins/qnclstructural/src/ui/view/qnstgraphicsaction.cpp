@@ -428,7 +428,7 @@ void QnstGraphicsAction::removeParam(QString name)
     emit bindParamUpdated(getnstUid() ,params, name_uid);
 }
 
-void QnstGraphicsAction::setConn(QnstConncetor* conn)
+void QnstGraphicsAction::setConn(QnstConnector* conn)
 {
     this->conn = conn;
 }

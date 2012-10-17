@@ -11,7 +11,7 @@ QnstGraphicsActionDialog::~QnstGraphicsActionDialog()
 
 }
 
-void QnstGraphicsActionDialog::init(QMap<QString, QnstConncetor*> connectors, QnstLink* link)
+void QnstGraphicsActionDialog::init(QMap<QString, QnstConnector*> connectors, QnstLink* link)
 {
     this->connectors = connectors;
     this->link = link;
@@ -37,7 +37,7 @@ void QnstGraphicsActionDialog::init(QMap<QString, QnstConncetor*> connectors, Qn
     form.cbAction->clear();
     form.cbAction->setEnabled(true);
 
-    QnstConncetor* conn;
+    QnstConnector* conn;
 
     if (link != NULL){
         conn = connectors[link->getxConnector()];

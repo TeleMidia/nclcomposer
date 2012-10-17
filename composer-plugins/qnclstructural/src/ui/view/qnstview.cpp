@@ -289,7 +289,7 @@ void QnstView::read(QDomElement element, QDomElement parent)
         importBases[element.attribute("uid")] = element.attribute("connUID");
 
     }else if (element.nodeName() == "connector"){
-        QnstConncetor* conn = new QnstConncetor();
+        QnstConnector* conn = new QnstConnector();
         conn->setnstUid(element.attribute("uid"));
         conn->setName(element.attribute("id"));
 
@@ -687,7 +687,7 @@ QString QnstView::serialize()
         root.appendChild(e);
     }
 
-    foreach(QnstConncetor* conn, connectors.values()){
+    foreach(QnstConnector* conn, connectors.values()){
         QDomElement e = dom->createElement("connector");
 
         e.setAttribute("id", conn->getName());
@@ -1584,13 +1584,13 @@ void QnstView::removeEntity(const QString uid, bool undo, bool rmRef)
         }
     }else if (importBases.contains(uid)){
 
-        foreach(QnstConncetor* cc, connectors.values()){
+        foreach(QnstConnector* cc, connectors.values()){
             if (cc->getnstUid() == importBases[uid]){
                 connectors.remove(cc->getName());
             }
         }
 
-        foreach(QnstConncetor* cc, connectors2.values()){
+        foreach(QnstConnector* cc, connectors2.values()){
             if (cc->getnstUid() == importBases[uid]){
                 connectors2.remove(cc->getnstId());
             }
@@ -1854,13 +1854,13 @@ void QnstView::addImportBase(QString uid, const QMap<QString, QString> propertie
 void QnstView::changeImportBase(QString uid, const QMap<QString, QString> properties)
 {
 
-    foreach(QnstConncetor* cc, connectors.values()){
+    foreach(QnstConnector* cc, connectors.values()){
         if (cc->getnstUid() == importBases[uid]){
             connectors.remove(cc->getName());
         }
     }
 
-    foreach(QnstConncetor* cc, connectors2.values()){
+    foreach(QnstConnector* cc, connectors2.values()){
         if (cc->getnstUid() == importBases[uid]){
             connectors2.remove(cc->getnstId());
         }
@@ -1899,7 +1899,7 @@ void QnstView::readImportBase(QString uid, QDomElement element, QString alias)
 
         QDomNodeList list = element.childNodes();
 
-        QnstConncetor* conn = new QnstConncetor();
+        QnstConnector* conn = new QnstConnector();
         conn->setnstId(alias+"#"+element.attribute("id"));
         conn->setName(alias+"#"+element.attribute("id"));
         conn->setnstUid(uid);
@@ -1928,7 +1928,7 @@ void QnstView::readImportBase(QString uid, QDomElement element, QString alias)
     }
 }
 
-void QnstView::readConnector(QDomElement element, QnstConncetor* conn)
+void QnstView::readConnector(QDomElement element, QnstConnector* conn)
 {
     if (element.tagName() == "connectorParam"){
         if (element.attribute("name") != ""){
@@ -3189,7 +3189,7 @@ void QnstView::adjustBind(QnstBind* entity)
 
             // add bind to link if has a valid type
             if (connectors.contains(parent->getxConnector())){
-                QnstConncetor* connector = connectors[parent->getxConnector()];
+                QnstConnector* connector = connectors[parent->getxConnector()];
 
                 foreach(QString type, connector->getConditions()){
                     if (type == entity->getRole()){
@@ -3568,7 +3568,7 @@ void QnstView::addConnector(const QString uid, const QString parent, const QMap<
 {
     if (!connectors2.contains(uid)){
 
-        QnstConncetor* entity = new QnstConncetor();
+        QnstConnector* entity = new QnstConnector();
         entity->setnstUid(uid);
 
         if (properties["id"] != ""){
@@ -3578,7 +3578,7 @@ void QnstView::addConnector(const QString uid, const QString parent, const QMap<
 
         connectors2[uid] = entity;
 
-        foreach(QnstConncetor* c, connectors.values()){
+        foreach(QnstConnector* c, connectors.values()){
             if (c->getnstUid() ==  entity->getnstUid()){
                 connectors.remove(connectors.key(c));
                 break;
@@ -3591,14 +3591,14 @@ void QnstView::addConnector(const QString uid, const QString parent, const QMap<
     }
 }
 
-void QnstView::changeConnector(QnstConncetor* entity, const QMap<QString, QString> properties)
+void QnstView::changeConnector(QnstConnector* entity, const QMap<QString, QString> properties)
 {
     if (properties["id"] != ""){
         entity->setName(properties["id"]);
         entity->setnstId(properties["id"]);
     }
 
-    foreach(QnstConncetor* c, connectors.values()){
+    foreach(QnstConnector* c, connectors.values()){
         if (c->getnstUid() ==  entity->getnstUid()){
             connectors.remove(connectors.key(c));
             break;
@@ -3613,7 +3613,7 @@ void QnstView::changeConnector(QnstConncetor* entity, const QMap<QString, QStrin
 void QnstView::addCondition(const QString uid, const QString parent, const QMap<QString, QString> properties)
 {
     if (connectors2.contains(properties["connector"])){
-        QnstConncetor* connector = connectors2[properties["connector"]];
+        QnstConnector* connector = connectors2[properties["connector"]];
 
         if (properties["role"] != ""){
             connector->addCondition(uid, properties["role"]);
@@ -3624,7 +3624,7 @@ void QnstView::addCondition(const QString uid, const QString parent, const QMap<
 void QnstView::changeCondition(QString uid, const QMap<QString, QString> properties)
 {
     if (connectors2.contains(properties["connector"])){
-        QnstConncetor* connector = connectors2[properties["connector"]];
+        QnstConnector* connector = connectors2[properties["connector"]];
 
         if (connector->getConditions().contains(uid)){
             connector->getConditions().remove(uid);
@@ -3640,7 +3640,7 @@ void QnstView::addAction(const QString uid, const QString parent, const QMap<QSt
 {
     if (connectors2.contains(properties["connector"])){
 
-        QnstConncetor* connector = connectors2[properties["connector"]];
+        QnstConnector* connector = connectors2[properties["connector"]];
 
         if (properties["role"] != ""){
             connector->addAction(uid, properties["role"]);
@@ -3651,7 +3651,7 @@ void QnstView::addAction(const QString uid, const QString parent, const QMap<QSt
 void QnstView::changeAction(QString uid, const QMap<QString, QString> properties)
 {
     if (connectors2.contains(properties["connector"])){
-        QnstConncetor* connector = connectors2[properties["connector"]];
+        QnstConnector* connector = connectors2[properties["connector"]];
 
         if (connector->getActions().contains(uid)){
             connector->getActions().remove(uid);
@@ -3745,7 +3745,7 @@ void QnstView::changeBindParam(const QString uid, const QMap<QString, QString> p
 void QnstView::addConnectorParam(const QString uid, const QString parent, const QMap<QString, QString> properties)
 {
     if (connectors2.contains(parent)){
-        QnstConncetor* conn = connectors2[parent];
+        QnstConnector* conn = connectors2[parent];
 
         conn->addParam(uid, properties["name"]);
     }
@@ -3754,7 +3754,7 @@ void QnstView::addConnectorParam(const QString uid, const QString parent, const 
 void QnstView::changeConnectorParam(const QString uid, const QMap<QString, QString> properties)
 {
     if (connectors2.contains(properties["parent"])){
-        QnstConncetor* conn = connectors2[properties["parent"]];
+        QnstConnector* conn = connectors2[properties["parent"]];
 
         conn->addParam(uid, properties["name"]);
     }
@@ -5636,7 +5636,7 @@ void QnstView:: addNodetoNodeEdge(QnstGraphicsEntity* entitya, QnstGraphicsEntit
                     QString connName = actionDialog->form.cbConnector->currentText();;
 
                     if (actionDialog->form.cbConnector->currentText() == "New..."){
-                        QnstConncetor* conn = new QnstConncetor();
+                        QnstConnector* conn = new QnstConnector();
                         conn->setName("newConnector"+QString::number(connectors.size()));
                         conn->addCondition("onBegin", "onBegin");
                         conn->addCondition("onEnd", "onEnd");
@@ -5781,7 +5781,7 @@ void QnstView:: addNodetoNodeEdge(QnstGraphicsEntity* entitya, QnstGraphicsEntit
                     QString connName = conditionDialog->form.cbConnector->currentText();;
 
                     if (conditionDialog->form.cbConnector->currentText() == "New..."){
-                        QnstConncetor* conn = new QnstConncetor();
+                        QnstConnector* conn = new QnstConnector();
                         conn->setName("newConnector"+QString::number(connectors.size()));
 
                         conn->addCondition("onBegin", "onBegin");
@@ -6024,7 +6024,7 @@ void QnstView:: addNodetoNodeEdge(QnstGraphicsEntity* entitya, QnstGraphicsEntit
                         QString connName = linkDialog->getCurrentConnector();;
 
                         if (linkDialog->getCurrentConnector() == "New..."){
-                            QnstConncetor* conn = new QnstConncetor();
+                            QnstConnector* conn = new QnstConnector();
                             conn->setName(con+act+QString::number(connectors.size()));
                             conn->addCondition(con, con);
                             conn->addAction(act, act);
@@ -6188,7 +6188,7 @@ void QnstView::addNodetoInterfaceEdge(QnstGraphicsEntity* entitya, QnstGraphicsE
                     QString connName = actionDialog->form.cbConnector->currentText();;
 
                     if (actionDialog->form.cbConnector->currentText() == "New..."){
-                        QnstConncetor* conn = new QnstConncetor();
+                        QnstConnector* conn = new QnstConnector();
                         conn->setName("newConnector"+QString::number(connectors.size()));
                         conn->addCondition("onBegin", "onBegin");
                         conn->addCondition("onEnd", "onEnd");
@@ -6429,7 +6429,7 @@ void QnstView::addNodetoInterfaceEdge(QnstGraphicsEntity* entitya, QnstGraphicsE
                         QString connName = linkDialog->getCurrentConnector();;
 
                         if (linkDialog->getCurrentConnector() == "New..."){
-                            QnstConncetor* conn = new QnstConncetor();
+                            QnstConnector* conn = new QnstConnector();
                             conn->setName(con+act+QString::number(connectors.size()));
                             conn->addCondition(con, con);
                             conn->addAction(act, act);
@@ -6592,7 +6592,7 @@ void QnstView::addInterfacetoNodeLink(QnstGraphicsEntity* entitya, QnstGraphicsE
             QString connName = conditionDialog->form.cbConnector->currentText();;
 
             if (conditionDialog->form.cbConnector->currentText() == "New..."){
-                QnstConncetor* conn = new QnstConncetor();
+                QnstConnector* conn = new QnstConnector();
                 conn->setName("newConnector"+QString::number(connectors.size()));
 
                 conn->addCondition("onBegin", "onBegin");
@@ -6838,7 +6838,7 @@ void QnstView::addInterfacetoNodeLink(QnstGraphicsEntity* entitya, QnstGraphicsE
             QString connName = linkDialog->getCurrentConnector();;
 
             if (linkDialog->getCurrentConnector() == "New..."){
-                QnstConncetor* conn = new QnstConncetor();
+                QnstConnector* conn = new QnstConnector();
                 conn->setName(con+act+QString::number(connectors.size()));
                 conn->addCondition(con, con);
                 conn->addAction(act, act);
@@ -7239,7 +7239,7 @@ void QnstView::addInterfacetoInterfaceEdge(QnstGraphicsEntity* entitya, QnstGrap
                         QString connName = linkDialog->getCurrentConnector();
 
                         if (linkDialog->getCurrentConnector() == "New..."){
-                            QnstConncetor* conn = new QnstConncetor();
+                            QnstConnector* conn = new QnstConnector();
                             conn->setName(con+act+QString::number(connectors.size()));
                             conn->addCondition(con, con);
                             conn->addAction(act, act);
@@ -7535,7 +7535,7 @@ void QnstView::addInterfacetoInterfaceEdge(QnstGraphicsEntity* entitya, QnstGrap
                         QString connName = linkDialog->getCurrentConnector();;
 
                         if (linkDialog->getCurrentConnector() == "New..."){
-                            QnstConncetor* conn = new QnstConncetor();
+                            QnstConnector* conn = new QnstConnector();
                             conn->setName(con+act+QString::number(connectors.size()));
                             conn->addCondition(con, con);
                             conn->addAction(act, act);
@@ -7792,7 +7792,7 @@ void QnstView::addInterfacetoInterfaceEdge(QnstGraphicsEntity* entitya, QnstGrap
                     QString connName = linkDialog->getCurrentConnector();;
 
                     if (linkDialog->getCurrentConnector() == "New..."){
-                        QnstConncetor* conn = new QnstConncetor();
+                        QnstConnector* conn = new QnstConnector();
                         conn->setName(con+act+QString::number(connectors.size()));
                         conn->addCondition(con, con);
                         conn->addAction(act, act);

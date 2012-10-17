@@ -188,7 +188,7 @@ QnstGraphicsLinkDialog::~QnstGraphicsLinkDialog()
 
 }
 
-void QnstGraphicsLinkDialog::init(QMap<QString, QnstConncetor*> connectors)
+void QnstGraphicsLinkDialog::init(QMap<QString, QnstConnector*> connectors)
 {
     this->connectors = connectors;
 
@@ -199,7 +199,7 @@ void QnstGraphicsLinkDialog::init(QMap<QString, QnstConncetor*> connectors)
     form.cbAction->clear();
 
     QStringList strConn;
-    foreach(QnstConncetor* conn, connectors.values()){
+    foreach(QnstConnector* conn, connectors.values()){
         strConn << conn->getName();
     }
 
@@ -263,7 +263,7 @@ void QnstGraphicsLinkDialog::adjustBinds(QString conn)
   }
   else
   {
-    QnstConncetor* oconn = NULL;
+    QnstConnector* oconn = NULL;
 
     if(connectors.contains(conn))
     {

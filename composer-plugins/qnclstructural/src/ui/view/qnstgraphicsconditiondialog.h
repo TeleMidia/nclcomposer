@@ -4,7 +4,7 @@
 #include <QDialog>
 #include <QDebug>
 
-#include "qnstconncetor.h"
+#include "qnstconnector.h"
 #include "qnstlink.h"
 
 #include "ui_QnstGraphicsConditionForm.h"
@@ -16,14 +16,14 @@ public:
 
     ~QnstGraphicsConditionDialog();
 
-    void init(QMap<QString, QnstConncetor*> connectors, QnstLink* links);
+    void init(QMap<QString, QnstConnector*> connectors, QnstLink* links);
 
 public:
     Ui::QnstGraphicsConditionForm form;
 
     QnstLink* link;
 
-    QMap<QString, QnstConncetor*> connectors;
+    QMap<QString, QnstConnector*> connectors;
 };
 
 #endif // QNSTGRAPHICSCONDITIONDIALOG_H

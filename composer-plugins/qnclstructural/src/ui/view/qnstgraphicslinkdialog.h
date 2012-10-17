@@ -8,7 +8,7 @@
 #include <QStringListModel>
 #include <QSortFilterProxyModel>
 
-#include  "qnstconncetor.h"
+#include  "qnstconnector.h"
 
 #include "ui_QnstGraphicsLinkForm.h"
 
@@ -51,7 +51,7 @@ public:
 
     ~QnstGraphicsLinkDialog();
 
-    void init(QMap<QString, QnstConncetor*> connectors);
+    void init(QMap<QString, QnstConnector*> connectors);
 
 protected slots:
     void adjustBinds(QString conn);
@@ -63,7 +63,7 @@ public:
     //TODO: This shouldn't be public
     Ui::QnstGraphicsLinkForm form;
 
-    QMap<QString, QnstConncetor*> connectors;
+    QMap<QString, QnstConnector*> connectors;
     QString getCurrentConnector();
 
 private:

@@ -31,7 +31,7 @@
 #include "qnstgraphicsactiondialog.h"
 #include "qnstgraphicscondition.h"
 #include "qnstgraphicsaction.h"
-#include "qnstconncetor.h"
+#include "qnstconnector.h"
 #include "qnstlink.h"
 #include "qnstbind.h"
 #include "qnstgraphicsproperty.h"
@@ -228,7 +228,7 @@ private:
 
     void addConnector(const QString uid, const QString parent, const QMap<QString, QString> properties);
 
-    void changeConnector(QnstConncetor* entity, const QMap<QString, QString> properties);
+    void changeConnector(QnstConnector* entity, const QMap<QString, QString> properties);
 
     void addCondition(const QString uid, const QString parent, const QMap<QString, QString> properties);
 
@@ -238,7 +238,7 @@ private:
 
     void changeAction(QString condition, const QMap<QString, QString> properties);
 
-    void adjustConnector(QnstConncetor* entity);
+    void adjustConnector(QnstConnector* entity);
 
     void addAggregator(const QString uid, const QString parent, const QMap<QString, QString> properties, bool undo = false);
 
@@ -300,7 +300,7 @@ private:
 
     void readImportBase(QString uid, QDomElement e, const QString alias);
 
-    void readConnector(QDomElement e, QnstConncetor* conn);
+    void readConnector(QDomElement e, QnstConnector* conn);
 
     void addNodetoNodeEdge(QnstGraphicsEntity* entitya, QnstGraphicsEntity* entityb);
 
@@ -376,9 +376,9 @@ private:
 
     QMap<QString, QString> bindParamUIDToBindUID;
 
-    QMap<QString, QnstConncetor*> connectors2; // uid - conn
+    QMap<QString, QnstConnector*> connectors2; // uid - conn
 
-    QMap<QString, QnstConncetor*> connectors; // id - conn
+    QMap<QString, QnstConnector*> connectors; // id - conn
 
     QUndoStack history;
 

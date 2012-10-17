@@ -29,7 +29,7 @@ public:
 
     void aux_adjust(QPointF pointa, QPointF pointb);
 
-    void setConn(QnstConncetor* conn);
+    void setConn(QnstConnector* conn);
 
     void setNameUids(QMap<QString, QString> nameUids);
 
@@ -61,7 +61,7 @@ private:
 
     QnstActionIcon actionIcon;
 
-    QnstConncetor* conn;
+    QnstConnector* conn;
 
     QMap<QString, QString> name_uid;
 

@@ -2,7 +2,7 @@
 #define QNSTGRAPHICSBINDDIALOG_H
 
 #include <QDialog>
-#include "qnstconncetor.h"
+#include "qnstconnector.h"
 
 #include <QDebug>
 #include <QStandardItemModel>
