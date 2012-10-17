@@ -10,6 +10,18 @@
 #include "qnstgraphicsproperty.h"
 #include "qnstgraphicsaggregator.h"
 
+std::map <Qnst::EntityType, QString> QnstUtil::iconFromTypeMap =
+    create_map<Qnst::EntityType, QString >
+      (Qnst::Image, ":/icon/image")
+      (Qnst::Audio, ":/icon/audio")
+      (Qnst::Video, ":/icon/video")
+      (Qnst::Html, ":/icon/html")
+      (Qnst::NCL, ":/icon/ncl")
+      (Qnst::Text, ":/icon/text")
+      (Qnst::Settings, ":/icon/settings")
+      (Qnst::Script, ":/icon/script")
+      (Qnst::Media, ":/icon/media");
+
 QnstGraphicsEntity *QnstUtil::makeGraphicsEntity(Qnst::EntityType type,
                                                  QnstGraphicsEntity *parent)
 {
@@ -69,4 +81,41 @@ QnstGraphicsEntity *QnstUtil::makeGraphicsEntity(Qnst::EntityType type,
   }
 
   return entity;
+}
+
+Qnst::EntityType QnstUtil::getnstTypeFromMime(const QString &mimeType)
+{
+  Qnst::EntityType type;
+
+  if (mimeType.startsWith("image"))
+   type = Qnst::Image;
+  else if (mimeType.startsWith("audio"))
+    type = Qnst::Audio;
+  else if (mimeType.startsWith("video"))
+    type = Qnst::Video;
+  else if (mimeType == "text/html")
+    type = Qnst::Html;
+  else if (mimeType == "application/x-ginga-NCL")
+    type = Qnst::NCL;
+  else if (mimeType.startsWith("text"))
+    type = Qnst::Text;
+  else if (mimeType == "application/x-ncl-settings")
+    type = Qnst::Settings;
+  else if (mimeType == "application/x-ginga-NCLua")
+    type = Qnst::Script;
+  else
+    type = Qnst::Media;
+
+  return type;
+}
+
+QString QnstUtil::iconFromMediaType(Qnst::EntityType type)
+{
+  QString path;
+  if(iconFromTypeMap.count(type))
+    path = iconFromTypeMap[type];
+  else
+    path = ":/icon/media";
+
+  return path;
 }
