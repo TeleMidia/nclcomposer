@@ -18,13 +18,13 @@ else {
 
 #WHAT FEATURES TO COMPILE?
 #CONFIG += clubencl
-#CONFIG += runssh_on
+CONFIG += runssh_on
 CONFIG += help
 QT += core xml network webkit
 
 #VERSION INFORMATION
 DEFINES += NCLCOMPOSER_GUI_VERSION=\"\\\"0.1.2\\\"\"
-DEFINES += BUILD_DATE=\"\\\"$${_DATE_}\"\\\"
+DEFINES += BUILD_DATE=\"\\\"$$system(echo \"$${_DATE_}\" | sed \"s/ /\\\\\\ /g\")\"\\\"
 #DEFINES += WITH_TEST_VERSION_MESSAGE=\"\\\"1\\\"\"
 
 #NOTIFY SYSTEM
@@ -107,7 +107,8 @@ else {
 
 INCLUDEPATH +=  include
 
-INCLUDEPATH   +=  ../composer-core/core/include
+INCLUDEPATH   +=  ../composer-core/core/include \
+                  ../composer-core
 LIBS          +=  -L../composer-core/core
 
 macx {
