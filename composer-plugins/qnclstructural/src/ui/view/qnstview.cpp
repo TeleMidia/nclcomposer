@@ -7,43 +7,55 @@
 #include <assert.h>
 #include "qnstutil.h"
 
+std::map <Qnst::EntityType, QString> QnstView::typeToXMLStr =
+    create_map<Qnst::EntityType, QString>
+      (Qnst::Media, "media")
+      (Qnst::Image, "image")
+      (Qnst::Audio, "audio")
+      (Qnst::Video, "video")
+      (Qnst::Html, "text/html")
+      (Qnst::NCL, "application/x-ginga-NCL")
+      (Qnst::Text, "text")
+      (Qnst::Script, "application/x-ginga-NCLua")
+      (Qnst::Settings, "application/x-ncl-settings");
+
 QnstView::QnstView(QWidget* parent)
     : QGraphicsView(parent)
 {
-    createObjects();
-    createConnection();
+  createObjects();
+  createConnection();
 
-    ncontext = 0;
+  ncontext = 0;
 
-    nswitch = 0;
+  nswitch = 0;
 
-    nport = 0;
+  nport = 0;
 
-    nmedia = 0;
+  nmedia = 0;
 
-    nlink = 0;
+  nlink = 0;
 
-    zoomStep = 0;
+  zoomStep = 0;
 
-    nproperty = 0;
+  nproperty = 0;
 
-    nswitchport = 0;
+  nswitchport = 0;
 
-    narea = 0;
+  narea = 0;
 
-    linking = false;
+  linking = false;
 
-    modified = false;
+  modified = false;
 
-    link = NULL;
+  link = NULL;
 
-    selected = NULL;
+  selected = NULL;
 
-    clipboard = NULL;
+  clipboard = NULL;
 
-    hasCutted = false;
+  hasCutted = false;
 
-    lastLinkMouseOver = NULL;
+  lastLinkMouseOver = NULL;
 }
 
 QnstView::~QnstView()
@@ -53,974 +65,798 @@ QnstView::~QnstView()
 
 void QnstView::load(QString data)
 {
-    qDebug() << "###########################################";
-    qDebug() << data;
-    qDebug() << "###########################################";
+  qDebug() << "###########################################";
+  qDebug() << data;
+  qDebug() << "###########################################";
 
-    QDomDocument* dom = new QDomDocument();
+  QDomDocument* dom = new QDomDocument();
+  dom->setContent(data);
 
-    dom->setContent(data);
+  QDomElement parent = dom->firstChildElement();
 
-    QDomElement parent = dom->firstChildElement();
+  QDomNodeList list = parent.childNodes();
 
-    QDomNodeList list = parent.childNodes();
-
-    for (unsigned int i=0;i<list.length();i++)
+  for (unsigned int i=0;i<list.length();i++)
+  {
+    if (list.item(i).isElement())
     {
-        if (list.item(i).isElement())
-        {
-            QDomElement e = list.item(i).toElement();
+      QDomElement e = list.item(i).toElement();
 
-            read(e, parent);
-        }
+      read(e, parent);
     }
+  }
 
-    for (unsigned int i=0;i<list.length();i++)
+  for (unsigned int i=0;i<list.length();i++)
+  {
+    if (list.item(i).isElement())
     {
-        if (list.item(i).isElement())
-        {
-            QDomElement e = list.item(i).toElement();
+      QDomElement e = list.item(i).toElement();
 
-            readLink(e, parent);
-        }
+      readLink(e, parent);
     }
+  }
 
-    for (unsigned int i=0;i<list.length();i++)
+  for (unsigned int i=0;i<list.length();i++)
+  {
+    if (list.item(i).isElement())
     {
-        if (list.item(i).isElement())
-        {
-            QDomElement e = list.item(i).toElement();
+      QDomElement e = list.item(i).toElement();
 
-            if (e.nodeName() == "context" ||
-                e.nodeName() == "switch" ||
-                e.nodeName() == "body"){
-
-                collapseCompositions(e, parent);
-            }
-        }
+      if (e.nodeName() == "context" ||
+          e.nodeName() == "switch" ||
+          e.nodeName() == "body")
+      {
+        collapseCompositions(e, parent);
+      }
     }
+  }
 }
 
-void QnstView::collapseCompositions(QDomElement element, QDomElement parent){
-    QDomNodeList list = element.childNodes();
+void QnstView::collapseCompositions(QDomElement element, QDomElement parent)
+{
+  QDomNodeList list = element.childNodes();
 
-    for (unsigned int i=0;i<list.length();i++)
+  for (unsigned int i=0;i<list.length();i++)
+  {
+    if (list.item(i).isElement())
     {
-        if (list.item(i).isElement())
-        {
-            QDomElement e = list.item(i).toElement();
+      QDomElement e = list.item(i).toElement();
 
-            if (e.nodeName() == "context" ||
-                e.nodeName() == "switch" ||
-                e.nodeName() == "body"){
-
-                collapseCompositions(e, parent);
-            }
-        }
+      if (e.nodeName() == "context" ||
+          e.nodeName() == "switch" ||
+          e.nodeName() == "body")
+      {
+        collapseCompositions(e, parent);
+      }
     }
+  }
 
-    if (element.attribute("collapsed") == "1"){
-        if(entities.contains(element.attribute("uid")))
-        {
-          QnstGraphicsComposition* c = ((QnstGraphicsComposition*) entities[element.attribute("uid")]);
+  if (element.attribute("collapsed") == "1")
+  {
+    if(entities.contains(element.attribute("uid")))
+    {
+      QnstGraphicsComposition* c =
+          ((QnstGraphicsComposition*) entities[element.attribute("uid")]);
 
-          c->collapse();
+      c->collapse();
 
-
-          c->setTop(element.attribute("top").toDouble());
-          c->setLeft(element.attribute("left").toDouble());
-        }
+      c->setTop(element.attribute("top").toDouble());
+      c->setLeft(element.attribute("left").toDouble());
     }
+  }
 }
 
 void QnstView::read(QDomElement element, QDomElement parent)
 {
-    if (element.nodeName() == "body"){
-        QString uid = element.attribute("uid");
+  QMap<QString, QString> properties;
 
-        QMap<QString, QString> properties;
+  QString uid = element.attribute("uid");
 
-        properties["id"] = element.attribute("id");
+  // \todo before fill the properties, check if we are a valid element.
+  // Fill common properties
+  properties["id"] = element.attribute("id");
 
-        properties["top"] = element.attribute("top");
-        properties["left"] = element.attribute("left");
-        properties["width"] = element.attribute("width");
-        properties["height"] = element.attribute("height");
+  properties["top"] = element.attribute("top");
+  properties["left"] = element.attribute("left");
+  properties["width"] = element.attribute("width");
+  properties["height"] = element.attribute("height");
+  // end fill
 
-        properties["expandWidth"] = element.attribute("expandWidth");
-        properties["expandHeight"] = element.attribute("expandHeight");
-        properties["collapsed"] = element.attribute("collapsed");
+  if (element.nodeName() == "body")
+  {
+    properties["expandWidth"] = element.attribute("expandWidth");
+    properties["expandHeight"] = element.attribute("expandHeight");
+    properties["collapsed"] = element.attribute("collapsed");
 
-        addBody(uid, "", properties, true);
+    addBody(uid, "", properties, true);
+  }
+  else if (element.nodeName() == "media")
+  {
+    properties["type"] = element.attribute("type");
+    properties["src"] = element.attribute("src");
 
-    }else if (element.nodeName() == "media"){
-        QString uid = element.attribute("uid");
+    properties["refer"] = element.attribute("refer");
+    properties["referUID"] = element.attribute("referUID");
+    properties["instance"] = element.attribute("instance");
 
-        QMap<QString, QString> properties;
+    addMedia(uid, parent.attribute("uid"), properties, true, false);
 
-        properties["id"] = element.attribute("id");
-        properties["type"] = element.attribute("type");
-        properties["src"] = element.attribute("src");
+  }
+  else if (element.nodeName() == "context")
+  {
+    properties["expandWidth"] = element.attribute("expandWidth");
+    properties["expandHeight"] = element.attribute("expandHeight");
+    properties["collapsed"] = element.attribute("collapsed");
 
-        properties["top"] = element.attribute("top");
-        properties["left"] = element.attribute("left");
-        properties["width"] = element.attribute("width");
-        properties["height"] = element.attribute("height");
+    addContext(uid, parent.attribute("uid"), properties, true);
 
-        properties["refer"] = element.attribute("refer");
-        properties["referUID"] = element.attribute("referUID");
-        properties["instance"] = element.attribute("instance");
+  }
+  else if (element.nodeName() == "switch")
+  {
+    properties["expandWidth"] = element.attribute("expandWidth");
+    properties["expandHeight"] = element.attribute("expandHeight");
+    properties["collapsed"] = element.attribute("collapsed");
 
-        addMedia(uid, parent.attribute("uid"), properties, true, false);
-
-    }else if (element.nodeName() == "context"){
-        QString uid = element.attribute("uid");
-
-        QMap<QString, QString> properties;
-
-        properties["id"] = element.attribute("id");
-
-        properties["top"] = element.attribute("top");
-        properties["left"] = element.attribute("left");
-        properties["width"] = element.attribute("width");
-        properties["height"] = element.attribute("height");
-
-        properties["expandWidth"] = element.attribute("expandWidth");
-        properties["expandHeight"] = element.attribute("expandHeight");
-        properties["collapsed"] = element.attribute("collapsed");
-
-        addContext(uid, parent.attribute("uid"), properties, true);
-
-    } else if (element.nodeName() == "switch") {
-        QString uid = element.attribute("uid");
-
-        QMap<QString, QString> properties;
-
-        properties["id"] = element.attribute("id");
-
-        properties["top"] = element.attribute("top");
-        properties["left"] = element.attribute("left");
-        properties["width"] = element.attribute("width");
-        properties["height"] = element.attribute("height");
-
-        properties["expandWidth"] = element.attribute("expandWidth");
-        properties["expandHeight"] = element.attribute("expandHeight");
-        properties["collapsed"] = element.attribute("collapsed");
-
-        addSwitch(uid, parent.attribute("uid"), properties, true);
-
-    }else if (element.nodeName() == "aggregator"){
-        QString uid = element.attribute("uid");
-
-        QMap<QString, QString> properties;
-
-        properties["id"] = element.attribute("id");
-
-        properties["top"] = element.attribute("top");
-        properties["left"] = element.attribute("left");
-        properties["width"] = element.attribute("width");
-        properties["height"] = element.attribute("height");
-
-        addAggregator(uid, parent.attribute("uid"), properties, true);
-
-    }else if (element.nodeName() == "area"){
-        QString uid = element.attribute("uid");
-
-        QMap<QString, QString> properties;
-
-        properties["id"] = element.attribute("id");
-
-        properties["top"] = element.attribute("top");
-        properties["left"] = element.attribute("left");
-        properties["width"] = element.attribute("width");
-        properties["height"] = element.attribute("height");
-
-        addArea(uid, parent.attribute("uid"), properties, true, false);
-
-    }else if (element.nodeName() == "property"){
-        QString uid = element.attribute("uid");
-
-        QMap<QString, QString> properties;
-
-        properties["id"] = element.attribute("id");
-
-        properties["top"] = element.attribute("top");
-        properties["left"] = element.attribute("left");
-        properties["width"] = element.attribute("width");
-        properties["height"] = element.attribute("height");
-
-        addProperty(uid, parent.attribute("uid"), properties, true, false);
-
-    }else if (element.nodeName() == "port"){
-        QString uid = element.attribute("uid");
-
-        QMap<QString, QString> properties;
-
-        properties["id"] = element.attribute("id");
-
-        properties["top"] = element.attribute("top");
-        properties["left"] = element.attribute("left");
-        properties["width"] = element.attribute("width");
-        properties["height"] = element.attribute("height");
-
-        addPort(uid, parent.attribute("uid"), properties, true);
-
-    }else if (element.nodeName() == "switchPort"){
-        QString uid = element.attribute("uid");
-
-        QMap<QString, QString> properties;
-
-        properties["id"] = element.attribute("id");
-
-        properties["top"] = element.attribute("top");
-        properties["left"] = element.attribute("left");
-        properties["width"] = element.attribute("width");
-        properties["height"] = element.attribute("height");
-
-        addSwitchPort(uid, parent.attribute("uid"), properties, true);
-
-    }else if (element.nodeName() == "interfaceReference"){
-        interfaceRefers[element.attribute("interfaceReferUID")] = element.attribute("interfaceOriginUID");
-
-    }else if (element.nodeName() == "nodeReference"){
-        refers[element.attribute("nodeReferUID")] = element.attribute("nodeOriginUID");
-
-    }else if (element.nodeName() == "importBase"){
-        importBases[element.attribute("uid")] = element.attribute("connUID");
-
-    }else if (element.nodeName() == "connector"){
-        QnstConnector* conn = new QnstConnector();
-        conn->setnstUid(element.attribute("uid"));
-        conn->setName(element.attribute("id"));
-
-        QDomNodeList list = element.childNodes();
-
-        for (unsigned int i=0;i<list.length();i++)
-        {
-            if (list.item(i).isElement())
-            {
-                QDomElement e = list.item(i).toElement();
-
-                if (e.nodeName() == "condition"){
-                    conn->addCondition(e.attribute("type"), e.attribute("type"));
-
-                }else if (e.nodeName() == "action"){
-                    conn->addAction(e.attribute("type"), e.attribute("type"));
-
-                }else if (e.nodeName() == "param"){
-                    conn->addParam(e.attribute("uid"), e.attribute("name"));
-                }
-            }
-        }
-
-        connectors[conn->getName()] = conn;
-        connectors2[conn->getnstUid()] = conn;
-
-        return;
-    }
+    addSwitch(uid, parent.attribute("uid"), properties, true);
+  }
+  else if (element.nodeName() == "aggregator")
+  {
+    addAggregator(uid, parent.attribute("uid"), properties, true);
+  }
+  else if (element.nodeName() == "area")
+  {
+    addArea(uid, parent.attribute("uid"), properties, true, false);
+  }
+  else if (element.nodeName() == "property")
+  {
+    addProperty(uid, parent.attribute("uid"), properties, true, false);
+  }
+  else if (element.nodeName() == "port")
+  {
+    addPort(uid, parent.attribute("uid"), properties, true);
+  }
+  else if (element.nodeName() == "switchPort")
+  {
+    addSwitchPort(uid, parent.attribute("uid"), properties, true);
+  }
+  else if (element.nodeName() == "interfaceReference")
+  {
+    interfaceRefers[element.attribute("interfaceReferUID")] =
+        element.attribute("interfaceOriginUID");
+  }
+  else if (element.nodeName() == "nodeReference")
+  {
+    refers[element.attribute("nodeReferUID")] = element.attribute("nodeOriginUID");
+  }
+  else if (element.nodeName() == "importBase")
+  {
+    importBases[element.attribute("uid")] = element.attribute("connUID");
+  }
+  else if (element.nodeName() == "connector")
+  {
+    QnstConnector* conn = new QnstConnector();
+    conn->setnstUid(element.attribute("uid"));
+    conn->setName(element.attribute("id"));
 
     QDomNodeList list = element.childNodes();
 
     for (unsigned int i=0;i<list.length();i++)
     {
-        if (list.item(i).isElement())
-        {
-            QDomElement e = list.item(i).toElement();
+      if (list.item(i).isElement())
+      {
+        QDomElement e = list.item(i).toElement();
 
-            read(e, element);
+        if (e.nodeName() == "condition")
+        {
+          conn->addCondition(e.attribute("type"), e.attribute("type"));
         }
+        else if (e.nodeName() == "action")
+        {
+          conn->addAction(e.attribute("type"), e.attribute("type"));
+        }
+        else if (e.nodeName() == "param")
+        {
+          conn->addParam(e.attribute("uid"), e.attribute("name"));
+        }
+      }
     }
+
+    connectors[conn->getName()] = conn;
+    connectors2[conn->getnstUid()] = conn;
+
+    return;
+  }
+
+  QDomNodeList list = element.childNodes();
+
+  for (unsigned int i=0;i<list.length();i++)
+  {
+    if (list.item(i).isElement())
+    {
+      QDomElement e = list.item(i).toElement();
+
+      read(e, element);
+    }
+  }
 }
 
 void QnstView::readLink(QDomElement element, QDomElement parent)
 {
-    if (element.nodeName() == "linkdata"){
-            QnstLink* link = new QnstLink();
-            link->setnstId(element.attribute("id"));
-            link->setnstUid(element.attribute("uid"));
+  if (element.nodeName() == "linkdata")
+  {
+          QnstLink* link = new QnstLink();
+          link->setnstId(element.attribute("id"));
+          link->setnstUid(element.attribute("uid"));
+
+          if(entities.contains(element.attribute("parent")))
+          {
+            link->setnstParent(entities[element.attribute("parent")]);
+
+            link->setxConnector(element.attribute("xconnetor"));
+            link->setxConnectorUID(element.attribute("xconnetorUID"));
+            link->setAggregatorUID(element.attribute("aggregatorUID"));
 
-            if(entities.contains(element.attribute("parent")))
-            {
-              link->setnstParent(entities[element.attribute("parent")]);
+            links[link->getnstUid()] = link;
+            link2conn[link->getnstId()] = link->getxConnector();
+          }
+          else
+            qWarning() << "Error trying to add a link inside" << element.attribute("parent") << "that does not exists.";
 
-              link->setxConnector(element.attribute("xconnetor"));
-              link->setxConnectorUID(element.attribute("xconnetorUID"));
-              link->setAggregatorUID(element.attribute("aggregatorUID"));
+  }if (element.nodeName() == "mapping"){
+      QMap<QString, QString> properties;
 
-              links[link->getnstUid()] = link;
-              link2conn[link->getnstId()] = link->getxConnector();
-            }
-            else
-              qWarning() << "Error trying to add a link inside" << element.attribute("parent") << "that does not exists.";
+      properties["uid"] = element.attribute("uid");
 
-    }if (element.nodeName() == "mapping"){
-        QMap<QString, QString> properties;
+      properties["component"] = element.attribute("component");
+      properties["componentUid"] = element.attribute("componentUid");
 
-        properties["uid"] = element.attribute("uid");
+      properties["interface"] = element.attribute("interface");
+      properties["interfaceUid"] = element.attribute("interfaceUid");
 
-        properties["component"] = element.attribute("component");
-        properties["componentUid"] = element.attribute("componentUid");
+      addMapping(properties["uid"], element.attribute("switchportUid"), properties, true);
 
-        properties["interface"] = element.attribute("interface");
-        properties["interfaceUid"] = element.attribute("interfaceUid");
+  }else if (element.nodeName() == "port"){
+      if (entities.contains(element.attribute("uid"))){
+          if (entities.contains(element.attribute("interfaceUID"))){
+              QnstGraphicsInterface* entitya = (QnstGraphicsInterface*) entities[element.attribute("uid")];
+              QnstGraphicsInterface* entityb = (QnstGraphicsInterface*) entities[element.attribute("interfaceUID")];
 
-        addMapping(properties["uid"], element.attribute("switchportUid"), properties, true);
+              if (entitya != entityb){
+                  QnstGraphicsReference* entity = new QnstGraphicsReference();
+                  entity->setnstGraphicsParent(entitya->getnstGraphicsParent());
+                  entity->setEntityA(entitya);
+                  entity->setEntityB(entityb);
+                  entity->adjust();
 
-    }else if (element.nodeName() == "port"){
-        if (entities.contains(element.attribute("uid"))){
-            if (entities.contains(element.attribute("interfaceUID"))){
-                QnstGraphicsInterface* entitya = (QnstGraphicsInterface*) entities[element.attribute("uid")];
-                QnstGraphicsInterface* entityb = (QnstGraphicsInterface*) entities[element.attribute("interfaceUID")];
+                  entitya->getnstGraphicsParent()->addnstGraphicsEntity(entity);
 
-                if (entitya != entityb){
-                    QnstGraphicsReference* entity = new QnstGraphicsReference();
-                    entity->setnstGraphicsParent(entitya->getnstGraphicsParent());
-                    entity->setEntityA(entitya);
-                    entity->setEntityB(entityb);
-                    entity->adjust();
+                  entitya->addnstGraphicsEdge(entity);
+                  entityb->addnstGraphicsEdge(entity);
+              }
 
-                    entitya->getnstGraphicsParent()->addnstGraphicsEntity(entity);
+          }else if (entities.contains(element.attribute("componentUID"))){
+              QnstGraphicsInterface* entitya = (QnstGraphicsInterface*) entities[element.attribute("uid")];
+              QnstGraphicsNode* entityb = (QnstGraphicsNode*) entities[element.attribute("componentUID")];
 
-                    entitya->addnstGraphicsEdge(entity);
-                    entityb->addnstGraphicsEdge(entity);
-                }
+              QnstGraphicsReference* entity = new QnstGraphicsReference();
+              entity->setnstGraphicsParent(entitya->getnstGraphicsParent());
+              entity->setEntityA(entitya);
+              entity->setEntityB(entityb);
+              entity->adjust();
 
-            }else if (entities.contains(element.attribute("componentUID"))){
-                QnstGraphicsInterface* entitya = (QnstGraphicsInterface*) entities[element.attribute("uid")];
-                QnstGraphicsNode* entityb = (QnstGraphicsNode*) entities[element.attribute("componentUID")];
+              entitya->getnstGraphicsParent()->addnstGraphicsEntity(entity);
 
-                QnstGraphicsReference* entity = new QnstGraphicsReference();
-                entity->setnstGraphicsParent(entitya->getnstGraphicsParent());
-                entity->setEntityA(entitya);
-                entity->setEntityB(entityb);
-                entity->adjust();
+              entitya->addnstGraphicsEdge(entity);
+              entityb->addnstGraphicsEdge(entity);
+          }
+      }
 
-                entitya->getnstGraphicsParent()->addnstGraphicsEntity(entity);
+  }else if (element.nodeName() == "bind"){
+      if (element.attribute("uid") != "" && entities.contains(element.attribute("componentaUID"))&& entities.contains(element.attribute("componentbUID"))){
+          if (!entities.contains(element.attribute("uid")) && links.contains(element.attribute("linkUID"))){
+              QnstGraphicsEntity* entitya = entities[element.attribute("componentaUID")];
+              QnstGraphicsEntity* entityb = entities[element.attribute("componentbUID")];
 
-                entitya->addnstGraphicsEdge(entity);
-                entityb->addnstGraphicsEdge(entity);
-            }
-        }
+              if (element.attribute("type") == "condition"){
+                  QnstGraphicsCondition* entity = new QnstGraphicsCondition();
+                  entity->setnstId(element.attribute("id"));
+                  entity->setnstUid(element.attribute("uid"));
+                  entity->setEntityA(entitya);
+                  entity->setEntityB(entityb);
 
-    }else if (element.nodeName() == "bind"){
-        if (element.attribute("uid") != "" && entities.contains(element.attribute("componentaUID"))&& entities.contains(element.attribute("componentbUID"))){
-            if (!entities.contains(element.attribute("uid")) && links.contains(element.attribute("linkUID"))){
-                QnstGraphicsEntity* entitya = entities[element.attribute("componentaUID")];
-                QnstGraphicsEntity* entityb = entities[element.attribute("componentbUID")];
+                  // if linking NODE to NODE
+                  if (entitya->getncgType() == Qncg::Node && entityb->getncgType() == Qncg::Node){
+                      entity->setnstGraphicsParent(entitya->getnstGraphicsParent());
 
-                if (element.attribute("type") == "condition"){
-                    QnstGraphicsCondition* entity = new QnstGraphicsCondition();
-                    entity->setnstId(element.attribute("id"));
-                    entity->setnstUid(element.attribute("uid"));
-                    entity->setEntityA(entitya);
-                    entity->setEntityB(entityb);
+                      entitya->getnstGraphicsParent()->addnstGraphicsEntity(entity);
 
-                    // if linking NODE to NODE
-                    if (entitya->getncgType() == Qncg::Node && entityb->getncgType() == Qncg::Node){
-                        entity->setnstGraphicsParent(entitya->getnstGraphicsParent());
+                  // if linking NODE to INTERFACE
+                  }else if (entitya->getncgType() == Qncg::Node && entityb->getncgType() == Qncg::Interface){
+                      entity->setnstGraphicsParent(entitya->getnstGraphicsParent());
 
-                        entitya->getnstGraphicsParent()->addnstGraphicsEntity(entity);
+                      entitya->getnstGraphicsParent()->addnstGraphicsEntity(entity);
 
-                    // if linking NODE to INTERFACE
-                    }else if (entitya->getncgType() == Qncg::Node && entityb->getncgType() == Qncg::Interface){
-                        entity->setnstGraphicsParent(entitya->getnstGraphicsParent());
+                  // if linking INTERFACE to NODE
+                  }else if (entitya->getncgType() == Qncg::Interface && entityb->getncgType() == Qncg::Node){
+                      entity->setnstGraphicsParent(entityb->getnstGraphicsParent());
 
-                        entitya->getnstGraphicsParent()->addnstGraphicsEntity(entity);
+                      entityb->getnstGraphicsParent()->addnstGraphicsEntity(entity);
 
-                    // if linking INTERFACE to NODE
-                    }else if (entitya->getncgType() == Qncg::Interface && entityb->getncgType() == Qncg::Node){
-                        entity->setnstGraphicsParent(entityb->getnstGraphicsParent());
+                  // if linking INTERFACE to INTERFACE
+                  }else if (entitya->getncgType() == Qncg::Interface && entityb->getncgType() == Qncg::Interface){
+                      entity->setnstGraphicsParent(entitya->getnstGraphicsParent()->getnstGraphicsParent());
 
-                        entityb->getnstGraphicsParent()->addnstGraphicsEntity(entity);
+                      entitya->getnstGraphicsParent()->getnstGraphicsParent()->addnstGraphicsEntity(entity);
+                  }
 
-                    // if linking INTERFACE to INTERFACE
-                    }else if (entitya->getncgType() == Qncg::Interface && entityb->getncgType() == Qncg::Interface){
-                        entity->setnstGraphicsParent(entitya->getnstGraphicsParent()->getnstGraphicsParent());
+                  // adjusting angle
+                  adjustAngle(entity, entitya, entityb);
 
-                        entitya->getnstGraphicsParent()->getnstGraphicsParent()->addnstGraphicsEntity(entity);
-                    }
+                  entity->adjust();
 
-                    // adjusting angle
-                    adjustAngle(entity, entitya, entityb);
+                  ((QnstGraphicsNode*) entitya)->addnstGraphicsEdge(entity);
+                  ((QnstGraphicsNode*) entityb)->addnstGraphicsEdge(entity);
 
-                    entity->adjust();
+                  QString con = element.attribute("condition");
 
-                    ((QnstGraphicsNode*) entitya)->addnstGraphicsEdge(entity);
-                    ((QnstGraphicsNode*) entityb)->addnstGraphicsEdge(entity);
+                  if (con == "onBegin"){
+                      entity->setCondition(Qnst::onBegin);
 
-                    QString con = element.attribute("condition");
+                  }else if (con == "onEnd"){
+                      entity->setCondition(Qnst::onEnd);
 
-                    if (con == "onBegin"){
-                        entity->setCondition(Qnst::onBegin);
+                  }else if (con == "onPause"){
+                      entity->setCondition(Qnst::onPause);
 
-                    }else if (con == "onEnd"){
-                        entity->setCondition(Qnst::onEnd);
+                  }else if (con == "onResume"){
+                      entity->setCondition(Qnst::onResume);
 
-                    }else if (con == "onPause"){
-                        entity->setCondition(Qnst::onPause);
+                  }else if (con == "onSelection"){
+                      entity->setCondition(Qnst::onSelection);
 
-                    }else if (con == "onResume"){
-                        entity->setCondition(Qnst::onResume);
+                  }else{
+                      entity->setCondition(Qnst::NoConditionType);
+                  }
 
-                    }else if (con == "onSelection"){
-                        entity->setCondition(Qnst::onSelection);
+                  QnstLink* lo = links[element.attribute("linkUID")];
 
-                    }else{
-                        entity->setCondition(Qnst::NoConditionType);
-                    }
+                  QnstBind* bo = new QnstBind();
+                  bo->setnstParent(lo);
+                  bo->setnstUid(entity->getnstUid());
+                  bo->setRole(con);
 
-                    QnstLink* lo = links[element.attribute("linkUID")];
+                  if (entitya->getncgType() == Qncg::Interface){
+                      bo->setComponent(entitya->getnstGraphicsParent()->getnstId());
+                      bo->setComponentUid(entitya->getnstGraphicsParent()->getnstUid());
+                      bo->setInterface(entitya->getnstId());
+                      bo->setInterfaceUid(entitya->getnstUid());
+                  }else{
+                      bo->setComponent(entitya->getnstId());
+                      bo->setComponentUid(entitya->getnstUid());
+                  }
 
-                    QnstBind* bo = new QnstBind();
-                    bo->setnstParent(lo);
-                    bo->setnstUid(entity->getnstUid());
-                    bo->setRole(con);
 
-                    if (entitya->getncgType() == Qncg::Interface){
-                        bo->setComponent(entitya->getnstGraphicsParent()->getnstId());
-                        bo->setComponentUid(entitya->getnstGraphicsParent()->getnstUid());
-                        bo->setInterface(entitya->getnstId());
-                        bo->setInterfaceUid(entitya->getnstUid());
-                    }else{
-                        bo->setComponent(entitya->getnstId());
-                        bo->setComponentUid(entitya->getnstUid());
-                    }
+                  QMap<QString, QString> params;
+                  QMap<QString, QString> name_uid;
 
+                  QDomNodeList list = element.childNodes();
 
-                    QMap<QString, QString> params;
-                    QMap<QString, QString> name_uid;
+                  for (unsigned int i=0;i<list.length();i++)
+                  {
+                      if (list.item(i).isElement())
+                      {
+                          QDomElement e = list.item(i).toElement();
 
-                    QDomNodeList list = element.childNodes();
+                          if (e.nodeName() == "param"){
+                              params[e.attribute("name")] = e.attribute("value");
+                              name_uid[e.attribute("name")] = e.attribute("uid");
+                          }
+                      }
+                  }
 
-                    for (unsigned int i=0;i<list.length();i++)
-                    {
-                        if (list.item(i).isElement())
-                        {
-                            QDomElement e = list.item(i).toElement();
+                  bo->setParams(params);
+                  bo->setNameUIDs(name_uid);
 
-                            if (e.nodeName() == "param"){
-                                params[e.attribute("name")] = e.attribute("value");
-                                name_uid[e.attribute("name")] = e.attribute("uid");
-                            }
-                        }
-                    }
+                  lo->addCondition(bo);
 
-                    bo->setParams(params);
-                    bo->setNameUIDs(name_uid);
 
-                    lo->addCondition(bo);
+                  binds[bo->getnstUid()] = bo;
+                  brelations[bo->getnstUid()] = entity->getnstUid();
 
+                  entities[entity->getnstUid()] = entity;
 
-                    binds[bo->getnstUid()] = bo;
-                    brelations[bo->getnstUid()] = entity->getnstUid();
+                  entity->setConn(connectors[lo->getxConnector()]);
 
-                    entities[entity->getnstUid()] = entity;
+                  entity->setParams(bo->getParams());
+                  entity->setNameUids(bo->getNameUIDs());
 
-                    entity->setConn(connectors[lo->getxConnector()]);
 
-                    entity->setParams(bo->getParams());
-                    entity->setNameUids(bo->getNameUIDs());
+                  connect(entity,
+                          SIGNAL(bindParamAdded(QString,QString,QMap<QString, QString>)),
+                          SLOT(requestBindParamAdjust(QString,QString,QMap<QString, QString>)));
 
+                  connect(entity,
+                          SIGNAL(bindParamUpdated(QString,QMap<QString,QString>,QMap<QString,QString>)),
+                          SLOT(updateBindParams(QString,QMap<QString,QString>,QMap<QString,QString>)));
 
-                    connect(entity,
-                            SIGNAL(bindParamAdded(QString,QString,QMap<QString, QString>)),
-                            SLOT(requestBindParamAdjust(QString,QString,QMap<QString, QString>)));
+                  nlink++;
 
-                    connect(entity,
-                            SIGNAL(bindParamUpdated(QString,QMap<QString,QString>,QMap<QString,QString>)),
-                            SLOT(updateBindParams(QString,QMap<QString,QString>,QMap<QString,QString>)));
+              }else if (element.attribute("type") == "action"){
+                  QnstGraphicsAction* entity = new QnstGraphicsAction();
+                  entity->setnstId(element.attribute("id"));
+                  entity->setnstUid(element.attribute("uid"));
+                  entity->setEntityA(entitya);
+                  entity->setEntityB(entityb);
 
-                    nlink++;
+                  // if linking NODE to NODE
+                  if (entitya->getncgType() == Qncg::Node && entityb->getncgType() == Qncg::Node){
+                      entity->setnstGraphicsParent(entitya->getnstGraphicsParent());
 
-                }else if (element.attribute("type") == "action"){
-                    QnstGraphicsAction* entity = new QnstGraphicsAction();
-                    entity->setnstId(element.attribute("id"));
-                    entity->setnstUid(element.attribute("uid"));
-                    entity->setEntityA(entitya);
-                    entity->setEntityB(entityb);
+                      entitya->getnstGraphicsParent()->addnstGraphicsEntity(entity);
 
-                    // if linking NODE to NODE
-                    if (entitya->getncgType() == Qncg::Node && entityb->getncgType() == Qncg::Node){
-                        entity->setnstGraphicsParent(entitya->getnstGraphicsParent());
+                  // if linking NODE to INTERFACE
+                  }else if (entitya->getncgType() == Qncg::Node && entityb->getncgType() == Qncg::Interface){
+                      entity->setnstGraphicsParent(entitya->getnstGraphicsParent());
 
-                        entitya->getnstGraphicsParent()->addnstGraphicsEntity(entity);
+                      entitya->getnstGraphicsParent()->addnstGraphicsEntity(entity);
 
-                    // if linking NODE to INTERFACE
-                    }else if (entitya->getncgType() == Qncg::Node && entityb->getncgType() == Qncg::Interface){
-                        entity->setnstGraphicsParent(entitya->getnstGraphicsParent());
+                  // if linking INTERFACE to NODE
+                  }else if (entitya->getncgType() == Qncg::Interface && entityb->getncgType() == Qncg::Node){
+                      entity->setnstGraphicsParent(entityb->getnstGraphicsParent());
 
-                        entitya->getnstGraphicsParent()->addnstGraphicsEntity(entity);
+                      entityb->getnstGraphicsParent()->addnstGraphicsEntity(entity);
 
-                    // if linking INTERFACE to NODE
-                    }else if (entitya->getncgType() == Qncg::Interface && entityb->getncgType() == Qncg::Node){
-                        entity->setnstGraphicsParent(entityb->getnstGraphicsParent());
+                  // if linking INTERFACE to INTERFACE
+                  }else if (entitya->getncgType() == Qncg::Interface && entityb->getncgType() == Qncg::Interface){
+                      entity->setnstGraphicsParent(entitya->getnstGraphicsParent()->getnstGraphicsParent());
 
-                        entityb->getnstGraphicsParent()->addnstGraphicsEntity(entity);
+                      entitya->getnstGraphicsParent()->getnstGraphicsParent()->addnstGraphicsEntity(entity);
+                  }
 
-                    // if linking INTERFACE to INTERFACE
-                    }else if (entitya->getncgType() == Qncg::Interface && entityb->getncgType() == Qncg::Interface){
-                        entity->setnstGraphicsParent(entitya->getnstGraphicsParent()->getnstGraphicsParent());
+                  // adjusting angle
+                  adjustAngle(entity, entitya, entityb);
 
-                        entitya->getnstGraphicsParent()->getnstGraphicsParent()->addnstGraphicsEntity(entity);
-                    }
+                  entity->adjust();
 
-                    // adjusting angle
-                    adjustAngle(entity, entitya, entityb);
+                  ((QnstGraphicsNode*) entitya)->addnstGraphicsEdge(entity);
+                  ((QnstGraphicsNode*) entityb)->addnstGraphicsEdge(entity);
 
-                    entity->adjust();
+                  QString act = element.attribute("action");
 
-                    ((QnstGraphicsNode*) entitya)->addnstGraphicsEdge(entity);
-                    ((QnstGraphicsNode*) entityb)->addnstGraphicsEdge(entity);
+                  if (act == "start"){
+                      entity->setAction(Qnst::Start);
 
-                    QString act = element.attribute("action");
+                  }else if (act == "stop"){
+                      entity->setAction(Qnst::Stop);
 
-                    if (act == "start"){
-                        entity->setAction(Qnst::Start);
+                  }else if (act == "pause"){
+                      entity->setAction(Qnst::Pause);
 
-                    }else if (act == "stop"){
-                        entity->setAction(Qnst::Stop);
+                  }else if (act == "resume"){
+                      entity->setAction(Qnst::Resume);
 
-                    }else if (act == "pause"){
-                        entity->setAction(Qnst::Pause);
+                  }else if (act == "set"){
+                      entity->setAction(Qnst::Set);
 
-                    }else if (act == "resume"){
-                        entity->setAction(Qnst::Resume);
+                  }else{
+                      entity->setAction(Qnst::NoActionType);
+                  }
 
-                    }else if (act == "set"){
-                        entity->setAction(Qnst::Set);
+                  QnstLink* lo = links[element.attribute("linkUID")];
 
-                    }else{
-                        entity->setAction(Qnst::NoActionType);
-                    }
+                  QnstBind* bo = new QnstBind();
+                  bo->setnstParent(lo);
+                  bo->setnstUid(entity->getnstUid());
+                  bo->setRole(act);
 
-                    QnstLink* lo = links[element.attribute("linkUID")];
+                  if (entitya->getncgType() == Qncg::Interface){
+                      bo->setComponent(entityb->getnstGraphicsParent()->getnstId());
+                      bo->setComponentUid(entityb->getnstGraphicsParent()->getnstUid());
+                      bo->setInterface(entityb->getnstId());
+                      bo->setInterfaceUid(entityb->getnstUid());
+                  }else{
+                      bo->setComponent(entityb->getnstId());
+                      bo->setComponentUid(entityb->getnstUid());
+                  }
 
-                    QnstBind* bo = new QnstBind();
-                    bo->setnstParent(lo);
-                    bo->setnstUid(entity->getnstUid());
-                    bo->setRole(act);
+                  QMap<QString, QString> params;
+                  QMap<QString, QString> name_uid;
 
-                    if (entitya->getncgType() == Qncg::Interface){
-                        bo->setComponent(entityb->getnstGraphicsParent()->getnstId());
-                        bo->setComponentUid(entityb->getnstGraphicsParent()->getnstUid());
-                        bo->setInterface(entityb->getnstId());
-                        bo->setInterfaceUid(entityb->getnstUid());
-                    }else{
-                        bo->setComponent(entityb->getnstId());
-                        bo->setComponentUid(entityb->getnstUid());
-                    }
+                  QDomNodeList list = element.childNodes();
 
-                    QMap<QString, QString> params;
-                    QMap<QString, QString> name_uid;
+                  for (unsigned int i=0;i<list.length();i++)
+                  {
+                      if (list.item(i).isElement())
+                      {
+                          QDomElement e = list.item(i).toElement();
 
-                    QDomNodeList list = element.childNodes();
+                          if (e.nodeName() == "param"){
+                              params[e.attribute("name")] = e.attribute("value");
+                              name_uid[e.attribute("name")] = e.attribute("uid");
+                          }
+                      }
+                  }
 
-                    for (unsigned int i=0;i<list.length();i++)
-                    {
-                        if (list.item(i).isElement())
-                        {
-                            QDomElement e = list.item(i).toElement();
+                  bo->setParams(params);
+                  bo->setNameUIDs(name_uid);
 
-                            if (e.nodeName() == "param"){
-                                params[e.attribute("name")] = e.attribute("value");
-                                name_uid[e.attribute("name")] = e.attribute("uid");
-                            }
-                        }
-                    }
+                  lo->addAction(bo);
 
-                    bo->setParams(params);
-                    bo->setNameUIDs(name_uid);
+                  binds[bo->getnstUid()] = bo;
+                  brelations[bo->getnstUid()] = entity->getnstUid();
 
-                    lo->addAction(bo);
+                  entities[entity->getnstUid()] = entity;
 
-                    binds[bo->getnstUid()] = bo;
-                    brelations[bo->getnstUid()] = entity->getnstUid();
+                  entity->setConn(connectors[lo->getxConnector()]);
 
-                    entities[entity->getnstUid()] = entity;
+                  entity->setParams(bo->getParams());
+                  entity->setNameUids(bo->getNameUIDs());
 
-                    entity->setConn(connectors[lo->getxConnector()]);
 
-                    entity->setParams(bo->getParams());
-                    entity->setNameUids(bo->getNameUIDs());
+                  connect(entity,
+                          SIGNAL(bindParamAdded(QString,QString,QMap<QString, QString>)),
+                          SLOT(requestBindParamAdjust(QString,QString,QMap<QString, QString>)));
 
+                  connect(entity,
+                          SIGNAL(bindParamUpdated(QString,QMap<QString,QString>,QMap<QString,QString>)),
+                          SLOT(updateBindParams(QString,QMap<QString,QString>,QMap<QString,QString>)));
 
-                    connect(entity,
-                            SIGNAL(bindParamAdded(QString,QString,QMap<QString, QString>)),
-                            SLOT(requestBindParamAdjust(QString,QString,QMap<QString, QString>)));
+                  nlink++;
+              }
+          }
+      }
+  }
 
-                    connect(entity,
-                            SIGNAL(bindParamUpdated(QString,QMap<QString,QString>,QMap<QString,QString>)),
-                            SLOT(updateBindParams(QString,QMap<QString,QString>,QMap<QString,QString>)));
+  QDomNodeList list = element.childNodes();
 
-                    nlink++;
-                }
-            }
-        }
-    }
+  for (unsigned int i=0;i<list.length();i++)
+  {
+      if (list.item(i).isElement())
+      {
+          QDomElement e = list.item(i).toElement();
 
-    QDomNodeList list = element.childNodes();
-
-    for (unsigned int i=0;i<list.length();i++)
-    {
-        if (list.item(i).isElement())
-        {
-            QDomElement e = list.item(i).toElement();
-
-            readLink(e, element);
-        }
-    }
+          readLink(e, element);
+      }
+  }
 }
 
 QString QnstView::serialize()
 {
-    QDomDocument* dom = new QDomDocument();
+  QDomDocument* dom = new QDomDocument();
 
-    QDomElement root = dom->createElement("qnst");
+  QDomElement root = dom->createElement("qnst");
 
-    foreach(QString key, importBases.keys()){
-        QDomElement e = dom->createElement("importBase");
+  foreach(QString key, importBases.keys()){
+      QDomElement e = dom->createElement("importBase");
 
-        e.setAttribute("uid", key);
+      e.setAttribute("uid", key);
 
-        e.setAttribute("connUID", importBases[key]);
+      e.setAttribute("connUID", importBases[key]);
 
-        root.appendChild(e);
-    }
+      root.appendChild(e);
+  }
 
-    foreach(QnstConnector* conn, connectors.values()){
-        QDomElement e = dom->createElement("connector");
+  foreach(QnstConnector* conn, connectors.values()){
+      QDomElement e = dom->createElement("connector");
 
-        e.setAttribute("id", conn->getName());
-        e.setAttribute("uid", conn->getnstUid());
+      e.setAttribute("id", conn->getName());
+      e.setAttribute("uid", conn->getnstUid());
 
-        foreach(QString condition, conn->getConditions()){
-            QDomElement c = dom->createElement("condition");
+      foreach(QString condition, conn->getConditions()){
+          QDomElement c = dom->createElement("condition");
 
-            c.setAttribute("type", condition);
+          c.setAttribute("type", condition);
 
-            e.appendChild(c);
-        }
+          e.appendChild(c);
+      }
 
-        foreach(QString action, conn->getActions()){
-            QDomElement a = dom->createElement("action");
+      foreach(QString action, conn->getActions()){
+          QDomElement a = dom->createElement("action");
 
-            a.setAttribute("type", action);
+          a.setAttribute("type", action);
 
-            e.appendChild(a);
-        }
+          e.appendChild(a);
+      }
 
 
-        foreach(QString key, conn->getParams().keys()){
-            QDomElement p = dom->createElement("param");
+      foreach(QString key, conn->getParams().keys()){
+          QDomElement p = dom->createElement("param");
 
-            p.setAttribute("uid", key);
-            p.setAttribute("name", conn->getParams()[key]);
+          p.setAttribute("uid", key);
+          p.setAttribute("name", conn->getParams()[key]);
 
-            e.appendChild(p);
-        }
+          e.appendChild(p);
+      }
 
-        root.appendChild(e);
-    }
+      root.appendChild(e);
+  }
 
-    foreach(QString key, interfaceRefers.keys()){
-        QDomElement e = dom->createElement("interfaceReference");
+  foreach(QString key, interfaceRefers.keys()){
+      QDomElement e = dom->createElement("interfaceReference");
 
-        e.setAttribute("interfaceReferUID", key);
+      e.setAttribute("interfaceReferUID", key);
 
-        e.setAttribute("interfaceOriginUID", interfaceRefers[key]);
+      e.setAttribute("interfaceOriginUID", interfaceRefers[key]);
 
-        root.appendChild(e);
-    }
+      root.appendChild(e);
+  }
 
-    foreach(QString key, refers.keys()){
-        QDomElement e = dom->createElement("nodeReference");
+  foreach(QString key, refers.keys()){
+      QDomElement e = dom->createElement("nodeReference");
 
-        e.setAttribute("nodeReferUID", key);
+      e.setAttribute("nodeReferUID", key);
 
-        e.setAttribute("nodeOriginUID", refers[key]);
+      e.setAttribute("nodeOriginUID", refers[key]);
 
-        root.appendChild(e);
-    }
+      root.appendChild(e);
+  }
 
-    foreach(QnstLink* link, links.values()){
-        QDomElement e = dom->createElement("linkdata");
+  foreach(QnstLink* link, links.values()){
+      QDomElement e = dom->createElement("linkdata");
 
-        e.setAttribute("id", link->getnstId());
-        e.setAttribute("uid", link->getnstUid());
+      e.setAttribute("id", link->getnstId());
+      e.setAttribute("uid", link->getnstUid());
 
-        e.setAttribute("parent", link->getnstParent()->getnstUid());
+      e.setAttribute("parent", link->getnstParent()->getnstUid());
 
-        e.setAttribute("xconnetor", link->getxConnector());
-        e.setAttribute("xconnetorUID", link->getxConnectorUID());
-        e.setAttribute("aggregatorUID", link->getAggregatorUID());
+      e.setAttribute("xconnetor", link->getxConnector());
+      e.setAttribute("xconnetorUID", link->getxConnectorUID());
+      e.setAttribute("aggregatorUID", link->getAggregatorUID());
 
-        root.appendChild(e);
-    }
+      root.appendChild(e);
+  }
 
-    foreach(QnstGraphicsEntity* entity, scene->getRoots()){
-        QDomElement e = dom->createElement("body");
+  foreach(QnstGraphicsEntity* entity, scene->getRoots()){
+      QDomElement e = dom->createElement("body");
 
-        e.setAttribute("id", entity->getnstId());
-        e.setAttribute("uid", entity->getnstUid());
+      e.setAttribute("id", entity->getnstId());
+      e.setAttribute("uid", entity->getnstUid());
 
-        e.setAttribute("top", entity->getTop());
-        e.setAttribute("left", entity->getLeft());
-        e.setAttribute("width", entity->getWidth());
-        e.setAttribute("height", entity->getHeight());
+      e.setAttribute("top", entity->getTop());
+      e.setAttribute("left", entity->getLeft());
+      e.setAttribute("width", entity->getWidth());
+      e.setAttribute("height", entity->getHeight());
 
-        e.setAttribute("collapsed", ((QnstGraphicsComposition*) entity)->isCollapsed());
+      e.setAttribute("collapsed", ((QnstGraphicsComposition*) entity)->isCollapsed());
 
-        e.setAttribute("expandWidth", ((QnstGraphicsComposition*) entity)->getLastW());
-        e.setAttribute("expandHeight", ((QnstGraphicsComposition*) entity)->getLastH());
+      e.setAttribute("expandWidth", ((QnstGraphicsComposition*) entity)->getLastW());
+      e.setAttribute("expandHeight", ((QnstGraphicsComposition*) entity)->getLastH());
 
-        foreach(QnstGraphicsEntity* c, entity->getnstGraphicsEntities()){
-            write(e, dom, c);
-        }
+      foreach(QnstGraphicsEntity* c, entity->getnstGraphicsEntities()){
+          write(e, dom, c);
+      }
 
-        writeLink(e, dom, entity);
+      writeLink(e, dom, entity);
 
-        root.appendChild(e);
-    }
+      root.appendChild(e);
+  }
 
-    dom->appendChild(root);
+  dom->appendChild(root);
 
-    linkWriterAux.clear();
+  linkWriterAux.clear();
 
-    return dom->toString(4);
+  return dom->toString(4);
 }
 
-void QnstView::write(QDomElement element, QDomDocument* dom, QnstGraphicsEntity* entity)
+void QnstView::write(QDomElement element, QDomDocument* dom,
+                     QnstGraphicsEntity* entity)
 {
-    QDomElement e;
+  QDomElement e;
 
-    switch(entity->getnstType()){
+  switch(entity->getnstType())
+  {
     case Qnst::Body:
-        e = dom->createElement("body");
+      e = dom->createElement("body");
 
-        e.setAttribute("collapsed", ((QnstGraphicsComposition*) entity)->isCollapsed());
+      e.setAttribute("collapsed", ((QnstGraphicsComposition*) entity)->isCollapsed());
 
-        e.setAttribute("expandWidth", ((QnstGraphicsComposition*) entity)->getLastW());
-        e.setAttribute("expandHeight", ((QnstGraphicsComposition*) entity)->getLastH());
-
-        break;
+      e.setAttribute("expandWidth", ((QnstGraphicsComposition*) entity)->getLastW());
+      e.setAttribute("expandHeight", ((QnstGraphicsComposition*) entity)->getLastH());
+      break;
 
     case Qnst::Context:
-        e = dom->createElement("context");
+      e = dom->createElement("context");
 
-        e.setAttribute("collapsed", ((QnstGraphicsComposition*) entity)->isCollapsed());
+      e.setAttribute("collapsed", ((QnstGraphicsComposition*) entity)->isCollapsed());
 
-        e.setAttribute("expandWidth", ((QnstGraphicsComposition*) entity)->getLastW());
-        e.setAttribute("expandHeight", ((QnstGraphicsComposition*) entity)->getLastH());
-
-        break;
+      e.setAttribute("expandWidth", ((QnstGraphicsComposition*) entity)->getLastW());
+      e.setAttribute("expandHeight", ((QnstGraphicsComposition*) entity)->getLastH());
+      break;
 
     case Qnst::Switch:
-        e = dom->createElement("switch");
+      e = dom->createElement("switch");
 
-        e.setAttribute("collapsed", ((QnstGraphicsComposition*) entity)->isCollapsed());
+      e.setAttribute("collapsed", ((QnstGraphicsComposition*) entity)->isCollapsed());
 
-        e.setAttribute("expandWidth", ((QnstGraphicsComposition*) entity)->getLastW());
-        e.setAttribute("expandHeight", ((QnstGraphicsComposition*) entity)->getLastH());
-
-        break;
+      e.setAttribute("expandWidth", ((QnstGraphicsComposition*) entity)->getLastW());
+      e.setAttribute("expandHeight", ((QnstGraphicsComposition*) entity)->getLastH());
+      break;
 
     case Qnst::Media:
-        e = dom->createElement("media");
-
-        e.setAttribute("type", "media");
-
-        if (((QnstGraphicsMedia*) entity)->getSource() != "" ){
-            e.setAttribute("src", ((QnstGraphicsMedia*) entity)->getSource());
-        }
-
-        e.setAttribute("refer", ((QnstGraphicsMedia*) entity)->getRefer());
-        e.setAttribute("referUID", ((QnstGraphicsMedia*) entity)->getReferUID());
-        e.setAttribute("instance", ((QnstGraphicsMedia*) entity)->getInstance());
-
-        break;
-
     case Qnst::Image:
-        e = dom->createElement("media");
-
-        e.setAttribute("type", "image");
-
-        if (((QnstGraphicsMedia*) entity)->getSource() != "" ){
-            e.setAttribute("src", ((QnstGraphicsMedia*) entity)->getSource());
-        }
-
-        e.setAttribute("refer", ((QnstGraphicsMedia*) entity)->getRefer());
-        e.setAttribute("referUID", ((QnstGraphicsMedia*) entity)->getReferUID());
-        e.setAttribute("instance", ((QnstGraphicsMedia*) entity)->getInstance());
-
-        break;
-
-    case Qnst::Video:
-        e = dom->createElement("media");
-
-        e.setAttribute("type", "video");
-
-        if (((QnstGraphicsMedia*) entity)->getSource() != "" ){
-            e.setAttribute("src", ((QnstGraphicsMedia*) entity)->getSource());
-        }
-
-        e.setAttribute("refer", ((QnstGraphicsMedia*) entity)->getRefer());
-        e.setAttribute("referUID", ((QnstGraphicsMedia*) entity)->getReferUID());
-        e.setAttribute("instance", ((QnstGraphicsMedia*) entity)->getInstance());
-
-        break;
-
-    case Qnst::Text:
-        e = dom->createElement("media");
-
-        e.setAttribute("type", "text");
-
-        if (((QnstGraphicsMedia*) entity)->getSource() != "" ){
-            e.setAttribute("src", ((QnstGraphicsMedia*) entity)->getSource());
-        }
-
-        e.setAttribute("refer", ((QnstGraphicsMedia*) entity)->getRefer());
-        e.setAttribute("referUID", ((QnstGraphicsMedia*) entity)->getReferUID());
-        e.setAttribute("instance", ((QnstGraphicsMedia*) entity)->getInstance());
-
-        break;
-
-    case Qnst::Html:
-        e = dom->createElement("media");
-
-        e.setAttribute("type", "text/html");
-
-        if (((QnstGraphicsMedia*) entity)->getSource() != "" ){
-            e.setAttribute("src", ((QnstGraphicsMedia*) entity)->getSource());
-        }
-
-        e.setAttribute("refer", ((QnstGraphicsMedia*) entity)->getRefer());
-        e.setAttribute("referUID", ((QnstGraphicsMedia*) entity)->getReferUID());
-        e.setAttribute("instance", ((QnstGraphicsMedia*) entity)->getInstance());
-
-        break;
-
-    case Qnst::NCL:
-        e = dom->createElement("media");
-
-        e.setAttribute("type", "application/x-ginga-NCL");
-
-        if (((QnstGraphicsMedia*) entity)->getSource() != "" ){
-            e.setAttribute("src", ((QnstGraphicsMedia*) entity)->getSource());
-        }
-
-        e.setAttribute("refer", ((QnstGraphicsMedia*) entity)->getRefer());
-        e.setAttribute("referUID", ((QnstGraphicsMedia*) entity)->getReferUID());
-        e.setAttribute("instance", ((QnstGraphicsMedia*) entity)->getInstance());
-
-        break;
-
-    case Qnst::Settings:
-        e = dom->createElement("media");
-
-        e.setAttribute("type", "application/x-ncl-settings");
-
-        if (((QnstGraphicsMedia*) entity)->getSource() != "" ){
-            e.setAttribute("src", ((QnstGraphicsMedia*) entity)->getSource());
-        }
-
-        e.setAttribute("refer", ((QnstGraphicsMedia*) entity)->getRefer());
-        e.setAttribute("referUID", ((QnstGraphicsMedia*) entity)->getReferUID());
-        e.setAttribute("instance", ((QnstGraphicsMedia*) entity)->getInstance());
-
-        break;
-
     case Qnst::Audio:
-        e = dom->createElement("media");
-
-        e.setAttribute("type", "audio");
-
-        if (((QnstGraphicsMedia*) entity)->getSource() != "" ){
-            e.setAttribute("src", ((QnstGraphicsMedia*) entity)->getSource());
-        }
-
-        e.setAttribute("refer", ((QnstGraphicsMedia*) entity)->getRefer());
-        e.setAttribute("referUID", ((QnstGraphicsMedia*) entity)->getReferUID());
-        e.setAttribute("instance", ((QnstGraphicsMedia*) entity)->getInstance());
-
-        break;
-
+    case Qnst::Video:
+    case Qnst::Html:
+    case Qnst::NCL:
+    case Qnst::Text:
+    case Qnst::Settings:
     case Qnst::Script:
-        e = dom->createElement("media");
+      e = dom->createElement("media");
 
-        e.setAttribute("type", "application/x-ginga-NCLua");
+      e.setAttribute("type", typeToXMLStr[entity->getnstType()]);
 
-        if (((QnstGraphicsMedia*) entity)->getSource() != "" ){
-            e.setAttribute("src", ((QnstGraphicsMedia*) entity)->getSource());
-        }
+      if (((QnstGraphicsMedia*) entity)->getSource() != "" )
+      {
+        e.setAttribute("src", ((QnstGraphicsMedia*) entity)->getSource());
+      }
 
-        e.setAttribute("refer", ((QnstGraphicsMedia*) entity)->getRefer());
-        e.setAttribute("referUID", ((QnstGraphicsMedia*) entity)->getReferUID());
-        e.setAttribute("instance", ((QnstGraphicsMedia*) entity)->getInstance());
-
-        break;
+      e.setAttribute("refer", ((QnstGraphicsMedia*) entity)->getRefer());
+      e.setAttribute("referUID", ((QnstGraphicsMedia*) entity)->getReferUID());
+      e.setAttribute("instance", ((QnstGraphicsMedia*) entity)->getInstance());
+      break;
 
     case Qnst::Property:
-        e = dom->createElement("property");
-
-        break;
+      e = dom->createElement("property");
+      break;
 
     case Qnst::SwitchPort:
-        e = dom->createElement("switchPort");
-
-        break;
+      e = dom->createElement("switchPort");
+      break;
 
     case Qnst::Area:
-        e = dom->createElement("area");
-
-        break;
+      e = dom->createElement("area");
+      break;
 
     case Qnst::Aggregator:
-        e = dom->createElement("aggregator");
-
-        break;
+      e = dom->createElement("aggregator");
+      break;
 
     case Qnst::Port:
     {
-        e = dom->createElement("port");
+      e = dom->createElement("port");
 
-        QnstGraphicsPort* pentity = ((QnstGraphicsPort*) entity);
+      QnstGraphicsPort* pentity = ((QnstGraphicsPort*) entity);
 
-        foreach(QnstGraphicsEdge* edge, pentity->getnstGraphicsEdges()){
-            if (edge->getnstType() == Qnst::Reference){
-                if (edge->getEntityB()->getncgType() == Qncg::Node){
-                    e.setAttribute("componentUID", edge->getEntityB()->getnstUid());
+      foreach(QnstGraphicsEdge* edge, pentity->getnstGraphicsEdges())
+      {
+        if (edge->getnstType() == Qnst::Reference){
+          if (edge->getEntityB()->getncgType() == Qncg::Node)
+          {
+            e.setAttribute("componentUID", edge->getEntityB()->getnstUid());
+          }
+          else if (edge->getEntityB()->getncgType() == Qncg::Interface)
+          {
+            e.setAttribute("componentUID", edge->getEntityB()->getnstParent()->getnstUid());
+            e.setAttribute("interfaceUID", edge->getEntityB()->getnstUid());
+          }
 
-                }else if (edge->getEntityB()->getncgType() == Qncg::Interface){
-                    e.setAttribute("componentUID", edge->getEntityB()->getnstParent()->getnstUid());
-                    e.setAttribute("interfaceUID", edge->getEntityB()->getnstUid());
-                }
-
-                break;
-            }
+          break;
         }
+      }
     }
-      break;
+    break;
 
     default:
       // do nothing
       break;
-    }
+  }
 
-    e.setAttribute("id", entity->getnstId());
-    e.setAttribute("uid", entity->getnstUid());
+  e.setAttribute("id", entity->getnstId());
+  e.setAttribute("uid", entity->getnstUid());
 
-    e.setAttribute("top", entity->getTop());
-    e.setAttribute("left", entity->getLeft());
-    e.setAttribute("width", entity->getWidth());
-    e.setAttribute("height", entity->getHeight());
+  e.setAttribute("top", entity->getTop());
+  e.setAttribute("left", entity->getLeft());
+  e.setAttribute("width", entity->getWidth());
+  e.setAttribute("height", entity->getHeight());
 
-    writeLink(element, dom, entity);
+  writeLink(element, dom, entity);
 
-    foreach(QnstGraphicsEntity* c, entity->getnstGraphicsEntities()){
-        write(e, dom, c);
-    }
+  foreach(QnstGraphicsEntity* c, entity->getnstGraphicsEntities())
+  {
+    write(e, dom, c);
+  }
 
-    element.appendChild(e);
+  element.appendChild(e);
 }
 
 void QnstView::writeLink(QDomElement element, QDomDocument* dom, QnstGraphicsEntity* entity)
@@ -1217,101 +1053,111 @@ void QnstView::createConnection()
 
 bool QnstView::hasEntity(QString uid)
 {
-    if (entities.contains(uid)  ||
-        binds.contains(uid) ||
-        links.contains(uid)){
+  if (entities.contains(uid)  ||
+      binds.contains(uid) ||
+      links.contains(uid))
+  {
+    return true;
+  }
 
-        return true;
-    }
-
-    return false;
+  return false;
 }
 
 QnstEntity* QnstView::getEntity(QString uid)
 {
-     if (links.contains(uid)){
-         return links.value(uid);
+  if (links.contains(uid))
+    return links.value(uid);
 
-     }else if (binds.contains(uid)){
-         return binds.value(uid);
+  else if (binds.contains(uid))
+    return binds.value(uid);
 
-     }else if (entities.contains(uid)){
-         return entities.value(uid);
-     }
+  else if (entities.contains(uid))
+    return entities.value(uid);
 
-     return NULL;
+  return NULL;
 }
 
-void QnstView::addEntity(const QString uid, const QString parent, const QMap<QString, QString> properties)
+void QnstView::addEntity(const QString uid, const QString parent,
+                         const QMap<QString, QString> &properties)
 {
-    qDebug() << "[QNST]" << ":" << "Adding entity '"+uid+"'";
+  qDebug() << "[QNST]" << ":" << "Adding entity '"+uid+"'";
 
-    // if the entity type is BODY
-    if (properties["TYPE"] == "body"){
-        addBody(uid, parent, properties);
+  if (properties["TYPE"] == "body")
+  {
+    addBody(uid, parent, properties);
+  }
+  else if (properties["TYPE"] == "context")
+  {
+    addContext(uid, parent, properties);
+  }
+  else if (properties["TYPE"] == "switch")
+  {
+    addSwitch(uid, parent, properties);
+  }
+  else if (properties["TYPE"] == "media")
+  {
+    addMedia(uid, parent, properties);
+  }
+  else if (properties["TYPE"] == "port")
+  {
+    addPort(uid, parent, properties);
+  }
+  else if (properties["TYPE"] == "link")
+  {
+    addLink(uid, parent, properties);
+  }
+  else if (properties["TYPE"] == "bind")
+  {
+    addBind(uid, parent, properties);
+  }
+  // if the entity type is CONNECTOR
+  else if (properties["TYPE"] == "causalConnector")
+  {
+    addConnector(uid, parent, properties);
+  }
+  // if the entity type is CONDITION
+  else if (properties["TYPE"] == "simpleCondition")
+  {
+    addCondition(uid, parent, properties);
+  }
+  // if the entity type is ACTION
+  else if (properties["TYPE"] == "simpleAction")
+  {
+    addAction(uid, parent, properties);
+  }
+  // if the entity type is IMPORTBASE
+  else if (properties["TYPE"] == "importBase")
+  {
+    addImportBase(uid, properties);
+  }
+  // if the entity type is AREA
+  else if (properties["TYPE"] == "area")
+  {
+    addArea(uid, parent, properties);
+  }
+  // if the entity type is PROPERTY
+  else if (properties["TYPE"] == "property")
+  {
+    addProperty(uid, parent, properties);
+  }
+  // if the entity type is SWITCHPORT
+  else if (properties["TYPE"] == "switchPort")
+  {
+    addSwitchPort(uid, parent, properties);
+  }
+  else if (properties["TYPE"] == "mapping")
+  {
+    addMapping(uid, parent, properties);
 
-    // if the entity type is CONTEXT
-    }else if (properties["TYPE"] == "context"){
-        addContext(uid, parent, properties);
-
-    // if the entity type is SWITCH
-    }else if (properties["TYPE"] == "switch"){
-        addSwitch(uid, parent, properties);
-
-    // if the entity type is MEDIA
-    }else if (properties["TYPE"] == "media"){
-        addMedia(uid, parent, properties);
-
-    // if the entity type is PORT
-    }else if (properties["TYPE"] == "port"){
-        addPort(uid, parent, properties);
-
-    // if the entity type is LINK
-    }else if (properties["TYPE"] == "link"){
-        addLink(uid, parent, properties);
-
-    // if the entity type is BIND
-    }else if (properties["TYPE"] == "bind"){
-        addBind(uid, parent, properties);
-
-    // if the entity type is CONNECTOR
-    }else if (properties["TYPE"] == "causalConnector"){
-        addConnector(uid, parent, properties);
-
-    // if the entity type is CONDITION
-    }else if (properties["TYPE"] == "simpleCondition"){
-        addCondition(uid, parent, properties);
-
-    // if the entity type is ACTION
-    }else if (properties["TYPE"] == "simpleAction"){
-        addAction(uid, parent, properties);
-
-    // if the entity type is IMPORTBASE
-    }else if (properties["TYPE"] == "importBase"){
-        addImportBase(uid, properties);
-
-    // if the entity type is AREA
-    }else if (properties["TYPE"] == "area"){
-        addArea(uid, parent, properties);
-
-    // if the entity type is PROPERTY
-    }else if (properties["TYPE"] == "property"){
-        addProperty(uid, parent, properties);
-
-    // if the entity type is SWITCHPORT
-    }else if (properties["TYPE"] == "switchPort"){
-        addSwitchPort(uid, parent, properties);
-
-    }else if (properties["TYPE"] == "mapping"){
-        addMapping(uid, parent, properties);
-
-    }else if (properties["TYPE"] == "bindParam"){
-        addBindParam(uid, parent, properties);
-
-    }else if (properties["TYPE"] == "connectorParam"){
-        addConnectorParam(uid, parent, properties);
-    }
-
+  }
+  else if (properties["TYPE"] == "bindParam")
+  {
+    addBindParam(uid, parent, properties);
+  }
+  else if (properties["TYPE"] == "connectorParam")
+  {
+    addConnectorParam(uid, parent, properties);
+  }
 }
 
 void QnstView::removeEntity(const QString uid, bool undo, bool rmRef)
@@ -1613,14 +1459,15 @@ void QnstView::removeEntity(const QString uid, bool undo, bool rmRef)
 }
 
 void QnstView::changeEntity(const QString uid,
-                            const QMap<QString, QString> properties)
+                            const QMap<QString, QString> &properties)
 {
   qDebug() << "[QNST]" << ":" << "Changing entity '"+uid+"'"
            << properties["TYPE"];
 
-  if (selected != NULL){
-      selected->setSelected(false);
-      selected->adjust();
+  if (selected != NULL)
+  {
+    selected->setSelected(false);
+    selected->adjust();
   }
   selected = NULL;
 
@@ -1716,325 +1563,344 @@ void QnstView::changeEntity(const QString uid,
   {
     changeConnectorParam(uid, properties);
   }
-
 }
 
 void QnstView::selectEntity(const QString uid)
 {
-    qDebug() << "[QNST]" << ":" << "Selecting entity '"+uid+"'";
+  qDebug() << "[QNST]" << ":" << "Selecting entity '"+uid+"'";
 
-    if (entities.contains(uid)){
-        QnstGraphicsEntity* entity = entities[uid];
+  if (entities.contains(uid))
+  {
+    QnstGraphicsEntity* entity = entities[uid];
 
-        if (entity != selected){
-            if (selected != NULL){
-                selected->setSelected(false);
-                selected->adjust();
-            }
+    if (entity != selected)
+    {
+      if (selected != NULL)
+      {
+        selected->setSelected(false);
+        selected->adjust();
+      }
 
-            selected = entity;
+      selected = entity;
 
-            selected->setSelected(true);
-            selected->adjust();
-        }
+      selected->setSelected(true);
+      selected->adjust();
     }
+  }
 }
 
-void QnstView::addBody(const QString uid, const QString parent, const QMap<QString, QString> properties, bool undo)
+void QnstView::addBody(const QString uid, const QString parent,
+                       const QMap<QString, QString> &properties, bool undo)
 {
-    QnstGraphicsBody* entity = new QnstGraphicsBody();
-    entity->setnstUid(uid);
+  QnstGraphicsBody* entity = new QnstGraphicsBody();
+  entity->setnstUid(uid);
 
-    entity->setTop(scene->height()/2 - 550/2);
-    entity->setLeft(scene->width()/2 - 750/2);
-    entity->setWidth(750);
-    entity->setHeight(550);
+  entity->setTop(scene->height()/2 - DEFAULT_BODY_HEIGHT/2);
+  entity->setLeft(scene->width()/2 - DEFAULT_BODY_WIDTH/2);
+  entity->setWidth(DEFAULT_BODY_WIDTH);
+  entity->setHeight(DEFAULT_BODY_HEIGHT);
 
-//    if (properties["id"] != ""){
-        entity->setnstId(properties["id"]);
-//    }
+//if (properties["id"] != ""){
+    entity->setnstId(properties["id"]);
+//}
 
-    if (properties["top"] != ""){
-        entity->setTop(properties["top"].toDouble());
+  if (properties["top"] != "")
+    entity->setTop(properties["top"].toDouble());
+
+  if (properties["left"] != "")
+    entity->setLeft(properties["left"].toDouble());
+
+  if (properties["collapsed"] != "")
+  {
+    if (properties["collapsed"] == "1")
+    {
+      if (properties["width"] != "")
+        entity->setLastW(properties["width"].toDouble());
+
+      if (properties["height"] != "")
+        entity->setLastH(properties["height"].toDouble());
+
+      if (properties["expandHeight"] != "")
+        entity->setHeight(properties["expandHeight"].toDouble());
+
+      if (properties["expandWidth"] != "")
+        entity->setWidth(properties["expandWidth"].toDouble());
     }
+    else
+    {
+      if (properties["width"] != "")
+        entity->setWidth(properties["width"].toDouble());
 
-    if (properties["left"] != ""){
-        entity->setLeft(properties["left"].toDouble());
+      if (properties["height"] != "")
+        entity->setHeight(properties["height"].toDouble());
+
+      if (properties["expandHeight"] != "")
+        entity->setLastH(properties["expandHeight"].toDouble());
+
+      if (properties["expandWidth"] != "")
+        entity->setLastW(properties["expandWidth"].toDouble());
     }
+  }
 
-    if (properties["collapsed"] != ""){
-        if (properties["collapsed"] == "1"){
-            if (properties["width"] != ""){
-                entity->setLastW(properties["width"].toDouble());
-            }
+  scene->addRoot(entity);
+  entities[uid] = entity;
 
-            if (properties["height"] != ""){
-                entity->setLastH(properties["height"].toDouble());
-            }
-
-            if (properties["expandHeight"] != ""){
-                entity->setHeight(properties["expandHeight"].toDouble());
-            }
-
-            if (properties["expandWidth"] != ""){
-                entity->setWidth(properties["expandWidth"].toDouble());
-            }
-        }else{
-            if (properties["width"] != ""){
-                entity->setWidth(properties["width"].toDouble());
-            }
-
-            if (properties["height"] != ""){
-                entity->setHeight(properties["height"].toDouble());
-            }
-
-
-            if (properties["expandHeight"] != ""){
-                entity->setLastH(properties["expandHeight"].toDouble());
-            }
-
-            if (properties["expandWidth"] != ""){
-                entity->setLastW(properties["expandWidth"].toDouble());
-            }
-        }
-    }
-
-    scene->addRoot(entity); entities[uid] = entity;
-
-    if (!undo){
-        QnstAddCommand* cmd = new QnstAddCommand(this, entity);
-        history.push(cmd);
-    }
+  if (!undo)
+  {
+    QnstAddCommand* cmd = new QnstAddCommand(this, entity);
+    history.push(cmd);
+  }
 }
 
-void QnstView::changeBody(QnstGraphicsBody* entity, const QMap<QString, QString> properties)
+void QnstView::changeBody(QnstGraphicsBody* entity,
+                          const QMap<QString, QString> &properties)
 {
-//    if (properties["id"] != ""){
-        entity->setnstId(properties["id"]);
-//    }
-
-    entity->adjust();
+//if (properties["id"] != ""){
+  entity->setnstId(properties["id"]);
+//}
+  entity->adjust();
 }
 
-void QnstView::addImportBase(QString uid, const QMap<QString, QString> properties)
+void QnstView::addImportBase(QString uid,
+                             const QMap<QString, QString> &properties)
 {
-    QString connUID = QUuid::createUuid().toString();
+  QString connUID = QUuid::createUuid().toString();
 
-    importBases[uid] = connUID;
+  importBases[uid] = connUID;
 
-    if (properties["documentURI"] != "" && properties["projectURI"] != "" && properties["alias"] != ""){
+  if (properties["documentURI"] != "" &&
+      properties["projectURI"] != "" &&
+      properties["alias"] != "")
+  {
+    int n = properties["projectURI"].lastIndexOf("/");
 
-        int n = properties["projectURI"].lastIndexOf("/");
+    QFile* file = new QFile(properties["projectURI"].left(n)+QDir::separator()+properties["documentURI"]);
 
-        QFile* file = new QFile(properties["projectURI"].left(n)+QDir::separator()+properties["documentURI"]);
+    if (file->exists()){
+        if (file->open(QIODevice::ReadOnly)){
+            QDomDocument* domdoc = new QDomDocument();
 
-        if (file->exists()){
-            if (file->open(QIODevice::ReadOnly)){
-                QDomDocument* domdoc = new QDomDocument();
-
-                if (domdoc->setContent(file)){
-                    readImportBase(connUID, domdoc->firstChildElement(), properties["alias"]);
-                }
+            if (domdoc->setContent(file)){
+                readImportBase(connUID, domdoc->firstChildElement(), properties["alias"]);
             }
         }
-
-        delete file;
-
-
-        foreach(QnstBind* b, binds.values()){
-            adjustBind(b);
-        }
-    }
-}
-
-
-void QnstView::changeImportBase(QString uid, const QMap<QString, QString> properties)
-{
-
-    foreach(QnstConnector* cc, connectors.values()){
-        if (cc->getnstUid() == importBases[uid]){
-            connectors.remove(cc->getName());
-        }
     }
 
-    foreach(QnstConnector* cc, connectors2.values()){
-        if (cc->getnstUid() == importBases[uid]){
-            connectors2.remove(cc->getnstId());
-        }
-    }
-
-    if (properties["documentURI"] != "" && properties["projectURI"] != "" && properties["alias"] != ""){
-
-        int n = properties["projectURI"].lastIndexOf("/");
-
-        QFile* file = new QFile(properties["projectURI"].left(n)+QDir::separator()+properties["documentURI"]);
-
-        if (file->exists()){
-            if (file->open(QIODevice::ReadOnly)){
-
-                QDomDocument* domdoc = new QDomDocument();
-
-                if (domdoc->setContent(file)){
-                    readImportBase(importBases[uid], domdoc->firstChildElement(), properties["alias"]);
-                }
-
-            }
-        }
-
-        delete file;
-    }
+    delete file;
 
     foreach(QnstBind* b, binds.values()){
         adjustBind(b);
     }
+  }
+}
+
+
+void QnstView::changeImportBase(QString uid,
+                                const QMap<QString, QString> &properties)
+{
+  foreach(QnstConnector* cc, connectors.values())
+  {
+    if (cc->getnstUid() == importBases[uid])
+      connectors.remove(cc->getName());
+  }
+
+  foreach(QnstConnector* cc, connectors2.values())
+  {
+    if (cc->getnstUid() == importBases[uid])
+      connectors2.remove(cc->getnstId());
+  }
+
+  if (properties["documentURI"] != "" &&
+      properties["projectURI"] != "" &&
+      properties["alias"] != "")
+  {
+    int n = properties["projectURI"].lastIndexOf("/");
+    QFile* file = new QFile(properties["projectURI"].left(n)+QDir::separator()+properties["documentURI"]);
+
+    if (file->exists())
+    {
+      if (file->open(QIODevice::ReadOnly))
+      {
+
+        QDomDocument* domdoc = new QDomDocument();
+
+        if (domdoc->setContent(file))
+        {
+          readImportBase(importBases[uid], domdoc->firstChildElement(), properties["alias"]);
+        }
+
+      }
+    }
+
+    delete file;
+  }
+
+  foreach(QnstBind* b, binds.values())
+  {
+    adjustBind(b);
+  }
 }
 
 
 void QnstView::readImportBase(QString uid, QDomElement element, QString alias)
 {
-    if (element.tagName() == "causalConnector"){
+  if (element.tagName() == "causalConnector")
+  {
+    QDomNodeList list = element.childNodes();
 
-        QDomNodeList list = element.childNodes();
+    QnstConnector* conn = new QnstConnector();
+    conn->setnstId(alias+"#"+element.attribute("id"));
+    conn->setName(alias+"#"+element.attribute("id"));
+    conn->setnstUid(uid);
 
-        QnstConnector* conn = new QnstConnector();
-        conn->setnstId(alias+"#"+element.attribute("id"));
-        conn->setName(alias+"#"+element.attribute("id"));
-        conn->setnstUid(uid);
+    for (unsigned int i=0;i<list.length();i++)
+    {
+      if (list.item(i).isElement())
+      {
+        QDomElement e = list.item(i).toElement();
 
-        for (unsigned int i=0;i<list.length();i++){
-            if (list.item(i).isElement()){
-                QDomElement e = list.item(i).toElement();
-
-                readConnector(e, conn);
-            }
-        }
-
-        connectors[conn->getName()] = conn;
-        connectors2[conn->getnstId()] = conn;
-
-    }else{
-        QDomNodeList list = element.childNodes();
-
-        for (unsigned int i=0;i<list.length();i++){
-            if (list.item(i).isElement()){
-                QDomElement e = list.item(i).toElement();
-
-                readImportBase(uid, e, alias);
-            }
-        }
+        readConnector(e, conn);
+      }
     }
+
+    connectors[conn->getName()] = conn;
+    connectors2[conn->getnstId()] = conn;
+
+  }
+  else
+  {
+    QDomNodeList list = element.childNodes();
+
+    for (unsigned int i=0;i<list.length();i++)
+    {
+      if (list.item(i).isElement())
+      {
+        QDomElement e = list.item(i).toElement();
+
+        readImportBase(uid, e, alias);
+      }
+    }
+  }
 }
 
 void QnstView::readConnector(QDomElement element, QnstConnector* conn)
 {
-    if (element.tagName() == "connectorParam"){
-        if (element.attribute("name") != ""){
-            conn->addParam(QUuid::createUuid().toString(), element.attribute("name"));
-        }
+  if (element.tagName() == "connectorParam")
+  {
+    if (element.attribute("name") != "")
+    {
+      conn->addParam(QUuid::createUuid().toString(), element.attribute("name"));
     }
+  }
 
-    if (element.tagName() == "simpleCondition" || element.tagName() == "attributeAssessment"){
-        if (element.attribute("role") != ""){
-            conn->addCondition(element.attribute("role"), element.attribute("role"));
-        }
+  if (element.tagName() == "simpleCondition" ||
+      element.tagName() == "attributeAssessment")
+  {
+    if (element.attribute("role") != "")
+    {
+      conn->addCondition(element.attribute("role"), element.attribute("role"));
     }
+  }
 
-    if (element.tagName() == "simpleAction"){
-        if (element.attribute("role") != ""){
-            conn->addAction(element.attribute("role"), element.attribute("role"));
-        }
+  if (element.tagName() == "simpleAction")
+  {
+    if (element.attribute("role") != "")
+    {
+      conn->addAction(element.attribute("role"), element.attribute("role"));
     }
+  }
 
-    QDomNodeList list = element.childNodes();
+  QDomNodeList list = element.childNodes();
 
-    for (unsigned int i=0;i<list.length();i++){
-        if (list.item(i).isElement()){
-            QDomElement e = list.item(i).toElement();
-
-            readConnector(e, conn);
-        }
+  for (unsigned int i=0;i<list.length();i++)
+  {
+    if (list.item(i).isElement())
+    {
+        QDomElement e = list.item(i).toElement();
+        readConnector(e, conn);
     }
+  }
 }
 
-void QnstView::addContext(const QString uid, const QString parent, const QMap<QString, QString> properties, bool undo)
+void QnstView::addContext(const QString uid, const QString parent,
+                          const QMap<QString, QString> &properties, bool undo)
 {
-    if (entities.contains(parent)){
-        QnstGraphicsContext* entity = new QnstGraphicsContext((QnstGraphicsNode*) entities[parent]);
-        entity->setnstUid(uid);
+  if (entities.contains(parent))
+  {
+    QnstGraphicsContext* entity =
+        new QnstGraphicsContext((QnstGraphicsNode*) entities[parent]);
+    entity->setnstUid(uid);
 
-        entity->setTop(entities[parent]->getHeight()/2 - 200/2);
-        entity->setLeft(entities[parent]->getWidth()/2 - 250/2);
-        entity->setWidth(250);
-        entity->setHeight(200);
+    entity->setTop(entities[parent]->getHeight()/2 - DEFAULT_CONTEXT_HEIGHT/2);
+    entity->setLeft(entities[parent]->getWidth()/2 - DEFAULT_CONTEXT_WIDTH/2);
+    entity->setWidth(DEFAULT_BODY_WIDTH);
+    entity->setHeight(DEFAULT_BODY_HEIGHT);
 
-        if (properties["id"] != ""){
-            entity->setnstId(properties["id"]);
-        }
+    if (properties["id"] != "")
+      entity->setnstId(properties["id"]);
 
-        if (properties["top"] != ""){
-            entity->setTop(properties["top"].toDouble());
-        }
+    if (properties["top"] != "")
+      entity->setTop(properties["top"].toDouble());
 
-        if (properties["left"] != ""){
-            entity->setLeft(properties["left"].toDouble());
-        }
+    if (properties["left"] != "")
+      entity->setLeft(properties["left"].toDouble());
 
-        if (properties["collapsed"] != ""){
-            if (properties["collapsed"] == "1"){
-                if (properties["width"] != ""){
-                    entity->setLastW(properties["width"].toDouble());
-                }
+    if (properties["collapsed"] != "")
+    {
+      if (properties["collapsed"] == "1")
+      {
+        if (properties["width"] != "")
+          entity->setLastW(properties["width"].toDouble());
 
-                if (properties["height"] != ""){
-                    entity->setLastH(properties["height"].toDouble());
-                }
+        if (properties["height"] != "")
+          entity->setLastH(properties["height"].toDouble());
 
-                if (properties["expandHeight"] != ""){
-                    entity->setHeight(properties["expandHeight"].toDouble());
-                }
+        if (properties["expandHeight"] != "")
+          entity->setHeight(properties["expandHeight"].toDouble());
 
-                if (properties["expandWidth"] != ""){
-                    entity->setWidth(properties["expandWidth"].toDouble());
-                }
-            }else{
-                if (properties["width"] != ""){
-                    entity->setWidth(properties["width"].toDouble());
-                }
+        if (properties["expandWidth"] != "")
+          entity->setWidth(properties["expandWidth"].toDouble());
+      }
+      else
+      {
+        if (properties["width"] != "")
+          entity->setWidth(properties["width"].toDouble());
 
-                if (properties["height"] != ""){
-                    entity->setHeight(properties["height"].toDouble());
-                }
+        if (properties["height"] != "")
+          entity->setHeight(properties["height"].toDouble());
 
+        if (properties["expandHeight"] != "")
+          entity->setLastH(properties["expandHeight"].toDouble());
 
-                if (properties["expandHeight"] != ""){
-                    entity->setLastH(properties["expandHeight"].toDouble());
-                }
-
-                if (properties["expandWidth"] != ""){
-                    entity->setLastW(properties["expandWidth"].toDouble());
-                }
-            }
-        }
-
-        entities[parent]->addnstGraphicsEntity(entity); entities[uid] = entity; entity->adjust();
-
-        if (!undo){
-            QnstAddCommand* cmd = new QnstAddCommand(this, entity);
-            history.push(cmd);
-        }
+        if (properties["expandWidth"] != "")
+          entity->setLastW(properties["expandWidth"].toDouble());
+      }
     }
+
+    entities[parent]->addnstGraphicsEntity(entity);
+    entities[uid] = entity;
+    entity->adjust();
+
+    if (!undo)
+    {
+      QnstAddCommand* cmd = new QnstAddCommand(this, entity);
+      history.push(cmd);
+    }
+  }
+
 }
 
-void QnstView::changeContext(QnstGraphicsContext* entity, const QMap<QString, QString> properties)
+void QnstView::changeContext(QnstGraphicsContext* entity,
+                             const QMap<QString, QString> &properties)
 {
-    if (properties["id"] != ""){
-        entity->setnstId(properties["id"]);
-    }
+  if (properties["id"] != "")
+    entity->setnstId(properties["id"]);
 
-//    TODO:
-//    if (properties["refer"] != ""){
+//TODO:
+//if (properties["refer"] != "")
+//{
 //
-//    }
+//}
 }
 
 void QnstView::adjustContext(QnstGraphicsContext* entity)
@@ -2042,89 +1908,87 @@ void QnstView::adjustContext(QnstGraphicsContext* entity)
 
 }
 
-void QnstView::addSwitch(const QString uid, const QString parent, const QMap<QString, QString> properties, bool undo)
+void QnstView::addSwitch(const QString uid, const QString parent,
+                         const QMap<QString, QString> &properties, bool undo)
 {
-    if (entities.contains(parent)){
-        QnstGraphicsSwitch* entity = new QnstGraphicsSwitch((QnstGraphicsNode*) entities[parent]);
-        entity->setnstUid(uid);
+  if (entities.contains(parent))
+  {
+    QnstGraphicsSwitch* entity =
+        new QnstGraphicsSwitch((QnstGraphicsNode*) entities[parent]);
+    entity->setnstUid(uid);
 
-        entity->setTop(entities[parent]->getHeight()/2 - 200/2);
-        entity->setLeft(entities[parent]->getWidth()/2 - 250/2);
-        entity->setWidth(250);
-        entity->setHeight(200);
+    entity->setTop(entities[parent]->getHeight()/2 - DEFAULT_CONTEXT_HEIGHT/2);
+    entity->setLeft(entities[parent]->getWidth()/2 - DEFAULT_CONTEXT_WIDTH/2);
+    entity->setWidth(DEFAULT_CONTEXT_WIDTH);
+    entity->setHeight(DEFAULT_CONTEXT_HEIGHT);
 
-        if (properties["id"] != ""){
-            entity->setnstId(properties["id"]);
-        }
+    if (properties["id"] != "")
+      entity->setnstId(properties["id"]);
 
-        if (properties["top"] != ""){
-            entity->setTop(properties["top"].toDouble());
-        }
+    if (properties["top"] != "")
+      entity->setTop(properties["top"].toDouble());
 
-        if (properties["left"] != ""){
-            entity->setLeft(properties["left"].toDouble());
-        }
+    if (properties["left"] != "")
+      entity->setLeft(properties["left"].toDouble());
 
-        if (properties["collapsed"] != ""){
-            if (properties["collapsed"] == "1"){
-                if (properties["width"] != ""){
-                    entity->setLastW(properties["width"].toDouble());
-                }
+    if (properties["collapsed"] != "")
+    {
+      if (properties["collapsed"] == "1")
+      {
+        if (properties["width"] != "")
+          entity->setLastW(properties["width"].toDouble());
 
-                if (properties["height"] != ""){
-                    entity->setLastH(properties["height"].toDouble());
-                }
+        if (properties["height"] != "")
+          entity->setLastH(properties["height"].toDouble());
 
-                if (properties["expandHeight"] != ""){
-                    entity->setHeight(properties["expandHeight"].toDouble());
-                }
+        if (properties["expandHeight"] != "")
+          entity->setHeight(properties["expandHeight"].toDouble());
 
-                if (properties["expandWidth"] != ""){
-                    entity->setWidth(properties["expandWidth"].toDouble());
-                }
-            }else{
-                if (properties["width"] != ""){
-                    entity->setWidth(properties["width"].toDouble());
-                }
+        if (properties["expandWidth"] != "")
+          entity->setWidth(properties["expandWidth"].toDouble());
+      }
+      else
+      {
+        if (properties["width"] != "")
+          entity->setWidth(properties["width"].toDouble());
 
-                if (properties["height"] != ""){
-                    entity->setHeight(properties["height"].toDouble());
-                }
+        if (properties["height"] != "")
+          entity->setHeight(properties["height"].toDouble());
 
+        if (properties["expandHeight"] != "")
+          entity->setLastH(properties["expandHeight"].toDouble());
 
-                if (properties["expandHeight"] != ""){
-                    entity->setLastH(properties["expandHeight"].toDouble());
-                }
-
-                if (properties["expandWidth"] != ""){
-                    entity->setLastW(properties["expandWidth"].toDouble());
-                }
-            }
-        }
-
-        entities[parent]->addnstGraphicsEntity(entity); entities[uid] = entity; entity->adjust();
-
-        if (!undo){
-            QnstAddCommand* cmd = new QnstAddCommand(this, entity);
-            history.push(cmd);
-        }
+        if (properties["expandWidth"] != "")
+          entity->setLastW(properties["expandWidth"].toDouble());
+      }
     }
+
+    entities[parent]->addnstGraphicsEntity(entity);
+    entities[uid] = entity;
+    entity->adjust();
+
+    if (!undo)
+    {
+      QnstAddCommand* cmd = new QnstAddCommand(this, entity);
+      history.push(cmd);
+    }
+  }
 }
 
-void QnstView::changeSwitch(QnstGraphicsSwitch* entity, const QMap<QString, QString> properties)
+void QnstView::changeSwitch(QnstGraphicsSwitch* entity,
+                            const QMap<QString, QString> &properties)
 {
-    if (properties["id"] != ""){
-        entity->setnstId(properties["id"]);
-    }
+  if (properties["id"] != "")
+    entity->setnstId(properties["id"]);
 
-//    TODO:
-//    if (properties["refer"] != ""){
+//TODO:
+//if (properties["refer"] != ""){
 //
-//    }
+//}
 }
 
 void QnstView::addMedia(const QString uid, const QString parent,
-                        const QMap<QString, QString> properties, bool undo,
+                        const QMap<QString, QString> &properties, bool undo,
                         bool adjust)
 {
   if (entities.contains(parent))
@@ -2139,10 +2003,10 @@ void QnstView::addMedia(const QString uid, const QString parent,
 
       entity->setnstUid(uid);
 
-      entity->setTop(entities[parent]->getHeight()/2 - 48/2);
-      entity->setLeft(entities[parent]->getWidth()/2 - 48/2);
-      entity->setWidth(48);
-      entity->setHeight(64);
+      entity->setTop(entities[parent]->getHeight()/2 - DEFAULT_MEDIA_HEIGHT/2);
+      entity->setLeft(entities[parent]->getWidth()/2 - DEFAULT_MEDIA_WIDTH/2);
+      entity->setWidth(DEFAULT_MEDIA_WIDTH);
+      entity->setHeight(DEFAULT_MEDIA_HEIGHT);
 
       if (properties["top"] != "")
         entity->setTop(properties["top"].toDouble());
@@ -2178,7 +2042,8 @@ void QnstView::addMedia(const QString uid, const QString parent,
 }
 
 void QnstView::changeMedia(QnstGraphicsMedia* entity,
-                           const QMap<QString, QString> properties, bool adjust)
+                           const QMap<QString, QString> &properties,
+                           bool adjust)
 {
   entity->setnstId(properties["id"]);
   entity->setSource(properties["src"]);
@@ -2218,6 +2083,7 @@ void QnstView::changeMedia(QnstGraphicsMedia* entity,
   if(adjust) adjustMedia(entity);
 }
 
+// \todo refactory
 void QnstView::adjustMedia(QnstGraphicsMedia* entity)
 {
 
@@ -2452,108 +2318,103 @@ void QnstView::adjustMedia(QnstGraphicsMedia* entity)
     entity->adjust();
 }
 
-void QnstView::addPort(const QString uid, const QString parent, const QMap<QString, QString> properties, bool undo)
+void QnstView::addPort(const QString uid, const QString parent,
+                       const QMap<QString, QString> &properties, bool undo)
 {
-    if (entities.contains(parent)){
-        QnstGraphicsPort* entity = new QnstGraphicsPort((QnstGraphicsNode*) entities[parent]);
-        entity->setnstUid(uid);
+  if (entities.contains(parent))
+  {
+    QnstGraphicsPort* entity =
+        new QnstGraphicsPort((QnstGraphicsNode*) entities[parent]);
 
-        entity->setTop(0);
-        entity->setLeft(0);
-        entity->setWidth(18);
-        entity->setHeight(18);
+    entity->setnstUid(uid);
 
-        entity->setnstId(properties["id"]);
+    entity->setTop(0);
+    entity->setLeft(0);
+    entity->setWidth(DEFAULT_INTERFACE_WIDTH);
+    entity->setHeight(DEFAULT_INTERFACE_HEIGHT);
 
-        entity->setComponent(properties["component"]);
-
-        entity->setInterface(properties["interface"]);
-
-        if (properties["top"] != ""){
-            entity->setTop(properties["top"].toDouble());
-        }
-
-        if (properties["left"] != ""){
-            entity->setLeft(properties["left"].toDouble());
-        }
-
-        if (properties["width"] != ""){
-            entity->setWidth(properties["width"].toDouble());
-        }
-
-        if (properties["height"] != ""){
-            entity->setHeight(properties["height"].toDouble());
-        }
-
-        if (properties["interfaceUid"] != ""){
-            entity->setInterfaceUid(properties["interfaceUid"]);
-        }else{
-            entity->setInterfaceUid("");
-        }
-
-        if (properties["componentUid"] != ""){
-            entity->setComponentUid(properties["componentUid"]);
-        }else{
-            entity->setComponentUid("");
-        }
-
-        entities[parent]->addnstGraphicsEntity(entity); entities[uid] = entity; ++nport;
-
-        adjustPort(entity);
-
-        if (!undo){
-            QnstAddCommand* cmd = new QnstAddCommand(this, entity);
-            history.push(cmd);
-
-        }
-    }
-}
-
-void QnstView::changePort(QnstGraphicsPort* entity, const QMap<QString, QString> properties)
-{
     entity->setnstId(properties["id"]);
 
     entity->setComponent(properties["component"]);
-
     entity->setInterface(properties["interface"]);
 
-    if (properties["top"] != ""){
-        entity->setTop(properties["top"].toDouble());
-    }
+    if (properties["top"] != "")
+      entity->setTop(properties["top"].toDouble());
 
-    if (properties["left"] != ""){
-        entity->setLeft(properties["left"].toDouble());
-    }
+    if (properties["left"] != "")
+      entity->setLeft(properties["left"].toDouble());
 
-    if (properties["width"] != ""){
-        entity->setWidth(properties["width"].toDouble());
-    }
+    if (properties["width"] != "")
+      entity->setWidth(properties["width"].toDouble());
 
-    if (properties["height"] != ""){
-        entity->setHeight(properties["height"].toDouble());
-    }
+    if (properties["height"] != "")
+      entity->setHeight(properties["height"].toDouble());
 
-    if (properties["interfaceUid"] != ""){
-        entity->setInterfaceUid(properties["interfaceUid"]);
-    }else{
+    if (properties["interfaceUid"] != "")
+      entity->setInterfaceUid(properties["interfaceUid"]);
+    else
         entity->setInterfaceUid("");
-    }
 
-    if (properties["componentUid"] != ""){
-        entity->setComponentUid(properties["componentUid"]);
-    }else{
-        entity->setComponentUid("");
-    }
+    if (properties["componentUid"] != "")
+      entity->setComponentUid(properties["componentUid"]);
+    else
+      entity->setComponentUid("");
 
-    foreach (QString key, interfaceRefers.keys(entity->getnstUid())){
-        if (entities.contains(key)){
-            entities[key]->setnstId(entity->getnstId());
-        }
-    }
+    entities[parent]->addnstGraphicsEntity(entity);
+    entities[uid] = entity;
+    ++nport;
 
     adjustPort(entity);
+
+    if (!undo)
+    {
+      QnstAddCommand* cmd = new QnstAddCommand(this, entity);
+      history.push(cmd);
+    }
+  }
 }
 
+void QnstView::changePort(QnstGraphicsPort* entity,
+                          const QMap<QString, QString> &properties)
+{
+  entity->setnstId(properties["id"]);
+
+  entity->setComponent(properties["component"]);
+  entity->setInterface(properties["interface"]);
+
+  if (properties["top"] != "")
+    entity->setTop(properties["top"].toDouble());
+
+  if (properties["left"] != "")
+    entity->setLeft(properties["left"].toDouble());
+
+  if (properties["width"] != "")
+    entity->setWidth(properties["width"].toDouble());
+
+  if (properties["height"] != "")
+    entity->setHeight(properties["height"].toDouble());
+
+  if (properties["interfaceUid"] != "")
+    entity->setInterfaceUid(properties["interfaceUid"]);
+  else
+    entity->setInterfaceUid("");
+
+  if (properties["componentUid"] != "")
+    entity->setComponentUid(properties["componentUid"]);
+  else
+    entity->setComponentUid("");
+
+  foreach (QString key, interfaceRefers.keys(entity->getnstUid()))
+  {
+    if (entities.contains(key))
+      entities[key]->setnstId(entity->getnstId());
+  }
+
+  adjustPort(entity);
+}
+
+
+// \todo refactory
 void QnstView::adjustPort(QnstGraphicsPort* entity)
 {
     QnstGraphicsEntity* parent = entity->getnstGraphicsParent();
@@ -2642,60 +2503,60 @@ void QnstView::adjustPort(QnstGraphicsPort* entity)
     entity->adjust();
 }
 
-void QnstView::addMapping(const QString uid, const QString parent, const QMap<QString, QString> properties, bool undo)
+void QnstView::addMapping(const QString uid, const QString parent,
+                          const QMap<QString, QString> &properties, bool undo)
 {
-    if (entities.contains(parent)){
-        QnstGraphicsNode* oparent = (QnstGraphicsNode*) entities[parent]->getnstGraphicsParent();
+  if (entities.contains(parent))
+  {
+    QnstGraphicsNode* oparent =
+        (QnstGraphicsNode*) entities[parent]->getnstGraphicsParent();
 
-        QnstGraphicsMapping* entity = new QnstGraphicsMapping(oparent);
-        entity->setnstUid(uid);
+    QnstGraphicsMapping* entity = new QnstGraphicsMapping(oparent);
+    entity->setnstUid(uid);
 
-        entity->setSwitchPortUid(parent);
+    entity->setSwitchPortUid(parent);
 
-        entity->setComponent(properties["component"]);
-
-        entity->setInterface(properties["interface"]);
-
-        if (properties["interfaceUid"] != ""){
-            entity->setInterfaceUid(properties["interfaceUid"]);
-        }else{
-            entity->setInterfaceUid("");
-        }
-
-        if (properties["componentUid"] != ""){
-            entity->setComponentUid(properties["componentUid"]);
-        }else{
-            entity->setComponentUid("");
-        }
-
-        oparent->addnstGraphicsEntity(entity);
-        entities[entity->getnstUid()] = entity;
-
-        adjustMapping(entity);
-    }
-}
-
-void QnstView::changeMapping(QnstGraphicsMapping* entity, const QMap<QString, QString> properties)
-{
     entity->setComponent(properties["component"]);
-
     entity->setInterface(properties["interface"]);
 
-    if (properties["interfaceUid"] != ""){
-        entity->setInterfaceUid(properties["interfaceUid"]);
-    }else{
-        entity->setInterfaceUid("");
-    }
+    if (properties["interfaceUid"] != "")
+      entity->setInterfaceUid(properties["interfaceUid"]);
+    else
+      entity->setInterfaceUid("");
 
-    if (properties["componentUid"] != ""){
-        entity->setComponentUid(properties["componentUid"]);
-    }else{
-        entity->setComponentUid("");
-    }
+    if (properties["componentUid"] != "")
+      entity->setComponentUid(properties["componentUid"]);
+    else
+      entity->setComponentUid("");
+
+    oparent->addnstGraphicsEntity(entity);
+    entities[entity->getnstUid()] = entity;
 
     adjustMapping(entity);
+  }
 }
 
+void QnstView::changeMapping(QnstGraphicsMapping* entity,
+                             const QMap<QString, QString> &properties)
+{
+  entity->setComponent(properties["component"]);
+
+  entity->setInterface(properties["interface"]);
+
+  if (properties["interfaceUid"] != "")
+    entity->setInterfaceUid(properties["interfaceUid"]);
+  else
+    entity->setInterfaceUid("");
+
+  if (properties["componentUid"] != "")
+    entity->setComponentUid(properties["componentUid"]);
+  else
+    entity->setComponentUid("");
+
+  adjustMapping(entity);
+}
+
+// \todo refactory
 void QnstView::adjustMapping(QnstGraphicsMapping* entity)
 {
 
@@ -2766,44 +2627,52 @@ void QnstView::adjustMapping(QnstGraphicsMapping* entity)
     }
 }
 
-void QnstView::addSwitchPort(const QString uid, const QString parent, const QMap<QString, QString> properties, bool undo)
+void QnstView::addSwitchPort(const QString uid, const QString parent,
+                             const QMap<QString, QString> &properties,
+                             bool undo)
 {
-    if (entities.contains(parent)){
-        QnstGraphicsSwitchPort* entity = new QnstGraphicsSwitchPort(entities[parent]);
-        entity->setnstUid(uid);
-        entity->setnstGraphicsParent(entities[parent]);
+  if (entities.contains(parent))
+  {
+    QnstGraphicsSwitchPort* entity =
+        new QnstGraphicsSwitchPort(entities[parent]);
 
-        entity->setTop(0);
-        entity->setLeft(0);
-        entity->setWidth(18);
-        entity->setHeight(18);
+    entity->setnstUid(uid);
+    entity->setnstGraphicsParent(entities[parent]);
 
-        entity->setnstId(properties["id"]);
+    entity->setTop(0);
+    entity->setLeft(0);
+    entity->setWidth(DEFAULT_INTERFACE_WIDTH);
+    entity->setHeight(DEFAULT_INTERFACE_HEIGHT);
 
-        if (properties["top"] != "")
-            entity->setTop(properties["top"].toDouble());
+    entity->setnstId(properties["id"]);
 
-        if (properties["left"] != "")
-            entity->setLeft(properties["left"].toDouble());
+    if (properties["top"] != "")
+        entity->setTop(properties["top"].toDouble());
 
-        if (properties["width"] != "")
-            entity->setWidth(properties["width"].toDouble());
+    if (properties["left"] != "")
+        entity->setLeft(properties["left"].toDouble());
 
-        if (properties["height"] != "")
-            entity->setHeight(properties["height"].toDouble());
+    if (properties["width"] != "")
+        entity->setWidth(properties["width"].toDouble());
 
-        entities[parent]->addnstGraphicsEntity(entity); entities[uid] = entity; ++nswitchport;
+    if (properties["height"] != "")
+        entity->setHeight(properties["height"].toDouble());
 
-        entity->adjust();
+    entities[parent]->addnstGraphicsEntity(entity);
+    entities[uid] = entity;
+    ++nswitchport;
 
-        if (!undo){
-            QnstAddCommand* cmd = new QnstAddCommand(this, entity);
-            history.push(cmd);
-        }
+    entity->adjust();
+
+    if (!undo){
+        QnstAddCommand* cmd = new QnstAddCommand(this, entity);
+        history.push(cmd);
     }
+  }
 }
 
-void QnstView::changeSwitchPort(QnstGraphicsSwitchPort* entity, const QMap<QString, QString> properties)
+void QnstView::changeSwitchPort(QnstGraphicsSwitchPort* entity,
+                                const QMap<QString, QString> &properties)
 {
     entity->setnstId(properties["id"]);
 
@@ -2822,7 +2691,9 @@ void QnstView::changeSwitchPort(QnstGraphicsSwitchPort* entity, const QMap<QStri
     entity->adjust();
 }
 
-void QnstView::addArea(const QString uid, const QString parent, const QMap<QString, QString> properties, bool undo, bool adjust)
+void QnstView::addArea(const QString uid, const QString parent,
+                       const QMap<QString, QString> &properties, bool undo,
+                       bool adjust)
 {
   if (entities.contains(parent))
   {
@@ -2832,8 +2703,8 @@ void QnstView::addArea(const QString uid, const QString parent, const QMap<QStri
 
     entity->setTop(0);
     entity->setLeft(0);
-    entity->setWidth(16);
-    entity->setHeight(16);
+    entity->setWidth(DEFAULT_INTERFACE_WIDTH); // previously this was 16 (I don't know why the size was different from property
+    entity->setHeight(DEFAULT_INTERFACE_HEIGHT); // previously this was 16
 
     entity->setnstId(properties["id"]);
 
@@ -2877,7 +2748,7 @@ void QnstView::addArea(const QString uid, const QString parent, const QMap<QStri
 }
 
 void QnstView::changeArea(QnstGraphicsArea* entity,
-                          const QMap<QString, QString> properties)
+                          const QMap<QString, QString> &properties)
 {
   entity->setnstId(properties["id"]);
 
@@ -2903,7 +2774,7 @@ void QnstView::changeArea(QnstGraphicsArea* entity,
 }
 
 void QnstView::addProperty(const QString uid, const QString parent,
-                           const QMap<QString, QString> properties, bool undo,
+                           const QMap<QString, QString> &properties, bool undo,
                            bool adjust)
 {
   if (entities.contains(parent))
@@ -2914,8 +2785,8 @@ void QnstView::addProperty(const QString uid, const QString parent,
 
     entity->setTop(0);
     entity->setLeft(0);
-    entity->setWidth(16);
-    entity->setHeight(16);
+    entity->setWidth(DEFAULT_INTERFACE_WIDTH);
+    entity->setHeight(DEFAULT_INTERFACE_HEIGHT);
 
     entity->setnstId(properties["id"]);
 
@@ -2962,7 +2833,7 @@ void QnstView::addProperty(const QString uid, const QString parent,
 }
 
 void QnstView::changeProperty(QnstGraphicsProperty* entity,
-                              const QMap<QString, QString> properties)
+                              const QMap<QString, QString> &properties)
 {
   entity->setnstId(properties["id"]);
 
@@ -2988,7 +2859,7 @@ void QnstView::changeProperty(QnstGraphicsProperty* entity,
 }
 
 void QnstView::addLink(const QString uid, const QString parent,
-                       const QMap<QString, QString> properties)
+                       const QMap<QString, QString> &properties)
 {
   if (!links.contains(uid))
   {
@@ -3012,7 +2883,7 @@ void QnstView::addLink(const QString uid, const QString parent,
 }
 
 void QnstView::changeLink(QnstLink* entity,
-                          const QMap<QString, QString> properties)
+                          const QMap<QString, QString> &properties)
 {
   if (entity != NULL)
   {
@@ -3033,55 +2904,58 @@ void QnstView::changeLink(QnstLink* entity,
 
 void QnstView::adjustLink(QnstLink* entity)
 {
-    // TODO
+  // TODO
 }
 
 void QnstView::addBind(const QString uid, const QString parent,
-                       const QMap<QString, QString> properties)
+                       const QMap<QString, QString> &properties)
 {
-    if (links.contains(parent)){
-        if (!binds.contains(uid)){
-            QnstBind* entity = new QnstBind();
-            entity->setnstUid(uid);
-            entity->setnstParent(links[parent]);
+  if (links.contains(parent))
+  {
+    if (!binds.contains(uid))
+    {
+      QnstBind* entity = new QnstBind();
+      entity->setnstUid(uid);
+      entity->setnstParent(links[parent]);
 
-            entity->setRole(properties["role"]);
+      entity->setRole(properties["role"]);
 
-            entity->setComponent(properties["component"]);
+      entity->setComponent(properties["component"]);
+      entity->setComponentUid(properties["componentUid"]);
 
-            entity->setComponentUid(properties["componentUid"]);
 
+      entity->setInterface(properties["interface"]);
+      entity->setInterfaceUid(properties["interfaceUid"]);
 
-            entity->setInterface(properties["interface"]);
+      binds[uid] = entity;
 
-            entity->setInterfaceUid(properties["interfaceUid"]);
-
-            binds[uid] = entity;
-
-            adjustBind(entity);
-        }
+      adjustBind(entity);
     }
+  }
 }
 
-void QnstView::changeBind(QnstBind* entity, const QMap<QString, QString> properties)
+void QnstView::changeBind(QnstBind* entity,
+                          const QMap<QString, QString> &properties)
 {
-    if (entity != NULL){
-        entity->setRole(properties["role"]);
-        entity->setComponent(properties["component"]);
-        entity->setComponentUid(properties["componentUid"]);
-        entity->setInterface(properties["interface"]);
-        entity->setInterfaceUid(properties["interfaceUid"]);
+  if (entity != NULL)
+  {
+    entity->setRole(properties["role"]);
+    entity->setComponent(properties["component"]);
+    entity->setComponentUid(properties["componentUid"]);
+    entity->setInterface(properties["interface"]);
+    entity->setInterfaceUid(properties["interfaceUid"]);
 
-        selected = NULL;  // \fixme This fix temporarily a BUG.
-                          // The bug is related with the fact that when the bind
-                          // is selected, and the adjustBind bellow is called
-                          // the value pointed by "selected" is deleted and
-                          // it stay points to garbage.
+    selected = NULL;  // \fixme This fix temporarily a BUG.
+                      // The bug is related with the fact that when the bind
+                      // is selected, and the adjustBind bellow is called
+                      // the value pointed by "selected" is deleted and
+                      // it stay points to garbage.
 
-        adjustBind(entity);
-    }
+    adjustBind(entity);
+  }
 }
 
+// \todo refactory
 void QnstView::adjustBind(QnstBind* entity)
 {
     if (entity != NULL){
@@ -3184,10 +3058,10 @@ void QnstView::adjustBind(QnstBind* entity)
 
                     QnstGraphicsAggregator* aggregator = new QnstGraphicsAggregator((QnstGraphicsNode*)node);
                     aggregator->setnstUid(parent->getnstUid());
-                    aggregator->setTop(node->getHeight()/2 - 14/2);
-                    aggregator->setLeft(node->getWidth()/2 - 14/2);
-                    aggregator->setWidth(14);
-                    aggregator->setHeight(14);
+                    aggregator->setTop(node->getHeight()/2 - DEFAULT_AGGREGATOR_HEIGHT/2);
+                    aggregator->setLeft(node->getWidth()/2 - DEFAULT_AGGREGATOR_WIDTH/2);
+                    aggregator->setWidth(DEFAULT_AGGREGATOR_WIDTH);
+                    aggregator->setHeight(DEFAULT_AGGREGATOR_HEIGHT);
                     aggregator->adjust();
 
                     node->addnstGraphicsEntity(aggregator);
@@ -3348,10 +3222,10 @@ void QnstView::adjustBind(QnstBind* entity)
 
                     QnstGraphicsAggregator* aggregator = new QnstGraphicsAggregator((QnstGraphicsNode*)node);
                     aggregator->setnstUid(parent->getnstUid());
-                    aggregator->setTop(node->getHeight()/2 - 14/2);
-                    aggregator->setLeft(node->getWidth()/2 - 14/2);
-                    aggregator->setWidth(14);
-                    aggregator->setHeight(14);
+                    aggregator->setTop(node->getHeight()/2 - DEFAULT_AGGREGATOR_HEIGHT/2);
+                    aggregator->setLeft(node->getWidth()/2 - DEFAULT_AGGREGATOR_WIDTH/2);
+                    aggregator->setWidth(DEFAULT_AGGREGATOR_WIDTH);
+                    aggregator->setHeight(DEFAULT_AGGREGATOR_HEIGHT);
                     aggregator->adjust();
 
                     node->addnstGraphicsEntity(aggregator);
@@ -3510,290 +3384,304 @@ void QnstView::adjustBind(QnstBind* entity)
     }
 }
 
-void QnstView::addConnector(const QString uid, const QString parent, const QMap<QString, QString> properties)
+void QnstView::addConnector(const QString uid, const QString parent,
+                            const QMap<QString, QString> &properties)
 {
-    if (!connectors2.contains(uid)){
+  if (!connectors2.contains(uid))
+  {
+    QnstConnector* entity = new QnstConnector();
+    entity->setnstUid(uid);
 
-        QnstConnector* entity = new QnstConnector();
-        entity->setnstUid(uid);
-
-        if (properties["id"] != ""){
-            entity->setName(properties["id"]);
-            entity->setnstId(properties["id"]);
-        }
-
-        connectors2[uid] = entity;
-
-        foreach(QnstConnector* c, connectors.values()){
-            if (c->getnstUid() ==  entity->getnstUid()){
-                connectors.remove(connectors.key(c));
-                break;
-            }
-        }
-
-        if (entity->getnstId() != ""){
-            connectors[entity->getnstId()] = entity;
-        }
+    if (properties["id"] != "")
+    {
+      entity->setName(properties["id"]);
+      entity->setnstId(properties["id"]);
     }
+
+    connectors2[uid] = entity;
+
+    foreach(QnstConnector* c, connectors.values())
+    {
+      if (c->getnstUid() ==  entity->getnstUid())
+      {
+        connectors.remove(connectors.key(c));
+        break;
+      }
+    }
+
+    if (entity->getnstId() != "")
+      connectors[entity->getnstId()] = entity;
+  }
 }
 
-void QnstView::changeConnector(QnstConnector* entity, const QMap<QString, QString> properties)
+void QnstView::changeConnector(QnstConnector* entity,
+                               const QMap<QString, QString> &properties)
 {
-    if (properties["id"] != ""){
-        entity->setName(properties["id"]);
-        entity->setnstId(properties["id"]);
-    }
+  if (properties["id"] != "")
+  {
+    entity->setName(properties["id"]);
+    entity->setnstId(properties["id"]);
+  }
 
-    foreach(QnstConnector* c, connectors.values()){
-        if (c->getnstUid() ==  entity->getnstUid()){
-            connectors.remove(connectors.key(c));
-            break;
-        }
+  foreach(QnstConnector* c, connectors.values())
+  {
+    if (c->getnstUid() ==  entity->getnstUid())
+    {
+      connectors.remove(connectors.key(c));
+      break;
     }
+  }
 
-    if (entity->getnstId() != ""){
-        connectors[entity->getnstId()] = entity;
-    }
+  if (entity->getnstId() != "")
+    connectors[entity->getnstId()] = entity;
 }
 
-void QnstView::addCondition(const QString uid, const QString parent, const QMap<QString, QString> properties)
+void QnstView::addCondition(const QString uid, const QString parent,
+                            const QMap<QString, QString> &properties)
 {
-    if (connectors2.contains(properties["connector"])){
-        QnstConnector* connector = connectors2[properties["connector"]];
+  if (connectors2.contains(properties["connector"]))
+  {
+    QnstConnector* connector = connectors2[properties["connector"]];
 
-        if (properties["role"] != ""){
-            connector->addCondition(uid, properties["role"]);
-        }
-    }
+    if (properties["role"] != "")
+      connector->addCondition(uid, properties["role"]);
+  }
 }
 
-void QnstView::changeCondition(QString uid, const QMap<QString, QString> properties)
+void QnstView::changeCondition(QString uid,
+                               const QMap<QString, QString> &properties)
 {
-    if (connectors2.contains(properties["connector"])){
-        QnstConnector* connector = connectors2[properties["connector"]];
+  if (connectors2.contains(properties["connector"]))
+  {
+    QnstConnector* connector = connectors2[properties["connector"]];
 
-        if (connector->getConditions().contains(uid)){
-            connector->getConditions().remove(uid);
-        }
+    if (connector->getConditions().contains(uid))
+      connector->getConditions().remove(uid);
 
-        if (properties["role"] != ""){
-            connector->addCondition(uid, properties["role"]);
-        }
-    }
+    if (properties["role"] != "")
+      connector->addCondition(uid, properties["role"]);
+  }
 }
 
-void QnstView::addAction(const QString uid, const QString parent, const QMap<QString, QString> properties)
+void QnstView::addAction(const QString uid, const QString parent,
+                         const QMap<QString, QString> &properties)
 {
-    if (connectors2.contains(properties["connector"])){
+  if (connectors2.contains(properties["connector"]))
+  {
+    QnstConnector* connector = connectors2[properties["connector"]];
 
-        QnstConnector* connector = connectors2[properties["connector"]];
-
-        if (properties["role"] != ""){
-            connector->addAction(uid, properties["role"]);
-        }
-    }
+    if (properties["role"] != "")
+      connector->addAction(uid, properties["role"]);
+  }
 }
 
-void QnstView::changeAction(QString uid, const QMap<QString, QString> properties)
+void QnstView::changeAction(QString uid,
+                            const QMap<QString, QString> &properties)
 {
-    if (connectors2.contains(properties["connector"])){
-        QnstConnector* connector = connectors2[properties["connector"]];
+  if (connectors2.contains(properties["connector"]))
+  {
+    QnstConnector* connector = connectors2[properties["connector"]];
 
-        if (connector->getActions().contains(uid)){
-            connector->getActions().remove(uid);
-        }
+    if (connector->getActions().contains(uid))
+      connector->getActions().remove(uid);
 
-        if (properties["role"] != ""){
-            connector->addAction(uid, properties["role"]);
-        }
-    }
+    if (properties["role"] != "")
+      connector->addAction(uid, properties["role"]);
+  }
 }
 
-void QnstView::addAggregator(const QString uid, const QString parent, const QMap<QString, QString> properties, bool undo)
+void QnstView::addAggregator(const QString uid, const QString parent,
+                             const QMap<QString, QString> &properties,
+                             bool undo)
 {
-    if (entities.contains(parent)){
-        QnstGraphicsAggregator* entity = new QnstGraphicsAggregator((QnstGraphicsNode*) entities[parent]);
-        entity->setnstUid(uid);
+  if (entities.contains(parent))
+  {
+    QnstGraphicsAggregator* entity = new QnstGraphicsAggregator((QnstGraphicsNode*) entities[parent]);
+    entity->setnstUid(uid);
 
-        entity->setTop(entities[parent]->getHeight()/2 - 14/2);
-        entity->setLeft(entities[parent]->getWidth()/2 - 14/2);
-        entity->setWidth(14);
-        entity->setHeight(14);
+    entity->setTop(entities[parent]->getHeight()/2 - DEFAULT_AGGREGATOR_HEIGHT/2);
+    entity->setLeft(entities[parent]->getWidth()/2 - DEFAULT_AGGREGATOR_WIDTH/2);
+    entity->setWidth(DEFAULT_AGGREGATOR_WIDTH);
+    entity->setHeight(DEFAULT_AGGREGATOR_HEIGHT);
 
-        if (properties["id"] != ""){
-            entity->setnstId(properties["id"]);
-        }
+    if (properties["id"] != "")
+      entity->setnstId(properties["id"]);
 
-        if (properties["top"] != ""){
-            entity->setTop(properties["top"].toDouble());
-        }
+    if (properties["top"] != "")
+      entity->setTop(properties["top"].toDouble());
 
-        if (properties["left"] != ""){
-            entity->setLeft(properties["left"].toDouble());
-        }
+    if (properties["left"] != "")
+      entity->setLeft(properties["left"].toDouble());
 
-        if (properties["width"] != ""){
-            entity->setWidth(properties["width"].toDouble());
-        }
+    if (properties["width"] != "")
+      entity->setWidth(properties["width"].toDouble());
 
-        if (properties["height"] != ""){
-            entity->setHeight(properties["height"].toDouble());
-        }
+    if (properties["height"] != "")
+      entity->setHeight(properties["height"].toDouble());
 
-        entities[parent]->addnstGraphicsEntity(entity); entities[uid] = entity; entity->adjust();
+    entities[parent]->addnstGraphicsEntity(entity);
+    entities[uid] = entity;
+    entity->adjust();
 
-        if (!undo){
-            QnstAddCommand* cmd = new QnstAddCommand(this, entity);
-            history.push(cmd);
-        }
+    if (!undo)
+    {
+      QnstAddCommand* cmd = new QnstAddCommand(this, entity);
+      history.push(cmd);
     }
+  }
 }
 
-void QnstView::addBindParam(const QString uid, const QString parent, const QMap<QString, QString> properties)
+void QnstView::addBindParam(const QString uid, const QString parent,
+                            const QMap<QString, QString> &properties)
 {
+  if (entities.contains(parent))
+  {
+    QnstGraphicsEntity* e = entities[parent];
 
-    if (entities.contains(parent)){
-        QnstGraphicsEntity* e = entities[parent];
+    if (e->getnstType() == Qnst::Action)
+    {
+      QnstGraphicsAction* action = (QnstGraphicsAction*) e;
 
-        if (e->getnstType() == Qnst::Action){
-            QnstGraphicsAction* action = (QnstGraphicsAction*) e;
-
-            action->addParam(uid, properties["name"], properties["value"]);
-
-        }else if (e->getnstType() == Qnst::Condition){
-            QnstGraphicsCondition* condition = (QnstGraphicsCondition*) e;
-
-            condition->addParam(uid, properties["name"], properties["value"]);
-        }
-
-        bindParamUIDToBindUID[uid] = brelations.key(parent);
+      action->addParam(uid, properties["name"], properties["value"]);
     }
+    else if (e->getnstType() == Qnst::Condition)
+    {
+      QnstGraphicsCondition* condition = (QnstGraphicsCondition*) e;
+
+      condition->addParam(uid, properties["name"], properties["value"]);
+    }
+
+    bindParamUIDToBindUID[uid] = brelations.key(parent);
+  }
 }
 
-void QnstView::changeBindParam(const QString uid, const QMap<QString, QString> properties)
+void QnstView::changeBindParam(const QString uid,
+                               const QMap<QString, QString> &properties)
 {
-    if (entities.contains(properties.value("parent"))){
-        QnstGraphicsEntity* e = entities[properties.value("parent")];
+  if (entities.contains(properties.value("parent")))
+  {
+    QnstGraphicsEntity* e = entities[properties.value("parent")];
 
-        if (e->getnstType() == Qnst::Action){
-            QnstGraphicsAction* action = (QnstGraphicsAction*) e;
-
-            action->setParam(properties.value("name",""), properties.value("value",""));
-
-        }else if (e->getnstType() == Qnst::Condition){
-            QnstGraphicsCondition* condition = (QnstGraphicsCondition*) e;
-
-            condition->setParam(properties.value("name",""), properties.value("value",""));
-        }
+    if (e->getnstType() == Qnst::Action)
+    {
+      QnstGraphicsAction* action = (QnstGraphicsAction*) e;
+      action->setParam(properties.value("name",""),
+                       properties.value("value",""));
     }
+    else if (e->getnstType() == Qnst::Condition)
+    {
+      QnstGraphicsCondition* condition = (QnstGraphicsCondition*) e;
+      condition->setParam(properties.value("name",""),
+                          properties.value("value",""));
+    }
+  }
 }
 
-void QnstView::addConnectorParam(const QString uid, const QString parent, const QMap<QString, QString> properties)
+void QnstView::addConnectorParam(const QString uid, const QString parent,
+                                 const QMap<QString, QString> &properties)
 {
-    if (connectors2.contains(parent)){
-        QnstConnector* conn = connectors2[parent];
-
-        conn->addParam(uid, properties["name"]);
-    }
+  if (connectors2.contains(parent))
+  {
+    QnstConnector* conn = connectors2[parent];
+    conn->addParam(uid, properties["name"]);
+  }
 }
 
-void QnstView::changeConnectorParam(const QString uid, const QMap<QString, QString> properties)
+void QnstView::changeConnectorParam(const QString uid,
+                                    const QMap<QString, QString> &properties)
 {
-    if (connectors2.contains(properties["parent"])){
-        QnstConnector* conn = connectors2[properties["parent"]];
-
-        conn->addParam(uid, properties["name"]);
-    }
+  if (connectors2.contains(properties["parent"]))
+  {
+    QnstConnector* conn = connectors2[properties["parent"]];
+    conn->addParam(uid, properties["name"]);
+  }
 }
 
 void QnstView::requestEntityAddition(QnstGraphicsEntity* entity, bool undo)
 {
-    qDebug() << "[QNST]" << ":" << "Requesting entity addition '"+entity->getnstUid()+"'";
+  qDebug() << "[QNST]" << ":" << "Requesting entity addition '"+entity->getnstUid()+"'";
 
-    if (entity != NULL){
-        entities[entity->getnstUid()] = entity;
+  if (entity != NULL)
+  {
+    entities[entity->getnstUid()] = entity;
 
-        switch(entity->getnstType()){
+    switch(entity->getnstType())
+    {
+      case Qnst::Body:
+          if (undo){  scene->addRoot(entity); }
 
-        // if the entity type is BODY
-        case Qnst::Body:
-            if (undo){  scene->addRoot(entity); }
-
-            requestBodyAddition((QnstGraphicsBody*) entity);
-            break;
-
-        // if the entity type is CONTEXT
-        case Qnst::Context:
-            requestContextAddition((QnstGraphicsContext*) entity, undo);
-            break;
-
-        // if the entity type is SWITCH
-        case Qnst::Switch:
-            requestSwitchAddition((QnstGraphicsSwitch*) entity, undo);
-            break;
-
-        // if the entity type is MEDIA
-        case Qnst::Audio:
-        case Qnst::Text:
-        case Qnst::Video:
-        case Qnst::Image:
-        case Qnst::Script:
-        case Qnst::Settings:
-        case Qnst::Html:
-        case Qnst::NCL:
-        case Qnst::Media:
-            requestMediaAddition((QnstGraphicsMedia*) entity, undo);
-            break;
-
-        // if the entity type is PORT
-        case Qnst::Port:
-            requestPortAddition((QnstGraphicsPort*) entity, undo);
-            break;
-
-        // if the entity type is AREA
-        case Qnst::Area:
-            requestAreaAddition((QnstGraphicsArea*) entity, undo);
-            break;
-
-        // if the entity type is PROPERTY
-        case Qnst::Property:
-            requestPropertyAddition((QnstGraphicsProperty*) entity);
-            break;
-
-        // if the entity type is AGGREGATOR
-        case Qnst::Aggregator:
-            requestAggregatorAddition((QnstGraphicsAggregator*) entity);
-            break;
-
-        // if the entity type is SWITCHPORT
-        case Qnst::SwitchPort:
-            requestSwitchPortAddition((QnstGraphicsSwitchPort*) entity);
-            break;
-
-        default:
-          // do nothing
+          requestBodyAddition((QnstGraphicsBody*) entity);
           break;
-        }
 
-        if (!undo){
-            QnstAddCommand* cmd = new QnstAddCommand(this, entity);
-            history.push(cmd);
+      case Qnst::Context:
+          requestContextAddition((QnstGraphicsContext*) entity, undo);
+          break;
 
-        }
+      case Qnst::Switch:
+          requestSwitchAddition((QnstGraphicsSwitch*) entity, undo);
+          break;
+
+      // if the entity type is MEDIA
+      case Qnst::Audio:
+      case Qnst::Text:
+      case Qnst::Video:
+      case Qnst::Image:
+      case Qnst::Script:
+      case Qnst::Settings:
+      case Qnst::Html:
+      case Qnst::NCL:
+      case Qnst::Media:
+          requestMediaAddition((QnstGraphicsMedia*) entity, undo);
+          break;
+
+      case Qnst::Port:
+          requestPortAddition((QnstGraphicsPort*) entity, undo);
+          break;
+
+      case Qnst::Area:
+          requestAreaAddition((QnstGraphicsArea*) entity, undo);
+          break;
+
+      case Qnst::Property:
+          requestPropertyAddition((QnstGraphicsProperty*) entity);
+          break;
+
+      case Qnst::Aggregator:
+          requestAggregatorAddition((QnstGraphicsAggregator*) entity);
+          break;
+
+      case Qnst::SwitchPort:
+          requestSwitchPortAddition((QnstGraphicsSwitchPort*) entity);
+          break;
+
+      default:
+        // do nothing
+        break;
     }
+
+    if (!undo)
+    {
+      QnstAddCommand* cmd = new QnstAddCommand(this, entity);
+      history.push(cmd);
+    }
+  }
 }
 
-void QnstView::requestEntityRemotion(QnstGraphicsEntity* entity, bool undo, bool rmRefs)
+// \todo refactory
+void QnstView::requestEntityRemotion(QnstGraphicsEntity* entity, bool undo,
+                                     bool rmRefs)
 {
-    qDebug() << "[QNST]" << ":" << "Requesting entity remotion '"+entity->getnstUid()+"'";
+  qDebug() << "[QNST]" << ":" << "Requesting entity remotion '"+entity->getnstUid()+"'";
 
-    if (entity != NULL){
-
-        if (entity->getncgType() == Qncg::Node){
-            if (!undo){
-                QnstRemoveCommand* cmd = new QnstRemoveCommand(this, entity);
-                history.push(cmd);
-            }
+  if (entity != NULL)
+  {
+    if (entity->getncgType() == Qncg::Node)
+    {
+      if (!undo)
+      {
+        QnstRemoveCommand* cmd = new QnstRemoveCommand(this, entity);
+        history.push(cmd);
+      }
 
             foreach(QnstGraphicsEntity* e, entity->getnstGraphicsEntities()){
                 if (e->getnstType() != Qnst::Link &&
@@ -4085,401 +3973,383 @@ void QnstView::requestEntityRemotion(QnstGraphicsEntity* entity, bool undo, bool
     }
 }
 
-void QnstView::requestEntityPreparation(QnstGraphicsEntity* entity, QMap<QString, QString> properties)
+void QnstView::requestEntityPreparation(QnstGraphicsEntity* entity,
+                                        QMap<QString, QString> properties)
 {
-    QnstChangeCommand* cmd = new QnstChangeCommand(this, entity->getnstUid(), properties);
-    history.push(cmd);
+  QnstChangeCommand* cmd = new QnstChangeCommand(this, entity->getnstUid(), properties);
+  history.push(cmd);
 
-    emit viewChanged();
+  emit viewChanged();
 }
 
 void QnstView::requestEntityChange(QnstGraphicsEntity* entity)
 {
-    qDebug() << "[QNST]" << ":" << "Requesting entity change '"+entity->getnstUid()+"'";
+  qDebug() << "[QNST]" << ":" << "Requesting entity change '"+entity->getnstUid()+"'";
 
-    if (entity != NULL){
-        switch(entity->getnstType()){
+  if (entity != NULL)
+  {
+    switch(entity->getnstType())
+    {
+      case Qnst::Body:
+        requestBodyChange((QnstGraphicsBody*) entity);
+        break;
 
-        // if the entity type is BODY
-        case Qnst::Body:
-            requestBodyChange((QnstGraphicsBody*) entity);
-            break;
+      case Qnst::Context:
+        requestContextChange((QnstGraphicsContext*) entity);
+        break;
 
-        // if the entity type is CONTEXT
-        case Qnst::Context:
-            requestContextChange((QnstGraphicsContext*) entity);
-            break;
+      case Qnst::Switch:
+        requestSwitchChange((QnstGraphicsSwitch*) entity);
+        break;
 
-        // if the entity type is SWITCH
-        case Qnst::Switch:
-            requestSwitchChange((QnstGraphicsSwitch*) entity);
-            break;
+      // if the entity type is MEDIA
+      case Qnst::Audio:
+      case Qnst::Text:
+      case Qnst::Video:
+      case Qnst::Image:
+      case Qnst::Script:
+      case Qnst::Settings:
+      case Qnst::Media:
+        requestMediaChange((QnstGraphicsMedia*) entity);
+        break;
 
-        // if the entity type is MEDIA
-        case Qnst::Audio:
-        case Qnst::Text:
-        case Qnst::Video:
-        case Qnst::Image:
-        case Qnst::Script:
-        case Qnst::Settings:
-        case Qnst::Media:
-            requestMediaChange((QnstGraphicsMedia*) entity);
-            break;
+      // if the entity type is PORT
+      case Qnst::Port:
+        requestPortChange((QnstGraphicsPort*) entity);
+        break;
 
-        // if the entity type is PORT
-        case Qnst::Port:
-            requestPortChange((QnstGraphicsPort*) entity);
-            break;
-
-        default:
-          // do nothing
-          break;
-        }
+      default:
+        // do nothing
+        break;
     }
+  }
 }
 
 void QnstView::requestEntitySelection(QnstGraphicsEntity* entity)
 {
-    qDebug() << "[QNST]" << ":" << "Requesting entity selection '"+entity->getnstUid()+"'";
+  qDebug() << "[QNST]" << ":" << "Requesting entity selection '"+entity->getnstUid()+"'";
 
-    if (entity != NULL){
-        if (entity->isSelected()){
-            if (selected != NULL)
-            {
-                selected->setSelected(false);
-                selected->adjust();
-            }
+  if (entity != NULL)
+  {
+    if (entity->isSelected())
+    {
+      if (selected != NULL)
+      {
+        selected->setSelected(false);
+        selected->adjust();
+      }
 
-            selected = entity;
+      selected = entity;
 
-            if (interfaceRefers.contains(entity->getnstUid())){
-
-                    emit entitySelected(interfaceRefers[entity->getnstUid()]);
-
-            }else{
-
-
-                    emit entitySelected(entity->getnstUid());
-            }
-        }
+      if (interfaceRefers.contains(entity->getnstUid()))
+        emit entitySelected(interfaceRefers[entity->getnstUid()]);
+      else
+        emit entitySelected(entity->getnstUid());
     }
+  }
 }
 
 void QnstView::requestBodyAddition(QnstGraphicsBody* entity)
 {
-    QMap<QString, QString> properties;
+  QMap<QString, QString> properties;
 
-    properties["TYPE"] = "body";
+  properties["TYPE"] = "body";
 
-    properties["id"] = entity->getnstId();
+  properties["id"] = entity->getnstId();
 
-    properties["top"] = QString::number(entity->getTop());
-    properties["left"] = QString::number(entity->getLeft());
-    properties["width"] = QString::number(entity->getWidth());
-    properties["heigh"] = QString::number(entity->getHeight());
-    properties["zindex"] = QString::number(entity->getzIndex());
+  properties["top"] = QString::number(entity->getTop());
+  properties["left"] = QString::number(entity->getLeft());
+  properties["width"] = QString::number(entity->getWidth());
+  properties["heigh"] = QString::number(entity->getHeight());
+  properties["zindex"] = QString::number(entity->getzIndex());
 
-    QMap <QString, QString> additionalData = entity->getUsrData();
-    foreach(QString key, additionalData.keys())
-    {
-      if(!properties.contains(key))
-        properties.insert(key, additionalData.value(key));
-    }
+  QMap <QString, QString> additionalData = entity->getUsrData();
+  foreach(QString key, additionalData.keys())
+  {
+    if(!properties.contains(key))
+      properties.insert(key, additionalData.value(key));
+  }
 
-    emit entityAdded(entity->getnstUid(), "", properties);
+  emit entityAdded(entity->getnstUid(), "", properties);
 }
 
 void QnstView::requestBodyChange(QnstGraphicsBody* entity)
 {
-    QMap<QString, QString> properties;
+  QMap<QString, QString> properties;
 
-    properties["TYPE"] = "body";
+  properties["TYPE"] = "body";
 
-    properties["id"] = entity->getnstId();
+  properties["id"] = entity->getnstId();
 
-    properties["top"] = QString::number(entity->getTop());
-    properties["left"] = QString::number(entity->getLeft());
-    properties["width"] = QString::number(entity->getWidth());
-    properties["heigh"] = QString::number(entity->getHeight());
-    properties["zindex"] = QString::number(entity->getzIndex());
+  properties["top"] = QString::number(entity->getTop());
+  properties["left"] = QString::number(entity->getLeft());
+  properties["width"] = QString::number(entity->getWidth());
+  properties["heigh"] = QString::number(entity->getHeight());
+  properties["zindex"] = QString::number(entity->getzIndex());
 
-    QMap <QString, QString> additionalData = entity->getUsrData();
-    foreach(QString key, additionalData.keys())
-    {
-      if(!properties.contains(key))
-        properties.insert(key, additionalData.value(key));
-    }
+  QMap <QString, QString> additionalData = entity->getUsrData();
+  foreach(QString key, additionalData.keys())
+  {
+    if(!properties.contains(key))
+      properties.insert(key, additionalData.value(key));
+  }
 
-    emit entityChanged(entity->getnstUid(), properties);
+  emit entityChanged(entity->getnstUid(), properties);
 }
 
 void QnstView::requestContextAddition(QnstGraphicsContext* entity, bool undo)
 {
-    if (entity->getnstId() == "" && !undo){
-        entity->setnstId("ctx"+QString::number(++ncontext));
-    }
+  if (entity->getnstId() == "" && !undo){
+    entity->setnstId("ctx"+QString::number(++ncontext));
+  }
 
-    QMap<QString, QString> properties;
+  QMap<QString, QString> properties;
 
-    properties["TYPE"] = "context";
+  properties["TYPE"] = "context";
 
-    properties["id"] = entity->getnstId();
+  properties["id"] = entity->getnstId();
 
-    properties["refer"] = "";
+  properties["refer"] = "";
 
-    properties["top"] = QString::number(entity->getTop());
-    properties["left"] = QString::number(entity->getLeft());
-    properties["width"] = QString::number(entity->getWidth());
-    properties["heigh"] = QString::number(entity->getHeight());
-    properties["zindex"] = QString::number(entity->getzIndex());
+  properties["top"] = QString::number(entity->getTop());
+  properties["left"] = QString::number(entity->getLeft());
+  properties["width"] = QString::number(entity->getWidth());
+  properties["heigh"] = QString::number(entity->getHeight());
+  properties["zindex"] = QString::number(entity->getzIndex());
 
-    QMap <QString, QString> additionalData = entity->getUsrData();
-    foreach(QString key, additionalData.keys())
-    {
-      if(!properties.contains(key))
-        properties.insert(key, additionalData.value(key));
-    }
+  QMap <QString, QString> additionalData = entity->getUsrData();
+  foreach(QString key, additionalData.keys())
+  {
+    if(!properties.contains(key))
+      properties.insert(key, additionalData.value(key));
+  }
 
-    emit entityAdded(entity->getnstUid(), entity->getnstGraphicsParent()->getnstUid(), properties);
+  emit entityAdded(entity->getnstUid(), entity->getnstGraphicsParent()->getnstUid(), properties);
 }
 
 void QnstView::requestContextChange(QnstGraphicsContext* entity)
 {
-    QMap<QString, QString> properties;
+  QMap<QString, QString> properties;
 
-    properties["TYPE"] = "context";
+  properties["TYPE"] = "context";
 
-    properties["id"] = entity->getnstId();
+  properties["id"] = entity->getnstId();
 
-    properties["refer"] = "";
+  properties["refer"] = "";
 
-    properties["top"] = QString::number(entity->getTop());
-    properties["left"] = QString::number(entity->getLeft());
-    properties["width"] = QString::number(entity->getWidth());
-    properties["heigh"] = QString::number(entity->getHeight());
-    properties["zindex"] = QString::number(entity->getzIndex());
+  properties["top"] = QString::number(entity->getTop());
+  properties["left"] = QString::number(entity->getLeft());
+  properties["width"] = QString::number(entity->getWidth());
+  properties["heigh"] = QString::number(entity->getHeight());
+  properties["zindex"] = QString::number(entity->getzIndex());
 
-    QMap <QString, QString> additionalData = entity->getUsrData();
-    foreach(QString key, additionalData.keys())
-    {
-      if(!properties.contains(key))
-        properties.insert(key, additionalData.value(key));
-    }
+  QMap <QString, QString> additionalData = entity->getUsrData();
+  foreach(QString key, additionalData.keys())
+  {
+    if(!properties.contains(key))
+      properties.insert(key, additionalData.value(key));
+  }
 
-    emit entityChanged(entity->getnstUid(), properties);
-}
+  emit entityChanged(entity->getnstUid(), properties);
+  }
 
 void QnstView::requestSwitchAddition(QnstGraphicsSwitch* entity, bool undo)
 {
-    if (entity->getnstId() == "" && !undo){
-        entity->setnstId("swt"+QString::number(++nswitch));
-    }
+  if (entity->getnstId() == "" && !undo){
+    entity->setnstId("swt"+QString::number(++nswitch));
+  }
 
-    QMap<QString, QString> properties;
+  QMap<QString, QString> properties;
 
-    properties["TYPE"] = "switch";
+  properties["TYPE"] = "switch";
 
-    properties["id"] = entity->getnstId();
+  properties["id"] = entity->getnstId();
 
-    properties["refer"] = "";
+  properties["refer"] = "";
 
-    properties["top"] = QString::number(entity->getTop());
-    properties["left"] = QString::number(entity->getLeft());
-    properties["width"] = QString::number(entity->getWidth());
-    properties["heigh"] = QString::number(entity->getHeight());
-    properties["zindex"] = QString::number(entity->getzIndex());
+  properties["top"] = QString::number(entity->getTop());
+  properties["left"] = QString::number(entity->getLeft());
+  properties["width"] = QString::number(entity->getWidth());
+  properties["heigh"] = QString::number(entity->getHeight());
+  properties["zindex"] = QString::number(entity->getzIndex());
 
-    QMap <QString, QString> additionalData = entity->getUsrData();
-    foreach(QString key, additionalData.keys())
-    {
-      if(!properties.contains(key))
-        properties.insert(key, additionalData.value(key));
-    }
+  QMap <QString, QString> additionalData = entity->getUsrData();
+  foreach(QString key, additionalData.keys())
+  {
+    if(!properties.contains(key))
+      properties.insert(key, additionalData.value(key));
+  }
 
-    emit entityAdded(entity->getnstUid(), entity->getnstGraphicsParent()->getnstUid(), properties);
+  emit entityAdded(entity->getnstUid(), entity->getnstGraphicsParent()->getnstUid(), properties);
 }
 
 void QnstView::requestSwitchChange(QnstGraphicsSwitch* entity)
 {
-    QMap<QString, QString> properties;
+  QMap<QString, QString> properties;
 
-    properties["TYPE"] = "switch";
+  properties["TYPE"] = "switch";
 
-    properties["id"] = entity->getnstId();
+  properties["id"] = entity->getnstId();
 
-    properties["refer"] = "";
+  properties["refer"] = "";
 
-    properties["top"] = QString::number(entity->getTop());
-    properties["left"] = QString::number(entity->getLeft());
-    properties["width"] = QString::number(entity->getWidth());
-    properties["heigh"] = QString::number(entity->getHeight());
-    properties["zindex"] = QString::number(entity->getzIndex());
+  properties["top"] = QString::number(entity->getTop());
+  properties["left"] = QString::number(entity->getLeft());
+  properties["width"] = QString::number(entity->getWidth());
+  properties["heigh"] = QString::number(entity->getHeight());
+  properties["zindex"] = QString::number(entity->getzIndex());
 
-    QMap <QString, QString> additionalData = entity->getUsrData();
-    foreach(QString key, additionalData.keys())
-    {
-      if(!properties.contains(key))
-        properties.insert(key, additionalData.value(key));
-    }
+  QMap <QString, QString> additionalData = entity->getUsrData();
+  foreach(QString key, additionalData.keys())
+  {
+    if(!properties.contains(key))
+      properties.insert(key, additionalData.value(key));
+  }
 
-    emit entityChanged(entity->getnstUid(), properties);
+  emit entityChanged(entity->getnstUid(), properties);
 }
 
+// \todo This SUBTYPE is not being used anywhere
 void QnstView::requestMediaAddition(QnstGraphicsMedia* entity, bool undo)
 {
-    if (entity->getnstId() == "" && !undo){
-        entity->setnstId("m"+QString::number(++nmedia));
-    }
+  if (entity->getnstId() == "" && !undo)
+  {
+    entity->setnstId("m"+QString::number(++nmedia));
+  }
 
-    QMap<QString, QString> properties;
+  QMap<QString, QString> properties;
+  properties["TYPE"] = "media";
 
-    properties["TYPE"] = "media";
-
-    switch(entity->getnstType()){
+  switch(entity->getnstType())
+  {
     case Qnst::Image:
-        properties["SUBTYPE"] = "image";
-
-//        properties["type"] = "image/png";
-
-        break;
+      properties["SUBTYPE"] = "image";
+//    properties["type"] = "image/png";
+      break;
 
     case Qnst::Audio:
-        properties["SUBTYPE"] = "audio";
-
-//        properties["type"] = "audio/mp3";
-
-        break;
+      properties["SUBTYPE"] = "audio";
+//    properties["type"] = "audio/mp3";
+      break;
 
     case Qnst::Video:
-        properties["SUBTYPE"] = "video";
-
-//        properties["type"] = "video/mp4";
-
-        break;
+      properties["SUBTYPE"] = "video";
+//    properties["type"] = "video/mp4";
+      break;
 
     case Qnst::Text:
-        properties["SUBTYPE"] = "text";
-
-//        properties["type"] = "text/plain";
-
-        break;
+      properties["SUBTYPE"] = "text";
+//    properties["type"] = "text/plain";
+      break;
 
     case Qnst::Html:
-        properties["SUBTYPE"] = "html";
-
-//        properties["type"] = "text/html";
-
-        break;
+      properties["SUBTYPE"] = "html";
+//    properties["type"] = "text/html";
+      break;
 
     case Qnst::NCL:
-        properties["SUBTYPE"] = "ncl";
-
-        properties["type"] = "application/x-ginga-NCL";
-
-        break;
+      properties["SUBTYPE"] = "ncl";
+      properties["type"] = "application/x-ginga-NCL";
+      break;
 
     case Qnst::Script:
-        properties["SUBTYPE"] = "script";
-
-        properties["type"] = "application/x-ginga-NCLua";
-
-        break;
+      properties["SUBTYPE"] = "script";
+      properties["type"] = "application/x-ginga-NCLua";
+      break;
 
     case Qnst::Settings:
-        properties["SUBTYPE"] = "settings";
-
-        properties["type"] = "application/x-ncl-settings";
-
-        break;
+      properties["SUBTYPE"] = "settings";
+      properties["type"] = "application/x-ncl-settings";
+      break;
 
     case Qnst::Media:
-        properties["SUBTYPE"] = "media";
-
-        break;
+      properties["SUBTYPE"] = "media";
+      break;
 
     default:
       // do nothing
       break;
-    }
+  }
 
-    properties["id"] = entity->getnstId();
+  properties["id"] = entity->getnstId();
 
-//    TODO:
-    properties["src"] = entity->getSource();
-//    properties["type"] = "";
-    properties["refer"] = entity->getRefer();
-    properties["instance"] = entity->getInstance();
- //    properties["descriptor"] = "";
-    entity->updateToolTip();
+// TODO:
+  properties["src"] = entity->getSource();
+//properties["type"] = "";
+  properties["refer"] = entity->getRefer();
+  properties["instance"] = entity->getInstance();
+// properties["descriptor"] = "";
+  entity->updateToolTip();
 
-//    properties["top"] = QString::number(entity->getTop());
-//    properties["left"] = QString::number(entity->getLeft());
-//    properties["width"] = QString::number(entity->getWidth());
-//    properties["heigh"] = QString::number(entity->getHeight());
-//    properties["zindex"] = QString::number(entity->getzIndex());
+// properties["top"] = QString::number(entity->getTop());
+// properties["left"] = QString::number(entity->getLeft());
+// properties["width"] = QString::number(entity->getWidth());
+// properties["heigh"] = QString::number(entity->getHeight());
+// properties["zindex"] = QString::number(entity->getzIndex());
 
-    QMap <QString, QString> additionalData = entity->getUsrData();
-    foreach(QString key, additionalData.keys())
-    {
-//      if(!properties.contains(key))
-        properties.insert(key, additionalData.value(key));
-    }
+  QMap <QString, QString> additionalData = entity->getUsrData();
+  foreach(QString key, additionalData.keys())
+  {
+//  if(!properties.contains(key))
+      properties.insert(key, additionalData.value(key));
+  }
 
-    emit entityAdded(entity->getnstUid(),
-                     entity->getnstGraphicsParent()->getnstUid(),
-                     properties);
+  emit entityAdded(entity->getnstUid(),
+                   entity->getnstGraphicsParent()->getnstUid(),
+                   properties);
 }
 
 void QnstView::requestMediaChange(QnstGraphicsMedia* entity)
 {
-    QMap<QString, QString> properties;
+  QMap<QString, QString> properties;
 
-    properties["TYPE"] = "media";
+  properties["TYPE"] = "media";
 
-    switch(entity->getnstType()){
+  switch(entity->getnstType())
+  {
     case Qnst::Image:
-        properties["SUBTYPE"] = "image";
-        break;
+      properties["SUBTYPE"] = "image";
+      break;
 
     case Qnst::Audio:
-        properties["SUBTYPE"] = "audio";
-        break;
+      properties["SUBTYPE"] = "audio";
+      break;
 
     case Qnst::Video:
-        properties["SUBTYPE"] = "video";
-        break;
+      properties["SUBTYPE"] = "video";
+      break;
 
     case Qnst::Text:
-        properties["SUBTYPE"] = "text";
-        break;
+      properties["SUBTYPE"] = "text";
+      break;
 
     case Qnst::Script:
-        properties["SUBTYPE"] = "script";
-        break;
+      properties["SUBTYPE"] = "script";
+      break;
 
     case Qnst::Settings:
-        properties["SUBTYPE"] = "settings";
-        break;
+      properties["SUBTYPE"] = "settings";
+      break;
 
     case Qnst::Media:
-        properties["SUBTYPE"] = "media";
-        break;
+      properties["SUBTYPE"] = "media";
+      break;
 
     case Qnst::Html:
-        properties["SUBTYPE"] = "html";
-        break;
+      properties["SUBTYPE"] = "html";
+      break;
 
     case Qnst::NCL:
-        properties["SUBTYPE"] = "ncl";
-        break;
+      properties["SUBTYPE"] = "ncl";
+      break;
 
     default:
       // do nothing
       break;
-    }
+  }
 
-    properties["id"] = entity->getnstId();
-    properties["src"] = entity->getSource();
+  properties["id"] = entity->getnstId();
+  properties["src"] = entity->getSource();
 
 //    properties["type"] = "";
 //    properties["refer"] = "";
@@ -4491,47 +4361,50 @@ void QnstView::requestMediaChange(QnstGraphicsMedia* entity)
 //    properties["heigh"] = QString::number(entity->getHeight());
 //    properties["zindex"] = QString::number(entity->getzIndex());
 
-    QMap <QString, QString> additionalData = entity->getUsrData();
-    foreach(QString key, additionalData.keys())
-    {
-      if(!properties.contains(key))
-        properties.insert(key, additionalData.value(key));
-    }
+  QMap <QString, QString> additionalData = entity->getUsrData();
+  foreach(QString key, additionalData.keys())
+  {
+    if(!properties.contains(key))
+    properties.insert(key, additionalData.value(key));
+  }
 
-    emit entityChanged(entity->getnstUid(), properties);
+  emit entityChanged(entity->getnstUid(), properties);
 }
 
 void QnstView::requestAggregatorAddition(QnstGraphicsAggregator* entity)
 {
-    entities[entity->getnstUid()] = entity;
+  entities[entity->getnstUid()] = entity;
 }
 
 void QnstView::requestPortAddition(QnstGraphicsPort* entity, bool undo)
 {
-    if (entity->getnstId() == "" && !undo){
-        entity->setnstId("p"+QString::number(++nport));
+  if (entity->getnstId() == "" && !undo)
+  {
+    entity->setnstId("p"+QString::number(++nport));
+  }
+
+  QMap<QString, QString> properties;
+
+  properties["TYPE"] = "port";
+
+  properties["id"] = entity->getnstId();
+
+  foreach(QnstGraphicsEdge* edge, entity->getnstGraphicsEdges())
+  {
+    if (edge->getnstType() == Qnst::Reference)
+    {
+      properties["COMPONENT"] = edge->getEntityA()->getnstUid();
+      properties["component"] = edge->getEntityA()->getnstId();
+
+      if (edge->getEntityB()->getnstType() == Qnst::Port ||
+          edge->getEntityB()->getnstType() == Qnst::Property ||
+          edge->getEntityB()->getnstType() == Qnst::Area)
+      {
+        properties["INTERFACE"] = edge->getEntityB()->getnstUid();;
+        properties["interface"] = edge->getEntityB()->getnstId();;
+      }
     }
-
-    QMap<QString, QString> properties;
-
-    properties["TYPE"] = "port";
-
-    properties["id"] = entity->getnstId();
-
-    foreach(QnstGraphicsEdge* edge, entity->getnstGraphicsEdges()){
-        if (edge->getnstType() == Qnst::Reference){
-            properties["COMPONENT"] = edge->getEntityA()->getnstUid();
-            properties["component"] = edge->getEntityA()->getnstId();
-
-            if (edge->getEntityB()->getnstType() == Qnst::Port ||
-                edge->getEntityB()->getnstType() == Qnst::Property ||
-                edge->getEntityB()->getnstType() == Qnst::Area){
-
-                properties["INTERFACE"] = edge->getEntityB()->getnstUid();;
-                properties["interface"] = edge->getEntityB()->getnstId();;
-            }
-        }
-    }
+  }
 
 //    TODO:
 //    properties["top"] = QString::number(entity->getTop());
@@ -4540,58 +4413,62 @@ void QnstView::requestPortAddition(QnstGraphicsPort* entity, bool undo)
 //    properties["heigh"] = QString::number(entity->getHeight());
 //    properties["zindex"] = QString::number(entity->getzIndex());
 
-    QMap <QString, QString> additionalData = entity->getUsrData();
-    foreach(QString key, additionalData.keys())
-    {
-      if(!properties.contains(key))
-        properties.insert(key, additionalData.value(key));
-    }
+  QMap <QString, QString> additionalData = entity->getUsrData();
+  foreach(QString key, additionalData.keys())
+  {
+    if(!properties.contains(key))
+      properties.insert(key, additionalData.value(key));
+  }
 
-    emit entityAdded(entity->getnstUid(),
-                     entity->getnstGraphicsParent()->getnstUid(),
-                     properties);
+  emit entityAdded(entity->getnstUid(),
+                   entity->getnstGraphicsParent()->getnstUid(),
+                   properties);
 }
 
 void QnstView::requestPortChange(QnstGraphicsPort* entity)
 {
-    QMap<QString, QString> properties;
+  QMap<QString, QString> properties;
 
-    properties["TYPE"] = "port";
+  properties["TYPE"] = "port";
 
-    properties["id"] = entity->getnstId();
+  properties["id"] = entity->getnstId();
 
-    foreach(QnstGraphicsEdge* edge, entity->getnstGraphicsEdges()){
-        if (edge->getnstType() == Qnst::Reference) {
-            if (edge->getEntityB()->getnstType() == Qnst::Port ||
-                edge->getEntityB()->getnstType() == Qnst::Property ||
-                edge->getEntityB()->getnstType() == Qnst::Area){
+  foreach(QnstGraphicsEdge* edge, entity->getnstGraphicsEdges())
+  {
+    if (edge->getnstType() == Qnst::Reference)
+    {
+      if (edge->getEntityB()->getnstType() == Qnst::Port ||
+          edge->getEntityB()->getnstType() == Qnst::Property ||
+          edge->getEntityB()->getnstType() == Qnst::Area)
+      {
+        properties["INTERFACE"] = edge->getEntityB()->getnstUid();
+        properties["interface"] = edge->getEntityB()->getnstId();
 
-                properties["INTERFACE"] = edge->getEntityB()->getnstUid();
-                properties["interface"] = edge->getEntityB()->getnstId();
+        properties["COMPONENT"] = edge->getEntityB()->getnstGraphicsParent()->getnstUid();
+        properties["component"] = edge->getEntityB()->getnstGraphicsParent()->getnstId();
 
-                properties["COMPONENT"] = edge->getEntityB()->getnstGraphicsParent()->getnstUid();
-                properties["component"] = edge->getEntityB()->getnstGraphicsParent()->getnstId();
+      }
+      else
+      {
+        properties["COMPONENT"] = edge->getEntityB()->getnstUid();
+        properties["component"] = edge->getEntityB()->getnstId();
 
-            }else{
-                properties["COMPONENT"] = edge->getEntityB()->getnstUid();
-                properties["component"] = edge->getEntityB()->getnstId();
+        properties["INTERFACE"] = "";
+        properties["interface"] = "";
+      }
 
-                properties["INTERFACE"] = "";
-                properties["interface"] = "";
-            }
+      QMap <QString, QString> additionalData = entity->getUsrData();
+      foreach(QString key, additionalData.keys())
+      {
+        if(!properties.contains(key))
+          properties.insert(key, additionalData.value(key));
+      }
 
-            QMap <QString, QString> additionalData = entity->getUsrData();
-            foreach(QString key, additionalData.keys())
-            {
-              if(!properties.contains(key))
-                properties.insert(key, additionalData.value(key));
-            }
-
-            break; // there is only one match, so 'break'.
-        }
+      break; // there is only one match, so 'break'.
     }
+  }
 
-    emit entityChanged(entity->getnstUid(), properties);
+  emit entityChanged(entity->getnstUid(), properties);
 }
 
 void QnstView::requestMappingAddition(QnstGraphicsMapping* entity, bool undo)
@@ -4606,24 +4483,26 @@ void QnstView::requestMappingChange(QnstGraphicsMapping* entity)
 
 void QnstView::requestSwitchPortAddition(QnstGraphicsSwitchPort* entity, bool undo)
 {
-    if (entity->getnstId() == "" && !undo){
-        entity->setnstId("swp"+QString::number(++nswitchport));
-    }
+  if (entity->getnstId() == "" && !undo)
+  {
+    entity->setnstId("swp"+QString::number(++nswitchport));
+  }
 
-    QMap<QString, QString> properties;
+  QMap<QString, QString> properties;
 
-    properties["TYPE"] = "switchPort";
+  properties["TYPE"] = "switchPort";
 
-    properties["id"] = entity->getnstId();
+  properties["id"] = entity->getnstId();
 
-    QMap <QString, QString> additionalData = entity->getUsrData();
-    foreach(QString key, additionalData.keys())
-    {
-      if(!properties.contains(key))
-        properties.insert(key, additionalData.value(key));
-    }
+  QMap <QString, QString> additionalData = entity->getUsrData();
+  foreach(QString key, additionalData.keys())
+  {
+    if(!properties.contains(key))
+      properties.insert(key, additionalData.value(key));
+  }
 
-    emit entityAdded(entity->getnstUid(), entity->getnstGraphicsParent()->getnstUid(), properties);
+  emit entityAdded(entity->getnstUid(),
+                   entity->getnstGraphicsParent()->getnstUid(), properties);
 }
 
 void QnstView::requestSwitchPortChange(QnstGraphicsSwitchPort* entity)
@@ -4665,9 +4544,7 @@ void QnstView::requestAreaAddition(QnstGraphicsArea* entity, bool undo)
     if (entities.contains(key))
     {
       if (entities[key]->isMedia())
-      {
         adjustMedia((QnstGraphicsMedia*) entities[key]);
-      }
     }
   }
 
@@ -4688,32 +4565,31 @@ void QnstView::requestAreaChange(QnstGraphicsArea* entity)
 
 void QnstView::requestPropertyAddition(QnstGraphicsProperty* entity)
 {
-    QMap<QString, QString> properties;
+  QMap<QString, QString> properties;
 
-    properties["TYPE"] = "property";
+  properties["TYPE"] = "property";
 
-    adjustMedia((QnstGraphicsMedia*) entity->getnstGraphicsParent());
+  adjustMedia((QnstGraphicsMedia*) entity->getnstGraphicsParent());
 
-    foreach (QString key,
-             refers.keys(entity->getnstGraphicsParent()->getnstUid()))
+  foreach (QString key,
+           refers.keys(entity->getnstGraphicsParent()->getnstUid()))
+  {
+    if (entities.contains(key))
     {
-      if (entities.contains(key))
-      {
-        if (entities[key]->isMedia())
-        {
-          adjustMedia((QnstGraphicsMedia*) entities[key]);
-        }
-      }
+      if (entities[key]->isMedia())
+        adjustMedia((QnstGraphicsMedia*) entities[key]);
     }
+  }
 
-    QMap <QString, QString> additionalData = entity->getUsrData();
-    foreach(QString key, additionalData.keys())
-    {
-      if(!properties.contains(key))
-        properties.insert(key, additionalData.value(key));
-    }
+  QMap <QString, QString> additionalData = entity->getUsrData();
+  foreach(QString key, additionalData.keys())
+  {
+    if(!properties.contains(key))
+      properties.insert(key, additionalData.value(key));
+  }
 
-    emit entityAdded(entity->getnstUid(), entity->getnstGraphicsParent()->getnstUid(), properties);
+  emit entityAdded(entity->getnstUid(),
+                   entity->getnstGraphicsParent()->getnstUid(), properties);
 }
 
 void QnstView::requestPropertyChange(QnstGraphicsProperty* entity)
@@ -4728,421 +4604,432 @@ void QnstView::performHelp()
 
 void QnstView::performUndo()
 {
-
-
-    if (history.canUndo()){
-        history.undo();
-    }
+  if (history.canUndo()){
+    history.undo();
+  }
 }
 
 void QnstView::performRedo()
 {
-
-
-    if (history.canRedo()){
-        history.redo();
-    }
+  if (history.canRedo()){
+    history.redo();
+  }
 }
 
 void QnstView::performCut()
 {
-    if (selected != NULL){
-        if (selected->getnstType() != Qnst::Body){
-            if (clipboard != NULL){
-                delete clipboard; clipboard = NULL;
-            }
+  if (selected != NULL)
+  {
+    if (selected->getnstType() != Qnst::Body)
+    {
+      if (clipboard != NULL)
+      {
+        delete clipboard; clipboard = NULL;
+      }
 
-            QnstGraphicsEntity* entity = selected;
+      QnstGraphicsEntity* entity = selected;
 
-            clipboard = QnstUtil::makeGraphicsEntity(entity->getnstType());
+      clipboard = QnstUtil::makeGraphicsEntity(entity->getnstType());
 
-            if (clipboard != NULL)
-            {
-              clipboard->setnstId(entity->getnstId());
+      if (clipboard != NULL)
+      {
+        clipboard->setnstId(entity->getnstId());
 
-              clipboard->setTop(entity->getTop());
-              clipboard->setLeft(entity->getLeft());
-              clipboard->setWidth(entity->getWidth());
-              clipboard->setHeight(entity->getHeight());
-              clipboard->setnstGraphicsParent(NULL);
+        clipboard->setTop(entity->getTop());
+        clipboard->setLeft(entity->getLeft());
+        clipboard->setWidth(entity->getWidth());
+        clipboard->setHeight(entity->getHeight());
+        clipboard->setnstGraphicsParent(NULL);
 
-              clipboard->setUsrData(entity->getUsrData());
+        clipboard->setUsrData(entity->getUsrData());
 
-              foreach(QnstGraphicsEntity* e, entity->getnstGraphicsEntities()){
-                  performCopy(e, clipboard);
-              }
-
-              requestEntityRemotion(selected);
-
-              foreach(QnstGraphicsEntity* e, entities.values()){
-                  if (e->getnstType() == Qnst::Body ||
-                      e->getnstType() == Qnst::Context ||
-                      e->getnstType() == Qnst::Switch){
-
-                      e->menu->actionPaste->setEnabled(true);
-                  }
-              }
-
-              hasCutted = true;
-            }
-
-        }else{
-            QMessageBox::warning(this, "Alert", "You cannot cut a &lt;body&gt; element!");
+        foreach(QnstGraphicsEntity* e, entity->getnstGraphicsEntities())
+        {
+          performCopy(e, clipboard);
         }
+
+        requestEntityRemotion(selected);
+
+        foreach(QnstGraphicsEntity* e, entities.values())
+        {
+          if (e->getnstType() == Qnst::Body ||
+              e->getnstType() == Qnst::Context ||
+              e->getnstType() == Qnst::Switch)
+          {
+            e->menu->actionPaste->setEnabled(true);
+          }
+        }
+
+        hasCutted = true;
+      }
     }
+    else
+    {
+      QMessageBox::warning(this, "Alert",
+                           "You cannot cut a &lt;body&gt; element!");
+    }
+  }
 }
 
 void QnstView::performCopy()
 {
-    if (selected != NULL){
-        if (selected->getnstType() != Qnst::Body){
+  if (selected != NULL)
+  {
+    if (selected->getnstType() != Qnst::Body)
+    {
+      if (clipboard != NULL)
+      {
+        delete clipboard; clipboard = NULL;
+      }
 
-            if (clipboard != NULL){
-                delete clipboard; clipboard = NULL;
-            }
+      QnstGraphicsEntity* entity = selected;
+      clipboard = QnstUtil::makeGraphicsEntity(entity->getnstType());
 
-            QnstGraphicsEntity* entity = selected;
-            clipboard = QnstUtil::makeGraphicsEntity(entity->getnstType());
+      if (clipboard != NULL)
+      {
+        clipboard->setnstId(entity->getnstId());
+        clipboard->setnstUid(entity->getnstUid());
 
-            if (clipboard != NULL){
-              clipboard->setnstId(entity->getnstId());
-              clipboard->setnstUid(entity->getnstUid());
+        clipboard->setTop(entity->getTop());
+        clipboard->setLeft(entity->getLeft());
+        clipboard->setWidth(entity->getWidth());
+        clipboard->setHeight(entity->getHeight());
 
-              clipboard->setTop(entity->getTop());
-              clipboard->setLeft(entity->getLeft());
-              clipboard->setWidth(entity->getWidth());
-              clipboard->setHeight(entity->getHeight());
+        clipboard->setnstGraphicsParent(NULL);
+        clipboard->setUsrData(entity->getUsrData());
 
-              clipboard->setnstGraphicsParent(NULL);
-              clipboard->setUsrData(entity->getUsrData());
-
-              qDebug() << "[QNST]" << clipboard->getUsrData();
-              foreach(QnstGraphicsEntity* e, entity->getnstGraphicsEntities()){
-                  performCopy(e, clipboard);
-              }
-
-              foreach(QnstGraphicsEntity* e, entities.values()){
-                  if (e->getnstType() == Qnst::Body ||
-                      e->getnstType() == Qnst::Context ||
-                      e->getnstType() == Qnst::Switch){
-
-                      e->menu->actionPaste->setEnabled(true);
-                  }
-              }
-
-              hasCutted = false;
-            }
-
-        }else{
-            QMessageBox::warning(this, "Alert", "You cannot copy a &lt;body&gt; element!");
+        qDebug() << "[QNST]" << clipboard->getUsrData();
+        foreach(QnstGraphicsEntity* e, entity->getnstGraphicsEntities())
+        {
+          performCopy(e, clipboard);
         }
+
+        foreach(QnstGraphicsEntity* e, entities.values())
+        {
+          if (e->getnstType() == Qnst::Body ||
+              e->getnstType() == Qnst::Context ||
+              e->getnstType() == Qnst::Switch)
+          {
+            e->menu->actionPaste->setEnabled(true);
+          }
+        }
+
+        hasCutted = false;
+      }
+
     }
+    else
+    {
+      QMessageBox::warning(this, "Alert",
+                           "You cannot copy a &lt;body&gt; element!");
+    }
+  }
 }
 
 void QnstView::performCopy(QnstGraphicsEntity* entity, QnstGraphicsEntity* parent)
 {
-    QnstGraphicsEntity* copy = NULL;
+  QnstGraphicsEntity* copy = NULL;
 
-    copy = QnstUtil::makeGraphicsEntity(entity->getnstType());
+  copy = QnstUtil::makeGraphicsEntity(entity->getnstType());
 
-    if (copy != NULL){
+  if (copy != NULL)
+  {
+    copy->setnstGraphicsParent(parent);
 
-      copy->setnstGraphicsParent(parent);
+    copy->setnstId(entity->getnstId());
+    copy->setnstUid(entity->getnstUid());
 
-      copy->setnstId(entity->getnstId());
-      copy->setnstUid(entity->getnstUid());
+    copy->setTop(entity->getTop());
+    copy->setLeft(entity->getLeft());
+    copy->setWidth(entity->getWidth());
+    copy->setHeight(entity->getHeight());
 
-      copy->setTop(entity->getTop());
-      copy->setLeft(entity->getLeft());
-      copy->setWidth(entity->getWidth());
-      copy->setHeight(entity->getHeight());
+    parent->addnstGraphicsEntity(copy);
 
-      parent->addnstGraphicsEntity(copy);
+    qDebug() << "[QNST]" << entity->getUsrData();
+    copy->setUsrData(entity->getUsrData());
 
-      qDebug() << "[QNST]" << entity->getUsrData();
-      copy->setUsrData(entity->getUsrData());
-
-      foreach(QnstGraphicsEntity* e, entity->getnstGraphicsEntities())
-      {
-        performCopy(e, copy);
-      }
+    foreach(QnstGraphicsEntity* e, entity->getnstGraphicsEntities())
+    {
+      performCopy(e, copy);
     }
+  }
 }
 
 void QnstView::performPaste()
 {
-    if (clipboard != NULL){
-        QnstGraphicsEntity* copy = clipboard;
-        qDebug() << "[QNST] performPaste() cliboard userdata = " << clipboard->getUsrData();
+  if (clipboard != NULL){
+    QnstGraphicsEntity* copy = clipboard;
+    qDebug() << "[QNST] performPaste() cliboard userdata = " << clipboard->getUsrData();
 
-        QnstGraphicsEntity* parent = selected;
+    QnstGraphicsEntity* parent = selected;
 
-        if (copy != NULL && parent != NULL){
-            if (parent->getnstType() == Qnst::Context ||
-                    parent->getnstType() == Qnst::Switch ||
-                    parent->getnstType() == Qnst::Body){
+    if (copy != NULL && parent != NULL)
+    {
+      if (parent->getnstType() == Qnst::Context ||
+          parent->getnstType() == Qnst::Switch ||
+          parent->getnstType() == Qnst::Body)
+      {
 
-                int result = 1;
-                if(!hasCutted) // if the user has cutted obviously he/she does not
-                               // want to make a reference
-                {
-                  result = QMessageBox::question(
-                        this,
-                        tr("Copy"),
-                        tr("Would you like to make a reference instead?"),
-                        tr("Cancel"),
-                        tr("No"),
-                        tr("Yes"),
-                        1);
-                }
-
-                if (result == 0) // Cancel operation
-                {
-                    return;
-                }
-                else if (result == 2
-                          && copy->getnstType() != Qnst::Property
-                          && copy->getnstType() != Qnst::Area ){ // Make reference
-
-                  performReference(copy, parent);
-                }
-                else  // Copy
-                {
-
-                QnstGraphicsEntity* entity = NULL;
-
-                entity = QnstUtil::makeGraphicsEntity(copy->getnstType(),
-                                                      parent);
-
-                if(entity != NULL)
-                {
-                  switch(copy->getnstType())
-                  {
-                    case Qnst::Image:
-                    case Qnst::Audio:
-                    case Qnst::Video:
-                    case Qnst::Text:
-                    case Qnst::NCL:
-                    case Qnst::Html:
-                    case Qnst::Script:
-                    case Qnst::Settings:
-                    case Qnst::Media:
-                        entity->setnstId("m"+QString::number(++nmedia));
-
-                        entity->setWidth(48);
-                        entity->setHeight(64);
-                        entity->setTop(parent->getHeight()/2 - copy->getWidth()/2);
-                        entity->setLeft(parent->getWidth()/2 - copy->getHeight()/2);
-
-                        ((QnstGraphicsMedia*) entity)->setSource(copy->getUsrData()["src"]);
-                        break;
-
-                    case Qnst::Context:
-                        entity->setnstId("ctx"+QString::number(++ncontext));
-
-                        entity->setWidth(copy->getWidth());
-                        entity->setHeight(copy->getHeight());
-                        entity->setTop(parent->getHeight()/2 - copy->getWidth()/2);
-                        entity->setLeft(parent->getWidth()/2 - copy->getHeight()/2);
-                        break;
-
-                    case Qnst::Switch:
-                        entity->setnstId("swt"+QString::number(++nswitch));
-
-                        entity->setWidth(copy->getWidth());
-                        entity->setHeight(copy->getHeight());
-                        entity->setTop(parent->getHeight()/2 - copy->getWidth()/2);
-                        entity->setLeft(parent->getWidth()/2 - copy->getHeight()/2);
-                        break;
-
-                    case Qnst::Port:
-                        entity->setnstId("p"+QString::number(++nport));
-
-                        entity->setWidth(copy->getWidth());
-                        entity->setHeight(copy->getHeight());
-                        entity->setTop(copy->getTop());
-                        entity->setLeft(copy->getLeft());
-                        break;
-
-                    case Qnst::SwitchPort:
-                        entity = new QnstGraphicsSwitchPort();
-                        entity->setnstGraphicsParent(parent);
-
-                        entity->setnstId("swp"+QString::number(++nswitchport));
-
-                        entity->setWidth(copy->getWidth());
-                        entity->setHeight(copy->getHeight());
-                        entity->setTop(copy->getTop());
-                        entity->setLeft(copy->getLeft());
-                        break;
-
-                    case Qnst::Area:
-                        entity->setnstId("area"+QString::number(++narea));
-
-                        entity->setWidth(copy->getWidth());
-                        entity->setHeight(copy->getHeight());
-                        entity->setTop(copy->getTop());
-                        entity->setLeft(copy->getLeft());
-                        break;
-
-                    case Qnst::Property:
-                        entity->setnstId("prop"+QString::number(++nproperty));
-
-                        entity->setWidth(copy->getWidth());
-                        entity->setHeight(copy->getHeight());
-                        entity->setTop(copy->getTop());
-                        entity->setLeft(copy->getLeft());
-                        break;
-
-                    default:
-                      // do nothing
-                      return;
-                  }
-
-                  entity->adjust();
-                }
-
-                parent->addnstGraphicsEntity(entity);
-
-                entity->setUsrData(copy->getUsrData());
-                requestEntityAddition(entity);
-
-                entity->setnstId(entity->getUsrData()["id"]);
-
-    //            requestEntityChange(entity);
-
-                foreach(QnstGraphicsEntity* e, copy->getnstGraphicsEntities()){
-                    performPaste(e, entity);
-                }
-
-                }
-            }
+        int result = 1;
+        if(!hasCutted) // if the user has cutted obviously he/she does not
+                       // want to make a reference
+        {
+          result = QMessageBox::question(
+                this,
+                tr("Copy"),
+                tr("Would you like to make a reference instead?"),
+                tr("Cancel"),
+                tr("No"),
+                tr("Yes"),
+                1);
         }
+
+        if (result == 0) // Cancel operation
+        {
+            return;
+        }
+        else if (result == 2
+                  && copy->getnstType() != Qnst::Property
+                  && copy->getnstType() != Qnst::Area )
+        {
+          // Make reference
+          performReference(copy, parent);
+        }
+        else  // Copy
+        {
+          QnstGraphicsEntity* entity = NULL;
+          entity = QnstUtil::makeGraphicsEntity(copy->getnstType(), parent);
+
+          if(entity != NULL)
+          {
+            switch(copy->getnstType())
+            {
+              case Qnst::Image:
+              case Qnst::Audio:
+              case Qnst::Video:
+              case Qnst::Text:
+              case Qnst::NCL:
+              case Qnst::Html:
+              case Qnst::Script:
+              case Qnst::Settings:
+              case Qnst::Media:
+                entity->setnstId("m"+QString::number(++nmedia));
+
+                entity->setWidth(DEFAULT_MEDIA_WIDTH);
+                entity->setHeight(DEFAULT_MEDIA_HEIGHT);
+                entity->setTop(parent->getHeight()/2 - copy->getWidth()/2);
+                entity->setLeft(parent->getWidth()/2 - copy->getHeight()/2);
+
+                ((QnstGraphicsMedia*) entity)->setSource(copy->getUsrData()["src"]);
+                break;
+
+              case Qnst::Context:
+                entity->setnstId("ctx"+QString::number(++ncontext));
+
+                entity->setWidth(copy->getWidth());
+                entity->setHeight(copy->getHeight());
+                entity->setTop(parent->getHeight()/2 - copy->getWidth()/2);
+                entity->setLeft(parent->getWidth()/2 - copy->getHeight()/2);
+                break;
+
+              case Qnst::Switch:
+                entity->setnstId("swt"+QString::number(++nswitch));
+
+                entity->setWidth(copy->getWidth());
+                entity->setHeight(copy->getHeight());
+                entity->setTop(parent->getHeight()/2 - copy->getWidth()/2);
+                entity->setLeft(parent->getWidth()/2 - copy->getHeight()/2);
+                break;
+
+              case Qnst::Port:
+                entity->setnstId("p"+QString::number(++nport));
+
+                entity->setWidth(copy->getWidth());
+                entity->setHeight(copy->getHeight());
+                entity->setTop(copy->getTop());
+                entity->setLeft(copy->getLeft());
+                break;
+
+              case Qnst::SwitchPort:
+                entity = new QnstGraphicsSwitchPort();
+                entity->setnstGraphicsParent(parent);
+
+                entity->setnstId("swp"+QString::number(++nswitchport));
+
+                entity->setWidth(copy->getWidth());
+                entity->setHeight(copy->getHeight());
+                entity->setTop(copy->getTop());
+                entity->setLeft(copy->getLeft());
+                break;
+
+              case Qnst::Area:
+                entity->setnstId("area"+QString::number(++narea));
+
+                entity->setWidth(copy->getWidth());
+                entity->setHeight(copy->getHeight());
+                entity->setTop(copy->getTop());
+                entity->setLeft(copy->getLeft());
+                break;
+
+              case Qnst::Property:
+                entity->setnstId("prop"+QString::number(++nproperty));
+
+                entity->setWidth(copy->getWidth());
+                entity->setHeight(copy->getHeight());
+                entity->setTop(copy->getTop());
+                entity->setLeft(copy->getLeft());
+                break;
+
+              default:
+                // do nothing
+                return;
+            }
+
+            entity->adjust();
+          }
+
+          parent->addnstGraphicsEntity(entity);
+
+          entity->setUsrData(copy->getUsrData());
+          requestEntityAddition(entity);
+
+          entity->setnstId(entity->getUsrData()["id"]);
+
+//            requestEntityChange(entity);
+
+          foreach(QnstGraphicsEntity* e, copy->getnstGraphicsEntities())
+          {
+            performPaste(e, entity);
+          }
+
+        }
+      }
     }
+  }
 }
 
 void QnstView::performPaste(QnstGraphicsEntity* copy, QnstGraphicsEntity* parent)
 {
-    QnstGraphicsEntity* entity = QnstUtil::makeGraphicsEntity(copy->getnstType(),
-                                                              parent);
+  QnstGraphicsEntity* entity = QnstUtil::makeGraphicsEntity(copy->getnstType(),
+                                                            parent);
 
-    if(entity != NULL)
+  if(entity != NULL)
+  {
+    switch(copy->getnstType())
     {
-      switch(copy->getnstType())
-      {
-        case Qnst::Image:
-        case Qnst::Audio:
-        case Qnst::Video:
-        case Qnst::Text:
-        case Qnst::Script:
-        case Qnst::Settings:
-        case Qnst::Media:
-          entity->setnstId("m"+QString::number(++nmedia));
+      case Qnst::Image:
+      case Qnst::Audio:
+      case Qnst::Video:
+      case Qnst::Text:
+      case Qnst::Script:
+      case Qnst::Settings:
+      case Qnst::Media:
+        entity->setnstId("m"+QString::number(++nmedia));
 
-          entity->setTop(copy->getTop());
-          entity->setLeft(copy->getLeft());
-          entity->setWidth(copy->getWidth());
-          entity->setHeight(copy->getHeight());
+        entity->setTop(copy->getTop());
+        entity->setLeft(copy->getLeft());
+        entity->setWidth(copy->getWidth());
+        entity->setHeight(copy->getHeight());
 
-          ((QnstGraphicsMedia*) entity)->setSource(copy->getUsrData()["src"]);
+        ((QnstGraphicsMedia*) entity)->setSource(copy->getUsrData()["src"]);
 
-          parent->addnstGraphicsEntity(entity);
-          break;
+        parent->addnstGraphicsEntity(entity);
+        break;
 
-        case Qnst::Context:
-          entity->setnstId("ctx"+QString::number(++ncontext));
+      case Qnst::Context:
+        entity->setnstId("ctx"+QString::number(++ncontext));
 
-          entity->setTop(copy->getTop());
-          entity->setLeft(copy->getLeft());
-          entity->setWidth(copy->getWidth());
-          entity->setHeight(copy->getHeight());
+        entity->setTop(copy->getTop());
+        entity->setLeft(copy->getLeft());
+        entity->setWidth(copy->getWidth());
+        entity->setHeight(copy->getHeight());
 
-          parent->addnstGraphicsEntity(entity);
-          break;
+        parent->addnstGraphicsEntity(entity);
+        break;
 
-        case Qnst::Switch:
-          entity->setnstId("swt"+QString::number(++nswitch));
+      case Qnst::Switch:
+        entity->setnstId("swt"+QString::number(++nswitch));
 
-          entity->setTop(copy->getTop());
-          entity->setLeft(copy->getLeft());
-          entity->setWidth(copy->getWidth());
-          entity->setHeight(copy->getHeight());
+        entity->setTop(copy->getTop());
+        entity->setLeft(copy->getLeft());
+        entity->setWidth(copy->getWidth());
+        entity->setHeight(copy->getHeight());
 
-          parent->addnstGraphicsEntity(entity);
-          break;
+        parent->addnstGraphicsEntity(entity);
+        break;
 
-        case Qnst::Port:
-          entity->setnstId("p"+QString::number(++nport));
+      case Qnst::Port:
+        entity->setnstId("p"+QString::number(++nport));
 
-          entity->setTop(copy->getTop());
-          entity->setLeft(copy->getLeft());
-          entity->setWidth(copy->getWidth());
-          entity->setHeight(copy->getHeight());
+        entity->setTop(copy->getTop());
+        entity->setLeft(copy->getLeft());
+        entity->setWidth(copy->getWidth());
+        entity->setHeight(copy->getHeight());
 
-          parent->addnstGraphicsEntity(entity);
-          break;
+        parent->addnstGraphicsEntity(entity);
+        break;
 
-        case Qnst::SwitchPort:
-          entity->setnstId("swp"+QString::number(++nswitchport));
+      case Qnst::SwitchPort:
+        entity->setnstId("swp"+QString::number(++nswitchport));
 
-          entity->setTop(copy->getTop());
-          entity->setLeft(copy->getLeft());
-          entity->setWidth(copy->getWidth());
-          entity->setHeight(copy->getHeight());
+        entity->setTop(copy->getTop());
+        entity->setLeft(copy->getLeft());
+        entity->setWidth(copy->getWidth());
+        entity->setHeight(copy->getHeight());
 
-          parent->addnstGraphicsEntity(entity);
-          break;
+        parent->addnstGraphicsEntity(entity);
+        break;
 
-        case Qnst::Area:
-          entity->setnstId("area"+QString::number(++narea));
+      case Qnst::Area:
+        entity->setnstId("area"+QString::number(++narea));
 
-          entity->setTop(copy->getTop());
-          entity->setLeft(copy->getLeft());
-          entity->setWidth(copy->getWidth());
-          entity->setHeight(copy->getHeight());
+        entity->setTop(copy->getTop());
+        entity->setLeft(copy->getLeft());
+        entity->setWidth(copy->getWidth());
+        entity->setHeight(copy->getHeight());
 
-          parent->addnstGraphicsEntity(entity);
-          break;
+        parent->addnstGraphicsEntity(entity);
+        break;
 
-        case Qnst::Property:
-          entity->setnstId("prop"+QString::number(++nproperty));
+      case Qnst::Property:
+        entity->setnstId("prop"+QString::number(++nproperty));
 
-          entity->setTop(copy->getTop());
-          entity->setLeft(copy->getLeft());
-          entity->setWidth(copy->getWidth());
-          entity->setHeight(copy->getHeight());
+        entity->setTop(copy->getTop());
+        entity->setLeft(copy->getLeft());
+        entity->setWidth(copy->getWidth());
+        entity->setHeight(copy->getHeight());
 
-          parent->addnstGraphicsEntity(entity);
-          break;
+        parent->addnstGraphicsEntity(entity);
+        break;
 
-        default:
-          // do nothing
-          break;
-      }
-
-      entity->adjust();
+      default:
+        // do nothing
+        break;
     }
 
-
-    entity->setUsrData(copy->getUsrData());
-    requestEntityAddition(entity);
-
-    entity->setnstId(entity->getUsrData()["id"]);
-
-//    qDebug() << "[QNST]" << entity->getUsrData();
-//    requestEntityChange(entity);
+    entity->adjust();
+  }
 
 
-    foreach(QnstGraphicsEntity* e, copy->getnstGraphicsEntities())
-    {
-        performPaste(e, entity);
-    }
+  entity->setUsrData(copy->getUsrData());
+  requestEntityAddition(entity);
+
+  entity->setnstId(entity->getUsrData()["id"]);
+
+// qDebug() << "[QNST]" << entity->getUsrData();
+// requestEntityChange(entity);
+
+  foreach(QnstGraphicsEntity* e, copy->getnstGraphicsEntities())
+  {
+    performPaste(e, entity);
+  }
 }
 
 void QnstView::performReference(QnstGraphicsEntity* copy, QnstGraphicsEntity* parent)
 {
-    QnstGraphicsEntity* entity =
-        QnstUtil::makeGraphicsEntity(copy->getnstType(), parent);
+  QnstGraphicsEntity* entity =
+      QnstUtil::makeGraphicsEntity(copy->getnstType(), parent);
 
   if(entity != NULL)
   {
@@ -5159,10 +5046,10 @@ void QnstView::performReference(QnstGraphicsEntity* copy, QnstGraphicsEntity* pa
       case Qnst::Media:
         entity->setnstId("m"+QString::number(++nmedia));
 
-        entity->setTop(parent->getHeight()/2 - 48/2);
-        entity->setLeft(parent->getWidth()/2 - 48/2);
-        entity->setWidth(48);
-        entity->setHeight(64);
+        entity->setTop(parent->getHeight()/2 - DEFAULT_MEDIA_HEIGHT/2);
+        entity->setLeft(parent->getWidth()/2 - DEFAULT_MEDIA_WIDTH/2);
+        entity->setWidth(DEFAULT_MEDIA_WIDTH);
+        entity->setHeight(DEFAULT_MEDIA_HEIGHT);
 
         //Reference
         ((QnstGraphicsMedia*) entity)->setInstance("new");
@@ -5264,73 +5151,72 @@ void QnstView::performReference(QnstGraphicsEntity* copy, QnstGraphicsEntity* pa
 
 void QnstView::performDelete()
 {
-    if (selected != NULL){
-        requestEntityRemotion(selected);
+  if (selected != NULL){
+    requestEntityRemotion(selected);
 
-        scene->update();
-    }
+    scene->update();
+  }
 }
 
 void QnstView::performExport()
 {
-    QString location = QFileDialog::getSaveFileName(NULL, "Export...", "", tr("Images (*.png)"));
+  QString location = QFileDialog::getSaveFileName(NULL, "Export...", "", tr("Images (*.png)"));
 
-    if (location != ""){
-        qreal top = 0;
-        qreal left = 0;
-        qreal width = scene->width();
-        qreal height = scene->height();
+  if (location != ""){
+    qreal top = 0;
+    qreal left = 0;
+    qreal width = scene->width();
+    qreal height = scene->height();
 
-        foreach (QnstGraphicsEntity* entity, scene->getRoots()) {
-            if (entity->getTop() > top){
-                top = entity->getTop();
-            }
+    foreach (QnstGraphicsEntity* entity, scene->getRoots())
+    {
+      if (entity->getTop() > top)
+        top = entity->getTop();
 
-            if (entity->getLeft() > left){
-                left = entity->getLeft();
-            }
+      if (entity->getLeft() > left)
+        left = entity->getLeft();
 
-            if (entity->getWidth() < width){
-                width = entity->getWidth();
-            }
+      if (entity->getWidth() < width)
+          width = entity->getWidth();
 
-            if (entity->getHeight() < height){
-                height = entity->getHeight();
-            }
-        }
-
-        QImage image(width, height, QImage::Format_ARGB32_Premultiplied);
-
-        QPainter painter(&image);
-
-        scene->render(&painter, QRect(), QRect(left-25,top-25,width+50,height+50));
-
-        painter.end();
-
-        image.save(location, "PNG");
+      if (entity->getHeight() < height)
+          height = entity->getHeight();
     }
+
+    QImage image(width, height, QImage::Format_ARGB32_Premultiplied);
+
+    QPainter painter(&image);
+
+    scene->render(&painter, QRect(), QRect(left-25,top-25,width+50,height+50));
+
+    painter.end();
+
+    image.save(location, "PNG");
+  }
 }
 
 void QnstView::performZoomIn()
 {
-    if (zoomStep > 0) {
-        zoomStep--;
+  if (zoomStep > 0)
+  {
+    zoomStep--;
 
-        resetMatrix();
+    resetMatrix();
 
-        scale(1 - zoomStep*0.05, 1 - zoomStep*0.05);
-    }
+    scale(1 - zoomStep*0.05, 1 - zoomStep*0.05);
+  }
 }
 
 void QnstView::performZoomOut()
 {
-    if (zoomStep*0.05 < 0.9){
-        zoomStep++;
+  if (zoomStep*0.05 < 0.9)
+  {
+    zoomStep++;
 
-        resetMatrix();
+    resetMatrix();
 
-        scale(1 - zoomStep*0.05, 1 - zoomStep*0.05);
-    }
+    scale(1 - zoomStep*0.05, 1 - zoomStep*0.05);
+  }
 }
 
 void QnstView::performZoomReset()
@@ -5844,10 +5730,10 @@ void QnstView:: addNodetoNodeEdge(QnstGraphicsEntity* entitya, QnstGraphicsEntit
 
 
                         QnstGraphicsAggregator* aggregator = new QnstGraphicsAggregator((QnstGraphicsNode*) parenta);
-                        aggregator->setTop(ycenter - 14/2);
-                        aggregator->setLeft(xcenter - 14/2);
-                        aggregator->setWidth(14);
-                        aggregator->setHeight(14);
+                        aggregator->setTop(ycenter - DEFAULT_AGGREGATOR_HEIGHT/2);
+                        aggregator->setLeft(xcenter - DEFAULT_AGGREGATOR_WIDTH/2);
+                        aggregator->setWidth(DEFAULT_AGGREGATOR_WIDTH);
+                        aggregator->setHeight(DEFAULT_AGGREGATOR_HEIGHT);
                         aggregator->adjust();
 
                         parenta->addnstGraphicsEntity(aggregator);
@@ -6251,10 +6137,10 @@ void QnstView::addNodetoInterfaceEdge(QnstGraphicsEntity* entitya, QnstGraphicsE
 
 
                         QnstGraphicsAggregator* aggregator = new QnstGraphicsAggregator((QnstGraphicsNode*) parenta);
-                        aggregator->setTop(ycenter - 14/2);
-                        aggregator->setLeft(xcenter - 14/2);
-                        aggregator->setWidth(14);
-                        aggregator->setHeight(14);
+                        aggregator->setTop(ycenter - DEFAULT_AGGREGATOR_HEIGHT/2);
+                        aggregator->setLeft(xcenter - DEFAULT_AGGREGATOR_WIDTH/2);
+                        aggregator->setWidth(DEFAULT_AGGREGATOR_WIDTH);
+                        aggregator->setHeight(DEFAULT_AGGREGATOR_HEIGHT);
                         aggregator->adjust();
 
                         parenta->addnstGraphicsEntity(aggregator);
@@ -6659,10 +6545,10 @@ void QnstView::addInterfacetoNodeLink(QnstGraphicsEntity* entitya, QnstGraphicsE
 
 
             QnstGraphicsAggregator* aggregator = new QnstGraphicsAggregator((QnstGraphicsNode*) parentb);
-            aggregator->setTop(ycenter - 14/2);
-            aggregator->setLeft(xcenter - 14/2);
-            aggregator->setWidth(14);
-            aggregator->setHeight(14);
+            aggregator->setTop(ycenter - DEFAULT_AGGREGATOR_HEIGHT/2);
+            aggregator->setLeft(xcenter - DEFAULT_AGGREGATOR_WIDTH/2);
+            aggregator->setWidth(DEFAULT_AGGREGATOR_WIDTH);
+            aggregator->setHeight(DEFAULT_AGGREGATOR_HEIGHT);
             aggregator->adjust();
 
             parentb->addnstGraphicsEntity(aggregator);
@@ -7059,10 +6945,10 @@ void QnstView::addInterfacetoInterfaceEdge(QnstGraphicsEntity* entitya, QnstGrap
 
 
                         QnstGraphicsAggregator* aggregator = new QnstGraphicsAggregator((QnstGraphicsNode*) parents);
-                        aggregator->setTop(ycenter - 14/2);
-                        aggregator->setLeft(xcenter - 14/2);
-                        aggregator->setWidth(14);
-                        aggregator->setHeight(14);
+                        aggregator->setTop(ycenter - DEFAULT_AGGREGATOR_HEIGHT/2);
+                        aggregator->setLeft(xcenter - DEFAULT_AGGREGATOR_WIDTH/2);
+                        aggregator->setWidth(DEFAULT_AGGREGATOR_WIDTH);
+                        aggregator->setHeight(DEFAULT_AGGREGATOR_HEIGHT);
                         aggregator->adjust();
 
                         parents->addnstGraphicsEntity(aggregator);
@@ -7354,10 +7240,10 @@ void QnstView::addInterfacetoInterfaceEdge(QnstGraphicsEntity* entitya, QnstGrap
 
 
                         QnstGraphicsAggregator* aggregator = new QnstGraphicsAggregator((QnstGraphicsNode*) parents);
-                        aggregator->setTop(ycenter - 14/2);
-                        aggregator->setLeft(xcenter - 14/2);
-                        aggregator->setWidth(14);
-                        aggregator->setHeight(14);
+                        aggregator->setTop(ycenter - DEFAULT_AGGREGATOR_HEIGHT/2);
+                        aggregator->setLeft(xcenter - DEFAULT_AGGREGATOR_WIDTH/2);
+                        aggregator->setWidth(DEFAULT_AGGREGATOR_WIDTH);
+                        aggregator->setHeight(DEFAULT_AGGREGATOR_HEIGHT);
                         aggregator->adjust();
 
                         parents->addnstGraphicsEntity(aggregator);
@@ -7612,10 +7498,10 @@ void QnstView::addInterfacetoInterfaceEdge(QnstGraphicsEntity* entitya, QnstGrap
 
 
                     QnstGraphicsAggregator* aggregator = new QnstGraphicsAggregator((QnstGraphicsNode*) parents);
-                    aggregator->setTop(ycenter - 14/2);
-                    aggregator->setLeft(xcenter - 14/2);
-                    aggregator->setWidth(14);
-                    aggregator->setHeight(14);
+                    aggregator->setTop(ycenter - DEFAULT_AGGREGATOR_HEIGHT/2);
+                    aggregator->setLeft(xcenter - DEFAULT_AGGREGATOR_WIDTH/2);
+                    aggregator->setWidth(DEFAULT_AGGREGATOR_WIDTH);
+                    aggregator->setHeight(DEFAULT_AGGREGATOR_HEIGHT);
                     aggregator->adjust();
 
                     parents->addnstGraphicsEntity(aggregator);
@@ -7969,7 +7855,8 @@ void QnstView::focusOutEvent(QFocusEvent *event)
   }
 }
 
-void QnstView::adjustAngle(QnstGraphicsEdge* edge, QnstGraphicsEntity* entitya, QnstGraphicsEntity* entityb)
+void QnstView::adjustAngle(QnstGraphicsEdge* edge, QnstGraphicsEntity* entitya,
+                           QnstGraphicsEntity* entityb)
 {
     int angle = 0;
 

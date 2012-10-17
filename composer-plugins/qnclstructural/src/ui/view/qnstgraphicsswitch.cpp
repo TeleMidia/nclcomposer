@@ -145,8 +145,8 @@ void QnstGraphicsSwitch::performSwitchPort()
     QnstGraphicsSwitchPort* entity = new QnstGraphicsSwitchPort(this);
     entity->setTop(0);
     entity->setLeft(0);
-    entity->setWidth(18);
-    entity->setHeight(18);
+    entity->setWidth(DEFAULT_MEDIA_WIDTH);
+    entity->setHeight(DEFAULT_MEDIA_HEIGHT);
     entity->adjust();
 
     addnstGraphicsEntity(entity);
@@ -159,8 +159,8 @@ void QnstGraphicsSwitch::performArea()
     QnstGraphicsArea* entity = new QnstGraphicsArea(this);
     entity->setTop(0);
     entity->setLeft(0);
-    entity->setWidth(16);
-    entity->setHeight(16);
+    entity->setWidth(DEFAULT_INTERFACE_WIDTH);
+    entity->setHeight(DEFAULT_INTERFACE_HEIGHT);
     entity->adjust();
 
     addnstGraphicsEntity(entity);
@@ -173,8 +173,8 @@ void QnstGraphicsSwitch::performProperty()
     QnstGraphicsProperty* entity = new QnstGraphicsProperty(this);
     entity->setTop(0);
     entity->setLeft(0);
-    entity->setWidth(16);
-    entity->setHeight(16);
+    entity->setWidth(DEFAULT_INTERFACE_WIDTH);
+    entity->setHeight(DEFAULT_INTERFACE_HEIGHT);
     entity->adjust();
 
     addnstGraphicsEntity(entity);

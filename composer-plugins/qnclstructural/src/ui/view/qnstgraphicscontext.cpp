@@ -145,8 +145,8 @@ void QnstGraphicsContext::performPort()
     QnstGraphicsPort* entity = new QnstGraphicsPort(this);
     entity->setTop(0);
     entity->setLeft(0);
-    entity->setWidth(18);
-    entity->setHeight(18);
+    entity->setWidth(DEFAULT_MEDIA_WIDTH);
+    entity->setHeight(DEFAULT_MEDIA_HEIGHT);
     entity->adjust();
 
     addnstGraphicsEntity(entity);
@@ -159,8 +159,8 @@ void QnstGraphicsContext::performArea()
     QnstGraphicsArea* entity = new QnstGraphicsArea(this);
     entity->setTop(0);
     entity->setLeft(0);
-    entity->setWidth(16);
-    entity->setHeight(16);
+    entity->setWidth(DEFAULT_INTERFACE_WIDTH);
+    entity->setHeight(DEFAULT_INTERFACE_HEIGHT);
     entity->adjust();
 
     addnstGraphicsEntity(entity);
@@ -173,8 +173,8 @@ void QnstGraphicsContext::performProperty()
     QnstGraphicsProperty* entity = new QnstGraphicsProperty(this);
     entity->setTop(0);
     entity->setLeft(0);
-    entity->setWidth(16);
-    entity->setHeight(16);
+    entity->setWidth(DEFAULT_INTERFACE_WIDTH);
+    entity->setHeight(DEFAULT_INTERFACE_HEIGHT);
     entity->adjust();
 
     addnstGraphicsEntity(entity);
@@ -185,10 +185,10 @@ void QnstGraphicsContext::performProperty()
 void QnstGraphicsContext::performAggregator()
 {
     QnstGraphicsAggregator* entity = new QnstGraphicsAggregator(this);
-    entity->setTop(getHeight()/2 - 14/2);
-    entity->setLeft(getWidth()/2 - 14/2);
-    entity->setWidth(14);
-    entity->setHeight(14);
+    entity->setTop(getHeight()/2 - DEFAULT_AGGREGATOR_HEIGHT/2);
+    entity->setLeft(getWidth()/2 - DEFAULT_AGGREGATOR_WIDTH/2);
+    entity->setWidth(DEFAULT_AGGREGATOR_WIDTH);
+    entity->setHeight(DEFAULT_AGGREGATOR_HEIGHT);
     entity->adjust();
 
     addnstGraphicsEntity(entity);

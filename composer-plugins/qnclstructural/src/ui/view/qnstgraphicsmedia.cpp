@@ -162,8 +162,8 @@ void QnstGraphicsMedia::performArea()
     QnstGraphicsArea* entity = new QnstGraphicsArea(this);
     entity->setTop(0);
     entity->setLeft(0);
-    entity->setWidth(16);
-    entity->setHeight(16);
+    entity->setWidth(DEFAULT_INTERFACE_WIDTH);
+    entity->setHeight(DEFAULT_INTERFACE_HEIGHT);
     entity->adjust();
 
     addnstGraphicsEntity(entity);
@@ -176,8 +176,8 @@ void QnstGraphicsMedia::performProperty()
     QnstGraphicsProperty* entity = new QnstGraphicsProperty(this);
     entity->setTop(0);
     entity->setLeft(0);
-    entity->setWidth(16);
-    entity->setHeight(16);
+    entity->setWidth(DEFAULT_INTERFACE_WIDTH);
+    entity->setHeight(DEFAULT_INTERFACE_HEIGHT);
     entity->adjust();
 
     addnstGraphicsEntity(entity);

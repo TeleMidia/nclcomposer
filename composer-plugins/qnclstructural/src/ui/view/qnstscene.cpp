@@ -86,10 +86,10 @@ void QnstScene::createConnections()
 void QnstScene::performBody()
 {
     QnstGraphicsBody* entity = new QnstGraphicsBody();
-    entity->setTop(height()/2 - 550/2);
-    entity->setLeft(width()/2 - 750/2);
-    entity->setWidth(750);
-    entity->setHeight(550);
+    entity->setTop(height()/2 - DEFAULT_BODY_HEIGHT/2);
+    entity->setLeft(width()/2 - DEFAULT_BODY_WIDTH/2);
+    entity->setWidth(DEFAULT_BODY_WIDTH);
+    entity->setHeight(DEFAULT_BODY_HEIGHT);
 
     addRoot(entity);
 

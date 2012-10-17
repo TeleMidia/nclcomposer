@@ -85,10 +85,10 @@ bool QnstGraphicsComposition::createEntity(Qnst::EntityType type)
 
   if(content != NULL) // If the Entity is a Media content
   {
-    content->setTop(getHeight()/2 - 48/2);
-    content->setLeft(getWidth()/2 - 48/2);
-    content->setWidth(48);
-    content->setHeight(64);
+    content->setTop(getHeight()/2 - DEFAULT_MEDIA_HEIGHT/2);
+    content->setLeft(getWidth()/2 - DEFAULT_MEDIA_WIDTH/2);
+    content->setWidth(DEFAULT_MEDIA_WIDTH);
+    content->setHeight(DEFAULT_MEDIA_HEIGHT);
     content->adjust();
 
     if (dropsrc != "") //if it is a drop we will keep the baseName as id
@@ -110,10 +110,10 @@ bool QnstGraphicsComposition::createEntity(Qnst::EntityType type)
     //If the Entity is a Composition (i.e. Body, Context or Switch)
     if(composition != NULL)
     {
-      composition->setTop(getHeight()/2 - 200/2);
-      composition->setLeft(getWidth()/2 - 250/2);
-      composition->setWidth(250);
-      composition->setHeight(200);
+      composition->setTop(getHeight()/2 - DEFAULT_CONTEXT_HEIGHT/2);
+      composition->setLeft(getWidth()/2 - DEFAULT_CONTEXT_WIDTH/2);
+      composition->setWidth(DEFAULT_CONTEXT_WIDTH);
+      composition->setHeight(DEFAULT_CONTEXT_HEIGHT);
       composition->adjust();
 
       composition->menu->actionPaste->setEnabled(menu->actionPaste->isEnabled());
@@ -216,15 +216,15 @@ void QnstGraphicsComposition::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *ev
     }
 
     if (collapsed){
-        setTop(getTop() - (lasth/2 - 64/2));
-        setLeft(getLeft() - (lastw/2 - 48/2));
+        setTop(getTop() - (lasth/2 - DEFAULT_MEDIA_HEIGHT/2));
+        setLeft(getLeft() - (lastw/2 - DEFAULT_MEDIA_WIDTH/2));
         setWidth(lastw);
         setHeight(lasth);
 
         foreach(QnstGraphicsEntity* e, getnstGraphicsEntities()){
             if (e->getncgType() == Qncg::Interface){
-                e->setTop(((e->getTop()*lasth)/64));
-                e->setLeft(((e->getLeft()*lastw)/48));
+                e->setTop(((e->getTop()*lasth)/DEFAULT_MEDIA_HEIGHT));
+                e->setLeft(((e->getLeft()*lastw)/DEFAULT_MEDIA_WIDTH));
             }
 
             e->setnstGraphicsParent(this);
@@ -254,15 +254,15 @@ void QnstGraphicsComposition::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *ev
             }
         }
 
-        setTop(getTop() + lasth/2 - 64/2);
-        setLeft(getLeft() + lastw/2 - 48/2);
-        setWidth(48);
-        setHeight(64);
+        setTop(getTop() + lasth/2 - DEFAULT_MEDIA_HEIGHT/2);
+        setLeft(getLeft() + lastw/2 - DEFAULT_MEDIA_WIDTH/2);
+        setWidth(DEFAULT_MEDIA_WIDTH);
+        setHeight(DEFAULT_MEDIA_HEIGHT);
 
         foreach(QnstGraphicsEntity* e, getnstGraphicsEntities()){
             if (e->getncgType() == Qncg::Interface){
-                e->setTop(((e->getTop()*64)/lasth));
-                e->setLeft(((e->getLeft()*48)/lastw));
+                e->setTop(((e->getTop()*DEFAULT_MEDIA_HEIGHT)/lasth));
+                e->setLeft(((e->getLeft()*DEFAULT_MEDIA_WIDTH)/lastw));
 
                 e->adjust();
             }
