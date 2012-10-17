@@ -2207,48 +2207,9 @@ void QnstView::changeMedia(QnstGraphicsMedia* entity,
   {
     // do nothing
   }
-  else if(src.endsWith(".png") ||
-          src.endsWith(".jpg") ||
-          src.endsWith(".jpeg") ||
-          src.endsWith(".gif"))
-  {
-   entity->setnstType(Qnst::Image);
-   entity->setIcon(":/icon/image");
-  }
-  else if(src.endsWith(".mp4") ||
-          src.endsWith(".avi") ||
-          src.endsWith(".mpeg4") ||
-          src.endsWith(".mpeg") ||
-          src.endsWith(".mpg") ||
-          src.endsWith(".mov"))
-  {
-    entity->setnstType(Qnst::Video);
-  }
-  else if(src.endsWith(".mp3") ||
-          src.endsWith(".wav"))
-  {
-    entity->setnstType(Qnst::Audio);
-  }
-  else if(src.endsWith(".htm") ||
-          src.endsWith(".html"))
-  {
-    entity->setnstType(Qnst::Html);
-  }
-  else if(src.endsWith(".ncl"))
-  {
-    entity->setnstType(Qnst::NCL);
-  }
-  else if(src.endsWith(".txt"))
-  {
-    entity->setnstType(Qnst::Text);
-  }
-  else if(src.endsWith(".lua"))
-  {
-    entity->setnstType(Qnst::Script);
-  }
-  else
-  {
-    entity->setnstType(Qnst::Media);
+  else {
+    QString ext = src.mid(src.lastIndexOf(".")+1);
+    entity->setnstType(QnstUtil::getnstTypeFromExtension(ext));
   }
 
   entity->setIcon(QnstUtil::iconFromMediaType(entity->getnstType()));

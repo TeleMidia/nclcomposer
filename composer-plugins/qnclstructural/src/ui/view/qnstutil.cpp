@@ -10,17 +10,46 @@
 #include "qnstgraphicsproperty.h"
 #include "qnstgraphicsaggregator.h"
 
+
+/* Initialize icon from type Map */
 std::map <Qnst::EntityType, QString> QnstUtil::iconFromTypeMap =
-    create_map<Qnst::EntityType, QString >
-      (Qnst::Image, ":/icon/image")
-      (Qnst::Audio, ":/icon/audio")
-      (Qnst::Video, ":/icon/video")
-      (Qnst::Html, ":/icon/html")
-      (Qnst::NCL, ":/icon/ncl")
-      (Qnst::Text, ":/icon/text")
-      (Qnst::Settings, ":/icon/settings")
-      (Qnst::Script, ":/icon/script")
-      (Qnst::Media, ":/icon/media");
+  create_map<Qnst::EntityType, QString >
+    (Qnst::Text, ":/icon/text")
+    (Qnst::Image, ":/icon/image")
+    (Qnst::Audio, ":/icon/audio")
+    (Qnst::Video, ":/icon/video")
+    (Qnst::Html, ":/icon/html")
+    (Qnst::NCL, ":/icon/ncl")
+    (Qnst::Settings, ":/icon/settings")
+    (Qnst::Script, ":/icon/script")
+    (Qnst::Media, ":/icon/media");
+
+/* Initialize type from extension Map */
+std::map <QString, Qnst::EntityType> QnstUtil::typeFromExtMap =
+  create_map <QString, Qnst::EntityType>
+    ("txt", Qnst::Text)
+
+    ("png", Qnst::Image)
+    ("jpg", Qnst::Image)
+    ("jpeg", Qnst::Image)
+    ("gif", Qnst::Image)
+
+    ("mp3", Qnst::Audio)
+    ("wav", Qnst::Audio)
+
+    ("mp4", Qnst::Video)
+    ("mpeg4", Qnst::Video)
+    ("mpeg", Qnst::Video)
+    ("mpg", Qnst::Video)
+    ("mov", Qnst::Video)
+    ("avi", Qnst::Video)
+
+    ("htm", Qnst::Html)
+    ("html", Qnst::Html)
+
+    ("ncl", Qnst::NCL)
+
+    ("lua", Qnst::Script);
 
 QnstGraphicsEntity *QnstUtil::makeGraphicsEntity(Qnst::EntityType type,
                                                  QnstGraphicsEntity *parent)
@@ -119,3 +148,17 @@ QString QnstUtil::iconFromMediaType(Qnst::EntityType type)
 
   return path;
 }
+
+Qnst::EntityType QnstUtil::getnstTypeFromExtension(const QString &ext)
+{
+  if(typeFromExtMap.count(ext))
+    return typeFromExtMap[ext];
+  else
+    return Qnst::Media;
+}
+/*
+QString QnstView::mimeFromType()
+{
+
+}
+ */
