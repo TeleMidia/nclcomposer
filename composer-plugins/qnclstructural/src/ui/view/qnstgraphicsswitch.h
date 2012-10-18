@@ -17,35 +17,6 @@ public:
 
     ~QnstGraphicsSwitch();
 
-public slots:
-    void performHtml();
-
-    void performNCL();
-
-    void performSwitchPort();
-
-    void performImage();
-
-    void performAudio();
-
-    void performText();
-
-    void performVideo();
-
-    void performScript();
-
-    void performSettings();
-
-    void performMedia();
-
-    void performContext();
-
-    void performSwitch();
-
-    void performArea();
-
-    void performProperty();
-
 private:
     void createObjects();
 

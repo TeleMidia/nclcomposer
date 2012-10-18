@@ -47,7 +47,7 @@ void QnstScene::addRoot(QnstGraphicsEntity* entity)
         addItem(entity);
 
         menu->menuInsert->setEnabled(false);
-        menu->actionBody->setEnabled(false);
+        menu->actionAddBody->setEnabled(false);
     }
 }
 
@@ -62,7 +62,7 @@ void QnstScene::removeRoot(QnstGraphicsEntity* entity)
             removeItem(entity);
 
             menu->menuInsert->setEnabled(true);
-            menu->actionBody->setEnabled(true);
+            menu->actionAddBody->setEnabled(true);
         }
     }
 }
@@ -73,7 +73,7 @@ void QnstScene::createObjects()
     menu->actionExport->setEnabled(true);
 
     menu->menuInsert->setEnabled(true);
-    menu->actionBody->setEnabled(true);
+    menu->actionAddBody->setEnabled(true);
 }
 
 void QnstScene::createConnections()

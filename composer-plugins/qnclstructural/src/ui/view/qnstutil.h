@@ -5,6 +5,8 @@
 
 #include "qnstgraphicsentity.h"
 
+class QnstGraphicsEntity;
+
 class QnstUtil {
 public:
   /*!

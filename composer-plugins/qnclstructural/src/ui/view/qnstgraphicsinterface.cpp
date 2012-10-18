@@ -3,12 +3,18 @@
 QnstGraphicsInterface::QnstGraphicsInterface(QnstGraphicsEntity* parent)
     : QnstGraphicsEntity(parent)
 {
-    setncgType(Qncg::Interface);
-    setnstType(Qnst::Interface);
+  setncgType(Qncg::Interface);
+  setnstType(Qnst::Interface);
 
-    setResizable(false);
+  setResizable(false);
 
-    setnstId("");
+  setnstId("");
+
+  /* Default values for interface */
+  setTop(0);
+  setLeft(0);
+  setWidth(DEFAULT_INTERFACE_WIDTH);
+  setHeight(DEFAULT_INTERFACE_HEIGHT);
 }
 
 QnstGraphicsInterface::~QnstGraphicsInterface()
@@ -18,14 +24,14 @@ QnstGraphicsInterface::~QnstGraphicsInterface()
 
 QVector<QnstGraphicsEdge*> QnstGraphicsInterface::getnstGraphicsEdges()
 {
-    return links;
+  return links;
 }
 
 void QnstGraphicsInterface::addnstGraphicsEdge(QnstGraphicsEdge* edge)
 {
-    if (edge != NULL){
-        links.append(edge);
-    }
+  if (edge != NULL){
+    links.append(edge);
+  }
 }
 
 void QnstGraphicsInterface::removenstGraphicsEdge(QnstGraphicsEdge* edge)

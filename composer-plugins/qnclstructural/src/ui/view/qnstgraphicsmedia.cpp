@@ -7,14 +7,29 @@
 QnstGraphicsMedia::QnstGraphicsMedia(QnstGraphicsEntity* parent)
   : QnstGraphicsContent(parent), enableDrag(false)
 {
-    setnstType(Qnst::Media);
+  setnstType(Qnst::Media);
 
-    setResizable(false);
+  setResizable(false);
 
-    createObjects();
-    createConnections();
+  createObjects();
+  createConnections();
 
-    setnstId("");
+  setnstId("");
+
+  /* Default media position */
+  if(parent)
+  {
+    setTop(parent->getHeight()/2 - DEFAULT_MEDIA_HEIGHT/2);
+    setLeft(parent->getWidth()/2 - DEFAULT_MEDIA_WIDTH/2);
+  }
+  else
+  {
+    setTop(0);
+    setLeft(0);
+  }
+
+  setWidth(DEFAULT_MEDIA_WIDTH);
+  setHeight(DEFAULT_MEDIA_HEIGHT);
 }
 
 QnstGraphicsMedia::~QnstGraphicsMedia()
@@ -93,17 +108,17 @@ void QnstGraphicsMedia::updateToolTip()
 
 QString QnstGraphicsMedia::getRefer() const
 {
-    return refer;
+  return refer;
 }
 
 void QnstGraphicsMedia::setRefer(QString refer)
 {
-    this->refer = refer;
+  this->refer = refer;
 }
 
 QString QnstGraphicsMedia::getReferUID() const
 {
-    return referUID;
+  return referUID;
 }
 
 void QnstGraphicsMedia::setReferUID(QString refetUID)
@@ -132,8 +147,8 @@ void QnstGraphicsMedia::createObjects()
     menu->actionExport->setEnabled(true);
 
     menu->menuInsert->setEnabled(true);
-    menu->actionArea->setEnabled(true);
-    menu->actionProperty->setEnabled(true);
+    menu->actionAddArea->setEnabled(true);
+    menu->actionAddProperty->setEnabled(true);
 }
 
 void QnstGraphicsMedia::createConnections()
@@ -149,42 +164,13 @@ void QnstGraphicsMedia::createConnections()
 
     connect(menu, SIGNAL(exportRequested()), SIGNAL(exportRequested()));
 
-    connect(menu, SIGNAL(areaRequested()), SLOT(performArea()));
-
-    connect(menu, SIGNAL(propertyRequested()), SLOT(performProperty()));
+    connect(menu, SIGNAL(menuAddEntityTriggered(Qnst::EntityType)),
+                  SLOT(createEntity(Qnst::EntityType)));
 
     connect(menu, SIGNAL(zoominRequested()), SIGNAL(zoominRequested()));
     connect(menu, SIGNAL(zoomoutRequested()), SIGNAL(zoomoutRequested()));
     connect(menu, SIGNAL(zoomresetRequested()), SIGNAL(zoomresetRequested()));
     connect(menu, SIGNAL(fullscreenRequested()), SIGNAL(fullscreenRequested()));
-}
-
-void QnstGraphicsMedia::performArea()
-{
-    QnstGraphicsArea* entity = new QnstGraphicsArea(this);
-    entity->setTop(0);
-    entity->setLeft(0);
-    entity->setWidth(DEFAULT_INTERFACE_WIDTH);
-    entity->setHeight(DEFAULT_INTERFACE_HEIGHT);
-    entity->adjust();
-
-    addnstGraphicsEntity(entity);
-
-    emit entityAdded(entity);
-}
-
-void QnstGraphicsMedia::performProperty()
-{
-    QnstGraphicsProperty* entity = new QnstGraphicsProperty(this);
-    entity->setTop(0);
-    entity->setLeft(0);
-    entity->setWidth(DEFAULT_INTERFACE_WIDTH);
-    entity->setHeight(DEFAULT_INTERFACE_HEIGHT);
-    entity->adjust();
-
-    addnstGraphicsEntity(entity);
-
-    emit entityAdded(entity);
 }
 
 void QnstGraphicsMedia::draw(QPainter* painter)

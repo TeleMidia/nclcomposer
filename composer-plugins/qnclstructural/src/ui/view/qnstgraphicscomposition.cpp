@@ -74,58 +74,6 @@ void QnstGraphicsComposition::setnstId(QString id)
     setToolTip(tip);
 }
 
-bool QnstGraphicsComposition::createEntity(Qnst::EntityType type)
-{
-  QnstGraphicsEntity *entity = QnstUtil::makeGraphicsEntity(type, this);
-
-  if(entity == NULL) return false;
-
-  QnstGraphicsMedia *content  = dynamic_cast<QnstGraphicsMedia*>(entity);
-  qDebug() << (bool) content;
-
-  if(content != NULL) // If the Entity is a Media content
-  {
-    content->setTop(getHeight()/2 - DEFAULT_MEDIA_HEIGHT/2);
-    content->setLeft(getWidth()/2 - DEFAULT_MEDIA_WIDTH/2);
-    content->setWidth(DEFAULT_MEDIA_WIDTH);
-    content->setHeight(DEFAULT_MEDIA_HEIGHT);
-    content->adjust();
-
-    if (dropsrc != "") //if it is a drop we will keep the baseName as id
-    {
-      content->setSource(dropsrc);
-      QFileInfo file = QFileInfo(dropsrc);
-      QString nstId = file.baseName();
-      entity->setnstId(nstId);
-      dropsrc = "";
-    }
-  }
-  else
-  {
-    QnstGraphicsComposition *composition =
-        dynamic_cast<QnstGraphicsComposition*>(entity);
-
-    qDebug() << (bool) composition;
-
-    //If the Entity is a Composition (i.e. Body, Context or Switch)
-    if(composition != NULL)
-    {
-      composition->setTop(getHeight()/2 - DEFAULT_CONTEXT_HEIGHT/2);
-      composition->setLeft(getWidth()/2 - DEFAULT_CONTEXT_WIDTH/2);
-      composition->setWidth(DEFAULT_CONTEXT_WIDTH);
-      composition->setHeight(DEFAULT_CONTEXT_HEIGHT);
-      composition->adjust();
-
-      composition->menu->actionPaste->setEnabled(menu->actionPaste->isEnabled());
-    }
-  }
-
-  addnstGraphicsEntity(entity);
-
-  emit entityAdded(entity);
-}
-
-
 void QnstGraphicsComposition::draw(QPainter* painter)
 {
 //    if (!isSelected() && hasMouseHover() && getnstType() != Qnst::Body){

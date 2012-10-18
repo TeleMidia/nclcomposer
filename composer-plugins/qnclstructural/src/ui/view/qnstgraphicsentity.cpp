@@ -1,4 +1,6 @@
 #include "qnstgraphicsentity.h"
+#include "qnstgraphicsmedia.h"
+#include "qnstgraphicscomposition.h"
 
 //
 // ATTENTION: This code needs a refactoring.
@@ -7,17 +9,17 @@
 QnstGraphicsEntity::QnstGraphicsEntity(QnstGraphicsEntity* parent)
   : QncgGraphicsEntity(parent), QnstEntity(parent)
 {
-    setnstType(Qnst::NoType);
+  setnstType(Qnst::NoType);
 
-    setnstGraphicsParent(parent);
+  setnstGraphicsParent(parent);
 
-    connect(this, SIGNAL(entitySelected()), SLOT(requestEntitySelection()));
-    connect(this, SIGNAL(entityAboutToChange(QMap<QString,QString>)), SLOT(requestEntityPreparation(QMap<QString,QString>)));
+  connect(this, SIGNAL(entitySelected()), SLOT(requestEntitySelection()));
+  connect(this, SIGNAL(entityAboutToChange(QMap<QString,QString>)), SLOT(requestEntityPreparation(QMap<QString,QString>)));
 
-    hover = false;
-    menu = NULL;
-    draggable = false;
-    hasError = false;
+  hover = false;
+  menu = NULL;
+  draggable = false;
+  hasError = false;
 }
 
 
@@ -132,6 +134,48 @@ void QnstGraphicsEntity::requestEntityPreparation(QMap<QString, QString> propert
 void QnstGraphicsEntity::requestEntitySelection()
 {
     emit entitySelected(this);
+}
+
+bool QnstGraphicsEntity::createEntity(Qnst::EntityType type)
+{
+  QnstGraphicsEntity *entity = QnstUtil::makeGraphicsEntity(type, this);
+
+  if(entity == NULL) return false;
+
+  QnstGraphicsMedia *content  = dynamic_cast<QnstGraphicsMedia*>(entity);
+
+  if(content != NULL) // If the Entity is a Media content
+  {
+    content->adjust();
+
+    if (dropsrc != "") //if it is a drop we will keep the baseName as id
+    {
+      content->setSource(dropsrc);
+      QFileInfo file = QFileInfo(dropsrc);
+      QString nstId = file.baseName();
+      entity->setnstId(nstId);
+      dropsrc = "";
+    }
+  }
+  else
+  {
+    QnstGraphicsComposition *composition =
+        dynamic_cast<QnstGraphicsComposition*>(entity);
+
+    //If the Entity is a Composition (i.e. Body, Context or Switch)
+    if(composition != NULL)
+    {
+      composition->adjust();
+
+      composition->menu->actionPaste->setEnabled(menu->actionPaste->isEnabled());
+    }
+  }
+
+  entity->adjust();
+
+  addnstGraphicsEntity(entity);
+
+  emit entityAdded(entity);
 }
 
 void QnstGraphicsEntity::contextMenuEvent(QGraphicsSceneContextMenuEvent* event)

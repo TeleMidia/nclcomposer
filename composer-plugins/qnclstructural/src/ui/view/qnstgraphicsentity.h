@@ -1,15 +1,17 @@
 #ifndef QNSTGRAPHICSENTITY_H
 #define QNSTGRAPHICSENTITY_H
 
-#include <QMenu>
 #include <QAction>
 #include <QFileDialog>
 
 #include <QDebug>
 
 #include "qnstentity.h"
-#include "qnstmenu.h"
 #include "qncggraphicsentity.h"
+
+#include "qnstmenu.h"
+
+class QnstMenu;
 
 //
 // ATTENTION: This code needs a refactoring.
@@ -102,6 +104,8 @@ protected slots:
 
     void requestEntitySelection();
 
+    virtual bool createEntity(Qnst::EntityType type);
+
 public:
     QnstMenu* menu;
     bool isDraggable();
@@ -118,6 +122,7 @@ private:
 
 protected:
     bool hover, hasError;
+    QString dropsrc;
 };
 
 #endif // QNSTGRAPHICSENTITY_H

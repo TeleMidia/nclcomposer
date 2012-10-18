@@ -3,177 +3,140 @@
 
 #include <QMenu>
 
+#include "qnst.h"
+#include "qnstutil.h"
+
 class QnstMenu : public QMenu
 {
-    Q_OBJECT
+  Q_OBJECT
 
 public:
-    QnstMenu(QWidget* parent = 0);
+  QnstMenu(QWidget* parent = 0);
 
-    ~QnstMenu();
+  ~QnstMenu();
+
+private slots:
+  void dispatchAddAction();
 
 signals:
-    void helpRequested();
+  void helpRequested();
 
-    void undoRequested();
+  void undoRequested();
 
-    void redoRequested();
+  void redoRequested();
 
-    void cutRequested();
+  void cutRequested();
 
-    void copyRequested();
+  void copyRequested();
 
-    void pasteRequested();
+  void pasteRequested();
 
-    void deleteRequested();
+  void deleteRequested();
 
-    void exportRequested();
+  void exportRequested();
 
-    void zoominRequested();
+  void zoominRequested();
 
-    void zoomoutRequested();
+  void zoomoutRequested();
 
-    void zoomresetRequested();
+  void zoomresetRequested();
 
-    void fullscreenRequested();
+  void fullscreenRequested();
 
-    void imageRequested();
+  void bringfrontRequested();
 
-    void audioRequested();
+  void bringforwardRequested();
 
-    void textRequested();
+  void sendbackwardRequested();
 
-    void videoRequested();
+  void sendbackRequested();
 
-    void scriptRequested();
+  void hideRequested();
 
-    void settingsRequested();
+  void propertiesRequested();
 
-    void htmlRequested();
+  void autoRequested();
 
-    void nclRequested();
-
-    void mediaRequested();
-
-    void contextRequested();
-
-    void switchRequested();
-
-    void bodyRequested();
-
-    void portRequested();
-
-    void switchportRequested();
-
-    void areaRequested();
-
-    void propertyRequested();
-
-    void aggregatorRequested();
-
-    void bringfrontRequested();
-
-    void bringforwardRequested();
-
-    void sendbackwardRequested();
-
-    void sendbackRequested();
-
-    void hideRequested();
-
-    void propertiesRequested();
-
-    void autoRequested();
+  /*!
+   * This signal says that the user wants to add an entity of the type passed
+   * as parameter.
+   */
+  void menuAddEntityTriggered(Qnst::EntityType);
 
 private:
-    void createActions();
+  void createActions();
 
-    void createMenus();
+  void createMenus();
 
-    void createConnections();
+  void createConnections();
 
 public:
-    QMenu* menuView;
+  QMenu* menuView;
 
-    QMenu* menuInsert;
+  QMenu* menuInsert;
 
-    QMenu* menuShow;
+  QMenu* menuShow;
 
-    QMenu* menuArrange;
+  QMenu* menuArrange;
 
-    QMenu* menuAdjust;
+  QMenu* menuAdjust;
 
-    QAction* actionHelp;
+  QAction* actionHelp;
 
-    QAction* actionUndo;
+  QAction* actionUndo;
 
-    QAction* actionRedo;
+  QAction* actionRedo;
 
-    QAction* actionCut;
+  QAction* actionCut;
 
-    QAction* actionCopy;
+  QAction* actionCopy;
 
-    QAction* actionPaste;
+  QAction* actionPaste;
 
-    QAction* actionDelete;
+  QAction* actionDelete;
 
-    QAction* actionExport;
+  QAction* actionExport;
 
-    QAction* actionZoomIn;
+  QAction* actionZoomIn;
 
-    QAction* actionZoomOut;
+  QAction* actionZoomOut;
 
-    QAction* actionZoomReset;
+  QAction* actionZoomReset;
 
-    QAction* actionFullscreen;
+  QAction* actionFullscreen;
 
-    QAction* actionImage;
+  QAction* actionBringfront;
 
-    QAction* actionVideo;
+  QAction* actionBringforward;
 
-    QAction* actionAudio;
+  QAction* actionSendbackward;
 
-    QAction* actionText;
+  QAction* actionSendback;
 
-    QAction* actionScript;
+  QAction* actionHide;
 
-    QAction* actionSettings;
+  QAction* actionAuto;
 
-    QAction* actionHTML;
+  QAction* actionProperties;
 
-    QAction* actionNCL;
+  /* Add actions */
+  QAction* actionAddMedia;
 
-    QAction* actionMedia;
+  QAction* actionAddContext;
 
-    QAction* actionContext;
+  QAction* actionAddSwitch;
 
-    QAction* actionSwitch;
+  QAction* actionAddBody;
 
-    QAction* actionBody;
+  QAction* actionAddPort;
 
-    QAction* actionPort;
+  QAction* actionAddArea;
 
-    QAction* actionArea;
+  QAction* actionAddProperty;
 
-    QAction* actionProperty;
+  QAction* actionAddSwitchPort;
 
-    QAction* actionSwitchPort;
-
-    QAction* actionAggregator;
-
-    QAction* actionBringfront;
-
-    QAction* actionBringforward;
-
-    QAction* actionSendbackward;
-
-    QAction* actionSendback;
-
-    QAction* actionHide;
-
-    QAction* actionAuto;
-
-    QAction* actionProperties;
+  QAction* actionAddAggregator;
 };
 
 #endif // QNSTMENU_H

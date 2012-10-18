@@ -58,14 +58,10 @@ protected:
 
     virtual void mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event);
 
-    virtual bool createEntity(Qnst::EntityType type);
-
 private:
     bool collapsed;
 
     QString color;
-
-    QString dropsrc;
 
     qreal lastw;
 

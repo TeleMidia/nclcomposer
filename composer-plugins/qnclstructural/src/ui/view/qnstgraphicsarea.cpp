@@ -1,11 +1,11 @@
 #include "qnstgraphicsarea.h"
 
 QnstGraphicsArea::QnstGraphicsArea(QnstGraphicsEntity* parent)
-    : QnstGraphicsInterface(parent)
+  : QnstGraphicsInterface(parent)
 {
-    setnstType(Qnst::Area);
+  setnstType(Qnst::Area);
 
-    setnstId("");
+  setnstId("");
 }
 
 QnstGraphicsArea::~QnstGraphicsArea()

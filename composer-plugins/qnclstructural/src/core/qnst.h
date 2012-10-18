@@ -20,7 +20,7 @@ class Qnst
 {
 public:
     enum EntityType {
-        Node,
+        Node = 0,
 
         Content,
         Media,

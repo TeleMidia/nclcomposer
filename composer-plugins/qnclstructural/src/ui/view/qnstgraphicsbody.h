@@ -16,50 +16,17 @@
 
 class QnstGraphicsBody : public QnstGraphicsComposition
 {
-    Q_OBJECT
+  Q_OBJECT
 
 public:
-    QnstGraphicsBody(QnstGraphicsEntity* parent = 0);
+  QnstGraphicsBody(QnstGraphicsEntity* parent = 0);
 
-    ~QnstGraphicsBody();
-
-public slots:
-    void performHtml();
-
-    void performNCL();
-
-    void performImage();
-
-    void performAudio();
-
-    void performText();
-
-    void performVideo();
-
-    void performScript();
-
-    void performSettings();
-
-    void performMedia();
-
-    void performContext();
-
-    void performSwitch();
-
-    void performPort();
-
-    void performArea();
-
-    void performProperty();
-
-    void performAggregator();
+  ~QnstGraphicsBody();
 
 private:
-    void createObjects();
+  void createObjects();
 
-    void createConnections();
-
-    QString dropsrc;
+  void createConnections();
 };
 
 #endif // QNSTGRAPHICSBODY_H

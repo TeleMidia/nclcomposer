@@ -45,11 +45,6 @@ public:
 
     void updateToolTip();
 
-public slots:
-    void performArea();
-
-    void performProperty();
-
 protected:
     virtual void draw(QPainter* painter);
 

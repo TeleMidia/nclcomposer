@@ -22,7 +22,16 @@ std::map <Qnst::EntityType, QString> QnstUtil::iconFromTypeMap =
     (Qnst::NCL, ":/icon/ncl")
     (Qnst::Settings, ":/icon/settings")
     (Qnst::NCLua, ":/icon/script")
-    (Qnst::Media, ":/icon/media");
+    (Qnst::Media, ":/icon/media")
+
+    (Qnst::Context, ":icon/context")
+    (Qnst::Switch, ":icon/switch")
+    (Qnst::Body, ":icon/body")
+
+    (Qnst::Port, ":icon/port")
+    (Qnst::SwitchPort, ":icon/switchport")
+    (Qnst::Area, ":icon/area")
+    (Qnst::Aggregator, ":icon/aggregator");
 
 /* Initialize type from extension Map */
 std::map <QString, Qnst::EntityType> QnstUtil::typeFromExtMap =

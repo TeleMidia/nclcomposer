@@ -5144,71 +5144,84 @@ void QnstView::performProperties()
 
 void QnstView::mouseMoveEvent(QMouseEvent* event)
 {
-    if (linking) {
-        if (lastLinkMouseOver != NULL){
-            lastLinkMouseOver->setMouseHover(false);
-
-            lastLinkMouseOver = NULL;
-        }
-
-        QList<QGraphicsItem *> itemsa = scene->items(link->getLine().p1());
-
-        if (itemsa.count() && itemsa.first() == link){
-            itemsa.removeFirst();
-        }
-
-        if (itemsa.count()) {
-            QnstGraphicsEntity* entitya = (QnstGraphicsEntity*) itemsa.first();
-            entitya->setMouseHover(true);
-        }
-
-        QList<QGraphicsItem*> itemsb = scene->items(link->getLine().p2());
-
-        if (itemsb.count() && itemsb.first() == link){
-            itemsb.removeFirst();
-        }
-
-        if (itemsb.count()){
-            QnstGraphicsEntity* entityb = (QnstGraphicsEntity*) itemsb.first();
-            entityb->setMouseHover(true);
-
-            lastLinkMouseOver = entityb;
-        }
-
-        link->setLine(QLineF(link->getLine().p1(), mapToScene(event->pos())));
+  if (linking)
+  {
+    if (lastLinkMouseOver != NULL)
+    {
+      lastLinkMouseOver->setMouseHover(false);
+      lastLinkMouseOver = NULL;
     }
 
-    QGraphicsView::mouseMoveEvent(event);
+    QList<QGraphicsItem *> itemsa = scene->items(link->getLine().p1());
+
+    if (itemsa.count() && itemsa.first() == link)
+    {
+      itemsa.removeFirst();
+    }
+
+    if (itemsa.count())
+    {
+      QnstGraphicsEntity* entitya = (QnstGraphicsEntity*) itemsa.first();
+      entitya->setMouseHover(true);
+    }
+
+    QList<QGraphicsItem*> itemsb = scene->items(link->getLine().p2());
+
+    if (itemsb.count() && itemsb.first() == link)
+    {
+      itemsb.removeFirst();
+    }
+
+    if (itemsb.count())
+    {
+      QnstGraphicsEntity* entityb = (QnstGraphicsEntity*) itemsb.first();
+      entityb->setMouseHover(true);
+
+      lastLinkMouseOver = entityb;
+    }
+
+    link->setLine(QLineF(link->getLine().p1(), mapToScene(event->pos())));
+  }
+
+  QGraphicsView::mouseMoveEvent(event);
 }
 
 void QnstView::mousePressEvent(QMouseEvent* event)
 {
-    if (modified){
-        if (link != NULL){
-            delete (link); link = NULL;
-        }
-
-        link = new QnstViewLink(); scene->addItem(link);
-        link->setLine(QLineF(mapToScene(event->pos()), mapToScene(event->pos())));
-        link->adjust();
-
-        linking = true;
-    }else{
-        QGraphicsView::mousePressEvent(event);
-
-        if (!event->isAccepted()){
-            if (event->button() == Qt::LeftButton){
-                if (selected != NULL){
-                    selected->setSelected(false);
-                    selected->adjust();
-                }
-
-                selected = NULL;
-            }
-
-            event->accept();
-        }
+  if (modified)
+  {
+    if (link != NULL)
+    {
+      delete (link); link = NULL;
     }
+
+    link = new QnstViewLink();
+    scene->addItem(link);
+    link->setLine(QLineF(mapToScene(event->pos()), mapToScene(event->pos())));
+    link->adjust();
+
+    linking = true;
+  }
+  else
+  {
+    QGraphicsView::mousePressEvent(event);
+
+    if (!event->isAccepted())
+    {
+      if (event->button() == Qt::LeftButton)
+      {
+        if (selected != NULL)
+        {
+          selected->setSelected(false);
+          selected->adjust();
+        }
+
+        selected = NULL;
+      }
+
+      event->accept();
+    }
+  }
 }
 
 void QnstView::mouseReleaseEvent(QMouseEvent* event)
@@ -7595,106 +7608,115 @@ void QnstView::addInterfacetoInterfaceEdge(QnstGraphicsEntity* entitya, QnstGrap
 
 void QnstView::keyPressEvent(QKeyEvent *event)
 {
-    // CTRL+X - Cut
-    if (event->modifiers() == Qt::ControlModifier && event->key() == Qt::Key_X){
-        performCut();
+  // CTRL+X - Cut
+  if (event->modifiers() == Qt::ControlModifier && event->key() == Qt::Key_X)
+  {
+    performCut();
 
-        event->accept();
-    // CTRL+C - Copy
-    }else if (event->modifiers() == Qt::ControlModifier && event->key() == Qt::Key_C){
-        performCopy();
+    event->accept();
+  }
+  // CTRL+C - Copy
+  else if (event->modifiers() == Qt::ControlModifier &&
+           event->key() == Qt::Key_C)
+  {
+    performCopy();
 
-        event->accept();
-    // CTRL+V - Paste
+    event->accept();
+  }
+  // CTRL+V - Paste
+  else if (event->modifiers() == Qt::ControlModifier &&
+           event->key() == Qt::Key_V)
+  {
+    performPaste();
+
+    event->accept();
+  }
+  // DELETE - Delete
+  else if (event->key() == Qt::Key_Delete)
+  {
+    performDelete();
+
+    event->accept();
+  }
+  // BACKSPACE - Delete
+  else if (event->key() == Qt::Key_Backspace)
+  {
+    performDelete();
+
+    event->accept();
+  }
+  // SHIFT - Enabling liking
+  else if (event->key() == Qt::Key_Shift)
+  {
+    if (selected != NULL)
+    {
+      selected->setSelected(false);
+      selected->adjust();
     }
-    else if (event->modifiers() == Qt::ControlModifier && event->key() == Qt::Key_V)
-    {
-        performPaste();
 
-        event->accept();
-    // DELETE - Delete
-    }
-    else if (event->key() == Qt::Key_Delete)
-    {
-        performDelete();
+    selected = NULL;
+    modified = true;
 
-        event->accept();
-    // BACKSPACE - Delete
-    }
-    else if (event->key() == Qt::Key_Backspace)
-    {
-        performDelete();
-
-        event->accept();
-    // SHIFT - Enabling liking
-    } else if (event->key() == Qt::Key_Shift)
-    {
-      if (selected != NULL){
-          selected->setSelected(false);
-          selected->adjust();
-      }
-      selected = NULL;
-      modified = true;
-
-      event->accept();
-    }
-    else if(event->key() == Qt::Key_Control)
-    {
+    event->accept();
+  }
+  else if(event->key() == Qt::Key_Control)
+  {
 //      modified = true;
-      QnstGraphicsEntity *entity;
-      foreach(entity, entities.values())
-      {
-        entity->setDraggable(true);
-      }
-
-      event->accept();
-    }
-    //Ctrl + 0 -> reset to default zoom
-    else if( event->modifiers() == Qt::ControlModifier &&
-             event->key() == Qt::Key_0)
+    QnstGraphicsEntity *entity;
+    foreach(entity, entities.values())
     {
-      performZoomReset();
-    }
-    //Ctrl + + -> perform zoom in
-    else if((event->modifiers() == Qt::ControlModifier ||
-             event->modifiers() == (Qt::ShiftModifier | Qt::ControlModifier)) &&
-             event->key() == Qt::Key_Plus)
-    {
-      performZoomIn();
-
-      event->accept();
-    }
-    //Ctrl + - -> perform zoom out
-    else if(event->modifiers() == Qt::ControlModifier &&
-            event->key() == Qt::Key_Minus)
-    {
-      performZoomOut();
-
-      event->accept();
-    }
-    //Ctrl + Z
-    else if(event->modifiers() == Qt::ControlModifier &&
-            event->key() == Qt::Key_Z)
-    {
-        performUndo();
-
-        event->accept();
-
-    //Ctrl + Y
-    }else if(event->modifiers() == Qt::ControlModifier &&
-                                    event->key() == Qt::Key_Y){
-        performRedo();
-
-        event->accept();
+      entity->setDraggable(true);
     }
 
-    if(!event->isAccepted())
-      QGraphicsView::keyPressEvent(event);
+    event->accept();
+  }
+  //Ctrl + 0 -> reset to default zoom
+  else if( event->modifiers() == Qt::ControlModifier &&
+           event->key() == Qt::Key_0)
+  {
+    performZoomReset();
+  }
+  //Ctrl + + -> perform zoom in
+  else if((event->modifiers() == Qt::ControlModifier ||
+           event->modifiers() == (Qt::ShiftModifier | Qt::ControlModifier)) &&
+           event->key() == Qt::Key_Plus)
+  {
+    performZoomIn();
+
+    event->accept();
+  }
+  //Ctrl + - -> perform zoom out
+  else if(event->modifiers() == Qt::ControlModifier &&
+          event->key() == Qt::Key_Minus)
+  {
+    performZoomOut();
+
+    event->accept();
+  }
+  //Ctrl + Z
+  else if(event->modifiers() == Qt::ControlModifier &&
+          event->key() == Qt::Key_Z)
+  {
+    performUndo();
+
+    event->accept();
+  }
+  //Ctrl + Y
+  else if(event->modifiers() == Qt::ControlModifier &&
+          event->key() == Qt::Key_Y)
+  {
+    performRedo();
+
+    event->accept();
+  }
+
+  if(!event->isAccepted())
+    QGraphicsView::keyPressEvent(event);
 }
 
 void QnstView::keyReleaseEvent(QKeyEvent *event)
 {
-  // SHIFT - Disabling liking
+  // SHIFT - Disabling linking
   if (event->key() == Qt::Key_Shift)
   {
     modified = false;
@@ -7765,9 +7787,8 @@ void QnstView::adjustAngle(QnstGraphicsEdge* edge, QnstGraphicsEntity* entitya,
 }
 
 
-void QnstView::requestBindParamAdjust(QString uid,
-                                        QString parent,
-                                        QMap<QString, QString> properties)
+void QnstView::requestBindParamAdjust(QString uid, QString parent,
+                                      QMap<QString, QString> properties)
 {
   properties["TYPE"] = "bindParam";
 
