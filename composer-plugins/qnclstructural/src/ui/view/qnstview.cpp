@@ -4451,7 +4451,15 @@ void QnstView::requestPropertyAddition(QnstGraphicsProperty* entity)
 
   properties["TYPE"] = "property";
 
-  adjustMedia((QnstGraphicsMedia*) entity->getnstGraphicsParent());
+
+  if(entity->getnstGraphicsParent()->isMedia())
+  {
+    QnstGraphicsMedia *media =
+      dynamic_cast <QnstGraphicsMedia *>(entity->getnstGraphicsParent());
+
+    if(media != NULL)
+      adjustMedia(media);
+  }
 
   foreach (QString key,
            refers.keys(entity->getnstGraphicsParent()->getnstUid()))
