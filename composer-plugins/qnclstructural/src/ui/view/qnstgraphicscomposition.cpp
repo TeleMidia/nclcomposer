@@ -283,56 +283,12 @@ void QnstGraphicsComposition::dropEvent(QGraphicsSceneDragDropEvent *event)
   foreach(QUrl url, event->mimeData()->urls())
   {
     QString filename = url.toLocalFile();
-    QString suffix = QFileInfo(filename).suffix().toUpper();
+    QString suffix = QFileInfo(filename).suffix().toLower();
 
-    if(suffix == "PNG" ||
-       suffix == "JPEG")
-    {
-      event->acceptProposedAction();
-      dropsrc = filename;
-      createEntity(Qnst::Image);
-    }
-    else if(suffix == "MP3" ||
-            suffix == "WAV")
-    {
-      event->acceptProposedAction();
-      dropsrc = filename;
-      createEntity(Qnst::Audio);
-    }
-    else if(suffix == "AVI" ||
-            suffix == "MPEG4" ||
-            suffix == "MP4" ||
-            suffix == "MPEG")
-    {
-      event->acceptProposedAction();
-      dropsrc = filename;
-      createEntity(Qnst::Video);
-    }
-    else if(suffix=="TXT")
-    {
-      event->acceptProposedAction();
-      dropsrc = filename;
-      createEntity(Qnst::Text);
-    }
-    else if(suffix=="LUA")
-    {
-      event->acceptProposedAction();
-      dropsrc = filename;
-      createEntity(Qnst::Script);
-    }
-    else if(suffix=="HTML" ||
-            suffix=="HTM")
-    {
-      event->acceptProposedAction();
-      dropsrc = filename;
-      createEntity(Qnst::Html);
-    }
-    else if(suffix=="NCL")
-    {
-      event->acceptProposedAction();
-      dropsrc = filename;
-      createEntity(Qnst::NCL);
-    }
+    event->acceptProposedAction();
+    dropsrc = filename;
+
+    createEntity(QnstUtil::getnstTypeFromExtension(suffix));
   }
 }
 

@@ -27,7 +27,7 @@ public:
 
     QnstType getnstType() const;
 
-    void setnstType(QnstType type);
+    virtual void setnstType(QnstType type);
 
     QMap <QString, QString> getUsrData();
 

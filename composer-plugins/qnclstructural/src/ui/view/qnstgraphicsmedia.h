@@ -23,11 +23,11 @@ public:
 
     QString getIcon() const;
 
-    void setIcon(QString icon);
-
     void setSource(QString source);
 
     void setnstId(QString id);
+
+    virtual void setnstType(QnstType type);
 
     QString getSource() const;
 

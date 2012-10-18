@@ -2,12 +2,12 @@
 
 #include <QDrag>
 
+#include "qnstutil.h"
+
 QnstGraphicsMedia::QnstGraphicsMedia(QnstGraphicsEntity* parent)
   : QnstGraphicsContent(parent), enableDrag(false)
 {
     setnstType(Qnst::Media);
-
-    setIcon(":/icon/media");
 
     setResizable(false);
 
@@ -27,11 +27,6 @@ QString QnstGraphicsMedia::getIcon() const
     return icon;
 }
 
-void QnstGraphicsMedia::setIcon(QString icon)
-{
-    this->icon = icon;
-}
-
 QString QnstGraphicsMedia::getSource() const
 {
     return source;
@@ -47,6 +42,13 @@ void QnstGraphicsMedia::setnstId(QString id)
     QnstGraphicsContent::setnstId(id);
 
     updateToolTip();
+}
+
+void QnstGraphicsMedia::setnstType(QnstType type)
+{
+  QnstEntity::setnstType(type);
+
+  this->icon = QnstUtil::iconFromMediaType(type);
 }
 
 void QnstGraphicsMedia::updateToolTip()

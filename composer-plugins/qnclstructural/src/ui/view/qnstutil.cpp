@@ -89,7 +89,7 @@ QnstGraphicsEntity *QnstUtil::makeGraphicsEntity(Qnst::EntityType type,
     case Qnst::NCL:
     case Qnst::Media:
       entity = new QnstGraphicsMedia(parent);
-      entity->setnstType(entity->getnstType());
+      entity->setnstType(type);
       break;
 
     case Qnst::Body:

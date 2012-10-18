@@ -2083,8 +2083,6 @@ void QnstView::changeMedia(QnstGraphicsMedia* entity,
     }
   }
 
-  entity->setIcon(QnstUtil::iconFromMediaType(entity->getnstType()));
-
   if(adjust) adjustMedia(entity);
 }
 
