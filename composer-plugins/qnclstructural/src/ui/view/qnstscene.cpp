@@ -78,9 +78,11 @@ void QnstScene::createObjects()
 
 void QnstScene::createConnections()
 {
-    connect(menu, SIGNAL(exportRequested()), SIGNAL(exportRequested()));
+  connect(menu, SIGNAL(exportRequested()), SIGNAL(exportRequested()));
 
-    connect(menu, SIGNAL(bodyRequested()), SLOT(performBody()));
+  // \fixme Even working this is not the correct way to do that
+  connect(menu, SIGNAL(menuAddEntityTriggered(Qnst::EntityType)),
+                SLOT(performBody()));
 }
 
 void QnstScene::performBody()

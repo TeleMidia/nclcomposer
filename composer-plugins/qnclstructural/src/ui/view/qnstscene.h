@@ -14,66 +14,66 @@
 
 class QnstScene : public QGraphicsScene
 {
-    Q_OBJECT
+  Q_OBJECT
 
 public:
-    QnstScene(QObject* parent = 0);
+  QnstScene(QObject* parent = 0);
 
-    ~QnstScene();
+  ~QnstScene();
 
-    QVector<QnstGraphicsEntity*> getRoots() const;
+  QVector<QnstGraphicsEntity*> getRoots() const;
 
-    void addRoot(QnstGraphicsEntity* root);
+  void addRoot(QnstGraphicsEntity* root);
 
-    void removeRoot(QnstGraphicsEntity* root);
+  void removeRoot(QnstGraphicsEntity* root);
 
 signals:
-    void entityAdded(QnstGraphicsEntity* entity);
+  void entityAdded(QnstGraphicsEntity* entity);
 
-    void entityRemoved(QnstGraphicsEntity* entity);
+  void entityRemoved(QnstGraphicsEntity* entity);
 
-    void entityChanged(QnstGraphicsEntity* entity);
+  void entityChanged(QnstGraphicsEntity* entity);
 
-    void entitySelected(QnstGraphicsEntity* entity);
+  void entitySelected(QnstGraphicsEntity* entity);
 
-    void entityAboutToChange(QnstGraphicsEntity* entity, QMap<QString, QString> properties);
+  void entityAboutToChange(QnstGraphicsEntity* entity, QMap<QString, QString> properties);
 
-    void undoRequested();
+  void undoRequested();
 
-    void redoRequested();
+  void redoRequested();
 
-    void cutRequested();
+  void cutRequested();
 
-    void copyRequested();
+  void copyRequested();
 
-    void pasteRequested();
+  void pasteRequested();
 
-    void deleteRequested();
+  void deleteRequested();
 
-    void exportRequested();
+  void exportRequested();
 
-    void zoominRequested();
+  void zoominRequested();
 
-    void zoomoutRequested();
+  void zoomoutRequested();
 
-    void zoomresetRequested();
+  void zoomresetRequested();
 
-    void fullscreenRequested();
+  void fullscreenRequested();
 
 protected:
-    virtual void contextMenuEvent(QGraphicsSceneContextMenuEvent* event);
+  virtual void contextMenuEvent(QGraphicsSceneContextMenuEvent* event);
 
 protected slots:
-    void performBody();
+  void performBody();
 
 private:
-    void createObjects();
+  void createObjects();
 
-    void createConnections();
+  void createConnections();
 
-    QnstMenu* menu;
+  QnstMenu* menu;
 
-    QVector<QnstGraphicsEntity*> roots;
+  QVector<QnstGraphicsEntity*> roots;
 };
 
 #endif // QNSTSCENE_H
