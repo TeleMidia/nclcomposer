@@ -19,110 +19,111 @@ class QnstMenu;
 
 class QnstGraphicsEntity : public QncgGraphicsEntity, public QnstEntity
 {
-    Q_OBJECT
+Q_OBJECT
 
 public:
-    QnstGraphicsEntity(QnstGraphicsEntity* parent = 0);
+  QnstGraphicsEntity(QnstGraphicsEntity* parent = 0);
 
-    ~QnstGraphicsEntity();
+  ~QnstGraphicsEntity();
 
-    QnstGraphicsEntity* getnstGraphicsParent() const;
+  QnstGraphicsEntity* getnstGraphicsParent() const;
 
-    void setnstGraphicsParent(QnstGraphicsEntity* parent);
+  void setnstGraphicsParent(QnstGraphicsEntity* parent);
 
-    QMap<QString, QSet<int> > getAngles();
+  QMap<QString, QSet<int> > getAngles();
 
-    void addAngle(QString uid, int angle);
+  void addAngle(QString uid, int angle);
 
-    void removeAngle(QString uid, int angle);
+  void removeAngle(QString uid, int angle);
 
-    QVector<QnstGraphicsEntity*> getnstGraphicsEntities();
+  QVector<QnstGraphicsEntity*> getnstGraphicsEntities();
 
-    void addnstGraphicsEntity(QnstGraphicsEntity* entity);
+  void addnstGraphicsEntity(QnstGraphicsEntity* entity);
 
-    void removenstGraphicsEntity(QnstGraphicsEntity* entity);
+  void removenstGraphicsEntity(QnstGraphicsEntity* entity);
 
-    virtual void adjust(bool avoidCollision = false) = 0;
+  virtual void adjust(bool avoidCollision = false) = 0;
 
-    bool hasMouseHover();
+  bool hasMouseHover();
 
-    void setMouseHover(bool hover);
+  void setMouseHover(bool hover);
 
 signals:
-    void entityAdded(QnstGraphicsEntity* entity);
+  void entityAdded(QnstGraphicsEntity* entity);
 
-    void entityRemoved(QnstGraphicsEntity* entity);
+  void entityRemoved(QnstGraphicsEntity* entity);
 
-    void entityChanged(QnstGraphicsEntity* entity);
+  void entityChanged(QnstGraphicsEntity* entity);
 
-    void entityAboutToChange(QnstGraphicsEntity* entity,
-                             QMap<QString, QString> properties);
+  void entityAboutToChange(QnstGraphicsEntity* entity,
+                           QMap<QString, QString> properties);
 
-    void entitySelected(QnstGraphicsEntity* entity);
+  void entitySelected(QnstGraphicsEntity* entity);
 
-    void undoRequested();
+  void undoRequested();
 
-    void redoRequested();
+  void redoRequested();
 
-    void cutRequested();
+  void cutRequested();
 
-    void copyRequested();
+  void copyRequested();
 
-    void pasteRequested();
+  void pasteRequested();
 
-    void deleteRequested();
+  void deleteRequested();
 
-    void exportRequested();
+  void exportRequested();
 
-    void zoominRequested();
+  void zoominRequested();
 
-    void zoomoutRequested();
+  void zoomoutRequested();
 
-    void zoomresetRequested();
+  void zoomresetRequested();
 
-    void fullscreenRequested();
+  void fullscreenRequested();
 
 protected:
-    virtual void draw(QPainter* painter) = 0;
+  virtual void draw(QPainter* painter) = 0;
 
-    virtual void delineate(QPainterPath* painter) const = 0;
+  virtual void delineate(QPainterPath* painter) const = 0;
 
-    virtual void move(QGraphicsSceneMouseEvent* event) = 0;
+  virtual void move(QGraphicsSceneMouseEvent* event) = 0;
 
-    virtual void resize(QGraphicsSceneMouseEvent* event) = 0;
+  virtual void resize(QGraphicsSceneMouseEvent* event) = 0;
 
-    virtual void contextMenuEvent(QGraphicsSceneContextMenuEvent* event);
+  virtual void contextMenuEvent(QGraphicsSceneContextMenuEvent* event);
 
-    virtual void hoverEnterEvent(QGraphicsSceneHoverEvent* event);
+  virtual void hoverEnterEvent(QGraphicsSceneHoverEvent* event);
 
-    virtual void hoverLeaveEvent(QGraphicsSceneHoverEvent* event);
+  virtual void hoverLeaveEvent(QGraphicsSceneHoverEvent* event);
 
 protected slots:
-    void requestEntityChange();
+  void requestEntityChange();
 
-    void requestEntityPreparation(QMap<QString, QString> properties);
+  void requestEntityPreparation(QMap<QString, QString> properties);
 
-    void requestEntitySelection();
+  void requestEntitySelection();
 
-    virtual bool createEntity(Qnst::EntityType type);
+  virtual bool createEntity(Qnst::EntityType type);
 
 public:
-    QnstMenu* menu;
-    bool isDraggable();
-    void setDraggable(bool isDraggable);
-    void setError(bool hasError);
+  QnstMenu* menu;
+  bool isDraggable();
+  void setDraggable(bool isDraggable);
+  void setError(bool hasError);
 
 private:
-    bool draggable;
-    QnstGraphicsEntity* parent;
+  bool draggable;
+  QnstGraphicsEntity* parent;
 
-    QMap<QString, QSet<int> > angles;
+  QMap<QString, QSet<int> > angles;
 
-    QVector<QnstGraphicsEntity*> entities;
+  QVector<QnstGraphicsEntity*> entities;
 
 protected:
     bool hover, hasError;
     QString dropsrc;
+
 };
 
 #endif // QNSTGRAPHICSENTITY_H

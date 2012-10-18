@@ -14,7 +14,8 @@ QnstGraphicsEntity::QnstGraphicsEntity(QnstGraphicsEntity* parent)
   setnstGraphicsParent(parent);
 
   connect(this, SIGNAL(entitySelected()), SLOT(requestEntitySelection()));
-  connect(this, SIGNAL(entityAboutToChange(QMap<QString,QString>)), SLOT(requestEntityPreparation(QMap<QString,QString>)));
+  connect(this, SIGNAL(entityAboutToChange(QMap<QString,QString>)),
+                SLOT(requestEntityPreparation(QMap<QString,QString>)));
 
   hover = false;
   menu = NULL;
@@ -30,15 +31,15 @@ QnstGraphicsEntity::~QnstGraphicsEntity()
 
 QnstGraphicsEntity* QnstGraphicsEntity::getnstGraphicsParent() const
 {
-    return parent;
+  return parent;
 }
 
 void QnstGraphicsEntity::setnstGraphicsParent(QnstGraphicsEntity* parent)
 {
-    this->parent = parent;
+  this->parent = parent;
 
-    setnstParent(parent);
-    setncgGraphicsParent(parent);
+  setnstParent(parent);
+  setncgGraphicsParent(parent);
 }
 
 QMap<QString, QSet<int> > QnstGraphicsEntity::getAngles()
@@ -53,11 +54,12 @@ void QnstGraphicsEntity::addAngle(QString uid, int angle)
 
 void QnstGraphicsEntity::removeAngle(QString uid, int angle)
 {
-    angles[uid].remove(angle);
+  angles[uid].remove(angle);
 
-    if (angles[uid].isEmpty()){
-        angles.remove(uid);
-    }
+  if (angles[uid].isEmpty())
+  {
+    angles.remove(uid);
+  }
 }
 
 QVector<QnstGraphicsEntity*> QnstGraphicsEntity::getnstGraphicsEntities()
@@ -77,67 +79,81 @@ void QnstGraphicsEntity::setDraggable(bool isDraggable)
 
 void QnstGraphicsEntity::addnstGraphicsEntity(QnstGraphicsEntity* entity)
 {
-    if (entity != NULL){
-        entities.append(entity);
+  if (entity != NULL)
+  {
+    entities.append(entity);
 
-        connect(entity, SIGNAL(undoRequested()), SIGNAL(undoRequested()));
-        connect(entity, SIGNAL(redoRequested()), SIGNAL(redoRequested()));
+    connect(entity, SIGNAL(undoRequested()), SIGNAL(undoRequested()));
+    connect(entity, SIGNAL(redoRequested()), SIGNAL(redoRequested()));
 
-        connect(entity, SIGNAL(cutRequested()), SIGNAL(cutRequested()));
-        connect(entity, SIGNAL(copyRequested()), SIGNAL(copyRequested()));
-        connect(entity, SIGNAL(pasteRequested()), SIGNAL(pasteRequested()));
+    connect(entity, SIGNAL(cutRequested()), SIGNAL(cutRequested()));
+    connect(entity, SIGNAL(copyRequested()), SIGNAL(copyRequested()));
+    connect(entity, SIGNAL(pasteRequested()), SIGNAL(pasteRequested()));
 
-        connect(entity, SIGNAL(deleteRequested()), SIGNAL(deleteRequested()));
+    connect(entity, SIGNAL(deleteRequested()), SIGNAL(deleteRequested()));
 
-        connect(entity, SIGNAL(exportRequested()), SIGNAL(exportRequested()));
+    connect(entity, SIGNAL(exportRequested()), SIGNAL(exportRequested()));
 
-        connect(entity, SIGNAL(zoominRequested()), SIGNAL(zoominRequested()));
-        connect(entity, SIGNAL(zoomoutRequested()), SIGNAL(zoomoutRequested()));
-        connect(entity, SIGNAL(zoomresetRequested()), SIGNAL(zoomresetRequested()));
-        connect(entity, SIGNAL(fullscreenRequested()), SIGNAL(fullscreenRequested()));
+    connect(entity, SIGNAL(zoominRequested()), SIGNAL(zoominRequested()));
+    connect(entity, SIGNAL(zoomoutRequested()), SIGNAL(zoomoutRequested()));
+    connect(entity, SIGNAL(zoomresetRequested()), SIGNAL(zoomresetRequested()));
+    connect(entity, SIGNAL(fullscreenRequested()),
+                    SIGNAL(fullscreenRequested()));
 
-        connect(entity, SIGNAL(entityAdded(QnstGraphicsEntity*)), SIGNAL(entityAdded(QnstGraphicsEntity*)));
-        connect(entity, SIGNAL(entityChanged(QnstGraphicsEntity*)), SIGNAL(entityChanged(QnstGraphicsEntity*)));
-        connect(entity, SIGNAL(entityAboutToChange(QnstGraphicsEntity*,QMap<QString,QString>)), SIGNAL(entityAboutToChange(QnstGraphicsEntity*,QMap<QString,QString>)));
-        connect(entity, SIGNAL(entityRemoved(QnstGraphicsEntity*)), SIGNAL(entityRemoved(QnstGraphicsEntity*)));
-        connect(entity, SIGNAL(entitySelected(QnstGraphicsEntity*)), SIGNAL(entitySelected(QnstGraphicsEntity*)));
+    connect(entity, SIGNAL(entityAdded(QnstGraphicsEntity*)),
+                    SIGNAL(entityAdded(QnstGraphicsEntity*)));
+    connect(entity, SIGNAL(entityChanged(QnstGraphicsEntity*)),
+                    SIGNAL(entityChanged(QnstGraphicsEntity*)));
 
-        addnstEntity(entity);
-        addncgGraphicsEntity(entity);
-    }
+    connect(entity, SIGNAL(entityAboutToChange(QnstGraphicsEntity*,
+                                               QMap<QString,QString>)),
+                    SIGNAL(entityAboutToChange(QnstGraphicsEntity*,
+                                               QMap<QString,QString>)));
+    connect(entity, SIGNAL(entityRemoved(QnstGraphicsEntity*)),
+                    SIGNAL(entityRemoved(QnstGraphicsEntity*)));
+    connect(entity, SIGNAL(entitySelected(QnstGraphicsEntity*)),
+                    SIGNAL(entitySelected(QnstGraphicsEntity*)));
+
+    addnstEntity(entity);
+    addncgGraphicsEntity(entity);
+  }
 }
 
 void QnstGraphicsEntity::removenstGraphicsEntity(QnstGraphicsEntity* entity)
 {
-    if (entity != NULL){
-        int index = entities.indexOf(entity);
+  if (entity != NULL)
+  {
+    int index = entities.indexOf(entity);
 
-        if (index >= 0){
-            entities.remove(index);
+    if (index >= 0)
+    {
+      entities.remove(index);
 
-            removenstEntity(entity);
-            removencgGraphicsEntity(entity);
-        }
+      removenstEntity(entity);
+      removencgGraphicsEntity(entity);
     }
+  }
 }
 
 void QnstGraphicsEntity::requestEntityChange()
 {
-    emit entityChanged(this);
+  emit entityChanged(this);
 }
 
-void QnstGraphicsEntity::requestEntityPreparation(QMap<QString, QString> properties)
+void QnstGraphicsEntity::requestEntityPreparation(QMap<QString, QString> props)
 {
-    emit entityAboutToChange(this, properties);
+  emit entityAboutToChange(this, props);
 }
 
 void QnstGraphicsEntity::requestEntitySelection()
 {
-    emit entitySelected(this);
+  emit entitySelected(this);
 }
 
 bool QnstGraphicsEntity::createEntity(Qnst::EntityType type)
 {
+  // \todo Check if type is an media type allowed to me!
+
   QnstGraphicsEntity *entity = QnstUtil::makeGraphicsEntity(type, this);
 
   if(entity == NULL) return false;
@@ -180,66 +196,42 @@ bool QnstGraphicsEntity::createEntity(Qnst::EntityType type)
 
 void QnstGraphicsEntity::contextMenuEvent(QGraphicsSceneContextMenuEvent* event)
 {
-    QncgGraphicsEntity::contextMenuEvent(event);
+  QncgGraphicsEntity::contextMenuEvent(event);
 
-    if (!event->isAccepted()){
+  if (!event->isAccepted())
+  {
+    if (!isSelected())
+      setSelected(true); emit entitySelected(this);
 
-        if (!isSelected()){
-            setSelected(true); emit entitySelected(this);
-        }
+    if (menu != NULL)
+      menu->exec(event->screenPos());
 
-        if (menu != NULL){
-            menu->exec(event->screenPos());
-        }
-
-        event->accept();
-    }
+    event->accept();
+  }
 }
 
 bool QnstGraphicsEntity::hasMouseHover()
 {
-    return hover;
+  return hover;
 }
 
 void QnstGraphicsEntity::setMouseHover(bool hover)
 {
-    this->hover = hover;
+  this->hover = hover;
 }
 
 void QnstGraphicsEntity::hoverEnterEvent(QGraphicsSceneHoverEvent* event)
 {
-    QncgGraphicsEntity::hoverEnterEvent(event);
+  QncgGraphicsEntity::hoverEnterEvent(event);
 
-    // if (!event->isAccepted()){
-
-
-//    QnstGraphicsNode* parent = (QnstGraphicsNode*) getnstGraphicsParent();
-
-//    while(parent != NULL){
-//        parent->setMouseHover(false);
-//        parent->update();
-
-//        parent = (QnstGraphicsNode*) parent->getnstGraphicsParent();
-//    }
-
-        hover = true;
-    // }
-
-    // event->accept();
+  hover = true;
 }
 
 void QnstGraphicsEntity::hoverLeaveEvent(QGraphicsSceneHoverEvent* event)
 {
-    QncgGraphicsEntity::hoverLeaveEvent(event);
+  QncgGraphicsEntity::hoverLeaveEvent(event);
 
-//    QnstGraphicsNode* parent = (QnstGraphicsNode*) getnstGraphicsParent();
-
-//    if (parent != NULL){
-//        parent->setMouseHover(true);
-//        parent->update();
-//    }
-
-    hover = false;
+  hover = false;
 }
 
 void QnstGraphicsEntity::setError(bool hasError)

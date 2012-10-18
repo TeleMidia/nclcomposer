@@ -2813,7 +2813,9 @@ void QnstView::addProperty(const QString uid, const QString parent,
 
     if (adjust)
     {
-      adjustMedia((QnstGraphicsMedia*) entities[parent]);
+      if(entities[parent]->isMedia())
+        adjustMedia((QnstGraphicsMedia*) entities[parent]);
+
       foreach (QString key,
                refers.keys(entity->getnstGraphicsParent()->getnstUid()))
       {
