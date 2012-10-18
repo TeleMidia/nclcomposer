@@ -53,6 +53,24 @@ void QnstGraphicsPort::setInterfaceUid(QString interfaceUid)
     this->interfaceUid = interfaceUid;
 }
 
+void QnstGraphicsPort::setProperties(const QMap<QString, QString> &properties)
+{
+  QnstGraphicsInterface::setProperties(properties);
+
+  setComponent(properties["component"]);
+  setInterface(properties["interface"]);
+
+  if (properties["interfaceUid"] != "")
+    setInterfaceUid(properties["interfaceUid"]);
+  else
+    setInterfaceUid("");
+
+  if (properties["componentUid"] != "")
+    setComponentUid(properties["componentUid"]);
+  else
+    setComponentUid("");
+}
+
 void QnstGraphicsPort::draw(QPainter* painter)
 {
     painter->setBrush(Qt::black);

@@ -12,39 +12,39 @@ typedef Qnst::ConditionType QnstCondition;
 class QnstGraphicsLink : public QnstGraphicsEdge
 {
 public:
-    QnstGraphicsLink(QnstGraphicsEntity* parent = 0);
+  QnstGraphicsLink(QnstGraphicsEntity* parent = 0);
 
-    ~QnstGraphicsLink();
+  ~QnstGraphicsLink();
 
-    QnstAction getAction();
+  QnstAction getAction();
 
-    void setAction(QnstAction action);
+  void setAction(QnstAction action);
 
-    QnstActionIcon getActionIcon();
+  QnstActionIcon getActionIcon();
 
-    void setActionIcon(QnstActionIcon actionIcon);
+  void setActionIcon(QnstActionIcon actionIcon);
 
-    QnstCondition getCondition();
+  QnstCondition getCondition();
 
-    void setCondition(QnstCondition condition);
+  void setCondition(QnstCondition condition);
 
-    QnstConditionIcon getConditionIcon();
+  QnstConditionIcon getConditionIcon();
 
-    void setConditionIcon(QnstConditionIcon conditionIcon);
+  void setConditionIcon(QnstConditionIcon conditionIcon);
 
 protected:
-    virtual void draw(QPainter* painter);
+  virtual void draw(QPainter* painter);
 
-    virtual void delineate(QPainterPath* painter) const;
+  virtual void delineate(QPainterPath* painter) const;
 
 private:
-    QnstAction action;
+  QnstAction action;
 
-    QnstActionIcon actionIcon;
+  QnstActionIcon actionIcon;
 
-    QnstCondition condition;
+  QnstCondition condition;
 
-    QnstConditionIcon conditionIcon;
+  QnstConditionIcon conditionIcon;
 };
 
 #endif // QNSTGRAPHICSLINK_H

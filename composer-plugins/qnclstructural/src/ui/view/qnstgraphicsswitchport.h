@@ -6,9 +6,9 @@
 class QnstGraphicsSwitchPort : public QnstGraphicsPort
 {
 public:
-    QnstGraphicsSwitchPort(QnstGraphicsEntity* parent = 0);
+  QnstGraphicsSwitchPort(QnstGraphicsEntity* parent = 0);
 
-    ~QnstGraphicsSwitchPort();
+  ~QnstGraphicsSwitchPort();
 };
 
 #endif // QNSTGRAPHICSSWITCHPORT_H

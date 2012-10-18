@@ -11,33 +11,33 @@
 class QnstGraphicsNode : public QnstGraphicsEntity
 {
 public:
-    QnstGraphicsNode(QnstGraphicsEntity* parent = 0);
+  QnstGraphicsNode(QnstGraphicsEntity* parent = 0);
 
-    ~QnstGraphicsNode();
+  ~QnstGraphicsNode();
 
-    QVector<QnstGraphicsEdge*> getnstGraphicsEdges();
+  QVector<QnstGraphicsEdge*> getnstGraphicsEdges();
 
-    void addnstGraphicsEdge(QnstGraphicsEdge* edge);
+  void addnstGraphicsEdge(QnstGraphicsEdge* edge);
 
-    void removenstGraphicsEdge(QnstGraphicsEdge* edge);
+  void removenstGraphicsEdge(QnstGraphicsEdge* edge);
 
-    virtual void fit(qreal padding);
+  virtual void fit(qreal padding);
 
-    virtual void inside();
+  virtual void inside();
 
-    void adjust(bool avoidCollision = true);
+  void adjust(bool avoidCollision = true);
 
 protected:
-    virtual void draw(QPainter* painter) = 0;
+  virtual void draw(QPainter* painter) = 0;
 
-    virtual void delineate(QPainterPath* painter) const = 0;
+  virtual void delineate(QPainterPath* painter) const = 0;
 
-    virtual void move(QGraphicsSceneMouseEvent* event);
+  virtual void move(QGraphicsSceneMouseEvent* event);
 
-    virtual void resize(QGraphicsSceneMouseEvent* event);
+  virtual void resize(QGraphicsSceneMouseEvent* event);
 
 private:
-    QVector<QnstGraphicsEdge*> edges;
+  QVector<QnstGraphicsEdge*> edges;
 
 };
 

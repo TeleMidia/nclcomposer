@@ -10,7 +10,7 @@ QnstGraphicsInterface::QnstGraphicsInterface(QnstGraphicsEntity* parent)
 
   setnstId("");
 
-  /* Default values for interface */
+  /* Default size for interface */
   setTop(0);
   setLeft(0);
   setWidth(DEFAULT_INTERFACE_WIDTH);

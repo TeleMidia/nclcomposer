@@ -6,39 +6,41 @@
 class QnstGraphicsPort : public QnstGraphicsInterface
 {
 public:
-    QnstGraphicsPort(QnstGraphicsEntity* parent = 0);
+  QnstGraphicsPort(QnstGraphicsEntity* parent = 0);
 
-    ~QnstGraphicsPort();
+  ~QnstGraphicsPort();
 
-    QString getComponent() const;
+  QString getComponent() const;
 
-    void setComponent(QString component);
+  void setComponent(QString component);
 
-    QString getComponentUid() const;
+  QString getComponentUid() const;
 
-    void setComponentUid(QString componentUid);
+  void setComponentUid(QString componentUid);
 
-    QString getInterface() const;
+  QString getInterface() const;
 
-    void setInterface(QString interface);
+  void setInterface(QString interface);
 
-    QString getInterfaceUid() const;
+  QString getInterfaceUid() const;
 
-    void setInterfaceUid(QString interfaceUid);
+  void setInterfaceUid(QString interfaceUid);
+
+  virtual void setProperties(const QMap<QString, QString> &properties);
 
 protected:
-    virtual void draw(QPainter* painter);
+  virtual void draw(QPainter* painter);
 
-    virtual void delineate(QPainterPath* painter) const;
+  virtual void delineate(QPainterPath* painter) const;
 
 private:
-    QString component;
+  QString component;
 
-    QString componentUid;
+  QString componentUid;
 
-    QString interface;
+  QString interface;
 
-    QString interfaceUid;
+  QString interfaceUid;
 };
 
 #endif // QNSTGRAPHICSPORT_H

@@ -6,41 +6,43 @@
 class QnstGraphicsMapping : public QnstGraphicsReference
 {
 public:
-    QnstGraphicsMapping(QnstGraphicsEntity* parent = 0);
+  QnstGraphicsMapping(QnstGraphicsEntity* parent = 0);
 
-    ~QnstGraphicsMapping();
+  ~QnstGraphicsMapping();
 
-    QString getComponent() const;
+  QString getComponent() const;
 
-    void setComponent(QString component);
+  void setComponent(QString component);
 
-    QString getComponentUid() const;
+  QString getComponentUid() const;
 
-    void setComponentUid(QString componentUid);
+  void setComponentUid(QString componentUid);
 
-    QString getSwitchPortUid() const;
+  QString getSwitchPortUid() const;
 
-    void setSwitchPortUid(QString switchportUid);
+  void setSwitchPortUid(QString switchportUid);
 
-    QString getInterface() const;
+  QString getInterface() const;
 
-    void setInterface(QString interface);
+  void setInterface(QString interface);
 
-    QString getInterfaceUid() const;
+  QString getInterfaceUid() const;
 
-    void setInterfaceUid(QString interfaceUid);
+  void setInterfaceUid(QString interfaceUid);
+
+  virtual void setProperties(const QMap<QString, QString> &properties);
 
 
 private:
-    QString component;
+  QString component;
 
-    QString componentUid;
+  QString componentUid;
 
-    QString switchportUid;
+  QString switchportUid;
 
-    QString interface;
+  QString interface;
 
-    QString interfaceUid;
+  QString interfaceUid;
 };
 
 #endif // QNSTGRAPHICSMAPPING_H

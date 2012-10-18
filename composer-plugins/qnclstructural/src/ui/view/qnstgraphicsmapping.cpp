@@ -61,3 +61,21 @@ void QnstGraphicsMapping::setInterfaceUid(QString interfaceUid)
 {
     this->interfaceUid = interfaceUid;
 }
+
+void QnstGraphicsMapping::setProperties(const QMap<QString, QString> &props)
+{
+  QnstGraphicsReference::setProperties(props);
+
+  setComponent(props["component"]);
+  setInterface(props["interface"]);
+
+  if (props["interfaceUid"] != "")
+    setInterfaceUid(props["interfaceUid"]);
+  else
+    setInterfaceUid("");
+
+  if (props["componentUid"] != "")
+    setComponentUid(props["componentUid"]);
+  else
+    setComponentUid("");
+}

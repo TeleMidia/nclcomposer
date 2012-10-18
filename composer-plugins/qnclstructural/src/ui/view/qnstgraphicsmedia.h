@@ -14,60 +14,62 @@
 
 class QnstGraphicsMedia : public QnstGraphicsContent
 {
-    Q_OBJECT
+  Q_OBJECT
 
 public:
-    QnstGraphicsMedia(QnstGraphicsEntity* parent = 0);
+  QnstGraphicsMedia(QnstGraphicsEntity* parent = 0);
 
-    ~QnstGraphicsMedia();
+  ~QnstGraphicsMedia();
 
-    QString getIcon() const;
+  QString getIcon() const;
 
-    void setSource(QString source);
+  void setSource(QString source);
 
-    void setnstId(QString id);
+  void setnstId(QString id);
 
-    virtual void setnstType(QnstType type);
+  virtual void setnstType(QnstType type);
 
-    QString getSource() const;
+  QString getSource() const;
 
-    QString getRefer() const;
+  QString getRefer() const;
 
-    void setRefer(QString refer);
+  void setRefer(QString refer);
 
-    QString getReferUID() const;
+  QString getReferUID() const;
 
-    void setReferUID(QString refetUID);
+  void setReferUID(QString refetUID);
 
-    QString getInstance() const;
+  QString getInstance() const;
 
-    void setInstance(QString instance);
+  void setInstance(QString instance);
 
-    void updateToolTip();
+  void updateToolTip();
+
+  virtual void setProperties(const QMap <QString, QString> &properties);
 
 protected:
-    virtual void draw(QPainter* painter);
+  virtual void draw(QPainter* painter);
 
-    virtual void delineate(QPainterPath* painter) const;
+  virtual void delineate(QPainterPath* painter) const;
 
-    virtual void mousePressEvent(QGraphicsSceneMouseEvent *event);
+  virtual void mousePressEvent(QGraphicsSceneMouseEvent *event);
 
 private:
-    void createObjects();
+  void createObjects();
 
-    void createConnections();
+  void createConnections();
 
-    QString refer;
+  QString refer;
 
-    QString referUID;
+  QString referUID;
 
-    QString instance;
+  QString instance;
 
-    QString icon;
+  QString icon;
 
-    QString source;
+  QString source;
 
-    bool enableDrag;
+  bool enableDrag;
 };
 
 #endif // QNSTGRAPHICSMEDIA_H

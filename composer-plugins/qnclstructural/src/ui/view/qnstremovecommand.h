@@ -11,28 +11,28 @@ class QnstView;
 class QnstRemoveCommand : public QUndoCommand
 {
 public:
-    QnstRemoveCommand(QnstView* view, QnstGraphicsEntity* entity);
+  QnstRemoveCommand(QnstView* view, QnstGraphicsEntity* entity);
 
-    ~QnstRemoveCommand();
+  ~QnstRemoveCommand();
 
-    virtual void undo();
+  virtual void undo();
 
-    virtual void redo();
+  virtual void redo();
 
 private:
-    void copy(QnstGraphicsEntity* entity);
+  void copy(QnstGraphicsEntity* entity);
 
-    void copy(QnstGraphicsEntity* entity, QnstGraphicsEntity* parent);
+  void copy(QnstGraphicsEntity* entity, QnstGraphicsEntity* parent);
 
-    void paste(QnstGraphicsEntity* entity, QnstGraphicsEntity* parent);
+  void paste(QnstGraphicsEntity* entity, QnstGraphicsEntity* parent);
 
-    bool ignore;
+  bool ignore;
 
-    QString parent;
+  QString parent;
 
-    QnstView* view;
+  QnstView* view;
 
-    QnstGraphicsEntity* entity;
+  QnstGraphicsEntity* entity;
 };
 
 

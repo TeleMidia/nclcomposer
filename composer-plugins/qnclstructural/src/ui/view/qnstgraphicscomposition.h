@@ -17,57 +17,59 @@
 
 class QnstGraphicsComposition : public QnstGraphicsNode
 {
-    Q_OBJECT
+  Q_OBJECT
 
 public:
-    QnstGraphicsComposition(QnstGraphicsEntity* parent = 0);
+  QnstGraphicsComposition(QnstGraphicsEntity* parent = 0);
 
-    ~QnstGraphicsComposition();
+  ~QnstGraphicsComposition();
 
-    QString getColor() const;
+  QString getColor() const;
 
-    void setColor(QString color);
+  void setColor(QString color);
 
-    void setnstId(QString id);
+  void setnstId(QString id);
 
-    void setCollapsed(bool collapsed);
+  void setCollapsed(bool collapsed);
 
-    qreal getLastW();
+  qreal getLastW();
 
-    qreal getLastH();
+  qreal getLastH();
 
-    void setLastW(qreal lastW);
+  void setLastW(qreal lastW);
 
-    void setLastH(qreal lastH);
+  void setLastH(qreal lastH);
 
-    bool isCollapsed();
+  bool isCollapsed();
 
-    void collapse();
+  void collapse();
+
+  virtual void setProperties(const QMap <QString, QString> &properties);
 
 protected slots:
-    void adjustWithSpring();
+  void adjustWithSpring();
 
 protected:
-    virtual void draw(QPainter* painter);
+  virtual void draw(QPainter* painter);
 
-    virtual void delineate(QPainterPath* painter) const;
+  virtual void delineate(QPainterPath* painter) const;
 
-    virtual void dragEnterEvent(QGraphicsSceneDragDropEvent *event);
+  virtual void dragEnterEvent(QGraphicsSceneDragDropEvent *event);
 
-    virtual void dropEvent(QGraphicsSceneDragDropEvent *event);
+  virtual void dropEvent(QGraphicsSceneDragDropEvent *event);
 
-    virtual void mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event);
+  virtual void mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event);
 
 private:
-    bool collapsed;
+  bool collapsed;
 
-    QString color;
+  QString color;
 
-    qreal lastw;
+  qreal lastw;
 
-    qreal lasth;
+  qreal lasth;
 
-    QnstGraphicsNode* tmp;
+  QnstGraphicsNode* tmp;
 };
 
 #endif // QNSTGRAPHICSCOMPOSITION_H

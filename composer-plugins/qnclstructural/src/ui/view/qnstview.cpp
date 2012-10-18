@@ -1599,53 +1599,16 @@ void QnstView::addBody(const QString uid, const QString parent,
 {
   QnstGraphicsBody* entity = new QnstGraphicsBody();
   entity->setnstUid(uid);
+//if (properties["id"] != ""){
+    entity->setnstId(properties["id"]);
+//}
+
+  entity->setProperties(properties);
 
   entity->setTop(scene->height()/2 - DEFAULT_BODY_HEIGHT/2);
   entity->setLeft(scene->width()/2 - DEFAULT_BODY_WIDTH/2);
   entity->setWidth(DEFAULT_BODY_WIDTH);
   entity->setHeight(DEFAULT_BODY_HEIGHT);
-
-//if (properties["id"] != ""){
-    entity->setnstId(properties["id"]);
-//}
-
-  if (properties["top"] != "")
-    entity->setTop(properties["top"].toDouble());
-
-  if (properties["left"] != "")
-    entity->setLeft(properties["left"].toDouble());
-
-  if (properties["collapsed"] != "")
-  {
-    if (properties["collapsed"] == "1")
-    {
-      if (properties["width"] != "")
-        entity->setLastW(properties["width"].toDouble());
-
-      if (properties["height"] != "")
-        entity->setLastH(properties["height"].toDouble());
-
-      if (properties["expandHeight"] != "")
-        entity->setHeight(properties["expandHeight"].toDouble());
-
-      if (properties["expandWidth"] != "")
-        entity->setWidth(properties["expandWidth"].toDouble());
-    }
-    else
-    {
-      if (properties["width"] != "")
-        entity->setWidth(properties["width"].toDouble());
-
-      if (properties["height"] != "")
-        entity->setHeight(properties["height"].toDouble());
-
-      if (properties["expandHeight"] != "")
-        entity->setLastH(properties["expandHeight"].toDouble());
-
-      if (properties["expandWidth"] != "")
-        entity->setLastW(properties["expandWidth"].toDouble());
-    }
-  }
 
   scene->addRoot(entity);
   entities[uid] = entity;
@@ -1663,6 +1626,8 @@ void QnstView::changeBody(QnstGraphicsBody* entity,
 //if (properties["id"] != ""){
   entity->setnstId(properties["id"]);
 //}
+  entity->setProperties(properties);
+
   entity->adjust();
 }
 
@@ -1836,51 +1801,16 @@ void QnstView::addContext(const QString uid, const QString parent,
         new QnstGraphicsContext((QnstGraphicsNode*) entities[parent]);
     entity->setnstUid(uid);
 
-    entity->setTop(entities[parent]->getHeight()/2 - DEFAULT_CONTEXT_HEIGHT/2);
-    entity->setLeft(entities[parent]->getWidth()/2 - DEFAULT_CONTEXT_WIDTH/2);
-    entity->setWidth(DEFAULT_BODY_WIDTH);
-    entity->setHeight(DEFAULT_BODY_HEIGHT);
-
     if (properties["id"] != "")
       entity->setnstId(properties["id"]);
 
-    if (properties["top"] != "")
-      entity->setTop(properties["top"].toDouble());
+    // Override the default position with the center of the parent
+    entity->setTop(entities[parent]->getHeight()/2 - DEFAULT_CONTEXT_HEIGHT/2);
+    entity->setLeft(entities[parent]->getWidth()/2 - DEFAULT_CONTEXT_WIDTH/2);
+    entity->setWidth(DEFAULT_CONTEXT_WIDTH);
+    entity->setHeight(DEFAULT_CONTEXT_HEIGHT);
 
-    if (properties["left"] != "")
-      entity->setLeft(properties["left"].toDouble());
-
-    if (properties["collapsed"] != "")
-    {
-      if (properties["collapsed"] == "1")
-      {
-        if (properties["width"] != "")
-          entity->setLastW(properties["width"].toDouble());
-
-        if (properties["height"] != "")
-          entity->setLastH(properties["height"].toDouble());
-
-        if (properties["expandHeight"] != "")
-          entity->setHeight(properties["expandHeight"].toDouble());
-
-        if (properties["expandWidth"] != "")
-          entity->setWidth(properties["expandWidth"].toDouble());
-      }
-      else
-      {
-        if (properties["width"] != "")
-          entity->setWidth(properties["width"].toDouble());
-
-        if (properties["height"] != "")
-          entity->setHeight(properties["height"].toDouble());
-
-        if (properties["expandHeight"] != "")
-          entity->setLastH(properties["expandHeight"].toDouble());
-
-        if (properties["expandWidth"] != "")
-          entity->setLastW(properties["expandWidth"].toDouble());
-      }
-    }
+    entity->setProperties(properties);
 
     entities[parent]->addnstGraphicsEntity(entity);
     entities[uid] = entity;
@@ -1901,11 +1831,8 @@ void QnstView::changeContext(QnstGraphicsContext* entity,
   if (properties["id"] != "")
     entity->setnstId(properties["id"]);
 
-//TODO:
-//if (properties["refer"] != "")
-//{
-//
-//}
+  entity->setProperties(properties);
+  // \todo context with refer
 }
 
 void QnstView::adjustContext(QnstGraphicsContext* entity)
@@ -1922,51 +1849,13 @@ void QnstView::addSwitch(const QString uid, const QString parent,
         new QnstGraphicsSwitch((QnstGraphicsNode*) entities[parent]);
     entity->setnstUid(uid);
 
+    // Override the default position with the center of the parent
     entity->setTop(entities[parent]->getHeight()/2 - DEFAULT_CONTEXT_HEIGHT/2);
     entity->setLeft(entities[parent]->getWidth()/2 - DEFAULT_CONTEXT_WIDTH/2);
     entity->setWidth(DEFAULT_CONTEXT_WIDTH);
     entity->setHeight(DEFAULT_CONTEXT_HEIGHT);
 
-    if (properties["id"] != "")
-      entity->setnstId(properties["id"]);
-
-    if (properties["top"] != "")
-      entity->setTop(properties["top"].toDouble());
-
-    if (properties["left"] != "")
-      entity->setLeft(properties["left"].toDouble());
-
-    if (properties["collapsed"] != "")
-    {
-      if (properties["collapsed"] == "1")
-      {
-        if (properties["width"] != "")
-          entity->setLastW(properties["width"].toDouble());
-
-        if (properties["height"] != "")
-          entity->setLastH(properties["height"].toDouble());
-
-        if (properties["expandHeight"] != "")
-          entity->setHeight(properties["expandHeight"].toDouble());
-
-        if (properties["expandWidth"] != "")
-          entity->setWidth(properties["expandWidth"].toDouble());
-      }
-      else
-      {
-        if (properties["width"] != "")
-          entity->setWidth(properties["width"].toDouble());
-
-        if (properties["height"] != "")
-          entity->setHeight(properties["height"].toDouble());
-
-        if (properties["expandHeight"] != "")
-          entity->setLastH(properties["expandHeight"].toDouble());
-
-        if (properties["expandWidth"] != "")
-          entity->setLastW(properties["expandWidth"].toDouble());
-      }
-    }
+    entity->setProperties(properties);
 
     entities[parent]->addnstGraphicsEntity(entity);
     entities[uid] = entity;
@@ -1986,10 +1875,9 @@ void QnstView::changeSwitch(QnstGraphicsSwitch* entity,
   if (properties["id"] != "")
     entity->setnstId(properties["id"]);
 
-//TODO:
-//if (properties["refer"] != ""){
-//
-//}
+  entity->setProperties(properties);
+
+  // \todo Switch with refer
 }
 
 void QnstView::addMedia(const QString uid, const QString parent,
@@ -2012,18 +1900,6 @@ void QnstView::addMedia(const QString uid, const QString parent,
       entity->setLeft(entities[parent]->getWidth()/2 - DEFAULT_MEDIA_WIDTH/2);
       entity->setWidth(DEFAULT_MEDIA_WIDTH);
       entity->setHeight(DEFAULT_MEDIA_HEIGHT);
-
-      if (properties["top"] != "")
-        entity->setTop(properties["top"].toDouble());
-
-      if (properties["left"] != "")
-        entity->setLeft(properties["left"].toDouble());
-
-      if (properties["width"] != "")
-        entity->setWidth(properties["width"].toDouble());
-
-      if (properties["height"] != "")
-        entity->setHeight(properties["height"].toDouble());
 
       ++nmedia;
 
@@ -2051,11 +1927,8 @@ void QnstView::changeMedia(QnstGraphicsMedia* entity,
                            bool adjust)
 {
   entity->setnstId(properties["id"]);
-  entity->setSource(properties["src"]);
-  entity->setRefer(properties["refer"]);
-  entity->setReferUID(properties["referUID"]);
-  entity->setInstance(properties["instance"]);
 
+  entity->setProperties(properties);
 
   if (properties["referUID"] != "")
   {
@@ -2083,7 +1956,8 @@ void QnstView::changeMedia(QnstGraphicsMedia* entity,
     }
   }
 
-  if(adjust) adjustMedia(entity);
+  if(adjust)
+    adjustMedia(entity);
 }
 
 // \todo refactory
@@ -2331,37 +2205,9 @@ void QnstView::addPort(const QString uid, const QString parent,
 
     entity->setnstUid(uid);
 
-    entity->setTop(0);
-    entity->setLeft(0);
-    entity->setWidth(DEFAULT_INTERFACE_WIDTH);
-    entity->setHeight(DEFAULT_INTERFACE_HEIGHT);
-
     entity->setnstId(properties["id"]);
 
-    entity->setComponent(properties["component"]);
-    entity->setInterface(properties["interface"]);
-
-    if (properties["top"] != "")
-      entity->setTop(properties["top"].toDouble());
-
-    if (properties["left"] != "")
-      entity->setLeft(properties["left"].toDouble());
-
-    if (properties["width"] != "")
-      entity->setWidth(properties["width"].toDouble());
-
-    if (properties["height"] != "")
-      entity->setHeight(properties["height"].toDouble());
-
-    if (properties["interfaceUid"] != "")
-      entity->setInterfaceUid(properties["interfaceUid"]);
-    else
-        entity->setInterfaceUid("");
-
-    if (properties["componentUid"] != "")
-      entity->setComponentUid(properties["componentUid"]);
-    else
-      entity->setComponentUid("");
+    entity->setProperties(properties);
 
     entities[parent]->addnstGraphicsEntity(entity);
     entities[uid] = entity;
@@ -2382,30 +2228,7 @@ void QnstView::changePort(QnstGraphicsPort* entity,
 {
   entity->setnstId(properties["id"]);
 
-  entity->setComponent(properties["component"]);
-  entity->setInterface(properties["interface"]);
-
-  if (properties["top"] != "")
-    entity->setTop(properties["top"].toDouble());
-
-  if (properties["left"] != "")
-    entity->setLeft(properties["left"].toDouble());
-
-  if (properties["width"] != "")
-    entity->setWidth(properties["width"].toDouble());
-
-  if (properties["height"] != "")
-    entity->setHeight(properties["height"].toDouble());
-
-  if (properties["interfaceUid"] != "")
-    entity->setInterfaceUid(properties["interfaceUid"]);
-  else
-    entity->setInterfaceUid("");
-
-  if (properties["componentUid"] != "")
-    entity->setComponentUid(properties["componentUid"]);
-  else
-    entity->setComponentUid("");
+  entity->setProperties(properties);
 
   foreach (QString key, interfaceRefers.keys(entity->getnstUid()))
   {
@@ -2519,18 +2342,7 @@ void QnstView::addMapping(const QString uid, const QString parent,
 
     entity->setSwitchPortUid(parent);
 
-    entity->setComponent(properties["component"]);
-    entity->setInterface(properties["interface"]);
-
-    if (properties["interfaceUid"] != "")
-      entity->setInterfaceUid(properties["interfaceUid"]);
-    else
-      entity->setInterfaceUid("");
-
-    if (properties["componentUid"] != "")
-      entity->setComponentUid(properties["componentUid"]);
-    else
-      entity->setComponentUid("");
+    entity->setProperties(properties);
 
     oparent->addnstGraphicsEntity(entity);
     entities[entity->getnstUid()] = entity;
@@ -2542,19 +2354,7 @@ void QnstView::addMapping(const QString uid, const QString parent,
 void QnstView::changeMapping(QnstGraphicsMapping* entity,
                              const QMap<QString, QString> &properties)
 {
-  entity->setComponent(properties["component"]);
-
-  entity->setInterface(properties["interface"]);
-
-  if (properties["interfaceUid"] != "")
-    entity->setInterfaceUid(properties["interfaceUid"]);
-  else
-    entity->setInterfaceUid("");
-
-  if (properties["componentUid"] != "")
-    entity->setComponentUid(properties["componentUid"]);
-  else
-    entity->setComponentUid("");
+  entity->setProperties(properties);
 
   adjustMapping(entity);
 }
@@ -2642,24 +2442,9 @@ void QnstView::addSwitchPort(const QString uid, const QString parent,
     entity->setnstUid(uid);
     entity->setnstGraphicsParent(entities[parent]);
 
-    entity->setTop(0);
-    entity->setLeft(0);
-    entity->setWidth(DEFAULT_INTERFACE_WIDTH);
-    entity->setHeight(DEFAULT_INTERFACE_HEIGHT);
-
     entity->setnstId(properties["id"]);
 
-    if (properties["top"] != "")
-        entity->setTop(properties["top"].toDouble());
-
-    if (properties["left"] != "")
-        entity->setLeft(properties["left"].toDouble());
-
-    if (properties["width"] != "")
-        entity->setWidth(properties["width"].toDouble());
-
-    if (properties["height"] != "")
-        entity->setHeight(properties["height"].toDouble());
+    entity->setProperties(properties);
 
     entities[parent]->addnstGraphicsEntity(entity);
     entities[uid] = entity;
@@ -2679,17 +2464,7 @@ void QnstView::changeSwitchPort(QnstGraphicsSwitchPort* entity,
 {
     entity->setnstId(properties["id"]);
 
-    if (properties["top"] != "")
-      entity->setTop(properties["top"].toDouble());
-
-    if (properties["left"] != "")
-      entity->setLeft(properties["left"].toDouble());
-
-    if (properties["width"] != "")
-      entity->setWidth(properties["width"].toDouble());
-
-    if (properties["height"] != "")
-      entity->setHeight(properties["height"].toDouble());
+    entity->setProperties(properties);
 
     entity->adjust();
 }
@@ -2704,24 +2479,9 @@ void QnstView::addArea(const QString uid, const QString parent,
     entity->setnstUid(uid);
     entity->setnstGraphicsParent(entities[parent]);
 
-    entity->setTop(0);
-    entity->setLeft(0);
-    entity->setWidth(DEFAULT_INTERFACE_WIDTH); // previously this was 16 (I don't know why the size was different from property
-    entity->setHeight(DEFAULT_INTERFACE_HEIGHT); // previously this was 16
-
     entity->setnstId(properties["id"]);
 
-    if (properties["top"] != "")
-      entity->setTop(properties["top"].toDouble());
-
-    if (properties["left"] != "")
-      entity->setLeft(properties["left"].toDouble());
-
-    if (properties["width"] != "")
-      entity->setWidth(properties["width"].toDouble());
-
-    if (properties["height"] != "")
-      entity->setHeight(properties["height"].toDouble());
+    entity->setProperties(properties);
 
     entities[parent]->addnstGraphicsEntity(entity);
     entities[uid] = entity;
@@ -2755,17 +2515,7 @@ void QnstView::changeArea(QnstGraphicsArea* entity,
 {
   entity->setnstId(properties["id"]);
 
-  if (properties["top"] != "")
-    entity->setTop(properties["top"].toDouble());
-
-  if (properties["left"] != "")
-    entity->setLeft(properties["left"].toDouble());
-
-  if (properties["width"] != "")
-    entity->setWidth(properties["width"].toDouble());
-
-  if (properties["height"] != "")
-    entity->setHeight(properties["height"].toDouble());
+  entity->setProperties(properties);
 
   foreach (QString key, interfaceRefers.keys(entity->getnstUid()))
   {
@@ -2786,24 +2536,9 @@ void QnstView::addProperty(const QString uid, const QString parent,
     entity->setnstUid(uid);
     entity->setnstGraphicsParent(entities[parent]);
 
-    entity->setTop(0);
-    entity->setLeft(0);
-    entity->setWidth(DEFAULT_INTERFACE_WIDTH);
-    entity->setHeight(DEFAULT_INTERFACE_HEIGHT);
-
     entity->setnstId(properties["id"]);
 
-    if (properties["top"] != "")
-      entity->setTop(properties["top"].toDouble());
-
-    if (properties["left"] != "")
-      entity->setLeft(properties["left"].toDouble());
-
-    if (properties["width"] != "")
-      entity->setWidth(properties["width"].toDouble());
-
-    if (properties["height"] != "")
-      entity->setHeight(properties["height"].toDouble());
+    entity->setProperties(properties);
 
     entities[parent]->addnstGraphicsEntity(entity);
     entities[uid] = entity;
@@ -2842,17 +2577,7 @@ void QnstView::changeProperty(QnstGraphicsProperty* entity,
 {
   entity->setnstId(properties["id"]);
 
-  if (properties["top"] != "")
-      entity->setTop(properties["top"].toDouble());
-
-  if (properties["left"] != "")
-      entity->setLeft(properties["left"].toDouble());
-
-  if (properties["width"] != "")
-      entity->setWidth(properties["width"].toDouble());
-
-  if (properties["height"] != "")
-      entity->setHeight(properties["height"].toDouble());
+  entity->setProperties(properties);
 
   foreach (QString key, interfaceRefers.keys(entity->getnstUid()))
   {
@@ -2880,6 +2605,7 @@ void QnstView::addLink(const QString uid, const QString parent,
       entity->setxConnector(properties["xconnector"]);
       entity->setxConnectorUID(properties["xconnectorUID"]);
     }
+
 
     links[uid] = entity;
 
@@ -3512,17 +3238,7 @@ void QnstView::addAggregator(const QString uid, const QString parent,
     if (properties["id"] != "")
       entity->setnstId(properties["id"]);
 
-    if (properties["top"] != "")
-      entity->setTop(properties["top"].toDouble());
-
-    if (properties["left"] != "")
-      entity->setLeft(properties["left"].toDouble());
-
-    if (properties["width"] != "")
-      entity->setWidth(properties["width"].toDouble());
-
-    if (properties["height"] != "")
-      entity->setHeight(properties["height"].toDouble());
+    entity->setProperties(properties);
 
     entities[parent]->addnstGraphicsEntity(entity);
     entities[uid] = entity;
@@ -4453,7 +4169,6 @@ void QnstView::requestPropertyAddition(QnstGraphicsProperty* entity)
 
   properties["TYPE"] = "property";
 
-
   if(entity->getnstGraphicsParent()->isMedia())
   {
     QnstGraphicsMedia *media =
@@ -4650,7 +4365,8 @@ void QnstView::performCopy(QnstGraphicsEntity* entity, QnstGraphicsEntity* paren
 
 void QnstView::performPaste()
 {
-  if (clipboard != NULL){
+  if (clipboard != NULL)
+  {
     QnstGraphicsEntity* copy = clipboard;
     qDebug() << "[QNST] performPaste() cliboard userdata = " << clipboard->getUsrData();
 

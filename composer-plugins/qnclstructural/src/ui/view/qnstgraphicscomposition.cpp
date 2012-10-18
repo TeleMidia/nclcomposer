@@ -9,21 +9,36 @@
 QnstGraphicsComposition::QnstGraphicsComposition(QnstGraphicsEntity* parent)
     : QnstGraphicsNode(parent)
 {
-    setnstType(Qnst::Compostion);
+  setnstType(Qnst::Compostion);
 
-    setColor("#EEEEEE");
+  setColor("#EEEEEE");
 
-    setAcceptDrops(true);
+  setAcceptDrops(true);
 
-    lastw = 0;
-    lasth = 0;
+  lastw = 0;
+  lasth = 0;
 
-    collapsed = false;
+  collapsed = false;
 
-    tmp = NULL;
+  tmp = NULL;
 
-//    tmp = new QnstGraphicsComposition();
-//    tmp->hide();
+  //tmp = new QnstGraphicsComposition();
+  //tmp->hide();
+
+  /* Default size and position */
+  if(parent)
+  {
+    setTop(parent->getHeight()/2 - DEFAULT_CONTEXT_HEIGHT/2);
+    setLeft(parent->getWidth()/2 - DEFAULT_CONTEXT_WIDTH/2);
+  }
+  else
+  {
+    setTop(0);
+    setLeft(0);
+  }
+
+  setWidth(DEFAULT_CONTEXT_WIDTH);
+  setHeight(DEFAULT_CONTEXT_HEIGHT);
 }
 
 QnstGraphicsComposition::~QnstGraphicsComposition()
@@ -33,45 +48,49 @@ QnstGraphicsComposition::~QnstGraphicsComposition()
 
 QString QnstGraphicsComposition::getColor() const
 {
-    return color;
+  return color;
 }
 
 void QnstGraphicsComposition::setColor(QString color)
 {
-    this->color = color;
+  this->color = color;
 }
 
 void QnstGraphicsComposition::setCollapsed(bool collapsed)
 {
-    this->collapsed = collapsed;
+  this->collapsed = collapsed;
 }
 
 bool QnstGraphicsComposition::isCollapsed()
 {
-    return collapsed;
+  return collapsed;
 }
 
 void QnstGraphicsComposition::setnstId(QString id)
 {
-    QnstGraphicsNode::setnstId(id);
+  QnstGraphicsNode::setnstId(id);
 
-    QString tip = "";
-    QString name = (getnstId() != "" ? getnstId() : "?");
+  QString tip = "";
+  QString name = (getnstId() != "" ? getnstId() : "?");
 
-    if (getnstType() == Qnst::Context){
-        tip += "Context ("+name+")";
+  if (getnstType() == Qnst::Context)
+  {
+    tip += "Context ("+name+")";
+  }
+  else if (getnstType() == Qnst::Switch)
+  {
+    tip += "Switch ("+name+")";
+  }
+  else if (getnstType() == Qnst::Body)
+  {
+    tip += "Body ("+name+")";
+  }
+  else
+  {
+    tip += "Composition ("+name+")";
+  }
 
-    }else if (getnstType() == Qnst::Switch){
-        tip += "Switch ("+name+")";
-
-    }else if (getnstType() == Qnst::Body){
-        tip += "Body ("+name+")";
-
-    }else{
-        tip += "Composition ("+name+")";
-    }
-
-    setToolTip(tip);
+  setToolTip(tip);
 }
 
 void QnstGraphicsComposition::draw(QPainter* painter)
@@ -405,6 +424,43 @@ void QnstGraphicsComposition::setLastW(qreal lastW)
 void QnstGraphicsComposition::setLastH(qreal lastH)
 {
     this->lasth = lastH;
+}
+
+void QnstGraphicsComposition::setProperties(const QMap<QString, QString> &props)
+{
+  QnstGraphicsNode::setProperties(props);
+
+  if (props["collapsed"] != "")
+  {
+    if (props["collapsed"] == "1")
+    {
+      if (props["width"] != "")
+        setLastW(props["width"].toDouble());
+
+      if (props["height"] != "")
+        setLastH(props["height"].toDouble());
+
+      if (props["expandHeight"] != "")
+        setHeight(props["expandHeight"].toDouble());
+
+      if (props["expandWidth"] != "")
+        setWidth(props["expandWidth"].toDouble());
+    }
+    else
+    {
+      if (props["width"] != "")
+        setWidth(props["width"].toDouble());
+
+      if (props["height"] != "")
+        setHeight(props["height"].toDouble());
+
+      if (props["expandHeight"] != "")
+        setLastH(props["expandHeight"].toDouble());
+
+      if (props["expandWidth"] != "")
+        setLastW(props["expandWidth"].toDouble());
+    }
+  }
 }
 
 //void QnstGraphicsComposition::setCollpsed(bool collapsed)

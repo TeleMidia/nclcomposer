@@ -11,67 +11,67 @@
 class QnstGraphicsEdge : public QnstGraphicsEntity
 {
 public:
-    QnstGraphicsEdge(QnstGraphicsEntity* parent = 0);
+  QnstGraphicsEdge(QnstGraphicsEntity* parent = 0);
 
-    ~QnstGraphicsEdge();
+  ~QnstGraphicsEdge();
 
-    bool isInvalid();
+  bool isInvalid();
 
-    void setInvalid(bool invalid);
+  void setInvalid(bool invalid);
 
-    QnstGraphicsEntity* getEntityA() const;
+  QnstGraphicsEntity* getEntityA() const;
 
-    void setEntityA(QnstGraphicsEntity* entity);
+  void setEntityA(QnstGraphicsEntity* entity);
 
-    QnstGraphicsEntity* getEntityB() const;
+  QnstGraphicsEntity* getEntityB() const;
 
-    void setEntityB(QnstGraphicsEntity* entity);
+  void setEntityB(QnstGraphicsEntity* entity);
 
-    bool isEntityAEnabled() const;
+  bool isEntityAEnabled() const;
 
-    void setEntityAEnabled(bool enable);
+  void setEntityAEnabled(bool enable);
 
-    bool isEntityBEnabled() const;
+  bool isEntityBEnabled() const;
 
-    void setEntityBEnabled(bool enable);
+  void setEntityBEnabled(bool enable);
 
-    void adjust(bool avoidCollision = false);
+  void adjust(bool avoidCollision = false);
 
-    void aux_adjust(QPointF pointa, QPointF pointb);
+  void aux_adjust(QPointF pointa, QPointF pointb);
 
-    QPointF arcPointAt(QLineF line, qreal at, bool toend = true);
+  QPointF arcPointAt(QLineF line, qreal at, bool toend = true);
 
-    qreal getAngle();
+  qreal getAngle();
 
-    void setAngle(qreal angle);
+  void setAngle(qreal angle);
 
-    qreal getAdjAngle();
+  qreal getAdjAngle();
 
-    void setAdjAngle(qreal adjangle);
+  void setAdjAngle(qreal adjangle);
 
 protected:
-    virtual void draw(QPainter* painter) = 0;
+  virtual void draw(QPainter* painter) = 0;
 
-    virtual void delineate(QPainterPath* painter) const = 0;
+  virtual void delineate(QPainterPath* painter) const = 0;
 
-    virtual void move(QGraphicsSceneMouseEvent* event);
+  virtual void move(QGraphicsSceneMouseEvent* event);
 
-    virtual void resize(QGraphicsSceneMouseEvent* event);
+  virtual void resize(QGraphicsSceneMouseEvent* event);
 
 private:
-    bool invalid;
+  bool invalid;
 
-    qreal angle;
+  qreal angle;
 
-    qreal adjustedangle;
+  qreal adjustedangle;
 
-    bool entityaenabled;
+  bool entityaenabled;
 
-    bool entitybenabled;
+  bool entitybenabled;
 
-    QnstGraphicsEntity* entitya;
+  QnstGraphicsEntity* entitya;
 
-    QnstGraphicsEntity* entityb;
+  QnstGraphicsEntity* entityb;
 };
 
 #endif // QNSTGRAPHICSEDGE_H

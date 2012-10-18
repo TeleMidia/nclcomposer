@@ -250,3 +250,13 @@ void QnstGraphicsMedia::mousePressEvent(QGraphicsSceneMouseEvent *event)
   else
     QnstGraphicsContent::mousePressEvent(event);
 }
+
+void QnstGraphicsMedia::setProperties(const QMap<QString, QString> &properties)
+{
+  QnstGraphicsContent::setProperties(properties);
+
+  setSource(properties["src"]);
+  setRefer(properties["refer"]);
+  setReferUID(properties["referUID"]);
+  setInstance(properties["instance"]);
+}

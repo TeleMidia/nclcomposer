@@ -10,19 +10,17 @@
 
 class QnstGraphicsSwitch : public QnstGraphicsComposition
 {
-    Q_OBJECT
+  Q_OBJECT
 
 public:
-    QnstGraphicsSwitch(QnstGraphicsEntity* parent = 0);
+  QnstGraphicsSwitch(QnstGraphicsEntity* parent = 0);
 
-    ~QnstGraphicsSwitch();
+  ~QnstGraphicsSwitch();
 
 private:
-    void createObjects();
+  void createObjects();
 
-    void createConnections();
-
-    QString dropsrc;
+  void createConnections();
 };
 
 

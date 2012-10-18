@@ -6,14 +6,14 @@
 class QnstGraphicsReference : public QnstGraphicsEdge
 {
 public:
-    QnstGraphicsReference(QnstGraphicsEntity* parent = 0);
+  QnstGraphicsReference(QnstGraphicsEntity* parent = 0);
 
-    ~QnstGraphicsReference();
+  ~QnstGraphicsReference();
 
 protected:
-    virtual void draw(QPainter* painter);
+  virtual void draw(QPainter* painter);
 
-    virtual void delineate(QPainterPath* painter) const;
+  virtual void delineate(QPainterPath* painter) const;
 };
 
 #endif // QNSTGRAPHICSREFERENCE_H

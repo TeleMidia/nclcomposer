@@ -423,3 +423,4 @@ void QnstGraphicsNode::resize(QGraphicsSceneMouseEvent* event)
 
     scene()->update();
 }
+

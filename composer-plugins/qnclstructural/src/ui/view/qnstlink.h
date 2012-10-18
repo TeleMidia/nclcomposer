@@ -9,44 +9,44 @@
 class QnstLink : public QnstEntity
 {
 public:
-    QnstLink();
+  QnstLink();
 
-    virtual ~QnstLink();
+  virtual ~QnstLink();
 
-    QString getAggregatorUID() const;
+  QString getAggregatorUID() const;
 
-    void setAggregatorUID(QString aggregatorUID);
+  void setAggregatorUID(QString aggregatorUID);
 
-    QString getxConnector() const;
+  QString getxConnector() const;
 
-    void setxConnector(QString xconnector);
+  void setxConnector(QString xconnector);
 
-    QString getxConnectorUID() const;
+  QString getxConnectorUID() const;
 
-    void setxConnectorUID(QString xconnectorUID);
+  void setxConnectorUID(QString xconnectorUID);
 
-    QMap<QString, QnstBind*> getActions() const;
+  QMap<QString, QnstBind*> getActions() const;
 
-    void addAction(QnstBind* action);
+  void addAction(QnstBind* action);
 
-    void removeAction(QnstBind* action);
+  void removeAction(QnstBind* action);
 
-    QMap<QString, QnstBind*> getConditions() const;
+  QMap<QString, QnstBind*> getConditions() const;
 
-    void addCondition(QnstBind* condition);
+  void addCondition(QnstBind* condition);
 
-    void removeCondition(QnstBind* condition);
+  void removeCondition(QnstBind* condition);
 
 private:
-    QString aggregatorUID;
+  QString aggregatorUID;
 
-    QString xconnector;
+  QString xconnector;
 
-    QString xconnectorUID;
+  QString xconnectorUID;
 
-    QMap<QString, QnstBind*> actions;
+  QMap<QString, QnstBind*> actions;
 
-    QMap<QString, QnstBind*> conditions;
+  QMap<QString, QnstBind*> conditions;
 };
 
 #endif // QNSTLINK_H

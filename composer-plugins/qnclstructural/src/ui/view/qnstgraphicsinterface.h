@@ -7,33 +7,33 @@
 class QnstGraphicsInterface : public QnstGraphicsEntity
 {
 public:
-    QnstGraphicsInterface(QnstGraphicsEntity* parent = 0);
+  QnstGraphicsInterface(QnstGraphicsEntity* parent = 0);
 
-    ~QnstGraphicsInterface();
+  ~QnstGraphicsInterface();
 
-    QVector<QnstGraphicsEdge*> getnstGraphicsEdges();
+  QVector<QnstGraphicsEdge*> getnstGraphicsEdges();
 
-    void addnstGraphicsEdge(QnstGraphicsEdge* edge);
+  void addnstGraphicsEdge(QnstGraphicsEdge* edge);
 
-    void removenstGraphicsEdge(QnstGraphicsEdge* edge);
+  void removenstGraphicsEdge(QnstGraphicsEdge* edge);
 
-    virtual void adjust(bool avoidCollision = true);
+  virtual void adjust(bool avoidCollision = true);
 
-    void setnstId(QString id);
+  void setnstId(QString id);
 
 protected:
-    virtual void draw(QPainter* painter) = 0;
+  virtual void draw(QPainter* painter) = 0;
 
-    virtual void delineate(QPainterPath* painter) const = 0;
+  virtual void delineate(QPainterPath* painter) const = 0;
 
-    virtual void move(QGraphicsSceneMouseEvent* event);
+  virtual void move(QGraphicsSceneMouseEvent* event);
 
-    virtual void resize(QGraphicsSceneMouseEvent* event);
+  virtual void resize(QGraphicsSceneMouseEvent* event);
 
 private:
-    void adjustToBorder();
+  void adjustToBorder();
 
-    QVector<QnstGraphicsEdge*> links;
+  QVector<QnstGraphicsEdge*> links;
 };
 
 #endif // QNSTGRAPHICSINTERFACE_H

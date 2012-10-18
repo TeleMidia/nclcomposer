@@ -19,56 +19,59 @@ class QListView;
 class QStringListModel;
 class QModelIndex;
 
-class CompleteLineEdit : public QLineEdit {
-    Q_OBJECT
+class CompleteLineEdit : public QLineEdit
+{
+  Q_OBJECT
+
 public:
-    CompleteLineEdit(QStringList words, QWidget *parent = 0);
-    void setStringList(const QStringList &words);
+  CompleteLineEdit(QStringList words, QWidget *parent = 0);
+  void setStringList(const QStringList &words);
 
 public slots:
-    void setCompleter(const QString &text);
-    void completeText(const QModelIndex &index);
+  void setCompleter(const QString &text);
+  void completeText(const QModelIndex &index);
 
 protected:
-    virtual void keyPressEvent(QKeyEvent *e);
-    virtual void focusInEvent(QFocusEvent *e);
-    virtual void hideEvent ( QHideEvent * event );
-    // virtual void focusOutEvent(QFocusEvent *e);
-    virtual bool eventFilter(QObject *object, QEvent *event);
+  virtual void keyPressEvent(QKeyEvent *e);
+  virtual void focusInEvent(QFocusEvent *e);
+  virtual void hideEvent ( QHideEvent * event );
+  // virtual void focusOutEvent(QFocusEvent *e);
+  virtual bool eventFilter(QObject *object, QEvent *event);
 
 private:
-    QStringList words;
-    QListView *listView;
-    QStringListModel *model;
+  QStringList words;
+  QListView *listView;
+  QStringListModel *model;
+
 };
 
 class QnstGraphicsLinkDialog : public QDialog
 {
-    Q_OBJECT
+  Q_OBJECT
 
 public:
-    QnstGraphicsLinkDialog(QWidget* parent = 0);
+  QnstGraphicsLinkDialog(QWidget* parent = 0);
 
-    ~QnstGraphicsLinkDialog();
+  ~QnstGraphicsLinkDialog();
 
-    void init(QMap<QString, QnstConnector*> connectors);
+  void init(QMap<QString, QnstConnector*> connectors);
 
 protected slots:
-    void adjustBinds(QString conn);
+  void adjustBinds(QString conn);
 
 protected:
-    virtual void showEvent(QShowEvent *evt);
+  virtual void showEvent(QShowEvent *evt);
 
 public:
-    //TODO: This shouldn't be public
-    Ui::QnstGraphicsLinkForm form;
+  //TODO: This shouldn't be public
+  Ui::QnstGraphicsLinkForm form;
 
-    QMap<QString, QnstConnector*> connectors;
-    QString getCurrentConnector();
+  QMap<QString, QnstConnector*> connectors;
+  QString getCurrentConnector();
 
 private:
-    bool firstTime, changeModel;
-    CompleteLineEdit *connLineEdit;
+  bool firstTime, changeModel;
+  CompleteLineEdit *connLineEdit;
 };
 
 #endif // QNSTGRAPHICSLINKDIALOG_H

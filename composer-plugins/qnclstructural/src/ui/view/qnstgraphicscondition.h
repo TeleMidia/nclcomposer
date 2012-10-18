@@ -10,63 +10,63 @@ typedef Qnst::ConditionType QnstCondition;
 
 class QnstGraphicsCondition : public QnstGraphicsEdge
 {
-    Q_OBJECT
+  Q_OBJECT
 
 public:
-    QnstGraphicsCondition(QnstGraphicsEntity* parent = 0);
+  QnstGraphicsCondition(QnstGraphicsEntity* parent = 0);
 
-    ~QnstGraphicsCondition();
+  ~QnstGraphicsCondition();
 
-    QnstCondition getCondition();
+  QnstCondition getCondition();
 
-    void setCondition(QnstCondition condition);
+  void setCondition(QnstCondition condition);
 
-    QnstConditionIcon getConditionIcon();
+  QnstConditionIcon getConditionIcon();
 
-    void setConditionIcon(QnstConditionIcon conditionIcon);
+  void setConditionIcon(QnstConditionIcon conditionIcon);
 
-    void adjust();
+  void adjust();
 
-    void aux_adjust(QPointF pointa, QPointF pointb);
+  void aux_adjust(QPointF pointa, QPointF pointb);
 
-    void setConn(QnstConnector* conn);
+  void setConn(QnstConnector* conn);
 
-    void setNameUids(QMap<QString, QString> nameUids);
+  void setNameUids(QMap<QString, QString> nameUids);
 
-    void setParams(QMap<QString, QString> params);
+  void setParams(QMap<QString, QString> params);
 
-    void addParam(QString uid, QString name, QString value);
+  void addParam(QString uid, QString name, QString value);
 
-    void setParam(QString name, QString value);
+  void setParam(QString name, QString value);
 
-    void removeParam(QString name);
+  void removeParam(QString name);
 
-    void removeUId(QString uid);
+  void removeUId(QString uid);
 
 signals:
-    void bindParamAdded(QString uid, QString parent, QMap<QString, QString> properties);
+  void bindParamAdded(QString uid, QString parent, QMap<QString, QString> properties);
 
-    void bindParamUpdated(QString bindUid, QMap<QString, QString> params,  QMap<QString, QString> name_uids);
+  void bindParamUpdated(QString bindUid, QMap<QString, QString> params,  QMap<QString, QString> name_uids);
 
 protected:
-    virtual void draw(QPainter* painter);
+  virtual void draw(QPainter* painter);
 
-    virtual void delineate(QPainterPath* painter) const;
+  virtual void delineate(QPainterPath* painter) const;
 
-    virtual void mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event);
+  virtual void mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event);
 
 private:
-    QnstCondition condition;
+  QnstCondition condition;
 
-    QnstConditionIcon conditionIcon;
+  QnstConditionIcon conditionIcon;
 
-    QnstConnector* conn;
+  QnstConnector* conn;
 
-    QMap<QString, QString> name_uid;
+  QMap<QString, QString> name_uid;
 
-    QMap<QString, QString> params;
+  QMap<QString, QString> params;
 
-    QnstGraphicsBindDialog* dialog;
+  QnstGraphicsBindDialog* dialog;
 };
 
 #endif // QNSTGRAPHICSCONDITION_H

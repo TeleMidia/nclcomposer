@@ -49,342 +49,342 @@ class QnstAddCommand;
 
 class QnstView : public QGraphicsView
 {
-    Q_OBJECT
+  Q_OBJECT
 
 public:
-    QnstView(QWidget* parent = 0);
+  QnstView(QWidget* parent = 0);
 
-    ~QnstView();
+  ~QnstView();
 
-    void load(QString data);
+  void load(QString data);
 
-    QString serialize();
+  QString serialize();
 
-    void read(QDomElement element, QDomElement parent);
+  void read(QDomElement element, QDomElement parent);
 
-    void readLink(QDomElement element, QDomElement parent);
+  void readLink(QDomElement element, QDomElement parent);
 
-    void write(QDomElement element, QDomDocument* dom, QnstGraphicsEntity* entity);
+  void write(QDomElement element, QDomDocument* dom, QnstGraphicsEntity* entity);
 
-    void writeLink(QDomElement element, QDomDocument* dom, QnstGraphicsEntity* entity);
+  void writeLink(QDomElement element, QDomDocument* dom, QnstGraphicsEntity* entity);
 
 public:
-    void addEntity(const QString uid, const QString parent, const QMap<QString, QString> &properties);
+  void addEntity(const QString uid, const QString parent, const QMap<QString, QString> &properties);
 
-    void removeEntity(const QString uid, bool undo = false, bool rmRef = true);
+  void removeEntity(const QString uid, bool undo = false, bool rmRef = true);
 
-    void changeEntity(const QString uid, const QMap<QString, QString> &properties);
+  void changeEntity(const QString uid, const QMap<QString, QString> &properties);
 
-    void selectEntity(const QString uid);
+  void selectEntity(const QString uid);
 
-    bool hasEntity(QString uid);
+  bool hasEntity(QString uid);
 
-    QnstEntity* getEntity(QString uid);
+  QnstEntity* getEntity(QString uid);
 
-    QMap<QString, QnstGraphicsEntity*> entities;
+  QMap<QString, QnstGraphicsEntity*> entities;
 
 public slots:
-    void performHelp();
+  void performHelp();
 
-    void performUndo();
+  void performUndo();
 
-    void performRedo();
+  void performRedo();
 
-    void performCut();
+  void performCut();
 
-    void performCopy();
+  void performCopy();
 
-    void performPaste();
+  void performPaste();
 
-    void performDelete();
+  void performDelete();
 
-    void performExport();
+  void performExport();
 
-    void performZoomIn();
+  void performZoomIn();
 
-    void performZoomOut();
+  void performZoomOut();
 
-    void performZoomReset();
+  void performZoomReset();
 
-    void performFullscreen();
+  void performFullscreen();
 
-    void performBringfront();
+  void performBringfront();
 
-    void performBringforward();
+  void performBringforward();
 
-    void performSendback();
+  void performSendback();
 
-    void performSendbackward();
+  void performSendbackward();
 
-    void performHide();
+  void performHide();
 
-    void performProperties();
+  void performProperties();
 
 signals:
-    void entityAdded(const QString uid, const QString parent, const QMap<QString, QString> properties);
+  void entityAdded(const QString uid, const QString parent, const QMap<QString, QString> properties);
 
-    void entityChanged(const QString uid, const QMap<QString, QString> properties);
+  void entityChanged(const QString uid, const QMap<QString, QString> properties);
 
-    void entityRemoved(const QString uid);
+  void entityRemoved(const QString uid);
 
-    void entitySelected(const QString uid);
+  void entitySelected(const QString uid);
 
-    void viewChanged();
+  void viewChanged();
 
 protected:
-    virtual void mouseMoveEvent(QMouseEvent* event);
+  virtual void mouseMoveEvent(QMouseEvent* event);
 
-    virtual void mousePressEvent(QMouseEvent* event);
+  virtual void mousePressEvent(QMouseEvent* event);
 
-    virtual void mouseReleaseEvent(QMouseEvent*event);
+  virtual void mouseReleaseEvent(QMouseEvent*event);
 
-    virtual void keyPressEvent(QKeyEvent *event);
+  virtual void keyPressEvent(QKeyEvent *event);
 
-    virtual void keyReleaseEvent(QKeyEvent *event);
+  virtual void keyReleaseEvent(QKeyEvent *event);
 
-    virtual void focusOutEvent(QFocusEvent *event);
+  virtual void focusOutEvent(QFocusEvent *event);
 
-    void wheelEvent(QWheelEvent * event);
+  void wheelEvent(QWheelEvent * event);
 
 public slots:
-    void requestEntityAddition(QnstGraphicsEntity* entity, bool undo = false);
+  void requestEntityAddition(QnstGraphicsEntity* entity, bool undo = false);
 
-    void requestEntityRemotion(QnstGraphicsEntity* entity, bool undo = false, bool rmRefs = true);
+  void requestEntityRemotion(QnstGraphicsEntity* entity, bool undo = false, bool rmRefs = true);
 
-    void requestEntityChange(QnstGraphicsEntity* entity);
+  void requestEntityChange(QnstGraphicsEntity* entity);
 
-    void requestEntityPreparation(QnstGraphicsEntity* entity, QMap<QString, QString> properties);
+  void requestEntityPreparation(QnstGraphicsEntity* entity, QMap<QString, QString> properties);
 
-    void requestEntitySelection(QnstGraphicsEntity* entity);
+  void requestEntitySelection(QnstGraphicsEntity* entity);
 
-    void requestBindParamAdjust(QString uid, QString parent, QMap<QString, QString> properties);
+  void requestBindParamAdjust(QString uid, QString parent, QMap<QString, QString> properties);
 
-    void updateBindParams(QString bindUID,QMap<QString, QString> params, QMap<QString, QString> name_uids);
+  void updateBindParams(QString bindUID,QMap<QString, QString> params, QMap<QString, QString> name_uids);
 
-    void markError(QString uid);
+  void markError(QString uid);
 
-    void clearValidationErrors();
+  void clearValidationErrors();
 
 private:
-    void addBody(const QString uid, const QString parent, const QMap<QString, QString> &properties, bool undo = false);
+  void addBody(const QString uid, const QString parent, const QMap<QString, QString> &properties, bool undo = false);
 
-    void changeBody(QnstGraphicsBody* entity, const QMap<QString, QString> &properties);
+  void changeBody(QnstGraphicsBody* entity, const QMap<QString, QString> &properties);
 
-    void addImportBase(QString uid, const QMap<QString, QString> &properties);
+  void addImportBase(QString uid, const QMap<QString, QString> &properties);
 
-    void changeImportBase(QString uid, const QMap<QString, QString> &properties);
+  void changeImportBase(QString uid, const QMap<QString, QString> &properties);
 
-    void addContext(const QString uid, const QString parent, const QMap<QString, QString> &properties, bool undo = false);
+  void addContext(const QString uid, const QString parent, const QMap<QString, QString> &properties, bool undo = false);
 
-    void changeContext(QnstGraphicsContext* entity, const QMap<QString, QString> &properties);
+  void changeContext(QnstGraphicsContext* entity, const QMap<QString, QString> &properties);
 
-    void adjustContext(QnstGraphicsContext* entity);
+  void adjustContext(QnstGraphicsContext* entity);
 
-    void addSwitch(const QString uid, const QString parent, const QMap<QString, QString> &properties, bool undo = false);
+  void addSwitch(const QString uid, const QString parent, const QMap<QString, QString> &properties, bool undo = false);
 
-    void changeSwitch(QnstGraphicsSwitch* entity, const QMap<QString, QString> &properties);
+  void changeSwitch(QnstGraphicsSwitch* entity, const QMap<QString, QString> &properties);
 
-    void addMedia(const QString uid, const QString parent, const QMap<QString, QString> &properties, bool undo = false, bool adjust = true);
+  void addMedia(const QString uid, const QString parent, const QMap<QString, QString> &properties, bool undo = false, bool adjust = true);
 
-    void changeMedia(QnstGraphicsMedia* entity, const QMap<QString, QString> &properties, bool adjust=true);
+  void changeMedia(QnstGraphicsMedia* entity, const QMap<QString, QString> &properties, bool adjust=true);
 
-    void adjustMedia(QnstGraphicsMedia* entity);
+  void adjustMedia(QnstGraphicsMedia* entity);
 
-    void addPort(const QString uid, const QString parent, const QMap<QString, QString> &properties, bool undo = false);
+  void addPort(const QString uid, const QString parent, const QMap<QString, QString> &properties, bool undo = false);
 
-    void changePort(QnstGraphicsPort* entity, const QMap<QString, QString> &properties);
+  void changePort(QnstGraphicsPort* entity, const QMap<QString, QString> &properties);
 
-    void adjustPort(QnstGraphicsPort* entity);
+  void adjustPort(QnstGraphicsPort* entity);
 
-    void addMapping(const QString uid, const QString parent, const QMap<QString, QString> &properties, bool undo = false);
+  void addMapping(const QString uid, const QString parent, const QMap<QString, QString> &properties, bool undo = false);
 
-    void changeMapping(QnstGraphicsMapping* entity, const QMap<QString, QString> &properties);
+  void changeMapping(QnstGraphicsMapping* entity, const QMap<QString, QString> &properties);
 
-    void adjustMapping(QnstGraphicsMapping* entity);
+  void adjustMapping(QnstGraphicsMapping* entity);
 
-    void addSwitchPort(const QString uid, const QString parent, const QMap<QString, QString> &properties, bool undo = false);
+  void addSwitchPort(const QString uid, const QString parent, const QMap<QString, QString> &properties, bool undo = false);
 
-    void changeSwitchPort(QnstGraphicsSwitchPort* entity, const QMap<QString, QString> &properties);
+  void changeSwitchPort(QnstGraphicsSwitchPort* entity, const QMap<QString, QString> &properties);
 
-    void addArea(const QString uid, const QString parent, const QMap<QString, QString> &properties, bool undo = false, bool adjust = true);
+  void addArea(const QString uid, const QString parent, const QMap<QString, QString> &properties, bool undo = false, bool adjust = true);
 
-    void changeArea(QnstGraphicsArea* entity, const QMap<QString, QString> &properties);
+  void changeArea(QnstGraphicsArea* entity, const QMap<QString, QString> &properties);
 
-    void addProperty(const QString uid, const QString parent, const QMap<QString, QString> &properties, bool undo = false, bool adjust = true);
+  void addProperty(const QString uid, const QString parent, const QMap<QString, QString> &properties, bool undo = false, bool adjust = true);
 
-    void changeProperty(QnstGraphicsProperty* entity, const QMap<QString, QString> &properties);
+  void changeProperty(QnstGraphicsProperty* entity, const QMap<QString, QString> &properties);
 
-    void addLink(const QString uid, const QString parent, const QMap<QString, QString> &properties);
+  void addLink(const QString uid, const QString parent, const QMap<QString, QString> &properties);
 
-    void changeLink(QnstLink* entity, const QMap<QString, QString> &properties);
+  void changeLink(QnstLink* entity, const QMap<QString, QString> &properties);
 
-    void adjustLink(QnstLink* entity);
+  void adjustLink(QnstLink* entity);
 
-    void addBind(const QString uid, const QString parent, const QMap<QString, QString> &properties);
+  void addBind(const QString uid, const QString parent, const QMap<QString, QString> &properties);
 
-    void changeBind(QnstBind* entity, const QMap<QString, QString> &properties);
+  void changeBind(QnstBind* entity, const QMap<QString, QString> &properties);
 
-    void adjustBind(QnstBind* entity);
+  void adjustBind(QnstBind* entity);
 
-    void addConnector(const QString uid, const QString parent, const QMap<QString, QString> &properties);
+  void addConnector(const QString uid, const QString parent, const QMap<QString, QString> &properties);
 
-    void changeConnector(QnstConnector* entity, const QMap<QString, QString> &properties);
+  void changeConnector(QnstConnector* entity, const QMap<QString, QString> &properties);
 
-    void addCondition(const QString uid, const QString parent, const QMap<QString, QString> &properties);
+  void addCondition(const QString uid, const QString parent, const QMap<QString, QString> &properties);
 
-    void changeCondition(QString condition, const QMap<QString, QString> &properties);
+  void changeCondition(QString condition, const QMap<QString, QString> &properties);
 
-    void addAction(const QString uid, const QString parent, const QMap<QString, QString> &properties);
+  void addAction(const QString uid, const QString parent, const QMap<QString, QString> &properties);
 
-    void changeAction(QString condition, const QMap<QString, QString> &properties);
+  void changeAction(QString condition, const QMap<QString, QString> &properties);
 
-    void adjustConnector(QnstConnector* entity);
+  void adjustConnector(QnstConnector* entity);
 
-    void addAggregator(const QString uid, const QString parent, const QMap<QString, QString> &properties, bool undo = false);
+  void addAggregator(const QString uid, const QString parent, const QMap<QString, QString> &properties, bool undo = false);
 
-    void addBindParam(const QString uid, const QString parent, const QMap<QString, QString> &properties);
+  void addBindParam(const QString uid, const QString parent, const QMap<QString, QString> &properties);
 
-    void changeBindParam(const QString uid, const QMap<QString, QString> &properties);
+  void changeBindParam(const QString uid, const QMap<QString, QString> &properties);
 
-    void addConnectorParam(const QString uid, const QString parent, const QMap<QString, QString> &properties);
+  void addConnectorParam(const QString uid, const QString parent, const QMap<QString, QString> &properties);
 
-    void changeConnectorParam(const QString uid, const QMap<QString, QString> &properties);
+  void changeConnectorParam(const QString uid, const QMap<QString, QString> &properties);
 
-    void requestBodyAddition(QnstGraphicsBody* entity);
+  void requestBodyAddition(QnstGraphicsBody* entity);
 
-    void requestBodyChange(QnstGraphicsBody* entity);
+  void requestBodyChange(QnstGraphicsBody* entity);
 
-    void requestContextAddition(QnstGraphicsContext* entity, bool undo = false);
+  void requestContextAddition(QnstGraphicsContext* entity, bool undo = false);
 
-    void requestContextChange(QnstGraphicsContext* entity);
+  void requestContextChange(QnstGraphicsContext* entity);
 
-    void requestSwitchAddition(QnstGraphicsSwitch* entity, bool undo = false);
+  void requestSwitchAddition(QnstGraphicsSwitch* entity, bool undo = false);
 
-    void requestSwitchChange(QnstGraphicsSwitch* entity);
+  void requestSwitchChange(QnstGraphicsSwitch* entity);
 
-    void requestMediaAddition(QnstGraphicsMedia* entity, bool undo = false);
+  void requestMediaAddition(QnstGraphicsMedia* entity, bool undo = false);
 
-    void requestMediaChange(QnstGraphicsMedia* entity);
+  void requestMediaChange(QnstGraphicsMedia* entity);
 
-    void requestAggregatorAddition(QnstGraphicsAggregator* entity);
+  void requestAggregatorAddition(QnstGraphicsAggregator* entity);
 
-    void requestPortAddition(QnstGraphicsPort* entity, bool undo = false);
+  void requestPortAddition(QnstGraphicsPort* entity, bool undo = false);
 
-    void requestPortChange(QnstGraphicsPort* entity);
+  void requestPortChange(QnstGraphicsPort* entity);
 
-    void requestMappingAddition(QnstGraphicsMapping* entity, bool undo = false);
+  void requestMappingAddition(QnstGraphicsMapping* entity, bool undo = false);
 
-    void requestMappingChange(QnstGraphicsMapping* entity);
+  void requestMappingChange(QnstGraphicsMapping* entity);
 
-    void requestSwitchPortAddition(QnstGraphicsSwitchPort* entity, bool undo = false);
+  void requestSwitchPortAddition(QnstGraphicsSwitchPort* entity, bool undo = false);
 
-    void requestSwitchPortChange(QnstGraphicsSwitchPort* entity);
+  void requestSwitchPortChange(QnstGraphicsSwitchPort* entity);
 
-    void requestAreaAddition(QnstGraphicsArea* entity, bool undo = false);
+  void requestAreaAddition(QnstGraphicsArea* entity, bool undo = false);
 
-    void requestAreaChange(QnstGraphicsArea* entity);
+  void requestAreaChange(QnstGraphicsArea* entity);
 
-    void requestPropertyAddition(QnstGraphicsProperty* entity);
+  void requestPropertyAddition(QnstGraphicsProperty* entity);
 
-    void requestPropertyChange(QnstGraphicsProperty* entity);
+  void requestPropertyChange(QnstGraphicsProperty* entity);
 
-    void performCopy(QnstGraphicsEntity* entity, QnstGraphicsEntity* parent);
+  void performCopy(QnstGraphicsEntity* entity, QnstGraphicsEntity* parent);
 
-    void performPaste(QnstGraphicsEntity* copy, QnstGraphicsEntity* parent);
+  void performPaste(QnstGraphicsEntity* copy, QnstGraphicsEntity* parent);
 
-    void performReference(QnstGraphicsEntity* copy, QnstGraphicsEntity* parent);
+  void performReference(QnstGraphicsEntity* copy, QnstGraphicsEntity* parent);
 
-    void createObjects();
+  void createObjects();
 
-    void createConnection();
+  void createConnection();
 
-    void readImportBase(QString uid, QDomElement e, const QString alias);
+  void readImportBase(QString uid, QDomElement e, const QString alias);
 
-    void readConnector(QDomElement e, QnstConnector* conn);
+  void readConnector(QDomElement e, QnstConnector* conn);
 
-    void addNodetoNodeEdge(QnstGraphicsEntity* entitya, QnstGraphicsEntity* entityb);
+  void addNodetoNodeEdge(QnstGraphicsEntity* entitya, QnstGraphicsEntity* entityb);
 
-    void addNodetoInterfaceEdge(QnstGraphicsEntity* entitya, QnstGraphicsEntity* entityb);
+  void addNodetoInterfaceEdge(QnstGraphicsEntity* entitya, QnstGraphicsEntity* entityb);
 
-    void addInterfacetoNodeEdge(QnstGraphicsEntity* entitya, QnstGraphicsEntity* entityb);
+  void addInterfacetoNodeEdge(QnstGraphicsEntity* entitya, QnstGraphicsEntity* entityb);
 
-    void addInterfacetoNodeLink(QnstGraphicsEntity* entitya, QnstGraphicsEntity* entityb);
+  void addInterfacetoNodeLink(QnstGraphicsEntity* entitya, QnstGraphicsEntity* entityb);
 
-    void addInterfacetoInterfaceEdge(QnstGraphicsEntity* entitya, QnstGraphicsEntity* entityb);
+  void addInterfacetoInterfaceEdge(QnstGraphicsEntity* entitya, QnstGraphicsEntity* entityb);
 
-    void adjustAngle(QnstGraphicsEdge* edge, QnstGraphicsEntity* entitya, QnstGraphicsEntity* entityb);
+  void adjustAngle(QnstGraphicsEdge* edge, QnstGraphicsEntity* entitya, QnstGraphicsEntity* entityb);
 
-    void collapseCompositions(QDomElement element, QDomElement parent);
+  void collapseCompositions(QDomElement element, QDomElement parent);
 
-    int ncontext;
+  int ncontext;
 
-    int nswitch;
+  int nswitch;
 
-    int nport;
+  int nport;
 
-    int nmedia;
+  int nmedia;
 
-    int nlink;
+  int nlink;
 
-    int nproperty;
+  int nproperty;
 
-    int nswitchport;
+  int nswitchport;
 
-    int narea;
+  int narea;
 
-    bool modified;
+  bool modified;
 
-    bool linking;
+  bool linking;
 
-    int zoomStep;
+  int zoomStep;
 
-    bool hasCutted;
+  bool hasCutted;
 
-    QAction* undoAct;
+  QAction* undoAct;
 
-    QAction* redoAct;
+  QAction* redoAct;
 
-    QnstScene* scene;
+  QnstScene* scene;
 
-    QnstViewLink* link;
+  QnstViewLink* link;
 
-    QnstGraphicsLinkDialog* linkDialog;
+  QnstGraphicsLinkDialog* linkDialog;
 
-    QnstGraphicsConditionDialog* conditionDialog;
+  QnstGraphicsConditionDialog* conditionDialog;
 
-    QnstGraphicsActionDialog* actionDialog;
+  QnstGraphicsActionDialog* actionDialog;
 
-    QnstGraphicsEntity* selected;
+  QnstGraphicsEntity* selected;
 
-    QnstGraphicsEntity* clipboard;
+  QnstGraphicsEntity* clipboard;
 
-    QSet<QString> linkWriterAux;
+  QSet<QString> linkWriterAux;
 
-    QMap<QString, QnstLink*> links;
+  QMap<QString, QnstLink*> links;
 
-    QMap<QString, QnstBind*> binds;
+  QMap<QString, QnstBind*> binds;
 
-    QMap<QString, QString> brelations;
+  QMap<QString, QString> brelations;
 
-    QMap<QString, QString> link2conn;
+  QMap<QString, QString> link2conn;
 
-    QMap<QString, QString> refers;
+  QMap<QString, QString> refers;
 
-    QMap<QString, QString> importBases; // importBaseUid - ConnUid
+  QMap<QString, QString> importBases; // importBaseUid - ConnUid
 
-    QMap<QString, QString> interfaceRefers;
+  QMap<QString, QString> interfaceRefers;
 
-    QMap<QString, QString> bindParamUIDToBindUID;
+  QMap<QString, QString> bindParamUIDToBindUID;
 
-    QMap<QString, QnstConnector*> connectors2; // uid - conn
+  QMap<QString, QnstConnector*> connectors2; // uid - conn
 
-    QMap<QString, QnstConnector*> connectors; // id - conn
+  QMap<QString, QnstConnector*> connectors; // id - conn
 
-    QUndoStack history;
+  QUndoStack history;
 
-    QnstGraphicsEntity* lastLinkMouseOver;
+  QnstGraphicsEntity* lastLinkMouseOver;
 
-    static std::map <Qnst::EntityType, QString> typeToXMLStr;
+  static std::map <Qnst::EntityType, QString> typeToXMLStr;
 };
 
 #endif // QNSTVIEW_H

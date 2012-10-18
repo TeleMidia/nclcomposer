@@ -11,21 +11,6 @@ QnstGraphicsContext::QnstGraphicsContext(QnstGraphicsEntity* parent)
   createConnections();
 
   dropsrc = "";
-
-  /* Default size and position */
-  if(parent)
-  {
-    setTop(parent->getHeight()/2 - DEFAULT_CONTEXT_HEIGHT/2);
-    setLeft(parent->getWidth()/2 - DEFAULT_CONTEXT_WIDTH/2);
-  }
-  else
-  {
-    setTop(0);
-    setLeft(0);
-  }
-
-  setWidth(DEFAULT_CONTEXT_WIDTH);
-  setHeight(DEFAULT_CONTEXT_HEIGHT);
 }
 
 QnstGraphicsContext::~QnstGraphicsContext()

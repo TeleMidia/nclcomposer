@@ -238,3 +238,18 @@ void QnstGraphicsEntity::setError(bool hasError)
 {
   this->hasError = hasError;
 }
+
+void QnstGraphicsEntity::setProperties(const QMap<QString, QString> &props)
+{
+  if (props["top"] != "")
+    setTop(props["top"].toDouble());
+
+  if (props["left"] != "")
+    setLeft(props["left"].toDouble());
+
+  if (props["width"] != "")
+    setWidth(props["width"].toDouble());
+
+  if (props["height"] != "")
+    setHeight(props["height"].toDouble());
+}

@@ -48,6 +48,8 @@ public:
 
   void setMouseHover(bool hover);
 
+  virtual void setProperties(const QMap <QString, QString> &properties);
+
 signals:
   void entityAdded(QnstGraphicsEntity* entity);
 
@@ -121,8 +123,8 @@ private:
   QVector<QnstGraphicsEntity*> entities;
 
 protected:
-    bool hover, hasError;
-    QString dropsrc;
+  bool hover, hasError;
+  QString dropsrc;
 
 };
 

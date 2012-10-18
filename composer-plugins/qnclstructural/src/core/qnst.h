@@ -19,64 +19,69 @@
 class Qnst
 {
 public:
-    enum EntityType {
-        Node = 0,
+  enum EntityType
+  {
+    Node = 0,
 
-        Content,
-        Media,
-        Image,
-        Audio,
-        Video,
-        Html,
-        NCL,
-        Text,
-        NCLua,
-        Settings,
+    Content,
+    /* MEDIAS */
+    Media,
+    Image,
+    Audio,
+    Video,
+    Html,
+    NCL,
+    Text,
+    NCLua,
+    Settings,
+    /* END MEDIAS */
 
-        Aggregator,
+    Aggregator,
 
-        Compostion,
-        Body,
-        Context,
-        Switch,
+    Compostion,
+    Body,
+    Context,
+    Switch,
 
-        Interface,
-        Port,
-        Area,
-        SwitchPort,
-        Property,
+    Interface,
+    Port,
+    Area,
+    SwitchPort,
+    Property,
 
-        Edge,
-        Reference,
-        Link,
-        Mapping,
-        Condition,
-        Action,
-        Bind,
+    Edge,
+    Reference,
+    Link,
+    Mapping,
+    Condition,
+    Action,
+    Bind,
 
-        NoType
-    };
+    NoType
+  };
 
-    enum ConditionType {
-        onBegin,
-        onSelectiononBegin,
-        onEnd,
-        onSelection,
-        onResume,
-        onPause,
+  enum ConditionType
+  {
+    onBegin,
+    onSelectiononBegin,
+    onEnd,
+    onSelection,
+    onResume,
+    onPause,
 
-        NoConditionType
-    };
+    NoConditionType
+  };
 
-    enum ActionType {
-        Start,
-        Stop,
-        Resume,
-        Pause,
-        Set,
+  enum ActionType
+  {
+    Start,
+    Stop,
+    Resume,
+    Pause,
+    Set,
 
-        NoActionType
-    };
+    NoActionType
+  };
 };
 
 #endif // QNST_H
