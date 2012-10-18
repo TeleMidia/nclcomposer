@@ -39,13 +39,22 @@ public:
    * \brief Returns the media type based on the extension of the media source.
    *
    * \arg ext the extension of the path.
-   * \return the media type associated with that extension.s
+   * \return the media type associated with that extension.
    */
   static Qnst::EntityType getnstTypeFromExtension(const QString &ext);
 
+  /*!
+   * \brief Returns the media type based on the string the represent that type.
+   *
+   * \arg strType the type specified in a string.
+   * \return the media type associated with that string.
+   */
+  static Qnst::EntityType getnstTypeFromStr(const QString &strType);
+
 private:
-  static std::map<Qnst::EntityType, QString> iconFromTypeMap;
+  static std::map <Qnst::EntityType, QString> iconFromTypeMap;
   static std::map <QString, Qnst::EntityType> typeFromExtMap;
+  static std::map <QString, Qnst::EntityType> typeFromStr;
 };
 
 template <typename T, typename U>

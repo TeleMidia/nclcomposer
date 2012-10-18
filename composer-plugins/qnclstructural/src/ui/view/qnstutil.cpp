@@ -51,6 +51,27 @@ std::map <QString, Qnst::EntityType> QnstUtil::typeFromExtMap =
 
     ("lua", Qnst::Script);
 
+/* Initialize map from str type to qnsttype */
+std::map <QString, Qnst::EntityType> QnstUtil::typeFromStr =
+  create_map <QString, Qnst::EntityType>
+    ("body", Qnst::Body)
+    ("context", Qnst::Context)
+    ("port", Qnst::Port)
+
+    ("switch", Qnst::Switch)
+    ("switchPort", Qnst::SwitchPort)
+    ("mapping", Qnst::Mapping)
+
+    ("media", Qnst::Media)
+    ("area", Qnst::Area)
+    ("property", Qnst::Property)
+
+    ("link", Qnst::Link)
+    ("bind", Qnst::Bind)
+    /* ("causalConnector", Qnst::) */
+    ("simpleCondition", Qnst::Condition)
+    ("simpleAction", Qnst::Action);
+
 QnstGraphicsEntity *QnstUtil::makeGraphicsEntity(Qnst::EntityType type,
                                                  QnstGraphicsEntity *parent)
 {
@@ -153,12 +174,14 @@ Qnst::EntityType QnstUtil::getnstTypeFromExtension(const QString &ext)
 {
   if(typeFromExtMap.count(ext))
     return typeFromExtMap[ext];
-  else
-    return Qnst::Media;
-}
-/*
-QString QnstView::mimeFromType()
-{
 
+  return Qnst::Media;
 }
- */
+
+Qnst::EntityType QnstUtil::getnstTypeFromStr(const QString &strType)
+{
+  if(typeFromStr.count(strType))
+    return typeFromStr[strType];
+
+  return Qnst::NoType;
+}
