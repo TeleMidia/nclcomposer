@@ -66,7 +66,7 @@ void QnstGraphicsMedia::updateToolTip()
     }else if (getnstType() == Qnst::Video){
         tip += "Video ("+name+")";
 
-    }else if (getnstType() == Qnst::Script){
+    }else if (getnstType() == Qnst::NCLua){
         tip += "Script ("+name+")";
 
     }else if (getnstType() == Qnst::Html){

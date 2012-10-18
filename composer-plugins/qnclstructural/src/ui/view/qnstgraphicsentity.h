@@ -53,7 +53,8 @@ signals:
 
     void entityChanged(QnstGraphicsEntity* entity);
 
-    void entityAboutToChange(QnstGraphicsEntity* entity, QMap<QString, QString> properties);
+    void entityAboutToChange(QnstGraphicsEntity* entity,
+                             QMap<QString, QString> properties);
 
     void entitySelected(QnstGraphicsEntity* entity);
 

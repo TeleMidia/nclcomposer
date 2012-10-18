@@ -16,7 +16,7 @@ std::map <Qnst::EntityType, QString> QnstView::typeToXMLStr =
       (Qnst::Html, "text/html")
       (Qnst::NCL, "application/x-ginga-NCL")
       (Qnst::Text, "text")
-      (Qnst::Script, "application/x-ginga-NCLua")
+      (Qnst::NCLua, "application/x-ginga-NCLua")
       (Qnst::Settings, "application/x-ncl-settings");
 
 QnstView::QnstView(QWidget* parent)
@@ -623,112 +623,116 @@ void QnstView::readLink(QDomElement element, QDomElement parent)
 QString QnstView::serialize()
 {
   QDomDocument* dom = new QDomDocument();
-
   QDomElement root = dom->createElement("qnst");
 
-  foreach(QString key, importBases.keys()){
-      QDomElement e = dom->createElement("importBase");
+  foreach(QString key, importBases.keys())
+  {
+    QDomElement e = dom->createElement("importBase");
 
-      e.setAttribute("uid", key);
+    e.setAttribute("uid", key);
+    e.setAttribute("connUID", importBases[key]);
 
-      e.setAttribute("connUID", importBases[key]);
-
-      root.appendChild(e);
+    root.appendChild(e);
   }
 
-  foreach(QnstConnector* conn, connectors.values()){
-      QDomElement e = dom->createElement("connector");
+  foreach(QnstConnector* conn, connectors.values())
+  {
+    QDomElement e = dom->createElement("connector");
 
-      e.setAttribute("id", conn->getName());
-      e.setAttribute("uid", conn->getnstUid());
+    e.setAttribute("id", conn->getName());
+    e.setAttribute("uid", conn->getnstUid());
 
-      foreach(QString condition, conn->getConditions()){
-          QDomElement c = dom->createElement("condition");
+    foreach(QString condition, conn->getConditions())
+    {
+      QDomElement c = dom->createElement("condition");
+      c.setAttribute("type", condition);
 
-          c.setAttribute("type", condition);
+      e.appendChild(c);
+    }
 
-          e.appendChild(c);
-      }
+    foreach(QString action, conn->getActions())
+    {
+      QDomElement a = dom->createElement("action");
+      a.setAttribute("type", action);
 
-      foreach(QString action, conn->getActions()){
-          QDomElement a = dom->createElement("action");
-
-          a.setAttribute("type", action);
-
-          e.appendChild(a);
-      }
+      e.appendChild(a);
+    }
 
 
-      foreach(QString key, conn->getParams().keys()){
-          QDomElement p = dom->createElement("param");
+    foreach(QString key, conn->getParams().keys())
+    {
+      QDomElement p = dom->createElement("param");
 
-          p.setAttribute("uid", key);
-          p.setAttribute("name", conn->getParams()[key]);
+      p.setAttribute("uid", key);
+      p.setAttribute("name", conn->getParams()[key]);
 
-          e.appendChild(p);
-      }
+      e.appendChild(p);
+    }
 
-      root.appendChild(e);
+    root.appendChild(e);
   }
 
-  foreach(QString key, interfaceRefers.keys()){
-      QDomElement e = dom->createElement("interfaceReference");
+  foreach(QString key, interfaceRefers.keys())
+  {
+    QDomElement e = dom->createElement("interfaceReference");
 
-      e.setAttribute("interfaceReferUID", key);
+    e.setAttribute("interfaceReferUID", key);
+    e.setAttribute("interfaceOriginUID", interfaceRefers[key]);
 
-      e.setAttribute("interfaceOriginUID", interfaceRefers[key]);
-
-      root.appendChild(e);
+    root.appendChild(e);
   }
 
-  foreach(QString key, refers.keys()){
-      QDomElement e = dom->createElement("nodeReference");
+  foreach(QString key, refers.keys())
+  {
+    QDomElement e = dom->createElement("nodeReference");
 
-      e.setAttribute("nodeReferUID", key);
+    e.setAttribute("nodeReferUID", key);
+    e.setAttribute("nodeOriginUID", refers[key]);
 
-      e.setAttribute("nodeOriginUID", refers[key]);
-
-      root.appendChild(e);
+    root.appendChild(e);
   }
 
-  foreach(QnstLink* link, links.values()){
-      QDomElement e = dom->createElement("linkdata");
+  foreach(QnstLink* link, links.values())
+  {
+    QDomElement e = dom->createElement("linkdata");
 
-      e.setAttribute("id", link->getnstId());
-      e.setAttribute("uid", link->getnstUid());
+    e.setAttribute("id", link->getnstId());
+    e.setAttribute("uid", link->getnstUid());
 
-      e.setAttribute("parent", link->getnstParent()->getnstUid());
+    e.setAttribute("parent", link->getnstParent()->getnstUid());
 
-      e.setAttribute("xconnetor", link->getxConnector());
-      e.setAttribute("xconnetorUID", link->getxConnectorUID());
-      e.setAttribute("aggregatorUID", link->getAggregatorUID());
+    e.setAttribute("xconnetor", link->getxConnector());
+    e.setAttribute("xconnetorUID", link->getxConnectorUID());
+    e.setAttribute("aggregatorUID", link->getAggregatorUID());
 
-      root.appendChild(e);
+    root.appendChild(e);
   }
 
-  foreach(QnstGraphicsEntity* entity, scene->getRoots()){
-      QDomElement e = dom->createElement("body");
+  foreach(QnstGraphicsEntity* entity, scene->getRoots())
+  {
+    QDomElement e = dom->createElement("body");
 
-      e.setAttribute("id", entity->getnstId());
-      e.setAttribute("uid", entity->getnstUid());
+    e.setAttribute("id", entity->getnstId());
+    e.setAttribute("uid", entity->getnstUid());
 
-      e.setAttribute("top", entity->getTop());
-      e.setAttribute("left", entity->getLeft());
-      e.setAttribute("width", entity->getWidth());
-      e.setAttribute("height", entity->getHeight());
+    e.setAttribute("top", entity->getTop());
+    e.setAttribute("left", entity->getLeft());
+    e.setAttribute("width", entity->getWidth());
+    e.setAttribute("height", entity->getHeight());
 
-      e.setAttribute("collapsed", ((QnstGraphicsComposition*) entity)->isCollapsed());
+    e.setAttribute("collapsed", ((QnstGraphicsComposition*) entity)->isCollapsed());
 
-      e.setAttribute("expandWidth", ((QnstGraphicsComposition*) entity)->getLastW());
-      e.setAttribute("expandHeight", ((QnstGraphicsComposition*) entity)->getLastH());
+    e.setAttribute("expandWidth", ((QnstGraphicsComposition*) entity)->getLastW());
+    e.setAttribute("expandHeight", ((QnstGraphicsComposition*) entity)->getLastH());
 
-      foreach(QnstGraphicsEntity* c, entity->getnstGraphicsEntities()){
-          write(e, dom, c);
-      }
+    foreach(QnstGraphicsEntity* c, entity->getnstGraphicsEntities())
+    {
+      write(e, dom, c);
+    }
 
-      writeLink(e, dom, entity);
+    writeLink(e, dom, entity);
 
-      root.appendChild(e);
+    root.appendChild(e);
   }
 
   dom->appendChild(root);
@@ -780,7 +784,7 @@ void QnstView::write(QDomElement element, QDomDocument* dom,
     case Qnst::NCL:
     case Qnst::Text:
     case Qnst::Settings:
-    case Qnst::Script:
+    case Qnst::NCLua:
       e = dom->createElement("media");
 
       e.setAttribute("type", typeToXMLStr[entity->getnstType()]);
@@ -819,7 +823,8 @@ void QnstView::write(QDomElement element, QDomDocument* dom,
 
       foreach(QnstGraphicsEdge* edge, pentity->getnstGraphicsEdges())
       {
-        if (edge->getnstType() == Qnst::Reference){
+        if (edge->getnstType() == Qnst::Reference)
+        {
           if (edge->getEntityB()->getncgType() == Qncg::Node)
           {
             e.setAttribute("componentUID", edge->getEntityB()->getnstUid());
@@ -1502,7 +1507,7 @@ void QnstView::changeEntity(const QString uid,
       case Qnst::Text:
       case Qnst::Video:
       case Qnst::Image:
-      case Qnst::Script:
+      case Qnst::NCLua:
       case Qnst::Settings:
       case Qnst::Media:
       case Qnst::Html:
@@ -2073,7 +2078,7 @@ void QnstView::changeMedia(QnstGraphicsMedia* entity,
     int start = src.lastIndexOf(".");
     if(start >= 0)
     {
-      QString ext = src.mid(+1);
+      QString ext = QFileInfo(src).suffix().toLower();
       entity->setnstType(QnstUtil::getnstTypeFromExtension(ext));
     }
   }
@@ -3626,7 +3631,7 @@ void QnstView::requestEntityAddition(QnstGraphicsEntity* entity, bool undo)
       case Qnst::Text:
       case Qnst::Video:
       case Qnst::Image:
-      case Qnst::Script:
+      case Qnst::NCLua:
       case Qnst::Settings:
       case Qnst::Html:
       case Qnst::NCL:
@@ -4007,7 +4012,7 @@ void QnstView::requestEntityChange(QnstGraphicsEntity* entity)
       case Qnst::Text:
       case Qnst::Video:
       case Qnst::Image:
-      case Qnst::Script:
+      case Qnst::NCLua:
       case Qnst::Settings:
       case Qnst::Media:
         requestMediaChange((QnstGraphicsMedia*) entity);
@@ -4690,7 +4695,7 @@ void QnstView::performPaste()
               case Qnst::Text:
               case Qnst::NCL:
               case Qnst::Html:
-              case Qnst::Script:
+              case Qnst::NCLua:
               case Qnst::Settings:
               case Qnst::Media:
                 entity->setnstId("m"+QString::number(++nmedia));
@@ -4801,7 +4806,7 @@ void QnstView::performPaste(QnstGraphicsEntity* copy, QnstGraphicsEntity* parent
       case Qnst::Audio:
       case Qnst::Video:
       case Qnst::Text:
-      case Qnst::Script:
+      case Qnst::NCLua:
       case Qnst::Settings:
       case Qnst::Media:
         entity->setnstId("m"+QString::number(++nmedia));
@@ -4920,7 +4925,7 @@ void QnstView::performReference(QnstGraphicsEntity* copy, QnstGraphicsEntity* pa
       case Qnst::Text:
       case Qnst::NCL:
       case Qnst::Html:
-      case Qnst::Script:
+      case Qnst::NCLua:
       case Qnst::Settings:
       case Qnst::Media:
         entity->setnstId("m"+QString::number(++nmedia));
@@ -7691,20 +7696,21 @@ void QnstView::keyPressEvent(QKeyEvent *event)
 
 void QnstView::keyReleaseEvent(QKeyEvent *event)
 {
-    // SHIFT - Disabling liking
-    if (event->key() == Qt::Key_Shift){
-        modified = false;
-    }
-    else if(event->key() == Qt::Key_Control)
+  // SHIFT - Disabling liking
+  if (event->key() == Qt::Key_Shift)
+  {
+    modified = false;
+  }
+  else if(event->key() == Qt::Key_Control)
+  {
+    QnstGraphicsEntity *entity;
+    foreach(entity, entities.values())
     {
-      QnstGraphicsEntity *entity;
-      foreach(entity, entities.values())
-      {
-        entity->setDraggable(false);
-      }
+      entity->setDraggable(false);
     }
+  }
 
-    QGraphicsView::keyReleaseEvent(event);
+  QGraphicsView::keyReleaseEvent(event);
 }
 
 void QnstView::wheelEvent(QWheelEvent * event)
@@ -7720,7 +7726,7 @@ void QnstView::wheelEvent(QWheelEvent * event)
   }
   else
   {
-    // call the father wheelEvent
+    // call the parent wheelEvent
     QGraphicsView::wheelEvent(event);
   }
 }
@@ -7737,24 +7743,27 @@ void QnstView::focusOutEvent(QFocusEvent *event)
 void QnstView::adjustAngle(QnstGraphicsEdge* edge, QnstGraphicsEntity* entitya,
                            QnstGraphicsEntity* entityb)
 {
-    int angle = 0;
+  int angle = 0;
 
-    while(1){
-        if (!entitya->getAngles()[entityb->getnstUid()].contains(angle)){
-            break;
-
-        }else if (!entitya->getAngles()[entityb->getnstUid()].contains(-angle)){
-            angle = -angle;
-            break;
-        }
-
-        angle += 60;
+  while(1)
+  {
+    if (!entitya->getAngles()[entityb->getnstUid()].contains(angle))
+    {
+      break;
+    }
+    else if (!entitya->getAngles()[entityb->getnstUid()].contains(-angle))
+    {
+      angle = -angle;
+      break;
     }
 
-    entitya->addAngle(entityb->getnstUid(), angle);
-    entityb->addAngle(entitya->getnstUid(), -angle);
+    angle += 60;
+  }
 
-    edge->setAngle(angle);
+  entitya->addAngle(entityb->getnstUid(), angle);
+  entityb->addAngle(entitya->getnstUid(), -angle);
+
+  edge->setAngle(angle);
 }
 
 
@@ -7762,24 +7771,26 @@ void QnstView::requestBindParamAdjust(QString uid,
                                         QString parent,
                                         QMap<QString, QString> properties)
 {
-    properties["TYPE"] = "bindParam";
+  properties["TYPE"] = "bindParam";
 
-    if (!properties["name"].isEmpty() && !properties["value"].isEmpty()){
-
-        if (bindParamUIDToBindUID.contains(uid)){
-            emit entityChanged(uid, properties);
-
-        }else{
-            bindParamUIDToBindUID[uid] = brelations.key(parent);;
-
-            emit entityAdded(uid, parent,properties );
-        }
-
-    }else if (!properties["name"].isEmpty()){
-        bindParamUIDToBindUID.remove(uid);
-
-        emit entityRemoved(uid);
+  if (!properties["name"].isEmpty() && !properties["value"].isEmpty())
+  {
+    if (bindParamUIDToBindUID.contains(uid))
+    {
+      emit entityChanged(uid, properties);
     }
+    else
+    {
+      bindParamUIDToBindUID[uid] = brelations.key(parent);
+      emit entityAdded(uid, parent,properties );
+    }
+  }
+  else if (!properties["name"].isEmpty())
+  {
+    bindParamUIDToBindUID.remove(uid);
+
+    emit entityRemoved(uid);
+  }
 }
 
 void QnstView::updateBindParams(QString bindUID, QMap<QString, QString> params,
@@ -7796,9 +7807,9 @@ void QnstView::markError(QString uid)
 {
   if(entities.contains(uid))
   {
-      QnstGraphicsEntity *entity = entities[uid];
-      assert(entity != NULL);
-      entity->setError(true);
+    QnstGraphicsEntity *entity = entities[uid];
+    assert(entity != NULL);
+    entity->setError(true);
   }
 }
 

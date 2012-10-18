@@ -108,7 +108,7 @@ void QnstGraphicsBody::performVideo()
 
 void QnstGraphicsBody::performScript()
 {
-  createEntity(Qnst::Script);
+  createEntity(Qnst::NCLua);
 }
 
 void QnstGraphicsBody::performSettings()

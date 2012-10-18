@@ -117,7 +117,7 @@ void QnstGraphicsSwitch::performVideo()
 
 void QnstGraphicsSwitch::performScript()
 {
-  createEntity(Qnst::Script);
+  createEntity(Qnst::NCLua);
 }
 
 void QnstGraphicsSwitch::performSettings()

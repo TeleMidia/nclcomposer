@@ -21,7 +21,7 @@ std::map <Qnst::EntityType, QString> QnstUtil::iconFromTypeMap =
     (Qnst::Html, ":/icon/html")
     (Qnst::NCL, ":/icon/ncl")
     (Qnst::Settings, ":/icon/settings")
-    (Qnst::Script, ":/icon/script")
+    (Qnst::NCLua, ":/icon/script")
     (Qnst::Media, ":/icon/media");
 
 /* Initialize type from extension Map */
@@ -49,7 +49,7 @@ std::map <QString, Qnst::EntityType> QnstUtil::typeFromExtMap =
 
     ("ncl", Qnst::NCL)
 
-    ("lua", Qnst::Script);
+    ("lua", Qnst::NCLua);
 
 /* Initialize map from str type to qnsttype */
 std::map <QString, Qnst::EntityType> QnstUtil::typeFromStr =
@@ -83,7 +83,7 @@ QnstGraphicsEntity *QnstUtil::makeGraphicsEntity(Qnst::EntityType type,
     case Qnst::Audio:
     case Qnst::Video:
     case Qnst::Text:
-    case Qnst::Script:
+    case Qnst::NCLua:
     case Qnst::Settings:
     case Qnst::Html:
     case Qnst::NCL:
@@ -152,7 +152,7 @@ Qnst::EntityType QnstUtil::getnstTypeFromMime(const QString &mimeType)
   else if (mimeType == "application/x-ncl-settings")
     type = Qnst::Settings;
   else if (mimeType == "application/x-ginga-NCLua")
-    type = Qnst::Script;
+    type = Qnst::NCLua;
   else
     type = Qnst::Media;
 

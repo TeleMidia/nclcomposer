@@ -30,8 +30,9 @@ public:
         Html,
         NCL,
         Text,
-        Script,
+        NCLua,
         Settings,
+
         Aggregator,
 
         Compostion,
