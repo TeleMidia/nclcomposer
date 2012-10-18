@@ -4209,7 +4209,6 @@ void QnstView::requestSwitchChange(QnstGraphicsSwitch* entity)
   emit entityChanged(entity->getnstUid(), properties);
 }
 
-// \todo This SUBTYPE is not being used anywhere
 void QnstView::requestMediaAddition(QnstGraphicsMedia* entity, bool undo)
 {
   if (entity->getnstId() == "" && !undo)
@@ -4220,78 +4219,18 @@ void QnstView::requestMediaAddition(QnstGraphicsMedia* entity, bool undo)
   QMap<QString, QString> properties;
   properties["TYPE"] = "media";
 
-  switch(entity->getnstType())
-  {
-    case Qnst::Image:
-      properties["SUBTYPE"] = "image";
-//    properties["type"] = "image/png";
-      break;
-
-    case Qnst::Audio:
-      properties["SUBTYPE"] = "audio";
-//    properties["type"] = "audio/mp3";
-      break;
-
-    case Qnst::Video:
-      properties["SUBTYPE"] = "video";
-//    properties["type"] = "video/mp4";
-      break;
-
-    case Qnst::Text:
-      properties["SUBTYPE"] = "text";
-//    properties["type"] = "text/plain";
-      break;
-
-    case Qnst::Html:
-      properties["SUBTYPE"] = "html";
-//    properties["type"] = "text/html";
-      break;
-
-    case Qnst::NCL:
-      properties["SUBTYPE"] = "ncl";
-      properties["type"] = "application/x-ginga-NCL";
-      break;
-
-    case Qnst::Script:
-      properties["SUBTYPE"] = "script";
-      properties["type"] = "application/x-ginga-NCLua";
-      break;
-
-    case Qnst::Settings:
-      properties["SUBTYPE"] = "settings";
-      properties["type"] = "application/x-ncl-settings";
-      break;
-
-    case Qnst::Media:
-      properties["SUBTYPE"] = "media";
-      break;
-
-    default:
-      // do nothing
-      break;
-  }
-
   properties["id"] = entity->getnstId();
 
-// TODO:
   properties["src"] = entity->getSource();
-//properties["type"] = "";
   properties["refer"] = entity->getRefer();
   properties["instance"] = entity->getInstance();
-// properties["descriptor"] = "";
-  entity->updateToolTip();
 
-// properties["top"] = QString::number(entity->getTop());
-// properties["left"] = QString::number(entity->getLeft());
-// properties["width"] = QString::number(entity->getWidth());
-// properties["heigh"] = QString::number(entity->getHeight());
-// properties["zindex"] = QString::number(entity->getzIndex());
+  entity->updateToolTip();
 
   QMap <QString, QString> additionalData = entity->getUsrData();
   foreach(QString key, additionalData.keys())
   {
-//  if(!properties.contains(key))
-      properties.insert(key, additionalData.value(key));
+    properties.insert(key, additionalData.value(key));
   }
 
   emit entityAdded(entity->getnstUid(),
@@ -4305,61 +4244,8 @@ void QnstView::requestMediaChange(QnstGraphicsMedia* entity)
 
   properties["TYPE"] = "media";
 
-  switch(entity->getnstType())
-  {
-    case Qnst::Image:
-      properties["SUBTYPE"] = "image";
-      break;
-
-    case Qnst::Audio:
-      properties["SUBTYPE"] = "audio";
-      break;
-
-    case Qnst::Video:
-      properties["SUBTYPE"] = "video";
-      break;
-
-    case Qnst::Text:
-      properties["SUBTYPE"] = "text";
-      break;
-
-    case Qnst::Script:
-      properties["SUBTYPE"] = "script";
-      break;
-
-    case Qnst::Settings:
-      properties["SUBTYPE"] = "settings";
-      break;
-
-    case Qnst::Media:
-      properties["SUBTYPE"] = "media";
-      break;
-
-    case Qnst::Html:
-      properties["SUBTYPE"] = "html";
-      break;
-
-    case Qnst::NCL:
-      properties["SUBTYPE"] = "ncl";
-      break;
-
-    default:
-      // do nothing
-      break;
-  }
-
   properties["id"] = entity->getnstId();
   properties["src"] = entity->getSource();
-
-//    properties["type"] = "";
-//    properties["refer"] = "";
-//    properties["instance"] = "";
-
-//    properties["top"] = QString::number(entity->getTop());
-//    properties["left"] = QString::number(entity->getLeft());
-//    properties["width"] = QString::number(entity->getWidth());
-//    properties["heigh"] = QString::number(entity->getHeight());
-//    properties["zindex"] = QString::number(entity->getzIndex());
 
   QMap <QString, QString> additionalData = entity->getUsrData();
   foreach(QString key, additionalData.keys())
@@ -4405,13 +4291,6 @@ void QnstView::requestPortAddition(QnstGraphicsPort* entity, bool undo)
       }
     }
   }
-
-//    TODO:
-//    properties["top"] = QString::number(entity->getTop());
-//    properties["left"] = QString::number(entity->getLeft());
-//    properties["width"] = QString::number(entity->getWidth());
-//    properties["heigh"] = QString::number(entity->getHeight());
-//    properties["zindex"] = QString::number(entity->getzIndex());
 
   QMap <QString, QString> additionalData = entity->getUsrData();
   foreach(QString key, additionalData.keys())
