@@ -132,6 +132,8 @@ signals:
   void viewChanged();
 
 protected:
+  bool updateEntityWithUniqueNstId(QnstGraphicsEntity *entity);
+
   virtual void mouseMoveEvent(QMouseEvent* event);
 
   virtual void mousePressEvent(QMouseEvent* event);
@@ -290,9 +292,10 @@ private:
 
   void performCopy(QnstGraphicsEntity* entity, QnstGraphicsEntity* parent);
 
-  void performPaste(QnstGraphicsEntity* copy, QnstGraphicsEntity* parent);
+  void performPaste(QnstGraphicsEntity* copy, QnstGraphicsEntity* parent,
+                    bool makeRefer = false, bool keepOriginalPos = false);
 
-  void performReference(QnstGraphicsEntity* copy, QnstGraphicsEntity* parent);
+  void performReference(QnstGraphicsEntity* entity, QnstGraphicsEntity* referred);
 
   void createObjects();
 
@@ -315,22 +318,6 @@ private:
   void adjustAngle(QnstGraphicsEdge* edge, QnstGraphicsEntity* entitya, QnstGraphicsEntity* entityb);
 
   void collapseCompositions(QDomElement element, QDomElement parent);
-
-  int ncontext;
-
-  int nswitch;
-
-  int nport;
-
-  int nmedia;
-
-  int nlink;
-
-  int nproperty;
-
-  int nswitchport;
-
-  int narea;
 
   bool modified;
 
@@ -383,6 +370,8 @@ private:
   QUndoStack history;
 
   QnstGraphicsEntity* lastLinkMouseOver;
+
+  std::map < Qnst::EntityType, int > entityCounter;
 
   static std::map <Qnst::EntityType, QString> typeToXMLStr;
 };

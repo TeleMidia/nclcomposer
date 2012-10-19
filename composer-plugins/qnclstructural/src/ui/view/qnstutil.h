@@ -53,10 +53,19 @@ public:
    */
   static Qnst::EntityType getnstTypeFromStr(const QString &strType);
 
+  /*!
+   * \brief Returns a media identifier prefix for an specific qnst entity type.
+   *
+   * \arg type the qnst entity type.
+   * \return the prefix for the entity type.
+   */
+  static QString getPrefixIdFromType(Qnst::EntityType type);
+
 private:
   static std::map <Qnst::EntityType, QString> iconFromTypeMap;
   static std::map <QString, Qnst::EntityType> typeFromExtMap;
   static std::map <QString, Qnst::EntityType> typeFromStr;
+  static std::map  <Qnst::EntityType, QString> prefixIdFromType;
 };
 
 template <typename T, typename U>

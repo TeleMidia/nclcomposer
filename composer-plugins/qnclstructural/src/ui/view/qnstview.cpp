@@ -25,23 +25,7 @@ QnstView::QnstView(QWidget* parent)
   createObjects();
   createConnection();
 
-  ncontext = 0;
-
-  nswitch = 0;
-
-  nport = 0;
-
-  nmedia = 0;
-
-  nlink = 0;
-
   zoomStep = 0;
-
-  nproperty = 0;
-
-  nswitchport = 0;
-
-  narea = 0;
 
   linking = false;
 
@@ -3820,9 +3804,8 @@ void QnstView::requestBodyChange(QnstGraphicsBody* entity)
 
 void QnstView::requestContextAddition(QnstGraphicsContext* entity, bool undo)
 {
-  if (entity->getnstId() == "" && !undo){
-    entity->setnstId("ctx"+QString::number(++ncontext));
-  }
+  if (entity->getnstId() == "" && !undo)
+    updateEntityWithUniqueNstId(entity);
 
   QMap<QString, QString> properties;
 
@@ -3876,9 +3859,8 @@ void QnstView::requestContextChange(QnstGraphicsContext* entity)
 
 void QnstView::requestSwitchAddition(QnstGraphicsSwitch* entity, bool undo)
 {
-  if (entity->getnstId() == "" && !undo){
-    entity->setnstId("swt"+QString::number(++nswitch));
-  }
+  if (entity->getnstId() == "" && !undo)
+    updateEntityWithUniqueNstId(entity);
 
   QMap<QString, QString> properties;
 
@@ -3901,7 +3883,9 @@ void QnstView::requestSwitchAddition(QnstGraphicsSwitch* entity, bool undo)
       properties.insert(key, additionalData.value(key));
   }
 
-  emit entityAdded(entity->getnstUid(), entity->getnstGraphicsParent()->getnstUid(), properties);
+  emit entityAdded(entity->getnstUid(),
+                   entity->getnstGraphicsParent()->getnstUid(),
+                   properties);
 }
 
 void QnstView::requestSwitchChange(QnstGraphicsSwitch* entity)
@@ -3933,9 +3917,7 @@ void QnstView::requestSwitchChange(QnstGraphicsSwitch* entity)
 void QnstView::requestMediaAddition(QnstGraphicsMedia* entity, bool undo)
 {
   if (entity->getnstId() == "" && !undo)
-  {
-    entity->setnstId("m"+QString::number(++nmedia));
-  }
+    updateEntityWithUniqueNstId(entity);
 
   QMap<QString, QString> properties;
   properties["TYPE"] = "media";
@@ -3986,9 +3968,7 @@ void QnstView::requestAggregatorAddition(QnstGraphicsAggregator* entity)
 void QnstView::requestPortAddition(QnstGraphicsPort* entity, bool undo)
 {
   if (entity->getnstId() == "" && !undo)
-  {
-    entity->setnstId("p"+QString::number(++nport));
-  }
+    updateEntityWithUniqueNstId(entity);
 
   QMap<QString, QString> properties;
 
@@ -4084,9 +4064,7 @@ void QnstView::requestMappingChange(QnstGraphicsMapping* entity)
 void QnstView::requestSwitchPortAddition(QnstGraphicsSwitchPort* entity, bool undo)
 {
   if (entity->getnstId() == "" && !undo)
-  {
-    entity->setnstId("swp"+QString::number(++nswitchport));
-  }
+    updateEntityWithUniqueNstId(entity);
 
   QMap<QString, QString> properties;
 
@@ -4126,9 +4104,7 @@ void QnstView::requestSwitchPortChange(QnstGraphicsSwitchPort* entity)
 void QnstView::requestAreaAddition(QnstGraphicsArea* entity, bool undo)
 {
   if (entity->getnstId() == "" && !undo)
-  {
-    entity->setnstId("area"+QString::number(++narea));
-  }
+    updateEntityWithUniqueNstId(entity);
 
   QMap<QString, QString> properties;
 
@@ -4333,7 +4309,8 @@ void QnstView::performCopy()
   }
 }
 
-void QnstView::performCopy(QnstGraphicsEntity* entity, QnstGraphicsEntity* parent)
+void QnstView::performCopy(QnstGraphicsEntity* entity,
+                           QnstGraphicsEntity* parent)
 {
   QnstGraphicsEntity* copy = NULL;
 
@@ -4368,7 +4345,8 @@ void QnstView::performPaste()
   if (clipboard != NULL)
   {
     QnstGraphicsEntity* copy = clipboard;
-    qDebug() << "[QNST] performPaste() cliboard userdata = " << clipboard->getUsrData();
+    qDebug() << "[QNST] performPaste() cliboard userdata = "
+             << clipboard->getUsrData();
 
     QnstGraphicsEntity* parent = selected;
 
@@ -4397,363 +4375,121 @@ void QnstView::performPaste()
         {
             return;
         }
-        else if (result == 2
-                  && copy->getnstType() != Qnst::Property
-                  && copy->getnstType() != Qnst::Area )
+        else  // Make the copy
         {
-          // Make reference
-          performReference(copy, parent);
-        }
-        else  // Copy
-        {
-          QnstGraphicsEntity* entity = NULL;
-          entity = QnstUtil::makeGraphicsEntity(copy->getnstType(), parent);
-
-          if(entity != NULL)
-          {
-            switch(copy->getnstType())
-            {
-              case Qnst::Image:
-              case Qnst::Audio:
-              case Qnst::Video:
-              case Qnst::Text:
-              case Qnst::NCL:
-              case Qnst::Html:
-              case Qnst::NCLua:
-              case Qnst::Settings:
-              case Qnst::Media:
-                entity->setnstId("m"+QString::number(++nmedia));
-
-                entity->setWidth(DEFAULT_MEDIA_WIDTH);
-                entity->setHeight(DEFAULT_MEDIA_HEIGHT);
-                entity->setTop(parent->getHeight()/2 - copy->getWidth()/2);
-                entity->setLeft(parent->getWidth()/2 - copy->getHeight()/2);
-
-                ((QnstGraphicsMedia*) entity)->setSource(copy->getUsrData()["src"]);
-                break;
-
-              case Qnst::Context:
-                entity->setnstId("ctx"+QString::number(++ncontext));
-
-                entity->setWidth(copy->getWidth());
-                entity->setHeight(copy->getHeight());
-                entity->setTop(parent->getHeight()/2 - copy->getWidth()/2);
-                entity->setLeft(parent->getWidth()/2 - copy->getHeight()/2);
-                break;
-
-              case Qnst::Switch:
-                entity->setnstId("swt"+QString::number(++nswitch));
-
-                entity->setWidth(copy->getWidth());
-                entity->setHeight(copy->getHeight());
-                entity->setTop(parent->getHeight()/2 - copy->getWidth()/2);
-                entity->setLeft(parent->getWidth()/2 - copy->getHeight()/2);
-                break;
-
-              case Qnst::Port:
-                entity->setnstId("p"+QString::number(++nport));
-
-                entity->setWidth(copy->getWidth());
-                entity->setHeight(copy->getHeight());
-                entity->setTop(copy->getTop());
-                entity->setLeft(copy->getLeft());
-                break;
-
-              case Qnst::SwitchPort:
-                entity = new QnstGraphicsSwitchPort();
-                entity->setnstGraphicsParent(parent);
-
-                entity->setnstId("swp"+QString::number(++nswitchport));
-
-                entity->setWidth(copy->getWidth());
-                entity->setHeight(copy->getHeight());
-                entity->setTop(copy->getTop());
-                entity->setLeft(copy->getLeft());
-                break;
-
-              case Qnst::Area:
-                entity->setnstId("area"+QString::number(++narea));
-
-                entity->setWidth(copy->getWidth());
-                entity->setHeight(copy->getHeight());
-                entity->setTop(copy->getTop());
-                entity->setLeft(copy->getLeft());
-                break;
-
-              case Qnst::Property:
-                entity->setnstId("prop"+QString::number(++nproperty));
-
-                entity->setWidth(copy->getWidth());
-                entity->setHeight(copy->getHeight());
-                entity->setTop(copy->getTop());
-                entity->setLeft(copy->getLeft());
-                break;
-
-              default:
-                // do nothing
-                return;
-            }
-
-            entity->adjust();
-          }
-
-          parent->addnstGraphicsEntity(entity);
-
-          entity->setUsrData(copy->getUsrData());
-          requestEntityAddition(entity);
-
-          entity->setnstId(entity->getUsrData()["id"]);
-
-//            requestEntityChange(entity);
-
-          foreach(QnstGraphicsEntity* e, copy->getnstGraphicsEntities())
-          {
-            performPaste(e, entity);
-          }
-
+          // result == 2 when the user asked to make a refer
+          performPaste(copy, parent, (result == 2), false);
         }
       }
     }
   }
 }
 
-void QnstView::performPaste(QnstGraphicsEntity* copy, QnstGraphicsEntity* parent)
+bool QnstView::updateEntityWithUniqueNstId(QnstGraphicsEntity *entity)
+{
+  if(entity != NULL)
+  {
+    int n = 0;
+    Qnst::EntityType type;
+
+    // for any media, we will consider the same identifier prefix
+    if(entity->isMedia())
+      type = Qnst::Media;
+    else
+      type = entity->getnstType();
+
+    // check if type is in the map
+    if(!entityCounter.count(type))
+      entityCounter[type] = 0;
+
+    n = entityCounter[type];
+
+    entity->setnstId(QnstUtil::getPrefixIdFromType(type) + QString::number(n));
+
+    entityCounter[type] ++ ;
+
+    return true;
+  }
+
+  return false;
+}
+
+void QnstView::performPaste(QnstGraphicsEntity* copy,
+                            QnstGraphicsEntity* parent,
+                            bool makeRefer, bool keepOriginalPos)
 {
   QnstGraphicsEntity* entity = QnstUtil::makeGraphicsEntity(copy->getnstType(),
                                                             parent);
 
   if(entity != NULL)
   {
-    switch(copy->getnstType())
+    // If I haven't cutted set a unique identifier to my entity
+    if(!hasCutted)
+      updateEntityWithUniqueNstId(entity);
+    else
     {
-      case Qnst::Image:
-      case Qnst::Audio:
-      case Qnst::Video:
-      case Qnst::Text:
-      case Qnst::NCLua:
-      case Qnst::Settings:
-      case Qnst::Media:
-        entity->setnstId("m"+QString::number(++nmedia));
-
-        entity->setTop(copy->getTop());
-        entity->setLeft(copy->getLeft());
-        entity->setWidth(copy->getWidth());
-        entity->setHeight(copy->getHeight());
-
-        ((QnstGraphicsMedia*) entity)->setSource(copy->getUsrData()["src"]);
-
-        parent->addnstGraphicsEntity(entity);
-        break;
-
-      case Qnst::Context:
-        entity->setnstId("ctx"+QString::number(++ncontext));
-
-        entity->setTop(copy->getTop());
-        entity->setLeft(copy->getLeft());
-        entity->setWidth(copy->getWidth());
-        entity->setHeight(copy->getHeight());
-
-        parent->addnstGraphicsEntity(entity);
-        break;
-
-      case Qnst::Switch:
-        entity->setnstId("swt"+QString::number(++nswitch));
-
-        entity->setTop(copy->getTop());
-        entity->setLeft(copy->getLeft());
-        entity->setWidth(copy->getWidth());
-        entity->setHeight(copy->getHeight());
-
-        parent->addnstGraphicsEntity(entity);
-        break;
-
-      case Qnst::Port:
-        entity->setnstId("p"+QString::number(++nport));
-
-        entity->setTop(copy->getTop());
-        entity->setLeft(copy->getLeft());
-        entity->setWidth(copy->getWidth());
-        entity->setHeight(copy->getHeight());
-
-        parent->addnstGraphicsEntity(entity);
-        break;
-
-      case Qnst::SwitchPort:
-        entity->setnstId("swp"+QString::number(++nswitchport));
-
-        entity->setTop(copy->getTop());
-        entity->setLeft(copy->getLeft());
-        entity->setWidth(copy->getWidth());
-        entity->setHeight(copy->getHeight());
-
-        parent->addnstGraphicsEntity(entity);
-        break;
-
-      case Qnst::Area:
-        entity->setnstId("area"+QString::number(++narea));
-
-        entity->setTop(copy->getTop());
-        entity->setLeft(copy->getLeft());
-        entity->setWidth(copy->getWidth());
-        entity->setHeight(copy->getHeight());
-
-        parent->addnstGraphicsEntity(entity);
-        break;
-
-      case Qnst::Property:
-        entity->setnstId("prop"+QString::number(++nproperty));
-
-        entity->setTop(copy->getTop());
-        entity->setLeft(copy->getLeft());
-        entity->setWidth(copy->getWidth());
-        entity->setHeight(copy->getHeight());
-
-        parent->addnstGraphicsEntity(entity);
-        break;
-
-      default:
-        // do nothing
-        break;
+      // \fixme Should we copy all properties?
+      entity->setnstId(copy->getnstId());
     }
 
+    // copy the position
+    if(keepOriginalPos)
+    {
+      entity->setTop(copy->getTop());
+      entity->setLeft(copy->getLeft());
+    }
+    else
+    {
+      entity->setTop(parent->getHeight()/2 - copy->getWidth()/2);
+      entity->setLeft(parent->getWidth()/2 - copy->getHeight()/2);
+    }
+
+    // set the size
+    entity->setWidth(copy->getWidth());
+    entity->setHeight(copy->getHeight());
+
+    // Should we make a Reference ??
+    if (makeRefer)
+    {
+      performReference(entity, copy);
+    }
+    else if(entity->isMedia())
+    {
+      // \fixme Should we copy all properties?
+      ((QnstGraphicsMedia*) entity)->setSource(copy->getUsrData()["src"]);
+    }
+
+    parent->addnstGraphicsEntity(entity);
+
     entity->adjust();
-  }
+    entity->setUsrData(copy->getUsrData());
 
+    requestEntityAddition(entity);
 
-  entity->setUsrData(copy->getUsrData());
-  requestEntityAddition(entity);
-
-  entity->setnstId(entity->getUsrData()["id"]);
-
-// qDebug() << "[QNST]" << entity->getUsrData();
-// requestEntityChange(entity);
-
-  foreach(QnstGraphicsEntity* e, copy->getnstGraphicsEntities())
-  {
-    performPaste(e, entity);
+    foreach(QnstGraphicsEntity* e, copy->getnstGraphicsEntities())
+    {
+      performPaste(e, entity, makeRefer, true);
+    }
   }
 }
 
-void QnstView::performReference(QnstGraphicsEntity* copy, QnstGraphicsEntity* parent)
+void QnstView::performReference(QnstGraphicsEntity* entity,
+                                QnstGraphicsEntity* referred)
 {
-  QnstGraphicsEntity* entity =
-      QnstUtil::makeGraphicsEntity(copy->getnstType(), parent);
-
   if(entity != NULL)
   {
-    switch(copy->getnstType())
+    // \fixme We should copy all properties
+    if(entity->isMedia())
     {
-      case Qnst::Image:
-      case Qnst::Audio:
-      case Qnst::Video:
-      case Qnst::Text:
-      case Qnst::NCL:
-      case Qnst::Html:
-      case Qnst::NCLua:
-      case Qnst::Settings:
-      case Qnst::Media:
-        entity->setnstId("m"+QString::number(++nmedia));
+      //Reference
+      ((QnstGraphicsMedia*) entity)->setInstance("new");
+      ((QnstGraphicsMedia*) entity)->setRefer(((QnstGraphicsMedia*) referred)->getnstId());
+      ((QnstGraphicsMedia*) entity)->setReferUID(((QnstGraphicsMedia*) referred)->getnstUid());
 
-        entity->setTop(parent->getHeight()/2 - DEFAULT_MEDIA_HEIGHT/2);
-        entity->setLeft(parent->getWidth()/2 - DEFAULT_MEDIA_WIDTH/2);
-        entity->setWidth(DEFAULT_MEDIA_WIDTH);
-        entity->setHeight(DEFAULT_MEDIA_HEIGHT);
-
-        //Reference
-        ((QnstGraphicsMedia*) entity)->setInstance("new");
-        ((QnstGraphicsMedia*) entity)->setRefer(((QnstGraphicsMedia*) copy)->getnstId());
-        ((QnstGraphicsMedia*) entity)->setReferUID(((QnstGraphicsMedia*) copy)->getnstUid());
-
-        parent->addnstGraphicsEntity(entity);
-
-        requestEntityAddition(entity);
-
-        adjustMedia((QnstGraphicsMedia*) entity);
-        break;
-
-      case Qnst::Context:
-        entity->setnstId("ctx"+QString::number(++ncontext));
-
-        entity->setTop(parent->getHeight()/2 - copy->getWidth()/2);
-        entity->setLeft(parent->getWidth()/2 - copy->getHeight()/2);
-        entity->setWidth(copy->getWidth());
-        entity->setHeight(copy->getHeight());
-
-        parent->addnstGraphicsEntity(entity);
-
-        requestEntityAddition(entity);
-        break;
-
-      case Qnst::Switch:
-        entity->setnstId("swt"+QString::number(++nswitch));
-
-        entity->setTop(parent->getHeight()/2 - copy->getWidth()/2);
-        entity->setLeft(parent->getWidth()/2 - copy->getHeight()/2);
-        entity->setWidth(copy->getWidth());
-        entity->setHeight(copy->getHeight());
-
-        parent->addnstGraphicsEntity(entity);
-
-        requestEntityAddition(entity);
-        break;
-
-      case Qnst::Port:
-        entity->setnstId("p"+QString::number(++nport));
-
-        entity->setTop(copy->getTop());
-        entity->setLeft(copy->getLeft());
-        entity->setWidth(copy->getWidth());
-        entity->setHeight(copy->getHeight());
-
-        parent->addnstGraphicsEntity(entity);
-
-        requestEntityAddition(entity);
-        break;
-
-      case Qnst::SwitchPort:
-        entity->setnstId("swp"+QString::number(++nswitchport));
-
-        entity->setTop(copy->getTop());
-        entity->setLeft(copy->getLeft());
-        entity->setWidth(copy->getWidth());
-        entity->setHeight(copy->getHeight());
-
-        parent->addnstGraphicsEntity(entity);
-        requestEntityAddition(entity);
-        break;
-
-      case Qnst::Area:
-        entity->setnstId("area"+QString::number(++narea));
-
-        entity->setTop(copy->getTop());
-        entity->setLeft(copy->getLeft());
-        entity->setWidth(copy->getWidth());
-        entity->setHeight(copy->getHeight());
-
-        parent->addnstGraphicsEntity(entity);
-
-        requestEntityAddition(entity);
-        break;
-
-      case Qnst::Property:
-        entity->setnstId("prop"+QString::number(++nproperty));
-
-        entity->setTop(copy->getTop());
-        entity->setLeft(copy->getLeft());
-        entity->setWidth(copy->getWidth());
-        entity->setHeight(copy->getHeight());
-
-        parent->addnstGraphicsEntity(entity);
-
-        requestEntityAddition(entity);
-        break;
-
-      default:
-        // do nothing
-        break;
+      adjustMedia((QnstGraphicsMedia*) entity);
     }
 
-    entity->adjust();
+    // \todo Refer for context and switch
   }
 }
 

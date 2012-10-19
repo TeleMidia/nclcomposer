@@ -81,6 +81,28 @@ std::map <QString, Qnst::EntityType> QnstUtil::typeFromStr =
     ("simpleCondition", Qnst::Condition)
     ("simpleAction", Qnst::Action);
 
+/* Initialize prefix id from type Map */
+std::map <Qnst::EntityType, QString> QnstUtil::prefixIdFromType =
+  create_map<Qnst::EntityType, QString >
+    (Qnst::Media, "m")
+    (Qnst::Image, "m")
+    (Qnst::Audio, "m")
+    (Qnst::Video, "m")
+    (Qnst::Html, "m")
+    (Qnst::NCL, "m")
+    (Qnst::Settings, "m")
+    (Qnst::NCLua, "m")
+    (Qnst::Media, "m")
+
+    (Qnst::Context, "ctx")
+    (Qnst::Switch, "swt")
+    (Qnst::Body, "body")
+
+    (Qnst::Port, "p")
+    (Qnst::SwitchPort, "swp")
+    (Qnst::Area, "area")
+    (Qnst::Aggregator, "prop");
+
 QnstGraphicsEntity *QnstUtil::makeGraphicsEntity(Qnst::EntityType type,
                                                  QnstGraphicsEntity *parent)
 {
@@ -193,4 +215,12 @@ Qnst::EntityType QnstUtil::getnstTypeFromStr(const QString &strType)
     return typeFromStr[strType];
 
   return Qnst::NoType;
+}
+
+QString QnstUtil::getPrefixIdFromType(Qnst::EntityType type)
+{
+  if(prefixIdFromType.count(type))
+    return prefixIdFromType[type];
+
+  return "unknown";
 }
