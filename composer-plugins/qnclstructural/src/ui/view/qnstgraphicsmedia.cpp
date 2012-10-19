@@ -5,7 +5,7 @@
 #include "qnstutil.h"
 
 QnstGraphicsMedia::QnstGraphicsMedia(QnstGraphicsEntity* parent)
-  : QnstGraphicsContent(parent), enableDrag(false)
+  : QnstGraphicsNode(parent), enableDrag(false)
 {
   setnstType(Qnst::Media);
 
@@ -54,7 +54,7 @@ void QnstGraphicsMedia::setSource(QString source)
 
 void QnstGraphicsMedia::setnstId(QString id)
 {
-    QnstGraphicsContent::setnstId(id);
+    QnstGraphicsNode::setnstId(id);
 
     updateToolTip();
 }
@@ -248,12 +248,12 @@ void QnstGraphicsMedia::mousePressEvent(QGraphicsSceneMouseEvent *event)
     drag->start();
   }
   else
-    QnstGraphicsContent::mousePressEvent(event);
+    QnstGraphicsNode::mousePressEvent(event);
 }
 
 void QnstGraphicsMedia::setProperties(const QMap<QString, QString> &properties)
 {
-  QnstGraphicsContent::setProperties(properties);
+  QnstGraphicsNode::setProperties(properties);
 
   setSource(properties["src"]);
   setRefer(properties["refer"]);

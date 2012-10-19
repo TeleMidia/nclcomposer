@@ -2,9 +2,9 @@
 #define QNSTGRAPHICSAGGREGATOR_H
 
 
-#include "qnstgraphicscontent.h"
+#include "qnstgraphicsnode.h"
 
-class QnstGraphicsAggregator : public QnstGraphicsContent
+class QnstGraphicsAggregator : public QnstGraphicsNode
 {
 public:
     QnstGraphicsAggregator(QnstGraphicsEntity* parent = 0);

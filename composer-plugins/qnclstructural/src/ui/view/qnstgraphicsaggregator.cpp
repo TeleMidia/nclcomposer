@@ -1,7 +1,7 @@
 #include "qnstgraphicsaggregator.h"
 
 QnstGraphicsAggregator::QnstGraphicsAggregator(QnstGraphicsEntity* parent)
-    : QnstGraphicsContent(parent)
+    : QnstGraphicsNode(parent)
 {
   setnstType(Qnst::Aggregator);
 

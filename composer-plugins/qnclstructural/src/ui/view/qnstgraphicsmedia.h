@@ -8,11 +8,11 @@
 #include <QFileInfo>
 #include <QKeyEvent>
 
-#include "qnstgraphicscontent.h"
+#include "qnstgraphicsnode.h"
 #include "qnstgraphicsproperty.h"
 #include "qnstgraphicsarea.h"
 
-class QnstGraphicsMedia : public QnstGraphicsContent
+class QnstGraphicsMedia : public QnstGraphicsNode
 {
   Q_OBJECT
 

@@ -29,7 +29,6 @@ HEADERS += \
     ui/view/qnstgraphicsnode.h \
     ui/view/qnstgraphicscomposition.h \
     ui/view/qnstgraphicsbody.h \
-    ui/view/qnstgraphicscontent.h \
     ui/view/qnstgraphicsmedia.h \
     ui/view/qnstgraphicscontext.h \
     ui/view/qnstgraphicsswitch.h \
@@ -70,7 +69,6 @@ SOURCES += \
     ui/view/qnstgraphicsnode.cpp \
     ui/view/qnstgraphicscomposition.cpp \
     ui/view/qnstgraphicsbody.cpp \
-    ui/view/qnstgraphicscontent.cpp \
     ui/view/qnstgraphicsmedia.cpp \
     ui/view/qnstgraphicscontext.cpp \
     ui/view/qnstgraphicsswitch.cpp \

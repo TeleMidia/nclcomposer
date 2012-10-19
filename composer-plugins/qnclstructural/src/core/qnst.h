@@ -23,7 +23,6 @@ public:
   {
     Node = 0,
 
-    Content,
     /* MEDIAS */
     Media,
     Image,
