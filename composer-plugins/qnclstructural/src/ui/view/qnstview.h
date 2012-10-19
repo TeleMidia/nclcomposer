@@ -321,6 +321,8 @@ private:
 
   bool modified;
 
+  int nlink;
+
   bool linking;
 
   int zoomStep;

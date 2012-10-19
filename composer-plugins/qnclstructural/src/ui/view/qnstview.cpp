@@ -27,6 +27,8 @@ QnstView::QnstView(QWidget* parent)
 
   zoomStep = 0;
 
+  nlink = 0;
+
   linking = false;
 
   modified = false;
@@ -40,6 +42,10 @@ QnstView::QnstView(QWidget* parent)
   hasCutted = false;
 
   lastLinkMouseOver = NULL;
+
+  // Initialize entity counters
+  for(int i = Qnst::Node; i < Qnst::NoType; i += 1)
+    entityCounter[ (Qnst::EntityType) i ] = 0;
 }
 
 QnstView::~QnstView()
@@ -1885,7 +1891,8 @@ void QnstView::addMedia(const QString uid, const QString parent,
       entity->setWidth(DEFAULT_MEDIA_WIDTH);
       entity->setHeight(DEFAULT_MEDIA_HEIGHT);
 
-      ++nmedia;
+      //Update media counter
+      entityCounter[Qnst::Media] ++;
 
       entities[parent]->addnstGraphicsEntity(entity);
       entities[uid] = entity;
@@ -2195,7 +2202,9 @@ void QnstView::addPort(const QString uid, const QString parent,
 
     entities[parent]->addnstGraphicsEntity(entity);
     entities[uid] = entity;
-    ++nport;
+
+    //Update entity counter
+    entityCounter[Qnst::Port] ++;
 
     adjustPort(entity);
 
@@ -2432,7 +2441,9 @@ void QnstView::addSwitchPort(const QString uid, const QString parent,
 
     entities[parent]->addnstGraphicsEntity(entity);
     entities[uid] = entity;
-    ++nswitchport;
+
+    // update entity counter
+    entityCounter[Qnst::SwitchPort] ++;
 
     entity->adjust();
 
@@ -2469,7 +2480,9 @@ void QnstView::addArea(const QString uid, const QString parent,
 
     entities[parent]->addnstGraphicsEntity(entity);
     entities[uid] = entity;
-    ++narea;
+
+    //Update entity counter
+    entityCounter[Qnst::Media] ++;
 
     entity->adjust();
 
@@ -2526,7 +2539,9 @@ void QnstView::addProperty(const QString uid, const QString parent,
 
     entities[parent]->addnstGraphicsEntity(entity);
     entities[uid] = entity;
-    ++nproperty;
+
+    //Update entity counter
+    entityCounter[Qnst::Property] ++;
 
     entity->adjust();
 
@@ -4850,7 +4865,8 @@ void QnstView:: addNodetoNodeEdge(QnstGraphicsEntity* entitya, QnstGraphicsEntit
 
                     QnstLink* lo;
 
-                    if (link == "New..."){
+                    if (link == "New...")
+                    {
                         properties["link"] = "link"+QString::number(++nlink);
 
                         lo = new QnstLink();
