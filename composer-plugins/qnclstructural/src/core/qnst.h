@@ -59,27 +59,23 @@ public:
     NoType
   };
 
-  enum ConditionType
+  enum BindType
   {
+    /* Conditions */
     onBegin,
-    onSelectiononBegin,
     onEnd,
     onSelection,
     onResume,
     onPause,
 
-    NoConditionType
-  };
-
-  enum ActionType
-  {
+    /* Actions */
     Start,
     Stop,
     Resume,
     Pause,
     Set,
 
-    NoActionType
+    NoBindType
   };
 };
 

@@ -3,11 +3,11 @@
 QnstGraphicsCondition::QnstGraphicsCondition(QnstGraphicsEntity* parent)
     : QnstGraphicsEdge(parent)
 {
-    setnstType(Qnst::Condition);
+  setnstType(Qnst::Condition);
 
-    setCondition(Qnst::NoConditionType);
+  setCondition(Qnst::NoBindType);
 
-    dialog = new QnstGraphicsBindDialog();
+  dialog = new QnstGraphicsBindDialog();
 }
 
 QnstGraphicsCondition::~QnstGraphicsCondition()
@@ -15,50 +15,46 @@ QnstGraphicsCondition::~QnstGraphicsCondition()
 
 }
 
-QnstCondition QnstGraphicsCondition::getCondition()
+Qnst::BindType QnstGraphicsCondition::getCondition()
 {
-    return condition;
+  return condition;
 }
 
-void QnstGraphicsCondition::setCondition(QnstCondition condition)
+void QnstGraphicsCondition::setCondition(Qnst::BindType condition)
 {
-    this->condition = condition;
+  this->condition = condition;
 
-    switch(condition){
-    case Qnst::onBegin:
-        setConditionIcon(QnstConditionIcon(":/icon/onbegin"));
-        break;
+  switch(condition)
+  {
+  case Qnst::onBegin:
+    this->conditionIcon = ":/icon/onbegin";
+    break;
 
-    case Qnst::onEnd:
-        setConditionIcon(QnstConditionIcon(":/icon/onend"));
-        break;
+  case Qnst::onEnd:
+    this->conditionIcon = ":/icon/onend";
+    break;
 
-    case Qnst::onResume:
-        setConditionIcon(QnstConditionIcon(":/icon/onresume"));
-        break;
+  case Qnst::onResume:
+    this->conditionIcon = ":/icon/onresume";
+    break;
 
-    case Qnst::onPause:
-        setConditionIcon(QnstConditionIcon(":/icon/onpause"));
-        break;
+  case Qnst::onPause:
+    this->conditionIcon = ":/icon/onpause";
+    break;
 
-    case Qnst::onSelection:
-        setConditionIcon(QnstConditionIcon(":/icon/onselection"));
-        break;
+  case Qnst::onSelection:
+    this->conditionIcon = ":/icon/onselection";
+    break;
 
-    case Qnst::NoConditionType:
-        setConditionIcon(QnstConditionIcon(":/icon/nocondition"));
-        break;
-    }
+  default:
+    this->conditionIcon = ":/icon/nocondition";
+    break;
+  }
 }
 
-QnstConditionIcon QnstGraphicsCondition::getConditionIcon()
+QString QnstGraphicsCondition::getConditionIcon()
 {
-    return conditionIcon;
-}
-
-void QnstGraphicsCondition::setConditionIcon(QnstConditionIcon conditionIcon)
-{
-    this->conditionIcon = conditionIcon;
+  return conditionIcon;
 }
 
 void QnstGraphicsCondition::adjust()
@@ -397,91 +393,98 @@ void QnstGraphicsCondition::delineate(QPainterPath* painter) const
 
 void QnstGraphicsCondition::setConn(QnstConnector* conn)
 {
-    this->conn = conn;
+  this->conn = conn;
 }
 
 void QnstGraphicsCondition::addParam(QString uid, QString name, QString value)
 {
-    if (name != ""){
-        params[name] = value;
-        name_uid[name] = uid;
+  if (name != "")
+  {
+    params[name] = value;
+    name_uid[name] = uid;
 
-        emit bindParamUpdated(getnstUid() ,params, name_uid);
-    }
+    emit bindParamUpdated(getnstUid() ,params, name_uid);
+  }
 }
 
 void QnstGraphicsCondition::setParam(QString name, QString value)
 {
-    if (name != ""){
-        params[name] = value;
+  if (name != "")
+  {
+    params[name] = value;
 
-        emit bindParamUpdated(getnstUid() ,params, name_uid);
-    }
+    emit bindParamUpdated(getnstUid() ,params, name_uid);
+  }
 }
 
 void QnstGraphicsCondition::removeParam(QString name)
 {
-    if (name != ""){
-        params.remove(name);
-        name_uid.remove(name);
+  if (name != "")
+  {
+    params.remove(name);
+    name_uid.remove(name);
 
-        emit bindParamUpdated(getnstUid() ,params, name_uid);
-    }
+    emit bindParamUpdated(getnstUid() ,params, name_uid);
+  }
 }
 
 void QnstGraphicsCondition::setParams(QMap<QString, QString> params)
 {
-    this->params = params;
+  this->params = params;
 }
 
 void QnstGraphicsCondition::setNameUids(QMap<QString, QString> nameUids)
 {
-    this->name_uid = nameUids;
+  this->name_uid = nameUids;
 }
 
 void QnstGraphicsCondition::removeUId(QString uid)
 {
-    QString name = name_uid.key(uid);
+  QString name = name_uid.key(uid);
 
-    if (params.contains(name)){
-        params.remove(name);
-        name_uid.remove(name);
+  if (params.contains(name))
+  {
+    params.remove(name);
+    name_uid.remove(name);
 
-        emit bindParamUpdated(getnstUid() ,params, name_uid);
-    }
+    emit bindParamUpdated(getnstUid() ,params, name_uid);
+  }
 }
 
 void QnstGraphicsCondition::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
 {
+  if (conn != NULL)
+  {
+    QList<QString> names = conn->getParams().values();
 
-    if (conn != NULL){
-        QList<QString> names = conn->getParams().values();
+    QMap<QString, QString> values;
 
-        QMap<QString, QString> values;
+    foreach(QString name, names)
+    {
+      values[name] = params[name];
 
-        foreach(QString name, names){
-            values[name] = params[name];
+      if (!name_uid.contains(name))
+        name_uid[name] = QUuid::createUuid().toString();
 
-            if (!name_uid.contains(name)){
-                name_uid[name] = QUuid::createUuid().toString();
-            }
-        }
-
-        dialog->init(values);
-
-        if (dialog->exec()){
-            params = dialog->getProperties();
-
-            foreach(QString name, params.keys()){
-                QMap<QString, QString> p;
-
-                p["name"] = name;
-                p["value"] = params[name];
-
-                emit bindParamAdded(name_uid[name], getnstUid(), p);
-            }
-
-            emit bindParamUpdated(getnstUid() ,params, name_uid);
-        }
     }
+
+    dialog->init(values);
+
+    if (dialog->exec())
+    {
+      params = dialog->getProperties();
+
+      foreach(QString name, params.keys())
+      {
+        QMap<QString, QString> p;
+
+        p["name"] = name;
+        p["value"] = params[name];
+
+        emit bindParamAdded(name_uid[name], getnstUid(), p);
+      }
+
+      emit bindParamUpdated(getnstUid() ,params, name_uid);
+    }
+  }
 }

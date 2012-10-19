@@ -5,7 +5,7 @@ QnstGraphicsAction::QnstGraphicsAction(QnstGraphicsEntity* parent)
 {
     setnstType(Qnst::Action);
 
-    setAction(Qnst::NoActionType);
+    setAction(Qnst::NoBindType);
 
     dialog = new QnstGraphicsBindDialog();
 
@@ -17,50 +17,46 @@ QnstGraphicsAction::~QnstGraphicsAction()
     delete dialog;
 }
 
-QnstAction QnstGraphicsAction::getAction()
+Qnst::BindType QnstGraphicsAction::getAction()
 {
     return action;
 }
 
-void QnstGraphicsAction::setAction(QnstAction action)
+void QnstGraphicsAction::setAction(Qnst::BindType action)
 {
     this->action = action;
 
-    switch(action){
+    switch(action)
+    {
     case Qnst::Start:
-        setActionIcon(QnstActionIcon(":/icon/start"));
+        this->actionIcon = ":/icon/start";
         break;
 
     case Qnst::Stop:
-        setActionIcon(QnstActionIcon(":/icon/stop"));
+        this->actionIcon = ":/icon/stop";
         break;
 
     case Qnst::Resume:
-        setActionIcon(QnstActionIcon(":/icon/resume"));
+        this->actionIcon = ":/icon/resume";
         break;
 
     case Qnst::Pause:
-        setActionIcon(QnstActionIcon(":/icon/pause"));
+        this->actionIcon = ":/icon/pause";
         break;
 
     case Qnst::Set:
-        setActionIcon(QnstActionIcon(":/icon/set"));
+        this->actionIcon = ":/icon/set";
         break;
 
-    case Qnst::NoActionType:
-        setActionIcon(QnstActionIcon(":/icon/noaction"));
+    default:
+        this->actionIcon = ":/icon/noaction";
         break;
     }
 }
 
-QnstActionIcon QnstGraphicsAction::getActionIcon()
+QString QnstGraphicsAction::getActionIcon()
 {
     return actionIcon;
-}
-
-void QnstGraphicsAction::setActionIcon(QnstActionIcon actionIcon)
-{
-    this->actionIcon = actionIcon;
 }
 
 void QnstGraphicsAction::adjust()

@@ -5,9 +5,6 @@
 
 #include "qnstgraphicsbinddialog.h"
 
-typedef QString QnstConditionIcon;
-typedef Qnst::ConditionType QnstCondition;
-
 class QnstGraphicsCondition : public QnstGraphicsEdge
 {
   Q_OBJECT
@@ -17,13 +14,11 @@ public:
 
   ~QnstGraphicsCondition();
 
-  QnstCondition getCondition();
+  Qnst::BindType getCondition();
 
-  void setCondition(QnstCondition condition);
+  void setCondition(Qnst::BindType condition);
 
-  QnstConditionIcon getConditionIcon();
-
-  void setConditionIcon(QnstConditionIcon conditionIcon);
+  QString getConditionIcon();
 
   void adjust();
 
@@ -56,9 +51,9 @@ protected:
   virtual void mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event);
 
 private:
-  QnstCondition condition;
+  Qnst::BindType condition;
 
-  QnstConditionIcon conditionIcon;
+  QString conditionIcon;
 
   QnstConnector* conn;
 

@@ -5,9 +5,6 @@
 
 #include "qnstgraphicsbinddialog.h"
 
-typedef QString QnstActionIcon;
-typedef Qnst::ActionType QnstAction;
-
 class QnstGraphicsAction : public QnstGraphicsEdge
 {
     Q_OBJECT
@@ -17,13 +14,11 @@ public:
 
     ~QnstGraphicsAction();
 
-    QnstAction getAction();
+    Qnst::BindType getAction();
 
-    void setAction(QnstAction action);
+    void setAction(Qnst::BindType action);
 
-    QnstActionIcon getActionIcon();
-
-    void setActionIcon(QnstActionIcon actionIcon);
+    QString getActionIcon();
 
     void adjust();
 
@@ -57,9 +52,9 @@ protected:
 
 private:
 
-    QnstAction action;
+    Qnst::BindType action;
 
-    QnstActionIcon actionIcon;
+    QString actionIcon;
 
     QnstConnector* conn;
 
