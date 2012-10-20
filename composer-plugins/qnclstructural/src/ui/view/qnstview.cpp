@@ -335,195 +335,136 @@ void QnstView::readLink(QDomElement element, QDomElement parent)
         QnstBind* bo = NULL;
         QnstLink* lo = NULL;
 
-        if (element.attribute("type") == "condition")
+        int bindType = -1;
+
+        // Get the bindType as Qnst::EntityType
+        if(element.attribute("type") == "condition")
+          bindType = Qnst::Condition;
+        else
+          bindType = Qnst::Action;
+
+        if(bindType != -1) // i.e., we have a valid bindType
         {
           graphicsBind = new QnstGraphicsBind();
-          graphicsBind->setCondition(Qnst::NoBindType);
-          graphicsBind->setnstId(element.attribute("id"));
-          graphicsBind->setnstUid(element.attribute("uid"));
-          graphicsBind->setEntityA(entitya);
-          graphicsBind->setEntityB(entityb);
 
-          // if linking NODE to NODE
-          if (entitya->getncgType() == Qncg::Node &&
-              entityb->getncgType() == Qncg::Node)
-          {
-            graphicsBind->setnstGraphicsParent(entitya->getnstGraphicsParent());
-            entitya->getnstGraphicsParent()->addnstGraphicsEntity(graphicsBind);
-          }
-          // if linking NODE to INTERFACE
-          else if (entitya->getncgType() == Qncg::Node &&
-                   entityb->getncgType() == Qncg::Interface)
-          {
-            graphicsBind->setnstGraphicsParent(entitya->getnstGraphicsParent());
-            entitya->getnstGraphicsParent()->addnstGraphicsEntity(graphicsBind);
-          }
-          // if linking INTERFACE to NODE
-          else if (entitya->getncgType() == Qncg::Interface &&
-                   entityb->getncgType() == Qncg::Node)
-          {
-            graphicsBind->setnstGraphicsParent(entityb->getnstGraphicsParent());
-            entityb->getnstGraphicsParent()->addnstGraphicsEntity(graphicsBind);
-          }
-          // if linking INTERFACE to INTERFACE
-          else if (entitya->getncgType() == Qncg::Interface &&
-                   entityb->getncgType() == Qncg::Interface)
-          {
-            graphicsBind->setnstGraphicsParent(entitya->getnstGraphicsParent()->getnstGraphicsParent());
-            entitya->getnstGraphicsParent()->getnstGraphicsParent()->addnstGraphicsEntity(graphicsBind);
-          }
-
-          // adjusting angle
-          adjustAngle(graphicsBind, entitya, entityb);
-
-          graphicsBind->adjust();
-
-          ((QnstGraphicsNode*) entitya)->addnstGraphicsEdge(graphicsBind);
-          ((QnstGraphicsNode*) entityb)->addnstGraphicsEdge(graphicsBind);
-
-          QString con = element.attribute("condition");
-
-          // \todo Make a map to get this information!!!
-          if (con == "onBegin")
-            graphicsBind->setCondition(Qnst::onBegin);
-          else if (con == "onEnd")
-            graphicsBind->setCondition(Qnst::onEnd);
-          else if (con == "onPause")
-            graphicsBind->setCondition(Qnst::onPause);
-          else if (con == "onResume")
-            graphicsBind->setCondition(Qnst::onResume);
-          else if (con == "onSelection")
-            graphicsBind->setCondition(Qnst::onSelection);
-          else
+          // Set action or condition depending of the bindType
+          if(bindType == Qnst::Condition)
             graphicsBind->setCondition(Qnst::NoBindType);
-
-          lo = links[element.attribute("linkUID")];
-
-          bo = new QnstBind();
-          bo->setnstParent(lo);
-          bo->setnstUid(graphicsBind->getnstUid());
-          bo->setRole(con);
-
-          if (entitya->getncgType() == Qncg::Interface)
-          {
-            bo->setComponent(entitya->getnstGraphicsParent()->getnstId());
-            bo->setComponentUid(entitya->getnstGraphicsParent()->getnstUid());
-            bo->setInterface(entitya->getnstId());
-            bo->setInterfaceUid(entitya->getnstUid());
-          }
-          else
-          {
-            bo->setComponent(entitya->getnstId());
-            bo->setComponentUid(entitya->getnstUid());
-          }
-
-          lo->addCondition(bo);
-
-          binds[bo->getnstUid()] = bo;
-          brelations[bo->getnstUid()] = graphicsBind->getnstUid();
-
-          entities[graphicsBind->getnstUid()] = graphicsBind;
-
-          graphicsBind->setConn(connectors[lo->getxConnector()]);
-
-        }
-        else if (element.attribute("type") == "action")
-        {
-          graphicsBind = new QnstGraphicsBind();
-          graphicsBind->setAction(Qnst::NoBindType);
-          graphicsBind->setnstId(element.attribute("id"));
-          graphicsBind->setnstUid(element.attribute("uid"));
-          graphicsBind->setEntityA(entitya);
-          graphicsBind->setEntityB(entityb);
-
-          // if linking NODE to NODE
-          if (entitya->getncgType() == Qncg::Node &&
-              entityb->getncgType() == Qncg::Node)
-          {
-            graphicsBind->setnstGraphicsParent(entitya->getnstGraphicsParent());
-            entitya->getnstGraphicsParent()->addnstGraphicsEntity(graphicsBind);
-          }
-          // if linking NODE to INTERFACE
-          else if (entitya->getncgType() == Qncg::Node &&
-                   entityb->getncgType() == Qncg::Interface)
-          {
-            graphicsBind->setnstGraphicsParent(entitya->getnstGraphicsParent());
-            entitya->getnstGraphicsParent()->addnstGraphicsEntity(graphicsBind);
-          }
-          // if linking INTERFACE to NODE
-          else if (entitya->getncgType() == Qncg::Interface &&
-                   entityb->getncgType() == Qncg::Node)
-          {
-            graphicsBind->setnstGraphicsParent(entityb->getnstGraphicsParent());
-            entityb->getnstGraphicsParent()->addnstGraphicsEntity(graphicsBind);
-          }
-          // if linking INTERFACE to INTERFACE
-          else if (entitya->getncgType() == Qncg::Interface &&
-                    entityb->getncgType() == Qncg::Interface)
-          {
-            graphicsBind->setnstGraphicsParent(entitya->getnstGraphicsParent()->getnstGraphicsParent());
-            entitya->getnstGraphicsParent()->getnstGraphicsParent()->addnstGraphicsEntity(graphicsBind);
-          }
-
-          // adjusting angle
-          adjustAngle(graphicsBind, entitya, entityb);
-
-          graphicsBind->adjust();
-
-          ((QnstGraphicsNode*) entitya)->addnstGraphicsEdge(graphicsBind);
-          ((QnstGraphicsNode*) entityb)->addnstGraphicsEdge(graphicsBind);
-
-          QString act = element.attribute("action");
-
-          // \todo Make a map with these information
-          if (act == "start")
-            graphicsBind->setAction(Qnst::Start);
-          else if (act == "stop")
-            graphicsBind->setAction(Qnst::Stop);
-          else if (act == "pause")
-            graphicsBind->setAction(Qnst::Pause);
-          else if (act == "resume")
-            graphicsBind->setAction(Qnst::Resume);
-          else if (act == "set")
-            graphicsBind->setAction(Qnst::Set);
           else
             graphicsBind->setAction(Qnst::NoBindType);
 
+          graphicsBind->setnstId(element.attribute("id"));
+          graphicsBind->setnstUid(element.attribute("uid"));
+
+          graphicsBind->setEntityA(entitya);
+          graphicsBind->setEntityB(entityb);
+
+          // if linking NODE to NODE
+          if (entitya->getncgType() == Qncg::Node &&
+              entityb->getncgType() == Qncg::Node)
+          {
+            graphicsBind->setnstGraphicsParent(entitya->getnstGraphicsParent());
+            entitya->getnstGraphicsParent()->addnstGraphicsEntity(graphicsBind);
+          }
+          // if linking NODE to INTERFACE
+          else if (entitya->getncgType() == Qncg::Node &&
+                   entityb->getncgType() == Qncg::Interface)
+          {
+            graphicsBind->setnstGraphicsParent(entitya->getnstGraphicsParent());
+            entitya->getnstGraphicsParent()->addnstGraphicsEntity(graphicsBind);
+          }
+          // if linking INTERFACE to NODE
+          else if (entitya->getncgType() == Qncg::Interface &&
+                   entityb->getncgType() == Qncg::Node)
+          {
+            graphicsBind->setnstGraphicsParent(entityb->getnstGraphicsParent());
+            entityb->getnstGraphicsParent()->addnstGraphicsEntity(graphicsBind);
+          }
+          // if linking INTERFACE to INTERFACE
+          else if (entitya->getncgType() == Qncg::Interface &&
+                   entityb->getncgType() == Qncg::Interface)
+          {
+            graphicsBind->setnstGraphicsParent(entitya->getnstGraphicsParent()->getnstGraphicsParent());
+            entitya->getnstGraphicsParent()->getnstGraphicsParent()->addnstGraphicsEntity(graphicsBind);
+          }
+
+          // adjusting angle
+          adjustAngle(graphicsBind, entitya, entityb);
+
+          graphicsBind->adjust();
+
+          ((QnstGraphicsNode*) entitya)->addnstGraphicsEdge(graphicsBind);
+          ((QnstGraphicsNode*) entityb)->addnstGraphicsEdge(graphicsBind);
+
+          QString roleStr;
+
+          // Set action or condition role
+          if(bindType == Qnst::Condition) // Qnst::Condition
+          {
+            roleStr = element.attribute("condition");
+            graphicsBind->setCondition(QnstUtil::getBindTypeFromStr(roleStr));
+          }
+          else //Qnst::Action
+          {
+            roleStr = element.attribute("action");
+            graphicsBind->setAction(QnstUtil::getBindTypeFromStr(roleStr));
+          }
+
           lo = links[element.attribute("linkUID")];
 
           bo = new QnstBind();
           bo->setnstParent(lo);
           bo->setnstUid(graphicsBind->getnstUid());
-          bo->setRole(act);
+          bo->setRole(roleStr);
 
-          if (entitya->getncgType() == Qncg::Interface)
+          // Qnst::Condition
+          if(bindType == Qnst::Condition)
           {
-            bo->setComponent(entityb->getnstGraphicsParent()->getnstId());
-            bo->setComponentUid(entityb->getnstGraphicsParent()->getnstUid());
-            bo->setInterface(entityb->getnstId());
-            bo->setInterfaceUid(entityb->getnstUid());
+            if (entitya->getncgType() == Qncg::Interface)
+            {
+              bo->setComponent(entitya->getnstGraphicsParent()->getnstId());
+              bo->setComponentUid(entitya->getnstGraphicsParent()->getnstUid());
+              bo->setInterface(entitya->getnstId());
+              bo->setInterfaceUid(entitya->getnstUid());
+            }
+            else
+            {
+              bo->setComponent(entitya->getnstId());
+              bo->setComponentUid(entitya->getnstUid());
+            }
+
+            lo->addCondition(bo);
           }
+          // Qnst::Action
           else
           {
-            bo->setComponent(entityb->getnstId());
-            bo->setComponentUid(entityb->getnstUid());
+            if (entitya->getncgType() == Qncg::Interface)
+            {
+              bo->setComponent(entityb->getnstGraphicsParent()->getnstId());
+              bo->setComponentUid(entityb->getnstGraphicsParent()->getnstUid());
+              bo->setInterface(entityb->getnstId());
+              bo->setInterfaceUid(entityb->getnstUid());
+            }
+            else
+            {
+              bo->setComponent(entityb->getnstId());
+              bo->setComponentUid(entityb->getnstUid());
+            }
+
+            lo->addAction(bo);
           }
 
-          lo->addAction(bo);
-
           binds[bo->getnstUid()] = bo;
+
           brelations[bo->getnstUid()] = graphicsBind->getnstUid();
 
           entities[graphicsBind->getnstUid()] = graphicsBind;
 
           graphicsBind->setConn(connectors[lo->getxConnector()]);
 
-        }
-
-        if(graphicsBind != NULL && lo != NULL && bo != NULL)
-        {
           nlink++;
 
+          // SET THE BIND PARAMS
           QMap<QString, QString> params;
           QMap<QString, QString> name_uid;
 
@@ -556,6 +497,7 @@ void QnstView::readLink(QDomElement element, QDomElement parent)
 
         graphicsBind->setParams(bo->getParams());
         graphicsBind->setNameUids(bo->getNameUIDs());
+        //FINISH BIND PARAMS
       }
     }
   }
@@ -848,34 +790,8 @@ void QnstView::writeLink(QDomElement element, QDomDocument* dom,
 
           // Be carefull, this is different for action
           e.setAttribute("linkUID", link->getEntityB()->getnstUid());
-
-          // \fixme make a map we these information
-          switch(link->getCondition())
-          {
-            case Qnst::onBegin:
-              e.setAttribute("condition", "onBegin");
-              break;
-
-            case Qnst::onEnd:
-              e.setAttribute("condition", "onEnd");
-              break;
-
-            case Qnst::onPause:
-              e.setAttribute("condition", "onPause");
-              break;
-
-            case Qnst::onResume:
-              e.setAttribute("condition", "onResume");
-              break;
-
-            case Qnst::onSelection:
-              e.setAttribute("condition", "onSelection");
-              break;
-
-            default:
-              e.setAttribute("condition", "NoBindType");
-              break;
-          }
+          e.setAttribute("condition",
+                         QnstUtil::getStrFromBindType(link->getCondition()));
         }
         // We are writing an action
         else if(edge->getnstType() == Qnst::Action)
@@ -884,34 +800,8 @@ void QnstView::writeLink(QDomElement element, QDomDocument* dom,
 
           // Be carefull, this is different for condition
           e.setAttribute("linkUID", link->getEntityA()->getnstUid());
-
-          // \fixme make a map we these information
-          switch(link->getAction())
-          {
-            case Qnst::Start:
-              e.setAttribute("action", "start");
-              break;
-
-            case Qnst::Stop:
-              e.setAttribute("action", "stop");
-              break;
-
-            case Qnst::Pause:
-              e.setAttribute("action", "pause");
-              break;
-
-            case Qnst::Resume:
-              e.setAttribute("action", "resume");
-              break;
-
-            case Qnst::Set:
-              e.setAttribute("action", "set");
-              break;
-
-            default:
-              e.setAttribute("action", "NoBindType");
-              break;
-          }
+          e.setAttribute("action",
+                         QnstUtil::getStrFromBindType(link->getAction()));
         }
 
         e.setAttribute("componentaUID", link->getEntityA()->getnstUid());

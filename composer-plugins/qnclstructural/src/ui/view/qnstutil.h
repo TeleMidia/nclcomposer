@@ -61,11 +61,31 @@ public:
    */
   static QString getPrefixIdFromType(Qnst::EntityType type);
 
+  /*!
+   * \brief Returns the Qnst::BindType related to the string role passed as
+   *    parameter.
+   *
+   * \arg role the string of the role (onBegin, onEnd, start, stop, ...)
+   * \return the Qnst::BindType related to that string.
+   */
+  static Qnst::BindType getBindTypeFromStr(const QString &role);
+
+  /*!
+   * \brief Returns a string that represents the QnstBindType passed as
+   *    parameter.
+   *
+   * \arg type the Qnst::BindType
+   * \return a string that represents that type.
+   */
+  static QString getStrFromBindType(Qnst::BindType type);
+
 private:
-  static std::map <Qnst::EntityType, QString> iconFromTypeMap;
-  static std::map <QString, Qnst::EntityType> typeFromExtMap;
-  static std::map <QString, Qnst::EntityType> typeFromStr;
-  static std::map  <Qnst::EntityType, QString> prefixIdFromType;
+  static std::map <Qnst::EntityType, QString>   iconFromTypeMap;
+  static std::map <QString, Qnst::EntityType>   typeFromExtMap;
+  static std::map <QString, Qnst::EntityType>   typeFromStr;
+  static std::map  <Qnst::EntityType, QString>  prefixIdFromType;
+  static std::map <QString, Qnst::BindType>     bindTypeFromRoleStr;
+  static std::map <Qnst::BindType, QString>     strFromBindType;
 };
 
 template <typename T, typename U>

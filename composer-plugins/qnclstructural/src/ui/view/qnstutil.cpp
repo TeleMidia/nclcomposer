@@ -107,6 +107,37 @@ std::map <Qnst::EntityType, QString> QnstUtil::prefixIdFromType =
     (Qnst::Area, "area")
     (Qnst::Aggregator, "prop");
 
+/* Initialize BindType from Role string Map */
+std::map <QString, Qnst::BindType> QnstUtil::bindTypeFromRoleStr =
+  create_map<QString, Qnst::BindType>
+    ("onBegin", Qnst::onBegin)
+    ("onEnd", Qnst::onEnd)
+    ("onSelection", Qnst::onSelection)
+    ("onResume", Qnst::onResume)
+    ("onPause", Qnst::onPause)
+
+    ("start", Qnst::Start)
+    ("stop", Qnst::Stop)
+    ("resume", Qnst::Resume)
+    ("pause", Qnst::Pause)
+    ("set", Qnst::Set);
+
+/* Initialize String from Qnst::BindType Map */
+std::map <Qnst::BindType, QString> QnstUtil::strFromBindType =
+  create_map<Qnst::BindType, QString>
+    (Qnst::onBegin, "onBegin")
+    (Qnst::onEnd, "onEnd")
+    (Qnst::onSelection, "onSelection")
+    (Qnst::onResume, "onResume")
+    (Qnst::onPause, "onPause")
+
+    (Qnst::Start, "start")
+    (Qnst::Stop, "stop")
+    (Qnst::Resume, "resume")
+    (Qnst::Pause, "pause")
+    (Qnst::Set, "set");
+
+
 QnstGraphicsEntity *QnstUtil::makeGraphicsEntity(Qnst::EntityType type,
                                                  QnstGraphicsEntity *parent)
 {
@@ -227,4 +258,20 @@ QString QnstUtil::getPrefixIdFromType(Qnst::EntityType type)
     return prefixIdFromType[type];
 
   return "unknown";
+}
+
+Qnst::BindType QnstUtil::getBindTypeFromStr(const QString &role)
+{
+  if(bindTypeFromRoleStr.count(role))
+    return bindTypeFromRoleStr[role];
+
+  return Qnst::NoBindType;
+}
+
+QString QnstUtil::getStrFromBindType(Qnst::BindType type)
+{
+  if(strFromBindType.count(type))
+    return strFromBindType[type];
+
+  return QString("NoBindType");
 }
