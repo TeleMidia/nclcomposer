@@ -2502,24 +2502,9 @@ void QnstView::adjustBind(QnstBind* entity)
                                     graphics->setCondition(Qnst::NoBindType);
 
                                 }else{
-                                    if (entity->getRole() == "onBegin"){
-                                        graphics->setCondition(Qnst::onBegin);
-
-                                    }else if (entity->getRole() == "onEnd"){
-                                        graphics->setCondition(Qnst::onEnd);
-
-                                    }else if (entity->getRole() == "onPause"){
-                                        graphics->setCondition(Qnst::onPause);
-
-                                    }else if (entity->getRole() == "onResume"){
-                                        graphics->setCondition(Qnst::onResume);
-
-                                    }else if (entity->getRole() == "onSelection"){
-                                        graphics->setCondition(Qnst::onSelection);
-
-                                    }else{
-                                        graphics->setCondition(Qnst::NoBindType);
-                                    }
+                                    //set condition
+                                    graphics->setCondition(
+                                          QnstUtil::getBindTypeFromStr(entity->getRole()));
                                 }
                                 graphics->setConn(connectors[parent->getxConnector()]);
 
@@ -2571,25 +2556,10 @@ void QnstView::adjustBind(QnstBind* entity)
                                 graphics->setInvalid(true);
                                 graphics->setCondition(Qnst::NoBindType);
 
-                            }else{
-                                if (entity->getRole() == "onBegin"){
-                                    graphics->setCondition(Qnst::onBegin);
-
-                                }else if (entity->getRole() == "onEnd"){
-                                    graphics->setCondition(Qnst::onEnd);
-
-                                }else if (entity->getRole() == "onPause"){
-                                    graphics->setCondition(Qnst::onPause);
-
-                                }else if (entity->getRole() == "onResume"){
-                                    graphics->setCondition(Qnst::onResume);
-
-                                }else if (entity->getRole() == "onSelection"){
-                                    graphics->setCondition(Qnst::onSelection);
-
-                                }else{
-                                    graphics->setCondition(Qnst::NoBindType);
-                                }
+                            }else
+                            {
+                              //set condition type
+                              graphics->setCondition(QnstUtil::getBindTypeFromStr(entity->getRole()));
                             }
 
                             graphics->setConn(connectors[parent->getxConnector()]);
@@ -2663,29 +2633,14 @@ void QnstView::adjustBind(QnstBind* entity)
                                 ((QnstGraphicsNode*) entitya)->addnstGraphicsEdge(graphics);
                                 ((QnstGraphicsInterface*) entityb)->addnstGraphicsEdge(graphics);
 
-                                if (invalid){
-                                    graphics->setInvalid(true);
-                                    graphics->setAction(Qnst::NoBindType);
-
-                                }else{
-                                    if (entity->getRole() == "start"){
-                                        graphics->setAction(Qnst::Start);
-
-                                    }else if (entity->getRole() == "stop"){
-                                        graphics->setAction(Qnst::Stop);
-
-                                    }else if (entity->getRole() == "pause"){
-                                        graphics->setAction(Qnst::Pause);
-
-                                    }else if (entity->getRole() == "resume"){
-                                        graphics->setAction(Qnst::Resume);
-
-                                    }else if (entity->getRole() == "set"){
-                                        graphics->setAction(Qnst::Set);
-
-                                    }else{
-                                        graphics->setAction(Qnst::NoBindType);
-                                    }
+                                if (invalid)
+                                {
+                                  graphics->setInvalid(true);
+                                  graphics->setAction(Qnst::NoBindType);
+                                }
+                                else
+                                {
+                                  graphics->setAction(QnstUtil::getBindTypeFromStr(entity->getRole()));
                                 }
 
 
@@ -2735,29 +2690,14 @@ void QnstView::adjustBind(QnstBind* entity)
                             ((QnstGraphicsNode*) entitya)->addnstGraphicsEdge(graphics);
                             ((QnstGraphicsNode*) entityb)->addnstGraphicsEdge(graphics);
 
-                            if (invalid){
-                                graphics->setInvalid(true);
-                                graphics->setAction(Qnst::NoBindType);
-
-                            }else{
-                                if (entity->getRole() == "start"){
-                                    graphics->setAction(Qnst::Start);
-
-                                }else if (entity->getRole() == "stop"){
-                                    graphics->setAction(Qnst::Stop);
-
-                                }else if (entity->getRole() == "pause"){
-                                    graphics->setAction(Qnst::Pause);
-
-                                }else if (entity->getRole() == "resume"){
-                                    graphics->setAction(Qnst::Resume);
-
-                                }else if (entity->getRole() == "set"){
-                                    graphics->setAction(Qnst::Set);
-
-                                }else{
-                                    graphics->setAction(Qnst::NoBindType);
-                                }
+                            if (invalid)
+                            {
+                              graphics->setInvalid(true);
+                              graphics->setAction(Qnst::NoBindType);
+                            }
+                            else
+                            {
+                              graphics->setAction(QnstUtil::getBindTypeFromStr(entity->getRole()));
                             }
 
                             graphics->setConn(connectors[parent->getxConnector()]);
@@ -4406,24 +4346,8 @@ void QnstView:: addNodetoNodeEdge(QnstGraphicsEntity* entitya, QnstGraphicsEntit
                     ((QnstGraphicsInterface*) entitya)->addnstGraphicsEdge(entity);
                     ((QnstGraphicsInterface*) entityb)->addnstGraphicsEdge(entity);
 
-                    if (act == "start"){
-                        entity->setAction(Qnst::Start);
-
-                    }else if (act == "stop"){
-                        entity->setAction(Qnst::Stop);
-
-                    }else if (act == "pause"){
-                        entity->setAction(Qnst::Pause);
-
-                    }else if (act == "resume"){
-                        entity->setAction(Qnst::Resume);
-
-                    }else if (act == "set"){
-                        entity->setAction(Qnst::Set);
-
-                    }else{
-                        entity->setAction(Qnst::NoBindType);
-                    }
+                    //set action
+                    entity->setAction(QnstUtil::getBindTypeFromStr(act));
 
                     /////
                     connect(entity,
@@ -4553,24 +4477,8 @@ void QnstView:: addNodetoNodeEdge(QnstGraphicsEntity* entitya, QnstGraphicsEntit
                     ((QnstGraphicsInterface*) entitya)->addnstGraphicsEdge(entity);
                     ((QnstGraphicsInterface*) entityb)->addnstGraphicsEdge(entity);
 
-                    if (cond == "onBegin"){
-                        entity->setCondition(Qnst::onBegin);
-
-                    }else if (cond == "onEnd"){
-                        entity->setCondition(Qnst::onEnd);
-
-                    }else if (cond == "onPause"){
-                        entity->setCondition(Qnst::onPause);
-
-                    }else if (cond == "onResume"){
-                        entity->setCondition(Qnst::onResume);
-
-                    }else if (cond == "onSelection"){
-                        entity->setCondition(Qnst::onSelection);
-
-                    }else{
-                        entity->setCondition(Qnst::NoBindType);
-                    }
+                    // set Condition type
+                    entity->setCondition(QnstUtil::getBindTypeFromStr(cond));
 
                     /////
                     connect(entity,
@@ -4747,24 +4655,8 @@ void QnstView:: addNodetoNodeEdge(QnstGraphicsEntity* entitya, QnstGraphicsEntit
                         ((QnstGraphicsNode*) entitya)->addnstGraphicsEdge(condition);
                         ((QnstGraphicsNode*) aggregator)->addnstGraphicsEdge(condition);
 
-                        if (con == "onBegin"){
-                            condition->setCondition(Qnst::onBegin);
-
-                        }else if (con == "onEnd"){
-                            condition->setCondition(Qnst::onEnd);
-
-                        }else if (con == "onPause"){
-                            condition->setCondition(Qnst::onPause);
-
-                        }else if (con == "onResume"){
-                            condition->setCondition(Qnst::onResume);
-
-                        }else if (con == "onSelection"){
-                            condition->setCondition(Qnst::onSelection);
-
-                        }else{
-                            condition->setCondition(Qnst::NoBindType);
-                        }
+                        // set condition type
+                        condition->setCondition(QnstUtil::getBindTypeFromStr(con));
 
                         entities[condition->getnstUid()] = condition;
 
@@ -4786,24 +4678,8 @@ void QnstView:: addNodetoNodeEdge(QnstGraphicsEntity* entitya, QnstGraphicsEntit
                         ((QnstGraphicsNode*) aggregator)->addnstGraphicsEdge(action);
                         ((QnstGraphicsInterface*) entityb)->addnstGraphicsEdge(action);
 
-                        if (act == "start"){
-                            action->setAction(Qnst::Start);
-
-                        }else if (act == "stop"){
-                            action->setAction(Qnst::Stop);
-
-                        }else if (act == "pause"){
-                            action->setAction(Qnst::Pause);
-
-                        }else if (act == "resume"){
-                            action->setAction(Qnst::Resume);
-
-                        }else if (act == "set"){
-                            action->setAction(Qnst::Set);
-
-                        }else{
-                            action->setAction(Qnst::NoBindType);
-                        }
+                        // set action
+                        action->setAction(QnstUtil::getBindTypeFromStr(act));
 
                         entities[action->getnstUid()] = action;
 
@@ -4963,24 +4839,8 @@ void QnstView::addNodetoInterfaceEdge(QnstGraphicsEntity* entitya, QnstGraphicsE
                     ((QnstGraphicsNode*) entitya)->addnstGraphicsEdge(entity);
                     ((QnstGraphicsInterface*) entityb)->addnstGraphicsEdge(entity);
 
-                    if (act == "start"){
-                        entity->setAction(Qnst::Start);
-
-                    }else if (act == "stop"){
-                        entity->setAction(Qnst::Stop);
-
-                    }else if (act == "pause"){
-                        entity->setAction(Qnst::Pause);
-
-                    }else if (act == "resume"){
-                        entity->setAction(Qnst::Resume);
-
-                    }else if (act == "set"){
-                        entity->setAction(Qnst::Set);
-
-                    }else{
-                        entity->setAction(Qnst::NoBindType);
-                    }
+                    //set action
+                    entity->setAction(QnstUtil::getBindTypeFromStr(act));
 
                     /////
                     connect(entity,
@@ -5157,24 +5017,8 @@ void QnstView::addNodetoInterfaceEdge(QnstGraphicsEntity* entitya, QnstGraphicsE
                         ((QnstGraphicsNode*) entitya)->addnstGraphicsEdge(condition);
                         ((QnstGraphicsNode*) aggregator)->addnstGraphicsEdge(condition);
 
-                        if (con == "onBegin"){
-                            condition->setCondition(Qnst::onBegin);
-
-                        }else if (con == "onEnd"){
-                            condition->setCondition(Qnst::onEnd);
-
-                        }else if (con == "onPause"){
-                            condition->setCondition(Qnst::onPause);
-
-                        }else if (con == "onResume"){
-                            condition->setCondition(Qnst::onResume);
-
-                        }else if (con == "onSelection"){
-                            condition->setCondition(Qnst::onSelection);
-
-                        }else{
-                            condition->setCondition(Qnst::NoBindType);
-                        }
+                        // set condition type
+                        condition->setCondition(QnstUtil::getBindTypeFromStr(con));
 
                         entities[condition->getnstUid()] = condition;
 
@@ -5196,24 +5040,8 @@ void QnstView::addNodetoInterfaceEdge(QnstGraphicsEntity* entitya, QnstGraphicsE
                         ((QnstGraphicsNode*) aggregator)->addnstGraphicsEdge(action);
                         ((QnstGraphicsInterface*) entityb)->addnstGraphicsEdge(action);
 
-                        if (act == "start"){
-                            action->setAction(Qnst::Start);
-
-                        }else if (act == "stop"){
-                            action->setAction(Qnst::Stop);
-
-                        }else if (act == "pause"){
-                            action->setAction(Qnst::Pause);
-
-                        }else if (act == "resume"){
-                            action->setAction(Qnst::Resume);
-
-                        }else if (act == "set"){
-                            action->setAction(Qnst::Set);
-
-                        }else{
-                            action->setAction(Qnst::NoBindType);
-                        }
+                        //set action
+                        action->setAction(QnstUtil::getBindTypeFromStr(act));
 
                         entities[action->getnstUid()] = action;
 
@@ -5370,24 +5198,8 @@ void QnstView::addInterfacetoNodeLink(QnstGraphicsEntity* entitya, QnstGraphicsE
             ((QnstGraphicsInterface*) entitya)->addnstGraphicsEdge(entity);
             ((QnstGraphicsNode*) entityb)->addnstGraphicsEdge(entity);
 
-            if (cond == "onBegin"){
-                entity->setCondition(Qnst::onBegin);
-
-            }else if (cond == "onEnd"){
-                entity->setCondition(Qnst::onEnd);
-
-            }else if (cond == "onPause"){
-                entity->setCondition(Qnst::onPause);
-
-            }else if (cond == "onResume"){
-                entity->setCondition(Qnst::onResume);
-
-            }else if (cond == "onSelection"){
-                entity->setCondition(Qnst::onSelection);
-
-            }else{
-                entity->setCondition(Qnst::NoBindType);
-            }
+            // set condition type
+            entity->setCondition(QnstUtil::getBindTypeFromStr(cond));
 
             /////
             connect(entity,
@@ -5568,24 +5380,8 @@ void QnstView::addInterfacetoNodeLink(QnstGraphicsEntity* entitya, QnstGraphicsE
             ((QnstGraphicsInterface*) entitya)->addnstGraphicsEdge(condition);
             ((QnstGraphicsNode*) aggregator)->addnstGraphicsEdge(condition);
 
-            if (con == "onBegin"){
-                condition->setCondition(Qnst::onBegin);
-
-            }else if (con == "onEnd"){
-                condition->setCondition(Qnst::onEnd);
-
-            }else if (con == "onPause"){
-                condition->setCondition(Qnst::onPause);
-
-            }else if (con == "onResume"){
-                condition->setCondition(Qnst::onResume);
-
-            }else if (con == "onSelection"){
-                condition->setCondition(Qnst::onSelection);
-
-            }else{
-                condition->setCondition(Qnst::NoBindType);
-            }
+            //set condition type
+            condition->setCondition(QnstUtil::getBindTypeFromStr(con));
 
             entities[condition->getnstUid()] = condition;
 
@@ -5607,24 +5403,8 @@ void QnstView::addInterfacetoNodeLink(QnstGraphicsEntity* entitya, QnstGraphicsE
             ((QnstGraphicsNode*) aggregator)->addnstGraphicsEdge(action);
             ((QnstGraphicsNode*) entityb)->addnstGraphicsEdge(action);
 
-            if (act == "start"){
-                action->setAction(Qnst::Start);
-
-            }else if (act == "stop"){
-                action->setAction(Qnst::Stop);
-
-            }else if (act == "pause"){
-                action->setAction(Qnst::Pause);
-
-            }else if (act == "resume"){
-                action->setAction(Qnst::Resume);
-
-            }else if (act == "set"){
-                action->setAction(Qnst::Set);
-
-            }else{
-                action->setAction(Qnst::NoBindType);
-            }
+            // set action
+            action->setAction(QnstUtil::getBindTypeFromStr(act));
 
             entities[action->getnstUid()] = action;
 
@@ -5970,24 +5750,8 @@ void QnstView::addInterfacetoInterfaceEdge(QnstGraphicsEntity* entitya, QnstGrap
                         ((QnstGraphicsInterface*) entitya)->addnstGraphicsEdge(condition);
                         ((QnstGraphicsNode*) aggregator)->addnstGraphicsEdge(condition);
 
-                        if (con == "onBegin"){
-                            condition->setCondition(Qnst::onBegin);
-
-                        }else if (con == "onEnd"){
-                            condition->setCondition(Qnst::onEnd);
-
-                        }else if (con == "onPause"){
-                            condition->setCondition(Qnst::onPause);
-
-                        }else if (con == "onResume"){
-                            condition->setCondition(Qnst::onResume);
-
-                        }else if (con == "onSelection"){
-                            condition->setCondition(Qnst::onSelection);
-
-                        }else{
-                            condition->setCondition(Qnst::NoBindType);
-                        }
+                        // set condition type
+                        condition->setCondition(QnstUtil::getBindTypeFromStr(con));
 
                         entities[condition->getnstUid()] = condition;
 
@@ -6010,24 +5774,8 @@ void QnstView::addInterfacetoInterfaceEdge(QnstGraphicsEntity* entitya, QnstGrap
                         ((QnstGraphicsNode*) aggregator)->addnstGraphicsEdge(action);
                         ((QnstGraphicsInterface*) entityb)->addnstGraphicsEdge(action);
 
-                        if (act == "start"){
-                            action->setAction(Qnst::Start);
-
-                        }else if (act == "stop"){
-                            action->setAction(Qnst::Stop);
-
-                        }else if (act == "pause"){
-                            action->setAction(Qnst::Pause);
-
-                        }else if (act == "resume"){
-                            action->setAction(Qnst::Resume);
-
-                        }else if (act == "set"){
-                            action->setAction(Qnst::Set);
-
-                        }else{
-                            action->setAction(Qnst::NoBindType);
-                        }
+                        // set action
+                        action->setAction(QnstUtil::getBindTypeFromStr(act));
 
                         entities[action->getnstUid()] = action;
 
@@ -6267,24 +6015,8 @@ void QnstView::addInterfacetoInterfaceEdge(QnstGraphicsEntity* entitya, QnstGrap
                         ((QnstGraphicsInterface*) entitya)->addnstGraphicsEdge(condition);
                         ((QnstGraphicsNode*) aggregator)->addnstGraphicsEdge(condition);
 
-                        if (con == "onBegin"){
-                            condition->setCondition(Qnst::onBegin);
-
-                        }else if (con == "onEnd"){
-                            condition->setCondition(Qnst::onEnd);
-
-                        }else if (con == "onPause"){
-                            condition->setCondition(Qnst::onPause);
-
-                        }else if (con == "onResume"){
-                            condition->setCondition(Qnst::onResume);
-
-                        }else if (con == "onSelection"){
-                            condition->setCondition(Qnst::onSelection);
-
-                        }else{
-                            condition->setCondition(Qnst::NoBindType);
-                        }
+                        // set condition
+                        condition->setCondition(QnstUtil::getBindTypeFromStr(con));
 
                         entities[condition->getnstUid()] = condition;
 
@@ -6307,24 +6039,8 @@ void QnstView::addInterfacetoInterfaceEdge(QnstGraphicsEntity* entitya, QnstGrap
                         ((QnstGraphicsNode*) aggregator)->addnstGraphicsEdge(action);
                         ((QnstGraphicsInterface*) entityb)->addnstGraphicsEdge(action);
 
-                        if (act == "start"){
-                            action->setAction(Qnst::Start);
-
-                        }else if (act == "stop"){
-                            action->setAction(Qnst::Stop);
-
-                        }else if (act == "pause"){
-                            action->setAction(Qnst::Pause);
-
-                        }else if (act == "resume"){
-                            action->setAction(Qnst::Resume);
-
-                        }else if (act == "set"){
-                            action->setAction(Qnst::Set);
-
-                        }else{
-                            action->setAction(Qnst::NoBindType);
-                        }
+                        // set action
+                        action->setAction(QnstUtil::getBindTypeFromStr(act));
 
                         entities[action->getnstUid()] = action;
 
@@ -6528,24 +6244,8 @@ void QnstView::addInterfacetoInterfaceEdge(QnstGraphicsEntity* entitya, QnstGrap
                     ((QnstGraphicsInterface*) entitya)->addnstGraphicsEdge(condition);
                     ((QnstGraphicsNode*) aggregator)->addnstGraphicsEdge(condition);
 
-                    if (con == "onBegin"){
-                        condition->setCondition(Qnst::onBegin);
-
-                    }else if (con == "onEnd"){
-                        condition->setCondition(Qnst::onEnd);
-
-                    }else if (con == "onPause"){
-                        condition->setCondition(Qnst::onPause);
-
-                    }else if (con == "onResume"){
-                        condition->setCondition(Qnst::onResume);
-
-                    }else if (con == "onSelection"){
-                        condition->setCondition(Qnst::onSelection);
-
-                    }else{
-                        condition->setCondition(Qnst::NoBindType);
-                    }
+                    // set condition type
+                    condition->setCondition(QnstUtil::getBindTypeFromStr(con));
 
                     entities[condition->getnstUid()] = condition;
 
@@ -6568,24 +6268,8 @@ void QnstView::addInterfacetoInterfaceEdge(QnstGraphicsEntity* entitya, QnstGrap
                     ((QnstGraphicsNode*) aggregator)->addnstGraphicsEdge(action);
                     ((QnstGraphicsInterface*) entityb)->addnstGraphicsEdge(action);
 
-                    if (act == "start"){
-                        action->setAction(Qnst::Start);
-
-                    }else if (act == "stop"){
-                        action->setAction(Qnst::Stop);
-
-                    }else if (act == "pause"){
-                        action->setAction(Qnst::Pause);
-
-                    }else if (act == "resume"){
-                        action->setAction(Qnst::Resume);
-
-                    }else if (act == "set"){
-                        action->setAction(Qnst::Set);
-
-                    }else{
-                        action->setAction(Qnst::NoBindType);
-                    }
+                    // set action type
+                    action->setAction(QnstUtil::getBindTypeFromStr(act));
 
                     entities[action->getnstUid()] = action;
 
