@@ -73,7 +73,8 @@ public:
 
   void removeEntity(const QString uid, bool undo = false, bool rmRef = true);
 
-  void changeEntity(const QString uid, const QMap<QString, QString> &properties);
+  void changeEntity(const QString uid, const QMap<QString, QString> &properties,
+                    bool adjust=true);
 
   void selectEntity(const QString uid);
 
@@ -168,35 +169,17 @@ public slots:
   void clearValidationErrors();
 
 private:
-  void changeBody(QnstGraphicsBody* entity, const QMap<QString, QString> &properties);
-
   void addImportBase(QString uid, const QMap<QString, QString> &properties);
 
   void changeImportBase(QString uid, const QMap<QString, QString> &properties);
 
-  void changeContext(QnstGraphicsContext* entity, const QMap<QString, QString> &properties);
-
   void adjustContext(QnstGraphicsContext* entity);
-
-  void changeSwitch(QnstGraphicsSwitch* entity, const QMap<QString, QString> &properties);
-
-  void changeMedia(QnstGraphicsMedia* entity, const QMap<QString, QString> &properties, bool adjust=true);
 
   void adjustMedia(QnstGraphicsMedia* entity);
 
-  void changePort(QnstGraphicsPort* entity, const QMap<QString, QString> &properties);
-
   void adjustPort(QnstGraphicsPort* entity);
 
-  void changeMapping(QnstGraphicsMapping* entity, const QMap<QString, QString> &properties);
-
   void adjustMapping(QnstGraphicsMapping* entity);
-
-  void changeSwitchPort(QnstGraphicsSwitchPort* entity, const QMap<QString, QString> &properties);
-
-  void changeArea(QnstGraphicsArea* entity, const QMap<QString, QString> &properties);
-
-  void changeProperty(QnstGraphicsProperty* entity, const QMap<QString, QString> &properties);
 
   void changeLink(QnstLink* entity, const QMap<QString, QString> &properties);
 

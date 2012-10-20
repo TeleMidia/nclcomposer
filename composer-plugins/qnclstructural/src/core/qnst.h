@@ -55,6 +55,7 @@ public:
     Condition,
     Action,
     Bind,
+    BindParam, /* Warning: This is not an Entity */
 
     NoType
   };
