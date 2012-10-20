@@ -349,7 +349,7 @@ private:
 
   std::map < Qnst::EntityType, int > entityCounter;
 
-  static std::map <Qnst::EntityType, QString> typeToXMLStr;
+  static std::map <Qnst::EntityType, QString> mediaTypeToXMLStr;
 };
 
 #endif // QNSTVIEW_H
