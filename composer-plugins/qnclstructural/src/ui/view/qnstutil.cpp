@@ -81,7 +81,9 @@ std::map <QString, Qnst::EntityType> QnstUtil::typeFromStr =
 
     /*("causalConnector", Qnst::)*/
     ("simpleCondition", Qnst::Condition)
-    ("simpleAction", Qnst::Action);
+    ("simpleAction", Qnst::Action)
+
+    ("aggregator",  Qnst::Aggregator);
 
 /* Initialize prefix id from type Map */
 std::map <Qnst::EntityType, QString> QnstUtil::prefixIdFromType =
