@@ -108,15 +108,9 @@ QString QnstGraphicsBind::getConditionIcon()
 void QnstGraphicsBind::adjust()
 {
   if(isCondition())
-  {
-    qWarning() << "[QNST] Adjust condition!!!";
     adjust_condition();
-  }
   else
-  {
-    qWarning() << "[QNST] Adjust action!!!";
     adjust_action();
-  }
 }
 
 void QnstGraphicsBind::adjust_action()
@@ -260,15 +254,9 @@ void QnstGraphicsBind::aux_adjust(QPointF pointa, QPointF pointb)
 void QnstGraphicsBind::draw(QPainter* painter)
 {
   if(isCondition())
-  {
-    qWarning() << "[QNST] Drawing condition!!!";
     draw_condition(painter);
-  }
   else
-  {
-    qWarning() << "[QNST] Drawing action!!!";
     draw_action(painter);
-  }
 }
 
 void QnstGraphicsBind::draw_action(QPainter* painter)
@@ -685,15 +673,9 @@ void QnstGraphicsBind::draw_condition(QPainter* painter)
 void QnstGraphicsBind::delineate(QPainterPath* painter) const
 {
   if(isCondition())
-  {
-    qWarning() << "[QNST] Delineate condition!!!";
     delineate_condition(painter);
-  }
   else
-  {
-    qWarning() << "[QNST] Delineate action!!!";
     delineate_action(painter);
-  }
 }
 
 void QnstGraphicsBind::delineate_action(QPainterPath* painter) const

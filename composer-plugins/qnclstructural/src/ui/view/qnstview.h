@@ -29,8 +29,6 @@
 #include "qnstgraphicslinkdialog.h"
 #include "qnstgraphicsconditiondialog.h"
 #include "qnstgraphicsactiondialog.h"
-#include "qnstgraphicscondition.h"
-#include "qnstgraphicsaction.h"
 #include "qnstconnector.h"
 #include "qnstlink.h"
 #include "qnstbind.h"
