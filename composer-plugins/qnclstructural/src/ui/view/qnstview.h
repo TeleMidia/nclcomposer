@@ -194,8 +194,6 @@ private:
 
   void changeSwitchPort(QnstGraphicsSwitchPort* entity, const QMap<QString, QString> &properties);
 
-  void addArea(const QString uid, const QString parent, const QMap<QString, QString> &properties, bool undo = false, bool adjust = true);
-
   void changeArea(QnstGraphicsArea* entity, const QMap<QString, QString> &properties);
 
   void changeProperty(QnstGraphicsProperty* entity, const QMap<QString, QString> &properties);

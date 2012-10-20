@@ -165,16 +165,13 @@ void QnstView::read(QDomElement element, QDomElement parent)
       element.nodeName() == "port" ||
       element.nodeName() == "switchPort" ||
       element.nodeName() == "aggregator" ||
-      element.nodeName() == "property")
+      element.nodeName() == "property" ||
+      element.nodeName() == "area")
   {
     if(element.nodeName() == "body")
       addEntity(uid, "", properties, true);
     else
       addEntity(uid, parent.attribute("uid"), properties, true);
-  }
-  else if (element.nodeName() == "area")
-  {
-    addArea(uid, parent.attribute("uid"), properties, true, false);
   }
   else if (element.nodeName() == "interfaceReference")
   {
@@ -1086,10 +1083,8 @@ void QnstView::addEntity(const QString uid, const QString parent,
           if (properties["id"] != "") entity->setnstId(properties["id"]);
 
           // Override the default position with the center of the parent
-          entity->setTop(entities[parent]->getHeight()/2 - DEFAULT_CONTEXT_HEIGHT/2);
-          entity->setLeft(entities[parent]->getWidth()/2 - DEFAULT_CONTEXT_WIDTH/2);
-          entity->setWidth(DEFAULT_CONTEXT_WIDTH);
-          entity->setHeight(DEFAULT_CONTEXT_HEIGHT);
+          entity->setTop(entityParent->getHeight()/2 - DEFAULT_CONTEXT_HEIGHT/2);
+          entity->setLeft(entityParent->getWidth()/2 - DEFAULT_CONTEXT_WIDTH/2);
 
           entity->setProperties(properties);
 
@@ -1107,7 +1102,7 @@ void QnstView::addEntity(const QString uid, const QString parent,
     case Qnst::Media:
       if (entityParent != NULL)
       {
-        entity = QnstUtil::makeGraphicsEntity(Qnst::Media, entityParent);
+        entity = QnstUtil::makeGraphicsEntity(type, entityParent);
 
         if(entity != NULL)
         {
@@ -1115,10 +1110,9 @@ void QnstView::addEntity(const QString uid, const QString parent,
 
           entity->setnstUid(uid);
 
-          entity->setTop(entities[parent]->getHeight()/2 - DEFAULT_MEDIA_HEIGHT/2);
-          entity->setLeft(entities[parent]->getWidth()/2 - DEFAULT_MEDIA_WIDTH/2);
-          entity->setWidth(DEFAULT_MEDIA_WIDTH);
-          entity->setHeight(DEFAULT_MEDIA_HEIGHT);
+          // Override the default position with the center of the parent
+          entity->setTop(entityParent->getHeight()/2 - DEFAULT_MEDIA_HEIGHT/2);
+          entity->setLeft(entityParent->getWidth()/2 - DEFAULT_MEDIA_WIDTH/2);
 
           entities[parent]->addnstGraphicsEntity(entity);
           entities[uid] = entity;
@@ -1137,8 +1131,8 @@ void QnstView::addEntity(const QString uid, const QString parent,
     case Qnst::Port:
       if (entityParent != NULL)
       {
-        entity = QnstUtil::makeGraphicsEntity(Qnst::Port, entityParent);
-        qWarning() << "Adding a Qnst::Port";
+        entity = QnstUtil::makeGraphicsEntity(type, entityParent);
+
         if(entity != NULL)
         {
           entity->setnstUid(uid);
@@ -1235,8 +1229,7 @@ void QnstView::addEntity(const QString uid, const QString parent,
     case Qnst::SwitchPort:
       if (entityParent != NULL)
       {
-        QnstGraphicsSwitchPort* entity =
-            new QnstGraphicsSwitchPort(entities[parent]); // \todo Use makeEntity
+        entity = QnstUtil::makeGraphicsEntity(type, entityParent);
 
         entity->setnstUid(uid);
         entity->setnstGraphicsParent(entities[parent]);
@@ -1277,7 +1270,7 @@ void QnstView::addEntity(const QString uid, const QString parent,
     case Qnst::Aggregator:
       if (entityParent)
       {
-        entity = QnstUtil::makeGraphicsEntity(Qnst::Aggregator, entityParent);
+        entity = QnstUtil::makeGraphicsEntity(type, entityParent);
         entity->setnstUid(uid);
 
         if (properties["id"] != "")
@@ -1294,12 +1287,14 @@ void QnstView::addEntity(const QString uid, const QString parent,
       }
       break;
 
+    case Qnst::Area:
     case Qnst::Property:
+
       if (entityParent)
       {
-        entity = QnstUtil::makeGraphicsEntity(Qnst::Property, entityParent);
+        entity = QnstUtil::makeGraphicsEntity(type, entityParent);
         entity->setnstUid(uid);
-        entity->setnstGraphicsParent(entities[parent]);
+        entity->setnstGraphicsParent(entityParent);
 
         entity->setnstId(properties["id"]);
 
@@ -1308,27 +1303,19 @@ void QnstView::addEntity(const QString uid, const QString parent,
         entities[parent]->addnstGraphicsEntity(entity);
         entities[uid] = entity;
 
-        //Update entity counter
-        entityCounter[Qnst::Property] ++;
-
         entity->adjust();
 
-        if (adjust)
+        if (adjust) // update media
         {
-          if(entities[parent]->isMedia())
+          if(entityParent->isMedia())
             adjustMedia((QnstGraphicsMedia*) entities[parent]);
 
           // Update the medias that refer to this one.
           foreach (QString key,
                    refers.keys(entity->getnstGraphicsParent()->getnstUid()))
           {
-            if (entities.contains(key))
-            {
-              if (entities[key]->isMedia())
-              {
+            if (entities.contains(key) && entities[key]->isMedia())
                 adjustMedia((QnstGraphicsMedia*) entities[key]);
-              }
-            }
           }
         }
 
@@ -1360,11 +1347,6 @@ void QnstView::addEntity(const QString uid, const QString parent,
   else if (properties["TYPE"] == "importBase")
   {
     addImportBase(uid, properties);
-  }
-  // if the entity type is AREA
-  else if (properties["TYPE"] == "area")
-  {
-    addArea(uid, parent, properties);
   }
   else if (properties["TYPE"] == "connectorParam")
   {
@@ -2468,49 +2450,6 @@ void QnstView::changeSwitchPort(QnstGraphicsSwitchPort* entity,
     entity->setProperties(properties);
 
     entity->adjust();
-}
-
-void QnstView::addArea(const QString uid, const QString parent,
-                       const QMap<QString, QString> &properties, bool undo,
-                       bool adjust)
-{
-  if (entities.contains(parent))
-  {
-    QnstGraphicsArea* entity = new QnstGraphicsArea(entities[parent]);
-    entity->setnstUid(uid);
-    entity->setnstGraphicsParent(entities[parent]);
-
-    entity->setnstId(properties["id"]);
-
-    entity->setProperties(properties);
-
-    entities[parent]->addnstGraphicsEntity(entity);
-    entities[uid] = entity;
-
-    //Update entity counter
-    entityCounter[Qnst::Media] ++;
-
-    entity->adjust();
-
-    if (adjust)
-    {
-      adjustMedia((QnstGraphicsMedia*) entities[parent]);
-      foreach (QString key,
-               refers.keys(entity->getnstGraphicsParent()->getnstUid()))
-      {
-        if (entities.contains(key) && entities[key]->isMedia())
-        {
-          adjustMedia((QnstGraphicsMedia*) entities[key]);
-        }
-      }
-    }
-
-    if (!undo)
-    {
-      QnstAddCommand* cmd = new QnstAddCommand(this, entity);
-      history.push(cmd);
-    }
-  }
 }
 
 void QnstView::changeArea(QnstGraphicsArea* entity,
