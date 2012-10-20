@@ -7,6 +7,8 @@
 #include <assert.h>
 #include "qnstutil.h"
 
+#include "qnstgraphicsbind.h"
+
 std::map <Qnst::EntityType, QString> QnstView::typeToXMLStr =
     create_map<Qnst::EntityType, QString>
       (Qnst::Media, "media")
@@ -348,7 +350,8 @@ void QnstView::readLink(QDomElement element, QDomElement parent)
               QnstGraphicsEntity* entityb = entities[element.attribute("componentbUID")];
 
               if (element.attribute("type") == "condition"){
-                  QnstGraphicsCondition* entity = new QnstGraphicsCondition();
+                  QnstGraphicsBind* entity = new QnstGraphicsBind();
+                  entity->setCondition(Qnst::NoBindType);
                   entity->setnstId(element.attribute("id"));
                   entity->setnstUid(element.attribute("uid"));
                   entity->setEntityA(entitya);
@@ -472,7 +475,8 @@ void QnstView::readLink(QDomElement element, QDomElement parent)
                   nlink++;
 
               }else if (element.attribute("type") == "action"){
-                  QnstGraphicsAction* entity = new QnstGraphicsAction();
+                  QnstGraphicsBind* entity = new QnstGraphicsBind();
+                  entity->setAction(Qnst::NoBindType);
                   entity->setnstId(element.attribute("id"));
                   entity->setnstUid(element.attribute("uid"));
                   entity->setEntityA(entitya);
@@ -861,7 +865,7 @@ void QnstView::writeLink(QDomElement element, QDomDocument* dom, QnstGraphicsEnt
 
         foreach(QnstGraphicsEdge* edge, node->getnstGraphicsEdges()){
             if (edge->getnstType() == Qnst::Condition && !linkWriterAux.contains(edge->getnstUid())){
-                QnstGraphicsCondition* link = (QnstGraphicsCondition*) edge;
+                QnstGraphicsBind* link = (QnstGraphicsBind*) edge;
 
                 QDomElement e = dom->createElement("bind");
 
@@ -919,7 +923,7 @@ void QnstView::writeLink(QDomElement element, QDomDocument* dom, QnstGraphicsEnt
                 linkWriterAux.insert(link->getnstUid());
 
             }else if (edge->getnstType() == Qnst::Action && !linkWriterAux.contains(edge->getnstUid())){
-                QnstGraphicsAction* link = (QnstGraphicsAction*) edge;
+                QnstGraphicsBind* link = (QnstGraphicsBind*) edge;
 
                 QDomElement e = dom->createElement("bind");
 
@@ -1430,16 +1434,13 @@ void QnstView::removeEntity(const QString uid, bool undo, bool rmRef)
 
         QnstGraphicsEntity* e = entities[brelations[bindParamUIDToBindUID[uid]]];
 
-        if (e->getnstType() == Qnst::Action){
-            QnstGraphicsAction* a = (QnstGraphicsAction*) e;
+        if (e->getnstType() == Qnst::Action ||
+            e->getnstType() == Qnst::Condition)
+        {
+            QnstGraphicsBind* a = (QnstGraphicsBind*) e;
 
             a->removeUId(uid);
-        }else if (e->getnstType() == Qnst::Condition){
-            QnstGraphicsCondition* c = (QnstGraphicsCondition*) e;
-
-            c->removeUId(uid);
         }
-
 
         bindParamUIDToBindUID.remove(uid);
     }
@@ -2807,7 +2808,8 @@ void QnstView::adjustBind(QnstBind* entity)
 
                             if (parenta != NULL && parentb != NULL && parenta->getnstGraphicsParent() == parentb){
 
-                                QnstGraphicsCondition* graphics = new QnstGraphicsCondition();
+                                QnstGraphicsBind* graphics = new QnstGraphicsBind();
+                                graphics->setCondition(Qnst::NoBindType);
                                 graphics->setnstUid(entity->getnstUid());
                                 graphics->setnstGraphicsParent(parentb);
                                 graphics->setEntityA(entitya);
@@ -2876,7 +2878,8 @@ void QnstView::adjustBind(QnstBind* entity)
 
                         if (parenta == parentb && parenta != NULL && parentb != NULL){
 
-                            QnstGraphicsCondition* graphics = new QnstGraphicsCondition();
+                            QnstGraphicsBind* graphics = new QnstGraphicsBind();
+                            graphics->setCondition(Qnst::NoBindType);
                             graphics->setnstUid(entity->getnstUid());
                             graphics->setnstGraphicsParent(parenta);
                             graphics->setEntityA(entitya);
@@ -2971,7 +2974,8 @@ void QnstView::adjustBind(QnstBind* entity)
 
                             if (parenta != NULL && parentb != NULL && parenta == parentb->getnstGraphicsParent()){
 
-                                QnstGraphicsAction* graphics = new QnstGraphicsAction();
+                                QnstGraphicsBind* graphics = new QnstGraphicsBind();
+                                graphics->setAction(Qnst::NoBindType);
                                 graphics->setnstUid(entity->getnstUid());
                                 graphics->setnstGraphicsParent(parenta);
                                 graphics->setEntityA(entitya);
@@ -3042,7 +3046,8 @@ void QnstView::adjustBind(QnstBind* entity)
 
                         if (parenta == parentb && parenta != NULL && parentb != NULL){
 
-                            QnstGraphicsAction* graphics = new QnstGraphicsAction();
+                            QnstGraphicsBind* graphics = new QnstGraphicsBind();
+                            graphics->setAction(Qnst::NoBindType);
                             graphics->setnstUid(entity->getnstUid());
                             graphics->setnstGraphicsParent(parentb);
                             graphics->setEntityA(entitya);
@@ -3252,13 +3257,13 @@ void QnstView::addBindParam(const QString uid, const QString parent,
 
     if (e->getnstType() == Qnst::Action)
     {
-      QnstGraphicsAction* action = (QnstGraphicsAction*) e;
+      QnstGraphicsBind* action = (QnstGraphicsBind*) e;
 
       action->addParam(uid, properties["name"], properties["value"]);
     }
     else if (e->getnstType() == Qnst::Condition)
     {
-      QnstGraphicsCondition* condition = (QnstGraphicsCondition*) e;
+      QnstGraphicsBind* condition = (QnstGraphicsBind*) e;
 
       condition->addParam(uid, properties["name"], properties["value"]);
     }
@@ -3276,13 +3281,13 @@ void QnstView::changeBindParam(const QString uid,
 
     if (e->getnstType() == Qnst::Action)
     {
-      QnstGraphicsAction* action = (QnstGraphicsAction*) e;
+      QnstGraphicsBind* action = (QnstGraphicsBind*) e;
       action->setParam(properties.value("name",""),
                        properties.value("value",""));
     }
     else if (e->getnstType() == Qnst::Condition)
     {
-      QnstGraphicsCondition* condition = (QnstGraphicsCondition*) e;
+      QnstGraphicsBind* condition = (QnstGraphicsBind*) e;
       condition->setParam(properties.value("name",""),
                           properties.value("value",""));
     }
@@ -4768,7 +4773,8 @@ void QnstView:: addNodetoNodeEdge(QnstGraphicsEntity* entitya, QnstGraphicsEntit
                     QString link = actionDialog->form.cbLink->currentText();
                     QString act = actionDialog->form.cbAction->currentText();
 
-                    QnstGraphicsAction* entity = new QnstGraphicsAction();
+                    QnstGraphicsBind* entity = new QnstGraphicsBind();
+                    entity->setAction(Qnst::NoBindType);
                     entity->setnstGraphicsParent(parenta);
                     entity->setEntityA(entitya);
                     entity->setEntityB(entityb);
@@ -4914,7 +4920,8 @@ void QnstView:: addNodetoNodeEdge(QnstGraphicsEntity* entitya, QnstGraphicsEntit
                     QString link = conditionDialog->form.cbLink->currentText();
                     QString cond = conditionDialog->form.cbCondition->currentText();
 
-                    QnstGraphicsCondition* entity = new QnstGraphicsCondition();
+                    QnstGraphicsBind* entity = new QnstGraphicsBind();
+                    entity->setCondition(Qnst::NoBindType);
                     entity->setnstGraphicsParent(parenta);
                     entity->setEntityA(entitya);
                     entity->setEntityB(entityb);
@@ -5107,7 +5114,8 @@ void QnstView:: addNodetoNodeEdge(QnstGraphicsEntity* entitya, QnstGraphicsEntit
 
                         ///
 
-                        QnstGraphicsCondition* condition = new QnstGraphicsCondition();
+                        QnstGraphicsBind* condition = new QnstGraphicsBind();
+                        condition->setCondition(Qnst::NoBindType);
                         condition->setnstGraphicsParent(parenta);
                         condition->setEntityA(entitya);
                         condition->setEntityB(aggregator);
@@ -5145,7 +5153,8 @@ void QnstView:: addNodetoNodeEdge(QnstGraphicsEntity* entitya, QnstGraphicsEntit
 
                         ///
 
-                        QnstGraphicsAction* action = new QnstGraphicsAction();
+                        QnstGraphicsBind* action = new QnstGraphicsBind();
+                        action->setAction(Qnst::NoBindType);
                         action->setnstGraphicsParent(parenta);
                         action->setEntityA(aggregator);
                         action->setEntityB(entityb);
@@ -5321,7 +5330,8 @@ void QnstView::addNodetoInterfaceEdge(QnstGraphicsEntity* entitya, QnstGraphicsE
                     QString link = actionDialog->form.cbLink->currentText();
                     QString act = actionDialog->form.cbAction->currentText();
 
-                    QnstGraphicsAction* entity = new QnstGraphicsAction();
+                    QnstGraphicsBind* entity = new QnstGraphicsBind();
+                    entity->setAction(Qnst::NoBindType);
                     entity->setnstGraphicsParent(parenta);
                     entity->setEntityA(entitya);
                     entity->setEntityB(entityb);
@@ -5514,7 +5524,8 @@ void QnstView::addNodetoInterfaceEdge(QnstGraphicsEntity* entitya, QnstGraphicsE
 
                         ///
 
-                        QnstGraphicsCondition* condition = new QnstGraphicsCondition();
+                        QnstGraphicsBind* condition = new QnstGraphicsBind();
+                        condition->setCondition(Qnst::NoBindType);
                         condition->setnstGraphicsParent(parenta);
                         condition->setEntityA(entitya);
                         condition->setEntityB(aggregator);
@@ -5552,7 +5563,8 @@ void QnstView::addNodetoInterfaceEdge(QnstGraphicsEntity* entitya, QnstGraphicsE
 
                         ///
 
-                        QnstGraphicsAction* action = new QnstGraphicsAction();
+                        QnstGraphicsBind* action = new QnstGraphicsBind();
+                        action->setAction(Qnst::NoBindType);
                         action->setnstGraphicsParent(parenta);
                         action->setEntityA(aggregator);
                         action->setEntityB(entityb);
@@ -5725,7 +5737,8 @@ void QnstView::addInterfacetoNodeLink(QnstGraphicsEntity* entitya, QnstGraphicsE
             QnstGraphicsEntity* parenta = entitya->getnstGraphicsParent();
             QnstGraphicsEntity* parentb = entityb->getnstGraphicsParent();
 
-            QnstGraphicsCondition* entity = new QnstGraphicsCondition();
+            QnstGraphicsBind* entity = new QnstGraphicsBind();
+            entity->setCondition(Qnst::NoBindType);
             entity->setnstGraphicsParent(parentb);
             entity->setEntityA(entitya);
             entity->setEntityB(entityb);
@@ -5922,7 +5935,8 @@ void QnstView::addInterfacetoNodeLink(QnstGraphicsEntity* entitya, QnstGraphicsE
 
             ///
 
-            QnstGraphicsCondition* condition = new QnstGraphicsCondition();
+            QnstGraphicsBind* condition = new QnstGraphicsBind();
+            condition->setCondition(Qnst::NoBindType);
             condition->setnstGraphicsParent(parentb);
             condition->setEntityA(entitya);
             condition->setEntityB(aggregator);
@@ -5960,7 +5974,8 @@ void QnstView::addInterfacetoNodeLink(QnstGraphicsEntity* entitya, QnstGraphicsE
 
             ///
 
-            QnstGraphicsAction* action = new QnstGraphicsAction();
+            QnstGraphicsBind* action = new QnstGraphicsBind();
+            action->setAction(Qnst::NoBindType);
             action->setnstGraphicsParent(parentb);
             action->setEntityA(aggregator);
             action->setEntityB(entityb);
@@ -6322,7 +6337,8 @@ void QnstView::addInterfacetoInterfaceEdge(QnstGraphicsEntity* entitya, QnstGrap
 
                         ///
 
-                        QnstGraphicsCondition* condition = new QnstGraphicsCondition();
+                        QnstGraphicsBind* condition = new QnstGraphicsBind();
+                        condition->setCondition(Qnst::NoBindType);
                         condition->setnstGraphicsParent(parents);
                         condition->setEntityA(entitya);
                         condition->setEntityB(aggregator);
@@ -6360,7 +6376,8 @@ void QnstView::addInterfacetoInterfaceEdge(QnstGraphicsEntity* entitya, QnstGrap
 
                         ///
 
-                        QnstGraphicsAction* action = new QnstGraphicsAction();
+                        QnstGraphicsBind* action = new QnstGraphicsBind();
+                        action->setAction(Qnst::NoBindType);
                         action->setnstGraphicsParent(parents);
                         action->setEntityA(aggregator);
                         action->setEntityB(entityb);
@@ -6617,7 +6634,8 @@ void QnstView::addInterfacetoInterfaceEdge(QnstGraphicsEntity* entitya, QnstGrap
 
                         ///
 
-                        QnstGraphicsCondition* condition = new QnstGraphicsCondition();
+                        QnstGraphicsBind* condition = new QnstGraphicsBind();
+                        condition->setCondition(Qnst::NoBindType);
                         condition->setnstGraphicsParent(parents);
                         condition->setEntityA(entitya);
                         condition->setEntityB(aggregator);
@@ -6655,7 +6673,8 @@ void QnstView::addInterfacetoInterfaceEdge(QnstGraphicsEntity* entitya, QnstGrap
 
                         ///
 
-                        QnstGraphicsAction* action = new QnstGraphicsAction();
+                        QnstGraphicsBind* action = new QnstGraphicsBind();
+                        action->setAction(Qnst::NoBindType);
                         action->setnstGraphicsParent(parents);
                         action->setEntityA(aggregator);
                         action->setEntityB(entityb);
@@ -6876,7 +6895,8 @@ void QnstView::addInterfacetoInterfaceEdge(QnstGraphicsEntity* entitya, QnstGrap
 
                     ///
 
-                    QnstGraphicsCondition* condition = new QnstGraphicsCondition();
+                    QnstGraphicsBind* condition = new QnstGraphicsBind();
+                    condition->setCondition(Qnst::NoBindType);
                     condition->setnstGraphicsParent(parents);
                     condition->setEntityA(entitya);
                     condition->setEntityB(aggregator);
@@ -6914,7 +6934,8 @@ void QnstView::addInterfacetoInterfaceEdge(QnstGraphicsEntity* entitya, QnstGrap
 
                     ///
 
-                    QnstGraphicsAction* action = new QnstGraphicsAction();
+                    QnstGraphicsBind* action = new QnstGraphicsBind();
+                    action->setAction(Qnst::NoBindType);
                     action->setnstGraphicsParent(parents);
                     action->setEntityA(aggregator);
                     action->setEntityB(entityb);
