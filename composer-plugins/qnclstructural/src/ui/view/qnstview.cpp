@@ -194,27 +194,22 @@ void QnstView::read(QDomElement element, QDomElement parent)
   }
   else if (element.nodeName() == "aggregator")
   {
-    properties["TYPE"] = element.nodeName();
     addAggregator(uid, parent.attribute("uid"), properties, true);
   }
   else if (element.nodeName() == "area")
   {
-    properties["TYPE"] = element.nodeName();
     addArea(uid, parent.attribute("uid"), properties, true, false);
   }
   else if (element.nodeName() == "property")
   {  
-    properties["TYPE"] = element.nodeName();
     addProperty(uid, parent.attribute("uid"), properties, true, false);
   }
   else if (element.nodeName() == "port")
   {
-    properties["TYPE"] = element.nodeName();
-    addPort(uid, parent.attribute("uid"), properties, true);
+    addEntity(uid, parent.attribute("uid"), properties, true);
   }
   else if (element.nodeName() == "switchPort")
   {
-    properties["TYPE"] = element.nodeName();
     addSwitchPort(uid, parent.attribute("uid"), properties, true);
   }
   else if (element.nodeName() == "interfaceReference")
@@ -1149,7 +1144,7 @@ void QnstView::addEntity(const QString uid, const QString parent,
       break;
 
     case Qnst::Media:
-      if (entities.contains(parent))
+      if (entityParent != NULL)
       {
         entity = QnstUtil::makeGraphicsEntity(Qnst::Media, entityParent);
 
@@ -1181,17 +1176,39 @@ void QnstView::addEntity(const QString uid, const QString parent,
           }
         }
       }
+      break;
+
+    case Qnst::Port:
+      if (entityParent != NULL)
+      {
+        entity = QnstUtil::makeGraphicsEntity(Qnst::Port, entityParent);
+        qWarning() << "Adding a Qnst::Port";
+        if(entity != NULL)
+        {
+          entity->setnstUid(uid);
+
+          entity->setnstId(properties["id"]);
+
+          entities[parent]->addnstGraphicsEntity(entity);
+          entities[uid] = entity;
+
+          // Update the entity properties
+          changePort(dynamic_cast<QnstGraphicsPort *>(entity), properties);
+
+          if (!undo)
+          {
+            QnstAddCommand* cmd = new QnstAddCommand(this, entity);
+            history.push(cmd);
+          }
+        }
+      }
 
     default:
       //do nothing
       break;
   }
 
-  if (properties["TYPE"] == "port")
-  {
-    addPort(uid, parent, properties);
-  }
-  else if (properties["TYPE"] == "link")
+  if (properties["TYPE"] == "link")
   {
     addLink(uid, parent, properties);
   }
@@ -2144,36 +2161,6 @@ void QnstView::adjustMedia(QnstGraphicsMedia* entity)
     }
 
     entity->adjust();
-}
-
-void QnstView::addPort(const QString uid, const QString parent,
-                       const QMap<QString, QString> &properties, bool undo)
-{
-  if (entities.contains(parent))
-  {
-    QnstGraphicsPort* entity =
-        new QnstGraphicsPort((QnstGraphicsNode*) entities[parent]);
-
-    entity->setnstUid(uid);
-
-    entity->setnstId(properties["id"]);
-
-    entity->setProperties(properties);
-
-    entities[parent]->addnstGraphicsEntity(entity);
-    entities[uid] = entity;
-
-    //Update entity counter
-    entityCounter[Qnst::Port] ++;
-
-    adjustPort(entity);
-
-    if (!undo)
-    {
-      QnstAddCommand* cmd = new QnstAddCommand(this, entity);
-      history.push(cmd);
-    }
-  }
 }
 
 void QnstView::changePort(QnstGraphicsPort* entity,

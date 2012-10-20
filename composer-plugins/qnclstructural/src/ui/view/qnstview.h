@@ -184,8 +184,6 @@ private:
 
   void adjustMedia(QnstGraphicsMedia* entity);
 
-  void addPort(const QString uid, const QString parent, const QMap<QString, QString> &properties, bool undo = false);
-
   void changePort(QnstGraphicsPort* entity, const QMap<QString, QString> &properties);
 
   void adjustPort(QnstGraphicsPort* entity);
