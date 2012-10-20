@@ -145,56 +145,30 @@ void QnstView::read(QDomElement element, QDomElement parent)
   QString uid = element.attribute("uid");
 
   // \todo before fill the properties, check if we are a valid element.
-  // Fill common properties
-  properties["id"] = element.attribute("id");
 
-  properties["top"] = element.attribute("top");
-  properties["left"] = element.attribute("left");
-  properties["width"] = element.attribute("width");
-  properties["height"] = element.attribute("height");
+  // Fill common properties
+  properties["TYPE"] = element.nodeName();
+  QDomNamedNodeMap attributeMap = element.attributes();
+
+  // copy every attribute from XML to proerties variable
+  for (int i = 0; i < attributeMap.count(); ++i)
+  {
+    QDomNode attribute = attributeMap.item(i);
+    properties[attribute.nodeName()] = attribute.nodeValue();
+  }
   // end fill
 
-  properties["TYPE"] = element.nodeName();
-  if (element.nodeName() == "body")
+  if (element.nodeName() == "body" ||
+      element.nodeName() == "context" ||
+      element.nodeName() == "switch" ||
+      element.nodeName() == "media" ||
+      element.nodeName() == "port" ||
+      element.nodeName() == "switchPort")
   {
-    properties["expandWidth"] = element.attribute("expandWidth");
-    properties["expandHeight"] = element.attribute("expandHeight");
-    properties["collapsed"] = element.attribute("collapsed");
-
-    addEntity(uid, "", properties, true);
-  }
-  else if (element.nodeName() == "context")
-  {
-    properties["expandWidth"] = element.attribute("expandWidth");
-    properties["expandHeight"] = element.attribute("expandHeight");
-    properties["collapsed"] = element.attribute("collapsed");
-
-    addEntity(uid, parent.attribute("uid"), properties, true);
-
-  }
-  else if (element.nodeName() == "switch")
-  {
-    properties["expandWidth"] = element.attribute("expandWidth");
-    properties["expandHeight"] = element.attribute("expandHeight");
-    properties["collapsed"] = element.attribute("collapsed");
-
-    addEntity(uid, parent.attribute("uid"), properties, true);
-  }
-  else if (element.nodeName() == "media")
-  {
-    properties["type"] = element.attribute("type");
-    properties["src"] = element.attribute("src");
-
-    properties["refer"] = element.attribute("refer");
-    properties["referUID"] = element.attribute("referUID");
-    properties["instance"] = element.attribute("instance");
-
-    addEntity(uid, parent.attribute("uid"), properties, true, false);
-
-  }
-  else if (element.nodeName() == "port")
-  {
-    addEntity(uid, parent.attribute("uid"), properties, true);
+    if(element.nodeName() == "body")
+      addEntity(uid, "", properties, true);
+    else
+      addEntity(uid, parent.attribute("uid"), properties, true);
   }
   else if (element.nodeName() == "aggregator")
   {
@@ -207,11 +181,6 @@ void QnstView::read(QDomElement element, QDomElement parent)
   else if (element.nodeName() == "property")
   {  
     addProperty(uid, parent.attribute("uid"), properties, true, false);
-  }
-
-  else if (element.nodeName() == "switchPort")
-  {
-    addSwitchPort(uid, parent.attribute("uid"), properties, true);
   }
   else if (element.nodeName() == "interfaceReference")
   {
@@ -299,6 +268,8 @@ void QnstView::readLink(QDomElement element, QDomElement parent)
   }if (element.nodeName() == "mapping"){
       QMap<QString, QString> properties;
 
+      properties["TYPE"] = element.nodeName();
+
       properties["uid"] = element.attribute("uid");
 
       properties["component"] = element.attribute("component");
@@ -307,7 +278,7 @@ void QnstView::readLink(QDomElement element, QDomElement parent)
       properties["interface"] = element.attribute("interface");
       properties["interfaceUid"] = element.attribute("interfaceUid");
 
-      addMapping(properties["uid"], element.attribute("switchportUid"), properties, true);
+      addEntity(properties["uid"], element.attribute("switchportUid"), properties, true);
 
   }else if (element.nodeName() == "port"){
       if (entities.contains(element.attribute("uid"))){
@@ -1207,48 +1178,54 @@ void QnstView::addEntity(const QString uid, const QString parent,
 
     case Qnst::Link:
       // \fixme THIS IS NOT BEING USED
-      if (!links.contains(uid))
+      if(entityParent != NULL)
       {
-        QnstLink* entity = new QnstLink();
-        entity->setnstUid(uid);
-        entity->setnstParent(entities[parent]);
-
-        if (properties["id"] != "")
-          entity->setnstId(properties["id"]);
-
-        if (properties["xconnector"] != "")
+        if (!links.contains(uid))
         {
-          entity->setxConnector(properties["xconnector"]);
-          entity->setxConnectorUID(properties["xconnectorUID"]);
+          QnstLink* entity = new QnstLink(); // \todo Use makeGraphicsEntity!!
+          entity->setnstUid(uid);
+          entity->setnstParent(entityParent);
+
+          if (properties["id"] != "")
+            entity->setnstId(properties["id"]);
+
+          if (properties["xconnector"] != "")
+          {
+            entity->setxConnector(properties["xconnector"]);
+            entity->setxConnectorUID(properties["xconnectorUID"]);
+          }
+
+          links[uid] = entity;
+
+          adjustLink(entity);
         }
-
-        links[uid] = entity;
-
-        adjustLink(entity);
       }
       break;
 
     case Qnst::Bind:
-      if (links.contains(parent))
+      if(entityParent != NULL)
       {
-        if (!binds.contains(uid))
+        if (links.contains(parent))
         {
-          QnstBind* entity = new QnstBind();
-          entity->setnstUid(uid);
-          entity->setnstParent(links[parent]);
+          if (!binds.contains(uid))
+          {
+            QnstBind* entity = new QnstBind(); // \todo Use makeGraphicsEntity!
+            entity->setnstUid(uid);
+            entity->setnstParent(links[parent]);
 
-          entity->setRole(properties["role"]);
+            entity->setRole(properties["role"]);
 
-          entity->setComponent(properties["component"]);
-          entity->setComponentUid(properties["componentUid"]);
+            entity->setComponent(properties["component"]);
+            entity->setComponentUid(properties["componentUid"]);
 
 
-          entity->setInterface(properties["interface"]);
-          entity->setInterfaceUid(properties["interfaceUid"]);
+            entity->setInterface(properties["interface"]);
+            entity->setInterfaceUid(properties["interfaceUid"]);
 
-          binds[uid] = entity;
+            binds[uid] = entity;
 
-          adjustBind(entity);
+            adjustBind(entity);
+          }
         }
       }
       break;
@@ -1274,6 +1251,53 @@ void QnstView::addEntity(const QString uid, const QString parent,
         bindParamUIDToBindUID[uid] = brelations.key(parent);
       }
       break;
+
+    case Qnst::SwitchPort:
+      if (entityParent != NULL)
+      {
+        QnstGraphicsSwitchPort* entity =
+            new QnstGraphicsSwitchPort(entities[parent]); // \todo Use makeEntity
+
+        entity->setnstUid(uid);
+        entity->setnstGraphicsParent(entities[parent]);
+
+        entity->setnstId(properties["id"]);
+
+        entity->setProperties(properties);
+
+        entities[parent]->addnstGraphicsEntity(entity);
+        entities[uid] = entity;
+
+        entity->adjust();
+
+        if (!undo)
+        {
+          QnstAddCommand* cmd = new QnstAddCommand(this, entity);
+          history.push(cmd);
+        }
+      }
+      break;
+
+    case Qnst::Mapping:
+      if (entityParent != NULL)
+      {
+        QnstGraphicsNode* oparent =
+            (QnstGraphicsNode*) entities[parent]->getnstGraphicsParent();
+
+        QnstGraphicsMapping* entity = new QnstGraphicsMapping(oparent);
+        entity->setnstUid(uid);
+
+        entity->setSwitchPortUid(parent);
+
+        entity->setProperties(properties);
+
+        oparent->addnstGraphicsEntity(entity);
+        entities[entity->getnstUid()] = entity;
+
+        adjustMapping(entity);
+      }
+      break;
+
 
     default:
       //do nothing
@@ -1309,16 +1333,6 @@ void QnstView::addEntity(const QString uid, const QString parent,
   else if (properties["TYPE"] == "property")
   {
     addProperty(uid, parent, properties);
-  }
-  // if the entity type is SWITCHPORT
-  else if (properties["TYPE"] == "switchPort")
-  {
-    addSwitchPort(uid, parent, properties);
-  }
-  else if (properties["TYPE"] == "mapping")
-  {
-    addMapping(uid, parent, properties);
-
   }
   else if (properties["TYPE"] == "connectorParam")
   {
@@ -2329,28 +2343,6 @@ void QnstView::adjustPort(QnstGraphicsPort* entity)
     entity->adjust();
 }
 
-void QnstView::addMapping(const QString uid, const QString parent,
-                          const QMap<QString, QString> &properties, bool undo)
-{
-  if (entities.contains(parent))
-  {
-    QnstGraphicsNode* oparent =
-        (QnstGraphicsNode*) entities[parent]->getnstGraphicsParent();
-
-    QnstGraphicsMapping* entity = new QnstGraphicsMapping(oparent);
-    entity->setnstUid(uid);
-
-    entity->setSwitchPortUid(parent);
-
-    entity->setProperties(properties);
-
-    oparent->addnstGraphicsEntity(entity);
-    entities[entity->getnstUid()] = entity;
-
-    adjustMapping(entity);
-  }
-}
-
 void QnstView::changeMapping(QnstGraphicsMapping* entity,
                              const QMap<QString, QString> &properties)
 {
@@ -2428,37 +2420,6 @@ void QnstView::adjustMapping(QnstGraphicsMapping* entity)
         parent->removenstGraphicsEntity(edge);
 
     }
-}
-
-void QnstView::addSwitchPort(const QString uid, const QString parent,
-                             const QMap<QString, QString> &properties,
-                             bool undo)
-{
-  if (entities.contains(parent))
-  {
-    QnstGraphicsSwitchPort* entity =
-        new QnstGraphicsSwitchPort(entities[parent]);
-
-    entity->setnstUid(uid);
-    entity->setnstGraphicsParent(entities[parent]);
-
-    entity->setnstId(properties["id"]);
-
-    entity->setProperties(properties);
-
-    entities[parent]->addnstGraphicsEntity(entity);
-    entities[uid] = entity;
-
-    // update entity counter
-    entityCounter[Qnst::SwitchPort] ++;
-
-    entity->adjust();
-
-    if (!undo){
-        QnstAddCommand* cmd = new QnstAddCommand(this, entity);
-        history.push(cmd);
-    }
-  }
 }
 
 void QnstView::changeSwitchPort(QnstGraphicsSwitchPort* entity,
