@@ -192,6 +192,10 @@ void QnstView::read(QDomElement element, QDomElement parent)
     addEntity(uid, parent.attribute("uid"), properties, true, false);
 
   }
+  else if (element.nodeName() == "port")
+  {
+    addEntity(uid, parent.attribute("uid"), properties, true);
+  }
   else if (element.nodeName() == "aggregator")
   {
     addAggregator(uid, parent.attribute("uid"), properties, true);
@@ -204,10 +208,7 @@ void QnstView::read(QDomElement element, QDomElement parent)
   {  
     addProperty(uid, parent.attribute("uid"), properties, true, false);
   }
-  else if (element.nodeName() == "port")
-  {
-    addEntity(uid, parent.attribute("uid"), properties, true);
-  }
+
   else if (element.nodeName() == "switchPort")
   {
     addSwitchPort(uid, parent.attribute("uid"), properties, true);
@@ -1202,22 +1203,85 @@ void QnstView::addEntity(const QString uid, const QString parent,
           }
         }
       }
+      break;
+
+    case Qnst::Link:
+      // \fixme THIS IS NOT BEING USED
+      if (!links.contains(uid))
+      {
+        QnstLink* entity = new QnstLink();
+        entity->setnstUid(uid);
+        entity->setnstParent(entities[parent]);
+
+        if (properties["id"] != "")
+          entity->setnstId(properties["id"]);
+
+        if (properties["xconnector"] != "")
+        {
+          entity->setxConnector(properties["xconnector"]);
+          entity->setxConnectorUID(properties["xconnectorUID"]);
+        }
+
+        links[uid] = entity;
+
+        adjustLink(entity);
+      }
+      break;
+
+    case Qnst::Bind:
+      if (links.contains(parent))
+      {
+        if (!binds.contains(uid))
+        {
+          QnstBind* entity = new QnstBind();
+          entity->setnstUid(uid);
+          entity->setnstParent(links[parent]);
+
+          entity->setRole(properties["role"]);
+
+          entity->setComponent(properties["component"]);
+          entity->setComponentUid(properties["componentUid"]);
+
+
+          entity->setInterface(properties["interface"]);
+          entity->setInterfaceUid(properties["interfaceUid"]);
+
+          binds[uid] = entity;
+
+          adjustBind(entity);
+        }
+      }
+      break;
+
+    case Qnst::BindParam: /* Warning: this is not an QnstEntity subclass */
+      if (entities.contains(parent))
+      {
+        QnstGraphicsEntity* e = entities[parent];
+
+        if (e->getnstType() == Qnst::Action)
+        {
+          QnstGraphicsBind* action = (QnstGraphicsBind*) e;
+
+          action->addParam(uid, properties["name"], properties["value"]);
+        }
+        else if (e->getnstType() == Qnst::Condition)
+        {
+          QnstGraphicsBind* condition = (QnstGraphicsBind*) e;
+
+          condition->addParam(uid, properties["name"], properties["value"]);
+        }
+
+        bindParamUIDToBindUID[uid] = brelations.key(parent);
+      }
+      break;
 
     default:
       //do nothing
       break;
   }
 
-  if (properties["TYPE"] == "link")
-  {
-    addLink(uid, parent, properties);
-  }
-  else if (properties["TYPE"] == "bind")
-  {
-    addBind(uid, parent, properties);
-  }
   // if the entity type is CONNECTOR
-  else if (properties["TYPE"] == "causalConnector")
+  if (properties["TYPE"] == "causalConnector")
   {
     addConnector(uid, parent, properties);
   }
@@ -1255,10 +1319,6 @@ void QnstView::addEntity(const QString uid, const QString parent,
   {
     addMapping(uid, parent, properties);
 
-  }
-  else if (properties["TYPE"] == "bindParam")
-  {
-    addBindParam(uid, parent, properties);
   }
   else if (properties["TYPE"] == "connectorParam")
   {
@@ -2534,31 +2594,6 @@ void QnstView::changeProperty(QnstGraphicsProperty* entity,
   }
 }
 
-void QnstView::addLink(const QString uid, const QString parent,
-                       const QMap<QString, QString> &properties)
-{
-  if (!links.contains(uid))
-  {
-    QnstLink* entity = new QnstLink();
-    entity->setnstUid(uid);
-    entity->setnstParent(entities[parent]);
-
-    if (properties["id"] != "")
-      entity->setnstId(properties["id"]);
-
-    if (properties["xconnector"] != "")
-    {
-      entity->setxConnector(properties["xconnector"]);
-      entity->setxConnectorUID(properties["xconnectorUID"]);
-    }
-
-
-    links[uid] = entity;
-
-    adjustLink(entity);
-  }
-}
-
 void QnstView::changeLink(QnstLink* entity,
                           const QMap<QString, QString> &properties)
 {
@@ -2582,33 +2617,6 @@ void QnstView::changeLink(QnstLink* entity,
 void QnstView::adjustLink(QnstLink* entity)
 {
   // TODO
-}
-
-void QnstView::addBind(const QString uid, const QString parent,
-                       const QMap<QString, QString> &properties)
-{
-  if (links.contains(parent))
-  {
-    if (!binds.contains(uid))
-    {
-      QnstBind* entity = new QnstBind();
-      entity->setnstUid(uid);
-      entity->setnstParent(links[parent]);
-
-      entity->setRole(properties["role"]);
-
-      entity->setComponent(properties["component"]);
-      entity->setComponentUid(properties["componentUid"]);
-
-
-      entity->setInterface(properties["interface"]);
-      entity->setInterfaceUid(properties["interfaceUid"]);
-
-      binds[uid] = entity;
-
-      adjustBind(entity);
-    }
-  }
 }
 
 void QnstView::changeBind(QnstBind* entity,
@@ -3199,30 +3207,6 @@ void QnstView::addAggregator(const QString uid, const QString parent,
       QnstAddCommand* cmd = new QnstAddCommand(this, entity);
       history.push(cmd);
     }
-  }
-}
-
-void QnstView::addBindParam(const QString uid, const QString parent,
-                            const QMap<QString, QString> &properties)
-{
-  if (entities.contains(parent))
-  {
-    QnstGraphicsEntity* e = entities[parent];
-
-    if (e->getnstType() == Qnst::Action)
-    {
-      QnstGraphicsBind* action = (QnstGraphicsBind*) e;
-
-      action->addParam(uid, properties["name"], properties["value"]);
-    }
-    else if (e->getnstType() == Qnst::Condition)
-    {
-      QnstGraphicsBind* condition = (QnstGraphicsBind*) e;
-
-      condition->addParam(uid, properties["name"], properties["value"]);
-    }
-
-    bindParamUIDToBindUID[uid] = brelations.key(parent);
   }
 }
 

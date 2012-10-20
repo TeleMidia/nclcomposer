@@ -206,13 +206,9 @@ private:
 
   void changeProperty(QnstGraphicsProperty* entity, const QMap<QString, QString> &properties);
 
-  void addLink(const QString uid, const QString parent, const QMap<QString, QString> &properties);
-
   void changeLink(QnstLink* entity, const QMap<QString, QString> &properties);
 
   void adjustLink(QnstLink* entity);
-
-  void addBind(const QString uid, const QString parent, const QMap<QString, QString> &properties);
 
   void changeBind(QnstBind* entity, const QMap<QString, QString> &properties);
 
@@ -233,8 +229,6 @@ private:
   void adjustConnector(QnstConnector* entity);
 
   void addAggregator(const QString uid, const QString parent, const QMap<QString, QString> &properties, bool undo = false);
-
-  void addBindParam(const QString uid, const QString parent, const QMap<QString, QString> &properties);
 
   void changeBindParam(const QString uid, const QMap<QString, QString> &properties);
 

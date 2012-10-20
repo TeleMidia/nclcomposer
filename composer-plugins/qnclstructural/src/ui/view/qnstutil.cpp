@@ -77,6 +77,7 @@ std::map <QString, Qnst::EntityType> QnstUtil::typeFromStr =
 
     ("link", Qnst::Link)
     ("bind", Qnst::Bind)
+    ("bindParam", Qnst::BindParam)
 
     /*("causalConnector", Qnst::)*/
     ("simpleCondition", Qnst::Condition)
