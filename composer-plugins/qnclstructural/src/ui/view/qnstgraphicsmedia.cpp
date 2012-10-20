@@ -61,7 +61,7 @@ void QnstGraphicsMedia::setnstId(QString id)
 
 void QnstGraphicsMedia::setnstType(QnstType type)
 {
-  QnstEntity::setnstType(type);
+  QnstGraphicsNode::setnstType(type);
 
   this->icon = QnstUtil::iconFromMediaType(type);
 }

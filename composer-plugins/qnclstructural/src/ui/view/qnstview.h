@@ -67,7 +67,9 @@ public:
   void writeLink(QDomElement element, QDomDocument* dom, QnstGraphicsEntity* entity);
 
 public:
-  void addEntity(const QString uid, const QString parent, const QMap<QString, QString> &properties);
+  void addEntity(const QString uid, const QString parent,
+                 const QMap<QString, QString> &properties, bool undo = false,
+                 bool adjust = false);
 
   void removeEntity(const QString uid, bool undo = false, bool rmRef = true);
 
@@ -166,25 +168,17 @@ public slots:
   void clearValidationErrors();
 
 private:
-  void addBody(const QString uid, const QString parent, const QMap<QString, QString> &properties, bool undo = false);
-
   void changeBody(QnstGraphicsBody* entity, const QMap<QString, QString> &properties);
 
   void addImportBase(QString uid, const QMap<QString, QString> &properties);
 
   void changeImportBase(QString uid, const QMap<QString, QString> &properties);
 
-  void addContext(const QString uid, const QString parent, const QMap<QString, QString> &properties, bool undo = false);
-
   void changeContext(QnstGraphicsContext* entity, const QMap<QString, QString> &properties);
 
   void adjustContext(QnstGraphicsContext* entity);
 
-  void addSwitch(const QString uid, const QString parent, const QMap<QString, QString> &properties, bool undo = false);
-
   void changeSwitch(QnstGraphicsSwitch* entity, const QMap<QString, QString> &properties);
-
-  void addMedia(const QString uid, const QString parent, const QMap<QString, QString> &properties, bool undo = false, bool adjust = true);
 
   void changeMedia(QnstGraphicsMedia* entity, const QMap<QString, QString> &properties, bool adjust=true);
 
