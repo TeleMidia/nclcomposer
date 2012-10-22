@@ -86,50 +86,6 @@ private:
 
     void createConnections();
 
-    void requestBodyAddition(Entity* entity);
-
-    void requestBodyChange(Entity* entity);
-
-    void requestContextAddition(Entity* entity);
-
-    void requestContextChange(Entity* entity);
-
-    void requestSwitchAddition(Entity* entity);
-
-    void requestSwitchChange(Entity* entity);
-
-    void requestMediaAddition(Entity* entity);
-
-    void requestMediaChange(Entity* entity);
-
-    void requestPortAddition(Entity* entity);
-
-    void requestPortChange(Entity* entity);
-
-    void requestMappingAddition(Entity* entity);
-
-    void requestMappingChange(Entity* entity);
-
-    void requestSwitchPortAddition(Entity* entity);
-
-    void requestSwitchPortChange(Entity* entity);
-
-    void requestAreaAddition(Entity* entity);
-
-    void requestAreaChange(Entity* entity);
-
-    void requestPropertyAddition(Entity* entity);
-
-    void requestPropertyChange(Entity* entity);
-
-    void requestLinkAddition(Entity* entity);
-
-    void requestLinkChange(Entity* entity);
-
-    void requestBindAddition(Entity* entity);
-
-    void requestBindChange(Entity* entity);
-
     void requestImportBaseAddition(Entity* entity);
 
     void requestImportBaseChange(Entity* entity);
@@ -146,13 +102,11 @@ private:
 
     void requestSimpleActionChange(Entity* entity);
 
-    void requestBindParamAddition(Entity* entity);
-
-    void requestBindParamChange(Entity* entity);
-
     void requestConnectorParamAddition(Entity* entity);
 
     void requestConnectorParamChange(Entity* entity);
+
+
 
     void requestBodyAddition(const QString uid, const QString parent, const QMap<QString, QString> properties);
 
