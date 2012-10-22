@@ -209,26 +209,6 @@ private:
 
   void changeConnectorParam(const QString uid, const QMap<QString, QString> &properties);
 
-  void requestBodyChange(QnstGraphicsBody* entity);
-
-  void requestContextChange(QnstGraphicsContext* entity);
-
-  void requestSwitchChange(QnstGraphicsSwitch* entity);
-
-  void requestMediaChange(QnstGraphicsMedia* entity);
-
-  void requestPortChange(QnstGraphicsPort* entity);
-
-  void requestMappingChange(QnstGraphicsMapping* entity);
-
-  void requestSwitchPortChange(QnstGraphicsSwitchPort* entity);
-
-  void requestAreaChange(QnstGraphicsArea* entity);
-
-  void requestPropertyAddition(QnstGraphicsProperty* entity);
-
-  void requestPropertyChange(QnstGraphicsProperty* entity);
-
   void performCopy(QnstGraphicsEntity* entity, QnstGraphicsEntity* parent);
 
   void performPaste(QnstGraphicsEntity* copy, QnstGraphicsEntity* parent,

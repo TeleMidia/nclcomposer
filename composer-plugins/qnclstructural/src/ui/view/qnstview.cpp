@@ -3352,7 +3352,7 @@ void QnstView::requestEntityRemotion(QnstGraphicsEntity* entity, bool undo,
 
 //                adjustPort(p);
 
-                requestPortChange(p);
+                requestEntityChange(p);
             }else if (edge->getnstType() == Qnst::Mapping){
                 QnstGraphicsEntity* parent = entity->getnstGraphicsParent();
                 parent->removenstGraphicsEntity(edge);
@@ -3385,21 +3385,74 @@ void QnstView::requestEntityChange(QnstGraphicsEntity* entity)
 {
   qDebug() << "[QNST]" << ":" << "Requesting entity change '"+entity->getnstUid()+"'";
 
+  QMap<QString, QString> properties;
+  QMap <QString, QString> additionalData;
+  bool ok = false;
+
   if (entity != NULL)
   {
+    // Load Additional data
+    additionalData = entity->getUsrData();
+    foreach(QString key, additionalData.keys())
+    {
+      if(!properties.contains(key))
+        properties.insert(key, additionalData.value(key));
+    }
+    // end load of additional data
+
     switch(entity->getnstType())
     {
       case Qnst::Body:
-        requestBodyChange((QnstGraphicsBody*) entity);
+      {
+        properties["TYPE"] = "body";
+
+        properties["id"] = entity->getnstId();
+
+        properties["top"] = QString::number(entity->getTop());
+        properties["left"] = QString::number(entity->getLeft());
+        properties["width"] = QString::number(entity->getWidth());
+        properties["heigh"] = QString::number(entity->getHeight());
+        properties["zindex"] = QString::number(entity->getzIndex());
+
+        ok = true;
         break;
+      }
 
       case Qnst::Context:
-        requestContextChange((QnstGraphicsContext*) entity);
+      {
+        properties["TYPE"] = "context";
+
+        properties["id"] = entity->getnstId();
+
+        properties["refer"] = ""; // We do not support refer on context yet!
+
+        properties["top"] = QString::number(entity->getTop());
+        properties["left"] = QString::number(entity->getLeft());
+        properties["width"] = QString::number(entity->getWidth());
+        properties["heigh"] = QString::number(entity->getHeight());
+        properties["zindex"] = QString::number(entity->getzIndex());
+
+        ok = true;
         break;
+      }
 
       case Qnst::Switch:
-        requestSwitchChange((QnstGraphicsSwitch*) entity);
+      {
+        properties["TYPE"] = "switch";
+
+        properties["id"] = entity->getnstId();
+
+        properties["refer"] = ""; // We do not support refer on switch yet!
+
+        properties["top"] = QString::number(entity->getTop());
+        properties["left"] = QString::number(entity->getLeft());
+        properties["width"] = QString::number(entity->getWidth());
+        properties["heigh"] = QString::number(entity->getHeight());
+        properties["zindex"] = QString::number(entity->getzIndex());
+
+        ok = true;
         break;
+      }
 
       // if the entity type is MEDIA
       case Qnst::Audio:
@@ -3408,19 +3461,88 @@ void QnstView::requestEntityChange(QnstGraphicsEntity* entity)
       case Qnst::Image:
       case Qnst::NCLua:
       case Qnst::Settings:
+      case Qnst::Html:
+      case Qnst::NCL:
       case Qnst::Media:
-        requestMediaChange((QnstGraphicsMedia*) entity);
+      {
+        properties["TYPE"] = "media";
+
+        properties["id"] = entity->getnstId();
+        properties["src"] = ((QnstGraphicsMedia*)entity)->getSource();
+
+        // What else ??
+
+        ok = true;
         break;
+      }
 
       // if the entity type is PORT
       case Qnst::Port:
-        requestPortChange((QnstGraphicsPort*) entity);
+      {
+        properties["TYPE"] = "port";
+
+        properties["id"] = entity->getnstId();
+
+        QnstGraphicsPort *port = dynamic_cast <QnstGraphicsPort *>  (entity);
+        foreach(QnstGraphicsEdge* edge, port->getnstGraphicsEdges())
+        {
+          if (edge->getnstType() == Qnst::Reference)
+          {
+            if (edge->getEntityB()->getnstType() == Qnst::Port ||
+                edge->getEntityB()->getnstType() == Qnst::Property ||
+                edge->getEntityB()->getnstType() == Qnst::Area)
+            {
+              properties["INTERFACE"] = edge->getEntityB()->getnstUid();
+              properties["interface"] = edge->getEntityB()->getnstId();
+
+              properties["COMPONENT"] = edge->getEntityB()->getnstGraphicsParent()->getnstUid();
+              properties["component"] = edge->getEntityB()->getnstGraphicsParent()->getnstId();
+
+            }
+            else
+            {
+              properties["COMPONENT"] = edge->getEntityB()->getnstUid();
+              properties["component"] = edge->getEntityB()->getnstId();
+
+              properties["INTERFACE"] = "";
+              properties["interface"] = "";
+            }
+
+            break; // there is only one match, so 'break'.
+          }
+        }
+
+        ok = true;
         break;
+      }
+
+      case Qnst::Area:
+      case Qnst::Property:
+      case Qnst::Aggregator:
+      {
+        // do nothing ??
+        break;
+      }
+
+      case Qnst::SwitchPort:
+      {
+        properties["TYPE"] = "switchPort";
+
+        properties["id"] = entity->getnstId();
+        break;
+      }
 
       default:
         // do nothing
         break;
     }
+
+    if(ok)
+    {
+      emit entityChanged(entity->getnstUid(), properties);
+    }
+
+    // Undo ??
   }
 }
 
@@ -3446,180 +3568,6 @@ void QnstView::requestEntitySelection(QnstGraphicsEntity* entity)
         emit entitySelected(entity->getnstUid());
     }
   }
-}
-
-void QnstView::requestBodyChange(QnstGraphicsBody* entity)
-{
-  QMap<QString, QString> properties;
-
-  properties["TYPE"] = "body";
-
-  properties["id"] = entity->getnstId();
-
-  properties["top"] = QString::number(entity->getTop());
-  properties["left"] = QString::number(entity->getLeft());
-  properties["width"] = QString::number(entity->getWidth());
-  properties["heigh"] = QString::number(entity->getHeight());
-  properties["zindex"] = QString::number(entity->getzIndex());
-
-  QMap <QString, QString> additionalData = entity->getUsrData();
-  foreach(QString key, additionalData.keys())
-  {
-    if(!properties.contains(key))
-      properties.insert(key, additionalData.value(key));
-  }
-
-  emit entityChanged(entity->getnstUid(), properties);
-}
-
-void QnstView::requestContextChange(QnstGraphicsContext* entity)
-{
-  QMap<QString, QString> properties;
-
-  properties["TYPE"] = "context";
-
-  properties["id"] = entity->getnstId();
-
-  properties["refer"] = "";
-
-  properties["top"] = QString::number(entity->getTop());
-  properties["left"] = QString::number(entity->getLeft());
-  properties["width"] = QString::number(entity->getWidth());
-  properties["heigh"] = QString::number(entity->getHeight());
-  properties["zindex"] = QString::number(entity->getzIndex());
-
-  QMap <QString, QString> additionalData = entity->getUsrData();
-  foreach(QString key, additionalData.keys())
-  {
-    if(!properties.contains(key))
-      properties.insert(key, additionalData.value(key));
-  }
-
-  emit entityChanged(entity->getnstUid(), properties);
-}
-
-void QnstView::requestSwitchChange(QnstGraphicsSwitch* entity)
-{
-  QMap<QString, QString> properties;
-
-  properties["TYPE"] = "switch";
-
-  properties["id"] = entity->getnstId();
-
-  properties["refer"] = "";
-
-  properties["top"] = QString::number(entity->getTop());
-  properties["left"] = QString::number(entity->getLeft());
-  properties["width"] = QString::number(entity->getWidth());
-  properties["heigh"] = QString::number(entity->getHeight());
-  properties["zindex"] = QString::number(entity->getzIndex());
-
-  QMap <QString, QString> additionalData = entity->getUsrData();
-  foreach(QString key, additionalData.keys())
-  {
-    if(!properties.contains(key))
-      properties.insert(key, additionalData.value(key));
-  }
-
-  emit entityChanged(entity->getnstUid(), properties);
-}
-
-void QnstView::requestMediaChange(QnstGraphicsMedia* entity)
-{
-  QMap<QString, QString> properties;
-
-  properties["TYPE"] = "media";
-
-  properties["id"] = entity->getnstId();
-  properties["src"] = entity->getSource();
-
-  QMap <QString, QString> additionalData = entity->getUsrData();
-  foreach(QString key, additionalData.keys())
-  {
-    if(!properties.contains(key))
-    properties.insert(key, additionalData.value(key));
-  }
-
-  emit entityChanged(entity->getnstUid(), properties);
-}
-
-void QnstView::requestPortChange(QnstGraphicsPort* entity)
-{
-  QMap<QString, QString> properties;
-
-  properties["TYPE"] = "port";
-
-  properties["id"] = entity->getnstId();
-
-  foreach(QnstGraphicsEdge* edge, entity->getnstGraphicsEdges())
-  {
-    if (edge->getnstType() == Qnst::Reference)
-    {
-      if (edge->getEntityB()->getnstType() == Qnst::Port ||
-          edge->getEntityB()->getnstType() == Qnst::Property ||
-          edge->getEntityB()->getnstType() == Qnst::Area)
-      {
-        properties["INTERFACE"] = edge->getEntityB()->getnstUid();
-        properties["interface"] = edge->getEntityB()->getnstId();
-
-        properties["COMPONENT"] = edge->getEntityB()->getnstGraphicsParent()->getnstUid();
-        properties["component"] = edge->getEntityB()->getnstGraphicsParent()->getnstId();
-
-      }
-      else
-      {
-        properties["COMPONENT"] = edge->getEntityB()->getnstUid();
-        properties["component"] = edge->getEntityB()->getnstId();
-
-        properties["INTERFACE"] = "";
-        properties["interface"] = "";
-      }
-
-      QMap <QString, QString> additionalData = entity->getUsrData();
-      foreach(QString key, additionalData.keys())
-      {
-        if(!properties.contains(key))
-          properties.insert(key, additionalData.value(key));
-      }
-
-      break; // there is only one match, so 'break'.
-    }
-  }
-
-  emit entityChanged(entity->getnstUid(), properties);
-}
-
-void QnstView::requestMappingChange(QnstGraphicsMapping* entity)
-{
-
-}
-
-void QnstView::requestSwitchPortChange(QnstGraphicsSwitchPort* entity)
-{
-  QMap<QString, QString> properties;
-
-  properties["TYPE"] = "switchPort";
-
-  properties["id"] = entity->getnstId();
-
-  QMap <QString, QString> additionalData = entity->getUsrData();
-  foreach(QString key, additionalData.keys())
-  {
-    if(!properties.contains(key))
-      properties.insert(key, additionalData.value(key));
-  }
-
-  emit entityChanged(entity->getnstUid(), properties);
-}
-
-void QnstView::requestAreaChange(QnstGraphicsArea* entity)
-{
-    // TODO
-}
-
-void QnstView::requestPropertyChange(QnstGraphicsProperty* entity)
-{
-    // TODO
 }
 
 void QnstView::performHelp()
