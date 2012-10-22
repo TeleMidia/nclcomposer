@@ -33,6 +33,7 @@
 #include "qnstlink.h"
 #include "qnstbind.h"
 #include "qnstgraphicsproperty.h"
+#include "qnstgraphicsbind.h"
 #include "qnstgraphicsarea.h"
 #include "qnstaddcommand.h"
 #include "qnstchangecommand.h"
@@ -242,6 +243,19 @@ private:
 
   QnstGraphicsAggregator* createAggregator(QnstGraphicsEntity* a,
                                            QnstGraphicsEntity* b);
+
+  void createNoGraphicalLink(QnstGraphicsEntity* entitya,
+                             QnstGraphicsEntity* entityb,
+                             QnstGraphicsAggregator* aggregator,
+                             QnstGraphicsBind* condition,
+                             QnstGraphicsBind* actionDialog,
+                             QString connector);
+
+  QnstBind* createNoGraphicalBind(QnstGraphicsEntity* entitya,
+                             QnstGraphicsEntity* entityb,
+                             QnstLink* link,
+                             QnstGraphicsBind* bind,
+                             QString type);
 
   bool modified;
 
