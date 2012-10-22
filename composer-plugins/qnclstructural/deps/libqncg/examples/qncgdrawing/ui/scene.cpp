@@ -51,8 +51,11 @@ void Scene::performNode()
     entity->setHeight(300);
     entity->adjust();
 
-    connect(entity, SIGNAL(entityChanged(QncgGraphicsEntity*)), SIGNAL(entityChanged(QncgGraphicsEntity*)));
-    connect(entity, SIGNAL(entitySelected(QncgGraphicsEntity*)), SIGNAL(entitySelected(QncgGraphicsEntity*)));
+    connect(entity, SIGNAL(entityChanged(QncgGraphicsEntity*)),
+                    SIGNAL(entityChanged(QncgGraphicsEntity*)));
+
+    connect(entity, SIGNAL(entitySelected(QncgGraphicsEntity*)),
+                    SIGNAL(entitySelected(QncgGraphicsEntity*)));
 
     addItem(entity);
 }
