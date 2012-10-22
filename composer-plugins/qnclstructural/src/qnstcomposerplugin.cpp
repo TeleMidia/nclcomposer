@@ -48,16 +48,16 @@ void QnstComposerPlugin::createWidgets()
 void QnstComposerPlugin::createConnections()
 {
   connect(view, SIGNAL(entityAdded(QString,QString,QMap<QString,QString>)),
-          SLOT(requestEntityAddition(QString,QString,QMap<QString,QString>)));
+          SLOT(notifyEntityAddedInView(QString,QString,QMap<QString,QString>)));
 
   connect(view, SIGNAL(entityRemoved(QString)),
-          SLOT(requestEntityRemotion(QString)));
+                SLOT(notifyEntityDeletedInView(QString)));
 
   connect(view, SIGNAL(entityChanged(QString,QMap<QString,QString>)),
-          SLOT(requestEntityChange(QString,QMap<QString,QString>)));
+                SLOT(notifyEntityDeletedInView(QString)));
 
   connect(view, SIGNAL(entitySelected(QString)),
-          SLOT(requestEntitySelection(QString)));
+                 SLOT(requestEntitySelection(QString)));
 
   connect(view, SIGNAL(viewChanged()), SIGNAL(setCurrentProjectAsDirty()));
 }
@@ -906,7 +906,8 @@ void QnstComposerPlugin::requestEntityChange(Entity* entity)
 
 void QnstComposerPlugin::requestEntitySelection(Entity* entity)
 {
-  if (entities.contains(entity->getUniqueId()) && lastSelected != entity->getUniqueId())
+  if (entities.contains(entity->getUniqueId()) &&
+      lastSelected != entity->getUniqueId())
   {
     if (entity->getType() == "body" ||
         entity->getType() == "context" ||
@@ -997,7 +998,8 @@ void QnstComposerPlugin::requestCausalConnectorAddition(Entity* entity)
     }
 
     if(entity->getParent()->getType() == "importBase")
-      view->addEntity(entity->getUniqueId(), entity->getParentUniqueId(), properties);
+      view->addEntity(entity->getUniqueId(), entity->getParentUniqueId(),
+                      properties);
     else
         view->addEntity(entity->getUniqueId(),"", properties);
 }
@@ -1019,7 +1021,8 @@ void QnstComposerPlugin::requestSimpleConditionAddition(Entity* entity)
 
   properties["TYPE"] = "simpleCondition";
   Entity* conn = entity->getParent();
-  while (conn->getType() != "causalConnector" && conn != getProject()){
+  while (conn->getType() != "causalConnector" && conn != getProject())
+  {
     conn = conn->getParent();
   }
 
@@ -1133,6 +1136,7 @@ void QnstComposerPlugin::requestConnectorParamAddition(Entity* entity)
 
 }
 
+// \fixme this methos is not being called anywhere!!!
 void QnstComposerPlugin::requestConnectorParamChange(Entity* entity)
 {
   QMap<QString, QString> properties;
@@ -1146,860 +1150,742 @@ void QnstComposerPlugin::requestConnectorParamChange(Entity* entity)
     view->changeEntity(entities[entity->getUniqueId()], properties);
 }
 
-void QnstComposerPlugin::requestEntityAddition(const QString uid,
-                                               const QString parent,
-                                               const QMap<QString, QString> properties)
+void QnstComposerPlugin::notifyEntityAddedInView(const QString uid,
+                                                 const QString parent,
+                                              QMap<QString, QString> properties)
 {
-    // if the entity is of type BODY
-    if (properties["TYPE"] == "body"){
-        requestBodyAddition(uid, parent, properties);
+  Qnst::EntityType type = QnstUtil::getnstTypeFromStr(properties["TYPE"]);
 
-    // if the entity is of type CONTEXT
-    }else if (properties["TYPE"] == "context"){
-        requestContextAddition(uid, parent, properties);
+  Entity* entity = NULL;
 
-    // if the entity is of type SWITCH
-    }else if (properties["TYPE"] == "switch"){
-        requestSwitchAddition(uid, parent, properties);
+  QMap<QString, QString> attributes;
+  bool mustEmitAddEntity = false;
 
-    // if the entity is of type MEDIA
-    }else if (properties["TYPE"] == "media"){
-        requestMediaAddition(uid, parent, properties);
+  if(type != Qnst::Body)
+  {
+    entity = getProject()->getEntityById(entities.key(parent));
 
-    // if the entity is of type PORT
-    }else if (properties["TYPE"] == "port"){
-        requestPortAddition(uid, parent, properties);
-
-    // if the entity is of type CONNECTOR
-    }else if (properties["TYPE"] == "connector"){
-        requestConnectorAddition(uid, parent, properties);
-
-    // if the entity is of type LINK
-    }else if (properties["TYPE"] == "link"){
-        requestLinkAddition(uid, parent, properties);
-
-    // if the entity is of type COMPLEXCONNECTOR
-    }else if (properties["TYPE"] == "complex-connector"){
-        requestComplexConnectorAddition(uid, parent, properties);
-
-    // if the entity is of type BIND
-    }else if (properties["TYPE"] == "bind"){
-        requestBindAddition(uid, parent, properties);
-
-    // if the entity is of type AREA
-    }else if (properties["TYPE"] == "area"){
-        requestAreaAddition(uid, parent, properties);
-
-    // if the entity is of type PROPERTY
-    }else if (properties["TYPE"] == "property"){
-        requestPropertyAddition(uid, parent, properties);
-
-    // if the entity is of type SWITCHPORT
-    }else if (properties["TYPE"] == "switchPort"){
-        requestSwitchPortAddition(uid, parent, properties);
-    }
-    else if (properties["TYPE"] == "mapping"){
-        requestMappingAddition(uid, parent, properties);
-    }
-    else if (properties["TYPE"] == "bindParam"){
-        requestBindParamAddition(uid, parent, properties);
-    }
-}
-
-void QnstComposerPlugin::requestEntityRemotion(const QString uid)
-{
-    if (entities.key(uid, "nil") != "nil")
+    if(entity == NULL)
     {
-        emit removeEntity(getProject()->getEntityById(entities.key(uid)), false);
-        entities.remove(entities.key(uid));
+      qWarning() << "[QNST] Error: trying to add an entity as child of an inexistent Entity";
+      return;
     }
+
+  }
+
+  // Load specific properties for each type (and handle dependencies)
+  switch(type)
+  {
+    case Qnst::Body:
+    {
+      requestBodyDependence();
+      QList<Entity*> list = getProject()->getEntitiesbyType("ncl");
+
+      if (!list.isEmpty())
+      {
+        entity = list.first();
+
+        if (properties["id"] != "")
+          attributes["id"] = properties["id"];
+
+        mustEmitAddEntity = true;
+      }
+      break;
+    }
+
+    case Qnst::Context:
+    {
+      if (properties["id"] != "")
+        attributes["id"] = properties["id"];
+
+      if (properties["refer"] != "")
+        attributes["refer"] = properties["refer"];
+
+      mustEmitAddEntity = true;
+      break;
+    }
+
+    case Qnst::Switch:
+    {
+      if (properties["id"] != "")
+        attributes["id"] = properties["id"];
+
+      if (properties["refer"] != "")
+        attributes["refer"] = properties["refer"];
+
+      mustEmitAddEntity = true;
+      break;
+    }
+
+    case Qnst::Media:
+    {
+      if (properties["id"] != "")
+        attributes["id"] = properties["id"];
+
+      if (properties["src"] != "")
+      {
+        QString src = properties["src"];
+        try
+        {
+          attributes["src"] = Utilities::relativePath(project->getLocation(),
+                                                        src, true);
+        }
+        catch(...)
+        {
+          attributes["src"] = properties["src"];
+        }
+      }
+
+      if (properties["refer"] != "")
+        attributes["refer"] = properties["refer"];
+
+      if (properties["instance"] != "")
+        attributes["instance"] = properties["instance"];
+
+      if (properties["type"] != "")
+        attributes["type"] = properties["type"];
+
+      if (properties["descriptor"] != "")
+        attributes["descriptor"] = properties["descriptor"];
+
+      mustEmitAddEntity = true;
+      break;
+    }
+    case Qnst::Port:
+    {
+      attributes["id"] = properties["id"];
+      attributes["component"] = properties["component"];
+
+      if(properties["interface"] != "")
+        attributes["interface"] = properties["interface"];
+
+      mustEmitAddEntity = true;
+      break;
+    }
+
+    case Qnst::Link:
+    {
+      attributes["id"] = properties["id"];
+      attributes["xconnector"] = properties["connector"];
+
+      request = uid;
+
+      emit addEntity("link", entity->getUniqueId(), attributes, false);
+
+      request = "";
+
+      Entity* parent = getProject()->getEntityById(entities.key(uid));
+
+      if (parent != NULL)
+      {
+        // bind condition
+        QMap<QString, QString> cattributes;
+        cattributes["role"] = properties["condition"];
+        cattributes["component"] = properties["componentcondition"];
+
+        request = uid;
+
+        emit addEntity("bind", parent->getUniqueId(), cattributes, false);
+
+        request = "";
+
+        // bind action
+
+        QMap<QString, QString> aattributes;
+        aattributes["role"] = properties["action"];
+        aattributes["component"] = properties["componentaction"];
+
+        request = uid;
+
+        emit addEntity("bind", parent->getUniqueId(), aattributes, false);
+
+        request = "";
+        mustEmitAddEntity = false; // we made the addEntity here, not must be made nothing
+                    // more after here!!
+      }
+      break;
+    }
+
+    case Qnst::Bind:
+    {
+      requestBindAddition(uid, parent, properties);
+      mustEmitAddEntity = false; // the add is made inside requestBindAddition!!!
+      break;
+    }
+
+    case Qnst::Area:
+    {
+      attributes["id"] = properties["id"];
+      mustEmitAddEntity = true;
+      break;
+    }
+
+    case Qnst::Property:
+    {
+      attributes["name"] = properties["id"];
+
+      mustEmitAddEntity = true;
+      break;
+    }
+
+    case Qnst::SwitchPort:
+    {
+      if (properties["id"] != "")
+        attributes["id"] = properties["id"];
+
+      mustEmitAddEntity = true;
+      break;
+    }
+
+    case Qnst::Mapping:
+    {
+      if (properties["component"] != "")
+        attributes["component"] = properties["component"];
+
+      if (properties["interface"] != "")
+        attributes["interface"] = properties["interface"];
+
+      mustEmitAddEntity = true;
+      break;
+    }
+
+    case Qnst::BindParam:
+    {
+      if (properties["name"] != "")
+        attributes["name"] = properties["name"];
+
+      if (properties["value"] != "")
+        attributes["value"] = properties["value"];
+
+      mustEmitAddEntity= true;
+      break;
+    }
+
+    default:
+      // do nothing
+      break;
+  }
+
+  if(mustEmitAddEntity && entity != NULL) // Everything is ok, so add my new entity
+  {
+    request = uid;
+    emit addEntity(properties["TYPE"],
+                   entity->getUniqueId(), attributes, false);
+    request = "";
+
+  }
+  else
+  {
+    // Special cases!! We do not have Qnst::EntityType defined!!
+    if (properties["TYPE"] == "connector")
+      requestConnectorAddition(uid, parent, properties);
+    else if (properties["TYPE"] == "complex-connector")
+      requestComplexConnectorAddition(uid, parent, properties);
+  }
 }
 
-void QnstComposerPlugin::requestEntityChange(const QString uid, const QMap<QString, QString> properties)
+void QnstComposerPlugin::notifyEntityDeletedInView(const QString uid)
 {
-    // if the entity is of type BODY
-    if (properties["TYPE"] == "body"){
-        requestBodyChange(uid, properties);
+  if (entities.key(uid, "nil") != "nil")
+  {
+    emit removeEntity(getProject()->getEntityById(entities.key(uid)), false);
+    entities.remove(entities.key(uid));
+  }
+}
 
-    // if the entity is of type CONTEXT
-    }else if (properties["TYPE"] == "context"){
-        requestContextChange(uid, properties);
+void QnstComposerPlugin::notifyEntityChangedInView(const QString uid,
+                                              QMap<QString, QString> properties)
+{
+  Qnst::EntityType type = QnstUtil::getnstTypeFromStr(properties["TYPE"]);
 
-    // if the entity is of type SWITCH
-    }else if (properties["TYPE"] == "switch"){
-        requestSwitchChange(uid, properties);
+  QMap<QString, QString> attributes;
+  Entity* entity = getProject()->getEntityById(entities.key(uid));
 
-    // if the entity is of type MEDIA
-    }else if (properties["TYPE"] == "media"){
-        requestMediaChange(uid, properties);
+  bool mustSetAttributes = false;
 
-    // if the entity is of type PORT
-    }else if (properties["TYPE"] == "port"){
-        requestPortChange(uid, properties);
+  if(entity == NULL)
+  {
+    qWarning() << "[QNST] Error!!! Trying to change a entity that does not exist in the model";
+  }
+
+  switch (type)
+  {
+    case Qnst::Body:
+    {
+      if (properties["id"] != "")
+        attributes["id"] = properties["id"];
+
+      mustSetAttributes = true;
+      break;
     }
-    else if (properties["TYPE"] == "bindParam"){
-        requestBindParamChange(uid,properties);
+
+    case Qnst::Context:
+    case Qnst::Switch:
+    {
+      if (properties["id"] != "")
+        attributes["id"] = properties["id"];
+
+      if (properties["refer"] != "")
+        attributes["refer"] = properties["refer"];
+
+      mustSetAttributes = true;
+      break;
     }
+
+    case Qnst::Media:
+    {
+      if (properties["id"] != "")
+        attributes["id"] = properties["id"];
+
+      if (properties["src"] != "")
+        attributes["src"] = properties["src"];
+
+      if (properties["refer"] != "")
+        attributes["refer"] = properties["refer"];
+
+      if (properties["instance"] != "")
+        attributes["instance"] = properties["instance"];
+
+      if (properties["type"] != "")
+        attributes["type"] = properties["type"];
+
+      if (properties["descriptor"] != "")
+        attributes["descriptor"] = properties["descriptor"];
+
+      mustSetAttributes = true;
+      break;
+    }
+
+    case Qnst::Port:
+    {
+      attributes["id"] = properties["id"];
+
+      if(properties["component"] != "")
+          attributes["component"] = properties["component"];
+
+      if(properties["interface"] != "")
+          attributes["interface"] = properties["interface"];
+
+      mustSetAttributes = true;
+      break;
+    }
+
+    case Qnst::BindParam:
+    {
+      if (properties["name"] != "")
+        attributes["name"] = properties["name"];
+
+      if (properties["value"] != "")
+        attributes["value"] = properties["value"];
+
+      mustSetAttributes = true;
+      break;
+    }
+
+    case Qnst::Mapping:
+    {
+      if (properties["component"] != "")
+        attributes["component"] = properties["component"];
+
+      if (properties["interface"] != "")
+        attributes["interface"] = properties["interface"];
+
+      mustSetAttributes = true;
+      break;
+    }
+
+    case Qnst::SwitchPort:
+    {
+
+      if (properties["id"] != "")
+        attributes["id"] = properties["id"];
+
+      mustSetAttributes = true;
+      break;
+    }
+    case Qnst::Area:
+    case Qnst::Property:
+      // \todo Changing of property and area.
+      break;
+
+    default:
+      break;
+  }
+
+  if(mustSetAttributes)
+  {
+    emit setAttributes(entity, attributes, false);
+  }
+
+  // \fixme By now, we are also setting additional data, but maybe this is not
+  //        necessary.
+  QString coreID = entities.key(uid);
+  QnstEntity *qnstEntity = view->entities.value(uid);
+  if(qnstEntity != NULL)
+  {
+    emit setAttributes(project->getEntityById(coreID),
+                       qnstEntity->getUsrData(), false);
+  }
 }
 
 void QnstComposerPlugin::requestEntitySelection(const QString uid)
 {
-    if (entities.key(uid, "nil") != "nil"){
-        lastSelected = entities.key(uid);
+  if (entities.key(uid, "nil") != "nil")
+  {
+    lastSelected = entities.key(uid);
 
-        emit sendBroadcastMessage("changeSelectedEntity", new QString(entities.key(uid)));
-    }
-}
-
-void QnstComposerPlugin::requestBodyAddition(const QString uid, const QString parent, const QMap<QString, QString> properties)
-{
-    requestBodyDependence();
-
-    QList<Entity*> list = getProject()->getEntitiesbyType("ncl");
-
-    if (!list.isEmpty()){
-        Entity* entity = list.first();
-
-        QMap<QString, QString> attributes;
-
-        if (properties["id"] != ""){
-            attributes["id"] = properties["id"];
-        }
-
-        request = uid;
-
-        emit addEntity("body", entity->getUniqueId(), attributes, false);
-
-        request = "";
-    }
+    emit sendBroadcastMessage("changeSelectedEntity",
+                              new QString(entities.key(uid)));
+  }
 }
 
 void QnstComposerPlugin::requestBodyDependence()
 {
-    QList<Entity*> list = getProject()->getEntitiesbyType("ncl");
-
-    if (list.isEmpty()){
-        Entity* project = getProject();
-
-        if (project != NULL){
-            QMap<QString, QString> attributes;
-
-            emit addEntity("ncl", project->getUniqueId(), attributes, false);
-        }
-    }
-}
-
-void QnstComposerPlugin::requestBodyChange(const QString uid, const QMap<QString, QString> properties)
-{
-    Entity* entity = getProject()->getEntityById(entities.key(uid));
-
-    if (entity != NULL){
-        QMap<QString, QString> attributes;
-
-        if (properties["id"] != ""){
-            attributes["id"] = properties["id"];
-        }
-
-        emit setAttributes(entity, attributes, false);
-    }
-}
-
-void QnstComposerPlugin::requestContextAddition(const QString uid, const QString parent, const QMap<QString, QString> properties)
-{
-    Entity* entity = getProject()->getEntityById(entities.key(parent));
-
-    if (entity != NULL){
-        QMap<QString, QString> attributes;
-
-        if (properties["id"] != ""){
-            attributes["id"] = properties["id"];
-        }
-
-        if (properties["refer"] != ""){
-            attributes["refer"] = properties["refer"];
-        }
-
-        request = uid;
-
-        emit addEntity("context", entity->getUniqueId(), attributes, false);
-
-        request = "";
-    }
-}
-
-void QnstComposerPlugin::requestContextChange(const QString uid, const QMap<QString, QString> properties)
-{
-    Entity* entity = getProject()->getEntityById(entities.key(uid));
-
-    if (entity != NULL){
-        QMap<QString, QString> attributes;
-
-        if (properties["id"] != ""){
-            attributes["id"] = properties["id"];
-        }
-
-        if (properties["refer"] != ""){
-            attributes["refer"] = properties["refer"];
-        }
-
-        emit setAttributes(entity, attributes, false);
-    }
-}
-
-void QnstComposerPlugin::requestSwitchAddition(const QString uid, const QString parent, const QMap<QString, QString> properties)
-{
-    Entity* entity = getProject()->getEntityById(entities.key(parent));
-    if (entity != NULL){
-        QMap<QString, QString> attributes;
-
-        if (properties["id"] != ""){
-            attributes["id"] = properties["id"];
-        }
-
-        if (properties["refer"] != ""){
-            attributes["refer"] = properties["refer"];
-        }
-
-        request = uid;
-
-        emit addEntity("switch", entity->getUniqueId(), attributes, false);
-
-        request = "";
-    }
-}
-
-void QnstComposerPlugin::requestSwitchChange(const QString uid, const QMap<QString, QString> properties)
-{
-    Entity* entity = getProject()->getEntityById(entities.key(uid));
-
-    if (entity != NULL){
-        QMap<QString, QString> attributes;
-
-        if (properties["id"] != ""){
-            attributes["id"] = properties["id"];
-        }
-
-        if (properties["refer"] != ""){
-            attributes["refer"] = properties["refer"];
-        }
-
-        emit setAttributes(entity, attributes, false);
-    }
-}
-
-void QnstComposerPlugin::requestSwitchPortAddition(const QString uid, const QString parent, const QMap<QString, QString> properties)
-{
-    Entity* entity = getProject()->getEntityById(entities.key(parent));
-
-    if (entity != NULL){
-        QMap<QString, QString> attributes;
-
-        if (properties["id"] != ""){
-            attributes["id"] = properties["id"];
-        }
-
-        request = uid;
-
-        emit addEntity("switchPort", entity->getUniqueId(), attributes, false);
-
-        request = "";
-    }
-}
-
-void QnstComposerPlugin::requestSwitchPortChange(const QString uid, const QMap<QString, QString> properties)
-{
-    Entity* entity = getProject()->getEntityById(entities.key(uid));
-
-    if (entity != NULL){
-        QMap<QString, QString> attributes;
-
-        if (properties["id"] != ""){
-            attributes["id"] = properties["id"];
-        }
-
-        emit setAttributes(entity, attributes, false);
-    }
-}
-
-void QnstComposerPlugin::requestMappingAddition(const QString uid, const QString parent, const QMap<QString, QString> properties)
-{
-    Entity* entity = getProject()->getEntityById(entities.key(parent));
-
-    if (entity != NULL){
-        QMap<QString, QString> attributes;
-
-        if (properties["component"] != ""){
-            attributes["component"] = properties["component"];
-        }
-
-        if (properties["interface"] != ""){
-            attributes["interface"] = properties["interface"];
-        }
-
-        request = uid;
-
-        emit addEntity("mapping", entity->getUniqueId(), attributes, false);
-
-        request = "";
-    }
-}
-
-void QnstComposerPlugin::requestMappingChange(const QString uid, const QMap<QString, QString> properties)
-{
-    Entity* entity = getProject()->getEntityById(entities.key(uid));
-
-    if (entity != NULL){
-        QMap<QString, QString> attributes;
-
-        if (properties["component"] != ""){
-            attributes["component"] = properties["component"];
-        }
-
-        if (properties["interface"] != ""){
-            attributes["interface"] = properties["interface"];
-        }
-
-        emit setAttributes(entity, attributes, false);
-    }
-}
-
-void QnstComposerPlugin::requestMediaAddition(const QString uid, const QString parent, const QMap<QString, QString> properties)
-{
-    Entity* entity = getProject()->getEntityById(entities.key(parent));
-
-    if (entity != NULL){
-        QMap<QString, QString> attributes;
-
-        if (properties["id"] != ""){
-            attributes["id"] = properties["id"];
-        }
-
-        if (properties["src"] != ""){
-          QString src = properties["src"];
-          try {
-            attributes["src"] = Utilities::relativePath(project->getLocation(),
-                                                      src, true);
-          }
-          catch(...)
-          {
-            attributes["src"] = properties["src"];
-          }
-        }
-
-        if (properties["refer"] != ""){
-            attributes["refer"] = properties["refer"];
-        }
-
-        if (properties["instance"] != ""){
-            attributes["instance"] = properties["instance"];
-        }
-
-        if (properties["type"] != ""){
-            attributes["type"] = properties["type"];
-        }
-
-        if (properties["descriptor"] != ""){
-            attributes["descriptor"] = properties["descriptor"];
-        }
-
-        request = uid;
-
-        emit addEntity("media", entity->getUniqueId(), attributes, false);
-
-        request = "";
-    }
-}
-
-void QnstComposerPlugin::requestMediaChange(const QString uid, const QMap<QString, QString> properties)
-{
-    Entity* entity = getProject()->getEntityById(entities.key(uid));
-
-    if (entity != NULL){
-        QMap<QString, QString> attributes;
-
-        if (properties["id"] != ""){
-            attributes["id"] = properties["id"];
-        }
-
-        if (properties["src"] != ""){
-            attributes["src"] = properties["src"];
-        }
-
-        if (properties["refer"] != ""){
-            attributes["refer"] = properties["refer"];
-        }
-
-        if (properties["instance"] != ""){
-            attributes["instance"] = properties["instance"];
-        }
-
-        if (properties["type"] != ""){
-            attributes["type"] = properties["type"];
-        }
-
-        if (properties["descriptor"] != ""){
-            attributes["descriptor"] = properties["descriptor"];
-        }
-
-        emit setAttributes(entity, attributes, false);
-    }
-}
-
-void QnstComposerPlugin::requestPortAddition(const QString uid, const QString parent, const QMap<QString, QString> properties)
-{
-    Entity* entity = getProject()->getEntityById(entities.key(parent));
-
-    if (entity != NULL){
-        QMap<QString, QString> attributes;
-
-        attributes["id"] = properties["id"];
-
-        attributes["component"] = properties["component"];
-
-        if(properties["interface"] != "")
-            attributes["interface"] = properties["interface"];
-
-        request = uid;
-
-        emit addEntity("port", entity->getUniqueId(), attributes, false);
-
-        request = "";
-    }
-}
-
-void QnstComposerPlugin::requestPortChange(const QString uid, const QMap<QString, QString> properties)
-{
-    Entity* entity = getProject()->getEntityById(entities.key(uid));
-
-    if (entity != NULL){
-        QMap<QString, QString> attributes;
-
-        attributes["id"] = properties["id"];
-
-        if(properties["component"] != "")
-            attributes["component"] = properties["component"];
-
-        if(properties["interface"] != "")
-            attributes["interface"] = properties["interface"];
-
-        emit setAttributes(entity, attributes, false);
-    }
-}
-
-void QnstComposerPlugin::requestAreaAddition(const QString uid, const QString parent, const QMap<QString, QString> properties)
-{
-    Entity* entity = getProject()->getEntityById(entities.key(parent));
-
-    if (entity != NULL){
-        QMap<QString, QString> attributes;
-
-        attributes["id"] = properties["id"];
-
-        request = uid;
-
-        emit addEntity("area", entity->getUniqueId(), attributes, false);
-
-        request = "";
-    }
-}
-
-void QnstComposerPlugin::requestAreaChange(const QString uid, const QMap<QString, QString> properties)
-{
-
-}
-
-void QnstComposerPlugin::requestPropertyAddition(const QString uid, const QString parent, const QMap<QString, QString> properties)
-{
-    Entity* entity = getProject()->getEntityById(entities.key(parent));
-
-    if (entity != NULL){
-        QMap<QString, QString> attributes;
-
-        attributes["name"] = properties["id"];
-
-        request = uid;
-
-        emit addEntity("property", entity->getUniqueId(), attributes, false);
-
-        request = "";
-    }
-}
-
-void QnstComposerPlugin::requestPropertyChange(const QString uid, const QMap<QString, QString> properties)
-{
-
-}
-
-void QnstComposerPlugin::requestConnectorAddition(const QString uid, const QString parent, const QMap<QString, QString> properties)
-{
-    requestConnectorDependence();
-
-    QList<Entity*> list = getProject()->getEntitiesbyType("connectorBase");
-
-    if (!list.isEmpty()){
-        Entity* entity = list.first();
-
-        if (entity != NULL){
-            QMap<QString, QString> attributes;
-
-            attributes["id"] = properties["id"];
-
-            request = uid;
-
-            emit addEntity("causalConnector", entity->getUniqueId(), attributes, false);
-
-            request = "";
-
-            // condition
-            QMap<QString, QString> cattributes;
-
-            cattributes["role"] = properties["condition"];
-            cattributes["max"] = "unbounded";
-
-            emit addEntity("simpleCondition", entities.key(uid), cattributes, false);
-
-            // action
-            QMap<QString, QString> aattributes;
-
-            aattributes["role"] = properties["action"].toLower();
-            aattributes["max"] = "unbounded";
-
-            emit addEntity("simpleAction", entities.key(uid), aattributes, false);
-        }
-    }
-}
-
-void QnstComposerPlugin::requestComplexConnectorAddition(const QString uid, const QString parent, const QMap<QString, QString> properties)
-{
-    requestConnectorDependence();
-
-    QList<Entity*> list = getProject()->getEntitiesbyType("connectorBase");
-
-    if (!list.isEmpty()){
-        Entity* entity = list.first();
-
-        if (entity != NULL){
-            QMap<QString, QString> attributes;
-
-            attributes["id"] = properties["id"];
-
-            request = uid;
-
-            emit addEntity("causalConnector", entity->getUniqueId(), attributes, false);
-
-            request = "";
-
-            QMap<QString, QString> fakemap;
-
-            emit addEntity("compoundCondition", entities.key(uid), fakemap,false);
-            emit addEntity("compoundAction", entities.key(uid), fakemap,false);
-
-            QString cpcUID;
-            QString cpaUID;
-
-            Entity *cmp = getProject()->getEntityById(entities.key(uid));
-            if(cmp != NULL)
-            {
-              foreach(Entity* child, cmp->getChildren())
-              {
-                if (child->getType() == "compoundCondition"){
-                    cpcUID = child->getUniqueId();
-                }
-
-                if (child->getType() == "compoundAction"){
-                    cpaUID = child->getUniqueId();
-                }
-              }
-            }
-
-            // condition
-            if (properties["condition"] != "" && cpcUID != ""){
-                QMap<QString, QString> cattributes;
-
-                cattributes["role"] = properties["condition"];
-                cattributes["max"] = "unbounded";
-
-                emit addEntity("simpleCondition", cpcUID, cattributes, false);
-            }
-
-            // condition
-            if (properties["action"] != ""  && cpaUID != ""){
-                // action
-                QMap<QString, QString> aattributes;
-
-                aattributes["role"] = properties["action"].toLower();
-                aattributes["max"] = "unbounded";
-
-                emit addEntity("simpleAction", cpaUID, aattributes, false);
-            }
-        }
-    }
-}
-
-void QnstComposerPlugin::requestConnectorDependence()
-{
-    requestConnectorBaseDependence();
-
-    QList<Entity*> list = getProject()->getEntitiesbyType("connectorBase");
-
-    if (list.isEmpty()){
-        Entity* parent = NULL;
-
-        if (!getProject()->getEntitiesbyType("head").isEmpty()){
-            parent = getProject()->getEntitiesbyType("head").first();
-        }
-
-        if (parent != NULL){
-            QMap<QString, QString> attributes;
-
-            emit addEntity("connectorBase", parent->getUniqueId(), attributes, false);
-        }
-    }
-}
-
-void QnstComposerPlugin::requestConnectorBaseDependence()
-{
-    QList<Entity*> list = getProject()->getEntitiesbyType("head");
-
-    if (list.isEmpty()){
-        Entity* parent = NULL;
-
-        if (!getProject()->getEntitiesbyType("ncl").isEmpty()){
-            parent = getProject()->getEntitiesbyType("ncl").first();
-        }
-
-        if (parent != NULL){
-            QMap<QString, QString> attributes;
-
-            emit addEntity("head", parent->getUniqueId(), attributes, false);
-        }
-    }
-}
-
-void QnstComposerPlugin::requestLinkAddition(const QString uid, const QString parent, const QMap<QString, QString> properties)
-{
-    Entity* entity = getProject()->getEntityById(entities.key(parent));
-
-    if (entity != NULL){
-        QMap<QString, QString> attributes;
-
-        attributes["id"] = properties["id"];
-        attributes["xconnector"] = properties["connector"];
-
-        request = uid;
-
-        emit addEntity("link", entity->getUniqueId(), attributes, false);
-
-        request = "";
-
-        Entity* parent = getProject()->getEntityById(entities.key(uid));
-
-        if (parent != NULL){
-            // bind condition
-            QMap<QString, QString> cattributes;
-
-            cattributes["role"] = properties["condition"];
-            cattributes["component"] = properties["componentcondition"];
-
-            request = uid;
-
-            emit addEntity("bind", parent->getUniqueId(), cattributes, false);
-
-            request = "";
-
-            // bind action
-
-            QMap<QString, QString> aattributes;
-
-            aattributes["role"] = properties["action"];
-            aattributes["component"] = properties["componentaction"];
-
-            request = uid;
-
-            emit addEntity("bind", parent->getUniqueId(), aattributes, false);
-
-            request = "";
-        }
-    }
-}
-
-void QnstComposerPlugin::requestBindAddition(const QString uid, const QString parent, const QMap<QString, QString> properties)
-{
-    // checking connector
-    QList<Entity*> connectors = getProject()->getEntitiesbyType("causalConnector");
-
-    QString connUID = "";
-
-    foreach(Entity* conn, connectors){
-        if (conn->getAttribute("id") == properties["connector"]){
-            connUID = conn->getUniqueId();
-
-            break;
-        }
-    }
-
-    QString cpcUID = "";
-    QString cpaUID = "";
-
-    if (connUID != "")
+  QList<Entity*> list = getProject()->getEntitiesbyType("ncl");
+
+  if (list.isEmpty())
+  {
+    Entity* project = getProject();
+    if (project != NULL)
     {
-      Entity *cmp = getProject()->getEntityById(connUID);
+      QMap<QString, QString> attributes;
+      emit addEntity("ncl", project->getUniqueId(), attributes, false);
+    }
+  }
+}
+
+void QnstComposerPlugin::requestConnectorAddition(const QString uid,
+                                                  const QString parent,
+                                       const QMap<QString, QString> &properties)
+{
+  requestConnectorDependence();
+
+  QList<Entity*> list = getProject()->getEntitiesbyType("connectorBase");
+
+  if (!list.isEmpty())
+  {
+    Entity* entity = list.first();
+
+    if (entity != NULL)
+    {
+      QMap<QString, QString> attributes;
+
+      attributes["id"] = properties["id"];
+
+      request = uid;
+      emit addEntity("causalConnector", entity->getUniqueId(), attributes, false);
+      request = "";
+
+      // condition
+      QMap<QString, QString> cattributes;
+      cattributes["role"] = properties["condition"];
+      cattributes["max"] = "unbounded";
+
+      emit addEntity("simpleCondition", entities.key(uid), cattributes, false);
+
+      // action
+      QMap<QString, QString> aattributes;
+      aattributes["role"] = properties["action"].toLower();
+      aattributes["max"] = "unbounded";
+
+      emit addEntity("simpleAction", entities.key(uid), aattributes, false);
+    }
+  }
+}
+
+void QnstComposerPlugin::requestComplexConnectorAddition(const QString uid,
+                                                         const QString parent,
+                                       const QMap<QString, QString> &properties)
+{
+  requestConnectorDependence();
+
+  QList<Entity*> list = getProject()->getEntitiesbyType("connectorBase");
+
+  if (!list.isEmpty())
+  {
+    Entity* entity = list.first();
+
+    if (entity != NULL)
+    {
+      QMap<QString, QString> attributes;
+
+      attributes["id"] = properties["id"];
+
+      request = uid;
+      emit addEntity("causalConnector", entity->getUniqueId(), attributes, false);
+      request = "";
+
+      QMap<QString, QString> fakemap;
+
+      emit addEntity("compoundCondition", entities.key(uid), fakemap,false);
+      emit addEntity("compoundAction", entities.key(uid), fakemap,false);
+
+      QString cpcUID;
+      QString cpaUID;
+
+      Entity *cmp = getProject()->getEntityById(entities.key(uid));
       if(cmp != NULL)
       {
         foreach(Entity* child, cmp->getChildren())
         {
-
-          if (child->getType() == "compoundCondition"){
+          if (child->getType() == "compoundCondition")
             cpcUID = child->getUniqueId();
-          }
 
-          if (child->getType() == "compoundAction"){
+          if (child->getType() == "compoundAction")
             cpaUID = child->getUniqueId();
+        }
+      }
+
+      // condition
+      if (properties["condition"] != "" && cpcUID != "")
+      {
+        QMap<QString, QString> cattributes;
+        cattributes["role"] = properties["condition"];
+        cattributes["max"] = "unbounded";
+
+        emit addEntity("simpleCondition", cpcUID, cattributes, false);
+      }
+
+      // action
+      if (properties["action"] != ""  && cpaUID != "")
+      {
+        QMap<QString, QString> aattributes;
+        aattributes["role"] = properties["action"].toLower();
+        aattributes["max"] = "unbounded";
+
+        emit addEntity("simpleAction", cpaUID, aattributes, false);
+      }
+    }
+  }
+}
+
+void QnstComposerPlugin::requestConnectorDependence()
+{
+  requestConnectorBaseDependence();
+
+  QList<Entity*> list = getProject()->getEntitiesbyType("connectorBase");
+
+  if (list.isEmpty())
+  {
+    Entity* parent = NULL;
+
+    if (!getProject()->getEntitiesbyType("head").isEmpty())
+      parent = getProject()->getEntitiesbyType("head").first();
+
+    if (parent != NULL)
+    {
+      QMap<QString, QString> attributes;
+
+      emit addEntity("connectorBase", parent->getUniqueId(), attributes, false);
+    }
+  }
+}
+
+void QnstComposerPlugin::requestConnectorBaseDependence()
+{
+  QList<Entity*> list = getProject()->getEntitiesbyType("head");
+
+  if (list.isEmpty())
+  {
+    Entity* parent = NULL;
+
+    if (!getProject()->getEntitiesbyType("ncl").isEmpty())
+      parent = getProject()->getEntitiesbyType("ncl").first();
+
+    if (parent != NULL)
+    {
+      QMap<QString, QString> attributes;
+
+      emit addEntity("head", parent->getUniqueId(), attributes, false);
+    }
+  }
+}
+
+void QnstComposerPlugin::requestBindAddition(const QString uid,
+                                             const QString parent,
+                                       const QMap<QString, QString> &properties)
+{
+  // checking connector
+  QList<Entity*> connectors = getProject()->getEntitiesbyType("causalConnector");
+
+  QString connUID = "";
+
+  foreach(Entity* conn, connectors)
+  {
+    if (conn->getAttribute("id") == properties["connector"])
+    {
+      connUID = conn->getUniqueId();
+      break;
+    }
+  }
+
+  QString cpcUID = "";
+  QString cpaUID = "";
+
+  if (connUID != "")
+  {
+    Entity *cmp = getProject()->getEntityById(connUID);
+    if(cmp != NULL)
+    {
+      foreach(Entity* child, cmp->getChildren())
+      {
+        if (child->getType() == "compoundCondition")
+          cpcUID = child->getUniqueId();
+
+        if (child->getType() == "compoundAction")
+          cpaUID = child->getUniqueId();
+      }
+    }
+  }
+
+  if (cpcUID != "" && cpaUID != "")
+  {
+    if (properties["condition"] != "")
+    {
+      bool hasCond = false;
+      Entity *cmp = getProject()->getEntityById(cpcUID);
+      if(cmp != NULL)
+      {
+        foreach(Entity* child, cmp->getChildren())
+        {
+          if (child->getAttribute("role") == properties["condition"])
+          {
+            hasCond = true;
+            break;
           }
         }
       }
-    }
 
-    if (cpcUID != "" && cpaUID != ""){
-        if (properties["condition"] != ""){
-          bool hasCond = false;
-          Entity *cmp = getProject()->getEntityById(cpcUID);
-          if(cmp != NULL)
-          {
-            foreach(Entity* child, cmp->getChildren())
-            {
-              if (child->getAttribute("role") == properties["condition"]){
-                hasCond = true;
-                break;
-              }
-            }
-          }
-
-            if (!hasCond){
-                QMap<QString, QString> cattributes;
-
-                cattributes["role"] = properties["condition"];
-
-                emit addEntity("simpleCondition", cpcUID, cattributes, false);
-            }
-        }
-
-        if (properties["action"] != ""){
-            bool hasAct = false;
-
-            Entity *cmp = getProject()->getEntityById(cpaUID);
-            if(cmp != NULL)
-            {
-              foreach(Entity* child, cmp->getChildren()){
-                if (child->getAttribute("role") == properties["action"].toLower()){
-                    hasAct = true;
-                    break;
-                }
-              }
-            }
-
-            if (!hasAct){
-                QMap<QString, QString> aattributes;
-
-                aattributes["role"] = properties["action"].toLower();
-
-                emit addEntity("simpleAction", cpaUID, aattributes, false);
-            }
-        }
-    }
-
-    //checking link
-    QList<Entity*> links = getProject()->getEntitiesbyType("link");
-
-    QString liknUID = "";
-
-    foreach(Entity* link, links){
-        if (link->getAttribute("id") == properties["link"]){
-            liknUID = link->getUniqueId();
-
-            break;
-        }
-    }
-
-    if (liknUID == ""){
-        QMap<QString, QString> linkattributes;
-
-        linkattributes["id"] = properties["link"];
-        linkattributes["xconnector"] = properties["connector"];
-
-        if (properties["linkUID"] != ""){
-            request = properties["linkUID"];
-        }else{
-            request = QUuid::createUuid().toString();
-        }
-
-        // \todo This could results in a Null pointer.
-        emit addEntity("link", getProject()->getEntityById(entities.key(parent))->getUniqueId(), linkattributes, false);
-
-        request = "";
-
-        liknUID = getUidById(linkattributes["id"]);
-    }
-
-    // add bind
-    if (properties["condition"] != ""){
-        // bind condition
+      if (!hasCond)
+      {
         QMap<QString, QString> cattributes;
 
         cattributes["role"] = properties["condition"];
-        cattributes["component"] = properties["component"];
 
-        if (properties["interface"] != ""){
-            cattributes["interface"] = properties["interface"];
-        }
-
-        request = uid;
-
-        emit addEntity("bind", liknUID, cattributes, false);
-
-        request = "";
-
-    }else if (properties["action"] != ""){
-        // bind action
-        QMap<QString, QString> aattributes;
-
-        aattributes["role"] = properties["action"].toLower();
-        aattributes["component"] = properties["component"];
-
-        if (properties["interface"] != ""){
-            aattributes["interface"] = properties["interface"];
-        }
-
-        request = uid;
-
-        emit addEntity("bind", liknUID, aattributes, false);
-
-        request = "";
+        emit addEntity("simpleCondition", cpcUID, cattributes, false);
+      }
     }
+
+    if (properties["action"] != "")
+    {
+      bool hasAct = false;
+
+      Entity *cmp = getProject()->getEntityById(cpaUID);
+      if(cmp != NULL)
+      {
+        foreach(Entity* child, cmp->getChildren())
+        {
+          if (child->getAttribute("role") == properties["action"].toLower())
+          {
+            hasAct = true;
+            break;
+          }
+        }
+      }
+
+      if (!hasAct)
+      {
+        QMap<QString, QString> aattributes;
+        aattributes["role"] = properties["action"].toLower();
+
+        emit addEntity("simpleAction", cpaUID, aattributes, false);
+      }
+    }
+  }
+
+  //checking link
+  QList<Entity*> links = getProject()->getEntitiesbyType("link");
+
+  QString liknUID = "";
+
+  foreach(Entity* link, links)
+  {
+    if (link->getAttribute("id") == properties["link"])
+    {
+      liknUID = link->getUniqueId();
+      break;
+    }
+  }
+
+  if (liknUID == "")
+  {
+    QMap<QString, QString> linkattributes;
+
+    linkattributes["id"] = properties["link"];
+    linkattributes["xconnector"] = properties["connector"];
+
+    if (properties["linkUID"] != "")
+      request = properties["linkUID"];
+    else
+      request = QUuid::createUuid().toString();
+
+    // \todo This could results in a Null pointer.
+    emit addEntity("link",
+                   getProject()->getEntityById(entities.key(parent))->getUniqueId(),
+                   linkattributes, false);
+    request = "";
+
+    liknUID = getUidById(linkattributes["id"]);
+  }
+
+  // add bind
+  if (properties["condition"] != "")
+  {
+    // bind condition
+    QMap<QString, QString> cattributes;
+
+    cattributes["role"] = properties["condition"];
+    cattributes["component"] = properties["component"];
+
+    if (properties["interface"] != "")
+      cattributes["interface"] = properties["interface"];
+
+    request = uid;
+    emit addEntity("bind", liknUID, cattributes, false);
+    request = "";
+
+  }
+  else if (properties["action"] != "")
+  {
+    // bind action
+    QMap<QString, QString> aattributes;
+
+    aattributes["role"] = properties["action"].toLower();
+    aattributes["component"] = properties["component"];
+
+    if (properties["interface"] != "")
+      aattributes["interface"] = properties["interface"];
+
+    request = uid;
+    emit addEntity("bind", liknUID, aattributes, false);
+    request = "";
+  }
 }
 
 QString QnstComposerPlugin::getUidById(QString id)
 {
-    return getUidById(id, getProject());
+  return getUidById(id, getProject());
 }
 
 QString QnstComposerPlugin::getUidById(QString id, Entity* entity)
 {
-    QString uid = "";
+  QString uid = "";
 
-    if (entity->getAttribute("id") == id){
-        return entity->getUniqueId();
+  if (entity->getAttribute("id") == id)
+    return entity->getUniqueId();
+
+  foreach(Entity* child, entity->getChildren())
+  {
+    QString result = getUidById(id, child);
+
+    if (result != "")
+    {
+      uid = result;
+      break;
     }
+  }
 
-    foreach(Entity* child, entity->getChildren()){
-        QString result = getUidById(id, child);
-
-        if (result != ""){
-            uid = result; break;
-        }
-    }
-
-    return uid;
+  return uid;
 }
 
 void QnstComposerPlugin::cacheNCLIds()
@@ -2052,7 +1938,6 @@ QString QnstComposerPlugin::getNCLIdFromEntity(Entity *entity)
   {
     if(entity->getType() == "body") // forces an ID if it not exists for body!
       nclID = insertNCLIDIfEmpty(entity);
-
 
     if(entity->hasAttribute("id"))
       nclID = entity->getAttribute("id");
@@ -2202,7 +2087,7 @@ void QnstComposerPlugin::syncNCLIdsWithStructuralIds()
 
 void QnstComposerPlugin::textualStartSync(QString, void*)
 {
-  qDebug() << "QnstComposerPlugin::textualStartSync";
+  // qDebug() << "QnstComposerPlugin::textualStartSync";
   cacheNCLIds();
   dirtyEntities.clear();
   isSyncingFromTextual = true;
@@ -2213,48 +2098,6 @@ void QnstComposerPlugin::textualFinishSync(QString, void*)
   qDebug() << "QnstComposerPlugin::textualFinishSync";
   isSyncingFromTextual = false;
   syncNCLIdsWithStructuralIds();
-}
-
-void QnstComposerPlugin::requestBindParamAddition(const QString uid, const QString parent, const QMap<QString, QString> properties)
-{
-    Entity* entity = getProject()->getEntityById(entities.key(parent));
-
-    if (entity != NULL){
-        QMap<QString, QString> attributes;
-
-        if (properties["name"] != ""){
-            attributes["name"] = properties["name"];
-        }
-
-        if (properties["value"] != ""){
-            attributes["value"] = properties["value"];
-        }
-
-        request = uid;
-
-        emit addEntity("bindParam", entity->getUniqueId(), attributes, false);
-
-        request = "";
-    }
-}
-
-void QnstComposerPlugin::requestBindParamChange(const QString uid, const QMap<QString, QString> properties)
-{
-    Entity* entity = getProject()->getEntityById(entities.key(uid));
-
-    if (entity != NULL){
-        QMap<QString, QString> attributes;
-
-        if (properties["name"] != ""){
-            attributes["name"] = properties["name"];
-        }
-
-        if (properties["value"] != ""){
-            attributes["value"] = properties["value"];
-        }
-
-        emit setAttributes(entity, attributes, false);
-    }
 }
 
 void QnstComposerPlugin::clearValidationError(QString, void *param)
@@ -2269,7 +2112,7 @@ void QnstComposerPlugin::validationError(QString pluginID, void *param)
 
   if(param)
   {
-      pair <QString, QString> *p = (pair <QString, QString> *)param;
-      view->markError(p->first);
+    pair <QString, QString> *p = (pair <QString, QString> *)param;
+    view->markError(p->first);
   }
 }

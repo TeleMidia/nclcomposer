@@ -57,6 +57,14 @@ public slots:
 
     virtual void changeSelectedEntity(QString pluginID, void* entityUID);
 
+    void clearValidationError(QString pluginID, void *param);
+
+    void validationError(QString pluginID, void *param);
+
+
+    /* From Core */
+    void requestEntitySelection(const QString uid);
+
     void requestEntityAddition(Entity* entity);
 
     void requestEntityRemotion(Entity* entity);
@@ -65,17 +73,14 @@ public slots:
 
     void requestEntitySelection(Entity* entity);
 
-    void requestEntityAddition(const QString uid, const QString parent, const QMap<QString, QString> properties);
+    /* From View */
+    void notifyEntityAddedInView (const QString uid, const QString parent,
+                                  QMap<QString, QString> properties);
 
-    void requestEntityRemotion(const QString uid);
+    void notifyEntityDeletedInView(const QString uid);
 
-    void requestEntityChange(const QString uid, const QMap<QString, QString> properties);
-
-    void requestEntitySelection(const QString uid);
-
-    void clearValidationError(QString pluginID, void *param);
-
-    void validationError(QString pluginID, void *param);
+    void notifyEntityChangedInView(const QString uid,
+                                   QMap<QString, QString> properties);
 
 private:
     QString getUidById(QString id);
@@ -86,6 +91,7 @@ private:
 
     void createConnections();
 
+    /* FROM NCL COMPOSER CORE */
     void requestImportBaseAddition(Entity* entity);
 
     void requestImportBaseChange(Entity* entity);
@@ -105,66 +111,28 @@ private:
     void requestConnectorParamAddition(Entity* entity);
 
     void requestConnectorParamChange(Entity* entity);
+    /* END FROM NCL COMPOSER CORE */
 
 
 
-    void requestBodyAddition(const QString uid, const QString parent, const QMap<QString, QString> properties);
-
-    void requestBodyChange(const QString uid, const QMap<QString, QString> properties);
-
+    /* FROM QNSTVIEW */
     void requestBodyDependence();
 
-    void requestContextAddition(const QString uid, const QString parent, const QMap<QString, QString> properties);
+    void requestConnectorAddition(const QString uid, const QString parent,
+                                  const QMap<QString, QString> &properties);
 
-    void requestContextChange(const QString uid, const QMap<QString, QString> properties);
+    void requestComplexConnectorAddition(const QString uid,
+                                         const QString parent,
+                                      const QMap<QString, QString> &properties);
 
-    void requestSwitchAddition(const QString uid, const QString parent, const QMap<QString, QString> properties);
-
-    void requestSwitchChange(const QString uid, const QMap<QString, QString> properties);
-
-    void requestSwitchPortAddition(const QString uid, const QString parent, const QMap<QString, QString> properties);
-
-    void requestSwitchPortChange(const QString uid, const QMap<QString, QString> properties);
-
-    void requestMappingAddition(const QString uid, const QString parent, const QMap<QString, QString> properties);
-
-    void requestMappingChange(const QString uid, const QMap<QString, QString> properties);
-
-    void requestMediaAddition(const QString uid, const QString parent, const QMap<QString, QString> properties);
-
-    void requestMediaChange(const QString uid, const QMap<QString, QString> properties);
-
-    void requestPortAddition(const QString uid, const QString parent, const QMap<QString, QString> properties);
-
-    void requestPortChange(const QString uid, const QMap<QString, QString> properties);
-
-    void requestAreaAddition(const QString uid, const QString parent, const QMap<QString, QString> properties);
-
-    void requestAreaChange(const QString uid, const QMap<QString, QString> properties);
-
-    void requestPropertyAddition(const QString uid, const QString parent, const QMap<QString, QString> properties);
-
-    void requestPropertyChange(const QString uid, const QMap<QString, QString> properties);
-
-    void requestConnectorAddition(const QString uid, const QString parent, const QMap<QString, QString> properties);
-
-    void requestComplexConnectorAddition(const QString uid, const QString parent, const QMap<QString, QString> properties);
-
-    void requestBindParamAddition(const QString uid, const QString parent, const QMap<QString, QString> properties);
-
-    void requestBindParamChange(const QString uid, const QMap<QString, QString> properties);
-
-    void requestConnectorParamAddition(const QString uid, const QString parent, const QMap<QString, QString> properties);
-
-    void requestConnectorParamChange(const QString uid, const QString parent, const QMap<QString, QString> properties);
+    void requestBindAddition(const QString uid, const QString parent,
+                             const QMap<QString, QString> &properties);
 
     void requestConnectorDependence();
 
     void requestConnectorBaseDependence();
+    /* END FROM QNSTVIEW */
 
-    void requestLinkAddition(const QString uid, const QString parent, const QMap<QString, QString> properties);
-
-    void requestBindAddition(const QString uid, const QString parent, const QMap<QString, QString> properties);
 
 private:
     int n;
