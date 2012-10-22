@@ -209,37 +209,19 @@ private:
 
   void changeConnectorParam(const QString uid, const QMap<QString, QString> &properties);
 
-  void requestBodyAddition(QnstGraphicsBody* entity);
-
   void requestBodyChange(QnstGraphicsBody* entity);
-
-  void requestContextAddition(QnstGraphicsContext* entity, bool undo = false);
 
   void requestContextChange(QnstGraphicsContext* entity);
 
-  void requestSwitchAddition(QnstGraphicsSwitch* entity, bool undo = false);
-
   void requestSwitchChange(QnstGraphicsSwitch* entity);
-
-  void requestMediaAddition(QnstGraphicsMedia* entity, bool undo = false);
 
   void requestMediaChange(QnstGraphicsMedia* entity);
 
-  void requestAggregatorAddition(QnstGraphicsAggregator* entity);
-
-  void requestPortAddition(QnstGraphicsPort* entity, bool undo = false);
-
   void requestPortChange(QnstGraphicsPort* entity);
-
-  void requestMappingAddition(QnstGraphicsMapping* entity, bool undo = false);
 
   void requestMappingChange(QnstGraphicsMapping* entity);
 
-  void requestSwitchPortAddition(QnstGraphicsSwitchPort* entity, bool undo = false);
-
   void requestSwitchPortChange(QnstGraphicsSwitchPort* entity);
-
-  void requestAreaAddition(QnstGraphicsArea* entity, bool undo = false);
 
   void requestAreaChange(QnstGraphicsArea* entity);
 

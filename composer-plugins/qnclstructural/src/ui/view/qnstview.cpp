@@ -593,7 +593,10 @@ QString QnstView::serialize()
     e.setAttribute("id", link->getnstId());
     e.setAttribute("uid", link->getnstUid());
 
-    e.setAttribute("parent", link->getnstParent()->getnstUid());
+    // \fixme Be careful, there are cases where even with no body element the
+    // links map is not empty!
+    if(link->getnstParent() != NULL)
+      e.setAttribute("parent", link->getnstParent()->getnstUid());
 
     e.setAttribute("xconnetor", link->getxConnector());
     e.setAttribute("xconnetorUID", link->getxConnectorUID());
@@ -2821,25 +2824,84 @@ void QnstView::requestEntityAddition(QnstGraphicsEntity* entity, bool undo)
 {
   qDebug() << "[QNST]" << ":" << "Requesting entity addition '"+entity->getnstUid()+"'";
 
+  QMap<QString, QString> properties;
+  QMap <QString, QString> additionalData;
+  bool ok = false;
+
   if (entity != NULL)
   {
     entities[entity->getnstUid()] = entity;
 
+    // Loading additional data
+    additionalData = entity->getUsrData();
+    foreach(QString key, additionalData.keys())
+    {
+      if(!properties.contains(key))
+        properties.insert(key, additionalData.value(key));
+    }
+    //end loading additional data
+
     switch(entity->getnstType())
     {
       case Qnst::Body:
-          if (undo){  scene->addRoot(entity); }
+      {
+        if (undo){  scene->addRoot(entity); }
 
-          requestBodyAddition((QnstGraphicsBody*) entity);
-          break;
+        properties["TYPE"] = "body";
+
+        properties["id"] = entity->getnstId();
+
+        properties["top"] = QString::number(entity->getTop());
+        properties["left"] = QString::number(entity->getLeft());
+        properties["width"] = QString::number(entity->getWidth());
+        properties["heigh"] = QString::number(entity->getHeight());
+        properties["zindex"] = QString::number(entity->getzIndex());
+
+        ok = true;
+        break;
+      }
 
       case Qnst::Context:
-          requestContextAddition((QnstGraphicsContext*) entity, undo);
-          break;
+      {
+        if (entity->getnstId() == "" && !undo)
+          updateEntityWithUniqueNstId(entity);
+
+        properties["TYPE"] = "context";
+
+        properties["id"] = entity->getnstId();
+
+        properties["refer"] = "";
+
+        properties["top"] = QString::number(entity->getTop());
+        properties["left"] = QString::number(entity->getLeft());
+        properties["width"] = QString::number(entity->getWidth());
+        properties["heigh"] = QString::number(entity->getHeight());
+        properties["zindex"] = QString::number(entity->getzIndex());
+
+        ok = true;
+        break;
+      }
 
       case Qnst::Switch:
-          requestSwitchAddition((QnstGraphicsSwitch*) entity, undo);
-          break;
+      {
+        if (entity->getnstId() == "" && !undo)
+          updateEntityWithUniqueNstId(entity);
+
+        properties["TYPE"] = "switch";
+
+        properties["id"] = entity->getnstId();
+
+        properties["refer"] = "";
+
+        properties["top"] = QString::number(entity->getTop());
+        properties["left"] = QString::number(entity->getLeft());
+        properties["width"] = QString::number(entity->getWidth());
+        properties["heigh"] = QString::number(entity->getHeight());
+        properties["zindex"] = QString::number(entity->getzIndex());
+
+        ok = true;
+        break;
+      }
 
       // if the entity type is MEDIA
       case Qnst::Audio:
@@ -2851,34 +2913,150 @@ void QnstView::requestEntityAddition(QnstGraphicsEntity* entity, bool undo)
       case Qnst::Html:
       case Qnst::NCL:
       case Qnst::Media:
-          requestMediaAddition((QnstGraphicsMedia*) entity, undo);
-          break;
+      {
+        if (entity->getnstId() == "" && !undo)
+          updateEntityWithUniqueNstId(entity);
+        QnstGraphicsMedia *media = dynamic_cast<QnstGraphicsMedia *>(entity);
+
+        if(media)
+        {
+          properties["TYPE"] = "media";
+
+          properties["id"] = media->getnstId();
+          properties["src"] = media->getSource();
+          properties["refer"] = media->getRefer();
+          properties["instance"] = media->getInstance();
+
+          media->updateToolTip();
+
+          ok = true;
+        }
+        break;
+      }
 
       case Qnst::Port:
-          requestPortAddition((QnstGraphicsPort*) entity, undo);
-          break;
+      {
+        if (entity->getnstId() == "" && !undo)
+          updateEntityWithUniqueNstId(entity);
+
+        QnstGraphicsPort *port = dynamic_cast <QnstGraphicsPort *> (entity);
+
+        properties["TYPE"] = "port";
+        properties["id"] = entity->getnstId();
+
+        if(port)
+        {
+          foreach(QnstGraphicsEdge* edge, port->getnstGraphicsEdges())
+          {
+            if (edge->getnstType() == Qnst::Reference)
+            {
+              properties["COMPONENT"] = edge->getEntityA()->getnstUid();
+              properties["component"] = edge->getEntityA()->getnstId();
+
+              if (edge->getEntityB()->getnstType() == Qnst::Port ||
+                  edge->getEntityB()->getnstType() == Qnst::Property ||
+                  edge->getEntityB()->getnstType() == Qnst::Area)
+              {
+                properties["INTERFACE"] = edge->getEntityB()->getnstUid();;
+                properties["interface"] = edge->getEntityB()->getnstId();;
+              }
+            }
+          }
+
+          ok = true;
+        }
+        break;
+      }
 
       case Qnst::Area:
-          requestAreaAddition((QnstGraphicsArea*) entity, undo);
-          break;
+      {
+        if (entity->getnstId() == "" && !undo)
+          updateEntityWithUniqueNstId(entity);
+
+        properties["TYPE"] = "area";
+
+        properties["id"] = entity->getnstId();
+
+        QnstGraphicsMedia *media = dynamic_cast <QnstGraphicsMedia *> (entity);
+        adjustMedia((QnstGraphicsMedia*) entity->getnstGraphicsParent());
+
+        foreach (QString key,
+                 refers.keys(entity->getnstGraphicsParent()->getnstUid()))
+        {
+          if (entities.contains(key))
+          {
+            if (entities[key]->isMedia())
+              adjustMedia((QnstGraphicsMedia*) entities[key]);
+          }
+        }
+
+        ok = true;
+        break;
+      }
 
       case Qnst::Property:
-          requestPropertyAddition((QnstGraphicsProperty*) entity);
-          break;
+      {
+        properties["TYPE"] = "property";
+
+        if(entity->getnstGraphicsParent()->isMedia())
+        {
+          QnstGraphicsMedia *media =
+            dynamic_cast <QnstGraphicsMedia *>(entity->getnstGraphicsParent());
+
+          if(media != NULL)
+            adjustMedia(media);
+        }
+
+        foreach (QString key,
+                 refers.keys(entity->getnstGraphicsParent()->getnstUid()))
+        {
+          if (entities.contains(key))
+          {
+            if (entities[key]->isMedia())
+              adjustMedia((QnstGraphicsMedia*) entities[key]);
+          }
+        }
+
+        ok = true;
+        break;
+      }
 
       case Qnst::Aggregator:
-          requestAggregatorAddition((QnstGraphicsAggregator*) entity);
-          break;
+      {
+        entities[entity->getnstUid()] = entity;
+        break;
+      }
 
       case Qnst::SwitchPort:
-          requestSwitchPortAddition((QnstGraphicsSwitchPort*) entity);
-          break;
+      {
+        if (entity->getnstId() == "" && !undo)
+          updateEntityWithUniqueNstId(entity);
+
+        properties["TYPE"] = "switchPort";
+        properties["id"] = entity->getnstId();
+
+        ok = true;
+        break;
+      }
 
       default:
         // do nothing
         break;
     }
 
+    if(ok)
+    {
+      if(entity->getnstType() == Qnst::Body)
+      {
+        emit entityAdded(entity->getnstUid(), "", properties);
+      }
+      else
+      {
+        emit entityAdded(entity->getnstUid(),
+                         entity->getnstGraphicsParent()->getnstUid(),
+                         properties);
+      }
+    }
     if (!undo)
     {
       QnstAddCommand* cmd = new QnstAddCommand(this, entity);
@@ -3270,30 +3448,6 @@ void QnstView::requestEntitySelection(QnstGraphicsEntity* entity)
   }
 }
 
-void QnstView::requestBodyAddition(QnstGraphicsBody* entity)
-{
-  QMap<QString, QString> properties;
-
-  properties["TYPE"] = "body";
-
-  properties["id"] = entity->getnstId();
-
-  properties["top"] = QString::number(entity->getTop());
-  properties["left"] = QString::number(entity->getLeft());
-  properties["width"] = QString::number(entity->getWidth());
-  properties["heigh"] = QString::number(entity->getHeight());
-  properties["zindex"] = QString::number(entity->getzIndex());
-
-  QMap <QString, QString> additionalData = entity->getUsrData();
-  foreach(QString key, additionalData.keys())
-  {
-    if(!properties.contains(key))
-      properties.insert(key, additionalData.value(key));
-  }
-
-  emit entityAdded(entity->getnstUid(), "", properties);
-}
-
 void QnstView::requestBodyChange(QnstGraphicsBody* entity)
 {
   QMap<QString, QString> properties;
@@ -3316,35 +3470,6 @@ void QnstView::requestBodyChange(QnstGraphicsBody* entity)
   }
 
   emit entityChanged(entity->getnstUid(), properties);
-}
-
-void QnstView::requestContextAddition(QnstGraphicsContext* entity, bool undo)
-{
-  if (entity->getnstId() == "" && !undo)
-    updateEntityWithUniqueNstId(entity);
-
-  QMap<QString, QString> properties;
-
-  properties["TYPE"] = "context";
-
-  properties["id"] = entity->getnstId();
-
-  properties["refer"] = "";
-
-  properties["top"] = QString::number(entity->getTop());
-  properties["left"] = QString::number(entity->getLeft());
-  properties["width"] = QString::number(entity->getWidth());
-  properties["heigh"] = QString::number(entity->getHeight());
-  properties["zindex"] = QString::number(entity->getzIndex());
-
-  QMap <QString, QString> additionalData = entity->getUsrData();
-  foreach(QString key, additionalData.keys())
-  {
-    if(!properties.contains(key))
-      properties.insert(key, additionalData.value(key));
-  }
-
-  emit entityAdded(entity->getnstUid(), entity->getnstGraphicsParent()->getnstUid(), properties);
 }
 
 void QnstView::requestContextChange(QnstGraphicsContext* entity)
@@ -3371,37 +3496,6 @@ void QnstView::requestContextChange(QnstGraphicsContext* entity)
   }
 
   emit entityChanged(entity->getnstUid(), properties);
-  }
-
-void QnstView::requestSwitchAddition(QnstGraphicsSwitch* entity, bool undo)
-{
-  if (entity->getnstId() == "" && !undo)
-    updateEntityWithUniqueNstId(entity);
-
-  QMap<QString, QString> properties;
-
-  properties["TYPE"] = "switch";
-
-  properties["id"] = entity->getnstId();
-
-  properties["refer"] = "";
-
-  properties["top"] = QString::number(entity->getTop());
-  properties["left"] = QString::number(entity->getLeft());
-  properties["width"] = QString::number(entity->getWidth());
-  properties["heigh"] = QString::number(entity->getHeight());
-  properties["zindex"] = QString::number(entity->getzIndex());
-
-  QMap <QString, QString> additionalData = entity->getUsrData();
-  foreach(QString key, additionalData.keys())
-  {
-    if(!properties.contains(key))
-      properties.insert(key, additionalData.value(key));
-  }
-
-  emit entityAdded(entity->getnstUid(),
-                   entity->getnstGraphicsParent()->getnstUid(),
-                   properties);
 }
 
 void QnstView::requestSwitchChange(QnstGraphicsSwitch* entity)
@@ -3430,33 +3524,6 @@ void QnstView::requestSwitchChange(QnstGraphicsSwitch* entity)
   emit entityChanged(entity->getnstUid(), properties);
 }
 
-void QnstView::requestMediaAddition(QnstGraphicsMedia* entity, bool undo)
-{
-  if (entity->getnstId() == "" && !undo)
-    updateEntityWithUniqueNstId(entity);
-
-  QMap<QString, QString> properties;
-  properties["TYPE"] = "media";
-
-  properties["id"] = entity->getnstId();
-
-  properties["src"] = entity->getSource();
-  properties["refer"] = entity->getRefer();
-  properties["instance"] = entity->getInstance();
-
-  entity->updateToolTip();
-
-  QMap <QString, QString> additionalData = entity->getUsrData();
-  foreach(QString key, additionalData.keys())
-  {
-    properties.insert(key, additionalData.value(key));
-  }
-
-  emit entityAdded(entity->getnstUid(),
-                   entity->getnstGraphicsParent()->getnstUid(),
-                   properties);
-}
-
 void QnstView::requestMediaChange(QnstGraphicsMedia* entity)
 {
   QMap<QString, QString> properties;
@@ -3474,51 +3541,6 @@ void QnstView::requestMediaChange(QnstGraphicsMedia* entity)
   }
 
   emit entityChanged(entity->getnstUid(), properties);
-}
-
-void QnstView::requestAggregatorAddition(QnstGraphicsAggregator* entity)
-{
-  entities[entity->getnstUid()] = entity;
-}
-
-void QnstView::requestPortAddition(QnstGraphicsPort* entity, bool undo)
-{
-  if (entity->getnstId() == "" && !undo)
-    updateEntityWithUniqueNstId(entity);
-
-  QMap<QString, QString> properties;
-
-  properties["TYPE"] = "port";
-
-  properties["id"] = entity->getnstId();
-
-  foreach(QnstGraphicsEdge* edge, entity->getnstGraphicsEdges())
-  {
-    if (edge->getnstType() == Qnst::Reference)
-    {
-      properties["COMPONENT"] = edge->getEntityA()->getnstUid();
-      properties["component"] = edge->getEntityA()->getnstId();
-
-      if (edge->getEntityB()->getnstType() == Qnst::Port ||
-          edge->getEntityB()->getnstType() == Qnst::Property ||
-          edge->getEntityB()->getnstType() == Qnst::Area)
-      {
-        properties["INTERFACE"] = edge->getEntityB()->getnstUid();;
-        properties["interface"] = edge->getEntityB()->getnstId();;
-      }
-    }
-  }
-
-  QMap <QString, QString> additionalData = entity->getUsrData();
-  foreach(QString key, additionalData.keys())
-  {
-    if(!properties.contains(key))
-      properties.insert(key, additionalData.value(key));
-  }
-
-  emit entityAdded(entity->getnstUid(),
-                   entity->getnstGraphicsParent()->getnstUid(),
-                   properties);
 }
 
 void QnstView::requestPortChange(QnstGraphicsPort* entity)
@@ -3567,36 +3589,9 @@ void QnstView::requestPortChange(QnstGraphicsPort* entity)
   emit entityChanged(entity->getnstUid(), properties);
 }
 
-void QnstView::requestMappingAddition(QnstGraphicsMapping* entity, bool undo)
-{
-
-}
-
 void QnstView::requestMappingChange(QnstGraphicsMapping* entity)
 {
 
-}
-
-void QnstView::requestSwitchPortAddition(QnstGraphicsSwitchPort* entity, bool undo)
-{
-  if (entity->getnstId() == "" && !undo)
-    updateEntityWithUniqueNstId(entity);
-
-  QMap<QString, QString> properties;
-
-  properties["TYPE"] = "switchPort";
-
-  properties["id"] = entity->getnstId();
-
-  QMap <QString, QString> additionalData = entity->getUsrData();
-  foreach(QString key, additionalData.keys())
-  {
-    if(!properties.contains(key))
-      properties.insert(key, additionalData.value(key));
-  }
-
-  emit entityAdded(entity->getnstUid(),
-                   entity->getnstGraphicsParent()->getnstUid(), properties);
 }
 
 void QnstView::requestSwitchPortChange(QnstGraphicsSwitchPort* entity)
@@ -3617,78 +3612,9 @@ void QnstView::requestSwitchPortChange(QnstGraphicsSwitchPort* entity)
   emit entityChanged(entity->getnstUid(), properties);
 }
 
-void QnstView::requestAreaAddition(QnstGraphicsArea* entity, bool undo)
-{
-  if (entity->getnstId() == "" && !undo)
-    updateEntityWithUniqueNstId(entity);
-
-  QMap<QString, QString> properties;
-
-  properties["TYPE"] = "area";
-
-  properties["id"] = entity->getnstId();
-
-  adjustMedia((QnstGraphicsMedia*) entity->getnstGraphicsParent());
-
-  foreach (QString key,
-           refers.keys(entity->getnstGraphicsParent()->getnstUid()))
-  {
-    if (entities.contains(key))
-    {
-      if (entities[key]->isMedia())
-        adjustMedia((QnstGraphicsMedia*) entities[key]);
-    }
-  }
-
-  QMap <QString, QString> additionalData = entity->getUsrData();
-  foreach(QString key, additionalData.keys())
-  {
-    if(!properties.contains(key))
-      properties.insert(key, additionalData.value(key));
-  }
-
-  emit entityAdded(entity->getnstUid(), entity->getnstGraphicsParent()->getnstUid(), properties);
-}
-
 void QnstView::requestAreaChange(QnstGraphicsArea* entity)
 {
     // TODO
-}
-
-void QnstView::requestPropertyAddition(QnstGraphicsProperty* entity)
-{
-  QMap<QString, QString> properties;
-
-  properties["TYPE"] = "property";
-
-  if(entity->getnstGraphicsParent()->isMedia())
-  {
-    QnstGraphicsMedia *media =
-      dynamic_cast <QnstGraphicsMedia *>(entity->getnstGraphicsParent());
-
-    if(media != NULL)
-      adjustMedia(media);
-  }
-
-  foreach (QString key,
-           refers.keys(entity->getnstGraphicsParent()->getnstUid()))
-  {
-    if (entities.contains(key))
-    {
-      if (entities[key]->isMedia())
-        adjustMedia((QnstGraphicsMedia*) entities[key]);
-    }
-  }
-
-  QMap <QString, QString> additionalData = entity->getUsrData();
-  foreach(QString key, additionalData.keys())
-  {
-    if(!properties.contains(key))
-      properties.insert(key, additionalData.value(key));
-  }
-
-  emit entityAdded(entity->getnstUid(),
-                   entity->getnstGraphicsParent()->getnstUid(), properties);
 }
 
 void QnstView::requestPropertyChange(QnstGraphicsProperty* entity)
