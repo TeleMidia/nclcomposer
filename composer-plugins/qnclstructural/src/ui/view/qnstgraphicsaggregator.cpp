@@ -75,7 +75,8 @@ void QnstGraphicsAggregator::draw(QPainter* painter)
     painter->setPen(QPen(QBrush(Qt::black), 0)); // 0px = cosmetic border
 
     painter->setRenderHint(QPainter::Antialiasing,false);
-    painter->drawRect(getMoveLeft()+4-getLeft(), getMoveTop()+4-getTop(), getWidth()-1, getHeight()-1);
+    painter->drawRect(getMoveLeft()+4-getLeft(), getMoveTop()+4-getTop(),
+                      getWidth()-1, getHeight()-1);
   }
 }
 

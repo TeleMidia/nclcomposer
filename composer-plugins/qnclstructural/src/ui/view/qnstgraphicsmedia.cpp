@@ -71,32 +71,43 @@ void QnstGraphicsMedia::updateToolTip()
     QString tip = "";
     QString name = (getnstId() != "" ? getnstId() : "?");
 
-    if (getnstType() == Qnst::Image){
+    switch(getnstType())
+    {
+      case Qnst::Image:
         tip += "Image ("+name+")";
+        break;
 
-    }else if (getnstType() == Qnst::Audio){
+      case Qnst::Audio:
         tip += "Audio ("+name+")";
+        break;
 
-    }else if (getnstType() == Qnst::Text){
+      case Qnst::Text:
         tip += "Text ("+name+")";
+        break;
 
-    }else if (getnstType() == Qnst::Video){
+      case Qnst::Video:
         tip += "Video ("+name+")";
+        break;
 
-    }else if (getnstType() == Qnst::NCLua){
-        tip += "Script ("+name+")";
+      case Qnst::NCLua:
+        tip += "NCLua ("+name+")";
+        break;
 
-    }else if (getnstType() == Qnst::Html){
-        tip += "Html ("+name+")";
+      case Qnst::Html:
+        tip += "HTML ("+name+")";
+        break;
 
-    }else if (getnstType() == Qnst::NCL){
+      case Qnst::NCL:
         tip += "NCL ("+name+")";
+        break;
 
-    }else if (getnstType() == Qnst::Settings){
+      case Qnst::Settings:
         tip += "Settings ("+name+")";
+        break;
 
-    }else{
+      default:
         tip += "Media ("+name+")";
+        break;
     }
 
     if (getSource() == "" && getRefer() == ""){
