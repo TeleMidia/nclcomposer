@@ -1,7 +1,6 @@
 #ifndef QNSTGRAPHICSAGGREGATOR_H
 #define QNSTGRAPHICSAGGREGATOR_H
 
-
 #include "qnstgraphicsnode.h"
 
 class QnstGraphicsAggregator : public QnstGraphicsNode

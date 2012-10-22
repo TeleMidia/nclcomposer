@@ -32,10 +32,9 @@ public:
 
   bool isCondition() const;
 
-
   void adjust();
 
-  // This two functions must be merged
+  // \todo This two functions must be merged
   void adjust_action();
   void adjust_condition();
 
@@ -63,13 +62,13 @@ signals:
 protected:
   virtual void draw(QPainter* painter);
 
-  // this two functions must be merged
+  // \todo this two functions must be merged
   virtual void draw_action(QPainter* painter);
   virtual void draw_condition(QPainter* painter);
 
   virtual void delineate(QPainterPath* painter) const;
 
-  // this two functions must be merged
+  // \todo this two functions must be merged
   virtual void delineate_action(QPainterPath* painter) const;
   virtual void delineate_condition(QPainterPath* painter) const;
 

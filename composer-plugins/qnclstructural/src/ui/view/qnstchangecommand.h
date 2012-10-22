@@ -12,7 +12,8 @@ class QnstView;
 class QnstChangeCommand : public QUndoCommand
 {
 public:
-    QnstChangeCommand(QnstView* view, QString uid, QMap<QString,QString> properties);
+    QnstChangeCommand(QnstView* view, QString uid,
+                      const QMap<QString,QString> &properties);
 
     ~QnstChangeCommand();
 
