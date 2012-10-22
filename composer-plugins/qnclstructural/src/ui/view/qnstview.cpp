@@ -4181,7 +4181,10 @@ void QnstView::mouseReleaseEvent(QMouseEvent* event)
 
     if (link != NULL)
     {
-      scene->removeItem(link); scene->update(); delete link; link = NULL;
+      scene->removeItem(link);
+      scene->update();
+
+      delete link; link = NULL;
     }
 
     linking = false;
@@ -4199,496 +4202,421 @@ void QnstView::mouseReleaseEvent(QMouseEvent* event)
 
 void QnstView::addNodetoNodeEdge(QnstGraphicsEntity* entitya, QnstGraphicsEntity* entityb)
 {
-    QnstGraphicsEntity* parenta = entitya->getnstGraphicsParent();
-    QnstGraphicsEntity* parentb = entityb->getnstGraphicsParent();
+  QnstGraphicsEntity* parenta = entitya->getnstGraphicsParent();
+  QnstGraphicsEntity* parentb = entityb->getnstGraphicsParent();
 
-    if (parenta != NULL && parentb != NULL){
-        if (parenta == parentb){
-            qDebug() << "NODE to NODE:" << entitya->getnstUid() << "->" << entityb->getnstUid();
+  if (parenta != NULL && parentb != NULL){
+    if (parenta == parentb){
 
-            if (entitya->getnstType() == Qnst::Aggregator){
-                actionDialog->init(connectors, links[entitya->getnstUid()]);
+      // if start node is an aggregator
+      if (entitya->getnstType() == Qnst::Aggregator){
+        actionDialog->init(connectors, links[entitya->getnstUid()]);
 
-                if (actionDialog->exec()){
-                    QString link = actionDialog->form.cbLink->currentText();
-                    QString act = actionDialog->form.cbAction->currentText();
+        if (actionDialog->exec()){
+          QString link = actionDialog->form.cbLink->currentText();
+          QString act = actionDialog->form.cbAction->currentText();
 
-                    QnstGraphicsBind* entity = new QnstGraphicsBind();
-                    entity->setAction(Qnst::NoBindType);
-                    entity->setnstGraphicsParent(parenta);
-                    entity->setEntityA(entitya);
-                    entity->setEntityB(entityb);
+          QnstGraphicsBind* entity = new QnstGraphicsBind();
+          entity->setnstGraphicsParent(parenta);
+          entity->setEntityA(entitya);
+          entity->setEntityB(entityb);
 
-                    // adjusting angle
-                    adjustAngle(entity, entitya, entityb);
+          // adjusting angle
+          adjustAngle(entity, entitya, entityb);
 
-                    entity->adjust();
+          entity->adjust();
 
-                    parenta->addnstGraphicsEntity(entity);
+          parenta->addnstGraphicsEntity(entity);
 
-                    ((QnstGraphicsInterface*) entitya)->addnstGraphicsEdge(entity);
-                    ((QnstGraphicsInterface*) entityb)->addnstGraphicsEdge(entity);
+          ((QnstGraphicsNode*) entitya)->addnstGraphicsEdge(entity);
+          ((QnstGraphicsNode*) entityb)->addnstGraphicsEdge(entity);
 
-                    //set action
-                    entity->setAction(QnstUtil::getBindTypeFromStr(act));
+          //set action
+          entity->setAction(QnstUtil::getBindTypeFromStr(act));
 
-                    /////
-                    connect(entity,
-                            SIGNAL(bindParamAdded(QString,QString,QMap<QString, QString>)),
-                            SLOT(requestBindParamAdjust(QString,QString,QMap<QString, QString>)));
+          /////
+          connect(entity,
+                  SIGNAL(bindParamAdded(QString,QString,QMap<QString, QString>)),
+                  SLOT(requestBindParamAdjust(QString,QString,QMap<QString, QString>)));
 
-                    connect(entity,
-                            SIGNAL(bindParamUpdated(QString,QMap<QString,QString>,QMap<QString,QString>)),
-                            SLOT(updateBindParams(QString,QMap<QString,QString>,QMap<QString,QString>)));
-                    /////
+          connect(entity,
+                  SIGNAL(bindParamUpdated(QString,QMap<QString,QString>,QMap<QString,QString>)),
+                  SLOT(updateBindParams(QString,QMap<QString,QString>,QMap<QString,QString>)));
 
-                    ///// connector
+          // creating connector
+          QString connName;
 
-                    QString connName = actionDialog->form.cbConnector->currentText();;
+          if (actionDialog->form.cbConnector->currentText() == "New...")
+            connName = createNewConnector("", act);
+          else
+            connName = actionDialog->form.cbConnector->currentText();
 
-                    if (actionDialog->form.cbConnector->currentText() == "New..."){
-                        QnstConnector* conn = new QnstConnector();
-                        conn->setName("newConnector"+QString::number(connectors.size()));
-                        conn->addCondition("onBegin", "onBegin");
-                        conn->addCondition("onEnd", "onEnd");
-                        conn->addCondition("onSelection", "onSelection");
-                        conn->addCondition("onResume", "onResume");
-                        conn->addCondition("onPause", "onPause");
+          // associating connector to bind
+          entity->setConn(connectors[connName]);
 
-                        conn->addAction("start", "start");
-                        conn->addAction("stop", "stop");
-                        conn->addAction("resume", "resume");
-                        conn->addAction("pause", "pause");
-                        conn->addAction("set", "set");
+          ///// link
 
-                        connectors[conn->getName()] = conn;
-                        connectors2[conn->getnstUid()] = conn;
+          QMap<QString, QString> properties;
 
-                        QMap<QString, QString> properties;
+          properties["TYPE"] = "bind";
 
-                        properties["TYPE"] = "complex-connector";
+          QnstLink* lo;
 
-                        properties["id"] = conn->getName();
-                        properties["action"] = act;
+          if (link == "New...")
+          {
+            properties["link"] = "link"+QString::number(++nlink);
 
-                        connName = conn->getName();
+            lo = new QnstLink();
+            lo->setnstParent(entitya->getnstGraphicsParent());
+            lo->setnstId(properties["link"]);
+            lo->setnstUid(entitya->getnstUid());
+            lo->setxConnector(connName);
+            lo->setxConnectorUID(connectors[connName]->getnstUid());
+            lo->setAggregatorUID(entitya->getnstUid());
 
-                        emit entityAdded(conn->getnstUid(), "", properties);
-                    }
+            links[lo->getnstUid()] = lo;
 
-                    // associating connector to bind
-                    entity->setConn(connectors[connName]);
+          }else{
+            properties["link"] = link;
 
-                    ///// link
+            lo = links[entitya->getnstUid()];
+          }
 
-                    QMap<QString, QString> properties;
+          properties["linkUID"] = entitya->getnstUid();
 
-                    properties["TYPE"] = "bind";
+          properties["connector"] = connName;
 
-                    QnstLink* lo;
+          properties["action"] = act;
 
-                    if (link == "New...")
-                    {
-                        properties["link"] = "link"+QString::number(++nlink);
+          properties["component"] = entityb->getnstId();
 
-                        lo = new QnstLink();
-                        lo->setnstParent(entitya->getnstGraphicsParent());
-                        lo->setnstId(properties["link"]);
-                        lo->setnstUid(entitya->getnstUid());
-                        lo->setxConnector(connName);
-                        lo->setxConnectorUID(connectors[connName]->getnstUid());
-                        lo->setAggregatorUID(entitya->getnstUid());
+          properties["role"] = act;
 
-                        links[lo->getnstUid()] = lo;
+          QnstBind* bo = new QnstBind();
+          bo->setnstParent(lo);
+          bo->setnstUid(entity->getnstUid());
+          bo->setRole(properties["action"]);
+          bo->setComponent(properties["component"]);
+          bo->setComponentUid(entityb->getnstUid());
 
-                    }else{
-                        properties["link"] = link;
+          lo->addAction(bo);
 
-                        lo = links[entitya->getnstUid()];
-                    }
+          binds[bo->getnstUid()] = bo;
+          brelations[bo->getnstUid()] = entity->getnstUid();
 
-                    properties["linkUID"] = entitya->getnstUid();
+          link2conn[properties["link"]] = connName;
 
-                    properties["connector"] = connName;
+          entities[entity->getnstUid()] = entity;
 
-                    properties["action"] = act;
+          emit entityAdded(entity->getnstUid(), parenta->getnstUid(), properties);
+        }
 
-                    properties["component"] = entityb->getnstId();
+      }else if (entityb->getnstType() == Qnst::Aggregator){
+        conditionDialog->init(connectors, links[entityb->getnstUid()]);
 
-                    properties["role"] = act;
+        if (conditionDialog->exec()){
+          QString conn = conditionDialog->form.cbConnector->currentText();
+          QString link = conditionDialog->form.cbLink->currentText();
+          QString cond = conditionDialog->form.cbCondition->currentText();
 
-                    QnstBind* bo = new QnstBind();
-                    bo->setnstParent(lo);
-                    bo->setnstUid(entity->getnstUid());
-                    bo->setRole(properties["action"]);
-                    bo->setComponent(properties["component"]);
-                    bo->setComponentUid(entityb->getnstUid());
+          QnstGraphicsBind* entity = new QnstGraphicsBind();
+          entity->setCondition(Qnst::NoBindType);
+          entity->setnstGraphicsParent(parenta);
+          entity->setEntityA(entitya);
+          entity->setEntityB(entityb);
 
-                    lo->addAction(bo);
+          // adjusting angle
+          adjustAngle(entity, entitya, entityb);
 
-                    binds[bo->getnstUid()] = bo;
-                    brelations[bo->getnstUid()] = entity->getnstUid();
+          entity->adjust();
 
-                    link2conn[properties["link"]] = connName;
+          parenta->addnstGraphicsEntity(entity);
 
-                    entities[entity->getnstUid()] = entity;
+          ((QnstGraphicsInterface*) entitya)->addnstGraphicsEdge(entity);
+          ((QnstGraphicsInterface*) entityb)->addnstGraphicsEdge(entity);
 
-                    emit entityAdded(entity->getnstUid(), parenta->getnstUid(), properties);
-                }
+          // set Condition type
+          entity->setCondition(QnstUtil::getBindTypeFromStr(cond));
 
-            }else if (entityb->getnstType() == Qnst::Aggregator){
-                conditionDialog->init(connectors, links[entityb->getnstUid()]);
+          /////
+          connect(entity,
+                  SIGNAL(bindParamAdded(QString,QString,QMap<QString, QString>)),
+                  SLOT(requestBindParamAdjust(QString,QString,QMap<QString, QString>)));
 
-                if (conditionDialog->exec()){
-                    QString conn = conditionDialog->form.cbConnector->currentText();
-                    QString link = conditionDialog->form.cbLink->currentText();
-                    QString cond = conditionDialog->form.cbCondition->currentText();
+          connect(entity,
+                  SIGNAL(bindParamUpdated(QString,QMap<QString,QString>,QMap<QString,QString>)),
+                  SLOT(updateBindParams(QString,QMap<QString,QString>,QMap<QString,QString>)));
+          /////
 
-                    QnstGraphicsBind* entity = new QnstGraphicsBind();
-                    entity->setCondition(Qnst::NoBindType);
-                    entity->setnstGraphicsParent(parenta);
-                    entity->setEntityA(entitya);
-                    entity->setEntityB(entityb);
+          // creating connector
+          QString connName;
 
-                    // adjusting angle
-                    adjustAngle(entity, entitya, entityb);
+          if (conditionDialog->form.cbConnector->currentText() == "New...")
+            connName = createNewConnector(cond, "");
+          else
+            connName = conditionDialog->form.cbConnector->currentText();
 
-                    entity->adjust();
+          // associating connector to bind
+          entity->setConn(connectors[connName]);
 
-                    parenta->addnstGraphicsEntity(entity);
+          ///// link
 
-                    ((QnstGraphicsInterface*) entitya)->addnstGraphicsEdge(entity);
-                    ((QnstGraphicsInterface*) entityb)->addnstGraphicsEdge(entity);
+          QMap<QString, QString> properties;
 
-                    // set Condition type
-                    entity->setCondition(QnstUtil::getBindTypeFromStr(cond));
+          properties["TYPE"] = "bind";
 
-                    /////
-                    connect(entity,
-                            SIGNAL(bindParamAdded(QString,QString,QMap<QString, QString>)),
-                            SLOT(requestBindParamAdjust(QString,QString,QMap<QString, QString>)));
+          QnstLink* lo;
 
-                    connect(entity,
-                            SIGNAL(bindParamUpdated(QString,QMap<QString,QString>,QMap<QString,QString>)),
-                            SLOT(updateBindParams(QString,QMap<QString,QString>,QMap<QString,QString>)));
-                    /////
+          if (link == "New..."){
+            properties["link"] = "link"+QString::number(++nlink);
 
-                    ///// connector
 
-                    QString connName = conditionDialog->form.cbConnector->currentText();;
+            lo = new QnstLink();
+            lo->setnstParent(entityb->getnstGraphicsParent());
+            lo->setnstId(properties["link"]);
+            lo->setnstUid(entityb->getnstUid());
+            lo->setxConnector(connName);
+            lo->setxConnectorUID(connectors[connName]->getnstUid());
+            lo->setAggregatorUID(entityb->getnstUid());
 
-                    if (conditionDialog->form.cbConnector->currentText() == "New..."){
-                        QnstConnector* conn = new QnstConnector();
-                        conn->setName("newConnector"+QString::number(connectors.size()));
+            links[lo->getnstUid()] = lo;
 
-                        conn->addCondition("onBegin", "onBegin");
-                        conn->addCondition("onEnd", "onEnd");
-                        conn->addCondition("onSelection", "onSelection");
-                        conn->addCondition("onResume", "onResume");
-                        conn->addCondition("onPause", "onPause");
+          }else{
+            properties["link"] = link;
 
-                        conn->addAction("start", "start");
-                        conn->addAction("stop", "stop");
-                        conn->addAction("resume", "resume");
-                        conn->addAction("pause", "pause");
-                        conn->addAction("set", "set");
+            lo = links[entityb->getnstUid()];
+          }
 
-                        connectors[conn->getName()] = conn;
-                        connectors2[conn->getnstUid()] = conn;
+          properties["linkUID"] = entityb->getnstUid();
 
-                        QMap<QString, QString> properties;
 
-                        properties["TYPE"] = "complex-connector";
+          properties["connector"] = connName;
+          properties["condition"] = cond;
 
-                        properties["id"] = conn->getName();
-                        properties["condition"] = cond;
+          properties["component"] = entitya->getnstId();
 
-                        connName = conn->getName();
+          properties["role"] = cond;
 
-                        emit entityAdded(conn->getnstUid(), "", properties);
-                    }
+          QnstBind* bo = new QnstBind();
+          bo->setnstParent(lo);
+          bo->setnstUid(entity->getnstUid());
+          bo->setRole(properties["condition"]);
+          bo->setComponent(properties["component"]);
+          bo->setComponentUid(entitya->getnstUid());
 
-                    // associating connector to bind
-                    entity->setConn(connectors[connName]);
+          lo->addCondition(bo);
 
-                    ///// link
+          binds[bo->getnstUid()] = bo;
+          brelations[bo->getnstUid()] = entity->getnstUid();
 
-                    QMap<QString, QString> properties;
+          link2conn[properties["link"]] = connName;
 
-                    properties["TYPE"] = "bind";
+          entities[entity->getnstUid()] = entity;
 
-                    QnstLink* lo;
+          emit entityAdded(entity->getnstUid(), parenta->getnstUid(), properties);
+        }
 
-                    if (link == "New..."){
-                        properties["link"] = "link"+QString::number(++nlink);
+      }else{
+        linkDialog->init(connectors);
 
+        if (linkDialog->exec()){
+          QString con = linkDialog->form.cbCondition->currentText();
+          QString act = linkDialog->form.cbAction->currentText();
 
-                        lo = new QnstLink();
-                        lo->setnstParent(entityb->getnstGraphicsParent());
-                        lo->setnstId(properties["link"]);
-                        lo->setnstUid(entityb->getnstUid());
-                        lo->setxConnector(connName);
-                        lo->setxConnectorUID(connectors[connName]->getnstUid());
-                        lo->setAggregatorUID(entityb->getnstUid());
+          if (con != "" && act != ""){
+            qreal xcenter = -1;
+            qreal ycenter = -1;
 
-                        links[lo->getnstUid()] = lo;
+            QPointF pointa(entitya->getLeft() + entitya->getWidth()/2,
+                           entitya->getTop() + entitya->getHeight()/2);
 
-                    }else{
-                        properties["link"] = link;
+            QPointF pointb(entityb->getLeft() + entityb->getWidth()/2,
+                           entityb->getTop() + entityb->getHeight()/2);
 
-                        lo = links[entityb->getnstUid()];
-                    }
 
-                    properties["linkUID"] = entityb->getnstUid();
+            pointb = parenta->mapFromItem(parentb, pointb);
 
+            qreal wa = entitya->getWidth()/2;
+            qreal wb = entityb->getWidth()/2;
 
-                    properties["connector"] = connName;
-                    properties["condition"] = cond;
+            if (pointa.x() <= pointb.x() && pointa.y() <= pointb.y()){
+              xcenter = pointa.x() + (pointb.x() - pointa.x())/2;
+              ycenter = pointa.y() + (pointb.y() - pointa.y())/2;
 
-                    properties["component"] = entitya->getnstId();
+            }else if (pointa.x() > pointb.x() && pointa.y() < pointb.y()){
+              xcenter = pointb.x() + (pointa.x() - pointb.x())/2;
+              ycenter = pointa.y() + (pointb.y() - pointa.y())/2;
 
-                    properties["role"] = cond;
+            }else if (pointa.x() < pointb.x() && pointa.y() > pointb.y()){
+              xcenter = pointa.x() + (pointb.x() - pointa.x())/2;
+              ycenter = pointb.y() + (pointa.y() - pointb.y())/2;
 
-                    QnstBind* bo = new QnstBind();
-                    bo->setnstParent(lo);
-                    bo->setnstUid(entity->getnstUid());
-                    bo->setRole(properties["condition"]);
-                    bo->setComponent(properties["component"]);
-                    bo->setComponentUid(entitya->getnstUid());
-
-                    lo->addCondition(bo);
-
-                    binds[bo->getnstUid()] = bo;
-                    brelations[bo->getnstUid()] = entity->getnstUid();
-
-                    link2conn[properties["link"]] = connName;
-
-                    entities[entity->getnstUid()] = entity;
-
-                    emit entityAdded(entity->getnstUid(), parenta->getnstUid(), properties);
-                }
-
-            }else{
-                linkDialog->init(connectors);
-
-                if (linkDialog->exec()){
-                    QString con = linkDialog->form.cbCondition->currentText();
-                    QString act = linkDialog->form.cbAction->currentText();
-
-                    if (con != "" && act != ""){
-                        qreal xcenter = -1;
-                        qreal ycenter = -1;
-
-                        QPointF pointa(entitya->getLeft() + entitya->getWidth()/2,
-                                       entitya->getTop() + entitya->getHeight()/2);
-
-                        QPointF pointb(entityb->getLeft() + entityb->getWidth()/2,
-                                       entityb->getTop() + entityb->getHeight()/2);
-
-
-                        pointb = parenta->mapFromItem(parentb, pointb);
-
-                        qreal wa = entitya->getWidth()/2;
-                        qreal wb = entityb->getWidth()/2;
-
-                        if (pointa.x() <= pointb.x() && pointa.y() <= pointb.y()){
-                            xcenter = pointa.x() + (pointb.x() - pointa.x())/2;
-                            ycenter = pointa.y() + (pointb.y() - pointa.y())/2;
-
-                        }else if (pointa.x() > pointb.x() && pointa.y() < pointb.y()){
-                            xcenter = pointb.x() + (pointa.x() - pointb.x())/2;
-                            ycenter = pointa.y() + (pointb.y() - pointa.y())/2;
-
-                        }else if (pointa.x() < pointb.x() && pointa.y() > pointb.y()){
-                            xcenter = pointa.x() + (pointb.x() - pointa.x())/2;
-                            ycenter = pointb.y() + (pointa.y() - pointb.y())/2;
-
-                        }else if (pointa.x() > pointb.x() && pointa.y() > pointb.y()){
-                            xcenter = pointb.x() + (pointa.x() - pointb.x())/2;
-                            ycenter = pointb.y() + (pointa.y() - pointb.y())/2;
-                        }
-
-
-                        QnstGraphicsAggregator* aggregator = new QnstGraphicsAggregator((QnstGraphicsNode*) parenta);
-                        aggregator->setTop(ycenter - DEFAULT_AGGREGATOR_HEIGHT/2);
-                        aggregator->setLeft(xcenter - DEFAULT_AGGREGATOR_WIDTH/2);
-                        aggregator->setWidth(DEFAULT_AGGREGATOR_WIDTH);
-                        aggregator->setHeight(DEFAULT_AGGREGATOR_HEIGHT);
-                        aggregator->adjust();
-
-                        parenta->addnstGraphicsEntity(aggregator);
-
-                        entities[aggregator->getnstUid()] = aggregator;
-
-                        ///
-
-                        QnstGraphicsBind* condition = new QnstGraphicsBind();
-                        condition->setCondition(Qnst::NoBindType);
-                        condition->setnstGraphicsParent(parenta);
-                        condition->setEntityA(entitya);
-                        condition->setEntityB(aggregator);
-
-                        // adjusting angle
-                        adjustAngle(condition, entitya, aggregator);
-
-                        condition->adjust();
-
-                        parenta->addnstGraphicsEntity(condition);
-
-                        ((QnstGraphicsNode*) entitya)->addnstGraphicsEdge(condition);
-                        ((QnstGraphicsNode*) aggregator)->addnstGraphicsEdge(condition);
-
-                        // set condition type
-                        condition->setCondition(QnstUtil::getBindTypeFromStr(con));
-
-                        entities[condition->getnstUid()] = condition;
-
-                        ///
-
-                        QnstGraphicsBind* action = new QnstGraphicsBind();
-                        action->setAction(Qnst::NoBindType);
-                        action->setnstGraphicsParent(parenta);
-                        action->setEntityA(aggregator);
-                        action->setEntityB(entityb);
-
-                        // adjusting angle
-                        adjustAngle(action, aggregator, entityb);
-
-                        action->adjust();
-
-                        parenta->addnstGraphicsEntity(action);
-
-                        ((QnstGraphicsNode*) aggregator)->addnstGraphicsEdge(action);
-                        ((QnstGraphicsInterface*) entityb)->addnstGraphicsEdge(action);
-
-                        // set action
-                        action->setAction(QnstUtil::getBindTypeFromStr(act));
-
-                        entities[action->getnstUid()] = action;
-
-                        /////
-                        connect(condition,
-                                SIGNAL(bindParamAdded(QString,QString,QMap<QString, QString>)),
-                                SLOT(requestBindParamAdjust(QString,QString,QMap<QString, QString>)));
-
-                        connect(condition,
-                                SIGNAL(bindParamUpdated(QString,QMap<QString,QString>,QMap<QString,QString>)),
-                                SLOT(updateBindParams(QString,QMap<QString,QString>,QMap<QString,QString>)));
-
-                        connect(action,
-                                SIGNAL(bindParamAdded(QString,QString,QMap<QString, QString>)),
-                                SLOT(requestBindParamAdjust(QString,QString,QMap<QString, QString>)));
-
-                        connect(action,
-                                SIGNAL(bindParamUpdated(QString,QMap<QString,QString>,QMap<QString,QString>)),
-                                SLOT(updateBindParams(QString,QMap<QString,QString>,QMap<QString,QString>)));
-                        /////
-
-
-
-                        ///// connector
-
-                        QString connName = linkDialog->getCurrentConnector();;
-
-                        if (linkDialog->getCurrentConnector() == "New..."){
-                            QnstConnector* conn = new QnstConnector();
-                            conn->setName(con+act+QString::number(connectors.size()));
-                            conn->addCondition(con, con);
-                            conn->addAction(act, act);
-
-                            connectors[conn->getName()] = conn;
-                            connectors2[conn->getnstUid()] = conn;
-
-                            QMap<QString, QString> properties;
-
-                            properties["TYPE"] = "connector";
-
-                            properties["id"] = conn->getName();
-                            properties["condition"] = con;
-                            properties["action"] = act;
-
-                            connName = conn->getName();
-
-                            emit entityAdded(conn->getnstUid(), "", properties);
-                        }
-
-                        // associating connector to bind
-                        action->setConn(connectors[connName]);
-                        condition->setConn(connectors[connName]);
-
-                        ///// link
-
-                        QMap<QString, QString> properties;
-
-                        properties["link"] = "link"+QString::number(++nlink);
-
-                        QnstLink* lo = new QnstLink();
-                        lo->setnstParent(aggregator->getnstGraphicsParent());
-                        lo->setnstId(properties["link"]);
-                        lo->setnstUid(aggregator->getnstUid());
-                        lo->setxConnector(connName);
-                        lo->setxConnectorUID(connectors[connName]->getnstUid());
-                        lo->setAggregatorUID(aggregator->getnstUid());
-
-                        links[lo->getnstUid()] = lo;
-
-                        properties["TYPE"] = "bind";
-
-
-                        properties["connector"] = connName;
-                        properties["condition"] = con;
-
-                        properties["component"] = entitya->getnstId();
-
-                        properties["role"] = con;
-
-                        properties["linkUID"] = aggregator->getnstUid();
-
-
-                        link2conn[properties["link"]] = connName;
-
-                        QnstBind* bo = new QnstBind();
-                        bo->setnstParent(lo);
-                        bo->setnstUid(condition->getnstUid());
-                        bo->setRole(properties["condition"]);
-                        bo->setComponent(properties["component"]);
-                        bo->setComponentUid(entitya->getnstUid());
-
-                        lo->addCondition(bo);
-
-                        binds[bo->getnstUid()] = bo;
-                        brelations[bo->getnstUid()] = condition->getnstUid();
-
-                        emit entityAdded(condition->getnstUid(), parenta->getnstUid(), properties);
-
-                        properties["condition"] = "";
-
-                        properties["action"] = act;
-
-                        properties["component"] = entityb->getnstId();
-
-                        properties["role"] = act;
-
-                        QnstBind* bo2 = new QnstBind();
-                        bo2->setnstParent(lo);
-                        bo2->setnstUid(action->getnstUid());
-                        bo2->setRole(properties["action"]);
-                        bo2->setComponent(properties["component"]);
-                        bo2->setComponentUid(entityb->getnstUid());
-
-                        lo->addAction(bo2);
-
-                        binds[bo2->getnstUid()] = bo2;
-                        brelations[bo2->getnstUid()] = action->getnstUid();
-
-                        emit entityAdded(action->getnstUid(), parenta->getnstUid(), properties);
-                    }
-                }
+            }else if (pointa.x() > pointb.x() && pointa.y() > pointb.y()){
+              xcenter = pointb.x() + (pointa.x() - pointb.x())/2;
+              ycenter = pointb.y() + (pointa.y() - pointb.y())/2;
             }
 
-            modified = false;
+
+            QnstGraphicsAggregator* aggregator = new QnstGraphicsAggregator((QnstGraphicsNode*) parenta);
+            aggregator->setTop(ycenter - DEFAULT_AGGREGATOR_HEIGHT/2);
+            aggregator->setLeft(xcenter - DEFAULT_AGGREGATOR_WIDTH/2);
+            aggregator->setWidth(DEFAULT_AGGREGATOR_WIDTH);
+            aggregator->setHeight(DEFAULT_AGGREGATOR_HEIGHT);
+            aggregator->adjust();
+
+            parenta->addnstGraphicsEntity(aggregator);
+
+            entities[aggregator->getnstUid()] = aggregator;
+
+            ///
+
+            QnstGraphicsBind* condition = new QnstGraphicsBind();
+            condition->setCondition(Qnst::NoBindType);
+            condition->setnstGraphicsParent(parenta);
+            condition->setEntityA(entitya);
+            condition->setEntityB(aggregator);
+
+            // adjusting angle
+            adjustAngle(condition, entitya, aggregator);
+
+            condition->adjust();
+
+            parenta->addnstGraphicsEntity(condition);
+
+            ((QnstGraphicsNode*) entitya)->addnstGraphicsEdge(condition);
+            ((QnstGraphicsNode*) aggregator)->addnstGraphicsEdge(condition);
+
+            // set condition type
+            condition->setCondition(QnstUtil::getBindTypeFromStr(con));
+
+            entities[condition->getnstUid()] = condition;
+
+            ///
+
+            QnstGraphicsBind* action = new QnstGraphicsBind();
+            action->setAction(Qnst::NoBindType);
+            action->setnstGraphicsParent(parenta);
+            action->setEntityA(aggregator);
+            action->setEntityB(entityb);
+
+            // adjusting angle
+            adjustAngle(action, aggregator, entityb);
+
+            action->adjust();
+
+            parenta->addnstGraphicsEntity(action);
+
+            ((QnstGraphicsNode*) aggregator)->addnstGraphicsEdge(action);
+            ((QnstGraphicsInterface*) entityb)->addnstGraphicsEdge(action);
+
+            // set action
+            action->setAction(QnstUtil::getBindTypeFromStr(act));
+
+            entities[action->getnstUid()] = action;
+
+            /////
+            connect(condition,
+                    SIGNAL(bindParamAdded(QString,QString,QMap<QString, QString>)),
+                    SLOT(requestBindParamAdjust(QString,QString,QMap<QString, QString>)));
+
+            connect(condition,
+                    SIGNAL(bindParamUpdated(QString,QMap<QString,QString>,QMap<QString,QString>)),
+                    SLOT(updateBindParams(QString,QMap<QString,QString>,QMap<QString,QString>)));
+
+            connect(action,
+                    SIGNAL(bindParamAdded(QString,QString,QMap<QString, QString>)),
+                    SLOT(requestBindParamAdjust(QString,QString,QMap<QString, QString>)));
+
+            connect(action,
+                    SIGNAL(bindParamUpdated(QString,QMap<QString,QString>,QMap<QString,QString>)),
+                    SLOT(updateBindParams(QString,QMap<QString,QString>,QMap<QString,QString>)));
+            /////
+
+            // creating connector
+            QString connName;
+
+            if (linkDialog->getCurrentConnector() == "New...")
+              connName = createNewConnector(con, act);
+            else
+              connName = linkDialog->getCurrentConnector();
+
+            // associating connector to bind
+            action->setConn(connectors[connName]);
+            condition->setConn(connectors[connName]);
+
+            ///// link
+
+            QMap<QString, QString> properties;
+
+            properties["link"] = "link"+QString::number(++nlink);
+
+            QnstLink* lo = new QnstLink();
+            lo->setnstParent(aggregator->getnstGraphicsParent());
+            lo->setnstId(properties["link"]);
+            lo->setnstUid(aggregator->getnstUid());
+            lo->setxConnector(connName);
+            lo->setxConnectorUID(connectors[connName]->getnstUid());
+            lo->setAggregatorUID(aggregator->getnstUid());
+
+            links[lo->getnstUid()] = lo;
+
+            properties["TYPE"] = "bind";
+
+
+            properties["connector"] = connName;
+            properties["condition"] = con;
+
+            properties["component"] = entitya->getnstId();
+
+            properties["role"] = con;
+
+            properties["linkUID"] = aggregator->getnstUid();
+
+
+            link2conn[properties["link"]] = connName;
+
+            QnstBind* bo = new QnstBind();
+            bo->setnstParent(lo);
+            bo->setnstUid(condition->getnstUid());
+            bo->setRole(properties["condition"]);
+            bo->setComponent(properties["component"]);
+            bo->setComponentUid(entitya->getnstUid());
+
+            lo->addCondition(bo);
+
+            binds[bo->getnstUid()] = bo;
+            brelations[bo->getnstUid()] = condition->getnstUid();
+
+            emit entityAdded(condition->getnstUid(), parenta->getnstUid(), properties);
+
+            properties["condition"] = "";
+
+            properties["action"] = act;
+
+            properties["component"] = entityb->getnstId();
+
+            properties["role"] = act;
+
+            QnstBind* bo2 = new QnstBind();
+            bo2->setnstParent(lo);
+            bo2->setnstUid(action->getnstUid());
+            bo2->setRole(properties["action"]);
+            bo2->setComponent(properties["component"]);
+            bo2->setComponentUid(entityb->getnstUid());
+
+            lo->addAction(bo2);
+
+            binds[bo2->getnstUid()] = bo2;
+            brelations[bo2->getnstUid()] = action->getnstUid();
+
+            emit entityAdded(action->getnstUid(), parenta->getnstUid(), properties);
+          }
         }
+      }
+
+      modified = false;
     }
+  }
 }
 
 void QnstView::addNodetoInterfaceEdge(QnstGraphicsEntity* entitya, QnstGraphicsEntity* entityb)
@@ -4735,39 +4663,14 @@ void QnstView::addNodetoInterfaceEdge(QnstGraphicsEntity* entitya, QnstGraphicsE
                             SLOT(updateBindParams(QString,QMap<QString,QString>,QMap<QString,QString>)));
                     /////
 
-                    ///// connector
 
-                    QString connName = actionDialog->form.cbConnector->currentText();;
+                    // creating connector
+                    QString connName;
 
-                    if (actionDialog->form.cbConnector->currentText() == "New..."){
-                        QnstConnector* conn = new QnstConnector();
-                        conn->setName("newConnector"+QString::number(connectors.size()));
-                        conn->addCondition("onBegin", "onBegin");
-                        conn->addCondition("onEnd", "onEnd");
-                        conn->addCondition("onSelection", "onSelection");
-                        conn->addCondition("onResume", "onResume");
-                        conn->addCondition("onPause", "onPause");
-
-                        conn->addAction("start", "start");
-                        conn->addAction("stop", "stop");
-                        conn->addAction("resume", "resume");
-                        conn->addAction("pause", "pause");
-                        conn->addAction("set", "set");
-
-                        connectors[conn->getName()] = conn;
-                        connectors2[conn->getnstUid()] = conn;
-
-                        QMap<QString, QString> properties;
-
-                        properties["TYPE"] = "complex-connector";
-
-                        properties["id"] = conn->getName();
-                        properties["action"] = act;
-
-                        connName = conn->getName();
-
-                        emit entityAdded(conn->getnstUid(), "", properties);
-                    }
+                    if (actionDialog->form.cbConnector->currentText() == "New...")
+                      connName = createNewConnector("", act);
+                    else
+                      connName = actionDialog->form.cbConnector->currentText();
 
                     // associating connector to bind
                     entity->setConn(connectors[connName]);
@@ -4946,32 +4849,14 @@ void QnstView::addNodetoInterfaceEdge(QnstGraphicsEntity* entitya, QnstGraphicsE
                                 SLOT(updateBindParams(QString,QMap<QString,QString>,QMap<QString,QString>)));
                         /////
 
-                        ///// connector
 
-                        QString connName = linkDialog->getCurrentConnector();;
+                        // creating connector
+                        QString connName;
 
-                        if (linkDialog->getCurrentConnector() == "New..."){
-                            QnstConnector* conn = new QnstConnector();
-                            conn->setName(con+act+QString::number(connectors.size()));
-                            conn->addCondition(con, con);
-                            conn->addAction(act, act);
-
-                            connectors[conn->getName()] = conn;
-                            connectors2[conn->getnstUid()] = conn;
-
-                            QMap<QString, QString> properties;
-
-                            properties["TYPE"] = "connector";
-
-                            properties["id"] = conn->getName();
-                            properties["condition"] = con;
-                            properties["action"] = act;
-
-
-                            connName = conn->getName();
-
-                            emit entityAdded(conn->getnstUid(), "", properties);
-                        }
+                        if (linkDialog->getCurrentConnector() == "New...")
+                          connName = createNewConnector(con, act);
+                        else
+                          connName = linkDialog->getCurrentConnector();
 
                         // associating connector to bind
                         action->setConn(connectors[connName]);
@@ -5094,40 +4979,14 @@ void QnstView::addInterfacetoNodeLink(QnstGraphicsEntity* entitya, QnstGraphicsE
                     SLOT(updateBindParams(QString,QMap<QString,QString>,QMap<QString,QString>)));
             /////
 
-            ///// connector
 
-            QString connName = conditionDialog->form.cbConnector->currentText();;
+            // creating connector
+            QString connName;
 
-            if (conditionDialog->form.cbConnector->currentText() == "New..."){
-                QnstConnector* conn = new QnstConnector();
-                conn->setName("newConnector"+QString::number(connectors.size()));
-
-                conn->addCondition("onBegin", "onBegin");
-                conn->addCondition("onEnd", "onEnd");
-                conn->addCondition("onSelection", "onSelection");
-                conn->addCondition("onResume", "onResume");
-                conn->addCondition("onPause", "onPause");
-
-                conn->addAction("start", "start");
-                conn->addAction("stop", "stop");
-                conn->addAction("resume", "resume");
-                conn->addAction("pause", "pause");
-                conn->addAction("set", "set");
-
-                connectors[conn->getName()] = conn;
-                connectors2[conn->getnstUid()] = conn;
-
-                QMap<QString, QString> properties;
-
-                properties["TYPE"] = "complex-connector";
-
-                properties["id"] = conn->getName();
-                properties["condition"] = cond;
-
-                connName = conn->getName();
-
-                emit entityAdded(conn->getnstUid(), "", properties);
-            }
+            if (conditionDialog->form.cbConnector->currentText() == "New...")
+              connName = createNewConnector(cond, "");
+            else
+              connName = conditionDialog->form.cbConnector->currentText();
 
             // associating connector to bind
             entity->setConn(connectors[connName]);
@@ -5307,35 +5166,14 @@ void QnstView::addInterfacetoNodeLink(QnstGraphicsEntity* entitya, QnstGraphicsE
             connect(action,
                     SIGNAL(bindParamUpdated(QString,QMap<QString,QString>,QMap<QString,QString>)),
                     SLOT(updateBindParams(QString,QMap<QString,QString>,QMap<QString,QString>)));
-            ///
 
+            // creating connector
+            QString connName;
 
-            ///// connector
-
-            QString connName = linkDialog->getCurrentConnector();;
-
-            if (linkDialog->getCurrentConnector() == "New..."){
-                QnstConnector* conn = new QnstConnector();
-                conn->setName(con+act+QString::number(connectors.size()));
-                conn->addCondition(con, con);
-                conn->addAction(act, act);
-
-                connectors[conn->getName()] = conn;
-                connectors2[conn->getnstUid()] = conn;
-
-                QMap<QString, QString> properties;
-
-                properties["TYPE"] = "connector";
-
-                properties["id"] = conn->getName();
-                properties["condition"] = con;
-                properties["action"] = act;
-
-
-                connName = conn->getName();
-
-                emit entityAdded(conn->getnstUid(), "", properties);
-            }
+            if (linkDialog->getCurrentConnector() == "New...")
+              connName = createNewConnector(con, act);
+            else
+              connName = linkDialog->getCurrentConnector();
 
             // associating connector to bind
             action->setConn(connectors[connName]);
@@ -6174,32 +6012,14 @@ void QnstView::addInterfacetoInterfaceEdge(QnstGraphicsEntity* entitya, QnstGrap
                             SIGNAL(bindParamUpdated(QString,QMap<QString,QString>,QMap<QString,QString>)),
                             SLOT(updateBindParams(QString,QMap<QString,QString>,QMap<QString,QString>)));
 
-                    ///// connector
 
-                    QString connName = linkDialog->getCurrentConnector();;
+                    // creating connector
+                    QString connName;
 
-                    if (linkDialog->getCurrentConnector() == "New..."){
-                        QnstConnector* conn = new QnstConnector();
-                        conn->setName(con+act+QString::number(connectors.size()));
-                        conn->addCondition(con, con);
-                        conn->addAction(act, act);
-
-                        connectors[conn->getName()] = conn;
-                        connectors2[conn->getnstUid()] = conn;
-
-                        QMap<QString, QString> properties;
-
-                        properties["TYPE"] = "connector";
-
-                        properties["id"] = conn->getName();
-                        properties["condition"] = con;
-                        properties["action"] = act;
-
-
-                        connName = conn->getName();
-
-                        emit entityAdded(conn->getnstUid(), "", properties);
-                    }
+                    if (linkDialog->getCurrentConnector() == "New...")
+                      connName = createNewConnector(con, act);
+                    else
+                      connName = linkDialog->getCurrentConnector();
 
                     // associating connector to bind
                     action->setConn(connectors[connName]);
@@ -6279,6 +6099,42 @@ void QnstView::addInterfacetoInterfaceEdge(QnstGraphicsEntity* entitya, QnstGrap
             modified = false;
         }
     }
+}
+
+QString QnstView::createNewConnector(QString condition, QString action)
+{
+  QnstConnector* conn = new QnstConnector();
+  conn->setName("newConnector"+QString::number(connectors.size()));
+  conn->addCondition("onBegin", "onBegin");
+  conn->addCondition("onEnd", "onEnd");
+  conn->addCondition("onSelection", "onSelection");
+  conn->addCondition("onResume", "onResume");
+  conn->addCondition("onPause", "onPause");
+
+  conn->addAction("start", "start");
+  conn->addAction("stop", "stop");
+  conn->addAction("resume", "resume");
+  conn->addAction("pause", "pause");
+  conn->addAction("set", "set");
+
+  connectors[conn->getName()] = conn;
+  connectors2[conn->getnstUid()] = conn;
+
+  QMap<QString, QString> properties;
+
+  properties["TYPE"] = "complex-connector";
+
+  properties["id"] = conn->getName();
+
+  if (!action.isEmpty())
+    properties["action"] = action;
+
+  if (!condition.isEmpty())
+    properties["condition"] = condition;
+
+  emit entityAdded(conn->getnstUid(), "", properties);
+
+  return conn->getName();
 }
 
 void QnstView::keyPressEvent(QKeyEvent *event)

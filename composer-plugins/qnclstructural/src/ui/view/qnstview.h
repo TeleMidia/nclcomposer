@@ -258,6 +258,8 @@ private:
 
   void collapseCompositions(QDomElement element, QDomElement parent);
 
+  QString createNewConnector(QString condition, QString action);
+
   bool modified;
 
   int nlink;
