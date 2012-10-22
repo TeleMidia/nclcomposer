@@ -260,6 +260,9 @@ private:
 
   QString createNewConnector(QString condition, QString action);
 
+  QnstGraphicsAggregator* createAggregator(QnstGraphicsEntity* a,
+                                           QnstGraphicsEntity* b);
+
   bool modified;
 
   int nlink;
