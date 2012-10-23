@@ -1,11 +1,11 @@
 #include "qnstgraphicsport.h"
 
 QnstGraphicsPort::QnstGraphicsPort(QnstGraphicsEntity* parent)
-    : QnstGraphicsInterface(parent)
+  : QnstGraphicsInterface(parent)
 {
-    setnstType(Qnst::Port);
+  setnstType(Qnst::Port);
 
-    setnstId("");
+  setnstId("");
 }
 
 QnstGraphicsPort::~QnstGraphicsPort()
@@ -15,42 +15,42 @@ QnstGraphicsPort::~QnstGraphicsPort()
 
 QString QnstGraphicsPort::getComponent() const
 {
-    return component;
+  return component;
 }
 
 void QnstGraphicsPort::setComponent(QString component)
 {
-    this->component = component;
+  this->component = component;
 }
 
 QString QnstGraphicsPort::getComponentUid() const
 {
-    return componentUid;
+  return componentUid;
 }
 
 void QnstGraphicsPort::setComponentUid(QString componentUid)
 {
-    this->componentUid = componentUid;
+  this->componentUid = componentUid;
 }
 
 QString QnstGraphicsPort::getInterface() const
 {
-    return interface;
+  return interface;
 }
 
 void QnstGraphicsPort::setInterface(QString interface)
 {
-    this->interface = interface;
+  this->interface = interface;
 }
 
 QString QnstGraphicsPort::getInterfaceUid() const
 {
-    return interfaceUid;
+  return interfaceUid;
 }
 
 void QnstGraphicsPort::setInterfaceUid(QString interfaceUid)
 {
-    this->interfaceUid = interfaceUid;
+  this->interfaceUid = interfaceUid;
 }
 
 void QnstGraphicsPort::setProperties(const QMap<QString, QString> &properties)
@@ -73,27 +73,29 @@ void QnstGraphicsPort::setProperties(const QMap<QString, QString> &properties)
 
 void QnstGraphicsPort::draw(QPainter* painter)
 {
-    painter->setBrush(Qt::black);
+  painter->setBrush(Qt::black);
 
-    painter->drawRect(4 + 8/2, 4 + 8/2, getWidth()-8, getHeight()-8);
+  painter->drawRect(4 + 8/2, 4 + 8/2, getWidth()-8, getHeight()-8);
 
-    // Draw MouseOver rectangle
-    if (!isSelected() && hasMouseHover()){
-        painter->setBrush(Qt::NoBrush);
-        painter->setPen(QPen(QBrush(QColor("#999999")), 0, Qt::DashLine)); // 0px = cosmetic border
+  // Draw MouseOver rectangle
+  if (!isSelected() && hasMouseHover())
+  {
+    painter->setBrush(Qt::NoBrush);
+    painter->setPen(QPen(QBrush(QColor("#999999")), 0, Qt::DashLine)); // 0px = cosmetic border
 
-        painter->drawRect(4, 4, getWidth(), getHeight());
-    }
+    painter->drawRect(4, 4, getWidth(), getHeight());
+  }
 
-    if (isMoving()){
-        painter->setBrush(Qt::NoBrush);
-        painter->setPen(QPen(QBrush(Qt::black), 0)); // 0px = cosmetic border
+  if (isMoving())
+  {
+    painter->setBrush(Qt::NoBrush);
+    painter->setPen(QPen(QBrush(Qt::black), 0)); // 0px = cosmetic border
 
-        painter->drawRect(getMoveLeft()+4-getLeft(),getMoveTop()+4-getTop(),getWidth()-1,getHeight()-1);
-    }
+    painter->drawRect(getMoveLeft()+4-getLeft(),getMoveTop()+4-getTop(),getWidth()-1,getHeight()-1);
+  }
 }
 
 void QnstGraphicsPort::delineate(QPainterPath* painter) const
 {
-    painter->addRect(4 + 8/2, 4 + 8/2, getWidth()-8, getHeight()-8);
+  painter->addRect(4 + 8/2, 4 + 8/2, getWidth()-8, getHeight()-8);
 }

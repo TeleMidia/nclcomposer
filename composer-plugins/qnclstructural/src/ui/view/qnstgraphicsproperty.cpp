@@ -1,7 +1,7 @@
 #include "qnstgraphicsproperty.h"
 
 QnstGraphicsProperty::QnstGraphicsProperty(QnstGraphicsEntity* parent)
-    : QnstGraphicsInterface(parent)
+  : QnstGraphicsInterface(parent)
 {
   setnstType(Qnst::Property);
 }
@@ -40,5 +40,5 @@ void QnstGraphicsProperty::draw(QPainter* painter)
 
 void QnstGraphicsProperty::delineate(QPainterPath* painter) const
 {
-    painter->addRect(4 + 8/2, 4 + 8/2, getWidth()-8, getHeight()-8);
+  painter->addRect(4 + 8/2, 4 + 8/2, getWidth()-8, getHeight()-8);
 }

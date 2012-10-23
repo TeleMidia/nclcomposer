@@ -1,11 +1,11 @@
 #include "qnstviewlink.h"
 
 QnstViewLink::QnstViewLink(QnstGraphicsEntity* parent)
-    : QnstGraphicsEntity(parent)
+  : QnstGraphicsEntity(parent)
 {
-    setSelectable(false);
-    setResizable(false);
-    setMoveable(false);
+  setSelectable(false);
+  setResizable(false);
+  setMoveable(false);
 }
 
 QnstViewLink::~QnstViewLink()
@@ -15,138 +15,149 @@ QnstViewLink::~QnstViewLink()
 
 QLineF QnstViewLink::getLine() const
 {
-    return line;
+  return line;
 }
 
 void QnstViewLink::setLine(QLineF line)
 {
-    this->line = line;
+  this->line = line;
 
-    adjust();
+  adjust();
 }
 
 void QnstViewLink::adjust(bool avoidCollision)
 {
-    QPointF pointa = line.p1();
-    QPointF pointb = line.p2();
+  QPointF pointa = line.p1();
+  QPointF pointb = line.p2();
 
-    if (pointa.x() <= pointb.x() && pointa.y() <= pointb.y()){
-        setTop(pointa.y()-6);
-        setLeft(pointa.x()-6);
-        setWidth((pointb.x()-6)-(pointa.x()-6) + 12);
-        setHeight((pointb.y()-6)-(pointa.y()-6) + 12);
+  if (pointa.x() <= pointb.x() && pointa.y() <= pointb.y())
+  {
+    setTop(pointa.y()-6);
+    setLeft(pointa.x()-6);
+    setWidth((pointb.x()-6)-(pointa.x()-6) + 12);
+    setHeight((pointb.y()-6)-(pointa.y()-6) + 12);
+  }
+  else if (pointa.x() > pointb.x() && pointa.y() < pointb.y())
+  {
+    setTop(pointa.y()-6);
+    setLeft(pointb.x()-6);
+    setWidth((pointa.x()-6)-(pointb.x()-6) + 12);
+    setHeight((pointb.y()-6)-(pointa.y()-6) + 12);
+  }
+  else if (pointa.x() < pointb.x() && pointa.y() > pointb.y())
+  {
+    setTop(pointb.y()-6);
+    setLeft((pointa.x()-6));
+    setWidth((pointb.x()-6)-(pointa.x()-6) + 12);
+    setHeight((pointa.y()-6)-(pointb.y()-6) + 12);
+  }
+  else if (pointa.x() > pointb.x() && pointa.y() > pointb.y())
+  {
+    setTop(pointb.y()-6);
+    setLeft(pointb.x()-6);
+    setWidth((pointa.x()-6)-(pointb.x()-6) + 12);
+    setHeight((pointa.y()-6)-(pointb.y()-6) + 12);
+  }
 
-    }else if (pointa.x() > pointb.x() && pointa.y() < pointb.y()){
-        setTop(pointa.y()-6);
-        setLeft(pointb.x()-6);
-        setWidth((pointa.x()-6)-(pointb.x()-6) + 12);
-        setHeight((pointb.y()-6)-(pointa.y()-6) + 12);
-
-    }else if (pointa.x() < pointb.x() && pointa.y() > pointb.y()){
-        setTop(pointb.y()-6);
-        setLeft((pointa.x()-6));
-        setWidth((pointb.x()-6)-(pointa.x()-6) + 12);
-        setHeight((pointa.y()-6)-(pointb.y()-6) + 12);
-
-    }else if (pointa.x() > pointb.x() && pointa.y() > pointb.y()){
-        setTop(pointb.y()-6);
-        setLeft(pointb.x()-6);
-        setWidth((pointa.x()-6)-(pointb.x()-6) + 12);
-        setHeight((pointa.y()-6)-(pointb.y()-6) + 12);
-    }
-
-    if (scene() != NULL){
-        scene()->update();
-    }
+  if (scene() != NULL)
+    scene()->update();
 }
 
 void QnstViewLink::draw(QPainter* painter)
 {
-    painter->setRenderHint(QPainter::Antialiasing, true);
+  painter->setRenderHint(QPainter::Antialiasing, true);
 
-    QPointF p1;
+  QPointF p1;
 
-    QPointF pointa = line.p1();
-    QPointF pointb = line.p2();
+  QPointF pointa = line.p1();
+  QPointF pointb = line.p2();
 
-    if (pointa.x() <= pointb.x() && pointa.y() <= pointb.y()){
-        painter->setPen(QPen(QBrush(QColor("#000000")), 1, Qt::DashLine));
+  if (pointa.x() <= pointb.x() && pointa.y() <= pointb.y())
+  {
+    painter->setPen(QPen(QBrush(QColor("#000000")), 1, Qt::DashLine));
 
-        painter->drawLine(4+6,4+6, 4+6+getWidth()-12-2, 4+6+getHeight()-12-2);
+    painter->drawLine(4+6,4+6, 4+6+getWidth()-12-2, 4+6+getHeight()-12-2);
 
-        painter->setBrush(QBrush(QColor("#000000")));
-        painter->setPen(Qt::NoPen);
+    painter->setBrush(QBrush(QColor("#000000")));
+    painter->setPen(Qt::NoPen);
 
-        painter->drawEllipse(4,4,12,12);
+    painter->drawEllipse(4,4,12,12);
 
-        p1 = QPointF(4+6+getWidth()-12, 4+6+getHeight()-12);
+    p1 = QPointF(4+6+getWidth()-12, 4+6+getHeight()-12);
 
-    }else if (pointa.x() > pointb.x() && pointa.y() < pointb.y()){
-        painter->setPen(QPen(QBrush(QColor("#000000")), 1, Qt::DashLine));
+  }
+  else if (pointa.x() > pointb.x() && pointa.y() < pointb.y())
+  {
+    painter->setPen(QPen(QBrush(QColor("#000000")), 1, Qt::DashLine));
 
-        painter->drawLine(4+6+getWidth()-12,4+6, 4+6, 4+6+getHeight()-12);
+    painter->drawLine(4+6+getWidth()-12,4+6, 4+6, 4+6+getHeight()-12);
 
-        painter->setBrush(QBrush(QColor("#000000")));
-        painter->setPen(Qt::NoPen);
+    painter->setBrush(QBrush(QColor("#000000")));
+    painter->setPen(Qt::NoPen);
 
-        painter->drawEllipse(4+getWidth()-12,4,12,12);
+    painter->drawEllipse(4+getWidth()-12,4,12,12);
 
-        p1 = QPointF(4+6, 4+6+getHeight()-12);
+    p1 = QPointF(4+6, 4+6+getHeight()-12);
 
-    }else if (pointa.x() < pointb.x() && pointa.y() > pointb.y()){
-        painter->setPen(QPen(QBrush(QColor("#000000")), 1, Qt::DashLine));
+  }
+  else if (pointa.x() < pointb.x() && pointa.y() > pointb.y())
+  {
+    painter->setPen(QPen(QBrush(QColor("#000000")), 1, Qt::DashLine));
 
-        painter->drawLine(4+6, 4+6+getHeight()-12, 4+6+getWidth()-12, 4+6);
+    painter->drawLine(4+6, 4+6+getHeight()-12, 4+6+getWidth()-12, 4+6);
 
-        painter->setBrush(QBrush(QColor("#000000")));
-        painter->setPen(Qt::NoPen);
+    painter->setBrush(QBrush(QColor("#000000")));
+    painter->setPen(Qt::NoPen);
 
-        painter->drawEllipse(4, 4+getHeight()-12, 12, 12);
+    painter->drawEllipse(4, 4+getHeight()-12, 12, 12);
 
-        p1 = QPointF(4+6+getWidth()-12, 4+6);
+    p1 = QPointF(4+6+getWidth()-12, 4+6);
 
-    }else if (pointa.x() > pointb.x() && pointa.y() > pointb.y()){
-        painter->setPen(QPen(QBrush(QColor("#000000")), 1, Qt::DashLine));
+  }
+  else if (pointa.x() > pointb.x() && pointa.y() > pointb.y())
+  {
+    painter->setPen(QPen(QBrush(QColor("#000000")), 1, Qt::DashLine));
 
-        painter->drawLine(4+6+getWidth()-12, 4+6+getHeight()-12, 4+6, 4+6);
+    painter->drawLine(4+6+getWidth()-12, 4+6+getHeight()-12, 4+6, 4+6);
 
-        painter->setBrush(QBrush(QColor("#000000")));
-        painter->setPen(Qt::NoPen);
+    painter->setBrush(QBrush(QColor("#000000")));
+    painter->setPen(Qt::NoPen);
 
-        painter->drawEllipse(4+getWidth()-12, 4+getHeight()-12, 12, 12);
+    painter->drawEllipse(4+getWidth()-12, 4+getHeight()-12, 12, 12);
 
-        p1 = QPointF(4+6, 4+6);
-    }
+    p1 = QPointF(4+6, 4+6);
+  }
 
-    double angle = ::acos(line.dx() / line.length());
+  double angle = ::acos(line.dx() / line.length());
 
-    if (line.dy() >= 0){
-         angle = (PI * 2) - angle;
-    }
+  if (line.dy() >= 0)
+  {
+    angle = (PI * 2) - angle;
+  }
 
-    QPointF p2 = p1 - QPointF(sin(angle + PI / 3) * 12, cos(angle + PI / 3) * 12);
-    QPointF p3 = p1 - QPointF(sin(angle + PI - PI / 3) * 12, cos(angle + PI - PI / 3) * 12);
+  QPointF p2 = p1 - QPointF(sin(angle + PI / 3) * 12, cos(angle + PI / 3) * 12);
+  QPointF p3 = p1 - QPointF(sin(angle + PI - PI / 3) * 12, cos(angle + PI - PI / 3) * 12);
 
-    QVector<QPointF> polygon;
+  QVector<QPointF> polygon;
 
-    polygon.append(p1);
-    polygon.append(p2);
-    polygon.append(p3);
+  polygon.append(p1);
+  polygon.append(p2);
+  polygon.append(p3);
 
-    painter->drawPolygon(QPolygonF(polygon));
+  painter->drawPolygon(QPolygonF(polygon));
 }
 
 void QnstViewLink::delineate(QPainterPath* painter) const
 {
-    // nothing to do
+  // nothing to do
 }
 
 void QnstViewLink::move(QGraphicsSceneMouseEvent* event)
 {
-    // nothing to do
+  // nothing to do
 }
 
 void QnstViewLink::resize(QGraphicsSceneMouseEvent* event)
 {
-    // nothing to do
+  // nothing to do
 }

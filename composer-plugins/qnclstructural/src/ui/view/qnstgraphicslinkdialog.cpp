@@ -10,7 +10,7 @@
 #include <QDebug>
 
 CompleteLineEdit::CompleteLineEdit(QStringList words, QWidget *parent)
-    : QLineEdit(parent), words(words)
+  : QLineEdit(parent), words(words)
 {
   listView = new QListView(this);
   model = new QStringListModel(this);
@@ -34,9 +34,11 @@ void CompleteLineEdit::setStringList(const QStringList &words)
 
 bool CompleteLineEdit::eventFilter(QObject *object, QEvent *event)
 {
-  if (object == this && event->type() == QEvent::KeyPress) {
+  if (object == this && event->type() == QEvent::KeyPress)
+  {
     QKeyEvent *keyEvent = static_cast<QKeyEvent *>(event);
-    if (keyEvent->key() == Qt::Key_Tab) {
+    if (keyEvent->key() == Qt::Key_Tab)
+    {
       if(!listView->isHidden())
       {
         QModelIndex currentIndex = listView->currentIndex();
@@ -47,7 +49,7 @@ bool CompleteLineEdit::eventFilter(QObject *object, QEvent *event)
         }
         listView->hide();
       }
-   }
+    }
   }
   return false;
 }
@@ -119,7 +121,7 @@ void CompleteLineEdit::keyPressEvent(QKeyEvent *e)
   }
   else
   {
-      QLineEdit::keyPressEvent(e);
+    QLineEdit::keyPressEvent(e);
   }
 }
 
@@ -170,17 +172,17 @@ void CompleteLineEdit::completeText(const QModelIndex &index)
 }
 
 QnstGraphicsLinkDialog::QnstGraphicsLinkDialog(QWidget* parent)
-    : QDialog(parent), firstTime(true)
+  : QDialog(parent), firstTime(true)
 {
-    form.setupUi(this);
+  form.setupUi(this);
 
-    connLineEdit = new CompleteLineEdit(QStringList());
-    this->form.gridLayout_2->addWidget(connLineEdit, 0, 1);
+  connLineEdit = new CompleteLineEdit(QStringList());
+  this->form.gridLayout_2->addWidget(connLineEdit, 0, 1);
 
-    connect(connLineEdit, SIGNAL(textChanged(QString)),
-            SLOT(adjustBinds(QString)));
+  connect(connLineEdit, SIGNAL(textChanged(QString)),
+          SLOT(adjustBinds(QString)));
 
-    changeModel = true;
+  changeModel = true;
 }
 
 QnstGraphicsLinkDialog::~QnstGraphicsLinkDialog()
@@ -190,44 +192,45 @@ QnstGraphicsLinkDialog::~QnstGraphicsLinkDialog()
 
 void QnstGraphicsLinkDialog::init(QMap<QString, QnstConnector*> connectors)
 {
-    this->connectors = connectors;
+  this->connectors = connectors;
 
-    form.cbCondition->setEnabled(false);
-    form.cbCondition->clear();
+  form.cbCondition->setEnabled(false);
+  form.cbCondition->clear();
 
-    form.cbAction->setEnabled(false);
-    form.cbAction->clear();
+  form.cbAction->setEnabled(false);
+  form.cbAction->clear();
 
-    QStringList strConn;
-    foreach(QnstConnector* conn, connectors.values()){
-        strConn << conn->getName();
-    }
+  QStringList strConn;
+  foreach(QnstConnector* conn, connectors.values())
+  {
+    strConn << conn->getName();
+  }
 
-    if (strConn.count() > 0){
-        strConn << "----------";
-    }
+  if (strConn.count() > 0){
+    strConn << "----------";
+  }
 
-    strConn << "New...";
+  strConn << "New...";
 
-    connLineEdit->setStringList(strConn);
+  connLineEdit->setStringList(strConn);
 
-    // Center the Dialog if this is the first time that we are openning
-    // QnstGraphicsLinkDialog
-    if(firstTime)
-    {
-      setMinimumWidth(350);
-      updateGeometry();
-      QDesktopWidget *desktop = QApplication::desktop();
+  // Center the Dialog if this is the first time that we are openning
+  // QnstGraphicsLinkDialog
+  if(firstTime)
+  {
+    setMinimumWidth(350);
+    updateGeometry();
+    QDesktopWidget *desktop = QApplication::desktop();
 
-      int screenWidth = desktop->width();
-      int screenHeight = desktop->height();
+    int screenWidth = desktop->width();
+    int screenHeight = desktop->height();
 
-      int x = (screenWidth - this->width()) / 2;
-      int y = (screenHeight - this->height()) / 2;
+    int x = (screenWidth - this->width()) / 2;
+    int y = (screenHeight - this->height()) / 2;
 
-      this->move(x, y);
-      firstTime = false;
-    }
+    this->move(x, y);
+    firstTime = false;
+  }
 }
 
 void QnstGraphicsLinkDialog::adjustBinds(QString conn)
@@ -281,8 +284,9 @@ void QnstGraphicsLinkDialog::adjustBinds(QString conn)
 
     if (oconn->getName() == conn)
     {
-      foreach(QString cond, oconn->getConditions().values()){
-          form.cbCondition->addItem(cond);
+      foreach(QString cond, oconn->getConditions().values())
+      {
+        form.cbCondition->addItem(cond);
       }
     }
 

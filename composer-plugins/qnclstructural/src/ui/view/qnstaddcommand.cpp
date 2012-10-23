@@ -4,16 +4,16 @@
 
 QnstAddCommand::QnstAddCommand(QnstView* view, QnstGraphicsEntity* entity)
 {
-    this->view = view; parent = "";
+  this->view = view; parent = "";
 
-    this->entity = NULL;
+  this->entity = NULL;
 
-    copy(entity); ignore = true;
+  copy(entity); ignore = true;
 }
 
 QnstAddCommand::~QnstAddCommand()
 {
-    delete entity;
+  delete entity;
 }
 
 void QnstAddCommand::copy(QnstGraphicsEntity* entity)

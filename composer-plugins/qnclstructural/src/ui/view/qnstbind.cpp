@@ -2,7 +2,7 @@
 
 QnstBind::QnstBind()
 {
-    setnstType(Qnst::Bind);
+  setnstType(Qnst::Bind);
 }
 
 QnstBind::~QnstBind()
@@ -12,70 +12,70 @@ QnstBind::~QnstBind()
 
 QString QnstBind::getRole() const
 {
-    return role;
+  return role;
 }
 
 void QnstBind::setRole(QString role)
 {
-    this->role = role;
+  this->role = role;
 }
 
 QString QnstBind::getComponent() const
 {
-    return component;
+  return component;
 }
 
 void QnstBind::setComponent(QString component)
 {
-    this->component = component;
+  this->component = component;
 }
 
 QString QnstBind::getComponentUid() const
 {
-    return componentUID;
+  return componentUID;
 }
 
 void QnstBind::setComponentUid(QString componentUID)
 {
-    this->componentUID = componentUID;
+  this->componentUID = componentUID;
 }
 
 QString QnstBind::getInterface() const
 {
-    return interface;
+  return interface;
 }
 
 void QnstBind::setInterface(QString interface)
 {
-    this->interface = interface;
+  this->interface = interface;
 }
 
 QString QnstBind::getInterfaceUid() const
 {
-    return interfaceUID;
+  return interfaceUID;
 }
 
 void QnstBind::setInterfaceUid(QString interfaceUID)
 {
-    this->interfaceUID = interfaceUID;
+  this->interfaceUID = interfaceUID;
 }
 
 QMap<QString, QString> QnstBind::getParams()
 {
-    return params;
+  return params;
 }
 
 void QnstBind::setParams(QMap<QString, QString> params)
 {
-    this->params = params;
+  this->params = params;
 }
 
 QMap<QString, QString> QnstBind::getNameUIDs()
 {
-    return name_uids;
+  return name_uids;
 }
 
 void QnstBind::setNameUIDs(QMap<QString, QString> name_uids)
 {
-    this->name_uids = name_uids;
+  this->name_uids = name_uids;
 }
