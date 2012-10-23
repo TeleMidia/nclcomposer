@@ -246,8 +246,19 @@ void QnstView::readLink(QDomElement element, QDomElement parent)
     {
       link->setnstParent(entities[element.attribute("parent")]);
 
-      link->setxConnector(element.attribute("xconnetor"));
-      link->setxConnectorUID(element.attribute("xconnetorUID"));
+      // This block of code is here only for compatibility with older versions,
+      // since in older version we were saving with the name "xconnetor"
+      if(element.hasAttribute("xconnetor"))
+        link->setxConnector(element.attribute("xconnetor"));
+      if(element.hasAttribute("xconnetorUID"))
+        link->setxConnectorUID(element.attribute("xconnetorUID"));
+      // end compatibility block of code
+
+      if(element.hasAttribute("xconnector"))
+        link->setxConnector(element.attribute("xconnector"));
+      if(element.hasAttribute("xconnectorUID"))
+        link->setxConnectorUID(element.attribute("xconnectorUID"));
+
       link->setAggregatorUID(element.attribute("aggregatorUID"));
 
       links[link->getnstUid()] = link;
@@ -598,8 +609,8 @@ QString QnstView::serialize()
     if(link->getnstParent() != NULL)
       e.setAttribute("parent", link->getnstParent()->getnstUid());
 
-    e.setAttribute("xconnetor", link->getxConnector());
-    e.setAttribute("xconnetorUID", link->getxConnectorUID());
+    e.setAttribute("xconnector", link->getxConnector());
+    e.setAttribute("xconnectorUID", link->getxConnectorUID());
     e.setAttribute("aggregatorUID", link->getAggregatorUID());
 
     root.appendChild(e);
