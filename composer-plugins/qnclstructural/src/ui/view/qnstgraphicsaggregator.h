@@ -6,19 +6,19 @@
 class QnstGraphicsAggregator : public QnstGraphicsNode
 {
 public:
-    QnstGraphicsAggregator(QnstGraphicsEntity* parent = 0);
+  QnstGraphicsAggregator(QnstGraphicsEntity* parent = 0);
 
-    ~QnstGraphicsAggregator();
+  ~QnstGraphicsAggregator();
 
 protected:
-    virtual void draw(QPainter* painter);
+  virtual void draw(QPainter* painter);
 
-    virtual void delineate(QPainterPath* painter) const;
+  virtual void delineate(QPainterPath* painter) const;
 
 private:
-    void createObjects();
+  void createObjects();
 
-    void createConnections();
+  void createConnections();
 };
 
 #endif // QNSTGRAPHICSAGGREGATOR_H

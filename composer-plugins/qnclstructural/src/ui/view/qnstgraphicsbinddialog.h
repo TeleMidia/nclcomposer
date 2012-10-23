@@ -14,16 +14,16 @@
 class QnstGraphicsBindDialog : public QDialog
 {
 public:
-    QnstGraphicsBindDialog(QWidget* parent = 0);
+  QnstGraphicsBindDialog(QWidget* parent = 0);
 
-    ~QnstGraphicsBindDialog();
+  ~QnstGraphicsBindDialog();
 
-    void init(QMap<QString, QString> params);
+  void init(QMap<QString, QString> params);
 
-    QMap<QString, QString> getProperties();
+  QMap<QString, QString> getProperties();
 
 public:
-    Ui::QnstGraphicsBindDialog form;
+  Ui::QnstGraphicsBindDialog form;
 };
 
 #endif // QNSTGRAPHICSBINDDIALOG_H

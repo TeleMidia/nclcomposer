@@ -11,18 +11,18 @@
 class QnstGraphicsActionDialog : public QDialog
 {
 public:
-    QnstGraphicsActionDialog(QWidget* parent = 0);
+  QnstGraphicsActionDialog(QWidget* parent = 0);
 
-    ~QnstGraphicsActionDialog();
+  ~QnstGraphicsActionDialog();
 
-    void init(QMap<QString, QnstConnector*> connectors, QnstLink* link);
+  void init(QMap<QString, QnstConnector*> connectors, QnstLink* link);
 
 public:
-    Ui::QnstGraphicsActionForm form;
+  Ui::QnstGraphicsActionForm form;
 
-    QnstLink* link;
+  QnstLink* link;
 
-    QMap<QString, QnstConnector*> connectors;
+  QMap<QString, QnstConnector*> connectors;
 };
 
 #endif // QNSTGRAPHICSACTIONDIALOG_H
