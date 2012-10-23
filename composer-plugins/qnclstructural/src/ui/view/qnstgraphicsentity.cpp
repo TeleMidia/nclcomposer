@@ -64,7 +64,7 @@ void QnstGraphicsEntity::removeAngle(QString uid, int angle)
 
 QVector<QnstGraphicsEntity*> QnstGraphicsEntity::getnstGraphicsEntities()
 {
-    return entities;
+  return entities;
 }
 
 bool QnstGraphicsEntity::isDraggable()
@@ -201,7 +201,10 @@ void QnstGraphicsEntity::contextMenuEvent(QGraphicsSceneContextMenuEvent* event)
   if (!event->isAccepted())
   {
     if (!isSelected())
-      setSelected(true); emit entitySelected(this);
+    {
+      setSelected(true);
+      emit entitySelected(this);
+    }
 
     if (menu != NULL)
       menu->exec(event->screenPos());
