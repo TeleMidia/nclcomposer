@@ -12,24 +12,24 @@ class QnstView;
 class QnstChangeCommand : public QUndoCommand
 {
 public:
-    QnstChangeCommand(QnstView* view, QString uid,
-                      const QMap<QString,QString> &properties);
+  QnstChangeCommand(QnstView* view, QString uid,
+                    const QMap<QString,QString> &properties);
 
-    ~QnstChangeCommand();
+  ~QnstChangeCommand();
 
-    virtual void undo();
+  virtual void undo();
 
-    virtual void redo();
+  virtual void redo();
 
 private:
-    bool ignore;
+  bool ignore;
 
-    QString uid;
+  QString uid;
 
-    QnstView* view;
+  QnstView* view;
 
-    QMap<QString, QString> previous;
+  QMap<QString, QString> previous;
 
-    QMap<QString, QString> next;
+  QMap<QString, QString> next;
 };
 #endif // QNSTCHANGECOMMAND_H

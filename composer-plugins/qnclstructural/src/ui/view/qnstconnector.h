@@ -8,40 +8,40 @@
 class QnstConnector : public QnstEntity
 {
 public:
-    QnstConnector();
+  QnstConnector();
 
-    ~QnstConnector();
+  ~QnstConnector();
 
-    QString getName();
+  QString getName();
 
-    void setName(QString name);
+  void setName(QString name);
 
-    QMap<QString, QString> getConditions();
+  QMap<QString, QString> getConditions();
 
-    void addCondition(QString uid, QString condition);
+  void addCondition(QString uid, QString condition);
 
-    void removeCondition(QString uid);
+  void removeCondition(QString uid);
 
-    QMap<QString, QString> getActions();
+  QMap<QString, QString> getActions();
 
-    void addAction(QString uid, QString action);
+  void addAction(QString uid, QString action);
 
-    void removeAction(QString uid);
+  void removeAction(QString uid);
 
-    QMap<QString, QString> getParams();
+  QMap<QString, QString> getParams();
 
-    void addParam(QString uid, QString name);
+  void addParam(QString uid, QString name);
 
-    void removeParam(QString uid);
+  void removeParam(QString uid);
 
 private:
-    QString name;
+  QString name;
 
-    QMap<QString, QString> params;
+  QMap<QString, QString> params;
 
-    QMap<QString, QString> conditions;
+  QMap<QString, QString> conditions;
 
-    QMap<QString, QString> actions;
+  QMap<QString, QString> actions;
 };
 
 #endif // QNSTCONNECTOR_H

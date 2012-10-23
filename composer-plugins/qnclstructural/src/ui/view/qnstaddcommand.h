@@ -11,24 +11,24 @@ class QnstView;
 class QnstAddCommand : public QUndoCommand
 {
 public:
-    QnstAddCommand(QnstView* view, QnstGraphicsEntity* entity);
+  QnstAddCommand(QnstView* view, QnstGraphicsEntity* entity);
 
-    ~QnstAddCommand();
+  ~QnstAddCommand();
 
-    virtual void undo();
+  virtual void undo();
 
-    virtual void redo();
+  virtual void redo();
 
 private:
-    void copy(QnstGraphicsEntity* entity);
+  void copy(QnstGraphicsEntity* entity);
 
-    bool ignore;
+  bool ignore;
 
-    QString parent;
+  QString parent;
 
-    QnstView* view;
+  QnstView* view;
 
-    QnstGraphicsEntity* entity;
+  QnstGraphicsEntity* entity;
 };
 
 #endif // QNSTADDCOMMAND_H
