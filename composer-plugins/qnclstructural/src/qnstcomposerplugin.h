@@ -31,134 +31,134 @@ using namespace composer::extension;
 
 class QnstComposerPlugin : public IPlugin
 {
-    Q_OBJECT
+  Q_OBJECT
 
 public:
-    QnstComposerPlugin(QObject* parent = 0);
+  QnstComposerPlugin(QObject* parent = 0);
 
-    ~QnstComposerPlugin();
+  ~QnstComposerPlugin();
 
-    virtual void init();
+  virtual void init();
 
-    virtual QWidget* getWidget();
+  virtual QWidget* getWidget();
 
-    virtual bool saveSubsession();
-
-public slots:
-    virtual void updateFromModel();
-
-    virtual void onEntityAdded(QString pluginID, Entity *entity);
-
-    virtual void errorMessage(QString error);
-
-    virtual void onEntityChanged(QString pluginID, Entity *entity);
-
-    virtual void onEntityRemoved(QString pluginID, QString entityID);
-
-    virtual void changeSelectedEntity(QString pluginID, void* entityUID);
-
-    void clearValidationError(QString pluginID, void *param);
-
-    void validationError(QString pluginID, void *param);
-
-
-    /* From Core */
-    void requestEntitySelection(const QString uid);
-
-    void requestEntityAddition(Entity* entity);
-
-    void requestEntityRemotion(Entity* entity);
-
-    void requestEntityChange(Entity* entity);
-
-    void requestEntitySelection(Entity* entity);
-
-    /* From View */
-    void notifyEntityAddedInView (const QString uid, const QString parent,
-                                  QMap<QString, QString> properties);
-
-    void notifyEntityDeletedInView(const QString uid);
-
-    void notifyEntityChangedInView(const QString uid,
-                                   QMap<QString, QString> properties);
-
-private:
-    QString getUidById(QString id);
-
-    QString getUidById(QString id, Entity* entity);
-
-    void createWidgets();
-
-    void createConnections();
-
-    /* FROM NCL COMPOSER CORE */
-    void requestImportBaseAddition(Entity* entity);
-
-    void requestImportBaseChange(Entity* entity);
-
-    void requestCausalConnectorAddition(Entity* entity);
-
-    void requestCausalConnectorChange(Entity* entity);
-
-    void requestSimpleConditionAddition(Entity* entity);
-
-    void requestSimpleConditionChange(Entity* entity);
-
-    void requestSimpleActionAddition(Entity* entity);
-
-    void requestSimpleActionChange(Entity* entity);
-
-    void requestConnectorParamAddition(Entity* entity);
-
-    void requestConnectorParamChange(Entity* entity);
-    /* END FROM NCL COMPOSER CORE */
-
-
-
-    /* FROM QNSTVIEW */
-    void requestBodyDependence();
-
-    void requestConnectorAddition(const QString uid, const QString parent,
-                                  const QMap<QString, QString> &properties);
-
-    void requestComplexConnectorAddition(const QString uid,
-                                         const QString parent,
-                                      const QMap<QString, QString> &properties);
-
-    void requestBindAddition(const QString uid, const QString parent,
-                             const QMap<QString, QString> &properties);
-
-    void requestConnectorDependence();
-
-    void requestConnectorBaseDependence();
-    /* END FROM QNSTVIEW */
-
-
-private:
-    int n;
-
-    QnstView* view;
-
-    QString request;
-    QMap <QString, QString> entities; // core -> structural
-    QMap <QString, QString> nclIDtoStructural; // nclId -> structural ID
-    QList <QString> dirtyEntities;
-    QList <QString> previousCoreID;
-
-    QString lastSelected;
-
-/* Functions to handle the "sinchronization with core" */
-    bool isSyncingFromTextual;
-    void cacheNCLIds();
-    QString insertNCLIDIfEmpty(Entity *entity);
-    QString getNCLIdFromEntity(Entity *entity);
-    bool isEntityHandled(Entity *entity);
-    void syncNCLIdsWithStructuralIds();
+  virtual bool saveSubsession();
 
 public slots:
-    void textualStartSync(QString, void*); /* from textual plugin */
-    void textualFinishSync(QString, void*); /* from textual plugin */
-/* End "synchronization with core". */
+  virtual void updateFromModel();
+
+  virtual void onEntityAdded(QString pluginID, Entity *entity);
+
+  virtual void errorMessage(QString error);
+
+  virtual void onEntityChanged(QString pluginID, Entity *entity);
+
+  virtual void onEntityRemoved(QString pluginID, QString entityID);
+
+  virtual void changeSelectedEntity(QString pluginID, void* entityUID);
+
+  void clearValidationError(QString pluginID, void *param);
+
+  void validationError(QString pluginID, void *param);
+
+
+  /* From Core */
+  void requestEntitySelection(const QString uid);
+
+  void requestEntityAddition(Entity* entity);
+
+  void requestEntityRemotion(Entity* entity);
+
+  void requestEntityChange(Entity* entity);
+
+  void requestEntitySelection(Entity* entity);
+
+  /* From View */
+  void notifyEntityAddedInView (const QString uid, const QString parent,
+                                QMap<QString, QString> properties);
+
+  void notifyEntityDeletedInView(const QString uid);
+
+  void notifyEntityChangedInView(const QString uid,
+                                 QMap<QString, QString> properties);
+
+private:
+  QString getUidById(QString id);
+
+  QString getUidById(QString id, Entity* entity);
+
+  void createWidgets();
+
+  void createConnections();
+
+  /* FROM NCL COMPOSER CORE */
+  void requestImportBaseAddition(Entity* entity);
+
+  void requestImportBaseChange(Entity* entity);
+
+  void requestCausalConnectorAddition(Entity* entity);
+
+  void requestCausalConnectorChange(Entity* entity);
+
+  void requestSimpleConditionAddition(Entity* entity);
+
+  void requestSimpleConditionChange(Entity* entity);
+
+  void requestSimpleActionAddition(Entity* entity);
+
+  void requestSimpleActionChange(Entity* entity);
+
+  void requestConnectorParamAddition(Entity* entity);
+
+  void requestConnectorParamChange(Entity* entity);
+  /* END FROM NCL COMPOSER CORE */
+
+
+
+  /* FROM QNSTVIEW */
+  void requestBodyDependence();
+
+  void requestConnectorAddition(const QString uid, const QString parent,
+                                const QMap<QString, QString> &properties);
+
+  void requestComplexConnectorAddition(const QString uid,
+                                       const QString parent,
+                                       const QMap<QString, QString> &properties);
+
+  void requestBindAddition(const QString uid, const QString parent,
+                           const QMap<QString, QString> &properties);
+
+  void requestConnectorDependence();
+
+  void requestConnectorBaseDependence();
+  /* END FROM QNSTVIEW */
+
+
+private:
+  int n;
+
+  QnstView* view;
+
+  QString request;
+  QMap <QString, QString> entities; // core -> structural
+  QMap <QString, QString> nclIDtoStructural; // nclId -> structural ID
+  QList <QString> dirtyEntities;
+  QList <QString> previousCoreID;
+
+  QString lastSelected;
+
+  /* Functions to handle the "sinchronization with core" */
+  bool isSyncingFromTextual;
+  void cacheNCLIds();
+  QString insertNCLIDIfEmpty(Entity *entity);
+  QString getNCLIdFromEntity(Entity *entity);
+  bool isEntityHandled(Entity *entity);
+  void syncNCLIdsWithStructuralIds();
+
+public slots:
+  void textualStartSync(QString, void*); /* from textual plugin */
+  void textualFinishSync(QString, void*); /* from textual plugin */
+  /* End "synchronization with core". */
 };
 
 #endif // QNSTCOMPOSERPLUGIN_H

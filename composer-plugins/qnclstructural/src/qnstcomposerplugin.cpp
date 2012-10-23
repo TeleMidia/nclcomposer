@@ -162,11 +162,28 @@ bool QnstComposerPlugin::saveSubsession()
 
 void QnstComposerPlugin::updateFromModel()
 {
-//    // TODO: clean view data before update.
-//    Entity* project = getProject();
-//    if (project != NULL){
-//        updateChildren(project);
-//    }
+  // \todo Keep the previous media position!!
+  foreach(QString coreID, entities.keys())
+  {
+    Entity *entity = project->getEntityById(coreID);
+    requestEntityRemotion(entity);
+  }
+
+  QStack <Entity *> stack;
+  stack.push(project);
+
+  while(stack.size())
+  {
+    Entity *current = stack.top();
+    stack.pop();
+
+    QVector <Entity *> children = current->getChildren();
+    for(int i = 0; i <children.size(); i++)
+    {
+      requestEntityAddition(children[i]);
+      stack.push(children[i]);
+    }
+  }
 }
 
 void QnstComposerPlugin::onEntityAdded(QString pluginID, Entity *entity)
@@ -629,7 +646,7 @@ void QnstComposerPlugin::requestEntityAddition(Entity* entity)
 
 void QnstComposerPlugin::requestEntityRemotion(Entity* entity)
 {
-  // It is still missing connector, simpleCondition and simpleAction
+  // \fixme It is still missing connector, simpleCondition and simpleAction
   if (isEntityHandled(entity))
   {
     QString entityID = entity->getUniqueId();
