@@ -241,8 +241,23 @@ private:
 
   QString createNewConnector(QString condition, QString action);
 
-  QnstGraphicsAggregator* createAggregator(QnstGraphicsEntity* a,
-                                           QnstGraphicsEntity* b);
+  void createReference(QnstGraphicsEntity* entitya,
+                       QnstGraphicsEntity* entityb);
+
+  void createMapping(QnstGraphicsEntity* entitya,
+                     QnstGraphicsEntity* entityb);
+
+  QnstGraphicsAggregator* createAggregator(QnstGraphicsEntity* entitya,
+                                           QnstGraphicsEntity* entityb);
+
+  void createActionWithDialog(QnstGraphicsEntity* entitya,
+                              QnstGraphicsEntity* entityb);
+
+  void createConditionWithDialog(QnstGraphicsEntity* entitya,
+                                 QnstGraphicsEntity* entityb);
+
+  void createLinkWithDialog(QnstGraphicsEntity* entitya,
+                            QnstGraphicsEntity* entityb);
 
   void createNoGraphicalLink(QnstGraphicsEntity* entitya,
                              QnstGraphicsEntity* entityb,
