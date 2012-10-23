@@ -1,6 +1,7 @@
 #ifndef QNSTUTIL_H
 #define QNSTUTIL_H
 
+#include <algorithm>
 #include <QMap>
 
 #include "qnstgraphicsentity.h"
@@ -88,27 +89,54 @@ private:
   static std::map <Qnst::BindType, QString>     strFromBindType;
 };
 
+/*!
+ * \brief A template class that simplify the initialization of std::map.
+ */
 template <typename T, typename U>
 class create_map
 {
 private:
-    std::map<T, U> m_map;
+  std::map<T, U> m_map;
+
 public:
-    create_map(const T& key, const U& val)
-    {
-        m_map[key] = val;
-    }
+  create_map(const T& key, const U& val)
+  {
+    m_map[key] = val;
+  }
 
-    create_map<T, U>& operator()(const T& key, const U& val)
-    {
-        m_map[key] = val;
-        return *this;
-    }
+  create_map<T, U>& operator()(const T& key, const U& val)
+  {
+    m_map[key] = val;
+    return *this;
+  }
 
-    operator std::map<T, U>()
-    {
-        return m_map;
-    }
+  operator std::map<T, U>()
+  {
+    return m_map;
+  }
 };
+
+/*!
+ * \brief A function that invert a pair <K, V> to <V, K>.
+ */
+template<typename K, typename V>
+std::pair<V, K> flip_pair(const std::pair<K, V>& p)
+{
+  return std::make_pair(p.second, p.first);
+}
+
+/*!
+ * \brief A function that invert one complete std::map from <key,value> to
+ *    <value,key>.
+ */
+template <typename K, typename V>
+std::map <K, V> invert_map (const std::map <V, K> &in)
+{
+  std::map<K, V> out;
+  std::transform(in.begin(), in.end(),
+                 std::inserter(out, out.begin()),
+                 flip_pair<V, K>);
+       return out;
+}
 
 #endif

@@ -128,23 +128,7 @@ std::map <QString, Qnst::BindType> QnstUtil::bindTypeFromRoleStr =
 
 /* Initialize String from Qnst::BindType Map */
 std::map <Qnst::BindType, QString> QnstUtil::strFromBindType =
-  create_map<Qnst::BindType, QString>
-    (Qnst::onBegin, "onBegin")
-    (Qnst::onEnd, "onEnd")
-    (Qnst::onSelection, "onSelection")
-    (Qnst::onResume, "onResume")
-    (Qnst::onPause, "onPause")
-    (Qnst::onBeginAttribution, "onBeginAttribution")
-    (Qnst::onEndAttribution, "onEndAttribution")
-    (Qnst::onPauseAttribution, "onPauseAttribution")
-    (Qnst::onResumeAttribution, "onResumeAttribution")
-
-
-    (Qnst::Start, "start")
-    (Qnst::Stop, "stop")
-    (Qnst::Resume, "resume")
-    (Qnst::Pause, "pause")
-    (Qnst::Set, "set");
+  invert_map<Qnst::BindType, QString> (QnstUtil::bindTypeFromRoleStr);
 
 
 QnstGraphicsEntity *QnstUtil::makeGraphicsEntity(Qnst::EntityType type,
@@ -193,7 +177,7 @@ QnstGraphicsEntity *QnstUtil::makeGraphicsEntity(Qnst::EntityType type,
 
     case Qnst::Property:
       entity = new QnstGraphicsProperty(parent);
-       break;
+      break;
 
     case Qnst::Aggregator:
       entity = new QnstGraphicsAggregator(parent);
