@@ -310,6 +310,8 @@ void QnstComposerPlugin::requestEntityAddition(Entity* entity)
 
       if (entity->getAttribute("id") != "")
         properties["id"] = entity->getAttribute("id");
+
+      ok = true;
       break;
     }
 
