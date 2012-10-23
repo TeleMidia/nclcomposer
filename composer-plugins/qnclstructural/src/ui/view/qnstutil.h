@@ -55,6 +55,16 @@ public:
   static Qnst::EntityType getnstTypeFromStr(const QString &strType);
 
   /*!
+   * \brief Returns the string that represents the type.
+   *
+   * One of the use of this function is to serialize the Qnst::EntityType.
+   *
+   * \arg type the entity type
+   * \return the string that represent that type.
+   */
+  static QString getStrFromNstType(Qnst::EntityType type);
+
+  /*!
    * \brief Returns a media identifier prefix for an specific qnst entity type.
    *
    * \arg type the qnst entity type.
@@ -84,6 +94,7 @@ private:
   static std::map <Qnst::EntityType, QString>   iconFromTypeMap;
   static std::map <QString, Qnst::EntityType>   typeFromExtMap;
   static std::map <QString, Qnst::EntityType>   typeFromStr;
+  static std::map <Qnst::EntityType, QString>   strFromType;
   static std::map  <Qnst::EntityType, QString>  prefixIdFromType;
   static std::map <QString, Qnst::BindType>     bindTypeFromRoleStr;
   static std::map <Qnst::BindType, QString>     strFromBindType;

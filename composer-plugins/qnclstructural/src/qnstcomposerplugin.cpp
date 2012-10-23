@@ -313,7 +313,8 @@ void QnstComposerPlugin::requestEntityAddition(Entity* entity)
   QMap<QString, QString> properties;
 
   // get the qnst type based on NCL Composer Type
-  int type = QnstUtil::getnstTypeFromStr(entity->getType());
+  Qnst::EntityType type = QnstUtil::getnstTypeFromStr(entity->getType());
+  properties["TYPE"] = QnstUtil::getStrFromNstType(type);
 
   bool ok = false;
 
@@ -322,8 +323,6 @@ void QnstComposerPlugin::requestEntityAddition(Entity* entity)
     case Qnst::Body:
     {
       entities[entity->getUniqueId()] = entity->getUniqueId();
-
-      properties["TYPE"] = "body";
 
       if (entity->getAttribute("id") != "")
         properties["id"] = entity->getAttribute("id");
@@ -335,8 +334,6 @@ void QnstComposerPlugin::requestEntityAddition(Entity* entity)
     case Qnst::Context:
     {
       entities[entity->getUniqueId()] = entity->getUniqueId();
-
-      properties["TYPE"] = "context";
 
       if (entity->getAttribute("id") != "")
         properties["id"] = entity->getAttribute("id");
@@ -353,8 +350,6 @@ void QnstComposerPlugin::requestEntityAddition(Entity* entity)
     {
       entities[entity->getUniqueId()] = entity->getUniqueId();
 
-      properties["TYPE"] = "switch";
-
       if (entity->getAttribute("id") != "")
         properties["id"] = entity->getAttribute("id");
 
@@ -370,7 +365,6 @@ void QnstComposerPlugin::requestEntityAddition(Entity* entity)
     {
       entities[entity->getUniqueId()] = entity->getUniqueId();
 
-      properties["TYPE"] = "media";
       properties["id"] = entity->getAttribute("id");
       properties["src"] = entity->getAttribute("src");
       properties["refer"] = entity->getAttribute("refer");
@@ -417,7 +411,6 @@ void QnstComposerPlugin::requestEntityAddition(Entity* entity)
     {
       entities[entity->getUniqueId()] = entity->getUniqueId();
 
-      properties["TYPE"] = "port";
       properties["id"] = entity->getAttribute("id");
 
       properties["component"] = entity->getAttribute("component");
@@ -445,8 +438,6 @@ void QnstComposerPlugin::requestEntityAddition(Entity* entity)
     {
       entities[entity->getUniqueId()] = entity->getUniqueId();
 
-      properties["TYPE"] = "link";
-
       if (entity->getAttribute("id") != "")
         properties["id"] = entity->getAttribute("id");
 
@@ -470,7 +461,6 @@ void QnstComposerPlugin::requestEntityAddition(Entity* entity)
     {
       entities[entity->getUniqueId()] = entity->getUniqueId();
 
-      properties["TYPE"] = "bind";
       properties["role"] = entity->getAttribute("role");
       properties["component"] = entity->getAttribute("component");
 
@@ -525,7 +515,6 @@ void QnstComposerPlugin::requestEntityAddition(Entity* entity)
     {
       entities[entity->getUniqueId()] = entity->getUniqueId();
 
-      properties["TYPE"] = "property";
       properties["id"] = entity->getAttribute("name");
 
       ok = true;
@@ -534,7 +523,7 @@ void QnstComposerPlugin::requestEntityAddition(Entity* entity)
 
     case Qnst::Area:
     {
-      properties["TYPE"] = "area";
+      // \fixme Why we do not add to entity map ??
       properties["id"] = entity->getAttribute("id");
 
       ok = true;
@@ -543,7 +532,7 @@ void QnstComposerPlugin::requestEntityAddition(Entity* entity)
 
     case Qnst::SwitchPort:
     {
-      properties["TYPE"] = "switchPort";
+      // \fixme Why we do not add to entities map ??
       properties["id"] = entity->getAttribute("id");
 
       ok = true;
@@ -552,8 +541,7 @@ void QnstComposerPlugin::requestEntityAddition(Entity* entity)
 
     case Qnst::Mapping:
     {
-      properties["TYPE"] = "mapping";
-
+      // \fixme Why we do not add to entities map ??
       properties["component"] = entity->getAttribute("component");
       if (entity->getAttribute("component") != "")
       {
@@ -576,8 +564,7 @@ void QnstComposerPlugin::requestEntityAddition(Entity* entity)
 
     case Qnst::BindParam:
     {
-      properties["TYPE"] = "bindParam";
-
+      // \fixme Why we do not add to entities map ??
       properties["name"] = entity->getAttribute("name");
       properties["value"] = entity->getAttribute("value");
 
@@ -1008,19 +995,18 @@ void QnstComposerPlugin::requestImportBaseChange(Entity* entity)
 
 void QnstComposerPlugin::requestCausalConnectorAddition(Entity* entity)
 {
-    QMap<QString, QString> properties;
+  QMap<QString, QString> properties;
 
-    properties["TYPE"] = "causalConnector";
+  properties["TYPE"] = "causalConnector";
 
-    if (entity->getAttribute("id") != ""){
-        properties["id"] = entity->getAttribute("id");
-    }
+  if (entity->getAttribute("id") != "")
+    properties["id"] = entity->getAttribute("id");
 
-    if(entity->getParent()->getType() == "importBase")
-      view->addEntity(entity->getUniqueId(), entity->getParentUniqueId(),
-                      properties);
-    else
-        view->addEntity(entity->getUniqueId(),"", properties);
+  if(entity->getParent()->getType() == "importBase")
+    view->addEntity(entity->getUniqueId(), entity->getParentUniqueId(),
+                    properties);
+  else
+    view->addEntity(entity->getUniqueId(),"", properties);
 }
 
 void QnstComposerPlugin::requestCausalConnectorChange(Entity* entity)

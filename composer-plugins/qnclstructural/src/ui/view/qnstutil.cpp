@@ -85,6 +85,9 @@ std::map <QString, Qnst::EntityType> QnstUtil::typeFromStr =
 
     ("aggregator",  Qnst::Aggregator);
 
+std::map <Qnst::EntityType, QString> QnstUtil::strFromType =
+    invert_map<Qnst::EntityType, QString>(QnstUtil::typeFromStr);
+
 /* Initialize prefix id from type Map */
 std::map <Qnst::EntityType, QString> QnstUtil::prefixIdFromType =
   create_map<Qnst::EntityType, QString >
@@ -243,6 +246,14 @@ Qnst::EntityType QnstUtil::getnstTypeFromStr(const QString &strType)
     return typeFromStr[strType];
 
   return Qnst::NoType;
+}
+
+QString QnstUtil::getStrFromNstType(Qnst::EntityType type)
+{
+  if(strFromType.count(type))
+    return strFromType[type];
+
+  else return "";
 }
 
 QString QnstUtil::getPrefixIdFromType(Qnst::EntityType type)
