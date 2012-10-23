@@ -115,6 +115,10 @@ std::map <QString, Qnst::BindType> QnstUtil::bindTypeFromRoleStr =
     ("onSelection", Qnst::onSelection)
     ("onResume", Qnst::onResume)
     ("onPause", Qnst::onPause)
+    ("onBeginAttribution", Qnst::onBeginAttribution)
+    ("onEndAttribution", Qnst::onEndAttribution)
+    ("onPauseAttribution", Qnst::onPauseAttribution)
+    ("onResumeAttribution", Qnst::onResumeAttribution)
 
     ("start", Qnst::Start)
     ("stop", Qnst::Stop)
@@ -130,6 +134,11 @@ std::map <Qnst::BindType, QString> QnstUtil::strFromBindType =
     (Qnst::onSelection, "onSelection")
     (Qnst::onResume, "onResume")
     (Qnst::onPause, "onPause")
+    (Qnst::onBeginAttribution, "onBeginAttribution")
+    (Qnst::onEndAttribution, "onEndAttribution")
+    (Qnst::onPauseAttribution, "onPauseAttribution")
+    (Qnst::onResumeAttribution, "onResumeAttribution")
+
 
     (Qnst::Start, "start")
     (Qnst::Stop, "stop")

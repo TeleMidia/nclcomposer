@@ -251,6 +251,11 @@ private:
                              QnstGraphicsBind* actionDialog,
                              QString connector);
 
+  QnstGraphicsBind* createBind(QnstGraphicsEntity* entitya,
+                               QnstGraphicsEntity* entityb,
+                               QString condition,
+                               QString action);
+
   QnstBind* createNoGraphicalBind(QnstGraphicsEntity* entitya,
                              QnstGraphicsEntity* entityb,
                              QnstLink* link,

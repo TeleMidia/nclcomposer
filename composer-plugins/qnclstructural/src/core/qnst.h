@@ -68,6 +68,10 @@ public:
     onSelection,
     onResume,
     onPause,
+    onBeginAttribution,
+    onEndAttribution,
+    onPauseAttribution,
+    onResumeAttribution,
 
     /* Actions */
     Start,
