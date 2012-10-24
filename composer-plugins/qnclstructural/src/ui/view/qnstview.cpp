@@ -968,12 +968,12 @@ void QnstView::addEntity(const QString uid, const QString parent,
       entity->setnstUid(uid);
       entity->setnstId(properties["id"]);
 
-      entity->setProperties(properties);
-
       entity->setTop(scene->height()/2 - DEFAULT_BODY_HEIGHT/2);
       entity->setLeft(scene->width()/2 - DEFAULT_BODY_WIDTH/2);
       entity->setWidth(DEFAULT_BODY_WIDTH);
       entity->setHeight(DEFAULT_BODY_HEIGHT);
+
+      entity->setProperties(properties);
 
       scene->addRoot(entity);
 
