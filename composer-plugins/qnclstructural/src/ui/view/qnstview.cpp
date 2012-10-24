@@ -4382,24 +4382,32 @@ QnstGraphicsAggregator* QnstView::createAggregator(QnstGraphicsEntity* entitya,
 
         pointa = parentb->mapFromItem(parenta, pointa);
 
-      }else{
+      }
+      else
+      {
         aggregator = new QnstGraphicsAggregator((QnstGraphicsNode*) parenta);
         parenta ->addnstGraphicsEntity(aggregator);
       }
 
-      if (pointa.x() <= pointb.x() && pointa.y() <= pointb.y()){
+      if (pointa.x() <= pointb.x() && pointa.y() <= pointb.y())
+      {
         xcenter = pointa.x() + (pointb.x() - pointa.x())/2;
         ycenter = pointa.y() + (pointb.y() - pointa.y())/2;
-
-      }else if (pointa.x() > pointb.x() && pointa.y() < pointb.y()){
+      }
+      else if (pointa.x() > pointb.x() && pointa.y() < pointb.y())
+      {
         xcenter = pointb.x() + (pointa.x() - pointb.x())/2;
         ycenter = pointa.y() + (pointb.y() - pointa.y())/2;
 
-      }else if (pointa.x() < pointb.x() && pointa.y() > pointb.y()){
+      }
+      else if (pointa.x() < pointb.x() && pointa.y() > pointb.y())
+      {
         xcenter = pointa.x() + (pointb.x() - pointa.x())/2;
         ycenter = pointb.y() + (pointa.y() - pointb.y())/2;
 
-      }else if (pointa.x() > pointb.x() && pointa.y() > pointb.y()){
+      }
+      else if (pointa.x() > pointb.x() && pointa.y() > pointb.y())
+      {
         xcenter = pointb.x() + (pointa.x() - pointb.x())/2;
         ycenter = pointb.y() + (pointa.y() - pointb.y())/2;
       }
@@ -4429,21 +4437,27 @@ void QnstView::createReference(QnstGraphicsEntity* entitya,
     // removing previous reference
     foreach(QnstGraphicsEntity* entity, parenta->getnstGraphicsEntities())
     {
-      if (entity->getnstType() == Qnst::Reference){
+      if (entity->getnstType() == Qnst::Reference)
+      {
         QnstGraphicsEdge* edge = (QnstGraphicsEdge*) entity;
 
         if (entitya == edge->getEntityA()){
-          if (edge->getEntityA()->getncgType() == Qncg::Node){
+          if (edge->getEntityA()->getncgType() == Qncg::Node)
+          {
             ((QnstGraphicsNode*) edge->getEntityA())->removenstGraphicsEdge(edge);
-
-          }else if (edge->getEntityA()->getncgType() == Qncg::Interface){
+          }
+          else if (edge->getEntityA()->getncgType() == Qncg::Interface)
+          {
             ((QnstGraphicsInterface*) edge->getEntityA())->removenstGraphicsEdge(edge);
           }
 
-          if (edge->getEntityB()->getncgType() == Qncg::Node){
+          if (edge->getEntityB()->getncgType() == Qncg::Node)
+          {
             ((QnstGraphicsNode*) edge->getEntityB())->removenstGraphicsEdge(edge);
 
-          }else if (edge->getEntityB()->getncgType() == Qncg::Interface){
+          }
+          else if (edge->getEntityB()->getncgType() == Qncg::Interface)
+          {
             ((QnstGraphicsInterface*) edge->getEntityB())->removenstGraphicsEdge(edge);
           }
 
