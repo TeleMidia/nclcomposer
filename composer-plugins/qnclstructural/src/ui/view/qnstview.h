@@ -26,6 +26,7 @@
 #include "qnstgraphicsport.h"
 #include "qnstgraphicsreference.h"
 #include "qnstgraphicslink.h"
+#include "qnstgraphicsaggregator.h"
 #include "qnstgraphicslinkdialog.h"
 #include "qnstgraphicsconditiondialog.h"
 #include "qnstgraphicsactiondialog.h"

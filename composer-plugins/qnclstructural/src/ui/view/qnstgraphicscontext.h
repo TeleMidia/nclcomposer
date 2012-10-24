@@ -6,7 +6,6 @@
 #include "qnstgraphicsswitch.h"
 #include "qnstgraphicsmedia.h"
 #include "qnstgraphicsport.h"
-#include "qnstgraphicsaggregator.h"
 
 class QnstGraphicsContext : public QnstGraphicsComposition
 {

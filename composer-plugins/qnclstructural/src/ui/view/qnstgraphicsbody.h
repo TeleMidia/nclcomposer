@@ -12,7 +12,6 @@
 #include "qnstgraphicscontext.h"
 #include "qnstgraphicsswitch.h"
 #include "qnstgraphicsport.h"
-#include "qnstgraphicsaggregator.h"
 
 class QnstGraphicsBody : public QnstGraphicsComposition
 {
