@@ -35,7 +35,9 @@ public:
     Settings,
     /* END MEDIAS */
 
-    Aggregator,
+
+    Aggregator, // \fixme this is here only for compatibility with versions
+                // prior to 0.1.3
 
     Compostion,
     Body,

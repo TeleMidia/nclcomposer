@@ -298,6 +298,9 @@ private:
                              QnstGraphicsBind* bind,
                              QString type);
 
+  void removeEdgesOfEntity (QnstGraphicsEntityWithEdges *entity);
+  void removeEdge (QnstGraphicsEdge *edge);
+
   bool modified;
 
   int nlink;

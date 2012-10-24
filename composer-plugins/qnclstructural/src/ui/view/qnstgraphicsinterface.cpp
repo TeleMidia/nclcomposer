@@ -1,7 +1,7 @@
 #include "qnstgraphicsinterface.h"
 
 QnstGraphicsInterface::QnstGraphicsInterface(QnstGraphicsEntity* parent)
-  : QnstGraphicsEntity(parent)
+  : QnstGraphicsEntityWithEdges(parent)
 {
   setncgType(Qncg::Interface);
   setnstType(Qnst::Interface);
@@ -20,28 +20,6 @@ QnstGraphicsInterface::QnstGraphicsInterface(QnstGraphicsEntity* parent)
 QnstGraphicsInterface::~QnstGraphicsInterface()
 {
 
-}
-
-QVector<QnstGraphicsEdge*> QnstGraphicsInterface::getnstGraphicsEdges()
-{
-  return links;
-}
-
-void QnstGraphicsInterface::addnstGraphicsEdge(QnstGraphicsEdge* edge)
-{
-  if (edge != NULL)
-    links.append(edge);
-}
-
-void QnstGraphicsInterface::removenstGraphicsEdge(QnstGraphicsEdge* edge)
-{
-  if (edge != NULL)
-  {
-    int index = links.indexOf(edge);
-
-    if (index >= 0)
-      links.remove(index);
-  }
 }
 
 void QnstGraphicsInterface::setnstId(QString id)
@@ -140,12 +118,14 @@ void QnstGraphicsInterface::adjust(bool avoidCollision)
     }
   }
 
-  foreach(QnstGraphicsEntity* edges, getnstGraphicsEdges()){
+  foreach(QnstGraphicsEntity* edges, getnstGraphicsEdges())
+  {
     if (edges->getnstType() == Qnst::Reference ||
         edges->getnstType() == Qnst::Link ||
         edges->getnstType() == Qnst::Mapping ||
         edges->getnstType() == Qnst::Action ||
-        edges->getnstType() == Qnst::Condition){
+        edges->getnstType() == Qnst::Condition)
+    {
       edges->adjust();
     }
   }

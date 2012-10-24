@@ -8,18 +8,12 @@
 #include "qnstgraphicsentity.h"
 #include "qnstgraphicsedge.h"
 
-class QnstGraphicsNode : public QnstGraphicsEntity
+class QnstGraphicsNode : public QnstGraphicsEntityWithEdges
 {
 public:
   QnstGraphicsNode(QnstGraphicsEntity* parent = 0);
 
   ~QnstGraphicsNode();
-
-  QVector<QnstGraphicsEdge*> getnstGraphicsEdges();
-
-  void addnstGraphicsEdge(QnstGraphicsEdge* edge);
-
-  void removenstGraphicsEdge(QnstGraphicsEdge* edge);
 
   virtual void fit(qreal padding);
 
@@ -35,9 +29,6 @@ protected:
   virtual void move(QGraphicsSceneMouseEvent* event);
 
   virtual void resize(QGraphicsSceneMouseEvent* event);
-
-private:
-  QVector<QnstGraphicsEdge*> edges;
 
 };
 

@@ -4,18 +4,12 @@
 #include "qnstgraphicsentity.h"
 #include "qnstgraphicsedge.h"
 
-class QnstGraphicsInterface : public QnstGraphicsEntity
+class QnstGraphicsInterface : public QnstGraphicsEntityWithEdges
 {
 public:
   QnstGraphicsInterface(QnstGraphicsEntity* parent = 0);
 
   ~QnstGraphicsInterface();
-
-  QVector<QnstGraphicsEdge*> getnstGraphicsEdges();
-
-  void addnstGraphicsEdge(QnstGraphicsEdge* edge);
-
-  void removenstGraphicsEdge(QnstGraphicsEdge* edge);
 
   virtual void adjust(bool avoidCollision = true);
 
@@ -32,8 +26,6 @@ protected:
 
 private:
   void adjustToBorder();
-
-  QVector<QnstGraphicsEdge*> links;
 };
 
 #endif // QNSTGRAPHICSINTERFACE_H

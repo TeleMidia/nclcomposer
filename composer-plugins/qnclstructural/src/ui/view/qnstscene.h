@@ -21,7 +21,7 @@ public:
 
   ~QnstScene();
 
-  QVector<QnstGraphicsEntity*> getRoots() const;
+  QVector <QnstGraphicsEntity* > getRoots() const;
 
   void addRoot(QnstGraphicsEntity* root);
 
@@ -36,7 +36,8 @@ signals:
 
   void entitySelected(QnstGraphicsEntity* entity);
 
-  void entityAboutToChange(QnstGraphicsEntity* entity, QMap<QString, QString> properties);
+  void entityAboutToChange(QnstGraphicsEntity* entity,
+                           QMap<QString, QString> properties);
 
   void undoRequested();
 
@@ -73,7 +74,7 @@ private:
 
   QnstMenu* menu;
 
-  QVector<QnstGraphicsEntity*> roots;
+  QVector <QnstGraphicsEntity*> roots;
 };
 
 #endif // QNSTSCENE_H

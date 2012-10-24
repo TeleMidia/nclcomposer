@@ -74,4 +74,24 @@ private:
   QnstGraphicsEntity* entityb;
 };
 
+// \fixme This class is temporary and must be removed as soon as possible!
+// The information of edges should be in the parent, and not inside the own
+// entity
+class QnstGraphicsEntityWithEdges : public QnstGraphicsEntity
+{
+public:
+  QnstGraphicsEntityWithEdges(QnstGraphicsEntity *parent = 0);
+  ~QnstGraphicsEntityWithEdges();
+
+
+  QVector<QnstGraphicsEdge*> getnstGraphicsEdges();
+
+  void addnstGraphicsEdge(QnstGraphicsEdge* edge);
+
+  void removenstGraphicsEdge(QnstGraphicsEdge* edge);
+
+private:
+    QVector<QnstGraphicsEdge*> edges;
+};
+
 #endif // QNSTGRAPHICSEDGE_H

@@ -68,7 +68,7 @@ void QnstView::load(QString data)
 
   QDomNodeList list = parent.childNodes();
 
-  for (unsigned int i=0;i<list.length();i++)
+  for (unsigned int i = 0; i < list.length(); i++)
   {
     if (list.item(i).isElement())
     {
@@ -78,7 +78,7 @@ void QnstView::load(QString data)
     }
   }
 
-  for (unsigned int i=0;i<list.length();i++)
+  for (unsigned int i = 0; i < list.length(); i++)
   {
     if (list.item(i).isElement())
     {
@@ -88,7 +88,7 @@ void QnstView::load(QString data)
     }
   }
 
-  for (unsigned int i=0;i<list.length();i++)
+  for (unsigned int i = 0; i < list.length(); i++)
   {
     if (list.item(i).isElement())
     {
@@ -108,7 +108,7 @@ void QnstView::collapseCompositions(QDomElement element, QDomElement parent)
 {
   QDomNodeList list = element.childNodes();
 
-  for (unsigned int i=0;i<list.length();i++)
+  for (unsigned int i = 0; i < list.length(); i++)
   {
     if (list.item(i).isElement())
     {
@@ -726,6 +726,7 @@ void QnstView::write(QDomElement element, QDomDocument* dom,
       break;
 
     case Qnst::Aggregator:
+      // \fixme We must not write aggregator anymore!!
       e = dom->createElement("aggregator");
       break;
 
@@ -904,11 +905,20 @@ void QnstView::createConnection()
   connect(scene, SIGNAL(zoomresetRequested()), SLOT(performZoomReset()));
   connect(scene, SIGNAL(fullscreenRequested()), SLOT(performFullscreen()));
 
-  connect(scene, SIGNAL(entityAdded(QnstGraphicsEntity*)), SLOT(requestEntityAddition(QnstGraphicsEntity*)));
-  connect(scene, SIGNAL(entityChanged(QnstGraphicsEntity*)), SLOT(requestEntityChange(QnstGraphicsEntity*)));
-  connect(scene, SIGNAL(entityRemoved(QnstGraphicsEntity*)), SLOT(requestEntityRemotion(QnstGraphicsEntity*)));
-  connect(scene, SIGNAL(entitySelected(QnstGraphicsEntity*)), SLOT(requestEntitySelection(QnstGraphicsEntity*)));
-  connect(scene, SIGNAL(entityAboutToChange(QnstGraphicsEntity*,QMap<QString,QString>)), SLOT(requestEntityPreparation(QnstGraphicsEntity*,QMap<QString,QString>)));
+  connect(scene, SIGNAL(entityAdded(QnstGraphicsEntity*)),
+                 SLOT(requestEntityAddition(QnstGraphicsEntity*)));
+  connect(scene, SIGNAL(entityChanged(QnstGraphicsEntity*)),
+                 SLOT(requestEntityChange(QnstGraphicsEntity*)));
+  connect(scene, SIGNAL(entityRemoved(QnstGraphicsEntity*)),
+                 SLOT(requestEntityRemotion(QnstGraphicsEntity*)));
+  connect(scene, SIGNAL(entitySelected(QnstGraphicsEntity*)),
+                 SLOT(requestEntitySelection(QnstGraphicsEntity*)));
+
+  connect(scene,
+          SIGNAL(entityAboutToChange(QnstGraphicsEntity*,
+                                     QMap<QString,QString>)),
+          SLOT(requestEntityPreparation(QnstGraphicsEntity*,
+                                        QMap<QString,QString>)));
 }
 
 bool QnstView::hasEntity(QString uid)
@@ -941,7 +951,7 @@ void QnstView::addEntity(const QString uid, const QString parent,
                          const QMap<QString, QString> &properties, bool undo,
                          bool adjust)
 {
-  qDebug() << "[QNST]" << ":" << "Adding entity '"+uid+"'";
+  qDebug() << "[QNST]" << ":" << "Adding entity '" + uid + "'";
 
   bool ok = false;
 
@@ -1000,7 +1010,6 @@ void QnstView::addEntity(const QString uid, const QString parent,
         entity->setProperties(properties);
 
         entities[parent]->addnstGraphicsEntity(entity);
-
         entities[uid] = entity;
 
         entity->adjust();
@@ -1063,8 +1072,9 @@ void QnstView::addEntity(const QString uid, const QString parent,
       // \fixme THIS IS NOT BEING USED
       if (!links.contains(uid))
       {
-        QnstEntity* entity = QnstUtil::makeGraphicsEntity(Qnst::Link);
+        entity = QnstUtil::makeGraphicsEntity(type, entityParent);
         QnstGraphicsLink *link = dynamic_cast <QnstGraphicsLink*>(entity);
+
         if(link)
         {
           link->setnstUid(uid);
@@ -1079,9 +1089,15 @@ void QnstView::addEntity(const QString uid, const QString parent,
             link->setxConnectorUID(properties["xconnectorUID"]);
           }
 
+          entityParent->addnstGraphicsEntity(entity);
+          entities[uid] = entity;
           links[uid] = link;
 
+          entity->adjust();
+
           adjustLink(link);
+
+          ok = true;
         }
       }
       break;
@@ -1178,6 +1194,7 @@ void QnstView::addEntity(const QString uid, const QString parent,
 
     case Qnst::Aggregator:
     {
+      // \fixme This must be deprecated!!
       entity = QnstUtil::makeGraphicsEntity(type, entityParent);
       entity->setnstUid(uid);
 
@@ -1287,37 +1304,11 @@ void QnstView::removeEntity(const QString uid, bool undo, bool rmRef)
       // We are removing a Node
       if (entity->getncgType() == Qncg::Node)
       {
-        // Remove recursively
-        foreach(QnstGraphicsEntity* e, entity->getnstGraphicsEntities())
-        {
-          if (e->getnstType() != Qnst::Link &&
-              e->getnstType() != Qnst::Edge &&
-              e->getnstType() != Qnst::Condition &&
-              e->getnstType() != Qnst::Mapping &&
-              e->getnstType() != Qnst::Action &&
-              e->getnstType() != Qnst::Reference)
-          {
-            // \fixme THIS CODE IS KIND OF USELESS
-            if (entity->isMedia())
-            {
-              QnstGraphicsMedia* m = (QnstGraphicsMedia*) entity;
-
-              if (m->getReferUID() != "")
-                 removeEntity(e->getnstUid(), true, false);
-              else
-                 removeEntity(e->getnstUid(), true, false);
-            }
-            else
-            {
-              removeEntity(e->getnstUid(), true, false);
-            }
-            //end fixme
-          }
-        }
-
+        // Remove edges related to this node!!
         foreach(QnstGraphicsEdge* edge,
                 ((QnstGraphicsNode*) entity)->getnstGraphicsEdges())
         {
+          // \fixme Everything here should be removed BIND only!!!
           if (edge->getEntityA()->getncgType() == Qncg::Node)
           {
             ((QnstGraphicsNode*) edge->getEntityA())->removenstGraphicsEdge(edge);
@@ -1363,6 +1354,7 @@ void QnstView::removeEntity(const QString uid, bool undo, bool rmRef)
               binds.remove(bb->getnstUid());
               brelations.remove(bb->getnstUid());
             }
+            //
           }
 
           QnstGraphicsEntity* parent = edge->getnstGraphicsParent();
@@ -1370,6 +1362,19 @@ void QnstView::removeEntity(const QString uid, bool undo, bool rmRef)
 
           entities.remove(edge->getnstUid());
         } // end foreach edges
+
+        // Remove recursively
+        foreach(QnstGraphicsEntity* e, entity->getnstGraphicsEntities())
+        {
+          if (e->getnstType() != Qnst::Edge &&
+              e->getnstType() != Qnst::Condition &&
+              e->getnstType() != Qnst::Mapping &&
+              e->getnstType() != Qnst::Action &&
+              e->getnstType() != Qnst::Reference)
+          {
+            removeEntity(e->getnstUid(), true, false);
+          }
+        }
 
         QnstGraphicsEntity* parent = entity->getnstGraphicsParent();
 
@@ -1384,7 +1389,7 @@ void QnstView::removeEntity(const QString uid, bool undo, bool rmRef)
         if (clipboard == entity)
           clipboard = NULL;
 
-        if (entity->getnstType() == Qnst::Aggregator)
+        if (entity->getnstType() == Qnst::Link)
         {
           if (links.contains(entity->getnstUid()))
           {
@@ -1395,7 +1400,6 @@ void QnstView::removeEntity(const QString uid, bool undo, bool rmRef)
 
         entities.remove(uid);
         delete entity;
-
       }
       // We are removing an Interface
       else if (entity->getncgType() == Qncg::Interface)
@@ -3048,6 +3052,13 @@ void QnstView::requestEntityAddition(QnstGraphicsEntity* entity, bool undo)
 
       case Qnst::Aggregator:
       {
+        // \fixme This should be deprecated!!
+        entities[entity->getnstUid()] = entity;
+        break;
+      }
+
+      case Qnst::Link:
+      {
         entities[entity->getnstUid()] = entity;
         break;
       }
@@ -3098,309 +3109,202 @@ void QnstView::requestEntityRemotion(QnstGraphicsEntity* entity, bool undo,
 
   if (entity != NULL)
   {
-    if (entity->getncgType() == Qncg::Node)
+    Qncg::EntityType qncgType = entity->getncgType();
+    bool mustRemoveFromParent = false;
+
+    // By now, we are handling undo only for node and interface!!
+    if (!undo)
     {
-      if (!undo)
+      QnstRemoveCommand* cmd = new QnstRemoveCommand(this, entity);
+      history.push(cmd);
+    }
+
+    if ( qncgType == Qncg::Node)
+    {
+      QnstGraphicsNode *node = dynamic_cast <QnstGraphicsNode*>(entity);
+
+      if(node)
+        removeEdgesOfEntity(node); // Remove the edges of this entity
+      else
+        qWarning() << "Could not make a cast to QnstGraphicsNode*";
+
+      // Remove recursively
+      foreach(QnstGraphicsEntity* e, entity->getnstGraphicsEntities())
       {
-        QnstRemoveCommand* cmd = new QnstRemoveCommand(this, entity);
-        history.push(cmd);
+        if (e->getnstType() != Qnst::Edge &&
+            e->getnstType() != Qnst::Condition &&
+            e->getnstType() != Qnst::Mapping &&
+            e->getnstType() != Qnst::Action &&
+            e->getnstType() != Qnst::Reference)
+        {
+          requestEntityRemotion(e, true, false);
+        }
       }
 
-            foreach(QnstGraphicsEntity* e, entity->getnstGraphicsEntities())
-              {
-                if (e->getnstType() != Qnst::Link &&
-                    e->getnstType() != Qnst::Edge &&
-                    e->getnstType() != Qnst::Condition &&
-                    e->getnstType() != Qnst::Mapping &&
-                    e->getnstType() != Qnst::Action &&
-                    e->getnstType() != Qnst::Reference){
-
-                    if (entity->isMedia())
-                    {
-                      QnstGraphicsMedia* m = (QnstGraphicsMedia*) entity;
-
-                      if (m->getReferUID() != "")
-                         requestEntityRemotion(e, true, false);
-                      else
-                         requestEntityRemotion(e, true, false);
-
-                    }
-                    else
-                    {
-                      requestEntityRemotion(e, true, false);
-                    }
-                }
-            }
-
-            foreach(QnstGraphicsEdge* edge, ((QnstGraphicsNode*) entity)->getnstGraphicsEdges()){
-                if (edge->getEntityA()->getncgType() == Qncg::Node){
-                    ((QnstGraphicsNode*) edge->getEntityA())->removenstGraphicsEdge(edge);
-
-                }else if (edge->getEntityA()->getncgType() == Qncg::Interface){
-                    ((QnstGraphicsInterface*) edge->getEntityA())->removenstGraphicsEdge(edge);
-                }
-
-                if (edge->getEntityB()->getncgType() == Qncg::Node){
-                    ((QnstGraphicsNode*) edge->getEntityB())->removenstGraphicsEdge(edge);
-
-                }else if (edge->getEntityB()->getncgType() == Qncg::Interface){
-                    ((QnstGraphicsInterface*) edge->getEntityB())->removenstGraphicsEdge(edge);
-                }
-
-                edge->getEntityA()->removeAngle(edge->getEntityB()->getnstUid(), edge->getAngle());
-                edge->getEntityB()->removeAngle(edge->getEntityA()->getnstUid(), -edge->getAngle());
-
-                if (edge->getnstType() == Qnst::Condition ||
-                    edge->getnstType() == Qnst::Action){
-
-                    QnstBind* bb = binds[edge->getnstUid()];
-
-                    if (bb != NULL){
-                        QnstGraphicsLink* ll = (QnstGraphicsLink*) bb->getnstParent();
-
-                        if (ll != NULL){
-                            if (ll->getConditions().contains(bb->getnstUid())){
-                                ll->removeCondition(bb);
-                            }
-
-                            if (ll->getActions().contains(bb->getnstUid())){
-                                ll->removeAction(bb);
-                            }
-
-                        }
-
-                        binds.remove(bb->getnstUid());
-                        brelations.remove(bb->getnstUid());
-                    }
-                }
-
-                QnstGraphicsEntity* parent = edge->getnstGraphicsParent();
-                parent->removenstGraphicsEntity(edge);
-
-                entities.remove(edge->getnstUid());
-
-                if (edge->getnstType() != Qnst::Reference){
-                    emit entityRemoved(edge->getnstUid());
-                }
-            }
-
-            QnstGraphicsEntity* parent = entity->getnstGraphicsParent();
-
-            if (parent != NULL){
-                parent->removenstGraphicsEntity(entity);
-
-            }else{
-                scene->removeRoot(entity);
-            }
-
-            if (selected == entity){
-                selected = NULL;
-            }
-
-            if (clipboard == entity){
-                clipboard = NULL;
-            }
-
-            if (entity->getnstType() == Qnst::Aggregator){
-                if (links.contains(entity->getnstUid())){
-                    link2conn.remove(links[entity->getnstUid()]->getnstId());
-                    links.remove(entity->getnstUid());
-                }
-            }
-
-            entities.remove(entity->getnstUid()); emit entityRemoved(entity->getnstUid()); delete entity;
-
-        }else if (entity->getncgType() == Qncg::Interface){
-            if (!undo){
-                QnstRemoveCommand* cmd = new QnstRemoveCommand(this, entity);
-                history.push(cmd);
-            }
-
-            foreach(QnstGraphicsEdge* edge, ((QnstGraphicsInterface*) entity)->getnstGraphicsEdges()){
-                if (edge->getEntityA()->getncgType() == Qncg::Node){
-                    ((QnstGraphicsNode*) edge->getEntityA())->removenstGraphicsEdge(edge);
-
-                }else if (edge->getEntityA()->getncgType() == Qncg::Interface){
-                    ((QnstGraphicsInterface*) edge->getEntityA())->removenstGraphicsEdge(edge);
-                }
-
-                if (edge->getEntityB()->getncgType() == Qncg::Node){
-                    ((QnstGraphicsNode*) edge->getEntityB())->removenstGraphicsEdge(edge);
-
-                }else if (edge->getEntityB()->getncgType() == Qncg::Interface){
-                    ((QnstGraphicsInterface*) edge->getEntityB())->removenstGraphicsEdge(edge);
-                }
-
-                edge->getEntityA()->removeAngle(edge->getEntityB()->getnstUid(), edge->getAngle());
-                edge->getEntityB()->removeAngle(edge->getEntityA()->getnstUid(), -edge->getAngle());
-
-                if (edge->getnstType() == Qnst::Condition ||
-                    edge->getnstType() == Qnst::Action){
-
-                    QnstBind* bb = binds[edge->getnstUid()];
-
-                    if (bb != NULL){
-                        QnstGraphicsLink* ll = (QnstGraphicsLink*) bb->getnstParent();
-
-                        if (ll != NULL){
-                            if (ll->getConditions().contains(bb->getnstUid())){
-                                ll->removeCondition(bb);
-                            }
-
-                            if (ll->getActions().contains(bb->getnstUid())){
-                                ll->removeAction(bb);
-                            }
-
-                        }
-
-                        binds.remove(bb->getnstUid());
-                        brelations.remove(bb->getnstUid());
-                    }
-                }
-
-                QnstGraphicsEntity* parent = edge->getnstGraphicsParent();
-                parent->removenstGraphicsEntity(edge);
-
-                entities.remove(edge->getnstUid());
-
-                if (edge->getnstType() != Qnst::Reference){
-                    emit entityRemoved(edge->getnstUid());
-                }
-            }
-
-            if (rmRefs){
-                // remove interface that "I" make a reference
-                if (interfaceRefers.contains(entity->getnstUid())){
-                    QString oUID = interfaceRefers[entity->getnstUid()];
-
-                    interfaceRefers.remove(entity->getnstUid());
-
-                    if (entities.contains(oUID)){
-                        requestEntityRemotion(entities[oUID]);
-                    }
-
-
-                }
-            }
-
-            // remove interfaces that reference "ME"
-            foreach(QString rUID, interfaceRefers.keys(entity->getnstUid())){
-                interfaceRefers.remove(rUID);
-
-                if (entities.contains(rUID)){
-                    requestEntityRemotion(entities[rUID]);
-                }
-            }
-
-            QnstGraphicsEntity* parent = entity->getnstGraphicsParent();
-
-            if (parent != NULL){
-                parent->removenstGraphicsEntity(entity);
-
-            }else{
-                scene->removeRoot(entity);
-            }
-
-            if (selected == entity){
-                selected = NULL;
-            }
-
-            if (clipboard == entity){
-                clipboard = NULL;
-            }
-
-            if (entity->getnstType() == Qnst::Aggregator){
-                if (links.contains(entity->getnstUid())){
-                  link2conn.remove(links[entity->getnstUid()]->getnstId());
-                  links.remove(entity->getnstUid());
-                }
-            }
-
-            entities.remove(entity->getnstUid()); emit entityRemoved(entity->getnstUid()); delete entity;
-
-        }else if (entity->getncgType() == Qncg::Edge){
-            QnstGraphicsEdge* edge = (QnstGraphicsEdge*) entity;
-
-            if (edge->getEntityA()->getncgType() == Qncg::Node){
-                ((QnstGraphicsNode*) edge->getEntityA())->removenstGraphicsEdge(edge);
-
-            }else if (edge->getEntityA()->getncgType() == Qncg::Interface){
-                ((QnstGraphicsInterface*) edge->getEntityA())->removenstGraphicsEdge(edge);
-            }
-
-            if (edge->getEntityB()->getncgType() == Qncg::Node){
-                ((QnstGraphicsNode*) edge->getEntityB())->removenstGraphicsEdge(edge);
-
-            }else if (edge->getEntityB()->getncgType() == Qncg::Interface){
-                ((QnstGraphicsInterface*) edge->getEntityB())->removenstGraphicsEdge(edge);
-            }
-
-            edge->getEntityA()->removeAngle(edge->getEntityB()->getnstUid(), edge->getAngle());
-            edge->getEntityB()->removeAngle(edge->getEntityA()->getnstUid(), -edge->getAngle());
-
-            if (edge->getnstType() == Qnst::Condition || edge->getnstType() == Qnst::Action){
-
-                QnstBind* bb = binds[edge->getnstUid()];
-
-                if (bb != NULL){
-                    QnstGraphicsLink* ll = (QnstGraphicsLink*) bb->getnstParent();
-
-                    if (ll != NULL){
-                        if (ll->getConditions().contains(bb->getnstUid())){
-                            ll->removeCondition(bb);
-                        }
-
-                        if (ll->getActions().contains(bb->getnstUid())){
-                            ll->removeAction(bb);
-                        }
-
-                    }
-
-                    QnstGraphicsEntity* parent = entity->getnstGraphicsParent();
-                    parent->removenstGraphicsEntity(edge);
-
-                    emit entityRemoved(brelations.key(entity->getnstUid()));
-
-                    binds.remove(bb->getnstUid());
-                    brelations.remove(bb->getnstUid());
-
-                    entities.remove(edge->getnstUid());
-                }
-
-            }else if (edge->getnstType() == Qnst::Reference){
-                QnstGraphicsPort* p = (QnstGraphicsPort*) edge->getEntityA();
-                p->setComponent("");
-                p->setComponentUid("");
-
-                p->setInterface("");
-                p->setInterfaceUid("");
-
-//                adjustPort(p);
-
-                requestEntityChange(p);
-            }else if (edge->getnstType() == Qnst::Mapping){
-                QnstGraphicsEntity* parent = entity->getnstGraphicsParent();
-                parent->removenstGraphicsEntity(edge);
-
-                entities.remove(edge->getnstUid()); emit entityRemoved(edge->getnstUid());
-
-            }
-
-            if (selected == entity){
-                selected = NULL;
-            }
-
-            if (clipboard == entity){
-                clipboard = NULL;
-            }
-        }
+      mustRemoveFromParent = true;
     }
+    else if (entity->getncgType() == Qncg::Interface)
+    {
+      QnstGraphicsInterface *interface =
+          dynamic_cast <QnstGraphicsInterface*>(entity);
+
+      if(interface)
+        removeEdgesOfEntity(interface); // Remove the edges of this entity
+      else
+        qWarning() << "Could not make a cast to QnstGraphicsNode*";
+
+      if (rmRefs)
+      {
+        // remove interface that "I" make a reference
+        if (interfaceRefers.contains(entity->getnstUid()))
+        {
+          QString oUID = interfaceRefers[entity->getnstUid()];
+          interfaceRefers.remove(entity->getnstUid());
+
+          if (entities.contains(oUID))
+            requestEntityRemotion(entities[oUID]);
+        }
+      }
+
+      // remove interfaces that reference "ME"
+      foreach(QString rUID, interfaceRefers.keys(entity->getnstUid()))
+      {
+        interfaceRefers.remove(rUID);
+
+        if (entities.contains(rUID))
+          requestEntityRemotion(entities[rUID]);
+      }
+
+      mustRemoveFromParent = true;
+
+      if (entity->getnstType() == Qnst::Link)
+      {
+        if (links.contains(entity->getnstUid()))
+        {
+          link2conn.remove(links[entity->getnstUid()]->getnstId());
+          links.remove(entity->getnstUid());
+        }
+      }
+    }
+    else if (entity->getncgType() == Qncg::Edge)
+    {
+      QnstGraphicsEdge *edge = dynamic_cast<QnstGraphicsEdge *>(entity);
+
+      if(edge)
+        removeEdge(edge);
+    }
+
+    // Everything is ok, now only remove the entity from its parent
+    if(mustRemoveFromParent)
+    {
+      //Remove the entity of its parent
+      QnstGraphicsEntity* parent = entity->getnstGraphicsParent();
+      if (parent != NULL)
+        parent->removenstGraphicsEntity(entity);
+      else
+        scene->removeRoot(entity);
+
+      if (selected == entity)
+        selected = NULL;
+
+      if (clipboard == entity)
+        clipboard = NULL;
+
+      if (entity->getnstType() == Qnst::Link)
+      {
+        if (links.contains(entity->getnstUid()))
+        {
+          link2conn.remove(links[entity->getnstUid()]->getnstId());
+          links.remove(entity->getnstUid());
+        }
+      }
+
+      entities.remove(entity->getnstUid());
+      emit entityRemoved(entity->getnstUid());
+      delete entity;
+    }
+  }
+}
+
+void QnstView::removeEdgesOfEntity(QnstGraphicsEntityWithEdges *entity)
+{
+  foreach(QnstGraphicsEdge* edge, entity->getnstGraphicsEdges())
+  {
+    requestEntityRemotion(edge);
+  }
+}
+
+void QnstView::removeEdge(QnstGraphicsEdge *edge)
+{
+  if (edge->getEntityA()->getncgType() == Qncg::Node ||
+      edge->getEntityA()->getncgType() == Qncg::Interface)
+  {
+    ((QnstGraphicsEntityWithEdges*) edge->getEntityA())->removenstGraphicsEdge(edge);
+  }
+
+  if (edge->getEntityB()->getncgType() == Qncg::Node ||
+      edge->getEntityB()->getncgType() == Qncg::Interface)
+  {
+    ((QnstGraphicsEntityWithEdges*) edge->getEntityB())->removenstGraphicsEdge(edge);
+  }
+
+  edge->getEntityA()->removeAngle(edge->getEntityB()->getnstUid(), edge->getAngle());
+  edge->getEntityB()->removeAngle(edge->getEntityA()->getnstUid(), -edge->getAngle());
+
+  if (edge->getnstType() == Qnst::Condition ||
+      edge->getnstType() == Qnst::Action)
+  {
+    QnstBind* bb = binds[edge->getnstUid()];
+
+    if (bb != NULL)
+    {
+      QnstGraphicsLink* ll = (QnstGraphicsLink*) bb->getnstParent();
+      if (ll != NULL)
+      {
+        if (ll->getConditions().contains(bb->getnstUid()))
+          ll->removeCondition(bb);
+
+        if (ll->getActions().contains(bb->getnstUid()))
+          ll->removeAction(bb);
+      }
+
+      binds.remove(bb->getnstUid());
+      brelations.remove(bb->getnstUid());
+    }
+  }
+  else if (edge->getnstType() == Qnst::Reference)
+  {
+    QnstGraphicsPort* p = (QnstGraphicsPort*) edge->getEntityA();
+    p->setComponent("");
+    p->setComponentUid("");
+    p->setInterface("");
+    p->setInterfaceUid("");
+    requestEntityChange(p);
+  }
+  else if (edge->getnstType() == Qnst::Mapping)
+  {
+    QnstGraphicsEntity* parent = edge->getnstGraphicsParent();
+    parent->removenstGraphicsEntity(edge);
+    entities.remove(edge->getnstUid());
+    emit entityRemoved(edge->getnstUid());
+  }
+
+  QnstGraphicsEntity* parent = edge->getnstGraphicsParent();
+  parent->removenstGraphicsEntity(edge);
+
+  entities.remove(edge->getnstUid());
+
+  if (edge->getnstType() != Qnst::Reference)
+  {
+    emit entityRemoved(edge->getnstUid());
+  }
 }
 
 void QnstView::requestEntityPreparation(QnstGraphicsEntity* entity,
                                         QMap<QString, QString> properties)
 {
-  QnstChangeCommand* cmd = new QnstChangeCommand(this, entity->getnstUid(), properties);
+  QnstChangeCommand* cmd = new QnstChangeCommand(this, entity->getnstUid(),
+                                                 properties);
   history.push(cmd);
 
   emit viewChanged();
@@ -3541,6 +3445,14 @@ void QnstView::requestEntityChange(QnstGraphicsEntity* entity)
         break;
       }
 
+      case Qnst::Link:
+      {
+        properties["TYPE"] = "link";
+
+        properties["id"] = entity->getnstId();
+        break;
+      }
+
       case Qnst::Area:
       case Qnst::Property:
       case Qnst::Aggregator:
@@ -3573,7 +3485,8 @@ void QnstView::requestEntityChange(QnstGraphicsEntity* entity)
 
 void QnstView::requestEntitySelection(QnstGraphicsEntity* entity)
 {
-  qDebug() << "[QNST]" << ":" << "Requesting entity selection '"+entity->getnstUid()+"'";
+  qDebug() << "[QNST]" << ":"
+           << "Requesting entity selection '" + entity->getnstUid() + "'";
 
   if (entity != NULL)
   {
@@ -4069,7 +3982,8 @@ void QnstView::mousePressEvent(QMouseEvent* event)
   {
     if (link != NULL)
     {
-      delete (link); link = NULL;
+      delete (link);
+      link = NULL;
     }
 
     link = new QnstViewLink();
@@ -4157,7 +4071,8 @@ void QnstView::mouseReleaseEvent(QMouseEvent* event)
       scene->removeItem(link);
       scene->update();
 
-      delete link; link = NULL;
+      delete link;
+      link = NULL;
     }
 
     linking = false;
@@ -4173,7 +4088,8 @@ void QnstView::mouseReleaseEvent(QMouseEvent* event)
   QGraphicsView::mouseReleaseEvent(event);
 }
 
-void QnstView::addNodetoNodeEdge(QnstGraphicsEntity* entitya, QnstGraphicsEntity* entityb)
+void QnstView::addNodetoNodeEdge(QnstGraphicsEntity* entitya,
+                                 QnstGraphicsEntity* entityb)
 {
   QnstGraphicsEntity* parenta = entitya->getnstGraphicsParent();
   QnstGraphicsEntity* parentb = entityb->getnstGraphicsParent();
@@ -4183,12 +4099,12 @@ void QnstView::addNodetoNodeEdge(QnstGraphicsEntity* entitya, QnstGraphicsEntity
     if (parenta == parentb)
     {
       // aggregator -> node
-      if (entitya->getnstType() == Qnst::Aggregator)
+      if (entitya->getnstType() == Qnst::Link)
       {
         createActionWithDialog(entitya, entityb);
       }
       // node -> aggregator
-      else if (entityb->getnstType() == Qnst::Aggregator)
+      else if (entityb->getnstType() == Qnst::Link)
       {
         createConditionWithDialog(entitya, entityb);
       }
@@ -4214,7 +4130,7 @@ void QnstView::addNodetoInterfaceEdge(QnstGraphicsEntity* entitya,
     if (parenta == parentb->getnstGraphicsParent())
     {
       // aggregator -> interface
-      if (entitya->getnstType() == Qnst::Aggregator)
+      if (entitya->getnstType() == Qnst::Link)
       {
         createActionWithDialog(entitya, entityb);
       }
@@ -4233,7 +4149,7 @@ void QnstView::addInterfacetoNodeLink(QnstGraphicsEntity* entitya,
                                       QnstGraphicsEntity* entityb)
 {
   // interface -> aggreagator
-  if (entityb->getnstType() == Qnst::Aggregator)
+  if (entityb->getnstType() == Qnst::Link)
   {
     createConditionWithDialog(entitya, entityb);
   }

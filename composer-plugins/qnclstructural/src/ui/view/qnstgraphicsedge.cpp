@@ -247,3 +247,36 @@ void QnstGraphicsEdge::resize(QGraphicsSceneMouseEvent* event)
 {
   // nothing to do
 }
+
+QnstGraphicsEntityWithEdges::QnstGraphicsEntityWithEdges(QnstGraphicsEntity *parent)
+  : QnstGraphicsEntity(parent)
+{
+
+}
+
+QnstGraphicsEntityWithEdges::~QnstGraphicsEntityWithEdges()
+{
+
+}
+
+QVector<QnstGraphicsEdge*> QnstGraphicsEntityWithEdges::getnstGraphicsEdges()
+{
+  return edges;
+}
+
+void QnstGraphicsEntityWithEdges::addnstGraphicsEdge(QnstGraphicsEdge* edge)
+{
+  if (edge != NULL)
+    edges.append(edge);
+}
+
+void QnstGraphicsEntityWithEdges::removenstGraphicsEdge(QnstGraphicsEdge* edge)
+{
+  if (edge != NULL)
+  {
+    int index = edges.indexOf(edge);
+
+    if (index >= 0)
+      edges.remove(index);
+  }
+}

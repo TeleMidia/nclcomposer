@@ -3,7 +3,7 @@
 #include <QDebug>
 
 QnstGraphicsNode::QnstGraphicsNode(QnstGraphicsEntity* parent)
-  : QnstGraphicsEntity(parent)
+  : QnstGraphicsEntityWithEdges(parent)
 {
   setncgType(Qncg::Node);
   setnstType(Qnst::Node);
@@ -14,28 +14,6 @@ QnstGraphicsNode::QnstGraphicsNode(QnstGraphicsEntity* parent)
 QnstGraphicsNode::~QnstGraphicsNode()
 {
 
-}
-
-QVector<QnstGraphicsEdge*> QnstGraphicsNode::getnstGraphicsEdges()
-{
-  return edges;
-}
-
-void QnstGraphicsNode::addnstGraphicsEdge(QnstGraphicsEdge* edge)
-{
-  if (edge != NULL)
-    edges.append(edge);
-}
-
-void QnstGraphicsNode::removenstGraphicsEdge(QnstGraphicsEdge* edge)
-{
-  if (edge != NULL)
-  {
-    int index = edges.indexOf(edge);
-
-    if (index >= 0)
-      edges.remove(index);
-  }
 }
 
 void QnstGraphicsNode::fit(qreal padding)
@@ -235,7 +213,8 @@ void QnstGraphicsNode::adjust(bool avoidCollision)
         entity->getnstType() == Qnst::Link ||
         entity->getnstType() == Qnst::Mapping ||
         entity->getnstType() == Qnst::Condition ||
-        entity->getnstType() == Qnst::Action){
+        entity->getnstType() == Qnst::Action)
+    {
       entity->adjust();
     }
   }

@@ -1,12 +1,11 @@
 #ifndef QNSTGRAPHICSLINK_H
 #define QNSTGRAPHICSLINK_H
 
-#include "qnstgraphicsedge.h"
-
+#include "qnstgraphicsnode.h"
 #include "qnstbind.h"
 
 // \todo The qnstgraphicsaggregator and qnstlink must be part of this class.
-class QnstGraphicsLink : public QnstGraphicsEdge
+class QnstGraphicsLink : public QnstGraphicsNode
 {
 public:
   QnstGraphicsLink(QnstGraphicsEntity* parent = 0);
@@ -41,7 +40,6 @@ protected:
   virtual void draw(QPainter* painter);
 
   virtual void delineate(QPainterPath* painter) const;
-
 
 private:
   void createObjects();

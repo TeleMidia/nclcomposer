@@ -31,7 +31,11 @@ std::map <Qnst::EntityType, QString> QnstUtil::iconFromTypeMap =
     (Qnst::Port, ":icon/port")
     (Qnst::SwitchPort, ":icon/switchport")
     (Qnst::Area, ":icon/area")
-    (Qnst::Aggregator, ":icon/aggregator");
+    (Qnst::Aggregator, ":icon/aggregator") // \fixme This is here only for
+                                           // compatibility with versions prior
+                                           // to 0.1.3
+
+    (Qnst::Link, ":icon/aggregator");
 
 /* Initialize type from extension Map */
 std::map <QString, Qnst::EntityType> QnstUtil::typeFromExtMap =

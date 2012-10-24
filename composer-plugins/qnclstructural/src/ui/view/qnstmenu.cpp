@@ -180,7 +180,7 @@ void QnstMenu::createActions()
   // aggregator action
   actionAddAggregator = new QAction(this);
   actionAddAggregator->setText(tr("Aggregator"));
-  actionAddAggregator->setData(Qnst::Aggregator);
+  actionAddAggregator->setData(Qnst::Link);
   actionAddAggregator->setIcon(QIcon(QnstUtil::iconFromMediaType(Qnst::Property)));
   actionAddAggregator->setEnabled(false);
 

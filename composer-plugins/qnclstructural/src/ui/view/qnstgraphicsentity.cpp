@@ -111,6 +111,7 @@ void QnstGraphicsEntity::addnstGraphicsEntity(QnstGraphicsEntity* entity)
                                                QMap<QString,QString>)));
     connect(entity, SIGNAL(entityRemoved(QnstGraphicsEntity*)),
                     SIGNAL(entityRemoved(QnstGraphicsEntity*)));
+
     connect(entity, SIGNAL(entitySelected(QnstGraphicsEntity*)),
                     SIGNAL(entitySelected(QnstGraphicsEntity*)));
 
