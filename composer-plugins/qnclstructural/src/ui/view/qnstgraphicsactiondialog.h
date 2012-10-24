@@ -4,7 +4,7 @@
 #include <QDialog>
 
 #include "qnstconnector.h"
-#include "qnstlink.h"
+#include "qnstgraphicslink.h"
 
 #include "ui_QnstGraphicsActionForm.h"
 
@@ -15,12 +15,12 @@ public:
 
   ~QnstGraphicsActionDialog();
 
-  void init(QMap<QString, QnstConnector*> connectors, QnstLink* link);
+  void init(QMap<QString, QnstConnector*> connectors, QnstGraphicsLink* link);
 
 public:
   Ui::QnstGraphicsActionForm form;
 
-  QnstLink* link;
+  QnstGraphicsLink* link;
 
   QMap<QString, QnstConnector*> connectors;
 };

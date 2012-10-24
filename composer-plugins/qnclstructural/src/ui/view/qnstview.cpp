@@ -238,34 +238,40 @@ void QnstView::readLink(QDomElement element, QDomElement parent)
 {
   if (element.nodeName() == "linkdata")
   {
-    QnstLink* link = new QnstLink();
-    link->setnstId(element.attribute("id"));
-    link->setnstUid(element.attribute("uid"));
+    QnstGraphicsEntity *entity = QnstUtil::makeGraphicsEntity(Qnst::Link);
+    QnstGraphicsLink* link = dynamic_cast <QnstGraphicsLink*>(entity);
 
-    if(entities.contains(element.attribute("parent")))
+    if(link)
     {
-      link->setnstParent(entities[element.attribute("parent")]);
+      link->setnstId(element.attribute("id"));
+      link->setnstUid(element.attribute("uid"));
 
-      // This block of code is here only for compatibility with older versions,
-      // since in older version we were saving with the name "xconnetor"
-      if(element.hasAttribute("xconnetor"))
-        link->setxConnector(element.attribute("xconnetor"));
-      if(element.hasAttribute("xconnetorUID"))
-        link->setxConnectorUID(element.attribute("xconnetorUID"));
-      // end compatibility block of code
+      if(entities.contains(element.attribute("parent")))
+      {
+        link->setnstParent(entities[element.attribute("parent")]);
 
-      if(element.hasAttribute("xconnector"))
-        link->setxConnector(element.attribute("xconnector"));
-      if(element.hasAttribute("xconnectorUID"))
-        link->setxConnectorUID(element.attribute("xconnectorUID"));
+        // This block of code is here only for compatibility with older versions,
+        // since in older version we were saving with the name "xconnetor"
+        if(element.hasAttribute("xconnetor"))
+          link->setxConnector(element.attribute("xconnetor"));
+        if(element.hasAttribute("xconnetorUID"))
+          link->setxConnectorUID(element.attribute("xconnetorUID"));
+        // end compatibility block of code
 
-      link->setAggregatorUID(element.attribute("aggregatorUID"));
+        if(element.hasAttribute("xconnector"))
+          link->setxConnector(element.attribute("xconnector"));
+        if(element.hasAttribute("xconnectorUID"))
+          link->setxConnectorUID(element.attribute("xconnectorUID"));
 
-      links[link->getnstUid()] = link;
-      link2conn[link->getnstId()] = link->getxConnector();
+        link->setAggregatorUID(element.attribute("aggregatorUID"));
+
+        links[link->getnstUid()] = link;
+        link2conn[link->getnstId()] = link->getxConnector();
+      }
+      else
+        qWarning() << "Error trying to add a link inside"
+                   << element.attribute("parent") << "that does not exists.";
     }
-    else
-      qWarning() << "Error trying to add a link inside" << element.attribute("parent") << "that does not exists.";
 
   }
   else if (element.nodeName() == "mapping")
@@ -344,7 +350,7 @@ void QnstView::readLink(QDomElement element, QDomElement parent)
 
         QnstGraphicsBind *graphicsBind = NULL;
         QnstBind* bo = NULL;
-        QnstLink* lo = NULL;
+        QnstGraphicsLink *lo = NULL;
 
         int bindType = -1;
 
@@ -597,7 +603,7 @@ QString QnstView::serialize()
     root.appendChild(e);
   }
 
-  foreach(QnstLink* link, links.values())
+  foreach(QnstGraphicsLink* link, links.values())
   {
     QDomElement e = dom->createElement("linkdata");
 
@@ -1054,25 +1060,29 @@ void QnstView::addEntity(const QString uid, const QString parent,
 
     case Qnst::Link:
     {
-    // \fixme THIS IS NOT BEING USED
+      // \fixme THIS IS NOT BEING USED
       if (!links.contains(uid))
       {
-        QnstLink* entity = new QnstLink(); // \todo Use makeGraphicsEntity!!
-        entity->setnstUid(uid);
-        entity->setnstParent(entityParent);
-
-        if (properties["id"] != "")
-          entity->setnstId(properties["id"]);
-
-        if (properties["xconnector"] != "")
+        QnstEntity* entity = QnstUtil::makeGraphicsEntity(Qnst::Link);
+        QnstGraphicsLink *link = dynamic_cast <QnstGraphicsLink*>(entity);
+        if(link)
         {
-          entity->setxConnector(properties["xconnector"]);
-          entity->setxConnectorUID(properties["xconnectorUID"]);
+          link->setnstUid(uid);
+          link->setnstParent(entityParent);
+
+          if (properties["id"] != "")
+            link->setnstId(properties["id"]);
+
+          if (properties["xconnector"] != "")
+          {
+            link->setxConnector(properties["xconnector"]);
+            link->setxConnectorUID(properties["xconnectorUID"]);
+          }
+
+          links[uid] = link;
+
+          adjustLink(link);
         }
-
-        links[uid] = entity;
-
-        adjustLink(entity);
       }
       break;
     }
@@ -1336,7 +1346,7 @@ void QnstView::removeEntity(const QString uid, bool undo, bool rmRef)
 
             if (bb != NULL)
             {
-              QnstLink* ll = (QnstLink*) bb->getnstParent();
+              QnstGraphicsLink* ll = (QnstGraphicsLink*) bb->getnstParent();
 
               if (ll != NULL)
               {
@@ -1421,7 +1431,7 @@ void QnstView::removeEntity(const QString uid, bool undo, bool rmRef)
 
             if (bb != NULL)
             {
-              QnstLink* ll = (QnstLink*) bb->getnstParent();
+              QnstGraphicsLink* ll = (QnstGraphicsLink*) bb->getnstParent();
 
               if (ll != NULL)
               {
@@ -1513,7 +1523,7 @@ void QnstView::removeEntity(const QString uid, bool undo, bool rmRef)
 
           if (bb != NULL)
           {
-            QnstLink* ll = (QnstLink*) bb->getnstParent();
+            QnstGraphicsLink* ll = (QnstGraphicsLink*) bb->getnstParent();
             if (ll != NULL)
             {
               if (ll->getConditions().contains(bb->getnstUid()))
@@ -2268,7 +2278,7 @@ void QnstView::adjustMapping(QnstGraphicsMapping* entity)
   }
 }
 
-void QnstView::changeLink(QnstLink* entity,
+void QnstView::changeLink(QnstGraphicsLink* entity,
                           const QMap<QString, QString> &properties)
 {
   if (entity != NULL)
@@ -2288,7 +2298,7 @@ void QnstView::changeLink(QnstLink* entity,
   }
 }
 
-void QnstView::adjustLink(QnstLink* entity)
+void QnstView::adjustLink(QnstGraphicsLink* entity)
 {
   // TODO
 }
@@ -2319,7 +2329,7 @@ void QnstView::adjustBind(QnstBind* entity)
 {
     if (entity != NULL){
         if (entity->getnstParent() != NULL){
-            QnstLink* parent = (QnstLink*) entity->getnstParent();
+            QnstGraphicsLink* parent = (QnstGraphicsLink*) entity->getnstParent();
 
             // is there a graphical bind?
             if (brelations.contains(entity->getnstUid())){
@@ -3146,7 +3156,7 @@ void QnstView::requestEntityRemotion(QnstGraphicsEntity* entity, bool undo,
                     QnstBind* bb = binds[edge->getnstUid()];
 
                     if (bb != NULL){
-                        QnstLink* ll = (QnstLink*) bb->getnstParent();
+                        QnstGraphicsLink* ll = (QnstGraphicsLink*) bb->getnstParent();
 
                         if (ll != NULL){
                             if (ll->getConditions().contains(bb->getnstUid())){
@@ -3230,7 +3240,7 @@ void QnstView::requestEntityRemotion(QnstGraphicsEntity* entity, bool undo,
                     QnstBind* bb = binds[edge->getnstUid()];
 
                     if (bb != NULL){
-                        QnstLink* ll = (QnstLink*) bb->getnstParent();
+                        QnstGraphicsLink* ll = (QnstGraphicsLink*) bb->getnstParent();
 
                         if (ll != NULL){
                             if (ll->getConditions().contains(bb->getnstUid())){
@@ -3333,7 +3343,7 @@ void QnstView::requestEntityRemotion(QnstGraphicsEntity* entity, bool undo,
                 QnstBind* bb = binds[edge->getnstUid()];
 
                 if (bb != NULL){
-                    QnstLink* ll = (QnstLink*) bb->getnstParent();
+                    QnstGraphicsLink* ll = (QnstGraphicsLink*) bb->getnstParent();
 
                     if (ll != NULL){
                         if (ll->getConditions().contains(bb->getnstUid())){
@@ -4176,13 +4186,11 @@ void QnstView::addNodetoNodeEdge(QnstGraphicsEntity* entitya, QnstGraphicsEntity
       if (entitya->getnstType() == Qnst::Aggregator)
       {
         createActionWithDialog(entitya, entityb);
-
       }
       // node -> aggregator
       else if (entityb->getnstType() == Qnst::Aggregator)
       {
         createConditionWithDialog(entitya, entityb);
-
       }
       // node -> node
       else
@@ -4195,7 +4203,8 @@ void QnstView::addNodetoNodeEdge(QnstGraphicsEntity* entitya, QnstGraphicsEntity
   }
 }
 
-void QnstView::addNodetoInterfaceEdge(QnstGraphicsEntity* entitya, QnstGraphicsEntity* entityb)
+void QnstView::addNodetoInterfaceEdge(QnstGraphicsEntity* entitya,
+                                      QnstGraphicsEntity* entityb)
 {
   QnstGraphicsEntity* parenta = entitya->getnstGraphicsParent();
   QnstGraphicsEntity* parentb = entityb->getnstGraphicsParent();
@@ -4235,7 +4244,8 @@ void QnstView::addInterfacetoNodeLink(QnstGraphicsEntity* entitya,
   }
 }
 
-void QnstView::addInterfacetoNodeEdge(QnstGraphicsEntity* entitya, QnstGraphicsEntity* entityb)
+void QnstView::addInterfacetoNodeEdge(QnstGraphicsEntity* entitya,
+                                      QnstGraphicsEntity* entityb)
 {
   QnstGraphicsEntity* parenta = entitya->getnstGraphicsParent();
   QnstGraphicsEntity* parentb = entityb->getnstGraphicsParent();
@@ -4560,7 +4570,7 @@ void QnstView::createActionWithDialog(QnstGraphicsEntity* entitya,
     }
     else
     {
-      QnstLink* link = links[entitya->getnstUid()];
+      QnstGraphicsLink* link = links[entitya->getnstUid()];
       link->addAction(createNoGraphicalBind(entitya,
                                             entityb,
                                             link,
@@ -4608,7 +4618,7 @@ void QnstView::createConditionWithDialog(QnstGraphicsEntity* entitya,
     }
     else
     {
-      QnstLink* link = links[entityb->getnstUid()];
+      QnstGraphicsLink* link = links[entityb->getnstUid()];
       link->addAction(createNoGraphicalBind(entitya,
                                             entityb,
                                             link,
@@ -4674,31 +4684,35 @@ void QnstView::createNoGraphicalLink(QnstGraphicsEntity* entitya,
 {
   QString id = "link"+QString::number(++nlink);
 
-  QnstLink* link = new QnstLink();
-  link->setnstParent(aggregator->getnstGraphicsParent());
-  link->setnstUid(aggregator->getnstUid());
-  link->setnstId(id);
-  link->setAggregatorUID(aggregator->getnstUid());
-  link->setxConnector(connector);
-  link->setxConnectorUID(connectors[connector]->getnstUid());
+  QnstGraphicsEntity *entity = QnstUtil::makeGraphicsEntity(Qnst::Link);
+  QnstGraphicsLink *link = dynamic_cast <QnstGraphicsLink*> (entity);
 
-  links[link->getnstUid()] = link;
-  link2conn[id] = connector;
+  if(link)
+  {
+    link->setnstParent(aggregator->getnstGraphicsParent());
+    link->setnstUid(aggregator->getnstUid());
+    link->setnstId(id);
+    link->setAggregatorUID(aggregator->getnstUid());
+    link->setxConnector(connector);
+    link->setxConnectorUID(connectors[connector]->getnstUid());
 
-  if (condition != NULL)
-    link->addCondition(createNoGraphicalBind(entitya,
-                                             entityb,
-                                             link,
-                                             condition,
-                                             "condition"));
+    links[link->getnstUid()] = link;
+    link2conn[id] = connector;
 
+    if (condition != NULL)
+      link->addCondition(createNoGraphicalBind(entitya,
+                                               entityb,
+                                               link,
+                                               condition,
+                                               "condition"));
 
-  if (action != NULL)
-    link->addAction(createNoGraphicalBind(entitya,
-                                          entityb,
-                                          link,
-                                          action,
-                                          "action"));
+    if (action != NULL)
+      link->addAction(createNoGraphicalBind(entitya,
+                                            entityb,
+                                            link,
+                                            action,
+                                            "action"));
+  }
 }
 
 QnstGraphicsBind* QnstView::createBind(QnstGraphicsEntity* entitya,
@@ -4794,10 +4808,10 @@ QnstGraphicsBind* QnstView::createBind(QnstGraphicsEntity* entitya,
 }
 
 QnstBind* QnstView::createNoGraphicalBind(QnstGraphicsEntity* entitya,
-                                     QnstGraphicsEntity* entityb,
-                                     QnstLink* link,
-                                     QnstGraphicsBind* graphBind,
-                                     QString type)
+                                          QnstGraphicsEntity* entityb,
+                                          QnstGraphicsLink* link,
+                                          QnstGraphicsBind* graphBind,
+                                          QString type)
 {
   QnstGraphicsEntity* parenta = entitya->getnstGraphicsParent();
   QnstGraphicsEntity* parentb = entityb->getnstGraphicsParent();
@@ -4883,7 +4897,9 @@ QnstBind* QnstView::createNoGraphicalBind(QnstGraphicsEntity* entitya,
           entityb->getncgType() == Qncg::Node)
   {
     emit entityAdded(bind->getnstUid(), parentb->getnstUid(), properties);
-  }else{
+  }
+  else
+  {
     emit entityAdded(bind->getnstUid(), parenta->getnstUid(), properties);
   }
 

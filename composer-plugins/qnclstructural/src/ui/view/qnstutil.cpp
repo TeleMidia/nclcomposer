@@ -9,7 +9,7 @@
 #include "qnstgraphicsarea.h"
 #include "qnstgraphicsproperty.h"
 #include "qnstgraphicsaggregator.h"
-
+#include "qnstgraphicslink.h"
 
 /* Initialize icon from type Map */
 std::map <Qnst::EntityType, QString> QnstUtil::iconFromTypeMap =
@@ -185,6 +185,9 @@ QnstGraphicsEntity *QnstUtil::makeGraphicsEntity(Qnst::EntityType type,
     case Qnst::Aggregator:
       entity = new QnstGraphicsAggregator(parent);
       break;
+
+    case Qnst::Link:
+      entity = new QnstGraphicsLink(parent);
 
     default:
       // do nothing

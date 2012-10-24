@@ -30,7 +30,6 @@
 #include "qnstgraphicsconditiondialog.h"
 #include "qnstgraphicsactiondialog.h"
 #include "qnstconnector.h"
-#include "qnstlink.h"
 #include "qnstbind.h"
 #include "qnstgraphicsproperty.h"
 #include "qnstgraphicsbind.h"
@@ -153,17 +152,21 @@ protected:
 public slots:
   void requestEntityAddition(QnstGraphicsEntity* entity, bool undo = false);
 
-  void requestEntityRemotion(QnstGraphicsEntity* entity, bool undo = false, bool rmRefs = true);
+  void requestEntityRemotion(QnstGraphicsEntity* entity, bool undo = false,
+                             bool rmRefs = true);
 
   void requestEntityChange(QnstGraphicsEntity* entity);
 
-  void requestEntityPreparation(QnstGraphicsEntity* entity, QMap<QString, QString> properties);
+  void requestEntityPreparation(QnstGraphicsEntity* entity,
+                                QMap<QString, QString> properties);
 
   void requestEntitySelection(QnstGraphicsEntity* entity);
 
-  void requestBindParamAdjust(QString uid, QString parent, QMap<QString, QString> properties);
+  void requestBindParamAdjust(QString uid, QString parent,
+                              QMap<QString, QString> properties);
 
-  void updateBindParams(QString bindUID,QMap<QString, QString> params, QMap<QString, QString> name_uids);
+  void updateBindParams(QString bindUID, QMap<QString, QString> params,
+                        QMap<QString, QString> name_uids);
 
   void markError(QString uid);
 
@@ -182,40 +185,51 @@ private:
 
   void adjustMapping(QnstGraphicsMapping* entity);
 
-  void changeLink(QnstLink* entity, const QMap<QString, QString> &properties);
+  void changeLink(QnstGraphicsLink* entity,
+                  const QMap<QString, QString> &properties);
 
-  void adjustLink(QnstLink* entity);
+  void adjustLink(QnstGraphicsLink* entity);
 
   void changeBind(QnstBind* entity, const QMap<QString, QString> &properties);
 
   void adjustBind(QnstBind* entity);
 
-  void addConnector(const QString uid, const QString parent, const QMap<QString, QString> &properties);
+  void addConnector(const QString uid, const QString parent,
+                    const QMap<QString, QString> &properties);
 
-  void changeConnector(QnstConnector* entity, const QMap<QString, QString> &properties);
+  void changeConnector(QnstConnector* entity,
+                       const QMap<QString, QString> &properties);
 
-  void addCondition(const QString uid, const QString parent, const QMap<QString, QString> &properties);
+  void addCondition(const QString uid, const QString parent,
+                    const QMap<QString, QString> &properties);
 
-  void changeCondition(QString condition, const QMap<QString, QString> &properties);
+  void changeCondition(QString condition, const QMap<QString,
+                       QString> &properties);
 
-  void addAction(const QString uid, const QString parent, const QMap<QString, QString> &properties);
+  void addAction(const QString uid, const QString parent,
+                 const QMap<QString, QString> &properties);
 
-  void changeAction(QString condition, const QMap<QString, QString> &properties);
+  void changeAction(QString condition,
+                    const QMap<QString, QString> &properties);
 
   void adjustConnector(QnstConnector* entity);
 
-  void changeBindParam(const QString uid, const QMap<QString, QString> &properties);
+  void changeBindParam(const QString uid,
+                       const QMap<QString, QString> &properties);
 
-  void addConnectorParam(const QString uid, const QString parent, const QMap<QString, QString> &properties);
+  void addConnectorParam(const QString uid, const QString parent,
+                         const QMap<QString, QString> &properties);
 
-  void changeConnectorParam(const QString uid, const QMap<QString, QString> &properties);
+  void changeConnectorParam(const QString uid,
+                            const QMap<QString, QString> &properties);
 
   void performCopy(QnstGraphicsEntity* entity, QnstGraphicsEntity* parent);
 
   void performPaste(QnstGraphicsEntity* copy, QnstGraphicsEntity* parent,
                     bool makeRefer = false, bool keepOriginalPos = false);
 
-  void performReference(QnstGraphicsEntity* entity, QnstGraphicsEntity* referred);
+  void performReference(QnstGraphicsEntity* entity,
+                        QnstGraphicsEntity* referred);
 
   void createObjects();
 
@@ -225,17 +239,23 @@ private:
 
   void readConnector(QDomElement e, QnstConnector* conn);
 
-  void addNodetoNodeEdge(QnstGraphicsEntity* entitya, QnstGraphicsEntity* entityb);
+  void addNodetoNodeEdge(QnstGraphicsEntity* entitya,
+                         QnstGraphicsEntity* entityb);
 
-  void addNodetoInterfaceEdge(QnstGraphicsEntity* entitya, QnstGraphicsEntity* entityb);
+  void addNodetoInterfaceEdge(QnstGraphicsEntity* entitya,
+                              QnstGraphicsEntity* entityb);
 
-  void addInterfacetoNodeEdge(QnstGraphicsEntity* entitya, QnstGraphicsEntity* entityb);
+  void addInterfacetoNodeEdge(QnstGraphicsEntity* entitya,
+                              QnstGraphicsEntity* entityb);
 
-  void addInterfacetoNodeLink(QnstGraphicsEntity* entitya, QnstGraphicsEntity* entityb);
+  void addInterfacetoNodeLink(QnstGraphicsEntity* entitya,
+                              QnstGraphicsEntity* entityb);
 
-  void addInterfacetoInterfaceEdge(QnstGraphicsEntity* entitya, QnstGraphicsEntity* entityb);
+  void addInterfacetoInterfaceEdge(QnstGraphicsEntity* entitya,
+                                   QnstGraphicsEntity* entityb);
 
-  void adjustAngle(QnstGraphicsEdge* edge, QnstGraphicsEntity* entitya, QnstGraphicsEntity* entityb);
+  void adjustAngle(QnstGraphicsEdge* edge, QnstGraphicsEntity* entitya,
+                   QnstGraphicsEntity* entityb);
 
   void collapseCompositions(QDomElement element, QDomElement parent);
 
@@ -273,7 +293,7 @@ private:
 
   QnstBind* createNoGraphicalBind(QnstGraphicsEntity* entitya,
                              QnstGraphicsEntity* entityb,
-                             QnstLink* link,
+                             QnstGraphicsLink* link,
                              QnstGraphicsBind* bind,
                              QString type);
 
@@ -307,7 +327,7 @@ private:
 
   QSet<QString> linkWriterAux;
 
-  QMap<QString, QnstLink*> links;
+  QMap<QString, QnstGraphicsLink*> links;
 
   QMap<QString, QnstBind*> binds;
 

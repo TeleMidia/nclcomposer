@@ -12,7 +12,7 @@ QnstGraphicsActionDialog::~QnstGraphicsActionDialog()
 }
 
 void QnstGraphicsActionDialog::init(QMap<QString, QnstConnector*> connectors,
-                                    QnstLink* link)
+                                    QnstGraphicsLink* link)
 {
   this->connectors = connectors;
   this->link = link;

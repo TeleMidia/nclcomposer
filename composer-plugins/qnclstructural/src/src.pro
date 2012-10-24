@@ -46,7 +46,6 @@ HEADERS += \
     ui/view/qnstgraphicsaggregator.h \
     ui/view/qnstgraphicsconditiondialog.h \
     ui/view/qnstgraphicsactiondialog.h \
-    ui/view/qnstlink.h \
     ui/view/qnstbind.h \
     ui/view/qnstgraphicsarea.h \
     ui/view/qnstgraphicsproperty.h \
@@ -84,7 +83,6 @@ SOURCES += \
     ui/view/qnstgraphicsaggregator.cpp \
     ui/view/qnstgraphicsconditiondialog.cpp \
     ui/view/qnstgraphicsactiondialog.cpp \
-    ui/view/qnstlink.cpp \
     ui/view/qnstbind.cpp \
     ui/view/qnstgraphicsarea.cpp \
     ui/view/qnstgraphicsproperty.cpp \
