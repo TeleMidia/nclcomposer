@@ -3,7 +3,10 @@
 
 #include "qnstgraphicsedge.h"
 #include "qnstconnector.h"
+#include "qnstgraphicslink.h"
 #include "qnstgraphicsbinddialog.h"
+
+class QnstGraphicsLink;
 
 class QnstGraphicsBind : public QnstGraphicsEdge
 {
@@ -14,22 +17,55 @@ public:
 
   ~QnstGraphicsBind();
 
-  /* FROM ACTION */
-  Qnst::BindType getAction();
+  QString getRole() const;
 
-  void setAction(Qnst::BindType action);
+  void setRole(QString role);
 
-  QString getActionIcon();
+  QString getComponent() const;
+
+  void setComponent(QString component);
+
+  QString getComponentUid() const;
+
+  void setComponentUid(QString componentUid);
+
+  QString getInterface() const;
+
+  void setInterface(QString interface);
+
+  QString getInterfaceUid() const;
+
+  void setInterfaceUid(QString interfaceUid);
+
+  QMap<QString, QString> getParams();
+
+  void setParams(QMap<QString, QString> params);
+
+  QMap<QString, QString> getNameUIDs();
+
+  void setNamesUIDs(QMap<QString, QString> name_uids);
+
+  void setConn(QnstConnector* conn);
+
+  void addParam(QString uid, QString name, QString value);
+
+  void setParam(QString name, QString value);
+
+  void removeParam(QString name);
+
+  void removeUId(QString uid);
+
+  void setLink(QnstGraphicsLink *link);
+
+  QnstGraphicsLink* getLink();
+
+  virtual void setProperties(const QMap<QString, QString> &properties);
+
+  void setType(Qnst::BindType type);
+  Qnst::BindType getType();
+  QString getIcon();
 
   bool isAction() const;
-
-  /* FROM CONDITION */
-  Qnst::BindType getCondition();
-
-  void setCondition(Qnst::BindType condition);
-
-  QString getConditionIcon();
-
   bool isCondition() const;
 
   void adjust();
@@ -40,19 +76,7 @@ public:
 
   void aux_adjust(QPointF pointa, QPointF pointb);
 
-  void setConn(QnstConnector* conn);
-
-  void setNameUids(QMap<QString, QString> nameUids);
-
-  void setParams(QMap<QString, QString> params);
-
-  void addParam(QString uid, QString name, QString value);
-
-  void setParam(QString name, QString value);
-
-  void removeParam(QString name);
-
-  void removeUId(QString uid);
+  // \fixme This method should not be here!!
 
 signals:
   void bindParamAdded(QString uid, QString parent, QMap<QString, QString> properties);
@@ -81,11 +105,24 @@ private:
 
   QnstConnector* conn;
 
-  QMap<QString, QString> name_uid;
+  QMap <QString, QString> names_uids;
 
   QMap<QString, QString> params;
 
   QnstGraphicsBindDialog* dialog;
+
+  QString role;
+
+  QString component;
+
+  QString componentUID;
+
+  QString interface;
+
+  QString interfaceUID;
+
+  QnstGraphicsLink *link;
+
 };
 
 #endif // QNSTGRAPHICSBIND_H

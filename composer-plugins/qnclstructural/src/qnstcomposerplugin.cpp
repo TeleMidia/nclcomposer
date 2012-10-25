@@ -765,7 +765,11 @@ void QnstComposerPlugin::requestEntityChange(Entity* entity)
     }
 
     case Qnst::Bind:
+    case Qnst::Action:
+    case Qnst::Condition:
     {
+
+      qWarning() << "[QNST] Changing bind on Plugin!!!";
       properties["role"] = entity->getAttribute("role");
       properties["component"] = entity->getAttribute("component");
 
@@ -1271,43 +1275,10 @@ void QnstComposerPlugin::notifyEntityAddedInView(const QString uid,
     case Qnst::Link:
     {
       attributes["id"] = properties["id"];
-      attributes["xconnector"] = properties["connector"];
+      attributes["xconnector"] = properties["xconnector"];
 
+      mustEmitAddEntity = true;
       request = uid;
-
-      emit addEntity("link", entity->getUniqueId(), attributes, false);
-
-      request = "";
-
-      Entity* parent = getProject()->getEntityById(entities.key(uid));
-
-      if (parent != NULL)
-      {
-        // bind condition
-        QMap<QString, QString> cattributes;
-        cattributes["role"] = properties["condition"];
-        cattributes["component"] = properties["componentcondition"];
-
-        request = uid;
-
-        emit addEntity("bind", parent->getUniqueId(), cattributes, false);
-
-        request = "";
-
-        // bind action
-
-        QMap<QString, QString> aattributes;
-        aattributes["role"] = properties["action"];
-        aattributes["component"] = properties["componentaction"];
-
-        request = uid;
-
-        emit addEntity("bind", parent->getUniqueId(), aattributes, false);
-
-        request = "";
-        mustEmitAddEntity = false; // we made the addEntity here, not must be made nothing
-                    // more after here!!
-      }
       break;
     }
 
@@ -1710,6 +1681,7 @@ void QnstComposerPlugin::requestBindAddition(const QString uid,
                                              const QString parent,
                                        const QMap<QString, QString> &properties)
 {
+  qWarning() <<  "[QNST] requestBindAddition " << properties;
   // checking connector
   QList<Entity*> connectors = getProject()->getEntitiesbyType("causalConnector");
 

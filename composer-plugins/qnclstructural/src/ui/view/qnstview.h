@@ -26,12 +26,10 @@
 #include "qnstgraphicsport.h"
 #include "qnstgraphicsreference.h"
 #include "qnstgraphicslink.h"
-#include "qnstgraphicsaggregator.h"
 #include "qnstgraphicslinkdialog.h"
 #include "qnstgraphicsconditiondialog.h"
 #include "qnstgraphicsactiondialog.h"
 #include "qnstconnector.h"
-#include "qnstbind.h"
 #include "qnstgraphicsproperty.h"
 #include "qnstgraphicsbind.h"
 #include "qnstgraphicsarea.h"
@@ -191,9 +189,7 @@ private:
 
   void adjustLink(QnstGraphicsLink* entity);
 
-  void changeBind(QnstBind* entity, const QMap<QString, QString> &properties);
-
-  void adjustBind(QnstBind* entity);
+  void adjustBind(QnstGraphicsBind* entity);
 
   void addConnector(const QString uid, const QString parent,
                     const QMap<QString, QString> &properties);
@@ -268,8 +264,9 @@ private:
   void createMapping(QnstGraphicsEntity* entitya,
                      QnstGraphicsEntity* entityb);
 
-  QnstGraphicsAggregator* createAggregator(QnstGraphicsEntity* entitya,
-                                           QnstGraphicsEntity* entityb);
+  QnstGraphicsLink* createLink(QnstGraphicsEntity* entitya,
+                               QnstGraphicsEntity* entityb,
+                               QString connName);
 
   void createActionWithDialog(QnstGraphicsEntity* entitya,
                               QnstGraphicsEntity* entityb);
@@ -282,7 +279,7 @@ private:
 
   void createNoGraphicalLink(QnstGraphicsEntity* entitya,
                              QnstGraphicsEntity* entityb,
-                             QnstGraphicsAggregator* aggregator,
+                             QnstGraphicsLink* aggregator,
                              QnstGraphicsBind* condition,
                              QnstGraphicsBind* actionDialog,
                              QString connector);
@@ -291,12 +288,6 @@ private:
                                QnstGraphicsEntity* entityb,
                                QString condition,
                                QString action);
-
-  QnstBind* createNoGraphicalBind(QnstGraphicsEntity* entitya,
-                             QnstGraphicsEntity* entityb,
-                             QnstGraphicsLink* link,
-                             QnstGraphicsBind* bind,
-                             QString type);
 
   void removeEdgesOfEntity (QnstGraphicsEntityWithEdges *entity);
   void removeEdge (QnstGraphicsEdge *edge);
@@ -333,7 +324,7 @@ private:
 
   QMap<QString, QnstGraphicsLink*> links;
 
-  QMap<QString, QnstBind*> binds;
+  QMap<QString, QnstGraphicsBind*> binds;
 
   QMap<QString, QString> brelations;
 

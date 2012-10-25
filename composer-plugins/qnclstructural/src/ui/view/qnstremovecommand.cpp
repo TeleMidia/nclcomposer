@@ -45,7 +45,8 @@ void QnstRemoveCommand::copy(QnstGraphicsEntity* entity)
   }
 }
 
-void QnstRemoveCommand::copy(QnstGraphicsEntity* entity, QnstGraphicsEntity* parent)
+void QnstRemoveCommand::copy(QnstGraphicsEntity* entity,
+                             QnstGraphicsEntity* parent)
 {
   QnstGraphicsEntity* c = QnstUtil::makeGraphicsEntity(entity->getnstType(),
                                                        parent);

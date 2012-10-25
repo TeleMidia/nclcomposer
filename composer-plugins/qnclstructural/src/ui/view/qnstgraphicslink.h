@@ -2,7 +2,9 @@
 #define QNSTGRAPHICSLINK_H
 
 #include "qnstgraphicsnode.h"
-#include "qnstbind.h"
+#include "qnstgraphicsbind.h"
+
+class QnstGraphicsBind;
 
 // \todo The qnstgraphicsaggregator and qnstlink must be part of this class.
 class QnstGraphicsLink : public QnstGraphicsNode
@@ -12,10 +14,6 @@ public:
 
   ~QnstGraphicsLink();
 
-  // \fixme The following two methods must be removed.
-  QString getAggregatorUID() const;
-  void setAggregatorUID(QString aggregatorUID);
-
   QString getxConnector() const;
 
   void setxConnector(QString xconnector);
@@ -24,17 +22,19 @@ public:
 
   void setxConnectorUID(QString xconnectorUID);
 
-  QMap<QString, QnstBind*> getActions() const;
+  QMap<QString, QnstGraphicsBind*> getActions() const;
 
-  void addAction(QnstBind* action);
+  void addAction(QnstGraphicsBind* action);
 
-  void removeAction(QnstBind* action);
+  void removeAction(QnstGraphicsBind* action);
 
-  QMap<QString, QnstBind*> getConditions() const;
+  QMap<QString, QnstGraphicsBind*> getConditions() const;
 
-  void addCondition(QnstBind* condition);
+  void addCondition(QnstGraphicsBind* condition);
 
-  void removeCondition(QnstBind* condition);
+  void removeCondition(QnstGraphicsBind* condition);
+
+  virtual void setProperties(const QMap<QString, QString> &properties);
 
 protected:
   virtual void draw(QPainter* painter);
@@ -46,15 +46,13 @@ private:
 
   void createConnections();
 
-  QString aggregatorUID;
-
   QString xconnector;
 
   QString xconnectorUID;
 
-  QMap<QString, QnstBind*> actions;
+  QMap<QString, QnstGraphicsBind*> actions;
 
-  QMap<QString, QnstBind*> conditions;
+  QMap<QString, QnstGraphicsBind*> conditions;
 };
 
 #endif // QNSTGRAPHICSLINK_H

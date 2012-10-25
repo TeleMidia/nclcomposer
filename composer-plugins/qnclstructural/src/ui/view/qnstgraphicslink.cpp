@@ -96,16 +96,6 @@ void QnstGraphicsLink::delineate(QPainterPath* painter) const
   painter->addRect(4, 4, getWidth(), getHeight());
 }
 
-QString QnstGraphicsLink::getAggregatorUID() const
-{
-  return aggregatorUID;
-}
-
-void QnstGraphicsLink::setAggregatorUID(QString aggregatorUID)
-{
-  this->aggregatorUID = aggregatorUID;
-}
-
 QString QnstGraphicsLink::getxConnector() const
 {
   return xconnector;
@@ -126,44 +116,59 @@ void QnstGraphicsLink::setxConnectorUID(QString xconnectorUID)
   this->xconnectorUID = xconnectorUID;
 }
 
-QMap<QString, QnstBind*> QnstGraphicsLink::getActions() const
+QMap<QString, QnstGraphicsBind*> QnstGraphicsLink::getActions() const
 {
   return actions;
 }
 
-void QnstGraphicsLink::addAction(QnstBind* action)
+void QnstGraphicsLink::addAction(QnstGraphicsBind* action)
 {
   if (action != NULL)
   {
     actions.insert(action->getnstUid(), action);
+    action->setLink(this);
   }
 }
 
-void QnstGraphicsLink::removeAction(QnstBind* action)
+void QnstGraphicsLink::removeAction(QnstGraphicsBind* action)
 {
   if (action != NULL)
   {
     actions.remove(action->getnstUid());
+    action->setLink(NULL);
   }
 }
 
-QMap<QString, QnstBind*> QnstGraphicsLink::getConditions() const
+QMap<QString, QnstGraphicsBind*> QnstGraphicsLink::getConditions() const
 {
   return conditions;
 }
 
-void QnstGraphicsLink::addCondition(QnstBind* condition)
+void QnstGraphicsLink::addCondition(QnstGraphicsBind* condition)
 {
   if (condition != NULL)
   {
     conditions.insert(condition->getnstUid(), condition);
+    condition->setLink(this);
   }
 }
 
-void QnstGraphicsLink::removeCondition(QnstBind* condition)
+void QnstGraphicsLink::removeCondition(QnstGraphicsBind* condition)
 {
   if (condition != NULL)
   {
     conditions.remove(condition->getnstUid());
+    condition->setLink(NULL);
   }
+}
+
+void QnstGraphicsLink::setProperties(const QMap<QString, QString> &properties)
+{
+  QnstGraphicsNode::setProperties(properties);
+
+  if (properties["xconnector"] != "")
+    setxConnector(properties["xconnector"]);
+
+  if (properties["xconnectorUID"] != "")
+    setxConnectorUID(properties["xconnectorUID"]);
 }

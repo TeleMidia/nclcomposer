@@ -8,7 +8,6 @@
 #include "qnstgraphicsswitchport.h"
 #include "qnstgraphicsarea.h"
 #include "qnstgraphicsproperty.h"
-#include "qnstgraphicsaggregator.h"
 #include "qnstgraphicslink.h"
 
 /* Initialize icon from type Map */
@@ -34,7 +33,6 @@ std::map <Qnst::EntityType, QString> QnstUtil::iconFromTypeMap =
     (Qnst::Aggregator, ":icon/aggregator") // \fixme This is here only for
                                            // compatibility with versions prior
                                            // to 0.1.3
-
     (Qnst::Link, ":icon/aggregator");
 
 /* Initialize type from extension Map */
@@ -186,12 +184,11 @@ QnstGraphicsEntity *QnstUtil::makeGraphicsEntity(Qnst::EntityType type,
       entity = new QnstGraphicsProperty(parent);
       break;
 
-    case Qnst::Aggregator:
-      entity = new QnstGraphicsAggregator(parent);
-      break;
-
+    case Qnst::Aggregator: // \fixme Aggregator is here only for compatibility
+                           // with versions prior to 0.1.3.
     case Qnst::Link:
       entity = new QnstGraphicsLink(parent);
+      break;
 
     default:
       // do nothing

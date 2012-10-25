@@ -179,9 +179,9 @@ void QnstMenu::createActions()
 
   // aggregator action
   actionAddAggregator = new QAction(this);
-  actionAddAggregator->setText(tr("Aggregator"));
+  actionAddAggregator->setText(tr("Link"));
   actionAddAggregator->setData(Qnst::Link);
-  actionAddAggregator->setIcon(QIcon(QnstUtil::iconFromMediaType(Qnst::Property)));
+  actionAddAggregator->setIcon(QIcon(QnstUtil::iconFromMediaType(Qnst::Link)));
   actionAddAggregator->setEnabled(false);
 
   // bring to front action

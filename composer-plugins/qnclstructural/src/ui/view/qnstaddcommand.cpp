@@ -8,7 +8,9 @@ QnstAddCommand::QnstAddCommand(QnstView* view, QnstGraphicsEntity* entity)
 
   this->entity = NULL;
 
-  copy(entity); ignore = true;
+  copy(entity);
+
+  ignore = true;
 }
 
 QnstAddCommand::~QnstAddCommand()
@@ -34,7 +36,7 @@ void QnstAddCommand::copy(QnstGraphicsEntity* entity)
 
     if (entity->getnstGraphicsParent() != NULL)
     {
-      parent = QString(entity->getnstGraphicsParent()->getnstUid());
+      parent = entity->getnstGraphicsParent()->getnstUid();
     }
 
     this->entity->setnstGraphicsParent(NULL);
@@ -55,7 +57,8 @@ void QnstAddCommand::redo()
   {
     QnstGraphicsEntity* e = NULL;
 
-    if (view->entities.contains(parent) || entity->getnstType() == Qnst::Body)
+    if (view->entities.contains(parent) ||
+        entity->getnstType() == Qnst::Body)
     {
       // instantiate the new entity
       e = QnstUtil::makeGraphicsEntity(entity->getnstType());

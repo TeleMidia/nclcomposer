@@ -6,11 +6,13 @@ QnstGraphicsBind::QnstGraphicsBind(QnstGraphicsEntity* parent)
   // \todo We should have only Qnst::Bind
   setnstType(Qnst::Condition);
 
-  setAction(Qnst::NoBindType);
+  setType(Qnst::NoBindType);
 
   dialog = new QnstGraphicsBindDialog();
 
   conn = NULL;
+
+  link = NULL;
 }
 
 QnstGraphicsBind::~QnstGraphicsBind()
@@ -18,89 +20,79 @@ QnstGraphicsBind::~QnstGraphicsBind()
   delete dialog;
 }
 
-Qnst::BindType QnstGraphicsBind::getAction()
+void QnstGraphicsBind::setType(Qnst::BindType type)
 {
-  return type;
-}
+  this->type = type;
 
-void QnstGraphicsBind::setAction(Qnst::BindType action)
-{
-  setnstType(Qnst::Action);
-  this->type = action;
-
-  switch(action)
+  switch(type)
   {
-    /* Actions */
+    //ACTIONS
     case Qnst::Start:
+      setnstType(Qnst::Action);
       this->icon = ":/icon/start";
       break;
 
     case Qnst::Stop:
+      setnstType(Qnst::Action);
       this->icon = ":/icon/stop";
       break;
 
     case Qnst::Resume:
+      setnstType(Qnst::Action);
       this->icon = ":/icon/resume";
       break;
 
     case Qnst::Pause:
+      setnstType(Qnst::Action);
       this->icon = ":/icon/pause";
       break;
 
     case Qnst::Set:
+      setnstType(Qnst::Action);
       this->icon = ":/icon/set";
       break;
 
-    default:
-      this->icon = ":/icon/noaction";
-      break;
-  }
-}
-
-QString QnstGraphicsBind::getActionIcon()
-{
-  return icon;
-}
-
-void QnstGraphicsBind::setCondition(Qnst::BindType condition)
-{
-  setnstType(Qnst::Condition);
-  this->type = condition;
-
-  switch(condition)
-  {
+    //CONDITIONS
     case Qnst::onBegin:
+      setnstType(Qnst::Condition);
       this->icon = ":/icon/onbegin";
       break;
 
     case Qnst::onEnd:
+      setnstType(Qnst::Condition);
       this->icon = ":/icon/onend";
       break;
 
     case Qnst::onResume:
+      setnstType(Qnst::Condition);
       this->icon = ":/icon/onresume";
       break;
 
     case Qnst::onPause:
+      setnstType(Qnst::Condition);
       this->icon = ":/icon/onpause";
       break;
 
     case Qnst::onSelection:
+      setnstType(Qnst::Condition);
       this->icon = ":/icon/onselection";
       break;
 
     default:
-      this->icon = ":/icon/nocondition";
+      if(getnstType() == Qnst::Action)
+        this->icon = ":/icon/noaction";
+      else
+        this->icon = ":/icon/nocondition";
       break;
   }
 }
 
-Qnst::BindType QnstGraphicsBind::getCondition()
+Qnst::BindType QnstGraphicsBind::getType()
 {
   return type;
 }
 
-QString QnstGraphicsBind::getConditionIcon()
+QString QnstGraphicsBind::getIcon()
 {
   return icon;
 }
@@ -759,19 +751,14 @@ void QnstGraphicsBind::delineate_condition(QPainterPath* painter) const
   }
 }
 
-void QnstGraphicsBind::setNameUids(QMap<QString, QString> nameUids)
-{
-  this->name_uid = nameUids;
-}
-
 void QnstGraphicsBind::addParam(QString uid, QString name, QString value)
 {
   if (name != "")
   {
     params[name] = value;
-    name_uid[name] = uid;
+    names_uids[name] = uid;
 
-    emit bindParamUpdated(getnstUid() ,params, name_uid);
+    emit bindParamUpdated(getnstUid() ,params, names_uids);
   }
 }
 
@@ -781,20 +768,20 @@ void QnstGraphicsBind::setParam(QString name, QString value)
   {
     params[name] = value;
 
-    emit bindParamUpdated(getnstUid() ,params, name_uid);
+    emit bindParamUpdated(getnstUid() ,params, names_uids);
   }
 }
 
 void QnstGraphicsBind::removeUId(QString uid)
 {
-  QString name = name_uid.key(uid);
+  QString name = names_uids.key(uid);
 
   if (params.contains(name))
   {
     params.remove(name);
-    name_uid.remove(name);
+    names_uids.remove(name);
 
-    emit bindParamUpdated(getnstUid() ,params, name_uid);
+    emit bindParamUpdated(getnstUid() ,params, names_uids);
   }
 }
 
@@ -803,9 +790,9 @@ void QnstGraphicsBind::removeParam(QString name)
   if(name != "")
   {
     params.remove(name);
-    name_uid.remove(name);
+    names_uids.remove(name);
 
-    emit bindParamUpdated(getnstUid() ,params, name_uid);
+    emit bindParamUpdated(getnstUid() ,params, names_uids);
   }
 }
 
@@ -830,8 +817,8 @@ void QnstGraphicsBind::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
     foreach(QString name, names)
     {
       values[name] = params[name];
-      if (!name_uid.contains(name))
-        name_uid[name] = QUuid::createUuid().toString();
+      if (!names_uids.contains(name))
+        names_uids[name] = QUuid::createUuid().toString();
     }
 
     dialog->init(values);
@@ -847,10 +834,10 @@ void QnstGraphicsBind::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
         p["name"] = name;
         p["value"] = params[name];
 
-        emit bindParamAdded(name_uid[name], getnstUid(), p);
+        emit bindParamAdded(names_uids[name], getnstUid(), p);
       }
 
-      emit bindParamUpdated(getnstUid(), params, name_uid);
+      emit bindParamUpdated(getnstUid(), params, names_uids);
     }
   }
 }
@@ -863,4 +850,102 @@ bool QnstGraphicsBind::isCondition() const
 bool QnstGraphicsBind::isAction() const
 {
   return !isCondition();
+}
+
+QString QnstGraphicsBind::getRole() const
+{
+  return role;
+}
+
+void QnstGraphicsBind::setRole(QString role)
+{
+  this->role = role;
+}
+
+QString QnstGraphicsBind::getComponent() const
+{
+  return component;
+}
+
+void QnstGraphicsBind::setComponent(QString component)
+{
+  this->component = component;
+}
+
+QString QnstGraphicsBind::getComponentUid() const
+{
+  return componentUID;
+}
+
+void QnstGraphicsBind::setComponentUid(QString componentUID)
+{
+  this->componentUID = componentUID;
+}
+
+QString QnstGraphicsBind::getInterface() const
+{
+  return interface;
+}
+
+void QnstGraphicsBind::setInterface(QString interface)
+{
+  this->interface = interface;
+}
+
+QString QnstGraphicsBind::getInterfaceUid() const
+{
+  return interfaceUID;
+}
+
+void QnstGraphicsBind::setInterfaceUid(QString interfaceUID)
+{
+  this->interfaceUID = interfaceUID;
+}
+
+QMap<QString, QString> QnstGraphicsBind::getParams()
+{
+  return params;
+}
+
+QMap<QString, QString> QnstGraphicsBind::getNameUIDs()
+{
+  return names_uids;
+}
+
+void QnstGraphicsBind::setNamesUIDs(QMap<QString, QString> names_uids)
+{
+  this->names_uids = names_uids;
+}
+
+void QnstGraphicsBind::setLink(QnstGraphicsLink *link)
+{
+  this->link = link;
+}
+
+QnstGraphicsLink* QnstGraphicsBind::getLink()
+{
+  return this->link;
+}
+
+void QnstGraphicsBind::setProperties(const QMap<QString, QString> &properties)
+{
+  QnstGraphicsEdge::setProperties(properties);
+
+  if(properties.contains("role"))
+  {
+    setRole(properties["role"]);
+    setType(QnstUtil::getBindTypeFromStr(getRole()));
+  }
+
+  if(properties.contains("component"))
+    setComponent("component");
+
+  if(properties.contains("componentUid"))
+    setComponentUid(properties["componentUid"]);
+
+  if(properties.contains("interface"))
+    setInterface(properties["interface"]);
+
+  if(properties.contains("interfaceUid"))
+    setInterfaceUid(properties["interfaceUid"]);
 }
