@@ -858,7 +858,7 @@ void QnstGraphicsBind::addParam(QString uid, QString name, QString value)
     params[name] = value;
     names_uids[name] = uid;
 
-    emit bindParamUpdated(getnstUid() ,params, names_uids);
+    emit bindParamUpdated(getnstUid(), params, names_uids);
   }
 }
 
@@ -868,7 +868,7 @@ void QnstGraphicsBind::setParam(QString name, QString value)
   {
     params[name] = value;
 
-    emit bindParamUpdated(getnstUid() ,params, names_uids);
+    emit bindParamUpdated(getnstUid(), params, names_uids);
   }
 }
 
@@ -881,7 +881,7 @@ void QnstGraphicsBind::removeUId(QString uid)
     params.remove(name);
     names_uids.remove(name);
 
-    emit bindParamUpdated(getnstUid() ,params, names_uids);
+    emit bindParamUpdated(getnstUid(), params, names_uids);
   }
 }
 
@@ -892,7 +892,7 @@ void QnstGraphicsBind::removeParam(QString name)
     params.remove(name);
     names_uids.remove(name);
 
-    emit bindParamUpdated(getnstUid() ,params, names_uids);
+    emit bindParamUpdated(getnstUid(), params, names_uids);
   }
 }
 

@@ -79,9 +79,11 @@ public:
   // \fixme This method should not be here!!
 
 signals:
-  void bindParamAdded(QString uid, QString parent, QMap<QString, QString> properties);
+  void bindParamAdded(QString uid, QString parent,
+                      QMap<QString, QString> properties);
 
-  void bindParamUpdated(QString bindUid, QMap<QString, QString> params,  QMap<QString, QString> name_uids);
+  void bindParamUpdated(QString bindUid, QMap<QString, QString> params,
+                        QMap<QString, QString> name_uids);
 
 protected:
   virtual void draw(QPainter* painter);
