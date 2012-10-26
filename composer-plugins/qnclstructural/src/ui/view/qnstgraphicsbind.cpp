@@ -107,17 +107,20 @@ void QnstGraphicsBind::adjust()
 
 void QnstGraphicsBind::adjust_action()
 {
-  if (getEntityA() != NULL && getEntityB() != NULL){
+  if (getEntityA() != NULL && getEntityB() != NULL)
+  {
     QLineF line = QLineF(QPointF(getEntityA()->getLeft() + getEntityA()->getWidth()/2,
                                  getEntityA()->getTop() + getEntityA()->getHeight()/2),
                          QPointF(getEntityB()->getLeft() + getEntityB()->getWidth()/2,
                                  getEntityB()->getTop() + getEntityB()->getHeight()/2));
 
-    if (getEntityA()->getncgType() == Qncg::Interface){
+    if (getEntityA()->getncgType() == Qncg::Interface)
+    {
       line.setP1(getnstGraphicsParent()->mapFromItem(getEntityA()->getnstGraphicsParent(), line.p1()));
     }
 
-    if (getEntityB()->getncgType() == Qncg::Interface){
+    if (getEntityB()->getncgType() == Qncg::Interface)
+    {
       line.setP2(getnstGraphicsParent()->mapFromItem(getEntityB()->getnstGraphicsParent(), line.p2()));
     }
 
@@ -130,12 +133,14 @@ void QnstGraphicsBind::adjust_action()
 
     qreal index;
 
-    if (pointa != pointb){
+    if (pointa != pointb)
+    {
       index = 1.0;
 
       int n = 0;
 
-      while(getEntityB()->collidesWithItem(this)){
+      while(getEntityB()->collidesWithItem(this))
+      {
         index -= 0.01;
 
         if (getAngle() == 0)
@@ -153,25 +158,27 @@ void QnstGraphicsBind::adjust_action()
 
     getEntityB()->setSelectable(true);
 
-    if (scene() != NULL){
+    if (scene() != NULL)
       scene()->update();
-    }
   }
 }
 
 void QnstGraphicsBind::adjust_condition()
 {
-  if (getEntityA() != NULL && getEntityB() != NULL){
+  if (getEntityA() != NULL && getEntityB() != NULL)
+  {
     QLineF line = QLineF(QPointF(getEntityA()->getLeft() + getEntityA()->getWidth()/2,
                                  getEntityA()->getTop() + getEntityA()->getHeight()/2),
                          QPointF(getEntityB()->getLeft() + getEntityB()->getWidth()/2,
                                  getEntityB()->getTop() + getEntityB()->getHeight()/2));
 
-    if (getEntityA()->getncgType() == Qncg::Interface){
+    if (getEntityA()->getncgType() == Qncg::Interface)
+    {
       line.setP1(getnstGraphicsParent()->mapFromItem(getEntityA()->getnstGraphicsParent(), line.p1()));
     }
 
-    if (getEntityB()->getncgType() == Qncg::Interface){
+    if (getEntityB()->getncgType() == Qncg::Interface)
+    {
       line.setP2(getnstGraphicsParent()->mapFromItem(getEntityB()->getnstGraphicsParent(), line.p2()));
     }
 
@@ -190,7 +197,8 @@ void QnstGraphicsBind::adjust_condition()
 
       int n = 0;
 
-      while(getEntityA()->collidesWithItem(this)){
+      while(getEntityA()->collidesWithItem(this))
+      {
         index += 0.01;
 
         if (getAngle() == 0)
@@ -200,41 +208,43 @@ void QnstGraphicsBind::adjust_condition()
 
         aux_adjust(pointa, pointb);
 
-        if (++n > 100){ // avoiding infinity loop
+        if (++n > 100) // avoiding infinity loop
           break;
-        }
       }
     }
 
     getEntityA()->setSelectable(true);
 
-    if (scene() != NULL){
+    if (scene() != NULL)
       scene()->update();
-    }
   }
 }
 
 void QnstGraphicsBind::aux_adjust(QPointF pointa, QPointF pointb)
 {
-  if (pointa.x() <= pointb.x() && pointa.y() <= pointb.y()){
+  if (pointa.x() <= pointb.x() && pointa.y() <= pointb.y())
+  {
     setTop(pointa.y()-4);
     setLeft(pointa.x()-4);
     setWidth((pointb.x()-4)-(pointa.x()-4) + 8);
     setHeight((pointb.y()-4)-(pointa.y()-4) + 8);
-
-  }else if (pointa.x() > pointb.x() && pointa.y() < pointb.y()){
+  }
+  else if (pointa.x() > pointb.x() && pointa.y() < pointb.y())
+  {
     setTop(pointa.y()-4);
     setLeft(pointb.x()-4);
     setWidth((pointa.x()-4)-(pointb.x()-4) + 8);
     setHeight((pointb.y()-4)-(pointa.y()-4) + 8);
-
-  }else if (pointa.x() < pointb.x() && pointa.y() > pointb.y()){
+  }
+  else if (pointa.x() < pointb.x() && pointa.y() > pointb.y())
+  {
     setTop(pointb.y()-4);
     setLeft((pointa.x()-4));
     setWidth((pointb.x()-4)-(pointa.x()-4) + 8);
     setHeight((pointa.y()-4)-(pointb.y()-4) + 8);
-
-  }else if (pointa.x() > pointb.x() && pointa.y() > pointb.y()){
+  }
+  else if (pointa.x() > pointb.x() && pointa.y() > pointb.y())
+  {
     setTop(pointb.y()-4);
     setLeft(pointb.x()-4);
     setWidth((pointa.x()-4)-(pointb.x()-4) + 8);
@@ -253,7 +263,8 @@ void QnstGraphicsBind::draw(QPainter* painter)
 
 void QnstGraphicsBind::draw_action(QPainter* painter)
 {
-  if (getEntityA() != NULL && getEntityB() != NULL){
+  if (getEntityA() != NULL && getEntityB() != NULL)
+  {
     painter->setRenderHint(QPainter::Antialiasing, true);
     painter->setRenderHint(QPainter::SmoothPixmapTransform, true);
 
@@ -262,30 +273,34 @@ void QnstGraphicsBind::draw_action(QPainter* painter)
                          QPointF(getEntityB()->getLeft() + getEntityB()->getWidth()/2,
                                  getEntityB()->getTop() + getEntityB()->getHeight()/2));
 
-    if (getEntityA()->getncgType() == Qncg::Interface){
+    if (getEntityA()->getncgType() == Qncg::Interface)
+    {
       line.setP1(getnstGraphicsParent()->mapFromItem(getEntityA()->getnstGraphicsParent(), line.p1()));
     }
 
-    if (getEntityB()->getncgType() == Qncg::Interface){
+    if (getEntityB()->getncgType() == Qncg::Interface)
+    {
       line.setP2(getnstGraphicsParent()->mapFromItem(getEntityB()->getnstGraphicsParent(), line.p2()));
     }
 
     QPointF pointa = line.p1();
     QPointF pointb = line.p2();
 
-    if (!isInvalid()){
+    if (!isInvalid())
       painter->setPen(QPen(QBrush(QColor("#000000")), 1));
-    }else{
+    else
       painter->setPen(QPen(QBrush(QColor(255,0,0,200)), 1, Qt::DashLine));
-    }
 
-    if (pointa.x() <= pointb.x() && pointa.y() <= pointb.y()){
-      if (getAngle() != 0){
+    if (pointa.x() <= pointb.x() && pointa.y() <= pointb.y())
+    {
+      if (getAngle() != 0)
+      {
         qreal drawangle = getAdjAngle();
 
         QLineF localline(4+4,4+4, 4+8+getWidth()-16, 4+8+getHeight()-16);
 
-        if (drawangle < 0){
+        if (drawangle < 0)
+        {
           drawangle = -drawangle;
         }
 
@@ -299,15 +314,19 @@ void QnstGraphicsBind::draw_action(QPainter* painter)
         QPointF center_b(localline.p1().x() + ::cos((180-delta-drawangle)*PI/180)*R,
                          localline.p1().y() - ::sin((180-delta-drawangle)*PI/180)*R);
 
-        if (getAdjAngle() < 0){
+        if (getAdjAngle() < 0)
+        {
           painter->drawArc(center_b.x()-R,center_b.y()-R,2*R,2*R,
                            16*((180-delta-drawangle)+180),16*drawangle);
-        }else{
+        }
+        else
+        {
           painter->drawArc(center_a.x()-R,center_a.y()-R,2*R,2*R
                            ,16*(180-delta-drawangle),16*drawangle);
         }
-
-      }else{
+      }
+      else
+      {
         painter->drawLine(4+4,4+4, 4+8+getWidth()-16, 4+8+getHeight()-16);
       }
 
@@ -315,21 +334,26 @@ void QnstGraphicsBind::draw_action(QPainter* painter)
 
       painter->drawPixmap(4+getWidth()-16, 4+getHeight()-16, 16, 16, QPixmap(icon));
 
-      if (!isInvalid()){
+      if (!isInvalid())
+      {
         painter->setBrush(QBrush(QColor("#000000")));
-      }else{
+      }
+      else
+      {
         painter->setBrush(QBrush(QColor(255,0,0,75)));
         painter->drawEllipse(3+getWidth()-16, 3+getHeight()-16, 18, 18);
       }
-
-    }else if (pointa.x() > pointb.x() && pointa.y() <= pointb.y()){
-
-      if (getAngle() != 0){
+    }
+    else if (pointa.x() > pointb.x() && pointa.y() <= pointb.y())
+    {
+      if (getAngle() != 0)
+      {
         qreal drawangle = getAdjAngle();
 
         QLineF localline(4+4+getWidth()-8,4+4, 4+8, 4+8+getHeight()-16);
 
-        if (drawangle < 0){
+        if (drawangle < 0)
+        {
           drawangle = -drawangle;
         }
 
@@ -343,15 +367,19 @@ void QnstGraphicsBind::draw_action(QPainter* painter)
         QPointF center_b(localline.p1().x() + ::cos((180-delta-drawangle)*PI/180)*R,
                          localline.p1().y() - ::sin((180-delta-drawangle)*PI/180)*R);
 
-        if (getAdjAngle() < 0){
+        if (getAdjAngle() < 0)
+        {
           painter->drawArc(center_b.x()-R,center_b.y()-R,2*R,2*R,
                            16*((180-delta-drawangle)+180),16*drawangle);
-        }else{
+        }
+        else
+        {
           painter->drawArc(center_a.x()-R,center_a.y()-R,2*R,2*R
                            ,16*(180-delta-drawangle),16*drawangle);
         }
-
-      }else{
+      }
+      else
+      {
         painter->drawLine(4+4+getWidth()-8,4+4, 4+8, 4+8+getHeight()-16);
       }
 
@@ -359,20 +387,26 @@ void QnstGraphicsBind::draw_action(QPainter* painter)
 
       painter->drawPixmap(4, 4+getHeight()-16, 16, 16, QPixmap(icon));
 
-      if (!isInvalid()){
+      if (!isInvalid())
+      {
         painter->setBrush(QBrush(QColor("#000000")));
-      }else{
+      }
+      else
+      {
         painter->setBrush(QBrush(QColor(255,0,0,75)));
         painter->drawEllipse(3, 3+getHeight()-16, 18, 18);
       }
-
-    }else if (pointa.x() <= pointb.x() && pointa.y() > pointb.y()){
-      if (getAngle() != 0){
+    }
+    else if (pointa.x() <= pointb.x() && pointa.y() > pointb.y())
+    {
+      if (getAngle() != 0)
+      {
         qreal drawangle = getAdjAngle();
 
         QLineF localline(4+4, 4+4+getHeight()-8, 4+8+getWidth()-16, 4+8);
 
-        if (drawangle < 0){
+        if (drawangle < 0)
+        {
           drawangle = -drawangle;
         }
 
@@ -386,15 +420,19 @@ void QnstGraphicsBind::draw_action(QPainter* painter)
         QPointF center_b(localline.p1().x() + ::cos((180-delta-drawangle)*PI/180)*R,
                          localline.p1().y() - ::sin((180-delta-drawangle)*PI/180)*R);
 
-        if (getAdjAngle() < 0){
+        if (getAdjAngle() < 0)
+        {
           painter->drawArc(center_b.x()-R,center_b.y()-R,2*R,2*R,
                            16*((180-delta-drawangle)+180),16*drawangle);
-        }else{
+        }
+        else
+        {
           painter->drawArc(center_a.x()-R,center_a.y()-R,2*R,2*R
                            ,16*(180-delta-drawangle),16*drawangle);
         }
-
-      }else{
+      }
+      else
+      {
         painter->drawLine(4+4, 4+4+getHeight()-8, 4+8+getWidth()-16, 4+8);
       }
 
@@ -402,20 +440,25 @@ void QnstGraphicsBind::draw_action(QPainter* painter)
 
       painter->drawPixmap(4+getWidth()-16,4,16,16, QPixmap(icon));
 
-      if (!isInvalid()){
+      if (!isInvalid())
+      {
         painter->setBrush(QBrush(QColor("#000000")));
-      }else{
+      }
+      else
+      {
         painter->setBrush(QBrush(QColor(255,0,0,75)));
         painter->drawEllipse(3+getWidth()-16,3,18,18);
       }
-
-    }else if (pointa.x() > pointb.x() && pointa.y() > pointb.y()){
+    }
+    else if (pointa.x() > pointb.x() && pointa.y() > pointb.y())
+    {
       if (getAngle() != 0){
         qreal drawangle = getAdjAngle();
 
         QLineF localline(4+4+getWidth()-8, 4+4+getHeight()-8, 4+8, 4+8);
 
-        if (drawangle < 0){
+        if (drawangle < 0)
+        {
           drawangle = -drawangle;
         }
 
@@ -429,15 +472,19 @@ void QnstGraphicsBind::draw_action(QPainter* painter)
         QPointF center_b(localline.p1().x() + ::cos((180-delta-drawangle)*PI/180)*R,
                          localline.p1().y() - ::sin((180-delta-drawangle)*PI/180)*R);
 
-        if (getAdjAngle() < 0){
+        if (getAdjAngle() < 0)
+        {
           painter->drawArc(center_b.x()-R,center_b.y()-R,2*R,2*R,
                            16*((180-delta-drawangle)+180),16*drawangle);
-        }else{
+        }
+        else
+        {
           painter->drawArc(center_a.x()-R,center_a.y()-R,2*R,2*R
                            ,16*(180-delta-drawangle),16*drawangle);
         }
-
-      }else{
+      }
+      else
+      {
         painter->drawLine(4+4+getWidth()-8, 4+4+getHeight()-8, 4+8, 4+8);
       }
 
@@ -445,9 +492,12 @@ void QnstGraphicsBind::draw_action(QPainter* painter)
 
       painter->drawPixmap(4,4,16,16, QPixmap(icon));
 
-      if (!isInvalid()){
+      if (!isInvalid())
+      {
         painter->setBrush(QBrush(QColor("#000000")));
-      }else{
+      }
+      else
+      {
         painter->setBrush(QBrush(QColor(255,0,0,75)));
         painter->drawEllipse(3,3,18,18);
       }
@@ -457,7 +507,8 @@ void QnstGraphicsBind::draw_action(QPainter* painter)
 
 void QnstGraphicsBind::draw_condition(QPainter* painter)
 {
-  if (getEntityA() != NULL && getEntityB() != NULL){
+  if (getEntityA() != NULL && getEntityB() != NULL)
+  {
     painter->setRenderHint(QPainter::Antialiasing, true);
     painter->setRenderHint(QPainter::SmoothPixmapTransform, true);
 
@@ -466,31 +517,34 @@ void QnstGraphicsBind::draw_condition(QPainter* painter)
                          QPointF(getEntityB()->getLeft() + getEntityB()->getWidth()/2,
                                  getEntityB()->getTop() + getEntityB()->getHeight()/2));
 
-    if (getEntityA()->getncgType() == Qncg::Interface){
+    if (getEntityA()->getncgType() == Qncg::Interface)
+    {
       line.setP1(getnstGraphicsParent()->mapFromItem(getEntityA()->getnstGraphicsParent(), line.p1()));
     }
 
-    if (getEntityB()->getncgType() == Qncg::Interface){
+    if (getEntityB()->getncgType() == Qncg::Interface)
+    {
       line.setP2(getnstGraphicsParent()->mapFromItem(getEntityB()->getnstGraphicsParent(), line.p2()));
     }
 
     QPointF pointa = line.p1();
     QPointF pointb = line.p2();
 
-    if (!isInvalid()){
+    if (!isInvalid())
       painter->setPen(QPen(QBrush(QColor("#000000")), 1));
-    }else{
+    else
       painter->setPen(QPen(QBrush(QColor(255,0,0,200)), 1, Qt::DashLine));
-    }
 
-    if (pointa.x() <= pointb.x() && pointa.y() <= pointb.y()){
-
-      if (getAngle() != 0){
+    if (pointa.x() <= pointb.x() && pointa.y() <= pointb.y())
+    {
+      if (getAngle() != 0)
+      {
         qreal drawangle = getAdjAngle();
 
         QLineF localline(4+8,4+8, 4+getWidth()-4, 4+getHeight()-4);
 
-        if (drawangle < 0){
+        if (drawangle < 0)
+        {
           drawangle = -drawangle;
         }
 
@@ -504,15 +558,19 @@ void QnstGraphicsBind::draw_condition(QPainter* painter)
         QPointF center_b(localline.p1().x() + ::cos((180-delta-drawangle)*PI/180)*R,
                          localline.p1().y() - ::sin((180-delta-drawangle)*PI/180)*R);
 
-        if (getAdjAngle() < 0){
+        if (getAdjAngle() < 0)
+        {
           painter->drawArc(center_b.x()-R,center_b.y()-R,2*R,2*R,
                            16*((180-delta-drawangle)+180),16*drawangle);
-        }else{
+        }
+        else
+        {
           painter->drawArc(center_a.x()-R,center_a.y()-R,2*R,2*R
                            ,16*(180-delta-drawangle),16*drawangle);
         }
-
-      }else{
+      }
+      else
+      {
         painter->drawLine(4+8,4+8, 4+getWidth()-4, 4+getHeight()-4);
       }
 
@@ -520,21 +578,26 @@ void QnstGraphicsBind::draw_condition(QPainter* painter)
 
       painter->drawPixmap(4,4,16,16, QPixmap(icon));
 
-      if (!isInvalid()){
+      if (!isInvalid())
+      {
         painter->setBrush(QBrush(QColor("#000000")));
-      }else{
+      }
+      else
+      {
         painter->setBrush(QBrush(QColor(255,0,0,75)));
         painter->drawEllipse(3,3, 18, 18);
       }
-
-    }else if (pointa.x() >= pointb.x() && pointa.y() <= pointb.y()){
-
-      if (getAngle() != 0){
+    }
+    else if (pointa.x() >= pointb.x() && pointa.y() <= pointb.y())
+    {
+      if (getAngle() != 0)
+      {
         qreal drawangle = getAdjAngle();
 
         QLineF localline(4+getWidth()-8,4+8, 4+4, 4+getHeight()-4);
 
-        if (drawangle < 0){
+        if (drawangle < 0)
+        {
           drawangle = -drawangle;
         }
 
@@ -548,15 +611,19 @@ void QnstGraphicsBind::draw_condition(QPainter* painter)
         QPointF center_b(localline.p1().x() + ::cos((180-delta-drawangle)*PI/180)*R,
                          localline.p1().y() - ::sin((180-delta-drawangle)*PI/180)*R);
 
-        if (getAdjAngle() < 0){
+        if (getAdjAngle() < 0)
+        {
           painter->drawArc(center_b.x()-R,center_b.y()-R,2*R,2*R,
                            16*((180-delta-drawangle)+180),16*drawangle);
-        }else{
+        }
+        else
+        {
           painter->drawArc(center_a.x()-R,center_a.y()-R,2*R,2*R
                            ,16*(180-delta-drawangle),16*drawangle);
         }
-
-      }else{
+      }
+      else
+      {
         painter->drawLine(4+getWidth()-8,4+8, 4+4, 4+getHeight()-4);
       }
 
@@ -564,21 +631,25 @@ void QnstGraphicsBind::draw_condition(QPainter* painter)
 
       painter->drawPixmap(4+getWidth()-16,4,16,16, QPixmap(icon));
 
-      if (!isInvalid()){
+      if (!isInvalid())
+      {
         painter->setBrush(QBrush(QColor("#000000")));
-      }else{
+      }
+      else
+      {
         painter->setBrush(QBrush(QColor(255,0,0,75)));
         painter->drawEllipse(3+getWidth()-16,3, 18, 18);
       }
-
-    }else if (pointa.x() < pointb.x() && pointa.y() > pointb.y()){
-
-      if (getAngle() != 0){
+    }
+    else if (pointa.x() < pointb.x() && pointa.y() > pointb.y())
+    {
+      if (getAngle() != 0)
+      {
         qreal drawangle = getAdjAngle();
-
         QLineF localline(4+8, 4+getHeight()-8, 4+getWidth()-4, 4+4);
 
-        if (drawangle < 0){
+        if (drawangle < 0)
+        {
           drawangle = -drawangle;
         }
 
@@ -592,15 +663,19 @@ void QnstGraphicsBind::draw_condition(QPainter* painter)
         QPointF center_b(localline.p1().x() + ::cos((180-delta-drawangle)*PI/180)*R,
                          localline.p1().y() - ::sin((180-delta-drawangle)*PI/180)*R);
 
-        if (getAdjAngle() < 0){
+        if (getAdjAngle() < 0)
+        {
           painter->drawArc(center_b.x()-R,center_b.y()-R,2*R,2*R,
                            16*((180-delta-drawangle)+180),16*drawangle);
-        }else{
+        }
+        else
+        {
           painter->drawArc(center_a.x()-R,center_a.y()-R,2*R,2*R
                            ,16*(180-delta-drawangle),16*drawangle);
         }
-
-      }else{
+      }
+      else
+      {
         painter->drawLine(4+8, 4+getHeight()-8, 4+getWidth()-4, 4+4);
       }
 
@@ -608,21 +683,26 @@ void QnstGraphicsBind::draw_condition(QPainter* painter)
 
       painter->drawPixmap(4, 4+getHeight()-16, 16, 16, QPixmap(icon));
 
-      if (!isInvalid()){
+      if (!isInvalid())
+      {
         painter->setBrush(QBrush(QColor("#000000")));
-      }else{
+      }
+      else
+      {
         painter->setBrush(QBrush(QColor(255,0,0,75)));
         painter->drawEllipse(3, 3+getHeight()-16, 18, 18);
       }
-
-    }else if (pointa.x() > pointb.x() && pointa.y() > pointb.y()){
-
-      if (getAngle() != 0){
+    }
+    else if (pointa.x() > pointb.x() && pointa.y() > pointb.y())
+    {
+      if (getAngle() != 0)
+      {
         qreal drawangle = getAdjAngle();
 
         QLineF localline(4+getWidth()-8, 4+getHeight()-8, 4+4, 4+4);
 
-        if (drawangle < 0){
+        if (drawangle < 0)
+        {
           drawangle = -drawangle;
         }
 
@@ -636,15 +716,19 @@ void QnstGraphicsBind::draw_condition(QPainter* painter)
         QPointF center_b(localline.p1().x() + ::cos((180-delta-drawangle)*PI/180)*R,
                          localline.p1().y() - ::sin((180-delta-drawangle)*PI/180)*R);
 
-        if (getAdjAngle() < 0){
+        if (getAdjAngle() < 0)
+        {
           painter->drawArc(center_b.x()-R,center_b.y()-R,2*R,2*R,
                            16*((180-delta-drawangle)+180),16*drawangle);
-        }else{
+        }
+        else
+        {
           painter->drawArc(center_a.x()-R,center_a.y()-R,2*R,2*R
                            ,16*(180-delta-drawangle),16*drawangle);
         }
-
-      }else{
+      }
+      else
+      {
         painter->drawLine(4+getWidth()-8, 4+getHeight()-8, 4+4, 4+4);
       }
 
@@ -652,9 +736,12 @@ void QnstGraphicsBind::draw_condition(QPainter* painter)
 
       painter->drawPixmap(4+getWidth()-16, 4+getHeight()-16, 16, 16, QPixmap(icon));
 
-      if (!isInvalid()){
+      if (!isInvalid())
+      {
         painter->setBrush(QBrush(QColor("#000000")));
-      }else{
+      }
+      else
+      {
         painter->setBrush(QBrush(QColor(255,0,0,75)));
         painter->drawEllipse(3+getWidth()-16, 3+getHeight()-16, 18, 18);
       }
@@ -672,37 +759,40 @@ void QnstGraphicsBind::delineate(QPainterPath* painter) const
 
 void QnstGraphicsBind::delineate_action(QPainterPath* painter) const
 {
-  if (getEntityA() != NULL && getEntityB() != NULL){
+  if (getEntityA() != NULL && getEntityB() != NULL)
+  {
     QLineF line = QLineF(QPointF(getEntityA()->getLeft() + getEntityA()->getWidth()/2,
                                  getEntityA()->getTop() + getEntityA()->getHeight()/2),
                          QPointF(getEntityB()->getLeft() + getEntityB()->getWidth()/2,
                                  getEntityB()->getTop() + getEntityB()->getHeight()/2));
 
-    if (getEntityA()->getncgType() == Qncg::Interface){
+    if (getEntityA()->getncgType() == Qncg::Interface)
+    {
       line.setP1(getnstGraphicsParent()->mapFromItem(getEntityA()->getnstGraphicsParent(), line.p1()));
     }
 
-    if (getEntityB()->getncgType() == Qncg::Interface){
+    if (getEntityB()->getncgType() == Qncg::Interface)
+    {
       line.setP2(getnstGraphicsParent()->mapFromItem(getEntityB()->getnstGraphicsParent(), line.p2()));
     }
 
     QPointF pointa = line.p1();
     QPointF pointb = line.p2();
 
-    if (pointa.x() <= pointb.x() && pointa.y() <= pointb.y()){
-
+    if (pointa.x() <= pointb.x() && pointa.y() <= pointb.y())
+    {
       painter->addEllipse(4+getWidth()-16, 4+getHeight()-16, 16, 16);
-
-    }else if (pointa.x() > pointb.x() && pointa.y() < pointb.y()){
-
+    }
+    else if (pointa.x() > pointb.x() && pointa.y() < pointb.y())
+    {
       painter->addEllipse(4, 4+getHeight()-16, 16, 16);
-
-    }else if (pointa.x() < pointb.x() && pointa.y() > pointb.y()){
-
+    }
+    else if (pointa.x() < pointb.x() && pointa.y() > pointb.y())
+    {
       painter->addEllipse(4+getWidth()-16,4,16,16);
-
-    }else if (pointa.x() > pointb.x() && pointa.y() > pointb.y()){
-
+    }
+    else if (pointa.x() > pointb.x() && pointa.y() > pointb.y())
+    {
       painter->addEllipse(4,4,16,16);
     }
   }
@@ -710,40 +800,50 @@ void QnstGraphicsBind::delineate_action(QPainterPath* painter) const
 
 void QnstGraphicsBind::delineate_condition(QPainterPath* painter) const
 {
-  if (getEntityA() != NULL && getEntityB() != NULL){
+  if (getEntityA() != NULL && getEntityB() != NULL)
+  {
     QLineF line = QLineF(QPointF(getEntityA()->getLeft() + getEntityA()->getWidth()/2,
                                  getEntityA()->getTop() + getEntityA()->getHeight()/2),
                          QPointF(getEntityB()->getLeft() + getEntityB()->getWidth()/2,
                                  getEntityB()->getTop() + getEntityB()->getHeight()/2));
 
-    if (getEntityA()->getncgType() == Qncg::Interface){
+    if (getEntityA()->getncgType() == Qncg::Interface)
+    {
       line.setP1(getnstGraphicsParent()->mapFromItem(getEntityA()->getnstGraphicsParent(), line.p1()));
     }
 
-    if (getEntityB()->getncgType() == Qncg::Interface){
+    if (getEntityB()->getncgType() == Qncg::Interface)
+    {
       line.setP2(getnstGraphicsParent()->mapFromItem(getEntityB()->getnstGraphicsParent(), line.p2()));
     }
 
     QPointF pointa = line.p1();
     QPointF pointb = line.p2();
 
-    if (pointa.x() <= pointb.x() && pointa.y() <= pointb.y()){
+    if (pointa.x() <= pointb.x() && pointa.y() <= pointb.y())
+    {
       //        painter->drawLine(4+4,4+4, 4+4+getWidth()-8-2, 4+4+getHeight()-8-2);
 
       painter->addEllipse(4,4,16,16);
 
-    }else if (pointa.x() > pointb.x() && pointa.y() < pointb.y()){
+    }
+    else if (pointa.x() > pointb.x() && pointa.y() < pointb.y())
+    {
       //        painter->drawLine(4+4+getWidth()-8,4+4, 4+4, 4+4+getHeight()-8);
 
       painter->addEllipse(4+getWidth()-16,4,16,16);
 
 
-    }else if (pointa.x() < pointb.x() && pointa.y() > pointb.y()){
+    }
+    else if (pointa.x() < pointb.x() && pointa.y() > pointb.y())
+    {
       //        painter->drawLine(4+4, 4+4+getHeight()-8, 4+4+getWidth()-8, 4+4);
 
       painter->addEllipse(4, 4+getHeight()-16, 16, 16);
 
-    }else if (pointa.x() > pointb.x() && pointa.y() > pointb.y()){
+    }
+    else if (pointa.x() > pointb.x() && pointa.y() > pointb.y())
+    {
       //        painter->drawLine(4+4+getWidth()-8, 4+4+getHeight()-8, 4+4, 4+4);
 
       painter->addEllipse(4+getWidth()-16, 4+getHeight()-16, 16, 16);

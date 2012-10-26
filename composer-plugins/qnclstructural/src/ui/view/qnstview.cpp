@@ -401,11 +401,6 @@ void QnstView::readLink(QDomElement element, QDomElement parent)
             entitya->getnstGraphicsParent()->getnstGraphicsParent()->addnstGraphicsEntity(graphicsBind);
           }
 
-          // adjusting angle
-          adjustAngle(graphicsBind, entitya, entityb);
-
-          graphicsBind->adjust();
-
           ((QnstGraphicsNode*) entitya)->addnstGraphicsEdge(graphicsBind);
           ((QnstGraphicsNode*) entityb)->addnstGraphicsEdge(graphicsBind);
 
@@ -419,6 +414,11 @@ void QnstView::readLink(QDomElement element, QDomElement parent)
             roleStr = element.attribute("action");
 
           graphicsBind->setType(QnstUtil::getBindTypeFromStr(roleStr));
+
+          // adjusting angle
+          adjustAngle(graphicsBind, entitya, entityb);
+
+          graphicsBind->adjust();
 
           if(links.contains(element.attribute("linkUID")))
           {
@@ -1105,20 +1105,19 @@ void QnstView::addEntity(const QString uid, const QString parent,
       {
         if (!binds.contains(uid))
         {
-          QnstGraphicsBind* entity = new QnstGraphicsBind(); // \todo Use makeGraphicsEntity!
-          entity->setnstUid(uid);
-          entity->setnstParent(links[parent]);
+          QnstGraphicsBind* bind = new QnstGraphicsBind(); // \todo Use makeGraphicsEntity!
+          bind->setnstUid(uid);
+          entity->setnstGraphicsParent(entities[parent]);
 
-          entity->setRole(properties["role"]);
+          bind->setProperties(properties);
+          entities[parent]->addnstGraphicsEntity(entity);
+          entities[uid] = bind;
+          binds[uid] = bind;
 
-          entity->setComponent(properties["component"]);
-          entity->setComponentUid(properties["componentUid"]);
+          bind->adjust();
+          scene->update();
 
-
-          entity->setInterface(properties["interface"]);
-          entity->setInterfaceUid(properties["interfaceUid"]);
-
-          binds[uid] = entity;
+          ok = true;
 
           // adjustBind(entity);
         }
@@ -1632,6 +1631,8 @@ void QnstView::changeEntity(const QString uid,
           bind->setProperties(properties);
 
           bind->adjust();
+
+          scene->update(); // \fixme Can we do better thant that
         }
         break;
       }
@@ -2618,6 +2619,8 @@ void QnstView::requestEntityAddition(QnstGraphicsEntity* entity, bool undo)
             properties["interface"] = bind->getInterface();
 
             binds[bind->getnstUid()] = bind;
+
+            bind->adjust();
             ok = true;
           }
         }
@@ -4456,7 +4459,8 @@ void QnstView::focusOutEvent(QFocusEvent *event)
   }
 }
 
-void QnstView::adjustAngle(QnstGraphicsEdge* edge, QnstGraphicsEntity* entitya,
+void QnstView::adjustAngle(QnstGraphicsEdge* edge,
+                           QnstGraphicsEntity* entitya,
                            QnstGraphicsEntity* entityb)
 {
   int angle = 0;
@@ -4481,7 +4485,6 @@ void QnstView::adjustAngle(QnstGraphicsEdge* edge, QnstGraphicsEntity* entitya,
 
   edge->setAngle(angle);
 }
-
 
 void QnstView::requestBindParamAdjust(QString uid, QString parent,
                                       QMap<QString, QString> properties)
