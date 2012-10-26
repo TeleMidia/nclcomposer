@@ -38,7 +38,7 @@ void QnstGraphicsActionDialog::init(QMap<QString, QnstConnector*> connectors,
 
   QnstConnector* conn;
 
-  if (link != NULL)
+  if (link != NULL && connectors.contains(link->getxConnector()))
     conn = connectors[link->getxConnector()];
   else
     conn = NULL;

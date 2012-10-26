@@ -37,8 +37,7 @@ void QnstGraphicsConditionDialog::init(QMap<QString, QnstConnector*> connectors,
   form.cbCondition->clear();
 
   QnstConnector* conn;
-
-  if (link != NULL)
+  if (link != NULL && connectors.contains(link->getxConnector()))
     conn = connectors[link->getxConnector()];
   else
     conn = NULL;
@@ -62,6 +61,3 @@ void QnstGraphicsConditionDialog::init(QMap<QString, QnstConnector*> connectors,
     form.cbCondition->addItem("onPause");
   }
 }
-
-
-
