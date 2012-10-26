@@ -253,8 +253,6 @@ void QnstView::readLink(QDomElement element, QDomElement parent)
   {
     // Fill common properties
     properties["TYPE"] = "link";
-    QDomNamedNodeMap attributeMap = element.attributes();
-
     // This block of code is here only for compatibility with older versions,
     // since in older version we were saving with the name "xconnetor"
     if(element.hasAttribute("xconnetor"))
@@ -264,6 +262,7 @@ void QnstView::readLink(QDomElement element, QDomElement parent)
     // end compatibility block of code
 
     // copy every attribute from XML to proerties variable
+    QDomNamedNodeMap attributeMap = element.attributes();
     for (int i = 0; i < attributeMap.count(); ++i)
     {
       QDomNode attribute = attributeMap.item(i);
@@ -280,11 +279,14 @@ void QnstView::readLink(QDomElement element, QDomElement parent)
   {
 
     properties["TYPE"] = element.nodeName();
-    properties["uid"] = element.attribute("uid");
-    properties["component"] = element.attribute("component");
-    properties["componentUid"] = element.attribute("componentUid");
-    properties["interface"] = element.attribute("interface");
-    properties["interfaceUid"] = element.attribute("interfaceUid");
+    // copy every attribute from XML to proerties variable
+    QDomNamedNodeMap attributeMap = element.attributes();
+    for (int i = 0; i < attributeMap.count(); ++i)
+    {
+      QDomNode attribute = attributeMap.item(i);
+      properties[attribute.nodeName()] = attribute.nodeValue();
+    }
+    // end fill
 
     addEntity(properties["uid"],
               element.attribute("switchportUid"),
@@ -304,6 +306,7 @@ void QnstView::readLink(QDomElement element, QDomElement parent)
         {
           QnstGraphicsReference* entity = new QnstGraphicsReference();
           entity->setnstGraphicsParent(entitya->getnstGraphicsParent());
+
           entity->setEntityA(entitya);
           entity->setEntityB(entityb);
           entity->adjust();
@@ -316,8 +319,11 @@ void QnstView::readLink(QDomElement element, QDomElement parent)
       }
       else if (entities.contains(element.attribute("componentUID")))
       {
-        QnstGraphicsInterface* entitya = (QnstGraphicsInterface*) entities[element.attribute("uid")];
-        QnstGraphicsNode* entityb = (QnstGraphicsNode*) entities[element.attribute("componentUID")];
+        QnstGraphicsInterface* entitya =
+            (QnstGraphicsInterface*)entities[element.attribute("uid")];
+
+        QnstGraphicsNode* entityb =
+            (QnstGraphicsNode*)entities[element.attribute("componentUID")];
 
         QnstGraphicsReference* entity = new QnstGraphicsReference();
         entity->setnstGraphicsParent(entitya->getnstGraphicsParent());
@@ -334,170 +340,67 @@ void QnstView::readLink(QDomElement element, QDomElement parent)
   }
   else if (element.nodeName() == "bind")
   {
-    if (element.attribute("uid") != "" &&
-        entities.contains(element.attribute("componentaUID")) &&
-        entities.contains(element.attribute("componentbUID")))
+    if (!entities.contains(element.attribute("uid")) &&
+        links.contains(element.attribute("linkUID")))
     {
-      qWarning() << entities.contains(element.attribute("uid"))
-                 << links.contains(element.attribute("linkUID"));
+      // Fill common properties
+      properties["TYPE"] = "bind";
+      QDomNamedNodeMap attributeMap = element.attributes();
 
-      if (!entities.contains(element.attribute("uid")) &&
-          links.contains(element.attribute("linkUID")))
+      // copy every attribute from XML to proerties variable
+      for (int i = 0; i < attributeMap.count(); ++i)
       {
-        QnstGraphicsEntity* entitya = entities[element.attribute("componentaUID")];
-        QnstGraphicsEntity* entityb = entities[element.attribute("componentbUID")];
+        QDomNode attribute = attributeMap.item(i);
+        properties[attribute.nodeName()] = attribute.nodeValue();
+      }
 
-        QnstGraphicsBind *graphicsBind = NULL;
-        QnstGraphicsBind* bo = NULL;
-        QnstGraphicsLink *lo = NULL;
+      addEntity(properties["uid"],
+                entities[element.attribute("linkUID")]
+                    ->getnstParent()->getnstUid(),
+                properties,
+                true);
+      // end fill
 
-        Qnst::EntityType bindType;
+      /*
+      // SET THE BIND PARAMS
+      QMap<QString, QString> params;
+      QMap<QString, QString> name_uid;
 
-        // Get the bindType as Qnst::EntityType
-        if(element.attribute("type") == "condition")
-          bindType = Qnst::Condition;
-        else
-          bindType = Qnst::Action;
-
-        if(bindType != -1) // i.e., we have a valid bindType
+      QDomNodeList list = element.childNodes();
+      for (unsigned int i=0;i<list.length();i++)
+      {
+        if (list.item(i).isElement())
         {
-          graphicsBind = new QnstGraphicsBind();
+          QDomElement e = list.item(i).toElement();
 
-          // Set action or condition depending of the bindType
-          graphicsBind->setType(Qnst::NoBindType);
-
-          graphicsBind->setnstId(element.attribute("id"));
-          graphicsBind->setnstUid(element.attribute("uid"));
-
-          graphicsBind->setEntityA(entitya);
-          graphicsBind->setEntityB(entityb);
-
-          // if linking NODE to NODE
-          if (entitya->getncgType() == Qncg::Node &&
-              entityb->getncgType() == Qncg::Node)
+          if (e.nodeName() == "param")
           {
-            graphicsBind->setnstGraphicsParent(entitya->getnstGraphicsParent());
-            entitya->getnstGraphicsParent()->addnstGraphicsEntity(graphicsBind);
+            params[e.attribute("name")] = e.attribute("value");
+            name_uid[e.attribute("name")] = e.attribute("uid");
           }
-          // if linking NODE to INTERFACE
-          else if (entitya->getncgType() == Qncg::Node &&
-                   entityb->getncgType() == Qncg::Interface)
-          {
-            graphicsBind->setnstGraphicsParent(entitya->getnstGraphicsParent());
-            entitya->getnstGraphicsParent()->addnstGraphicsEntity(graphicsBind);
-          }
-          // if linking INTERFACE to NODE
-          else if (entitya->getncgType() == Qncg::Interface &&
-                   entityb->getncgType() == Qncg::Node)
-          {
-            graphicsBind->setnstGraphicsParent(entityb->getnstGraphicsParent());
-            entityb->getnstGraphicsParent()->addnstGraphicsEntity(graphicsBind);
-          }
-          // if linking INTERFACE to INTERFACE
-          else if (entitya->getncgType() == Qncg::Interface &&
-                   entityb->getncgType() == Qncg::Interface)
-          {
-            graphicsBind->setnstGraphicsParent(entitya->getnstGraphicsParent()->getnstGraphicsParent());
-            entitya->getnstGraphicsParent()->getnstGraphicsParent()->addnstGraphicsEntity(graphicsBind);
-          }
-
-          ((QnstGraphicsNode*) entitya)->addnstGraphicsEdge(graphicsBind);
-          ((QnstGraphicsNode*) entityb)->addnstGraphicsEdge(graphicsBind);
-
-          QString roleStr;
-          graphicsBind->setnstType(bindType); // \fixme In the future, we should
-                                              // not need that.
-          // Set action or condition role
-          if(bindType == Qnst::Condition) // Qnst::Condition
-            roleStr = element.attribute("condition");
-          else //Qnst::Action
-            roleStr = element.attribute("action");
-
-          graphicsBind->setType(QnstUtil::getBindTypeFromStr(roleStr));
-
-          // adjusting angle
-          adjustAngle(graphicsBind, entitya, entityb);
-
-          graphicsBind->adjust();
-
-          if(links.contains(element.attribute("linkUID")))
-          {
-            lo = links[element.attribute("linkUID")];
-
-            bo = new QnstGraphicsBind();
-            bo->setnstType(bindType); // \fixme In the future, we should
-                                      // not need that.
-
-            bo->setnstParent(lo);
-            bo->setnstUid(graphicsBind->getnstUid());
-            bo->setRole(roleStr);
-
-            // Qnst::Condition
-            if (entitya->getncgType() == Qncg::Interface)
-            {
-              bo->setComponent(entitya->getnstGraphicsParent()->getnstId());
-              bo->setComponentUid(entitya->getnstGraphicsParent()->getnstUid());
-              bo->setInterface(entitya->getnstId());
-              bo->setInterfaceUid(entitya->getnstUid());
-            }
-            else
-            {
-              bo->setComponent(entitya->getnstId());
-              bo->setComponentUid(entitya->getnstUid());
-            }
-
-            if(bindType == Qnst::Condition)
-              lo->addCondition(bo);
-           else
-              lo->addAction(bo);
-
-            binds[bo->getnstUid()] = bo;
-            brelations[bo->getnstUid()] = graphicsBind->getnstUid();
-            entities[graphicsBind->getnstUid()] = graphicsBind;
-            graphicsBind->setConn(connectors[lo->getxConnector()]);
-
-            // SET THE BIND PARAMS
-            QMap<QString, QString> params;
-            QMap<QString, QString> name_uid;
-
-            QDomNodeList list = element.childNodes();
-            for (unsigned int i=0;i<list.length();i++)
-            {
-              if (list.item(i).isElement())
-              {
-                QDomElement e = list.item(i).toElement();
-
-                if (e.nodeName() == "param")
-                {
-                  params[e.attribute("name")] = e.attribute("value");
-                  name_uid[e.attribute("name")] = e.attribute("uid");
-                }
-              }
-            }
-
-            bo->setParams(params);
-            bo->setNamesUIDs(name_uid);
-
-            connect(graphicsBind,
-                    SIGNAL(bindParamAdded(QString,QString,QMap<QString, QString>)),
-                    SLOT(requestBindParamAdjust(QString,QString,QMap<QString, QString>)));
-
-            connect(graphicsBind,
-                    SIGNAL(bindParamUpdated(QString,QMap<QString,QString>,QMap<QString,QString>)),
-                    SLOT(updateBindParams(QString,QMap<QString,QString>,QMap<QString,QString>)));
-
-
-            graphicsBind->setParams(bo->getParams());
-            graphicsBind->setNamesUIDs(bo->getNameUIDs());
-            //FINISH BIND PARAMS
-          }
-        }
-        else
-        {
-          qWarning() << "[QNST] Warning!! Trying to add a bind to a link that \
-                        does not exists!! It will be ignored!!";
         }
       }
+
+      bo->setParams(params);
+      bo->setNamesUIDs(name_uid);
+
+      connect(graphicsBind,
+              SIGNAL(bindParamAdded(QString,QString,QMap<QString, QString>)),
+              SLOT(requestBindParamAdjust(QString,QString,QMap<QString, QString>)));
+
+      connect(graphicsBind,
+              SIGNAL(bindParamUpdated(QString,QMap<QString,QString>,QMap<QString,QString>)),
+              SLOT(updateBindParams(QString,QMap<QString,QString>,QMap<QString,QString>)));
+
+
+      graphicsBind->setParams(bo->getParams());
+      graphicsBind->setNamesUIDs(bo->getNameUIDs());
+      //FINISH BIND PARAMS*/
+    }
+    else
+    {
+      qWarning() << "[QNST] Warning!! Trying to add a bind to a link that \
+                    does not exists!! It will be ignored!!";
     }
   }
 
@@ -530,6 +433,8 @@ QString QnstView::serialize()
 
   foreach(QnstConnector* conn, connectors.values())
   {
+    assert(conn != NULL);
+
     QDomElement e = dom->createElement("connector");
 
     e.setAttribute("id", conn->getName());
@@ -587,7 +492,7 @@ QString QnstView::serialize()
 
   foreach(QnstGraphicsLink* link, links.values())
   {
-    QDomElement e = dom->createElement("linkdata");
+    QDomElement e = dom->createElement("link"); // Previously from 0.1.3 thi was linkdata
 
     e.setAttribute("id", link->getnstId());
     e.setAttribute("uid", link->getnstUid());
@@ -599,11 +504,11 @@ QString QnstView::serialize()
 
     // \fixme Be careful, there are cases where even with no body element the
     // links map is not empty!
-    if(link->getnstParent() != NULL)
-    {
+//    if(link->getnstParent() != NULL)
+//    {
       e.setAttribute("parent",
                      link->getnstParent()->getnstUid());
-    }
+//    }
 
     e.setAttribute("xconnector", link->getxConnector());
     e.setAttribute("xconnectorUID", link->getxConnectorUID());
@@ -815,14 +720,17 @@ void QnstView::writeLink(QDomElement element, QDomDocument* dom,
           // Be carefull, this is different for condition
           e.setAttribute("linkUID", graphicsBind->getEntityA()->getnstUid());
           e.setAttribute("action",
-                         QnstUtil::getStrFromBindType(
-                           graphicsBind->getType())
-                         );
+                         QnstUtil::getStrFromBindType(graphicsBind->getType()));
         }
 
         e.setAttribute("componentaUID", graphicsBind->getEntityA()->getnstUid());
         e.setAttribute("componentbUID", graphicsBind->getEntityB()->getnstUid());
 
+        e.setAttribute("component", graphicsBind->getComponent());
+        e.setAttribute("componentUid", graphicsBind->getComponentUid());
+
+        e.setAttribute("interface", graphicsBind->getComponent());
+        e.setAttribute("interfaceUid", graphicsBind->getComponentUid());
 
         //It will be used to write params
         bind = binds[brelations.key(graphicsBind->getnstUid())];
@@ -947,18 +855,19 @@ void QnstView::addEntity(const QString uid, const QString parent,
                          const QMap<QString, QString> &properties, bool undo,
                          bool adjust)
 {
-  qDebug() << "[QNST]" << ":" << "Adding entity '" + uid + "'";
-  qDebug() << links.keys();
-
   bool ok = false;
 
   Qnst::EntityType type = QnstUtil::getnstTypeFromStr(properties["TYPE"]);
   QnstGraphicsEntity *entityParent = NULL;
 
+  qDebug() << "[QNST]" << ":" << "Adding entity '" + uid + "' type=" + properties["TYPE"];
+
   if(entities.count(parent))
     entityParent = (QnstGraphicsNode*) entities[parent];
 
-  if(parent != "" && entityParent == NULL)
+  if(parent != "" && entityParent == NULL &&
+     type != Qnst::Bind // for bind we will discover the parent after that
+     )
   {
     qWarning() << "[QNST] I cannot add an entity without a parent!!!";
     return;
@@ -1074,7 +983,7 @@ void QnstView::addEntity(const QString uid, const QString parent,
         if(link)
         {
           link->setnstUid(uid);
-          link->setnstParent(entityParent);
+          link->setnstGraphicsParent(entityParent);
 
           link->setProperties(properties);
 
@@ -1100,26 +1009,52 @@ void QnstView::addEntity(const QString uid, const QString parent,
     }
 
     case Qnst::Bind:
+    case Qnst::Action:
+    case Qnst::Condition:
     {
-      if (links.contains(parent))
+      if (!binds.contains(uid))
       {
-        if (!binds.contains(uid))
-        {
-          QnstGraphicsBind* bind = new QnstGraphicsBind(); // \todo Use makeGraphicsEntity!
-          bind->setnstUid(uid);
-          entity->setnstGraphicsParent(entities[parent]);
+        QnstGraphicsEntity *entitya = NULL, *entityb = NULL;
+        QString action = "", condition = "";
 
+        if(entities.contains(properties["componentaUID"]))
+          entitya = entities[properties["componentaUID"]];
+        else
+          qWarning() << "[QNST] Trying to make a bind that componentaUID \
+                        does not exist!";
+
+        if(entities.contains(properties["componentbUID"]))
+          entityb = entities[properties["componentbUID"]];
+        else
+          qWarning() << "[QNST] Trying to make a bind that componentbUID \
+                        does not exist!";
+
+        if(properties.contains("action"))
+           action = properties["action"];
+        else
+          condition = properties["condition"];
+
+        if(entitya != NULL && entityb != NULL)
+        {
+          qWarning() << "Adding BIND !!!" << entitya->getnstType() << entityb->getnstType();
+
+          QnstGraphicsBind* bind = createBind(entitya,
+                                              entityb,
+                                              action,
+                                              condition,
+                                              false); // \todo Use makeGraphicsEntity!
+
+          // p.s. The parent set is made inside createBind!
+          bind->setnstUid(uid);
           bind->setProperties(properties);
-          entities[parent]->addnstGraphicsEntity(entity);
           entities[uid] = bind;
           binds[uid] = bind;
 
-          bind->adjust();
-          scene->update();
+          adjustBind(bind);
 
-          ok = true;
+          ok = false;
 
-          // adjustBind(entity);
+          // adjustBind(bind);
         }
       }
       break;
@@ -1191,22 +1126,6 @@ void QnstView::addEntity(const QString uid, const QString parent,
     {
       qWarning() << "ERROR!!! Trying to add an Aggregator!! This is not \
                     supported anymore!";
-      /*
-      // \fixme This must be deprecated!!
-      entity = QnstUtil::makeGraphicsEntity(type, entityParent);
-      entity->setnstUid(uid);
-
-      if (properties["id"] != "")
-        entity->setnstId(properties["id"]);
-
-      entity->setProperties(properties);
-
-      entities[parent]->addnstGraphicsEntity(entity);
-      entities[uid] = entity;
-
-      entity->adjust();
-
-      ok = true; */
       break;
     }
 
@@ -1222,7 +1141,7 @@ void QnstView::addEntity(const QString uid, const QString parent,
 
       entity->setProperties(properties);
 
-      entities[parent]->addnstGraphicsEntity(entity);
+      entityParent->addnstGraphicsEntity(entity);
       entities[uid] = entity;
 
       entity->adjust();
@@ -1441,10 +1360,10 @@ void QnstView::removeEntity(const QString uid, bool undo, bool rmRef)
 
     importBases.remove(uid);
 
-    // foreach(QnstGraphicsBind* b, binds.values())
-    // {
-      // adjustBind(b);
-    // }
+    foreach(QnstGraphicsBind* b, binds.values())
+    {
+      adjustBind(b);
+    }
   }
   else if (connectors2.contains(uid))
   {
@@ -1623,16 +1542,14 @@ void QnstView::changeEntity(const QString uid,
       case Qnst::Action:
       case Qnst::Condition:
       {
-        qWarning() << "[QNST] Changing BIND!!!";
         QnstGraphicsBind *bind = dynamic_cast<QnstGraphicsBind *> (entity);
-
         if(bind)
         {
+          qWarning() << "[QNST] Changing BIND!!!";
+
           bind->setProperties(properties);
 
-          bind->adjust();
-
-          scene->update(); // \fixme Can we do better thant that
+          adjustBind(bind);
         }
         break;
       }
@@ -1719,10 +1636,10 @@ void QnstView::addImportBase(QString uid,
 
     delete file;
 
-    // foreach(QnstGraphicsBind* b, binds.values())
-    // {
-      // adjustBind(b);
-    // }
+    foreach(QnstGraphicsBind* b, binds.values())
+    {
+      adjustBind(b);
+    }
   }
 }
 
@@ -1766,10 +1683,10 @@ void QnstView::changeImportBase(QString uid,
     delete file;
   }
 
-  //foreach(QnstGraphicsBind* b, binds.values())
-  //{
-    //adjustBind(b);
-  //}
+  foreach(QnstGraphicsBind* b, binds.values())
+  {
+    adjustBind(b);
+  }
 }
 
 void QnstView::readImportBase(QString uid, QDomElement element, QString alias)
@@ -2199,6 +2116,42 @@ void QnstView::adjustLink(QnstGraphicsLink* entity)
   // TODO
 }
 
+void QnstView::adjustBind(QnstGraphicsBind* bind)
+{
+  QnstGraphicsEntity *entitya = NULL, *entityb = NULL;
+  if(bind->getnstType() == Qnst::Condition)
+  {
+    entitya = entities[bind->getComponentUid()];
+    entityb = bind->getLink();
+  }
+  else
+  {
+    entitya = bind->getLink();
+    entityb = entities[bind->getComponentUid()];
+  }
+
+  qWarning() << "Adjusting Bind " << entitya->getnstType() << entityb->getnstType();
+  // Remove bind from old entities
+  if(bind->getEntityA())
+    ((QnstGraphicsEntityWithEdges*)(bind->getEntityA()))->removenstGraphicsEdge(bind);
+
+  if(bind->getEntityB())
+    ((QnstGraphicsEntityWithEdges*)(bind->getEntityB()))->removenstGraphicsEdge(bind);
+
+  //Set new
+  if(entitya)
+    ((QnstGraphicsEntityWithEdges*)entitya)->addnstGraphicsEdge(bind);
+
+  if(entityb)
+    ((QnstGraphicsEntityWithEdges*)entityb)->addnstGraphicsEdge(bind);
+
+  bind->setEntityA(entitya);
+  bind->setEntityB(entityb);
+
+  bind->adjust();
+  // \todo interface
+}
+
 void QnstView::addConnector(const QString uid, const QString parent,
                             const QMap<QString, QString> &properties)
 {
@@ -2308,6 +2261,7 @@ void QnstView::changeAction(QString uid,
 void QnstView::changeBindParam(const QString uid,
                                const QMap<QString, QString> &properties)
 {
+  qWarning() << "changeBindParam";
   if (entities.contains(properties.value("parent")))
   {
     QnstGraphicsEntity* e = entities[properties.value("parent")];
@@ -2670,7 +2624,7 @@ void QnstView::requestEntityAddition(QnstGraphicsEntity* entity, bool undo)
 void QnstView::requestEntityRemotion(QnstGraphicsEntity* entity, bool undo,
                                      bool rmRefs)
 {
-  qDebug() << "[QNST]" << ":" << "Requesting entity remotion '"+entity->getnstUid()+"'";
+  qDebug() << "[QNST]" << ":" << "Requesting entity remotion '" + entity->getnstUid() + "'";
   qDebug() << links.keys();
 
   if (entity != NULL)
@@ -3034,6 +2988,8 @@ void QnstView::requestEntityChange(QnstGraphicsEntity* entity)
         properties["TYPE"] = "link";
 
         properties["id"] = entity->getnstId();
+
+        ok = true;
         break;
       }
 
@@ -3050,7 +3006,14 @@ void QnstView::requestEntityChange(QnstGraphicsEntity* entity)
         properties["TYPE"] = "switchPort";
 
         properties["id"] = entity->getnstId();
+
+        ok = true;
         break;
+      }
+
+      case Qnst::BindParam:
+      {
+        // \todo
       }
 
       default:
@@ -4179,7 +4142,8 @@ void QnstView::createLinkWithDialog(QnstGraphicsEntity* entitya,
 QnstGraphicsBind* QnstView::createBind(QnstGraphicsEntity* entitya,
                                        QnstGraphicsEntity* entityb,
                                        QString condition,
-                                       QString action)
+                                       QString action,
+                                       bool notifyCreation)
 {
   QnstGraphicsEntity* parenta = entitya->getnstGraphicsParent();
   QnstGraphicsEntity* parentb = entityb->getnstGraphicsParent();
@@ -4296,7 +4260,8 @@ QnstGraphicsBind* QnstView::createBind(QnstGraphicsEntity* entitya,
                                 QMap<QString,QString>,
                                 QMap<QString,QString>)));
 
-  requestEntityAddition(bind);
+  if(notifyCreation)
+    requestEntityAddition(bind);
 
   // adjusting bind
   adjustAngle(bind, entitya, entityb);
@@ -4489,12 +4454,14 @@ void QnstView::adjustAngle(QnstGraphicsEdge* edge,
 void QnstView::requestBindParamAdjust(QString uid, QString parent,
                                       QMap<QString, QString> properties)
 {
+  qWarning() << "Request bind param adjust";
   properties["TYPE"] = "bindParam";
 
   if (!properties["name"].isEmpty() && !properties["value"].isEmpty())
   {
     if (bindParamUIDToBindUID.contains(uid))
     {
+      qWarning() << "Request bind param changing entity";
       emit entityChanged(uid, properties);
     }
     else
@@ -4533,9 +4500,18 @@ void QnstView::markError(QString uid)
 
 void QnstView::clearValidationErrors()
 {
+  traceEntities();
   foreach(QnstGraphicsEntity *entity, entities.values())
   {
     assert(entity != NULL);
     entity->setError(false);
+  }
+}
+
+void QnstView::traceEntities()
+{
+  foreach(QString key, entities.keys())
+  {
+    qDebug() << key << entities[key]->getnstType();
   }
 }

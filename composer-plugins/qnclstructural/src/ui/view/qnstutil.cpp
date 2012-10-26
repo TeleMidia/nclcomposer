@@ -110,7 +110,10 @@ std::map <Qnst::EntityType, QString> QnstUtil::prefixIdFromType =
     (Qnst::Port, "p")
     (Qnst::SwitchPort, "swp")
     (Qnst::Area, "area")
-    (Qnst::Aggregator, "prop");
+
+    (Qnst::Aggregator, "link") // \fixme This is here only for compatibility
+                               // with versions prior to 0.1.3.
+    (Qnst::Link, "link");
 
 /* Initialize BindType from Role string Map */
 std::map <QString, Qnst::BindType> QnstUtil::bindTypeFromRoleStr =

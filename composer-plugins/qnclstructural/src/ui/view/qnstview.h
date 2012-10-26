@@ -287,10 +287,13 @@ private:
   QnstGraphicsBind* createBind(QnstGraphicsEntity* entitya,
                                QnstGraphicsEntity* entityb,
                                QString condition,
-                               QString action);
+                               QString action,
+                               bool notifyCreation = true);
 
   void removeEdgesOfEntity (QnstGraphicsEntityWithEdges *entity);
   void removeEdge (QnstGraphicsEdge *edge);
+
+  void traceEntities();
 
   bool modified;
 
