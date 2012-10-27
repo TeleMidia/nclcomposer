@@ -59,6 +59,10 @@ public:
 
   QnstGraphicsLink* getLink();
 
+  void setTarget(QnstGraphicsEntity *target);
+
+  QnstGraphicsEntity *getTarget();
+
   virtual void setProperties(const QMap<QString, QString> &properties);
 
   void setType(Qnst::BindType type);

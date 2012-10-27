@@ -507,6 +507,8 @@ void QnstComposerPlugin::requestEntityAddition(Entity* entity)
         properties["interfaceUid"] = "";
       }
 
+      properties["linkUID"] = entities[entity->getParentUniqueId()];
+
       ok = true;
       break;
     }
@@ -768,8 +770,8 @@ void QnstComposerPlugin::requestEntityChange(Entity* entity)
     case Qnst::Action:
     case Qnst::Condition:
     {
-
       qWarning() << "[QNST] Changing bind on Plugin!!!";
+      properties["TYPE"] = "bind";
       properties["role"] = entity->getAttribute("role");
       properties["component"] = entity->getAttribute("component");
 
@@ -788,7 +790,6 @@ void QnstComposerPlugin::requestEntityChange(Entity* entity)
       }
 
       properties["interface"] = entity->getAttribute("interface");
-
       if (entity->getAttribute("interface") != "")
       {
         Entity* cmp = getProject()->getEntityById(comUID);
@@ -813,6 +814,9 @@ void QnstComposerPlugin::requestEntityChange(Entity* entity)
       {
         properties["interfaceUid"] = "";
       }
+
+      // get the parent
+      properties["linkUID"] = entities[entity->getParentUniqueId()];
 
       ok = true;
       break;
@@ -1448,6 +1452,7 @@ void QnstComposerPlugin::notifyEntityChangedInView(const QString uid,
 
     case Qnst::BindParam:
     {
+      qWarning() << "Changing bindParam";
       if (properties["name"] != "")
         attributes["name"] = properties["name"];
 

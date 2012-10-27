@@ -152,7 +152,7 @@ public slots:
   void requestEntityAddition(QnstGraphicsEntity* entity, bool undo = false);
 
   void requestEntityRemotion(QnstGraphicsEntity* entity, bool undo = false,
-                             bool rmRefs = true);
+                             bool rmRefs = true, bool notify = true);
 
   void requestEntityChange(QnstGraphicsEntity* entity);
 
@@ -284,20 +284,19 @@ private:
                              QnstGraphicsBind* actionDialog,
                              QString connector);
 
-  QnstGraphicsBind* createBind(QnstGraphicsEntity* entitya,
-                               QnstGraphicsEntity* entityb,
+  QnstGraphicsBind* createBind(QnstGraphicsLink* link,
+                               QnstGraphicsEntity* target,
                                QString condition,
                                QString action,
                                bool notifyCreation = true);
 
-  void removeEdgesOfEntity (QnstGraphicsEntityWithEdges *entity);
-  void removeEdge (QnstGraphicsEdge *edge);
+  void removeEdgesOfEntity (QnstGraphicsEntityWithEdges *entity, bool notify=true);
+
+  void removeEdge (QnstGraphicsEdge *edge, bool notify=true);
 
   void traceEntities();
 
   bool modified;
-
-  int nlink;
 
   bool linking;
 
@@ -328,10 +327,6 @@ private:
   QMap<QString, QnstGraphicsLink*> links;
 
   QMap<QString, QnstGraphicsBind*> binds;
-
-  QMap<QString, QString> brelations;
-
-  QMap<QString, QString> link2conn;
 
   QMap<QString, QString> refers;
 

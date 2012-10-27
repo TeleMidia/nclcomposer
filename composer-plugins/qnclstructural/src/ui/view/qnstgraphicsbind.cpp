@@ -99,10 +99,10 @@ QString QnstGraphicsBind::getIcon()
 
 void QnstGraphicsBind::adjust()
 {
-  if(isCondition())
-    adjust_condition();
-  else
-    adjust_action();
+  // if(isCondition())
+  //  adjust_condition();
+  // else
+  adjust_action();
 }
 
 void QnstGraphicsBind::adjust_action()
@@ -255,10 +255,10 @@ void QnstGraphicsBind::aux_adjust(QPointF pointa, QPointF pointb)
 
 void QnstGraphicsBind::draw(QPainter* painter)
 {
-  if(isCondition())
-    draw_condition(painter);
-  else
-    draw_action(painter);
+  // if(isCondition())
+  //  draw_condition(painter);
+  // else
+  draw_action(painter);
 }
 
 void QnstGraphicsBind::draw_action(QPainter* painter)
@@ -751,10 +751,10 @@ void QnstGraphicsBind::draw_condition(QPainter* painter)
 
 void QnstGraphicsBind::delineate(QPainterPath* painter) const
 {
-  if(isCondition())
-    delineate_condition(painter);
-  else
-    delineate_action(painter);
+  // if(isCondition())
+  //  delineate_condition(painter);
+  // else
+  delineate_action(painter);
 }
 
 void QnstGraphicsBind::delineate_action(QPainterPath* painter) const
@@ -1020,11 +1020,22 @@ void QnstGraphicsBind::setNamesUIDs(QMap<QString, QString> names_uids)
 void QnstGraphicsBind::setLink(QnstGraphicsLink *link)
 {
   this->link = link;
+  setEntityA(link);
 }
 
 QnstGraphicsLink* QnstGraphicsBind::getLink()
 {
   return this->link;
+}
+
+void QnstGraphicsBind::setTarget(QnstGraphicsEntity *target)
+{
+  setEntityB(target);
+}
+
+QnstGraphicsEntity *QnstGraphicsBind::getTarget()
+{
+  return getEntityB();
 }
 
 void QnstGraphicsBind::setProperties(const QMap<QString, QString> &properties)
