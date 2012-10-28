@@ -940,6 +940,10 @@ void QnstGraphicsBind::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
       emit bindParamUpdated(getnstUid(), params, names_uids);
     }
   }
+  else
+  {
+    qWarning() << "[QNST] Connector is NULL. I can not load connectorParams";
+  }
 }
 
 bool QnstGraphicsBind::isCondition() const
