@@ -45,7 +45,8 @@ void QnstAddCommand::copy(QnstGraphicsEntity* entity)
 
 void QnstAddCommand::undo()
 {
-  if (view->entities.contains(entity->getnstUid()))
+  if ( !ignore && this->entity != NULL &&
+       view->entities.contains(entity->getnstUid()) )
   {
      view->requestEntityRemotion(view->entities[entity->getnstUid()], true);
   }
