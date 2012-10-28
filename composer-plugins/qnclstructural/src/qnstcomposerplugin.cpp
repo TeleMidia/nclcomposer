@@ -54,7 +54,7 @@ void QnstComposerPlugin::createConnections()
                 SLOT(notifyEntityDeletedInView(QString)));
 
   connect(view, SIGNAL(entityChanged(QString,QMap<QString,QString>)),
-                SLOT(notifyEntityDeletedInView(QString)));
+                SLOT(notifyEntityChangedInView(QString,QMap<QString,QString>)));
 
   connect(view, SIGNAL(entitySelected(QString)),
                  SLOT(requestEntitySelection(QString)));
