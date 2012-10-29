@@ -42,26 +42,6 @@ void QnstGraphicsEntity::setnstGraphicsParent(QnstGraphicsEntity* parent)
   setncgGraphicsParent(parent);
 }
 
-QMap<QString, QSet<int> > QnstGraphicsEntity::getAngles()
-{
-    return angles;
-}
-
-void QnstGraphicsEntity::addAngle(QString uid, int angle)
-{
-    angles[uid].insert(angle);
-}
-
-void QnstGraphicsEntity::removeAngle(QString uid, int angle)
-{
-  angles[uid].remove(angle);
-
-  if (angles[uid].isEmpty())
-  {
-    angles.remove(uid);
-  }
-}
-
 QVector<QnstGraphicsEntity*> QnstGraphicsEntity::getnstGraphicsEntities()
 {
   return entities;

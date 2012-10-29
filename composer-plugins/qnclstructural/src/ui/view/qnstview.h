@@ -255,8 +255,7 @@ private:
   void addInterfacetoInterfaceEdge(QnstGraphicsEntity* entitya,
                                    QnstGraphicsEntity* entityb);
 
-  void adjustAngle(QnstGraphicsEdge* edge, QnstGraphicsEntity* entitya,
-                   QnstGraphicsEntity* entityb);
+  void adjustAngles(QnstGraphicsEdge* edge);
 
   void collapseCompositions(QDomElement element, QDomElement parent);
 

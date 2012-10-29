@@ -1048,7 +1048,7 @@ void QnstView::addEntity(const QString uid, const QString parent,
             binds[uid] = bind;
 
             ok = false;
-            adjustBind(bind);
+            changeEntity(bind->getnstUid(), properties, true);
           }
         }
       }
@@ -1195,7 +1195,7 @@ void QnstView::addEntity(const QString uid, const QString parent,
 void QnstView::removeEntity(const QString uid, bool undo, bool rmRef)
 {
   // \fixme Move this logic to RemoveCommand
-  traceEntities();
+  // traceEntities();
 
   qDebug() << "[QNST]" << ":" << "Removing entity '"+uid+"'";
   // qDebug() << links.keys();
@@ -2144,8 +2144,9 @@ void QnstView::adjustBind(QnstGraphicsBind* bind)
 
   //Remove old
   if(bind->getTarget())
+  {
     ((QnstGraphicsEntityWithEdges*)bind->getTarget())->removenstGraphicsEdge(bind);
-
+  }
 
   //Set new
   if(target)
@@ -2161,7 +2162,7 @@ void QnstView::adjustBind(QnstGraphicsBind* bind)
   bind->setTarget(target);
 
   // adjusting bind
-  // adjustAngle(bind, link, target);
+  adjustAngles(bind);
 
   bind->adjust();
   // \todo interface
@@ -2353,7 +2354,7 @@ void QnstView::changeConnectorParam(const QString uid,
 void QnstView::requestEntityAddition(QnstGraphicsEntity* entity, bool undo)
 {
   qDebug() << "[QNST]" << ":" << "Requesting entity addition '"+entity->getnstUid()+"'";
-  qDebug() << links.keys();
+  // qDebug() << links.keys();
 
   QMap<QString, QString> properties;
   QMap <QString, QString> additionalData;
@@ -2832,9 +2833,6 @@ void QnstView::removeEdge(QnstGraphicsEdge *edge, bool notify)
     {
       ((QnstGraphicsEntityWithEdges*) edge->getEntityA())->removenstGraphicsEdge(edge);
     }
-
-    if( edge->getEntityB())
-      edge->getEntityA()->removeAngle(edge->getEntityB()->getnstUid(), edge->getAngle());
   }
 
   if( edge->getEntityB() )
@@ -2844,9 +2842,6 @@ void QnstView::removeEdge(QnstGraphicsEdge *edge, bool notify)
     {
       ((QnstGraphicsEntityWithEdges*) edge->getEntityB())->removenstGraphicsEdge(edge);
     }
-
-    if( edge->getEntityA() )
-      edge->getEntityB()->removeAngle(edge->getEntityA()->getnstUid(), -edge->getAngle());
   }
 
   if (edge->getnstType() == Qnst::Condition ||
@@ -4432,31 +4427,34 @@ void QnstView::focusOutEvent(QFocusEvent *event)
   }
 }
 
-void QnstView::adjustAngle(QnstGraphicsEdge* edge,
-                           QnstGraphicsEntity* entitya,
-                           QnstGraphicsEntity* entityb)
+void QnstView::adjustAngles(QnstGraphicsEdge* edge)
 {
+  QnstGraphicsEntityWithEdges *entitya = (QnstGraphicsEntityWithEdges*)edge->getEntityA();
+  QnstGraphicsEntityWithEdges *entityb = (QnstGraphicsEntityWithEdges*)edge->getEntityB();
+
+  if(entitya == NULL || entityb == NULL) return; // do nothing
+
   int angle = 0;
-
-  while(1)
+  bool par = false;
+  foreach (QnstGraphicsEdge *edge, entitya->getnstGraphicsEdges())
   {
-    if (!entitya->getAngles()[entityb->getnstUid()].contains(angle))
+    if(edge->getEntityB() == entityb)
     {
-      break;
-    }
-    else if (!entitya->getAngles()[entityb->getnstUid()].contains(-angle))
-    {
-      angle = -angle;
-      break;
-    }
+      if(par)
+      {
+        edge->setAngle(angle);
+        par = false;
+      }
+      else
+      {
+        edge->setAngle(-angle);
+        angle += 60;
+        par = true;
+      }
 
-    angle += 60;
+      edge->adjust();
+    }
   }
-
-  entitya->addAngle(entityb->getnstUid(), angle);
-  entityb->addAngle(entitya->getnstUid(), -angle);
-
-  edge->setAngle(angle);
 }
 
 void QnstView::requestBindParamAdjust(QString uid, QString parent,
@@ -4508,7 +4506,7 @@ void QnstView::markError(QString uid)
 
 void QnstView::clearValidationErrors()
 {
-  traceEntities();
+  // traceEntities();
   foreach(QnstGraphicsEntity *entity, entities.values())
   {
     assert(entity != NULL);

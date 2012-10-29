@@ -30,8 +30,6 @@ public:
 
   void setnstGraphicsParent(QnstGraphicsEntity* parent);
 
-  QMap<QString, QSet<int> > getAngles();
-
   void addAngle(QString uid, int angle);
 
   void removeAngle(QString uid, int angle);
@@ -117,8 +115,6 @@ public:
 private:
   bool draggable;
   QnstGraphicsEntity* parent;
-
-  QMap<QString, QSet<int> > angles;
 
   QVector<QnstGraphicsEntity*> entities;
 
