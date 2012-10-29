@@ -19,7 +19,7 @@ public:
 
     QString getnstId() const;
 
-    void setnstId(QString id);
+    virtual void setnstId(QString id);
 
     QString getnstUid() const;
 

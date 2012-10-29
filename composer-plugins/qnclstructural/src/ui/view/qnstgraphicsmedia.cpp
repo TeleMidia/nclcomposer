@@ -110,7 +110,7 @@ void QnstGraphicsMedia::updateToolTip()
       break;
   }
 
-  if (getSource() == "" && getRefer() == ""){
+  if (getSource().isEmpty()){
     tip += " - Alert: Missing 'src' attribute";
   }
 
@@ -205,12 +205,12 @@ void QnstGraphicsMedia::draw(QPainter* painter)
   {
     painter->drawPixmap((getWidth()-8)/2 + 12, (getHeight()-8)/2 + 4, 12, 12, QPixmap(":/icon/delete"));
   }
-  else if (getSource() == "" && getRefer() == "")
+  else if (getSource().isEmpty())
   {
     painter->drawPixmap((getWidth()-8)/2 + 12, (getHeight()-8)/2 + 4, 12, 12, QPixmap(":/icon/alert"));
   }
 
-  if(!getReferUID().isEmpty() && getReferUID() != "")
+  if(!getReferUID().isEmpty() && !getReferUID().isEmpty())
   {
     painter->drawPixmap(0, 0, getWidth(), getHeight(), QPixmap(":/icon/alias"));
   }

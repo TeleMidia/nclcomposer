@@ -26,8 +26,11 @@ void QnstGraphicsInterface::setnstId(QString id)
 {
   QnstGraphicsEntity::setnstId(id);
 
+  qDebug() << "===================================== ID" ;
+  qDebug() << "=====================================" << id << "asd" ;
+
   QString tip = "";
-  QString name = (getnstId() != "" ? getnstId() : "?");
+  QString name = (id != "" ? id : "?");
 
   if (getnstType() == Qnst::Port)
   {
