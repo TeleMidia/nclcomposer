@@ -178,7 +178,6 @@ void QnstComposerPlugin::updateFromModel()
     }
   }
 
-  // \todo Keep the previous media position!!
   foreach(QString coreID, entities.keys())
   {
     Entity *entity = project->getEntityById(coreID);
@@ -1239,7 +1238,6 @@ void QnstComposerPlugin::notifyEntityAddedInView(const QString uid,
       qWarning() << "[QNST] Error: trying to add an entity as child of an inexistent Entity";
       return;
     }
-
   }
 
   // Load specific properties for each type (and handle dependencies)
