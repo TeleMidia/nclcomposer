@@ -2206,6 +2206,40 @@ void QnstView::addConnector(const QString uid, const QString parent,
   }
 }
 
+void QnstView::adjustAll()
+{
+  foreach(QnstGraphicsEntity *entity, entities.values())
+  {
+    switch(entity->getnstType())
+    {
+      case Qnst::Action:
+      case Qnst::Condition:
+      case Qnst::Bind:
+      {
+        QnstGraphicsBind *bind = dynamic_cast <QnstGraphicsBind *>(entity);
+        if(bind)
+          adjustBind(bind);
+        break;
+      }
+      // if the entity type is MEDIA
+      case Qnst::Audio:
+      case Qnst::Text:
+      case Qnst::Video:
+      case Qnst::Image:
+      case Qnst::NCLua:
+      case Qnst::Settings:
+      case Qnst::Media:
+      case Qnst::Html:
+      case Qnst::NCL:
+      {
+        QnstGraphicsMedia *media = dynamic_cast <QnstGraphicsMedia *>(entity);
+        if(media)
+          adjustMedia(media);
+      }
+    }
+  }
+}
+
 void QnstView::changeConnector(QnstConnector* entity,
                                const QMap<QString, QString> &properties)
 {
@@ -4481,6 +4515,24 @@ void QnstView::clearValidationErrors()
     assert(entity != NULL);
     entity->setError(false);
   }
+}
+
+void QnstView::clearAllData()
+{
+  if(scene->getRoots().size())
+    scene->removeRoot(scene->getRoots().at(0));
+
+  entities.clear();
+  links.clear();
+
+  refers.clear();
+  importBases.clear();
+  interfaceRefers.clear();
+
+  bindParamUIDToBindUID.clear();
+
+  connectors.clear();
+  connectors2.clear();
 }
 
 void QnstView::traceEntities()

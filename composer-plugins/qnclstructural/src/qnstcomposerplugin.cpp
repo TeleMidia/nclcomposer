@@ -162,12 +162,30 @@ bool QnstComposerPlugin::saveSubsession()
 
 void QnstComposerPlugin::updateFromModel()
 {
+  QMap <QString, int> top, left, width, height;
+
+  //save previous positions
+  foreach (QString key, entities.keys())
+  {
+    QnstGraphicsEntity *entity =
+        dynamic_cast <QnstGraphicsEntity*>(view->getEntity(entities.value(key)));
+    if(entity && entity->getnstId() != "")
+    {
+      top[entity->getnstId()] = entity->getTop();
+      left[entity->getnstId()]=  entity->getLeft();
+      height[entity->getnstId()] = entity->getHeight();
+      width[entity->getnstId()] = entity->getWidth();
+    }
+  }
+
   // \todo Keep the previous media position!!
   foreach(QString coreID, entities.keys())
   {
     Entity *entity = project->getEntityById(coreID);
     requestEntityRemotion(entity);
   }
+
+  view->clearAllData();
 
   QStack <Entity *> stack;
   stack.push(project);
@@ -184,6 +202,38 @@ void QnstComposerPlugin::updateFromModel()
       stack.push(children[i]);
     }
   }
+
+  // \fixme This second step is to ensure that all binds will be correctly drawn
+  // it should not be necessary if we fix the order we do the insertions!!
+  stack.push(project);
+  while(stack.size())
+  {
+    Entity *current = stack.top();
+    stack.pop();
+
+    QVector <Entity *> children = current->getChildren();
+    for(int i = 0; i <children.size(); i++)
+    {
+      requestEntityChange(children[i]);
+      stack.push(children[i]);
+    }
+  }
+
+  // Set saved positions!!
+  foreach (QString key, entities.keys())
+  {
+    QnstGraphicsEntity *entity =
+        dynamic_cast <QnstGraphicsEntity*>(view->getEntity(entities.value(key)));
+    if(entity && entity->getnstId() != "" && top.contains(entity->getnstId()))
+    {
+      entity->setTop(top[entity->getnstId()]);
+      entity->setLeft(left[entity->getnstId()]);
+      entity->setWidth(width[entity->getnstId()]);
+      entity->setHeight(height[entity->getnstId()]);
+    }
+  }
+
+  view->adjustAll();
 }
 
 void QnstComposerPlugin::onEntityAdded(QString pluginID, Entity *entity)
@@ -525,7 +575,8 @@ void QnstComposerPlugin::requestEntityAddition(Entity* entity)
 
     case Qnst::Area:
     {
-      // \fixme Why we do not add to entity map ??
+      entities[entity->getUniqueId()] = entity->getUniqueId();
+
       properties["id"] = entity->getAttribute("id");
 
       ok = true;
@@ -534,7 +585,8 @@ void QnstComposerPlugin::requestEntityAddition(Entity* entity)
 
     case Qnst::SwitchPort:
     {
-      // \fixme Why we do not add to entities map ??
+      entities[entity->getUniqueId()] = entity->getUniqueId();
+
       properties["id"] = entity->getAttribute("id");
 
       ok = true;
@@ -543,7 +595,8 @@ void QnstComposerPlugin::requestEntityAddition(Entity* entity)
 
     case Qnst::Mapping:
     {
-      // \fixme Why we do not add to entities map ??
+      entities[entity->getUniqueId()] = entity->getUniqueId();
+
       properties["component"] = entity->getAttribute("component");
       if (entity->getAttribute("component") != "")
       {
@@ -794,21 +847,24 @@ void QnstComposerPlugin::requestEntityChange(Entity* entity)
       {
         Entity* cmp = getProject()->getEntityById(comUID);
 
-        QString intUID = "";
-        foreach(Entity* c, cmp->getChildren())
+        if(cmp != NULL)
         {
-          if (c->getAttribute("id") == entity->getAttribute("interface") ||
-              c->getAttribute("name") == entity->getAttribute("interface"))
+          QString intUID = "";
+          foreach(Entity* c, cmp->getChildren())
           {
-            intUID = c->getUniqueId();
-            break;
+            if (c->getAttribute("id") == entity->getAttribute("interface") ||
+                c->getAttribute("name") == entity->getAttribute("interface"))
+            {
+              intUID = c->getUniqueId();
+              break;
+            }
           }
-        }
 
-        if(entities.contains(intUID))
-          properties["interfaceUid"] = entities[intUID];
-        else
-          properties["interfaceUid"] = "";
+          if(entities.contains(intUID))
+            properties["interfaceUid"] = entities[intUID];
+          else
+            properties["interfaceUid"] = "";
+        }
       }
       else
       {

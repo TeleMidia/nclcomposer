@@ -167,9 +167,13 @@ public slots:
   void updateBindParams(QString bindUID, QMap<QString, QString> params,
                         QMap<QString, QString> name_uids);
 
+  void clearAllData();
+
   void markError(QString uid);
 
   void clearValidationErrors();
+
+  void adjustAll();
 
 private:
   void addImportBase(QString uid, const QMap<QString, QString> &properties);
