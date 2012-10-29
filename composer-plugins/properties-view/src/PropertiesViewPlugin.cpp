@@ -138,8 +138,8 @@ void PropertiesViewPlugin::updateCurrentEntityAttr(QString attr, QString value)
 {
   if (currentEntity != NULL)
   {
-    if(currentEntity->hasAttribute("attr") &&
-       currentEntity->getAttribute("attr") == value)
+    if(currentEntity->hasAttribute(attr) &&
+       currentEntity->getAttribute(attr) == value)
     {
       //do nothing
       return;
