@@ -2947,7 +2947,7 @@ void QnstView::requestEntityRemotion(QnstGraphicsEntity* entity, bool undo,
         QnstGraphicsEdge *edge = dynamic_cast<QnstGraphicsEdge *>(entity);
 
         if(edge)
-          removeEdge(edge, false);
+          removeEdge(edge, notify);
         break;
       }
 
@@ -3047,7 +3047,7 @@ void QnstView::removeEdgesOfEntity(QnstGraphicsEntityWithEdges *entity,
 {
   foreach(QnstGraphicsEdge* edge, entity->getnstGraphicsEdges())
   {
-    requestEntityRemotion(edge, notify);
+    requestEntityRemotion(edge, false, false, notify);
   }
 }
 
