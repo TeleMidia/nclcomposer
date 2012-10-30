@@ -245,13 +245,13 @@ QString Entity::toString(int ntab, bool writeuid)
 
 Entity *Entity::cloneEntity()
 {
-  QMap <QString, QString>::iterator begin, end, it;
-  QMap <QString, QString> attrs;
-  getAttributeIterator(begin, end);
-  for (it = begin; it != end; ++it)
-      attrs[it.key()] = it.value();
+//  QMap <QString, QString>::iterator begin, end, it;
+//  QMap <QString, QString> attrs;
+//  getAttributeIterator(begin, end);
+//  for (it = begin; it != end; ++it)
+//      attrs[it.key()] = it.value();
 
-  return new Entity(getUniqueId(), getType(), attrs);
+  return new Entity(getUniqueId(), getType(), this->atts);
 }
 
 }}} //end namespace

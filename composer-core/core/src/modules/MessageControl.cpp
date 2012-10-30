@@ -113,12 +113,14 @@ void MessageControl::anonymousChangeEntity( QString entityId,
                                             bool notifyPlugins)
 {
   Entity *ent = project->getEntityById(entityId);
+  if(ent != NULL)
+  {
+    ent->setAtrributes(atts); //do it!
 
-  ent->setAtrributes(atts); //do it!
-
-  //send message to All PLUGINS interested in this message.
-  if(notifyPlugins)
-    sendEntityChangedMessageToPlugins("", ent);
+    //send message to All PLUGINS interested in this message.
+    if(notifyPlugins)
+      sendEntityChangedMessageToPlugins("", ent);
+  }
 }
 
 void MessageControl::anonymousUpdateFromModel()

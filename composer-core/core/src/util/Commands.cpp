@@ -73,7 +73,7 @@ void RemoveCommand::redo()
   if(first)
     project->removeEntity(this->entity, false);
   else
-    msgControl->anonymousRemoveEntity(entityTmp->getUniqueId());
+    msgControl->anonymousRemoveEntity(this->entity->getUniqueId());
 
   this->entity = entityTmp;
 }
@@ -101,11 +101,15 @@ void AddCommand::undo()
 
 void AddCommand::redo()
 {
+  //I have to do this because the core is responsible to Remove the entity.
+  Entity *entityTmp = this->entity->cloneEntity();
   //TODO - calll validator to check
   if(first)
     project->addEntity(this->entity, parentUniqueId);
   else
     msgControl->anonymousAddEntity(this->entity, parentUniqueId);
+
+  this->entity = entityTmp;
 }
 
 } } } //end namespace
