@@ -218,7 +218,8 @@ Qnst::EntityType QnstUtil::getnstTypeFromMime(const QString &mimeType)
     type = Qnst::NCL;
   else if (mimeType.startsWith("text"))
     type = Qnst::Text;
-  else if (mimeType == "application/x-ncl-settings")
+  else if (mimeType == "application/x-ncl-settings" ||
+           mimeType == "application/x-ginga-settings")
     type = Qnst::Settings;
   else if (mimeType == "application/x-ginga-NCLua")
     type = Qnst::NCLua;

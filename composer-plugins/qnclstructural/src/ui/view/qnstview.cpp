@@ -100,6 +100,14 @@ void QnstView::load(QString data)
       }
     }
   }
+
+  foreach (QnstGraphicsEntity* entity, entities.values())
+  {
+    if (entity->isMedia())
+    {
+      adjustMedia((QnstGraphicsMedia*) entity);
+    }
+  }
 }
 
 void QnstView::collapseCompositions(QDomElement element, QDomElement parent)
@@ -172,6 +180,7 @@ void QnstView::read(QDomElement element, QDomElement parent)
   }
   else if (element.nodeName() == "interfaceReference")
   {
+// deprecated since version 0.1.2
 //    interfaceRefers[element.attribute("interfaceReferUID")] =
 //        element.attribute("interfaceOriginUID");
   }
@@ -476,6 +485,7 @@ QString QnstView::serialize()
     root.appendChild(e);
   }
 
+//  // deprecated since version 0.1.2
 //  foreach(QString key, interfaceRefers.keys())
 //  {
 //    QDomElement e = dom->createElement("interfaceReference");
@@ -1531,17 +1541,14 @@ void QnstView::changeEntity(const QString uid,
           media->updateToolTip();
 
           if(adjust)
-            adjustMedia(media);
-
-          // adjust refer medias
-          foreach(QString refer, refers.keys(media->getnstUid()))
           {
-            if (entities.contains(refer))
+            // \fixme It's not necessary to adjust all medias
+            foreach (QnstGraphicsEntity* ee, entities.values())
             {
-              QnstGraphicsMedia* m =
-                  dynamic_cast <QnstGraphicsMedia *>(entities.value(refer));
-
-              adjustMedia(m);
+              if (ee->isMedia())
+              {
+                adjustMedia((QnstGraphicsMedia*) ee);
+              }
             }
           }
         }
@@ -1901,7 +1908,7 @@ void QnstView::adjustMedia(QnstGraphicsMedia* entity)
         if (refers.key(interface->getnstUid(),"NULL") == "NULL" &&
             !refers.contains(interface->getnstUid()))
         {
-          QnstGraphicsEntity* copy =
+          QnstGraphicsInterface* copy = (QnstGraphicsInterface*)
               QnstUtil::makeGraphicsEntity(interface->getnstType(), entity);
 
           copy->setnstId(interface->getnstId());
@@ -1910,6 +1917,7 @@ void QnstView::adjustMedia(QnstGraphicsMedia* entity)
           copy->setLeft(interface->getLeft());
           copy->setWidth(interface->getWidth());
           copy->setHeight(interface->getHeight());
+          copy->setRefer(true);
           copy->adjust();
 
           entity->addnstGraphicsEntity(copy);
@@ -1969,7 +1977,7 @@ void QnstView::adjustMedia(QnstGraphicsMedia* entity)
 
                 if (!containsRef)
                 {
-                    QnstGraphicsEntity* copy =
+                    QnstGraphicsInterface* copy = (QnstGraphicsInterface*)
                         QnstUtil::makeGraphicsEntity(rinterface->getnstType(), origin);
 
                     copy->setnstId(rinterface->getnstId());
@@ -1978,6 +1986,7 @@ void QnstView::adjustMedia(QnstGraphicsMedia* entity)
                     copy->setLeft(rinterface->getLeft());
                     copy->setWidth(rinterface->getWidth());
                     copy->setHeight(rinterface->getHeight());
+                    copy->setRefer(true);
                     copy->adjust();
 
                     origin->addnstGraphicsEntity(copy);
@@ -2672,8 +2681,14 @@ void QnstView::requestEntityAddition(QnstGraphicsEntity* entity, bool undo)
         properties["TYPE"] = "area";
         properties["id"] = entity->getnstId();
 
-        QnstGraphicsMedia *media = dynamic_cast <QnstGraphicsMedia *> (entity);
-        adjustMedia((QnstGraphicsMedia*) entity->getnstGraphicsParent());
+        if(entity->getnstGraphicsParent()->isMedia())
+        {
+          QnstGraphicsMedia *media =
+            dynamic_cast <QnstGraphicsMedia *>(entity->getnstGraphicsParent());
+
+          if(media != NULL)
+            adjustMedia(media);
+        }
 
         foreach (QString key,
                  refers.keys(entity->getnstGraphicsParent()->getnstUid()))

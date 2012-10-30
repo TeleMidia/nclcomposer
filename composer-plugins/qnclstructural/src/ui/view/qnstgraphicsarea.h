@@ -14,6 +14,7 @@ protected:
   virtual void draw(QPainter* painter);
 
   virtual void delineate(QPainterPath* painter) const;
+
 };
 
 #endif // QNSTGRAPHICSAREA_H

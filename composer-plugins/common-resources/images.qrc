@@ -48,6 +48,7 @@
         <file alias="alert">images/icon-alert.png</file>
         <file alias="html">images/icon-html.png</file>
         <file alias="ncl">images/icon-ncl.png</file>
-        <file alias="alias">images/alias.png</file>
+        <file alias="alias2">images/alias.png</file>
+        <file alias="alias">images/icon-alias2.png</file>
     </qresource>
 </RCC>

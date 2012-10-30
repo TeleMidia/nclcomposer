@@ -15,7 +15,22 @@ QnstGraphicsArea::~QnstGraphicsArea()
 
 void QnstGraphicsArea::draw(QPainter* painter)
 {
-  painter->setBrush(QBrush(QColor("#F4A460")));
+  QColor bg;
+  QColor border;
+
+  if (isRefer())
+  {
+    bg = QColor(244,164,96,75);
+//    border = QColor(238,238,238);
+    border = QColor(153,153,153, 75);
+  }
+  else
+  {
+    bg = QColor(244,164,96);
+    border = QColor(153,153,153);
+  }
+  painter->setBrush(QBrush(bg));
+  painter->setPen(QPen(QBrush(border), 0, Qt::SolidLine));
 
   painter->drawRect(4 + 8/2, 4 + 8/2, getWidth()-8, getHeight()-8);
 
@@ -23,7 +38,7 @@ void QnstGraphicsArea::draw(QPainter* painter)
   if (!isSelected() && hasMouseHover())
   {
     painter->setBrush(Qt::NoBrush);
-    painter->setPen(QPen(QBrush(QColor("#999999")), 0, Qt::DashLine)); // 0px = cosmetic border
+    painter->setPen(QPen(QBrush("#999999"), 0, Qt::DashLine)); // 0px = cosmetic border
 
     painter->drawRect(4, 4, getWidth(), getHeight());
   }

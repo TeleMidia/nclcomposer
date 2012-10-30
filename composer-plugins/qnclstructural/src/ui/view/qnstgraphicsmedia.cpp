@@ -212,7 +212,7 @@ void QnstGraphicsMedia::draw(QPainter* painter)
 
   if(!getReferUID().isEmpty() && !getReferUID().isEmpty())
   {
-    painter->drawPixmap(0, 0, getWidth(), getHeight(), QPixmap(":/icon/alias"));
+    painter->drawPixmap(8, getHeight()-40, 32, 32, QPixmap(":/icon/alias"));
   }
 
   QString localid = (getnstId() != "" ? getnstId() : "?");

@@ -10,6 +10,8 @@ QnstGraphicsInterface::QnstGraphicsInterface(QnstGraphicsEntity* parent)
 
   setnstId("");
 
+  setRefer(false);
+
   /* Default size for interface */
   setTop(0);
   setLeft(0);
@@ -22,12 +24,20 @@ QnstGraphicsInterface::~QnstGraphicsInterface()
 
 }
 
+
+bool QnstGraphicsInterface::isRefer()
+{
+  return _isRefer;
+}
+
+void QnstGraphicsInterface::setRefer(bool isRefer)
+{
+  _isRefer = isRefer;
+}
+
 void QnstGraphicsInterface::setnstId(QString id)
 {
   QnstGraphicsEntity::setnstId(id);
-
-  qDebug() << "===================================== ID" ;
-  qDebug() << "=====================================" << id << "asd" ;
 
   QString tip = "";
   QString name = (id != "" ? id : "?");

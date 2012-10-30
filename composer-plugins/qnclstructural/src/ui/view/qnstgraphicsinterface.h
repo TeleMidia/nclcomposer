@@ -15,6 +15,10 @@ public:
 
   void setnstId(QString id);
 
+  bool isRefer();
+
+  void setRefer(bool refer);
+
 protected:
   virtual void draw(QPainter* painter) = 0;
 
@@ -26,6 +30,8 @@ protected:
 
 private:
   void adjustToBorder();
+
+  bool _isRefer;
 };
 
 #endif // QNSTGRAPHICSINTERFACE_H

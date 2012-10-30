@@ -13,7 +13,22 @@ QnstGraphicsProperty::~QnstGraphicsProperty()
 
 void QnstGraphicsProperty::draw(QPainter* painter)
 {
-  painter->setBrush(QBrush(QColor("#999999")));
+  QColor bg;
+  QColor border;
+
+  if (isRefer())
+  {
+    bg = QColor(153,153,153,75);
+//    border = QColor(238,238,238);
+    border = QColor(102,102,102,75);
+  }
+  else
+  {
+    bg = QColor(153,153,153);
+    border = QColor(102,102,102);
+  }
+  painter->setBrush(QBrush(bg));
+  painter->setPen(QPen(QBrush(border), 0, Qt::SolidLine));
 
   painter->drawRect(4 + 8/2, 4 + 8/2, getWidth()-8, getHeight()-8);
 
