@@ -957,7 +957,8 @@ void QnstView::addEntity(const QString uid, const QString parent,
 
         entity->setnstId(properties["id"]);
 
-        entities[parent]->addnstGraphicsEntity(entity);
+        entity->setnstGraphicsParent(entityParent);
+        entityParent->addnstGraphicsEntity(entity);
         entities[uid] = entity;
 
         // Update the entity properties
@@ -1264,7 +1265,7 @@ void QnstView::removeEntity(const QString uid, bool undo, bool rmRef)
           if(interface)
             removeEdgesOfEntity(interface, false); // Remove the edges of this entity
           else
-            qWarning() << "Could not make a cast to QnstGraphicsNode*";
+            qWarning() << "Could not make a cast to QnstGraphicsInterface*";
 
           /* \fixme We still must to fix the refer!!
           if (rmRefs)
@@ -2045,25 +2046,20 @@ void QnstView::adjustPort(QnstGraphicsPort* entity)
 
         if (entity == edge->getEntityA())
         {
-          if (edge->getEntityA()->getncgType() == Qncg::Node)
+          if (edge->getEntityA()->getncgType() == Qncg::Node ||
+              edge->getEntityA()->getncgType() == Qncg::Interface )
           {
-            ((QnstGraphicsNode*) edge->getEntityA())->removenstGraphicsEdge(edge);
-          }
-          else if (edge->getEntityA()->getncgType() == Qncg::Interface)
-          {
-            ((QnstGraphicsInterface*) edge->getEntityA())->removenstGraphicsEdge(edge);
+            ((QnstGraphicsEntityWithEdges*) edge->getEntityA())->removenstGraphicsEdge(edge);
           }
 
-          if (edge->getEntityB()->getncgType() == Qncg::Node)
+          if (edge->getEntityB()->getncgType() == Qncg::Node ||
+              edge->getEntityB()->getncgType() == Qncg::Interface)
           {
-            ((QnstGraphicsNode*) edge->getEntityB())->removenstGraphicsEdge(edge);
-          }
-          else if (edge->getEntityB()->getncgType() == Qncg::Interface)
-          {
-            ((QnstGraphicsInterface*) edge->getEntityB())->removenstGraphicsEdge(edge);
+            ((QnstGraphicsEntityWithEdges*) edge->getEntityB())->removenstGraphicsEdge(edge);
           }
 
-          parent->removenstGraphicsEntity(edge); delete (edge);
+          parent->removenstGraphicsEntity(edge);
+          delete (edge);
           break;
         }
       }
@@ -2278,6 +2274,20 @@ void QnstView::adjustBind(QnstGraphicsBind* bind)
 
   // adjusting bind
   adjustAngles(bind);
+
+  //check if the bind is valid
+  if(link &&
+     connectors.contains(link->getxConnector()))
+  {
+    QnstConnector *connector = connectors[link->getxConnector()];
+    if(!connector->getConditions().contains(bind->getRole()) &&
+       !connector->getActions().contains(bind->getRole()))
+      bind->setInvalid(true);
+    else
+      bind->setInvalid(false);
+  }
+  else
+    bind->setInvalid(true);
 
   bind->adjust();
   // \todo interface
@@ -2870,7 +2880,7 @@ void QnstView::requestEntityRemotion(QnstGraphicsEntity* entity, bool undo,
             requestEntityRemotion(entities[rUID]);
         } */
 
-        mustRemoveFromParent = false;
+        mustRemoveFromParent = true;
         break;
       }
 
@@ -3012,6 +3022,14 @@ void QnstView::removeEdge(QnstGraphicsEdge *edge, bool notify)
     if(notify)
       emit entityRemoved(edge->getnstUid());
   }
+
+  if (selected == edge)
+    selected = NULL;
+
+  if (clipboard == edge)
+    clipboard = NULL;
+
+  // delete edge;
 }
 
 void QnstView::requestEntityPreparation(QnstGraphicsEntity* entity,
@@ -4061,7 +4079,8 @@ QnstGraphicsLink* QnstView::createLink(QnstGraphicsEntity* entitya,
       updateEntityWithUniqueNstId(linkDot); // set a unique Id
 
       linkDot->setxConnector(connName);
-      linkDot->setxConnectorUID(connectors[connName]->getnstUid());
+      if(connectors.contains(connName))
+        linkDot->setxConnectorUID(connectors[connName]->getnstUid());
 
       requestEntityAddition(linkDot);
 
@@ -4225,7 +4244,8 @@ void QnstView::createActionWithDialog(QnstGraphicsEntity* entitya,
                                           act);
 
       // associating connector to bind
-      bind->setConn(connectors[connName]);
+      if(connectors.contains(connName))
+        bind->setConn(connectors[connName]);
 
       link->addAction(bind);
     }
@@ -4265,7 +4285,8 @@ void QnstView::createConditionWithDialog(QnstGraphicsEntity* entitya,
                                           "");
 
       // associating connector to bind
-      bind->setConn(connectors[connName]);
+      if(connectors.contains(connName))
+        bind->setConn(connectors[connName]);
 
       link->addCondition(bind);
     }
@@ -4282,7 +4303,8 @@ void QnstView::createLinkWithDialog(QnstGraphicsEntity* entitya,
     QString con = linkDialog->form.cbCondition->currentText();
     QString act = linkDialog->form.cbAction->currentText();
 
-    if (con != "" && act != ""){
+    if (con != "" && act != "")
+    {
       // creating connector
       QString connName;
 
@@ -4306,8 +4328,11 @@ void QnstView::createLinkWithDialog(QnstGraphicsEntity* entitya,
                                             act);
 
       // associating connector to bind
-      action->setConn(connectors[connName]);
-      condition->setConn(connectors[connName]);
+      if(connectors.contains(connName))
+      {
+        action->setConn(connectors[connName]);
+        condition->setConn(connectors[connName]);
+      }
 
       link->addAction(action);
       link->addCondition(condition);
