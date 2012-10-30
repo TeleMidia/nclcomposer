@@ -299,6 +299,8 @@ private:
 
   void traceEntities();
 
+  void deletePendingEntities();
+
   bool modified;
 
   bool linking;
@@ -340,6 +342,8 @@ private:
   QMap<QString, QnstConnector*> connectors2; // uid - conn
 
   QMap<QString, QnstConnector*> connectors; // id - conn
+
+  QVector<QnstGraphicsEntity*> toDelete;
 
   QUndoStack history;
 
