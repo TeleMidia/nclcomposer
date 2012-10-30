@@ -1221,6 +1221,9 @@ void QnstView::removeEntity(const QString uid, bool undo, bool rmRef)
         }
       }
 
+      QnstGraphicsEntity* P = entity->getnstGraphicsParent();
+      QString UID = entity->getnstUid();
+
       // We are removing a Node
       switch(qncgType)
       {
@@ -1334,6 +1337,50 @@ void QnstView::removeEntity(const QString uid, bool undo, bool rmRef)
 
         // emit entityRemoved(entity->getnstUid());
         delete entity;
+
+        if (qncgType == Qncg::Interface)
+        {
+            if (refers.contains(UID))
+            {
+                QString REF = refers.value(UID);
+                refers.remove(UID);
+
+                QnstGraphicsMedia* M = (QnstGraphicsMedia*) P;
+
+                if (M->getRefer() != "" &&
+                    M->getReferUID() != "")
+                {
+                  adjustMedia(M);
+                }
+                else
+                {
+                    if (entities.contains(REF))
+                    {
+                      QnstGraphicsEntity* e = entities.value(REF);
+                      QnstGraphicsEntity* p = e->getnstGraphicsParent();
+
+                      if (p->isMedia())
+                        adjustMedia((QnstGraphicsMedia*)p);
+                    }
+                }
+            }
+            else
+            {
+                if (P->isMedia())
+                  adjustMedia((QnstGraphicsMedia*)P);
+
+                foreach(QString rUid, refers.keys(P->getnstUid()))
+                {
+                    if (entities.contains(rUid))
+                    {
+                        QnstGraphicsEntity* e = entities.value(rUid);
+
+                        if (e->isMedia())
+                          adjustMedia((QnstGraphicsMedia*)e);
+                    }
+                }
+            }
+        }
       }
     }
   }
@@ -1810,8 +1857,6 @@ void QnstView::adjustMedia(QnstGraphicsMedia* entity)
   {
     if (entities.contains(entity->getReferUID()))
     {
-      qDebug() << "==============================================";
-
       QnstGraphicsMedia* origin =
           (QnstGraphicsMedia*)entities[entity->getReferUID()];
 
@@ -1839,7 +1884,6 @@ void QnstView::adjustMedia(QnstGraphicsMedia* entity)
             if (!validReference){
               entity->removenstGraphicsEntity(rinterface);
 
-              rrefers.remove(refers.value(rinterface->getnstUid()));
               refers.remove(rinterface->getnstUid());
               entities.remove(rinterface->getnstUid());
 
@@ -1849,9 +1893,13 @@ void QnstView::adjustMedia(QnstGraphicsMedia* entity)
         }
       }
 
+
+
+      ///
       foreach (QnstGraphicsEntity* interface, origin->getnstGraphicsEntities())
       {
-        if (!rrefers.contains(interface->getnstUid()))
+        if (refers.key(interface->getnstUid(),"NULL") == "NULL" &&
+            !refers.contains(interface->getnstUid()))
         {
           QnstGraphicsEntity* copy =
               QnstUtil::makeGraphicsEntity(interface->getnstType(), entity);
@@ -1867,16 +1915,114 @@ void QnstView::adjustMedia(QnstGraphicsMedia* entity)
           entity->addnstGraphicsEntity(copy);
 
           refers[copy->getnstUid()] = interface->getnstUid();
-          rrefers[interface->getnstUid()] = copy->getnstUid();
 
           entities[copy->getnstUid()] = copy;
         }
       }
 
+      if (entity->getInstance() == "instSame")
+      {
+        //cleaning
+          foreach(QnstGraphicsEntity* interface, origin->getnstGraphicsEntities())
+          {
+            if (interface->getncgType() == Qncg::Interface)
+            {
+              if (refers.contains(interface->getnstUid()))
+              {
+                bool validReference = false;
+
+                foreach(QnstGraphicsEntity* rinterface, entity->getnstGraphicsEntities())
+                {
+                  if (rinterface->getnstUid() == refers[interface->getnstUid()])
+                  {
+                    validReference = true;
+                    break;
+                  }
+                }
+
+                if (!validReference){
+                  origin->removenstGraphicsEntity(interface);
+
+                  refers.remove(interface->getnstUid());
+                  entities.remove(interface->getnstUid());
+
+                  delete interface;
+                }
+              }
+            }
+          }
+
+        foreach(QnstGraphicsEntity* rinterface, entity->getnstGraphicsEntities())
+        {
+            if (!refers.contains(rinterface->getnstUid()))
+            {
+                bool containsRef = false;
+
+                foreach(QnstGraphicsEntity* interface, origin->getnstGraphicsEntities())
+                {
+                    if (refers.value(interface->getnstUid(),"NULL") == rinterface->getnstUid())
+                    {
+                        containsRef = true;
+                        break;
+                    }
+                }
+
+                if (!containsRef)
+                {
+                    QnstGraphicsEntity* copy =
+                        QnstUtil::makeGraphicsEntity(rinterface->getnstType(), origin);
+
+                    copy->setnstId(rinterface->getnstId());
+
+                    copy->setTop(rinterface->getTop());
+                    copy->setLeft(rinterface->getLeft());
+                    copy->setWidth(rinterface->getWidth());
+                    copy->setHeight(rinterface->getHeight());
+                    copy->adjust();
+
+                    origin->addnstGraphicsEntity(copy);
+
+                    refers[copy->getnstUid()] = rinterface->getnstUid();
+
+                    entities[copy->getnstUid()] = copy;
+                }
+            }
+        }
+      }
+      else
+      {
+          foreach(QnstGraphicsEntity* interface, origin->getnstGraphicsEntities())
+          {
+              if (refers.contains(interface->getnstUid()))
+              {
+                  bool containsRef = false;
+
+                  foreach(QnstGraphicsEntity* rinterface, entity->getnstGraphicsEntities())
+                  {
+                      if (refers.value(interface->getnstUid()) == rinterface->getnstUid())
+                      {
+                          containsRef = true;
+                          break;
+                      }
+                  }
+
+                  if (containsRef)
+                  {
+                    origin->removenstGraphicsEntity(interface);
+
+                    refers.remove(interface->getnstUid());
+                    entities.remove(interface->getnstUid());
+
+                    delete interface;
+                  }
+              }
+          }
+      }
+
       refers[entity->getnstUid()] = origin->getnstUid();
     }
   }
-  else
+  else // remove all references
   {
     if (refers.contains(entity->getnstUid())){
       entity->setnstType(Qnst::Media);
@@ -1885,149 +2031,42 @@ void QnstView::adjustMedia(QnstGraphicsMedia* entity)
       refers.remove(entity->getnstUid());
     }
 
-    foreach(QnstGraphicsEntity* inteface, entity->getnstGraphicsEntities())
+    foreach(QnstGraphicsEntity* interface, entity->getnstGraphicsEntities())
     {
-      if (inteface->getncgType() == Qncg::Interface)
+      if (interface->getncgType() == Qncg::Interface)
       {
-        if (refers.contains(inteface->getnstUid()))
+        if (refers.contains(interface->getnstUid()))
         {
-          entity->removenstGraphicsEntity(inteface);
+          entity->removenstGraphicsEntity(interface);
 
-          rrefers.remove(refers.value(inteface->getnstUid()));
-          refers.remove(inteface->getnstUid());
-          entities.remove(inteface->getnstUid());
+          refers.remove(interface->getnstUid());
+          entities.remove(interface->getnstUid());
 
-          delete inteface;
+          delete interface;
         }
-      }
-    }
-
-    entity->adjust();
-  }
-
-  /*
-  if (entity->getRefer() != "" &&
-      entity->getReferUID() != "" &&
-      entity->getInstance() != "")
-  {
-    if (entities.contains(entity->getReferUID()))
-    {
-      QnstGraphicsEntity* origin = entities[entity->getReferUID()];
-
-      foreach (QnstGraphicsEntity* oe, origin->getnstGraphicsEntities())
-      {
-        if (oe->getncgType() == Qncg::Interface)
+        else
         {
-          bool contains = false;
-
-          if (interfaceRefers.contains(oe->getnstUid()))
-          {
-              contains = true;
-          }
-          else
-          {
-            foreach (QnstGraphicsEntity* e, entity->getnstGraphicsEntities())
+            foreach(QString rUid, refers.keys(interface->getnstUid()))
             {
-              if (interfaceRefers.contains(e->getnstUid()))
-              {
-                if (interfaceRefers[e->getnstUid()] == oe->getnstUid())
+                if (entities.contains(rUid))
                 {
-                  contains = true;
-                  break;
+                    QnstGraphicsEntity* e = entities.value(rUid);
+                    QnstGraphicsEntity* p = e->getnstGraphicsParent();
+
+                    p->removenstGraphicsEntity(e);
+
+                    refers.remove(e->getnstUid());
+                    entities.remove(e->getnstUid());
+
+                    delete e;
                 }
-              }
-            } //end foreach
-          }
-
-          if (!contains)
-          {
-            if(oe->getnstType() == Qnst::Port ||
-               oe->getnstType() == Qnst::Area ||
-               oe->getnstType() == Qnst::Property)
-            {
-              QnstGraphicsEntity *i = QnstUtil::makeGraphicsEntity(oe->getnstType(),
-                                                                   entity);
-
-              i->setnstId(oe->getnstId());
-
-              i->setTop(oe->getTop());
-              i->setLeft(oe->getLeft());
-              i->setWidth(oe->getWidth());
-              i->setHeight(oe->getHeight());
-
-              i->adjust();
-
-              entity->addnstGraphicsEntity(i);
-
-              entities[i->getnstUid()] = i;
-
-              interfaceRefers[i->getnstUid()] = oe->getnstUid();
             }
-          }
         }
       }
-
-      foreach (QnstGraphicsEntity* e, entity->getnstGraphicsEntities())
-      {
-        if (e->getncgType() == Qncg::Interface)
-        {
-          bool contains = false;
-
-          foreach (QnstGraphicsEntity* oe, origin->getnstGraphicsEntities())
-          {
-            if (interfaceRefers.contains(oe->getnstUid()))
-            {
-              if (interfaceRefers[oe->getnstUid()] == e->getnstUid())
-              {
-                contains = true;
-                break;
-              }
-            }
-          } // end foreach
-
-          if (!contains)
-          {
-            if (interfaceRefers.contains(e->getnstUid()))
-                contains = true;
-          }
-
-          if (!contains && entity->getInstance() != "new")
-          {
-            if (e->getnstType() == Qnst::Port ||
-                e->getnstType() == Qnst::Area ||
-                e->getnstType() == Qnst::Property)
-            {
-              QnstGraphicsEntity *i = QnstUtil::makeGraphicsEntity(e->getnstType(),
-                                                                   origin);
-
-              i->setnstId(e->getnstId());
-
-              i->setTop(e->getTop());
-              i->setLeft(e->getLeft());
-              i->setWidth(e->getWidth());
-              i->setHeight(e->getHeight());
-              i->adjust();
-
-              origin->addnstGraphicsEntity(i);
-
-              entities[i->getnstUid()] = i;
-
-              // interfaceRefers[e->getnstUid()] = i->getnstUid();
-              interfaceRefers[i->getnstUid()] = e->getnstUid();
-
-              origin->adjust();
-
-            }
-          }
-        }
-      }
-
-      refers[entity->getnstUid()] = origin->getnstUid();
     }
   }
 
   entity->adjust();
-  */
 }
 
 // \todo refactory
@@ -2819,6 +2858,9 @@ void QnstView::requestEntityRemotion(QnstGraphicsEntity* entity, bool undo,
       }
     }
 
+    QnstGraphicsEntity* P = entity->getnstGraphicsParent();
+    QString UID = entity->getnstUid();
+
     switch (qncgType)
     {
       case Qncg::Node:
@@ -2936,6 +2978,50 @@ void QnstView::requestEntityRemotion(QnstGraphicsEntity* entity, bool undo,
         emit entityRemoved(entity->getnstUid());
 
       delete entity;
+
+      if (qncgType == Qncg::Interface)
+      {
+          if (refers.contains(UID))
+          {
+              QString REF = refers.value(UID);
+              refers.remove(UID);
+
+              QnstGraphicsMedia* M = (QnstGraphicsMedia*) P;
+
+              if (M->getRefer() != "" &&
+                  M->getReferUID() != "")
+              {
+                adjustMedia(M);
+              }
+              else
+              {
+                  if (entities.contains(REF))
+                  {
+                    QnstGraphicsEntity* e = entities.value(REF);
+                    QnstGraphicsEntity* p = e->getnstGraphicsParent();
+
+                    if (p->isMedia())
+                      adjustMedia((QnstGraphicsMedia*)p);
+                  }
+              }
+          }
+          else
+          {
+              if (P->isMedia())
+                adjustMedia((QnstGraphicsMedia*)P);
+
+              foreach(QString rUid, refers.keys(P->getnstUid()))
+              {
+                  if (entities.contains(rUid))
+                  {
+                      QnstGraphicsEntity* e = entities.value(rUid);
+
+                      if (e->isMedia())
+                        adjustMedia((QnstGraphicsMedia*)e);
+                  }
+              }
+          }
+      }
     }
   }
 }
@@ -3242,9 +3328,15 @@ void QnstView::requestEntitySelection(QnstGraphicsEntity* entity)
       selected = entity;
 
       if (!entity->isMedia() && refers.contains(entity->getnstUid()))
+      {
+          qDebug() << "========================" << "REF" << entity->getnstUid() << "->" << refers[entity->getnstUid()];
         emit entitySelected(refers[entity->getnstUid()]);
+      }
       else
+      {
+           qDebug() << "========================" << entity->getnstUid();
         emit entitySelected(entity->getnstUid());
+      }
     }
   }
 }
@@ -4378,8 +4470,10 @@ QnstGraphicsBind* QnstView::createBind(QnstGraphicsLink* link,
     }
     else if(target->getncgType()  == Qncg::Interface)
     {
-      bind->setComponent(target->getnstId());
-      bind->setComponentUid(target->getnstUid());
+      QnstGraphicsEntity* targetParent = target->getnstGraphicsParent();
+
+      bind->setComponent(targetParent->getnstId());
+      bind->setComponentUid(targetParent->getnstUid());
       bind->setInterface(target->getnstId());
       bind->setInterfaceUid(target->getnstUid());
     }
@@ -4664,7 +4758,6 @@ void QnstView::clearAllData()
 
   refers.clear();
   importBases.clear();
-  interfaceRefers.clear();
 
   bindParamUIDToBindUID.clear();
 
