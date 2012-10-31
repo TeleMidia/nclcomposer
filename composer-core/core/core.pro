@@ -25,6 +25,10 @@ else {
   message ("core.pro DEBUG build!")
 }
 
+contains(NO_DEBUG_OUTPUT, true) {
+    DEFINES += QT_NO_DEBUG_OUTPUT QT_NO_DEBUG_WARNING
+}
+
 macx:CONFIG += lib_bundle
 
 macx {

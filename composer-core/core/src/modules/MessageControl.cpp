@@ -234,9 +234,13 @@ void MessageControl::onRemoveEntity(Entity *entity, bool force)
         while(stack.size())
         {
           Entity *currentEntity = stack.top();
-          willBeRemoved.push_back(currentEntity);
+
+          // \fixme While sending messages to plugins it is possible that plugin
+          // itself remove the entity (and in future we could get a trash.
+          // That is the reason why we keep a clone here!!
+          willBeRemoved.push_back(currentEntity->cloneEntity());
+
           stack.pop();
-//          qDebug() << "Will be removed " << currentEntity;
 
           QVector <Entity *> children = currentEntity->getChildren();
           for(int i = 0; i < children.size(); i++)
@@ -245,18 +249,22 @@ void MessageControl::onRemoveEntity(Entity *entity, bool force)
           }
         }
 
-        for(int i = willBeRemoved.size()-1; i >= 0; i--)
-        {
-          sendEntityRemovedMessageToPlugins(pluginID, willBeRemoved[i]);
-        }
-
         /*!
          * \todo remember to change, the append should come from the
          *   plugin.
          */
+        for(int i = willBeRemoved.size()-1; i >= 0; i--)
+        {
+          sendEntityRemovedMessageToPlugins(pluginID, willBeRemoved[i]);
+
+          delete willBeRemoved[i]; // We do not need it anymore!!!
+        }
+
 //      This function will release the entity instance and its children
+        // \fixme Since the plugin itself could already removed entity we can
+        // get a trash here!!!
         qUndoStack->push(new RemoveCommand(project, entity));
-//      project->removeEntity(entity, true);
+//        project->removeEntity(entity, true);
       }
       else
       {
@@ -352,6 +360,7 @@ void MessageControl::sendEntityChangedMessageToPlugins(QString pluginInstanceId,
 void MessageControl::sendEntityRemovedMessageToPlugins(QString pluginInstanceId,
                                                        Entity *entity)
 {
+  qWarning() << "sendEntityRemovedMessageToPlugins" << pluginInstanceId << entity;
   QList<IPlugin*>::iterator it;
   QList<IPlugin*> instances =
       PluginControl::getInstance()->getPluginInstances(this->project);

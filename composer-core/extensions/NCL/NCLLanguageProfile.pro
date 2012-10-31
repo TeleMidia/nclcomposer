@@ -28,6 +28,10 @@ else {
   message ("NCLLanguageProfile.pro DEBUG build!")
 }
 
+contains(NO_DEBUG_OUTPUT, true) {
+    DEFINES += QT_NO_DEBUG_OUTPUT QT_NO_DEBUG_WARNING
+}
+
 macx {
   INSTALLBASE = /Library/Frameworks
   INSTALLSUPPORT = $$quote(/Library/Application Support/Composer/Extensions)

@@ -122,7 +122,7 @@ bool Entity::deleteChild(Entity *entity)
         }
     }
     delete entity;
-    entity = NULL;
+    // entity = NULL;
 
     return true;
 }
@@ -191,8 +191,8 @@ bool Entity::removeChildAppendChildren(Entity *entity)
     }
 
     entity->setDeleteChildren(false);
-    delete entity;
-    entity = NULL;
+    // delete entity;
+    // entity = NULL;
 
     return true;
 }
@@ -245,11 +245,11 @@ QString Entity::toString(int ntab, bool writeuid)
 
 Entity *Entity::cloneEntity()
 {
-//  QMap <QString, QString>::iterator begin, end, it;
-//  QMap <QString, QString> attrs;
-//  getAttributeIterator(begin, end);
-//  for (it = begin; it != end; ++it)
-//      attrs[it.key()] = it.value();
+  // QMap <QString, QString>::iterator begin, end, it;
+  // QMap <QString, QString> attrs;
+  //getAttributeIterator(begin, end);
+  //for (it = begin; it != end; ++it)
+  //    attrs[it.key()] = it.value();
 
   return new Entity(getUniqueId(), getType(), this->atts);
 }
