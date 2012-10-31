@@ -1585,14 +1585,14 @@ void QnstView::changeEntity(const QString uid,
             qDebug() << "==================" << "Adjusting all medias";
 
             // \fixme It's not necessary to adjust all medias
-            foreach (QnstGraphicsEntity* e, entities.values())
-            {
+//            foreach (QnstGraphicsEntity* e, entities.values())
+//            {
 
-              QnstGraphicsMedia* m = dynamic_cast<QnstGraphicsMedia*>(e);
-              if (m)
-                adjustMedia(m);
+//              QnstGraphicsMedia* m = dynamic_cast<QnstGraphicsMedia*>(e);
+//              if (m)
+//                adjustMedia(m);
 
-            }
+//            }
           }
         }
         break;
@@ -2089,6 +2089,30 @@ void QnstView::adjustMedia(QnstGraphicsMedia* entity)
         refers[entity->getnstUid()] = origin->getnstUid();
       }
     }
+    else
+    {
+        foreach(QnstGraphicsEntity* interface, entity->getnstGraphicsEntities())
+        {
+          QnstGraphicsInterface* i =
+              dynamic_cast<QnstGraphicsInterface*>(interface);
+
+          if (i != 0)
+          {
+            if (i->isRefer())
+            {
+              entity->removenstGraphicsEntity(interface);
+
+              entities.remove(interface->getnstUid());
+//              delete interface;
+              toDelete.push_back(interface);
+            }
+          }
+        }
+
+        entity->setnstType(Qnst::Media);
+        entity->setSource("");
+        entity->setReferUID("");
+    }
   }
   else // remove all references
   {
@@ -2145,6 +2169,7 @@ void QnstView::adjustMedia(QnstGraphicsMedia* entity)
             {
               entity->removenstGraphicsEntity(interface);
 
+              entities.remove(interface->getnstUid());
 //              delete interface;
               toDelete.push_back(interface);
             }
