@@ -106,7 +106,7 @@ void QnstGraphicsEntity::removenstGraphicsEntity(QnstGraphicsEntity* entity)
   {
     int index = entities.indexOf(entity);
 
-    if (index >= 0)
+    if (index >= 0 && index < entities.size())
     {
       entities.remove(index);
 
