@@ -107,6 +107,8 @@ void QnstView::load(QString data)
     {
       adjustMedia((QnstGraphicsMedia*) entity);
     }
+
+    entity->adjust();
   }
 
   deletePendingEntities();
@@ -958,7 +960,7 @@ void QnstView::addEntity(const QString uid, const QString parent,
         entities[uid] = entity;
 
         // Update the entity properties
-        changeEntity(uid, properties, true);
+        changeEntity(uid, properties, false);
 
         entity->adjust();
 
@@ -1581,8 +1583,6 @@ void QnstView::changeEntity(const QString uid,
           if(adjust)
           {
             adjustMedia(media);
-
-            qDebug() << "==================" << "Adjusting all medias";
 
             // \fixme It's not necessary to adjust all medias
 //            foreach (QnstGraphicsEntity* e, entities.values())
