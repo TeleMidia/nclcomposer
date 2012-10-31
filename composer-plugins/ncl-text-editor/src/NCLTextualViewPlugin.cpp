@@ -222,7 +222,10 @@ void NCLTextualViewPlugin::onEntityAdded(QString pluginID, Entity *entity)
   // Return if this is my call to onEntityAdded
   // qDebug() << " isSyncing= " << isSyncing;
   if(pluginID == getPluginInstanceID())
+  {
+    currentEntity = entity;
     return;
+  }
 
   QString line = "<" + entity->getType() + "";
   int insertAtOffset = PROLOG.size();
@@ -551,7 +554,7 @@ void NCLTextualViewPlugin::changeSelectedEntity(QString pluginID, void *param)
 void NCLTextualViewPlugin::updateCoreModel()
 {
   syncMutex.lock();
-  bool rebuildComposerModelFromScratch = false;
+  bool rebuildComposerModelFromScratch = true;
 
   isSyncing = true; //set our current state as syncing
 

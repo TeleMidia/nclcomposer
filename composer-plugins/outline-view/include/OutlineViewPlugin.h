@@ -36,6 +36,7 @@ private:
     NCLTreeWidget *window, *windowBuffering; /*!< TODO */
     QString *selectedId; /*!< TODO */
     QMap <QString, QTreeWidgetItem*> idToItem; /*!< TODO */
+    bool isSyncFromTextual;
 
 public:
     /*!
