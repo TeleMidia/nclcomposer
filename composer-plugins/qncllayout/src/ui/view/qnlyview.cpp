@@ -414,7 +414,7 @@ void QnlyView::addRegion(QnlyGraphicsRegion* region,
 {
     if (region != NULL && regionBase != NULL)
     {
-        qDebug() << "Region Added!";
+        qDebug() << "Adding Region" << attributes;
 
        regions[region->getUid()] = region;
 

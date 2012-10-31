@@ -297,6 +297,8 @@ private:
 
   void removeEdge (QnstGraphicsEdge *edge, bool notify=true);
 
+  void traceRefers();
+
   void traceEntities();
 
   void deletePendingEntities();

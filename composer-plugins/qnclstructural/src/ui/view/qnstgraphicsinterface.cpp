@@ -24,7 +24,6 @@ QnstGraphicsInterface::~QnstGraphicsInterface()
 
 }
 
-
 bool QnstGraphicsInterface::isRefer()
 {
   return _isRefer;

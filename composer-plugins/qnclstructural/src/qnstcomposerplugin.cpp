@@ -2124,7 +2124,7 @@ void QnstComposerPlugin::syncNCLIdsWithStructuralIds()
 void QnstComposerPlugin::textualStartSync(QString, void*)
 {
   // qDebug() << "QnstComposerPlugin::textualStartSync";
-  cacheNCLIds();
+  // cacheNCLIds();
   dirtyEntities.clear();
   isSyncingFromTextual = true;
 }
@@ -2133,7 +2133,8 @@ void QnstComposerPlugin::textualFinishSync(QString, void*)
 {
   qDebug() << "QnstComposerPlugin::textualFinishSync";
   isSyncingFromTextual = false;
-  syncNCLIdsWithStructuralIds();
+  // syncNCLIdsWithStructuralIds();
+  updateFromModel();
 }
 
 void QnstComposerPlugin::clearValidationError(QString, void *param)
