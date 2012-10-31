@@ -1910,7 +1910,7 @@ void ComposerMainWindow::focusChanged(QWidget *old, QWidget *now)
   if(qApp->activeModalWidget() != NULL)
     return; // Do nothing!! (Wait for the popup to end)
 
-  qDebug() << "Locking allDocksMutex 1";
+  // qDebug() << "Locking allDocksMutex 1";
   allDocksMutex.lock();
   for(int i = 0; i < allDocks.size(); i++)
   {
@@ -1918,9 +1918,9 @@ void ComposerMainWindow::focusChanged(QWidget *old, QWidget *now)
     updateDockStyle(allDocks.at(i), false);
   }
   allDocksMutex.unlock();
-  qDebug() << "Unlocked allDocksMutex 1";
+  // qDebug() << "Unlocked allDocksMutex 1";
 
-  qDebug() << "Locking allDocksMutex 2";
+  // qDebug() << "Locking allDocksMutex 2";
   allDocksMutex.lock();
 
   if(now != NULL)
@@ -1929,11 +1929,11 @@ void ComposerMainWindow::focusChanged(QWidget *old, QWidget *now)
     {
       bool isAncestor = false;
       QWidget *child = now;
-      qDebug() << "Start" << i << allDocks.size();
+//      qDebug() << "Start" << i << allDocks.size();
       while (child && child != this)
       {
-        qDebug() << "child pointer" << child;
-        qDebug() << child->metaObject()->className();
+//        qDebug() << "child pointer" << child;
+//        qDebug() << child->metaObject()->className();
         if (child == allDocks.at(i))
         {
           isAncestor = true;
@@ -1941,14 +1941,14 @@ void ComposerMainWindow::focusChanged(QWidget *old, QWidget *now)
         }
         child = child->parentWidget();
       }
-      qDebug() << "End";
+//      qDebug() << "End";
 
       if(isAncestor)
         updateDockStyle(allDocks.at(i), true);
     }
   }
   allDocksMutex.unlock();
-  qDebug() << "Unlocked allDocksMutex 2";
+//  qDebug() << "Unlocked allDocksMutex 2";
 }
 
 void ComposerMainWindow::setProjectDirty(QString location, bool isDirty)
