@@ -1,52 +1,52 @@
 /*
  * Copyright 2011 TeleMidia/PUC-Rio.
- * 
+ *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
- * License as published by the Free Software Foundation; either 
+ * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
- * You should have received a copy of the GNU Lesser General Public 
+ *
+ * You should have received a copy of the GNU Lesser General Public
  * License along with this library.  If not, see
- * <http://www.gnu.org/licenses/>. 
+ * <http://www.gnu.org/licenses/>.
  */
 #include "qnlygraphicsregionbase.h"
 
 QnlyGraphicsRegionBase::QnlyGraphicsRegionBase(QObject* parent,
                                                QMenu* switchMenu)
-    : QGraphicsScene(parent)
+  : QGraphicsScene(parent)
 {
-    this->switchMenu = switchMenu;
+  this->switchMenu = switchMenu;
 
-    this->switchMenu->setEnabled(true);
+  this->switchMenu->setEnabled(true);
 
-    createActions();
-    createMenus();
-    createConnections();
+  createActions();
+  createMenus();
+  createConnections();
 
-    graphicsRegionBaseId = NULL;
+  graphicsRegionBaseId = NULL;
 
-    selectedRegion = NULL;
+  selectedRegion = NULL;
 
-    setSceneRect(0,0,854,480);
+  setSceneRect(0,0,854,480);
 
-    bgrect = new QGraphicsRectItem(0,this);
-    bgrect->setRect(0,0,854,480);
-    bgrect->setBrush(QBrush(QPixmap(":/bg/layout")));
-    bgrect->setPen(QPen(QColor("#BBBBBB")));
-    bgrect->setZValue(-1);
+  bgrect = new QGraphicsRectItem(0,this);
+  bgrect->setRect(0,0,854,480);
+  bgrect->setBrush(QBrush(QPixmap(":/bg/layout")));
+  bgrect->setPen(QPen(QColor("#BBBBBB")));
+  bgrect->setZValue(-1);
 
-    grid = new QnlyGraphicsGrid(0,this);
-    grid->setStep(25);
-    grid->setPen(QPen(QBrush(QColor("#00FFFF")), 1.5,Qt::DotLine));
-    grid->setRect(0,0,854,480);
-    grid->setZValue(1000);
-    grid->setVisible(false);
+  grid = new QnlyGraphicsGrid(0,this);
+  grid->setStep(25);
+  grid->setPen(QPen(QBrush(QColor("#00FFFF")), 1.5,Qt::DotLine));
+  grid->setRect(0,0,854,480);
+  grid->setZValue(1000);
+  grid->setVisible(false);
 }
 
 QnlyGraphicsRegionBase::~QnlyGraphicsRegionBase()
@@ -56,312 +56,318 @@ QnlyGraphicsRegionBase::~QnlyGraphicsRegionBase()
 
 QString QnlyGraphicsRegionBase::getId() const
 {
-    return id;
+  return id;
 }
 
 void QnlyGraphicsRegionBase::setId(const QString &id)
 {
   this->id = id;
 
-//  if(graphicsRegionBaseId == NULL)
-//    graphicsRegionBaseId = addText("regionBaseId");
-
-//  graphicsRegionBaseId->setPos(10,10);
-//  graphicsRegionBaseId->setToolTip(id);
-//  graphicsRegionBaseId->setPlainText(id);
+  //  if(graphicsRegionBaseId == NULL)
+  //    graphicsRegionBaseId = addText("regionBaseId");
+  //  graphicsRegionBaseId->setPos(10,10);
+  //  graphicsRegionBaseId->setToolTip(id);
+  //  graphicsRegionBaseId->setPlainText(id);
 }
 
 QString QnlyGraphicsRegionBase::getUid() const
 {
-    return uid;
+  return uid;
 }
 
 void QnlyGraphicsRegionBase::setUid(const QString &uid)
 {
-    this->uid = uid;
+  this->uid = uid;
 }
 
 QString QnlyGraphicsRegionBase::getRegion() const
 {
-    return region;
+  return region;
 }
 
 void QnlyGraphicsRegionBase::setRegion(const QString &region)
 {
-    this->region = region;
+  this->region = region;
 }
 
 QString QnlyGraphicsRegionBase::getDevice() const
 {
-    return device;
+  return device;
 }
 
 void QnlyGraphicsRegionBase::setDevice(const QString &device)
 {
-    this->device = device;
+  this->device = device;
 }
 
 void QnlyGraphicsRegionBase::selectRegion(QnlyGraphicsRegion* region)
 {
-    if (!region->isSelected())
+  if (!region->isSelected())
+  {
+    if (selectedRegion != NULL)
     {
-        if (selectedRegion != NULL)
-        {
-            selectedRegion->setSelected(false);
-        }
-
-        region->setSelected(true);
-
-        selectedRegion = region;
+      selectedRegion->setSelected(false);
     }
+
+    region->setSelected(true);
+
+    selectedRegion = region;
+  }
 }
 
 void QnlyGraphicsRegionBase::changeRegion(QnlyGraphicsRegion* region,
-                const QMap<QString, QString> attributes)
+                                          const QMap<QString, QString> attributes)
 {
-    if (region != NULL)
+  if (region != NULL)
+  {
+    //        if (!attributes["id"].isEmpty()){
+    region->setId(attributes["id"]);
+    //        }
+
+    //        if (!attributes["title"].isEmpty()){
+    region->setTitle(attributes["title"]);
+    //        }
+
+    if (!attributes["color"].isEmpty())
+      region->setColor(attributes["color"]);
+
+    if (!attributes["top"].isEmpty())
     {
-//        if (!attributes["id"].isEmpty()){
-            region->setId(attributes["id"]);
-//        }
+      if (attributes["top"].contains(QRegExp("\\d+(.\\d+)?%")))
+      {
+        QString attribute = attributes["top"];
+        attribute.remove(attribute.length()-1,1); // removing '%'
 
-//        if (!attributes["title"].isEmpty()){
-            region->setTitle(attributes["title"]);
-//        }
+        qreal top = attribute.toDouble();
 
-        if (!attributes["color"].isEmpty()){
-            region->setColor(attributes["color"]);
-        }
+        if (top >= 0 && top <= 100)
+          region->setRelativeTop(top/100);
+      }
+      else if (attributes["top"].contains(QRegExp("\\d+(.\\d+)?")))
+      {
+        QString attribute = attributes["top"];
 
-        if (!attributes["top"].isEmpty()){
-            if (attributes["top"].contains(QRegExp("\\d+(.\\d+)?%"))){
-                QString attribute = attributes["top"];
-                attribute.remove(attribute.length()-1,1); // removing '%'
+        qreal top = attribute.toDouble();
 
-                qreal top = attribute.toDouble();
-
-                if (top >= 0 && top <= 100){
-                    region->setRelativeTop(top/100);
-                }
-            }else if (attributes["top"].contains(QRegExp("\\d+(.\\d+)?"))){
-                QString attribute = attributes["top"];
-
-                qreal top = attribute.toDouble();
-
-                if (top >= 0 && top <= 1){
-                    region->setRelativeTop(top);
-                }
-            }
-        }
-
-        if (!attributes["left"].isEmpty()){
-            if (attributes["left"].contains(QRegExp("\\d+(.\\d+)?%"))){
-                QString attribute = attributes["left"];
-                attribute.remove(attribute.length()-1,1); // removing '%'
-
-                qreal left = attribute.toDouble();
-
-                if (left >= 0 && left <= 100){
-                    region->setRelativeLeft(left/100);
-                }
-
-            }else if (attributes["left"].contains(QRegExp("\\d+(.\\d+)?"))){
-                QString attribute = attributes["left"];
-
-                qreal left = attribute.toDouble();
-
-                if (left >= 0 && left <= 1){
-                    region->setRelativeLeft(left);
-                }
-            }
-        }
-
-        if (!attributes["right"].isEmpty()){
-            if (attributes["right"].contains(QRegExp("\\d+(.\\d+)?%"))){
-                QString attribute = attributes["right"];
-                attribute.remove(attribute.length()-1,1); // removing '%'
-
-                qreal right = attribute.toDouble();
-
-                if (right >= 0 && right <= 100){
-                    region->setRelativeRight(right/100);
-                }
-
-            }else if (attributes["right"].contains(QRegExp("\\d+(.\\d+)?"))){
-                QString attribute = attributes["right"];
-
-                qreal right = attribute.toDouble();
-
-                if (right >= 0 && right <= 1){
-                    region->setRelativeRight(right);
-                }
-            }
-        }
-
-        if (!attributes["bottom"].isEmpty()){
-            if (attributes["bottom"].contains(QRegExp("\\d+(.\\d+)?%"))){
-                QString attribute = attributes["bottom"];
-                attribute.remove(attribute.length()-1,1); // removing '%'
-
-                qreal bottom = attribute.toDouble();
-
-                if (bottom >= 0 && bottom <= 100){
-                    region->setRelativeBottom(bottom/100);
-                }
-
-            }else if (attributes["bottom"].contains(QRegExp("\\d+(.\\d+)?"))){
-                QString attribute = attributes["bottom"];
-
-                qreal bottom = attribute.toDouble();
-
-                if (bottom >= 0 && bottom <= 1){
-                    region->setRelativeBottom(bottom);
-                }
-            }
-        }
-
-        if (!attributes["width"].isEmpty()){
-            if (attributes["width"].contains(QRegExp("\\d+(.\\d+)?%"))){
-                QString attribute = attributes["width"];
-                attribute.remove(attribute.length()-1,1); // removing '%'
-
-                qreal width = attribute.toDouble();
-
-                if (width >= 0 && width <= 100){
-                    region->setRelativeWidth(width/100);
-                }
-
-            }else if (attributes["width"].contains(QRegExp("\\d+(.\\d+)?"))){
-                QString attribute = attributes["width"];
-
-                qreal width = attribute.toDouble();
-
-                if (width >= 0 && width <= 1){
-                    region->setRelativeWidth(width);
-                }
-            }
-        }
-
-        if (!attributes["height"].isEmpty()){
-            if (attributes["height"].contains(QRegExp("\\d+(.\\d+)?%"))){
-                QString attribute = attributes["height"];
-                attribute.remove(attribute.length()-1,1); // removing '%'
-
-                qreal height = attribute.toDouble();
-
-                if (height >= 0 && height <= 100){
-                    region->setRelativeHeight(height/100);
-                }
-
-            }else if (attributes["height"].contains(QRegExp("\\d+(.\\d+)?"))){
-                QString attribute = attributes["height"];
-
-                qreal height = attribute.toDouble();
-
-                if (height >= 0 && height <= 1){
-                    region->setRelativeHeight(height);
-                }
-            }
-        }
-
-        if(attributes.contains("zIndex"))
-          region->setzIndex(attributes["zIndex"].toInt());
-
-        region->adjust();
+        if (top >= 0 && top <= 1)
+          region->setRelativeTop(top);
+      }
     }
+
+    if (!attributes["left"].isEmpty())
+    {
+      if (attributes["left"].contains(QRegExp("\\d+(.\\d+)?%")))
+      {
+        QString attribute = attributes["left"];
+        attribute.remove(attribute.length()-1,1); // removing '%'
+
+        qreal left = attribute.toDouble();
+
+        if (left >= 0 && left <= 100)
+          region->setRelativeLeft(left/100);
+      }
+      else if (attributes["left"].contains(QRegExp("\\d+(.\\d+)?")))
+      {
+        QString attribute = attributes["left"];
+
+        qreal left = attribute.toDouble();
+
+        if (left >= 0 && left <= 1)
+          region->setRelativeLeft(left);
+      }
+    }
+
+    if (!attributes["right"].isEmpty())
+    {
+      if (attributes["right"].contains(QRegExp("\\d+(.\\d+)?%")))
+      {
+        QString attribute = attributes["right"];
+        attribute.remove(attribute.length()-1,1); // removing '%'
+
+        qreal right = attribute.toDouble();
+
+        if (right >= 0 && right <= 100)
+          region->setRelativeRight(right/100);
+      }
+      else if (attributes["right"].contains(QRegExp("\\d+(.\\d+)?")))
+      {
+        QString attribute = attributes["right"];
+
+        qreal right = attribute.toDouble();
+
+        if (right >= 0 && right <= 1)
+          region->setRelativeRight(right);
+      }
+    }
+
+    if (!attributes["bottom"].isEmpty())
+    {
+      if (attributes["bottom"].contains(QRegExp("\\d+(.\\d+)?%")))
+      {
+        QString attribute = attributes["bottom"];
+        attribute.remove(attribute.length()-1,1); // removing '%'
+
+        qreal bottom = attribute.toDouble();
+
+        if (bottom >= 0 && bottom <= 100)
+          region->setRelativeBottom(bottom/100);
+
+      }
+      else if (attributes["bottom"].contains(QRegExp("\\d+(.\\d+)?")))
+      {
+        QString attribute = attributes["bottom"];
+
+        qreal bottom = attribute.toDouble();
+
+        if (bottom >= 0 && bottom <= 1)
+          region->setRelativeBottom(bottom);
+      }
+    }
+
+    if (!attributes["width"].isEmpty())
+    {
+      if (attributes["width"].contains(QRegExp("\\d+(.\\d+)?%")))
+      {
+        QString attribute = attributes["width"];
+        attribute.remove(attribute.length()-1,1); // removing '%'
+
+        qreal width = attribute.toDouble();
+
+        if (width >= 0 && width <= 100)
+          region->setRelativeWidth(width/100);
+
+      }
+      else if (attributes["width"].contains(QRegExp("\\d+(.\\d+)?")))
+      {
+        QString attribute = attributes["width"];
+
+        qreal width = attribute.toDouble();
+
+        if (width >= 0 && width <= 1)
+          region->setRelativeWidth(width);
+      }
+    }
+
+    if (!attributes["height"].isEmpty())
+    {
+      if (attributes["height"].contains(QRegExp("\\d+(.\\d+)?%")))
+      {
+        QString attribute = attributes["height"];
+        attribute.remove(attribute.length()-1,1); // removing '%'
+
+        qreal height = attribute.toDouble();
+
+        if (height >= 0 && height <= 100)
+          region->setRelativeHeight(height/100);
+
+      }
+      else if (attributes["height"].contains(QRegExp("\\d+(.\\d+)?")))
+      {
+        QString attribute = attributes["height"];
+
+        qreal height = attribute.toDouble();
+
+        if (height >= 0 && height <= 1)
+          region->setRelativeHeight(height);
+
+      }
+    }
+
+    if(attributes.contains("zIndex"))
+      region->setzIndex(attributes["zIndex"].toInt());
+
+    region->adjust();
+  }
 }
 
 void QnlyGraphicsRegionBase::requestRegionChange(QnlyGraphicsRegion* region,
-                            QMap<QString, QString> attributes)
+                                                 QMap<QString, QString> attributes)
 {
+  // setting
+  QMap<QString, QString> full;
 
-    // setting
-    QMap<QString, QString> full;
+  double value = 0.0;
+  if (attributes.contains("id"))
+    full["id"] = attributes["id"];
+  else if (!region->getId().isEmpty())
+    full["id"] = region->getId();
 
-    double value = 0.0;
-    if (attributes.contains("id"))
-        full["id"] = attributes["id"];
-    else if (!region->getId().isEmpty())
-        full["id"] = region->getId();
+  //    if (attributes.contains("title"))
+  //        full["title"] = attributes["title"];
+  //    else if (!region->getTitle().isEmpty())
+  //        full["title"] = region->getTitle();
 
-//    if (attributes.contains("title"))
-//        full["title"] = attributes["title"];
-//    else if (!region->getTitle().isEmpty())
-//        full["title"] = region->getTitle();
+  if (attributes.contains("color"))
+    full["color"] = attributes["color"];
+  else if (!region->getColor().isEmpty())
+    full["color"] = region->getColor();
 
-    if (attributes.contains("color"))
-        full["color"] = attributes["color"];
-    else if (!region->getColor().isEmpty())
-        full["color"] = region->getColor();
+  if (attributes.contains("top"))
+    full["top"] = attributes["top"];
+  else
+  {
+    value = region->getRelativeTop()*100;
+    ROUND_DOUBLE(value);
+    full["top"] = QString::number(value, 'f', 2) + "%";
+  }
 
-    if (attributes.contains("top"))
-        full["top"] = attributes["top"];
-    else
-    {
-        value = region->getRelativeTop()*100;
-        ROUND_DOUBLE(value);
-        full["top"] = QString::number(value, 'f', 2) + "%";
-    }
+  if (attributes.contains("left"))
+    full["left"] = attributes["left"];
+  else
+  {
+    value = region->getRelativeLeft()*100;
+    ROUND_DOUBLE(value);
+    full["left"] = QString::number(value, 'f', 2) + "%";
+  }
 
-    if (attributes.contains("left"))
-        full["left"] = attributes["left"];
-    else
-    {
-        value = region->getRelativeLeft()*100;
-        ROUND_DOUBLE(value);
-        full["left"] = QString::number(value, 'f', 2) + "%";
-    }
+  //    if (attributes.contains("right"))
+  //        full["right"] = attributes["right"];
+  //    else
+  //    {
+  //        value = region->getRelativeRight()*100;
+  //        ROUND_DOUBLE(value);
+  //        full["right"] = QString::number(value, 'f', 2) + "%";
+  //    }
 
-//    if (attributes.contains("right"))
-//        full["right"] = attributes["right"];
-//    else
-//    {
-//        value = region->getRelativeRight()*100;
-//        ROUND_DOUBLE(value);
-//        full["right"] = QString::number(value, 'f', 2) + "%";
-//    }
+  //    if (attributes.contains("bottom"))
+  //        full["bottom"] = attributes["bottom"];
+  //    else
+  //    {
+  //        value = region->getRelativeBottom()*100;
+  //        ROUND_DOUBLE(value);
+  //        full["bottom"] = QString::number(value, 'f', 2) + "%";
+  //    }
 
-//    if (attributes.contains("bottom"))
-//        full["bottom"] = attributes["bottom"];
-//    else
-//    {
-//        value = region->getRelativeBottom()*100;
-//        ROUND_DOUBLE(value);
-//        full["bottom"] = QString::number(value, 'f', 2) + "%";
-//    }
+  if (attributes.contains("width"))
+    full["width"] = attributes["width"];
+  else
+  {
+    value = region->getRelativeWidth()*100;
+    ROUND_DOUBLE(value);
+    full["width"] = QString::number(value, 'f', 2) + "%";
+  }
 
-    if (attributes.contains("width"))
-        full["width"] = attributes["width"];
-    else
-    {
-        value = region->getRelativeWidth()*100;
-        ROUND_DOUBLE(value);
-        full["width"] = QString::number(value, 'f', 2) + "%";
-    }
+  if (attributes.contains("height"))
+    full["height"] = attributes["height"];
+  else
+  {
+    value = region->getRelativeHeight()*100;
+    ROUND_DOUBLE(value);
+    full["height"] = QString::number(value, 'f', 2) + "%";
+  }
 
-    if (attributes.contains("height"))
-        full["height"] = attributes["height"];
-    else
-    {
-        value = region->getRelativeHeight()*100;
-        ROUND_DOUBLE(value);
-        full["height"] = QString::number(value, 'f', 2) + "%";
-    }
+  // TODO: zIndex
+  if(attributes.contains("zIndex"))
+  {
+    full["zIndex"] = attributes["zIndex"];
+  }
+  else
+  {
+    value = region->getzIndex();
+    full["zIndex"] = QString::number(value);
+  }
 
-    // TODO: zIndex
-    if(attributes.contains("zIndex"))
-    {
-      full["zIndex"] = attributes["zIndex"];
-    }
-    else
-    {
-      value = region->getzIndex();
-      full["zIndex"] = QString::number(value);
-    }
-
-    emit regionChangeRequested( region->getUid(),
-                                uid,
-                                full);
+  emit regionChangeRequested( region->getUid(), uid, full );
 }
 
 void QnlyGraphicsRegionBase::requestRegionSelection(QnlyGraphicsRegion* region)
@@ -371,352 +377,349 @@ void QnlyGraphicsRegionBase::requestRegionSelection(QnlyGraphicsRegion* region)
 
 void QnlyGraphicsRegionBase::QnlyGraphicsRegionBase::createActions()
 {
-    // help action
-    helpAction = new QAction(this);
-    helpAction->setText(tr("Help"));
+  // help action
+  helpAction = new QAction(this);
+  helpAction->setText(tr("Help"));
 
-    helpAction->setEnabled(true);
-    helpAction->setShortcut(QKeySequence("F1"));
+  helpAction->setEnabled(true);
+  helpAction->setShortcut(QKeySequence("F1"));
 
-    // undo action
-    undoAction = new QAction(this);
-    undoAction->setText(tr("Undo"));
+  // undo action
+  undoAction = new QAction(this);
+  undoAction->setText(tr("Undo"));
 
-    undoAction->setEnabled(false);
-    undoAction->setShortcut(QKeySequence("Ctrl+Z"));
+  undoAction->setEnabled(false);
+  undoAction->setShortcut(QKeySequence("Ctrl+Z"));
 
-    // redo action
-    redoAction = new QAction(this);
-    redoAction->setText(tr("Redo"));
+  // redo action
+  redoAction = new QAction(this);
+  redoAction->setText(tr("Redo"));
 
-    redoAction->setEnabled(false);
-    redoAction->setShortcut(QKeySequence("Ctrl+Shift+Z"));
+  redoAction->setEnabled(false);
+  redoAction->setShortcut(QKeySequence("Ctrl+Shift+Z"));
 
-    // cut action
-    cutAction = new QAction(this);
-    cutAction->setText(tr("Cut"));
+  // cut action
+  cutAction = new QAction(this);
+  cutAction->setText(tr("Cut"));
 
-    cutAction->setEnabled(false);
-    cutAction->setShortcut(QKeySequence("Ctrl+X"));
+  cutAction->setEnabled(false);
+  cutAction->setShortcut(QKeySequence("Ctrl+X"));
 
-    // copy action
-    copyAction = new QAction(this);
-    copyAction->setText(tr("Copy"));
+  // copy action
+  copyAction = new QAction(this);
+  copyAction->setText(tr("Copy"));
 
-    copyAction->setEnabled(false);
-    copyAction->setShortcut(QKeySequence("Ctrl+C"));
+  copyAction->setEnabled(false);
+  copyAction->setShortcut(QKeySequence("Ctrl+C"));
 
-    // paste action
-    pasteAction = new QAction(this);
-    pasteAction->setText(tr("Paste"));
+  // paste action
+  pasteAction = new QAction(this);
+  pasteAction->setText(tr("Paste"));
 
-    pasteAction->setEnabled(false);
-    pasteAction->setShortcut(QKeySequence("Ctrl+V"));
+  pasteAction->setEnabled(false);
+  pasteAction->setShortcut(QKeySequence("Ctrl+V"));
 
-    // delete action
-    deleteAction = new QAction(this);
-    deleteAction->setText(tr("Delete"));
+  // delete action
+  deleteAction = new QAction(this);
+  deleteAction->setText(tr("Delete"));
 
-    deleteAction->setEnabled(true);
-    deleteAction->setShortcut(QKeySequence("Del"));
+  deleteAction->setEnabled(true);
+  deleteAction->setShortcut(QKeySequence("Del"));
 
-    // zoomin action
-    zoominAction = new QAction(this);
-    zoominAction->setText(tr("Zoom In"));
+  // zoomin action
+  zoominAction = new QAction(this);
+  zoominAction->setText(tr("Zoom In"));
 
-    zoominAction->setEnabled(true);
-    zoominAction->setShortcut(QKeySequence("Ctrl++"));
+  zoominAction->setEnabled(true);
+  zoominAction->setShortcut(QKeySequence("Ctrl++"));
 
-    // zoomout action
-    zoomoutAction = new QAction(this);
-    zoomoutAction->setText(tr("Zoom Out"));
+  // zoomout action
+  zoomoutAction = new QAction(this);
+  zoomoutAction->setText(tr("Zoom Out"));
 
-    zoomoutAction->setEnabled(true);
-    zoomoutAction->setShortcut(QKeySequence("Ctrl+-"));
+  zoomoutAction->setEnabled(true);
+  zoomoutAction->setShortcut(QKeySequence("Ctrl+-"));
 
-    // reset action
-    zoomresetAction = new QAction(this);
-    zoomresetAction->setText(tr("Reset"));
+  // reset action
+  zoomresetAction = new QAction(this);
+  zoomresetAction->setText(tr("Reset"));
 
-    zoomresetAction->setEnabled(true);
-    zoomresetAction->setShortcut(QKeySequence("Ctrl+0"));
+  zoomresetAction->setEnabled(true);
+  zoomresetAction->setShortcut(QKeySequence("Ctrl+0"));
 
-    // fullscreen action
-    fullscreenAction = new QAction(this);
-    fullscreenAction->setText(tr("Full Screen"));
+  // fullscreen action
+  fullscreenAction = new QAction(this);
+  fullscreenAction->setText(tr("Full Screen"));
 
-    fullscreenAction->setEnabled(true);
-    fullscreenAction->setShortcut(QKeySequence("F11"));
+  fullscreenAction->setEnabled(true);
+  fullscreenAction->setShortcut(QKeySequence("F11"));
 
-    // export action
-    exportAction = new QAction(this);
-    exportAction->setText(tr("Export..."));
+  // export action
+  exportAction = new QAction(this);
+  exportAction->setText(tr("Export..."));
 
-    exportAction->setEnabled(true);
+  exportAction->setEnabled(true);
 
-    // region action
-    regionAction = new QAction(this);
-    regionAction->setText(tr("Region"));
+  // region action
+  regionAction = new QAction(this);
+  regionAction->setText(tr("Region"));
 
-    regionAction->setEnabled(true);
+  regionAction->setEnabled(true);
 
-    // regionbase action
-    regionbaseAction = new QAction(this);
-    regionbaseAction->setText(tr("Regionbase"));
+  // regionbase action
+  regionbaseAction = new QAction(this);
+  regionbaseAction->setText(tr("Regionbase"));
 
-    regionbaseAction->setEnabled(true);
+  regionbaseAction->setEnabled(true);
 
-    // bring to front action
-    bringfrontAction = new QAction(this);
-    bringfrontAction->setText(tr("Bring to Front"));
+  // bring to front action
+  bringfrontAction = new QAction(this);
+  bringfrontAction->setText(tr("Bring to Front"));
 
-    bringfrontAction->setEnabled(false);
-    bringfrontAction->setShortcut(QKeySequence("Shift+Ctrl+]"));
+  bringfrontAction->setEnabled(false);
+  bringfrontAction->setShortcut(QKeySequence("Shift+Ctrl+]"));
 
-    // bring forward action
-    bringforwardAction = new QAction(this);
-    bringforwardAction->setText(tr("Bring Forward"));
+  // bring forward action
+  bringforwardAction = new QAction(this);
+  bringforwardAction->setText(tr("Bring Forward"));
 
-    bringforwardAction->setEnabled(false);
-    bringforwardAction->setShortcut(QKeySequence("Ctrl+]"));
+  bringforwardAction->setEnabled(false);
+  bringforwardAction->setShortcut(QKeySequence("Ctrl+]"));
 
-    // send backward action
-    sendbackwardAction = new QAction(this);
-    sendbackwardAction->setText(tr("Send Backward"));
+  // send backward action
+  sendbackwardAction = new QAction(this);
+  sendbackwardAction->setText(tr("Send Backward"));
 
-    sendbackwardAction->setEnabled(false);
-    sendbackwardAction->setShortcut(QKeySequence("Ctrl+["));
+  sendbackwardAction->setEnabled(false);
+  sendbackwardAction->setShortcut(QKeySequence("Ctrl+["));
 
-    // send to back action
-    sendbackAction = new QAction(this);
-    sendbackAction->setText(tr("Send to Back"));
+  // send to back action
+  sendbackAction = new QAction(this);
+  sendbackAction->setText(tr("Send to Back"));
 
-    sendbackAction->setEnabled(false);
-    sendbackAction->setShortcut(QKeySequence("Shift+Ctrl+["));
+  sendbackAction->setEnabled(false);
+  sendbackAction->setShortcut(QKeySequence("Shift+Ctrl+["));
 
-    re640x480 = new QAction(this);
-    re640x480->setText(tr("640x480 (4:3)"));
-    re640x480->setCheckable(true);
-    re640x480->setChecked(false);
+  re640x480 = new QAction(this);
+  re640x480->setText(tr("640x480 (4:3)"));
+  re640x480->setCheckable(true);
+  re640x480->setChecked(false);
 
-    re800x600 = new QAction(this);
-    re800x600->setText(tr("800x600 (4:3)"));
-    re800x600->setCheckable(true);
-    re800x600->setChecked(false);
+  re800x600 = new QAction(this);
+  re800x600->setText(tr("800x600 (4:3)"));
+  re800x600->setCheckable(true);
+  re800x600->setChecked(false);
 
-    re1024x768 = new QAction(this);
-    re1024x768->setText(tr("1024x768 (4:3)"));
-    re1024x768->setCheckable(true);
-    re1024x768->setChecked(false);
+  re1024x768 = new QAction(this);
+  re1024x768->setText(tr("1024x768 (4:3)"));
+  re1024x768->setCheckable(true);
+  re1024x768->setChecked(false);
 
-    re854x480 = new QAction(this);
-    re854x480->setText(tr("854x480 (16:9)"));
-    re854x480->setCheckable(true);
-    re854x480->setChecked(true);
+  re854x480 = new QAction(this);
+  re854x480->setText(tr("854x480 (16:9)"));
+  re854x480->setCheckable(true);
+  re854x480->setChecked(true);
 
-    re1280x720 = new QAction(this);
-    re1280x720->setText(tr("1280x720 (16:9)"));
-    re1280x720->setCheckable(true);
-    re1280x720->setChecked(false);
+  re1280x720 = new QAction(this);
+  re1280x720->setText(tr("1280x720 (16:9)"));
+  re1280x720->setCheckable(true);
+  re1280x720->setChecked(false);
 
-    re1920x1080 = new QAction(this);
-    re1920x1080->setText(tr("1920x1080 (16:9)"));
-    re1920x1080->setCheckable(true);
-    re1920x1080->setChecked(false);
+  re1920x1080 = new QAction(this);
+  re1920x1080->setText(tr("1920x1080 (16:9)"));
+  re1920x1080->setCheckable(true);
+  re1920x1080->setChecked(false);
 
-    re320x400 = new QAction(this);
-    re320x400->setText(tr("320x400 (4:5)"));
-    re320x400->setCheckable(true);
-    re320x400->setChecked(false);
+  re320x400 = new QAction(this);
+  re320x400->setText(tr("320x400 (4:5)"));
+  re320x400->setCheckable(true);
+  re320x400->setChecked(false);
 
-    // hide action
-    hideAction = new QAction(this);
-    hideAction->setText(tr("Hide"));
+  // hide action
+  hideAction = new QAction(this);
+  hideAction->setText(tr("Hide"));
 
-    hideAction->setEnabled(false);
+  hideAction->setEnabled(false);
 
-    gridAction = new QAction(this);
-    gridAction->setText(tr("Grid"));
+  gridAction = new QAction(this);
+  gridAction->setText(tr("Grid"));
 
-    gridAction->setEnabled(true);
-    gridAction->setCheckable(true);
-    gridAction->setChecked(false);
+  gridAction->setEnabled(true);
+  gridAction->setCheckable(true);
+  gridAction->setChecked(false);
 
-    // properties action
-    propertiesAction = new QAction(this);
-    propertiesAction->setText(tr("Properties"));
+  // properties action
+  propertiesAction = new QAction(this);
+  propertiesAction->setText(tr("Properties"));
 
-    propertiesAction->setEnabled(true);
+  propertiesAction->setEnabled(true);
 
-    regionActionGroup = new QActionGroup(this);
-    regionActionGroup->setExclusive(false);
+  regionActionGroup = new QActionGroup(this);
+  regionActionGroup->setExclusive(false);
 
-    screensizeGroup  = new QActionGroup(this);
-    screensizeGroup->setExclusive(true);
+  screensizeGroup  = new QActionGroup(this);
+  screensizeGroup->setExclusive(true);
 
-    screensizeGroup->addAction(re640x480);
-    screensizeGroup->addAction(re800x600);
-    screensizeGroup->addAction(re1024x768);
-    screensizeGroup->addAction(re854x480);
-    screensizeGroup->addAction(re1280x720);
-    screensizeGroup->addAction(re1920x1080);
-    screensizeGroup->addAction(re320x400);
+  screensizeGroup->addAction(re640x480);
+  screensizeGroup->addAction(re800x600);
+  screensizeGroup->addAction(re1024x768);
+  screensizeGroup->addAction(re854x480);
+  screensizeGroup->addAction(re1280x720);
+  screensizeGroup->addAction(re1920x1080);
+  screensizeGroup->addAction(re320x400);
 }
 
 void QnlyGraphicsRegionBase::createMenus()
 {
-    // view menu
-    viewMenu = new QMenu();
-    viewMenu->setTitle(tr("View"));
+  // view menu
+  viewMenu = new QMenu();
+  viewMenu->setTitle(tr("View"));
 
-    viewMenu->setEnabled(true);
+  viewMenu->setEnabled(true);
 
-    viewMenu->addAction(zoominAction);
-    viewMenu->addAction(zoomoutAction);
-    viewMenu->addAction(zoomresetAction);
-    viewMenu->addSeparator();
-    viewMenu->addAction(fullscreenAction);
+  viewMenu->addAction(zoominAction);
+  viewMenu->addAction(zoomoutAction);
+  viewMenu->addAction(zoomresetAction);
+  viewMenu->addSeparator();
+  viewMenu->addAction(fullscreenAction);
 
-    // insert menu
-    insertMenu = new QMenu();
-    insertMenu->setTitle(tr("Insert"));
+  // insert menu
+  insertMenu = new QMenu();
+  insertMenu->setTitle(tr("Insert"));
 
-    insertMenu->setEnabled(true);
+  insertMenu->setEnabled(true);
 
-    insertMenu->addAction(regionAction);
-    insertMenu->addAction(regionbaseAction);
+  insertMenu->addAction(regionAction);
+  insertMenu->addAction(regionbaseAction);
 
-    // show menu
-    showMenu = new QMenu();
-    showMenu->setTitle(tr("Show"));
+  // show menu
+  showMenu = new QMenu();
+  showMenu->setTitle(tr("Show"));
 
-    showMenu->addAction(gridAction);
+  showMenu->addAction(gridAction);
 
-    showMenu->setEnabled(true);
+  showMenu->setEnabled(true);
 
-    // arrange menu
-    arrangeMenu = new QMenu();
-    arrangeMenu->setTitle(tr("Arrange"));
+  // arrange menu
+  arrangeMenu = new QMenu();
+  arrangeMenu->setTitle(tr("Arrange"));
 
-    arrangeMenu->setEnabled(false);
+  arrangeMenu->setEnabled(false);
 
-    arrangeMenu->addAction(bringfrontAction);
-    arrangeMenu->addAction(bringforwardAction);
-    arrangeMenu->addAction(sendbackwardAction);
-    arrangeMenu->addAction(sendbackAction);
+  arrangeMenu->addAction(bringfrontAction);
+  arrangeMenu->addAction(bringforwardAction);
+  arrangeMenu->addAction(sendbackwardAction);
+  arrangeMenu->addAction(sendbackAction);
 
-    // screensize menu
-    screensizeMenu = new QMenu();
-    screensizeMenu->setTitle(tr("Screen Size"));
+  // screensize menu
+  screensizeMenu = new QMenu();
+  screensizeMenu->setTitle(tr("Screen Size"));
 
-    screensizeMenu->setEnabled(true);
+  screensizeMenu->setEnabled(true);
 
-    screensizeMenu->addAction(re640x480);
-    screensizeMenu->addAction(re800x600);
-    screensizeMenu->addAction(re1024x768);
-    screensizeMenu->addAction(re854x480);
-    screensizeMenu->addAction(re1280x720);
-    screensizeMenu->addAction(re1920x1080);
-    screensizeMenu->addAction(re320x400);
+  screensizeMenu->addAction(re640x480);
+  screensizeMenu->addAction(re800x600);
+  screensizeMenu->addAction(re1024x768);
+  screensizeMenu->addAction(re854x480);
+  screensizeMenu->addAction(re1280x720);
+  screensizeMenu->addAction(re1920x1080);
+  screensizeMenu->addAction(re320x400);
 
 
-    // context menu
-    contextMenu = new QMenu();
-    contextMenu->addAction(helpAction);
-    contextMenu->addSeparator();
-//    contextMenu->addAction(undoAction);
-//    contextMenu->addAction(redoAction);
-//    contextMenu->addSeparator();
-//    contextMenu->addAction(cutAction);
-//    contextMenu->addAction(copyAction);
-//    contextMenu->addAction(pasteAction);
-//    contextMenu->addSeparator();
-    contextMenu->addAction(deleteAction);
-    contextMenu->addSeparator();
-    contextMenu->addAction(exportAction);
-    contextMenu->addSeparator();
-    contextMenu->addMenu(viewMenu);
-    contextMenu->addMenu(insertMenu);
-    contextMenu->addMenu(showMenu);
-    contextMenu->addMenu(screensizeMenu);
-    contextMenu->addMenu(arrangeMenu);
-    contextMenu->addSeparator();
-    contextMenu->addAction(hideAction);
-    contextMenu->addSeparator();
-    contextMenu->addMenu(switchMenu);
-    contextMenu->addSeparator();
-    contextMenu->addAction(propertiesAction);
+  // context menu
+  contextMenu = new QMenu();
+  contextMenu->addAction(helpAction);
+  contextMenu->addSeparator();
+  //    contextMenu->addAction(undoAction);
+  //    contextMenu->addAction(redoAction);
+  //    contextMenu->addSeparator();
+  //    contextMenu->addAction(cutAction);
+  //    contextMenu->addAction(copyAction);
+  //    contextMenu->addAction(pasteAction);
+  //    contextMenu->addSeparator();
+  contextMenu->addAction(deleteAction);
+  contextMenu->addSeparator();
+  contextMenu->addAction(exportAction);
+  contextMenu->addSeparator();
+  contextMenu->addMenu(viewMenu);
+  contextMenu->addMenu(insertMenu);
+  contextMenu->addMenu(showMenu);
+  contextMenu->addMenu(screensizeMenu);
+  contextMenu->addMenu(arrangeMenu);
+  contextMenu->addSeparator();
+  contextMenu->addAction(hideAction);
+  contextMenu->addSeparator();
+  contextMenu->addMenu(switchMenu);
+  contextMenu->addSeparator();
+  contextMenu->addAction(propertiesAction);
 }
 
 void QnlyGraphicsRegionBase::createConnections()
 {
-    connect(regionAction, SIGNAL(triggered()),
-                          SLOT(performRegion()));
+  connect(regionAction, SIGNAL(triggered()),
+          SLOT(performRegion()));
 
-    connect(regionbaseAction, SIGNAL(triggered()),
-                              SIGNAL(regionbasePerformed()));
+  connect(regionbaseAction, SIGNAL(triggered()),
+          SIGNAL(regionbasePerformed()));
 
-    connect(regionActionGroup, SIGNAL(triggered(QAction*)),
-            SLOT(performShow(QAction*)));
+  connect(regionActionGroup, SIGNAL(triggered(QAction*)),
+          SLOT(performShow(QAction*)));
 
-    connect(deleteAction, SIGNAL(triggered()),
-            SLOT(performDelete()));
+  connect(deleteAction, SIGNAL(triggered()),
+          SLOT(performDelete()));
 
-    re640x480->setData(QSize(640, 480));
-    connect(re640x480, SIGNAL(triggered()), SLOT(performChangeResolution()));
+  re640x480->setData(QSize(640, 480));
+  connect(re640x480, SIGNAL(triggered()), SLOT(performChangeResolution()));
 
-    re800x600->setData(QSize(800, 600));
-    connect(re800x600, SIGNAL(triggered()), SLOT(performChangeResolution()));
+  re800x600->setData(QSize(800, 600));
+  connect(re800x600, SIGNAL(triggered()), SLOT(performChangeResolution()));
 
-    re1024x768->setData(QSize(1024, 768));
-    connect(re1024x768, SIGNAL(triggered()), SLOT(performChangeResolution()));
+  re1024x768->setData(QSize(1024, 768));
+  connect(re1024x768, SIGNAL(triggered()), SLOT(performChangeResolution()));
 
-    re854x480->setData(QSize(854, 480));
-    connect(re854x480, SIGNAL(triggered()), SLOT(performChangeResolution()));
+  re854x480->setData(QSize(854, 480));
+  connect(re854x480, SIGNAL(triggered()), SLOT(performChangeResolution()));
 
-    re1280x720->setData(QSize(1280, 720));
-    connect(re1280x720, SIGNAL(triggered()), SLOT(performChangeResolution()));
+  re1280x720->setData(QSize(1280, 720));
+  connect(re1280x720, SIGNAL(triggered()), SLOT(performChangeResolution()));
 
-    re1920x1080->setData(QSize(1920, 1080));
-    connect(re1920x1080, SIGNAL(triggered()), SLOT(performChangeResolution()));
+  re1920x1080->setData(QSize(1920, 1080));
+  connect(re1920x1080, SIGNAL(triggered()), SLOT(performChangeResolution()));
 
-    re320x400->setData(QSize(320, 400));
-    connect(re320x400, SIGNAL(triggered()), SLOT(performChangeResolution()));
+  re320x400->setData(QSize(320, 400));
+  connect(re320x400, SIGNAL(triggered()), SLOT(performChangeResolution()));
 
-    connect(exportAction, SIGNAL(triggered()), SLOT(performExport()));
+  connect(exportAction, SIGNAL(triggered()), SLOT(performExport()));
 
-    connect(gridAction, SIGNAL(triggered()), SLOT(performGrid()));
+  connect(gridAction, SIGNAL(triggered()), SLOT(performGrid()));
 }
 
 void QnlyGraphicsRegionBase::performShow(QAction* action)
 {
-
-    if (!action->isChecked()){
-
-        regions[regionActions.key(action)]->setVisible(false);
-    }else{
-        regions[regionActions.key(action)]->setVisible(true);
-    }
+  if (!action->isChecked())
+    regions[regionActions.key(action)]->setVisible(false);
+  else
+    regions[regionActions.key(action)]->setVisible(true);
 }
 
 void QnlyGraphicsRegionBase::requestAdditionRegion(QnlyGraphicsRegion* parent)
 {
-    QMap<QString, QString> attributes;
+  QMap<QString, QString> attributes;
 
-    attributes["top"] = "10%";
-    attributes["left"] = "10%";
-//    attributes["right"] = "10%";
-//    attributes["bottom"] = "10%";
-    attributes["width"] = "80%";
-    attributes["height"] = "80%";
-    attributes["zIndex"] = "0";
+  attributes["top"] = "10%";
+  attributes["left"] = "10%";
+  //    attributes["right"] = "10%";
+  //    attributes["bottom"] = "10%";
+  attributes["width"] = "80%";
+  attributes["height"] = "80%";
+  attributes["zIndex"] = "0";
 
-    emit regionAdditionRequested("", parent->getUid(),uid,attributes);
+  emit regionAdditionRequested("", parent->getUid(), uid, attributes);
 }
 
 void QnlyGraphicsRegionBase::requestRegionDeletion(QnlyGraphicsRegion* region)
 {
-    emit regionDeletionRequested(region->getUid(), uid);
+  emit regionDeletionRequested(region->getUid(), uid);
 }
 
 void QnlyGraphicsRegionBase::updateActionText(QnlyGraphicsRegion *region)
@@ -728,323 +731,315 @@ void QnlyGraphicsRegionBase::updateActionText(QnlyGraphicsRegion *region)
 
 void QnlyGraphicsRegionBase::hideRegion(QnlyGraphicsRegion* region)
 {
-    regionActions[region->getUid()]->trigger();
+  regionActions[region->getUid()]->trigger();
 }
 
 void QnlyGraphicsRegionBase::removeRegion(QnlyGraphicsRegion* region)
 {
-    if (region != NULL)
+  if (region != NULL)
+  {
+    if (region->parentItem() != NULL)
     {
-        if (region->parentItem() != NULL)
-        {
-            QnlyGraphicsRegion* parent =
-                    (QnlyGraphicsRegion*) region->parentItem();
+      QnlyGraphicsRegion* parent =
+          (QnlyGraphicsRegion*) region->parentItem();
 
-            foreach(QGraphicsItem* item, region->childItems())
-            {
-                QnlyGraphicsRegion* child = dynamic_cast<QnlyGraphicsRegion*> (item);
+      foreach(QGraphicsItem* item, region->childItems())
+      {
+        QnlyGraphicsRegion* child = dynamic_cast<QnlyGraphicsRegion*> (item);
 
-                if(child != NULL)
-                  regions.remove(child->getUid());
-                else
-                  qWarning() << "Trying to remove an element that is not of the type QnlyGraphicsRegion " << __FILE__ << __LINE__;
-            }
-
-            parent->removeRegion(region);
-        }
+        if(child != NULL)
+          regions.remove(child->getUid());
         else
-        {
-            foreach(QGraphicsItem* item, region->childItems())
-            {
-                QnlyGraphicsRegion* child = dynamic_cast<QnlyGraphicsRegion*> (item);
+          qWarning() << "Trying to remove an element that is not of the type QnlyGraphicsRegion " << __FILE__ << __LINE__;
+      }
 
-                if(child != NULL)
-                  regions.remove(child->getUid());
-                else
-                  qWarning() << "Trying to remove an element that is not of the type QnlyGraphicsRegion " << __FILE__ << __LINE__;
-            }
-
-            if(regionActions.contains(region->getUid()))
-            {
-              QAction *action = regionActions[region->getUid()];
-
-              showMenu->removeAction(action);
-
-              regionActionGroup->removeAction(action);
-
-              regionActions.remove(region->getUid());
-            }
-        }
-
-        removeItem(region);
-
-        regions.remove(region->getUid());
-
-//        delete(region);
-
-        selectedRegion = NULL;
-
-        emit regionBaseSelectionRequested(uid);
+      parent->removeRegion(region);
     }
+    else
+    {
+      foreach(QGraphicsItem* item, region->childItems())
+      {
+        QnlyGraphicsRegion* child = dynamic_cast<QnlyGraphicsRegion*> (item);
+
+        if(child != NULL)
+          regions.remove(child->getUid());
+        else
+          qWarning() << "Trying to remove an element that is not of the type QnlyGraphicsRegion " << __FILE__ << __LINE__;
+      }
+
+      if(regionActions.contains(region->getUid()))
+      {
+        QAction *action = regionActions[region->getUid()];
+
+        showMenu->removeAction(action);
+
+        regionActionGroup->removeAction(action);
+
+        regionActions.remove(region->getUid());
+      }
+    }
+
+    removeItem(region);
+
+    regions.remove(region->getUid());
+
+    //        delete(region);
+
+    selectedRegion = NULL;
+
+    emit regionBaseSelectionRequested(uid);
+  }
 }
 
 QGraphicsItem* QnlyGraphicsRegionBase::getBackgroundItem()
 {
-    return bgrect;
+  return bgrect;
 }
 
 void QnlyGraphicsRegionBase::performDelete()
 {
-    emit regionBaseDeletionRequested(uid);
+  emit regionBaseDeletionRequested(uid);
 }
 
 void QnlyGraphicsRegionBase::performRegion()
 {
-    QMap<QString, QString> attributes;
+  QMap<QString, QString> attributes;
 
-    attributes["top"] = "10%";
-    attributes["left"] = "10%";
-    attributes["right"] = "10%";
-    attributes["bottom"] = "10%";
-    attributes["width"] = "80%";
-    attributes["height"] = "80%";
-    attributes["zIndex"] = "0";
+  attributes["top"] = "10%";
+  attributes["left"] = "10%";
+  attributes["right"] = "10%";
+  attributes["bottom"] = "10%";
+  attributes["width"] = "80%";
+  attributes["height"] = "80%";
+  attributes["zIndex"] = "0";
 
-    emit regionAdditionRequested("", "",uid,attributes);
+  emit regionAdditionRequested("", "", uid, attributes);
 }
 
 void QnlyGraphicsRegionBase::addRegion(QnlyGraphicsRegion* region,
-               QnlyGraphicsRegion* parent,
-               const QMap<QString, QString> attributes)
+                                       QnlyGraphicsRegion* parent,
+                                       const QMap<QString, QString> attributes)
 {
-    if (region != NULL)
+  if (region != NULL)
+  {
+    /* changing */
+    if (!attributes["id"].isEmpty())
+      region->setId(attributes["id"]);
+
+    if (!attributes["title"].isEmpty())
+      region->setTitle(attributes["title"]);
+
+    if (!attributes["color"].isEmpty())
+      region->setColor(attributes["color"]);
+
+    if (!attributes["top"].isEmpty())
     {
-        /* changing */
-        if (!attributes["id"].isEmpty()){
-            region->setId(attributes["id"]);
-        }
+      if (attributes["top"].contains(QRegExp("\\d+(.\\d+)?%")))
+      {
+        QString attribute = attributes["top"];
+        attribute.remove(attribute.length()-1,1); // removing '%'
 
-        if (!attributes["title"].isEmpty()){
-            region->setTitle(attributes["title"]);
-        }
+        qreal top = attribute.toDouble();
 
-        if (!attributes["color"].isEmpty()){
-            region->setColor(attributes["color"]);
-        }
+        if (top >= 0 && top <= 100)
+          region->setRelativeTop(top/100);
+      }
+      else if (attributes["top"].contains(QRegExp("\\d+(.\\d+)?")))
+      {
+        QString attribute = attributes["top"];
 
-        if (!attributes["top"].isEmpty()){
-            if (attributes["top"].contains(QRegExp("\\d+(.\\d+)?%"))){
-                QString attribute = attributes["top"];
-                attribute.remove(attribute.length()-1,1); // removing '%'
+        qreal top = attribute.toDouble();
 
-                qreal top = attribute.toDouble();
-
-                if (top >= 0 && top <= 100){
-                    region->setRelativeTop(top/100);
-                }
-            }else if (attributes["top"].contains(QRegExp("\\d+(.\\d+)?"))){
-                QString attribute = attributes["top"];
-
-                qreal top = attribute.toDouble();
-
-                if (top >= 0 && top <= 1){
-                    region->setRelativeTop(top);
-                }
-            }
-        }
-
-        if (!attributes["left"].isEmpty())
-        {
-            if (attributes["left"].contains(QRegExp("\\d+(.\\d+)?%")))
-            {
-                QString attribute = attributes["left"];
-                attribute.remove(attribute.length()-1,1); // removing '%'
-
-                qreal left = attribute.toDouble();
-
-                if (left >= 0 && left <= 100){
-                    region->setRelativeLeft(left/100);
-                }
-
-            }
-            else if (attributes["left"].contains(QRegExp("\\d+(.\\d+)?")))
-            {
-                QString attribute = attributes["left"];
-
-                qreal left = attribute.toDouble();
-
-                if (left >= 0 && left <= 1){
-                    region->setRelativeLeft(left);
-                }
-            }
-        }
-
-        if (!attributes["right"].isEmpty()){
-            if (attributes["right"].contains(QRegExp("\\d+(.\\d+)?%")))
-            {
-                QString attribute = attributes["right"];
-                attribute.remove(attribute.length()-1,1); // removing '%'
-
-                qreal right = attribute.toDouble();
-
-                if (right >= 0 && right <= 100){
-                    region->setRelativeRight(right/100);
-                }
-
-            }
-            else if (attributes["right"].contains(QRegExp("\\d+(.\\d+)?")))
-            {
-                QString attribute = attributes["right"];
-
-                qreal right = attribute.toDouble();
-
-                if (right >= 0 && right <= 1){
-                    region->setRelativeRight(right);
-                }
-            }
-        }
-
-        if (!attributes["bottom"].isEmpty()){
-            if (attributes["bottom"].contains(QRegExp("\\d+(.\\d+)?%"))){
-                QString attribute = attributes["bottom"];
-                attribute.remove(attribute.length()-1,1); // removing '%'
-
-                qreal bottom = attribute.toDouble();
-
-                if (bottom >= 0 && bottom <= 100){
-                    region->setRelativeBottom(bottom/100);
-                }
-
-            }else if (attributes["bottom"].contains(QRegExp("\\d+(.\\d+)?"))){
-                QString attribute = attributes["bottom"];
-
-                qreal bottom = attribute.toDouble();
-
-                if (bottom >= 0 && bottom <= 1){
-                    region->setRelativeBottom(bottom);
-                }
-            }
-        }
-
-        if (!attributes["width"].isEmpty())
-        {
-            if (attributes["width"].contains(QRegExp("\\d+(.\\d+)?%")))
-            {
-                QString attribute = attributes["width"];
-                attribute.remove(attribute.length()-1,1); // removing '%'
-
-                qreal width = attribute.toDouble();
-
-                if (width >= 0.0 &&  width <= 100.0)
-                {
-                    region->setRelativeWidth(width/100);
-                }
-            }
-            else if (attributes["width"].contains(QRegExp("\\d+(.\\d+)?")))
-            {
-                QString attribute = attributes["width"];
-
-                qreal width = attribute.toDouble();
-
-                if (width >= 0 && width <= 1){
-                    region->setRelativeWidth(width);
-                }
-            }
-        }
-
-        if (!attributes["height"].isEmpty()){
-            if (attributes["height"].contains(QRegExp("\\d+(.\\d+)?%")))
-            {
-                QString attribute = attributes["height"];
-                attribute.remove(attribute.length()-1,1); // removing '%'
-
-                qreal height = attribute.toDouble();
-
-                if (height >= 0 && height <= 100)
-                    region->setRelativeHeight(height/100);
-
-            }
-            else if (attributes["height"].contains(QRegExp("\\d+(.\\d+)?")))
-            {
-                QString attribute = attributes["height"];
-
-                qreal height = attribute.toDouble();
-
-                if (height >= 0 && height <= 1){
-                    region->setRelativeHeight(height);
-                }
-            }
-        }
-
-        if(attributes.contains("zIndex"))
-          region->setzIndex(attributes["zIndex"].toInt());
-
-        region->setGridAction(gridAction);
-
-        if (parent != NULL)
-        {
-           parent->addRegion(region);
-        }
-        else
-        {
-            addItem(region);
-
-            action = new QAction(this);
-            action->setText(region->getId());
-
-            showMenu->insertAction(showMenu->actions().front(), action);
-
-            if (showMenu->actions().size() <= 2){
-                showMenu->insertSeparator(showMenu->actions().back());
-            }
-
-            action->setCheckable(true);
-            action->setChecked(true);
-            action->setEnabled(true);
-
-            regionActionGroup->addAction(action);
-
-            regionActions[region->getUid()] = action;
-        }
-
-        region->adjust();
-
-        regions[region->getUid()] = region;
-
-        connect(region,
-                SIGNAL(regionSelectionRequested(QnlyGraphicsRegion*)),
-                SLOT(requestRegionSelection(QnlyGraphicsRegion*)));
-
-        connect(region,
-    SIGNAL(regionChangeRequested(QnlyGraphicsRegion*,QMap<QString,QString>)),
-    SLOT(requestRegionChange(QnlyGraphicsRegion*,QMap<QString,QString>)));
-
-        connect(region,
-    SIGNAL(regionbasePerformed()),
-    SIGNAL(regionbasePerformed()));
-
-
-        connect(region,
-                SIGNAL(regionAdditionRequested(QnlyGraphicsRegion*)),
-                SLOT(requestAdditionRegion(QnlyGraphicsRegion*)));
-
-        connect(region,
-                SIGNAL(regionDeletionRequested(QnlyGraphicsRegion*)),
-                SLOT(requestRegionDeletion(QnlyGraphicsRegion*)));
-
-        connect(region,
-                SIGNAL(dragMediaOverRegion(QString,QnlyGraphicsRegion*)),
-                this,
-                SLOT(requestMediaOverRegionAction(QString,QnlyGraphicsRegion*))
-                );
-
-        // \fixme seg fault on Outline
-        QMap<QString, QString> noChangeAtts;
-
-        requestRegionChange(region,noChangeAtts);
-
-        emit requestRegionSelection(region);
+        if (top >= 0 && top <= 1)
+          region->setRelativeTop(top);
+      }
     }
+
+    if (!attributes["left"].isEmpty())
+    {
+      if (attributes["left"].contains(QRegExp("\\d+(.\\d+)?%")))
+      {
+        QString attribute = attributes["left"];
+        attribute.remove(attribute.length()-1,1); // removing '%'
+
+        qreal left = attribute.toDouble();
+
+        if (left >= 0 && left <= 100)
+          region->setRelativeLeft(left/100);
+      }
+      else if (attributes["left"].contains(QRegExp("\\d+(.\\d+)?")))
+      {
+        QString attribute = attributes["left"];
+
+        qreal left = attribute.toDouble();
+
+        if (left >= 0 && left <= 1)
+          region->setRelativeLeft(left);
+      }
+    }
+
+    if (!attributes["right"].isEmpty())
+    {
+      if (attributes["right"].contains(QRegExp("\\d+(.\\d+)?%")))
+      {
+        QString attribute = attributes["right"];
+        attribute.remove(attribute.length()-1,1); // removing '%'
+
+        qreal right = attribute.toDouble();
+
+        if (right >= 0 && right <= 100)
+          region->setRelativeRight(right/100);
+      }
+      else if (attributes["right"].contains(QRegExp("\\d+(.\\d+)?")))
+      {
+        QString attribute = attributes["right"];
+
+        qreal right = attribute.toDouble();
+
+        if (right >= 0 && right <= 1)
+          region->setRelativeRight(right);
+      }
+    }
+
+    if (!attributes["bottom"].isEmpty())
+    {
+      if (attributes["bottom"].contains(QRegExp("\\d+(.\\d+)?%")))
+      {
+        QString attribute = attributes["bottom"];
+        attribute.remove(attribute.length()-1,1); // removing '%'
+
+        qreal bottom = attribute.toDouble();
+
+        if (bottom >= 0 && bottom <= 100)
+          region->setRelativeBottom(bottom/100);
+      }
+      else if (attributes["bottom"].contains(QRegExp("\\d+(.\\d+)?")))
+      {
+        QString attribute = attributes["bottom"];
+
+        qreal bottom = attribute.toDouble();
+
+        if (bottom >= 0 && bottom <= 1)
+          region->setRelativeBottom(bottom);
+      }
+    }
+
+    if (!attributes["width"].isEmpty())
+    {
+      if (attributes["width"].contains(QRegExp("\\d+(.\\d+)?%")))
+      {
+        QString attribute = attributes["width"];
+        attribute.remove(attribute.length()-1,1); // removing '%'
+
+        qreal width = attribute.toDouble();
+
+        if (width >= 0.0 &&  width <= 100.0)
+          region->setRelativeWidth(width/100);
+      }
+      else if (attributes["width"].contains(QRegExp("\\d+(.\\d+)?")))
+      {
+        QString attribute = attributes["width"];
+
+        qreal width = attribute.toDouble();
+
+        if (width >= 0 && width <= 1)
+          region->setRelativeWidth(width);
+      }
+    }
+
+    if (!attributes["height"].isEmpty()){
+      if (attributes["height"].contains(QRegExp("\\d+(.\\d+)?%")))
+      {
+        QString attribute = attributes["height"];
+        attribute.remove(attribute.length()-1,1); // removing '%'
+
+        qreal height = attribute.toDouble();
+
+        if (height >= 0 && height <= 100)
+          region->setRelativeHeight(height/100);
+
+      }
+      else if (attributes["height"].contains(QRegExp("\\d+(.\\d+)?")))
+      {
+        QString attribute = attributes["height"];
+
+        qreal height = attribute.toDouble();
+
+        if (height >= 0 && height <= 1)
+          region->setRelativeHeight(height);
+      }
+    }
+
+    if(attributes.contains("zIndex"))
+      region->setzIndex(attributes["zIndex"].toInt());
+
+    region->setGridAction(gridAction);
+
+    if (parent != NULL)
+    {
+      parent->addRegion(region);
+    }
+    else
+    {
+      addItem(region);
+
+      action = new QAction(this);
+      action->setText(region->getId());
+
+      showMenu->insertAction(showMenu->actions().front(), action);
+
+      if (showMenu->actions().size() <= 2)
+      {
+        showMenu->insertSeparator(showMenu->actions().back());
+      }
+
+      action->setCheckable(true);
+      action->setChecked(true);
+      action->setEnabled(true);
+
+      regionActionGroup->addAction(action);
+
+      regionActions[region->getUid()] = action;
+    }
+
+    region->adjust();
+
+    regions[region->getUid()] = region;
+
+    connect(region,
+            SIGNAL(regionSelectionRequested(QnlyGraphicsRegion*)),
+            SLOT(requestRegionSelection(QnlyGraphicsRegion*)));
+
+    connect(region,
+            SIGNAL(regionChangeRequested(QnlyGraphicsRegion*,QMap<QString,QString>)),
+            SLOT(requestRegionChange(QnlyGraphicsRegion*,QMap<QString,QString>)));
+
+    connect(region,
+            SIGNAL(regionbasePerformed()),
+            SIGNAL(regionbasePerformed()));
+
+
+    connect(region,
+            SIGNAL(regionAdditionRequested(QnlyGraphicsRegion*)),
+            SLOT(requestAdditionRegion(QnlyGraphicsRegion*)));
+
+    connect(region,
+            SIGNAL(regionDeletionRequested(QnlyGraphicsRegion*)),
+            SLOT(requestRegionDeletion(QnlyGraphicsRegion*)));
+
+    connect(region,
+            SIGNAL(dragMediaOverRegion(QString,QnlyGraphicsRegion*)),
+            this,
+            SLOT(requestMediaOverRegionAction(QString,QnlyGraphicsRegion*))
+            );
+
+    // \fixme seg fault on Outline
+    QMap<QString, QString> noChangeAtts;
+
+    requestRegionChange(region,noChangeAtts);
+
+    emit requestRegionSelection(region);
+  }
 }
 
 void QnlyGraphicsRegionBase::performChangeResolution()
@@ -1063,47 +1058,53 @@ void QnlyGraphicsRegionBase::changeResolution(int w, int h)
   bgrect->setRect(0, 0, w, h);
   grid->setRect(0, 0, w, h);
 
-  foreach(QnlyGraphicsRegion* r, regions.values()) {
-      r->adjust();
+  foreach(QnlyGraphicsRegion* r, regions.values())
+  {
+    r->adjust();
   }
 }
 
 void QnlyGraphicsRegionBase::performGrid()
 {
-    grid->setVisible(!grid->isVisible());
+  grid->setVisible(!grid->isVisible());
 }
 
 void QnlyGraphicsRegionBase::performExport()
 {
-    QString location = QFileDialog::getSaveFileName(NULL, "Export...", "", tr("Images (*.png)"));
+  QString location =
+      QFileDialog::getSaveFileName(NULL, "Export...", "", tr("Images (*.png)"));
 
-    if (location != ""){
-        QImage image(width(), height(), QImage::Format_ARGB32_Premultiplied);
+  if (location != "")
+  {
+    QImage image(width(), height(), QImage::Format_ARGB32_Premultiplied);
 
-        QPainter painter(&image);
+    QPainter painter(&image);
 
-        render(&painter, QRect(), QRect(0,0,width(),height()));
+    render(&painter, QRect(), QRect(0,0,width(),height()));
 
-        painter.end();
+    painter.end();
 
-        image.save(location, "PNG");
-    }
+    image.save(location, "PNG");
+  }
 }
 
 void QnlyGraphicsRegionBase::mousePressEvent(QGraphicsSceneMouseEvent* event)
 {
-    QGraphicsScene::mousePressEvent(event);
+  QGraphicsScene::mousePressEvent(event);
 
-    if (!event->isAccepted()){
-        if (event->button() == Qt::RightButton){
-            event->ignore();
+  if (!event->isAccepted())
+  {
+    if (event->button() == Qt::RightButton)
+    {
+      event->ignore();
 
-        }else if (event->button() == Qt::LeftButton){
-            emit regionBaseSelectionRequested(uid);
-        }
-
-       event->accept();
     }
+    else if (event->button() == Qt::LeftButton){
+      emit regionBaseSelectionRequested(uid);
+    }
+
+    event->accept();
+  }
 }
 
 void QnlyGraphicsRegionBase::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
@@ -1117,22 +1118,22 @@ void QnlyGraphicsRegionBase::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 }
 
 void QnlyGraphicsRegionBase::contextMenuEvent(
-        QGraphicsSceneContextMenuEvent* event)
+    QGraphicsSceneContextMenuEvent* event)
 {
-    QGraphicsScene::contextMenuEvent(event);
+  QGraphicsScene::contextMenuEvent(event);
 
-    if (!event->isAccepted())
-    {
-        emit regionBaseSelectionRequested(uid);
+  if (!event->isAccepted())
+  {
+    emit regionBaseSelectionRequested(uid);
 
-        contextMenu->exec(event->screenPos());
+    contextMenu->exec(event->screenPos());
 
-        event->accept();
-    }
+    event->accept();
+  }
 }
 
 void QnlyGraphicsRegionBase::requestMediaOverRegionAction(QString mediaId,
-                                                    QnlyGraphicsRegion* region)
+                                                          QnlyGraphicsRegion* region)
 {
   emit mediaOverRegion(mediaId, region->getUid());
 }
