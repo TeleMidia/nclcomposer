@@ -351,6 +351,10 @@ void QnlyGraphicsRegionBase::requestRegionChange(QnlyGraphicsRegion* region,
     // TODO: zIndex
     if(attributes.contains("zIndex"))
     {
+      full["zIndex"] = attributes["zIndex"];
+    }
+    else
+    {
       value = region->getzIndex();
       full["zIndex"] = QString::number(value);
     }
