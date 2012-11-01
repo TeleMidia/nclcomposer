@@ -23,7 +23,7 @@ CONFIG += help
 QT += core xml network webkit
 
 #VERSION INFORMATION
-DEFINES += NCLCOMPOSER_GUI_VERSION=\"\\\"0.1.2\\\"\"
+DEFINES += NCLCOMPOSER_GUI_VERSION=\"\\\"0.1.3\\\"\"
 DEFINES += BUILD_DATE=\"\\\"$$system(echo \"$${_DATE_}\" | sed \"s/ /\\\\\\ /g\")\"\\\"
 #DEFINES += WITH_TEST_VERSION_MESSAGE=\"\\\"1\\\"\"
 
