@@ -8,7 +8,7 @@
 
 ;--------------------------------
 
-!define VERSION "0.1.1"
+!define VERSION "0.1.3"
 Name "NCL Composer ${VERSION}"
 Caption "NCL Composer Installer"
 OutFile "nclcomposer-installer-${VERSION}.exe"
