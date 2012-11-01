@@ -87,6 +87,8 @@ private:
 
   QString getUidById(QString id, Entity* entity);
 
+  QString getUidByName(QString name, Entity* entity);
+
   void createWidgets();
 
   void createConnections();

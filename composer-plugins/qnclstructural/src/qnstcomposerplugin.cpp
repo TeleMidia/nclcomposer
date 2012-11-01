@@ -785,12 +785,19 @@ void QnstComposerPlugin::requestEntityChange(Entity* entity)
           properties["componentUid"] = entities[componentUID];
       }
 
-      properties["interface"] = entity->getAttribute("interface");
-      if (entity->getAttribute("interface") != "")
+      if (properties["componentUid"] != "")
       {
-        QString interfaceUID = getUidById(properties["interface"]);
-        if(entities.contains(interfaceUID))
-          properties["interfaceUid"] = entities[interfaceUID];
+        properties["interface"] = entity->getAttribute("interface");
+        if (entity->getAttribute("interface") != "")
+        {
+          QString interfaceUID =
+              getUidByName(properties["interface"],
+                           getProject()->getEntityById(
+                             getUidById(properties["component"])));
+
+          if(entities.contains(interfaceUID))
+            properties["interfaceUid"] = entities[interfaceUID];
+        }
       }
 
       ok = true;
@@ -1923,6 +1930,28 @@ QString QnstComposerPlugin::getUidById(QString id, Entity* entity)
 
   return uid;
 }
+
+QString QnstComposerPlugin::getUidByName(QString name, Entity* entity)
+{
+  QString uid = "";
+
+  if (entity->getAttribute("name") == name)
+    return entity->getUniqueId();
+
+  foreach(Entity* child, entity->getChildren())
+  {
+    QString result = getUidByName(name, child);
+
+    if (result != "")
+    {
+      uid = result;
+      break;
+    }
+  }
+
+  return uid;
+}
+
 
 void QnstComposerPlugin::cacheNCLIds()
 {
