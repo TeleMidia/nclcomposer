@@ -13,6 +13,9 @@ QnstGraphicsEntity::QnstGraphicsEntity(QnstGraphicsEntity* parent)
 
   setnstGraphicsParent(parent);
 
+  if(parent)
+    parent->addnstGraphicsEntity(this);
+
   connect(this, SIGNAL(entitySelected()), SLOT(requestEntitySelection()));
   connect(this, SIGNAL(entityAboutToChange(QMap<QString,QString>)),
                 SLOT(requestEntityPreparation(QMap<QString,QString>)));
@@ -97,6 +100,9 @@ void QnstGraphicsEntity::addnstGraphicsEntity(QnstGraphicsEntity* entity)
 
     addnstEntity(entity);
     addncgGraphicsEntity(entity);
+
+    if(entity)
+      entity->setnstGraphicsParent(this);
   }
 }
 
@@ -112,6 +118,9 @@ void QnstGraphicsEntity::removenstGraphicsEntity(QnstGraphicsEntity* entity)
 
       removenstEntity(entity);
       removencgGraphicsEntity(entity);
+
+      entity->setnstGraphicsParent(NULL);
+      entity->setnstParent(NULL);
     }
   }
 }

@@ -116,12 +116,14 @@ void QnstGraphicsReference::delineate(QPainterPath* painter) const
 
     if (getEntityA()->getncgType() == Qncg::Interface)
     {
-      line.setP1(getnstGraphicsParent()->mapFromItem(getEntityA()->getnstGraphicsParent(), line.p1()));
+      if(getnstGraphicsParent())
+        line.setP1(getnstGraphicsParent()->mapFromItem(getEntityA()->getnstGraphicsParent(), line.p1()));
     }
 
     if (getEntityB()->getncgType() == Qncg::Interface)
     {
-      line.setP2(getnstGraphicsParent()->mapFromItem(getEntityB()->getnstGraphicsParent(), line.p2()));
+      if(getnstGraphicsParent())
+        line.setP2(getnstGraphicsParent()->mapFromItem(getEntityB()->getnstGraphicsParent(), line.p2()));
     }
 
     QPointF p1;

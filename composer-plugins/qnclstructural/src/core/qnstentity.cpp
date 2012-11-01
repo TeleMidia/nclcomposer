@@ -23,6 +23,9 @@ QnstEntity::QnstEntity(QnstEntity* parent)
 
   setnstParent(parent);
 
+  if(parent)
+    parent->addnstEntity(this);
+
   setnstUid((QString) QUuid::createUuid());
 }
 

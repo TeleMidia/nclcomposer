@@ -169,7 +169,9 @@ void QnstComposerPlugin::updateFromModel()
   {
     QnstGraphicsEntity *entity =
         dynamic_cast <QnstGraphicsEntity*>(view->getEntity(entities.value(key)));
-    if(entity && entity->getnstId() != "")
+
+    if(entity &&
+       entity->getnstId() != "")
     {
       top[entity->getnstId()] = entity->getTop();
       left[entity->getnstId()]=  entity->getLeft();
@@ -181,8 +183,13 @@ void QnstComposerPlugin::updateFromModel()
   foreach(QString coreID, entities.keys())
   {
     Entity *entity = project->getEntityById(coreID);
-    requestEntityRemotion(entity);
+    if(entity != NULL)
+    {
+//      qWarning() << "updateFromModel removing entity" << entity;
+      requestEntityRemotion(entity);
+    }
   }
+  entities.clear();
 
   view->clearAllData();
 
