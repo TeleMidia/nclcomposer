@@ -38,7 +38,7 @@ void updateSettingsWithDefaults()
   // After that we will look for plugins in the default system path
 #ifdef Q_WS_MAC
   defaultPluginsPath << "/Library/Application Support/Composer/Extensions"
-                     << QCoreApplication::applicationDirPath() +
+                     << QApplication::applicationDirPath() +
                         "/../PlugIns/composer";
 #elif defined(Q_WS_WIN32)
   defaultPluginsPath << QApplication::applicationDirPath() + "/extensions";
@@ -97,6 +97,25 @@ void updateSettingsWithDefaults()
                     defaultConnBaseDir + "defaultConnBase.ncl");
   settings.endGroup();
 /*End Import Bases*/
+
+/* Stylesheets */
+
+  QStringList stylesheetsDirs;
+
+  if (!settings.contains("default_stylesheets_dirs"))
+  {
+    stylesheetsDirs <<
+        QString(DATA_PATH);
+  }
+  else
+  {
+    stylesheetsDirs <<
+        settings.value("default_stylesheets_dirs").toStringList();
+  }
+
+  settings.setValue("default_stylesheets_dirs", stylesheetsDirs);
+
+/* End Stylesheets */
 }
 
 void loadTranslations(QApplication *app)
@@ -164,11 +183,31 @@ XInitThreads();
     ComposerMainWindow w;
     w.setWindowIcon(QIcon(":/mainwindow/icon"));
 
-    QFile style(QString(STYLE_PATH)+"/style.qss");
+    QStringList dirs =
+        ComposerSettings().value("default_stylesheets_dirs").toStringList();
 
-    if (style.open(QFile::ReadOnly)){
-        w.setStyleSheet(style.readAll());
-        style.close();
+    #ifdef Q_WS_WIN32
+
+      dirs << QApplication::applicationDirPath() + "/data";
+    #elif Q_WS_MAC
+
+      dirs << QApplication::applicationDirPath() + "/../PlugIns/composer";
+    #endif
+
+      qDebug() << "=============" << dirs;
+
+    foreach(QString dir, dirs){
+      if (QFile::exists(dir+"/style.qss"))
+      {
+        QFile style(dir+"/style.qss");
+
+        if (style.open(QFile::ReadOnly)){
+            w.setStyleSheet(style.readAll());
+            style.close();
+        }
+
+        break;
+      }
     }
 
     w.init(a);

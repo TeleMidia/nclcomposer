@@ -18,7 +18,7 @@ else {
 
 #WHAT FEATURES TO COMPILE?
 #CONFIG += clubencl
-CONFIG += runssh_on
+#CONFIG += runssh_on
 CONFIG += help
 QT += core xml network webkit
 
@@ -93,7 +93,8 @@ else:win32 {
 data.files = data/defaultConnBase.ncl data/style.qss
 
 DEFINES += EXT_DEFAULT_PATH=\"\\\"$$PREFIX\\\"\"
-DEFINES += STYLE_PATH=\"\\\"$$data.path\\\"\"
+DEFINES += INSTALL_PATH=\"\\\"$$INSTALLBASE\\\"\"
+DEFINES += DATA_PATH=\"\\\"$$data.path\\\"\"
 
 unix:!macx {
     target.path = $$INSTALLBASE/bin
