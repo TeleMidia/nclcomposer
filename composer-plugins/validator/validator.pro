@@ -6,11 +6,14 @@
 
 include (../plugins-common.pri)
 
-#INCLUDEPATH += "/usr/lib/" "/usr/local/lib"
+INCLUDEPATH += \
+    /usr/local/include \
+    /opt/local/include \
+
 
 QT += xml
 
-LIBS += -lboost_regex
+LIBS += -L/usr/local/lib -L/opt/local/lib -lboost_regex
 
 TARGET = ValidatorPlugin
 
