@@ -29,7 +29,7 @@
         <file alias="closeplugin">images/close_icon.png</file>
         <file alias="refreshplugin">images/refresh_icon.png</file>
         <file alias="ncllogo">images/ncl_logo.png</file>
-        <file alias="bggray">images/bg-gray-one.jpg</file>
+        <file alias="bggray-old">images/bg-gray-one.jpg</file>
         <file alias="leftarrow">images/left_arrow.png</file>
         <file alias="rightarrow">images/right_arrow.png</file>
         <file alias="nclomposer-full">images/nclcomposer-full.png</file>
@@ -39,5 +39,6 @@
         <file alias="stop">images/stop.png</file>
         <file alias="config">images/config.png</file>
         <file alias="reportbug">images/ladybug.png</file>
+        <file alias="bggray">images/bg-gray-one.png</file>
     </qresource>
 </RCC>
