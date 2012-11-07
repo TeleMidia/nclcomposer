@@ -189,7 +189,7 @@ XInitThreads();
     #ifdef Q_WS_WIN32
 
       dirs << QApplication::applicationDirPath() + "/data";
-    #elif Q_WS_MAC
+    #elif defined(Q_WS_MAC)
 
       dirs << QApplication::applicationDirPath() + "/../PlugIns/composer";
     #endif
