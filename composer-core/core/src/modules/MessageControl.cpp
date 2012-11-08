@@ -360,7 +360,6 @@ void MessageControl::sendEntityChangedMessageToPlugins(QString pluginInstanceId,
 void MessageControl::sendEntityRemovedMessageToPlugins(QString pluginInstanceId,
                                                        Entity *entity)
 {
-  qWarning() << "sendEntityRemovedMessageToPlugins" << pluginInstanceId << entity;
   QList<IPlugin*>::iterator it;
   QList<IPlugin*> instances =
       PluginControl::getInstance()->getPluginInstances(this->project);
