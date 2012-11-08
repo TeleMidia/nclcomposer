@@ -117,7 +117,7 @@ bool RunRemoteGingaVMAction::sendFilesToGingaVM(SimpleSSHClient &sshclient,
 
   // This will force the creation of the baseRemotePath if it does not exists
   // filesToSend.prepend(baseRemotePath);
-  qWarning() << "Must send these files:" << filesToSend;
+  qDebug() << "Must send these files:" << filesToSend;
 
   emit taskDescription(tr("Sending files to remote machine..."));
   emit taskMaximumValue(filesToSend.size());
@@ -126,14 +126,13 @@ bool RunRemoteGingaVMAction::sendFilesToGingaVM(SimpleSSHClient &sshclient,
   QString mkdir = "mkdir -p ";
   mkdir += baseRemotePath;
 
-  qWarning() << "Running command = " << mkdir;
+  qDebug() << "Running command = " << mkdir;
   ret = !sshclient.exec_cmd(mkdir.toStdString().c_str());
 
   for(int i = 0; i < filesToSend.size(); i++)
   {
     if(mustStop) break;
 
-    qWarning() << i << "from" << filesToSend.size();
     emit taskValue(i);
 
     int resp = 0;
@@ -326,7 +325,7 @@ void RunRemoteGingaVMAction::runCurrentProject()
   }
   else
   {
-    qDebug() << "Error copying the dependency files";
+    qWarning() << "Error copying the dependency files";
   }
 
   sshclient.doDisconnect();
