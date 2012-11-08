@@ -32,7 +32,7 @@ void updateSettingsWithDefaults()
 /* Defaults plugins paths */
   QStringList defaultPluginsPath;
 
-  // The first path will be at user's home.
+  // The first path will look for plugins is at user's home.
   defaultPluginsPath << QDir::homePath() + QString("/composer/extensions");
 
   // After that we will look for plugins in the default system path
@@ -99,22 +99,20 @@ void updateSettingsWithDefaults()
 /*End Import Bases*/
 
 /* Stylesheets */
+  QStringList stylesheetsDirs =
+      settings.value("default_stylesheets_dirs").toStringList();
 
-  QStringList stylesheetsDirs;
+  stylesheetsDirs << QString(DATA_PATH);
 
-  if (!settings.contains("default_stylesheets_dirs"))
-  {
-    stylesheetsDirs <<
-        QString(DATA_PATH);
-  }
-  else
-  {
-    stylesheetsDirs <<
-        settings.value("default_stylesheets_dirs").toStringList();
-  }
+#ifdef Q_WS_WIN32
+  stylesheetsDirs << QApplication::applicationDirPath() + "/data";
+#elif defined(Q_WS_MAC)
+  stylesheetsDirs << QApplication::applicationDirPath() + "/../PlugIns/composer";
+#endif
+
+  stylesheetsDirs.removeDuplicates();
 
   settings.setValue("default_stylesheets_dirs", stylesheetsDirs);
-
 /* End Stylesheets */
 }
 
@@ -186,26 +184,16 @@ XInitThreads();
     QStringList dirs =
         ComposerSettings().value("default_stylesheets_dirs").toStringList();
 
-    #ifdef Q_WS_WIN32
-
-      dirs << QApplication::applicationDirPath() + "/data";
-    #elif defined(Q_WS_MAC)
-
-      dirs << QApplication::applicationDirPath() + "/../PlugIns/composer";
-    #endif
-
-      qDebug() << "=============" << dirs;
-
-    foreach(QString dir, dirs){
+    foreach(QString dir, dirs)
+    {
       if (QFile::exists(dir+"/style.qss"))
       {
         QFile style(dir+"/style.qss");
-
-        if (style.open(QFile::ReadOnly)){
-            w.setStyleSheet(style.readAll());
-            style.close();
+        if (style.open(QFile::ReadOnly))
+        {
+          w.setStyleSheet(style.readAll());
+          style.close();
         }
-
         break;
       }
     }
