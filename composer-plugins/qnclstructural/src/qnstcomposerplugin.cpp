@@ -185,7 +185,6 @@ void QnstComposerPlugin::updateFromModel()
     Entity *entity = project->getEntityById(coreID);
     if(entity != NULL)
     {
-//      qWarning() << "updateFromModel removing entity" << entity;
       requestEntityRemotion(entity);
     }
   }
@@ -273,9 +272,6 @@ void QnstComposerPlugin::onEntityAdded(QString pluginID, Entity *entity)
         userData.insert(it.key(), it.value());
 
       nsEntity->setUsrData(userData);
-
-//        qDebug() << "[QNST] QnstComposerPlugin::onEntityAdded" << userData;
-
     }
     else
       qWarning() << "[QNST] QnsComposerPlugin::onEntityAdded entity "
@@ -836,7 +832,6 @@ void QnstComposerPlugin::requestEntityChange(Entity* entity)
     case Qnst::Action:
     case Qnst::Condition:
     {
-      qWarning() << "[QNST] Changing bind on Plugin!!!";
       properties["TYPE"] = "bind";
       properties["role"] = entity->getAttribute("role");
       properties["component"] = entity->getAttribute("component");
@@ -1520,7 +1515,6 @@ void QnstComposerPlugin::notifyEntityChangedInView(const QString uid,
 
     case Qnst::BindParam:
     {
-      qWarning() << "Changing bindParam";
       if (properties["name"] != "")
         attributes["name"] = properties["name"];
 
@@ -1754,7 +1748,6 @@ void QnstComposerPlugin::requestBindAddition(const QString uid,
                                              const QString parent,
                                        const QMap<QString, QString> &properties)
 {
-  qWarning() <<  "[QNST] requestBindAddition " << properties;
   // checking connector
   QList<Entity*> connectors = getProject()->getEntitiesbyType("causalConnector");
 

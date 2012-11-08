@@ -707,8 +707,6 @@ void QnstView::writeLink(QDomElement element, QDomDocument* dom,
   {
     QnstGraphicsNode* node = (QnstGraphicsNode*) entity;
 
-    qWarning() << node->getnstType();
-
     foreach(QnstGraphicsEdge* edge, node->getnstGraphicsEdges())
     {
       //We already have this link, so skipping
@@ -1121,7 +1119,7 @@ void QnstView::addEntity(const QString uid, const QString parent,
 
     case Qnst::Aggregator:
     {
-      qWarning() << "ERROR!!! Trying to add an Aggregator!! This is not \
+      qWarning() << "[QNST] ERROR!!! Trying to add an Aggregator!! This is not \
                     supported anymore!";
       break;
     }
@@ -1211,8 +1209,6 @@ void QnstView::removeEntity(const QString uid, bool undo, bool rmRef)
   if (entities.contains(uid))
   {
     QnstGraphicsEntity* entity = entities[uid];
-    qWarning() << "[QNST]" << ":" << "Removing entity '"+uid+"'"
-             << (int)entity << QnstUtil::getStrFromNstType(entity->getnstType());
 
     if (entity != NULL)
     {
@@ -1242,9 +1238,6 @@ void QnstView::removeEntity(const QString uid, bool undo, bool rmRef)
           // Remove recursively
           foreach(QnstGraphicsEntity* e, entity->getnstGraphicsEntities())
           {
-            qWarning() << "parent = " << (int)entity << entity->getnstType()
-                       << "remove child = " << (int) e << e->getncgType();
-
             if (e->getnstType() != Qnst::Edge &&
                 e->getnstType() != Qnst::Condition &&
                 e->getnstType() != Qnst::Mapping &&
@@ -1630,12 +1623,9 @@ void QnstView::changeEntity(const QString uid,
       case Qnst::Condition:
       {
         QnstGraphicsBind *bind = dynamic_cast<QnstGraphicsBind *> (entity);
-        qWarning() << "[QNST] Changing BIND!!!";
 
         if(bind)
         {
-          qWarning() << "[QNST] cast??";
-          qWarning() << properties;
           bind->setProperties(properties);
 
           adjustBind(bind);
@@ -1877,7 +1867,6 @@ void QnstView::adjustMedia(QnstGraphicsMedia* entity)
   {
     if (entities.contains(referUID)) // media already refer to other media
     {
-      qWarning() << "Media already refer to other media";
       QnstGraphicsMedia* origin =
           dynamic_cast<QnstGraphicsMedia*>(entities[referUID]);
 
@@ -2133,7 +2122,6 @@ void QnstView::adjustMedia(QnstGraphicsMedia* entity)
     }
     else
     {
-      qWarning() << "Refers does not contains" << entity->getnstUid();
       if (refers.keys(entity->getnstUid()).size() == 0)
       {
         foreach(QnstGraphicsEntity* interface, entity->getnstGraphicsEntities())
@@ -2390,8 +2378,6 @@ void QnstView::adjustBind(QnstGraphicsBind* bind)
   else if(entities.contains(bind->getComponentUid()))
     target = entities[bind->getComponentUid()];
 
-  qWarning() << "adjustBind "<< (int) link << (int) target;
-
   //Remove old
   if(bind->getTarget())
   {
@@ -2579,7 +2565,6 @@ void QnstView::changeAction(QString uid,
 void QnstView::changeBindParam(const QString uid,
                                const QMap<QString, QString> &properties)
 {
-  qWarning() << "changeBindParam";
   if (entities.contains(properties.value("parent")))
   {
     QnstGraphicsEntity* e = entities[properties.value("parent")];
@@ -4803,14 +4788,12 @@ void QnstView::adjustAngles(QnstGraphicsEdge* edge)
 void QnstView::requestBindParamAdjust(QString uid, QString parent,
                                       QMap<QString, QString> properties)
 {
-  qWarning() << "Request bind param adjust";
   properties["TYPE"] = "bindParam";
 
   if (!properties["name"].isEmpty() && !properties["value"].isEmpty())
   {
     if (bindParamUIDToBindUID.contains(uid))
     {
-      qWarning() << "Request bind param changing entity";
       emit entityChanged(uid, properties);
     }
     else

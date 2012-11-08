@@ -191,7 +191,6 @@ void PropertiesViewPlugin::updateCurrentEntityAttr(QString attr, QString value)
         }
       }
 
-      qWarning() << attrs;
       emit setAttributes(currentEntity, attrs, false);
     }
   }

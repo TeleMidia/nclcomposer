@@ -34,6 +34,7 @@ QnlyView::QnlyView(QWidget* parent) : QStackedWidget(parent)
 
 QnlyView::~QnlyView()
 {
+
 }
 
 void QnlyView::createActions()

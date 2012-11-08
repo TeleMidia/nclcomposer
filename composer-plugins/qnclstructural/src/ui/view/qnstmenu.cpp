@@ -338,7 +338,6 @@ void QnstMenu::dispatchAddAction()
   QAction *action = dynamic_cast <QAction*> (QObject::sender());
   if(action != NULL)
   {
-    qWarning() << "[QNST] QnstMenu::dispatchAddAction" << action->data().toInt();
     emit menuAddEntityTriggered( (Qnst::EntityType) action->data().toInt() );
   }
 }
