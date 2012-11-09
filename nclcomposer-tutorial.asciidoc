@@ -31,6 +31,11 @@ interativas para usuário não-programadores. Para isso, ele utiliza-se de
 várias abstrações gráficas (visões) que permitem ao autor focar em apenas um
 determinado ponto, durante cada fase distinta da autoria.
 
+// O intuito principal deste tutorial é fornecer ao leitor a habilidade de 
+// desenvolver programas NCL simples, usando o {nclcomposer}, e capacitá-lo a 
+// melhor entender e exercitar os principais conceitos da NCL, no ambiente de
+// autoria {nclcomposer}.
+
 Baseado nos exemplos apresentados no Capítulo 3 do livro 
 http://www.telemidia.puc-rio.br[Programando em NCL 3.0], este tutorial traz uma
 introdução passo a passo de como utilizar o {nclcomposer} para o 
@@ -78,7 +83,8 @@ Quando tocar?
 {nclcomposer}
 ~~~~~~~~~~~~
 O {nclcomposer} é composto por várias visões, cada uma permitindo a
-visualização de uma característica específica do documento hipermídia.
+visualização/edição de uma característica específica do documento
+hipermídia.
 
 [[sec:structural_view]]
 Visão Estrutural
@@ -144,29 +150,11 @@ http://www.softwarepublico.gov.br[Implementação de Referência do Ginga-NCL]);
 
 Instalando o {nclcomposer}
 ~~~~~~~~~~~~~~~~~~~~~~~~~
-Para instalar o NCL Composer, vá até a página:
-http://composer.telemidia.puc-rio.br/en/download e baixe a versão mais nova
-para o seu sistema (atualmente são suportados Window, Linux (Debian e Ubuntu)
-e Mac OS X.
+TODO
 
 Windows
 ^^^^^^^
-Para Windows são disponíveis duas versões:
-
-  * Um arquivo compactado (.ZIP), e um
-	* instalador (.EXE).
-
-Baixe a versão que melhor lhe convier. Recomendamos a versão .ZIP se você
-deseja apenas testar o NCL Composer, ou não tem permissão de administrador no
-sistema onde deseja instalar. Se você tem permissão de administrador,
-recomendamos o instalador .EXE pois nele você terá a opcão de já criar atalhos
-na Área de Trabalho e no Menu Iniciar.
-
-Para instalar a partir do .ZIP é suficiente extraí-lo em qualquer pasta do seu
-sistema onde queira instalar o NCL Composer.
-
-Para instalar a partir do .EXE, execute esse arquivo, que você será guiado por
-um passo-a-passo de instalacão.
+TODO
 
 Linux (Ubuntu/Debian)
 ^^^^^^^^^^^^^^^^^^^^^
@@ -210,27 +198,13 @@ Mané Garrincha, escritas por Gerson Soares.
 NOTE: Uma descrição completa da animação _O Primeiro João_ pode ser encontrada
 em: <<Soares2012>>.
 
-Código-fonte dos Exemplos
-^^^^^^^^^^^^^^^^^^^^^^^^^
-No decorrer deste tutorial iremos criar uma única aplicação que evoluirá em
-cada um dos nossos exemplos. Para tirar total proveito deste tutorial, você
-precisará dos objetos de mídia que compõe essa aplicação. Um pacote apenas com
-os objetos de mídia que farão parte da aplicação pode ser encontrado em:
-
-  * link:exemplos/garrincha_nclcomposer_media_only.zip[garrincha_nclcomposer_media_only.zip] 
-
-Enquanto um pacote completo, com todos os objetos de mídia e os projetos no
-NCL Composer de cada um dos exemplos está disponível em:
-
-  * link:exemplos/garrincha_nclcomposer_full.zip[garrincha_nclcomposer_full.zip] 
-
 Olá Garrincha!
 ~~~~~~~~~~~~~~
 Em nosso primeiro exemplo, iremos apenas exibir o vídeo da animação. Para
 isso, vamos abrir o {nclcomposer}. Depois de carregado, o {nclcomposer}
 apresenta a seguinte tela de boas-vindas:
 
-image::images/nclcomposer-welcomescreen.png[title="Tela de boas-vindas do {nclcomposer}.",width="70%",align="center"]
+image::images/nclcomposer-welcomescreen.png[title="Tela de boas-vindas do {nclcomposer}.",width="35%",align="center",link="images/nclcomposer-welcomescreen.png"]
 
 Nessa tela de boas-vindas podemos criar o nosso primeiro projeto. Para isso,
 pressione o botão _New Project_ no canto esquerdo inferior da tela de
@@ -239,7 +213,7 @@ boas-vindas. A seguinte tela será exibida:
 TIP: Outra possibilidade para criar um novo projeto é através do menu
 _File->New Project_.
 
-image::images/nclcomposer-newproject.png[title="Criação de um novo projeto.",width="50%",align="center"]
+image::images/nclcomposer-newproject.png[title="Criação de um novo projeto.",width="35%",align="center"]
 
 Nessa janela, atribua um nome para o projeto que você está criando, selecione
 o diretório onde deseja salvá-lo e também marque a opção _Copy and Import the
@@ -251,7 +225,7 @@ pois ela será útil para os próximos exemplos que iremos desenvolver.
 
 Feito isso, pressione o botão _Finish_ e a seguinte tela será apresentada:
 
-image::images/nclcomposer-body.png[title="Visão estrutural de um projeto recém-criado.",width="70%",align="center"]
+image::images/nclcomposer-body.png[title="Visão estrutural de um projeto recém-criado.",width="35%",align="center"]
 
 Com o nosso projeto criado, podemos ter acesso às visões que já vem instaladas
 por default no {nclcomposer}: {default_views}.
@@ -352,7 +326,7 @@ Para inserir os nossos objetos de mídia, a forma mais simples é apenas
 arrastar os objetos de mídia do seu Gerenciador de Arquivos para dentro da
 {structural_view} do {nclcomposer}.
 
-image::images/nclcomposer-drag_and_drop_animGar.png[title="Arraste os objetos de mídia do seu gerenciador de arquivos para a {structural_view} do {nclcomposer} para inserí-lo como objetos de mídia da aplicação.", width="70%", align="center"]
+image::images/nclcomposer-drag_and_drop_animGar.png[title="Arraste os objetos de mídia do seu gerenciador de arquivos para a {structural_view} do {nclcomposer} para inserí-lo como objetos de mídia da aplicação.", width="35%", align="center"]
 
 TIP: Outra forma de inserir um objeto de mídia, na {structural_view} é 
 clicar com o botão direito sobre o corpo do documento e selecionar o menu 
@@ -376,13 +350,13 @@ Para inserirmos uma porta no corpo do documento pela _Visão
 Estrutural_ é suficiente clicarmos com o botão direito sobre o corpo e
 selecionarmos o menu _Insert->Port_.
 
-image::images/nclcomposer-addport.png[title="Adicionando porta.", width="70%", align="center"]
+image::images/nclcomposer-addport.png[title="Adicionando porta.", width="35%", align="center"]
 
 Para mapearmos a porta que acabamos de criar para o objeto de mídia, devemos, 
 segurando a tecla _SHIFT_, clicar sobre a porta e arrastar o ponteiro
 do mouse para o objeto de mídia.  
 
-image::images/nclcomposer-portcomponent.png[title="Mapeando porta para objeto de mídia.", width="70%", align="center"]
+image::images/nclcomposer-portcomponent.png[title="Mapeando porta para objeto de mídia.", width="35%", align="center"]
 
 Com isso, já definimos que nossa aplicação é constituída apenas do objeto de
 mídia _animGar_ e que quando a aplicação começar, o primeiro objeto de mídia a
@@ -390,8 +364,8 @@ ser apresentado será o vídeo da animação _O Primeiro João_.
 
 Propriedades e dimensões dos objetos de mídia
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-Para finalizar o nosso exemplo inicial _Alô Garrincha_ só falta definirmos
-onde esse vídeo da animação será exibido. A forma mais simples de
+Para finalizar o nosso exemplo inicial _Alô Garrincha_ só falta agora
+definirmos onde esse vídeo da animação será exibido. A forma mais simples de
 definir as dimensões do objeto de mídia, é por meio de propriedades.
 
 Para inserirmos propriedades nos objetos de mídia por meio da _Visão
@@ -399,7 +373,7 @@ Estrutural_ a forma mais direta é clicando com o botão direto do mouse sobre o
 objeto de mídia no qual queremos inserir uma nova propriedade e selecionando o
 menu _Insert->Property_.
 
-image::images/nclcomposer-addproperty.png[title="Adicionando propriedade à um objeto de mídia.", width="70%", align="center"]
+image::images/nclcomposer-addproperty.png[title="Adicionando propriedade à um objeto de mídia.", width="35%", align="center"]
 
 Neste nosso primeiro exemplo estamos especialmente interessados nas
 propriedades que definem a dimensão dos objetos: _top_, _left_, _width_ e
@@ -414,7 +388,7 @@ No caso do nosso exemplo, devemos definir a propriedade _width_ e o valor
 com o valor de 100%. Definindo assim, que nossa mídia irá ocupar toda a tela
 quando for apresentada.
 
-image::images/nclcomposer-property-width.png[title="Definindo largura do objeto de mídia.", width="70%", align="center"]
+image::images/nclcomposer-property-width.png[title="Definindo largura do objeto de mídia.", width="35%", align="center"]
 
 .Para saber mais: Propriedades dos Objetos de Mídia
 ***************************************************
@@ -427,23 +401,15 @@ Nosso próximo exemplo ilustra como é possível introduzir vários objetos de
 mídia sincronizados no tempo. Vamos acrescentar:
 
   1. uma música de fundo (um chorinho), que deverá começar assim que terminar a
-apresentação inicial do vídeo e começar a animação propriamente dita (i.e. 5s
-após o início do vídeo da animação);
+apresentação inicial do vídeo e começar a animação propriamente dita;
   2. um outro objeto de vídeo, que deverá ser exibido em paralelo e sincronizado
-com o famoso "drible do vaivém" do Mané, retratado na animação; e ainda
+com o famoso “drible do vaivém” do Mané, retratado na animação; e ainda
   3. uma outra imagem, uma foto, que deverá ser exibida junto com a cena do
 marcador caído no chão.
 
 A imagem a seguir apresenta a visão temporal do nosso segundo exemplo:
 
-image::images/temporal-view.png[title="Visão temporal do exemplo 02.", width="50%",align="center"]
-
-Para desenvolver esse exemplo, vamos partir do exemplo anterior, no qual já
-temos o nosso objeto de mídia da animaćão. Sendo assim, temos que inserir os
-outros objetos de mídia que também farão parte deste exemplo:
-
-	* media/chorinho.mp3 (A música de fundo)
-	* media/shoes.mp3
+image::images/temporal-view.png[title="Visão temporal do exemplo 02.",width="35%",align="center"]
 
 Reúso Apenas de Relação
 ^^^^^^^^^^^^^^^^^^^^^^^
