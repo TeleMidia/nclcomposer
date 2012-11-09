@@ -1,6 +1,6 @@
 // This is the SIP interface definition for QsciLexerDiff.
 //
-// Copyright (c) 2011 Riverbank Computing Limited <info@riverbankcomputing.com>
+// Copyright (c) 2012 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
 // This file is part of QScintilla.
 // 
@@ -54,6 +54,7 @@ public:
     const char *lexer() const;
     QColor defaultColor(int style) const;
     QString description(int style) const;
+    const char *wordCharacters() const;
 
 private:
     QsciLexerDiff(const QsciLexerDiff &);

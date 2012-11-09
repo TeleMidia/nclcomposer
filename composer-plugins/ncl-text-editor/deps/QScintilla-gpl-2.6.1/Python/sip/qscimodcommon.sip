@@ -1,7 +1,7 @@
 // This is the SIP interface definition for the parts of the Qsci module common
 // to the Qt v3 and v4 versions.
 //
-// Copyright (c) 2011 Riverbank Computing Limited <info@riverbankcomputing.com>
+// Copyright (c) 2012 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
 // This file is part of QScintilla.
 // 
@@ -28,7 +28,7 @@
 
 
 %Copying
-Copyright (c) 2011 Riverbank Computing Limited <info@riverbankcomputing.com>
+Copyright (c) 2012 Riverbank Computing Limited <info@riverbankcomputing.com>
 
 This file is part of QScintilla.
 

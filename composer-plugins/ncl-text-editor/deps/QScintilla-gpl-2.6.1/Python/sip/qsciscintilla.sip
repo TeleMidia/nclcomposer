@@ -1,6 +1,6 @@
 // This is the SIP interface definition for QsciScintilla.
 //
-// Copyright (c) 2011 Riverbank Computing Limited <info@riverbankcomputing.com>
+// Copyright (c) 2012 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
 // This file is part of QScintilla.
 // 
@@ -245,6 +245,9 @@ public:
     virtual bool findFirst(const QString &expr, bool re, bool cs, bool wo,
             bool wrap, bool forward = true, int line = -1, int index = -1,
             bool show = true, bool posix = false);
+    virtual bool findFirstInSelection(const QString &expr, bool re, bool cs,
+            bool wo, bool forward = true, bool show = true,
+            bool posix = false);
     virtual bool findNext();
     int firstVisibleLine() const;
     FoldStyle folding() const;
@@ -302,6 +305,8 @@ public:
     int markerLine(int mhandle) const;
     int markerFindNext(int linenr, unsigned mask) const;
     int markerFindPrevious(int linenr, unsigned mask) const;
+
+    bool overwriteMode() const;
 
     QColor paper() const;
     int positionFromLineIndex(int line, int index) const;
@@ -382,6 +387,8 @@ public:
     void setExtraAscent(int extra);
     void setExtraDescent(int extra);
 
+    void setOverwriteMode(bool overwrite);
+
     void setWhitespaceBackgroundColor(const QColor &col);
     void setWhitespaceForegroundColor(const QColor &col);
     void setWhitespaceSize(int size);
@@ -399,6 +406,7 @@ public:
     int whitespaceSize() const;
     WhitespaceVisibility whitespaceVisibility() const;
 
+    QString wordAtLineIndex(int line, int index) const;
     QString wordAtPoint(const QPoint &point) const;
     const char *wordCharacters() const;
     WrapMode wrapMode() const;

@@ -1,6 +1,20 @@
-v2.6.1 ??? ??? ???
+v2.6.3 ???
+  - Added support for Qt v5-beta1.
+  - Added setOverwriteMode() and overwriteMode() to QsciScintilla.
+  - Added wordAtLineIndex() to QsciScintilla.
+  - Added findFirstInSelection() to QsciScintilla.
+  - Bug fixes.
+
+v2.6.2 20th June 2012
+  - Added support for Qt v5-alpha.
+  - QsciLexer::wordCharacters() is now part of the public API.
+  - Bug fixes.
+
+v2.6.1 10th February 2012
   - Support SCI_NAMESPACE to enable all internal Scintilla classes to be put
     into the Scintilla namespace.
+  - APIs now allow for spaces between the end of a word and the opening
+    parenthesis.
   - Building against Qt v3 is fixed.
 
 v2.6 11th November 2011
