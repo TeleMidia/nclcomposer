@@ -1194,11 +1194,6 @@ void QnstView::addEntity(const QString uid, const QString parent,
     QnstAddCommand* cmd = new QnstAddCommand(this, entity);
     history.push(cmd);
   }
-
-//  if (entityCounter.find(type) != entityCounter.end())
-//  {
-//    entityCounter[type]++;
-//  }
 }
 
 void QnstView::removeEntity(const QString uid, bool undo, bool rmRef)
@@ -1318,9 +1313,7 @@ void QnstView::removeEntity(const QString uid, bool undo, bool rmRef)
 
         entities.remove(entity->getnstUid());
 
-        // emit entityRemoved(entity->getnstUid());
         entity->deleteLater();
-
 
         // Update refer entities
         if (qncgType == Qncg::Interface)
@@ -2626,6 +2619,10 @@ void QnstView::requestEntityAddition(QnstGraphicsEntity* entity, bool undo)
     }
     //end loading additional data
 
+
+    // \fixme Should this come only after the switch/case ?
+    entity->getProperties(properties);
+
     switch(entity->getnstType())
     {
       case Qnst::Body:
@@ -2633,15 +2630,6 @@ void QnstView::requestEntityAddition(QnstGraphicsEntity* entity, bool undo)
         if (undo){  scene->addRoot(entity); }
 
         properties["TYPE"] = "body";
-
-        properties["id"] = entity->getnstId();
-
-        properties["top"] = QString::number(entity->getTop());
-        properties["left"] = QString::number(entity->getLeft());
-        properties["width"] = QString::number(entity->getWidth());
-        properties["heigh"] = QString::number(entity->getHeight());
-        properties["zindex"] = QString::number(entity->getzIndex());
-
         ok = true;
         break;
       }
@@ -2652,16 +2640,7 @@ void QnstView::requestEntityAddition(QnstGraphicsEntity* entity, bool undo)
           updateEntityWithUniqueNstId(entity);
 
         properties["TYPE"] = "context";
-
         properties["id"] = entity->getnstId();
-
-        properties["refer"] = "";
-
-        properties["top"] = QString::number(entity->getTop());
-        properties["left"] = QString::number(entity->getLeft());
-        properties["width"] = QString::number(entity->getWidth());
-        properties["heigh"] = QString::number(entity->getHeight());
-        properties["zindex"] = QString::number(entity->getzIndex());
 
         ok = true;
         break;
@@ -2673,17 +2652,7 @@ void QnstView::requestEntityAddition(QnstGraphicsEntity* entity, bool undo)
           updateEntityWithUniqueNstId(entity);
 
         properties["TYPE"] = "switch";
-
         properties["id"] = entity->getnstId();
-
-        properties["refer"] = "";
-
-        properties["top"] = QString::number(entity->getTop());
-        properties["left"] = QString::number(entity->getLeft());
-        properties["width"] = QString::number(entity->getWidth());
-        properties["heigh"] = QString::number(entity->getHeight());
-        properties["zindex"] = QString::number(entity->getzIndex());
-
         ok = true;
         break;
       }
@@ -2701,19 +2670,15 @@ void QnstView::requestEntityAddition(QnstGraphicsEntity* entity, bool undo)
       {
         if (entity->getnstId() == "" && !undo)
           updateEntityWithUniqueNstId(entity);
+
         QnstGraphicsMedia *media = dynamic_cast<QnstGraphicsMedia *>(entity);
 
         if(media)
         {
           properties["TYPE"] = "media";
-
-          properties["id"] = media->getnstId();
-          properties["src"] = media->getSource();
-          properties["refer"] = media->getRefer();
-          properties["instance"] = media->getInstance();
+          properties["id"] = entity->getnstId();
 
           media->updateToolTip();
-
           ok = true;
         }
         break;
@@ -2729,6 +2694,7 @@ void QnstView::requestEntityAddition(QnstGraphicsEntity* entity, bool undo)
         properties["TYPE"] = "port";
         properties["id"] = entity->getnstId();
 
+        // \fixme Do I really need the following code?
         if(port)
         {
           foreach(QnstGraphicsEdge* edge, port->getnstGraphicsEdges())
@@ -2761,6 +2727,7 @@ void QnstView::requestEntityAddition(QnstGraphicsEntity* entity, bool undo)
         properties["TYPE"] = "area";
         properties["id"] = entity->getnstId();
 
+        // \fixme Do I really need the following code?
         if(entity->getnstGraphicsParent()->isMedia())
         {
           QnstGraphicsMedia *media =
@@ -2788,6 +2755,7 @@ void QnstView::requestEntityAddition(QnstGraphicsEntity* entity, bool undo)
       {
         properties["TYPE"] = "property";
 
+        // \fixme Do I really need the following code?
         if(entity->getnstGraphicsParent()->isMedia())
         {
           QnstGraphicsMedia *media =
@@ -2825,6 +2793,7 @@ void QnstView::requestEntityAddition(QnstGraphicsEntity* entity, bool undo)
       {
         QnstGraphicsLink *link = dynamic_cast<QnstGraphicsLink*>(entity);
 
+        // \fixme Do I really need the following code?
         if(link)
         {
           if (entity->getnstId() == "" && !undo)
@@ -2853,6 +2822,7 @@ void QnstView::requestEntityAddition(QnstGraphicsEntity* entity, bool undo)
           {
             properties["TYPE"] = "bind";
 
+            // \fixme Do I really need the following code?
             if(bind->getLink() != NULL)
             {
               properties["connector"] = bind->getLink()->getxConnector();
@@ -2896,7 +2866,6 @@ void QnstView::requestEntityAddition(QnstGraphicsEntity* entity, bool undo)
 
         properties["TYPE"] = "switchPort";
         properties["id"] = entity->getnstId();
-
         ok = true;
         break;
       }
@@ -3229,20 +3198,13 @@ void QnstView::requestEntityChange(QnstGraphicsEntity* entity)
     }
     // end load of additional data
 
+    entity->getProperties(properties);
+
     switch(entity->getnstType())
     {
       case Qnst::Body:
       {
         properties["TYPE"] = "body";
-
-        properties["id"] = entity->getnstId();
-
-        properties["top"] = QString::number(entity->getTop());
-        properties["left"] = QString::number(entity->getLeft());
-        properties["width"] = QString::number(entity->getWidth());
-        properties["heigh"] = QString::number(entity->getHeight());
-        properties["zindex"] = QString::number(entity->getzIndex());
-
         ok = true;
         break;
       }
@@ -3250,17 +3212,6 @@ void QnstView::requestEntityChange(QnstGraphicsEntity* entity)
       case Qnst::Context:
       {
         properties["TYPE"] = "context";
-
-        properties["id"] = entity->getnstId();
-
-        properties["refer"] = ""; // We do not support refer on context yet!
-
-        properties["top"] = QString::number(entity->getTop());
-        properties["left"] = QString::number(entity->getLeft());
-        properties["width"] = QString::number(entity->getWidth());
-        properties["heigh"] = QString::number(entity->getHeight());
-        properties["zindex"] = QString::number(entity->getzIndex());
-
         ok = true;
         break;
       }
@@ -3268,17 +3219,6 @@ void QnstView::requestEntityChange(QnstGraphicsEntity* entity)
       case Qnst::Switch:
       {
         properties["TYPE"] = "switch";
-
-        properties["id"] = entity->getnstId();
-
-        properties["refer"] = ""; // We do not support refer on switch yet!
-
-        properties["top"] = QString::number(entity->getTop());
-        properties["left"] = QString::number(entity->getLeft());
-        properties["width"] = QString::number(entity->getWidth());
-        properties["heigh"] = QString::number(entity->getHeight());
-        properties["zindex"] = QString::number(entity->getzIndex());
-
         ok = true;
         break;
       }
@@ -3295,12 +3235,6 @@ void QnstView::requestEntityChange(QnstGraphicsEntity* entity)
       case Qnst::Media:
       {
         properties["TYPE"] = "media";
-
-        properties["id"] = entity->getnstId();
-        properties["src"] = ((QnstGraphicsMedia*)entity)->getSource();
-
-        // What else ??
-
         ok = true;
         break;
       }
@@ -3310,8 +3244,7 @@ void QnstView::requestEntityChange(QnstGraphicsEntity* entity)
       {
         properties["TYPE"] = "port";
 
-        properties["id"] = entity->getnstId();
-
+        //\fixme DO I really need that?
         QnstGraphicsPort *port = dynamic_cast <QnstGraphicsPort *>  (entity);
         foreach(QnstGraphicsEdge* edge, port->getnstGraphicsEdges())
         {
@@ -3326,7 +3259,6 @@ void QnstView::requestEntityChange(QnstGraphicsEntity* entity)
 
               properties["COMPONENT"] = edge->getEntityB()->getnstGraphicsParent()->getnstUid();
               properties["component"] = edge->getEntityB()->getnstGraphicsParent()->getnstId();
-
             }
             else
             {
@@ -3348,9 +3280,6 @@ void QnstView::requestEntityChange(QnstGraphicsEntity* entity)
       case Qnst::Link:
       {
         properties["TYPE"] = "link";
-
-        properties["id"] = entity->getnstId();
-
         ok = true;
         break;
       }
@@ -3366,9 +3295,6 @@ void QnstView::requestEntityChange(QnstGraphicsEntity* entity)
       case Qnst::SwitchPort:
       {
         properties["TYPE"] = "switchPort";
-
-        properties["id"] = entity->getnstId();
-
         ok = true;
         break;
       }
@@ -3411,12 +3337,12 @@ void QnstView::requestEntitySelection(QnstGraphicsEntity* entity)
 
       if (!entity->isMedia() && refers.contains(entity->getnstUid()))
       {
-          qDebug() << "========================" << "REF" << entity->getnstUid() << "->" << refers[entity->getnstUid()];
+        qDebug() << "========================" << "REF" << entity->getnstUid() << "->" << refers[entity->getnstUid()];
         emit entitySelected(refers[entity->getnstUid()]);
       }
       else
       {
-           qDebug() << "========================" << entity->getnstUid();
+        qDebug() << "========================" << entity->getnstUid();
         emit entitySelected(entity->getnstUid());
       }
     }

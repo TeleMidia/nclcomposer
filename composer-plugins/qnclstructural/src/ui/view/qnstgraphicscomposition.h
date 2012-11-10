@@ -46,6 +46,8 @@ public:
 
   virtual void setProperties(const QMap <QString, QString> &properties);
 
+  virtual void getProperties(QMap<QString, QString> &properties);
+
 protected slots:
   void adjustWithSpring();
 

@@ -36,6 +36,8 @@ public:
 
   virtual void setProperties(const QMap<QString, QString> &properties);
 
+  virtual void getProperties(QMap<QString, QString> &properties);
+
 protected:
   virtual void draw(QPainter* painter);
 

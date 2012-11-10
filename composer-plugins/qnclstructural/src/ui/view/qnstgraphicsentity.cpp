@@ -143,7 +143,6 @@ void QnstGraphicsEntity::requestEntitySelection()
 bool QnstGraphicsEntity::createEntity(Qnst::EntityType type)
 {
   // \todo Check if type is an media type allowed to me!
-
   QnstGraphicsEntity *entity = QnstUtil::makeGraphicsEntity(type, this);
 
   if(entity == NULL) return false;
@@ -178,8 +177,6 @@ bool QnstGraphicsEntity::createEntity(Qnst::EntityType type)
   }
 
   entity->adjust();
-
-  addnstGraphicsEntity(entity);
 
   emit entityAdded(entity);
 }
@@ -245,4 +242,14 @@ void QnstGraphicsEntity::setProperties(const QMap<QString, QString> &props)
 
   if (props["height"] != "")
     setHeight(props["height"].toDouble());
+}
+
+void QnstGraphicsEntity::getProperties(QMap <QString, QString> &props)
+{
+  props["id"] = getnstId();
+  props["top"] = QString::number(getTop());
+  props["left"] = QString::number(getLeft());
+  props["width"] = QString::number(getWidth());
+  props["height"] = QString::number(getHeight());
+  props["zIndex"] = QString::number(getzIndex());
 }

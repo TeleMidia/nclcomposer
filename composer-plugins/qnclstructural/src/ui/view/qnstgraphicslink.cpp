@@ -172,3 +172,11 @@ void QnstGraphicsLink::setProperties(const QMap<QString, QString> &properties)
   if (properties["xconnectorUID"] != "")
     setxConnectorUID(properties["xconnectorUID"]);
 }
+
+void QnstGraphicsLink::getProperties(QMap<QString, QString> &properties)
+{
+  QnstGraphicsNode::getProperties(properties);
+
+  properties["xconnector"] = getxConnector();
+  properties["xconnectorUID"] = getxConnectorUID();
+}

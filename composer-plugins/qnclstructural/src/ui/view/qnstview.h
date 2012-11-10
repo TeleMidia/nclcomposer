@@ -132,6 +132,7 @@ signals:
   void viewChanged();
 
 protected:
+
   bool updateEntityWithUniqueNstId(QnstGraphicsEntity *entity);
 
   virtual void mouseMoveEvent(QMouseEvent* event);

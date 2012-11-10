@@ -1064,3 +1064,14 @@ void QnstGraphicsBind::setProperties(const QMap<QString, QString> &properties)
   if(properties.contains("interfaceUid"))
     setInterfaceUid(properties["interfaceUid"]);
 }
+
+void QnstGraphicsBind::getProperties(QMap<QString, QString> &properties)
+{
+  QnstGraphicsEdge::getProperties(properties);
+
+  properties["role"] = getRole();
+  properties["component"] = getComponent();
+  properties["componentUid"] = getComponentUid();
+  properties["interface"] = getInterface();
+  properties["interfaceUid"] = getComponentUid();
+}

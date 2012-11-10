@@ -274,3 +274,13 @@ void QnstGraphicsMedia::setProperties(const QMap<QString, QString> &properties)
   setReferUID(properties["referUID"]);
   setInstance(properties["instance"]);
 }
+
+void QnstGraphicsMedia::getProperties(QMap<QString, QString> &properties)
+{
+  QnstGraphicsNode::getProperties(properties);
+
+  properties["src"] = getSource();
+  properties["refer"] = getRefer();
+  properties["referUID"] = getReferUID();
+  properties["instance"] = getInstance();
+}

@@ -53,24 +53,6 @@ void QnstGraphicsPort::setInterfaceUid(QString interfaceUid)
   this->interfaceUid = interfaceUid;
 }
 
-void QnstGraphicsPort::setProperties(const QMap<QString, QString> &properties)
-{
-  QnstGraphicsInterface::setProperties(properties);
-
-  setComponent(properties["component"]);
-  setInterface(properties["interface"]);
-
-  if (properties["interfaceUid"] != "")
-    setInterfaceUid(properties["interfaceUid"]);
-  else
-    setInterfaceUid("");
-
-  if (properties["componentUid"] != "")
-    setComponentUid(properties["componentUid"]);
-  else
-    setComponentUid("");
-}
-
 void QnstGraphicsPort::draw(QPainter* painter)
 {
   painter->setBrush(Qt::black);
@@ -98,4 +80,35 @@ void QnstGraphicsPort::draw(QPainter* painter)
 void QnstGraphicsPort::delineate(QPainterPath* painter) const
 {
   painter->addRect(4 + 8/2, 4 + 8/2, getWidth()-8, getHeight()-8);
+}
+
+void QnstGraphicsPort::setProperties(const QMap<QString, QString> &properties)
+{
+  QnstGraphicsInterface::setProperties(properties);
+
+  setComponent(properties["component"]);
+
+  if (properties["componentUid"] != "")
+    setComponentUid(properties["componentUid"]);
+  else
+    setComponentUid("");
+
+  setInterface(properties["interface"]);
+
+  if (properties["interfaceUid"] != "")
+    setInterfaceUid(properties["interfaceUid"]);
+  else
+    setInterfaceUid("");
+}
+
+void QnstGraphicsPort::getProperties(QMap<QString, QString> &properties)
+{
+  QnstGraphicsInterface::getProperties(properties);
+
+  properties["component"] = getComponent();
+  properties["componentUid"] = getComponentUid();
+
+  properties["interface"] = getInterface();
+  properties["interfaceUid"] = getInterfaceUid();
+
 }
