@@ -14,9 +14,14 @@
 #include <fstream>
 #include <sstream>
 #include <exception>
-#include <boost/regex.hpp>
 #include <QDebug>
 #include <QFile>
+
+#ifdef WITH_LIBBOOST
+  #include <boost/regex.hpp>
+#else
+  #include <QRegExp>
+#endif
 
 #include <assert.h>
 
@@ -123,8 +128,8 @@ void Langstruct::init ()
 
         getline(strTok, component, '(');
         
-        assert (component == "ELEMENT" || component == "ATTRIBUTE"
-                || component == "REFERENCE" || component == "DATATYPE");
+//        assert (component == "ELEMENT" || component == "ATTRIBUTE"
+//                || component == "REFERENCE" || component == "DATATYPE");
         
         if (component == "ELEMENT") {
             string name,
@@ -370,12 +375,18 @@ bool Langstruct::isValidAttribute(const string attName, const string attValue,
     }
 
     string pattern = Langstruct::datatypes[Langstruct::attributes[attName].getDatatype(element)];
+
+#ifdef WITH_LIBBOOST
     const boost::regex reg (pattern);
 
-//    fprintf (stderr, "\n\n%s\n%s\n%d\n",attValue.c_str(), reg.expression(), boost::regex_match (attValue, reg));
+    //    fprintf (stderr, "\n\n%s\n%s\n%d\n",attValue.c_str(), reg.expression(), boost::regex_match (attValue, reg));
 
     return boost::regex_match (attValue, reg);
-//    return RE2::FullMatch (attValue, Langstruct::datatypes[Langstruct::attributes[attName].getDatatype(element)]);
+    //    return RE2::FullMatch (attValue, Langstruct::datatypes[Langstruct::attributes[attName].getDatatype(element)]);
+#else
+    QRegExp rx(QString(pattern.c_str()));
+    return rx.exactMatch(QString(attValue.c_str()));
+#endif
 }
 
 

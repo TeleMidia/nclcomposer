@@ -6,14 +6,26 @@
 
 include (../plugins-common.pri)
 
-INCLUDEPATH += \
-    /usr/local/include \
-    /opt/local/include \
+#CONFIG += \
+#  libboost
 
+libboost {
+  message("[!] Compiling with libboost")
+
+  DEFINES += \
+    WITH_LIBBOOST
+
+  INCLUDEPATH += \
+      /usr/local/include \
+      /opt/local/include
+
+  LIBS += \
+    -L/usr/local/lib \
+    -L/opt/local/lib \
+    -lboost_regex
+}
 
 QT += xml
-
-LIBS += -L/usr/local/lib -L/opt/local/lib -lboost_regex
 
 TARGET = ValidatorPlugin
 
