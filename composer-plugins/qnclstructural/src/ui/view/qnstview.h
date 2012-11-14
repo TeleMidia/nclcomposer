@@ -181,6 +181,8 @@ private:
 
   void changeImportBase(QString uid, const QMap<QString, QString> &properties);
 
+  void adjustEntity(QnstGraphicsEntity *entity);
+
   void adjustContext(QnstGraphicsContext* entity);
 
   void adjustMedia(QnstGraphicsMedia* entity);

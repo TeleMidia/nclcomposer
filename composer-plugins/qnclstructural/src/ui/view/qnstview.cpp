@@ -900,61 +900,32 @@ void QnstView::addEntity(const QString uid, const QString parent,
   {
     case Qnst::Body:
       entity = QnstUtil::makeGraphicsEntity(type);
-
       entity->setnstUid(uid);
-      entity->setnstId(properties["id"]);
 
       entity->setTop(scene->height()/2 - DEFAULT_BODY_HEIGHT/2);
       entity->setLeft(scene->width()/2 - DEFAULT_BODY_WIDTH/2);
       entity->setWidth(DEFAULT_BODY_WIDTH);
       entity->setHeight(DEFAULT_BODY_HEIGHT);
 
-      entity->setProperties(properties);
-
       scene->addRoot(entity);
-
-      entities[uid] = entity;
-
       ok = true;
-
       break;
 
     case Qnst::Context:
     case Qnst::Switch:
     {
-      entity = QnstUtil::makeGraphicsEntity(type, entityParent);
-      if(entity != NULL)
-      {
-        entity->setnstUid(uid);
-
-        if (properties["id"] != "") entity->setnstId(properties["id"]);
-
-        entity->setProperties(properties);
-        entities[uid] = entity;
-
-        entity->adjust();
-
-        ok = true;
-      }
+      entity = QnstUtil::makeGraphicsEntity(type, entityParent, properties);
+      if(entity != NULL) ok = true;
       break;
     }
 
     case Qnst::Media:
     {
-      entity = QnstUtil::makeGraphicsEntity(type, entityParent);
+      entity = QnstUtil::makeGraphicsEntity(type, entityParent, properties);
 
       if(entity != NULL)
       {
         entity->setnstType(QnstUtil::getnstTypeFromMime(properties["type"]));
-
-        entity->setnstUid(uid);
-        entities[uid] = entity;
-
-        // Update the entity properties
-        changeEntity(uid, properties, false);
-
-        entity->adjust();
-
         ok = true;
       }
       break;
@@ -962,20 +933,8 @@ void QnstView::addEntity(const QString uid, const QString parent,
 
     case Qnst::Port:
     {
-      entity = QnstUtil::makeGraphicsEntity(type, entityParent);
-
-      if(entity != NULL)
-      {
-        entity->setnstUid(uid);
-
-        entity->setnstId(properties["id"]);
-        entities[uid] = entity;
-
-        // Update the entity properties
-        changeEntity(uid, properties);
-
-        ok = true;
-      }
+      entity = QnstUtil::makeGraphicsEntity(type, entityParent, properties);
+      if(entity != NULL) ok = true;
       break;
     }
 
@@ -983,23 +942,17 @@ void QnstView::addEntity(const QString uid, const QString parent,
     {
       if (!links.contains(uid))
       {
-        entity = QnstUtil::makeGraphicsEntity(type, entityParent);
+        entity = QnstUtil::makeGraphicsEntity(type, entityParent, properties);
         QnstGraphicsLink *link = dynamic_cast <QnstGraphicsLink*>(entity);
 
         if(link)
         {
           link->setnstUid(uid);
-          link->setProperties(properties);
 
           if (properties["id"] != "")
             link->setnstId(properties["id"]);
 
-          entities[uid] = entity;
           links[uid] = link;
-
-          entity->adjust();
-          adjustLink(link);
-
           ok = true;
         }
       }
@@ -1082,18 +1035,8 @@ void QnstView::addEntity(const QString uid, const QString parent,
 
     case Qnst::SwitchPort:
     {
-      entity = QnstUtil::makeGraphicsEntity(type, entityParent);
-
-      entity->setnstUid(uid);
-
-      entity->setnstId(properties["id"]);
-
-      entity->setProperties(properties);
-      entities[uid] = entity;
-
-      entity->adjust();
-
-      ok = true;
+      entity = QnstUtil::makeGraphicsEntity(type, entityParent, properties);
+      if(entity != NULL) ok = true;
       break;
     }
 
@@ -1104,16 +1047,7 @@ void QnstView::addEntity(const QString uid, const QString parent,
           (QnstGraphicsNode*) entityParent->getnstGraphicsParent();
 
       QnstGraphicsMapping* entity = new QnstGraphicsMapping(oparent);
-
-      entity->setnstUid(uid);
       entity->setSwitchPortUid(parent);
-
-      entity->setProperties(properties);
-      oparent->addnstGraphicsEntity(entity);
-
-      entities[entity->getnstUid()] = entity;
-
-      adjustMapping(entity);
       break;
     }
 
@@ -1128,31 +1062,11 @@ void QnstView::addEntity(const QString uid, const QString parent,
     case Qnst::Area:
     case Qnst::Property:
     {
-      entity = QnstUtil::makeGraphicsEntity(type, entityParent);
-      entity->setnstUid(uid);
-      entity->setnstId(properties["id"]);
+      entity = QnstUtil::makeGraphicsEntity(type, entityParent, properties);
 
       if (properties.contains("isRefer"))
       {
-          ((QnstGraphicsInterface*) entity)->setRefer(true);
-      }
-
-      entity->setProperties(properties);
-      entities[uid] = entity;
-
-      entity->adjust();
-
-      if (adjust) // update media
-      {
-        if(entityParent->isMedia())
-          adjustMedia((QnstGraphicsMedia*) entityParent);
-
-        // Update the medias that refer to this one.
-        foreach (QString key, refers.keys(entityParent->getnstUid()))
-        {
-          if (entities.contains(key) && entities[key]->isMedia())
-              adjustMedia((QnstGraphicsMedia*) entities[key]);
-        }
+        ((QnstGraphicsInterface*) entity)->setRefer(true);
       }
 
       ok = true;
@@ -1162,6 +1076,17 @@ void QnstView::addEntity(const QString uid, const QString parent,
     default:
       //do nothing
       break;
+  }
+
+  if(ok)
+  {
+    entity->setnstUid(uid);
+    entities[uid] = entity;
+    entity->setProperties(properties);
+
+    entity->adjust();
+
+    adjustEntity(entity);
   }
 
   // if the entity type is CONNECTOR
@@ -1841,6 +1766,44 @@ void QnstView::readConnector(QDomElement element, QnstConnector* conn)
     {
       QDomElement e = list.item(i).toElement();
       readConnector(e, conn);
+    }
+  }
+}
+
+void QnstView::adjustEntity(QnstGraphicsEntity *entity)
+{
+  QnstType type = entity->getnstType();
+  entity->adjust();
+
+  switch(type)
+  {
+    case Qnst::Link:
+    {
+      adjustLink((QnstGraphicsLink*)link);
+      break;
+    }
+
+    case Qnst::Mapping:
+    {
+      adjustMapping((QnstGraphicsMapping*)entity);
+      break;
+    }
+
+    case Qnst::Area:
+    case Qnst::Property:
+    {
+      QnstGraphicsEntity *entityParent = entity->getnstGraphicsParent();
+
+      if(entityParent->isMedia())
+        adjustMedia((QnstGraphicsMedia*) entityParent);
+
+      // Update the medias that refer to this one.
+      foreach (QString key, refers.keys(entityParent->getnstUid()))
+      {
+        if (entities.contains(key) && entities[key]->isMedia())
+          adjustMedia((QnstGraphicsMedia*) entities[key]);
+      }
+      break;
     }
   }
 }
