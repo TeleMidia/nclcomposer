@@ -26,6 +26,8 @@ public:
 
   ~QnstGraphicsEntity();
 
+
+
   QnstGraphicsEntity* getnstGraphicsParent() const;
 
   void setnstGraphicsParent(QnstGraphicsEntity* parent);
@@ -40,15 +42,19 @@ public:
 
   void removenstGraphicsEntity(QnstGraphicsEntity* entity);
 
-  virtual void adjust(bool avoidCollision = false) = 0;
-
   bool hasMouseHover();
 
   void setMouseHover(bool hover);
 
+  virtual void setnstId(const QString &id);
+
+  virtual void updateTooltip() { } // it has a default empty implementation.
+
   virtual void setProperties(const QMap <QString, QString> &properties);
 
   virtual void getProperties(QMap <QString, QString> &properties);
+
+  virtual void adjust(bool avoidCollision = false) = 0;
 
 signals:
   void entityAdded(QnstGraphicsEntity* entity);

@@ -13,11 +13,13 @@ public:
 
   virtual void adjust(bool avoidCollision = true);
 
-  void setnstId(QString id);
-
   bool isRefer();
 
   void setRefer(bool refer);
+
+  virtual void updateTooltip();
+
+  virtual void setProperties(const QMap<QString, QString> &props);
 
 protected:
   virtual void draw(QPainter* painter) = 0;

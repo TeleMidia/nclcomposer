@@ -34,12 +34,10 @@ void QnstGraphicsInterface::setRefer(bool isRefer)
   _isRefer = isRefer;
 }
 
-void QnstGraphicsInterface::setnstId(QString id)
+void QnstGraphicsInterface::updateTooltip()
 {
-  QnstGraphicsEntity::setnstId(id);
-
   QString tip = "";
-  QString name = (id != "" ? id : "?");
+  QString name = (getnstId() != "" ? getnstId() : "?");
 
   if (getnstType() == Qnst::Port)
   {
@@ -59,6 +57,17 @@ void QnstGraphicsInterface::setnstId(QString id)
   }
 
   setToolTip(tip);
+}
+
+void QnstGraphicsInterface::setProperties(const QMap<QString, QString> &props)
+{
+  if(props.contains("isRefer"))
+  {
+    if(props["isRefer"] == "true")
+      setRefer(true);
+    else
+      setRefer(false);
+  }
 }
 
 void QnstGraphicsInterface::adjust(bool avoidCollision)

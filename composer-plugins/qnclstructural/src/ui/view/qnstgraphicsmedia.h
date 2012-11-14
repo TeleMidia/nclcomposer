@@ -25,8 +25,6 @@ public:
 
   void setSource(QString source);
 
-  void setnstId(QString id);
-
   virtual void setnstType(QnstType type);
 
   QString getSource() const;
@@ -43,7 +41,7 @@ public:
 
   void setInstance(QString instance);
 
-  void updateToolTip();
+  virtual void updateToolTip();
 
   virtual void setProperties(const QMap <QString, QString> &properties);
 

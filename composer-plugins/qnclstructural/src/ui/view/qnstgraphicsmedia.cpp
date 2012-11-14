@@ -52,13 +52,6 @@ void QnstGraphicsMedia::setSource(QString source)
   this->source = source;
 }
 
-void QnstGraphicsMedia::setnstId(QString id)
-{
-  QnstGraphicsNode::setnstId(id);
-
-  updateToolTip();
-}
-
 void QnstGraphicsMedia::setnstType(QnstType type)
 {
   QnstGraphicsNode::setnstType(type);

@@ -32,6 +32,12 @@ QnstGraphicsEntity::~QnstGraphicsEntity()
 
 }
 
+void QnstGraphicsEntity::setnstId(const QString &id)
+{
+  QnstEntity::setnstId(id);
+  updateTooltip();
+}
+
 QnstGraphicsEntity* QnstGraphicsEntity::getnstGraphicsParent() const
 {
   return parent;
@@ -231,6 +237,9 @@ void QnstGraphicsEntity::setError(bool hasError)
 
 void QnstGraphicsEntity::setProperties(const QMap<QString, QString> &props)
 {
+  if(props.contains("id"))
+    setnstId(props["id"]);
+
   if (props["top"] != "")
     setTop(props["top"].toDouble());
 
@@ -247,6 +256,7 @@ void QnstGraphicsEntity::setProperties(const QMap<QString, QString> &props)
 void QnstGraphicsEntity::getProperties(QMap <QString, QString> &props)
 {
   props["id"] = getnstId();
+
   props["top"] = QString::number(getTop());
   props["left"] = QString::number(getLeft());
   props["width"] = QString::number(getWidth());

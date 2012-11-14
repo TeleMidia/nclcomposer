@@ -28,8 +28,6 @@ public:
 
   void setColor(QString color);
 
-  void setnstId(QString id);
-
   void setCollapsed(bool collapsed);
 
   qreal getLastW();
@@ -43,6 +41,8 @@ public:
   bool isCollapsed();
 
   void collapse();
+
+  virtual void updateTooltip();
 
   virtual void setProperties(const QMap <QString, QString> &properties);
 

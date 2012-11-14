@@ -66,10 +66,8 @@ bool QnstGraphicsComposition::isCollapsed()
   return collapsed;
 }
 
-void QnstGraphicsComposition::setnstId(QString id)
+void QnstGraphicsComposition::updateTooltip()
 {
-  QnstGraphicsNode::setnstId(id);
-
   QString tip = "";
   QString name = (getnstId() != "" ? getnstId() : "?");
 

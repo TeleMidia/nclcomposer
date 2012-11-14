@@ -19,11 +19,11 @@ public:
 
     QString getnstId() const;
 
-    virtual void setnstId(QString id);
+    virtual void setnstId(const QString &id);
 
     QString getnstUid() const;
 
-    void setnstUid(QString uid);
+    void setnstUid(const QString &uid);
 
     QnstType getnstType() const;
 

@@ -39,7 +39,7 @@ QString QnstEntity::getnstUid() const
   return uid;
 }
 
-void QnstEntity::setnstUid(QString uid)
+void QnstEntity::setnstUid(const QString &uid)
 {
   this->uid = uid;
 }
@@ -49,7 +49,7 @@ QString QnstEntity::getnstId() const
   return id;
 }
 
-void QnstEntity::setnstId(QString id)
+void QnstEntity::setnstId(const QString &id)
 {
   this->id = id;
 }
