@@ -140,7 +140,8 @@ std::map <Qnst::BindType, QString> QnstUtil::strFromBindType =
 
 
 QnstGraphicsEntity *QnstUtil::makeGraphicsEntity(Qnst::EntityType type,
-                                                 QnstGraphicsEntity *parent)
+                                                 QnstGraphicsEntity *parent,
+                                           const QMap <QString, QString> &props)
 {
   QnstGraphicsEntity *entity = NULL;
 
@@ -198,6 +199,9 @@ QnstGraphicsEntity *QnstUtil::makeGraphicsEntity(Qnst::EntityType type,
       // We will return NULL;
       break;
   }
+
+  if(entity)
+    entity->setProperties(props);
 
   return entity;
 }

@@ -19,7 +19,8 @@ public:
    * \return a new QnstGraphicsEntity
    */
   static QnstGraphicsEntity *makeGraphicsEntity(Qnst::EntityType type,
-                                                QnstGraphicsEntity *parent = 0);
+                                                QnstGraphicsEntity *parent = 0,
+               const QMap<QString, QString> &props = QMap <QString, QString>());
 
   /*!
    * \brief Returns the Qnst::EntityType based on the media mimetype.
