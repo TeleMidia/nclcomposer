@@ -86,11 +86,13 @@ void QnlyComposerPlugin::createConnections()
 void QnlyComposerPlugin::updateFromModel()
 {
   QRectF previousRect;
+  bool isGridVisible = false;
 
   QnlyGraphicsRegionBase *currentRegionBase = view->getSelectedRegionBase();
   if(currentRegionBase != NULL)
   {
     previousRect = currentRegionBase->sceneRect();
+    isGridVisible = currentRegionBase->isGridVisible();
   }
 
   clear();
@@ -102,6 +104,7 @@ void QnlyComposerPlugin::updateFromModel()
   {
     currentRegionBase->changeResolution(previousRect.width(),
                                         previousRect.height());
+    currentRegionBase->setGridVisible(isGridVisible);
   }
 }
 

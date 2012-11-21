@@ -1066,7 +1066,18 @@ void QnlyGraphicsRegionBase::changeResolution(int w, int h)
 
 void QnlyGraphicsRegionBase::performGrid()
 {
-  grid->setVisible(!grid->isVisible());
+  setGridVisible(!isGridVisible());
+}
+
+bool QnlyGraphicsRegionBase::isGridVisible()
+{
+  return grid->isVisible();
+}
+
+void QnlyGraphicsRegionBase::setGridVisible(bool visible)
+{
+  gridAction->setChecked(visible);
+  grid->setVisible(visible);
 }
 
 void QnlyGraphicsRegionBase::performExport()

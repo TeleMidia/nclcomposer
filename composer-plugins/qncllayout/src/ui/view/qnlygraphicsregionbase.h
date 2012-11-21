@@ -78,6 +78,10 @@ public:
 
     void changeResolution(int w, int h);
 
+    bool isGridVisible();
+
+    void setGridVisible(bool active);
+
 signals:
     void regionAdditionRequested(const QString regionUID,
                      const QString parentUID,
