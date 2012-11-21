@@ -44,6 +44,8 @@ public:
 
     virtual ~QnlyView();
 
+    QnlyGraphicsRegionBase *getSelectedRegionBase();
+
 public slots:
     void addRegion(const QString regionUID,
                    const QString parentUID,

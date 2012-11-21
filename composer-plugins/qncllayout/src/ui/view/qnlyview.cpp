@@ -623,7 +623,8 @@ void QnlyView::changeRegionBase(QnlyGraphicsRegionBase* regionBase,
 
 void QnlyView::selectRegionBase(QnlyGraphicsRegionBase* regionBase)
 {
-  if (regionBase != NULL){
+  if (regionBase != NULL)
+  {
     QWidget* parent = (QWidget*) regionBase->parent();
 
     setCurrentWidget(parent);
@@ -635,7 +636,14 @@ void QnlyView::selectRegionBase(QnlyGraphicsRegionBase* regionBase)
     {
       selectedRegion->setSelected(false);
     }
+
+    selectedRegionBase = regionBase;
   }
+}
+
+QnlyGraphicsRegionBase* QnlyView::getSelectedRegionBase()
+{
+  return selectedRegionBase;
 }
 
 void QnlyView::contextMenuEvent(QContextMenuEvent *event)

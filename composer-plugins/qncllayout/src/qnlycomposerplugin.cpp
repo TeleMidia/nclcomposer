@@ -85,9 +85,24 @@ void QnlyComposerPlugin::createConnections()
 
 void QnlyComposerPlugin::updateFromModel()
 {
+  QRectF previousRect;
+
+  QnlyGraphicsRegionBase *currentRegionBase = view->getSelectedRegionBase();
+  if(currentRegionBase != NULL)
+  {
+    previousRect = currentRegionBase->sceneRect();
+  }
+
   clear();
 
   loadRegionbase();
+
+  currentRegionBase = view->getSelectedRegionBase();
+  if(currentRegionBase != NULL)
+  {
+    currentRegionBase->changeResolution(previousRect.width(),
+                                        previousRect.height());
+  }
 }
 
 void QnlyComposerPlugin::loadRegionbase()

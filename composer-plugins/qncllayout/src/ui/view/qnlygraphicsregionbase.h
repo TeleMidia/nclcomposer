@@ -76,6 +76,8 @@ public:
 
     QGraphicsItem* getBackgroundItem();
 
+    void changeResolution(int w, int h);
+
 signals:
     void regionAdditionRequested(const QString regionUID,
                      const QString parentUID,
@@ -132,7 +134,6 @@ protected slots:
     void performExport();
 
     void performChangeResolution();
-    void changeResolution(int w, int h);
 
     void performGrid();
 
