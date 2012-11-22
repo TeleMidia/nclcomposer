@@ -283,7 +283,8 @@ void QnstGraphicsComposition::adjustWithSpring()
 
   while(it++ < SPRING_INTERATION)
   {
-    int N = getnstGraphicsEntities().size(); QPointF next[N];
+    int N = getnstGraphicsEntities().size();
+    QPointF next[N];
 
     qreal vf[N];
     qreal va[N];
@@ -294,10 +295,9 @@ void QnstGraphicsComposition::adjustWithSpring()
       va[I] = 0;
     }
 
-    for (int I = 0; I < N; I++)
+    int I = 0;
+    foreach (QnstGraphicsEntity *entity, getnstGraphicsEntities())
     {
-      QnstGraphicsEntity* entity = getnstGraphicsEntities().at(I);
-
       if (entity->getncgType() == Qncg::Node)
       {
         QnstGraphicsNode* node = (QnstGraphicsNode*) entity;
@@ -433,12 +433,12 @@ void QnstGraphicsComposition::adjustWithSpring()
           next[I] = QPointF(entity->getLeft() + rx*attr, entity->getTop() - ry*attr);
         }
       }
+
+      I++;
     }
 
-    for (int I = 0; I < N; I++)
+    foreach (QnstGraphicsEntity *entity, getnstGraphicsEntities())
     {
-      QnstGraphicsEntity* entity = getnstGraphicsEntities().at(I);
-
       entity->setLeft(next[I].x());
       entity->setTop(next[I].y());
     }

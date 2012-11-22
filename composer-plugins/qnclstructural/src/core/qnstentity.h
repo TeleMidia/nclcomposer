@@ -3,7 +3,7 @@
 
 #include <QUuid>
 #include <QString>
-#include <QVector>
+#include <QSet>
 #include <QMap>
 
 #include "qnst.h"
@@ -37,7 +37,7 @@ public:
 
     void setnstParent(QnstEntity* parent);
 
-    QVector<QnstEntity*> getnstEntities();
+    QSet<QnstEntity*> getnstEntities();
 
     void addnstEntity(QnstEntity* entity);
 
@@ -54,7 +54,7 @@ private:
 
     QnstEntity* parent;
 
-    QVector<QnstEntity*> entities;
+    QSet<QnstEntity*> entities;
 
     // FIXME: Maybe, this is not needed!! We could use the
     QMap <QString, QString> userData;

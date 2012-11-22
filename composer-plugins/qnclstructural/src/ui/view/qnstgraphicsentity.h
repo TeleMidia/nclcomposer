@@ -26,8 +26,6 @@ public:
 
   ~QnstGraphicsEntity();
 
-
-
   QnstGraphicsEntity* getnstGraphicsParent() const;
 
   void setnstGraphicsParent(QnstGraphicsEntity* parent);
@@ -36,7 +34,7 @@ public:
 
   void removeAngle(QString uid, int angle);
 
-  QVector<QnstGraphicsEntity*> getnstGraphicsEntities();
+  QSet<QnstGraphicsEntity*> getnstGraphicsEntities();
 
   void addnstGraphicsEntity(QnstGraphicsEntity* entity);
 
@@ -124,12 +122,11 @@ private:
   bool draggable;
   QnstGraphicsEntity* parent;
 
-  QVector<QnstGraphicsEntity*> entities;
+  QSet<QnstGraphicsEntity*> entities;
 
 protected:
   bool hover, hasError;
   QString dropsrc;
-
 };
 
 #endif // QNSTGRAPHICSENTITY_H

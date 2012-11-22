@@ -17,6 +17,8 @@
  */
 #include "qnstentity.h"
 
+#include <QDebug>
+
 QnstEntity::QnstEntity(QnstEntity* parent)
 {
   setnstType(Qnst::NoType);
@@ -90,7 +92,7 @@ void QnstEntity::setnstParent(QnstEntity* parent)
   this->parent = parent;
 }
 
-QVector<QnstEntity*> QnstEntity::getnstEntities()
+QSet <QnstEntity*> QnstEntity::getnstEntities()
 {
   return entities;
 }
@@ -98,17 +100,23 @@ QVector<QnstEntity*> QnstEntity::getnstEntities()
 void QnstEntity::addnstEntity(QnstEntity* entity)
 {
   if (entity != NULL)
-    entities.append(entity);
+  {
+    // \fixme This is only an additional check. Maybe, the better way to do
+    // that could be using a set instead of a vector to entities.
+    if(entities.contains(entity))
+      qWarning() << "[QNST] Warning! You are adding the same entity twice as \
+          child of " << (int) this << __FILE__ << __LINE__;
+
+    entity->setnstParent(this);
+    entities.insert(entity);
+  }
 }
 
 void QnstEntity::removenstEntity(QnstEntity* entity)
 {
   if (entity != NULL)
   {
-    int index = entities.indexOf(entity);
-
-    if (index >= 0)
-      entities.remove(index);
-
+    entities.remove(entity);
+    entity->setnstParent(NULL);
   }
 }

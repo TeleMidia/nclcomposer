@@ -51,7 +51,7 @@ void QnstGraphicsEntity::setnstGraphicsParent(QnstGraphicsEntity* parent)
   setncgGraphicsParent(parent);
 }
 
-QVector<QnstGraphicsEntity*> QnstGraphicsEntity::getnstGraphicsEntities()
+QSet<QnstGraphicsEntity*> QnstGraphicsEntity::getnstGraphicsEntities()
 {
   return entities;
 }
@@ -70,7 +70,13 @@ void QnstGraphicsEntity::addnstGraphicsEntity(QnstGraphicsEntity* entity)
 {
   if (entity != NULL)
   {
-    entities.append(entity);
+    // \fixme This is only an additional check. Maybe, the better way to do
+    // that could be using a set instead of a vector to entities.
+    if(entities.contains(entity))
+      qWarning() << "[QNST] Warning! You are adding the same entity twice as \
+          child of " << (int) this << __FILE__ << __LINE__;
+
+    entities.insert(entity);
 
     connect(entity, SIGNAL(undoRequested()), SIGNAL(undoRequested()));
     connect(entity, SIGNAL(redoRequested()), SIGNAL(redoRequested()));
@@ -116,18 +122,12 @@ void QnstGraphicsEntity::removenstGraphicsEntity(QnstGraphicsEntity* entity)
 {
   if (entity != NULL)
   {
-    int index = entities.indexOf(entity);
+    entities.remove(entity);
 
-    if (index >= 0 && index < entities.size())
-    {
-      entities.remove(index);
+    removenstEntity(entity);
+    removencgGraphicsEntity(entity);
 
-      removenstEntity(entity);
-      removencgGraphicsEntity(entity);
-
-      entity->setnstGraphicsParent(NULL);
-      entity->setnstParent(NULL);
-    }
+    entity->setnstGraphicsParent(NULL);
   }
 }
 
