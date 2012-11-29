@@ -149,8 +149,8 @@ void ComposerMainWindow::initModules()
   connect(projectControl,SIGNAL(endOpenProject(QString)),
           SLOT(addToRecentProjects(QString)));
 
-  connect(projectControl, SIGNAL(endOpenProject(QString)),
-          welcomeWidget, SLOT(addToRecentProjects(QString)));
+  //connect(projectControl, SIGNAL(endOpenProject(QString)),
+  //        welcomeWidget, SLOT(addToRecentProjects(QString)));
 
   connect(welcomeWidget, SIGNAL(userPressedRecentProject(QString)),
           this, SLOT(userPressedRecentProject(QString)));
@@ -1810,6 +1810,7 @@ void ComposerMainWindow::clearRecentProjects(void)
   settings.remove("recentProjects");
   QStringList empty;
   updateRecentProjectsMenu(empty);
+  welcomeWidget->updateRecentProjects(empty);
 }
 
 void ComposerMainWindow::selectedAboutCurrentPluginFactory()
