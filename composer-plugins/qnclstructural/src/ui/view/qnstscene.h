@@ -39,9 +39,9 @@ signals:
   void entityAboutToChange(QnstGraphicsEntity* entity,
                            QMap<QString, QString> properties);
 
-  void undoRequested();
+  // void undoRequested();
 
-  void redoRequested();
+  // void redoRequested();
 
   void cutRequested();
 

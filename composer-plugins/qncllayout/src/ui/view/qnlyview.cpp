@@ -47,11 +47,11 @@ void QnlyView::createActions()
   helpAction->setShortcut(QKeySequence("F1"));
 
   // undo action
-  undoAction = new QAction(this);
-  undoAction->setText(tr("Undo"));
+  // undoAction = new QAction(this);
+  // undoAction->setText(tr("Undo"));
 
-  undoAction->setEnabled(false);
-  undoAction->setShortcut(QKeySequence("Ctrl+Z"));
+  // undoAction->setEnabled(false);
+  // undoAction->setShortcut(QKeySequence("Ctrl+Z"));
 
   // redo action
   redoAction = new QAction(this);

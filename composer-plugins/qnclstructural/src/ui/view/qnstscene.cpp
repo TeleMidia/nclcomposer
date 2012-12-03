@@ -23,8 +23,8 @@ void QnstScene::addRoot(QnstGraphicsEntity* entity)
   {
     roots.append(entity);
 
-    connect(entity, SIGNAL(undoRequested()), SIGNAL(undoRequested()));
-    connect(entity, SIGNAL(redoRequested()), SIGNAL(redoRequested()));
+    // connect(entity, SIGNAL(undoRequested()), SIGNAL(undoRequested()));
+    // connect(entity, SIGNAL(redoRequested()), SIGNAL(redoRequested()));
 
     connect(entity, SIGNAL(cutRequested()), SIGNAL(cutRequested()));
     connect(entity, SIGNAL(copyRequested()), SIGNAL(copyRequested()));

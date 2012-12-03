@@ -45,6 +45,8 @@ public:
 
     bool isMedia();
 
+    virtual void getProperties(QMap <QString, QString> &props) {};
+
 private:
     QString id;
 

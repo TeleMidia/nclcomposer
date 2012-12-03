@@ -117,15 +117,15 @@ void QnstComposerPlugin::init()
         QMap <QString, QString> userData;
 
         Entity *entity = project->getEntityById(coreID);
-        if(entity != NULL)
-        {
-          entity->getAttributeIterator(begin, end);
+        // if(entity != NULL)
+        //{
+          // entity->getAttributeIterator(begin, end);
 
-          for (it = begin; it != end; ++it)
-            userData[it.key()] = it.value();
+          // for (it = begin; it != end; ++it)
+            // userData[it.key()] = it.value();
 
-          nstEntity->setUsrData(userData);
-        }
+          // nstEntity->setUsrData(userData);
+        // }
       }
     }
 
@@ -257,7 +257,7 @@ void QnstComposerPlugin::onEntityAdded(QString pluginID, Entity *entity)
   }
 
   //Add user data
-  if(entities.contains(entity->getUniqueId()))
+  /*if(entities.contains(entity->getUniqueId()))
   {
     QString structuralId = entities.value(entity->getUniqueId());
 
@@ -279,7 +279,7 @@ void QnstComposerPlugin::onEntityAdded(QString pluginID, Entity *entity)
   }
   else
     qWarning() << "[QNST] QnsComposerPlugin::onEntityAdded Entity was not "
-               << "added";
+               << "added"; */
 
   // \todo This must be incremental
   view->clearValidationErrors();
@@ -312,7 +312,7 @@ void QnstComposerPlugin::onEntityChanged(QString pluginID, Entity *entity)
 
       if(nstEntity != NULL)
       {
-        QMap <QString, QString>::iterator begin, end, it;
+        /*QMap <QString, QString>::iterator begin, end, it;
         QMap <QString, QString> userData;
         entity->getAttributeIterator(begin, end);
         for (it = begin; it != end; ++it)
@@ -320,7 +320,7 @@ void QnstComposerPlugin::onEntityChanged(QString pluginID, Entity *entity)
 
         nstEntity->setUsrData(userData);
 
-        qDebug() << "[QNST] QnstComposerPlugin::onEntityChanged" << userData;
+        qDebug() << "[QNST] QnstComposerPlugin::onEntityChanged" << userData;*/
       }
     }
   }
@@ -1566,8 +1566,11 @@ void QnstComposerPlugin::notifyEntityChangedInView(const QString uid,
   QnstEntity *qnstEntity = view->entities.value(uid);
   if(qnstEntity != NULL)
   {
-    emit setAttributes(project->getEntityById(coreID),
-                       qnstEntity->getUsrData(), false);
+    //Disabled for now
+    //QMap <QString, QString> props;
+    //qnstEntity->getProperties(props);
+    //emit setAttributes(project->getEntityById(coreID),
+    //                   props, false);
   }
 }
 

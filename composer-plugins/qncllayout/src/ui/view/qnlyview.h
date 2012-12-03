@@ -163,7 +163,7 @@ private:
 
     QAction* helpAction;
 
-    QAction* undoAction;
+    // QAction* undoAction;  // Temporaly disabled
 
     QAction* redoAction;
 

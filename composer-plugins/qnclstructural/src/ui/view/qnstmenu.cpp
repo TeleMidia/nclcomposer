@@ -9,8 +9,8 @@ QnstMenu::QnstMenu(QWidget* parent)
 
   addAction(actionHelp);
   addSeparator();
-  addAction(actionUndo);
-  addAction(actionRedo);
+  // addAction(actionUndo);
+  // addAction(actionRedo);
   addSeparator();
   addAction(actionCut);
   addAction(actionCopy);
@@ -46,18 +46,18 @@ void QnstMenu::createActions()
   actionHelp->setEnabled(false);
 
   // undo action
-  actionUndo = new QAction(this);
-  actionUndo->setText(tr("Undo"));
-  actionUndo->setIcon(QIcon(":/icon/undo"));
-  actionUndo->setShortcut(QKeySequence("Ctrl+Z"));
-  actionUndo->setEnabled(false);
+  // actionUndo = new QAction(this);
+  // actionUndo->setText(tr("Undo"));
+  // actionUndo->setIcon(QIcon(":/icon/undo"));
+  // actionUndo->setShortcut(QKeySequence("Ctrl+Z"));
+  // actionUndo->setEnabled(false);
 
   // redo action
-  actionRedo = new QAction(this);
-  actionRedo->setText(tr("Redo"));
-  actionRedo->setIcon(QIcon(":/icon/redo"));
-  actionRedo->setShortcut(QKeySequence("Ctrl+Shift+Z"));
-  actionRedo->setEnabled(false);
+  // actionRedo = new QAction(this);
+  // actionRedo->setText(tr("Redo"));
+  // actionRedo->setIcon(QIcon(":/icon/redo"));
+  // actionRedo->setShortcut(QKeySequence("Ctrl+Shift+Z"));
+  // actionRedo->setEnabled(false);
 
   // cut action
   actionCut = new QAction(this);
@@ -293,8 +293,8 @@ void QnstMenu::createConnections()
 {
   connect(actionHelp, SIGNAL(triggered()), SIGNAL(helpRequested()));
 
-  connect(actionUndo, SIGNAL(triggered()), SIGNAL(undoRequested()));
-  connect(actionRedo, SIGNAL(triggered()), SIGNAL(redoRequested()));
+  // connect(actionUndo, SIGNAL(triggered()), SIGNAL(undoRequested()));
+  // connect(actionRedo, SIGNAL(triggered()), SIGNAL(redoRequested()));
 
   connect(actionCut, SIGNAL(triggered()), SIGNAL(cutRequested()));
   connect(actionCopy, SIGNAL(triggered()), SIGNAL(copyRequested()));

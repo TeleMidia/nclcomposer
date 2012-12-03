@@ -43,8 +43,8 @@ void QnstGraphicsBody::createObjects()
 
 void QnstGraphicsBody::createConnections()
 {
-  connect(menu, SIGNAL(undoRequested()), SIGNAL(undoRequested()));
-  connect(menu, SIGNAL(redoRequested()), SIGNAL(redoRequested()));
+  // connect(menu, SIGNAL(undoRequested()), SIGNAL(undoRequested()));
+  // connect(menu, SIGNAL(redoRequested()), SIGNAL(redoRequested()));
 
   connect(menu, SIGNAL(cutRequested()), SIGNAL(cutRequested()));
   connect(menu, SIGNAL(copyRequested()), SIGNAL(copyRequested()));

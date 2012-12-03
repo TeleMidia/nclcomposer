@@ -21,9 +21,9 @@ private slots:
 signals:
   void helpRequested();
 
-  void undoRequested();
+  // void undoRequested();
 
-  void redoRequested();
+  // void redoRequested();
 
   void cutRequested();
 
@@ -83,7 +83,7 @@ public:
 
   QAction* actionHelp;
 
-  QAction* actionUndo;
+  // QAction* actionUndo;
 
   QAction* actionRedo;
 

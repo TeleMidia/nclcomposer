@@ -811,8 +811,8 @@ void QnstView::createObjects()
 
 void QnstView::createConnection()
 {
-  connect(scene, SIGNAL(undoRequested()), SLOT(performUndo()));
-  connect(scene, SIGNAL(redoRequested()), SLOT(performRedo()));
+  // connect(scene, SIGNAL(undoRequested()), SLOT(performUndo()));
+  // connect(scene, SIGNAL(redoRequested()), SLOT(performRedo()));
 
   connect(scene, SIGNAL(cutRequested()), SLOT(performCut()));
   connect(scene, SIGNAL(copyRequested()), SLOT(performCopy()));
@@ -874,7 +874,6 @@ void QnstView::addEntity(const QString uid, const QString parent,
                          bool adjust)
 {
   // \fixme Move this logic to AddCommand
-
   bool ok = false;
 
   Qnst::EntityType type = QnstUtil::getnstTypeFromStr(properties["TYPE"]);
@@ -3317,7 +3316,7 @@ void QnstView::performHelp()
     // TODO
 }
 
-void QnstView::performUndo()
+/*void QnstView::performUndo()
 {
   if (history.canUndo()){
     history.undo();
@@ -3329,7 +3328,7 @@ void QnstView::performRedo()
   if (history.canRedo()){
     history.redo();
   }
-}
+}*/
 
 void QnstView::performCut()
 {
@@ -4578,7 +4577,7 @@ void QnstView::keyPressEvent(QKeyEvent *event)
     event->accept();
   }
   //Ctrl + Z
-  else if(event->modifiers() == Qt::ControlModifier &&
+  /* else if(event->modifiers() == Qt::ControlModifier &&
           event->key() == Qt::Key_Z)
   {
     performUndo();
@@ -4592,7 +4591,7 @@ void QnstView::keyPressEvent(QKeyEvent *event)
     performRedo();
 
     event->accept();
-  }
+  }*/
 
   if(!event->isAccepted())
     QGraphicsView::keyPressEvent(event);

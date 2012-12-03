@@ -86,9 +86,9 @@ public:
 public slots:
   void performHelp();
 
-  void performUndo();
+  /* void performUndo();
 
-  void performRedo();
+  void performRedo(); */
 
   void performCut();
 

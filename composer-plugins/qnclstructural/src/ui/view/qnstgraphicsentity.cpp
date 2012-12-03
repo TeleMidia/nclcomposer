@@ -78,8 +78,8 @@ void QnstGraphicsEntity::addnstGraphicsEntity(QnstGraphicsEntity* entity)
 
     entities.insert(entity);
 
-    connect(entity, SIGNAL(undoRequested()), SIGNAL(undoRequested()));
-    connect(entity, SIGNAL(redoRequested()), SIGNAL(redoRequested()));
+    // connect(entity, SIGNAL(undoRequested()), SIGNAL(undoRequested()));
+    // connect(entity, SIGNAL(redoRequested()), SIGNAL(redoRequested()));
 
     connect(entity, SIGNAL(cutRequested()), SIGNAL(cutRequested()));
     connect(entity, SIGNAL(copyRequested()), SIGNAL(copyRequested()));
