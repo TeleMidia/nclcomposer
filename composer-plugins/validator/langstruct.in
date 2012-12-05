@@ -299,5 +299,5 @@ DATATYPE(TIME_OR_VARIABLE,^\$\S+$|^[0-9]+(\.[0-9]+)?s$|^([01][0-9]|2[0-3])(:[0-5
 DATATYPE(TRANSITION_SUBTYPE,^(leftToRight|rectangle|clockwiseTwelve|topLeftHorizontal|crossfade)$)
 DATATYPE(TRANSITION_TYPE,^(barWipe|irisWipe|clockWipe|snakeWipe|fade)$)
 DATATYPE(TRANSITION,^(starts|stops|aborts|pauses|resumes)$)
-DATATYPE(URI,^(\S+)$)
+DATATYPE(URI,^.*$)
 DATATYPE(XMLNS,^(http://www.ncl.org.br/NCL3.0/EDTVProfile)|(http://www.ncl.org.br/NCL3.0/BDTVProfile)|(http://www.ncl.org.br/NCL3.0/CausalConnectorProfile)$)
