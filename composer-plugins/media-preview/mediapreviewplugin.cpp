@@ -15,7 +15,6 @@
 #include<gifview.h>
 #include<hypertextview.h>
 #include<nclview.h>
-//#include<video.h>
 #include "videoplayer.h"
 #include<QMovie>
 #include<QIcon>
@@ -28,9 +27,7 @@
 #include<QIODevice>
 #include<QMainWindow>
 
-
 using namespace std;
-
 
 MediaPreviewPlugin::MediaPreviewPlugin()
 {
@@ -225,19 +222,16 @@ void MediaPreviewPlugin::changeSelectedEntity(QString plugID, void *param)
                   if (type =="audio")
                   {
 
-
                              musicplayer = new audioplayer(attrSrc);
                              musicplayer->setParent(windowg);
                              windowg->setCentralWidget(musicplayer);
+
                   }
 
 
                   /*video*/
                   if(type=="video")
                   {
-                      /*videoview=new videoplayer(attrSrc);
-                      videoview->setParent(windowg);
-                      windowg->setCentralWidget(videoview);*/
                       videoplay = new videoplayer(attrSrc);
                       videoplay->setParent(windowg);
                       windowg->setCentralWidget(videoplay);
@@ -286,7 +280,7 @@ void MediaPreviewPlugin::changeSelectedEntity(QString plugID, void *param)
 
                   }
 
-                  /*NCL DOCUMENTS */
+                 /*NCL DOCUMENTS */
                   if(type=="ncl")
                   {
                       ncldocview =new nclview(attrSrc);

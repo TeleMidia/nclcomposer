@@ -27,8 +27,8 @@ audioplayer::audioplayer(QString filename)
 {
 
   setStyleSheet("* { background-color: rgb(220,220,220) }");
-  setMinimumWidth(420);
-  setMinimumHeight(120);
+  setMinimumWidth(430);
+  setMinimumHeight(150);
 
   mediaobject = Phonon::createPlayer(Phonon::MusicCategory,
                                      Phonon::MediaSource(filename));
@@ -62,9 +62,10 @@ audioplayer::audioplayer(QString filename)
    volumeslider= new Phonon::VolumeSlider();
    volumeslider->setAudioOutput(Audioutput);
    volumeslider->setSingleStep(1);
+   volumeslider->setMaximumVolume(1.0);
    volumeslider->setMuteVisible(true);
    volumeslider->setFixedSize(150,20);
-   volumeslider->setFixedWidth(150);
+   volumeslider->setFixedWidth(170);
    volumeslider->setSizePolicy(QSizePolicy::Maximum,QSizePolicy::MinimumExpanding);
    Audioutput->setVolume(-0.1);
 
@@ -79,14 +80,13 @@ audioplayer::audioplayer(QString filename)
   layout->addWidget(stopButton);
   layout->addWidget(volumeslider);
 
-QHBoxLayout *layout2=new QHBoxLayout;
-layout2->addWidget(slider);
+  QHBoxLayout *layout2=new QHBoxLayout;
+  layout2->addWidget(slider);
 
-QVBoxLayout *layoutf=new QVBoxLayout;
-//layoutf->addLayout(layout3);
-layoutf->addLayout(layout);
-layoutf->addLayout(layout2);
+ QVBoxLayout *layoutf=new QVBoxLayout;
 
+ layoutf->addLayout(layout);
+ layoutf->addLayout(layout2);
 
 setLayout(layoutf);
 
@@ -105,6 +105,7 @@ QObject::connect(stopButton,SIGNAL(clicked()),this,SLOT(stop()));
 void audioplayer::play()
 {
   mediaobject->play();
+
 }
 
 void audioplayer::pause()

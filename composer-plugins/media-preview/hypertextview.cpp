@@ -19,4 +19,5 @@ hypertextview::hypertextview(QString filename)
     adjustSize();
 
 
+
 }

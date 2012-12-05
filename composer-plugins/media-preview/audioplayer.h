@@ -15,8 +15,6 @@
 #include <phonon/videowidget.h>
 
 
-
-
 class audioplayer : public QWidget
 {
   Q_OBJECT
@@ -37,7 +35,7 @@ public slots:
 
 private:
    audioplayer *mvideoWidget;
-  QWidget *mvideoWindow;
+   QWidget *infowidget;
   Phonon::MediaObject *mediaobject;
    Phonon::VolumeSlider *volumeslider;
    Phonon::AudioOutput *Audioutput;

@@ -18,6 +18,9 @@
 videoplayer::videoplayer(QString filename): ui(new Ui::videoplayer)
 {
 
+    setMinimumWidth(430);
+    setMinimumHeight(370);
+
     ui->setupUi(this);
     ui->playbutton->setFont(QFont("Comic Sans MS",10,QFont::Bold));
     ui->playbutton->setIcon(QIcon("play.jpeg"));
@@ -27,14 +30,14 @@ videoplayer::videoplayer(QString filename): ui(new Ui::videoplayer)
     ui->playbutton->setStyleSheet("* { background-color: rgb(173,225,47) }");
 
     ui->pausebutton->setFont(QFont("Comic Sans MS",10,QFont::Bold));
-    ui->pausebutton->setIcon(QIcon("play.jpeg"));
+    ui->pausebutton->setIcon(QIcon("pause.jpeg"));
     ui->pausebutton->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::MinimumExpanding);
 
     ui->pausebutton->setIconSize(QSize (30,30));
     ui->pausebutton->setStyleSheet("* { background-color: rgb(173,225,47) }");
 
     ui->stopbutton->setFont(QFont("Comic Sans MS",10,QFont::Bold));
-    ui->stopbutton->setIcon(QIcon("play.jpeg"));
+    ui->stopbutton->setIcon(QIcon("stop.jpeg"));
     ui->stopbutton->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::MinimumExpanding);
 
     ui->stopbutton->setIconSize(QSize (30,30));
@@ -89,6 +92,7 @@ videoplayer::videoplayer(QString filename): ui(new Ui::videoplayer)
    connect(ui->stopbutton,SIGNAL(clicked()),ui->videoDisplay,SLOT(on_stop_clicked()));
 
 
+
 }
 
 
@@ -111,4 +115,6 @@ void videoplayer::on_pausebutton_clicked()
 void videoplayer::on_stopbutton_clicked()
 {
     mediaObject->stop();
+ui->videoDisplay->setStyleSheet("* { background-color: rgb(0,0,0) }");
+
 }

@@ -21,5 +21,6 @@ textview::textview(QString filename)
     setText(in.readAll());
     setReadOnly(true);
     setStyleSheet("QTextEdit { background-color : white; color : black; }");
+    setAlignment(Qt::AlignCenter);
 
 }

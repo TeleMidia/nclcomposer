@@ -18,5 +18,7 @@ imagview::imagview(QString filename)
 
     setPixmap(QPixmap(filename));
     setVisible(true);
+    setSizePolicy(QSizePolicy::Maximum,QSizePolicy::MinimumExpanding);
+    setAlignment(Qt::AlignCenter);
 
 }

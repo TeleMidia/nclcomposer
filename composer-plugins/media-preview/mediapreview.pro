@@ -5,17 +5,39 @@ include(../plugins-common.pri)
 
 QT += phonon
 QT += gui
+
+
 #TEMPLATE = app
 TARGET = mediapreview
 DEPENDPATH += .
 INCLUDEPATH += .
 CODECFORTR = UTF-8
 # Input
-SOURCES += player.cpp \
+SOURCES += \
     mediapreviewfactory.cpp \
-    mediapreviewplugin.cpp
+    audioplayer.cpp \
+    imagview.cpp \
+    gifview.cpp \
+    textview.cpp \
+    hypertextview.cpp \
+    nclview.cpp \
+    luaview.cpp \
+    mediapreviewplugin.cpp \
+    videoplayer.cpp
 
 HEADERS += \
-    player.h \
     mediapreviewfactory.h \
-    mediapreviewplugin.h
+    mediapreviewplugin.h \
+    audioplayer.h \
+    imagview.h \
+    gifview.h \
+    textview.h \
+    hypertextview.h \
+    nclview.h \
+    luaview.h \
+    videoplayer.h
+
+FORMS += \
+    videoplayer.ui
+
+RESOURCES +=

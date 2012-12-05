@@ -17,5 +17,8 @@ gifview::gifview(QString filename)
     QMovie *movie = new QMovie(filename);
     setMovie(movie);
     movie->start();
+    setSizePolicy(QSizePolicy::Minimum,QSizePolicy::Minimum);
+    setAlignment(Qt::AlignCenter);
+
 
 }
