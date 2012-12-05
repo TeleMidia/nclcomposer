@@ -1116,9 +1116,9 @@ void QnstComposerPlugin::requestSimpleConditionAddition(Entity* entity)
     properties["role"] = entity->getAttribute("role");
   }
 
-  if(entities.contains(entity->getParentUniqueId()))
+  if(entities.contains(conn->getUniqueId()))
     view->addEntity(entity->getUniqueId(),
-                    entities[entity->getParentUniqueId()], properties);
+                    entities[conn->getUniqueId()], properties);
   else
     view->addEntity(entity->getUniqueId(), "", properties);
 }
@@ -1169,9 +1169,9 @@ void QnstComposerPlugin::requestSimpleActionAddition(Entity* entity)
     properties["role"] = entity->getAttribute("role");
   }
 
-  if(entities.contains(entity->getParentUniqueId()))
+  if(entities.contains(conn->getUniqueId()))
     view->addEntity(entity->getUniqueId(),
-                    entities[entity->getParentUniqueId()], properties);
+                    entities[conn->getUniqueId()], properties);
   else
     view->addEntity(entity->getUniqueId(), "", properties);
 }
@@ -1247,8 +1247,19 @@ void QnstComposerPlugin::notifyEntityAddedInView(const QString uid,
 
     if(entity == NULL)
     {
-      qWarning() << "[QNST] Error: trying to add an entity as child of an inexistent Entity";
-      return;
+      qWarning() << "[QNST] Warning: trying to add an entity as child of an inexistent Entity";
+      if(properties["TYPE"] == "importBase" ||
+         properties["TYPE"] == "causalConnector" ||
+         properties["TYPE"] == "connector" ||
+         properties["TYPE"] == "complex-connector")
+      { // In these cases we do not need a parent.
+        qWarning() << "[QNST] " << properties["TYPE"] << " is a special case. So, we will not need a parent.";
+      }
+      else
+      {
+        qWarning() << "[QNST] The entityAdd is beging ignored!";
+        return;
+      }
     }
   }
 
@@ -1609,6 +1620,8 @@ void QnstComposerPlugin::requestConnectorAddition(const QString uid,
 {
   requestConnectorDependence();
 
+  qWarning() << "QnstComposerPlugin::requestConnectorAddition";
+
   QList<Entity*> list = getProject()->getEntitiesbyType("connectorBase");
 
   if (!list.isEmpty())
@@ -1665,9 +1678,11 @@ void QnstComposerPlugin::requestComplexConnectorAddition(const QString uid,
       request = "";
 
       QMap<QString, QString> fakemap;
+      fakemap["operator"] = "or";
+      emit addEntity("compoundCondition", entities.key(uid), fakemap, false);
 
-      emit addEntity("compoundCondition", entities.key(uid), fakemap,false);
-      emit addEntity("compoundAction", entities.key(uid), fakemap,false);
+      fakemap["operator"] = "par";
+      emit addEntity("compoundAction", entities.key(uid), fakemap, false);
 
       QString cpcUID;
       QString cpaUID;
