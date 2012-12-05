@@ -1,5 +1,22 @@
+/*INF2102 Projeto Final de Programação*****************
+ *Período: 2012/2
+ *Coordenador: Prof. Carlos José Pereira Lucena       *
+ *Projeto: Media-Preview Plugin para o Composer 3.0   *
+ *Nome do aluno: Amparito Alexandra Morales Figueroa. *                                 *
+ *Matrícula: 1121838                                  *
+ *Orientador: Prof. Luiz Fernando Gomes Soares        *
+ *Descrição: Plugin que facilita a visualização       *
+ *e exibição dos objetos de mídia que estão sendo     *
+ *utilizados num projeto desenvolvido utilizando a    *
+ *ferramenta Composer 3.0******************************/
+
 #include <mediapreviewplugin.h>
-#include<player.h>
+#include<audioplayer.h>
+#include<gifview.h>
+#include<hypertextview.h>
+#include<nclview.h>
+//#include<video.h>
+#include "videoplayer.h"
 #include<QMovie>
 #include<QIcon>
 #include<QPalette>
@@ -9,6 +26,7 @@
 #include<QString>
 #include<QTextStream>
 #include<QIODevice>
+#include<QMainWindow>
 
 
 using namespace std;
@@ -16,72 +34,10 @@ using namespace std;
 
 MediaPreviewPlugin::MediaPreviewPlugin()
 {
-    /*main widget*/
-    windowg =  new QWidget(0);
+    /*Main Widget*/
+    windowg =  new QMainWindow(0);
     windowg->setStyleSheet("* { background-color: rgb(220,220,220) }");
-
-
-    /*audio*/
-    window= new QWidget(windowg);
-    window->hide();
-
-    /*control video*/
-    windowv=new QWidget(windowg);
-    windowv->hide();
-
-
-    /*picture*/
-    picture=new QLabel(windowg);
-    picture->setAlignment(Qt::AlignHCenter);
-    picture->hide();
-
-    /*picture1*/
-    picture1=new QLabel(windowg);
-    picture1->hide();
-    picture1->setAlignment(Qt::AlignHCenter);
-
-    /*webview*/
-    view= new QWebView(windowg);
-    view->hide();
-
-    /*text*/
-
-    textedit=new QTextEdit(windowg);
-    textedit->hide();
-
-
-    /*ncl*/
-    texteditncl =new QTextEdit(windowg);
-    texteditncl->hide();
-    /*lua*/
-    texteditlua =new QTextEdit(windowg);
-    texteditlua->hide();
-
-
     comp = "";
-
-    /*video*/
-    QVBoxLayout *layout2 = new QVBoxLayout();
-    videoPlayer= new Phonon::VideoPlayer(Phonon::VideoCategory, windowg);
-    videoPlayer->hide();
-
-
-    layout2->addWidget(videoPlayer);
-    layout2->addWidget(textedit);
-    layout2->addWidget(texteditncl);
-    layout2->addWidget(texteditlua);
-    layout2->addWidget(window);
-    layout2->addWidget(picture);
-    layout2->addWidget(picture1);
-    layout2->addWidget(view);
-
-    windowg->setLayout(layout2);
-
-    button1 = new QPushButton("Play");
-    button2 = new QPushButton("Pause");
-    button3 = new QPushButton("Stop");
-
-    musicPlayer = NULL;
 
 }
 
@@ -95,11 +51,13 @@ QWidget *MediaPreviewPlugin::getWidget()
 {
     return windowg;
 }
+/* Identifica se a entidade selecionada é do tipo mídia, então armazenada
+em variaveis do tipo String os atributos que vão permitir a clasificação do
+do tipo de mídia, estes são: source("src") e type("type")*/
 
 void MediaPreviewPlugin::changeSelectedEntity(QString plugID, void *param)
 {
     QString  *entityUID = (QString*) param;
-
 
     if(entityUID != NULL)
     {
@@ -108,340 +66,252 @@ void MediaPreviewPlugin::changeSelectedEntity(QString plugID, void *param)
         {
             if(entity->getType() == "media")
             {
-                QString filename = entity->getAttribute("src");
-                QString typemidia = entity->getAttribute("type");
+                QString attrSrc = entity->getAttribute("src");
+                QString attrType = entity->getAttribute("type");
+                qDebug() <<"enderço do arquivo";
+                qDebug()<< attrSrc;
                 if (comp != entity->getUniqueId())
                 {
                     comp=entity->getUniqueId();
-                    if ( filename.endsWith(".mp4") ||
-                         filename.endsWith(".mpg")|| filename.endsWith(".mp2") ||
-                         filename.endsWith(".mpe") || filename.endsWith(".mpg4") ||
-                         filename.endsWith(".mng") || filename.endsWith(".qt") ||
-                         filename.endsWith(".mov") || filename.endsWith(".avi"))
+                    QString type;
+
+
+                    /* Manejo das extensões dos objetos de mídia. Compara
+                      se o valor contido na variavél attrSrc corresponde a um objeto
+                      de mída do tipo vídeo, audio, imagem, hypertexto, ncl or lua.*/
+
+
+                    /*Objeto de mídia do tipo VIDEO*/
+                    if(attrSrc.endsWith(".mp4") ||
+                       attrSrc.endsWith(".mpg")|| attrSrc.endsWith(".mp2") ||
+                       attrSrc.endsWith(".mpe") || attrSrc.endsWith(".mpg4") ||
+                       attrSrc.endsWith(".mng") || attrSrc.endsWith(".qt") ||
+                       attrSrc.endsWith(".mov") || attrSrc.endsWith(".avi") )
                     {
-
-
-                        videoPlayer->play(Phonon::MediaSource(filename));
-                        videoPlayer->setVisible(true);
-
-
-                        if(videoPlayer->isVisible())
-
-                        {
-                            if(musicPlayer != NULL)
-                            {
-                                musicPlayer->stop();
-                            }
-
-                            videoPlayer->stop();
-                            picture->hide();
-                            picture1->hide();
-                            window->hide();
-                            view->hide();
-                            textedit->hide();
-                            texteditncl->hide();
-                            texteditlua->hide();
-                            videoPlayer->play(Phonon::MediaSource(filename));
-                            videoPlayer->show();
-
-                        }
-
-                        else
-                        {
-                            videoPlayer->show();
-                            videoPlayer->play();
-                            picture->hide();
-                            picture1->hide();
-                            window->hide();
-                            view->hide();
-                            textedit->hide();
-                            texteditncl->hide();
-                            texteditlua->hide();
-
-
-                        }
-                    }
-                    else if (filename.endsWith(".mp3") || filename.endsWith(".flv") ||
-                             filename.endsWith(".wav") || filename.endsWith(".ua") ||
-                             filename.endsWith(".mp2") || filename.endsWith(".mp4")||
-                             filename.endsWith(".mpg4"))
-                    {
-
-                        button1->setFont(QFont("Comic Sans MS",10,QFont::Bold));
-                        button2->setFont(QFont("Comic Sans MS",10,QFont::Bold));
-                        button3->setFont(QFont("Comic Sans MS",10,QFont::Bold));
-
-
-                        button1->setIcon(QIcon("play.jpeg"));
-                        button1->setIconSize(QSize (30,30));
-                        button1->setStyleSheet("* { background-color: rgb(173,255,47) }");
-
-                        button2->setIcon(QIcon("pause.jpeg"));
-                        button2->setIconSize(QSize (30,30));
-                        button2->setStyleSheet("* { background-color: rgb(173,255,47) }");
-
-                        button3->setIcon(QIcon("stop.jpeg"));
-                        button3->setIconSize(QSize (30,30));
-                        button3->setStyleSheet("* { background-color: rgb(173,255,47) }");
-
-                        QHBoxLayout *layout = new QHBoxLayout;
-                        layout->addWidget(button1);
-                        layout->addWidget(button2);
-                        layout->addWidget(button3);
-
-                        window->setLayout(layout);
-
-                        if(musicPlayer != NULL && window->isVisible())
-                        {
-                            delete musicPlayer;
-                            musicPlayer->stop();
-
-                        }
-
-
-                        musicPlayer = new player(filename);
-                        mediaobject = Phonon::createPlayer(Phonon::MusicCategory,
-                                                           Phonon::MediaSource(filename));
-                        QObject::connect(button1,SIGNAL(clicked()),musicPlayer,SLOT(play()));
-                        QObject::connect(button2,SIGNAL(clicked()),musicPlayer,SLOT(pause()));
-                        QObject::connect(button3,SIGNAL(clicked()),musicPlayer,SLOT(stop()));
-
-
-
-
-                        window->setVisible(true);
-
-                        if(videoPlayer->isVisible())
-                        {
-                            videoPlayer->stop();
-                            videoPlayer->hide();
-
-
-                        }
-                        else
-                        {
-
-                            if(musicPlayer != NULL)
-                            {
-                                musicPlayer->stop();
-                            }
-
-                            window->show();
-                            picture->hide();
-                            picture1->hide();
-                            videoPlayer->hide();
-                            view->hide();
-                            textedit->hide();
-                            texteditncl->hide();
-                            texteditlua->hide();
-
-
-
-                        }
-                    }
-                    else if (filename.endsWith(".jpeg") || filename.endsWith(".png") ||
-                             filename.endsWith(".bmp") || filename.endsWith(".jpg") ||
-                             filename.endsWith(".jpe"))
-                    {
-                        picture->setPixmap(QPixmap(filename));
-                        picture->show();
-                        picture->setVisible(true);
-
-                        if (videoPlayer->isVisible())
-                        {
-                            videoPlayer->stop();
-                            videoPlayer->hide();
-
-                        }
-                        else
-                        {
-                            picture1->hide();
-                            if(musicPlayer != NULL)
-                            {
-                                musicPlayer->stop();
-                            }
-                            window->hide();
-                            view->hide();
-                            textedit->hide();
-                            texteditncl->hide();
-                            texteditlua->hide();
-                            picture->show();
-
-                        }
+                      type = "video";
                     }
 
-                    else if (filename.endsWith(".gif") )
+                    /*Objeto de mídia do tipo AUDIO*/
+                    else if(attrSrc.endsWith(".mp3") || attrSrc.endsWith(".flv") ||
+                            attrSrc.endsWith(".wav") || attrSrc.endsWith(".ua") ||
+                            attrSrc.endsWith(".mp2") || attrSrc.endsWith(".mp4")||
+                            attrSrc.endsWith(".mpg4"))
                     {
-
-                        QMovie *movie = new QMovie(filename);
-                        picture1->setMovie(movie);
-                        movie->start();
-                        picture1->show();
-
-                        if(videoPlayer->isVisible())
-                        {
-                            videoPlayer->stop();
-                            videoPlayer->hide();
-
-                        }
-                        else
-                        {
-                            if(musicPlayer != NULL)
-                            {
-                                musicPlayer->stop();
-                            }
-                            window->hide();
-                            picture->hide();
-                            view->hide();
-                            textedit->hide();
-                            texteditncl->hide();
-                            texteditlua->hide();
-                            picture1->show();
-                        }
-                    }
-
-
-                    else if (filename.startsWith("http") ||filename.endsWith(".html") ||
-                             filename.endsWith("htm") || filename.endsWith(".xhtml"))
-                    {
-                        view->load(QUrl(filename));
-                        view->adjustSize();
-                        view->show();
-
-                        if(videoPlayer->isVisible())
-                        {
-
-                            videoPlayer->stop();
-                            videoPlayer->hide();
-
-                        }
-                        else
-                        {
-                            if(musicPlayer != NULL)
-                            {
-                                musicPlayer->stop();
-                            }
-                            window->hide();
-                            picture->hide();
-                            picture1->hide();
-                            textedit->hide();
-                            texteditncl->hide();
-                            texteditlua->hide();
-                            view->show();
-                        }
+                      type = "audio";
 
                     }
 
-                    else if (filename.endsWith(".txt"))
+                    /*Objeto de mídia do tipo IMAGEM*/
+                   else if(attrSrc.endsWith(".jpeg") || attrSrc.endsWith(".png") ||
+                            attrSrc.endsWith(".bmp") || attrSrc.endsWith(".jpg") ||
+                            attrSrc.endsWith(".jpe"))
                     {
+                      type = "image";
+                    }
 
-                        QFile inputFile(filename);
-                        QTextStream in(&inputFile);
-                        inputFile.open(QIODevice::ReadOnly);
-                        textedit->setText(in.readAll());
-                        textedit->setReadOnly(true);
-                        textedit->setStyleSheet("QTextEdit { background-color : white; color : black; }");
-                        textedit->show();
+                    /*Objeto de mídia do tipo GIF*/
+                   else if (attrSrc.endsWith((".gif")))
+                    {
+                        type ="gif";
+                    }
 
-                        if(videoPlayer->isVisible())
-                        {
+                    /*Objeto de mídia do tipo HYPERTEXT*/
+                   else if (attrSrc.startsWith ("http") ||attrSrc.endsWith(".html") ||
+                             attrSrc.endsWith(".htm") || attrSrc.endsWith(".xhtml"))
+                    {
+                        type = "hypertext";
+                    }
 
-                            videoPlayer->stop();
-                            videoPlayer->hide();
+                    /*Objeto de mídia do tipo TEXTO*/
+                    else if (attrSrc.endsWith(".txt"))
+                    {
+                        type ="text";
+                    }
 
-                        }
+                     /*Objeto de mídia do tipo NCL*/
+                    else if (attrSrc.endsWith(".ncl"))
+                    {
+                        type="ncl";
+                    }
 
-                        else
-                        {
-                            if(musicPlayer != NULL)
-                            {
-                                musicPlayer->stop();
-                            }
-                            window->hide();
-                            picture->hide();
-                            picture1->hide();
-                            texteditncl->hide();
-                            texteditlua->hide();
-                            view->hide();
-                            textedit->show();
-                        }
+                     /*Objeto de mídia do tipo LUA*/
+                    else if (attrSrc.endsWith(".lua") )
+                    {
+                        type="lua";
+                    }
+
+                    /*Objeto de mídia do tipo XML*/
+
+                   else if(attrSrc.endsWith(".xml"))
+                    {
+                        type ="xml";
+                    }
+
+                    else if(attrSrc.endsWith(".css"))
+                    {
+                        type="css";
+                    }
+
+                     /*Objeto de mídia do tipo XLT*/
+
+                    else if (attrSrc.endsWith(".xlt")|| attrSrc.endsWith(".xlet")|| attrSrc.endsWith(".class"))
+                    {
+                        type="let";
+                    }
+
+                    /* Manejo do atributo type,attrType. (overwrite extension)*/
+
+                 if(attrType.contains("video/"))
+                    {
+                      type = "video";
+                    }
+                   else  if(attrType.contains("audio/"))
+                    {
+                      type = "audio";
 
                     }
 
-
-                    else if (filename.endsWith(".ncl") && typemidia.contains("application/x-ginga-NCL"))
+                    else if(attrType.contains("image/gif") )
                     {
-
-                        QFile inputFile(filename);
-                        QTextStream in(&inputFile);
-                        inputFile.open(QIODevice::ReadOnly);
-                        texteditncl->setText(in.readAll());
-                        texteditncl->setReadOnly(true);
-                        texteditncl->setStyleSheet("QTextEdit { background-color : white; color : black; }");
-                        texteditncl->show();
-
-                        if(videoPlayer->isVisible())
-                        {
-
-                            videoPlayer->stop();
-                            videoPlayer->hide();
-
-                        }
-                        else
-                        {
-                            if(musicPlayer != NULL)
-                            {
-                                musicPlayer->stop();
-                            }
-                            window->hide();
-                            picture->hide();
-                            picture1->hide();
-                            view->hide();
-                            textedit->hide();
-                            texteditlua->hide();
-                            texteditncl->show();
-                        }
+                        type="gif";
 
                     }
 
-                    else if (filename.endsWith(".lua") && typemidia.contains("application/x-ginga-NCLua"))
+                    else if (attrType.contains("image/bmp")||attrType.contains("image/png")|| attrType.contains("image/jpg")
+                             ||attrType.contains("image/jpeg")||attrType.contains("image/jpe"))
                     {
-
-                        QFile inputFile(filename);
-
-                        QTextStream in(&inputFile);
-                        inputFile.open(QFile::ReadOnly);
-                        texteditlua->setText(in.readAll());
-                        texteditlua->setReadOnly(true);
-                        texteditlua->setStyleSheet("QTextEdit { background-color : white; color : black; }");
-                        texteditlua->show();
-
-                        if(videoPlayer->isVisible())
-                        {
-
-                            videoPlayer->stop();
-                            videoPlayer->hide();
-
-                        }
-                        else
-                        {
-                            if(musicPlayer != NULL)
-                            {
-                                musicPlayer->stop();
-                            }
-                            window->hide();
-                            picture->hide();
-                            picture1->hide();
-                            view->hide();
-                            textedit->hide();
-                            texteditncl->hide();
-                            texteditlua->show();
-                        }
-
+                        type="image";
                     }
 
-                }
+                    else if(attrType.contains("text/xml"))
+                    {
+                        type="Markup language";
+                    }
+                    else if (attrType.contains("text/html"))
+                    {
+                        type ="hypertext";
+                    }
+
+                    else if(attrType.contains("text/css"))
+                    {
+                        type="css";
+                    }
+
+                    else if(attrType.contains("text/plain"))
+                    {
+                        type="text";
+                    }
+
+                   else if(attrType.contains("application/x-ginga-ncl")||attrType.contains("application/x-ncl-NCL"))
+                    {
+                        type="ncl";
+                    }
+
+                   else if (attrType.contains("application/x-ginga-NCLua")|| attrType.contains("application/x-ncl-NCLua"))
+                    {
+                        type="lua";
+
+                     }
+
+                    else if(attrType.contains("application/x-ginga-NCLet"))
+                    {
+                        type="let";
+                    }
+
+                 /*Interface para exibir o objeto de mídia, dependendo da extensão y/ou tipo
+                   da mída. Uma clase diferente para cada tipo de mídia foi criada. */
+
+                    /*audio*/
+                  if (type =="audio")
+                  {
+
+
+                             musicplayer = new audioplayer(attrSrc);
+                             musicplayer->setParent(windowg);
+                             windowg->setCentralWidget(musicplayer);
+                  }
+
+
+                  /*video*/
+                  if(type=="video")
+                  {
+                      /*videoview=new videoplayer(attrSrc);
+                      videoview->setParent(windowg);
+                      windowg->setCentralWidget(videoview);*/
+                      videoplay = new videoplayer(attrSrc);
+                      videoplay->setParent(windowg);
+                      windowg->setCentralWidget(videoplay);
+
+                  }
+
+
+                /*image*/
+                  if(type =="image")
+                  {
+                      imageview= new imagview(attrSrc);
+                      imageview->setParent(windowg);
+                      windowg->setCentralWidget(imageview);
+                  }
+
+                  /*gif*/
+
+                  if(type=="gif")
+                  {
+                      picgifview = new gifview(attrSrc);
+                      picgifview->setParent(windowg);
+                      windowg->setCentralWidget(picgifview);
+                  }
+
+                  /*text*/
+                  if(type=="text")
+                  {
+                      txtview =new textview(attrSrc);
+                      txtview->setParent(windowg);
+                      windowg->setCentralWidget(txtview);
+                  }
+
+                  /*hypertext*/
+                  if(type=="hypertext")
+                  {
+                      hyperview = new hypertextview(attrSrc);
+                      hyperview->setParent(windowg);
+                      windowg->setCentralWidget(hyperview);
+
+                  }
+
+                  /*XML*/
+
+                  if(type=="xml")
+                  {
+
+                  }
+
+                  /*NCL DOCUMENTS */
+                  if(type=="ncl")
+                  {
+                      ncldocview =new nclview(attrSrc);
+                      ncldocview->setParent(windowg);
+                      windowg->setCentralWidget(ncldocview);
+                  }
+
+                    /*LUA OBJECTS*/
+
+                  if(type=="lua")
+                  {
+                      luaobjview = new luaview(attrSrc);
+                      luaobjview->setParent(windowg);
+                      windowg->setCentralWidget(luaobjview);
+
+                  }
+
+            }
+        }
             }
         }
     }
-}
+
+
+
+
+
+

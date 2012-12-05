@@ -1,7 +1,16 @@
 #ifndef MEDIAPREVIEWPLUGIN_H
 #define MEDIAPREVIEWPLUGIN_H
 
-#include "player.h"
+#include <audioplayer.h>
+
+#include<imagview.h>
+#include<gifview.h>
+#include<textview.h>
+#include<hypertextview.h>
+#include<nclview.h>
+#include<luaview.h>
+//#include<video.h>
+#include "videoplayer.h"
 #include <composer/core/extensions/IPlugin.h>
 #include<VideoPlayer>
 #include<MediaObject>
@@ -11,6 +20,7 @@
 #include<QMovie>
 #include<QtWebKit/QWebView>
 #include<QTextEdit>
+#include<QMainWindow>
 
 
 
@@ -30,7 +40,7 @@ private:
     QString comp;
 
     QWidget *window;
-    QWidget *windowg;
+    QMainWindow *windowg;
     QWidget *windowv;
 
     QTextEdit *textedit;
@@ -39,16 +49,29 @@ private:
 
     Phonon::MediaObject *mediaobject;
     Phonon::MediaObject *media;
-    Phonon::VideoPlayer *videoPlayer;
+   // Phonon::VideoPlayer *videoPlayer;
 
 
-    QLabel *picture;
-    QLabel *picture1;
-    QPushButton *button1;
-    QPushButton *button2;
-    QPushButton *button3;
-    QWebView *view;
-    player *musicPlayer;
+
+   QPushButton *button1;
+   QPushButton *button2;
+   QPushButton *button3;
+   QWebView *view;
+   audioplayer *musicplayer;
+   imagview *imageview;
+   gifview *picgifview;
+   textview *txtview;
+   hypertextview *hyperview;
+   nclview *ncldocview;
+   luaview *luaobjview;
+  //videoplayer *videoview;
+videoplayer *videoplay;
+
+
+
+
+
+
     QMovie *movie;
 
 public slots:
