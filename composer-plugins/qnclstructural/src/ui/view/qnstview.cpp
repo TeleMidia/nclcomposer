@@ -878,6 +878,7 @@ void QnstView::addEntity(const QString uid, const QString parent,
 
   Qnst::EntityType type = QnstUtil::getnstTypeFromStr(properties["TYPE"]);
   QnstGraphicsEntity *entityParent = 0;
+  QnstGraphicsEntity *entity = NULL;
 
   if(entities.count(parent))
     entityParent = dynamic_cast<QnstGraphicsNode*> (entities[parent]);
@@ -886,14 +887,24 @@ void QnstView::addEntity(const QString uid, const QString parent,
 
   if(!entityParent &&
      type != Qnst::Body &&
-     type != Qnst::Bind) // for bind we will discover the parent after that
+     type != Qnst::Bind // for bind we will discover the parent after that
+    )
   {
-    qWarning() << "[QNST] I cannot add an entity without a parent!!!";
-    return;
+    qWarning() << "[QNST] Trying to add an entity without a parent!!";
+    ok = false; // We still can be a special case. So, I can not return here!
+
+    if(properties["TYPE"] == "importBase" ||
+       properties["TYPE"] == "causalConnector")
+    {
+      qWarning() << "[QNST] " << properties["TYPE"] << " is a special case. So, we will not need a parent.";
+      // In these cases we do not need a parent.
+    }
+    else
+    {
+      qWarning() << "[QNST] The entityAdd is beging ignored!";
+      return;
+    }
   }
-
-  QnstGraphicsEntity *entity = NULL;
-
   // \fixme There are a lot of duplicated code among the cases bellow!
   switch (type)
   {
@@ -975,7 +986,7 @@ void QnstView::addEntity(const QString uid, const QString parent,
           entitya = entities[properties["linkUID"]];
         else
           qWarning() << "[QNST] Trying to make a bind that componentaUID \
-                        does not exist!";
+                         does not exist!";
 
         if(entities.contains(properties["componentbUID"]))
           entityb = entities[properties["componentbUID"]];
@@ -984,7 +995,7 @@ void QnstView::addEntity(const QString uid, const QString parent,
                         does not exist!";
 
         if(properties.contains("action"))
-           action = properties["action"];
+          action = properties["action"];
         else
           condition = properties["condition"];
 
@@ -1091,7 +1102,7 @@ void QnstView::addEntity(const QString uid, const QString parent,
   // if the entity type is CONNECTOR
   if (properties["TYPE"] == "causalConnector")
   {
-    addConnector(uid, parent, properties);
+    addConnector(uid, properties);
   }
   // if the entity type is CONDITION
   else if (properties["TYPE"] == "simpleCondition")
@@ -2373,7 +2384,7 @@ void QnstView::adjustBind(QnstGraphicsBind* bind)
   // \todo interface
 }
 
-void QnstView::addConnector(const QString uid, const QString parent,
+void QnstView::addConnector(const QString uid,
                             const QMap<QString, QString> &properties)
 {
   if (!connectors2.contains(uid))

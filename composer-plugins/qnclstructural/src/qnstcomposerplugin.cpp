@@ -1006,6 +1006,7 @@ void QnstComposerPlugin::requestEntitySelection(Entity* entity)
 
 void QnstComposerPlugin::requestImportBaseAddition(Entity* entity)
 {
+  qWarning() << "Adding requestImportBaseAddition " << entity;
   if (entity != NULL)
   {
     Entity* parent = entity->getParent();
@@ -1028,7 +1029,9 @@ void QnstComposerPlugin::requestImportBaseAddition(Entity* entity)
           properties["alias"] = entity->getAttribute("alias");
 
         //                if(entities.contains(entity->getUniqueId()))
-        view->addEntity(entity->getUniqueId(), "",properties);
+        view->addEntity(  entity->getUniqueId(),
+                          parent->getUniqueId(),
+                          properties );
       }
     }
   }

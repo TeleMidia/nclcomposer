@@ -198,7 +198,7 @@ private:
 
   void adjustBind(QnstGraphicsBind* entity);
 
-  void addConnector(const QString uid, const QString parent,
+  void addConnector(const QString uid,
                     const QMap<QString, QString> &properties);
 
   void changeConnector(QnstConnector* entity,
