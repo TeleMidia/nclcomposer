@@ -8,6 +8,7 @@ REM -     * An installer file based on NSIS.
 REM -
 REM -   TODO:
 REM -     * Handle Qt release files (.dll)
+REM -     * Stop when any error occur.
 REM -
 
 REM - GET THE GIT VERSION

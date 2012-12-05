@@ -1,0 +1,59 @@
+NCL Composer Win32 Release
+==========================
+This directory contains all files related to generate a win32 release.
+
+Today, there are the follwing files:
+
+  * README: This file.
+  * FileAssociation.nsh: A NSIS library used by composer.nsi.
+  * composer.nsi: The main NSIS script to generate NCL Composer installer.
+  * generate-release.bat: A helpful .bat to generate .ZIP and NSIS releases.
+
+Generating a release
+====================
+The easiest (and recommended) way to generate an NCL Composer release is 
+through the generate-release.bat script.
+
+Before running it, you must be sure that all the necessary dependencies are
+installed and configured.
+
+Dependencies
+------------
+In order to get this script up and running you will need the following
+softwares installed in your Windows machine and properly configured in PATH:
+
+  * git >= 1.7x (http://git-scm.com)
+  * Qt >=4.7.x (http://qt.digia.com)
+  * NSIS >= 2.46 (http://nsis.sourceforge.net)
+  * 7zip >= 9.20 (http://www.7-zip.org)
+  
+Again, make sure all these programs are CONFIGURED IN PATH, because the
+generate-release.bat will assume it.
+
+Changing version
+----------------
+The current version of generate-release.bat will get the NCL Composer version
+automatically from tag configured in project:
+
+   * composer-plugins.git
+
+However you can set this version by hand uncommenting and editing the line:
+
+  REM - SET CPRVERSION=0.1.4
+
+inside the generate-release.bat script.
+
+Compiling and releasing
+-----------------------
+After be sure that all dependencies are installed and the version of NCL
+Composer is properly configured you are able to run (inside win32-nsis
+directory):
+
+  $ generate-release.bat
+
+If everything run OK the following files should be created (and are ready to 
+be available):
+
+  * nclcomposer-{VERSION}.zip
+  * nclcomposer-installer-{VERSION}.exe
+
