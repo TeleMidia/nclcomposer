@@ -5,7 +5,20 @@ MOC_DIR     =   .moc
 OBJECTS_DIR =   .obj
 UI_DIR      =   .ui
 
-DEFINES += NCLCOMPOSER_PLUGINS_VERSION=\"\\\"0.1.3\\\"\"
+GIT_VERSION=true
+isEmpty(CPRVERSION) {
+  #GUI_VERSION=$$system(git describe --tag | sed "s/v\(.*\)-.*-.*/\1/")
+  PLUGINS_VERSION=$$system(git describe --tag | sed "s/v//")
+}
+else {
+  PLUGINS_VERSION=$$CPRVERSION
+  GIT_VERSION=false
+}
+
+message("NCL Composer Plugins build version $${PLUGINS_VERSION} (from git=$${GIT_VERSION})")
+
+VERSTR = '\\"$${PLUGINS_VERSION}\\"'
+DEFINES += NCLCOMPOSER_PLUGINS_VERSION=\"$${VERSTR}\"
 
 # Uses FORCERELEASE variable because CONFIG and SUBDIR force three executions
 # if qmake and the last one does not preserves CONFIG from command line.
