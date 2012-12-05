@@ -177,9 +177,11 @@ public slots:
   void adjustAll();
 
 private:
-  void addImportBase(QString uid, const QMap<QString, QString> &properties);
+  void addImportBase(const QString &uid,
+                     const QMap<QString, QString> &properties);
 
-  void changeImportBase(QString uid, const QMap<QString, QString> &properties);
+  void changeImportBase(const QString &uid,
+                        const QMap<QString, QString> &properties);
 
   void adjustEntity(QnstGraphicsEntity *entity);
 
@@ -198,33 +200,34 @@ private:
 
   void adjustBind(QnstGraphicsBind* entity);
 
-  void addConnector(const QString uid,
+  void addConnector(const QString &uid,
                     const QMap<QString, QString> &properties);
 
   void changeConnector(QnstConnector* entity,
                        const QMap<QString, QString> &properties);
 
-  void addCondition(const QString uid, const QString parent,
+  void addCondition(const QString &uid,
                     const QMap<QString, QString> &properties);
 
-  void changeCondition(QString condition, const QMap<QString,
-                       QString> &properties);
+  void changeCondition(const QString &condition,
+                       const QMap<QString, QString> &properties);
 
-  void addAction(const QString uid, const QString parent,
+  void addAction(const QString &uid,
                  const QMap<QString, QString> &properties);
 
-  void changeAction(QString condition,
+  void changeAction(const QString &uid,
                     const QMap<QString, QString> &properties);
 
   void adjustConnector(QnstConnector* entity);
 
-  void changeBindParam(const QString uid,
+  void changeBindParam(const QString &uid,
                        const QMap<QString, QString> &properties);
 
-  void addConnectorParam(const QString uid, const QString parent,
+  void addConnectorParam(const QString &uid,
+                         const QString &parent,
                          const QMap<QString, QString> &properties);
 
-  void changeConnectorParam(const QString uid,
+  void changeConnectorParam(const QString &uid,
                             const QMap<QString, QString> &properties);
 
   void performCopy(QnstGraphicsEntity* entity, QnstGraphicsEntity* parent);
@@ -239,7 +242,7 @@ private:
 
   void createConnection();
 
-  void readImportBase(QString uid, QDomElement e, const QString alias);
+  void readImportBase(const QString &uid, QDomElement e, const QString &alias);
 
   void readConnector(QDomElement e, QnstConnector* conn);
 
@@ -303,6 +306,9 @@ private:
   void traceRefers();
 
   void traceEntities();
+
+  void traceConnectors();
+  void traceConnectors2();
 
   void deletePendingEntities();
 

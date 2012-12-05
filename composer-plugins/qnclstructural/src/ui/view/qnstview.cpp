@@ -893,11 +893,12 @@ void QnstView::addEntity(const QString uid, const QString parent,
     qWarning() << "[QNST] Trying to add an entity without a parent!!";
     ok = false; // We still can be a special case. So, I can not return here!
 
-    if(properties["TYPE"] == "importBase" ||
-       properties["TYPE"] == "causalConnector")
-    {
+    if( properties["TYPE"] == "importBase" ||
+        properties["TYPE"] == "causalConnector" ||
+        properties["TYPE"] == "simpleAction" ||
+        properties["TYPE"] == "simpleCondition" )
+    { // In these cases we do not need a parent.
       qWarning() << "[QNST] " << properties["TYPE"] << " is a special case. So, we will not need a parent.";
-      // In these cases we do not need a parent.
     }
     else
     {
@@ -985,8 +986,7 @@ void QnstView::addEntity(const QString uid, const QString parent,
         if(entities.contains(properties["linkUID"]))
           entitya = entities[properties["linkUID"]];
         else
-          qWarning() << "[QNST] Trying to make a bind that componentaUID \
-                         does not exist!";
+          qWarning() << "[QNST] Trying to make a bind that componentaUID does not exist!";
 
         if(entities.contains(properties["componentbUID"]))
           entityb = entities[properties["componentbUID"]];
@@ -1107,12 +1107,12 @@ void QnstView::addEntity(const QString uid, const QString parent,
   // if the entity type is CONDITION
   else if (properties["TYPE"] == "simpleCondition")
   {
-    addCondition(uid, parent, properties);
+    addCondition(uid, properties);
   }
   // if the entity type is ACTION
   else if (properties["TYPE"] == "simpleAction")
   {
-    addAction(uid, parent, properties);
+    addAction(uid, properties);
   }
   // if the entity type is IMPORTBASE
   else if (properties["TYPE"] == "importBase")
@@ -1624,7 +1624,7 @@ void QnstView::selectEntity(const QString uid)
   }
 }
 
-void QnstView::addImportBase(QString uid,
+void QnstView::addImportBase(const QString &uid,
                              const QMap<QString, QString> &properties)
 {
   QString connUID = QUuid::createUuid().toString();
@@ -1659,7 +1659,7 @@ void QnstView::addImportBase(QString uid,
 }
 
 
-void QnstView::changeImportBase(QString uid,
+void QnstView::changeImportBase(const QString &uid,
                                 const QMap<QString, QString> &properties)
 {
   foreach(QnstConnector* cc, connectors.values())
@@ -1704,7 +1704,9 @@ void QnstView::changeImportBase(QString uid,
   // }
 }
 
-void QnstView::readImportBase(QString uid, QDomElement element, QString alias)
+void QnstView::readImportBase(const QString &uid,
+                              QDomElement element,
+                              const QString &alias)
 {
   if (element.tagName() == "causalConnector")
   {
@@ -2371,20 +2373,26 @@ void QnstView::adjustBind(QnstGraphicsBind* bind)
      connectors.contains(link->getxConnector()))
   {
     QnstConnector *connector = connectors[link->getxConnector()];
-    if(!connector->getConditions().contains(bind->getRole()) &&
-       !connector->getActions().contains(bind->getRole()))
+    if(!connector->getConditions().values().contains(bind->getRole()) &&
+       !connector->getActions().values().contains(bind->getRole()))
+    {
       bind->setInvalid(true);
+      qWarning() << "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
+    }
     else
       bind->setInvalid(false);
   }
   else
+  {
+    qWarning() << "SSSSSSSSSSSSSSSSSSSSSSSSSSSSS";
     bind->setInvalid(true);
+  }
 
   bind->adjust();
   // \todo interface
 }
 
-void QnstView::addConnector(const QString uid,
+void QnstView::addConnector(const QString &uid,
                             const QMap<QString, QString> &properties)
 {
   if (!connectors2.contains(uid))
@@ -2416,6 +2424,9 @@ void QnstView::addConnector(const QString uid,
 
 void QnstView::adjustAll()
 {
+  traceConnectors();
+  traceConnectors2();
+
   foreach(QnstGraphicsEntity *entity, entities.values())
   {
     switch(entity->getnstType())
@@ -2455,6 +2466,7 @@ void QnstView::adjustAll()
 void QnstView::changeConnector(QnstConnector* entity,
                                const QMap<QString, QString> &properties)
 {
+  qWarning() << "QnstView::changeConnector" << entity << properties;
   if (properties["id"] != "")
   {
     entity->setName(properties["id"]);
@@ -2474,7 +2486,7 @@ void QnstView::changeConnector(QnstConnector* entity,
     connectors[entity->getnstId()] = entity;
 }
 
-void QnstView::addCondition(const QString uid, const QString parent,
+void QnstView::addCondition(const QString &uid,
                             const QMap<QString, QString> &properties)
 {
   if (connectors2.contains(properties["connector"]))
@@ -2484,9 +2496,11 @@ void QnstView::addCondition(const QString uid, const QString parent,
     if (properties["role"] != "")
       connector->addCondition(uid, properties["role"]);
   }
+  else
+    qWarning() << "[QNST] Trying yo add a condition to a connector that does not exist.";
 }
 
-void QnstView::changeCondition(QString uid,
+void QnstView::changeCondition(const QString &uid,
                                const QMap<QString, QString> &properties)
 {
   if (connectors2.contains(properties["connector"]))
@@ -2497,11 +2511,16 @@ void QnstView::changeCondition(QString uid,
       connector->getConditions().remove(uid);
 
     if (properties["role"] != "")
+    {
+      qWarning() << "CHANGING CONDITION" << properties["role"];
       connector->addCondition(uid, properties["role"]);
+    }
   }
+  else
+    qWarning() << "[QNST] Trying yo change a condition in a connector that does not exist.";
 }
 
-void QnstView::addAction(const QString uid, const QString parent,
+void QnstView::addAction(const QString &uid,
                          const QMap<QString, QString> &properties)
 {
   if (connectors2.contains(properties["connector"]))
@@ -2513,7 +2532,7 @@ void QnstView::addAction(const QString uid, const QString parent,
   }
 }
 
-void QnstView::changeAction(QString uid,
+void QnstView::changeAction(const QString &uid,
                             const QMap<QString, QString> &properties)
 {
   if (connectors2.contains(properties["connector"]))
@@ -2528,7 +2547,7 @@ void QnstView::changeAction(QString uid,
   }
 }
 
-void QnstView::changeBindParam(const QString uid,
+void QnstView::changeBindParam(const QString &uid,
                                const QMap<QString, QString> &properties)
 {
   if (entities.contains(properties.value("parent")))
@@ -2550,7 +2569,8 @@ void QnstView::changeBindParam(const QString uid,
   }
 }
 
-void QnstView::addConnectorParam(const QString uid, const QString parent,
+void QnstView::addConnectorParam(const QString &uid,
+                                 const QString &parent,
                                  const QMap<QString, QString> &properties)
 {
   if (connectors2.contains(parent))
@@ -2560,7 +2580,7 @@ void QnstView::addConnectorParam(const QString uid, const QString parent,
   }
 }
 
-void QnstView::changeConnectorParam(const QString uid,
+void QnstView::changeConnectorParam(const QString &uid,
                                     const QMap<QString, QString> &properties)
 {
   if (connectors2.contains(properties["parent"]))
@@ -4788,6 +4808,30 @@ void QnstView::traceEntities()
       qDebug() << "\t" << (int)e << e->getnstType() << QnstUtil::getStrFromNstType(e->getnstType());
   }
   qDebug() << "#### END TRACING ENTITIES ####" << endl;
+}
+
+void QnstView::traceConnectors()
+{
+  qDebug() << "#### TRACING CONNECTORS ####";
+  foreach(QString key, connectors.keys())
+  {
+    assert(connectors[key] != NULL);
+
+    qDebug() << key << (int)connectors[key] << connectors[key]->getConditions() << connectors[key]->getActions();
+  }
+  qDebug() << "#### END TRACING CONNECTORS ####" << endl;
+}
+
+void QnstView::traceConnectors2()
+{
+  qDebug() << "#### TRACING CONNECTORS2 ####";
+  foreach(QString key, connectors2.keys())
+  {
+    assert(connectors2[key] != NULL);
+
+    qDebug() << key << (int)connectors2[key] << connectors2[key]->getConditions() << connectors2[key]->getActions();
+  }
+  qDebug() << "#### END TRACING CONNECTORS2 ####" << endl;
 }
 
 void QnstView::deletePendingEntities()
