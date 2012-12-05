@@ -171,8 +171,11 @@ UninstallText "This will uninstall NCL Composer. Hit next to continue"
 Section "Uninstall"
   Delete "$INSTDIR\*"
   Delete "$INSTDIR\extensions\*"
+  Delete "$INSTDIR\data\*"
+  Delete "$INSTDIR\include\*"
   RMDir "$INSTDIR\extensions"
-  RMDir "$INSTDIR"
+  RMDir "$INSTDIR\data"
+  RMDir "$INSTDIR\include"
 
   ;Shortcuts
   Delete "$SMPROGRAMS\NCL Composer\*"
@@ -180,6 +183,12 @@ Section "Uninstall"
 
   ;Remove file association
   ${unregisterExtension} ".cpr" "NCL Composer project"
+
+  ; Always delete uninstall as the last action
+  Delete "$INSTDIR\uninstall.exe"
+
+  ; Try to remove the install dir
+  RMDir "$INSTDIR"
 
   ;Remove uninstaller information from the registry
   DeleteRegKey HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${COMPANYNAME} ${APPNAME}"
