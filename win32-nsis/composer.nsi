@@ -8,7 +8,10 @@
 
 ;--------------------------------
 
+!ifndef VERSION
 !define VERSION "0.1.3"
+!endif
+
 Name "NCL Composer ${VERSION}"
 Caption "NCL Composer Installer"
 OutFile "nclcomposer-installer-${VERSION}.exe"
