@@ -18,12 +18,30 @@ else {
 
 #WHAT FEATURES TO COMPILE?
 #CONFIG += clubencl
-#CONFIG += runssh_on
+
+contains(RUNSSH_ON, true)
+{
+  CONFIG += runssh_on
+}
+
 CONFIG += help
 QT += core xml network webkit
 
 #VERSION INFORMATION
-DEFINES += NCLCOMPOSER_GUI_VERSION=\"\\\"0.1.3\\\"\"
+GIT_VERSION=true
+isEmpty(CPRVERSION) {
+  #GUI_VERSION=$$system(git describe --tag | sed "s/v\(.*\)-.*-.*/\1/")
+  GUI_VERSION=$$system(git describe --tag | sed "s/v//")
+}
+else {
+  GUI_VERSION=$$CPRVERSION
+  GIT_VERSION=false
+}
+
+message("NCL Composer GUI build version $${GUI_VERSION} (from git=$${GIT_VERSION})")
+
+VERSTR = '\\"$${GUI_VERSION}\\"
+DEFINES += NCLCOMPOSER_GUI_VERSION=\"$${VERSTR}\"
 DEFINES += BUILD_DATE=\"\\\"$$system(echo \"$${_DATE_}\" | sed \"s/ /\\\\\\ /g\")\"\\\"
 #DEFINES += WITH_TEST_VERSION_MESSAGE=\"\\\"1\\\"\"
 
@@ -120,6 +138,7 @@ macx {
         /opt/local/include/
 
     runssh_on {
+      message ("NCL Composer.pro will be built with support to run over SSH.")
       DEFINES += WITH_LIBSSH2
       LIBS += -L/opt/local/lib -lssh2 -lgcrypt
     }
@@ -130,6 +149,7 @@ else:unix {
                     $$INSTALLBASE/include/composer/core
 
     runssh_on {
+      message ("NCL Composer.pro will be built with support to run over SSH.")
       DEFINES += WITH_LIBSSH2
       LIBS += -lssh2
     }
@@ -140,12 +160,14 @@ else:win32 {
                    $$INSTALLBASE/include/composer/core
 
     runssh_on {
-        # Link against libssh2
-        LIBS += deps/libssh2-1.3.0/lib/libssh2.a \
-                deps/libssh2-1.3.0/lib/libgcrypt.a \
-                deps/libssh2-1.3.0/lib/libgpg-error.a \
-                -lws2_32
-        INCLUDEPATH += deps/libssh2-1.3.0/include
+      message ("NCL Composer.pro will be built with support to run over SSH.")
+      # Link against libssh2
+      DEFINES += WITH_LIBSSH2
+      LIBS += deps/libssh2-1.3.0/lib/libssh2.a \
+              deps/libssh2-1.3.0/lib/libgcrypt.a \
+              deps/libssh2-1.3.0/lib/libgpg-error.a \
+              -lws2_32
+      INCLUDEPATH += deps/libssh2-1.3.0/include
     }
 }
 
@@ -229,7 +251,7 @@ INSTALLS += target trans data
 
 unix:!macx {
     INSTALLS += target desktop
-		INSTALLS += icon256 icon128 icon64 icon48 icon32 icon24 icon22 icon16
+    INSTALLS += icon256 icon128 icon64 icon48 icon32 icon24 icon22 icon16
 }
 
 OTHER_FILES += LICENSE.LGPL
