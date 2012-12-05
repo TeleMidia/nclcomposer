@@ -16,7 +16,8 @@ builddir:
 	mkdir -p builddir
 
 builddir/Makefile: builddir
-	cd builddir && $(QMAKE) PREFIX=/usr FORCERELEASE=true ../composer-all.pro
+	cd builddir && $(QMAKE) PREFIX=/usr FORCERELEASE=true RUNSSH_ON=true \
+	   ../composer-all.pro
 	dh_auto_configure
 
 build: build-stamp
