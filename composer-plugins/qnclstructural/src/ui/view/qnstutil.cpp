@@ -81,9 +81,9 @@ std::map <QString, Qnst::EntityType> QnstUtil::typeFromStr =
     ("bind", Qnst::Bind)
     ("bindParam", Qnst::BindParam)
 
-    /*("causalConnector", Qnst::)*/
+    /*("causalConnector", Qnst::)
     ("simpleCondition", Qnst::Condition)
-    ("simpleAction", Qnst::Action)
+    ("simpleAction", Qnst::Action)*/
 
     ("aggregator",  Qnst::Aggregator);
 
