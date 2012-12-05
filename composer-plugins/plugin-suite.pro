@@ -13,9 +13,14 @@ SUBDIRS = \
     qncllayout/qnly.pro \
     qnclstructural/deps/libqncg/libqncg.pro \
     qnclstructural/qnst.pro
-#    media-preview/mediapreview.pro
-#    clube-ncl
-#    validator
+#   media-preview/mediapreview.pro
+#   clube-ncl
+
+contains(FORCERELEASE, true)
+{
+  SUBDIRS += validator      # Validator is required when releasing.
+  SUBDIRS -= debug-console  # Debug must not be present in release.
+}
 
 macx {
   INSTALLBASE = /Applications/Composer
