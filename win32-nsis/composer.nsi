@@ -17,6 +17,9 @@ Caption "NCL Composer Installer"
 OutFile "nclcomposer-installer-${VERSION}.exe"
 Icon "../composer-gui/images/icon.ico"
 
+!define APPNAME "NCL Composer"
+!define COMPANYNAME "TeleMidia"
+
 ; The default installation directory
 ; InstallDir "$PROGRAMFILES\NCL Composer"
 InstallDir "C:\Composer"
@@ -27,6 +30,37 @@ LicenseData "../composer-core/LICENSE.EPL"
 
 ; Request application privileges for Windows Vista
 RequestExecutionLevel admin
+
+;--------------------------------
+; onInit function
+
+Function .onInit
+  ReadRegStr $R0 HKLM \
+     "Software\Microsoft\Windows\CurrentVersion\Uninstall\${COMPANYNAME} ${APPNAME}" \
+     "UninstallString"
+  StrCmp $R0 "" done
+	  
+  MessageBox MB_OKCANCEL|MB_ICONEXCLAMATION \
+     "${APPNAME} is already installed. $\n$\nClick `OK` to remove the \
+      previous version or `Cancel` to cancel this upgrade." \
+      IDOK uninst
+      Abort
+     
+  ;Run the uninstaller
+  uninst:
+    ClearErrors
+    ExecWait '$R0 _?=$INSTDIR' ;Do not copy the uninstaller to a temp file
+ 
+    IfErrors no_remove_uninstaller done
+    ;You can either use Delete /REBOOTOK in the uninstaller or add some code
+    ;here to remove the uninstaller. Use a registry key to check
+    ;whether the user has chosen to uninstall. If you are using an uninstaller
+    ;components page, make sure all sections are uninstalled.
+    no_remove_uninstaller:
+
+  done:
+
+FunctionEnd
 
 ;--------------------------------
 
@@ -77,6 +111,9 @@ Section "NCL Composer Core (required)" ; No components page, name is not importa
 
   ; Associate .cpr files with NCL Composer
   ${registerExtension} $INSTDIR\composer.exe ".cpr" "NCL Composer project"
+
+  ; Registry information for add/remove programs
+  WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${COMPANYNAME} ${APPNAME}" "UninstallString" "$\"$INSTDIR\uninstall.exe$\""
 SectionEnd ; end the section
 
 ; Optional section (can be disabled by the user)
@@ -143,4 +180,7 @@ Section "Uninstall"
 
   ;Remove file association
   ${unregisterExtension} ".cpr" "NCL Composer project"
+
+  ;Remove uninstaller information from the registry
+  DeleteRegKey HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${COMPANYNAME} ${APPNAME}"
 SectionEnd
