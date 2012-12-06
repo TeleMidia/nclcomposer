@@ -47,7 +47,7 @@ DEFINES += BUILD_DATE=\"\\\"$$system(echo \"$${_DATE_}\" | sed \"s/ /\\\\\\ /g\"
 
 #NOTIFY SYSTEM
 DEFINES += DEFAULT_MAX_NOTIFY_MESSAGES=\"4\"
-DEFINES += DEFAULT_MIN_MESSAGE_ID_TO_SHOW=\"1\"
+DEFINES += DEFAULT_MIN_MESSAGE_ID_TO_SHOW=\"2\"
 DEFINES += NCL_COMPOSER_NOTIFY_URL=\"\\\"http://composer.telemidia.puc-rio.br/update/CURRENT_VERSION\\\"\"
 
 #DEFINES += USE_MDI
