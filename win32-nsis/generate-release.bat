@@ -21,12 +21,12 @@ cd ..
 SET /p CPRVERSION= <VERSION
 
 REM - I CAN FORCE A VERSION IF I UNCOMMENT THE NEXT LINE
-REM - SET CPRVERSION=0.1.4
+SET CPRVERSION=0.1.4
 
 echo Generating NCL Composer %CPRVERSION% Windows Installer and Zip files.
 
 REM - Run qmake with release parameters
-IF "%VERSION%"=="" (qmake FORCERELEASE=true RUNSSH_ON=true) ELSE (qmake FORCERELEASE=true RUNSSH_ON=true CPRVERSION=%CPRVERSION%)
+IF "%CPRVERSION%"=="" (qmake FORCERELEASE=true RUNSSH_ON=true) ELSE (qmake FORCERELEASE=true RUNSSH_ON=true CPRVERSION=%CPRVERSION%)
 
 REM - Generate translation files
 cd composer-gui 
