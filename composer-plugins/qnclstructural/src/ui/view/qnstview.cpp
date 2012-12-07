@@ -1228,7 +1228,13 @@ void QnstView::removeEntity(const QString uid, bool undo, bool rmRef)
         QnstGraphicsEntity* parent = entity->getnstGraphicsParent();
         if (parent != NULL)
         {
-          qDebug() << "parent = " << (int)parent << parent->getnstUid();
+
+#ifdef Q_WS_MAC
+    qDebug() << "parent = " << parent << parent->getnstUid();
+#else
+    qDebug() << "parent = " << (int)parent << parent->getnstUid();
+#endif
+
           parent->removenstGraphicsEntity(entity);
         }
         else
@@ -4798,14 +4804,25 @@ void QnstView::traceEntities()
   {
     assert(entities[key] != NULL);
     assert(entities[key] != entities[key]->getnstGraphicsParent());
+
+#ifdef Q_WS_MAC
+    qDebug() << key << entities[key] << entities[key]->getnstType()
+             << QnstUtil::getStrFromNstType(entities[key]->getnstType());
+#else
     qDebug() << key << (int)entities[key] << entities[key]->getnstType()
              << QnstUtil::getStrFromNstType(entities[key]->getnstType());
+#endif
 
     if(entities[key]->getnstGraphicsParent())
       qDebug()<< QnstUtil::getStrFromNstType(entities[key]->getnstGraphicsParent()->getnstType());
 
     foreach(QnstGraphicsEntity * e, entities[key]->getnstGraphicsEntities())
-      qDebug() << "\t" << (int)e << e->getnstType() << QnstUtil::getStrFromNstType(e->getnstType());
+#ifdef Q_WS_MAC
+    qDebug() << "\t" << e << e->getnstType() << QnstUtil::getStrFromNstType(e->getnstType());
+#else
+    qDebug() << "\t" << (int)e << e->getnstType() << QnstUtil::getStrFromNstType(e->getnstType());
+#endif
+
   }
   qDebug() << "#### END TRACING ENTITIES ####" << endl;
 }
@@ -4817,7 +4834,11 @@ void QnstView::traceConnectors()
   {
     assert(connectors[key] != NULL);
 
+#ifdef Q_WS_MAC
+    qDebug() << key << connectors[key] << connectors[key]->getConditions() << connectors[key]->getActions();
+#else
     qDebug() << key << (int)connectors[key] << connectors[key]->getConditions() << connectors[key]->getActions();
+#endif
   }
   qDebug() << "#### END TRACING CONNECTORS ####" << endl;
 }
@@ -4829,7 +4850,11 @@ void QnstView::traceConnectors2()
   {
     assert(connectors2[key] != NULL);
 
+#ifdef Q_WS_MAC
+    qDebug() << key << connectors2[key] << connectors2[key]->getConditions() << connectors2[key]->getActions();
+#else
     qDebug() << key << (int)connectors2[key] << connectors2[key]->getConditions() << connectors2[key]->getActions();
+#endif
   }
   qDebug() << "#### END TRACING CONNECTORS2 ####" << endl;
 }

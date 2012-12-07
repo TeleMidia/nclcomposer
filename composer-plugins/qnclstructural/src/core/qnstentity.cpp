@@ -104,8 +104,14 @@ void QnstEntity::addnstEntity(QnstEntity* entity)
     // \fixme This is only an additional check. Maybe, the better way to do
     // that could be using a set instead of a vector to entities.
     if(entities.contains(entity))
-      qWarning() << "[QNST] Warning! You are adding the same entity twice as \
-          child of " << (int) this << __FILE__ << __LINE__;
+
+#ifdef Q_WS_MAC
+    qWarning() << "[QNST] Warning! You are adding the same entity twice as \
+      child of " << this << __FILE__ << __LINE__;
+#else
+    qWarning() << "[QNST] Warning! You are adding the same entity twice as \
+      child of " << (int) this << __FILE__ << __LINE__;
+#endif
 
     entity->setnstParent(this);
     entities.insert(entity);
