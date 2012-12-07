@@ -1,10 +1,10 @@
 #!/bin/bash
 
-DIR=`pwd`; DIR="$DIR/../"; cd $DIR;
+DIR=`pwd`; DIR="$DIR/../"; cd $DIR/composer-gui/;
 
 echo "(1/4) ------ Setting ------";
 
-BUNDLE=`pwd`/composer-gui/Composer.app
+BUNDLE=Composer.app
 
 mkdir $BUNDLE/Contents/PlugIns
 mkdir $BUNDLE/Contents/PlugIns/composer
