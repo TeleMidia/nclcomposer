@@ -23,8 +23,8 @@ The main dependency of NCL Composer is:
   * Qt >= 4.7.x
 
 If you want to enable the Run your application on Ginga Virtual Set-top box,
-then you should uncomment the line 
-  * #CONFIG += runssh_on
+then you should run qmake like this:
+  * qmake RUNSSH_ON=true
 
 By doing so, you have to be installed the following:
   * libssh2

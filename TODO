@@ -23,6 +23,14 @@ TODO file for composer-gui
     . Remote Run
       . Check md5sum for local and remote files and send it again only if they
         are differents.
+	- Create a plugin to handle CPR project:
+		. Two subview:
+			. Project
+			. Files
+		. Some actions:
+			. Add media
+			. Add file
+			. etc.
 
 * Done:
   - Add "Remove Perspective" action.
