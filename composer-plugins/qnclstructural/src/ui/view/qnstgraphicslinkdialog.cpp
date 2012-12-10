@@ -220,13 +220,27 @@ void QnstGraphicsLinkDialog::init(QMap<QString, QnstConnector*> connectors)
   {
     setMinimumWidth(350);
     updateGeometry();
-    QDesktopWidget *desktop = QApplication::desktop();
+    QWidget *screen = NULL;
+    QRect screenGeometry;
 
-    int screenWidth = desktop->width();
-    int screenHeight = desktop->height();
+    if(this->parentWidget())
+    {
+      screen = QApplication::desktop()->screen(
+                QApplication::desktop()->screenNumber(this->parentWidget())
+               );
 
-    int x = (screenWidth - this->width()) / 2;
-    int y = (screenHeight - this->height()) / 2;
+      screenGeometry = QApplication::desktop()->screenGeometry(this->parentWidget());
+    }
+    else
+    {
+      screenGeometry = QApplication::desktop()->screenGeometry();
+    }
+
+    int screenWidth = screenGeometry.width();
+    int screenHeight = screenGeometry.height();
+
+    int x = screenGeometry.x() + (screenWidth - this->width()) / 2;
+    int y = screenGeometry.y() + (screenHeight - this->height()) / 2;
 
     this->move(x, y);
     firstTime = false;
