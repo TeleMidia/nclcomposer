@@ -16,6 +16,7 @@
 #include<QLabel>
 #include<QWidget>
 #include<QMovie>
+#include <QFileInfo>
 #include<QtWebKit/QWebView>
 #include<QTextEdit>
 #include<QMainWindow>

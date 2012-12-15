@@ -65,11 +65,27 @@ void MediaPreviewPlugin::changeSelectedEntity(QString plugID, void *param)
         {
             if(entity->getType() == "media")
             {
-                QString attrSrc = entity->getAttribute("src");
+                QString attrSrc = "";
                 QString attrType = entity->getAttribute("type");
 
+                QFileInfo finfo(getProject()->getLocation());
+                QString location = finfo.dir().absolutePath();
 
-                if (comp != entity->getUniqueId())
+
+                if (QFile::exists(entity->getAttribute("src")))
+                {
+                    attrSrc = entity->getAttribute("src");
+                }
+                else if (QFile::exists(location+
+                                       QDir::separator()+
+                                       entity->getAttribute("src")))
+                {
+                    attrSrc = location+
+                              QDir::separator()+
+                              entity->getAttribute("src");
+                }
+
+                if (comp != entity->getUniqueId() && attrSrc != "")
                 {
                     comp=entity->getUniqueId();
                     QString type;
