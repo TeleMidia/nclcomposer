@@ -12,7 +12,7 @@ SUBDIRS = \
     properties-view \
     qncllayout/qnly.pro \
     qnclstructural/deps/libqncg/libqncg.pro \
-    qnclstructural/qnst.pro
+    qnclstructural/qnst.pro \
     media-preview/mediapreview.pro
 #   clube-ncl
 
