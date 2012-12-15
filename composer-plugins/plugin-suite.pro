@@ -13,7 +13,7 @@ SUBDIRS = \
     qncllayout/qnly.pro \
     qnclstructural/deps/libqncg/libqncg.pro \
     qnclstructural/qnst.pro
-#   media-preview/mediapreview.pro
+    media-preview/mediapreview.pro
 #   clube-ncl
 
 contains(FORCERELEASE, true)

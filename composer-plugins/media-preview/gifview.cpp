@@ -22,3 +22,6 @@ gifview::gifview(QString filename)
 
 
 }
+gifview::~gifview()
+{
+}

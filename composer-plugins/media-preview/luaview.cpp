@@ -22,3 +22,8 @@ luaview::luaview(QString filename)
     setStyleSheet("QTextEdit { background-color : white; color : black; }");
     setAlignment(Qt::AlignCenter);
 }
+
+luaview::~luaview()
+{
+
+}

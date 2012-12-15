@@ -1,16 +1,22 @@
-/*INF2102 Projeto Final de Programação*****************
- *Período: 2012/2
- *Coordenador: Prof. Carlos José Pereira Lucena       *
- *Projeto: Media-Preview Plugin para o Composer 3.0   *
- *Nome do aluno: Amparito Alexandra Morales Figueroa. *                                 *
- *Matrícula: 1121838                                  *
- *Orientador: Prof. Luiz Fernando Gomes Soares        *
- *Descrição: Plugin que facilita a visualização       *
- *e exibição dos objetos de mídia que estão sendo     *
- *utilizados num projeto desenvolvido utilizando a    *
- *ferramenta Composer 3.0******************************/
+/*!INF2102 Projeto Final de Programação      ***********
+ ** Período: 2012/2                                    **
+ ** Coordenador: Prof. Carlos José Pereira Lucena      **
+ ** Projeto: Media-Preview Plugin para o Composer 3.0  **
+ ** Nome do aluno: Amparito Alexandra Morales Figueroa.**                                 *
+ ** Matrícula: 1121838                                 **
+ ** Orientador: Prof. Luiz Fernando Gomes Soares       **
+ ** Descrição: Plugin que facilita a visualização      **
+ ** e exibição dos objetos de mídia que estão sendo    **
+ ** utilizados num projeto desenvolvido utilizando a   **
+ ** ferramenta Composer 3.0******************************/
+
+
 
 #include <mediapreviewplugin.h>
+#include<QString>
+#include<QTextStream>
+#include<QIODevice>
+#include<QMainWindow>
 #include<audioplayer.h>
 #include<gifview.h>
 #include<hypertextview.h>
@@ -24,18 +30,16 @@
 #include<QFont>
 #include<QString>
 #include<QTextStream>
-#include<QIODevice>
-#include<QMainWindow>
+
 
 using namespace std;
 
 MediaPreviewPlugin::MediaPreviewPlugin()
 {
     /*Main Widget*/
-    windowg =  new QMainWindow(0);
-    windowg->setStyleSheet("* { background-color: rgb(220,220,220) }");
+   windowg =  new QMainWindow(0);
+   windowg->setStyleSheet("* { background-color: rgb(220,220,220) }");
     comp = "";
-
 }
 
 MediaPreviewPlugin::~MediaPreviewPlugin()
@@ -43,14 +47,11 @@ MediaPreviewPlugin::~MediaPreviewPlugin()
 
 }
 
-
 QWidget *MediaPreviewPlugin::getWidget()
 {
     return windowg;
 }
-/* Identifica se a entidade selecionada é do tipo mídia, então armazenada
-em variaveis do tipo String os atributos que vão permitir a clasificação do
-do tipo de mídia, estes são: source("src") e type("type")*/
+
 
 void MediaPreviewPlugin::changeSelectedEntity(QString plugID, void *param)
 {
@@ -58,20 +59,20 @@ void MediaPreviewPlugin::changeSelectedEntity(QString plugID, void *param)
 
     if(entityUID != NULL)
     {
+
         Entity* entity = getProject()->getEntityById(*entityUID);
-        if(entity != NULL)
+          if(entity != NULL)
         {
             if(entity->getType() == "media")
             {
                 QString attrSrc = entity->getAttribute("src");
                 QString attrType = entity->getAttribute("type");
-                qDebug() <<"enderço do arquivo";
-                qDebug()<< attrSrc;
+
+
                 if (comp != entity->getUniqueId())
                 {
                     comp=entity->getUniqueId();
                     QString type;
-
 
                     /* Manejo das extensões dos objetos de mídia. Compara
                       se o valor contido na variavél attrSrc corresponde a um objeto
@@ -298,14 +299,12 @@ void MediaPreviewPlugin::changeSelectedEntity(QString plugID, void *param)
 
                   }
 
-            }
-        }
+                }
+
+                }
             }
         }
     }
-
-
-
 
 
 

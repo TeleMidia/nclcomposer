@@ -1,0 +1,7 @@
+<RCC>
+    <qresource prefix="/media-preview">
+        <file alias="pause">pause.jpeg</file>
+        <file alias="play">play.jpeg</file>
+        <file alias="stop">stop.jpeg</file>
+    </qresource>
+</RCC>

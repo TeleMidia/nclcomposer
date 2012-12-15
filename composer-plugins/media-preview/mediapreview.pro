@@ -5,6 +5,8 @@ include(../plugins-common.pri)
 
 QT += phonon
 QT += gui
+QT += xml
+CONFIG +=qtestlib
 
 
 #TEMPLATE = app
@@ -40,4 +42,5 @@ HEADERS += \
 FORMS += \
     videoplayer.ui
 
-RESOURCES +=
+RESOURCES += \
+    media-preview.qrc

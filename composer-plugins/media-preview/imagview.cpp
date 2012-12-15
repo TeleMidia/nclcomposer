@@ -22,3 +22,7 @@ imagview::imagview(QString filename)
     setAlignment(Qt::AlignCenter);
 
 }
+imagview::~imagview()
+{
+
+}

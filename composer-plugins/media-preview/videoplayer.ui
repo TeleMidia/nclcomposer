@@ -18,48 +18,108 @@
     <rect>
      <x>40</x>
      <y>220</y>
-     <width>51</width>
-     <height>27</height>
+     <width>32</width>
+     <height>32</height>
     </rect>
    </property>
+   <property name="maximumSize">
+    <size>
+     <width>32</width>
+     <height>32</height>
+    </size>
+   </property>
    <property name="text">
-    <string>Play</string>
+    <string/>
+   </property>
+   <property name="icon">
+    <iconset resource="media-preview.qrc">
+     <normaloff>:/media-preview/play</normaloff>:/media-preview/play</iconset>
+   </property>
+   <property name="iconSize">
+    <size>
+     <width>32</width>
+     <height>32</height>
+    </size>
    </property>
   </widget>
   <widget class="QPushButton" name="pausebutton">
    <property name="geometry">
     <rect>
-     <x>100</x>
+     <x>80</x>
      <y>220</y>
-     <width>51</width>
-     <height>27</height>
+     <width>32</width>
+     <height>32</height>
     </rect>
    </property>
+   <property name="maximumSize">
+    <size>
+     <width>32</width>
+     <height>32</height>
+    </size>
+   </property>
    <property name="text">
-    <string>Pause</string>
+    <string/>
+   </property>
+   <property name="icon">
+    <iconset resource="media-preview.qrc">
+     <normaloff>:/media-preview/pause</normaloff>:/media-preview/pause</iconset>
+   </property>
+   <property name="iconSize">
+    <size>
+     <width>32</width>
+     <height>32</height>
+    </size>
    </property>
   </widget>
   <widget class="QPushButton" name="stopbutton">
    <property name="geometry">
     <rect>
-     <x>160</x>
+     <x>120</x>
      <y>220</y>
-     <width>51</width>
-     <height>27</height>
+     <width>31</width>
+     <height>31</height>
     </rect>
    </property>
+   <property name="maximumSize">
+    <size>
+     <width>32</width>
+     <height>32</height>
+    </size>
+   </property>
    <property name="text">
-    <string>Stop</string>
+    <string/>
+   </property>
+   <property name="icon">
+    <iconset resource="media-preview.qrc">
+     <normaloff>:/media-preview/stop</normaloff>:/media-preview/stop</iconset>
+   </property>
+   <property name="iconSize">
+    <size>
+     <width>32</width>
+     <height>32</height>
+    </size>
    </property>
   </widget>
   <widget class="Phonon::VolumeSlider" name="volumeSlider">
    <property name="geometry">
     <rect>
-     <x>220</x>
+     <x>160</x>
      <y>220</y>
-     <width>121</width>
-     <height>29</height>
+     <width>181</width>
+     <height>31</height>
     </rect>
+   </property>
+   <property name="pageStep">
+    <number>2</number>
+   </property>
+   <property name="singleStep">
+    <number>1</number>
+   </property>
+   <property name="iconSize">
+    <size>
+     <width>16</width>
+     <height>16</height>
+    </size>
    </property>
   </widget>
   <widget class="Phonon::SeekSlider" name="seekSlider">
@@ -100,6 +160,8 @@
    <header location="global">phonon/volumeslider.h</header>
   </customwidget>
  </customwidgets>
- <resources/>
+ <resources>
+  <include location="media-preview.qrc"/>
+ </resources>
  <connections/>
 </ui>

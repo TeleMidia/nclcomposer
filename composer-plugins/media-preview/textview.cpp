@@ -24,3 +24,8 @@ textview::textview(QString filename)
     setAlignment(Qt::AlignCenter);
 
 }
+
+textview::~textview()
+{
+
+}

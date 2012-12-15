@@ -21,3 +21,8 @@ hypertextview::hypertextview(QString filename)
 
 
 }
+
+hypertextview::~hypertextview()
+{
+
+}

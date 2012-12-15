@@ -24,3 +24,8 @@ nclview::nclview(QString filename)
     setAlignment(Qt::AlignCenter);
 
 }
+
+nclview::~nclview()
+{
+
+}
