@@ -1094,6 +1094,8 @@ void QnstView::addEntity(const QString uid, const QString parent,
     entities[uid] = entity;
     entity->setProperties(properties);
 
+    entity->updateToolTip();
+
     entity->adjust();
 
     adjustEntity(entity);
@@ -1471,8 +1473,6 @@ void QnstView::changeEntity(const QString uid,
             }
           }
 
-          media->updateToolTip();
-
           if(adjust)
           {
             adjustMedia(media);
@@ -1571,6 +1571,8 @@ void QnstView::changeEntity(const QString uid,
         // do nothing
         break;
     }
+
+    entity->updateToolTip();
   }
   else
   {
@@ -2677,7 +2679,6 @@ void QnstView::requestEntityAddition(QnstGraphicsEntity* entity, bool undo)
           properties["TYPE"] = "media";
           properties["id"] = entity->getnstId();
 
-          media->updateToolTip();
           ok = true;
         }
         break;
@@ -2876,6 +2877,8 @@ void QnstView::requestEntityAddition(QnstGraphicsEntity* entity, bool undo)
 
     if(ok)
     {
+      entity->updateToolTip();
+
       if(entity->getnstType() == Qnst::Body)
       {
         emit entityAdded(entity->getnstUid(), "", properties);
@@ -3310,6 +3313,8 @@ void QnstView::requestEntityChange(QnstGraphicsEntity* entity)
 
     if(ok)
     {
+      entity->updateToolTip();
+
       emit entityChanged(entity->getnstUid(), properties);
     }
 
@@ -3568,11 +3573,30 @@ bool QnstView::updateEntityWithUniqueNstId(QnstGraphicsEntity *entity)
     if(!entityCounter.count(type))
       entityCounter[type] = 0;
 
-    n = entityCounter[type];
+    // change this check in future
+    QString prefix = QnstUtil::getPrefixIdFromType(type);
 
-    entity->setnstId(QnstUtil::getPrefixIdFromType(type) + QString::number(n));
+    while(1) //
+    {
+      bool match = false;
 
-    entityCounter[type] ++ ;
+      foreach(QnstGraphicsEntity* entity, entities.values())
+      {
+        if (entity->getnstId() == prefix + QString::number(n))
+        {
+          match = true;
+          break;
+        }
+      }
+
+      if (match)
+        n++;
+      else
+        break;
+    }
+
+    entity->setnstId(QnstUtil::getPrefixIdFromType(type) +
+                     QString::number(n));
 
     return true;
   }

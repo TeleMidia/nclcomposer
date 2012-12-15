@@ -46,7 +46,7 @@ public:
 
   virtual void setnstId(const QString &id);
 
-  virtual void updateTooltip() { } // it has a default empty implementation.
+  virtual void updateToolTip() {}
 
   virtual void setProperties(const QMap <QString, QString> &properties);
 

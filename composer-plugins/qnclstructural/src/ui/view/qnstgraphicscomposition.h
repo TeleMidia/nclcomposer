@@ -42,7 +42,7 @@ public:
 
   void collapse();
 
-  virtual void updateTooltip();
+  virtual void updateToolTip();
 
   virtual void setProperties(const QMap <QString, QString> &properties);
 

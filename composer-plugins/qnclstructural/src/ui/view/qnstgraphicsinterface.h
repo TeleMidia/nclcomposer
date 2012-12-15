@@ -17,7 +17,7 @@ public:
 
   void setRefer(bool refer);
 
-  virtual void updateTooltip();
+  virtual void updateToolTip();
 
   virtual void setProperties(const QMap<QString, QString> &props);
 

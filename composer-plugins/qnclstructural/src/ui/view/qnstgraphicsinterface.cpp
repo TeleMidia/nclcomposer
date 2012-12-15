@@ -34,7 +34,7 @@ void QnstGraphicsInterface::setRefer(bool isRefer)
   _isRefer = isRefer;
 }
 
-void QnstGraphicsInterface::updateTooltip()
+void QnstGraphicsInterface::updateToolTip()
 {
   QString tip = "";
   QString name = (getnstId() != "" ? getnstId() : "?");
@@ -61,6 +61,8 @@ void QnstGraphicsInterface::updateTooltip()
 
 void QnstGraphicsInterface::setProperties(const QMap<QString, QString> &props)
 {
+  QnstGraphicsEntityWithEdges::setProperties(props);
+
   if(props.contains("isRefer"))
   {
     if(props["isRefer"] == "true")

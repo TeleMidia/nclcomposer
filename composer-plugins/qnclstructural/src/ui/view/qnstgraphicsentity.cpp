@@ -35,7 +35,7 @@ QnstGraphicsEntity::~QnstGraphicsEntity()
 void QnstGraphicsEntity::setnstId(const QString &id)
 {
   QnstEntity::setnstId(id);
-  updateTooltip();
+  updateToolTip();
 }
 
 QnstGraphicsEntity* QnstGraphicsEntity::getnstGraphicsParent() const
@@ -72,55 +72,58 @@ void QnstGraphicsEntity::addnstGraphicsEntity(QnstGraphicsEntity* entity)
   {
     // \fixme This is only an additional check. Maybe, the better way to do
     // that could be using a set instead of a vector to entities.
-    if(entities.contains(entity))
+    if(!entities.contains(entity))
+    {
+      entities.insert(entity);
 
+      // connect(entity, SIGNAL(undoRequested()), SIGNAL(undoRequested()));
+      // connect(entity, SIGNAL(redoRequested()), SIGNAL(redoRequested()));
+
+      connect(entity, SIGNAL(cutRequested()), SIGNAL(cutRequested()));
+      connect(entity, SIGNAL(copyRequested()), SIGNAL(copyRequested()));
+      connect(entity, SIGNAL(pasteRequested()), SIGNAL(pasteRequested()));
+
+      connect(entity, SIGNAL(deleteRequested()), SIGNAL(deleteRequested()));
+
+      connect(entity, SIGNAL(exportRequested()), SIGNAL(exportRequested()));
+
+      connect(entity, SIGNAL(zoominRequested()), SIGNAL(zoominRequested()));
+      connect(entity, SIGNAL(zoomoutRequested()), SIGNAL(zoomoutRequested()));
+      connect(entity, SIGNAL(zoomresetRequested()), SIGNAL(zoomresetRequested()));
+      connect(entity, SIGNAL(fullscreenRequested()),
+                      SIGNAL(fullscreenRequested()));
+
+      connect(entity, SIGNAL(entityAdded(QnstGraphicsEntity*)),
+                      SIGNAL(entityAdded(QnstGraphicsEntity*)));
+      connect(entity, SIGNAL(entityChanged(QnstGraphicsEntity*)),
+                      SIGNAL(entityChanged(QnstGraphicsEntity*)));
+
+      connect(entity, SIGNAL(entityAboutToChange(QnstGraphicsEntity*,
+                                                 QMap<QString,QString>)),
+                      SIGNAL(entityAboutToChange(QnstGraphicsEntity*,
+                                                 QMap<QString,QString>)));
+      connect(entity, SIGNAL(entityRemoved(QnstGraphicsEntity*)),
+                      SIGNAL(entityRemoved(QnstGraphicsEntity*)));
+
+      connect(entity, SIGNAL(entitySelected(QnstGraphicsEntity*)),
+                      SIGNAL(entitySelected(QnstGraphicsEntity*)));
+
+      addnstEntity(entity);
+      addncgGraphicsEntity(entity);
+
+      if(entity)
+        entity->setnstGraphicsParent(this);
+    }
+    else
+    {
 #ifdef Q_WS_MAC
-    qWarning() << "[QNST] Warning! You are adding the same entity twice as \
-      child of " << this << __FILE__ << __LINE__;
+      qWarning() << "[QNST] Warning! You are adding the same entity twice as \
+        child of " << this << __FILE__ << __LINE__;
 #else
-    qWarning() << "[QNST] Warning! You are adding the same entity twice as \
-      child of " << (int) this << __FILE__ << __LINE__;
+      qWarning() << "[QNST] Warning! You are adding the same entity twice as \
+        child of " << (int) this << __FILE__ << __LINE__;
 #endif
-
-    entities.insert(entity);
-
-    // connect(entity, SIGNAL(undoRequested()), SIGNAL(undoRequested()));
-    // connect(entity, SIGNAL(redoRequested()), SIGNAL(redoRequested()));
-
-    connect(entity, SIGNAL(cutRequested()), SIGNAL(cutRequested()));
-    connect(entity, SIGNAL(copyRequested()), SIGNAL(copyRequested()));
-    connect(entity, SIGNAL(pasteRequested()), SIGNAL(pasteRequested()));
-
-    connect(entity, SIGNAL(deleteRequested()), SIGNAL(deleteRequested()));
-
-    connect(entity, SIGNAL(exportRequested()), SIGNAL(exportRequested()));
-
-    connect(entity, SIGNAL(zoominRequested()), SIGNAL(zoominRequested()));
-    connect(entity, SIGNAL(zoomoutRequested()), SIGNAL(zoomoutRequested()));
-    connect(entity, SIGNAL(zoomresetRequested()), SIGNAL(zoomresetRequested()));
-    connect(entity, SIGNAL(fullscreenRequested()),
-                    SIGNAL(fullscreenRequested()));
-
-    connect(entity, SIGNAL(entityAdded(QnstGraphicsEntity*)),
-                    SIGNAL(entityAdded(QnstGraphicsEntity*)));
-    connect(entity, SIGNAL(entityChanged(QnstGraphicsEntity*)),
-                    SIGNAL(entityChanged(QnstGraphicsEntity*)));
-
-    connect(entity, SIGNAL(entityAboutToChange(QnstGraphicsEntity*,
-                                               QMap<QString,QString>)),
-                    SIGNAL(entityAboutToChange(QnstGraphicsEntity*,
-                                               QMap<QString,QString>)));
-    connect(entity, SIGNAL(entityRemoved(QnstGraphicsEntity*)),
-                    SIGNAL(entityRemoved(QnstGraphicsEntity*)));
-
-    connect(entity, SIGNAL(entitySelected(QnstGraphicsEntity*)),
-                    SIGNAL(entitySelected(QnstGraphicsEntity*)));
-
-    addnstEntity(entity);
-    addncgGraphicsEntity(entity);
-
-    if(entity)
-      entity->setnstGraphicsParent(this);
+    }
   }
 }
 
