@@ -462,6 +462,7 @@ void ComposerMainWindow::addPluginWidget(IPluginFactory *fac, IPlugin *plugin,
   pW->setObjectName(fac->id());
 #else
   ClickableQDockWidget *dock = new ClickableQDockWidget(fac->name());
+  dock->setProperty("project", location);
 
   dock->setAllowedAreas(Qt::AllDockWidgetAreas);
   dock->setFeatures(QDockWidget::AllDockWidgetFeatures);
@@ -533,6 +534,7 @@ void ComposerMainWindow::addPluginWidget(IPluginFactory *fac, IPlugin *plugin,
 
 void ComposerMainWindow::updateDockStyle(QDockWidget *dock, bool selected)
 {
+  qWarning() << "ComposerMainWindows::updateDockStyle ( " << dock << selected << ")";
 
   QList <QTabBar*> tabBars = this->findChildren <QTabBar *>();
 
@@ -641,27 +643,32 @@ void ComposerMainWindow::tabClosed(int index)
     QMainWindow *w = projectsWidgets[location];
 
     allDocksMutex.lock();
-      QList<QDockWidget*> newAllDocks;
+      QList <QDockWidget*> newAllDocks;
       //Remove from allDocks
       for( int i = 0; i < allDocks.size(); i++)
       {
-        if(w->isAncestorOf(allDocks.at(i)))
-          allDocks.removeAt(i);
+        if(allDocks.at(i)->property("project") == location)
+        {
+          // It will not be part of the new allDock widget!
+          // allDocks.removeAt(i);
+        }
         else
           newAllDocks.push_back(allDocks.at(i));
       }
       allDocks = newAllDocks;
     allDocksMutex.unlock();
 
+    projectsWidgets.remove(location);
+    firstDock.remove(location);
+
     // Delete QMainWindow
     if (w)
     {
-        w->close();
-        w->deleteLater();
+      w->close();
+      w->deleteLater();
     }
-    projectsWidgets.remove(location);
-    firstDock.remove(location);
   }
+  qWarning() << "ComposerMainWindow::tabClosed ends";
 }
 
 void ComposerMainWindow::closeCurrentTab()
@@ -955,11 +962,9 @@ void ComposerMainWindow::updateViewMenu()
   {
     QString location = tabProjects->tabToolTip(tabProjects->currentIndex());
 
-    QMainWindow *window = projectsWidgets[location];
-
     for(int i = 0; i < allDocks.size(); i++)
     {
-      if(window->isAncestorOf(allDocks.at(i)))
+      if(allDocks.at(i)->property("project").toString() == location)
         ui->menu_Views->addAction(allDocks.at(i)->toggleViewAction());
     }
   }
