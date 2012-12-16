@@ -105,6 +105,7 @@ void QnstView::load(QString data)
   {
     if (entity->isMedia())
     {
+      qDebug() << "=========================================" << entity->getnstId();
       adjustMedia((QnstGraphicsMedia*) entity);
     }
 
@@ -180,7 +181,7 @@ void QnstView::read(QDomElement element, QDomElement parent)
     if(element.nodeName() == "body")
       addEntity(uid, "", properties, true);
     else
-      addEntity(uid, parent.attribute("uid"), properties, true);
+      addEntity(uid, parent.attribute("uid"), properties, true, false);
   }
   else if (element.nodeName() == "interfaceReference")
   {
@@ -1098,7 +1099,8 @@ void QnstView::addEntity(const QString uid, const QString parent,
 
     entity->adjust();
 
-    adjustEntity(entity);
+    if (adjust)
+      adjustEntity(entity);
   }
 
   // if the entity type is CONNECTOR
@@ -1838,6 +1840,10 @@ void QnstView::adjustMedia(QnstGraphicsMedia* entity)
 {
   QString referUID = entity->getReferUID();
   QString refer = entity->getRefer();
+
+  qDebug() << "===================================== ID" <<  entity->getnstId();
+  qDebug() << "===================================== REFER" << refer;
+  qDebug() << "===================================== REFERUID" << referUID;
 
   if (!refer.isEmpty() && !referUID.isEmpty())
   {

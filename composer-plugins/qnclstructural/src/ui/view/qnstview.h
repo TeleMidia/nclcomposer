@@ -68,7 +68,7 @@ public:
 public:
   void addEntity(const QString uid, const QString parent,
                  const QMap<QString, QString> &properties, bool undo = false,
-                 bool adjust = false);
+                 bool adjust = true);
 
   void removeEntity(const QString uid, bool undo = false, bool rmRef = true);
 
