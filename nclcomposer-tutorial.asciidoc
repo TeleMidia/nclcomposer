@@ -1,7 +1,7 @@
 Tutorial do NCL Composer
 ========================
 Roberto Gerson de Albuquerque Azevedo and Luiz Fernando Gomes Soares
-v1.0, 2012-09
+v1.0, 2012-12
 :doctype: book
 :lang: pt-BR
 
@@ -34,9 +34,9 @@ Alguns conhecimentos são necessários para prosseguir:
 	* http://www.ncl.org.br[Linguagem NCL 3.0 (Nested Context Language)] (pode ser
   	estudada junto com o tutorial).
 
-Exemplos
-~~~~~~~~
-	* Exemplo 0: Olá Garrincha!
+Exemplos:
+
+	* Exemplo 0: <<sample:00, Olá Garrincha!>>
 	* Exemplo 1: Sincronismo sem interatividade
 	* Exemplo 2: Sincronismo com interatividade
 	* Exempl0 3: Contextos
@@ -48,18 +48,7 @@ Exemplos
 	* Exemplo 9: Efeitos de Transição e Animação
 	* Exemplo 10: Navegação por teclas
 	* Exemplo 11: Objetos NCLua
-//
-// é uma linguagem 
-// declarativa, uma aplicação http://www.xml.org[XML], para a criação de
-// aplicações multimídia interativas. A NCL traz uma separação clara entre 
-// os conteúdos de mídia (áudio, vídeo, imagem etc.) e a estrutura de uma
-// aplicação. Um documento NCL apenas define como os objetos de mídia são 
-// estruturados e relacionados, no tempo e no espaço.
-//
-// O intuito principal deste tutorial é fornecer ao leitor a habilidade de 
-// desenvolver programas NCL simples, usando o {nclcomposer}, e capacitá-lo a 
-// melhor entender e exercitar os principais conceitos da NCL, no ambiente de
-// autoria {nclcomposer}.
+
 [NOTE]
 ****
 Neste tutorial, não existe a preocupação nem de definir a linguagem NCL
@@ -82,17 +71,46 @@ Handbook] ou para o http://composer.telemidia.puc-rio.br[{nclcomposer} User
 Manual] onde o leitor pode encontrar mais informações.
 ****
 
-//Estrutura de um documento Hipermídia
-//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+NCL: Conceitos Básicos
+~~~~~~~~~~~~~~~~~~~~~~
+NCL é uma linguagem declarativa, uma aplicação http://www.xml.org[XML], para a
+criação de aplicações multimídia interativas. A NCL traz uma separação clara
+entre os conteúdos de mídia (áudio, vídeo, imagem etc.) e a estrutura de uma
+aplicação. Um documento NCL apenas define como os objetos de mídia são
+estruturados e relacionados, no tempo e no espaço.
+
+//O intuito principal deste tutorial é fornecer ao leitor a habilidade de desenvolver programas NCL simples, usando o {nclcomposer}, e capacitá-lo a melhor entender e exercitar os principais conceitos da NCL, no ambiente de autoria {nclcomposer}.
+
+Para criarmos um documento hipermídia, geralmente, temos que responder a
+quatro perguntas: *o que* se quer tocar, *onde* (i.e. em que região da tela e
+em qual dispositivo), *como* (e.g. com que volume, com que transparência etc.)
+e *quando* (e.g. no início da apresentação, quando o usuário selecionar alguma
+teclas etc.).
+
 //Precisamos disso ?
-//O que tocar?
-//^^^^^^^^^^^^
-//Onde tocar?
-//^^^^^^^^^^^
-//Como tocar?
-//^^^^^^^^^^^
-//Quando tocar?
-//^^^^^^^^^^^^^
+O que tocar?
+^^^^^^^^^^^^
+Em NCL, essa resposta é realizada por meio dos objetos de mídia (elementos
+<media>).
+
+Onde tocar?
+^^^^^^^^^^^
+Em NCL, podemos responder a esta pergunta de duas formas. Definindo regiões
+(elementos <region>) que posteriormente serão associados aos objetos, ou
+diretamente por meio de propriedades nos objetos de mídia. As propriedades
+associadas à posicionamento de objetos são:
+
+	* left
+	* top
+	* width
+	* height
+
+Como tocar?
+^^^^^^^^^^^
+
+
+Quando tocar?
+^^^^^^^^^^^^^
 
 {nclcomposer}: Conceitos Básicos
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -166,6 +184,10 @@ NCL. Os erros no documento são apresentados como uma lista no
 
 image::http://composer.telemidia.puc-rio.br/_media/plugins/validator-plugin.png[title="{validator_view}",width="35%",align="center",link="http://composer.telemidia.puc-rio.br/_media/plugins/validator-plugin.png"]
 
+Perspectivas
+^^^^^^^^^^^^
+TODO
+
 [[sec:tutorial]]
 O Primeiro João
 ---------------
@@ -180,10 +202,17 @@ Mané Garrincha, escritas por Gerson Soares.
 NOTE: Uma descrição completa da animação _O Primeiro João_ pode ser encontrada
 em: <<Soares2012>>.
 
+[[sample:00]]
 Exemplo 0: Olá Garrincha!
 ~~~~~~~~~~~~~~~~~~~~~~~~~
-Em nosso primeiro exemplo, iremos apenas exibir o vídeo da animação. Para
-isso, vamos abrir o {nclcomposer}, que apresenta a seguinte tela de
+Objetivo
+^^^^^^^^
+Neste primeiro exemplo, o objetivo é apenas exibir o vídeo da animação em tela
+cheia.
+
+Passo 0: Criando um novo projeto
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Para isso, vamos abrir o {nclcomposer}, que apresenta a seguinte tela de
 boas-vindas:
 
 image::images/nclcomposer-welcomescreen.png[title="Tela de boas-vindas do {nclcomposer}.",width="35%",align="center",link="images/nclcomposer-welcomescreen.png"]
@@ -201,7 +230,7 @@ Nessa janela, atribua um nome para o projeto que você está criando, selecione
 o diretório onde deseja salvá-lo e também marque a opção _Copy and Import the
 default Connector Base_. 
 
-NOTE: Nas próximas seções discutiremos em detalhes o que são os conectores
+NOTE: Nas próximas seções serão discutidos em detalhes o que são os conectores
 e também as bases de conectores. Por enquanto, apenas marque esta opção,
 pois ela será útil para os próximos exemplos que iremos desenvolver.
 
@@ -231,79 +260,79 @@ foi gerado por padrão:
 </ncl>
 -------------------------------------------
 
-.Para saber mais: eXtensible Markup Language
-********************************************
-Alguns pontos que você deve saber sobre XML são:
-
-  * XML significa _EXtensible Markup Language_.
-	* XML é uma linguagem textual para descrição de dados.
-	* XML é uma recomendação W3C.
-
-**Tags, elements, and attributes**
-
-Existem três termos comumente utilizados para descrever partes de um documento
-XML: tags, elementos e atributos. Segue um exemplo que ilustra tais termos:
-
---------
-<address>
-  <name>
-    <title>Mrs.</title>
-    <first-name>
-      Mary
-    </first-name>
-    <last-name>
-      McGoon
-    </last-name>
-  </name>
-  <street>
-    1401 Main Street
-  </street>
-  <city state="NC">Anytown</city>
-  <postal-code>
-    34829
-  </postal-code>
-</address>
----------
-
-Uma **tag** é o texto entre os símbolos "<", à esquerda, e ">", à direita. Existem
-tags de início (como <name>) e tags de final (</name).
-
-Um **elemento** é composto por uma tag de início, uma tag de final e tudo entre
-essas. No exemplo acima, o elemento <name> contém três elementos-filhos: <title>,
-<first-name> e <last-name>.
-
-Um atributo é par nome-valor dentro de uma tag de início de um elemento. No
-exemplo acima, state é um atributo do elemento <city> element.
-
-	* Um documento XML é um documento textual composto por um conjunto de
-	* elementos aninhados.
-	* As tags XML não são predefinidas. Cada aplicação XML define as suas
-	  próprias tags.
-	* NCL é um exemplo de aplicação XML que define suas próprias
-		tags (<ncl>, <head>, <body>, <media>, ...).
-
-********************************************
-
-.Para saber mais: Estrutura do documento NCL
-************************************************
-Um documento NCL é um arquivo escrito em XML. Todo documento NCL possui a
-seguinte estrutura:
-
-  * uma seção de prólogo, definindo a codificação do arquivo.
-	* um cabeçalho de arquivo NCL (<ncl>).
-	* uma seção de cabeçalho, onde são definidos os elementos que serão
-	  reutilizados no corpo (<head>).
-	* o corpo do programa, (<body>), onde são definidos os diversos objetos de
-	  mídia (<media) e como eles se relacionam.
-	* pelo menos uma porta que indica onde o programa começa a ser exibido.
-	  (<port>).
-	* a conclusão do documento.
-
-TODO: Figura com o esqueleto de um documento NCL.
-************************************************
-
-Adicionando um objeto de mídia
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+//.Para saber mais: eXtensible Markup Language
+//********************************************
+//Alguns pontos que você deve saber sobre XML são:
+//
+//  * XML significa _EXtensible Markup Language_.
+//	* XML é uma linguagem textual para descrição de dados.
+//	* XML é uma recomendação W3C.
+//
+//**Tags, elements, and attributes**
+//
+//Existem três termos comumente utilizados para descrever partes de um documento
+//XML: tags, elementos e atributos. Segue um exemplo que ilustra tais termos:
+//
+//--------
+//<address>
+//  <name>
+//    <title>Mrs.</title>
+//    <first-name>
+//      Mary
+//    </first-name>
+//    <last-name>
+//      McGoon
+//    </last-name>
+//  </name>
+//  <street>
+//    1401 Main Street
+//  </street>
+//  <city state="NC">Anytown</city>
+//  <postal-code>
+//    34829
+//  </postal-code>
+//</address>
+//---------
+//
+//Uma **tag** é o texto entre os símbolos "<", à esquerda, e ">", à direita. Existem
+//tags de início (como <name>) e tags de final (</name).
+//
+//Um **elemento** é composto por uma tag de início, uma tag de final e tudo entre
+//essas. No exemplo acima, o elemento <name> contém três elementos-filhos: <title>,
+//<first-name> e <last-name>.
+//
+//Um atributo é par nome-valor dentro de uma tag de início de um elemento. No
+//exemplo acima, state é um atributo do elemento <city> element.
+//
+//	* Um documento XML é um documento textual composto por um conjunto de
+//	* elementos aninhados.
+//	* As tags XML não são predefinidas. Cada aplicação XML define as suas
+//	  próprias tags.
+//	* NCL é um exemplo de aplicação XML que define suas próprias
+//		tags (<ncl>, <head>, <body>, <media>, ...).
+//
+//********************************************
+//
+//.Para saber mais: Estrutura do documento NCL
+//************************************************
+//Um documento NCL é um arquivo escrito em XML. Todo documento NCL possui a
+//seguinte estrutura:
+//
+//  * uma seção de prólogo, definindo a codificação do arquivo.
+//	* um cabeçalho de arquivo NCL (<ncl>).
+//	* uma seção de cabeçalho, onde são definidos os elementos que serão
+//	  reutilizados no corpo (<head>).
+//	* o corpo do programa, (<body>), onde são definidos os diversos objetos de
+//	  mídia (<media) e como eles se relacionam.
+//	* pelo menos uma porta que indica onde o programa começa a ser exibido.
+//	  (<port>).
+//	* a conclusão do documento.
+//
+//TODO: Figura com o esqueleto de um documento NCL.
+//************************************************
+//
+Passo 1: Adicionando um objeto de mídia
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 Para inserir os nossos objetos de mídia, a forma mais simples é apenas
 arrastar os objetos de mídia do seu Gerenciador de Arquivos para dentro da
 {structural_view} do {nclcomposer}.
@@ -317,35 +346,14 @@ para o objeto de mídia, o que poder ser realizado selecionando o objeto que
 você acabou de editar e alterando o valor do atributo _src_ (ou na _Visão de
 Propriedades_ ou na _Visão Textual_).
 
-.Para saber mais: Objetos de Mídia
-************************************************
-TODO
-************************************************
+//.Para saber mais: Objetos de Mídia
+//************************************************
+//TODO
+//************************************************
+//
 
-Informando o(s) objeto(s) de mídia que serão inicialmente exibidos
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-Para informar que o objeto de mídia que acabamos de inserir deve iniciar
-quanto a nossa aplicação multimídia iniciar, é suficiente criarmos uma porta
-no corpo do documento, mapeando-a para o objeto de mídia.
-
-Para inserirmos uma porta no corpo do documento pela _Visão
-Estrutural_ é suficiente clicarmos com o botão direito sobre o corpo e
-selecionarmos o menu _Insert->Port_.
-
-image::images/nclcomposer-addport.png[title="Adicionando porta.", width="35%", align="center"]
-
-Para mapearmos a porta que acabamos de criar para o objeto de mídia, devemos, 
-segurando a tecla _SHIFT_, clicar sobre a porta e arrastar o ponteiro
-do mouse para o objeto de mídia.  
-
-image::images/nclcomposer-portcomponent.png[title="Mapeando porta para objeto de mídia.", width="35%", align="center"]
-
-Com isso, já definimos que nossa aplicação é constituída apenas do objeto de
-mídia _animGar_ e que quando a aplicação começar, o primeiro objeto de mídia a
-ser apresentado será o vídeo da animação _O Primeiro João_. 
-
-Propriedades e dimensões dos objetos de mídia
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Passo 2: Definindo propriedades do objeto de mídia
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 Para finalizar o nosso exemplo inicial _Alô Garrincha_ só falta agora
 definirmos onde esse vídeo da animação será exibido. A forma mais simples de
 definir as dimensões do objeto de mídia, é por meio de propriedades.
@@ -363,19 +371,59 @@ _height_.
 
 Para editar a propriedade inserirmos anteriormente é suficiente a
 selecionarmos pela {structural_view} e, depois, a partir da visão de
-propriedades podemos definir o seu nome e seu valor.
-
-No caso do nosso exemplo, devemos definir a propriedade _width_ e o valor
-100%. Da mesma forma podemos devemos criar uma propriedade _height_, também
-com o valor de 100%. Definindo assim, que nossa mídia irá ocupar toda a tela
-quando for apresentada.
+propriedades podemos definir o seu nome e seu valor. No caso do nosso 
+exemplo, devemos definir a propriedade _width_ e o valor 100%:
 
 image::images/nclcomposer-property-width.png[title="Definindo largura do objeto de mídia.", width="35%", align="center"]
 
-.Para saber mais: Propriedades dos Objetos de Mídia
-***************************************************
-TODO
-***************************************************
+Da mesma forma, deve-se  criar uma propriedade _height_, também com o valor 
+de 100%. Definindo assim, que nossa mídia irá ocupar toda a tela quando 
+for apresentada.
+
+Passo 3: Informando o(s) objeto(s) de mídia que serão inicialmente exibidos
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Para informar que o objeto de mídia que acabamos de inserir deve iniciar
+quanto a nossa aplicação multimídia iniciar, é suficiente criarmos uma porta
+no corpo do documento, mapeando-a para o objeto de mídia.
+
+Para inserirmos uma porta no corpo do documento pela _Visão
+Estrutural_ é suficiente clicarmos com o botão direito sobre o corpo e
+selecionarmos o menu _Insert->Port_.
+
+image::images/nclcomposer-addport.png[title="Adicionando porta.", width="35%", align="center"]
+
+*FIXME*: Esta figura deveria ter as duas propriedades definidas no passo
+anterior.
+
+Para mapearmos a porta que acabamos de criar para o objeto de mídia, devemos, 
+segurando a tecla _SHIFT_, clicar sobre a porta e arrastar o ponteiro
+do mouse para o objeto de mídia.  
+
+image::images/nclcomposer-portcomponent.png[title="Mapeando porta para objeto de mídia.", width="35%", align="center"]
+
+*FIXME*: Esta figura deveria ter as duas propriedades definidas no passo
+anterior.
+
+Com isso, já definimos que nossa aplicação é constituída apenas do objeto de
+mídia _animGar_ e que quando a aplicação começar, o primeiro objeto de mídia a
+ser apresentado será o vídeo da animação _O Primeiro João_. 
+
+Passo 4: Executar o exemplo desenvolvido
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Dado que o NCL Composer está devidamente configurado (link para o anexo que
+explica como configurar) com o player NCL de sua escolha, basta executar a
+aplicação por meio do "Run NCL Project"
+
+*TODO*: Imagem do botão.
+
+A seguinte tela exemplifica o exemplo em execução:
+
+*TODO*: Imagem rodando o Exemplo 0.
+
+//.Para saber mais: Propriedades dos Objetos de Mídia
+//***************************************************
+//TODO
+//***************************************************
 
 Exemplo 1: Sincronismo de Mídia sem Interatividade
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -498,47 +546,45 @@ Integração com o player NCL
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^
 TODO
 
-[appendix]
-Lista de Connectores pré-definidos
-----------------------------------
-Ao criar um novo projeto no {nclcomposer} é possível adicionar uma base de
-conectores pré-definidos (_defaultConnBase.ncl_). Esta base de conectores
-pré-definidos traz um conjunto de 
-
-
-[width="100%",frame="topbot",options="header"]
-|=======
-|          | *start*      | *stop*      | *pause*      | *resume*      | *set* + parâmetro _var_
-|*onBegin* | onBeginStart | onBeginStop | onBeginPause | onBeginResume | onBeginSet
-|*onEnd*   | onEndStart   | onEndStop   | onEndPause   | onEndResume   | onEndSet
-|*onSelection* (seleção por mouse) | onSelectionStart  | onSelectionStop |
-onSelectionPause | onSelectionResume | onSelectionSet
-|*onSelection* + parâmetro _key_ (seleção por tecla) | onKeySelectionStart |
-onKeySelectionStop | onKeySelectionPause | onKeySelectionResume |
-onKeySelectionSet
-|=======
-
-  * TODO: Como definir minha própria base de conectores???
-  * TODO: Como editar minha base de conectores default??
+//[appendix]
+//Lista de Connectores pré-definidos
+//----------------------------------
+//Ao criar um novo projeto no {nclcomposer} é possível adicionar uma base de
+//conectores pré-definidos (_defaultConnBase.ncl_). Esta base de conectores
+//pré-definidos traz um conjunto de 
+//
+//
+//[width="100%",frame="topbot",options="header"]
+//|=======
+//|          | *start*      | *stop*      | *pause*      | *resume*      | *set* + parâmetro _var_
+//|*onBegin* | onBeginStart | onBeginStop | onBeginPause | onBeginResume | onBeginSet
+//|*onEnd*   | onEndStart   | onEndStop   | onEndPause   | onEndResume   | onEndSet
+//|*onSelection* (seleção por mouse) | onSelectionStart  | onSelectionStop |
+//onSelectionPause | onSelectionResume | onSelectionSet
+//|*onSelection* + parâmetro _key_ (seleção por tecla) | onKeySelectionStart |
+//onKeySelectionStop | onKeySelectionPause | onKeySelectionResume |
+//onKeySelectionSet
+//|=======
+//
+//  * TODO: Como definir minha própria base de conectores???
+//  * TODO: Como editar minha base de conectores default??
 
 [appendix]
 Onde encontrar mais informações
 -------------------------------
 TODO
 
-[appendix]
+Construindo Programas Audiovisuais Interativos Utilizando a NCL 3.0
+
 Outras ferramentas de autoria
------------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Dado que existem diferente pefis de usuários para a linguagem NCL, é natural
 que também existam várias ferramentas, cada uma focada em um determinado
 perfil. O objetivo do {nclcomposer}, ao ser extensível por meio de plugins é
 possibilitar que todas essas diferentes abstra
 
-NCL Eclipse
-~~~~~~~~~~~
-
-CreaTVDigital
-~~~~~~~~~~~~~
+  * *NCL Eclipse*
+	* *CreaTVDigital*
 
 O {nclcomposer} não é a única ferramenta de autoria disponível para NCL. A
 proposta do NCL Composer é servir como base para a criação de diversas visões
