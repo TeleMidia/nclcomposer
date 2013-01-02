@@ -14,6 +14,7 @@ ELEMENT(ncl,,1,true)
 
     ELEMENT(transitionBase,head,?,false)
       ELEMENT(importBase,transitionBase,#,false)
+      ELEMENT(transition,transitionBase,#,false)
 
     ELEMENT(regionBase,head,*,false)
       ELEMENT(importBase,regionBase,#,false)
