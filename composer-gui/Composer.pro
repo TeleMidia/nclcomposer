@@ -18,6 +18,7 @@ else {
 
 #WHAT FEATURES TO COMPILE?
 #CONFIG += clubencl
+#DEFINES += USE_MDI
 
 contains(RUNSSH_ON, true)
 {
@@ -50,7 +51,6 @@ DEFINES += DEFAULT_MAX_NOTIFY_MESSAGES=\"4\"
 DEFINES += DEFAULT_MIN_MESSAGE_ID_TO_SHOW=\"2\"
 DEFINES += NCL_COMPOSER_NOTIFY_URL=\"\\\"http://composer.telemidia.puc-rio.br/update/CURRENT_VERSION\\\"\"
 
-#DEFINES += USE_MDI
 RC_FILE = images/nclcomposer.rc
 
 MOC_DIR     =   .moc
@@ -197,7 +197,9 @@ SOURCES += main.cpp \
     src/RunGingaConfig.cpp \
     src/ComposerHelpWidget.cpp \
     src/GeneralPreferences.cpp \
-    src/NewProjectWizard.cpp
+    src/NewProjectWizard.cpp \
+    src/FileChooser.cpp \
+    src/ClickableDockWidget.cpp
 #   src/ImportBasePreferences.cpp
 
 HEADERS += include/ComposerMainWindow.h \
@@ -211,7 +213,9 @@ HEADERS += include/ComposerMainWindow.h \
     include/RunGingaConfig.h \
     include/ComposerHelpWidget.h \
     include/GeneralPreferences.h \
-    include/NewProjectWizard.h
+    include/NewProjectWizard.h \
+    include/FileChooser.h \
+    include/ClickableDockWidget.h
 #   include/ImportBasePreferences.h
 
 RESOURCES += images.qrc
@@ -225,7 +229,8 @@ FORMS   += ui/PreferencesDialog.ui \
     ui/WelcomeWidget.ui \
     ui/AboutDialog.ui \
     ui/GeneralPreferences.ui \
-    ui/NewProjectWizard.ui
+    ui/NewProjectWizard.ui \
+    ui/FileChooser.ui
 
 #TRANSLATIONS
 win32 {
