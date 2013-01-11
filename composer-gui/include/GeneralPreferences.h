@@ -12,6 +12,7 @@
 #define GENERALPREFERENCES_H
 
 #include "IPreferencesPage.h"
+#include "FileChooser.h"
 
 namespace Ui {
   class GeneralPreferences;
@@ -24,6 +25,7 @@ class GeneralPreferences : public IPreferencesPage
 {
 private:
   Ui::GeneralPreferences *ui;
+  FileChooser *fileChooser;
 
 public:
   /*!

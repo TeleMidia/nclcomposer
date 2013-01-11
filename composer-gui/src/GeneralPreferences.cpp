@@ -40,6 +40,15 @@ GeneralPreferences::GeneralPreferences(QWidget *parent)
   if(index >= 0)
     ui->comboBox->setCurrentIndex(index);
   settings.endGroup();
+
+
+  QString currentQss = settings.value("default_stylesheets_dirs").toString();
+  fileChooser = new FileChooser(tr("QSS File Theme:"),
+                                FileChooser::GET_EXISTINGDIRECTORY,
+                                "", "", this);
+
+  fileChooser->setText(currentQss);
+  ui->formLayout->setWidget( 6, QFormLayout::FieldRole, fileChooser);
 }
 
 GeneralPreferences::~GeneralPreferences()
@@ -55,6 +64,8 @@ void GeneralPreferences::applyValues()
                     ui->comboBox->itemData(ui->comboBox->currentIndex())
                     .toString());
   settings.endGroup();
+
+  settings.setValue("default_stylesheets_dirs", fileChooser->getText());
 }
 
 void GeneralPreferences::setDefaultValues()

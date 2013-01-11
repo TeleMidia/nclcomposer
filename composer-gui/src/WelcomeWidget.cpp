@@ -607,15 +607,15 @@ void composer::gui::WelcomeWidget::on_commandLinkButton_6_clicked()
     QDesktopServices::openUrl(QUrl("http://www.telemidia.puc-rio.br/sites/telemidia.puc-rio.br/files/Curso%20Ginga%20Brasil.zip"));
 }
 
-void composer::gui::WelcomeWidget::on_commandLinkButton_9_clicked()
-{
-    QDesktopServices::openUrl(QUrl("http://www.telemidia.puc-rio.br/sites/telemidia.puc-rio.br/files/MCAplDeclarativa.pdf"));
-}
+// void composer::gui::WelcomeWidget::on_commandLinkButton_9_clicked()
+// {
+//     QDesktopServices::openUrl(QUrl("http://www.telemidia.puc-rio.br/sites/telemidia.puc-rio.br/files/MCAplDeclarativa.pdf"));
+// }
 
-void composer::gui::WelcomeWidget::on_commandLinkButton_30_clicked()
-{
-    QDesktopServices::openUrl(QUrl("http://www.ncl.org.br/en/tutorials"));
-}
+// void composer::gui::WelcomeWidget::on_commandLinkButton_30_clicked()
+// {
+//     QDesktopServices::openUrl(QUrl("http://www.ncl.org.br/en/tutorials"));
+// }
 
 void composer::gui::WelcomeWidget::on_commandLinkButton_10_clicked()
 {

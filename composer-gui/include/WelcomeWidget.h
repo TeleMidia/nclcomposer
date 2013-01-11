@@ -95,8 +95,8 @@ public:
 private slots:
   void on_commandLinkButton_29_clicked();
   void on_commandLinkButton_6_clicked();
-  void on_commandLinkButton_9_clicked();
-  void on_commandLinkButton_30_clicked();
+  // void on_commandLinkButton_9_clicked();
+  // void on_commandLinkButton_30_clicked();
   void on_commandLinkButton_10_clicked();
   void on_commandLinkButton_11_clicked();
   void on_commandLinkButton_31_clicked();
