@@ -67,7 +67,12 @@ void FileChooser::on_pushButton_pressed()
   ui->lineEdit->setText(location);
 }
 
-QString FileChooser::getSelected()
+QString FileChooser::getText()
 {
   return ui->lineEdit->text();
+}
+
+void FileChooser::setText(const QString &value)
+{
+  ui->lineEdit->setText(value);
 }

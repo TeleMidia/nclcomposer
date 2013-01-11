@@ -24,6 +24,7 @@
 
 namespace composer {
   namespace gui {
+
 /*!
 * \brief A DockWidget that emit signals when clicked.
 */
@@ -32,6 +33,9 @@ class ClickableQDockWidget : public QDockWidget
   Q_OBJECT
 
 public:
+  /*!
+   * \brief Constructor.
+   */
   ClickableQDockWidget (const QString &title, QWidget *parent = 0,
                         Qt::WindowFlags flags = 0);
 

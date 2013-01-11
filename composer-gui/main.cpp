@@ -57,7 +57,7 @@ void updateSettingsWithDefaults()
     QStringList extensions_path = settings.value("path").toStringList();
     extensions_path << defaultPluginsPath; //add default to extensions path
     extensions_path.removeDuplicates();
-  settings.setValue("path", extensions_path); //udpate with the new value
+    settings.setValue("path", extensions_path); //udpate with the new value
   settings.endGroup();
 /* End defaults plugin path */
 

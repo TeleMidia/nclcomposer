@@ -40,7 +40,8 @@ public:
                        QWidget *parent = 0);
   ~FileChooser();
 
-  QString getSelected();
+  QString getText();
+  void setText(const QString &value);
   
 private slots:
   void on_pushButton_pressed();
