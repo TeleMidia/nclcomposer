@@ -1,6 +1,4 @@
-/*
- * Copyright (c) 2011-2013 Telemidia/PUC-Rio.
- *
+/* Copyright (c) 2011 Telemidia/PUC-Rio.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -9,7 +7,6 @@
  * Contributors:
  *    Telemidia/PUC-Rio - initial API and implementation
  */
-
 #ifndef COMPOSERMAINWINDOW_H
 #define COMPOSERMAINWINDOW_H
 
@@ -44,9 +41,6 @@
 #include <QtGui/QBitmap>
 #include <QtGui/QPainter>
 #include <QtGui/QTreeView>
-#include <QtGui/QComboBox>
-#include <QtGui/QStackedWidget>
-#include <QtGui/QStackedLayout>
 #include <QToolButton>
 #include <QDockWidget>
 #include <QAtomicInt>
@@ -65,7 +59,6 @@ using namespace composer::core::util;
 #include "WelcomeWidget.h"
 #include "AboutDialog.h"
 #include "ComposerHelpWidget.h"
-#include "ClickableDockWidget.h"
 
 #include "RunGingaConfig.h"
 
@@ -100,15 +93,9 @@ private:
   static const int maximumRecentProjectsSize = 10;
 
   Ui::ComposerMainWindow *ui; /*!< A reference to Ui class. */
-
-  QMap <int, QString> widget2location;
-
-  QWidget *frameComboBoxProjects;
-  QLabel *labelComboBoxProjets;
-  QComboBox *comboBoxProjects;
-  QPushButton *btn_CloseCurrentProject;
-  QString currentProject;
-
+  QTabWidget  *tabProjects; /*!< Each open project is show in a different
+                                tab. The tabProjects variable keeps the list of
+                                the projects open tabs. */
   QToolButton  *tbPerspectiveDropList; /*!< Action that shows the list of
                                              perspective as a menu. */
   QMenu        *menu_Perspective; /*!< The menu containing the list of
@@ -156,13 +143,11 @@ private:
   PluginDetailsDialog *pluginDetailsDialog;
 
   QProcess localGingaProcess;
-
 #ifdef WITH_LIBSSH2
   QThreadEx runRemoteGingaVMThread;
   RunRemoteGingaVMAction runRemoteGingaVMAction;
   StopRemoteGingaVMAction stopRemoteGingaVMAction;
 #endif
-
   QProgressDialog *taskProgressBar;
 
   QTimer *autoSaveTimer; // auto save timer
@@ -287,14 +272,14 @@ private slots:
      */
   void showEditPreferencesDialog();
   /*!
-   * \brief
-   * \param index
-   */
-  void closeProject(QString location);
+     * \brief
+     * \param index
+     */
+  void tabClosed(int index);
   /*!
-   * \brief
-   */
-  void closeCurrentProject();
+     * \brief
+     */
+  void closeCurrentTab();
   /*!
      * \brief
      */
@@ -352,7 +337,7 @@ private slots:
 
   void gotoNCLClubWebsite();
 
-  void autoSaveOpenProjects();
+  void autoSaveCurrentProjects();
 
   // TODO: Remove this function from here.
   void updateLastFileDialogPath(QString filepath);
@@ -444,9 +429,6 @@ public slots:
   void redo();
 
   void openProjects(const QStringList &projects);
-
-  void showWelcomeWidget();
-  void setCurrentProjectFromIndex(int index);
 
 signals:
   /*!
