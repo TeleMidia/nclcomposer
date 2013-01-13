@@ -59,6 +59,7 @@ using namespace composer::core::util;
 #include "WelcomeWidget.h"
 #include "AboutDialog.h"
 #include "ComposerHelpWidget.h"
+#include "ClickableDockWidget.h"
 
 #include "RunGingaConfig.h"
 
