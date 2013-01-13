@@ -72,6 +72,9 @@
          <property name="text">
           <string>Copy and Import the default Connector Base</string>
          </property>
+         <property name="checked">
+          <bool>true</bool>
+         </property>
         </widget>
        </item>
       </layout>
