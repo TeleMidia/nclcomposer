@@ -650,24 +650,31 @@ vector <ModelElement *> Model::elementByPropertyName(string component, string pr
                     if (attribute.value() == propertyName)
                         elements.push_back(child);
                 }
-                Attribute refer = e->attribute("refer");
-                if (refer.value() != ""){
-                    multimap <string, virtualId>::iterator it2 = _idToElement.find(refer.value());
-                    do{
-                        ModelElement *eRefer = this->element((*it2).second);
-                        if (eRefer){
-                            children = eRefer->children();
-                            for (int i = 0; i < children.size(); i++){
-                                ModelElement *child =  this->element(children[i]);
-                                if (!child || child->elementName() != "property") continue;
 
-                                Attribute attribute = child->attribute("name");
-                                if (attribute.value() == propertyName)
-                                    elements.push_back(child);
-                            }
-                        }
-                        it2++;
-                    }while (it2 != _idToElement.upper_bound(refer.value()));
+                Attribute refer = e->attribute("refer");
+
+                if (refer.value() != "") {
+                    multimap <string, virtualId>::iterator it2 = _idToElement.find(refer.value());
+
+                    if(it2 != _idToElement.end()) {
+                      do{
+                          ModelElement *eRefer = this->element((*it2).second);
+                          printf("%p\n", eRefer);
+
+                          if (eRefer){
+                              children = eRefer->children();
+                              for (int i = 0; i < children.size(); i++) {
+                                  ModelElement *child =  this->element(children[i]);
+                                  if (!child || child->elementName() != "property") continue;
+
+                                  Attribute attribute = child->attribute("name");
+                                  if (attribute.value() == propertyName)
+                                      elements.push_back(child);
+                              }
+                          }
+                          it2++;
+                      } while (it2 != _idToElement.upper_bound(refer.value()));
+                    }
                 }
             }
             it ++;
