@@ -20,10 +20,10 @@ else {
 #CONFIG += clubencl
 #DEFINES += USE_MDI
 
-contains(RUNSSH_ON, true)
-{
+contains(RUNSSHON, true) {
   CONFIG += runssh_on
 }
+
 
 CONFIG += help
 QT += core xml network webkit
