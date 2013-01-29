@@ -20,6 +20,7 @@ contains(FORCERELEASE, true)
 {
   SUBDIRS += validator      # Validator is required when releasing.
   SUBDIRS -= debug-console  # Debug must not be present in release.
+  SUBDIRS -= media-preview/mediapreview.pro # It is still experimental.
 }
 
 macx {
