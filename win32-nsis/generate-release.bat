@@ -10,6 +10,14 @@ REM -   TODO:
 REM -     * Handle Qt release files (.dll)
 REM -     * Stop when any error occur.
 REM -
+REM -   DEPENDENCIES (must be in path)
+REM -     * qmake
+REM -     * mingw32-make
+REM -     * lupdate/lrelease
+REM -     * 7z
+REM -     * makensis
+REM -     * ssc/scp (if we want to publish)
+echo off
 
 REM - GET THE GIT VERSION
 cd ../composer-plugins/
@@ -21,7 +29,14 @@ cd ..
 SET /p CPRVERSION= <VERSION
 
 REM - I CAN FORCE A VERSION IF I UNCOMMENT THE NEXT LINE
-SET CPRVERSION=0.1.4
+REM - SET CPRVERSION=0.1.4
+
+REM - makensis path
+SET MAKENSIS="makensis.exe"
+
+SET PUBLISH_SERVER="robertogerson@xserve1"
+SET PUBLISH_SERVER_PATH="/Library/WebServer/Documents/composer/downloads/nightly/"
+SET PUBLISH_URL="%PUBLISH_SERVER%:%PUBLISH_SERVER_PATH%"
 
 echo Generating NCL Composer %CPRVERSION% Windows Installer and Zip files.
 
@@ -50,5 +65,6 @@ REM - Generate .zip release
 7z a -tzip nclcomposer-%CPRVERSION%.zip C:\Composer
 
 REM - Generate installer
-"C:\Program Files\NSIS\makensis.exe" /DVERSION=%CPRVERSION% composer.nsi
+%MAKENSIS% /DVERSION=%CPRVERSION% composer.nsi
+IF "%1"=="publish" (scp nclcomposer-installer-%CPRVERSION%.exe %PUBLISH_URL% && ssh %PUBLISH_SERVER% chmod 644 "%PUBLISH_SERVER_PATH%nclcomposer-installer-%CPRVERSION%.exe")
 
