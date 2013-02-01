@@ -4191,25 +4191,105 @@ QnstGraphicsLink* QnstView::createLink(QnstGraphicsEntity* entitya,
         parenta ->addnstGraphicsEntity(linkDot);
       }
 
+      QLineF l(pointa, pointb);
+
       if (pointa.x() <= pointb.x() && pointa.y() <= pointb.y())
       {
+        qreal angle = (l.angle() - 270);
+        qreal rangle = angle*PI/180;
+
+        if (angle > 45)
+        {
+          pointa.setX(pointa.x() + entitya->getWidth()/2);
+          pointa.setY(pointa.y() + ((entitya->getWidth()/2)/tan(rangle)));
+
+          pointb.setX(pointb.x() - entityb->getWidth()/2);
+          pointb.setY(pointb. y() - ((entityb->getWidth()/2)/tan(rangle)));
+        }
+        else
+        {
+          pointa.setX(pointa.x() + ((entitya->getHeight()/2)*tan(rangle)));
+          pointa.setY(pointa.y() + entitya->getHeight()/2);
+
+          pointb.setX(pointb.x() - ((entityb->getHeight()/2)*tan(rangle)));
+          pointb.setY(pointb.y() - entityb->getHeight()/2);
+        }
+
         xcenter = pointa.x() + (pointb.x() - pointa.x())/2;
         ycenter = pointa.y() + (pointb.y() - pointa.y())/2;
       }
       else if (pointa.x() > pointb.x() && pointa.y() < pointb.y())
       {
+        qreal angle = (270 - l.angle());
+        qreal rangle = angle*PI/180;
+
+        if (angle > 45)
+        {
+          pointa.setX(pointa.x() - entitya->getWidth()/2);
+          pointa.setY(pointa.y() + ((entitya->getWidth()/2)/tan(rangle)));
+
+          pointb.setX(pointb.x() + entityb->getWidth()/2);
+          pointb.setY(pointb.y() - ((entityb->getWidth()/2)/tan(rangle)));
+        }
+        else
+        {
+          pointa.setX(pointa.x() - ((entitya->getHeight()/2)*tan(rangle)));
+          pointa.setY(pointa.y() + entitya->getHeight()/2);
+
+          pointb.setX(pointb.x() + ((entityb->getHeight()/2)*tan(rangle)));
+          pointb.setY(pointb.y() - entityb->getHeight()/2);
+        }
+
         xcenter = pointb.x() + (pointa.x() - pointb.x())/2;
         ycenter = pointa.y() + (pointb.y() - pointa.y())/2;
-
       }
       else if (pointa.x() < pointb.x() && pointa.y() > pointb.y())
       {
+        qreal angle = l.angle();
+        qreal rangle = angle*PI/180;
+
+        if (angle < 45)
+        {
+          pointa.setX(pointa.x() + entitya->getWidth()/2);
+          pointa.setY(pointa.y() - ((entitya->getWidth()/2)*tan(rangle)));
+
+          pointb.setX(pointb.x() - entityb->getWidth()/2);
+          pointb.setY(pointb.y() + ((entityb->getWidth()/2)*tan(rangle)));
+        }
+        else
+        {
+          pointa.setX(pointa.x() + ((entitya->getHeight()/2)/tan(rangle)));
+          pointa.setY(pointa.y() - entitya->getHeight()/2);
+
+          pointb.setX(pointb.x() - ((entityb->getHeight()/2)/tan(rangle)));
+          pointb.setY(pointb.y() + entityb->getHeight()/2);
+        }
+
         xcenter = pointa.x() + (pointb.x() - pointa.x())/2;
         ycenter = pointb.y() + (pointa.y() - pointb.y())/2;
-
       }
       else if (pointa.x() > pointb.x() && pointa.y() > pointb.y())
       {
+        qreal angle = l.angle() - 90;
+        qreal rangle = angle*PI/180;
+
+        if (angle > 45)
+        {
+          pointa.setX(pointa.x() - entitya->getWidth()/2);
+          pointa.setY(pointa.y() - ((entitya->getWidth()/2)/tan(rangle)));
+
+          pointb.setX(pointb.x() + entityb->getWidth()/2);
+          pointb.setY(pointb.y() + ((entityb->getWidth()/2)/tan(rangle)));
+        }
+        else
+        {
+          pointa.setX(pointa.x() - ((entitya->getHeight()/2)*tan(rangle)));
+          pointa.setY(pointa.y() - entitya->getHeight()/2);
+
+          pointb.setX(pointb.x() + ((entityb->getHeight()/2)*tan(rangle)));
+          pointb.setY(pointb.y() + entityb->getHeight()/2);
+        }
+
         xcenter = pointb.x() + (pointa.x() - pointb.x())/2;
         ycenter = pointb.y() + (pointa.y() - pointb.y())/2;
       }
