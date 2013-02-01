@@ -712,7 +712,14 @@ void QnlyGraphicsRegionBase::requestAdditionRegion(QnlyGraphicsRegion* parent)
   //    attributes["bottom"] = "10%";
   attributes["width"] = "80%";
   attributes["height"] = "80%";
-  attributes["zIndex"] = "0";
+
+  //Make the zIndex to be the greater one in the regionBase
+  int zIndex = 0;
+  foreach(QnlyGraphicsRegion *region, regions.values())
+  {
+    zIndex = zIndex > region->getzIndex() ? zIndex : region->getzIndex() + 1;
+  }
+  attributes["zIndex"] = QString::number(zIndex);
 
   emit regionAdditionRequested("", parent->getUid(), uid, attributes);
 }
@@ -811,7 +818,14 @@ void QnlyGraphicsRegionBase::performRegion()
   attributes["bottom"] = "10%";
   attributes["width"] = "80%";
   attributes["height"] = "80%";
-  attributes["zIndex"] = "0";
+
+  //Make the zIndex to be the greater one in the regionBase
+  int zIndex = 0;
+  foreach(QnlyGraphicsRegion *region, regions.values())
+  {
+    zIndex = zIndex > region->getzIndex() ? zIndex : region->getzIndex() + 1;
+  }
+  attributes["zIndex"] = QString::number(zIndex);
 
   emit regionAdditionRequested("", "", uid, attributes);
 }
