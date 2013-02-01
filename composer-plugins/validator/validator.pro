@@ -69,4 +69,5 @@ HEADERS  += \
 OTHER_FILES +=
 
 RESOURCES += \
-    Resource.qrc
+    Resource.qrc \
+    ../common-resources/language.qrc

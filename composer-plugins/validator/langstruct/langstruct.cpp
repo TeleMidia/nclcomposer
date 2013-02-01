@@ -107,7 +107,7 @@ void showMaps () {
  */
 void Langstruct::init ()
 {
-    QFile ifs (":/config/langstruct.in");
+    QFile ifs (":/config/NCL_STRUCTURE");
 //    ifstream ifs (":/config/langstruct.in", ifstream::in);
 
     if (!ifs.open(QIODevice::ReadOnly | QIODevice::Text))
@@ -121,12 +121,23 @@ void Langstruct::init ()
     while (!ifs.atEnd()) {
         line = QString (ifs.readLine()).toStdString();
 
-//        std::cout << line;
+        if(!line.size()) continue;
+        if(line.substr(0, 2) == "//") continue;
+
+        std::cout << line;
 
         strTok.clear ();
         strTok.str(line);
 
         getline(strTok, component, '(');
+
+        if(!component.size()) continue;
+
+        std::stringstream trimmer;
+        trimmer << component;
+        trimmer >> component;
+
+        std::cout << "########### COMPONENT = " << component << std::endl;
         
 //        assert (component == "ELEMENT" || component == "ATTRIBUTE"
 //                || component == "REFERENCE" || component == "DATATYPE");
@@ -206,13 +217,19 @@ void Langstruct::init ()
         }
 
         // DATATYPE
-        else {
-            string datatype,
-                    regex;
+        else if(component == "DATATYPE"){
+            string datatype, regex, values;
 
             getline(strTok, datatype, ',');
-            getline(strTok, regex);
-            regex.erase(regex.size () - 1);
+
+            getline(strTok, regex, '\"');
+            getline(strTok, regex, '\"');
+
+            getline(strTok, values, '\"');
+            getline(strTok, values, '\"');
+
+            std::cout << "########### DATATYPE = " << datatype << std::endl;
+            std::cout << "########### REGEX = " << regex << std::endl;
             //
             //            RE2 re(regex);
             //            assert(re.ok());  // compiled; if not, see re.error();
