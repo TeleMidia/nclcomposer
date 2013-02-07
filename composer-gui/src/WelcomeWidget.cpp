@@ -10,6 +10,7 @@
 #include <WelcomeWidget.h>
 #include <ui_WelcomeWidget.h>
 #include <core/modules/ProjectControl.h>
+#include <QtGlobal>
 
 namespace composer {
 namespace gui {
@@ -124,7 +125,9 @@ void WelcomeWidget::notifyMessagesReadData(const QHttpResponseHeader &resp)
     ComposerSettings settings;
     settings.beginGroup("notify_system");
     if(settings.contains("min_message_id_to_show"))
-        min_message_id_to_show = settings.value("min_message_id_to_show").toInt();
+        min_message_id_to_show =
+            qMax( settings.value("min_message_id_to_show").toInt(),
+                  min_message_id_to_show);
     else
         settings.setValue("min_message_id_to_show", min_message_id_to_show);
 
