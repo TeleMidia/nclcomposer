@@ -64,3 +64,47 @@ void QnstConnector::removeParam(QString uid)
 {
   params.remove(uid);
 }
+
+QMap<QPair<QString,QString>, QString> QnstConnector::getConditionParams()
+{
+  return conditionParams;
+}
+
+void QnstConnector::addConditionParam(QString uid, QString name, QString value)
+{
+  QPair<QString, QString> key(uid, name);
+
+  conditionParams.insert(key, value);
+}
+
+void QnstConnector::removeConditionParam(QString uid, QString name)
+{
+  QPair<QString, QString> key(uid, name);
+
+  if (conditionParams.contains(key))
+  {
+    conditionParams.remove(key);
+  }
+}
+
+QMap<QPair<QString,QString>, QString> QnstConnector::getActionParams()
+{
+  return actionParams;
+}
+
+void QnstConnector::addActionParam(QString uid, QString name, QString value)
+{
+  QPair<QString, QString> key(uid, name);
+
+  actionParams.insert(key, value);
+}
+
+void QnstConnector::removeActionParam(QString uid, QString name)
+{
+  QPair<QString, QString> key(uid, name);
+
+  if (actionParams.contains(key))
+  {
+    actionParams.remove(key);
+  }
+}

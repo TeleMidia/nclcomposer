@@ -214,15 +214,34 @@ void QnstView::read(QDomElement element, QDomElement parent)
 
         if (e.nodeName() == "condition")
         {
-          conn->addCondition(e.attribute("type"), e.attribute("type"));
+          if (e.attribute("uid") != "")
+              conn->addCondition(e.attribute("uid"), e.attribute("type"));
+          else
+              conn->addCondition(e.attribute("type"), e.attribute("type"));
         }
         else if (e.nodeName() == "action")
         {
-          conn->addAction(e.attribute("type"), e.attribute("type"));
+          if (e.attribute("uid") != "")
+            conn->addAction(e.attribute("uid"), e.attribute("type"));
+          else
+            conn->addAction(e.attribute("type"), e.attribute("type"));
         }
         else if (e.nodeName() == "param")
         {
-          conn->addParam(e.attribute("uid"), e.attribute("name"));
+          if (e.attribute("type") == "action")
+          {
+            conn->addActionParam(e.attribute("uid"), e.attribute("name"), e.attribute("value"));
+          }
+          else if (e.attribute("type") == "condition")
+          {
+            conn->addConditionParam(e.attribute("uid"), e.attribute("name"), e.attribute("value"));
+          }
+          else
+          {
+            // maintaining compatibility with old versions (< v0.1.5)
+            conn->addActionParam(e.attribute("name"), "", e.attribute("name"));
+            conn->addConditionParam(e.attribute("name"), "", e.attribute("name"));
+          }
         }
       }
     }
@@ -458,28 +477,57 @@ QString QnstView::serialize()
     e.setAttribute("id", conn->getName());
     e.setAttribute("uid", conn->getnstUid());
 
-    foreach(QString condition, conn->getConditions())
+    foreach(QString k, conn->getConditions().keys())
     {
       QDomElement c = dom->createElement("condition");
-      c.setAttribute("type", condition);
+      c.setAttribute("uid", k); // since version 0.1.5
+      c.setAttribute("type", conn->getConditions().value(k));
 
       e.appendChild(c);
     }
 
-    foreach(QString action, conn->getActions())
+    foreach(QString k, conn->getActions().keys())
     {
       QDomElement a = dom->createElement("action");
-      a.setAttribute("type", action);
+      a.setAttribute("uid", k); // since version 0.1.5
+      a.setAttribute("type", conn->getActions().value(k));
 
       e.appendChild(a);
     }
 
-    foreach(QString key, conn->getParams().keys())
+// deprecated since version 0.1.5
+//    foreach(QString key, conn->getParams().keys())
+//    {
+//      QDomElement p = dom->createElement("param");
+
+//      p.setAttribute("uid", key);
+//      p.setAttribute("name", conn->getParams()[key]);
+
+//      e.appendChild(p);
+//    }
+
+    QPair<QString, QString> key;
+
+    foreach(key, conn->getActionParams().keys())
     {
       QDomElement p = dom->createElement("param");
 
-      p.setAttribute("uid", key);
-      p.setAttribute("name", conn->getParams()[key]);
+      p.setAttribute("uid", key.first);
+      p.setAttribute("name", key.second);
+      p.setAttribute("value", conn->getActionParams().value(key));
+      p.setAttribute("type", "action");
+
+      e.appendChild(p);
+    }
+
+    foreach(key, conn->getConditionParams().keys())
+    {
+      QDomElement p = dom->createElement("param");
+
+      p.setAttribute("uid", key.first);
+      p.setAttribute("name", key.second);
+      p.setAttribute("value", conn->getConditionParams().value(key));
+      p.setAttribute("type", "condition");
 
       e.appendChild(p);
     }
@@ -1769,15 +1817,49 @@ void QnstView::readConnector(QDomElement element, QnstConnector* conn)
       element.tagName() == "attributeAssessment")
   {
     if (element.attribute("role") != "")
-      conn->addCondition(element.attribute("role"), element.attribute("role"));
+    {
+      QString UID = QUuid::createUuid().toString();
+
+      conn->addCondition(UID, element.attribute("role"));
+
+      QDomNamedNodeMap attributes = element.attributes();
+
+      for (int i=0;i<attributes.size();i++)
+      {
+        QString name = attributes.item(i).toAttr().name();
+        QString value = attributes.item(i).toAttr().value();
+
+        if (value.contains("$"))
+        {
+          conn->addConditionParam(UID,name,value.replace('$',""));
+        }
+      }
+    }
   }
 
   if (element.tagName() == "simpleAction")
   {
     if (element.attribute("role") != "")
     {
-      conn->addAction(element.attribute("role"), element.attribute("role"));
+      QString UID = QUuid::createUuid().toString();
+
+      conn->addAction(UID, element.attribute("role"));
+
+      QDomNamedNodeMap attributes = element.attributes();
+
+      for (int i=0;i<attributes.size();i++)
+      {
+        QString name = attributes.item(i).toAttr().name();
+        QString value = attributes.item(i).toAttr().value();
+
+        if (value.contains("$"))
+        {
+          conn->addActionParam(UID,name,value.replace('$',""));
+        }
+      }
     }
+
+
   }
 
   QDomNodeList list = element.childNodes();
@@ -2509,6 +2591,14 @@ void QnstView::addCondition(const QString &uid,
 
     if (properties["role"] != "")
       connector->addCondition(uid, properties["role"]);
+
+    foreach(QString key, properties.keys())
+    {
+      if (key.startsWith("param"))
+      {
+        connector->addConditionParam(uid, "", properties.value(key));
+      }
+    }
   }
   else
     qWarning() << "[QNST] Trying yo add a condition to a connector that does not exist.";
@@ -2543,6 +2633,14 @@ void QnstView::addAction(const QString &uid,
 
     if (properties["role"] != "")
       connector->addAction(uid, properties["role"]);
+
+    foreach(QString key, properties.keys())
+    {
+      if (key.startsWith("param"))
+      {
+        connector->addActionParam(uid, "", properties.value(key));
+      }
+    }
   }
 }
 
@@ -2568,18 +2666,8 @@ void QnstView::changeBindParam(const QString &uid,
   {
     QnstGraphicsEntity* e = entities[properties.value("parent")];
 
-    if (e->getnstType() == Qnst::Action)
-    {
-      QnstGraphicsBind* action = (QnstGraphicsBind*) e;
-      action->setParam(properties.value("name",""),
-                       properties.value("value",""));
-    }
-    else if (e->getnstType() == Qnst::Condition)
-    {
-      QnstGraphicsBind* condition = (QnstGraphicsBind*) e;
-      condition->setParam(properties.value("name",""),
-                          properties.value("value",""));
-    }
+    QnstGraphicsBind* bind = (QnstGraphicsBind*) e;
+    bind->setParam(properties.value("name",""), properties.value("value",""));
   }
 }
 

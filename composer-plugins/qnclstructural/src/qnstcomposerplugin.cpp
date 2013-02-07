@@ -1116,6 +1116,23 @@ void QnstComposerPlugin::requestSimpleConditionAddition(Entity* entity)
     properties["role"] = entity->getAttribute("role");
   }
 
+  QMap<QString, QString>::iterator begin;
+  QMap<QString, QString>::iterator end;
+
+  entity->getAttributeIterator(begin,end);
+
+  int n = 0;
+
+  while(begin+1 != end)
+  {
+    QString value(begin.value());
+
+    if (value.startsWith("$"))
+    {
+      properties["param"+QString::number(n++)] = value.replace('$',"");
+    }
+  }
+
   if(entities.contains(conn->getUniqueId()))
     view->addEntity(entity->getUniqueId(),
                     entities[conn->getUniqueId()], properties);
@@ -1167,6 +1184,23 @@ void QnstComposerPlugin::requestSimpleActionAddition(Entity* entity)
   if (entity->getAttribute("role") != "")
   {
     properties["role"] = entity->getAttribute("role");
+  }
+
+  QMap<QString, QString>::iterator begin;
+  QMap<QString, QString>::iterator end;
+
+  entity->getAttributeIterator(begin,end);
+
+  int n = 0;
+
+  while(begin+1 != end)
+  {
+    QString value(begin.value());
+
+    if (value.startsWith("$"))
+    {
+      properties["param"+QString::number(n++)] = value.replace('$',"");
+    }
   }
 
   if(entities.contains(conn->getUniqueId()))

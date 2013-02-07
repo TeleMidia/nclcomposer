@@ -910,15 +910,64 @@ void QnstGraphicsBind::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
 {
   if (conn != NULL)
   {
-    QList<QString> names = conn->getParams().values();
-
+    QString UID = "";
     QMap<QString, QString> values;
 
-    foreach(QString name, names)
+    if (params.isEmpty())
     {
-      values[name] = params[name];
-      if (!names_uids.contains(name))
-        names_uids[name] = QUuid::createUuid().toString();
+      if (isAction())
+      {
+        foreach(QString type, conn->getActions().values())
+        {
+          if (type == QnstUtil::getStrFromBindType(getType()))
+          {
+            UID = conn->getActions().key(type,"");
+          }
+        }
+
+        QMap<QPair<QString, QString>, QString> parameters = conn->getActionParams();
+
+        QPair<QString, QString> key;
+
+        foreach(key , parameters.keys())
+        {
+          if (key.first == UID)
+          {
+            values[parameters.value(key)] = params.value(parameters.value(key),"");
+          }
+        }
+
+
+
+      }
+      else if (isCondition())
+      {
+        foreach(QString type, conn->getConditions().values())
+        {
+          if (type == QnstUtil::getStrFromBindType(getType()))
+          {
+            UID = conn->getConditions().key(type,"");
+          }
+        }
+
+        QMap<QPair<QString, QString>, QString> parameters = conn->getConditionParams();
+
+        QPair<QString, QString> key;
+
+        foreach(key , parameters.keys())
+        {
+          if (key.first == UID)
+          {
+            values[parameters.value(key)] = params.value(parameters.value(key),"");
+          }
+        }
+
+
+      }
+    }
+    else
+    {
+      values = params;
     }
 
     dialog->init(values);
@@ -933,6 +982,11 @@ void QnstGraphicsBind::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
 
         p["name"] = name;
         p["value"] = params[name];
+
+        if (names_uids[name].isEmpty())
+        {
+          names_uids[name] = QUuid::createUuid().toString();
+        }
 
         emit bindParamAdded(names_uids[name], getnstUid(), p);
       }
