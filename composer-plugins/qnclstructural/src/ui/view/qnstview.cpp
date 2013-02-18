@@ -930,9 +930,13 @@ void QnstView::addEntity(const QString uid, const QString parent,
   QnstGraphicsEntity *entity = NULL;
 
   if(entities.count(parent))
-    entityParent = dynamic_cast<QnstGraphicsNode*> (entities[parent]);
+  {
+    entityParent = dynamic_cast<QnstGraphicsEntity*> (entities[parent]);
+  }
 
-  qDebug() << "[QNST]" << ":" << "Adding entity '" + uid + "'" << properties;
+  qDebug() << "[QNST]" << ":" << "Adding entity '" + uid + "'" << properties << "Parent: " << parent;
+
+
 
   if(!entityParent &&
      type != Qnst::Body &&
@@ -1105,8 +1109,10 @@ void QnstView::addEntity(const QString uid, const QString parent,
       QnstGraphicsNode* oparent =
           (QnstGraphicsNode*) entityParent->getnstGraphicsParent();
 
-      QnstGraphicsMapping* entity = new QnstGraphicsMapping(oparent);
-      entity->setSwitchPortUid(parent);
+      entity = new QnstGraphicsMapping(oparent);
+      ((QnstGraphicsMapping*) entity)->setSwitchPortUid(parent);
+      ok = true;
+
       break;
     }
 
@@ -1923,9 +1929,9 @@ void QnstView::adjustMedia(QnstGraphicsMedia* entity)
   QString referUID = entity->getReferUID();
   QString refer = entity->getRefer();
 
-  qDebug() << "===================================== ID" <<  entity->getnstId();
-  qDebug() << "===================================== REFER" << refer;
-  qDebug() << "===================================== REFERUID" << referUID;
+//  qDebug() << "===================================== ID" <<  entity->getnstId();
+//  qDebug() << "===================================== REFER" << refer;
+//  qDebug() << "===================================== REFERUID" << referUID;
 
   if (!refer.isEmpty() && !referUID.isEmpty())
   {
@@ -2960,6 +2966,7 @@ void QnstView::requestEntityAddition(QnstGraphicsEntity* entity, bool undo)
 
         properties["TYPE"] = "switchPort";
         properties["id"] = entity->getnstId();
+
         ok = true;
         break;
       }
