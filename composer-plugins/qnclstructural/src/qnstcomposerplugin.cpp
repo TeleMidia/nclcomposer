@@ -2234,6 +2234,8 @@ void QnstComposerPlugin::validationError(QString pluginID, void *param)
   if(param)
   {
     pair <QString, QString> *p = (pair <QString, QString> *)param;
-    view->markError(p->first);
+
+    if (entities.contains(p->first))
+      view->markError(entities.value(p->first), p->second);
   }
 }

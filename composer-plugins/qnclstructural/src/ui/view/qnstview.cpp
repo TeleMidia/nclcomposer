@@ -4943,13 +4943,15 @@ void QnstView::updateBindParams(QString bindUID, QMap<QString, QString> params,
   }
 }
 
-void QnstView::markError(QString uid)
+void QnstView::markError(QString uid, QString msg)
 {
   if(entities.contains(uid))
   {
     QnstGraphicsEntity *entity = entities[uid];
     assert(entity != NULL);
     entity->setError(true);
+    entity->setErrorMsg(msg);
+    entity->updateToolTip();
   }
 }
 

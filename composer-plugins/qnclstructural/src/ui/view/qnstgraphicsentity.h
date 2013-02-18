@@ -117,6 +117,7 @@ public:
   bool isDraggable();
   void setDraggable(bool isDraggable);
   void setError(bool hasError);
+  void setErrorMsg(QString erroMsg);
 
 private:
   bool draggable;
@@ -126,6 +127,7 @@ private:
 
 protected:
   bool hover, hasError;
+  QString erroMsg;
   QString dropsrc;
 };
 

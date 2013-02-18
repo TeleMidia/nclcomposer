@@ -88,6 +88,9 @@ void QnstGraphicsComposition::updateToolTip()
     tip += "Composition ("+name+")";
   }
 
+  if (hasError)
+    tip += " - Error: " + erroMsg;
+
   setToolTip(tip);
 }
 
@@ -105,7 +108,11 @@ void QnstGraphicsComposition::draw(QPainter* painter)
     painter->setRenderHint(QPainter::Antialiasing,true);
 
     painter->setBrush(QColor(color));
-    painter->setPen(QPen(QBrush(Qt::black), 0));
+
+    if (hasError)
+      painter->setPen(QPen(QBrush(Qt::red), 2));
+    else
+      painter->setPen(QPen(QBrush(Qt::black), 0));
 
     painter->drawEllipse(4, 4, getWidth()-1, getHeight()-1);
 

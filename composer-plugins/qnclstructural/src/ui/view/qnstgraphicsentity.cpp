@@ -244,6 +244,11 @@ void QnstGraphicsEntity::setError(bool hasError)
   this->hasError = hasError;
 }
 
+void QnstGraphicsEntity::setErrorMsg(QString erroMsg)
+{
+  this->erroMsg = erroMsg;
+}
+
 void QnstGraphicsEntity::setProperties(const QMap<QString, QString> &props)
 {
   if(props.contains("id"))

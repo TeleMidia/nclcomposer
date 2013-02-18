@@ -170,7 +170,7 @@ public slots:
 
   void clearAllData();
 
-  void markError(QString uid);
+  void markError(QString uid, QString msg);
 
   void clearValidationErrors();
 

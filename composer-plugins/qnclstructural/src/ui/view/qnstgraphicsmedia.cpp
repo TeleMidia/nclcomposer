@@ -103,9 +103,10 @@ void QnstGraphicsMedia::updateToolTip()
       break;
   }
 
-  if (getSource().isEmpty()){
+  if (hasError)
+    tip += " - Error: " + erroMsg;
+  else if (getSource().isEmpty())
     tip += " - Alert: Missing 'src' attribute";
-  }
 
   setToolTip(tip);
 }
