@@ -1193,6 +1193,8 @@ void QnstView::removeEntity(const QString uid, bool undo, bool rmRef)
 {
   // traceEntities();
 
+  QnstConnector* cONN = NULL;
+
   // \fixme Move this logic to RemoveCommand
   if (entities.contains(uid))
   {
@@ -1404,6 +1406,11 @@ void QnstView::removeEntity(const QString uid, bool undo, bool rmRef)
   {
     connectors.remove(connectors2[uid]->getName());
     connectors2.remove(uid);
+  }
+  else if ((cONN = getConnectorByRoleUid(uid)) != NULL)
+  {
+    cONN->removeAction(uid);
+    cONN->removeCondition(uid);
   }
   else if (bindParamUIDToBindUID.contains(uid))
   {
@@ -2479,14 +2486,12 @@ void QnstView::adjustBind(QnstGraphicsBind* bind)
        !connector->getActions().values().contains(bind->getRole()))
     {
       bind->setInvalid(true);
-      qWarning() << "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
     }
     else
       bind->setInvalid(false);
   }
   else
   {
-    qWarning() << "SSSSSSSSSSSSSSSSSSSSSSSSSSSSS";
     bind->setInvalid(true);
   }
 
@@ -2602,7 +2607,9 @@ void QnstView::addCondition(const QString &uid,
     {
       if (key.startsWith("param"))
       {
-        connector->addConditionParam(uid, "", properties.value(key));
+        QString num = key.replace("param","");
+
+        connector->addConditionParam(uid, properties.value("attr"+num), properties.value(key));
       }
     }
   }
@@ -2618,12 +2625,22 @@ void QnstView::changeCondition(const QString &uid,
     QnstConnector* connector = connectors2[properties["connector"]];
 
     if (connector->getConditions().contains(uid))
-      connector->getConditions().remove(uid);
+      connector->removeCondition(uid);
 
     if (properties["role"] != "")
     {
       qWarning() << "CHANGING CONDITION" << properties["role"];
       connector->addCondition(uid, properties["role"]);
+
+      foreach(QString key, properties.keys())
+      {
+        if (key.startsWith("param"))
+        {
+          QString num = key.replace("param","");
+
+          connector->addConditionParam(uid, properties.value("attr"+num), properties.value(key));
+        }
+      }
     }
   }
   else
@@ -2644,7 +2661,9 @@ void QnstView::addAction(const QString &uid,
     {
       if (key.startsWith("param"))
       {
-        connector->addActionParam(uid, "", properties.value(key));
+        QString num = key.replace("param","");
+
+        connector->addActionParam(uid, properties.value("attr"+num), properties.value(key));
       }
     }
   }
@@ -4200,17 +4219,17 @@ QString QnstView::createNewConnector(QString condition, QString action)
 {
   QnstConnector* conn = new QnstConnector();
   conn->setName("newConnector"+QString::number(connectors.size()));
-  conn->addCondition("onBegin", "onBegin");
-  conn->addCondition("onEnd", "onEnd");
-  conn->addCondition("onSelection", "onSelection");
-  conn->addCondition("onResume", "onResume");
-  conn->addCondition("onPause", "onPause");
+  conn->addCondition(QUuid::createUuid().toString(), "onBegin");
+  conn->addCondition(QUuid::createUuid().toString(), "onEnd");
+  conn->addCondition(QUuid::createUuid().toString(), "onSelection");
+  conn->addCondition(QUuid::createUuid().toString(), "onResume");
+  conn->addCondition(QUuid::createUuid().toString(), "onPause");
 
-  conn->addAction("start", "start");
-  conn->addAction("stop", "stop");
-  conn->addAction("resume", "resume");
-  conn->addAction("pause", "pause");
-  conn->addAction("set", "set");
+  conn->addAction(QUuid::createUuid().toString(), "start");
+  conn->addAction(QUuid::createUuid().toString(), "stop");
+  conn->addAction(QUuid::createUuid().toString(), "resume");
+  conn->addAction(QUuid::createUuid().toString(), "pause");
+  conn->addAction(QUuid::createUuid().toString(), "set");
 
   connectors[conn->getName()] = conn;
   connectors2[conn->getnstUid()] = conn;
@@ -4222,10 +4241,22 @@ QString QnstView::createNewConnector(QString condition, QString action)
   properties["id"] = conn->getName();
 
   if (!action.isEmpty())
+  {
     properties["action"] = action;
 
+    QString UID = conn->getActions().key(action, QUuid::createUuid().toString());
+
+    properties["actionUID"] = UID;
+  }
+
   if (!condition.isEmpty())
+  {
     properties["condition"] = condition;
+
+    QString UID = conn->getConditions().key(action, QUuid::createUuid().toString());
+
+    properties["conditionUID"] = UID;
+  }
 
   emit entityAdded(conn->getnstUid(), "", properties);
 
@@ -4952,10 +4983,17 @@ void QnstView::updateBindParams(QString bindUID, QMap<QString, QString> params,
 
 void QnstView::markError(QString uid, QString msg)
 {
+  QnstGraphicsEntity *entity = NULL;
+
   if(entities.contains(uid))
   {
-    QnstGraphicsEntity *entity = entities[uid];
-    assert(entity != NULL);
+    entity = entities[uid];
+  }else if (binds.contains(uid)){
+    entity = (QnstGraphicsEntity*) binds[uid];
+  }
+
+  if (entity != NULL)
+  {
     entity->setError(true);
     entity->setErrorMsg(msg);
     entity->updateToolTip();
@@ -4968,6 +5006,12 @@ void QnstView::clearValidationErrors()
   {
     assert(entity != NULL);
     entity->setError(false);
+  }
+
+  foreach(QnstGraphicsBind *bind, binds.values())
+  {
+    assert(bind != NULL);
+    bind->setError(false);
   }
 }
 
@@ -5074,4 +5118,19 @@ void QnstView::deletePendingEntities()
   }
 
   toDelete.clear();
+}
+
+QnstConnector* QnstView::getConnectorByRoleUid(QString uid)
+{
+  QnstConnector* conn = NULL;
+
+  foreach(QnstConnector* c, connectors.values())
+  {
+    if (c->hasCondition(uid) || c->hasAction(uid))
+    {
+      conn = c;
+    }
+  }
+
+  return conn;
 }

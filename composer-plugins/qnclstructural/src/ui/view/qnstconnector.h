@@ -2,6 +2,7 @@
 #define QNSTCONNECTOR_H
 
 #include <QMap>
+#include <QDebug>
 
 #include  "qnstentity.h"
 
@@ -17,10 +18,12 @@ public:
   void setName(QString name);
 
   QMap<QString, QString> getConditions();
+  bool hasCondition(QString uid);
   void addCondition(QString uid, QString condition);
   void removeCondition(QString uid);
 
   QMap<QString, QString> getActions();
+  bool hasAction(QString uid);
   void addAction(QString uid, QString action);
   void removeAction(QString uid);
 

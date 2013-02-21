@@ -690,7 +690,6 @@ void QnstComposerPlugin::requestEntityAddition(Entity* entity)
 
 void QnstComposerPlugin::requestEntityRemotion(Entity* entity)
 {
-  // \fixme It is still missing connector, simpleCondition and simpleAction
   if (isEntityHandled(entity))
   {
     QString entityID = entity->getUniqueId();
@@ -1123,14 +1122,19 @@ void QnstComposerPlugin::requestSimpleConditionAddition(Entity* entity)
 
   int n = 0;
 
-  while(begin+1 != end)
+  while(begin != end)
   {
+    QString name(begin.key());
     QString value(begin.value());
 
     if (value.startsWith("$"))
     {
-      properties["param"+QString::number(n++)] = value.replace('$',"");
+      properties["attr"+QString::number(n)] = name;
+      properties["value"+QString::number(n)] = value.replace('$',"");
+      n++;
     }
+
+    begin++;
   }
 
   if(entities.contains(conn->getUniqueId()))
@@ -1159,6 +1163,28 @@ void QnstComposerPlugin::requestSimpleConditionChange(Entity* entity)
 
   if (entity->getAttribute("role") != "")
     properties["role"] = entity->getAttribute("role");
+
+  QMap<QString, QString>::iterator begin;
+  QMap<QString, QString>::iterator end;
+
+  entity->getAttributeIterator(begin,end);
+
+  int n = 0;
+
+  while(begin != end)
+  {
+    QString name(begin.key());
+    QString value(begin.value());
+
+    if (value.startsWith("$"))
+    {
+      properties["attr"+QString::number(n)] = name;
+      properties["value"+QString::number(n)] = value.replace('$',"");
+      n++;
+    }
+
+    begin++;
+  }
 
   if(entities.contains(entity->getUniqueId()))
     view->changeEntity(entities[entity->getUniqueId()], properties);
@@ -1193,14 +1219,19 @@ void QnstComposerPlugin::requestSimpleActionAddition(Entity* entity)
 
   int n = 0;
 
-  while(begin+1 != end)
+  while(begin != end)
   {
+    QString name(begin.key());
     QString value(begin.value());
 
     if (value.startsWith("$"))
     {
-      properties["param"+QString::number(n++)] = value.replace('$',"");
+      properties["attr"+QString::number(n)] = name;
+      properties["value"+QString::number(n)] = value.replace('$',"");
+      n++;
     }
+
+    begin++;
   }
 
   if(entities.contains(conn->getUniqueId()))
@@ -1229,6 +1260,28 @@ void QnstComposerPlugin::requestSimpleActionChange(Entity* entity)
 
   if (entity->getAttribute("role") != "")
     properties["role"] = entity->getAttribute("role");
+
+  QMap<QString, QString>::iterator begin;
+  QMap<QString, QString>::iterator end;
+
+  entity->getAttributeIterator(begin,end);
+
+  int n = 0;
+
+  while(begin != end)
+  {
+    QString name(begin.key());
+    QString value(begin.value());
+
+    if (value.startsWith("$"))
+    {
+      properties["attr"+QString::number(n)] = name;
+      properties["value"+QString::number(n)] = value.replace('$',"");
+      n++;
+    }
+
+    begin++;
+  }
 
   if(entities.contains(entity->getUniqueId()))
     view->changeEntity(entities[entity->getUniqueId()], properties);
@@ -1741,7 +1794,9 @@ void QnstComposerPlugin::requestComplexConnectorAddition(const QString uid,
         cattributes["role"] = properties["condition"];
         cattributes["max"] = "unbounded";
 
+        request = properties["conditionUID"];
         emit addEntity("simpleCondition", cpcUID, cattributes, false);
+        request = "";
       }
 
       // action
@@ -1751,7 +1806,9 @@ void QnstComposerPlugin::requestComplexConnectorAddition(const QString uid,
         aattributes["role"] = properties["action"].toLower();
         aattributes["max"] = "unbounded";
 
+        request = properties["actionUID"];
         emit addEntity("simpleAction", cpaUID, aattributes, false);
+        request = "";
       }
     }
   }
@@ -2092,7 +2149,8 @@ bool QnstComposerPlugin::isEntityHandled(Entity *entity)
        type == "switch" || type == "port" || type == "link" || type == "bind" ||
        type == "area" || type == "property" || type == "causalConnector" ||
        type == "switchPort" || type == "mapping" || type == "importBase"||
-       type == "bindParam" || type == "connectorParam"  )
+       type == "bindParam" || type == "connectorParam" ||
+       type == "simpleCondition" || type == "simpleAction")
 
       return true;
   }

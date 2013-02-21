@@ -32,7 +32,26 @@ void QnstConnector::addCondition(QString uid, QString condition)
 
 void QnstConnector::removeCondition(QString uid)
 {
-  conditions.remove(uid);
+  if (conditions.remove(uid))
+  {
+    QPair<QString, QString> p;
+
+    foreach(p, conditionParams.keys())
+    {
+      if (p.first == uid)
+        conditionParams.remove(p);
+    }
+  }
+}
+
+bool QnstConnector::hasCondition(QString uid)
+{
+  return conditions.contains(uid);
+}
+
+bool QnstConnector::hasAction(QString uid)
+{
+  return actions.contains(uid);
 }
 
 QMap<QString, QString> QnstConnector::getActions()
@@ -47,7 +66,16 @@ void QnstConnector::addAction(QString uid, QString action)
 
 void QnstConnector::removeAction(QString uid)
 {
-  actions.remove(uid);
+  if (actions.remove(uid))
+  {
+    QPair<QString, QString> p;
+
+    foreach(p, actionParams.keys())
+    {
+      if (p.first == uid)
+        actionParams.remove(p);
+    }
+  }
 }
 
 QMap<QString, QString> QnstConnector::getParams()

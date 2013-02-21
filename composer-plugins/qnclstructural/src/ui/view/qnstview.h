@@ -312,6 +312,8 @@ private:
 
   void deletePendingEntities();
 
+  QnstConnector* getConnectorByRoleUid(QString uid);
+
   bool modified;
 
   bool linking;
