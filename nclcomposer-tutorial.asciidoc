@@ -1,6 +1,11 @@
-Tutorial do NCL Composer
-========================
-Roberto Gerson de Albuquerque Azevedo and Luiz Fernando Gomes Soares
+Manual do Usuário do NCL Composer
+=================================
+Roberto Gerson de Albuquerque Azevedo <robertogerson@telemidia.puc-rio.br>
+:Author Initials: RGAA
+:toc:
+:icons:
+:numbered:
+:website: http://asciidoc.org/
 v1.0, 2012-12
 :doctype: book
 :lang: pt-BR
@@ -19,6 +24,267 @@ v1.0, 2012-12
 [[sec:intro]]
 Introdução
 ----------
+//O que é NCL?
+//~~~~~~~~~~~~
+//NCL é uma linguagem declarativa, uma aplicação http://www.xml.org[XML], para a
+//criação de aplicações multimídia interativas. A NCL traz uma separação clara
+//entre os conteúdos de mídia (áudio, vídeo, imagem etc.) e a estrutura de uma
+//aplicação. Um documento NCL apenas define como os objetos de mídia são
+//estruturados e relacionados, no tempo e no espaço.
+
+//O intuito principal deste tutorial é fornecer ao leitor a habilidade de desenvolver programas NCL simples, usando o {nclcomposer}, e capacitá-lo a melhor entender e exercitar os principais conceitos da NCL, no ambiente de autoria {nclcomposer}.
+
+//Para criarmos um documento hipermídia, geralmente, temos que responder a
+//quatro perguntas: *o que* se quer tocar, *onde* (i.e. em que região da tela e
+//em qual dispositivo), *como* (e.g. com que volume, com que transparência etc.)
+//e *quando* (e.g. no início da apresentação, quando o usuário selecionar alguma
+//teclas etc.).
+
+//Precisamos disso ?
+// O que tocar?:
+//	Em NCL, essa resposta é realizada por meio dos objetos de mídia (elementos
+//	<media>).
+
+// Onde tocar?:
+//	Em NCL, podemos responder a esta pergunta de duas formas. Definindo regiões
+//	(elementos <region>) que posteriormente serão associados aos objetos, ou
+//	diretamente por meio de propriedades nos objetos de mídia. As propriedades
+//	associadas à posicionamento de objetos são: _left_, _top_, _width_ e
+//	_height_.
+
+//Como tocar?:
+//	Em NCL, respondemos isso por meio de propriedades nos objetos de mídia, ou
+//	por meio de descritores.
+
+//Quando tocar?:
+//	Em NCL, respondemos essa pergunta por meio de links e conectores.
+
+O que é o {nclcomposer}?
+~~~~~~~~~~~~~~~~~~~~~~~~
+O http://composer.telemidia.puc-rio.br[{nclcomposer}] é uma ferramenta de
+autoria para NCL que visa facilitar o desenvolvimento de aplicações 
+interativas para usuário não-programadores. Para isso, ele utiliza-se de
+várias abstrações gráficas (visões) que permitem ao autor focar em apenas um
+determinado ponto, durante cada fase distinta da autoria.
+
+Conceitos Básicos
+~~~~~~~~~~~~~~~~~
+Plugins
+^^^^^^^
+TODO
+
+Visões
+^^^^^^
+Uma visão permite ao autor visualizar/editar uma característica específica do 
+documento hipermídia. As principais visões do {nclcomposer} são:
+{default_views}.
+
+Perspectivas
+^^^^^^^^^^^^
+Uma perspectiva, no NCL Composer, é a disposição das visões na tela. É
+permitido ao usuário criar suas próprias perspectivas, escolhendo a que melhor
+o ajuda a efetuar uma determinada tarefa.
+
+[[sec:utilizing]]
+Usando a documentação e buscando ajuda
+--------------------------------------
+Divisão desta documentação
+
+  * Interface gráfica
+	* Tutorial
+
+Onde buscar mais ajuda: Mailing list!
+
+[[sec:iniciando]]
+Iniciando
+---------
+Instalando o {nclcomposer}
+~~~~~~~~~~~~~~~~~~~~~~~~~
+TODO
+
+Windows
+^^^^^^^
+TODO
+
+Linux (Ubuntu/Debian)
+^^^^^^^^^^^^^^^^^^^^^
+TODO
+
+MacOS X
+^^^^^^^
+TODO
+
+Instalando o player NCL
+~~~~~~~~~~~~~~~~~~~~~~~
+TODO
+
+Windows
+^^^^^^^
+TODO
+
+Linux
+^^^^^
+TODO
+
+MacOS X
+^^^^^^^
+TODO
+
+Configuração do Ambiente
+~~~~~~~~~~~~~~~~~~~~~~~~
+Configurando a disposição das visões 
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Escondendo/mostrando visões
++++++++++++++++++++++++++++
+É possível esconder ou mostrar cada uma das visões instaladas no NCL Composer
+por meio do menu _Window->Views_:
+
+image::images/nclcomposer-menu-hide-show-views.png[title="Menu para mostrar esconder visões.", width="35%"]
+
+Criando novas perspectivas
+++++++++++++++++++++++++++
+Para criar novas perspectivas, inicialmente você precisa mostrar todas as
+_Visões_ que você deseja que façam parte dessa perspectiva. Depois disso, 
+você pode posicionar cada uma das views. Para salvar a perspectiva que 
+acabou de posicionar, basta ir em 
+
+image::images/nclcomposer-save-perspective-2.png[title="Menu para mostrar esconder visões.", width="35%"]
+
+image::images/nclcomposer-save-perspective-3.png[title="Menu para mostrar esconder visões.", width="35%"]
+
+image::images/nclcomposer-save-perspective-4.png[title="Menu para mostrar esconder visões.", width="35%"]
+
+Alternando entre perspectivas
++++++++++++++++++++++++++++++
+
+image::images/nclcomposer-save-perspective-5.png[title="Alternando entre perspectivas", width="25%"]
+
+
+Integração com o player NCL
+^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Existem duas formas principais de executar sua aplicação NCL a partir da
+interface do NCL Composer:
+
+ * No executável do Ginga-NCL instalado localmente; ou
+ * em uma máquina remota (e.g. Ginga Virtual Set-top Box);
+
+Executando no Ginga-NCL localmente
+++++++++++++++++++++++++++++++++++
+Para configurar o NCL Composer para executar em uma instalação local do Ginga
+selecione o Menu: _Edit->Preferences->Run Configuration_.
+
+image::images/nclcomposer-run-config-local.png["Execução local."]
+
+Nessa janela, marque a opção _Local: Ginga Player_ e na caixa de texto
+_Command_ coloque o caminho completo do executável Ginga-NCL.
+
+A caixa de texto _Argument_ pode ser preenchida com os parâmetros que o
+executável do Ginga-NCL será chamado. Deve-se colocar um parâmetro em cada
+uma das linhas.
+
+Executando no Ginga-NCL Virtual Set-top Box
++++++++++++++++++++++++++++++++++++++++++++
+Para executar no Ginga Virtual Set-top Box escolha a opção: _Remote: Ginga-NCL
+Virtual Set-top Box_, conforme a figura a seguir:
+
+image::images/nclcomposer-run-config-remote.png["Configuração para executar aplicação no _Ginga-NCL Virtual Set-top Box_."]
+
+Usualmente, o único parâmetro a ser modificado é o endereço IP da máquina
+virtual contendo o _Ginga-NCL Virtual Set-top Box_. Só é sugerido modificar os
+outros parâmetros caso você saiba exatamente o que está fazendo.
+
+[[sec:utilizing]]
+Janelas e Menus do NCL Composer
+-------------------------------
+Janela Principal
+~~~~~~~~~~~~~~~~
+TODO: Imagem com a visão geral do NCL Composer.
+
+Barra de título::
+TODO
+
+Barra de menu::
+Mostra as entradas de menu disponíveis.
+
+Barra de ferramentas::
+TODO
+
+Tab Bar::
+TODO
+
+Área das Visões::
+TODO
+
+Visões _Default_
+~~~~~~~~~~~~~~~~
+Por padrão o NCL Composer vem com as seguintes visões:
+
+[[sec:structural_view]]
+Visão Estrutural
+^^^^^^^^^^^^^^^^
+A {structural_view} permite que os autores de aplicações interajam visualmente
+com a estrutura lógica do documento NCL. Em NCL, a estrutura lógica é
+representada pelos seus objetos (nós de conteúdo e nós de composição) e os
+elos entre esses objetos (representadas pelos elementos <link>).
+
+image::http://composer.telemidia.puc-rio.br/_media//plugins/structural-plugin-02102012.png[title="{structural_view}",width="35%",link="http://composer.telemidia.puc-rio.br/_media//plugins/structural-plugin-02102012.png"]
+
+[[sec:layout_view]]
+Visão de Leiaute
+^^^^^^^^^^^^^^^^
+A {layout_view} permite que os autores de aplicações NCL interajam visualmente
+com as regiões onde os objetos de mídia serão inicialmente apresentados. Nesta
+visão, os autores podem criar e manipular as regiões e a hierarquia de regiões
+do documento.
+
+image::http://composer.telemidia.puc-rio.br/_media/layout_view.png[title="{layout_view}",width="35%",link="http://composer.telemidia.puc-rio.br/_media/layout_view.png"]
+
+[[sec:outline_view]]
+Visão de Outline
+^^^^^^^^^^^^^^^^
+A {outline_view} apresenta a estrutura do documento NCL como uma árvore,
+permitindo aos autores navegarem no documento.
+
+image::http://composer.telemidia.puc-rio.br/_media/outline-view.png[title="{outline_view}",width="35%",link="http://composer.telemidia.puc-rio.br/_media/outline-view.png"]
+
+[[sec:properties_view]]
+Visão de Propriedades
+^^^^^^^^^^^^^^^^^^^^^
+A {properties_view} apresenta o conjunto de propriedades da entidade
+selecionada. Essa entidade selecionada por ser, por exemplo, uma região na
+{layout_view}, um objeto de mídia na {structural_view} etc.
+
+image::http://composer.telemidia.puc-rio.br/_media/property-view.png[title="{properties_view}",width="35%",link="http://composer.telemidia.puc-rio.br/_media/property-view.png"]
+
+[[sec:textual_view]]
+Visão Textual
+^^^^^^^^^^^^^
+A {textual_view} permite aos usuários interagirem diretamente com o
+código-fonte da aplicação NCL. Ela é um editor de texto avançado focado na
+linguagem NCL e traz funcionalidades como: coloração sintática, sugestão de
+código contextual e formatação de código.
+
+A {textual_view} é recomendada especialmente para usuários avançados e que se
+sentem à vontade com a sintaxe XML.
+
+image::http://composer.telemidia.puc-rio.br/_media/textual-view.png[title="{textual_view}",width="35%",link="http://composer.telemidia.puc-rio.br/_media//textual-view.png"]
+
+[[sec:validator]]
+Validador
+^^^^^^^^^
+O {validator_view} é responsável por notificar erros e alertas no documento
+NCL. Os erros no documento são apresentados como uma lista no
+{validator_view}. A figura a seguir apresenta um exemplo.
+
+image::http://composer.telemidia.puc-rio.br/_media/plugins/validator-plugin.png[title="{validator_view}",width="35%",link="http://composer.telemidia.puc-rio.br/_media/plugins/validator-plugin.png"]
+
+
+
+TODO
+
+[[sec:tutorial]]
+Tutorial
+--------
 Este tutorial é o ponto de partida para os interessados em desenvolver
 aplicações para TV Digital usando o
 http://composer.telemidia.puc-rio.br[{nclcomposer}].
@@ -37,7 +303,7 @@ Alguns conhecimentos são necessários para prosseguir:
 Exemplos:
 
 	* Exemplo 0: <<sample:00, Olá Garrincha!>>
-	* Exemplo 1: Sincronismo sem interatividade
+	* Exemplo 1: <<sample:01, Sincronismo sem interatividade>>
 	* Exemplo 2: Sincronismo com interatividade
 	* Exempl0 3: Contextos
 	* Exemplo 4: Reúso de Objetos de Mídia
@@ -65,132 +331,12 @@ Para uma referência completa sobre o {nclcomposer}, é possível consultar o:
 
   * http://composer.telemidia.puc-rio.br[{nclcomposer} User Manual] (inglês).
 
-Sempre que necessário, no entanto, no decorrer deste tutorial, buscamos
-inserir ponteiros para partes específicas do http://handbook.ncl.org.br[NCL
+Sempre que necessário, no entanto, no decorrer deste tutorial, é possível
+encontrar ponteiros para partes específicas do http://handbook.ncl.org.br[NCL
 Handbook] ou para o http://composer.telemidia.puc-rio.br[{nclcomposer} User
 Manual] onde o leitor pode encontrar mais informações.
 ****
 
-NCL: Conceitos Básicos
-~~~~~~~~~~~~~~~~~~~~~~
-NCL é uma linguagem declarativa, uma aplicação http://www.xml.org[XML], para a
-criação de aplicações multimídia interativas. A NCL traz uma separação clara
-entre os conteúdos de mídia (áudio, vídeo, imagem etc.) e a estrutura de uma
-aplicação. Um documento NCL apenas define como os objetos de mídia são
-estruturados e relacionados, no tempo e no espaço.
-
-//O intuito principal deste tutorial é fornecer ao leitor a habilidade de desenvolver programas NCL simples, usando o {nclcomposer}, e capacitá-lo a melhor entender e exercitar os principais conceitos da NCL, no ambiente de autoria {nclcomposer}.
-
-Para criarmos um documento hipermídia, geralmente, temos que responder a
-quatro perguntas: *o que* se quer tocar, *onde* (i.e. em que região da tela e
-em qual dispositivo), *como* (e.g. com que volume, com que transparência etc.)
-e *quando* (e.g. no início da apresentação, quando o usuário selecionar alguma
-teclas etc.).
-
-//Precisamos disso ?
-O que tocar?
-^^^^^^^^^^^^
-Em NCL, essa resposta é realizada por meio dos objetos de mídia (elementos
-<media>).
-
-Onde tocar?
-^^^^^^^^^^^
-Em NCL, podemos responder a esta pergunta de duas formas. Definindo regiões
-(elementos <region>) que posteriormente serão associados aos objetos, ou
-diretamente por meio de propriedades nos objetos de mídia. As propriedades
-associadas à posicionamento de objetos são:
-
-	* left
-	* top
-	* width
-	* height
-
-Como tocar?
-^^^^^^^^^^^
-
-
-Quando tocar?
-^^^^^^^^^^^^^
-
-{nclcomposer}: Conceitos Básicos
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-O http://composer.telemidia.puc-rio.br[{nclcomposer}] é uma ferramenta de
-autoria para NCL que visa facilitar o desenvolvimento de aplicações 
-interativas para usuário não-programadores. Para isso, ele utiliza-se de
-várias abstrações gráficas (visões) que permitem ao autor focar em apenas um
-determinado ponto, durante cada fase distinta da autoria.
-
-Visões
-^^^^^^
-Uma visão permite ao autor visualizar/editar uma característica específica do 
-documento hipermídia. As principais visões do {nclcomposer} são:
-
-[[sec:structural_view]]
-Visão Estrutural
-++++++++++++++++
-A {structural_view} permite que os autores de aplicações interajam visualmente
-com a estrutura lógica do documento NCL. Em NCL, a estrutura lógica é
-representada pelos seus objetos (nós de conteúdo e nós de composição) e os
-elos entre esses objetos (representadas pelos elementos <link>).
-
-image::http://composer.telemidia.puc-rio.br/_media//plugins/structural-plugin-02102012.png[title="{structural_view}",width="35%",align="center",link="http://composer.telemidia.puc-rio.br/_media//plugins/structural-plugin-02102012.png"]
-
-[[sec:layout_view]]
-Visão de Leiaute
-++++++++++++++++
-A {layout_view} permite que os autores de aplicações NCL interajam visualmente
-com as regiões onde os objetos de mídia serão inicialmente apresentados. Nesta
-visão, os autores podem criar e manipular as regiões e a hierarquia de regiões
-do documento.
-
-image::http://composer.telemidia.puc-rio.br/_media/layout_view.png[title="{layout_view}",width="35%",align="center",link="http://composer.telemidia.puc-rio.br/_media/layout_view.png"]
-
-[[sec:outline_view]]
-Visão de Outline
-++++++++++++++++
-A {outline_view} apresenta a estrutura do documento NCL como uma árvore,
-permitindo aos autores navegarem no documento.
-
-image::http://composer.telemidia.puc-rio.br/_media/outline-view.png[title="{outline_view}",width="35%",align="center",link="http://composer.telemidia.puc-rio.br/_media/outline-view.png"]
-
-[[sec:properties_view]]
-Visão de Propriedades
-+++++++++++++++++++++
-A {properties_view} apresenta o conjunto de propriedades da entidade
-selecionada. Essa entidade selecionada por ser, por exemplo, uma região na
-{layout_view}, um objeto de mídia na {structural_view} etc.
-
-image::http://composer.telemidia.puc-rio.br/_media/property-view.png[title="{properties_view}",width="35%",align="center",link="http://composer.telemidia.puc-rio.br/_media/property-view.png"]
-
-[[sec:textual_view]]
-Visão Textual
-+++++++++++++
-A {textual_view} permite aos usuários interagirem diretamente com o
-código-fonte da aplicação NCL. Ela é um editor de texto avançado focado na
-linguagem NCL e traz funcionalidades como: coloração sintática, sugestão de
-código contextual e formatação de código.
-
-A {textual_view} é recomendada especialmente para usuários avançados e que se
-sentem à vontade com a sintaxe XML.
-
-image::http://composer.telemidia.puc-rio.br/_media/textual-view.png[title="{textual_view}",width="35%",align="center",link="http://composer.telemidia.puc-rio.br/_media//textual-view.png"]
-
-[[sec:validator]]
-Validador
-+++++++++
-O {validator_view} é responsável por notificar erros e alertas no documento
-NCL. Os erros no documento são apresentados como uma lista no
-{validator_view}. A figura a seguir apresenta um exemplo.
-
-image::http://composer.telemidia.puc-rio.br/_media/plugins/validator-plugin.png[title="{validator_view}",width="35%",align="center",link="http://composer.telemidia.puc-rio.br/_media/plugins/validator-plugin.png"]
-
-Perspectivas
-^^^^^^^^^^^^
-TODO
-
-[[sec:tutorial]]
-O Primeiro João
----------------
 Assim como no Capítulo 3 do Livro Programando em NCL, para introduzir a
 programação em NCL usando o {nclcomposer}, iremos utilizar um único exemplo,
 que será construído passo a passo: _O Primeiro João_.
@@ -203,7 +349,7 @@ NOTE: Uma descrição completa da animação _O Primeiro João_ pode ser encontr
 em: <<Soares2012>>.
 
 [[sample:00]]
-Exemplo 0: Olá Garrincha!
+Exemplo 1: Olá Garrincha!
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 Objetivo
 ^^^^^^^^
@@ -215,7 +361,7 @@ Passo 0: Criando um novo projeto
 Para isso, vamos abrir o {nclcomposer}, que apresenta a seguinte tela de
 boas-vindas:
 
-image::images/nclcomposer-welcomescreen.png[title="Tela de boas-vindas do {nclcomposer}.",width="35%",align="center",link="images/nclcomposer-welcomescreen.png"]
+image::images/nclcomposer-welcomescreen.png[title="Tela de boas-vindas do {nclcomposer}.",width="35%",link="images/nclcomposer-welcomescreen.png"]
 
 Nessa tela de boas-vindas podemos criar o nosso primeiro projeto. Para isso,
 pressione o botão _New Project_ no canto esquerdo inferior da tela de
@@ -224,7 +370,7 @@ boas-vindas. A seguinte tela será exibida:
 TIP: Outra possibilidade para criar um novo projeto é através do menu
 _File->New Project_.
 
-image::images/nclcomposer-newproject.png[title="Criação de um novo projeto.",width="35%",align="center"]
+image::images/nclcomposer-newproject.png[title="Criação de um novo projeto.",width="35%"]
 
 Nessa janela, atribua um nome para o projeto que você está criando, selecione
 o diretório onde deseja salvá-lo e também marque a opção _Copy and Import the
@@ -236,7 +382,7 @@ pois ela será útil para os próximos exemplos que iremos desenvolver.
 
 Feito isso, pressione o botão _Finish_ e a seguinte tela será apresentada:
 
-image::images/nclcomposer-body.png[title="Visão estrutural de um projeto recém-criado.",width="35%",align="center"]
+image::images/nclcomposer-body.png[title="Visão estrutural de um projeto recém-criado.",width="35%"]
 
 Com o nosso projeto criado, podemos ter acesso às visões que já vem instaladas
 por default no {nclcomposer}: {default_views}.
@@ -337,7 +483,7 @@ Para inserir os nossos objetos de mídia, a forma mais simples é apenas
 arrastar os objetos de mídia do seu Gerenciador de Arquivos para dentro da
 {structural_view} do {nclcomposer}.
 
-image::images/nclcomposer-drag_and_drop_animGar.png[title="Arraste os objetos de mídia do seu gerenciador de arquivos para a {structural_view} do {nclcomposer} para inserí-lo como objetos de mídia da aplicação.", width="35%", align="center"]
+image::images/nclcomposer-drag_and_drop_animGar.png[title="Arraste os objetos de mídia do seu gerenciador de arquivos para a {structural_view} do {nclcomposer} para inserí-lo como objetos de mídia da aplicação.", width="35%"]
 
 TIP: Outra forma de inserir um objeto de mídia, na {structural_view} é 
 clicar com o botão direito sobre o corpo do documento e selecionar o menu 
@@ -363,7 +509,7 @@ Estrutural_ a forma mais direta é clicando com o botão direto do mouse sobre o
 objeto de mídia no qual queremos inserir uma nova propriedade e selecionando o
 menu _Insert->Property_.
 
-image::images/nclcomposer-addproperty.png[title="Adicionando propriedade à um objeto de mídia.", width="35%", align="center"]
+image::images/nclcomposer-addproperty.png[title="Adicionando propriedade à um objeto de mídia.", width="35%"]
 
 Neste nosso primeiro exemplo estamos especialmente interessados nas
 propriedades que definem a dimensão dos objetos: _top_, _left_, _width_ e
@@ -374,7 +520,7 @@ selecionarmos pela {structural_view} e, depois, a partir da visão de
 propriedades podemos definir o seu nome e seu valor. No caso do nosso 
 exemplo, devemos definir a propriedade _width_ e o valor 100%:
 
-image::images/nclcomposer-property-width.png[title="Definindo largura do objeto de mídia.", width="35%", align="center"]
+image::images/nclcomposer-property-width.png[title="Definindo largura do objeto de mídia.", width="35%"]
 
 Da mesma forma, deve-se  criar uma propriedade _height_, também com o valor 
 de 100%. Definindo assim, que nossa mídia irá ocupar toda a tela quando 
@@ -390,7 +536,7 @@ Para inserirmos uma porta no corpo do documento pela _Visão
 Estrutural_ é suficiente clicarmos com o botão direito sobre o corpo e
 selecionarmos o menu _Insert->Port_.
 
-image::images/nclcomposer-addport.png[title="Adicionando porta.", width="35%", align="center"]
+image::images/nclcomposer-addport.png[title="Adicionando porta.", width="35%"]
 
 *FIXME*: Esta figura deveria ter as duas propriedades definidas no passo
 anterior.
@@ -399,7 +545,7 @@ Para mapearmos a porta que acabamos de criar para o objeto de mídia, devemos,
 segurando a tecla _SHIFT_, clicar sobre a porta e arrastar o ponteiro
 do mouse para o objeto de mídia.  
 
-image::images/nclcomposer-portcomponent.png[title="Mapeando porta para objeto de mídia.", width="35%", align="center"]
+image::images/nclcomposer-portcomponent.png[title="Mapeando porta para objeto de mídia.", width="35%"]
 
 *FIXME*: Esta figura deveria ter as duas propriedades definidas no passo
 anterior.
@@ -418,17 +564,20 @@ aplicação por meio do "Run NCL Project"
 
 A seguinte tela exemplifica o exemplo em execução:
 
-*TODO*: Imagem rodando o Exemplo 0.
+*TODO*: Imagem rodando o Exemplo 1.
 
 //.Para saber mais: Propriedades dos Objetos de Mídia
 //***************************************************
 //TODO
 //***************************************************
 
-Exemplo 1: Sincronismo de Mídia sem Interatividade
+Exemplo 2: Sincronismo de Mídia sem Interatividade
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Nosso próximo exemplo ilustra como é possível introduzir vários objetos de
-mídia sincronizados no tempo. Vamos acrescentar:
+Objetivo
+^^^^^^^^
+O próximo exemplo ilustra como é possível introduzir vários objetos de
+mídia sincronizados no tempo. Para isso, vamos começar a partir do projeto que
+desenvolvemos no <<sample:00, exemplo anterior>> e vamos acrescentar:
 
   1. uma música de fundo (um chorinho), que deverá começar assim que terminar a
 apresentação inicial do vídeo e começar a animação propriamente dita;
@@ -439,7 +588,11 @@ marcador caído no chão.
 
 A imagem a seguir apresenta a visão temporal deste exemplo:
 
-image::images/temporal-view.png[title="Visão temporal do exemplo 02.",width="35%",align="center"]
+image::images/temporal-view.png[title="Visão temporal do exemplo 02.",width="35%"]
+
+Passo 1: Salvar como projeto anterior
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Para mantermos o exemplo anterior, vamos abrí-lo e "Salvar como..."  
 
 Reúso Apenas de Relação
 ^^^^^^^^^^^^^^^^^^^^^^^
@@ -449,48 +602,44 @@ Reúso de Características de Apresentação e Importação de Base
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 TODO
 
-Exemplo 2: Sincronismo com Interatividade
+Exemplo 3: Sincronismo com Interatividade
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 TODO
 
-Exemplo 3: Contextos
+Exemplo 4: Contextos
 ~~~~~~~~~~~~~~~~~~~~
 TODO
 
-Exemplo 4: Reúso de Objetos de Mídia
+Exemplo 5: Reúso de Objetos de Mídia
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 TODO
 
-Exemplo 5: Canal de Interatividade
+Exemplo 6: Canal de Interatividade
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 TODO
 
-Exemplo 6: Múltiplos Dispositivos de Exibição
+Exemplo 7: Múltiplos Dispositivos de Exibição
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 TODO
 
-Exemplo 7: Adaptação de Conteúdo
+Exemplo 8: Adaptação de Conteúdo
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 TODO
 
-Exemplo 8: Nó Settings
+Exemplo 9: Nó Settings
 ~~~~~~~~~~~~~~~~~~~~~~
 TODO
 
-Exemplo 9: Efeitos de Transição e Animação
+Exemplo 10: Efeitos de Transição e Animação
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 TODO
 
-Exemplo 10: Navegação por Teclas
+Exemplo 11: Navegação por Teclas
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 TODO
 
-Exemplo 11: Objetos NCLua
+Exemplo 12: Objetos NCLua
 ~~~~~~~~~~~~~~~~~~~~~~~~~
-TODO
-
-Conclusões
-----------
 TODO
 
 [bibliography]
@@ -510,66 +659,31 @@ instalados e configurados em sua máquina os seguintes softwares:
 http://www.softwarepublico.gov.br[Implementação de Referência do Ginga-NCL]);
   * http://composer.telemidia.puc-rio.br[{nclcomposer}]
 
-Instalando o {nclcomposer}
-~~~~~~~~~~~~~~~~~~~~~~~~~
-TODO
-
-Windows
-^^^^^^^
-TODO
-
-Linux (Ubuntu/Debian)
-^^^^^^^^^^^^^^^^^^^^^
-TODO
-
-Instalando o player NCL
-~~~~~~~~~~~~~~~~~~~~~~~
-TODO
-
-Windows
-^^^^^^^
-TODO
-
-Linux
-^^^^^
-TODO
-
-Configuração do Ambiente
-~~~~~~~~~~~~~~~~~~~~~~~~
-TODO
-
-Configurando a disposição das visões 
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-TODO
-
-Integração com o player NCL
-^^^^^^^^^^^^^^^^^^^^^^^^^^^
-TODO
-
-//[appendix]
-//Lista de Connectores pré-definidos
-//----------------------------------
-//Ao criar um novo projeto no {nclcomposer} é possível adicionar uma base de
-//conectores pré-definidos (_defaultConnBase.ncl_). Esta base de conectores
-//pré-definidos traz um conjunto de 
-//
-//
-//[width="100%",frame="topbot",options="header"]
-//|=======
-//|          | *start*      | *stop*      | *pause*      | *resume*      | *set* + parâmetro _var_
-//|*onBegin* | onBeginStart | onBeginStop | onBeginPause | onBeginResume | onBeginSet
-//|*onEnd*   | onEndStart   | onEndStop   | onEndPause   | onEndResume   | onEndSet
-//|*onSelection* (seleção por mouse) | onSelectionStart  | onSelectionStop |
-//onSelectionPause | onSelectionResume | onSelectionSet
-//|*onSelection* + parâmetro _key_ (seleção por tecla) | onKeySelectionStart |
-//onKeySelectionStop | onKeySelectionPause | onKeySelectionResume |
-//onKeySelectionSet
-//|=======
-//
-//  * TODO: Como definir minha própria base de conectores???
-//  * TODO: Como editar minha base de conectores default??
-
 [appendix]
+appendix]
+Lista de Connectores pré-definidos
+----------------------------------
+Ao criar um novo projeto no {nclcomposer} é possível adicionar uma base de
+conectores pré-definidos (_defaultConnBase.ncl_). Esta base de conectores
+pré-definidos traz um conjunto de 
+
+
+[width="100%",frame="topbot",options="header"]
+|=======
+|          | *start*      | *stop*      | *pause*      | *resume*      | *set* + parâmetro _var_
+|*onBegin* | onBeginStart | onBeginStop | onBeginPause | onBeginResume | onBeginSet
+|*onEnd*   | onEndStart   | onEndStop   | onEndPause   | onEndResume   | onEndSet
+|*onSelection* (seleção por mouse) | onSelectionStart  | onSelectionStop |
+onSelectionPause | onSelectionResume | onSelectionSet
+|*onSelection* + parâmetro _key_ (seleção por tecla) | onKeySelectionStart |
+onKeySelectionStop | onKeySelectionPause | onKeySelectionResume |
+onKeySelectionSet
+|=======
+
+* TODO: Como definir minha própria base de conectores???
+* TODO: Como editar minha base de conectores default??
+
+
 Onde encontrar mais informações
 -------------------------------
 TODO

@@ -7,7 +7,8 @@ SOURCES=nclcomposer-tutorial.asciidoc
 OUTPUT=HTML CHUNKED_HTML EPUB PDF
 
 ASCIIDOC_BIN=asciidoc
-ASCIIDOC_PARAMS=-b html5 -a toc2 -a theme=flask -a icons
+#ASCIIDOC_PARAMS=-b html5 -a toc2 -a icons
+ASCIIDOC_PARAMS=-b html5 -a icons -a toc
 
 all: $(OUTPUT)
 
