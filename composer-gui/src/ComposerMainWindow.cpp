@@ -1772,7 +1772,7 @@ void ComposerMainWindow::userPressedRecentProject(QString src)
         QMessageBox::question(this,
                               tr("File does not exists anymore."),
                               tr("The File %1 does not exists anymore. "
-                                 "Do you want to create create this file "
+                                 "Do you want to create this file "
                                  "again?").arg(src),
                               QMessageBox::Yes | QMessageBox::No,
                               QMessageBox::No);
@@ -1790,6 +1790,18 @@ void ComposerMainWindow::userPressedRecentProject(QString src)
     ProjectControl::getInstance()->launchProject(src);
     if(recreateFile)
     {
+      // Create the directory structure if it does not exist anymore
+
+      QDir dir;
+      bool ok = dir.mkpath(QFileInfo(src).absolutePath()); //this function creates the path, with all its necessary parents;
+
+      if(!ok)
+      {
+        //error message, could not create the required directory structure!
+        QMessageBox::critical(this, tr("Error!"), tr("Error creating directory structure"));
+        return;
+      }
+
       // \todo Ask for the import or not of the defaultConnBase.
       addDefaultStructureToProject(
             ProjectControl::getInstance()->getOpenProject(src),
