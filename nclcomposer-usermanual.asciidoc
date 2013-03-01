@@ -62,10 +62,10 @@ Introdução
 O que é o {nclcomposer}?
 ~~~~~~~~~~~~~~~~~~~~~~~~
 O http://composer.telemidia.puc-rio.br[{nclcomposer}] é uma ferramenta de
-autoria para NCL que visa facilitar o desenvolvimento de aplicações 
-interativas para usuário não-programadores. Para isso, ele utiliza-se de
-várias abstrações gráficas (visões) que permitem ao autor focar em apenas um
-determinado ponto, durante cada fase distinta da autoria.
+autoria para NCL que visa facilitar o desenvolvimento de aplicações
+interativas. Para isso, ele utiliza-se de várias abstrações gráficas
+(visões) que permitem ao autor focar em apenas um determinado ponto, durante
+cada fase distinta da autoria.
 
 Conceitos Básicos
 ~~~~~~~~~~~~~~~~~
@@ -114,8 +114,9 @@ janelas e menus do {nclcomposer}.
 Contém uma série de exemplos e o passo-a-passo de como desenvolvê-los no
 {nclcomposer}.
 
-Onde buscar mais ajuda?
-~~~~~~~~~~~~~~~~~~~~~~~
+.Onde buscar mais ajuda?
+[NOTE]
+========================
 Existem vários canais _online_ onde é possível buscar mais ajuda.
 
 O {nclcomposer} possui várias listas de e-mail:
@@ -123,30 +124,45 @@ O {nclcomposer} possui várias listas de e-mail:
   * _Lista de usuários_ <nclcomposer-user@telemidia.puc-rio.br> - Questões e
 	discussões relacionadas ao uso do {nclcomposer}
 	* _Lista de desenvolvedores_ <nclcomposer-devel@telemidia.puc-rio.br> -
-	Discussões relacionadas à assuntos de _design_ e desenvolvimento do 
-	{nclcomposer} e submissão de correções (_patches_).
-
-Or you can chat live with the developers on IRC. Join them on #gnucash at
-irc.gnome.org.
-
-The GnuCash web site has more details on these channels. You will also find
-pointers there to additional useful resources such as the GnuCash wiki and bug
-tracking system.
-Onde buscar mais ajuda: Mailing list!
+	Discussões relacionadas ao _design_ e desenvolvimento do {nclcomposer} e 
+	submissão de correções (_patches_).
+========================
 
 [[sec:iniciando]]
 Iniciando
 ---------
 Instalando o {nclcomposer}
 ~~~~~~~~~~~~~~~~~~~~~~~~~
-
 Windows
 ^^^^^^^
-TODO
+Para instalar o {nclcomposer} em ambiente Windows:
+
+  . Baixe a versão mais atual do {nclcomposer} para Windows em:
+	http://composer.telemidia.puc-rio.br/en/downloads
+	. O arquivo deve ter o nome na forma _nclcomposer-installer-X.X.X.exe_, onde
+	X.X.X deve conter a versão do {nclcomposer}. Execute esse arquivo, e a
+	seguinte tela deve ser apresentada:
+	TODO: Image.
+	. Siga o passo a passo do instalador até terminar a instalação.
+	. Caso tenha instalado corretamente é possível executar o {nclcomposer}
+	através do menu _Iniciar->NCL Composer->NCL Composer_.
 
 Linux (Ubuntu/Debian)
 ^^^^^^^^^^^^^^^^^^^^^
-TODO
+Para instalar o {nclcomposer} em ambiente Linux (Ubuntu/Debian):
+
+  . Baixe a versão mais atual do {nclcomposer} para Linux (Ubuntu/Debian) em:
+	http://composer.telemidia.puc-rio.br/en/downloads
+	. O arquivo deve ter o nome na forma _composer_X.X.X_i386.deb_, onde
+	X.X.X deve conter a versão do {nclcomposer}. Para instalar o arquivo que foi
+	baixado, execute o seguinte comando na linha de comando:
+
+	$ dpkg -i nclcomposer-X.X.X.deb
+
+	. Caso a instalação ocorra sem problemas, é possível acessar o
+	{nclcomposer} através do menu de aplicações, ou por meio do comando:
+
+	$ composer
 
 MacOS X
 ^^^^^^^
@@ -154,55 +170,85 @@ TODO
 
 Instalando um player NCL
 ~~~~~~~~~~~~~~~~~~~~~~~~
-O {nclcomposer}, por _default_, não vem com um _player_ NCL embutido. Desta
+O {nclcomposer}, por _default_, não vem com um _player_ NCL embutido. Dessa
 forma, para executar suas aplicações, será necessário que você tenha algum
 player NCL instalado.
 
 É recomendado o uso da Implementação de Referência do
-http://www.ginga.org.br[Ginga-NCL].
+http://www.ginga.org.br[Ginga-NCL]. As subseções a seguir detalham como
+instalar a Implementação de Referência do Ginga-NCL nos principais sistemas
+operacionais.
 
-Windows
-^^^^^^^
-TODO
+Implementação de Referência do Ginga-NCL
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.Windows
+[NOTE]
+========
+Para instalar o _Ginga4Windows_ (versão da implementação de referência do
+Ginga-NCL para a plataforma Windows):
 
-Linux
-^^^^^
-TODO
+  . Baixe a versão mais atual do _Ginga4Windows_ em:
+	http://www.gingancl.org.br/en/ferramentas.
+	. O arquivo deve ter o nome da forma _ginga-v.X.X.X-win32.exe_, onde _X.X.X_
+	informa a versão mais atual. Execute esse arquivo e a seguinte tela deve
+	aparecer:
 
-MacOS X
-^^^^^^^
+	TODO: Image.
+
+	. Caso a máquina na qual está instalando, não tenha as dependências
+	necessárias o instalador irá automaticamente baixá-las da Internet.
+
+Possíveis problemas::
 TODO
+========
+
+.Linux
+[NOTE]
+======
+Até o momento da escrita deste manual ainda não existe um instalador da
+Implementação de Referência para a plataforma Linux. Sendo assim, caso deseje
+instalá-lo em uma máquina com sistema operacional Linux será necessário
+baixar e compilar o código-fonte.
+
+Mais informações podem ser encontradas em:
+http://svn.softwarepublico.gov.br/trac/ginga/wiki/Building_Wiki_GingaNCL.
+======
+
+.MacOS X
+[NOTE]
+========
+Até o momento da escrita deste manual ainda não existe um instalador da
+Implementação de Referência para a plataforma MacOS X. Sendo assim, caso
+deseje instalá-lo em uma máquina com sistema operacional MacOS X será
+necessário baixar e compilar o código-fonte.
+
+Mais informações podem ser encontradas em:
+http://svn.softwarepublico.gov.br/trac/ginga/wiki/Building_Wiki_GingaNCL.
+========
+
+Ginga-NCL Virtual Set-top box
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.Windows
+[NOTE]
+========
+TODO
+========
+
+.Linux (Ubuntu/Debian)
+[NOTE]
+========
+TODO
+========
+
+.MacOS X
+[NOTE]
+========
+TODO
+========
 
 Configuração do Ambiente
 ~~~~~~~~~~~~~~~~~~~~~~~~
-Configurando a disposição das visões 
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-Escondendo/mostrando visões
-+++++++++++++++++++++++++++
-É possível esconder ou mostrar cada uma das visões instaladas no NCL Composer
-por meio do menu _Window->Views_:
-
-image::images/nclcomposer-menu-hide-show-views.png[title="Menu para mostrar esconder visões.", width="35%"]
-
-Criando novas perspectivas
-++++++++++++++++++++++++++
-Para criar novas perspectivas, inicialmente você precisa mostrar todas as
-_Visões_ que você deseja que façam parte dessa perspectiva. Depois disso, 
-você pode posicionar cada uma das views. Para salvar a perspectiva que 
-acabou de posicionar, basta ir em 
-
-image::images/nclcomposer-save-perspective-2.png[title="Menu para mostrar esconder visões.", width="35%"]
-
-image::images/nclcomposer-save-perspective-3.png[title="Menu para mostrar esconder visões.", width="35%"]
-
-image::images/nclcomposer-save-perspective-4.png[title="Menu para mostrar esconder visões.", width="35%"]
-
-Alternando entre perspectivas
-+++++++++++++++++++++++++++++
-
-image::images/nclcomposer-save-perspective-5.png[title="Alternando entre perspectivas", width="25%"]
-
-
+[sec:player_integration]
 Integração com o player NCL
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^
 Existem duas formas principais de executar sua aplicação NCL a partir da
@@ -235,6 +281,31 @@ image::images/nclcomposer-run-config-remote.png["Configuração para executar ap
 Usualmente, o único parâmetro a ser modificado é o endereço IP da máquina
 virtual contendo o _Ginga-NCL Virtual Set-top Box_. Só é sugerido modificar os
 outros parâmetros caso você saiba exatamente o que está fazendo.
+
+Configurando a disposição das visões 
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Escondendo/mostrando visões
++++++++++++++++++++++++++++
+É possível esconder ou mostrar cada uma das visões instaladas no NCL Composer
+por meio do menu _Window->Views_:
+
+image::images/nclcomposer-menu-hide-show-views.png[title="Menu para mostrar esconder visões.", width="35%"]
+
+Criando novas perspectivas
+++++++++++++++++++++++++++
+Para salvar a disposição atual de _Visões_ como uma nova perspectiva, é
+suficiente ir no menu _Windows->Perspectives->Save current perspective..._.
+
+image::images/nclcomposer-save-perspective-2.png[title="Salvando disposição corrente como uma nova perspectiva.", width="35%"]
+
+image::images/nclcomposer-save-perspective-3.png[title="Menu para mostrar esconder visões.", width="35%"]
+
+image::images/nclcomposer-save-perspective-4.png[title="Menu para mostrar esconder visões.", width="35%"]
+
+Alternando entre perspectivas
++++++++++++++++++++++++++++++
+
+image::images/nclcomposer-save-perspective-5.png[title="Alternando entre perspectivas", width="25%"]
 
 [[sec:windows_and_menus]]
 Janelas e Menus do NCL Composer

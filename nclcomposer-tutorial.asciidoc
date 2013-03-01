@@ -81,10 +81,12 @@ image::images/nclcomposer-welcomescreen.png[title="Tela de boas-vindas do {nclco
 
 Nessa tela de boas-vindas podemos criar o nosso primeiro projeto. Para isso,
 pressione o botão _New Project_ no canto esquerdo inferior da tela de
-boas-vindas. A seguinte tela será exibida:
+boas-vindas.
 
 TIP: Outra possibilidade para criar um novo projeto é através do menu
 _File->New Project_.
+
+A seguinte tela será exibida:
 
 image::images/nclcomposer-newproject.png[title="Criação de um novo projeto.",width="35%"]
 
@@ -272,9 +274,9 @@ ser apresentado será o vídeo da animação _O Primeiro João_.
 
 Passo 4: Executar o exemplo desenvolvido
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-Dado que o NCL Composer está devidamente configurado (link para o anexo que
-explica como configurar) com o player NCL de sua escolha, basta executar a
-aplicação por meio do "Run NCL Project"
+Dado que o NCL Composer está devidamente <<sec:player_integration, configurado
+para executar algum player NCL>> de sua escolha, basta executar a aplicação
+por meio do botão "Run NCL Project" na barra de ferramentas.
 
 *TODO*: Imagem do botão.
 
@@ -308,7 +310,8 @@ image::images/temporal-view.png[title="Visão temporal do exemplo 02.",width="35
 
 Passo 1: Salvar como projeto anterior
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-Para mantermos o exemplo anterior, vamos abrí-lo e "Salvar como..."  
+Para mantermos o que já foi feito no exemplo anterior, vamos abrí-lo criar um
+novo projeto por meio do menu _File->Salve as..._.  
 
 Reúso Apenas de Relação
 ^^^^^^^^^^^^^^^^^^^^^^^
