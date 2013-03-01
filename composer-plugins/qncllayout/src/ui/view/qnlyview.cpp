@@ -641,6 +641,14 @@ void QnlyView::selectRegionBase(QnlyGraphicsRegionBase* regionBase)
   }
 }
 
+void QnlyView::setGridVisible(bool visible)
+{
+  foreach(QnlyGraphicsRegionBase *regionBase, regionbases.values())
+  {
+    regionBase->setGridVisible(visible);
+  }
+}
+
 QnlyGraphicsRegionBase* QnlyView::getSelectedRegionBase()
 {
   return selectedRegionBase;

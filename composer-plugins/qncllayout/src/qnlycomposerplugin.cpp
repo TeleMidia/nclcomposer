@@ -150,12 +150,44 @@ QWidget* QnlyComposerPlugin::getWidget()
 
 bool QnlyComposerPlugin::saveSubsession()
 {
-  return false;
+  QByteArray data;
+  QString line = "gridVisible=";
+  QVariant tmp(QVariant::Bool);
+
+  if(view->getSelectedRegionBase() != NULL)
+    tmp.setValue(view->getSelectedRegionBase()->isGridVisible());
+  else
+    tmp.setValue(false);
+
+  line += tmp.toString();
+  data.append(line);
+  qDebug() << "[QNLY] saveSubsession() data is " << data;
+  emit setPluginData(data);
+  return true;
 }
 
 void QnlyComposerPlugin::init()
 {
   // \todo Load specific contents.
+  QString data = project->getPluginData("br.puc-rio.telemidia.qncllayout");
+  qDebug() << "[QNLY] data = " << data;
+  QStringList list = data.split("=");
+  bool gridVisible = false;
+
+  for(int i = 0; !(list.size()%2) && i < list.size(); i += 2)
+  {
+    QString key = list[i];
+    QString value = list[i+1];
+    if(key == "gridVisible")
+    {
+      qDebug() << "[QNLY] gridVisible = " << value;
+      if(value == "true")
+        gridVisible = true;
+
+    }
+  }
+
+  // Update layout model from core model.
   QStack <Entity*> stack;
   stack.push(project);
 
@@ -179,6 +211,8 @@ void QnlyComposerPlugin::init()
       stack.push(children.at(i));
     }
   }
+
+  view->setGridVisible(gridVisible);
 }
 
 void QnlyComposerPlugin::errorMessage(QString error)

@@ -85,6 +85,8 @@ public slots:
                              const QString regionbaseUID,
                              QMap<QString, QString> attributes);
 
+    void setGridVisible(bool visible);
+
 signals:
     void regionAdded(const QString regionUID,
                      const QString parentUID,
