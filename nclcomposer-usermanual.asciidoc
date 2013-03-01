@@ -12,7 +12,7 @@ v1.0, 2012-12
 
 // Atribute List
 :nclcomposer: NCL Composer
-:default_views: Estrutural, Leiaute, Outline, Propriedades, Textual e Validador
+:default_views: <<sec:structural_view, Estrutural>>, <<sec:layout_view, Leiaute>>, <<sec:outline_view, Outline>>, <<sec:properties_view, Propriedades>>, <<sec:textual_view, Textual>> e <<sec:validator_view, Validador>>
 :structural_view: Visão Estrutural
 :layout_view: Visão de Leiaute
 :outline_view: Visão de Outline
@@ -63,12 +63,13 @@ O que é o {nclcomposer}?
 ~~~~~~~~~~~~~~~~~~~~~~~~
 O http://composer.telemidia.puc-rio.br[{nclcomposer}] é uma ferramenta de
 autoria para NCL que visa facilitar o desenvolvimento de aplicações
-interativas. Para isso, ele utiliza-se de várias abstrações gráficas
-(visões) que permitem ao autor focar em apenas um determinado ponto, durante
-cada fase distinta da autoria.
+interativas para TV Digital. Para isso, ele utiliza-se de várias abstrações
+gráficas(visões) que permitem ao autor focar em apenas um determinado ponto,
+durante cada fase distinta da autoria.
 
 Conceitos Básicos
 ~~~~~~~~~~~~~~~~~
+[def:plugins]
 Plugins
 ^^^^^^^
 O {nclcomposer} foi desenvolvido para ser facilmente extensível. Por isso, 
@@ -81,6 +82,7 @@ Uma lista completa dos _plugins_ disponíveis oficialmente no site do
 {nclcomposer}, pode ser encontrada em:
 http://composer.telemidia.puc-rio.br/en/plugins/[].
 
+[def:views]
 Visões
 ^^^^^^
 O tipo de _plugin_ mais comum do {nclcomposer} são as _Visões_. Uma visão
@@ -90,6 +92,7 @@ documento hipermídia.
 
 As principais visões do {nclcomposer} são: {default_views}.
 
+[def:perspective]
 Perspectivas
 ^^^^^^^^^^^^
 Uma perspectiva, no NCL Composer, é a disposição das visões na tela. É
@@ -140,12 +143,32 @@ Para instalar o {nclcomposer} em ambiente Windows:
   . Baixe a versão mais atual do {nclcomposer} para Windows em:
 	http://composer.telemidia.puc-rio.br/en/downloads
 	. O arquivo deve ter o nome na forma _nclcomposer-installer-X.X.X.exe_, onde
-	X.X.X deve conter a versão do {nclcomposer}. Execute esse arquivo, e a
-	seguinte tela deve ser apresentada:
-	TODO: Image.
-	. Siga o passo a passo do instalador até terminar a instalação.
-	. Caso tenha instalado corretamente é possível executar o {nclcomposer}
-	através do menu _Iniciar->NCL Composer->NCL Composer_.
+	X.X.X deve conter a versão do {nclcomposer}. Execute esse arquivo.
+	. Caso você tenha alguma versão anterior instalada, o instalador irá
+	perguntar se deseja desinstalá-la antes.
+	. Caso contrário, a seguinte tela será exibida:
++
+image:images/cap3_install_1.png["Instalando"]
++
+  . Clique no botão _I Agree_ para aceitar a licença do NCL Composer.
+	. Após aceitar a licença do software, será possível escolher quais _plugins_
+	serão instalados na sua máquina, por meio da tela (em caso de dúvida não
+	altere):
++
+image:images/cap3_install_2.png["Instalando"]
++
+	. Clique no botão _Next_, e será possível escolher o local onde o
+	{nclcomposer} será instalado:
++
+image:images/cap3_install_3.png["Instalando"]
++
+	. Por fim, o {nclcomposer} será instalado, e a seguinte tela exibida:
++
+image:images/cap3_install_4.png["Instalando"]
++
+	. Caso não tenha ocorrido nenhum problema, feche o instalador. Será possível 
+	executar o {nclcomposer} através do menu _Iniciar->NCL Composer->NCL 
+	Composer_.
 
 Linux (Ubuntu/Debian)
 ^^^^^^^^^^^^^^^^^^^^^
@@ -312,22 +335,27 @@ Janelas e Menus do NCL Composer
 -------------------------------
 Janela Principal
 ~~~~~~~~~~~~~~~~
-TODO: Imagem com a visão geral do NCL Composer.
+
+image:images/cap4_mainwindow.png[width=300px]
 
 Barra de título::
-TODO
+Evidencia o nome do {nclcomposer} e do projeto corrente.
 
 Barra de menu::
 Mostra as entradas de menu disponíveis.
 
 Barra de ferramentas::
-TODO
+As ações globais ficam disponíveis na barra de ferramentas. Por exemplo, as
+açoes para salvar o projeto atual, executá-lo etc.
 
 Tab Bar::
-TODO
+Lista a tela de boas-vindas e a lista de projetos abertos, permitindo navegar
+entre eles.
 
 Área das Visões::
-TODO
+Área de desenho das diversas <<def:views, Visões>>. Cada visão pode ter
+seus próprios elementos de interface. Também é possível organizar e salvar a
+disposição das diversas visões por meio das <<def:perspective, Perspectivas>>.
 
 Visões _Default_
 ~~~~~~~~~~~~~~~~
@@ -383,7 +411,7 @@ sentem à vontade com a sintaxe XML.
 
 image::http://composer.telemidia.puc-rio.br/_media/textual-view.png[title="{textual_view}",width="35%",link="http://composer.telemidia.puc-rio.br/_media//textual-view.png"]
 
-[[sec:validator]]
+[[sec:validator_view]]
 Validador
 ^^^^^^^^^
 O {validator_view} é responsável por notificar erros e alertas no documento
@@ -433,7 +461,7 @@ onKeySelectionSet
 [appendix]
 Outras ferramentas de autoria
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Dado que existem diferente pefis de usuários para a linguagem NCL, é natural
+Dado que existem diferentes pefis de usuários para a linguagem NCL, é natural
 que também existam várias ferramentas, cada uma focada em um determinado
 perfil. O objetivo do {nclcomposer}, ao ser extensível por meio de plugins é
 possibilitar que todas essas diferentes abstra
