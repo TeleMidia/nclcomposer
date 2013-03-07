@@ -151,15 +151,27 @@ QWidget* QnlyComposerPlugin::getWidget()
 bool QnlyComposerPlugin::saveSubsession()
 {
   QByteArray data;
-  QString line = "gridVisible=";
-  QVariant tmp(QVariant::Bool);
+  QString line;
+  QVariant gridVisible(QVariant::Bool),
+           resolutionWidth(QVariant::Int),
+           resolutionHeight(QVariant::Int);
 
   if(view->getSelectedRegionBase() != NULL)
-    tmp.setValue(view->getSelectedRegionBase()->isGridVisible());
+  {
+    gridVisible.setValue(view->getSelectedRegionBase()->isGridVisible());
+    resolutionWidth.setValue(view->getSelectedRegionBase()->sceneRect().width());
+    resolutionHeight.setValue(view->getSelectedRegionBase()->sceneRect().height());
+  }
   else
-    tmp.setValue(false);
+  {
+    gridVisible.setValue(false);
+    resolutionWidth.setValue(0);
+    resolutionHeight.setValue(0);
+  }
 
-  line += tmp.toString();
+  line += QString("gridVisible=") + gridVisible.toString() + "\n";
+  line += QString("resolutionWidth=") + resolutionWidth.toString() + "\n";
+  line += QString("resolutionHeight=") + resolutionHeight.toString() + "\n";
   data.append(line);
   qDebug() << "[QNLY] saveSubsession() data is " << data;
   emit setPluginData(data);
@@ -171,22 +183,39 @@ void QnlyComposerPlugin::init()
   // \todo Load specific contents.
   QString data = project->getPluginData("br.puc-rio.telemidia.qncllayout");
   qDebug() << "[QNLY] data = " << data;
-  QStringList list = data.split("=");
-  bool gridVisible = false;
+  QStringList lines = data.split("\n");
+  bool gridVisible = false, ok = true;
+  int resolutionWidth, resolutionHeight;
 
-  for(int i = 0; !(list.size()%2) && i < list.size(); i += 2)
+  for(int i = 0; i < lines.size(); i++)
   {
-    QString key = list[i];
-    QString value = list[i+1];
-    if(key == "gridVisible")
+    QStringList list = lines[i].split("=");
+    for(int j = 0; !(list.size()%2) && j < list.size(); j += 2)
     {
-      qDebug() << "[QNLY] gridVisible = " << value;
-      if(value == "true")
-        gridVisible = true;
-
+      QString key = list[j];
+      QString value = list[j+1];
+      if(key == "gridVisible")
+      {
+        qDebug() << "[QNLY] gridVisible = " << value;
+        if(value == "true")
+          gridVisible = true;
+      }
+      else if(key == "resolutionWidth")
+      {
+        resolutionWidth = value.toInt(&ok);
+        if(!ok)
+          resolutionWidth = 0;
+      }
+      else if(key == "resolutionHeight")
+      {
+        resolutionHeight = value.toInt(&ok);
+        if(!ok)
+          resolutionHeight = 0;
+      }
     }
   }
 
+  qDebug() << resolutionWidth << resolutionHeight;
   // Update layout model from core model.
   QStack <Entity*> stack;
   stack.push(project);
@@ -199,6 +228,10 @@ void QnlyComposerPlugin::init()
     if(current->getType() == "regionBase")
     {
       addRegionBaseToView(current);
+
+      // TODO: In the future we should support saving individual resolutions
+      // foreach regionBase
+      view->getSelectedRegionBase()->changeResolution(resolutionWidth, resolutionHeight);
     }
     else if(current->getType() == "region")
     {

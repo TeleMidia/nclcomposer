@@ -1076,6 +1076,37 @@ void QnlyGraphicsRegionBase::changeResolution(int w, int h)
   {
     r->adjust();
   }
+
+  // TODO: This should be based on array!
+  QSize size(w, h);
+  if(re640x480->data().toSize() == size)
+  {
+    re640x480->setChecked(true);
+  }
+  else if(re800x600->data().toSize() == size)
+  {
+    re800x600->setChecked(true);
+  }
+  else if(re1024x768->data().toSize() == size)
+  {
+    re1024x768->setChecked(true);
+  }
+  else if(re854x480->data().toSize() == size)
+  {
+    re854x480->setChecked(true);
+  }
+  else if(re1280x720->data().toSize() == size)
+  {
+    re1280x720->setChecked(true);
+  }
+  else if(re1920x1080->data().toSize() == size)
+  {
+    re1920x1080->setChecked(true);
+  }
+  else if(re320x400->data().toSize() == size)
+  {
+    re320x400->setChecked(true);
+  }
 }
 
 void QnlyGraphicsRegionBase::performGrid()
