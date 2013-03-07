@@ -41,7 +41,7 @@ else {
 
 message("NCL Composer GUI build version $${GUI_VERSION} (from git=$${GIT_VERSION})")
 
-VERSTR = '\\"$${GUI_VERSION}\\"
+VERSTR = '\\"$${GUI_VERSION}\\"'
 DEFINES += NCLCOMPOSER_GUI_VERSION=\"$${VERSTR}\"
 DEFINES += BUILD_DATE=\"\\\"$$system(echo \"$${_DATE_}\" | sed \"s/ /\\\\\\ /g\")\"\\\"
 #DEFINES += WITH_TEST_VERSION_MESSAGE=\"\\\"1\\\"\"
