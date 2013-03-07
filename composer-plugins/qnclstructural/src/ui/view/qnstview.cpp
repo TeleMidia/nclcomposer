@@ -1289,10 +1289,10 @@ void QnstView::removeEntity(const QString uid, bool undo, bool rmRef)
         if (parent != NULL)
         {
 
-#ifdef Q_WS_MAC
+#ifndef Q_WS_MAC
     qDebug() << "parent = " << parent << parent->getnstUid();
 #else
-    qDebug() << "parent = " << (int)parent << parent->getnstUid();
+    qDebug() << "parent = " << (long) parent << parent->getnstUid();
 #endif
 
           parent->removenstGraphicsEntity(entity);
@@ -5056,11 +5056,11 @@ void QnstView::traceEntities()
     assert(entities[key] != NULL);
     assert(entities[key] != entities[key]->getnstGraphicsParent());
 
-#ifdef Q_WS_MAC
+#ifndef Q_WS_MAC
     qDebug() << key << entities[key] << entities[key]->getnstType()
              << QnstUtil::getStrFromNstType(entities[key]->getnstType());
 #else
-    qDebug() << key << (int)entities[key] << entities[key]->getnstType()
+    qDebug() << key << (long)entities[key] << entities[key]->getnstType()
              << QnstUtil::getStrFromNstType(entities[key]->getnstType());
 #endif
 
@@ -5068,10 +5068,10 @@ void QnstView::traceEntities()
       qDebug()<< QnstUtil::getStrFromNstType(entities[key]->getnstGraphicsParent()->getnstType());
 
     foreach(QnstGraphicsEntity * e, entities[key]->getnstGraphicsEntities())
-#ifdef Q_WS_MAC
+#ifndef Q_WS_MAC
     qDebug() << "\t" << e << e->getnstType() << QnstUtil::getStrFromNstType(e->getnstType());
 #else
-    qDebug() << "\t" << (int)e << e->getnstType() << QnstUtil::getStrFromNstType(e->getnstType());
+    qDebug() << "\t" << (long)e << e->getnstType() << QnstUtil::getStrFromNstType(e->getnstType());
 #endif
 
   }

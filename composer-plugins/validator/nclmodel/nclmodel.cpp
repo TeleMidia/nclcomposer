@@ -83,7 +83,7 @@ Model::~Model(){
 virtualId Model::randomId () {
     string s("vId");
     stringstream oss;
-    oss << s << _seed ++;
+    oss << s.c_str() << _seed ++;
     return oss.str ();
 }
 
@@ -701,7 +701,7 @@ void Model::parseConnectorChild (ModelElement *child, map <string, pair <int, in
             int max = 1;
 
             if (minAttr.value() != ""){
-                ss << minAttr.value();
+                ss << minAttr.value().c_str();
                 ss >> min;
 
                 if (!ss)
@@ -713,7 +713,7 @@ void Model::parseConnectorChild (ModelElement *child, map <string, pair <int, in
                     max = (int) numeric_limits <int>::max ();
                 }
                 else{
-                    ss << maxAttr.value();
+                    ss << maxAttr.value().c_str();
                     ss >> max;
 
                     if (!ss)
