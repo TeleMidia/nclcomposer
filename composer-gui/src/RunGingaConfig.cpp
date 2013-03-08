@@ -53,7 +53,7 @@ RunGingaConfig::~RunGingaConfig()
 
 void RunGingaConfig::initializeDefaultValues()
 {
-  ComposerSettings settings;
+  GlobalSettings settings;
   settings.beginGroup("runginga");
 
   if(!settings.contains("remote_ip"))
@@ -88,13 +88,13 @@ void RunGingaConfig::initializeDefaultValues()
 
 void RunGingaConfig::setDefaultValues()
 {
-  ComposerSettings settings;
+  GlobalSettings settings;
   settings.remove("runginga/*");
 }
 
 void RunGingaConfig::loadValuesFromSettings()
 {
-  ComposerSettings settings;
+  GlobalSettings settings;
   settings.beginGroup("runginga");
     //Enable/disable remote_run
     ui->remotevm_Group->setChecked(settings.value("run_remote").toBool());
@@ -116,7 +116,7 @@ void RunGingaConfig::loadValuesFromSettings()
 
 void RunGingaConfig::applyValues()
 {
-  ComposerSettings settings;
+  GlobalSettings settings;
 
   settings.beginGroup("runginga");
   settings.setValue("remote_ip", ui->lineEdit_RemoteIP->text());

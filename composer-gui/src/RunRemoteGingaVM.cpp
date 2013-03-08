@@ -248,7 +248,7 @@ void RunRemoteGingaVMAction::runCurrentProject()
 
   emit taskDescription(tr("Getting remote connection configuration"));
   // Getting the settings user data.
-  ComposerSettings settings;
+  GlobalSettings settings;
   settings.beginGroup("runginga");
   QString remoteIp = settings.value("remote_ip").toString();
   QString remoteUser = settings.value("remote_user").toString();
@@ -345,7 +345,7 @@ void RunRemoteGingaVMAction::stopExecution()
 void StopRemoteGingaVMAction::stopRunningApplication()
 {
   // Getting the settings user data.
-  ComposerSettings settings;
+  GlobalSettings settings;
   settings.beginGroup("runginga");
   QString remoteIp = settings.value("remote_ip").toString();
   QString remoteUser = settings.value("remote_user").toString();

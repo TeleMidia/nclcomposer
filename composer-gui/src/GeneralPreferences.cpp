@@ -22,7 +22,7 @@ GeneralPreferences::GeneralPreferences(QWidget *parent)
   : ui(new Ui::GeneralPreferences), IPreferencesPage(parent)
 {
   ui->setupUi(this);
-  ComposerSettings settings;
+  GlobalSettings settings;
   settings.beginGroup("languages");
   QStringList list = settings.value("supportedLanguages").toStringList();
 
@@ -58,7 +58,7 @@ GeneralPreferences::~GeneralPreferences()
 
 void GeneralPreferences::applyValues()
 {
-  ComposerSettings settings;
+  GlobalSettings settings;
   settings.beginGroup("languages");
   settings.setValue("currentLanguage",
                     ui->comboBox->itemData(ui->comboBox->currentIndex())

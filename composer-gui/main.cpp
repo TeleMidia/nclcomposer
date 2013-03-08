@@ -25,7 +25,7 @@
 using namespace composer::gui;
 
 /*!
- * \brief Add the default paths to ComposerSettings.
+ * \brief Add the default paths to GlobalSettings.
  */
 void updateSettingsWithDefaults()
 {
@@ -52,7 +52,7 @@ void updateSettingsWithDefaults()
 
 #endif
 
-  ComposerSettings settings;
+  GlobalSettings settings;
   settings.beginGroup("extensions");
     QStringList extensions_path = settings.value("path").toStringList();
     extensions_path << defaultPluginsPath; //add default to extensions path
@@ -119,7 +119,7 @@ void updateSettingsWithDefaults()
 void loadTranslations(QApplication *app)
 {
   /* Get the current language code */
-  ComposerSettings settings;
+  GlobalSettings settings;
   settings.beginGroup("languages");
   QString language_code = settings.value("currentLanguage",
                                          QString("en")).toString();
@@ -182,7 +182,7 @@ XInitThreads();
     w.setWindowIcon(QIcon(":/mainwindow/icon"));
 
     QStringList dirs =
-        ComposerSettings().value("default_stylesheets_dirs").toStringList();
+        GlobalSettings().value("default_stylesheets_dirs").toStringList();
 
     foreach(QString dir, dirs)
     {

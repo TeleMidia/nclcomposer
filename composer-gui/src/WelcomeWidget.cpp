@@ -122,7 +122,7 @@ void WelcomeWidget::notifyMessagesReadData(const QHttpResponseHeader &resp)
     int max_notify_messages = DEFAULT_MAX_NOTIFY_MESSAGES;
 
     // Get settings values
-    ComposerSettings settings;
+    GlobalSettings settings;
     settings.beginGroup("notify_system");
     if(settings.contains("min_message_id_to_show"))
         min_message_id_to_show =

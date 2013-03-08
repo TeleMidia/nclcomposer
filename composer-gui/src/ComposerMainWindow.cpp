@@ -166,7 +166,7 @@ void ComposerMainWindow::initModules()
 
 void ComposerMainWindow::readExtensions()
 {
-  ComposerSettings settings;
+  GlobalSettings settings;
 
   settings.beginGroup("extensions");
   extensions_paths.clear();
@@ -240,7 +240,7 @@ QString ComposerMainWindow::promptChooseExtDirectory()
 
 void ComposerMainWindow::readSettings()
 {
-  ComposerSettings settings;
+  GlobalSettings settings;
   settings.beginGroup("openfiles");
   QStringList openfiles = settings.value("openfiles").toStringList();
   settings.endGroup();
@@ -293,7 +293,7 @@ void ComposerMainWindow::openProjects(const QStringList &projects)
   }
 
   /* Update Recent Projects on Menu */
-  ComposerSettings settings;
+  GlobalSettings settings;
   QStringList recentProjects = settings.value("recentprojects").toStringList();
   updateRecentProjectsMenu(recentProjects);
   welcomeWidget->updateRecentProjects(recentProjects);
@@ -832,7 +832,7 @@ void ComposerMainWindow::aboutPlugins()
     treeWidgetItem->setText(0, pF->name());
 
     // Set checked (or not) based on the settings
-    ComposerSettings settings;
+    GlobalSettings settings;
     settings.beginGroup("loadPlugins");
     if(!settings.contains(pF->id()) || settings.value(pF->id()).toBool())
       treeWidgetItem->setCheckState(1, Qt::Checked);
@@ -1010,7 +1010,7 @@ void ComposerMainWindow::closeEvent(QCloseEvent *event)
     }
   }
 
-  ComposerSettings settings;
+  GlobalSettings settings;
   settings.beginGroup("extensions");
   settings.setValue("path", extensions_paths);
   settings.endGroup();
@@ -1064,10 +1064,9 @@ void ComposerMainWindow::startOpenProject(QString project)
 
 void ComposerMainWindow::endOpenProject(QString project)
 {
-  (void) project;
   this->setCursor(QCursor(Qt::ArrowCursor));
 
-  ComposerSettings settings;
+  GlobalSettings settings;
 
   if(settings.contains("default_perspective"))
   {
@@ -1094,7 +1093,6 @@ void ComposerMainWindow::saveCurrentProject()
 
     if(saveAlsoNCLDocument)
     {
-
       QString nclfilepath = location.mid(0, location.lastIndexOf(".")) + ".ncl";
       QFile file(nclfilepath);
       if(file.open(QFile::WriteOnly | QIODevice::Truncate))
@@ -1241,7 +1239,7 @@ void ComposerMainWindow::savePerspective(QString layoutName)
 
 void ComposerMainWindow::saveDefaultPerspective(QString defaultPerspectiveName)
 {
-  ComposerSettings settings;
+  GlobalSettings settings;
   settings.setValue("default_perspective", defaultPerspectiveName);
 }
 
@@ -1253,7 +1251,7 @@ void ComposerMainWindow::restorePerspective(QString layoutName)
           tabProjects->currentIndex());
 
     QMainWindow *window = projectsWidgets[location];
-    ComposerSettings settings;
+    GlobalSettings settings;
     settings.beginGroup("pluginslayout");
 #ifndef USE_MDI
     window->restoreState(settings.value(layoutName).toByteArray());
@@ -1284,7 +1282,7 @@ void ComposerMainWindow::runNCL()
 
   // There is no other instance running, so let's run
   bool runRemote = false;
-  ComposerSettings settings;
+  GlobalSettings settings;
   settings.beginGroup("runginga");
   if(settings.contains("run_remote") && settings.value("run_remote").toBool())
     runRemote = true;
@@ -1302,7 +1300,7 @@ void ComposerMainWindow::runNCL()
 
 void ComposerMainWindow::runOnLocalGinga()
 {
-  ComposerSettings settings;
+  GlobalSettings settings;
   QString command, args;
   settings.beginGroup("runginga");
   command = settings.value("local_ginga_cmd").toString();
@@ -1538,7 +1536,7 @@ void ComposerMainWindow::addDefaultStructureToProject(Project *project,
   // Copy the default connector
   if(shouldCopyDefaultConnBase)
   {
-    ComposerSettings settings;
+    GlobalSettings settings;
     settings.beginGroup("importBases");
     QString defaultConnBase =
         settings.value("default_conn_base").toString();
@@ -1714,7 +1712,7 @@ void ComposerMainWindow::importFromDocument()
 
 void ComposerMainWindow::addToRecentProjects(QString projectUrl)
 {
-  ComposerSettings settings;
+  GlobalSettings settings;
   QStringList recentProjects = settings.value("recentProjects").toStringList();
 
   recentProjects.push_front(projectUrl);
@@ -1822,7 +1820,7 @@ void ComposerMainWindow::userPressedRecentProject()
 
 void ComposerMainWindow::clearRecentProjects(void)
 {
-  ComposerSettings settings;
+  GlobalSettings settings;
 
   settings.remove("recentProjects");
   QStringList empty;
@@ -1859,7 +1857,7 @@ void ComposerMainWindow::restorePerspectiveFromMenu()
 
 void ComposerMainWindow::updateMenuPerspectives()
 {
-  ComposerSettings settings;
+  GlobalSettings settings;
   settings.beginGroup("pluginslayout");
   QStringList keys = settings.allKeys();
   settings.endGroup();
@@ -2217,7 +2215,7 @@ void ComposerMainWindow::updateTabWithProject(int index, QString newLocation)
 
 void ComposerMainWindow::saveLoadPluginData(int)
 {
-  ComposerSettings settings;
+  GlobalSettings settings;
   settings.beginGroup("loadPlugins");
   QTreeWidgetItem *item;
   qDebug() << treeWidgetItem2plFactory.keys();
