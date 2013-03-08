@@ -7,8 +7,8 @@ QnstMenu::QnstMenu(QWidget* parent)
   createMenus();
   createConnections();
 
-  addAction(actionHelp);
-  addSeparator();
+  // addAction(actionHelp);
+  // addSeparator();
   // addAction(actionUndo);
   // addAction(actionRedo);
   addSeparator();
@@ -20,15 +20,16 @@ QnstMenu::QnstMenu(QWidget* parent)
   addSeparator();
   addAction(actionExport);
   addSeparator();
-  addMenu(menuView);
+  // addMenu(menuView); // disabled for a while
   addMenu(menuInsert);
-  addMenu(menuShow);
-  addMenu(menuArrange);
+  addSeparator();
+  // addMenu(menuShow); // disabled for a while
+  // addMenu(menuArrange); // disabled for a while
   addMenu(menuAdjust);
-  addSeparator();
-  addAction(actionHide);
-  addSeparator();
-  addAction(actionProperties);
+  // addSeparator(); // disabled for a while
+  // addAction(actionHide); // disabled for a while
+  // addSeparator(); // disabled for a while
+  // addAction(actionProperties); // disabled for a while
 }
 
 QnstMenu::~QnstMenu()
