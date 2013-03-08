@@ -101,6 +101,8 @@ public:
    */
   static bool isURL(const QString &tagname, const QString &attr);
 
+  QSize sizeHint() const { return QSize(250, 400); }
+
 private slots:
   /*!
    * \brief This SLOT must be called when the user changes the value of an item.

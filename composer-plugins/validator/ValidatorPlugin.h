@@ -10,12 +10,26 @@
 #include "validation/Validator.h"
 #include "composerncladapter.h"
 
+#include <QSize>
+
 using namespace composer::extension;
 
 namespace composer{
     namespace plugin{
         namespace validator{
 
+
+class ValidatorTreeWidget : public QTreeWidget {
+public:
+  ValidatorTreeWidget(QWidget *parent=0) : QTreeWidget(parent)
+  {
+  }
+
+  QSize sizeHint () const
+  {
+    return QSize(900, 200);
+  }
+};
 
 class ValidatorPlugin : public IPlugin
 {
@@ -52,7 +66,7 @@ private:
     QVector <pair<QString, QString> > pairsMessages;
 
     QWidget* window;
-    QTreeWidget *table;
+    ValidatorTreeWidget *table;
     ComposerNCLAdapter adapter;
 
 };

@@ -7,7 +7,7 @@ namespace composer{
 
 ValidatorPlugin::ValidatorPlugin()
 {
-    table = new QTreeWidget;
+    table = new ValidatorTreeWidget();
     table->setColumnCount(3);
     QStringList headers;
     headers << "" << "Elemento" << "Mensagem";

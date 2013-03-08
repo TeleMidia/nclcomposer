@@ -99,6 +99,8 @@ public:
    */
   void mouseMoveEvent(QMouseEvent *event);
 
+  QSize sizeHint() const { return QSize(250, 400); }
+
 public slots:
   /**
      * \brief Updates the tree representation based on the XML text parameter.
