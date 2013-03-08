@@ -660,16 +660,16 @@ void QnlyGraphicsRegion::createMenus()
   contextMenu->addSeparator();
   contextMenu->addAction(exportAction);
   contextMenu->addSeparator();
-  contextMenu->addMenu(viewMenu);
+  // contextMenu->addMenu(viewMenu); // disabled for while
   contextMenu->addMenu(insertMenu);
   contextMenu->addMenu(showMenu);
-  contextMenu->addMenu(arrangeMenu);
+  // contextMenu->addMenu(arrangeMenu); // disabled for while
   contextMenu->addSeparator();
   contextMenu->addAction(hideAction);
   contextMenu->addSeparator();
   contextMenu->addMenu(switchMenu);
-  contextMenu->addSeparator();
-  contextMenu->addAction(propertiesAction);
+  // contextMenu->addSeparator(); //disabled for now
+  // contextMenu->addAction(propertiesAction); //disabled for now
 }
 
 void QnlyGraphicsRegion::createConnections()

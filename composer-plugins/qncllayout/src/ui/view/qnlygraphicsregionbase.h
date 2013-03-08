@@ -109,6 +109,8 @@ signals:
 
     void regionbasePerformed();
 
+    void gridVisibilityChanged(bool gridVisibility);
+
 protected:
     virtual void contextMenuEvent(QGraphicsSceneContextMenuEvent* event);
     void mouseMoveEvent(QGraphicsSceneMouseEvent* event);

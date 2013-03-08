@@ -46,6 +46,8 @@ public:
 
     QnlyGraphicsRegionBase *getSelectedRegionBase();
 
+    bool gridVisibility;
+
 public slots:
     void addRegion(const QString regionUID,
                    const QString parentUID,

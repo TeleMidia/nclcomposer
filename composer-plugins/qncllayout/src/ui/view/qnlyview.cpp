@@ -17,7 +17,9 @@
  */
 #include "qnlyview.h"
 
-QnlyView::QnlyView(QWidget* parent) : QStackedWidget(parent)
+QnlyView::QnlyView(QWidget* parent) :
+    QStackedWidget(parent),
+    gridVisibility(false)
 {
   setWindowTitle("Qnly");
 
@@ -550,6 +552,12 @@ void QnlyView::addRegionBase(QnlyGraphicsRegionBase* regionBase,
             SIGNAL(mediaOverRegion(QString,QString)),
             SIGNAL(mediaOverRegionAction(QString,QString)));
 
+    regionBase->setGridVisible(gridVisibility);
+    connect(regionBase,
+            SIGNAL(gridVisibilityChanged(bool)),
+            SLOT(setGridVisible(bool)));
+
+
     emit regionBaseSelected(regionBase->getUid());
   }
 }
@@ -565,7 +573,7 @@ void QnlyView::removeRegionBase(QnlyGraphicsRegionBase* regionBase)
 
     regionbaseActionGroup->removeAction(action);
 
-    //        delete(action);
+    // delete(action);
 
     foreach(QGraphicsItem* item, regionBase->items())
     {
@@ -643,6 +651,7 @@ void QnlyView::selectRegionBase(QnlyGraphicsRegionBase* regionBase)
 
 void QnlyView::setGridVisible(bool visible)
 {
+  this->gridVisibility = visible;
   foreach(QnlyGraphicsRegionBase *regionBase, regionbases.values())
   {
     regionBase->setGridVisible(visible);

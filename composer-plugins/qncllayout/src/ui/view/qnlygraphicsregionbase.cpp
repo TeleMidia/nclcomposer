@@ -628,30 +628,30 @@ void QnlyGraphicsRegionBase::createMenus()
 
   // context menu
   contextMenu = new QMenu();
-  contextMenu->addAction(helpAction);
-  contextMenu->addSeparator();
-  //    contextMenu->addAction(undoAction);
-  //    contextMenu->addAction(redoAction);
-  //    contextMenu->addSeparator();
-  //    contextMenu->addAction(cutAction);
-  //    contextMenu->addAction(copyAction);
-  //    contextMenu->addAction(pasteAction);
-  //    contextMenu->addSeparator();
+  // contextMenu->addAction(helpAction);
+  // contextMenu->addSeparator();
+  // contextMenu->addAction(undoAction);
+  // contextMenu->addAction(redoAction);
+  // contextMenu->addSeparator();
+  // contextMenu->addAction(cutAction);
+  // contextMenu->addAction(copyAction);
+  // contextMenu->addAction(pasteAction);
+  // contextMenu->addSeparator();
   contextMenu->addAction(deleteAction);
   contextMenu->addSeparator();
   contextMenu->addAction(exportAction);
   contextMenu->addSeparator();
-  contextMenu->addMenu(viewMenu);
+  // contextMenu->addMenu(viewMenu); //disabled for while
   contextMenu->addMenu(insertMenu);
   contextMenu->addMenu(showMenu);
   contextMenu->addMenu(screensizeMenu);
-  contextMenu->addMenu(arrangeMenu);
+  // contextMenu->addMenu(arrangeMenu); //disabled for while
   contextMenu->addSeparator();
   contextMenu->addAction(hideAction);
   contextMenu->addSeparator();
   contextMenu->addMenu(switchMenu);
-  contextMenu->addSeparator();
-  contextMenu->addAction(propertiesAction);
+  // contextMenu->addSeparator(); // disabled for while
+  // contextMenu->addAction(propertiesAction); //disabled for while
 }
 
 void QnlyGraphicsRegionBase::createConnections()
@@ -1112,6 +1112,7 @@ void QnlyGraphicsRegionBase::changeResolution(int w, int h)
 void QnlyGraphicsRegionBase::performGrid()
 {
   setGridVisible(!isGridVisible());
+  emit gridVisibilityChanged(isGridVisible());
 }
 
 bool QnlyGraphicsRegionBase::isGridVisible()
