@@ -329,7 +329,7 @@ void NCLTreeWidget::updateItem(QTreeWidgetItem *item, QString tagname,
       //TODO: The mapping between extension and media type should be in the
       // settings file.
 
-      /* ComposerSettings settings;
+      /* GlobalSettings settings;
       settings.beginGroup("mimetypes");
       type = settings.value(ext).toString();
       settings.endGroup(); */

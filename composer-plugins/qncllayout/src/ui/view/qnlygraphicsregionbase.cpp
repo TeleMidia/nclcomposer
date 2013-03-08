@@ -691,7 +691,8 @@ void QnlyGraphicsRegionBase::createConnections()
 
   connect(exportAction, SIGNAL(triggered()), SLOT(performExport()));
 
-  connect(gridAction, SIGNAL(triggered()), SLOT(performGrid()));
+  connect(gridAction, SIGNAL(triggered()),
+          SLOT(performGrid()));
 }
 
 void QnlyGraphicsRegionBase::performShow(QAction* action)

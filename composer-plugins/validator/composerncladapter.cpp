@@ -2,7 +2,7 @@
 
 ComposerNCLAdapter::ComposerNCLAdapter()
 {
-    ComposerSettings settings;
+    GlobalSettings settings;
     settings.beginGroup("languages");
     language = settings.value("currentLanguage",QString("en")).toString();
     settings.endGroup();
