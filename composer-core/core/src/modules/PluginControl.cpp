@@ -149,7 +149,7 @@ void PluginControl::launchProject(Project *project)
   {
     factory        = pluginFactories[*it];
 
-    ComposerSettings settings;
+    GlobalSettings settings;
     settings.beginGroup("loadPlugins");
     if(!settings.contains(*it) || settings.value(*it).toBool() == true)
     {

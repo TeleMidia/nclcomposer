@@ -102,7 +102,7 @@ QString Utilities::relativePath( QString absolutePath, QString relativeTo,
 
 QString Utilities::getLastFileDialogPath()
 {
-  ComposerSettings settings;
+  GlobalSettings settings;
   QString lastFileDialogPath = QDir::homePath();
 
   settings.beginGroup("mainwindow"); // TODO: A better name to mainwindow.
@@ -119,7 +119,7 @@ void Utilities::updateLastFileDialogPath(QString filepath)
 {
   QFileInfo fileInfo(filepath);
 
-  ComposerSettings settings;
+  GlobalSettings settings;
   settings.beginGroup("mainwindow");
   settings.setValue("lastFileDialogPath", fileInfo.absolutePath());
   settings.endGroup();

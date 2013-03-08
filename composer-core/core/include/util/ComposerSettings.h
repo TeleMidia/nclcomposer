@@ -1,4 +1,4 @@
-/* Copyright (c) 2011 Telemidia/PUC-Rio.
+/* Copyright (c) 2011-2013 Telemidia/PUC-Rio.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,8 +7,8 @@
  * Contributors:
  *    Telemidia/PUC-Rio - initial API and implementation
  */
-#ifndef COMPOSERSETTINGS_H
-#define COMPOSERSETTINGS_H
+#ifndef ComposerSettings_H
+#define ComposerSettings_H
 
 #include "ComposerCoreControl_global.h"
 #include <QSettings>
@@ -17,12 +17,18 @@ namespace composer {
     namespace core {
         namespace util {
 
-class COMPOSERCORESHARED_EXPORT ComposerSettings: public QSettings
+class COMPOSERCORESHARED_EXPORT GlobalSettings: public QSettings
 {
 public:
-  ComposerSettings();
+  GlobalSettings();
+};
+
+class COMPOSERCORESHARED_EXPORT ProjectSettings: public QSettings
+{
+public:
+  ProjectSettings(const QString &project);
 };
 
 } } } // end namespace
 
-#endif // COMPOSERSETTINGS_H
+#endif // ComposerSettings_H
