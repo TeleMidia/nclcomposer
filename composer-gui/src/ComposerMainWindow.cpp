@@ -17,6 +17,8 @@
 #include <QToolButton>
 #include <QApplication>
 
+#include <QRegExp>
+
 #include <QDesktopServices>
 
 #include "GeneralPreferences.h"
@@ -241,18 +243,19 @@ QString ComposerMainWindow::promptChooseExtDirectory()
 void ComposerMainWindow::readSettings()
 {
   GlobalSettings settings;
-  settings.beginGroup("openfiles");
-  QStringList openfiles = settings.value("openfiles").toStringList();
-  settings.endGroup();
-
-  openProjects(openfiles);
-
-  QApplication::processEvents();
 
   settings.beginGroup("mainwindow");
   restoreGeometry(settings.value("geometry").toByteArray());
   restoreState(settings.value("windowState").toByteArray());
   settings.endGroup();
+
+  QApplication::processEvents();
+
+  settings.beginGroup("openfiles");
+  QStringList openfiles = settings.value("openfiles").toStringList();
+  settings.endGroup();
+
+  openProjects(openfiles);
 }
 
 void ComposerMainWindow::openProjects(const QStringList &projects)
@@ -482,24 +485,23 @@ void ComposerMainWindow::addPluginWidget(IPluginFactory *fac, IPlugin *plugin,
   dock->setWidget(borderFrame);
   dock->setObjectName(fac->id());
 
-  if (n%2)
-    w->addDockWidget(Qt::RightDockWidgetArea, dock, Qt::Vertical);
-  else
-    w->addDockWidget(Qt::LeftDockWidgetArea, dock, Qt::Vertical);
-
   dock->setMinimumSize(0, 0);
   tabProjects->setCurrentWidget(w);
 
   if(firstDock.contains(location)) {
-    // w->tabifyDockWidget(firstDock[location], dock);
+    w->tabifyDockWidget(firstDock[location], dock);
   }
-  else firstDock[location] = dock;
+  else
+  {
+    w->addDockWidget(Qt::LeftDockWidgetArea, dock);
+    firstDock[location] = dock;
+  }
 
   QFrame *titleBar = new QFrame();
   titleBar->setContentsMargins(0,0,0,0);
 
   QLabel *titleLabel = new QLabel(fac->name());
-  titleLabel->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Minimum);
+  titleLabel->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Minimum);
 
   QHBoxLayout *layout = new QHBoxLayout(titleBar);
   layout->setMargin(0);
@@ -1072,9 +1074,74 @@ void ComposerMainWindow::endOpenProject(QString project)
   {
     QString defaultPerspective =
         settings.value("default_perspective").toString();
+
+    // Ok! There is a default perspective, so use it
     restorePerspective(defaultPerspective);
+
     update();
   }
+  else
+  {
+    // There is no a default perspective, so let use the system default.
+    QMainWindow *window = projectsWidgets[project];
+    QList <QDockWidget *> docks = window->findChildren <QDockWidget* >(QRegExp("br.*"));
+    QMap <QString, QDockWidget*> dockByPluginId;
+    QList <QDockWidget *> leftDocks, rightDocks, bottomDocks;
+    for(int i = 0; i < docks.size(); i++)
+    {
+      dockByPluginId[docks[i]->objectName()] = docks[i];
+      if(docks[i]->objectName() == "br.puc-rio.telemidia.OutlineView" ||
+              docks[i]->objectName() == "br.puc-rio.telemidia.PropertiesView")
+      {
+        leftDocks.append(docks[i]);
+      }
+      else if(docks[i]->objectName() == "br.puc-rio.telemidia.DebugConsole" ||
+              docks[i]->objectName() == "br.ufma.deinf.laws.validator")
+      {
+        bottomDocks.append(docks[i]);
+      }
+      else
+        rightDocks.append(docks[i]);
+    }
+
+    for(int i = leftDocks.size()-1; i >= 0; i--)
+    {
+      leftDocks[i]->widget()->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
+      leftDocks[i]->widget()->setMinimumWidth(200);
+      // leftDocks[i]->widget()->setMaximumWidth(400);
+      if(!i)
+        window->addDockWidget(Qt::LeftDockWidgetArea, leftDocks[i]);
+      else
+        window->addDockWidget(Qt::LeftDockWidgetArea, leftDocks[i], Qt::Vertical);
+
+      window->adjustSize();
+    }
+
+    for(int i = 0; i < rightDocks.size(); i++)
+    {
+      rightDocks[i]->widget()->setSizePolicy(QSizePolicy::Expanding,
+                                             QSizePolicy::Expanding);
+
+      if(!i)
+        window->addDockWidget(Qt::RightDockWidgetArea, rightDocks[i]);
+      else
+        window->tabifyDockWidget(rightDocks[0], rightDocks[i]);
+    }
+
+    for(int i = 0; i < bottomDocks.size(); i++)
+    {
+      bottomDocks[i]->widget()->setSizePolicy(QSizePolicy::MinimumExpanding,
+                                              QSizePolicy::MinimumExpanding);
+      bottomDocks[i]->widget()->setMaximumHeight(200);
+      bottomDocks[i]->widget()->setMinimumHeight(100);
+      if(!i)
+        window->addDockWidget(Qt::RightDockWidgetArea, bottomDocks[i], Qt::Vertical);
+      else
+        window->tabifyDockWidget(bottomDocks[0], bottomDocks[i]);
+    }
+  }
+
+  this->updateGeometry();
 }
 
 void ComposerMainWindow::saveCurrentProject()
