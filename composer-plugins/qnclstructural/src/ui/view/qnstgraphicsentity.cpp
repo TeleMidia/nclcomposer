@@ -116,13 +116,8 @@ void QnstGraphicsEntity::addnstGraphicsEntity(QnstGraphicsEntity* entity)
     }
     else
     {
-#ifndef Q_WS_MAC
       qWarning() << "[QNST] Warning! You are adding the same entity twice as \
-        child of " << this << __FILE__ << __LINE__;
-#else
-      qWarning() << "[QNST] Warning! You are adding the same entity twice as \
-        child of " << (long) this << __FILE__ << __LINE__;
-#endif
+        child of " << QString().sprintf("%p", this) << __FILE__ << __LINE__;
     }
   }
 }

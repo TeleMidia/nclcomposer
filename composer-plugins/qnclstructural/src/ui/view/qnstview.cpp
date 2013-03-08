@@ -5,6 +5,8 @@
 //
 
 #include <assert.h>
+#include <QDebug>
+
 #include "qnstutil.h"
 
 #include "qnstgraphicsbind.h"
@@ -1288,12 +1290,9 @@ void QnstView::removeEntity(const QString uid, bool undo, bool rmRef)
         QnstGraphicsEntity* parent = entity->getnstGraphicsParent();
         if (parent != NULL)
         {
-
-#ifndef Q_WS_MAC
-    qDebug() << "parent = " << parent << parent->getnstUid();
-#else
-    qDebug() << "parent = " << (long) parent << parent->getnstUid();
-#endif
+          qDebug() << "parent = "
+                   << QString().sprintf("%p", parent)
+                   << parent->getnstUid();
 
           parent->removenstGraphicsEntity(entity);
         }
@@ -5056,24 +5055,21 @@ void QnstView::traceEntities()
     assert(entities[key] != NULL);
     assert(entities[key] != entities[key]->getnstGraphicsParent());
 
-#ifndef Q_WS_MAC
-    qDebug() << key << entities[key] << entities[key]->getnstType()
+    qDebug() << key
+             << QString().sprintf("%p", entities.value(key))
+             << entities[key]->getnstType()
              << QnstUtil::getStrFromNstType(entities[key]->getnstType());
-#else
-    qDebug() << key << (long)entities[key] << entities[key]->getnstType()
-             << QnstUtil::getStrFromNstType(entities[key]->getnstType());
-#endif
 
     if(entities[key]->getnstGraphicsParent())
       qDebug()<< QnstUtil::getStrFromNstType(entities[key]->getnstGraphicsParent()->getnstType());
 
     foreach(QnstGraphicsEntity * e, entities[key]->getnstGraphicsEntities())
-#ifndef Q_WS_MAC
-    qDebug() << "\t" << e << e->getnstType() << QnstUtil::getStrFromNstType(e->getnstType());
-#else
-    qDebug() << "\t" << (long)e << e->getnstType() << QnstUtil::getStrFromNstType(e->getnstType());
-#endif
-
+    {
+      qDebug() << "\t"
+               << QString().sprintf("%p", e)
+               << e->getnstType()
+               << QnstUtil::getStrFromNstType(e->getnstType());
+    }
   }
   qDebug() << "#### END TRACING ENTITIES ####" << endl;
 }
