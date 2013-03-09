@@ -321,6 +321,10 @@ ATTRIBUTE(transitionBase,id,false,ID)
 //valueAssessment
 ATTRIBUTE(valueAssessment,value,true,STRING)
 
+REFERENCE(descriptor,moveDown,descriptor,focusIndex,ANY)
+REFERENCE(descriptor,moveLeft,descriptor,focusIndex,ANY)
+REFERENCE(descriptor,moveRight,descriptor,focusIndex,ANY)
+REFERENCE(descriptor,moveUp,descriptor,focusIndex,ANY)
 REFERENCE(bind,component,body,id,SAME)
 REFERENCE(bind,component,context,id,SAME)
 REFERENCE(bind,component,media,id,SAME)
