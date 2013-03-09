@@ -40,6 +40,7 @@
 
 class QnstAddCommand;
 
+// #define SMOOTH_ZOOM 1
 //
 // ATTENTION: This code needs a refactoring.
 //
@@ -149,7 +150,16 @@ protected:
 
   void wheelEvent(QWheelEvent * event);
 
+#ifdef SMOOTH_ZOOM
+  int _numScheduledScalings;
+#endif
+
 public slots:
+#ifdef SMOOTH_ZOOM
+  void scalingTime(qreal x);
+  void animFinished();
+#endif
+
   void requestEntityAddition(QnstGraphicsEntity* entity, bool undo = false);
 
   void requestEntityRemotion(QnstGraphicsEntity* entity, bool undo = false,
