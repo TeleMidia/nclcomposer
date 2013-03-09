@@ -19,7 +19,7 @@
 
 QnlyCanvas::QnlyCanvas(QWidget* parent) : QGraphicsView(parent)
 {
-  setBackgroundBrush(QBrush(QColor("#999")));
+  setBackgroundBrush(QBrush(QColor("#eee")));
 }
 
 QnlyCanvas::~QnlyCanvas()
