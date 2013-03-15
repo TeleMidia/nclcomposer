@@ -67,6 +67,7 @@ void OutlineViewPlugin::onEntityAdded(QString pluginID, Entity *entity)
     return;
 
   (void) pluginID;
+  qDebug() << "OutlineViewPlugin::onEntityAdded(" << pluginID << entity << endl;
   //  QString line = "<" + entity->getType() + "> </" + entity->getType() + ">\n";
 
   QTreeWidgetItem *item;
@@ -367,11 +368,18 @@ void OutlineViewPlugin::clearErrorMessages()
   if(isSyncFromTextual)
     return;
 
+  qDebug() << "OutlineViewPlugin::clearErrorMessages" << endl;
+
   foreach (QTreeWidgetItem *item, idToItem.values())
   {
     item->setTextColor(0, Qt::black);
     item->setToolTip(0, "");
   }
+}
+
+void OutlineViewPlugin::clearValidationMessages(QString, void *param)
+{
+  clearErrorMessages();
 }
 
 void OutlineViewPlugin::validationError(QString pluginID, void * param)

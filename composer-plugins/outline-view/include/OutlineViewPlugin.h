@@ -142,10 +142,17 @@ public slots:
      */
     void textualFinishSync(QString, void*);
 
+// COMUNICATION WITH VALIDATION PLUGIN //
     /*!
-     * \brief
+     * \brief This message is called by Validator plugin.
+     *
      */
-    void validationError(QString pluginID, void * param);
+    void clearValidationMessages(QString, void *param);
+    /*!
+    * \brief This message is called by Validator plugin.
+    */
+    void validationError(QString pluginID, void *param);
+// END COMMUNICATION WITH VALIDATION PLUGIN
 
     /*!
      * \brief
