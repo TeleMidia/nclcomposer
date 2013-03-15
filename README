@@ -38,15 +38,15 @@ Prerequisites:
  * Qt 4.7.1
      The Qt SDK provides you with most of the required software.
 
-The easier way to get the all submodules projects required is running:
+The easistr way to get the all submodules projects required is running:
   $ qmake
 
-in the root directory of this projects. The first time you run qmake, it will
-initialize and update the submodules, getting all the necessary source code for
-compile NCL Composer. By default, every submodule will be checkouted to branch
-master.
+in the root directory of composer.git. The first time you run qmake, it will
+initialize and update all the submodules, getting all the necessary source code
+for compile NCL Composer. By default, every submodule will be checkouted to
+branch master.
 
-Otherwise, if you want to do it for yourself you can execute the following 
+Otherwise, if you want to do it by yourself you can execute the following 
 commands:
   $ git submodule init
   $ git submodule update
