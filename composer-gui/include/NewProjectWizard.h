@@ -17,6 +17,7 @@ public:
 
   QString getProjectFullPath();
   bool shouldCopyDefaultConnBase();
+  bool shouldCreateADefaultRegion();
   
 private:
   Ui::NewProjectWizard *ui;

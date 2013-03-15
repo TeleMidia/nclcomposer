@@ -1562,7 +1562,8 @@ void ComposerMainWindow::launchProjectWizard()
                                                ->getOpenProject(filename);
 
         addDefaultStructureToProject( project,
-                                      wizard.shouldCopyDefaultConnBase() );
+                                      wizard.shouldCopyDefaultConnBase(),
+                                      wizard.shouldCreateADefaultRegion());
       }
       else
       {
@@ -1574,11 +1575,14 @@ void ComposerMainWindow::launchProjectWizard()
 
 void ComposerMainWindow::addDefaultStructureToProject(Project *project,
                                                  bool shouldCopyDefaultConnBase,
+                                                 bool shouldCreateADefaultRegion,
                                                  bool save)
 {
   const QString defaultNCLID = "myNCLDocID";
   const QString defaultBodyID = "myBodyID";
   const QString defaultConnBaseID = "connBaseId";
+  const QString defaultRegionBaseID = "regionBase0";
+  const QString defaultRegionID = "region0";
 
   QMap <QString, QString> nclAttrs, headAttrs, bodyAttrs;
   nclAttrs.insert("id", defaultNCLID);
@@ -1669,6 +1673,39 @@ void ComposerMainWindow::addDefaultStructureToProject(Project *project,
                               "exists").arg(defaultConnBase),
                            tr("Ok"));
     }
+  }
+
+  if(shouldCreateADefaultRegion)
+  {
+    QMap <QString, QString> regionBaseAttrs, regionAttrs;
+    QList<Entity*> regionBases = project->getEntitiesbyType("regionBase");
+
+    // There is no regionBase, so lets create one
+    if(!regionBases.size())
+    {
+      regionBaseAttrs.insert("id", defaultRegionBaseID);
+      Entity *head = project->getEntitiesbyType("head").at(0);
+      msgControl->anonymousAddEntity("regionBase",
+                                     head->getUniqueId(),
+                                     regionBaseAttrs);
+    }
+
+    //Now, its time to add the region itself
+    Entity *regionBase = project->getEntitiesbyType("regionBase").at(0);
+    regionAttrs.insert("id", defaultRegionID);
+    regionAttrs.insert("top", "0");
+    regionAttrs.insert("left", "0");
+    regionAttrs.insert("width", "100%");
+    regionAttrs.insert("height", "100%");
+    regionAttrs.insert("zIndex", "1");
+    msgControl->anonymousAddEntity("region",
+                                   regionBase->getUniqueId(),
+                                   regionAttrs);
+  }
+
+  if(shouldCreateADefaultRegion)
+  {
+
   }
 
   if(save)
@@ -1870,6 +1907,7 @@ void ComposerMainWindow::userPressedRecentProject(QString src)
       // \todo Ask for the import or not of the defaultConnBase.
       addDefaultStructureToProject(
             ProjectControl::getInstance()->getOpenProject(src),
+            false,
             false,
             true);
     }

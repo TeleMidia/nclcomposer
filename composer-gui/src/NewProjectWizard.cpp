@@ -43,3 +43,8 @@ bool NewProjectWizard::shouldCopyDefaultConnBase()
 {
   return ui->checkBox_ImportConnectorBase->isChecked();
 }
+
+bool NewProjectWizard::shouldCreateADefaultRegion()
+{
+  return ui->checkBox_AddDefaultRegion->isChecked();
+}
