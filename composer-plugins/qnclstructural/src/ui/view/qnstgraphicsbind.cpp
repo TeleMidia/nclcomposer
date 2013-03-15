@@ -286,7 +286,7 @@ void QnstGraphicsBind::draw_action(QPainter* painter)
     QPointF pointa = line.p1();
     QPointF pointb = line.p2();
 
-    if (!isInvalid())
+    if (!isInvalid() && !hasError)
       painter->setPen(QPen(QBrush(QColor("#000000")), 1));
     else
       painter->setPen(QPen(QBrush(QColor(255,0,0,200)), 1, Qt::DashLine));
@@ -334,7 +334,7 @@ void QnstGraphicsBind::draw_action(QPainter* painter)
 
       painter->drawPixmap(4+getWidth()-16, 4+getHeight()-16, 16, 16, QPixmap(icon));
 
-      if (!isInvalid())
+      if (!isInvalid() && !hasError)
       {
         painter->setBrush(QBrush(QColor("#000000")));
       }
@@ -387,7 +387,7 @@ void QnstGraphicsBind::draw_action(QPainter* painter)
 
       painter->drawPixmap(4, 4+getHeight()-16, 16, 16, QPixmap(icon));
 
-      if (!isInvalid())
+      if (!isInvalid() && !hasError)
       {
         painter->setBrush(QBrush(QColor("#000000")));
       }
@@ -440,7 +440,7 @@ void QnstGraphicsBind::draw_action(QPainter* painter)
 
       painter->drawPixmap(4+getWidth()-16,4,16,16, QPixmap(icon));
 
-      if (!isInvalid())
+      if (!isInvalid() && !hasError)
       {
         painter->setBrush(QBrush(QColor("#000000")));
       }
@@ -492,7 +492,7 @@ void QnstGraphicsBind::draw_action(QPainter* painter)
 
       painter->drawPixmap(4,4,16,16, QPixmap(icon));
 
-      if (!isInvalid())
+      if (!isInvalid() && !hasError)
       {
         painter->setBrush(QBrush(QColor("#000000")));
       }
@@ -530,7 +530,7 @@ void QnstGraphicsBind::draw_condition(QPainter* painter)
     QPointF pointa = line.p1();
     QPointF pointb = line.p2();
 
-    if (!isInvalid())
+    if (!isInvalid() && !hasError)
       painter->setPen(QPen(QBrush(QColor("#000000")), 1));
     else
       painter->setPen(QPen(QBrush(QColor(255,0,0,200)), 1, Qt::DashLine));
@@ -578,7 +578,7 @@ void QnstGraphicsBind::draw_condition(QPainter* painter)
 
       painter->drawPixmap(4,4,16,16, QPixmap(icon));
 
-      if (!isInvalid())
+      if (!isInvalid() && !hasError)
       {
         painter->setBrush(QBrush(QColor("#000000")));
       }
@@ -631,7 +631,7 @@ void QnstGraphicsBind::draw_condition(QPainter* painter)
 
       painter->drawPixmap(4+getWidth()-16,4,16,16, QPixmap(icon));
 
-      if (!isInvalid())
+      if (!isInvalid() && !hasError)
       {
         painter->setBrush(QBrush(QColor("#000000")));
       }
@@ -683,7 +683,7 @@ void QnstGraphicsBind::draw_condition(QPainter* painter)
 
       painter->drawPixmap(4, 4+getHeight()-16, 16, 16, QPixmap(icon));
 
-      if (!isInvalid())
+      if (!isInvalid() && !hasError)
       {
         painter->setBrush(QBrush(QColor("#000000")));
       }
@@ -736,7 +736,7 @@ void QnstGraphicsBind::draw_condition(QPainter* painter)
 
       painter->drawPixmap(4+getWidth()-16, 4+getHeight()-16, 16, 16, QPixmap(icon));
 
-      if (!isInvalid())
+      if (!isInvalid() && !hasError)
       {
         painter->setBrush(QBrush(QColor("#000000")));
       }
