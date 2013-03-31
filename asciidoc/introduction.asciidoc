@@ -51,16 +51,15 @@ O {nclcomposer} foi desenvolvido para ser facilmente extensível. Por isso,
 novas funcionalidades podem ser adicionadas facilmente por meio de _plugins_.
 
 [def:plugins]
-Plugins;;
+.Plugins
 _Plugins_ são pedaços de software que podem ser distribuídos separadamente e
 adicionar ou modificar funcionalidades de um determinado software _host_.
-
 Uma lista completa dos _plugins_ disponíveis oficialmente no site do
 {nclcomposer}, pode ser encontrada em:
 http://composer.telemidia.puc-rio.br/en/plugins/[].
 
 [def:views]
-Visões;;
+.Visões
 O tipo de _plugin_ mais comum do {nclcomposer} são as _Visões_. Uma visão
 é um _plugin_ que possui uma representação na interface gráfica e permite
 ao autor visualizar/editar uma característica específica do 
