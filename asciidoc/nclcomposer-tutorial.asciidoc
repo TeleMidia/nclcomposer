@@ -77,7 +77,7 @@ Passo 0: Criando um novo projeto
 Para isso, vamos abrir o {nclcomposer}, que apresenta a seguinte tela de
 boas-vindas:
 
-image::images/nclcomposer-welcomescreen.png[title="Tela de boas-vindas do {nclcomposer}.",width="35%",link="images/nclcomposer-welcomescreen.png"]
+image::../imgs/nclcomposer-welcomescreen.png[title="Tela de boas-vindas do {nclcomposer}.",width="35%",link="../imgs/nclcomposer-welcomescreen.png"]
 
 Nessa tela de boas-vindas podemos criar o nosso primeiro projeto. Para isso,
 pressione o botão _New Project_ no canto esquerdo inferior da tela de
@@ -88,7 +88,7 @@ _File->New Project_.
 
 A seguinte tela será exibida:
 
-image::images/nclcomposer-newproject.png[title="Criação de um novo projeto.",width="35%"]
+image::../imgs/nclcomposer-newproject.png[title="Criação de um novo projeto.",width="35%"]
 
 Nessa janela, atribua um nome para o projeto que você está criando, selecione
 o diretório onde deseja salvá-lo e também marque a opção _Copy and Import the
@@ -100,7 +100,7 @@ pois ela será útil para os próximos exemplos que iremos desenvolver.
 
 Feito isso, pressione o botão _Finish_ e a seguinte tela será apresentada:
 
-image::images/nclcomposer-body.png[title="Visão estrutural de um projeto recém-criado.",width="35%"]
+image::../imgs/nclcomposer-body.png[title="Visão estrutural de um projeto recém-criado.",width="35%"]
 
 Com o nosso projeto criado, podemos ter acesso às visões que já vem instaladas
 por default no {nclcomposer}: {default_views}.
@@ -201,7 +201,7 @@ Para inserir os nossos objetos de mídia, a forma mais simples é apenas
 arrastar os objetos de mídia do seu Gerenciador de Arquivos para dentro da
 {structural_view} do {nclcomposer}.
 
-image::images/nclcomposer-drag_and_drop_animGar.png[title="Arraste os objetos de mídia do seu gerenciador de arquivos para a {structural_view} do {nclcomposer} para inserí-lo como objetos de mídia da aplicação.", width="35%"]
+image::../imgs/nclcomposer-drag_and_drop_animGar.png[title="Arraste os objetos de mídia do seu gerenciador de arquivos para a {structural_view} do {nclcomposer} para inserí-lo como objetos de mídia da aplicação.", width="35%"]
 
 TIP: Outra forma de inserir um objeto de mídia, na {structural_view} é 
 clicar com o botão direito sobre o corpo do documento e selecionar o menu 
@@ -227,7 +227,7 @@ Estrutural_ a forma mais direta é clicando com o botão direto do mouse sobre o
 objeto de mídia no qual queremos inserir uma nova propriedade e selecionando o
 menu _Insert->Property_.
 
-image::images/nclcomposer-addproperty.png[title="Adicionando propriedade à um objeto de mídia.", width="35%"]
+image::../imgs/nclcomposer-addproperty.png[title="Adicionando propriedade à um objeto de mídia.", width="35%"]
 
 Neste nosso primeiro exemplo estamos especialmente interessados nas
 propriedades que definem a dimensão dos objetos: _top_, _left_, _width_ e
@@ -238,7 +238,7 @@ selecionarmos pela {structural_view} e, depois, a partir da visão de
 propriedades podemos definir o seu nome e seu valor. No caso do nosso 
 exemplo, devemos definir a propriedade _width_ e o valor 100%:
 
-image::images/nclcomposer-property-width.png[title="Definindo largura do objeto de mídia.", width="35%"]
+image::../imgs/nclcomposer-property-width.png[title="Definindo largura do objeto de mídia.", width="35%"]
 
 Da mesma forma, deve-se  criar uma propriedade _height_, também com o valor 
 de 100%. Definindo assim, que nossa mídia irá ocupar toda a tela quando 
@@ -254,7 +254,7 @@ Para inserirmos uma porta no corpo do documento pela _Visão
 Estrutural_ é suficiente clicarmos com o botão direito sobre o corpo e
 selecionarmos o menu _Insert->Port_.
 
-image::images/nclcomposer-addport.png[title="Adicionando porta.", width="35%"]
+image::../imgs/nclcomposer-addport.png[title="Adicionando porta.", width="35%"]
 
 *FIXME*: Esta figura deveria ter as duas propriedades definidas no passo
 anterior.
@@ -263,7 +263,7 @@ Para mapearmos a porta que acabamos de criar para o objeto de mídia, devemos,
 segurando a tecla _SHIFT_, clicar sobre a porta e arrastar o ponteiro
 do mouse para o objeto de mídia.  
 
-image::images/nclcomposer-portcomponent.png[title="Mapeando porta para objeto de mídia.", width="35%"]
+image::../imgs/nclcomposer-portcomponent.png[title="Mapeando porta para objeto de mídia.", width="35%"]
 
 *FIXME*: Esta figura deveria ter as duas propriedades definidas no passo
 anterior.
@@ -306,7 +306,7 @@ marcador caído no chão.
 
 A imagem a seguir apresenta a visão temporal deste exemplo:
 
-image::images/temporal-view.png[title="Visão temporal do exemplo 02.",width="35%"]
+image::../imgs/temporal-view.png[title="Visão temporal do exemplo 02.",width="35%"]
 
 Passo 1: Salvar como projeto anterior
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^

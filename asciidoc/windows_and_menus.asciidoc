@@ -5,7 +5,7 @@ Janelas e Menus do NCL Composer
 Janela Principal
 ~~~~~~~~~~~~~~~~
 
-image:images/cap4_mainwindow.png[width=300px]
+image:../imgs/cap4_mainwindow.png[width=300px]
 
 Barra de título::
 Evidencia o nome do {nclcomposer} e do projeto corrente.
