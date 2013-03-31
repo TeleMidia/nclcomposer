@@ -1,0 +1,31 @@
+Exemplo 2: Sincronismo de Mídia sem Interatividade
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Objetivo
+^^^^^^^^
+O próximo exemplo ilustra como é possível introduzir vários objetos de
+mídia sincronizados no tempo. Para isso, vamos começar a partir do projeto que
+desenvolvemos no <<sample:00, exemplo anterior>> e vamos acrescentar:
+
+  1. uma música de fundo (um chorinho), que deverá começar assim que terminar a
+apresentação inicial do vídeo e começar a animação propriamente dita;
+  2. um outro objeto de vídeo, que deverá ser exibido em paralelo e sincronizado
+com o famoso “drible do vaivém” do Mané, retratado na animação; e ainda
+  3. uma outra imagem, uma foto, que deverá ser exibida junto com a cena do
+marcador caído no chão.
+
+A imagem a seguir apresenta a visão temporal deste exemplo:
+
+image::../imgs/temporal-view.png[title="Visão temporal do exemplo 02.",width="35%"]
+
+Passo 1: Salvar como projeto anterior
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Para mantermos o que já foi feito no exemplo anterior, vamos abrí-lo criar um
+novo projeto por meio do menu _File->Salve as..._.  
+
+Reúso Apenas de Relação
+^^^^^^^^^^^^^^^^^^^^^^^
+TODO
+
+Reúso de Características de Apresentação e Importação de Base
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TODO
