@@ -210,7 +210,7 @@ por meio do botão "Run NCL Project" na barra de ferramentas.
 
 A seguinte tela exemplifica o exemplo em execução:
 
-image::../imgs/ex01-running.png[title="Adicionando porta.", width="50%"]
+image::../imgs/ex01-running.png[title="Exemplo 01 em execução: três momentos da animação \"O Primeiro João\"", width="80%"]
 
 //.Para saber mais: Propriedades dos Objetos de Mídia
 //***************************************************
