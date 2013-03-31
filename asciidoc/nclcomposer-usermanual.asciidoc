@@ -7,7 +7,7 @@ Roberto Gerson de Albuquerque Azevedo <robertogerson@telemidia.puc-rio.br>
 :numbered:
 :website: http://asciidoc.org/
 v1.0, 2012-12
-:doctype: book
+:doctype: article
 :lang: pt-BR
 
 // Atribute List
