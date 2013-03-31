@@ -49,7 +49,7 @@ Conceitos Básicos
 O {nclcomposer} foi desenvolvido para ser facilmente extensível. Por isso, 
 novas funcionalidades podem ser adicionadas facilmente por meio de _plugins_.
 
-XXX
+XXXX
 
 [[def:plugins]]
 .Plugins
