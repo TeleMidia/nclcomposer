@@ -58,83 +58,83 @@ MacOS X
 ^^^^^^^
 TODO
 
-Instalando um player NCL
-~~~~~~~~~~~~~~~~~~~~~~~~
-O {nclcomposer}, por _default_, não vem com um _player_ NCL embutido. Dessa
-forma, para executar suas aplicações, será necessário que você tenha algum
-player NCL instalado.
-
-É recomendado o uso da Implementação de Referência do
-http://www.ginga.org.br[Ginga-NCL]. As subseções a seguir detalham como
-instalar a Implementação de Referência do Ginga-NCL nos principais sistemas
-operacionais.
-
-Implementação de Referência do Ginga-NCL
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-.Windows
-[NOTE]
-========
-Para instalar o _Ginga4Windows_ (versão da implementação de referência do
-Ginga-NCL para a plataforma Windows):
-
-  . Baixe a versão mais atual do _Ginga4Windows_ em:
-	http://www.gingancl.org.br/en/ferramentas.
-	. O arquivo deve ter o nome da forma _ginga-v.X.X.X-win32.exe_, onde _X.X.X_
-	informa a versão mais atual. Execute esse arquivo e a seguinte tela deve
-	aparecer:
-
-	TODO: Image.
-
-	. Caso a máquina na qual está instalando, não tenha as dependências
-	necessárias o instalador irá automaticamente baixá-las da Internet.
-
-Possíveis problemas::
-TODO
-========
-
-.Linux
-[NOTE]
-======
-Até o momento da escrita deste manual ainda não existe um instalador da
-Implementação de Referência para a plataforma Linux. Sendo assim, caso deseje
-instalá-lo em uma máquina com sistema operacional Linux será necessário
-baixar e compilar o código-fonte.
-
-Mais informações podem ser encontradas em:
-http://svn.softwarepublico.gov.br/trac/ginga/wiki/Building_Wiki_GingaNCL.
-======
-
-.MacOS X
-[NOTE]
-========
-Até o momento da escrita deste manual ainda não existe um instalador da
-Implementação de Referência para a plataforma MacOS X. Sendo assim, caso
-deseje instalá-lo em uma máquina com sistema operacional MacOS X será
-necessário baixar e compilar o código-fonte.
-
-Mais informações podem ser encontradas em:
-http://svn.softwarepublico.gov.br/trac/ginga/wiki/Building_Wiki_GingaNCL.
-========
-
-Ginga-NCL Virtual Set-top box
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-.Windows
-[NOTE]
-========
-TODO
-========
-
-.Linux (Ubuntu/Debian)
-[NOTE]
-========
-TODO
-========
-
-.MacOS X
-[NOTE]
-========
-TODO
-========
+// Instalando um player NCL
+// ~~~~~~~~~~~~~~~~~~~~~~~~
+// O {nclcomposer}, por _default_, não vem com um _player_ NCL embutido. Dessa
+// forma, para executar suas aplicações, será necessário que você tenha algum
+// player NCL instalado.
+// 
+// É recomendado o uso da Implementação de Referência do
+// http://www.ginga.org.br[Ginga-NCL]. As subseções a seguir detalham como
+// instalar a Implementação de Referência do Ginga-NCL nos principais sistemas
+// operacionais.
+// 
+// Implementação de Referência do Ginga-NCL
+// ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+// .Windows
+// [NOTE]
+// ========
+// Para instalar o _Ginga4Windows_ (versão da implementação de referência do
+// Ginga-NCL para a plataforma Windows):
+// 
+//  . Baixe a versão mais atual do _Ginga4Windows_ em:
+// 	http://www.gingancl.org.br/en/ferramentas.
+// 	. O arquivo deve ter o nome da forma _ginga-v.X.X.X-win32.exe_, onde _X.X.X_
+// 	informa a versão mais atual. Execute esse arquivo e a seguinte tela deve
+// 	aparecer:
+// 
+// 	TODO: Image.
+// 
+// 	. Caso a máquina na qual está instalando, não tenha as dependências
+// 	necessárias o instalador irá automaticamente baixá-las da Internet.
+// 
+// Possíveis problemas::
+// TODO
+// ========
+// 
+// .Linux
+// [NOTE]
+// ======
+// Até o momento da escrita deste manual ainda não existe um instalador da
+// Implementação de Referência para a plataforma Linux. Sendo assim, caso deseje
+// instalá-lo em uma máquina com sistema operacional Linux será necessário
+// baixar e compilar o código-fonte.
+// 
+// Mais informações podem ser encontradas em:
+// http://svn.softwarepublico.gov.br/trac/ginga/wiki/Building_Wiki_GingaNCL.
+// ======
+// 
+// .MacOS X
+// [NOTE]
+// ========
+// Até o momento da escrita deste manual ainda não existe um instalador da
+// Implementação de Referência para a plataforma MacOS X. Sendo assim, caso
+// deseje instalá-lo em uma máquina com sistema operacional MacOS X será
+// necessário baixar e compilar o código-fonte.
+// 
+// Mais informações podem ser encontradas em:
+// http://svn.softwarepublico.gov.br/trac/ginga/wiki/Building_Wiki_GingaNCL.
+// ========
+// 
+// Ginga-NCL Virtual Set-top box
+// ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+// .Windows
+// [NOTE]
+// ========
+// TODO
+// ========
+// 
+// .Linux (Ubuntu/Debian)
+// [NOTE]
+// ========
+// TODO
+// ========
+// 
+// .MacOS X
+// [NOTE]
+// ========
+// TODO
+// ========
 
 Configuração do Ambiente
 ~~~~~~~~~~~~~~~~~~~~~~~~
