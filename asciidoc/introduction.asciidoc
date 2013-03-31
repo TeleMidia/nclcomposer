@@ -1,0 +1,109 @@
+[[sec:intro]]
+Introdução
+----------
+//O que é NCL?
+//~~~~~~~~~~~~
+//NCL é uma linguagem declarativa, uma aplicação http://www.xml.org[XML], para a
+//criação de aplicações multimídia interativas. A NCL traz uma separação clara
+//entre os conteúdos de mídia (áudio, vídeo, imagem etc.) e a estrutura de uma
+//aplicação. Um documento NCL apenas define como os objetos de mídia são
+//estruturados e relacionados, no tempo e no espaço.
+
+//O intuito principal deste tutorial é fornecer ao leitor a habilidade de desenvolver programas NCL simples, usando o {nclcomposer}, e capacitá-lo a melhor entender e exercitar os principais conceitos da NCL, no ambiente de autoria {nclcomposer}.
+
+//Para criarmos um documento hipermídia, geralmente, temos que responder a
+//quatro perguntas: *o que* se quer tocar, *onde* (i.e. em que região da tela e
+//em qual dispositivo), *como* (e.g. com que volume, com que transparência etc.)
+//e *quando* (e.g. no início da apresentação, quando o usuário selecionar alguma
+//teclas etc.).
+
+//Precisamos disso ?
+// O que tocar?:
+//	Em NCL, essa resposta é realizada por meio dos objetos de mídia (elementos
+//	<media>).
+
+// Onde tocar?:
+//	Em NCL, podemos responder a esta pergunta de duas formas. Definindo regiões
+//	(elementos <region>) que posteriormente serão associados aos objetos, ou
+//	diretamente por meio de propriedades nos objetos de mídia. As propriedades
+//	associadas à posicionamento de objetos são: _left_, _top_, _width_ e
+//	_height_.
+
+//Como tocar?:
+//	Em NCL, respondemos isso por meio de propriedades nos objetos de mídia, ou
+//	por meio de descritores.
+
+//Quando tocar?:
+//	Em NCL, respondemos essa pergunta por meio de links e conectores.
+
+O que é o {nclcomposer}?
+~~~~~~~~~~~~~~~~~~~~~~~~
+O http://composer.telemidia.puc-rio.br[{nclcomposer}] é uma ferramenta de
+autoria para NCL que visa facilitar o desenvolvimento de aplicações
+interativas para TV Digital. Para isso, ele utiliza-se de várias abstrações
+gráficas(visões) que permitem ao autor focar em apenas um determinado ponto,
+durante cada fase distinta da autoria.
+
+Conceitos Básicos
+~~~~~~~~~~~~~~~~~
+[def:plugins]
+Plugins
+^^^^^^^
+O {nclcomposer} foi desenvolvido para ser facilmente extensível. Por isso, 
+novas funcionalidades podem ser adicionadas facilmente por meio de _plugins_.
+
+_Plugins_ são pedaços de software que podem ser distribuídos separadamente e
+adicionar ou modificar funcionalidades de um determinado software _host_.
+
+Uma lista completa dos _plugins_ disponíveis oficialmente no site do
+{nclcomposer}, pode ser encontrada em:
+http://composer.telemidia.puc-rio.br/en/plugins/[].
+
+[def:views]
+Visões
+^^^^^^
+O tipo de _plugin_ mais comum do {nclcomposer} são as _Visões_. Uma visão
+é um _plugin_ que possui uma representação na interface gráfica e permite
+ao autor visualizar/editar uma característica específica do 
+documento hipermídia.
+
+As principais visões do {nclcomposer} são: {default_views}.
+
+[def:perspective]
+Perspectivas
+^^^^^^^^^^^^
+Uma perspectiva, no NCL Composer, é a disposição das visões na tela. É
+permitido ao usuário criar suas próprias perspectivas, escolhendo a que melhor
+o ajuda a efetuar uma determinada tarefa.
+
+[[sec:utilizing]]
+Usando a documentação e buscando ajuda
+--------------------------------------
+Esta documentação é dividida em duas partes principais:
+
+<<sec:iniciando, Iniciando>>::
+Apresenta os primeiros passos que irá levá-lo a começar a utilizar o
+{nclcomposer}, incluindo as instruções de instalação e configurações básicas
+do ambiente.
+
+<<sec:windows_and_menus, Interface Gráfica>>::
+Apresenta uma visão geral das convenções da interface gráfica, e as principais
+janelas e menus do {nclcomposer}.
+
+<<sec:tutorial, Tutorial>>::
+Contém uma série de exemplos e o passo-a-passo de como desenvolvê-los no
+{nclcomposer}.
+
+.Onde buscar mais ajuda?
+[NOTE]
+========================
+Existem vários canais _online_ onde é possível buscar mais ajuda.
+
+O {nclcomposer} possui várias listas de e-mail:
+
+  * _Lista de usuários_ <nclcomposer-user@telemidia.puc-rio.br> - Questões e
+	discussões relacionadas ao uso do {nclcomposer}
+  * _Lista de desenvolvedores_ <nclcomposer-devel@telemidia.puc-rio.br> -
+	Discussões relacionadas ao _design_ e desenvolvimento do {nclcomposer} e 
+	submissão de correções (_patches_).
+========================

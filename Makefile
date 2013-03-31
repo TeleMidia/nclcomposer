@@ -3,7 +3,7 @@
 # Dependencies:
 #   * asciidoc
 
-SOURCES=nclcomposer-usermanual.asciidoc
+SOURCES=asciidoc/nclcomposer-usermanual.asciidoc
 OUTPUT=HTML CHUNKED_HTML EPUB PDF
 
 ASCIIDOC_BIN=asciidoc
