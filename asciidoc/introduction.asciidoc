@@ -46,11 +46,12 @@ durante cada fase distinta da autoria.
 
 Conceitos Básicos
 ~~~~~~~~~~~~~~~~~
-
 O {nclcomposer} foi desenvolvido para ser facilmente extensível. Por isso, 
 novas funcionalidades podem ser adicionadas facilmente por meio de _plugins_.
 
-[def:plugins]
+XXX
+
+[[def:plugins]]
 .Plugins
 _Plugins_ são pedaços de software que podem ser distribuídos separadamente e
 adicionar ou modificar funcionalidades de um determinado software _host_.
@@ -58,7 +59,7 @@ Uma lista completa dos _plugins_ disponíveis oficialmente no site do
 {nclcomposer}, pode ser encontrada em:
 http://composer.telemidia.puc-rio.br/en/plugins/[].
 
-[def:views]
+[[def:views]]
 .Visões
 O tipo de _plugin_ mais comum do {nclcomposer} são as _Visões_. Uma visão
 é um _plugin_ que possui uma representação na interface gráfica e permite
@@ -67,7 +68,7 @@ documento hipermídia.
 
 As principais visões do {nclcomposer} são: {default_views}.
 
-[def:perspective]
+[[def:perspective]]
 .Perspectivas
 Uma perspectiva, no NCL Composer, é a disposição das visões na tela. É
 permitido ao usuário criar suas próprias perspectivas, escolhendo a que melhor
@@ -92,7 +93,7 @@ Contém uma série de exemplos e o passo-a-passo de como desenvolvê-los no
 {nclcomposer}.
 
 .Onde buscar mais ajuda?
-[NOTE]
+[TIP]
 ========================
 Existem vários canais _online_ onde é possível buscar mais ajuda.
 
