@@ -18,8 +18,8 @@ Alguns conhecimentos são necessários para prosseguir:
 
 Exemplos:
 
-	* Exemplo 0: <<sample:00, Olá Garrincha!>>
-	* Exemplo 1: <<sample:01, Sincronismo sem interatividade>>
+	* Exemplo 0: <<example:01, Olá Garrincha!>>
+	* Exemplo 1: <<example:02, Sincronismo sem interatividade>>
 	* Exemplo 2: Sincronismo com interatividade
 	* Exempl0 3: Contextos
 	* Exemplo 4: Reúso de Objetos de Mídia

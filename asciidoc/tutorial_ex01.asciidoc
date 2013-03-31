@@ -1,4 +1,4 @@
-[[sample:00]]
+[[example:01]]
 Exemplo 1: Olá Garrincha!
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 .Objetivo

@@ -15,7 +15,7 @@
    id="svg2"
    version="1.1"
    inkscape:version="0.48.4 r9939"
-   sodipodi:docname="New document 1">
+   sodipodi:docname="ex02-drag-and-drop.svg">
   <defs
      id="defs4">
     <marker
@@ -1872,7 +1872,10 @@ i00V4Q4ymlSCySqImc2JHrzGfo+PDHD4979//fXXdApF+dkul8tqtaJX//6QZ2hw2DN061and9hz
 +eqVSRrD4XA4HA6HY0xeltVqtebl5VksFrPZ/P8B97h8n7J0b9IAAAAASUVORK5CYII=
 "
        height="471"
-       width="722" />
+       width="722"
+       inkscape:export-filename="C:\Users\user\nclcomposer-usermanual\imgs\ex02-drag-and-drop.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
     <image
        y="213.6514"
        x="460.18555"
@@ -3203,24 +3206,36 @@ LKNbtmy5c+fO3bt3r1+/fu/evTM5+Q7jBwAAAAAA0bRv16ply5bt27cPDQ29UXLr/wHAEki35iaC
 GQAAAABJRU5ErkJggg==
 "
        height="740"
-       width="1007" />
+       width="1007"
+       inkscape:export-filename="C:\Users\user\nclcomposer-usermanual\imgs\ex02-drag-and-drop.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
     <path
        style="fill:none;stroke:#000000;stroke-width:4;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;marker-end:url(#TriangleOutL)"
        d="M 432.34529,171.89784 C 965.35921,-14.257386 1060.6602,413.94577 1060.6602,413.94577"
        id="path4910"
        inkscape:connector-curvature="0"
-       sodipodi:nodetypes="cc" />
+       sodipodi:nodetypes="cc"
+       inkscape:export-filename="C:\Users\user\nclcomposer-usermanual\imgs\ex02-drag-and-drop.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
     <path
        style="fill:none;stroke:#000000;stroke-width:4;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
        d="M 254.55844,248.28076 C 478.81231,-2.2370779 830.3454,150.29595 830.3454,150.29595"
        id="path5100"
        inkscape:connector-curvature="0"
-       sodipodi:nodetypes="cc" />
+       sodipodi:nodetypes="cc"
+       inkscape:export-filename="C:\Users\user\nclcomposer-usermanual\imgs\ex02-drag-and-drop.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
     <path
        style="fill:none;stroke:#000000;stroke-width:4;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
        d="M 379.24938,305.77758 C 603.50325,55.259735 845.03639,156.3642 845.03639,156.3642"
        id="path5100-2"
        inkscape:connector-curvature="0"
-       sodipodi:nodetypes="cc" />
+       sodipodi:nodetypes="cc"
+       inkscape:export-filename="C:\Users\user\nclcomposer-usermanual\imgs\ex02-drag-and-drop.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
   </g>
 </svg>

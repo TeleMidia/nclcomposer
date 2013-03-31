@@ -1,3 +1,4 @@
+[[example:02]]
 Exemplo 2: Sincronismo de Mídia sem Interatividade
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Objetivo
@@ -22,12 +23,16 @@ Para reusarmos o que já foi feito no exemplo anterior, vamos abrí-lo e criar u
 novo projeto baseado nele, por meio do menu _File->Save as..._.  
 
 .Passo 2: Adicionando os objetos de mídia
-Da mesma forma que no <<sample:00, exemplo anterior>> vamos arrastar os objetos
+Da mesma forma que no <<example:01, exemplo anterior>> vamos arrastar os objetos
 de mídia que ainda não estão na nossa aplicação para dentro da
-{structural_view}. Os arquivos que devemos adicionar são:
+{structural_view}, conforme a figura a seguir:
 
-  * choro.mp3
-  * drible.mp4
-  * photo.png
+image::../imgs/ex02-drag-and-drop.png[title="Arraste os objetos de mídia choro.mp3, drible.mp4 e photo.png do seu gerenciador de arquivos para a {structural_view}.",width="35%"]
 
-image::../imgs/ex02-drag-and-drop.png[title="Arraste os objetos de mídia _choro.mp3_, _drible.mp4_ e p_hoto.png_ do seu gerenciador de arquivos para a {structural_view}.",width="35%"]
+.Passo 3: Onde os objetos de mídia serão apresentados: Regiões
+Dado que já definimos _quais_ são os objetos de mídia que fazem parte da nossa
+aplicação, vamos agora definir _onde_ cada um desses objetos será apresentado.
+
+Para isso, vamos na visão de leiaute criar as regiões a seguir:
+
+image::../imgs/ex02-layout-view.png[title="Visão de leauite do <<example02, Exemplo 02>>.",width="35%"]
