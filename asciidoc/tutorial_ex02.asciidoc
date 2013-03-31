@@ -17,15 +17,17 @@ A imagem a seguir apresenta a visão temporal deste exemplo:
 
 image::../imgs/temporal-view.png[title="Visão temporal do exemplo 02.",width="35%"]
 
-Passo 1: Salvar como projeto anterior
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-Para mantermos o que já foi feito no exemplo anterior, vamos abrí-lo criar um
-novo projeto por meio do menu _File->Salve as..._.  
+.Passo 1: Salvar como...
+Para reusarmos o que já foi feito no exemplo anterior, vamos abrí-lo e criar um
+novo projeto baseado nele, por meio do menu _File->Save as..._.  
 
-Reúso Apenas de Relação
-^^^^^^^^^^^^^^^^^^^^^^^
-TODO
+.Passo 2: Adicionando os objetos de mídia
+Da mesma forma que no <<sample:00, exemplo anterior>> vamos arrastar os objetos
+de mídia que ainda não estão na nossa aplicação para dentro da
+{structural_view}. Os arquivos que devemos adicionar são:
 
-Reúso de Características de Apresentação e Importação de Base
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-TODO
+  * choro.mp3
+  * drible.mp4
+  * photo.png
+
+image::../imgs/ex02-drag-and-drop.png[title="Arraste os objetos de mídia _choro.mp3_, _drible.mp4_ e p_hoto.png_ do seu gerenciador de arquivos para a {structural_view}.",width="35%"]
