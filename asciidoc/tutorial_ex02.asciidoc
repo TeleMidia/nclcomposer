@@ -35,11 +35,16 @@ aplicação, vamos agora definir _onde_ cada um desses objetos será apresentado
 
 Para isso, vamos na visão de leiaute criar as regiões a seguir:
 
-image::../imgs/ex02-layout-view.png[title="Visão de leauite do <<example:02, Exemplo 02>>.",width="35%"]
+image::../imgs/ex02-layout-view.png[title="Visão de leiaute do <<example:02, Exemplo 02>>.",width="35%"]
 
 Para associar o objeto de mídia a região criada basta selecionar e arrastar o
 objeto de mídia da {outline_view} para a região que deseja associá-lo:
 
 image::../imgs/ex02-associate-media-region.png[title="Arraste o objeto de mídia da {outline_view} para a região na qual deseja associá-lo.",width="35%"]
+
+.Passo 4: Quando os objetos de mídia serão apresentados: _Links_
+TODO
+
+.Passo 5: Executando
 
 
