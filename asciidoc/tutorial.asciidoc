@@ -67,13 +67,11 @@ em: <<Soares2012>>.
 [[sample:00]]
 Exemplo 1: Olá Garrincha!
 ~~~~~~~~~~~~~~~~~~~~~~~~~
-Objetivo
-^^^^^^^^
+.Objetivo
 Neste primeiro exemplo, o objetivo é apenas exibir o vídeo da animação em tela
 cheia.
 
-Passo 0: Criando um novo projeto
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.Passo 0: Criando um novo projeto
 Para isso, vamos abrir o {nclcomposer}, que apresenta a seguinte tela de
 boas-vindas:
 
@@ -195,8 +193,7 @@ foi gerado por padrão:
 //TODO: Figura com o esqueleto de um documento NCL.
 //************************************************
 //
-Passo 1: Adicionando um objeto de mídia
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.Passo 1: Adicionando um objeto de mídia
 Para inserir os nossos objetos de mídia, a forma mais simples é apenas
 arrastar os objetos de mídia do seu Gerenciador de Arquivos para dentro da
 {structural_view} do {nclcomposer}.
@@ -216,8 +213,7 @@ Propriedades_ ou na _Visão Textual_).
 //************************************************
 //
 
-Passo 2: Definindo propriedades do objeto de mídia
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.Passo 2: Definindo propriedades do objeto de mídia
 Para finalizar o nosso exemplo inicial _Alô Garrincha_ só falta agora
 definirmos onde esse vídeo da animação será exibido. A forma mais simples de
 definir as dimensões do objeto de mídia, é por meio de propriedades.
@@ -244,8 +240,7 @@ Da mesma forma, deve-se  criar uma propriedade _height_, também com o valor
 de 100%. Definindo assim, que nossa mídia irá ocupar toda a tela quando 
 for apresentada.
 
-Passo 3: Informando o(s) objeto(s) de mídia que serão inicialmente exibidos
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.Passo 3: Informando o(s) objeto(s) de mídia que serão inicialmente exibidos
 Para informar que o objeto de mídia que acabamos de inserir deve iniciar
 quanto a nossa aplicação multimídia iniciar, é suficiente criarmos uma porta
 no corpo do documento, mapeando-a para o objeto de mídia.
@@ -272,8 +267,7 @@ Com isso, já definimos que nossa aplicação é constituída apenas do objeto d
 mídia _animGar_ e que quando a aplicação começar, o primeiro objeto de mídia a
 ser apresentado será o vídeo da animação _O Primeiro João_. 
 
-Passo 4: Executar o exemplo desenvolvido
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.Passo 4: Executar o exemplo desenvolvido
 Dado que o NCL Composer está devidamente <<sec:player_integration, configurado
 para executar algum player NCL>> de sua escolha, basta executar a aplicação
 por meio do botão "Run NCL Project" na barra de ferramentas.
