@@ -141,6 +141,18 @@ Configuração do Ambiente
 [sec:player_integration]
 Integração com o player NCL
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+O {nclcomposer}, por _default_, não vem com um _player_ NCL embutido. Dessa
+forma, para executar suas aplicações, será necessário que você tenha algum
+player NCL instalado.
+
+[NOTE] 
+======
+É recomendado o uso da Implementação de Referência do
+http://www.ginga.org.br[Ginga-NCL]. As subseções a seguir detalham como
+instalar a Implementação de Referência do Ginga-NCL nos principais sistemas
+operacionais.
+======
+
 Existem duas formas principais de executar sua aplicação NCL a partir da
 interface do NCL Composer:
 
