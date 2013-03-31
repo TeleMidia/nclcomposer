@@ -148,9 +148,7 @@ player NCL instalado.
 [NOTE] 
 ======
 É recomendado o uso da Implementação de Referência do
-http://www.ginga.org.br[Ginga-NCL]. As subseções a seguir detalham como
-instalar a Implementação de Referência do Ginga-NCL nos principais sistemas
-operacionais.
+http://www.ginga.org.br[Ginga-NCL].
 ======
 
 Existem duas formas principais de executar sua aplicação NCL a partir da

@@ -76,7 +76,7 @@ o ajuda a efetuar uma determinada tarefa.
 [[sec:utilizing]]
 Usando a documentação e buscando ajuda
 --------------------------------------
-Esta documentação é dividida em duas partes principais:
+Esta documentação é dividida em três partes principais:
 
 <<sec:iniciando, Iniciando>>::
 Apresenta os primeiros passos que irá levá-lo a começar a utilizar o

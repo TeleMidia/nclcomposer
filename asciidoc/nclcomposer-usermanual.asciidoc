@@ -31,13 +31,15 @@ include::getting-started.asciidoc[]
 // Include the windows_and_menus
 include::windows_and_menus.asciidoc[]
 
+// Include the tutorial
+include::tutorial.asciidoc[]
+
 // Include bibliography
 include::bibliography.asciidoc[]
 
 [appendix]
 // Include the history
 include::history.asciidoc[]
-
 
 [appendix]
 // Include the other tools
