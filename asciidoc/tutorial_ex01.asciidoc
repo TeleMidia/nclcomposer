@@ -204,9 +204,8 @@ ser apresentado será o vídeo da animação _O Primeiro João_.
 .Passo 5: Executando o exemplo
 Dado que o NCL Composer está devidamente <<sec:player_integration, configurado
 para executar algum player NCL>> de sua escolha, basta executar a aplicação
-por meio do botão "Run NCL Project" na barra de ferramentas.
-
-*TODO*: Imagem do botão.
+por meio do botão "Run NCL Project" (image::../imgs/run-button.png) na barra de
+ferramentas.
 
 A seguinte tela exemplifica o exemplo em execução:
 
