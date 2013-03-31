@@ -131,14 +131,10 @@ TODO
 // ========
 // 
 // .MacOS X
-// [NOTE]
-// ========
-// TODO
-// ========
 
 Configuração do Ambiente
 ~~~~~~~~~~~~~~~~~~~~~~~~
-[sec:player_integration]
+[[sec:player_integration]]
 Integração com o player NCL
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^
 O {nclcomposer}, por _default_, não vem com um _player_ NCL embutido. Dessa
@@ -147,7 +143,7 @@ player NCL instalado.
 
 [NOTE] 
 ======
-É recomendado o uso da Implementação de Referência do
+E recomendado o uso da Implementação de Referência do
 http://www.ginga.org.br[Ginga-NCL].
 ======
 

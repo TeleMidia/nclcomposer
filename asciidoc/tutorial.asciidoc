@@ -31,8 +31,8 @@ Exemplos:
 	* Exemplo 10: Navegação por teclas
 	* Exemplo 11: Objetos NCLua
 
-[NOTE]
-****
+// [NOTE]
+// ******
 Neste tutorial, não existe a preocupação nem de definir a linguagem NCL
 completamente e nem de apresentar todas as funcionalidades do {nclcomposer}. Os
 exemplos são desenvolvidos seguindo o que os autores acreditam que seja a
@@ -51,7 +51,7 @@ Sempre que necessário, no entanto, no decorrer deste tutorial, é possível
 encontrar ponteiros para partes específicas do http://handbook.ncl.org.br[NCL
 Handbook] ou para o http://composer.telemidia.puc-rio.br[{nclcomposer} User
 Manual] onde o leitor pode encontrar mais informações.
-****
+// ******
 
 Assim como no Capítulo 3 do Livro Programando em NCL, para introduzir a
 programação em NCL usando o {nclcomposer}, iremos utilizar um único exemplo,
@@ -109,7 +109,7 @@ automaticamente já o cria com o cabeçalho e o corpo da aplicação.
 Se você for para a visão _Textual_ poderá ver o código XML do documento que já
 foi gerado por padrão: 
 
-[source,xml]
+[source]
 -------------------------------------------
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <ncl id="myNCLDocID" xmlns="http://www.ncl.org.br/NCL3.0/EDTVProfile">
