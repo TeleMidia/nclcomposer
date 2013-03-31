@@ -68,8 +68,7 @@ documento hipermídia.
 As principais visões do {nclcomposer} são: {default_views}.
 
 [def:perspective]
-Perspectivas
-^^^^^^^^^^^^
+.Perspectivas
 Uma perspectiva, no NCL Composer, é a disposição das visões na tela. É
 permitido ao usuário criar suas próprias perspectivas, escolhendo a que melhor
 o ajuda a efetuar uma determinada tarefa.
