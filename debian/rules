@@ -14,9 +14,9 @@ export PREFIX=/usr
 VERSION=`git --git-dir=./composer-plugins/.git describe --tags | sed "s/v//g"`
 
 #I can also FORCE an specific version
-VERSION=0.1.4
+VERSION=0.1.5
 
-QMAKE=qmake FORCERELEASE=true RUNSSH_ON=true CPRVERSION=${VERSION} PREFIX=/usr
+QMAKE=qmake FORCERELEASE=true RUNSSHON=true CPRVERSION=${VERSION} PREFIX=/usr
 
 APPNAME := composer
 builddir:

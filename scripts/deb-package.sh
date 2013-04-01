@@ -4,13 +4,13 @@ set -e
 #Getting current version
 VERSION=`git --git-dir=./composer-plugins/.git describe --tags | sed "s/v//g"`
 
-# I caan also FORCE a specific version
-VERSION=0.1.4
+# I can also FORCE a specific version
+VERSION=0.1.5
 
 QMAKE="qmake FORCERELEASE=true RUNSSH=true CPRVERSION=${VERSION} PREFIX=/usr"
 
 #We need to install before to be able to compile the plugins.
-${QMAKE} && make install
+${QMAKE} && lupdate composer-all.pro && lrelease composer-all.pro && make install
 
 #Now, we start to generate the deb.
 debuild -us -uc
@@ -21,3 +21,4 @@ pbuilder build ../composer_${VERSION}.dsc
 make uninstall && make clean && make distclean
 
 #TODO: PUBLISH!!
+

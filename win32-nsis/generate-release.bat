@@ -41,7 +41,7 @@ SET PUBLISH_URL="%PUBLISH_SERVER%:%PUBLISH_SERVER_PATH%"
 echo Generating NCL Composer %CPRVERSION% Windows Installer and Zip files.
 
 REM - Run qmake with release parameters
-IF "%CPRVERSION%"=="" (qmake FORCERELEASE=true RUNSSH_ON=true) ELSE (qmake FORCERELEASE=true RUNSSH_ON=true CPRVERSION=%CPRVERSION%)
+IF "%CPRVERSION%"=="" (qmake FORCERELEASE=true RUNSSHON=true) ELSE (qmake FORCERELEASE=true RUNSSHON=true CPRVERSION=%CPRVERSION%)
 
 REM - Generate translation files
 cd composer-gui 
