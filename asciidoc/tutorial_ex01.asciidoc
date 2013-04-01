@@ -6,42 +6,40 @@ Neste primeiro exemplo, o objetivo é apenas exibir o vídeo da animação em te
 cheia.
 
 .Passo 1: Criando um novo projeto
-Para isso, vamos abrir o {nclcomposer}, que apresenta a seguinte tela de
-boas-vindas:
+A primeira tarefa para isso é criar um novo projeto. 
+Ao abrir o {nclcomposer}, apresenta a seguinte tela de boas-vindas é
+apresentada:
 
 image::../imgs/nclcomposer-welcomescreen.png[title="Tela de boas-vindas do {nclcomposer}.",width="35%",link="../imgs/nclcomposer-welcomescreen.png"]
 
-Nessa tela de boas-vindas podemos criar o nosso primeiro projeto. Para isso,
-pressione o botão _New Project_ no canto esquerdo inferior da tela de
-boas-vindas.
+Para criar um novo projeto, pressione o botão _New Project_ no canto esquerdo
+inferior dessa tela.
 
 TIP: Outra possibilidade para criar um novo projeto é através do menu
 _File->New Project_.
 
-A seguinte tela será exibida:
+Feito isso, a seguinte janela será exibida:
 
 image::../imgs/nclcomposer-newproject.png[title="Criação de um novo projeto.",width="35%"]
 
-Nessa janela, atribua um nome para o projeto que você está criando, selecione
-o diretório onde deseja salvá-lo e também marque a opção _Copy and Import the
-default Connector Base_. 
+Atribua um nome para o projeto que você está criando, selecione o diretório
+onde deseja salvá-lo e deixe as opções _Copy and Import the default Connector
+Base_ e _Add a default region to the project_ ativas. 
 
 NOTE: Nas próximas seções serão discutidos em detalhes o que são os conectores
-e também as bases de conectores. Por enquanto, apenas marque esta opção,
-pois ela será útil para os próximos exemplos que iremos desenvolver.
+e também as bases de conectores. Por enquanto, apenas deixe esta opção marcada,
+pois ela será útil para os próximos exemplos.
 
 Feito isso, pressione o botão _Finish_ e a seguinte tela será apresentada:
 
 image::../imgs/nclcomposer-body.png[title="Visão estrutural de um projeto recém-criado.",width="35%"]
 
-Com o nosso projeto criado, podemos ter acesso às visões que já vem instaladas
-por default no {nclcomposer}: {default_views}.
+Com o primeiro projeto criado, pode-se ter acesso às visões que já vem instaladas
+por _default_ no {nclcomposer}: {default_views}.
 
-Como é possível observar, quando criamos um novo projeto, o {nclcomposer}
-automaticamente já o cria com o cabeçalho e o corpo da aplicação.
-
-Se você for para a visão _Textual_ poderá ver o código XML do documento que já
-foi gerado por padrão: 
+Observe também que, quando criamos um novo projeto, o {nclcomposer}
+automaticamente já o cria com o cabeçalho e o corpo da aplicação. Se você for
+para a visão _Textual_, por exemplo, poderá ver o código XML do documento: 
 
 [source]
 -------------------------------------------
@@ -128,9 +126,8 @@ foi gerado por padrão:
 //************************************************
 //
 .Passo 2: Adicionando um objeto de mídia
-Para inserir os nossos objetos de mídia, a forma mais simples é apenas
-arrastar os objetos de mídia do seu Gerenciador de Arquivos para dentro da
-{structural_view} do {nclcomposer}.
+Para inserir os objetos de mídia, a forma mais simples é apenas arrastá-los do
+seu Gerenciador de Arquivos para dentro da {structural_view} do {nclcomposer}.
 
 image::../imgs/nclcomposer-drag_and_drop_animGar.png[title="Arraste os objetos de mídia do seu gerenciador de arquivos para a {structural_view} do {nclcomposer} para inserí-lo como objetos de mídia da aplicação.", width="35%"]
 
@@ -148,8 +145,8 @@ Propriedades_ ou na _Visão Textual_).
 //
 
 .Passo 3: Definindo propriedades do objeto de mídia
-Para finalizar o nosso exemplo inicial _Alô Garrincha_ só falta agora
-definirmos onde esse vídeo da animação será exibido. A forma mais simples de
+Para finalizar este primeiro exemplo só falta agora definirmos
+onde o vídeo da animação será exibido. A forma mais simples de
 definir as dimensões do objeto de mídia, é por meio de propriedades.
 
 Para inserirmos propriedades nos objetos de mídia por meio da _Visão

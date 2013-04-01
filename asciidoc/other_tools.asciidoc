@@ -6,9 +6,4 @@ perfil. O objetivo do {nclcomposer}, ao ser extensível por meio de plugins é
 possibilitar que todas essas diferentes abstra
 
   * *http://laws.deinf.ufma.br/ncleclipse[NCL Eclipse]*
-	* *http://code.google.com/p/creatvdigital/[CreaTVDigital]*
-
-O {nclcomposer} não é a única ferramenta de autoria disponível para NCL. A
-proposta do NCL Composer é servir como base para a criação de diversas visões
- {nclcomposer} não é a única ferramenta de autoria disponível para NCL. A
-proposta do NCL Composer é servir como base para a criação de diversas visões
+  * *http://code.google.com/p/creatvdigital/[CreaTVDigital]*

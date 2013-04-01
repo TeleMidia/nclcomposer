@@ -21,7 +21,6 @@ v1.0, 2012-12
 :validator_view: Plugin de Validação
 //End Attribute List
 
-
 // Include the introduction
 include::introduction.asciidoc[]
 
