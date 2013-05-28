@@ -258,6 +258,16 @@ void QnstGraphicsBind::draw(QPainter* painter)
   // if(isCondition())
   //  draw_condition(painter);
   // else
+
+  // Draw MouseHover rectangle
+  if (!isSelected() && hasMouseHover())
+  {
+    painter->setBrush(Qt::NoBrush);
+    painter->setPen(QPen(QBrush(QColor("#999999")), 0, Qt::DashLine)); // 0px = cosmetic border
+
+    painter->drawRect(4, 4, getWidth(), getHeight());
+  }
+
   draw_action(painter);
 }
 
@@ -1107,7 +1117,7 @@ void QnstGraphicsBind::setProperties(const QMap<QString, QString> &properties)
   }
 
   if(properties.contains("component"))
-    setComponent("component");
+    setComponent(properties["component"]);
 
   if(properties.contains("componentUid"))
     setComponentUid(properties["componentUid"]);
@@ -1128,4 +1138,17 @@ void QnstGraphicsBind::getProperties(QMap<QString, QString> &properties)
   properties["componentUid"] = getComponentUid();
   properties["interface"] = getInterface();
   properties["interfaceUid"] = getComponentUid();
+}
+
+void QnstGraphicsBind::updateToolTip()
+{
+  QString tip = getRole() + "(" + getComponent();
+  if(getInterface() != "")
+  {
+    tip += "#";
+    tip += getInterface();
+  }
+  tip += ")";
+
+  setToolTip(tip);
 }

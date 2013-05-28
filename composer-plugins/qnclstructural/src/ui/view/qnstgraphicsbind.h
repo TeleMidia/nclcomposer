@@ -67,6 +67,8 @@ public:
 
   virtual void getProperties(QMap<QString, QString> &properties);
 
+  virtual void updateToolTip();
+
   void setType(Qnst::BindType type);
   Qnst::BindType getType();
   QString getIcon();
