@@ -27,9 +27,9 @@ QTabWidget::tab-bar {
 }
 
 QTabBar::tab {
-    background: lightgray;
-    color: darkgray;
-    padding: 4px;
+	background: lightgray;
+	color: darkgray;
+	padding: 4px; 
     border: 2px solid #C4C4C3;
     border-right: 0px;
     border-top-left-radius: 4px;
@@ -38,8 +38,8 @@ QTabBar::tab {
 }
 
 QTabBar::tab:selected {
-    background: steelblue;
-    color: white;
+    background: rgba(130, 175, 233, 255);
+	color: white;
     font-size: 10px;
 }
 
@@ -100,19 +100,19 @@ QTabBar[activePlugin="false"]::tab::selected {
 
 /* View selected */
 QTabBar[activePlugin="true"]::tab::selected {
-  background: steelblue;
+  background: rgba(130, 175, 233, 255);
   color: white;
 }
 
 *[activePluginBorder="true"] > QFrame {
-  border: 3px solid steelblue;
+  border: 3px solid rgba(130, 175, 233, 255);
   border-top: 0;
   margin: 0;
 }
 
 *[activePluginTitleBar="true"] {
   border: none;
-  background: steelblue;
+  background: rgba(130, 175, 233, 255);
   color: white;
   font-style: bold;
   padding-left: 2px;
