@@ -14,7 +14,6 @@
    <string>MainWindow</string>
   </property>
   <widget class="QWidget" name="centralwidget"/>
-  <widget class="QStatusBar" name="statusbar"/>
   <widget class="QToolBar" name="toolBar">
    <property name="windowTitle">
     <string>toolBar</string>
@@ -31,7 +30,7 @@
   </widget>
   <action name="actionAdd_Region">
    <property name="icon">
-    <iconset resource="../../common-resources/images.qrc">
+    <iconset resource="../../../common-resources/images.qrc">
      <normaloff>:/icon/add-region-icon</normaloff>:/icon/add-region-icon</iconset>
    </property>
    <property name="text">
@@ -43,7 +42,7 @@
   </action>
   <action name="actionRemove_Region">
    <property name="icon">
-    <iconset resource="../../common-resources/images.qrc">
+    <iconset resource="../../../common-resources/images.qrc">
      <normaloff>:/icon/remove-region-icon</normaloff>:/icon/remove-region-icon</iconset>
    </property>
    <property name="text">
@@ -58,7 +57,7 @@
     <bool>true</bool>
    </property>
    <property name="icon">
-    <iconset resource="../../common-resources/images.qrc">
+    <iconset resource="../../../common-resources/images.qrc">
      <normaloff>:/icon/grid-icon</normaloff>:/icon/grid-icon</iconset>
    </property>
    <property name="text">
@@ -67,9 +66,9 @@
   </action>
  </widget>
  <resources>
-  <include location="../../common-resources/images.qrc"/>
-  <include location="../../common-resources/images.qrc"/>
-  <include location="../../common-resources/images.qrc"/>
+  <include location="../../../common-resources/images.qrc"/>
+  <include location="../../../common-resources/images.qrc"/>
+  <include location="../../../common-resources/images.qrc"/>
  </resources>
  <connections/>
 </ui>

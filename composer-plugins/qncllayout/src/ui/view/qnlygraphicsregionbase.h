@@ -116,6 +116,11 @@ protected:
     void mouseMoveEvent(QGraphicsSceneMouseEvent* event);
     void mousePressEvent(QGraphicsSceneMouseEvent* event);
 
+public slots:
+    void performRegion();
+
+    void performDelete();
+
 protected slots:
     void performShow(QAction* action);
 
@@ -127,10 +132,6 @@ protected slots:
 
     void requestRegionChange(QnlyGraphicsRegion* region,
                                 QMap<QString, QString> attributes);
-
-    void performRegion();
-
-    void performDelete();
 
     void requestMediaOverRegionAction(QString mediaId,
                                       QnlyGraphicsRegion* region);

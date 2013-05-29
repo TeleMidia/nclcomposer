@@ -450,8 +450,6 @@ void QnlyView::removeRegion(QnlyGraphicsRegion* region,
   }
 }
 
-
-
 void QnlyView::changeRegion(QnlyGraphicsRegion* region,
                             QnlyGraphicsRegionBase* regionBase,
                             const QMap<QString, QString> attributes)
@@ -643,6 +641,7 @@ void QnlyView::selectRegionBase(QnlyGraphicsRegionBase* regionBase)
     if (selectedRegion != NULL)
     {
       selectedRegion->setSelected(false);
+      selectedRegion = NULL;
     }
 
     selectedRegionBase = regionBase;
@@ -666,6 +665,11 @@ void QnlyView::setGridVisible(bool visible)
 QnlyGraphicsRegionBase* QnlyView::getSelectedRegionBase()
 {
   return selectedRegionBase;
+}
+
+QnlyGraphicsRegion* QnlyView::getSelectedRegion()
+{
+  return selectedRegion;
 }
 
 void QnlyView::contextMenuEvent(QContextMenuEvent *event)

@@ -46,6 +46,8 @@ public:
 
     QnlyGraphicsRegionBase *getSelectedRegionBase();
 
+    QnlyGraphicsRegion *getSelectedRegion();
+
     bool gridVisibility;
 
 public slots:

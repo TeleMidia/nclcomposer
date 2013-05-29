@@ -45,7 +45,6 @@ void QnlyComposerPlugin::createView()
   mainWindow = new QnlyMainWindow();
 
   view = new QnlyView(mainWindow);
-  mainWindow->setCentralWidget(view);
   mainWindow->setQnlyView(view);
 }
 

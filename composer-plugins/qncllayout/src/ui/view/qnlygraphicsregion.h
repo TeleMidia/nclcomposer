@@ -261,14 +261,15 @@ protected:
 
     void dropEvent(QGraphicsSceneDragDropEvent *event);
 
+public slots:
+    void performRegion();
+
+    void performDelete();
+
 protected slots:
     void performShow(QAction* action);
 
-    void performRegion();
-
     void performHide();
-
-    void performDelete();
 
     void performExport();
 
