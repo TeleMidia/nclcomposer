@@ -21,6 +21,7 @@
 #include <QPushButton>
 #include <QMessageBox>
 #include <QInputDialog>
+#include <QToolBar>
 
 QnlyComposerPlugin::QnlyComposerPlugin(QObject* parent)
 {
@@ -41,7 +42,16 @@ QnlyComposerPlugin::~QnlyComposerPlugin()
 
 void QnlyComposerPlugin::createView()
 {
-  view = new QnlyView();
+  mainWindow = new QMainWindow();
+  QToolBar *toolbar = mainWindow->addToolBar("Actions");
+  toolbar->addAction(QIcon(":/icon/add-region-icon"), "Add Region");
+  toolbar->addAction(QIcon(":/icon/remove-region-icon"), "Remove Region");
+
+  QAction *hide = toolbar->addAction(QIcon(":/icon/grid-icon"), "Show/Hide Grid");
+  hide->setCheckable(true);
+
+  view = new QnlyView(mainWindow);
+  mainWindow->setCentralWidget(view);
 }
 
 void QnlyComposerPlugin::createConnections()
@@ -145,7 +155,7 @@ void QnlyComposerPlugin::loadRegion(Entity* region)
 
 QWidget* QnlyComposerPlugin::getWidget()
 {
-  return view;
+  return mainWindow;
 }
 
 bool QnlyComposerPlugin::saveSubsession()
