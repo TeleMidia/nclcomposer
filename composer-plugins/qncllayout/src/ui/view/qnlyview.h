@@ -117,6 +117,8 @@ signals:
 
     void mediaOverRegionAction(QString mediaID, QString regionUID);
 
+    void gridVisibilityChanged(bool visibility);
+
 protected slots:
     void addRegion(QnlyGraphicsRegion* region,
                    QnlyGraphicsRegion* parent,

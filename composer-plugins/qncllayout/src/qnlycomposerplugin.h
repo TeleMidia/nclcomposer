@@ -20,7 +20,8 @@
 
 #include <QString>
 #include <QMap>
-#include <QMainWindow>
+
+#include "ui/qnlymainwindow.h"
 
 #include <core/extensions/IPlugin.h>
 using namespace composer::extension;
@@ -120,7 +121,7 @@ private:
 
     void createConnections();
 
-    QMainWindow *mainWindow;
+    QnlyMainWindow *mainWindow;
 
     QnlyView* view;
 

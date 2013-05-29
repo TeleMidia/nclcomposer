@@ -42,16 +42,11 @@ QnlyComposerPlugin::~QnlyComposerPlugin()
 
 void QnlyComposerPlugin::createView()
 {
-  mainWindow = new QMainWindow();
-  QToolBar *toolbar = mainWindow->addToolBar("Actions");
-  toolbar->addAction(QIcon(":/icon/add-region-icon"), "Add Region");
-  toolbar->addAction(QIcon(":/icon/remove-region-icon"), "Remove Region");
-
-  QAction *hide = toolbar->addAction(QIcon(":/icon/grid-icon"), "Show/Hide Grid");
-  hide->setCheckable(true);
+  mainWindow = new QnlyMainWindow();
 
   view = new QnlyView(mainWindow);
   mainWindow->setCentralWidget(view);
+  mainWindow->setQnlyView(view);
 }
 
 void QnlyComposerPlugin::createConnections()

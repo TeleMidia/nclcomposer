@@ -651,10 +651,15 @@ void QnlyView::selectRegionBase(QnlyGraphicsRegionBase* regionBase)
 
 void QnlyView::setGridVisible(bool visible)
 {
-  this->gridVisibility = visible;
-  foreach(QnlyGraphicsRegionBase *regionBase, regionbases.values())
+  if(this->gridVisibility != visible)
   {
-    regionBase->setGridVisible(visible);
+    this->gridVisibility = visible;
+    foreach(QnlyGraphicsRegionBase *regionBase, regionbases.values())
+    {
+      regionBase->setGridVisible(visible);
+    }
+
+    emit gridVisibilityChanged(visible);
   }
 }
 
