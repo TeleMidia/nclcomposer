@@ -103,19 +103,19 @@ signals:
     void regionSelected(const QString regionUID,
                         const QString regionbaseUID);
 
-    void regionChanged(const QString regionUID,
-                       const QString regionbaseUID,
-                       const QMap<QString, QString> attributes);
+    void regionChanged(const QString &regionUID,
+                       const QString &regionbaseUID,
+                       const QMap<QString, QString> &attributes);
 
-    void regionBaseAdded(const QString regionbaseUID,
-                         const QMap<QString, QString> attributes);
+    void regionBaseAdded(const QString &regionbaseUID,
+                         const QMap<QString, QString> &attributes);
 
     void regionBaseRemoved(const QString regionbaseUID);
 
     void regionBaseSelected(const QString regionbaseUID);
 
-    void regionBaseChanged(const QString regionbaseUID,
-                           const QMap<QString, QString> attributes);
+    void regionBaseChanged(const QString &regionbaseUID,
+                           const QMap<QString, QString> &attributes);
 
     void mediaOverRegionAction(QString mediaID, QString regionUID);
 

@@ -406,6 +406,8 @@ void QnlyView::selectRegionBase(const QString regionbaseUID)
   {
     selectRegionBase(regionbases[regionbaseUID]);
   }
+  else
+    qWarning() << tr("It is not possible to select regionBase ") << regionbaseUID;
 }
 
 void QnlyView::addRegion(QnlyGraphicsRegion* region,
@@ -645,6 +647,8 @@ void QnlyView::selectRegionBase(QnlyGraphicsRegionBase* regionBase)
     }
 
     selectedRegionBase = regionBase;
+
+    emit regionBaseSelected(selectedRegionBase->getUid());
   }
 }
 

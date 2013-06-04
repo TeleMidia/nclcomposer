@@ -3,6 +3,8 @@
 
 #include <QMainWindow>
 
+#include <QLabel>
+#include <QMap>
 #include "ui/view/qnlyview.h"
 
 namespace Ui {
@@ -32,14 +34,25 @@ public:
 
     // \todo unset QnlyView
     void setQnlyView(QnlyView *view);
+
+signals:
+    void selectRegionBaseFromComboBox(const QString &uuid);
     
 private:
     Ui::QnlyMainWindow *ui;
     QnlyView *view;
 
-private slots:
+public slots:
     void addRegion();
-    void removeRegion();
+
+    void removeSelectedRegion();
+
+    void addRegionBaseToCombobox(const QString &uuid,
+                                 const QMap<QString,QString> &properties);
+
+    void removeRegionBaseFromCombobox(const QString &uuid);
+
+    void comboBoxChangedCurrentRegionBase(int pos);
 };
 
 #endif // QNLYMAINWINDOW_H

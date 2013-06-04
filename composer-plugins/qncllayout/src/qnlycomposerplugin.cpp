@@ -50,38 +50,47 @@ void QnlyComposerPlugin::createView()
 
 void QnlyComposerPlugin::createConnections()
 {
+  /* ADD */
   connect(view,
           SIGNAL(regionAdded(QString,QString,QString,QMap<QString,QString>)),
           SLOT(addRegion(QString,QString,QString,QMap<QString,QString>)));
 
   connect(view,
-          SIGNAL(regionRemoved(QString,QString)),
-          SLOT(removeRegion(QString,QString)));
-
-  connect(view,
-          SIGNAL(regionSelected(QString,QString)),
-          SLOT(selectRegion(QString,QString)));
-
-  connect(view,
-          SIGNAL(regionChanged(QString,QString,QMap<QString,QString>)),
-          SLOT(changeRegion(QString,QString,QMap<QString,QString>)));
-
-  connect(view,
           SIGNAL(regionBaseAdded(QString,QMap<QString,QString>)),
           SLOT(addRegionBase(QString,QMap<QString,QString>)));
 
+  /* REMOVE */
   connect(view,
-          SIGNAL(regionBaseChanged(QString,QMap<QString,QString>)),
-          SLOT(changeRegionBase(QString,QMap<QString,QString>)));
-
-  connect(view,
-          SIGNAL(regionBaseSelected(QString)),
-          SLOT(selectRegionBase(QString)));
+          SIGNAL(regionRemoved(QString,QString)),
+          SLOT(removeRegion(QString,QString)));
 
   connect(view,
           SIGNAL(regionBaseRemoved(QString)),
           SLOT(removeRegionBase(QString)));
 
+  /* CHANGE */
+  connect(view,
+          SIGNAL(regionChanged(QString,QString,QMap<QString,QString>)),
+          SLOT(changeRegion(QString,QString,QMap<QString,QString>)));
+
+  connect(view,
+          SIGNAL(regionBaseChanged(QString,QMap<QString,QString>)),
+          SLOT(changeRegionBase(QString,QMap<QString,QString>)));
+
+  /* SELECTION */
+  connect(view,
+          SIGNAL(regionSelected(QString,QString)),
+          SLOT(selectRegion(QString,QString)));
+
+  connect(view,
+          SIGNAL(regionBaseSelected(QString)),
+          SLOT(selectRegionBase(QString)));
+
+  connect(mainWindow,
+          SIGNAL(selectRegionBaseFromComboBox(QString)),
+          SLOT(selectRegionBase(QString)));
+
+  /* OTHERS */
   connect(view,
           SIGNAL(mediaOverRegionAction(QString, QString)),
           SLOT(performMediaOverRegionAction(QString, QString)));
@@ -659,6 +668,7 @@ void QnlyComposerPlugin::addRegionBaseToView(Entity* entity)
       regionbases[regionbaseUID] = entity;
 
       view->addRegionBase(regionbaseUID, attributes);
+      mainWindow->addRegionBaseToCombobox(regionbaseUID, attributes);
     }
   }
 }
@@ -680,6 +690,8 @@ void QnlyComposerPlugin::removeRegionBaseFromView(QString entityUID)
       regionbases.remove(regionbaseUID);
 
       relations.remove(entityUID);
+
+      mainWindow->removeRegionBaseFromCombobox(regionbaseUID);
 
     }
   }
@@ -885,6 +897,8 @@ void QnlyComposerPlugin::removeRegionBase(const QString regionbaseUID)
 {
   if (regionbases.contains(regionbaseUID))
   {
+    mainWindow->removeRegionBaseFromCombobox(regionbaseUID);
+
     emit removeEntity(regionbases[regionbaseUID], false);
   }
 }
@@ -956,6 +970,9 @@ void QnlyComposerPlugin::selectRegionBase(const QString regionbaseUID)
 {
   if(selectedId != NULL)
   {
+    if(*selectedId == regionbaseUID)
+      return; // Do nothing! It is already selected
+
     delete selectedId;
     selectedId = NULL;
   }
@@ -963,6 +980,8 @@ void QnlyComposerPlugin::selectRegionBase(const QString regionbaseUID)
   if (!regionbaseUID.isEmpty())
   {
     selectedId = new QString(regionbaseUID);
+    // mainWindow->selectRegionBaseFromComboBox(regionbaseUID);
+
     emit sendBroadcastMessage("changeSelectedEntity", selectedId);
   }
 }
