@@ -16,7 +16,9 @@ namespace composer {
 namespace gui {
 
 WelcomeWidget::WelcomeWidget(QWidget *parent): QWidget(parent),
-    ui(new Ui::WelcomeWidget)
+    ui(new Ui::WelcomeWidget),
+    http(this),
+    httpNotifyMessages(this)
 {
     ui->setupUi(this);
     ui->tabWidget->installEventFilter(new ResizeFilter(ui->tabWidget));
@@ -29,8 +31,10 @@ WelcomeWidget::WelcomeWidget(QWidget *parent): QWidget(parent),
 
     ui->pushButton_DownloadApp->setEnabled(false);
 
-    connect(&httpNotifyMessages, SIGNAL(readyRead(const QHttpResponseHeader &)),
-            this, SLOT(notifyMessagesReadData(const QHttpResponseHeader &)));
+    connect(&httpNotifyMessages,
+            SIGNAL(finished(QNetworkReply *)),
+            this,
+            SLOT(notifyMessagesReadData(QNetworkReply *)));
 
 #ifdef WITH_CLUBENCL
     //Connect the QHttp with
@@ -105,18 +109,17 @@ void WelcomeWidget::updateRecentProjects(QStringList recentProjects)
 
 void WelcomeWidget::updateNotifyMessages()
 {
-  QUrl url = QUrl::fromUserInput(NCL_COMPOSER_NOTIFY_URL);
-  httpNotifyMessages.setHost(url.host());
-  connectionId = httpNotifyMessages.get(url.path());
+  httpNotifyMessages.get(QNetworkRequest(QUrl(NCL_COMPOSER_NOTIFY_URL)));
 }
 
-void WelcomeWidget::notifyMessagesReadData(const QHttpResponseHeader &resp)
+void WelcomeWidget::notifyMessagesReadData(QNetworkReply *resp)
 {
-  if (resp.statusCode() != 200)
+  qWarning() << "WelcomeWidget::notifyMessagesReadData";
+  if (resp->error() != QNetworkReply::NoError)
   {
-    httpNotifyMessages.abort();
+    qWarning() << "There was not possible to get update messages.";
   }
-  else
+  else // The connection is ready
   {
     int min_message_id_to_show = DEFAULT_MIN_MESSAGE_ID_TO_SHOW;
     int max_notify_messages = DEFAULT_MAX_NOTIFY_MESSAGES;
@@ -136,7 +139,7 @@ void WelcomeWidget::notifyMessagesReadData(const QHttpResponseHeader &resp)
     else
         settings.setValue("max_notify_messages", max_notify_messages);
 
-    QByteArray bytes = httpNotifyMessages.readAll();
+    QByteArray bytes = resp->readAll();
     if (bytes.size())
     {
       QStringList messages = QString(bytes).split("\n");
@@ -150,7 +153,7 @@ void WelcomeWidget::notifyMessagesReadData(const QHttpResponseHeader &resp)
         if(msgSplittedId.size() >= 2)
         {
           if( msgSplittedId[0].toInt() >= min_message_id_to_show )
-            messageToShow += msgSplittedId[1];
+              messageToShow += msgSplittedId[1] + "<br/>";
           else
             break;
         }

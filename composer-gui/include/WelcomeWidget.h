@@ -25,6 +25,9 @@
 #include <QDesktopServices>
 #include <QMessageBox>
 
+#include <QNetworkAccessManager>
+#include <QNetworkReply>
+
 #ifdef WITH_CLUBNCL
 #include <quazip/quazip.h>
 #include <quazip/quazipfile.h>
@@ -105,7 +108,7 @@ private slots:
 
 private:
   int connectionId;
-  QHttp http;
+  QNetworkAccessManager http;
   QXmlStreamReader xmlReader;
 
   Ui::WelcomeWidget *ui;
@@ -124,11 +127,11 @@ private:
   currentImg, currentDownloadUrl;
 
 /* Loading Notify Messages */
-  QHttp httpNotifyMessages;
+  QNetworkAccessManager httpNotifyMessages;
   void updateNotifyMessages();
 
 private slots:
-  void notifyMessagesReadData(const QHttpResponseHeader &);
+  void notifyMessagesReadData(QNetworkReply *);
 /* END Notify loading messages */
 
 #ifdef WITH_CLUBENCL
