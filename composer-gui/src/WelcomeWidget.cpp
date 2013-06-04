@@ -117,7 +117,7 @@ void WelcomeWidget::notifyMessagesReadData(QNetworkReply *resp)
   qWarning() << "WelcomeWidget::notifyMessagesReadData";
   if (resp->error() != QNetworkReply::NoError)
   {
-    qWarning() << "There was not possible to get update messages.";
+    qWarning() << tr("There was not possible to get update messages from NCL Composer server.");
   }
   else // The connection is ready
   {
@@ -128,9 +128,7 @@ void WelcomeWidget::notifyMessagesReadData(QNetworkReply *resp)
     GlobalSettings settings;
     settings.beginGroup("notify_system");
     if(settings.contains("min_message_id_to_show"))
-        min_message_id_to_show =
-            qMax( settings.value("min_message_id_to_show").toInt(),
-                  min_message_id_to_show);
+        min_message_id_to_show = settings.value("min_message_id_to_show").toInt();
     else
         settings.setValue("min_message_id_to_show", min_message_id_to_show);
 
@@ -148,17 +146,26 @@ void WelcomeWidget::notifyMessagesReadData(QNetworkReply *resp)
       for(int i = 0; i < messages.size(); i++)
       {
         if( i > max_notify_messages - 1 ) break;
-        QStringList msgSplittedId = messages[i].split("\t");
+        QStringList msgSplitted = messages[i].split("\t");
 
-        if(msgSplittedId.size() >= 2)
+        if(msgSplitted.size() == 2)
         {
-          if( msgSplittedId[0].toInt() >= min_message_id_to_show )
-              messageToShow += msgSplittedId[1] + "<br/>";
+          if( msgSplitted[0].toInt() >= min_message_id_to_show )
+            messageToShow += msgSplitted[1] + "<br/>";
           else
             break;
         }
+        else if(msgSplitted.size() == 3) // There is also a regex to what version should show this message
+        {
+          QRegExp regex (msgSplitted.at(2));
+          if(regex.exactMatch(NCLCOMPOSER_GUI_VERSION))
+          {
+            messageToShow += msgSplitted[1] + "<br/>";
+          }
+        }
       }
 
+      qDebug() << messageToShow;
       if(messageToShow.size())
       {
         ui->labelNotifyMessage->setText(messageToShow);
