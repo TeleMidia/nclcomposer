@@ -792,10 +792,16 @@ void QnstComposerPlugin::requestEntityChange(Entity* entity)
         properties["interface"] = entity->getAttribute("interface");
         if (entity->getAttribute("interface") != "")
         {
-          QString interfaceUID =
-              getUidByName(properties["interface"],
-                           getProject()->getEntityById(
-                             getUidById(properties["component"])));
+          QString interfaceUID = "";
+
+          interfaceUID = getUidById(properties["interface"]);
+
+          if (interfaceUID == "")
+          {
+             interfaceUID = getUidByName(properties["interface"],
+                              getProject()->getEntityById(
+                                getUidById(properties["component"])));;
+          }
 
           if(entities.contains(interfaceUID))
             properties["interfaceUid"] = entities[interfaceUID];

@@ -115,6 +115,7 @@ void QnstView::load(QString data)
     if (entity->isMedia())
     {
       qDebug() << "=========================================" << entity->getnstId();
+      qDebug() << "=========================================" << entity->getTop() << entity->getLeft() << entity->getWidth() << entity->getHeight();
       adjustMedia((QnstGraphicsMedia*) entity);
     }
 
@@ -572,10 +573,10 @@ QString QnstView::serialize()
     e.setAttribute("id", link->getnstId());
     e.setAttribute("uid", link->getnstUid());
 
-    e.setAttribute("top", link->getTop());
-    e.setAttribute("left", link->getLeft());
-    e.setAttribute("width", link->getWidth());
-    e.setAttribute("height", link->getHeight());
+    e.setAttribute("top", QString::number(link->getTop()));
+    e.setAttribute("left", QString::number(link->getLeft()));
+    e.setAttribute("width", QString::number(link->getWidth()));
+    e.setAttribute("height", QString::number(link->getHeight()));
 
     // \fixme Be careful, there are cases where even with no body element the
     // links map is not empty!
@@ -601,10 +602,10 @@ QString QnstView::serialize()
     e.setAttribute("id", entity->getnstId());
     e.setAttribute("uid", entity->getnstUid());
 
-    e.setAttribute("top", entity->getTop());
-    e.setAttribute("left", entity->getLeft());
-    e.setAttribute("width", entity->getWidth());
-    e.setAttribute("height", entity->getHeight());
+    e.setAttribute("top", QString::number(entity->getTop()));
+    e.setAttribute("left", QString::number(entity->getLeft()));
+    e.setAttribute("width", QString::number(entity->getWidth()));
+    e.setAttribute("height", QString::number(entity->getHeight()));
 
     e.setAttribute("collapsed", ((QnstGraphicsComposition*) entity)->isCollapsed());
 
@@ -624,6 +625,8 @@ QString QnstView::serialize()
   dom->appendChild(root);
 
   linkWriterAux.clear();
+
+  qDebug() << dom->toString(4);
 
   return dom->toString(4);
 }
@@ -718,7 +721,7 @@ void QnstView::write(QDomElement element, QDomDocument* dom,
 
       foreach(QnstGraphicsEdge* edge, pentity->getnstGraphicsEdges())
       {
-        if (edge->getnstType() == Qnst::Reference)
+        if (edge->getnstType() == Qnst::Reference && edge->getEntityA() == entity)
         {
           if (edge->getEntityB()->getncgType() == Qncg::Node)
           {
@@ -743,10 +746,10 @@ void QnstView::write(QDomElement element, QDomDocument* dom,
   e.setAttribute("id", entity->getnstId());
   e.setAttribute("uid", entity->getnstUid());
 
-  e.setAttribute("top", entity->getTop());
-  e.setAttribute("left", entity->getLeft());
-  e.setAttribute("width", entity->getWidth());
-  e.setAttribute("height", entity->getHeight());
+  e.setAttribute("top", QString::number(entity->getTop()));
+  e.setAttribute("left", QString::number(entity->getLeft()));
+  e.setAttribute("width", QString::number(entity->getWidth()));
+  e.setAttribute("height",QString::number(entity->getHeight()));
 
   writeLink(element, dom, entity);
 
@@ -931,6 +934,10 @@ void QnstView::addEntity(const QString uid, const QString parent,
                          const QMap<QString, QString> &properties, bool undo,
                          bool adjust)
 {
+  qDebug();
+  qDebug() << "============================================= ADD ENTITY" << properties;
+  qDebug();
+
   // \fixme Move this logic to AddCommand
   bool ok = false;
 
@@ -1154,17 +1161,17 @@ void QnstView::addEntity(const QString uid, const QString parent,
 
   if(ok)
   {
+
     entity->setnstUid(uid);
     entities[uid] = entity;
     entity->setProperties(properties);
 
     entity->updateToolTip();
-
     entity->adjust();
 
     if (adjust)
       adjustEntity(entity);
-  }
+ }
 
   // if the entity type is CONNECTOR
   if (properties["TYPE"] == "causalConnector")
@@ -1566,6 +1573,7 @@ void QnstView::changeEntity(const QString uid,
 
         entity->setProperties(properties);
 
+
         foreach (QString key, refers.keys(entity->getnstUid()))
         {
           if (entities.contains(key))
@@ -1573,6 +1581,7 @@ void QnstView::changeEntity(const QString uid,
         }
 
         QnstGraphicsPort *port = dynamic_cast<QnstGraphicsPort*> (entity);
+
         // \todo updateToolTip!!
         if(port)
           adjustPort(port);
@@ -1903,6 +1912,13 @@ void QnstView::adjustEntity(QnstGraphicsEntity *entity)
     case Qnst::Link:
     {
       adjustLink((QnstGraphicsLink*)link);
+      break;
+    }
+
+    case Qnst::Media:
+    {
+        qDebug() << "======================== ajusta media" ;
+      adjustMedia((QnstGraphicsMedia*)entity);
       break;
     }
 
@@ -3376,7 +3392,7 @@ void QnstView::requestEntityChange(QnstGraphicsEntity* entity)
         QnstGraphicsPort *port = dynamic_cast <QnstGraphicsPort *>  (entity);
         foreach(QnstGraphicsEdge* edge, port->getnstGraphicsEdges())
         {
-          if (edge->getnstType() == Qnst::Reference)
+          if (edge->getnstType() == Qnst::Reference && edge->getEntityA() == entity)
           {
             if (edge->getEntityB()->getnstType() == Qnst::Port ||
                 edge->getEntityB()->getnstType() == Qnst::Property ||
@@ -3438,7 +3454,9 @@ void QnstView::requestEntityChange(QnstGraphicsEntity* entity)
     }
 
     if(ok)
-    {
+      {
+      qDebug() << "======== PROPERTIES: " << properties;
+
       entity->updateToolTip();
 
       emit entityChanged(entity->getnstUid(), properties);
@@ -4213,7 +4231,7 @@ void QnstView::addInterfacetoInterfaceEdge(QnstGraphicsEntity* entitya,
       }
     }
     else if (parenta->getnstGraphicsParent() == parentb->getnstGraphicsParent())
-    {
+    {  
       createLinkWithDialog(entitya, entityb);
 
       modified = false;
@@ -4451,6 +4469,8 @@ void QnstView::createReference(QnstGraphicsEntity* entitya,
 {
   QnstGraphicsEntity* parenta = entitya->getnstGraphicsParent();
   QnstGraphicsEntity* parentb = entityb->getnstGraphicsParent();
+
+  qDebug() << "=================== Creating reference: " << entitya->getnstId() << "->" << entityb->getnstId();
 
   if (parenta != NULL && parentb != NULL)
   {
@@ -5122,7 +5142,7 @@ void QnstView::traceConnectors()
 #ifdef Q_WS_MAC
     qDebug() << key << connectors[key] << connectors[key]->getConditions() << connectors[key]->getActions();
 #else
-    qDebug() << key << (int)connectors[key] << connectors[key]->getConditions() << connectors[key]->getActions();
+//    qDebug() << key << (int)connectors[key] << connectors[key]->getConditions() << connectors[key]->getActions();
 #endif
   }
   qDebug() << "#### END TRACING CONNECTORS ####" << endl;
@@ -5138,7 +5158,7 @@ void QnstView::traceConnectors2()
 #ifdef Q_WS_MAC
     qDebug() << key << connectors2[key] << connectors2[key]->getConditions() << connectors2[key]->getActions();
 #else
-    qDebug() << key << (int)connectors2[key] << connectors2[key]->getConditions() << connectors2[key]->getActions();
+//    qDebug() << key << (int)connectors2[key] << connectors2[key]->getConditions() << connectors2[key]->getActions();
 #endif
   }
   qDebug() << "#### END TRACING CONNECTORS2 ####" << endl;

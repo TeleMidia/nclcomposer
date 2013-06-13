@@ -219,6 +219,11 @@ void QnstGraphicsNode::adjust(bool avoidCollision)
     }
   }
 
+  foreach(QnstGraphicsEntity* entity, getnstGraphicsEntities())
+  {
+    entity->adjust();
+  }
+
   if (scene() != NULL)
     scene()->update();
 }
