@@ -18,9 +18,15 @@
 #ifndef PROPERTYEDITOR_H
 #define PROPERTYEDITOR_H
 
+#define WITH_TREEVIEW 0
+
 #include <QObject>
 #include <QString>
 #include <QWidget>
+
+#if WITH_TREEVIEW
+#include <QStandardItemModel>
+#endif
 
 #include "ui_PropertyEditorWidget.h"
 #include "QLineEditFilter.h"
@@ -43,6 +49,11 @@ private:
 
   QString currentTagname, currentName;
   QString currentFilterString;
+
+#if WITH_TREEVIEW
+  QStandardItemModel *standardModel;
+  QStandardItem *attributesRootItem, *propertiesRootItem;
+#endif
 
 public:
   /*!

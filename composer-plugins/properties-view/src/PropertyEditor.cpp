@@ -49,6 +49,17 @@ PropertyEditor::PropertyEditor(QWidget *parent):
           SLOT(filterProperties(const QString&)));
 
   internalPropertyChange = false;
+
+  ui->treeView->setVisible(WITH_TREEVIEW);
+#if WITH_TREEVIEW
+  standardModel = new QStandardItemModel(0, 2);
+  attributesRootItem = new QStandardItem("Common");
+  propertiesRootItem = new QStandardItem("Properties");
+  standardModel->invisibleRootItem()->appendRow(attributesRootItem);
+  standardModel->invisibleRootItem()->appendRow(propertiesRootItem);
+  ui->treeView->setModel(standardModel);
+  ui->treeView->expandAll();
+#endif
 }
 
 PropertyEditor::~PropertyEditor()
@@ -195,6 +206,11 @@ void PropertyEditor::filterProperties(const QString& text)
 
   propertyToLine.clear();
 
+#if WITH_TREEVIEW
+  while(attributesRootItem->rowCount())
+    attributesRootItem->removeRow(0);
+#endif
+
   QString attr;
   foreach( attr, propertyToValue.keys() )
   {
@@ -202,6 +218,13 @@ void PropertyEditor::filterProperties(const QString& text)
     {
       QTableWidgetItem *item = new QTableWidgetItem(attr);
       QTableWidgetItem *itemValue = new QTableWidgetItem(propertyToValue[attr]);
+
+#if WITH_TREEVIEW
+      QList<QStandardItem *> property;
+      property << new QStandardItem(attr);
+      property << new QStandardItem(propertyToValue[attr]);
+      attributesRootItem->appendRow(property);
+#endif
 
       ui->tableWidget->insertRow(ui->tableWidget->rowCount());
       internalPropertyChange = true;
