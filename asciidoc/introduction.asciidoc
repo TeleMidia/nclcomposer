@@ -9,7 +9,9 @@ Introdução
 //aplicação. Um documento NCL apenas efine como os objetos de mídia são
 //estruturados e relacionados, no tempo e no espaço.
 
-//O intuito principal deste tutorial é fornecer ao leitor a habilidade de desenvolver programas NCL simples, usando o {nclcomposer}, e capacitá-lo a melhor entender e exercitar os principais conceitos da NCL, no ambiente de autoria {nclcomposer}.
+//O intuito principal deste tutorial é fornecer ao leitor a habilidade de desenvolver
+//programas NCL simples, usando o {nclcomposer}, e capacitá-lo a melhor entender e
+//exercitar os principais conceitos da NCL, no ambiente de autoria {nclcomposer}.
 
 //Para criarmos um documento hipermídia, geralmente, temos que responder a
 //quatro perguntas: *o que* se quer tocar, *onde* (i.e. em que região da tela e
@@ -41,13 +43,14 @@ O que é o {nclcomposer}?
 O http://composer.telemidia.puc-rio.br[{nclcomposer}] é uma ferramenta de
 autoria para NCL que visa facilitar o desenvolvimento de aplicações
 interativas para TV Digital. Para isso, ele utiliza-se de várias abstrações
-gráficas(visões) que permitem ao autor focar em apenas um determinado ponto,
+gráficas (visões) que permitem ao autor focar em apenas um determinado aspecto,
 durante cada fase distinta da autoria.
+
+O {nclcomposer} foi desenvolvido para ser facilmente extensível. Por isso, 
+novas funcionalidades podem ser adicionadas facilmente por meio de _plugins_.
 
 Conceitos Básicos
 ~~~~~~~~~~~~~~~~~
-O {nclcomposer} foi desenvolvido para ser facilmente extensível. Por isso, 
-novas funcionalidades podem ser adicionadas facilmente por meio de _plugins_.
 
 .Plugins
 _Plugins_ são pedaços de software que podem ser distribuídos separadamente e
@@ -57,15 +60,15 @@ Uma lista completa dos _plugins_ disponíveis oficialmente no site do
 http://composer.telemidia.puc-rio.br/en/plugins/[].
 
 .Visões
-O tipo de _plugin_ mais comum do {nclcomposer} são as _Visões_. Uma visão
-é um _plugin_ que possui uma representação na interface gráfica e permite
-ao autor visualizar/editar uma característica específica do 
-documento hipermídia.
+O tipo de _plugin_ mais comum do {nclcomposer} é aquele que denominamos
+_Visão_. Uma visão é um _plugin_ que possui uma representação na interface
+gráfica e permite ao autor visualizar/editar uma característica específica do
+documento NCL.
 
 As principais visões do {nclcomposer} são: {default_views}.
 
 .Perspectivas
-Uma perspectiva, no NCL Composer, é a disposição das visões na tela. É
+Uma _perspectiva_, no NCL Composer, é a disposição das visões na tela. É
 permitido ao usuário criar suas próprias perspectivas, escolhendo a que melhor
 o ajuda a efetuar uma determinada tarefa.
 
@@ -95,8 +98,8 @@ Existem vários canais _online_ onde é possível buscar mais ajuda.
 O {nclcomposer} possui várias listas de e-mail:
 
   * _Lista de usuários_ <nclcomposer-user@telemidia.puc-rio.br> - Questões e
-	discussões relacionadas ao uso do {nclcomposer}
+     discussões relacionadas ao uso do {nclcomposer}
   * _Lista de desenvolvedores_ <nclcomposer-devel@telemidia.puc-rio.br> -
-	Discussões relacionadas ao _design_ e desenvolvimento do {nclcomposer} e 
+    Discussões relacionadas ao _design_ e desenvolvimento do {nclcomposer} e
 	submissão de correções (_patches_).
 ========================
