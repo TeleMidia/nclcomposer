@@ -13,6 +13,15 @@ CONFIG +=qtestlib
 TARGET = mediapreview
 DEPENDPATH += .
 INCLUDEPATH += .
+
+release {
+LIBS      +=    -L../ncl-textual-plugin/deps/QScintilla-gpl-2.6.3/Qt4Qt5/release \
+                -lqscintilla2_telem
+}else:debug {
+LIBS      +=    -L../ncl-textual-plugin/deps/QScintilla-gpl-2.6.3/Qt4Qt5/debug \
+                -lqscintilla2_telem
+}
+
 CODECFORTR = UTF-8
 # Input
 SOURCES += \
