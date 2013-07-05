@@ -59,8 +59,7 @@ QnstView::QnstView(QWidget* parent)
 
   minimap = new MiniMap(this);
   minimap->init(this);
-  minimap->setMinimumSize(MINIMAP_DEFAULT_W, MINIMAP_DEFAULT_H);
-  minimap->setStyleSheet("transparency: 80%; border: 0px;");
+  minimap->setMinimumSize(MINIMAP_DEFAULT_W, MINIMAP_DEFAULT_H);  
 }
 
 QnstView::~QnstView()

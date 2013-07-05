@@ -41,6 +41,7 @@
 #include "qnstminimap.h"
 
 class QnstAddCommand;
+class MiniMap;
 
 // #define SMOOTH_ZOOM 1
 //
