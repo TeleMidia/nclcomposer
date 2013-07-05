@@ -35,7 +35,6 @@
 #include <QtGui/QGridLayout>
 #include <QtGui/QLineEdit>
 #include <QtGui/QToolBar>
-#include <QtGui/QSplashScreen>
 #include <QtGui/QListWidget>
 #include <QtGui/QDialog>
 #include <QtGui/QBitmap>
@@ -52,6 +51,8 @@ using namespace composer::core;
 
 #include <core/util/ComposerSettings.h>
 using namespace composer::core::util;
+
+#include "ComposerSplashScreen.h"
 
 #include "PerspectiveManager.h"
 #include "PreferencesDialog.h"

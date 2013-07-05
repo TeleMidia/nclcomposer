@@ -18,7 +18,6 @@
 #include <QApplication>
 
 #include <QRegExp>
-
 #include <QDesktopServices>
 
 #include "GeneralPreferences.h"
@@ -70,21 +69,23 @@ void ComposerMainWindow::init(const QApplication &app)
 {
   /* The following code could be in another function */
   QPixmap mPix(":/mainwindow/nclcomposer-splash");
-  QSplashScreen splash(mPix);
+  ComposerSplashScreen splash(mPix);
   splash.setMask(mPix.mask());
-  splash.showMessage(tr("Loading NCL Composer..."), Qt::AlignRight, Qt::gray);
+  splash.showMessage(tr("Loading NCL Composer..."),
+                     Qt::AlignRight, Qt::gray);
 
   //splash.blockSignals(true);
   splash.show();
   app.processEvents();
 
-  splash.showMessage(tr("Starting GUI..."), Qt::AlignRight, Qt::gray);
+  splash.showMessage(tr("Starting GUI..."),
+                     Qt::AlignRight, Qt::gray);
 
   initGUI();
   app.processEvents();
 
-  splash.showMessage(tr("Starting Modules and Plugins..."), Qt::AlignRight,
-                      Qt::gray);
+  splash.showMessage(tr("Starting Modules and Plugins..."),
+                     Qt::AlignRight, Qt::gray);
   initModules();
   app.processEvents();
 
@@ -98,8 +99,8 @@ void ComposerMainWindow::init(const QApplication &app)
 
   autoSaveTimer->start(autoSaveInterval);
 
-  splash.showMessage(tr("Reloading last session..."), Qt::AlignRight,
-                      Qt::gray);
+  splash.showMessage(tr("Reloading last session..."),
+                     Qt::AlignRight, Qt::gray);
   readSettings();
   app.processEvents();
 
@@ -350,7 +351,8 @@ void ComposerMainWindow::initGUI()
   // connect(ui->action_Undo, SIGNAL(triggered()), this, SLOT(undo()));
   // connect(ui->action_Redo, SIGNAL(triggered()), this, SLOT(redo()));
 
-  welcomeWidget = new WelcomeWidget(this);
+  welcomeWidget = new WelcomeWidget();
+
   tabProjects->addTab(welcomeWidget, tr("Welcome"));
   tabProjects->setTabIcon(0, QIcon());
 
