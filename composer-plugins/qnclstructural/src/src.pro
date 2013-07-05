@@ -53,7 +53,8 @@ HEADERS += \
     ui/view/qnstgraphicsmapping.h \
     ui/view/qnstgraphicsswitchport.h \
     ui/view/qnstgraphicsbinddialog.h \
-    ui/view/qnstutil.h
+    ui/view/qnstutil.h \
+    ui/view/qnstminimap.h
 
 SOURCES += \
     qnstcomposerplugin.cpp \
@@ -88,7 +89,8 @@ SOURCES += \
     ui/view/qnstgraphicsmapping.cpp \
     ui/view/qnstgraphicsswitchport.cpp \
     ui/view/qnstgraphicsbinddialog.cpp \
-    ui/view/qnstutil.cpp
+    ui/view/qnstutil.cpp \
+    ui/view/qnstminimap.cpp
 
 RESOURCES += \
     ../../common-resources/images.qrc

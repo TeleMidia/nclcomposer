@@ -12,7 +12,6 @@
 #endif
 
 #include "qnstutil.h"
-
 #include "qnstgraphicsbind.h"
 
 std::map <Qnst::EntityType, QString> QnstView::mediaTypeToXMLStr =
@@ -55,6 +54,13 @@ QnstView::QnstView(QWidget* parent)
   // Initialize entity counters
   for(int i = Qnst::Node; i < Qnst::NoType; i += 1)
     entityCounter[ (Qnst::EntityType) i ] = 0;
+
+  setAttribute(Qt::WA_TranslucentBackground);
+
+  minimap = new MiniMap(this);
+  minimap->init(this);
+  minimap->setMinimumSize(MINIMAP_DEFAULT_W, MINIMAP_DEFAULT_H);
+  minimap->setStyleSheet("transparency: 80%; border: 0px;");
 }
 
 QnstView::~QnstView()
@@ -3953,6 +3959,22 @@ void QnstView::performHide()
 void QnstView::performProperties()
 {
     // TODO
+}
+
+void QnstView::resizeEvent(QResizeEvent *event)
+{
+  minimap->move(event->size().width() - minimap->width(),
+                event->size().height() - minimap->height());
+
+  QGraphicsView::resizeEvent(event);
+}
+
+void QnstView::setMinimapVisible(bool v)
+{
+  if(v)
+    minimap->show();
+  else
+    minimap->hide();
 }
 
 void QnstView::mouseMoveEvent(QMouseEvent* event)

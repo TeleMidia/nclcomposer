@@ -38,6 +38,8 @@
 #include "qnstremovecommand.h"
 #include "qnstgraphicsmapping.h"
 
+#include "qnstminimap.h"
+
 class QnstAddCommand;
 
 // #define SMOOTH_ZOOM 1
@@ -65,6 +67,8 @@ public:
   void write(QDomElement element, QDomDocument* dom, QnstGraphicsEntity* entity);
 
   void writeLink(QDomElement element, QDomDocument* dom, QnstGraphicsEntity* entity);
+
+  inline QnstScene *getScene() { return this->scene; }
 
 public:
   void addEntity(const QString uid, const QString parent,
@@ -121,6 +125,8 @@ public slots:
 
   void performProperties();
 
+  void setMinimapVisible(bool v = true);
+
 signals:
   void entityAdded(const QString uid, const QString parent, const QMap<QString, QString> properties);
 
@@ -135,6 +141,8 @@ signals:
 protected:
 
   bool updateEntityWithUniqueNstId(QnstGraphicsEntity *entity);
+
+  void resizeEvent(QResizeEvent *event);
 
   virtual void mouseMoveEvent(QMouseEvent* event);
 
@@ -375,6 +383,8 @@ private:
   std::map < Qnst::EntityType, int > entityCounter;
 
   static std::map <Qnst::EntityType, QString> mediaTypeToXMLStr;
+
+  MiniMap *minimap;
 };
 
 #endif // QNSTVIEW_H

@@ -43,6 +43,7 @@ QnstComposerPlugin::~QnstComposerPlugin()
 void QnstComposerPlugin::createWidgets()
 {
   view = new QnstView();
+  view->setMinimapVisible(true);
 }
 
 void QnstComposerPlugin::createConnections()
