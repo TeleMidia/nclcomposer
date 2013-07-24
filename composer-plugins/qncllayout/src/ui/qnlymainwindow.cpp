@@ -113,3 +113,8 @@ void QnlyMainWindow::comboBoxChangedCurrentRegionBase(int pos)
 
   emit selectRegionBaseFromComboBox(uuid);
 }
+
+void QnlyMainWindow::on_actionAction_Export_triggered()
+{
+  view->snapshot();
+}

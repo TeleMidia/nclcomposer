@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>800</width>
-    <height>600</height>
+    <width>797</width>
+    <height>587</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -38,6 +38,7 @@
    <addaction name="actionAdd_Region"/>
    <addaction name="actionRemove_Region"/>
    <addaction name="actionShow_Hide_Grid"/>
+   <addaction name="actionAction_Export"/>
   </widget>
   <action name="actionAdd_Region">
    <property name="icon">
@@ -73,6 +74,18 @@
    </property>
    <property name="text">
     <string>Show/Hide Grid</string>
+   </property>
+  </action>
+  <action name="actionAction_Export">
+   <property name="icon">
+    <iconset resource="../../../common-resources/images.qrc">
+     <normaloff>:/icon/export-icon</normaloff>:/icon/export-icon</iconset>
+   </property>
+   <property name="text">
+    <string>action_Export</string>
+   </property>
+   <property name="toolTip">
+    <string>Take a picture of the current layout</string>
    </property>
   </action>
  </widget>

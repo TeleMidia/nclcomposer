@@ -91,6 +91,8 @@ public slots:
 
     void setGridVisible(bool visible);
 
+    void snapshot();
+
 signals:
     void regionAdded(const QString regionUID,
                      const QString parentUID,
@@ -169,6 +171,8 @@ private:
 
     QMenu* contextMenu;
 
+    // \todo This actions must be in a place that will be shared by
+    //       qnlyview and qnlymainwindow
     QAction* helpAction;
 
     // QAction* undoAction;  // Temporaly disabled

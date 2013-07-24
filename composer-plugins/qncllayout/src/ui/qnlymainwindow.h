@@ -53,6 +53,9 @@ public slots:
     void removeRegionBaseFromCombobox(const QString &uuid);
 
     void comboBoxChangedCurrentRegionBase(int pos);
+
+private slots:
+    void on_actionAction_Export_triggered();
 };
 
 #endif // QNLYMAINWINDOW_H

@@ -687,3 +687,9 @@ void QnlyView::contextMenuEvent(QContextMenuEvent *event)
     event->accept();
   }
 }
+
+void QnlyView::snapshot()
+{
+  if(getSelectedRegionBase() != NULL)
+      getSelectedRegionBase()->performExport();
+}

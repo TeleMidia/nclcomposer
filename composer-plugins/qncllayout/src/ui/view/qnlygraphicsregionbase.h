@@ -121,6 +121,8 @@ public slots:
 
     void performDelete();
 
+    void performExport();
+
 protected slots:
     void performShow(QAction* action);
 
@@ -135,10 +137,6 @@ protected slots:
 
     void requestMediaOverRegionAction(QString mediaId,
                                       QnlyGraphicsRegion* region);
-
-
-
-    void performExport();
 
     void performChangeResolution();
 
