@@ -68,6 +68,11 @@ void QnstGraphicsPort::draw(QPainter* painter)
     painter->drawRect(4, 4, getWidth(), getHeight());
   }
 
+  if(hasError)
+  {
+    painter->drawPixmap((getWidth()-16)/2 + 12, (getHeight()-8)/2 + 4, 12, 12, QPixmap(":/icon/delete"));
+  }
+
   if (isMoving())
   {
     painter->setBrush(Qt::NoBrush);
