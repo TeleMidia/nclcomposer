@@ -3988,7 +3988,8 @@ void QnstView::mouseMoveEvent(QMouseEvent* event)
 
       // \fixme This is not the best place to control this!!
       if(lastLinkMouseOver->getnstType() == Qnst::Composition ||
-         lastLinkMouseOver->getnstType() == Qnst::Context)
+         lastLinkMouseOver->getnstType() == Qnst::Context ||
+         lastLinkMouseOver->getnstType() == Qnst::Switch)
       {
         lastLinkMouseOver->setMouseHoverHighlight(false);
       }
@@ -4023,7 +4024,8 @@ void QnstView::mouseMoveEvent(QMouseEvent* event)
 
       // \fixme This is not the best place to control this!!
       if(entityb->getnstType() == Qnst::Composition ||
-         entityb->getnstType() == Qnst::Context)
+         entityb->getnstType() == Qnst::Context ||
+         entityb->getnstType() == Qnst::Switch)
       {
         entityb->setMouseHoverHighlight(true);
       }
@@ -4128,7 +4130,8 @@ void QnstView::mouseReleaseEvent(QMouseEvent* event)
 
       // \fixme This is not the best place to control this!!
       if(entityb->getnstType() == Qnst::Composition ||
-         entityb->getnstType() == Qnst::Context)
+         entityb->getnstType() == Qnst::Context ||
+         entityb->getnstType() == Qnst::Switch)
       {
         entityb->setMouseHoverHighlight(false);
       }
