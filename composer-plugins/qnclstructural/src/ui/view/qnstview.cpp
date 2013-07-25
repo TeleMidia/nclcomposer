@@ -864,7 +864,7 @@ void QnstView::createObjects()
 {
   scene = new QnstScene();
   scene->setParent(this);
-  scene->setSceneRect(0, 0, 4000, 4000);
+  scene->setSceneRect(0, 0, 3200, 1800);
 
   setScene(scene);
 
@@ -873,6 +873,8 @@ void QnstView::createObjects()
   conditionDialog = new QnstGraphicsConditionDialog(this);
 
   actionDialog = new QnstGraphicsActionDialog(this);
+
+  this->resize(scene->itemsBoundingRect().size().width(), scene->itemsBoundingRect().height());
 }
 
 void QnstView::createConnection()
@@ -3983,6 +3985,14 @@ void QnstView::mouseMoveEvent(QMouseEvent* event)
     if (lastLinkMouseOver != NULL)
     {
       lastLinkMouseOver->setMouseHover(false);
+
+      // \fixme This is not the best place to control this!!
+      if(lastLinkMouseOver->getnstType() == Qnst::Composition ||
+         lastLinkMouseOver->getnstType() == Qnst::Context)
+      {
+        lastLinkMouseOver->setMouseHoverHighlight(false);
+      }
+
       lastLinkMouseOver = NULL;
     }
 
@@ -4010,6 +4020,13 @@ void QnstView::mouseMoveEvent(QMouseEvent* event)
     {
       QnstGraphicsEntity* entityb = (QnstGraphicsEntity*) itemsb.first();
       entityb->setMouseHover(true);
+
+      // \fixme This is not the best place to control this!!
+      if(entityb->getnstType() == Qnst::Composition ||
+         entityb->getnstType() == Qnst::Context)
+      {
+        entityb->setMouseHoverHighlight(true);
+      }
 
       lastLinkMouseOver = entityb;
     }
@@ -4108,6 +4125,13 @@ void QnstView::mouseReleaseEvent(QMouseEvent* event)
 
       entitya->setMouseHover(false);
       entityb->setMouseHover(false);
+
+      // \fixme This is not the best place to control this!!
+      if(entityb->getnstType() == Qnst::Composition ||
+         entityb->getnstType() == Qnst::Context)
+      {
+        entityb->setMouseHoverHighlight(false);
+      }
     }
 
     if (link != NULL)
