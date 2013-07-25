@@ -325,11 +325,19 @@ void QsciNCLAPIs::autoCompletionSelected(const QString &selection)
     outputStr = selection + "=\"\"";
 
     //if the attribute is just after another word, put a space between then
-    if(start >= 0){
+    if(start >= 0)
+    {
       QChar ch = strline.at(start);
-      qDebug() << ch;
       if(!ch.isSpace())
         outputStr.prepend(' ');
+    }
+    //if the attribute is just before another word ut a space in the end of the
+    //inserted text
+    if(start + 1 < strline.size())
+    {
+      QChar ch = strline.at(start + 1);
+      if(!ch.isSpace() && ch != '>')
+        outputStr.append(' ');
     }
   }
   else if(suggesting == SUGGESTING_ATTRIBUTE_VALUES)
@@ -391,19 +399,18 @@ void QsciNCLAPIs::autoCompletionSelected(const QString &selection)
   }
 
   // move cursor to the new position
+  lexer()->editor()->SendScintilla(QsciScintilla::SCI_GOTOPOS, pos);
   lexer()->editor()->SendScintilla(QsciScintilla::SCI_WORDRIGHT);
   lexer()->editor()->SendScintilla(QsciScintilla::SCI_WORDRIGHT);
+
+  if ((suggesting == SUGGESTING_ELEMENTS && hasAttributes) ||
+      suggesting == SUGGESTING_ATTRIBUTES)
+  {
+    lexer()->editor()->recolor();
+    ((NCLTextEditor *)lexer()->editor())->userFillingNextAttribute(pos);
+  }
 
   lexer()->editor()->endUndoAction();
-
-  if (suggesting == SUGGESTING_ELEMENTS)
-  {
-    if(hasAttributes)
-    {
-      lexer()->editor()->recolor();
-      ((NCLTextEditor *)lexer()->editor())->userFillingNextAttribute(pos);
-    }
-  }
 }
 
 
