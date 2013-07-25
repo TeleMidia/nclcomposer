@@ -184,14 +184,7 @@ void QnstGraphicsMedia::draw(QPainter* painter)
 
   painter->drawPixmap(4 + 8/2, 4 + 8/2, getWidth()-8, getHeight()-16-8, QPixmap(icon));
 
-  // Draw MouseHover rectangle
-  if (!isSelected() && hasMouseHover())
-  {
-    painter->setBrush(Qt::NoBrush);
-    painter->setPen(QPen(QBrush(QColor("#999999")), 0, Qt::DashLine)); // 0px = cosmetic border
-
-    painter->drawRect(4, 4, getWidth(), getHeight());
-  }
+  drawMouseHoverHighlight(painter); // This should not be HERE!!
 
   painter->setPen(QPen(QBrush(Qt::black),0));
 
@@ -223,7 +216,6 @@ void QnstGraphicsMedia::draw(QPainter* painter)
   //      painter->setPen(QPen(QBrush(Qt::black), 0));
 
   painter->drawText(4 + 8/2, 4 + 8/2 + getHeight()-16-8, getWidth()-8, 16, Qt::AlignCenter, localid);
-
 
   if (isMoving())
   {

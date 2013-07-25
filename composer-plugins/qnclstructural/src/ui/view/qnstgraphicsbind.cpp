@@ -259,14 +259,7 @@ void QnstGraphicsBind::draw(QPainter* painter)
   //  draw_condition(painter);
   // else
 
-  // Draw MouseHover rectangle
-  if (!isSelected() && hasMouseHover())
-  {
-    painter->setBrush(Qt::NoBrush);
-    painter->setPen(QPen(QBrush(QColor("#999999")), 0, Qt::DashLine)); // 0px = cosmetic border
-
-    painter->drawRect(4, 4, getWidth(), getHeight());
-  }
+  drawMouseHoverHighlight(painter); // This should not be HERE!!
 
   draw_action(painter);
 }

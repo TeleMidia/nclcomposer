@@ -24,6 +24,7 @@ QnstGraphicsEntity::QnstGraphicsEntity(QnstGraphicsEntity* parent)
   menu = NULL;
   draggable = false;
   hasError = false;
+  enableMouseHoverHighlight = true;
 }
 
 
@@ -220,6 +221,11 @@ void QnstGraphicsEntity::setMouseHover(bool hover)
   this->hover = hover;
 }
 
+void QnstGraphicsEntity::setMouseHoverHighlight(bool enable)
+{
+  this->enableMouseHoverHighlight = enable;
+}
+
 void QnstGraphicsEntity::hoverEnterEvent(QGraphicsSceneHoverEvent* event)
 {
   QncgGraphicsEntity::hoverEnterEvent(event);
@@ -271,4 +277,19 @@ void QnstGraphicsEntity::getProperties(QMap <QString, QString> &props)
   props["width"] = QString::number(getWidth());
   props["height"] = QString::number(getHeight());
   props["zIndex"] = QString::number(getzIndex());
+}
+
+void QnstGraphicsEntity::drawMouseHoverHighlight(QPainter *painter)
+{
+  if(enableMouseHoverHighlight)
+  {
+    // Draw MouseHover rectangle
+    if (!isSelected() && hasMouseHover())
+    {
+      painter->setBrush(Qt::NoBrush);
+      painter->setPen(QPen(QBrush(QColor("#999999")), 0, Qt::DashLine)); // 0px = cosmetic border
+
+      painter->drawRect(4, 4, getWidth(), getHeight());
+    }
+  }
 }

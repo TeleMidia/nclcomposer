@@ -39,6 +39,9 @@ QnstGraphicsComposition::QnstGraphicsComposition(QnstGraphicsEntity* parent)
 
   setWidth(DEFAULT_CONTEXT_WIDTH);
   setHeight(DEFAULT_CONTEXT_HEIGHT);
+
+  // By default composition will not be able to show mouse hover highlight
+  setMouseHoverHighlight(false);
 }
 
 QnstGraphicsComposition::~QnstGraphicsComposition()
@@ -96,13 +99,6 @@ void QnstGraphicsComposition::updateToolTip()
 
 void QnstGraphicsComposition::draw(QPainter* painter)
 {
-  //    if (!isSelected() && hasMouseHover() && getnstType() != Qnst::Body){
-  //        painter->setBrush(Qt::NoBrush);
-  //        painter->setPen(QPen(QBrush(QColor("#999999")), 0, Qt::DashLine)); // 0px = cosmetic border
-
-  //        painter->drawRect(4, 4, getWidth(), getHeight());
-  //    }
-
   if (!collapsed)
   {
     painter->setRenderHint(QPainter::Antialiasing,true);
@@ -115,6 +111,8 @@ void QnstGraphicsComposition::draw(QPainter* painter)
       painter->setPen(QPen(QBrush(Qt::black), 0));
 
     painter->drawEllipse(4, 4, getWidth()-1, getHeight()-1);
+
+    drawMouseHoverHighlight(painter); // This should not be HERE!!
 
     if (isMoving())
     {
@@ -138,13 +136,7 @@ void QnstGraphicsComposition::draw(QPainter* painter)
 
     painter->drawPixmap(4 + 8/2, 4 + 8/2, getWidth()-8, getHeight()-16-8, QPixmap(":/icon/context"));
 
-    if (!isSelected() && hasMouseHover())
-    {
-      painter->setBrush(Qt::NoBrush);
-      painter->setPen(QPen(QBrush(QColor("#999999")), 0, Qt::DashLine)); // 0px = cosmetic border
-
-      painter->drawRect(4, 4, getWidth(), getHeight());
-    }
+    drawMouseHoverHighlight(painter); // This should not be HERE!!
 
     painter->setPen(QPen(QBrush(Qt::black),0));
 

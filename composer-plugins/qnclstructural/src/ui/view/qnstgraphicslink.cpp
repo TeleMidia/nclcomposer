@@ -71,14 +71,7 @@ void QnstGraphicsLink::draw(QPainter* painter)
 
   painter->drawEllipse(4 + 8/2, 4 + 8/2, getWidth()-8, getHeight()-8);
 
-  // Draw MouseHover rectangle
-  if (!isSelected() && hasMouseHover())
-  {
-    painter->setBrush(Qt::NoBrush);
-    painter->setPen(QPen(QBrush(QColor("#999999")), 0, Qt::DashLine)); // 0px = cosmetic border
-
-    painter->drawRect(4, 4, getWidth(), getHeight());
-  }
+  drawMouseHoverHighlight(painter); // This should not be HERE!!
 
   if (isMoving())
   {

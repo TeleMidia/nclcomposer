@@ -44,6 +44,8 @@ public:
 
   void setMouseHover(bool hover);
 
+  void setMouseHoverHighlight(bool enable);
+
   virtual void setnstId(const QString &id);
 
   virtual void updateToolTip() {}
@@ -91,6 +93,8 @@ signals:
 protected:
   virtual void draw(QPainter* painter) = 0;
 
+  virtual void drawMouseHoverHighlight(QPainter *painter);
+
   virtual void delineate(QPainterPath* painter) const = 0;
 
   virtual void move(QGraphicsSceneMouseEvent* event) = 0;
@@ -126,7 +130,7 @@ private:
   QSet<QnstGraphicsEntity*> entities;
 
 protected:
-  bool hover, hasError;
+  bool hover, hasError, enableMouseHoverHighlight;
   QString erroMsg;
   QString dropsrc;
 };
