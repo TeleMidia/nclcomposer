@@ -209,12 +209,33 @@ void QnstGraphicsMedia::draw(QPainter* painter)
     localid = getnstId().replace(3,getnstId().length()-3,"...");
   }
 
-  // \todo draw a formated text with underline when there is error
-  //    if(hasError)
-  //      painter->setPen(QPen(QBrush(Qt::red), 0));
-  //    else
-  //      painter->setPen(QPen(QBrush(Qt::black), 0));
+  // draw a formated text with underline when there is error
+  if(hasError)
+  {
+    int N_STEPS = 20;
+    int begin_w = 8;
+    int end_w = getWidth();
+    double current_x = begin_w;
+    double step = (double) ( end_w - begin_w ) / N_STEPS;
 
+    QPolygonF polygon;
+    painter->setPen(QPen(QBrush(Qt::red), 0)); // 0px = cosmetic border
+    painter->setRenderHint(QPainter::Antialiasing, true);
+
+    for (int i = 0; i < N_STEPS; i++)
+    {
+      current_x = begin_w + (double) i * step;
+
+      if( i % 2)
+        polygon << QPointF( current_x, getHeight() - 3 );
+      else
+        polygon << QPointF( current_x, getHeight() );
+    }
+
+    painter->drawPolyline(polygon);
+  }
+
+  // draw the text
   painter->drawText(4 + 8/2, 4 + 8/2 + getHeight()-16-8, getWidth()-8, 16, Qt::AlignCenter, localid);
 
   if (isMoving())
