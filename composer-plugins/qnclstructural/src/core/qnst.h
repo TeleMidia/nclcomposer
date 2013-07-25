@@ -39,7 +39,7 @@ public:
     Aggregator, // \fixme this is here only for compatibility with versions
                 // prior to 0.1.3
 
-    Compostion,
+    Composition,
     Body,
     Context,
     Switch,
