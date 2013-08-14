@@ -199,7 +199,8 @@ SOURCES += main.cpp \
     src/GeneralPreferences.cpp \
     src/NewProjectWizard.cpp \
     src/FileChooser.cpp \
-    src/ClickableDockWidget.cpp
+    src/ClickableDockWidget.cpp \
+    src/ComposerSplashScreen.cpp
 #   src/ImportBasePreferences.cpp
 
 HEADERS += include/ComposerMainWindow.h \
@@ -215,7 +216,8 @@ HEADERS += include/ComposerMainWindow.h \
     include/GeneralPreferences.h \
     include/NewProjectWizard.h \
     include/FileChooser.h \
-    include/ClickableDockWidget.h
+    include/ClickableDockWidget.h \
+    include/ComposerSplashScreen.h
 #   include/ImportBasePreferences.h
 
 RESOURCES += images.qrc
