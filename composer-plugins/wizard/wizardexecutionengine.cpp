@@ -13,7 +13,7 @@ WizardExecutionEngine::WizardExecutionEngine(QString wsPath)
 {
     setWS(wsPath);
 
-    connect(&_wizard, &QWizard::accepted, this, &WizardExecutionEngine::createFinalApplication);
+    connect(&_wizard, SIGNAL(accepted()), this, SLOT(createFinalApplication()));
 }
 
 void WizardExecutionEngine::setWS(QString wsPath)

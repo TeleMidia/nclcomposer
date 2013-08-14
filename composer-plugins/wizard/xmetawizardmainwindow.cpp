@@ -20,8 +20,8 @@ XMetaWizardMainWindow::XMetaWizardMainWindow(QWidget *parent) :
     mainLayout->addWidget(templateBaseButton);
     mainLayout->addWidget(wizarButton);
 
-    connect(templateBaseButton, &QPushButton::pressed, this, &XMetaWizardMainWindow::runWizardGenerator);
-    connect(wizarButton, &QPushButton::pressed, this, &XMetaWizardMainWindow::runWizardEngine);
+    connect(templateBaseButton, SIGNAL(pressed()), this, SLOT(runWizardGenerator()));
+    connect(wizarButton, SIGNAL(pressed()), this,SLOT(runWizardEngine()) );
 
     QWidget *widget = new QWidget;
     widget->setLayout(mainLayout);

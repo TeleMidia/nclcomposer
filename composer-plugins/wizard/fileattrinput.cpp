@@ -16,7 +16,7 @@ FileAttrInput::FileAttrInput(QString question, QString name, QString type, QStri
     _answer = new QLineEdit;
     QPushButton *fileSearch = new QPushButton ("&Browse...");
 
-    connect (fileSearch, &QPushButton::pressed, this, &FileAttrInput::searchFile);
+    connect (fileSearch, SIGNAL(pressed()), this, SLOT(searchFile()));
 
     lineLayout->addWidget(_answer);
     lineLayout->addWidget(fileSearch);

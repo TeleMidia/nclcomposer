@@ -42,7 +42,7 @@ ElemInput *XWizardPage::addElemInput(QString id, QString elemInputSelector, QStr
         _elemInputs.append(elemInput);
         elemInput->setId(id);
 
-        connect(elemInput, &ElemInput::cloned, this, &XWizardPage::cloneElemInput);
+        connect(elemInput, SIGNAL(cloned()), this, SLOT(cloneElemInput()));
 
         _containerLayout->addWidget(elemInput);
     }
@@ -226,7 +226,7 @@ void XWizardPage::cloneElemInput(ElemInput *elemInput)
     if (elemInput){
         _containerLayout->addWidget(elemInput);
         _elemInputs.append(elemInput);
-        connect (elemInput, &ElemInput::cloned, this, &XWizardPage::cloneElemInput);
+        connect (elemInput, SIGNAL(cloned(ElemInput*)), this, SLOT(cloneElemInput(ElemInput*)));
     }
 }
 

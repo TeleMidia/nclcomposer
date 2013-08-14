@@ -16,7 +16,7 @@ ElemInput::ElemInput (QString selector, QString title, QWidget *parent)
     QIcon icon (":/images/plus.png");
     plusButton->setIcon(icon);
 
-    connect (plusButton, &QPushButton::pressed, this, &ElemInput::clone);
+    connect (plusButton, SIGNAL(pressed()), this, SLOT(clone()));
 
     QHBoxLayout *mainLayout = new QHBoxLayout;
     mainLayout->addLayout(_elemInputLayout);
