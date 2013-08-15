@@ -1,4 +1,4 @@
-#include "deafultattrinput.h"
+#include "defaultattrinput.h"
 
 #include <QLabel>
 
