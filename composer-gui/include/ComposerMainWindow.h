@@ -156,6 +156,8 @@ private:
 
   ComposerHelpWidget composerHelpWidget;
 
+  QProcess wizardProcess;
+
 private:
   /*!
    * \brief Shows a prompt where the user can choose where its plugins are
@@ -353,6 +355,10 @@ private slots:
                                     bool save = true);
   void on_actionReport_Bug_triggered();
 
+  void on_actionProject_from_Wizard_triggered();
+
+  void wizardFinished(int resp);
+
 public:
   /*!
      * \brief Constructs the Composer Main Window with the given parent.
@@ -371,7 +377,7 @@ public:
   /*!
      * \brief
      */
-  ~ComposerMainWindow();
+  virtual ~ComposerMainWindow();
 
 public slots:
   /*!

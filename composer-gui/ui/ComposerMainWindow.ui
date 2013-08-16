@@ -150,7 +150,7 @@
      <x>0</x>
      <y>0</y>
      <width>776</width>
-     <height>21</height>
+     <height>29</height>
     </rect>
    </property>
    <property name="layoutDirection">
@@ -182,7 +182,14 @@
      </property>
      <addaction name="action_ImportFromExistingNCL"/>
     </widget>
-    <addaction name="action_NewProject"/>
+    <widget class="QMenu" name="menuNew">
+     <property name="title">
+      <string>&amp;New</string>
+     </property>
+     <addaction name="action_NewProject"/>
+     <addaction name="actionProject_from_Wizard"/>
+    </widget>
+    <addaction name="menuNew"/>
     <addaction name="action_OpenProject"/>
     <addaction name="menu_Recent_Files"/>
     <addaction name="separator"/>
@@ -247,7 +254,7 @@
      <normaloff>:/mainwindow/images/new_document_icon.png</normaloff>:/mainwindow/images/new_document_icon.png</iconset>
    </property>
    <property name="text">
-    <string>&amp;New Project</string>
+    <string>&amp;Project</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+N</string>
@@ -454,6 +461,11 @@
    </property>
    <property name="toolTip">
     <string>Go to our WebSite and Report a BUG</string>
+   </property>
+  </action>
+  <action name="actionProject_from_Wizard">
+   <property name="text">
+    <string>Project from &amp;Wizard</string>
    </property>
   </action>
  </widget>

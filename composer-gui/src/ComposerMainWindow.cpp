@@ -63,6 +63,11 @@ ComposerMainWindow::ComposerMainWindow(QWidget *parent)
           this, SLOT(runHasFinished()));
 #endif
 
+  connect(&wizardProcess,
+          SIGNAL(finished(int)),
+          this,
+          SLOT(wizardFinished(int)));
+
 }
 
 void ComposerMainWindow::init(const QApplication &app)
@@ -2344,6 +2349,24 @@ void ComposerMainWindow::saveLoadPluginData(int)
 void ComposerMainWindow::on_actionReport_Bug_triggered()
 {
   QDesktopServices::openUrl(QUrl("http://composer.telemidia.puc-rio.br/en/contact"));
+}
+
+void ComposerMainWindow::on_actionProject_from_Wizard_triggered()
+{
+  wizardProcess.start("./composer-plugins/wizard/WizardEngine2");
+}
+
+void ComposerMainWindow::wizardFinished(int resp)
+{
+  qDebug() << "Wizard process finished with ret=" << resp;
+  if(!resp)
+  {
+    QString filename = wizardProcess.readLine();
+    filename = (filename.mid(0, filename.size()-1));
+    qDebug() << filename;
+    ProjectControl::getInstance()->importFromDocument(filename,
+                                                      "/tmp/a.cpr");
+  }
 }
 
 } } //end namespace
