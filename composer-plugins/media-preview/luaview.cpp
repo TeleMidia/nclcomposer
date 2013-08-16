@@ -24,6 +24,18 @@
 luaview::luaview(const QString &filename)
 {
   lexerLua = new QsciLexerLua(this);
+
+  setFolding(QsciScintilla::CircledTreeFoldStyle);
+  // setFoldMarginColors(PREF_FOLD_MARGIN_FORE_COLOR, PREF_FOLD_MARGIN_BACK_COLOR);
+
+  setMarginLineNumbers(1, true);
+  setMarginWidth(1, 25);
+  // setMarginsBackgroundColor(MARGINS_BACKGROUND_COLOR);
+
+  setCaretWidth(20);
+  setCaretLineBackgroundColor(QColor("#e6fff0"));
+  setCaretLineVisible(true);
+
   setLexer(lexerLua);
 
   loadFile(filename);
