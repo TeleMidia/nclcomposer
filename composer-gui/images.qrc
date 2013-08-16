@@ -40,5 +40,6 @@
         <file alias="config">images/config.png</file>
         <file alias="reportbug">images/ladybug.png</file>
         <file alias="bggray">images/bg-gray-one.png</file>
+        <file>images/wizard-icon.png</file>
     </qresource>
 </RCC>

@@ -464,6 +464,10 @@
    </property>
   </action>
   <action name="actionProject_from_Wizard">
+   <property name="icon">
+    <iconset resource="../images.qrc">
+     <normaloff>:/mainwindow/images/wizard-icon.png</normaloff>:/mainwindow/images/wizard-icon.png</iconset>
+   </property>
    <property name="text">
     <string>Project from &amp;Wizard</string>
    </property>
