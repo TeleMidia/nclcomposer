@@ -12,7 +12,7 @@ int main(int argc, char *argv[])
 {
   QApplication a(argc, argv);
 
-  if(argc > 0) // Generate the .ws from the template base passed as parameter
+  if(argc > 1) // Generate the .ws from the template base passed as parameter
   {
     WizardGenerator::run(argv[1]);
     return 0;
