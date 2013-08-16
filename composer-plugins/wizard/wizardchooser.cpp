@@ -11,6 +11,11 @@ wizardchooser::wizardchooser(QWidget *parent, bool modal) :
 {
   ui->setupUi(this);
   setModal(modal);
+
+  connect(ui->listWidget,
+          SIGNAL(currentTextChanged(QString)),
+          this,
+          SLOT(changeDescView(QString)));
 }
 
 wizardchooser::~wizardchooser()
@@ -37,7 +42,22 @@ int wizardchooser::exec(const QString &path)
 
 QString wizardchooser::getSelectedPath()
 {
-  QString selectedPath = ui->listWidget->selectedItems().at(0)->text();
+  QString selectedPath = "";
+  if(ui->listWidget->selectedItems().size())
+     selectedPath = ui->listWidget->selectedItems().at(0)->text();
 
   return path + selectedPath;
+}
+
+void wizardchooser::changeDescView(QString textItem)
+{
+  qDebug() << textItem;
+  QString selectedPath = path  + textItem;
+  selectedPath += selectedPath.mid(selectedPath.lastIndexOf("/")) + ".html";
+
+  QFileInfo finfo(selectedPath);
+  if(finfo.exists())
+    ui->webView->load(selectedPath);
+  else
+    ui->webView->setHtml("<html><body>Description not found!!</body></html>");
 }

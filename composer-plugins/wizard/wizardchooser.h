@@ -2,6 +2,7 @@
 #define WIZARDCHOOSER_H
 
 #include <QDialog>
+#include <QListWidgetItem>
 
 namespace Ui {
 class wizardchooser;
@@ -23,6 +24,9 @@ public Q_SLOTS:
 private:
   Ui::wizardchooser *ui;
   QString path;
+
+private slots:
+  void changeDescView(QString);
 };
 
 #endif // WIZARDCHOOSER_H
