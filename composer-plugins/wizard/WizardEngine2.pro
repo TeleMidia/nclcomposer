@@ -23,8 +23,9 @@ SOURCES += main.cpp\
     xwizardpage.cpp \
     eleminput.cpp \
     attrinput.cpp \
-    deafultattrinput.cpp \
-    fileattrinput.cpp
+    defaultattrinput.cpp \
+    fileattrinput.cpp \
+    wizardchooser.cpp
 
 HEADERS  += xmetawizardmainwindow.h \
     templateparser.h \
@@ -37,10 +38,12 @@ HEADERS  += xmetawizardmainwindow.h \
     xwizardpage.h \
     eleminput.h \
     attrinput.h \
-    deafultattrinput.h \
-    fileattrinput.h
+    defaultattrinput.h \
+    fileattrinput.h \
+    wizardchooser.h
 
-FORMS    += xmetawizardmainwindow.ui
+FORMS    += xmetawizardmainwindow.ui \
+    wizardchooser.ui
 
 RESOURCES += \
     resources.qrc

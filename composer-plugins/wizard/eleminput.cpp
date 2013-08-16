@@ -2,7 +2,7 @@
 
 #include <QPushButton>
 
-#include "deafultattrinput.h"
+#include "defaultattrinput.h"
 #include "fileattrinput.h"
 
 ElemInput::ElemInput (QString selector, QString title, QWidget *parent)

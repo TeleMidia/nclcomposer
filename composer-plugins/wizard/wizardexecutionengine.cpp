@@ -9,14 +9,17 @@
 #include <QSet>
 #include <QDebug>
 
-WizardExecutionEngine::WizardExecutionEngine(QString wsPath)
+WizardExecutionEngine::WizardExecutionEngine(const QString &wsPath,
+                                             QObject *parent):
+    QObject(parent)
 {
+  if(wsPath != "")
     setWS(wsPath);
 
-    connect(&_wizard, SIGNAL(accepted()), this, SLOT(createFinalApplication()));
+  connect(&_wizard, SIGNAL(accepted()), this, SLOT(createFinalApplication()));
 }
 
-void WizardExecutionEngine::setWS(QString wsPath)
+void WizardExecutionEngine::setWS(const QString &wsPath)
 {
     _wsPath = wsPath;
     _inputFile = "";
@@ -82,9 +85,16 @@ void WizardExecutionEngine::setWS(QString wsPath)
 
 }
 
+void WizardExecutionEngine::setInputFile(const QString &inputFile)
+{
+  this->_inputFile = inputFile;
+}
+
 void WizardExecutionEngine::run()
 {
-    _inputFile = QFileDialog::getOpenFileName(0, "Select the file input", getenv("HOME"));
+    if(_inputFile == "")
+        _inputFile = QFileDialog::getOpenFileName(0, "Select the file input", getenv("HOME"));
+
     if (_inputFile != "")
         _wizard.exec();
 }

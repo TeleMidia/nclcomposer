@@ -17,9 +17,10 @@ private:
     void removeUuid(QDomElement& rootElement);
 
 public:
-    WizardExecutionEngine(QString);
+    explicit WizardExecutionEngine(const QString &wsPath = "", QObject *parent  = 0);
 
-    void setWS (QString);
+    void setWS (const QString&);
+    void setInputFile (const QString&);
 
     void run ();
 
