@@ -40,11 +40,18 @@ public:
     inline QString selector () const { return _selector; }
     inline QString id () const { return _id; }
 
+    ~ElemInput ();
+
 signals:
     void cloned (ElemInput *);
+    void removeRequested (ElemInput *);
 
 public slots:
     ElemInput * clone ();
+
+    inline void notifyRemove () {
+        emit removeRequested(this);
+    }
 
     inline void addElemInput (ElemInput *elemInput){
         if (elemInput){

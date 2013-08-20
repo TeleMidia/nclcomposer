@@ -43,6 +43,8 @@ public:
     explicit XWizardPage(QWidget *parent = 0);
 
     ElemInput * addElemInput (QString id, QString elemInputSelector, QString title);
+    void addElemInput (ElemInput *);
+
     void addAttrInput (ElemInput *elemInput, QString question, QString, QString type = "string", QString value = "");
 
     bool computeAnswers (QDomElement& finalAppRootElement, QDomElement& pdpRootElement,

@@ -39,15 +39,18 @@ ElemInput *XWizardPage::addElemInput(QString id, QString elemInputSelector, QStr
     ElemInput *elemInput = 0;
     if (id != ""){
         elemInput = new ElemInput (elemInputSelector, title, this);
-        _elemInputs.append(elemInput);
         elemInput->setId(id);
-
-        connect(elemInput, SIGNAL(cloned()), this, SLOT(cloneElemInput()));
-
-        _containerLayout->addWidget(elemInput);
+        addElemInput(elemInput);
     }
 
     return elemInput;
+}
+
+void XWizardPage::addElemInput(ElemInput *elemInput)
+{
+    _elemInputs.append(elemInput);
+    connect(elemInput, SIGNAL(cloned(ElemInput*)), this, SLOT(cloneElemInput(ElemInput *)));
+    _containerLayout->addWidget(elemInput);
 }
 
 void XWizardPage::addAttrInput(ElemInput *elemInput, QString question, QString name, QString type, QString value)
@@ -224,9 +227,7 @@ QDomElement XWizardPage::searchParent(QString tagname, QString attributeName,
 void XWizardPage::cloneElemInput(ElemInput *elemInput)
 {
     if (elemInput){
-        _containerLayout->addWidget(elemInput);
-        _elemInputs.append(elemInput);
-        connect (elemInput, SIGNAL(cloned(ElemInput*)), this, SLOT(cloneElemInput(ElemInput*)));
+        addElemInput(elemInput);
     }
 }
 

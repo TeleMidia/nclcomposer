@@ -12,15 +12,25 @@ ElemInput::ElemInput (QString selector, QString title, QWidget *parent)
     _title = title;
     _elemInputLayout = new QVBoxLayout;
 
-    QPushButton *plusButton = new QPushButton;
-    QIcon icon (":/images/plus.png");
-    plusButton->setIcon(icon);
+    QPushButton *addButton = new QPushButton;
+    QIcon addIcon (":/images/plus.png");
+    addButton->setIcon(addIcon);
 
-    connect (plusButton, SIGNAL(pressed()), this, SLOT(clone()));
+    connect (addButton, SIGNAL(pressed()), this, SLOT(clone()));
+
+    QPushButton *removeButton = new QPushButton;
+    QIcon removeIcon (":/images/minus.png");
+    removeButton->setIcon(removeIcon);
+
+    connect (removeButton, SIGNAL(pressed()), this, SLOT(notifyRemove()));
+
+    QVBoxLayout *buttonsLayout = new QVBoxLayout;
+    buttonsLayout->addWidget(addButton);
+    buttonsLayout->addWidget(removeButton);
 
     QHBoxLayout *mainLayout = new QHBoxLayout;
     mainLayout->addLayout(_elemInputLayout);
-    mainLayout->addWidget(plusButton);
+    mainLayout->addLayout(buttonsLayout);
 
     setLayout(mainLayout);
 }
@@ -54,6 +64,8 @@ ElemInput *ElemInput::clone()
 
     return (clone);
 }
+
+
 
 void ElemInput::addElemInput(QDomElement &elemInputElement)
 {
@@ -91,4 +103,9 @@ void ElemInput::addElemInput(QDomElement &elemInputElement)
 
         elemInputRecursiveElement = elemInputRecursiveElement.nextSiblingElement("elemInput");
     }
+}
+
+ElemInput::~ElemInput()
+{
+
 }
