@@ -30,6 +30,8 @@ public:
         if(attrInput){
             _attrInputs.append(attrInput);
             _elemInputLayout->addWidget(attrInput);
+
+            attrInput->setStyleSheet("QGroupBox { border: 2px solid gray; }");
         }
     }
     inline void setId (QString id) { _id = id; }
@@ -47,6 +49,7 @@ signals:
     void removeRequested (ElemInput *);
 
 public slots:
+    void menuSelected (QAction *);
     ElemInput * clone ();
 
     inline void notifyRemove () {

@@ -5,7 +5,6 @@
 
 #include "selectsparser.h"
 
-
 #include <QDebug>
 
 XWizardPage::XWizardPage(QWidget *parent) :
@@ -49,7 +48,10 @@ ElemInput *XWizardPage::addElemInput(QString id, QString elemInputSelector, QStr
 void XWizardPage::addElemInput(ElemInput *elemInput)
 {
     _elemInputs.append(elemInput);
+
     connect(elemInput, SIGNAL(cloned(ElemInput*)), this, SLOT(cloneElemInput(ElemInput *)));
+    connect(elemInput, SIGNAL(removeRequested(ElemInput*)), this, SLOT(removeElemInput(ElemInput*)));
+
     _containerLayout->addWidget(elemInput);
 }
 
@@ -228,6 +230,19 @@ void XWizardPage::cloneElemInput(ElemInput *elemInput)
 {
     if (elemInput){
         addElemInput(elemInput);
+    }
+}
+
+void XWizardPage::removeElemInput(ElemInput *elemInput)
+{
+    if (elemInput){
+       QList <QObject *> layoutChildren = _containerLayout->children();
+       for (int i = 0; i < layoutChildren.count(); i++){
+           ElemInput *temp = (ElemInput *) layoutChildren.at(i);
+           if (temp && temp == elemInput){
+
+           }
+       }
     }
 }
 

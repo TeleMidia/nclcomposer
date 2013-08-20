@@ -56,6 +56,7 @@ signals:
     
 public slots:
     void cloneElemInput (ElemInput *elemInput);
+    void removeElemInput (ElemInput *elemInput);
     
 };
 
