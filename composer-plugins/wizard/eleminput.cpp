@@ -9,37 +9,36 @@
 #include "constants.h"
 
 ElemInput::ElemInput (QString selector, QString title, QWidget *parent)
-    : QGroupBox(title, parent)
+    : QFrame(parent)
 {
-    setStyleSheet("QGroupBox { border: 1px solid gray; }");
+    setFrameShape( QFrame::Box );
 
     _selector = selector;
     _question = title;
     _elemInputLayout = new QVBoxLayout;
 
-    QPushButton *optionsButton = new QPushButton();
+    _optionsButton = new QPushButton(this);
 
     QMenu *menu = new QMenu(this);
     menu->addAction(ADD_LABEL);
     menu->addAction(REMOVE_LABEL);
 
-    optionsButton->setMenu(menu);
+    _optionsButton->setMenu(menu);
     QIcon optionsIcon (":/images/down.png");
-    optionsButton->setIcon(optionsIcon);
+    _optionsButton->setIcon(optionsIcon);
 
-    optionsButton->setFixedWidth(20);
+    _optionsButton->setFixedWidth(20);
+    _optionsButton->setFixedHeight(20);
 
     connect (menu, SIGNAL(triggered(QAction*)), this, SLOT(menuSelected(QAction*)));
 
     /*
     connect (optionsButton, SIGNAL(pressed()), this, SLOT(clone()));
-
     QPushButton *removeButton = new QPushButton;
     QIcon removeIcon (":/images/minus.png");
     removeButton->setIcon(removeIcon);
 
     connect (removeButton, SIGNAL(pressed()), this, SLOT(notifyRemove()));
-
     QVBoxLayout *buttonsLayout = new QVBoxLayout;
     buttonsLayout->addWidget(optionsButton);
     buttonsLayout->addWidget(removeButton);
@@ -48,10 +47,10 @@ ElemInput::ElemInput (QString selector, QString title, QWidget *parent)
     widget->setLayout(buttonsLayout);
     */
 
-    QVBoxLayout *mainLayout = new QVBoxLayout;
-    mainLayout->addSpacing(15);
-    mainLayout->addWidget(optionsButton);
+    QHBoxLayout *mainLayout = new QHBoxLayout;
+    // mainLayout->addSpacing(15);
     mainLayout->addLayout(_elemInputLayout);
+    // mainLayout->addWidget(_optionsButton);
 
     setLayout(mainLayout);
 }

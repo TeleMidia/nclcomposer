@@ -7,8 +7,9 @@
 #include <QVector>
 #include <QVBoxLayout>
 #include <QDomElement>
+#include <QPushButton>
 
-class ElemInput : public QGroupBox
+class ElemInput : public QFrame
 {
     Q_OBJECT
 
@@ -19,6 +20,8 @@ private:
     QString _question;
     QString _selector;
     QString _id;
+
+    QPushButton *_optionsButton;
 
 public:
     explicit ElemInput(QString selector, QString question, QWidget *parent = 0);
