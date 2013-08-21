@@ -8,7 +8,7 @@ QT       += core gui xml webkit
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
-TARGET = WizardEngine2
+TARGET = wizardEngine
 TEMPLATE = app
 
 
