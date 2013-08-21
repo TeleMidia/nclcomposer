@@ -134,8 +134,6 @@ void XWizardPage::resolve(ElemInput *elemInput, QDomElement &finalAppRootElement
         }
     }
 
-
-
     if (!elementTarget.isNull()){
         elementTargetUuid = elementTarget.attribute(TEMP_ATTR);
         elementsMarked.insert(elementTargetUuid);
@@ -148,6 +146,14 @@ void XWizardPage::resolve(ElemInput *elemInput, QDomElement &finalAppRootElement
 
             elementTarget.setAttribute(attributeName, attributeValue);
         }
+
+        QString prefixId = elementTarget.tagName().mid(0, 1);
+        if(_elemPrefixIdCount.count(prefixId))
+          _elemPrefixIdCount[prefixId] += 1;
+        else
+          _elemPrefixIdCount[prefixId] = 1;
+
+        elementTarget.setAttribute("id",  prefixId + "_" + QString::number(_elemPrefixIdCount[prefixId]));
     }
 
     foreach (ElemInput *childElemInput, elemInput->elemInputs()){
@@ -159,7 +165,8 @@ bool XWizardPage::computeAnswers(QDomElement& finalAppRootElement, QDomElement& 
                                  QSet<QString> &selectorsUsed)
 {
     bool answer = true;
-    for (int i = 0; i < _elemInputs.size(); i++){
+
+    for (int i = 0; i < _elemInputs.size(); i++) {
         ElemInput *elemInput = _elemInputs.at(i);
 
         resolve(elemInput, finalAppRootElement, pdpRootElement, selectorsUsed);

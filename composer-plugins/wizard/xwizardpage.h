@@ -16,6 +16,8 @@ class XWizardPage : public QWizardPage
     Q_OBJECT
 
 private:
+    QMap <QString, int> _elemPrefixIdCount;
+
     QVector <ElemInput*> _elemInputs;
     QVBoxLayout *_containerLayout;
 
