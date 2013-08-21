@@ -14,7 +14,7 @@ ElemInput::ElemInput (QString selector, QString title, QWidget *parent)
     setStyleSheet("QGroupBox { border: 1px solid gray; }");
 
     _selector = selector;
-    _title = title;
+    _question = title;
     _elemInputLayout = new QVBoxLayout;
 
     QPushButton *optionsButton = new QPushButton();
@@ -78,7 +78,7 @@ void ElemInput::addAttrInput(QString question, QString name, QString type, QStri
 
 ElemInput *ElemInput::clone()
 {
-    ElemInput *clone = new ElemInput (_selector, _title, (QWidget *) parent());
+    ElemInput *clone = new ElemInput (_selector, _question, (QWidget *) parent());
 
     foreach (AttrInput *attrInput, _attrInputs)
         clone->addAttrInput(attrInput->clone());

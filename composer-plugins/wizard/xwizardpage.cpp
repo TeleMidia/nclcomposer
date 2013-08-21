@@ -236,13 +236,16 @@ void XWizardPage::cloneElemInput(ElemInput *elemInput)
 void XWizardPage::removeElemInput(ElemInput *elemInput)
 {
     if (elemInput){
-       QList <QObject *> layoutChildren = _containerLayout->children();
-       for (int i = 0; i < layoutChildren.count(); i++){
-           ElemInput *temp = (ElemInput *) layoutChildren.at(i);
-           if (temp && temp == elemInput){
-
-           }
-       }
+        int count = _containerLayout->count();
+        for (int i = 0; i < count; i++){
+            QLayoutItem *item = _containerLayout->itemAt(i);
+            if (item && item->widget() == elemInput){
+                _containerLayout->removeItem(item);
+                delete item->widget();
+                delete item;
+                break;
+            }
+        }
     }
 }
 

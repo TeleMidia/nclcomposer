@@ -16,12 +16,12 @@ private:
     QVector <AttrInput *> _attrInputs;
     QVector <ElemInput *> _elemInputs;
     QVBoxLayout * _elemInputLayout;
-    QString _title;
+    QString _question;
     QString _selector;
     QString _id;
 
 public:
-    explicit ElemInput(QString selector, QString title, QWidget *parent = 0);
+    explicit ElemInput(QString selector, QString question, QWidget *parent = 0);
 
     void addAttrInput (QString question, QString name, QString type = "string", QString value = "");
     void addElemInput (QDomElement & elemInputElement);
@@ -38,7 +38,7 @@ public:
     inline void setSelector (QString selector) { _selector = selector; }
     inline QVector <ElemInput *> elemInputs () const { return _elemInputs; }
     inline QVector <AttrInput*> attrInputs () const { return _attrInputs; }
-    inline QString title () const { return _title; }
+    inline QString question () const { return _question; }
     inline QString selector () const { return _selector; }
     inline QString id () const { return _id; }
 
