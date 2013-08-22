@@ -8,6 +8,8 @@
 #include <QSet>
 #include <QUuid>
 
+#include <QFormLayout>
+
 #include "constants.h"
 #include "eleminput.h"
 
@@ -19,7 +21,7 @@ private:
     QMap <QString, int> _elemPrefixIdCount;
 
     QVector <ElemInput*> _elemInputs;
-    QVBoxLayout *_containerLayout;
+    QFormLayout *_containerLayout;
 
     QVector<QDomElement> searchElement (QString tagname, QString attributeName, QString attributeValue,
                                QDomElement &rootElement);

@@ -24,7 +24,7 @@ XWizardPage::XWizardPage(QWidget *parent) :
     QWidget *containerWidget = new QWidget;
     widgetScrollable->setWidget(containerWidget);
 
-    _containerLayout = new QVBoxLayout;
+    _containerLayout = new QFormLayout;
     containerWidget->setLayout(_containerLayout);
 
     QVBoxLayout *mainLayout = new QVBoxLayout;
