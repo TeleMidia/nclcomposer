@@ -29,6 +29,8 @@ private:
     void resolve (ElemInput *elemInput, QDomElement& finalAppRootElement,
                   QDomElement& pdpRootElement, QSet <QString>& elementsMarked);
 
+    void recursiveElementSearch (QString attributeName, QString attributeValue,
+                                 QDomElement &rootElement, QVector<QDomElement>&elementsToReturn);
 public:
     static void createRandomIds(QDomElement& rootElement)
     {

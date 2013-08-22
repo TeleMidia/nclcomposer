@@ -182,7 +182,7 @@ QVector <QDomElement> XWizardPage::searchElement(QString tagname, QString attrib
 
     QDomNodeList elements;
     if (tagname == "*"){
-        //recursive search
+        recursiveElementSearch(attributeName, attributeValue, rootElement, elementsToReturn);
     }
     else {
         QString rootTagname = rootElement.tagName();
@@ -194,6 +194,7 @@ QVector <QDomElement> XWizardPage::searchElement(QString tagname, QString attrib
         }
 
         elements = rootElement.elementsByTagName(tagname);
+
         for (int i = 0; i < elements.size(); i++){
             QDomElement element = elements.at(i).toElement();
             QString value = element.attribute(attributeName, "");
@@ -202,10 +203,26 @@ QVector <QDomElement> XWizardPage::searchElement(QString tagname, QString attrib
                 elementsToReturn.append(element);
             }
         }
-
     }
 
     return elementsToReturn;
+}
+
+void XWizardPage::recursiveElementSearch(QString attributeName, QString attributeValue, QDomElement &rootElement, QVector<QDomElement> &elementsToReturn)
+{
+    if (!rootElement.isNull()){
+        QString rootAttributeValue = rootElement.attribute(attributeName);
+        if (rootAttributeValue == attributeValue){
+            elementsToReturn.append(rootElement);
+        }
+
+        QDomNodeList elements = rootElement.childNodes();
+        for (int i = 0; i < elements.size(); i++){
+            QDomElement element = elements.at(i).toElement();
+
+            recursiveElementSearch(attributeName, attributeValue, element, elementsToReturn);
+        }
+    }
 }
 
 QDomElement XWizardPage::searchParent(QString tagname, QString attributeName,

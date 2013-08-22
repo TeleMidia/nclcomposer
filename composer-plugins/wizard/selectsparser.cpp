@@ -20,7 +20,6 @@ void SelectsParser::setSeletsAttributeValue(QString selectsAttr)
         selectsAttr = selectsAttr.mid(index + 1).trimmed();
     }
 
-
     parse (selectsAttr, _element);
 
 }
