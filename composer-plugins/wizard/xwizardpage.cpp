@@ -265,8 +265,8 @@ void XWizardPage::removeElemInput(ElemInput *elemInput)
             QLayoutItem *item = _containerLayout->itemAt(i);
             if (item && item->widget() == elemInput){
                 _containerLayout->removeItem(item);
-                delete item->widget();
                 delete item;
+                elemInput->deleteLater();
                 break;
             }
         }
