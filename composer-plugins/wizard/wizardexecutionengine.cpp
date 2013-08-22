@@ -4,6 +4,7 @@
 #include <QFileInfo>
 #include <QFileDialog>
 #include <QMessageBox>
+#include <QLabel>
 #include "xwizardpage.h"
 
 #include <QSet>
@@ -15,6 +16,19 @@ WizardExecutionEngine::WizardExecutionEngine(const QString &wsPath,
 {
   if(wsPath != "")
     setWS(wsPath);
+
+  QLabel *treeViewLabel = new QLabel ("Steps:");
+  _treeView = new QTreeWidget;
+
+  QVBoxLayout *sideWidgetLayout = new QVBoxLayout;
+  sideWidgetLayout->addWidget(treeViewLabel);
+  sideWidgetLayout->addWidget(_treeView);
+
+  QWidget *sideWidget = new QWidget;
+  sideWidget->setLayout(sideWidgetLayout);
+
+  _wizard.setSideWidget(sideWidget);
+
 
   connect(&_wizard, SIGNAL(accepted()), this, SLOT(createFinalApplication()));
 }
@@ -40,6 +54,9 @@ void WizardExecutionEngine::setWS(const QString &wsPath)
     QDomNodeList stepList = rootElement.elementsByTagName("step");
     for (int i = 0; i < stepList.size(); i++){
         QDomElement stepElement = stepList.at(i).toElement();
+
+        QString stepId = stepElement.attribute("id");
+        _treeView->addTopLevelItem(new QTreeWidgetItem(QStringList(stepId)));
 
         XWizardPage *page = new XWizardPage;
         QDomElement elemInputElement = stepElement.firstChildElement("elemInput");

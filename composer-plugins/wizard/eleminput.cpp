@@ -32,25 +32,8 @@ ElemInput::ElemInput (QString selector, QString title, QWidget *parent)
 
     connect (menu, SIGNAL(triggered(QAction*)), this, SLOT(menuSelected(QAction*)));
 
-    /*
-    connect (optionsButton, SIGNAL(pressed()), this, SLOT(clone()));
-    QPushButton *removeButton = new QPushButton;
-    QIcon removeIcon (":/images/minus.png");
-    removeButton->setIcon(removeIcon);
-
-    connect (removeButton, SIGNAL(pressed()), this, SLOT(notifyRemove()));
-    QVBoxLayout *buttonsLayout = new QVBoxLayout;
-    buttonsLayout->addWidget(optionsButton);
-    buttonsLayout->addWidget(removeButton);
-
-    QWidget *widget = new QWidget;
-    widget->setLayout(buttonsLayout);
-    */
-
     QHBoxLayout *mainLayout = new QHBoxLayout;
-    // mainLayout->addSpacing(15);
     mainLayout->addLayout(_elemInputLayout);
-    // mainLayout->addWidget(_optionsButton);
 
     setLayout(mainLayout);
 }

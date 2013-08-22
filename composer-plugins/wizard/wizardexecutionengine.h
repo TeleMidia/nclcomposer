@@ -4,6 +4,7 @@
 #include "constants.h"
 #include <QWizard>
 #include <QDomDocument>
+#include <QTreeWidget>
 
 class WizardExecutionEngine : public QObject
 {
@@ -11,6 +12,8 @@ class WizardExecutionEngine : public QObject
 
 private:
     QWizard _wizard;
+    QTreeWidget *_treeView;
+
     QString _wsPath;
     QString _inputFile;
 

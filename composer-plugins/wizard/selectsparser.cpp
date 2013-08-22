@@ -63,7 +63,12 @@ void SelectsParser::parse(QString pattern, SelectsElement &element)
                     element.setAttributeValue(pattern.mid(openBracketIndex));
                 }
                 else{
-                    qDebug () << QString("The value of 'selects' attribute '" + pattern + " isn't supported yet!");
+                    int colonIndex = pattern.indexOf(":");
+                    if (colonIndex != -1){
+                        qDebug () << QString("The value of 'selects' attribute '" + pattern + " isn't supported yet!");
+                    }
+                    else
+                        element.setTagname(pattern);
                 }
             }
         }
