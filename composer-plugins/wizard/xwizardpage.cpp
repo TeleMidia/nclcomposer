@@ -134,7 +134,7 @@ void XWizardPage::resolve(ElemInput *elemInput, QDomElement &finalAppRootElement
         }
     }
 
-    if (!elementTarget.isNull()){
+    if (!elementTarget.isNull()) {
         elementTargetUuid = elementTarget.attribute(TEMP_ATTR);
         elementsMarked.insert(elementTargetUuid);
 
@@ -147,13 +147,17 @@ void XWizardPage::resolve(ElemInput *elemInput, QDomElement &finalAppRootElement
             elementTarget.setAttribute(attributeName, attributeValue);
         }
 
-        QString prefixId = elementTarget.tagName().mid(0, 1);
-        if(_elemPrefixIdCount.count(prefixId))
-          _elemPrefixIdCount[prefixId] += 1;
-        else
-          _elemPrefixIdCount[prefixId] = 1;
+        // If the target element has an id attribute update it
+        if(elementTarget.hasAttribute("id"))
+        {
+          QString prefixId = elementTarget.tagName().mid(0, 1);
+          if(_elemPrefixIdCount.count(prefixId))
+            _elemPrefixIdCount[prefixId] += 1;
+          else
+            _elemPrefixIdCount[prefixId] = 1;
 
-        elementTarget.setAttribute("id",  prefixId + "_" + QString::number(_elemPrefixIdCount[prefixId]));
+          elementTarget.setAttribute("id",  prefixId + "_" + QString::number(_elemPrefixIdCount[prefixId]));
+        }
     }
 
     foreach (ElemInput *childElemInput, elemInput->elemInputs()){
