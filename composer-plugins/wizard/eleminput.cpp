@@ -20,11 +20,15 @@ ElemInput::ElemInput (QString selector, QString title, QWidget *parent)
     _optionsButton = new QPushButton(this);
 
     QMenu *menu = new QMenu(this);
-    menu->addAction(ADD_LABEL);
-    menu->addAction(REMOVE_LABEL);
+
+    QIcon addIcon (":/images/plus");
+    menu->addAction(addIcon, ADD_LABEL);
+
+    QIcon removeIcon (":/images/plus");
+    menu->addAction(removeIcon, REMOVE_LABEL);
 
     _optionsButton->setMenu(menu);
-    QIcon optionsIcon (":/images/down.png");
+    QIcon optionsIcon (":/images/down");
     _optionsButton->setIcon(optionsIcon);
 
     _optionsButton->setFixedWidth(20);
