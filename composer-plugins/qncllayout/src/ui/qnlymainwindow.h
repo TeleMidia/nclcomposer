@@ -52,6 +52,9 @@ public slots:
 
     void removeRegionBaseFromCombobox(const QString &uuid);
 
+    void updateRegionBaseInComboBox(const QString &uuid,
+                                    const QMap<QString,QString> &properties);
+
     void comboBoxChangedCurrentRegionBase(int pos);
 
     void selectRegionBaseInComboBox(const QString &uuid);

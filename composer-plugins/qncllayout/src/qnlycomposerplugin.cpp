@@ -267,7 +267,7 @@ void QnlyComposerPlugin::errorMessage(QString error)
 }
 
 void QnlyComposerPlugin::onEntityAdded(QString pluginID, Entity *entity)
-{    
+{
   if (entity != NULL)
   {
     if (entity->getType() == "region")
@@ -745,6 +745,8 @@ void QnlyComposerPlugin::changeRegionBaseInView(Entity* entity)
 
       view->changeRegionBase(regionbaseUID,
                              attributes);
+
+      mainWindow->updateRegionBaseInComboBox(regionbaseUID, attributes);
     }
   }
 }
@@ -945,6 +947,8 @@ void QnlyComposerPlugin::changeRegionBase(const QString regionbaseUID,
 
     // emitting
     emit setAttributes(regionbases[regionbaseUID],standard, false);
+
+    mainWindow->updateRegionBaseInComboBox(regionbaseUID, attributes);
   }
 }
 
