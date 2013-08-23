@@ -4,10 +4,15 @@ set -e
 #Getting current version
 VERSION=`git --git-dir=./composer-plugins/.git describe --tags | sed "s/v//g"`
 
-# I can also FORCE a specific version
-VERSION=0.1.5
+# I can also FORCE a specific version from command line
+if [ $# -eq 1 ]
+  then
+    VERSION=$1
+fi
 
-QMAKE="qmake FORCERELEASE=true RUNSSH=true CPRVERSION=${VERSION} PREFIX=/usr"
+echo $VERSION
+
+QMAKE="qmake-qt4 FORCERELEASE=true RUNSSH=true CPRVERSION=${VERSION} PREFIX=/usr"
 
 #We need to install before to be able to compile the plugins.
 ${QMAKE} && lupdate composer-all.pro && lrelease composer-all.pro && make install
