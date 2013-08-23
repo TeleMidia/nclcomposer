@@ -13,13 +13,14 @@ DIR=`pwd`; DIR="$DIR/../"; cd $DIR/composer-gui/;
 echo "(1/3) ------ Setting ------";
 
 BUNDLE=Composer.dmg
-NAME="nclcomposer-"$VERSION"-"`date '+%Y%m%d'`".dmg"
+NAME=nclcomposer-$VERSION-`date '+%Y%m%d'`.dmg
 
 cp $BUNDLE $NAME
  
 echo "(2/3) ------ Pulishing ------";
 
 scp $NAME edcaraujo@xserve1.telemidia.puc-rio.br:/Library/WebServer/Documents/composer/downloads/unstable
+ssh edcaraujo@xserve1.telemidia.puc-rio.br "chmod 777 /Library/WebServer/Documents/composer/downloads/unstable/$NAME" 
 
 echo "(3/3) ------ Cleaning ------";
 
