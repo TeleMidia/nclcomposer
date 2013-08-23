@@ -111,7 +111,14 @@ void QnlyMainWindow::comboBoxChangedCurrentRegionBase(int pos)
 {
   QString uuid = ui->regionBaseComboBox->itemData(pos).toString();
 
-  emit selectRegionBaseFromComboBox(uuid);
+  emit regionBaseSelectedFromComboBox(uuid);
+}
+
+void QnlyMainWindow::selectRegionBaseInComboBox(const QString &uuid)
+{
+  int index = ui->regionBaseComboBox->findData(uuid);
+  if(index != -1)
+    ui->regionBaseComboBox->setCurrentIndex(index);
 }
 
 void QnlyMainWindow::on_actionAction_Export_triggered()

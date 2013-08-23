@@ -87,7 +87,7 @@ void QnlyComposerPlugin::createConnections()
           SLOT(selectRegionBase(QString)));
 
   connect(mainWindow,
-          SIGNAL(selectRegionBaseFromComboBox(QString)),
+          SIGNAL(regionBaseSelectedFromComboBox(QString)),
           SLOT(selectRegionBase(QString)));
 
   /* OTHERS */
@@ -668,7 +668,10 @@ void QnlyComposerPlugin::addRegionBaseToView(Entity* entity)
       regionbases[regionbaseUID] = entity;
 
       view->addRegionBase(regionbaseUID, attributes);
+
       mainWindow->addRegionBaseToCombobox(regionbaseUID, attributes);
+
+      mainWindow->selectRegionBaseInComboBox(regionbaseUID);
     }
   }
 }
@@ -759,6 +762,8 @@ void QnlyComposerPlugin::selectRegionBaseInView(QString entityUID)
 
       // select
       view->selectRegionBase(regionbaseUID);
+
+      mainWindow->selectRegionBaseInComboBox(regionbaseUID);
     }
   }
 }
@@ -980,7 +985,7 @@ void QnlyComposerPlugin::selectRegionBase(const QString regionbaseUID)
   if (!regionbaseUID.isEmpty())
   {
     selectedId = new QString(regionbaseUID);
-    // mainWindow->selectRegionBaseFromComboBox(regionbaseUID);
+    mainWindow->selectRegionBaseInComboBox(regionbaseUID);
 
     emit sendBroadcastMessage("changeSelectedEntity", selectedId);
   }

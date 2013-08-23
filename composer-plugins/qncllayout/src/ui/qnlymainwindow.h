@@ -36,7 +36,7 @@ public:
     void setQnlyView(QnlyView *view);
 
 signals:
-    void selectRegionBaseFromComboBox(const QString &uuid);
+    void regionBaseSelectedFromComboBox(const QString &uuid);
     
 private:
     Ui::QnlyMainWindow *ui;
@@ -53,6 +53,8 @@ public slots:
     void removeRegionBaseFromCombobox(const QString &uuid);
 
     void comboBoxChangedCurrentRegionBase(int pos);
+
+    void selectRegionBaseInComboBox(const QString &uuid);
 
 private slots:
     void on_actionAction_Export_triggered();
