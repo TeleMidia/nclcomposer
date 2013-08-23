@@ -79,10 +79,15 @@ void updateSettingsWithDefaults()
 /* Import Bases */
   QString defaultConnBaseDir;
   settings.beginGroup("importBases");
+		
   if(!settings.contains("default_connector_base"))
   {
     #ifdef Q_WS_MAC
-      defaultConnBaseDir = "/Library/Application Support/Composer/Data/";
+		#ifdef QT_NO_DEBUG
+			defaultConnBaseDir = "../PlugIns/composer/";
+		#elif
+			defaultConnBaseDir = "/Library/Application Support/Composer/Data/";
+		#endif
     #elif defined(Q_WS_WIN32)
       defaultConnBaseDir = QApplication::applicationDirPath() + "/data/";
     #else
@@ -93,6 +98,7 @@ void updateSettingsWithDefaults()
       #endif
     #endif
   }
+	
   settings.setValue("default_conn_base",
                     defaultConnBaseDir + "defaultConnBase.ncl");
   settings.endGroup();
