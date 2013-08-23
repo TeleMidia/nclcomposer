@@ -1,5 +1,13 @@
 #!/bin/bash
 
+VERSION=$1
+
+if [ -z $VERSION ]; then
+	echo "create-release.sh: missing operand."
+	echo "Try 'create-release.sh <VERSION>'."
+	exit   
+fi
+
 DIR=`pwd`; DIR="$DIR/../"; cd $DIR;
 
 echo "(1/4) ------ Uninstall ------";
@@ -21,6 +29,7 @@ sudo make distclean
 echo "Cleaning 'gui'...";
 cd $DIR/composer-gui
 sudo make ditclean 
+sudo rm -Rf Composer.app
 echo "Cleaning 'plugins'...";
 cd $DIR/composer-plugins
 sudo make distclean 
@@ -43,21 +52,24 @@ echo "(4/4) ------ Install ------";
 
 echo "Installing release version of 'core'...";
 cd $DIR/composer-core
-qmake -spec macx-g++ composer-core.pro FORCERELEASE=true  
+qmake -spec macx-g++ composer-core.pro FORCERELEASE=true
+sudo make
 sudo make install  
 
 echo "Installing release version of 'gui'...";
 cd $DIR/composer-gui
-qmake -spec macx-g++ Composer.pro FORCERELEASE=true RUNSSH_ON=true CPRVERSION=0.1.4 
+qmake -spec macx-g++ Composer.pro FORCERELEASE=true RUNSSHON=true CPRVERSION=$VERSION
 lupdate Composer.pro 
 lrelease Composer.pro
+sudo make
 sudo make install  
 
 echo "Installing release version of 'plugins'...";
 cd $DIR/composer-plugins
-qmake -spec macx-g++ plugin-suite.pro FORCERELEASE=true CPRVERSION=0.1.4
+qmake -spec macx-g++ plugin-suite.pro FORCERELEASE=true CPRVERSION=$VERSION
 lupdate plugin-suite.pro
 lrelease plugin-suite.pro
+sudo make
 sudo make install  
 echo;
 
