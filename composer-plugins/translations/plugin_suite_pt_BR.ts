@@ -30,7 +30,7 @@
 <context>
     <name>MediaPreviewFactory</name>
     <message>
-        <location filename="../media-preview/mediapreviewfactory.h" line="104"/>
+        <location filename="../media-preview/mediapreviewfactory.h" line="121"/>
         <source>Media Pre-view displays a media player of a current selected entity and enables the user have to a pre-view of the media object selected.</source>
         <translation type="unfinished"></translation>
     </message>
@@ -555,7 +555,7 @@ Do you want to save your changes?</source>
 <context>
     <name>QnlyComposerPlugin</name>
     <message>
-        <location filename="../qncllayout/src/qnlycomposerplugin.cpp" line="1100"/>
+        <location filename="../qncllayout/src/qnlycomposerplugin.cpp" line="1128"/>
         <source>Please, tell what do you want to do</source>
         <translation>Por favor, selecione o que você deseja fazer</translation>
     </message>
@@ -564,27 +564,27 @@ Do you want to save your changes?</source>
         <translation type="obsolete">Criar um novo descritor</translation>
     </message>
     <message>
-        <location filename="../qncllayout/src/qnlycomposerplugin.cpp" line="1105"/>
+        <location filename="../qncllayout/src/qnlycomposerplugin.cpp" line="1133"/>
         <source>Use a descriptor</source>
         <translation>Usar um descritor</translation>
     </message>
     <message>
-        <location filename="../qncllayout/src/qnlycomposerplugin.cpp" line="1109"/>
+        <location filename="../qncllayout/src/qnlycomposerplugin.cpp" line="1137"/>
         <source>Import region properties to media object</source>
         <translation>Importar dados da regiões para as propriedades da mídia</translation>
     </message>
     <message>
-        <location filename="../qncllayout/src/qnlycomposerplugin.cpp" line="1114"/>
+        <location filename="../qncllayout/src/qnlycomposerplugin.cpp" line="1142"/>
         <source>Nothing!</source>
         <translation>Nada!</translation>
     </message>
     <message>
-        <location filename="../qncllayout/src/qnlycomposerplugin.cpp" line="1145"/>
+        <location filename="../qncllayout/src/qnlycomposerplugin.cpp" line="1173"/>
         <source>Descriptor id:</source>
         <translation>Id do descritor:</translation>
     </message>
     <message>
-        <location filename="../qncllayout/src/qnlycomposerplugin.cpp" line="1146"/>
+        <location filename="../qncllayout/src/qnlycomposerplugin.cpp" line="1174"/>
         <source>Please, enter the descriptor id</source>
         <translation>Por favor, entre com o identificador do descritor</translation>
     </message>
@@ -910,6 +910,60 @@ Do you want to save your changes?</source>
     </message>
 </context>
 <context>
+    <name>QnlyMainWindow</name>
+    <message>
+        <location filename="../qncllayout/src/ui/qnlymainwindow.ui" line="14"/>
+        <source>MainWindow</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qncllayout/src/ui/qnlymainwindow.ui" line="30"/>
+        <source>toolBar</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qncllayout/src/ui/qnlymainwindow.ui" line="49"/>
+        <source>Add Region</source>
+        <translation>Adiciona uma região</translation>
+    </message>
+    <message>
+        <location filename="../qncllayout/src/ui/qnlymainwindow.ui" line="52"/>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Add Region&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Adiciona uma região&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+    </message>
+    <message>
+        <location filename="../qncllayout/src/ui/qnlymainwindow.ui" line="61"/>
+        <location filename="../qncllayout/src/ui/qnlymainwindow.ui" line="64"/>
+        <source>Remove Region</source>
+        <translation>Remover região</translation>
+    </message>
+    <message>
+        <location filename="../qncllayout/src/ui/qnlymainwindow.ui" line="76"/>
+        <source>Show/Hide Grid</source>
+        <translation>Mostrar/esconder grade</translation>
+    </message>
+    <message>
+        <location filename="../qncllayout/src/ui/qnlymainwindow.ui" line="85"/>
+        <source>action_Export</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qncllayout/src/ui/qnlymainwindow.ui" line="88"/>
+        <source>Take a picture of the current layout</source>
+        <translation>Tirar uma imagem do leiaute corrente</translation>
+    </message>
+    <message>
+        <location filename="../qncllayout/src/ui/qnlymainwindow.cpp" line="22"/>
+        <source>Region Bases:</source>
+        <translation>Bases de Regiões:</translation>
+    </message>
+    <message>
+        <location filename="../qncllayout/src/ui/qnlymainwindow.cpp" line="93"/>
+        <source>Unknown</source>
+        <translation>Desconhecido</translation>
+    </message>
+</context>
+<context>
     <name>QnlyView</name>
     <message>
         <location filename="../qncllayout/src/ui/view/qnlyview.cpp" line="46"/>
@@ -1034,6 +1088,11 @@ Do you want to save your changes?</source>
         <location filename="../qncllayout/src/ui/view/qnlyview.cpp" line="226"/>
         <source>Switch</source>
         <translation>Alternar</translation>
+    </message>
+    <message>
+        <location filename="../qncllayout/src/ui/view/qnlyview.cpp" line="410"/>
+        <source>It is not possible to select regionBase </source>
+        <translation>Não foi possível selecionar a regionBase</translation>
     </message>
 </context>
 <context>
@@ -1343,32 +1402,32 @@ Do you want to save your changes?</source>
 <context>
     <name>QnstView</name>
     <message>
-        <location filename="../qnclstructural/src/ui/view/qnstview.cpp" line="3663"/>
+        <location filename="../qnclstructural/src/ui/view/qnstview.cpp" line="3688"/>
         <source>Copy</source>
         <translation>Copiar</translation>
     </message>
     <message>
-        <location filename="../qnclstructural/src/ui/view/qnstview.cpp" line="3664"/>
+        <location filename="../qnclstructural/src/ui/view/qnstview.cpp" line="3689"/>
         <source>Would you like to make a reference instead?</source>
         <translation>Você deseja fazer uma referência?</translation>
     </message>
     <message>
-        <location filename="../qnclstructural/src/ui/view/qnstview.cpp" line="3665"/>
+        <location filename="../qnclstructural/src/ui/view/qnstview.cpp" line="3690"/>
         <source>Cancel</source>
         <translation>Cancelar</translation>
     </message>
     <message>
-        <location filename="../qnclstructural/src/ui/view/qnstview.cpp" line="3666"/>
+        <location filename="../qnclstructural/src/ui/view/qnstview.cpp" line="3691"/>
         <source>No</source>
         <translation>Não</translation>
     </message>
     <message>
-        <location filename="../qnclstructural/src/ui/view/qnstview.cpp" line="3667"/>
+        <location filename="../qnclstructural/src/ui/view/qnstview.cpp" line="3692"/>
         <source>Yes</source>
         <translation>Sim</translation>
     </message>
     <message>
-        <location filename="../qnclstructural/src/ui/view/qnstview.cpp" line="3840"/>
+        <location filename="../qnclstructural/src/ui/view/qnstview.cpp" line="3865"/>
         <source>Images (*.png)</source>
         <translation>Imagens (*.png)</translation>
     </message>
