@@ -2353,7 +2353,10 @@ void ComposerMainWindow::on_actionReport_Bug_triggered()
 
 void ComposerMainWindow::on_actionProject_from_Wizard_triggered()
 {
-  wizardProcess.start("./composer-plugins/wizard/WizardEngine2");
+  GlobalSettings settings;
+  settings.beginGroup("wizard");
+  wizardProcess.start(settings.value("wizard-engine").toByteArray());
+  settings.endGroup();
 }
 
 void ComposerMainWindow::wizardFinished(int resp)
@@ -2363,9 +2366,35 @@ void ComposerMainWindow::wizardFinished(int resp)
   {
     QString filename = wizardProcess.readLine();
     filename = (filename.mid(0, filename.size()-1));
+
+    qDebug() << "Wizard process finished with ret=" << resp;
     qDebug() << filename;
-    ProjectControl::getInstance()->importFromDocument(filename,
-                                                      "/tmp/a.cpr");
+
+    QStringList args;
+    args << filename;
+    args << "/tmp/a.ncl";
+
+    GlobalSettings settings;
+
+    settings.beginGroup("wizard");
+    talProcess.start( settings.value("tal-processor").toByteArray(), args );
+    settings.endGroup();
+    talProcess.waitForFinished();
+
+    qDebug() << talProcess.readAllStandardError();
+    qDebug() << talProcess.readAllStandardOutput();
+
+    QFileInfo fInfo("/tmp/a.ncl");
+    if(fInfo.exists())
+    {
+      ProjectControl::getInstance()->importFromDocument("/tmp/a.ncl",
+                                                        "/tmp/a.cpr");
+      QFile::remove("/tmp/a.ncl");
+    }
+    else
+    {
+      QMessageBox::warning(this, tr("Error"), tr("It was not possible to create the file from the template!"));
+    }
   }
 }
 
