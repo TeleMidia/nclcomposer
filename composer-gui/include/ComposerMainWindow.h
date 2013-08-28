@@ -157,6 +157,7 @@ private:
   ComposerHelpWidget composerHelpWidget;
 
   QProcess wizardProcess;
+  QProcess talProcess;
 
 private:
   /*!
