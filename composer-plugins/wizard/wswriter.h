@@ -8,7 +8,7 @@
 class WSWriter
 {
 public:
-    static void writeWizard (QString);
+  static void writeWizard (QString);
 };
 
 #endif // WSWRITER_H

@@ -6,7 +6,7 @@
 class WizardGenerator
 {
 public:
-    static void run (QString);
+  static void run (QString);
 };
 
 #endif // WIZARDGENERATOR_H

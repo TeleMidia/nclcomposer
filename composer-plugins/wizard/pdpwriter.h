@@ -9,13 +9,13 @@
 class PDPWriter
 {
 private:
-    static QDomElement parseGapElement (QDomElement&, QDomDocument &);
-    static int mediaCount;
-    static int contextCount;
-    static int switchCount;
+  static QDomElement parseGapElement (QDomElement&, QDomDocument &);
+  static int mediaCount;
+  static int contextCount;
+  static int switchCount;
 
 public:
-    static void writePDP (QString);
+  static void writePDP (QString);
 };
 
 #endif // PDPWRITER_H

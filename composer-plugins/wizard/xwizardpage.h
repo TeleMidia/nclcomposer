@@ -15,54 +15,55 @@
 
 class XWizardPage : public QWizardPage
 {
-    Q_OBJECT
+  Q_OBJECT
 
 private:
-    QMap <QString, int> _elemPrefixIdCount;
+  QMap <QString, int> _elemPrefixIdCount;
 
-    QVector <ElemInput*> _elemInputs;
-    QFormLayout *_containerLayout;
+  QVector <ElemInput*> _elemInputs;
+  QFormLayout *_containerLayout;
 
-    QVector<QDomElement> searchElement (QString tagname, QString attributeName, QString attributeValue,
-                               QDomElement &rootElement);
-    QDomElement searchParent (QString tagname, QString attributeName, QString attributeValue,
-                               QDomElement &rootElement);
+  QVector<QDomElement> searchElement (QString tagname, QString attributeName, QString attributeValue,
+                             QDomElement &rootElement);
+  QDomElement searchParent (QString tagname, QString attributeName, QString attributeValue,
+                             QDomElement &rootElement);
 
-    void resolve (ElemInput *elemInput, QDomElement& finalAppRootElement,
-                  QDomElement& pdpRootElement, QSet <QString>& elementsMarked);
+  void resolve (ElemInput *elemInput, QDomElement& finalAppRootElement,
+                QDomElement& pdpRootElement, QSet <QString>& elementsMarked);
 
-    void recursiveElementSearch (QString attributeName, QString attributeValue,
-                                 QDomElement &rootElement, QVector<QDomElement>&elementsToReturn);
+  void recursiveElementSearch (QString attributeName, QString attributeValue,
+                               QDomElement &rootElement, QVector<QDomElement>&elementsToReturn);
 public:
-    static void createRandomIds(QDomElement& rootElement)
+  static void createRandomIds(QDomElement& rootElement)
+  {
+    QString uuid = QUuid::createUuid().toString();
+    rootElement.setAttribute(TEMP_ATTR, uuid);
+
+    QDomElement childElement = rootElement.firstChildElement();
+    while (!childElement.isNull())
     {
-        QString uuid = QUuid::createUuid().toString();
-        rootElement.setAttribute(TEMP_ATTR, uuid);
-
-        QDomElement childElement = rootElement.firstChildElement();
-        while (!childElement.isNull()){
-            createRandomIds(childElement);
-            childElement = childElement.nextSiblingElement();
-        }
+      createRandomIds(childElement);
+      childElement = childElement.nextSiblingElement();
     }
+  }
 
-    explicit XWizardPage(QWidget *parent = 0);
+  explicit XWizardPage(QWidget *parent = 0);
 
-    ElemInput * addElemInput (QString id, QString elemInputSelector, QString title);
-    void addElemInput (ElemInput *);
+  ElemInput * addElemInput (QString id, QString elemInputSelector, QString title);
+  void addElemInput (ElemInput *);
 
-    void addAttrInput (ElemInput *elemInput, QString question, QString, QString type = "string", QString value = "");
+  void addAttrInput (ElemInput *elemInput, QString question, QString, QString type = "string", QString value = "");
 
-    bool computeAnswers (QDomElement& finalAppRootElement, QDomElement& pdpRootElement,
+  bool computeAnswers (QDomElement& finalAppRootElement, QDomElement& pdpRootElement,
                          QSet <QString>& selectorsUsed);
 
-    bool validatePage();
+  bool validatePage();
     
 signals:
     
 public slots:
-    void cloneElemInput (ElemInput *elemInput);
-    void removeElemInput (ElemInput *elemInput);
+  void cloneElemInput (ElemInput *elemInput);
+  void removeElemInput (ElemInput *elemInput);
     
 };
 

@@ -7,20 +7,20 @@
 
 class FileAttrInput : public AttrInput
 {
-    Q_OBJECT
+  Q_OBJECT
 
 private:
-    QLineEdit *_answer;
+  QLineEdit *_answer;
 
 public:
-    explicit FileAttrInput(QString question, QString name, QString type = "string", QString value = "", QWidget * parent = 0);
+  explicit FileAttrInput(QString question, QString name, QString type = "string", QString value = "", QWidget * parent = 0);
 
-    QString answer() const { return _answer->text(); }
-    void setAnswer(QString answer) {_answer->setText(answer); }
-    inline AttrInput * clone () const{ return (new FileAttrInput (_question, _name, _type, _value, (QWidget *) parent())); }
+  QString answer() const { return _answer->text(); }
+  void setAnswer(QString answer) {_answer->setText(answer); }
+  inline AttrInput * clone () const{ return (new FileAttrInput (_question, _name, _type, _value, (QWidget *) parent())); }
 
 public slots:
-    void searchFile ();
+  void searchFile ();
 };
 
 #endif // FILEATTRINPUT_H

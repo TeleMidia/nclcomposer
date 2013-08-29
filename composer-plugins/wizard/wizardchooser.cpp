@@ -51,7 +51,6 @@ QString wizardchooser::getSelectedPath()
 
 void wizardchooser::changeDescView(QString textItem)
 {
-  qDebug() << textItem;
   QString selectedPath = path  + textItem;
   selectedPath += selectedPath.mid(selectedPath.lastIndexOf("/")) + ".html";
 

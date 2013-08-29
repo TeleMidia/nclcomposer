@@ -8,27 +8,27 @@
 
 class WizardExecutionEngine : public QObject
 {
-    Q_OBJECT
+  Q_OBJECT
 
 private:
-    QWizard _wizard;
-    QTreeWidget *_treeView;
+  QWizard _wizard;
+  QTreeWidget *_treeView;
 
-    QString _wsPath;
-    QString _inputFile;
+  QString _wsPath;
+  QString _inputFile;
 
-    void removeUuid(QDomElement& rootElement);
+  void removeUuid(QDomElement& rootElement);
 
 public:
-    explicit WizardExecutionEngine(const QString &wsPath = "", QObject *parent  = 0);
+  explicit WizardExecutionEngine(const QString &wsPath = "", QObject *parent  = 0);
 
-    void setWS (const QString&);
-    void setInputFile (const QString&);
+  void setWS (const QString&);
+  void setInputFile (const QString&);
 
-    void run ();
+  void run ();
 
 public slots:
-    void createFinalApplication ();
+  void createFinalApplication ();
 };
 
 #endif // WIZARDEXECUTIONENGINE_H

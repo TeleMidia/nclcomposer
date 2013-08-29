@@ -4,20 +4,20 @@
 #include <QMainWindow>
 
 namespace Ui {
-class XMetaWizardMainWindow;
+  class XMetaWizardMainWindow;
 }
 
 class XMetaWizardMainWindow : public QMainWindow
 {
-    Q_OBJECT
+  Q_OBJECT
     
 public:
-    explicit XMetaWizardMainWindow(QWidget *parent = 0);
-    ~XMetaWizardMainWindow();
+  explicit XMetaWizardMainWindow(QWidget *parent = 0);
+  ~XMetaWizardMainWindow();
 
 public slots:
-    void runWizardGenerator ();
-    void runWizardEngine ();
+  void runWizardGenerator ();
+  void runWizardEngine ();
     
 };
 

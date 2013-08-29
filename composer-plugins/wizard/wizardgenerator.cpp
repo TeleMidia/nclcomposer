@@ -5,9 +5,10 @@
 
 void WizardGenerator::run(QString path)
 {
-    QVector <QString> auxPaths = TemplateParser::parse(path);
-    foreach (QString path, auxPaths){
-        PDPWriter::writePDP(path);
-        WSWriter::writeWizard(path);
-    }
+  QVector <QString> auxPaths = TemplateParser::parse(path);
+  foreach (QString path, auxPaths)
+  {
+    PDPWriter::writePDP(path);
+    WSWriter::writeWizard(path);
+  }
 }

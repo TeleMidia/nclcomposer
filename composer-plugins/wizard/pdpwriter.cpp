@@ -28,8 +28,8 @@ void PDPWriter::writePDP(QString auxPath)
   }
   auxFile.close();
 
-  QDomDocument pdpDocument ("pdp");
-  //    pdpDocument.createProcessingInstruction("xml", "version=\"1.0\" encoding=\"utf-8\"");
+  QDomDocument pdpDocument;
+  pdpDocument.createProcessingInstruction("xml", "version=\"1.0\" encoding=\"utf-8\"");
 
   QDomElement pdpRoot = pdpDocument.createElementNS(NCL_NS, "ncl");
   pdpDocument.appendChild(pdpRoot);
@@ -75,7 +75,8 @@ QDomElement PDPWriter::parseGapElement(QDomElement &gapElement, QDomDocument& pd
 {
   QDomElement pdpElement;
   QString selectsAttr = gapElement.attribute("selects");
-  if (selectsAttr != ""){
+  if (selectsAttr != "")
+  {
     SelectsParser selectsParser (selectsAttr);
 
     QString tagname = selectsParser.elementTagname();
@@ -85,9 +86,11 @@ QDomElement PDPWriter::parseGapElement(QDomElement &gapElement, QDomDocument& pd
     QString attributeName = selectsParser.elementAttributeName();
     QString attributeValue = selectsParser.elementAttributeValue();
 
-    if (tagname != ""){
+    if (tagname != "")
+    {
       pdpElement = pdpDoc.createElement(tagname);
-      if (tagname == "media"){
+      if (tagname == "media")
+      {
         pdpElement.setAttribute("id", QString ("m_" + QString::number(mediaCount++)));
         pdpElement.setAttribute("src", "");
 
