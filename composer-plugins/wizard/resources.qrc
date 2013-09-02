@@ -4,6 +4,5 @@
         <file alias="minus">images/minus.png</file>
         <file alias="down">images/down.png</file>
         <file alias="empty-icon">images/empty-icon.png</file>
-        <file alias="icognito-multimedia">images/incognito-multimedia.png</file>
     </qresource>
 </RCC>
