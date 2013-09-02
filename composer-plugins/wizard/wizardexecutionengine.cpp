@@ -68,6 +68,7 @@ void WizardExecutionEngine::setWS(const QString &wsPath)
     _treeView->addTopLevelItem(new QTreeWidgetItem(QStringList(stepId)));
 
     XWizardPage *page = new XWizardPage;
+    page->setTitle(stepId);
 
     QDomElement elemInputElement = stepElement.firstChildElement("elemInput");
     while (!elemInputElement.isNull())
