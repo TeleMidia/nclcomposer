@@ -17,21 +17,26 @@ WizardExecutionEngine::WizardExecutionEngine(const QString &wsPath,
   if(wsPath != "")
     setWS(wsPath);
 
-  QLabel *treeViewLabel = new QLabel ("Steps:");
   _treeView = new QTreeWidget;
+  _treeView->setHeaderLabel("Wizard Steps:");
+  _treeView->setMinimumWidth(200);
 
   QVBoxLayout *sideWidgetLayout = new QVBoxLayout;
-  sideWidgetLayout->addWidget(treeViewLabel);
   sideWidgetLayout->addWidget(_treeView);
 
   QWidget *sideWidget = new QWidget;
   sideWidget->setLayout(sideWidgetLayout);
 
+  _wizard.setWizardStyle(QWizard::ClassicStyle);
+
   _wizard.setSideWidget(sideWidget);
 
   _wizard.setFixedSize(800, 600);
 
-  connect(&_wizard, SIGNAL(accepted()), this, SLOT(createFinalApplication()));
+  connect(&_wizard,
+          SIGNAL(accepted()),
+          this,
+          SLOT(createFinalApplication()));
 }
 
 void WizardExecutionEngine::setWS(const QString &wsPath)
@@ -45,14 +50,16 @@ void WizardExecutionEngine::setWS(const QString &wsPath)
       return;
     }
   QDomDocument wsDoc ("wsDoc");
-  if (!wsDoc.setContent(&wsFile)){
-      QMessageBox::critical(0, "Error", "Error while parsing the file " + wsPath + ".");
-      return;
-    }
+  if (!wsDoc.setContent(&wsFile))
+  {
+    QMessageBox::critical(0, "Error", "Error while parsing the file " + wsPath + ".");
+    return;
+  }
   wsFile.close();
 
   QDomElement rootElement = wsDoc.documentElement();
   QDomNodeList stepList = rootElement.elementsByTagName("step");
+
   for (int i = 0; i < stepList.size(); i++)
   {
     QDomElement stepElement = stepList.at(i).toElement();
@@ -61,6 +68,7 @@ void WizardExecutionEngine::setWS(const QString &wsPath)
     _treeView->addTopLevelItem(new QTreeWidgetItem(QStringList(stepId)));
 
     XWizardPage *page = new XWizardPage;
+
     QDomElement elemInputElement = stepElement.firstChildElement("elemInput");
     while (!elemInputElement.isNull())
     {
@@ -131,13 +139,15 @@ void WizardExecutionEngine::createFinalApplication()
   QDomDocument pdpDoc ("pdpDoc");
   QDomDocument finalAppDoc ("finalApp");
 
-  if (!(pdpDoc.setContent(&inputPDP))){
+  if (!(pdpDoc.setContent(&inputPDP)))
+  {
     QMessageBox::critical(0, "Error", "Error while parsing the file " + _inputFile + ".");
     return;
   }
 
   inputPDP.seek(0);
-  if (!(finalAppDoc.setContent(&inputPDP))){
+  if (!(finalAppDoc.setContent(&inputPDP)))
+  {
     QMessageBox::critical(0, "Error", "Error while parsing the file " + _inputFile + ".");
     return;
   }

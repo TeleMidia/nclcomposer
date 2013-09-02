@@ -1,7 +1,9 @@
 <RCC>
     <qresource prefix="/images">
-        <file>images/plus.png</file>
-        <file>images/minus.png</file>
-        <file>images/down.png</file>
+        <file alias="plus">images/plus.png</file>
+        <file alias="minus">images/minus.png</file>
+        <file alias="down">images/down.png</file>
+        <file alias="empty-icon">images/empty-icon.png</file>
+        <file alias="icognito-multimedia">images/incognito-multimedia.png</file>
     </qresource>
 </RCC>

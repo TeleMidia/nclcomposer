@@ -4,6 +4,7 @@
 #include <QDir>
 #include <QFileInfo>
 #include <QDebug>
+#include <QDomDocument>
 
 wizardchooser::wizardchooser(QWidget *parent, bool modal) :
     QDialog(parent),
@@ -34,7 +35,10 @@ int wizardchooser::exec(const QString &path)
     dir.setFilter(QDir::Dirs | QDir::NoDotAndDotDot);
     foreach (QString wizardName, dir.entryList())
     {
-      ui->listWidget->addItem(wizardName);
+      QListWidgetItem *item = new QListWidgetItem(ui->listWidget);
+      item->setIcon(QIcon(":/images/empty-icon"));
+      item->setText(wizardName);
+      // ui->listWidget->addItem(wizardName);
     }
   }
   return QDialog::exec();
