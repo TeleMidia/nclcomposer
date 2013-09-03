@@ -29,6 +29,8 @@ public:
 
 public slots:
   void createFinalApplication ();
+  void updateSelection (int);
+  void updateCurrentPage();
 };
 
 #endif // WIZARDEXECUTIONENGINE_H

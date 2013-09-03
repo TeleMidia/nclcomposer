@@ -19,7 +19,7 @@ int main(int argc, char *argv[])
   }
 
   wizardchooser w;
-  int resp = w.exec(QString (getenv ("HOME")) + "/XWizardOutput/");
+  int resp = w.exec(DEFAULT_DIR);
 
   qDebug() << resp;
 

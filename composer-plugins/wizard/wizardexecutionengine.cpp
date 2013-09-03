@@ -37,6 +37,34 @@ WizardExecutionEngine::WizardExecutionEngine(const QString &wsPath,
           SIGNAL(accepted()),
           this,
           SLOT(createFinalApplication()));
+
+  connect (&_wizard,
+           SIGNAL(currentIdChanged(int)),
+           this,
+           SLOT(updateSelection(int)));
+
+  connect (_treeView,
+           SIGNAL(itemSelectionChanged()),
+           this,
+           SLOT(updateCurrentPage()));
+}
+
+void WizardExecutionEngine::updateSelection(int currentIndex)
+{
+    _treeView->setCurrentIndex(_treeView->model()->index(currentIndex,0));
+}
+
+void WizardExecutionEngine::updateCurrentPage()
+{
+    int selectedRow = _treeView->currentIndex().row();
+    int currentPage = _wizard.currentId();
+
+    if (selectedRow > currentPage)
+        for (int i = 0; i < selectedRow - currentPage; i++)
+            _wizard.next();
+    else
+        for (int i = 0; i < currentPage - selectedRow; i++)
+            _wizard.back();
 }
 
 void WizardExecutionEngine::setWS(const QString &wsPath)
@@ -131,7 +159,7 @@ void WizardExecutionEngine::setInputFile(const QString &inputFile)
 void WizardExecutionEngine::run()
 {
   if(_inputFile == "")
-    _inputFile = QFileDialog::getOpenFileName(0, "Select the file input", getenv("HOME"));
+    _inputFile = QFileDialog::getOpenFileName(0, "Select the file input", QDir::homePath());
 
   if (_inputFile != "")
     _wizard.exec();
