@@ -67,8 +67,16 @@ void WizardExecutionEngine::setWS(const QString &wsPath)
     QString stepId = stepElement.attribute("id");
     _treeView->addTopLevelItem(new QTreeWidgetItem(QStringList(stepId)));
 
-    XWizardPage *page = new XWizardPage;
-    page->setTitle(stepId);
+    QString stepText = "";
+    QDomNodeList stepChildNodes = stepElement.childNodes();
+    for (int i = 0; i < stepChildNodes.size(); i++)
+    {
+      QDomNode node = stepChildNodes.at(i);
+      if (node.isText())
+        stepText += node.toText().data();
+    }
+
+    XWizardPage *page = new XWizardPage (stepId, stepText.trimmed());
 
     QDomElement elemInputElement = stepElement.firstChildElement("elemInput");
     while (!elemInputElement.isNull())

@@ -25,8 +25,6 @@ private:
 
   QVector<QDomElement> searchElement (QString tagname, QString attributeName, QString attributeValue,
                              QDomElement &rootElement);
-  QDomElement searchParent (QString tagname, QString attributeName, QString attributeValue,
-                             QDomElement &rootElement);
 
   void resolve (ElemInput *elemInput, QDomElement& finalAppRootElement,
                 QDomElement& pdpRootElement, QSet <QString>& elementsMarked);
@@ -47,7 +45,7 @@ public:
     }
   }
 
-  explicit XWizardPage(QWidget *parent = 0);
+  explicit XWizardPage(QString title, QString text = "", QWidget *parent = 0);
 
   ElemInput * addElemInput (QString id, QString elemInputSelector, QString title);
   void addElemInput (ElemInput *);

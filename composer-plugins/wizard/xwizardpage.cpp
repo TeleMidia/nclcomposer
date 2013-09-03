@@ -2,12 +2,14 @@
 
 #include <QScrollArea>
 #include <QScrollBar>
+#include <QMessageBox>
+#include <QLabel>
 
 #include "selectsparser.h"
 
 #include <QDebug>
 
-XWizardPage::XWizardPage(QWidget *parent) :
+XWizardPage::XWizardPage(QString title, QString text, QWidget *parent) :
     QWizardPage(parent)
 {
   QScrollArea *widgetScrollable = new QScrollArea;
@@ -18,14 +20,17 @@ XWizardPage::XWizardPage(QWidget *parent) :
   scrollBar->setValue(0);
 
   widgetScrollable->setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded);
-  widgetScrollable->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-
+  widgetScrollable->setHorizontalScrollBarPolicy(Qt::ScrollBarAsNeeded);
 
   QWidget *containerWidget = new QWidget;
   widgetScrollable->setWidget(containerWidget);
 
   _containerLayout = new QFormLayout;
   containerWidget->setLayout(_containerLayout);
+
+  _containerLayout->addWidget(new QLabel(text));
+
+  setTitle(title);
 
   QVBoxLayout *mainLayout = new QVBoxLayout;
   mainLayout->addWidget(widgetScrollable);
@@ -247,35 +252,6 @@ void XWizardPage::recursiveElementSearch(QString attributeName, QString attribut
   }
 }
 
-QDomElement XWizardPage::searchParent(QString tagname, QString attributeName,
-                                      QString attributeValue, QDomElement &rootElement)
-{
-  QDomElement elementToReturn;
-
-  QDomNodeList elements;
-  if (tagname == "*")
-  {
-    //recursive search
-  }
-  else
-  {
-    elements = rootElement.elementsByTagName(tagname);
-    for (int i = 0; i < elements.size(); i++)
-    {
-      QDomElement element = elements.at(i).toElement();
-      QString value = element.attribute(attributeName, "");
-
-      if (value == attributeValue)
-      {
-        elementToReturn = element;
-        break;
-      }
-    }
-  }
-
-  return elementToReturn;
-}
-
 void XWizardPage::cloneElemInput(ElemInput *elemInput)
 {
   if (elemInput)
@@ -284,6 +260,11 @@ void XWizardPage::cloneElemInput(ElemInput *elemInput)
 
 void XWizardPage::removeElemInput(ElemInput *elemInput)
 {
+  if (_elemInputs.size() == 1){
+    QMessageBox::warning(this, "Warning", "Each page must have at least one <elemInput>.", QMessageBox::Ok);
+    return;
+  }
+
   if (elemInput)
   {
     int count = _containerLayout->count();
@@ -292,6 +273,7 @@ void XWizardPage::removeElemInput(ElemInput *elemInput)
       QLayoutItem *item = _containerLayout->itemAt(i);
       if (item && item->widget() == elemInput)
       {
+        _elemInputs.remove(i);
         _containerLayout->removeItem(item);
         delete item;
         elemInput->deleteLater();
