@@ -6,6 +6,7 @@
 
 #include "defaultattrinput.h"
 #include "fileattrinput.h"
+#include "comboattrinput.h"
 #include "constants.h"
 
 ElemInput::ElemInput (QString selector, QString title, QWidget *parent)
@@ -58,6 +59,8 @@ void ElemInput::addAttrInput(QString question, QString name, QString type, QStri
 
   if (type == "file")
     attrInput = new FileAttrInput (question, name, type, value);
+  else if (type == "combo")
+    attrInput = new ComboAttrInput (question, name, type, value);
   else
     attrInput = new DefaultAttrInput(question, name, type, value);
 

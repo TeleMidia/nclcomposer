@@ -6,7 +6,7 @@
 
 QT       += core gui xml webkit
 
-greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
+greaterThan(QT_MAJOR_VERSION, 4): QT += widgets webkitwidgets
 
 TARGET = wizardEngine
 TEMPLATE = app
@@ -25,7 +25,8 @@ SOURCES += main.cpp\
     attrinput.cpp \
     defaultattrinput.cpp \
     fileattrinput.cpp \
-    wizardchooser.cpp
+    wizardchooser.cpp \
+    comboattrinput.cpp
 
 HEADERS  += xmetawizardmainwindow.h \
     templateparser.h \
@@ -40,7 +41,8 @@ HEADERS  += xmetawizardmainwindow.h \
     attrinput.h \
     defaultattrinput.h \
     fileattrinput.h \
-    wizardchooser.h
+    wizardchooser.h \
+    comboattrinput.h
 
 FORMS    += xmetawizardmainwindow.ui \
     wizardchooser.ui
