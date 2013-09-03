@@ -102,8 +102,10 @@ void WizardExecutionEngine::setWS(const QString &wsPath)
   {
     QDomElement stepElement = stepList.at(i).toElement();
 
-    QString stepId = stepElement.attribute("id");
-    _treeView->addTopLevelItem(new QTreeWidgetItem(QStringList(stepId)));
+    QString stepTitle = stepElement.attribute("title");
+    if(stepTitle == "")
+      stepTitle = stepElement.attribute("id");
+    _treeView->addTopLevelItem(new QTreeWidgetItem(QStringList(stepTitle)));
 
     QString stepText = "";
 
