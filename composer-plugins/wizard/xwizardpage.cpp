@@ -10,7 +10,7 @@
 #include <QDebug>
 
 XWizardPage::XWizardPage(QString title, QString text, QWidget *parent) :
-    QWizardPage(parent)
+  QWizardPage(parent)
 {
   QScrollArea *widgetScrollable = new QScrollArea;
   widgetScrollable->setWidgetResizable(true);
@@ -196,7 +196,7 @@ bool XWizardPage::computeAnswers(QDomElement& finalAppRootElement, QDomElement& 
 }
 
 QVector <QDomElement> XWizardPage::searchElement(QString tagname, QString attributeName,
-                                       QString attributeValue, QDomElement &rootElement)
+                                                 QString attributeValue, QDomElement &rootElement)
 {
   QVector<QDomElement> elementsToReturn;
 
@@ -240,14 +240,14 @@ void XWizardPage::recursiveElementSearch(QString attributeName, QString attribut
   {
     QString rootAttributeValue = rootElement.attribute(attributeName);
     if (rootAttributeValue == attributeValue){
-        elementsToReturn.append(rootElement);
+      elementsToReturn.append(rootElement);
     }
 
     QDomNodeList elements = rootElement.childNodes();
     for (int i = 0; i < elements.size(); i++){
-        QDomElement element = elements.at(i).toElement();
+      QDomElement element = elements.at(i).toElement();
 
-        recursiveElementSearch(attributeName, attributeValue, element, elementsToReturn);
+      recursiveElementSearch(attributeName, attributeValue, element, elementsToReturn);
     }
   }
 }
@@ -267,13 +267,18 @@ void XWizardPage::removeElemInput(ElemInput *elemInput)
 
   if (elemInput)
   {
+    for (int i = 0; i < _elemInputs.size(); i++)
+      if (_elemInputs.at(i) == elemInput){
+        _elemInputs.remove(i);
+        break;
+      }
+
     int count = _containerLayout->count();
     for (int i = 0; i < count; i++)
     {
       QLayoutItem *item = _containerLayout->itemAt(i);
       if (item && item->widget() == elemInput)
       {
-        _elemInputs.remove(i);
         _containerLayout->removeItem(item);
         delete item;
         elemInput->deleteLater();
