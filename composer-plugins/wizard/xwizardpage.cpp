@@ -9,8 +9,10 @@
 
 #include <QDebug>
 
-XWizardPage::XWizardPage(QString title, QString text, QWidget *parent) :
-  QWizardPage(parent)
+XWizardPage::XWizardPage(const QString &title,
+                         const QString &text,
+                         QWidget *parent)
+  : QWizardPage(parent)
 {
   QScrollArea *widgetScrollable = new QScrollArea;
   widgetScrollable->setWidgetResizable(true);
@@ -38,30 +40,49 @@ XWizardPage::XWizardPage(QString title, QString text, QWidget *parent) :
   setLayout(mainLayout);
 }
 
-ElemInput *XWizardPage::addElemInput(QString id, QString elemInputSelector, QString title)
+ElemInput *XWizardPage::addElemInput(const QString &id,
+                                     const QString &elemInputSelector,
+                                     const QString &title)
 {
   ElemInput *elemInput = 0;
   if (id != "")
   {
     elemInput = new ElemInput (elemInputSelector, title, this);
     elemInput->setId(id);
+
     addElemInput(elemInput);
   }
 
   return elemInput;
 }
 
+void XWizardPage::createConnections (ElemInput *elemInput)
+{
+  connect( elemInput,
+           SIGNAL(cloned(ElemInput*)),
+           this,
+           SLOT(cloneElemInput(ElemInput *)) );
+
+  connect( elemInput,
+           SIGNAL(removeRequested(ElemInput*)),
+           this, SLOT(removeElemInput(ElemInput*)) );
+}
+
 void XWizardPage::addElemInput(ElemInput *elemInput)
 {
   _elemInputs.append(elemInput);
 
-  connect(elemInput, SIGNAL(cloned(ElemInput*)), this, SLOT(cloneElemInput(ElemInput *)));
-  connect(elemInput, SIGNAL(removeRequested(ElemInput*)), this, SLOT(removeElemInput(ElemInput*)));
+  createConnections(elemInput);
 
   _containerLayout->addWidget(elemInput);
 }
 
-void XWizardPage::addAttrInput(ElemInput *elemInput, QString question, QString name, QString type, QString value)
+
+void XWizardPage::addAttrInput( ElemInput *elemInput,
+                                const QString &question,
+                                const QString &name,
+                                const QString &type,
+                                const QString &value)
 {
   if (elemInput)
     elemInput->addAttrInput(question, name, type, value);

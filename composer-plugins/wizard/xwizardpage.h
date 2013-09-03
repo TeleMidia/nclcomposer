@@ -45,15 +45,27 @@ public:
     }
   }
 
-  explicit XWizardPage(QString title, QString text = "", QWidget *parent = 0);
+  explicit XWizardPage( const QString &title,
+                        const QString &text = "",
+                        QWidget *parent = 0);
 
-  ElemInput * addElemInput (QString id, QString elemInputSelector, QString title);
+  ElemInput * addElemInput ( const QString &id,
+                             const QString &elemInputSelector,
+                             const QString &title );
+
   void addElemInput (ElemInput *);
 
-  void addAttrInput (ElemInput *elemInput, QString question, QString, QString type = "string", QString value = "");
+  void createConnections (ElemInput *);
 
-  bool computeAnswers (QDomElement& finalAppRootElement, QDomElement& pdpRootElement,
-                         QSet <QString>& selectorsUsed);
+  void addAttrInput ( ElemInput *elemInput,
+                      const QString &question,
+                      const QString&,
+                      const QString &type = "string",
+                      const QString &value = "" );
+
+  bool computeAnswers ( QDomElement& finalAppRootElement,
+                        QDomElement& pdpRootElement,
+                        QSet <QString>& selectorsUsed );
 
   void addLabel(QString text);
 
