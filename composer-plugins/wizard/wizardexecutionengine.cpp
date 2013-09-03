@@ -21,8 +21,12 @@ WizardExecutionEngine::WizardExecutionEngine(const QString &wsPath,
   _treeView->setHeaderLabel("Wizard Steps:");
   _treeView->setMinimumWidth(200);
 
+  _progressBar = new QProgressBar;
+  _progressBar->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Maximum);
+
   QVBoxLayout *sideWidgetLayout = new QVBoxLayout;
   sideWidgetLayout->addWidget(_treeView);
+  sideWidgetLayout->addWidget(_progressBar);
 
   QWidget *sideWidget = new QWidget;
   sideWidget->setLayout(sideWidgetLayout);
@@ -52,6 +56,7 @@ WizardExecutionEngine::WizardExecutionEngine(const QString &wsPath,
 void WizardExecutionEngine::updateSelection(int currentIndex)
 {
     _treeView->setCurrentIndex(_treeView->model()->index(currentIndex,0));
+    _progressBar->setValue(currentIndex);
 }
 
 void WizardExecutionEngine::updateCurrentPage()
@@ -65,6 +70,8 @@ void WizardExecutionEngine::updateCurrentPage()
     else
         for (int i = 0; i < currentPage - selectedRow; i++)
             _wizard.back();
+
+    _progressBar->setValue(selectedRow);
 }
 
 void WizardExecutionEngine::setWS(const QString &wsPath)
@@ -87,6 +94,9 @@ void WizardExecutionEngine::setWS(const QString &wsPath)
 
   QDomElement rootElement = wsDoc.documentElement();
   QDomNodeList stepList = rootElement.elementsByTagName("step");
+
+  _progressBar->setMaximum(stepList.size());
+  _progressBar->setValue(0);
 
   for (int i = 0; i < stepList.size(); i++)
   {

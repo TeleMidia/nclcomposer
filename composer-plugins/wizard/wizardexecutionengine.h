@@ -5,6 +5,7 @@
 #include <QWizard>
 #include <QDomDocument>
 #include <QTreeWidget>
+#include <QProgressBar>
 
 class WizardExecutionEngine : public QObject
 {
@@ -16,6 +17,7 @@ private:
 
   QString _wsPath;
   QString _inputFile;
+  QProgressBar *_progressBar;
 
   void removeUuid(QDomElement& rootElement);
 
