@@ -40,9 +40,9 @@ XWizardPage::XWizardPage(const QString &title,
   setLayout(mainLayout);
 }
 
-ElemInput *XWizardPage::addElemInput(const QString &id,
-                                     const QString &elemInputSelector,
-                                     const QString &title)
+ElemInput *XWizardPage::addElemInput( const QString &id,
+                                      const QString &elemInputSelector,
+                                      const QString &title )
 {
   ElemInput *elemInput = 0;
   if (id != "")
@@ -305,7 +305,9 @@ void XWizardPage::recursiveElementSearch( const QString &attributeName,
 void XWizardPage::cloneElemInput(ElemInput *elemInput)
 {
   if (elemInput)
+  {
     addElemInput(elemInput);
+  }
 }
 
 void XWizardPage::removeElemInput(ElemInput *elemInput)
