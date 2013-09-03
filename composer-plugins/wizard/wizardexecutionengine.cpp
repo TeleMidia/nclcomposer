@@ -107,7 +107,9 @@ void WizardExecutionEngine::setWS(const QString &wsPath)
 
     QString stepText = "";
 
-    XWizardPage *page = new XWizardPage (stepId, stepText.trimmed());
+    XWizardPage *page = new XWizardPage ( stepElement.attribute("title"),
+                                          stepText.trimmed() );
+    page->setSubTitle(stepElement.attribute("subtitle"));
 
     QDomElement stepChildElement = stepElement.firstChildElement();
 
