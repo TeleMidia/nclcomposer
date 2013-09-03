@@ -3,6 +3,7 @@
 #include <QPushButton>
 #include <QMenu>
 #include <QAction>
+#include <QLabel>
 
 #include "defaultattrinput.h"
 #include "fileattrinput.h"
@@ -17,6 +18,10 @@ ElemInput::ElemInput (QString selector, QString title, QWidget *parent)
   _selector = selector;
   _question = title;
   _elemInputLayout = new QVBoxLayout;
+  _elemInputLayout->addSpacing(10);
+
+  QLabel *question = new QLabel (_question);
+  _elemInputLayout->addWidget(question);
 
   _optionsButton = new QPushButton(this);
 
@@ -25,7 +30,7 @@ ElemInput::ElemInput (QString selector, QString title, QWidget *parent)
   QIcon addIcon (":/images/plus");
   menu->addAction(addIcon, ADD_LABEL);
 
-  QIcon removeIcon (":/images/plus");
+  QIcon removeIcon (":/images/minus");
   menu->addAction(removeIcon, REMOVE_LABEL);
 
   _optionsButton->setMenu(menu);
