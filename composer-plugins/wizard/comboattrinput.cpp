@@ -19,7 +19,7 @@ ComboAttrInput::ComboAttrInput(QString question, QString name, QString type, QSt
   _combo->addItems(items);
 
   if (items.size())
-    _combo->setCurrentText(items.at(0));
+    _combo->setEditText(items.at(0));
 
   setLayout(mainLayout);
 }
