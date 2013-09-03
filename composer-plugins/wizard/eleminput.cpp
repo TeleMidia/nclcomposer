@@ -130,6 +130,31 @@ void ElemInput::addElemInput(QDomElement &elemInputElement)
   }
 }
 
+void ElemInput::removeElemInput(ElemInput *elemInput)
+{
+    if (elemInput)
+    {
+        for (int i = 0; i < _elemInputs.size(); i++)
+            if (_elemInputs.at(i) == elemInput){
+                _elemInputs.remove(i);
+                break;
+            }
+
+        int count = _elemInputLayout->count();
+        for (int i = 0; i < count; i++)
+        {
+            QLayoutItem *item = _elemInputLayout->itemAt(i);
+            if (item && item->widget() == elemInput)
+            {
+                _elemInputLayout->removeItem(item);
+                delete item;
+                elemInput->deleteLater();
+                break;
+            }
+        }
+    }
+}
+
 ElemInput::~ElemInput()
 {
 

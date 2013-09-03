@@ -55,6 +55,7 @@ signals:
 
 public slots:
   void menuSelected (QAction *);
+  void removeElemInput (ElemInput *);
   ElemInput * clone ();
 
   inline void notifyRemove ()
@@ -67,6 +68,7 @@ public slots:
     if (elemInput)
     {
       connect (elemInput, SIGNAL(cloned(ElemInput*)), this, SLOT (addElemInput(ElemInput*)));
+      connect (elemInput, SIGNAL(removeRequested(ElemInput*)), this, SLOT (removeElemInput(ElemInput*)));
       _elemInputs.append(elemInput);
       _elemInputLayout->addWidget(elemInput);
     }
