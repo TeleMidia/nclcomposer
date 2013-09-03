@@ -293,3 +293,8 @@ bool XWizardPage::validatePage()
   return true;
 }
 
+void XWizardPage::addLabel(QString text)
+{
+  _containerLayout->addWidget(new QLabel(text, this));
+}
+

@@ -106,55 +106,56 @@ void WizardExecutionEngine::setWS(const QString &wsPath)
     _treeView->addTopLevelItem(new QTreeWidgetItem(QStringList(stepId)));
 
     QString stepText = "";
-    QDomNodeList stepChildNodes = stepElement.childNodes();
-    for (int i = 0; i < stepChildNodes.size(); i++)
-    {
-      QDomNode node = stepChildNodes.at(i);
-      if (node.isText())
-        stepText += node.toText().data();
-    }
 
     XWizardPage *page = new XWizardPage (stepId, stepText.trimmed());
 
-    QDomElement elemInputElement = stepElement.firstChildElement("elemInput");
-    while (!elemInputElement.isNull())
+    QDomElement stepChildElement = stepElement.firstChildElement();
+
+    while (!stepChildElement.isNull())
     {
-      QString elemInputText = "";
-      QDomNodeList childNodes = elemInputElement.childNodes();
-      for (int i = 0; i < childNodes.size(); i++)
+      if(stepChildElement.tagName() == "elemInput")
       {
-        QDomNode node = childNodes.at(i);
-        if (node.isText())
-          elemInputText += node.toText().data();
+        QString elemInputText = "";
+        QDomNodeList childNodes = stepChildElement.childNodes();
+        for (int i = 0; i < childNodes.size(); i++)
+        {
+          QDomNode node = childNodes.at(i);
+          if (node.isText())
+            elemInputText += node.toText().data();
+        }
+
+        QString elemInputId = stepChildElement.attribute("id");
+        QString elemInputSelector = stepChildElement.attribute("selector");
+
+        ElemInput *elemInput = page->addElemInput(elemInputId, elemInputSelector, elemInputText);
+
+        QDomElement attrInput = stepChildElement.firstChildElement("attrInput");
+        while (!attrInput.isNull())
+        {
+          QString attrInputQuestion = attrInput.text();
+          QString attrInputName = attrInput.attribute("name");
+          QString attrInputType = attrInput.attribute("type");
+          QString attrInputValue = attrInput.attribute("value");
+
+          page->addAttrInput(elemInput, attrInputQuestion, attrInputName, attrInputType, attrInputValue);
+
+          attrInput = attrInput.nextSiblingElement("attrInput");
+        }
+
+        QDomElement elemInputRecursiveElement = stepChildElement.firstChildElement("elemInput");
+        while (!elemInputRecursiveElement.isNull())
+        {
+          elemInput->addElemInput(elemInputRecursiveElement);
+
+          elemInputRecursiveElement = elemInputRecursiveElement.nextSiblingElement("elemInput");
+        }
+      }
+      else if(stepChildElement.tagName() == "label")
+      {
+        page->addLabel(stepChildElement.text());
       }
 
-      QString elemInputId = elemInputElement.attribute("id");
-      QString elemInputSelector = elemInputElement.attribute("selector");
-
-      ElemInput *elemInput = page->addElemInput(elemInputId, elemInputSelector, elemInputText);
-
-      QDomElement attrInput = elemInputElement.firstChildElement("attrInput");
-      while (!attrInput.isNull())
-      {
-        QString attrInputQuestion = attrInput.text();
-        QString attrInputName = attrInput.attribute("name");
-        QString attrInputType = attrInput.attribute("type");
-        QString attrInputValue = attrInput.attribute("value");
-
-        page->addAttrInput(elemInput, attrInputQuestion, attrInputName, attrInputType, attrInputValue);
-
-        attrInput = attrInput.nextSiblingElement("attrInput");
-      }
-
-      QDomElement elemInputRecursiveElement = elemInputElement.firstChildElement("elemInput");
-      while (!elemInputRecursiveElement.isNull())
-      {
-        elemInput->addElemInput(elemInputRecursiveElement);
-
-        elemInputRecursiveElement = elemInputRecursiveElement.nextSiblingElement("elemInput");
-      }
-
-      elemInputElement = elemInputElement.nextSiblingElement("elemInput");
+      stepChildElement = stepChildElement.nextSiblingElement();
     }
 
     _wizard.addPage(page);

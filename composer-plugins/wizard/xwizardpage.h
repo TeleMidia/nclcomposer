@@ -55,6 +55,8 @@ public:
   bool computeAnswers (QDomElement& finalAppRootElement, QDomElement& pdpRootElement,
                          QSet <QString>& selectorsUsed);
 
+  void addLabel(QString text);
+
   bool validatePage();
     
 signals:
