@@ -88,8 +88,10 @@ void XWizardPage::addAttrInput( ElemInput *elemInput,
     elemInput->addAttrInput(question, name, type, value);
 }
 
-void XWizardPage::resolve(ElemInput *elemInput, QDomElement &finalAppRootElement,
-                          QDomElement &pdpRootElement, QSet<QString>& elementsMarked)
+void XWizardPage::resolve( ElemInput *elemInput,
+                           QDomElement &finalAppRootElement,
+                           QDomElement &pdpRootElement,
+                           QSet<QString>& elementsMarked )
 {
   QString selector = elemInput->selector();
   SelectsParser selectorParser (selector);
@@ -107,13 +109,20 @@ void XWizardPage::resolve(ElemInput *elemInput, QDomElement &finalAppRootElement
   QVector <QDomElement> elements;
   if (selectorParser.hasParentDependency())
   {
-    elements = searchElement(parentTagname, parentAttributeName, parentAttributeValue, finalAppRootElement);
+    elements = searchElement( parentTagname,
+                              parentAttributeName,
+                              parentAttributeValue,
+                              finalAppRootElement );
     QDomElement parentElement;
     if (!elements.empty())
       parentElement = elements.front();
+
     if (!parentElement.isNull())
     {
-      elements = searchElement(elementToSearch, elementAttributeName, elementAttributeValue, parentElement);
+      elements = searchElement( elementToSearch,
+                                elementAttributeName,
+                                elementAttributeValue,
+                                parentElement );
 
       if (!elements.empty())
         elementTarget = elements.front();
@@ -121,7 +130,11 @@ void XWizardPage::resolve(ElemInput *elemInput, QDomElement &finalAppRootElement
   }
   else
   {
-    elements = searchElement(elementToSearch, elementAttributeName, elementAttributeValue, finalAppRootElement);
+    elements = searchElement( elementToSearch,
+                              elementAttributeName,
+                              elementAttributeValue,
+                              finalAppRootElement );
+
     if (!elements.isEmpty())
       elementTarget = elements.front();
   }
@@ -136,14 +149,21 @@ void XWizardPage::resolve(ElemInput *elemInput, QDomElement &finalAppRootElement
 
     if (selectorParser.hasParentDependency())
     {
-      elements = searchElement(parentTagname, parentAttributeName, parentAttributeValue, pdpRootElement);
+      elements = searchElement( parentTagname,
+                                parentAttributeName,
+                                parentAttributeValue,
+                                pdpRootElement );
+
       QDomElement parentElement;
       if (!elements.isEmpty())
         parentElement = elements.front();
 
       if (!parentElement.isNull())
       {
-        elements = searchElement(elementToSearch, elementAttributeName, elementAttributeValue, parentElement);
+        elements = searchElement( elementToSearch,
+                                  elementAttributeName,
+                                  elementAttributeValue,
+                                  parentElement );
 
         if (!elements.isEmpty())
           toClone = elements.front();
@@ -151,7 +171,11 @@ void XWizardPage::resolve(ElemInput *elemInput, QDomElement &finalAppRootElement
     }
     else
     {
-      elements = searchElement(elementToSearch, elementAttributeName, elementAttributeValue, pdpRootElement);
+      elements = searchElement( elementToSearch,
+                                elementAttributeName,
+                                elementAttributeValue,
+                                pdpRootElement );
+
       if (!elements.isEmpty())
         toClone = elements.front();
     }
@@ -216,8 +240,10 @@ bool XWizardPage::computeAnswers(QDomElement& finalAppRootElement, QDomElement& 
   return answer;
 }
 
-QVector <QDomElement> XWizardPage::searchElement(QString tagname, QString attributeName,
-                                                 QString attributeValue, QDomElement &rootElement)
+QVector <QDomElement> XWizardPage::searchElement( const QString &tagname,
+                                                  const QString &attributeName,
+                                                  const QString &attributeValue,
+                                                  QDomElement &rootElement )
 {
   QVector<QDomElement> elementsToReturn;
 
@@ -255,7 +281,10 @@ QVector <QDomElement> XWizardPage::searchElement(QString tagname, QString attrib
   return elementsToReturn;
 }
 
-void XWizardPage::recursiveElementSearch(QString attributeName, QString attributeValue, QDomElement &rootElement, QVector<QDomElement> &elementsToReturn)
+void XWizardPage::recursiveElementSearch( const QString &attributeName,
+                                          const QString &attributeValue,
+                                          QDomElement &rootElement,
+                                          QVector<QDomElement> &elementsToReturn)
 {
   if (!rootElement.isNull())
   {
@@ -314,7 +343,7 @@ bool XWizardPage::validatePage()
   return true;
 }
 
-void XWizardPage::addLabel(QString text)
+void XWizardPage::addLabel(const QString &text)
 {
   _containerLayout->addWidget(new QLabel(text, this));
 }

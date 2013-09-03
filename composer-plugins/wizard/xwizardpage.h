@@ -23,14 +23,18 @@ private:
   QVector <ElemInput*> _elemInputs;
   QFormLayout *_containerLayout;
 
-  QVector<QDomElement> searchElement (QString tagname, QString attributeName, QString attributeValue,
-                             QDomElement &rootElement);
+  QVector<QDomElement> searchElement ( const QString &tagname,
+                                       const QString &attributeName,
+                                       const QString &attributeValue,
+                                       QDomElement &rootElement );
 
   void resolve (ElemInput *elemInput, QDomElement& finalAppRootElement,
                 QDomElement& pdpRootElement, QSet <QString>& elementsMarked);
 
-  void recursiveElementSearch (QString attributeName, QString attributeValue,
-                               QDomElement &rootElement, QVector<QDomElement>&elementsToReturn);
+  void recursiveElementSearch ( const QString &attributeName,
+                                const QString &attributeValue,
+                                QDomElement &rootElement,
+                                QVector<QDomElement>&elementsToReturn );
 public:
   static void createRandomIds(QDomElement& rootElement)
   {
@@ -67,7 +71,7 @@ public:
                         QDomElement& pdpRootElement,
                         QSet <QString>& selectorsUsed );
 
-  void addLabel(QString text);
+  void addLabel(const QString &text);
 
   bool validatePage();
     
