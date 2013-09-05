@@ -18,6 +18,9 @@ public:
   inline QString answer() const { return _combo->currentText(); }
   inline void setAnswer(QString answer) { _combo->setEditText(answer); }
   inline AttrInput * clone () const { return new ComboAttrInput (_question, _name, _type, _value, (QWidget *) parent()); }
+
+public slots:
+  void changeSelection (int);
 };
 
 #endif // COMBOATTRINPUT_H
