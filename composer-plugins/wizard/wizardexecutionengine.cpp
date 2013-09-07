@@ -154,9 +154,15 @@ void WizardExecutionEngine::setWS(const QString &wsPath)
           elemInputRecursiveElement = elemInputRecursiveElement.nextSiblingElement("elemInput");
         }
       }
-      else if(stepChildElement.tagName() == "label")
+      else if(stepChildElement.tagName() == "widget" &&
+              stepChildElement.attribute("type") == "text" )
       {
         page->addLabel(stepChildElement.text());
+      }
+      else if(stepChildElement.tagName() == "widget" &&
+              stepChildElement.attribute("type") == "html")
+      {
+        page->addHtmlPage(stepChildElement.text());
       }
 
       stepChildElement = stepChildElement.nextSiblingElement();

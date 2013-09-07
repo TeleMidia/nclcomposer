@@ -18,7 +18,7 @@ class XWizardPage : public QWizardPage
   Q_OBJECT
 
 private:
-  QMap <QString, int> _elemPrefixIdCount;
+  static QMap <QString, int> _elemPrefixIdCount;
 
   QVector <ElemInput*> _elemInputs;
   QFormLayout *_containerLayout;
@@ -72,6 +72,7 @@ public:
                         QSet <QString>& selectorsUsed );
 
   void addLabel(const QString &text);
+  void addHtmlPage(const QString &html);
 
   bool validatePage();
     

@@ -2,12 +2,15 @@
 
 #include <QScrollArea>
 #include <QScrollBar>
+#include <QWebView>
 #include <QMessageBox>
 #include <QLabel>
 
 #include "selectsparser.h"
 
 #include <QDebug>
+
+QMap <QString, int> XWizardPage::_elemPrefixIdCount;
 
 XWizardPage::XWizardPage(const QString &title,
                          const QString &text,
@@ -208,10 +211,11 @@ void XWizardPage::resolve( ElemInput *elemInput,
     }
 
     // If the target element has an id attribute update it
-    if(elementTarget.hasAttribute("id"))
+    if( elementTarget.hasAttribute("id") )
     {
       QString prefixId = elementTarget.tagName().mid(0, 1);
-      if(_elemPrefixIdCount.count(prefixId))
+
+      if(_elemPrefixIdCount.count(prefixId) >= 0)
         _elemPrefixIdCount[prefixId] += 1;
       else
         _elemPrefixIdCount[prefixId] = 1;
@@ -348,5 +352,12 @@ bool XWizardPage::validatePage()
 void XWizardPage::addLabel(const QString &text)
 {
   _containerLayout->addWidget(new QLabel(text, this));
+}
+
+void XWizardPage::addHtmlPage(const QString &html)
+{
+  QWebView *view = new QWebView(this);
+  _containerLayout->addWidget(view);
+  view->load(html);
 }
 
