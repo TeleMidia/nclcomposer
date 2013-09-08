@@ -11,6 +11,7 @@ class FileAttrInput : public AttrInput
 
 private:
   QLineEdit *_answer;
+  static QString lastPath;
 
 public:
   explicit FileAttrInput(QString question, QString name, QString type = "string", QString value = "", QWidget * parent = 0);

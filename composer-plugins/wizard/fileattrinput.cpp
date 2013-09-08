@@ -5,6 +5,8 @@
 #include <QPushButton>
 #include <QFileDialog>
 
+QString FileAttrInput::lastPath = QDir::homePath();
+
 FileAttrInput::FileAttrInput(QString question, QString name, QString type, QString value, QWidget *parent)
     : AttrInput (question, name, type, value, parent)
 {
@@ -29,7 +31,12 @@ FileAttrInput::FileAttrInput(QString question, QString name, QString type, QStri
 
 void FileAttrInput::searchFile()
 {
-  QString filePath = QFileDialog::getOpenFileName(this, "File", "Select a file");
+  QString filePath = QFileDialog::getOpenFileName(this,
+                                                  "Select a file",
+                                                  lastPath);
   if (filePath != "")
+  {
+    lastPath = QFileInfo(filePath).absolutePath();
     setAnswer(filePath);
+  }
 }
