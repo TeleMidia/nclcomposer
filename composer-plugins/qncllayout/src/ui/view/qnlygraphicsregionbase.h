@@ -111,6 +111,9 @@ signals:
 
     void gridVisibilityChanged(bool gridVisibility);
 
+    void copyRequested(QnlyGraphicsRegion *);
+    void pasteRequested();
+
 protected:
     virtual void contextMenuEvent(QGraphicsSceneContextMenuEvent* event);
     void mouseMoveEvent(QGraphicsSceneMouseEvent* event);

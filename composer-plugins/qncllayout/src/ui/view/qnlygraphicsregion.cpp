@@ -488,14 +488,14 @@ void QnlyGraphicsRegion::QnlyGraphicsRegion::createActions()
   copyAction = new QAction(this);
   copyAction->setText(tr("Copy"));
 
-  copyAction->setEnabled(false);
+  copyAction->setEnabled(true);
   copyAction->setShortcut(QKeySequence("Ctrl+C"));
 
   // paste action
   pasteAction = new QAction(this);
   pasteAction->setText(tr("Paste"));
 
-  pasteAction->setEnabled(false);
+  pasteAction->setEnabled(true);
   pasteAction->setShortcut(QKeySequence("Ctrl+V"));
 
   // delete action
@@ -652,10 +652,10 @@ void QnlyGraphicsRegion::createMenus()
   //    contextMenu->addAction(undoAction);
   //    contextMenu->addAction(redoAction);
   //    contextMenu->addSeparator();
-  //    contextMenu->addAction(cutAction);
-  //    contextMenu->addAction(copyAction);
-  //    contextMenu->addAction(pasteAction);
-  //    contextMenu->addSeparator();
+  contextMenu->addAction(cutAction);
+  contextMenu->addAction(copyAction);
+  contextMenu->addAction(pasteAction);
+  contextMenu->addSeparator();
   contextMenu->addAction(deleteAction);
   contextMenu->addSeparator();
   contextMenu->addAction(exportAction);
@@ -690,6 +690,10 @@ void QnlyGraphicsRegion::createConnections()
           SLOT(performDelete()));
 
   connect(exportAction, SIGNAL(triggered()), SLOT(performExport()));
+
+  connect(copyAction, SIGNAL(triggered()), SLOT(performCopy()));
+
+  connect(pasteAction, SIGNAL(triggered()), SLOT(performPaste()));
 }
 
 void QnlyGraphicsRegion::updateActionText(QnlyGraphicsRegion *region)
@@ -763,6 +767,16 @@ void QnlyGraphicsRegion::performShow(QAction* action)
   {
     regions[regionActions.key(action)]->setVisible(true);
   }
+}
+
+void QnlyGraphicsRegion::performCopy()
+{
+  emit copyRequested(this);
+}
+
+void QnlyGraphicsRegion::performPaste()
+{
+  emit pasteRequested();
 }
 
 void QnlyGraphicsRegion::removeRegion(QnlyGraphicsRegion* region)
@@ -1645,4 +1659,35 @@ void QnlyGraphicsRegion::dropEvent(QGraphicsSceneDragDropEvent *event)
 
   emit dragMediaOverRegion(event->mimeData()->data("nclcomposer/mediaid"),
                            this);
+}
+
+QMap <QString, QString> QnlyGraphicsRegion::getAttributes()
+{
+  // setting
+  QMap<QString, QString> full;
+
+  double value = 0.0;
+  full["id"] = getId();
+  full["color"] = getColor();
+
+  value = getRelativeTop()*100;
+  ROUND_DOUBLE(value);
+  full["top"] = QString::number(value, 'f', 2) + "%";
+
+  value = getRelativeLeft()*100;
+  ROUND_DOUBLE(value);
+  full["left"] = QString::number(value, 'f', 2) + "%";
+
+  value = getRelativeWidth()*100;
+  ROUND_DOUBLE(value);
+  full["width"] = QString::number(value, 'f', 2) + "%";
+
+  value = getRelativeHeight()*100;
+  ROUND_DOUBLE(value);
+  full["height"] = QString::number(value, 'f', 2) + "%";
+
+  value = getzIndex();
+  full["zIndex"] = QString::number(value);
+
+  return full;
 }

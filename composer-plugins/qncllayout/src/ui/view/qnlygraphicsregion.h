@@ -184,6 +184,8 @@ public:
 
     void setGridAction(QAction* action);
 
+    QMap <QString, QString> getAttributes();
+
 signals:
     void regionAdditionRequested(QnlyGraphicsRegion* parent);
 
@@ -197,6 +199,10 @@ signals:
     void dragMediaOverRegion(QString mediaid, QnlyGraphicsRegion *region);
 
     void regionbasePerformed();
+
+    void copyRequested(QnlyGraphicsRegion *);
+
+    void pasteRequested();
 
 protected:
     void setTop(qreal top);
@@ -265,6 +271,10 @@ public slots:
     void performRegion();
 
     void performDelete();
+
+    void performCopy();
+
+    void performPaste();
 
 protected slots:
     void performShow(QAction* action);

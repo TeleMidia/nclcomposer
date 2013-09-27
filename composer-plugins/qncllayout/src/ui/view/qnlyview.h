@@ -50,6 +50,8 @@ public:
 
     bool gridVisibility;
 
+    QMap <QString, QString> copiedRegionAttrs;
+
 public slots:
     void addRegion(const QString regionUID,
                    const QString parentUID,
@@ -92,6 +94,10 @@ public slots:
     void setGridVisible(bool visible);
 
     void snapshot();
+
+    void performCopy(QnlyGraphicsRegion *);
+
+    void performPaste();
 
 signals:
     void regionAdded(const QString regionUID,

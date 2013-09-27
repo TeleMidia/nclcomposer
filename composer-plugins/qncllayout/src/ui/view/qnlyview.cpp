@@ -80,7 +80,7 @@ void QnlyView::createActions()
   pasteAction = new QAction(this);
   pasteAction->setText(tr("Paste"));
 
-  pasteAction->setEnabled(false);
+  pasteAction->setEnabled(true);
   pasteAction->setShortcut(QKeySequence("Ctrl+V"));
 
   // delete action
@@ -236,8 +236,8 @@ void QnlyView::createMenus()
   //    contextMenu->addSeparator();
   //    contextMenu->addAction(cutAction);
   //    contextMenu->addAction(copyAction);
-  //    contextMenu->addAction(pasteAction);
-  //    contextMenu->addSeparator();
+  contextMenu->addAction(pasteAction);
+  contextMenu->addSeparator();
   contextMenu->addAction(deleteAction);
   contextMenu->addSeparator();
   contextMenu->addAction(exportAction);
@@ -260,6 +260,8 @@ void QnlyView::createConnections()
           SLOT(performSwitch(QAction*)));
 
   connect(regionbaseAction, SIGNAL(triggered()),SLOT(performRegionBase()));
+
+  connect(pasteAction, SIGNAL(triggered()), SLOT(performPaste()));
 }
 
 void QnlyView::requestRegionAddition(const QString regionUID,
@@ -323,6 +325,37 @@ void QnlyView::addRegion(const QString regionUID,
 
     addRegion(region, parent, regionbase, attributes);
   }
+}
+
+void QnlyView::performCopy(QnlyGraphicsRegion *region)
+{  
+  // setting
+  QMap<QString, QString> attr = region->getAttributes();
+
+  copiedRegionAttrs.clear();
+  foreach(QString key, attr.keys())
+  {
+    if(key != "id")
+      copiedRegionAttrs[key] = attr[key];
+  }
+}
+
+void QnlyView::performPaste()
+{ 
+  QString selectedRegionUId = "";
+  if(selectedRegion != NULL)
+    selectedRegionUId = selectedRegion->getUid();
+
+  qDebug() << "Perform paste inside: " << selectedRegionUId;
+
+  QString selectedRegionBaseUId = "";
+  if(selectedRegionBase != NULL)
+    selectedRegionBaseUId = selectedRegionBase->getUid();
+
+  requestRegionAddition("",
+                        selectedRegionUId,
+                        selectedRegionBaseUId,
+                        copiedRegionAttrs);
 }
 
 void QnlyView::removeRegion(const QString regionUID,
@@ -557,6 +590,13 @@ void QnlyView::addRegionBase(QnlyGraphicsRegionBase* regionBase,
             SIGNAL(gridVisibilityChanged(bool)),
             SLOT(setGridVisible(bool)));
 
+    connect(regionBase,
+            SIGNAL(copyRequested(QnlyGraphicsRegion*)),
+            SLOT(performCopy(QnlyGraphicsRegion *)));
+
+    connect(regionBase,
+            SIGNAL(pasteRequested()),
+            SLOT(performPaste()));
 
     emit regionBaseSelected(regionBase->getUid());
   }

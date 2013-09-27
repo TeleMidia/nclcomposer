@@ -285,87 +285,12 @@ void QnlyGraphicsRegionBase::requestRegionChange(QnlyGraphicsRegion* region,
                                                  QMap<QString, QString> attributes)
 {
   // setting
-  QMap<QString, QString> full;
+  QMap<QString, QString> full = region->getAttributes();
 
-  double value = 0.0;
-  if (attributes.contains("id"))
-    full["id"] = attributes["id"];
-  else if (!region->getId().isEmpty())
-    full["id"] = region->getId();
-
-  //    if (attributes.contains("title"))
-  //        full["title"] = attributes["title"];
-  //    else if (!region->getTitle().isEmpty())
-  //        full["title"] = region->getTitle();
-
-  if (attributes.contains("color"))
-    full["color"] = attributes["color"];
-  else if (!region->getColor().isEmpty())
-    full["color"] = region->getColor();
-
-  if (attributes.contains("top"))
-    full["top"] = attributes["top"];
-  else
+  // Overwrite parameter from attributes
+  foreach(QString key, attributes.keys())
   {
-    value = region->getRelativeTop()*100;
-    ROUND_DOUBLE(value);
-    full["top"] = QString::number(value, 'f', 2) + "%";
-  }
-
-  if (attributes.contains("left"))
-    full["left"] = attributes["left"];
-  else
-  {
-    value = region->getRelativeLeft()*100;
-    ROUND_DOUBLE(value);
-    full["left"] = QString::number(value, 'f', 2) + "%";
-  }
-
-  //    if (attributes.contains("right"))
-  //        full["right"] = attributes["right"];
-  //    else
-  //    {
-  //        value = region->getRelativeRight()*100;
-  //        ROUND_DOUBLE(value);
-  //        full["right"] = QString::number(value, 'f', 2) + "%";
-  //    }
-
-  //    if (attributes.contains("bottom"))
-  //        full["bottom"] = attributes["bottom"];
-  //    else
-  //    {
-  //        value = region->getRelativeBottom()*100;
-  //        ROUND_DOUBLE(value);
-  //        full["bottom"] = QString::number(value, 'f', 2) + "%";
-  //    }
-
-  if (attributes.contains("width"))
-    full["width"] = attributes["width"];
-  else
-  {
-    value = region->getRelativeWidth()*100;
-    ROUND_DOUBLE(value);
-    full["width"] = QString::number(value, 'f', 2) + "%";
-  }
-
-  if (attributes.contains("height"))
-    full["height"] = attributes["height"];
-  else
-  {
-    value = region->getRelativeHeight()*100;
-    ROUND_DOUBLE(value);
-    full["height"] = QString::number(value, 'f', 2) + "%";
-  }
-
-  // TODO: zIndex
-  if(attributes.contains("zIndex"))
-  {
-    full["zIndex"] = attributes["zIndex"];
-  }
-  else
-  {
-    value = region->getzIndex();
-    full["zIndex"] = QString::number(value);
+    full[key] = attributes[key];
   }
 
   emit regionChangeRequested( region->getUid(), uid, full );
@@ -417,7 +342,7 @@ void QnlyGraphicsRegionBase::QnlyGraphicsRegionBase::createActions()
   pasteAction = new QAction(this);
   pasteAction->setText(tr("Paste"));
 
-  pasteAction->setEnabled(false);
+  pasteAction->setEnabled(true);
   pasteAction->setShortcut(QKeySequence("Ctrl+V"));
 
   // delete action
@@ -626,7 +551,6 @@ void QnlyGraphicsRegionBase::createMenus()
   screensizeMenu->addAction(re1920x1080);
   screensizeMenu->addAction(re320x400);
 
-
   // context menu
   contextMenu = new QMenu();
   // contextMenu->addAction(helpAction);
@@ -636,8 +560,8 @@ void QnlyGraphicsRegionBase::createMenus()
   // contextMenu->addSeparator();
   // contextMenu->addAction(cutAction);
   // contextMenu->addAction(copyAction);
-  // contextMenu->addAction(pasteAction);
-  // contextMenu->addSeparator();
+  contextMenu->addAction(pasteAction);
+  contextMenu->addSeparator();
   contextMenu->addAction(deleteAction);
   contextMenu->addSeparator();
   contextMenu->addAction(exportAction);
@@ -692,8 +616,9 @@ void QnlyGraphicsRegionBase::createConnections()
 
   connect(exportAction, SIGNAL(triggered()), SLOT(performExport()));
 
-  connect(gridAction, SIGNAL(triggered()),
-          SLOT(performGrid()));
+  connect(gridAction, SIGNAL(triggered()), SLOT(performGrid()));
+
+  connect(pasteAction, SIGNAL(triggered()), SIGNAL(pasteRequested()));
 }
 
 void QnlyGraphicsRegionBase::performShow(QAction* action)
@@ -1048,6 +973,14 @@ void QnlyGraphicsRegionBase::addRegion(QnlyGraphicsRegion* region,
             this,
             SLOT(requestMediaOverRegionAction(QString,QnlyGraphicsRegion*))
             );
+
+    connect(region,
+            SIGNAL(copyRequested(QnlyGraphicsRegion*)),
+            SIGNAL(copyRequested(QnlyGraphicsRegion*)));
+
+    connect(region,
+            SIGNAL(pasteRequested()),
+            SIGNAL(pasteRequested()));
 
     // \fixme seg fault on Outline
     QMap<QString, QString> noChangeAtts;
