@@ -156,8 +156,10 @@ private:
 
   ComposerHelpWidget composerHelpWidget;
 
+#if WITH_WIZARD
   QProcess wizardProcess;
   QProcess talProcess;
+#endif
 
 private:
   /*!
@@ -356,9 +358,10 @@ private slots:
                                     bool save = true);
   void on_actionReport_Bug_triggered();
 
+#if WITH_WIZARD
   void on_actionProject_from_Wizard_triggered();
-
   void wizardFinished(int resp);
+#endif
 
 public:
   /*!

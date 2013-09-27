@@ -63,10 +63,14 @@ ComposerMainWindow::ComposerMainWindow(QWidget *parent)
           this, SLOT(runHasFinished()));
 #endif
 
+#if WITH_WIZARD
   connect(&wizardProcess,
           SIGNAL(finished(int)),
           this,
           SLOT(wizardFinished(int)));
+#else
+  ui->actionProject_from_Wizard->setVisible(false);
+#endif
 
 }
 
@@ -2351,6 +2355,7 @@ void ComposerMainWindow::on_actionReport_Bug_triggered()
   QDesktopServices::openUrl(QUrl("http://composer.telemidia.puc-rio.br/en/contact"));
 }
 
+#if WITH_WIZARD
 void ComposerMainWindow::on_actionProject_from_Wizard_triggered()
 {
   GlobalSettings settings;
@@ -2397,5 +2402,6 @@ void ComposerMainWindow::wizardFinished(int resp)
     }
   }
 }
+#endif
 
 } } //end namespace

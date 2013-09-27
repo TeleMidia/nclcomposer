@@ -19,6 +19,8 @@ else {
 #WHAT FEATURES TO COMPILE?
 #CONFIG += clubencl
 #DEFINES += USE_MDI
+#DEFINES += WITH_WIZARD
+
 
 contains(RUNSSHON, true) {
   CONFIG += runssh_on
@@ -172,6 +174,7 @@ else:win32 {
 }
 
 clubencl {
+    message ("NCL Composer.pro will be built with support to CLUBE NCL.")
     DEFINES += WITH_CLUBENCL
     #if clube ncl
     LIBS += -lquazip
