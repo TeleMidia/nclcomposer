@@ -32,3 +32,6 @@ FORMS += \
 
 RESOURCES += \
     ../common-resources/language.qrc
+
+OTHER_FILES += \
+    properties_view.json
