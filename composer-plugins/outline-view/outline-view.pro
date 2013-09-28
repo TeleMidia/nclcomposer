@@ -25,3 +25,6 @@ INSTALLS        =   target
 RESOURCES += \
     ../common-resources/images.qrc \
     ../common-resources/language.qrc
+
+OTHER_FILES += \
+    outline_view.json
