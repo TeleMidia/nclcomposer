@@ -76,5 +76,6 @@ void NCLTextualViewPluginFactory::applyValues()
 {
     //TODO
 }
-
+#if QT_VERSION < 0x050000
 Q_EXPORT_PLUGIN2(ncl_textual_plugin, NCLTextualViewPluginFactory)
+#endif

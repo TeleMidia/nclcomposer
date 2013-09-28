@@ -61,7 +61,8 @@ SOURCES     =   src/NCLTextEditorMainWindow.cpp \
 
 OTHER_FILES +=  TODO \
                 config/NCL_STRUCTURE \
-                NEWS
+                NEWS \
+		ncl_textual_view.json
 
 RESOURCES   =   ../common-resources/language.qrc
 FORMS       +=  ui/TextualPluginPreferencesWidget.ui

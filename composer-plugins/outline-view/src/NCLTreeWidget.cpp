@@ -23,6 +23,8 @@ using namespace composer::language;
 #include <QInputDialog>
 #include <QDialog>
 
+#include <QVariant>
+
 #include <core/util/ComposerSettings.h>
 using namespace composer::core::util;
 
@@ -552,9 +554,9 @@ void NCLTreeWidget::mouseMoveEvent(QMouseEvent *event)
   {
     QDrag *drag = new QDrag(this);
     QMimeData *mimeData = new QMimeData;
-    mimeData->setColorData(Qt::green);
-    mimeData->setData("nclcomposer/mediaid", currentItem()->text(3).toAscii());
-    mimeData->setData("nclcomposer/qnstuid", currentItem()->text(2).toAscii());
+    mimeData->setColorData(QColor(Qt::green));
+    mimeData->setData("nclcomposer/mediaid", currentItem()->text(3).toLatin1());
+    mimeData->setData("nclcomposer/qnstuid", currentItem()->text(2).toLatin1());
 
     drag->setMimeData(mimeData);
     // start drag

@@ -22,12 +22,18 @@
 #include <stdlib.h>
 using namespace std;
 
+#include <QApplication>
+
 #include <QMainWindow>
 #include <QDockWidget>
 #include <QListWidget>
 #include <QDialog>
 #include <QPushButton>
 #include <QLineEdit>
+#include <QStatusBar>
+#include <QFileDialog>
+#include <QMenuBar>
+#include <QGridLayout>
 
 #include "NCLProblemsView.h"
 
