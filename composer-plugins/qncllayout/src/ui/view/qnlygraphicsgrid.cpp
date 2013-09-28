@@ -1,7 +1,7 @@
 #include "qnlygraphicsgrid.h"
 
 QnlyGraphicsGrid::QnlyGraphicsGrid(QGraphicsItem* parent, QGraphicsScene* scene)
-  : QGraphicsRectItem(parent, scene)
+  : QGraphicsRectItem(parent)
 {
 
 }

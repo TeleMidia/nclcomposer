@@ -35,11 +35,14 @@ QnlyGraphicsRegionBase::QnlyGraphicsRegionBase(QObject* parent,
 
   setSceneRect(0,0,854,480);
 
-  bgrect = new QGraphicsRectItem(0,this);
-  bgrect->setRect(0,0,854,480);
+  bgrect = new QGraphicsRectItem(QRect(0,0, 854, 480));
+
+  this->addItem(bgrect);
+
   //bgrect->setBrush(QBrush(QPixmap(":/bg/layout")));
   bgrect->setBrush(QBrush(Qt::white));
   bgrect->setPen(QPen(QColor("#BBBBBB")));
+
   bgrect->setZValue(-1);
 
   grid = new QnlyGraphicsGrid(0,this);

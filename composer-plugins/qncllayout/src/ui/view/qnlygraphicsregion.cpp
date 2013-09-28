@@ -18,6 +18,7 @@
 #include "qnlygraphicsregion.h"
 
 #include <QCursor>
+#include <QMimeData>
 
 QnlyGraphicsRegion::QnlyGraphicsRegion(QMenu* switchMenu,
                                        QnlyGraphicsRegion* parent)

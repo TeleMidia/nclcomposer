@@ -35,3 +35,6 @@ INSTALLS =  target
 
 FORMS += \
             ui/qnlymainwindow.ui
+
+OTHER_FILES += \
+    ncl_layout_view.json

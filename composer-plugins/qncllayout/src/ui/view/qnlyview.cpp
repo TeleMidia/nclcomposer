@@ -296,7 +296,7 @@ void QnlyView::performRegionBase()
 
   attributes["id"] = "rgbase" + QString::number(++nregionbases);
 
-  emit regionBaseAdded((QString) QUuid::createUuid(), attributes);
+  emit regionBaseAdded(QUuid::createUuid().toString(), attributes);
 }
 
 void QnlyView::addRegion(const QString regionUID,
@@ -310,7 +310,7 @@ void QnlyView::addRegion(const QString regionUID,
     QnlyGraphicsRegion* region = new QnlyGraphicsRegion(switchMenu);
 
     if (regionUID.isEmpty())
-      region->setUid((QString) QUuid::createUuid());
+      region->setUid(QUuid::createUuid().toString());
     else
       region->setUid(regionUID);
 
@@ -406,7 +406,7 @@ void QnlyView::addRegionBase(const QString regionbaseUID,
 
     if (regionbaseUID.isEmpty())
     {
-      regionbase->setUid((QString) QUuid::createUuid());
+      regionbase->setUid(QUuid::createUuid().toString());
     }
     else{
       regionbase->setUid(regionbaseUID);
