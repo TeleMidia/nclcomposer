@@ -20,7 +20,7 @@ class ValidatorFactory : public QObject,
     Q_INTERFACES(IPluginFactory)
 
 #if QT_VERSION >= 0x050000
-  Q_PLUGIN_METADATA(IID IPluginFactory_iid FILE "media_preview_plugin.json")
+  Q_PLUGIN_METADATA(IID IPluginFactory_iid FILE "validator_plugin.json")
 #endif
 
 public:
