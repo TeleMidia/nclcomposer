@@ -18,31 +18,33 @@
 #include <QCoreApplication>
 #include <QApplication>
 #include <QTimer>
-#include <QtGui/QMainWindow>
-#include <QtGui/QTabWidget>
-#include <QtGui/QStatusBar>
-#include <QtGui/QMenu>
-#include <QtGui/QAction>
-#include <QtGui/QMessageBox>
-#include <QtGui/QMenuBar>
-#include <QtGui/QTreeWidget>
-#include <QtGui/QWizardPage>
-#include <QtGui/QWizard>
-#include <QtGui/QVBoxLayout>
-#include <QtGui/QFileDialog>
-#include <QtGui/QPushButton>
-#include <QtGui/QLabel>
-#include <QtGui/QGridLayout>
-#include <QtGui/QLineEdit>
-#include <QtGui/QToolBar>
-#include <QtGui/QListWidget>
-#include <QtGui/QDialog>
-#include <QtGui/QBitmap>
-#include <QtGui/QPainter>
-#include <QtGui/QTreeView>
+
 #include <QToolButton>
 #include <QDockWidget>
 #include <QAtomicInt>
+
+#include <QMainWindow>
+#include <QTabWidget>
+#include <QStatusBar>
+#include <QMenu>
+#include <QAction>
+#include <QMessageBox>
+#include <QMenuBar>
+#include <QTreeWidget>
+#include <QWizardPage>
+#include <QWizard>
+#include <QVBoxLayout>
+#include <QFileDialog>
+#include <QPushButton>
+#include <QLabel>
+#include <QGridLayout>
+#include <QLineEdit>
+#include <QToolBar>
+#include <QListWidget>
+#include <QDialog>
+#include <QBitmap>
+#include <QPainter>
+#include <QTreeView>
 
 #include <core/modules/PluginControl.h>
 #include <core/modules/ProjectControl.h>
@@ -59,7 +61,7 @@ using namespace composer::core::util;
 #include "PluginDetailsDialog.h"
 #include "WelcomeWidget.h"
 #include "AboutDialog.h"
-#include "ComposerHelpWidget.h"
+// #include "ComposerHelpWidget.h"
 #include "ClickableDockWidget.h"
 
 #include "RunGingaConfig.h"
@@ -154,7 +156,7 @@ private:
 
   QTimer *autoSaveTimer; // auto save timer
 
-  ComposerHelpWidget composerHelpWidget;
+  // ComposerHelpWidget composerHelpWidget;
 
 #if WITH_WIZARD
   QProcess wizardProcess;

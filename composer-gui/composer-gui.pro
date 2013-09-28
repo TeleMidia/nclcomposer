@@ -21,14 +21,19 @@ else {
 #DEFINES += USE_MDI
 #DEFINES += WITH_WIZARD
 
-
 contains(RUNSSHON, true) {
   CONFIG += runssh_on
 }
 
+QT += core xml network
 
-CONFIG += help
-QT += core xml network webkit
+greaterThan(QT_MAJOR_VERSION, 4) {
+  QT += widgets webkitwidgets
+}
+else {
+  QT += webkit
+  CONFIG += help
+}
 
 #VERSION INFORMATION
 GIT_VERSION=true
@@ -198,12 +203,12 @@ SOURCES += main.cpp \
     src/WelcomeWidget.cpp \
     src/AboutDialog.cpp \
     src/RunGingaConfig.cpp \
-    src/ComposerHelpWidget.cpp \
     src/GeneralPreferences.cpp \
     src/NewProjectWizard.cpp \
     src/FileChooser.cpp \
     src/ClickableDockWidget.cpp \
     src/ComposerSplashScreen.cpp
+#   src/ComposerHelpWidget.cpp \
 #   src/ImportBasePreferences.cpp
 
 HEADERS += include/ComposerMainWindow.h \
@@ -215,12 +220,12 @@ HEADERS += include/ComposerMainWindow.h \
     include/WelcomeWidget.h \
     include/AboutDialog.h \
     include/RunGingaConfig.h \
-    include/ComposerHelpWidget.h \
     include/GeneralPreferences.h \
     include/NewProjectWizard.h \
     include/FileChooser.h \
     include/ClickableDockWidget.h \
     include/ComposerSplashScreen.h
+#   include/ComposerHelpWidget.h \
 #   include/ImportBasePreferences.h
 
 RESOURCES += images.qrc

@@ -28,7 +28,8 @@
 #include <QMdiArea>
 #endif
 
-// #define SHOW_PROFILES
+#define SHOW_PROFILES 1
+
 namespace composer {
 namespace gui {
 
@@ -1177,7 +1178,7 @@ void ComposerMainWindow::saveCurrentProject()
       {
         // Write FILE!!
         if(project->getChildren().size())
-          file.write(project->getChildren().at(0)->toString(0, false).toAscii());
+          file.write(project->getChildren().at(0)->toString(0, false).toLatin1());
 
         file.close();
       }
@@ -1241,7 +1242,7 @@ void ComposerMainWindow::saveAsCurrentProject()
         {
           // Write FILE!!
           if(project->getChildren().size())
-            file.write(project->getChildren().at(0)->toString(0, false).toAscii());
+            file.write(project->getChildren().at(0)->toString(0, false).toLatin1());
 
           file.close();
         }
@@ -1407,7 +1408,7 @@ void ComposerMainWindow::runOnLocalGinga()
   {
     /* Write FILE!! */
     if(project->getChildren().size())
-      file.write(project->getChildren().at(0)->toString(0, false).toAscii());
+      file.write(project->getChildren().at(0)->toString(0, false).toLatin1());
 
     file.close();
 
@@ -2138,7 +2139,7 @@ void ComposerMainWindow::gotoNCLClubWebsite()
 
 bool ComposerMainWindow::showHelp()
 {
-  composerHelpWidget.show();
+  // composerHelpWidget.show();
   return true;
 
   // Old implementation based on Assistant

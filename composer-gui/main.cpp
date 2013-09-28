@@ -7,7 +7,6 @@
  * Contributors:
  *    Telemidia/PUC-Rio - initial API and implementation
  */
-#include <QtGui/QApplication>
 #include <QApplication>
 #include <QResource>
 #include <QObject>
@@ -16,11 +15,6 @@
 #include <core/util/ComposerSettings.h>
 
 #include "ComposerMainWindow.h"
-
-#ifdef Q_WS_X11
-#include <QX11EmbedWidget>
-#include <X11/Xlib.h>
-#endif
 
 using namespace composer::gui;
 
@@ -166,9 +160,6 @@ void loadTranslations(QApplication *app)
 
 int main(int argc, char *argv[])
 {
-#ifdef Q_WS_X11
-XInitThreads();
-#endif
     QApplication a(argc, argv);
     a.setQuitOnLastWindowClosed(true);
 

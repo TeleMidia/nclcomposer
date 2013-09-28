@@ -301,7 +301,7 @@ void RunRemoteGingaVMAction::runCurrentProject()
     {
       /* Write FILE!! */
       if(project->getChildren().size())
-        file.write(project->getChildren().at(0)->toString(0, false).toAscii());
+        file.write(project->getChildren().at(0)->toString(0, false).toLatin1());
 
       file.close();
 
