@@ -11,6 +11,10 @@ VERSION = \
 
 CONFIG += static
 
+greaterThan(QT_MAJOR_VERSION, 4) {
+  QT += widgets
+}
+
 # Uses FORCERELEASE variable because CONFIG and SUBDIR force three executions
 # if qmake and the last one does not preserves CONFIG from command line.
 contains(FORCERELEASE, true) {

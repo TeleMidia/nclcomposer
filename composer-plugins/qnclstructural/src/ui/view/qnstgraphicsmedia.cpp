@@ -260,9 +260,9 @@ void QnstGraphicsMedia::mousePressEvent(QGraphicsSceneMouseEvent *event)
   if(isDraggable())
   {
     QMimeData *data = new QMimeData;
-    data->setColorData(Qt::green);
-    data->setData("nclcomposer/mediaid", getnstId().toAscii());
-    data->setData("nclcomposer/qnstuid", getnstUid().toAscii());
+    data->setColorData(QColor(Qt::green));
+    data->setData("nclcomposer/mediaid", getnstId().toLatin1());
+    data->setData("nclcomposer/qnstuid", getnstUid().toLatin1());
 
     QDrag *drag = new QDrag(event->widget());
     drag->setMimeData(data);

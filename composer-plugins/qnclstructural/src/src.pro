@@ -101,6 +101,9 @@ FORMS += \
     ui/view/QnstGraphicsActionForm.ui \
     ui/view/QnstGraphicsBindForm.ui
 
+OTHER_FILES += \
+    ncl_structural_view.json
+
 
 
 

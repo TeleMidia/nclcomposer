@@ -5,8 +5,8 @@
 #include <QStringList>
 
 #include <QKeyEvent>
-#include <QtGui/QListView>
-#include <QtGui/QStringListModel>
+#include <QListView>
+#include <QStringListModel>
 #include <QDebug>
 
 CompleteLineEdit::CompleteLineEdit(QStringList words, QWidget *parent)

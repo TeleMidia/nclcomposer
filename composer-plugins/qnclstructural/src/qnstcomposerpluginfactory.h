@@ -32,6 +32,10 @@ class QnstComposerPluginFactory : public QObject, public IPluginFactory
   Q_OBJECT
   Q_INTERFACES(IPluginFactory)
 
+#if QT_VERSION >= 0x050000
+  Q_PLUGIN_METADATA(IID IPluginFactory_iid FILE "ncl_structural_view.json")
+#endif
+
 public:
   QnstComposerPluginFactory(QObject* parent = 0);
 

@@ -12,7 +12,7 @@
 
 #include "ui_QnstGraphicsLinkForm.h"
 
-#include <QtGui/QLineEdit>
+#include <QLineEdit>
 #include <QStringList>
 
 class QListView;
