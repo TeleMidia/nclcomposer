@@ -1,7 +1,7 @@
 #ifndef PLUGINVALIDATOR_H
 #define PLUGINVALIDATOR_H
 
-#include <QtGui/QWidget>
+#include <QWidget>
 #include <validation/Validator.h>
 #include <core/extensions/IPluginFactory.h>
 #include "ValidatorPlugin.h"
@@ -18,6 +18,10 @@ class ValidatorFactory : public QObject,
 {
     Q_OBJECT
     Q_INTERFACES(IPluginFactory)
+
+#if QT_VERSION >= 0x050000
+  Q_PLUGIN_METADATA(IID IPluginFactory_iid FILE "media_preview_plugin.json")
+#endif
 
 public:
     ValidatorFactory(QWidget *parent = 0);

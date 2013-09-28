@@ -66,7 +66,8 @@ HEADERS  += \
     nclmodel/textualparser.h \
     nclmodel/connectorparser.h
 
-OTHER_FILES +=
+OTHER_FILES += \
+    validator_plugin.json
 
 RESOURCES += \
     Resource.qrc \
