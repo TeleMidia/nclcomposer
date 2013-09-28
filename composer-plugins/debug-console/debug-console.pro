@@ -22,3 +22,6 @@ HEADERS += include/DebugConsoleFactory.h\
 RESOURCES += images.qrc
 
 INSTALLS += target
+
+OTHER_FILES += \
+    debug_console.json

@@ -5,6 +5,10 @@ MOC_DIR     =   .moc
 OBJECTS_DIR =   .obj
 UI_DIR      =   .ui
 
+greaterThan(QT_MAJOR_VERSION, 4) {
+  QT += widgets
+}
+
 GIT_VERSION=true
 isEmpty(CPRVERSION) {
   #GUI_VERSION=$$system(git describe --tag | sed "s/v\(.*\)-.*-.*/\1/")
