@@ -15,8 +15,6 @@
 #include <QtDebug>
 #include <QFile>
 #include <QTextStream>
-#include <QtScript/QScriptValue>
-#include <QtScript/QScriptEngine>
 #include <deque>
 #include <map>
 #include <QStringList>

@@ -72,6 +72,11 @@ public:
   * This is require for the QTPlugin system work.
   * Declaring the interface that is going to be used by external plugins.
   */
+#if QT_VERSION >= 0x050000
+#define ILanguageProfile_iid "br.puc_rio.telemidia.composer.ILanguageProfile"
+Q_DECLARE_INTERFACE(ILanguageProfile, ILanguageProfile_iid)
+#else
 Q_DECLARE_INTERFACE(ILanguageProfile,
                     "br.telemidia.purcrio.composer.ILanguage")
+#endif
 #endif // ILANGUAGE_H

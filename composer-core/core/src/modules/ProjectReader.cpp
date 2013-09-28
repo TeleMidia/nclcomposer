@@ -80,7 +80,7 @@ Project *ProjectReader::readFile(QString location)
 
         pos = endPluginData + endPluginDataStr.size() + 1;
 
-        project->setPluginData(pluginID, data.toAscii());
+        project->setPluginData(pluginID, data.toLatin1());
     }
     /* FINISH READING MODEL */
 

@@ -1,12 +1,14 @@
 # -------------------------------------------------
 # Project created by QtCreator 2010-03-12T13:06:44
 # -------------------------------------------------
-# QT -= gui
-QT += xml
+
+QT += core gui xml
+greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
+
 TEMPLATE = lib
 TARGET = ComposerCore
+
 VERSION = 1.0
-QT += gui
 CONFIG += dll
 MOC_DIR = .mocs
 OBJECTS_DIR = .objs

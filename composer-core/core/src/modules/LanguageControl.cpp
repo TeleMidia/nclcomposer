@@ -53,7 +53,7 @@ ILanguageProfile* LanguageControl::loadProfile(QString fileName)
 {
     ILanguageProfile *lProfile = NULL;
     QPluginLoader loader(fileName);
-    //qDebug() << "trying to load: " << fileName;
+
     QObject *profile = loader.instance();
     if (profile) {
         lProfile = qobject_cast<ILanguageProfile*> (profile);
@@ -65,10 +65,16 @@ ILanguageProfile* LanguageControl::loadProfile(QString fileName)
                 "Profile for language (" <<
                 Utilities::getExtensionForLanguageType(type) <<
                         ") already exists";
-            } else
-            {
-              profiles[type] = lProfile;
             }
+            else
+            {
+              profiles.insert(type, lProfile);
+            }
+        }
+        else
+        {
+          qDebug() << "LanguageControl::loadProfiles" <<
+                      "Error!" << "Could not cast to ILanguageProfile";
         }
     } else qDebug() << "Failed to load languageControl (" << fileName << ")"
                     << loader.errorString();
@@ -84,6 +90,7 @@ void LanguageControl::loadProfiles(QString profilesDirPath)
              "directory (%1) does not exist!").arg(profilesDirPath));
         return;
     }
+
     QStringList filter;
     filter.append("*.so");
     filter.append("*.dylib");
@@ -91,8 +98,9 @@ void LanguageControl::loadProfiles(QString profilesDirPath)
     profileDir.setNameFilters(filter);
 
     foreach (QString fileName, profileDir.entryList(QDir::Files
-         | QDir::NoSymLinks)) {
-        loadProfile(profileDir.absoluteFilePath(fileName));
+         | QDir::NoSymLinks))
+    {
+      loadProfile(profileDir.absoluteFilePath(fileName));
     }
 }
 

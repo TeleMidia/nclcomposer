@@ -214,7 +214,7 @@ QString Entity::toString(int ntab, bool writeuid)
         out += "\t";
 
     out += "<";
-    out.append(getType().toAscii());
+    out.append(getType().toLatin1());
     foreach(QString attr, atts.keys()){
         out += " ";
         out.append(attr);

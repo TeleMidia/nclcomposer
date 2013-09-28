@@ -22,7 +22,12 @@ class NCLLANGUAGEPROFILESHARED_EXPORT NCLLanguageProfile : public QObject,
     public ILanguageProfile {
 
   Q_OBJECT
+
   Q_INTERFACES(ILanguageProfile)
+
+#if QT_VERSION >= 0x050000
+  Q_PLUGIN_METADATA(IID "br.puc_rio.telemidia.composer.ILanguageProfile" FILE "nclLanguageProfile.json")
+#endif
 
 public:
   NCLLanguageProfile();

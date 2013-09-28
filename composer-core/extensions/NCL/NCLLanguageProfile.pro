@@ -90,5 +90,7 @@ HEADERS +=  NCLLanguageProfile.h \
             NCLDocumentParser.h \
             NCLStructure.h
 
+OTHER_FILES += nclLanguageProfile.json \
+    nclLanguageProfile.json
 
 INSTALLS += target headers_nclprofile

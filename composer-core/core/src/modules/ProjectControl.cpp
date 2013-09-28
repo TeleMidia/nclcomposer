@@ -224,7 +224,7 @@ void ProjectControl::saveProject(QString location)
     }
 
     QString content = project->toString();
-    fout.write(qCompress(content.toAscii(), content.size()));
+    fout.write(qCompress(content.toLatin1(), content.size()));
     fout.close();
     project->setDirty(false);
 }
@@ -273,7 +273,7 @@ void ProjectControl::saveTemporaryProject(QString location)
   }
 
   QString content = project->toString();
-  fout.write(qCompress(content.toAscii(), content.size()));
+  fout.write(qCompress(content.toLatin1(), content.size()));
   fout.close();
 //  project->setDirty(false);
 }
