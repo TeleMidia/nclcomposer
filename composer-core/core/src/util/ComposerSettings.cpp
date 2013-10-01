@@ -12,7 +12,7 @@
 namespace composer {
     namespace core {
         namespace util {
-#ifdef Q_WS_MAC
+#ifdef Q_OS_MAC
 GlobalSettings::GlobalSettings() : QSettings ("br.puc-rio.telemidia", "Composer")
 #else
 GlobalSettings::GlobalSettings() : QSettings(QSettings::IniFormat, QSettings::UserScope, "telemidia", "composer")

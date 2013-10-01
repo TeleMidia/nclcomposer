@@ -70,7 +70,6 @@ IPluginFactory* PluginControl::loadPlugin(QString fileName)
   QPluginLoader loader(fileName);
   QObject *plugin = loader.instance();
 
-  // qDebug() << "loadingPlugin( " << fileName << ")";
   if (plugin)
   {
     pluginFactory = qobject_cast<IPluginFactory*> (plugin);
@@ -93,7 +92,7 @@ IPluginFactory* PluginControl::loadPlugin(QString fileName)
   }//end load OK
   else
   {
-    qDebug() << "PluginControl::loadPlugins failed to load"
+    qWarning() << "PluginControl::loadPlugins failed to load"
                << "(" << fileName << ")" << " -- " << loader.errorString();
   }
 
