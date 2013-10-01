@@ -105,7 +105,7 @@ void QnstEntity::addnstEntity(QnstEntity* entity)
     // that could be using a set instead of a vector to entities.
     if(entities.contains(entity))
 
-#ifdef Q_WS_MAC
+#ifdef Q_OS_MAC
     qWarning() << "[QNST] Warning! You are adding the same entity twice as \
       child of " << this << __FILE__ << __LINE__;
 #else

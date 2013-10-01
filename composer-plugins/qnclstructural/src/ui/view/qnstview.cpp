@@ -5187,7 +5187,7 @@ void QnstView::traceConnectors()
   {
     assert(connectors[key] != NULL);
 
-#ifdef Q_WS_MAC
+#ifdef Q_OS_MAC
     qDebug() << key << connectors[key] << connectors[key]->getConditions() << connectors[key]->getActions();
 #else
 //    qDebug() << key << (int)connectors[key] << connectors[key]->getConditions() << connectors[key]->getActions();
@@ -5203,7 +5203,7 @@ void QnstView::traceConnectors2()
   {
     assert(connectors2[key] != NULL);
 
-#ifdef Q_WS_MAC
+#ifdef Q_OS_MAC
     qDebug() << key << connectors2[key] << connectors2[key]->getConditions() << connectors2[key]->getActions();
 #else
 //    qDebug() << key << (int)connectors2[key] << connectors2[key]->getConditions() << connectors2[key]->getActions();
