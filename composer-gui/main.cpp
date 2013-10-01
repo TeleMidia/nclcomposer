@@ -7,6 +7,7 @@
  * Contributors:
  *    Telemidia/PUC-Rio - initial API and implementation
  */
+#include <qglobal.h>
 #include <QApplication>
 #include <QResource>
 #include <QObject>
@@ -30,11 +31,11 @@ void updateSettingsWithDefaults()
   defaultPluginsPath << QDir::homePath() + QString("/composer/extensions");
 
   // After that we will look for plugins in the default system path
-#ifdef Q_WS_MAC
+#ifdef Q_OS_MAC
   defaultPluginsPath << "/Library/Application Support/Composer/Extensions"
                      << QApplication::applicationDirPath() +
                         "/../PlugIns/composer";
-#elif defined(Q_WS_WIN32)
+#elif defined(Q_OS_WIN32)
   defaultPluginsPath << QApplication::applicationDirPath() + "/extensions";
   defaultPluginsPath << "C:/Composer/extensions";
 #else
@@ -76,13 +77,13 @@ void updateSettingsWithDefaults()
 		
   if(!settings.contains("default_connector_base"))
   {
-    #ifdef Q_WS_MAC
+    #ifdef Q_OS_MAC
 		#ifdef QT_NO_DEBUG
 			defaultConnBaseDir = "../PlugIns/composer/";
 		#elif
 			defaultConnBaseDir = "/Library/Application Support/Composer/Data/";
 		#endif
-    #elif defined(Q_WS_WIN32)
+    #elif defined(Q_OS_WIN32)
       defaultConnBaseDir = QApplication::applicationDirPath() + "/data/";
     #else
       // PREFIX Should be defined by the qmake while compiling the source code.
@@ -104,9 +105,9 @@ void updateSettingsWithDefaults()
 
   stylesheetsDirs << QString(DATA_PATH);
 
-#ifdef Q_WS_WIN32
+#ifdef Q_OS_WIN32
   stylesheetsDirs << QApplication::applicationDirPath() + "/data";
-#elif defined(Q_WS_MAC)
+#elif defined(Q_OS_MAC)
   stylesheetsDirs << QApplication::applicationDirPath() + "/../PlugIns/composer";
 #endif
 

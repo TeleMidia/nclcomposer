@@ -315,7 +315,7 @@ void ComposerMainWindow::openProjects(const QStringList &projects)
 
 void ComposerMainWindow::initGUI()
 {
-#ifndef Q_WS_MAC
+#ifndef Q_OS_MAC
   setWindowIcon(QIcon(":/mainwindow/icon"));
 #endif
   setWindowTitle(tr("NCL Composer"));
@@ -711,7 +711,7 @@ void ComposerMainWindow::onOpenProjectTab(QString location)
 
 void ComposerMainWindow::createMenus()
 {
-#ifdef Q_WS_MAC
+#ifdef Q_OS_MAC
   ui->menubar->setNativeMenuBar(true);
 #endif
 
