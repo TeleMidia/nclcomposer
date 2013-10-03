@@ -45,6 +45,7 @@ void QsciNCLAPIs::updateAutoCompletionList( const QStringList &context,
 
   int pos = lexer()->editor()
       ->SendScintilla(QsciScintilla::SCI_GETSELECTIONSTART);
+
   qDebug() << "updateAutoCompletionList to";
 
   if ( isElement(pos) )
@@ -184,7 +185,8 @@ void QsciNCLAPIs::updateAutoCompletionList( const QStringList &context,
           else if(references[i]->getScope() == AttributeReferences::SAME_SCOPE)
           {
             int parent_offset = getParentOffset(pos);
-            while(!nclStructure->defineScope(getCurrentTagName(parent_offset)))
+            while( parent_offset >= 0 &&
+                   !nclStructure->defineScope(getCurrentTagName(parent_offset)))
             {
               parent_offset = getParentOffset(parent_offset);
             }
@@ -462,7 +464,9 @@ bool QsciNCLAPIs::isElement(int pos)
 {
   int style = lexer()->editor()
       ->SendScintilla( QsciScintilla:: SCI_GETSTYLEAT, pos);
+
   qDebug() << "Style=" << style;
+
   if(style == QsciLexerNCL::Default)
   {
     return true;
