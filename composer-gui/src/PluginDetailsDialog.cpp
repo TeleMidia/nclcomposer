@@ -27,8 +27,9 @@ void PluginDetailsDialog::setCurrentPlugin(IPluginFactory *currentPluginFactory)
 {
     this->currentPluginFactory = currentPluginFactory;
 
+#if QT_VERSION < 0x050000
     ui->label_NameValue->setText(currentPluginFactory->name());
-    ui->label_VendorValue->setText(currentPluginFactory->version());
+    ui->label_VendorValue->setText(currentPluginFactory->vendor());
     ui->label_CompatibilityVersionValue
                 ->setText(currentPluginFactory->compatVersion());
 
@@ -42,6 +43,23 @@ void PluginDetailsDialog::setCurrentPlugin(IPluginFactory *currentPluginFactory)
     ui->label_CopyrightValue->setText(currentPluginFactory->copyright());
 
     ui->textBrowser_License->setText(currentPluginFactory->license());
+#else
+    ui->label_NameValue->setText(currentPluginFactory->metadata().value("name").toString());
+    ui->label_VendorValue->setText(currentPluginFactory->metadata().value("vendor").toString());
+    ui->label_CompatibilityVersionValue
+                ->setText(currentPluginFactory->metadata().value("compatVersion").toString());
+
+    ui->label_VersionValue->setText(currentPluginFactory->metadata().value("version").toString());
+    ui->label_CategoryValue->setText(currentPluginFactory->metadata().value("category").toString());
+
+    ui->label_URLValue->setText(currentPluginFactory->metadata().value("url").toString());
+
+    ui->textBrowser_Description->setText(currentPluginFactory->metadata().value("description").toString());
+
+    ui->label_CopyrightValue->setText(currentPluginFactory->metadata().value("copyright").toString());
+
+    ui->textBrowser_License->setText(currentPluginFactory->metadata().value("license").toString());
+#endif
 }
 
 } } // end namespace

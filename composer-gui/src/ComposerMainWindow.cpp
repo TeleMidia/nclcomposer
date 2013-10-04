@@ -828,7 +828,12 @@ void ComposerMainWindow::aboutPlugins()
   QMap <QString, QTreeWidgetItem*> categories;
   for (it = pList.begin(); it != pList.end(); it++) {
     IPluginFactory *pF = *it;
+#if QT_VERSION < 0x050000
     QString category = pF->category();
+#else
+    QString category = pF->metadata().value("category").toString();
+#endif
+
     if(!categories.contains(category)){
       treeWidgetItem = new QTreeWidgetItem(pluginsExt);
       categories.insert(category, treeWidgetItem);
@@ -840,10 +845,17 @@ void ComposerMainWindow::aboutPlugins()
   treeWidgetItem2plFactory.clear();
   for (it = pList.begin(); it != pList.end(); it++) {
     IPluginFactory *pF = *it;
+#if QT_VERSION < 0x050000
     treeWidgetItem = new QTreeWidgetItem(categories.value(pF->category()));
+#else
+    treeWidgetItem = new QTreeWidgetItem(categories.value(pF->metadata().value("category").toString()));
+#endif
     treeWidgetItem2plFactory.insert(treeWidgetItem, pF);
-
+#if QT_VERSION < 0x050000
     treeWidgetItem->setText(0, pF->name());
+#else
+    treeWidgetItem->setText(0, pF->metadata().value("name").toString());
+#endif
 
     // Set checked (or not) based on the settings
     GlobalSettings settings;
@@ -854,8 +866,13 @@ void ComposerMainWindow::aboutPlugins()
       treeWidgetItem->setCheckState(1, Qt::Unchecked);
 
     settings.endGroup();
+#if QT_VERSION < 0x050000
     treeWidgetItem->setText(2, pF->version());
     treeWidgetItem->setText(3, pF->vendor());
+#else
+    treeWidgetItem->setText(2, pF->metadata().value("version").toString());
+    treeWidgetItem->setText(3, pF->metadata().value("vendor").toString());
+#endif
   }
 
   pluginsExt->expandAll();
