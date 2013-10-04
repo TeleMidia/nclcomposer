@@ -13,6 +13,8 @@ contains(FORCERELEASE, true) {
 else {
   CONFIG += qt warn_on debug console
   CONFIG -= release
+
+  DEFINES += WITH_TEST_VERSION_MESSAGE=\"\\\"1\\\"\"
   message ("Composer.pro DEBUG build!")
 }
 
@@ -51,7 +53,6 @@ message("NCL Composer GUI build version $${GUI_VERSION} (from git=$${GIT_VERSION
 VERSTR = '\\"$${GUI_VERSION}\\"'
 DEFINES += NCLCOMPOSER_GUI_VERSION=\"$${VERSTR}\"
 DEFINES += BUILD_DATE=\"\\\"$$system(echo \"$${_DATE_}\" | sed \"s/ /\\\\\\ /g\")\"\\\"
-#DEFINES += WITH_TEST_VERSION_MESSAGE=\"\\\"1\\\"\"
 
 #NOTIFY SYSTEM
 DEFINES += DEFAULT_MAX_NOTIFY_MESSAGES=\"4\"
