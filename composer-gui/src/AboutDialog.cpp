@@ -1,6 +1,7 @@
 #include "AboutDialog.h"
 #include "ui_AboutDialog.h"
 
+#include <QApplication>
 #include <QMessageBox>
 #include <QFile>
 
@@ -15,7 +16,11 @@ AboutDialog::AboutDialog(QWidget *parent):
     ui->label_ProgramName->setText(QString("NCL Composer v.") +
                                    QString(NCLCOMPOSER_GUI_VERSION));
 
+    ui->label_buildDate->setText(BUILD_DATE);
+
     connect(ui->button_Close, SIGNAL(pressed()), this, SLOT(close()));
+
+    connect(ui->button_aboutQt, SIGNAL(pressed()), qApp, SLOT(aboutQt()));
 }
 
 AboutDialog::~AboutDialog()
