@@ -77,12 +77,13 @@ public:
    \return QString
   */
   virtual QString name() const {return "Media Preview"; }
+
+#if QT_VERSION < 0x050000
   /*!
    \brief Returns the version of Property View implementation.
 
    \return QString the version number as string.
   */
-
   QString version() { return NCLCOMPOSER_PLUGINS_VERSION; }
   /*!
    \brief Returns the core version that is compatible with this plugin.
@@ -126,6 +127,7 @@ public:
   QString url() {return "http://composer.telemidia.puc-rio.br/debug";}
 
   QString category() {return "NCL";}
+#endif
 
 
 

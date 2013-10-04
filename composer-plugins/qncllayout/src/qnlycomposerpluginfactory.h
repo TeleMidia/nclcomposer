@@ -45,6 +45,7 @@ public:
 
     QString name() const;
 
+#if QT_VERSION < 0x050000
     /*!
      \brief Returns the version of Layout View implementation.
 
@@ -86,9 +87,10 @@ public:
     QString description() {return tr("Layout View enable the user to edit the "
                                      "NCL regions visually.");}
 
-    QString url() {return "http://composer.telemidia.puc-rio.br/debug";}
+    QString url() {return "http://composer.telemidia.puc-rio.br/layout";}
 
     QString category() {return "NCL";}
+#endif
 };
 
 #endif // QNLYCOMPOSERPLUGINFACTORY_H

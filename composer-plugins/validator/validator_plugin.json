@@ -1,3 +1,13 @@
 {
-  "Keys": [ "validator_plugin" ]
+  "version": "0.2",
+  "compatVersion": "0.2",
+
+  "vendor": "Laws Lab",
+  "copyright": "LAWS/UFMA",
+  "license": "LGPL",
+
+  "description": "Validates NCL documents.",
+  "url": "http://composer.telemidia.puc-rio.br/validator",
+
+  "category": "NCL"
 }

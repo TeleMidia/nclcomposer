@@ -63,6 +63,8 @@ public:
 
   void applyValues();
 
+
+#if QT_VERSION < 0x050000
   /*!
    * \brief Returns the version of Textual View implementation.
    *
@@ -113,6 +115,7 @@ public:
    * \return QString the category of TextualPlugin.
    */
   QString category() {return "NCL";}
+#endif
 
 private:
   QFrame *prefPageWidget;

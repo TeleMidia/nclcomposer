@@ -1,3 +1,17 @@
 {
-  "Keys": [ "ncl_textual_view" ]
+  "version": "0.2",
+  "compatVersion": "0.2",
+
+  "vendor": "TeleMidia Labs",
+  "copyright": "TeleMidia/PUC-Rio",
+  "license": "LGPL",
+
+  "description": "NCL Textual plugin enable the user to \
+                  edit the application directly through its \
+                  source code. Additionally, this plugin \
+                  brings features like code coloring and \
+                  autocomplete.",
+  "url": "http://composer.telemidia.puc-rio.br/textual",
+
+  "category": "NCL"
 }

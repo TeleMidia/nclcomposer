@@ -76,6 +76,8 @@ class OutlineViewFactory : public QObject, public IPluginFactory
           \return QIcon
          */
          QIcon icon() const;
+
+#if QT_VERSION < 0x050000
          /*!
           \brief Returns the version of Outline View implementation.
 
@@ -120,6 +122,7 @@ class OutlineViewFactory : public QObject, public IPluginFactory
          QString url() {return "http://composer.telemidia.puc-rio.br/outline";}
 
          QString category() {return "NCL";}
+#endif
 };
 
 #endif // OUTLINEVIEWPLUGINFACTORY_H

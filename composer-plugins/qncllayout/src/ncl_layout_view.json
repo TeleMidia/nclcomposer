@@ -1,3 +1,14 @@
 {
-  "Keys": [ "ncl_layout_view" ]
+  "version": "0.2",
+  "compatVersion": "0.2",
+
+  "vendor": "TeleMidia Labs",
+  "copyright": "TeleMidia/PUC-Rio",
+  "license": "LGPL",
+
+  "description": "Layout View enable the user to edit the \
+                  NCL regions visually.",
+  "url": "http://composer.telemidia.puc-rio.br/layout",
+
+  "category": "NCL"
 }

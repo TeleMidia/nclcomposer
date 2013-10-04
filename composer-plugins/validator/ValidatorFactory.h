@@ -46,7 +46,7 @@ public:
     void applyValues() {};
 
 
-
+#if QT_VERSION < 0x050000
     /* Informações úteis que devem estar no plugin (em um XML?)*/
     QString version() { return "0.1"; }
     QString compatVersion() {return "0.1";}
@@ -56,6 +56,7 @@ public:
     QString description() {return "Unknown";}
     QString url() {return "Unknown";}
     QString category() {return "NCL";}
+#endif
 
 };
 

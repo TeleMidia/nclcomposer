@@ -49,6 +49,7 @@ public:
 
   QString name() const;
 
+#if QT_VERSION < 0x050000
   /*!
      \brief Returns the version of Layout View implementation.
 
@@ -94,6 +95,7 @@ public:
   QString url() {return "http://composer.telemidia.puc-rio.br/structural";}
 
   QString category() {return "NCL";}
+#endif
 };
 
 #endif // QNSTCOMPOSERPLUGINFACTORY_H

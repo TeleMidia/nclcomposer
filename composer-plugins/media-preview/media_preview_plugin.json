@@ -1,0 +1,16 @@
+{
+  "version": "0.2",
+  "compatVersion": "0.2",
+
+  "vendor": "TeleMidia Labs",
+  "copyright": "TeleMidia/PUC-Rio",
+  "license": "LGPL",
+
+  "description": "Media Pre-view displays a media player \
+                  of a current selected entity and \
+                  enables the user have to a preview \
+                  of the media object selected.",
+  "url": "http://composer.telemidia.puc-rio.br/mediapreview",
+
+  "category": "NCL"
+}

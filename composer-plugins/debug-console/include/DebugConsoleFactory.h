@@ -60,6 +60,8 @@ class DebugConsoleFactory : public QObject,
 
          void applyValues();
 
+
+#if QT_VERSION < 0x050000
          /*!
           \brief Returns the version of Debug Console View implementation.
 
@@ -104,6 +106,7 @@ class DebugConsoleFactory : public QObject,
          QString url() {return "http://composer.telemidia.puc-rio.br/debug";}
 
          QString category() {return tr("General");}
+#endif
 
 };
 

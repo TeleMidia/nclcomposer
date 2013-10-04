@@ -53,3 +53,6 @@ FORMS += \
 
 RESOURCES += \
     media-preview.qrc
+
+OTHER_FILES += \
+    media_preview_plugin.json

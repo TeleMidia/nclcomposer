@@ -29,7 +29,7 @@ using namespace composer::extension;
 
 */
 class PropertiesViewFactory : public QObject,
-                            public IPluginFactory
+                              public IPluginFactory
 {
     Q_OBJECT
     Q_INTERFACES(IPluginFactory)
@@ -84,6 +84,7 @@ class PropertiesViewFactory : public QObject,
          */
          QIcon icon() const;
 
+#if QT_VERSION < 0x050000
          /*!
           \brief Returns the version of Property View implementation.
 
@@ -127,9 +128,10 @@ class PropertiesViewFactory : public QObject,
                                           "enables the user to change its "
                                           "values.");}
 
-         QString url() {return "http://composer.telemidia.puc-rio.br/debug";}
+         QString url() {return "http://composer.telemidia.puc-rio.br/property";}
 
          QString category() {return "NCL";}
+#endif
 
 };
 
