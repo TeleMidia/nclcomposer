@@ -14,6 +14,11 @@
 #include <QString>
 #include <QtGui/QIcon>
 
+#if QT_VERSION >= 0x050000
+#include <QJsonObject>
+#endif
+
+
 #include "../util/ComposerCoreControl_global.h"
 
 #include "../util/Utilities.h"
@@ -33,6 +38,10 @@ namespace composer {
  * project. The whole process is transparent for plugin developers.
  */
 class COMPOSERCORESHARED_EXPORT IPluginFactory {
+#if QT_VERSION >= 0x050000
+private:
+    QJsonObject metadata_obj;
+#endif
 
 public:
     virtual ~IPluginFactory() {}
@@ -74,7 +83,10 @@ public:
         lTypes.append(NCL);
         return lTypes;
     }
-
+#if QT_VERSION >= 0x050000
+    void setMetadata(const QJsonObject &obj) { this->metadata_obj = obj; }
+    QJsonObject metadata() { return this->metadata_obj; }
+#else
     /*Useful information about the plugin (go to XML?)*/
     virtual QString version() { return "Unknown";}
     virtual QString compatVersion() {return "Unknown";}
@@ -84,6 +96,7 @@ public:
     virtual QString description() {return "Unknown";}
     virtual QString url() {return "Unknown";}
     virtual QString category() {return "Unknown";}
+#endif
 };
 
 } } //end namespace

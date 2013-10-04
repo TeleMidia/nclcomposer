@@ -13,6 +13,10 @@
 #include <QMetaObject>
 #include <QMetaMethod>
 
+#if QT_VERSION >= 0x050000
+#include <QJsonObject>
+#endif
+
 namespace composer {
 namespace core {
 
@@ -87,6 +91,12 @@ IPluginFactory* PluginControl::loadPlugin(QString fileName)
         {
           pluginsByType.insert(*it, pluginFactory->id());
         }
+
+#if QT_VERSION >= 0x050000
+        qDebug() << loader.metaData();
+        QJsonObject metadata = loader.metaData().value("MetaData").toObject();
+        pluginFactory->setMetadata(metadata);
+#endif
       }
     }
   }//end load OK
