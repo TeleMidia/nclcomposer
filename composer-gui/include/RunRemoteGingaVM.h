@@ -38,6 +38,8 @@ private:
 
   bool mustStop;
 
+  bool _autoplay;
+
 signals:
   void finished();
   void copyFinished();
@@ -48,11 +50,12 @@ signals:
   void taskValue(int);
 
 public slots:
-  void runCurrentProject();
+  void copyCurrentProject();
   void stopExecution();
-
+  void setAutoplay(bool autoplay);
 public:
   void setCurrentProject(Project* project);
+  RunRemoteGingaVMAction();
 };
 
 class StopRemoteGingaVMAction : public QObject

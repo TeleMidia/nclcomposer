@@ -24,6 +24,11 @@
 #include <core/util/ComposerSettings.h>
 using namespace composer::core::util;
 
+RunRemoteGingaVMAction::RunRemoteGingaVMAction()
+{
+  _autoplay = true;
+}
+
 void RunRemoteGingaVMAction::setCurrentProject(Project *project)
 {
   this->project = project;
@@ -236,7 +241,7 @@ bool RunRemoteGingaVMAction::fixSrcsFromNCLFile(const QString &nclLocalPath)
   return true;
 }
 
-void RunRemoteGingaVMAction::runCurrentProject()
+void RunRemoteGingaVMAction::copyCurrentProject()
 {
   mustStop = false;
 
@@ -308,6 +313,9 @@ void RunRemoteGingaVMAction::runCurrentProject()
 //      if(fixSrcsFromNCLFile(nclLocalPath))
 //      {
         /* RUNNING GINGA */
+
+      if (_autoplay)
+      {
         sshclient.sftp_copy_file(nclLocalPath.toStdString().c_str(),
                                 remotePath.toStdString().c_str());
         QString cmd = remoteCmd;
@@ -315,6 +323,7 @@ void RunRemoteGingaVMAction::runCurrentProject()
         cmd += remotePath + "/tmp.ncl";
         if(!mustStop)
           sshclient.exec_cmd(cmd.toStdString().c_str());
+      }
 //      }
     }
     else
@@ -331,6 +340,11 @@ void RunRemoteGingaVMAction::runCurrentProject()
   sshclient.doDisconnect();
 
   emit finished();
+}
+
+void RunRemoteGingaVMAction::setAutoplay(bool autoplay)
+{
+  _autoplay = autoplay;
 }
 
 void RunRemoteGingaVMAction::stopExecution()

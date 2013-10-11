@@ -168,7 +168,7 @@
      <x>0</x>
      <y>0</y>
      <width>776</width>
-     <height>25</height>
+     <height>21</height>
     </rect>
    </property>
    <property name="layoutDirection">
@@ -214,6 +214,8 @@
     <addaction name="action_Save"/>
     <addaction name="action_SaveAs"/>
     <addaction name="action_SaveAll"/>
+    <addaction name="separator"/>
+    <addaction name="actionPublish"/>
     <addaction name="separator"/>
     <addaction name="menuImport"/>
     <addaction name="separator"/>
@@ -493,6 +495,18 @@
   <action name="actionAbout_Qt">
    <property name="text">
     <string>About Qt</string>
+   </property>
+  </action>
+  <action name="actionPublish">
+   <property name="icon">
+    <iconset resource="../images.qrc">
+     <normaloff>:/mainwindow/pub</normaloff>:/mainwindow/pub</iconset>
+   </property>
+   <property name="text">
+    <string>Publish...</string>
+   </property>
+   <property name="toolTip">
+    <string>Publish current project to server.</string>
    </property>
   </action>
  </widget>

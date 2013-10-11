@@ -121,6 +121,8 @@ private:
   QAction *projectViewAct; /*!< TODO */
   QAction *editPreferencesAct; /*!< TODO */
 
+  QAction *publishProjectAct; /*!< Action to open publish dialog. */
+
   QAction *saveCurrentPluginsLayoutAct; /*!< Action to save current plugins
                                                 layout as a new perspective. */
   QAction *restorePluginsLayoutAct; /*!< Action to restore a previously saved
@@ -314,8 +316,8 @@ private slots:
   void stopNCL();
   bool isRunningNCL();
   void runOnLocalGinga();
-  void runOnRemoteGingaVM();
-  void runHasFinished();
+  void copyOnRemoteGingaVM(bool autoplay = true);
+  void copyHasFinished();
   void updateRunActions();
 
   void launchProjectWizard();
@@ -360,10 +362,15 @@ private slots:
                                     bool save = true);
   void on_actionReport_Bug_triggered();
 
+#ifdef WITH_SERV_PUB
+  void on_actionPublish_triggered();
+#endif
+
 #if WITH_WIZARD
   void on_actionProject_from_Wizard_triggered();
   void wizardFinished(int resp);
 #endif
+
 
 public:
   /*!

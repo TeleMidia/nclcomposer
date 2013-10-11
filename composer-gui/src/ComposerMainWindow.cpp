@@ -45,23 +45,23 @@ ComposerMainWindow::ComposerMainWindow(QWidget *parent)
 
   // Local Ginga Run
   connect(&localGingaProcess, SIGNAL(finished(int)),
-          this, SLOT(runHasFinished()));
+          this, SLOT(copyHasFinished()));
 
   // Remote Ginga Run
 #ifdef WITH_LIBSSH2
   runRemoteGingaVMAction.moveToThread(&runRemoteGingaVMThread);
 
   connect(&runRemoteGingaVMThread, SIGNAL(started()),
-          &runRemoteGingaVMAction, SLOT(runCurrentProject()));
+          &runRemoteGingaVMAction, SLOT(copyCurrentProject()));
 
   connect(&runRemoteGingaVMAction, SIGNAL(finished()),
           &runRemoteGingaVMThread, SLOT(quit()));
 
   connect(&runRemoteGingaVMThread, SIGNAL(finished()),
-          this, SLOT(runHasFinished()));
+          this, SLOT(copyHasFinished()));
 
   connect(&runRemoteGingaVMThread, SIGNAL(terminated()),
-          this, SLOT(runHasFinished()));
+          this, SLOT(copyHasFinished()));
 #endif
 
 #if WITH_WIZARD
@@ -913,6 +913,12 @@ void ComposerMainWindow::createActions() {
   connect( ui->action_AboutPlugins, SIGNAL(triggered()),
            this, SLOT(aboutPlugins()));
 
+#ifdef WITH_SERV_PUB
+  ui->actionPublish->setEnabled(true);
+#else
+  ui->actionPublish->setEnabled(false);
+#endif
+
   fullScreenViewAct = new QAction(tr("&FullScreen"),this);
   fullScreenViewAct->setShortcut(tr("F11"));
 
@@ -1387,7 +1393,7 @@ void ComposerMainWindow::runNCL()
   settings.endGroup();
 
   if(runRemote)
-    runOnRemoteGingaVM();
+    copyOnRemoteGingaVM();
   else
     runOnLocalGinga();
 
@@ -1444,7 +1450,7 @@ void ComposerMainWindow::runOnLocalGinga()
   }
 }
 
-void ComposerMainWindow::runOnRemoteGingaVM()
+void ComposerMainWindow::copyOnRemoteGingaVM(bool autoplay)
 {
 #ifdef WITH_LIBSSH2
   int currentTab = tabProjects->currentIndex();
@@ -1479,6 +1485,7 @@ void ComposerMainWindow::runOnRemoteGingaVM()
     }
 
     runRemoteGingaVMAction.setCurrentProject(currentProject);
+    runRemoteGingaVMAction.setAutoplay(autoplay);
 
     runRemoteGingaVMThread.start();
   }
@@ -1541,7 +1548,7 @@ void ComposerMainWindow::updateRunActions()
   }
 }
 
-void ComposerMainWindow::runHasFinished()
+void ComposerMainWindow::copyHasFinished()
 {
   qDebug() << "ComposerMainWindow::runHasFinished()";
   updateRunActions();
@@ -2372,6 +2379,41 @@ void ComposerMainWindow::on_actionReport_Bug_triggered()
 {
   QDesktopServices::openUrl(QUrl("http://composer.telemidia.puc-rio.br/en/contact"));
 }
+
+#ifdef WITH_SERV_PUB
+void ComposerMainWindow::on_actionPublish_triggered()
+{
+  int index = tabProjects->currentIndex();
+
+  if (index != 0)
+  {
+    QString location = tabProjects->tabToolTip(index);
+
+    Project *currentProject =
+        ProjectControl::getInstance()->getOpenProject(location);
+
+    QString projectName = currentProject->getLocation();
+
+    GlobalSettings settings;
+    settings.beginGroup("runginga");
+    QString remoteIp = settings.value("remote_ip").toString();
+    QString remoteUser = settings.value("remote_user").toString();
+    QString remotePath = settings.value("remote_path").toString();
+    settings.endGroup();
+
+    QString  remoteLocation = remoteUser+"@"+remoteIp+":"+remotePath;
+
+    int r = QMessageBox::question(this,
+                    tr("Publish"), tr("Are you sure you want to publish"
+    " the project <b>'%1'</b> to <b>'%2'</b>").arg(projectName, remoteLocation),
+                    QMessageBox::Yes | QMessageBox::No,
+                    QMessageBox::No);
+
+    if (r == QMessageBox::Yes)
+      copyOnRemoteGingaVM(false);
+  }
+}
+#endif
 
 #if WITH_WIZARD
 void ComposerMainWindow::on_actionProject_from_Wizard_triggered()

@@ -22,9 +22,16 @@ else {
 #CONFIG += clubencl
 #DEFINES += USE_MDI
 #DEFINES += WITH_WIZARD
+#RUNSSHON = true
+#SERVERPUB = true
 
 contains(RUNSSHON, true) {
   CONFIG += runssh_on
+}
+
+contains(SERVERPUB, true) {
+  CONFIG += server_publish runssh_on
+  DEFINES += WITH_SERV_PUB
 }
 
 QT += core xml network
@@ -86,7 +93,7 @@ else:unix {
 
   icon256.files = images/256x256/$${TARGET}.png
   icon256.path = $$DATADIR/icons/gnome/256x256/apps
-  
+
   icon128.files = images/128x128/$${TARGET}.png
   icon128.path = $$DATADIR/icons/gnome/128x128/apps
 
@@ -140,7 +147,7 @@ LIBS          +=  -L../composer-core/core
 
 macx {
     LIBS += -framework ComposerCore
-   
+
     INCLUDEPATH += \
         /Library/Frameworks/ComposerCore.framework/ \
         /opt/local/include/
