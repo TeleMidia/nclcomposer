@@ -1143,7 +1143,7 @@ void ComposerMainWindow::endOpenProject(QString project)
     {
       leftDocks[i]->widget()->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
       leftDocks[i]->widget()->setMinimumWidth(200);
-      // leftDocks[i]->widget()->setMaximumWidth(400);
+      leftDocks[i]->widget()->setMinimumHeight(100);
       if(!i)
         window->addDockWidget(Qt::LeftDockWidgetArea, leftDocks[i]);
       else
