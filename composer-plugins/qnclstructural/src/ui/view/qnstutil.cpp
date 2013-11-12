@@ -21,6 +21,7 @@ std::map <Qnst::EntityType, QString> QnstUtil::iconFromTypeMap =
     (Qnst::NCL, ":/icon/ncl")
     (Qnst::Settings, ":/icon/settings")
     (Qnst::NCLua, ":/icon/script")
+    (Qnst::Stream, ":/icon/stream")
     (Qnst::Media, ":/icon/media")
 
     (Qnst::Context, ":icon/context")
@@ -62,6 +63,22 @@ std::map <QString, Qnst::EntityType> QnstUtil::typeFromExtMap =
 
     ("lua", Qnst::NCLua);
 
+/* Initialize type from URL Schema */
+std::map <QString, Qnst::EntityType> QnstUtil::typeFromUrlSchemaMap =
+  create_map <QString, Qnst::EntityType>
+    ("file", Qnst::Media)
+    ("http", Qnst::Media)
+    ("https", Qnst::Media)
+
+    ("rtp", Qnst::Stream)
+    ("rtsp", Qnst::Stream)
+
+    ("ncl-mirror", Qnst::Media)
+
+    ("sbtvd-ts", Qnst::Stream)
+    ("isdb-ts", Qnst::Stream)
+    ("ts", Qnst::Stream);
+
 /* Initialize map from str type to qnsttype */
 std::map <QString, Qnst::EntityType> QnstUtil::typeFromStr =
   create_map <QString, Qnst::EntityType>
@@ -101,6 +118,7 @@ std::map <Qnst::EntityType, QString> QnstUtil::prefixIdFromType =
     (Qnst::NCL, "m")
     (Qnst::Settings, "m")
     (Qnst::NCLua, "m")
+    (Qnst::Stream, "m")
     (Qnst::Media, "m")
 
     (Qnst::Context, "ctx")
@@ -151,8 +169,9 @@ QnstGraphicsEntity *QnstUtil::makeGraphicsEntity(Qnst::EntityType type,
     case Qnst::Audio:
     case Qnst::Video:
     case Qnst::Text:
-    case Qnst::NCLua:
     case Qnst::Settings:
+    case Qnst::NCLua:
+    case Qnst::Stream:
     case Qnst::Html:
     case Qnst::NCL:
     case Qnst::Media:
@@ -248,6 +267,14 @@ Qnst::EntityType QnstUtil::getnstTypeFromExtension(const QString &ext)
 {
   if(typeFromExtMap.count(ext))
     return typeFromExtMap[ext];
+
+  return Qnst::Media;
+}
+
+Qnst::EntityType QnstUtil::getnstTypeFromUrlSchema(const QString &urlSchema)
+{
+  if(typeFromUrlSchemaMap.count(urlSchema))
+    return typeFromUrlSchemaMap[urlSchema];
 
   return Qnst::Media;
 }

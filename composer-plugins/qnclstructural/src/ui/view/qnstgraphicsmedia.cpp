@@ -98,6 +98,10 @@ void QnstGraphicsMedia::updateToolTip()
       tip += "Settings ("+name+")";
       break;
 
+    case Qnst::Stream:
+      tip += "Stream ("+name+")";
+      break;
+
     default:
       tip += "Media ("+name+")";
       break;

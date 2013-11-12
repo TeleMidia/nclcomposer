@@ -1525,6 +1525,7 @@ void QnstView::changeEntity(const QString uid,
       case Qnst::Settings:
       case Qnst::Media:
       case Qnst::Html:
+      case Qnst::Stream:
       case Qnst::NCL:
       {
         QnstGraphicsMedia *media = dynamic_cast <QnstGraphicsMedia *>(entity);
@@ -1548,6 +1549,12 @@ void QnstView::changeEntity(const QString uid,
             // do nothing
           }
           else {
+            int url_end = src.indexOf(":");
+            if(url_end >= 0)
+            {
+              QString schema = src.mid(0, url_end);
+              media->setnstType(QnstUtil::getnstTypeFromUrlSchema(schema));
+            }
             int start = src.lastIndexOf(".");
             if(start >= 0)
             {

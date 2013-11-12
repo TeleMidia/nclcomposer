@@ -54,5 +54,6 @@
         <file alias="remove-region-icon">images/application-remove-icon.png</file>
         <file alias="grid-icon">images/grid-icon.png</file>
         <file alias="export-icon">images/application-export-icon.png</file>
+        <file alias="stream">images/icon-stream.png</file>
     </qresource>
 </RCC>

@@ -33,6 +33,7 @@ public:
     Text,
     NCLua,
     Settings,
+    Stream,
     /* END MEDIAS */
 
 

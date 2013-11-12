@@ -48,6 +48,14 @@ public:
   static Qnst::EntityType getnstTypeFromExtension(const QString &ext);
 
   /*!
+   * \brief Returns the media type based on the URL Schema of the media source.
+   *
+   * \arg ext the url schema of the source.
+   * \return the media type associated with that extension.
+   */
+  static Qnst::EntityType getnstTypeFromUrlSchema(const QString &urlSchema);
+
+  /*!
    * \brief Returns the media type based on the string the represent that type.
    *
    * \arg strType the type specified in a string.
@@ -94,6 +102,7 @@ public:
 private:
   static std::map <Qnst::EntityType, QString>   iconFromTypeMap;
   static std::map <QString, Qnst::EntityType>   typeFromExtMap;
+  static std::map <QString, Qnst::EntityType>   typeFromUrlSchemaMap;
   static std::map <QString, Qnst::EntityType>   typeFromStr;
   static std::map <Qnst::EntityType, QString>   strFromType;
   static std::map  <Qnst::EntityType, QString>  prefixIdFromType;
