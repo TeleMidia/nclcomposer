@@ -70,7 +70,6 @@ public:
     virtual void releasePluginInstance(IPlugin *) = 0;
 
     virtual QString id() const = 0;
-    virtual QString name() const = 0;
 
     virtual QIcon icon() const { return QIcon(); }
     virtual QWidget* getPreferencePageWidget() { return NULL; }
@@ -88,14 +87,15 @@ public:
     QJsonObject metadata() { return this->metadata_obj; }
 #else
     /*Useful information about the plugin (go to XML?)*/
-    virtual QString version() { return "Unknown";}
-    virtual QString compatVersion() {return "Unknown";}
-    virtual QString vendor() {return "Unknown";}
-    virtual QString copyright() {return "Unknown";}
-    virtual QString license() {return "Unknown";}
-    virtual QString description() {return "Unknown";}
-    virtual QString url() {return "Unknown";}
-    virtual QString category() {return "Unknown";}
+    virtual QString name() { return "Unknown"; }
+    virtual QString version() { return "Unknown"; }
+    virtual QString compatVersion() { return "Unknown"; }
+    virtual QString vendor() { return "Unknown"; }
+    virtual QString copyright() { return "Unknown"; }
+    virtual QString license() { return "Unknown"; }
+    virtual QString description() { return "Unknown"; }
+    virtual QString url() { return "Unknown"; }
+    virtual QString category() { return "Unknown"; }
 #endif
 };
 
