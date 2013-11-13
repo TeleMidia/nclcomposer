@@ -472,11 +472,20 @@ void ComposerMainWindow::addPluginWidget(IPluginFactory *fac, IPlugin *plugin,
 #ifdef USE_MDI
   mdiArea->addSubWindow(pW);
   pW->setWindowModified(true);
-  pW->setWindowTitle(projectId + " - " + fac->name());
+  #if QT_VERSION < 0x050000
+    pW->setWindowTitle(projectId + " - " + fac->name());
+  #else
+    pW->setWindowTitle(projectId + " - " + fac->metadata().value("name").toString());
+  #endif
   pW->show();
   pW->setObjectName(fac->id());
 #else
-  ClickableQDockWidget *dock = new ClickableQDockWidget(fac->name());
+  ClickableQDockWidget *dock;
+#if QT_VERSION < 0x050000
+  dock = new ClickableQDockWidget(fac->name());
+#else
+  dock = new ClickableQDockWidget(fac->metadata().value("name").toString());
+#endif
   dock->setProperty("project", location);
 
   dock->setAllowedAreas(Qt::AllDockWidgetAreas);
@@ -512,7 +521,12 @@ void ComposerMainWindow::addPluginWidget(IPluginFactory *fac, IPlugin *plugin,
   QFrame *titleBar = new QFrame();
   titleBar->setContentsMargins(0,0,0,0);
 
-  QLabel *titleLabel = new QLabel(fac->name());
+  QLabel *titleLabel;
+#if QT_VERSION < 0x050000
+  titleLabel = new QLabel(fac->name());
+#else
+  titleLabel = new QLabel(fac->metadata().value("name").toString());
+#endif
   titleLabel->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Minimum);
 
   QHBoxLayout *layout = new QHBoxLayout(titleBar);
