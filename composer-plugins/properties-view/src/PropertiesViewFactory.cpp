@@ -48,11 +48,6 @@ QString PropertiesViewFactory::id() const
     return "br.puc-rio.telemidia.PropertiesView";
 }
 
-QString PropertiesViewFactory::name() const
-{
-    return tr("Properties View");
-}
-
 QIcon PropertiesViewFactory::icon()  const
 {
     return QIcon(":/images/icon.png");
