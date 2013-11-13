@@ -13,6 +13,7 @@ SUBDIRS = \
     qncllayout/qnly.pro \
     qnclstructural/deps/libqncg/libqncg.pro \
     qnclstructural/qnst.pro \
+    validator/validator.pro \
     media-preview/mediapreview.pro
 #   clube-ncl
 
