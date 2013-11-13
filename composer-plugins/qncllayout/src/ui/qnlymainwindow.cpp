@@ -110,9 +110,16 @@ void QnlyMainWindow::removeRegionBaseFromCombobox(const QString &uuid)
 
 void QnlyMainWindow::comboBoxChangedCurrentRegionBase(int pos)
 {
-  QString uuid = ui->regionBaseComboBox->itemData(pos).toString();
-
-  emit regionBaseSelectedFromComboBox(uuid);
+  // \fixme Handle when the user clicks the separator
+  if(pos == ui->regionBaseComboBox->count() - 1) // means that we want to create a new one
+  {
+    emit createNewRegionBase("test", QMap <QString, QString>());
+  }
+  else
+  {
+    QString uuid = ui->regionBaseComboBox->itemData(pos).toString();
+    emit regionBaseSelectedFromComboBox(uuid);
+  }
 }
 
 void QnlyMainWindow::selectRegionBaseInComboBox(const QString &uuid)

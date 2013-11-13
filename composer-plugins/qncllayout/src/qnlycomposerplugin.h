@@ -74,33 +74,33 @@ protected slots:
 
   void selectRegionBaseInView(QString entityUID);
 
-  void addRegion(const QString regionUID,
-                 const QString parentUID,
-                 const QString regionbaseUID,
-                 const QMap<QString, QString> attributes);
+  void addRegion(const QString &regionUID,
+                 const QString &parentUID,
+                 const QString &regionbaseUID,
+                 const QMap<QString, QString> &attrs);
 
-  void removeRegion(const QString regionUID,
-                    const QString regionbaseUID);
+  void removeRegion(const QString &regionUID,
+                    const QString &regionbaseUID);
 
-  void changeRegion(const QString regionUID,
-                    const QString regionbaseUID,
-                    const QMap<QString, QString> attributes);
+  void changeRegion(const QString &regionUID,
+                    const QString &regionbaseUID,
+                    const QMap<QString, QString> &attrs);
 
-  void selectRegion(const QString regionUID,
-                    const QString regionbaseUID);
+  void selectRegion(const QString &regionUID,
+                    const QString &regionbaseUID);
 
-  void addRegionBase(const QString regionbaseUID,
-                     const QMap<QString, QString> attributes);
+  void addRegionBase(const QString &regionbaseUID,
+                     const QMap<QString, QString> &attrs);
 
-  void removeRegionBase(const QString regionbaseUID);
+  void removeRegionBase(const QString &regionbaseUID);
 
-  void changeRegionBase(const QString regionbaseUID,
-                        const QMap<QString, QString> attributes);
+  void changeRegionBase(const QString &regionbaseUID,
+                        const QMap<QString, QString> &attrs);
 
-  void selectRegionBase(const QString regionbaseUID);
+  void selectRegionBase(const QString &regionbaseUID);
 
-  void performMediaOverRegionAction(const QString mediaId,
-                                    const QString regionUID);
+  void performMediaOverRegionAction(const QString &mediaId,
+                                    const QString &regionUID);
 
 private:
   void clear();

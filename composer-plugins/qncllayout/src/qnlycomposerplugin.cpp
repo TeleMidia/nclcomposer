@@ -90,6 +90,10 @@ void QnlyComposerPlugin::createConnections()
           SIGNAL(regionBaseSelectedFromComboBox(QString)),
           SLOT(selectRegionBase(QString)));
 
+  connect(mainWindow,
+          SIGNAL(createNewRegionBase(QString,QMap<QString,QString>)),
+          SLOT(addRegionBase(QString,QMap<QString,QString>)));
+
   /* OTHERS */
   connect(view,
           SIGNAL(mediaOverRegionAction(QString, QString)),
@@ -769,10 +773,10 @@ void QnlyComposerPlugin::selectRegionBaseInView(QString entityUID)
   }
 }
 
-void QnlyComposerPlugin::addRegion(const QString regionUID,
-                                   const QString parentUID,
-                                   const QString regionbaseUID,
-                                   const QMap<QString, QString> attributes)
+void QnlyComposerPlugin::addRegion(const QString &regionUID,
+                                   const QString &parentUID,
+                                   const QString &regionbaseUID,
+                                   const QMap<QString, QString> &attributes)
 {
   // setting
   QMap<QString, QString> standard;
@@ -813,8 +817,8 @@ void QnlyComposerPlugin::addRegion(const QString regionUID,
     emit addEntity("region", regionbaseUID, standard, false);
 }
 
-void QnlyComposerPlugin::removeRegion(const QString regionUID,
-                                      const QString regionbaseUID)
+void QnlyComposerPlugin::removeRegion(const QString &regionUID,
+                                      const QString &regionbaseUID)
 {
   if (regions.contains(regionUID))
   {
@@ -822,9 +826,9 @@ void QnlyComposerPlugin::removeRegion(const QString regionUID,
   }
 }
 
-void QnlyComposerPlugin::changeRegion(const QString regionUID,
-                                      const QString regionbaseUID,
-                                      const QMap<QString, QString> attributes)
+void QnlyComposerPlugin::changeRegion(const QString &regionUID,
+                                      const QString &regionbaseUID,
+                                      const QMap<QString, QString> &attributes)
 {
   if (regions.contains(regionUID))
   {
@@ -863,8 +867,8 @@ void QnlyComposerPlugin::changeRegion(const QString regionUID,
   }
 }
 
-void QnlyComposerPlugin::selectRegion(const QString regionUID,
-                                      const QString regionbaseUID)
+void QnlyComposerPlugin::selectRegion(const QString &regionUID,
+                                      const QString &regionbaseUID)
 {
   if(selectedId != NULL)
   {
@@ -879,8 +883,8 @@ void QnlyComposerPlugin::selectRegion(const QString regionUID,
   }
 }
 
-void QnlyComposerPlugin::addRegionBase(const QString regionbaseUID,
-                                       const QMap<QString, QString> attributes)
+void QnlyComposerPlugin::addRegionBase(const QString &regionbaseUID,
+                                       const QMap<QString, QString> &attributes)
 {
   // setting
   QMap<QString, QString> standard;
@@ -899,7 +903,7 @@ void QnlyComposerPlugin::addRegionBase(const QString regionbaseUID,
   emit addEntity("regionBase", headUID, standard, false);
 }
 
-void QnlyComposerPlugin::removeRegionBase(const QString regionbaseUID)
+void QnlyComposerPlugin::removeRegionBase(const QString &regionbaseUID)
 {
   if (regionbases.contains(regionbaseUID))
   {
@@ -909,8 +913,8 @@ void QnlyComposerPlugin::removeRegionBase(const QString regionbaseUID)
   }
 }
 
-void QnlyComposerPlugin::changeRegionBase(const QString regionbaseUID,
-                                          const QMap<QString, QString> attributes)
+void QnlyComposerPlugin::changeRegionBase(const QString &regionbaseUID,
+                                          const QMap<QString, QString> &attributes)
 {
   if (regionbases.contains(regionbaseUID))
   {
@@ -974,7 +978,7 @@ void QnlyComposerPlugin::clear()
   relations.clear();
 }
 
-void QnlyComposerPlugin::selectRegionBase(const QString regionbaseUID)
+void QnlyComposerPlugin::selectRegionBase(const QString &regionbaseUID)
 {
   if(selectedId != NULL)
   {
@@ -1091,8 +1095,8 @@ QMap <QString, QString> QnlyComposerPlugin::getRegionAttributes(Entity *region)
   return attrs;
 }
 
-void QnlyComposerPlugin::performMediaOverRegionAction(const QString mediaId,
-                                                      const QString regionUID)
+void QnlyComposerPlugin::performMediaOverRegionAction(const QString &mediaId,
+                                                      const QString &regionUID)
 {
   bool error = false;
   Entity *region = project->getEntityById(regionUID);
