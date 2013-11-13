@@ -1,5 +1,5 @@
 /*
- * Copyright 2011 TeleMidia/PUC-Rio.
+ * Copyright 2011-2013 TeleMidia/PUC-Rio.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -53,8 +53,6 @@ public:
 
   QString id() const;
 
-  QString name() const;
-
   QIcon icon() const;
 
   QWidget* getPreferencePageWidget();
@@ -63,14 +61,21 @@ public:
 
   void applyValues();
 
-
 #if QT_VERSION < 0x050000
+  /*!
+   * \brief Returns the name of Textual View plug-in.
+   *
+   * \return QString the name of the plug-in.
+   */
+  QString name() { return "NCL Textual View"; }
+
   /*!
    * \brief Returns the version of Textual View implementation.
    *
    * \return QString the version number as string.
    */
   QString version() { return NCLCOMPOSER_PLUGINS_VERSION; }
+
   /*!
    * \brief Returns the core version that is compatible with this plugin.
    *
@@ -78,18 +83,21 @@ public:
    *    as a string.
    */
   QString compatVersion() {return "0.1";}
+
   /*!
    * \brief Returns the vendor of TextualView (i.e. Telemidia Lab).
    *
    * \return QString the name of the vendor of OutlineView.
    */
   QString vendor() {return "Telemidia Lab";}
+
   /*!
    * \brief Returns the copyright of TextualView.
    *
    * \return QString the copyright of TextualView.
    */
   QString copyright() {return "Telemidia/PUC-Rio";}
+
   /*!
    * \brief Returns the license of TextualView plugin (i.e. LGPL).
    *
@@ -107,7 +115,11 @@ public:
         "edit the application directly through its source code. Additionally, "
         "this plugin brings features like code coloring and autocomplete.");}
 
-        QString url() {return "http://composer.telemidia.puc-rio.br/textual";}
+  /*!
+   * \brief url
+   * \return
+   */
+  QString url() {return "http://composer.telemidia.puc-rio.br/textual";}
 
   /*!
    * \brief Returns the textual plugin category (i.e. NCL).

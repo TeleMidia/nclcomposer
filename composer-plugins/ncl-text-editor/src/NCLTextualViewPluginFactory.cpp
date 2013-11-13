@@ -1,63 +1,58 @@
 /*
  * Copyright 2011 TeleMidia/PUC-Rio.
- * 
+ *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
- * License as published by the Free Software Foundation; either 
+ * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
- * You should have received a copy of the GNU Lesser General Public 
+ *
+ * You should have received a copy of the GNU Lesser General Public
  * License along with this library.  If not, see
- * <http://www.gnu.org/licenses/>. 
+ * <http://www.gnu.org/licenses/>.
  */
 #include "NCLTextualViewPluginFactory.h"
 #include "ui_TextualPluginPreferencesWidget.h"
 
 NCLTextualViewPluginFactory::NCLTextualViewPluginFactory()
 {
-    prefPageWidget = NULL;
+  prefPageWidget = NULL;
 }
 
 IPlugin* NCLTextualViewPluginFactory::createPluginInstance()
 {
-    return new NCLTextualViewPlugin();
+  return new NCLTextualViewPlugin();
 }
 
 void NCLTextualViewPluginFactory::releasePluginInstance(IPlugin *plugin)
 {
-    NCLTextualViewPlugin *textualView =
-            qobject_cast<NCLTextualViewPlugin*>(plugin);
+  NCLTextualViewPlugin *textualView =
+      qobject_cast<NCLTextualViewPlugin*>(plugin);
 
-    if (textualView)
+  if (textualView)
     {
-        delete textualView;
-        textualView = NULL;
+      delete textualView;
+      textualView = NULL;
     }
 }
 
 QString NCLTextualViewPluginFactory::id() const
 {
-    return "br.puc-rio.telemidia.NCLTextualView";
-}
-
-QString NCLTextualViewPluginFactory::name() const
-{
-    return tr("NCL Textual View");
+  return "br.puc-rio.telemidia.NCLTextualView";
 }
 
 QIcon NCLTextualViewPluginFactory::icon() const
 {
-    return QIcon(":/images/ncl.png");
+  return QIcon(":/images/ncl.png");
 }
 
 QWidget* NCLTextualViewPluginFactory::getPreferencePageWidget()
 {
-    /* if (prefPageWidget == NULL)
+  /* if (prefPageWidget == NULL)
         {
             prefPageWidget = new QFrame();
             prefPageUi = new Ui::TextPluginPreferencesWidget();
@@ -69,12 +64,12 @@ QWidget* NCLTextualViewPluginFactory::getPreferencePageWidget()
 
 void NCLTextualViewPluginFactory::setDefaultValues()
 {
-    //TODO
+  //TODO
 }
 
 void NCLTextualViewPluginFactory::applyValues()
 {
-    //TODO
+  //TODO
 }
 #if QT_VERSION < 0x050000
 Q_EXPORT_PLUGIN2(ncl_textual_plugin, NCLTextualViewPluginFactory)
