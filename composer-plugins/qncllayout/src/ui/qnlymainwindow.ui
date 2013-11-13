@@ -23,6 +23,16 @@
       <height>31</height>
      </rect>
     </property>
+    <item>
+     <property name="text">
+      <string>---------</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>Create new...</string>
+     </property>
+    </item>
    </widget>
   </widget>
   <widget class="QToolBar" name="toolBar">

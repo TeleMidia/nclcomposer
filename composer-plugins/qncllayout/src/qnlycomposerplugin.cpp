@@ -695,7 +695,6 @@ void QnlyComposerPlugin::removeRegionBaseFromView(QString entityUID)
       relations.remove(entityUID);
 
       mainWindow->removeRegionBaseFromCombobox(regionbaseUID);
-
     }
   }
 }
@@ -1078,10 +1077,10 @@ QMap <QString, QString> QnlyComposerPlugin::getRegionAttributes(Entity *region)
     top += tops[i] * heights[i+1];
 
   QMap <QString, QString> attrs;
-  attrs.insert("width", QString::number(widths[0]*100.0)+"%");
-  attrs.insert("height", QString::number(heights[0]*100.0)+"%");
-  attrs.insert("left", QString::number(left*100.0)+"%");
-  attrs.insert("top", QString::number(top*100.0)+"%");
+  attrs.insert( "width",  QString::number(widths[0]*100.0)+"%" );
+  attrs.insert( "height", QString::number(heights[0]*100.0)+"%" );
+  attrs.insert( "left",   QString::number(left*100.0)+"%" );
+  attrs.insert( "top",    QString::number(top*100.0)+"%" );
 
   // Add also the zIndex to the list of properties.
   if(region->hasAttribute("zIndex"))

@@ -85,12 +85,15 @@ void QnlyMainWindow::removeSelectedRegion()
   }
 }
 
-void QnlyMainWindow::addRegionBaseToCombobox(const QString &uuid, const QMap<QString,QString> &properties)
+void QnlyMainWindow::addRegionBaseToCombobox( const QString &uuid,
+                                              const QMap<QString,QString> &properties )
 {
+  int comboCount = ui->regionBaseComboBox->count();
+
   if(properties.count("id"))
-    ui->regionBaseComboBox->addItem(properties["id"], uuid);
+    ui->regionBaseComboBox->insertItem(comboCount - 2, properties["id"], uuid);
   else
-    ui->regionBaseComboBox->addItem(tr("Unknown"), uuid);
+    ui->regionBaseComboBox->insertItem(comboCount - 2, tr("Unknown"), uuid);
 }
 
 void QnlyMainWindow::removeRegionBaseFromCombobox(const QString &uuid)
@@ -119,8 +122,8 @@ void QnlyMainWindow::selectRegionBaseInComboBox(const QString &uuid)
     ui->regionBaseComboBox->setCurrentIndex(index);
 }
 
-void QnlyMainWindow::updateRegionBaseInComboBox(const QString &uuid,
-                                                const QMap<QString,QString> &properties)
+void QnlyMainWindow::updateRegionBaseInComboBox( const QString &uuid,
+                                                 const QMap<QString,QString> &properties )
 {
   int index = ui->regionBaseComboBox->findData(uuid);
   if(index != -1)
