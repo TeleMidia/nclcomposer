@@ -1,5 +1,5 @@
 /*
- * Copyright 2011 TeleMidia/PUC-Rio.
+ * Copyright 2011-2013 TeleMidia/PUC-Rio.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -45,11 +45,6 @@ void QnstComposerPluginFactory::releasePluginInstance(IPlugin* plugin)
 QString QnstComposerPluginFactory::id() const
 {
   return "br.puc-rio.telemidia.qnst";
-}
-
-QString QnstComposerPluginFactory::name() const
-{
-  return tr("Structural View");
 }
 
 #if QT_VERSION < 0x050000

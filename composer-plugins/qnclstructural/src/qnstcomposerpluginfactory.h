@@ -1,5 +1,5 @@
 /*
- * Copyright 2011 TeleMidia/PUC-Rio.
+ * Copyright 2011-2013 TeleMidia/PUC-Rio.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -47,9 +47,15 @@ public:
 
   QString id() const;
 
-  QString name() const;
 
 #if QT_VERSION < 0x050000
+  /*!
+   * \brief Returns the name of the structural view plug-in.
+   *
+   * \return QString the name of the plug-in.
+   */
+  QString name() { return "Structural View"; }
+
   /*!
      \brief Returns the version of Layout View implementation.
 
