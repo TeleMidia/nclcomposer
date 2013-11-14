@@ -7,8 +7,31 @@ namespace nclValidator {
 
 /*
  * Test reference of any scope */
-void anyScopeReferenceValidation (const ModelElement &el, const ModelElement &pointed, const Attribute &att,
-                                  Model &model, vector<pair<void *, string> > &msg, Message &messageFactory) {
+void anyScopeReferenceValidation (const ModelElement &el,
+                                  const ModelElement &pointed,
+                                  const Attribute &att,
+                                  Model &model,
+                                  vector<pair<void *, string> > &msg,
+                                  Message &messageFactory)
+{
+  fprintf (stderr, "\n\n*************%s *****************\n\n", att.name().c_str());
+
+  // Test 'refer' special case
+  if (att.name() == "refer")
+  {
+
+    // 'refer' can't point to an element that defined a 'refer' att too
+    if (pointed.attribute("refer").name() != "")
+    {
+      fprintf (stderr, "'refer' attribute of '%s' element can't point to an "
+               "element that have a 'refer' defined too\n",
+               el.elementName().c_str());
+
+      msg.push_back(make_pair (el.data(),
+                               messageFactory.createMessage(
+                                 4109, 1, att.value().c_str())));
+      model.addElementWithErrorInLastPass(el.id());
+    }
 
     // Test 'refer' special case
     if (att.name() == "refer") {
