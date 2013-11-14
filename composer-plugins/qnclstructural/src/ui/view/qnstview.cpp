@@ -971,6 +971,7 @@ void QnstView::addEntity(const QString uid, const QString parent,
 
     if( properties["TYPE"] == "importBase" ||
         properties["TYPE"] == "causalConnector" ||
+        properties["TYPE"] == "connectorParam" ||
         properties["TYPE"] == "simpleAction" ||
         properties["TYPE"] == "simpleCondition" )
     { // In these cases we do not need a parent.
@@ -1179,6 +1180,11 @@ void QnstView::addEntity(const QString uid, const QString parent,
     if (adjust)
       adjustEntity(entity);
  }
+
+  qDebug();
+  qDebug() << "============================================= TYPE " << properties["TYPE"];
+  qDebug();
+
 
   // if the entity type is CONNECTOR
   if (properties["TYPE"] == "causalConnector")
@@ -2641,11 +2647,11 @@ void QnstView::addCondition(const QString &uid,
 
     foreach(QString key, properties.keys())
     {
-      if (key.startsWith("param"))
+      if (key.startsWith("value"))
       {
-        QString num = key.replace("param","");
+        QString num = key.replace("value","");
 
-        connector->addConditionParam(uid, properties.value("attr"+num), properties.value(key));
+        connector->addConditionParam(uid, properties.value("attr"+num), properties.value("value"+num));
       }
     }
   }
@@ -2695,11 +2701,11 @@ void QnstView::addAction(const QString &uid,
 
     foreach(QString key, properties.keys())
     {
-      if (key.startsWith("param"))
+      if (key.startsWith("value"))
       {
-        QString num = key.replace("param","");
+        QString num = key.replace("value","");
 
-        connector->addActionParam(uid, properties.value("attr"+num), properties.value(key));
+        connector->addActionParam(uid, properties.value("attr"+num), properties.value("value"+num));
       }
     }
   }
@@ -2736,8 +2742,17 @@ void QnstView::addConnectorParam(const QString &uid,
                                  const QString &parent,
                                  const QMap<QString, QString> &properties)
 {
+  qDebug();
+  qDebug() << "%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% " << properties;
+  qDebug() << "%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% " << parent;
+  qDebug();
+
   if (connectors2.contains(parent))
   {
+    qDebug();
+    qDebug() << "%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% EXISTE";
+    qDebug();
+
     QnstConnector* conn = connectors2[parent];
     conn->addParam(uid, properties["name"]);
   }

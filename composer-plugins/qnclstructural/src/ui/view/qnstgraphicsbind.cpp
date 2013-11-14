@@ -920,6 +920,7 @@ void QnstGraphicsBind::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
     {
       if (isAction())
       {
+        /*
         foreach(QString type, conn->getActions().values())
         {
           if (type == QnstUtil::getStrFromBindType(getType()))
@@ -939,12 +940,20 @@ void QnstGraphicsBind::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
             values[parameters.value(key)] = params.value(parameters.value(key),"");
           }
         }
+        */
 
+        QMap<QPair<QString, QString>, QString> parameters = conn->getActionParams();
 
+        QPair<QString, QString> key;
+        foreach(key , parameters.keys())
+        {
+          values[parameters[key]] = "";
+        }
 
       }
       else if (isCondition())
       {
+        /*
         foreach(QString type, conn->getConditions().values())
         {
           if (type == QnstUtil::getStrFromBindType(getType()))
@@ -964,8 +973,14 @@ void QnstGraphicsBind::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
             values[parameters.value(key)] = params.value(parameters.value(key),"");
           }
         }
+        */
+        QMap<QPair<QString, QString>, QString> parameters = conn->getConditionParams();
 
-
+        QPair<QString, QString> key;
+        foreach(key , parameters.keys())
+        {
+          values[parameters[key]] = "";
+        }
       }
     }
     else

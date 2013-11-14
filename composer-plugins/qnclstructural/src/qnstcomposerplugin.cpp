@@ -1136,8 +1136,17 @@ void QnstComposerPlugin::requestSimpleConditionAddition(Entity* entity)
 
     if (value.startsWith("$"))
     {
+       qDebug();
+       qDebug() << "+++++++++++++++++++++++++" << name << value;
+       qDebug();
+
       properties["attr"+QString::number(n)] = name;
       properties["value"+QString::number(n)] = value.replace('$',"");
+
+      qDebug();
+      qDebug() << "+++++++++++++++++++++++++" << properties["attr"+QString::number(n)] << properties["value"+QString::number(n)];
+      qDebug();
+
       n++;
     }
 
@@ -1233,8 +1242,16 @@ void QnstComposerPlugin::requestSimpleActionAddition(Entity* entity)
 
     if (value.startsWith("$"))
     {
-      properties["attr"+QString::number(n)] = name;
-      properties["value"+QString::number(n)] = value.replace('$',"");
+      qDebug();
+      qDebug() << "+++++++++++++++++++++++++" << name << value;
+      qDebug();
+
+     properties["attr"+QString::number(n)] = name;
+     properties["value"+QString::number(n)] = value.replace('$',"");
+
+     qDebug();
+     qDebug() << "+++++++++++++++++++++++++" << properties["attr"+QString::number(n)] << properties["value"+QString::number(n)];
+     qDebug();
       n++;
     }
 

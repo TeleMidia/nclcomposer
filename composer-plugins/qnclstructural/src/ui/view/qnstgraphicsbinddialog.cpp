@@ -20,6 +20,8 @@ void QnstGraphicsBindDialog::init(QMap<QString, QString> params)
   form.table->verticalHeader()->hide();
 #if QT_VERSION < 0x050000
   form.table->horizontalHeader()->setResizeMode(QHeaderView::Stretch);
+#else
+  form.table->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
 #endif
 
   QStandardItemModel *model = new QStandardItemModel(nrow, ncol);
