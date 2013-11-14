@@ -77,14 +77,14 @@ public:
    */
   QIcon icon() const;
 
-#if QT_VERSION < 0x050000
   /*!
    * \brief Returns the name of properties view plug-in.
    *
    * \return QString the name of the plug-in.
    */
-  QString name() { return "Properties View"; }
+  QString name() const { return "Properties View"; }
 
+#if QT_VERSION < 0x050000
   /*!
    * \brief Returns the version of Property View implementation.
    *

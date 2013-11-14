@@ -42,6 +42,7 @@ public:
 
   void applyValues() {};
 
+  QString name() const {return "Validator View";}
 
 #if QT_VERSION < 0x050000
   /*!

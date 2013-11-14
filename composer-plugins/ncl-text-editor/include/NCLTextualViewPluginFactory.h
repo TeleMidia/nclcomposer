@@ -61,14 +61,14 @@ public:
 
   void applyValues();
 
-#if QT_VERSION < 0x050000
   /*!
    * \brief Returns the name of Textual View plug-in.
    *
    * \return QString the name of the plug-in.
    */
-  QString name() { return "NCL Textual View"; }
+  QString name() const { return "NCL Textual View"; }
 
+#if QT_VERSION < 0x050000
   /*!
    * \brief Returns the version of Textual View implementation.
    *

@@ -69,14 +69,14 @@ public:
    */
   QIcon icon() const;
 
-#if QT_VERSION < 0x050000
   /*!
    * \brief Returns the name of outline plug-in.
    *
    * \return QString the name of the plug-in.
    */
-  QString name() { return "Outline View"; }
+  QString name() const { return "Outline View"; }
 
+#if QT_VERSION < 0x050000
   /*!
    * \brief Returns the version of Outline View implementation.
    *
