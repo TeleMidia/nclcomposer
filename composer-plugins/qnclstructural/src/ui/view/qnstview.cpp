@@ -69,9 +69,9 @@ QnstView::~QnstView()
 
 void QnstView::load(QString data)
 {
-  qDebug() << "###########################################";
-  qDebug() << data;
-  qDebug() << "###########################################";
+//  qDebug() << "###########################################";
+//  qDebug() << data;
+//  qDebug() << "###########################################";
 
   QDomDocument* dom = new QDomDocument();
   dom->setContent(data);
@@ -433,6 +433,13 @@ void QnstView::readLink(QDomElement element, QDomElement parent)
             }
           }
 
+          qDebug() << "=====================================";
+          qDebug() << "=====================================";
+          qDebug() << "=====================================" << params;
+          qDebug() << "=====================================" << name_uid;
+          qDebug() << "=====================================";
+          qDebug() << "=====================================";
+
           // Set bindParams
           bind->setParams(params);
           bind->setNamesUIDs(name_uid);
@@ -631,7 +638,7 @@ QString QnstView::serialize()
 
   linkWriterAux.clear();
 
-  qDebug() << dom->toString(4);
+ // qDebug() << dom->toString(4);
 
   return dom->toString(4);
 }
@@ -5078,7 +5085,7 @@ void QnstView::requestBindParamAdjust(QString uid, QString parent,
 {
   properties["TYPE"] = "bindParam";
 
-  if (!properties["name"].isEmpty() && !properties["value"].isEmpty())
+  if (!properties["name"].isEmpty() && (!properties["value"].isEmpty() || (properties["value"].isEmpty() && bindParamUIDToBindUID.contains(uid))))
   {
     if (bindParamUIDToBindUID.contains(uid))
     {
@@ -5090,12 +5097,11 @@ void QnstView::requestBindParamAdjust(QString uid, QString parent,
       emit entityAdded(uid, parent, properties );
     }
   }
-  else if (!properties["name"].isEmpty())
-  {
-    bindParamUIDToBindUID.remove(uid);
-
-    emit entityRemoved(uid);
-  }
+//  else if (!properties["name"].isEmpty())
+//  {
+//    bindParamUIDToBindUID.remove(uid);
+//    emit entityRemoved(uid);
+//  }
 }
 
 void QnstView::updateBindParams(QString bindUID, QMap<QString, QString> params,
