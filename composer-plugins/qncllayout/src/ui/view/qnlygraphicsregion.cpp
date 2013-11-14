@@ -1623,7 +1623,28 @@ void QnlyGraphicsRegion::keyPressEvent( QKeyEvent * event )
     event->accept();
   }
 
-  QGraphicsItem::keyPressEvent(event);
+  // CTRL+C - Copy
+  else if (event->modifiers() == Qt::ControlModifier &&
+           event->key() == Qt::Key_C)
+  {
+    qDebug() << "Ctrl+C -- performCopy()" << this->getId();
+
+    performCopy();
+
+    event->accept();
+  }
+  // CTRL+V - Paste
+  else if (event->modifiers() == Qt::ControlModifier &&
+           event->key() == Qt::Key_V)
+  {
+    performPaste();
+
+    event->accept();
+  }
+  else
+  {
+    QGraphicsItem::keyPressEvent(event);
+  }
 }
 
 void QnlyGraphicsRegion::keyReleaseEvent( QKeyEvent * event )

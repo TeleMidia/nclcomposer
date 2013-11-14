@@ -1132,3 +1132,28 @@ void QnlyGraphicsRegionBase::requestMediaOverRegionAction(QString mediaId,
 {
   emit mediaOverRegion(mediaId, region->getUid());
 }
+
+void QnlyGraphicsRegionBase::keyPressEvent( QKeyEvent * event )
+{
+  // CTRL+C - Copy
+  /* if (event->modifiers() == Qt::ControlModifier &&
+           event->key() == Qt::Key_C)
+  {
+    performCopy();
+
+    event->accept();
+  }
+  // CTRL+V - Paste
+  else */
+  if (event->modifiers() == Qt::ControlModifier &&
+           event->key() == Qt::Key_V)
+  {
+    emit pasteRequested();
+
+    event->accept();
+  }
+  else
+  {
+    QGraphicsScene::keyPressEvent(event);
+  }
+}

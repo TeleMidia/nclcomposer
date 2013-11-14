@@ -118,6 +118,7 @@ protected:
     virtual void contextMenuEvent(QGraphicsSceneContextMenuEvent* event);
     void mouseMoveEvent(QGraphicsSceneMouseEvent* event);
     void mousePressEvent(QGraphicsSceneMouseEvent* event);
+    void keyPressEvent( QKeyEvent * event );
 
 public slots:
     void performRegion();
