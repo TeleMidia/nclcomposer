@@ -64,7 +64,7 @@ public:
    *
    * \return QString the name of the plug-in.
    */
-  QString name() const { return tr("Debug Console"); }
+  QString name() { return tr("Debug Console"); }
 
   /*!
    * \brief Returns the version of Debug Console View implementation.

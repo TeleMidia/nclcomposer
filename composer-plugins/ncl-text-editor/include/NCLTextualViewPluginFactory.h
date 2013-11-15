@@ -67,7 +67,7 @@ public:
    *
    * \return QString the name of the plug-in.
    */
-  QString name() const { return "NCL Textual View"; }
+  QString name() { return "NCL Textual View"; }
 
   /*!
    * \brief Returns the version of Textual View implementation.

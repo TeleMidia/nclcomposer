@@ -71,14 +71,13 @@ public:
 
   virtual QString id() const { return "br.puc-rio.telemidia.mediapreview"; }
 
+#if QT_VERSION < 0x050000
   /*!
    \brief
 
    \return QString
   */
-  virtual QString name() const {return "Media Preview"; }
-
-#if QT_VERSION < 0x050000
+  virtual QString name() { return "Media Preview"; }
   /*!
    \brief Returns the version of Property View implementation.
 
