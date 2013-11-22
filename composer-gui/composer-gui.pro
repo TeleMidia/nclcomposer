@@ -166,7 +166,7 @@ else:unix {
     runssh_on {
       message ("NCL Composer.pro will be built with support to run over SSH.")
       DEFINES += WITH_LIBSSH2
-      LIBS += -lssh2
+      LIBS += -lssh2 -lgcrypt
     }
 }
 else:win32 {
