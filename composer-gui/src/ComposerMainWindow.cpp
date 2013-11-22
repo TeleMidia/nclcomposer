@@ -2145,13 +2145,15 @@ void ComposerMainWindow::undo()
 {
   int index = tabProjects->currentIndex();
 
-  if(index != -1)
+  if(index >= 1)
   {
     QString location = tabProjects->tabToolTip(index);
     Project *project = ProjectControl::getInstance()->getOpenProject(location);
     MessageControl *msgControl =
         PluginControl::getInstance()->getMessageControl(project);
-    msgControl->undo();
+
+    if(msgControl != NULL)
+      msgControl->undo();
   }
 }
 
@@ -2159,13 +2161,15 @@ void ComposerMainWindow::redo()
 {
   int index = tabProjects->currentIndex();
 
-  if(index != -1)
+  if(index >= 1)
   {
     QString location = tabProjects->tabToolTip(index);
     Project *project = ProjectControl::getInstance()->getOpenProject(location);
     MessageControl *msgControl =
         PluginControl::getInstance()->getMessageControl(project);
-    msgControl->redo();
+
+    if(msgControl != 0)
+      msgControl->redo();
   }
 
 }
