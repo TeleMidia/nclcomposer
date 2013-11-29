@@ -76,10 +76,10 @@ public:
 
     /*!
      \brief Returns the location of the project.
-
-     \todo This could be a URL.
+     \todo This should be a URL.
     */
     QString getLocation();
+
     /*!
      \brief Returns the Identifier of this project. A project type says for what
         language this project is. Currently, there are suport only for NCL

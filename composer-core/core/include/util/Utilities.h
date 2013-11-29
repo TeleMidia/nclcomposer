@@ -45,29 +45,50 @@ private:
 
 public:
     /*!
-     * \brief
+     * \brief getLanguageTypeByExtension
      * \param ext
+     * \return
      */
-    static LanguageType getLanguageTypeByExtension(QString ext);
+    static LanguageType getLanguageTypeByExtension(const QString &ext);
+
     /*!
-     * \brief
+     * \brief getExtensionForLanguageType
      * \param type
+     * \return
      */
     static QString getExtensionForLanguageType(LanguageType type);
+
     /*!
-     * \brief
+     * \brief relativePath
+     * \param absolutePath
+     * \param relativeTo
+     * \param bIsFile
+     * \return
      */
-    static QString relativePath( QString absolutePath, QString relativeTo,
-                                         bool bIsFile = false );
+    static QString relativePath( const QString &absolutePath,
+                                 const QString &relativeTo,
+                                 bool bIsFile = false );
+
     /*!
-     * \brief
+     * \brief getAbsolutePath
+     * \param path
+     * \param relativeTo
+     * \return
+     */
+    static QString absolutePath ( const QString &path,
+                                  const QString &relativeTo );
+
+    /*!
+     * \brief getLastFileDialogPath
+     * \return
      */
     static QString getLastFileDialogPath();
 
     /*!
-     * \brief
+     * \brief updateLastFileDialogPath
+     * \param filepath
      */
-    static void updateLastFileDialogPath(QString filepath);
+    static void updateLastFileDialogPath( const QString &filepath );
 };
 
 } } } //end namespace

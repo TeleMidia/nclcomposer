@@ -27,7 +27,7 @@ namespace composer {
 
 QMap<QString,LanguageType> Utilities::types = createMap();
 
-LanguageType Utilities::getLanguageTypeByExtension(QString ext)
+LanguageType Utilities::getLanguageTypeByExtension(const QString &ext)
 {
     if (!types.contains(ext)) return NONE;
     else return types[ext];
@@ -42,11 +42,14 @@ QString Utilities::getExtensionForLanguageType(LanguageType type)
     return "";
 }
 
-QString Utilities::relativePath( QString absolutePath, QString relativeTo,
+QString Utilities::relativePath( const QString &absPath,
+                                 const QString &relTo,
                                  bool bIsFile /*= false*/ )
 {
   //force the "/" instead of "\\"
-  absolutePath = absolutePath.replace("\\", "/");
+  QString absolutePath = absPath;
+  absolutePath.replace("\\", "/");
+  QString relativeTo = relTo;
   relativeTo = relativeTo.replace("\\", "/");
 
   QStringList absoluteDirectories = absolutePath.split("/",
@@ -100,6 +103,16 @@ QString Utilities::relativePath( QString absolutePath, QString relativeTo,
   return relativePath;
 }
 
+QString Utilities::absolutePath( const QString &path,
+                                 const QString &relativeTo )
+{
+  QFileInfo fInfo (path);
+  if(fInfo.isAbsolute())
+    return path;
+  else
+    return relativeTo + "/" + path;
+}
+
 QString Utilities::getLastFileDialogPath()
 {
   GlobalSettings settings;
@@ -115,7 +128,7 @@ QString Utilities::getLastFileDialogPath()
   return lastFileDialogPath;
 }
 
-void Utilities::updateLastFileDialogPath(QString filepath)
+void Utilities::updateLastFileDialogPath(const QString &filepath)
 {
   QFileInfo fileInfo(filepath);
 
