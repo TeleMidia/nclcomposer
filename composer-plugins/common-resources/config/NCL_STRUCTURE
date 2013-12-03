@@ -263,7 +263,7 @@ ATTRIBUTE(regionBase,region,false,STRING)
 
 //rule
 ATTRIBUTE(rule,id,true,ID)
-ATTRIBUTE(rule,var,true,STRING)
+ATTRIBUTE(rule,var,true,SETTINGS_PROPERTY)
 ATTRIBUTE(rule,comparator,true,COMPARATOR)
 ATTRIBUTE(rule,value,true,STRING)
 
@@ -395,8 +395,9 @@ DATATYPE(PARAM_NAMES,"^(top|left|bottom|right|width|height|explicitDur|location|
 DATATYPE(POSITIVE_DOUBLE_0_1,"^(0|(0,[0-9]+)|1)$")
 DATATYPE(POSITIVE_INTEGER_0_255,"^([0]*([0-9]|[1-9][0-9]|[1][0-9][0-9]|[2][0-4][0-9]|[2][5][0-5]))$")
 DATATYPE(POSITIVE_INTEGER,"^([0-9]+)$")
-// TODO: split in property_name and settings_property
-DATATYPE(PROPERTY_NAME,"^.*$","background,balanceLevel,bassLevel,bottom,bounds,explicitDur,fit,focusIndex,fontColor,fontFamily,fontSize,fontStyle,fontVariant,fontWeight,height,left,location,plan,playerLife,reusePlayer,right,scroll,size,soundLevel,style,top,transparency,trebleLevel,visible,width,zIndex,channel.keyboardBounds,channel.keyCapture,channel.virtualKeyboard,default.focusBorderColor,default.focusBorderTransparency,default.focusBorderWidth,default.selBorberColor,service.currentFocus,service.currentKeyMaster,si.channelNumber,si.numberOfPartialServices,si.numberOfServices,system.audioType,system.audioType(i),system.caption,system.classNumber,system.classType(i),system.CPU,system.devNumber(i),system.info(i),system.javaConfiguration,system.javaProfile,system.language,system.luaVersion,system.memory,system.operatingSystem,system.returnBitRate(i),system.screenGraphicSize,system.screenGraphicSize(i),system.screenSize,system.screenSize(i),system.subtitle,user.age,user.genre,user.location")
+DATATYPE(SETTINGS_PROPERTY,"^.*$","channel.keyboardBounds,channel.keyCapture,channel.virtualKeyboard,default.focusBorderColor,default.focusBorderTransparency,default.focusBorderWidth,default.selBorberColor,service.currentFocus,service.currentKeyMaster,si.channelNumber,si.numberOfPartialServices,si.numberOfServices,system.audioType,system.audioType(i),system.caption,system.classNumber,system.classType(i),system.CPU,system.devNumber(i),system.info(i),system.javaConfiguration,system.javaProfile,system.language,system.luaVersion,system.memory,system.operatingSystem,system.returnBitRate(i),system.screenGraphicSize,system.screenGraphicSize(i),system.screenSize,system.screenSize(i),system.subtitle,user.age,user.genre,user.location")
+// TODO: Add SETTINGS_PROPERTY to PROPERTY_NAME datatype (we still does not support that
+DATATYPE(PROPERTY_NAME,"^.*$","background,balanceLevel,bassLevel,bottom,bounds,explicitDur,fit,focusIndex,fontColor,fontFamily,fontSize,fontStyle,fontVariant,fontWeight,height,left,location,plan,playerLife,reusePlayer,right,scroll,size,soundLevel,style,top,transparency,trebleLevel,visible,width,zIndex")
 DATATYPE(QUANTITY,"^([1-9]+)|unbounded$", "unbounded")
 DATATYPE(ROLE_ACTION,"^(\S+)$", "start,stop,abort,pause,resume,set")
 DATATYPE(ROLE_CONDITION,"^(\S+)$", "onBegin,onEnd,onAbort,onPause,onResume,onSelection,onBeginSelection,onEndSelection,onAbortSelection,onPauseSelection,onResumeSelection,onBeginAttribution,onEndAttribution,onPauseAttribution,onResumeAttribution,onAbortAttribution")
