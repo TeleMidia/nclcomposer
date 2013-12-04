@@ -10,6 +10,11 @@ include (../plugins-common.pri)
 INCLUDEPATH += . \
             include
 
+macx:LIBS +=    -L$$quote(/Library/Application Support/Composer/Extensions) \
+                -lNCLLanguageProfile
+
+win32:LIBS +=   -lNCLLanguageProfile
+
 SOURCES += \
     src/rulesviewplugin.cpp \
     src/rulesviewfactory.cpp \

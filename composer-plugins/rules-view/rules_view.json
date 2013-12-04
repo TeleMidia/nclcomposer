@@ -1,0 +1,14 @@
+{
+  "name": "Rules View",
+  "version": "0.2",
+  "compatVersion": "0.2",
+
+  "vendor": "TeleMidia Labs",
+  "copyright": "TeleMidia/PUC-Rio",
+  "license": "LGPL",
+
+  "description": "Rules View.",
+  "url": "http://composer.telemidia.puc-rio.br/rules",
+
+  "category": "NCL"
+}
