@@ -14,6 +14,8 @@ SUBDIRS = \
     qnclstructural/deps/libqncg/libqncg.pro \
     qnclstructural/qnst.pro \
     validator/validator.pro \
+    rules-view/rules-view.pro \
+    nclstructural-20/nclstructural.pro \
     media-preview/mediapreview.pro
 #   clube-ncl
 
