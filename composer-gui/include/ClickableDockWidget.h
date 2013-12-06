@@ -20,6 +20,8 @@
 #define CLICKABLEDOCKWIDGET_H
 
 #include <QEvent>
+#include <QFrame>
+#include <QPushButton>
 #include <QDockWidget>
 
 namespace composer {
@@ -46,9 +48,14 @@ private slots:
   void visibilityHasChange(bool visible);
   void topLevelHasChanged(bool a);
 
+private:
+  void createTitlebar(const QString &title);
+  void addButtonToDockTitleBar( QFrame *titleBar,
+                                QPushButton *button);
+
 signals:
   void clicked();
-
+  void refreshPressed();
 };
 
 } }

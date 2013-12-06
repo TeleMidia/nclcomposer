@@ -222,9 +222,7 @@ private:
 
   void updateRecentProjectsMenu(QStringList &recentProjects);
 
-  void updateDockStyle(QDockWidget *titleBar, bool selected=false);
-
-  void addButtonToDockTitleBar(QFrame *titleBar, QPushButton *button);
+  void updateDockStyle(QDockWidget *titleBar, bool selected=false);  
 
   void updateTabWithProject(int index, QString newLocation);
 

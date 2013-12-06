@@ -15,8 +15,10 @@
  * License along with this library.  If not, see
  * <http://www.gnu.org/licenses/>. 
  */
-
 #include "ClickableDockWidget.h"
+
+#include <QLabel>
+#include <QHBoxLayout>
 
 namespace composer {
   namespace gui {
@@ -33,6 +35,53 @@ ClickableQDockWidget::ClickableQDockWidget(const QString &title,
 
   connect(this, SIGNAL(topLevelChanged(bool)),
           this, SLOT(topLevelHasChanged(bool)));
+
+  createTitlebar (title);
+}
+
+void ClickableQDockWidget::createTitlebar(const QString &title)
+{
+  QFrame *titleBar = new QFrame();
+  titleBar->setContentsMargins(0, 0, 0, 0);
+
+  QLabel *titleLabel = new QLabel(title);
+  titleLabel->setSizePolicy( QSizePolicy::MinimumExpanding,
+                             QSizePolicy::Minimum );
+
+  QHBoxLayout *layout = new QHBoxLayout(titleBar);
+  layout->setMargin(0);
+  layout->setSpacing(0);
+
+  layout->addWidget(titleLabel);
+
+  titleBar->setStyleSheet(" ");
+  setTitleBarWidget(titleBar);
+
+  // Create refresh button
+  QPushButton *refresh_btn = new QPushButton(titleBar);
+  // refresh_btn->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Minimum);
+  refresh_btn->setIcon(QIcon(":/mainwindow/refreshplugin"));
+  refresh_btn->setToolTip(tr("Reload View Model"));
+  addButtonToDockTitleBar(titleBar, refresh_btn);
+  connect(refresh_btn, SIGNAL(pressed()), this, SIGNAL(refreshPressed()));
+
+  // Create close button
+  QPushButton *close_btn = new QPushButton(titleBar);
+  // close_btn->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Minimum);
+  close_btn->setIcon(QIcon(":/mainwindow/closeplugin"));
+  close_btn->setToolTip(tr("Hide View"));
+  addButtonToDockTitleBar(titleBar, close_btn);
+  connect(close_btn, SIGNAL(pressed()), this, SLOT(close()));
+
+  //layout->addStretch();
+}
+
+void ClickableQDockWidget::addButtonToDockTitleBar(QFrame *titleBar,
+                                                   QPushButton *button)
+{
+  button->setIconSize(QSize(18, 18));
+
+  titleBar->layout()->addWidget(button);
 }
 
 bool ClickableQDockWidget::event(QEvent *event)

@@ -72,7 +72,6 @@ ComposerMainWindow::ComposerMainWindow(QWidget *parent)
 #else
   ui->actionProject_from_Wizard->setVisible(false);
 #endif
-
 }
 
 void ComposerMainWindow::init(const QApplication &app)
@@ -518,42 +517,11 @@ void ComposerMainWindow::addPluginWidget(IPluginFactory *fac, IPlugin *plugin,
     firstDock[location] = dock;
   }
 
-  QFrame *titleBar = new QFrame();
-  titleBar->setContentsMargins(0,0,0,0);
-
-  QLabel *titleLabel;
-#if QT_VERSION < 0x050000
-  titleLabel = new QLabel(fac->name());
-#else
-  titleLabel = new QLabel(fac->metadata().value("name").toString());
-#endif
-  titleLabel->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Minimum);
-
-  QHBoxLayout *layout = new QHBoxLayout(titleBar);
-  layout->setMargin(0);
-  layout->setSpacing(0);
-
-  layout->addWidget(titleLabel);
-
-  titleBar->setStyleSheet(" ");
-
-  dock->setTitleBarWidget(titleBar);
   allDocksMutex.lock();
   allDocks.insert(0, dock);
   allDocksMutex.unlock();
 
-  QPushButton *refresh = new QPushButton(titleBar);
-  refresh->setIcon(QIcon(":/mainwindow/refreshplugin"));
-  refresh->setToolTip(tr("Reload View Model"));
-  addButtonToDockTitleBar(titleBar, refresh);
-  connect(refresh, SIGNAL(pressed()), plugin, SLOT(updateFromModel()));
-
-  QPushButton *hide = new QPushButton(titleBar);
-  connect(hide, SIGNAL(pressed()), dock, SLOT(close()));
-  hide->setIcon(QIcon(":/mainwindow/closeplugin"));
-  hide->setToolTip(tr("Hide View"));
-
-  addButtonToDockTitleBar(titleBar, hide);
+  connect(dock, SIGNAL(refreshPressed()), plugin, SLOT(updateFromModel()));
 
   // dock->installEventFilter(this);
   updateDockStyle(dock, false);
@@ -629,14 +597,6 @@ void ComposerMainWindow::updateDockStyle(QDockWidget *dock, bool selected)
       dock->setStyleSheet(styleSheet());
     }
   }
-}
-
-void ComposerMainWindow::addButtonToDockTitleBar(QFrame *titleBar,
-                                                 QPushButton *button)
-{
-  button->setIconSize(QSize(18, 18));
-
-  titleBar->layout()->addWidget(button);
 }
 
 void ComposerMainWindow::tabClosed(int index)
@@ -862,7 +822,8 @@ void ComposerMainWindow::aboutPlugins()
 #if QT_VERSION < 0x050000
     treeWidgetItem = new QTreeWidgetItem(categories.value(pF->category()));
 #else
-    treeWidgetItem = new QTreeWidgetItem(categories.value(pF->metadata().value("category").toString()));
+    QString category = pF->metadata().value("category").toString();
+    treeWidgetItem = new QTreeWidgetItem ( categories.value(category) );
 #endif
     treeWidgetItem2plFactory.insert(treeWidgetItem, pF);
 #if QT_VERSION < 0x050000
