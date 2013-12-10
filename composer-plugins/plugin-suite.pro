@@ -23,7 +23,12 @@ contains(FORCERELEASE, true)
 {
   SUBDIRS += validator      # Validator is required when releasing.
   SUBDIRS -= debug-console  # Debug must not be present in release.
-  SUBDIRS -= media-preview/mediapreview.pro # It is still experimental.
+
+  # These plug-ins are still experimental
+  #  (and must not be present in the release):
+  SUBDIRS -= media-preview/mediapreview.pro
+  SUBDIRS -= rules-view/rules-view.pro
+  SUBDIRS -= nclstructural-20/nclstructural.pro
 }
 
 macx {
