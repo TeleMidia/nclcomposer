@@ -4211,7 +4211,7 @@ void QnstView::addNodetoNodeEdge(QnstGraphicsEntity* entitya,
       // node -> node
       else
       {
-        createLinkWithDialog(entitya, entityb);
+       createLinkWithDialog(entitya, entityb);
       }
 
       modified = false;
@@ -4227,7 +4227,7 @@ void QnstView::addNodetoInterfaceEdge(QnstGraphicsEntity* entitya,
 
   if (parenta != NULL && parentb != NULL)
   {
-    if (parenta == parentb->getnstGraphicsParent())
+    if (parenta == parentb || parenta == parentb->getnstGraphicsParent())
     {
       // aggregator -> interface
       if (entitya->getnstType() == Qnst::Link)

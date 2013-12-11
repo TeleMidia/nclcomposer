@@ -117,22 +117,8 @@ void QnstGraphicsEdge::adjust(bool avoidCollision)
         line.setP2(getnstGraphicsParent()->mapFromItem(getEntityB()->getnstGraphicsParent(), line.p2()));
     }
 
-    if (LINK_WITH_PARENT)
-    {
-      if (entitya == getnstGraphicsParent())
-      {
-
-      }
-
-      if (entityb == getnstGraphicsParent())
-      {
-
-      }
-    }
-
     QPointF pointa = line.p1();
     QPointF pointb = line.p2();
-
 
     aux_adjust(pointa, pointb);
 
@@ -145,11 +131,6 @@ void QnstGraphicsEdge::adjust(bool avoidCollision)
     {
       index = 1.0; n = 0;
       qDebug();
-
-      qDebug() << entitya->getnstId() << "A -> B" << entityb->getnstId();
-      qDebug() << "===== LINE: " << line;
-      qDebug() << "===== PA:   " << pointa;
-      qDebug() << "===== PB:   " << pointb;
 
       if (LINK_WITH_PARENT && entityb == getnstGraphicsParent())
       {
@@ -200,12 +181,6 @@ void QnstGraphicsEdge::adjust(bool avoidCollision)
         }
       }
 
-      qDebug() << "---";
-      qDebug() << "===== LINE: " << line;
-      qDebug() << "===== PA:   " << pointa;
-      qDebug() << "===== PB:   " << pointb;
-
-
       index = 0; n = 0;
 
       while(entitya->collidesWithItem(this))
@@ -224,54 +199,7 @@ void QnstGraphicsEdge::adjust(bool avoidCollision)
         }
       }
 
-
-      qDebug() << "---";
-      qDebug() << "===== LINE: " << line;
-      qDebug() << "===== PA:   " << pointa;
-      qDebug() << "===== PB:   " << pointb;
-
-      qDebug();
     }
-
-    /*
-    if (LINK_WITH_PARENT)
-    {
-      if (entitya == getnstGraphicsParent())
-      {
-        // TODO
-      }
-
-      if (entityb == getnstGraphicsParent())
-      {
-        index = 1; n = 0;
-
-        while(!entityb->collidesWithItem(this))
-        {
-          index -= 0.01;
-
-          if (angle == 0)
-            pointb = line.pointAt(index);
-          else
-            pointb = arcPointAt(line , index);
-
-          aux_adjust(pointa, pointb);
-
-          if (++n > 100){ // avoiding infinity loop
-            break;
-          }
-        }
-
-        index -= 0.005;
-
-        if (angle == 0)
-          pointb = line.pointAt(index);
-        else
-          pointb = arcPointAt(line , index);
-
-        aux_adjust(pointa, pointb);
-      }
-    }
-    */
 
     entitya->setSelectable(true);
     entityb->setSelectable(true);
