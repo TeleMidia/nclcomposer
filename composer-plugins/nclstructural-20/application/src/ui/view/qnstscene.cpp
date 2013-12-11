@@ -47,8 +47,8 @@ void QnstScene::addRoot(QnstEntity* entity)
 
     addItem(entity);
 
-    menu->menuInsert->setEnabled(false);
-    menu->actionAddBody->setEnabled(false);
+//    menu->menuInsert->setEnabled(false);
+//    menu->actionAddBody->setEnabled(false);
   }
 }
 
@@ -64,8 +64,8 @@ void QnstScene::removeRoot(QnstEntity* entity)
 
       removeItem(entity);
 
-      menu->menuInsert->setEnabled(true);
-      menu->actionAddBody->setEnabled(true);
+//      menu->menuInsert->setEnabled(true);
+//      menu->actionAddBody->setEnabled(true);
     }
   }
 }
@@ -77,6 +77,13 @@ void QnstScene::createObjects()
 
   menu->menuInsert->setEnabled(true);
   menu->actionAddBody->setEnabled(true);
+  menu->actionAddContext->setEnabled(true);
+  menu->actionAddMedia->setEnabled(true);
+  menu->actionAddSwitch->setEnabled(true);
+  menu->actionAddArea->setEnabled(true);
+  menu->actionAddPort->setEnabled(true);
+  menu->actionAddProperty->setEnabled(true);
+  menu->actionAddSwitchPort->setEnabled(true);
 }
 
 void QnstScene::createConnections()
@@ -85,7 +92,26 @@ void QnstScene::createConnections()
 
   // \fixme Even working this is not the correct way to do that
   connect(menu, SIGNAL(menuAddEntityTriggered(QnstSubtype)),
-                SLOT(performBody()));
+                SLOT(performAdd(QnstSubtype)));
+}
+
+void QnstScene::performAdd(QnstSubtype subtype)
+{
+  QString uid = QUuid::createUuid().toString();
+  QString parent = "";
+  QMap<QString, QString> properties;
+  properties[":nst:subtype"] = QnstUtil::getStrFromNstType(subtype);
+//  properties[":nst:top"] = QString::number(height()/2 - DEFAULT_BODY_HEIGHT/2);
+//  properties[":nst:left"] = QString::number(width()/2 - DEFAULT_BODY_WIDTH/2);
+//  properties[":nst:width"] = QString::number(DEFAULT_BODY_WIDTH);
+//  properties[":nst:height"] = QString::number(DEFAULT_BODY_HEIGHT);
+
+  QMap<QString, QString> settings;
+  settings["UNDO"] = "1";
+  settings["NOTIFY"] = "1";
+  settings["CODE"] = QUuid::createUuid().toString();
+
+  emit insertEntityResquested(uid, parent, properties, settings);
 }
 
 void QnstScene::performBody()
@@ -102,21 +128,7 @@ void QnstScene::performBody()
   emit entityAdded(entity);
   **************************************************/
 
-  QString uid = QUuid::createUuid().toString();
-  QString parent = "";
-  QMap<QString, QString> properties;
-  properties[":nst:subtype"] = "body";
-  properties[":nst:top"] = QString::number(height()/2 - DEFAULT_BODY_HEIGHT/2);
-  properties[":nst:left"] = QString::number(width()/2 - DEFAULT_BODY_WIDTH/2);
-  properties[":nst:width"] = QString::number(DEFAULT_BODY_WIDTH);
-  properties[":nst:height"] = QString::number(DEFAULT_BODY_HEIGHT);
-
-  QMap<QString, QString> settings;
-  settings["UNDO"] = "1";
-  settings["NOTIFY"] = "1";
-  settings["CODE"] = QUuid::createUuid().toString();
-
-  emit insertEntityResquested(uid, parent, properties, settings);
+  performAdd(Qnst::Body);
 }
 
 void QnstScene::contextMenuEvent(QGraphicsSceneContextMenuEvent* event)

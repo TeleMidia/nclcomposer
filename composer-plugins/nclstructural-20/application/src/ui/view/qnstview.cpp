@@ -162,146 +162,144 @@ void QnstView::insert(QString uid, QString parent, QMap<QString, QString> proper
 
     QnstEntity* entity; QnstSubtype type = QnstUtil::getnstTypeFromStr(properties[":nst:subtype"]);
 
-    if (entities.contains(parent))
+    switch (type)
     {
-      switch (type)
+      case Qnst::Context:
       {
-        case Qnst::Context:
-        {
-          entity = new QnstComposition(entities[parent]);
-          entity->setnstSubtype(Qnst::Context);
+        entity = new QnstComposition();
+        entity->setnstSubtype(Qnst::Context);
 
-          break;
-        }
-
-        case Qnst::Switch:
-        {
-          entity = new QnstComposition(entities[parent]);
-          entity->setnstSubtype(Qnst::Switch);
-          break;
-        }
-
-        case Qnst::Media:
-        {
-          entity = new QnstMedia(entities[parent]);
-          break;
-        }
-
-        case Qnst::Port:
-        {
-          entity = new QnstInterface(entities[parent]);
-          entity->setnstSubtype(Qnst::Port);
-          break;
-        }
-
-        case Qnst::SwitchPort:
-        {
-          entity = new QnstInterface(entities[parent]);
-          entity->setnstSubtype(Qnst::SwitchPort);
-          break;
-        }
-
-        case Qnst::Area:
-        {
-          entity = new QnstInterface(entities[parent]);
-          entity->setnstSubtype(Qnst::Area);
-          break;
-        }
-
-        case Qnst::Property:
-        {
-          entity = new QnstInterface(entities[parent]);
-          entity->setnstSubtype(Qnst::Property);
-          break;
-        }
-
-        case Qnst::Link:
-        {
-          entity = new QnstLink(entities[parent]);
-          break;
-        }
-
-        case Qnst::Bind:
-        {
-          if (entities.contains(properties.value(":nst:a")) && entities.contains(properties.value(":nst:b")))
-          {
-              entity = new QnstBind(entities[parent]);
-
-              QnstBind* bind = (QnstBind*) entity;
-              bind->setEntityA(entities[properties.value(":nst:a")]);
-              bind->setEntityB(entities[properties.value(":nst:b")]);
-
-             // qDebug() << "================" << properties.value(":nst:bindtype");
-              bind->setType(QnstUtil::getBindTypeFromStr(properties.value(":nst:bindtype")));
-          }
-
-          break;
-        }
-
-        case Qnst::Reference:
-        {
-          if (entities.contains(properties.value(":nst:a")) && entities.contains(properties.value(":nst:b")))
-          {
-              QnstEntity* a = entities[properties.value(":nst:a")];
-
-              if (a->getnstSubtype() == Qnst::Port)
-              {
-                  foreach (QnstEntity* e, entities.values()) {
-                      if (e->getnstSubtype() == Qnst::Reference)
-                      {
-                          QnstReference* r = (QnstReference*) e;
-
-                          if (e->getnstProperty(":nst:a") == a->getnstUid())
-                          {
-                              QMap<QString, QString> localset;
-                              localset["UNDO"] = "1";
-                              localset["NOTIFY"] = "1";
-                              localset["CODE"] = settings["CODE"];
-
-                              remove(r->getnstUid(),localset);
-                          }
-                      }
-                  }
-              }
-
-              entity = new QnstReference(entities[parent]);
-
-              QnstReference* bind = (QnstReference*) entity;
-              bind->setEntityA(entities[properties.value(":nst:a")]);
-              bind->setEntityB(entities[properties.value(":nst:b")]);
-          }
-
-          break;
-        }
-
-        default:
-        {
-          entity = NULL;
-          break;
-        }
+        break;
       }
-    }
-    else
-    {
-      switch (type)
+
+      case Qnst::Switch:
       {
-        case Qnst::Body:
+        entity = new QnstComposition();
+        entity->setnstSubtype(Qnst::Switch);
+        break;
+      }
+
+      case Qnst::Media:
+      {
+        entity = new QnstMedia();
+        break;
+      }
+
+      case Qnst::Port:
+      {
+        entity = new QnstInterface();
+        entity->setnstSubtype(Qnst::Port);
+        break;
+      }
+
+      case Qnst::SwitchPort:
+      {
+        entity = new QnstInterface();
+        entity->setnstSubtype(Qnst::SwitchPort);
+        break;
+      }
+
+      case Qnst::Area:
+      {
+        entity = new QnstInterface();
+        entity->setnstSubtype(Qnst::Area);
+        break;
+      }
+
+      case Qnst::Property:
+      {
+        entity = new QnstInterface();
+        entity->setnstSubtype(Qnst::Property);
+        break;
+      }
+
+      case Qnst::Link:
+      {
+        entity = new QnstLink();
+        break;
+      }
+
+      case Qnst::Bind:
+      {
+        if (entities.contains(properties.value(":nst:a")) && entities.contains(properties.value(":nst:b")))
         {
-          entity = new QnstComposition(); scene->addItem(entity);
-          entity->setnstSubtype(Qnst::Body);
-          break;
+            entity = new QnstBind();
+
+            QnstBind* bind = (QnstBind*) entity;
+            bind->setEntityA(entities[properties.value(":nst:a")]);
+            bind->setEntityB(entities[properties.value(":nst:b")]);
+
+            qDebug() << "================" << properties.value(":nst:bindtype");
+            bind->setType(QnstUtil::getBindTypeFromStr(properties.value(":nst:bindtype")));
         }
 
-        default:
+        break;
+      }
+
+      case Qnst::Reference:
+      {
+        if (entities.contains(properties.value(":nst:a")) && entities.contains(properties.value(":nst:b")))
         {
-          entity = NULL;
-          break;
+            QnstEntity* a = entities[properties.value(":nst:a")];
+
+            if (a->getnstSubtype() == Qnst::Port)
+            {
+                foreach (QnstEntity* e, entities.values()) {
+                    if (e->getnstSubtype() == Qnst::Reference)
+                    {
+                        QnstReference* r = (QnstReference*) e;
+
+                        if (e->getnstProperty(":nst:a") == a->getnstUid())
+                        {
+                            QMap<QString, QString> localset;
+                            localset["UNDO"] = "1";
+                            localset["NOTIFY"] = "1";
+                            localset["CODE"] = settings["CODE"];
+
+                            remove(r->getnstUid(),localset);
+                        }
+                    }
+                }
+            }
+
+            entity = new QnstReference(entities[parent]);
+
+            QnstReference* bind = (QnstReference*) entity;
+            bind->setEntityA(entities[properties.value(":nst:a")]);
+            bind->setEntityB(entities[properties.value(":nst:b")]);
         }
+
+        break;
+      }
+
+      case Qnst::Body:
+      {
+        entity = new QnstComposition();
+        entity->setnstSubtype(Qnst::Body);
+        break;
+      }
+
+      default:
+      {
+        entity = NULL;
+        break;
       }
     }
 
     if (entity != NULL)
     {
+      if (entities.contains(parent))
+      {
+        entity->setnstParent(entities[parent]);
+      }
+      else
+      {
+        scene->addItem(entity);
+
+        entity->setTop(scene->sceneRect().height()/2 - entity->getWidth()/2);
+        entity->setLeft(scene->sceneRect().width()/2 - entity->getWidth()/2);
+      }
+
       entity->setnstUid(uid);
       entity->setnstProperties(properties);
 
@@ -1054,6 +1052,47 @@ void QnstView::createLink(QnstEntity* a, QnstEntity* b)
             createBind(entities[uid],b,action,settings["CODE"]);
         }
     }
+    else if (parenta == NULL && parentb == NULL)
+    {
+      QString uid = QUuid::createUuid().toString();
+      QMap<QString, QString> properties;
+      properties[":nst:subtype"] = "link";
+//        properties[":nst:a"] = entitya->getnstUid();
+//        properties[":nst:b"] = entityb->getnstUid();
+//        properties[":nst:bindtype"] = "onBegin";
+
+
+      if (a->getTop() > b->getTop())
+          properties[":nst:top"] = QString::number(b->getTop() + (a->getTop() - b->getTop())/2);
+      else
+          properties[":nst:top"] = QString::number(a->getTop() + (b->getTop() - a->getTop())/2);
+
+
+      if (a->getLeft() > b->getLeft())
+          properties[":nst:left"] = QString::number(b->getLeft() + (a->getLeft() - b->getLeft())/2);
+      else
+          properties[":nst:left"] = QString::number(a->getLeft() + (b->getLeft() - a->getLeft())/2);
+
+
+      QMap<QString, QString> settings;
+      settings["UNDO"] = "1";
+      settings["NOTIFY"] = "1";
+      settings["CODE"] = QUuid::createUuid().toString();
+
+      insert(uid, "", properties, settings);
+
+      if (entities.contains(uid))
+      {
+//            QnstLinkDialog* dialog = new QnstLinkDialog();
+//            dialog->init();
+//            dialog->exec();
+//            createBind(a,entities[uid],dialog->form.cbCondition->currentText(),settings["CODE"]);
+//            createBind(entities[uid],b,dialog->form.cbAction->currentText(),settings["CODE"]);
+
+          createBind(a,entities[uid],condition,settings["CODE"]);
+          createBind(entities[uid],b,action,settings["CODE"]);
+      }
+    }
 
 //    linking = false;
 //    modified = false;
@@ -1064,77 +1103,132 @@ void QnstView::createBind(QnstEntity* a, QnstEntity* b, QString type, QString co
     QnstEntity* pa = a->getnstParent();
     QnstEntity* pb = b->getnstParent();
 
-    if (pa == NULL || pb == NULL)
-        return;
+    if (pa != NULL && pb != NULL)
+    {
+      QString parent;
 
-    QString parent;
+      if (pa == pb)
+      {
+          parent = pa->getnstUid();
+      }
+      else if (pa->getnstParent() == pb)
+      {
+          parent = pb->getnstUid();
+      }
+      else if (pa == pb->getnstParent())
+      {
+          parent = pa->getnstUid();
+      }
+      else
+      {
+          return;
+      }
 
-    if (pa == pb)
-    {
-        parent = pa->getnstUid();
-    }
-    else if (pa->getnstParent() == pb)
-    {
-        parent = pb->getnstUid();
-    }
-    else if (pa == pb->getnstParent())
-    {
-        parent = pa->getnstUid();
+      QString uid = QUuid::createUuid().toString();
+
+      QMap<QString, QString> properties;
+      properties[":nst:subtype"] = "bind";
+      properties[":nst:a"] = a->getnstUid();
+      properties[":nst:b"] = b->getnstUid();
+
+      if (type == "")
+      {
+          if (a->getnstSubtype() == Qnst::Link)
+          {
+  //            QnstActionDialog* dialog = new QnstActionDialog();
+  //            dialog->init();
+  //            dialog->exec();
+
+  //            properties[":nst:bindtype"] = dialog->form.cbAction->currentText();
+              properties[":nst:bindtype"] = action;
+          }
+          else if (b->getnstSubtype() == Qnst::Link)
+          {
+  //            QnstConditionDialog* dialog = new QnstConditionDialog();
+  //            dialog->init();
+  //            dialog->exec();
+
+  //            properties[":nst:bindtype"] = dialog->form.cbCondition->currentText();
+              properties[":nst:bindtype"] = condition;
+          }
+
+      }
+      else
+      {
+          properties[":nst:bindtype"] = type;
+      }
+
+
+
+      QMap<QString, QString> settings;
+      settings["UNDO"] = "1";
+      settings["NOTIFY"] = "1";
+
+      if (code == "")
+          settings["CODE"] = QUuid::createUuid().toString();
+      else
+          settings["CODE"] = code;
+
+      insert(uid, parent, properties, settings);
+
+  //    linking = false;
+  //    modified = false;
     }
     else
     {
-        return;
+      QString parent = "";
+
+      QString uid = QUuid::createUuid().toString();
+
+      QMap<QString, QString> properties;
+      properties[":nst:subtype"] = "bind";
+      properties[":nst:a"] = a->getnstUid();
+      properties[":nst:b"] = b->getnstUid();
+
+      if (type == "")
+      {
+          if (a->getnstSubtype() == Qnst::Link)
+          {
+  //            QnstActionDialog* dialog = new QnstActionDialog();
+  //            dialog->init();
+  //            dialog->exec();
+
+  //            properties[":nst:bindtype"] = dialog->form.cbAction->currentText();
+              properties[":nst:bindtype"] = action;
+          }
+          else if (b->getnstSubtype() == Qnst::Link)
+          {
+  //            QnstConditionDialog* dialog = new QnstConditionDialog();
+  //            dialog->init();
+  //            dialog->exec();
+
+  //            properties[":nst:bindtype"] = dialog->form.cbCondition->currentText();
+              properties[":nst:bindtype"] = condition;
+          }
+
+      }
+      else
+      {
+          properties[":nst:bindtype"] = type;
+      }
+
+
+
+      QMap<QString, QString> settings;
+      settings["UNDO"] = "1";
+      settings["NOTIFY"] = "1";
+
+      if (code == "")
+          settings["CODE"] = QUuid::createUuid().toString();
+      else
+          settings["CODE"] = code;
+
+      insert(uid, parent, properties, settings);
+
+  //    linking = false;
+  //    modified = false;
     }
 
-    QString uid = QUuid::createUuid().toString();
-
-    QMap<QString, QString> properties;
-    properties[":nst:subtype"] = "bind";
-    properties[":nst:a"] = a->getnstUid();
-    properties[":nst:b"] = b->getnstUid();
-
-    if (type == "")
-    {
-        if (a->getnstSubtype() == Qnst::Link)
-        {
-//            QnstActionDialog* dialog = new QnstActionDialog();
-//            dialog->init();
-//            dialog->exec();
-
-//            properties[":nst:bindtype"] = dialog->form.cbAction->currentText();
-            properties[":nst:bindtype"] = action;
-        }
-        else if (b->getnstSubtype() == Qnst::Link)
-        {
-//            QnstConditionDialog* dialog = new QnstConditionDialog();
-//            dialog->init();
-//            dialog->exec();
-
-//            properties[":nst:bindtype"] = dialog->form.cbCondition->currentText();
-            properties[":nst:bindtype"] = condition;
-        }
-
-    }
-    else
-    {
-        properties[":nst:bindtype"] = type;
-    }
-
-
-
-    QMap<QString, QString> settings;
-    settings["UNDO"] = "1";
-    settings["NOTIFY"] = "1";
-
-    if (code == "")
-        settings["CODE"] = QUuid::createUuid().toString();
-    else
-        settings["CODE"] = code;
-
-    insert(uid, parent, properties, settings);
-
-//    linking = false;
-//    modified = false;
 }
 
 void QnstView::createReference(QnstEntity* a, QnstEntity* b)

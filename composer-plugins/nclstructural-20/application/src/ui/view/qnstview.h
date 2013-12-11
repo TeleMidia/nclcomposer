@@ -13,6 +13,7 @@
 #include <QSet>
 #include <QUndoStack>
 #include <QDir>
+#include <QGraphicsScene>
 
 #include <QDebug>
 

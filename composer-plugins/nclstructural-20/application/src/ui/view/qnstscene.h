@@ -69,6 +69,7 @@ protected:
 
 protected slots:
   void performBody();
+  void performAdd(QnstSubtype subtype);
 
 private:
   void createObjects();
