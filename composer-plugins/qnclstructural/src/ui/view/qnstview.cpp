@@ -4194,7 +4194,8 @@ void QnstView::addNodetoNodeEdge(QnstGraphicsEntity* entitya,
   QnstGraphicsEntity* parenta = entitya->getnstGraphicsParent();
   QnstGraphicsEntity* parentb = entityb->getnstGraphicsParent();
 
-  if (parenta != NULL || parentb != NULL)
+  if ((LINK_WITH_PARENT && parenta != NULL || parentb != NULL) ||
+      parenta != NULL && parentb != NULL)
   {
     if (parenta == parentb || parenta == entityb || parentb == entitya)
     {
@@ -4225,9 +4226,11 @@ void QnstView::addNodetoInterfaceEdge(QnstGraphicsEntity* entitya,
   QnstGraphicsEntity* parenta = entitya->getnstGraphicsParent();
   QnstGraphicsEntity* parentb = entityb->getnstGraphicsParent();
 
-  if (parenta != NULL && parentb != NULL)
+  if ((LINK_WITH_PARENT && parenta != NULL || parentb != NULL) ||
+      parenta != NULL && parentb != NULL)
   {
-    if (parenta == parentb || parenta == parentb->getnstGraphicsParent())
+    if ((LINK_WITH_PARENT && parenta == parentb) ||
+        parenta == parentb->getnstGraphicsParent())
     {
       // aggregator -> interface
       if (entitya->getnstType() == Qnst::Link)
@@ -4371,11 +4374,12 @@ QnstGraphicsLink* QnstView::createLink(QnstGraphicsEntity* entitya,
   QnstGraphicsEntity* parenta = entitya->getnstGraphicsParent();
   QnstGraphicsEntity* parentb = entityb->getnstGraphicsParent();
 
-  if (parenta != NULL || parentb != NULL)
+  if ((LINK_WITH_PARENT && parenta != NULL || parentb != NULL) ||
+      parenta != NULL && parentb != NULL)
   {
       QnstGraphicsLink* linkDot = NULL;
 
-      if (parenta == entityb)
+      if (LINK_WITH_PARENT && parenta == entityb)
       {
         QnstGraphicsLink* linkDot = new QnstGraphicsLink((QnstGraphicsNode*) parenta);
         parenta->addnstGraphicsEntity(linkDot);
@@ -4392,7 +4396,7 @@ QnstGraphicsLink* QnstView::createLink(QnstGraphicsEntity* entitya,
 
         return linkDot;
       }
-      else if (parentb == entitya)
+      else if (LINK_WITH_PARENT && parentb == entitya)
       {
         QnstGraphicsLink* linkDot = new QnstGraphicsLink((QnstGraphicsNode*) parentb);
         parenta->addnstGraphicsEntity(linkDot);

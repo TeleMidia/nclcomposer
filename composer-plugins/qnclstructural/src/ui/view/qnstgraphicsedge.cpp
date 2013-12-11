@@ -130,7 +130,6 @@ void QnstGraphicsEdge::adjust(bool avoidCollision)
     if (pointa != pointb)
     {
       index = 1.0; n = 0;
-      qDebug();
 
       if (LINK_WITH_PARENT && entityb == getnstGraphicsParent())
       {
