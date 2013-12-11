@@ -117,23 +117,59 @@ void QnstGraphicsEdge::adjust(bool avoidCollision)
         line.setP2(getnstGraphicsParent()->mapFromItem(getEntityB()->getnstGraphicsParent(), line.p2()));
     }
 
+    if (LINK_WITH_PARENT)
+    {
+      if (entitya == getnstGraphicsParent())
+      {
+
+      }
+
+      if (entityb == getnstGraphicsParent())
+      {
+
+      }
+    }
+
     QPointF pointa = line.p1();
     QPointF pointb = line.p2();
+
 
     aux_adjust(pointa, pointb);
 
     entitya->setSelectable(false);
     entityb->setSelectable(false);
 
-    qreal index;
+    qreal index; int n;
 
-    if (pointa != pointb){
-      index = 1.0;
+    if (pointa != pointb)
+    {
+      index = 1.0; n = 0;
+      qDebug();
 
-      int n = 0;
+      qDebug() << entitya->getnstId() << "A -> B" << entityb->getnstId();
+      qDebug() << "===== LINE: " << line;
+      qDebug() << "===== PA:   " << pointa;
+      qDebug() << "===== PB:   " << pointb;
 
-      while(entityb->collidesWithItem(this))
+      if (LINK_WITH_PARENT && entityb == getnstGraphicsParent())
       {
+        while(!entityb->collidesWithItem(this))
+        {
+          index -= 0.01;
+
+          if (angle == 0)
+            pointb = line.pointAt(index);
+          else
+            pointb = arcPointAt(line , index);
+
+          aux_adjust(pointa, pointb);
+
+          if (++n > 100) // avoiding infinity loop
+          {
+            break;
+          }
+        }
+
         index -= 0.01;
 
         if (angle == 0)
@@ -143,15 +179,34 @@ void QnstGraphicsEdge::adjust(bool avoidCollision)
 
         aux_adjust(pointa, pointb);
 
-        if (++n > 100) // avoiding infinity loop
+      }
+      else
+      {
+        while(entityb->collidesWithItem(this))
         {
-          break;
+          index -= 0.01;
+
+          if (angle == 0)
+            pointb = line.pointAt(index);
+          else
+            pointb = arcPointAt(line , index);
+
+          aux_adjust(pointa, pointb);
+
+          if (++n > 100) // avoiding infinity loop
+          {
+            break;
+          }
         }
       }
 
-      index = 0;
+      qDebug() << "---";
+      qDebug() << "===== LINE: " << line;
+      qDebug() << "===== PA:   " << pointa;
+      qDebug() << "===== PB:   " << pointb;
 
-      n = 0;
+
+      index = 0; n = 0;
 
       while(entitya->collidesWithItem(this))
       {
@@ -168,7 +223,55 @@ void QnstGraphicsEdge::adjust(bool avoidCollision)
           break;
         }
       }
+
+
+      qDebug() << "---";
+      qDebug() << "===== LINE: " << line;
+      qDebug() << "===== PA:   " << pointa;
+      qDebug() << "===== PB:   " << pointb;
+
+      qDebug();
     }
+
+    /*
+    if (LINK_WITH_PARENT)
+    {
+      if (entitya == getnstGraphicsParent())
+      {
+        // TODO
+      }
+
+      if (entityb == getnstGraphicsParent())
+      {
+        index = 1; n = 0;
+
+        while(!entityb->collidesWithItem(this))
+        {
+          index -= 0.01;
+
+          if (angle == 0)
+            pointb = line.pointAt(index);
+          else
+            pointb = arcPointAt(line , index);
+
+          aux_adjust(pointa, pointb);
+
+          if (++n > 100){ // avoiding infinity loop
+            break;
+          }
+        }
+
+        index -= 0.005;
+
+        if (angle == 0)
+          pointb = line.pointAt(index);
+        else
+          pointb = arcPointAt(line , index);
+
+        aux_adjust(pointa, pointb);
+      }
+    }
+    */
 
     entitya->setSelectable(true);
     entityb->setSelectable(true);

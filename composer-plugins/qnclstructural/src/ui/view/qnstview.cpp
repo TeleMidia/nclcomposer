@@ -59,7 +59,7 @@ QnstView::QnstView(QWidget* parent)
 
   minimap = new MiniMap(this);
   minimap->init(this);
-  minimap->setMinimumSize(MINIMAP_DEFAULT_W, MINIMAP_DEFAULT_H);  
+  minimap->setMinimumSize(MINIMAP_DEFAULT_W, MINIMAP_DEFAULT_H);
 }
 
 QnstView::~QnstView()
@@ -4194,9 +4194,9 @@ void QnstView::addNodetoNodeEdge(QnstGraphicsEntity* entitya,
   QnstGraphicsEntity* parenta = entitya->getnstGraphicsParent();
   QnstGraphicsEntity* parentb = entityb->getnstGraphicsParent();
 
-  if (parenta != NULL && parentb != NULL)
+  if (parenta != NULL || parentb != NULL)
   {
-    if (parenta == parentb)
+    if (parenta == parentb || parenta == entityb || parentb == entitya)
     {
       // aggregator -> node
       if (entitya->getnstType() == Qnst::Link)
@@ -4308,7 +4308,7 @@ void QnstView::addInterfacetoInterfaceEdge(QnstGraphicsEntity* entitya,
       }
     }
     else if (parenta->getnstGraphicsParent() == parentb->getnstGraphicsParent())
-    {  
+    {
       createLinkWithDialog(entitya, entityb);
 
       modified = false;
@@ -4371,171 +4371,208 @@ QnstGraphicsLink* QnstView::createLink(QnstGraphicsEntity* entitya,
   QnstGraphicsEntity* parenta = entitya->getnstGraphicsParent();
   QnstGraphicsEntity* parentb = entityb->getnstGraphicsParent();
 
-  if (parenta != NULL && parentb != NULL)
+  if (parenta != NULL || parentb != NULL)
   {
       QnstGraphicsLink* linkDot = NULL;
 
-      qreal xcenter = -1;
-      qreal ycenter = -1;
-
-      QPointF pointa(entitya->getLeft() + entitya->getWidth()/2,
-                     entitya->getTop() + entitya->getHeight()/2);
-
-      QPointF pointb(entityb->getLeft() + entityb->getWidth()/2,
-                     entityb->getTop() + entityb->getHeight()/2);
-
-      if(entitya->getncgType() == Qncg::Interface &&
-         entityb->getncgType() == Qncg::Interface)
+      if (parenta == entityb)
       {
-        QnstGraphicsEntity* super = parenta->getnstGraphicsParent();
-
-        linkDot = new QnstGraphicsLink((QnstGraphicsNode*) super);
-        super->addnstGraphicsEntity(linkDot);
-
-        pointa = super->mapFromItem(parenta, pointa);
-        pointb = super->mapFromItem(parentb, pointb);
-      }
-      else if(entitya->getncgType()  == Qncg::Node &&
-              entityb->getncgType() == Qncg::Interface)
-      {
-        linkDot = new QnstGraphicsLink((QnstGraphicsNode*) parenta);
+        QnstGraphicsLink* linkDot = new QnstGraphicsLink((QnstGraphicsNode*) parenta);
         parenta->addnstGraphicsEntity(linkDot);
 
-        pointb = parenta->mapFromItem(parentb, pointb);
+        linkDot->adjust();
+
+        updateEntityWithUniqueNstId(linkDot); // set a unique Id
+
+        linkDot->setxConnector(connName);
+        if(connectors.contains(connName))
+          linkDot->setxConnectorUID(connectors[connName]->getnstUid());
+
+        requestEntityAddition(linkDot);
+
+        return linkDot;
       }
-      else if(entitya->getncgType()  == Qncg::Interface &&
-              entityb->getncgType() == Qncg::Node)
+      else if (parentb == entitya)
       {
-        linkDot = new QnstGraphicsLink((QnstGraphicsNode*) parentb);
-        parentb->addnstGraphicsEntity(linkDot);
+        QnstGraphicsLink* linkDot = new QnstGraphicsLink((QnstGraphicsNode*) parentb);
+        parenta->addnstGraphicsEntity(linkDot);
 
-        pointa = parentb->mapFromItem(parenta, pointa);
+        linkDot->adjust();
 
+        updateEntityWithUniqueNstId(linkDot); // set a unique Id
+
+        linkDot->setxConnector(connName);
+        if(connectors.contains(connName))
+          linkDot->setxConnectorUID(connectors[connName]->getnstUid());
+
+        requestEntityAddition(linkDot);
+
+        return linkDot;
       }
       else
       {
-        linkDot = new QnstGraphicsLink((QnstGraphicsNode*) parenta);
-        parenta ->addnstGraphicsEntity(linkDot);
-      }
+        qreal xcenter = -1;
+        qreal ycenter = -1;
 
-      QLineF l(pointa, pointb);
+        QPointF pointa(entitya->getLeft() + entitya->getWidth()/2,
+                       entitya->getTop() + entitya->getHeight()/2);
 
-      if (pointa.x() <= pointb.x() && pointa.y() <= pointb.y())
-      {
-        qreal angle = (l.angle() - 270);
-        qreal rangle = angle*PI/180;
+        QPointF pointb(entityb->getLeft() + entityb->getWidth()/2,
+                       entityb->getTop() + entityb->getHeight()/2);
 
-        if (angle > 45)
+        if(entitya->getncgType() == Qncg::Interface &&
+           entityb->getncgType() == Qncg::Interface)
         {
-          pointa.setX(pointa.x() + entitya->getWidth()/2);
-          pointa.setY(pointa.y() + ((entitya->getWidth()/2)/tan(rangle)));
+          QnstGraphicsEntity* super = parenta->getnstGraphicsParent();
 
-          pointb.setX(pointb.x() - entityb->getWidth()/2);
-          pointb.setY(pointb. y() - ((entityb->getWidth()/2)/tan(rangle)));
+          linkDot = new QnstGraphicsLink((QnstGraphicsNode*) super);
+          super->addnstGraphicsEntity(linkDot);
+
+          pointa = super->mapFromItem(parenta, pointa);
+          pointb = super->mapFromItem(parentb, pointb);
+        }
+        else if(entitya->getncgType()  == Qncg::Node &&
+                entityb->getncgType() == Qncg::Interface)
+        {
+          linkDot = new QnstGraphicsLink((QnstGraphicsNode*) parenta);
+          parenta->addnstGraphicsEntity(linkDot);
+
+          pointb = parenta->mapFromItem(parentb, pointb);
+        }
+        else if(entitya->getncgType()  == Qncg::Interface &&
+                entityb->getncgType() == Qncg::Node)
+        {
+          linkDot = new QnstGraphicsLink((QnstGraphicsNode*) parentb);
+          parentb->addnstGraphicsEntity(linkDot);
+
+          pointa = parentb->mapFromItem(parenta, pointa);
+
         }
         else
         {
-          pointa.setX(pointa.x() + ((entitya->getHeight()/2)*tan(rangle)));
-          pointa.setY(pointa.y() + entitya->getHeight()/2);
-
-          pointb.setX(pointb.x() - ((entityb->getHeight()/2)*tan(rangle)));
-          pointb.setY(pointb.y() - entityb->getHeight()/2);
+          linkDot = new QnstGraphicsLink((QnstGraphicsNode*) parenta);
+          parenta ->addnstGraphicsEntity(linkDot);
         }
 
-        xcenter = pointa.x() + (pointb.x() - pointa.x())/2;
-        ycenter = pointa.y() + (pointb.y() - pointa.y())/2;
+        QLineF l(pointa, pointb);
+
+        if (pointa.x() <= pointb.x() && pointa.y() <= pointb.y())
+        {
+          qreal angle = (l.angle() - 270);
+          qreal rangle = angle*PI/180;
+
+          if (angle > 45)
+          {
+            pointa.setX(pointa.x() + entitya->getWidth()/2);
+            pointa.setY(pointa.y() + ((entitya->getWidth()/2)/tan(rangle)));
+
+            pointb.setX(pointb.x() - entityb->getWidth()/2);
+            pointb.setY(pointb. y() - ((entityb->getWidth()/2)/tan(rangle)));
+          }
+          else
+          {
+            pointa.setX(pointa.x() + ((entitya->getHeight()/2)*tan(rangle)));
+            pointa.setY(pointa.y() + entitya->getHeight()/2);
+
+            pointb.setX(pointb.x() - ((entityb->getHeight()/2)*tan(rangle)));
+            pointb.setY(pointb.y() - entityb->getHeight()/2);
+          }
+
+          xcenter = pointa.x() + (pointb.x() - pointa.x())/2;
+          ycenter = pointa.y() + (pointb.y() - pointa.y())/2;
+        }
+        else if (pointa.x() > pointb.x() && pointa.y() < pointb.y())
+        {
+          qreal angle = (270 - l.angle());
+          qreal rangle = angle*PI/180;
+
+          if (angle > 45)
+          {
+            pointa.setX(pointa.x() - entitya->getWidth()/2);
+            pointa.setY(pointa.y() + ((entitya->getWidth()/2)/tan(rangle)));
+
+            pointb.setX(pointb.x() + entityb->getWidth()/2);
+            pointb.setY(pointb.y() - ((entityb->getWidth()/2)/tan(rangle)));
+          }
+          else
+          {
+            pointa.setX(pointa.x() - ((entitya->getHeight()/2)*tan(rangle)));
+            pointa.setY(pointa.y() + entitya->getHeight()/2);
+
+            pointb.setX(pointb.x() + ((entityb->getHeight()/2)*tan(rangle)));
+            pointb.setY(pointb.y() - entityb->getHeight()/2);
+          }
+
+          xcenter = pointb.x() + (pointa.x() - pointb.x())/2;
+          ycenter = pointa.y() + (pointb.y() - pointa.y())/2;
+        }
+        else if (pointa.x() < pointb.x() && pointa.y() > pointb.y())
+        {
+          qreal angle = l.angle();
+          qreal rangle = angle*PI/180;
+
+          if (angle < 45)
+          {
+            pointa.setX(pointa.x() + entitya->getWidth()/2);
+            pointa.setY(pointa.y() - ((entitya->getWidth()/2)*tan(rangle)));
+
+            pointb.setX(pointb.x() - entityb->getWidth()/2);
+            pointb.setY(pointb.y() + ((entityb->getWidth()/2)*tan(rangle)));
+          }
+          else
+          {
+            pointa.setX(pointa.x() + ((entitya->getHeight()/2)/tan(rangle)));
+            pointa.setY(pointa.y() - entitya->getHeight()/2);
+
+            pointb.setX(pointb.x() - ((entityb->getHeight()/2)/tan(rangle)));
+            pointb.setY(pointb.y() + entityb->getHeight()/2);
+          }
+
+          xcenter = pointa.x() + (pointb.x() - pointa.x())/2;
+          ycenter = pointb.y() + (pointa.y() - pointb.y())/2;
+        }
+        else if (pointa.x() > pointb.x() && pointa.y() > pointb.y())
+        {
+          qreal angle = l.angle() - 90;
+          qreal rangle = angle*PI/180;
+
+          if (angle > 45)
+          {
+            pointa.setX(pointa.x() - entitya->getWidth()/2);
+            pointa.setY(pointa.y() - ((entitya->getWidth()/2)/tan(rangle)));
+
+            pointb.setX(pointb.x() + entityb->getWidth()/2);
+            pointb.setY(pointb.y() + ((entityb->getWidth()/2)/tan(rangle)));
+          }
+          else
+          {
+            pointa.setX(pointa.x() - ((entitya->getHeight()/2)*tan(rangle)));
+            pointa.setY(pointa.y() - entitya->getHeight()/2);
+
+            pointb.setX(pointb.x() + ((entityb->getHeight()/2)*tan(rangle)));
+            pointb.setY(pointb.y() + entityb->getHeight()/2);
+          }
+
+          xcenter = pointb.x() + (pointa.x() - pointb.x())/2;
+          ycenter = pointb.y() + (pointa.y() - pointb.y())/2;
+        }
+
+        linkDot->setTop(ycenter - DEFAULT_AGGREGATOR_HEIGHT/2);
+        linkDot->setLeft(xcenter - DEFAULT_AGGREGATOR_WIDTH/2);
+        linkDot->setWidth(DEFAULT_AGGREGATOR_WIDTH);
+        linkDot->setHeight(DEFAULT_AGGREGATOR_HEIGHT);
+        linkDot->adjust();
+
+        updateEntityWithUniqueNstId(linkDot); // set a unique Id
+
+        linkDot->setxConnector(connName);
+        if(connectors.contains(connName))
+          linkDot->setxConnectorUID(connectors[connName]->getnstUid());
+
+        requestEntityAddition(linkDot);
+
+        return linkDot;
       }
-      else if (pointa.x() > pointb.x() && pointa.y() < pointb.y())
-      {
-        qreal angle = (270 - l.angle());
-        qreal rangle = angle*PI/180;
-
-        if (angle > 45)
-        {
-          pointa.setX(pointa.x() - entitya->getWidth()/2);
-          pointa.setY(pointa.y() + ((entitya->getWidth()/2)/tan(rangle)));
-
-          pointb.setX(pointb.x() + entityb->getWidth()/2);
-          pointb.setY(pointb.y() - ((entityb->getWidth()/2)/tan(rangle)));
-        }
-        else
-        {
-          pointa.setX(pointa.x() - ((entitya->getHeight()/2)*tan(rangle)));
-          pointa.setY(pointa.y() + entitya->getHeight()/2);
-
-          pointb.setX(pointb.x() + ((entityb->getHeight()/2)*tan(rangle)));
-          pointb.setY(pointb.y() - entityb->getHeight()/2);
-        }
-
-        xcenter = pointb.x() + (pointa.x() - pointb.x())/2;
-        ycenter = pointa.y() + (pointb.y() - pointa.y())/2;
-      }
-      else if (pointa.x() < pointb.x() && pointa.y() > pointb.y())
-      {
-        qreal angle = l.angle();
-        qreal rangle = angle*PI/180;
-
-        if (angle < 45)
-        {
-          pointa.setX(pointa.x() + entitya->getWidth()/2);
-          pointa.setY(pointa.y() - ((entitya->getWidth()/2)*tan(rangle)));
-
-          pointb.setX(pointb.x() - entityb->getWidth()/2);
-          pointb.setY(pointb.y() + ((entityb->getWidth()/2)*tan(rangle)));
-        }
-        else
-        {
-          pointa.setX(pointa.x() + ((entitya->getHeight()/2)/tan(rangle)));
-          pointa.setY(pointa.y() - entitya->getHeight()/2);
-
-          pointb.setX(pointb.x() - ((entityb->getHeight()/2)/tan(rangle)));
-          pointb.setY(pointb.y() + entityb->getHeight()/2);
-        }
-
-        xcenter = pointa.x() + (pointb.x() - pointa.x())/2;
-        ycenter = pointb.y() + (pointa.y() - pointb.y())/2;
-      }
-      else if (pointa.x() > pointb.x() && pointa.y() > pointb.y())
-      {
-        qreal angle = l.angle() - 90;
-        qreal rangle = angle*PI/180;
-
-        if (angle > 45)
-        {
-          pointa.setX(pointa.x() - entitya->getWidth()/2);
-          pointa.setY(pointa.y() - ((entitya->getWidth()/2)/tan(rangle)));
-
-          pointb.setX(pointb.x() + entityb->getWidth()/2);
-          pointb.setY(pointb.y() + ((entityb->getWidth()/2)/tan(rangle)));
-        }
-        else
-        {
-          pointa.setX(pointa.x() - ((entitya->getHeight()/2)*tan(rangle)));
-          pointa.setY(pointa.y() - entitya->getHeight()/2);
-
-          pointb.setX(pointb.x() + ((entityb->getHeight()/2)*tan(rangle)));
-          pointb.setY(pointb.y() + entityb->getHeight()/2);
-        }
-
-        xcenter = pointb.x() + (pointa.x() - pointb.x())/2;
-        ycenter = pointb.y() + (pointa.y() - pointb.y())/2;
-      }
-
-      linkDot->setTop(ycenter - DEFAULT_AGGREGATOR_HEIGHT/2);
-      linkDot->setLeft(xcenter - DEFAULT_AGGREGATOR_WIDTH/2);
-      linkDot->setWidth(DEFAULT_AGGREGATOR_WIDTH);
-      linkDot->setHeight(DEFAULT_AGGREGATOR_HEIGHT);
-      linkDot->adjust();
-
-      updateEntityWithUniqueNstId(linkDot); // set a unique Id
-
-      linkDot->setxConnector(connName);
-      if(connectors.contains(connName))
-        linkDot->setxConnectorUID(connectors[connName]->getnstUid());
-
-      requestEntityAddition(linkDot);
-
-      return linkDot;
   }
 
   return NULL;

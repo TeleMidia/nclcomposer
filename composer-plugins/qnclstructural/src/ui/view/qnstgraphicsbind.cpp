@@ -97,13 +97,13 @@ QString QnstGraphicsBind::getIcon()
   return icon;
 }
 
-void QnstGraphicsBind::adjust()
-{
-  // if(isCondition())
+//void QnstGraphicsBind::adjust()
+//{
+  //if(isCondition())
   //  adjust_condition();
-  // else
-  adjust_action();
-}
+  //else
+    //adjust_action();
+//}
 
 void QnstGraphicsBind::adjust_action()
 {
@@ -255,13 +255,12 @@ void QnstGraphicsBind::aux_adjust(QPointF pointa, QPointF pointb)
 
 void QnstGraphicsBind::draw(QPainter* painter)
 {
-  // if(isCondition())
-  //  draw_condition(painter);
-  // else
-
   drawMouseHoverHighlight(painter); // This should not be HERE!!
 
-  draw_action(painter);
+  //if(isCondition())
+  //  draw_condition(painter);
+  //else
+    draw_action(painter);
 }
 
 void QnstGraphicsBind::draw_action(QPainter* painter)

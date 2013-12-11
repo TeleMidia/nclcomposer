@@ -13,6 +13,9 @@ TARGET = \
 VERSION = \
     0.1.0
 
+DEFINES += \
+   LINK_WITH_PARENT=\"1\"
+
 INCLUDEPATH += \
     $$QNSTINCLUDES
 

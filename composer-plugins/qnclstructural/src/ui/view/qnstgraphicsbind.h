@@ -6,6 +6,8 @@
 #include "qnstgraphicslink.h"
 #include "qnstgraphicsbinddialog.h"
 
+#include <QDebug>
+
 class QnstGraphicsLink;
 
 class QnstGraphicsBind : public QnstGraphicsEdge
@@ -76,7 +78,7 @@ public:
   bool isAction() const;
   bool isCondition() const;
 
-  void adjust();
+  //void adjust();
 
   // \todo This two functions must be merged
   void adjust_action();
