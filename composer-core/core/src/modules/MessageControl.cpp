@@ -422,12 +422,14 @@ void MessageControl::setCurrentProjectAsDirty()
 
 void MessageControl::undo()
 {
-  qUndoStack->undo();
+  if(qUndoStack->canUndo())
+    qUndoStack->undo();
 }
 
 void MessageControl::redo()
 {
-  qUndoStack->redo();
+  if(qUndoStack->canRedo())
+    qUndoStack->redo();
 }
 
 } } //end namespace
