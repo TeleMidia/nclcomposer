@@ -10,12 +10,15 @@ if [ $# -eq 1 ]
     VERSION=$1
 fi
 
-echo $VERSION
+echo "Generating NCL Composer ${VERSION} deb package"
 
-QMAKE="qmake-qt4 FORCERELEASE=true RUNSSH=true CPRVERSION=${VERSION} PREFIX=/usr"
+PARAMS="FORCERELEASE=true RUNSSH=true CPRVERSION=${VERSION} PREFIX=/usr"
+QMAKE="qmake-qt4 -recursive ${PARAMS}"
+LUPDATE="lupdate-qt4 composer-all.pro"
+LRELEASE="lrelease-qt4 composer-all.pro"
 
 #We need to install before to be able to compile the plugins.
-${QMAKE} && lupdate composer-all.pro && lrelease composer-all.pro && make install
+${QMAKE} && ${LUPDATE} && ${LRELEASE} && make install
 
 #Now, we start to generate the deb.
 debuild -us -uc
