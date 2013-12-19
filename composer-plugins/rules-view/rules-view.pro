@@ -20,18 +20,19 @@ SOURCES += \
     src/rulesviewfactory.cpp \
     src/rulesview.cpp \
     src/comboboxitem.cpp \
-    src/ruleitem.cpp \
     src/compositeruleitem.cpp \
-    src/rulestreewidget.cpp
+    src/rulestreewidget.cpp \
+    src/ruleitem.cpp
 
 HEADERS += \
     include/rulesviewplugin.h \
     include/rulesviewfactory.h \
     include/rulesview.h \
     include/comboboxitem.h \
-    include/ruleitem.h \
     include/compositeruleitem.h \
-    include/rulestreewidget.h
+    include/rulestreewidget.h \
+    include/ruleitem.h \
+    include/util.h
 
 unix:!symbian {
     maemo5 {
@@ -41,3 +42,6 @@ unix:!symbian {
     }
     INSTALLS += target
 }
+
+RESOURCES += \
+    ../common-resources/images.qrc

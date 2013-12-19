@@ -18,27 +18,37 @@ CompositeRuleItem::CompositeRuleItem(QTreeWidgetItem *item, QString id,
 
 void CompositeRuleItem::init(QString id, QString op)
 {
-  _id = id;
-  _operator = op;
+  setText(1, id);
+  setOperator(op);
 
-  setText(0, _id + " (" + _operator + ")");
-
-  //setFlags(flags() | Qt::ItemIsEditable);
+  setFlags(flags() | Qt::ItemIsEditable);
 }
 
 void CompositeRuleItem::setOperator(int op)
 {
+  QString operatorLabel = "";
   switch (op) {
     case AND_OP:
-      _operator = "and";
+      operatorLabel = "and";
       break;
     case OR_OP:
-      _operator = "or";
+      operatorLabel = "or";
       break;
     default:
       qDebug () << "Invalid operator.";
       return;
   }
 
-  setText(0, _id + " (" + _operator + ")");
+  setOperator(operatorLabel);
+}
+
+void CompositeRuleItem::setOperator(QString op)
+{
+  _operator = op;
+
+  QString label = "compositeRule";
+  if (_operator != "")
+    label += "(" + _operator + ")";
+
+  setText(0, label);
 }

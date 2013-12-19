@@ -16,15 +16,16 @@ public:
   explicit CompositeRuleItem(QTreeWidgetItem *item, QString id,
                              QString op, int type, QWidget *parent);
 
-  QString id () const { return _id; }
+  QString id () const { return text (1); }
   QString getOperator () const { return _operator; }
 
   void setOperator (int op);
+  void setOperator (QString op);
+
 
 private:
   void init (QString id, QString op);
 
-  QString _id;
   QString _operator;
 };
 

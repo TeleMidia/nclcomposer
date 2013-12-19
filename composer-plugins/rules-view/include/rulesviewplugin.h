@@ -28,18 +28,26 @@ public:
 public slots:
   void init();
 
-  void updateValue(QTreeWidgetItem*);
+  void onEntityAdded(QString, Entity *);
+  void onEntityChanged(QString entityID, Entity *entity);
+  void onEntityRemoved(QString, QString entityID);
 
-  void onEntityAdded(QString ID, Entity *);
-  void onEntityChanged(QString ID, Entity *) {};
-  void onEntityRemoved(QString ID, QString entityID) {};
+private slots:
+  void sendRemoveEntitySignal (QTreeWidgetItem *);
+  void updateValue(QTreeWidgetItem*);
+  void sendSelectionChangedSignal();
 
 private:
   void findAllRules (Entity *);
+  void releaseItemChildren (QTreeWidgetItem *);
+
+  Project * _currentProject;
+
+  QString * _selectedUId;
 
   RulesTreeWidget * _rulesTable;
   Entity * _ruleBaseEntity;
-  QMap <QTreeWidgetItem *, Entity *> _items;
+  QMap <QTreeWidgetItem *, QString> _items;
 };
 
 #endif // RULESVIEWPLUGIN_H

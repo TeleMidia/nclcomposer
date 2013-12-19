@@ -2,37 +2,28 @@
 #define RULEITEM_H
 
 #include <QTreeWidgetItem>
-#include <QLineEdit>
 #include "comboboxitem.h"
+#include "util.h"
 
 class RuleItem : public QObject, public QTreeWidgetItem
 {
   Q_OBJECT
 public:
   explicit RuleItem(QTreeWidget *view, QString id, QString var,
-                    QString comparator, QString value,
-                    int type, QWidget *parent = 0);
+                      QString comparator, QString value, int type,
+                      QWidget *parent);
 
   explicit RuleItem(QTreeWidgetItem *item, QString id, QString var,
-                    QString comparator, QString value,
-                    int type, QWidget *parent = 0);
+                      QString comparator, QString value,
+                      int type, QWidget *parent = 0);
 
-  inline QString id () const { return text(ID); }
+  inline QString id () const { return text(ID_COLUMN); }
   inline QString var () const { return _varCombo->currentText(); }
   inline QString comparator () const { return _comparatorCombo->currentText(); }
-  inline QString value () const { return text(VALUE); }
-
-signals:
-
-public slots:
+  inline QString value () const { return text(VALUE_COLUMN); }
 
 private:
   void init (QString id, QString var, QString comparator, QString value);
-
-  static int ID;
-  static int VAR;
-  static int COMP;
-  static int VALUE;
 
   static QStringList _varList;
   static QStringList _cmpList;
@@ -48,5 +39,4 @@ private:
   ComboBoxItem *_comparatorCombo;
 };
 
-#endif // RULEITEM_H
-
+#endif // RULEITEM2_H

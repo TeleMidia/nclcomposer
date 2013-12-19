@@ -2,6 +2,7 @@
 
 #include <QMenu>
 #include <QDebug>
+#include <QIcon>
 
 #include "compositeruleitem.h"
 
@@ -11,6 +12,11 @@ RulesTreeWidget::RulesTreeWidget(QWidget *parent) :
   setContextMenuPolicy(Qt::CustomContextMenu);
   connect(this, SIGNAL(customContextMenuRequested(const QPoint&)),
           SLOT(onCustomContextMenuRequested(const QPoint&)));
+
+  connect(this, SIGNAL(itemDoubleClicked(QTreeWidgetItem*,int)),
+          SLOT(editItem(QTreeWidgetItem*,int)));
+
+  setEditTriggers(NoEditTriggers);
 }
 
 void RulesTreeWidget::onCustomContextMenuRequested(const QPoint &pos)
@@ -27,37 +33,60 @@ void RulesTreeWidget::showContextMenu(QTreeWidgetItem* item,
 {
   QMenu menu;
 
+  QAction *addRuleAction = 0;
+  QAction *removeRuleAction = 0;
+  QAction *andOpAction = 0;
+  QAction *orOpAction = 0;
+
+  removeRuleAction = menu.addAction (QIcon(":icon/delete"),
+                                     "Remove Element");
+
   switch (item->type()) {
     case RULE_TYPE:
       break;
 
     case COMPOSITE_TYPE:
-      QMenu *opMenu = menu.addMenu("operator");
-      opMenu->addAction("and");
-      opMenu->addAction("or");
-
+      menu.addSeparator();
+      QMenu *opMenu = menu.addMenu("Operator");
+      andOpAction = opMenu->addAction("and");
+      orOpAction = opMenu->addAction("or");
       break;
   }
 
-  if (item->Type != RULE_TYPE)
+  QAction *choosenAction = menu.exec(mapToGlobal(globalPos));
+  if (choosenAction)
   {
-    QAction *choosenAction = menu.exec(mapToGlobal(globalPos));
-    if (choosenAction)
+    if (choosenAction == andOpAction || choosenAction == orOpAction)
     {
-      QString actionText = choosenAction->text();
       CompositeRuleItem *compositeRule = dynamic_cast <CompositeRuleItem *>
           (item);
-      if (compositeRule)
-      {
-        if (actionText == "and")
-          compositeRule->setOperator (AND_OP);
-        else if (actionText == "or")
-          compositeRule->setOperator(OR_OP);
-
-        emit entityChanged(compositeRule);
-      }
+      if (choosenAction == andOpAction)
+        compositeRule->setOperator (AND_OP);
+      else
+        compositeRule->setOperator(OR_OP);
     }
-
+    else if (choosenAction == removeRuleAction)
+    {
+      emit removeEntityRequested (item);
+    }
   }
 }
 
+void RulesTreeWidget::editItem(QTreeWidgetItem *item, int column)
+{
+  bool isColumnEditable = false;
+  if (item->type() == RULEBASE_TYPE || item->type() == COMPOSITE_TYPE)
+  {
+    if (column == 1)
+      isColumnEditable = true;
+
+  }
+  else if (item->type() == RULE_TYPE)
+  {
+    if (column > 0)
+      isColumnEditable = true;
+  }
+
+  if (isColumnEditable)
+    QTreeWidget::editItem(item, column);
+}
