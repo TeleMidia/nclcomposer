@@ -40,6 +40,8 @@ RulesViewPlugin::RulesViewPlugin() :
   connect(_rulesTable, SIGNAL(removeEntityRequested(QTreeWidgetItem*)),
           this, SLOT(sendRemoveEntitySignal(QTreeWidgetItem *)));
 
+  connect(_rulesTable, SIGNAL(addRuleRequested(QTreeWidgetItem*,int)),
+          this, SLOT(sendAddEntitySignal(QTreeWidgetItem*,int)));
 
   QStringList headers;
   headers << "Element" << "Id" << "Variable" << "Comparator" << "Value";
@@ -191,7 +193,7 @@ void RulesViewPlugin::addRule(Entity *entity)
       item = new CompositeRuleItem (parent,
                                     entity->getAttribute(ID_ATTR),
                                     entity->getAttribute(OPERATOR_ATTR),
-                                    COMPOSITE_TYPE, _rulesTable);
+                                    COMPOSITERULE_TYPE, _rulesTable);
     }
   }
 
@@ -249,7 +251,7 @@ void RulesViewPlugin::updateValue(QTreeWidgetItem* item)
         break;
       }
 
-    case COMPOSITE_TYPE:
+    case COMPOSITERULE_TYPE:
       {
         CompositeRuleItem *compositeRuleItem =
             dynamic_cast <CompositeRuleItem *> (item);
@@ -300,8 +302,22 @@ void RulesViewPlugin::sendRemoveEntitySignal(QTreeWidgetItem *item)
     emit removeEntity(entity, true);
 }
 
+void RulesViewPlugin::sendAddEntitySignal(QTreeWidgetItem *parent, int type)
+{
+  if (!parent) return;
+
+  QString parentUId = _items.value(parent);
+  if (!parentUId.isEmpty())
+  {
+    QMap <QString, QString> attr;
+    emit addEntity(type == RULE_TYPE ? RULE_LABEL : COMPOSITERULE_LABEL,
+                   parentUId, attr, true);
+  }
+}
+
 RulesViewPlugin::~RulesViewPlugin()
 {
 
   delete _rulesTable;
+  delete _selectedUId;
 }

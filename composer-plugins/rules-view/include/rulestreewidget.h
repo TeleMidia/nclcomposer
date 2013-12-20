@@ -5,7 +5,7 @@
 
 static const int RULEBASE_TYPE = QTreeWidgetItem::UserType;
 static const int RULE_TYPE = QTreeWidgetItem::UserType + 1;
-static const int COMPOSITE_TYPE = QTreeWidgetItem::UserType + 2;
+static const int COMPOSITERULE_TYPE = QTreeWidgetItem::UserType + 2;
 
 
 class RulesTreeWidget : public QTreeWidget
@@ -16,6 +16,7 @@ public:
 
 signals:
   void removeEntityRequested (QTreeWidgetItem *);
+  void addRuleRequested (QTreeWidgetItem*, int);
 
 private slots:
   void onCustomContextMenuRequested(const QPoint &pos);

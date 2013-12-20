@@ -3,6 +3,7 @@
 #include <QMenu>
 #include <QDebug>
 #include <QIcon>
+#include <QMessageBox>
 
 #include "compositeruleitem.h"
 
@@ -34,23 +35,30 @@ void RulesTreeWidget::showContextMenu(QTreeWidgetItem* item,
   QMenu menu;
 
   QAction *addRuleAction = 0;
+  QAction *addCompositeRuleAction = 0;
   QAction *removeRuleAction = 0;
   QAction *andOpAction = 0;
   QAction *orOpAction = 0;
 
+  if (item->type() == COMPOSITERULE_TYPE || item->type() == RULEBASE_TYPE)
+  {
+    addRuleAction = menu.addAction("Add Rule");
+    addCompositeRuleAction = menu.addAction("Add Composite Rule");
+  }
+
   removeRuleAction = menu.addAction (QIcon(":icon/delete"),
-                                     "Remove Element");
+                                     item->type() == RULEBASE_TYPE ?
+                                     "Remove ruleBase" : "Remove Rule");
 
-  switch (item->type()) {
-    case RULE_TYPE:
-      break;
+  removeRuleAction->setShortcut(QKeySequence::Delete);
 
-    case COMPOSITE_TYPE:
-      menu.addSeparator();
-      QMenu *opMenu = menu.addMenu("Operator");
-      andOpAction = opMenu->addAction("and");
-      orOpAction = opMenu->addAction("or");
-      break;
+
+  if (item->type() == COMPOSITERULE_TYPE)
+  {
+    menu.addSeparator();
+    QMenu *opMenu = menu.addMenu("Operator");
+    andOpAction = opMenu->addAction("and");
+    orOpAction = opMenu->addAction("or");
   }
 
   QAction *choosenAction = menu.exec(mapToGlobal(globalPos));
@@ -67,15 +75,25 @@ void RulesTreeWidget::showContextMenu(QTreeWidgetItem* item,
     }
     else if (choosenAction == removeRuleAction)
     {
-      emit removeEntityRequested (item);
+      int button =
+          QMessageBox::question(this, "Remove Element",
+                                "Do you really want remove this element?",
+                                QMessageBox::Yes, QMessageBox::No);
+
+      if (button == QMessageBox::Yes)
+        emit removeEntityRequested (item);
     }
+    else if (choosenAction == addRuleAction)
+      emit addRuleRequested(item, RULE_TYPE);
+    else if (choosenAction == addCompositeRuleAction)
+      emit addRuleRequested(item, COMPOSITERULE_TYPE);
   }
 }
 
 void RulesTreeWidget::editItem(QTreeWidgetItem *item, int column)
 {
   bool isColumnEditable = false;
-  if (item->type() == RULEBASE_TYPE || item->type() == COMPOSITE_TYPE)
+  if (item->type() == RULEBASE_TYPE || item->type() == COMPOSITERULE_TYPE)
   {
     if (column == 1)
       isColumnEditable = true;

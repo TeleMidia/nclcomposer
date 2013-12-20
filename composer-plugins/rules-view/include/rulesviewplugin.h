@@ -33,8 +33,10 @@ public slots:
   void onEntityRemoved(QString, QString entityID);
 
 private slots:
-  void sendRemoveEntitySignal (QTreeWidgetItem *);
   void updateValue(QTreeWidgetItem*);
+
+  void sendAddEntitySignal (QTreeWidgetItem *, int);
+  void sendRemoveEntitySignal (QTreeWidgetItem *);
   void sendSelectionChangedSignal();
 
 private:
