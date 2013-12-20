@@ -14,8 +14,6 @@ void anyScopeReferenceValidation (const ModelElement &el,
                                   vector<pair<void *, string> > &msg,
                                   Message &messageFactory)
 {
-  fprintf (stderr, "\n\n*************%s *****************\n\n", att.name().c_str());
-
   // Test 'refer' special case
   if (att.name() == "refer")
   {
