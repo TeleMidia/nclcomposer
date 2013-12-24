@@ -76,8 +76,11 @@ void RulesViewPlugin::onEntityAdded(QString, Entity *entity)
           this, SLOT(updateValue(QTreeWidgetItem*)));
 }
 
-void RulesViewPlugin::onEntityChanged(QString, Entity *entity)
+void RulesViewPlugin::onEntityChanged(QString pluginID, Entity *entity)
 {
+  if (pluginID == IPlugin::pluginInstanceID)
+    return;
+
   QTreeWidgetItem *item = _items.key(entity->getUniqueId(), 0);
 
   if (item)
