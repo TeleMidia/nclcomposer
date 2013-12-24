@@ -18,7 +18,7 @@ CompositeRuleItem::CompositeRuleItem(QTreeWidgetItem *item, QString id,
 
 void CompositeRuleItem::init(QString id, QString op)
 {
-  setText(1, id);
+  setText(ID_COLUMN, id);
   setOperator(op);
 
   setFlags(flags() | Qt::ItemIsEditable);
@@ -50,5 +50,5 @@ void CompositeRuleItem::setOperator(QString op)
   if (_operator != "")
     label += "(" + _operator + ")";
 
-  setText(0, label);
+  setText(ELEMENT_COLUMN, label);
 }

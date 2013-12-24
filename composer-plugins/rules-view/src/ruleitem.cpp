@@ -27,10 +27,7 @@ RuleItem::RuleItem(QTreeWidgetItem *item, QString id, QString var,
 
 void RuleItem::init(QString id, QString var, QString comparator, QString value)
 {
-  _id = id;
-  _var = var;
   _comparator = comparator;
-  _value = value;
 
   NCLStructure *instance = NCLStructure::getInstance();
 
@@ -39,16 +36,21 @@ void RuleItem::init(QString id, QString var, QString comparator, QString value)
         (instance->getAttributeDatatype(RULE_LABEL, VAR_ATTR));
 
   if (_cmpList.isEmpty())
-    _cmpList = instance->getDatatypeDefaultSuggestions
-        (instance->getAttributeDatatype(RULE_LABEL, COMPARATOR_ATTR));
+    _cmpList.append(instance->getDatatypeDefaultSuggestions
+        (instance->getAttributeDatatype(RULE_LABEL, COMPARATOR_ATTR)));
 
   _varCombo = new ComboBoxItem (this, VAR_COLUMN);
+  _varCombo->addItem("");
   _varCombo->addItems(_varList);
   _varCombo->setEditable(true);
-  _varCombo->setEditText(_var);
+  _varCombo->setEditText(var);
 
   _comparatorCombo = new ComboBoxItem (this, COMP_COLUMN);
+  _comparatorCombo->addItem("");
   _comparatorCombo->addItems(_cmpList);
+
+  changeComboValue(_varCombo, var);
+  changeComboValue(_comparatorCombo, comparator);
 
   QTreeWidgetItem::setText(ELEMENT_COLUMN, RULE_LABEL);
   QTreeWidgetItem::setText(ID_COLUMN, id);

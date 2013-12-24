@@ -22,16 +22,38 @@ public:
   inline QString comparator () const { return _comparatorCombo->currentText(); }
   inline QString value () const { return text(VALUE_COLUMN); }
 
+  inline void setId (QString id) { setText (ID_COLUMN, id); }
+  inline void setVar (QString var)
+  {
+    changeComboValue(_varCombo, var);
+  }
+
+  inline void setComparator (QString comparator)
+  {
+    changeComboValue(_comparatorCombo, comparator);
+  }
+  inline void setValue (QString value) { setText(VALUE_COLUMN, value); }
+
+  inline void changeComboValue(QComboBox *combo, QString value)
+  {
+    int index = combo->findText(value);
+    if (index != -1)
+      combo->setCurrentIndex(index);
+    else
+    {
+      combo->setItemText(0, value);
+      combo->setCurrentIndex(0);
+    }
+  }
+
 private:
   void init (QString id, QString var, QString comparator, QString value);
+  void changeComboValue (QComboBox &combo, QString value);
 
   static QStringList _varList;
   static QStringList _cmpList;
 
-  QString _id;
-  QString _var;
   QString _comparator;
-  QString _value;
 
   QLineEdit * _idEdit;
   QLineEdit * _valueEdit;

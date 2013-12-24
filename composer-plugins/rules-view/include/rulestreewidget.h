@@ -14,6 +14,9 @@ class RulesTreeWidget : public QTreeWidget
 public:
   explicit RulesTreeWidget(QWidget *parent = 0);
 
+protected:
+  void mousePressEvent(QMouseEvent *event);
+
 signals:
   void removeEntityRequested (QTreeWidgetItem *);
   void addRuleRequested (QTreeWidgetItem*, int);

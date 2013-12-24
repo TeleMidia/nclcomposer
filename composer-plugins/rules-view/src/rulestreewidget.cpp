@@ -4,6 +4,7 @@
 #include <QDebug>
 #include <QIcon>
 #include <QMessageBox>
+#include <QMouseEvent>
 
 #include "compositeruleitem.h"
 
@@ -16,6 +17,7 @@ RulesTreeWidget::RulesTreeWidget(QWidget *parent) :
 
   connect(this, SIGNAL(itemDoubleClicked(QTreeWidgetItem*,int)),
           SLOT(editItem(QTreeWidgetItem*,int)));
+
 
   setEditTriggers(NoEditTriggers);
 }
@@ -107,4 +109,17 @@ void RulesTreeWidget::editItem(QTreeWidgetItem *item, int column)
 
   if (isColumnEditable)
     QTreeWidget::editItem(item, column);
+}
+
+void RulesTreeWidget::mousePressEvent(QMouseEvent *event)
+{
+  if (event->button() == Qt::RightButton && topLevelItemCount() == 0)
+  {
+    QMenu menu;
+
+    menu.addAction ("Add ruleBase");
+    if (menu.exec(mapToGlobal(event->pos())))
+      emit addRuleRequested(0, RULEBASE_TYPE);
+  }
+  QTreeWidget::mousePressEvent(event);
 }

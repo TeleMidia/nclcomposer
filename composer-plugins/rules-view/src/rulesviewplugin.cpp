@@ -3,6 +3,7 @@
 #include <QDebug>
 #include <QAction>
 #include <QList>
+#include <QMessageBox>
 
 #include "util.h"
 #include "ruleitem.h"
@@ -75,9 +76,37 @@ void RulesViewPlugin::onEntityAdded(QString, Entity *entity)
           this, SLOT(updateValue(QTreeWidgetItem*)));
 }
 
-void RulesViewPlugin::onEntityChanged(QString entityID, Entity *entity)
+void RulesViewPlugin::onEntityChanged(QString, Entity *entity)
 {
-  qDebug () << "RuleViewPlugin::onEntityChanged";
+  QTreeWidgetItem *item = _items.key(entity->getUniqueId(), 0);
+
+  if (item)
+  {
+    if (item->type() == RULEBASE_TYPE)
+      item->setText(ID_COLUMN, entity->getAttribute(ID_ATTR));
+    else if (item->type() == RULE_TYPE)
+    {
+      RuleItem *ruleItem = dynamic_cast <RuleItem *> (item);
+      if (ruleItem)
+      {
+        ruleItem->setId(entity->getAttribute(ID_ATTR));
+        ruleItem->setVar(entity->getAttribute(VAR_ATTR));
+        ruleItem->setComparator(entity->getAttribute(COMPARATOR_ATTR));
+        ruleItem->setValue(entity->getAttribute(VALUE_ATTR));
+      }
+    }
+    else if (item->type() == COMPOSITERULE_TYPE)
+    {
+      CompositeRuleItem *compositeRuleItem =
+          dynamic_cast <CompositeRuleItem *> (item);
+      if (compositeRuleItem)
+      {
+        compositeRuleItem->setId (entity->getAttribute(ID_ATTR));
+        compositeRuleItem->setOperator(entity->getAttribute(OPERATOR_ATTR));
+      }
+    }
+
+  }
 }
 
 void RulesViewPlugin::onEntityRemoved(QString, QString entityID)
@@ -304,9 +333,30 @@ void RulesViewPlugin::sendRemoveEntitySignal(QTreeWidgetItem *item)
 
 void RulesViewPlugin::sendAddEntitySignal(QTreeWidgetItem *parent, int type)
 {
-  if (!parent) return;
+  QMap <QString, QString> attr;
+  QString parentUId;
 
-  QString parentUId = _items.value(parent);
+  if (!parent)
+  {
+    if (type == RULEBASE_TYPE)
+    {
+      QList <Entity *> entities = _currentProject->getEntitiesbyType("head");
+      if (entities.count() > 0)
+      {
+        parentUId = entities.first()->getUniqueId();
+        emit addEntity(RULEBASE_LABEL, parentUId, attr, true);
+      }
+      else
+      {
+        QMessageBox::information(_rulesTable, "Ops...", "You must first add a "
+                                 "head element.", QMessageBox::Ok);
+        return;
+      }
+    }
+    else
+      return;
+  }
+  parentUId = _items.value(parent);
   if (!parentUId.isEmpty())
   {
     QMap <QString, QString> attr;
@@ -315,9 +365,26 @@ void RulesViewPlugin::sendAddEntitySignal(QTreeWidgetItem *parent, int type)
   }
 }
 
+void RulesViewPlugin::changeSelectedEntity(QString pluginID, void *param)
+{
+  if (pluginID == IPlugin::pluginInstanceID)
+    return;
+
+  _rulesTable->selectionModel()->clear();
+
+  QString *id = (QString*) param;
+
+  if(id != NULL && *id != "")
+  {
+    QTreeWidgetItem *item = _items.key(*id);
+    if (item)
+      item->setSelected(true);
+
+  }
+}
+
 RulesViewPlugin::~RulesViewPlugin()
 {
-
   delete _rulesTable;
   delete _selectedUId;
 }

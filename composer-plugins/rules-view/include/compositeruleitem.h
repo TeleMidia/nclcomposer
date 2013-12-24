@@ -2,6 +2,7 @@
 #define COMPOSITERULEITEM_H
 
 #include <QTreeWidgetItem>
+#include "util.h"
 
 static const int AND_OP = 0;
 static const int OR_OP = 1;
@@ -19,6 +20,7 @@ public:
   QString id () const { return text (1); }
   QString getOperator () const { return _operator; }
 
+  inline void setId (QString id) { setText(ID_COLUMN, id); }
   void setOperator (int op);
   void setOperator (QString op);
 

@@ -22,7 +22,6 @@ public:
 
   QWidget* getWidget() {return _rulesTable; }
 
-
   void addRule (Entity *);
 
 public slots:
@@ -31,6 +30,8 @@ public slots:
   void onEntityAdded(QString, Entity *);
   void onEntityChanged(QString entityID, Entity *entity);
   void onEntityRemoved(QString, QString entityID);
+
+  void changeSelectedEntity(QString pluginID, void *param);
 
 private slots:
   void updateValue(QTreeWidgetItem*);
