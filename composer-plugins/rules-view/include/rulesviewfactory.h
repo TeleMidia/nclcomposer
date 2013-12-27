@@ -30,7 +30,7 @@ public:
 
   QList<LanguageType> getSupportedLanguages();
 
-  QString id() const { return "br.puc-rio.telemidia.DebugConsole"; }
+  QString id() const { return "br.puc-rio.telemidia.RulesView"; }
 
   QIcon icon() const { return QIcon (); }
 
