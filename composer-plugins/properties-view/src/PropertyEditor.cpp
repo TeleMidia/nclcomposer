@@ -37,6 +37,10 @@ PropertyEditor::PropertyEditor(QWidget *parent):
   ui = new Ui::PropertyEditorWidget();
   ui->setupUi(this);
 
+  ComboBoxDelegate *delegate = new ComboBoxDelegate();
+  ui->tableWidget->setItemDelegate(delegate);
+  delegate->setTableWidget(ui->tableWidget);
+
   connect(ui->tableWidget,
           SIGNAL(itemChanged(QTableWidgetItem *)),
           this,
@@ -71,6 +75,10 @@ void PropertyEditor::setTagname(QString tagname, QString name)
 {
   this->currentTagname = tagname;
   //this->currentFilterString = "";
+  ComboBoxDelegate *delegate = qobject_cast<ComboBoxDelegate *> (ui->tableWidget->itemDelegate());
+
+  if(delegate)
+    delegate->setCurrentTagname(tagname);
 
   //Clear previous items
   propertyToLine.clear();

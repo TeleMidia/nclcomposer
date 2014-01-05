@@ -23,6 +23,12 @@
 #include <QObject>
 #include <QString>
 #include <QWidget>
+#include <QItemDelegate>
+#include <QStyledItemDelegate>
+#include <QComboBox>
+
+#include <NCLStructure.h>
+using namespace  composer::language;
 
 #if WITH_TREEVIEW
 #include <QStandardItemModel>
@@ -30,6 +36,82 @@
 
 #include "ui_PropertyEditorWidget.h"
 #include "QLineEditFilter.h"
+
+class ComboBoxDelegate : public QStyledItemDelegate
+{
+  Q_OBJECT
+
+private:
+  QString currentTagname;
+  QTableWidget *tableWidget;
+
+public:
+  ComboBoxDelegate(QWidget *parent = 0) : QStyledItemDelegate(parent) {}
+
+  QWidget *createEditor(QWidget *parent, const QStyleOptionViewItem &option,
+                        const QModelIndex &index) const
+  {
+    if(index.column() == 1)
+    {
+      QComboBox *edit = new QComboBox(parent);
+      edit->setEditable(true);
+
+      // \todo References
+      NCLStructure *structure = NCLStructure::getInstance();
+      QString datatype = structure->getAttributeDatatype(currentTagname,
+                                                         tableWidget->item(index.row(), 0)->text());
+
+      edit->addItems( structure->getDatatypeDefaultSuggestions(datatype) );
+
+      return edit;
+    }
+    else
+    {
+      return QStyledItemDelegate::createEditor(parent, option, index);
+    }
+  }
+
+  void setEditorData(QWidget *editor, const QModelIndex &index) const
+  {
+    if(index.column() == 1)
+    {
+      QComboBox *combobox = qobject_cast<QComboBox *> (editor);
+      combobox->setEditText(index.data().toString());
+    }
+    else
+    {
+      QStyledItemDelegate::setEditorData(editor, index);
+    }
+
+  }
+  void setModelData(QWidget *editor, QAbstractItemModel *model,
+                    const QModelIndex &index) const
+  {
+    if (index.column() == 1)
+    {
+      QComboBox *combobox = qobject_cast<QComboBox *> (editor);
+
+      model->setData(index, qVariantFromValue(combobox->currentText()));
+    }
+    else
+    {
+      QStyledItemDelegate::setModelData(editor, model, index);
+    }
+  }
+
+  void setCurrentTagname(const QString &tagname)
+  {
+    this->currentTagname = tagname;
+  }
+
+  void setTableWidget(QTableWidget *tableWidget)
+  {
+    this->tableWidget = tableWidget;
+  }
+/*
+private slots:
+  void commitAndCloseEditor(); */
+};
 
 /*!
  \brief PropertyEditor is a Widget that allows to edit individual properties
