@@ -97,7 +97,7 @@ public:
    *
    * \return QString the description of Rules View.
    */
-  QString category() {return "General";}
+  QString category() {return "NCL";}
 #endif
 
 };
