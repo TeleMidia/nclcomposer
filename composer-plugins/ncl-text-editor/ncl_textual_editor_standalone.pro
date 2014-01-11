@@ -11,10 +11,11 @@ DEFINES     +=  NCLEDITOR_STANDALONE
 
 # We use QMAKE_CXXFLAGS instead of INCLUDEPATH because our qscintilla is
 # modified, and must be found before any other that is installed.
-QMAKE_CXXFLAGS  += -Ideps/QScintilla-gpl-2.6.3/Qt4Qt5
+QMAKE_CXXFLAGS  += -Ideps/QScintilla-gpl-2.7.2/Qt4Qt5
 
-LIBS      +=    -Ldeps/QScintilla-gpl-2.6.3/Qt4Qt5 \
-                -lqscintilla2_telem
+LIBS      +=    deps/QScintilla-gpl-2.7.2/Qt4Qt5/libqscintilla2_telem.a
+#		-Ldeps/QScintilla-gpl-2.7.2/Qt4Qt5 \
+#                -lqscintilla2_telem
 
 INCLUDEPATH +=  include \
                 ../outline-view/include \
@@ -27,6 +28,8 @@ HEADERS     =   include/NCLTextEditorMainWindow.h \
                 include/QsciLexerNCL.h \
                 include/QsciNCLAPIs.h \
                 ../../composer-core/core/include/util/AttributeReferences.h \
+                ../../composer-core/core/include/util/Utilities.h \
+                ../../composer-core/core/include/util/ComposerSettings.h \
                 ../../composer-core/extensions/NCL/NCLStructure.h \
                 include/MyLexer.h \
                 include/NCLValidator.h \
@@ -42,6 +45,8 @@ SOURCES     =   src/main.cpp \
                 src/QsciLexerNCL.cpp \
                 src/QsciNCLAPIs.cpp \
                 ../../composer-core/core/src/util/AttributeReferences.cpp \
+                ../../composer-core/core/src/util/Utilities.cpp \
+                ../../composer-core/core/src/util/ComposerSettings.cpp \
                 ../../composer-core/extensions/NCL/NCLStructure.cpp \
                 src/MyLexer.cpp \
                 src/NCLValidator.cpp \
