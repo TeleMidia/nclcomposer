@@ -39,6 +39,23 @@ Se este é o seu primeiro contato com o NCL Composer e o seu principal objetivo
 Nessa seção é possível encontrar tutoriais passo-a-passo de como utilizar o NCL
 Composer para desenvolver aplicações para TV Digital Interativa.
 
+Esta documentação é dividida em três partes principais:
+
+<!--
+<<sec:iniciando, Iniciando>>::
+Apresenta os primeiros passos que irá levá-lo a começar a utilizar o
+{nclcomposer}, incluindo as instruções de instalação e configurações básicas
+do ambiente.
+
+<<sec:windows_and_menus, Interface Gráfica>>::
+Apresenta uma visão geral das convenções da interface gráfica, e as principais
+janelas e menus do {nclcomposer}.
+
+<<sec:tutorial, Tutorial>>::
+Contém uma série de exemplos e o passo-a-passo de como desenvolvê-los no
+{nclcomposer}.
+-->
+
 ## Onde buscar mais ajuda? ##
 
 Além deste manual, existem alguns canais _online_ onde é possível buscar mais
