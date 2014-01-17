@@ -5,7 +5,7 @@
 Para instalar o {nclcomposer} em ambiente Windows:
 
   * Baixe a versão mais atual do {nclcomposer} para Windows em:
-    [http://composer.telemidia.puc-rio.br](http://composer.telemidia.puc-rio.br/endownloads)
+    [http://composer.telemidia.puc-rio.br/en/download](http://composer.telemidia.puc-rio.br/en/download)
 
   * O arquivo deve ter o nome na forma _nclcomposer-installer-X.X.X.exe_, onde
     _X.X.X_ deve conter a versão do {nclcomposer}. Execute esse arquivo.

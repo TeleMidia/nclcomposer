@@ -20,10 +20,8 @@ Capítulo [Iniciando](#iniciando).
 Este manual é destinado a qualquer pessoa que deseja aprender a desenvolver
 aplicações para o middleware de TV Digital [Ginga-NCL](http://www.ginga.org.br),
 independente de sua experiência em
-[NCL (Nested Context Language)](http://www.ncl.org.br)  
-
-O único requisito que se espera do leitor deste manual é conhecimentos básicos
-de informática.
+[NCL (Nested Context Language)](http://www.ncl.org.br). O único requisito que se
+espera do leitor deste manual é conhecimentos básicos de informática.
 
 Não espera-se que usuários avançados leiam este manual, mas todas as sugestões
 sobre documentação serão consideradas. 
