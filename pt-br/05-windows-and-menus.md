@@ -58,7 +58,7 @@ com a estrutura lógica do documento NCL. Em NCL, a estrutura lógica é
 representada pelos seus objetos (nós de conteúdo e nós de composição) e os
 elos entre esses objetos (representadas pelos elementos <link>).
 
-![](http://composer.telemidia.puc-rio.br/_media//plugins/structural-plugin-02102012.png "Visão estrutural")
+![](../imgs/plugin-structural.png "Visão estrutural")
 
 ### Visão de Leiaute ###
 
@@ -67,14 +67,14 @@ com as regiões onde os objetos de mídia serão inicialmente apresentados. Nest
 visão, os autores podem criar e manipular as regiões e a hierarquia de regiões
 do documento.
 
-![](http://composer.telemidia.puc-rio.br/_media/layout_view.png "Visão de leiaute")
+![](../imgs/plugin-layout.png "Visão de leiaute")
 
 
 ### Visão de Outline ###
 A {outline_view} apresenta a estrutura do documento NCL como uma árvore,
 permitindo aos autores navegarem no documento.
 
-![](http://composer.telemidia.puc-rio.br/_media/outline-view.png "Visão de outline")
+![](../imgs/plugin-outline.png "Visão de outline")
 
 
 ### Visão de Propriedades ###
@@ -82,7 +82,7 @@ A {properties_view} apresenta o conjunto de propriedades da entidade
 selecionada. Essa entidade selecionada por ser, por exemplo, uma região na
 {layout_view}, um objeto de mídia na {structural_view} etc.
 
-![](http://composer.telemidia.puc-rio.br/_media/property-view.png "Visão de propriedades")
+![](../imgs/plugin-property.png "Visão de propriedades")
 
 ### Visão Textual ###
 A _Visão Textual_ permite aos usuários interagirem diretamente com o
@@ -93,10 +93,11 @@ código contextual e formatação de código.
 A _visão textual_ é recomendada especialmente para usuários avançados e que se
 sentem à vontade com a sintaxe XML.
 
-![](http://composer.telemidia.puc-rio.br/_media/textual-view.png "Visão textual")
+![](../imgs/plugin-textual.png "Visão textual")
 
 ### Validador ###
 O validador é responsável por notificar erros e alertas no documento NCL.
 A figura a seguir apresenta um exemplo.
 
-![](http://composer.telemidia.puc-rio.br/_media/plugins/validator-plugin.png "Visão de validação")
+![](../imgs/plugin-validator.png "Visão de validação")
+
