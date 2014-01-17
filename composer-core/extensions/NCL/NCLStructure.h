@@ -38,8 +38,9 @@ class NCLLANGUAGEPROFILESHARED_EXPORT NCLStructure
 
 private:
     map <QString, map <QString, bool> *> *attributes; /**< TODO */
-    map <QString, deque <QString> *>      *attributes_ordered; /**< TODO */
+    map <QString, deque <QString> *>     *attributes_ordered; /**< TODO */
     map <QString, map <QString, char> *> *nesting; /**< TODO */
+    deque <QString>                      *elements_ordered;
     map <QString, QString > *dataTypes; /**< TODO */
 
     map <QString, QStringList> *dataTypeDefaultSuggestions;
@@ -150,6 +151,13 @@ public:
      * \return map<QString, char>
      */
     map <QString, char> *getChildren (QString tagname);
+    /*!
+     * \brief
+     *
+     * \param tagname
+     * \return deque<QString>
+     */
+    deque <QString> *getElementsOrdered();
     /*!
      * \brief
      *

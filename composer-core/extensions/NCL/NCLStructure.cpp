@@ -19,6 +19,7 @@ NCLStructure::NCLStructure()
   attributes = new map <QString, map <QString, bool > * > ();
   attributes_ordered = new map<QString, deque <QString> * > ();
   nesting = new map <QString, map <QString, char > * > ();
+  elements_ordered = new deque <QString>();
   dataTypes = new map <QString, QString> ();
   dataTypeDefaultSuggestions = new map <QString, QStringList>();
   attributesDatatype = new map <QString, map<QString, QString> *> ();
@@ -49,6 +50,7 @@ NCLStructure::~NCLStructure()
   }
   nesting->clear();
   delete nesting;
+  delete elements_ordered;
 
   dataTypes->clear();
   delete dataTypes;
@@ -237,6 +239,12 @@ void NCLStructure::addElement(QString name, QString father, char cardinality,
   if(!attributes_ordered->count(name))
     (*attributes_ordered)[name] = new deque <QString>();
 
+  deque <QString>::iterator location = find( elements_ordered->begin(),
+                                             elements_ordered->end(),
+                                             name );
+  if(location == elements_ordered->end())
+    elements_ordered->push_back(name);
+
   (*(*nesting)[father])[name] = cardinality;
   this->define_scope[name] = define_scope;
 }
@@ -329,6 +337,11 @@ map <QString, char> * NCLStructure::getChildren (QString tagname)
   if(nesting->count(tagname))
     return (*nesting)[tagname];
   return NULL;
+}
+
+deque <QString> *NCLStructure::getElementsOrdered()
+{
+  return elements_ordered;
 }
 
 vector <AttributeReferences*> NCLStructure::getReferences ( QString element,
