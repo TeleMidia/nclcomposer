@@ -4,7 +4,7 @@
 #   * pandoc
 
 PANDOC_BIN=pandoc
-OUTPUT=HTML 
+OUTPUT=HTML PDF
 # HTML_BOOTSTRAP CHUNKED_HTML
 CSS=http://jasonm23.github.io/markdown-css-themes/markdown.css
 #CSS=http://s3.jfh.me/css/john-full.css
@@ -15,7 +15,7 @@ OUT=book
 all: $(OUTPUT)
 
 clean:
-	rm -r html
+	rm -r html pdf
 
 HTML:
 	mkdir html
@@ -27,4 +27,9 @@ HTML_BOOTSTRAP:
 CHUNKED_HTML:
 	ls -d pt-br/* | xargs pandoc -s -S -t docbook -o pt-br/$(OUT).db --css=$(CSS)
 	xmlto xhtml -m config.xsl pt-br/$(OUT).db pt-br/html/
+
+PDF:
+	mkdir pdf && cd pdf
+	ls -d pt-br/* | xargs pandoc --toc -o pt-br/$(OUT).pdf -V documentclass=book
+	cd ../
 

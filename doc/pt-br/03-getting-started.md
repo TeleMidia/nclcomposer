@@ -183,14 +183,27 @@ por meio do menu _Window->Views_:
 ![](../imgs/nclcomposer-menu-hide-show-views.png "Menu para mostrar esconder visões.")
 
 ### Criando novas perspectivas ###
+
+É possível organizar as diversas visões na tela clicando na barra de
+título da visão, segurando e arastando-a para onde você quiser. Depois de
+organizá-las da forma que melhor lhe convier, é possível salvá-la como uma
+perspectiva, de tal forma, que seja fácil voltar àquela organizaćão quando
+necessário.
+
 Para salvar a disposição atual de _Visões_ como uma nova perspectiva, é
 suficiente ir no menu _Windows->Perspectives->Save current perspective..._.
 
 ![](../imgs/nclcomposer-save-perspective-2.png "Salvando disposição corrente como uma nova perspectiva.")
 
+Após isso, o NCL Composer, irá solicitar o nome da nova perspectiva
+(permitindo também marcá-la como a perspectiva padrão) através da janela
+a seguir:
+
 ![](../imgs/nclcomposer-save-perspective-3.png "Menu para mostrar esconder visões.")
 
+<!--
 ![](../imgs/nclcomposer-save-perspective-4.png "Menu para mostrar esconder visões.")
+-->
 
 ### Alternando entre perspectivas ###
 
