@@ -1,6 +1,4 @@
 #include "rulesviewplugin.h"
-
-#include <QDebug>
 #include <QAction>
 #include <QList>
 #include <QMessageBox>
@@ -59,10 +57,8 @@ RulesViewPlugin::RulesViewPlugin() :
   emit setListenFilter(listenFilter);
 }
 
-void RulesViewPlugin::onEntityAdded(QString, Entity *entity)
+void RulesViewPlugin::onEntityAdded(QString pluginID, Entity *entity)
 {
-  if (!entity) return;
-
   disconnect(_rulesTable, SIGNAL(itemChanged(QTreeWidgetItem*,int)),
              this, SLOT(updateValue(QTreeWidgetItem*)));
 
@@ -78,7 +74,7 @@ void RulesViewPlugin::onEntityAdded(QString, Entity *entity)
 
 void RulesViewPlugin::onEntityChanged(QString pluginID, Entity *entity)
 {
-  if (pluginID == IPlugin::pluginInstanceID)
+  if (pluginID == IPlugin::pluginInstanceID || !entity)
     return;
 
   QTreeWidgetItem *item = _items.key(entity->getUniqueId(), 0);
@@ -108,14 +104,14 @@ void RulesViewPlugin::onEntityChanged(QString pluginID, Entity *entity)
         compositeRuleItem->setOperator(entity->getAttribute(OPERATOR_ATTR));
       }
     }
-
   }
 }
 
-void RulesViewPlugin::onEntityRemoved(QString, QString entityID)
+void RulesViewPlugin::onEntityRemoved(QString pluginID, QString entityID)
 {
   QList<QTreeWidgetItem *> treeItems = _items.keys();
   foreach (QTreeWidgetItem *item, treeItems)
+  {
     if (_items.value(item) == entityID)
     {
       QTreeWidgetItem *parent = item->parent();
@@ -126,6 +122,7 @@ void RulesViewPlugin::onEntityRemoved(QString, QString entityID)
         _ruleBaseEntity = 0;
       }
     }
+  }
 }
 
 void RulesViewPlugin::releaseItemChildren(QTreeWidgetItem *item)
@@ -370,20 +367,25 @@ void RulesViewPlugin::sendAddEntitySignal(QTreeWidgetItem *parent, int type)
 
 void RulesViewPlugin::changeSelectedEntity(QString pluginID, void *param)
 {
-  if (pluginID == IPlugin::pluginInstanceID)
+  if (pluginID == IPlugin::pluginInstanceID || pluginID == "")
     return;
+
+  disconnect(_rulesTable, SIGNAL(itemSelectionChanged()),
+          this, SLOT(sendSelectionChangedSignal()));
 
   _rulesTable->selectionModel()->clear();
 
   QString *id = (QString*) param;
 
-  if(id != NULL && *id != "")
+  if (id != NULL && *id != "")
   {
     QTreeWidgetItem *item = _items.key(*id);
     if (item)
       item->setSelected(true);
-
   }
+
+  connect(_rulesTable, SIGNAL(itemSelectionChanged()),
+          this, SLOT(sendSelectionChangedSignal()));
 }
 
 RulesViewPlugin::~RulesViewPlugin()

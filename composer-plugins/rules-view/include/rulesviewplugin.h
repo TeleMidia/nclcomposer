@@ -27,7 +27,7 @@ public:
 public slots:
   void init();
 
-  void onEntityAdded(QString, Entity *);
+  void onEntityAdded(QString pluginID, Entity *);
   void onEntityChanged(QString pluginID, Entity *entity);
   void onEntityRemoved(QString, QString entityID);
 
