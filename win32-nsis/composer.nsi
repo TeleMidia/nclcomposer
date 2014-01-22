@@ -163,6 +163,12 @@ SectionGroup /e "Install Default Plugins"
     SetOutPath $INSTDIR\extensions
     File "C:\Composer\extensions\ValidatorPlugin.dll"
   SectionEnd
+  
+  Section "Rules View"
+    SectionIn 1
+    SetOutPath $INSTDIR\extensions
+    File "C:\Composer\extensions\RulesView.dll"
+  SectionEnd
 SectionGroupEnd
 
 ;--------------------------------
