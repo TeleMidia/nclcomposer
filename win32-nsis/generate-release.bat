@@ -20,8 +20,8 @@ REM -     * ssc/scp (if we want to publish)
 echo off
 
 REM - GET THE GIT VERSION
-cd ../composer-plugins/
-git describe --tag | sed "s/v//g" > ..\VERSION
+REM - cd ../composer-plugins/
+REM - git describe --tag | sed "s/v//g" > ..\VERSION
 
 REM - Go to default NCL Composer PATH
 cd ..
@@ -29,7 +29,7 @@ cd ..
 SET /p CPRVERSION= <VERSION
 
 REM - I CAN FORCE A VERSION IF I UNCOMMENT THE NEXT LINE
-REM - SET CPRVERSION=0.1.4
+SET CPRVERSION=0.1.9
 
 REM - makensis path
 SET MAKENSIS="makensis.exe"
