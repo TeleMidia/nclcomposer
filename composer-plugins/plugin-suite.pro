@@ -27,7 +27,6 @@ contains(FORCERELEASE, true)
   # These plug-ins are still experimental
   #  (and must not be present in the release):
   SUBDIRS -= media-preview/mediapreview.pro
-  SUBDIRS -= rules-view/rules-view.pro
   SUBDIRS -= nclstructural-20/nclstructural.pro
 }
 
