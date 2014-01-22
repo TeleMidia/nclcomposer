@@ -1106,7 +1106,8 @@ void ComposerMainWindow::endOpenProject(QString project)
         leftDocks.append(docks[i]);
       }
       else if(docks[i]->objectName() == "br.puc-rio.telemidia.DebugConsole" ||
-              docks[i]->objectName() == "br.ufma.deinf.laws.validator")
+              docks[i]->objectName() == "br.ufma.deinf.laws.validator" ||
+              docks[i]->objectName() == "br.puc-rio.telemidia.RulesView")
       {
         bottomDocks.append(docks[i]);
       }
