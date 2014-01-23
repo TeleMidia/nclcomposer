@@ -1,3 +1,9 @@
+composer (0.1.9) unstable; urgency=low
+
+  * Updated with NCL Composer 0.1.9.
+
+ -- Roberto Azevedo <robertogerson@telemidia.puc-rio.br>  Wed, 23 Jan 2014  19:28:00 -0300
+
 composer (0.1.8) unstable; urgency=low
 
   * Updated with NCL Composer 0.1.8.
