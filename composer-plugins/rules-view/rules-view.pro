@@ -34,14 +34,8 @@ HEADERS += \
     include/ruleitem.h \
     include/util.h
 
-unix:!symbian {
-    maemo5 {
-        target.path = /opt/usr/lib
-    } else {
-        target.path = /usr/lib
-    }
-    INSTALLS += target
-}
-
 RESOURCES += \
     ../common-resources/images.qrc
+
+INSTALLS += target
+
