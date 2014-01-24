@@ -364,6 +364,9 @@ void ComposerMainWindow::initGUI()
 
   tabProjects->addTab(welcomeWidget, tr("Welcome"));
   tabProjects->setTabIcon(0, QIcon());
+  QTabBar *tabBar = tabProjects->findChild<QTabBar *>();
+  tabBar->setTabButton(0, QTabBar::RightSide, 0);
+  tabBar->setTabButton(0, QTabBar::LeftSide, 0);
 
   connect(welcomeWidget, SIGNAL(userPressedOpenProject()),
           this, SLOT(openProject()));
