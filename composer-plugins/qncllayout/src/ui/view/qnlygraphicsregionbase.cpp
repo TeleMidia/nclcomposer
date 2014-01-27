@@ -17,8 +17,8 @@
  */
 #include "qnlygraphicsregionbase.h"
 
-QnlyGraphicsRegionBase::QnlyGraphicsRegionBase(QObject* parent,
-                                               QMenu* switchMenu)
+QnlyGraphicsRegionBase::QnlyGraphicsRegionBase( QObject* parent,
+                                                QMenu* switchMenu )
   : QGraphicsScene(parent)
 {
   this->switchMenu = switchMenu;
@@ -39,18 +39,21 @@ QnlyGraphicsRegionBase::QnlyGraphicsRegionBase(QObject* parent,
 
   this->addItem(bgrect);
 
-  //bgrect->setBrush(QBrush(QPixmap(":/bg/layout")));
+  // bgrect->setBrush(QBrush(QPixmap(":/bg/layout")));
   bgrect->setBrush(QBrush(Qt::white));
   bgrect->setPen(QPen(QColor("#BBBBBB")));
 
   bgrect->setZValue(-1);
 
-  grid = new QnlyGraphicsGrid(0,this);
+  grid = new QnlyGraphicsGrid(0, this);
   grid->setStep(25);
   grid->setPen(QPen(QBrush(Qt::gray), 1.5,Qt::DotLine));
   grid->setRect(0,0,854,480);
   grid->setZValue(1000);
   grid->setVisible(false);
+
+  this->addItem(grid);
+
 }
 
 QnlyGraphicsRegionBase::~QnlyGraphicsRegionBase()

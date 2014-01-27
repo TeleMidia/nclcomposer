@@ -31,12 +31,13 @@ QPen QnlyGraphicsGrid::getPen()
   return pen;
 }
 
-void QnlyGraphicsGrid::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
+void QnlyGraphicsGrid::paint( QPainter *painter,
+                              const QStyleOptionGraphicsItem *option,
+                              QWidget *widget)
 {
   painter->setPen(pen);
 
   QRectF r = rect();
-
   int w = 0;
 
   while (w < r.width())
