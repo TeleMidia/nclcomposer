@@ -17,7 +17,8 @@
  */
 #include "PropertyEditor.h"
 
-#include <QMap>
+#include <deque>
+
 #include <QSpinBox>
 #include <QPushButton>
 #include <QTableWidget>
@@ -83,6 +84,7 @@ void PropertyEditor::setTagname(QString tagname, QString name)
   //Clear previous items
   propertyToLine.clear();
   propertyToValue.clear();
+  orderedProperties.clear();
 
   while(ui->tableWidget->rowCount())
     ui->tableWidget->removeRow(0);
@@ -90,18 +92,19 @@ void PropertyEditor::setTagname(QString tagname, QString name)
   setCurrentName(name);
 
   // add the new ones
-  map <QString, bool> *attrs =
-      NCLStructure::getInstance()->getAttributes(currentTagname);
+  deque <QString> *attrs =
+      NCLStructure::getInstance()->getAttributesOrdered(currentTagname);
 
   if(attrs != NULL)
   {
-    map <QString, bool>::iterator it;
+    deque <QString>::iterator it;
 
     int i;
-    for(i=0,it = attrs->begin(); it != attrs->end(); ++it, i++)
+    for(i=0, it = attrs->begin(); it != attrs->end(); ++it, i++)
     {
-      QString currentAttr = (*it).first;
+      QString currentAttr = (*it);
       propertyToValue[currentAttr] = "";
+      orderedProperties.push_back(currentAttr);
     }
   }
 
@@ -137,7 +140,8 @@ void PropertyEditor::setAttributeValue(QString property, QString value)
   // tagname.
   // Also, if propertyToLine does not contains property it is not been showed by
   // the filter.
-  if(propertyToValue.contains(property) && propertyToLine.contains(property))
+  if( propertyToValue.contains(property) &&
+      propertyToLine.contains(property) )
   {
     int line = propertyToLine.value(property);
 
@@ -220,8 +224,12 @@ void PropertyEditor::filterProperties(const QString& text)
 #endif
 
   QString attr;
-  foreach( attr, propertyToValue.keys() )
+  deque <QString>::iterator it;
+
+  for (it = orderedProperties.begin(); it != orderedProperties.end(); ++it)
+  // foreach( attr, propertyToValue.keys() )
   {
+    attr = *it;
     if(attr.toLower().startsWith(text.toLower()))
     {
       QTableWidgetItem *item = new QTableWidgetItem(attr);

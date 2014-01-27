@@ -124,6 +124,7 @@ class PropertyEditor : public QWidget
 
 private:
   Ui::PropertyEditorWidget *ui; /*!< TODO */
+  deque <QString> orderedProperties;
   QMap <QString, int> propertyToLine; /*!< TODO */
   QMap <QString, QString> propertyToValue; /*!< TODO */
 
