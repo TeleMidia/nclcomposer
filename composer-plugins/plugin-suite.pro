@@ -6,7 +6,7 @@ CONFIG += \
 
 SUBDIRS = \
     outline-view \
-    ncl-text-editor/deps/QScintilla-gpl-2.7.2/Qt4Qt5/qscintilla.pro \
+    ncl-text-editor/deps/QScintilla-gpl-2.8/Qt4Qt5/qscintilla.pro \
     ncl-text-editor/ncl-textual-plugin.pro \
     debug-console \
     properties-view \
