@@ -130,7 +130,6 @@ bool QsciLexerNCL::defaultEolFill(int style) const
 QFont QsciLexerNCL::defaultFont(int style) const
 {
     QFont f;
-
     switch (style)
     {
     case Default:
@@ -139,7 +138,7 @@ QFont QsciLexerNCL::defaultFont(int style) const
 #if defined(Q_OS_WIN)
         f = QFont("Times New Roman", 10);
 #else
-        f = QFont("Bitstream Charter", 9);
+        f = QFont("Monospace", 10);
 #endif
         break;
 
@@ -151,10 +150,11 @@ QFont QsciLexerNCL::defaultFont(int style) const
         break;
 
     default:
-        f = QsciLexerHTML::defaultFont(style);
+        f = QFont("Monospace", 10);
+        // f = QsciLexerHTML::defaultFont(style);
     }
 
-    f.setPointSize(8);
+    // f.setPointSize(8);
 
     return f;
 }

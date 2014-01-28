@@ -69,7 +69,7 @@ void NCLTextEditor::initParameters()
   // setIndentationWidth(0);
   // setIndentationGuides(true);
   // setTabIndents(true);
-  setTabWidth(8);
+  setTabWidth(4);
   // setIndentationsUseTabs(true);
 
 
