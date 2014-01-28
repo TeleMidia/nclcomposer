@@ -549,6 +549,7 @@ public:
         SCI_GETADDITIONALSELECTIONTYPING,
         SCI_SETADDITIONALCARETSBLINK,
         SCI_GETADDITIONALCARETSBLINK,
+        SCI_SCROLLRANGE,
         SCI_SETADDITIONALCARETSVISIBLE,
         SCI_GETADDITIONALCARETSVISIBLE,
         SCI_AUTOCGETCURRENTTEXT,
@@ -653,6 +654,25 @@ public:
         SCI_STYLEGETSIZEFRACTIONAL,
         SCI_STYLESETWEIGHT,             
         SCI_STYLEGETWEIGHT,
+
+        SCI_FOLDLINE,
+        SCI_FOLDCHILDREN,
+        SCI_EXPANDCHILDREN,
+        SCI_FOLDALL,
+        SCI_SETAUTOMATICFOLD,
+        SCI_GETAUTOMATICFOLD,
+        SCI_AUTOCSETORDER,
+        SCI_AUTOCGETORDER,
+        SCI_POSITIONRELATIVE,
+        SCI_RELEASEALLEXTENDEDSTYLES,
+        SCI_ALLOCATEEXTENDEDSTYLES,
+        SCI_SETMOUSESELECTIONRECTANGULARSWITCH,
+        SCI_GETMOUSESELECTIONRECTANGULARSWITCH,
+        SCI_GETCARETLINEVISIBLEALWAYS,
+        SCI_SETCARETLINEVISIBLEALWAYS,
+        SCI_SETREPRESENTATION,
+        SCI_GETREPRESENTATION,
+        SCI_CLEARREPRESENTATION,
     };
 
     enum {
@@ -860,6 +880,7 @@ public:
         INDIC_SQUIGGLELOW,
         INDIC_DOTBOX,
         INDIC_SQUIGGLEPIXMAP,
+        INDIC_COMPOSITIONTHICK,
 
         INDIC_CONTAINER,
         INDIC_MAX,
@@ -1130,6 +1151,10 @@ public:
         SCLEX_ECL,
         SCLEX_OSCRIPT,
         SCLEX_VISUALPROLOG,
+        SCLEX_LITERATEHASKELL,
+        SCLEX_STTXT,
+        SCLEX_KVIRC,
+        SCLEX_RUST,
     };
 
     enum {
@@ -1152,6 +1177,27 @@ public:
         SC_FONT_SIZE_MULTIPLIER,
     };
 
+    enum
+    {
+        SC_FOLDACTION_CONTRACT,
+        SC_FOLDACTION_EXPAND,
+        SC_FOLDACTION_TOGGLE,
+    };
+
+    enum
+    {
+        SC_AUTOMATICFOLD_SHOW,
+        SC_AUTOMATICFOLD_CLICK,
+        SC_AUTOMATICFOLD_CHANGE,
+    };
+
+    enum
+    {
+        SC_ORDER_PRESORTED,
+        SC_ORDER_PERFORMSORT,
+        SC_ORDER_CUSTOM,
+    };
+    
     explicit QsciScintillaBase(QWidget *parent /TransferThis/ = 0);
     virtual ~QsciScintillaBase();
 
@@ -1260,6 +1306,8 @@ signals:
     void SCN_DOUBLECLICK(int position, int line, int modifiers);
     void SCN_DWELLEND(int, int, int);
     void SCN_DWELLSTART(int, int, int);
+    void SCN_FOCUSIN();
+    void SCN_FOCUSOUT();
     void SCN_HOTSPOTCLICK(int position, int modifiers);
     void SCN_HOTSPOTDOUBLECLICK(int position, int modifiers);
     void SCN_HOTSPOTRELEASECLICK(int position, int modifiers);
@@ -1293,6 +1341,7 @@ protected:
     virtual bool focusNextPrevChild(bool next);
     virtual void keyPressEvent(QKeyEvent *e);
     virtual void inputMethodEvent(QInputMethodEvent *e);
+    virtual QVariant inputMethodQuery(Qt::InputMethodQuery query) const;
     virtual void mouseDoubleClickEvent(QMouseEvent *e);
     virtual void mouseMoveEvent(QMouseEvent *e);
     virtual void mousePressEvent(QMouseEvent *e);

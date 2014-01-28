@@ -23,9 +23,9 @@
 # WARRANTY OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
 
 
-# This must be kept in sync with configure.py, Qt4Qt5/application.pro and
-# Qt4Qt5/designer.pro.
-!win32:VERSION = 9.0.2
+# This must be kept in sync with Python/configure.py, Python/configure-old.py,
+# example-Qt4Qt5/application.pro and designer-Qt4Qt5/designer.pro.
+!win32:VERSION = 11.0.0
 
 TEMPLATE = lib
 TARGET = qscintilla2_telem
@@ -50,12 +50,15 @@ INCLUDEPATH = . ../include ../lexlib ../src
 # We use QMAKE_CXXFLAGS instead of INCLUDEPATH because our qscintilla is
 # modified, and must be found before any other that is installed.
 QMAKE_CXXFLAGS  += -I. -I../include -I../lexlib -I../src
-
-DEFINES = QSCINTILLA_MAKE_DLL QT SCI_LEXER
+DEFINES = QSCINTILLA_MAKE_DLL SCINTILLA_QT SCI_LEXER
 
 greaterThan(QT_MAJOR_VERSION, 4) {
 	QT += widgets
 	QT += printsupport
+
+    greaterThan(QT_MINOR_VERSION, 1) {
+	    macx:QT += macextras
+    }
 }
 
 # Comment this in if you want the internal Scintilla classes to be placed in a
@@ -139,40 +142,40 @@ HEADERS = \
 
 contains(ALL_LEXERS, true) {
 	HEADERS += \
-		./Qsci/qscilexerbash.h \
-		./Qsci/qscilexerbatch.h \
-		./Qsci/qscilexercmake.h \
-		./Qsci/qscilexercpp.h \
-		./Qsci/qscilexercsharp.h \
-		./Qsci/qscilexercss.h \
-		./Qsci/qscilexercustom.h \
-		./Qsci/qscilexerd.h \
-		./Qsci/qscilexerdiff.h \
-		./Qsci/qscilexerfortran.h \
-		./Qsci/qscilexerfortran77.h \
-		./Qsci/qscilexerhtml.h \
-		./Qsci/qscilexeridl.h \
-		./Qsci/qscilexerjava.h \
-		./Qsci/qscilexerjavascript.h \
-		./Qsci/qscilexerlua.h \
-		./Qsci/qscilexermakefile.h \
-		./Qsci/qscilexermatlab.h \
-		./Qsci/qscilexeroctave.h \
-		./Qsci/qscilexerpascal.h \
-		./Qsci/qscilexerperl.h \
-		./Qsci/qscilexerpostscript.h \
-		./Qsci/qscilexerpov.h \
-		./Qsci/qscilexerproperties.h \
-		./Qsci/qscilexerpython.h \
-		./Qsci/qscilexerruby.h \
-		./Qsci/qscilexerspice.h \
-		./Qsci/qscilexersql.h \
-		./Qsci/qscilexertcl.h \
-		./Qsci/qscilexertex.h \
-		./Qsci/qscilexerverilog.h \
-		./Qsci/qscilexervhdl.h \
-		./Qsci/qscilexerxml.h \
-		./Qsci/qscilexeryaml.h
+	./Qsci/qscilexerbash.h \
+	./Qsci/qscilexerbatch.h \
+	./Qsci/qscilexercmake.h \
+	./Qsci/qscilexercpp.h \
+	./Qsci/qscilexercsharp.h \
+	./Qsci/qscilexercss.h \
+	./Qsci/qscilexercustom.h \
+	./Qsci/qscilexerd.h \
+	./Qsci/qscilexerdiff.h \
+	./Qsci/qscilexerfortran.h \
+	./Qsci/qscilexerfortran77.h \
+	./Qsci/qscilexerhtml.h \
+	./Qsci/qscilexeridl.h \
+	./Qsci/qscilexerjava.h \
+	./Qsci/qscilexerjavascript.h \
+	./Qsci/qscilexerlua.h \
+	./Qsci/qscilexermakefile.h \
+	./Qsci/qscilexermatlab.h \
+	./Qsci/qscilexeroctave.h \
+	./Qsci/qscilexerpascal.h \
+	./Qsci/qscilexerperl.h \
+	./Qsci/qscilexerpostscript.h \
+	./Qsci/qscilexerpov.h \
+	./Qsci/qscilexerproperties.h \
+	./Qsci/qscilexerpython.h \
+	./Qsci/qscilexerruby.h \
+	./Qsci/qscilexerspice.h \
+	./Qsci/qscilexersql.h \
+	./Qsci/qscilexertcl.h \
+	./Qsci/qscilexertex.h \
+	./Qsci/qscilexerverilog.h \
+	./Qsci/qscilexervhdl.h \
+	./Qsci/qscilexerxml.h \
+	./Qsci/qscilexeryaml.h
 }
 else {
 	HEADERS += \
@@ -199,6 +202,7 @@ HEADERS += \
 	../include/Scintilla.h \
 	../include/ScintillaWidget.h \
 	../lexlib/Accessor.h \
+	../lexlib/CharacterCategory.h \
 	../lexlib/CharacterSet.h \
 	../lexlib/LexAccessor.h \
 	../lexlib/LexerBase.h \
@@ -208,9 +212,12 @@ HEADERS += \
 	../lexlib/OptionSet.h \
 	../lexlib/PropSetSimple.h \
 	../lexlib/StyleContext.h \
+	../lexlib/SubStyles.h \
 	../lexlib/WordList.h \
 	../src/AutoComplete.h \
 	../src/CallTip.h \
+	../src/CaseConvert.h \
+	../src/CaseFolder.h \
 	../src/Catalogue.h \
 	../src/CellBuffer.h \
 	../src/CharClassify.h \
@@ -232,7 +239,7 @@ HEADERS += \
 	../src/Selection.h \
 	../src/SplitVector.h \
 	../src/Style.h \
-	../src/SVector.h \
+	../src/UnicodeFromUTF8.h \
 	../src/UniConversion.h \
 	../src/ViewStyle.h \
 	../src/XPM.h
@@ -249,40 +256,40 @@ SOURCES = \
 
 contains (ALL_LEXERS, true) {
 	SOURCES += \
-		qscilexerbash.cpp \
-		qscilexerbatch.cpp \
-		qscilexercmake.cpp \
-		qscilexercpp.cpp \
-		qscilexercsharp.cpp \
-		qscilexercss.cpp \
-		qscilexercustom.cpp \
-		qscilexerd.cpp \
-		qscilexerdiff.cpp \
-		qscilexerfortran.cpp \
-		qscilexerfortran77.cpp \
-		qscilexerhtml.cpp \
-		qscilexeridl.cpp \
-		qscilexerjava.cpp \
-		qscilexerjavascript.cpp \
-		qscilexerlua.cpp \
-		qscilexermakefile.cpp \
-		qscilexermatlab.cpp \
-		qscilexeroctave.cpp \
-		qscilexerpascal.cpp \
-		qscilexerperl.cpp \
-		qscilexerpostscript.cpp \
-		qscilexerpov.cpp \
-		qscilexerproperties.cpp \
-		qscilexerpython.cpp \
-		qscilexerruby.cpp \
-		qscilexerspice.cpp \
-		qscilexersql.cpp \
-		qscilexertcl.cpp \
-		qscilexertex.cpp \
-		qscilexerverilog.cpp \
-		qscilexervhdl.cpp \
-		qscilexerxml.cpp \
-		qscilexeryaml.cpp
+	qscilexerbash.cpp \
+	qscilexerbatch.cpp \
+	qscilexercmake.cpp \
+	qscilexercpp.cpp \
+	qscilexercsharp.cpp \
+	qscilexercss.cpp \
+	qscilexercustom.cpp \
+	qscilexerd.cpp \
+	qscilexerdiff.cpp \
+	qscilexerfortran.cpp \
+	qscilexerfortran77.cpp \
+	qscilexerhtml.cpp \
+	qscilexeridl.cpp \
+	qscilexerjava.cpp \
+	qscilexerjavascript.cpp \
+	qscilexerlua.cpp \
+	qscilexermakefile.cpp \
+	qscilexermatlab.cpp \
+	qscilexeroctave.cpp \
+	qscilexerpascal.cpp \
+	qscilexerperl.cpp \
+	qscilexerpostscript.cpp \
+	qscilexerpov.cpp \
+	qscilexerproperties.cpp \
+	qscilexerpython.cpp \
+	qscilexerruby.cpp \
+	qscilexerspice.cpp \
+	qscilexersql.cpp \
+	qscilexertcl.cpp \
+	qscilexertex.cpp \
+	qscilexerverilog.cpp \
+	qscilexervhdl.cpp \
+	qscilexerxml.cpp \
+	qscilexeryaml.cpp
 }
 else {
 	SOURCES += \
@@ -299,6 +306,8 @@ SOURCES += \
 	qsciprinter.cpp \
 	qscistyle.cpp \
 	qscistyledtext.cpp \
+    MacPasteboardMime.cpp \
+    InputMethod.cpp \
 	SciClasses.cpp \
 	ListBoxQt.cpp \
 	PlatQt.cpp \
@@ -306,94 +315,98 @@ SOURCES += \
 
 contains(ALL_LEXERS, true) {
 	SOURCES += \
-		../lexers/LexA68k.cpp \
-		../lexers/LexAbaqus.cpp \
-		../lexers/LexAda.cpp \
-		../lexers/LexAPDL.cpp \
-		../lexers/LexAsm.cpp \
-		../lexers/LexAsn1.cpp \
-		../lexers/LexASY.cpp \
-		../lexers/LexAU3.cpp \
-		../lexers/LexAVE.cpp \
-		../lexers/LexAVS.cpp \
-		../lexers/LexBaan.cpp \
-		../lexers/LexBash.cpp \
-		../lexers/LexBasic.cpp \
-		../lexers/LexBullant.cpp \
-		../lexers/LexCaml.cpp \
-		../lexers/LexCLW.cpp \
-		../lexers/LexCmake.cpp \
-		../lexers/LexCOBOL.cpp \
-		../lexers/LexCoffeeScript.cpp \
-		../lexers/LexConf.cpp \
-		../lexers/LexCPP.cpp \
-		../lexers/LexCrontab.cpp \
-		../lexers/LexCsound.cpp \
-		../lexers/LexCSS.cpp \
-		../lexers/LexD.cpp \
-		../lexers/LexECL.cpp \
-		../lexers/LexEiffel.cpp \
-		../lexers/LexErlang.cpp \
-		../lexers/LexEScript.cpp \
-		../lexers/LexFlagship.cpp \
-		../lexers/LexForth.cpp \
-		../lexers/LexFortran.cpp \
-		../lexers/LexGAP.cpp \
-		../lexers/LexGui4Cli.cpp \
-		../lexers/LexHaskell.cpp \
-		../lexers/LexHTML.cpp \
-		../lexers/LexInno.cpp \
-		../lexers/LexKix.cpp \
-		../lexers/LexLisp.cpp \
-		../lexers/LexLout.cpp \
-		../lexers/LexLua.cpp \
-		../lexers/LexMagik.cpp \
-		../lexers/LexMarkdown.cpp \
-		../lexers/LexMatlab.cpp \
-		../lexers/LexMetapost.cpp \
-		../lexers/LexMMIXAL.cpp \
-		../lexers/LexModula.cpp \
-		../lexers/LexMPT.cpp \
-		../lexers/LexMSSQL.cpp \
-		../lexers/LexMySQL.cpp \
-		../lexers/LexNimrod.cpp \
-		../lexers/LexNsis.cpp \
-		../lexers/LexOpal.cpp \
-		../lexers/LexOScript.cpp \
-		../lexers/LexOthers.cpp \
-		../lexers/LexPascal.cpp \
-		../lexers/LexPB.cpp \
-		../lexers/LexPerl.cpp \
-		../lexers/LexPLM.cpp \
-		../lexers/LexPO.cpp \
-		../lexers/LexPOV.cpp \
-		../lexers/LexPowerPro.cpp \
-		../lexers/LexPowerShell.cpp \
-		../lexers/LexProgress.cpp \
-		../lexers/LexPS.cpp \
-		../lexers/LexPython.cpp \
-		../lexers/LexR.cpp \
-		../lexers/LexRebol.cpp \
-		../lexers/LexRuby.cpp \
-		../lexers/LexScriptol.cpp \
-		../lexers/LexSmalltalk.cpp \
-		../lexers/LexSML.cpp \
-		../lexers/LexSorcus.cpp \
-		../lexers/LexSpecman.cpp \
-		../lexers/LexSpice.cpp \
-		../lexers/LexSQL.cpp \
-		../lexers/LexTACL.cpp \
-		../lexers/LexTADS3.cpp \
-		../lexers/LexTAL.cpp \
-		../lexers/LexTCL.cpp \
-		../lexers/LexTCMD.cpp \
-		../lexers/LexTeX.cpp \
-		../lexers/LexTxt2tags.cpp \
-		../lexers/LexVB.cpp \
-		../lexers/LexVerilog.cpp \
-		../lexers/LexVHDL.cpp \
-		../lexers/LexVisualProlog.cpp \
-		../lexers/LexYAML.cpp
+	../lexers/LexA68k.cpp \
+	../lexers/LexAbaqus.cpp \
+	../lexers/LexAda.cpp \
+	../lexers/LexAPDL.cpp \
+	../lexers/LexAsm.cpp \
+	../lexers/LexAsn1.cpp \
+	../lexers/LexASY.cpp \
+	../lexers/LexAU3.cpp \
+	../lexers/LexAVE.cpp \
+	../lexers/LexAVS.cpp \
+	../lexers/LexBaan.cpp \
+	../lexers/LexBash.cpp \
+	../lexers/LexBasic.cpp \
+	../lexers/LexBullant.cpp \
+	../lexers/LexCaml.cpp \
+	../lexers/LexCLW.cpp \
+	../lexers/LexCmake.cpp \
+	../lexers/LexCOBOL.cpp \
+	../lexers/LexCoffeeScript.cpp \
+	../lexers/LexConf.cpp \
+	../lexers/LexCPP.cpp \
+	../lexers/LexCrontab.cpp \
+	../lexers/LexCsound.cpp \
+	../lexers/LexCSS.cpp \
+	../lexers/LexD.cpp \
+	../lexers/LexECL.cpp \
+	../lexers/LexEiffel.cpp \
+	../lexers/LexErlang.cpp \
+	../lexers/LexEScript.cpp \
+	../lexers/LexFlagship.cpp \
+	../lexers/LexForth.cpp \
+	../lexers/LexFortran.cpp \
+	../lexers/LexGAP.cpp \
+	../lexers/LexGui4Cli.cpp \
+	../lexers/LexHaskell.cpp \
+	../lexers/LexHTML.cpp \
+	../lexers/LexInno.cpp \
+	../lexers/LexKix.cpp \
+	../lexers/LexKVIrc.cpp \
+	../lexers/LexLaTex.cpp \
+	../lexers/LexLisp.cpp \
+	../lexers/LexLout.cpp \
+	../lexers/LexLua.cpp \
+	../lexers/LexMagik.cpp \
+	../lexers/LexMarkdown.cpp \
+	../lexers/LexMatlab.cpp \
+	../lexers/LexMetapost.cpp \
+	../lexers/LexMMIXAL.cpp \
+	../lexers/LexModula.cpp \
+	../lexers/LexMPT.cpp \
+	../lexers/LexMSSQL.cpp \
+	../lexers/LexMySQL.cpp \
+	../lexers/LexNimrod.cpp \
+	../lexers/LexNsis.cpp \
+	../lexers/LexOpal.cpp \
+	../lexers/LexOScript.cpp \
+	../lexers/LexOthers.cpp \
+	../lexers/LexPascal.cpp \
+	../lexers/LexPB.cpp \
+	../lexers/LexPerl.cpp \
+	../lexers/LexPLM.cpp \
+	../lexers/LexPO.cpp \
+	../lexers/LexPOV.cpp \
+	../lexers/LexPowerPro.cpp \
+	../lexers/LexPowerShell.cpp \
+	../lexers/LexProgress.cpp \
+	../lexers/LexPS.cpp \
+	../lexers/LexPython.cpp \
+	../lexers/LexR.cpp \
+	../lexers/LexRebol.cpp \
+	../lexers/LexRuby.cpp \
+	../lexers/LexRust.cpp \
+	../lexers/LexScriptol.cpp \
+	../lexers/LexSmalltalk.cpp \
+	../lexers/LexSML.cpp \
+	../lexers/LexSorcus.cpp \
+	../lexers/LexSpecman.cpp \
+	../lexers/LexSpice.cpp \
+	../lexers/LexSQL.cpp \
+	../lexers/LexSTTXT.cpp \
+	../lexers/LexTACL.cpp \
+	../lexers/LexTADS3.cpp \
+	../lexers/LexTAL.cpp \
+	../lexers/LexTCL.cpp \
+	../lexers/LexTCMD.cpp \
+	../lexers/LexTeX.cpp \
+	../lexers/LexTxt2tags.cpp \
+	../lexers/LexVB.cpp \
+	../lexers/LexVerilog.cpp \
+	../lexers/LexVHDL.cpp \
+	../lexers/LexVisualProlog.cpp \
+	../lexers/LexYAML.cpp
 }
 else {
 	SOURCES += \
@@ -404,6 +417,7 @@ else {
 
 SOURCES += \
 	../lexlib/Accessor.cpp \
+	../lexlib/CharacterCategory.cpp \
 	../lexlib/CharacterSet.cpp \
 	../lexlib/LexerBase.cpp \
 	../lexlib/LexerModule.cpp \
@@ -414,6 +428,8 @@ SOURCES += \
 	../lexlib/WordList.cpp \
 	../src/AutoComplete.cpp \
 	../src/CallTip.cpp \
+	../src/CaseConvert.cpp \
+	../src/CaseFolder.cpp \
 	../src/Catalogue.cpp \
 	../src/CellBuffer.cpp \
 	../src/CharClassify.cpp \

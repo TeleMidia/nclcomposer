@@ -22,7 +22,7 @@
   
   <td style="padding-left: 0.5em;">
    <div id="projectname">QScintilla
-   &#160;<span id="projectnumber">2.7.2</span>
+   &#160;<span id="projectnumber">2.8</span>
    </div>
    
   </td>
@@ -56,6 +56,7 @@
 <a href="#signals">Signals</a> &#124;
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="#pub-static-methods">Static Public Member Functions</a> &#124;
+<a href="#pro-types">Protected Types</a> &#124;
 <a href="#pro-methods">Protected Member Functions</a>  </div>
   <div class="headertitle">
 <div class="title">QsciScintillaBase Class Reference</div>  </div>
@@ -385,6 +386,10 @@ Public Types</h2>
 <br/>
 &#160;&#160;<b>SCI_WRAPCOUNT</b> =  2235, 
 <b>SCI_GETALLLINESVISIBLE</b> =  2236, 
+<b>SCI_FOLDLINE</b> =  2237, 
+<br/>
+&#160;&#160;<b>SCI_FOLDCHILDREN</b> =  2238, 
+<b>SCI_EXPANDCHILDREN</b> =  2239, 
 <b>SCI_SETTABINDENTS</b> =  2260, 
 <br/>
 &#160;&#160;<b>SCI_GETTABINDENTS</b> =  2261, 
@@ -752,23 +757,27 @@ Public Types</h2>
 <b>SCI_ANNOTATIONSETSTYLEOFFSET</b> =  2550, 
 <br/>
 &#160;&#160;<b>SCI_ANNOTATIONGETSTYLEOFFSET</b> =  2551, 
-<b>SCI_SETEMPTYSELECTION</b> =  2556, 
+<b>SCI_RELEASEALLEXTENDEDSTYLES</b> =  2552, 
+<b>SCI_ALLOCATEEXTENDEDSTYLES</b> =  2553, 
+<br/>
+&#160;&#160;<b>SCI_SETEMPTYSELECTION</b> =  2556, 
 <b>SCI_GETMARGINOPTIONS</b> =  2557, 
+<b>SCI_INDICSETOUTLINEALPHA</b> =  2558, 
 <br/>
-&#160;&#160;<b>SCI_INDICSETOUTLINEALPHA</b> =  2558, 
-<b>SCI_INDICGETOUTLINEALPHA</b> =  2559, 
+&#160;&#160;<b>SCI_INDICGETOUTLINEALPHA</b> =  2559, 
 <b>SCI_ADDUNDOACTION</b> =  2560, 
+<b>SCI_CHARPOSITIONFROMPOINT</b> =  2561, 
 <br/>
-&#160;&#160;<b>SCI_CHARPOSITIONFROMPOINT</b> =  2561, 
-<b>SCI_CHARPOSITIONFROMPOINTCLOSE</b> =  2562, 
+&#160;&#160;<b>SCI_CHARPOSITIONFROMPOINTCLOSE</b> =  2562, 
 <b>SCI_SETMULTIPLESELECTION</b> =  2563, 
+<b>SCI_GETMULTIPLESELECTION</b> =  2564, 
 <br/>
-&#160;&#160;<b>SCI_GETMULTIPLESELECTION</b> =  2564, 
-<b>SCI_SETADDITIONALSELECTIONTYPING</b> =  2565, 
+&#160;&#160;<b>SCI_SETADDITIONALSELECTIONTYPING</b> =  2565, 
 <b>SCI_GETADDITIONALSELECTIONTYPING</b> =  2566, 
+<b>SCI_SETADDITIONALCARETSBLINK</b> =  2567, 
 <br/>
-&#160;&#160;<b>SCI_SETADDITIONALCARETSBLINK</b> =  2567, 
-<b>SCI_GETADDITIONALCARETSBLINK</b> =  2568, 
+&#160;&#160;<b>SCI_GETADDITIONALCARETSBLINK</b> =  2568, 
+<b>SCI_SCROLLRANGE</b> =  2569, 
 <b>SCI_SETADDITIONALCARETSVISIBLE</b> =  2608, 
 <br/>
 &#160;&#160;<b>SCI_GETADDITIONALCARETSVISIBLE</b> =  2609, 
@@ -875,31 +884,48 @@ Public Types</h2>
 <b>SCI_RGBAIMAGESETSCALE</b> =  2651, 
 <b>SCI_VCHOMEDISPLAY</b> =  2652, 
 <br/>
-&#160;&#160;<b>SCI_VCHOMEDISPLAYEXTEND</b> =  2653, 
+&#160;&#160;<b>SCI_GETCARETLINEVISIBLEALWAYS</b> =  2654, 
+<b>SCI_SETCARETLINEVISIBLEALWAYS</b> =  2655, 
+<b>SCI_VCHOMEDISPLAYEXTEND</b> =  2653, 
+<br/>
+&#160;&#160;<b>SCI_AUTOCSETORDER</b> =  2660, 
+<b>SCI_AUTOCGETORDER</b> =  2661, 
+<b>SCI_FOLDALL</b> =  2662, 
+<br/>
+&#160;&#160;<b>SCI_SETAUTOMATICFOLD</b> =  2663, 
+<b>SCI_GETAUTOMATICFOLD</b> =  2664, 
+<b>SCI_SETREPRESENTATION</b> =  2665, 
+<br/>
+&#160;&#160;<b>SCI_GETREPRESENTATION</b> =  2666, 
+<b>SCI_CLEARREPRESENTATION</b> =  2667, 
+<b>SCI_SETMOUSESELECTIONRECTANGULARSWITCH</b> =  2668, 
+<br/>
+&#160;&#160;<b>SCI_GETMOUSESELECTIONRECTANGULARSWITCH</b> =  2669, 
+<b>SCI_POSITIONRELATIVE</b> =  2670, 
 <b>SCI_STARTRECORD</b> =  3001, 
-<b>SCI_STOPRECORD</b> =  3002, 
 <br/>
-&#160;&#160;<a class="el" href="classQsciScintillaBase.html#ab2179a2af3123f8e759086f07be80cd2a29b928416c21edb11e32d4325764fcc7">SCI_SETLEXER</a> =  4001, 
+&#160;&#160;<b>SCI_STOPRECORD</b> =  3002, 
+<a class="el" href="classQsciScintillaBase.html#ab2179a2af3123f8e759086f07be80cd2a29b928416c21edb11e32d4325764fcc7">SCI_SETLEXER</a> =  4001, 
 <a class="el" href="classQsciScintillaBase.html#ab2179a2af3123f8e759086f07be80cd2af625e0ecead2e1d0bc3e0cefe2e8954a">SCI_GETLEXER</a> =  4002, 
-<b>SCI_COLOURISE</b> =  4003, 
 <br/>
-&#160;&#160;<b>SCI_SETPROPERTY</b> =  4004, 
+&#160;&#160;<b>SCI_COLOURISE</b> =  4003, 
+<b>SCI_SETPROPERTY</b> =  4004, 
 <b>SCI_SETKEYWORDS</b> =  4005, 
-<a class="el" href="classQsciScintillaBase.html#ab2179a2af3123f8e759086f07be80cd2a6309b2b8bf3813c1041d31cb54ce3feb">SCI_SETLEXERLANGUAGE</a> =  4006, 
 <br/>
-&#160;&#160;<b>SCI_LOADLEXERLIBRARY</b> =  4007, 
+&#160;&#160;<a class="el" href="classQsciScintillaBase.html#ab2179a2af3123f8e759086f07be80cd2a6309b2b8bf3813c1041d31cb54ce3feb">SCI_SETLEXERLANGUAGE</a> =  4006, 
+<b>SCI_LOADLEXERLIBRARY</b> =  4007, 
 <b>SCI_GETPROPERTY</b> =  4008, 
-<b>SCI_GETPROPERTYEXPANDED</b> =  4009, 
 <br/>
-&#160;&#160;<b>SCI_GETPROPERTYINT</b> =  4010, 
+&#160;&#160;<b>SCI_GETPROPERTYEXPANDED</b> =  4009, 
+<b>SCI_GETPROPERTYINT</b> =  4010, 
 <b>SCI_GETSTYLEBITSNEEDED</b> =  4011, 
-<b>SCI_GETLEXERLANGUAGE</b> =  4012, 
 <br/>
-&#160;&#160;<b>SCI_PRIVATELEXERCALL</b> =  4013, 
+&#160;&#160;<b>SCI_GETLEXERLANGUAGE</b> =  4012, 
+<b>SCI_PRIVATELEXERCALL</b> =  4013, 
 <b>SCI_PROPERTYNAMES</b> =  4014, 
-<b>SCI_PROPERTYTYPE</b> =  4015, 
 <br/>
-&#160;&#160;<b>SCI_DESCRIBEPROPERTY</b> =  4016, 
+&#160;&#160;<b>SCI_PROPERTYTYPE</b> =  4015, 
+<b>SCI_DESCRIBEPROPERTY</b> =  4016, 
 <b>SCI_DESCRIBEKEYWORDSETS</b> =  4017
 <br/>
  }
@@ -1115,13 +1141,14 @@ Public Types</h2>
 <br/>
 &#160;&#160;<b>INDIC_DOTBOX</b> =  12, 
 <b>INDIC_SQUIGGLEPIXMAP</b> =  13, 
-<b>INDIC_CONTAINER</b> =  8, 
+<b>INDIC_COMPOSITIONTHICK</b> =  14, 
 <br/>
-&#160;&#160;<b>INDIC_MAX</b> =  31, 
+&#160;&#160;<b>INDIC_CONTAINER</b> =  8, 
+<b>INDIC_MAX</b> =  31, 
 <b>INDIC0_MASK</b> =  0x20, 
-<b>INDIC1_MASK</b> =  0x40, 
 <br/>
-&#160;&#160;<b>INDIC2_MASK</b> =  0x80, 
+&#160;&#160;<b>INDIC1_MASK</b> =  0x40, 
+<b>INDIC2_MASK</b> =  0x80, 
 <b>INDICS_MASK</b> =  0xe0
 <br/>
  }
@@ -1422,7 +1449,12 @@ Public Types</h2>
 <a class="el" href="classQsciScintillaBase.html#ae3a61e2c74b5965b93ef3f994258fc70a7ed6ed45706f72a25396e7cea6f179fc">SCLEX_ECL</a> =  105, 
 <br/>
 &#160;&#160;<a class="el" href="classQsciScintillaBase.html#ae3a61e2c74b5965b93ef3f994258fc70a96e54938b672128818b2c8201833993a">SCLEX_OSCRIPT</a> =  106, 
-<a class="el" href="classQsciScintillaBase.html#ae3a61e2c74b5965b93ef3f994258fc70a6505e2018707a20252ef8eefc6b25fb3">SCLEX_VISUALPROLOG</a> =  107
+<a class="el" href="classQsciScintillaBase.html#ae3a61e2c74b5965b93ef3f994258fc70a6505e2018707a20252ef8eefc6b25fb3">SCLEX_VISUALPROLOG</a> =  107, 
+<a class="el" href="classQsciScintillaBase.html#ae3a61e2c74b5965b93ef3f994258fc70a96b2db4f5bb0191b81dd536b0b8b13e2">SCLEX_LITERATEHASKELL</a> =  108, 
+<br/>
+&#160;&#160;<a class="el" href="classQsciScintillaBase.html#ae3a61e2c74b5965b93ef3f994258fc70a6e8fa194daac20f1860a30910cd77ad2">SCLEX_STTXT</a> =  109, 
+<a class="el" href="classQsciScintillaBase.html#ae3a61e2c74b5965b93ef3f994258fc70ad0cd24eef0f5650d775d4dd05bd82df8">SCLEX_KVIRC</a> =  110, 
+<a class="el" href="classQsciScintillaBase.html#ae3a61e2c74b5965b93ef3f994258fc70a7dedcc3f7467a77cf25eff297aad55c1">SCLEX_RUST</a> =  111
 <br/>
  }
 <li>enum { <b>SC_WEIGHT_NORMAL</b> =  400, 
@@ -1436,6 +1468,18 @@ Public Types</h2>
 <b>SC_CASEINSENSITIVEBEHAVIOUR_IGNORECASE</b> =  1
  }
 <li>enum { <b>SC_FONT_SIZE_MULTIPLIER</b> =  100
+ }
+<li>enum { <b>SC_FOLDACTION_CONTRACT</b> =  0, 
+<b>SC_FOLDACTION_EXPAND</b> =  1, 
+<b>SC_FOLDACTION_TOGGLE</b> =  2
+ }
+<li>enum { <b>SC_AUTOMATICFOLD_SHOW</b> =  0x0001, 
+<b>SC_AUTOMATICFOLD_CLICK</b> =  0x0002, 
+<b>SC_AUTOMATICFOLD_CHANGE</b> =  0x0004
+ }
+<li>enum { <b>SC_ORDER_PRESORTED</b> =  0, 
+<b>SC_ORDER_PERFORMSORT</b> =  1, 
+<b>SC_ORDER_CUSTOM</b> =  2
  }
 </ul>
 <h2><a name="signals"></a>
@@ -1454,6 +1498,10 @@ void <a class="el" href="classQsciScintillaBase.html#af2cc3652d35b4d0ec1d8c9ac18
 void <b>SCN_DWELLEND</b> (int, int, int)
 <li><a class="anchor" id="ae87f2ed357c92b8e1d18d8354524ad34"></a><!-- doxytag: member="QsciScintillaBase::SCN_DWELLSTART" ref="ae87f2ed357c92b8e1d18d8354524ad34" args="(int, int, int)" -->
 void <b>SCN_DWELLSTART</b> (int, int, int)
+<li><a class="anchor" id="ae53947625062cec64a212dc68877ddc3"></a><!-- doxytag: member="QsciScintillaBase::SCN_FOCUSIN" ref="ae53947625062cec64a212dc68877ddc3" args="()" -->
+void <a class="el" href="classQsciScintillaBase.html#ae53947625062cec64a212dc68877ddc3">SCN_FOCUSIN</a> ()
+<li><a class="anchor" id="a2febc4ea74d45d6a8bc9c758635dd99d"></a><!-- doxytag: member="QsciScintillaBase::SCN_FOCUSOUT" ref="a2febc4ea74d45d6a8bc9c758635dd99d" args="()" -->
+void <a class="el" href="classQsciScintillaBase.html#a2febc4ea74d45d6a8bc9c758635dd99d">SCN_FOCUSOUT</a> ()
 <li>void <a class="el" href="classQsciScintillaBase.html#a5eff383e6fa96cbbaba6a2558b076c0b">SCN_HOTSPOTCLICK</a> (int position, int modifiers)
 <li>void <a class="el" href="classQsciScintillaBase.html#a682cc736272338433efdc86bc936e0e8">SCN_HOTSPOTDOUBLECLICK</a> (int position, int modifiers)
 <li>void <a class="el" href="classQsciScintillaBase.html#a906faecb0defd2d5a14cac54f8415dcf">SCN_HOTSPOTRELEASECLICK</a> (int position, int modifiers)
@@ -1504,6 +1552,12 @@ Static Public Member Functions</h2>
 <ul>
 <li>static <a class="el" href="classQsciScintillaBase.html">QsciScintillaBase</a> * <a class="el" href="classQsciScintillaBase.html#a0f69249f4e97b96f09ea70f546df7464">pool</a> ()
 </ul>
+<h2><a name="pro-types"></a>
+Protected Types</h2>
+<ul>
+<li><a class="anchor" id="adf9244775a9df945d915aaf4cf4861fe"></a><!-- doxytag: member="QsciScintillaBase::ScintillaBytes" ref="adf9244775a9df945d915aaf4cf4861fe" args="" -->
+typedef QByteArray <b>ScintillaBytes</b>
+</ul>
 <h2><a name="pro-methods"></a>
 Protected Member Functions</h2>
 <ul>
@@ -1528,8 +1582,10 @@ virtual void <a class="el" href="classQsciScintillaBase.html#a1aec9b47eeaf611687
 virtual bool <a class="el" href="classQsciScintillaBase.html#ad6fb5a9621640080fc9909f94b6c0213">focusNextPrevChild</a> (bool next)
 <li><a class="anchor" id="a39f62b8e6cee02e86d7af508d20a191d"></a><!-- doxytag: member="QsciScintillaBase::keyPressEvent" ref="a39f62b8e6cee02e86d7af508d20a191d" args="(QKeyEvent *e)" -->
 virtual void <a class="el" href="classQsciScintillaBase.html#a39f62b8e6cee02e86d7af508d20a191d">keyPressEvent</a> (QKeyEvent *e)
-<li><a class="anchor" id="a319a98caf382e3a5083affb11eee929b"></a><!-- doxytag: member="QsciScintillaBase::inputMethodEvent" ref="a319a98caf382e3a5083affb11eee929b" args="(QInputMethodEvent *e)" -->
-virtual void <a class="el" href="classQsciScintillaBase.html#a319a98caf382e3a5083affb11eee929b">inputMethodEvent</a> (QInputMethodEvent *e)
+<li><a class="anchor" id="acb05eb7e7c7cac07547a08d0628013fe"></a><!-- doxytag: member="QsciScintillaBase::inputMethodEvent" ref="acb05eb7e7c7cac07547a08d0628013fe" args="(QInputMethodEvent *event)" -->
+virtual void <a class="el" href="classQsciScintillaBase.html#acb05eb7e7c7cac07547a08d0628013fe">inputMethodEvent</a> (QInputMethodEvent *event)
+<li><a class="anchor" id="a5a358527dbce7938a4593bd4eb57e93c"></a><!-- doxytag: member="QsciScintillaBase::inputMethodQuery" ref="a5a358527dbce7938a4593bd4eb57e93c" args="(Qt::InputMethodQuery query) const " -->
+virtual QVariant <b>inputMethodQuery</b> (Qt::InputMethodQuery query) const 
 <li><a class="anchor" id="aab16e9b7ca9a17af2af3b7ca7f14c8c4"></a><!-- doxytag: member="QsciScintillaBase::mouseDoubleClickEvent" ref="aab16e9b7ca9a17af2af3b7ca7f14c8c4" args="(QMouseEvent *e)" -->
 virtual void <a class="el" href="classQsciScintillaBase.html#aab16e9b7ca9a17af2af3b7ca7f14c8c4">mouseDoubleClickEvent</a> (QMouseEvent *e)
 <li><a class="anchor" id="a5a4a2c5466d1b4f7d6e835c253cb1730"></a><!-- doxytag: member="QsciScintillaBase::mouseMoveEvent" ref="a5a4a2c5466d1b4f7d6e835c253cb1730" args="(QMouseEvent *e)" -->
@@ -1546,6 +1602,10 @@ virtual void <a class="el" href="classQsciScintillaBase.html#a6d0427b93e05876c9a
 virtual void <b>scrollContentsBy</b> (int dx, int dy)
 <li><a class="anchor" id="a1628992bb476d4b0939a0349a30930f4"></a><!-- doxytag: member="QsciScintillaBase::setScrollBars" ref="a1628992bb476d4b0939a0349a30930f4" args="()" -->
 void <b>setScrollBars</b> ()
+<li><a class="anchor" id="aeb577a02cf3fce48ad3b608c9cafd0f1"></a><!-- doxytag: member="QsciScintillaBase::textAsBytes" ref="aeb577a02cf3fce48ad3b608c9cafd0f1" args="(const QString &amp;text) const " -->
+ScintillaBytes <b>textAsBytes</b> (const QString &amp;text) const 
+<li><a class="anchor" id="a58d051e10d5eccc6544a35175287d9bf"></a><!-- doxytag: member="QsciScintillaBase::bytesAsText" ref="a58d051e10d5eccc6544a35175287d9bf" args="(const char *bytes) const " -->
+QString <b>bytesAsText</b> (const char *bytes) const 
 </ul>
 <hr/><a name="details" id="details"></a><h2>Detailed Description</h2>
 <div class="textblock"><p>The <a class="el" href="classQsciScintillaBase.html" title="The QsciScintillaBase class implements the Scintilla editor widget and its low-level API...">QsciScintillaBase</a> class implements the Scintilla editor widget and its low-level API. </p>
@@ -2327,6 +2387,18 @@ void <b>setScrollBars</b> ()
 </td></tr>
 <tr><td valign="top"><em><a class="anchor" id="ae3a61e2c74b5965b93ef3f994258fc70a6505e2018707a20252ef8eefc6b25fb3"></a><!-- doxytag: member="SCLEX_VISUALPROLOG" ref="ae3a61e2c74b5965b93ef3f994258fc70a6505e2018707a20252ef8eefc6b25fb3" args="" -->SCLEX_VISUALPROLOG</em>&nbsp;</td><td>
 <p>Select the Visual Prolog lexer. </p>
+</td></tr>
+<tr><td valign="top"><em><a class="anchor" id="ae3a61e2c74b5965b93ef3f994258fc70a96b2db4f5bb0191b81dd536b0b8b13e2"></a><!-- doxytag: member="SCLEX_LITERATEHASKELL" ref="ae3a61e2c74b5965b93ef3f994258fc70a96b2db4f5bb0191b81dd536b0b8b13e2" args="" -->SCLEX_LITERATEHASKELL</em>&nbsp;</td><td>
+<p>Select the Literal Haskell lexer. </p>
+</td></tr>
+<tr><td valign="top"><em><a class="anchor" id="ae3a61e2c74b5965b93ef3f994258fc70a6e8fa194daac20f1860a30910cd77ad2"></a><!-- doxytag: member="SCLEX_STTXT" ref="ae3a61e2c74b5965b93ef3f994258fc70a6e8fa194daac20f1860a30910cd77ad2" args="" -->SCLEX_STTXT</em>&nbsp;</td><td>
+<p>Select the Structured Text lexer. </p>
+</td></tr>
+<tr><td valign="top"><em><a class="anchor" id="ae3a61e2c74b5965b93ef3f994258fc70ad0cd24eef0f5650d775d4dd05bd82df8"></a><!-- doxytag: member="SCLEX_KVIRC" ref="ae3a61e2c74b5965b93ef3f994258fc70ad0cd24eef0f5650d775d4dd05bd82df8" args="" -->SCLEX_KVIRC</em>&nbsp;</td><td>
+<p>Select the KVIrc lexer. </p>
+</td></tr>
+<tr><td valign="top"><em><a class="anchor" id="ae3a61e2c74b5965b93ef3f994258fc70a7dedcc3f7467a77cf25eff297aad55c1"></a><!-- doxytag: member="SCLEX_RUST" ref="ae3a61e2c74b5965b93ef3f994258fc70a7dedcc3f7467a77cf25eff297aad55c1" args="" -->SCLEX_RUST</em>&nbsp;</td><td>
+<p>Select the Rust lexer. </p>
 </td></tr>
 </table>
 </dd>
@@ -3343,7 +3415,7 @@ void <b>setScrollBars</b> ()
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Sun Jun 16 2013 14:03:35 for QScintilla by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Nov 8 2013 15:31:11 for QScintilla by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.7.5.1
 </small></address>

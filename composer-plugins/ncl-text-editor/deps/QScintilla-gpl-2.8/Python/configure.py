@@ -38,9 +38,9 @@ except ImportError:
 # Initialise the constants.
 SIP_MIN_VERSION = '4.12.0'
 
-# This must be kept in sync with qscintilla.pro, Qt4Qt5/application.pro and
-# Qt4Qt5/designer.pro.
-QSCI_API_MAJOR = 9
+# This must be kept in sync with Python/configure-old.py, qscintilla.pro,
+# example-Qt4Qt5/application.pro and designer-Qt4Qt5/designer.pro.
+QSCI_API_MAJOR = 11
 
 
 def error(msg):
@@ -404,7 +404,7 @@ def create_optparser(target_config):
         setattr(parser.values, option.dest, os.path.abspath(value))
 
     p = optparse.OptionParser(usage="python %prog [options]",
-            version="2.7.2")
+            version="2.8")
 
     p.add_option("--spec", dest='qmakespec', default=None, action='store',
             metavar="SPEC",
@@ -544,8 +544,8 @@ def check_qscintilla(target_config):
     # Because we include the Python bindings with the C++ code we can
     # reasonably force the same version to be used and not bother about
     # versioning.
-    if sciversstr != '2.7.2':
-        error("QScintilla %s is being used but the Python bindings 2.7.2 are being built. Please use matching versions." % sciversstr)
+    if sciversstr != '2.8':
+        error("QScintilla %s is being used but the Python bindings 2.8 are being built. Please use matching versions." % sciversstr)
 
     inform("QScintilla %s is being used." % sciversstr)
 

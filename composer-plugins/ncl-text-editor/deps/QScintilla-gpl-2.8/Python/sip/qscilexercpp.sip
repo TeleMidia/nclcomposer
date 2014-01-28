@@ -79,6 +79,8 @@ public:
         InactiveHashQuotedString,
         PreProcessorComment,
         InactivePreProcessorComment,
+        PreProcessorCommentLineDoc,
+        InactivePreProcessorCommentLineDoc,
     };
 
 %If (Qsci_Qt4)
