@@ -8,7 +8,7 @@ class QnstGraphicsReference : public QnstGraphicsEdge
 public:
   QnstGraphicsReference(QnstGraphicsEntity* parent = 0);
 
-  ~QnstGraphicsReference();
+  virtual ~QnstGraphicsReference();
 
 protected:
   virtual void draw(QPainter* painter);

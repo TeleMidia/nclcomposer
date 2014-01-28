@@ -13,54 +13,50 @@ typedef Qnst::EntityType QnstType;
 class QnstEntity
 {
 public:
-    QnstEntity(QnstEntity* parent = 0);
+  QnstEntity(QnstEntity* parent = 0);
 
-    ~QnstEntity();
+  ~QnstEntity();
 
-    QString getnstId() const;
+  QString getnstId() const;
 
-    virtual void setnstId(const QString &id);
+  virtual void setnstId(const QString &id);
 
-    QString getnstUid() const;
+  QString getnstUid() const;
 
-    void setnstUid(const QString &uid);
+  void setnstUid(const QString &uid);
 
-    QnstType getnstType() const;
+  QnstType getnstType() const;
 
-    virtual void setnstType(QnstType type);
+  virtual void setnstType(QnstType type);
 
-    QMap <QString, QString> getUsrData();
+  QMap <QString, QString> getUsrData();
 
-    void setUsrData(QMap <QString, QString> userData);
+  void setUsrData(QMap <QString, QString> userData);
 
-    QnstEntity* getnstParent() const;
+  QnstEntity* getnstParent() const;
 
-    void setnstParent(QnstEntity* parent);
+  void setnstParent(QnstEntity* parent);
 
-    QSet<QnstEntity*> getnstEntities();
+  QSet<QnstEntity*> getnstEntities();
 
-    void addnstEntity(QnstEntity* entity);
+  void addnstEntity(QnstEntity* entity);
 
-    void removenstEntity(QnstEntity* entity);
+  void removenstEntity(QnstEntity* entity);
 
-    bool isMedia();
+  bool isMedia();
 
-    virtual void getProperties(QMap <QString, QString> &props) { (void) props;}
+  virtual void getProperties(QMap <QString, QString> &props) { (void) props;}
 
 
 private:
-    QString id;
+  QString id;
+  QString uid;
+  QnstType type;
+  QnstEntity* parent;
+  QSet<QnstEntity*> entities;
 
-    QString uid;
-
-    QnstType type;
-
-    QnstEntity* parent;
-
-    QSet<QnstEntity*> entities;
-
-    // FIXME: Maybe, this is not needed!! We could use the
-    QMap <QString, QString> userData;
+  // FIXME: Maybe, this is not needed!! We could use the
+  QMap <QString, QString> userData;
 };
 
 #endif // QNSTENTITY_H

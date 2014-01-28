@@ -1,5 +1,7 @@
 #include "qnstgraphicsbind.h"
 
+#include <assert.h>
+
 QnstGraphicsBind::QnstGraphicsBind(QnstGraphicsEntity* parent)
   : QnstGraphicsEdge(parent)
 {
@@ -761,7 +763,15 @@ void QnstGraphicsBind::delineate(QPainterPath* painter) const
 
 void QnstGraphicsBind::delineate_action(QPainterPath* painter) const
 {
-  if (getEntityA() != NULL && getEntityB() != NULL)
+  // \fixme This should never reach here with dome of the following NULL
+ /*
+  assert (getEntityA() != NULL);
+  assert (getEntityA()->getnstGraphicsParent() != NULL);
+  assert (getEntityB() != NULL);
+  assert (getnstGraphicsParent() != NULL);
+  assert (getEntityB()->getnstGraphicsParent() != NULL); */
+
+  if (getEntityA() != NULL && getEntityB() != NULL && getnstGraphicsParent() != NULL)
   {
     QLineF line = QLineF(QPointF(getEntityA()->getLeft() + getEntityA()->getWidth()/2,
                                  getEntityA()->getTop() + getEntityA()->getHeight()/2),

@@ -348,6 +348,9 @@ void QnstView::readLink(QDomElement element, QDomElement parent)
         QnstGraphicsInterface* entitya = (QnstGraphicsInterface*) entities[element.attribute("uid")];
         QnstGraphicsInterface* entityb = (QnstGraphicsInterface*) entities[element.attribute("interfaceUID")];
 
+        assert ( entitya != NULL );
+        assert ( entityb != NULL );
+
         if (entitya != entityb)
         {
           QnstGraphicsReference* entity = new QnstGraphicsReference();
@@ -444,13 +447,13 @@ void QnstView::readLink(QDomElement element, QDomElement parent)
           bind->setParams(params);
           bind->setNamesUIDs(name_uid);
 
-          connect(bind,
-                  SIGNAL(bindParamAdded(QString,QString,QMap<QString, QString>)),
-                  SLOT(requestBindParamAdjust(QString,QString,QMap<QString, QString>)));
+          connect( bind,
+                   SIGNAL(bindParamAdded(QString,QString,QMap<QString, QString>)),
+                   SLOT(requestBindParamAdjust(QString,QString,QMap<QString, QString>)) );
 
-          connect(bind,
-                  SIGNAL(bindParamUpdated(QString,QMap<QString,QString>,QMap<QString,QString>)),
-                  SLOT(updateBindParams(QString,QMap<QString,QString>,QMap<QString,QString>)));
+          connect( bind,
+                   SIGNAL(bindParamUpdated(QString,QMap<QString,QString>,QMap<QString,QString>)),
+                   SLOT(updateBindParams(QString,QMap<QString,QString>,QMap<QString,QString>)) );
 
         }
       }
@@ -805,8 +808,7 @@ void QnstView::writeLink(QDomElement element, QDomDocument* dom,
             e.setAttribute("type", "condition");
 
             e.setAttribute("condition",
-                           QnstUtil::getStrFromBindType(
-                             bind->getType()) );
+                           QnstUtil::getStrFromBindType( bind->getType()) );
           }
           // We are writing an action
           else if(edge->getnstType() == Qnst::Action)
@@ -816,8 +818,17 @@ void QnstView::writeLink(QDomElement element, QDomDocument* dom,
                            QnstUtil::getStrFromBindType(bind->getType()));
           }
 
-          e.setAttribute("componentaUID", bind->getEntityA()->getnstUid());
-          e.setAttribute("componentbUID", bind->getEntityB()->getnstUid());
+          //\fixme Probably this should never get here with NULL
+          if(bind->getEntityA() != NULL)
+          {
+            e.setAttribute("componentaUID", bind->getEntityA()->getnstUid());
+          }
+
+          //\fixme Probably this should never get here with NULL
+          if(bind->getEntityB() != NULL)
+          {
+            e.setAttribute("componentbUID", bind->getEntityB()->getnstUid());
+          }
 
           e.setAttribute("component", bind->getComponent());
           e.setAttribute("componentUid", bind->getComponentUid());
@@ -827,7 +838,7 @@ void QnstView::writeLink(QDomElement element, QDomDocument* dom,
 
           element.appendChild(e);
 
-          linkWriterAux.insert(bind->getnstUid());
+          linkWriterAux.insert( bind->getnstUid() );
 
           // Write the bind parameters
           if(bind != NULL)
@@ -2355,6 +2366,9 @@ void QnstView::adjustPort(QnstGraphicsPort* entity)
       {
         QnstGraphicsEntity* entitya = (QnstGraphicsEntity*) entity;
         QnstGraphicsEntity* entityb = (QnstGraphicsEntity*) entities[entity->getComponentUid()];
+
+        assert (entitya != NULL);
+        assert (entityb != NULL);
 
         QnstGraphicsEntity* parenta = entitya->getnstGraphicsParent();
         QnstGraphicsEntity* parentb = entityb->getnstGraphicsParent();
@@ -5126,7 +5140,9 @@ void QnstView::requestBindParamAdjust(QString uid, QString parent,
 {
   properties["TYPE"] = "bindParam";
 
-  if (!properties["name"].isEmpty() && (!properties["value"].isEmpty() || (properties["value"].isEmpty() && bindParamUIDToBindUID.contains(uid))))
+  if ( !properties["name"].isEmpty() &&
+      (!properties["value"].isEmpty() ||
+      (properties["value"].isEmpty() && bindParamUIDToBindUID.contains(uid))))
   {
     if (bindParamUIDToBindUID.contains(uid))
     {
@@ -5145,7 +5161,8 @@ void QnstView::requestBindParamAdjust(QString uid, QString parent,
 //  }
 }
 
-void QnstView::updateBindParams(QString bindUID, QMap<QString, QString> params,
+void QnstView::updateBindParams(QString bindUID,
+                                QMap<QString, QString> params,
                                 QMap<QString, QString> name_uids)
 {
   if (binds.contains(bindUID))
@@ -5162,7 +5179,9 @@ void QnstView::markError(QString uid, QString msg)
   if(entities.contains(uid))
   {
     entity = entities[uid];
-  }else if (binds.contains(uid)){
+  }
+  else if (binds.contains(uid))
+  {
     entity = (QnstGraphicsEntity*) binds[uid];
   }
 

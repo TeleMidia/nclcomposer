@@ -1566,6 +1566,8 @@ void QnstComposerPlugin::notifyEntityChangedInView(const QString uid,
   if(entity == NULL)
   {
     qWarning() << "[QNST] Error!!! Trying to change a entity that does not exist in the model";
+    // \todo should return an error!!
+    return;
   }
 
   switch (type)

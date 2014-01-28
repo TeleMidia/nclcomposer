@@ -24,7 +24,7 @@ Q_OBJECT
 public:
   QnstGraphicsEntity(QnstGraphicsEntity* parent = 0);
 
-  ~QnstGraphicsEntity();
+  virtual ~QnstGraphicsEntity();
 
   QnstGraphicsEntity* getnstGraphicsParent() const;
 

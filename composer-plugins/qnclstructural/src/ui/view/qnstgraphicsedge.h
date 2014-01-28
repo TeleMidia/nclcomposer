@@ -11,42 +11,32 @@
 class QnstGraphicsEdge : public QnstGraphicsEntity
 {
 public:
-  QnstGraphicsEdge(QnstGraphicsEntity* parent = 0);
+  explicit QnstGraphicsEdge(QnstGraphicsEntity* parent = 0);
 
-  ~QnstGraphicsEdge();
+  virtual ~QnstGraphicsEdge();
 
   bool isInvalid();
-
   void setInvalid(bool invalid);
 
   QnstGraphicsEntity* getEntityA() const;
-
   void setEntityA(QnstGraphicsEntity* entity);
-
-  QnstGraphicsEntity* getEntityB() const;
-
-  void setEntityB(QnstGraphicsEntity* entity);
-
   bool isEntityAEnabled() const;
-
   void setEntityAEnabled(bool enable);
 
+  QnstGraphicsEntity* getEntityB() const;
+  void setEntityB(QnstGraphicsEntity* entity);
   bool isEntityBEnabled() const;
-
   void setEntityBEnabled(bool enable);
 
   virtual void adjust(bool avoidCollision = false);
-
   void aux_adjust(QPointF pointa, QPointF pointb);
 
   QPointF arcPointAt(QLineF line, qreal at, bool toend = true);
 
   qreal getAngle();
-
   void setAngle(qreal angle);
 
   qreal getAdjAngle();
-
   void setAdjAngle(qreal adjangle);
 
 protected:
@@ -62,15 +52,12 @@ private:
   bool invalid;
 
   qreal angle;
-
   qreal adjustedangle;
 
   bool entityaenabled;
-
   bool entitybenabled;
 
   QnstGraphicsEntity* entitya;
-
   QnstGraphicsEntity* entityb;
 };
 

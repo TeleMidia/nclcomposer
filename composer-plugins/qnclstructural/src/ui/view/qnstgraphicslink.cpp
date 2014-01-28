@@ -127,7 +127,7 @@ void QnstGraphicsLink::removeAction(QnstGraphicsBind* action)
 {
   if (action != NULL)
   {
-    actions.remove(action->getnstUid());
+    actions.remove ( action->getnstUid() );
     action->setLink(NULL);
   }
 }
