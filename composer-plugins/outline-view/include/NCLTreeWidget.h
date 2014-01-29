@@ -31,6 +31,12 @@ using namespace std;
 #include <QKeyEvent>
 #include <QWheelEvent>
 
+#define KEEP_ELEMENTS_ORDER 1
+
+#ifdef KEEP_ELEMENTS_ORDER
+#include <QVector>
+#endif
+
 #include "NCLParser.h"
 
 /*!
@@ -43,6 +49,10 @@ class NCLTreeWidget: public QTreeWidget {
   Q_OBJECT
 
 private:
+#ifdef KEEP_ELEMENTS_ORDER
+  static QVector <QString> entitiesOrder;
+#endif
+
   QAction *insertNodeAct; /**< TODO */
   QAction *removeNodeAct; /**< TODO */
   QAction *expandAllAct; /**< TODO */

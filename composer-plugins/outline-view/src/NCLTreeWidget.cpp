@@ -146,9 +146,52 @@ QTreeWidgetItem* NCLTreeWidget::addElement ( QTreeWidgetItem *father,
   if(father != 0)
   {
     child = new QTreeWidgetItem(0);
+
+    // Need to find where to insert the child
+    int pos_found = false;
     int p = pos;
-    if(pos == -1)
+
+#ifdef KEEP_ELEMENTS_ORDER
+    deque <QString> *elements_ordered = NCLStructure::getInstance()->getElementsOrdered();
+    if(father->childCount())
+    {
+      int i = 0;
+      p = 0;
+      while (!pos_found)
+      {
+        qDebug() << p << i << father->childCount();
+        while ((elements_ordered->at(i) != tagname)
+               &&
+               (elements_ordered->at(i) != father->child(p)->text(4)))
+        {
+          i++;
+          qDebug() << i << elements_ordered->at(i) << p << father->child(p)->text(4) << father->childCount();
+        }
+
+        if(elements_ordered->at(i) == tagname)
+          pos_found = true;
+
+
+        while( (p < father->childCount())
+               &&
+               (elements_ordered->at(i) == father->child(p)->text(4)) )
+        {
+          p++;
+          qDebug() << p << i << father->childCount();
+        }
+
+        if( p == father->childCount() )
+          break;
+      }
+    }
+
+    if(!pos_found)
       p = father->childCount();
+
+#else
+    if (p == -1)
+      p = father->childCount();
+#endif
 
     father->insertChild(p, child);
   }
