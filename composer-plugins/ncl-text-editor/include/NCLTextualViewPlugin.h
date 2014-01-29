@@ -48,8 +48,10 @@ private:
                                             buffer with text and syntax coloring
                                             while the text content is
                                             synchronized to the core */
-  QMap <QString, int> startEntityOffset; /*!< TODO */
-  QMap <QString, int> endEntityOffset; /*!< TODO */
+
+  QMap <QString, int> startEntityOffset; /*!< Keep the offset of the startTag
+                                              element */
+  QMap <QString, int> endEntityOffset; /*!< Keep the offset of endTag offset */
 
   QShortcut *updateModelShortcut;
 

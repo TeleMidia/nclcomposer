@@ -231,11 +231,11 @@ void NCLTextualViewPlugin::onEntityAdded(QString pluginID, Entity *entity)
   int insertAtOffset = PROLOG.size();
   bool hasOpennedTag = false;
 
-  //get the line number where the new element must be inserted
+  // get the line number where the new element must be inserted
   if(entity->getParentUniqueId() != NULL &&
      entity->getParent()->getType() != "project")
   {
-    // Test if exists before access from operator[] becaus if doesn't exist
+    // Test if exists before access from operator[] because if doesn't exist
     // this operator will create a new (and we don't want this!).
     if(endEntityOffset.count(entity->getParentUniqueId()))
     {
@@ -856,7 +856,7 @@ bool NCLTextualViewPlugin::isStartEndTag(Entity *entity)
 
   if(curChar == '/')
   {
-    qDebug() << "isStartEndTag returns true";
+    // qDebug() << "isStartEndTag returns true";
     return true;
   }
   else return false;
