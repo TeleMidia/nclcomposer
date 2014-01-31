@@ -139,7 +139,7 @@ else {
     target.path = $$INSTALLBASE
 }
 
-INCLUDEPATH +=  include
+INCLUDEPATH +=  . src
 
 INCLUDEPATH   +=  ../composer-core/core/include \
                   ../composer-core
@@ -219,20 +219,21 @@ SOURCES += main.cpp \
 #   src/ComposerHelpWidget.cpp \
 #   src/ImportBasePreferences.cpp
 
-HEADERS += include/ComposerMainWindow.h \
-    include/PreferencesDialog.h \
-    include/PerspectiveManager.h \
-    include/PluginDetailsDialog.h \
-    include/EnvironmentPreferencesWidget.h \
-    include/IPreferencesPage.h \
-    include/WelcomeWidget.h \
-    include/AboutDialog.h \
-    include/RunGingaConfig.h \
-    include/GeneralPreferences.h \
-    include/NewProjectWizard.h \
-    include/FileChooser.h \
-    include/ClickableDockWidget.h \
-    include/ComposerSplashScreen.h
+HEADERS += src/ComposerMainWindow.h \
+    src/PreferencesDialog.h \
+    src/PerspectiveManager.h \
+    src/PluginDetailsDialog.h \
+    src/EnvironmentPreferencesWidget.h \
+    src/IPreferencesPage.h \
+    src/WelcomeWidget.h \
+    src/AboutDialog.h \
+    src/RunGingaConfig.h \
+    src/GeneralPreferences.h \
+    src/NewProjectWizard.h \
+    src/FileChooser.h \
+    src/ClickableDockWidget.h \
+    src/ComposerSplashScreen.h
+
 #   include/ComposerHelpWidget.h \
 #   include/ImportBasePreferences.h
 
