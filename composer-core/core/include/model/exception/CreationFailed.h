@@ -20,29 +20,33 @@ namespace composer{
         namespace util {
 
 /*!
- \brief Exception to inform that the creation of an element failed.
-*/
+ * \brief Exception to inform that the creation of an element failed.
+ */
 class CreationFailed : public exception
 {
-    private:
-        QString element; /*!< TODO */
-        QString id; /*!< TODO */
-    public:
-        /*!
-         \brief
+public:
+  /*!
+   * \brief
+   *
+   * \param _element
+   * \param _id
+   */
+  CreationFailed(QString _element, QString _id) : element(_element), id(_id) { }
+  ~CreationFailed() throw() { }
 
-         \param _element
-         \param _id
-        */
-        CreationFailed(QString _element, QString _id) :
-                element(_element), id(_id) {}
-        ~CreationFailed() throw() {}
-        const char* what() const throw() {
-            QString ret = "Entity (" + element + ") with id (" + id + ") could "
-            + "not be created!";
-            return ret.toStdString().c_str();
-        }
+  const char* what() const throw()
+  {
+    QString ret = "Entity (" + element + ") with id (" + id + ") could "
+        + "not be created!";
+
+    return ret.toStdString().c_str();
+  }
+
+private:
+  QString element; /*!< TODO */
+  QString id; /*!< TODO */
 };
-}}}
+
+} } } // end namespace
 
 #endif // CREATIONFAILED_H

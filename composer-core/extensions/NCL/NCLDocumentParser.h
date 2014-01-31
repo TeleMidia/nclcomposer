@@ -23,49 +23,51 @@
 using namespace composer::extension;
 
 namespace composer {
-    namespace language{
+  namespace language {
 
 class NCLLANGUAGEPROFILESHARED_EXPORT NCLDocumentParser :
-        public IDocumentParser, public QXmlDefaultHandler
+    public IDocumentParser,
+    public QXmlDefaultHandler
 {
-    Q_OBJECT
-private:
-    Project *project;
-    QMutex lockStack;
-    QWaitCondition sync;
-    QStack<Entity*> elementStack;
+  Q_OBJECT
 
 public:
-    explicit NCLDocumentParser(Project *project);
-    ~NCLDocumentParser();
-    bool parseDocument(); // \deprecated
-    bool parseContent(const QString &str);
-    QString getParserName();
+  explicit NCLDocumentParser(Project *project);
+  ~NCLDocumentParser();
 
-    bool serialize();
+  bool parseDocument(); // \deprecated
+  bool parseContent(const QString &str);
+  QString getParserName();
 
-protected:
-    bool startElement(const QString &namespaceURI,
-                      const QString &localName,
-                      const QString &qName,
-                      const QXmlAttributes &attributes);
-    bool endElement(const QString &namespaceURI,
-                    const QString &localName,
-                    const QString &qName);
-
-    bool characters(const QString &str);
-    bool fatalError(const QXmlParseException &exception);
-
-    bool endDocument();
-
-signals:
-    void parseFinished();
+  bool serialize();
 
 public slots:
     void onEntityAddError(QString error);
     void onEntityAdded(QString ID, Entity *entity);
 
+signals:
+    void parseFinished();
+
+protected:
+  bool startElement( const QString &namespaceURI,
+                     const QString &localName,
+                     const QString &qName,
+                     const QXmlAttributes &attributes );
+  bool endElement( const QString &namespaceURI,
+                   const QString &localName,
+                   const QString &qName );
+
+  bool characters(const QString &str);
+  bool fatalError(const QXmlParseException &exception);
+
+  bool endDocument();
+
+private:
+  Project *project;
+  QMutex lockStack;
+  QWaitCondition sync;
+  QStack<Entity*> elementStack;
 };
 
-}} //end namespace
+} } //end namespace
 #endif // NCLDOCUMENTPARSER_H

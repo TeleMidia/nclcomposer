@@ -183,9 +183,11 @@ void MessageControl::onAddEntity( QString type, QString parentEntityId,
 void MessageControl::onEditEntity(Entity *entity, QMap<QString,QString> atts,
                                   bool force)
 {
-  IPlugin *plugin = qobject_cast<IPlugin *>(QObject::sender());
+  assert (entity != NULL);
 
-  if(plugin) {
+  IPlugin *plugin = qobject_cast<IPlugin *>(QObject::sender());
+  if(plugin)
+  {
     QString pluginID = plugin->getPluginInstanceID();
 
     try
@@ -203,7 +205,9 @@ void MessageControl::onEditEntity(Entity *entity, QMap<QString,QString> atts,
       plugin->errorMessage(e.what());
       return;
     }
-  } else {
+  }
+  else
+  {
     //TODO -- erro on casting
     return;
   }

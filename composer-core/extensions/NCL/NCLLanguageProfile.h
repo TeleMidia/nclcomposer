@@ -18,9 +18,10 @@ using namespace composer::extension;
 namespace composer {
 namespace language {
 
-class NCLLANGUAGEPROFILESHARED_EXPORT NCLLanguageProfile : public QObject,
-    public ILanguageProfile {
-
+class NCLLANGUAGEPROFILESHARED_EXPORT NCLLanguageProfile :
+    public QObject,
+    public ILanguageProfile
+{
   Q_OBJECT
   Q_INTERFACES(ILanguageProfile)
 
@@ -44,7 +45,7 @@ public:
   map <QString, char> *getChildren (QString tagname);
 
   vector <AttributeReferences *> getReferences(QString element, QString attr);
-
 };
+
 } } //end namespace
 #endif // NCLLANGUAGEPROFILE_H

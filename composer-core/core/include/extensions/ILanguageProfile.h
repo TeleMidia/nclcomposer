@@ -28,43 +28,37 @@ using namespace composer::core::model;
 using namespace composer::util;
 
 namespace composer {
-    namespace extension {
+  namespace extension {
 /**!
   * This class must be implemented by anyone that want to support
   * a new language in Composer.
   */
-class COMPOSERCORESHARED_EXPORT ILanguageProfile {
+class COMPOSERCORESHARED_EXPORT ILanguageProfile
+{
 public:
-    virtual ~ILanguageProfile() {}
+  virtual ~ILanguageProfile() {}
 
-    virtual LanguageType
-            getLanguageType()  = 0;
+  virtual LanguageType getLanguageType()  = 0;
 
-    virtual QString
-            getProfileName() = 0;
+  virtual QString getProfileName() = 0;
 
-    virtual QList<QString>
-            getOutputDocumentTypes() = 0;
+  virtual QList<QString> getOutputDocumentTypes() = 0;
 
-    virtual IDocumentParser*
-            createParser(Project *project) = 0;
+  virtual IDocumentParser* createParser(Project *project) = 0;
 
-    virtual void releaseDocumentParser
-            (IDocumentParser *parser) = 0;
+  virtual void releaseDocumentParser (IDocumentParser *parser) = 0;
 
-    //FUNCTIONS RELATED TO LANGUAGE STRUCTURE
-    virtual map <QString, map <QString, char> *>
-            *getNesting() = 0;
+  //FUNCTIONS RELATED TO LANGUAGE STRUCTURE
+  virtual map <QString, map <QString, char> *> *getNesting() = 0;
 
-    virtual map <QString, bool>
-            *getAttributes (QString element) = 0;
+  virtual map <QString, bool> *getAttributes (QString element) = 0;
 
-    virtual map <QString, char>
-            *getChildren (QString tagname) = 0;
+  virtual map <QString, char> *getChildren (QString tagname) = 0;
 
-    virtual vector <AttributeReferences *>
-            getReferences (QString element, QString attr) = 0;
+  virtual vector <AttributeReferences *>
+    getReferences (QString element, QString attr) = 0;
 };
+
 } } //end namespace
 
 

@@ -26,31 +26,36 @@ namespace composer{
 */
 class EntityNotFound : public exception
 {
-    private:
-        QString element; /*!< TODO */
-        QString id; /*!< TODO */
-    public:
-        /*!
-         \brief Contructor.
+public:
+  /*!
+   \brief Contructor.
 
-         \param _element
-         \param _id
-        */
-        EntityNotFound(QString _element, QString _id) :
-                element(_element), id(_id) {}
-        /*!
-            \brief Destructor.
-        */
-        ~EntityNotFound() throw() {}
+   \param _element
+   \param _id
+  */
+  EntityNotFound(const QString &element, const QString &id) :
+    _element(element), _id(id)
+  {
 
-        /*!
-          \brief return a description of what the exception represents.
-        */
-        const char* what() const throw() {
-            QString ret = "Entity (" + element + ") with id (" + id + ") not \
-                            found!";
-            return ret.toStdString().c_str();
-        }
+  }
+
+  /*!
+      \brief Destructor.
+  */
+  ~EntityNotFound() throw() {}
+
+  /*!
+    \brief return a description of what the exception represents.
+  */
+  const char* what() const throw()
+  {
+    QString ret = "Entity (" + _element + ") with id (" + _id + ") not found!";
+    return ret.toStdString().c_str();
+  }
+
+private:
+  QString _element; /*!< TODO */
+  QString _id; /*!< TODO */
 };
 
 }}}

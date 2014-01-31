@@ -37,8 +37,8 @@ namespace core {
 } } //end namespace
 
 namespace composer {
-    namespace core {
-        namespace model {
+  namespace core {
+    namespace model {
 /*!
  * \brief An Entity is the main class of the internal Composer core.
  *
@@ -58,28 +58,60 @@ class COMPOSERCORESHARED_EXPORT Entity : public QObject
   friend class composer::core::util::AddCommand;
   friend class composer::core::util::RemoveCommand;
 
-private:
-  QMutex lockAtts;
-  QMutex lockID;
-  QMutex lockType;
-  QMutex lockChildren;
-  QMutex lockParent;
-  QString _id;
-  QString type;
-  Entity* parent;
-  bool deleteChildren; /* initial value is true */
+public:
+  /*!
+   * \brief This method is used to get an specific attribute of the element.
+   *
+   * \param name - The name of the attribute been requested
+   * \return A string with the requested attribute.
+   */
+  QString getAttribute(QString name); // \todo This must be const &
+  /*!
+   * This method is used to get the iterator in the <map> of attributes.
+   *
+   * \param begin - a reference to be filled with the begin of the map.
+   * \param end - a reference to be filled with the end of the map.
+   */
+  void getAttributeIterator (QMap<QString,QString>::iterator &begin,
+                             QMap<QString,QString>::iterator &end);
+  /*!
+   * \brief This method is used to verify if this element has certain
+   *      attribute.
+   *
+   * \param name - The name of the attribute to be verified.
+   * \return an boolean depending of the existence of the attribute.
+  */
+  bool hasAttribute(const QString &name);
+
+  QString getUniqueId();
+
+  QString getType();
+
+  Entity* getParent();
+
+  QString getParentUniqueId();
+  /*!
+   * \brief Tell if the children should be deleted when this entity is deleted
+   *          through destructor.
+   *
+   * \param mustDelete tell if the children also must be deleted.
+   */
+  void setDeleteChildren(bool mustDelete);
+
+  QVector <Entity *> getChildren();
+  /*!
+   * \brief Convert the current Entity to a XML String.
+   *
+   * \param ntabs the number of tabs to be inserted before the current entity.
+   */
+  QString toString(int ntabs, bool writeuid = true);
 
   /*!
-   * \brief children is a list of Entity that is children than this Entity.
+   * \brief Creates a clone of the current entity.
+   *
+   * All the content of the entity will be cloned, including its uniqueId.
    */
-  QVector <Entity*> children;
-
-  /*!
-   * \brief This <map> represents the attributes of the element
-   *   the Key is the name of the attribute and Value is the value of that
-   *   attribute.
-   */
-  QMap<QString, QString> atts;
+  Entity *cloneEntity();
 
 protected:
   /*!
@@ -171,60 +203,28 @@ protected:
    */
   void print();
 
-public:
+private:
+  QMutex lockAtts;
+  QMutex lockID;
+  QMutex lockType;
+  QMutex lockChildren;
+  QMutex lockParent;
+  QString _id;
+  QString type;
+  Entity* parent;
+  bool deleteChildren; /* initial value is true */
+
   /*!
-   * \brief This method is used to get an specific attribute of the element.
-   *
-   * \param name - The name of the attribute been requested
-   * \return A string with the requested attribute.
+   * \brief children is a list of Entity that is children than this Entity.
    */
-  QString getAttribute(QString name); // \todo This must be const &
+  QVector <Entity*> children;
+
   /*!
-   * This method is used to get the iterator in the <map> of attributes.
-   *
-   * \param begin - a reference to be filled with the begin of the map.
-   * \param end - a reference to be filled with the end of the map.
+   * \brief This <map> represents the attributes of the element
+   *   the Key is the name of the attribute and Value is the value of that
+   *   attribute.
    */
-  void getAttributeIterator (QMap<QString,QString>::iterator &begin,
-                             QMap<QString,QString>::iterator &end);
-  /*!
-   * \brief This method is used to verify if this element has certain
-   *      attribute.
-   *
-   * \param name - The name of the attribute to be verified.
-   * \return an boolean depending of the existence of the attribute.
-  */
-  bool hasAttribute(const QString &name);
-
-  QString getUniqueId();
-
-  QString getType();
-
-  Entity* getParent();
-
-  QString getParentUniqueId();
-  /*!
-   * \brief Tell if the children should be deleted when this entity is deleted
-   *          through destructor.
-   *
-   * \param mustDelete tell if the children also must be deleted.
-   */
-  void setDeleteChildren(bool mustDelete);
-
-  QVector <Entity *> getChildren();
-  /*!
-   * \brief Convert the current Entity to a XML String.
-   *
-   * \param ntabs the number of tabs to be inserted before the current entity.
-   */
-  QString toString(int ntabs, bool writeuid = true);
-
-  /*!
-   * \brief Creates a clone of the current entity.
-   *
-   * All the content of the entity will be cloned, including its uniqueId.
-   */
-  Entity *cloneEntity();
+  QMap<QString, QString> atts;
 };
 
 } } } //end namespace

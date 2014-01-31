@@ -25,73 +25,70 @@ using namespace composer::extension;
 using namespace composer::core::util;
 
 namespace composer {
-    namespace core {
-
+  namespace core {
 
 /*!
- \brief Manages the installed language profiles (though ILanguageProfile
-    interface).
-*/
+ * \brief Manages the installed language profiles (though ILanguageProfile
+ *  interface).
+ */
 class COMPOSERCORESHARED_EXPORT LanguageControl : public QObject
 {
-    Q_OBJECT
-    SINGLETON(LanguageControl)
+  Q_OBJECT
+  SINGLETON(LanguageControl) // Constructor wil be private
+
+public:
+  /*!
+   * \brief Load all the profiles from a specific directory.
+   *
+   * \param profilesDirPath the directory path from where the profiles must be
+   * loaded.
+   */
+  void loadProfiles(QString profilesDirPath);
+
+  /*!
+   * \brief Load a language profile from a specific fileName.
+   *
+   * \param fileName th
+   */
+  ILanguageProfile* loadProfile(QString fileName);
+
+  /*!
+   * \brief
+   * \param type
+   */
+  ILanguageProfile* getProfileFromType(LanguageType type);
+
+  /*!
+   * \brief
+   * \param type
+   */
+  bool removeProfile(LanguageType type);
+
+  /*!
+   * \brief
+   */
+  QList<ILanguageProfile*> getLoadedProfiles();
+
+signals:
+  /*!
+   * \brief
+   *
+   * \param QString
+   */
+  void notifyError(QString);
 
 private:
-    /*!
-     \brief Constructor (it is private because this class is a Singleton).
-    */
-    LanguageControl();
-    /*!
-     \brief Destructor (it is private because this class is a Singleton).
-    */
-    ~LanguageControl();
+  /*!
+   * \brief Constructor (it is private because this class is a Singleton).
+   */
+  LanguageControl();
 
-    QMap<LanguageType, ILanguageProfile*> profiles; /*!< TODO */
-public:
-    /*!
-     \brief Load all the profiles from a specific directory.
+  /*!
+   * \brief Destructor (it is private because this class is a Singleton).
+   */
+  ~LanguageControl();
 
-     \param profilesDirPath the directory path from where the profiles must be
-        loaded.
-    */
-    void loadProfiles(QString profilesDirPath);
-
-    /*!
-     \brief Load a language profile from a specific fileName.
-
-     \param fileName th
-    */
-    ILanguageProfile* loadProfile(QString fileName);
-
-    /*!
-     \brief
-
-     \param type
-    */
-    ILanguageProfile* getProfileFromType(LanguageType type);
-
-    /*!
-     \brief
-
-     \param type
-    */
-    bool removeProfile(LanguageType type);
-
-    /*!
-     \brief
-
-    */
-    QList<ILanguageProfile*> getLoadedProfiles();
-signals:
-    /*!
-     \brief
-
-     \param QString
-    */
-    void notifyError(QString);
-            public slots:
-
+  QMap<LanguageType, ILanguageProfile*> profiles; /*!< TODO */
 };
 
 } } //end namespace

@@ -30,7 +30,7 @@ using namespace composer::core::model;
 using namespace composer::extension;
 
 namespace composer {
-namespace core {
+  namespace core {
 
 /*!
  \brief Manages the messages sent from plugins to NCL Composer Core and
@@ -39,12 +39,6 @@ namespace core {
 class COMPOSERCORESHARED_EXPORT MessageControl : public QObject
 {
   Q_OBJECT
-
-private:
-  Project *project; /*!< TODO */
-  QMap <QString, QStringList> listenEntities;
-  QUndoStack *qUndoStack;
-  /*!< pluginInstanceId to list of entity this plugin is */
 
 public:
   /*!
@@ -58,29 +52,6 @@ public:
    */
   ~MessageControl();
 
-private:
-  /*!
-   * \brief TODO
-   */
-  void sendEntityAddedMessageToPlugins( QString pluginInstanceId,
-                                        Entity *entity);
-  /*!
-   * \brief TODO
-   */
-  void sendEntityChangedMessageToPlugins( QString pluginInstanceId,
-                                          Entity *entity);
-  /*!
-   * \brief TODO
-   */
-  void sendEntityRemovedMessageToPlugins( QString pluginInstanceId,
-                                          Entity *entity);
-
-
-  /*!
-   * \brief TODO
-   */
-  bool pluginIsInterestedIn(IPlugin *plugin, Entity *entity);
-
 public slots:
   /*!
      \brief
@@ -93,7 +64,7 @@ public slots:
   void onAddEntity( QString type,
                     QString parentEntityId,
                     QMap<QString,QString>& atts,
-                    bool force);
+                    bool force );
   /*!
      \brief
 
@@ -175,6 +146,32 @@ public slots:
 signals:
   void entityAdded(QString, Entity*);
 
+
+private:
+  Project *project; /*!< TODO */
+  QMap <QString, QStringList> listenEntities;
+  QUndoStack *qUndoStack;
+
+  /*!
+   * \brief TODO
+   */
+  void sendEntityAddedMessageToPlugins( QString pluginInstanceId,
+                                        Entity *entity );
+  /*!
+   * \brief TODO
+   */
+  void sendEntityChangedMessageToPlugins( QString pluginInstanceId,
+                                          Entity *entity );
+  /*!
+   * \brief TODO
+   */
+  void sendEntityRemovedMessageToPlugins( QString pluginInstanceId,
+                                          Entity *entity );
+
+  /*!
+   * \brief TODO
+   */
+  bool pluginIsInterestedIn(IPlugin *plugin, Entity *entity);
 };
 } } //end namespace
 #endif // MESSAGECONTROL_H

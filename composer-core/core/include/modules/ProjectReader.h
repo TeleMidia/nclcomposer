@@ -27,40 +27,38 @@ using namespace composer::core::model;
 #include <QFile>
 
 namespace composer {
-    namespace core {
+  namespace core {
 /*!
  * \brief The class responsible to parse the Composer Project and generate fills
- *   the data of a Project object.
- *
- *
+ *  the data of a Project object.
  */
 class COMPOSERCORESHARED_EXPORT ProjectReader: public QXmlDefaultHandler
 {
 public:
-    ProjectReader();
-    virtual ~ProjectReader();
+  ProjectReader();
+  virtual ~ProjectReader();
 
-    Project *readFile(QString location);
-
-private:
-    Project *project;
-    Entity *currentEntity;
-    QMutex lockStack;
-    QWaitCondition sync;
-    QStack<Entity*> elementStack;
-
-    bool parseModelString(const QString &str);
+  Project *readFile(QString location);
 
 protected:
-    bool startElement(const QString &namespaceURI,
-                      const QString &localName,
-                      const QString &qName,
-                      const QXmlAttributes &attributes);
-    bool endElement(const QString &namespaceURI,
+  bool startElement(const QString &namespaceURI,
                     const QString &localName,
-                    const QString &qName);
-    bool characters(const QString &str);
-    bool fatalError(const QXmlParseException &exception);
+                    const QString &qName,
+                    const QXmlAttributes &attributes);
+  bool endElement(const QString &namespaceURI,
+                  const QString &localName,
+                  const QString &qName);
+  bool characters(const QString &str);
+  bool fatalError(const QXmlParseException &exception);
+
+private:
+  Project *project;
+  Entity *currentEntity;
+  QMutex lockStack;
+  QWaitCondition sync;
+  QStack<Entity*> elementStack;
+
+  bool parseModelString(const QString &str);
 };
 
 } } //end namespace

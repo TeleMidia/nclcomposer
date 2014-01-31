@@ -25,34 +25,38 @@ namespace composer{
 */
 class ParentNotFound : public exception
 {
-    private:
-        QString element; /*!< TODO */
-        QString parent; /*!< TODO */
-        QString id; /*!< TODO */
-    public:
-        /*!
-         \brief Constructor
+public:
+  /*!
+   * \brief Constructor
+   *
+   * \param element
+   * \param parent
+   * \param id
+   */
+  ParentNotFound( const QString &element, const QString &parent,
+                  const QString &id ) :
+    _element(element), _parent(parent), _id(id) {}
 
-         \param _element
-         \param _parent
-         \param _id
-        */
-        ParentNotFound(QString _element, QString _parent ,QString _id) :
-                element(_element), parent(_parent), id(_id) {}
+  /*!
+   * \brief Descriptor
+   */
+  ~ParentNotFound() throw() {}
 
-        /*!
-          \brief Descriptor
-        */
-        ~ParentNotFound() throw() {}
+  /*!
+   * \brief return a description of what the exception represents.
+   */
+  const char* what() const throw()
+  {
+    QString ret = "Entity (" + _parent + ") parent of " + _element + "(" + _id
+        + ") could not be found!";
+    return ret.toStdString().c_str();
+  }
 
-        /*!
-          \brief return a description of what the exception represents.
-        */
-        const char* what() const throw() {
-            QString ret = "Entity (" + parent + ") parent of "
-                          + element + "(" + id + ") could not be found!";
-            return ret.toStdString().c_str();
-        }
+private:
+  QString _element; /*!< TODO */
+  QString _parent; /*!< TODO */
+  QString _id; /*!< TODO */
 };
-}}}
+
+} } }
 #endif // PARENTNOTFOUND_H

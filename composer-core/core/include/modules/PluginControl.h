@@ -39,160 +39,176 @@ using namespace composer::core::util;
 using namespace composer::extension;
 
 namespace composer {
-    namespace core {
+  namespace core {
 
 /*!
- \brief Manages the NCL Composer plugins.
-
- It is part of the PluginControl responsability:
-    - Find the installed plugins in the system.
-    - Load the installed plugins.
-    - And connect each plugin with its respective message controllers.
-*/
+ * \brief Manages the NCL Composer plugins.
+ *
+ * It is part of the PluginControl responsability:
+ *  - Find the installed plugins in the system.
+ *  - Load the installed plugins.
+ *  - And connect each plugin with its respective message controllers.
+ */
 class COMPOSERCORESHARED_EXPORT PluginControl : public QObject
 {
-    Q_OBJECT
-    SINGLETON(PluginControl)
-
-private:
-    /*!
-     \brief Constructor.
-    */
-    explicit PluginControl();
-    /*!
-     \brief Constructor.
-    */
-    virtual ~PluginControl();
-    QHash <QString, IPluginFactory*> pluginFactories;
-    /*!< PluginFactory by pluginID */
-    QMultiHash <LanguageType, QString> pluginsByType;
-    /*!< pluginID given LanguageType */
-
-    /* TC by DocumentID */
-    /* Is this right??
-       And when we have plugins that are not related to documents???
-    */
-    QHash <Project *, MessageControl*> messageControls; /*!< TODO */
-
-    QMultiHash<Project *, IPlugin*> pluginInstances;
-    /*!< Plugin Instance given project location */
-
-    QMultiHash<IPlugin*, IPluginFactory*> factoryByPlugin;
-    /*!< Maps each IPlugin to its corresponding IPluginFactory */
-    /*!
-     \brief Launchs a new plugin and connect it with the given
-        MessageControl.
-
-     \param plugin the plugin instance that must be connected.
-     \param mControl
-    */
-    void launchNewPlugin(IPlugin *plugin, MessageControl *mControl);
+  Q_OBJECT
+  SINGLETON(PluginControl)
 
 public:
-    void launchNewPlugin(IPluginFactory *factory, Project *project);
-    /*!
-     \brief
 
-     \param pluginsDirPath
-    */
-    void loadPlugins(QString pluginsDirPath);
-    /*!
-     \brief
+  /*!
+   * \brief launchNewPlugin
+   *
+   * \param factory
+   * \param project
+   */
+  void launchNewPlugin(IPluginFactory *factory, Project *project);
 
-     \param fileName
-     \return IPluginFactory *
-    */
-    IPluginFactory* loadPlugin(QString fileName);
-    /*!
-     \brief
+  /*!
+   * \brief
+   *
+   * \param pluginsDirPath
+   */
+  void loadPlugins(QString pluginsDirPath);
 
-     \return QList<IPluginFactory *>
-    */
-    QList<IPluginFactory*> getLoadedPlugins();
-    /*!
-     \brief
+  /*!
+   * \brief
+   *
+   * \param fileName
+   * \return IPluginFactory *
+   */
+  IPluginFactory* loadPlugin(QString fileName);
 
-     \param doc
-     \return bool
-    */
-    bool releasePlugins(Project *doc);
-    /*!
-      \brief TODO
+  /*!
+   * \brief
+   * \return QList<IPluginFactory *>
+   */
+  QList<IPluginFactory*> getLoadedPlugins();
 
-      \param
-      \return
-     */
-    MessageControl *getMessageControl(Project *project);
-    /*!
-     \brief
+  /*!
+   * \brief
+   *
+   * \param doc
+   * \return bool
+   */
+  bool releasePlugins(Project *doc);
 
-     \param parser
-     \param mControl
-    */
-    void connectParser(IDocumentParser *parser, MessageControl *mControl);
+  /*!
+   * \brief TODO
+   *
+   * \param
+   * \return
+   */
+  MessageControl *getMessageControl(Project *project);
 
+  /*!
+   * \brief
+   *
+   * \param parser
+   * \param mControl
+   */
+  void connectParser(IDocumentParser *parser, MessageControl *mControl);
 
-    /*!
-     * \brief
-     */
-    QList <IPlugin*> getPluginInstances(Project *project);
-    /* Should be private? */
+  /*!
+   * \brief
+   */
+  QList <IPlugin*> getPluginInstances(Project *project);
+  /* Should be private? */
 
 public slots:
-    /*!
-     \brief
+  /*!
+   * \brief
+   *
+   * \param doc
+   */
+  void launchProject(Project *doc);
 
-     \param doc
-    */
-    void launchProject(Project *doc);
-    /*!
-     \brief
-
-     \param location
-    */
-    void savePluginsData(Project* project);
-
-private slots:
-    /*!
-     \brief
-
-     \param slot
-     \param payload
-    */
-    void sendBroadcastMessage(const char *slot, void *payload);
+  /*!
+   * \brief
+   *
+   * \param location
+   */
+  void savePluginsData(Project* project);
 
 signals:
-    /*!
-     \brief
+  /*!
+   * \brief
+   *
+   * \param documentdId
+   * \param location
+   */
+  void newProjectLaunchedAndCreated(QString documentdId, QString location);
 
-     \param documentdId
-     \param location
-    */
-    void newProjectLaunchedAndCreated(QString documentdId, QString location);
-    /*!
-     \brief
+  /*!
+   * \brief
+   *
+   * \param QString
+   */
+  void notifyError(QString);
 
-     \param QString
-    */
-    void notifyError(QString);
-    /*!
-     \brief
+  /*!
+   * \brief addPluginWidgetToWindow
+   *
+   * \param pluginFactory
+   * \param plugin
+   * \param documentId
+   */
+  void addPluginWidgetToWindow( IPluginFactory *pluginFactory, IPlugin *plugin,
+                                QString documentId );
+  /*!
+   * \brief addPluginWidgetToWindow
+   *
+   * \param pluginFactory
+   * \param plugin
+   * \param project
+   * \param n
+   */
+  void addPluginWidgetToWindow( IPluginFactory *pluginFactory, IPlugin *plugin,
+                                Project* project, int n );
 
-     \param
-     \param
-     \param documentId
-    */
-    void addPluginWidgetToWindow(IPluginFactory*, IPlugin*, QString documentId);
-    /*!
-     \brief
+private:
+  /*!
+   * \brief Constructor.
+   */
+  explicit PluginControl();
+  /*!
+   * \brief Constructor.
+   */
+  virtual ~PluginControl();
 
-     \param
-     \param
-     \param
-     \param n
-    */
-    void addPluginWidgetToWindow(IPluginFactory*, IPlugin*, Project*, int n);
+  QHash <QString, IPluginFactory*> pluginFactories;
+  /*!< PluginFactory by pluginID */
 
+  QMultiHash <LanguageType, QString> pluginsByType;
+  /*!< pluginID given LanguageType */
+
+  /* TC by DocumentID */
+  /* Is this right??
+   * And when we have plugins that are not related to documents???
+   */
+  QHash <Project *, MessageControl*> messageControls; /*!< TODO */
+
+  QMultiHash<Project *, IPlugin*> pluginInstances;
+  /*!< Plugin Instance given project location */
+
+  QMultiHash<IPlugin*, IPluginFactory*> factoryByPlugin;
+  /*!< Maps each IPlugin to its corresponding IPluginFactory */
+  /*!
+   * \brief Launchs a new plugin and connect it with the given MessageControl.
+   *
+   * \param plugin the plugin instance that must be connected.
+   * \param mControl
+   */
+  void launchNewPlugin(IPlugin *plugin, MessageControl *mControl);
+
+private slots:
+  /*!
+   * \brief sendBroadcastMessage
+   *
+   * \param slot
+   * \param payload
+   */
+  void sendBroadcastMessage(const char *slot, void *payload);
 };
 
 } } //end namespace

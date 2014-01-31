@@ -31,64 +31,62 @@ typedef enum {
 } LanguageType;
 
 namespace composer {
-    namespace core {
-        namespace util {
-
+  namespace core {
+    namespace util {
 /*!
  \brief Groups useful functions.
 */
 class COMPOSERCORESHARED_EXPORT Utilities
 {
+public:
+  /*!
+   * \brief getLanguageTypeByExtension
+   * \param ext
+   * \return
+   */
+  static LanguageType getLanguageTypeByExtension(const QString &ext);
+
+  /*!
+   * \brief getExtensionForLanguageType
+   * \param type
+   * \return
+   */
+  static QString getExtensionForLanguageType(LanguageType type);
+
+  /*!
+   * \brief relativePath
+   * \param absolutePath
+   * \param relativeTo
+   * \param bIsFile
+   * \return
+   */
+  static QString relativePath( const QString &absolutePath,
+                               const QString &relativeTo,
+                               bool bIsFile = false );
+
+  /*!
+   * \brief getAbsolutePath
+   * \param path
+   * \param relativeTo
+   * \return
+   */
+  static QString absolutePath ( const QString &path,
+                                const QString &relativeTo );
+
+  /*!
+   * \brief getLastFileDialogPath
+   * \return
+   */
+  static QString getLastFileDialogPath();
+
+  /*!
+   * \brief updateLastFileDialogPath
+   * \param filepath
+   */
+  static void updateLastFileDialogPath( const QString &filepath );
 
 private:
-    static QMap<QString,LanguageType> types; /*!< TODO */
-
-public:
-    /*!
-     * \brief getLanguageTypeByExtension
-     * \param ext
-     * \return
-     */
-    static LanguageType getLanguageTypeByExtension(const QString &ext);
-
-    /*!
-     * \brief getExtensionForLanguageType
-     * \param type
-     * \return
-     */
-    static QString getExtensionForLanguageType(LanguageType type);
-
-    /*!
-     * \brief relativePath
-     * \param absolutePath
-     * \param relativeTo
-     * \param bIsFile
-     * \return
-     */
-    static QString relativePath( const QString &absolutePath,
-                                 const QString &relativeTo,
-                                 bool bIsFile = false );
-
-    /*!
-     * \brief getAbsolutePath
-     * \param path
-     * \param relativeTo
-     * \return
-     */
-    static QString absolutePath ( const QString &path,
-                                  const QString &relativeTo );
-
-    /*!
-     * \brief getLastFileDialogPath
-     * \return
-     */
-    static QString getLastFileDialogPath();
-
-    /*!
-     * \brief updateLastFileDialogPath
-     * \param filepath
-     */
-    static void updateLastFileDialogPath( const QString &filepath );
+  static QMap<QString,LanguageType> types; /*!< TODO */
 };
 
 } } } //end namespace

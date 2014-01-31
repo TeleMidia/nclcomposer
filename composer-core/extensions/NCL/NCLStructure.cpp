@@ -77,13 +77,15 @@ NCLStructure::~NCLStructure()
 // implementation.
 void NCLStructure::loadStructure(){
   QFile fInput ( NCLSTRUCTURE_FILE );
-  if(!fInput.open(QIODevice::ReadOnly)){
+  if(!fInput.open(QIODevice::ReadOnly))
+  {
     qErrnoWarning("Should not open the NCL_STRUCTURE file.");
     return;
   }
 
   QTextStream in (&fInput);
-  while(!in.atEnd()){
+  while(!in.atEnd())
+  {
     QString line = in.readLine();
     vector <QString> tokens = parseLine(line);
 
@@ -175,11 +177,15 @@ vector <QString> NCLStructure::parseLine(QString line)
   QString token;
   bool reading_attributes = false, readingstring = false;
 
-  while (i < line.size()) {
+  while (i < line.size())
+  {
     ch = line.at(i);
-    if(!readingstring){
-      if (ch == '/') {
-        if (i+1 < size && line[i+1] == '/') {
+    if(!readingstring)
+    {
+      if (ch == '/')
+      {
+        if (i+1 < size && line[i+1] == '/')
+        {
           // comment was found, it will ignore the remaining
           // caracteres in the line
           token = "//";
@@ -190,29 +196,34 @@ vector <QString> NCLStructure::parseLine(QString line)
       {
         readingstring = true;
       }
-      else if(ch == '(') {
+      else if(ch == '(')
+      {
         if(token != "")
           ret.push_back(token);
         token = "";
         reading_attributes = true;
       }
-      else if(ch == ',') {
+      else if(ch == ',')
+      {
         if(reading_attributes && token != "")
           ret.push_back(token);
         token = "";
       }
-      else if (ch == ')') {
+      else if (ch == ')')
+      {
         if(reading_attributes && token != "")
           ret.push_back(token);
         reading_attributes = false;
         token = "";
       }
-      else {
+      else
+      {
         if(!ch.isSpace())
           token.append(line.at(i));
       }
     }
-    else {
+    else
+    {
       if(ch == '\"')
         readingstring = false;
       else

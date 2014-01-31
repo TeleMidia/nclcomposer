@@ -17,16 +17,16 @@
 #include <QStack>
 
 namespace composer {
-    namespace core {
-        class PluginControl;
-        class MessageControl;
-        class ProjectControl;
-        class ProjectReader;
-        namespace util {
-          class EditCommand;
-          class AddCommand;
-          class DeleteCommand;
-        }
+  namespace core {
+    class PluginControl;
+    class MessageControl;
+    class ProjectControl;
+    class ProjectReader;
+    namespace util {
+      class EditCommand;
+      class AddCommand;
+      class DeleteCommand;
+    }
 } } //end namespace
 
 #include "../model/exception/ParentNotFound.h"
@@ -38,8 +38,8 @@ using namespace composer::core::util;
 using namespace composer::core::model;
 
 namespace composer {
-    namespace core {
-        namespace model {
+  namespace core {
+    namespace model {
 
 /*!
  * \brief A Project is a data structure that will keep all Entities and all
@@ -105,17 +105,8 @@ public:
 
   bool isDirty();
 
-private:
-  QMutex *lockEntities; /*!< TODO */
-  QMutex lockLocation; /*!< TODO */
-  QMap<QString, Entity*> entities; /*!< TODO */
-  QMap<QString, QByteArray> pluginData; /*!< TODO */
-
-  QString projectLocation; /*!< TODO */
-  QString projectName; /*!< TODO */
-  LanguageType projectType; /*!< TODO */
-
-  bool dirty;
+signals:
+  void dirtyProject(bool isDirty);
 
 protected:
   /*!
@@ -208,8 +199,7 @@ protected:
    *                    children are also deleted.
    * \return an boolean depending on the success
    */
-  bool removeEntity(Entity* entity, bool appendChild)
-  throw (EntityNotFound);
+  bool removeEntity(Entity* entity, bool appendChild) throw (EntityNotFound);
 
   /*!
    * \brief Transforms the current project to a string. This string will contain
@@ -223,8 +213,17 @@ protected:
    */
   void setDirty(bool isDirty);
 
-signals:
-  void dirtyProject(bool isDirty);
+private:
+  QMutex *lockEntities; /*!< TODO */
+  QMutex lockLocation; /*!< TODO */
+  QMap<QString, Entity*> entities; /*!< TODO */
+  QMap<QString, QByteArray> pluginData; /*!< TODO */
+
+  QString projectLocation; /*!< TODO */
+  QString projectName; /*!< TODO */
+  LanguageType projectType; /*!< TODO */
+
+  bool dirty;
 };
 
 } } } //end namespace

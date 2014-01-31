@@ -31,112 +31,120 @@ using namespace composer::core::model;
 using namespace composer::core::util;
 
 namespace composer {
-    namespace core {
-
-
+  namespace core {
 /*!
  \brief Manages all the open Projects.
 */
 class COMPOSERCORESHARED_EXPORT ProjectControl : public QObject
 {
-    Q_OBJECT
-    SINGLETON(ProjectControl)
-
-private:
-    /*!
-     \brief Constructor.
-    */
-    ProjectControl();
-    /*!
-     \brief Destructor.
-    */
-    ~ProjectControl();
-
-    QMap<QString, Project*> openProjects; /*!< A map that keeps all the open
-                                               projects. */
+  Q_OBJECT
+  SINGLETON(ProjectControl)
 
 public:
-    /*!
-     \brief
+  /*!
+   * \brief getOpenProject
+   *
+   * \param location
+   * \return
+   */
+  Project *getOpenProject(QString location);
 
-     \param location
-    */
-    Project *getOpenProject(QString location);
+public slots:
+  /*!
+   * \brief closeProject
+   * \param location
+   * \return
+   */
+  bool closeProject(QString location);
 
- public slots:
-    /*!
-     \brief
+  /*!
+   * \brief saveProject
+   * \param location
+   */
+  void saveProject(QString location);
 
-     \param location
-    */
-    bool closeProject(QString location);
-    /*!
-     \brief
+  /*!
+   * \brief moveProject
+   *
+   * \param location
+   * \param dest
+   * \param saveDesc
+   */
+  void moveProject(QString location, QString dest, bool saveDesc = false);
 
-     \param location
-    */
-    void saveProject(QString location);
-    /*!
-     \brief
+  /*!
+   * \brief saveTemporaryProject
+   *
+   * \param location
+   */
+  void saveTemporaryProject(QString location);
 
-     \param location
-    */
-    void moveProject(QString location, QString dest, bool saveDesc = false);
-    /*!
-     \brief
+  /*!
+   * \brief launchProject
+   *
+   * \param location
+   * \return
+   */
+  bool launchProject(QString location);
 
-     \param location
-    */
-    void saveTemporaryProject(QString location);
-    /*!
-     \brief
 
-     \param location
-    */
-    bool launchProject(QString location);
-
-    /*!
-     \brief
-
-     \param docLocation
-     \param projLocation
-    */
-    void importFromDocument(QString docLocation, QString projLocation);
-
-private slots:
-    void projectIsDirty(bool isDirty);
+  /*!
+   * \brief importFromDocument
+   *
+   * \param docLocation
+   * \param projLocation
+   */
+  void importFromDocument(QString docLocation, QString projLocation);
 
 signals:
-    /*!
-     \brief
+  /*!
+   * \brief startOpenProject
+   *
+   * \param document
+   */
+  void startOpenProject(QString document);
 
-     \param document
-    */
-    void startOpenProject(QString document);
-    /*!
-     \brief
+  /*!
+   * \brief endOpenProject
+   *
+   * \param document
+   */
+  void endOpenProject(QString document);
 
-     \param document
-    */
-    void endOpenProject(QString document);
-    /*!
-     \brief
+  /*!
+   * \brief projectAlreadyOpen
+   */
+  void projectAlreadyOpen(QString);
 
-     \param QString
-    */
-    void projectAlreadyOpen(QString);
-    /*!
-     \brief
+  /*!
+   * \brief notifyError
+   *
+   * \param strError
+   */
+  void notifyError(QString strError);
 
-     \param QString
-    */
-    void notifyError(QString);
+  /*!
+   * \brief dirtyProject
+   */
+  void dirtyProject(QString, bool);
 
-    /*!
-      \brief
-      \param
-     */
-    void dirtyProject(QString, bool);
+private:
+  /*!
+   * \brief Constructor.
+   */
+  ProjectControl();
+
+  /*!
+   * \brief Destructor.
+   */
+  ~ProjectControl();
+
+  QMap<QString, Project*> openProjects; /*!< A map that keeps all the open
+                                             projects. */
+
+private slots:
+  void projectIsDirty(bool isDirty);
+
 };
 
 } } //end namespace

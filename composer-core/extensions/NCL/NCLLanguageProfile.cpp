@@ -24,48 +24,48 @@ NCLLanguageProfile::~NCLLanguageProfile()
 
 LanguageType NCLLanguageProfile::getLanguageType()
 {
-    return NCL;
+  return NCL;
 }
 
 QString NCLLanguageProfile::getProfileName()
 {
-    return "Nested Context Language Profile";
+  return "Nested Context Language Profile";
 }
 
 QList<QString> NCLLanguageProfile::getOutputDocumentTypes()
 {
-    QList<QString> list;
-    list.append("ncl");
-    return list;
+  QList<QString> list;
+  list.append("ncl");
+  return list;
 }
 
 IDocumentParser* NCLLanguageProfile::createParser (Project *project)
 {
-    return new NCLDocumentParser (project);
+  return new NCLDocumentParser (project);
 }
 
 void NCLLanguageProfile::releaseDocumentParser (IDocumentParser *parser)
 {
-    if (parser)
-    {
-        delete parser;
-        parser = NULL;
-    }
+  if (parser)
+  {
+    delete parser;
+    parser = NULL;
+  }
 }
 
 map <QString, map <QString, char> *> *NCLLanguageProfile::getNesting()
 {
-    return NCLStructure::getInstance()->getNesting();
+  return NCLStructure::getInstance()->getNesting();
 }
 
 map <QString, bool> *NCLLanguageProfile::getAttributes (QString element)
 {
-    return NCLStructure::getInstance()->getAttributes(element);
+  return NCLStructure::getInstance()->getAttributes(element);
 }
 
 map <QString, char> *NCLLanguageProfile::getChildren (QString tagname)
 {
-    return NCLStructure::getInstance()->getChildren(tagname);
+  return NCLStructure::getInstance()->getChildren(tagname);
 }
 
 vector <AttributeReferences *>

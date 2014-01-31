@@ -22,24 +22,24 @@ QMap<QString,LanguageType> createMap() {
 }
 
 namespace composer {
-    namespace core {
-        namespace util {
+  namespace core {
+    namespace util {
 
 QMap<QString,LanguageType> Utilities::types = createMap();
 
 LanguageType Utilities::getLanguageTypeByExtension(const QString &ext)
 {
-    if (!types.contains(ext)) return NONE;
-    else return types[ext];
+  if (!types.contains(ext)) return NONE;
+  else return types[ext];
 }
 
 QString Utilities::getExtensionForLanguageType(LanguageType type)
 {
-    QMap<QString,LanguageType>::iterator it;
-    for (it = types.begin(); it != types.end(); it++)
-        if(type == it.value())
-            return it.key();
-    return "";
+  QMap<QString,LanguageType>::iterator it;
+  for (it = types.begin(); it != types.end(); it++)
+    if(type == it.value())
+      return it.key();
+  return "";
 }
 
 QString Utilities::relativePath( const QString &absPath,
@@ -58,9 +58,8 @@ QString Utilities::relativePath( const QString &absPath,
                                                      QString::SkipEmptyParts);
 
   //Get the shortest of the two paths
-  int length =
-      absoluteDirectories.count() < relativeDirectories.count() ?
-        absoluteDirectories.count() : relativeDirectories.count();
+  int length = absoluteDirectories.count() < relativeDirectories.count() ?
+               absoluteDirectories.count() : relativeDirectories.count();
 
   //Use to determine where in the loop we exited
   int lastCommonRoot = -1;
@@ -68,10 +67,12 @@ QString Utilities::relativePath( const QString &absPath,
 
   //Find common root
   for (index = 0; index < length; index++)
+  {
     if (absoluteDirectories[index] == relativeDirectories[index])
       lastCommonRoot = index;
     else
       break;
+  }
 
   //If we didn't find a common prefix then throw
   if (lastCommonRoot == -1)

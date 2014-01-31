@@ -15,14 +15,15 @@
 #include <QMap>
 
 namespace composer {
-namespace util {
+  namespace util {
 /*!
  * \brief Keep information about which pair (element, attribute) can refer a
  *    value of another pair (element, attribute).
  *
  * This class is mainly used to described the language profile.
  */
-class COMPOSERCORESHARED_EXPORT AttributeReferences {
+class COMPOSERCORESHARED_EXPORT AttributeReferences
+{
 public:
   enum REFERENCE_SCOPE {
     ANY_SCOPE = 0,

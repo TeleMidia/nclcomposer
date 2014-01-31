@@ -23,17 +23,17 @@ namespace composer {
 class EditCommand : public QUndoCommand
 {
 public:
-    EditCommand(Project *project, Entity *entity,
-                QMap <QString, QString> newAttrs, QUndoCommand *parent = 0);
+  EditCommand( Project *project, Entity *entity,
+               QMap <QString, QString> newAttrs, QUndoCommand *parent = 0 );
 
-    void undo();
-    void redo();
+  void undo();
+  void redo();
 
 private:
-    Project *project;
-    QString uniqueId;
-    QMap <QString, QString> attrs, newAttrs;
-    MessageControl *msgControl;
+  Project *project;
+  QString uniqueId;
+  QMap <QString, QString> attrs, newAttrs;
+  MessageControl *msgControl;
 };
 
 /*!
@@ -42,17 +42,17 @@ private:
 class RemoveCommand : public QUndoCommand
 {
 public:
-    RemoveCommand(Project *project, Entity *entity, QUndoCommand *parent = 0);
+  RemoveCommand(Project *project, Entity *entity, QUndoCommand *parent = 0);
 
-    void undo();
-    void redo();
+  void undo();
+  void redo();
 
 private:
-    Project *project;
-    Entity *entity;
-    QString parentUniqueId;
-    MessageControl *msgControl;
-    bool first;
+  Project *project;
+  Entity *entity;
+  QString parentUniqueId;
+  MessageControl *msgControl;
+  bool first;
 };
 
 /*!
@@ -61,18 +61,18 @@ private:
 class AddCommand : public QUndoCommand
 {
 public:
-    AddCommand(Project *project, Entity *entity, QString parentUniqueId,
-               QUndoCommand *parent = 0);
+  AddCommand(Project *project, Entity *entity, QString parentUniqueId,
+             QUndoCommand *parent = 0);
 
-    void undo();
-    void redo();
+  void undo();
+  void redo();
 
 private:
-    Project *project;
-    Entity *entity;
-    QString parentUniqueId;
-    MessageControl *msgControl;
-    bool first;
+  Project *project;
+  Entity *entity;
+  QString parentUniqueId;
+  MessageControl *msgControl;
+  bool first;
 };
 
 //QString createCommandString(DiagramItem *item, const QPointF &point);
