@@ -66,12 +66,12 @@ public:
    *
    * \param _id The Unique Identifier of the required entity.
    */
-  Entity* getEntityById(QString _id);
+  Entity* getEntityById(QString id);
   /*!
    * \brief Returns a list of the entities which are of the type __type.
    * \param _type The entity type required.
    */
-  QList<Entity*> getEntitiesbyType(QString _type);
+  QList<Entity*> getEntitiesbyType(QString type);
 
   /*!
    * \brief Returns the location of the project.

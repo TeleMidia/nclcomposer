@@ -9,6 +9,8 @@
  */
 #include "model/Entity.h"
 
+#include <assert.h>
+
 namespace composer {
     namespace core {
         namespace model {
@@ -36,7 +38,7 @@ Entity::Entity(QMap<QString,QString> &atts, QObject *parent) :
 Entity::Entity( QString uniqueId,
                 QString type,
                 QMap<QString, QString> &atts,
-                QObject *parent) :
+                QObject *parent ) :
   QObject(parent)
 {
   //  QMutexLocker locker(&lockAtts);
@@ -98,6 +100,7 @@ void Entity::setParent(Entity *parent)
 
 bool Entity::addChild(Entity *entity, int pos)
 {
+  assert(entity != NULL);
   QMutexLocker locker(&lockChildren);
   QString _id = entity->getUniqueId();
 
@@ -117,6 +120,7 @@ bool Entity::addChild(Entity *entity, int pos)
 //! Deletes the child and its children in a recursive way
 bool Entity::deleteChild(Entity *entity)
 {
+  assert(entity != NULL);
 //    QMutexLocker locker(&lockChildren);
   entity->setDeleteChildren(true);
   for(int i = 0; i < children.size(); i++)
@@ -190,6 +194,8 @@ QVector <Entity *> Entity::getChildren()
 // Is it useful ??
 bool Entity::removeChildAppendChildren(Entity *entity)
 {
+  assert(entity != NULL);
+
   for(int i= 0; i < children.size(); i++)
   {
     Entity *child = children.at(i);
