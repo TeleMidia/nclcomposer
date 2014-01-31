@@ -13,7 +13,6 @@
 #include <QObject>
 #include <QTest>
 
-
 // #include <modules/DocumentControl.h>
 #include <modules/LanguageControl.h>
 #include <modules/PluginControl.h>
@@ -22,34 +21,36 @@ using namespace composer::core;
 
 class tst_ModuleInit : public QObject
 {
-    Q_OBJECT
+  Q_OBJECT
+
 public:
-    void setInterations(int _interartions) { interations = _interartions; }
-    void setBenchmark(bool isBench) { isBenchmark = isBench; }
+  void setInterations(int _interartions) { interations = _interartions; }
+  void setBenchmark(bool isBench) { isBenchmark = isBench; }
+
 private:
-    LanguageControl *lgControl;
-    // DocumentControl *docControl;
-    PluginControl *pgControl;
-    int interations;
-    bool isBenchmark;
-    QString profileDir;
-    QString pluginDir;
-    QString documentDir;
+  LanguageControl *lgControl;
+  // DocumentControl *docControl;
+  PluginControl *pgControl;
+  int interations;
+  bool isBenchmark;
+  QString profileDir;
+  QString pluginDir;
+  QString documentDir;
 
 private slots:
-    void initTestCase();
-    void initBenchmark_data();
-    void initTorture();
-    void initBenchmark();
-    void languageProfile();
-//    void pluginProfile();
-//    void launchDocument();
-//    void launchDocument_data();
-//    void closeDocument();
-//    void closeDocument_data();
-//    void launchAndCloseDocument();
-//    void launchAndCloseDocument_data();
-    void cleanupTestCase();
+  void initTestCase();
+  void initBenchmark_data();
+  void initTorture();
+  void initBenchmark();
+  void languageProfile();
+//  void pluginProfile();
+//  void launchDocument();
+//  void launchDocument_data();
+//  void closeDocument();
+//  void closeDocument_data();
+//  void launchAndCloseDocument();
+//  void launchAndCloseDocument_data();
+  void cleanupTestCase();
 };
 
 #endif // TST_MODULEINIT_H

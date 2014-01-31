@@ -100,7 +100,8 @@ void tst_InsertNode::insertNode()
   QVERIFY(pjControl->launchProject(projectFileName));
 
   MessageControl *messageControl =
-      pgControl->getMessageControl(projectFileName);
+      pgControl->getMessageControl(pjControl->getOpenProject(projectFileName));
+
   Project *project = ProjectControl::getInstance()
       ->getOpenProject(projectFileName);
 
@@ -163,7 +164,7 @@ void tst_InsertNode::insertNodeNPlugins()
   QVERIFY(pjControl->launchProject(projectFileName));
 
   MessageControl *messageControl =
-      pgControl->getMessageControl(projectFileName);
+      pgControl->getMessageControl(pjControl->getOpenProject(projectFileName));
   Project *project = ProjectControl::getInstance()
       ->getOpenProject(projectFileName);
 
@@ -203,8 +204,8 @@ void tst_InsertNode::insertNodeNPlugins()
     messageControl->anonymousAddEntity("region", regionBase->getUniqueId(),
                                        attrs, false, false);
 
-//    messageControl->anonymousAddEntity("media", body->getUniqueId(),
-//                                       attrs);
+    //    messageControl->anonymousAddEntity("media", body->getUniqueId(),
+    //                                       attrs);
     messageControl->anonymousUpdateFromModel();
     QApplication::processEvents();
     showWidgets.redraw();
@@ -233,8 +234,8 @@ void tst_InsertNode::updateNodes_data()
   nNodes.push_back(100);
   nNodes.push_back(500);
   nNodes.push_back(1000);
-//  nNodes.push_back(5000);
-//  nNodes.push_back(10000);
+  //  nNodes.push_back(5000);
+  //  nNodes.push_back(10000);
 
   for(int i = 0; i < nNodes.size(); i++)
   {
@@ -248,7 +249,7 @@ void tst_InsertNode::updateNodes_data()
     QTest::newRow(testName.toStdString().c_str()) << projectName
                                                   << pluginList.size()
                                                   << nNodes[i]
-                                                  << 100;
+                                                     << 100;
   }
 }
 
@@ -271,7 +272,7 @@ void tst_InsertNode::updateNodes()
   QVERIFY(pjControl->launchProject(projectFileName));
 
   MessageControl *messageControl =
-      pgControl->getMessageControl(projectFileName);
+      pgControl->getMessageControl(pjControl->getOpenProject(projectFileName));
   Project *project = ProjectControl::getInstance()
       ->getOpenProject(projectFileName);
 
@@ -342,7 +343,7 @@ void tst_InsertNode::updateNodes()
       QString value = QString::number(i);
       attrs.insert("top", value);
       messageControl->anonymousChangeEntity(region->getUniqueId(), attrs,
-                                          false, false);
+                                            false, false);
     }
     messageControl->anonymousUpdateFromModel();
     QApplication::processEvents();

@@ -21,10 +21,10 @@ void tst_ModuleProject::initTestCase()
 
   pgControl = PluginControl::getInstance();
 
-  connect(pgControl,
-         SIGNAL(addPluginWidgetToWindow(IPluginFactory*,IPlugin*,Project*,int)),
-         &showWidgets,
-         SLOT(showPluginWidget(IPluginFactory*, IPlugin*, Project*, int)));
+  connect( pgControl,
+           SIGNAL(addPluginWidgetToWindow(IPluginFactory*,IPlugin*,Project*,int)),
+           &showWidgets,
+           SLOT(showPluginWidget(IPluginFactory*, IPlugin*, Project*, int)) );
 }
 
 void tst_ModuleProject::cleanupTestCase()
@@ -137,7 +137,7 @@ void tst_ModuleProject::importFromExistingNCL()
   interval = TestUtil::timeval_subtract_micro(begin, end);
   cout << (double) interval / 1000.0 << endl;
   QApplication::processEvents();
-//  showWidgets.redraw();
+  //  showWidgets.redraw();
   QVERIFY(pjControl->closeProject(projectFileName));
   myfile.close();
 }
@@ -196,7 +196,7 @@ void tst_ModuleProject::importNCLForEachPlugin()
   gettimeofday(&end, NULL);
   long long int interval = TestUtil::timeval_subtract_micro(begin, end);
   myfile << pluginName.mid(pluginName.lastIndexOf("/")+1).toStdString().c_str()
-       << " " << size << " " << (double)interval/1000.0 << " ";
+         << " " << size << " " << (double)interval/1000.0 << " ";
   gettimeofday(&begin,NULL);
   pjControl->saveProject(projectFileName);
   gettimeofday(&end,NULL);

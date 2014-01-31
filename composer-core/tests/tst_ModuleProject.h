@@ -17,10 +17,9 @@ using namespace std;
 
 using namespace composer::core;
 
-class ShowWidgets : public QObject {
+class ShowWidgets : public QObject
+{
   Q_OBJECT
-
-  QList <QWidget *> widgets;
 
 public:
   ShowWidgets(){}
@@ -49,12 +48,13 @@ public slots:
     QApplication::closeAllWindows();
   }
 
+private:
+  QList <QWidget *> widgets;
 };
 
 class tst_ModuleProject : public QObject
 {
   Q_OBJECT
-  ShowWidgets showWidgets;
 
 public:
   void setBenchmark(bool isBench) { isBenchmark = isBench; }
@@ -69,6 +69,11 @@ private:
   QString pluginDir;
   bool isBenchmark;
 
+  ShowWidgets showWidgets;
+
+  void importNCLForEachPlugin();
+  void importNCLForEachPlugin_data();
+
 private slots:
   void initTestCase();
   void init();
@@ -77,11 +82,6 @@ private slots:
 
   void importFromExistingNCL_data();
   void importFromExistingNCL();
-
-private:
-  void importNCLForEachPlugin();
-  void importNCLForEachPlugin_data();
-
 };
 
 #endif // TST_MODULEDOCUMENT_H

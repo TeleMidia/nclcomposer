@@ -51,8 +51,8 @@ public:
 //    pluginList << (pluginDir + "libdebug_console.so");
 //    pluginList << (pluginDir + "libproperties_view.so");
 //    pluginList << (pluginDir + "libQnly.so");
-//    pluginList << (pluginDir + "libQnst.so");
-    pluginList << (pluginDir + "libncl_textual_plugin.so");
+    pluginList << (pluginDir + "libQnst.so");
+//    pluginList << (pluginDir + "libncl_textual_plugin.so");
 //    pluginList << (pluginDir + "liboutline_view.so");
 #endif
 

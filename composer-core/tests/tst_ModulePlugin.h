@@ -19,23 +19,24 @@ using namespace composer::core;
 
 class tst_ModulePlugin : public QObject
 {
-    Q_OBJECT
+  Q_OBJECT
+
 public:
-    void setBenchmark(bool isBench) { isBenchmark = isBench; }
+  void setBenchmark(bool isBench) { isBenchmark = isBench; }
+
 private:
-    PluginControl *pgControl;
-    QString pluginDir;
-    bool isBenchmark;
+  PluginControl *pgControl;
+  QString pluginDir;
+  bool isBenchmark;
 
 private slots:
-
-    void initTestCase();
-    void loadPluginDir();
-    void pluginName_data();
-    void pluginName();
-    void pluginLoadBenchmark_data();
-    void pluginLoadBenchmark();
-    void cleanupTestCase();
+  void initTestCase();
+  void loadPluginDir();
+  void pluginName_data();
+  void pluginName();
+  void pluginLoadBenchmark_data();
+  void pluginLoadBenchmark();
+  void cleanupTestCase();
 
 };
 

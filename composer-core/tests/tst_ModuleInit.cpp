@@ -11,102 +11,106 @@
 
 void tst_ModuleInit::initTestCase()
 {
-    QString baseDir = "C:";
-    baseDir += QDir::separator()+QString("Composer");
-    profileDir  = baseDir+QDir::separator()+"lib"+QDir::separator()+"composer"+QDir::separator();
-    pluginDir   = baseDir+QDir::separator()+"plugins"+QDir::separator();
+  QString baseDir = "C:";
+  baseDir += QDir::separator() + QString("Composer");
+  profileDir  = baseDir+QDir::separator()+"lib"+QDir::separator()+"composer"+QDir::separator();
+  pluginDir   = baseDir+QDir::separator()+"plugins"+QDir::separator();
 }
 
 
 void tst_ModuleInit::initBenchmark_data()
 {
-    QTest::addColumn<bool>("instanciate");
+  QTest::addColumn<bool>("instanciate");
 
-    QTest::newRow("init") << true;
-    QTest::newRow("release") << false;
+  QTest::newRow("init") << true;
+  QTest::newRow("release") << false;
 }
 
 void tst_ModuleInit::initBenchmark()
 {
-    if (!isBenchmark)
-        QSKIP("This test is not a benchmark test", SkipSingle);
+  if (!isBenchmark)
+    QSKIP("This test is not a benchmark test", SkipSingle);
 
-    QFETCH(bool,instanciate);
+  QFETCH(bool,instanciate);
 
-    if (instanciate)
+  if (instanciate)
+  {
+    QBENCHMARK
     {
-        QBENCHMARK {
-            // docControl = DocumentControl::getInstance();
-            // QVERIFY(docControl);
-            lgControl = LanguageControl::getInstance();
-            QVERIFY(lgControl);
-            pgControl = PluginControl::getInstance();
-            QVERIFY(pgControl);
-        }
-        // DocumentControl::releaseInstance();
-        LanguageControl::releaseInstance();
-        PluginControl::releaseInstance();
-    } else {
-        // docControl = DocumentControl::getInstance();
-        // QVERIFY(docControl);
-        lgControl = LanguageControl::getInstance();
-        QVERIFY(lgControl);
-        pgControl = PluginControl::getInstance();
-        QVERIFY(pgControl);
-
-        QBENCHMARK {
-           // DocumentControl::releaseInstance();
-            LanguageControl::releaseInstance();
-            PluginControl::releaseInstance();
-        }
+      // docControl = DocumentControl::getInstance();
+      // QVERIFY(docControl);
+      lgControl = LanguageControl::getInstance();
+      QVERIFY(lgControl);
+      pgControl = PluginControl::getInstance();
+      QVERIFY(pgControl);
     }
+    // DocumentControl::releaseInstance();
+    LanguageControl::releaseInstance();
+    PluginControl::releaseInstance();
+  }
+  else
+  {
+    // docControl = DocumentControl::getInstance();
+    // QVERIFY(docControl);
+    lgControl = LanguageControl::getInstance();
+    QVERIFY(lgControl);
+    pgControl = PluginControl::getInstance();
+    QVERIFY(pgControl);
+
+    QBENCHMARK
+    {
+      // DocumentControl::releaseInstance();
+      LanguageControl::releaseInstance();
+      PluginControl::releaseInstance();
+    }
+  }
 }
 
 void tst_ModuleInit::initTorture()
 {
 
-    for (int i = 0; i < interations ; i++)
-    {
-        // docControl = DocumentControl::getInstance();
-        // QVERIFY(docControl);
-        lgControl = LanguageControl::getInstance();
-        QVERIFY(lgControl);
-        pgControl = PluginControl::getInstance();
-        QVERIFY(pgControl);
+  for (int i = 0; i < interations ; i++)
+  {
+    // docControl = DocumentControl::getInstance();
+    // QVERIFY(docControl);
+    lgControl = LanguageControl::getInstance();
+    QVERIFY(lgControl);
+    pgControl = PluginControl::getInstance();
+    QVERIFY(pgControl);
 
-        // DocumentControl::releaseInstance();
-        LanguageControl::releaseInstance();
-        PluginControl::releaseInstance();
-    }
+    // DocumentControl::releaseInstance();
+    LanguageControl::releaseInstance();
+    PluginControl::releaseInstance();
+  }
 
 
 }
 
 void tst_ModuleInit::languageProfile()
 {
-    QList<ILanguageProfile*> list;
+  QList<ILanguageProfile*> list;
 
-    /* Try to load the same profile */
-    QVERIFY(lgControl->loadProfile
-            (profileDir+"NCLLanguageProfile.so"));
-    list = lgControl->getLoadedProfiles();
-    QCOMPARE(list.size(),1);
+  /* Try to load the same profile */
+  QVERIFY(lgControl->loadProfile
+          (profileDir+"NCLLanguageProfile.so"));
+  list = lgControl->getLoadedProfiles();
+  QCOMPARE(list.size(),1);
 
-//    /* remove the loaded profile */
-//    QVERIFY(lgControl->removeProfile(NCL));
-//    list = lgControl->getLoadedProfiles();
-//    QCOMPARE(list.isEmpty(),true);
+  //    /* remove the loaded profile */
+  //    QVERIFY(lgControl->removeProfile(NCL));
+  //    list = lgControl->getLoadedProfiles();
+  //    QCOMPARE(list.isEmpty(),true);
 
-//    /* reload the profile from fileName */
-//    QVERIFY(lgControl->loadProfile
-//            (profileDir+"libNCLLanguageProfile.dylib"));
-//    list = lgControl->getLoadedProfiles();
-//    QCOMPARE(list.size(),1);
+  //    /* reload the profile from fileName */
+  //    QVERIFY(lgControl->loadProfile
+  //            (profileDir+"libNCLLanguageProfile.dylib"));
+  //    list = lgControl->getLoadedProfiles();
+  //    QCOMPARE(list.size(),1);
 
-//    /* Try to load a non existing profile */
-//    QVERIFY(!lgControl->loadProfile("blah"));
-//    list = lgControl->getLoadedProfiles();
-//    QCOMPARE(list.size(),1);
+  //    /* Try to load a non existing profile */
+  //    QVERIFY(!lgControl->loadProfile("blah"));
+  //    list = lgControl->getLoadedProfiles();
+  //    QCOMPARE(list.size(),1);
 
 }
 

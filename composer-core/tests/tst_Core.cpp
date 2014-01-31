@@ -15,21 +15,21 @@
 
 int run_ModuleInit()
 {
-    tst_ModuleInit testModuleInit;
-    testModuleInit.setInterations(10240);
-    testModuleInit.setBenchmark(true);
-    QStringList args;
-    args.append("-v2");
-    return QTest::qExec(&testModuleInit,args);
+  tst_ModuleInit testModuleInit;
+  testModuleInit.setInterations(10240);
+  testModuleInit.setBenchmark(true);
+  QStringList args;
+  args.append("-v2");
+  return QTest::qExec(&testModuleInit,args);
 }
 
 int run_ModuleLanguage()
 {
-    tst_ModuleLanguage testModuleLanguage;
-    testModuleLanguage.setBenchmark(true);
-    QStringList args;
-    args.append("-v2");
-    return QTest::qExec(&testModuleLanguage, args);
+  tst_ModuleLanguage testModuleLanguage;
+  testModuleLanguage.setBenchmark(true);
+  QStringList args;
+  args.append("-v2");
+  return QTest::qExec(&testModuleLanguage, args);
 }
 
 int run_ModuleProject()
@@ -40,10 +40,10 @@ int run_ModuleProject()
 
 int run_InsertNode()
 {
-    tst_InsertNode testInsertNode;
-    QStringList args;
-    args.append("-v2");
-    return QTest::qExec(&testInsertNode, args);
+  tst_InsertNode testInsertNode;
+  QStringList args;
+  args.append("-v2");
+  return QTest::qExec(&testInsertNode, args);
 }
 
 //QTEST_MAIN(tst_ModuleProject)
