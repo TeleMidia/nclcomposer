@@ -81,19 +81,23 @@ public:
  * examples from NCL Club and allows the user to install new plugins and see the
  * news related to the software.
  */
-class WelcomeWidget: public QWidget {
+class WelcomeWidget: public QWidget
+{
   Q_OBJECT
 
 public:
   /*!
-     * \brief Constructor.
-     * \param parent The parent of this class.
-     */
+   * \brief Constructor.
+   * \param parent The parent of this class.
+   */
   WelcomeWidget(QWidget *parent = 0);
   /*!
-     * \brief Destructor.
-     */
+   * \brief Destructor.
+   */
   virtual ~WelcomeWidget();
+
+public slots:
+  void updateRecentProjects(QStringList recentProjects);
 
 private slots:
   void on_commandLinkButton_29_clicked();
@@ -215,9 +219,6 @@ private slots:
   void sendRecentProjectClicked();
 
   void on_commandLinkButton_3_pressed();
-
-public slots:
-  void updateRecentProjects(QStringList recentProjects);
 };
 
 } }

@@ -3,11 +3,14 @@
 #include <QPainter>
 #include <QDebug>
 
-ComposerSplashScreen::ComposerSplashScreen(const QPixmap &pixmap, Qt::WindowFlags f):
+ComposerSplashScreen::ComposerSplashScreen( const QPixmap &pixmap,
+                                            Qt::WindowFlags f ):
   QSplashScreen(pixmap, f)
 {}
 
-ComposerSplashScreen::ComposerSplashScreen(QWidget *parent, const QPixmap &pixmap, Qt::WindowFlags f):
+ComposerSplashScreen::ComposerSplashScreen( QWidget *parent,
+                                            const QPixmap &pixmap,
+                                            Qt::WindowFlags f):
   QSplashScreen(parent, pixmap, f)
 {}
 

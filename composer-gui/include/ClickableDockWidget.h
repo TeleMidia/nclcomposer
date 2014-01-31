@@ -41,21 +41,21 @@ public:
   ClickableQDockWidget (const QString &title, QWidget *parent = 0,
                         Qt::WindowFlags flags = 0);
 
+signals:
+  void clicked();
+  void refreshPressed();
+
 protected:
   bool event(QEvent *event);
-
-private slots:
-  void visibilityHasChange(bool visible);
-  void topLevelHasChanged(bool a);
 
 private:
   void createTitlebar(const QString &title);
   void addButtonToDockTitleBar( QFrame *titleBar,
                                 QPushButton *button);
+private slots:
+  void visibilityHasChange(bool visible);
+  void topLevelHasChanged(bool a);
 
-signals:
-  void clicked();
-  void refreshPressed();
 };
 
 } }

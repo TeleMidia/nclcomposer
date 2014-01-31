@@ -20,8 +20,28 @@ class RunRemoteGingaVMAction : public QObject
 {
   Q_OBJECT
 
+public:
+  explicit RunRemoteGingaVMAction();
+  void setCurrentProject(Project* project);
+
+public slots:
+  void copyCurrentProject();
+  void stopExecution();
+  void setAutoplay(bool autoplay);
+
+signals:
+  void finished();
+  void copyFinished();
+
+  void startTask();
+  void taskDescription(QString);
+  void taskMaximumValue(int);
+  void taskValue(int);
+
 private:
   Project *project;
+  bool mustStop;
+  bool _autoplay;
 
   /*!
    * \brief Return the list of files to be sent to the Ginga Set-top box
@@ -35,27 +55,6 @@ private:
                           QString baseRemotePath, QStringList filesToSend);
 
   bool fixSrcsFromNCLFile(const QString &nclLocalPath);
-
-  bool mustStop;
-
-  bool _autoplay;
-
-signals:
-  void finished();
-  void copyFinished();
-
-  void startTask();
-  void taskDescription(QString);
-  void taskMaximumValue(int);
-  void taskValue(int);
-
-public slots:
-  void copyCurrentProject();
-  void stopExecution();
-  void setAutoplay(bool autoplay);
-public:
-  void setCurrentProject(Project* project);
-  RunRemoteGingaVMAction();
 };
 
 class StopRemoteGingaVMAction : public QObject

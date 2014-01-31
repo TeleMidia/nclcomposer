@@ -21,11 +21,11 @@
 
 #include <QFileDialog>
 
-FileChooser::FileChooser(const QString &label,
-                         FileChooser::FILECHOOSER_TYPE fctype,
-                         const QString &caption,
-                         const QString &filter,
-                         QWidget *parent) :
+FileChooser::FileChooser( const QString &label,
+                          FileChooser::FILECHOOSER_TYPE fctype,
+                          const QString &caption,
+                          const QString &filter,
+                          QWidget *parent ) :
   QWidget(parent),
   ui(new Ui::FileChooser),
   fctype(fctype),

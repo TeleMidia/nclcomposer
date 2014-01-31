@@ -26,43 +26,43 @@ using namespace composer::core;
 #include "IPreferencesPage.h"
 
 namespace Ui {
-    class PreferencesDialog;
+  class PreferencesDialog;
 }
 
 namespace composer {
-    namespace gui {
+  namespace gui {
 
 class PreferencesDialog : public QDialog
 {
-    Q_OBJECT
+  Q_OBJECT
 
 public:
-    explicit PreferencesDialog(QWidget *parent = 0);
-    ~PreferencesDialog();
+  explicit PreferencesDialog(QWidget *parent = 0);
+  ~PreferencesDialog();
 
-    void addPreferencePage(IPluginFactory *);
-    void addPreferencePage(IPreferencesPage *page);
-    /*!
-     * \deprecated
-     */
-    void addPreferencePage(QIcon icon, QString name, QWidget *widget);
-
-private:
-    Ui::PreferencesDialog *ui;
-    QListWidgetItem *currentItem;
-    QWidget *currentPage;
-
-    void loadPreferencesPages();
-    QMap <QString, QWidget *> pages;
-
-private slots:
-    void changeActivePage();
-    void applyCurrentValues();
-    void buttonClicked(QAbstractButton*);
+  void addPreferencePage(IPluginFactory *);
+  void addPreferencePage(IPreferencesPage *page);
+  /*!
+   * \deprecated
+   */
+  void addPreferencePage(QIcon icon, QString name, QWidget *widget);
 
 /*public Q_SLOTS:
     void show();
     void selectFirst(); */
+
+private:
+  Ui::PreferencesDialog *ui;
+  QListWidgetItem *currentItem;
+  QWidget *currentPage;
+
+  void loadPreferencesPages();
+  QMap <QString, QWidget *> pages;
+
+private slots:
+  void changeActivePage();
+  void applyCurrentValues();
+  void buttonClicked(QAbstractButton*);
 };
 
 }} //end namespace

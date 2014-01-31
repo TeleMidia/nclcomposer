@@ -4,9 +4,11 @@
 #include <QSplashScreen>
 
 /**
- * @brief The ComposerSplashScreen class defines the initial splash screen of NCL Composer
+ * \brief The ComposerSplashScreen class defines the initial splash screen of
+ *  NCL Composer
  *
- * This class was created mainly to also draw the NCL Composer in the QSplashScreen
+ * This class was created mainly to also draw the NCL Composer in the
+ * QSplashScreen
  */
 class ComposerSplashScreen : public QSplashScreen
 {
@@ -18,7 +20,8 @@ public:
    * @param pixmap
    * @param f
    */
-  explicit ComposerSplashScreen(const QPixmap &pixmap = QPixmap(), Qt::WindowFlags f = 0);
+  explicit ComposerSplashScreen( const QPixmap &pixmap = QPixmap(),
+                                 Qt::WindowFlags f = 0);
 
   /**
    * @brief constructor
@@ -26,7 +29,9 @@ public:
    * @param pixmap
    * @param f
    */
-  ComposerSplashScreen(QWidget *parent, const QPixmap &pixmap = QPixmap(), Qt::WindowFlags f = 0);
+  ComposerSplashScreen( QWidget *parent,
+                        const QPixmap &pixmap = QPixmap(),
+                        Qt::WindowFlags f = 0 );
 
   /**
    * @brief destructor

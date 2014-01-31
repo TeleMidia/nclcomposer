@@ -31,12 +31,12 @@ PreferencesDialog::PreferencesDialog(QWidget *parent) :
   connect( ui->listWidget,
           SIGNAL(itemSelectionChanged()),
           this,
-          SLOT(changeActivePage()));
+          SLOT(changeActivePage()) );
 
-  connect(ui->buttonBox_2,
-          SIGNAL(clicked(QAbstractButton*)),
-          this,
-          SLOT(buttonClicked(QAbstractButton*)));
+  connect( ui->buttonBox_2,
+           SIGNAL(clicked(QAbstractButton*)),
+           this,
+           SLOT(buttonClicked(QAbstractButton*)) );
 
 
   connect(this, SIGNAL(accepted()), this, SLOT(applyCurrentValues()));

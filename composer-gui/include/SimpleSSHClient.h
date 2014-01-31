@@ -41,25 +41,12 @@ using namespace std;
 //\todo A better way to send error report than fprintf
 class SimpleSSHClient
 {
-private:
-  string username;
-  string password;
-  string hostip;
-  string sftp_path;
-  string sftp_file;
-  static int libssh2_init_rc; /* Keeps the value returned by lissh2_init */
-
-  int sock;
-
-  LIBSSH2_SESSION *session;
-  LIBSSH2_SFTP *sftp_session;
-
 public:
   /*!
    * \brief Configures the machine properties.
    */
-  SimpleSSHClient(const char *username, const char *password,
-                  const char *hostip, const char *remotepath);
+  SimpleSSHClient( const char *username, const char *password,
+                   const char *hostip, const char *remotepath );
 
   /*!
    * \brief Initialize the libssh2 library. This function must be called only
@@ -84,15 +71,41 @@ public:
 
   /*!
    * \brief Copy the file from localpath to the remotepath.
+   *
+   * \param localfile
+   * \param destpath
+   * \return
    */
   int sftp_copy_file(const char *localfile, const char* destpath);
 
   /*!
    * \brief Executes a command in the remote machine.
+   *
+   * \param command
+   * \return
    */
   int exec_cmd(const char *command);
 
+  /*!
+   * \brief waitsocket
+   * \param socket_fd
+   * \param session
+   * \return
+   */
   static int waitsocket(int socket_fd, LIBSSH2_SESSION *session);
+
+private:
+  string username;
+  string password;
+  string hostip;
+  string sftp_path;
+  string sftp_file;
+  static int libssh2_init_rc; /* Keeps the value returned by lissh2_init */
+
+  int sock;
+
+  LIBSSH2_SESSION *session;
+  LIBSSH2_SFTP *sftp_session;
 };
 
 #endif // SIMPLESSHCLIENT_H

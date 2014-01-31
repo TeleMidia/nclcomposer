@@ -31,7 +31,13 @@ class FileChooser : public QWidget
   Q_ENUMS(FILECHOOSER_TYPE)
 
 public:
-  enum  FILECHOOSER_TYPE { OPEN_FILENAME, SAVE_FILENAME, GET_EXISTINGDIRECTORY, OPEN_FILENAMES };
+  enum  FILECHOOSER_TYPE
+  {
+    OPEN_FILENAME,
+    SAVE_FILENAME,
+    GET_EXISTINGDIRECTORY,
+    OPEN_FILENAMES
+  };
 
   explicit FileChooser(const QString &label,
                        FileChooser::FILECHOOSER_TYPE fctype,
@@ -43,13 +49,13 @@ public:
   QString getText();
   void setText(const QString &value);
   
-private slots:
-  void on_pushButton_pressed();
-
 private:
   FILECHOOSER_TYPE fctype;
   QString filter, caption;
   Ui::FileChooser *ui;
+
+private slots:
+  void on_pushButton_pressed();
 };
 
 #endif // FILECHOOSER_H

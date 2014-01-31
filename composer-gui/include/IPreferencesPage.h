@@ -24,7 +24,6 @@ class IPreferencesPage : public QWidget
 public:
   IPreferencesPage(QWidget *parent) : QWidget(parent) { }
 
-public:
   virtual const QString getName() { return windowTitle(); }
   virtual const QIcon getIcon() = 0;
 

@@ -4,32 +4,32 @@
 #include <QDialog>
 
 namespace Ui {
-class AboutDialog;
+  class AboutDialog;
 }
 
 namespace composer {
-namespace gui {
+  namespace gui {
 
-class AboutDialog: public QDialog
+class AboutDialog : public QDialog
 {
-    Q_OBJECT
+  Q_OBJECT
 
 public:
-    /*!
+  /*!
      \brief Constructor.
      \param parent The parent of this class.
     */
-    AboutDialog(QWidget *parent = 0);
-    /*!
+  AboutDialog(QWidget *parent = 0);
+  /*!
      \brief Destructor.
     */
-    virtual ~AboutDialog();
+  virtual ~AboutDialog();
 
 private:
-    Ui::AboutDialog *ui;
+  Ui::AboutDialog *ui;
 
 private slots:
-    void showLicense();
+  void showLicense();
 };
 
 } } // end namespace

@@ -23,10 +23,6 @@ namespace composer {
 
 class GeneralPreferences : public IPreferencesPage
 {
-private:
-  Ui::GeneralPreferences *ui;
-  FileChooser *fileChooser;
-
 public:
   /*!
    * \brief Constructor.
@@ -49,6 +45,10 @@ public slots:
    * \brief Set the default values to settings.
    */
   void setDefaultValues();
+
+private:
+  Ui::GeneralPreferences *ui;
+  FileChooser *fileChooser;
 };
 
 }} //end namespace

@@ -89,6 +89,8 @@ protected:
  * \brief The main Window of NCL Composer.
  *
  * This class is the main window of NCL Composer.
+ *
+ * \fixme This class is too big it must be splitted
  */
 class ComposerMainWindow : public QMainWindow {
   Q_OBJECT
@@ -368,7 +370,6 @@ private slots:
   void on_actionProject_from_Wizard_triggered();
   void wizardFinished(int resp);
 #endif
-
 
 public:
   /*!

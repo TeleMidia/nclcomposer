@@ -26,19 +26,12 @@ class RunGingaConfig : public IPreferencesPage
 {
   Q_OBJECT
 
-private:
-  Ui::RunGingaConfig *ui;
-
 public:
   explicit RunGingaConfig(QWidget *parent = 0);
   ~RunGingaConfig();
 
   const QString getName() {return tr("Run Configuration");}
   const QIcon getIcon() {return QIcon(":/mainwindow/images/play_button.png");}
-
-private:
-  void initializeDefaultValues();
-  void loadValuesFromSettings();
 
 public slots:
   void applyValues();
@@ -47,6 +40,13 @@ public slots:
   void changeToLocal(bool);
   void changeToRemote(bool);
   void browseButtonPressed();
+
+
+private:
+  Ui::RunGingaConfig *ui;
+
+  void initializeDefaultValues();
+  void loadValuesFromSettings();
 };
 
 } } //end namespace

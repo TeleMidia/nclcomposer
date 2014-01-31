@@ -23,9 +23,9 @@
 namespace composer {
   namespace gui {
 
-ClickableQDockWidget::ClickableQDockWidget(const QString &title,
-                                           QWidget *parent,
-                                           Qt::WindowFlags flags)
+ClickableQDockWidget::ClickableQDockWidget( const QString &title,
+                                            QWidget *parent,
+                                            Qt::WindowFlags flags)
   : QDockWidget(title, parent, flags)
 {
   setFocusPolicy(Qt::StrongFocus);

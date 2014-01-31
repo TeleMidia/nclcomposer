@@ -23,14 +23,14 @@ namespace composer {
 class PluginDetailsDialog : public QDialog
 {
 private:
-    Ui::PluginDetailsDialog *ui;
-    IPluginFactory *currentPluginFactory;
+  Ui::PluginDetailsDialog *ui;
+  IPluginFactory *currentPluginFactory;
 
 public:
-    PluginDetailsDialog(QWidget *parent = 0);
-    virtual ~PluginDetailsDialog();
+  PluginDetailsDialog(QWidget *parent = 0);
+  virtual ~PluginDetailsDialog();
 
-    void setCurrentPlugin(IPluginFactory *plugin);
+  void setCurrentPlugin(IPluginFactory *plugin);
 };
 
 } }
