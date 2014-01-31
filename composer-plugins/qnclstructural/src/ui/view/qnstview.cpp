@@ -3896,7 +3896,32 @@ void QnstView::performDelete()
     }
     else
     {
-      requestEntityRemotion(selected);
+      bool mustRemove = true;
+      if(selected->getnstType() == Qnst::Context ||
+         selected->getnstType() == Qnst::Body ||
+         selected->getnstType() == Qnst::Switch)
+      {
+        mustRemove = false;
+        QString strNstType =
+            QnstUtil::getStrFromNstType(selected->getnstType());
+        QMessageBox mBox ( QMessageBox::Question,
+                           tr("Removing %1 ...").arg(strNstType),
+                           tr("Are you sure you want to remove the"
+                              " %1 element and all its children?").
+                              arg(strNstType),
+                           (QMessageBox::Yes | QMessageBox::No),
+                           this);
+        mBox.setDefaultButton(QMessageBox::No);
+        //mBox.setMinimumWidth(300);
+
+        if (mBox.exec() == QMessageBox::Yes)
+        {
+          mustRemove = true;
+        }
+      }
+
+      if(mustRemove)
+        requestEntityRemotion(selected);
     }
 
     scene->update();
