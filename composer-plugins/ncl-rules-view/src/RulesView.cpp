@@ -1,4 +1,4 @@
-#include "rulesview.h"
+#include "RulesView.h"
 
 #include <QVBoxLayout>
 #include <QStringList>

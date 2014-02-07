@@ -1,4 +1,4 @@
-#include "ruleitem.h"
+#include "RuleItem.h"
 
 #include <core/extensions/NCLStructure.h>
 #include <QDebug>

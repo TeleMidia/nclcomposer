@@ -205,7 +205,7 @@ void XWizardPage::resolve( ElemInput *elemInput,
     {
       AttrInput * attrInput = attrInputs.at(i);
       QString attributeName = attrInput->name();
-      QString attributeValue = attrInput->answer();
+      QString attributeValue = attrInput->getAnswer();
 
       elementTarget.setAttribute(attributeName, attributeValue);
     }

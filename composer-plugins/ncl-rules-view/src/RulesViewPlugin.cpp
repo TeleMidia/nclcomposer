@@ -1,4 +1,5 @@
-#include "rulesviewplugin.h"
+#include "RulesViewPlugin.h"
+
 #include <QAction>
 #include <QList>
 #include <QMessageBox>

@@ -1,4 +1,4 @@
-#include "rulesviewfactory.h"
+#include "RulesViewFactory.h"
 
 RulesViewFactory::RulesViewFactory()
 {

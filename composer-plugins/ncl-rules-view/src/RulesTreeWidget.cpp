@@ -1,4 +1,4 @@
-#include "rulestreewidget.h"
+#include "RulesTreeWidget.h"
 
 #include <QMenu>
 #include <QDebug>

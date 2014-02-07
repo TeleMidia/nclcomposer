@@ -1,4 +1,4 @@
-#include "compositeruleitem.h"
+#include "CompositeRuleItem.h"
 
 #include <QDebug>
 
