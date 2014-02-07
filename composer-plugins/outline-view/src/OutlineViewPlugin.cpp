@@ -20,11 +20,11 @@
 #include "core/modules/LanguageControl.h"
 
 OutlineViewPlugin::OutlineViewPlugin() :
-  window(new NCLTreeWidget(0)), windowBuffering(new NCLTreeWidget(0))
+  _window(new NCLTreeWidget(0)), _windowBuffering(new NCLTreeWidget(0))
 {
   project = NULL;
 
-  connect ( window,
+  connect ( _window,
             SIGNAL( elementAddedByUser ( QString,
                                          QString,
                                          QMap <QString, QString> &,
@@ -35,35 +35,35 @@ OutlineViewPlugin::OutlineViewPlugin() :
                                       QMap <QString, QString> &,
                                       bool)));
 
-  connect (window, SIGNAL(elementRemovedByUser(QString)), this,
+  connect (_window, SIGNAL(elementRemovedByUser(QString)), this,
            SLOT(elementRemovedByUser(QString)));
 
-  connect(window,
+  connect(_window,
           SIGNAL(itemSelectionChanged()),
           this,
           SLOT(itemSelectionChanged()));
 
-  selectedId = NULL;
-  isSyncFromTextual = false;
+  _selectedId = NULL;
+  _isSyncingFromTextual = false;
 }
 
 OutlineViewPlugin::~OutlineViewPlugin()
 {
-  if(selectedId != NULL)
-    delete selectedId;
+  if(_selectedId != NULL)
+    delete _selectedId;
 
-  delete window;
-  delete windowBuffering;
+  delete _window;
+  delete _windowBuffering;
 }
 
 QWidget* OutlineViewPlugin::getWidget()
 {
-  return window;
+  return _window;
 }
 
 void OutlineViewPlugin::onEntityAdded(QString pluginID, Entity *entity)
 {
-  if(isSyncFromTextual)
+  if(_isSyncingFromTextual)
     return;
 
   (void) pluginID;
@@ -80,26 +80,26 @@ void OutlineViewPlugin::onEntityAdded(QString pluginID, Entity *entity)
     attrs[it.key()] = it.value();
   }
 
-  if(idToItem.contains(entity->getParentUniqueId()))
+  if(_idToItem.contains(entity->getParentUniqueId()))
   {
-    item = window->addElement( idToItem[entity->getParentUniqueId()],
-                               -1,
-                               entity->getType(),
-                               entity->getUniqueId(),
-                               attrs,
-                               0, 0);
+    item = _window->addElement( _idToItem[entity->getParentUniqueId()],
+        -1,
+        entity->getType(),
+        entity->getUniqueId(),
+        attrs,
+        0, 0);
   }
   else
   {
-    item = window->addElement( 0,
-                               -1,
-                               entity->getType(),
-                               entity->getUniqueId(),
-                               attrs,
-                               0, 0);
+    item = _window->addElement( 0,
+                                -1,
+                                entity->getType(),
+                                entity->getUniqueId(),
+                                attrs,
+                                0, 0);
   }
 
-  idToItem[entity->getUniqueId()] = item;
+  _idToItem[entity->getUniqueId()] = item;
 
   if(entity->getType() == "ncl" ||
      entity->getType() == "body" ||
@@ -124,7 +124,7 @@ void OutlineViewPlugin::onEntityAdded(QString pluginID, Entity *entity)
 
   // \todo This must be incremental
   clearErrorMessages();
-  //    emit sendBroadcastMessage("askAllValidationMessages", NULL);
+  // emit sendBroadcastMessage("askAllValidationMessages", NULL);
 }
 
 void OutlineViewPlugin::errorMessage(QString error)
@@ -134,7 +134,7 @@ void OutlineViewPlugin::errorMessage(QString error)
 
 void OutlineViewPlugin::onEntityChanged(QString pluginID, Entity * entity)
 {
-  if(isSyncFromTextual)
+  if(_isSyncingFromTextual)
     return;
 
   QMap <QString, QString> attrs;
@@ -146,20 +146,20 @@ void OutlineViewPlugin::onEntityChanged(QString pluginID, Entity * entity)
     attrs[it.key()] = it.value();
   }
 
-  idToItem[entity->getUniqueId()]->setTextColor(0, Qt::black);
-  idToItem[entity->getUniqueId()]->setToolTip(0, "");
+  _idToItem[entity->getUniqueId()]->setTextColor(0, Qt::black);
+  _idToItem[entity->getUniqueId()]->setToolTip(0, "");
 
-  window->updateItem(idToItem[entity->getUniqueId()], entity->getType(),
-                     attrs);
+  _window->updateItem(_idToItem[entity->getUniqueId()], entity->getType(),
+      attrs);
 
   // \todo This must be incremental
   clearErrorMessages();
-  //    emit sendBroadcastMessage("askAllValidationMessages", NULL);
+  // emit sendBroadcastMessage("askAllValidationMessages", NULL);
 }
 
 void OutlineViewPlugin::onEntityRemoved(QString pluginID, QString entityID)
 {
-  if(isSyncFromTextual)
+  if(_isSyncingFromTextual)
     return;
 
   (void) pluginID;
@@ -167,14 +167,14 @@ void OutlineViewPlugin::onEntityRemoved(QString pluginID, QString entityID)
   //            << entityID << ")";
   //    qDebug() << idToItem.contains(entityID);
 
-  if(idToItem.contains(entityID))
+  if(_idToItem.contains(entityID))
   {
-    idToItem.remove(entityID);
-    window->removeItem(entityID);
-    if (selectedId != NULL && entityID == *selectedId)
+    _idToItem.remove(entityID);
+    _window->removeItem(entityID);
+    if (_selectedId != NULL && entityID == *_selectedId)
     {
-      delete selectedId;
-      selectedId = NULL;
+      delete _selectedId;
+      _selectedId = NULL;
     }
   }
 
@@ -207,12 +207,12 @@ bool OutlineViewPlugin::saveSubsession()
 
 void OutlineViewPlugin::updateFromModel()
 {
-  window->hide();
-  window->collapseAll();
+  _window->hide();
+  _window->collapseAll();
 
   // \todo This could be a default implementation for updateFromModel
-  window->clear();
-  idToItem.clear();
+  _window->clear();
+  _idToItem.clear();
 
   if(project->getChildren().size())
   {
@@ -239,19 +239,19 @@ void OutlineViewPlugin::updateFromModel()
     }
   }
 
-  window->expandAll();
-  window->show();
+  _window->expandAll();
+  _window->show();
 }
 
 void OutlineViewPlugin::init()
 {
   //Clear previous tree
   QString key;
-  foreach(key, idToItem.keys())
+  foreach(key, _idToItem.keys())
   {
-    window->removeItem(key);
+    _window->removeItem(key);
   }
-  idToItem.clear();
+  _idToItem.clear();
 
   //Draw new tree
   if(!project->getChildren().size()) return;
@@ -269,14 +269,14 @@ void OutlineViewPlugin::init()
     attrs[it.key()] = it.value();
   }
 
-  item = window->addElement( 0,
-                             -1,
-                             entity->getType(),
-                             entity->getUniqueId(),
-                             attrs,
-                             0, 0);
+  item = _window->addElement( 0,
+                              -1,
+                              entity->getType(),
+                              entity->getUniqueId(),
+                              attrs,
+                              0, 0);
 
-  idToItem[entity->getUniqueId()] = item;
+  _idToItem[entity->getUniqueId()] = item;
   stack.push(entity);
 
   while(stack.size() > 0)
@@ -287,7 +287,7 @@ void OutlineViewPlugin::init()
     QVector <Entity *> children = entity->getChildren();
     for(int i = 0; i < children.size(); i++)
     {
-      if(idToItem.contains(children.at(i)->getUniqueId())) continue;
+      if(_idToItem.contains(children.at(i)->getUniqueId())) continue;
 
       attrs.clear();
       children.at(i)->getAttributeIterator(begin, end);
@@ -296,14 +296,14 @@ void OutlineViewPlugin::init()
         attrs[it.key()] = it.value();
       }
 
-      item = window->addElement( idToItem[entity->getUniqueId()],
-                                 -1,
-                                 children.at(i)->getType(),
-                                 children.at(i)->getUniqueId(),
-                                 attrs,
-                                 0, 0);
+      item = _window->addElement( _idToItem[entity->getUniqueId()],
+          -1,
+          children.at(i)->getType(),
+          children.at(i)->getUniqueId(),
+          attrs,
+          0, 0);
 
-      idToItem[children.at(i)->getUniqueId()] = item;
+      _idToItem[children.at(i)->getUniqueId()] = item;
       stack.push_front(children.at(i));
     }
   }
@@ -319,32 +319,32 @@ void OutlineViewPlugin::debugHasSendClearAll(QString pluginID, void *param)
 
 void OutlineViewPlugin::itemSelectionChanged()
 {
-  if(selectedId != NULL)
+  if(_selectedId != NULL)
   {
-    delete selectedId;
-    selectedId = NULL;
+    delete _selectedId;
+    _selectedId = NULL;
   }
 
-  QList <QTreeWidgetItem*> selecteds = window->selectedItems();
+  QList <QTreeWidgetItem*> selecteds = _window->selectedItems();
 
   if(selecteds.size())
   {
-    selectedId = new QString(selecteds.at(0)->text(2));
-    emit sendBroadcastMessage("changeSelectedEntity", selectedId);
+    _selectedId = new QString(selecteds.at(0)->text(2));
+    emit sendBroadcastMessage("changeSelectedEntity", _selectedId);
   }
 }
 
 void OutlineViewPlugin::changeSelectedEntity(QString pluginID, void *param)
 {
-  if(isSyncFromTextual)
+  if(_isSyncingFromTextual)
     return;
 
   if(pluginID != this->pluginInstanceID)
   {
     QString *id = (QString*)param;
-    QTreeWidgetItem *item = window->getItemById(*id);
+    QTreeWidgetItem *item = _window->getItemById(*id);
     if(item != NULL)
-      window->setCurrentItem(item, 0);
+      _window->setCurrentItem(item, 0);
     else
       qWarning() << "The OutlineViewPlugin receive a message to select an"
                  << " Entity that it doesn't know.";
@@ -353,24 +353,24 @@ void OutlineViewPlugin::changeSelectedEntity(QString pluginID, void *param)
 
 void OutlineViewPlugin::textualStartSync(QString, void*)
 {
-  isSyncFromTextual = true;
+  _isSyncingFromTextual = true;
 }
 
 void OutlineViewPlugin::textualFinishSync(QString, void*)
 {
-  isSyncFromTextual = false;
+  _isSyncingFromTextual = false;
 
   updateFromModel();
 }
 
 void OutlineViewPlugin::clearErrorMessages()
 {
-  if(isSyncFromTextual)
+  if(_isSyncingFromTextual)
     return;
 
   qDebug() << "OutlineViewPlugin::clearErrorMessages" << endl;
 
-  foreach (QTreeWidgetItem *item, idToItem.values())
+  foreach (QTreeWidgetItem *item, _idToItem.values())
   {
     item->setTextColor(0, Qt::black);
     item->setToolTip(0, "");
@@ -384,7 +384,7 @@ void OutlineViewPlugin::clearValidationMessages(QString, void *param)
 
 void OutlineViewPlugin::validationError(QString pluginID, void * param)
 {
-  if(isSyncFromTextual)
+  if(_isSyncingFromTextual)
     return;
 
   if (param)
@@ -393,7 +393,7 @@ void OutlineViewPlugin::validationError(QString pluginID, void * param)
 
     QString uid = p->first;
 
-    QTreeWidgetItem *item = window->getItemById(uid);
+    QTreeWidgetItem *item = _window->getItemById(uid);
     if(item != NULL)
     {
       item->setTextColor(0, Qt::red);

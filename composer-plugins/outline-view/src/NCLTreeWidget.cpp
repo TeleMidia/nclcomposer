@@ -47,10 +47,10 @@ NCLTreeWidget::NCLTreeWidget(QWidget *parent) : QTreeWidget(parent)
   setColumnHidden(3, true);
   setColumnHidden(4, true);
 
-  isExpandedAll = true;
+  _isExpandedAll = true;
 
   /* \todo This defaultFontSize must be configurable. */
-  defaultFont = QFont();
+  _defaultFont = QFont();
 
   setDragEnabled(true);
 }
@@ -62,39 +62,37 @@ NCLTreeWidget::~NCLTreeWidget()
 
 void NCLTreeWidget::createActions ()
 {
-  insertNodeAct = new QAction( QIcon(":/images/save.png"),
+  _insertNodeAct = new QAction( QIcon(":/images/save.png"),
                                tr("&Add child"),
                                this);
-
-  connect( insertNodeAct, SIGNAL(triggered()),
+  connect( _insertNodeAct, SIGNAL(triggered()),
            this, SLOT(userAddNewElement()));
-  addAction(insertNodeAct);
+  addAction(_insertNodeAct);
 
-  removeNodeAct = new QAction( QIcon(":/images/delete.png"),
+  _removeNodeAct = new QAction( QIcon(":/images/delete.png"),
                                tr("&Remove Selected element"),
                                this);
-
-  connect( removeNodeAct, SIGNAL(triggered()),
+  _removeNodeAct->setShortcutContext(Qt::WidgetShortcut);
+  _removeNodeAct->setShortcut(QKeySequence::Delete);
+  addAction(_removeNodeAct);
+  connect( _removeNodeAct, SIGNAL(triggered()),
            this, SLOT(userRemoveElement()));
-  removeNodeAct->setShortcutContext(Qt::WidgetShortcut);
-  removeNodeAct->setShortcut(QKeySequence::Delete);
-  addAction(removeNodeAct);
 
-  expandAllAct = new QAction(tr("&Expand All"), this);
-  expandAllAct->setCheckable(true);
-  expandAllAct->setChecked(true);
-  connect(expandAllAct, SIGNAL(triggered()), this, SLOT(expandAll()));
-  addAction(expandAllAct);
+  _expandAllAct = new QAction(tr("&Expand All"), this);
+  _expandAllAct->setCheckable(true);
+  _expandAllAct->setChecked(true);
+  connect(_expandAllAct, SIGNAL(triggered()), this, SLOT(expandAll()));
+  addAction(_expandAllAct);
 
 }
 
 void NCLTreeWidget::createMenus()
 {
-  elementMenu = new QMenu(this);
-  elementMenu->addAction(insertNodeAct);
-  elementMenu->addAction(removeNodeAct);
-  elementMenu->addSeparator();
-  elementMenu->addAction(expandAllAct);
+  _elementMenu = new QMenu(this);
+  _elementMenu->addAction(_insertNodeAct);
+  _elementMenu->addAction(_removeNodeAct);
+  _elementMenu->addSeparator();
+  _elementMenu->addAction(_expandAllAct);
 }
 
 bool NCLTreeWidget::updateFromText(QString text)
@@ -137,8 +135,8 @@ QTreeWidgetItem* NCLTreeWidget::addElement ( QTreeWidgetItem *father,
                                              QString tagname,
                                              QString id,
                                              QMap <QString, QString> &attrs,
-                                             int line_in_text,
-                                             int column_in_text)
+                                             int /* line_in_text */,
+                                             int /* column_in_text*/)
 {
 
   QTreeWidgetItem *child;
@@ -152,20 +150,20 @@ QTreeWidgetItem* NCLTreeWidget::addElement ( QTreeWidgetItem *father,
     int p = pos;
 
 #ifdef KEEP_ELEMENTS_ORDER
-    deque <QString> *elements_ordered = NCLStructure::getInstance()->getElementsOrdered();
+    deque <QString> *elements_ordered =
+        NCLStructure::getInstance()->getElementsOrdered();
     if(father->childCount())
     {
+      // Find where to insert the element.
       int i = 0;
       p = 0;
       while (!pos_found)
       {
-        qDebug() << p << i << father->childCount();
         while ((elements_ordered->at(i) != tagname)
                &&
                (elements_ordered->at(i) != father->child(p)->text(4)))
         {
           i++;
-          qDebug() << i << elements_ordered->at(i) << p << father->child(p)->text(4) << father->childCount();
         }
 
         if(elements_ordered->at(i) == tagname)
@@ -278,9 +276,7 @@ QTreeWidgetItem *NCLTreeWidget::getItemById(QString itemId)
   for (int i = 0; i < items.size(); i++)
   {
     if(items.at(i)->text(2) == itemId)
-    {
       return items.at(i);
-    }
   }
   return NULL;
 }
@@ -356,8 +352,8 @@ void NCLTreeWidget::updateItem(QTreeWidgetItem *item, QString tagname,
 {
   QIcon icon;
   /*!
-      \todo Create a method to return an Icon to a given element.
-     */
+   *  \todo Create a method to return an Icon to a given element.
+   */
   if(tagname == "media")
   {
     QString type = "";
@@ -459,7 +455,8 @@ void NCLTreeWidget::updateItem(QTreeWidgetItem *item, QString tagname,
   {
     strAttrList += " ";
     strAttrList += key + "=\"" + attrs[key] + "\"";
-    if(key == "id" || key == "name") {
+    if(key == "id" || key == "name")
+    {
       name = attrs[key];
     }
   }
@@ -478,7 +475,7 @@ void NCLTreeWidget::updateItem(QTreeWidgetItem *item, QString tagname,
   //item->setText(2, id);
   //item->setText(1, name);
 
-  if(isExpandedAll)
+  if(_isExpandedAll)
     QTreeWidget::expandAll();
 
   repaint();
@@ -512,24 +509,26 @@ void NCLTreeWidget::increaseFont()
 
 void NCLTreeWidget::resetFont()
 {
-  setFont(defaultFont);
+  setFont(_defaultFont);
 }
 
 void NCLTreeWidget::setDefaultFont(const QFont &defaultFont)
 {
-  this->defaultFont = defaultFont;
+  this->_defaultFont = defaultFont;
 }
 
 void NCLTreeWidget::wheelEvent(QWheelEvent *event)
 {
-  if(event->modifiers() == Qt::ControlModifier){
+  if(event->modifiers() == Qt::ControlModifier)
+  {
     if(event->delta() > 0)
       zoomIn();
     else
       zoomOut();
     event->accept();
   }
-  else {
+  else
+  {
     QTreeWidget::wheelEvent(event);
   }
 }
@@ -560,12 +559,12 @@ void NCLTreeWidget::keyPressEvent(QKeyEvent *event)
 
 void NCLTreeWidget::expandAll()
 {
-  if(!isExpandedAll)
+  if(!_isExpandedAll)
   {
-    isExpandedAll = true;
+    _isExpandedAll = true;
     QTreeWidget::expandAll();
   }
-  else isExpandedAll = false;
+  else _isExpandedAll = false;
 }
 
 void NCLTreeWidget::zoomIn()

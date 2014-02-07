@@ -1,19 +1,19 @@
 /*
  * Copyright 2011-2012 TeleMidia/PUC-Rio.
- * 
+ *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
- * License as published by the Free Software Foundation; either 
+ * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
- * You should have received a copy of the GNU Lesser General Public 
+ *
+ * You should have received a copy of the GNU Lesser General Public
  * License along with this library.  If not, see
- * <http://www.gnu.org/licenses/>. 
+ * <http://www.gnu.org/licenses/>.
  */
 #ifndef NCLTREEWIDGET_H
 #define NCLTREEWIDGET_H
@@ -45,49 +45,9 @@ using namespace std;
  *  Composer Core.
  *
  */
-class NCLTreeWidget: public QTreeWidget {
+class NCLTreeWidget: public QTreeWidget
+{
   Q_OBJECT
-
-private:
-#ifdef KEEP_ELEMENTS_ORDER
-  static QVector <QString> entitiesOrder;
-#endif
-
-  QAction *insertNodeAct; /**< TODO */
-  QAction *removeNodeAct; /**< TODO */
-  QAction *expandAllAct; /**< TODO */
-  QMenu   *elementMenu; /**< TODO */
-
-  QShortcut *shortcut_zoomout; /**< TODO */
-  QShortcut *shortcut_zoomin; /**< TODO */
-  bool isExpandedAll;
-
-  int fontSize;
-  QFont defaultFont;
-
-  /*!
-   * \brief Creates the QActions
-   */
-  void createActions();
-  /*!
-   * \brief Creates the menus and bind to previous created QActions.
-   */
-  void createMenus();
-
-  /* User events */
-  /*!
-   * \brief Handles wheel event (mainly to perform zoom actions). This function
-   *          is a callback called by Qt.
-   *
-   * \param event The QWheelEvent.
-   */
-  void wheelEvent(QWheelEvent * event);
-  /*!
-   * \brief Handles keypress event. This callback is called internally by Qt.
-   *
-   * \param event The QKeyEvent.
-   */
-  void keyPressEvent(QKeyEvent *event);
 
 public:
   /*!
@@ -95,15 +55,18 @@ public:
    *
    * \param parent The
    */
-  NCLTreeWidget(QWidget *parent = 0);
+  explicit NCLTreeWidget(QWidget *parent = 0);
+
   /*!
    * \brief Destroys the tree widget and all its items.
    */
   virtual ~NCLTreeWidget();
+
   /*!
    * \brief Sets the default font of the TreeWidget.
    */
-  void setDefaultFont(const QFont &defaultFont);
+  void setDefaultFont(const QFont &_defaultFont);
+
   /*!
    * Reimplementation of mouseMoveEvent.
    */
@@ -199,24 +162,6 @@ public slots:
    */
   void resetZoom();
 
-private slots:
-  /*!
-   * \brief
-   */
-  void userAddNewElement();
-  /*!
-   * \brief
-   */
-  void userRemoveElement();
-  /*!
-   * \brief
-   */
-  void decreaseFont();
-  /*!
-   * \brief
-   */
-  void increaseFont();
-
 signals:
   /*!
    * \brief
@@ -247,6 +192,67 @@ signals:
                           int line,
                           int column,
                           int severity);
+
+
+private:
+#ifdef KEEP_ELEMENTS_ORDER
+  static QVector <QString> _entitiesOrder;
+#endif
+
+  QAction *_insertNodeAct; /**< TODO */
+  QAction *_removeNodeAct; /**< TODO */
+  QAction *_expandAllAct; /**< TODO */
+  QMenu   *_elementMenu; /**< TODO */
+
+  QShortcut *_shortcutZoomOut; /**< TODO */
+  QShortcut *_shortcutZoomIn; /**< TODO */
+  bool _isExpandedAll;
+
+  int _fontSize;
+  QFont _defaultFont;
+
+  /*!
+   * \brief Creates the QActions
+   */
+  void createActions();
+  /*!
+   * \brief Creates the menus and bind to previous created QActions.
+   */
+  void createMenus();
+
+  /* User events */
+  /*!
+   * \brief Handles wheel event (mainly to perform zoom actions). This function
+   *          is a callback called by Qt.
+   *
+   * \param event The QWheelEvent.
+   */
+  void wheelEvent(QWheelEvent * event);
+  /*!
+   * \brief Handles keypress event. This callback is called internally by Qt.
+   *
+   * \param event The QKeyEvent.
+   */
+  void keyPressEvent(QKeyEvent *event);
+
+private slots:
+  /*!
+   * \brief
+   */
+  void userAddNewElement();
+  /*!
+   * \brief
+   */
+  void userRemoveElement();
+  /*!
+   * \brief
+   */
+  void decreaseFont();
+  /*!
+   * \brief
+   */
+  void increaseFont();
+
 
 };
 

@@ -32,12 +32,6 @@ class OutlineViewPlugin : public IPlugin
 {
   Q_OBJECT
 
-private:
-  NCLTreeWidget *window, *windowBuffering; /*!< TODO */
-  QString *selectedId; /*!< TODO */
-  QMap <QString, QTreeWidgetItem*> idToItem; /*!< TODO */
-  bool isSyncFromTextual;
-
 public:
   /*!
    * \brief Constructor.
@@ -160,6 +154,12 @@ public slots:
    * \brief
    */
   void clearErrorMessages();
+
+private:
+  NCLTreeWidget *_window, *_windowBuffering; /*!< TODO */
+  QString *_selectedId; /*!< TODO */
+  QMap <QString, QTreeWidgetItem*> _idToItem; /*!< TODO */
+  bool _isSyncingFromTextual;
 
 private slots:
   /*!

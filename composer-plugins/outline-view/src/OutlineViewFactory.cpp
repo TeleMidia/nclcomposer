@@ -31,10 +31,10 @@ void OutlineViewFactory::releasePluginInstance(IPlugin *plugin)
   OutlineViewFactory *outlineView = qobject_cast<OutlineViewFactory*>(plugin);
 
   if (outlineView)
-    {
-      delete outlineView;
-      outlineView = NULL;
-    }
+  {
+    delete outlineView;
+    outlineView = NULL;
+  }
 }
 
 QString OutlineViewFactory::id() const
