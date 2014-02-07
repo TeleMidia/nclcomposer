@@ -32,6 +32,8 @@ PropertiesViewPlugin::PropertiesViewPlugin()
 
 PropertiesViewPlugin::~PropertiesViewPlugin()
 {
+  /*!  \todo Review PropertiesViewPlugin::~PropertiesViewPlugin().
+             Why not delete 'window'? Memory leak? */
   //delete window;
 }
 
@@ -77,12 +79,13 @@ void PropertiesViewPlugin::onEntityRemoved(QString pluginID, QString entityID)
 
 bool PropertiesViewPlugin::saveSubsession()
 {
-  //TODO: All
+  /*!< TODO: Implement PropertiesViewPlugin::saveSubsession() */
   return true;
 }
 
 void PropertiesViewPlugin::init()
 {
+  /*!< TODO: Implement PropertiesViewPlugin::init() */
   //TODO: All
   /*
     QPushButton *refresh = new QPushButton(window);
@@ -200,11 +203,11 @@ void PropertiesViewPlugin::validationError(QString pluginID, void * param)
 {
   if (param)
   {
-     pair <QString , QString> *p = (pair <QString, QString> *) param;
+    pair <QString , QString> *p = (pair <QString, QString> *) param;
 
-     QString uid = p->first;
+    QString uid = p->first;
 
-     if(currentEntity == project->getEntityById(uid))
-       updateCurrentEntity(p->second);
+    if(currentEntity == project->getEntityById(uid))
+      updateCurrentEntity(p->second);
   }
 }

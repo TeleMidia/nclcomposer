@@ -76,7 +76,8 @@ void PropertyEditor::setTagname(QString tagname, QString name)
 {
   this->currentTagname = tagname;
   //this->currentFilterString = "";
-  ComboBoxDelegate *delegate = qobject_cast<ComboBoxDelegate *> (ui->tableWidget->itemDelegate());
+  ComboBoxDelegate *delegate = qobject_cast<ComboBoxDelegate *>
+      (ui->tableWidget->itemDelegate());
 
   if(delegate)
     delegate->setCurrentTagname(tagname);
@@ -155,7 +156,7 @@ void PropertyEditor::setAttributeValue(QString property, QString value)
         // Try to update if the values are not equal
         if(item->text() != value)
         {
-//          internalPropertyChange = true;
+          //          internalPropertyChange = true;
           item->setText(value);
           propertyToValue[property] = value;
         }
@@ -180,7 +181,7 @@ void PropertyEditor::setAttributeValue(QString property, QString value)
 
 void PropertyEditor::updateWithItemChanges(QTableWidgetItem *item)
 {
-//  qDebug() << "updateWithItemChanges " << internalPropertyChange;
+  //  qDebug() << "updateWithItemChanges " << internalPropertyChange;
   int row = ui->tableWidget->row(item);
   int column = ui->tableWidget->column(item);
 
@@ -227,7 +228,7 @@ void PropertyEditor::filterProperties(const QString& text)
   deque <QString>::iterator it;
 
   for (it = orderedProperties.begin(); it != orderedProperties.end(); ++it)
-  // foreach( attr, propertyToValue.keys() )
+    // foreach( attr, propertyToValue.keys() )
   {
     attr = *it;
     if(attr.toLower().startsWith(text.toLower()))
@@ -269,7 +270,7 @@ void PropertyEditor::filterProperties(const QString& text)
 
 bool PropertyEditor::isURL(const QString &tagname, const QString &attr)
 {
-  // \todo This must be improved to use NCLStructure
+  /*! \todo This must be improved to use NCLStructure */
   return (attr == "src" ||
           attr == "focusSrc" ||
           attr == "focusSelSrc" ||

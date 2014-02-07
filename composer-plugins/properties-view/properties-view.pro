@@ -1,37 +1,43 @@
-TARGET = properties_view
-
 include (../plugins-common.pri)
 
-LIBS += -lNCLLanguageProfile
+TARGET = \
+  properties-view
 
-DEFINES += PROPERTIESVIEW_LIBRARY
+INCLUDEPATH += \
+  src
 
-INCLUDEPATH += include
+LIBS += \
+  -lNCLLanguageProfile
 
-SOURCES +=  src/PropertiesViewFactory.cpp \
-            src/PropertiesViewPlugin.cpp \
-            src/PropertyEditor.cpp \
-            src/QLLineEditFilter.cpp \
-            src/LineEditWithButton.cpp \
-            src/PropertyButton.cpp
+DEFINES += \
+  PROPERTIESVIEW_LIBRARY
 
-HEADERS +=  include/PropertiesViewFactory.h\
-            include/PropertiesView_global.h \
-            include/PropertyEditor.h \
-            include/PropertiesViewPlugin.h \
-            include/QLineEditFilter.h \
-            include/LineEditWithButton.h \
-            include/PropertyButton.h
+SOURCES +=  \
+  src/PropertiesViewFactory.cpp \
+  src/PropertiesViewPlugin.cpp \
+  src/PropertyEditor.cpp \
+  src/QLLineEditFilter.cpp \
+  src/LineEditWithButton.cpp \
+  src/PropertyButton.cpp
 
-#RESOURCES += images.qrc
-
-INSTALLS += target
+HEADERS +=  \
+  src/PropertiesViewFactory.h\
+  src/PropertiesView_global.h \
+  src/PropertyEditor.h \
+  src/PropertiesViewPlugin.h \
+  src/QLineEditFilter.h \
+  src/LineEditWithButton.h \
+  src/PropertyButton.h
 
 FORMS += \
-    ui/PropertyEditorWidget.ui
+  ui/PropertyEditorWidget.ui
 
 RESOURCES += \
-    ../common-resources/language.qrc
+  ../common-resources/language.qrc
 
 OTHER_FILES += \
-    properties_view.json
+  properties_view.json
+
+INSTALLS += \
+  target
+

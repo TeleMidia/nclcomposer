@@ -26,7 +26,7 @@ LineEditWithButton::LineEditWithButton(QWidget *parent,
   // Create the search button and set its icon, cursor, and stylesheet
   this->mButton = new QToolButton(this);
   // this->mButton->setIcon(QIcon(iconPath));
-//  this->mButton->setFixedSize(18, 18);
+  //  this->mButton->setFixedSize(18, 18);
   this->mButton->setText("...");
   this->mButton->setCursor(Qt::ArrowCursor);
   this->mButton->setStyleSheet(this->buttonStyleSheetForCurrentState());
@@ -34,13 +34,13 @@ LineEditWithButton::LineEditWithButton(QWidget *parent,
   // Some stylesheet and size corrections for the text box
   this->setStyleSheet(this->styleSheetForCurrentState());
 
-//  int frameWidth = this->style()->pixelMetric(QStyle::PM_DefaultFrameWidth);
-//  QSize minSizeHint = this->minimumSizeHint();
-//  this->setMinimumSize(
-//        qMax(minSizeHint.width(),
-//             this->mButton->sizeHint().width() + frameWidth * 2 + 2),
-//        qMax(minSizeHint.height(),
-//             this->mButton->sizeHint().height() + frameWidth * 2 + 2));
+  //  int frameWidth = this->style()->pixelMetric(QStyle::PM_DefaultFrameWidth);
+  //  QSize minSizeHint = this->minimumSizeHint();
+  //  this->setMinimumSize(
+  //        qMax(minSizeHint.width(),
+  //             this->mButton->sizeHint().width() + frameWidth * 2 + 2),
+  //        qMax(minSizeHint.height(),
+  //             this->mButton->sizeHint().height() + frameWidth * 2 + 2));
 
   QObject::connect(this->mButton, SIGNAL(clicked()), SIGNAL(buttonPressed()));
 }
@@ -63,12 +63,12 @@ QString LineEditWithButton::styleSheetForCurrentState() const
   style += "QLineEdit {";
   /* if (this->text().isEmpty())
   { */
-//    style += "font-family: 'MS Sans Serif';";
-//    style += "font-style: italic;";
-    style += "font-size: 11px;";
+  //    style += "font-family: 'MS Sans Serif';";
+  //    style += "font-style: italic;";
+  style += "font-size: 11px;";
   // }
 
-//  style += "padding-left: 3px;";
+  //  style += "padding-left: 3px;";
   style += QString("padding-right: %1px;").arg(
         this->mButton->sizeHint().width() + frameWidth + 1);
   /*

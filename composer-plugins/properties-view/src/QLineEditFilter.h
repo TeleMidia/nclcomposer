@@ -1,19 +1,19 @@
 /*
  * Copyright 2011 TeleMidia/PUC-Rio.
- * 
+ *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
- * License as published by the Free Software Foundation; either 
+ * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
- * You should have received a copy of the GNU Lesser General Public 
+ *
+ * You should have received a copy of the GNU Lesser General Public
  * License along with this library.  If not, see
- * <http://www.gnu.org/licenses/>. 
+ * <http://www.gnu.org/licenses/>.
  */
 #ifndef QLINEEDITFILTER_H
 #define QLINEEDITFILTER_H
@@ -23,25 +23,24 @@
 
 class QLineEditFilter : public QLineEdit
 {
-    Q_OBJECT
+  Q_OBJECT
 
 public:
-    QLineEditFilter(QWidget *parent);
-    virtual ~QLineEditFilter();
-
-protected:
-    void focusInEvent(QFocusEvent *);
-    void focusOutEvent(QFocusEvent *);
-
-private slots:
-    void userTextEdited(const QString &);
-
-private:
-    bool isFilterText;
+  QLineEditFilter(QWidget *parent);
+  virtual ~QLineEditFilter();
 
 signals:
-    void filterTextChanged(const QString &);
+  void filterTextChanged(const QString &);
 
+protected:
+  void focusInEvent(QFocusEvent *);
+  void focusOutEvent(QFocusEvent *);
+
+private slots:
+  void userTextEdited(const QString &);
+
+private:
+  bool isFilterText;
 };
 
 #endif // QLINEEDITFILTER_H

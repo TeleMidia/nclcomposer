@@ -1,5 +1,5 @@
 /*
- * Copyright 2011-2012 TeleMidia/PUC-Rio.
+ * Copyright 2011 TeleMidia/PUC-Rio.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -15,33 +15,17 @@
  * License along with this library.  If not, see
  * <http://www.gnu.org/licenses/>.
  */
-#ifndef PROPERTYBUTTONS_H
-#define PROPERTYBUTTONS_H
+#ifndef PROPERTIESVIEW_GLOBAL_H
+#define PROPERTIESVIEW_GLOBAL_H
 
-#include "LineEditWithButton.h"
+#include <QtCore/qglobal.h>
 
-class PropertyButtons : public LineEditWithButton
-{
-  Q_OBJECT
+/*! \todo Remove this file. It is not used. */
 
-private:
-  QWidget *window;
+#if defined(PROPERTIESVIEW_LIBRARY)
+#  define PROPERTIESVIEWSHARED_EXPORT Q_DECL_EXPORT
+#else
+#  define PROPERTIESVIEWSHARED_EXPORT Q_DECL_IMPORT
+#endif
 
-public:
-  explicit PropertyButtons(QString propName, QWidget *parent = 0);
-
-  QString key, value;
-
-public slots:
-  void openfile();
-
-private slots:
-  void emitNewValue();
-  void emitNewValue(QString);
-
-signals:
-  void newValue(QString name, QString value);
-
-};
-
-#endif // PROPERTYBUTTONS_H
+#endif // PROPERTIESVIEW_GLOBAL_H

@@ -41,10 +41,6 @@ class ComboBoxDelegate : public QStyledItemDelegate
 {
   Q_OBJECT
 
-private:
-  QString currentTagname;
-  QTableWidget *tableWidget;
-
 public:
   ComboBoxDelegate(QWidget *parent = 0) : QStyledItemDelegate(parent) {}
 
@@ -58,8 +54,9 @@ public:
 
       // \todo References
       NCLStructure *structure = NCLStructure::getInstance();
-      QString datatype = structure->getAttributeDatatype(currentTagname,
-                                                         tableWidget->item(index.row(), 0)->text());
+      QString datatype = structure->
+          getAttributeDatatype(currentTagname,
+                               tableWidget->item(index.row(), 0)->text());
 
       edit->addItems( structure->getDatatypeDefaultSuggestions(datatype) );
 
@@ -108,7 +105,12 @@ public:
   {
     this->tableWidget = tableWidget;
   }
-/*
+
+private:
+  QString currentTagname;
+  QTableWidget *tableWidget;
+
+  /*
 private slots:
   void commitAndCloseEditor(); */
 };
@@ -121,22 +123,6 @@ private slots:
 class PropertyEditor : public QWidget
 {
   Q_OBJECT
-
-private:
-  Ui::PropertyEditorWidget *ui; /*!< TODO */
-  deque <QString> orderedProperties;
-  QMap <QString, int> propertyToLine; /*!< TODO */
-  QMap <QString, QString> propertyToValue; /*!< TODO */
-
-  bool internalPropertyChange;
-
-  QString currentTagname, currentName;
-  QString currentFilterString;
-
-#if WITH_TREEVIEW
-  QStandardItemModel *standardModel;
-  QStandardItem *attributesRootItem, *propertiesRootItem;
-#endif
 
 public:
   /*!
@@ -197,6 +183,9 @@ public:
 
   QSize sizeHint() const { return QSize(250, 400); }
 
+signals:
+  void propertyChanged(QString property, QString value);
+
 private slots:
   /*!
    * \brief This SLOT must be called when the user changes the value of an item.
@@ -210,8 +199,21 @@ private slots:
    */
   void filterProperties(const QString&);
 
-signals:
-  void propertyChanged(QString property, QString value);
+private:
+  Ui::PropertyEditorWidget *ui; /*!< TODO */
+  deque <QString> orderedProperties;
+  QMap <QString, int> propertyToLine; /*!< TODO */
+  QMap <QString, QString> propertyToValue; /*!< TODO */
+
+  bool internalPropertyChange;
+
+  QString currentTagname, currentName;
+  QString currentFilterString;
+
+#if WITH_TREEVIEW
+  QStandardItemModel *standardModel;
+  QStandardItem *attributesRootItem, *propertiesRootItem;
+#endif
 };
 
 #endif // PROPERTYEDITOR_H
