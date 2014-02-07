@@ -7,13 +7,13 @@ macx:LIBS +=    -L$$quote(/Library/Application Support/Composer/Extensions) \
 
 win32:LIBS +=   -lNCLLanguageProfile
 
-INCLUDEPATH     +=  include \
+INCLUDEPATH     +=  src \
                     ../ncl-text-editor/include \
 
-HEADERS         =   include/NCLTreeWidget.h \
-                    include/NCLParser.h \
-                    include/OutlineViewPlugin.h \
-                    include/OutlineViewFactory.h
+HEADERS         =   src/NCLTreeWidget.h \
+                    src/NCLParser.h \
+                    src/OutlineViewPlugin.h \
+                    src/OutlineViewFactory.h
 
 SOURCES         =   src/NCLTreeWidget.cpp \
                     src/NCLParser.cpp \
