@@ -6,15 +6,15 @@ CONFIG += \
 
 SUBDIRS = \
     outline-view \
-    ncl-text-editor/deps/QScintilla-gpl-2.8/Qt4Qt5/qscintilla.pro \
-    ncl-text-editor/ncl-textual-plugin.pro \
+    ncl-textual-view/deps/QScintilla-gpl-2.8/Qt4Qt5/qscintilla.pro \
+    ncl-textual-view/ncl-textual-view.pro \
     debug-console \
     properties-view \
     ncl-layout-view \
     qnclstructural/deps/libqncg/libqncg.pro \
     qnclstructural/qnst.pro \
     validator/validator.pro \
-    rules-view/rules-view.pro \
+    ncl-rules-view/ncl-rules-view.pro \
     nclstructural-20/nclstructural.pro \
     media-preview/mediapreview.pro
 #   clube-ncl
