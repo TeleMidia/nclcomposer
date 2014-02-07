@@ -10,7 +10,7 @@ SUBDIRS = \
     ncl-text-editor/ncl-textual-plugin.pro \
     debug-console \
     properties-view \
-    qncllayout/qnly.pro \
+    ncl-layout-view \
     qnclstructural/deps/libqncg/libqncg.pro \
     qnclstructural/qnst.pro \
     validator/validator.pro \
