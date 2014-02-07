@@ -17,7 +17,7 @@
  */
 #include "View.h"
 
-QnlyView::QnlyView(QWidget* parent) :
+View::View(QWidget* parent) :
     QStackedWidget(parent),
     gridVisibility(false)
 {
@@ -34,12 +34,12 @@ QnlyView::QnlyView(QWidget* parent) :
   selectedRegionBase = NULL;
 }
 
-QnlyView::~QnlyView()
+View::~View()
 {
 
 }
 
-void QnlyView::createActions()
+void View::createActions()
 {
   // help action
   helpAction = new QAction(this);
@@ -182,7 +182,7 @@ void QnlyView::createActions()
   setMouseTracking(true);
 }
 
-void QnlyView::createMenus()
+void View::createMenus()
 {
   // view menu
   viewMenu = new QMenu();
@@ -254,7 +254,7 @@ void QnlyView::createMenus()
   contextMenu->addAction(propertiesAction);
 }
 
-void QnlyView::createConnections()
+void View::createConnections()
 {
   connect(regionbaseActionGroup, SIGNAL(triggered(QAction*)),
           SLOT(performSwitch(QAction*)));
@@ -264,7 +264,7 @@ void QnlyView::createConnections()
   connect(pasteAction, SIGNAL(triggered()), SLOT(performPaste()));
 }
 
-void QnlyView::requestRegionAddition(const QString regionUID,
+void View::requestRegionAddition(const QString regionUID,
                                      const QString parentUID,
                                      const QString regionbaseUID,
                                      QMap<QString, QString> attributes)
@@ -275,7 +275,7 @@ void QnlyView::requestRegionAddition(const QString regionUID,
   emit regionAdded(regionUID, parentUID, regionbaseUID, attributes);
 }
 
-void QnlyView::requestRegionChange(const QString regionUID,
+void View::requestRegionChange(const QString regionUID,
                                    const QString regionbaseUID,
                                    QMap<QString, QString> attributes)
 {
@@ -285,12 +285,12 @@ void QnlyView::requestRegionChange(const QString regionUID,
                      attributes);
 }
 
-void QnlyView::performSwitch(QAction* action)
+void View::performSwitch(QAction* action)
 {
   emit regionBaseSelected(regionbaseActions.key(action));
 }
 
-void QnlyView::performRegionBase()
+void View::performRegionBase()
 {
   QMap<QString, QString> attributes;
 
@@ -299,7 +299,7 @@ void QnlyView::performRegionBase()
   emit regionBaseAdded(QUuid::createUuid().toString(), attributes);
 }
 
-void QnlyView::addRegion(const QString regionUID,
+void View::addRegion(const QString regionUID,
                          const QString parentUID,
                          const QString regionbaseUID,
                          const QMap<QString, QString> attributes)
@@ -307,19 +307,19 @@ void QnlyView::addRegion(const QString regionUID,
   if (!regions.contains(regionUID) &&
       regionbases.contains(regionbaseUID))
   {
-    QnlyGraphicsRegion* region = new QnlyGraphicsRegion(switchMenu);
+    Region* region = new Region(switchMenu);
 
     if (regionUID.isEmpty())
       region->setUid(QUuid::createUuid().toString());
     else
       region->setUid(regionUID);
 
-    QnlyGraphicsRegion* parent = NULL;
+    Region* parent = NULL;
 
     if (regions.contains(parentUID))
       parent = regions[parentUID];
 
-    QnlyGraphicsRegionBase* regionbase = regionbases[regionbaseUID];
+    RegionBase* regionbase = regionbases[regionbaseUID];
 
     nregions++;
 
@@ -327,7 +327,7 @@ void QnlyView::addRegion(const QString regionUID,
   }
 }
 
-void QnlyView::performCopy(QnlyGraphicsRegion *region)
+void View::performCopy(Region *region)
 {  
   // setting
   QMap<QString, QString> attr = region->getAttributes();
@@ -340,7 +340,7 @@ void QnlyView::performCopy(QnlyGraphicsRegion *region)
   }
 }
 
-void QnlyView::performPaste()
+void View::performPaste()
 { 
   QString selectedRegionUId = "";
   if(selectedRegion != NULL)
@@ -358,7 +358,7 @@ void QnlyView::performPaste()
                         copiedRegionAttrs);
 }
 
-void QnlyView::removeRegion(const QString regionUID,
+void View::removeRegion(const QString regionUID,
                             const QString regionbaseUID)
 {
   if (regions.contains(regionUID) && regionbases.contains(regionbaseUID))
@@ -368,7 +368,7 @@ void QnlyView::removeRegion(const QString regionUID,
   }
 }
 
-void QnlyView::changeRegion(const QString regionUID,
+void View::changeRegion(const QString regionUID,
                             const QString regionbaseUID,
                             const QMap<QString, QString> attributes)
 {
@@ -380,7 +380,7 @@ void QnlyView::changeRegion(const QString regionUID,
   }
 }
 
-void QnlyView::selectRegion(const QString regionUID,
+void View::selectRegion(const QString regionUID,
                             const QString regionbaseUID)
 {
   if (regions.contains(regionUID) && regionbases.contains(regionbaseUID))
@@ -390,15 +390,15 @@ void QnlyView::selectRegion(const QString regionUID,
   }
 }
 
-void QnlyView::addRegionBase(const QString regionbaseUID,
+void View::addRegionBase(const QString regionbaseUID,
                              const QMap<QString, QString> attributes)
 {
   if (!regionbases.contains(regionbaseUID))
   {
-    QnlyCanvas* canvas = new QnlyCanvas(this);
+    Canvas* canvas = new Canvas(this);
 
-    QnlyGraphicsRegionBase* regionbase =
-        new QnlyGraphicsRegionBase(canvas, switchMenu);
+    RegionBase* regionbase =
+        new RegionBase(canvas, switchMenu);
 
     regionbase->setParent(canvas);
 
@@ -416,7 +416,7 @@ void QnlyView::addRegionBase(const QString regionbaseUID,
   }
 }
 
-void QnlyView::removeRegionBase(const QString regionbaseUID)
+void View::removeRegionBase(const QString regionbaseUID)
 {
   if (regionbases.contains(regionbaseUID))
   {
@@ -424,7 +424,7 @@ void QnlyView::removeRegionBase(const QString regionbaseUID)
   }
 }
 
-void QnlyView::changeRegionBase(const QString regionbaseUID,
+void View::changeRegionBase(const QString regionbaseUID,
                                 const QMap<QString, QString> attributes)
 {
   if (regionbases.contains(regionbaseUID))
@@ -433,19 +433,20 @@ void QnlyView::changeRegionBase(const QString regionbaseUID,
   }
 }
 
-void QnlyView::selectRegionBase(const QString regionbaseUID)
+void View::selectRegionBase(const QString regionbaseUID)
 {
   if (regionbases.contains(regionbaseUID))
   {
     selectRegionBase(regionbases[regionbaseUID]);
   }
   else
-    qWarning() << tr("It is not possible to select regionBase ") << regionbaseUID;
+    qWarning() << tr("It is not possible to select regionBase ")
+               << regionbaseUID;
 }
 
-void QnlyView::addRegion(QnlyGraphicsRegion* region,
-                         QnlyGraphicsRegion* parent,
-                         QnlyGraphicsRegionBase* regionBase,
+void View::addRegion(Region* region,
+                         Region* parent,
+                         RegionBase* regionBase,
                          const QMap<QString, QString> attributes)
 {
   if (region != NULL && regionBase != NULL)
@@ -460,8 +461,8 @@ void QnlyView::addRegion(QnlyGraphicsRegion* region,
   }
 }
 
-void QnlyView::removeRegion(QnlyGraphicsRegion* region,
-                            QnlyGraphicsRegionBase* regionBase)
+void View::removeRegion(Region* region,
+                            RegionBase* regionBase)
 {
   if (region != NULL && regionBase != NULL)
   {
@@ -469,12 +470,13 @@ void QnlyView::removeRegion(QnlyGraphicsRegion* region,
 
     foreach(QGraphicsItem* item, region->childItems())
     {
-      QnlyGraphicsRegion* child = dynamic_cast<QnlyGraphicsRegion*> (item);
+      Region* child = dynamic_cast<Region*> (item);
 
       if(item != NULL)
         removeRegion(child, regionBase);
       else
-        qWarning() << "Trying to remove an element that is not of the type QnlyGraphicsRegion " << __FILE__ << __LINE__;
+        qWarning() << "Trying to remove an element that is not\
+                      of the type QnlyGraphicsRegion " << __FILE__ << __LINE__;
     }
 
     regions.remove(region->getUid());
@@ -485,8 +487,8 @@ void QnlyView::removeRegion(QnlyGraphicsRegion* region,
   }
 }
 
-void QnlyView::changeRegion(QnlyGraphicsRegion* region,
-                            QnlyGraphicsRegionBase* regionBase,
+void View::changeRegion(Region* region,
+                            RegionBase* regionBase,
                             const QMap<QString, QString> attributes)
 {
   if (region != NULL && regionBase != NULL)
@@ -495,8 +497,8 @@ void QnlyView::changeRegion(QnlyGraphicsRegion* region,
   }
 }
 
-void QnlyView::selectRegion(QnlyGraphicsRegion* region,
-                            QnlyGraphicsRegionBase* regionBase)
+void View::selectRegion(Region* region,
+                            RegionBase* regionBase)
 {
   if (region != NULL && regionBase != NULL)
   {
@@ -515,7 +517,7 @@ void QnlyView::selectRegion(QnlyGraphicsRegion* region,
   }
 }
 
-void QnlyView::addRegionBase(QnlyGraphicsRegionBase* regionBase,
+void View::addRegionBase(RegionBase* regionBase,
                              const QMap<QString, QString> attributes)
 {
   if (regionBase != NULL)
@@ -591,8 +593,8 @@ void QnlyView::addRegionBase(QnlyGraphicsRegionBase* regionBase,
             SLOT(setGridVisible(bool)));
 
     connect(regionBase,
-            SIGNAL(copyRequested(QnlyGraphicsRegion*)),
-            SLOT(performCopy(QnlyGraphicsRegion *)));
+            SIGNAL(copyRequested(Region*)),
+            SLOT(performCopy(Region *)));
 
     connect(regionBase,
             SIGNAL(pasteRequested()),
@@ -602,7 +604,7 @@ void QnlyView::addRegionBase(QnlyGraphicsRegionBase* regionBase,
   }
 }
 
-void QnlyView::removeRegionBase(QnlyGraphicsRegionBase* regionBase)
+void View::removeRegionBase(RegionBase* regionBase)
 {
   if (regionBase != NULL)
   {
@@ -618,14 +620,15 @@ void QnlyView::removeRegionBase(QnlyGraphicsRegionBase* regionBase)
     foreach(QGraphicsItem* item, regionBase->items())
     {
       if (item != regionBase->getBackgroundItem()) {
-        QnlyGraphicsRegion* child = dynamic_cast<QnlyGraphicsRegion *> (item);
+        Region* child = dynamic_cast<Region *> (item);
 
         if (child != NULL)
         {
           regions.remove(child->getUid());
         }
         else
-          qWarning() << "Trying to remove an element that is not of the type QnlyGraphicsRegion " << __FILE__ << __LINE__;
+          qWarning() << "Trying to remove an element that is not of the\
+                        type QnlyGraphicsRegion " << __FILE__ << __LINE__;
       }
     }
 
@@ -640,15 +643,15 @@ void QnlyView::removeRegionBase(QnlyGraphicsRegionBase* regionBase)
 
     if (currentWidget() != NULL)
     {
-      QnlyGraphicsRegionBase* current =
-          (QnlyGraphicsRegionBase*) ((QGraphicsView*)currentWidget())->scene();
+      RegionBase* current =
+          (RegionBase*) ((QGraphicsView*)currentWidget())->scene();
 
       emit regionBaseSelected(current->getUid());
     }
   }
 }
 
-void QnlyView::changeRegionBase(QnlyGraphicsRegionBase* regionBase,
+void View::changeRegionBase(RegionBase* regionBase,
                                 const QMap<QString, QString> attributes)
 {
   if (regionBase != NULL)
@@ -669,7 +672,7 @@ void QnlyView::changeRegionBase(QnlyGraphicsRegionBase* regionBase,
   }
 }
 
-void QnlyView::selectRegionBase(QnlyGraphicsRegionBase* regionBase)
+void View::selectRegionBase(RegionBase* regionBase)
 {
   if (regionBase != NULL)
   {
@@ -692,12 +695,12 @@ void QnlyView::selectRegionBase(QnlyGraphicsRegionBase* regionBase)
   }
 }
 
-void QnlyView::setGridVisible(bool visible)
+void View::setGridVisible(bool visible)
 {
   if(this->gridVisibility != visible)
   {
     this->gridVisibility = visible;
-    foreach(QnlyGraphicsRegionBase *regionBase, regionbases.values())
+    foreach(RegionBase *regionBase, regionbases.values())
     {
       regionBase->setGridVisible(visible);
     }
@@ -706,17 +709,17 @@ void QnlyView::setGridVisible(bool visible)
   }
 }
 
-QnlyGraphicsRegionBase* QnlyView::getSelectedRegionBase()
+RegionBase* View::getSelectedRegionBase()
 {
   return selectedRegionBase;
 }
 
-QnlyGraphicsRegion* QnlyView::getSelectedRegion()
+Region* View::getSelectedRegion()
 {
   return selectedRegion;
 }
 
-void QnlyView::contextMenuEvent(QContextMenuEvent *event)
+void View::contextMenuEvent(QContextMenuEvent *event)
 {
   QStackedWidget::contextMenuEvent(event);
 
@@ -728,7 +731,7 @@ void QnlyView::contextMenuEvent(QContextMenuEvent *event)
   }
 }
 
-void QnlyView::snapshot()
+void View::snapshot()
 {
   if(getSelectedRegionBase() != NULL)
       getSelectedRegionBase()->performExport();

@@ -1,37 +1,37 @@
 #include "Grid.h"
 
-QnlyGraphicsGrid::QnlyGraphicsGrid(QGraphicsItem* parent, QGraphicsScene* scene)
+Grid::Grid(QGraphicsItem* parent, QGraphicsScene* scene)
   : QGraphicsRectItem(parent)
 {
 
 }
 
-QnlyGraphicsGrid::~QnlyGraphicsGrid()
+Grid::~Grid()
 {
 
 }
 
-void QnlyGraphicsGrid::setStep(qreal step)
+void Grid::setStep(qreal step)
 {
   this->step = step;
 }
 
-qreal QnlyGraphicsGrid::getStep()
+qreal Grid::getStep()
 {
   return step;
 }
 
-void QnlyGraphicsGrid::setPen(QPen pen)
+void Grid::setPen(QPen pen)
 {
   this->pen = pen;
 }
 
-QPen QnlyGraphicsGrid::getPen()
+QPen Grid::getPen()
 {
   return pen;
 }
 
-void QnlyGraphicsGrid::paint( QPainter *painter,
+void Grid::paint( QPainter *painter,
                               const QStyleOptionGraphicsItem *option,
                               QWidget *widget)
 {

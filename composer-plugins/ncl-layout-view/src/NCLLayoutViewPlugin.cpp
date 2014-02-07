@@ -23,7 +23,7 @@
 #include <QInputDialog>
 #include <QToolBar>
 
-QnlyComposerPlugin::QnlyComposerPlugin(QObject* parent)
+NCLLayoutViewPlugin::NCLLayoutViewPlugin(QObject* parent)
 {
   setParent(parent);
 
@@ -33,22 +33,22 @@ QnlyComposerPlugin::QnlyComposerPlugin(QObject* parent)
   selectedId = NULL;
 }
 
-QnlyComposerPlugin::~QnlyComposerPlugin()
+NCLLayoutViewPlugin::~NCLLayoutViewPlugin()
 {
   if(selectedId != NULL)
     delete selectedId;
   delete(view);
 }
 
-void QnlyComposerPlugin::createView()
+void NCLLayoutViewPlugin::createView()
 {
-  mainWindow = new QnlyMainWindow();
+  mainWindow = new MainWindow();
 
-  view = new QnlyView(mainWindow);
+  view = new View(mainWindow);
   mainWindow->setQnlyView(view);
 }
 
-void QnlyComposerPlugin::createConnections()
+void NCLLayoutViewPlugin::createConnections()
 {
   /* ADD */
   connect(view,
@@ -100,12 +100,12 @@ void QnlyComposerPlugin::createConnections()
           SLOT(performMediaOverRegionAction(QString, QString)));
 }
 
-void QnlyComposerPlugin::updateFromModel()
+void NCLLayoutViewPlugin::updateFromModel()
 {
   QRectF previousRect;
   bool isGridVisible = false;
 
-  QnlyGraphicsRegionBase *currentRegionBase = view->getSelectedRegionBase();
+  RegionBase *currentRegionBase = view->getSelectedRegionBase();
   if(currentRegionBase != NULL)
   {
     previousRect = currentRegionBase->sceneRect();
@@ -125,9 +125,10 @@ void QnlyComposerPlugin::updateFromModel()
   }
 }
 
-void QnlyComposerPlugin::loadRegionbase()
+void NCLLayoutViewPlugin::loadRegionbase()
 {
-  QList<Entity*> regionbaseList = getProject()->getEntitiesbyType("regionBase");
+  QList<Entity*> regionbaseList =
+      getProject()->getEntitiesbyType("regionBase");
 
   if (!regionbaseList.isEmpty())
   {
@@ -145,7 +146,7 @@ void QnlyComposerPlugin::loadRegionbase()
   }
 }
 
-void QnlyComposerPlugin::loadRegion(Entity* region)
+void NCLLayoutViewPlugin::loadRegion(Entity* region)
 {
   if (region != NULL)
   {
@@ -160,24 +161,27 @@ void QnlyComposerPlugin::loadRegion(Entity* region)
   }
 }
 
-QWidget* QnlyComposerPlugin::getWidget()
+QWidget* NCLLayoutViewPlugin::getWidget()
 {
   return mainWindow;
 }
 
-bool QnlyComposerPlugin::saveSubsession()
+bool NCLLayoutViewPlugin::saveSubsession()
 {
   QByteArray data;
   QString line;
   QVariant gridVisible(QVariant::Bool),
-           resolutionWidth(QVariant::Int),
-           resolutionHeight(QVariant::Int);
+      resolutionWidth(QVariant::Int),
+      resolutionHeight(QVariant::Int);
 
   if(view->getSelectedRegionBase() != NULL)
   {
-    gridVisible.setValue(view->getSelectedRegionBase()->isGridVisible());
-    resolutionWidth.setValue(view->getSelectedRegionBase()->sceneRect().width());
-    resolutionHeight.setValue(view->getSelectedRegionBase()->sceneRect().height());
+    gridVisible.setValue(
+          view->getSelectedRegionBase()->isGridVisible());
+    resolutionWidth.setValue(
+          view->getSelectedRegionBase()->sceneRect().width());
+    resolutionHeight.setValue(
+          view->getSelectedRegionBase()->sceneRect().height());
   }
   else
   {
@@ -195,7 +199,7 @@ bool QnlyComposerPlugin::saveSubsession()
   return true;
 }
 
-void QnlyComposerPlugin::init()
+void NCLLayoutViewPlugin::init()
 {
   // \todo Load specific contents.
   QString data = project->getPluginData("br.puc-rio.telemidia.qncllayout");
@@ -248,7 +252,8 @@ void QnlyComposerPlugin::init()
 
       // TODO: In the future we should support saving individual resolutions
       // foreach regionBase
-      view->getSelectedRegionBase()->changeResolution(resolutionWidth, resolutionHeight);
+      view->getSelectedRegionBase()->
+          changeResolution(resolutionWidth, resolutionHeight);
     }
     else if(current->getType() == "region")
     {
@@ -265,12 +270,12 @@ void QnlyComposerPlugin::init()
   view->setGridVisible(gridVisible);
 }
 
-void QnlyComposerPlugin::errorMessage(QString error)
+void NCLLayoutViewPlugin::errorMessage(QString error)
 {
   //TODO: void QnlyComposerPlugin::errorMessage(QString error)
 }
 
-void QnlyComposerPlugin::onEntityAdded(QString pluginID, Entity *entity)
+void NCLLayoutViewPlugin::onEntityAdded(QString pluginID, Entity *entity)
 {
   if (entity != NULL)
   {
@@ -285,7 +290,7 @@ void QnlyComposerPlugin::onEntityAdded(QString pluginID, Entity *entity)
   }
 }
 
-void QnlyComposerPlugin::onEntityRemoved(QString pluginID, QString entityID)
+void NCLLayoutViewPlugin::onEntityRemoved(QString pluginID, QString entityID)
 {
   if (!entityID.isEmpty())
   {
@@ -300,7 +305,7 @@ void QnlyComposerPlugin::onEntityRemoved(QString pluginID, QString entityID)
   }
 }
 
-void QnlyComposerPlugin::onEntityChanged(QString pluginID, Entity *entity)
+void NCLLayoutViewPlugin::onEntityChanged(QString pluginID, Entity *entity)
 {
   if (entity != NULL)
   {
@@ -315,7 +320,7 @@ void QnlyComposerPlugin::onEntityChanged(QString pluginID, Entity *entity)
   }
 }
 
-void QnlyComposerPlugin::changeSelectedEntity (QString pluginID, void* param)
+void NCLLayoutViewPlugin::changeSelectedEntity (QString pluginID, void* param)
 {
   //if(pluginID != this->pluginInstanceID)
   // {
@@ -331,7 +336,7 @@ void QnlyComposerPlugin::changeSelectedEntity (QString pluginID, void* param)
   // }
 }
 
-void QnlyComposerPlugin::addRegionToView(Entity* entity)
+void NCLLayoutViewPlugin::addRegionToView(Entity* entity)
 {
   if (entity != NULL)
   {
@@ -446,7 +451,7 @@ void QnlyComposerPlugin::addRegionToView(Entity* entity)
   }
 }
 
-void QnlyComposerPlugin::removeRegionFromView(QString entityUID)
+void NCLLayoutViewPlugin::removeRegionFromView(QString entityUID)
 {
   if (!entityUID.isEmpty())
   {
@@ -482,7 +487,7 @@ void QnlyComposerPlugin::removeRegionFromView(QString entityUID)
   }
 }
 
-void QnlyComposerPlugin::changeRegionInView(Entity* entity)
+void NCLLayoutViewPlugin::changeRegionInView(Entity* entity)
 {
   if (entity != NULL)
   {
@@ -594,7 +599,7 @@ void QnlyComposerPlugin::changeRegionInView(Entity* entity)
   }
 }
 
-void QnlyComposerPlugin::selectRegionInView(QString entityUID)
+void NCLLayoutViewPlugin::selectRegionInView(QString entityUID)
 {
   if (!entityUID.isEmpty())
   {
@@ -626,7 +631,7 @@ void QnlyComposerPlugin::selectRegionInView(QString entityUID)
   }
 }
 
-void QnlyComposerPlugin::addRegionBaseToView(Entity* entity)
+void NCLLayoutViewPlugin::addRegionBaseToView(Entity* entity)
 {
   if (entity != NULL)
   {
@@ -680,7 +685,7 @@ void QnlyComposerPlugin::addRegionBaseToView(Entity* entity)
   }
 }
 
-void QnlyComposerPlugin::removeRegionBaseFromView(QString entityUID)
+void NCLLayoutViewPlugin::removeRegionBaseFromView(QString entityUID)
 {
   if (!entityUID.isEmpty())
   {
@@ -703,7 +708,7 @@ void QnlyComposerPlugin::removeRegionBaseFromView(QString entityUID)
   }
 }
 
-void QnlyComposerPlugin::changeRegionBaseInView(Entity* entity)
+void NCLLayoutViewPlugin::changeRegionBaseInView(Entity* entity)
 {
   if (entity != NULL)
   {
@@ -754,7 +759,7 @@ void QnlyComposerPlugin::changeRegionBaseInView(Entity* entity)
   }
 }
 
-void QnlyComposerPlugin::selectRegionBaseInView(QString entityUID)
+void NCLLayoutViewPlugin::selectRegionBaseInView(QString entityUID)
 {
   if (!entityUID.isEmpty())
   {
@@ -773,7 +778,7 @@ void QnlyComposerPlugin::selectRegionBaseInView(QString entityUID)
   }
 }
 
-void QnlyComposerPlugin::addRegion(const QString &regionUID,
+void NCLLayoutViewPlugin::addRegion(const QString &regionUID,
                                    const QString &parentUID,
                                    const QString &regionbaseUID,
                                    const QMap<QString, QString> &attributes)
@@ -817,7 +822,7 @@ void QnlyComposerPlugin::addRegion(const QString &regionUID,
     emit addEntity("region", regionbaseUID, standard, false);
 }
 
-void QnlyComposerPlugin::removeRegion(const QString &regionUID,
+void NCLLayoutViewPlugin::removeRegion(const QString &regionUID,
                                       const QString &regionbaseUID)
 {
   if (regions.contains(regionUID))
@@ -826,7 +831,7 @@ void QnlyComposerPlugin::removeRegion(const QString &regionUID,
   }
 }
 
-void QnlyComposerPlugin::changeRegion(const QString &regionUID,
+void NCLLayoutViewPlugin::changeRegion(const QString &regionUID,
                                       const QString &regionbaseUID,
                                       const QMap<QString, QString> &attributes)
 {
@@ -867,7 +872,7 @@ void QnlyComposerPlugin::changeRegion(const QString &regionUID,
   }
 }
 
-void QnlyComposerPlugin::selectRegion(const QString &regionUID,
+void NCLLayoutViewPlugin::selectRegion(const QString &regionUID,
                                       const QString &regionbaseUID)
 {
   if(selectedId != NULL)
@@ -883,7 +888,7 @@ void QnlyComposerPlugin::selectRegion(const QString &regionUID,
   }
 }
 
-void QnlyComposerPlugin::addRegionBase(const QString &regionbaseUID,
+void NCLLayoutViewPlugin::addRegionBase(const QString &regionbaseUID,
                                        const QMap<QString, QString> &attributes)
 {
   // setting
@@ -903,7 +908,7 @@ void QnlyComposerPlugin::addRegionBase(const QString &regionbaseUID,
   emit addEntity("regionBase", headUID, standard, false);
 }
 
-void QnlyComposerPlugin::removeRegionBase(const QString &regionbaseUID)
+void NCLLayoutViewPlugin::removeRegionBase(const QString &regionbaseUID)
 {
   if (regionbases.contains(regionbaseUID))
   {
@@ -913,8 +918,9 @@ void QnlyComposerPlugin::removeRegionBase(const QString &regionbaseUID)
   }
 }
 
-void QnlyComposerPlugin::changeRegionBase(const QString &regionbaseUID,
-                                          const QMap<QString, QString> &attributes)
+void NCLLayoutViewPlugin::changeRegionBase(
+    const QString &regionbaseUID,
+    const QMap<QString, QString> &attributes)
 {
   if (regionbases.contains(regionbaseUID))
   {
@@ -955,7 +961,7 @@ void QnlyComposerPlugin::changeRegionBase(const QString &regionbaseUID,
   }
 }
 
-void QnlyComposerPlugin::clear()
+void NCLLayoutViewPlugin::clear()
 {
   while(!regions.empty())
   {
@@ -978,7 +984,7 @@ void QnlyComposerPlugin::clear()
   relations.clear();
 }
 
-void QnlyComposerPlugin::selectRegionBase(const QString &regionbaseUID)
+void NCLLayoutViewPlugin::selectRegionBase(const QString &regionbaseUID)
 {
   if(selectedId != NULL)
   {
@@ -998,7 +1004,7 @@ void QnlyComposerPlugin::selectRegionBase(const QString &regionbaseUID)
   }
 }
 
-QString QnlyComposerPlugin::getHeadUid()
+QString NCLLayoutViewPlugin::getHeadUid()
 {
   if (getProject()->getEntitiesbyType("head").isEmpty())
   {
@@ -1023,7 +1029,7 @@ QString QnlyComposerPlugin::getHeadUid()
   return getProject()->getEntitiesbyType("head").at(0)->getUniqueId();
 }
 
-QMap <QString, QString> QnlyComposerPlugin::getRegionAttributes(Entity *region)
+QMap <QString, QString> NCLLayoutViewPlugin::getRegionAttributes(Entity *region)
 {
   QMap <QString, QString>::iterator begin, end, it;
   QVector <double> widths;
@@ -1095,7 +1101,7 @@ QMap <QString, QString> QnlyComposerPlugin::getRegionAttributes(Entity *region)
   return attrs;
 }
 
-void QnlyComposerPlugin::performMediaOverRegionAction(const QString &mediaId,
+void NCLLayoutViewPlugin::performMediaOverRegionAction(const QString &mediaId,
                                                       const QString &regionUID)
 {
   bool error = false;
@@ -1117,13 +1123,15 @@ void QnlyComposerPlugin::performMediaOverRegionAction(const QString &mediaId,
 
   if(region == NULL)
   {
-    qWarning() << "QnlyComposerPlugin::performMediaOverRegionAction Region does not exists. Nothing will be done." ;
+    qWarning() << "QnlyComposerPlugin::performMediaOverRegionAction Region\
+                  does not exists. Nothing will be done." ;
     error = 1;
   }
 
   if(media == NULL)
   {
-    qWarning() << "QnlyComposerPlugin::performMediaOverRegionAction Media was not found! Nothing will be done." ;
+    qWarning() << "QnlyComposerPlugin::performMediaOverRegionActiona\
+                  Media was not found! Nothing will be done." ;
     error = 1;
   }
 

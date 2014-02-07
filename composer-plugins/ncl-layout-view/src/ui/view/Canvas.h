@@ -23,12 +23,11 @@
 
 #include "Region.h"
 
-class QnlyCanvas : public QGraphicsView
+class Canvas : public QGraphicsView
 {
 public:
-    QnlyCanvas(QWidget* parent = 0);
-
-    ~QnlyCanvas();
+    Canvas(QWidget* parent = 0);
+    ~Canvas();
 
 protected:
     virtual void resizeEvent(QResizeEvent* event);

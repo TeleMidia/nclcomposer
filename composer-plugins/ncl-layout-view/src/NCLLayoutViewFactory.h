@@ -23,7 +23,7 @@ using namespace composer::extension;
 
 #include "NCLLayoutViewPlugin.h"
 
-class QnlyComposerPluginFactory : public QObject, public IPluginFactory
+class NCLLayoutViewFactory : public QObject, public IPluginFactory
 {
   Q_OBJECT
   Q_INTERFACES(IPluginFactory)
@@ -33,9 +33,8 @@ class QnlyComposerPluginFactory : public QObject, public IPluginFactory
 #endif
 
 public:
-  QnlyComposerPluginFactory(QObject* parent = 0);
-
-  ~QnlyComposerPluginFactory();
+  explicit NCLLayoutViewFactory(QObject* parent = 0);
+  virtual ~NCLLayoutViewFactory();
 
   IPlugin* createPluginInstance();
 

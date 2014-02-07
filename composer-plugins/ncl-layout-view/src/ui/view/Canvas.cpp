@@ -17,17 +17,17 @@
  */
 #include "Canvas.h"
 
-QnlyCanvas::QnlyCanvas(QWidget* parent) : QGraphicsView(parent)
+Canvas::Canvas(QWidget* parent) : QGraphicsView(parent)
 {
   setBackgroundBrush(QBrush(QColor("#eee")));
 }
 
-QnlyCanvas::~QnlyCanvas()
+Canvas::~Canvas()
 {
 
 }
 
-void QnlyCanvas::resizeEvent(QResizeEvent* event)
+void Canvas::resizeEvent(QResizeEvent* event)
 {
   QGraphicsView::resizeEvent(event);
 

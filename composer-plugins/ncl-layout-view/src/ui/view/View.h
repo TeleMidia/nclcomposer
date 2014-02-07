@@ -35,21 +35,18 @@
 #include "RegionBase.h"
 
 
-class QnlyView : public QStackedWidget
+class View : public QStackedWidget
 {
     Q_OBJECT
 
 public:
-    QnlyView(QWidget* parent = 0);
+    explicit View(QWidget* parent = 0);
+    virtual ~View();
 
-    virtual ~QnlyView();
-
-    QnlyGraphicsRegionBase *getSelectedRegionBase();
-
-    QnlyGraphicsRegion *getSelectedRegion();
+    RegionBase *getSelectedRegionBase();
+    Region *getSelectedRegion();
 
     bool gridVisibility;
-
     QMap <QString, QString> copiedRegionAttrs;
 
 public slots:
@@ -95,7 +92,7 @@ public slots:
 
     void snapshot();
 
-    void performCopy(QnlyGraphicsRegion *);
+    void performCopy(Region *);
 
     void performPaste();
 
@@ -130,110 +127,79 @@ signals:
     void gridVisibilityChanged(bool visibility);
 
 protected slots:
-    void addRegion(QnlyGraphicsRegion* region,
-                   QnlyGraphicsRegion* parent,
-                   QnlyGraphicsRegionBase* regionBase,
+    void addRegion(Region* region,
+                   Region* parent,
+                   RegionBase* regionBase,
                    const QMap<QString, QString> attributes);
 
-    void removeRegion(QnlyGraphicsRegion* region,
-                      QnlyGraphicsRegionBase* regionBase);
+    void removeRegion(Region* region,
+                      RegionBase* regionBase);
 
-    void changeRegion(QnlyGraphicsRegion* region,
-                      QnlyGraphicsRegionBase* regionBase,
+    void changeRegion(Region* region,
+                      RegionBase* regionBase,
                       const QMap<QString, QString> attributes);
 
-    void selectRegion(QnlyGraphicsRegion* region,
-                      QnlyGraphicsRegionBase* regionBase);
+    void selectRegion(Region* region,
+                      RegionBase* regionBase);
 
-    void addRegionBase(QnlyGraphicsRegionBase* regionBase,
+    void addRegionBase(RegionBase* regionBase,
                        const QMap<QString, QString> attributes);
 
-    void removeRegionBase(QnlyGraphicsRegionBase* regionBase);
+    void removeRegionBase(RegionBase* regionBase);
 
-    void changeRegionBase(QnlyGraphicsRegionBase* regionBase,
+    void changeRegionBase(RegionBase* regionBase,
                           const QMap<QString, QString> attributes);
 
-    void selectRegionBase(QnlyGraphicsRegionBase* regionBase);
+    void selectRegionBase(RegionBase* regionBase);
 
 protected:
     virtual void contextMenuEvent(QContextMenuEvent *event);
 
 private:
     void createActions();
-
     void createMenus();
-
     void createConnections();
 
     QMenu* viewMenu;
-
     QMenu* insertMenu;
-
     QMenu* showMenu;
-
     QMenu* arrangeMenu;
-
     QMenu* switchMenu;
-
     QMenu* contextMenu;
-
     // \todo This actions must be in a place that will be shared by
     //       qnlyview and qnlymainwindow
     QAction* helpAction;
-
     // QAction* undoAction;  // Temporaly disabled
-
     QAction* redoAction;
-
     QAction* cutAction;
-
     QAction* copyAction;
-
     QAction* pasteAction;
-
     QAction* deleteAction;
-
     QAction* zoominAction;
-
     QAction* zoomoutAction;
-
     QAction* zoomresetAction;
-
     QAction* hideAction;
-
     QAction* fullscreenAction;
-
     QAction* exportAction;
-
     QAction* regionAction;
-
     QAction* regionbaseAction;
-
     QAction* bringfrontAction;
-
     QAction* bringforwardAction;
-
     QAction* sendbackwardAction;
-
     QAction* sendbackAction;
-
     QAction* propertiesAction;
-
-    QnlyGraphicsRegion* selectedRegion;
-
-    QnlyGraphicsRegionBase* selectedRegionBase;
-
-    int nregions;
-
-    int nregionbases;
 
     QActionGroup* regionbaseActionGroup;
 
+    Region* selectedRegion;
+    RegionBase* selectedRegionBase;
+
+    int nregions;
+    int nregionbases;
+
     QMap<QString, QAction*> regionbaseActions;
-
-    QMap<QString, QnlyGraphicsRegion*> regions;
-
-    QMap<QString, QnlyGraphicsRegionBase*> regionbases;
+    QMap<QString, Region*> regions;
+    QMap<QString, RegionBase*> regionbases;
 };
 
 #endif // QNLYVIEW_H

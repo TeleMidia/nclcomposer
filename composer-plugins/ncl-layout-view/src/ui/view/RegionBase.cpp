@@ -17,8 +17,7 @@
  */
 #include "RegionBase.h"
 
-QnlyGraphicsRegionBase::QnlyGraphicsRegionBase( QObject* parent,
-                                                QMenu* switchMenu )
+RegionBase::RegionBase( QObject* parent, QMenu* switchMenu )
   : QGraphicsScene(parent)
 {
   this->switchMenu = switchMenu;
@@ -45,7 +44,7 @@ QnlyGraphicsRegionBase::QnlyGraphicsRegionBase( QObject* parent,
 
   bgrect->setZValue(-1);
 
-  grid = new QnlyGraphicsGrid(0, this);
+  grid = new Grid(0, this);
   grid->setStep(25);
   grid->setPen(QPen(QBrush(Qt::gray), 1.5,Qt::DotLine));
   grid->setRect(0,0,854,480);
@@ -56,17 +55,17 @@ QnlyGraphicsRegionBase::QnlyGraphicsRegionBase( QObject* parent,
 
 }
 
-QnlyGraphicsRegionBase::~QnlyGraphicsRegionBase()
+RegionBase::~RegionBase()
 {
 
 }
 
-QString QnlyGraphicsRegionBase::getId() const
+QString RegionBase::getId() const
 {
   return id;
 }
 
-void QnlyGraphicsRegionBase::setId(const QString &id)
+void RegionBase::setId(const QString &id)
 {
   this->id = id;
 
@@ -77,37 +76,37 @@ void QnlyGraphicsRegionBase::setId(const QString &id)
   //  graphicsRegionBaseId->setPlainText(id);
 }
 
-QString QnlyGraphicsRegionBase::getUid() const
+QString RegionBase::getUid() const
 {
   return uid;
 }
 
-void QnlyGraphicsRegionBase::setUid(const QString &uid)
+void RegionBase::setUid(const QString &uid)
 {
   this->uid = uid;
 }
 
-QString QnlyGraphicsRegionBase::getRegion() const
+QString RegionBase::getRegion() const
 {
   return region;
 }
 
-void QnlyGraphicsRegionBase::setRegion(const QString &region)
+void RegionBase::setRegion(const QString &region)
 {
   this->region = region;
 }
 
-QString QnlyGraphicsRegionBase::getDevice() const
+QString RegionBase::getDevice() const
 {
   return device;
 }
 
-void QnlyGraphicsRegionBase::setDevice(const QString &device)
+void RegionBase::setDevice(const QString &device)
 {
   this->device = device;
 }
 
-void QnlyGraphicsRegionBase::selectRegion(QnlyGraphicsRegion* region)
+void RegionBase::selectRegion(Region* region)
 {
   if (!region->isSelected())
   {
@@ -122,8 +121,8 @@ void QnlyGraphicsRegionBase::selectRegion(QnlyGraphicsRegion* region)
   }
 }
 
-void QnlyGraphicsRegionBase::changeRegion(QnlyGraphicsRegion* region,
-                                          const QMap<QString, QString> attributes)
+void RegionBase::changeRegion(Region* region,
+                              const QMap<QString, QString> attributes)
 {
   if (region != NULL)
   {
@@ -287,8 +286,8 @@ void QnlyGraphicsRegionBase::changeRegion(QnlyGraphicsRegion* region,
   }
 }
 
-void QnlyGraphicsRegionBase::requestRegionChange(QnlyGraphicsRegion* region,
-                                                 QMap<QString, QString> attributes)
+void RegionBase::requestRegionChange(Region* region,
+                                     QMap<QString, QString> attributes)
 {
   // setting
   QMap<QString, QString> full = region->getAttributes();
@@ -302,12 +301,12 @@ void QnlyGraphicsRegionBase::requestRegionChange(QnlyGraphicsRegion* region,
   emit regionChangeRequested( region->getUid(), uid, full );
 }
 
-void QnlyGraphicsRegionBase::requestRegionSelection(QnlyGraphicsRegion* region)
+void RegionBase::requestRegionSelection(Region* region)
 {
   emit regionSelectionRequested(region->getUid(),uid);
 }
 
-void QnlyGraphicsRegionBase::QnlyGraphicsRegionBase::createActions()
+void RegionBase::RegionBase::createActions()
 {
   // help action
   helpAction = new QAction(this);
@@ -501,7 +500,7 @@ void QnlyGraphicsRegionBase::QnlyGraphicsRegionBase::createActions()
   screensizeGroup->addAction(re320x400);
 }
 
-void QnlyGraphicsRegionBase::createMenus()
+void RegionBase::createMenus()
 {
   // view menu
   viewMenu = new QMenu();
@@ -585,7 +584,7 @@ void QnlyGraphicsRegionBase::createMenus()
   // contextMenu->addAction(propertiesAction); //disabled for while
 }
 
-void QnlyGraphicsRegionBase::createConnections()
+void RegionBase::createConnections()
 {
   connect(regionAction, SIGNAL(triggered()),
           SLOT(performRegion()));
@@ -627,7 +626,7 @@ void QnlyGraphicsRegionBase::createConnections()
   connect(pasteAction, SIGNAL(triggered()), SIGNAL(pasteRequested()));
 }
 
-void QnlyGraphicsRegionBase::performShow(QAction* action)
+void RegionBase::performShow(QAction* action)
 {
   if (!action->isChecked())
     regions[regionActions.key(action)]->setVisible(false);
@@ -635,7 +634,7 @@ void QnlyGraphicsRegionBase::performShow(QAction* action)
     regions[regionActions.key(action)]->setVisible(true);
 }
 
-void QnlyGraphicsRegionBase::requestAdditionRegion(QnlyGraphicsRegion* parent)
+void RegionBase::requestAdditionRegion(Region* parent)
 {
   QMap<QString, QString> attributes;
 
@@ -648,7 +647,7 @@ void QnlyGraphicsRegionBase::requestAdditionRegion(QnlyGraphicsRegion* parent)
 
   //Make the zIndex to be the greater one in the regionBase
   int zIndex = 0;
-  foreach(QnlyGraphicsRegion *region, regions.values())
+  foreach(Region *region, regions.values())
   {
     zIndex = zIndex > region->getzIndex() ? zIndex : region->getzIndex() + 1;
   }
@@ -657,40 +656,41 @@ void QnlyGraphicsRegionBase::requestAdditionRegion(QnlyGraphicsRegion* parent)
   emit regionAdditionRequested("", parent->getUid(), uid, attributes);
 }
 
-void QnlyGraphicsRegionBase::requestRegionDeletion(QnlyGraphicsRegion* region)
+void RegionBase::requestRegionDeletion(Region* region)
 {
   emit regionDeletionRequested(region->getUid(), uid);
 }
 
-void QnlyGraphicsRegionBase::updateActionText(QnlyGraphicsRegion *region)
+void RegionBase::updateActionText(Region *region)
 {
   // Update Show Menu
   if(regionActions.contains(region->getUid()))
     regionActions[region->getUid()]->setText(region->getId());
 }
 
-void QnlyGraphicsRegionBase::hideRegion(QnlyGraphicsRegion* region)
+void RegionBase::hideRegion(Region* region)
 {
   regionActions[region->getUid()]->trigger();
 }
 
-void QnlyGraphicsRegionBase::removeRegion(QnlyGraphicsRegion* region)
+void RegionBase::removeRegion(Region* region)
 {
   if (region != NULL)
   {
     if (region->parentItem() != NULL)
     {
-      QnlyGraphicsRegion* parent =
-          (QnlyGraphicsRegion*) region->parentItem();
+      Region* parent =
+          (Region*) region->parentItem();
 
       foreach(QGraphicsItem* item, region->childItems())
       {
-        QnlyGraphicsRegion* child = dynamic_cast<QnlyGraphicsRegion*> (item);
+        Region* child = dynamic_cast<Region*> (item);
 
         if(child != NULL)
           regions.remove(child->getUid());
         else
-          qWarning() << "Trying to remove an element that is not of the type QnlyGraphicsRegion " << __FILE__ << __LINE__;
+          qWarning() << "Trying to remove an element that is not of\
+                        the type QnlyGraphicsRegion " << __FILE__ << __LINE__;
       }
 
       parent->removeRegion(region);
@@ -699,12 +699,13 @@ void QnlyGraphicsRegionBase::removeRegion(QnlyGraphicsRegion* region)
     {
       foreach(QGraphicsItem* item, region->childItems())
       {
-        QnlyGraphicsRegion* child = dynamic_cast<QnlyGraphicsRegion*> (item);
+        Region* child = dynamic_cast<Region*> (item);
 
         if(child != NULL)
           regions.remove(child->getUid());
         else
-          qWarning() << "Trying to remove an element that is not of the type QnlyGraphicsRegion " << __FILE__ << __LINE__;
+          qWarning() << "Trying to remove an element that is not of the\
+                        type QnlyGraphicsRegion " << __FILE__ << __LINE__;
       }
 
       if(regionActions.contains(region->getUid()))
@@ -731,17 +732,17 @@ void QnlyGraphicsRegionBase::removeRegion(QnlyGraphicsRegion* region)
   }
 }
 
-QGraphicsItem* QnlyGraphicsRegionBase::getBackgroundItem()
+QGraphicsItem* RegionBase::getBackgroundItem()
 {
   return bgrect;
 }
 
-void QnlyGraphicsRegionBase::performDelete()
+void RegionBase::performDelete()
 {
   emit regionBaseDeletionRequested(uid);
 }
 
-void QnlyGraphicsRegionBase::performRegion()
+void RegionBase::performRegion()
 {
   QMap<QString, QString> attributes;
 
@@ -754,7 +755,7 @@ void QnlyGraphicsRegionBase::performRegion()
 
   //Make the zIndex to be the greater one in the regionBase
   int zIndex = 0;
-  foreach(QnlyGraphicsRegion *region, regions.values())
+  foreach(Region *region, regions.values())
   {
     zIndex = zIndex > region->getzIndex() ? zIndex : region->getzIndex() + 1;
   }
@@ -763,8 +764,8 @@ void QnlyGraphicsRegionBase::performRegion()
   emit regionAdditionRequested("", "", uid, attributes);
 }
 
-void QnlyGraphicsRegionBase::addRegion(QnlyGraphicsRegion* region,
-                                       QnlyGraphicsRegion* parent,
+void RegionBase::addRegion(Region* region,
+                                       Region* parent,
                                        const QMap<QString, QString> attributes)
 {
   if (region != NULL)
@@ -954,12 +955,12 @@ void QnlyGraphicsRegionBase::addRegion(QnlyGraphicsRegion* region,
     regions[region->getUid()] = region;
 
     connect(region,
-            SIGNAL(regionSelectionRequested(QnlyGraphicsRegion*)),
-            SLOT(requestRegionSelection(QnlyGraphicsRegion*)));
+            SIGNAL(regionSelectionRequested(Region*)),
+            SLOT(requestRegionSelection(Region*)));
 
     connect(region,
-            SIGNAL(regionChangeRequested(QnlyGraphicsRegion*,QMap<QString,QString>)),
-            SLOT(requestRegionChange(QnlyGraphicsRegion*,QMap<QString,QString>)));
+            SIGNAL(regionChangeRequested(Region*,QMap<QString,QString>)),
+            SLOT(requestRegionChange(Region*,QMap<QString,QString>)));
 
     connect(region,
             SIGNAL(regionbasePerformed()),
@@ -967,22 +968,22 @@ void QnlyGraphicsRegionBase::addRegion(QnlyGraphicsRegion* region,
 
 
     connect(region,
-            SIGNAL(regionAdditionRequested(QnlyGraphicsRegion*)),
-            SLOT(requestAdditionRegion(QnlyGraphicsRegion*)));
+            SIGNAL(regionAdditionRequested(Region*)),
+            SLOT(requestAdditionRegion(Region*)));
 
     connect(region,
-            SIGNAL(regionDeletionRequested(QnlyGraphicsRegion*)),
-            SLOT(requestRegionDeletion(QnlyGraphicsRegion*)));
+            SIGNAL(regionDeletionRequested(Region*)),
+            SLOT(requestRegionDeletion(Region*)));
 
     connect(region,
-            SIGNAL(dragMediaOverRegion(QString,QnlyGraphicsRegion*)),
+            SIGNAL(dragMediaOverRegion(QString,Region*)),
             this,
-            SLOT(requestMediaOverRegionAction(QString,QnlyGraphicsRegion*))
+            SLOT(requestMediaOverRegionAction(QString,Region*))
             );
 
     connect(region,
-            SIGNAL(copyRequested(QnlyGraphicsRegion*)),
-            SIGNAL(copyRequested(QnlyGraphicsRegion*)));
+            SIGNAL(copyRequested(Region*)),
+            SIGNAL(copyRequested(Region*)));
 
     connect(region,
             SIGNAL(pasteRequested()),
@@ -997,7 +998,7 @@ void QnlyGraphicsRegionBase::addRegion(QnlyGraphicsRegion* region,
   }
 }
 
-void QnlyGraphicsRegionBase::performChangeResolution()
+void RegionBase::performChangeResolution()
 {
   QAction* action = dynamic_cast<QAction*> (QObject::sender());
   if(action != NULL)
@@ -1007,13 +1008,13 @@ void QnlyGraphicsRegionBase::performChangeResolution()
   }
 }
 
-void QnlyGraphicsRegionBase::changeResolution(int w, int h)
+void RegionBase::changeResolution(int w, int h)
 {
   setSceneRect(0, 0, w, h);
   bgrect->setRect(0, 0, w, h);
   grid->setRect(0, 0, w, h);
 
-  foreach(QnlyGraphicsRegion* r, regions.values())
+  foreach(Region* r, regions.values())
   {
     r->adjust();
   }
@@ -1050,24 +1051,24 @@ void QnlyGraphicsRegionBase::changeResolution(int w, int h)
   }
 }
 
-void QnlyGraphicsRegionBase::performGrid()
+void RegionBase::performGrid()
 {
   setGridVisible(!isGridVisible());
   emit gridVisibilityChanged(isGridVisible());
 }
 
-bool QnlyGraphicsRegionBase::isGridVisible()
+bool RegionBase::isGridVisible()
 {
   return grid->isVisible();
 }
 
-void QnlyGraphicsRegionBase::setGridVisible(bool visible)
+void RegionBase::setGridVisible(bool visible)
 {
   gridAction->setChecked(visible);
   grid->setVisible(visible);
 }
 
-void QnlyGraphicsRegionBase::performExport()
+void RegionBase::performExport()
 {
   QString location =
       QFileDialog::getSaveFileName(NULL, "Export...", "", tr("Images (*.png)"));
@@ -1086,7 +1087,7 @@ void QnlyGraphicsRegionBase::performExport()
   }
 }
 
-void QnlyGraphicsRegionBase::mousePressEvent(QGraphicsSceneMouseEvent* event)
+void RegionBase::mousePressEvent(QGraphicsSceneMouseEvent* event)
 {
   QGraphicsScene::mousePressEvent(event);
 
@@ -1105,7 +1106,7 @@ void QnlyGraphicsRegionBase::mousePressEvent(QGraphicsSceneMouseEvent* event)
   }
 }
 
-void QnlyGraphicsRegionBase::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
+void RegionBase::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 {
   if(selectedRegion != NULL)
   {
@@ -1115,7 +1116,7 @@ void QnlyGraphicsRegionBase::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
   QGraphicsScene::mouseMoveEvent(event);
 }
 
-void QnlyGraphicsRegionBase::contextMenuEvent(
+void RegionBase::contextMenuEvent(
     QGraphicsSceneContextMenuEvent* event)
 {
   QGraphicsScene::contextMenuEvent(event);
@@ -1130,13 +1131,13 @@ void QnlyGraphicsRegionBase::contextMenuEvent(
   }
 }
 
-void QnlyGraphicsRegionBase::requestMediaOverRegionAction(QString mediaId,
-                                                          QnlyGraphicsRegion* region)
+void RegionBase::requestMediaOverRegionAction(QString mediaId,
+                                                          Region* region)
 {
   emit mediaOverRegion(mediaId, region->getUid());
 }
 
-void QnlyGraphicsRegionBase::keyPressEvent( QKeyEvent * event )
+void RegionBase::keyPressEvent( QKeyEvent * event )
 {
   // CTRL+C - Copy
   /* if (event->modifiers() == Qt::ControlModifier &&

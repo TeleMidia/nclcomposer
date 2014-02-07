@@ -6,15 +6,16 @@
 #include <QBrush>
 #include <QPen>
 
-class QnlyGraphicsGrid : public QGraphicsRectItem
+class Grid : public QGraphicsRectItem
 {
 public:
-  explicit QnlyGraphicsGrid( QGraphicsItem* parent = 0,
+  explicit Grid( QGraphicsItem* parent = 0,
                              QGraphicsScene* scene = 0 );
-  ~QnlyGraphicsGrid();
+  virtual ~Grid();
 
   void setStep(qreal step);
   qreal getStep();
+
   void setPen(QPen pen);
   QPen getPen();
 
@@ -22,7 +23,6 @@ protected:
   virtual void paint( QPainter *painter,
                       const QStyleOptionGraphicsItem *option,
                       QWidget *widget);
-
 private:
   qreal step;
   QPen pen;

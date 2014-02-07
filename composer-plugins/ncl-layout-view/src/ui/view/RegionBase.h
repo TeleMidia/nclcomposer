@@ -32,55 +32,49 @@
 #include "Region.h"
 #include "Grid.h"
 
-class QnlyGraphicsRegion;
+class Region;
 
-class QnlyGraphicsRegionBase : public QGraphicsScene
+class RegionBase : public QGraphicsScene
 {
     Q_OBJECT
 
 public:
-    QnlyGraphicsRegionBase(QObject* parent, QMenu* switchMenu);
-
-    ~QnlyGraphicsRegionBase();
+    explicit RegionBase(QObject* parent, QMenu* switchMenu);
+    virtual ~RegionBase();
 
     QString getId() const;
-
     void setId(const QString &id);
 
     QString getUid() const;
-
     void setUid(const QString &uid);
 
     QString getRegion() const;
-
     void setRegion(const QString &region);
 
     QString getDevice() const;
-
     void setDevice(const QString &device);
 
-    void addRegion(QnlyGraphicsRegion* region,
-                   QnlyGraphicsRegion* parent,
+    void addRegion(Region* region,
+                   Region* parent,
                    const QMap<QString, QString> attributes);
-
-    void changeRegion(QnlyGraphicsRegion* region,
+    void changeRegion(Region* region,
                     const QMap<QString, QString> attributes);
-
-    void selectRegion(QnlyGraphicsRegion* region);
-
-    void hideRegion(QnlyGraphicsRegion* region);
-
-    void updateActionText(QnlyGraphicsRegion *region);
-
-    void removeRegion(QnlyGraphicsRegion* region);
+    void selectRegion(Region* region);
+    void hideRegion(Region* region);
+    void updateActionText(Region *region);
+    void removeRegion(Region* region);
 
     QGraphicsItem* getBackgroundItem();
 
     void changeResolution(int w, int h);
 
     bool isGridVisible();
-
     void setGridVisible(bool active);
+
+public slots:
+    void performRegion();
+    void performDelete();
+    void performExport();
 
 signals:
     void regionAdditionRequested(const QString regionUID,
@@ -111,7 +105,7 @@ signals:
 
     void gridVisibilityChanged(bool gridVisibility);
 
-    void copyRequested(QnlyGraphicsRegion *);
+    void copyRequested(Region *);
     void pasteRequested();
 
 protected:
@@ -120,98 +114,58 @@ protected:
     void mousePressEvent(QGraphicsSceneMouseEvent* event);
     void keyPressEvent( QKeyEvent * event );
 
-public slots:
-    void performRegion();
-
-    void performDelete();
-
-    void performExport();
-
 protected slots:
     void performShow(QAction* action);
 
-    void requestAdditionRegion(QnlyGraphicsRegion* parent);
-
-    void requestRegionSelection(QnlyGraphicsRegion* region);
-
-    void requestRegionDeletion(QnlyGraphicsRegion* region);
-
-    void requestRegionChange(QnlyGraphicsRegion* region,
+    void requestAdditionRegion(Region* parent);
+    void requestRegionSelection(Region* region);
+    void requestRegionDeletion(Region* region);
+    void requestRegionChange(Region* region,
                                 QMap<QString, QString> attributes);
-
     void requestMediaOverRegionAction(QString mediaId,
-                                      QnlyGraphicsRegion* region);
-
+                                      Region* region);
     void performChangeResolution();
-
     void performGrid();
 
 private:
     void createActions();
-
     void createMenus();
-
     void createConnections();
 
     QMenu* viewMenu;
-
     QMenu* insertMenu;
-
     QMenu* showMenu;
-
     QMenu* arrangeMenu;
-
     QMenu* screensizeMenu;
-
     QMenu* switchMenu;
-
     QMenu* contextMenu;
 
     QAction* helpAction;
-
     QAction* undoAction;
-
     QAction* redoAction;
-
     QAction* cutAction;
-
     QAction* copyAction;
-
     QAction* pasteAction;
-
     QAction* deleteAction;
-
     QAction* zoominAction;
-
     QAction* zoomoutAction;
-
     QAction* zoomresetAction;
-
     QAction* hideAction;
-
     QAction* fullscreenAction;
-
     QAction* exportAction;
-
     QAction* regionAction;
-
     QAction* regionbaseAction;
-
     QAction* bringfrontAction;
-
     QAction* bringforwardAction;
-
     QAction* sendbackwardAction;
-
     QAction* sendbackAction;
-
     QAction* propertiesAction;
-
     QAction* gridAction;
-
     QAction* action;
 
-    // \todo This could be an array (and the user could also add its own size)
+    /*! \todo This could be an array (and the user could
+     *        also add its own size)
+     */
     QAction* re640x480;
     QAction* re800x600;
     QAction* re1024x768;
@@ -221,28 +175,23 @@ private:
     QAction* re320x400;
 
     QActionGroup* screensizeGroup;
-
     QActionGroup* regionActionGroup;
 
     QGraphicsTextItem *graphicsRegionBaseId;
 
     QString id;
-
     QString uid;
-
     QString region;
-
     QString device;
 
     QGraphicsRectItem* bgrect;
 
-    QnlyGraphicsGrid* grid;
+    Grid* grid;
 
-    QnlyGraphicsRegion* selectedRegion;
+    Region* selectedRegion;
 
     QMap<QString, QAction*> regionActions;
-
-    QMap<QString, QnlyGraphicsRegion*> regions;
+    QMap<QString, Region*> regions;
 };
 
 #endif // QNLYGRAPHICSREGIONBASE_H

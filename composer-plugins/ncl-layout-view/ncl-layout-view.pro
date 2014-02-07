@@ -5,6 +5,9 @@ INCLUDEPATH += \
   src/ui/ \
   src/ui/view/
 
+DESTDIR = \
+  bin/
+
 TARGET = \
   ncl-layout-view
 

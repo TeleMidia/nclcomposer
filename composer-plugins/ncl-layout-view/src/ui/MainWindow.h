@@ -16,7 +16,7 @@ namespace Ui {
  *
  * It groups all layout views, toolbars etc.
  */
-class QnlyMainWindow : public QMainWindow
+class MainWindow : public QMainWindow
 {
   Q_OBJECT
 
@@ -25,23 +25,15 @@ public:
    * \brief QnlyMainWindow constructor
    * \param parent
    */
-  explicit QnlyMainWindow(QWidget *parent = 0);
+  explicit MainWindow(QWidget *parent = 0);
 
   /*!
    * \brief Destructor
    */
-  ~QnlyMainWindow();
+  virtual ~MainWindow();
 
   // \todo unset QnlyView
-  void setQnlyView(QnlyView *view);
-
-signals:
-  void regionBaseSelectedFromComboBox(const QString &uuid);
-  void createNewRegionBase(const QString &id, const QMap <QString, QString> &attrs);
-
-private:
-  Ui::QnlyMainWindow *ui;
-  QnlyView *view;
+  void setQnlyView(View *view);
 
 public slots:
   void addRegion();
@@ -60,8 +52,18 @@ public slots:
 
   void selectRegionBaseInComboBox(const QString &uuid);
 
+signals:
+  void regionBaseSelectedFromComboBox(const QString &uuid);
+  void createNewRegionBase(const QString &id,
+                           const QMap <QString, QString> &attrs);
+
 private slots:
   void on_actionAction_Export_triggered();
+
+private:
+  Ui::QnlyMainWindow *ui;
+  View *view;
+
 };
 
 #endif // QNLYMAINWINDOW_H
