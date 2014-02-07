@@ -9,6 +9,9 @@
  */
 #include "util/ComposerSettings.h"
 
+#include <QStringList>
+#include <QDir>
+
 namespace composer {
     namespace core {
         namespace util {
@@ -23,10 +26,111 @@ GlobalSettings::GlobalSettings() :
 
 }
 
+/*!
+ * \brief Add the default paths to GlobalSettings.
+ *
+ * \fixme This function came from GUI, maybe some of the MACROS used above are
+ * not working.
+ */
+void GlobalSettings::updateWithDefaults(const QString &dataPath)
+{
+  /* Defaults plugins paths */
+  QStringList defaultPluginsPath;
+
+  // The first path will look for plugins is at user's home.
+  defaultPluginsPath << QDir::homePath() + QString("/composer/extensions");
+
+  // After that we will look for plugins in the default system path
+#ifdef Q_OS_MAC
+  defaultPluginsPath << "/Library/Application Support/Composer/Extensions"
+                     << QApplication::applicationDirPath() +
+                        "/../PlugIns/composer";
+#elif defined(Q_OS_WIN32)
+  defaultPluginsPath << QApplication::applicationDirPath() + "/extensions";
+  defaultPluginsPath << "C:/Composer/extensions";
+#else
+  // PREFIX Should be defined by the qmake while compiling the source code.
+#ifdef EXT_DEFAULT_PATH
+  defaultPluginsPath << QString(EXT_DEFAULT_PATH)
+                        + QString("/lib/composer/extensions");
+#endif
+
+#endif
+
+  this->beginGroup("extensions");
+  QStringList extensions_path = this->value("path").toStringList();
+  extensions_path << defaultPluginsPath; //add default to extensions path
+  extensions_path.removeDuplicates();
+  this->setValue("path", extensions_path); //udpate with the new value
+  this->endGroup();
+  /* End defaults plugin path */
+
+  /* Default language */
+  this->beginGroup("languages");
+  if(!this->contains("currentLanguage"))
+    this->setValue("currentLanguage", "en");
+
+  // Set the defaults supported languages
+  if(!this->contains("supportedLanguages"))
+  {
+    QStringList list;
+    list << "en_US" << "pt_BR" << "es_ES";
+    this->setValue("supportedLanguages", list);
+  }
+  this->endGroup();
+  /* End default language */
+
+  /* Import Bases */
+  QString defaultConnBaseDir;
+  this->beginGroup("importBases");
+
+  if(!this->contains("default_connector_base"))
+  {
+#ifdef Q_OS_MAC
+#ifdef QT_NO_DEBUG
+    defaultConnBaseDir = "../PlugIns/composer/";
+#elif
+    defaultConnBaseDir = "/Library/Application Support/Composer/Data/";
+#endif
+#elif defined(Q_OS_WIN32)
+    defaultConnBaseDir = QApplication::applicationDirPath() + "/data/";
+#else
+    // PREFIX Should be defined by the qmake while compiling the source code.
+#ifdef EXT_DEFAULT_PATH
+    defaultConnBaseDir = QString(EXT_DEFAULT_PATH)
+        + QString("/share/composer/");
+#endif
+#endif
+  }
+
+  this->setValue("default_conn_base",
+                    defaultConnBaseDir + "defaultConnBase.ncl");
+  this->endGroup();
+  /*End Import Bases*/
+
+  /* Stylesheets */
+  QStringList stylesheetsDirs =
+      this->value("default_stylesheets_dirs").toStringList();
+  stylesheetsDirs << QString(dataPath);
+
+#ifdef Q_OS_WIN32
+  stylesheetsDirs << QApplication::applicationDirPath() + "/data";
+#elif defined(Q_OS_MAC)
+  stylesheetsDirs << QApplication::applicationDirPath() + "/../PlugIns/composer";
+#endif
+
+  stylesheetsDirs.removeDuplicates();
+
+  this->setValue("default_stylesheets_dirs", stylesheetsDirs);
+  /* End Stylesheets */
+}
+
 ProjectSettings::ProjectSettings(const QString &project) :
   QSettings(project + ".ini", QSettings::IniFormat)
 {
 
 }
+
+
 
 } } } // end namespace
