@@ -1,9 +1,10 @@
-#include "include/compositeruleitem.h"
+#include "compositeruleitem.h"
 
 #include <QDebug>
 
-CompositeRuleItem::CompositeRuleItem(QTreeWidget *view, QString id,
-                                     QString op, int type, QWidget *parent) :
+CompositeRuleItem::CompositeRuleItem(QTreeWidget *view, const QString &id,
+                                     const QString &op, const int &type,
+                                     QWidget *parent) :
   QObject (parent), QTreeWidgetItem (view, type)
 {
   init (id, op);
@@ -16,7 +17,7 @@ CompositeRuleItem::CompositeRuleItem(QTreeWidgetItem *item, QString id,
   init (id, op);
 }
 
-void CompositeRuleItem::init(QString id, QString op)
+void CompositeRuleItem::init(const QString &id, const QString &op)
 {
   setText(ID_COLUMN, id);
   setOperator(op);
@@ -24,10 +25,11 @@ void CompositeRuleItem::init(QString id, QString op)
   setFlags(flags() | Qt::ItemIsEditable);
 }
 
-void CompositeRuleItem::setOperator(int op)
+void CompositeRuleItem::setOperator(const int &op)
 {
   QString operatorLabel = "";
-  switch (op) {
+  switch (op)
+  {
     case AND_OP:
       operatorLabel = "and";
       break;
@@ -42,7 +44,7 @@ void CompositeRuleItem::setOperator(int op)
   setOperator(operatorLabel);
 }
 
-void CompositeRuleItem::setOperator(QString op)
+void CompositeRuleItem::setOperator(const QString &op)
 {
   _operator = op;
 

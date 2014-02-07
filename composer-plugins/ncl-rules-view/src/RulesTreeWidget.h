@@ -24,7 +24,7 @@ signals:
 private slots:
   void onCustomContextMenuRequested(const QPoint &pos);
   void showContextMenu(QTreeWidgetItem* item, const QPoint& globalPos);
-  void editItem (QTreeWidgetItem *item, int column);
+  void editItem (QTreeWidgetItem *item, const int &column);
 };
 
 #endif // RULESTREEWIDGET_H

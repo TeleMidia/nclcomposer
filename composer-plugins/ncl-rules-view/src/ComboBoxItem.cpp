@@ -1,4 +1,4 @@
-#include "include/comboboxitem.h"
+#include "comboboxitem.h"
 
 ComboBoxItem::ComboBoxItem(QTreeWidgetItem *item, int column, QWidget *parent) :
   QComboBox(parent)

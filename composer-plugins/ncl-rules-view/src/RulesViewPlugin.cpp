@@ -23,8 +23,6 @@ const int VAR_COLUMN = 2;
 const int COMP_COLUMN = 3;
 const int VALUE_COLUMN = 4;
 
-
-
 RulesViewPlugin::RulesViewPlugin() :
   IPlugin ()
 {
@@ -264,18 +262,18 @@ void RulesViewPlugin::updateValue(QTreeWidgetItem* item)
         QString oldComparator = entity->getAttribute(COMPARATOR_ATTR);
         QString oldValue = entity->getAttribute(VALUE_ATTR);
 
-        QString newId = ruleItem->id();
-        QString newVar = ruleItem->var();
-        QString newComparator = ruleItem->comparator();
-        QString newValue = ruleItem->value();
+        QString newId = ruleItem->getId();
+        QString newVar = ruleItem->getVar();
+        QString newComparator = ruleItem->getComparator();
+        QString newValue = ruleItem->getValue();
 
         if (newId != oldId || newVar != oldVar ||
             newComparator != oldComparator || newValue != oldValue)
         {
-          attr.insert(ID_ATTR, ruleItem->id());
-          attr.insert(VAR_ATTR, ruleItem->var());
-          attr.insert(COMPARATOR_ATTR, ruleItem->comparator());
-          attr.insert(VALUE_ATTR, ruleItem->value());
+          attr.insert(ID_ATTR, ruleItem->getId());
+          attr.insert(VAR_ATTR, ruleItem->getVar());
+          attr.insert(COMPARATOR_ATTR, ruleItem->getComparator());
+          attr.insert(VALUE_ATTR, ruleItem->getValue());
         }
         break;
       }
@@ -289,12 +287,12 @@ void RulesViewPlugin::updateValue(QTreeWidgetItem* item)
 
         QString oldOperator = entity->getAttribute(OPERATOR_ATTR);
 
-        QString newId = compositeRuleItem->id();
+        QString newId = compositeRuleItem->getId();
         QString newOperator = compositeRuleItem->getOperator();
 
         if (newId != oldId || newOperator != oldOperator )
         {
-          attr.insert("id", compositeRuleItem->id());
+          attr.insert("id", compositeRuleItem->getId());
           attr.insert("operator", compositeRuleItem->getOperator());
         }
         break;
@@ -371,7 +369,7 @@ void RulesViewPlugin::changeSelectedEntity(QString pluginID, void *param)
     return;
 
   disconnect(_rulesTable, SIGNAL(itemSelectionChanged()),
-          this, SLOT(sendSelectionChangedSignal()));
+             this, SLOT(sendSelectionChangedSignal()));
 
   _rulesTable->selectionModel()->clear();
 

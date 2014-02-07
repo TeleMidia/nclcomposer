@@ -26,5 +26,5 @@ QList<LanguageType> RulesViewFactory::getSupportedLanguages()
 }
 
 #if QT_VERSION < 0x050000
-Q_EXPORT_PLUGIN2(RulesView, RulesViewFactory)
+Q_EXPORT_PLUGIN2(ncl-rules-view, RulesViewFactory)
 #endif

@@ -1,4 +1,4 @@
-#include "include/ruleitem.h"
+#include "ruleitem.h"
 
 #include <core/extensions/NCLStructure.h>
 #include <QDebug>
@@ -9,23 +9,24 @@ using namespace composer::language;
 QStringList RuleItem::_varList;
 QStringList RuleItem::_cmpList;
 
-RuleItem::RuleItem(QTreeWidget *view, QString id, QString var,
-                     QString comparator, QString value, int type,
-                     QWidget *parent)
+RuleItem::RuleItem(QTreeWidget *view, const QString &id, const QString &var,
+                   const QString &comparator, const QString &value,
+                   const int &type, QWidget *parent)
   :  QObject (parent), QTreeWidgetItem (view, type)
 {
   init (id, var, comparator, value);
 }
 
-RuleItem::RuleItem(QTreeWidgetItem *item, QString id, QString var,
-                     QString comparator, QString value, int type,
-                     QWidget *parent)
+RuleItem::RuleItem(QTreeWidgetItem *item, const QString &id, const QString &var,
+                   const QString &comparator, const QString &value,
+                   const int &type, QWidget *parent)
   : QObject (parent), QTreeWidgetItem (item, type)
 {
   init (id, var, comparator, value);
 }
 
-void RuleItem::init(QString id, QString var, QString comparator, QString value)
+void RuleItem::init(const QString &id, const QString &var,
+                    const QString &comparator, const QString &value)
 {
   _comparator = comparator;
 
@@ -37,7 +38,8 @@ void RuleItem::init(QString id, QString var, QString comparator, QString value)
 
   if (_cmpList.isEmpty())
     _cmpList.append(instance->getDatatypeDefaultSuggestions
-        (instance->getAttributeDatatype(RULE_LABEL, COMPARATOR_ATTR)));
+                    (instance->getAttributeDatatype(RULE_LABEL,
+                                                    COMPARATOR_ATTR)));
 
   _varCombo = new ComboBoxItem (this, VAR_COLUMN);
   _varCombo->addItem("");

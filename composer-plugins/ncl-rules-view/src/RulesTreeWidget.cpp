@@ -1,4 +1,4 @@
-#include "include/rulestreewidget.h"
+#include "rulestreewidget.h"
 
 #include <QMenu>
 #include <QDebug>
@@ -50,7 +50,7 @@ void RulesTreeWidget::showContextMenu(QTreeWidgetItem* item,
 
   removeRuleAction = menu.addAction (QIcon(":icon/delete"),
                                      item->type() == RULEBASE_TYPE ?
-                                     "Remove ruleBase" : "Remove Rule");
+                                       "Remove ruleBase" : "Remove Rule");
 
   removeRuleAction->setShortcut(QKeySequence::Delete);
 
@@ -92,7 +92,7 @@ void RulesTreeWidget::showContextMenu(QTreeWidgetItem* item,
   }
 }
 
-void RulesTreeWidget::editItem(QTreeWidgetItem *item, int column)
+void RulesTreeWidget::editItem(QTreeWidgetItem *item, const int &column)
 {
   bool isColumnEditable = false;
   if (item->type() == RULEBASE_TYPE || item->type() == COMPOSITERULE_TYPE)
