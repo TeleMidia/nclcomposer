@@ -33,22 +33,22 @@ class SearchLineEdit : public QLineEdit
 public:
   explicit SearchLineEdit(QWidget *parent = NULL);
 
+signals:
+  void escPressed();
+  void shiftReturnPressed();
+
 protected:
   void resizeEvent(QResizeEvent *event);
   virtual void keyPressEvent(QKeyEvent *keyEvent);
-
-private slots:
-  void updateSearchButton(const QString &text);
 
 private:
   QString styleSheetForCurrentState() const;
   QString buttonStyleSheetForCurrentState() const;
 
-  QToolButton *mSearchButton;
+  QToolButton *_mSearchButton;
 
-signals:
-  void escPressed();
-  void shiftReturnPressed();
+private slots:
+  void updateSearchButton(const QString &text);
 
 };
 

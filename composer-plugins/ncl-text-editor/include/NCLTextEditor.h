@@ -1,19 +1,19 @@
 /*
  * Copyright 2011 TeleMidia/PUC-Rio.
- * 
+ *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
- * License as published by the Free Software Foundation; either 
+ * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
- * You should have received a copy of the GNU Lesser General Public 
+ *
+ * You should have received a copy of the GNU Lesser General Public
  * License along with this library.  If not, see
- * <http://www.gnu.org/licenses/>. 
+ * <http://www.gnu.org/licenses/>.
  */
 #ifndef NCLTEXTEDITOR_H
 #define NCLTEXTEDITOR_H
@@ -37,16 +37,16 @@
 
 #ifdef LIGTHSTYLE
 /* Light Style */
-  #define PREF_CARET_LINE_BG_COLOR QColor("#B9D3EE")
-  #define PREF_FOLD_MARGIN_FORE_COLOR QColor("#B9D3EE")
-  #define PREF_FOLD_MARGIN_BACK_COLOR QColor("#FFFFFF")
-  #define MARGINS_BACKGROUND_COLOR QColor("#ffffff")
+#define PREF_CARET_LINE_BG_COLOR QColor("#B9D3EE")
+#define PREF_FOLD_MARGIN_FORE_COLOR QColor("#B9D3EE")
+#define PREF_FOLD_MARGIN_BACK_COLOR QColor("#FFFFFF")
+#define MARGINS_BACKGROUND_COLOR QColor("#ffffff")
 #else
-  /* Dark Style */
-  #define PREF_CARET_LINE_BG_COLOR QColor("#B9D3EE")
-  #define PREF_FOLD_MARGIN_FORE_COLOR QColor("#FFFFFF")
-  #define PREF_FOLD_MARGIN_BACK_COLOR QColor("#AAAAAA")
-  #define MARGINS_BACKGROUND_COLOR QColor("#BBBBBB")
+/* Dark Style */
+#define PREF_CARET_LINE_BG_COLOR QColor("#B9D3EE")
+#define PREF_FOLD_MARGIN_FORE_COLOR QColor("#FFFFFF")
+#define PREF_FOLD_MARGIN_BACK_COLOR QColor("#AAAAAA")
+#define MARGINS_BACKGROUND_COLOR QColor("#BBBBBB")
 #endif
 
 //! The NCL Text Editor
@@ -72,63 +72,43 @@ public:
   explicit NCLTextEditor(QWidget *parent = 0);
   virtual ~NCLTextEditor();
 
-  void setTabBehavior(TAB_BEHAVIOR tabBehavior);
+  void setTabBehavior(TAB_BEHAVIOR _tabBehavior);
   void userFillingNextAttribute(int pos);
   void userFillingPreviousAttribute(int pos);
   void updateVisualFillingAttributeField( int line,
                                           int index,
                                           int &begin,
-                                          int &end);
-
+                                          int &end );
   void keepFocused();
   QString textWithoutUserInteraction();
-  void setTextWithoutUserInteraction(QString text);
+  void setTextWithoutUserInteraction(const QString &text);
 
-  void setDocumentUrl(QString docURL);
+  void setDocumentUrl(const QString &_docURL);
   QString getDocumentUrl();
   bool parseDocument(bool recursive = true);
-  void updateElementsIDWithAlias(QDomDocument doc, QString alias);
+  void updateElementsIDWithAlias(const QDomDocument &doc, const QString &alias);
 
-  QDomElement elementById(const QDomDocument &domDoc, QString id);
-  QDomElement elementById(QString id, bool recursive = true);
-  QList <QDomElement> elementsByTagname(QString tagname);
-  QList <QDomElement> elementsByTagname(const QDomDocument &domDoc,
-                                        QString tagname);
-  QList <QDomElement> elementsByTagname(QString tagname, QString parentId);
+  QDomElement elementById(const QDomDocument &_domDoc, const QString &id);
+  QDomElement elementById(const QString &id, bool recursive = true);
+  QList <QDomElement> elementsByTagname(const QString &tagname);
+  QList <QDomElement> elementsByTagname(const QDomDocument &_domDoc,
+                                        const QString &tagname);
+  QList <QDomElement> elementsByTagname(const QString &tagname,
+                                        const QString &parentId);
 
-private:
-  enum INTERACTION_STATE
-  {
-    DEFAULT_STATE = 1,
-    FILLING_ATTRIBUTES_STATE
-  };
+public slots:
+  void Increasefont();
+  void Decreasefont();
+  void clearErrorIndicators();
+  void clearFillingAttributeIndicator();
+  void markError(const QString &description,
+                 const QString &file,
+                 int line, int column = 0, int severity = 0);
+  void MarkLine(int, int, Qt::KeyboardModifiers);
+  void formatText();
 
-  INTERACTION_STATE interaction_state;
-
-  QsciLexerNCL *nclexer;
-  QsciNCLAPIs *apis;
-  QDomDocument domDoc;
-  QString docURL;
-  QMap <QString, QDomDocument> domDocs;
-
-  int error_indicator;
-  int error_marker;
-  int filling_attribute_indicator;
-
-  TAB_BEHAVIOR tabBehavior;
-  bool focusInIgnoringCurrentText;
-  QString textWithoutUserInter;
-
-  void initParameters();
-
-  /* events */
-  void wheelEvent( QWheelEvent * event );
-  void keyPressEvent(QKeyEvent *event);
-  void keyReleaseEvent(QKeyEvent *event);
-  void mousePressEvent(QMouseEvent *e);
-
-  bool parseImportedDocuments( QString currentFileURI,
-                               QDomDocument &doc, bool recursive = true);
+signals:
+  void focusLosted(QFocusEvent *event);
 
 protected:
   void AutoCompleteCompleted();
@@ -139,18 +119,40 @@ protected:
   void dragEnterEvent(QDragEnterEvent *event);
   void dropEvent(QDropEvent *event);*/
 
-public slots:
-  void Increasefont();
-  void Decreasefont();
-  void clearErrorIndicators();
-  void clearFillingAttributeIndicator();
-  void markError(QString description, QString file, int line, int column = 0,
-                 int severity = 0);
-  void MarkLine(int, int, Qt::KeyboardModifiers);
-  void formatText();
+private:
+  enum INTERACTION_STATE
+  {
+    DEFAULT_STATE = 1,
+    FILLING_ATTRIBUTES_STATE
+  };
 
-signals:
-  void focusLosted(QFocusEvent *event);
+  INTERACTION_STATE _interactionState;
+
+  QsciLexerNCL *_nclLexer;
+  QsciNCLAPIs *_apis;
+  QDomDocument _domDoc;
+  QString _docURL;
+  QMap <QString, QDomDocument> _domDocs;
+
+  int _errorIndicator;
+  int _errorMarker;
+  int _fillingAttributeIndicator;
+
+  TAB_BEHAVIOR _tabBehavior;
+  bool _focusInIgnoringCurrentText;
+  QString _textWithoutUserInter;
+
+  void initParameters();
+
+  /* events */
+  void wheelEvent( QWheelEvent * event );
+  void keyPressEvent(QKeyEvent *event);
+  void keyReleaseEvent(QKeyEvent *event);
+  void mousePressEvent(QMouseEvent *e);
+
+  bool parseImportedDocuments( const QString &currentFileURI,
+                               const QDomDocument &doc,
+                               bool recursive = true );
 };
 
 #endif // NCLTEXTEDITOR_H

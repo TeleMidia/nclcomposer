@@ -41,26 +41,6 @@ class NCLTextualViewPlugin :
 {
   Q_OBJECT
 
-private:
-  NCLTextEditorMainWindow *window; /*!< TODO */
-  NCLTextEditor *nclTextEditor; /*! < The current NCLTextEditor */
-  NCLTextEditor *tmpNclTextEditor; /*!< This variable is used to keep a
-                                            buffer with text and syntax coloring
-                                            while the text content is
-                                            synchronized to the core */
-
-  QMap <QString, int> startEntityOffset; /*!< Keep the offset of the startTag
-                                              element */
-  QMap <QString, int> endEntityOffset; /*!< Keep the offset of endTag offset */
-
-  QShortcut *updateModelShortcut;
-
-  bool isSyncing;
-  Entity *currentEntity;
-
-  QDomDocument xmlDoc;
-  QMutex syncMutex;
-
 public:
   /*!
    * \brief Constructor.
@@ -174,6 +154,48 @@ public slots:
   void validationError(QString pluginID, void *param);
   // END COMMUNICATION WITH VALIDATION PLUGIN
 
+signals:
+  void TextualPluginHasAddedEntity(QString pluginID, Entity *entity);
+
+protected:
+  void updateEntitiesOffset(int startFrom = 0, int insertedChars = 0);
+  void printEntitiesOffset();
+
+  /*!
+   * \brief
+   */
+  bool isStartEndTag(Entity *entity);
+
+  /*!
+   * \brief
+   */
+  void openStartEndTag(Entity *entity);
+
+  /*!
+   * \brief
+   */
+  void fixIdentation(int offset, bool mustAddTab = false);
+
+private:
+  NCLTextEditorMainWindow *_window; /*!< TODO */
+  NCLTextEditor *_nclTextEditor; /*! < The current NCLTextEditor */
+  NCLTextEditor *_tmpNclTextEditor; /*!< This variable is used to keep a
+                                            buffer with text and syntax coloring
+                                            while the text content is
+                                            synchronized to the core */
+
+  QMap <QString, int> _startEntityOffset; /*!< Keep the offset of the startTag
+                                              element */
+  QMap <QString, int> _endEntityOffset; /*!< Keep the offset of endTag offset */
+
+  QShortcut *_updateModelShortcut;
+
+  bool _isSyncing;
+  Entity *_currentEntity;
+
+  QDomDocument _xmlDoc;
+  QMutex _syncMutex;
+
 private slots:
   /*!
    * \brief Updates the core model with the current content of the NCL Text
@@ -202,28 +224,6 @@ private slots:
    * \brief Called when the user change the focus from the textual plugin.
    */
   virtual void manageFocusLost(QFocusEvent *event);
-
-signals:
-  void TextualPluginHasAddedEntity(QString pluginID, Entity *entity);
-
-protected:
-  void updateEntitiesOffset(int startFrom = 0, int insertedChars = 0);
-  void printEntitiesOffset();
-
-  /*!
-   * \brief
-   */
-  bool isStartEndTag(Entity *entity);
-
-  /*!
-   * \brief
-   */
-  void openStartEndTag(Entity *entity);
-
-  /*!
-   * \brief
-   */
-  void fixIdentation(int offset, bool mustAddTab = false);
 };
 
 #endif // DEBUGCONSOLEPLUGIN_H

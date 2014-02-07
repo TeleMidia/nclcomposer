@@ -7,7 +7,7 @@ QT          +=  xml gui
 DEFINES     += QSCINTILLA_DLL
 
 INCLUDEPATH +=  include \
-                ../outline-view/include \
+                ../outline-view/src \
                 ../ncl-layout-view
 
 # We use QMAKE_CXXFLAGS instead of INCLUDEPATH because our qscintilla is
@@ -39,8 +39,8 @@ HEADERS     =   include/NCLTextEditorMainWindow.h \
                 include/MyLexer.h \
                 include/NCLValidator.h \
                 include/NCLProblemsView.h \
-                ../outline-view/include/NCLParser.h \
-                ../outline-view/include/NCLTreeWidget.h \
+                ../outline-view/src/NCLParser.h \
+                ../outline-view/src/NCLTreeWidget.h \
                 include/NCLTextualViewPlugin.h \
                 include/NCLTextualViewPluginFactory.h \
                 include/NCLTextualViewPlugin_global.h \

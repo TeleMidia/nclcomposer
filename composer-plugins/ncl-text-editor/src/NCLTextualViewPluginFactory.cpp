@@ -20,7 +20,7 @@
 
 NCLTextualViewPluginFactory::NCLTextualViewPluginFactory()
 {
-  prefPageWidget = NULL;
+  _prefPageWidget = NULL;
 }
 
 IPlugin* NCLTextualViewPluginFactory::createPluginInstance()
@@ -34,10 +34,10 @@ void NCLTextualViewPluginFactory::releasePluginInstance(IPlugin *plugin)
       qobject_cast<NCLTextualViewPlugin*>(plugin);
 
   if (textualView)
-    {
-      delete textualView;
-      textualView = NULL;
-    }
+  {
+    delete textualView;
+    textualView = NULL;
+  }
 }
 
 QString NCLTextualViewPluginFactory::id() const

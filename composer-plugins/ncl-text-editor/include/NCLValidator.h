@@ -27,17 +27,17 @@ using namespace std;
 class NCLValidator
 {
 private:
-    vector <QString> errorMessages;
-    vector <QString> warningMessages;
+  vector <QString> errorMessages;
+  vector <QString> warningMessages;
 
 public:
-    NCLValidator();
-    bool validate (const QFile file);
-    bool validate (const QString &text);
+  NCLValidator();
+  bool validate (const QFile file);
+  bool validate (const QString &text);
 
-    bool begin();
-    QString getNextErrorMessage();
-    QString getNextWarningMessage();
+  bool begin();
+  QString getNextErrorMessage();
+  QString getNextWarningMessage();
 };
 
 #endif // NCLVALIDATOR_H

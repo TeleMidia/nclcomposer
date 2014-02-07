@@ -1,19 +1,19 @@
 /*
  * Copyright 2011 TeleMidia/PUC-Rio.
- * 
+ *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
- * License as published by the Free Software Foundation; either 
+ * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
- * You should have received a copy of the GNU Lesser General Public 
+ *
+ * You should have received a copy of the GNU Lesser General Public
  * License along with this library.  If not, see
- * <http://www.gnu.org/licenses/>. 
+ * <http://www.gnu.org/licenses/>.
  */
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
@@ -55,106 +55,104 @@ class QMenu;
  */
 class NCLTextEditorMainWindow : public QMainWindow
 {
-    Q_OBJECT
+  Q_OBJECT
 
 public:
-    explicit NCLTextEditorMainWindow(QWidget *parent = 0);
-    NCLTextEditor *getTextEditor() {return this->textEdit;}
+  explicit NCLTextEditorMainWindow(QWidget *parent = 0);
+  NCLTextEditor *getTextEditor() {return this->_textEdit;}
 
 #ifdef NCLEDITOR_STANDALONE
-    NCLTreeWidget *getNCLTreeWidget() {return this->outlineView; }
+  NCLTreeWidget *getNCLTreeWidget() {return this->outlineView; }
 #endif
-
-protected:
-    void closeEvent(QCloseEvent *event);
-
-private slots:
-    void newFile();
-    void open();
-    bool save();
-    bool saveAs();
-    void about();
-    void documentWasModified();
-    void showInFullScreen();
-    void insertElement();
-    void gotoLineOf(QTreeWidgetItem *item, int column);
-    void showPreferences();
-
-    void showSearchBox();
-    void hideSearchBox();
-    void findNext();
-    void findNext(QString text);
-    void findPrevious();
-    void findPrevious(QString text);
-
-private:
-    void createActions();
-    void createMenus();
-    void createToolBars();
-    void createStatusBar();
-    void createTextView();
-    void createOutlineView();
-    void createProblemsView();
-    void createSearchBox();
-    void readSettings();
-    void writeSettings();
-    bool maybeSave();
-    void loadFile(const QString &fileName);
-    bool saveFile(const QString &fileName);
-    void setCurrentFile(const QString &fileName);
-    QString strippedName(const QString &fullFileName);
-
-    QDockWidget *dockTextEdit, *dockTextEdit2;
-    NCLTextEditor *textEdit, *textEdit2;
-    QString curFile;
-
-    QMenu *fileMenu;
-    QMenu *editMenu;
-    QMenu *helpMenu;
-    QToolBar *fileToolBar;
-    QToolBar *editToolBar;
-    QAction *newAct;
-    QAction *openAct;
-    QAction *saveAct;
-    QAction *saveAsAct;
-    QAction *exitAct;
-    QAction *cutAct;
-    QAction *copyAct;
-    QAction *pasteAct;
-    QAction *aboutAct;
-    QAction *aboutQtAct;
-    QAction *fullscreenAct;
-    QAction *editPreferencesAct;
-    QAction *synchronizeAct;
-    QAction *showSearchBoxAct;
-
-    QFrame searchBox;
-    QPushButton doSearchButton;
-    QDockWidget *dockSearchBox;
-    SearchLineEdit searchBoxText;
-
-/** VIEWS **/
-    /** Outline View */
-#ifdef NCLEDITOR_STANDALONE
-    QDockWidget *dockOutlineView;
-    NCLTreeWidget *outlineView;
-#endif
-
-    QMenu *nodeMenu;
-    QAction *insertNodeChildAct;
-
-    /** Problems View */
-    NCLProblemsView *problemsView;
-
-    /*  QDockWidget *dockLayoutView;
-        LayoutView *layoutView; */
-
-    /* Preferences *preferences;
-    PreferencesPage *textEditorPreferencesPage; */
 
 signals:
-    void elementAdded(QString, QString, QMap <QString, QString>&, bool);
-    void focusLosted();
+  void elementAdded(QString, QString, QMap <QString, QString>&, bool);
+  void focusLosted();
+
+protected:
+  void closeEvent(QCloseEvent *event);
+
+private:
+  void createActions();
+  void createMenus();
+  void createToolBars();
+  void createStatusBar();
+  void createTextView();
+  void createOutlineView();
+  void createProblemsView();
+  void createSearchBox();
+  void readSettings();
+  void writeSettings();
+  bool maybeSave();
+  void loadFile(const QString &fileName);
+  bool saveFile(const QString &fileName);
+  void setCurrentFile(const QString &fileName);
+  QString strippedName(const QString &fullFileName);
+
+  QDockWidget *_dockTextEdit, *_dockTextEdit2;
+  NCLTextEditor *_textEdit, *_textEdit2;
+  QString _curFile;
+
+  QMenu *_fileMenu;
+  QMenu *_editMenu;
+  QMenu *_helpMenu;
+  QToolBar *_fileToolBar;
+  QToolBar *_editToolBar;
+  QAction *_newAct;
+  QAction *_openAct;
+  QAction *_saveAct;
+  QAction *_saveAsAct;
+  QAction *_exitAct;
+  QAction *_cutAct;
+  QAction *_copyAct;
+  QAction *_pasteAct;
+  QAction *_aboutAct;
+  QAction *_aboutQtAct;
+  QAction *_fullscreenAct;
+  QAction *_editPreferencesAct;
+  QAction *_synchronizeAct;
+  QAction *_showSearchBoxAct;
+
+  QFrame _searchBox;
+  QPushButton _doSearchButton;
+  QDockWidget *_dockSearchBox;
+  SearchLineEdit _searchBoxText;
+
+  /** VIEWS **/
+  /** Outline View */
+#ifdef NCLEDITOR_STANDALONE
+  QDockWidget *_dockOutlineView;
+  NCLTreeWidget *_outlineView;
+#endif
+
+  QMenu *_nodeMenu;
+  QAction *_insertNodeChildAct;
+
+  /** Problems View */
+  NCLProblemsView *_problemsView;
+
+  /*  QDockWidget *dockLayoutView;
+  LayoutView *layoutView; */
+  /* Preferences *preferences;
+  PreferencesPage *textEditorPreferencesPage; */
+private slots:
+  void newFile();
+  void open();
+  bool save();
+  bool saveAs();
+  void about();
+  void documentWasModified();
+  void showInFullScreen();
+  void insertElement();
+  void gotoLineOf(QTreeWidgetItem *item, int column);
+  void showPreferences();
+
+  void showSearchBox();
+  void hideSearchBox();
+  void findNext();
+  void findNext(QString text);
+  void findPrevious();
+  void findPrevious(QString text);
 };
 
 #endif

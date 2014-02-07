@@ -27,8 +27,9 @@ using namespace composer::extension;
 #include "NCLTextualViewPlugin_global.h"
 #include "NCLTextualViewPlugin.h"
 
-namespace Ui {
-class TextPluginPreferencesWidget;
+namespace Ui
+{
+  class TextPluginPreferencesWidget;
 }
 
 /*!
@@ -112,8 +113,8 @@ public:
    * \return QString the description of TextualView.
    */
   QString description() {return tr("NCL Textual plugin enable the user to "
-        "edit the application directly through its source code. Additionally, "
-        "this plugin brings features like code coloring and autocomplete.");}
+                                   "edit the application directly through its source code. Additionally, "
+                                   "this plugin brings features like code coloring and autocomplete.");}
 
   /*!
    * \brief url
@@ -130,8 +131,8 @@ public:
 #endif
 
 private:
-  QFrame *prefPageWidget;
-  Ui::TextPluginPreferencesWidget *prefPageUi;
+  QFrame *_prefPageWidget;
+  Ui::TextPluginPreferencesWidget *_prefPageUi;
 
 };
 

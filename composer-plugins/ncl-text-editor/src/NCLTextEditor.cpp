@@ -27,23 +27,23 @@ NCLTextEditor::NCLTextEditor(QWidget *parent) :
   QsciScintilla(parent)
 {
   initParameters();
-  nclexer = NULL;
-  apis = NULL;
-  textWithoutUserInter = "";
-  focusInIgnoringCurrentText = false;
+  _nclLexer = NULL;
+  _apis = NULL;
+  _textWithoutUserInter = "";
+  _focusInIgnoringCurrentText = false;
 
   setAcceptDrops(true);
 }
 
 NCLTextEditor::~NCLTextEditor()
 {
-//    if(nclexer != NULL) delete nclexer;
-//    if(apis != NULL) delete apis;
+  // if(nclexer != NULL) delete nclexer;
+  // if(apis != NULL) delete apis;
 }
 
 void NCLTextEditor::initParameters()
 {
-  tabBehavior = TAB_BEHAVIOR_DEFAULT;
+  _tabBehavior = TAB_BEHAVIOR_DEFAULT;
 
   setAutoIndent(true);
   setFolding(QsciScintilla::CircledTreeFoldStyle);
@@ -89,11 +89,11 @@ void NCLTextEditor::initParameters()
     mylexer->addTextPartition(10, startTagRegex, startTagStyle);
     */
 
-  nclexer = new QsciLexerNCL (0);
-  setLexer(nclexer);
+  _nclLexer = new QsciLexerNCL (0);
+  setLexer(_nclLexer);
 
   //APIS
-  apis = new QsciNCLAPIs(lexer());
+  _apis = new QsciNCLAPIs(lexer());
 
   QFont font;
   font.setFamily(QString::fromUtf8(PREF_FONT_FAMILY));
@@ -104,10 +104,10 @@ void NCLTextEditor::initParameters()
   // connect(this, SIGNAL(marginClicked(int,int,Qt::KeyboardModifiers)), this,
   // SLOT(MarkLine(int,int,Qt::KeyboardModifiers)));
 
-  error_marker = markerDefine(QPixmap(":/images/error-icon-16.png"), -1);
-  error_indicator = indicatorDefine(SquiggleIndicator, 1);
-  setIndicatorForegroundColor(QColor("#FF0000"), error_indicator);
-  filling_attribute_indicator = indicatorDefine (RoundBoxIndicator, 2);
+  _errorMarker = markerDefine(QPixmap(":/images/error-icon-16.png"), -1);
+  _errorIndicator = indicatorDefine(SquiggleIndicator, 1);
+  setIndicatorForegroundColor(QColor("#FF0000"), _errorIndicator);
+  _fillingAttributeIndicator = indicatorDefine (RoundBoxIndicator, 2);
 
   // qDebug() << error_marker << " " << error_indicator;
   // setWhitespaceVisibility(QsciScintilla::WsVisible);
@@ -126,7 +126,7 @@ void NCLTextEditor::Decreasefont()
 void NCLTextEditor::clearErrorIndicators()
 {
   // clear markers
-  markerDeleteAll(error_marker);
+  markerDeleteAll(_errorMarker);
 
   //clearIndicators
   int nr_lines = lines();
@@ -135,12 +135,12 @@ void NCLTextEditor::clearErrorIndicators()
                        0,
                        nr_lines,
                        tmp2.size(),
-                       error_indicator);
+                       _errorIndicator);
   clearAnnotations();
 }
 
-void NCLTextEditor::markError ( QString description,
-                                QString file,
+void NCLTextEditor::markError ( const QString &description,
+                                const QString &file,
                                 int line,
                                 int column,
                                 int severity)
@@ -150,7 +150,7 @@ void NCLTextEditor::markError ( QString description,
 
   // ADD MARKER
   if (text() != "")
-    markerAdd(line, error_marker);
+    markerAdd(line, _errorMarker);
 
   //ADD INDICATOR
   int indentation = 0;
@@ -161,13 +161,14 @@ void NCLTextEditor::markError ( QString description,
                      indentation,
                      line,
                      tmp.size()-1,
-                     error_indicator);
+                     _errorIndicator);
   annotate(line, QsciStyledText(description, 0));
 }
 
 void NCLTextEditor::wheelEvent (QWheelEvent *event)
 {
-  if(event->modifiers() == Qt::ControlModifier){
+  if(event->modifiers() == Qt::ControlModifier)
+  {
     if(event->delta() > 0)
       zoomIn();
     else
@@ -183,10 +184,12 @@ void NCLTextEditor::mousePressEvent(QMouseEvent *event)
   int selBegin = SendScintilla(SCI_GETSELECTIONSTART);
   int selEnd = SendScintilla(SCI_GETSELECTIONEND);
 
-  int clearBegin = SendScintilla(SCI_POSITIONFROMLINE, SendScintilla(SCI_LINEFROMPOSITION, selBegin));
-  int clearEnd  = SendScintilla(SCI_GETLINEENDPOSITION, SendScintilla(SCI_LINEFROMPOSITION, selEnd));
+  int clearBegin = SendScintilla(SCI_POSITIONFROMLINE,
+                                 SendScintilla(SCI_LINEFROMPOSITION, selBegin));
+  int clearEnd  = SendScintilla(SCI_GETLINEENDPOSITION,
+                                SendScintilla(SCI_LINEFROMPOSITION, selEnd));
 
-  qDebug() << clearBegin << clearEnd;
+  // qDebug() << clearBegin << clearEnd;
 
   SendScintilla(SCI_INDICATORCLEARRANGE, clearBegin, clearEnd);
 
@@ -207,7 +210,7 @@ void NCLTextEditor::mousePressEvent(QMouseEvent *event)
   }
   else
   {
-    interaction_state = DEFAULT_STATE;
+    _interactionState = DEFAULT_STATE;
   }
 }
 
@@ -241,7 +244,8 @@ void NCLTextEditor::keyPressEvent(QKeyEvent *event)
 
   // If I receive a Qt::Key_Backtab
   // change event to Shift+Tab
-  if(event->key() == Qt::Key_Backtab) {
+  if(event->key() == Qt::Key_Backtab)
+  {
     event->accept();
     event = new QKeyEvent(event->type(), Qt::Key_Tab, Qt::ShiftModifier);
   }
@@ -267,30 +271,35 @@ void NCLTextEditor::keyPressEvent(QKeyEvent *event)
     return;
   }
 
-  if (interaction_state == FILLING_ATTRIBUTES_STATE) {
+  if (_interactionState == FILLING_ATTRIBUTES_STATE)
+  {
     QString strline = text(line);
     clearIndicatorRange ( line,
                           0,
                           line,
                           strline.size(),
-                          filling_attribute_indicator);
+                          _fillingAttributeIndicator);
 
-    if(event->key() == Qt::Key_Return){
-      interaction_state = DEFAULT_STATE;
+    if(event->key() == Qt::Key_Return)
+    {
+      _interactionState = DEFAULT_STATE;
       setSelection(line, index, line, index);
       QsciScintilla::keyPressEvent(event);
       return;
     }
 
-    if(event->key() == Qt::Key_Tab){
+    if(event->key() == Qt::Key_Tab)
+    {
       QString strline = text(line);
       pos = SendScintilla(SCI_GETCURRENTPOS);
       style = SendScintilla(SCI_GETSTYLEAT, pos);
       bool error = false;
 
       //SHIFT+TAB -> GO TO PREVIOUS ATRIBUTE
-      if(event->modifiers() & Qt::ShiftModifier) {
-        while (pos > 0 ) {
+      if(event->modifiers() & Qt::ShiftModifier)
+      {
+        while (pos > 0 )
+        {
           style = SendScintilla(SCI_GETSTYLEAT, pos);
           if(style != QsciLexerNCL::HTMLDoubleQuotedString)
             break;
@@ -301,11 +310,12 @@ void NCLTextEditor::keyPressEvent(QKeyEvent *event)
           userFillingPreviousAttribute(pos);
         else
           error = true;
-
       }
       //JUST TAB -> GO TO NEXT ATTRIBUTE
-      else if(event->modifiers() == Qt::NoModifier) {
-        while (pos < size){
+      else if(event->modifiers() == Qt::NoModifier)
+      {
+        while (pos < size)
+        {
           style = SendScintilla(SCI_GETSTYLEAT, pos);
           if(style != QsciLexerNCL::HTMLDoubleQuotedString)
             break;
@@ -318,13 +328,14 @@ void NCLTextEditor::keyPressEvent(QKeyEvent *event)
           error = true;
       }
 
-      if (error) {
+      if (error)
+      {
         clearIndicatorRange( line,
                              0,
                              line,
                              strline.size(),
-                             filling_attribute_indicator );
-        interaction_state = DEFAULT_STATE;
+                             _fillingAttributeIndicator );
+        _interactionState = DEFAULT_STATE;
       }
       return;
 
@@ -339,8 +350,8 @@ void NCLTextEditor::keyPressEvent(QKeyEvent *event)
       // Test if pos-1 is also inside the attribute, otherwise it will
       // treat a text inside the end of previous Quote and the start of
       // the current one as an attribute
-      if (    style == QsciLexerNCL::HTMLDoubleQuotedString
-              && pos-1 >=0 ) {
+      if ( style == QsciLexerNCL::HTMLDoubleQuotedString && pos-1 >=0 )
+      {
         //TODO: IMPROVE PERFORMANCE
         recolor();
         style = SendScintilla(SCI_GETSTYLEAT, pos-1);
@@ -356,9 +367,9 @@ void NCLTextEditor::keyPressEvent(QKeyEvent *event)
                            0,
                            line,
                            strline.size(),
-                           filling_attribute_indicator);
+                           _fillingAttributeIndicator);
 
-      interaction_state = DEFAULT_STATE;
+      _interactionState = DEFAULT_STATE;
     }
   }
   else
@@ -370,17 +381,17 @@ void NCLTextEditor::keyPressEvent(QKeyEvent *event)
     //Test if pos-1 is also inside the attribute, otherwise it will
     // treat a text inside the end of previous Quote and the start of
     // the current one as an attribute
-    if (style == QsciLexerNCL::HTMLDoubleQuotedString &&
-        pos-1 >=0 ) {
+    if (style == QsciLexerNCL::HTMLDoubleQuotedString && pos-1 >=0 )
+    {
       //TODO: IMPROVE PERFORMANCE
       recolor();
       style = SendScintilla(SCI_GETSTYLEAT, pos-1);
 
       //FIXME: Attribute also can be between Single quotes
-      if (tabBehavior == TAB_BEHAVIOR_NEXT_ATTR &&
-          (style == QsciLexerNCL::HTMLDoubleQuotedString)) {
-
-        interaction_state = FILLING_ATTRIBUTES_STATE;
+      if (_tabBehavior == TAB_BEHAVIOR_NEXT_ATTR &&
+          (style == QsciLexerNCL::HTMLDoubleQuotedString))
+      {
+        _interactionState = FILLING_ATTRIBUTES_STATE;
         getCursorPosition (&line, &index);
 
         updateVisualFillingAttributeField(line, index, begin, end);
@@ -411,11 +422,12 @@ void NCLTextEditor::userFillingNextAttribute(int pos)
   int begin, end, style, i = pos;
   int size = SendScintilla(SCI_GETTEXTLENGTH);
 
-  interaction_state = FILLING_ATTRIBUTES_STATE;
+  _interactionState = FILLING_ATTRIBUTES_STATE;
 
-  qDebug() << pos;
+  // qDebug() << pos;
 
-  while( i < size ) {
+  while( i < size )
+  {
     style = SendScintilla(SCI_GETSTYLEAT, i);
     if (style == QsciLexerNCL::HTMLDoubleQuotedString)
       break;
@@ -423,10 +435,10 @@ void NCLTextEditor::userFillingNextAttribute(int pos)
   }
   i++;
 
-  qDebug() << i;
+  // qDebug() << i;
 
   if( i >= size ) {
-    interaction_state = DEFAULT_STATE;
+    _interactionState = DEFAULT_STATE;
     return;
   }
 
@@ -441,17 +453,19 @@ void NCLTextEditor::userFillingPreviousAttribute(int pos)
 {
   int begin, end, style;
   int i = pos-1;
-  interaction_state = FILLING_ATTRIBUTES_STATE;
+  _interactionState = FILLING_ATTRIBUTES_STATE;
 
-  while( i >= 0) {
+  while( i >= 0)
+  {
     style = SendScintilla(SCI_GETSTYLEAT, i);
     if (style == QsciLexerHTML::HTMLDoubleQuotedString)
       break;
     i--;
   }
 
-  if( i < 0) {
-    interaction_state = DEFAULT_STATE;
+  if( i < 0)
+  {
+    _interactionState = DEFAULT_STATE;
     return;
   }
 
@@ -477,13 +491,14 @@ void NCLTextEditor::updateVisualFillingAttributeField( int line,
                        0,
                        line,
                        strline.size(),
-                       filling_attribute_indicator);
+                       _fillingAttributeIndicator);
 
   while( begin >= 0 && strline[begin] != '\"')
     begin--;
 
-  if(begin < 0) {
-    interaction_state = DEFAULT_STATE;
+  if(begin < 0)
+  {
+    _interactionState = DEFAULT_STATE;
     return;
   }
   begin++;
@@ -491,8 +506,9 @@ void NCLTextEditor::updateVisualFillingAttributeField( int line,
   while( end < strline.size() && strline[end] != '\"')
     end++;
 
-  if(end >= strline.size() || begin == end) {
-    interaction_state = DEFAULT_STATE;
+  if(end >= strline.size() || begin == end)
+  {
+    _interactionState = DEFAULT_STATE;
     return;
   }
 
@@ -502,14 +518,14 @@ void NCLTextEditor::updateVisualFillingAttributeField( int line,
     end++;
     inserted_space = true;
   }
-  fillIndicatorRange(line, begin, line, end, filling_attribute_indicator);
+  fillIndicatorRange(line, begin, line, end, _fillingAttributeIndicator);
 
   if(inserted_space) setSelection(line, begin, line, end);
 }
 
 void NCLTextEditor::setTabBehavior(TAB_BEHAVIOR tabBehavior)
 {
-  this->tabBehavior = tabBehavior;
+  this->_tabBehavior = tabBehavior;
 }
 
 void NCLTextEditor::formatText()
@@ -519,7 +535,7 @@ void NCLTextEditor::formatText()
 
 void NCLTextEditor::keepFocused()
 {
-  focusInIgnoringCurrentText = true;
+  _focusInIgnoringCurrentText = true;
   this->setFocus();
   this->SendScintilla(QsciScintilla::SCI_SETFOCUS, true);
 }
@@ -540,45 +556,46 @@ void NCLTextEditor::clearFillingAttributeIndicator()
                        0,
                        nr_lines,
                        tmp2.size(),
-                       filling_attribute_indicator);
+                       _fillingAttributeIndicator);
 }
 
 void NCLTextEditor::focusInEvent(QFocusEvent *e)
 {
 #ifndef NCLEDITOR_STANDALONE
-  if(!focusInIgnoringCurrentText)
-    textWithoutUserInter = text();
+  if(!_focusInIgnoringCurrentText)
+    _textWithoutUserInter = text();
 
-  focusInIgnoringCurrentText = false;
+  _focusInIgnoringCurrentText = false;
   this->SendScintilla(QsciScintilla::SCI_SETFOCUS, true);
 #endif
 }
 
 QString NCLTextEditor::textWithoutUserInteraction()
 {
-  return textWithoutUserInter;
-}
-void NCLTextEditor::setTextWithoutUserInteraction(QString text)
-{
-  textWithoutUserInter = text;
+  return _textWithoutUserInter;
 }
 
-void NCLTextEditor::setDocumentUrl(QString docURL)
+void NCLTextEditor::setTextWithoutUserInteraction(const QString &text)
 {
-  this->docURL = docURL;
+  _textWithoutUserInter = text;
+}
+
+void NCLTextEditor::setDocumentUrl(const QString &docURL)
+{
+  this->_docURL = docURL;
 }
 
 QString NCLTextEditor::getDocumentUrl()
 {
-  return this->docURL;
+  return this->_docURL;
 }
 
 bool NCLTextEditor::parseDocument(bool recursive)
 {
-  domDocs.clear();
-  domDoc.clear();
+  _domDocs.clear();
+  _domDoc.clear();
   //  docs.clear();
-  if(!domDoc.setContent(this->text()))
+  if(!_domDoc.setContent(this->text()))
   {
     // could not parse the document
     return false;
@@ -587,15 +604,16 @@ bool NCLTextEditor::parseDocument(bool recursive)
 
   if(recursive)
   {
-    domDocs.insert(docURL, domDoc);
-    return parseImportedDocuments(docURL, domDoc, true);
+    _domDocs.insert(_docURL, _domDoc);
+    return parseImportedDocuments(_docURL, _domDoc, true);
   }
   else
     return true;
 }
 
-bool NCLTextEditor::parseImportedDocuments(QString currentFileURI,
-                                           QDomDocument &doc, bool recursive)
+bool NCLTextEditor::parseImportedDocuments( const QString &currentFileURI,
+                                            const QDomDocument &doc,
+                                            bool /*recursive*/ )
 {
   qDebug() << "parseImportedDocument( " << currentFileURI;
   QStack <QDomElement> stack;
@@ -649,7 +667,7 @@ bool NCLTextEditor::parseImportedDocuments(QString currentFileURI,
               ret = false;
               qDebug() << "Could not import " << fullpath;
             }
-            domDocs.insert(fullpath, currentDomDoc);
+            _domDocs.insert(fullpath, currentDomDoc);
           }
         }
       }
@@ -665,7 +683,8 @@ bool NCLTextEditor::parseImportedDocuments(QString currentFileURI,
   return ret;
 }
 
-void NCLTextEditor::updateElementsIDWithAlias(QDomDocument doc, QString alias)
+void NCLTextEditor::updateElementsIDWithAlias( const QDomDocument &doc,
+                                               const QString &alias )
 {
   QStack <QDomElement> stack;
   QDomElement current = doc.firstChildElement();
@@ -688,7 +707,8 @@ void NCLTextEditor::updateElementsIDWithAlias(QDomDocument doc, QString alias)
   }
 }
 
-QDomElement NCLTextEditor::elementById(const QDomDocument &domDoc, QString id)
+QDomElement NCLTextEditor::elementById( const QDomDocument &domDoc,
+                                        const QString &id )
 {
   QStack <QDomNode> stack;
   stack.push_front(domDoc.firstChildElement());
@@ -709,18 +729,17 @@ QDomElement NCLTextEditor::elementById(const QDomDocument &domDoc, QString id)
       child = child.nextSibling();
     }
   }
-
   // The function QDomDocument::elementById will always returns a NULL doc.
   // That is why we have to reimplement this function.
   return QDomElement();
 }
 
-QDomElement NCLTextEditor::elementById(QString id, bool recursive)
+QDomElement NCLTextEditor::elementById(const QString &id, bool recursive)
 {
   if(!recursive)
-    return elementById(domDoc, id);
+    return elementById(_domDoc, id);
 
-  QMapIterator<QString, QDomDocument> i(domDocs);
+  QMapIterator<QString, QDomDocument> i(_domDocs);
   while (i.hasNext())
   {
     i.next();
@@ -730,11 +749,11 @@ QDomElement NCLTextEditor::elementById(QString id, bool recursive)
       return element;
   }
 
-  return domDoc.elementById(id);
+  return _domDoc.elementById(id);
 }
 
 QList <QDomElement> NCLTextEditor::elementsByTagname(const QDomDocument &domDoc,
-                                                     QString tagname)
+                                                     const QString &tagname)
 {
   QDomNodeList elements = domDoc.elementsByTagName(tagname);
   QList <QDomElement> ret;
@@ -745,10 +764,10 @@ QList <QDomElement> NCLTextEditor::elementsByTagname(const QDomDocument &domDoc,
   return ret;
 }
 
-QList <QDomElement> NCLTextEditor::elementsByTagname(QString tagname)
+QList <QDomElement> NCLTextEditor::elementsByTagname(const QString &tagname)
 {
   QList <QDomElement> ret;
-  QMapIterator<QString, QDomDocument> i(domDocs);
+  QMapIterator<QString, QDomDocument> i(_domDocs);
   while (i.hasNext())
   {
     i.next();
@@ -757,8 +776,8 @@ QList <QDomElement> NCLTextEditor::elementsByTagname(QString tagname)
   return ret;
 }
 
-QList <QDomElement> NCLTextEditor::elementsByTagname( QString tagname,
-                                                      QString parentId )
+QList <QDomElement> NCLTextEditor::elementsByTagname(const QString &tagname,
+                                                     const QString &parentId)
 {
   QDomElement current = elementById(parentId);
   QList <QDomElement> ret;

@@ -25,10 +25,10 @@ SearchLineEdit::SearchLineEdit(QWidget *parent) :
   QLineEdit(parent)
 {
   // Create the search button and set its icon, cursor, and stylesheet
-  this->mSearchButton = new QToolButton(this);
-  this->mSearchButton->setFixedSize(18, 18);
-  this->mSearchButton->setCursor(Qt::ArrowCursor);
-  this->mSearchButton->setStyleSheet(this->buttonStyleSheetForCurrentState());
+  this->_mSearchButton = new QToolButton(this);
+  this->_mSearchButton->setFixedSize(18, 18);
+  this->_mSearchButton->setCursor(Qt::ArrowCursor);
+  this->_mSearchButton->setStyleSheet(this->buttonStyleSheetForCurrentState());
 
   // Update the search button when the text changes
   QObject::connect(this, SIGNAL(textChanged(QString)),
@@ -42,17 +42,17 @@ SearchLineEdit::SearchLineEdit(QWidget *parent) :
   QSize minSizeHint = this->minimumSizeHint();
   this->setMinimumSize(
         qMax(minSizeHint.width(),
-             this->mSearchButton->sizeHint().width() + frameWidth * 2 + 2),
+             this->_mSearchButton->sizeHint().width() + frameWidth * 2 + 2),
         qMax(minSizeHint.height(),
-             this->mSearchButton->sizeHint().height() + frameWidth * 2 + 2));
+             this->_mSearchButton->sizeHint().height() + frameWidth * 2 + 2));
 }
 
 void SearchLineEdit::resizeEvent(QResizeEvent *event)
 {
   Q_UNUSED(event);
-  QSize size = this->mSearchButton->sizeHint();
+  QSize size = this->_mSearchButton->sizeHint();
   int frameWidth = this->style()->pixelMetric(QStyle::PM_DefaultFrameWidth);
-  this->mSearchButton->move(
+  this->_mSearchButton->move(
         this->rect().right() - frameWidth - size.width() - 2,
         (this->rect().bottom() + 2 - size.height()) / 2);
 }
@@ -62,17 +62,17 @@ void SearchLineEdit::updateSearchButton(const QString &text)
   if (!text.isEmpty())
   {
     // We have some text in the box - set the button to clear the text
-    QObject::connect(this->mSearchButton, SIGNAL(clicked()), SLOT(clear()));
+    QObject::connect(this->_mSearchButton, SIGNAL(clicked()), SLOT(clear()));
   }
   else
   {
     // The text box is empty - make the icon do nothing when clicked
-    QObject::disconnect(this->mSearchButton, SIGNAL(clicked()),
+    QObject::disconnect(this->_mSearchButton, SIGNAL(clicked()),
                         this, SLOT(clear()));
   }
 
   this->setStyleSheet(this->styleSheetForCurrentState());
-  this->mSearchButton->setStyleSheet(this->buttonStyleSheetForCurrentState());
+  this->_mSearchButton->setStyleSheet(this->buttonStyleSheetForCurrentState());
 }
 
 QString SearchLineEdit::styleSheetForCurrentState() const
@@ -90,7 +90,7 @@ QString SearchLineEdit::styleSheetForCurrentState() const
 
   style += "padding-left: 3px;";
   style += QString("padding-right: %1px;").arg(
-        this->mSearchButton->sizeHint().width() + frameWidth + 1);
+        this->_mSearchButton->sizeHint().width() + frameWidth + 1);
 
   style += "border-width: 3px;";
   style += "border-image: url(:/images/esf-border.png) 3 3 3 3 stretch;";

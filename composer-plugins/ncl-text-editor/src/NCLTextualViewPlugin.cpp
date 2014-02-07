@@ -1,19 +1,19 @@
 /*
  * Copyright 2011 TeleMidia/PUC-Rio.
- * 
+ *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
- * License as published by the Free Software Foundation; either 
+ * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
- * You should have received a copy of the GNU Lesser General Public 
+ *
+ * You should have received a copy of the GNU Lesser General Public
  * License along with this library.  If not, see
- * <http://www.gnu.org/licenses/>. 
+ * <http://www.gnu.org/licenses/>.
  */
 #include "NCLTextualViewPlugin.h"
 
@@ -32,36 +32,36 @@ const QString PROLOG ("<?xml version=\"1.0\" encoding=\"ISO-8859-1\"?>\n<!-- Gen
 
 NCLTextualViewPlugin::NCLTextualViewPlugin()
 {
-  window = new NCLTextEditorMainWindow();
-  nclTextEditor = window->getTextEditor();
+  _window = new NCLTextEditorMainWindow();
+  _nclTextEditor = _window->getTextEditor();
 
-  tmpNclTextEditor = NULL;
+  _tmpNclTextEditor = NULL;
 
   project = NULL;
-  connect( window,
-          SIGNAL(elementAdded(QString,QString,QMap<QString,QString>&,bool)),
-          this,
-          SIGNAL(addEntity(QString,QString,QMap<QString,QString>&,bool)));
+  connect( _window,
+           SIGNAL(elementAdded(QString,QString,QMap<QString,QString>&,bool)),
+           this,
+           SIGNAL(addEntity(QString,QString,QMap<QString,QString>&,bool)));
 
-  isSyncing = false;
+  _isSyncing = false;
 
-  updateModelShortcut = new QShortcut(window);
-  updateModelShortcut->setKey(QKeySequence("F5"));
+  _updateModelShortcut = new QShortcut(_window);
+  _updateModelShortcut->setKey(QKeySequence("F5"));
 
-  connect(updateModelShortcut, SIGNAL(activated()),
+  connect(_updateModelShortcut, SIGNAL(activated()),
           this, SLOT(updateCoreModel()) );
 
-  connect(nclTextEditor, SIGNAL(focusLosted(QFocusEvent*)),
+  connect(_nclTextEditor, SIGNAL(focusLosted(QFocusEvent*)),
           this, SLOT(manageFocusLost(QFocusEvent*)));
 
-  connect(nclTextEditor, SIGNAL(textChanged()),
+  connect(_nclTextEditor, SIGNAL(textChanged()),
           this, SIGNAL(setCurrentProjectAsDirty()));
 }
 
 NCLTextualViewPlugin::~NCLTextualViewPlugin()
 {
-  delete window;
-  window = NULL;
+  delete _window;
+  _window = NULL;
 }
 
 void NCLTextualViewPlugin::init()
@@ -75,16 +75,16 @@ void NCLTextualViewPlugin::init()
 
   // Just for safety clearing start and end line previous saved.
   QString key;
-  foreach(key, startEntityOffset.keys())
-    startEntityOffset.remove(key);
-  foreach(key, endEntityOffset.keys())
-    endEntityOffset.remove(key);
+  foreach(key, _startEntityOffset.keys())
+    _startEntityOffset.remove(key);
+  foreach(key, _endEntityOffset.keys())
+    _endEntityOffset.remove(key);
 
   QString text = data.left(indexOfStartEntities);
   if(text.isEmpty() || text.isNull())
-    nclTextEditor->setText(PROLOG);
+    _nclTextEditor->setText(PROLOG);
   else
-    nclTextEditor->setText(text);
+    _nclTextEditor->setText(text);
 
   int indexOfStartEntitiesContent = indexOfStartEntities +
       startEntitiesSep.length();
@@ -101,32 +101,32 @@ void NCLTextualViewPlugin::init()
 
   for(i = 0; i < listStart.size()-1 && i < listEnd.size()-1; i +=2)
   {
-    startEntityOffset[listStart[i]] = listStart[i+1].toInt();
-    endEntityOffset[listEnd[i]] = listEnd[i+1].toInt();
+    _startEntityOffset[listStart[i]] = listStart[i+1].toInt();
+    _endEntityOffset[listEnd[i]] = listEnd[i+1].toInt();
   }
 
-	// qDebug() << i << listStart.size() << listEnd.size();
-	if( i != listStart.size() || i != listEnd.size())
-	{
-	  qDebug() << "The data saved in the file is corrupted. Forcing"
-						 << " updateFromModel";
+  // qDebug() << i << listStart.size() << listEnd.size();
+  if( i != listStart.size() || i != listEnd.size())
+  {
+    qDebug() << "The data saved in the file is corrupted. Forcing"
+             << " updateFromModel";
 
-		updateFromModel();
-	}
+    updateFromModel();
+  }
 
-  nclTextEditor->setDocumentUrl(project->getLocation());
+  _nclTextEditor->setDocumentUrl(project->getLocation());
 
   updateErrorMessages();
 }
 
 QWidget* NCLTextualViewPlugin::getWidget()
 {
-  return window;
+  return _window;
 }
 
 void NCLTextualViewPlugin::updateFromModel()
 {
-//  qDebug() << "NCLTextualViewPlugin::updateFromModel";
+  //  qDebug() << "NCLTextualViewPlugin::updateFromModel";
   incrementalUpdateFromModel();
 
   updateErrorMessages();
@@ -134,10 +134,10 @@ void NCLTextualViewPlugin::updateFromModel()
 
 void NCLTextualViewPlugin::incrementalUpdateFromModel()
 {
-  nclTextEditor->clear();
-  nclTextEditor->setText(PROLOG);
-  startEntityOffset.clear();
-  endEntityOffset.clear();
+  _nclTextEditor->clear();
+  _nclTextEditor->setText(PROLOG);
+  _startEntityOffset.clear();
+  _endEntityOffset.clear();
 
   if(project->getChildren().size())
   {
@@ -165,8 +165,8 @@ void NCLTextualViewPlugin::incrementalUpdateFromModel()
 
 void NCLTextualViewPlugin::nonIncrementalUpdateFromModel()
 {
-  nclTextEditor->clear();
-  nclTextEditor->setText(PROLOG);
+  _nclTextEditor->clear();
+  _nclTextEditor->setText(PROLOG);
   QDomDocument doc ("document");
   if(project->getChildren().size())
   {
@@ -187,8 +187,8 @@ void NCLTextualViewPlugin::nonIncrementalUpdateFromModel()
 
       if(!first) //ignore the project root
       {
-//      current->appendChild(el);
-//      onEntityAdded("xxx", entity);
+        //      current->appendChild(el);
+        //      onEntityAdded("xxx", entity);
       }
       else
       {
@@ -212,8 +212,8 @@ void NCLTextualViewPlugin::nonIncrementalUpdateFromModel()
     QString *text = new QString();
     QTextStream textStream(text);
     doc.save(textStream, QDomNode::EncodingFromTextStream);
-    nclTextEditor->setText(PROLOG);
-    nclTextEditor->insertAtPos(textStream.readAll(), PROLOG.size());
+    _nclTextEditor->setText(PROLOG);
+    _nclTextEditor->insertAtPos(textStream.readAll(), PROLOG.size());
   }
 }
 
@@ -223,7 +223,7 @@ void NCLTextualViewPlugin::onEntityAdded(QString pluginID, Entity *entity)
   // qDebug() << " isSyncing= " << isSyncing;
   if(pluginID == getPluginInstanceID())
   {
-    currentEntity = entity;
+    _currentEntity = entity;
     return;
   }
 
@@ -237,22 +237,22 @@ void NCLTextualViewPlugin::onEntityAdded(QString pluginID, Entity *entity)
   {
     // Test if exists before access from operator[] because if doesn't exist
     // this operator will create a new (and we don't want this!).
-    if(endEntityOffset.count(entity->getParentUniqueId()))
+    if(_endEntityOffset.count(entity->getParentUniqueId()))
     {
       if(isStartEndTag(entity->getParent()))
       {
         openStartEndTag(entity->getParent());
         hasOpennedTag = true;
-//        printEntitiesOffset();
+        //        printEntitiesOffset();
       }
 
-      insertAtOffset = endEntityOffset[entity->getParentUniqueId()];
+      insertAtOffset = _endEntityOffset[entity->getParentUniqueId()];
     }
   }
 
   // fill the attributes (ordered)
   deque <QString> *attributes_ordered =
-          NCLStructure::getInstance()->getAttributesOrdered(entity->getType());
+      NCLStructure::getInstance()->getAttributesOrdered(entity->getType());
 
   if(attributes_ordered != NULL)
   {
@@ -260,14 +260,14 @@ void NCLTextualViewPlugin::onEntityAdded(QString pluginID, Entity *entity)
     {
       if(entity->hasAttribute((*attributes_ordered)[i]))
       {
-          line += " " + (*attributes_ordered)[i] +
-                "=\"" + entity->getAttribute((*attributes_ordered)[i]) + "\"";
+        line += " " + (*attributes_ordered)[i] +
+            "=\"" + entity->getAttribute((*attributes_ordered)[i]) + "\"";
       }
     }
   }
 
   map <QString, bool> *attributes =
-          NCLStructure::getInstance()->getAttributes(entity->getType());
+      NCLStructure::getInstance()->getAttributes(entity->getType());
   // Search if there is any other attribute that is not part of NCL Language
   // but the user fills it.
   QMap <QString, QString>::iterator begin, end, it;
@@ -281,31 +281,31 @@ void NCLTextualViewPlugin::onEntityAdded(QString pluginID, Entity *entity)
   line += "/>\n";
   int startEntitySize = line.size();
 
-  if(insertAtOffset >= 0 && insertAtOffset <= nclTextEditor->text().length())
+  if(insertAtOffset >= 0 && insertAtOffset <= _nclTextEditor->text().length())
   {
-    nclTextEditor->insertAtPos(line, insertAtOffset);
+    _nclTextEditor->insertAtPos(line, insertAtOffset);
 
     //update all previous offset numbers (when necessary)
     updateEntitiesOffset(insertAtOffset, line.size());
 
-    startEntityOffset[entity->getUniqueId()] = insertAtOffset;
-    endEntityOffset[entity->getUniqueId()] = insertAtOffset + startEntitySize-2;
+    _startEntityOffset[entity->getUniqueId()] = insertAtOffset;
+    _endEntityOffset[entity->getUniqueId()] = insertAtOffset + startEntitySize-2;
 
-    window->getTextEditor()->SendScintilla(QsciScintilla::SCI_SETFOCUS, true);
+    _window->getTextEditor()->SendScintilla(QsciScintilla::SCI_SETFOCUS, true);
 
     if(hasOpennedTag) //Add a new tab to the new inserted element.
       fixIdentation(insertAtOffset, true);
     else              // keep the previous tabulation
       fixIdentation(insertAtOffset, false);
 
-    currentEntity = entity;
+    _currentEntity = entity;
   }
   else
     qWarning() << "NCLTextEditor::onEntityAdded Trying to insert a media in a "
                   "position greater than the text size. It will be ignored!"
                << insertAtOffset;
 
-//  printEntitiesOffset();
+  //  printEntitiesOffset();
 }
 
 void NCLTextualViewPlugin::errorMessage(QString error)
@@ -319,7 +319,7 @@ void NCLTextualViewPlugin::onEntityChanged(QString pluginID, Entity *entity)
               entity->getType() + " - " + entity->getUniqueId() +")";
 
   //Return if this is my call to onEntityAdded
-  if(pluginID == getPluginInstanceID() && !isSyncing)
+  if(pluginID == getPluginInstanceID() && !_isSyncing)
     return;
 
   QString line = "<" + entity->getType() + "";
@@ -333,24 +333,24 @@ void NCLTextualViewPlugin::onEntityChanged(QString pluginID, Entity *entity)
   }
 
   int insertAtOffset = 0;
-  if(startEntityOffset.contains(entity->getUniqueId()))
-     insertAtOffset = startEntityOffset.value(entity->getUniqueId());
+  if(_startEntityOffset.contains(entity->getUniqueId()))
+    insertAtOffset = _startEntityOffset.value(entity->getUniqueId());
 
-  if(insertAtOffset >= 0 && insertAtOffset <= nclTextEditor->text().size())
+  if(insertAtOffset >= 0 && insertAtOffset <= _nclTextEditor->text().size())
   {
     int previous_length = 0;
-    char curChar = nclTextEditor->SendScintilla(QsciScintilla::SCI_GETCHARAT,
-                                                insertAtOffset+previous_length);
+    char curChar = _nclTextEditor->SendScintilla(QsciScintilla::SCI_GETCHARAT,
+                                                 insertAtOffset+previous_length);
     while(curChar != '>' &&
-          (insertAtOffset+previous_length) < nclTextEditor->text().size())
+          (insertAtOffset+previous_length) < _nclTextEditor->text().size())
     {
       previous_length++;
-      curChar = nclTextEditor->SendScintilla(QsciScintilla::SCI_GETCHARAT,
-                                             insertAtOffset+previous_length);
+      curChar = _nclTextEditor->SendScintilla(QsciScintilla::SCI_GETCHARAT,
+                                              insertAtOffset+previous_length);
     }
 
-    curChar = nclTextEditor->SendScintilla(QsciScintilla::SCI_GETCHARAT,
-                                           insertAtOffset+previous_length-1);
+    curChar = _nclTextEditor->SendScintilla(QsciScintilla::SCI_GETCHARAT,
+                                            insertAtOffset+previous_length-1);
     if(curChar == '/')
     {
       line += "/>";
@@ -358,7 +358,7 @@ void NCLTextualViewPlugin::onEntityChanged(QString pluginID, Entity *entity)
     else
       line += ">";
 
-    if((insertAtOffset+previous_length) == nclTextEditor->text().size())
+    if((insertAtOffset+previous_length) == _nclTextEditor->text().size())
     {
       qWarning() << "TextEditor could not perform the requested action.";
       return;
@@ -373,19 +373,19 @@ void NCLTextualViewPlugin::onEntityChanged(QString pluginID, Entity *entity)
                       ->SendScintilla( QsciScintilla::SCI_GETLINEINDENTATION,
                                        insertAtLine);*/
 
-    nclTextEditor->SendScintilla(QsciScintilla::SCI_SETSELECTIONSTART,
-                                 insertAtOffset);
-    nclTextEditor->SendScintilla(QsciScintilla::SCI_SETSELECTIONEND,
-                                 insertAtOffset+previous_length);
-    nclTextEditor->removeSelectedText();
+    _nclTextEditor->SendScintilla(QsciScintilla::SCI_SETSELECTIONSTART,
+                                  insertAtOffset);
+    _nclTextEditor->SendScintilla(QsciScintilla::SCI_SETSELECTIONEND,
+                                  insertAtOffset+previous_length);
+    _nclTextEditor->removeSelectedText();
 
-    nclTextEditor->insertAtPos(line, insertAtOffset);
+    _nclTextEditor->insertAtPos(line, insertAtOffset);
 
     //update all previous entities line numbers (when necessary)
     int diff_size = line.size() - previous_length;
     updateEntitiesOffset(insertAtOffset, diff_size);
 
-    nclTextEditor->SendScintilla( QsciScintilla::SCI_GOTOPOS, insertAtOffset);
+    _nclTextEditor->SendScintilla( QsciScintilla::SCI_GOTOPOS, insertAtOffset);
     //TODO: fix indentation
   }
   else
@@ -397,35 +397,35 @@ void NCLTextualViewPlugin::onEntityChanged(QString pluginID, Entity *entity)
 void NCLTextualViewPlugin::onEntityRemoved(QString pluginID, QString entityID)
 {
   // skip if this is my own call to onEntityRemoved
-  if(pluginID == getPluginInstanceID() && !isSyncing)
+  if(pluginID == getPluginInstanceID() && !_isSyncing)
     return;
 
-  int startOffset = startEntityOffset[entityID];
-  int endOffset = endEntityOffset[entityID];
+  int startOffset = _startEntityOffset[entityID];
+  int endOffset = _endEntityOffset[entityID];
 
-  char curChar = nclTextEditor->SendScintilla(
+  char curChar = _nclTextEditor->SendScintilla(
         QsciScintilla::SCI_GETCHARAT,
         startOffset);
 
   while(curChar != '>' && startOffset >= 0)
   {
     startOffset--;
-    curChar = nclTextEditor->SendScintilla( QsciScintilla::SCI_GETCHARAT,
-                                           startOffset);
+    curChar = _nclTextEditor->SendScintilla( QsciScintilla::SCI_GETCHARAT,
+                                             startOffset);
   }
   if(curChar == '>')
     startOffset++; // does not include the '>' character
 
-  curChar = nclTextEditor->SendScintilla( QsciScintilla::SCI_GETCHARAT,
-                                         endOffset);
+  curChar = _nclTextEditor->SendScintilla( QsciScintilla::SCI_GETCHARAT,
+                                           endOffset);
 
-  while(curChar != '>' && endOffset < nclTextEditor->text().size())
+  while(curChar != '>' && endOffset < _nclTextEditor->text().size())
   {
     endOffset++;
-    curChar = nclTextEditor->SendScintilla( QsciScintilla::SCI_GETCHARAT,
-                                           endOffset);
+    curChar = _nclTextEditor->SendScintilla( QsciScintilla::SCI_GETCHARAT,
+                                             endOffset);
   }
-  if(endOffset == nclTextEditor->text().size())
+  if(endOffset == _nclTextEditor->text().size())
   {
     qWarning() << "TextEditor could not perform the requested action.";
     return;
@@ -433,18 +433,18 @@ void NCLTextualViewPlugin::onEntityRemoved(QString pluginID, QString entityID)
 
   endOffset++; // includes the '>' character
 
-  while(isspace(curChar) && endOffset < nclTextEditor->text().size())
+  while(isspace(curChar) && endOffset < _nclTextEditor->text().size())
   {
     endOffset++;
-    curChar = nclTextEditor->SendScintilla( QsciScintilla::SCI_GETCHARAT,
-                                           endOffset);
+    curChar = _nclTextEditor->SendScintilla( QsciScintilla::SCI_GETCHARAT,
+                                             endOffset);
   }
 
-  nclTextEditor->SendScintilla(QsciScintilla::SCI_SETSELECTIONSTART,
-                               startOffset);
-  nclTextEditor->SendScintilla(QsciScintilla::SCI_SETSELECTIONEND,
-                               endOffset);
-  nclTextEditor->removeSelectedText();
+  _nclTextEditor->SendScintilla(QsciScintilla::SCI_SETSELECTIONSTART,
+                                startOffset);
+  _nclTextEditor->SendScintilla(QsciScintilla::SCI_SETSELECTIONEND,
+                                endOffset);
+  _nclTextEditor->removeSelectedText();
 
   QString key;
   QList<QString> mustRemoveEntity;
@@ -452,11 +452,11 @@ void NCLTextualViewPlugin::onEntityRemoved(QString pluginID, QString entityID)
   // check all entities that is removed together with entityID, i.e.
   // its children
   // P.S. This could be get from model
-  foreach(key, startEntityOffset.keys())
+  foreach(key, _startEntityOffset.keys())
   {
     // if the element is inside the entity that will be removed:
-    if(startEntityOffset[key] >= startOffset &&
-        endEntityOffset[key]+2 <= endOffset)
+    if(_startEntityOffset[key] >= startOffset &&
+       _endEntityOffset[key]+2 <= endOffset)
     {
       mustRemoveEntity.append(key);
     }
@@ -464,14 +464,14 @@ void NCLTextualViewPlugin::onEntityRemoved(QString pluginID, QString entityID)
     {
       // otherwise if necessary we must update the start and end line of
       // the entity.
-      if(startEntityOffset[key] >= startOffset)
+      if(_startEntityOffset[key] >= startOffset)
       {
-        startEntityOffset[key] -= (endOffset - startOffset);
+        _startEntityOffset[key] -= (endOffset - startOffset);
       }
 
-      if(endEntityOffset[key] >= endOffset)
+      if(_endEntityOffset[key] >= endOffset)
       {
-        endEntityOffset[key] -= (endOffset - startOffset);
+        _endEntityOffset[key] -= (endOffset - startOffset);
       }
     }
   }
@@ -481,8 +481,8 @@ void NCLTextualViewPlugin::onEntityRemoved(QString pluginID, QString entityID)
   QListIterator<QString> iterator( mustRemoveEntity );
   while( iterator.hasNext() ){
     key = iterator.next();
-    startEntityOffset.remove(key);
-    endEntityOffset.remove(key);
+    _startEntityOffset.remove(key);
+    _endEntityOffset.remove(key);
   }
 
   /* foreach(key, startEntityOffset.keys())
@@ -495,27 +495,27 @@ void NCLTextualViewPlugin::onEntityRemoved(QString pluginID, QString entityID)
 bool NCLTextualViewPlugin::saveSubsession()
 {
   QByteArray data;
-  data.append(nclTextEditor->text());
+  data.append(_nclTextEditor->text());
   data.append("$START_ENTITIES_LINES$");
   QString key;
   bool first = true;
-  foreach (key, startEntityOffset.keys())
+  foreach (key, _startEntityOffset.keys())
   {
     if(!first)
       data.append(",");
     else
       first = false;
-    data.append(key + ", " + QString::number(startEntityOffset[key]));
+    data.append(key + ", " + QString::number(_startEntityOffset[key]));
   }
   data.append("$END_ENTITIES_LINES$");
   first = true;
-  foreach (key, endEntityOffset.keys())
+  foreach (key, _endEntityOffset.keys())
   {
     if(!first)
       data.append(",");
     else
       first = false;
-    data.append(key + "," + QString::number(endEntityOffset[key]));
+    data.append(key + "," + QString::number(_endEntityOffset[key]));
   }
 
   emit setPluginData(data);
@@ -525,78 +525,78 @@ bool NCLTextualViewPlugin::saveSubsession()
 
 void NCLTextualViewPlugin::changeSelectedEntity(QString pluginID, void *param)
 {
-  if(isSyncing)
+  if(_isSyncing)
     return; // do nothing;
 
   QString *id = (QString*)param;
-  if(startEntityOffset.contains(*id))
+  if(_startEntityOffset.contains(*id))
   {
-    int entityOffset = startEntityOffset.value(*id);
+    int entityOffset = _startEntityOffset.value(*id);
     //  int entityLine = window->getTextEditor()->SendScintilla(
     //                                  QsciScintilla::SCI_LINEFROMPOSITION,
     //                                  entityOffset);
 
-    if(entityOffset < nclTextEditor->text().size())
+    if(entityOffset < _nclTextEditor->text().size())
     {
-      nclTextEditor->SendScintilla(QsciScintilla::SCI_GOTOPOS,
-                                   entityOffset);
-      nclTextEditor->SendScintilla(QsciScintilla::SCI_SETFOCUS,
-                                   true);
+      _nclTextEditor->SendScintilla(QsciScintilla::SCI_GOTOPOS,
+                                    entityOffset);
+      _nclTextEditor->SendScintilla(QsciScintilla::SCI_SETFOCUS,
+                                    true);
     }
   }
   else
   {
     qDebug() << "NCLTextualViewPlugin::changeSelectedEntity() "
-               << "Entity doesn't exists!";
+             << "Entity doesn't exists!";
   }
 }
 
 void NCLTextualViewPlugin::updateCoreModel()
 {
-  syncMutex.lock();
+  _syncMutex.lock();
   bool rebuildComposerModelFromScratch = true;
 
-  isSyncing = true; //set our current state as syncing
+  _isSyncing = true; //set our current state as syncing
 
-  QString text = nclTextEditor->text();
+  QString text = _nclTextEditor->text();
   QString errorMessage;
   int errorLine, errorColumn;
   //Create a DOM document with the new content
-  nclTextEditor->clearErrorIndicators();
-  if(!xmlDoc.setContent(text, &errorMessage, &errorLine, &errorColumn))
+  _nclTextEditor->clearErrorIndicators();
+  if(!_xmlDoc.setContent(text, &errorMessage, &errorLine, &errorColumn))
   {
     //if the current XML is not well formed.
-    QMessageBox::warning(nclTextEditor, tr("Error"),
-                             tr("Your document is not a Well-formed XML"));
-    nclTextEditor->keepFocused();
-    nclTextEditor->markError(errorMessage, "", errorLine-1, errorColumn);
+    QMessageBox::warning(_nclTextEditor, tr("Error"),
+                         tr("Your document is not a Well-formed XML"));
+    _nclTextEditor->keepFocused();
+    _nclTextEditor->markError(errorMessage, "", errorLine-1, errorColumn);
 
-    isSyncing = false;
-    syncMutex.unlock();
+    _isSyncing = false;
+    _syncMutex.unlock();
     return;
   }
 
-//  int line, column;
-//  nclTextEditor->getCursorPosition(&line, &column);
+  //  int line, column;
+  //  nclTextEditor->getCursorPosition(&line, &column);
   sendBroadcastMessage("textualStartSync", NULL);
   //double-buffering
-  tmpNclTextEditor = nclTextEditor;
-  nclTextEditor = new NCLTextEditor(0);
-  nclTextEditor->setDocumentUrl(project->getLocation());
-  nclTextEditor->setText(tmpNclTextEditor->textWithoutUserInteraction());
+  _tmpNclTextEditor = _nclTextEditor;
+  _nclTextEditor = new NCLTextEditor(0);
+  _nclTextEditor->setDocumentUrl(project->getLocation());
+  _nclTextEditor->setText(_tmpNclTextEditor->textWithoutUserInteraction());
   updateFromModel();  // this is just a precaution
 
   if(rebuildComposerModelFromScratch)
     nonIncrementalUpdateCoreModel();
   else
-//    incrementalUpdateCoreModelById();
+    //    incrementalUpdateCoreModelById();
     incrementalUpdateCoreModel();
   emit syncFinished();
   sendBroadcastMessage("textualFinishSync", NULL);
 
-//  nclTextEditor->setCursorPosition(line, column); //go back to the previous position
+  //  nclTextEditor->setCursorPosition(line, column); //go back to the previous position
 
-  syncMutex.unlock();
+  _syncMutex.unlock();
 }
 
 void NCLTextualViewPlugin::nonIncrementalUpdateCoreModel()
@@ -606,17 +606,17 @@ void NCLTextualViewPlugin::nonIncrementalUpdateCoreModel()
     emit removeEntity(project->getChildren().at(0), true);
 
   // clear the entities offset
-  nclTextEditor->clear();
-  nclTextEditor->setText("<?xml version=1.0 encoding=ISO-8859-1?>");
-  startEntityOffset.clear();
-  endEntityOffset.clear();
+  _nclTextEditor->clear();
+  _nclTextEditor->setText("<?xml version=1.0 encoding=ISO-8859-1?>");
+  _startEntityOffset.clear();
+  _endEntityOffset.clear();
 
   QList <QString> parentUids;
   QString parentUId = project->getUniqueId();
   parentUids.push_back(parentUId);
 
   QList <QDomElement> nodes;
-  QDomElement current = xmlDoc.firstChildElement();
+  QDomElement current = _xmlDoc.firstChildElement();
   nodes.push_back(current);
 
   while(!nodes.empty())
@@ -643,7 +643,7 @@ void NCLTextualViewPlugin::nonIncrementalUpdateCoreModel()
 
     //Send the addEntity to the core plugin
     emit addEntity(current.tagName(), parentUId, atts, false);
-    parentUId = currentEntity->getUniqueId();
+    parentUId = _currentEntity->getUniqueId();
 
     QDomElement child = current.firstChildElement();
     while(!child.isNull())
@@ -659,13 +659,13 @@ void NCLTextualViewPlugin::incrementalUpdateCoreModel()
 {
   QProgressDialog dialog(tr("Synchronizing with other plugins..."),
                          tr("Cancel"), 0, 100,
-                         nclTextEditor);
+                         _nclTextEditor);
   dialog.setAutoClose(true);
   dialog.show();
 
   //incremental update
   QList <QDomNode> nodes;
-  QDomNode current = xmlDoc;
+  QDomNode current = _xmlDoc;
   nodes.push_back(current);
   Entity *curEntity = project;
   QList <Entity *> entities;
@@ -689,7 +689,7 @@ void NCLTextualViewPlugin::incrementalUpdateCoreModel()
   }
 
   dialog.setRange(0, total_nodes);
-  current = xmlDoc;
+  current = _xmlDoc;
   nodes.push_back(current);
   while(!nodes.empty())
   {
@@ -725,10 +725,10 @@ void NCLTextualViewPlugin::incrementalUpdateCoreModel()
           sameNCLID = true;
       }
       else if(    children[i].hasAttribute("name")
-              && entityChildren[j]->hasAttribute("name"))
+                  && entityChildren[j]->hasAttribute("name"))
       {
         if(children[i].attribute("name")
-                == entityChildren[j]->getAttribute("name"))
+           == entityChildren[j]->getAttribute("name"))
           sameNCLID = true;
       }
       // testing for alias - remove after
@@ -736,14 +736,14 @@ void NCLTextualViewPlugin::incrementalUpdateCoreModel()
               && entityChildren[j]->hasAttribute("alias"))
       {
         if(children[i].attribute("alias")
-                == entityChildren[j]->getAttribute("alias"))
+           == entityChildren[j]->getAttribute("alias"))
           sameNCLID = true;
       }
       else
         sameNCLID = true;
 
       if(   children[i].tagName() == entityChildren[j]->getType()
-         && sameNCLID)
+            && sameNCLID)
       {
         //if the same type, just update the attributes
         //TODO: Compare attributes
@@ -836,23 +836,23 @@ void NCLTextualViewPlugin::incrementalUpdateCoreModel()
 void NCLTextualViewPlugin::syncFinished()
 {
   // tmpNclTextEditor->setText(nclTextEditor->text());
-  delete nclTextEditor;
-  nclTextEditor = tmpNclTextEditor;
-  tmpNclTextEditor = NULL;
+  delete _nclTextEditor;
+  _nclTextEditor = _tmpNclTextEditor;
+  _tmpNclTextEditor = NULL;
   updateFromModel();
-  nclTextEditor->setTextWithoutUserInteraction(nclTextEditor->text());
-  isSyncing = false;
+  _nclTextEditor->setTextWithoutUserInteraction(_nclTextEditor->text());
+  _isSyncing = false;
 
   updateErrorMessages();
 }
 
 bool NCLTextualViewPlugin::isStartEndTag(Entity *entity)
 {
-  int endOffset = endEntityOffset[entity->getUniqueId()];
+  int endOffset = _endEntityOffset[entity->getUniqueId()];
 
   //Check if I am at a START_END_TAG />
-  char curChar = nclTextEditor->SendScintilla(QsciScintilla::SCI_GETCHARAT,
-                                              endOffset-1);
+  char curChar = _nclTextEditor->SendScintilla(QsciScintilla::SCI_GETCHARAT,
+                                               endOffset-1);
 
   if(curChar == '/')
   {
@@ -866,63 +866,63 @@ void NCLTextualViewPlugin::openStartEndTag(Entity *entity)
 {
   if(isStartEndTag(entity))
   {
-    int endOffset = endEntityOffset[entity->getUniqueId()];
+    int endOffset = _endEntityOffset[entity->getUniqueId()];
 
-//    printEntitiesOffset(); qDebug() << endl;
+    //    printEntitiesOffset(); qDebug() << endl;
     // If the parent is a START_END, then we should separate the START from
     // the END.
-    nclTextEditor->SendScintilla(QsciScintilla::SCI_SETSELECTIONSTART,
-                                 endOffset-1);
+    _nclTextEditor->SendScintilla(QsciScintilla::SCI_SETSELECTIONSTART,
+                                  endOffset-1);
 
-    nclTextEditor->SendScintilla(QsciScintilla::SCI_SETSELECTIONEND,
-                                 endOffset+1);
+    _nclTextEditor->SendScintilla(QsciScintilla::SCI_SETSELECTIONEND,
+                                  endOffset+1);
 
-    nclTextEditor->removeSelectedText();
+    _nclTextEditor->removeSelectedText();
 
     QString endTag = ">\n</" + entity->getType() + ">";
     // Openning the START_END_TAG
-    nclTextEditor->insertAtPos(endTag, endOffset-1);
+    _nclTextEditor->insertAtPos(endTag, endOffset-1);
     // before we have "/>\n" and now we have to remove update with the difference
     // i.e. endtag.size() - 3
-//    printEntitiesOffset();
-//    qDebug() << endl;
+    //    printEntitiesOffset();
+    //    qDebug() << endl;
     updateEntitiesOffset(endOffset, endTag.size() - 2);
-//    printEntitiesOffset(); qDebug() << endl;
+    //    printEntitiesOffset(); qDebug() << endl;
 
     fixIdentation(endOffset+2, false);
-    endEntityOffset[entity->getUniqueId()] = endOffset + 1;
+    _endEntityOffset[entity->getUniqueId()] = endOffset + 1;
   }
 }
 
 void NCLTextualViewPlugin::fixIdentation(int offset, bool mustAddTab)
 {
   /* Fix Indentation */
-  int insertAtLine = nclTextEditor->SendScintilla(
+  int insertAtLine = _nclTextEditor->SendScintilla(
         QsciScintilla::SCI_LINEFROMPOSITION, offset);
 
-  int totalLines = nclTextEditor->
+  int totalLines = _nclTextEditor->
       SendScintilla( QsciScintilla::SCI_GETLINECOUNT);
 
   qDebug () << totalLines << insertAtLine;
 
   if(insertAtLine + 1 >= totalLines) return; // do nothing
   // get the identation for the next line
-  int lineIndent = nclTextEditor
+  int lineIndent = _nclTextEditor
       ->SendScintilla( QsciScintilla::SCI_GETLINEINDENTATION,
                        insertAtLine-1);
 
   if(insertAtLine > 1 && mustAddTab)
-    lineIndent += nclTextEditor->tabWidth();
+    lineIndent += _nclTextEditor->tabWidth();
 
-  nclTextEditor->SendScintilla( QsciScintilla::SCI_SETLINEINDENTATION,
-                                insertAtLine,
-                                lineIndent);
+  _nclTextEditor->SendScintilla( QsciScintilla::SCI_SETLINEINDENTATION,
+                                 insertAtLine,
+                                 lineIndent);
 
-  updateEntitiesOffset(offset-1, lineIndent/nclTextEditor->tabWidth());
+  updateEntitiesOffset(offset-1, lineIndent/_nclTextEditor->tabWidth());
 }
 
 void NCLTextualViewPlugin::updateEntitiesOffset( int startFrom,
-                                                int insertedChars)
+                                                 int insertedChars)
 {
   /* qDebug() << "NCLTextualViewPlugin::updateEntitiesOffset(" << startFrom
              << ", " << insertedChars << ")"; */
@@ -931,32 +931,32 @@ void NCLTextualViewPlugin::updateEntitiesOffset( int startFrom,
     return;
 
   QString key;
-  foreach(key, startEntityOffset.keys())
+  foreach(key, _startEntityOffset.keys())
   {
-    if(startEntityOffset[key] > startFrom)
-      startEntityOffset[key] += insertedChars;
+    if(_startEntityOffset[key] > startFrom)
+      _startEntityOffset[key] += insertedChars;
 
-    if(endEntityOffset[key] >= startFrom)
-      endEntityOffset[key] += insertedChars;
+    if(_endEntityOffset[key] >= startFrom)
+      _endEntityOffset[key] += insertedChars;
   }
 }
 
 void NCLTextualViewPlugin::printEntitiesOffset()
 {
   QString key;
-  foreach(key, startEntityOffset.keys())
+  foreach(key, _startEntityOffset.keys())
   {
-    int startOffSet = startEntityOffset[key];
-    char startChar = nclTextEditor->SendScintilla(QsciScintilla::SCI_GETCHARAT,
-                                                  startOffSet);
-    int endOffSet = endEntityOffset[key];
-    char endChar = nclTextEditor->SendScintilla(QsciScintilla::SCI_GETCHARAT,
-                                                endOffSet);
+    int startOffSet = _startEntityOffset[key];
+    char startChar = _nclTextEditor->SendScintilla(QsciScintilla::SCI_GETCHARAT,
+                                                   startOffSet);
+    int endOffSet = _endEntityOffset[key];
+    char endChar = _nclTextEditor->SendScintilla(QsciScintilla::SCI_GETCHARAT,
+                                                 endOffSet);
 
     qDebug() << "key="<< key << "(" << project->getEntityById(key)->getType()
-                << "; start=" << startOffSet
-                << "; start_char=" << startChar << "; end=" << endOffSet
-                << "; end_char=" << endChar << endl;
+             << "; start=" << startOffSet
+             << "; start_char=" << startChar << "; end=" << endOffSet
+             << "; end_char=" << endChar << endl;
   }
 }
 
@@ -970,46 +970,46 @@ void NCLTextualViewPlugin::manageFocusLost(QFocusEvent *event)
   // the core, that is why the test "QApplication::focusWidget() != NULL" is
   // here.
   // qDebug() << nclTextEditor << QApplication::focusWidget();
-  if(nclTextEditor->textWithoutUserInteraction() != nclTextEditor->text()
-     && !isSyncing
+  if(_nclTextEditor->textWithoutUserInteraction() != _nclTextEditor->text()
+     && !_isSyncing
      && (QApplication::focusWidget() != NULL))
   {
-    int ret = QMessageBox::question(window,
+    int ret = QMessageBox::question(_window,
                                     tr("Textual View synchronization"),
                                     tr("You have changed the textual content of the NCL \
                                        Document. Do you want to synchronize this text with \
                                        other views?"),
-                                                    QMessageBox::Yes |
-                                                    QMessageBox::No |
-                                                    QMessageBox::Cancel,
+                                                   QMessageBox::Yes |
+                                                   QMessageBox::No |
+                                                   QMessageBox::Cancel,
 
                                        QMessageBox::Cancel);
 
         switch(ret)
     {
-      case QMessageBox::Yes:
+        case QMessageBox::Yes:
         updateCoreModel();
         break;
-      case QMessageBox::No:
-        nclTextEditor->setText(nclTextEditor->textWithoutUserInteraction());
+        case QMessageBox::No:
+        _nclTextEditor->setText(_nclTextEditor->textWithoutUserInteraction());
         break;
-      case QMessageBox::Cancel:
-        nclTextEditor->keepFocused();
+        case QMessageBox::Cancel:
+        _nclTextEditor->keepFocused();
         break;
-    }
+  }
   }
   else if(QApplication::focusWidget() == NULL)
   {
     // If the focus goes to AutoComplete list we force Qt keeps the focus in the
     // NCLTextEditor!!!
-    nclTextEditor->keepFocused();
+    _nclTextEditor->keepFocused();
   }
 #endif
 }
 
 void NCLTextualViewPlugin::updateErrorMessages()
 {
-  if(isSyncing)
+  if(_isSyncing)
     return;
 
   clearValidationMessages(this->pluginInstanceID, NULL);
@@ -1019,23 +1019,23 @@ void NCLTextualViewPlugin::updateErrorMessages()
 
 void NCLTextualViewPlugin::clearValidationMessages(QString, void *param)
 {
-  nclTextEditor->clearErrorIndicators();
+  _nclTextEditor->clearErrorIndicators();
 }
 
 void NCLTextualViewPlugin::validationError(QString pluginID, void * param)
 {
-  if(isSyncing)
+  if(_isSyncing)
     return;
 
   if (param) {
-     pair <QString , QString> *p = (pair <QString, QString> *) param;
+    pair <QString , QString> *p = (pair <QString, QString> *) param;
 
-     int offset = startEntityOffset[p->first];
+    int offset = _startEntityOffset[p->first];
 
-     int line = nclTextEditor->SendScintilla(
-                                     QsciScintilla::SCI_LINEFROMPOSITION,
-                                     offset);
+    int line = _nclTextEditor->SendScintilla(
+          QsciScintilla::SCI_LINEFROMPOSITION,
+          offset);
 
-     nclTextEditor->markError(p->second, "", line);
+    _nclTextEditor->markError(p->second, "", line);
   }
 }
