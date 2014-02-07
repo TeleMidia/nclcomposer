@@ -3,6 +3,9 @@ include (../plugins-common.pri)
 TARGET = \
   properties-view
 
+DESTDIR = \
+  bin
+
 INCLUDEPATH += \
   src
 
