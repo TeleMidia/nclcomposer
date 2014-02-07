@@ -19,104 +19,7 @@
 
 using namespace composer::gui;
 
-/*!
- * \brief Add the default paths to GlobalSettings.
- */
-void updateSettingsWithDefaults()
-{
-/* Defaults plugins paths */
-  QStringList defaultPluginsPath;
-
-  // The first path will look for plugins is at user's home.
-  defaultPluginsPath << QDir::homePath() + QString("/composer/extensions");
-
-  // After that we will look for plugins in the default system path
-#ifdef Q_OS_MAC
-  defaultPluginsPath << "/Library/Application Support/Composer/Extensions"
-                     << QApplication::applicationDirPath() +
-                        "/../PlugIns/composer";
-#elif defined(Q_OS_WIN32)
-  defaultPluginsPath << QApplication::applicationDirPath() + "/extensions";
-  defaultPluginsPath << "C:/Composer/extensions";
-#else
-  // PREFIX Should be defined by the qmake while compiling the source code.
-#ifdef EXT_DEFAULT_PATH
-  defaultPluginsPath << QString(EXT_DEFAULT_PATH)
-                        + QString("/lib/composer/extensions");
-#endif
-
-#endif
-
-  GlobalSettings settings;
-  settings.beginGroup("extensions");
-    QStringList extensions_path = settings.value("path").toStringList();
-    extensions_path << defaultPluginsPath; //add default to extensions path
-    extensions_path.removeDuplicates();
-    settings.setValue("path", extensions_path); //udpate with the new value
-  settings.endGroup();
-/* End defaults plugin path */
-
-/* Default language */
-  settings.beginGroup("languages");
-  if(!settings.contains("currentLanguage"))
-    settings.setValue("currentLanguage", "en");
-
-  // Set the defaults supported languages
-  if(!settings.contains("supportedLanguages"))
-  {
-    QStringList list;
-    list << "en_US" << "pt_BR" << "es_ES";
-    settings.setValue("supportedLanguages", list);
-  }
-  settings.endGroup();
-/* End default language */
-
-/* Import Bases */
-  QString defaultConnBaseDir;
-  settings.beginGroup("importBases");
-		
-  if(!settings.contains("default_connector_base"))
-  {
-    #ifdef Q_OS_MAC
-		#ifdef QT_NO_DEBUG
-			defaultConnBaseDir = "../PlugIns/composer/";
-		#elif
-			defaultConnBaseDir = "/Library/Application Support/Composer/Data/";
-		#endif
-    #elif defined(Q_OS_WIN32)
-      defaultConnBaseDir = QApplication::applicationDirPath() + "/data/";
-    #else
-      // PREFIX Should be defined by the qmake while compiling the source code.
-      #ifdef EXT_DEFAULT_PATH
-        defaultConnBaseDir = QString(EXT_DEFAULT_PATH)
-                            + QString("/share/composer/");
-      #endif
-    #endif
-  }
-	
-  settings.setValue("default_conn_base",
-                    defaultConnBaseDir + "defaultConnBase.ncl");
-  settings.endGroup();
-/*End Import Bases*/
-
-/* Stylesheets */
-  QStringList stylesheetsDirs =
-      settings.value("default_stylesheets_dirs").toStringList();
-
-  stylesheetsDirs << QString(DATA_PATH);
-
-#ifdef Q_OS_WIN32
-  stylesheetsDirs << QApplication::applicationDirPath() + "/data";
-#elif defined(Q_OS_MAC)
-  stylesheetsDirs << QApplication::applicationDirPath() + "/../PlugIns/composer";
-#endif
-
-  stylesheetsDirs.removeDuplicates();
-
-  settings.setValue("default_stylesheets_dirs", stylesheetsDirs);
-/* End Stylesheets */
-}
-
+// \todo this function should move from here
 void loadTranslations(QApplication *app)
 {
   /* Get the current language code */
@@ -163,7 +66,9 @@ int main(int argc, char *argv[])
     QApplication a(argc, argv);
     a.setQuitOnLastWindowClosed(true);
 
-    updateSettingsWithDefaults();
+    GlobalSettings settings;
+    // We need that to make sure the defaults are in the settings
+    settings.updateWithDefaults(DATA_PATH);
     loadTranslations(&a);
 
     QResource::registerResource("images.qrc");
