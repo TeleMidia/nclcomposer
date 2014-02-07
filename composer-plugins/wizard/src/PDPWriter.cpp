@@ -1,4 +1,4 @@
-#include "pdpwriter.h"
+#include "PDPWriter.h"
 
 #include <QFile>
 #include <QFileInfo>

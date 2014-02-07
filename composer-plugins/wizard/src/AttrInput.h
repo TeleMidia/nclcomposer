@@ -21,14 +21,15 @@ protected:
 public:
   explicit AttrInput (QWidget *parent = 0) : QWidget (parent) {}
 
-  explicit AttrInput(QString question, QString name, QString type, QString value, QWidget *parent = 0);
+  explicit AttrInput(QString getQuestion, QString name, QString getType,
+                     QString getValue, QWidget *parent = 0);
 
-  inline QString name () const { return _name; }
-  inline QString type () const { return _type; }
-  inline QString value () const { return _value; }
-  inline QString question () const { return _question; }
+  inline QString getName () const { return _name; }
+  inline QString getType () const { return _type; }
+  inline QString getValue () const { return _value; }
+  inline QString getQuestion () const { return _question; }
 
-  virtual QString answer () const = 0;
+  virtual QString getAnswer () const = 0;
   virtual void setAnswer (QString) = 0;
   virtual AttrInput * clone () const = 0;
   //    virtual void computeAnswer () = 0;

@@ -26,7 +26,8 @@ private:
 public:
   explicit ElemInput(QString selector, QString question, QWidget *parent = 0);
 
-  void addAttrInput (QString question, QString name, QString type = "string", QString value = "");
+  void addAttrInput (QString question, QString name, QString type = "string",
+                     QString value = "");
   void addElemInput (QDomElement & elemInputElement);
 
   inline void addAttrInput (AttrInput *attrInput )

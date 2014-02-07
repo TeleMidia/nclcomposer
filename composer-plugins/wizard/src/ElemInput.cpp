@@ -1,4 +1,4 @@
-#include "eleminput.h"
+#include "ElemInput.h"
 
 #include <QPushButton>
 #include <QMenu>

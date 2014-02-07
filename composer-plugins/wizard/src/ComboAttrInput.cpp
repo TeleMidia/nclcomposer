@@ -1,10 +1,11 @@
-#include "comboattrinput.h"
+#include "ComboAttrInput.h"
 
 #include <QVBoxLayout>
 #include <QLabel>
 #include <QInputDialog>
 
-ComboAttrInput::ComboAttrInput(QString question, QString name, QString type, QString value, QWidget *parent)
+ComboAttrInput::ComboAttrInput(QString question, QString name, QString type,
+                               QString value, QWidget *parent)
   : AttrInput(question, name, type, value, parent)
 {
   QVBoxLayout *mainLayout = new QVBoxLayout;
@@ -27,7 +28,8 @@ ComboAttrInput::ComboAttrInput(QString question, QString name, QString type, QSt
   if (items.size())
     _combo->setEditText(items.at(0));
 
-  connect (_combo, SIGNAL(currentIndexChanged(int)), this, SLOT(changeSelection(int)));
+  connect (_combo, SIGNAL(currentIndexChanged(int)), this,
+           SLOT(changeSelection(int)));
 
   setLayout(mainLayout);
 }

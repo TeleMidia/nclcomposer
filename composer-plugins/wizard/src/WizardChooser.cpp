@@ -6,7 +6,7 @@
 #include <QDebug>
 #include <QDomDocument>
 
-wizardchooser::wizardchooser(QWidget *parent, bool modal) :
+WizardChooser::WizardChooser(QWidget *parent, bool modal) :
     QDialog(parent),
     ui(new Ui::wizardchooser)
 {
@@ -19,12 +19,12 @@ wizardchooser::wizardchooser(QWidget *parent, bool modal) :
           SLOT(changeDescView(QString)));
 }
 
-wizardchooser::~wizardchooser()
+WizardChooser::~WizardChooser()
 {
   delete ui;
 }
 
-int wizardchooser::exec(const QString &path)
+int WizardChooser::exec(const QString &path)
 {
   this->path = path;
 
@@ -44,7 +44,7 @@ int wizardchooser::exec(const QString &path)
   return QDialog::exec();
 }
 
-QString wizardchooser::getSelectedPath()
+QString WizardChooser::getSelectedPath()
 {
   QString selectedPath = "";
   if(ui->listWidget->selectedItems().size())
@@ -53,7 +53,7 @@ QString wizardchooser::getSelectedPath()
   return path + selectedPath;
 }
 
-void wizardchooser::changeDescView(QString textItem)
+void WizardChooser::changeDescView(QString textItem)
 {
   QString selectedPath = path  + textItem;
   selectedPath += selectedPath.mid(selectedPath.lastIndexOf("/")) + ".html";

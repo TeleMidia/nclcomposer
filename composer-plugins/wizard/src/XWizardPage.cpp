@@ -6,7 +6,7 @@
 #include <QMessageBox>
 #include <QLabel>
 
-#include "selectsparser.h"
+#include "SelectsElement.h"
 
 #include <QDebug>
 

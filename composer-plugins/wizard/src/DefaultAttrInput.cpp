@@ -1,4 +1,4 @@
-#include "defaultattrinput.h"
+#include "DefaultAttrInput.h"
 
 #include <QLabel>
 

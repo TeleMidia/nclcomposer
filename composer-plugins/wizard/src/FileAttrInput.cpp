@@ -1,4 +1,4 @@
-#include "fileattrinput.h"
+#include "FileAttrInput.h"
 
 #include <QVBoxLayout>
 #include <QLabel>

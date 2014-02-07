@@ -16,7 +16,7 @@ private:
 public:
   explicit FileAttrInput(QString question, QString name, QString type = "string", QString value = "", QWidget * parent = 0);
 
-  QString answer() const { return _answer->text(); }
+  QString getAnswer() const { return _answer->text(); }
   void setAnswer(QString answer) {_answer->setText(answer); }
   inline AttrInput * clone () const{ return (new FileAttrInput (_question, _name, _type, _value, (QWidget *) parent())); }
 

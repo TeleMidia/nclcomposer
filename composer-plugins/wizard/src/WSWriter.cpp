@@ -5,7 +5,7 @@
 #include <QMessageBox>
 #include <QTextStream>
 
-#include "selectsparser.h"
+#include "SelectsElement.h"
 
 void WSWriter::writeWizard(QString path)
 {

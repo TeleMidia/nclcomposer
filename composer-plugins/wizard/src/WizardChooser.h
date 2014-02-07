@@ -8,13 +8,13 @@ namespace Ui {
 class wizardchooser;
 }
 
-class wizardchooser : public QDialog
+class WizardChooser : public QDialog
 {
   Q_OBJECT
     
 public:
-  explicit wizardchooser(QWidget *parent = 0, bool modal = true);
-  ~wizardchooser();
+  explicit WizardChooser(QWidget *parent = 0, bool modal = true);
+  ~WizardChooser();
 
   QString getSelectedPath();
 
