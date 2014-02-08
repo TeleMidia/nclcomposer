@@ -42,7 +42,7 @@ QnstComposerPlugin::~QnstComposerPlugin()
 
 void QnstComposerPlugin::createWidgets()
 {
-  //view = new QnstView();
+  //view = new View();
   //view->setMinimapVisible(true);
 
   window = new QnstMainWindow();

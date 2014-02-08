@@ -105,14 +105,14 @@ void QnstMainWindow::createActions()
   pasteAction->setShortcut(QKeySequence("Ctrl+V"));
 
   // pointer action
-  pointerAction = new QAction(this);
-  pointerAction->setEnabled(true);
-  pointerAction->setCheckable(true);
-  pointerAction->setChecked(true);
-  pointerAction->setText(tr("Pointer"));
-  pointerAction->setToolTip(tr("Pointer tool"));
-  pointerAction->setIcon(QIcon(":/images/icon/pointer"));
-  pointerAction->setShortcut(QKeySequence("1"));
+  selectionAction = new QAction(this);
+  selectionAction->setEnabled(true);
+  selectionAction->setCheckable(true);
+  selectionAction->setChecked(true);
+  selectionAction->setText(tr("Selection tool"));
+  selectionAction->setToolTip(tr("Selection tool"));
+  selectionAction->setIcon(QIcon(":/images/icon/pointer"));
+  selectionAction->setShortcut(QKeySequence("1"));
 
   // link action
   linkAction = new QAction(this);
@@ -128,7 +128,7 @@ void QnstMainWindow::createActions()
   mediaAction = new QAction(this);
   mediaAction->setEnabled(true);
   mediaAction->setText(tr("Media"));
-  mediaAction->setToolTip(tr("Insert a &lt;media&gt; entity"));
+  mediaAction->setToolTip(tr("Insert &lt;media&gt; tool"));
   mediaAction->setIcon(QIcon(":/images/icon/media-plus"));
   mediaAction->setShortcut(QKeySequence("3"));
 
@@ -136,7 +136,7 @@ void QnstMainWindow::createActions()
   contextAction = new QAction(this);
   contextAction->setEnabled(true);
   contextAction->setText(tr("Context"));
-  contextAction->setToolTip(tr("Insert a &lt;context&gt; entity"));
+  contextAction->setToolTip(tr("Insert &lt;context&gt; tool"));
   contextAction->setIcon(QIcon(":/images/icon/context-plus"));
   contextAction->setShortcut(QKeySequence("4"));
 
@@ -144,7 +144,7 @@ void QnstMainWindow::createActions()
   switchAction = new QAction(this);
   switchAction->setEnabled(true);
   switchAction->setText(tr("Switch"));
-  switchAction->setToolTip(tr("Insert a &lt;switch&gt; entity"));
+  switchAction->setToolTip(tr("Insert &lt;switch&gt; tool"));
   switchAction->setIcon(QIcon(":/images/icon/switch-plus"));
   switchAction->setShortcut(QKeySequence("5"));
 
@@ -152,7 +152,7 @@ void QnstMainWindow::createActions()
   bodyAction = new QAction(this);
   bodyAction->setEnabled(true);
   bodyAction->setText(tr("Body"));
-  bodyAction->setToolTip(tr("Insert a &lt;body&gt; entity"));
+  bodyAction->setToolTip(tr("Insert &lt;body&gt; tool"));
   bodyAction->setIcon(QIcon(":/images/icon/body-plus"));
   bodyAction->setShortcut(QKeySequence("6"));
 
@@ -160,7 +160,7 @@ void QnstMainWindow::createActions()
   areaAction = new QAction(this);
   areaAction->setEnabled(true);
   areaAction->setText(tr("Area"));
-  areaAction->setToolTip(tr("Insert a &lt;area&gt; entity"));
+  areaAction->setToolTip(tr("Insert &lt;area&gt; tool"));
   areaAction->setIcon(QIcon(":/images/icon/area-plus"));
   areaAction->setShortcut(QKeySequence("7"));
 
@@ -168,7 +168,7 @@ void QnstMainWindow::createActions()
   propertyAction = new QAction(this);
   propertyAction->setEnabled(true);
   propertyAction->setText(tr("Property"));
-  propertyAction->setToolTip(tr("Insert a &lt;property&gt; entity"));
+  propertyAction->setToolTip(tr("Insert &lt;property&gt; tool"));
   propertyAction->setIcon(QIcon(":/images/icon/property-plus"));
   propertyAction->setShortcut(QKeySequence("8"));
 
@@ -176,7 +176,7 @@ void QnstMainWindow::createActions()
   portAction = new QAction(this);
   portAction->setEnabled(true);
   portAction->setText(tr("Port"));
-  portAction->setToolTip(tr("Insert a &lt;port&gt; entity"));
+  portAction->setToolTip(tr("Insert &lt;port&gt; tool"));
   portAction->setIcon(QIcon(":/images/icon/port-plus"));
   portAction->setShortcut(QKeySequence("9"));
 
@@ -184,7 +184,7 @@ void QnstMainWindow::createActions()
   switchPortAction = new QAction(this);
   switchPortAction->setEnabled(true);
   switchPortAction->setText(tr("Switch Port"));
-  switchPortAction->setToolTip(tr("Insert a &lt;switchport&gt; entity"));
+  switchPortAction->setToolTip(tr("Insert &lt;switchport&gt; tool"));
   switchPortAction->setIcon(QIcon(":/images/icon/switchport-plus"));
   switchPortAction->setShortcut(QKeySequence("0"));
 
@@ -207,74 +207,20 @@ void QnstMainWindow::createActions()
   aboutAction->setText(tr("About..."));
 
   // draw group
-  drawActionGroup = new QActionGroup(this);
-  drawActionGroup->setExclusive(true);
+  insertActionGroup = new QActionGroup(this);
+  insertActionGroup->setExclusive(true);
 
-  drawActionGroup->addAction(pointerAction);
-  drawActionGroup->addAction(linkAction);
-}
-
-void  QnstMainWindow::createMenus()
-{
-  // file menu
-  fileMenu = menuBar()->addMenu(tr("File"));
-  fileMenu->addAction(newAction);
-  fileMenu->addAction(openAction);
-  fileMenu->addSeparator();
-  fileMenu->addAction(saveAction);
-  fileMenu->addAction(saveAsAction);
-  fileMenu->addSeparator();
-  fileMenu->addAction(exportAction);
-  fileMenu->addAction(importAction);
-  fileMenu->addSeparator();
-  fileMenu->addAction(closeAction);
-  fileMenu->addSeparator();
-  fileMenu->addAction(quitAction);
-
-  // edit menu
-  editMenu = menuBar()->addMenu(tr("Edit"));
-  editMenu->addAction(undoAction);
-  editMenu->addAction(redoAction);
-  editMenu->addSeparator();
-  editMenu->addAction(cutAction);
-  editMenu->addAction(copyAction);
-  editMenu->addAction(pasteAction);
-
-  // window menu
-  windowMenu = menuBar()->addMenu(tr("Window"));
-
-  windowMenu->addAction(preferencesAction);
-
-  // help menu
-  helpMenu = menuBar()->addMenu(tr("Help"));
-  helpMenu->addAction(reportAction);
-  helpMenu->addSeparator();
-  helpMenu->addAction(aboutAction);
+  insertActionGroup->addAction(selectionAction);
+  insertActionGroup->addAction(linkAction);
 }
 
 void QnstMainWindow::createToolbar()
 {
-#ifdef APPLICATION
-  // file toolbar
-  fileToolbar = addToolBar(tr("File"));
-
-  fileToolbar->setMovable(false);
-  fileToolbar->setFloatable(false);
-  fileToolbar->setIconSize(QSize(32,32));
-
-  fileToolbar->addAction(newAction);
-  fileToolbar->addAction(openAction);
-  fileToolbar->addAction(saveAction);
-
-#ifdef Q_WS_MACX
-  fileToolbar->addSeparator();
-#endif
-
   // edit toolbar
   editToolbar = addToolBar(tr("Edit"));
 
-  editToolbar->setMovable(false);
-  editToolbar->setFloatable(false);
+  editToolbar->setMovable(true);
+  editToolbar->setFloatable(true);
   editToolbar->setIconSize(QSize(32,32));
 
   editToolbar->addAction(undoAction);
@@ -284,23 +230,15 @@ void QnstMainWindow::createToolbar()
   editToolbar->addAction(copyAction);
   editToolbar->addAction(pasteAction);
 
-  // draw toolbar
-  drawToolbar = addToolBar(tr("Draw"));
-  drawToolbar->setMovable(true);
-  drawToolbar->setFloatable(true);
-  drawToolbar->setIconSize(QSize(32,32));
-
-  drawToolbar->addAction(pointerAction);
-  drawToolbar->addAction(linkAction);
-
-  addToolBar(Qt::LeftToolBarArea, drawToolbar);
-
   // insert toolbar
   insertToolbar = addToolBar(tr("Insert"));
   insertToolbar->setMovable(true);
   insertToolbar->setFloatable(true);
   insertToolbar->setIconSize(QSize(32,32));
 
+  insertToolbar->addAction(selectionAction);
+  insertToolbar->addAction(linkAction);
+  insertToolbar->addSeparator();
   insertToolbar->addAction(mediaAction);
   insertToolbar->addSeparator();
   insertToolbar->addAction(contextAction);
@@ -312,82 +250,14 @@ void QnstMainWindow::createToolbar()
   insertToolbar->addAction(portAction);
   insertToolbar->addAction(switchPortAction);
 
-  addToolBar(Qt::LeftToolBarArea, insertToolbar);
-
 #ifdef Q_WS_MACX
   setUnifiedTitleAndToolBarOnMac(true);
-#endif
-#endif
-
-#ifdef PLUGIN
-  // file toolbar
-  fileToolbar = addToolBar(tr("File"));
-
-  fileToolbar->setMovable(false);
-  fileToolbar->setFloatable(false);
-  fileToolbar->setIconSize(QSize(32,32));
-
-  fileToolbar->addAction(newAction);
-  fileToolbar->addAction(openAction);
-  fileToolbar->addAction(saveAction);
-
-#ifdef Q_WS_MACX
-  fileToolbar->addSeparator();
-#endif
-
-  // edit toolbar
-  editToolbar = addToolBar(tr("Edit"));
-
-  editToolbar->setMovable(false);
-  editToolbar->setFloatable(false);
-  editToolbar->setIconSize(QSize(32,32));
-
-  editToolbar->addAction(undoAction);
-  editToolbar->addAction(redoAction);
-  editToolbar->addSeparator();
-  editToolbar->addAction(cutAction);
-  editToolbar->addAction(copyAction);
-  editToolbar->addAction(pasteAction);
-
-  // draw toolbar
-  drawToolbar = addToolBar(tr("Draw"));
-  drawToolbar->setMovable(true);
-  drawToolbar->setFloatable(true);
-  drawToolbar->setIconSize(QSize(32,32));
-
-  drawToolbar->addAction(pointerAction);
-  drawToolbar->addAction(linkAction);
-
-  addToolBar(Qt::LeftToolBarArea, drawToolbar);
-
-  // insert toolbar
-  insertToolbar = addToolBar(tr("Insert"));
-  insertToolbar->setMovable(true);
-  insertToolbar->setFloatable(true);
-  insertToolbar->setIconSize(QSize(32,32));
-
-  insertToolbar->addAction(mediaAction);
-  insertToolbar->addSeparator();
-  insertToolbar->addAction(contextAction);
-  insertToolbar->addAction(switchAction);
-  insertToolbar->addAction(bodyAction);
-  insertToolbar->addSeparator();
-  insertToolbar->addAction(areaAction);
-  insertToolbar->addAction(propertyAction);
-  insertToolbar->addAction(portAction);
-  insertToolbar->addAction(switchPortAction);
-
-  addToolBar(Qt::LeftToolBarArea, insertToolbar);
-
-#ifdef Q_WS_MACX
-  setUnifiedTitleAndToolBarOnMac(true);
-#endif
 #endif
 }
 
 void QnstMainWindow::createWidgets()
 {
-  view = new QnstView(this); setCentralWidget(view);
+  view = new View(this); setCentralWidget(view);
 }
 
 void  QnstMainWindow::createStatusbar()
@@ -417,7 +287,7 @@ void  QnstMainWindow::createConnections()
   connect(reportAction, SIGNAL(triggered()), SLOT(performReport()));
   connect(aboutAction, SIGNAL(triggered()), SLOT(performAbout()));
 
-  connect(pointerAction, SIGNAL(triggered()), SLOT(performPointer()));
+  connect(selectionAction, SIGNAL(triggered()), SLOT(performPointer()));
   connect(linkAction, SIGNAL(triggered()), SLOT(performLink()));
 
   connect(mediaAction, SIGNAL(triggered()), SLOT(performMedia()));

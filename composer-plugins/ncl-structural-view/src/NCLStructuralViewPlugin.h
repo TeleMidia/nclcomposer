@@ -140,7 +140,7 @@ private:
 private:
   int n;
 
-  //QnstView* view;
+  //View* view;
   QnstMainWindow* window;
 
   QString request;

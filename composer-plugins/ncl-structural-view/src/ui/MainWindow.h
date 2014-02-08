@@ -51,21 +51,14 @@ protected slots:
   void performAbout();
 
 private:
-  void createMenus();
   void createActions();
   void createToolbar();
   void createWidgets();
   void createStatusbar();
   void createConnections();
 
-  QMenu* fileMenu;
-  QMenu* editMenu;
-  QMenu* windowMenu;
-  QMenu* helpMenu;
-
   QToolBar* fileToolbar;
   QToolBar* editToolbar;
-  QToolBar* drawToolbar;
   QToolBar* insertToolbar;
 
   QAction* newAction;
@@ -83,7 +76,7 @@ private:
   QAction* copyAction;
   QAction* pasteAction;
 
-  QAction* pointerAction;
+  QAction* selectionAction;
   QAction* linkAction;
 
   QAction* mediaAction;
@@ -100,9 +93,9 @@ private:
   QAction* reportAction;
   QAction* aboutAction;
 
-  QActionGroup* drawActionGroup;
+  QActionGroup* insertActionGroup;
 
-  QnstView* view;
+  View* view;
 };
 
 #endif // QNSTMAINWINDOW_H

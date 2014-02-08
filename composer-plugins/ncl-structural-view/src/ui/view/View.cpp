@@ -10,7 +10,7 @@
 #include "Util.h"
 #include "Bind.h"
 
-std::map <Qnst::EntitySubtype, QString> QnstView::mediaTypeToXMLStr =
+std::map <Qnst::EntitySubtype, QString> View::mediaTypeToXMLStr =
     create_map<Qnst::EntitySubtype, QString>
       (Qnst::Media, "media");
 //      (Qnst::Image, "image")
@@ -22,7 +22,7 @@ std::map <Qnst::EntitySubtype, QString> QnstView::mediaTypeToXMLStr =
 //      (Qnst::NCLua, "application/x-ginga-NCLua")
 //      (Qnst::Settings, "application/x-ncl-settings");
 
-QnstView::QnstView(QWidget* parent)
+View::View(QWidget* parent)
     : QGraphicsView(parent)
 {
   createObjects();
@@ -59,12 +59,12 @@ QnstView::QnstView(QWidget* parent)
 //  minimap->setMinimumSize(MINIMAP_DEFAULT_W, MINIMAP_DEFAULT_H);
 }
 
-QnstView::~QnstView()
+View::~View()
 {
 
 }
 
-void QnstView::createObjects()
+void View::createObjects()
 {
   scene = new QnstScene();
   scene->setParent(this);
@@ -75,7 +75,7 @@ void QnstView::createObjects()
   this->resize(scene->itemsBoundingRect().size().width(), scene->itemsBoundingRect().height());
 }
 
-void QnstView::createConnection()
+void View::createConnection()
 {
   // connect(scene, SIGNAL(undoRequested()), SLOT(performUndo()));
   // connect(scene, SIGNAL(redoRequested()), SLOT(performRedo()));
@@ -114,7 +114,7 @@ void QnstView::createConnection()
   connect(scene, SIGNAL(selectEntityResquested(QString,QMap<QString,QString>)),SLOT(select(QString,QMap<QString,QString>)));
 }
 
-bool QnstView::hasEntity(QString uid)
+bool View::hasEntity(QString uid)
 {
   if (entities.contains(uid)  ||
       binds.contains(uid) ||
@@ -126,7 +126,7 @@ bool QnstView::hasEntity(QString uid)
   return false;
 }
 
-QnstEntity* QnstView::getEntity(QString uid)
+QnstEntity* View::getEntity(QString uid)
 {
   if (links.contains(uid))
     return links.value(uid);
@@ -142,7 +142,7 @@ QnstEntity* QnstView::getEntity(QString uid)
 
 /**********************************************************/
 
-void QnstView::insert(QString uid, QString parent, QMap<QString, QString> properties, QMap<QString, QString> settings)
+void View::insert(QString uid, QString parent, QMap<QString, QString> properties, QMap<QString, QString> settings)
 {
   if (!entities.contains(uid))
   {
@@ -322,7 +322,7 @@ void QnstView::insert(QString uid, QString parent, QMap<QString, QString> proper
   }
 }
 
-QnstCommand* QnstView::rmcmd(QnstEntity* parent, QnstCommand* cmdparent, QMap<QString, QString> settings)
+QnstCommand* View::rmcmd(QnstEntity* parent, QnstCommand* cmdparent, QMap<QString, QString> settings)
 {
   foreach (QnstEntity* entity, parent->getnstChildren())
   {
@@ -338,7 +338,7 @@ QnstCommand* QnstView::rmcmd(QnstEntity* parent, QnstCommand* cmdparent, QMap<QS
   }
 }
 
-void QnstView::remove(QString uid, QMap<QString, QString> settings)
+void View::remove(QString uid, QMap<QString, QString> settings)
 {
   if (entities.contains(uid))
   {
@@ -401,7 +401,7 @@ void QnstView::remove(QString uid, QMap<QString, QString> settings)
   }
 }
 
-void QnstView::change(QString uid, QMap<QString, QString> properties, QMap<QString, QString> previous, QMap<QString, QString> settings)
+void View::change(QString uid, QMap<QString, QString> properties, QMap<QString, QString> previous, QMap<QString, QString> settings)
 {
   if (entities.contains(uid))
   {
@@ -438,7 +438,7 @@ void QnstView::change(QString uid, QMap<QString, QString> properties, QMap<QStri
   }
 }
 
-void QnstView::select(QString uid, QMap<QString, QString> settings)
+void View::select(QString uid, QMap<QString, QString> settings)
 {
   if (entities.contains(uid))
   {
@@ -455,7 +455,7 @@ void QnstView::select(QString uid, QMap<QString, QString> settings)
   }
 }
 
-void QnstView::create(QnstSubtype subtype)
+void View::create(QnstSubtype subtype)
 {
   switch (subtype)
   {
@@ -501,12 +501,12 @@ void QnstView::create(QnstSubtype subtype)
 }
 
 
-void QnstView::performHelp()
+void View::performHelp()
 {
     // TODO
 }
 
-void QnstView::performUndo()
+void View::performUndo()
 {
   if (commnads.canUndo())
   {
@@ -517,7 +517,7 @@ void QnstView::performUndo()
   }
 }
 
-void QnstView::performRedo()
+void View::performRedo()
 {
   if (commnads.canRedo())
   {
@@ -528,7 +528,7 @@ void QnstView::performRedo()
   }
 }
 
-void QnstView::performCut()
+void View::performCut()
 {
     if (_selected != NULL)
     {
@@ -539,7 +539,7 @@ void QnstView::performCut()
     }
 }
 
-void QnstView::performCopy()
+void View::performCopy()
 {
     if (_selected != NULL)
     {
@@ -548,7 +548,7 @@ void QnstView::performCopy()
     }
 }
 
-bool QnstView::isChild(QnstEntity* e , QnstEntity* p)
+bool View::isChild(QnstEntity* e , QnstEntity* p)
 {
     bool r = false;
 
@@ -566,7 +566,7 @@ bool QnstView::isChild(QnstEntity* e , QnstEntity* p)
     return r;
 }
 
-void QnstView::performPaste()
+void View::performPaste()
 {
     if (entities.contains(clip))
     {
@@ -595,7 +595,7 @@ void QnstView::performPaste()
     }
 }
 
-void QnstView::performPaste(QnstEntity* entity, QnstEntity* parent, QString CODE)
+void View::performPaste(QnstEntity* entity, QnstEntity* parent, QString CODE)
 {
     QString uid = QUuid::createUuid().toString();
     QString parentuid = parent->getnstUid();
@@ -616,7 +616,7 @@ void QnstView::performPaste(QnstEntity* entity, QnstEntity* parent, QString CODE
     }
 }
 
-bool QnstView::updateEntityWithUniqueNstId(QnstEntity *entity)
+bool View::updateEntityWithUniqueNstId(QnstEntity *entity)
 {
   if(entity != NULL)
   {
@@ -657,7 +657,7 @@ bool QnstView::updateEntityWithUniqueNstId(QnstEntity *entity)
   return false;
 }
 
-void QnstView::performDelete()
+void View::performDelete()
 {
   if (_selected != NULL)
   {
@@ -671,7 +671,7 @@ void QnstView::performDelete()
   }
 }
 
-void QnstView::performExport()
+void View::performExport()
 {
   QString location = QFileDialog::getSaveFileName(NULL, "Export...", "", tr("Images (*.png)"));
 
@@ -708,7 +708,7 @@ void QnstView::performExport()
   }
 }
 
-void QnstView::performZoomIn()
+void View::performZoomIn()
 {
   if (zoomStep > 0)
   {
@@ -720,7 +720,7 @@ void QnstView::performZoomIn()
   }
 }
 
-void QnstView::performZoomOut()
+void View::performZoomOut()
 {
   if (zoomStep*0.05 < 0.9)
   {
@@ -732,53 +732,53 @@ void QnstView::performZoomOut()
   }
 }
 
-void QnstView::performZoomReset()
+void View::performZoomReset()
 {
   zoomStep = 0;
   resetMatrix();
 }
 
-void QnstView::performFullscreen()
+void View::performFullscreen()
 {
     // TODO
 }
 
-void QnstView::performBringfront()
+void View::performBringfront()
 {
     // TODO
 }
 
-void QnstView::performBringforward()
+void View::performBringforward()
 {
     // TODO
 }
 
-void QnstView::performSendback()
+void View::performSendback()
 {
     // TODO
 }
 
-void QnstView::performSendbackward()
+void View::performSendbackward()
 {
     // TODO
 }
 
-void QnstView::performHide()
+void View::performHide()
 {
     // TODO
 }
 
-void QnstView::performProperties()
+void View::performProperties()
 {
     // TODO
 }
 
-void QnstView::resizeEvent(QResizeEvent *event)
+void View::resizeEvent(QResizeEvent *event)
 {
   QGraphicsView::resizeEvent(event);
 }
 
-void QnstView::mouseMoveEvent(QMouseEvent* event)
+void View::mouseMoveEvent(QMouseEvent* event)
 {
   if (linking)
   {
@@ -839,7 +839,7 @@ void QnstView::mouseMoveEvent(QMouseEvent* event)
   QGraphicsView::mouseMoveEvent(event);
 }
 
-void QnstView::mousePressEvent(QMouseEvent* event)
+void View::mousePressEvent(QMouseEvent* event)
 {
   if (modified)
   {
@@ -849,7 +849,7 @@ void QnstView::mousePressEvent(QMouseEvent* event)
       link = NULL;
     }
 
-    link = new QnstViewLink();
+    link = new ViewLink();
     scene->addItem(link);
     link->setLine(QLineF(mapToScene(event->pos()), mapToScene(event->pos())));
     link->adjust();
@@ -878,7 +878,7 @@ void QnstView::mousePressEvent(QMouseEvent* event)
   }
 }
 
-void QnstView::mouseReleaseEvent(QMouseEvent* event)
+void View::mouseReleaseEvent(QMouseEvent* event)
 {
   if (linking)
   {
@@ -1005,7 +1005,7 @@ void QnstView::mouseReleaseEvent(QMouseEvent* event)
   QGraphicsView::mouseReleaseEvent(event);
 }
 
-void QnstView::createLink(QnstEntity* a, QnstEntity* b)
+void View::createLink(QnstEntity* a, QnstEntity* b)
 {
     QnstEntity* parenta = (QnstEntity*) a->getnstParent();
     QnstEntity* parentb = (QnstEntity*) b->getnstParent();
@@ -1098,7 +1098,7 @@ void QnstView::createLink(QnstEntity* a, QnstEntity* b)
 //    modified = false;
 }
 
-void QnstView::createBind(QnstEntity* a, QnstEntity* b, QString type, QString code)
+void View::createBind(QnstEntity* a, QnstEntity* b, QString type, QString code)
 {
     QnstEntity* pa = a->getnstParent();
     QnstEntity* pb = b->getnstParent();
@@ -1231,7 +1231,7 @@ void QnstView::createBind(QnstEntity* a, QnstEntity* b, QString type, QString co
 
 }
 
-void QnstView::createReference(QnstEntity* a, QnstEntity* b)
+void View::createReference(QnstEntity* a, QnstEntity* b)
 {
     if (a->getnstSubtype() == Qnst::Port || a->getnstSubtype() == Qnst::SwitchPort)
     {
@@ -1260,7 +1260,7 @@ void QnstView::createReference(QnstEntity* a, QnstEntity* b)
     }
 }
 
-void QnstView::keyPressEvent(QKeyEvent *event)
+void View::keyPressEvent(QKeyEvent *event)
 {
   // CTRL+X - Cut
   if (event->modifiers() == Qt::ControlModifier && event->key() == Qt::Key_X)
@@ -1368,7 +1368,7 @@ void QnstView::keyPressEvent(QKeyEvent *event)
     QGraphicsView::keyPressEvent(event);
 }
 
-void QnstView::keyReleaseEvent(QKeyEvent *event)
+void View::keyReleaseEvent(QKeyEvent *event)
 {
   // SHIFT - Disabling linking
   if (event->key() == Qt::Key_Shift)
@@ -1387,7 +1387,7 @@ void QnstView::keyReleaseEvent(QKeyEvent *event)
   QGraphicsView::keyReleaseEvent(event);
 }
 
-void QnstView::wheelEvent(QWheelEvent * event)
+void View::wheelEvent(QWheelEvent * event)
 {
   if(event->modifiers() == Qt::ControlModifier)
   {
@@ -1407,7 +1407,7 @@ void QnstView::wheelEvent(QWheelEvent * event)
   }
 }
 
-void QnstView::focusOutEvent(QFocusEvent *event)
+void View::focusOutEvent(QFocusEvent *event)
 {
   QnstEntity *entity;
   foreach(entity, entities.values())
@@ -1416,7 +1416,7 @@ void QnstView::focusOutEvent(QFocusEvent *event)
   }
 }
 
-void QnstView::clearAllData()
+void View::clearAllData()
 {
   if(scene->getRoots().size())
     scene->removeRoot(scene->getRoots().at(0));
@@ -1435,7 +1435,7 @@ void QnstView::clearAllData()
   deletePendingEntities();
 }
 
-void QnstView::deletePendingEntities()
+void View::deletePendingEntities()
 {
   foreach(QnstEntity* e, toDelete)
   {
@@ -1445,7 +1445,7 @@ void QnstView::deletePendingEntities()
   toDelete.clear();
 }
 
-void QnstView::setEnableLink(bool status)
+void View::setEnableLink(bool status)
 {
     if (status)
     {
@@ -1464,12 +1464,12 @@ void QnstView::setEnableLink(bool status)
     }
 }
 
-void QnstView::setAction(QString action)
+void View::setAction(QString action)
 {
     this->action = action;
 }
 
-void QnstView::setCondition(QString condition)
+void View::setCondition(QString condition)
 {
     this->condition = condition;
 }

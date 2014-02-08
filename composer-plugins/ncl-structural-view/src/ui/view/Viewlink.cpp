@@ -1,6 +1,6 @@
 #include "ViewLink.h"
 
-QnstViewLink::QnstViewLink(QnstEntity* parent)
+ViewLink::ViewLink(QnstEntity* parent)
   : QnstEntity(parent)
 {
   setSelectable(false);
@@ -8,24 +8,24 @@ QnstViewLink::QnstViewLink(QnstEntity* parent)
   setMoveable(false);
 }
 
-QnstViewLink::~QnstViewLink()
+ViewLink::~ViewLink()
 {
 
 }
 
-QLineF QnstViewLink::getLine() const
+QLineF ViewLink::getLine() const
 {
   return line;
 }
 
-void QnstViewLink::setLine(QLineF line)
+void ViewLink::setLine(QLineF line)
 {
   this->line = line;
 
   adjust();
 }
 
-void QnstViewLink::adjust(bool avoidCollision)
+void ViewLink::adjust(bool avoidCollision)
 {
   QPointF pointa = line.p1();
   QPointF pointb = line.p2();
@@ -63,7 +63,7 @@ void QnstViewLink::adjust(bool avoidCollision)
     scene()->update();
 }
 
-void QnstViewLink::draw(QPainter* painter)
+void ViewLink::draw(QPainter* painter)
 {
   painter->setRenderHint(QPainter::Antialiasing, true);
 
@@ -147,17 +147,17 @@ void QnstViewLink::draw(QPainter* painter)
   painter->drawPolygon(QPolygonF(polygon));
 }
 
-void QnstViewLink::delineate(QPainterPath* painter) const
+void ViewLink::delineate(QPainterPath* painter) const
 {
   // nothing to do
 }
 
-void QnstViewLink::move(QGraphicsSceneMouseEvent* event)
+void ViewLink::move(QGraphicsSceneMouseEvent* event)
 {
   // nothing to do
 }
 
-void QnstViewLink::resize(QGraphicsSceneMouseEvent* event)
+void ViewLink::resize(QGraphicsSceneMouseEvent* event)
 {
   // nothing to do
 }

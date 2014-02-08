@@ -16,7 +16,7 @@ MiniMap::MiniMap(QWidget *parent)
   viewport()->setAutoFillBackground(false);
 }
 
-void MiniMap::init(QnstView *mEditorView)
+void MiniMap::init(View *mEditorView)
 {
   this->mEditorView = mEditorView;
 

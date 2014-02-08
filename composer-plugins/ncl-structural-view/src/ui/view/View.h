@@ -33,13 +33,13 @@
 
 class QnstAddCommand;
 
-class QnstView : public QGraphicsView
+class View : public QGraphicsView
 {
   Q_OBJECT
 
 public:
-  QnstView(QWidget* parent = 0);
-  ~QnstView();
+  View(QWidget* parent = 0);
+  ~View();
 
 public:
   bool hasEntity(QString uid);
@@ -151,7 +151,7 @@ private:
 
   QnstScene* scene;
 
-  QnstViewLink* link;
+  ViewLink* link;
 
   QnstEntity* _selected;
 

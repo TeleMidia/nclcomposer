@@ -7,12 +7,12 @@
 
 #include "Entity.h"
 
-class QnstViewLink : public QnstEntity
+class ViewLink : public QnstEntity
 {
 public:
-    QnstViewLink(QnstEntity* parent = 0);
+    ViewLink(QnstEntity* parent = 0);
 
-    ~QnstViewLink();
+    ~ViewLink();
 
     QLineF getLine() const;
 

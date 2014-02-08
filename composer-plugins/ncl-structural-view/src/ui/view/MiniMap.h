@@ -27,7 +27,7 @@ public:
 
 	explicit MiniMap(QWidget *parent = 0);
 
-	void init(QnstView *view);
+	void init(View *view);
 
 	void setScene(QGraphicsScene *scene);
 
@@ -54,7 +54,7 @@ private:
 	/// @return a rectangle of the scene which is viewed in the editor view
 	QRectF getNewRect();
 
-	QnstView *mEditorView;
+	View *mEditorView;
 	/// in the scene coordinates
 	QRectF mEditorViewRect;
 
