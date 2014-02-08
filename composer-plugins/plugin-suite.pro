@@ -11,11 +11,11 @@ SUBDIRS = \
     debug-console \
     properties-view \
     ncl-layout-view \
+    ncl-structural-view \
     qnclstructural/deps/libqncg/libqncg.pro \
     qnclstructural/qnst.pro \
     validator/validator.pro \
-    ncl-rules-view/ncl-rules-view.pro \
-    nclstructural-20/nclstructural.pro \
+    ncl-rules-view \
     media-preview/mediapreview.pro
 #   clube-ncl
 
