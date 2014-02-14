@@ -15,7 +15,7 @@
  * License along with this library.  If not, see
  * <http://www.gnu.org/licenses/>.
  */
-#include "NCLLayoutViewPlugin.h"
+#include "LayoutViewPlugin.h"
 
 #include <QAbstractButton>
 #include <QPushButton>
@@ -42,9 +42,9 @@ NCLLayoutViewPlugin::~NCLLayoutViewPlugin()
 
 void NCLLayoutViewPlugin::createView()
 {
-  mainWindow = new MainWindow();
+  mainWindow = new LayoutWindow();
 
-  view = new View(mainWindow);
+  view = new LayoutView(mainWindow);
   mainWindow->setQnlyView(view);
 }
 
@@ -105,7 +105,7 @@ void NCLLayoutViewPlugin::updateFromModel()
   QRectF previousRect;
   bool isGridVisible = false;
 
-  RegionBase *currentRegionBase = view->getSelectedRegionBase();
+  LayoutRegionBase *currentRegionBase = view->getSelectedRegionBase();
   if(currentRegionBase != NULL)
   {
     previousRect = currentRegionBase->sceneRect();
@@ -779,9 +779,9 @@ void NCLLayoutViewPlugin::selectRegionBaseInView(QString entityUID)
 }
 
 void NCLLayoutViewPlugin::addRegion(const QString &regionUID,
-                                   const QString &parentUID,
-                                   const QString &regionbaseUID,
-                                   const QMap<QString, QString> &attributes)
+                                    const QString &parentUID,
+                                    const QString &regionbaseUID,
+                                    const QMap<QString, QString> &attributes)
 {
   // setting
   QMap<QString, QString> standard;
@@ -823,7 +823,7 @@ void NCLLayoutViewPlugin::addRegion(const QString &regionUID,
 }
 
 void NCLLayoutViewPlugin::removeRegion(const QString &regionUID,
-                                      const QString &regionbaseUID)
+                                       const QString &regionbaseUID)
 {
   if (regions.contains(regionUID))
   {
@@ -832,8 +832,8 @@ void NCLLayoutViewPlugin::removeRegion(const QString &regionUID,
 }
 
 void NCLLayoutViewPlugin::changeRegion(const QString &regionUID,
-                                      const QString &regionbaseUID,
-                                      const QMap<QString, QString> &attributes)
+                                       const QString &regionbaseUID,
+                                       const QMap<QString, QString> &attributes)
 {
   if (regions.contains(regionUID))
   {
@@ -873,7 +873,7 @@ void NCLLayoutViewPlugin::changeRegion(const QString &regionUID,
 }
 
 void NCLLayoutViewPlugin::selectRegion(const QString &regionUID,
-                                      const QString &regionbaseUID)
+                                       const QString &regionbaseUID)
 {
   if(selectedId != NULL)
   {
@@ -889,7 +889,7 @@ void NCLLayoutViewPlugin::selectRegion(const QString &regionUID,
 }
 
 void NCLLayoutViewPlugin::addRegionBase(const QString &regionbaseUID,
-                                       const QMap<QString, QString> &attributes)
+                                        const QMap<QString, QString> &attributes)
 {
   // setting
   QMap<QString, QString> standard;
@@ -1102,7 +1102,7 @@ QMap <QString, QString> NCLLayoutViewPlugin::getRegionAttributes(Entity *region)
 }
 
 void NCLLayoutViewPlugin::performMediaOverRegionAction(const QString &mediaId,
-                                                      const QString &regionUID)
+                                                       const QString &regionUID)
 {
   bool error = false;
   Entity *region = project->getEntityById(regionUID);
@@ -1125,14 +1125,14 @@ void NCLLayoutViewPlugin::performMediaOverRegionAction(const QString &mediaId,
   {
     qWarning() << "QnlyComposerPlugin::performMediaOverRegionAction Region\
                   does not exists. Nothing will be done." ;
-    error = 1;
+                  error = 1;
   }
 
   if(media == NULL)
   {
     qWarning() << "QnlyComposerPlugin::performMediaOverRegionActiona\
                   Media was not found! Nothing will be done." ;
-    error = 1;
+                  error = 1;
   }
 
   if(!error)

@@ -1,15 +1,15 @@
-#include "MainWindow.h"
-#include "ui_MainWindow.h"
+#include "LayoutWindow.h"
+#include "ui_LayoutWindow.h"
 
 #include <assert.h>
-#include "View.h"
+#include "LayoutView.h"
 
-#include "RegionBase.h"
-#include "Region.h"
+#include "LayoutRegionBase.h"
+#include "LayoutRegion.h"
 
-MainWindow::MainWindow(QWidget *parent) :
-    QMainWindow(parent),
-    ui(new Ui::QnlyMainWindow)
+LayoutWindow::LayoutWindow(QWidget *parent) :
+  QMainWindow(parent),
+  ui(new Ui::QnlyMainWindow)
 {
   ui->setupUi(this);
 
@@ -22,12 +22,12 @@ MainWindow::MainWindow(QWidget *parent) :
   ui->toolBar->addWidget(ui->regionBaseComboBox);
 }
 
-MainWindow::~MainWindow()
+LayoutWindow::~LayoutWindow()
 {
   delete ui;
 }
 
-void MainWindow::setQnlyView(View *view)
+void LayoutWindow::setQnlyView(LayoutView *view)
 {
   assert(view != NULL);
 
@@ -45,9 +45,9 @@ void MainWindow::setQnlyView(View *view)
           SLOT(removeSelectedRegion()));
 
   connect(ui->actionShow_Hide_Grid,
-               SIGNAL(toggled(bool)),
-               view,
-               SLOT(setGridVisible(bool)));
+          SIGNAL(toggled(bool)),
+          view,
+          SLOT(setGridVisible(bool)));
 
   connect(view,
           SIGNAL(gridVisibilityChanged(bool)),
@@ -60,12 +60,12 @@ void MainWindow::setQnlyView(View *view)
           SLOT(comboBoxChangedCurrentRegionBase(int)));
 }
 
-void MainWindow::addRegion()
+void LayoutWindow::addRegion()
 {
-  Region *region = view->getSelectedRegion();
+  LayoutRegion *region = view->getSelectedRegion();
   if(region == NULL)
   {
-    RegionBase *regionBase = view->getSelectedRegionBase();
+    LayoutRegionBase *regionBase = view->getSelectedRegionBase();
     if(regionBase != NULL)
     {
       regionBase->performRegion();
@@ -75,18 +75,18 @@ void MainWindow::addRegion()
     region->performRegion();
 }
 
-void MainWindow::removeSelectedRegion()
+void LayoutWindow::removeSelectedRegion()
 {
-  Region *region = view->getSelectedRegion();
+  LayoutRegion *region = view->getSelectedRegion();
   if(region != NULL)
   {
     region->performDelete();
   }
 }
 
-void MainWindow::addRegionBaseToCombobox(
-                const QString &uuid,
-                const QMap<QString,QString> &properties )
+void LayoutWindow::addRegionBaseToCombobox(
+    const QString &uuid,
+    const QMap<QString,QString> &properties )
 {
   int comboCount = ui->regionBaseComboBox->count();
 
@@ -96,7 +96,7 @@ void MainWindow::addRegionBaseToCombobox(
     ui->regionBaseComboBox->insertItem(comboCount - 2, tr("Unknown"), uuid);
 }
 
-void MainWindow::removeRegionBaseFromCombobox(const QString &uuid)
+void LayoutWindow::removeRegionBaseFromCombobox(const QString &uuid)
 {
   for(int i = 0; i < ui->regionBaseComboBox->count(); i++)
   {
@@ -108,7 +108,7 @@ void MainWindow::removeRegionBaseFromCombobox(const QString &uuid)
   }
 }
 
-void MainWindow::comboBoxChangedCurrentRegionBase(int pos)
+void LayoutWindow::comboBoxChangedCurrentRegionBase(int pos)
 {
   // \fixme Handle when the user clicks the separator
   // means that we want to create a new one
@@ -123,16 +123,16 @@ void MainWindow::comboBoxChangedCurrentRegionBase(int pos)
   }
 }
 
-void MainWindow::selectRegionBaseInComboBox(const QString &uuid)
+void LayoutWindow::selectRegionBaseInComboBox(const QString &uuid)
 {
   int index = ui->regionBaseComboBox->findData(uuid);
   if(index != -1)
     ui->regionBaseComboBox->setCurrentIndex(index);
 }
 
-void MainWindow::updateRegionBaseInComboBox(
-     const QString &uuid,
-     const QMap<QString,QString> &properties )
+void LayoutWindow::updateRegionBaseInComboBox(
+    const QString &uuid,
+    const QMap<QString,QString> &properties )
 {
   int index = ui->regionBaseComboBox->findData(uuid);
   if(index != -1)
@@ -146,7 +146,7 @@ void MainWindow::updateRegionBaseInComboBox(
   }
 }
 
-void MainWindow::on_actionAction_Export_triggered()
+void LayoutWindow::on_actionAction_Export_triggered()
 {
   view->snapshot();
 }

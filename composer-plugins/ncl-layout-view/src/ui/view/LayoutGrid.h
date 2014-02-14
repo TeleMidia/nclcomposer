@@ -6,12 +6,12 @@
 #include <QBrush>
 #include <QPen>
 
-class Grid : public QGraphicsRectItem
+class LayoutGrid : public QGraphicsRectItem
 {
 public:
-  explicit Grid( QGraphicsItem* parent = 0,
-                             QGraphicsScene* scene = 0 );
-  virtual ~Grid();
+  explicit LayoutGrid( QGraphicsItem* parent = 0,
+                       QGraphicsScene* scene = 0 );
+  virtual ~LayoutGrid();
 
   void setStep(qreal step);
   qreal getStep();

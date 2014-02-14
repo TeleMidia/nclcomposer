@@ -5,7 +5,7 @@
 
 #include <QLabel>
 #include <QMap>
-#include "View.h"
+#include "LayoutView.h"
 
 namespace Ui {
   class QnlyMainWindow;
@@ -16,7 +16,7 @@ namespace Ui {
  *
  * It groups all layout views, toolbars etc.
  */
-class MainWindow : public QMainWindow
+class LayoutWindow : public QMainWindow
 {
   Q_OBJECT
 
@@ -25,15 +25,15 @@ public:
    * \brief QnlyMainWindow constructor
    * \param parent
    */
-  explicit MainWindow(QWidget *parent = 0);
+  explicit LayoutWindow(QWidget *parent = 0);
 
   /*!
    * \brief Destructor
    */
-  virtual ~MainWindow();
+  virtual ~LayoutWindow();
 
   // \todo unset QnlyView
-  void setQnlyView(View *view);
+  void setQnlyView(LayoutView *view);
 
 public slots:
   void addRegion();
@@ -62,7 +62,7 @@ private slots:
 
 private:
   Ui::QnlyMainWindow *ui;
-  View *view;
+  LayoutView *view;
 
 };
 

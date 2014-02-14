@@ -15,33 +15,32 @@
  * License along with this library.  If not, see
  * <http://www.gnu.org/licenses/>.
  */
-#include "NCLLayoutViewFactory.h"
+#include "LayoutCanvas.h"
 
-NCLLayoutViewFactory::NCLLayoutViewFactory(QObject* parent)
+LayoutCanvas::LayoutCanvas(QWidget* parent) : QGraphicsView(parent)
 {
-  setParent(parent);
+  setBackgroundBrush(QBrush(QColor("#eee")));
 }
 
-NCLLayoutViewFactory::~NCLLayoutViewFactory()
+LayoutCanvas::~LayoutCanvas()
 {
 
 }
 
-IPlugin* NCLLayoutViewFactory::createPluginInstance()
+void LayoutCanvas::resizeEvent(QResizeEvent* event)
 {
-  return new NCLLayoutViewPlugin();
-}
+  QGraphicsView::resizeEvent(event);
 
-void NCLLayoutViewFactory::releasePluginInstance(IPlugin* plugin)
-{
-  delete(plugin);
-}
+  //    QSize size = event->size();
 
-QString NCLLayoutViewFactory::id() const
-{
-  return "br.puc-rio.telemidia.qncllayout";
-}
+  //    QGraphicsScene* s = scene();
 
-#if QT_VERSION < 0x050000
-Q_EXPORT_PLUGIN2(QnclLayout, NCLLayoutViewFactory)
-#endif
+  //    s->setSceneRect(0,0,size.width(),size.height());
+
+  //    foreach(QGraphicsItem* item, s->items())
+  //    {
+  //        QnlyGraphicsRegion* region = (QnlyGraphicsRegion*) item;
+
+  //        region->adjust();
+  //    }
+}

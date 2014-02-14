@@ -21,7 +21,7 @@
 #include <core/extensions/IPluginFactory.h>
 using namespace composer::extension;
 
-#include "NCLLayoutViewPlugin.h"
+#include "LayoutViewPlugin.h"
 
 class NCLLayoutViewFactory : public QObject, public IPluginFactory
 {

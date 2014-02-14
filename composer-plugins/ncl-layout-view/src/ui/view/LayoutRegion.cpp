@@ -15,14 +15,14 @@
  * License along with this library.  If not, see
  * <http://www.gnu.org/licenses/>.
  */
-#include "Region.h"
+#include "LayoutRegion.h"
 
 #include <QCursor>
 #include <QMimeData>
 
-Region::Region(QMenu* switchMenu, Region* parent)
+LayoutRegion::LayoutRegion(QMenu* switchMenu, LayoutRegion* parent)
   : QObject(parent), QGraphicsItem(parent)
-{   
+{
   this->switchMenu = switchMenu;
 
   this->switchMenu->setEnabled(true);
@@ -60,7 +60,7 @@ Region::Region(QMenu* switchMenu, Region* parent)
   setColor("#E4E4E4");
 }
 
-Region::~Region()
+LayoutRegion::~LayoutRegion()
 {
   delete(viewMenu);
   delete(insertMenu);
@@ -68,18 +68,18 @@ Region::~Region()
   delete(contextMenu);
 }
 
-bool Region::isMoving() const
+bool LayoutRegion::isMoving() const
 {
   return moving;
 }
 
-void Region::setParent(Region* region)
+void LayoutRegion::setParent(LayoutRegion* region)
 {
   QObject::setParent(region);
   setParentItem(region);
 }
 
-void Region::setMoving(bool moving)
+void LayoutRegion::setMoving(bool moving)
 {
   this->moving = moving;
   if(moving)
@@ -88,22 +88,22 @@ void Region::setMoving(bool moving)
     setCursor(QCursor(Qt::ArrowCursor));
 }
 
-bool Region::isResizing() const
+bool LayoutRegion::isResizing() const
 {
   return resizing;
 }
 
-void Region::setResizing(bool resizing)
+void LayoutRegion::setResizing(bool resizing)
 {
   this->resizing = resizing;
 }
 
-bool Region::isSelected() const
+bool LayoutRegion::isSelected() const
 {
   return selected;
 }
 
-void Region::setSelected(bool selected)
+void LayoutRegion::setSelected(bool selected)
 {
   this->selected = selected;
 
@@ -111,22 +111,22 @@ void Region::setSelected(bool selected)
     setFocus(Qt::MouseFocusReason);
 }
 
-bool Region::isValidated() const
+bool LayoutRegion::isValidated() const
 {
   return validated;
 }
 
-void Region::setValidated(bool validated)
+void LayoutRegion::setValidated(bool validated)
 {
   this->validated = validated;
 }
 
-QString Region::getId() const
+QString LayoutRegion::getId() const
 {
   return id;
 }
 
-void Region::setId(const QString &id)
+void LayoutRegion::setId(const QString &id)
 {
   this->id = id;
 
@@ -134,327 +134,327 @@ void Region::setId(const QString &id)
 
   if (parentItem() != NULL)
   {
-    Region* parent = (Region*) parentItem();
+    LayoutRegion* parent = (LayoutRegion*) parentItem();
     parent->updateActionText(this);
   }
   else
   {
-    RegionBase* s = (RegionBase*) scene();
+    LayoutRegionBase* s = (LayoutRegionBase*) scene();
 
     if(s != NULL)
       s->updateActionText(this);
   }
 }
 
-QString Region::getUid() const
+QString LayoutRegion::getUid() const
 {
   return uid;
 }
 
-void Region::setUid(const QString &uid)
+void LayoutRegion::setUid(const QString &uid)
 {
   this->uid = uid;
 }
 
-QString Region::getTitle() const
+QString LayoutRegion::getTitle() const
 {
   return title;
 }
 
-void Region::setTitle(const QString &title)
+void LayoutRegion::setTitle(const QString &title)
 {
   this->title = title;
 
   setToolTip(title+" "+"("+id+")");
 }
 
-QString Region::getColor() const
+QString LayoutRegion::getColor() const
 {
   return color;
 }
 
-void Region::setColor(const QString &color)
+void LayoutRegion::setColor(const QString &color)
 {
   this->color = color;
 }
 
-bool Region::isPainted() const
+bool LayoutRegion::isPainted() const
 {
   return painted;
 }
 
-void Region::setPainted(bool painted)
+void LayoutRegion::setPainted(bool painted)
 {
   this->painted = painted;
 }
 
-void Region::setzIndex(int zindex)
+void LayoutRegion::setzIndex(int zindex)
 {
   this->zindex = zindex;
 
   setZValue(zindex);
 }
 
-int Region::getzIndex() const
+int LayoutRegion::getzIndex() const
 {
   return zindex;
 }
 
-void Region::setzIndexTop(qreal zindexTop)
+void LayoutRegion::setzIndexTop(qreal zindexTop)
 {
   this->zindexTop = zindexTop;
 }
 
-qreal Region::getzIndexTop() const
+qreal LayoutRegion::getzIndexTop() const
 {
   return zindexTop;
 }
 
-qreal Region::getTop() const
+qreal LayoutRegion::getTop() const
 {
   return top;
 }
 
-void Region::setTop(qreal top)
+void LayoutRegion::setTop(qreal top)
 {
   this->top = top;
 
   setY(top-4);
 }
 
-qreal Region::getMoveTop() const
+qreal LayoutRegion::getMoveTop() const
 {
   return moveTop;
 }
 
-void Region::setMoveTop(qreal moveTop)
+void LayoutRegion::setMoveTop(qreal moveTop)
 {
   this->moveTop = moveTop;
 }
 
-qreal Region::getPressTop() const
+qreal LayoutRegion::getPressTop() const
 {
   return pressTop;
 }
 
-void Region::setPressTop(qreal pressTop)
+void LayoutRegion::setPressTop(qreal pressTop)
 {
   this->pressTop = pressTop;
 }
 
-qreal Region::getResizeTop() const
+qreal LayoutRegion::getResizeTop() const
 {
   return resizeTop;
 }
 
-void Region::setResizeTop(qreal resizeTop)
+void LayoutRegion::setResizeTop(qreal resizeTop)
 {
   this->resizeTop = resizeTop;
 }
 
-qreal Region::getRelativeTop() const
+qreal LayoutRegion::getRelativeTop() const
 {
   return relativeTop;
 }
 
-void Region::setRelativeTop(qreal relativeTop)
+void LayoutRegion::setRelativeTop(qreal relativeTop)
 {
   this->relativeTop = relativeTop;
 }
 
-qreal Region::getLeft() const
+qreal LayoutRegion::getLeft() const
 {
   return left;
 }
 
-void Region::setLeft(qreal left)
+void LayoutRegion::setLeft(qreal left)
 {
   this->left = left;
 
   setX(left-4);
 }
 
-qreal Region::getMoveLeft() const
+qreal LayoutRegion::getMoveLeft() const
 {
   return moveLeft;
 }
 
-void Region::setMoveLeft(qreal moveLeft)
+void LayoutRegion::setMoveLeft(qreal moveLeft)
 {
   this->moveLeft = moveLeft;
 }
 
-qreal Region::getPressLeft() const
+qreal LayoutRegion::getPressLeft() const
 {
   return pressLeft;
 }
 
-void Region::setPressLeft(qreal pressLeft)
+void LayoutRegion::setPressLeft(qreal pressLeft)
 {
   this->pressLeft = pressLeft;
 }
 
-qreal Region::getResizeLeft() const
+qreal LayoutRegion::getResizeLeft() const
 {
   return resizeLeft;
 }
 
-void Region::setResizeLeft(qreal resizeLeft)
+void LayoutRegion::setResizeLeft(qreal resizeLeft)
 {
   this->resizeLeft = resizeLeft;
 }
 
-qreal Region::getRelativeLeft() const
+qreal LayoutRegion::getRelativeLeft() const
 {
   return relativeLeft;
 }
 
-void Region::setRelativeLeft(qreal relativeLeft)
+void LayoutRegion::setRelativeLeft(qreal relativeLeft)
 {
   this->relativeLeft = relativeLeft;
 }
 
-qreal Region::getRight() const
+qreal LayoutRegion::getRight() const
 {
   return right;
 }
 
-void Region::setRight(qreal right)
+void LayoutRegion::setRight(qreal right)
 {
   this->right = right;
 }
 
-qreal Region::getRelativeRight() const
+qreal LayoutRegion::getRelativeRight() const
 {
   return relativeRight;
 }
 
-void Region::setRelativeRight(qreal relativeRight)
+void LayoutRegion::setRelativeRight(qreal relativeRight)
 {
   this->relativeRight = relativeRight;
 }
 
-qreal Region::getBottom() const
+qreal LayoutRegion::getBottom() const
 {
   return bottom;
 }
 
-void Region::setBottom(qreal bottom)
+void LayoutRegion::setBottom(qreal bottom)
 {
   this->bottom = bottom;
 }
 
-qreal Region::getRelativeBottom() const
+qreal LayoutRegion::getRelativeBottom() const
 {
   return relativeBottom;
 }
 
-void Region::setRelativeBottom(qreal relativeBottom)
+void LayoutRegion::setRelativeBottom(qreal relativeBottom)
 {
   this->relativeBottom = relativeBottom;
 }
 
-qreal Region::getWidth() const
+qreal LayoutRegion::getWidth() const
 {
   return width;
 }
 
-void Region::setWidth(qreal width)
+void LayoutRegion::setWidth(qreal width)
 {
   this->width = width;
 }
 
-qreal Region::getPressWidth() const
+qreal LayoutRegion::getPressWidth() const
 {
   return pressWidth;
 }
 
-void Region::setPressWidth(qreal pressWidth)
+void LayoutRegion::setPressWidth(qreal pressWidth)
 {
   this->pressWidth = pressWidth;
 }
 
-qreal Region::getResizeWidth() const
+qreal LayoutRegion::getResizeWidth() const
 {
   return resizeWidth;
 }
 
-bool Region::hasChanged() const
+bool LayoutRegion::hasChanged() const
 {
   return changed;
 }
 
-void Region::setChanged(bool changed)
+void LayoutRegion::setChanged(bool changed)
 {
   this->changed = changed;
 }
 
-void Region::setResizeWidth(qreal resizeWidth)
+void LayoutRegion::setResizeWidth(qreal resizeWidth)
 {
   this->resizeWidth = resizeWidth;
 }
 
-qreal Region::getRelativeWidth() const
+qreal LayoutRegion::getRelativeWidth() const
 {
   return relativeWidth;
 }
 
-void Region::setRelativeWidth(qreal relativeWidth)
+void LayoutRegion::setRelativeWidth(qreal relativeWidth)
 {
   this->relativeWidth = relativeWidth;
 }
 
-qreal Region::getHeight() const
+qreal LayoutRegion::getHeight() const
 {
   return height;
 }
 
-void Region::setHeight(qreal height)
+void LayoutRegion::setHeight(qreal height)
 {
   this->height = height;
 }
 
-qreal Region::getPressHeight() const
+qreal LayoutRegion::getPressHeight() const
 {
   return pressHeight;
 }
 
-void Region::setPressHeight(qreal pressHeight)
+void LayoutRegion::setPressHeight(qreal pressHeight)
 {
   this->pressHeight = pressHeight;
 }
 
-qreal Region::getResizeHeight() const
+qreal LayoutRegion::getResizeHeight() const
 {
   return resizeHeight;
 }
 
-void Region::setResizeHeight(qreal resizeHeight)
+void LayoutRegion::setResizeHeight(qreal resizeHeight)
 {
   this->resizeHeight = resizeHeight;
 }
 
-qreal Region::getRelativeHeight() const
+qreal LayoutRegion::getRelativeHeight() const
 {
   return relativeHeight;
 }
 
-void Region::setRelativeHeight(qreal relativeHeight)
+void LayoutRegion::setRelativeHeight(qreal relativeHeight)
 {
   this->relativeHeight = relativeHeight;
 }
 
-Region::QnlyResizeType Region::getResizeType() const
+LayoutRegion::QnlyResizeType LayoutRegion::getResizeType() const
 {
   return resizeType;
 }
 
-void Region::setResizeType(const QnlyResizeType &resizeType)
+void LayoutRegion::setResizeType(const QnlyResizeType &resizeType)
 {
   this->resizeType = resizeType;
 }
 
-void Region::Region::createActions()
+void LayoutRegion::LayoutRegion::createActions()
 {
   // help action
   helpAction = new QAction(this);
@@ -597,7 +597,7 @@ void Region::Region::createActions()
   setAcceptDrops(true);
 }
 
-void Region::setGridAction(QAction* action)
+void LayoutRegion::setGridAction(QAction* action)
 {
   gridAction = action;
 
@@ -605,7 +605,7 @@ void Region::setGridAction(QAction* action)
 
 }
 
-void Region::createMenus()
+void LayoutRegion::createMenus()
 {
   // view menu
   viewMenu = new QMenu();
@@ -672,7 +672,7 @@ void Region::createMenus()
   // contextMenu->addAction(propertiesAction); //disabled for now
 }
 
-void Region::createConnections()
+void LayoutRegion::createConnections()
 {
   connect(regionActionGroup, SIGNAL(triggered(QAction*)),
           SLOT(performShow(QAction*)));
@@ -696,24 +696,24 @@ void Region::createConnections()
   connect(pasteAction, SIGNAL(triggered()), SLOT(performPaste()));
 }
 
-void Region::updateActionText(Region *region)
+void LayoutRegion::updateActionText(LayoutRegion *region)
 {
   // Update Show Menu
   if(regionActions.contains(region->getUid()))
     regionActions[region->getUid()]->setText(region->getId());
 }
 
-void Region::hideRegion(Region* region)
+void LayoutRegion::hideRegion(LayoutRegion* region)
 {
   regionActions[region->getUid()]->trigger();
 }
 
-void Region::performDelete()
+void LayoutRegion::performDelete()
 {
   emit regionDeletionRequested(this);
 }
 
-void Region::performExport()
+void LayoutRegion::performExport()
 {
   QString location =
       QFileDialog::getSaveFileName(NULL, "Export...", "",
@@ -738,28 +738,28 @@ void Region::performExport()
   }
 }
 
-void Region::performHide()
+void LayoutRegion::performHide()
 {
   if (parentItem() != NULL)
   {
-    Region* parent = (Region*) parentItem();
+    LayoutRegion* parent = (LayoutRegion*) parentItem();
 
     parent->hideRegion(this);
   }
   else
   {
-    RegionBase* s = (RegionBase*) scene();
+    LayoutRegionBase* s = (LayoutRegionBase*) scene();
 
     s->hideRegion(this);
   }
 }
 
-void Region::performRegion()
+void LayoutRegion::performRegion()
 {
   emit regionAdditionRequested(this);
 }
 
-void Region::performShow(QAction* action)
+void LayoutRegion::performShow(QAction* action)
 {
   if (!action->isChecked())
   {
@@ -771,17 +771,17 @@ void Region::performShow(QAction* action)
   }
 }
 
-void Region::performCopy()
+void LayoutRegion::performCopy()
 {
   emit copyRequested(this);
 }
 
-void Region::performPaste()
+void LayoutRegion::performPaste()
 {
   emit pasteRequested();
 }
 
-void Region::removeRegion(Region* region)
+void LayoutRegion::removeRegion(LayoutRegion* region)
 {
   if(regionActions.contains(region->getUid()))
   {
@@ -795,7 +795,7 @@ void Region::removeRegion(Region* region)
   regionActions.remove(region->getUid());
 }
 
-void Region::addRegion(Region* region)
+void LayoutRegion::addRegion(LayoutRegion* region)
 {
   if (region != NULL)
   {
@@ -826,7 +826,7 @@ void Region::addRegion(Region* region)
   }
 }
 
-void Region::move(QGraphicsSceneMouseEvent* event)
+void LayoutRegion::move(QGraphicsSceneMouseEvent* event)
 {
   /* setting */
   qreal x = left;
@@ -898,7 +898,7 @@ void Region::move(QGraphicsSceneMouseEvent* event)
   scene()->update();
 }
 
-void Region::resize(QGraphicsSceneMouseEvent* event)
+void LayoutRegion::resize(QGraphicsSceneMouseEvent* event)
 {
   /* setting bounds */
   qreal x = left;
@@ -964,145 +964,145 @@ void Region::resize(QGraphicsSceneMouseEvent* event)
   switch(resizeType)
   {
     /* adjusting TOPLEFT */
-    case Region::TopLeft:
-    {
-      if (nextx < minx)
+    case LayoutRegion::TopLeft:
       {
-        nextx = minx;
-        nextw = x + w - minx;
-      }
+        if (nextx < minx)
+        {
+          nextx = minx;
+          nextw = x + w - minx;
+        }
 
-      if (nexty < miny)
+        if (nexty < miny)
+        {
+          nexty = miny;
+          nexth = y + h - miny;
+        }
+        break;
+      }
+      /* adjusting TOP */
+    case LayoutRegion::Top:
       {
-        nexty = miny;
-        nexth = y + h - miny;
-      }
-      break;
-    }
-    /* adjusting TOP */
-    case Region::Top:
-    {
-      nextx = x; // fixed x
-      nextw = w; // fixed width
+        nextx = x; // fixed x
+        nextw = w; // fixed width
 
-      if (nexty < miny)
+        if (nexty < miny)
+        {
+          nexty = miny;
+          nexth = y + h - miny;
+        }
+
+        break;
+      }
+
+      /* adjusting TOPRIGHT */
+    case LayoutRegion::TopRight:
       {
-        nexty = miny;
-        nexth = y + h - miny;
+        nextx = x; // fixed x
+
+        nextw = w - dw;
+        if (x + nextw > maxw)
+        {
+          nextw = maxw - x;
+        }
+
+        if (nexty < miny)
+        {
+          nexty = miny;
+          nexth = y + h - miny;
+        }
+
+        break;
       }
 
-      break;
-    }
-
-    /* adjusting TOPRIGHT */
-    case Region::TopRight:
-    {
-      nextx = x; // fixed x
-
-      nextw = w - dw;
-      if (x + nextw > maxw)
+      /* adjusting RIGHT */
+    case LayoutRegion::Right:
       {
-        nextw = maxw - x;
+        nextx = x; // fixed x
+
+        nextw = w - dw;
+        if (x + nextw > maxw)
+        {
+          nextw = maxw - x;
+        }
+
+        nexty = y; // fixed y
+        nexth = h; // fixed height
+
+        break;
       }
 
-      if (nexty < miny)
+      /* adjusting BOTTOMRIGHT */
+    case LayoutRegion::BottomRight:
       {
-        nexty = miny;
-        nexth = y + h - miny;
+        nextx = x; // fixed x
+
+        nextw = w - dw;
+        if (x + nextw > maxw){
+          nextw = maxw - x;
+        }
+
+        nexty = y; // fixed y
+
+        nexth = h - dh;
+        if (y + nexth > maxh)
+        {
+          nexth = maxh - y;
+        }
+
+        break;
       }
 
-      break;
-    }
-
-    /* adjusting RIGHT */
-    case Region::Right:
-    {
-      nextx = x; // fixed x
-
-      nextw = w - dw;
-      if (x + nextw > maxw)
+      /* adjusting BOTTOM */
+    case LayoutRegion::Bottom:
       {
-        nextw = maxw - x;
+        nextx = x; // fixed x
+        nextw = w; // fixed width
+
+        nexty = y; // fixed y
+
+        nexth = h - dh;
+        if (y + nexth > maxh)
+        {
+          nexth = maxh - y;
+        }
+
+        break;
       }
 
-      nexty = y; // fixed y
-      nexth = h; // fixed height
-
-      break;
-    }
-
-    /* adjusting BOTTOMRIGHT */
-    case Region::BottomRight:
-    {
-      nextx = x; // fixed x
-
-      nextw = w - dw;
-      if (x + nextw > maxw){
-        nextw = maxw - x;
-      }
-
-      nexty = y; // fixed y
-
-      nexth = h - dh;
-      if (y + nexth > maxh)
+      /* adjusting BOTTOMLEFT */
+    case LayoutRegion::BottomLeft:
       {
-        nexth = maxh - y;
+        if (nextx < minx)
+        {
+          nextx = minx;
+          nextw = x + w - minx;
+        }
+
+        nexty = y; // fixed y
+
+        nexth = h - dh;
+        if (y + nexth > maxh)
+        {
+          nexth = maxh - y;
+        }
+
+        break;
       }
 
-      break;
-    }
-
-    /* adjusting BOTTOM */
-    case Region::Bottom:
-    {
-      nextx = x; // fixed x
-      nextw = w; // fixed width
-
-      nexty = y; // fixed y
-
-      nexth = h - dh;
-      if (y + nexth > maxh)
+      /* adjusting LEFT */
+    case LayoutRegion::Left:
       {
-        nexth = maxh - y;
+        if (nextx < minx)
+        {
+          nextx = minx;
+          nextw = x + w - minx;
+        }
+
+        nexty = y; // fixed y
+        nexth = h; // fixed height
+
+        break;
       }
-
-      break;
-    }
-
-    /* adjusting BOTTOMLEFT */
-    case Region::BottomLeft:
-    {
-      if (nextx < minx)
-      {
-        nextx = minx;
-        nextw = x + w - minx;
-      }
-
-      nexty = y; // fixed y
-
-      nexth = h - dh;
-      if (y + nexth > maxh)
-      {
-        nexth = maxh - y;
-      }
-
-      break;
-    }
-
-    /* adjusting LEFT */
-    case Region::Left:
-    {
-      if (nextx < minx)
-      {
-        nextx = minx;
-        nextw = x + w - minx;
-      }
-
-      nexty = y; // fixed y
-      nexth = h; // fixed height
-
-      break;
-    }
   }
 
   /* resizing */
@@ -1114,11 +1114,11 @@ void Region::resize(QGraphicsSceneMouseEvent* event)
   scene()->update();
 }
 
-void Region::adjust(bool repaint)
+void LayoutRegion::adjust(bool repaint)
 {
   if (parentItem() != NULL)
   {
-    Region* item = (Region*) parentItem();
+    LayoutRegion* item = (LayoutRegion*) parentItem();
 
     setTop(qRound(item->getHeight()*relativeTop + 4));
     setLeft(qRound(item->getWidth()*relativeLeft + 4));
@@ -1144,7 +1144,7 @@ void Region::adjust(bool repaint)
 
   for (int i=0;i<childItems().size();++i)
   {
-    Region* item = (Region*) childItems().at(i);
+    LayoutRegion* item = (LayoutRegion*) childItems().at(i);
 
     item->adjust(false);
   }
@@ -1155,7 +1155,7 @@ void Region::adjust(bool repaint)
   }
 }
 
-QPainterPath Region::shape() const
+QPainterPath LayoutRegion::shape() const
 {
   QPainterPath path;
 
@@ -1178,7 +1178,7 @@ QPainterPath Region::shape() const
   return path;
 }
 
-QRectF Region::boundingRect() const
+QRectF LayoutRegion::boundingRect() const
 {
   QRectF bounds;
 
@@ -1190,9 +1190,9 @@ QRectF Region::boundingRect() const
   return bounds;
 }
 
-void Region::paint(QPainter *painter,
-                               const QStyleOptionGraphicsItem *option,
-                               QWidget *widget)
+void LayoutRegion::paint(QPainter *painter,
+                         const QStyleOptionGraphicsItem *option,
+                         QWidget *widget)
 {
   if (selected)
   {
@@ -1232,7 +1232,7 @@ void Region::paint(QPainter *painter,
   else if (selected)
   {
     painter->setBrush(QBrush(Qt::white));
-     // 0px = cosmetic border
+    // 0px = cosmetic border
     painter->setPen(QPen(QBrush(QBrush(Qt::black)), 0));
 
     painter->drawRect(0,0,8,8);                                 // topleft
@@ -1255,7 +1255,7 @@ void Region::paint(QPainter *painter,
   painter->drawText(4+6,4+6,width-1-4-6,height-1-4-6,Qt::AlignLeft, text);
 }
 
-void Region::updateCursor(QGraphicsSceneMouseEvent* event)
+void LayoutRegion::updateCursor(QGraphicsSceneMouseEvent* event)
 {
   Qt::CursorShape newShape;
   if(!resizing && !moving)
@@ -1303,7 +1303,7 @@ void Region::updateCursor(QGraphicsSceneMouseEvent* event)
   }
 }
 
-void Region::mouseMoveEvent(QGraphicsSceneMouseEvent* event)
+void LayoutRegion::mouseMoveEvent(QGraphicsSceneMouseEvent* event)
 {
   if (moving)
   {
@@ -1315,7 +1315,7 @@ void Region::mouseMoveEvent(QGraphicsSceneMouseEvent* event)
   }
 }
 
-void Region::mousePressEvent(QGraphicsSceneMouseEvent* event)
+void LayoutRegion::mousePressEvent(QGraphicsSceneMouseEvent* event)
 {
   if (event->button() == Qt::RightButton)
   {
@@ -1344,49 +1344,49 @@ void Region::mousePressEvent(QGraphicsSceneMouseEvent* event)
     /* if over TOPLEFT resize region */
     if (QRectF(0,0,8,8).contains(event->pos()))
     {
-      setResizeType(Region::TopLeft);
+      setResizeType(LayoutRegion::TopLeft);
       setResizing(true);
     }
     /* if over TOP resize region */
     else if (QRectF((width+8)/2 - 4,0,8,8).contains(event->pos()))
     {
-      setResizeType(Region::Top);
+      setResizeType(LayoutRegion::Top);
       setResizing(true);
     }
     /* if over TOPRIGHT resize region */
     else if (QRectF((width+8) - 8,0,8,8).contains(event->pos()))
     {
-      setResizeType(Region::TopRight);
+      setResizeType(LayoutRegion::TopRight);
       setResizing(true);
     }
     /* if over RIGHT resize region */
     else if (QRectF((width+8) - 8,(height+8)/2 - 4,8,8).contains(event->pos()))
     {
-      setResizeType(Region::Right);
+      setResizeType(LayoutRegion::Right);
       setResizing(true);
     }
     /* if over BOTTOMRIGHT resize region */
     else if (QRectF((width+8) - 8,(height+8) - 8,8,8).contains(event->pos()))
     {
-      setResizeType(Region::BottomRight);
+      setResizeType(LayoutRegion::BottomRight);
       setResizing(true);
     }
     /* if over BOTTOM resize region */
     else if (QRectF((width+8)/2 - 4,(height+8) - 8,8,8).contains(event->pos()))
     {
-      setResizeType(Region::Bottom);
+      setResizeType(LayoutRegion::Bottom);
       setResizing(true);
     }
     /* if over BOTTOMLEFT resize region */
     else if (QRectF(0,(height+8) - 8,8,8).contains(event->pos()))
     {
-      setResizeType(Region::BottomLeft);
+      setResizeType(LayoutRegion::BottomLeft);
       setResizing(true);
     }
     /* if over LEFT resize region */
     else if (QRectF(0,(height+8)/2 - 4,8,8).contains(event->pos()))
     {
-      setResizeType(Region::Left);
+      setResizeType(LayoutRegion::Left);
       setResizing(true);
     }
     /* if not over any resize region */
@@ -1401,7 +1401,7 @@ void Region::mousePressEvent(QGraphicsSceneMouseEvent* event)
   QGraphicsItem::mousePressEvent(event);
 }
 
-void Region::mouseReleaseEvent(QGraphicsSceneMouseEvent* event)
+void LayoutRegion::mouseReleaseEvent(QGraphicsSceneMouseEvent* event)
 {
   if (moving)
   {
@@ -1441,7 +1441,7 @@ void Region::mouseReleaseEvent(QGraphicsSceneMouseEvent* event)
       double value = 0.0;
       if (parentItem() != NULL)
       {
-        Region* item = (Region*) parentItem();
+        LayoutRegion* item = (LayoutRegion*) parentItem();
 
         value = ((moveTop-4)/item->getHeight()) * 100;
         ROUND_DOUBLE(value);
@@ -1555,7 +1555,7 @@ void Region::mouseReleaseEvent(QGraphicsSceneMouseEvent* event)
       double value = 0.0;
       if (parentItem() != NULL)
       {
-        Region* item = (Region*) parentItem();
+        LayoutRegion* item = (LayoutRegion*) parentItem();
 
         value = ((resizeTop-4)/item->getHeight())*100;
         ROUND_DOUBLE(value);
@@ -1625,7 +1625,7 @@ void Region::mouseReleaseEvent(QGraphicsSceneMouseEvent* event)
   QGraphicsItem::mouseReleaseEvent(event);
 }
 
-void Region::keyPressEvent( QKeyEvent * event )
+void LayoutRegion::keyPressEvent( QKeyEvent * event )
 {
   if (event->key() == Qt::Key_Delete || event->key() == Qt::Key_Backspace)
   {
@@ -1658,13 +1658,13 @@ void Region::keyPressEvent( QKeyEvent * event )
   }
 }
 
-void Region::keyReleaseEvent( QKeyEvent * event )
+void LayoutRegion::keyReleaseEvent( QKeyEvent * event )
 {
   QGraphicsItem::keyReleaseEvent(event);
 }
 
 
-void Region::contextMenuEvent(QGraphicsSceneContextMenuEvent* event)
+void LayoutRegion::contextMenuEvent(QGraphicsSceneContextMenuEvent* event)
 {
   QGraphicsItem::contextMenuEvent(event);
 
@@ -1678,13 +1678,13 @@ void Region::contextMenuEvent(QGraphicsSceneContextMenuEvent* event)
   }
 }
 
-void Region::dragEnterEvent(QGraphicsSceneDragDropEvent *event)
+void LayoutRegion::dragEnterEvent(QGraphicsSceneDragDropEvent *event)
 {
   if (event->mimeData()->hasFormat("nclcomposer/mediaid"))
     event->acceptProposedAction();
 }
 
-void Region::dropEvent(QGraphicsSceneDragDropEvent *event)
+void LayoutRegion::dropEvent(QGraphicsSceneDragDropEvent *event)
 {
   qDebug() << "dropEvent " << event->mimeData()->data("nclcomposer/mediaid")
            << event->mimeData()->data("nclcomposer/qnstuid");
@@ -1694,7 +1694,7 @@ void Region::dropEvent(QGraphicsSceneDragDropEvent *event)
                            this);
 }
 
-QMap <QString, QString> Region::getAttributes()
+QMap <QString, QString> LayoutRegion::getAttributes()
 {
   // setting
   QMap<QString, QString> full;

@@ -24,8 +24,8 @@
 #include <core/extensions/IPlugin.h>
 using namespace composer::extension;
 
-#include "MainWindow.h"
-#include "View.h"
+#include "LayoutWindow.h"
+#include "LayoutView.h"
 
 class NCLLayoutViewPlugin : public IPlugin
 {
@@ -97,8 +97,8 @@ private:
 
   QString *selectedId;
 
-  MainWindow *mainWindow;
-  View* view;
+  LayoutWindow *mainWindow;
+  LayoutView* view;
 
   QMap<QString, Entity*> regions;
   QMap<QString, Entity*> regionbases;
