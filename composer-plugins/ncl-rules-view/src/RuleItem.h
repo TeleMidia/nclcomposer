@@ -2,7 +2,7 @@
 #define RULEITEM_H
 
 #include <QTreeWidgetItem>
-#include "comboboxitem.h"
+#include "ComboBoxItem.h"
 #include "util.h"
 
 class RuleItem : public QObject, public QTreeWidgetItem

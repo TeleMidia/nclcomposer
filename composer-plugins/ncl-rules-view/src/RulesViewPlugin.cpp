@@ -5,8 +5,8 @@
 #include <QMessageBox>
 
 #include "util.h"
-#include "ruleitem.h"
-#include "compositeruleitem.h"
+#include "RuleItem.h"
+#include "CompositeRuleItem.h"
 
 const char* RULEBASE_LABEL = "ruleBase";
 const char* RULE_LABEL = "rule";

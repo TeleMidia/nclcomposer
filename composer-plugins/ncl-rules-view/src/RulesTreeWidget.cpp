@@ -6,7 +6,7 @@
 #include <QMessageBox>
 #include <QMouseEvent>
 
-#include "compositeruleitem.h"
+#include "CompositeRuleItem.h"
 
 RulesTreeWidget::RulesTreeWidget(QWidget *parent) :
   QTreeWidget(parent)

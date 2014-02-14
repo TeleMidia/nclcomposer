@@ -4,8 +4,8 @@
 #include <IPlugin.h>
 #include <QMap>
 
-#include "rulesview.h"
-#include "rulestreewidget.h"
+#include "RulesView.h"
+#include "RulesTreeWidget.h"
 
 using namespace composer::extension;
 

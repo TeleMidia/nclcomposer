@@ -3,7 +3,7 @@
 
 #include <core/extensions/IPluginFactory.h>
 
-#include "rulesviewplugin.h"
+#include "RulesViewPlugin.h"
 
 using namespace composer::extension;
 
