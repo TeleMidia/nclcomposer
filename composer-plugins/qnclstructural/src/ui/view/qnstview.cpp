@@ -3874,7 +3874,7 @@ void QnstView::performReference(QnstGraphicsEntity* entity,
     if(entity->isMedia())
     {
       //Reference
-      ((QnstGraphicsMedia*) entity)->setInstance("new");
+      ((QnstGraphicsMedia*) entity)->setInstance("instSame");
       ((QnstGraphicsMedia*) entity)->setRefer(((QnstGraphicsMedia*) referred)->getnstId());
       ((QnstGraphicsMedia*) entity)->setReferUID(((QnstGraphicsMedia*) referred)->getnstUid());
 
