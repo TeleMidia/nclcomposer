@@ -15,24 +15,27 @@
  * License along with this library.  If not, see
  * <http://www.gnu.org/licenses/>.
  */
-#include "textview.h"
-#include<QFile>
-#include<QTextStream>
-#include<QIODevice>
+#ifndef HYPERTEXTVIEW_H
+#define HYPERTEXTVIEW_H
+#include <QtWebKit/QWebView>
+#include <QString>
 
-textview::textview(QString filename)
+/*!
+ * \brief Handles the creation of hypertext objects.
+ */
+class HypertextView :public QWebView
 {
-    QFile inputFile(filename);
-    QTextStream in(&inputFile);
-    inputFile.open(QIODevice::ReadOnly);
-    setText(in.readAll());
-    setReadOnly(true);
-    setStyleSheet("QTextEdit { background-color : white; color : black; }");
-    setAlignment(Qt::AlignCenter);
+public:
+  /*!
+   * \brief Constructor.
+   * \param Filename is the variable for specifying the media object location.
+   */
+  explicit HypertextView(const QString &filename);
 
-}
+  /*!
+   * \brief Destructor.
+   */
+  ~HypertextView();
+};
 
-textview::~textview()
-{
-
-}
+#endif // HYPERTEXTVIEW_H

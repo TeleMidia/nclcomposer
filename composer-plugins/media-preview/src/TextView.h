@@ -15,20 +15,30 @@
  * License along with this library.  If not, see
  * <http://www.gnu.org/licenses/>.
  */
-#include "hypertextview.h"
-#include <QtWebKit/QWebView>
-#include <QUrl>
+#ifndef TEXTVIEW_H
+#define TEXTVIEW_H
+#include<QString>
+#include<QTextEdit>
+#include<QFile>
 
-hypertextview::hypertextview(QString filename)
+/*!
+ * \brief Handles the creation of text objects.
+ */
+class TextView : public QTextEdit
 {
-    load(QUrl(filename));
-    adjustSize();
+public:
+  /*!
+   * \brief Constructor.
+   * \param Filename is the variable for specifying the media object location.
+   */
+  explicit TextView(const QString &filename);
+  /*!
+   * \brief Destructor.
+   */
+  ~TextView();
 
+private:
+  QFile *inputFile;
+};
 
-
-}
-
-hypertextview::~hypertextview()
-{
-
-}
+#endif // TEXTVIEW_H

@@ -15,34 +15,29 @@
  * License along with this library.  If not, see
  * <http://www.gnu.org/licenses/>.
  */
-#ifndef GIFVIEW_H
-#define GIFVIEW_H
+#ifndef IMAGVIEW_H
+#define IMAGVIEW_H
 #include<QLabel>
 #include<QString>
-#include<QMovie>
-#include<QtTest>
 
 /*!
- \brief Handles the creation of image objects, but gif type.
-*/
-
-class gifview : public QLabel
+ * \brief Handles the creation of image objects.
+ */
+class ImageView :public QLabel
 {
-    Q_OBJECT
-public: 
+  Q_OBJECT
 
-    /*!
-    * \brief Constructor.
-    * \param Filename is the variable for specifying the media object location.
-    */
-    gifview(QString filename);
+public:
+  /*!
+   * \brief Constructor.
+   * \param Filename is the variable for specifying the media object location.
+   */
+  explicit ImageView(const QString &filename);
 
-    /*!
-      \brief Destructor.
-     */
-  ~gifview();
-private:
-    QMovie *movie;
+  /*!
+   * \brief Destructor.
+   */
+  ~ImageView();
 };
 
-#endif // GIFVIEW_H
+#endif // IMAGVIEW_H

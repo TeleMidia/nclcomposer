@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>videoplayer</class>
+ <class>VideoPlayer</class>
  <widget class="QWidget" name="videoplayer">
   <property name="geometry">
    <rect>

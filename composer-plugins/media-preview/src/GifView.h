@@ -15,17 +15,33 @@
  * License along with this library.  If not, see
  * <http://www.gnu.org/licenses/>.
  */
-#include "mediapreviewfactory.h"
+#ifndef GIFVIEW_H
+#define GIFVIEW_H
+#include<QLabel>
+#include<QString>
+#include<QMovie>
+#include<QtTest>
 
-MediaPreviewFactory::MediaPreviewFactory()
+/*!
+ * \brief Handles the creation of image objects, but gif type.
+ */
+class GifView : public QLabel
 {
-}
+  Q_OBJECT
+public: 
+  /*!
+   * \brief Constructor.
+   * \param Filename is the variable for specifying the media object location.
+   */
+  explicit GifView(const QString &filename);
 
-MediaPreviewFactory::~MediaPreviewFactory()
-{
+  /*!
+   * \brief Destructor.
+   */
+  ~GifView();
 
-}
+private:
+  QMovie *movie;
+};
 
-// This is very important, and will allow to Qt framework recognize your
-// plugin
-Q_EXPORT_PLUGIN2(MediaPreview, MediaPreviewFactory)
+#endif // GIFVIEW_H

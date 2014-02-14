@@ -15,31 +15,26 @@
  * License along with this library.  If not, see
  * <http://www.gnu.org/licenses/>.
  */
-#ifndef IMAGVIEW_H
-#define IMAGVIEW_H
-#include<QLabel>
-#include<QString>
+#ifndef NCLVIEW_H
+#define NCLVIEW_H
+#include <QTextEdit>
 
 /*!
- \brief Handles the creation of image objects.
-*/
-
-class imagview :public QLabel
+ * \brief Handles the creation of NCL objects.
+ */
+class NCLView : public QTextEdit
 {
- Q_OBJECT
-
 public:
+  /*!
+   * \brief Constructor.
+   * \param Filename is the variable for specifying the media object location.
+   */
+  explicit NCLView(const QString &filename);
 
-    /*!
-     \brief Constructor.
-     \param Filename is the variable for specifying the media object location.
-    */
-
-    imagview(QString filename);
-    /*!
-      \brief Destructor.
-     */
-  ~imagview();
+  /*!
+   * \brief Destructor.
+   */
+  ~NCLView();
 };
 
-#endif // IMAGVIEW_H
+#endif // NCLVIEW_H

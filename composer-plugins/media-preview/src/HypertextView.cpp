@@ -15,20 +15,18 @@
  * License along with this library.  If not, see
  * <http://www.gnu.org/licenses/>.
  */
-#include "gifview.h"
-#include <QLabel>
-#include<QMovie>
+#include "HypertextView.h"
 
-gifview::gifview(QString filename)
+#include <QtWebKit/QWebView>
+#include <QUrl>
+
+HypertextView::HypertextView(const QString &filename)
 {
-    QMovie *movie = new QMovie(filename);
-    setMovie(movie);
-    movie->start();
-    setSizePolicy(QSizePolicy::Minimum,QSizePolicy::Minimum);
-    setAlignment(Qt::AlignCenter);
-
-
+  load(QUrl(filename));
+  adjustSize();
 }
-gifview::~gifview()
+
+HypertextView::~HypertextView()
 {
+
 }

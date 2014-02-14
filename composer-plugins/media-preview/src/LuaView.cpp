@@ -1,27 +1,27 @@
 /*
  * Copyright 2011-2013 TeleMidia/PUC-Rio.
- * 
+ *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
- * License as published by the Free Software Foundation; either 
+ * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
- * You should have received a copy of the GNU Lesser General Public 
+ *
+ * You should have received a copy of the GNU Lesser General Public
  * License along with this library.  If not, see
- * <http://www.gnu.org/licenses/>. 
+ * <http://www.gnu.org/licenses/>.
  */
-#include "luaview.h"
+#include "LuaView.h"
 
 #include <QFile>
 #include <QTextStream>
 #include <QApplication>
 
-luaview::luaview(const QString &filename)
+LuaView::LuaView(const QString &filename)
 {
   lexerLua = new QsciLexerLua(this);
 
@@ -42,7 +42,7 @@ luaview::luaview(const QString &filename)
 }
 
 
-void luaview::loadFile(const QString &fileName)
+void LuaView::loadFile(const QString &fileName)
 {
   QFile file(fileName);
   if (!file.open(QFile::ReadOnly))
@@ -57,7 +57,7 @@ void luaview::loadFile(const QString &fileName)
   QApplication::restoreOverrideCursor();
 }
 
-luaview::~luaview()
+LuaView::~LuaView()
 {
 
 }

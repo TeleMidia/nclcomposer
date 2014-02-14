@@ -15,24 +15,20 @@
  * License along with this library.  If not, see
  * <http://www.gnu.org/licenses/>.
  */
-#include "nclview.h"
-#include<QFile>
-#include<QTextStream>
-#include<QIODevice>
+#include "GifView.h"
 
-nclview::nclview(QString filename)
+#include <QLabel>
+#include<QMovie>
+
+GifView::GifView(const QString &filename)
 {
-    QFile inputFile(filename);
-    QTextStream in(&inputFile);
-    inputFile.open(QIODevice::ReadOnly);
-    setText(in.readAll());
-    setReadOnly(true);
-    setStyleSheet("QTextEdit { background-color : white; color : black; }");
-    setAlignment(Qt::AlignCenter);
-
+  QMovie *movie = new QMovie(filename);
+  setMovie(movie);
+  movie->start();
+  setSizePolicy(QSizePolicy::Minimum,QSizePolicy::Minimum);
+  setAlignment(Qt::AlignCenter);
 }
 
-nclview::~nclview()
+GifView::~GifView()
 {
-
 }

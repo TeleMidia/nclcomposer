@@ -15,27 +15,16 @@
  * License along with this library.  If not, see
  * <http://www.gnu.org/licenses/>.
  */
-#ifndef NCLVIEW_H
-#define NCLVIEW_H
-#include<QTextEdit>
+#include "MediaPreviewFactory.h"
 
-/*!
- \brief Handles the creation of NCL objects.
-*/
-
-class nclview :public QTextEdit
+MediaPreviewFactory::MediaPreviewFactory()
 {
-public:
-    /*!
-     \brief Constructor.
-     \param Filename is the variable for specifying the media object location.
-    */
+}
 
-    nclview(QString filename);
-    /*!
-      \brief Destructor.
-     */
-  ~nclview();
-};
+MediaPreviewFactory::~MediaPreviewFactory()
+{
+}
 
-#endif // NCLVIEW_H
+// This is very important, and will allow to Qt framework recognize your
+// plugin
+Q_EXPORT_PLUGIN2(MediaPreview, MediaPreviewFactory)

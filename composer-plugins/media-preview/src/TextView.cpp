@@ -15,21 +15,24 @@
  * License along with this library.  If not, see
  * <http://www.gnu.org/licenses/>.
  */
-#include "imagview.h"
-#include<QIcon>
-#include<QWidget>
-#include <QLabel>
+#include "TextView.h"
 
-imagview::imagview(QString filename)
+#include<QFile>
+#include<QTextStream>
+#include<QIODevice>
+
+TextView::TextView(const QString &filename)
 {
-
-    setPixmap(QPixmap(filename));
-    setVisible(true);
-    setSizePolicy(QSizePolicy::Maximum,QSizePolicy::MinimumExpanding);
-    setAlignment(Qt::AlignCenter);
-
+  QFile inputFile(filename);
+  QTextStream in(&inputFile);
+  inputFile.open(QIODevice::ReadOnly);
+  setText(in.readAll());
+  setReadOnly(true);
+  setStyleSheet("QTextEdit { background-color : white; color : black; }");
+  setAlignment(Qt::AlignCenter);
 }
-imagview::~imagview()
+
+TextView::~TextView()
 {
 
 }

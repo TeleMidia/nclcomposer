@@ -25,57 +25,47 @@
 #include<VideoPlayer>
 #include<VideoWidget>
 
-
 namespace Ui {
-/*!
- \brief Handles the creation of video objects.
-*/
-
-class videoplayer;
+  class VideoPlayer;
 }
 
-class videoplayer : public QWidget
+class VideoPlayer : public QWidget
 {
-    Q_OBJECT
-    
+  Q_OBJECT
+
 public:
-    /*!
-     \brief Constructor.
-     \param Filename is the variable for specifying the media object location.
-    */
+  /*!
+   * \brief Constructor.
+   * \param Filename is the variable for specifying the media object location.
+   */
+  explicit VideoPlayer(const QString &filename);
 
-    videoplayer(QString filename);
+  /*!
+   * \brief Destructor.
+   */
+  ~VideoPlayer();
 
-    /*!
-      \brief Destructor.
-     */
-
-    ~videoplayer();
-    
 private:
-    Ui::videoplayer *ui;
-    Phonon::MediaObject *mediaObject;
-    Phonon::VideoPlayer *videoObject;
-    Phonon::AudioOutput *Audioutput;
-    Phonon::Path audioOutputPath;
-    Phonon::VideoWidget *videowidget;
-
+  Ui::VideoPlayer *ui;
+  Phonon::MediaObject *mediaObject;
+  Phonon::VideoPlayer *videoObject;
+  Phonon::AudioOutput *audioOutput;
+  Phonon::Path audioOutputPath;
+  Phonon::VideoWidget *videoWidget;
 
 private slots:
-
-    /*!
-     \brief Play the video media object.
-    */
-    void on_playbutton_clicked();
-    /*!
-     \brief Pause the video media object.
-    */
-    void on_pausebutton_clicked();
-    /*!
-     \brief Stop the video media object.
-    */
-    void on_stopbutton_clicked();
-
+  /*!
+   * \brief Play the video media object.
+   */
+  void on_playbutton_clicked();
+  /*!
+   * \brief Pause the video media object.
+   */
+  void on_pausebutton_clicked();
+  /*!
+   * \brief Stop the video media object.
+   */
+  void on_stopbutton_clicked();
 };
 
 #endif // VIDEOPLAYER_H

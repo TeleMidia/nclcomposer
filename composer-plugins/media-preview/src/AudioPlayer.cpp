@@ -15,7 +15,8 @@
  * License along with this library.  If not, see
  * <http://www.gnu.org/licenses/>.
  */
-#include <audioplayer.h>
+#include "AudioPlayer.h"
+
 #include<QObject>
 #include<QPushButton>
 #include<MediaObject>
@@ -29,7 +30,7 @@
 #include<VolumeSlider>
 #include<Path>
 
-audioplayer::audioplayer(QString filename)
+AudioPlayer::AudioPlayer(const QString &filename)
 
 {
   setStyleSheet("* { background-color: rgb(220,220,220) }");
@@ -38,7 +39,7 @@ audioplayer::audioplayer(QString filename)
 
   mediaobject = Phonon::createPlayer(Phonon::MusicCategory,
                                      Phonon::MediaSource(filename));
- /*Criação dos botões de controle(play, pause, stop, slider de voulme,e
+  /*Criação dos botões de controle(play, pause, stop, slider de voulme,e
   seek slider*/
 
   playButton = new QPushButton();
@@ -60,40 +61,37 @@ audioplayer::audioplayer(QString filename)
   pauseButton->setFixedHeight(34);
   pauseButton->setIconSize(QSize (26,26));
   pauseButton->setStyleSheet("* { background-color: rgb(173,255,47) }");
- pauseButton->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Minimum);
+  pauseButton->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Minimum);
 
- stopButton->setIcon(QIcon("stop.jpeg"));
+  stopButton->setIcon(QIcon("stop.jpeg"));
   stopButton->setFixedWidth(51);
   stopButton->setFixedHeight(34);
   stopButton->setIconSize(QSize (26,26));
   stopButton->setStyleSheet("* { background-color: rgb(173,255,47) }");
-stopButton->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Minimum);
+  stopButton->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Minimum);
 
   mediaobject = new Phonon::MediaObject(this);
   mediaobject->setCurrentSource(Phonon::MediaSource(filename));
   Audioutput =new Phonon::AudioOutput(Phonon::MusicCategory, this);
   audioOutputPath = Phonon::createPath(mediaobject, Audioutput);
-     Audioutput->setVolume(0.003);
+  Audioutput->setVolume(0.003);
 
-   volumeslider= new Phonon::VolumeSlider();
-   volumeslider->setAudioOutput(Audioutput);
+  volumeslider= new Phonon::VolumeSlider();
+  volumeslider->setAudioOutput(Audioutput);
 
-   volumeslider->setSingleStep(0.002);
-   volumeslider->setMaximumVolume(0.5);
-   volumeslider->setTracking(true);
-   volumeslider->setMaximumVolume(1);
-   volumeslider->setMuteVisible(true);
-   volumeslider->setFixedSize(150,31);
-   volumeslider->setFixedWidth(170);
-   volumeslider->setSizePolicy(QSizePolicy::Maximum,QSizePolicy::MinimumExpanding);
+  volumeslider->setSingleStep(0.002);
+  volumeslider->setMaximumVolume(0.5);
+  volumeslider->setTracking(true);
+  volumeslider->setMaximumVolume(1);
+  volumeslider->setMuteVisible(true);
+  volumeslider->setFixedSize(150,31);
+  volumeslider->setFixedWidth(170);
+  volumeslider->setSizePolicy(QSizePolicy::Maximum,QSizePolicy::MinimumExpanding);
 
-
-
-   Phonon::SeekSlider *slider = new Phonon::SeekSlider;
-   slider->setMediaObject(mediaobject);
-   slider->setFixedWidth(510);
-   slider->show();
-
+  Phonon::SeekSlider *slider = new Phonon::SeekSlider;
+  slider->setMediaObject(mediaobject);
+  slider->setFixedWidth(510);
+  slider->show();
 
   QHBoxLayout *layout = new QHBoxLayout;
   layout->addWidget(playButton);
@@ -104,42 +102,38 @@ stopButton->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Minimum);
   QHBoxLayout *layout2=new QHBoxLayout;
   layout2->addWidget(slider);
 
- QVBoxLayout *layoutf=new QVBoxLayout;
+  QVBoxLayout *layoutf=new QVBoxLayout;
 
- layoutf->addLayout(layout);
- layoutf->addLayout(layout2);
+  layoutf->addLayout(layout);
+  layoutf->addLayout(layout2);
 
-setLayout(layoutf);
+  setLayout(layoutf);
 
-setVisible(true);
+  setVisible(true);
 
-
-/*Slots para o controle dos botões*/
-
-QObject::connect(playButton,SIGNAL(clicked()),this,SLOT(play()));
-QObject::connect(pauseButton,SIGNAL(clicked()),this,SLOT(pause()));
-QObject::connect(stopButton,SIGNAL(clicked()),this,SLOT(stop()));
-
+  /*Slots para o controle dos botões*/
+  QObject::connect(playButton,SIGNAL(clicked()),this,SLOT(play()));
+  QObject::connect(pauseButton,SIGNAL(clicked()),this,SLOT(pause()));
+  QObject::connect(stopButton,SIGNAL(clicked()),this,SLOT(stop()));
 }
 
 
-audioplayer::~audioplayer()
+AudioPlayer::~AudioPlayer()
 {
 
 }
 
-void audioplayer::play()
+void AudioPlayer::play()
 {
   mediaobject->play();
-
 }
 
-void audioplayer::pause()
+void AudioPlayer::pause()
 {
   mediaobject->pause();
 }
 
-void audioplayer::stop()
+void AudioPlayer::stop()
 {
   mediaobject->stop();
 }

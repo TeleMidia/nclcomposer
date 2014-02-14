@@ -15,29 +15,37 @@
  * License along with this library.  If not, see
  * <http://www.gnu.org/licenses/>.
  */
-#ifndef HYPERTEXTVIEW_H
-#define HYPERTEXTVIEW_H
-#include<QtWebKit/QWebView>
-#include<QString>
+#ifndef LUAVIEW_H
+#define LUAVIEW_H
+
+#include <Qsci/qsciscintilla.h>
+#include <Qsci/qscilexerlua.h>
 
 /*!
- \brief Handles the creation of hypertext objects.
+ \brief Handles the creation of NCL objects.
 */
-
-class hypertextview :public QWebView
+class LuaView :public QsciScintilla
 {
+  Q_OBJECT
 public:
+  /*!
+   * \brief Constructor.
+   * \param Filename is the variable for specifying the media object location.
+   */
+  explicit LuaView(const QString &filename = "");
 
-    /*!
-     \brief Constructor.
-     \param Filename is the variable for specifying the media object location.
-    */
-    hypertextview(QString filename);
+  /*!
+   * \brief Destructor.
+   */
+  ~LuaView();
 
-    /*!
-      \brief Destructor.
-     */
-  ~hypertextview();
+  /*!
+   * \brief loadFile
+   * \param fileName
+   */
+  void loadFile(const QString &fileName);
+
+private:
+  QsciLexerLua *lexerLua;
 };
-
-#endif // HYPERTEXTVIEW_H
+#endif // LUAVIEW_H

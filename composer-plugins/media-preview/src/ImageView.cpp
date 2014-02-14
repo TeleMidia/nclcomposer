@@ -15,31 +15,21 @@
  * License along with this library.  If not, see
  * <http://www.gnu.org/licenses/>.
  */
-#ifndef TEXTVIEW_H
-#define TEXTVIEW_H
-#include<QString>
-#include<QTextEdit>
-#include<QFile>
+#include "ImageView.h"
 
-/*!
- \brief Handles the creation of text objects.
-*/
-class textview : public QTextEdit
+#include<QIcon>
+#include<QWidget>
+#include <QLabel>
+
+ImageView::ImageView(const QString &filename)
 {
-public:
+  setPixmap(QPixmap(filename));
+  setVisible(true);
+  setSizePolicy(QSizePolicy::Maximum,QSizePolicy::MinimumExpanding);
+  setAlignment(Qt::AlignCenter);
+}
 
-    /*!
-     \brief Constructor.
-     \param Filename is the variable for specifying the media object location.
-    */
-    textview(QString Filename);
-    /*!
-      \brief Destructor.
-     */
-  ~textview();
-private:
+ImageView::~ImageView()
+{
 
-    QFile *inputFile;
-};
-
-#endif // TEXTVIEW_H
+}
