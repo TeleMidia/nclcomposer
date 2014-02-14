@@ -1,12 +1,3 @@
-#-------------------------------------------------
-#
-# Project created by QtCreator 2013-11-29T16:46:38
-#
-#-------------------------------------------------
-TARGET = ncl-rules-view
-
-DESTDIR=$$PWD/bin
-
 include (../plugins-common.pri)
 
 INCLUDEPATH += . \
@@ -38,6 +29,3 @@ HEADERS += \
 
 RESOURCES += \
     ../common-resources/images.qrc
-
-INSTALLS += target
-

@@ -85,4 +85,18 @@ else:win32 {
   target.path = $$INSTALLBASE/extensions
 }
 
-INSTALLS = target
+# Set the name of the default target based on the .pro file
+DEFAULT_TARGET=$$basename(_PRO_FILE_)
+DEFAULT_TARGET=$$replace(DEFAULT_TARGET, "-", "_")
+DEFAULT_TARGET=$$replace(DEFAULT_TARGET, ".pro", "")
+contains(FORCERELEASE, true) {
+  TARGET=$$DEFAULT_TARGET
+}
+else {
+  TARGET=$${DEFAULT_TARGET}_d
+}
+message ($${TARGET}D)
+
+INSTALLS += target
+DESTDIR = bin
+#message("Building to $${TARGET}")

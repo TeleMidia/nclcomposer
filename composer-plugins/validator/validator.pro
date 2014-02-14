@@ -27,10 +27,6 @@ libboost {
 
 QT += xml
 
-TARGET = ValidatorPlugin
-
-INSTALLS += target
-
 SOURCES += \
     ValidatorPlugin.cpp \
     ValidatorFactory.cpp \

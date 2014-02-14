@@ -5,8 +5,6 @@ QT += gui
 QT += xml
 CONFIG +=qtestlib
 
-#TEMPLATE = app
-TARGET = media-preview
 DEPENDPATH += .
 INCLUDEPATH += . src
 

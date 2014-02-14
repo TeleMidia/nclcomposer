@@ -7,9 +7,6 @@ QT += \
 TEMPLATE = \
     lib
 
-TARGET = \
-    Qnst
-
 VERSION = \
     0.1.0
 

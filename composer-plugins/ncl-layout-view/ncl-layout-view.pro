@@ -5,12 +5,6 @@ INCLUDEPATH += \
   src/ui/ \
   src/ui/view/
 
-DESTDIR = \
-  bin/
-
-TARGET = \
-  ncl-layout-view
-
 SOURCES += \
     src/LayoutViewPlugin.cpp \
     src/LayoutViewFactory.cpp \
@@ -30,9 +24,6 @@ HEADERS += \
     src/ui/view/LayoutRegionBase.h \
     src/ui/view/LayoutView.h \
     src/ui/LayoutWindow.h
-
-INSTALLS = \
-  target
 
 FORMS += \
     ui/LayoutWindow.ui

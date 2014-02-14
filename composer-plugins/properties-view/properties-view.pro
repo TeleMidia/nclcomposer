@@ -1,11 +1,5 @@
 include (../plugins-common.pri)
 
-TARGET = \
-  properties-view
-
-DESTDIR = \
-  bin
-
 INCLUDEPATH += \
   src
 
@@ -40,7 +34,3 @@ RESOURCES += \
 
 OTHER_FILES += \
   properties_view.json
-
-INSTALLS += \
-  target
-

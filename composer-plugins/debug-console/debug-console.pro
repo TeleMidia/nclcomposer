@@ -1,11 +1,3 @@
-#-------------------------------------------------
-#
-# Project created by QtCreator 2011-01-23T14:17:36
-#
-#-------------------------------------------------
-
-TARGET = debug_console
-
 include (../plugins-common.pri)
 
 DEFINES += DEBUGCONSOLE_LIBRARY
@@ -20,8 +12,6 @@ HEADERS += include/DebugConsoleFactory.h\
     include/DebugConsolePlugin.h
 
 RESOURCES += images.qrc
-
-INSTALLS += target
 
 OTHER_FILES += \
     debug_console.json

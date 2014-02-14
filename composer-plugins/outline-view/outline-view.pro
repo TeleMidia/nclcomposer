@@ -1,5 +1,4 @@
 include (../plugins-common.pri)
-TARGET          = outline_view
 QT              += xml
 
 macx:LIBS +=    -L$$quote(/Library/Application Support/Composer/Extensions) \
@@ -19,8 +18,6 @@ SOURCES         =   src/NCLTreeWidget.cpp \
                     src/NCLParser.cpp \
                     src/OutlineViewPlugin.cpp \
                     src/OutlineViewFactory.cpp
-
-INSTALLS        =   target
 
 RESOURCES += \
     ../common-resources/images.qrc \

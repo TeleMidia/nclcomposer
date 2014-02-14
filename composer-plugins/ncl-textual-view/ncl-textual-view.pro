@@ -1,6 +1,4 @@
-TARGET      =   ncl_textual_plugin
 include (../plugins-common.pri)
-
 QT          +=  xml gui
 
 # Required to link against QSCINTILLA on Windows
@@ -19,7 +17,8 @@ QMAKE_CXXFLAGS  += -Ideps/QScintilla-gpl-2.8/Qt4Qt5 \
 release {
 LIBS      +=    -Ldeps/QScintilla-gpl-2.8/Qt4Qt5/release \
                 -lqscintilla2_telem
-}else:debug {
+}
+else:debug {
 LIBS      +=    -Ldeps/QScintilla-gpl-2.8/Qt4Qt5/debug \
                 -lqscintilla2_telem
 }
@@ -32,19 +31,19 @@ unix:LIBS += -Ldeps/QScintilla-gpl-2.8/Qt4Qt5
 
 win32:LIBS += -lNCLLanguageProfile
 
-HEADERS     =   include/NCLTextEditorMainWindow.h \
-                include/NCLTextEditor.h \
-                include/QsciLexerNCL.h \
-                include/QsciNCLAPIs.h \
-                include/MyLexer.h \
-                include/NCLValidator.h \
-                include/NCLProblemsView.h \
+HEADERS     =   src/NCLTextEditorMainWindow.h \
+                src/NCLTextEditor.h \
+                src/QsciLexerNCL.h \
+                src/QsciNCLAPIs.h \
+                src/MyLexer.h \
+                src/NCLValidator.h \
+                src/NCLProblemsView.h \
                 ../outline-view/src/NCLParser.h \
                 ../outline-view/src/NCLTreeWidget.h \
-                include/NCLTextualViewPlugin.h \
-                include/NCLTextualViewPluginFactory.h \
-                include/NCLTextualViewPlugin_global.h \
-                include/SearchLineEdit.h
+                src/NCLTextualViewPlugin.h \
+                src/NCLTextualViewPluginFactory.h \
+                src/NCLTextualViewPlugin_global.h \
+                src/SearchLineEdit.h
 
 SOURCES     =   src/NCLTextEditorMainWindow.cpp \
                 src/NCLTextEditor.cpp \
@@ -66,5 +65,3 @@ OTHER_FILES +=  TODO \
 
 RESOURCES   =   ../common-resources/language.qrc
 FORMS       +=  ui/TextualPluginPreferencesWidget.ui
-
-INSTALLS += target
