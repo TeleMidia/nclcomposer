@@ -8,21 +8,14 @@
 
 class AttrInput : public QWidget
 {
-
   Q_OBJECT
-
-protected:
-  QString _name;
-  QString _type;
-  QString _value;
-  QString _question;
-
 
 public:
   explicit AttrInput (QWidget *parent = 0) : QWidget (parent) {}
 
-  explicit AttrInput(QString getQuestion, QString name, QString getType,
-                     QString getValue, QWidget *parent = 0);
+  explicit AttrInput(const QString &question, const QString &name,
+                     const QString &type, const QString &value,
+                     QWidget *parent = 0);
 
   inline QString getName () const { return _name; }
   inline QString getType () const { return _type; }
@@ -30,7 +23,7 @@ public:
   inline QString getQuestion () const { return _question; }
 
   virtual QString getAnswer () const = 0;
-  virtual void setAnswer (QString) = 0;
+  virtual void setAnswer (const QString&) = 0;
   virtual AttrInput * clone () const = 0;
   //    virtual void computeAnswer () = 0;
 
@@ -41,6 +34,13 @@ public:
       QPainter p(this);
       style()->drawPrimitive(QStyle::PE_Widget, &opt, &p, this);
   } */
+
+protected:
+  QString _name;
+  QString _type;
+  QString _value;
+  QString _question;
+
 };
 
 #endif // ATTRINPUT_H

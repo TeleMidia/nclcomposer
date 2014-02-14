@@ -1,14 +1,15 @@
-#include "xmetawizardmainwindow.h"
+#include "XMetaWizardMainWindow.h"
 #include "ui_xmetawizardmainwindow.h"
-#include "wizardgenerator.h"
-#include "wizardexecutionengine.h"
+#include "WizardGenerator.h"
+#include "WizardExecutionEngine.h"
 
 #include <QPushButton>
 #include <QHBoxLayout>
 #include <QFileDialog>
+#include <QDir>
 
 XMetaWizardMainWindow::XMetaWizardMainWindow(QWidget *parent) :
-    QMainWindow(parent)
+  QMainWindow(parent)
 {
   setWindowTitle("Wizard Generator");
 
@@ -20,8 +21,10 @@ XMetaWizardMainWindow::XMetaWizardMainWindow(QWidget *parent) :
   mainLayout->addWidget(templateBaseButton);
   mainLayout->addWidget(wizarButton);
 
-  connect(templateBaseButton, SIGNAL(pressed()), this, SLOT(runWizardGenerator()));
-  connect(wizarButton, SIGNAL(pressed()), this,SLOT(runWizardEngine()) );
+  connect(templateBaseButton, SIGNAL(pressed()),
+          this, SLOT(runWizardGenerator()));
+  connect(wizarButton, SIGNAL(pressed()),
+          this, SLOT(runWizardEngine()) );
 
   QWidget *widget = new QWidget;
   widget->setLayout(mainLayout);
@@ -31,14 +34,17 @@ XMetaWizardMainWindow::XMetaWizardMainWindow(QWidget *parent) :
 
 void XMetaWizardMainWindow::runWizardGenerator()
 {
-  QString filePath = QFileDialog::getOpenFileName(this, "Choose a template base", getenv("HOME"), "*.tal");
+  QString filePath = QFileDialog::getOpenFileName(this,
+                                                  "Choose a template base",
+                                                  QDir::homePath(), "*.tal");
   if (filePath != "")
     WizardGenerator::run(filePath);
 }
 
 void XMetaWizardMainWindow::runWizardEngine()
 {
-  QString filePath = QFileDialog::getOpenFileName(this, "Choose a wizard", getenv("HOME"), "*.ws");
+  QString filePath = QFileDialog::getOpenFileName(this, "Choose a wizard",
+                                                  QDir::homePath(), "*.ws");
   if (filePath != "")
   {
     WizardExecutionEngine engine(filePath);

@@ -3,12 +3,12 @@
 
 #include <QDomDocument>
 
-#include "constants.h"
+#include "Constants.h"
 
 class WSWriter
 {
 public:
-  static void writeWizard (QString);
+  static void writeWizard (const QString&);
 };
 
 #endif // WSWRITER_H

@@ -29,12 +29,15 @@ int main(int argc, char *argv[])
     QString selectedPath = w.getSelectedPath();
 
     qDebug() << selectedPath;
-    we.setWS( selectedPath + selectedPath.mid(selectedPath.lastIndexOf("/")) + ".ws" );
-    we.setInputFile(selectedPath + selectedPath.mid(selectedPath.lastIndexOf("/")) + ".ncl" );
+    we.setWS( selectedPath +
+              selectedPath.mid(selectedPath.lastIndexOf("/")) + ".ws" );
+    we.setInputFile(selectedPath +
+                    selectedPath.mid(selectedPath.lastIndexOf("/")) + ".ncl" );
 
     we.run();
 
-    std::cout << (selectedPath + selectedPath.mid(selectedPath.lastIndexOf("/")) + "Final.ncl").toStdString() << endl;
+    std::cout << (selectedPath + selectedPath.mid(selectedPath.lastIndexOf("/"))
+                  + "Final.ncl").toStdString() << endl;
   }
 
   return 0;

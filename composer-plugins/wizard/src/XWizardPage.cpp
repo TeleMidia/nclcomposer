@@ -1,4 +1,4 @@
-#include "xwizardpage.h"
+#include "XWizardPage.h"
 
 #include <QScrollArea>
 #include <QScrollBar>
@@ -6,7 +6,7 @@
 #include <QMessageBox>
 #include <QLabel>
 
-#include "SelectsElement.h"
+#include "SelectsParser.h"
 
 #include <QDebug>
 
@@ -96,18 +96,18 @@ void XWizardPage::resolve( ElemInput *elemInput,
                            QDomElement &pdpRootElement,
                            QSet<QString>& elementsMarked )
 {
-  QString selector = elemInput->selector();
+  QString selector = elemInput->getSelector();
   SelectsParser selectorParser (selector);
 
   QDomElement elementTarget;
 
-  QString elementToSearch = selectorParser.elementTagname();
-  QString elementAttributeName = selectorParser.elementAttributeName();
-  QString elementAttributeValue = selectorParser.elementAttributeValue();
+  QString elementToSearch = selectorParser.getElementTagname();
+  QString elementAttributeName = selectorParser.getElementAttributeName();
+  QString elementAttributeValue = selectorParser.getElementAttributeValue();
 
-  QString parentTagname = selectorParser.parentTagname();
-  QString parentAttributeName = selectorParser.parentAttributeName();
-  QString parentAttributeValue = selectorParser.parentAttributeValue();
+  QString parentTagname = selectorParser.getParentTagname();
+  QString parentAttributeName = selectorParser.getParentAttributeName();
+  QString parentAttributeValue = selectorParser.getParentAttributeValue();
 
   QVector <QDomElement> elements;
   if (selectorParser.hasParentDependency())
@@ -200,11 +200,11 @@ void XWizardPage::resolve( ElemInput *elemInput,
     elementTargetUuid = elementTarget.attribute(TEMP_ATTR);
     elementsMarked.insert(elementTargetUuid);
 
-    QVector <AttrInput*> attrInputs = elemInput->attrInputs();
+    QVector <AttrInput*> attrInputs = elemInput->getAttrInputs();
     for (int i = 0; i < attrInputs.size(); i++)
     {
       AttrInput * attrInput = attrInputs.at(i);
-      QString attributeName = attrInput->name();
+      QString attributeName = attrInput->getName();
       QString attributeValue = attrInput->getAnswer();
 
       elementTarget.setAttribute(attributeName, attributeValue);
@@ -220,17 +220,19 @@ void XWizardPage::resolve( ElemInput *elemInput,
       else
         _elemPrefixIdCount[prefixId] = 1;
 
-      elementTarget.setAttribute("id",  prefixId + "_" + QString::number(_elemPrefixIdCount[prefixId]));
+      elementTarget.setAttribute("id",  prefixId + "_" +
+                                 QString::number(_elemPrefixIdCount[prefixId]));
     }
   }
 
-  foreach (ElemInput *childElemInput, elemInput->elemInputs())
+  foreach (ElemInput *childElemInput, elemInput->getElemInputs())
   {
     resolve (childElemInput, elementTarget, pdpRootElement, elementsMarked);
   }
 }
 
-bool XWizardPage::computeAnswers(QDomElement& finalAppRootElement, QDomElement& pdpRootElement,
+bool XWizardPage::computeAnswers(QDomElement& finalAppRootElement,
+                                 QDomElement& pdpRootElement,
                                  QSet<QString> &selectorsUsed)
 {
   bool answer = true;
@@ -254,7 +256,8 @@ QVector <QDomElement> XWizardPage::searchElement( const QString &tagname,
   QDomNodeList elements;
   if (tagname == "*")
   {
-    recursiveElementSearch(attributeName, attributeValue, rootElement, elementsToReturn);
+    recursiveElementSearch(attributeName, attributeValue, rootElement,
+                           elementsToReturn);
   }
   else
   {
@@ -285,23 +288,26 @@ QVector <QDomElement> XWizardPage::searchElement( const QString &tagname,
   return elementsToReturn;
 }
 
-void XWizardPage::recursiveElementSearch( const QString &attributeName,
-                                          const QString &attributeValue,
-                                          QDomElement &rootElement,
-                                          QVector<QDomElement> &elementsToReturn)
+void XWizardPage::recursiveElementSearch(const QString &attributeName,
+                                         const QString &attributeValue,
+                                         QDomElement &rootElement,
+                                         QVector<QDomElement> &elementsToReturn)
 {
   if (!rootElement.isNull())
   {
     QString rootAttributeValue = rootElement.attribute(attributeName);
-    if (rootAttributeValue == attributeValue){
+    if (rootAttributeValue == attributeValue)
+    {
       elementsToReturn.append(rootElement);
     }
 
     QDomNodeList elements = rootElement.childNodes();
-    for (int i = 0; i < elements.size(); i++){
+    for (int i = 0; i < elements.size(); i++)
+    {
       QDomElement element = elements.at(i).toElement();
 
-      recursiveElementSearch(attributeName, attributeValue, element, elementsToReturn);
+      recursiveElementSearch(attributeName, attributeValue, element,
+                             elementsToReturn);
     }
   }
 }
@@ -316,15 +322,19 @@ void XWizardPage::cloneElemInput(ElemInput *elemInput)
 
 void XWizardPage::removeElemInput(ElemInput *elemInput)
 {
-  if (_elemInputs.size() == 1){
-    QMessageBox::warning(this, "Warning", "Each page must have at least one <elemInput>.", QMessageBox::Ok);
+  if (_elemInputs.size() == 1)
+  {
+    QMessageBox::warning(
+          this, "Warning", "Each page must have at least one <elemInput>.",
+          QMessageBox::Ok);
     return;
   }
 
   if (elemInput)
   {
     for (int i = 0; i < _elemInputs.size(); i++)
-      if (_elemInputs.at(i) == elemInput){
+      if (_elemInputs.at(i) == elemInput)
+      {
         _elemInputs.remove(i);
         break;
       }

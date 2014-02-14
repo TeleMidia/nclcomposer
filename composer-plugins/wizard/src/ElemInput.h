@@ -3,7 +3,7 @@
 
 #include <QGroupBox>
 
-#include "attrinput.h"
+#include "AttrInput.h"
 #include <QVector>
 #include <QVBoxLayout>
 #include <QDomElement>
@@ -13,22 +13,13 @@ class ElemInput : public QFrame
 {
   Q_OBJECT
 
-private:
-  QVector <AttrInput *> _attrInputs;
-  QVector <ElemInput *> _elemInputs;
-  QVBoxLayout * _elemInputLayout;
-  QString _question;
-  QString _selector;
-  QString _id;
-
-  QPushButton *_optionsButton;
-
 public:
-  explicit ElemInput(QString selector, QString question, QWidget *parent = 0);
+  explicit ElemInput(const QString &getSelector, const QString &getQuestion,
+                     QWidget *parent = 0);
 
-  void addAttrInput (QString question, QString name, QString type = "string",
-                     QString value = "");
-  void addElemInput (QDomElement & elemInputElement);
+  void addAttrInput (const QString &getQuestion, const QString &name,
+                     const QString &type = "string", const QString &value = "");
+  void addElemInput (const QDomElement & elemInputElement);
 
   inline void addAttrInput (AttrInput *attrInput )
   {
@@ -40,13 +31,15 @@ public:
       attrInput->setStyleSheet("QGroupBox { border: 2px solid gray; }");
     }
   }
-  inline void setId (QString id) { _id = id; }
-  inline void setSelector (QString selector) { _selector = selector; }
-  inline QVector <ElemInput *> elemInputs () const { return _elemInputs; }
-  inline QVector <AttrInput*> attrInputs () const { return _attrInputs; }
-  inline QString question () const { return _question; }
-  inline QString selector () const { return _selector; }
-  inline QString id () const { return _id; }
+
+  inline void setId (const QString &id) { _id = id; }
+  inline void setSelector (const QString &selector) { _selector = selector; }
+
+  inline QVector <ElemInput *> getElemInputs () const { return _elemInputs; }
+  inline QVector <AttrInput*> getAttrInputs () const { return _attrInputs; }
+  inline QString getQuestion () const { return _question; }
+  inline QString getSelector () const { return _selector; }
+  inline QString getId () const { return _id; }
 
   ~ElemInput ();
 
@@ -68,12 +61,23 @@ public slots:
   {
     if (elemInput)
     {
-      connect (elemInput, SIGNAL(cloned(ElemInput*)), this, SLOT (addElemInput(ElemInput*)));
-      connect (elemInput, SIGNAL(removeRequested(ElemInput*)), this, SLOT (removeElemInput(ElemInput*)));
+      connect (elemInput, SIGNAL(cloned(ElemInput*)),
+               this, SLOT (addElemInput(ElemInput*)));
+      connect (elemInput, SIGNAL(removeRequested(ElemInput*)),
+               this, SLOT (removeElemInput(ElemInput*)));
       _elemInputs.append(elemInput);
       _elemInputLayout->addWidget(elemInput);
     }
   }
+
+private:
+  QVector <AttrInput *> _attrInputs;
+  QVector <ElemInput *> _elemInputs;
+  QVBoxLayout * _elemInputLayout;
+  QString _question;
+  QString _selector;
+  QString _id;
+  QPushButton *_optionsButton;
 };
 
 #endif // ELEMINPUT_H

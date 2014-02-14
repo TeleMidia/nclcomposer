@@ -3,19 +3,20 @@
 
 #include <QDomDocument>
 
-#include "constants.h"
-#include "selectsparser.h"
+#include "Constants.h"
+#include "SelectsParser.h"
 
 class PDPWriter
 {
-private:
-  static QDomElement parseGapElement (QDomElement&, QDomDocument &);
-  static int mediaCount;
-  static int contextCount;
-  static int switchCount;
-
 public:
   static void writePDP (QString);
+
+private:
+  static QDomElement parseGapElement (const QDomElement&, QDomDocument &);
+
+  static int _mediaCount;
+  static int _contextCount;
+  static int _switchCount;
 };
 
 #endif // PDPWRITER_H

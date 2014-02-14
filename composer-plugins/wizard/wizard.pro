@@ -39,14 +39,14 @@ HEADERS  += \
     src/ElemInput.h \
     src/FileAttrInput.h \
     src/PDPWriter.h \
-    src/SelectsElement.h \    
     src/TemplateParser.h \
     src/WizardChooser.h \
     src/WizardExecutionEngine.h \
     src/WizardGenerator.h \
     src/WSWriter.h \
     src/XMetaWizardMainWindow.h \
-    src/XWizardPage.h
+    src/XWizardPage.h \
+    src/SelectsParser.h
 
 FORMS    += ui/xmetawizardmainwindow.ui \
     ui/wizardchooser.ui

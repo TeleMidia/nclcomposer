@@ -1,18 +1,18 @@
-#include "wizardexecutionengine.h"
+#include "WizardExecutionEngine.h"
 
 #include <QFile>
 #include <QFileInfo>
 #include <QFileDialog>
 #include <QMessageBox>
 #include <QLabel>
-#include "xwizardpage.h"
+#include "XWizardPage.h"
 
 #include <QSet>
 #include <QDebug>
 
 WizardExecutionEngine::WizardExecutionEngine(const QString &wsPath,
                                              QObject *parent):
-    QObject(parent)
+  QObject(parent)
 {
   if(wsPath != "")
     setWS(wsPath);
@@ -55,23 +55,23 @@ WizardExecutionEngine::WizardExecutionEngine(const QString &wsPath,
 
 void WizardExecutionEngine::updateSelection(int currentIndex)
 {
-    _treeView->setCurrentIndex(_treeView->model()->index(currentIndex,0));
-    _progressBar->setValue(currentIndex);
+  _treeView->setCurrentIndex(_treeView->model()->index(currentIndex,0));
+  _progressBar->setValue(currentIndex);
 }
 
 void WizardExecutionEngine::updateCurrentPage()
 {
-    int selectedRow = _treeView->currentIndex().row();
-    int currentPage = _wizard.currentId();
+  int selectedRow = _treeView->currentIndex().row();
+  int currentPage = _wizard.currentId();
 
-    if (selectedRow > currentPage)
-        for (int i = 0; i < selectedRow - currentPage; i++)
-            _wizard.next();
-    else
-        for (int i = 0; i < currentPage - selectedRow; i++)
-            _wizard.back();
+  if (selectedRow > currentPage)
+    for (int i = 0; i < selectedRow - currentPage; i++)
+      _wizard.next();
+  else
+    for (int i = 0; i < currentPage - selectedRow; i++)
+      _wizard.back();
 
-    _progressBar->setValue(selectedRow);
+  _progressBar->setValue(selectedRow);
 }
 
 void WizardExecutionEngine::setWS(const QString &wsPath)
@@ -80,14 +80,17 @@ void WizardExecutionEngine::setWS(const QString &wsPath)
   _inputFile = "";
 
   QFile wsFile (wsPath);
-  if (!wsFile.open(QIODevice::ReadOnly)){
-      QMessageBox::critical(0, "Error", "Error while opening the file " + wsPath + " for reading!");
-      return;
-    }
+  if (!wsFile.open(QIODevice::ReadOnly))
+  {
+    QMessageBox::critical(0, "Error", "Error while opening the file "
+                          + wsPath + " for reading!");
+    return;
+  }
   QDomDocument wsDoc ("wsDoc");
   if (!wsDoc.setContent(&wsFile))
   {
-    QMessageBox::critical(0, "Error", "Error while parsing the file " + wsPath + ".");
+    QMessageBox::critical(0, "Error", "Error while parsing the file "
+                          + wsPath + ".");
     return;
   }
   wsFile.close();
@@ -131,7 +134,9 @@ void WizardExecutionEngine::setWS(const QString &wsPath)
         QString elemInputId = stepChildElement.attribute("id");
         QString elemInputSelector = stepChildElement.attribute("selector");
 
-        ElemInput *elemInput = page->addElemInput(elemInputId, elemInputSelector, elemInputText);
+        ElemInput *elemInput = page->addElemInput(elemInputId,
+                                                  elemInputSelector,
+                                                  elemInputText);
 
         QDomElement attrInput = stepChildElement.firstChildElement("attrInput");
         while (!attrInput.isNull())
@@ -141,17 +146,20 @@ void WizardExecutionEngine::setWS(const QString &wsPath)
           QString attrInputType = attrInput.attribute("type");
           QString attrInputValue = attrInput.attribute("value");
 
-          page->addAttrInput(elemInput, attrInputQuestion, attrInputName, attrInputType, attrInputValue);
+          page->addAttrInput(elemInput, attrInputQuestion, attrInputName,
+                             attrInputType, attrInputValue);
 
           attrInput = attrInput.nextSiblingElement("attrInput");
         }
 
-        QDomElement elemInputRecursiveElement = stepChildElement.firstChildElement("elemInput");
+        QDomElement elemInputRecursiveElement =
+            stepChildElement.firstChildElement("elemInput");
         while (!elemInputRecursiveElement.isNull())
         {
           elemInput->addElemInput(elemInputRecursiveElement);
 
-          elemInputRecursiveElement = elemInputRecursiveElement.nextSiblingElement("elemInput");
+          elemInputRecursiveElement =
+              elemInputRecursiveElement.nextSiblingElement("elemInput");
         }
       }
       else if(stepChildElement.tagName() == "widget" &&
@@ -180,7 +188,8 @@ void WizardExecutionEngine::setInputFile(const QString &inputFile)
 void WizardExecutionEngine::run()
 {
   if(_inputFile == "")
-    _inputFile = QFileDialog::getOpenFileName(0, "Select the file input", QDir::homePath());
+    _inputFile = QFileDialog::getOpenFileName(0, "Select the file input",
+                                              QDir::homePath());
 
   if (_inputFile != "")
     _wizard.exec();
@@ -189,8 +198,10 @@ void WizardExecutionEngine::run()
 void WizardExecutionEngine::createFinalApplication()
 {
   QFile inputPDP (_inputFile);
-  if (!inputPDP.open(QIODevice::ReadOnly)) {
-    QMessageBox::critical(0, "Error", "Error while opening the file " + _inputFile + " for reading!");
+  if (!inputPDP.open(QIODevice::ReadOnly))
+  {
+    QMessageBox::critical(0, "Error", "Error while opening the file " +
+                          _inputFile + " for reading!");
     return;
   }
 
@@ -199,14 +210,16 @@ void WizardExecutionEngine::createFinalApplication()
 
   if (!(pdpDoc.setContent(&inputPDP)))
   {
-    QMessageBox::critical(0, "Error", "Error while parsing the file " + _inputFile + ".");
+    QMessageBox::critical(0, "Error", "Error while parsing the file " +
+                          _inputFile + ".");
     return;
   }
 
   inputPDP.seek(0);
   if (!(finalAppDoc.setContent(&inputPDP)))
   {
-    QMessageBox::critical(0, "Error", "Error while parsing the file " + _inputFile + ".");
+    QMessageBox::critical(0, "Error", "Error while parsing the file " +
+                          _inputFile + ".");
     return;
   }
 
@@ -225,7 +238,8 @@ void WizardExecutionEngine::createFinalApplication()
     int pageId = pageIds.at(i);
 
     XWizardPage *xWizardPage = (XWizardPage *) _wizard.page(pageId);
-    xWizardPage->computeAnswers(finalAppRootElement, pdpRootElement, elementsMarked);
+    xWizardPage->computeAnswers(finalAppRootElement, pdpRootElement,
+                                elementsMarked);
   }
 
   removeUuid(finalAppRootElement);
@@ -243,7 +257,7 @@ void WizardExecutionEngine::createFinalApplication()
   QFile file(filename);
 
   if (file.exists())
-      file.remove();
+    file.remove();
 
   if (file.open(QIODevice::ReadWrite))
   {

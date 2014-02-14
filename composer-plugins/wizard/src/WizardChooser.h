@@ -4,8 +4,9 @@
 #include <QDialog>
 #include <QListWidgetItem>
 
-namespace Ui {
-class wizardchooser;
+namespace Ui
+{
+  class wizardchooser;
 }
 
 class WizardChooser : public QDialog
@@ -19,14 +20,14 @@ public:
   QString getSelectedPath();
 
 public Q_SLOTS:
-  virtual int exec(const QString &path);
+  virtual int exec(const QString &_path);
     
-private:
-  Ui::wizardchooser *ui;
-  QString path;
-
 private slots:
-  void changeDescView(QString);
+  void changeDescView(const QString&);
+
+private:
+  Ui::wizardchooser *_ui;
+  QString _path;
 };
 
 #endif // WIZARDCHOOSER_H

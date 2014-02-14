@@ -2,7 +2,6 @@
 
 #include <QDir>
 #include <QFile>
-#include <stdlib.h>
 #include <QDebug>
 #include <QMessageBox>
 #include <QDomDocument>
@@ -11,26 +10,31 @@
 
 QVector <QString> TemplateParser::_toParse;
 
-QVector<QString> TemplateParser::parse(QString path)
+QVector<QString> TemplateParser::parse(const QString &path)
 {
   QVector <QString> auxPaths;
   QDir dir;
   if (dir.mkdir(DEFAULT_DIR))
   {
-    QMessageBox::information(0, "Directory created", "Directory " + DEFAULT_DIR + " created successfully. The output files will be stored in this folder!", QMessageBox::Ok);
+    QMessageBox::information(0, "Directory created", "Directory " +
+                             DEFAULT_DIR + " created successfully. The output "
+                             "files will be stored in this folder!",
+                             QMessageBox::Ok);
   }
 
   QFile filePath (path);
   if (!filePath.exists())
   {
-    QMessageBox::critical(0, "File not found", "The file '" + path + "'' doesn't exist!");
+    QMessageBox::critical(0, "File not found", "The file '"
+                          + path + "'' doesn't exist!");
   }
   else
   {
     QDomDocument doc ("TAL");
     if (!filePath.open(QIODevice::ReadOnly))
     {
-      QMessageBox::critical(0, "Error", "Unable to open the file '" + path + "'.");
+      QMessageBox::critical(0, "Error", "Unable to open the file '"
+                            + path + "'.");
       return auxPaths;
     }
     if (!doc.setContent(&filePath, true))
@@ -51,26 +55,29 @@ QVector<QString> TemplateParser::parse(QString path)
       if (auxPath != "") auxPaths.append(auxPath);
     }
 
-    QMessageBox::information(0, "", "Aux files generated successfully.", QMessageBox::Ok);
+    QMessageBox::information(0, "", "Aux files generated successfully.",
+                             QMessageBox::Ok);
   }
 
   return auxPaths;
 }
 
-QString TemplateParser::generateAuxFile(QString path)
+QString TemplateParser::generateAuxFile(const QString &path)
 {
   QDomDocument doc ("template");
   QFile file (path);
 
   if (!file.open(QIODevice::ReadOnly))
   {
-    QMessageBox::critical(0, "Error", "Unable to open the file '" + path + "'.");
+    QMessageBox::critical(0, "Error", "Unable to open the file '"
+                          + path + "'.");
     return "";
   }
 
   if (!doc.setContent(&file, true))
   {
-    QMessageBox::critical(0, "Error", "Internal error while parsing '" + path + "' file.");
+    QMessageBox::critical(0, "Error", "Internal error while parsing '"
+                          + path + "' file.");
     return "";
   }
   file.close();
@@ -137,7 +144,8 @@ QString TemplateParser::generateAuxFile(QString path)
   return "";
 }
 
-QDomElement TemplateParser::parseTALComponent(QDomElement &component, QDomDocument &auxDoc)
+QDomElement TemplateParser::parseTALComponent(const QDomElement &component,
+                                              QDomDocument &auxDoc)
 {
   QDomElement auxGap = auxDoc.createElement("gap");
   auxGap.setAttribute("type", component.tagName());

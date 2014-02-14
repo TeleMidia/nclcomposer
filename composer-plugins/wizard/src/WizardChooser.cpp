@@ -1,4 +1,4 @@
-#include "wizardchooser.h"
+#include "WizardChooser.h"
 #include "ui_wizardchooser.h"
 
 #include <QDir>
@@ -7,13 +7,13 @@
 #include <QDomDocument>
 
 WizardChooser::WizardChooser(QWidget *parent, bool modal) :
-    QDialog(parent),
-    ui(new Ui::wizardchooser)
+  QDialog(parent),
+  _ui(new Ui::wizardchooser)
 {
-  ui->setupUi(this);
+  _ui->setupUi(this);
   setModal(modal);
 
-  connect(ui->listWidget,
+  connect(_ui->listWidget,
           SIGNAL(currentTextChanged(QString)),
           this,
           SLOT(changeDescView(QString)));
@@ -21,12 +21,12 @@ WizardChooser::WizardChooser(QWidget *parent, bool modal) :
 
 WizardChooser::~WizardChooser()
 {
-  delete ui;
+  delete _ui;
 }
 
 int WizardChooser::exec(const QString &path)
 {
-  this->path = path;
+  _path = path;
 
   QFileInfo fInfo (path);
   if(fInfo.isDir())
@@ -35,7 +35,7 @@ int WizardChooser::exec(const QString &path)
     dir.setFilter(QDir::Dirs | QDir::NoDotAndDotDot);
     foreach (QString wizardName, dir.entryList())
     {
-      QListWidgetItem *item = new QListWidgetItem(ui->listWidget);
+      QListWidgetItem *item = new QListWidgetItem(_ui->listWidget);
       item->setIcon(QIcon(":/images/empty-icon"));
       item->setText(wizardName);
       // ui->listWidget->addItem(wizardName);
@@ -47,20 +47,20 @@ int WizardChooser::exec(const QString &path)
 QString WizardChooser::getSelectedPath()
 {
   QString selectedPath = "";
-  if(ui->listWidget->selectedItems().size())
-     selectedPath = ui->listWidget->selectedItems().at(0)->text();
+  if(_ui->listWidget->selectedItems().size())
+    selectedPath = _ui->listWidget->selectedItems().at(0)->text();
 
-  return path + selectedPath;
+  return _path + selectedPath;
 }
 
-void WizardChooser::changeDescView(QString textItem)
+void WizardChooser::changeDescView(const QString &textItem)
 {
-  QString selectedPath = path  + textItem;
+  QString selectedPath = _path  + textItem;
   selectedPath += selectedPath.mid(selectedPath.lastIndexOf("/")) + ".html";
 
   QFileInfo finfo(selectedPath);
   if(finfo.exists())
-    ui->webView->load(selectedPath);
+    _ui->webView->load(selectedPath);
   else
-    ui->webView->setHtml("<html><body>Description not found!!</body></html>");
+    _ui->webView->setHtml("<html><body>Description not found!!</body></html>");
 }

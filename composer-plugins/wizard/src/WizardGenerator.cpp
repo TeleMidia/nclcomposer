@@ -1,9 +1,9 @@
-#include "wizardgenerator.h"
+#include "WizardGenerator.h"
 
-#include "pdpwriter.h"
-#include "wswriter.h"
+#include "PDPWriter.h"
+#include "WSWriter.h"
 
-void WizardGenerator::run(QString path)
+void WizardGenerator::run(const QString &path)
 {
   QVector <QString> auxPaths = TemplateParser::parse(path);
   foreach (QString path, auxPaths)

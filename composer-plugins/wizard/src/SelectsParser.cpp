@@ -1,10 +1,10 @@
-#include "SelectsElement.h"
+#include "SelectsParser.h"
 
 #include <QDebug>
 
 SelectsParser::SelectsParser(QString selectsAttr)
 {
-    setSeletsAttributeValue(selectsAttr);
+  setSeletsAttributeValue(selectsAttr);
 }
 
 void SelectsParser::setSeletsAttributeValue(QString selectsAttr)
@@ -29,7 +29,7 @@ void SelectsParser::parse(QString pattern, SelectsElement &element)
   if (pattern != "")
   {
     if (pattern == "*") //*
-        element.setTagname("*");
+      element.setTagname("*");
     else
     {
       int openBracketIndex = pattern.indexOf("[");
@@ -52,13 +52,17 @@ void SelectsParser::parse(QString pattern, SelectsElement &element)
           {
             element.setAttributeName(pattern.left(tileIndex));
             if (closeBracketIndex > equalsIndex)
-              element.setAttributeValue(pattern.mid(equalsIndex + 1, closeBracketIndex - equalsIndex - 1));
+              element.setAttributeValue(pattern.mid(equalsIndex + 1,
+                                                    closeBracketIndex -
+                                                    equalsIndex - 1));
           }
           else //E[attr~=value]
           {
             element.setAttributeName(pattern.left(equalsIndex));
             if (closeBracketIndex > equalsIndex)
-              element.setAttributeValue(pattern.mid(equalsIndex + 1, closeBracketIndex - equalsIndex - 1));
+              element.setAttributeValue(pattern.mid(equalsIndex + 1,
+                                                    closeBracketIndex -
+                                                    equalsIndex - 1));
           }
         }
       }
@@ -75,7 +79,8 @@ void SelectsParser::parse(QString pattern, SelectsElement &element)
           int colonIndex = pattern.indexOf(":");
           if (colonIndex != -1)
           {
-            qDebug () << QString("The value of 'selects' attribute '" + pattern + " isn't supported yet!");
+            qDebug () << QString("The value of 'selects' attribute '" +
+                                 pattern + " isn't supported yet!");
           }
           else
             element.setTagname(pattern);

@@ -6,9 +6,9 @@
 
 #include <QDebug>
 
-int PDPWriter::mediaCount = 0;
-int PDPWriter::contextCount = 0;
-int PDPWriter::switchCount = 0;
+int PDPWriter::_mediaCount = 0;
+int PDPWriter::_contextCount = 0;
+int PDPWriter::_switchCount = 0;
 
 void PDPWriter::writePDP(QString auxPath)
 {
@@ -17,19 +17,22 @@ void PDPWriter::writePDP(QString auxPath)
   QFile auxFile (auxPath);
   if (!auxFile.open(QIODevice::ReadOnly))
   {
-    QMessageBox::critical(0, "Error", "Error while opening the file '" + auxPath + "'.");
+    QMessageBox::critical(0, "Error", "Error while opening the file '"
+                          + auxPath + "'.");
     return;
   }
 
   if (!auxDoc.setContent(&auxFile))
   {
-    QMessageBox::critical(0, "Error", "Error while parsing the file '" + auxPath + "'.");
+    QMessageBox::critical(0, "Error", "Error while parsing the file '" +
+                          auxPath + "'.");
     return;
   }
   auxFile.close();
 
   QDomDocument pdpDocument;
-  pdpDocument.createProcessingInstruction("xml", "version=\"1.0\" encoding=\"utf-8\"");
+  pdpDocument.createProcessingInstruction("xml",
+                                          "version=\"1.0\" encoding=\"utf-8\"");
 
   QDomElement pdpRoot = pdpDocument.createElementNS(NCL_NS, "ncl");
   pdpDocument.appendChild(pdpRoot);
@@ -44,9 +47,11 @@ void PDPWriter::writePDP(QString auxPath)
 
   QDomNodeList gapElements = auxDoc.elementsByTagName("gap");
 
-  for (int i = 0; i < gapElements.size(); i++){
+  for (int i = 0; i < gapElements.size(); i++)
+  {
     QDomElement gapElement = gapElements.at(i).toElement();
     QDomElement pdpElement = parseGapElement(gapElement, pdpDocument);
+
     if (!pdpElement.isNull())
       bodyElement.appendChild(pdpElement);
   }
@@ -61,17 +66,19 @@ void PDPWriter::writePDP(QString auxPath)
 
   QString filename = folder + "/" + pdpName;
   QFile file(filename);
-  if (file.open(QIODevice::ReadWrite)) {
+  if (file.open(QIODevice::ReadWrite))
+  {
     QTextStream stream(&file);
     stream << str;
   }
 
-  PDPWriter::mediaCount = 0;
-  PDPWriter::contextCount = 0;
-  PDPWriter::switchCount = 0;
+  PDPWriter::_mediaCount = 0;
+  PDPWriter::_contextCount = 0;
+  PDPWriter::_switchCount = 0;
 }
 
-QDomElement PDPWriter::parseGapElement(QDomElement &gapElement, QDomDocument& pdpDoc)
+QDomElement PDPWriter::parseGapElement(const QDomElement &gapElement,
+                                       QDomDocument& pdpDoc)
 {
   QDomElement pdpElement;
   QString selectsAttr = gapElement.attribute("selects");
@@ -79,19 +86,20 @@ QDomElement PDPWriter::parseGapElement(QDomElement &gapElement, QDomDocument& pd
   {
     SelectsParser selectsParser (selectsAttr);
 
-    QString tagname = selectsParser.elementTagname();
+    QString tagname = selectsParser.getElementTagname();
 
     if (tagname == "*") tagname = "media";
 
-    QString attributeName = selectsParser.elementAttributeName();
-    QString attributeValue = selectsParser.elementAttributeValue();
+    QString attributeName = selectsParser.getElementAttributeName();
+    QString attributeValue = selectsParser.getElementAttributeValue();
 
     if (tagname != "")
     {
       pdpElement = pdpDoc.createElement(tagname);
       if (tagname == "media")
       {
-        pdpElement.setAttribute("id", QString ("m_" + QString::number(mediaCount++)));
+        pdpElement.setAttribute("id", QString ("m_" +
+                                               QString::number(_mediaCount++)));
         pdpElement.setAttribute("src", "");
 
         QDomElement propertyElement = pdpDoc.createElement("property");
@@ -102,9 +110,13 @@ QDomElement PDPWriter::parseGapElement(QDomElement &gapElement, QDomDocument& pd
 
       }
       else if (tagname == "context")
-        pdpElement.setAttribute("id", QString ("c_" + QString::number(contextCount++)));
+        pdpElement.setAttribute("id", QString ("c_" +
+                                               QString::number(
+                                                 _contextCount++)));
       else if (tagname == "switch")
-        pdpElement.setAttribute("id", QString ("s_" + QString::number(switchCount++)));
+        pdpElement.setAttribute("id", QString ("s_" +
+                                               QString::number(
+                                                 _switchCount++)));
 
       if (attributeName != "")
         pdpElement.setAttribute(attributeName, attributeValue);

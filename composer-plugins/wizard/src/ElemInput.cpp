@@ -5,13 +5,14 @@
 #include <QAction>
 #include <QLabel>
 
-#include "defaultattrinput.h"
-#include "fileattrinput.h"
-#include "comboattrinput.h"
-#include "constants.h"
+#include "DefaultAttrInput.h"
+#include "FileAttrInput.h"
+#include "ComboAttrInput.h"
+#include "Constants.h"
 
-ElemInput::ElemInput (QString selector, QString title, QWidget *parent)
-    : QFrame(parent)
+ElemInput::ElemInput (const QString &selector, const QString &title,
+                      QWidget *parent)
+  : QFrame(parent)
 {
   setFrameShape( QFrame::Box );
 
@@ -40,7 +41,8 @@ ElemInput::ElemInput (QString selector, QString title, QWidget *parent)
   _optionsButton->setFixedWidth(20);
   _optionsButton->setFixedHeight(20);
 
-  connect (menu, SIGNAL(triggered(QAction*)), this, SLOT(menuSelected(QAction*)));
+  connect (menu, SIGNAL(triggered(QAction*)),
+           this, SLOT(menuSelected(QAction*)));
 
   setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
 
@@ -58,7 +60,8 @@ void ElemInput::menuSelected(QAction *action)
     notifyRemove();
 }
 
-void ElemInput::addAttrInput(QString question, QString name, QString type, QString value)
+void ElemInput::addAttrInput(const QString &question, const QString &name,
+                             const QString &type, const QString &value)
 {
   AttrInput *attrInput = 0;
 
@@ -79,10 +82,15 @@ ElemInput *ElemInput::clone()
   foreach (AttrInput *attrInput, _attrInputs)
     clone->addAttrInput(attrInput->clone());
 
-  foreach (ElemInput *elemInput, _elemInputs){
-    disconnect (elemInput, SIGNAL(cloned(ElemInput*)), this, SLOT (addElemInput(ElemInput*)));
+  foreach (ElemInput *elemInput, _elemInputs)
+  {
+    disconnect (elemInput, SIGNAL(cloned(ElemInput*)),
+                this, SLOT (addElemInput(ElemInput*)));
+
     clone->addElemInput(elemInput->clone());
-    connect (elemInput, SIGNAL(cloned(ElemInput*)), this, SLOT (addElemInput(ElemInput*)));
+
+    connect (elemInput, SIGNAL(cloned(ElemInput*)),
+             this, SLOT (addElemInput(ElemInput*)));
   }
 
   emit cloned(clone);
@@ -90,10 +98,10 @@ ElemInput *ElemInput::clone()
   return (clone);
 }
 
-void ElemInput::addElemInput(QDomElement &elemInputElement)
+void ElemInput::addElemInput(const QDomElement &elemInputElement)
 {
-    QString elemInputText = "";
-    QDomNodeList childNodes = elemInputElement.childNodes();
+  QString elemInputText = "";
+  QDomNodeList childNodes = elemInputElement.childNodes();
   for (int i = 0; i < childNodes.size(); i++)
   {
     QDomNode node = childNodes.at(i);
@@ -114,48 +122,52 @@ void ElemInput::addElemInput(QDomElement &elemInputElement)
     QString attrInputType = attrInput.attribute("type");
     QString attrInputValue = attrInput.attribute("value");
 
-    elemInput->addAttrInput(attrInputQuestion, attrInputName, attrInputType, attrInputValue);
+    elemInput->addAttrInput(attrInputQuestion, attrInputName,
+                            attrInputType, attrInputValue);
 
     attrInput = attrInput.nextSiblingElement("attrInput");
   }
 
   addElemInput(elemInput);
 
-  QDomElement elemInputRecursiveElement = elemInputElement.firstChildElement("elemInput");
+  QDomElement elemInputRecursiveElement =
+      elemInputElement.firstChildElement("elemInput");
+
   while (!elemInputRecursiveElement.isNull())
   {
     elemInput->addElemInput(elemInputRecursiveElement);
 
-    elemInputRecursiveElement = elemInputRecursiveElement.nextSiblingElement("elemInput");
+    elemInputRecursiveElement =
+        elemInputRecursiveElement.nextSiblingElement("elemInput");
   }
 }
 
 void ElemInput::removeElemInput(ElemInput *elemInput)
 {
-    if (elemInput)
-    {
-        for (int i = 0; i < _elemInputs.size(); i++)
-            if (_elemInputs.at(i) == elemInput){
-                _elemInputs.remove(i);
-                break;
-            }
+  if (elemInput)
+  {
+    for (int i = 0; i < _elemInputs.size(); i++)
+      if (_elemInputs.at(i) == elemInput)
+      {
+        _elemInputs.remove(i);
+        break;
+      }
 
-        int count = _elemInputLayout->count();
-        for (int i = 0; i < count; i++)
-        {
-            QLayoutItem *item = _elemInputLayout->itemAt(i);
-            if (item && item->widget() == elemInput)
-            {
-                _elemInputLayout->removeItem(item);
-                delete item;
-                elemInput->deleteLater();
-                break;
-            }
-        }
+    int count = _elemInputLayout->count();
+    for (int i = 0; i < count; i++)
+    {
+      QLayoutItem *item = _elemInputLayout->itemAt(i);
+      if (item && item->widget() == elemInput)
+      {
+        _elemInputLayout->removeItem(item);
+        delete item;
+        elemInput->deleteLater();
+        break;
+      }
     }
+  }
 }
 
 ElemInput::~ElemInput()
-{
-
+{  
 }

@@ -1,7 +1,7 @@
 #ifndef WIZARDEXECUTIONENGINE_H
 #define WIZARDEXECUTIONENGINE_H
 
-#include "constants.h"
+#include "Constants.h"
 #include <QWizard>
 #include <QDomDocument>
 #include <QTreeWidget>
@@ -10,19 +10,9 @@
 class WizardExecutionEngine : public QObject
 {
   Q_OBJECT
-
-private:
-  QWizard _wizard;
-  QTreeWidget *_treeView;
-
-  QString _wsPath;
-  QString _inputFile;
-  QProgressBar *_progressBar;
-
-  void removeUuid(QDomElement& rootElement);
-
 public:
-  explicit WizardExecutionEngine(const QString &wsPath = "", QObject *parent  = 0);
+  explicit WizardExecutionEngine(const QString &wsPath = "",
+                                 QObject *parent  = 0);
 
   void setWS (const QString&);
   void setInputFile (const QString&);
@@ -33,6 +23,16 @@ public slots:
   void createFinalApplication ();
   void updateSelection (int);
   void updateCurrentPage();
+
+private:
+  void removeUuid(QDomElement& rootElement);
+  QWizard _wizard;
+
+  QTreeWidget *_treeView;
+
+  QString _wsPath;
+  QString _inputFile;
+  QProgressBar *_progressBar;
 };
 
 #endif // WIZARDEXECUTIONENGINE_H
