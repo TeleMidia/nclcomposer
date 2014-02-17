@@ -9,6 +9,7 @@
  */
 #include "util/ComposerSettings.h"
 
+#include <QApplication>
 #include <QStringList>
 #include <QDir>
 
