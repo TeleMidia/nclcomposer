@@ -4,12 +4,6 @@ QT += \
   widgets \
   xml
 
-TARGET = \
-  ncl-structural-view
-
-DESTDIR = \
-  bin/
-
 INCLUDEPATH += \
   src/ \
   src/core/ \
