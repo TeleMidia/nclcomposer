@@ -12,11 +12,10 @@ SUBDIRS = \
     properties-view \
     ncl-layout-view \
     ncl-structural-view \
-    qnclstructural/deps/libqncg/libqncg.pro \
-    qnclstructural/qnst.pro \
-    validator/validator.pro \
+    ncl-structural-view-next \
+    validator/ \
     ncl-rules-view \
-    media-preview/mediapreview.pro
+    media-preview
 #   clube-ncl
 
 contains(FORCERELEASE, true)
@@ -26,8 +25,8 @@ contains(FORCERELEASE, true)
 
   # These plug-ins are still experimental
   #  (and must not be present in the release):
-  SUBDIRS -= media-preview/mediapreview.pro
-  SUBDIRS -= nclstructural-20/nclstructural.pro
+  SUBDIRS -= media-preview
+  SUBDIRS -= ncl-structural-view-next
 }
 
 macx {
