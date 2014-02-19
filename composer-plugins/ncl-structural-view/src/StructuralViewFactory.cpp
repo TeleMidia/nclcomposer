@@ -48,5 +48,5 @@ QString StructuralViewFactory::id() const
 }
 
 #if QT_VERSION < 0x050000
-Q_EXPORT_PLUGIN2(StructuralView, StructuralViewFactory)
+Q_EXPORT_PLUGIN2(ncl-structural-view, StructuralViewFactory)
 #endif

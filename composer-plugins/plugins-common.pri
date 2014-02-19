@@ -95,8 +95,7 @@ contains(FORCERELEASE, true) {
 else {
   TARGET=$${DEFAULT_TARGET}_d
 }
-message ($${TARGET}D)
 
 INSTALLS += target
-DESTDIR = bin
+DESTDIR = $$PWD/build
 #message("Building to $${TARGET}")
