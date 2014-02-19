@@ -991,8 +991,7 @@ void LayoutRegionBase::removeRegion(LayoutRegion* region)
 
           // \fixme seg fault on Outline
           QMap<QString, QString> noChangeAtts;
-
-          requestRegionChange(region,noChangeAtts);
+          requestRegionChange(region, noChangeAtts);
 
           emit requestRegionSelection(region);
         }

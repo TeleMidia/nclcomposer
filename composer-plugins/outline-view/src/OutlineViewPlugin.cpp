@@ -146,11 +146,19 @@ void OutlineViewPlugin::onEntityChanged(QString pluginID, Entity * entity)
     attrs[it.key()] = it.value();
   }
 
-  _idToItem[entity->getUniqueId()]->setTextColor(0, Qt::black);
-  _idToItem[entity->getUniqueId()]->setToolTip(0, "");
+  // \fixme This "if" should not be here. It is here because after adding an
+  // entity, layout view change their content (before outline add the region)
+  // so it will receive an change before the added. CORE should handle that to
+  // the operations be received in order.
+  if(_idToItem.contains(entity->getUniqueId()))
+  {
+    _idToItem[entity->getUniqueId()]->setTextColor(0, Qt::black);
+    _idToItem[entity->getUniqueId()]->setToolTip(0, "");
 
-  _window->updateItem(_idToItem[entity->getUniqueId()], entity->getType(),
-      attrs);
+    _window->updateItem( _idToItem[entity->getUniqueId()],
+                         entity->getType(),
+                         attrs );
+  }
 
   // \todo This must be incremental
   clearErrorMessages();
