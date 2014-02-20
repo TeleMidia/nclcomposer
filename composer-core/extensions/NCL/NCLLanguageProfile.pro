@@ -50,7 +50,9 @@ else:win32 {
 macx:HEADERS_PATH = $$INSTALLBASE/ComposerCore.framework
 else:unix:HEADERS_PATH = $$INSTALLBASE/include/composer
 
-INCLUDEPATH += ../../core/include
+INCLUDEPATH += \
+    $$PWD/../../core/src \
+    $$INSTALLBASE/include/composer
 
 headers_nclprofile.files += NCLLanguageProfile.h\
                             NCLStructure.h \
@@ -80,17 +82,19 @@ else:win32 {
 
 DEFINES += NCLLANGUAGEPROFILE_LIBRARY
 
-SOURCES += NCLLanguageProfile.cpp \
-           NCLDocumentParser.cpp \
-           NCLStructure.cpp
+SOURCES += \
+    NCLLanguageProfile.cpp \
+    NCLDocumentParser.cpp \
+    NCLStructure.cpp
 
+HEADERS +=  \
+    NCLLanguageProfile.h \
+    NCLLanguageProfile_global.h \
+    NCLDocumentParser.h \
+    NCLStructure.h
 
-HEADERS +=  NCLLanguageProfile.h \
-            NCLLanguageProfile_global.h \
-            NCLDocumentParser.h \
-            NCLStructure.h
-
-OTHER_FILES += nclLanguageProfile.json \
+OTHER_FILES += \
+    nclLanguageProfile.json \
     nclLanguageProfile.json
 
 INSTALLS += target headers_nclprofile

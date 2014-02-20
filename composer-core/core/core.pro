@@ -63,36 +63,42 @@ SOURCES += \
     # src/model/Model.cpp
 
 HEADERS_MAN += \
-    include/modules/PluginControl.h \
-    include/modules/MessageControl.h \
-    include/modules/LanguageControl.h \
-    include/modules/ProjectControl.h \
-    include/modules/ProjectReader.h
+    src/modules/PluginControl.h \
+    src/modules/MessageControl.h \
+    src/modules/LanguageControl.h \
+    src/modules/ProjectControl.h \
+    src/modules/ProjectReader.h
 
 HEADERS_EXTENSIONS += \
-    include/extensions/ILanguageProfile.h \
-    include/extensions/IDocumentParser.h \
-    include/extensions/IPlugin.h \
-    include/extensions/IPluginFactory.h
+    src/extensions/ILanguageProfile.h \
+    src/extensions/IDocumentParser.h \
+    src/extensions/IPlugin.h \
+    src/extensions/IPluginFactory.h
 
 HEADERS_UTIL += \
-    include/util/ComposerCoreControl_global.h \
-    include/util/Singleton.h \
-    include/util/AttributeReferences.h \
-    include/util/Utilities.h \
-    include/util/ComposerSettings.h \
-    include/util/Commands.h
+    src/util/ComposerCoreControl_global.h \
+    src/util/Singleton.h \
+    src/util/AttributeReferences.h \
+    src/util/Utilities.h \
+    src/util/ComposerSettings.h \
+    src/util/Commands.h
 
-HEADERS_EXCEPTION +=  include/model/exception/EntityNotFound.h \
-    include/model/exception/ParentNotFound.h \
-    include/model/exception/CreationFailed.h
+HEADERS_EXCEPTION +=  \
+    src/model/exception/EntityNotFound.h \
+    src/model/exception/ParentNotFound.h \
+    src/model/exception/CreationFailed.h
 
-HEADERS_MODEL += include/model/Entity.h \
-    include/model/Project.h
+HEADERS_MODEL += \
+    src/model/Entity.h \
+    src/model/Project.h
     #include/model/Model.h
 
-HEADERS = $$HEADERS_MAN $$HEADERS_EXTENSIONS $$HEADERS_UTIL \
-          $$HEADERS_EXCEPTION $$HEADERS_MODEL
+HEADERS = \
+    $$HEADERS_MAN \
+    $$HEADERS_EXTENSIONS \
+    $$HEADERS_UTIL \
+    $$HEADERS_EXCEPTION \
+    $$HEADERS_MODEL
 
 
 headers_man.files = $$HEADERS_MAN
@@ -101,7 +107,7 @@ headers_util.files = $$HEADERS_UTIL
 headers_exception.files = $$HEADERS_EXCEPTION
 headers_model.files = $$HEADERS_MODEL
 
-INCLUDEPATH += include
+INCLUDEPATH += . ./src
 
 macx { 
     QMAKE_FRAMEWORK_BUNDLE_NAME = $$TARGET
@@ -142,3 +148,4 @@ else:unix {
     INSTALLS += headers_man headers_util headers_model \
                 headers_extensions headers_exception target
 }
+
