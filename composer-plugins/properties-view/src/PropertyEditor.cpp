@@ -76,8 +76,8 @@ void PropertyEditor::setTagname(QString tagname, QString name)
 {
   this->currentTagname = tagname;
   //this->currentFilterString = "";
-  ComboBoxDelegate *delegate = qobject_cast<ComboBoxDelegate *>
-      (ui->tableWidget->itemDelegate());
+  ComboBoxDelegate *delegate =
+      qobject_cast<ComboBoxDelegate *> (ui->tableWidget->itemDelegate());
 
   if(delegate)
     delegate->setCurrentTagname(tagname);

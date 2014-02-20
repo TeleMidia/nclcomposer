@@ -26,6 +26,7 @@
 #include <QItemDelegate>
 #include <QStyledItemDelegate>
 #include <QComboBox>
+#include <QTextEdit>
 
 #include <NCLStructure.h>
 using namespace  composer::language;
@@ -49,18 +50,28 @@ public:
   {
     if(index.column() == 1)
     {
-      QComboBox *edit = new QComboBox(parent);
-      edit->setEditable(true);
-
       // \todo References
       NCLStructure *structure = NCLStructure::getInstance();
       QString datatype = structure->
           getAttributeDatatype(currentTagname,
                                tableWidget->item(index.row(), 0)->text());
 
-      edit->addItems( structure->getDatatypeDefaultSuggestions(datatype) );
 
-      return edit;
+      QStringList defaultSuggestions =
+          structure->getDatatypeDefaultSuggestions(datatype);
+      if(defaultSuggestions.size())
+      {
+        QComboBox *comboEdit = new QComboBox(parent);
+        comboEdit->setEditable(true);
+        comboEdit->addItems( defaultSuggestions );
+
+        return comboEdit;
+      }
+      else
+      {
+        QWidget *textEdit = new QTextEdit(parent);
+        return textEdit;
+      }
     }
     else
     {
@@ -73,22 +84,35 @@ public:
     if(index.column() == 1)
     {
       QComboBox *combobox = qobject_cast<QComboBox *> (editor);
-      combobox->setEditText(index.data().toString());
+      if(combobox)
+        combobox->setEditText(index.data().toString());
+      else
+      {
+        QTextEdit *textEdit = qobject_cast <QTextEdit *> (editor);
+        if(textEdit)
+          textEdit->setText(index.data().toString());
+      }
     }
     else
     {
       QStyledItemDelegate::setEditorData(editor, index);
     }
-
   }
+
   void setModelData(QWidget *editor, QAbstractItemModel *model,
                     const QModelIndex &index) const
   {
     if (index.column() == 1)
     {
       QComboBox *combobox = qobject_cast<QComboBox *> (editor);
-
-      model->setData(index, qVariantFromValue(combobox->currentText()));
+      if(combobox)
+        model->setData(index, qVariantFromValue(combobox->currentText()));
+      else
+      {
+        QTextEdit *textEdit = qobject_cast <QTextEdit *> (editor);
+        if(textEdit)
+          model->setData(index, qVariantFromValue(textEdit->toPlainText()));
+      }
     }
     else
     {
