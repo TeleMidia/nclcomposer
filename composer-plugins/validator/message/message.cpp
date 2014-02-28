@@ -1,78 +1,92 @@
 /*
- * message.cpp
+ * Copyright 2011-2013 Laws/UFMA.
  *
- *  Created on: Aug 9, 2011
- *      Author: Rodrigo Costa
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2.1 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this library. If not, see
+ * <http://www.gnu.org/licenses/>.
  */
-
 #include "message.h"
 
-namespace nclValidator {
-
-Message::Message (string language){
-	_language = language;
+Message::Message (string language)
+{
+  _language = language;
 
   string fileName = ":/config/" + language + "_messages.txt";
   //	ifstream messageFile;
 
-//	messageFile.open(fileName.c_str(), ifstream::in);
-        QFile messageFile (QString::fromStdString(fileName));
-        if (!messageFile.exists())
-            messageFile.setFileName(":/config/en_messages.txt");
+  //	messageFile.open(fileName.c_str(), ifstream::in);
+  QFile messageFile (QString::fromStdString(fileName));
+  if (!messageFile.exists())
+    messageFile.setFileName(":/config/en_messages.txt");
 
-        messageFile.open(QIODevice::ReadOnly | QIODevice::Text);
+  messageFile.open(QIODevice::ReadOnly | QIODevice::Text);
 
-//	char line [256];
-        std::string line;
-        while (!messageFile.atEnd()){
-//		messageFile.getline(line, 256);
-                line = QString (messageFile.readLine()).toStdString();
+  std::string line;
+  while (!messageFile.atEnd())
+  {
+    line = QString (messageFile.readLine()).toStdString();
 
-		int i;
-                for (i = 0; i < line.size(); i++){
-			if (line[i] != ' ')
-				break;
-		}
+    int i;
+    for (i = 0; i < line.size(); i++)
+    {
+      if (line[i] != ' ')
+        break;
+    }
 
-		if (line[i] == '#')
-			continue;
+    if (line[i] == '#')
+      continue;
 
-                stringstream s (&line[0] + i);
+    stringstream s (&line[0] + i);
 
-		int index;
-		string _;
-		string message = "";
-		string str;
+    int index;
+    string _;
+    string message = "";
+    string str;
 
-		s >> index >> _;
+    s >> index >> _;
 
-		while (s >> str)
-			message += str + " ";
+    while (s >> str)
+      message += str + " ";
 
-		if (message.size()){
-			_messages [index] = message;
-//			cout << message << endl;
-		}
-	}
+    if (message.size())
+    {
+      _messages [index] = message;
+      //			cout << message << endl;
+    }
+  }
 
-        messageFile.close();
+  messageFile.close();
 }
 
-string Message::createMessage(int messageId, int num_args, const char * first, ...){
+string Message::createMessage(int messageId, int num_args, const char * first,
+															...)
+{
 
 	va_list argList;
-        const char * str = first;
+	const char * str = first;
 	vector <string> args;
 
 	va_start(argList, str);
 
-	for (int i=0; i < num_args; i++){
+	for (int i=0; i < num_args; i++)
+	{
 		args.push_back(str);
 		str = va_arg(argList, char *);
 	}
 	va_end(argList);
 
-	if (_messages.count(messageId)){
+	if (_messages.count(messageId))
+	{
 		string message = _messages[messageId];
 
 		for (int i=0; i < args.size(); i++)
@@ -82,8 +96,4 @@ string Message::createMessage(int messageId, int num_args, const char * first, .
 	}
 
 	return "";
-
-
-}
-
 }

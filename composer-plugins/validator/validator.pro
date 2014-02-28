@@ -6,9 +6,6 @@
 
 include (../plugins-common.pri)
 
-#CONFIG += \
-#  libboost
-
 libboost {
   message("[!] Compiling with libboost")
 
@@ -42,7 +39,8 @@ SOURCES += \
     validation/structuralvalidation.cpp \
     validatortreewidgetitem.cpp \
     nclmodel/textualparser.cpp \
-    nclmodel/connectorparser.cpp
+    nclmodel/connectorparser.cpp \
+    main.cpp
 
 HEADERS  += \
     ValidatorPlugin.h \

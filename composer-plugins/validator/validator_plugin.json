@@ -4,10 +4,10 @@
   "compatVersion": "0.2",
 
   "vendor": "Laws Lab",
-  "copyright": "LAWS/UFMA",
+  "copyright": "Laws/UFMA",
   "license": "LGPL",
 
-  "description": "Validates NCL documents.",
+  "description": "Validator View validates the current document being edited and shows error messages.",
   "url": "http://composer.telemidia.puc-rio.br/validator",
 
   "category": "NCL"

@@ -1,121 +1,118 @@
+/*
+ * Copyright 2011-2013 Laws/UFMA.
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2.1 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this library. If not, see
+ * <http://www.gnu.org/licenses/>.
+ */
+
 #include "composerncladapter.h"
 
 ComposerNCLAdapter::ComposerNCLAdapter()
 {
-    GlobalSettings settings;
-    settings.beginGroup("languages");
-    language = settings.value("currentLanguage",QString("en")).toString();
-    settings.endGroup();
+  GlobalSettings settings;
+  settings.beginGroup("languages");
+  language = settings.value("currentLanguage",QString("en")).toString();
+  settings.endGroup();
 }
 
 void ComposerNCLAdapter::addElement(Entity *entity)
 {
+  if (!entity)
+    return;
 
-    if (!entity){
-        return;
-    }
+  std::vector <Attribute> attributes =
+      createVectorAttribute(entity);
 
+  if (!idToVirtualId.count(entity->getParentUniqueId()))
+  {
+    Entity *parent = entity->getParent();
 
-    std::vector <nclValidator::Attribute> attributes = createVectorAttribute(entity);
+    if (parent->getType() != "document")
+      addElement(parent);
+  }
 
-//    if (entity->getType() == "importBase"){
-//        for (int i = 0; i < attributes.size(); i++)
-//            if (attributes[i].name() == "documentURI"){
-//                QString fileName = QString::fromStdString(attributes[i].value ());
+  virtualId virtualId =
+      nclModel.addElement(entity->getType().toStdString(), attributes);
 
-//                fprintf (stderr, "\nIMPORTURI: %s\n", fileName.toStdString().c_str());
-//            }
-//    }
+  if (virtualId != "")
+    idToVirtualId.insert(entity->getUniqueId(), virtualId);
 
-    if (!idToVirtualId.count(entity->getParentUniqueId())){
-        Entity *parent = entity->getParent();
+  if (entity->getParent()->getType() != "document")
+  {
+    nclModel.addChild(idToVirtualId[entity->getParentUniqueId()], virtualId);
+  }
 
-        if (parent->getType() != "document")
-            addElement(parent);
-    }
-
-    nclValidator::virtualId virtualId = nclModel.addElement(entity->getType().toStdString(), attributes);
-
-    if (virtualId != "")
-        idToVirtualId.insert(entity->getUniqueId(), virtualId);
-
-    if (entity->getParent()->getType() != "document"){
-        nclModel.addChild(idToVirtualId[entity->getParentUniqueId()], virtualId);
-    }
-
-    nclValidator::ModelElement *el = nclModel.element(virtualId);
-    if (el){
-        el->setData(entity);
-//        el->setComposerModelId(entity->getUniqueId());
-    }
-
-    ////qDebug() << "**********Validator: End addElement";
+  ModelElement *el = nclModel.element(virtualId);
+  if (el)
+  {
+    el->setData(entity);
+  }
 }
 
 void ComposerNCLAdapter::changeElement(Entity * entity)
-{
-    //qDebug() << "****************************Start editElement()";
+{  
+  virtualId virtualId = idToVirtualId[entity->getUniqueId()];
 
-    nclValidator::virtualId virtualId = idToVirtualId[entity->getUniqueId()];
+  if (virtualId == "")
+    return;
 
-    if (virtualId == "")
-        return;
+  std::vector <Attribute> attributes =
+      createVectorAttribute(entity);
 
-    std::vector <nclValidator::Attribute> attributes = createVectorAttribute(entity);
-
-    nclModel.editElement(virtualId, attributes);
-    //qDebug() << "****************************End editElement()";
+  nclModel.editElement(virtualId, attributes);
 }
 
 void ComposerNCLAdapter::removeElement(QString entityID)
-{
-    //qDebug() << "****************************Start removeElement()";
+{  
+  virtualId virtualId = idToVirtualId [entityID];
 
-    nclValidator::virtualId virtualId = idToVirtualId [entityID];
-
-    if (virtualId != ""){
-        //qDebug () << "remove!";
-        nclModel.removeElement(virtualId);
-    }
-
-    //qDebug() << "****************************End removeElement()";
+  if (virtualId != "")
+  {
+    nclModel.removeElement(virtualId);
+  }
 }
 
 std::vector <std::pair<void *, std::string> > ComposerNCLAdapter::validate()
 {
-    //qDebug() << "**********Validator: Begin validate";
+  std::vector<std::pair<void *, std::string> > msgs =
+      Validator::validate(nclModel, language.toStdString());
 
-    std::vector<std::pair<void *, std::string> > msgs = nclValidator::Validator::validate(nclModel, language.toStdString());
+  nclModel.clearMarkedElements();
 
-    ////qDebug() << "**********Validator: End validate";
-
-    nclModel.clearMarkedElements();
-
-    return msgs;
+  return msgs;
 }
 
-std::vector <nclValidator::Attribute> ComposerNCLAdapter::createVectorAttribute(Entity * entity)
+std::vector <Attribute>
+ComposerNCLAdapter::createVectorAttribute(Entity * entity)
 {
-    QMap <QString, QString>::iterator begin;
-    QMap <QString, QString>::iterator end;
+  QMap <QString, QString>::iterator begin;
+  QMap <QString, QString>::iterator end;
 
-    entity->getAttributeIterator(begin, end);
+  entity->getAttributeIterator(begin, end);
 
-    std::vector <nclValidator::Attribute> attributes;
+  std::vector <Attribute> attributes;
 
-    while (begin != end){
-        QString name = begin.key();
-        QString value = begin.value();
+  while (begin != end)
+  {
+    QString name = begin.key();
+    QString value = begin.value();
 
-        ////qDebug() << name << " " << value;
+    Attribute attr (name.toStdString(), value.toStdString());
 
-        nclValidator::Attribute attr (name.toStdString(), value.toStdString());
+    attributes.push_back(attr);
+    begin++;
+  }
 
-//        std::cout << attr.name() << " " << attr.value();
-
-        attributes.push_back(attr);
-        begin++;
-    }
-
-    return attributes;
+  return attributes;
 }

@@ -1,8 +1,19 @@
 /*
- * Validator.cpp
+ * Copyright 2011-2013 Laws/UFMA.
  *
- *  Created on: 29 Aug 2011
- *      Author: rios
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2.1 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this library. If not, see
+ * <http://www.gnu.org/licenses/>.
  */
 
 #include "Validator.h"
@@ -12,55 +23,52 @@
 #include <QDebug>
 #include <set>
 
+vector<pair<void *, string> >Validator::validate(Model &model,
+                                                 string messagesLanguage = "en")
+{
+  vector<pair<void *, string> > msgs;
 
-namespace nclValidator {
+  set<virtualId> markeds = model.markedElements(),
+      affecteds = model.affectedElements(),
+      errorInLastPass = model.elementsWithErrorInLastPass();
 
-vector<pair<void *, string> >Validator::validate(Model &model, string messagesLanguage = "en")
- {
+  Message messageFactory (messagesLanguage);
+  set<virtualId>::iterator vIds = errorInLastPass.begin();
 
-    vector<pair<void *, string> > msgs;
+  model.clearElementsWithErrorInLastPass();
 
-    set<virtualId> markeds = model.markedElements(),
-                   affecteds = model.affectedElements(),
-                   errorInLastPass = model.elementsWithErrorInLastPass();
-
-    Message messageFactory (messagesLanguage);
-//    //qDebug () << "Begin errorInLastPass";
-    set<virtualId>::iterator vIds = errorInLastPass.begin();
-
-    model.clearElementsWithErrorInLastPass();
-
-    for (ModelElement *el = NULL; vIds != errorInLastPass.end(); ++vIds) {
-        el = model.element(*vIds);
-        if (el){
-            StructuralValidation::structuralValidation (*el, model, msgs, messageFactory);
-            SemanticValidation::semanticValidation (*el, model, msgs, messageFactory);
-        }
+  for (ModelElement *el = NULL; vIds != errorInLastPass.end(); ++vIds)
+  {
+    el = model.element(*vIds);
+    if (el)
+    {
+      StructuralValidation::structuralValidation (*el, model, msgs,
+                                                  messageFactory);
+      SemanticValidation::semanticValidation (*el, model, msgs, messageFactory);
     }
+  }
 
-    vIds = markeds.begin();
-    //qDebug () << "Begin markeds";
-    for (ModelElement *el = NULL; vIds != markeds.end(); ++vIds) {
-        el = model.element(*vIds);
+  vIds = markeds.begin();
+  for (ModelElement *el = NULL; vIds != markeds.end(); ++vIds)
+  {
+    el = model.element(*vIds);
 
-        if (el){
-            StructuralValidation::structuralValidation (*el, model, msgs, messageFactory);
-            SemanticValidation::semanticValidation (*el, model, msgs, messageFactory);
-        }
+    if (el)
+    {
+      StructuralValidation::structuralValidation (*el, model, msgs,
+                                                  messageFactory);
+      SemanticValidation::semanticValidation (*el, model, msgs, messageFactory);
     }
-    //qDebug () << "End markeds";
-    vIds = affecteds.begin();
+  }
+  vIds = affecteds.begin();
 
-    //qDebug () << "Begin affecteds";
-    for (ModelElement *el = NULL ; vIds != affecteds.end(); ++vIds) {
-        el = model.element(*vIds);
+  for (ModelElement *el = NULL ; vIds != affecteds.end(); ++vIds)
+  {
+    el = model.element(*vIds);
 
-        if (el)
-            SemanticValidation::semanticValidation (*el, model, msgs, messageFactory);
-    }
-    //qDebug () << "End affecteds";
-    return msgs;
-
+    if (el)
+      SemanticValidation::semanticValidation (*el, model, msgs, messageFactory);
+  }
+  return msgs;
 }
 
-}

@@ -1,60 +1,69 @@
 /*
- * ReferenceStructure.cpp
+ * Copyright 2011-2013 Laws/UFMA.
  *
- *  Created on: 09/08/2011
- *      Author: Mária Gonçalves
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2.1 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this library. If not, see
+ * <http://www.gnu.org/licenses/>.
  */
 
 #include "ReferenceStructure.h"
 
-namespace nclValidator {
 
-ReferenceStructure::ReferenceStructure(string _from, string _fromAtt, string _to,
-		string _toAtt, string _perspective, string _perspectiveAtt)
+ReferenceStructure::ReferenceStructure(string _from, string _fromAtt,
+																			 string _to, string _toAtt,
+																			 string _perspective,
+																			 string _perspectiveAtt)
 {
 	from = _from;
 	fromAtt = _fromAtt;
 	to = _to;
 	toAtt = _toAtt;
 	perspective = _perspective;
-        perspectiveAtt = _perspectiveAtt;
+	perspectiveAtt = _perspectiveAtt;
 }
 
 
 string ReferenceStructure::getFrom() const
 {
-    return from;
+	return from;
 }
 
 string ReferenceStructure::getFromAtt() const
 {
-    return fromAtt;
+	return fromAtt;
 }
 
 
 string ReferenceStructure::getTo() const
 {
-    return to;
+	return to;
 }
 
 string ReferenceStructure::getToAtt() const
 {
-    return toAtt;
+	return toAtt;
 }
 
 
 string ReferenceStructure::getPerspective() const
 {
-    return perspective;
+	return perspective;
 }
 
 
 string ReferenceStructure::getPerspectiveAtt() const
 {
-    return perspectiveAtt;
+	return perspectiveAtt;
 }
-
 
 ReferenceStructure::~ReferenceStructure() {}
-
-}
