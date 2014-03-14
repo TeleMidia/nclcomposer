@@ -68,8 +68,12 @@ public:
 
   void changeResolution(int w, int h);
 
+
   bool isGridVisible();
   void setGridVisible(bool active);
+  void updateSafeAreaPos();
+  bool isSafeAreaVisible();
+  void setSafeAreaVisible(bool active);
 
 public slots:
   void performRegion();
@@ -86,16 +90,13 @@ signals:
                              const QString regionbaseUID,
                              QMap<QString, QString> attributes);
 
-  void regionSelectionRequested(
-      const QString regionUID,
-      const QString regionbaseUID);
+  void regionSelectionRequested( const QString regionUID,
+                                 const QString regionbaseUID);
 
-  void regionDeletionRequested(
-      const QString regionUID,
-      const QString regionbaseUID);
+  void regionDeletionRequested( const QString regionUID,
+                                const QString regionbaseUID);
 
-  void regionBaseDeletionRequested(
-      const QString regionbaseUID);
+  void regionBaseDeletionRequested(const QString regionbaseUID);
 
   void regionBaseSelectionRequested(const QString regionbaseUID);
 
@@ -103,16 +104,40 @@ signals:
 
   void regionbasePerformed();
 
-  void gridVisibilityChanged(bool gridVisibility);
-
   void copyRequested(LayoutRegion *);
   void pasteRequested();
+
+  void gridVisibilityChanged(bool visible);
+  void safeAreaVisibilityChanged(bool visible);
 
 protected:
   virtual void contextMenuEvent(QGraphicsSceneContextMenuEvent* event);
   void mouseMoveEvent(QGraphicsSceneMouseEvent* event);
   void mousePressEvent(QGraphicsSceneMouseEvent* event);
   void keyPressEvent( QKeyEvent * event );
+
+  /*!
+   * \brief createGrid creates the grid element that can be hide/unhide in the
+   *  scene.
+   */
+  void createGrid();
+  /*!
+   * \brief createSafeArea creates the QGraphicsRectItem responsible to drawn
+   *  safeArea information.
+   *
+   *  For more information about safe are you can look at: SMPTE ST 2046-1
+   */
+  void createSafeArea();
+  /*!
+   * \brief getSafeAreaRect returns a rect related that represents the safe area
+   *  of a rectangle with size w x h.
+   * \param w
+   * \param h
+   * \param w_perc
+   * \param h_perc
+   * \return
+   */
+  QRect getSafeAreaRect(int w, int h, double w_perc, double h_perc);
 
 protected slots:
   void performShow(QAction* action);
@@ -126,6 +151,7 @@ protected slots:
                                     LayoutRegion* region);
   void performChangeResolution();
   void performGrid();
+  void performSafeArea();
 
 private:
   void createActions();
@@ -161,11 +187,10 @@ private:
   QAction* sendbackAction;
   QAction* propertiesAction;
   QAction* gridAction;
+  QAction* _safeAreaAction;
   QAction* action;
 
-  /*! \todo This could be an array (and the user could
-     *        also add its own size)
-     */
+  /*! \todo This could be an array (and the user could also add its own size) */
   QAction* re640x480;
   QAction* re800x600;
   QAction* re1024x768;
@@ -185,8 +210,12 @@ private:
   QString device;
 
   QGraphicsRectItem* bgrect;
+  QGraphicsRectItem* _safeActionAreaRect;
+  QGraphicsTextItem* _safeActionAreaText;
+  QGraphicsRectItem* _safeTitleAreaRect;
+  QGraphicsTextItem* _safeTitleAreaText;
 
-  LayoutGrid* grid;
+  LayoutGrid* _grid;
 
   LayoutRegion* selectedRegion;
 
