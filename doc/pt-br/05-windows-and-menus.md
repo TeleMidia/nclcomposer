@@ -51,7 +51,7 @@ disposição das diversas visões por meio das <<def:perspective, Perspectivas>>
 Por padrão o {nclcomposer} vem com as seguintes visões:
 
 
-### Visão Estrutural ###
+### {structural_view} ###
 
 A {structural_view} permite que os autores de aplicações interajam visualmente
 com a estrutura lógica do documento NCL. Em NCL, a estrutura lógica é
@@ -60,44 +60,52 @@ elos entre esses objetos (representadas pelos elementos <link>).
 
 ![](../imgs/plugin-structural.png "{structural_view}")
 
-### Visão de Leiaute ###
+### {layout_view} ###
 
 A {layout_view} permite que os autores de aplicações NCL interajam visualmente
 com as regiões onde os objetos de mídia serão inicialmente apresentados. Nesta
 visão, os autores podem criar e manipular as regiões e a hierarquia de regiões
 do documento.
 
-![](../imgs/plugin-layout.png "Visão de leiaute")
+![](../imgs/plugin-layout.png "{layout_view}")
 
 
-### Visão de Outline ###
+### {outline_view} ###
+
 A {outline_view} apresenta a estrutura do documento NCL como uma árvore,
 permitindo aos autores navegarem no documento.
 
-![](../imgs/plugin-outline.png "Visão de outline")
+![](../imgs/plugin-outline.png "{outline_view}")
 
 
-### Visão de Propriedades ###
+### {properties_view} ###
+
 A {properties_view} apresenta o conjunto de propriedades da entidade
 selecionada. Essa entidade selecionada por ser, por exemplo, uma região na
 {layout_view}, um objeto de mídia na {structural_view} etc.
 
-![](../imgs/plugin-property.png "Visão de propriedades")
+![](../imgs/plugin-property.png "{properties_view}")
 
-### Visão Textual ###
-A _Visão Textual_ permite aos usuários interagirem diretamente com o
+### {textual_view} ###
+
+A _{textual_view}__ permite aos usuários interagirem diretamente com o
 código-fonte da aplicação NCL. Ela é um editor de texto avançado focado na
 linguagem NCL e traz funcionalidades como: coloração sintática, sugestão de
 código contextual e formatação de código.
 
-A _visão textual_ é recomendada especialmente para usuários avançados e que se
+A _{textual_view}_ é recomendada especialmente para usuários avançados e que se
 sentem à vontade com a sintaxe XML.
 
-![](../imgs/plugin-textual.png "Visão textual")
+![](../imgs/plugin-textual.png "{textual_view}")
 
-### Validador ###
+### {rules_view} ###
+
+TODO
+
+### {validator} ###
+
 O validador é responsável por notificar erros e alertas no documento NCL.
 A figura a seguir apresenta um exemplo.
 
-![](../imgs/plugin-validator.png "Visão de validação")
+![](../imgs/plugin-validator.png "{validator}")
 
