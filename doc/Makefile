@@ -24,7 +24,7 @@ PRE:
 	mkdir -p ${BUILD_DIR}/${LANG}
 	$(foreach i,$(INPUT), lua ${LANG}/dict.lua $(i) >${BUILD_DIR}/$(i); )
 HTML:
-	mkdir html
+	mkdir -p html
 	ls -d ${BUILD_DIR}/${LANG}/*.md | xargs pandoc --toc -o ./html/$(OUT)_${LANG}.html --css=$(CSS)
 
 HTML_BOOTSTRAP:
@@ -35,7 +35,7 @@ CHUNKED_HTML:
 	xmlto xhtml -m config.xsl ${LANG}/$(OUT).db ${LANG}/html/
 
 PDF:
-	mkdir pdf && cd pdf
+	mkdir -p pdf && cd pdf
 	ls -d ${BUILD_DIR}/${LANG}/*.md | xargs pandoc --toc -o ${LANG}/$(OUT).pdf -V documentclass=book
 	cd ../
 
