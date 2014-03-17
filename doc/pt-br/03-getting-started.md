@@ -1,5 +1,5 @@
 # Iniciando #
-## Instalando o NCL Composer ##
+## Instalando o {nclcomposer} ##
 ### Windows ###
 
 Para instalar o {nclcomposer} em ambiente Windows:
@@ -17,7 +17,7 @@ Para instalar o {nclcomposer} em ambiente Windows:
 
 ![](../imgs/cap3_install_1.png "Instalando")
 
-  * Clique no botão _I Agree_ para aceitar a licença do NCL Composer.
+  * Clique no botão _I Agree_ para aceitar a licença do {nclcomposer}.
   * Após aceitar a licença do software, será possível escolher quais _plugins_
     serão instalados na sua máquina, por meio da tela (em caso de dúvida não
     altere):
@@ -34,7 +34,7 @@ Para instalar o {nclcomposer} em ambiente Windows:
 ![](../imgs/cap3_install_4.png "Instalando")
 
   * Caso não tenha ocorrido nenhum problema, feche o instalador. Será possível 
-    executar o {nclcomposer} através do menu _Iniciar->NCL Composer->NCL 
+    executar o {nclcomposer} através do menu _Iniciar->{nclcomposer}->NCL 
     Composer_.
 
 ### Linux (Ubuntu/Debian) ###
@@ -145,14 +145,14 @@ player NCL instalado.
 
 
 Existem duas formas principais de executar sua aplicação NCL a partir da
-interface do NCL Composer:
+interface do {nclcomposer}:
 
  * No executável do Ginga-NCL instalado localmente; ou
  * em uma máquina remota (e.g. Ginga Virtual Set-top Box);
 
 
 ### Executando no Ginga-NCL localmente ###
-Para configurar o NCL Composer para executar em uma instalação local do Ginga
+Para configurar o {nclcomposer} para executar em uma instalação local do Ginga
 selecione o Menu: _Edit->Preferences->Run Configuration_.
 
 ![](../imgs/nclcomposer-run-config-local.png "Execução local.")
@@ -177,7 +177,7 @@ outros parâmetros caso você saiba exatamente o que está fazendo.
 ## Configurando a disposição das visões ##
 
 ### Escondendo/exibindo visões ###
-É possível esconder ou mostrar cada uma das visões instaladas no NCL Composer
+É possível esconder ou mostrar cada uma das visões instaladas no {nclcomposer}
 por meio do menu _Window->Views_:
 
 ![](../imgs/nclcomposer-menu-hide-show-views.png "Menu para mostrar esconder visões.")
@@ -195,7 +195,7 @@ suficiente ir no menu _Windows->Perspectives->Save current perspective..._.
 
 ![](../imgs/nclcomposer-save-perspective-2.png "Salvando disposição corrente como uma nova perspectiva.")
 
-Após isso, o NCL Composer, irá solicitar o nome da nova perspectiva
+Após isso, o {nclcomposer}, irá solicitar o nome da nova perspectiva
 (permitindo também marcá-la como a perspectiva padrão) através da janela
 a seguir:
 

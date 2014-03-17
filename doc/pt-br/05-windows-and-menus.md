@@ -1,5 +1,5 @@
 
-# Janelas e Menus do NCL Composer #
+# Janelas e Menus do {nclcomposer} #
 
 ## Conceitos Básicos ##
 
@@ -19,7 +19,7 @@ documento NCL.
 As principais visões do {nclcomposer} são: {default_views}.
 
 .Perspectivas
-Uma _perspectiva_, no NCL Composer, é a disposição das visões na tela. É
+Uma _perspectiva_, no {nclcomposer}, é a disposição das visões na tela. É
 permitido ao usuário criar suas próprias perspectivas, escolhendo a que melhor
 o ajuda a efetuar uma determinada tarefa.
 
@@ -48,7 +48,7 @@ disposição das diversas visões por meio das <<def:perspective, Perspectivas>>
 
 ## Visões _Default_ ##
 
-Por padrão o NCL Composer vem com as seguintes visões:
+Por padrão o {nclcomposer} vem com as seguintes visões:
 
 
 ### Visão Estrutural ###
@@ -58,7 +58,7 @@ com a estrutura lógica do documento NCL. Em NCL, a estrutura lógica é
 representada pelos seus objetos (nós de conteúdo e nós de composição) e os
 elos entre esses objetos (representadas pelos elementos <link>).
 
-![](../imgs/plugin-structural.png "Visão estrutural")
+![](../imgs/plugin-structural.png "{structural_view}")
 
 ### Visão de Leiaute ###
 

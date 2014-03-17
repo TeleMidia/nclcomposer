@@ -5,12 +5,13 @@
 Para tirar total proveito deste manual você precisará de um computador com:
 
 * Sistema operacional **Linux**, **Windows** ou **MAC OS X**
-* Versão mais atual do **NCL Composer** instalado e os plug-ins padrões
+* Versão mais atual do **{nclcomposer}** instalado e os plug-ins padrões
   habilitados
 * Algum **player NCL**: Responsável por executar as aplicações desenvolvidas no
-  NCL Composer
+  {nclcomposer}
 
-A versão mais atual do NCL Composer está disponível no [site oficial](http://composer.telemidia.puc-rio.br) da ferramenta.
+A versão mais atual do {nclcomposer} está disponível no 
+[site oficial](http://composer.telemidia.puc-rio.br) da ferramenta.
 
 Instruções detalhadas sobre processo de instalação podem ser encontradas no
 Capítulo [Iniciando](#iniciando).  
@@ -28,11 +29,11 @@ sobre documentação serão consideradas.
 
 ## Como usar esse manual?
 
-Este manual tem o objetivo de agrupar todas as informações sobre o NCL Composer
+Este manual tem o objetivo de agrupar todas as informações sobre o {nclcomposer}
 de forma detalhada. Por isso, dependendo do seu objetivo você pode usá-lo de
 formas diferentes.
 
-Se este é o seu primeiro contato com o NCL Composer e o seu principal objetivo 
+Se este é o seu primeiro contato com o {nclcomposer} e o seu principal objetivo 
 é aprender a usá-lo você pode ir direto para a [Seção de Tutoriais](#tutorial).
 Nessa seção é possível encontrar tutoriais passo-a-passo de como utilizar o NCL
 Composer para desenvolver aplicações para TV Digital Interativa.
@@ -60,7 +61,8 @@ Além deste manual, existem alguns canais _online_ onde é possível buscar mais
 ajuda. Você pode contactar as seguintes listas de e-mail:
 
   * _Lista de usuários_ <nclcomposer-user@telemidia.puc-rio.br> - Questões e
-     discussões relacionadas ao uso do NCL Composer.
+     discussões relacionadas ao uso do {nclcomposer}.
   * _Lista de desenvolvedores_ <nclcomposer-devel@telemidia.puc-rio.br> -
-    Discussões relacionadas ao _design_ e desenvolvimento do NCL Composer e
+    Discussões relacionadas ao _design_ e desenvolvimento do {nclcomposer} e
 	submissão de correções (_patches_).
+
