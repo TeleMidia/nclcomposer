@@ -185,26 +185,25 @@ por meio do menu _Window->Views_:
 ### Criando novas perspectivas ###
 
 É possível organizar as diversas visões na tela clicando na barra de
-título da visão, segurando e arastando-a para onde você quiser. Depois de
-organizá-las da forma que melhor lhe convier, é possível salvá-la como uma
-perspectiva, de tal forma, que seja fácil voltar àquela organizaćão quando
-necessário.
+título de cada visão, e arastando-a para dispô-la da melhor forma que lhe 
+convier na tela. Depois de organizá-las, é possível salvar uma determinada
+organização de plug-ins na tela uma *perspectiva*, de tal forma, que seja 
+simples voltar àquela organização quando necessário.
 
 Para salvar a disposição atual de _Visões_ como uma nova perspectiva, é
 suficiente ir no menu _Windows->Perspectives->Save current perspective..._.
+Outra alternativa é clicar no ícone _Change your current perspective_ na barra
+de tarefas e depois em _Save current perspective..._:
 
-![](../imgs/nclcomposer-save-perspective-2.png "Salvando disposição corrente como uma nova perspectiva.")
+![](../imgs/nclcomposer-save-perspective-1.png "Salvando disposição corrente como uma nova perspectiva.")
 
-Após isso, o {nclcomposer}, irá solicitar o nome da nova perspectiva
-(permitindo também marcá-la como a perspectiva padrão) através da janela
-a seguir:
+Idependente de pelo menu _Windows_ ou pela barra de tarefas, após a seleção da
+opção _Save current perspective..._ o {nclcomposer}, irá solicitar o nome da
+nova perspectiva (permitindo também marcá-la como a perspectiva padrão) através 
+da janela a seguir:
 
-![](../imgs/nclcomposer-save-perspective-3.png "Menu para mostrar esconder visões.")
-
-<!--
-![](../imgs/nclcomposer-save-perspective-4.png "Menu para mostrar esconder visões.")
--->
+![](../imgs/nclcomposer-save-perspective-2.png "Menu para mostrar esconder visões.")
 
 ### Alternando entre perspectivas ###
 
-![](../imgs/nclcomposer-save-perspective-5.png "Alternando entre perspectivas")
+![](../imgs/nclcomposer-save-perspective-3.png "Alternando entre perspectivas")
