@@ -1,1 +1,12 @@
-Makefile
+Makefile*
+*.mocs
+*.objs
+*.moc
+*.obj
+*.ui
+*.DS_Store
+*.pro.user
+*.app
+*.dylib
+*.framework
+qrc_*
