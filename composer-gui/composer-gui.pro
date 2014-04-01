@@ -59,8 +59,14 @@ message("NCL Composer GUI build version $${GUI_VERSION} (from git=$${GIT_VERSION
 
 VERSTR = '\\"$${GUI_VERSION}\\"'
 DEFINES += NCLCOMPOSER_GUI_VERSION=\"$${VERSTR}\"
-DEFINES += BUILD_DATE=\"\\\" $$system(echo \"$${_DATE_}\" | sed \"s/ /\\\\\\ /g\") \\\"\"
-#$$system(echo \"$${_DATE_}\" | sed \"s/ /\\\\\\ /g\")
+
+macx {
+    DEFINES += BUILD_DATE=\"\\\"$$system(echo \" $${_DATE_}\" | sed \"s/ /\\\\\\t/g\")\\\"\"
+}
+else {
+    DEFINES += BUILD_DATE=\"\\\" $$system(echo \"$${_DATE_}\" | sed \"s/ /\\\\\\ /g\") \\\"\"
+}
+
 #NOTIFY SYSTEM
 DEFINES += DEFAULT_MAX_NOTIFY_MESSAGES=\"4\"
 DEFINES += DEFAULT_MIN_MESSAGE_ID_TO_SHOW=\"2\"
@@ -150,6 +156,7 @@ macx {
 
     INCLUDEPATH += \
         /Library/Frameworks/ComposerCore.framework/ \
+        /Library/Frameworks/ComposerCore.framework/core/ \
         /opt/local/include/
 
     runssh_on {
