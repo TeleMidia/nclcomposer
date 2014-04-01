@@ -22,7 +22,7 @@ using namespace std;
 
 #include <util/AttributeReferences.h>
 using namespace composer::util;
-#include <core/util/Singleton.h>
+#include <util/Singleton.h>
 
 #define NCLSTRUCTURE_FILE ":/config/NCL_STRUCTURE"
 

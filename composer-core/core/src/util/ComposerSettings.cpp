@@ -90,7 +90,7 @@ void GlobalSettings::updateWithDefaults(const QString &dataPath)
 #ifdef Q_OS_MAC
 #ifdef QT_NO_DEBUG
     defaultConnBaseDir = "../PlugIns/composer/";
-#elif
+#else
     defaultConnBaseDir = "/Library/Application Support/Composer/Data/";
 #endif
 #elif defined(Q_OS_WIN32)

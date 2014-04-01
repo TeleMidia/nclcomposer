@@ -11,7 +11,7 @@
 #define NCLLANGUAGEPROFILE_H
 
 #include "NCLLanguageProfile_global.h"
-#include <core/extensions/ILanguageProfile.h>
+#include <extensions/ILanguageProfile.h>
 
 using namespace composer::extension;
 

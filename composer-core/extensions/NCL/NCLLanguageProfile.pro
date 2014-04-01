@@ -51,6 +51,7 @@ macx:HEADERS_PATH = $$INSTALLBASE/ComposerCore.framework
 else:unix:HEADERS_PATH = $$INSTALLBASE/include/composer
 
 INCLUDEPATH += \
+    $$PWD/../../ \
     $$PWD/../../core/src \
     $$INSTALLBASE/include/composer
 

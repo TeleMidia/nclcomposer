@@ -19,7 +19,7 @@
 #include <QMutex>
 #include <QWaitCondition>
 
-#include <core/extensions/IDocumentParser.h>
+#include <extensions/IDocumentParser.h>
 using namespace composer::extension;
 
 namespace composer {
