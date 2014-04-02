@@ -10,3 +10,7 @@ Makefile*
 *.dylib
 *.framework
 qrc_*
+*.o
+*.plist
+moc_*
+*.xcodeproj
