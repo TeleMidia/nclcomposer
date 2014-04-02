@@ -5,13 +5,13 @@
 int main(int argc, char *argv[])
 {
     QApplication application(argc, argv);
-    application.setApplicationName("nclstructural");
+    application.setApplicationName("ncl-structural-view");
     application.setApplicationVersion("1.0.0");
     application.setOrganizationName("telemidia");
     application.setOrganizationDomain("telemidia.puc-rio.br");
 
-    QnstMainWindow window;
-    window.setWindowTitle("NCL Structural");
+    StructuralWindow window;
+    window.setWindowTitle("NCL Structural View");
     window.setMinimumWidth(800);
     window.setMinimumHeight(600);
     window.show();

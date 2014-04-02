@@ -12,7 +12,7 @@ SUBDIRS = \
     properties-view \
     ncl-layout-view \
     ncl-structural-view \
-    ncl-structural-view-next \
+    ncl-structural-view-next/ncl-structural-view-next.pro \
     validator/ \
     ncl-rules-view \
     media-preview

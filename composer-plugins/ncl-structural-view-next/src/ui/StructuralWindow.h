@@ -30,72 +30,69 @@ protected slots:
   void performImport();
   void performClose();
   void performQuit();
-
   void performUndo();
   void performRedo();
   void performCut();
   void performCopy();
   void performPaste();
-
   void performPointer();
   void performLink();
-
   void performBody();
   void performContext();
   void performSwitch();
   void performMedia();
-
   void performPreferences();
-
   void performReport();
   void performAbout();
 
 private:
   void createActions();
+  void createMenus();
   void createToolbar();
   void createWidgets();
   void createStatusbar();
   void createConnections();
 
-  QToolBar* fileToolbar;
-  QToolBar* editToolbar;
-  QToolBar* insertToolbar;
+  QMenu* _fileMenu;
+  QMenu* _editMenu;
+  QMenu* _insertMenu;
+  QMenu* _windowMenu;
+  QMenu* _helpMenu;
 
-  QAction* newAction;
-  QAction* openAction;
-  QAction* saveAction;
-  QAction* saveAsAction;
-  QAction* importAction;
-  QAction* exportAction;
-  QAction* closeAction;
-  QAction* quitAction;
+  QToolBar* _fileToolbar;
+  QToolBar* _editToolbar;
+  QToolBar* _insertToolbar;
 
-  QAction* undoAction;
-  QAction* redoAction;
-  QAction* cutAction;
-  QAction* copyAction;
-  QAction* pasteAction;
+  QAction* _newAction;
+  QAction* _openAction;
+  QAction* _saveAction;
+  QAction* _saveAsAction;
+  QAction* _importAction;
+  QAction* _exportAction;
+  QAction* _closeAction;
+  QAction* _quitAction;
+  QAction* _undoAction;
+  QAction* _redoAction;
+  QAction* _cutAction;
+  QAction* _copyAction;
+  QAction* _pasteAction;
+  QAction* _pointerAction;
+  QAction* _linkAction;
+  QAction* _mediaAction;
+  QAction* _contextAction;
+  QAction* _switchAction;
+  QAction* _bodyAction;
+  QAction* _areaAction;
+  QAction* _propertyAction;
+  QAction* _portAction;
+  QAction* _switchportAction;
+  QAction* _preferencesAction;
+  QAction* _reportAction;
+  QAction* _aboutAction;
 
-  QAction* selectionAction;
-  QAction* linkAction;
+  QActionGroup* _insertActionGroup;
 
-  QAction* mediaAction;
-  QAction* contextAction;
-  QAction* switchAction;
-  QAction* bodyAction;
-  QAction* areaAction;
-  QAction* propertyAction;
-  QAction* portAction;
-  QAction* switchPortAction;
-
-  QAction* preferencesAction;
-
-  QAction* reportAction;
-  QAction* aboutAction;
-
-  QActionGroup* insertActionGroup;
-
-  StructuralView* view;
+  StructuralView* _view;
 };
 
 #endif // QNSTMAINWINDOW_H

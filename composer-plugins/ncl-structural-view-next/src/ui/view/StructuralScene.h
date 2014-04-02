@@ -9,6 +9,9 @@
 #include <QDebug>
 
 #include "StructuralMenu.h"
+#include "StructuralView.h"
+
+class StructuralView;
 
 class StructuralScene : public QGraphicsScene
 {
@@ -16,69 +19,22 @@ class StructuralScene : public QGraphicsScene
 
 public:
   StructuralScene(QObject* parent = 0);
-
-  ~StructuralScene();
-
-  QVector <StructuralEntity* > getRoots() const;
-
-  void addRoot(StructuralEntity* root);
-
-  void removeRoot(StructuralEntity* root);
-
-signals:
-  void entityAdded(StructuralEntity* entity);
-
-  void entityRemoved(StructuralEntity* entity);
-
-  void entityChanged(StructuralEntity* entity);
-
-  void entitySelected(StructuralEntity* entity);
-
-  void entityAboutToChange(StructuralEntity* entity,
-                           QMap<QString, QString> properties);
-
-  void insertEntityResquested(QString uid, QString parent, QMap<QString, QString> properties, QMap<QString, QString> settings);
-  void removeEntityResquested(QString uid, QMap<QString, QString> settings);
-  void changeEntityResquested(QString uid, QMap<QString, QString> properties, QMap<QString, QString> previous, QMap<QString, QString> settings);
-  void selectEntityResquested(QString uid, QMap<QString, QString> settings);
-
-  // void undoRequested();
-
-  // void redoRequested();
-
-  void cutRequested();
-
-  void copyRequested();
-
-  void pasteRequested();
-
-  void deleteRequested();
-
-  void exportRequested();
-
-  void zoominRequested();
-
-  void zoomoutRequested();
-
-  void zoomresetRequested();
-
-  void fullscreenRequested();
+  virtual ~StructuralScene();
 
 protected:
   virtual void contextMenuEvent(QGraphicsSceneContextMenuEvent* event);
 
 protected slots:
+  void performUndo();
+  void performRedo();
+  void performSnapshot();
   void performBody();
-  void performAdd(QnstSubtype subtype);
 
 private:
-  void createObjects();
-
+  void createMenus();
   void createConnections();
 
-  StructuralMenu* menu;
-
-  QVector <StructuralEntity*> roots;
+  StructuralMenu* _menu;
 };
 
 #endif // QNSTSCENE_H

@@ -37,12 +37,12 @@ StructuralLink::~StructuralLink()
 void StructuralLink::createObjects()
 {
   menu = new StructuralMenu();
-  menu->actionCut->setEnabled(true);
-  menu->actionCopy->setEnabled(true);
+//  menu->_cutAction->setEnabled(true);
+//  menu->_copyAction->setEnabled(true);
 
-  menu->actionDelete->setEnabled(true);
+//  menu->_deleteAction->setEnabled(true);
 
-  menu->actionExport->setEnabled(true);
+//  menu->actionExport->setEnabled(true);
 }
 
 void StructuralLink::createConnections()

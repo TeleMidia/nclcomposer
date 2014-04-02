@@ -15,21 +15,22 @@
         <file alias="icon/link">images/icon-link.png</file>
         <file alias="icon/pointer">images/icon-pointer.png</file>
         <file alias="icon/body">images/icon-body.png</file>
-        <file alias="icon/body-plus">images/icon-body-plus.png</file>
+        <file alias="icon/body-insert">images/icon-body-insert.png</file>
         <file alias="icon/context">images/icon-context.png</file>
-        <file alias="icon/context-plus">images/icon-context-plus.png</file>
+        <file alias="icon/context-insert">images/icon-context-insert.png</file>
         <file alias="icon/switch">images/icon-switch.png</file>
-        <file alias="icon/switch-plus">images/icon-switch-plus.png</file>
+        <file alias="icon/switch-insert">images/icon-switch-insert.png</file>
         <file alias="icon/media">images/icon-media.png</file>
-        <file alias="icon/media-plus">images/icon-media-plus.png</file>
+        <file alias="icon/media-insert">images/icon-media-insert.png</file>
         <file alias="icon/area">images/icon-area.png</file>
         <file alias="icon/port">images/icon-port.png</file>
-        <file alias="icon/port-plus">images/icon-port-plus.png</file>
+        <file alias="icon/port-insert">images/icon-port-insert.png</file>
         <file alias="icon/property">images/icon-property.png</file>
-        <file alias="icon/property-plus">images/icon-propertyt-plus.png</file>
+        <file alias="icon/property-insert">images/icon-propertyt-insert.png</file>
         <file alias="icon/switchport">images/icon-switchport.png</file>
-        <file alias="icon/switchport-plus">images/icon-switchport-plus.png</file>
-        <file alias="icon/area-plus">images/icon-area-plus.png</file>
+        <file alias="icon/switchport-insert">images/icon-switchport-insert.png</file>
+        <file alias="icon/area-insert">images/icon-area-insert.png</file>
         <file alias="icon/snapshot">images/icon-snapshot.png</file>
+        <file alias="icon/help">images/icon-help.png</file>
     </qresource>
 </RCC>

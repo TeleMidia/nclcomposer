@@ -32,6 +32,7 @@
 #include "Insert.h"
 
 class QnstAddCommand;
+class StructuralScene;
 
 class StructuralView : public QGraphicsView
 {
@@ -39,7 +40,7 @@ class StructuralView : public QGraphicsView
 
 public:
   StructuralView(QWidget* parent = 0);
-  ~StructuralView();
+  virtual ~StructuralView();
 
 public:
   bool hasEntity(QString uid);
@@ -69,7 +70,7 @@ public slots:
   void performUndo();
   void performRedo();
 
-  void performExport();
+  void performSnapshot();
 
   void performDelete();
 
@@ -185,7 +186,7 @@ private:
 
   static std::map <Structural::EntitySubtype, QString> mediaTypeToXMLStr;
 
-//  MiniMap *minimap;
+  //  MiniMap *minimap;
 
   QString action;
   QString condition;

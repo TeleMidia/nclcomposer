@@ -56,21 +56,21 @@ StructuralComposition::~StructuralComposition()
 void StructuralComposition::createObjects()
 {
   menu = new StructuralMenu();
-  menu->actionDelete->setEnabled(true);
+//  menu->_deleteAction->setEnabled(true);
 
-  menu->actionExport->setEnabled(true);
+//  menu->actionExport->setEnabled(true);
 
-  menu->menuInsert->setEnabled(true);
+//  menu->_insertMenu->setEnabled(true);
 
-  menu->actionAddMedia->setEnabled(true);
-  menu->actionAddContext->setEnabled(true);
-  menu->actionAddSwitch->setEnabled(true);
-  menu->actionAddPort->setEnabled(true);
-  menu->actionAddProperty->setEnabled(true);
-  menu->actionAddAggregator->setEnabled(true);
+//  menu->_mediaAction->setEnabled(true);
+//  menu->_contextAction->setEnabled(true);
+//  menu->_switchAction->setEnabled(true);
+//  menu->_portAction->setEnabled(true);
+//  menu->_propertyAction->setEnabled(true);
+//  menu->actionAddAggregator->setEnabled(true);
 
-  menu->menuAdjust->setEnabled(true);
-  menu->actionAuto->setEnabled(true);
+//  menu->menuAdjust->setEnabled(true);
+//  menu->actionAuto->setEnabled(true);
 }
 
 void StructuralComposition::createConnections()
@@ -79,9 +79,9 @@ void StructuralComposition::createConnections()
   // connect(menu, SIGNAL(redoRequested()), SIGNAL(redoRequested()));
 
 
-  connect(menu, SIGNAL(menuAddEntityTriggered(QnstSubtype)),SLOT(newChild(QnstSubtype)));
+//  connect(menu, SIGNAL(menuAddEntityTriggered(QnstSubtype)),SLOT(newChild(QnstSubtype)));
 
-  connect(menu, SIGNAL(autoRequested()), SLOT(adjustWithSpring()));
+//  connect(menu, SIGNAL(autoRequested()), SLOT(adjustWithSpring()));
 }
 
 QString StructuralComposition::getColor() const
@@ -110,8 +110,8 @@ void StructuralComposition::setnstSubtype(const QnstSubtype subtype)
     setColor("#F4E4CC");
   }else if (subtype == Structural::Switch){
     setColor("#C6E2FF");
-    menu->actionAddSwitchPort->setEnabled(true);
-    menu->actionAddPort->setEnabled(false);
+    menu->switchportAction->setEnabled(true);
+    menu->portAction->setEnabled(false);
   }else if (subtype == Structural::Body){
     setColor("#EEEEEE");
   }

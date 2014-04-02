@@ -92,7 +92,7 @@ void StructuralEntity::setnstType(const QnstType type)
 {
   this->type = type;
 
-  properties[":nst:uid"] = QString::number(type);
+  properties[":nst:type"] = QString::number(type);
 }
 
 QnstSubtype StructuralEntity::getnstSubtype() const
@@ -515,45 +515,45 @@ void StructuralEntity::insertChild(StructuralEntity* child)
                     void StructuralEntity::newChild(Structural::EntitySubtype type)
       {
                     /****************************************************
-                // \todo Check if type is an media type allowed to me!
-                QnstGraphicsEntity *entity = QnstUtil::makeGraphicsEntity(type, this);
+                              // \todo Check if type is an media type allowed to me!
+                              QnstGraphicsEntity *entity = QnstUtil::makeGraphicsEntity(type, this);
 
-                if(entity == NULL) return false;
+                              if(entity == NULL) return false;
 
-                QnstGraphicsMedia *content  = dynamic_cast<QnstGraphicsMedia*>(entity);
+                              QnstGraphicsMedia *content  = dynamic_cast<QnstGraphicsMedia*>(entity);
 
-                if(content != NULL) // If the Entity is a Media content
-                {
-                  content->adjust();
+                              if(content != NULL) // If the Entity is a Media content
+                              {
+                                content->adjust();
 
-                  if (dropsrc != "") //if it is a drop we will keep the baseName as id
-                  {
-                    content->setSource(dropsrc);
-                    QFileInfo file = QFileInfo(dropsrc);
-                    QString nstId = file.baseName();
-                    entity->setnstId(nstId);
-                    dropsrc = "";
-                  }
-                }
-                else
-                {
-                  QnstGraphicsComposition *composition =
-                      dynamic_cast<QnstGraphicsComposition*>(entity);
+                                if (dropsrc != "") //if it is a drop we will keep the baseName as id
+                                {
+                                  content->setSource(dropsrc);
+                                  QFileInfo file = QFileInfo(dropsrc);
+                                  QString nstId = file.baseName();
+                                  entity->setnstId(nstId);
+                                  dropsrc = "";
+                                }
+                              }
+                              else
+                              {
+                                QnstGraphicsComposition *composition =
+                                    dynamic_cast<QnstGraphicsComposition*>(entity);
 
-                  //If the Entity is a Composition (i.e. Body, Context or Switch)
-                  if(composition != NULL)
-                  {
-                    composition->adjust();
+                                //If the Entity is a Composition (i.e. Body, Context or Switch)
+                                if(composition != NULL)
+                                {
+                                  composition->adjust();
 
-                    composition->menu->actionPaste->setEnabled(menu->actionPaste->isEnabled());
-                  }
-                }
+                                  composition->menu->actionPaste->setEnabled(menu->actionPaste->isEnabled());
+                                }
+                              }
 
-                entity->adjust();
+                              entity->adjust();
 
-                emit entityAdded(entity);
+                              emit entityAdded(entity);
 
-                *****************************************************/
+                              *****************************************************/
 
                     /*****************************************************/
 

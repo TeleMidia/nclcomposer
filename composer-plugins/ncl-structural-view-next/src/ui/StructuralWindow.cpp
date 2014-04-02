@@ -5,7 +5,8 @@ StructuralWindow::StructuralWindow(QWidget* parent)
 {
   createWidgets();
   createActions();
-  createToolbar();
+//  createMenus();
+//  createToolbar();
   createStatusbar();
   createConnections();
 }
@@ -18,237 +19,306 @@ StructuralWindow::~StructuralWindow()
 void StructuralWindow::createActions()
 {
   // new action
-  newAction = new QAction(this);
-  newAction->setEnabled(true);
-  newAction->setText(tr("New"));
-  newAction->setIcon(QIcon(":/images/icon/new"));
-  newAction->setShortcut(QKeySequence("Ctrl+N"));
+  _newAction = new QAction(this);
+  _newAction->setEnabled(true);
+  _newAction->setText(tr("New"));
+  _newAction->setIcon(QIcon(":/images/icon/new"));
+  _newAction->setShortcut(QKeySequence("Ctrl+N"));
 
   // open action
-  openAction = new QAction(this);
-  openAction->setEnabled(true);
-  openAction->setText(tr("Open..."));
-  openAction->setIcon(QIcon(":/images/icon/open"));
-  openAction->setShortcut(QKeySequence("Ctrl+O"));
+  _openAction = new QAction(this);
+  _openAction->setEnabled(true);
+  _openAction->setText(tr("Open..."));
+  _openAction->setIcon(QIcon(":/images/icon/open"));
+  _openAction->setShortcut(QKeySequence("Ctrl+O"));
 
   // save action
-  saveAction = new QAction(this);
-  saveAction->setEnabled(true);
-  saveAction->setText(tr("Save"));
-  saveAction->setIcon(QIcon(":/images/icon/save"));
-  saveAction->setShortcut(QKeySequence("Ctrl+S"));
+  _saveAction = new QAction(this);
+  _saveAction->setEnabled(true);
+  _saveAction->setText(tr("Save"));
+  _saveAction->setIcon(QIcon(":/images/icon/save"));
+  _saveAction->setShortcut(QKeySequence("Ctrl+S"));
 
   // saveas action
-  saveAsAction = new QAction(this);
-  saveAsAction->setEnabled(true);
-  saveAsAction->setText(tr("Save As..."));
-  saveAsAction->setIcon(QIcon(":/images/icon/saveas"));
-  saveAsAction->setShortcut(QKeySequence("Shift+Ctrl+S"));
+  _saveAsAction = new QAction(this);
+  _saveAsAction->setEnabled(true);
+  _saveAsAction->setText(tr("Save As..."));
+  _saveAsAction->setIcon(QIcon(":/images/icon/saveas"));
+  _saveAsAction->setShortcut(QKeySequence("Shift+Ctrl+S"));
 
   // close action
-  closeAction = new QAction(this);
-  closeAction->setEnabled(true);
-  closeAction->setText(tr("Close"));
-  closeAction->setShortcut(QKeySequence("Ctrl+W"));
+  _closeAction = new QAction(this);
+  _closeAction->setEnabled(true);
+  _closeAction->setText(tr("Close"));
+  _closeAction->setShortcut(QKeySequence("Ctrl+W"));
 
   // quit action
-  quitAction = new QAction(this);
-  quitAction->setEnabled(true);
-  quitAction->setText(tr("Quit"));
-  quitAction->setShortcut(QKeySequence("Ctrl+Q"));
+  _quitAction = new QAction(this);
+  _quitAction->setEnabled(true);
+  _quitAction->setText(tr("Quit"));
+  _quitAction->setShortcut(QKeySequence("Ctrl+Q"));
 
   // import action
-  importAction = new QAction(this);
-  importAction->setEnabled(true);
-  importAction->setText(tr("Import..."));
-  importAction->setShortcut(QKeySequence("Ctrl+R"));
+  _importAction = new QAction(this);
+  _importAction->setEnabled(true);
+  _importAction->setText(tr("Import..."));
+  _importAction->setShortcut(QKeySequence("Ctrl+R"));
 
   // export action
-  exportAction = new QAction(this);
-  exportAction->setEnabled(true);
-  exportAction->setText(tr("Export..."));
-  exportAction->setShortcut(QKeySequence("Ctrl+Shift+R"));
+  _exportAction = new QAction(this);
+  _exportAction->setEnabled(true);
+  _exportAction->setText(tr("Export..."));
+  _exportAction->setShortcut(QKeySequence("Ctrl+Shift+R"));
 
   // undo action
-  undoAction = new QAction(this);
-  undoAction->setEnabled(true);
-  undoAction->setText(tr("Undo"));
-  undoAction->setIcon(QIcon(":/images/icon/undo"));
-  undoAction->setShortcut(QKeySequence("Ctrl+Z"));
+  _undoAction = new QAction(this);
+  _undoAction->setEnabled(true);
+  _undoAction->setText(tr("Undo"));
+  _undoAction->setIcon(QIcon(":/images/icon/undo"));
+  _undoAction->setShortcut(QKeySequence("Ctrl+Z"));
 
   // redo action
-  redoAction = new QAction(this);
-  redoAction->setEnabled(true);
-  redoAction->setText(tr("Redo"));
-  redoAction->setIcon(QIcon(":/images/icon/redo"));
-  redoAction->setShortcut(QKeySequence("Ctrl+Shift+Z"));
+  _redoAction = new QAction(this);
+  _redoAction->setEnabled(true);
+  _redoAction->setText(tr("Redo"));
+  _redoAction->setIcon(QIcon(":/images/icon/redo"));
+  _redoAction->setShortcut(QKeySequence("Ctrl+Shift+Z"));
 
   // cut action
-  cutAction = new QAction(this);
-  cutAction->setEnabled(true);
-  cutAction->setText(tr("Cut"));
-  cutAction->setIcon(QIcon(":/images/icon/cut"));
-  cutAction->setShortcut(QKeySequence("Ctrl+X"));
+  _cutAction = new QAction(this);
+  _cutAction->setEnabled(true);
+  _cutAction->setText(tr("Cut"));
+  _cutAction->setIcon(QIcon(":/images/icon/cut"));
+  _cutAction->setShortcut(QKeySequence("Ctrl+X"));
 
   // copy action
-  copyAction = new QAction(this);
-  copyAction->setEnabled(true);
-  copyAction->setText(tr("Copy"));
-  copyAction->setIcon(QIcon(":/images/icon/copy"));
-  copyAction->setShortcut(QKeySequence("Ctrl+C"));
+  _copyAction = new QAction(this);
+  _copyAction->setEnabled(true);
+  _copyAction->setText(tr("Copy"));
+  _copyAction->setIcon(QIcon(":/images/icon/copy"));
+  _copyAction->setShortcut(QKeySequence("Ctrl+C"));
 
   // paste action
-  pasteAction = new QAction(this);
-  pasteAction->setEnabled(true);
-  pasteAction->setText(tr("Paste"));
-  pasteAction->setIcon(QIcon(":/images/icon/paste"));
-  pasteAction->setShortcut(QKeySequence("Ctrl+V"));
+  _pasteAction = new QAction(this);
+  _pasteAction->setEnabled(true);
+  _pasteAction->setText(tr("Paste"));
+  _pasteAction->setIcon(QIcon(":/images/icon/paste"));
+  _pasteAction->setShortcut(QKeySequence("Ctrl+V"));
 
   // pointer action
-  selectionAction = new QAction(this);
-  selectionAction->setEnabled(true);
-  selectionAction->setCheckable(true);
-  selectionAction->setChecked(true);
-  selectionAction->setText(tr("Selection tool"));
-  selectionAction->setToolTip(tr("Selection tool"));
-  selectionAction->setIcon(QIcon(":/images/icon/pointer"));
-  selectionAction->setShortcut(QKeySequence("1"));
+  _pointerAction = new QAction(this);
+  _pointerAction->setEnabled(true);
+  _pointerAction->setCheckable(true);
+  _pointerAction->setChecked(true);
+  _pointerAction->setText(tr("Selection tool"));
+  _pointerAction->setToolTip(tr("Selection tool"));
+  _pointerAction->setIcon(QIcon(":/images/icon/pointer"));
+  _pointerAction->setShortcut(QKeySequence("1"));
 
   // link action
-  linkAction = new QAction(this);
-  linkAction->setEnabled(true);
-  linkAction->setCheckable(true);
-  linkAction->setChecked(false);
-  linkAction->setText(tr("Link"));
-  linkAction->setToolTip(tr("Link tool"));
-  linkAction->setIcon(QIcon(":/images/icon/link"));
-  linkAction->setShortcut(QKeySequence("2"));
+  _linkAction = new QAction(this);
+  _linkAction->setEnabled(true);
+  _linkAction->setCheckable(true);
+  _linkAction->setChecked(false);
+  _linkAction->setText(tr("Link"));
+  _linkAction->setToolTip(tr("Link tool"));
+  _linkAction->setIcon(QIcon(":/images/icon/link"));
+  _linkAction->setShortcut(QKeySequence("2"));
 
   // media action
-  mediaAction = new QAction(this);
-  mediaAction->setEnabled(true);
-  mediaAction->setText(tr("Media"));
-  mediaAction->setToolTip(tr("Insert &lt;media&gt; tool"));
-  mediaAction->setIcon(QIcon(":/images/icon/media-plus"));
-  mediaAction->setShortcut(QKeySequence("3"));
+  _mediaAction = new QAction(this);
+  _mediaAction->setEnabled(true);
+  _mediaAction->setCheckable(true);
+  _mediaAction->setChecked(false);
+  _mediaAction->setText(tr("Media"));
+  _mediaAction->setToolTip(tr("Insert &lt;media&gt; tool"));
+  _mediaAction->setIcon(QIcon(":/images/icon/media-insert"));
+  _mediaAction->setShortcut(QKeySequence("3"));
 
   // context action
-  contextAction = new QAction(this);
-  contextAction->setEnabled(true);
-  contextAction->setText(tr("Context"));
-  contextAction->setToolTip(tr("Insert &lt;context&gt; tool"));
-  contextAction->setIcon(QIcon(":/images/icon/context-plus"));
-  contextAction->setShortcut(QKeySequence("4"));
+  _contextAction = new QAction(this);
+  _contextAction->setEnabled(true);
+  _contextAction->setCheckable(true);
+  _contextAction->setChecked(false);
+  _contextAction->setText(tr("Context"));
+  _contextAction->setToolTip(tr("Insert &lt;context&gt; tool"));
+  _contextAction->setIcon(QIcon(":/images/icon/context-insert"));
+  _contextAction->setShortcut(QKeySequence("4"));
 
   // switch action
-  switchAction = new QAction(this);
-  switchAction->setEnabled(true);
-  switchAction->setText(tr("Switch"));
-  switchAction->setToolTip(tr("Insert &lt;switch&gt; tool"));
-  switchAction->setIcon(QIcon(":/images/icon/switch-plus"));
-  switchAction->setShortcut(QKeySequence("5"));
+  _switchAction = new QAction(this);
+  _switchAction->setEnabled(true);
+  _switchAction->setCheckable(true);
+  _switchAction->setChecked(false);
+  _switchAction->setText(tr("Switch"));
+  _switchAction->setToolTip(tr("Insert &lt;switch&gt; tool"));
+  _switchAction->setIcon(QIcon(":/images/icon/switch-insert"));
+  _switchAction->setShortcut(QKeySequence("5"));
 
   // body action
-  bodyAction = new QAction(this);
-  bodyAction->setEnabled(true);
-  bodyAction->setText(tr("Body"));
-  bodyAction->setToolTip(tr("Insert &lt;body&gt; tool"));
-  bodyAction->setIcon(QIcon(":/images/icon/body-plus"));
-  bodyAction->setShortcut(QKeySequence("6"));
+  _bodyAction = new QAction(this);
+  _bodyAction->setEnabled(true);
+  _bodyAction->setCheckable(true);
+  _bodyAction->setChecked(false);
+  _bodyAction->setText(tr("Body"));
+  _bodyAction->setToolTip(tr("Insert &lt;body&gt; tool"));
+  _bodyAction->setIcon(QIcon(":/images/icon/body-insert"));
+  _bodyAction->setShortcut(QKeySequence("6"));
 
   // area action
-  areaAction = new QAction(this);
-  areaAction->setEnabled(true);
-  areaAction->setText(tr("Area"));
-  areaAction->setToolTip(tr("Insert &lt;area&gt; tool"));
-  areaAction->setIcon(QIcon(":/images/icon/area-plus"));
-  areaAction->setShortcut(QKeySequence("7"));
+  _areaAction = new QAction(this);
+  _areaAction->setEnabled(true);
+  _areaAction->setCheckable(true);
+  _areaAction->setChecked(false);
+  _areaAction->setText(tr("Area"));
+  _areaAction->setToolTip(tr("Insert &lt;area&gt; tool"));
+  _areaAction->setIcon(QIcon(":/images/icon/area-insert"));
+  _areaAction->setShortcut(QKeySequence("7"));
 
   // property action
-  propertyAction = new QAction(this);
-  propertyAction->setEnabled(true);
-  propertyAction->setText(tr("Property"));
-  propertyAction->setToolTip(tr("Insert &lt;property&gt; tool"));
-  propertyAction->setIcon(QIcon(":/images/icon/property-plus"));
-  propertyAction->setShortcut(QKeySequence("8"));
+  _propertyAction = new QAction(this);
+  _propertyAction->setEnabled(true);
+  _propertyAction->setCheckable(true);
+  _propertyAction->setChecked(false);
+  _propertyAction->setText(tr("Property"));
+  _propertyAction->setToolTip(tr("Insert &lt;property&gt; tool"));
+  _propertyAction->setIcon(QIcon(":/images/icon/property-insert"));
+  _propertyAction->setShortcut(QKeySequence("8"));
 
   // port action
-  portAction = new QAction(this);
-  portAction->setEnabled(true);
-  portAction->setText(tr("Port"));
-  portAction->setToolTip(tr("Insert &lt;port&gt; tool"));
-  portAction->setIcon(QIcon(":/images/icon/port-plus"));
-  portAction->setShortcut(QKeySequence("9"));
+  _portAction = new QAction(this);
+  _portAction->setEnabled(true);
+  _portAction->setCheckable(true);
+  _portAction->setChecked(false);
+  _portAction->setText(tr("Port"));
+  _portAction->setToolTip(tr("Insert &lt;port&gt; tool"));
+  _portAction->setIcon(QIcon(":/images/icon/port-insert"));
+  _portAction->setShortcut(QKeySequence("9"));
 
   // switchport action
-  switchPortAction = new QAction(this);
-  switchPortAction->setEnabled(true);
-  switchPortAction->setText(tr("Switch Port"));
-  switchPortAction->setToolTip(tr("Insert &lt;switchport&gt; tool"));
-  switchPortAction->setIcon(QIcon(":/images/icon/switchport-plus"));
-  switchPortAction->setShortcut(QKeySequence("0"));
+  _switchportAction = new QAction(this);
+  _switchportAction->setEnabled(true);
+  _switchportAction->setCheckable(true);
+  _switchportAction->setChecked(false);
+  _switchportAction->setText(tr("Switch Port"));
+  _switchportAction->setToolTip(tr("Insert &lt;switchport&gt; tool"));
+  _switchportAction->setIcon(QIcon(":/images/icon/switchport-insert"));
+  _switchportAction->setShortcut(QKeySequence("0"));
 
   // preferences action
-  preferencesAction = new QAction(this);
-  preferencesAction->setEnabled(true);
-  preferencesAction->setText(tr("Preferences..."));
-  preferencesAction->setIcon(QIcon(":/images/icon/preferences"));
-  preferencesAction->setShortcut(QKeySequence("Ctrl+P"));
+  _preferencesAction = new QAction(this);
+  _preferencesAction->setEnabled(true);
+  _preferencesAction->setText(tr("Preferences..."));
+  _preferencesAction->setIcon(QIcon(":/images/icon/preferences"));
+  _preferencesAction->setShortcut(QKeySequence("Ctrl+P"));
 
   // report action
-  reportAction = new QAction(this);
-  reportAction->setEnabled(true);
-  reportAction->setText(tr("Report Bug..."));
-  reportAction->setIcon(QIcon(":/images/icon/report"));
+  _reportAction = new QAction(this);
+  _reportAction->setEnabled(true);
+  _reportAction->setText(tr("Report Bug..."));
+  _reportAction->setIcon(QIcon(":/images/icon/report"));
 
   // about action
-  aboutAction = new QAction(this);
-  aboutAction->setEnabled(true);
-  aboutAction->setText(tr("About..."));
+  _aboutAction = new QAction(this);
+  _aboutAction->setEnabled(true);
+  _aboutAction->setText(tr("About..."));
 
   // draw group
-  insertActionGroup = new QActionGroup(this);
-  insertActionGroup->setExclusive(true);
+  _insertActionGroup = new QActionGroup(this);
+  _insertActionGroup->setExclusive(true);
 
-  insertActionGroup->addAction(selectionAction);
-  insertActionGroup->addAction(linkAction);
+  _insertActionGroup->addAction(_pointerAction);
+  _insertActionGroup->addAction(_linkAction);
+
+  _insertActionGroup->addAction(_mediaAction);
+  _insertActionGroup->addAction(_contextAction);
+  _insertActionGroup->addAction(_switchAction);
+  _insertActionGroup->addAction(_bodyAction);
+  _insertActionGroup->addAction(_areaAction);
+  _insertActionGroup->addAction(_propertyAction);
+  _insertActionGroup->addAction(_portAction);
+  _insertActionGroup->addAction(_switchportAction);
+}
+
+void StructuralWindow::createMenus()
+{
+  // file menu
+  _fileMenu = menuBar()->addMenu(tr("File"));
+  _fileMenu->addAction(_newAction);
+  _fileMenu->addAction(_openAction);
+  _fileMenu->addSeparator();
+  _fileMenu->addAction(_saveAction);
+  _fileMenu->addAction(_saveAsAction);
+  _fileMenu->addSeparator();
+  _fileMenu->addAction(_exportAction);
+  _fileMenu->addAction(_importAction);
+  _fileMenu->addSeparator();
+  _fileMenu->addAction(_closeAction);
+  _fileMenu->addSeparator();
+  _fileMenu->addAction(_quitAction);
+
+  // edit menu
+  _editMenu = menuBar()->addMenu(tr("Edit"));
+  _editMenu->addAction(_undoAction);
+  _editMenu->addAction(_redoAction);
+  _editMenu->addSeparator();
+  _editMenu->addAction(_cutAction);
+  _editMenu->addAction(_copyAction);
+  _editMenu->addAction(_pasteAction);
+
+  // insert menu
+  _insertMenu = menuBar()->addMenu(tr("Insert"));
+
+  // window menu
+  _windowMenu = menuBar()->addMenu(tr("Window"));
+  _windowMenu->addAction(_preferencesAction);
+
+  // help menu
+  _helpMenu = menuBar()->addMenu(tr("Help"));
+  _helpMenu->addAction(_reportAction);
+  _helpMenu->addSeparator();
+  _helpMenu->addAction(_aboutAction);
 }
 
 void StructuralWindow::createToolbar()
 {
   // edit toolbar
-  editToolbar = addToolBar(tr("Edit"));
+  _editToolbar = addToolBar(tr("Edit"));
 
-  editToolbar->setMovable(true);
-  editToolbar->setFloatable(true);
-  editToolbar->setIconSize(QSize(32,32));
+  _editToolbar->setMovable(true);
+  _editToolbar->setFloatable(true);
+  _editToolbar->setIconSize(QSize(32,32));
 
-  editToolbar->addAction(undoAction);
-  editToolbar->addAction(redoAction);
-  editToolbar->addSeparator();
-  editToolbar->addAction(cutAction);
-  editToolbar->addAction(copyAction);
-  editToolbar->addAction(pasteAction);
+  _editToolbar->addAction(_undoAction);
+  _editToolbar->addAction(_redoAction);
+  _editToolbar->addSeparator();
+  _editToolbar->addAction(_cutAction);
+  _editToolbar->addAction(_copyAction);
+  _editToolbar->addAction(_pasteAction);
+
+#ifdef Q_WS_MACX
+  _editToolbar->addSeparator();
+#endif
 
   // insert toolbar
-  insertToolbar = addToolBar(tr("Insert"));
-  insertToolbar->setMovable(true);
-  insertToolbar->setFloatable(true);
-  insertToolbar->setIconSize(QSize(32,32));
+  _insertToolbar = addToolBar(tr("Insert"));
+  _insertToolbar->setMovable(true);
+  _insertToolbar->setFloatable(true);
+  _insertToolbar->setIconSize(QSize(32,32));
 
-  insertToolbar->addAction(selectionAction);
-  insertToolbar->addAction(linkAction);
-  insertToolbar->addSeparator();
-  insertToolbar->addAction(mediaAction);
-  insertToolbar->addSeparator();
-  insertToolbar->addAction(contextAction);
-  insertToolbar->addAction(switchAction);
-  insertToolbar->addAction(bodyAction);
-  insertToolbar->addSeparator();
-  insertToolbar->addAction(areaAction);
-  insertToolbar->addAction(propertyAction);
-  insertToolbar->addAction(portAction);
-  insertToolbar->addAction(switchPortAction);
+  _insertToolbar->addAction(_pointerAction);
+  _insertToolbar->addAction(_linkAction);
+  _insertToolbar->addSeparator();
+  _insertToolbar->addAction(_mediaAction);
+  _insertToolbar->addSeparator();
+  _insertToolbar->addAction(_contextAction);
+  _insertToolbar->addAction(_switchAction);
+  _insertToolbar->addAction(_bodyAction);
+  _insertToolbar->addSeparator();
+  _insertToolbar->addAction(_areaAction);
+  _insertToolbar->addAction(_propertyAction);
+  _insertToolbar->addAction(_portAction);
+  _insertToolbar->addAction(_switchportAction);
 
 #ifdef Q_WS_MACX
   setUnifiedTitleAndToolBarOnMac(true);
@@ -257,7 +327,7 @@ void StructuralWindow::createToolbar()
 
 void StructuralWindow::createWidgets()
 {
-  view = new StructuralView(this); setCentralWidget(view);
+  _view = new StructuralView(this); setCentralWidget(_view);
 }
 
 void  StructuralWindow::createStatusbar()
@@ -267,34 +337,34 @@ void  StructuralWindow::createStatusbar()
 
 void  StructuralWindow::createConnections()
 {
-  connect(newAction, SIGNAL(triggered()), SLOT(performNew()));
-  connect(openAction, SIGNAL(triggered()), SLOT(performOpen()));
-  connect(saveAction, SIGNAL(triggered()), SLOT(performSave()));
-  connect(saveAsAction, SIGNAL(triggered()), SLOT(performSaveAs()));
-  connect(exportAction, SIGNAL(triggered()), SLOT(performExport()));
-  connect(importAction, SIGNAL(triggered()), SLOT(performImport()));
-  connect(closeAction, SIGNAL(triggered()), SLOT(performClose()));
-  connect(quitAction, SIGNAL(triggered()), SLOT(performQuit()));
+  connect(_newAction, SIGNAL(triggered()), SLOT(performNew()));
+  connect(_openAction, SIGNAL(triggered()), SLOT(performOpen()));
+  connect(_saveAction, SIGNAL(triggered()), SLOT(performSave()));
+  connect(_saveAsAction, SIGNAL(triggered()), SLOT(performSaveAs()));
+  connect(_exportAction, SIGNAL(triggered()), SLOT(performExport()));
+  connect(_importAction, SIGNAL(triggered()), SLOT(performImport()));
+  connect(_closeAction, SIGNAL(triggered()), SLOT(performClose()));
+  connect(_quitAction, SIGNAL(triggered()), SLOT(performQuit()));
 
-  connect(undoAction, SIGNAL(triggered()), SLOT(performUndo()));
-  connect(redoAction, SIGNAL(triggered()), SLOT(performRedo()));
-  connect(cutAction, SIGNAL(triggered()), SLOT(performCut()));
-  connect(copyAction, SIGNAL(triggered()), SLOT(performCopy()));
-  connect(pasteAction, SIGNAL(triggered()), SLOT(performPaste()));
+  connect(_undoAction, SIGNAL(triggered()), SLOT(performUndo()));
+  connect(_redoAction, SIGNAL(triggered()), SLOT(performRedo()));
+  connect(_cutAction, SIGNAL(triggered()), SLOT(performCut()));
+  connect(_copyAction, SIGNAL(triggered()), SLOT(performCopy()));
+  connect(_pasteAction, SIGNAL(triggered()), SLOT(performPaste()));
 
-  connect(preferencesAction, SIGNAL(triggered()), SLOT(performPreferences()));
+  connect(_preferencesAction, SIGNAL(triggered()), SLOT(performPreferences()));
 
-  connect(reportAction, SIGNAL(triggered()), SLOT(performReport()));
-  connect(aboutAction, SIGNAL(triggered()), SLOT(performAbout()));
+  connect(_reportAction, SIGNAL(triggered()), SLOT(performReport()));
+  connect(_aboutAction, SIGNAL(triggered()), SLOT(performAbout()));
 
-  connect(selectionAction, SIGNAL(triggered()), SLOT(performPointer()));
-  connect(linkAction, SIGNAL(triggered()), SLOT(performLink()));
+  connect(_pointerAction, SIGNAL(triggered()), SLOT(performPointer()));
+  connect(_linkAction, SIGNAL(triggered()), SLOT(performLink()));
 
-  connect(mediaAction, SIGNAL(triggered()), SLOT(performMedia()));
+  connect(_mediaAction, SIGNAL(triggered()), SLOT(performMedia()));
 
-  connect(bodyAction, SIGNAL(triggered()), SLOT(performBody()));
-  connect(contextAction, SIGNAL(triggered()), SLOT(performContext()));
-  connect(switchAction, SIGNAL(triggered()), SLOT(performSwitch()));
+  connect(_bodyAction, SIGNAL(triggered()), SLOT(performBody()));
+  connect(_contextAction, SIGNAL(triggered()), SLOT(performContext()));
+  connect(_switchAction, SIGNAL(triggered()), SLOT(performSwitch()));
 
 }
 
@@ -359,73 +429,73 @@ void StructuralWindow::performUndo()
 {
   qDebug() << "[QNST]" << ":" << "Performing 'Undo' action";
 
-  view->performUndo();
+  _view->performUndo();
 }
 
 void StructuralWindow::performRedo()
 {
   qDebug() << "[QNST]" << ":" << "Performing 'Redo' action";
 
-  view->performRedo();
+  _view->performRedo();
 }
 
 void StructuralWindow::performCut()
 {
   qDebug() << "[QNST]" << ":" << "Performing 'Cut' action";
 
-  view->performCut();
+  _view->performCut();
 }
 
 void StructuralWindow::performCopy()
 {
   qDebug() << "[QNST]" << ":" << "Performing 'Copy' action";
 
-  view->performCopy();
+  _view->performCopy();
 }
 
 void StructuralWindow::performPaste()
 {
   qDebug() << "[QNST]" << ":" << "Performing 'Paste' action";
 
-  view->performPaste();
+  _view->performPaste();
 }
 
 void StructuralWindow::performPointer()
 {
-  view->setEnableLink(false);
+  // TODO
 }
 
 void StructuralWindow::performLink()
 {
-  view->setEnableLink(true);
+  // TODO
 }
 
 void StructuralWindow::performBody()
 {
   qDebug() << "[QNST]" << ":" << "Performing 'Body' action";
 
-  view->create(Structural::Body);
+  // TODO
 }
 
 void StructuralWindow::performContext()
 {
   qDebug() << "[QNST]" << ":" << "Performing 'Context' action";
 
-  view->create(Structural::Context);
+  // TODO
 }
 
 void StructuralWindow::performSwitch()
 {
   qDebug() << "[QNST]" << ":" << "Performing 'Switch' action";
 
-  view->create(Structural::Switch);
+  // TODO
 }
 
 void StructuralWindow::performMedia()
 {
   qDebug() << "[QNST]" << ":" << "Performing 'Media' action";
 
-  view->create(Structural::Media);
+  // TODO
 }
 
 void StructuralWindow::performPreferences()

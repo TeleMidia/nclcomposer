@@ -77,41 +77,7 @@ void StructuralView::createObjects()
 
 void StructuralView::createConnection()
 {
-  // connect(scene, SIGNAL(undoRequested()), SLOT(performUndo()));
-  // connect(scene, SIGNAL(redoRequested()), SLOT(performRedo()));
 
-  connect(scene, SIGNAL(cutRequested()), SLOT(performCut()));
-  connect(scene, SIGNAL(copyRequested()), SLOT(performCopy()));
-  connect(scene, SIGNAL(pasteRequested()), SLOT(performPaste()));
-
-  connect(scene, SIGNAL(deleteRequested()), SLOT(performDelete()));
-
-  connect(scene, SIGNAL(exportRequested()), SLOT(performExport()));
-
-  connect(scene, SIGNAL(zoominRequested()), SLOT(performZoomIn()));
-  connect(scene, SIGNAL(zoomoutRequested()), SLOT(performZoomOut()));
-  connect(scene, SIGNAL(zoomresetRequested()), SLOT(performZoomReset()));
-  connect(scene, SIGNAL(fullscreenRequested()), SLOT(performFullscreen()));
-
-//  connect(scene, SIGNAL(entityAdded(QnstEntity*)),
-//                 SLOT(requestEntityAddition(QnstEntity*)));
-//  connect(scene, SIGNAL(changed(QnstEntity*)),
-//                 SLOT(requestEntityChange(QnstEntity*)));
-//  connect(scene, SIGNAL(removed(QnstEntity*)),
-//                 SLOT(requestEntityRemotion(QnstEntity*)));
-//  connect(scene, SIGNAL(_selected(QnstEntity*)),
-//                 SLOT(requestEntitySelection(QnstEntity*)));
-
-//  connect(scene,
-//          SIGNAL(entityAboutToChange(QnstEntity*,
-//                                     QMap<QString,QString>)),
-//          SLOT(requestEntityPreparation(QnstEntity*,
-//                                        QMap<QString,QString>)));
-
-  connect(scene, SIGNAL(insertEntityResquested(QString,QString,QMap<QString,QString>,QMap<QString,QString>)),SLOT(insert(QString,QString,QMap<QString,QString>,QMap<QString,QString>)));
-  connect(scene, SIGNAL(removeEntityResquested(QString,QMap<QString,QString>)),SLOT(remove(QString,QMap<QString,QString>)));
-  connect(scene, SIGNAL(changeEntityResquested(QString,QMap<QString,QString>,QMap<QString,QString>,QMap<QString,QString>)), SLOT(change(QString,QMap<QString,QString>,QMap<QString,QString>,QMap<QString,QString>)));
-  connect(scene, SIGNAL(selectEntityResquested(QString,QMap<QString,QString>)),SLOT(select(QString,QMap<QString,QString>)));
 }
 
 bool StructuralView::hasEntity(QString uid)
@@ -671,8 +637,9 @@ void StructuralView::performDelete()
   }
 }
 
-void StructuralView::performExport()
+void StructuralView::performSnapshot()
 {
+  /*
   QString location = QFileDialog::getSaveFileName(NULL, "Export...", "", tr("Images (*.png)"));
 
   if (location != ""){
@@ -706,6 +673,7 @@ void StructuralView::performExport()
 
     image.save(location, "PNG");
   }
+  */
 }
 
 void StructuralView::performZoomIn()
@@ -1418,8 +1386,10 @@ void StructuralView::focusOutEvent(QFocusEvent *event)
 
 void StructuralView::clearAllData()
 {
+  /*
   if(scene->getRoots().size())
     scene->removeRoot(scene->getRoots().at(0));
+  */
 
   entities.clear();
   links.clear();
