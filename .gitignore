@@ -14,3 +14,4 @@ qrc_*
 *.plist
 moc_*
 *.xcodeproj
+.qmake.stash
