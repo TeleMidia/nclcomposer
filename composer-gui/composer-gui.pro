@@ -152,7 +152,7 @@ INCLUDEPATH   +=  ../composer-core/core/include \
 LIBS          +=  -L../composer-core/core
 
 macx {
-    LIBS += -framework ComposerCore
+    LIBS += -F/Library/Frameworks -framework ComposerCore
 
     INCLUDEPATH += \
         /Library/Frameworks/ComposerCore.framework/ \
