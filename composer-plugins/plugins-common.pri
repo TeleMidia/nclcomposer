@@ -52,7 +52,7 @@ else:win32 {
 }
 
 macx {
-  LIBS += -framework ComposerCore
+  LIBS += -F/Library/Frameworks -framework ComposerCore
   LIBS +=  $$quote(-L/Library/Application Support/Composer/Extensions)
   INCLUDEPATH +=  include /Library/Frameworks/ComposerCore.framework/ \
                   /Library/Frameworks/ComposerCore.framework/core \

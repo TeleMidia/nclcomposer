@@ -283,7 +283,7 @@ void StructuralGraphicsComposition::adjustWithSpring()
   while(it++ < SPRING_INTERATION)
   {
     int N = getnstGraphicsEntities().size();
-    QPointF next[N];
+    QVector<QPointF> next(N);
 
     qreal vf[N];
     qreal va[N];
