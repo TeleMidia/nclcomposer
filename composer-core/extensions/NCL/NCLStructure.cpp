@@ -169,7 +169,7 @@ void NCLStructure::loadStructure(){
 
 // TODO: This function should be based on lex and yacc to a better
 // implementation.
-vector <QString> NCLStructure::parseLine(QString line)
+vector <QString> NCLStructure::parseLine(const QString &line)
 {
   vector <QString> ret;
   QChar ch;
@@ -235,7 +235,9 @@ vector <QString> NCLStructure::parseLine(QString line)
 }
 
 //TODO: SCOPE
-void NCLStructure::addElement(QString name, QString father, char cardinality,
+void NCLStructure::addElement(const QString &name,
+                              const QString &father,
+                              char cardinality,
                               bool define_scope)
 {
   if(!nesting->count(father))
@@ -260,7 +262,9 @@ void NCLStructure::addElement(QString name, QString father, char cardinality,
   this->define_scope[name] = define_scope;
 }
 
-void NCLStructure::addAttribute ( QString element, QString attr, QString type,
+void NCLStructure::addAttribute ( const QString &element,
+                                  const QString &attr,
+                                  const QString &type,
                                   bool required)
 {
   if(!attributes->count(element))
@@ -278,9 +282,9 @@ void NCLStructure::addAttribute ( QString element, QString attr, QString type,
   (*(*attributesDatatype)[element])[attr] = type;
 }
 
-void NCLStructure::addReference( QString element, QString attr,
-                                 QString ref_element, QString ref_attr,
-                                 QString scope)
+void NCLStructure::addReference( const QString &element, const QString &attr,
+                                 const QString &ref_element, const QString &ref_attr,
+                                 const QString &scope)
 {
   AttributeReferences *ref = new AttributeReferences (element, attr,
                                                       ref_element, ref_attr,
@@ -288,14 +292,14 @@ void NCLStructure::addReference( QString element, QString attr,
   references->insert(element, ref);
 }
 
-void NCLStructure::addDatatype (QString name, QString regex)
+void NCLStructure::addDatatype (const QString &name, const QString &regex)
 {
   qDebug() << "NCLStructure::addDatatype (" << name << ", " << regex << ")";
   (*dataTypes)[name] = regex;
 }
 
-void NCLStructure::addDatatypeDefaultSuggestions( QString datatype,
-                                                  QString values)
+void NCLStructure::addDatatypeDefaultSuggestions( const QString &datatype,
+                                                  const QString &values)
 {
   // qDebug() << "NCLStructure::addDatatypeDefaultSuggestion (" << datatype
   //   << ", " << values << ")";
@@ -305,7 +309,8 @@ void NCLStructure::addDatatypeDefaultSuggestions( QString datatype,
     (*dataTypeDefaultSuggestions)[datatype] = QStringList();
 }
 
-QString NCLStructure::getAttributeDatatype(QString element, QString name)
+QString NCLStructure::getAttributeDatatype(const QString &element,
+                                           const QString &name)
 {
   if( attributesDatatype->count(element) &&
       (*attributesDatatype)[element]->count(name))
@@ -315,7 +320,7 @@ QString NCLStructure::getAttributeDatatype(QString element, QString name)
   return QString("Unknown");
 }
 
-QStringList NCLStructure::getDatatypeDefaultSuggestions(QString datatype)
+QStringList NCLStructure::getDatatypeDefaultSuggestions(const QString &datatype)
 {
   if( dataTypeDefaultSuggestions->count(datatype))
   {
@@ -324,14 +329,14 @@ QStringList NCLStructure::getDatatypeDefaultSuggestions(QString datatype)
   return QStringList();
 }
 
-map <QString, bool> *NCLStructure::getAttributes(QString element)
+map <QString, bool> *NCLStructure::getAttributes(const QString &element)
 {
   if(attributes->count(element))
     return (*attributes)[element];
   return NULL;
 }
 
-deque <QString> *NCLStructure::getAttributesOrdered(QString element)
+deque <QString> *NCLStructure::getAttributesOrdered(const QString &element)
 {
   if(attributes_ordered->count(element))
     return (*attributes_ordered)[element];
@@ -343,7 +348,7 @@ map <QString, map <QString, char> *> *NCLStructure::getNesting()
   return this->nesting;
 }
 
-map <QString, char> * NCLStructure::getChildren (QString tagname)
+map <QString, char> * NCLStructure::getChildren (const QString &tagname)
 {
   if(nesting->count(tagname))
     return (*nesting)[tagname];
@@ -355,8 +360,8 @@ deque <QString> *NCLStructure::getElementsOrdered()
   return elements_ordered;
 }
 
-vector <AttributeReferences*> NCLStructure::getReferences ( QString element,
-                                                            QString attr)
+vector <AttributeReferences*> NCLStructure::getReferences ( const QString &element,
+                                                            const QString &attr)
 {
   vector <AttributeReferences *> ref;
   foreach( AttributeReferences *value, references->values(element) )
@@ -367,7 +372,7 @@ vector <AttributeReferences*> NCLStructure::getReferences ( QString element,
   return ref;
 }
 
-bool NCLStructure::defineScope(QString tagname)
+bool NCLStructure::defineScope(const QString &tagname)
 {
   if(define_scope.count(tagname))
     return define_scope[tagname];

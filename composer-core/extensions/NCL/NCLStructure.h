@@ -58,8 +58,8 @@ public:
    *
    * \todo use const for parameters
    */
-  void addElement ( QString name,
-                    QString father,
+  void addElement ( const QString &name,
+                    const QString &father,
                     char cardinality,
                     bool define_scope = false );
   /*!
@@ -72,9 +72,9 @@ public:
    *
    * \todo use const for parameters
    */
-  void addAttribute ( QString element,
-                      QString attr,
-                      QString type,
+  void addAttribute ( const QString &element,
+                      const QString &attr,
+                      const QString &type,
                       bool required );
   /*!
    * \brief
@@ -87,11 +87,11 @@ public:
    *
    * \todo use const for parameters
    */
-  void addReference ( QString element,
-                      QString attr,
-                      QString ref_element,
-                      QString ref_attr,
-                      QString scope );
+  void addReference ( const QString &element,
+                      const QString &attr,
+                      const QString &ref_element,
+                      const QString &ref_attr,
+                      const QString &scope );
 
   /*!
    * \brief addDatatype
@@ -101,7 +101,7 @@ public:
    *
    * \todo use const for parameters
    */
-  void addDatatype( QString datatype, QString regex );
+  void addDatatype( const QString &datatype, const QString &regex );
 
   /*!
    * \brief addDatatypeDefaultSuggestions
@@ -111,7 +111,7 @@ public:
    *
    * \todo use const for parameters
    */
-  void addDatatypeDefaultSuggestions(QString datatype, QString values);
+  void addDatatypeDefaultSuggestions(const QString &datatype, const QString &values);
 
   /*!
    * \brief getDatatypeDefaultSuggestions
@@ -120,7 +120,7 @@ public:
    *
    * \todo use const for parameters
    */
-  QStringList getDatatypeDefaultSuggestions(QString datatype);
+  QStringList getDatatypeDefaultSuggestions(const QString &datatype);
 
   /*!
    * \brief getNesting
@@ -139,7 +139,7 @@ public:
    * \todo use const for parameters
    * \todo use const to not allow user to modify the map
    */
-  map <QString, bool> *getAttributes (QString element);
+  map <QString, bool> *getAttributes (const QString &element);
 
   /*!
    * \brief getAttributesOrdered
@@ -149,7 +149,7 @@ public:
    * \todo use const for parameters
    * \todo use const to not allow user to modify the deque
    */
-  deque <QString> *getAttributesOrdered (QString element);
+  deque <QString> *getAttributesOrdered (const QString &element);
 
   /*!
    * \brief getChildren
@@ -159,7 +159,7 @@ public:
    * \todo use const for parameters
    * \todo use const to not allow user to modify the map
    */
-  map <QString, char> *getChildren (QString tagname);
+  map <QString, char> *getChildren (const QString &tagname);
 
   /*!
    * \brief getElementsOrdered
@@ -178,7 +178,8 @@ public:
    * \todo use const for parameters
    * \todo use const to not allow user to modify the map
    */
-  vector <AttributeReferences *> getReferences (QString element, QString attr);
+  vector <AttributeReferences *> getReferences (const QString &element,
+                                                const QString &attr);
   /*!
    * \brief getAttributeDatatype
    *
@@ -188,7 +189,7 @@ public:
    *
    * \todo use const for parameters
    */
-  QString getAttributeDatatype(QString element, QString name);
+  QString getAttributeDatatype(const QString &element, const QString &name);
 
   /*!
    * \brief defineScope
@@ -197,7 +198,7 @@ public:
    *
    * \todo use const for parameters
    */
-  bool defineScope(QString tagname);
+  bool defineScope(const QString &tagname);
 
 private:
   map <QString, map <QString, bool> *>  *attributes; /**< TODO */
@@ -227,7 +228,7 @@ private:
    * \param line
    * \return vector<QString>
    */
-  vector <QString> parseLine(QString line);
+  vector <QString> parseLine(const QString &line);
 };
 
 }} //end namespace
