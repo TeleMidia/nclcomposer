@@ -220,6 +220,9 @@ private slots:
    */
   void syncFinished();
 
+  // FIXME: It should be const
+  QString getEntityAttributesAsString(/*const*/ Entity *ent);
+
   /*!
    * \brief Called when the user change the focus from the textual plugin.
    */

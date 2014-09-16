@@ -250,35 +250,9 @@ void NCLTextualViewPlugin::onEntityAdded(QString pluginID, Entity *entity)
     }
   }
 
-  // fill the attributes (ordered)
-  deque <QString> *attributes_ordered =
-      NCLStructure::getInstance()->getAttributesOrdered(entity->getType());
-
-  if(attributes_ordered != NULL)
-  {
-    for(int i = 0; i < attributes_ordered->size(); i++)
-    {
-      if(entity->hasAttribute((*attributes_ordered)[i]))
-      {
-        line += " " + (*attributes_ordered)[i] +
-            "=\"" + entity->getAttribute((*attributes_ordered)[i]) + "\"";
-      }
-    }
-  }
-
-  map <QString, bool> *attributes =
-      NCLStructure::getInstance()->getAttributes(entity->getType());
-  // Search if there is any other attribute that is not part of NCL Language
-  // but the user fills it.
-  QMap <QString, QString>::iterator begin, end, it;
-  entity->getAttributeIterator(begin, end);
-  for (it = begin; it != end; ++it)
-  {
-    if(attributes == NULL || !attributes->count(it.key()))
-      line += " " + it.key() + "=\"" + it.value() + "\"";
-  }
-
+  line += getEntityAttributesAsString(entity);
   line += "/>\n";
+
   int startEntitySize = line.size();
 
   if(insertAtOffset >= 0 && insertAtOffset <= _nclTextEditor->text().length())
@@ -324,13 +298,7 @@ void NCLTextualViewPlugin::onEntityChanged(QString pluginID, Entity *entity)
 
   QString line = "<" + entity->getType() + "";
 
-  QMap <QString, QString>::iterator begin, end, it;
-  entity->getAttributeIterator(begin, end);
-  for (it = begin; it != end; ++it)
-  {
-    if(it.value() != "")
-      line += " " + it.key() + "=\"" + it.value() + "\"";
-  }
+  line += getEntityAttributesAsString(entity);
 
   int insertAtOffset = 0;
   if(_startEntityOffset.contains(entity->getUniqueId()))
@@ -635,7 +603,7 @@ void NCLTextualViewPlugin::nonIncrementalUpdateCoreModel()
     QMap<QString,QString> atts;
 
     QDomNamedNodeMap attributes = current.attributes();
-    for (int i = 0; i < attributes.length(); i++)
+    for (uint i = 0; i < attributes.length(); i++)
     {
       QDomAttr item = attributes.item(i).toAttr();
       atts[item.name()] = item.value();
@@ -712,7 +680,7 @@ void NCLTextualViewPlugin::incrementalUpdateCoreModel()
 
     QVector <Entity *> entityChildren = curEntity->getChildren();
 
-    int i, j;
+    uint i, j;
     for(i = 0, j = 0;
         i < children.size() && j < entityChildren.size();
         i++, j++)
@@ -749,7 +717,7 @@ void NCLTextualViewPlugin::incrementalUpdateCoreModel()
         //TODO: Compare attributes
         QMap<QString, QString> atts;
         QDomNamedNodeMap attributes = children[i].attributes();
-        for (int k = 0; k < attributes.length(); k++)
+        for (uint k = 0; k < attributes.length(); k++)
         {
           QDomNode item = attributes.item(k);
           qDebug() << item.nodeName() << item.nodeValue();
@@ -785,7 +753,7 @@ void NCLTextualViewPlugin::incrementalUpdateCoreModel()
         //and insert a new entity with the required type.
         QMap<QString,QString> atts;
         QDomNamedNodeMap attributes = children[i].attributes();
-        for (int k = 0; k < attributes.length(); k++)
+        for (uint k = 0; k < attributes.length(); k++)
         {
           QDomNode item = attributes.item(k);
           atts[item.nodeName()] = item.nodeValue();
@@ -809,7 +777,7 @@ void NCLTextualViewPlugin::incrementalUpdateCoreModel()
         //add new entity
         QMap<QString,QString> atts;
         QDomNamedNodeMap attributes = children[i].attributes();
-        for (int k = 0; k < attributes.length(); k++)
+        for (uint k = 0; k < attributes.length(); k++)
         {
           QDomNode item = attributes.item(k);
           atts[item.nodeName()] = item.nodeValue();
@@ -826,7 +794,7 @@ void NCLTextualViewPlugin::incrementalUpdateCoreModel()
       child = child.nextSiblingElement();
     }
     entityChildren = curEntity->getChildren();
-    for(int i = 0; i < entityChildren.size(); i++)
+    for(uint i = 0; i < entityChildren.size(); i++)
       entities.push_back(entityChildren[i]);
   }
 
@@ -1038,4 +1006,38 @@ void NCLTextualViewPlugin::validationError(QString pluginID, void * param)
 
     _nclTextEditor->markError(p->second, "", line);
   }
+}
+
+QString NCLTextualViewPlugin::getEntityAttributesAsString(/*const */ Entity *entity)
+{
+  QString line;
+  // fill the attributes (ordered)
+  deque <QString> *attributes_ordered =
+      NCLStructure::getInstance()->getAttributesOrdered(entity->getType());
+
+  if(attributes_ordered != NULL)
+  {
+    for(uint i = 0; i < attributes_ordered->size(); i++)
+    {
+      if(entity->hasAttribute((*attributes_ordered)[i]))
+      {
+        line += " " + (*attributes_ordered)[i] +
+            "=\"" + entity->getAttribute((*attributes_ordered)[i]) + "\"";
+      }
+    }
+  }
+
+  map <QString, bool> *attributes =
+      NCLStructure::getInstance()->getAttributes(entity->getType());
+  // Search if there is any other attribute that is not part of NCL Language
+  // but the user fills it.
+  QMap <QString, QString>::iterator begin, end, it;
+  entity->getAttributeIterator(begin, end);
+  for (it = begin; it != end; ++it)
+  {
+    if(attributes == NULL || !attributes->count(it.key()))
+      line += " " + it.key() + "=\"" + it.value() + "\"";
+  }
+
+  return line;
 }
