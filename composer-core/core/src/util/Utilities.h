@@ -44,6 +44,12 @@ public:
    * \param ext
    * \return
    */
+  static QString normalizeXMLID (const QString &);
+  /*!
+   * \brief getLanguageTypeByExtension
+   * \param ext
+   * \return
+   */
   static LanguageType getLanguageTypeByExtension(const QString &ext);
 
   /*!

@@ -2,6 +2,9 @@
 #include "StructuralGraphicsMedia.h"
 #include "StructuralGraphicsComposition.h"
 
+#include "util/Utilities.h"
+using namespace composer::core::util;
+
 //
 // ATTENTION: This code needs a refactoring.
 //
@@ -168,7 +171,7 @@ bool StructuralGraphicsEntity::createEntity(Structural::EntityType type)
     {
       content->setSource(dropsrc);
       QFileInfo file = QFileInfo(dropsrc);
-      QString nstId = file.baseName();
+      QString nstId = Utilities::normalizeXMLID(file.baseName());
       entity->setnstId(nstId);
       dropsrc = "";
     }

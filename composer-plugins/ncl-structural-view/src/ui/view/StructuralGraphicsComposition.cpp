@@ -268,7 +268,6 @@ void StructuralGraphicsComposition::dropEvent(QGraphicsSceneDragDropEvent *event
   {
     QString filename = url.toLocalFile();
     QString suffix = QFileInfo(filename).suffix().toLower();
-
     event->acceptProposedAction();
     dropsrc = filename;
 

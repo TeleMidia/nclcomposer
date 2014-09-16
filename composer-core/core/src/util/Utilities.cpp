@@ -27,6 +27,16 @@ namespace composer {
 
 QMap<QString,LanguageType> Utilities::types = createMap();
 
+
+QString Utilities::normalizeXMLID(const QString &id)
+{
+  QString tmp = id.normalized(QString::NormalizationForm_KD);
+  tmp.remove(QRegExp("[^a-zA-Z_-\.\\s]"));
+  if(tmp.at(0).isDigit())
+    tmp = "_" + tmp;
+
+  return tmp;
+}
 LanguageType Utilities::getLanguageTypeByExtension(const QString &ext)
 {
   if (!types.contains(ext)) return NONE;
