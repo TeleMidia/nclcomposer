@@ -65,28 +65,26 @@ void RulesViewPlugin::onEntityAdded(QString pluginID, Entity *entity)
 
   if (entityType == RULEBASE_LABEL ||entityType == RULE_LABEL ||
       entityType == COMPOSITERULE_LABEL)
-    addRule(entity);
-
-  // Set default attributes
-  if(entity->getAttribute("id") == "")
   {
-    QString id = project->generateUniqueNCLId(entity->getType());
-    QMap<QString, QString> attrs;
-    attrs["id"] = id;
-
-    if(entity->getType() == "compositeRule")
+    addRule(entity);
+    // Set default attributes
+    if(entity->getAttribute("id") == "")
     {
-      QString _operator = entity->getAttribute("operator");
-      if (_operator == "")
-        _operator = "and";
-      attrs["operator"] = _operator;
+      QString id = project->generateUniqueNCLId(entity->getType());
+      QMap<QString, QString> attrs;
+      attrs["id"] = id;
+      if(entity->getType() == "compositeRule")
+      {
+        QString _operator = entity->getAttribute("operator");
+        if (_operator == "")
+          _operator = "and";
+        attrs["operator"] = _operator;
+      }
+      emit setAttributes(entity, attrs, false);
     }
-
-    emit setAttributes(entity, attrs, false);
+    connect(_rulesTable, SIGNAL(itemChanged(QTreeWidgetItem*,int)),
+            this, SLOT(updateValue(QTreeWidgetItem*)));
   }
-
-  connect(_rulesTable, SIGNAL(itemChanged(QTreeWidgetItem*,int)),
-          this, SLOT(updateValue(QTreeWidgetItem*)));
 }
 
 void RulesViewPlugin::onEntityChanged(QString pluginID, Entity *entity)
