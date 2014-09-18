@@ -67,6 +67,24 @@ void RulesViewPlugin::onEntityAdded(QString pluginID, Entity *entity)
       entityType == COMPOSITERULE_LABEL)
     addRule(entity);
 
+  // Set default attributes
+  if(entity->getAttribute("id") == "")
+  {
+    QString id = project->generateUniqueNCLId(entity->getType());
+    QMap<QString, QString> attrs;
+    attrs["id"] = id;
+
+    if(entity->getType() == "compositeRule")
+    {
+      QString _operator = entity->getAttribute("operator");
+      if (_operator == "")
+        _operator = "and";
+      attrs["operator"] = _operator;
+    }
+
+    emit setAttributes(entity, attrs, false);
+  }
+
   connect(_rulesTable, SIGNAL(itemChanged(QTreeWidgetItem*,int)),
           this, SLOT(updateValue(QTreeWidgetItem*)));
 }
