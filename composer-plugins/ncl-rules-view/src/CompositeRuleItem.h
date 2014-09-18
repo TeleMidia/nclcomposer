@@ -15,8 +15,8 @@ public:
                              const QString &op, const int &type,
                              QWidget *parent);
 
-  explicit CompositeRuleItem(QTreeWidgetItem *item, QString id,
-                             QString op, int type, QWidget *parent);
+  explicit CompositeRuleItem(QTreeWidgetItem *item, const QString &id,
+                             const QString &op, int type, QWidget *parent);
 
   inline QString getId () const
   { return text (1); }

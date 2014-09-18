@@ -10,8 +10,8 @@ CompositeRuleItem::CompositeRuleItem(QTreeWidget *view, const QString &id,
   init (id, op);
 }
 
-CompositeRuleItem::CompositeRuleItem(QTreeWidgetItem *item, QString id,
-                                     QString op, int type, QWidget *parent) :
+CompositeRuleItem::CompositeRuleItem(QTreeWidgetItem *item, const QString &id,
+                                     const QString &op, int type, QWidget *parent) :
   QObject (parent), QTreeWidgetItem (item, type)
 {
   init (id, op);
