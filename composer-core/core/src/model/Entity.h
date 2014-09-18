@@ -65,7 +65,7 @@ public:
    * \param name - The name of the attribute been requested
    * \return A string with the requested attribute.
    */
-  QString getAttribute(QString name); // \todo This must be const &
+  QString getAttribute(const QString &name);
   /*!
    * This method is used to get the iterator in the <map> of attributes.
    *
@@ -126,7 +126,7 @@ protected:
    * \param atts attributes to be set to this Entity.
    * \param parent the QObject parent.
    */
-  explicit Entity(QMap<QString,QString> &atts, QObject *parent = 0);
+  explicit Entity(const QMap<QString,QString> &atts, QObject *parent = 0);
   /*!
    * \brief Contructor.
    *
@@ -135,9 +135,9 @@ protected:
    * \param atts attributes to be set to this Entity.
    * \param parent the QObject parent.
    */
-  explicit Entity( QString uniqueId,
-                   QString type,
-                   QMap<QString,QString> &atts, // \todo This must be const
+  explicit Entity( const QString &uniqueId,
+                   const QString &type,
+                   const QMap<QString,QString> &atts,
                    QObject *parent = 0 );
 
   /*!
@@ -151,7 +151,7 @@ protected:
    * \param name - The name of the attribute to be set
    * \param value - The value this attribute is going to be set
    */
-  void setAttribute(QString name, QString value);
+  void setAttribute(const QString &name, const QString &value);
 
   /*!
    * \brief Set the attributes of the current entity to the value passed as
@@ -159,14 +159,14 @@ protected:
    *
    * \param newAtts the new value of entity's attributes.
    */
-  void setAtrributes(QMap<QString,QString> &newatts); // \todo This must be const
+  void setAtrributes(const QMap<QString,QString> &newatts);
 
   /*!
    * \brief Set the entity's type to the value passed as parameter.
    *
    * \param type The type of the entity.
    */
-  void setType(QString type);
+  void setType(const QString &type);
 
   /*!
    *  \brief Set the unique identifier of the entity to the value passed as
@@ -174,14 +174,14 @@ protected:
    *
    * \param _id The new uniqueId of the entity.
    */
-  void setUniqueID(QString uniqueId); // \todo this must be const &
+  void setUniqueID(const QString &uniqueId);
 
   /*!
    * \brief Set the parent of the Entity.
    *
    * \param parent The new parent of this Entity.
    */
-  void setParent(Entity *parent); // \todo This must be const
+  void setParent(Entity *parent);
 
   //OBS: This addChild updates the parent referency
   bool addChild(Entity *entity, int pos = -1);

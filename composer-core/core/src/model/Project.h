@@ -66,12 +66,12 @@ public:
    *
    * \param _id The Unique Identifier of the required entity.
    */
-  Entity* getEntityById(QString id);
+  Entity* getEntityById(const QString &id);
   /*!
    * \brief Returns a list of the entities which are of the type __type.
    * \param _type The entity type required.
    */
-  QList<Entity*> getEntitiesbyType(QString type);
+  QList<Entity*> getEntitiesbyType(const QString &type);
 
   /*!
    * \brief Returns the location of the project.
@@ -95,7 +95,7 @@ public:
    *
    * \param pluginId
    */
-  QByteArray getPluginData(QString pluginId);
+  QByteArray getPluginData(const QString &pluginId);
 
   /*!
    * \brief Generate a descritor NCLID that are not present in the core.
@@ -121,7 +121,7 @@ protected:
    * \param atts
    * \param parent
    */
-  Project(QMap<QString,QString> &atts, QObject *parent = 0);
+  Project(const QMap<QString,QString> &atts, QObject *parent = 0);
 
   /*!
    * \brief Constructor.
@@ -130,7 +130,7 @@ protected:
    * \param atts
    * \param parent
    */
-  Project(QString uniqueId, QMap<QString,QString> &atts, QObject *parent = 0);
+  Project(const QString &uniqueId, const QMap<QString,QString> &atts, QObject *parent = 0);
 
   /*!
    * \brief Destructor;
@@ -142,7 +142,7 @@ protected:
    * \todo The locations should be an URL.
    * \param location the location of the project.
    */
-  void setLocation(QString location); // \todo
+  void setLocation(const QString &location);
   /*!
    * \brief Set the type of the project.s
    * \param type The type of the project. Currently, there are support just for
@@ -176,10 +176,10 @@ protected:
    *
    * \return true if success and false otherwise.
    */
-  bool addEntity(Entity* entity, QString parentId)
+  bool addEntity(Entity* entity, const QString &parentId)
     throw (EntityNotFound, ParentNotFound);
 
-  bool addEntity(Entity *entity, QString parentId, Entity *entity_before)
+  bool addEntity(Entity *entity, const QString &parentId, Entity *entity_before)
     throw (EntityNotFound, ParentNotFound);
 
   /*!
@@ -188,7 +188,7 @@ protected:
    * \param pluginId the plugin identifier that we want to set
    * \param data
    */
-  bool setPluginData(QString pluginId, const QByteArray data);
+  bool setPluginData(const QString &pluginId, const QByteArray &data);
 
   /*!
    * \brief This method is used to remove and delete an Entity from the map.

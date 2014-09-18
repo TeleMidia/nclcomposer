@@ -27,7 +27,7 @@ Project::Project(QObject *parent) :
   lockEntities = new QMutex();
 }
 
-Project::Project(QMap<QString,QString> &atts, QObject *parent) :
+Project::Project(const QMap<QString,QString> &atts, QObject *parent) :
   Entity(atts, parent)
 {
   setType("document");
@@ -37,7 +37,8 @@ Project::Project(QMap<QString,QString> &atts, QObject *parent) :
   lockEntities = new QMutex();
 }
 
-Project::Project( QString uniqueId, QMap<QString,QString> &atts,
+Project::Project( const QString &uniqueId,
+                  const QMap<QString,QString> &atts,
                   QObject *parent) :
   Entity(uniqueId, "document", atts, parent)
 {
@@ -64,13 +65,13 @@ void Project::setProjectType(LanguageType type)
   this->projectType = type;
 }
 
-Entity* Project::getEntityById(QString id)
+Entity* Project::getEntityById(const QString &id)
 {
   QMutexLocker locker(lockEntities);
   return entities.contains(id) ? entities[id] : NULL;
 }
 
-QList<Entity*> Project::getEntitiesbyType(QString type)
+QList<Entity*> Project::getEntitiesbyType(const QString &type)
 {
   QMutexLocker locker(lockEntities);
   QMapIterator<QString, Entity*> it(entities);
@@ -92,13 +93,13 @@ QString Project::getLocation()
   return this->projectLocation;
 }
 
-void Project::setLocation(QString location)
+void Project::setLocation(const QString &location)
 {
   // QMutexLocker locker(&lockLocation);
   this->projectLocation = location;
 }
 
-bool Project::addEntity(Entity* entity, QString parentId)
+bool Project::addEntity(Entity* entity, const QString &parentId)
     throw (EntityNotFound, ParentNotFound)
 {
   assert(entity != NULL);
@@ -196,7 +197,8 @@ QString Project::toString()
   return result;
 }
 
-bool Project::setPluginData(QString pluginId, const QByteArray data)
+bool Project::setPluginData(const QString &pluginId,
+                            const QByteArray &data)
 {
   this->pluginData[pluginId] = data;
 
@@ -204,7 +206,7 @@ bool Project::setPluginData(QString pluginId, const QByteArray data)
   return true;
 }
 
-QByteArray Project::getPluginData(QString pluginId)
+QByteArray Project::getPluginData(const QString &pluginId)
 {
   if(pluginData.contains(pluginId))
   {

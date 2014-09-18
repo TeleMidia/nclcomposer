@@ -24,7 +24,7 @@ Entity::Entity(QObject *parent) :
   this->deleteChildren = true;
 }
 
-Entity::Entity(QMap<QString,QString> &atts, QObject *parent) :
+Entity::Entity(const QMap<QString,QString> &atts, QObject *parent) :
     QObject(parent)
 {
   // QMutexLocker locker(&lockAtts);
@@ -35,9 +35,9 @@ Entity::Entity(QMap<QString,QString> &atts, QObject *parent) :
   this->deleteChildren = true;
 }
 
-Entity::Entity( QString uniqueId,
-                QString type,
-                QMap<QString, QString> &atts,
+Entity::Entity( const QString &uniqueId,
+                const QString &type,
+                const QMap<QString, QString> &atts,
                 QObject *parent ) :
   QObject(parent)
 {
@@ -64,30 +64,31 @@ Entity::~Entity() {
   }
 }
 
-void Entity::setAttribute(QString name, QString value)
+void Entity::setAttribute(const QString &name,
+                          const QString &value)
 {
 //    QMutexLocker locker(&lockAtts);
   atts[name] = value;
 }
 
-void Entity::setAtrributes(QMap<QString,QString> &newatts)
+void Entity::setAtrributes(const QMap<QString,QString> &newatts)
 {
 //    QMutexLocker locker(&lockAtts);
   this->atts.clear(); // Should it??!
-  for ( QMap<QString,QString>::iterator it = newatts.begin();
+  for ( QMap<QString,QString>::const_iterator it = newatts.begin();
         it != newatts.end(); ++it)
   {
     this->atts[it.key()] = it.value();
   }
 }
 
-void Entity::setType(QString type)
+void Entity::setType(const QString &type)
 {
 //    QMutexLocker locker(&lockType);
   this->type = type;
 }
 
-void Entity::setUniqueID(QString uniqueId)
+void Entity::setUniqueID(const QString &uniqueId)
 {
 //    QMutexLocker locker(&lockID);
   this->_id = uniqueId;
@@ -137,7 +138,7 @@ bool Entity::deleteChild(Entity *entity)
   return true;
 }
 
-QString Entity::getAttribute(QString name)
+QString Entity::getAttribute(const QString &name)
 {
   QMutexLocker locker(&lockAtts);
   return atts.contains(name) ? atts[name] : "";
