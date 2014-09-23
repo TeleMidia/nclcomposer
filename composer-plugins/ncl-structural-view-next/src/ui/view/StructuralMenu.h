@@ -14,9 +14,23 @@ public:
   StructuralMenu(QWidget* parent = 0);
   virtual ~StructuralMenu();
 
+signals:
+  void insert(Structural::EntitySubtype);
+
 private:
   void createActions();
   void createMenus();
+  void createConnections();
+
+private slots:
+  void performBody();
+  void performContext();
+  void performSwitch();
+  void performMedia();
+  void performPort();
+  void performArea();
+  void performSwitchport();
+  void performProperty();
 
 public:
   QMenu* insertMenu;

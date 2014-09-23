@@ -5,8 +5,8 @@ StructuralWindow::StructuralWindow(QWidget* parent)
 {
   createWidgets();
   createActions();
-//  createMenus();
-//  createToolbar();
+  createMenus();
+  createToolbar();
   createStatusbar();
   createConnections();
 }
@@ -128,8 +128,6 @@ void StructuralWindow::createActions()
   // media action
   _mediaAction = new QAction(this);
   _mediaAction->setEnabled(true);
-  _mediaAction->setCheckable(true);
-  _mediaAction->setChecked(false);
   _mediaAction->setText(tr("Media"));
   _mediaAction->setToolTip(tr("Insert &lt;media&gt; tool"));
   _mediaAction->setIcon(QIcon(":/images/icon/media-insert"));
@@ -138,8 +136,6 @@ void StructuralWindow::createActions()
   // context action
   _contextAction = new QAction(this);
   _contextAction->setEnabled(true);
-  _contextAction->setCheckable(true);
-  _contextAction->setChecked(false);
   _contextAction->setText(tr("Context"));
   _contextAction->setToolTip(tr("Insert &lt;context&gt; tool"));
   _contextAction->setIcon(QIcon(":/images/icon/context-insert"));
@@ -148,8 +144,6 @@ void StructuralWindow::createActions()
   // switch action
   _switchAction = new QAction(this);
   _switchAction->setEnabled(true);
-  _switchAction->setCheckable(true);
-  _switchAction->setChecked(false);
   _switchAction->setText(tr("Switch"));
   _switchAction->setToolTip(tr("Insert &lt;switch&gt; tool"));
   _switchAction->setIcon(QIcon(":/images/icon/switch-insert"));
@@ -158,8 +152,6 @@ void StructuralWindow::createActions()
   // body action
   _bodyAction = new QAction(this);
   _bodyAction->setEnabled(true);
-  _bodyAction->setCheckable(true);
-  _bodyAction->setChecked(false);
   _bodyAction->setText(tr("Body"));
   _bodyAction->setToolTip(tr("Insert &lt;body&gt; tool"));
   _bodyAction->setIcon(QIcon(":/images/icon/body-insert"));
@@ -168,8 +160,6 @@ void StructuralWindow::createActions()
   // area action
   _areaAction = new QAction(this);
   _areaAction->setEnabled(true);
-  _areaAction->setCheckable(true);
-  _areaAction->setChecked(false);
   _areaAction->setText(tr("Area"));
   _areaAction->setToolTip(tr("Insert &lt;area&gt; tool"));
   _areaAction->setIcon(QIcon(":/images/icon/area-insert"));
@@ -178,8 +168,6 @@ void StructuralWindow::createActions()
   // property action
   _propertyAction = new QAction(this);
   _propertyAction->setEnabled(true);
-  _propertyAction->setCheckable(true);
-  _propertyAction->setChecked(false);
   _propertyAction->setText(tr("Property"));
   _propertyAction->setToolTip(tr("Insert &lt;property&gt; tool"));
   _propertyAction->setIcon(QIcon(":/images/icon/property-insert"));
@@ -188,8 +176,6 @@ void StructuralWindow::createActions()
   // port action
   _portAction = new QAction(this);
   _portAction->setEnabled(true);
-  _portAction->setCheckable(true);
-  _portAction->setChecked(false);
   _portAction->setText(tr("Port"));
   _portAction->setToolTip(tr("Insert &lt;port&gt; tool"));
   _portAction->setIcon(QIcon(":/images/icon/port-insert"));
@@ -198,8 +184,6 @@ void StructuralWindow::createActions()
   // switchport action
   _switchportAction = new QAction(this);
   _switchportAction->setEnabled(true);
-  _switchportAction->setCheckable(true);
-  _switchportAction->setChecked(false);
   _switchportAction->setText(tr("Switch Port"));
   _switchportAction->setToolTip(tr("Insert &lt;switchport&gt; tool"));
   _switchportAction->setIcon(QIcon(":/images/icon/switchport-insert"));
@@ -229,15 +213,6 @@ void StructuralWindow::createActions()
 
   _insertActionGroup->addAction(_pointerAction);
   _insertActionGroup->addAction(_linkAction);
-
-  _insertActionGroup->addAction(_mediaAction);
-  _insertActionGroup->addAction(_contextAction);
-  _insertActionGroup->addAction(_switchAction);
-  _insertActionGroup->addAction(_bodyAction);
-  _insertActionGroup->addAction(_areaAction);
-  _insertActionGroup->addAction(_propertyAction);
-  _insertActionGroup->addAction(_portAction);
-  _insertActionGroup->addAction(_switchportAction);
 }
 
 void StructuralWindow::createMenus()
@@ -361,6 +336,11 @@ void  StructuralWindow::createConnections()
   connect(_linkAction, SIGNAL(triggered()), SLOT(performLink()));
 
   connect(_mediaAction, SIGNAL(triggered()), SLOT(performMedia()));
+
+  connect(_portAction, SIGNAL(triggered()), SLOT(performPort()));
+  connect(_switchportAction, SIGNAL(triggered()), SLOT(performSwitchport()));
+  connect(_areaAction, SIGNAL(triggered()), SLOT(performArea()));
+  connect(_propertyAction, SIGNAL(triggered()), SLOT(performProperty()));
 
   connect(_bodyAction, SIGNAL(triggered()), SLOT(performBody()));
   connect(_contextAction, SIGNAL(triggered()), SLOT(performContext()));
@@ -494,6 +474,34 @@ void StructuralWindow::performSwitch()
 void StructuralWindow::performMedia()
 {
   qDebug() << "[QNST]" << ":" << "Performing 'Media' action";
+
+  // TODO
+}
+
+void StructuralWindow::performPort()
+{
+  qDebug() << "[QNST]" << ":" << "Performing 'Port' action";
+
+  // TODO
+}
+
+void StructuralWindow::performArea()
+{
+  qDebug() << "[QNST]" << ":" << "Performing 'Area' action";
+
+  // TODO
+}
+
+void StructuralWindow::performSwitchport()
+{
+  qDebug() << "[QNST]" << ":" << "Performing 'SwitchPort' action";
+
+  // TODO
+}
+
+void StructuralWindow::performProperty()
+{
+  qDebug() << "[QNST]" << ":" << "Performing 'Property' action";
 
   // TODO
 }

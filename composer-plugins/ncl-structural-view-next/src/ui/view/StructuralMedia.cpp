@@ -147,7 +147,6 @@ void StructuralMedia::setInstance(QString instance)
 
 void StructuralMedia::createObjects()
 {
-  menu = new StructuralMenu();
 //  menu->_cutAction->setEnabled(true);
 //  menu->_copyAction->setEnabled(true);
 
@@ -166,8 +165,8 @@ void StructuralMedia::createConnections()
   // connect(menu, SIGNAL(redoRequested()), SIGNAL(redoRequested()));
 
 
-  connect(menu, SIGNAL(menuAddEntityTriggered(QnstSubtype)),
-          SLOT(newChild(QnstSubtype)));
+//  connect(menu, SIGNAL(menuAddEntityTriggered(QnstSubtype)),
+//          SLOT(newChild(QnstSubtype)));
 }
 
 void StructuralMedia::draw(QPainter* painter)

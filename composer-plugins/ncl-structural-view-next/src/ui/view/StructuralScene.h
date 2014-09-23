@@ -28,13 +28,15 @@ protected slots:
   void performUndo();
   void performRedo();
   void performSnapshot();
-  void performBody();
+  void performInsert(Structural::EntitySubtype);
 
 private:
   void createMenus();
   void createConnections();
 
   StructuralMenu* _menu;
+
+  QPointF _insertPoint;
 };
 
 #endif // QNSTSCENE_H

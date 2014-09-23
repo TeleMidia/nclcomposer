@@ -269,7 +269,11 @@ void StructuralView::insert(QString uid, QString parent, QMap<QString, QString> 
       entity->setnstUid(uid);
       entity->setnstProperties(properties);
 
-      updateEntityWithUniqueNstId(entity); entity->updateToolTip();
+
+      if (entity->getnstProperty(":nst:id").isEmpty())
+        updateEntityWithUniqueNstId(entity);
+
+      entity->updateToolTip();
 
       connect(entity, SIGNAL(inserted(QString,QString,QMap<QString,QString>,QMap<QString,QString>)),SLOT(insert(QString,QString,QMap<QString,QString>,QMap<QString,QString>)));
       connect(entity, SIGNAL(removed(QString,QMap<QString,QString>)),SLOT(remove(QString,QMap<QString,QString>)));
@@ -421,7 +425,7 @@ void StructuralView::select(QString uid, QMap<QString, QString> settings)
   }
 }
 
-void StructuralView::create(QnstSubtype subtype)
+void StructuralView::create(QnstSubtype subtype, QMap<QString, QString> extraproperties, QMap<QString, QString> extrasettings)
 {
   switch (subtype)
   {
@@ -429,16 +433,30 @@ void StructuralView::create(QnstSubtype subtype)
     {
       QString uid = QUuid::createUuid().toString();
       QString parent = "";
-      QMap<QString, QString> properties;
+      QMap<QString, QString> properties = extraproperties;
       properties[":nst:subtype"] = "body";
-      properties[":nst:top"] = QString::number(scene->height()/2 - DEFAULT_BODY_HEIGHT/2);
-      properties[":nst:left"] = QString::number(scene->width()/2 - DEFAULT_BODY_WIDTH/2);
-      properties[":nst:width"] = QString::number(DEFAULT_BODY_WIDTH);
-      properties[":nst:height"] = QString::number(DEFAULT_BODY_HEIGHT);
 
-      QMap<QString, QString> settings;
+      if (!properties.contains(":nst:top"))
+        properties[":nst:top"] = QString::number(scene->height()/2 - DEFAULT_BODY_HEIGHT/2);
+
+      if (!properties.contains(":nst:left"))
+        properties[":nst:left"] = QString::number(scene->width()/2 - DEFAULT_BODY_WIDTH/2);
+
+      if (!properties.contains(":nst:width"))
+        properties[":nst:width"] = QString::number(DEFAULT_BODY_WIDTH);
+
+      if (!properties.contains(":nst:height"))
+        properties[":nst:height"] = QString::number(DEFAULT_BODY_HEIGHT);
+
+      QMap<QString, QString> settings = extrasettings;
+
+      if (!settings.contains("UNDO"))
       settings["UNDO"] = "1";
+
+      if (!settings.contains("NOTIFY"))
       settings["NOTIFY"] = "1";
+
+      if (!settings.contains("CODE"))
       settings["CODE"] = QUuid::createUuid().toString();
 
       insert(uid, parent, properties, settings);
@@ -602,11 +620,12 @@ bool StructuralView::updateEntityWithUniqueNstId(StructuralEntity *entity)
 
       foreach(StructuralEntity* entity, entities.values())
       {
+
           if (entity->getnstProperty(":nst:id") == QString(prefix + QString::number(n)))
-        {
-          match = true;
-          break;
-        }
+          {
+            match = true;
+            break;
+          }
       }
 
       if (match)

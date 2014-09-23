@@ -41,6 +41,10 @@ protected slots:
   void performContext();
   void performSwitch();
   void performMedia();
+  void performPort();
+  void performArea();
+  void performSwitchport();
+  void performProperty();
   void performPreferences();
   void performReport();
   void performAbout();

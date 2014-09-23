@@ -61,6 +61,8 @@ public slots:
 
   void create(QnstSubtype subtype);
 
+  void create(QnstSubtype subtype, QMap<QString, QString> properties, QMap<QString, QString> settings);
+
   void performHelp();
 
   void performCut();

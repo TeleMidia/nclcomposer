@@ -26,7 +26,7 @@ void StructuralScene::createMenus()
 
 void StructuralScene::createConnections()
 {
-  connect(_menu->bodyAction, SIGNAL(triggered()), SLOT(performBody()));
+  connect(_menu, SIGNAL(insert(Structural::EntitySubtype)), SLOT(performInsert(Structural::EntitySubtype)));
 }
 
 void StructuralScene::performUndo()
@@ -41,24 +41,30 @@ void StructuralScene::performRedo()
   view->performRedo();
 }
 
-void StructuralScene::performBody()
+void StructuralScene::performInsert(Structural::EntitySubtype name)
 {
-  QString uid = QUuid::createUuid().toString();
-  QString parent = "";
-  QMap<QString, QString> properties;
-  properties[":nst:subtype"] = "body";
-  properties[":nst:top"] = QString::number(height()/2 - DEFAULT_BODY_HEIGHT/2);
-  properties[":nst:left"] = QString::number(width()/2 - DEFAULT_BODY_WIDTH/2);
-  properties[":nst:width"] = QString::number(DEFAULT_BODY_WIDTH);
-  properties[":nst:height"] = QString::number(DEFAULT_BODY_HEIGHT);
 
-  QMap<QString, QString> settings;
-  settings["UNDO"] = "1";
-  settings["NOTIFY"] = "1";
-  settings["CODE"] = QUuid::createUuid().toString();
+  qDebug() << "MENU DA CENA";
+  switch (name) {
+    case Structural::Body:
+    {
 
-  StructuralView* view = (StructuralView*) views().at(0);
-  view->insert(uid, parent, properties, settings);
+      qDebug() << _insertPoint;
+      QMap<QString, QString> properties;
+      properties[":nst:top"] = QString::number(_insertPoint.y() - DEFAULT_BODY_HEIGHT/2);
+      properties[":nst:left"] = QString::number(_insertPoint.x() - DEFAULT_BODY_WIDTH/2);
+
+      StructuralView* view = (StructuralView*) views().at(0);
+      view->create(Structural::Body, properties, QMap<QString, QString>());
+
+      break;
+    }
+
+    default:
+    {
+      break;
+    }
+  }
 }
 
 void StructuralScene::performSnapshot()
@@ -73,6 +79,10 @@ void StructuralScene::contextMenuEvent(QGraphicsSceneContextMenuEvent* event)
 
   if (!event->isAccepted())
   {
+    _insertPoint = event->scenePos();
+
+    qDebug() << _insertPoint;
+
     _menu->exec(event->screenPos());
 
     event->accept();

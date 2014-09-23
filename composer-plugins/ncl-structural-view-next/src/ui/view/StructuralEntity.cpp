@@ -51,15 +51,15 @@ StructuralEntity::StructuralEntity(StructuralEntity* parent)
 
   setAcceptHoverEvents(true);
 
-  if(parent)
-    parent->insertChild(this);
-
   //  connect(this, SIGNAL(entitySelected()), SLOT(requestEntitySelection()));
   //  connect(this, SIGNAL(entityAboutToChange(QMap<QString,QString>)),
   //                SLOT(requestEntityPreparation(QMap<QString,QString>)));
 
+
   hover = false;
-  menu = NULL;
+  menu = new StructuralMenu();
+  connect(menu, SIGNAL(insert(Structural::EntitySubtype)),SLOT(performInsert(Structural::EntitySubtype)));
+
   draggable = false;
   hasError = false;
   enableMouseHoverHighlight = true;
@@ -129,6 +129,7 @@ void StructuralEntity::setnstProperty(const QString &name, const QString &value)
 {
   properties.insert(name, value);
 
+
   if (name == ":nst:top")
   {
     setTop(value.toDouble());
@@ -148,6 +149,10 @@ void StructuralEntity::setnstProperty(const QString &name, const QString &value)
   else if (name == ":nst:zIndex")
   {
     setzIndex(value.toInt());
+  }
+  else if (name == ":nst:id")
+  {
+    setnstId(value);
   }
 }
 
@@ -436,6 +441,9 @@ void StructuralEntity::setnstParent(StructuralEntity* parent)
 
   setParent(parent);
   setParentItem(parent);
+
+  if (parent !=NULL)
+    parent->insertChild(this);
 }
 
 QVector<StructuralEntity*> StructuralEntity::getnstChildren()
@@ -481,15 +489,11 @@ void StructuralEntity::insertChild(StructuralEntity* child)
     // that could be using a set instead of a vector to entities.
     if(!children.contains(child))
     {
-      children.push_back(child);
+      children.append(child);
 
       // connect(entity, SIGNAL(undoRequested()), SIGNAL(undoRequested()));
       // connect(entity, SIGNAL(redoRequested()), SIGNAL(redoRequested()));
 
-
-
-      if(child)
-        child->setnstParent(this);
     }
     else
     {
@@ -901,8 +905,13 @@ void StructuralEntity::insertChild(StructuralEntity* child)
           emit selected(getnstUid(), QMap<QString, QString>());
         }
 
+        _insertPoint = event->pos();
+
         if (menu != NULL)
+        {
+
           menu->exec(event->screenPos());
+        }
 
         event->accept();
       }
@@ -961,4 +970,55 @@ void StructuralEntity::insertChild(StructuralEntity* child)
         }
       }
     }
+
+  void StructuralEntity::performInsert(Structural::EntitySubtype name)
+  {
+
+    QMap<QString, QString> properties;
+    properties[":nst:subtype"] = StructuralUtil::getStrFromNstType(name);
+
+    switch (name) {
+      case Structural::Body:
+      {
+        properties[":nst:top"] = QString::number(_insertPoint.y() - DEFAULT_BODY_HEIGHT/2);
+        properties[":nst:left"] = QString::number(_insertPoint.x() - DEFAULT_BODY_WIDTH/2);
+        properties[":nst:height"] = QString::number(DEFAULT_BODY_HEIGHT);
+        properties[":nst:width"] = QString::number(DEFAULT_BODY_WIDTH);
+
+        break;
+      }
+      case Structural::Context:
+      case Structural::Switch:
+      {
+
+        properties[":nst:top"] = QString::number(_insertPoint.y() - DEFAULT_CONTEXT_HEIGHT/2);
+        properties[":nst:left"] = QString::number(_insertPoint.x() - DEFAULT_CONTEXT_WIDTH/2);
+        properties[":nst:height"] = QString::number(DEFAULT_CONTEXT_HEIGHT);
+        properties[":nst:width"] = QString::number(DEFAULT_CONTEXT_WIDTH);
+
+        break;
+      }
+
+      case Structural::Media:
+      {
+
+        properties[":nst:top"] = QString::number(_insertPoint.y() - DEFAULT_MEDIA_HEIGHT/2);
+        properties[":nst:left"] = QString::number(_insertPoint.x() - DEFAULT_MEDIA_WIDTH/2);
+        properties[":nst:height"] = QString::number(DEFAULT_MEDIA_HEIGHT);
+        properties[":nst:width"] = QString::number(DEFAULT_MEDIA_WIDTH);
+
+        break;
+      }
+
+      default:
+        break;
+    }
+
+    QMap<QString, QString> settings;
+    settings["UNDO"] = "1";
+    settings["NOTIFY"] = "1";
+    settings["CODE"] = QUuid::createUuid().toString();
+
+    inserted(QUuid::createUuid().toString(),getnstUid(), properties, settings);
+  }
 

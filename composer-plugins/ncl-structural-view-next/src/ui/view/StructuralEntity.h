@@ -136,6 +136,7 @@ public:
 
 public slots:
   virtual void newChild(QnstSubtype subtype);
+  void performInsert(Structural::EntitySubtype name);
 
 signals:
   void inserted(QString uid, QString parent, QMap<QString, QString> properties, QMap<QString, QString> settings);
@@ -171,6 +172,8 @@ private:
 
   StructuralEntity* parent;
   QVector<StructuralEntity*> children;
+
+private:
 
   bool moveable;
   bool selectable;
@@ -212,6 +215,7 @@ private:
 
 /****************************************************************************/
 
+  QPointF _insertPoint;
 public:
   void addAngle(QString uid, int angle);
   void removeAngle(QString uid, int angle);
@@ -229,6 +233,7 @@ protected:
 
 
 public:
+
   StructuralMenu* menu;
   void setError(bool hasError);
   void setErrorMsg(QString erroMsg);

@@ -5,6 +5,7 @@ StructuralMenu::StructuralMenu(QWidget* parent)
 {
   createActions();
   createMenus();
+  createConnections();
 }
 
 StructuralMenu::~StructuralMenu()
@@ -142,4 +143,54 @@ void StructuralMenu::createMenus()
   addAction(snapshotAction);
   addSeparator();
   addMenu(insertMenu);
+}
+
+void StructuralMenu::createConnections()
+{
+  connect(mediaAction,SIGNAL(triggered()),SLOT(performMedia()));
+  connect(bodyAction,SIGNAL(triggered()),SLOT(performBody()));
+  connect(contextAction,SIGNAL(triggered()),SLOT(performContext()));
+  connect(switchAction,SIGNAL(triggered()),SLOT(performSwitch()));
+
+}
+
+void StructuralMenu::performBody()
+{
+  insert(Structural::Body);
+}
+
+void StructuralMenu::performContext()
+{
+  insert(Structural::Context);
+}
+
+void StructuralMenu::performSwitch()
+{
+  insert(Structural::Switch);
+}
+
+void StructuralMenu::performMedia()
+{
+  qDebug() << "media maluco";
+  insert(Structural::Media);
+}
+
+void StructuralMenu::performPort()
+{
+  insert(Structural::Port);
+}
+
+void StructuralMenu::performArea()
+{
+  insert(Structural::Area);
+}
+
+void StructuralMenu::performSwitchport()
+{
+  insert(Structural::SwitchPort);
+}
+
+void StructuralMenu::performProperty()
+{
+  insert(Structural::Property);
 }
