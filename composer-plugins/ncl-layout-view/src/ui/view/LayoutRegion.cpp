@@ -20,6 +20,9 @@
 #include <QCursor>
 #include <QMimeData>
 
+#define KEYBOARD_MOVE_REGION_STEP 10.0
+#define KEYBOARD_MOVE_REGION_STEP_SMALL 1.0
+
 LayoutRegion::LayoutRegion(QMenu* switchMenu, LayoutRegion* parent)
   : QObject(parent), QGraphicsItem(parent)
 {
@@ -1306,13 +1309,9 @@ void LayoutRegion::updateCursor(QGraphicsSceneMouseEvent* event)
 void LayoutRegion::mouseMoveEvent(QGraphicsSceneMouseEvent* event)
 {
   if (moving)
-  {
     move(event);
-  }
   else if (resizing)
-  {
     resize(event);
-  }
 }
 
 void LayoutRegion::mousePressEvent(QGraphicsSceneMouseEvent* event)
@@ -1409,86 +1408,41 @@ void LayoutRegion::mouseReleaseEvent(QGraphicsSceneMouseEvent* event)
 
     if ((top != moveTop || left != moveLeft))
     {
-      /*
-            setTop(moveTop);
-            setLeft(moveLeft);
-
-            if (parentItem() != NULL){
-                QnlyGraphicsRegion* item = (QnlyGraphicsRegion*) parentItem();
-
-                setRelativeTop((top-4)/item->getHeight());
-                setRelativeLeft((left-4)/item->getWidth());
-
-                setRelativeWidth(width/item->getWidth());
-                setRelativeHeight(height/item->getHeight());
-
-                setRelativeRight(1 - (relativeLeft+relativeWidth));
-                setRelativeBottom(1 - (relativeTop+relativeHeight));
-
-            }else{
-                setRelativeTop(top/scene()->height());
-                setRelativeLeft(left/scene()->width());
-
-                setRelativeWidth(width/scene()->width());
-                setRelativeHeight(height/scene()->height());
-
-                setRelativeRight(1 - (relativeLeft+relativeWidth));
-                setRelativeBottom(1 - (relativeTop+relativeHeight));
-            }
-*/
       QMap<QString, QString> attributes;
-
       double value = 0.0;
+      qreal parentW, parentH;
+
       if (parentItem() != NULL)
       {
-        LayoutRegion* item = (LayoutRegion*) parentItem();
-
-        value = ((moveTop-4)/item->getHeight()) * 100;
-        ROUND_DOUBLE(value);
-        attributes["top"] = QString::number(value, 'f', 2) + "%";
-
-        value = ((moveLeft-4)/item->getWidth()) * 100;
-        ROUND_DOUBLE(value);
-        attributes["left"] = QString::number(value, 'f', 2) + "%";
-
-        value = (1 - (((moveLeft-4)/item->getWidth())+(
-                        width/item->getWidth()))) * 100;
-        ROUND_DOUBLE(value);
-        attributes["right"] = QString::number(value, 'f', 2) + "%";
-
-        value = (1 - (((moveTop-4)/item->getHeight())+
-                      (height/item->getHeight())))*100;
-        ROUND_DOUBLE(value);
-        attributes["bottom"] = QString::number(value, 'f', 2) + "%";
-
+        parentW = ((LayoutRegion*) parentItem())->getWidth();
+        parentH = ((LayoutRegion*) parentItem())->getHeight();
       }
       else
       {
-        value = ((moveTop)/scene()->height())*100;
-        ROUND_DOUBLE(value);
-        attributes["top"] = QString::number(value, 'f', 2) + "%";
-
-        value = ((moveLeft)/scene()->width())*100;
-        ROUND_DOUBLE(value);
-        attributes["left"] = QString::number(value, 'f', 2) + "%";
-
-        value = (1 - (((moveLeft)/scene()->width())+
-                      (width/scene()->width())))*100;
-        ROUND_DOUBLE(value);
-        attributes["right"] = QString::number(value, 'f', 2) + "%";
-
-        value = (1 - (((moveTop)/scene()->height())+
-                      (height/scene()->height())))*100;
-        ROUND_DOUBLE(value);
-        attributes["bottom"] = QString::number(value, 'f', 2) + "%";
-
+        parentW = scene()->width();
+        parentH = scene()->height();
       }
+
+      value = ((moveTop-4)/parentH) * 100;
+      ROUND_DOUBLE(value);
+      attributes["top"] = QString::number(value, 'f', 2) + "%";
+
+      value = ((moveLeft-4)/parentW) * 100;
+      ROUND_DOUBLE(value);
+      attributes["left"] = QString::number(value, 'f', 2) + "%";
+
+      value = (1 - (((moveLeft-4)/parentW)+(width/parentW))) * 100;
+      ROUND_DOUBLE(value);
+      attributes["right"] = QString::number(value, 'f', 2) + "%";
+
+      value = (1 - (((moveTop-4)/parentH)+(height/parentH)))*100;
+      ROUND_DOUBLE(value);
+      attributes["bottom"] = QString::number(value, 'f', 2) + "%";
 
       attributes["zIndex"] = QString::number(getzIndex());
 
       setChanged(true);
-
-      emit regionChangeRequested(this,attributes);
+      emit regionChangeRequested(this, attributes);
     }
   }
 
@@ -1522,101 +1476,51 @@ void LayoutRegion::mouseReleaseEvent(QGraphicsSceneMouseEvent* event)
         setResizeTop(resizeTop + resizeHeight);
         setResizeHeight(-resizeHeight);
       }
-      /*
-        setTop(resizeTop);
-        setLeft(resizeLeft);
-        setWidth(resizeWidth);
-        setHeight(resizeHeight);
 
-        if (parentItem() != NULL){
-            QnlyGraphicsRegion* item = (QnlyGraphicsRegion*) parentItem();
-
-            setRelativeTop((top-4)/item->getHeight());
-            setRelativeLeft((left-4)/item->getWidth());
-            setRelativeWidth(width/item->getWidth());
-            setRelativeHeight(height/item->getHeight());
-
-            setRelativeRight(1 - (relativeLeft+relativeWidth));
-            setRelativeBottom(1 - (relativeTop+relativeHeight));
-
-        }else{
-            setRelativeTop(top/scene()->height());
-            setRelativeLeft(left/scene()->width());
-            setRelativeWidth(width/scene()->width());
-            setRelativeHeight(height/scene()->height());
-
-            setRelativeRight(1 - (relativeLeft+relativeWidth));
-            setRelativeBottom(1 - (relativeTop+relativeHeight));
-        }
-      */
-
-      QMap<QString, QString> attributes;
-
+      QMap<QString, QString> attrs;
+      qreal parentW, parentH;
       double value = 0.0;
-      if (parentItem() != NULL)
+
+      if(parentItem() != NULL)
       {
-        LayoutRegion* item = (LayoutRegion*) parentItem();
-
-        value = ((resizeTop-4)/item->getHeight())*100;
-        ROUND_DOUBLE(value);
-        attributes["top"] = QString::number(value, 'f', 2) + "%";
-
-        value = ((resizeLeft-4)/item->getWidth())*100;
-        ROUND_DOUBLE(value);
-        attributes["left"] = QString::number(value, 'f', 2) + "%";
-
-        value = (resizeHeight/item->getHeight())*100;
-        ROUND_DOUBLE(value);
-        attributes["height"] = QString::number(value, 'f', 2) + "%";
-
-        value = (resizeWidth/item->getWidth())*100;
-        ROUND_DOUBLE(value);
-        attributes["width"] = QString::number(value, 'f', 2) + "%";
-
-        value = (1 - (((resizeLeft-4)/item->getWidth())+
-                      (resizeWidth/item->getWidth())))*100;
-        ROUND_DOUBLE(value);
-        attributes["right"] = QString::number(value, 'f', 2) + "%";
-
-        value = (1 - (((resizeTop-4)/item->getHeight())+
-                      (resizeHeight/item->getHeight())))*100;
-        ROUND_DOUBLE(value);
-        attributes["bottom"] = QString::number(value, 'f', 2) + "%";
+        parentW = ((LayoutRegion*)parentItem())->getWidth();
+        parentH = ((LayoutRegion*)parentItem())->getHeight();
       }
       else
       {
-        value = ((resizeTop)/scene()->height())*100;
-        ROUND_DOUBLE(value);
-        attributes["top"] = QString::number(value, 'f', 2) + "%";
-
-        value = ((resizeLeft)/scene()->width())*100;
-        ROUND_DOUBLE(value);
-        attributes["left"] = QString::number(value, 'f', 2) + "%";
-
-        value = (resizeHeight/scene()->height())*100;
-        ROUND_DOUBLE(value);
-        attributes["height"] = QString::number(value, 'f', 2) + "%";
-
-        value = (resizeWidth/scene()->width())*100;
-        ROUND_DOUBLE(value);
-        attributes["width"] = QString::number(value, 'f', 2) + "%";
-
-        value = (1 - (((resizeLeft)/scene()->width())+
-                      (resizeWidth/scene()->width())))*100;
-        ROUND_DOUBLE(value);
-        attributes["right"] = QString::number(value, 'f', 2) + "%";
-
-        value = (1 - (((resizeTop)/scene()->height())+
-                      (resizeHeight/scene()->height())))*100;
-        ROUND_DOUBLE(value);
-        attributes["bottom"] = QString::number(value, 'f', 2) + "%";
+        parentW = (scene())->width();
+        parentH = (scene())->height();
       }
 
-      attributes["zIndex"] = QString::number(getzIndex());
+      value = ((resizeTop-4)/parentH)*100;
+      ROUND_DOUBLE(value);
+      attrs["top"] = QString::number(value, 'f', 2) + "%";
+
+      value = ((resizeLeft-4)/parentW)*100;
+      ROUND_DOUBLE(value);
+      attrs["left"] = QString::number(value, 'f', 2) + "%";
+
+      value = (resizeHeight/parentH)*100;
+      ROUND_DOUBLE(value);
+      attrs["height"] = QString::number(value, 'f', 2) + "%";
+
+      value = (resizeWidth/parentW)*100;
+      ROUND_DOUBLE(value);
+      attrs["width"] = QString::number(value, 'f', 2) + "%";
+
+      value = (1 - (((resizeLeft-4)/parentW)+
+                    (resizeWidth/parentW)))*100;
+      ROUND_DOUBLE(value);
+      attrs["right"] = QString::number(value, 'f', 2) + "%";
+
+      value = (1 - (((resizeTop-4)/parentH)+ (resizeHeight/parentH)))*100;
+      ROUND_DOUBLE(value);
+      attrs["bottom"] = QString::number(value, 'f', 2) + "%";
+
+      attrs["zIndex"] = QString::number(getzIndex());
 
       setChanged(true);
-
-      emit regionChangeRequested(this, attributes);
+      emit regionChangeRequested(this, attrs);
     }
   }
 
@@ -1630,7 +1534,6 @@ void LayoutRegion::keyPressEvent( QKeyEvent * event )
   if (event->key() == Qt::Key_Delete || event->key() == Qt::Key_Backspace)
   {
     performDelete();
-
     event->accept();
   }
 
@@ -1641,7 +1544,6 @@ void LayoutRegion::keyPressEvent( QKeyEvent * event )
     qDebug() << "Ctrl+C -- performCopy()" << this->getId();
 
     performCopy();
-
     event->accept();
   }
   // CTRL+V - Paste
@@ -1661,8 +1563,65 @@ void LayoutRegion::keyPressEvent( QKeyEvent * event )
 void LayoutRegion::keyReleaseEvent( QKeyEvent * event )
 {
   QGraphicsItem::keyReleaseEvent(event);
-}
 
+  QMap <QString, QString> attrs = getAttributes();
+  double value = 0.0;
+
+  double step = event->modifiers().testFlag(Qt::ShiftModifier) ?
+        KEYBOARD_MOVE_REGION_STEP_SMALL : KEYBOARD_MOVE_REGION_STEP;
+
+  qreal parentW, parentH;
+  if(parentItem() != NULL)
+  {
+    parentW = ((LayoutRegion*)parentItem())->getWidth();
+    parentH = ((LayoutRegion*)parentItem())->getHeight();
+  }
+  else
+  {
+    parentW = scene()->width();
+    parentH = scene()->height();
+  }
+
+  if (isSelected())
+  {
+    switch (event->key())
+    {
+      case Qt::Key_Left:
+        value = ( (x() - step) / parentW) * 100;
+        ROUND_DOUBLE(value);
+        if ((value + relativeWidth * 100) > 100.0)
+          value = (1.0 - relativeWidth) * 100.0;
+        attrs ["left"] = QString::number( value, 'f', 2) + "%";
+        break;
+      case Qt::Key_Right:
+        value = ( (x() + step) / parentW) * 100;
+        ROUND_DOUBLE(value);
+        if ((value + relativeWidth * 100) > 100.0)
+          value = (1.0 - relativeWidth) * 100.0;
+        attrs ["left"] = QString::number( value, 'f', 2) + "%";
+        break;
+      case Qt::Key_Down:
+        value = ( (y() + step) / parentH) * 100;
+        ROUND_DOUBLE(value);
+        if ((value + relativeHeight * 100) > 100.0)
+          value = (1.0 - relativeHeight) * 100.0;
+        attrs ["top"] = QString::number( value, 'f', 2) + "%";
+        break;
+      case Qt::Key_Up:
+        value = ( (y() - step) / parentH) * 100;
+        ROUND_DOUBLE(value);
+        if ((value + relativeHeight * 100) > 100.0)
+          value = (1.0 - relativeHeight) * 100.0;
+        attrs ["top"] = QString::number( value, 'f', 2) + "%";
+        break;
+      default:
+        break;
+    }
+
+    event->accept();
+    emit regionChangeRequested(this, attrs);
+  }
+}
 
 void LayoutRegion::contextMenuEvent(QGraphicsSceneContextMenuEvent* event)
 {

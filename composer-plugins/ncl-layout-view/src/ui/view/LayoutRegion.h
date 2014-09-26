@@ -41,7 +41,7 @@
 
 class LayoutRegionBase;
 
-#define ROUND_DOUBLE(x) x<0.0?x=0.0:(x>100.0?x=0.0:x)
+#define ROUND_DOUBLE(x) (x < 0.0 || x > 100.0) ? x = 0.0 : x
 
 class LayoutRegion : public QObject, public QGraphicsItem
 {
