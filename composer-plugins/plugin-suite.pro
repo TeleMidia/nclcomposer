@@ -5,6 +5,7 @@ CONFIG += \
     ordered
 
 SUBDIRS = \
+    ncl-profile \
     outline-view \
     ncl-textual-view/deps/QScintilla-gpl-2.8/Qt4Qt5/qscintilla.pro \
     ncl-textual-view/ncl-textual-view.pro \

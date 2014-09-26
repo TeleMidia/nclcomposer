@@ -1,9 +1,4 @@
-#-------------------------------------------------
-#
-# Project created by QtCreator 2011-10-11T11:55:41
-#
-#-------------------------------------------------
-
+CONFIG += link_ncl_profile
 include (../plugins-common.pri)
 
 libboost {
