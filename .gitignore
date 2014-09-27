@@ -1,4 +1,6 @@
 Makefile*
+*.so
+*.so.*
 *.mocs
 *.objs
 *.moc
