@@ -59,8 +59,6 @@ public slots:
   void change(QString uid, QMap<QString, QString> properties, QMap<QString, QString> previous, QMap<QString, QString> settings);
   void select(QString uid, QMap<QString, QString> settings);
 
-  void create(QnstSubtype subtype);
-
   void create(QnstSubtype subtype, QMap<QString, QString> properties, QMap<QString, QString> settings);
 
   void performHelp();

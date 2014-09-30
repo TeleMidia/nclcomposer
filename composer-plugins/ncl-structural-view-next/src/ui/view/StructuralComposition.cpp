@@ -242,7 +242,7 @@ void StructuralComposition::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *even
   }
 
   if (collapsed)
-  {
+  {  
     setTop(getTop() - (lasth/2 - DEFAULT_MEDIA_HEIGHT/2));
     setLeft(getLeft() - (lastw/2 - DEFAULT_MEDIA_WIDTH/2));
     setWidth(lastw);
@@ -270,10 +270,7 @@ void StructuralComposition::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *even
   }
   else
   {
-    tmp->setTop(getTop());
-    tmp->setLeft(getLeft());
-    tmp->setWidth(getWidth());
-    tmp->setHeight(getHeight());
+    tmp->setnstProperties(getnstProperties());
 
     lastw = getWidth();
     lasth = getHeight();
@@ -284,6 +281,7 @@ void StructuralComposition::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *even
       {
         e->hide();
         e->setnstParent(tmp);
+        removeChild(e);
       }
     }
 
@@ -335,7 +333,7 @@ void StructuralComposition::adjustWithSpring()
   while(it++ < SPRING_INTERATION)
   {
     int N = getnstChildren().size();
-    QPointF next[N];
+    QVector<QPointF> next(N);
 
     qreal vf[N];
     qreal va[N];

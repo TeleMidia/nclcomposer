@@ -397,6 +397,8 @@ void StructuralView::change(QString uid, QMap<QString, QString> properties, QMap
      {
          if (entity->getnstType() == Structural::Edge)
          {
+             if (entity->getnstProperty(":nst:a") == uid ||
+                 entity->getnstProperty(":nst:b") == uid)
              entity->adjust();
          }
      }

@@ -62,4 +62,5 @@ SOURCES += \
   src/main.cpp
 
 RESOURCES += \
-  ncl-structural-view-next.qrc
+  ncl-structural-view-next.qrc \
+  ../common-resources/images.qrc
