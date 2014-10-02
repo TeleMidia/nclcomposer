@@ -43,13 +43,9 @@ void StructuralScene::performRedo()
 
 void StructuralScene::performInsert(Structural::EntitySubtype name)
 {
-
-  qDebug() << "MENU DA CENA";
   switch (name) {
     case Structural::Body:
     {
-
-      qDebug() << _insertPoint;
       QMap<QString, QString> properties;
       properties[":nst:top"] = QString::number(_insertPoint.y() - DEFAULT_BODY_HEIGHT/2);
       properties[":nst:left"] = QString::number(_insertPoint.x() - DEFAULT_BODY_WIDTH/2);

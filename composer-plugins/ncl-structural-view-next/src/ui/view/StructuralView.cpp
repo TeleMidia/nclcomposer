@@ -108,6 +108,48 @@ StructuralEntity* StructuralView::getEntity(QString uid)
 
 /**********************************************************/
 
+void StructuralView::serialize(QString &data)
+{
+  QDomDocument* document = new QDomDocument();
+  QDomElement root = document->createElement("structural");
+
+  foreach(StructuralEntity* entity, entities.values())
+  {
+    if (entity->getnstSubtype() == Structural::Body)
+    {
+      exportDataFromEntity(entity, document, root);
+    }
+  }
+
+  document->appendChild(root);
+  data = document->toString();
+
+  qDebug() << data;
+
+}
+
+void StructuralView::exportDataFromEntity(StructuralEntity* entity, QDomDocument* doc, QDomElement parent)
+{  
+  QDomElement element = doc->createElement(StructuralUtil::getStrFromNstType(entity->getnstSubtype()));
+
+  element.setAttribute("uid", entity->getnstUid());
+
+  foreach (QString name, entity->getnstProperties().keys())
+  {
+    QDomElement property = doc->createElement("property");
+    property.setAttribute("name",name);
+    property.setAttribute("value", entity->getnstProperty(name));
+
+    element.appendChild(property);
+  }
+
+  foreach (StructuralEntity* child, entity->getnstChildren()) {
+    exportDataFromEntity(child, doc, element);
+  }
+
+  parent.appendChild(element);
+}
+
 void StructuralView::insert(QString uid, QString parent, QMap<QString, QString> properties, QMap<QString, QString> settings)
 {
   if (!entities.contains(uid))
@@ -264,6 +306,8 @@ void StructuralView::insert(QString uid, QString parent, QMap<QString, QString> 
 
         entity->setTop(scene->sceneRect().height()/2 - entity->getWidth()/2);
         entity->setLeft(scene->sceneRect().width()/2 - entity->getWidth()/2);
+        entity->setWidth(DEFAULT_BODY_WIDTH);
+        entity->setHeight(DEFAULT_BODY_HEIGHT);
       }
 
       entity->setnstUid(uid);

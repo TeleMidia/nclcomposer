@@ -78,8 +78,6 @@ QString StructuralEntity::getnstUid() const
 void StructuralEntity::setnstUid(const QString &uid)
 {
   this->uid = uid;
-
-  properties[":nst:uid"] = uid;
 }
 
 
@@ -104,7 +102,7 @@ void StructuralEntity::setnstSubtype(const QnstSubtype subtype)
 {
   this->subtype = subtype;
 
-  properties[":nst:subtype"] = QString::number(subtype);
+  properties[":nst:subtype"] = StructuralUtil::getStrFromNstType(subtype);
 }
 
 QMap<QString, QString> StructuralEntity::getnstProperties() const

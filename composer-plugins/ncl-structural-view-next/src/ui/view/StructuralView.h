@@ -52,6 +52,8 @@ public:
   void setAction(QString action);
   void setCondition(QString condition);
 
+  void serialize(QString &data);
+  void exportDataFromEntity(StructuralEntity* entity, QDomDocument* doc, QDomElement parent);
 
 public slots:
   void insert(QString uid, QString parent, QMap<QString, QString> properties, QMap<QString, QString> settings);

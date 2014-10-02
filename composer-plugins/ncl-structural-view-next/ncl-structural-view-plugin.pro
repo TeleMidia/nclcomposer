@@ -10,6 +10,9 @@ TARGET = \
 DESTDIR = \
   bin/
 
+DEFINES += \
+  PLUGIN
+
 INCLUDEPATH += \
   src/ \
   src/core/ \

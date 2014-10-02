@@ -16,6 +16,16 @@ StructuralWindow::~StructuralWindow()
 
 }
 
+StructuralView* StructuralWindow::getView()
+{
+  return _view;
+}
+
+void StructuralWindow::setView(StructuralView* view)
+{
+  _view = view;
+}
+
 void StructuralWindow::createActions()
 {
   // new action
@@ -217,6 +227,7 @@ void StructuralWindow::createActions()
 
 void StructuralWindow::createMenus()
 {
+#ifndef PLUGIN
   // file menu
   _fileMenu = menuBar()->addMenu(tr("File"));
   _fileMenu->addAction(_newAction);
@@ -253,6 +264,7 @@ void StructuralWindow::createMenus()
   _helpMenu->addAction(_reportAction);
   _helpMenu->addSeparator();
   _helpMenu->addAction(_aboutAction);
+#endif
 }
 
 void StructuralWindow::createToolbar()
