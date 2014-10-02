@@ -6,7 +6,7 @@ StructuralNode::StructuralNode(StructuralEntity* parent)
   : QnstEntityWithEdges(parent)
 {
   setnstType(Structural::Node);
-  setnstSubtype(Structural::NoSubtype);
+  setnstSubtype(Structural::NoName);
 
   hover = false;
 }

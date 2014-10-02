@@ -52,7 +52,7 @@ void StructuralMedia::setSource(QString source)
   this->source = source;
 }
 
-void StructuralMedia::setnstSubtype(QnstSubtype type)
+void StructuralMedia::setnstSubtype(QnstName type)
 {
   StructuralNode::setnstSubtype(type);
 

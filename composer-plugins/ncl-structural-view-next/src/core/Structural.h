@@ -28,7 +28,7 @@ public:
     NoType      = 0
   };
 
-  enum EntitySubtype
+  enum EntityName
   {
     Media       = 1,
     Body        = 2,
@@ -44,7 +44,7 @@ public:
     Bind        = 10,
     Reference   = 11,
 
-    NoSubtype   = 0
+    NoName   = 0
   };
 
   enum EntityResize {
@@ -85,7 +85,7 @@ public:
 };
 
 typedef Structural::EntityType QnstType;
-typedef Structural::EntitySubtype QnstSubtype;
+typedef Structural::EntityName QnstName;
 
 typedef Structural::EntityResize QnstResizeType;
 

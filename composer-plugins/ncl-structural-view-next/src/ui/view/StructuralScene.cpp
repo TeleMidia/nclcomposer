@@ -26,7 +26,7 @@ void StructuralScene::createMenus()
 
 void StructuralScene::createConnections()
 {
-  connect(_menu, SIGNAL(insert(Structural::EntitySubtype)), SLOT(performInsert(Structural::EntitySubtype)));
+  connect(_menu, SIGNAL(insert(Structural::EntityName)), SLOT(performInsert(Structural::EntityName)));
 }
 
 void StructuralScene::performUndo()
@@ -41,7 +41,7 @@ void StructuralScene::performRedo()
   view->performRedo();
 }
 
-void StructuralScene::performInsert(Structural::EntitySubtype name)
+void StructuralScene::performInsert(Structural::EntityName name)
 {
   switch (name) {
     case Structural::Body:
@@ -51,7 +51,7 @@ void StructuralScene::performInsert(Structural::EntitySubtype name)
       properties[":nst:left"] = QString::number(_insertPoint.x() - DEFAULT_BODY_WIDTH/2);
 
       StructuralView* view = (StructuralView*) views().at(0);
-      view->create(Structural::Body, properties, QMap<QString, QString>());
+//      view->create(Structural::Body, properties, QMap<QString, QString>());
 
       break;
     }

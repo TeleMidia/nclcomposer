@@ -28,7 +28,7 @@ protected slots:
   void performUndo();
   void performRedo();
   void performSnapshot();
-  void performInsert(Structural::EntitySubtype);
+  void performInsert(Structural::EntityName);
 
 private:
   void createMenus();

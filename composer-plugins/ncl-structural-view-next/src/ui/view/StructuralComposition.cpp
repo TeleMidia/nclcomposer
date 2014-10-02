@@ -100,7 +100,7 @@ bool StructuralComposition::isCollapsed()
   return collapsed;
 }
 
-void StructuralComposition::setnstSubtype(const QnstSubtype subtype)
+void StructuralComposition::setnstSubtype(const QnstName subtype)
 {
   if (subtype == Structural::Context){
     setColor("#F4E4CC");

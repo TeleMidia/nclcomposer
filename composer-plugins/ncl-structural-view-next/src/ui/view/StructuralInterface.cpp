@@ -4,7 +4,7 @@ StructuralInterface::StructuralInterface(StructuralEntity* parent)
   : QnstEntityWithEdges(parent)
 {
   setnstType(Structural::Interface);
-  setnstSubtype(Structural::NoSubtype);
+  setnstSubtype(Structural::NoName);
 
   setResizable(false);
 
@@ -37,20 +37,24 @@ void StructuralInterface::setRefer(bool isRefer)
   _isRefer = isRefer;
 }
 
-void StructuralInterface::setnstSubtype(const QnstSubtype subtype)
+void StructuralInterface::setnstSubtype(const QnstName subtype)
 {
   if (subtype == Structural::Port){
     setHexColor("#000000");
     setHexBorderColor("#000000");
+    icon = QPixmap(":/images/icon/port");
   }else if (subtype == Structural::Area){
     setHexColor("#F4A460");
     setHexBorderColor("#999999");
+    icon = QPixmap(":/images/icon/area");
   }else if (subtype == Structural::Property){
     setHexColor("#999999");
     setHexBorderColor("#666666");
+    icon = QPixmap(":/images/icon/property");
   }else if (subtype == Structural::SwitchPort){
     setHexColor("#000000");
     setHexBorderColor("#000000");
+    icon = QPixmap(":/images/icon/switchport");
   }
 
   QnstEntityWithEdges::setnstSubtype(subtype);
@@ -455,7 +459,9 @@ void StructuralInterface::draw(QPainter* painter)
   painter->setBrush(QBrush(bg));
   painter->setPen(QPen(QBrush(border), 0, Qt::SolidLine));
 
-  painter->drawRect(4 + 8/2, 4 + 8/2, getWidth()-8, getHeight()-8);
+//  painter->drawRect(4 + 8/2, 4 + 8/2, getWidth()-8, getHeight()-8);
+
+  painter->drawPixmap(4 + 4/2, 4 + 4/2, getWidth()-4, getHeight()-4,icon);
 
   drawMouseHoverHighlight(painter); // This should not be HERE!!
 

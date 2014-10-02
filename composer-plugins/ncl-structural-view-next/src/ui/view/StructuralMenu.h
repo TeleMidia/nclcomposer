@@ -15,7 +15,7 @@ public:
   virtual ~StructuralMenu();
 
 signals:
-  void insert(Structural::EntitySubtype);
+  void insert(Structural::EntityName);
 
 private:
   void createActions();

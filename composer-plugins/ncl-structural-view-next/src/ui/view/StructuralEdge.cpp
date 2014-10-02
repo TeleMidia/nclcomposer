@@ -4,7 +4,7 @@ StructuralEdge::StructuralEdge(StructuralEntity* parent)
   : StructuralEntity(parent)
 {
   setnstType(Structural::Edge);
-  setnstSubtype(Structural::NoSubtype);
+  setnstSubtype(Structural::NoName);
 
   setSelectable(true);
   setResizable(false);

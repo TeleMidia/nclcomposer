@@ -7,7 +7,7 @@ StructuralEntity::StructuralEntity(StructuralEntity* parent)
 {
   setnstUid((QString) QUuid::createUuid().toString());
   setnstType(Structural::NoType);
-  setnstSubtype(Structural::NoSubtype);
+  setnstSubtype(Structural::NoName);
 
   setnstParent(parent);
 
@@ -58,7 +58,7 @@ StructuralEntity::StructuralEntity(StructuralEntity* parent)
 
   hover = false;
   menu = new StructuralMenu();
-  connect(menu, SIGNAL(insert(Structural::EntitySubtype)),SLOT(performInsert(Structural::EntitySubtype)));
+  connect(menu, SIGNAL(insert(Structural::EntityName)),SLOT(performInsert(Structural::EntityName)));
 
   draggable = false;
   hasError = false;
@@ -93,12 +93,12 @@ void StructuralEntity::setnstType(const QnstType type)
   properties[":nst:type"] = QString::number(type);
 }
 
-QnstSubtype StructuralEntity::getnstSubtype() const
+QnstName StructuralEntity::getnstSubtype() const
 {
   return subtype;
 }
 
-void StructuralEntity::setnstSubtype(const QnstSubtype subtype)
+void StructuralEntity::setnstSubtype(const QnstName subtype)
 {
   this->subtype = subtype;
 
@@ -514,7 +514,7 @@ void StructuralEntity::insertChild(StructuralEntity* child)
     }
     }
 
-                    void StructuralEntity::newChild(Structural::EntitySubtype type)
+                    void StructuralEntity::newChild(Structural::EntityName type)
       {
                     /****************************************************
                               // \todo Check if type is an media type allowed to me!
@@ -655,7 +655,7 @@ void StructuralEntity::insertChild(StructuralEntity* child)
 
       }else if (event->button() == Qt::LeftButton){
         if (selectable && !selectedd){
-          setSelected(true); emit selected(getnstUid(), QMap<QString, QString>());
+          setSelected(true); QMap<QString, QString> settings; emit selected(getnstUid(), settings);
         }
 
         setPressTop(event->pos().y());
@@ -900,7 +900,7 @@ void StructuralEntity::insertChild(StructuralEntity* child)
         {
           setSelected(true);
           //emit entitySelected(this);
-          emit selected(getnstUid(), QMap<QString, QString>());
+          QMap<QString, QString> settings; emit selected(getnstUid(), settings);
         }
 
         _insertPoint = event->pos();
@@ -969,7 +969,7 @@ void StructuralEntity::insertChild(StructuralEntity* child)
       }
     }
 
-  void StructuralEntity::performInsert(Structural::EntitySubtype name)
+  void StructuralEntity::performInsert(Structural::EntityName name)
   {
 
     QMap<QString, QString> properties;

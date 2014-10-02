@@ -350,7 +350,7 @@ void  StructuralWindow::createConnections()
   connect(_mediaAction, SIGNAL(triggered()), SLOT(performMedia()));
 
   connect(_portAction, SIGNAL(triggered()), SLOT(performPort()));
-  connect(_switchportAction, SIGNAL(triggered()), SLOT(performSwitchport()));
+  connect(_switchportAction, SIGNAL(triggered()), SLOT(performSwitchPort()));
   connect(_areaAction, SIGNAL(triggered()), SLOT(performArea()));
   connect(_propertyAction, SIGNAL(triggered()), SLOT(performProperty()));
 
@@ -454,11 +454,15 @@ void StructuralWindow::performPaste()
 
 void StructuralWindow::performPointer()
 {
+  qDebug() << "[QNST]" << ":" << "Performing 'Pointer' action";
+
   // TODO
 }
 
 void StructuralWindow::performLink()
 {
+  qDebug() << "[QNST]" << ":" << "Performing 'Link' action";
+
   // TODO
 }
 
@@ -466,56 +470,120 @@ void StructuralWindow::performBody()
 {
   qDebug() << "[QNST]" << ":" << "Performing 'Body' action";
 
-  // TODO
+  QMap<QString,QString> properties;
+  properties["LOCAL:NAME"] = "body";
+
+  QMap<QString,QString> settings;
+  settings["UNDO"] = "1";
+  settings["NOTIFY"] = "1";
+  settings["CODE"] = StructuralUtil::createUid();
+
+  _view->create(Structural::Body, properties, settings);
 }
 
 void StructuralWindow::performContext()
 {
   qDebug() << "[QNST]" << ":" << "Performing 'Context' action";
 
-  // TODO
+  QMap<QString,QString> properties;
+  properties["LOCAL:NAME"] = "context";
+
+  QMap<QString,QString> settings;
+  settings["UNDO"] = "1";
+  settings["NOTIFY"] = "1";
+  settings["CODE"] = StructuralUtil::createUid();
+
+  _view->create(Structural::Context, properties, settings);
 }
 
 void StructuralWindow::performSwitch()
 {
   qDebug() << "[QNST]" << ":" << "Performing 'Switch' action";
 
-  // TODO
+  QMap<QString,QString> properties;
+  properties["LOCAL:NAME"] = "switch";
+
+  QMap<QString,QString> settings;
+  settings["UNDO"] = "1";
+  settings["NOTIFY"] = "1";
+  settings["CODE"] = StructuralUtil::createUid();
+
+  _view->create(Structural::Switch, properties, settings);
 }
 
 void StructuralWindow::performMedia()
 {
   qDebug() << "[QNST]" << ":" << "Performing 'Media' action";
 
-  // TODO
+  QMap<QString,QString> properties;
+  properties["LOCAL:NAME"] = "media";
+
+  QMap<QString,QString> settings;
+  settings["UNDO"] = "1";
+  settings["NOTIFY"] = "1";
+  settings["CODE"] = StructuralUtil::createUid();
+
+  _view->create(Structural::Media, properties, settings);
 }
 
 void StructuralWindow::performPort()
 {
   qDebug() << "[QNST]" << ":" << "Performing 'Port' action";
 
-  // TODO
+  QMap<QString,QString> properties;
+  properties["LOCAL:NAME"] = "port";
+
+  QMap<QString,QString> settings;
+  settings["UNDO"] = "1";
+  settings["NOTIFY"] = "1";
+  settings["CODE"] = StructuralUtil::createUid();
+
+  _view->create(Structural::Port, properties, settings);
 }
 
 void StructuralWindow::performArea()
 {
   qDebug() << "[QNST]" << ":" << "Performing 'Area' action";
 
-  // TODO
+  QMap<QString,QString> properties;
+  properties["LOCAL:NAME"] = "area";
+
+  QMap<QString,QString> settings;
+  settings["UNDO"] = "1";
+  settings["NOTIFY"] = "1";
+  settings["CODE"] = StructuralUtil::createUid();
+
+  _view->create(Structural::Area, properties, settings);
 }
 
-void StructuralWindow::performSwitchport()
+void StructuralWindow::performSwitchPort()
 {
   qDebug() << "[QNST]" << ":" << "Performing 'SwitchPort' action";
 
-  // TODO
+  QMap<QString,QString> properties;
+  properties["LOCAL:NAME"] = "switchPort";
+
+  QMap<QString,QString> settings;
+  settings["UNDO"] = "1";
+  settings["NOTIFY"] = "1";
+  settings["CODE"] = StructuralUtil::createUid();
+
+  _view->create(Structural::SwitchPort, properties, settings);
 }
 
 void StructuralWindow::performProperty()
 {
   qDebug() << "[QNST]" << ":" << "Performing 'Property' action";
 
-  // TODO
+  QMap<QString,QString> properties;
+  properties["LOCAL:NAME"] = "property";
+
+  QMap<QString,QString> settings;
+  settings["UNDO"] = "1";
+  settings["NOTIFY"] = "1";
+  settings["CODE"] = StructuralUtil::createUid();
+
+  _view->create(Structural::Property, properties, settings);
 }
 
 void StructuralWindow::performPreferences()

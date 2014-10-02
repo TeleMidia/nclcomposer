@@ -23,7 +23,7 @@ public:
 
   void setSource(QString source);
 
-  virtual void setnstSubtype(QnstSubtype subtype);
+  virtual void setnstSubtype(QnstName subtype);
 
   QString getSource() const;
 

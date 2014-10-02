@@ -11,7 +11,7 @@ public:
 
   ~StructuralInterface();
 
-  virtual void setnstSubtype(const QnstSubtype subtype);
+  virtual void setnstSubtype(const QnstName subtype);
 
   virtual void adjust(bool avoidCollision = true);
 
@@ -40,6 +40,8 @@ private:
 
   QString hexColor;
   QString hexBorderColor;
+
+  QPixmap icon;
 };
 
 #endif // QNSTGRAPHICSINTERFACE_H

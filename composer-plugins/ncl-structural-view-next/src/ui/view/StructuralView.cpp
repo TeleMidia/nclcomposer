@@ -10,8 +10,8 @@
 #include "StructuralUtil.h"
 #include "StructuralBind.h"
 
-std::map <Structural::EntitySubtype, QString> StructuralView::mediaTypeToXMLStr =
-    create_map<Structural::EntitySubtype, QString>
+std::map <Structural::EntityName, QString> StructuralView::mediaTypeToXMLStr =
+    create_map<Structural::EntityName, QString>
       (Structural::Media, "media");
 //      (Qnst::Image, "image")
 //      (Qnst::Audio, "audio")
@@ -46,8 +46,8 @@ StructuralView::StructuralView(QWidget* parent)
   lastLinkMouseOver = NULL;
 
   // Initialize entity counters
-  for(int i = Structural::Node; i < Structural::NoSubtype; i += 1)
-    entityCounter[ (Structural::EntitySubtype) i ] = 0;
+  for(int i = Structural::Node; i < Structural::NoName; i += 1)
+    entityCounter[ (Structural::EntityName) i ] = 0;
 
   setAttribute(Qt::WA_TranslucentBackground);
 
@@ -168,7 +168,7 @@ void StructuralView::insert(QString uid, QString parent, QMap<QString, QString> 
       commnads.push(command); return;
     }
 
-    StructuralEntity* entity; QnstSubtype type = StructuralUtil::getnstTypeFromStr(properties[":nst:subtype"]);
+    StructuralEntity* entity; QnstName type = StructuralUtil::getnstTypeFromStr(properties["LOCAL:NAME"]);
 
     switch (type)
     {
@@ -471,63 +471,52 @@ void StructuralView::select(QString uid, QMap<QString, QString> settings)
   }
 }
 
-void StructuralView::create(QnstSubtype subtype, QMap<QString, QString> extraproperties, QMap<QString, QString> extrasettings)
+void StructuralView::create(QnstName name, QMap<QString, QString> &properties, QMap<QString, QString> &settings)
 {
-  switch (subtype)
+  QString uid = StructuralUtil::createUid();
+  QString parent = "";
+
+  switch (name)
   {
     case Structural::Body:
     {
-      QString uid = QUuid::createUuid().toString();
-      QString parent = "";
-      QMap<QString, QString> properties = extraproperties;
-      properties[":nst:subtype"] = "body";
+      if (!properties.contains("LOCAL:TOP"))
+        properties["LOCAL:TOP"] = QString::number(scene->height()/2 - DEFAULT_BODY_HEIGHT/2);
 
-      if (!properties.contains(":nst:top"))
-        properties[":nst:top"] = QString::number(scene->height()/2 - DEFAULT_BODY_HEIGHT/2);
+      if (!properties.contains("LOCAL:LEFT"))
+        properties["LOCAL:LEFT"] = QString::number(scene->width()/2 - DEFAULT_BODY_WIDTH/2);
 
-      if (!properties.contains(":nst:left"))
-        properties[":nst:left"] = QString::number(scene->width()/2 - DEFAULT_BODY_WIDTH/2);
+      if (!properties.contains("LOCAL:WIDTH"))
+        properties["LOCAL:WIDTH"] = QString::number(DEFAULT_BODY_WIDTH);
 
-      if (!properties.contains(":nst:width"))
-        properties[":nst:width"] = QString::number(DEFAULT_BODY_WIDTH);
+      if (!properties.contains("LOCAL:HEIGHT"))
+        properties["LOCAL:HEIGHT"] = QString::number(DEFAULT_BODY_HEIGHT);
 
-      if (!properties.contains(":nst:height"))
-        properties[":nst:height"] = QString::number(DEFAULT_BODY_HEIGHT);
-
-      QMap<QString, QString> settings = extrasettings;
-
-      if (!settings.contains("UNDO"))
-      settings["UNDO"] = "1";
-
-      if (!settings.contains("NOTIFY"))
-      settings["NOTIFY"] = "1";
-
-      if (!settings.contains("CODE"))
-      settings["CODE"] = QUuid::createUuid().toString();
-
-      insert(uid, parent, properties, settings);
       break;
     }
 
     default:
     {
       if (_selected != NULL)
-      {
-        QString uid = QUuid::createUuid().toString();
-        QString parent = _selected->getnstUid();
-        QMap<QString, QString> properties;
-        properties[":nst:subtype"] = StructuralUtil::getStrFromNstType(subtype);
+        parent = _selected->getnstUid();
 
-        QMap<QString, QString> settings;
-        settings["UNDO"] = "1";
-        settings["NOTIFY"] = "1";
-        settings["CODE"] = QUuid::createUuid().toString();
-
-        insert(uid, parent, properties, settings);
-      }
       break;
     }
   }
+
+  if (!properties.contains("LOCAL:NAME"))
+    properties["LOCAL:NAME"] = StructuralUtil::getStrFromNstType(name);
+
+  if (!settings.contains("UNDO"))
+    settings["UNDO"] = "1";
+
+  if (!settings.contains("NOTIFY"))
+    settings["NOTIFY"] = "1";
+
+  if (!settings.contains("CODE"))
+    settings["CODE"] = StructuralUtil::createUid();
+
+  insert(uid, parent, properties, settings);
 }
 
 
@@ -651,7 +640,7 @@ bool StructuralView::updateEntityWithUniqueNstId(StructuralEntity *entity)
   if(entity != NULL)
   {
     int n = 0;
-    Structural::EntitySubtype type = entity->getnstSubtype();
+    Structural::EntityName type = entity->getnstSubtype();
 
     // check if type is in the map
     if(!entityCounter.count(type))

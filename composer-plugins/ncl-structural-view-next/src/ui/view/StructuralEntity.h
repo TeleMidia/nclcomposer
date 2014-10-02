@@ -34,8 +34,8 @@ public:
   QnstType getnstType() const;
   virtual void setnstType(const QnstType type);
 
-  QnstSubtype getnstSubtype() const;
-  virtual void setnstSubtype(const QnstSubtype subtype);
+  QnstName getnstSubtype() const;
+  virtual void setnstSubtype(const QnstName subtype);
 
   QMap<QString, QString> getnstProperties() const;
   virtual void setnstProperties(const QMap<QString, QString> &properties);
@@ -135,8 +135,8 @@ public:
   void setzIndex(qreal zIndex);
 
 public slots:
-  virtual void newChild(QnstSubtype subtype);
-  void performInsert(Structural::EntitySubtype name);
+  virtual void newChild(QnstName subtype);
+  void performInsert(Structural::EntityName name);
 
 signals:
   void inserted(QString uid, QString parent, QMap<QString, QString> properties, QMap<QString, QString> settings);
@@ -167,7 +167,7 @@ protected:
 private:
   QString uid;
   QnstType type;
-  QnstSubtype subtype;
+  QnstName subtype;
   QMap<QString, QString> properties;
 
   StructuralEntity* parent;

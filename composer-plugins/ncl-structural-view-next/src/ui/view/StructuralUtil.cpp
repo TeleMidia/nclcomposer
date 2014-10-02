@@ -48,8 +48,8 @@ static std::map <QString, QString> config  =
   (":nst:entity:composition:collapsed", "0");
 
 /* Initialize icon from type Map */
-std::map <Structural::EntitySubtype, QString> StructuralUtil::iconFromTypeMap =
-  create_map<Structural::EntitySubtype, QString >
+std::map <Structural::EntityName, QString> StructuralUtil::iconFromTypeMap =
+  create_map<Structural::EntityName, QString >
 /*
     (Qnst::Text, ":/icon/text")
     (Qnst::Image, ":/icon/image")
@@ -75,8 +75,8 @@ std::map <Structural::EntitySubtype, QString> StructuralUtil::iconFromTypeMap =
     //(Qnst::Link, ":icon/aggregator")
 
 /* Initialize type from extension Map */
-std::map <QString, Structural::EntitySubtype> StructuralUtil::typeFromExtMap =
-  create_map <QString, Structural::EntitySubtype>
+std::map <QString, Structural::EntityName> StructuralUtil::typeFromExtMap =
+  create_map <QString, Structural::EntityName>
     ("txt", Structural::Media)
     ("png", Structural::Media)
     ("jpg", Structural::Media)
@@ -101,8 +101,8 @@ std::map <QString, Structural::EntitySubtype> StructuralUtil::typeFromExtMap =
     ("lua", Structural::Media);
 
 /* Initialize map from str type to qnsttype */
-std::map <QString, Structural::EntitySubtype> StructuralUtil::typeFromStr =
-  create_map <QString, Structural::EntitySubtype>
+std::map <QString, Structural::EntityName> StructuralUtil::typeFromStr =
+  create_map <QString, Structural::EntityName>
     ("body", Structural::Body)
     ("context", Structural::Context)
     ("port", Structural::Port)
@@ -126,12 +126,12 @@ std::map <QString, Structural::EntitySubtype> StructuralUtil::typeFromStr =
 
   //  ("aggregator",  Qnst::Aggregator);
 
-std::map <Structural::EntitySubtype, QString> StructuralUtil::strFromType =
-    invert_map<Structural::EntitySubtype, QString>(StructuralUtil::typeFromStr);
+std::map <Structural::EntityName, QString> StructuralUtil::strFromType =
+    invert_map<Structural::EntityName, QString>(StructuralUtil::typeFromStr);
 
 /* Initialize prefix id from type Map */
-std::map <Structural::EntitySubtype, QString> StructuralUtil::prefixIdFromType =
-  create_map<Structural::EntitySubtype, QString >
+std::map <Structural::EntityName, QString> StructuralUtil::prefixIdFromType =
+  create_map<Structural::EntityName, QString >
     (Structural::Media, "m")
 /*
     (Qnst::Image, "m")
@@ -181,7 +181,7 @@ std::map <Structural::BindType, QString> StructuralUtil::strFromBindType =
   invert_map<Structural::BindType, QString> (StructuralUtil::bindTypeFromRoleStr);
 
 
-StructuralEntity *StructuralUtil::makeGraphicsEntity(Structural::EntitySubtype type,
+StructuralEntity *StructuralUtil::makeGraphicsEntity(Structural::EntityName type,
                                                  StructuralEntity *parent,
                                            const QMap <QString, QString> &props)
 {
@@ -247,9 +247,9 @@ StructuralEntity *StructuralUtil::makeGraphicsEntity(Structural::EntitySubtype t
   return entity;
 }
 
-Structural::EntitySubtype StructuralUtil::getnstTypeFromMime(const QString &mimeType)
+Structural::EntityName StructuralUtil::getnstTypeFromMime(const QString &mimeType)
 {
-  Structural::EntitySubtype type;
+  Structural::EntityName type;
 /*
   if (mimeType.startsWith("image"))
    type = Qnst::Image;
@@ -275,7 +275,12 @@ Structural::EntitySubtype StructuralUtil::getnstTypeFromMime(const QString &mime
   return type;
 }
 
-QString StructuralUtil::iconFromMediaType(Structural::EntitySubtype type)
+QString StructuralUtil::createUid()
+{
+  return QUuid::createUuid().toString();
+}
+
+QString StructuralUtil::iconFromMediaType(Structural::EntityName type)
 {
   QString path;
   if(iconFromTypeMap.count(type))
@@ -286,7 +291,7 @@ QString StructuralUtil::iconFromMediaType(Structural::EntitySubtype type)
   return path;
 }
 
-Structural::EntitySubtype StructuralUtil::getnstTypeFromExtension(const QString &ext)
+Structural::EntityName StructuralUtil::getnstTypeFromExtension(const QString &ext)
 {
   if(typeFromExtMap.count(ext))
     return typeFromExtMap[ext];
@@ -294,15 +299,15 @@ Structural::EntitySubtype StructuralUtil::getnstTypeFromExtension(const QString 
   return Structural::Media;
 }
 
-Structural::EntitySubtype StructuralUtil::getnstTypeFromStr(const QString &strType)
+Structural::EntityName StructuralUtil::getnstTypeFromStr(const QString &strType)
 {
   if(typeFromStr.count(strType))
     return typeFromStr[strType];
 
-  return Structural::NoSubtype;
+  return Structural::NoName;
 }
 
-QString StructuralUtil::getStrFromNstType(Structural::EntitySubtype type)
+QString StructuralUtil::getStrFromNstType(Structural::EntityName type)
 {
   if(strFromType.count(type))
     return strFromType[type];
@@ -310,7 +315,7 @@ QString StructuralUtil::getStrFromNstType(Structural::EntitySubtype type)
   else return "";
 }
 
-QString StructuralUtil::getPrefixIdFromType(Structural::EntitySubtype type)
+QString StructuralUtil::getPrefixIdFromType(Structural::EntityName type)
 {
   if(prefixIdFromType.count(type))
     return prefixIdFromType[type];
