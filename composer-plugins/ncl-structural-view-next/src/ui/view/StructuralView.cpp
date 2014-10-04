@@ -41,6 +41,11 @@ StructuralView::StructuralView(QWidget* parent)
 
   clipboard = NULL;
 
+  e_clip = NULL;
+
+  clip_cut = "";
+  clip_copy = "";
+
   hasCutted = false;
 
   lastLinkMouseOver = NULL;
@@ -154,20 +159,6 @@ void StructuralView::insert(QString uid, QString parent, QMap<QString, QString> 
 {
   if (!entities.contains(uid))
   {
-    if (settings["UNDO"] == "1")
-    {
-      Insert* command = new Insert(uid, parent, properties, settings);
-
-      connect(command, SIGNAL(insert(QString,QString,QMap<QString,QString>,QMap<QString,QString>)), SLOT(insert(QString,QString,QMap<QString,QString>,QMap<QString,QString>)));
-      connect(command, SIGNAL(remove(QString,QMap<QString,QString>)),SLOT(remove(QString,QMap<QString,QString>)));
-      connect(command, SIGNAL(change(QString,QMap<QString,QString>,QMap<QString,QString>,QMap<QString,QString>)), SLOT(change(QString,QMap<QString,QString>,QMap<QString,QString>,QMap<QString,QString>)));
-      connect(command, SIGNAL(select(QString,QMap<QString,QString>)),SLOT(select(QString,QMap<QString,QString>)));
-
-      command->setText(settings["CODE"]);
-
-      commnads.push(command); return;
-    }
-
     StructuralEntity* entity; QnstName type = StructuralUtil::getnstTypeFromStr(properties["LOCAL:NAME"]);
 
     switch (type)
@@ -304,16 +295,17 @@ void StructuralView::insert(QString uid, QString parent, QMap<QString, QString> 
       {
         scene->addItem(entity);
 
-        entity->setTop(scene->sceneRect().height()/2 - entity->getWidth()/2);
-        entity->setLeft(scene->sceneRect().width()/2 - entity->getWidth()/2);
         entity->setWidth(DEFAULT_BODY_WIDTH);
         entity->setHeight(DEFAULT_BODY_HEIGHT);
+        entity->setTop(scene->sceneRect().height()/2 - entity->getHeight()/2);
+        entity->setLeft(scene->sceneRect().width()/2 - entity->getWidth()/2);
       }
 
       entity->setnstUid(uid);
       entity->setnstProperties(properties);
 
 
+      entities[uid] = entity;
       if (entity->getnstProperty(":nst:id").isEmpty())
         updateEntityWithUniqueNstId(entity);
 
@@ -326,11 +318,23 @@ void StructuralView::insert(QString uid, QString parent, QMap<QString, QString> 
 
       entity->adjust(true);
 
-      entities[uid] = entity;
+      if (settings["UNDO"] == "1")
+      {
+        Insert* command = new Insert(uid, parent, entity->getnstProperties(), settings);
+
+        connect(command, SIGNAL(insert(QString,QString,QMap<QString,QString>,QMap<QString,QString>)), SLOT(insert(QString,QString,QMap<QString,QString>,QMap<QString,QString>)));
+        connect(command, SIGNAL(remove(QString,QMap<QString,QString>)),SLOT(remove(QString,QMap<QString,QString>)));
+        connect(command, SIGNAL(change(QString,QMap<QString,QString>,QMap<QString,QString>,QMap<QString,QString>)), SLOT(change(QString,QMap<QString,QString>,QMap<QString,QString>,QMap<QString,QString>)));
+        connect(command, SIGNAL(select(QString,QMap<QString,QString>)),SLOT(select(QString,QMap<QString,QString>)));
+
+        command->setText(settings["CODE"]);
+
+        commnads.push(command);
+      }
 
       if (settings["NOTIFY"] == "1")
       {
-        emit inserted(uid, parent, properties, settings);
+        emit inserted(uid, parent, entity->getnstProperties(), settings);
       }
     }
   }
@@ -468,6 +472,12 @@ void StructuralView::select(QString uid, QMap<QString, QString> settings)
       }
 
       _selected = entity;
+
+      // TODO
+//      if (settings["NOTIFY"] == "1")
+//      {
+        emit selected(uid, settings);
+//      }
   }
 }
 
@@ -478,27 +488,29 @@ void StructuralView::create(QnstName name, QMap<QString, QString> &properties, Q
 
   switch (name)
   {
-    case Structural::Body:
-    {
-      if (!properties.contains("LOCAL:TOP"))
-        properties["LOCAL:TOP"] = QString::number(scene->height()/2 - DEFAULT_BODY_HEIGHT/2);
+//    case Structural::Body:
+//    {
+//      if (!properties.contains("LOCAL:TOP"))
+//        properties["LOCAL:TOP"] = QString::number(scene->height()/2 - DEFAULT_BODY_HEIGHT/2);
 
-      if (!properties.contains("LOCAL:LEFT"))
-        properties["LOCAL:LEFT"] = QString::number(scene->width()/2 - DEFAULT_BODY_WIDTH/2);
+//      if (!properties.contains("LOCAL:LEFT"))
+//        properties["LOCAL:LEFT"] = QString::number(scene->width()/2 - DEFAULT_BODY_WIDTH/2);
 
-      if (!properties.contains("LOCAL:WIDTH"))
-        properties["LOCAL:WIDTH"] = QString::number(DEFAULT_BODY_WIDTH);
+//      if (!properties.contains("LOCAL:WIDTH"))
+//        properties["LOCAL:WIDTH"] = QString::number(DEFAULT_BODY_WIDTH);
 
-      if (!properties.contains("LOCAL:HEIGHT"))
-        properties["LOCAL:HEIGHT"] = QString::number(DEFAULT_BODY_HEIGHT);
+//      if (!properties.contains("LOCAL:HEIGHT"))
+//        properties["LOCAL:HEIGHT"] = QString::number(DEFAULT_BODY_HEIGHT);
 
-      break;
-    }
+//      break;
+//    }
 
     default:
     {
       if (_selected != NULL)
+      {
         parent = _selected->getnstUid();
+      }
 
       break;
     }
@@ -520,12 +532,12 @@ void StructuralView::create(QnstName name, QMap<QString, QString> &properties, Q
 }
 
 
-void StructuralView::performHelp()
+bool StructuralView::performHelp()
 {
-    // TODO
+    return false;
 }
 
-void StructuralView::performUndo()
+bool StructuralView::performUndo()
 {
   if (commnads.canUndo())
   {
@@ -533,10 +545,14 @@ void StructuralView::performUndo()
 
       while(code == commnads.undoText())
         commnads.undo();
+
+      return true;
   }
+
+  return false;
 }
 
-void StructuralView::performRedo()
+bool StructuralView::performRedo()
 {
   if (commnads.canRedo())
   {
@@ -544,27 +560,96 @@ void StructuralView::performRedo()
 
     while(code == commnads.redoText())
       commnads.redo();
+
+    return true;
   }
+
+  return false;
 }
 
-void StructuralView::performCut()
+bool StructuralView::performCut()
 {
     if (_selected != NULL)
     {
-        clip = _selected->getnstUid();
+      if (!clip_copy.isEmpty())
+      {
+        clip_copy =  "";
+      }
 
-        _selected->setnstParent(NULL);
-        _selected->setVisible(false);
+      if (!clip_cut.isEmpty())
+      {
+        QMap<QString, QString> settings;
+        settings["UNDO"] = "0";
+        settings["NOTIFY"] = "0";
+        settings["CODE"] = StructuralUtil::createUid();
+
+        remove(clip_cut, settings);
+      }
+
+
+
+        clip_cut = _selected->getnstUid();
+
+//        _selected->getnstParent()->removeChild(_selected);
+//        _selected->setnstParent(NULL);
+
+        QMap<QString, QString> previous;
+        previous = _selected->getnstProperties();
+
+        QMap<QString, QString> properties;
+        properties = _selected->getnstProperties();
+        properties["hidden"] = "true";
+
+        QMap<QString, QString> settings;
+        settings["UNDO"] = "1";
+        settings["NOTIFY"] = "1";
+        settings["CODE"] = StructuralUtil::createUid();
+
+        change(clip_cut, properties, previous, settings);
+
+        return true;
     }
+
+    return false;
 }
 
-void StructuralView::performCopy()
+//void StructuralView::rec_clip(StructuralEntity* e, StructuralEntity* parent)
+//{
+//  parent->setnstUid(e->getnstUid());
+//  parent->setnstProperties(e->getnstProperties());
+
+//  foreach (StructuralEntity* child, e->getnstChildren()) {
+//    StructuralEntity* e_c = new StructuralEntity();
+
+//    e_c->setnstParent(parent);
+
+//    rec_clip(child, e_c);
+//  }
+//}
+
+bool StructuralView::performCopy()
 {
     if (_selected != NULL)
     {
-        clip = _selected->getnstUid();
+      if (!clip_cut.isEmpty())
+      {
+        QMap<QString, QString> settings;
+        settings["UNDO"] = "0";
+        settings["NOTIFY"] = "0";
+        settings["CODE"] = StructuralUtil::createUid();
+
+        remove(clip_cut, settings);
+
+        clip_cut = "";
+      }
+
+        clip_copy = _selected->getnstUid();
         //qDebug() << "======================" << clip;
+
+        return true;
     }
+
+    return false;
 }
 
 bool StructuralView::isChild(StructuralEntity* e , StructuralEntity* p)
@@ -585,8 +670,15 @@ bool StructuralView::isChild(StructuralEntity* e , StructuralEntity* p)
     return r;
 }
 
-void StructuralView::performPaste()
+bool StructuralView::performPaste()
 {
+    QString clip = "";
+
+    if (!clip_copy.isEmpty())
+      clip = clip_copy;
+    else if (!clip_cut.isEmpty())
+      clip = clip_cut;
+
     if (entities.contains(clip))
     {
         if (_selected != NULL && _selected != entities[clip] && !isChild(_selected, entities[clip]))
@@ -611,7 +703,15 @@ void StructuralView::performPaste()
             }
 
         }
+
+        return true;
     }
+    else if (e_clip != NULL && _selected != NULL)
+    {
+      performPaste(e_clip, _selected, QUuid::createUuid().toString());
+    }
+
+    return false;
 }
 
 void StructuralView::performPaste(StructuralEntity* entity, StructuralEntity* parent, QString CODE)
@@ -619,6 +719,7 @@ void StructuralView::performPaste(StructuralEntity* entity, StructuralEntity* pa
     QString uid = QUuid::createUuid().toString();
     QString parentuid = parent->getnstUid();
     QMap<QString, QString> properties = entity->getnstProperties();
+    properties["hidden"] = "false";
 
     QMap<QString, QString> settings;
     settings["UNDO"] = "1";
@@ -649,14 +750,28 @@ bool StructuralView::updateEntityWithUniqueNstId(StructuralEntity *entity)
     // change this check in future
     QString prefix = StructuralUtil::getPrefixIdFromType(type);
 
+    bool match = false;
+
+//    foreach(StructuralEntity* e, entities.values())
+//    {
+//      if (e->getnstProperty(":nst:id") == entity->getnstProperty(":nst:id") &&
+//          e != entity)
+//      {
+//        match = true;
+//        break;
+//      }
+//    }
+
+//    if (!match)
+//      return true;
+
     while(1) //
     {
-      bool match = false;
+      match = false;
 
-      foreach(StructuralEntity* entity, entities.values())
+      foreach(StructuralEntity* e, entities.values())
       {
-
-          if (entity->getnstProperty(":nst:id") == QString(prefix + QString::number(n)))
+          if (e->getnstProperty(":nst:id") == QString(prefix + QString::number(n)))
           {
             match = true;
             break;
@@ -677,7 +792,7 @@ bool StructuralView::updateEntityWithUniqueNstId(StructuralEntity *entity)
   return false;
 }
 
-void StructuralView::performDelete()
+bool StructuralView::performDelete()
 {
   if (_selected != NULL)
   {
@@ -688,10 +803,14 @@ void StructuralView::performDelete()
       settings["CODE"] = QUuid::createUuid().toString();
 
       remove(_selected->getnstUid(), settings);
+
+      return true;
   }
+
+  return false;
 }
 
-void StructuralView::performSnapshot()
+bool StructuralView::performSnapshot()
 {
   /*
   QString location = QFileDialog::getSaveFileName(NULL, "Export...", "", tr("Images (*.png)"));
@@ -728,9 +847,11 @@ void StructuralView::performSnapshot()
     image.save(location, "PNG");
   }
   */
+
+  return false;
 }
 
-void StructuralView::performZoomIn()
+bool StructuralView::performZoomIn()
 {
   if (zoomStep > 0)
   {
@@ -739,10 +860,14 @@ void StructuralView::performZoomIn()
     resetMatrix();
 
     scale(1 - zoomStep*0.05, 1 - zoomStep*0.05);
+
+    return true;
   }
+
+  return false;
 }
 
-void StructuralView::performZoomOut()
+bool StructuralView::performZoomOut()
 {
   if (zoomStep*0.05 < 0.9)
   {
@@ -751,48 +876,54 @@ void StructuralView::performZoomOut()
     resetMatrix();
 
     scale(1 - zoomStep*0.05, 1 - zoomStep*0.05);
+
+    return true;
   }
+
+  return false;
 }
 
-void StructuralView::performZoomReset()
+bool StructuralView::performZoomReset()
 {
   zoomStep = 0;
   resetMatrix();
+
+  return false;
 }
 
-void StructuralView::performFullscreen()
+bool StructuralView::performFullscreen()
 {
-    // TODO
+    return false;
 }
 
-void StructuralView::performBringfront()
+bool StructuralView::performBringfront()
 {
-    // TODO
+    return false;
 }
 
-void StructuralView::performBringforward()
+bool StructuralView::performBringforward()
 {
-    // TODO
+    return false;
 }
 
-void StructuralView::performSendback()
+bool StructuralView::performSendback()
 {
-    // TODO
+    return false;
 }
 
-void StructuralView::performSendbackward()
+bool StructuralView::performSendbackward()
 {
-    // TODO
+    return false;
 }
 
-void StructuralView::performHide()
+bool StructuralView::performHide()
 {
-    // TODO
+    return false;
 }
 
-void StructuralView::performProperties()
+bool StructuralView::performProperties()
 {
-    // TODO
+    return false;
 }
 
 void StructuralView::resizeEvent(QResizeEvent *event)
@@ -893,6 +1024,8 @@ void StructuralView::mousePressEvent(QMouseEvent* event)
         }
 
         _selected = NULL;
+
+        emit selected("", QMap<QString, QString>());
       }
 
       event->accept();

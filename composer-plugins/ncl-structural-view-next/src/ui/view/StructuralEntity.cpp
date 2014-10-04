@@ -102,7 +102,7 @@ void StructuralEntity::setnstSubtype(const QnstName subtype)
 {
   this->subtype = subtype;
 
-  properties[":nst:subtype"] = StructuralUtil::getStrFromNstType(subtype);
+  properties["LOCAL:NAME"] = StructuralUtil::getStrFromNstType(subtype);
 }
 
 QMap<QString, QString> StructuralEntity::getnstProperties() const
@@ -116,6 +116,9 @@ void StructuralEntity::setnstProperties(const QMap<QString, QString> &properties
   {
     setnstProperty(name, properties[name]);
   }
+
+  if (!properties.contains("hidden"))
+    setVisible(true);
 }
 
 QString StructuralEntity::getnstProperty(const QString &name)
@@ -151,6 +154,13 @@ void StructuralEntity::setnstProperty(const QString &name, const QString &value)
   else if (name == ":nst:id")
   {
     setnstId(value);
+  }
+  else if (name == "hidden")
+  {
+    if (value == "true")
+      setVisible(false);
+    else
+      setVisible(true);
   }
 }
 
@@ -562,7 +572,7 @@ void StructuralEntity::insertChild(StructuralEntity* child)
                     QString uid = QUuid::createUuid().toString();
                     QString parent = getnstUid();
                     QMap<QString, QString> properties;
-                    properties[":nst:subtype"] = StructuralUtil::getStrFromNstType(type);
+                    properties["LOCAL:NAME"] = StructuralUtil::getStrFromNstType(type);
 
       QMap<QString, QString> settings;
       settings["UNDO"] = "1";
@@ -973,7 +983,7 @@ void StructuralEntity::insertChild(StructuralEntity* child)
   {
 
     QMap<QString, QString> properties;
-    properties[":nst:subtype"] = StructuralUtil::getStrFromNstType(name);
+    properties["LOCAL:NAME"] = StructuralUtil::getStrFromNstType(name);
 
     switch (name) {
       case Structural::Body:

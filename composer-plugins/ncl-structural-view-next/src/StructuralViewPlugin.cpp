@@ -1366,7 +1366,7 @@ void StructuralViewPlugin::notifyEntityAddedInView(const QString uid,
                                               QMap<QString, QString> properties,
                                               QMap<QString, QString> settings)
 {
-  Structural::EntitySubtype type = StructuralUtil::getnstTypeFromStr(properties[":nst:subtype"]);
+  Structural::EntityName type = StructuralUtil::getnstTypeFromStr(properties["LOCAL:NAME"]);
 
   qDebug() << "========================================" << type;
 
@@ -1417,29 +1417,29 @@ void StructuralViewPlugin::notifyEntityAddedInView(const QString uid,
       break;
     }
 
-//    case Qnst::Context:
-//    {
-//      if (properties["id"] != "")
-//        attributes["id"] = properties["id"];
+    case Structural::Context:
+    {
+      if (!properties.value(":nst:id").isEmpty())
+        attributes["id"] = properties[":nst:id"];
 
-//      if (properties["refer"] != "")
-//        attributes["refer"] = properties["refer"];
+      if (!properties.value(":nst:refer").isEmpty())
+        attributes["refer"] = properties[":nst:refer"];
 
-//      mustEmitAddEntity = true;
-//      break;
-//    }
+      mustEmitAddEntity = true;
+      break;
+    }
 
-//    case Qnst::Switch:
-//    {
-//      if (properties["id"] != "")
-//        attributes["id"] = properties["id"];
+    case Structural::Switch:
+    {
+      if (!properties.value(":nst:id").isEmpty())
+          attributes["id"] = properties[":nst:id"];
 
-//      if (properties["refer"] != "")
-//        attributes["refer"] = properties["refer"];
+      if (!properties.value(":nst:refer").isEmpty())
+        attributes["refer"] = properties[":nst:refer"];
 
-//      mustEmitAddEntity = true;
-//      break;
-//    }
+      mustEmitAddEntity = true;
+      break;
+    }
 
     case Structural::Media:
     {
@@ -1467,8 +1467,8 @@ void StructuralViewPlugin::notifyEntityAddedInView(const QString uid,
       if (!properties.value(":nst:instance").isEmpty())
         attributes["instance"] = properties[":nst:instance"];
 
-//      if (!properties.value(":nst:type").isEmpty())
-//        attributes["type"] = properties[":nst:type"];
+      if (!properties.value(":nst:type").isEmpty())
+        attributes["type"] = properties[":nst:type"];
 
       if (!properties.value(":nst:descriptor").isEmpty())
         attributes["descriptor"] = properties[":nst:descriptor"];
@@ -1476,17 +1476,18 @@ void StructuralViewPlugin::notifyEntityAddedInView(const QString uid,
       mustEmitAddEntity = true;
       break;
     }
-//    case Qnst::Port:
-//    {
-//      attributes["id"] = properties["id"];
-//      attributes["component"] = properties["component"];
 
-//      if(properties["interface"] != "")
-//        attributes["interface"] = properties["interface"];
+    case Structural::Port:
+    {
+      attributes["id"] = properties[":nst:id"];
+      attributes["component"] = properties[":nst:component"];
 
-//      mustEmitAddEntity = true;
-//      break;
-//    }
+      if (!properties.value(":nst:interface").isEmpty())
+        attributes["interface"] = properties[":nst:interface"];
+
+      mustEmitAddEntity = true;
+      break;
+    }
 
 //    case Qnst::Link:
 //    {
@@ -1505,29 +1506,32 @@ void StructuralViewPlugin::notifyEntityAddedInView(const QString uid,
 //      break;
 //    }
 
-//    case Qnst::Area:
-//    {
-//      attributes["id"] = properties["id"];
-//      mustEmitAddEntity = true;
-//      break;
-//    }
+    case Structural::Area:
+    {
+      if (!properties.value(":nst:id").isEmpty())
+        attributes["id"] = properties[":nst:id"];
 
-//    case Qnst::Property:
-//    {
-//      attributes["name"] = properties["id"];
+      mustEmitAddEntity = true;
+      break;
+    }
 
-//      mustEmitAddEntity = true;
-//      break;
-//    }
+    case Structural::Property:
+    {
+      if (!properties.value(":nst:id").isEmpty())
+        attributes["name"] = properties[":nst:id"];
 
-//    case Qnst::SwitchPort:
-//    {
-//      if (properties["id"] != "")
-//        attributes["id"] = properties["id"];
+      mustEmitAddEntity = true;
+      break;
+    }
 
-//      mustEmitAddEntity = true;
-//      break;
-//    }
+    case Structural::SwitchPort:
+    {
+      if (!properties.value(":nst:id").isEmpty())
+        attributes["name"] = properties[":nst:id"];
+
+      mustEmitAddEntity = true;
+      break;
+    }
 
 //    case Qnst::Mapping:
 //    {
@@ -1553,15 +1557,15 @@ void StructuralViewPlugin::notifyEntityAddedInView(const QString uid,
 //      break;
 //    }
 
-//    default:
-//      // do nothing
-//      break;
+    default:
+      // do nothing
+      break;
   }
 
   if(mustEmitAddEntity && entity != NULL) // Everything is ok, so add my new entity
   {
     request = uid;
-    emit addEntity(properties[":nst:subtype"],
+    emit addEntity(properties["LOCAL:NAME"],
                    entity->getUniqueId(), attributes, false);
     request = "";
 

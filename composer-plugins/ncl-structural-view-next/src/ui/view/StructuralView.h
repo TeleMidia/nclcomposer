@@ -61,36 +61,34 @@ public slots:
   void change(QString uid, QMap<QString, QString> properties, QMap<QString, QString> previous, QMap<QString, QString> settings);
   void select(QString uid, QMap<QString, QString> settings);
 
-  void create(QnstName name, QMap<QString, QString> &properties, QMap<QString, QString> &settings);
+  void create(QnstName name, QMap<QString, QString> &properties, QMap<QString, QString> &settings);  
 
-  void performHelp();
+  bool performHelp();
 
-  void performCut();
-  void performCopy();
-  void performPaste();
+  bool performCut();
+  bool performCopy();
+  bool performPaste();
 
-  void performUndo();
-  void performRedo();
+  bool performUndo();
+  bool performRedo();
 
-  void performSnapshot();
+  bool performSnapshot();
 
-  void performDelete();
+  bool performDelete();
 
-  void performZoomIn();
-  void performZoomOut();
-  void performZoomReset();
-  void performFullscreen();
+  bool performZoomIn();
+  bool performZoomOut();
+  bool performZoomReset();
+  bool performFullscreen();
 
-  void performBringfront();
-  void performBringforward();
-  void performSendback();
-  void performSendbackward();
+  bool performBringfront();
+  bool performBringforward();
+  bool performSendback();
+  bool performSendbackward();
 
-  void performHide();
+  bool performHide();
 
-  void performProperties();
-
-
+  bool performProperties();
 
 signals:
   void inserted(QString uid, QString parent, QMap<QString, QString> properties, QMap<QString, QString> settings);
@@ -132,6 +130,8 @@ private:
   void createReference(StructuralEntity* a, StructuralEntity* b);
   Command* rmcmd(StructuralEntity* entity, Command* cmdparent, QMap<QString, QString> settings);
 
+//  void rec_clip(StructuralEntity* e, StructuralEntity* parent);
+
   void createObjects();
 
   void createConnection();
@@ -160,7 +160,8 @@ private:
 
   StructuralEntity* clipboard;
 
-  QString clip;
+  QString clip_cut;
+  QString clip_copy;
 
   QSet<QString> linkWriterAux;
 
@@ -192,6 +193,8 @@ private:
 
   QString action;
   QString condition;
+
+  StructuralEntity* e_clip;
 };
 
 #endif // QNSTVIEW_H
