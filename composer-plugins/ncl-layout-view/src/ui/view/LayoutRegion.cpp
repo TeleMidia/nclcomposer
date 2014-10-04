@@ -61,6 +61,8 @@ LayoutRegion::LayoutRegion(QMenu* switchMenu, LayoutRegion* parent)
   setzIndexTop(0);
 
   setColor("#E4E4E4");
+
+  isDragging = false;
 }
 
 LayoutRegion::~LayoutRegion()
@@ -1197,34 +1199,27 @@ void LayoutRegion::paint(QPainter *painter,
                          const QStyleOptionGraphicsItem *option,
                          QWidget *widget)
 {
+  Q_UNUSED(widget)
+
+  QString color = this->color;
+
+  if(isDragging)
+    color = "#C4D8E2"; // FIXME: This should be configurable
+
+  painter->setBrush(QColor(color));
+
   if (selected)
-  {
-    painter->setBrush(QColor(color));
-    // 0px = cosmetic border
     painter->setPen(QPen(QBrush(Qt::black), 0, Qt::DashLine));
-    painter->drawRect(4,4,width-1,height-1);
-  }
   else
-  {
-    painter->setBrush(QColor(color));
-    painter->setPen(QPen(QBrush(Qt::black), 0));      // 0px = cosmetic border
-    painter->drawRect(4,4,width-1,height-1);
-  }
+    painter->setPen(QPen(QBrush(Qt::black), 0));
+
+  painter->drawRect(4,4,width-1,height-1);
 
   if (moving)
   {
-    if (parentItem() != NULL)
-    {
-      painter->setBrush(Qt::NoBrush);
-      painter->setPen(QPen(QBrush(Qt::black), 0));   // 0px = cosmetic border
-      painter->drawRect(moveLeft+4-left,moveTop+4-top,width-1,height-1);
-    }
-    else
-    {
-      painter->setBrush(Qt::NoBrush);
-      painter->setPen(QPen(QBrush(Qt::black), 0));    // 0px = cosmetic border
-      painter->drawRect(moveLeft+4-left,moveTop+4-top,width-1,height-1);
-    }
+    painter->setBrush(Qt::NoBrush);
+    painter->setPen(QPen(QBrush(Qt::black), 0));    // 0px = cosmetic border
+    painter->drawRect(moveLeft+4-left,moveTop+4-top,width-1,height-1);
   }
   else if (resizing)
   {
@@ -1640,11 +1635,24 @@ void LayoutRegion::contextMenuEvent(QGraphicsSceneContextMenuEvent* event)
 void LayoutRegion::dragEnterEvent(QGraphicsSceneDragDropEvent *event)
 {
   if (event->mimeData()->hasFormat("nclcomposer/mediaid"))
+  {
+    isDragging = true;
     event->acceptProposedAction();
+
+    scene()->update(); // FIXME: Can we do better?
+  }
+}
+
+void LayoutRegion::dragLeaveEvent(QGraphicsSceneDragDropEvent *event)
+{
+  isDragging = false;
+
+  scene()->update();// FIXME: Can we do better?
 }
 
 void LayoutRegion::dropEvent(QGraphicsSceneDragDropEvent *event)
 {
+  isDragging = false;
   qDebug() << "dropEvent " << event->mimeData()->data("nclcomposer/mediaid")
            << event->mimeData()->data("nclcomposer/qnstuid");
 

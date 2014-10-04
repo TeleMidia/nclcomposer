@@ -205,6 +205,7 @@ protected:
   void keyReleaseEvent(QKeyEvent * event);
   void keyPressEvent(QKeyEvent * event);
   void dragEnterEvent(QGraphicsSceneDragDropEvent *event);
+  void dragLeaveEvent(QGraphicsSceneDragDropEvent *event);
   void dropEvent(QGraphicsSceneDragDropEvent *event);
 
 protected slots:
@@ -223,6 +224,7 @@ private:
   bool validated;
   bool painted;
   bool changed;
+  bool isDragging;
 
   qreal top;
   qreal moveTop;
