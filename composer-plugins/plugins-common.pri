@@ -10,6 +10,7 @@ greaterThan(QT_MAJOR_VERSION, 4) {
 }
 
 GIT_VERSION=true
+
 isEmpty(CPRVERSION) {
   #GUI_VERSION=$$system(git describe --tag | sed "s/v\(.*\)-.*-.*/\1/")
   PLUGINS_VERSION=$$system(git describe --tag | sed "s/v//")
@@ -58,15 +59,20 @@ macx {
                   /Library/Frameworks/ComposerCore.framework/core \
                   /Library/Frameworks/ComposerCore.framework/core/extensions
 
+  HEADERSPATH
+
   target.path = $$quote(/Library/Application Support/Composer/Extensions)
 }
 else:unix {
-  LIBS += -L$$INSTALLBASE/lib/composer \
-          -L$$INSTALLBASE/lib/composer/extensions -lNCLLanguageProfile
+  LIBS += -L$$INSTALLBASE/lib/composer -lComposerCore
+
+  link_ncl_profile {
+    LIBS += -L$$INSTALLBASE/lib/composer/extensions -lNCLLanguageProfile
+  }
 
   INCLUDEPATH += include $$INSTALLBASE/include/composer \
                  $$INSTALLBASE/include/composer/core \
-                 $$INSTALLBASE/include/composer/core/extensions
+                 $$INSTALLBASE/include/composer/extensions
 
   QMAKE_LFLAGS += -Wl,-rpath,\'\$\$ORIGIN\':\'\$\$ORIGIN/../\'
   QMAKE_LFLAGS += -Wl,-rpath,\'\$\$ORIGIN/../lib/composer\'
@@ -75,12 +81,15 @@ else:unix {
   target.path = $$quote($$INSTALLBASE/lib/composer/extensions)
 }
 else:win32 {
-  LIBS += -L$$INSTALLBASE -lComposerCore1 \
+  LIBS += -L$$INSTALLBASE
+
+  link_ncl_profile {
           -L$$INSTALLBASE/extensions -lNCLLanguageProfile
+  }
 
   INCLUDEPATH += . include $$INSTALLBASE/include/composer \
                  $$INSTALLBASE/include/composer/core \
-                 $$INSTALLBASE/include/composer/core/extensions
+                 $$INSTALLBASE/include/composer/extensions
 
   target.path = $$INSTALLBASE/extensions
 }

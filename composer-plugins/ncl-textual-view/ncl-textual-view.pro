@@ -1,4 +1,6 @@
+CONFIG += link_ncl_profile
 include (../plugins-common.pri)
+
 QT          +=  xml gui
 
 # Required to link against QSCINTILLA on Windows

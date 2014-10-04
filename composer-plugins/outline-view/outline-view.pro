@@ -1,4 +1,6 @@
+CONFIG += link_ncl_profile
 include (../plugins-common.pri)
+
 QT              += xml
 
 macx:LIBS +=    -L$$quote(/Library/Application Support/Composer/Extensions) \

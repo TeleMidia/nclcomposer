@@ -1,6 +1,6 @@
 #include "RuleItem.h"
 
-#include <core/extensions/NCLStructure.h>
+#include <extensions/NCLStructure.h>
 #include <QDebug>
 
 

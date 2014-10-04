@@ -1,3 +1,5 @@
+CONFIG += link_ncl_profile
+
 include(../plugins-common.pri)
 
 QT += \

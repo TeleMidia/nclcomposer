@@ -1,3 +1,5 @@
+CONFIG += link_ncl_profile
+
 include (../plugins-common.pri)
 
 INCLUDEPATH += . \
@@ -5,8 +7,6 @@ INCLUDEPATH += . \
 
 macx:LIBS +=    -L$$quote(/Library/Application Support/Composer/Extensions) \
                 -lNCLLanguageProfile
-
-win32:LIBS +=   -lNCLLanguageProfile
 
 SOURCES += \
     src/ComboBoxItem.cpp \
