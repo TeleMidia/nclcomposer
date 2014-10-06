@@ -3,8 +3,8 @@
 StructuralReference::StructuralReference(StructuralEntity* parent)
   : StructuralEdge(parent)
 {
-  setnstType(Structural::Edge);
-  setnstSubtype(Structural::Reference);
+  setLocalType(Structural::Edge);
+  setLocalName(Structural::Reference);
 }
 
 StructuralReference::~StructuralReference()
@@ -23,14 +23,14 @@ void StructuralReference::draw(QPainter* painter)
                          QPointF(getEntityB()->getLeft() + getEntityB()->getWidth()/2,
                                  getEntityB()->getTop() + getEntityB()->getHeight()/2));
 
-    if (getEntityA()->getnstType() == Structural::Interface)
+    if (getEntityA()->getLocalType() == Structural::Interface)
     {
-      line.setP1(getnstParent()->mapFromItem(getEntityA()->getnstParent(), line.p1()));
+      line.setP1(getLocalParent()->mapFromItem(getEntityA()->getLocalParent(), line.p1()));
     }
 
-    if (getEntityB()->getnstType() == Structural::Interface)
+    if (getEntityB()->getLocalType() == Structural::Interface)
     {
-      line.setP2(getnstParent()->mapFromItem(getEntityB()->getnstParent(), line.p2()));
+      line.setP2(getLocalParent()->mapFromItem(getEntityB()->getLocalParent(), line.p2()));
     }
 
     QPointF p1;
@@ -115,16 +115,16 @@ void StructuralReference::delineate(QPainterPath* painter) const
                          QPointF(getEntityB()->getLeft() + getEntityB()->getWidth()/2,
                                  getEntityB()->getTop() + getEntityB()->getHeight()/2));
 
-    if (getEntityA()->getnstType() == Structural::Interface)
+    if (getEntityA()->getLocalType() == Structural::Interface)
     {
-      if(getnstParent())
-        line.setP1(getnstParent()->mapFromItem(getEntityA()->getnstParent(), line.p1()));
+      if(getLocalParent())
+        line.setP1(getLocalParent()->mapFromItem(getEntityA()->getLocalParent(), line.p1()));
     }
 
-    if (getEntityB()->getnstType() == Structural::Interface)
+    if (getEntityB()->getLocalType() == Structural::Interface)
     {
-      if(getnstParent())
-        line.setP2(getnstParent()->mapFromItem(getEntityB()->getnstParent(), line.p2()));
+      if(getLocalParent())
+        line.setP2(getLocalParent()->mapFromItem(getEntityB()->getLocalParent(), line.p2()));
     }
 
     QPointF p1;

@@ -18,7 +18,7 @@ class StructuralWindow : public QMainWindow
   Q_OBJECT
 
 public:
-  StructuralWindow(QWidget* parent = 0);
+  StructuralWindow(QWidget* _parent = 0);
   virtual ~StructuralWindow();
 
   StructuralView* getView();
@@ -52,7 +52,7 @@ protected slots:
   void performReport();
   void performAbout();
 
-  void insert(QString uid, QString parent, QMap<QString, QString> properties, QMap<QString, QString> settings);
+  void insert(QString uid, QString _parent, QMap<QString, QString> properties, QMap<QString, QString> settings);
   void remove(QString uid, QMap<QString, QString> settings);
   void change(QString uid, QMap<QString, QString> properties, QMap<QString, QString> previous, QMap<QString, QString> settings);
   void select(QString uid, QMap<QString, QString> settings);

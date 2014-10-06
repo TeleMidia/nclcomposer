@@ -18,7 +18,7 @@ class StructuralScene : public QGraphicsScene
   Q_OBJECT
 
 public:
-  StructuralScene(QObject* parent = 0);
+  StructuralScene(QObject* _parent = 0);
   virtual ~StructuralScene();
 
 protected:

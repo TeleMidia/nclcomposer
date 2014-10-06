@@ -3,8 +3,8 @@
 StructuralEdge::StructuralEdge(StructuralEntity* parent)
   : StructuralEntity(parent)
 {
-  setnstType(Structural::Edge);
-  setnstSubtype(Structural::NoName);
+  setLocalType(Structural::Edge);
+  setLocalName(Structural::NoName);
 
   setSelectable(true);
   setResizable(false);
@@ -107,16 +107,16 @@ void StructuralEdge::adjust(bool avoidCollision)
                          QPointF(entityb->getLeft() + entityb->getWidth()/2,
                                  entityb->getTop() + entityb->getHeight()/2));
 
-    if (getEntityA()->getnstType() == Structural::Interface)
+    if (getEntityA()->getLocalType() == Structural::Interface)
     {
-      if(getnstParent())
-        line.setP1(getnstParent()->mapFromItem(getEntityA()->getnstParent(), line.p1()));
+      if(getLocalParent())
+        line.setP1(getLocalParent()->mapFromItem(getEntityA()->getLocalParent(), line.p1()));
     }
 
-    if (getEntityB()->getnstType() == Structural::Interface)
+    if (getEntityB()->getLocalType() == Structural::Interface)
     {
-      if(getnstParent())
-        line.setP2(getnstParent()->mapFromItem(getEntityB()->getnstParent(), line.p2()));
+      if(getLocalParent())
+        line.setP2(getLocalParent()->mapFromItem(getEntityB()->getLocalParent(), line.p2()));
     }
 
     QPointF pointa = line.p1();

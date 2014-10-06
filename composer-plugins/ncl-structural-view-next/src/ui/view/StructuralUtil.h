@@ -102,6 +102,8 @@ private:
   static std::map  <Structural::EntityName, QString>  prefixIdFromType;
   static std::map <QString, Structural::BindType>     bindTypeFromRoleStr;
   static std::map <Structural::BindType, QString>     strFromBindType;
+
+  static std::map <LocalResize, QRectF> region;
 };
 
 /*!

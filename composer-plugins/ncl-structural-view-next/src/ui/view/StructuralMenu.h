@@ -11,7 +11,7 @@ class StructuralMenu : public QMenu
   Q_OBJECT
 
 public:
-  StructuralMenu(QWidget* parent = 0);
+  StructuralMenu(QWidget* _parent = 0);
   virtual ~StructuralMenu();
 
 signals:

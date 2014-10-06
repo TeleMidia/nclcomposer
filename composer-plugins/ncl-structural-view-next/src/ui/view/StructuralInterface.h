@@ -11,7 +11,7 @@ public:
 
   ~StructuralInterface();
 
-  virtual void setnstSubtype(const QnstName subtype);
+  virtual void setLocalName(const LocalName _name);
 
   virtual void adjust(bool avoidCollision = true);
 

@@ -45,13 +45,13 @@ public:
 
   //void setConn(QnstConnector* conn);
 
-  void addParam(QString uid, QString name, QString value);
+  void addParam(QString _uid, QString _name, QString value);
 
-  void setParam(QString name, QString value);
+  void setParam(QString _name, QString value);
 
-  void removeParam(QString name);
+  void removeParam(QString _name);
 
-  void removeUId(QString uid);
+  void removeUId(QString _uid);
 
   void setLink(StructuralLink *link);
 
@@ -63,7 +63,7 @@ public:
 
   virtual void updateToolTip();
 
-  void setType(Structural::BindType subtype);
+  void setType(Structural::BindType _name);
   Structural::BindType getType();
   QString getIcon();
 
@@ -81,8 +81,8 @@ public:
   // \fixme This method should not be here!!
 
 signals:
-  void bindParamAdded(QString uid, QString parent,
-                      QMap<QString, QString> properties);
+  void bindParamAdded(QString _uid, QString parent,
+                      QMap<QString, QString> _properties);
 
   void bindParamUpdated(QString bindUid, QMap<QString, QString> params,
                         QMap<QString, QString> name_uids);
@@ -103,7 +103,7 @@ protected:
   virtual void mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event);
 
 private:
-  Structural::BindType subtype;
+  Structural::BindType _name;
 
   QString icon;
 

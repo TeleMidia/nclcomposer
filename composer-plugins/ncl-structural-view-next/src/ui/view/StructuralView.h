@@ -39,7 +39,7 @@ class StructuralView : public QGraphicsView
   Q_OBJECT
 
 public:
-  StructuralView(QWidget* parent = 0);
+  StructuralView(QWidget* _parent = 0);
   virtual ~StructuralView();
 
 public:
@@ -53,15 +53,15 @@ public:
   void setCondition(QString condition);
 
   void serialize(QString &data);
-  void exportDataFromEntity(StructuralEntity* entity, QDomDocument* doc, QDomElement parent);
+  void exportDataFromEntity(StructuralEntity* entity, QDomDocument* doc, QDomElement _parent);
 
 public slots:
-  void insert(QString uid, QString parent, QMap<QString, QString> properties, QMap<QString, QString> settings);
+  void insert(QString uid, QString _parent, QMap<QString, QString> properties, QMap<QString, QString> settings);
   void remove(QString uid, QMap<QString, QString> settings);
   void change(QString uid, QMap<QString, QString> properties, QMap<QString, QString> previous, QMap<QString, QString> settings);
   void select(QString uid, QMap<QString, QString> settings);
 
-  void create(QnstName name, QMap<QString, QString> &properties, QMap<QString, QString> &settings);  
+  void create(LocalName name, QMap<QString, QString> &properties, QMap<QString, QString> &settings);  
 
   bool performHelp();
 
@@ -91,7 +91,7 @@ public slots:
   bool performProperties();
 
 signals:
-  void inserted(QString uid, QString parent, QMap<QString, QString> properties, QMap<QString, QString> settings);
+  void inserted(QString uid, QString _parent, QMap<QString, QString> properties, QMap<QString, QString> settings);
   void removed(QString uid, QMap<QString, QString> settings);
   void changed(QString uid, QMap<QString, QString> properties, QMap<QString, QString> previous, QMap<QString, QString> settings);
   void selected(QString uid, QMap<QString, QString> settings);
@@ -122,7 +122,7 @@ public slots:
   void clearAllData();
 
 private:
-  void performPaste(StructuralEntity* entity, StructuralEntity* parent, QString CODE);
+  void performPaste(StructuralEntity* entity, StructuralEntity* _parent, QString CODE);
 
   bool isChild(StructuralEntity* e , StructuralEntity* p);
   void createLink(StructuralEntity* a, StructuralEntity* b);
@@ -136,7 +136,7 @@ private:
 
   void createConnection();
 
-  void collapseCompositions(QDomElement element, QDomElement parent);
+  void collapseCompositions(QDomElement element, QDomElement _parent);
 
   void deletePendingEntities();
 

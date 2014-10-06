@@ -3,12 +3,12 @@
 StructuralInterface::StructuralInterface(StructuralEntity* parent)
   : QnstEntityWithEdges(parent)
 {
-  setnstType(Structural::Interface);
-  setnstSubtype(Structural::NoName);
+  setLocalType(Structural::Interface);
+  setLocalName(Structural::NoName);
 
   setResizable(false);
 
-  setnstId("");
+  setLocalId("");
 
   setRefer(false);
 
@@ -37,7 +37,7 @@ void StructuralInterface::setRefer(bool isRefer)
   _isRefer = isRefer;
 }
 
-void StructuralInterface::setnstSubtype(const QnstName subtype)
+void StructuralInterface::setLocalName(const LocalName subtype)
 {
   if (subtype == Structural::Port){
     setHexColor("#000000");
@@ -57,7 +57,7 @@ void StructuralInterface::setnstSubtype(const QnstName subtype)
     icon = QPixmap(":/images/icon/switchport");
   }
 
-  QnstEntityWithEdges::setnstSubtype(subtype);
+  QnstEntityWithEdges::setLocalName(subtype);
 
   updateToolTip();
 }
@@ -75,21 +75,21 @@ void StructuralInterface::setHexBorderColor(QString hexBorderColor)
 void StructuralInterface::updateToolTip()
 {
   QString tip = "";
-  QString name = (getnstProperty(":nst:id") != "" ? getnstProperty(":nst:id") : "?");
+  QString name = (getLocalProperty("LOCAL:ID") != "" ? getLocalProperty("LOCAL:ID") : "?");
 
-  if (getnstSubtype() == Structural::Port)
+  if (getLocalName() == Structural::Port)
   {
     tip += "Port ("+name+")";
   }
-  else if (getnstSubtype() == Structural::Area)
+  else if (getLocalName() == Structural::Area)
   {
     tip += "Area ("+name+")";
   }
-  else if (getnstSubtype() == Structural::Property)
+  else if (getLocalName() == Structural::Property)
   {
     tip += "Property ("+name+")";
   }
-  else if (getnstSubtype() == Structural::SwitchPort)
+  else if (getLocalName() == Structural::SwitchPort)
   {
     tip += "SwitchPort ("+name+")";
   }
@@ -104,7 +104,7 @@ void StructuralInterface::updateToolTip()
 
 void StructuralInterface::adjust(bool avoidCollision)
 {
-  StructuralEntity* parent = getnstParent();
+  StructuralEntity* parent = getLocalParent();
 
   if (parent != NULL)
   {
@@ -121,9 +121,9 @@ void StructuralInterface::adjust(bool avoidCollision)
 
         colliding = false;
         foreach(StructuralEntity *entity,
-                getnstParent()->getnstChildren())
+                getLocalParent()->getLocalChildren())
         {
-          if(this != entity && entity->getnstType() == Structural::Interface)
+          if(this != entity && entity->getLocalType() == Structural::Interface)
           {
             qreal n = 0;
             qreal i = 0.0;
@@ -159,7 +159,7 @@ void StructuralInterface::adjust(bool avoidCollision)
         }
 
         foreach(StructuralEntity *entity,
-                getnstParent()->getnstChildren())
+                getLocalParent()->getLocalChildren())
         {
           if(collidesWithItem(entity, Qt::IntersectsItemBoundingRect))
           {
@@ -191,7 +191,7 @@ void StructuralInterface::adjust(bool avoidCollision)
 
 void StructuralInterface::adjustToBorder()
 {
-  StructuralEntity* parent = getnstParent();
+  StructuralEntity* parent = getLocalParent();
 
   if (parent != NULL)
   {
@@ -256,7 +256,7 @@ void StructuralInterface::move(QGraphicsSceneMouseEvent* event)
   qreal x = getLeft();
   qreal y = getTop();
 
-  StructuralEntity* parent = getnstParent();
+  StructuralEntity* parent = getLocalParent();
 
   qreal minx;
   qreal miny;
@@ -309,7 +309,7 @@ void StructuralInterface::resize(QGraphicsSceneMouseEvent* event)
   qreal w = getWidth();
   qreal h = getHeight();
 
-  StructuralEntity* parent = getnstParent();
+  StructuralEntity* parent = getLocalParent();
 
   qreal minx;
   qreal miny;
@@ -362,7 +362,7 @@ void StructuralInterface::resize(QGraphicsSceneMouseEvent* event)
   qreal nexth = h + dh;
 
   // adjusting
-  switch(getResizeType())
+  switch(getLocalResize())
   {
     case Structural::TopLeft:
     {

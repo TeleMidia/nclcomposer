@@ -180,7 +180,6 @@ std::map <QString, Structural::BindType> StructuralUtil::bindTypeFromRoleStr =
 std::map <Structural::BindType, QString> StructuralUtil::strFromBindType =
   invert_map<Structural::BindType, QString> (StructuralUtil::bindTypeFromRoleStr);
 
-
 StructuralEntity *StructuralUtil::makeGraphicsEntity(Structural::EntityName type,
                                                  StructuralEntity *parent,
                                            const QMap <QString, QString> &props)
@@ -201,7 +200,7 @@ StructuralEntity *StructuralUtil::makeGraphicsEntity(Structural::EntityName type
     */
     case Structural::Media:
       entity = new StructuralMedia(parent);
-      entity->setnstSubtype(type);
+      entity->setLocalName(type);
       break;
 
     case Structural::Body:

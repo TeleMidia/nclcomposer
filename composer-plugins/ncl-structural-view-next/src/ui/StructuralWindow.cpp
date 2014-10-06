@@ -620,7 +620,7 @@ void StructuralWindow::insert(QString uid, QString parent, QMap<QString, QString
 
   if (entity)
   {
-    QnstName NAME = _view->getEntity(uid)->getnstSubtype();
+    LocalName NAME = _view->getEntity(uid)->getLocalName();
 
     switch (NAME) {
       case Structural::Body:
@@ -639,7 +639,7 @@ void StructuralWindow::remove(QString uid, QMap<QString, QString> settings)
 
   if (entity)
   {
-    QnstName NAME = _view->getEntity(uid)->getnstSubtype();
+    LocalName NAME = _view->getEntity(uid)->getLocalName();
 
     switch (NAME) {
       case Structural::Body:
@@ -658,7 +658,7 @@ void StructuralWindow::change(QString uid, QMap<QString, QString> properties, QM
 
   if (entity)
   {
-    QnstName NAME = _view->getEntity(uid)->getnstSubtype();
+    LocalName NAME = _view->getEntity(uid)->getLocalName();
 
     switch (NAME) {
       case Structural::Body:
@@ -677,7 +677,7 @@ void StructuralWindow::select(QString uid, QMap<QString, QString> settings)
 
   if (entity)
   {
-    QnstName NAME = _view->getEntity(uid)->getnstSubtype();
+    LocalName NAME = _view->getEntity(uid)->getLocalName();
 
     switch (NAME) {
       case Structural::Media:

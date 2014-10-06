@@ -47,8 +47,8 @@ void StructuralScene::performInsert(Structural::EntityName name)
     case Structural::Body:
     {
       QMap<QString, QString> properties;
-      properties[":nst:top"] = QString::number(_insertPoint.y() - DEFAULT_BODY_HEIGHT/2);
-      properties[":nst:left"] = QString::number(_insertPoint.x() - DEFAULT_BODY_WIDTH/2);
+      properties["LOCAL:TOP"] = QString::number(_insertPoint.y() - DEFAULT_BODY_HEIGHT/2);
+      properties["LOCAL:LEFT"] = QString::number(_insertPoint.x() - DEFAULT_BODY_WIDTH/2);
 
       StructuralView* view = (StructuralView*) views().at(0);
 //      view->create(Structural::Body, properties, QMap<QString, QString>());
