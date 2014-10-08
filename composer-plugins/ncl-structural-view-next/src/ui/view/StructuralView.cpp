@@ -159,7 +159,7 @@ void StructuralView::insert(QString uid, QString parent, QMap<QString, QString> 
 {
   if (!entities.contains(uid))
   {
-    StructuralEntity* entity; LocalName type = StructuralUtil::getnstTypeFromStr(properties["LOCAL:NAME"]);
+    StructuralEntity* entity; LocalName type = (LocalName) properties["LOCAL:NAME"].toInt();
 
     switch (type)
     {
@@ -481,6 +481,16 @@ void StructuralView::select(QString uid, QMap<QString, QString> settings)
   }
 }
 
+bool StructuralView::canUndo()
+{
+  return commnads.canUndo();
+}
+
+bool StructuralView::canRedo()
+{
+  return commnads.canRedo();
+}
+
 void StructuralView::create(LocalName name, QMap<QString, QString> &properties, QMap<QString, QString> &settings)
 {
   QString uid = StructuralUtil::createUid();
@@ -488,23 +498,6 @@ void StructuralView::create(LocalName name, QMap<QString, QString> &properties, 
 
   switch (name)
   {
-//    case Structural::Body:
-//    {
-//      if (!properties.contains("LOCAL:TOP"))
-//        properties["LOCAL:TOP"] = QString::number(scene->height()/2 - DEFAULT_BODY_HEIGHT/2);
-
-//      if (!properties.contains("LOCAL:LEFT"))
-//        properties["LOCAL:LEFT"] = QString::number(scene->width()/2 - DEFAULT_BODY_WIDTH/2);
-
-//      if (!properties.contains("LOCAL:WIDTH"))
-//        properties["LOCAL:WIDTH"] = QString::number(DEFAULT_BODY_WIDTH);
-
-//      if (!properties.contains("LOCAL:HEIGHT"))
-//        properties["LOCAL:HEIGHT"] = QString::number(DEFAULT_BODY_HEIGHT);
-
-//      break;
-//    }
-
     default:
     {
       if (_selected != NULL)
@@ -517,7 +510,7 @@ void StructuralView::create(LocalName name, QMap<QString, QString> &properties, 
   }
 
   if (!properties.contains("LOCAL:NAME"))
-    properties["LOCAL:NAME"] = StructuralUtil::getStrFromNstType(name);
+    properties["LOCAL:NAME"] = QString::number(name);
 
   if (!settings.contains("UNDO"))
     settings["UNDO"] = "1";

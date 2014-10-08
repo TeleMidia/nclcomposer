@@ -104,15 +104,15 @@ void StructuralComposition::setLocalName(const LocalName subtype)
 {
   if (subtype == Structural::Context){
     setColor("#F4E4CC");
-    menu->switchportAction->setEnabled(false);
+    menu->switchPortAction->setEnabled(false);
     menu->portAction->setEnabled(true);
   }else if (subtype == Structural::Switch){
     setColor("#C6E2FF");
-    menu->switchportAction->setEnabled(true);
+    menu->switchPortAction->setEnabled(true);
     menu->portAction->setEnabled(false);
   }else if (subtype == Structural::Body){
     setColor("#EEEEEE");
-    menu->switchportAction->setEnabled(false);
+    menu->switchPortAction->setEnabled(false);
     menu->portAction->setEnabled(true);
   }
 

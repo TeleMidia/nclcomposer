@@ -42,6 +42,9 @@ public:
   StructuralView(QWidget* _parent = 0);
   virtual ~StructuralView();
 
+  bool canUndo();
+  bool canRedo();
+
 public:
   bool hasEntity(QString uid);
   StructuralEntity* getEntity(QString uid);

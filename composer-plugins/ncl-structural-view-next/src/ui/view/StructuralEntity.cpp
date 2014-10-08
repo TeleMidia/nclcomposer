@@ -54,6 +54,8 @@ StructuralEntity::StructuralEntity(StructuralEntity* parent)
   menu = new StructuralMenu();
   connect(menu, SIGNAL(insert(Structural::EntityName)),SLOT(performInsert(Structural::EntityName)));
 
+  menu->insertMenu->setEnabled(true);
+
   _draggable = false;
   hasError = false;
   enableMouseHoverHighlight = true;
@@ -549,79 +551,32 @@ void StructuralEntity::insertLocalChild(StructuralEntity* child)
   }
   }
 
-                  void StructuralEntity::removeLocalChild(StructuralEntity* child)
-    {
-                  if (child != NULL)
-    {
-                  int index = _children.indexOf(child);
+void StructuralEntity::removeLocalChild(StructuralEntity* child)
+{
+  if (child != NULL)
+  {
+    int index = _children.indexOf(child);
 
-                  if (index >= 0)
-                  _children.remove(index);
+    if (index >= 0)
+    _children.remove(index);
 
-                  child->setLocalParent(NULL);
+    child->setLocalParent(NULL);
   }
 }
 
 void StructuralEntity::newChild(Structural::EntityName type)
 {
-/****************************************************
-          // \todo Check if type is an media type allowed to me!
-          QnstGraphicsEntity *entity = QnstUtil::makeGraphicsEntity(type, this);
+  QString uid = QUuid::createUuid().toString();
+  QString parent = getLocalUid();
+  QMap<QString, QString> properties;
+  properties["LOCAL:NAME"] = QString::number(type);
 
-          if(entity == NULL) return false;
+  QMap<QString, QString> settings;
+  settings["UNDO"] = "1";
+  settings["NOTIFY"] = "1";
+  settings["CODE"] = QUuid::createUuid().toString();
 
-          QnstGraphicsMedia *content  = dynamic_cast<QnstGraphicsMedia*>(entity);
-
-          if(content != NULL) // If the Entity is a Media content
-          {
-            content->adjust();
-
-            if (dropsrc != "") //if it is a drop we will keep the baseName as id
-            {
-              content->setSource(dropsrc);
-              QFileInfo file = QFileInfo(dropsrc);
-              QString nstId = file.baseName();
-              entity->setnstId(nstId);
-              dropsrc = "";
-            }
-          }
-          else
-          {
-            QnstGraphicsComposition *composition =
-                dynamic_cast<QnstGraphicsComposition*>(entity);
-
-            //If the Entity is a Composition (i.e. Body, Context or Switch)
-            if(composition != NULL)
-            {
-              composition->adjust();
-
-              composition->menu->actionPaste->setEnabled(menu->actionPaste->isEnabled());
-            }
-          }
-
-          entity->adjust();
-
-          emit entityAdded(entity);
-
-          *****************************************************/
-
-/*****************************************************/
-
-QString uid = QUuid::createUuid().toString();
-QString parent = getLocalUid();
-QMap<QString, QString> properties;
-properties["LOCAL:NAME"] = StructuralUtil::getStrFromNstType(type);
-
-QMap<QString, QString> settings;
-settings["UNDO"] = "1";
-settings["NOTIFY"] = "1";
-settings["CODE"] = QUuid::createUuid().toString();
-
-emit inserted(uid, parent, properties, settings);
-
-/*****************************************************/
-
-
+  emit inserted(uid, parent, properties, settings);
 }
 
 LocalResize StructuralEntity::getLocalResize() const
@@ -977,6 +932,68 @@ void StructuralEntity::contextMenuEvent(QGraphicsSceneContextMenuEvent* event)
 
     if (menu != NULL)
     {
+      switch (_name) {
+        case Structural::Media:
+          menu->mediaAction->setEnabled(false);
+          menu->contextAction->setEnabled(false);
+          menu->switchAction->setEnabled(false);
+          menu->bodyAction->setEnabled(false);
+          menu->areaAction->setEnabled(true);
+          menu->propertyAction->setEnabled(true);
+          menu->portAction->setEnabled(false);
+          menu->switchPortAction->setEnabled(false);
+          break;
+
+        case Structural::Context:
+          menu->mediaAction->setEnabled(true);
+          menu->contextAction->setEnabled(true);
+          menu->switchAction->setEnabled(true);
+          menu->bodyAction->setEnabled(false);
+          menu->areaAction->setEnabled(false);
+          menu->propertyAction->setEnabled(true);
+          menu->portAction->setEnabled(true);
+          menu->switchPortAction->setEnabled(false);
+          break;
+
+        case Structural::Switch:
+          menu->mediaAction->setEnabled(true);
+          menu->contextAction->setEnabled(true);
+          menu->switchAction->setEnabled(true);
+          menu->bodyAction->setEnabled(false);
+          menu->areaAction->setEnabled(false);
+          menu->propertyAction->setEnabled(true);
+          menu->portAction->setEnabled(false);
+          menu->switchPortAction->setEnabled(true);
+          break;
+
+        case Structural::Body:
+          menu->mediaAction->setEnabled(true);
+          menu->contextAction->setEnabled(true);
+          menu->switchAction->setEnabled(true);
+          menu->bodyAction->setEnabled(false);
+          menu->areaAction->setEnabled(false);
+          menu->propertyAction->setEnabled(true);
+          menu->portAction->setEnabled(true);
+          menu->switchPortAction->setEnabled(false);
+          break;
+
+        case Structural::Area:
+        case Structural::Property:
+        case Structural::Port:
+        case Structural::SwitchPort:
+          menu->mediaAction->setEnabled(false);
+          menu->contextAction->setEnabled(false);
+          menu->switchAction->setEnabled(false);
+          menu->bodyAction->setEnabled(false);
+          menu->areaAction->setEnabled(false);
+          menu->propertyAction->setEnabled(false);
+          menu->portAction->setEnabled(false);
+          menu->switchPortAction->setEnabled(false);
+          break;
+
+        default:
+          break;
+      }
 
       menu->exec(event->screenPos());
     }
@@ -1039,54 +1056,54 @@ void StructuralEntity::drawMouseHoverHighlight(QPainter *painter)
   }
 }
 
-  void StructuralEntity::performInsert(Structural::EntityName name)
-  {
+void StructuralEntity::performInsert(Structural::EntityName name)
+{
 
-    QMap<QString, QString> properties;
-    properties["LOCAL:NAME"] = StructuralUtil::getStrFromNstType(name);
+  QMap<QString, QString> properties;
+  properties["LOCAL:NAME"] = QString::number(name);
 
-    switch (name) {
-      case Structural::Body:
-      {
-        properties["LOCAL:TOP"] = QString::number(_insertPoint.y() - DEFAULT_BODY_HEIGHT/2);
-        properties["LOCAL:LEFT"] = QString::number(_insertPoint.x() - DEFAULT_BODY_WIDTH/2);
-        properties["LOCAL:HEIGHT"] = QString::number(DEFAULT_BODY_HEIGHT);
-        properties["LOCAL:WIDTH"] = QString::number(DEFAULT_BODY_WIDTH);
+  switch (name) {
+    case Structural::Body:
+    {
+      properties["LOCAL:TOP"] = QString::number(_insertPoint.y() - DEFAULT_BODY_HEIGHT/2);
+      properties["LOCAL:LEFT"] = QString::number(_insertPoint.x() - DEFAULT_BODY_WIDTH/2);
+      properties["LOCAL:HEIGHT"] = QString::number(DEFAULT_BODY_HEIGHT);
+      properties["LOCAL:WIDTH"] = QString::number(DEFAULT_BODY_WIDTH);
 
-        break;
-      }
-      case Structural::Context:
-      case Structural::Switch:
-      {
+      break;
+    }
+    case Structural::Context:
+    case Structural::Switch:
+    {
 
-        properties["LOCAL:TOP"] = QString::number(_insertPoint.y() - DEFAULT_CONTEXT_HEIGHT/2);
-        properties["LOCAL:LEFT"] = QString::number(_insertPoint.x() - DEFAULT_CONTEXT_WIDTH/2);
-        properties["LOCAL:HEIGHT"] = QString::number(DEFAULT_CONTEXT_HEIGHT);
-        properties["LOCAL:WIDTH"] = QString::number(DEFAULT_CONTEXT_WIDTH);
+      properties["LOCAL:TOP"] = QString::number(_insertPoint.y() - DEFAULT_CONTEXT_HEIGHT/2);
+      properties["LOCAL:LEFT"] = QString::number(_insertPoint.x() - DEFAULT_CONTEXT_WIDTH/2);
+      properties["LOCAL:HEIGHT"] = QString::number(DEFAULT_CONTEXT_HEIGHT);
+      properties["LOCAL:WIDTH"] = QString::number(DEFAULT_CONTEXT_WIDTH);
 
-        break;
-      }
-
-      case Structural::Media:
-      {
-
-        properties["LOCAL:TOP"] = QString::number(_insertPoint.y() - DEFAULT_MEDIA_HEIGHT/2);
-        properties["LOCAL:LEFT"] = QString::number(_insertPoint.x() - DEFAULT_MEDIA_WIDTH/2);
-        properties["LOCAL:HEIGHT"] = QString::number(DEFAULT_MEDIA_HEIGHT);
-        properties["LOCAL:WIDTH"] = QString::number(DEFAULT_MEDIA_WIDTH);
-
-        break;
-      }
-
-      default:
-        break;
+      break;
     }
 
-    QMap<QString, QString> settings;
-    settings["UNDO"] = "1";
-    settings["NOTIFY"] = "1";
-    settings["CODE"] = QUuid::createUuid().toString();
+    case Structural::Media:
+    {
 
-    inserted(QUuid::createUuid().toString(),getLocalUid(), properties, settings);
+      properties["LOCAL:TOP"] = QString::number(_insertPoint.y() - DEFAULT_MEDIA_HEIGHT/2);
+      properties["LOCAL:LEFT"] = QString::number(_insertPoint.x() - DEFAULT_MEDIA_WIDTH/2);
+      properties["LOCAL:HEIGHT"] = QString::number(DEFAULT_MEDIA_HEIGHT);
+      properties["LOCAL:WIDTH"] = QString::number(DEFAULT_MEDIA_WIDTH);
+
+      break;
+    }
+
+    default:
+      break;
   }
+
+  QMap<QString, QString> settings;
+  settings["UNDO"] = "1";
+  settings["NOTIFY"] = "1";
+  settings["CODE"] = QUuid::createUuid().toString();
+
+  inserted(QUuid::createUuid().toString(),getLocalUid(), properties, settings);
+}
 

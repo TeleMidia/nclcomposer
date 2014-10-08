@@ -29,7 +29,7 @@ private slots:
   void performMedia();
   void performPort();
   void performArea();
-  void performSwitchport();
+  void performSwitchPort();
   void performProperty();
 
 public:
@@ -50,7 +50,7 @@ public:
   QAction* portAction;
   QAction* areaAction;
   QAction* propertyAction;
-  QAction* switchportAction;
+  QAction* switchPortAction;
 };
 
 #endif // QNSTMENU_H

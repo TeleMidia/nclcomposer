@@ -6,7 +6,7 @@
 class Change : public Command
 {
 public:
-  Change(QString _uid, QMap<QString, QString> _properties, QMap<QString, QString> _previous, QMap<QString, QString> _settings);
+  Change(QString uid, QMap<QString, QString> properties, QMap<QString, QString> previous, QMap<QString, QString> settings);
   virtual ~Change();
 
   virtual void undo();
