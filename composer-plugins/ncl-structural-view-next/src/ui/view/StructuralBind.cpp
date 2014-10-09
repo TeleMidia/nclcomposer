@@ -1,5 +1,7 @@
 #include "StructuralBind.h"
 
+#include "StructuralBindDialog.h"
+
 StructuralBind::StructuralBind(StructuralEntity* parent)
   : StructuralEdge(parent)
 {
@@ -86,6 +88,17 @@ void StructuralBind::setType(Structural::BindType type)
         this->icon = ":/icon/nocondition";
       break;
   }
+}
+
+void StructuralBind::setLocalProperty(const QString &name, const QString &value)
+{
+  if (name == "LOCAL:BIND")
+  {
+    setType(StructuralUtil::getBindTypeFromStr(value));
+    setRole(value);
+  }
+
+  StructuralEdge::setLocalProperty(name, value);
 }
 
 Structural::BindType StructuralBind::getType()
@@ -917,6 +930,28 @@ void StructuralBind::setParams(QMap<QString, QString> params)
 
 void StructuralBind::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
 {
+  StructuralBindDialog *d = new StructuralBindDialog();
+
+  if (isCondition())
+    d->setType(StructuralBindDialog::CONDITION);
+  else
+    d->setType(StructuralBindDialog::ACTION);
+
+  if (d->exec())
+  {
+    QMap<QString,QString> previous = getLocalProperties();
+    QMap<QString,QString> properties = getLocalProperties();
+    properties["LOCAL:BIND"] = d->getSelected();
+
+    QMap<QString, QString> settings;
+    settings["UNDO"] = "1";
+    settings["NOTIFY"] = "1";
+    settings["CODE"] = StructuralUtil::createUid();
+
+    changed(getLocalUid(), properties, previous, settings);
+  }
+
+  delete d;
   /*
   if (conn != NULL)
   {
@@ -1117,12 +1152,30 @@ StructuralEntity *StructuralBind::getTarget()
 
 void StructuralBind::updateToolTip()
 {
-  QString tip = getRole() + "(" + getComponent();
-  if(getInterface() != "")
+  StructuralEntity* comp = NULL;
+
+  if (isCondition())
   {
-    tip += "#";
-    tip += getInterface();
+    comp = getEntityA();
   }
+  else
+  {
+    comp = getEntityB();
+  }
+
+
+  QString tip = getRole() + " (";
+
+  if (comp->getLocalType() == Structural::Interface)
+  {
+    StructuralEntity* parent = comp->getLocalParent();
+    tip += parent->getLocalId() +  "#" + comp->getLocalId();
+  }
+  else
+  {
+    tip += comp->getLocalId();
+  }
+
   tip += ")";
 
   setToolTip(tip);

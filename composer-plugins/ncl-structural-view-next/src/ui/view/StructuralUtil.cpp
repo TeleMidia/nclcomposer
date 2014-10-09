@@ -170,11 +170,11 @@ std::map <QString, Structural::BindType> StructuralUtil::bindTypeFromRoleStr =
     ("onPauseAttribution", Structural::onPauseAttribution)
     ("onResumeAttribution", Structural::onResumeAttribution)
 
-    ("start", Structural::Start)
-    ("stop", Structural::Stop)
-    ("resume", Structural::Resume)
-    ("pause", Structural::Pause)
-    ("set", Structural::Set);
+    ("Start", Structural::Start)
+    ("Stop", Structural::Stop)
+    ("Resume", Structural::Resume)
+    ("Pause", Structural::Pause)
+    ("Set", Structural::Set);
 
 /* Initialize String from Qnst::BindType Map */
 std::map <Structural::BindType, QString> StructuralUtil::strFromBindType =

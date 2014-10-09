@@ -57,6 +57,8 @@ public:
 
   StructuralLink* getLink();
 
+  virtual void setLocalProperty(const QString &name, const QString &value);
+
   void setTarget(StructuralEntity *target);
 
   StructuralEntity *getTarget();
