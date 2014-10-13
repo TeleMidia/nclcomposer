@@ -10,6 +10,8 @@
 #include "StructuralUtil.h"
 #include "StructuralBind.h"
 
+#include "StructuralEdge.h"
+
 std::map <Structural::EntityName, QString> StructuralView::mediaTypeToXMLStr =
     create_map<Structural::EntityName, QString>
       (Structural::Media, "media");
@@ -229,6 +231,16 @@ void StructuralView::insert(QString uid, QString parent, QMap<QString, QString> 
             bind->setEntityB(entities[properties.value("LOCAL:END")]);
 
             bind->setType(StructuralUtil::getBindTypeFromStr(properties.value("LOCAL:BIND")));
+
+            if (properties.value("LOCAL:ANGLE").isEmpty())
+            {
+              adjustAngles(bind);
+              bind->setLocalProperty("LOCAL:ANGLE", QString::number(bind->getAngle()));
+            }
+            else
+            {
+              bind->setAngle(properties.value("LOCAL:ANGLE").toDouble());
+            }
         }
 
         break;
@@ -317,7 +329,8 @@ void StructuralView::insert(QString uid, QString parent, QMap<QString, QString> 
 
       entity->adjust(true);
 
-      qDebug() << entity->getLocalProperties();
+//      qDebug() << entity->getLocalProperties();
+//      qDebug() << "ANGLE" << entity->getLocalProperty("LOCAL:ANGLE");
 
       if (settings["UNDO"] == "1")
       {
@@ -1617,6 +1630,62 @@ void StructuralView::setEnableLink(bool status)
     {
         modified = false;
     }
+}
+
+void StructuralView::adjustAngles(StructuralBind* edge)
+{
+  int MIN =  100000;
+  int MAX = -100000;
+
+  bool HAS = false;
+
+  bool isCondition = false;
+
+  foreach (StructuralEntity *e, entities)
+  {
+    if (e->getLocalName() == Structural::Bind)
+    {
+      StructuralBind *ea = (StructuralBind*) e;
+
+      if ((edge->getEntityA() == ea->getEntityA() || edge->getEntityA() == ea->getEntityB()) &&
+          (edge->getEntityB() == ea->getEntityB() || edge->getEntityB() == ea->getEntityA()) &&
+          edge != ea)
+      {
+        HAS = true;
+
+        int A = ea->getAngle();
+
+        if (!ea->isCondition())
+          A = -A;
+
+        if (MAX < A )
+          MAX = A;
+
+        if (MIN > A )
+          MIN = A;
+      }
+    }
+  }
+
+  int ANGLE = -1;
+
+  if (!HAS)
+    ANGLE = 0;
+  else if (MAX <= abs(MIN))
+    ANGLE = MAX+60;
+  else if (MAX > abs(MIN))
+    ANGLE = MIN-60;
+
+//  if (isCondition == edge->isCondition())
+//    edge->setAngle(ANGLE);
+//  else
+//    edge->setAngle(-ANGLE);
+
+  if (!edge->isCondition())
+    edge->setAngle(-ANGLE);
+  else
+    edge->setAngle(ANGLE);
+
 }
 
 void StructuralView::setAction(QString action)

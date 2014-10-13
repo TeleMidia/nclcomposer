@@ -126,6 +126,9 @@ private:
 
   QString interfaceUID;
 
+  QPointF globlalPointA;
+  QPointF globlalPointB;
+
   StructuralLink *link;
 
 };

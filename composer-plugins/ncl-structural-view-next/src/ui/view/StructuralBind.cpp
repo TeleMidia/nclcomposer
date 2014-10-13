@@ -140,16 +140,16 @@ void StructuralBind::adjust_action()
       line.setP2(getLocalParent()->mapFromItem(getEntityB()->getLocalParent(), line.p2()));
     }
 
-    QPointF pointa = line.p1();
-    QPointF pointb = line.p2();
+    globlalPointA = line.p1();
+    globlalPointB = line.p2();
 
-    aux_adjust(pointa, pointb);
+    aux_adjust(globlalPointA, globlalPointB);
 
     getEntityB()->setSelectable(false);
 
     qreal index;
 
-    if (pointa != pointb)
+    if (globlalPointA != globlalPointB)
     {
       index = 1.0;
 
@@ -160,11 +160,11 @@ void StructuralBind::adjust_action()
         index -= 0.01;
 
         if (getAngle() == 0)
-          pointb = line.pointAt(index);
+          globlalPointB = line.pointAt(index);
         else
-          pointb = arcPointAt(line , index);
+          globlalPointB = arcPointAt(line , index);
 
-        aux_adjust(pointa, pointb);
+        aux_adjust(globlalPointA, globlalPointB);
 
         if (++n > 100){ // avoiding infinity loop
           break;
@@ -198,16 +198,16 @@ void StructuralBind::adjust_condition()
       line.setP2(getLocalParent()->mapFromItem(getEntityB()->getLocalParent(), line.p2()));
     }
 
-    QPointF pointa = line.p1();
-    QPointF pointb = line.p2();
+    globlalPointA = line.p1();
+    globlalPointB = line.p2();
 
-    aux_adjust(pointa, pointb);
+    aux_adjust(globlalPointA, globlalPointB);
 
     getEntityA()->setSelectable(false);
 
     qreal index;
 
-    if (pointa != pointb){
+    if (globlalPointA != globlalPointB){
 
       index = 0;
 
@@ -218,11 +218,11 @@ void StructuralBind::adjust_condition()
         index += 0.01;
 
         if (getAngle() == 0)
-          pointa = line.pointAt(index);
+          globlalPointA = line.pointAt(index);
         else
-          pointa = arcPointAt(line , index, false);
+          globlalPointA = arcPointAt(line , index, false);
 
-        aux_adjust(pointa, pointb);
+        aux_adjust(globlalPointA, globlalPointB);
 
         if (++n > 100) // avoiding infinity loop
           break;
@@ -245,14 +245,14 @@ void StructuralBind::aux_adjust(QPointF pointa, QPointF pointb)
     setWidth((pointb.x()-4)-(pointa.x()-4) + 8);
     setHeight((pointb.y()-4)-(pointa.y()-4) + 8);
   }
-  else if (pointa.x() > pointb.x() && pointa.y() < pointb.y())
+  else if (pointa.x() > pointb.x() && pointa.y() <= pointb.y())
   {
     setTop(pointa.y()-4);
     setLeft(pointb.x()-4);
     setWidth((pointa.x()-4)-(pointb.x()-4) + 8);
     setHeight((pointb.y()-4)-(pointa.y()-4) + 8);
   }
-  else if (pointa.x() < pointb.x() && pointa.y() > pointb.y())
+  else if (pointa.x() <= pointb.x() && pointa.y() > pointb.y())
   {
     setTop(pointb.y()-4);
     setLeft((pointa.x()-4));
@@ -303,13 +303,14 @@ void StructuralBind::draw_action(QPainter* painter)
       line.setP2(getLocalParent()->mapFromItem(getEntityB()->getLocalParent(), line.p2()));
     }
 
-    QPointF pointa = line.p1();
-    QPointF pointb = line.p2();
+    QPointF pointa = globlalPointA;
+    QPointF pointb = globlalPointB;
 
     if (!isInvalid() && !hasError)
       painter->setPen(QPen(QBrush(QColor("#000000")), 1));
     else
       painter->setPen(QPen(QBrush(QColor(255,0,0,200)), 1, Qt::DashLine));
+
 
     if (pointa.x() <= pointb.x() && pointa.y() <= pointb.y())
     {
@@ -333,6 +334,9 @@ void StructuralBind::draw_action(QPainter* painter)
 
         QPointF center_b(localline.p1().x() + ::cos((180-delta-drawangle)*PI/180)*R,
                          localline.p1().y() - ::sin((180-delta-drawangle)*PI/180)*R);
+
+
+
 
         if (getAdjAngle() < 0)
         {
@@ -381,11 +385,12 @@ void StructuralBind::draw_action(QPainter* painter)
 
         qreal delta = (180-drawangle)/2 + (360 - localline.angle());
 
-        QPointF center_a(localline.p2().x() - ::cos((180-delta-drawangle)*PI/180)*R,
-                         localline.p2().y() + ::sin((180-delta-drawangle)*PI/180)*R);
+        QPointF center_a(localline.p2().x() - ::cos(((2*localline.angle() - drawangle - 540)/2)*PI/180)*R,
+                         localline.p2().y() + ::sin(((2*localline.angle() - drawangle - 540)/2)*PI/180)*R);
 
-        QPointF center_b(localline.p1().x() + ::cos((180-delta-drawangle)*PI/180)*R,
-                         localline.p1().y() - ::sin((180-delta-drawangle)*PI/180)*R);
+        QPointF center_b(localline.p1().x() + ::cos(((2*localline.angle() - drawangle - 540)/2)*PI/180)*R,
+                         localline.p1().y() - ::sin(((2*localline.angle() - drawangle - 540)/2)*PI/180)*R);
+
 
         if (getAdjAngle() < 0)
         {
@@ -403,9 +408,12 @@ void StructuralBind::draw_action(QPainter* painter)
         painter->drawLine(4+4+getWidth()-8,4+4, 4+8, 4+8+getHeight()-16);
       }
 
+
       painter->setPen(Qt::NoPen);
 
       painter->drawPixmap(4, 4+getHeight()-16, 16, 16, QPixmap(icon));
+
+      painter->setBrush(QBrush(QColor(255,0,0,75)));
 
       if (!isInvalid() && !hasError)
       {
@@ -547,8 +555,8 @@ void StructuralBind::draw_condition(QPainter* painter)
       line.setP2(getLocalParent()->mapFromItem(getEntityB()->getLocalParent(), line.p2()));
     }
 
-    QPointF pointa = line.p1();
-    QPointF pointb = line.p2();
+    QPointF pointa = globlalPointA;
+    QPointF pointb = globlalPointB;
 
     if (!isInvalid() && !hasError)
       painter->setPen(QPen(QBrush(QColor("#000000")), 1));

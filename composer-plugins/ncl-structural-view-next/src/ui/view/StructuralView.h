@@ -135,6 +135,8 @@ private:
 
 //  void rec_clip(StructuralEntity* e, StructuralEntity* parent);
 
+  void adjustAngles(StructuralBind* edge);
+
   void createObjects();
 
   void createConnection();

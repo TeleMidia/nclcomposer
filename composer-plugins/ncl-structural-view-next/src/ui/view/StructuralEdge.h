@@ -39,7 +39,7 @@ public:
 
   void aux_adjust(QPointF pointa, QPointF pointb);
 
-  QPointF arcPointAt(QLineF line, qreal at, bool toend = true);
+  QPointF arcPointAt(QLineF line, qreal at, bool toend = true, bool invert = false);
 
   qreal getAngle();
 
