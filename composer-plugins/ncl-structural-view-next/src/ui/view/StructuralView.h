@@ -161,7 +161,7 @@ private:
 
   StructuralViewLink* link;
 
-  StructuralEntity* _selected;
+  QString _selected_UID;
 
   StructuralEntity* clipboard;
 

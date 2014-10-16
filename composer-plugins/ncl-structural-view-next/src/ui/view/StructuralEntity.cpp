@@ -174,12 +174,9 @@ void StructuralEntity::setLocalProperty(const QString &name, const QString &valu
   {
     setLocalUid(value);
   }
-  else if (name == "hidden")
+  else if (name == "LOCAL:HIDDEN")
   {
-    if (value == "true")
-      setVisible(false);
-    else
-      setVisible(true);
+    setHidden((value == "TRUE" ? true : false));
   }
 }
 
@@ -192,7 +189,7 @@ void StructuralEntity::setMoveable(bool moveable)
 {
   _moveable = moveable;
 
-  _properties["LOCAL:MOVEABLE"] = (moveable ? "TRUE" : "FALSE");
+//  _properties["LOCAL:MOVEABLE"] = (moveable ? "TRUE" : "FALSE");
 }
 
 bool StructuralEntity::isSelectable() const
@@ -204,7 +201,7 @@ void StructuralEntity::setSelectable(bool selectable)
 {
   _selectable = selectable;
 
-  _properties["LOCAL:SELECTABLE"] = (selectable ? "TRUE" : "FALSE");
+//  _properties["LOCAL:SELECTABLE"] = (selectable ? "TRUE" : "FALSE");
 }
 
 bool StructuralEntity::isHoverable() const
@@ -216,7 +213,7 @@ void StructuralEntity::setHoverable(bool hoverable)
 {
   _hoverable = hoverable;
 
-  _properties["LOCAL:HOVERABLE"] = (hoverable ? "TRUE" : "FALSE");
+//  _properties["LOCAL:HOVERABLE"] = (hoverable ? "TRUE" : "FALSE");
 }
 
 bool StructuralEntity::isResizable() const
@@ -228,7 +225,7 @@ void StructuralEntity::setResizable(bool resizable)
 {
   _resizable = resizable;
 
-  _properties["LOCAL:RESIZABLE"] = (resizable ? "TRUE" : "FALSE");
+//  _properties["LOCAL:RESIZABLE"] = (resizable ? "TRUE" : "FALSE");
 }
 
 bool StructuralEntity::isDraggable()
@@ -240,7 +237,7 @@ void StructuralEntity::setDraggable(bool draggable)
 {
   _draggable = draggable;
 
-  _properties["LOCAL:DRAGGABLE"] = (draggable ? "TRUE" : "FALSE");
+//  _properties["LOCAL:DRAGGABLE"] = (draggable ? "TRUE" : "FALSE");
 }
 
 bool StructuralEntity::isMoving() const
@@ -252,7 +249,7 @@ void StructuralEntity::setMoving(bool moving)
 {
   _moving = moving;
 
-  _properties["LOCAL:MOVING"] = (moving ? "TRUE" : "FALSE");
+//  _properties["LOCAL:MOVING"] = (moving ? "TRUE" : "FALSE");
 }
 
 bool StructuralEntity::isHidden() const
@@ -279,7 +276,7 @@ void StructuralEntity::setResizing(bool resizing)
 {
   _resizing = resizing;
 
-  _properties["LOCAL:RESIZING"] = (resizing ? "TRUE" : "FALSE");
+//  _properties["LOCAL:RESIZING"] = (resizing ? "TRUE" : "FALSE");
 }
 
 bool StructuralEntity::isHovering() const
@@ -291,7 +288,7 @@ void StructuralEntity::setHovering(bool hovering)
 {
   _hovering = hovering;
 
-  _properties["LOCAL:HOVERING"] = (hovering ? "TRUE" : "FALSE");
+//  _properties["LOCAL:HOVERING"] = (hovering ? "TRUE" : "FALSE");
 }
 
 bool StructuralEntity::isDragging() const
@@ -303,7 +300,7 @@ void StructuralEntity::setDragging(bool dragging)
 {
   _dragging = dragging;
 
-  _properties["LOCAL:DRAGGING"] = (dragging ? "TRUE" : "FALSE");
+//  _properties["LOCAL:DRAGGING"] = (dragging ? "TRUE" : "FALSE");
 }
 
 bool StructuralEntity::isSelected() const
@@ -342,7 +339,7 @@ void StructuralEntity::setMoveTop(qreal moveTop)
 {
   _moveTop = moveTop;
 
-  _properties["LOCAL:MOVETOP"] = QString::number(moveTop);
+//  _properties["LOCAL:MOVETOP"] = QString::number(moveTop);
 }
 
 qreal StructuralEntity::getPressTop() const
@@ -354,7 +351,7 @@ void StructuralEntity::setPressTop(qreal pressTop)
 {
   _pressTop = pressTop;
 
-  _properties["LOCAL:PRESSTOP"] = QString::number(pressTop);
+//  _properties["LOCAL:PRESSTOP"] = QString::number(pressTop);
 }
 
 qreal StructuralEntity::getResizeTop() const
@@ -366,7 +363,7 @@ void StructuralEntity::setResizeTop(qreal resizeTop)
 {
   _resizeTop = resizeTop;
 
-  _properties["LOCAL:RESIZETOP"] = QString::number(resizeTop);
+//  _properties["LOCAL:RESIZETOP"] = QString::number(resizeTop);
 }
 
 qreal StructuralEntity::getLeft() const
@@ -393,7 +390,7 @@ void StructuralEntity::setMoveLeft(qreal moveLeft)
 {
   _moveLeft = moveLeft;
 
-  _properties["LOCAL:MOVELEFT"] = QString::number(moveLeft);
+//  _properties["LOCAL:MOVELEFT"] = QString::number(moveLeft);
 }
 
 qreal StructuralEntity::getPressLeft() const
@@ -405,7 +402,7 @@ void StructuralEntity::setPressLeft(qreal pressLeft)
 {
   _pressLeft = pressLeft;
 
-  _properties["LOCAL:PRESSLEFT"] = QString::number(pressLeft);
+//  _properties["LOCAL:PRESSLEFT"] = QString::number(pressLeft);
 }
 
 qreal StructuralEntity::getResizeLeft() const
@@ -417,7 +414,7 @@ void StructuralEntity::setResizeLeft(qreal resizeLeft)
 {
   _resizeLeft = resizeLeft;
 
-  _properties["LOCAL:RESIZELEFT"] = QString::number(resizeLeft);
+//  _properties["LOCAL:RESIZELEFT"] = QString::number(resizeLeft);
 }
 
 qreal StructuralEntity::getWidth() const
@@ -441,7 +438,7 @@ void StructuralEntity::setPressWidth(qreal pressWidth)
 {
   _pressWidth = pressWidth;
 
-  _properties["LOCAL:PRESSWIDTH"] = QString::number(pressWidth);
+//  _properties["LOCAL:PRESSWIDTH"] = QString::number(pressWidth);
 }
 
 qreal StructuralEntity::getResizeWidth() const
@@ -453,7 +450,7 @@ void StructuralEntity::setResizeWidth(qreal resizeWidth)
 {
   _resizeWidth = resizeWidth;
 
-  _properties["LOCAL:RESIZEWIDTH"] = QString::number(resizeWidth);
+//  _properties["LOCAL:RESIZEWIDTH"] = QString::number(resizeWidth);
 }
 
 qreal StructuralEntity::getHeight() const
@@ -477,7 +474,7 @@ void StructuralEntity::setPressHeight(qreal pressHeight)
 {
   _pressHeight = pressHeight;
 
-  _properties["LOCAL:PRESSHEIGHT"] = QString::number(pressHeight);
+//  _properties["LOCAL:PRESSHEIGHT"] = QString::number(pressHeight);
 }
 
 qreal StructuralEntity::getResizeHeight() const
@@ -489,7 +486,7 @@ void StructuralEntity::setResizeHeight(qreal resizeHeight)
 {
   _resizeHeight = resizeHeight;
 
-  _properties["LOCAL:RESIZEHEIGHT"] = QString::number(resizeHeight);
+//  _properties["LOCAL:RESIZEHEIGHT"] = QString::number(resizeHeight);
 }
 
 qreal StructuralEntity::getzIndex() const

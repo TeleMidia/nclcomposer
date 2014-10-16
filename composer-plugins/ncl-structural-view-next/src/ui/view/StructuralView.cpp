@@ -39,7 +39,7 @@ StructuralView::StructuralView(QWidget* parent)
 
   link = NULL;
 
-  _selected = NULL;
+  _selected_UID = "";
 
   clipboard = NULL;
 
@@ -277,6 +277,8 @@ void StructuralView::insert(QString uid, QString parent, QMap<QString, QString> 
             StructuralReference* bind = (StructuralReference*) entity;
             bind->setEntityA(entities[properties.value("LOCAL:BEGIN")]);
             bind->setEntityB(entities[properties.value("LOCAL:END")]);
+
+            qDebug() << "MISTICO";
         }
 
         break;
@@ -350,6 +352,8 @@ void StructuralView::insert(QString uid, QString parent, QMap<QString, QString> 
       {
         emit inserted(uid, parent, entity->getLocalProperties(), settings);
       }
+
+      qDebug() << "INSERT ============================" << entities.size();
     }
   }
 }
@@ -390,28 +394,33 @@ void StructuralView::remove(QString uid, QMap<QString, QString> settings)
       connect(command, SIGNAL(change(QString,QMap<QString,QString>,QMap<QString,QString>,QMap<QString,QString>)), SLOT(change(QString,QMap<QString,QString>,QMap<QString,QString>,QMap<QString,QString>)));
       connect(command, SIGNAL(select(QString,QMap<QString,QString>)),SLOT(select(QString,QMap<QString,QString>)));
 
-      if (entities[uid]->getLocalType() != Structural::Edge)
+      commnads.push(command); return;
+    }
+
+    if (entities[uid]->getLocalType() != Structural::Edge)
+    {
+      foreach (StructuralEntity* entity, entities.values())
       {
-        foreach (StructuralEntity* entity, entities.values())
-        {
-            if (entity->getLocalType() == Structural::Edge)
-            {
-                StructuralEdge* bind = (StructuralEdge*) entity;
+          if (entity->getLocalType() == Structural::Edge)
+          {
+              StructuralEdge* bind = (StructuralEdge*) entity;
 
-                if (bind->getLocalProperty("LOCAL:BEGIN") == uid || bind->getLocalProperty("LOCAL:END") == uid)
-                {
-                    remove(bind->getLocalUid(), settings);
-                }
-            }
-        }
-
-        foreach (StructuralEntity* entity, entities[uid]->getLocalChildren())
-        {
-            remove(entity->getLocalUid(), settings);
-        }
+              if (bind->getLocalProperty("LOCAL:BEGIN") == uid || bind->getLocalProperty("LOCAL:END") == uid)
+              {
+                  settings["UNDO"] = "1";
+                  settings["NOTIFY"] = "1";
+                  remove(bind->getLocalUid(), settings);
+              }
+          }
       }
 
-      commnads.push(command); return;
+      foreach (StructuralEntity* entity, entities[uid]->getLocalChildren())
+      {
+          settings["UNDO"] = "1";
+          settings["NOTIFY"] = "1";
+
+          remove(entity->getLocalUid(), settings);
+      }
     }
 
     StructuralEntity* entity = entities[uid];
@@ -427,12 +436,15 @@ void StructuralView::remove(QString uid, QMap<QString, QString> settings)
 
     entities.remove(uid);
 
-    delete entity; entity = NULL; _selected = NULL;
+    delete entity; entity = NULL;
+     _selected_UID = "";
 
     if (settings["NOTIFY"] == "1")
     {
       emit removed(uid, settings);
     }
+
+    qDebug() << "REMOVE ============================" << entities.size();
   }
 }
 
@@ -458,13 +470,29 @@ void StructuralView::change(QString uid, QMap<QString, QString> properties, QMap
      entity->setLocalProperties(properties);
      entity->adjust();
 
-     foreach (StructuralEntity* entity, entities.values())
+     foreach (StructuralEntity* e, entities.values())
      {
-         if (entity->getLocalType() == Structural::Edge)
+         if (e->getLocalType() == Structural::Edge)
          {
-             if (entity->getLocalProperty("LOCAL:BEGIN") == uid ||
-                 entity->getLocalProperty("LOCAL:END") == uid)
-             entity->adjust();
+             if (e->getLocalProperty("LOCAL:BEGIN") == uid ||
+                 e->getLocalProperty("LOCAL:END") == uid)
+             {
+                e->adjust();
+             }
+             else
+             {
+               foreach (StructuralEntity* child, entity->getLocalChildren())
+               {
+                 if (child->getLocalType() == Structural::Interface)
+                 {
+                   if (e->getLocalProperty("LOCAL:BEGIN") == child->getLocalUid() ||
+                       e->getLocalProperty("LOCAL:END") == child->getLocalUid())
+                   {
+                     e->adjust();
+                   }
+                 }
+               }
+             }
          }
      }
 
@@ -472,6 +500,8 @@ void StructuralView::change(QString uid, QMap<QString, QString> properties, QMap
     {
       emit changed(uid, properties, previous, settings);
     }
+
+    qDebug() << "CHANGE ============================" << entities.size();
   }
 }
 
@@ -482,13 +512,18 @@ void StructuralView::select(QString uid, QMap<QString, QString> settings)
       StructuralEntity* entity = entities[uid];
       entity->setSelected(true);
 
+      StructuralEntity* _selected = NULL;
+
+      if (!_selected_UID.isEmpty())
+        _selected = entities[_selected_UID];
+
       if (_selected != NULL && _selected != 0)
       {
         _selected->setSelected(false);
         _selected->adjust();
       }
 
-      _selected = entity;
+      _selected_UID = uid;
 
       // TODO
 //      if (settings["NOTIFY"] == "1")
@@ -517,6 +552,11 @@ void StructuralView::create(LocalName name, QMap<QString, QString> &properties, 
   {
     default:
     {
+      StructuralEntity* _selected = NULL;
+
+      if (!_selected_UID.isEmpty())
+        _selected = entities[_selected_UID];
+
       if (_selected != NULL)
       {
         parent = _selected->getLocalUid();
@@ -579,6 +619,11 @@ bool StructuralView::performRedo()
 
 bool StructuralView::performCut()
 {
+    StructuralEntity* _selected = NULL;
+
+    if (!_selected_UID.isEmpty())
+      _selected = entities[_selected_UID];
+
     if (_selected != NULL)
     {
       if (!clip_copy.isEmpty())
@@ -608,7 +653,7 @@ bool StructuralView::performCut()
 
         QMap<QString, QString> properties;
         properties = _selected->getLocalProperties();
-        properties["hidden"] = "true";
+        properties["LOCAL:HIDDEN"] = "TRUE";
 
         QMap<QString, QString> settings;
         settings["UNDO"] = "1";
@@ -616,6 +661,10 @@ bool StructuralView::performCut()
         settings["CODE"] = StructuralUtil::createUid();
 
         change(clip_cut, properties, previous, settings);
+
+        _selected->setSelected(false);
+
+        _selected_UID = "";
 
         return true;
     }
@@ -639,6 +688,11 @@ bool StructuralView::performCut()
 
 bool StructuralView::performCopy()
 {
+    StructuralEntity* _selected = NULL;
+
+    if (!_selected_UID.isEmpty())
+      _selected = entities[_selected_UID];
+
     if (_selected != NULL)
     {
       if (!clip_cut.isEmpty())
@@ -689,13 +743,15 @@ bool StructuralView::performPaste()
     else if (!clip_cut.isEmpty())
       clip = clip_cut;
 
+    StructuralEntity* _selected = NULL;
+
+    if (!_selected_UID.isEmpty())
+      _selected = entities[_selected_UID];
+
     if (entities.contains(clip))
     {
         if (_selected != NULL && _selected != entities[clip] && !isChild(_selected, entities[clip]))
         {
-
-
-
             StructuralEntity* entity = entities[clip];
 
             if (entity->getLocalType() == Structural::Interface)
@@ -729,7 +785,9 @@ void StructuralView::performPaste(StructuralEntity* entity, StructuralEntity* pa
     QString uid = QUuid::createUuid().toString();
     QString parentuid = parent->getLocalUid();
     QMap<QString, QString> properties = entity->getLocalProperties();
-    properties["hidden"] = "false";
+    properties["LOCAL:UID"] = uid;
+    properties["LOCAL:HIDDEN"] = "FALSE";
+
 
     QMap<QString, QString> settings;
     settings["UNDO"] = "1";
@@ -804,6 +862,11 @@ bool StructuralView::updateEntityWithUniqueNstId(StructuralEntity *entity)
 
 bool StructuralView::performDelete()
 {
+  StructuralEntity* _selected = NULL;
+
+  if (!_selected_UID.isEmpty())
+    _selected = entities[_selected_UID];
+
   if (_selected != NULL)
   {
 
@@ -1027,13 +1090,18 @@ void StructuralView::mousePressEvent(QMouseEvent* event)
     {
       if (event->button() == Qt::LeftButton)
       {
+        StructuralEntity* _selected = NULL;
+
+        if (!_selected_UID.isEmpty())
+          _selected = entities[_selected_UID];
+
         if (_selected != NULL)
         {
           _selected->setSelected(false);
           _selected->adjust();
         }
 
-        _selected = NULL;
+        _selected_UID = "";
 
         emit selected("", QMap<QString, QString>());
       }
@@ -1068,6 +1136,7 @@ void StructuralView::mouseReleaseEvent(QMouseEvent* event)
         if (entitya->getLocalType() == Structural::Node &&
             entityb->getLocalType() == Structural::Node)
         {
+            qDebug()  << "if linking NODE to NODE";
             if (entitya->getLocalName() != Structural::Link && entityb->getLocalName() != Structural::Link)
             {
                 createLink(entitya, entityb);
@@ -1076,13 +1145,12 @@ void StructuralView::mouseReleaseEvent(QMouseEvent* event)
             {
                 createBind(entitya, entityb);
             }
-
-//           addNodetoNodeEdge(entitya, entityb);
         }
         // if linking NODE to INTERFACE
         else if (entitya->getLocalType() == Structural::Node &&
                  entityb->getLocalType() == Structural::Interface)
         {
+            qDebug()  << "if linking NODE to INTERFACE";
             if (entitya->getLocalName() != Structural::Link)
             {
                 createLink(entitya, entityb);
@@ -1091,13 +1159,12 @@ void StructuralView::mouseReleaseEvent(QMouseEvent* event)
             {
                 createBind(entitya, entityb);
             }
-
-//          addNodetoInterfaceEdge(entitya, entityb);
         }
         // if linking INTERFACE to NODE
         else if (entitya->getLocalType() == Structural::Interface &&
                  entityb->getLocalType() == Structural::Node)
         {
+            qDebug()  << "if linking INTERFACE to NODE";
             StructuralEntity* pa = entitya->getLocalParent();
             StructuralEntity* pb = entityb->getLocalParent();
 
@@ -1113,13 +1180,12 @@ void StructuralView::mouseReleaseEvent(QMouseEvent* event)
             {
                 createBind(entitya, entityb);
             }
-
-//          addInterfacetoNodeEdge(entitya, entityb);
         }
         // if linking INTERFACE to INTERFACE
         else if (entitya->getLocalType() == Structural::Interface &&
                  entityb->getLocalType() == Structural::Interface)
         {
+            qDebug()  << "if linking INTERFACE to INTERFACE";
             StructuralEntity* pa = entitya->getLocalParent();
             StructuralEntity* pb = entityb->getLocalParent();
 
@@ -1131,8 +1197,6 @@ void StructuralView::mouseReleaseEvent(QMouseEvent* event)
             {
                 createLink(entitya, entityb);
             }
-
-//          addInterfacetoInterfaceEdge(entitya, entityb);
         }
       }
 
@@ -1172,17 +1236,93 @@ void StructuralView::mouseReleaseEvent(QMouseEvent* event)
 
 void StructuralView::createLink(StructuralEntity* a, StructuralEntity* b)
 {
-    StructuralEntity* parenta = (StructuralEntity*) a->getLocalParent();
-    StructuralEntity* parentb = (StructuralEntity*) b->getLocalParent();
 
+    StructuralEntity* pa = (StructuralEntity*) a->getLocalParent();
+    StructuralEntity* pb = (StructuralEntity*) b->getLocalParent();
+
+    if (pa != NULL && pb != NULL)
+    {
+      QString uid = QUuid::createUuid().toString();
+      StructuralEntity* parent = NULL;
+      QMap<QString, QString> properties;
+      properties["LOCAL:NAME"] = QString::number(Structural::Link);
+
+      QPointF pt_a;
+      QPointF pt_b;
+
+      if (pa == pb)
+      {
+          parent = pa;
+
+          pt_a.setX(a->getLeft()), pt_a.setY(a->getTop());
+          pt_b.setX(b->getLeft()), pt_b.setY(b->getTop());
+      }
+      else if (pa->getLocalParent() == pb)
+      {
+          parent = pb;
+
+          QPointF cv = pa->mapToParent(a->getLeft(), a->getTop());
+
+          pt_a.setX(cv.x()), pt_a.setY(cv.y());
+          pt_b.setX(b->getLeft()), pt_b.setY(b->getTop());
+      }
+      else if (pa == pb->getLocalParent())
+      {
+          parent = pa;
+
+          QPointF cv = pb->mapToParent(b->getLeft(), b->getTop());
+
+          pt_a.setX(a->getLeft()), pt_a.setY(a->getTop());
+          pt_b.setX(cv.x()), pt_b.setY(cv.y());
+      }
+      else
+      {
+          return;
+      }
+
+      qDebug() << "AX:" << a->getLeft() << "AY:" << a->getTop();
+      qDebug() << "BX:" << b->getLeft() << "BY:" << b->getTop();
+
+      qDebug() << "RAX:" << pt_a.x() << "RAY:" << pt_a.y();
+      qDebug() << "RBX:" << pt_b.x() << "RBY:" << pt_b.y();
+
+      if (pt_a.y() > pt_b.y())
+          properties["LOCAL:TOP"] = QString::number(pt_b.y() + (pt_a.y() - pt_b.y())/2);
+      else
+          properties["LOCAL:TOP"] = QString::number(pt_a.y() + (pt_b.y() - pt_a.y())/2);
+
+
+      if (pt_a.x() > pt_b.x())
+          properties["LOCAL:LEFT"] = QString::number(pt_b.x() + (pt_a.x() - pt_b.x())/2);
+      else
+          properties["LOCAL:LEFT"] = QString::number(pt_a.x() + (pt_b.x() - pt_a.x())/2);
+
+
+      QMap<QString, QString> settings;
+      settings["UNDO"] = "1";
+      settings["NOTIFY"] = "1";
+      settings["CODE"] = QUuid::createUuid().toString();
+
+      insert(uid, parent->getLocalUid(), properties, settings);
+
+      if (entities.contains(uid))
+      {
+          createBind(a,entities[uid],condition,settings["CODE"]);
+          createBind(entities[uid],b,action,settings["CODE"]);
+      }
+    }
+
+/*
     if (parenta == parentb && parenta != NULL && parentb != NULL)
     {
+        qDebug() << "#1 void StructuralView::createLink(StructuralEntity* a, StructuralEntity* b)";
+
         QString uid = QUuid::createUuid().toString();
         QString parent = parenta->getLocalUid();
         QMap<QString, QString> properties;
         properties["LOCAL:NAME"] = QString::number(Structural::Link);
-        properties["LOCAL:BEGIN"] = a->getLocalUid();
-        properties["LOCAL:END"] = b->getLocalUid();
+//        properties["LOCAL:BEGIN"] = a->getLocalUid();
+//        properties["LOCAL:END"] = b->getLocalUid();
 //        properties["LOCAL:BIND"] = "onBegin";
 
 
@@ -1219,11 +1359,12 @@ void StructuralView::createLink(StructuralEntity* a, StructuralEntity* b)
     }
     else if (parenta == NULL && parentb == NULL)
     {
+      qDebug() << "#2 void StructuralView::createLink(StructuralEntity* a, StructuralEntity* b)";
       QString uid = QUuid::createUuid().toString();
       QMap<QString, QString> properties;
       properties["LOCAL:NAME"] = QString::number(Structural::Link);
-      properties["LOCAL:BEGIN"] = a->getLocalUid();
-      properties["LOCAL:END"] = b->getLocalUid();
+//      properties["LOCAL:BEGIN"] = a->getLocalUid();
+//      properties["LOCAL:END"] = b->getLocalUid();
 //        properties["LOCAL:BIND"] = "onBegin";
 
 
@@ -1258,7 +1399,7 @@ void StructuralView::createLink(StructuralEntity* a, StructuralEntity* b)
           createBind(entities[uid],b,action,settings["CODE"]);
       }
     }
-
+*/
 //    linking = false;
 //    modified = false;
 }
@@ -1323,8 +1464,6 @@ void StructuralView::createBind(StructuralEntity* a, StructuralEntity* b, QStrin
       {
           properties["LOCAL:BIND"] = type;
       }
-
-
 
       QMap<QString, QString> settings;
       settings["UNDO"] = "1";
@@ -1412,7 +1551,7 @@ void StructuralView::createReference(StructuralEntity* a, StructuralEntity* b)
             QString uid = QUuid::createUuid().toString();
             QString parent = pa->getLocalUid();
             QMap<QString, QString> properties;
-            properties["LOCAL:NAME"] = "reference";
+            properties["LOCAL:NAME"] = QString::number(Structural::Reference);
             properties["LOCAL:BEGIN"] = a->getLocalUid();
             properties["LOCAL:END"] = b->getLocalUid();
 
@@ -1468,13 +1607,18 @@ void StructuralView::keyPressEvent(QKeyEvent *event)
   // SHIFT - Enabling liking
   else if (event->key() == Qt::Key_Shift)
   {
+    StructuralEntity* _selected = NULL;
+
+    if (!_selected_UID.isEmpty())
+      _selected = entities[_selected_UID];
+
     if (_selected != NULL)
     {
       _selected->setSelected(false);
       _selected->adjust();
     }
 
-    _selected = NULL;
+    _selected_UID =  "";
     modified = true;
 
     event->accept();
@@ -1617,18 +1761,23 @@ void StructuralView::setEnableLink(bool status)
 {
     if (status)
     {
-        if (_selected != NULL)
-        {
-          _selected->setSelected(false);
-          _selected->adjust();
-        }
+      StructuralEntity* _selected = NULL;
 
-        _selected = NULL;
-        modified = true;
+      if (!_selected_UID.isEmpty())
+        _selected = entities[_selected_UID];
+
+      if (_selected != NULL)
+      {
+        _selected->setSelected(false);
+        _selected->adjust();
+      }
+
+      _selected_UID =  "";
+      modified = true;
     }
     else
     {
-        modified = false;
+      modified = false;
     }
 }
 

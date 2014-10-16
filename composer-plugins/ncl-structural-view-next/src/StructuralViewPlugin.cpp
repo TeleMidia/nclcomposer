@@ -391,7 +391,7 @@ void StructuralViewPlugin::requestEntityAddition(Entity* entity)
 
 //  if (!entity->getAttribute("id").isEmpty())
 //  {
-//    properties[":nst:id"] = entity->getAttribute("id");
+//    properties["LOCAL:ID"] = entity->getAttribute("id");
 //  }
 
 //  QMap<QString, QString> settings;
@@ -1366,9 +1366,7 @@ void StructuralViewPlugin::notifyEntityAddedInView(const QString uid,
                                               QMap<QString, QString> properties,
                                               QMap<QString, QString> settings)
 {
-  Structural::EntityName type = StructuralUtil::getnstTypeFromStr(properties["LOCAL:NAME"]);
-
-  qDebug() << "========================================" << type;
+  LocalName type = (LocalName) properties["LOCAL:NAME"].toInt();
 
   Entity* entity = NULL;
 
@@ -1409,8 +1407,8 @@ void StructuralViewPlugin::notifyEntityAddedInView(const QString uid,
       {
         entity = list.first();
 
-        if (!properties.value(":nst:id").isEmpty())
-          attributes["id"] = properties[":nst:id"];
+        if (!properties.value("LOCAL:ID").isEmpty())
+          attributes["id"] = properties["LOCAL:ID"];
 
         mustEmitAddEntity = true;
       }
@@ -1419,11 +1417,11 @@ void StructuralViewPlugin::notifyEntityAddedInView(const QString uid,
 
     case Structural::Context:
     {
-      if (!properties.value(":nst:id").isEmpty())
-        attributes["id"] = properties[":nst:id"];
+      if (!properties.value("LOCAL:ID").isEmpty())
+        attributes["id"] = properties["LOCAL:ID"];
 
-      if (!properties.value(":nst:refer").isEmpty())
-        attributes["refer"] = properties[":nst:refer"];
+      if (!properties.value("LOCAL:REFER").isEmpty())
+        attributes["refer"] = properties["LOCAL:REFER"];
 
       mustEmitAddEntity = true;
       break;
@@ -1431,11 +1429,11 @@ void StructuralViewPlugin::notifyEntityAddedInView(const QString uid,
 
     case Structural::Switch:
     {
-      if (!properties.value(":nst:id").isEmpty())
-          attributes["id"] = properties[":nst:id"];
+      if (!properties.value("LOCAL:ID").isEmpty())
+          attributes["id"] = properties["LOCAL:ID"];
 
-      if (!properties.value(":nst:refer").isEmpty())
-        attributes["refer"] = properties[":nst:refer"];
+      if (!properties.value("LOCAL:REFER").isEmpty())
+        attributes["refer"] = properties["LOCAL:REFER"];
 
       mustEmitAddEntity = true;
       break;
@@ -1443,13 +1441,13 @@ void StructuralViewPlugin::notifyEntityAddedInView(const QString uid,
 
     case Structural::Media:
     {
-      if (!properties.value(":nst:id").isEmpty())
-        attributes["id"] = properties[":nst:id"];
+      if (!properties.value("LOCAL:ID").isEmpty())
+        attributes["id"] = properties["LOCAL:ID"];
 
 
-      if (!properties.value(":nst:src").isEmpty())
+      if (!properties.value("LOCAL:SRC").isEmpty())
       {
-        QString src = properties[":nst:src"];
+        QString src = properties["LOCAL:SRC"];
         try
         {
           attributes["src"] = Utilities::relativePath(project->getLocation(),
@@ -1457,21 +1455,21 @@ void StructuralViewPlugin::notifyEntityAddedInView(const QString uid,
         }
         catch(...)
         {
-          attributes["src"] = properties[":nst:src"];
+          attributes["src"] = properties["LOCAL:SRC"];
         }
       }
 
-      if (!properties.value(":nst:refer").isEmpty())
-        attributes["refer"] = properties[":nst:refer"];
+      if (!properties.value("LOCAL:REFER").isEmpty())
+        attributes["refer"] = properties["LOCAL:REFER"];
 
-      if (!properties.value(":nst:instance").isEmpty())
-        attributes["instance"] = properties[":nst:instance"];
+      if (!properties.value("LOCAL:INSTANCE").isEmpty())
+        attributes["instance"] = properties["LOCAL:INSTANCE"];
 
-      if (!properties.value(":nst:type").isEmpty())
-        attributes["type"] = properties[":nst:type"];
+      if (!properties.value("CPR:TYPE").isEmpty())
+        attributes["type"] = properties["CPR:TYPE"];
 
-      if (!properties.value(":nst:descriptor").isEmpty())
-        attributes["descriptor"] = properties[":nst:descriptor"];
+      if (!properties.value("CPR:DESCRIPTOR").isEmpty())
+        attributes["descriptor"] = properties["CPR:DESCRIPTOR"];
 
       mustEmitAddEntity = true;
       break;
@@ -1479,11 +1477,11 @@ void StructuralViewPlugin::notifyEntityAddedInView(const QString uid,
 
     case Structural::Port:
     {
-      attributes["id"] = properties[":nst:id"];
-      attributes["component"] = properties[":nst:component"];
+      attributes["id"] = properties["LOCAL:ID"];
+      attributes["component"] = properties["CPR:COMPONENT"];
 
-      if (!properties.value(":nst:interface").isEmpty())
-        attributes["interface"] = properties[":nst:interface"];
+      if (!properties.value("CPR:INTERFACE").isEmpty())
+        attributes["interface"] = properties["CPR:INTERFACE"];
 
       mustEmitAddEntity = true;
       break;
@@ -1508,8 +1506,8 @@ void StructuralViewPlugin::notifyEntityAddedInView(const QString uid,
 
     case Structural::Area:
     {
-      if (!properties.value(":nst:id").isEmpty())
-        attributes["id"] = properties[":nst:id"];
+      if (!properties.value("LOCAL:ID").isEmpty())
+        attributes["id"] = properties["LOCAL:ID"];
 
       mustEmitAddEntity = true;
       break;
@@ -1517,8 +1515,8 @@ void StructuralViewPlugin::notifyEntityAddedInView(const QString uid,
 
     case Structural::Property:
     {
-      if (!properties.value(":nst:id").isEmpty())
-        attributes["name"] = properties[":nst:id"];
+      if (!properties.value("LOCAL:ID").isEmpty())
+        attributes["name"] = properties["LOCAL:ID"];
 
       mustEmitAddEntity = true;
       break;
@@ -1526,8 +1524,8 @@ void StructuralViewPlugin::notifyEntityAddedInView(const QString uid,
 
     case Structural::SwitchPort:
     {
-      if (!properties.value(":nst:id").isEmpty())
-        attributes["name"] = properties[":nst:id"];
+      if (!properties.value("LOCAL:ID").isEmpty())
+        attributes["name"] = properties["LOCAL:ID"];
 
       mustEmitAddEntity = true;
       break;
