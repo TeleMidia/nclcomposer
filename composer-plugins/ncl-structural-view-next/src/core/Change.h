@@ -13,9 +13,9 @@ public:
   virtual void redo();
 
 private:
-  QString uid;
-  QString parent;
-  QMap<QString, QString> properties; QMap<QString, QString> previous; QMap<QString, QString> settings;
+  QString _uid;
+  QString _parent;
+  QMap<QString, QString> _properties; QMap<QString, QString> _previous; QMap<QString, QString> _settings;
 };
 
 #endif // QNSTCHANGE_H

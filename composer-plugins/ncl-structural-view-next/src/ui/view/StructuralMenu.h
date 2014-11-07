@@ -11,12 +11,26 @@ class StructuralMenu : public QMenu
   Q_OBJECT
 
 public:
-  StructuralMenu(QWidget* parent = 0);
+  StructuralMenu(QWidget* _parent = 0);
   virtual ~StructuralMenu();
+
+signals:
+  void insert(Structural::EntityName);
 
 private:
   void createActions();
   void createMenus();
+  void createConnections();
+
+private slots:
+  void performBody();
+  void performContext();
+  void performSwitch();
+  void performMedia();
+  void performPort();
+  void performArea();
+  void performSwitchPort();
+  void performProperty();
 
 public:
   QMenu* insertMenu;
@@ -36,7 +50,7 @@ public:
   QAction* portAction;
   QAction* areaAction;
   QAction* propertyAction;
-  QAction* switchportAction;
+  QAction* switchPortAction;
 };
 
 #endif // QNSTMENU_H

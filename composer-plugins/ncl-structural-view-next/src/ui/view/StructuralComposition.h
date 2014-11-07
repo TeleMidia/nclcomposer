@@ -24,7 +24,7 @@ public:
 
   ~StructuralComposition();
 
-  virtual void setnstSubtype(const QnstSubtype subtype);
+  virtual void setLocalName(const LocalName _name);
 
   QString getColor() const;
 

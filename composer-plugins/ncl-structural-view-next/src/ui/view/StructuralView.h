@@ -39,8 +39,11 @@ class StructuralView : public QGraphicsView
   Q_OBJECT
 
 public:
-  StructuralView(QWidget* parent = 0);
+  StructuralView(QWidget* _parent = 0);
   virtual ~StructuralView();
+
+  bool canUndo();
+  bool canRedo();
 
 public:
   bool hasEntity(QString uid);
@@ -52,46 +55,46 @@ public:
   void setAction(QString action);
   void setCondition(QString condition);
 
+  void serialize(QString &data);
+  void exportDataFromEntity(StructuralEntity* entity, QDomDocument* doc, QDomElement _parent);
 
 public slots:
-  void insert(QString uid, QString parent, QMap<QString, QString> properties, QMap<QString, QString> settings);
+  void insert(QString uid, QString _parent, QMap<QString, QString> properties, QMap<QString, QString> settings);
   void remove(QString uid, QMap<QString, QString> settings);
   void change(QString uid, QMap<QString, QString> properties, QMap<QString, QString> previous, QMap<QString, QString> settings);
   void select(QString uid, QMap<QString, QString> settings);
 
-  void create(QnstSubtype subtype);
+  void create(LocalName name, QMap<QString, QString> &properties, QMap<QString, QString> &settings);  
 
-  void performHelp();
+  bool performHelp();
 
-  void performCut();
-  void performCopy();
-  void performPaste();
+  bool performCut();
+  bool performCopy();
+  bool performPaste();
 
-  void performUndo();
-  void performRedo();
+  bool performUndo();
+  bool performRedo();
 
-  void performSnapshot();
+  bool performSnapshot();
 
-  void performDelete();
+  bool performDelete();
 
-  void performZoomIn();
-  void performZoomOut();
-  void performZoomReset();
-  void performFullscreen();
+  bool performZoomIn();
+  bool performZoomOut();
+  bool performZoomReset();
+  bool performFullscreen();
 
-  void performBringfront();
-  void performBringforward();
-  void performSendback();
-  void performSendbackward();
+  bool performBringfront();
+  bool performBringforward();
+  bool performSendback();
+  bool performSendbackward();
 
-  void performHide();
+  bool performHide();
 
-  void performProperties();
-
-
+  bool performProperties();
 
 signals:
-  void inserted(QString uid, QString parent, QMap<QString, QString> properties, QMap<QString, QString> settings);
+  void inserted(QString uid, QString _parent, QMap<QString, QString> properties, QMap<QString, QString> settings);
   void removed(QString uid, QMap<QString, QString> settings);
   void changed(QString uid, QMap<QString, QString> properties, QMap<QString, QString> previous, QMap<QString, QString> settings);
   void selected(QString uid, QMap<QString, QString> settings);
@@ -122,7 +125,7 @@ public slots:
   void clearAllData();
 
 private:
-  void performPaste(StructuralEntity* entity, StructuralEntity* parent, QString CODE);
+  void performPaste(StructuralEntity* entity, StructuralEntity* _parent, QString CODE);
 
   bool isChild(StructuralEntity* e , StructuralEntity* p);
   void createLink(StructuralEntity* a, StructuralEntity* b);
@@ -130,11 +133,15 @@ private:
   void createReference(StructuralEntity* a, StructuralEntity* b);
   Command* rmcmd(StructuralEntity* entity, Command* cmdparent, QMap<QString, QString> settings);
 
+//  void rec_clip(StructuralEntity* e, StructuralEntity* parent);
+
+  void adjustAngles(StructuralBind* edge);
+
   void createObjects();
 
   void createConnection();
 
-  void collapseCompositions(QDomElement element, QDomElement parent);
+  void collapseCompositions(QDomElement element, QDomElement _parent);
 
   void deletePendingEntities();
 
@@ -154,11 +161,12 @@ private:
 
   StructuralViewLink* link;
 
-  StructuralEntity* _selected;
+  QString _selected_UID;
 
   StructuralEntity* clipboard;
 
-  QString clip;
+  QString clip_cut;
+  QString clip_copy;
 
   QSet<QString> linkWriterAux;
 
@@ -182,14 +190,16 @@ private:
 
   StructuralEntity* lastLinkMouseOver;
 
-  std::map < Structural::EntitySubtype, int > entityCounter;
+  std::map < Structural::EntityName, int > entityCounter;
 
-  static std::map <Structural::EntitySubtype, QString> mediaTypeToXMLStr;
+  static std::map <Structural::EntityName, QString> mediaTypeToXMLStr;
 
   //  MiniMap *minimap;
 
   QString action;
   QString condition;
+
+  StructuralEntity* e_clip;
 };
 
 #endif // QNSTVIEW_H

@@ -19,7 +19,7 @@ public:
    *
    * \return a new QnstGraphicsEntity
    */
-  static StructuralEntity *makeGraphicsEntity(Structural::EntitySubtype type,
+  static StructuralEntity *makeGraphicsEntity(Structural::EntityName type,
                                                 StructuralEntity *parent = 0,
                                                 const QMap<QString, QString> &props = (QMap<QString,QString>()));
 
@@ -30,7 +30,7 @@ public:
    *
    * \return the qnst media type.
    */
-  static Structural::EntitySubtype getnstTypeFromMime(const QString &mimeType);
+  static Structural::EntityName getnstTypeFromMime(const QString &mimeType);
 
   /*!
    * \brief Returns the icon that represents the Qnst::EntitySubtype.
@@ -38,7 +38,7 @@ public:
    * \arg type the Qnst::EntitySubtype.
    * \return the path to the icon of that type.
    */
-  static QString iconFromMediaType(Structural::EntitySubtype type);
+  static QString iconFromMediaType(Structural::EntityName type);
 
   /*!
    * \brief Returns the media type based on the extension of the media source.
@@ -46,7 +46,7 @@ public:
    * \arg ext the extension of the path.
    * \return the media type associated with that extension.
    */
-  static Structural::EntitySubtype getnstTypeFromExtension(const QString &ext);
+  static Structural::EntityName getnstTypeFromExtension(const QString &ext);
 
   /*!
    * \brief Returns the media type based on the string the represent that type.
@@ -54,7 +54,7 @@ public:
    * \arg strType the type specified in a string.
    * \return the media type associated with that string.
    */
-  static Structural::EntitySubtype getnstTypeFromStr(const QString &strType);
+  static Structural::EntityName getnstTypeFromStr(const QString &strType);
 
   /*!
    * \brief Returns the string that represents the type.
@@ -64,7 +64,7 @@ public:
    * \arg type the entity type
    * \return the string that represent that type.
    */
-  static QString getStrFromNstType(Structural::EntitySubtype type);
+  static QString getStrFromNstType(Structural::EntityName type);
 
   /*!
    * \brief Returns a media identifier prefix for an specific qnst entity type.
@@ -72,7 +72,7 @@ public:
    * \arg type the qnst entity type.
    * \return the prefix for the entity type.
    */
-  static QString getPrefixIdFromType(Structural::EntitySubtype type);
+  static QString getPrefixIdFromType(Structural::EntityName type);
 
   /*!
    * \brief Returns the Qnst::BindType related to the string role passed as
@@ -92,14 +92,18 @@ public:
    */
   static QString getStrFromBindType(Structural::BindType type);
 
+  static QString createUid();
+
 private:
-  static std::map <Structural::EntitySubtype, QString>   iconFromTypeMap;
-  static std::map <QString, Structural::EntitySubtype>   typeFromExtMap;
-  static std::map <QString, Structural::EntitySubtype>   typeFromStr;
-  static std::map <Structural::EntitySubtype, QString>   strFromType;
-  static std::map  <Structural::EntitySubtype, QString>  prefixIdFromType;
+  static std::map <Structural::EntityName, QString>   iconFromTypeMap;
+  static std::map <QString, Structural::EntityName>   typeFromExtMap;
+  static std::map <QString, Structural::EntityName>   typeFromStr;
+  static std::map <Structural::EntityName, QString>   strFromType;
+  static std::map  <Structural::EntityName, QString>  prefixIdFromType;
   static std::map <QString, Structural::BindType>     bindTypeFromRoleStr;
   static std::map <Structural::BindType, QString>     strFromBindType;
+
+  static std::map <LocalResize, QRectF> region;
 };
 
 /*!

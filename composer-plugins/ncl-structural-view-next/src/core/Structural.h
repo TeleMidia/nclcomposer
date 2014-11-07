@@ -1,5 +1,5 @@
-#ifndef QNST_H
-#define QNST_H
+#ifndef STRUCTURAL_H
+#define STRUCTURAL_H
 
 #define DEFAULT_BODY_WIDTH  750
 #define DEFAULT_BODY_HEIGHT 500
@@ -16,6 +16,9 @@
 #define DEFAULT_AGGREGATOR_WIDTH  14
 #define DEFAULT_AGGREGATOR_HEIGHT 14
 
+#define DEFAULT_ANCHOR_WIDTH  8
+#define DEFAULT_ANCHOR_HEIGHT 8
+
 class Structural
 {
 public:
@@ -28,7 +31,7 @@ public:
     NoType      = 0
   };
 
-  enum EntitySubtype
+  enum EntityName
   {
     Media       = 1,
     Body        = 2,
@@ -44,7 +47,7 @@ public:
     Bind        = 10,
     Reference   = 11,
 
-    NoSubtype   = 0
+    NoName   = 0
   };
 
   enum EntityResize {
@@ -84,9 +87,8 @@ public:
   };
 };
 
-typedef Structural::EntityType QnstType;
-typedef Structural::EntitySubtype QnstSubtype;
+typedef Structural::EntityType LocalType;
+typedef Structural::EntityName LocalName;
+typedef Structural::EntityResize LocalResize;
 
-typedef Structural::EntityResize QnstResizeType;
-
-#endif // QNST_H
+#endif // STRUCTURAL_H

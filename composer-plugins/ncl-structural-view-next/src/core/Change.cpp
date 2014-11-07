@@ -2,12 +2,11 @@
 
 Change::Change(QString uid, QMap<QString, QString> properties, QMap<QString, QString> previous, QMap<QString, QString> settings)
 {
-  this->uid = uid;
-  this->parent = parent;
-  this->properties = properties;
-  this->previous = previous;
+  this->_uid = uid;
+  this->_properties = properties;
+  this->_previous = previous;
 
-  this->settings = settings;
+  this->_settings = settings;
 }
 
 Change::~Change()
@@ -17,14 +16,14 @@ Change::~Change()
 
 void Change::undo()
 {
-  settings["UNDO"] = "0";
+  _settings["UNDO"] = "0";
 
-  emit change(uid, previous, properties, settings);
+  emit change(_uid, _previous, _properties, _settings);
 }
 
 void Change::redo()
 {
-  settings["UNDO"] = "0";
+  _settings["UNDO"] = "0";
 
-  emit change(uid, properties, previous, settings);
+  emit change(_uid, _properties, _previous, _settings);
 }

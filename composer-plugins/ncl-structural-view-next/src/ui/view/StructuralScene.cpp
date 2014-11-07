@@ -26,7 +26,7 @@ void StructuralScene::createMenus()
 
 void StructuralScene::createConnections()
 {
-  connect(_menu->bodyAction, SIGNAL(triggered()), SLOT(performBody()));
+  connect(_menu, SIGNAL(insert(Structural::EntityName)), SLOT(performInsert(Structural::EntityName)));
 }
 
 void StructuralScene::performUndo()
@@ -41,24 +41,28 @@ void StructuralScene::performRedo()
   view->performRedo();
 }
 
-void StructuralScene::performBody()
+void StructuralScene::performInsert(Structural::EntityName name)
 {
-  QString uid = QUuid::createUuid().toString();
-  QString parent = "";
-  QMap<QString, QString> properties;
-  properties[":nst:subtype"] = "body";
-  properties[":nst:top"] = QString::number(height()/2 - DEFAULT_BODY_HEIGHT/2);
-  properties[":nst:left"] = QString::number(width()/2 - DEFAULT_BODY_WIDTH/2);
-  properties[":nst:width"] = QString::number(DEFAULT_BODY_WIDTH);
-  properties[":nst:height"] = QString::number(DEFAULT_BODY_HEIGHT);
+  switch (name) {
+    case Structural::Body:
+    {
+      QMap<QString, QString> properties;
+      properties["LOCAL:TOP"] = QString::number(_insertPoint.y() - DEFAULT_BODY_HEIGHT/2);
+      properties["LOCAL:LEFT"] = QString::number(_insertPoint.x() - DEFAULT_BODY_WIDTH/2);
 
-  QMap<QString, QString> settings;
-  settings["UNDO"] = "1";
-  settings["NOTIFY"] = "1";
-  settings["CODE"] = QUuid::createUuid().toString();
+      QMap<QString, QString> settings;
 
-  StructuralView* view = (StructuralView*) views().at(0);
-  view->insert(uid, parent, properties, settings);
+      StructuralView* view = (StructuralView*) views().at(0);
+      view->create(Structural::Body, properties, settings);
+
+      break;
+    }
+
+    default:
+    {
+      break;
+    }
+  }
 }
 
 void StructuralScene::performSnapshot()
@@ -73,6 +77,10 @@ void StructuralScene::contextMenuEvent(QGraphicsSceneContextMenuEvent* event)
 
   if (!event->isAccepted())
   {
+    _insertPoint = event->scenePos();
+
+    qDebug() << _insertPoint;
+
     _menu->exec(event->screenPos());
 
     event->accept();

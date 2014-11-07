@@ -18,7 +18,7 @@ class StructuralScene : public QGraphicsScene
   Q_OBJECT
 
 public:
-  StructuralScene(QObject* parent = 0);
+  StructuralScene(QObject* _parent = 0);
   virtual ~StructuralScene();
 
 protected:
@@ -28,13 +28,15 @@ protected slots:
   void performUndo();
   void performRedo();
   void performSnapshot();
-  void performBody();
+  void performInsert(Structural::EntityName);
 
 private:
   void createMenus();
   void createConnections();
 
   StructuralMenu* _menu;
+
+  QPointF _insertPoint;
 };
 
 #endif // QNSTSCENE_H

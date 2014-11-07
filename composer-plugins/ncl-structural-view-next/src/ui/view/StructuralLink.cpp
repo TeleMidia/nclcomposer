@@ -3,8 +3,8 @@
 StructuralLink::StructuralLink(StructuralEntity* parent)
   : StructuralNode(parent)
 {
-  setnstType(Structural::Node);
-  setnstSubtype(Structural::Link);
+  setLocalType(Structural::Node);
+  setLocalName(Structural::Link);
 
   // setnstType(Qnst::Aggregator);
 
@@ -107,7 +107,7 @@ void StructuralLink::addAction(StructuralBind* action)
 {
   if (action != NULL)
   {
-    actions.insert(action->getnstUid(), action);
+    actions.insert(action->getLocalUid(), action);
     action->setLink(this);
   }
 }
@@ -116,7 +116,7 @@ void StructuralLink::removeAction(StructuralBind* action)
 {
   if (action != NULL)
   {
-    actions.remove(action->getnstUid());
+    actions.remove(action->getLocalUid());
     action->setLink(NULL);
   }
 }
@@ -130,7 +130,7 @@ void StructuralLink::addCondition(StructuralBind* condition)
 {
   if (condition != NULL)
   {
-    conditions.insert(condition->getnstUid(), condition);
+    conditions.insert(condition->getLocalUid(), condition);
     condition->setLink(this);
   }
 }
@@ -139,7 +139,7 @@ void StructuralLink::removeCondition(StructuralBind* condition)
 {
   if (condition != NULL)
   {
-    conditions.remove(condition->getnstUid());
+    conditions.remove(condition->getLocalUid());
     condition->setLink(NULL);
   }
 }

@@ -5,6 +5,7 @@ StructuralMenu::StructuralMenu(QWidget* parent)
 {
   createActions();
   createMenus();
+  createConnections();
 }
 
 StructuralMenu::~StructuralMenu()
@@ -92,10 +93,10 @@ void StructuralMenu::createActions()
   portAction->setIcon(QIcon(":/images/icon/port-insert"));
 
   // switchport action
-  switchportAction = new QAction(this);
-  switchportAction->setEnabled(false);
-  switchportAction->setText(tr("Switch Port"));
-  switchportAction->setIcon(QIcon(":/images/icon/switchport-insert"));
+  switchPortAction = new QAction(this);
+  switchPortAction->setEnabled(false);
+  switchPortAction->setText(tr("Switch Port"));
+  switchPortAction->setIcon(QIcon(":/images/icon/switchport-insert"));
 
   // area action
   areaAction = new QAction(this);
@@ -125,7 +126,7 @@ void StructuralMenu::createMenus()
   insertMenu->addAction(areaAction);
   insertMenu->addAction(propertyAction);
   insertMenu->addAction(portAction);
-  insertMenu->addAction(switchportAction);
+  insertMenu->addAction(switchPortAction);
   insertMenu->setEnabled(false);
 
   addAction(helpAction);
@@ -142,4 +143,56 @@ void StructuralMenu::createMenus()
   addAction(snapshotAction);
   addSeparator();
   addMenu(insertMenu);
+}
+
+void StructuralMenu::createConnections()
+{
+  connect(mediaAction,SIGNAL(triggered()),SLOT(performMedia()));
+  connect(bodyAction,SIGNAL(triggered()),SLOT(performBody()));
+  connect(contextAction,SIGNAL(triggered()),SLOT(performContext()));
+  connect(switchAction,SIGNAL(triggered()),SLOT(performSwitch()));
+  connect(portAction,SIGNAL(triggered()),SLOT(performPort()));
+  connect(areaAction,SIGNAL(triggered()),SLOT(performArea()));
+  connect(switchPortAction,SIGNAL(triggered()),SLOT(performSwitchPort()));
+  connect(propertyAction,SIGNAL(triggered()),SLOT(performProperty()));
+}
+
+void StructuralMenu::performBody()
+{
+  insert(Structural::Body);
+}
+
+void StructuralMenu::performContext()
+{
+  insert(Structural::Context);
+}
+
+void StructuralMenu::performSwitch()
+{
+  insert(Structural::Switch);
+}
+
+void StructuralMenu::performMedia()
+{
+  insert(Structural::Media);
+}
+
+void StructuralMenu::performPort()
+{
+  insert(Structural::Port);
+}
+
+void StructuralMenu::performArea()
+{
+  insert(Structural::Area);
+}
+
+void StructuralMenu::performSwitchPort()
+{
+  insert(Structural::SwitchPort);
+}
+
+void StructuralMenu::performProperty()
+{
+  insert(Structural::Property);
 }

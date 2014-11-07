@@ -7,14 +7,14 @@
 StructuralMedia::StructuralMedia(StructuralEntity* parent)
   : StructuralNode(parent), enableDrag(false)
 {
-  setnstSubtype(Structural::Media);
+  setLocalName(Structural::Media);
 
   setResizable(false);
 
   createObjects();
   createConnections();
 
-  setnstId("");
+  setLocalId("");
 
   /* Default media position */
   if(parent)
@@ -52,9 +52,9 @@ void StructuralMedia::setSource(QString source)
   this->source = source;
 }
 
-void StructuralMedia::setnstSubtype(QnstSubtype type)
+void StructuralMedia::setLocalName(LocalName type)
 {
-  StructuralNode::setnstSubtype(type);
+  StructuralNode::setLocalName(type);
 
   this->icon = StructuralUtil::iconFromMediaType(type);
 }
@@ -62,7 +62,7 @@ void StructuralMedia::setnstSubtype(QnstSubtype type)
 void StructuralMedia::updateToolTip()
 {
   QString tip = "";
-  QString name = (getnstProperty(":nst:id") != "" ? getnstProperty(":nst:id") : "?");
+  QString name = (getLocalProperty("LOCAL:ID") != "" ? getLocalProperty("LOCAL:ID") : "?");
 
   /*
   switch(getnstSubtype())
@@ -147,7 +147,6 @@ void StructuralMedia::setInstance(QString instance)
 
 void StructuralMedia::createObjects()
 {
-  menu = new StructuralMenu();
 //  menu->_cutAction->setEnabled(true);
 //  menu->_copyAction->setEnabled(true);
 
@@ -166,8 +165,8 @@ void StructuralMedia::createConnections()
   // connect(menu, SIGNAL(redoRequested()), SIGNAL(redoRequested()));
 
 
-  connect(menu, SIGNAL(menuAddEntityTriggered(QnstSubtype)),
-          SLOT(newChild(QnstSubtype)));
+//  connect(menu, SIGNAL(menuAddEntityTriggered(QnstSubtype)),
+//          SLOT(newChild(QnstSubtype)));
 }
 
 void StructuralMedia::draw(QPainter* painter)
@@ -194,11 +193,11 @@ void StructuralMedia::draw(QPainter* painter)
     painter->drawPixmap(8, getHeight()-40, 32, 32, QPixmap(":/icon/alias"));
   }
 
-  QString localid = (getnstProperty(":nst:id") != "" ? getnstProperty(":nst:id") : "?");
+  QString localid = (getLocalProperty("LOCAL:ID") != "" ? getLocalProperty("LOCAL:ID") : "?");
 
   if (localid.length() > 5)
   {
-    localid = getnstProperty(":nst:id").replace(3,getnstProperty(":nst:id").length()-3,"...");
+    localid = getLocalProperty("LOCAL:ID").replace(3,getLocalProperty("LOCAL:ID").length()-3,"...");
   }
 
   // draw a formated text with underline when there is error

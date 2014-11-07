@@ -36,32 +36,23 @@ class StructuralViewPlugin : public IPlugin
 
 public:
   StructuralViewPlugin(QObject* parent = 0);
-
-  ~StructuralViewPlugin();
+  virtual ~StructuralViewPlugin();
 
   virtual void init();
-
   virtual QWidget* getWidget();
-
   virtual bool saveSubsession();
 
 public slots:
   virtual void updateFromModel();
 
   virtual void onEntityAdded(QString pluginID, Entity *entity);
-
-  virtual void errorMessage(QString error);
-
   virtual void onEntityChanged(QString pluginID, Entity *entity);
-
   virtual void onEntityRemoved(QString pluginID, QString entityID);
-
   virtual void changeSelectedEntity(QString pluginID, void* entityUID);
 
+  virtual void errorMessage(QString error);
   void clearValidationError(QString pluginID, void *param);
-
   void validationError(QString pluginID, void *param);
-
 
   /* From Core */
   void requestEntitySelection(const QString uid);
@@ -76,7 +67,7 @@ public slots:
 
   /* From View */
   void notifyEntityAddedInView (const QString uid, const QString parent,
-                                QMap<QString, QString> properties);
+                                QMap<QString, QString> properties, QMap<QString, QString> settings);
 
   void notifyEntityDeletedInView(const QString uid);
 
@@ -140,7 +131,7 @@ private:
 private:
   int n;
 
-  //View* view;
+  StructuralView* view;
   StructuralWindow* window;
 
   QString request;

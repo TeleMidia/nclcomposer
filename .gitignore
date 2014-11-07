@@ -17,3 +17,7 @@ qrc_*
 moc_*
 *.xcodeproj
 .qmake.stash
+*.Debug
+*.Release
+Thumbs.db
+*.exe

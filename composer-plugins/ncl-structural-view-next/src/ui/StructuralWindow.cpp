@@ -5,8 +5,8 @@ StructuralWindow::StructuralWindow(QWidget* parent)
 {
   createWidgets();
   createActions();
-//  createMenus();
-//  createToolbar();
+  createMenus();
+  createToolbar();
   createStatusbar();
   createConnections();
 }
@@ -14,6 +14,16 @@ StructuralWindow::StructuralWindow(QWidget* parent)
 StructuralWindow::~StructuralWindow()
 {
 
+}
+
+StructuralView* StructuralWindow::getView()
+{
+  return _view;
+}
+
+void StructuralWindow::setView(StructuralView* view)
+{
+  _view = view;
 }
 
 void StructuralWindow::createActions()
@@ -86,21 +96,21 @@ void StructuralWindow::createActions()
 
   // cut action
   _cutAction = new QAction(this);
-  _cutAction->setEnabled(true);
+  _cutAction->setEnabled(false);
   _cutAction->setText(tr("Cut"));
   _cutAction->setIcon(QIcon(":/images/icon/cut"));
   _cutAction->setShortcut(QKeySequence("Ctrl+X"));
 
   // copy action
   _copyAction = new QAction(this);
-  _copyAction->setEnabled(true);
+  _copyAction->setEnabled(false);
   _copyAction->setText(tr("Copy"));
   _copyAction->setIcon(QIcon(":/images/icon/copy"));
   _copyAction->setShortcut(QKeySequence("Ctrl+C"));
 
   // paste action
   _pasteAction = new QAction(this);
-  _pasteAction->setEnabled(true);
+  _pasteAction->setEnabled(false);
   _pasteAction->setText(tr("Paste"));
   _pasteAction->setIcon(QIcon(":/images/icon/paste"));
   _pasteAction->setShortcut(QKeySequence("Ctrl+V"));
@@ -127,9 +137,7 @@ void StructuralWindow::createActions()
 
   // media action
   _mediaAction = new QAction(this);
-  _mediaAction->setEnabled(true);
-  _mediaAction->setCheckable(true);
-  _mediaAction->setChecked(false);
+  _mediaAction->setEnabled(false);
   _mediaAction->setText(tr("Media"));
   _mediaAction->setToolTip(tr("Insert &lt;media&gt; tool"));
   _mediaAction->setIcon(QIcon(":/images/icon/media-insert"));
@@ -137,9 +145,7 @@ void StructuralWindow::createActions()
 
   // context action
   _contextAction = new QAction(this);
-  _contextAction->setEnabled(true);
-  _contextAction->setCheckable(true);
-  _contextAction->setChecked(false);
+  _contextAction->setEnabled(false);
   _contextAction->setText(tr("Context"));
   _contextAction->setToolTip(tr("Insert &lt;context&gt; tool"));
   _contextAction->setIcon(QIcon(":/images/icon/context-insert"));
@@ -147,9 +153,7 @@ void StructuralWindow::createActions()
 
   // switch action
   _switchAction = new QAction(this);
-  _switchAction->setEnabled(true);
-  _switchAction->setCheckable(true);
-  _switchAction->setChecked(false);
+  _switchAction->setEnabled(false);
   _switchAction->setText(tr("Switch"));
   _switchAction->setToolTip(tr("Insert &lt;switch&gt; tool"));
   _switchAction->setIcon(QIcon(":/images/icon/switch-insert"));
@@ -158,8 +162,6 @@ void StructuralWindow::createActions()
   // body action
   _bodyAction = new QAction(this);
   _bodyAction->setEnabled(true);
-  _bodyAction->setCheckable(true);
-  _bodyAction->setChecked(false);
   _bodyAction->setText(tr("Body"));
   _bodyAction->setToolTip(tr("Insert &lt;body&gt; tool"));
   _bodyAction->setIcon(QIcon(":/images/icon/body-insert"));
@@ -167,9 +169,7 @@ void StructuralWindow::createActions()
 
   // area action
   _areaAction = new QAction(this);
-  _areaAction->setEnabled(true);
-  _areaAction->setCheckable(true);
-  _areaAction->setChecked(false);
+  _areaAction->setEnabled(false);
   _areaAction->setText(tr("Area"));
   _areaAction->setToolTip(tr("Insert &lt;area&gt; tool"));
   _areaAction->setIcon(QIcon(":/images/icon/area-insert"));
@@ -177,9 +177,7 @@ void StructuralWindow::createActions()
 
   // property action
   _propertyAction = new QAction(this);
-  _propertyAction->setEnabled(true);
-  _propertyAction->setCheckable(true);
-  _propertyAction->setChecked(false);
+  _propertyAction->setEnabled(false);
   _propertyAction->setText(tr("Property"));
   _propertyAction->setToolTip(tr("Insert &lt;property&gt; tool"));
   _propertyAction->setIcon(QIcon(":/images/icon/property-insert"));
@@ -187,9 +185,7 @@ void StructuralWindow::createActions()
 
   // port action
   _portAction = new QAction(this);
-  _portAction->setEnabled(true);
-  _portAction->setCheckable(true);
-  _portAction->setChecked(false);
+  _portAction->setEnabled(false);
   _portAction->setText(tr("Port"));
   _portAction->setToolTip(tr("Insert &lt;port&gt; tool"));
   _portAction->setIcon(QIcon(":/images/icon/port-insert"));
@@ -197,9 +193,7 @@ void StructuralWindow::createActions()
 
   // switchport action
   _switchportAction = new QAction(this);
-  _switchportAction->setEnabled(true);
-  _switchportAction->setCheckable(true);
-  _switchportAction->setChecked(false);
+  _switchportAction->setEnabled(false);
   _switchportAction->setText(tr("Switch Port"));
   _switchportAction->setToolTip(tr("Insert &lt;switchport&gt; tool"));
   _switchportAction->setIcon(QIcon(":/images/icon/switchport-insert"));
@@ -229,19 +223,11 @@ void StructuralWindow::createActions()
 
   _insertActionGroup->addAction(_pointerAction);
   _insertActionGroup->addAction(_linkAction);
-
-  _insertActionGroup->addAction(_mediaAction);
-  _insertActionGroup->addAction(_contextAction);
-  _insertActionGroup->addAction(_switchAction);
-  _insertActionGroup->addAction(_bodyAction);
-  _insertActionGroup->addAction(_areaAction);
-  _insertActionGroup->addAction(_propertyAction);
-  _insertActionGroup->addAction(_portAction);
-  _insertActionGroup->addAction(_switchportAction);
 }
 
 void StructuralWindow::createMenus()
 {
+#ifndef PLUGIN
   // file menu
   _fileMenu = menuBar()->addMenu(tr("File"));
   _fileMenu->addAction(_newAction);
@@ -278,6 +264,7 @@ void StructuralWindow::createMenus()
   _helpMenu->addAction(_reportAction);
   _helpMenu->addSeparator();
   _helpMenu->addAction(_aboutAction);
+#endif
 }
 
 void StructuralWindow::createToolbar()
@@ -348,6 +335,7 @@ void  StructuralWindow::createConnections()
 
   connect(_undoAction, SIGNAL(triggered()), SLOT(performUndo()));
   connect(_redoAction, SIGNAL(triggered()), SLOT(performRedo()));
+
   connect(_cutAction, SIGNAL(triggered()), SLOT(performCut()));
   connect(_copyAction, SIGNAL(triggered()), SLOT(performCopy()));
   connect(_pasteAction, SIGNAL(triggered()), SLOT(performPaste()));
@@ -360,12 +348,20 @@ void  StructuralWindow::createConnections()
   connect(_pointerAction, SIGNAL(triggered()), SLOT(performPointer()));
   connect(_linkAction, SIGNAL(triggered()), SLOT(performLink()));
 
-  connect(_mediaAction, SIGNAL(triggered()), SLOT(performMedia()));
-
   connect(_bodyAction, SIGNAL(triggered()), SLOT(performBody()));
   connect(_contextAction, SIGNAL(triggered()), SLOT(performContext()));
   connect(_switchAction, SIGNAL(triggered()), SLOT(performSwitch()));
 
+  connect(_mediaAction, SIGNAL(triggered()), SLOT(performMedia()));
+  connect(_portAction, SIGNAL(triggered()), SLOT(performPort()));
+  connect(_switchportAction, SIGNAL(triggered()), SLOT(performSwitchPort()));
+  connect(_areaAction, SIGNAL(triggered()), SLOT(performArea()));
+  connect(_propertyAction, SIGNAL(triggered()), SLOT(performProperty()));
+
+  connect(_view, SIGNAL(inserted(QString,QString,QMap<QString,QString>,QMap<QString,QString>)),SLOT(insert(QString,QString,QMap<QString,QString>,QMap<QString,QString>)));
+  connect(_view, SIGNAL(removed(QString,QMap<QString,QString>)),SLOT(remove(QString,QMap<QString,QString>)));
+  connect(_view, SIGNAL(changed(QString,QMap<QString,QString>,QMap<QString,QString>,QMap<QString,QString>)), SLOT(change(QString,QMap<QString,QString>,QMap<QString,QString>,QMap<QString,QString>)));
+  connect(_view, SIGNAL(selected(QString,QMap<QString,QString>)),SLOT(select(QString,QMap<QString,QString>)));
 }
 
 void StructuralWindow::performNew()
@@ -430,6 +426,7 @@ void StructuralWindow::performUndo()
   qDebug() << "[QNST]" << ":" << "Performing 'Undo' action";
 
   _view->performUndo();
+
 }
 
 void StructuralWindow::performRedo()
@@ -443,14 +440,16 @@ void StructuralWindow::performCut()
 {
   qDebug() << "[QNST]" << ":" << "Performing 'Cut' action";
 
-  _view->performCut();
+  if (_view->performCut())
+    _pasteAction->setEnabled(true);
 }
 
 void StructuralWindow::performCopy()
 {
   qDebug() << "[QNST]" << ":" << "Performing 'Copy' action";
 
-  _view->performCopy();
+  if (_view->performCopy())
+    _pasteAction->setEnabled(true);
 }
 
 void StructuralWindow::performPaste()
@@ -462,40 +461,136 @@ void StructuralWindow::performPaste()
 
 void StructuralWindow::performPointer()
 {
-  // TODO
+  qDebug() << "[QNST]" << ":" << "Performing 'Pointer' action";
+
+  _view->setEnableLink(false);
 }
 
 void StructuralWindow::performLink()
 {
-  // TODO
+  qDebug() << "[QNST]" << ":" << "Performing 'Link' action";
+
+  _view->setEnableLink(true);
 }
 
 void StructuralWindow::performBody()
 {
   qDebug() << "[QNST]" << ":" << "Performing 'Body' action";
 
-  // TODO
+  QMap<QString,QString> properties;
+  properties["LOCAL:NAME"] = QString::number(Structural::Body);
+
+  QMap<QString,QString> settings;
+  settings["UNDO"] = "1";
+  settings["NOTIFY"] = "1";
+  settings["CODE"] = StructuralUtil::createUid();
+
+  _view->create(Structural::Body, properties, settings);
 }
 
 void StructuralWindow::performContext()
 {
   qDebug() << "[QNST]" << ":" << "Performing 'Context' action";
 
-  // TODO
+  QMap<QString,QString> properties;
+  properties["LOCAL:NAME"] = QString::number(Structural::Context);
+
+  QMap<QString,QString> settings;
+  settings["UNDO"] = "1";
+  settings["NOTIFY"] = "1";
+  settings["CODE"] = StructuralUtil::createUid();
+
+  _view->create(Structural::Context, properties, settings);
 }
 
 void StructuralWindow::performSwitch()
 {
   qDebug() << "[QNST]" << ":" << "Performing 'Switch' action";
 
-  // TODO
+  QMap<QString,QString> properties;
+  properties["LOCAL:NAME"] = QString::number(Structural::Switch);
+
+  QMap<QString,QString> settings;
+  settings["UNDO"] = "1";
+  settings["NOTIFY"] = "1";
+  settings["CODE"] = StructuralUtil::createUid();
+
+  _view->create(Structural::Switch, properties, settings);
 }
 
 void StructuralWindow::performMedia()
 {
   qDebug() << "[QNST]" << ":" << "Performing 'Media' action";
 
-  // TODO
+  QMap<QString,QString> properties;
+  properties["LOCAL:NAME"] = QString::number(Structural::Media);
+
+  QMap<QString,QString> settings;
+  settings["UNDO"] = "1";
+  settings["NOTIFY"] = "1";
+  settings["CODE"] = StructuralUtil::createUid();
+
+  _view->create(Structural::Media, properties, settings);
+}
+
+void StructuralWindow::performPort()
+{
+  qDebug() << "[QNST]" << ":" << "Performing 'Port' action";
+
+  QMap<QString,QString> properties;
+  properties["LOCAL:NAME"] = QString::number(Structural::Port);
+
+  QMap<QString,QString> settings;
+  settings["UNDO"] = "1";
+  settings["NOTIFY"] = "1";
+  settings["CODE"] = StructuralUtil::createUid();
+
+  _view->create(Structural::Port, properties, settings);
+}
+
+void StructuralWindow::performArea()
+{
+  qDebug() << "[QNST]" << ":" << "Performing 'Area' action";
+
+  QMap<QString,QString> properties;
+  properties["LOCAL:NAME"] = QString::number(Structural::Area);
+
+  QMap<QString,QString> settings;
+  settings["UNDO"] = "1";
+  settings["NOTIFY"] = "1";
+  settings["CODE"] = StructuralUtil::createUid();
+
+  _view->create(Structural::Area, properties, settings);
+}
+
+void StructuralWindow::performSwitchPort()
+{
+  qDebug() << "[QNST]" << ":" << "Performing 'SwitchPort' action";
+
+  QMap<QString,QString> properties;
+  properties["LOCAL:NAME"] = QString::number(Structural::SwitchPort);
+
+  QMap<QString,QString> settings;
+  settings["UNDO"] = "1";
+  settings["NOTIFY"] = "1";
+  settings["CODE"] = StructuralUtil::createUid();
+
+  _view->create(Structural::SwitchPort, properties, settings);
+}
+
+void StructuralWindow::performProperty()
+{
+  qDebug() << "[QNST]" << ":" << "Performing 'Property' action";
+
+  QMap<QString,QString> properties;
+  properties["LOCAL:NAME"] = QString::number(Structural::Property);
+
+  QMap<QString,QString> settings;
+  settings["UNDO"] = "1";
+  settings["NOTIFY"] = "1";
+  settings["CODE"] = StructuralUtil::createUid();
+
+  _view->create(Structural::Property, properties, settings);
 }
 
 void StructuralWindow::performPreferences()
@@ -517,4 +612,152 @@ void StructuralWindow::performAbout()
   qDebug() << "[QNST]" << ":" << "Performing 'About' action";
 
   // TODO
+}
+
+void StructuralWindow::insert(QString uid, QString parent, QMap<QString, QString> properties, QMap<QString, QString> settings)
+{
+  StructuralEntity* entity = _view->getEntity(uid);
+
+  if (entity)
+  {
+    LocalName NAME = _view->getEntity(uid)->getLocalName();
+
+    switch (NAME) {
+      case Structural::Body:
+        _bodyAction->setEnabled(false);
+        break;
+
+      default:
+        break;
+    }
+  }
+}
+
+void StructuralWindow::remove(QString uid, QMap<QString, QString> settings)
+{
+  StructuralEntity* entity = _view->getEntity(uid);
+
+  if (entity)
+  {
+    LocalName NAME = _view->getEntity(uid)->getLocalName();
+
+    switch (NAME) {
+      case Structural::Body:
+        _bodyAction->setEnabled(true);
+        break;
+
+      default:
+        break;
+    }
+  }
+}
+
+void StructuralWindow::change(QString uid, QMap<QString, QString> properties, QMap<QString, QString> previous, QMap<QString, QString> settings)
+{
+  StructuralEntity* entity = _view->getEntity(uid);
+
+  if (entity)
+  {
+    LocalName NAME = _view->getEntity(uid)->getLocalName();
+
+    switch (NAME) {
+      case Structural::Body:
+        _bodyAction->setEnabled(false);
+        break;
+
+      default:
+        break;
+    }
+  }
+}
+
+void StructuralWindow::select(QString uid, QMap<QString, QString> settings)
+{
+  StructuralEntity* entity = _view->getEntity(uid);
+
+  if (entity)
+  {
+    LocalName NAME = _view->getEntity(uid)->getLocalName();
+
+    switch (NAME) {
+      case Structural::Media:
+        _mediaAction->setEnabled(false);
+        _contextAction->setEnabled(false);
+        _switchAction->setEnabled(false);
+        _bodyAction->setEnabled(false);
+        _areaAction->setEnabled(true);
+        _propertyAction->setEnabled(true);
+        _portAction->setEnabled(false);
+        _switchportAction->setEnabled(false);
+        break;
+
+      case Structural::Context:
+        _mediaAction->setEnabled(true);
+        _contextAction->setEnabled(true);
+        _switchAction->setEnabled(true);
+        _bodyAction->setEnabled(false);
+        _areaAction->setEnabled(false);
+        _propertyAction->setEnabled(true);
+        _portAction->setEnabled(true);
+        _switchportAction->setEnabled(false);
+        break;
+
+      case Structural::Switch:
+        _mediaAction->setEnabled(true);
+        _contextAction->setEnabled(true);
+        _switchAction->setEnabled(true);
+        _bodyAction->setEnabled(false);
+        _areaAction->setEnabled(false);
+        _propertyAction->setEnabled(true);
+        _portAction->setEnabled(false);
+        _switchportAction->setEnabled(true);
+        break;
+
+      case Structural::Body:
+        _mediaAction->setEnabled(true);
+        _contextAction->setEnabled(true);
+        _switchAction->setEnabled(true);
+        _bodyAction->setEnabled(false);
+        _areaAction->setEnabled(false);
+        _propertyAction->setEnabled(true);
+        _portAction->setEnabled(true);
+        _switchportAction->setEnabled(false);
+        break;
+
+      case Structural::Area:
+      case Structural::Property:
+      case Structural::Port:
+      case Structural::SwitchPort:
+        _mediaAction->setEnabled(false);
+        _contextAction->setEnabled(false);
+        _switchAction->setEnabled(false);
+        _bodyAction->setEnabled(false);
+        _areaAction->setEnabled(false);
+        _propertyAction->setEnabled(false);
+        _portAction->setEnabled(false);
+        _switchportAction->setEnabled(false);
+        break;
+
+      default:
+        break;
+    }
+
+    _cutAction->setEnabled(true);
+    _copyAction->setEnabled(true);
+  }
+  else
+  {
+    _mediaAction->setEnabled(false);
+    _contextAction->setEnabled(false);
+    _switchAction->setEnabled(false);
+    _bodyAction->setEnabled(_bodyAction->isEnabled());
+    _areaAction->setEnabled(false);
+    _propertyAction->setEnabled(false);
+    _portAction->setEnabled(false);
+    _switchAction->setEnabled(false);
+
+    _cutAction->setEnabled(false);
+    _copyAction->setEnabled(false);
+    _pasteAction->setEnabled(false);
+  }
 }

@@ -55,22 +55,18 @@ StructuralComposition::~StructuralComposition()
 
 void StructuralComposition::createObjects()
 {
-  menu = new StructuralMenu();
-//  menu->_deleteAction->setEnabled(true);
+  menu->deleteAction->setEnabled(true);
 
-//  menu->actionExport->setEnabled(true);
+  menu->snapshotAction->setEnabled(true);
 
-//  menu->_insertMenu->setEnabled(true);
+  menu->insertMenu->setEnabled(true);
 
-//  menu->_mediaAction->setEnabled(true);
-//  menu->_contextAction->setEnabled(true);
-//  menu->_switchAction->setEnabled(true);
-//  menu->_portAction->setEnabled(true);
-//  menu->_propertyAction->setEnabled(true);
-//  menu->actionAddAggregator->setEnabled(true);
+  menu->mediaAction->setEnabled(true);
+  menu->contextAction->setEnabled(true);
+  menu->switchAction->setEnabled(true);
+  menu->portAction->setEnabled(true);
+  menu->propertyAction->setEnabled(true);
 
-//  menu->menuAdjust->setEnabled(true);
-//  menu->actionAuto->setEnabled(true);
 }
 
 void StructuralComposition::createConnections()
@@ -104,19 +100,23 @@ bool StructuralComposition::isCollapsed()
   return collapsed;
 }
 
-void StructuralComposition::setnstSubtype(const QnstSubtype subtype)
+void StructuralComposition::setLocalName(const LocalName subtype)
 {
   if (subtype == Structural::Context){
     setColor("#F4E4CC");
+    menu->switchPortAction->setEnabled(false);
+    menu->portAction->setEnabled(true);
   }else if (subtype == Structural::Switch){
     setColor("#C6E2FF");
-    menu->switchportAction->setEnabled(true);
+    menu->switchPortAction->setEnabled(true);
     menu->portAction->setEnabled(false);
   }else if (subtype == Structural::Body){
     setColor("#EEEEEE");
+    menu->switchPortAction->setEnabled(false);
+    menu->portAction->setEnabled(true);
   }
 
-  StructuralNode::setnstSubtype(subtype);
+  StructuralNode::setLocalName(subtype);
 
   updateToolTip();
 }
@@ -124,17 +124,17 @@ void StructuralComposition::setnstSubtype(const QnstSubtype subtype)
 void StructuralComposition::updateToolTip()
 {
   QString tip = "";
-  QString name = (getnstProperty(":nst:id") != "" ? getnstProperty(":nst:id") : "?");
+  QString name = (getLocalProperty("LOCAL:ID") != "" ? getLocalProperty("LOCAL:ID") : "?");
 
-  if (getnstSubtype() == Structural::Context)
+  if (getLocalName() == Structural::Context)
   {
     tip += "Context ("+name+")";
   }
-  else if (getnstSubtype() == Structural::Switch)
+  else if (getLocalName() == Structural::Switch)
   {
     tip += "Switch ("+name+")";
   }
-  else if (getnstSubtype() == Structural::Body)
+  else if (getLocalName() == Structural::Body)
   {
     tip += "Body ("+name+")";
   }
@@ -186,17 +186,17 @@ void StructuralComposition::draw(QPainter* painter)
   {
     painter->setRenderHint(QPainter::SmoothPixmapTransform, true);
 
-    painter->drawPixmap(4 + 8/2, 4 + 8/2, getWidth()-8, getHeight()-16-8, QPixmap(StructuralUtil::iconFromMediaType(getnstSubtype())));
+    painter->drawPixmap(4 + 8/2, 4 + 8/2, getWidth()-8, getHeight()-16-8, QPixmap(StructuralUtil::iconFromMediaType(getLocalName())));
 
     drawMouseHoverHighlight(painter); // This should not be HERE!!
 
     painter->setPen(QPen(QBrush(Qt::black),0));
 
-    QString localid = (getnstProperty(":nst:uid") != "" ? getnstProperty(":nst:uid") : "?");
+    QString localid = (getLocalProperty(":nst:uid") != "" ? getLocalProperty(":nst:uid") : "?");
 
     if (localid.length() > 5)
     {
-      localid = getnstProperty(":nst:uid").replace(3,getnstProperty(":nst:uid").length()-3,"...");
+      localid = getLocalProperty(":nst:uid").replace(3,getLocalProperty(":nst:uid").length()-3,"...");
     }
 
     painter->drawText(4 + 8/2, 4 + 8/2 + getHeight()-16-8, getWidth()-8, 16, Qt::AlignCenter, localid);
@@ -242,25 +242,25 @@ void StructuralComposition::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *even
   }
 
   if (collapsed)
-  {
+  {  
     setTop(getTop() - (lasth/2 - DEFAULT_MEDIA_HEIGHT/2));
     setLeft(getLeft() - (lastw/2 - DEFAULT_MEDIA_WIDTH/2));
     setWidth(lastw);
     setHeight(lasth);
 
-    foreach(StructuralEntity* e, getnstChildren())
+    foreach(StructuralEntity* e, getLocalChildren())
     {
-      if (e->getnstType() == Structural::Interface)
+      if (e->getLocalType() == Structural::Interface)
       {
         e->setTop(((e->getTop()*lasth)/DEFAULT_MEDIA_HEIGHT));
         e->setLeft(((e->getLeft()*lastw)/DEFAULT_MEDIA_WIDTH));
       }
 
-      e->setnstParent(this);
+      e->setLocalParent(this);
       e->show();
       e->adjust();
 
-      if (e->getnstType() == Structural::Interface)
+      if (e->getLocalType() == Structural::Interface)
       {
         qDebug() << e->getLeft() << e->getTop() << e->getWidth() << e->getHeight();
       }
@@ -270,20 +270,18 @@ void StructuralComposition::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *even
   }
   else
   {
-    tmp->setTop(getTop());
-    tmp->setLeft(getLeft());
-    tmp->setWidth(getWidth());
-    tmp->setHeight(getHeight());
+    tmp->setLocalProperties(getLocalProperties());
 
     lastw = getWidth();
     lasth = getHeight();
 
-    foreach(StructuralEntity* e, getnstChildren())
+    foreach(StructuralEntity* e, getLocalChildren())
     {
-      if (e->getnstType() != Structural::Interface)
+      if (e->getLocalType() != Structural::Interface)
       {
         e->hide();
-        e->setnstParent(tmp);
+        e->setLocalParent(tmp);
+        removeLocalChild(e);
       }
     }
 
@@ -292,9 +290,9 @@ void StructuralComposition::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *even
     setWidth(DEFAULT_MEDIA_WIDTH);
     setHeight(DEFAULT_MEDIA_HEIGHT);
 
-    foreach(StructuralEntity* e, getnstChildren())
+    foreach(StructuralEntity* e, getLocalChildren())
     {
-      if (e->getnstType() == Structural::Interface)
+      if (e->getLocalType() == Structural::Interface)
       {
         e->setTop(((e->getTop()*DEFAULT_MEDIA_HEIGHT)/lasth));
         e->setLeft(((e->getLeft()*DEFAULT_MEDIA_WIDTH)/lastw));
@@ -306,9 +304,9 @@ void StructuralComposition::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *even
     setResizable(false);
   }
 
-  if (getnstParent() != NULL)
+  if (getLocalParent() != NULL)
   {
-    getnstParent()->adjust();
+    getLocalParent()->adjust();
   }
 
   setCollapsed(!collapsed);
@@ -334,8 +332,8 @@ void StructuralComposition::adjustWithSpring()
 
   while(it++ < SPRING_INTERATION)
   {
-    int N = getnstChildren().size();
-    QPointF next[N];
+    int N = getLocalChildren().size();
+    QVector<QPointF> next(N);
 
     qreal vf[N];
     qreal va[N];
@@ -347,9 +345,9 @@ void StructuralComposition::adjustWithSpring()
     }
 
     int I = 0;
-    foreach (StructuralEntity *entity, getnstChildren())
+    foreach (StructuralEntity *entity, getLocalChildren())
     {
-      if (entity->getnstType() == Structural::Node)
+      if (entity->getLocalType() == Structural::Node)
       {
         StructuralNode* node = (StructuralNode*) entity;
 
@@ -488,7 +486,7 @@ void StructuralComposition::adjustWithSpring()
       I++;
     }
 
-    foreach (StructuralEntity *entity, getnstChildren())
+    foreach (StructuralEntity *entity, getLocalChildren())
     {
       entity->setLeft(next[I].x());
       entity->setTop(next[I].y());

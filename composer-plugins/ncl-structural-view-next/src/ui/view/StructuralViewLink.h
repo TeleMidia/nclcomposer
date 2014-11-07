@@ -11,8 +11,7 @@ class StructuralViewLink : public StructuralEntity
 {
 public:
     StructuralViewLink(StructuralEntity* parent = 0);
-
-    ~StructuralViewLink();
+    virtual ~StructuralViewLink();
 
     QLineF getLine() const;
 

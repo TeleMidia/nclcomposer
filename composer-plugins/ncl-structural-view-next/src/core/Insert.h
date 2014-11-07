@@ -13,11 +13,11 @@ public:
   virtual void redo();
 
 private:
-  QString uid;
-  QString parent;
-  QMap<QString, QString> properties;
+  QString _uid;
+  QString _parent;
+  QMap<QString, QString> _properties;
 
-  QMap<QString, QString> settings;
+  QMap<QString, QString> _settings;
 };
 
 

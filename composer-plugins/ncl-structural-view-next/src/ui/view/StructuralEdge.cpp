@@ -3,8 +3,8 @@
 StructuralEdge::StructuralEdge(StructuralEntity* parent)
   : StructuralEntity(parent)
 {
-  setnstType(Structural::Edge);
-  setnstSubtype(Structural::NoSubtype);
+  setLocalType(Structural::Edge);
+  setLocalName(Structural::NoName);
 
   setSelectable(true);
   setResizable(false);
@@ -107,16 +107,16 @@ void StructuralEdge::adjust(bool avoidCollision)
                          QPointF(entityb->getLeft() + entityb->getWidth()/2,
                                  entityb->getTop() + entityb->getHeight()/2));
 
-    if (getEntityA()->getnstType() == Structural::Interface)
+    if (getEntityA()->getLocalType() == Structural::Interface)
     {
-      if(getnstParent())
-        line.setP1(getnstParent()->mapFromItem(getEntityA()->getnstParent(), line.p1()));
+      if(getLocalParent())
+        line.setP1(getLocalParent()->mapFromItem(getEntityA()->getLocalParent(), line.p1()));
     }
 
-    if (getEntityB()->getnstType() == Structural::Interface)
+    if (getEntityB()->getLocalType() == Structural::Interface)
     {
-      if(getnstParent())
-        line.setP2(getnstParent()->mapFromItem(getEntityB()->getnstParent(), line.p2()));
+      if(getLocalParent())
+        line.setP2(getLocalParent()->mapFromItem(getEntityB()->getLocalParent(), line.p2()));
     }
 
     QPointF pointa = line.p1();
@@ -180,9 +180,12 @@ void StructuralEdge::adjust(bool avoidCollision)
   }
 }
 
-QPointF StructuralEdge::arcPointAt(QLineF line, qreal at, bool toend)
+QPointF StructuralEdge::arcPointAt(QLineF line, qreal at, bool toend, bool invert)
 {
   qreal alfa = getAngle();
+
+  if (invert)
+    alfa = -alfa;
 
   qreal beta = (180 - alfa)/2 + (360 - line.angle());
 
@@ -191,11 +194,11 @@ QPointF StructuralEdge::arcPointAt(QLineF line, qreal at, bool toend)
   QPointF center_p(line.p2().x() - ::cos((180-beta-alfa)*PI/180)*R,
                    line.p2().y() + ::sin((180-beta-alfa)*PI/180)*R);
 
-  qreal arc_len = alfa*PI*R/180;
+  qreal arc_len = (qreal) alfa*PI*R/180;
 
   qreal new_arc_len = arc_len*at;
 
-  qreal new_alfa = (180*new_arc_len)/(PI*R);
+  qreal new_alfa = (qreal) (180*new_arc_len)/(PI*R);
 
   qreal gama = (180-beta-new_alfa);
 
@@ -205,7 +208,7 @@ QPointF StructuralEdge::arcPointAt(QLineF line, qreal at, bool toend)
   if (toend)
     this->adjustedangle = new_alfa;
   else
-    this->adjustedangle = (180*(arc_len-arc_len*at))/(PI*R);
+    this->adjustedangle = (qreal)(180*(arc_len-arc_len*at))/(PI*R);
 
   return new_start_p;
 }

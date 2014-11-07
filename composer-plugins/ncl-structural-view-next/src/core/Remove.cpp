@@ -3,11 +3,11 @@
 Remove::Remove(QString uid, QString parent, QMap<QString, QString> properties, QMap<QString, QString> settings, Command* command)
   : Command(command)
 {
-  this->uid = uid;
-  this->parent = parent;
-  this->properties = properties;
+  this->_uid = uid;
+  this->_parent = parent;
+  this->_properties = properties;
 
-  this->settings = settings;
+  this->_settings = settings;
 }
 
 Remove::~Remove()
@@ -17,16 +17,16 @@ Remove::~Remove()
 
 void Remove::undo()
 {
-  settings["UNDO"] = "0";
+  _settings["UNDO"] = "0";
 
-  emit insert(uid, parent, properties, settings);
+  emit insert(_uid, _parent, _properties, _settings);
 }
 
 void Remove::redo()
 {
-  settings["UNDO"] = "0";
+  _settings["UNDO"] = "0";
 
-  emit remove(uid, settings);
+  emit remove(_uid, _settings);
 
 }
 

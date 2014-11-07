@@ -1,5 +1,7 @@
 #include "StructuralBind.h"
 
+#include "StructuralBindDialog.h"
+
 StructuralBind::StructuralBind(StructuralEntity* parent)
   : StructuralEdge(parent)
 {
@@ -8,8 +10,8 @@ StructuralBind::StructuralBind(StructuralEntity* parent)
 
   setType(Structural::NoBindType);
 
-  setnstType(Structural::Edge);
-  setnstSubtype(Structural::Bind);
+  setLocalType(Structural::Edge);
+  setLocalName(Structural::Bind);
 
 
   //conn = NULL;
@@ -23,7 +25,7 @@ StructuralBind::~StructuralBind()
 
 void StructuralBind::setType(Structural::BindType type)
 {
-  this->subtype = type;
+  this->_name = type;
 
   switch(type)
   {
@@ -88,9 +90,20 @@ void StructuralBind::setType(Structural::BindType type)
   }
 }
 
+void StructuralBind::setLocalProperty(const QString &name, const QString &value)
+{
+  if (name == "LOCAL:BIND")
+  {
+    setType(StructuralUtil::getBindTypeFromStr(value));
+    setRole(value);
+  }
+
+  StructuralEdge::setLocalProperty(name, value);
+}
+
 Structural::BindType StructuralBind::getType()
 {
-  return subtype;
+  return _name;
 }
 
 QString StructuralBind::getIcon()
@@ -100,7 +113,7 @@ QString StructuralBind::getIcon()
 
 void StructuralBind::adjust(bool avoidCollision)
 {
-  qDebug() << "Adjusting edge '"+getnstUid()+"'...";
+  qDebug() << "Adjusting edge '"+getLocalUid()+"'...";
 
   if(isCondition())
     adjust_condition();
@@ -117,26 +130,26 @@ void StructuralBind::adjust_action()
                          QPointF(getEntityB()->getLeft() + getEntityB()->getWidth()/2,
                                  getEntityB()->getTop() + getEntityB()->getHeight()/2));
 
-    if (getEntityA()->getnstType() == Structural::Interface)
+    if (getEntityA()->getLocalType() == Structural::Interface)
     {
-      line.setP1(getnstParent()->mapFromItem(getEntityA()->getnstParent(), line.p1()));
+      line.setP1(getLocalParent()->mapFromItem(getEntityA()->getLocalParent(), line.p1()));
     }
 
-    if (getEntityB()->getnstType() == Structural::Interface)
+    if (getEntityB()->getLocalType() == Structural::Interface)
     {
-      line.setP2(getnstParent()->mapFromItem(getEntityB()->getnstParent(), line.p2()));
+      line.setP2(getLocalParent()->mapFromItem(getEntityB()->getLocalParent(), line.p2()));
     }
 
-    QPointF pointa = line.p1();
-    QPointF pointb = line.p2();
+    globlalPointA = line.p1();
+    globlalPointB = line.p2();
 
-    aux_adjust(pointa, pointb);
+    aux_adjust(globlalPointA, globlalPointB);
 
     getEntityB()->setSelectable(false);
 
     qreal index;
 
-    if (pointa != pointb)
+    if (globlalPointA != globlalPointB)
     {
       index = 1.0;
 
@@ -147,11 +160,11 @@ void StructuralBind::adjust_action()
         index -= 0.01;
 
         if (getAngle() == 0)
-          pointb = line.pointAt(index);
+          globlalPointB = line.pointAt(index);
         else
-          pointb = arcPointAt(line , index);
+          globlalPointB = arcPointAt(line , index);
 
-        aux_adjust(pointa, pointb);
+        aux_adjust(globlalPointA, globlalPointB);
 
         if (++n > 100){ // avoiding infinity loop
           break;
@@ -175,26 +188,26 @@ void StructuralBind::adjust_condition()
                          QPointF(getEntityB()->getLeft() + getEntityB()->getWidth()/2,
                                  getEntityB()->getTop() + getEntityB()->getHeight()/2));
 
-    if (getEntityA()->getnstType() == Structural::Interface)
+    if (getEntityA()->getLocalType() == Structural::Interface)
     {
-      line.setP1(getnstParent()->mapFromItem(getEntityA()->getnstParent(), line.p1()));
+      line.setP1(getLocalParent()->mapFromItem(getEntityA()->getLocalParent(), line.p1()));
     }
 
-    if (getEntityB()->getnstType() == Structural::Interface)
+    if (getEntityB()->getLocalType() == Structural::Interface)
     {
-      line.setP2(getnstParent()->mapFromItem(getEntityB()->getnstParent(), line.p2()));
+      line.setP2(getLocalParent()->mapFromItem(getEntityB()->getLocalParent(), line.p2()));
     }
 
-    QPointF pointa = line.p1();
-    QPointF pointb = line.p2();
+    globlalPointA = line.p1();
+    globlalPointB = line.p2();
 
-    aux_adjust(pointa, pointb);
+    aux_adjust(globlalPointA, globlalPointB);
 
     getEntityA()->setSelectable(false);
 
     qreal index;
 
-    if (pointa != pointb){
+    if (globlalPointA != globlalPointB){
 
       index = 0;
 
@@ -205,11 +218,11 @@ void StructuralBind::adjust_condition()
         index += 0.01;
 
         if (getAngle() == 0)
-          pointa = line.pointAt(index);
+          globlalPointA = line.pointAt(index);
         else
-          pointa = arcPointAt(line , index, false);
+          globlalPointA = arcPointAt(line , index, false);
 
-        aux_adjust(pointa, pointb);
+        aux_adjust(globlalPointA, globlalPointB);
 
         if (++n > 100) // avoiding infinity loop
           break;
@@ -232,14 +245,14 @@ void StructuralBind::aux_adjust(QPointF pointa, QPointF pointb)
     setWidth((pointb.x()-4)-(pointa.x()-4) + 8);
     setHeight((pointb.y()-4)-(pointa.y()-4) + 8);
   }
-  else if (pointa.x() > pointb.x() && pointa.y() < pointb.y())
+  else if (pointa.x() > pointb.x() && pointa.y() <= pointb.y())
   {
     setTop(pointa.y()-4);
     setLeft(pointb.x()-4);
     setWidth((pointa.x()-4)-(pointb.x()-4) + 8);
     setHeight((pointb.y()-4)-(pointa.y()-4) + 8);
   }
-  else if (pointa.x() < pointb.x() && pointa.y() > pointb.y())
+  else if (pointa.x() <= pointb.x() && pointa.y() > pointb.y())
   {
     setTop(pointb.y()-4);
     setLeft((pointa.x()-4));
@@ -280,23 +293,24 @@ void StructuralBind::draw_action(QPainter* painter)
                          QPointF(getEntityB()->getLeft() + getEntityB()->getWidth()/2,
                                  getEntityB()->getTop() + getEntityB()->getHeight()/2));
 
-    if (getEntityA()->getnstType() == Structural::Interface)
+    if (getEntityA()->getLocalType() == Structural::Interface)
     {
-      line.setP1(getnstParent()->mapFromItem(getEntityA()->getnstParent(), line.p1()));
+      line.setP1(getLocalParent()->mapFromItem(getEntityA()->getLocalParent(), line.p1()));
     }
 
-    if (getEntityB()->getnstType() == Structural::Interface)
+    if (getEntityB()->getLocalType() == Structural::Interface)
     {
-      line.setP2(getnstParent()->mapFromItem(getEntityB()->getnstParent(), line.p2()));
+      line.setP2(getLocalParent()->mapFromItem(getEntityB()->getLocalParent(), line.p2()));
     }
 
-    QPointF pointa = line.p1();
-    QPointF pointb = line.p2();
+    QPointF pointa = globlalPointA;
+    QPointF pointb = globlalPointB;
 
     if (!isInvalid() && !hasError)
       painter->setPen(QPen(QBrush(QColor("#000000")), 1));
     else
       painter->setPen(QPen(QBrush(QColor(255,0,0,200)), 1, Qt::DashLine));
+
 
     if (pointa.x() <= pointb.x() && pointa.y() <= pointb.y())
     {
@@ -320,6 +334,9 @@ void StructuralBind::draw_action(QPainter* painter)
 
         QPointF center_b(localline.p1().x() + ::cos((180-delta-drawangle)*PI/180)*R,
                          localline.p1().y() - ::sin((180-delta-drawangle)*PI/180)*R);
+
+
+
 
         if (getAdjAngle() < 0)
         {
@@ -368,11 +385,12 @@ void StructuralBind::draw_action(QPainter* painter)
 
         qreal delta = (180-drawangle)/2 + (360 - localline.angle());
 
-        QPointF center_a(localline.p2().x() - ::cos((180-delta-drawangle)*PI/180)*R,
-                         localline.p2().y() + ::sin((180-delta-drawangle)*PI/180)*R);
+        QPointF center_a(localline.p2().x() - ::cos(((2*localline.angle() - drawangle - 540)/2)*PI/180)*R,
+                         localline.p2().y() + ::sin(((2*localline.angle() - drawangle - 540)/2)*PI/180)*R);
 
-        QPointF center_b(localline.p1().x() + ::cos((180-delta-drawangle)*PI/180)*R,
-                         localline.p1().y() - ::sin((180-delta-drawangle)*PI/180)*R);
+        QPointF center_b(localline.p1().x() + ::cos(((2*localline.angle() - drawangle - 540)/2)*PI/180)*R,
+                         localline.p1().y() - ::sin(((2*localline.angle() - drawangle - 540)/2)*PI/180)*R);
+
 
         if (getAdjAngle() < 0)
         {
@@ -390,9 +408,12 @@ void StructuralBind::draw_action(QPainter* painter)
         painter->drawLine(4+4+getWidth()-8,4+4, 4+8, 4+8+getHeight()-16);
       }
 
+
       painter->setPen(Qt::NoPen);
 
       painter->drawPixmap(4, 4+getHeight()-16, 16, 16, QPixmap(icon));
+
+      painter->setBrush(QBrush(QColor(255,0,0,75)));
 
       if (!isInvalid() && !hasError)
       {
@@ -524,18 +545,18 @@ void StructuralBind::draw_condition(QPainter* painter)
                          QPointF(getEntityB()->getLeft() + getEntityB()->getWidth()/2,
                                  getEntityB()->getTop() + getEntityB()->getHeight()/2));
 
-    if (getEntityA()->getnstType() == Structural::Interface)
+    if (getEntityA()->getLocalType() == Structural::Interface)
     {
-      line.setP1(getnstParent()->mapFromItem(getEntityA()->getnstParent(), line.p1()));
+      line.setP1(getLocalParent()->mapFromItem(getEntityA()->getLocalParent(), line.p1()));
     }
 
-    if (getEntityB()->getnstType() == Structural::Interface)
+    if (getEntityB()->getLocalType() == Structural::Interface)
     {
-      line.setP2(getnstParent()->mapFromItem(getEntityB()->getnstParent(), line.p2()));
+      line.setP2(getLocalParent()->mapFromItem(getEntityB()->getLocalParent(), line.p2()));
     }
 
-    QPointF pointa = line.p1();
-    QPointF pointb = line.p2();
+    QPointF pointa = globlalPointA;
+    QPointF pointb = globlalPointB;
 
     if (!isInvalid() && !hasError)
       painter->setPen(QPen(QBrush(QColor("#000000")), 1));
@@ -773,14 +794,14 @@ void StructuralBind::delineate_action(QPainterPath* painter) const
                          QPointF(getEntityB()->getLeft() + getEntityB()->getWidth()/2,
                                  getEntityB()->getTop() + getEntityB()->getHeight()/2));
 
-    if (getEntityA()->getnstType() == Structural::Interface)
+    if (getEntityA()->getLocalType() == Structural::Interface)
     {
-      line.setP1(getnstParent()->mapFromItem(getEntityA()->getnstParent(), line.p1()));
+      line.setP1(getLocalParent()->mapFromItem(getEntityA()->getLocalParent(), line.p1()));
     }
 
-    if (getEntityB()->getnstType() == Structural::Interface)
+    if (getEntityB()->getLocalType() == Structural::Interface)
     {
-      line.setP2(getnstParent()->mapFromItem(getEntityB()->getnstParent(), line.p2()));
+      line.setP2(getLocalParent()->mapFromItem(getEntityB()->getLocalParent(), line.p2()));
     }
 
     QPointF pointa = line.p1();
@@ -814,14 +835,14 @@ void StructuralBind::delineate_condition(QPainterPath* painter) const
                          QPointF(getEntityB()->getLeft() + getEntityB()->getWidth()/2,
                                  getEntityB()->getTop() + getEntityB()->getHeight()/2));
 
-    if (getEntityA()->getnstType() == Structural::Interface)
+    if (getEntityA()->getLocalType() == Structural::Interface)
     {
-      line.setP1(getnstParent()->mapFromItem(getEntityA()->getnstParent(), line.p1()));
+      line.setP1(getLocalParent()->mapFromItem(getEntityA()->getLocalParent(), line.p1()));
     }
 
-    if (getEntityB()->getnstType() == Structural::Interface)
+    if (getEntityB()->getLocalType() == Structural::Interface)
     {
-      line.setP2(getnstParent()->mapFromItem(getEntityB()->getnstParent(), line.p2()));
+      line.setP2(getLocalParent()->mapFromItem(getEntityB()->getLocalParent(), line.p2()));
     }
 
     QPointF pointa = line.p1();
@@ -865,7 +886,7 @@ void StructuralBind::addParam(QString uid, QString name, QString value)
     params[name] = value;
     names_uids[name] = uid;
 
-    emit bindParamUpdated(getnstUid(), params, names_uids);
+    emit bindParamUpdated(getLocalUid(), params, names_uids);
   }
 }
 
@@ -875,7 +896,7 @@ void StructuralBind::setParam(QString name, QString value)
   {
     params[name] = value;
 
-    emit bindParamUpdated(getnstUid(), params, names_uids);
+    emit bindParamUpdated(getLocalUid(), params, names_uids);
   }
 }
 
@@ -888,7 +909,7 @@ void StructuralBind::removeUId(QString uid)
     params.remove(name);
     names_uids.remove(name);
 
-    emit bindParamUpdated(getnstUid(), params, names_uids);
+    emit bindParamUpdated(getLocalUid(), params, names_uids);
   }
 }
 
@@ -899,7 +920,7 @@ void StructuralBind::removeParam(QString name)
     params.remove(name);
     names_uids.remove(name);
 
-    emit bindParamUpdated(getnstUid(), params, names_uids);
+    emit bindParamUpdated(getLocalUid(), params, names_uids);
   }
 }
 
@@ -917,6 +938,28 @@ void StructuralBind::setParams(QMap<QString, QString> params)
 
 void StructuralBind::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
 {
+  StructuralBindDialog *d = new StructuralBindDialog();
+
+  if (isCondition())
+    d->setType(StructuralBindDialog::CONDITION);
+  else
+    d->setType(StructuralBindDialog::ACTION);
+
+  if (d->exec())
+  {
+    QMap<QString,QString> previous = getLocalProperties();
+    QMap<QString,QString> properties = getLocalProperties();
+    properties["LOCAL:BIND"] = d->getSelected();
+
+    QMap<QString, QString> settings;
+    settings["UNDO"] = "1";
+    settings["NOTIFY"] = "1";
+    settings["CODE"] = StructuralUtil::createUid();
+
+    changed(getLocalUid(), properties, previous, settings);
+  }
+
+  delete d;
   /*
   if (conn != NULL)
   {
@@ -1013,15 +1056,15 @@ void StructuralBind::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
 
 bool StructuralBind::isCondition() const
 {
-    return (subtype == Structural::onBegin ||
-            subtype == Structural::onBeginAttribution ||
-            subtype == Structural::onEnd ||
-            subtype == Structural::onEndAttribution ||
-            subtype == Structural::onPause ||
-            subtype == Structural::onPauseAttribution ||
-            subtype == Structural::onResume ||
-            subtype == Structural::onResumeAttribution ||
-            subtype == Structural::onSelection);
+    return (_name == Structural::onBegin ||
+            _name == Structural::onBeginAttribution ||
+            _name == Structural::onEnd ||
+            _name == Structural::onEndAttribution ||
+            _name == Structural::onPause ||
+            _name == Structural::onPauseAttribution ||
+            _name == Structural::onResume ||
+            _name == Structural::onResumeAttribution ||
+            _name == Structural::onSelection);
 }
 
 bool StructuralBind::isAction() const
@@ -1117,12 +1160,30 @@ StructuralEntity *StructuralBind::getTarget()
 
 void StructuralBind::updateToolTip()
 {
-  QString tip = getRole() + "(" + getComponent();
-  if(getInterface() != "")
+  StructuralEntity* comp = NULL;
+
+  if (isCondition())
   {
-    tip += "#";
-    tip += getInterface();
+    comp = getEntityA();
   }
+  else
+  {
+    comp = getEntityB();
+  }
+
+
+  QString tip = getRole() + " (";
+
+  if (comp->getLocalType() == Structural::Interface)
+  {
+    StructuralEntity* parent = comp->getLocalParent();
+    tip += parent->getLocalId() +  "#" + comp->getLocalId();
+  }
+  else
+  {
+    tip += comp->getLocalId();
+  }
+
   tip += ")";
 
   setToolTip(tip);

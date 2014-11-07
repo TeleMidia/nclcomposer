@@ -36,7 +36,8 @@ HEADERS += \
   src/ui/view/StructuralEdge.h \
   src/ui/view/StructuralConditionDialog.h \
   src/ui/view/StructuralComposition.h \
-  src/ui/view/StructuralBind.h
+  src/ui/view/StructuralBind.h \
+    src/ui/view/StructuralBindDialog.h
 
 SOURCES += \
   src/core/Command.cpp \
@@ -59,7 +60,12 @@ SOURCES += \
   src/core/Remove.cpp \
   src/core/Insert.cpp \
   src/core/Change.cpp \
-  src/main.cpp
+  src/main.cpp \
+    src/ui/view/StructuralBindDialog.cpp
 
 RESOURCES += \
-  ncl-structural-view-next.qrc
+  ncl-structural-view-next.qrc \
+  ../common-resources/images.qrc
+
+FORMS += \
+    ui/StructuralBindDialog.ui

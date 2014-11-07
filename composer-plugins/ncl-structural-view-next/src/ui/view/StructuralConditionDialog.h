@@ -11,7 +11,7 @@
 class StructuralConditionDialog : public QDialog
 {
 public:
-  StructuralConditionDialog(QWidget* parent = 0);
+  StructuralConditionDialog(QWidget* _parent = 0);
 
   ~StructuralConditionDialog();
 

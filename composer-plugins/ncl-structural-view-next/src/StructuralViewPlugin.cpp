@@ -46,12 +46,13 @@ void StructuralViewPlugin::createWidgets()
   //view->setMinimapVisible(true);
 
   window = new StructuralWindow();
+  view = window->getView();
 }
 
 void StructuralViewPlugin::createConnections()
 {
-  //connect(view, SIGNAL(entityAdded(QString,QString,QMap<QString,QString>)),
-  //        SLOT(notifyEntityAddedInView(QString,QString,QMap<QString,QString>)));
+  connect(view, SIGNAL(inserted(QString,QString,QMap<QString,QString>,QMap<QString,QString>)),
+          SLOT(notifyEntityAddedInView(QString,QString,QMap<QString,QString>,QMap<QString,QString>)));
 
   //connect(view, SIGNAL(entityRemoved(QString)),
   //              SLOT(notifyEntityDeletedInView(QString)));
@@ -155,7 +156,10 @@ bool StructuralViewPlugin::saveSubsession()
   data.append("$START_ENTITIES_LINES$");
 
   data.append("~~VIEW-DATA~~");
-  //data.append(view->serialize());
+
+  QString info; window->getView()->serialize(info);
+
+  data.append(info);
 
   data.append("~~PLUGIN-DATA~~");
   foreach(QString key, entities.keys()){
@@ -252,7 +256,9 @@ void StructuralViewPlugin::updateFromModel()
 
 void StructuralViewPlugin::onEntityAdded(QString pluginID, Entity *entity)
 {
-  if(isSyncingFromTextual) return;
+  qDebug() << "===================================== NEWSTR onEntityAdded";
+
+//  if(isSyncingFromTextual) return;
 
   if (pluginID != getPluginInstanceID()){
     requestEntityAddition(entity);
@@ -369,15 +375,35 @@ void StructuralViewPlugin::changeSelectedEntity(QString pluginID, void* param)
 
 void StructuralViewPlugin::requestEntityAddition(Entity* entity)
 {
-  qDebug() << "QnstComposerPlugin::requestEntityAddition" << entity->getType();
+//  QMap<QString, QString> properties;
 
-  QMap<QString, QString> properties;
+//  Structural::EntitySubtype type = StructuralUtil::getnstTypeFromStr(entity->getType());
+//  properties[":nst:subtype"] = StructuralUtil::getStrFromNstType(type);
 
-  // get the qnst type based on NCL Composer Type
-  //Qnst::EntityType type = QnstUtil::getnstTypeFromStr(entity->getType());
-  //properties["TYPE"] = QnstUtil::getStrFromNstType(type);
+//  switch (type) {
+//    case Structural::Body:
+//      entities[entity->getUniqueId()] = entity->getUniqueId();
+//      break;
 
-  bool ok = false;
+//    default:
+//      break;
+//  }
+
+//  if (!entity->getAttribute("id").isEmpty())
+//  {
+//    properties["LOCAL:ID"] = entity->getAttribute("id");
+//  }
+
+//  QMap<QString, QString> settings;
+//  settings["UNDO"] = "1";
+//  settings["NOTIFY"] = "0";
+//  settings["CODE"] = QUuid::createUuid().toString();
+
+//  if (type == Structural::Body)
+//  {
+//    view->insert(entity->getUniqueId(), "", properties, settings);
+//  }
+
   /*
   switch (type)
   {
@@ -1337,42 +1363,42 @@ void StructuralViewPlugin::requestConnectorParamChange(Entity* entity)
 
 void StructuralViewPlugin::notifyEntityAddedInView(const QString uid,
                                                  const QString parent,
-                                              QMap<QString, QString> properties)
+                                              QMap<QString, QString> properties,
+                                              QMap<QString, QString> settings)
 {
-  //Qnst::EntityType type = QnstUtil::getnstTypeFromStr(properties["TYPE"]);
+  LocalName type = (LocalName) properties["LOCAL:NAME"].toInt();
 
-  /*
   Entity* entity = NULL;
 
   QMap<QString, QString> attributes;
   bool mustEmitAddEntity = false;
 
-  if(type != Qnst::Body)
+  if(type != Structural::Body)
   {
     entity = getProject()->getEntityById(entities.key(parent));
 
-    if(entity == NULL)
-    {
-      qWarning() << "[QNST] Warning: trying to add an entity as child of an inexistent Entity";
-      if(properties["TYPE"] == "importBase" ||
-         properties["TYPE"] == "causalConnector" ||
-         properties["TYPE"] == "connector" ||
-         properties["TYPE"] == "complex-connector")
-      { // In these cases we do not need a parent.
-        qWarning() << "[QNST] " << properties["TYPE"] << " is a special case. So, we will not need a parent.";
-      }
-      else
-      {
-        qWarning() << "[QNST] The entityAdd is beging ignored!";
-        return;
-      }
-    }
+//    if(entity == NULL)
+//    {
+//      qWarning() << "[QNST] Warning: trying to add an entity as child of an inexistent Entity";
+//      if(properties["TYPE"] == "importBase" ||
+//         properties["TYPE"] == "causalConnector" ||
+//         properties["TYPE"] == "connector" ||
+//         properties["TYPE"] == "complex-connector")
+//      { // In these cases we do not need a parent.
+//        qWarning() << "[QNST] " << properties["TYPE"] << " is a special case. So, we will not need a parent.";
+//      }
+//      else
+//      {
+//        qWarning() << "[QNST] The entityAdd is beging ignored!";
+//        return;
+//      }
+//    }
   }
 
   // Load specific properties for each type (and handle dependencies)
   switch(type)
   {
-    case Qnst::Body:
+    case Structural::Body:
     {
       requestBodyDependence();
       QList<Entity*> list = getProject()->getEntitiesbyType("ncl");
@@ -1381,46 +1407,47 @@ void StructuralViewPlugin::notifyEntityAddedInView(const QString uid,
       {
         entity = list.first();
 
-        if (properties["id"] != "")
-          attributes["id"] = properties["id"];
+        if (!properties.value("LOCAL:ID").isEmpty())
+          attributes["id"] = properties["LOCAL:ID"];
 
         mustEmitAddEntity = true;
       }
       break;
     }
 
-    case Qnst::Context:
+    case Structural::Context:
     {
-      if (properties["id"] != "")
-        attributes["id"] = properties["id"];
+      if (!properties.value("LOCAL:ID").isEmpty())
+        attributes["id"] = properties["LOCAL:ID"];
 
-      if (properties["refer"] != "")
-        attributes["refer"] = properties["refer"];
+      if (!properties.value("LOCAL:REFER").isEmpty())
+        attributes["refer"] = properties["LOCAL:REFER"];
 
       mustEmitAddEntity = true;
       break;
     }
 
-    case Qnst::Switch:
+    case Structural::Switch:
     {
-      if (properties["id"] != "")
-        attributes["id"] = properties["id"];
+      if (!properties.value("LOCAL:ID").isEmpty())
+          attributes["id"] = properties["LOCAL:ID"];
 
-      if (properties["refer"] != "")
-        attributes["refer"] = properties["refer"];
+      if (!properties.value("LOCAL:REFER").isEmpty())
+        attributes["refer"] = properties["LOCAL:REFER"];
 
       mustEmitAddEntity = true;
       break;
     }
 
-    case Qnst::Media:
+    case Structural::Media:
     {
-      if (properties["id"] != "")
-        attributes["id"] = properties["id"];
+      if (!properties.value("LOCAL:ID").isEmpty())
+        attributes["id"] = properties["LOCAL:ID"];
 
-      if (properties["src"] != "")
+
+      if (!properties.value("LOCAL:SRC").isEmpty())
       {
-        QString src = properties["src"];
+        QString src = properties["LOCAL:SRC"];
         try
         {
           attributes["src"] = Utilities::relativePath(project->getLocation(),
@@ -1428,101 +1455,105 @@ void StructuralViewPlugin::notifyEntityAddedInView(const QString uid,
         }
         catch(...)
         {
-          attributes["src"] = properties["src"];
+          attributes["src"] = properties["LOCAL:SRC"];
         }
       }
 
-      if (properties["refer"] != "")
-        attributes["refer"] = properties["refer"];
+      if (!properties.value("LOCAL:REFER").isEmpty())
+        attributes["refer"] = properties["LOCAL:REFER"];
 
-      if (properties["instance"] != "")
-        attributes["instance"] = properties["instance"];
+      if (!properties.value("LOCAL:INSTANCE").isEmpty())
+        attributes["instance"] = properties["LOCAL:INSTANCE"];
 
-      if (properties["type"] != "")
-        attributes["type"] = properties["type"];
+      if (!properties.value("CPR:TYPE").isEmpty())
+        attributes["type"] = properties["CPR:TYPE"];
 
-      if (properties["descriptor"] != "")
-        attributes["descriptor"] = properties["descriptor"];
-
-      mustEmitAddEntity = true;
-      break;
-    }
-    case Qnst::Port:
-    {
-      attributes["id"] = properties["id"];
-      attributes["component"] = properties["component"];
-
-      if(properties["interface"] != "")
-        attributes["interface"] = properties["interface"];
+      if (!properties.value("CPR:DESCRIPTOR").isEmpty())
+        attributes["descriptor"] = properties["CPR:DESCRIPTOR"];
 
       mustEmitAddEntity = true;
       break;
     }
 
-    case Qnst::Link:
+    case Structural::Port:
     {
-      attributes["id"] = properties["id"];
-      attributes["xconnector"] = properties["xconnector"];
+      attributes["id"] = properties["LOCAL:ID"];
+      attributes["component"] = properties["CPR:COMPONENT"];
 
-      mustEmitAddEntity = true;
-      request = uid;
-      break;
-    }
-
-    case Qnst::Bind:
-    {
-      requestBindAddition(uid, parent, properties);
-      mustEmitAddEntity = false; // the add is made inside requestBindAddition!!!
-      break;
-    }
-
-    case Qnst::Area:
-    {
-      attributes["id"] = properties["id"];
-      mustEmitAddEntity = true;
-      break;
-    }
-
-    case Qnst::Property:
-    {
-      attributes["name"] = properties["id"];
+      if (!properties.value("CPR:INTERFACE").isEmpty())
+        attributes["interface"] = properties["CPR:INTERFACE"];
 
       mustEmitAddEntity = true;
       break;
     }
 
-    case Qnst::SwitchPort:
+//    case Qnst::Link:
+//    {
+//      attributes["id"] = properties["id"];
+//      attributes["xconnector"] = properties["xconnector"];
+
+//      mustEmitAddEntity = true;
+//      request = uid;
+//      break;
+//    }
+
+//    case Qnst::Bind:
+//    {
+//      requestBindAddition(uid, parent, properties);
+//      mustEmitAddEntity = false; // the add is made inside requestBindAddition!!!
+//      break;
+//    }
+
+    case Structural::Area:
     {
-      if (properties["id"] != "")
-        attributes["id"] = properties["id"];
+      if (!properties.value("LOCAL:ID").isEmpty())
+        attributes["id"] = properties["LOCAL:ID"];
 
       mustEmitAddEntity = true;
       break;
     }
 
-    case Qnst::Mapping:
+    case Structural::Property:
     {
-      if (properties["component"] != "")
-        attributes["component"] = properties["component"];
-
-      if (properties["interface"] != "")
-        attributes["interface"] = properties["interface"];
+      if (!properties.value("LOCAL:ID").isEmpty())
+        attributes["name"] = properties["LOCAL:ID"];
 
       mustEmitAddEntity = true;
       break;
     }
 
-    case Qnst::BindParam:
+    case Structural::SwitchPort:
     {
-      if (properties["name"] != "")
-        attributes["name"] = properties["name"];
+      if (!properties.value("LOCAL:ID").isEmpty())
+        attributes["name"] = properties["LOCAL:ID"];
 
-      if (properties["value"] != "")
-        attributes["value"] = properties["value"];
-
-      mustEmitAddEntity= true;
+      mustEmitAddEntity = true;
       break;
     }
+
+//    case Qnst::Mapping:
+//    {
+//      if (properties["component"] != "")
+//        attributes["component"] = properties["component"];
+
+//      if (properties["interface"] != "")
+//        attributes["interface"] = properties["interface"];
+
+//      mustEmitAddEntity = true;
+//      break;
+//    }
+
+//    case Qnst::BindParam:
+//    {
+//      if (properties["name"] != "")
+//        attributes["name"] = properties["name"];
+
+//      if (properties["value"] != "")
+//        attributes["value"] = properties["value"];
+
+//      mustEmitAddEntity= true;
+//      break;
+//    }
 
     default:
       // do nothing
@@ -1532,20 +1563,20 @@ void StructuralViewPlugin::notifyEntityAddedInView(const QString uid,
   if(mustEmitAddEntity && entity != NULL) // Everything is ok, so add my new entity
   {
     request = uid;
-    emit addEntity(properties["TYPE"],
+    emit addEntity(properties["LOCAL:NAME"],
                    entity->getUniqueId(), attributes, false);
     request = "";
 
   }
-  else
-  {
-    // Special cases!! We do not have Qnst::EntityType defined!!
-    if (properties["TYPE"] == "connector")
-      requestConnectorAddition(uid, parent, properties);
-    else if (properties["TYPE"] == "complex-connector")
-      requestComplexConnectorAddition(uid, parent, properties);
-  }
-  */
+//  else
+//  {
+//    // Special cases!! We do not have Qnst::EntityType defined!!
+//    if (properties["TYPE"] == "connector")
+//      requestConnectorAddition(uid, parent, properties);
+//    else if (properties["TYPE"] == "complex-connector")
+//      requestComplexConnectorAddition(uid, parent, properties);
+//  }
+
 }
 
 void StructuralViewPlugin::notifyEntityDeletedInView(const QString uid)
