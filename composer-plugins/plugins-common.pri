@@ -84,7 +84,7 @@ else:win32 {
   LIBS += -L$$INSTALLBASE
 
   link_ncl_profile {
-          -L$$INSTALLBASE/extensions -lNCLLanguageProfile
+         LIBS += -L$$INSTALLBASE/extensions -lNCLLanguageProfile
   }
 
   INCLUDEPATH += . include $$INSTALLBASE/include/composer \
