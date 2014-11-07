@@ -21,3 +21,4 @@ moc_*
 *.Release
 Thumbs.db
 *.exe
+*~
