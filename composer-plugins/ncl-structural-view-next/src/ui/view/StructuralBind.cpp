@@ -94,8 +94,8 @@ void StructuralBind::setLocalProperty(const QString &name, const QString &value)
 {
   if (name == "LOCAL:BIND")
   {
-    setType(StructuralUtil::getBindTypeFromStr(value));
-    setRole(value);
+    setType((Structural::BindType) value.toInt());
+    setRole(StructuralUtil::getStrFromBindType(getType()));
   }
 
   StructuralEdge::setLocalProperty(name, value);

@@ -170,11 +170,11 @@ std::map <QString, Structural::BindType> StructuralUtil::bindTypeFromRoleStr =
     ("onPauseAttribution", Structural::onPauseAttribution)
     ("onResumeAttribution", Structural::onResumeAttribution)
 
-    ("Start", Structural::Start)
-    ("Stop", Structural::Stop)
-    ("Resume", Structural::Resume)
-    ("Pause", Structural::Pause)
-    ("Set", Structural::Set);
+    ("start", Structural::Start)
+    ("stop", Structural::Stop)
+    ("resume", Structural::Resume)
+    ("pause", Structural::Pause)
+    ("set", Structural::Set);
 
 /* Initialize String from Qnst::BindType Map */
 std::map <Structural::BindType, QString> StructuralUtil::strFromBindType =
@@ -312,6 +312,31 @@ QString StructuralUtil::getStrFromNstType(Structural::EntityName type)
     return strFromType[type];
 
   else return "";
+}
+
+bool StructuralUtil::isCondition(Structural::BindType btype)
+{
+
+  switch (btype) {
+    case Structural::onBegin:
+    case Structural::onEnd:
+    case Structural::onSelection:
+    case Structural::onResume:
+    case Structural::onPause:
+    case Structural::onBeginAttribution:
+    case Structural::onEndAttribution:
+    case Structural::onPauseAttribution:
+    case Structural::onResumeAttribution:
+      return true;
+
+      break;
+    default:
+
+      return false;
+      break;
+  }
+
+  return false;
 }
 
 QString StructuralUtil::getPrefixIdFromType(Structural::EntityName type)

@@ -106,14 +106,20 @@ void StructuralComposition::setLocalName(const LocalName subtype)
     setColor("#F4E4CC");
     menu->switchPortAction->setEnabled(false);
     menu->portAction->setEnabled(true);
+    setWidth(DEFAULT_CONTEXT_WIDTH);
+    setHeight(DEFAULT_CONTEXT_HEIGHT);
   }else if (subtype == Structural::Switch){
     setColor("#C6E2FF");
     menu->switchPortAction->setEnabled(true);
     menu->portAction->setEnabled(false);
+    setWidth(DEFAULT_CONTEXT_WIDTH);
+    setHeight(DEFAULT_CONTEXT_HEIGHT);
   }else if (subtype == Structural::Body){
     setColor("#EEEEEE");
     menu->switchPortAction->setEnabled(false);
     menu->portAction->setEnabled(true);
+    setWidth(DEFAULT_BODY_WIDTH);
+    setHeight(DEFAULT_BODY_HEIGHT);
   }
 
   StructuralNode::setLocalName(subtype);

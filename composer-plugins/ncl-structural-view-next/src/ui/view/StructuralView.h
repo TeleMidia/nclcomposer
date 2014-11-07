@@ -52,8 +52,12 @@ public:
 
   void setEnableLink(bool status);
 
-  void setAction(QString action);
-  void setCondition(QString condition);
+//  void setAction(QString action);
+//  void setCondition(QString condition);
+
+  void load(QString &data);
+
+  void read(QDomElement element, QDomElement parent);
 
   void serialize(QString &data);
   void exportDataFromEntity(StructuralEntity* entity, QDomDocument* doc, QDomElement _parent);
@@ -129,7 +133,7 @@ private:
 
   bool isChild(StructuralEntity* e , StructuralEntity* p);
   void createLink(StructuralEntity* a, StructuralEntity* b);
-  void createBind(StructuralEntity* a, StructuralEntity* b,QString type = "", QString code = "");
+  void createBind(StructuralEntity* a, StructuralEntity* b,Structural::BindType type = Structural::NoBindType, QString code = "");
   void createReference(StructuralEntity* a, StructuralEntity* b);
   Command* rmcmd(StructuralEntity* entity, Command* cmdparent, QMap<QString, QString> settings);
 
@@ -196,8 +200,8 @@ private:
 
   //  MiniMap *minimap;
 
-  QString action;
-  QString condition;
+  Structural::BindType action;
+  Structural::BindType condition;
 
   StructuralEntity* e_clip;
 };

@@ -12,6 +12,7 @@ StructuralBindDialog::StructuralBindDialog(QWidget *parent) :
 
 StructuralBindDialog::~StructuralBindDialog()
 {
+
   delete ui;
 }
 

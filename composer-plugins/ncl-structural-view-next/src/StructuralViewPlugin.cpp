@@ -47,6 +47,8 @@ void StructuralViewPlugin::createWidgets()
 
   window = new StructuralWindow();
   view = window->getView();
+
+  isConnector =false;
 }
 
 void StructuralViewPlugin::createConnections()
@@ -54,8 +56,8 @@ void StructuralViewPlugin::createConnections()
   connect(view, SIGNAL(inserted(QString,QString,QMap<QString,QString>,QMap<QString,QString>)),
           SLOT(notifyEntityAddedInView(QString,QString,QMap<QString,QString>,QMap<QString,QString>)));
 
-  //connect(view, SIGNAL(entityRemoved(QString)),
-  //              SLOT(notifyEntityDeletedInView(QString)));
+  connect(view, SIGNAL(removed(QString,QMap<QString,QString>)),
+                SLOT(notifyEntityDeletedInView(QString,QMap<QString,QString>)));
 
   //connect(view, SIGNAL(entityChanged(QString,QMap<QString,QString>)),
   //              SLOT(notifyEntityChangedInView(QString,QMap<QString,QString>)));
@@ -68,7 +70,7 @@ void StructuralViewPlugin::createConnections()
 
 void StructuralViewPlugin::init()
 {
-/******
+
   QString data = project->getPluginData("br.puc-rio.telemidia.nclstructural");
 
   QString startEntitiesSep = "~~VIEW-DATA~~";
@@ -83,7 +85,7 @@ void StructuralViewPlugin::init()
   QString mid = data.mid(indexOfStartEntitiesContent,
                          indexOfEndEntities - indexOfStartEntitiesContent);
 
-  //view->load(mid);
+  view->load(mid);
 
   startEntitiesSep = "~~PLUGIN-DATA~~";
   endEntitiesSep = "$END_ENTITIES_LINES$";
@@ -110,7 +112,7 @@ void StructuralViewPlugin::init()
 
     entities[coreID] = structuralID;
 
-    ///////////////////////
+    /*
     //Update user data
     if(view->hasEntity(structuralID))
     {
@@ -134,12 +136,11 @@ void StructuralViewPlugin::init()
         // }
       }
     }
+    */
 
     lastp = nextp+1;
     nextp = mid.indexOf("~", nextp+1);
-  ///////////////////////////
   }
-*****/
 }
 
 QWidget* StructuralViewPlugin::getWidget()
@@ -267,7 +268,12 @@ void StructuralViewPlugin::onEntityAdded(QString pluginID, Entity *entity)
   {
     if (request != "")
     {
-      entities[entity->getUniqueId()] = request;
+      if (isConnector)
+        xconnector_viewLink[request] = entity->getUniqueId();
+      else
+        entities[entity->getUniqueId()] = request;
+
+      isConnector = false;
     }
   }
 
@@ -375,10 +381,10 @@ void StructuralViewPlugin::changeSelectedEntity(QString pluginID, void* param)
 
 void StructuralViewPlugin::requestEntityAddition(Entity* entity)
 {
-//  QMap<QString, QString> properties;
+  QMap<QString, QString> properties;
 
-//  Structural::EntitySubtype type = StructuralUtil::getnstTypeFromStr(entity->getType());
-//  properties[":nst:subtype"] = StructuralUtil::getStrFromNstType(type);
+  Structural::EntityName type = StructuralUtil::getnstTypeFromStr(entity->getType());
+  properties["LOCAL:NAME"] = QString::number(type);
 
 //  switch (type) {
 //    case Structural::Body:
@@ -404,116 +410,132 @@ void StructuralViewPlugin::requestEntityAddition(Entity* entity)
 //    view->insert(entity->getUniqueId(), "", properties, settings);
 //  }
 
-  /*
+  bool ok = false;
+
+
   switch (type)
   {
-    case Qnst::Body:
+    case Structural::Body:
     {
       entities[entity->getUniqueId()] = entity->getUniqueId();
 
       if (entity->getAttribute("id") != "")
-        properties["id"] = entity->getAttribute("id");
+        properties["LOCAL:ID"] = entity->getAttribute("id");
 
       ok = true;
       break;
     }
 
-    case Qnst::Context:
+    case Structural::Context:
     {
       entities[entity->getUniqueId()] = entity->getUniqueId();
 
       if (entity->getAttribute("id") != "")
-        properties["id"] = entity->getAttribute("id");
+        properties["LOCAL:ID"] = entity->getAttribute("id");
 
       if (entity->getAttribute("refer") != "")
-        properties["refer"] = entity->getAttribute("refer");
+      {
+        properties["LOCAL:REFER:ID"] = entity->getAttribute("refer");
+
+        QString referUID = getUidById(properties["refer"]);
+        if(entities.contains(referUID))
+          properties["LOCAL:REFER:UID"] = entities[referUID];
+      }
 
       ok = true;
 
       break;
     }
 
-    case Qnst::Switch:
+    case Structural::Switch:
     {
       entities[entity->getUniqueId()] = entity->getUniqueId();
 
       if (entity->getAttribute("id") != "")
-        properties["id"] = entity->getAttribute("id");
+        properties["LOCAL:ID"] = entity->getAttribute("id");
 
       if (entity->getAttribute("refer") != "")
-        properties["refer"] = entity->getAttribute("refer");
+      {
+        properties["LOCAL:REFER:ID"] = entity->getAttribute("refer");
+
+        QString referUID = getUidById(properties["refer"]);
+        if(entities.contains(referUID))
+          properties["LOCAL:REFER:UID"] = entities[referUID];
+      }
 
       ok = true;
 
       break;
     }
 
-    case Qnst::Media:
+    case Structural::Media:
     {
       entities[entity->getUniqueId()] = entity->getUniqueId();
 
-      properties["id"] = entity->getAttribute("id");
-      properties["src"] = entity->getAttribute("src");
-      properties["refer"] = entity->getAttribute("refer");
-      properties["instance"] = entity->getAttribute("instance");
-      properties["type"] = entity->getAttribute("type");
-      properties["descriptor"] = entity->getAttribute("descriptor");
+      properties["LOCAL:ID"] = entity->getAttribute("id");
+      properties["LOCAL:SRC"] = entity->getAttribute("src");
+      properties["LOCAL:REFER:ID"] = entity->getAttribute("refer");
+      properties["LOCAL:INSTANCE"] = entity->getAttribute("instance");
+      properties["CPR:TYPE"] = entity->getAttribute("type");
+      properties["LOCAL:DESCRIPTOR"] = entity->getAttribute("descriptor");
 
       if (entity->getAttribute("refer") != "")
       {
         QString referUID = getUidById(properties["refer"]);
         if(entities.contains(referUID))
-          properties["referUID"] = entities[referUID];
+          properties["LOCAL:REFER:UID"] = entities[referUID];
       }
       else
       {
-        properties["referUID"] = "";
+        properties["LOCAL:REFER:UID"] = "";
       }
 
       // \fixme This must be made after the switch/case!!
-      if(entities.contains(entity->getParentUniqueId()))
-      {
-        //view->ref_addEntity(entity->getUniqueId(),
-        //                entities[entity->getParentUniqueId()],
-        //                properties);
+//      if(entities.contains(entity->getParentUniqueId()))
+//      {
+//        //view->ref_addEntity(entity->getUniqueId(),
+//        //                entities[entity->getParentUniqueId()],
+//        //                properties);
 
-        QList<Entity*> list;
+//        QList<Entity*> list;
 
-        list = getProject()->getEntitiesbyType("port");
+//        list = getProject()->getEntitiesbyType("port");
 
-        // update properties?
-        foreach(Entity* e, list)
-        {
-          if (e->getAttribute("component") != "" &&
-              e->getAttribute("component") == properties["id"])
-          {
-            requestEntityChange(e);
-          }
-        }
-      }
+//        // update properties?
+//        foreach(Entity* e, list)
+//        {
+//          if (e->getAttribute("component") != "" &&
+//              e->getAttribute("component") == properties["id"])
+//          {
+//            requestEntityChange(e);
+//          }
+//        }
+//      }
+
+      ok =true;
       break;
     }
 
-    case Qnst::Port:
+    case Structural::Port:
     {
       entities[entity->getUniqueId()] = entity->getUniqueId();
 
-      properties["id"] = entity->getAttribute("id");
+      properties["LOCAL:ID"] = entity->getAttribute("id");
 
-      properties["component"] = entity->getAttribute("component");
+      properties["LOCAL:COMPONENT:ID"] = entity->getAttribute("component");
       if (entity->getAttribute("component") != "")
       {
         QString componentUID = getUidById(properties["component"]);
         if(entities.contains(componentUID))
-          properties["componentUid"] = entities[componentUID];
+          properties["LOCAL:COMPONENT:UID"] = entities[componentUID];
       }
 
-      properties["interface"] = entity->getAttribute("interface");
+      properties["LOCAL:INTERFACE:ID"] = entity->getAttribute("interface");
       if (entity->getAttribute("interface") != "")
       {
           QString interfaceUID = getUidById(properties["interface"]);
           if(entities.contains(interfaceUID))
-            properties["interfaceUid"] = entities[interfaceUID];
+            properties["LOCAL:INTERFACE:UID"] = entities[interfaceUID];
       }
 
       ok = true;
@@ -521,22 +543,22 @@ void StructuralViewPlugin::requestEntityAddition(Entity* entity)
       break;
     }
 
-    case Qnst::Link:
+    case Structural::Link:
     {
       entities[entity->getUniqueId()] = entity->getUniqueId();
 
       if (entity->getAttribute("id") != "")
-        properties["id"] = entity->getAttribute("id");
+        properties["LOCAL:ID"] = entity->getAttribute("id");
 
       if (entity->getAttribute("xconnector") != "")
       {
-        properties["xconnector"] = entity->getAttribute("xconnector");
+        properties["LOCAL:XCONNECTOR:ID"] = entity->getAttribute("xconnector");
 
         QString xconnectorUID = getUidById(properties["xconnector"]);
         if(entities.contains(xconnectorUID))
-          properties["xconnectorUID"] = entities[xconnectorUID];
+          properties["LOCAL:XCONNECTOR:UID"] = entities[xconnectorUID];
         else
-          properties["xconnectorUID"] = "";
+          properties["LOCAL:XCONNECTOR:UID"] = "";
       }
 
       ok = true;
@@ -544,125 +566,125 @@ void StructuralViewPlugin::requestEntityAddition(Entity* entity)
       break;
     }
 
-    case Qnst::Bind:
+//    case Structural::Bind:
+//    {
+//      entities[entity->getUniqueId()] = entity->getUniqueId();
+
+//      properties["role"] = entity->getAttribute("role");
+//      properties["component"] = entity->getAttribute("component");
+
+//      QString comUID = "";
+//      if (entity->getAttribute("component") != "")
+//      {
+//        comUID = getUidById(properties["component"]);
+//        if(entities.contains(comUID))
+//          properties["componentUid"] = entities[comUID];
+//        else
+//          properties["componentUid"] = "";
+//      }
+//      else
+//      {
+//        properties["componentUid"] = "";
+//      }
+
+//      properties["interface"] = entity->getAttribute("interface");
+
+//      if (entity->getAttribute("interface") != "")
+//      {
+//        Entity* cmp = getProject()->getEntityById(comUID);
+//        if(cmp != NULL)
+//        {
+//          QString intUID = "";
+//          foreach(Entity* c, cmp->getChildren())
+//          {
+//            if (c->getAttribute("id") == entity->getAttribute("interface") ||
+//                c->getAttribute("name") == entity->getAttribute("interface"))
+//            {
+//              intUID = c->getUniqueId();
+//              break;
+//            }
+//          }
+
+//        if(entities.contains(intUID))
+//         properties["interfaceUid"] = entities[intUID];
+//        else
+//          properties["interfaceUid"] = "";
+//        }
+//      }
+//      else
+//      {
+//        properties["interfaceUid"] = "";
+//      }
+
+//      properties["linkUID"] = entities[entity->getParentUniqueId()];
+
+//      ok = true;
+//      break;
+//    }
+
+    case Structural::Property:
     {
       entities[entity->getUniqueId()] = entity->getUniqueId();
 
-      properties["role"] = entity->getAttribute("role");
-      properties["component"] = entity->getAttribute("component");
-
-      QString comUID = "";
-      if (entity->getAttribute("component") != "")
-      {
-        comUID = getUidById(properties["component"]);
-        if(entities.contains(comUID))
-          properties["componentUid"] = entities[comUID];
-        else
-          properties["componentUid"] = "";
-      }
-      else
-      {
-        properties["componentUid"] = "";
-      }
-
-      properties["interface"] = entity->getAttribute("interface");
-
-      if (entity->getAttribute("interface") != "")
-      {
-        Entity* cmp = getProject()->getEntityById(comUID);
-        if(cmp != NULL)
-        {
-          QString intUID = "";
-          foreach(Entity* c, cmp->getChildren())
-          {
-            if (c->getAttribute("id") == entity->getAttribute("interface") ||
-                c->getAttribute("name") == entity->getAttribute("interface"))
-            {
-              intUID = c->getUniqueId();
-              break;
-            }
-          }
-
-        if(entities.contains(intUID))
-         properties["interfaceUid"] = entities[intUID];
-        else
-          properties["interfaceUid"] = "";
-        }
-      }
-      else
-      {
-        properties["interfaceUid"] = "";
-      }
-
-      properties["linkUID"] = entities[entity->getParentUniqueId()];
+      properties["LOCAL:ID"] = entity->getAttribute("name");
 
       ok = true;
       break;
     }
 
-    case Qnst::Property:
+    case Structural::Area:
     {
       entities[entity->getUniqueId()] = entity->getUniqueId();
 
-      properties["id"] = entity->getAttribute("name");
+      properties["LOCAL:ID"] = entity->getAttribute("id");
 
       ok = true;
       break;
     }
 
-    case Qnst::Area:
+    case Structural::SwitchPort:
     {
       entities[entity->getUniqueId()] = entity->getUniqueId();
 
-      properties["id"] = entity->getAttribute("id");
+      properties["LOCAL:ID"] = entity->getAttribute("id");
 
       ok = true;
       break;
     }
 
-    case Qnst::SwitchPort:
-    {
-      entities[entity->getUniqueId()] = entity->getUniqueId();
+//    case Structural::Mapping:
+//    {
+//      entities[entity->getUniqueId()] = entity->getUniqueId();
 
-      properties["id"] = entity->getAttribute("id");
+//      properties["component"] = entity->getAttribute("component");
+//      if (entity->getAttribute("component") != "")
+//      {
+//        QString componentUID = getUidById(properties["component"]);
+//        if(entities.contains(componentUID))
+//          properties["componentUid"] = entities[componentUID];
+//      }
 
-      ok = true;
-      break;
-    }
+//      properties["interface"] = entity->getAttribute("interface");
+//      if (entity->getAttribute("interface") != "")
+//      {
+//        QString interfaceUID = getUidById(properties["interface"]);
+//        if(entities.contains(interfaceUID))
+//          properties["interfaceUid"] = entities[interfaceUID];
+//      }
 
-    case Qnst::Mapping:
-    {
-      entities[entity->getUniqueId()] = entity->getUniqueId();
+//      ok = true;
+//      break;
+//    }
 
-      properties["component"] = entity->getAttribute("component");
-      if (entity->getAttribute("component") != "")
-      {
-        QString componentUID = getUidById(properties["component"]);
-        if(entities.contains(componentUID))
-          properties["componentUid"] = entities[componentUID];
-      }
+//    case Structural::BindParam:
+//    {
+//      // \fixme Why we do not add to entities map ??
+//      properties["name"] = entity->getAttribute("name");
+//      properties["value"] = entity->getAttribute("value");
 
-      properties["interface"] = entity->getAttribute("interface");
-      if (entity->getAttribute("interface") != "")
-      {
-        QString interfaceUID = getUidById(properties["interface"]);
-        if(entities.contains(interfaceUID))
-          properties["interfaceUid"] = entities[interfaceUID];
-      }
-
-      ok = true;
-      break;
-    }
-
-    case Qnst::BindParam:
-    {
-      // \fixme Why we do not add to entities map ??
-      properties["name"] = entity->getAttribute("name");
-      properties["value"] = entity->getAttribute("value");
-
-      ok = true;
-      break;
-    }
+//      ok = true;
+//      break;
+//    }
 
     default:
       // do nothing!!
@@ -672,56 +694,58 @@ void StructuralViewPlugin::requestEntityAddition(Entity* entity)
 
   if(ok)
   {
+    QMap<QString,QString> settings;
+    settings["UNDO"] = "1";
+    settings["NOTIFY"] = "0";
+    settings["CODE"] = StructuralUtil::createUid();
+
+    QString parentUID = entity->getParentUniqueId();
+
     // if it is body we are with no parent
-    if(type == Qnst::Body)
+    if(type == Structural::Body)
     {
-      //view->ref_addEntity(entity->getUniqueId(), "", properties);
+      parentUID = "";
     }
     // otherwise, we need to set add with a parent
     else
     {
-      QString parentUID = entity->getParentUniqueId();
-     // if(entities.contains(parentUID))
-        //view->ref_addEntity(entity->getUniqueId(), entities[parentUID], properties);
-     // else
-      //   qWarning() << "QnstPlugin:: You are trying to add a "
-      //              << entity->getType()
-       //             << " inside an entity that does not exists.";
+      parentUID = entity->getParentUniqueId();
     }
+
+    view->insert(entity->getUniqueId(), parentUID, properties, settings);
   }
-  else
-  {
-    // Special cases!! We do not have Qnst::EntityType defined!!
-    if (entity->getType() == "causalConnector")
-    {
-      entities[entity->getUniqueId()] = entity->getUniqueId();
+//  else
+//  {
+//    // Special cases!! We do not have Qnst::EntityType defined!!
+//    if (entity->getType() == "causalConnector")
+//    {
+//      entities[entity->getUniqueId()] = entity->getUniqueId();
 
-      requestCausalConnectorAddition(entity);
-    }
-    else if (entity->getType() == "simpleCondition")
-    {
-      entities[entity->getUniqueId()] = entity->getUniqueId();
+//      requestCausalConnectorAddition(entity);
+//    }
+//    else if (entity->getType() == "simpleCondition")
+//    {
+//      entities[entity->getUniqueId()] = entity->getUniqueId();
 
-      requestSimpleConditionAddition(entity);
-    }
-    else if (entity->getType() == "simpleAction")
-    {
-      entities[entity->getUniqueId()] = entity->getUniqueId();
+//      requestSimpleConditionAddition(entity);
+//    }
+//    else if (entity->getType() == "simpleAction")
+//    {
+//      entities[entity->getUniqueId()] = entity->getUniqueId();
 
-      requestSimpleActionAddition(entity);
-    }
-    else if (entity->getType() == "importBase")
-    {
-      entities[entity->getUniqueId()] = entity->getUniqueId();
-      requestImportBaseAddition(entity);
-    }
-    else if (entity->getType() == "connectorParam")
-    {
-      entities[entity->getUniqueId()] = entity->getUniqueId();
-      requestConnectorParamAddition(entity);
-    }
-  }
-  */
+//      requestSimpleActionAddition(entity);
+//    }
+//    else if (entity->getType() == "importBase")
+//    {
+//      entities[entity->getUniqueId()] = entity->getUniqueId();
+//      requestImportBaseAddition(entity);
+//    }
+//    else if (entity->getType() == "connectorParam")
+//    {
+//      entities[entity->getUniqueId()] = entity->getUniqueId();
+//      requestConnectorParamAddition(entity);
+//    }
+//  }
 }
 
 void StructuralViewPlugin::requestEntityRemotion(Entity* entity)
@@ -743,286 +767,283 @@ void StructuralViewPlugin::requestEntityChange(Entity* entity)
 {
   QMap<QString, QString> properties;
 
-  /*
+
   // get the qnst type based on NCL Composer Type
-  int type = QnstUtil::getnstTypeFromStr(entity->getType());
+  int type = StructuralUtil::getnstTypeFromStr(entity->getType());
 
   bool ok = false;
 
   switch (type)
   {
-    case Qnst::Body:
+    case Structural::Body:
     {
       if (entity->getAttribute("id") != "")
-        properties["id"] = entity->getAttribute("id");
+        properties["LOCAL:ID"] = entity->getAttribute("id");
 
       ok = true;
       break;
     }
-    case Qnst::Context:
-    case Qnst::Switch:
+    case Structural::Context:
+    case Structural::Switch:
     {
       if (entity->getAttribute("id") != "")
-        properties["id"] = entity->getAttribute("id");
+        properties["LOCAL:ID"] = entity->getAttribute("id");
 
       if (entity->getAttribute("refer") != "")
-        properties["refer"] = entity->getAttribute("refer");
+      {
+        properties["LOCAL:REFER:ID"] = entity->getAttribute("refer");
+
+        QString referUID = getUidById(properties["refer"]);
+        if(entities.contains(referUID))
+          properties["LOCAL:REFER:UID"] = entities[referUID];
+      }
 
       ok = true;
       break;
     }
 
-    case Qnst::Media:
+    case Structural::Media:
     {
-      properties["id"] = entity->getAttribute("id");
-      properties["src"] = entity->getAttribute("src");
-      properties["refer"] = entity->getAttribute("refer");
-      properties["instance"] = entity->getAttribute("instance");
-      properties["type"] = entity->getAttribute("type");
-      properties["descriptor"] = entity->getAttribute("descriptor");
+      properties["LOCAL:ID"] = entity->getAttribute("id");
+      properties["LOCAL:SRC"] = entity->getAttribute("src");
+      properties["LOCAL:REFER:ID"] = entity->getAttribute("refer");
+      properties["LOCAL:INSTANCE"] = entity->getAttribute("instance");
+      properties["CPR:TYPE"] = entity->getAttribute("type");
+      properties["LOCAL:DESCRIPTOR"] = entity->getAttribute("descriptor");
 
-      if(properties["refer"] != "")
+      if (entity->getAttribute("refer") != "")
       {
         QString referUID = getUidById(properties["refer"]);
         if(entities.contains(referUID))
-          properties["referUID"] = entities[referUID];
+          properties["LOCAL:REFER:UID"] = entities[referUID];
       }
       else
       {
-        properties["referUID"] = "";
+        properties["LOCAL:REFER:UID"] = "";
       }
 
       //if(entities.contains(entity->getUniqueId()))
         //view->ref_changeEntity( entities[entity->getUniqueId()],
         //                    properties);
 
-      QList<Entity*> list;
-      list = getProject()->getEntitiesbyType("port");
+//      QList<Entity*> list;
+//      list = getProject()->getEntitiesbyType("port");
 
-      foreach(Entity* e, list){
-        if (e->getAttribute("component") != "")
-        {
-          if (e->getAttribute("component") == properties["id"])
-          {
-            requestEntityChange(e);
-          }
-        }
-      }
+//      foreach(Entity* e, list){
+//        if (e->getAttribute("component") != "")
+//        {
+//          if (e->getAttribute("component") == properties["id"])
+//          {
+//            requestEntityChange(e);
+//          }
+//        }
+//      }
 
       ok = true;
       break;
     }
 
-    case Qnst::Port:
+    case Structural::Port:
     {
-      properties["id"] = entity->getAttribute("id");
-      properties["component"] = entity->getAttribute("component");
+      properties["LOCAL:ID"] = entity->getAttribute("id");
+
+      properties["LOCAL:COMPONENT:ID"] = entity->getAttribute("component");
       if (entity->getAttribute("component") != "")
       {
         QString componentUID = getUidById(properties["component"]);
         if(entities.contains(componentUID))
-          properties["componentUid"] = entities[componentUID];
+          properties["LOCAL:COMPONENT:UID"] = entities[componentUID];
       }
 
-      if (properties["componentUid"] != "")
+      properties["LOCAL:INTERFACE:ID"] = entity->getAttribute("interface");
+      if (entity->getAttribute("interface") != "")
       {
-        properties["interface"] = entity->getAttribute("interface");
-        if (entity->getAttribute("interface") != "")
-        {
-          QString interfaceUID = "";
-
-          interfaceUID = getUidById(properties["interface"]);
-
-          if (interfaceUID == "")
-          {
-             interfaceUID = getUidByName(properties["interface"],
-                              getProject()->getEntityById(
-                                getUidById(properties["component"])));;
-          }
-
+          QString interfaceUID = getUidById(properties["interface"]);
           if(entities.contains(interfaceUID))
-            properties["interfaceUid"] = entities[interfaceUID];
-        }
+            properties["LOCAL:INTERFACE:UID"] = entities[interfaceUID];
       }
 
       ok = true;
       break;
     }
 
-    case Qnst::Link:
+//    case Structural::Link:
+//    {
+//      if (entity->getAttribute("id") != "")
+//        properties["id"] = entity->getAttribute("id");
+
+//      if (entity->getAttribute("xconnector") != "")
+//      {
+//        properties["xconnector"] = entity->getAttribute("xconnector");
+//        if(entities.contains(getUidById(properties["xconnector"])))
+//        {
+//          properties["xconnectorUID"] =
+//              entities[getUidById(properties["xconnector"])];
+//        }
+//        else
+//          properties["xconnectorUID"] = "";
+//      }
+
+//      ok = true;
+//      break;
+//    }
+
+//    case Structural::Bind:
+//    case Structural::Action:
+//    case Structural::Condition:
+//    {
+//      properties["TYPE"] = "bind";
+//      properties["role"] = entity->getAttribute("role");
+//      properties["component"] = entity->getAttribute("component");
+
+//      QString comUID = "";
+//      if (entity->getAttribute("component") != "")
+//      {
+//        comUID = getUidById(properties["component"]);
+//        if(entities.contains(comUID))
+//          properties["componentUid"] = entities[comUID];
+//        else
+//          properties["componentUid"] = "";
+//      }
+//      else
+//      {
+//        properties["componentUid"] = "";
+//      }
+
+//      properties["interface"] = entity->getAttribute("interface");
+//      if (entity->getAttribute("interface") != "")
+//      {
+//        Entity* cmp = getProject()->getEntityById(comUID);
+
+//        if(cmp != NULL)
+//        {
+//          QString intUID = "";
+//          foreach(Entity* c, cmp->getChildren())
+//          {
+//            if (c->getAttribute("id") == entity->getAttribute("interface") ||
+//                c->getAttribute("name") == entity->getAttribute("interface"))
+//            {
+//              intUID = c->getUniqueId();
+//              break;
+//            }
+//          }
+
+//          if(entities.contains(intUID))
+//            properties["interfaceUid"] = entities[intUID];
+//          else
+//            properties["interfaceUid"] = "";
+//        }
+//      }
+//      else
+//      {
+//        properties["interfaceUid"] = "";
+//      }
+
+//      // get the parent
+//      properties["linkUID"] = entities[entity->getParentUniqueId()];
+
+//      ok = true;
+//      break;
+//    }
+
+    case Structural::Area:
     {
-      if (entity->getAttribute("id") != "")
-        properties["id"] = entity->getAttribute("id");
-
-      if (entity->getAttribute("xconnector") != "")
-      {
-        properties["xconnector"] = entity->getAttribute("xconnector");
-        if(entities.contains(getUidById(properties["xconnector"])))
-        {
-          properties["xconnectorUID"] =
-              entities[getUidById(properties["xconnector"])];
-        }
-        else
-          properties["xconnectorUID"] = "";
-      }
+      properties["LOCAL:ID"] = entity->getAttribute("id");
 
       ok = true;
       break;
     }
 
-    case Qnst::Bind:
-    case Qnst::Action:
-    case Qnst::Condition:
+    case Structural::Property:
     {
-      properties["TYPE"] = "bind";
-      properties["role"] = entity->getAttribute("role");
-      properties["component"] = entity->getAttribute("component");
-
-      QString comUID = "";
-      if (entity->getAttribute("component") != "")
-      {
-        comUID = getUidById(properties["component"]);
-        if(entities.contains(comUID))
-          properties["componentUid"] = entities[comUID];
-        else
-          properties["componentUid"] = "";
-      }
-      else
-      {
-        properties["componentUid"] = "";
-      }
-
-      properties["interface"] = entity->getAttribute("interface");
-      if (entity->getAttribute("interface") != "")
-      {
-        Entity* cmp = getProject()->getEntityById(comUID);
-
-        if(cmp != NULL)
-        {
-          QString intUID = "";
-          foreach(Entity* c, cmp->getChildren())
-          {
-            if (c->getAttribute("id") == entity->getAttribute("interface") ||
-                c->getAttribute("name") == entity->getAttribute("interface"))
-            {
-              intUID = c->getUniqueId();
-              break;
-            }
-          }
-
-          if(entities.contains(intUID))
-            properties["interfaceUid"] = entities[intUID];
-          else
-            properties["interfaceUid"] = "";
-        }
-      }
-      else
-      {
-        properties["interfaceUid"] = "";
-      }
-
-      // get the parent
-      properties["linkUID"] = entities[entity->getParentUniqueId()];
+      properties["LOCAL:ID"] = entity->getAttribute("name");
 
       ok = true;
       break;
     }
 
-    case Qnst::Area:
+    case Structural::SwitchPort:
     {
-      properties["TYPE"] = "area"; // Do I need that?
-      properties["id"] = entity->getAttribute("id");
-
+      properties["LOCAL:ID"] = entity->getAttribute("id");
       ok = true;
       break;
     }
 
-    case Qnst::Property:
-    {
-      properties["TYPE"] = "property"; // Do I need that?
-      properties["id"] = entity->getAttribute("name");
+//    case Structural::Mapping:
+//    {
+//      properties["component"] = entity->getAttribute("component");
+//      if (entity->getAttribute("component") != "")
+//      {
+//        QString componentUID = getUidById(properties["component"]);
+//        if(entities.contains(componentUID))
+//          properties["componentUid"] = entities[componentUID];
+//      }
 
-      ok = true;
-      break;
-    }
+//      properties["interface"] = entity->getAttribute("interface");
+//      if (entity->getAttribute("interface") != "")
+//      {
+//        QString interfaceUID = getUidById(properties["interface"]);
+//        if(entities.contains(interfaceUID))
+//          properties["interfaceUid"] = entities[interfaceUID];
+//      }
 
-    case Qnst::SwitchPort:
-    {
-      properties["id"] = entity->getAttribute("id");
-      ok = true;
-      break;
-    }
+//      ok = true;
+//      break;
+//    }
 
-    case Qnst::Mapping:
-    {
-      properties["component"] = entity->getAttribute("component");
-      if (entity->getAttribute("component") != "")
-      {
-        QString componentUID = getUidById(properties["component"]);
-        if(entities.contains(componentUID))
-          properties["componentUid"] = entities[componentUID];
-      }
+//    case Structural::BindParam:
+//    {
+//      properties["TYPE"] = "bindParam";
 
-      properties["interface"] = entity->getAttribute("interface");
-      if (entity->getAttribute("interface") != "")
-      {
-        QString interfaceUID = getUidById(properties["interface"]);
-        if(entities.contains(interfaceUID))
-          properties["interfaceUid"] = entities[interfaceUID];
-      }
+//      properties["name"] = entity->getAttribute("name");
+//      properties["value"] = entity->getAttribute("value");
+//      properties["parent"] = entities[entity->getParentUniqueId()];
 
-      ok = true;
-      break;
-    }
-
-    case Qnst::BindParam:
-    {
-      properties["TYPE"] = "bindParam";
-
-      properties["name"] = entity->getAttribute("name");
-      properties["value"] = entity->getAttribute("value");
-      properties["parent"] = entities[entity->getParentUniqueId()];
-
-      ok = true;
-      break;
-    }
+//      ok = true;
+//      break;
+//    }
   }
 
-  if(ok)
+  if(!ok)
   {
-    //if(entities.contains(entity->getUniqueId()))
-      //view->ref_changeEntity(entities[entity->getUniqueId()], properties);
-  //  else
-    //  qWarning() << "QnstPlugin:: You are trying to EDIT an entity that does not exists.";
-  }
-  else
-  {
-    // Special cases!! We do not have Qnst::EntityType defined!!
-    if (entity->getType() == "causalConnector")
+    if(entities.contains(entity->getUniqueId()))
     {
-      requestCausalConnectorChange(entity);
-    }
-    // if the entity is of type SimpleCondition
-    else if (entity->getType() == "simpleCondition")
-    {
-      requestSimpleConditionChange(entity);
-    }
-    // if the entity is of type SimpleAction
-    else if (entity->getType() == "simpleAction")
-    {
-      requestSimpleActionChange(entity);
-    }
-    // if the entity is of type ImportBase
-    else if (entity->getType() == "importBase")
-    {
-      requestImportBaseChange(entity);
-    }
-    else if (entity->getType() == "connectorParam")
-    {
-      // \fixme Do what ?
+
+    QMap<QString,QString> settings;
+    settings["UNDO"] = "1";
+    settings["NOTIFY"] = "0";
+    settings["CODE"] = StructuralUtil::createUid();
+
+    view->change(entities[entity->getUniqueId()], properties, view->getEntity(entities[entity->getUniqueId()])->getLocalProperties(), settings);
     }
   }
-  */
+//  else
+//  {
+//    // Special cases!! We do not have Qnst::EntityType defined!!
+//    if (entity->getType() == "causalConnector")
+//    {
+//      requestCausalConnectorChange(entity);
+//    }
+//    // if the entity is of type SimpleCondition
+//    else if (entity->getType() == "simpleCondition")
+//    {
+//      requestSimpleConditionChange(entity);
+//    }
+//    // if the entity is of type SimpleAction
+//    else if (entity->getType() == "simpleAction")
+//    {
+//      requestSimpleActionChange(entity);
+//    }
+//    // if the entity is of type ImportBase
+//    else if (entity->getType() == "importBase")
+//    {
+//      requestImportBaseChange(entity);
+//    }
+//    else if (entity->getType() == "connectorParam")
+//    {
+//      // \fixme Do what ?
+//    }
+//  }
 }
 
 void StructuralViewPlugin::requestEntitySelection(Entity* entity)
@@ -1487,22 +1508,26 @@ void StructuralViewPlugin::notifyEntityAddedInView(const QString uid,
       break;
     }
 
-//    case Qnst::Link:
-//    {
-//      attributes["id"] = properties["id"];
-//      attributes["xconnector"] = properties["xconnector"];
+    case Structural::Link:
+    {
+      attributes["id"] = properties["LOCAL:ID"];
 
-//      mustEmitAddEntity = true;
-//      request = uid;
-//      break;
-//    }
 
-//    case Qnst::Bind:
-//    {
-//      requestBindAddition(uid, parent, properties);
-//      mustEmitAddEntity = false; // the add is made inside requestBindAddition!!!
-//      break;
-//    }
+      requestConnectorAddition(uid, parent, properties);
+
+      attributes["xconnector"] = "conn_"+properties["LOCAL:ID"];
+
+      mustEmitAddEntity = true;
+      request = uid;
+      break;
+    }
+
+    case Structural::Bind:
+    {
+      requestBindAddition(uid, parent, properties);
+      mustEmitAddEntity = false; // the add is made inside requestBindAddition!!!
+      break;
+    }
 
     case Structural::Area:
     {
@@ -1563,7 +1588,7 @@ void StructuralViewPlugin::notifyEntityAddedInView(const QString uid,
   if(mustEmitAddEntity && entity != NULL) // Everything is ok, so add my new entity
   {
     request = uid;
-    emit addEntity(properties["LOCAL:NAME"],
+    emit addEntity(StructuralUtil::getStrFromNstType((Structural::EntityName) properties["LOCAL:NAME"].toInt()),
                    entity->getUniqueId(), attributes, false);
     request = "";
 
@@ -1579,7 +1604,7 @@ void StructuralViewPlugin::notifyEntityAddedInView(const QString uid,
 
 }
 
-void StructuralViewPlugin::notifyEntityDeletedInView(const QString uid)
+void StructuralViewPlugin::notifyEntityDeletedInView(const QString uid, QMap<QString, QString> settings)
 {
   if (entities.key(uid, "nil") != "nil")
   {
@@ -1772,25 +1797,21 @@ void StructuralViewPlugin::requestConnectorAddition(const QString uid,
     {
       QMap<QString, QString> attributes;
 
-      attributes["id"] = properties["id"];
+      attributes["id"] = "conn_"+properties["LOCAL:ID"];
 
+      isConnector = true;
       request = uid;
       emit addEntity("causalConnector", entity->getUniqueId(), attributes, false);
       request = "";
 
-      // condition
-      QMap<QString, QString> cattributes;
-      cattributes["role"] = properties["condition"];
-      cattributes["max"] = "unbounded";
+      QMap<QString, QString> attrs;
+      attrs["operator"] = "and";
 
-      emit addEntity("simpleCondition", entities.key(uid), cattributes, false);
+      emit addEntity("compoundCondition", xconnector_viewLink.value(uid), attrs, false);
 
-      // action
-      QMap<QString, QString> aattributes;
-      aattributes["role"] = properties["action"].toLower();
-      aattributes["max"] = "unbounded";
+      attrs["operator"] = "par";
+      emit addEntity("compoundAction", xconnector_viewLink.value(uid), attrs, false);
 
-      emit addEntity("simpleAction", entities.key(uid), aattributes, false);
     }
   }
 }
@@ -1913,19 +1934,8 @@ void StructuralViewPlugin::requestBindAddition(const QString uid,
                                              const QString parent,
                                        const QMap<QString, QString> &properties)
 {
-  // checking connector
-  QList<Entity*> connectors = getProject()->getEntitiesbyType("causalConnector");
 
-  QString connUID = "";
-
-  foreach(Entity* conn, connectors)
-  {
-    if (conn->getAttribute("id") == properties["connector"])
-    {
-      connUID = conn->getUniqueId();
-      break;
-    }
-  }
+  QString connUID = xconnector_viewLink.value(properties["LOCAL:LINK:UID"]);
 
   QString cpcUID = "";
   QString cpaUID = "";
@@ -1948,125 +1958,67 @@ void StructuralViewPlugin::requestBindAddition(const QString uid,
 
   if (cpcUID != "" && cpaUID != "")
   {
-    if (properties["condition"] != "")
-    {
-      bool hasCond = false;
-      Entity *cmp = getProject()->getEntityById(cpcUID);
-      if(cmp != NULL)
-      {
-        foreach(Entity* child, cmp->getChildren())
-        {
-          if (child->getAttribute("role") == properties["condition"])
-          {
-            hasCond = true;
-            break;
-          }
-        }
-      }
 
-      if (!hasCond)
-      {
-        QMap<QString, QString> cattributes;
-
-        cattributes["role"] = properties["condition"];
-
-        emit addEntity("simpleCondition", cpcUID, cattributes, false);
-      }
-    }
-
-    if (properties["action"] != "")
-    {
-      bool hasAct = false;
-
-      Entity *cmp = getProject()->getEntityById(cpaUID);
-      if(cmp != NULL)
-      {
-        foreach(Entity* child, cmp->getChildren())
-        {
-          if (child->getAttribute("role") == properties["action"].toLower())
-          {
-            hasAct = true;
-            break;
-          }
-        }
-      }
-
-      if (!hasAct)
-      {
-        QMap<QString, QString> aattributes;
-        aattributes["role"] = properties["action"].toLower();
-
-        emit addEntity("simpleAction", cpaUID, aattributes, false);
-      }
-    }
-  }
-
-  //checking link
-  QList<Entity*> links = getProject()->getEntitiesbyType("link");
-
-  QString liknUID = "";
-
-  foreach(Entity* link, links)
-  {
-    if (link->getAttribute("id") == properties["link"])
-    {
-      liknUID = link->getUniqueId();
-      break;
-    }
-  }
-
-  if (liknUID == "")
-  {
-    QMap<QString, QString> linkattributes;
-
-    linkattributes["id"] = properties["link"];
-    linkattributes["xconnector"] = properties["connector"];
-
-    if (properties["linkUID"] != "")
-      request = properties["linkUID"];
-    else
-      request = QUuid::createUuid().toString();
-
-    // \todo This could results in a Null pointer.
-    emit addEntity("link",
-                   getProject()->getEntityById(entities.key(parent))->getUniqueId(),
-                   linkattributes, false);
-    request = "";
-
-    liknUID = getUidById(linkattributes["id"]);
-  }
-
-  // add bind
-  if (properties["condition"] != "")
-  {
-    // bind condition
     QMap<QString, QString> cattributes;
+    cattributes["max"] = "unbounded";
+    cattributes["role"] = StructuralUtil::getStrFromBindType((Structural::BindType) properties["LOCAL:BIND"].toInt());
 
-    cattributes["role"] = properties["condition"];
-    cattributes["component"] = properties["component"];
+    if (StructuralUtil::isCondition((Structural::BindType) properties["LOCAL:BIND"].toInt()))
+    {
+      Entity* cpc_entity = getProject()->getEntityById(cpcUID);
 
-    if (properties["interface"] != "")
-      cattributes["interface"] = properties["interface"];
+      bool alreadyHad = false;
 
-    request = uid;
-    emit addEntity("bind", liknUID, cattributes, false);
-    request = "";
+      foreach (Entity *e_child, cpc_entity->getChildren()) {
+        if (e_child->getAttribute("role") == cattributes["role"])
+        {
+          alreadyHad = true; break;
+        }
+      }
 
-  }
-  else if (properties["action"] != "")
-  {
-    // bind action
-    QMap<QString, QString> aattributes;
+      if (!alreadyHad)
+        emit addEntity("simpleCondition", cpcUID, cattributes, false);
 
-    aattributes["role"] = properties["action"].toLower();
-    aattributes["component"] = properties["component"];
+      QMap<QString, QString> battributes;
 
-    if (properties["interface"] != "")
-      aattributes["interface"] = properties["interface"];
+      battributes["role"] = cattributes["role"];
+      battributes["component"] = properties["LOCAL:COMPONENT:ID"];
 
-    request = uid;
-    emit addEntity("bind", liknUID, aattributes, false);
-    request = "";
+      if (properties["LOCAL:INTERFACE:ID"] != "")
+        battributes["interface"] = properties["LOCAL:INTERFACE:ID"];
+
+      request = uid;
+      emit addEntity("bind", entities.key(properties["LOCAL:LINK:UID"]), battributes, false);
+      request = "";
+    }
+    else
+    {
+      Entity* cpa_entity = getProject()->getEntityById(cpaUID);
+
+      bool alreadyHad = false;
+
+      foreach (Entity *e_child, cpa_entity->getChildren()) {
+        if (e_child->getAttribute("role") == cattributes["role"])
+        {
+          alreadyHad = true; break;
+        }
+      }
+
+      if (!alreadyHad)
+        emit addEntity("simpleAction", cpaUID, cattributes, false);
+
+      QMap<QString, QString> battributes;
+
+      battributes["role"] = cattributes["role"];
+      battributes["component"] = properties["LOCAL:COMPONENT:ID"];
+
+      if (properties["LOCAL:INTERFACE:ID"] != "")
+        battributes["interface"] = properties["LOCAL:INTERFACE:ID"];
+
+      request = uid;
+      emit addEntity("bind", entities.key(properties["LOCAL:LINK:UID"]), battributes, false);
+      request = "";
+    }
   }
 }
 

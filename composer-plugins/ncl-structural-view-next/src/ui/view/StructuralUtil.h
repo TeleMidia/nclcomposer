@@ -74,6 +74,9 @@ public:
    */
   static QString getPrefixIdFromType(Structural::EntityName type);
 
+
+  static bool isCondition(Structural::BindType btype);
+
   /*!
    * \brief Returns the Qnst::BindType related to the string role passed as
    *    parameter.

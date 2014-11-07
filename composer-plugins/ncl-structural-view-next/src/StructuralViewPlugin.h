@@ -69,7 +69,7 @@ public slots:
   void notifyEntityAddedInView (const QString uid, const QString parent,
                                 QMap<QString, QString> properties, QMap<QString, QString> settings);
 
-  void notifyEntityDeletedInView(const QString uid);
+  void notifyEntityDeletedInView(const QString uid, QMap<QString, QString> settings);
 
   void notifyEntityChangedInView(const QString uid,
                                  QMap<QString, QString> properties);
@@ -131,12 +131,16 @@ private:
 private:
   int n;
 
+  bool isConnector;
+
   StructuralView* view;
   StructuralWindow* window;
 
   QString request;
   QMap <QString, QString> entities; // core -> structural
   QMap <QString, QString> nclIDtoStructural; // nclId -> structural ID
+
+  QMap <QString, QString> xconnector_viewLink; // nclId -> structural ID
   QList <QString> dirtyEntities;
   QList <QString> previousCoreID;
 

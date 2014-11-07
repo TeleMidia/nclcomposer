@@ -76,6 +76,7 @@ RESOURCES += \
   ../common-resources/images.qrc
 
 FORMS += \
+    ui/StructuralBindDialog.ui \
     ui/StructuralBindDialog.ui
 
 INSTALLS = \
