@@ -153,16 +153,16 @@ private:
   QString *_selectedId;
 
   /* Functions to handle the "sinchronization with core" */
-  bool isSyncingFromTextual;
-  void cacheNCLIds();
-  QString insertNCLIDIfEmpty(Entity *entity);
-  QString getNCLIdFromEntity(Entity *entity);
+//  bool isSyncingFromTextual;
+//  void cacheNCLIds();
+//  QString insertNCLIDIfEmpty(Entity *entity);
+//  QString getNCLIdFromEntity(Entity *entity);
   bool isEntityHandled(Entity *entity);
-  void syncNCLIdsWithStructuralIds();
+//  void syncNCLIdsWithStructuralIds();
 
 public slots:
-  void textualStartSync(QString, void*); /* from textual plugin */
-  void textualFinishSync(QString, void*); /* from textual plugin */
+//  void textualStartSync(QString, void*); /* from textual plugin */
+//  void textualFinishSync(QString, void*); /* from textual plugin */
   /* End "synchronization with core". */
 };
 

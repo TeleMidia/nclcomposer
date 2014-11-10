@@ -32,7 +32,7 @@ StructuralViewPlugin::StructuralViewPlugin(QObject* parent)
 
   request = "";
 
-  isSyncingFromTextual = false;
+//  isSyncingFromTextual = false;
 }
 
 StructuralViewPlugin::~StructuralViewPlugin()
@@ -311,11 +311,11 @@ void StructuralViewPlugin::errorMessage(QString error)
 
 void StructuralViewPlugin::onEntityChanged(QString pluginID, Entity *entity)
 {
-  if(isSyncingFromTextual)
-  {
-    dirtyEntities.push_back(entity->getUniqueId());
-    return;
-  }
+//  if(isSyncingFromTextual)
+//  {
+//    dirtyEntities.push_back(entity->getUniqueId());
+//    return;
+//  }
 
   if (pluginID != getPluginInstanceID() && !pluginID.isEmpty())
     requestEntityChange(entity);
@@ -350,7 +350,7 @@ void StructuralViewPlugin::onEntityChanged(QString pluginID, Entity *entity)
 
 void StructuralViewPlugin::onEntityRemoved(QString pluginID, QString entityID)
 {
-  if(isSyncingFromTextual) return;
+//  if(isSyncingFromTextual) return;
 
   if (pluginID != getPluginInstanceID())
   {
@@ -361,7 +361,7 @@ void StructuralViewPlugin::onEntityRemoved(QString pluginID, QString entityID)
 
 void StructuralViewPlugin::changeSelectedEntity(QString pluginID, void* param)
 {
-  if(isSyncingFromTextual) return;
+//  if(isSyncingFromTextual) return;
   QString* entityUID = (QString*) param;
 
   if(entityUID != NULL)
@@ -2107,7 +2107,7 @@ QString StructuralViewPlugin::getUidByName(QString name, Entity* entity)
   return uid;
 }
 
-
+/*
 void StructuralViewPlugin::cacheNCLIds()
 {
   Entity *current;
@@ -2180,7 +2180,7 @@ QString StructuralViewPlugin::getNCLIdFromEntity(Entity *entity)
   }
   return nclID;
 }
-
+*/
 bool StructuralViewPlugin::isEntityHandled(Entity *entity)
 {
   if(entity != NULL)
@@ -2199,7 +2199,7 @@ bool StructuralViewPlugin::isEntityHandled(Entity *entity)
   }
   return false;
 }
-
+/*
 void StructuralViewPlugin::syncNCLIdsWithStructuralIds()
 {
   QMap <QString, QString> nclIDtoCoreID;
@@ -2321,7 +2321,7 @@ void StructuralViewPlugin::textualFinishSync(QString, void*)
   // syncNCLIdsWithStructuralIds();
   updateFromModel();
 }
-
+*/
 void StructuralViewPlugin::clearValidationError(QString, void *param)
 {
  // view->clearValidationErrors();
@@ -2329,8 +2329,8 @@ void StructuralViewPlugin::clearValidationError(QString, void *param)
 
 void StructuralViewPlugin::validationError(QString pluginID, void *param)
 {
-  if(isSyncingFromTextual)
-    return;
+//  if(isSyncingFromTextual)
+//    return;
 
   if(param)
   {
