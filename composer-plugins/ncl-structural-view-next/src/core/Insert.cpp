@@ -17,6 +17,7 @@ Insert::~Insert()
 void Insert::undo()
 {
   _settings["UNDO"] = "0";
+  _settings["NOTIFY"] = "1";
 
   emit remove(_uid, _settings);
 }

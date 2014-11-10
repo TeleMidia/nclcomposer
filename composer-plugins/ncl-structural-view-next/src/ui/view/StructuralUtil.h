@@ -5,8 +5,10 @@
 #include <QMap>
 
 #include "StructuralEntity.h"
+//#include "StructuralMedia.h"
 
 class StructuralEntity;
+//class StructuralMedia;
 
 
 class StructuralUtil {
@@ -30,7 +32,7 @@ public:
    *
    * \return the qnst media type.
    */
-  static Structural::EntityName getnstTypeFromMime(const QString &mimeType);
+  static Structural::MediaTypes getnstTypeFromMime(const QString &mimeType);
 
   /*!
    * \brief Returns the icon that represents the Qnst::EntitySubtype.
@@ -38,7 +40,9 @@ public:
    * \arg type the Qnst::EntitySubtype.
    * \return the path to the icon of that type.
    */
-  static QString iconFromMediaType(Structural::EntityName type);
+  static QString iconFromEntityType(Structural::EntityName type);
+
+  static QString iconFromMediaType(Structural::MediaTypes type);
 
   /*!
    * \brief Returns the media type based on the extension of the media source.
@@ -46,7 +50,9 @@ public:
    * \arg ext the extension of the path.
    * \return the media type associated with that extension.
    */
-  static Structural::EntityName getnstTypeFromExtension(const QString &ext);
+  static Structural::MediaTypes getnstTypeFromExtension(const QString &ext);
+
+  static QString normalizeXMLID(const QString &id);
 
   /*!
    * \brief Returns the media type based on the string the represent that type.
@@ -99,7 +105,8 @@ public:
 
 private:
   static std::map <Structural::EntityName, QString>   iconFromTypeMap;
-  static std::map <QString, Structural::EntityName>   typeFromExtMap;
+  static std::map <Structural::MediaTypes, QString>   iconFromMediaTypeMap;
+  static std::map <QString, Structural::MediaTypes>   typeFromExtMap;
   static std::map <QString, Structural::EntityName>   typeFromStr;
   static std::map <Structural::EntityName, QString>   strFromType;
   static std::map  <Structural::EntityName, QString>  prefixIdFromType;

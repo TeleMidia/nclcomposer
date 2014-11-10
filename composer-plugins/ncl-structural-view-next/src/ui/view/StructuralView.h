@@ -62,6 +62,8 @@ public:
   void serialize(QString &data);
   void exportDataFromEntity(StructuralEntity* entity, QDomDocument* doc, QDomElement _parent);
 
+  void unSelect();
+
 public slots:
   void insert(QString uid, QString _parent, QMap<QString, QString> properties, QMap<QString, QString> settings);
   void remove(QString uid, QMap<QString, QString> settings);

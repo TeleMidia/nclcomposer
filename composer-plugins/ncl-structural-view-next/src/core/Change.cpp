@@ -17,6 +17,7 @@ Change::~Change()
 void Change::undo()
 {
   _settings["UNDO"] = "0";
+  _settings["NOTIFY"] = "1";
 
   emit change(_uid, _previous, _properties, _settings);
 }

@@ -9,6 +9,8 @@ StructuralMedia::StructuralMedia(StructuralEntity* parent)
 {
   setLocalName(Structural::Media);
 
+  setMediaType(Structural::NoMediaType);
+
   setResizable(false);
 
   createObjects();
@@ -50,13 +52,23 @@ QString StructuralMedia::getSource() const
 void StructuralMedia::setSource(QString source)
 {
   this->source = source;
+
+  setMediaType(StructuralUtil::getnstTypeFromExtension(QFileInfo(source).suffix().toLower()));
 }
 
 void StructuralMedia::setLocalName(LocalName type)
 {
   StructuralNode::setLocalName(type);
+}
 
-  this->icon = StructuralUtil::iconFromMediaType(type);
+void StructuralMedia::setLocalProperty(const QString &name, const QString &value)
+{
+  StructuralNode::setLocalProperty(name, value);
+
+  if (name == "LOCAL:SRC")
+    setSource(value);
+  else if (name == "LOCAL:MEDIATYPE")
+    setMediaType((Structural::MediaTypes) value.toInt());
 }
 
 void StructuralMedia::updateToolTip()
@@ -64,38 +76,38 @@ void StructuralMedia::updateToolTip()
   QString tip = "";
   QString name = (getLocalProperty("LOCAL:ID") != "" ? getLocalProperty("LOCAL:ID") : "?");
 
-  /*
-  switch(getnstSubtype())
+
+  switch(mediatype)
   {
-    case Qnst::Image:
+    case Structural::Image:
       tip += "Image ("+name+")";
       break;
 
-    case Qnst::Audio:
+    case Structural::Audio:
       tip += "Audio ("+name+")";
       break;
 
-    case Qnst::Text:
+    case Structural::Text:
       tip += "Text ("+name+")";
       break;
 
-    case Qnst::Video:
+    case Structural::Video:
       tip += "Video ("+name+")";
       break;
 
-    case Qnst::NCLua:
+    case Structural::NCLua:
       tip += "NCLua ("+name+")";
       break;
 
-    case Qnst::Html:
+    case Structural::Html:
       tip += "HTML ("+name+")";
       break;
 
-    case Qnst::NCL:
+    case Structural::NCL:
       tip += "NCL ("+name+")";
       break;
 
-    case Qnst::Settings:
+    case Structural::Settings:
       tip += "Settings ("+name+")";
       break;
 
@@ -103,9 +115,6 @@ void StructuralMedia::updateToolTip()
       tip += "Media ("+name+")";
       break;
   }
-  */
-
-  tip += "Media ("+name+")";
 
   if (hasError)
     tip += " - Error: " + erroMsg;
@@ -242,6 +251,13 @@ void StructuralMedia::draw(QPainter* painter)
 void StructuralMedia::delineate(QPainterPath* painter) const
 {
   painter->addRect(4, 4, getWidth(), getHeight());
+}
+
+void StructuralMedia::setMediaType(Structural::MediaTypes type)
+{
+  mediatype = type;
+
+  this->icon = StructuralUtil::iconFromMediaType(mediatype);
 }
 
 

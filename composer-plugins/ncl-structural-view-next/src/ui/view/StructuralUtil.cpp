@@ -50,16 +50,7 @@ static std::map <QString, QString> config  =
 /* Initialize icon from type Map */
 std::map <Structural::EntityName, QString> StructuralUtil::iconFromTypeMap =
   create_map<Structural::EntityName, QString >
-/*
-    (Qnst::Text, ":/icon/text")
-    (Qnst::Image, ":/icon/image")
-    (Qnst::Audio, ":/icon/audio")
-    (Qnst::Video, ":/icon/video")
-    (Qnst::Html, ":/icon/html")
-    (Qnst::NCL, ":/icon/ncl")
-    (Qnst::Settings, ":/icon/settings")
-    (Qnst::NCLua, ":/icon/script")
-*/
+
     (Structural::Media, ":/images/icon/media")
 
     (Structural::Context, ":/images/icon/context")
@@ -74,31 +65,45 @@ std::map <Structural::EntityName, QString> StructuralUtil::iconFromTypeMap =
                                            // to 0.1.3
     //(Qnst::Link, ":icon/aggregator")
 
+std::map <Structural::MediaTypes, QString> StructuralUtil::iconFromMediaTypeMap =
+  create_map<Structural::MediaTypes, QString >
+    (Structural::Text, ":/icon/text")
+    (Structural::Image, ":/icon/image")
+    (Structural::Audio, ":/icon/audio")
+    (Structural::Video, ":/icon/video")
+    (Structural::Html, ":/icon/html")
+    (Structural::NCL, ":/icon/ncl")
+    (Structural::Settings, ":/icon/settings")
+    (Structural::NCLua, ":/icon/script")
+    (Structural::NoMediaType, ":/images/icon/media");
+
+
 /* Initialize type from extension Map */
-std::map <QString, Structural::EntityName> StructuralUtil::typeFromExtMap =
-  create_map <QString, Structural::EntityName>
-    ("txt", Structural::Media)
-    ("png", Structural::Media)
-    ("jpg", Structural::Media)
-    ("jpeg", Structural::Media)
-    ("gif", Structural::Media)
+std::map <QString, Structural::MediaTypes> StructuralUtil::typeFromExtMap =
+  create_map <QString, Structural::MediaTypes>
+    ("txt", Structural::Text)
+    ("png", Structural::Image)
+    ("jpg", Structural::Image)
+    ("jpeg", Structural::Image)
+    ("gif", Structural::Image)
 
-    ("mp3", Structural::Media)
-    ("wav", Structural::Media)
+    ("mp3", Structural::Audio)
+    ("wav", Structural::Audio)
 
-    ("mp4", Structural::Media)
-    ("mpeg4", Structural::Media)
-    ("mpeg", Structural::Media)
-    ("mpg", Structural::Media)
-    ("mov", Structural::Media)
-    ("avi", Structural::Media)
+    ("mp4", Structural::Video)
+    ("mpeg4", Structural::Video)
+    ("mpeg", Structural::Video)
+    ("mpg", Structural::Video)
+    ("mov", Structural::Video)
+    ("avi", Structural::Video)
+    ("mkv", Structural::Video)
 
-    ("htm", Structural::Media)
-    ("html", Structural::Media)
+    ("htm", Structural::Html)
+    ("html", Structural::Html)
 
-    ("ncl", Structural::Media)
+    ("ncl", Structural::NCL)
 
-    ("lua", Structural::Media);
+    ("lua", Structural::NCLua);
 
 /* Initialize map from str type to qnsttype */
 std::map <QString, Structural::EntityName> StructuralUtil::typeFromStr =
@@ -246,30 +251,29 @@ StructuralEntity *StructuralUtil::makeGraphicsEntity(Structural::EntityName type
   return entity;
 }
 
-Structural::EntityName StructuralUtil::getnstTypeFromMime(const QString &mimeType)
+Structural::MediaTypes StructuralUtil::getnstTypeFromMime(const QString &mimeType)
 {
-  Structural::EntityName type;
-/*
+  Structural::MediaTypes type;
+
   if (mimeType.startsWith("image"))
-   type = Qnst::Image;
+   type = Structural::Image;
   else if (mimeType.startsWith("audio"))
-    type = Qnst::Audio;
+    type = Structural::Audio;
   else if (mimeType.startsWith("video"))
-    type = Qnst::Video;
+    type = Structural::Video;
   else if (mimeType == "text/html")
-    type = Qnst::Html;
+    type = Structural::Html;
   else if (mimeType == "application/x-ginga-NCL")
-    type = Qnst::NCL;
+    type = Structural::NCL;
   else if (mimeType.startsWith("text"))
-    type = Qnst::Text;
+    type = Structural::Text;
   else if (mimeType == "application/x-ncl-settings" ||
            mimeType == "application/x-ginga-settings")
-    type = Qnst::Settings;
+    type = Structural::Settings;
   else if (mimeType == "application/x-ginga-NCLua")
-    type = Qnst::NCLua;
+    type = Structural::NCLua;
   else
-*/
-    type = Structural::Media;
+    type = Structural::NoMediaType;
 
   return type;
 }
@@ -279,7 +283,7 @@ QString StructuralUtil::createUid()
   return QUuid::createUuid().toString();
 }
 
-QString StructuralUtil::iconFromMediaType(Structural::EntityName type)
+QString StructuralUtil::iconFromEntityType(Structural::EntityName type)
 {
   QString path;
   if(iconFromTypeMap.count(type))
@@ -290,12 +294,33 @@ QString StructuralUtil::iconFromMediaType(Structural::EntityName type)
   return path;
 }
 
-Structural::EntityName StructuralUtil::getnstTypeFromExtension(const QString &ext)
+QString StructuralUtil::iconFromMediaType(Structural::MediaTypes type)
+{
+  QString path;
+  if(iconFromMediaTypeMap.count(type))
+    path = iconFromMediaTypeMap[type];
+  else
+    path = ":/icon/media";
+
+  return path;
+}
+
+QString StructuralUtil::normalizeXMLID(const QString &id)
+{
+  QString tmp = id.normalized(QString::NormalizationForm_KD);
+  tmp.remove(QRegExp("[^a-zA-Z_-\.\\s]"));
+  if(tmp.at(0).isDigit())
+    tmp = "_" + tmp;
+
+  return tmp;
+}
+
+Structural::MediaTypes StructuralUtil::getnstTypeFromExtension(const QString &ext)
 {
   if(typeFromExtMap.count(ext))
     return typeFromExtMap[ext];
 
-  return Structural::Media;
+  return Structural::NoMediaType;
 }
 
 Structural::EntityName StructuralUtil::getnstTypeFromStr(const QString &strType)

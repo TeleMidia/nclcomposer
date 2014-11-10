@@ -192,7 +192,7 @@ void StructuralComposition::draw(QPainter* painter)
   {
     painter->setRenderHint(QPainter::SmoothPixmapTransform, true);
 
-    painter->drawPixmap(4 + 8/2, 4 + 8/2, getWidth()-8, getHeight()-16-8, QPixmap(StructuralUtil::iconFromMediaType(getLocalName())));
+    painter->drawPixmap(4 + 8/2, 4 + 8/2, getWidth()-8, getHeight()-16-8, QPixmap(StructuralUtil::iconFromEntityType(getLocalName())));
 
     drawMouseHoverHighlight(painter); // This should not be HERE!!
 
@@ -328,7 +328,22 @@ void StructuralComposition::dropEvent(QGraphicsSceneDragDropEvent *event)
     event->acceptProposedAction();
     dropsrc = filename;
 
-    newChild(StructuralUtil::getnstTypeFromExtension(suffix));
+    QMap<QString,QString> properties;
+    properties["LOCAL:NAME"] = QString::number(Structural::Media);
+    properties["LOCAL:ID"] = StructuralUtil::normalizeXMLID(QFileInfo(filename).baseName());
+    properties["LOCAL:SRC"] = filename;
+    properties["LOCAL:MEDIATYPE"] = StructuralUtil::getnstTypeFromExtension(suffix);
+
+    QMap<QString,QString> settings;
+    settings["UNDO"] = "1";
+    settings["NOTIFY"] = "1";
+    settings["CODE"] = StructuralUtil::createUid();
+
+
+
+    inserted(StructuralUtil::createUid(), getLocalUid(), properties, settings);
+
+//    newChild(StructuralUtil::getnstTypeFromExtension(suffix));
   }
 }
 

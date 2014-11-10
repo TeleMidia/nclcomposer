@@ -18,6 +18,7 @@ Remove::~Remove()
 void Remove::undo()
 {
   _settings["UNDO"] = "0";
+  _settings["NOTIFY"] = "1";
 
   emit insert(_uid, _parent, _properties, _settings);
 }

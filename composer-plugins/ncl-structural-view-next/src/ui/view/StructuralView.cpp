@@ -372,8 +372,6 @@ void StructuralView::insert(QString uid, QString parent, QMap<QString, QString> 
             StructuralReference* bind = (StructuralReference*) entity;
             bind->setEntityA(entities[properties.value("LOCAL:BEGIN")]);
             bind->setEntityB(entities[properties.value("LOCAL:END")]);
-
-            qDebug() << "MISTICO";
         }
 
         break;
@@ -393,14 +391,29 @@ void StructuralView::insert(QString uid, QString parent, QMap<QString, QString> 
       }
     }
 
+    bool avoidCollision = true;
+
     if (entity != NULL)
     {
       if (entities.contains(parent))
       {
         entity->setLocalParent(entities[parent]);
 
-        entity->setTop(entities[parent]->getHeight()/2 - entity->getHeight()/2);
-        entity->setLeft(entities[parent]->getWidth()/2 - entity->getWidth()/2);
+        qDebug() << "====================== LORT" << properties;
+
+
+
+        if (!properties.value("LOCAL:TOP").isEmpty() && !properties.value("LOCAL:TOP").isEmpty())
+        {
+          avoidCollision = false;
+        }
+        else
+        {
+          entity->setTop(entities[parent]->getHeight()/2 - entity->getHeight()/2);
+          entity->setLeft(entities[parent]->getWidth()/2 - entity->getWidth()/2);
+
+          avoidCollision = true;
+        }
       }
       else
       {
@@ -422,12 +435,14 @@ void StructuralView::insert(QString uid, QString parent, QMap<QString, QString> 
 
       entity->updateToolTip();
 
+      qDebug() << "++++++++++++++++ AVOID" << avoidCollision;
+
+      entity->adjust(avoidCollision);
+
       connect(entity, SIGNAL(inserted(QString,QString,QMap<QString,QString>,QMap<QString,QString>)),SLOT(insert(QString,QString,QMap<QString,QString>,QMap<QString,QString>)));
       connect(entity, SIGNAL(removed(QString,QMap<QString,QString>)),SLOT(remove(QString,QMap<QString,QString>)));
       connect(entity, SIGNAL(changed(QString,QMap<QString,QString>,QMap<QString,QString>,QMap<QString,QString>)), SLOT(change(QString,QMap<QString,QString>,QMap<QString,QString>,QMap<QString,QString>)));
       connect(entity, SIGNAL(selected(QString,QMap<QString,QString>)),SLOT(select(QString,QMap<QString,QString>)));
-
-      entity->adjust(true);
 
 //      qDebug() << entity->getLocalProperties();
 //      qDebug() << "ANGLE" << entity->getLocalProperty("LOCAL:ANGLE");
@@ -552,7 +567,13 @@ void StructuralView::change(QString uid, QMap<QString, QString> properties, QMap
   {
     if (settings["UNDO"] == "1")
     {
-      Change* command = new Change(uid, properties, previous, settings);
+      QMap<QString,QString> tmp = previous;
+
+      foreach (QString key, properties.keys()) {
+        tmp[key] = properties.value(key);
+      };
+
+      Change* command = new Change(uid, tmp, previous, settings);
 
       connect(command, SIGNAL(insert(QString,QString,QMap<QString,QString>,QMap<QString,QString>)), SLOT(insert(QString,QString,QMap<QString,QString>,QMap<QString,QString>)));
       connect(command, SIGNAL(remove(QString,QMap<QString,QString>)),SLOT(remove(QString,QMap<QString,QString>)));
@@ -563,6 +584,8 @@ void StructuralView::change(QString uid, QMap<QString, QString> properties, QMap
 
       commnads.push(command); return;
     }
+
+    qDebug() << "CHANGE MOTHER FUCKER==================" << properties;
 
      StructuralEntity* entity = entities[uid];
      entity->setLocalProperties(properties);
@@ -603,10 +626,29 @@ void StructuralView::change(QString uid, QMap<QString, QString> properties, QMap
   }
 }
 
+void StructuralView::unSelect()
+{
+  qDebug() << "UNSELECT ============================";
+
+  if (entities.contains(_selected_UID))
+  {
+    entities.value(_selected_UID)->setSelected(false);
+
+    _selected_UID = "";
+
+    scene->update();
+
+    emit selected("", QMap<QString, QString>());
+  }
+}
+
 void StructuralView::select(QString uid, QMap<QString, QString> settings)
 {
   if (entities.contains(uid))
   {
+      if (uid == _selected_UID)
+        return;
+
       StructuralEntity* entity = entities[uid];
       entity->setSelected(true);
 
@@ -623,11 +665,11 @@ void StructuralView::select(QString uid, QMap<QString, QString> settings)
 
       _selected_UID = uid;
 
-      // TODO
 //      if (settings["NOTIFY"] == "1")
 //      {
         emit selected(uid, settings);
 //      }
+          scene->update();
   }
 }
 

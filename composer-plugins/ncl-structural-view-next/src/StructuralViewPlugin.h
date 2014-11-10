@@ -71,8 +71,12 @@ public slots:
 
   void notifyEntityDeletedInView(const QString uid, QMap<QString, QString> settings);
 
+    void notifyEntitySelectionInView(const QString uid, QMap<QString, QString> settings);
+
   void notifyEntityChangedInView(const QString uid,
-                                 QMap<QString, QString> properties);
+                                 QMap<QString, QString> properties,
+                                 QMap<QString, QString> previous,
+                                 QMap<QString, QString> settings);
 
 private:
   QString getUidById(QString id);
@@ -145,6 +149,8 @@ private:
   QList <QString> previousCoreID;
 
   QString lastSelected;
+
+  QString *_selectedId;
 
   /* Functions to handle the "sinchronization with core" */
   bool isSyncingFromTextual;

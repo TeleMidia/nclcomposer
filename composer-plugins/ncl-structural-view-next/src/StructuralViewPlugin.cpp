@@ -59,11 +59,11 @@ void StructuralViewPlugin::createConnections()
   connect(view, SIGNAL(removed(QString,QMap<QString,QString>)),
                 SLOT(notifyEntityDeletedInView(QString,QMap<QString,QString>)));
 
-  //connect(view, SIGNAL(entityChanged(QString,QMap<QString,QString>)),
-  //              SLOT(notifyEntityChangedInView(QString,QMap<QString,QString>)));
+  connect(view, SIGNAL(changed(QString,QMap<QString,QString>,QMap<QString,QString>,QMap<QString,QString>)),
+                SLOT(notifyEntityChangedInView(QString,QMap<QString,QString>,QMap<QString,QString>,QMap<QString,QString>)));
 
-  //connect(view, SIGNAL(entitySelected(QString)),
-  //              SLOT(requestEntitySelection(QString)));
+  connect(view, SIGNAL(selected(QString,QMap<QString,QString>)),
+                SLOT(notifyEntitySelectionInView(QString,QMap<QString,QString>)));
 
   //connect(view, SIGNAL(viewChanged()), SIGNAL(setCurrentProjectAsDirty()));
 }
@@ -319,7 +319,7 @@ void StructuralViewPlugin::onEntityChanged(QString pluginID, Entity *entity)
     return;
   }
 
-  if (pluginID != getPluginInstanceID())
+  if (pluginID != getPluginInstanceID() && !pluginID.isEmpty())
     requestEntityChange(entity);
 
   //Update user data
@@ -543,28 +543,28 @@ void StructuralViewPlugin::requestEntityAddition(Entity* entity)
       break;
     }
 
-    case Structural::Link:
-    {
-      entities[entity->getUniqueId()] = entity->getUniqueId();
+//    case Structural::Link:
+//    {
+//      entities[entity->getUniqueId()] = entity->getUniqueId();
 
-      if (entity->getAttribute("id") != "")
-        properties["LOCAL:ID"] = entity->getAttribute("id");
+//      if (entity->getAttribute("id") != "")
+//        properties["LOCAL:ID"] = entity->getAttribute("id");
 
-      if (entity->getAttribute("xconnector") != "")
-      {
-        properties["LOCAL:XCONNECTOR:ID"] = entity->getAttribute("xconnector");
+//      if (entity->getAttribute("xconnector") != "")
+//      {
+//        properties["LOCAL:XCONNECTOR:ID"] = entity->getAttribute("xconnector");
 
-        QString xconnectorUID = getUidById(properties["xconnector"]);
-        if(entities.contains(xconnectorUID))
-          properties["LOCAL:XCONNECTOR:UID"] = entities[xconnectorUID];
-        else
-          properties["LOCAL:XCONNECTOR:UID"] = "";
-      }
+//        QString xconnectorUID = getUidById(properties["xconnector"]);
+//        if(entities.contains(xconnectorUID))
+//          properties["LOCAL:XCONNECTOR:UID"] = entities[xconnectorUID];
+//        else
+//          properties["LOCAL:XCONNECTOR:UID"] = "";
+//      }
 
-      ok = true;
+//      ok = true;
 
-      break;
-    }
+//      break;
+//    }
 
 //    case Structural::Bind:
 //    {
@@ -755,7 +755,12 @@ void StructuralViewPlugin::requestEntityRemotion(Entity* entity)
     QString entityID = entity->getUniqueId();
     if(entities.contains(entityID))
     {
-      //view->ref_removeEntity(entities[entityID]);
+      QMap<QString,QString> settings;
+      settings["UNDO"] = "1";
+      settings["NOTIFY"] = "0";
+      settings["CODE"] = StructuralUtil::createUid();
+
+      view->remove(entities[entityID], settings);
       entities.remove(entityID);
     }
     else
@@ -1004,7 +1009,7 @@ void StructuralViewPlugin::requestEntityChange(Entity* entity)
 //    }
   }
 
-  if(!ok)
+  if(ok)
   {
     if(entities.contains(entity->getUniqueId()))
     {
@@ -1013,6 +1018,7 @@ void StructuralViewPlugin::requestEntityChange(Entity* entity)
     settings["UNDO"] = "1";
     settings["NOTIFY"] = "0";
     settings["CODE"] = StructuralUtil::createUid();
+
 
     view->change(entities[entity->getUniqueId()], properties, view->getEntity(entities[entity->getUniqueId()])->getLocalProperties(), settings);
     }
@@ -1063,8 +1069,18 @@ void StructuralViewPlugin::requestEntitySelection(Entity* entity)
         entity->getType() == "switchPort" ||
         entity->getType() == "property")
     {
-     // view->ref_selectEntity(entities[entity->getUniqueId()]);
+      QMap<QString,QString> settings;
+      settings["UNDO"] = "0";
+      settings["NOTIFY"] = "0";
+      settings["CODE"] = StructuralUtil::createUid();
+
+      view->select(entities[entity->getUniqueId()], settings);
     }
+
+  }
+  else
+  {
+    view->unSelect();
   }
 }
 
@@ -1613,11 +1629,21 @@ void StructuralViewPlugin::notifyEntityDeletedInView(const QString uid, QMap<QSt
   }
 }
 
-void StructuralViewPlugin::notifyEntityChangedInView(const QString uid,
-                                              QMap<QString, QString> properties)
+void StructuralViewPlugin::notifyEntitySelectionInView(const QString uid, QMap<QString, QString> settings)
 {
-  /*
-  Qnst::EntityType type = QnstUtil::getnstTypeFromStr(properties["TYPE"]);
+  if (entities.key(uid, "nil") != "nil"){
+    _selectedId = new QString(entities.key(uid));
+    emit sendBroadcastMessage("changeSelectedEntity", _selectedId);
+  }
+}
+
+void StructuralViewPlugin::notifyEntityChangedInView(const QString uid,
+                                                     QMap<QString, QString> properties,
+                                                     QMap<QString, QString> previous,
+                                                     QMap<QString, QString> settings)
+{
+
+  Structural::EntityName type = (Structural::EntityName) properties["LOCAL:NAME"].toInt();
 
   QMap<QString, QString> attributes;
   Entity* entity = getProject()->getEntityById(entities.key(uid));
@@ -1631,103 +1657,117 @@ void StructuralViewPlugin::notifyEntityChangedInView(const QString uid,
 
   switch (type)
   {
-    case Qnst::Body:
+    case Structural::Body:
     {
-      if (properties["id"] != "")
-        attributes["id"] = properties["id"];
+      if (properties["LOCAL:ID"] != "")
+        attributes["id"] = properties["LOCAL:ID"];
 
       mustSetAttributes = true;
       break;
     }
 
-    case Qnst::Context:
-    case Qnst::Switch:
+    case Structural::Context:
+    case Structural::Switch:
     {
-      if (properties["id"] != "")
-        attributes["id"] = properties["id"];
+      if (properties["LOCAL:ID"] != "")
+        attributes["id"] = properties["LOCAL:ID"];
 
-      if (properties["refer"] != "")
-        attributes["refer"] = properties["refer"];
+      if (properties["LOCAL:REFER"] != "")
+        attributes["refer"] = properties["LOCAL:REFER"];
 
       mustSetAttributes = true;
       break;
     }
 
-    case Qnst::Media:
+    case Structural::Media:
     {
-      if (properties["id"] != "")
-        attributes["id"] = properties["id"];
+      if (properties["LOCAL:ID"] != "")
+        attributes["id"] = properties["LOCAL:ID"];
 
-      if (properties["src"] != "")
-        attributes["src"] = properties["src"];
+      if (properties["LOCAL:SRC"] != "")
+        attributes["src"] = properties["LOCAL:SRC"];
 
-      if (properties["refer"] != "")
-        attributes["refer"] = properties["refer"];
+      if (properties["LOCAL:REFER"] != "")
+        attributes["refer"] = properties["LOCAL:REFER"];
 
-      if (properties["instance"] != "")
-        attributes["instance"] = properties["instance"];
+      if (properties["LOCAL:INSTANCE"] != "")
+        attributes["instance"] = properties["LOCAL:INSTANCE"];
 
-      if (properties["type"] != "")
-        attributes["type"] = properties["type"];
+      if (properties["CPR:TYPE"] != "")
+        attributes["type"] = properties["CPR:TYPE"];
 
-      if (properties["descriptor"] != "")
-        attributes["descriptor"] = properties["descriptor"];
+      if (properties["CPR:DESCRIPTOR"] != "")
+        attributes["descriptor"] = properties["CPR:DESCRIPTOR"];
 
       mustSetAttributes = true;
       break;
     }
 
-    case Qnst::Port:
+    case Structural::Port:
     {
-      attributes["id"] = properties["id"];
+      attributes["id"] = properties["LOCAL:ID"];
 
       if(properties["component"] != "")
-          attributes["component"] = properties["component"];
+          attributes["component"] = properties["CPR:COMPONENT"];
 
       if(properties["interface"] != "")
-          attributes["interface"] = properties["interface"];
+          attributes["interface"] = properties["CPR:INTERFACE"];
 
       mustSetAttributes = true;
       break;
     }
 
-    case Qnst::BindParam:
+//    case Structural::BindParam:
+//    {
+//      if (properties["name"] != "")
+//        attributes["name"] = properties["name"];
+
+//      if (properties["value"] != "")
+//        attributes["value"] = properties["value"];
+
+//      mustSetAttributes = true;
+//      break;
+//    }
+
+//    case Structural::Mapping:
+//    {
+//      if (properties["component"] != "")
+//        attributes["component"] = properties["component"];
+
+//      if (properties["interface"] != "")
+//        attributes["interface"] = properties["interface"];
+
+//      mustSetAttributes = true;
+//      break;
+//    }
+
+    case Structural::SwitchPort:
     {
-      if (properties["name"] != "")
-        attributes["name"] = properties["name"];
 
-      if (properties["value"] != "")
-        attributes["value"] = properties["value"];
+      if (properties["LOCAL:ID"] != "")
+        attributes["id"] = properties["LOCAL:ID"];
 
       mustSetAttributes = true;
       break;
     }
 
-    case Qnst::Mapping:
+    case Structural::Area:
     {
-      if (properties["component"] != "")
-        attributes["component"] = properties["component"];
-
-      if (properties["interface"] != "")
-        attributes["interface"] = properties["interface"];
+      if (properties["LOCAL:ID"] != "")
+        attributes["id"] = properties["LOCAL:ID"];
 
       mustSetAttributes = true;
       break;
     }
 
-    case Qnst::SwitchPort:
+    case Structural::Property:
     {
-
-      if (properties["id"] != "")
-        attributes["id"] = properties["id"];
+      if (properties["LOCAL:ID"] != "")
+        attributes["name"] = properties["LOCAL:ID"];
 
       mustSetAttributes = true;
       break;
     }
-    case Qnst::Area:
-    case Qnst::Property:
-      // \todo Changing of property and area.
-      break;
 
     default:
       break;
@@ -1750,7 +1790,7 @@ void StructuralViewPlugin::notifyEntityChangedInView(const QString uid,
     //emit setAttributes(project->getEntityById(coreID),
     //                   props, false);
   //}
-  */
+
 }
 
 void StructuralViewPlugin::requestEntitySelection(const QString uid)

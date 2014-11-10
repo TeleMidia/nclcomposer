@@ -31,6 +31,19 @@ public:
     NoType      = 0
   };
 
+  enum MediaTypes{
+    Image,
+    Audio,
+    Video,
+    Text,
+    NCLua,
+    Settings,
+    Html,
+    NCL,
+
+    NoMediaType
+  };
+
   enum EntityName
   {
     Media       = 1,

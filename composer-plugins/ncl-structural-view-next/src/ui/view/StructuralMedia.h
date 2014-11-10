@@ -16,14 +16,17 @@ class StructuralMedia : public StructuralNode
 
 public:
   StructuralMedia(StructuralEntity* parent = 0);
-
   ~StructuralMedia();
 
   QString getIcon() const;
 
+  void setMediaType(Structural::MediaTypes type);
+
   void setSource(QString source);
 
   virtual void setLocalName(LocalName _name);
+
+  virtual void setLocalProperty(const QString &name, const QString &value);
 
   QString getSource() const;
 
@@ -63,6 +66,8 @@ private:
   QString source;
 
   bool enableDrag;
+
+  Structural::MediaTypes mediatype;
 };
 
 #endif // QNSTGRAPHICSMEDIA_H
