@@ -257,8 +257,6 @@ void StructuralViewPlugin::updateFromModel()
 
 void StructuralViewPlugin::onEntityAdded(QString pluginID, Entity *entity)
 {
-  qDebug() << "===================================== NEWSTR onEntityAdded";
-
 //  if(isSyncingFromTextual) return;
 
   if (pluginID != getPluginInstanceID()){

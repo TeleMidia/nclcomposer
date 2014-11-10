@@ -131,8 +131,6 @@ void StructuralView::load(QString &data)
 
   parent = parent.firstChildElement();
 
-  qDebug() << "==================" << parent.nodeName();
-
   QMap<QString,QString> properties;
 
   QDomNodeList list = parent.childNodes();
@@ -172,8 +170,6 @@ void StructuralView::load(QString &data)
 
 void StructuralView::read(QDomElement element, QDomElement parent)
 {
-  qDebug() << "==================" << element.nodeName();
-
   QMap<QString,QString> properties;
 
   QDomNodeList list = element.childNodes();
@@ -399,10 +395,6 @@ void StructuralView::insert(QString uid, QString parent, QMap<QString, QString> 
       {
         entity->setLocalParent(entities[parent]);
 
-        qDebug() << "====================== LORT" << properties;
-
-
-
         if (!properties.value("LOCAL:TOP").isEmpty() && !properties.value("LOCAL:TOP").isEmpty())
         {
           avoidCollision = false;
@@ -435,17 +427,12 @@ void StructuralView::insert(QString uid, QString parent, QMap<QString, QString> 
 
       entity->updateToolTip();
 
-      qDebug() << "++++++++++++++++ AVOID" << avoidCollision;
-
       entity->adjust(avoidCollision);
 
       connect(entity, SIGNAL(inserted(QString,QString,QMap<QString,QString>,QMap<QString,QString>)),SLOT(insert(QString,QString,QMap<QString,QString>,QMap<QString,QString>)));
       connect(entity, SIGNAL(removed(QString,QMap<QString,QString>)),SLOT(remove(QString,QMap<QString,QString>)));
       connect(entity, SIGNAL(changed(QString,QMap<QString,QString>,QMap<QString,QString>,QMap<QString,QString>)), SLOT(change(QString,QMap<QString,QString>,QMap<QString,QString>,QMap<QString,QString>)));
       connect(entity, SIGNAL(selected(QString,QMap<QString,QString>)),SLOT(select(QString,QMap<QString,QString>)));
-
-//      qDebug() << entity->getLocalProperties();
-//      qDebug() << "ANGLE" << entity->getLocalProperty("LOCAL:ANGLE");
 
       if (settings["UNDO"] == "1")
       {
@@ -465,8 +452,6 @@ void StructuralView::insert(QString uid, QString parent, QMap<QString, QString> 
       {
         emit inserted(uid, parent, entity->getLocalProperties(), settings);
       }
-
-      qDebug() << "INSERT ============================" << entities.size();
     }
   }
 }
@@ -556,8 +541,6 @@ void StructuralView::remove(QString uid, QMap<QString, QString> settings)
     {
       emit removed(uid, settings);
     }
-
-    qDebug() << "REMOVE ============================" << entities.size();
   }
 }
 
@@ -584,8 +567,6 @@ void StructuralView::change(QString uid, QMap<QString, QString> properties, QMap
 
       commnads.push(command); return;
     }
-
-    qDebug() << "CHANGE MOTHER FUCKER==================" << properties;
 
      StructuralEntity* entity = entities[uid];
      entity->setLocalProperties(properties);
@@ -622,13 +603,11 @@ void StructuralView::change(QString uid, QMap<QString, QString> properties, QMap
       emit changed(uid, properties, previous, settings);
     }
 
-    qDebug() << "CHANGE ============================" << entities.size();
   }
 }
 
 void StructuralView::unSelect()
 {
-  qDebug() << "UNSELECT ============================";
 
   if (entities.contains(_selected_UID))
   {
@@ -848,7 +827,6 @@ bool StructuralView::performCopy()
       }
 
         clip_copy = _selected->getLocalUid();
-        //qDebug() << "======================" << clip;
 
         return true;
     }
