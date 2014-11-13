@@ -46,9 +46,7 @@ else:win32 {
   INSTALLBASE = C:/Composer
 }
 
-contains(EXT_DPATH, true) {
-  DEFINES += EXT_DEFAULT_PATH=\"\\\"$$PREFIX\\\"\"
-}
+DEFINES += EXT_DEFAULT_PATH=\"\\\"$$PREFIX\\\"\"
 
 DEFINES += COMPOSERCORE_LIBRARY
 
