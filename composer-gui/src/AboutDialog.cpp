@@ -4,6 +4,7 @@
 #include <QApplication>
 #include <QMessageBox>
 #include <QFile>
+#include <QDesktopServices>
 
 namespace composer {
 namespace gui {
@@ -38,3 +39,8 @@ void AboutDialog::showLicense()
 }
 
 } } // end namespace
+
+void composer::gui::AboutDialog::on_button_Homepage_pressed()
+{
+  QDesktopServices::openUrl(QUrl("http://composer.telemidia.puc-rio.br"));
+}

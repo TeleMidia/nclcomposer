@@ -30,6 +30,7 @@ private:
 
 private slots:
   void showLicense();
+  void on_button_Homepage_pressed();
 };
 
 } } // end namespace
