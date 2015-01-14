@@ -310,12 +310,21 @@ void MessageControl::sendEntityAddedMessageToPlugins( QString pluginInstanceId,
       PluginControl::getInstance()->getPluginInstances(this->project);
 
   QString slotName("onEntityAdded(QString,Entity*)");
+  IPlugin *pluginMsgSrc = NULL;
 
   for (it = instances.begin(); it != instances.end(); it++)
   {
     IPlugin *inst = *it;
 
-    if(pluginIsInterestedIn(inst, entity))
+    // \fixme: This is an workaround. I am delaying the calling for plugin that
+    // triggered the message
+    if (inst->getPluginInstanceID() == pluginInstanceId )
+    {
+      pluginMsgSrc = inst;
+      continue;
+    }
+
+    if( pluginIsInterestedIn(inst, entity) )
     {
       int idxSlot = inst->metaObject()
           ->indexOfSlot(slotName.toStdString().c_str());
@@ -326,6 +335,20 @@ void MessageControl::sendEntityAddedMessageToPlugins( QString pluginInstanceId,
                       Q_ARG(QString, pluginInstanceId),
                       Q_ARG(Entity*, entity));
       }
+    }
+  }
+
+  // \fixme: Now I call for the plugin that asked the message.
+  if(pluginMsgSrc != NULL && pluginIsInterestedIn(pluginMsgSrc, entity))
+  {
+    int idxSlot = pluginMsgSrc->metaObject()
+        ->indexOfSlot(slotName.toStdString().c_str());
+    if(idxSlot != -1)
+    {
+      QMetaMethod method = pluginMsgSrc->metaObject()->method(idxSlot);
+      method.invoke(pluginMsgSrc, Qt::DirectConnection,
+                    Q_ARG(QString, pluginInstanceId),
+                    Q_ARG(Entity*, entity));
     }
   }
 
@@ -341,10 +364,19 @@ void MessageControl::sendEntityChangedMessageToPlugins(QString pluginInstanceId,
       PluginControl::getInstance()->getPluginInstances(this->project);
 
   QString slotName("onEntityChanged(QString,Entity*)");
+  IPlugin *pluginMsgSrc = NULL;
 
   for (it = instances.begin(); it != instances.end(); it++)
   {
     IPlugin *inst = *it;
+
+    // \fixme: This is an workaround. I am delaying the calling for plugin that
+    // triggered the message
+    if (inst->getPluginInstanceID() == pluginInstanceId )
+    {
+      pluginMsgSrc = inst;
+      continue;
+    }
 
     if(pluginIsInterestedIn(inst, entity))
     {
@@ -359,6 +391,20 @@ void MessageControl::sendEntityChangedMessageToPlugins(QString pluginInstanceId,
       }
     }
   }
+
+  // \fixme: Now I call for the plugin that asked the message.
+  ifpluginIsInterestedIn(pluginMsgSrc, entity))
+  {
+    int idxSlot = pluginMsgSrc->metaObject()
+        ->indexOfSlot(slotName.toStdString().c_str());
+    if(idxSlot != -1)
+    {
+      QMetaMethod method = pluginMsgSrc->metaObject()->method(idxSlot);
+      method.invoke(pluginMsgSrc, Qt::DirectConnection,
+                    Q_ARG(QString, pluginInstanceId),
+                    Q_ARG(Entity*, entity));
+    }
+  }
 }
 
 void MessageControl::sendEntityRemovedMessageToPlugins(QString pluginInstanceId,
@@ -369,11 +415,20 @@ void MessageControl::sendEntityRemovedMessageToPlugins(QString pluginInstanceId,
       PluginControl::getInstance()->getPluginInstances(this->project);
 
   QString slotName("onEntityRemoved(QString,QString)");
+  IPlugin *pluginMsgSrc = NULL;
   QString entityId = entity->getUniqueId();
 
   for (it = instances.begin(); it != instances.end(); it++)
   {
     IPlugin *inst = *it;
+
+    // \fixme: This is an workaround. I am delaying the calling for plugin that
+    // triggered the message
+    if (inst->getPluginInstanceID() == pluginInstanceId )
+    {
+      pluginMsgSrc = inst;
+      continue;
+    }
 
     if(pluginIsInterestedIn(inst, entity))
     {
@@ -386,6 +441,20 @@ void MessageControl::sendEntityRemovedMessageToPlugins(QString pluginInstanceId,
                       Q_ARG(QString, pluginInstanceId),
                       Q_ARG(QString, entityId));
       }
+    }
+  }
+
+  // \fixme: Now I call for the plugin that asked the message.
+  if(pluginIsInterestedIn(pluginMsgSrc, entity))
+  {
+    int idxSlot = pluginMsgSrc->metaObject()
+        ->indexOfSlot(slotName.toStdString().c_str());
+    if(idxSlot != -1)
+    {
+      QMetaMethod method = pluginMsgSrc->metaObject()->method(idxSlot);
+      method.invoke(pluginMsgSrc, Qt::DirectConnection,
+                    Q_ARG(QString, pluginInstanceId),
+                    Q_ARG(QString, entityId));
     }
   }
 }
