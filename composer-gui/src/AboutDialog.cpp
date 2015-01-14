@@ -5,6 +5,7 @@
 #include <QMessageBox>
 #include <QFile>
 #include <QDesktopServices>
+#include <QUrl>
 
 namespace composer {
 namespace gui {
