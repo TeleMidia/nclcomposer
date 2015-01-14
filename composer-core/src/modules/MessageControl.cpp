@@ -393,7 +393,7 @@ void MessageControl::sendEntityChangedMessageToPlugins(QString pluginInstanceId,
   }
 
   // \fixme: Now I call for the plugin that asked the message.
-  ifpluginIsInterestedIn(pluginMsgSrc, entity))
+  if(pluginMsgSrc != NULL && pluginIsInterestedIn(pluginMsgSrc, entity))
   {
     int idxSlot = pluginMsgSrc->metaObject()
         ->indexOfSlot(slotName.toStdString().c_str());
@@ -445,7 +445,7 @@ void MessageControl::sendEntityRemovedMessageToPlugins(QString pluginInstanceId,
   }
 
   // \fixme: Now I call for the plugin that asked the message.
-  if(pluginIsInterestedIn(pluginMsgSrc, entity))
+  if(pluginMsgSrc != NULL && pluginIsInterestedIn(pluginMsgSrc, entity))
   {
     int idxSlot = pluginMsgSrc->metaObject()
         ->indexOfSlot(slotName.toStdString().c_str());
