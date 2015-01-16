@@ -200,6 +200,18 @@ signals:
    */
   void addEntity( QString type, QString parentEntityId,
                   QMap<QString,QString>& atts, bool force );
+
+  /*!
+   * \brief This message allows to add an Entity (and its children, recursively)
+   *  through passing an XML content that has the content of this Entity.
+   *
+   * \param entity_content
+   * \param parentId
+   * \param force
+   */
+  // \fixme Maybe, this message should be addContent
+  void addEntity(QString entity_content, QString parentId, bool force);
+
   /*!
    * \brief This message can be used to edit the attributes of an Entity.
    *

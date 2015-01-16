@@ -219,6 +219,12 @@ void PluginControl::launchNewPlugin(IPlugin *plugin, MessageControl *mControl)
           Qt::DirectConnection);
 
   connect(plugin,
+          SIGNAL(addEntity(QString,QString,bool)),
+          mControl,
+          SLOT(onAddEntity(QString,QString,bool)),
+          Qt::DirectConnection);
+
+  connect(plugin,
           SIGNAL(setAttributes(Entity*, QMap<QString,QString>, bool)),
           mControl,
           SLOT(onEditEntity(Entity*, QMap<QString,QString>, bool)),

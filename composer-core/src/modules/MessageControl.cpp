@@ -13,6 +13,9 @@
 #include <QMetaObject>
 #include <QMetaMethod>
 #include <QApplication>
+#include <QQueue>
+#include <QDomDocument>
+#include <QDebug>
 
 #include "util/Commands.h"
 
@@ -178,6 +181,89 @@ void MessageControl::onAddEntity( QString type, QString parentEntityId,
 
     return;
   }
+}
+
+void MessageControl::onAddEntity(QString entity_content,
+                                 QString parentId,
+                                 bool force)
+{
+  /* Cast to IPlugin to make sure it's a plugin */
+  IPlugin *plugin = qobject_cast<IPlugin *> (QObject::sender());
+  IDocumentParser *parser = qobject_cast<IDocumentParser*>
+      (QObject::sender());
+  QString pluginID;
+
+  if(plugin) pluginID = plugin->getPluginInstanceID();
+  else if (parser) pluginID = parser->getParserName();
+
+  Entity *ent = NULL;
+
+  //recursivelly go throught the elements
+  QDomDocument doc ("doc");
+  if(!doc.setContent(entity_content))
+  {
+    //We can not parse the DOM
+    if (plugin)
+      plugin->errorMessage(tr("Could not parse XML Content"));
+    else if (parser)
+     parser->onEntityAddError(tr("Could not parse XML Content"));
+  }
+  else
+  {
+    //Everything is all right. Now, its time to recursivelly add the entities
+    QQueue <QDomElement> queue;
+    QDomElement node, child;
+
+    queue.push_back(doc.firstChildElement());
+    doc.toElement().setAttribute("uuid", parentId);
+
+    bool first = true;
+
+    QMap<QString,QString> atts;
+    while(queue.size())
+    {
+      node = queue.front();
+      queue.pop_front();
+
+      //Get the attributes from the DOM Element
+      atts.clear();
+      QDomNamedNodeMap nodeAtts = node.toElement().attributes();
+      for(int i = 0; i < nodeAtts.count(); i++)
+      {
+        atts[nodeAtts.item(i).nodeName()] = nodeAtts.item(i).nodeValue();
+        qDebug() <<"###########" << nodeAtts.item(i).nodeName() << nodeAtts.item(i).nodeValue();
+      }
+
+      //Create the new Entity
+      ent = new Entity(atts);
+      ent->setType(node.tagName());
+      node.setAttribute("uuid", ent->getUniqueId());
+
+      QString nodeParentUuid;
+      if(first)
+      {
+        nodeParentUuid = parentId;
+        first = false;
+      }
+      else
+        nodeParentUuid = node.parentNode().toElement().attribute("uuid");
+
+      // Do the addEntity in the core
+      qUndoStack->push(new AddCommand( project, ent, nodeParentUuid));
+
+      //send message to All PLUGINS interested in this message.
+      sendEntityAddedMessageToPlugins(pluginID, ent);
+
+      child = node.firstChildElement();
+      while (!child.isNull())
+      {
+        queue.push_back(child);
+        child = child.nextSiblingElement();
+      }
+    }
+  }
+
+  return;
 }
 
 void MessageControl::onEditEntity(Entity *entity, QMap<QString,QString> atts,

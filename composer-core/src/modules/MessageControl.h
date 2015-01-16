@@ -68,6 +68,17 @@ public slots:
   /*!
      \brief
 
+     \param type
+     \param parentEntityId
+     \param atts
+     \param force
+    */
+  void onAddEntity( QString entity_content,
+                    QString parentId,
+                    bool force );
+  /*!
+     \brief
+
      \param entity
      \param atts
      \param force
