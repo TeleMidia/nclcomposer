@@ -219,9 +219,9 @@ void PluginControl::launchNewPlugin(IPlugin *plugin, MessageControl *mControl)
           Qt::DirectConnection);
 
   connect(plugin,
-          SIGNAL(addEntity(QString,QString,bool)),
+          SIGNAL(addEntity(QString,QString,Data::Format,bool)),
           mControl,
-          SLOT(onAddEntity(QString,QString,bool)),
+          SLOT(onAddEntity(QString,QString,Data::Format,bool)),
           Qt::DirectConnection);
 
   connect(plugin,

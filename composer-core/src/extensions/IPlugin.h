@@ -22,6 +22,10 @@ using namespace composer::core::model;
 namespace composer {
   namespace extension {
 
+namespace Data {
+  enum Format {XML, JSON};
+}
+
 /*!
  * \brief The interface for communication between the core and the plugin.
  *
@@ -210,7 +214,10 @@ signals:
    * \param force
    */
   // \fixme Maybe, this message should be addContent
-  void addEntity(QString entity_content, QString parentId, bool force);
+  void addEntity( QString entity_content,
+                  QString parentId,
+                  Data::Format format,
+                  bool force);
 
   /*!
    * \brief This message can be used to edit the attributes of an Entity.

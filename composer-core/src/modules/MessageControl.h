@@ -75,6 +75,7 @@ public slots:
     */
   void onAddEntity( QString entity_content,
                     QString parentId,
+                    Data::Format format,
                     bool force );
   /*!
      \brief
