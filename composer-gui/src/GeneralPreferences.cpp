@@ -19,7 +19,7 @@ namespace composer {
     namespace gui {
 
 GeneralPreferences::GeneralPreferences(QWidget *parent)
-  : ui(new Ui::GeneralPreferences), IPreferencesPage(parent)
+  : IPreferencesPage(parent), ui(new Ui::GeneralPreferences)
 {
   ui->setupUi(this);
   GlobalSettings settings;

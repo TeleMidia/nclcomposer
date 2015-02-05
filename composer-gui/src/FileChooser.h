@@ -50,9 +50,10 @@ public:
   void setText(const QString &value);
   
 private:
+  Ui::FileChooser *ui;
   FILECHOOSER_TYPE fctype;
   QString filter, caption;
-  Ui::FileChooser *ui;
+
 
 private slots:
   void on_pushButton_pressed();
