@@ -45,6 +45,8 @@ void EditCommand::redo()
 RemoveCommand::RemoveCommand(Project *project, Entity *entity,
                              QUndoCommand *parent)
 {
+  Q_UNUSED(parent)
+
   this->parentUniqueId = entity->getParentUniqueId();
   this->entity = entity;
   this->project = project;
@@ -81,6 +83,8 @@ void RemoveCommand::redo()
 AddCommand::AddCommand(Project *project, Entity *entity, QString parentUniqueId,
                        QUndoCommand *parent)
 {
+  Q_UNUSED(parent)
+
   this->parentUniqueId = parentUniqueId;
   this->entity = entity;
   this->project = project;

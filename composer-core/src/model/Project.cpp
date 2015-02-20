@@ -128,6 +128,8 @@ bool Project::addEntity(Entity* entity, const QString &parentId)
 bool Project::removeEntity(Entity* entity, bool appendChild)
      throw (EntityNotFound)
 {
+  Q_UNUSED(appendChild)
+
   assert(entity != NULL);
 
   QMutexLocker locker(lockEntities);

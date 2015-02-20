@@ -43,6 +43,8 @@ void MessageControl::anonymousAddEntity( QString type,
                                          bool force,
                                          bool notifyPlugins)
 {
+  Q_UNUSED(force)
+
   Entity *ent = NULL;
 
   try
@@ -70,6 +72,8 @@ void MessageControl::anonymousAddEntity( Entity *entity,
                                          bool force,
                                          bool notifyPlugins)
 {
+  Q_UNUSED(force)
+
   try
   {
     // \todo call validator to check
@@ -86,9 +90,12 @@ void MessageControl::anonymousAddEntity( Entity *entity,
   }
 }
 
-void MessageControl::anonymousRemoveEntity( QString entityUniqueId, bool force,
-                            bool notifyPlugins)
+void MessageControl::anonymousRemoveEntity( QString entityUniqueId,
+                                            bool force,
+                                            bool notifyPlugins)
 {
+  Q_UNUSED(force)
+
   try
   {
     Entity *entity = project->getEntityById(entityUniqueId);
@@ -115,6 +122,8 @@ void MessageControl::anonymousChangeEntity( QString entityId,
                                             bool force,
                                             bool notifyPlugins)
 {
+  Q_UNUSED(force)
+
   Entity *ent = project->getEntityById(entityId);
   if(ent != NULL)
   {
@@ -149,6 +158,8 @@ void MessageControl::anonymousUpdateFromModel()
 void MessageControl::onAddEntity( QString type, QString parentEntityId,
                                   QMap<QString,QString>& atts, bool force)
 {
+  Q_UNUSED(force)
+
   /* Cast to IPlugin to make sure it's a plugin */
   IPlugin *plugin = qobject_cast<IPlugin *> (QObject::sender());
   IDocumentParser *parser = qobject_cast<IDocumentParser*>
@@ -188,6 +199,8 @@ void MessageControl::onAddEntity(QString entity_content,
                                  Data::Format format,
                                  bool force)
 {
+  Q_UNUSED(force)
+
   /* Cast to IPlugin to make sure it's a plugin */
   IPlugin *plugin = qobject_cast<IPlugin *> (QObject::sender());
   IDocumentParser *parser = qobject_cast<IDocumentParser*>
@@ -271,9 +284,12 @@ void MessageControl::onAddEntity(QString entity_content,
   return;
 }
 
-void MessageControl::onEditEntity(Entity *entity, QMap<QString,QString> atts,
+void MessageControl::onEditEntity(Entity *entity,
+                                  QMap<QString,QString> atts,
                                   bool force)
 {
+  Q_UNUSED(force)
+
   assert (entity != NULL);
 
   IPlugin *plugin = qobject_cast<IPlugin *>(QObject::sender());
@@ -307,6 +323,8 @@ void MessageControl::onEditEntity(Entity *entity, QMap<QString,QString> atts,
 
 void MessageControl::onRemoveEntity(Entity *entity, bool force)
 {
+  Q_UNUSED(force)
+
   IPlugin *plugin = qobject_cast<IPlugin *> (QObject::sender());
   if(plugin)
   {
