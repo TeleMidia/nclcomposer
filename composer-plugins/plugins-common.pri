@@ -81,7 +81,7 @@ else:unix {
   target.path = $$quote($$INSTALLBASE/lib/composer/extensions)
 }
 else:win32 {
-  LIBS += -L$$INSTALLBASE
+  LIBS += -L$$INSTALLBASE -lComposerCore1
 
   link_ncl_profile {
          LIBS += -L$$INSTALLBASE/extensions -lNCLLanguageProfile
