@@ -20,7 +20,7 @@
 using namespace composer::gui;
 
 // \todo this function should move from here
-void loadTranslations(QApplication *app)
+void loadTranslations()
 {
   /* Get the current language code */
   GlobalSettings settings;
@@ -69,7 +69,7 @@ int main(int argc, char *argv[])
     GlobalSettings settings;
     // We need that to make sure the defaults are in the settings
     settings.updateWithDefaults(DATA_PATH);
-    loadTranslations(&a);
+    loadTranslations();
 
     QResource::registerResource("images.qrc");
     QCoreApplication::setOrganizationName("Telemidia Lab");

@@ -15,7 +15,8 @@
 namespace composer {
 namespace gui {
 
-WelcomeWidget::WelcomeWidget(QWidget *parent): QWidget(parent),
+WelcomeWidget::WelcomeWidget(QWidget *parent):
+    QWidget(parent),
     ui(new Ui::WelcomeWidget),
     http(this),
     httpNotifyMessages(this)

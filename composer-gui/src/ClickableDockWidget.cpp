@@ -102,6 +102,8 @@ void ClickableQDockWidget::visibilityHasChange(bool visible)
 
 void ClickableQDockWidget::topLevelHasChanged(bool a)
 {
+  Q_UNUSED(a)
+
   emit clicked();
   raise();
   setFocus();

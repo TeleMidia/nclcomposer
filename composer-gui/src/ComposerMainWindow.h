@@ -406,8 +406,9 @@ public slots:
      * \param doc
      * \param n
      */
-  void addPluginWidget(IPluginFactory *fac, IPlugin *plugin,
-                       Project *project, int n);
+  void addPluginWidget( IPluginFactory *fac,
+                        IPlugin *plugin,
+                        Project *project );
   /*!
      * \brief Called when a new tab is open.
      *

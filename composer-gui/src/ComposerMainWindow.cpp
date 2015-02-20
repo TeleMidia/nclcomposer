@@ -140,8 +140,8 @@ void ComposerMainWindow::initModules()
           SLOT(errorDialog(QString)));
 
   connect(pgControl,SIGNAL(addPluginWidgetToWindow(IPluginFactory*,
-                                                   IPlugin*, Project*, int)),
-          SLOT(addPluginWidget(IPluginFactory*, IPlugin*, Project*, int)));
+                                                   IPlugin*, Project*)),
+          SLOT(addPluginWidget(IPluginFactory*, IPlugin*, Project*)));
 
   connect(lgControl,SIGNAL(notifyError(QString)),
           SLOT(errorDialog(QString)));
@@ -437,8 +437,9 @@ void ComposerMainWindow::keyPressEvent(QKeyEvent *event)
   }
 }
 
-void ComposerMainWindow::addPluginWidget(IPluginFactory *fac, IPlugin *plugin,
-                                         Project *project, int n)
+void ComposerMainWindow::addPluginWidget( IPluginFactory *fac,
+                                          IPlugin *plugin,
+                                          Project *project )
 {
   QMainWindow *w;
   QString location = project->getLocation();
@@ -1351,11 +1352,13 @@ void ComposerMainWindow::runNCL()
         )
   {
     QMessageBox::StandardButton reply;
-    reply = QMessageBox::warning(NULL, tr("Warning!"),
-                               tr("You already have an NCL application "
-                                  "running. Please, stop it before you start "
-                                  "a new one."),
-                               QMessageBox::Ok);
+    reply = QMessageBox::warning( NULL, tr("Warning!"),
+                                  tr("You already have an NCL application "
+                                     "running. Please, stop it before you start "
+                                     "a new one."),
+                                  QMessageBox::Ok);
+    Q_UNUSED(reply)
+
     return;
   }
 
@@ -1398,6 +1401,7 @@ void ComposerMainWindow::runOnLocalGinga()
     reply = QMessageBox::warning(this, tr("Warning!"),
                                  tr("There aren't a current NCL project."),
                                  QMessageBox::Ok);
+    Q_UNUSED(reply)
     return;
   }
 
@@ -1431,6 +1435,7 @@ void ComposerMainWindow::runOnLocalGinga()
 
 void ComposerMainWindow::copyOnRemoteGingaVM(bool autoplay)
 {
+
 #ifdef WITH_LIBSSH2
   int currentTab = tabProjects->currentIndex();
   if(currentTab != 0)
@@ -1478,11 +1483,14 @@ void ComposerMainWindow::copyOnRemoteGingaVM(bool autoplay)
   }
 
 #else
+  Q_UNUSED(autoplay)
+
   QMessageBox::StandardButton reply;
   reply = QMessageBox::warning(NULL, tr("Warning!"),
                                tr("Your NCL Composer was not build with Remote "
                                   "Run support."),
                                QMessageBox::Ok);
+  Q_UNUSED (reply)
 #endif
 }
 
@@ -2040,6 +2048,8 @@ void ComposerMainWindow::currentTabChanged(int n)
 
 void ComposerMainWindow::focusChanged(QWidget *old, QWidget *now)
 {
+  Q_UNUSED(old)
+
   if(now == NULL)
     return; // Do nothing!!
 

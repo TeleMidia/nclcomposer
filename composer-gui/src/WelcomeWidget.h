@@ -111,11 +111,12 @@ private slots:
   void on_commandLinkButton_8_clicked();
 
 private:
+  Ui::WelcomeWidget *ui;
+
   int connectionId;
   QNetworkAccessManager http;
   QXmlStreamReader xmlReader;
 
-  Ui::WelcomeWidget *ui;
   int n_items;
 
   void loadRSS();
