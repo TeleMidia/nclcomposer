@@ -44,7 +44,8 @@ QWidget* PropertiesViewPlugin::getWidget()
 
 void PropertiesViewPlugin::onEntityAdded(QString pluginID, Entity *entity)
 {
-  QString line = "<" + entity->getType() + "> </" + entity->getType() + ">\n";
+  Q_UNUSED(pluginID)
+  Q_UNUSED(entity)
 }
 
 void PropertiesViewPlugin::errorMessage(QString error)
@@ -54,8 +55,7 @@ void PropertiesViewPlugin::errorMessage(QString error)
 
 void PropertiesViewPlugin::onEntityChanged(QString pluginID, Entity * entity)
 {
-  QString line = "PLUGIN (" + pluginID + ") changed the Entity (" +
-      entity->getType() + " - " + entity->getUniqueId() +")";
+  Q_UNUSED(pluginID)
 
   if(entity != NULL && currentEntity != NULL)
   {
@@ -66,8 +66,7 @@ void PropertiesViewPlugin::onEntityChanged(QString pluginID, Entity * entity)
 
 void PropertiesViewPlugin::onEntityRemoved(QString pluginID, QString entityID)
 {
-  QString line = "PLUGIN (" + pluginID + ") removed Entity (" +
-      entityID + ")";
+  Q_UNUSED(pluginID)
 
   if(entityID == currentEntityId)
   {
@@ -97,6 +96,8 @@ void PropertiesViewPlugin::init()
 
 void PropertiesViewPlugin::changeSelectedEntity(QString pluginID, void *param)
 {
+  Q_UNUSED(pluginID)
+
   QString *id = (QString*) param;
   if(id != NULL && *id != "") {
     currentEntity = project->getEntityById(*id);
@@ -201,6 +202,8 @@ void PropertiesViewPlugin::updateCurrentEntityAttr(QString attr, QString value)
 
 void PropertiesViewPlugin::validationError(QString pluginID, void * param)
 {
+  Q_UNUSED(pluginID)
+
   if (param)
   {
     pair <QString , QString> *p = (pair <QString, QString> *) param;

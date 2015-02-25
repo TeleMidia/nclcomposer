@@ -27,7 +27,8 @@
 using namespace composer::core::util;
 
 PropertyButtons::PropertyButtons(QString propName, QWidget *parent)
-  : key(propName), LineEditWithButton(parent, ":/images/esf-search.png")
+  : LineEditWithButton(parent, ":/images/esf-search.png"),
+    key(propName)
 {
   connect(mButton, SIGNAL(pressed()), SLOT(openfile()));
 

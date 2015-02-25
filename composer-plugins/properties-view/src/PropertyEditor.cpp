@@ -270,6 +270,8 @@ void PropertyEditor::filterProperties(const QString& text)
 
 bool PropertyEditor::isURL(const QString &tagname, const QString &attr)
 {
+  Q_UNUSED(tagname)
+
   /*! \todo This must be improved to use NCLStructure */
   return (attr == "src" ||
           attr == "focusSrc" ||
