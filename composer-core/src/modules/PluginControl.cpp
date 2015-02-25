@@ -182,8 +182,9 @@ void PluginControl::launchNewPlugin(IPluginFactory *factory, Project *project)
     pluginInstances.insert(project, pluginInstance);
     factoryByPlugin.insert(pluginInstance, factory);
 
-    emit addPluginWidgetToWindow(factory, pluginInstance, project,
-                                 factoryByPlugin.size());
+    emit addPluginWidgetToWindow( factory,
+                                  pluginInstance,
+                                  project);
 
     //TODO: CREATE A NEW FUNCTION TO UPDATE FROM SAVED CONTENT
     pluginInstance->init();

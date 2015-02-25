@@ -153,7 +153,8 @@ signals:
    * \param plugin
    * \param documentId
    */
-  void addPluginWidgetToWindow( IPluginFactory *pluginFactory, IPlugin *plugin,
+  void addPluginWidgetToWindow( IPluginFactory *pluginFactory,
+                                IPlugin *plugin,
                                 QString documentId );
   /*!
    * \brief addPluginWidgetToWindow
@@ -163,8 +164,9 @@ signals:
    * \param project
    * \param n
    */
-  void addPluginWidgetToWindow( IPluginFactory *pluginFactory, IPlugin *plugin,
-                                Project* project, int n );
+  void addPluginWidgetToWindow( IPluginFactory *pluginFactory,
+                                IPlugin *plugin,
+                                Project* project );
 
 private:
   /*!
