@@ -1,9 +1,9 @@
 #include "qncggraphicsinterface.h"
 
 QncgGraphicsInterface::QncgGraphicsInterface(QncgGraphicsEntity* parent)
-    : QncgGraphicsEntity(parent)
+  : QncgGraphicsEntity(parent)
 {
-    setncgType(Qncg::Interface);
+  setncgType(Qncg::Interface);
 }
 
 QncgGraphicsInterface::~QncgGraphicsInterface()
@@ -13,243 +13,186 @@ QncgGraphicsInterface::~QncgGraphicsInterface()
 
 void QncgGraphicsInterface::adjust(bool avoidCollision)
 {
-    QncgGraphicsEntity* parent = getncgGraphicsParent();
+  Q_UNUSED(avoidCollision)
 
-    if (parent != NULL){
-        // setting
-        QPointF pointa(parent->getWidth()/2, parent->getHeight()/2);
-        QPointF pointb(getLeft() + getWidth()/2, getTop() + getHeight()/2);
+  QncgGraphicsEntity* parent = getncgGraphicsParent();
 
-        if (pointa == pointb){
-            pointb.setX(pointa.x());
-            pointb.setY(pointa.y() - 10);
-        }
+  if (parent != NULL)
+  {
+    // setting
+    QPointF pointa(parent->getWidth()/2, parent->getHeight()/2);
+    QPointF pointb(getLeft() + getWidth()/2, getTop() + getHeight()/2);
 
-        QLineF line(pointa,pointb);
-
-        // adjusting
-        if (parent->contains(pointb)){
-            QPointF pointn = pointb;
-
-            qreal index = 1.0;
-
-            if (parent->contains(line.pointAt(index+0.01))){
-                while(parent->contains(pointn)){
-                    index += 0.01;
-
-                    pointn = line.pointAt(index);
-                }
-            }
-
-            setTop(pointn.y() - getHeight()/2);
-            setLeft(pointn.x() - getWidth()/2);
-
-        }else{
-            QPointF pointn = pointb;
-
-            qreal index = 1.0;
-
-            if (!parent->contains(line.pointAt(index-0.01))){
-                while(!parent->contains(pointn)){
-                    index -= 0.01;
-
-                    pointn = line.pointAt(index);
-                }
-            }
-
-            setTop(pointn.y() - getHeight()/2);
-            setLeft(pointn.x() - getWidth()/2);
-        }
+    if (pointa == pointb){
+      pointb.setX(pointa.x());
+      pointb.setY(pointa.y() - 10);
     }
 
-    // redrawing
-    if (scene() != NULL){
-        scene()->update();
+    QLineF line(pointa,pointb);
+
+    // adjusting
+    if (parent->contains(pointb)){
+      QPointF pointn = pointb;
+
+      qreal index = 1.0;
+
+      if (parent->contains(line.pointAt(index+0.01))){
+        while(parent->contains(pointn)){
+          index += 0.01;
+
+          pointn = line.pointAt(index);
+        }
+      }
+
+      setTop(pointn.y() - getHeight()/2);
+      setLeft(pointn.x() - getWidth()/2);
+
+    }else{
+      QPointF pointn = pointb;
+
+      qreal index = 1.0;
+
+      if (!parent->contains(line.pointAt(index-0.01))){
+        while(!parent->contains(pointn)){
+          index -= 0.01;
+
+          pointn = line.pointAt(index);
+        }
+      }
+
+      setTop(pointn.y() - getHeight()/2);
+      setLeft(pointn.x() - getWidth()/2);
     }
+  }
+
+  // redrawing
+  if (scene() != NULL){
+    scene()->update();
+  }
 }
 
 void QncgGraphicsInterface::move(QGraphicsSceneMouseEvent* event)
 {
-    // setting
-    qreal x = getLeft();
-    qreal y = getTop();
+  // setting
+  qreal x = getLeft();
+  qreal y = getTop();
 
-    QncgGraphicsEntity* parent = getncgGraphicsParent();
+  qreal dx = event->pos().x() - getPressLeft(); // (x1 - x0)
+  qreal dy = event->pos().y() - getPressTop();  // (y1 - y0)
 
-    qreal minx;
-    qreal miny;
+  qreal nextx = x + dx;
+  qreal nexty = y + dy;
 
-    if (parent != NULL){
-        minx = 4;
-        miny = 4;
-    }else{
-        minx = 0;
-        miny = 0;
-    }
+  // moving
+  setMoveTop(nexty);
+  setMoveLeft(nextx);
 
-    qreal maxx;
-    qreal maxy;
-
-    if (parent != NULL){
-        maxx = parent->getWidth() - getWidth() - 4;
-        maxy = parent->getHeight() - getHeight() - 4;
-    }else{
-        maxx = scene()->width() - getWidth();
-        maxy = scene()->height() - getHeight();
-    }
-
-    qreal dx = event->pos().x() - getPressLeft(); // (x1 - x0)
-    qreal dy = event->pos().y() - getPressTop();  // (y1 - y0)
-
-    qreal nextx = x + dx;
-    qreal nexty = y + dy;
-
-    // moving
-    setMoveTop(nexty);
-    setMoveLeft(nextx);
-
-    // redrawing
-    if (scene() != NULL){
-        scene()->update();
-    }
+  // redrawing
+  if (scene() != NULL){
+    scene()->update();
+  }
 }
 
 void QncgGraphicsInterface::resize(QGraphicsSceneMouseEvent* event)
 {
-    // setting
-    qreal x = getLeft();
-    qreal y = getTop();
-    qreal w = getWidth();
-    qreal h = getHeight();
+  // setting
+  qreal x = getLeft();
+  qreal y = getTop();
+  qreal w = getWidth();
+  qreal h = getHeight();
 
-    QncgGraphicsEntity* parent = getncgGraphicsParent();
+  qreal dx = event->pos().x() - getPressLeft();    // (x1 - x0)
+  qreal dy = event->pos().y() - getPressTop();     // (y1 - y0)
+  qreal dw = -dx;
+  qreal dh = -dy;
 
-    qreal minx;
-    qreal miny;
-    qreal minw;
-    qreal minh;
+  qreal nextx = x + dx;
+  qreal nexty = y + dy;
+  qreal nextw = w + dw;
+  qreal nexth = h + dh;
 
-    if (parentItem() != NULL){
-        minx = 4;
-        miny = 4;
-        minw = -1; // not used
-        minh = -1; // not used
-    }else{
-        minx = 0;
-        miny = 0;
-        minw = -1; // not used
-        minh = -1; // not used
-    }
+  // adjusting
+  switch(getncgResize()){
 
-    qreal maxx;
-    qreal maxy;
-    qreal maxw;
-    qreal maxh;
+  case Qncg::TopLeft:{
+    break;
+  }
 
-    if (parentItem() != NULL){
-        maxx = parent->getWidth() - getWidth() - 4;
-        maxy = parent->getHeight() - getHeight() - 4;
-        maxw = parent->getWidth() - 4;
-        maxh = parent->getHeight() - 4;
-    }else{
-        maxx = scene()->width() - getWidth();
-        maxy = scene()->height() - getHeight();
-        maxw = scene()->width();
-        maxh = scene()->height();
-    }
+  case Qncg::Top:{
+    nextx = x; // fixed x
+    nextw = w; // fixed width
 
-    qreal dx = event->pos().x() - getPressLeft();    // (x1 - x0)
-    qreal dy = event->pos().y() - getPressTop();     // (y1 - y0)
-    qreal dw = -dx;
-    qreal dh = -dy;
+    break;
+  }
 
-    qreal nextx = x + dx;
-    qreal nexty = y + dy;
-    qreal nextw = w + dw;
-    qreal nexth = h + dh;
+  case Qncg::TopRight:{
+    nextx = x; // fixed x
 
-    // adjusting
-    switch(getncgResize()){
+    nextw = w - dw;
 
-    case Qncg::TopLeft:{
-        break;
-    }
+    break;
+  }
 
-    case Qncg::Top:{
-        nextx = x; // fixed x
-        nextw = w; // fixed width
+  case Qncg::Right:{
+    nextx = x; // fixed x
 
-        break;
-    }
+    nextw = w - dw;
 
-    case Qncg::TopRight:{
-        nextx = x; // fixed x
+    nexty = y; // fixed y
+    nexth = h; // fixed height
 
-        nextw = w - dw;
+    break;
+  }
 
-        break;
-    }
+  case Qncg::BottomRight:{
+    nextx = x; // fixed x
 
-    case Qncg::Right:{
-        nextx = x; // fixed x
+    nextw = w - dw;
 
-        nextw = w - dw;
+    nexty = y; // fixed y
 
-        nexty = y; // fixed y
-        nexth = h; // fixed height
+    nexth = h - dh;
 
-        break;
-    }
+    break;
+  }
 
-    case Qncg::BottomRight:{
-        nextx = x; // fixed x
+  case Qncg::Bottom:{
+    nextx = x; // fixed x
+    nextw = w; // fixed width
 
-        nextw = w - dw;
+    nexty = y; // fixed y
 
-        nexty = y; // fixed y
+    nexth = h - dh;
 
-        nexth = h - dh;
+    break;
+  }
 
-        break;
-    }
+  case Qncg::BottomLeft:{
+    nexty = y; // fixed y
 
-    case Qncg::Bottom:{
-        nextx = x; // fixed x
-        nextw = w; // fixed width
+    nexth = h - dh;
 
-        nexty = y; // fixed y
+    break;
+  }
 
-        nexth = h - dh;
+  case Qncg::Left:{
+    nexty = y; // fixed y
+    nexth = h; // fixed height
 
-        break;
-    }
+    break;
+  }
+  default:
+    break;
+  }
 
-    case Qncg::BottomLeft:{
-        nexty = y; // fixed y
+  // resizing
+  setResizeTop(nexty);
+  setResizeLeft(nextx);
+  setResizeWidth(nextw);
+  setResizeHeight(nexth);
 
-        nexth = h - dh;
-
-        break;
-    }
-
-    case Qncg::Left:{
-        nexty = y; // fixed y
-        nexth = h; // fixed height
-
-        break;
-    }
-    default:
-        break;
-    }
-
-    // resizing
-    setResizeTop(nexty);
-    setResizeLeft(nextx);
-    setResizeWidth(nextw);
-    setResizeHeight(nexth);
-
-    // redrawing
-    if (scene() != NULL){
-        scene()->update();
-    }
+  // redrawing
+  if (scene() != NULL){
+    scene()->update();
+  }
 }
