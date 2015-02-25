@@ -63,10 +63,11 @@ QWidget* OutlineViewPlugin::getWidget()
 
 void OutlineViewPlugin::onEntityAdded(QString pluginID, Entity *entity)
 {
+  Q_UNUSED(pluginID)
+
   if(_isSyncingFromTextual)
     return;
 
-  (void) pluginID;
   qDebug() << "OutlineViewPlugin::onEntityAdded(" << pluginID << entity << endl;
   //  QString line = "<" + entity->getType() + "> </" + entity->getType() + ">\n";
 
@@ -134,6 +135,8 @@ void OutlineViewPlugin::errorMessage(QString error)
 
 void OutlineViewPlugin::onEntityChanged(QString pluginID, Entity * entity)
 {
+  Q_UNUSED(pluginID)
+
   if(_isSyncingFromTextual)
     return;
 
@@ -385,13 +388,18 @@ void OutlineViewPlugin::clearErrorMessages()
   }
 }
 
-void OutlineViewPlugin::clearValidationMessages(QString, void *param)
+void OutlineViewPlugin::clearValidationMessages(QString pluginID, void *param)
 {
+  Q_UNUSED(pluginID)
+  Q_UNUSED(param)
+
   clearErrorMessages();
 }
 
-void OutlineViewPlugin::validationError(QString pluginID, void * param)
+void OutlineViewPlugin::validationError(QString pluginID, void *param)
 {
+  Q_UNUSED(pluginID)
+
   if(_isSyncingFromTextual)
     return;
 
