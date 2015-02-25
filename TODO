@@ -188,11 +188,11 @@ NCL Composer Plug-ins
   * Storeboard plugin.
   * A plugin to handle CPR project:
     . Two subview:
-		  . Project
-			. Files
-		. Some actions:
-			. Add media
-			. Add file
-			. etc.
+      . Project
+      . Files
+    . Some actions:
+      . Add media
+      . Add file
+      . etc.
 
 //TODO: License
