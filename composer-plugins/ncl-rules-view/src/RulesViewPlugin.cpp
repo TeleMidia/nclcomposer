@@ -58,6 +58,8 @@ RulesViewPlugin::RulesViewPlugin() :
 
 void RulesViewPlugin::onEntityAdded(QString pluginID, Entity *entity)
 {
+  Q_UNUSED(pluginID)
+
   disconnect(_rulesTable, SIGNAL(itemChanged(QTreeWidgetItem*,int)),
              this, SLOT(updateValue(QTreeWidgetItem*)));
 
@@ -124,6 +126,8 @@ void RulesViewPlugin::onEntityChanged(QString pluginID, Entity *entity)
 
 void RulesViewPlugin::onEntityRemoved(QString pluginID, QString entityID)
 {
+  Q_UNUSED(pluginID)
+
   QList<QTreeWidgetItem *> treeItems = _items.keys();
   foreach (QTreeWidgetItem *item, treeItems)
   {
