@@ -1,20 +1,21 @@
 CONFIG += link_ncl_profile
 include (../plugins-common.pri)
 
-QT          +=  xml gui
+QT +=  xml gui
 
 # Required to link against QSCINTILLA on Windows
-DEFINES     += QSCINTILLA_DLL
+DEFINES += QSCINTILLA_DLL
 
-INCLUDEPATH +=  include \
-                ../outline-view/src \
-                ../ncl-layout-view
+INCLUDEPATH += \
+  src \
+  ../outline-view/src \
+  ../ncl-layout-view/src
 
 # We use QMAKE_CXXFLAGS instead of INCLUDEPATH because our qscintilla is
 # modified, and must be found before any other that is installed.
 # If you know a better way to do that, please report us.
-QMAKE_CXXFLAGS  += -Ideps/QScintilla-gpl-2.8/Qt4Qt5 \
-                   -Ideps/QScintilla-gpl-2.8/include
+QMAKE_CXXFLAGS += -Ideps/QScintilla-gpl-2.8/Qt4Qt5 \
+                  -Ideps/QScintilla-gpl-2.8/include
 
 release {
 LIBS      +=    -Ldeps/QScintilla-gpl-2.8/Qt4Qt5/release \

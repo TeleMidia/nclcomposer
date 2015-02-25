@@ -21,7 +21,7 @@
 #include <QObject>
 
 #include "NCLTreeWidget.h"
-#include <core/extensions/IPlugin.h>
+#include <extensions/IPlugin.h>
 using namespace composer::extension;
 
 /*!

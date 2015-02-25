@@ -1,7 +1,7 @@
 #ifndef RULESVIEWFACTORY_H
 #define RULESVIEWFACTORY_H
 
-#include <core/extensions/IPluginFactory.h>
+#include <extensions/IPluginFactory.h>
 
 #include "RulesViewPlugin.h"
 

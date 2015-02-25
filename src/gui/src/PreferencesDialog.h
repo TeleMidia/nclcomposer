@@ -17,10 +17,10 @@
 #include <QAbstractButton>
 #include <QListWidgetItem>
 
-#include <core/extensions/IPluginFactory.h>
+#include <extensions/IPluginFactory.h>
 using namespace composer::extension;
 
-#include <core/modules/PluginControl.h>
+#include <modules/PluginControl.h>
 using namespace composer::core;
 
 #include "IPreferencesPage.h"

@@ -23,7 +23,7 @@
 
 #include <QDebug>
 
-#include <core/util/Utilities.h>
+#include <util/Utilities.h>
 using namespace composer::core::util;
 
 PropertyButtons::PropertyButtons(QString propName, QWidget *parent)

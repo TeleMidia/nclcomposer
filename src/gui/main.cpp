@@ -13,7 +13,7 @@
 #include <QObject>
 #include <QStringList>
 
-#include <core/util/ComposerSettings.h>
+#include <util/ComposerSettings.h>
 
 #include "ComposerMainWindow.h"
 

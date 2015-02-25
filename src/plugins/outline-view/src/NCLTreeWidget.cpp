@@ -25,7 +25,7 @@ using namespace composer::language;
 
 #include <QVariant>
 
-#include <core/util/ComposerSettings.h>
+#include <util/ComposerSettings.h>
 using namespace composer::core::util;
 
 NCLTreeWidget::NCLTreeWidget(QWidget *parent) : QTreeWidget(parent)

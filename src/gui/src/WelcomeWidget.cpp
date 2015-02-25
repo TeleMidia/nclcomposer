@@ -9,7 +9,7 @@
  */
 #include <WelcomeWidget.h>
 #include <ui_WelcomeWidget.h>
-#include <core/modules/ProjectControl.h>
+#include <modules/ProjectControl.h>
 #include <QtGlobal>
 
 namespace composer {

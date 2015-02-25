@@ -9,6 +9,7 @@ CONFIG += silent
 
 TEMPLATE = lib
 TARGET = ComposerCore
+DESTDIR = $$PWD/../../bin/
 
 VERSION = 1.0
 CONFIG += dll

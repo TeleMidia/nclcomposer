@@ -1,8 +1,7 @@
 #include "RuleItem.h"
 
-#include <extensions/NCLStructure.h>
+#include <NCLStructure.h>
 #include <QDebug>
-
 
 using namespace composer::language;
 

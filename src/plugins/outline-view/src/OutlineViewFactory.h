@@ -19,7 +19,7 @@
 #ifndef OUTLINEVIEWPLUGINFACTORY_H
 #define OUTLINEVIEWPLUGINFACTORY_H
 
-#include <core/extensions/IPluginFactory.h>
+#include <extensions/IPluginFactory.h>
 using namespace composer::extension;
 
 #include "OutlineViewPlugin.h"

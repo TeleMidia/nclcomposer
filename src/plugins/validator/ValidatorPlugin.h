@@ -19,7 +19,7 @@
 #ifndef VALIDATORPLUGIN_H
 #define VALIDATORPLUGIN_H
 
-#include <core/extensions/IPlugin.h>
+#include <extensions/IPlugin.h>
 #include <QWidget>
 #include <QVector>
 #include <QHBoxLayout>

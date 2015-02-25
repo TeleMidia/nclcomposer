@@ -1,7 +1,8 @@
 TARGET = composer
+DESTDIR = $$PWD/../../bin/
 TEMPLATE = app
 
-CONFIG += silent
+#CONFIG += silent
 
 # I'm using FORCERELEASE variable because CONFIG and SUBDIR force three
 # executions if qmake and the last one does not preserves CONFIG from command
@@ -142,6 +143,7 @@ unix:!macx {
 
     QMAKE_LFLAGS += -Wl,-rpath,\'\$\$ORIGIN/../lib/composer\'
     QMAKE_LFLAGS += -Wl,-rpath,\'\$\$ORIGIN/../lib/composer/extensions\'
+    QMAKE_LFLAGS += -Wl,-rpath,\'.\'
 }
 else {
     target.path = $$INSTALLBASE
@@ -149,9 +151,10 @@ else {
 
 INCLUDEPATH +=  . src
 
-INCLUDEPATH   +=  ../composer-core/core/include \
-                  ../composer-core
-LIBS          +=  -L../composer-core/core
+INCLUDEPATH   +=  ../core/src \
+                  ../core
+
+LIBS          +=  -L$$DESTDIR
 
 macx {
     LIBS += -F/Library/Frameworks -framework ComposerCore

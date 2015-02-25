@@ -12,7 +12,7 @@
 
 #include <QDialog>
 
-#include <core/extensions/IPluginFactory.h>
+#include <extensions/IPluginFactory.h>
 using namespace composer::core;
 
 #include "ui_PluginDetailsDialog.h"

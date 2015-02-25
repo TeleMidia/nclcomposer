@@ -38,7 +38,10 @@ void GlobalSettings::updateWithDefaults(const QString &dataPath)
   /* Defaults plugins paths */
   QStringList defaultPluginsPath;
 
-  // The first path will look for plugins is at user's home.
+  // The first path will look for plug-ins is relative to the executable
+  defaultPluginsPath << QApplication::applicationDirPath() + "/extensions";
+
+  // Then, we will look for plug-ins is at user's home.
   defaultPluginsPath << QDir::homePath() + QString("/composer/extensions");
 
   // After that we will look for plugins in the default system path
@@ -47,7 +50,7 @@ void GlobalSettings::updateWithDefaults(const QString &dataPath)
                      << QApplication::applicationDirPath() +
                         "/../PlugIns/composer";
 #elif defined(Q_OS_WIN32)
-  defaultPluginsPath << QApplication::applicationDirPath() + "/extensions";
+
   defaultPluginsPath << "C:/Composer/extensions";
 #else
   // PREFIX Should be defined by the qmake while compiling the source code.

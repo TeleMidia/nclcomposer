@@ -16,7 +16,7 @@
  * <http://www.gnu.org/licenses/>.
  */
 #include "PropertiesViewPlugin.h"
-#include "core/modules/LanguageControl.h"
+#include "modules/LanguageControl.h"
 
 #include <QDockWidget>
 

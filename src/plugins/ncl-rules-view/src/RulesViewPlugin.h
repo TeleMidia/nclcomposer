@@ -1,7 +1,7 @@
 #ifndef RULESVIEWPLUGIN_H
 #define RULESVIEWPLUGIN_H
 
-#include <core/extensions/IPlugin.h>
+#include <extensions/IPlugin.h>
 #include <QMap>
 
 #include "RulesView.h"

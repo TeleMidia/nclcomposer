@@ -14,7 +14,7 @@
 #include <QAbstractItemModel>
 #include <QMessageBox>
 
-#include <core/util/ComposerSettings.h>
+#include <util/ComposerSettings.h>
 using namespace composer::core::util;
 
 namespace composer {

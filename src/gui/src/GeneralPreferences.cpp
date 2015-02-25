@@ -10,7 +10,7 @@
 #include "GeneralPreferences.h"
 #include "ui_GeneralPreferences.h"
 
-#include <core/util/ComposerSettings.h>
+#include <util/ComposerSettings.h>
 using namespace composer::core::util;
 
 #include <QLocale>

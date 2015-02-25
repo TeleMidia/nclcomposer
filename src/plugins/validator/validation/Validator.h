@@ -24,7 +24,7 @@
 #include "../nclmodel/nclmodel.h"
 #include "../langstruct/langstruct.h"
 #include "../message/message.h"
-#include <core/util/ComposerSettings.h>
+#include <util/ComposerSettings.h>
 #include <QDebug>
 
 using namespace composer::core::util;

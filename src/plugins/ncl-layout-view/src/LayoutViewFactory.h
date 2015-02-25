@@ -18,7 +18,7 @@
 #ifndef QNLYCOMPOSERPLUGINFACTORY_H
 #define QNLYCOMPOSERPLUGINFACTORY_H
 
-#include <core/extensions/IPluginFactory.h>
+#include <extensions/IPluginFactory.h>
 using namespace composer::extension;
 
 #include "LayoutViewPlugin.h"

@@ -64,13 +64,17 @@ macx {
   target.path = $$quote(/Library/Application Support/Composer/Extensions)
 }
 else:unix {
-  LIBS += -L$$INSTALLBASE/lib/composer -lComposerCore
+  LIBS += -L$$PWD/../../bin \
+          -L$$PWD/../../bin/extensions \
+          -L$$INSTALLBASE/lib/composer -lComposerCore
 
   link_ncl_profile {
     LIBS += -L$$INSTALLBASE/lib/composer/extensions -lNCLLanguageProfile
   }
 
-  INCLUDEPATH += include $$INSTALLBASE/include/composer \
+  INCLUDEPATH += $$PWD/../core/src \
+                 $$PWD/ncl-profile/ \
+                 $$INSTALLBASE/include/composer \
                  $$INSTALLBASE/include/composer/core \
                  $$INSTALLBASE/include/composer/extensions
 
@@ -106,4 +110,4 @@ else {
 }
 
 INSTALLS += target
-DESTDIR  = $$PWD/build
+DESTDIR  = $$PWD/../../bin/extensions/

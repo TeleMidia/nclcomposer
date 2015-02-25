@@ -17,7 +17,7 @@
  */
 #include "OutlineViewPlugin.h"
 
-#include "core/modules/LanguageControl.h"
+#include "modules/LanguageControl.h"
 
 OutlineViewPlugin::OutlineViewPlugin() :
   _window(new NCLTreeWidget(0)), _windowBuffering(new NCLTreeWidget(0))

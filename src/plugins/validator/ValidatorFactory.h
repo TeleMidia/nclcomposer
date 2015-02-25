@@ -21,7 +21,7 @@
 
 #include <QWidget>
 #include <validation/Validator.h>
-#include <core/extensions/IPluginFactory.h>
+#include <extensions/IPluginFactory.h>
 #include "ValidatorPlugin.h"
 
 using namespace composer::extension;

@@ -24,7 +24,7 @@
 #include <QListWidget>
 #include <QListWidgetItem>
 
-#include <core/extensions/IPlugin.h>
+#include <extensions/IPlugin.h>
 using namespace composer::extension;
 
 #include "PropertyEditor.h"

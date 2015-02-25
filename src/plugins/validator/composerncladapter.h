@@ -23,7 +23,7 @@
 #include "nclmodel/nclmodel.h"
 #include "validation/Validator.h"
 #include "message/message.h"
-#include <core/model/Entity.h>
+#include <model/Entity.h>
 #include <QDebug>
 #include <QMap>
 #include <vector>

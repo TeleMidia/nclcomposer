@@ -21,7 +21,7 @@
 
 #include <QFileDialog>
 
-#include <core/util/Utilities.h>
+#include <util/Utilities.h>
 using namespace composer::core::util;
 
 QsciNCLAPIs::QsciNCLAPIs(QsciLexer * 	lexer) :

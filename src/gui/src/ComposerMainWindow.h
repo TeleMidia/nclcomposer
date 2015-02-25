@@ -46,12 +46,12 @@
 #include <QPainter>
 #include <QTreeView>
 
-#include <core/modules/PluginControl.h>
-#include <core/modules/ProjectControl.h>
-#include <core/modules/LanguageControl.h>
+#include <modules/PluginControl.h>
+#include <modules/ProjectControl.h>
+#include <modules/LanguageControl.h>
 using namespace composer::core;
 
-#include <core/util/ComposerSettings.h>
+#include <util/ComposerSettings.h>
 using namespace composer::core::util;
 
 #include "ComposerSplashScreen.h"
