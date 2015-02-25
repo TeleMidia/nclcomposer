@@ -92,6 +92,10 @@ bool NCLDocumentParser::endElement(const QString &namespaceURI,
                                    const QString &localName,
                                    const QString &qName)
 {
+  Q_UNUSED(namespaceURI)
+  Q_UNUSED(localName)
+  Q_UNUSED(qName)
+
   lockStack.lock();
   if(elementStack.size())
     elementStack.pop();

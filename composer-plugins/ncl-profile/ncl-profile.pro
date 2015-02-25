@@ -1,5 +1,7 @@
 include (../plugins-common.pri)
 
+CONFiG += silent
+
 QT       -= gui
 QT       += xml
 
@@ -25,12 +27,10 @@ HEADERS +=  \
 
 headers_nclprofile.files = $$HEADERS
 
-message ($$INSTALLBASE)
 headers_nclprofile.path = $$INSTALLBASE/include/composer/extensions
-message ($$headers_nclprofile.files)
 
 OTHER_FILES += \
     nclLanguageProfile.json \
     nclLanguageProfile.json
 
-INSTALLS += target headers_nclprofile
+INSTALLS += headers_nclprofile
