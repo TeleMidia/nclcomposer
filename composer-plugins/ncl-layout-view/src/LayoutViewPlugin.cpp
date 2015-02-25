@@ -206,7 +206,7 @@ void NCLLayoutViewPlugin::init()
   qDebug() << "[QNLY] data = " << data;
   QStringList lines = data.split("\n");
   bool gridVisible = false, ok = true;
-  int resolutionWidth, resolutionHeight;
+  int resolutionWidth = 0, resolutionHeight = 0;
 
   for(int i = 0; i < lines.size(); i++)
   {
@@ -272,11 +272,14 @@ void NCLLayoutViewPlugin::init()
 
 void NCLLayoutViewPlugin::errorMessage(QString error)
 {
+  Q_UNUSED(error)
   //TODO: void QnlyComposerPlugin::errorMessage(QString error)
 }
 
 void NCLLayoutViewPlugin::onEntityAdded(QString pluginID, Entity *entity)
 {
+  Q_UNUSED(pluginID)
+
   if (entity != NULL)
   {
     if (entity->getType() == "region")
@@ -292,6 +295,8 @@ void NCLLayoutViewPlugin::onEntityAdded(QString pluginID, Entity *entity)
 
 void NCLLayoutViewPlugin::onEntityRemoved(QString pluginID, QString entityID)
 {
+  Q_UNUSED(pluginID)
+
   if (!entityID.isEmpty())
   {
     if (regions.contains(entityID))
@@ -307,6 +312,8 @@ void NCLLayoutViewPlugin::onEntityRemoved(QString pluginID, QString entityID)
 
 void NCLLayoutViewPlugin::onEntityChanged(QString pluginID, Entity *entity)
 {
+  Q_UNUSED(pluginID)
+
   if (entity != NULL)
   {
     if (entity->getType() == "region")
@@ -322,6 +329,8 @@ void NCLLayoutViewPlugin::onEntityChanged(QString pluginID, Entity *entity)
 
 void NCLLayoutViewPlugin::changeSelectedEntity (QString pluginID, void* param)
 {
+  Q_UNUSED(pluginID)
+
   //if(pluginID != this->pluginInstanceID)
   // {
   QString* entityUID = (QString*) param;
@@ -783,6 +792,8 @@ void NCLLayoutViewPlugin::addRegion(const QString &regionUID,
                                     const QString &regionbaseUID,
                                     const QMap<QString, QString> &attributes)
 {
+  Q_UNUSED(regionUID)
+
   // setting
   QMap<QString, QString> standard;
 
@@ -825,6 +836,8 @@ void NCLLayoutViewPlugin::addRegion(const QString &regionUID,
 void NCLLayoutViewPlugin::removeRegion(const QString &regionUID,
                                        const QString &regionbaseUID)
 {
+  Q_UNUSED(regionbaseUID)
+
   if (regions.contains(regionUID))
   {
     emit removeEntity(regions[regionUID], false);
@@ -835,6 +848,8 @@ void NCLLayoutViewPlugin::changeRegion(const QString &regionUID,
                                        const QString &regionbaseUID,
                                        const QMap<QString, QString> &attributes)
 {
+  Q_UNUSED(regionbaseUID)
+
   if (regions.contains(regionUID))
   {
     // setting
@@ -875,6 +890,8 @@ void NCLLayoutViewPlugin::changeRegion(const QString &regionUID,
 void NCLLayoutViewPlugin::selectRegion(const QString &regionUID,
                                        const QString &regionbaseUID)
 {
+  Q_UNUSED(regionbaseUID)
+
   if(selectedId != NULL)
   {
     delete selectedId;
@@ -891,6 +908,8 @@ void NCLLayoutViewPlugin::selectRegion(const QString &regionUID,
 void NCLLayoutViewPlugin::addRegionBase(const QString &regionbaseUID,
                                         const QMap<QString, QString> &attributes)
 {
+  Q_UNUSED(regionbaseUID)
+
   // setting
   QMap<QString, QString> standard;
 
@@ -1156,6 +1175,7 @@ void NCLLayoutViewPlugin::performMediaOverRegionAction(const QString &mediaId,
       QPushButton *cancelButton =
           msgBox.addButton(tr("Nothing!"),
                            QMessageBox::ActionRole);
+      Q_UNUSED(cancelButton)
 
       //  msgBox.setIcon(QMessageBox::Question);
       msgBox.exec();

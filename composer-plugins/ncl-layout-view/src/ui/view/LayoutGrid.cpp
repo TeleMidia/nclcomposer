@@ -1,9 +1,10 @@
 #include "LayoutGrid.h"
 
-LayoutGrid::LayoutGrid(QGraphicsItem* parent, QGraphicsScene* scene)
+LayoutGrid::LayoutGrid(QGraphicsItem* parent,
+                       QGraphicsScene* scene)
   : QGraphicsRectItem(parent)
 {
-
+  Q_UNUSED(scene)
 }
 
 LayoutGrid::~LayoutGrid()
@@ -35,6 +36,9 @@ void LayoutGrid::paint( QPainter *painter,
                         const QStyleOptionGraphicsItem *option,
                         QWidget *widget)
 {
+  Q_UNUSED(option)
+  Q_UNUSED(widget)
+
   painter->setPen(pen);
 
   QRectF r = rect();

@@ -914,41 +914,33 @@ void LayoutRegion::resize(QGraphicsSceneMouseEvent* event)
   /* setting minimal bounds */
   qreal minx;
   qreal miny;
-  qreal minw;
-  qreal minh;
 
   if (parentItem() != NULL)
   {
     minx = 4;
     miny = 4;
-    minw = -1; // not used
-    minh = -1; // not used
   }
   else
   {
     minx = 0;
     miny = 0;
-    minw = -1; // not used
-    minh = -1; // not used
   }
 
   /* setting maximal bounds */
-  qreal maxx;
-  qreal maxy;
+//  qreal maxx;
+//  qreal maxy;
   qreal maxw;
   qreal maxh;
 
   if (parentItem() != NULL)
   {
-    maxx = parentItem()->boundingRect().width() - width - 4;
-    maxy = parentItem()->boundingRect().height() - height - 4;
     maxw = parentItem()->boundingRect().width() - 4;
     maxh = parentItem()->boundingRect().height() - 4;
   }
   else
   {
-    maxx = scene()->width() - width;
-    maxy = scene()->height() - height;
+//    maxx = scene()->width() - width;
+//    maxy = scene()->height() - height;
     maxw = scene()->width();
     maxh = scene()->height();
   }
@@ -1199,6 +1191,7 @@ void LayoutRegion::paint(QPainter *painter,
                          const QStyleOptionGraphicsItem *option,
                          QWidget *widget)
 {
+  Q_UNUSED(option)
   Q_UNUSED(widget)
 
   QString color = this->color;
@@ -1645,6 +1638,8 @@ void LayoutRegion::dragEnterEvent(QGraphicsSceneDragDropEvent *event)
 
 void LayoutRegion::dragLeaveEvent(QGraphicsSceneDragDropEvent *event)
 {
+  Q_UNUSED(event)
+
   isDragging = false;
 
   scene()->update();// FIXME: Can we do better?
