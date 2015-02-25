@@ -110,6 +110,7 @@ QColor MyLexer::defaultColor(int style)
 
 QFont  MyLexer::defaultFont(int style)
 {
+  Q_UNUSED(style)
   return QFont("Courier New", 10);
 }
 

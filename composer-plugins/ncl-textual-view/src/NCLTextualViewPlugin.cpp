@@ -284,6 +284,7 @@ void NCLTextualViewPlugin::onEntityAdded(QString pluginID, Entity *entity)
 
 void NCLTextualViewPlugin::errorMessage(QString error)
 {
+  Q_UNUSED(error)
   //  qDebug() << "NCLTextualViewPlugin::onEntityAddError(" << error << ")";
 }
 
@@ -493,6 +494,8 @@ bool NCLTextualViewPlugin::saveSubsession()
 
 void NCLTextualViewPlugin::changeSelectedEntity(QString pluginID, void *param)
 {
+  Q_UNUSED(pluginID)
+
   if(_isSyncing)
     return; // do nothing;
 
@@ -680,7 +683,7 @@ void NCLTextualViewPlugin::incrementalUpdateCoreModel()
 
     QVector <Entity *> entityChildren = curEntity->getChildren();
 
-    uint i, j;
+    int i, j;
     for(i = 0, j = 0;
         i < children.size() && j < entityChildren.size();
         i++, j++)
@@ -794,7 +797,7 @@ void NCLTextualViewPlugin::incrementalUpdateCoreModel()
       child = child.nextSiblingElement();
     }
     entityChildren = curEntity->getChildren();
-    for(uint i = 0; i < entityChildren.size(); i++)
+    for(int i = 0; i < entityChildren.size(); i++)
       entities.push_back(entityChildren[i]);
   }
 
@@ -930,6 +933,8 @@ void NCLTextualViewPlugin::printEntitiesOffset()
 
 void NCLTextualViewPlugin::manageFocusLost(QFocusEvent *event)
 {
+  Q_UNUSED(event)
+
 #ifndef NCLEDITOR_STANDALONE
 
   // When AutoComplete list gets the focus, the QApplication::focusWidget
@@ -987,11 +992,14 @@ void NCLTextualViewPlugin::updateErrorMessages()
 
 void NCLTextualViewPlugin::clearValidationMessages(QString, void *param)
 {
+  Q_UNUSED(param)
   _nclTextEditor->clearErrorIndicators();
 }
 
 void NCLTextualViewPlugin::validationError(QString pluginID, void * param)
 {
+  Q_UNUSED(pluginID)
+
   if(_isSyncing)
     return;
 

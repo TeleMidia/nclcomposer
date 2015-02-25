@@ -145,6 +145,10 @@ void NCLTextEditor::markError ( const QString &description,
                                 int column,
                                 int severity)
 {
+  Q_UNUSED(file)
+  Q_UNUSED(column)
+  Q_UNUSED(severity)
+
   //TODO: Show Error Messages
   QString tmp = this->text(line);
 
@@ -561,6 +565,7 @@ void NCLTextEditor::clearFillingAttributeIndicator()
 
 void NCLTextEditor::focusInEvent(QFocusEvent *e)
 {
+  Q_UNUSED(e)
 #ifndef NCLEDITOR_STANDALONE
   if(!_focusInIgnoringCurrentText)
     _textWithoutUserInter = text();
@@ -757,7 +762,7 @@ QList <QDomElement> NCLTextEditor::elementsByTagname(const QDomDocument &domDoc,
 {
   QDomNodeList elements = domDoc.elementsByTagName(tagname);
   QList <QDomElement> ret;
-  for(int i = 0; i < elements.length(); i++)
+  for(uint i = 0; i < elements.length(); i++)
   {
     ret.push_back(elements.at(i).toElement());
   }

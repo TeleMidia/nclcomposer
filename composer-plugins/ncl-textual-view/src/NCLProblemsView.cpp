@@ -79,6 +79,8 @@ void NCLProblemsView::addProblem( QString message,
                                   int column,
                                   int severity /*ERROR OR WARNING?*/)
 {
+  Q_UNUSED(column)
+
   QTreeWidgetItem *error = new QTreeWidgetItem(_problemsList);
   if(severity == 0)
     error->setIcon(0, QIcon(":/images/error-icon-16.png"));
