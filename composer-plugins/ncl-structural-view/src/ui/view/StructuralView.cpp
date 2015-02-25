@@ -289,6 +289,8 @@ void StructuralView::read(QDomElement element, QDomElement parent)
 
 void StructuralView::readLink(QDomElement element, QDomElement parent)
 {
+  Q_UNUSED(parent)
+
   // \fixme Why this is here, and not inside the read method ?
   QMap<QString, QString> properties;
 
@@ -1238,6 +1240,8 @@ void StructuralView::addEntity(const QString uid, const QString parent,
 
 void StructuralView::removeEntity(const QString uid, bool undo, bool rmRef)
 {
+  Q_UNUSED(rmRef)
+
   // traceEntities();
 
   StructuralConnector* cONN = NULL;
@@ -1982,12 +1986,16 @@ void StructuralView::adjustEntity(StructuralGraphicsEntity *entity)
       }
       break;
     }
+
+    default:
+      // do nothing?
+      break;
   }
 }
 
 void StructuralView::adjustContext(StructuralGraphicsContext* entity)
 {
-
+  Q_UNUSED(entity)
 }
 
 // \todo refactory
@@ -1995,10 +2003,6 @@ void StructuralView::adjustMedia(StructuralGraphicsMedia* entity)
 {
   QString referUID = entity->getReferUID();
   QString refer = entity->getRefer();
-
-//  qDebug() << "===================================== ID" <<  entity->getnstId();
-//  qDebug() << "===================================== REFER" << refer;
-//  qDebug() << "===================================== REFERUID" << referUID;
 
   if (!refer.isEmpty() && !referUID.isEmpty())
   {
@@ -2499,6 +2503,7 @@ void StructuralView::changeLink(StructuralGraphicsLink* entity,
 
 void StructuralView::adjustLink(StructuralGraphicsLink* entity)
 {
+  Q_UNUSED(entity)
   // TODO
 }
 
@@ -2750,6 +2755,7 @@ void StructuralView::changeAction(const QString &uid,
 void StructuralView::changeBindParam(const QString &uid,
                                const QMap<QString, QString> &properties)
 {
+  Q_UNUSED(uid)
   if (entities.contains(properties.value("parent")))
   {
     StructuralGraphicsEntity* e = entities[properties.value("parent")];
@@ -3092,9 +3098,13 @@ void StructuralView::requestEntityAddition(StructuralGraphicsEntity* entity, boo
 }
 
 // \todo refactory
-void StructuralView::requestEntityRemotion(StructuralGraphicsEntity* entity, bool undo,
-                                     bool rmRefs, bool notify)
+void StructuralView::requestEntityRemotion(StructuralGraphicsEntity* entity,
+                                           bool undo,
+                                           bool rmRefs,
+                                           bool notify)
 {
+  Q_UNUSED(rmRefs)
+
   qDebug() << "[QNST]" << ":" << "Requesting entity remotion '" +
               entity->getnstUid() + "'" +
               entity->getnstType() + "=" +
@@ -4227,16 +4237,16 @@ void StructuralView::mouseReleaseEvent(QMouseEvent* event)
   QGraphicsView::mouseReleaseEvent(event);
 }
 
-void StructuralView::addNodetoNodeEdge(StructuralGraphicsEntity* entitya,
-                                 StructuralGraphicsEntity* entityb)
+void StructuralView::addNodetoNodeEdge( StructuralGraphicsEntity* entitya,
+                                        StructuralGraphicsEntity* entityb)
 {
   StructuralGraphicsEntity* parenta = entitya->getnstGraphicsParent();
   StructuralGraphicsEntity* parentb = entityb->getnstGraphicsParent();
 
-  if ((LINK_WITH_PARENT && parenta != NULL || parentb != NULL) ||
-      parenta != NULL && parentb != NULL)
+  if ((LINK_WITH_PARENT && ((parenta != NULL) || (parentb != NULL)) ) ||
+      ((parenta != NULL) && (parentb != NULL)))
   {
-    if (parenta == parentb || parenta == entityb || parentb == entitya)
+    if ((parenta == parentb) || (parenta == entityb) || (parentb == entitya))
     {
       // aggregator -> node
       if (entitya->getnstType() == Structural::Link)
@@ -4265,11 +4275,11 @@ void StructuralView::addNodetoInterfaceEdge(StructuralGraphicsEntity* entitya,
   StructuralGraphicsEntity* parenta = entitya->getnstGraphicsParent();
   StructuralGraphicsEntity* parentb = entityb->getnstGraphicsParent();
 
-  if ((LINK_WITH_PARENT && parenta != NULL || parentb != NULL) ||
-      parenta != NULL && parentb != NULL)
+  if ((LINK_WITH_PARENT && ((parenta != NULL) || (parentb != NULL))) ||
+      ((parenta != NULL) && (parentb != NULL)))
   {
-    if ((LINK_WITH_PARENT && parenta == parentb) ||
-        parenta == parentb->getnstGraphicsParent())
+    if ((LINK_WITH_PARENT && (parenta == parentb)) ||
+        (parenta == parentb->getnstGraphicsParent()))
     {
       // aggregator -> interface
       if (entitya->getnstType() == Structural::Link)
@@ -4308,7 +4318,7 @@ void StructuralView::addInterfacetoNodeEdge(StructuralGraphicsEntity* entitya,
   StructuralGraphicsEntity* parenta = entitya->getnstGraphicsParent();
   StructuralGraphicsEntity* parentb = entityb->getnstGraphicsParent();
 
-  if (parenta != NULL && parentb != NULL)
+  if ((parenta != NULL) && (parentb != NULL))
   {
     if (parenta == parentb)
     {
@@ -4413,12 +4423,12 @@ StructuralGraphicsLink* StructuralView::createLink(StructuralGraphicsEntity* ent
   StructuralGraphicsEntity* parenta = entitya->getnstGraphicsParent();
   StructuralGraphicsEntity* parentb = entityb->getnstGraphicsParent();
 
-  if ((LINK_WITH_PARENT && parenta != NULL || parentb != NULL) ||
-      parenta != NULL && parentb != NULL)
+  if (( (LINK_WITH_PARENT) && ((parenta != NULL) || (parentb != NULL))) ||
+      ((parenta != NULL) && (parentb != NULL)))
   {
       StructuralGraphicsLink* linkDot = NULL;
 
-      if (LINK_WITH_PARENT && parenta == entityb)
+      if ((LINK_WITH_PARENT) && (parenta == entityb))
       {
         StructuralGraphicsLink* linkDot = new StructuralGraphicsLink((StructuralGraphicsNode*) parenta);
         parenta->addnstGraphicsEntity(linkDot);
@@ -4435,7 +4445,7 @@ StructuralGraphicsLink* StructuralView::createLink(StructuralGraphicsEntity* ent
 
         return linkDot;
       }
-      else if (LINK_WITH_PARENT && parentb == entitya)
+      else if (LINK_WITH_PARENT && (parentb == entitya))
       {
         StructuralGraphicsLink* linkDot = new StructuralGraphicsLink((StructuralGraphicsNode*) parentb);
         parenta->addnstGraphicsEntity(linkDot);
@@ -5123,6 +5133,8 @@ void QnstView::animFinished()
 
 void StructuralView::focusOutEvent(QFocusEvent *event)
 {
+  Q_UNUSED(event)
+
   StructuralGraphicsEntity *entity;
   foreach(entity, entities.values())
   {

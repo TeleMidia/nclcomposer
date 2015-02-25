@@ -225,36 +225,6 @@ void StructuralGraphicsInterface::move(QGraphicsSceneMouseEvent* event)
   qreal x = getLeft();
   qreal y = getTop();
 
-  StructuralGraphicsEntity* parent = getnstGraphicsParent();
-
-  qreal minx;
-  qreal miny;
-
-  if (parent != NULL)
-  {
-    minx = 4;
-    miny = 4;
-  }
-  else
-  {
-    minx = 0;
-    miny = 0;
-  }
-
-  qreal maxx;
-  qreal maxy;
-
-  if (parent != NULL)
-  {
-    maxx = parent->getWidth() - getWidth() - 4;
-    maxy = parent->getHeight() - getHeight() - 4;
-  }
-  else
-  {
-    maxx = scene()->width() - getWidth();
-    maxy = scene()->height() - getHeight();
-  }
-
   qreal dx = event->pos().x() - getPressLeft(); // (x1 - x0)
   qreal dy = event->pos().y() - getPressTop();  // (y1 - y0)
 
@@ -277,48 +247,6 @@ void StructuralGraphicsInterface::resize(QGraphicsSceneMouseEvent* event)
   qreal y = getTop();
   qreal w = getWidth();
   qreal h = getHeight();
-
-  StructuralGraphicsEntity* parent = getnstGraphicsParent();
-
-  qreal minx;
-  qreal miny;
-  qreal minw;
-  qreal minh;
-
-  if (parentItem() != NULL)
-  {
-    minx = 4;
-    miny = 4;
-    minw = -1; // not used
-    minh = -1; // not used
-  }
-  else
-  {
-    minx = 0;
-    miny = 0;
-    minw = -1; // not used
-    minh = -1; // not used
-  }
-
-  qreal maxx;
-  qreal maxy;
-  qreal maxw;
-  qreal maxh;
-
-  if (parentItem() != NULL)
-  {
-    maxx = parent->getWidth() - getWidth() - 4;
-    maxy = parent->getHeight() - getHeight() - 4;
-    maxw = parent->getWidth() - 4;
-    maxh = parent->getHeight() - 4;
-  }
-  else
-  {
-    maxx = scene()->width() - getWidth();
-    maxy = scene()->height() - getHeight();
-    maxw = scene()->width();
-    maxh = scene()->height();
-  }
 
   qreal dx = event->pos().x() - getPressLeft();    // (x1 - x0)
   qreal dy = event->pos().y() - getPressTop();     // (y1 - y0)
@@ -401,6 +329,10 @@ void StructuralGraphicsInterface::resize(QGraphicsSceneMouseEvent* event)
 
       break;
     }
+
+    default:
+      // do nothing?
+      break;
   }
 
   // resizing

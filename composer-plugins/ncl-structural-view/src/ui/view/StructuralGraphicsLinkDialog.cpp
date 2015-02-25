@@ -56,6 +56,7 @@ bool CompleteLineEdit::eventFilter(QObject *object, QEvent *event)
 
 void CompleteLineEdit::hideEvent ( QHideEvent * event )
 {
+  Q_UNUSED(event)
   listView->hide();
 }
 
@@ -220,14 +221,14 @@ void StructuralGraphicsLinkDialog::init(QMap<QString, StructuralConnector*> conn
   {
     setMinimumWidth(350);
     updateGeometry();
-    QWidget *screen = NULL;
+    // QWidget *screen = NULL;
     QRect screenGeometry;
 
     if(this->parentWidget())
     {
-      screen = QApplication::desktop()->screen(
-                QApplication::desktop()->screenNumber(this->parentWidget())
-               );
+      //screen = QApplication::desktop()->screen(
+      //          QApplication::desktop()->screenNumber(this->parentWidget())
+      //         );
 
       screenGeometry = QApplication::desktop()->screenGeometry(this->parentWidget());
     }
@@ -318,6 +319,7 @@ void StructuralGraphicsLinkDialog::adjustBinds(QString conn)
 
 void StructuralGraphicsLinkDialog::showEvent(QShowEvent *evt)
 {
+  Q_UNUSED(evt)
   this->connLineEdit->setText("");
   this->connLineEdit->setFocus();
 }

@@ -98,6 +98,8 @@ void StructuralGraphicsEdge::setAdjAngle(qreal adjangle)
 
 void StructuralGraphicsEdge::adjust(bool avoidCollision)
 {
+  Q_UNUSED(avoidCollision)
+
   if (entitya != NULL && entityb != NULL)
   {
     QLineF line = QLineF(QPointF(entitya->getLeft() + entitya->getWidth()/2,
@@ -272,11 +274,13 @@ void StructuralGraphicsEdge::aux_adjust(QPointF pointa, QPointF pointb)
 
 void StructuralGraphicsEdge::move(QGraphicsSceneMouseEvent* event)
 {
+  Q_UNUSED(event)
   // nothing to do
 }
 
 void StructuralGraphicsEdge::resize(QGraphicsSceneMouseEvent* event)
 {
+  Q_UNUSED(event)
   // nothing to do
 }
 

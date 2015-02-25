@@ -920,9 +920,10 @@ void StructuralGraphicsBind::setParams(QMap<QString, QString> params)
 
 void StructuralGraphicsBind::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
 {
+  Q_UNUSED(event)
+
   if (conn != NULL)
   {
-    QString UID = "";
     QMap<QString, QString> values;
 
     if (params.isEmpty())

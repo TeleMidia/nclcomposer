@@ -27,6 +27,8 @@ void StructuralViewLink::setLine(QLineF line)
 
 void StructuralViewLink::adjust(bool avoidCollision)
 {
+  Q_UNUSED(avoidCollision)
+
   QPointF pointa = line.p1();
   QPointF pointb = line.p2();
 
@@ -149,15 +151,18 @@ void StructuralViewLink::draw(QPainter* painter)
 
 void StructuralViewLink::delineate(QPainterPath* painter) const
 {
+  Q_UNUSED(painter)
   // nothing to do
 }
 
 void StructuralViewLink::move(QGraphicsSceneMouseEvent* event)
 {
+  Q_UNUSED(event)
   // nothing to do
 }
 
 void StructuralViewLink::resize(QGraphicsSceneMouseEvent* event)
 {
+  Q_UNUSED(event)
   // nothing to do
 }

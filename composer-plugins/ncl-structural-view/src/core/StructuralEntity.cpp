@@ -109,7 +109,7 @@ void StructuralEntity::addnstEntity(StructuralEntity* entity)
     qWarning() << "[QNST] Warning! You are adding the same entity twice as \
       child of " << this << __FILE__ << __LINE__;
 #else
-//    qWarning() << "[QNST] Warning! You are adding the same entity twice as \
+//    qWarning() << "[QNST] Warning! You are adding the same entity twice as
 //      child of " << (int) this << __FILE__ << __LINE__;
 #endif
 

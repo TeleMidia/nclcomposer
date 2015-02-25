@@ -193,6 +193,8 @@ bool StructuralGraphicsEntity::createEntity(Structural::EntityType type)
   entity->adjust();
 
   emit entityAdded(entity);
+
+  return true;
 }
 
 void StructuralGraphicsEntity::contextMenuEvent(QGraphicsSceneContextMenuEvent* event)

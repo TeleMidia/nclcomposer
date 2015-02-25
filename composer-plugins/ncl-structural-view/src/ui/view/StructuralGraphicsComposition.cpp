@@ -183,6 +183,8 @@ void StructuralGraphicsComposition::collapse()
 
 void StructuralGraphicsComposition::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
 {
+  Q_UNUSED(event)
+
   if (tmp == NULL)
   {
     tmp = new StructuralGraphicsComposition();

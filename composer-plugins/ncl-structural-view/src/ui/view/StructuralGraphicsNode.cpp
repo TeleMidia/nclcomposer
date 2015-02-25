@@ -234,38 +234,6 @@ void StructuralGraphicsNode::move(QGraphicsSceneMouseEvent* event)
   qreal x = getLeft();
   qreal y = getTop();
 
-  QncgGraphicsEntity* parent = getncgGraphicsParent();
-
-  // setting minimal position
-  qreal minx;
-  qreal miny;
-
-  if (parent != NULL)
-  {
-    minx = 4;
-    miny = 4;
-  }
-  else
-  {
-    minx = 0;
-    miny = 0;
-  }
-
-  // setting maximal position
-  qreal maxx;
-  qreal maxy;
-
-  if (parent != NULL)
-  {
-    maxx = parent->getWidth() - getWidth() - 4;
-    maxy = parent->getHeight() - getHeight() - 4;
-  }
-  else
-  {
-    maxx = scene()->width() - getWidth();
-    maxy = scene()->height() - getHeight();
-  }
-
   // setting delta
   qreal dx = event->pos().x() - getPressLeft(); // (x1 - x0)
   qreal dy = event->pos().y() - getPressTop();  // (y1 - y0)
@@ -278,7 +246,6 @@ void StructuralGraphicsNode::move(QGraphicsSceneMouseEvent* event)
   setMoveTop(nexty);
   setMoveLeft(nextx);
 
-
   scene()->update();
 }
 
@@ -289,50 +256,6 @@ void StructuralGraphicsNode::resize(QGraphicsSceneMouseEvent* event)
   qreal y = getTop();
   qreal w = getWidth();
   qreal h = getHeight();
-
-  QncgGraphicsEntity* parent = getncgGraphicsParent();
-
-  // setting minimal bounds
-  qreal minx;
-  qreal miny;
-  qreal minw;
-  qreal minh;
-
-  if (parentItem() != NULL)
-  {
-    minx = 4;
-    miny = 4;
-    minw = -1; // not used
-    minh = -1; // not used
-  }
-  else
-  {
-    minx = 0;
-    miny = 0;
-    minw = -1; // not used
-    minh = -1; // not used
-  }
-
-  // setting maximal bounds
-  qreal maxx;
-  qreal maxy;
-  qreal maxw;
-  qreal maxh;
-
-  if (parentItem() != NULL)
-  {
-    maxx = parent->getWidth() - getWidth() - 4;
-    maxy = parent->getHeight() - getHeight() - 4;
-    maxw = parent->getWidth() - 4;
-    maxh = parent->getHeight() - 4;
-  }
-  else
-  {
-    maxx = scene()->width() - getWidth();
-    maxy = scene()->height() - getHeight();
-    maxw = scene()->width();
-    maxh = scene()->height();
-  }
 
   // setting delta
   qreal dx = event->pos().x() - getPressLeft();    // (x1 - x0)
@@ -418,6 +341,10 @@ void StructuralGraphicsNode::resize(QGraphicsSceneMouseEvent* event)
 
       break;
     }
+
+    default:
+      //do nothing?
+      break;
   }
 
   // resizing

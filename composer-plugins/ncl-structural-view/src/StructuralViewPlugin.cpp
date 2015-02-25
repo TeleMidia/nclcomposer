@@ -114,10 +114,11 @@ void StructuralViewPlugin::init()
 
       if(nstEntity != NULL)
       {
-        QMap <QString, QString>::iterator begin, end, it;
-        QMap <QString, QString> userData;
+//        QMap <QString, QString>::iterator begin, end, it;
+//        QMap <QString, QString> userData;
 
-        Entity *entity = project->getEntityById(coreID);
+//        Entity *entity = project->getEntityById(coreID);
+
         // if(entity != NULL)
         //{
           // entity->getAttributeIterator(begin, end);
@@ -288,7 +289,7 @@ void StructuralViewPlugin::onEntityAdded(QString pluginID, Entity *entity)
 
 void StructuralViewPlugin::errorMessage(QString error)
 {
-
+  Q_UNUSED(error)
 }
 
 void StructuralViewPlugin::onEntityChanged(QString pluginID, Entity *entity)
@@ -343,6 +344,8 @@ void StructuralViewPlugin::onEntityRemoved(QString pluginID, QString entityID)
 
 void StructuralViewPlugin::changeSelectedEntity(QString pluginID, void* param)
 {
+  Q_UNUSED(pluginID)
+
   if(isSyncingFromTextual) return;
   QString* entityUID = (QString*) param;
 
@@ -1723,6 +1726,8 @@ void StructuralViewPlugin::requestConnectorAddition(const QString uid,
                                                   const QString parent,
                                        const QMap<QString, QString> &properties)
 {
+  Q_UNUSED(parent)
+
   requestConnectorDependence();
 
   qWarning() << "QnstComposerPlugin::requestConnectorAddition";
@@ -1764,6 +1769,8 @@ void StructuralViewPlugin::requestComplexConnectorAddition(const QString uid,
                                                          const QString parent,
                                        const QMap<QString, QString> &properties)
 {
+  Q_UNUSED(parent)
+
   requestConnectorDependence();
 
   QList<Entity*> list = getProject()->getEntitiesbyType("connectorBase");
@@ -2299,11 +2306,15 @@ void StructuralViewPlugin::textualFinishSync(QString, void*)
 
 void StructuralViewPlugin::clearValidationError(QString, void *param)
 {
+  Q_UNUSED(param)
+
   view->clearValidationErrors();
 }
 
 void StructuralViewPlugin::validationError(QString pluginID, void *param)
 {
+  Q_UNUSED(pluginID)
+
   if(isSyncingFromTextual)
     return;
 
