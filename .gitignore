@@ -22,3 +22,4 @@ moc_*
 Thumbs.db
 *.exe
 *~
+bin/
