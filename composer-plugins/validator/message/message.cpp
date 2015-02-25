@@ -36,7 +36,7 @@ Message::Message (string language)
   {
     line = QString (messageFile.readLine()).toStdString();
 
-    int i;
+    uint i;
     for (i = 0; i < line.size(); i++)
     {
       if (line[i] != ' ')
@@ -68,20 +68,22 @@ Message::Message (string language)
   messageFile.close();
 }
 
-string Message::createMessage(int messageId, int num_args, const char * first,
-															...)
+string Message::createMessage( int messageId,
+                               size_t num_args,
+                               const char * first,
+                               ... )
 {
 
 	va_list argList;
 	const char * str = first;
 	vector <string> args;
 
-	va_start(argList, str);
+    va_start(argList, first);
 
-	for (int i=0; i < num_args; i++)
+    for (size_t i = 0; i < num_args; i++)
 	{
 		args.push_back(str);
-		str = va_arg(argList, char *);
+        str = va_arg(argList, const char *);
 	}
 	va_end(argList);
 
@@ -89,7 +91,7 @@ string Message::createMessage(int messageId, int num_args, const char * first,
 	{
 		string message = _messages[messageId];
 
-		for (int i=0; i < args.size(); i++)
+        for (size_t i = 0; i < args.size(); i++)
 			message.replace (message.find("%s"), 2, args[i]);
 
 		return message;

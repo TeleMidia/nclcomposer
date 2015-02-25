@@ -61,7 +61,7 @@ void ModelElement::addChild(virtualId childId)
 
 bool ModelElement::removeReference(virtualId id)
 {
-  for (int i=0; i < _referencesToMyself.size(); i++)
+  for (size_t i=0; i < _referencesToMyself.size(); i++)
     if (_referencesToMyself[i] == id)
     {
       _referencesToMyself.erase(_referencesToMyself.begin() + i);
@@ -121,12 +121,12 @@ bool Model::editElement(virtualId &id, vector <Attribute> &newAttributes)
     string oldId = "";
     string newId = "";
 
-    for (int i = 0; i < elementEdited->references().size(); i++)
+    for (size_t i = 0; i < elementEdited->references().size(); i++)
       _affectedEllements.insert(elementEdited->references().at(i));
 
     _markedElements.insert(id);
 
-    for (int i=0; i < oldAttributes.size(); i++)
+    for (size_t i=0; i < oldAttributes.size(); i++)
     {
       Attribute oldAttribute = oldAttributes[i];
 
@@ -140,7 +140,7 @@ bool Model::editElement(virtualId &id, vector <Attribute> &newAttributes)
               oldAttribute.value());
 
         if (references.size() > 0)
-          for (int j = 0; j < references.size(); j++)
+          for (size_t j = 0; j < references.size(); j++)
           {
             ModelElement *ref = references[j];
             ref->removeReference(id);
@@ -169,7 +169,7 @@ bool Model::editElement(virtualId &id, vector <Attribute> &newAttributes)
     }
 
 
-    for (int i=0; i < newAttributes.size(); i++)
+    for (size_t i=0; i < newAttributes.size(); i++)
     {
       Attribute newAttribute = newAttributes[i];
 
@@ -190,7 +190,7 @@ bool Model::editElement(virtualId &id, vector <Attribute> &newAttributes)
           {
             vector<Attribute> elAttr = el->attributes();
 
-            for (int j =0; j < elAttr.size(); j++)
+            for (size_t j =0; j < elAttr.size(); j++)
             {
               if (Langstruct::isAttributeReferenceDependent(el->elementName(),
                                                             elAttr[j].name()))
@@ -255,7 +255,7 @@ bool Model::editElement(virtualId &id, vector <Attribute> &newAttributes)
         if (parent->elementName() == "causalConnector")
         {
           _markedElements.insert(parent->id());
-          for (int i = 0; i < parent->references().size(); i++)
+          for (size_t i = 0; i < parent->references().size(); i++)
             _affectedEllements.insert(parent->references().at(i));
 
           break;
@@ -301,11 +301,11 @@ bool Model::removeElement(virtualId &id)
       _markedElements.insert(parent->id());
     }
 
-    for (int i = 0; i < element->references().size(); i++)
+    for (size_t i = 0; i < element->references().size(); i++)
       _affectedEllements.insert(element->references().at(i));
 
     vector<Attribute> attrs = element->attributes();
-    for (int i = 0; i < attrs.size(); i++)
+    for (size_t i = 0; i < attrs.size(); i++)
     {
       Attribute attribute = attrs[i];
 
@@ -322,7 +322,7 @@ bool Model::removeElement(virtualId &id)
                                                     attribute.name()))
       {
         vector <ModelElement *> els = elementsByIdentifier(attribute.value());
-        for (int j = 0; j<els.size(); j++)
+        for (size_t j = 0; j<els.size(); j++)
         {
           ModelElement * e = els[j];
           e->removeReference(id);
@@ -330,7 +330,7 @@ bool Model::removeElement(virtualId &id)
       }
     }
 
-    for (int i=0; i < element->children().size(); i++)
+    for (size_t i = 0; i < element->children().size(); i++)
     {
       ModelElement *child = this->element(element->children()[i]);
       child->setParent(element->parent());
@@ -517,7 +517,7 @@ void Model::adjustReference(string elementName, ModelElement & newElement,
         string attributeValue = attributes[i].value();
         string toInsert = attributeValue;
 
-        int index = attributeValue.find("#");
+        size_t index = attributeValue.find("#");
         if ( index == string::npos)
         {
           elements = elementsByIdentifier(attributeValue);
@@ -571,7 +571,7 @@ vector <ModelElement *>  Model::elementsByIdentifier(string identifier)
 {
   vector <ModelElement *> elements;
 
-  int index = int (identifier.find("#"));
+  size_t index = int (identifier.find("#"));
 
   //se não tiver alias
   if (index == string::npos)
@@ -717,7 +717,7 @@ vector <ModelElement *> Model::elementsByPropertyName(string component,
       if (e)
       {
         vector <virtualId> children = e->children();
-        for (int i = 0; i < children.size(); i++)
+        for (size_t i = 0; i < children.size(); i++)
         {
           ModelElement *child =  this->element(children[i]);
           if (!child || child->elementName() != "property") continue;
@@ -744,7 +744,7 @@ vector <ModelElement *> Model::elementsByPropertyName(string component,
               if (eRefer)
               {
                 children = eRefer->children();
-                for (int i = 0; i < children.size(); i++)
+                for (size_t i = 0; i < children.size(); i++)
                 {
                   ModelElement *child =  this->element(children[i]);
                   if (!child || child->elementName() != "property") continue;
@@ -825,7 +825,7 @@ void Model::parseAllConnectorChildren (ModelElement *connector,
                                        map <string, pair <int, int> > &roles)
 {
   vector<virtualId> children = element->children();
-  for (int i = 0; i < children.size(); i++)
+  for (size_t i = 0; i < children.size(); i++)
   {
     ModelElement *child = this->element(children[i]);
     if (child)
@@ -839,11 +839,11 @@ void Model::parseAllConnectorChildren (ModelElement *connector,
 
 map<string, pair<int, int> > Model::getConnectorSetRoles (string identifier)
 {
-  int index = identifier.find("#");
   map <string, pair <int, int> > roles;
+  size_t index = identifier.find("#");
+
   if (index == string::npos)
   {
-
     vector <ModelElement *> els = elementsByIdentifier(identifier);
 
     if (els.size() == 0)

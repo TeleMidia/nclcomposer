@@ -198,7 +198,7 @@ void referenceValidation (const ModelElement &el, const Attribute &att,
     vector <ReferenceStructure> references = Langstruct::getReferences(
           el.elementName(), att.name());
 
-    for (int i = 0; i < references.size(); i++)
+    for (size_t i = 0; i < references.size(); i++)
     {
       ReferenceStructure ref = references.at(i);
 
@@ -206,7 +206,7 @@ void referenceValidation (const ModelElement &el, const Attribute &att,
       {
         vector <ModelElement *> elements = model.elementsByName(ref.getTo());
 
-        for (int j = 0; j < elements.size(); j++)
+        for (size_t j = 0; j < elements.size(); j++)
         {
           ModelElement *el = elements.at(j);
           Attribute refAttr = el->attribute(ref.getToAtt());
@@ -305,7 +305,7 @@ void testRepeatedRoles (const ModelElement &element,
                         Message &messageFactory)
 {
   vector<virtualId> children = element.children();
-  for (int i = 0; i < children.size(); i++)
+  for (size_t i = 0; i < children.size(); i++)
   {
     ModelElement *child = model.element(children[i]);
     if (child)
@@ -341,7 +341,7 @@ void linkValidation (const ModelElement& link, string connectorId, Model& model,
 
   map <string, int> roleCount;
   vector <virtualId> children = link.children();
-  for (int i = 0; i < children.size(); i++)
+  for (size_t i = 0; i < children.size(); i++)
   {
     ModelElement *child = model.element(children[i]);
     if (child->elementName() == "bind")
@@ -456,7 +456,7 @@ void SemanticValidation::semanticValidation(const ModelElement &el,
       vector <ModelElement *> els = model.elementsByIdentifier(value);
       if (els.size() > 1)
       {
-        for (int i = 0; i < els.size(); i++)
+        for (size_t i = 0; i < els.size(); i++)
         {
           ModelElement *e = els[i];
           if (e->id() != "")

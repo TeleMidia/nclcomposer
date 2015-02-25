@@ -71,7 +71,7 @@ void validate(QString document, QString language)
 
 
       QDomNamedNodeMap a = e.attributes(); vector<Attribute> atts;
-      for (int i=0; i< a.length(); i++)
+      for (size_t i = 0; i < a.length(); i++)
       {
         atts.push_back(Attribute(a.item(i).nodeName().toStdString(),
                                  a.item(i).nodeValue().toStdString()));
@@ -89,7 +89,7 @@ void validate(QString document, QString language)
                                 e.lineNumber(), e.columnNumber()));
 
       QDomNodeList list = e.childNodes();
-      for ( int i=list.length()-1;i>=0;--i)
+      for ( int i = list.length()-1; i >= 0; --i)
       {
         if (list.item(i).isElement())
         {

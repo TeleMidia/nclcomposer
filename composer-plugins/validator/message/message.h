@@ -34,7 +34,7 @@ class Message
 {
 public:
   Message (string language="en");
-  string createMessage (int, int, const char *, ...);
+  string createMessage (int, size_t, const char *, ...);
 
 private:
   string _language;

@@ -69,6 +69,9 @@ bool ConnectorParser::startElement(const QString &, const QString &,
 bool ConnectorParser::endElement(const QString &namespaceURI,
                                  const QString &localName, const QString &qName)
 {
+  Q_UNUSED(namespaceURI)
+  Q_UNUSED(localName)
+
   if (qName.toStdString() == "causalConnector" && flag)
   {
     completed = true;

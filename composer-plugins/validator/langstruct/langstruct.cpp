@@ -150,8 +150,8 @@ void Langstruct::init ()
       getline(strTok, toAtt, ',');
       getline(strTok, perspective, ')');
 
-      int persAttPos = perspective.find('.');
-      if (persAttPos != perspective.npos)
+      size_t persAttPos = perspective.find('.');
+      if (persAttPos != string::npos)
       {
         perspectiveAtt = perspective.substr(persAttPos + 1,
                                             perspective.size() - 1);

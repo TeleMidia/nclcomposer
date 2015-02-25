@@ -15,9 +15,7 @@
  * License along with this library. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-
 #include "ValidatorPlugin.h"
-
 
 ValidatorPlugin::ValidatorPlugin()
 {
@@ -76,7 +74,7 @@ void ValidatorPlugin::updateMessages(std::vector<pair<void *, string> > msgs)
   emit sendBroadcastMessage("clearValidationMessages", 0);
 
   set <pair <Entity *, QString> > messages;
-  for (int i = 0; i < msgs.size(); i++)
+  for (uint i = 0; i < msgs.size(); i++)
   {
     Entity *entity = (Entity *) msgs[i].first;
     if (entity != NULL)
@@ -105,8 +103,10 @@ void ValidatorPlugin::updateMessages(std::vector<pair<void *, string> > msgs)
 
 }
 
-void ValidatorPlugin::onEntityAdded(QString ID, Entity *entity)
+void ValidatorPlugin::onEntityAdded(QString pluginID, Entity *entity)
 {
+  Q_UNUSED(pluginID)
+
   if (!entity) return;
 
   adapter.addElement(entity);
@@ -116,17 +116,20 @@ void ValidatorPlugin::onEntityAdded(QString ID, Entity *entity)
 
 }
 
-void ValidatorPlugin::onEntityChanged(QString ID, Entity * entity)
+void ValidatorPlugin::onEntityChanged(QString pluginID, Entity * entity)
 {
+  Q_UNUSED(pluginID)
+
   adapter.changeElement(entity);
   std::vector <pair<void *, string> > msgs = adapter.validate();
   updateMessages(msgs);
 
 }
 
-void ValidatorPlugin::onEntityRemoved(QString ID, QString entityID)
+void ValidatorPlugin::onEntityRemoved(QString pluginID, QString entityID)
 {
-  qDebug () << "Validator: Entity Removed: " << ID;
+  Q_UNUSED(pluginID)
+
   adapter.removeElement(entityID);
 
   std::vector <pair<void *, string> > msgs = adapter.validate();
@@ -142,6 +145,8 @@ void ValidatorPlugin::errorMessage(QString error)
 
 void ValidatorPlugin::clearValidationMessages(QString pluginID, void * param)
 {
+  Q_UNUSED(pluginID)
+  Q_UNUSED(param)
   //    qDebug() << "clearValidationMessages:";
   //    qDebug() << pluginID;
   //    qDebug() << (param == 0) ;
@@ -150,18 +155,24 @@ void ValidatorPlugin::clearValidationMessages(QString pluginID, void * param)
 
 void ValidatorPlugin::validationError(QString pluginID, void * param)
 {
-
+  Q_UNUSED(pluginID)
+  Q_UNUSED(param)
 }
 
-void ValidatorPlugin::askAllValidationMessages(QString, void *)
+void ValidatorPlugin::askAllValidationMessages(QString pluginID, void *param)
 {
+  Q_UNUSED(pluginID)
+  Q_UNUSED(param)
+
   for (int i = 0; i < pairsMessages.size(); i++)
     emit sendBroadcastMessage("validationError", &pairsMessages[i]);
 
 }
 
-void ValidatorPlugin::validationErrorSelected(QString, void *param)
+void ValidatorPlugin::validationErrorSelected(QString pluginID, void *param)
 {
+  Q_UNUSED(pluginID)
+
   if (param)
   {
     pair <QString, QString> * p = (pair <QString, QString>*) param;
