@@ -14,14 +14,13 @@ SUBDIRS = \
     ncl-layout-view \
     ncl-structural-view \
 #   ncl-structural-view-next \
-    validator/ \
+    validator \
     ncl-rules-view \
     media-preview
 #   clube-ncl
 
 contains(FORCERELEASE, true)
 {
-  SUBDIRS += validator      # Validator is required when releasing.
   SUBDIRS -= debug-console  # Debug must not be present in release.
 
   # These plug-ins are still experimental

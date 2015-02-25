@@ -1,5 +1,5 @@
 TEMPLATE    =   lib
-CONFIG      +=  plugin dll
+CONFIG      +=  plugin dll silent
 CONFIG      -=  debug
 MOC_DIR     =   .moc
 OBJECTS_DIR =   .obj
@@ -106,5 +106,4 @@ else {
 }
 
 INSTALLS += target
-DESTDIR = $$PWD/build
-#message("Building to $${TARGET}")
+DESTDIR  = $$PWD/build

@@ -29,7 +29,7 @@
 
 TEMPLATE = lib
 TARGET = qscintilla2_telem
-CONFIG += qt warn_off release dll thread
+CONFIG += qt warn_off release dll thread silent
 
 # Uses FORCERELEASE variable because CONFIG and SUBDIR force three executions
 # if qmake and the last one does not preserves CONFIG from command line.
