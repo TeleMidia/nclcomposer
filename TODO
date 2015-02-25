@@ -1,40 +1,198 @@
-Copyright (C) 2011 PUC-Rio/Laboratorio Telemidia
-See the end of the file for license conditions.
+TODO file for NCL Composer
+==========================
+Copyright (C) 2011-2015 PUC-Rio/Laboratorio Telemidia
 
-TODO file for composer-gui
+TODO file for nclcomposer
 
-* Features:
-  - Some defaults:
-    . Structural, Textual and Layout default perspectives.
-  - Message to add new buttons to title bar of composer dock.
-  - Message saying that a perspective already exist when trying to save a new
-    one with the same name. 
-  - Keybinding to save new perspective.
-  - Keybinding to open "choose perpective menu".
-  - Allow to choose MDI or Dock enviroment.
-    - Include save the current plugins session inside the project.
-  - Internationalisation.
-  - Check for updates.
-  - Plugin repository.
-  - Marking plugins to be loaded.
-  - Install new Plugins.
-  - Run features:
-    . Local Run
-    . Remote Run
-      . Check md5sum for local and remote files and send it again only if they
-        are differents.
-	- Create a plugin to handle CPR project:
-		. Two subview:
-			. Project
+NCL Composer Core
+-----------------
+  * New features:
+    - Search the plug-ins on a relative path (mainly for Windows and MAC OS)
+    - Export to NCL.
+    - Generalize NCLStructure for all kinds of languages.
+    - ToolGUI integration API
+    - Transaction support (plug-in should emit N messages ass a single
+      transaction)
+    - Separate each plug-in as a different process.
+    - Import documents.
+
+  * Optimizations and clean up
+
+  * Tests:
+    - A tool for testing plug-in API:
+      . Performance tests.
+      . Memory leaks (valgrind)
+        . Security??
+        . Integration with other plug-ins?
+
+  * Documentation:
+    - A manual to develop plug-ins.
+    - Points to be mentioned:
+      . Key handling (pass to the father).
+
+NCL Composer GUI
+----------------
+  * New features:
+    - Some defaults:
+      . Structural, Textual and Layout default perspectives.
+    - Message to add new buttons to title bar of composer dock.
+    - Message saying that a perspective already exist when trying to save a new
+      one with the same name.
+    - Keybinding to save new perspective.
+    - Keybinding to open "choose perpective menu".
+    - Allow to choose MDI or Dock enviroment.
+      - Include save the current plugins session inside the project.
+    - Internationalisation.
+    - Check for updates.
+    - Plugin repository.
+    - Marking plugins to be loaded.
+    - Install new Plugins.
+    - Run features:
+      . Local Run
+      . Remote Run
+        . Check md5sum for local and remote files and send it again only if they
+          are differents.
+
+NCL Composer Plug-ins
+---------------------
+### General
+
+  - Script to automatically create the Plugin and Factory classes.
+  - Copy and paste among plugins.
+  - Undo/Redo: How it will work?
+    . A new plugin??!
+
+  * New features:
+	  - Try to keep attribute order.
+
+  * Optimizations and cleanup:
+    - All Composer view should inherent from a common class (Composer View?!)
+
+  * Known bugs:
+
+### Debug Console
+
+  * New features:
+    - Add a window that describe in more details the message from core.
+
+  * Optimizations and cleanup:
+
+  * Known bugs:
+
+### Textual View
+
+  * New features:
+    -  Contextual code suggestion:
+      . Sugestion of default attribute values. (ok)
+      . Sugestion of references. (ok)
+      . Suggestion of references based on scope.
+    - Code format(Ctrl+Shift+F). (This is done when the text is synchronized
+      with core).
+    - Split the Textual View Window; thus, allowing to see different parts of
+      the text in the same moment (this is simple).
+    - Suggestion of code corrections.
+    - Hyperlinks navigation.
+    - Preview of media objects, connectors, etc.
+    - Preferences Widget:
+      . Default font size.
+      . Font family.
+      . Font colors.
+      . Whitespace visibility.
+    - Incremental synchronization with composer core.
+      . xml simple diff based on elements id (ok).
+      . diffx algorithm.
+
+  * Optimizations and cleanup:
+    - Code refactoring:
+      . Rename NCLTextEditor to NCLTextView ?!
+      . Rename NCLTreeWidget to NCLTreeView ?!
+     . Improve attribute navigation performance.
+
+  * Known bugs:
+
+### Outline View
+
+  * New features:
+    - Update from model.
+
+  * Optimizations and cleanup:
+    - Remove duplicate icons (structural and outline have the same icons
+      resources).
+
+  * Known bugs:
+
+### Properties View
+
+  * New features:
+    - Specific controls for each type of attribute.
+    - Suggestion of attribute values.
+
+  * Optimization and cleanup:
+
+  * Known bugs:
+
+### Layout View
+
+  * New features:
+    - Plugin preferences.
+    - Rotate regions :D.
+    - Draw regions specified in pixels.
+    - Add color to regions (based on media type).
+    - Draw region base id.
+    - Add keybindings to delete, copy, paste, etc.
+    - it must ask the user confirmation when the user delete an entity.
+
+  * Optimization and cleanup:
+    - Review code organization and naming.
+
+  * Known bugs:
+    - When receive a change signal from core, the item doesn't adjust 'width'
+      property correctly, overlapping the boundary of their parent item.
+
+### Structural View
+
+  * New features:
+    - Draw complex link (with aggregation item).
+    - Process signals receive from core.
+    - Add hide/show system (as in layout plugin).
+    - Review items looklike (based on user experience?).
+    - Display link option based on core document.
+    - Add full preview for easy navigation.
+    - Prevent addition of more than one body item.
+    - Link selection.
+    - User actions to change anchors of a link.
+    - Add keybindings to delete, copy, paste, etc.
+    - It must ask the user confirmation when the user delete an entity.
+    - zIndex of the selected entity must be the greater one.
+
+  * Optimization and cleanup:
+    - Review code organization and naming.
+
+  * Known bugs:
+
+### Validation Plug-in
+
+  * New features:
+    - Send message when an error is detected (ok).
+    - Double click over a error message. (ok).
+    - Message to ask for Validator re-send all the error messages.
+
+  * Optimization and cleanup:
+
+  * Known bugs:
+
+### New Plug-ins
+
+  * Global Actions.
+  * Lua Scripting plugin.
+  * Storeboard plugin.
+  * A plugin to handle CPR project:
+    . Two subview:
+		  . Project
 			. Files
 		. Some actions:
 			. Add media
 			. Add file
 			. etc.
-
-* Done:
-  - Add "Remove Perspective" action.
-  - Add set as default perspective action.
-  - Marking dirty project.
 
 //TODO: License
