@@ -132,6 +132,23 @@ else:win32 {
   data.path = $$INSTALLBASE/data
 }
 
+
+macx {
+  COPY_CMD = cp -R
+}
+else:unix {
+  COPY_CMD = "cp -R"
+}
+else:win32 {
+  COPY_CMD = xcopy /E
+}
+
+copydata.commands = $$COPY_CMD $$PWD/data $$DESTDIR
+first.depends = $(first) copydata
+export(first.depends)
+export(copydata.commands)
+QMAKE_EXTRA_TARGETS += first copydata
+
 data.files = data/defaultConnBase.ncl data/style.qss
 
 DEFINES += EXT_DEFAULT_PATH=\"\\\"$$PREFIX\\\"\"
