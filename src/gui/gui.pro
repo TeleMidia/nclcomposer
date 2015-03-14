@@ -2,7 +2,7 @@ TARGET = composer
 DESTDIR = $$PWD/../../bin/
 TEMPLATE = app
 
-#CONFIG += silent
+CONFIG += silent
 
 # I'm using FORCERELEASE variable because CONFIG and SUBDIR force three
 # executions if qmake and the last one does not preserves CONFIG from command
