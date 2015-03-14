@@ -117,10 +117,10 @@ void GlobalSettings::updateWithDefaults(const QString &dataPath)
       this->value("default_stylesheets_dirs").toStringList();
   stylesheetsDirs << QString(dataPath);
 
-#ifdef Q_OS_WIN32
-  stylesheetsDirs << QApplication::applicationDirPath() + "/data";
-#elif defined(Q_OS_MAC)
+#if defined(Q_OS_MAC)
   stylesheetsDirs << QApplication::applicationDirPath() + "/../PlugIns/composer";
+#else
+  stylesheetsDirs << QApplication::applicationDirPath() + "/data";
 #endif
 
   stylesheetsDirs.removeDuplicates();
