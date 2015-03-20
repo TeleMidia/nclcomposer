@@ -1,4 +1,4 @@
-TARGET = composer
+TARGET = nclcomposer
 DESTDIR = $$PWD/../../bin/
 TEMPLATE = app
 
