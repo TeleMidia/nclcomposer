@@ -4,7 +4,4 @@
         <file>es_messages.txt</file>
         <file>pt_BR_messages.txt</file>
     </qresource>
-    <qresource prefix="/">
-        <file>images/error.png</file>
-    </qresource>
 </RCC>

@@ -506,6 +506,7 @@ void LayoutRegion::LayoutRegion::createActions()
   // delete action
   deleteAction = new QAction(this);
   deleteAction->setText(tr("Delete"));
+  deleteAction->setIcon(QIcon(":/icon/minus"));
 
   deleteAction->setEnabled(true);
   deleteAction->setShortcut(QKeySequence("Del"));

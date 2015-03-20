@@ -95,7 +95,7 @@ void ValidatorPlugin::updateMessages(std::vector<pair<void *, string> > msgs)
     ValidatorTreeWidgetItem *item = new ValidatorTreeWidgetItem (
           table, p.first, p.second);
 
-    item->setIcon(0, QIcon(":/images/error.png"));
+    item->setIcon(0, QIcon(":/icon/error"));
     table->addTopLevelItem (item);
 
     emit sendBroadcastMessage("validationError", &pairsMessages.back());

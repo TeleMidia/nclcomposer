@@ -86,6 +86,7 @@ void LayoutView::createActions()
   // delete action
   deleteAction = new QAction(this);
   deleteAction->setText(tr("Delete"));
+  deleteAction->setIcon(QIcon(":/icon/minus"));
 
   deleteAction->setEnabled(false);
   deleteAction->setShortcut(QKeySequence("Del"));

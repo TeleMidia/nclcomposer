@@ -60,4 +60,5 @@ OTHER_FILES += \
 
 RESOURCES += \
     Resource.qrc \
-    ../common-resources/language.qrc
+    ../common-resources/language.qrc \
+    ../common-resources/images.qrc

@@ -44,11 +44,12 @@ void RulesTreeWidget::showContextMenu(QTreeWidgetItem* item,
 
   if (item->type() == COMPOSITERULE_TYPE || item->type() == RULEBASE_TYPE)
   {
-    addRuleAction = menu.addAction("Add Rule");
-    addCompositeRuleAction = menu.addAction("Add Composite Rule");
+    addRuleAction = menu.addAction(QIcon(":/icon/plus"), "Add Rule");
+    addCompositeRuleAction = menu.addAction( QIcon(":/icon/plus"),
+                                             "Add Composite Rule");
   }
 
-  removeRuleAction = menu.addAction (QIcon(":icon/delete"),
+  removeRuleAction = menu.addAction (QIcon(":/icon/minus"),
                                      item->type() == RULEBASE_TYPE ?
                                        "Remove ruleBase" : "Remove Rule");
 
@@ -117,7 +118,7 @@ void RulesTreeWidget::mousePressEvent(QMouseEvent *event)
   {
     QMenu menu;
 
-    menu.addAction ("Add ruleBase");
+    menu.addAction (QIcon(":/icon/plus"), "Add ruleBase");
     if (menu.exec(mapToGlobal(event->pos())))
       emit addRuleRequested(0, RULEBASE_TYPE);
   }
