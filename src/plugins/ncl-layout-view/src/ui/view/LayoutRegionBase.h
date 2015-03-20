@@ -159,7 +159,6 @@ private:
   void createConnections();
 
   QMenu* viewMenu;
-  QMenu* insertMenu;
   QMenu* showMenu;
   QMenu* arrangeMenu;
   QMenu* screensizeMenu;
