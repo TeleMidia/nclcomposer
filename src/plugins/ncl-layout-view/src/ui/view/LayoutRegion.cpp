@@ -1646,12 +1646,17 @@ void LayoutRegion::dragLeaveEvent(QGraphicsSceneDragDropEvent *event)
 void LayoutRegion::dropEvent(QGraphicsSceneDragDropEvent *event)
 {
   isDragging = false;
+
+  scene()->update();
+
   qDebug() << "dropEvent " << event->mimeData()->data("nclcomposer/mediaid")
            << event->mimeData()->data("nclcomposer/qnstuid");
 
 
   emit dragMediaOverRegion(event->mimeData()->data("nclcomposer/mediaid"),
                            this);
+
+
 }
 
 QMap <QString, QString> LayoutRegion::getAttributes()

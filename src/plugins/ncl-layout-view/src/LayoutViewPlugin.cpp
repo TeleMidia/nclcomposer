@@ -1144,14 +1144,19 @@ void NCLLayoutViewPlugin::performMediaOverRegionAction(const QString &mediaId,
   {
     qWarning() << "QnlyComposerPlugin::performMediaOverRegionAction Region\
                   does not exists. Nothing will be done." ;
-                  error = 1;
+    error = 1;
   }
 
   if(media == NULL)
   {
-    qWarning() << "QnlyComposerPlugin::performMediaOverRegionActiona\
-                  Media was not found! Nothing will be done." ;
-                  error = 1;
+    int ret = QMessageBox::warning(this->getWidget(), tr("Error"),
+                                   tr("Sorry. \"") + mediaId +
+                                   tr("\" is not a valid media."),
+                                   QMessageBox::Ok,
+                                   QMessageBox::Ok);
+
+    Q_UNUSED(ret)
+    error = 1;
   }
 
   if(!error)
