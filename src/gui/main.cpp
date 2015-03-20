@@ -80,7 +80,7 @@ int handleArguments (QStringList &args, bool &initGUI)
   else if (args.contains("-help"))
   {
     initGUI = false;
-    cout << "Usage composer [options] [files] ..." << endl;
+    cout << "Usage nclcomposer [options] [files] ..." << endl;
     cout << "Options:" << endl;
   }
 
