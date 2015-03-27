@@ -25,3 +25,4 @@ Thumbs.db
 bin/
 doc/build
 *.qm
+qscintilla_*.ts
