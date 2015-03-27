@@ -1,0 +1,24 @@
+site_name: NCL Composer User Manual
+pages:
+- [index.md, 'Prefácio']
+- [02-introduction.md, 'Manual', 'Introdução']
+- [03-getting-started.md, 'Manual', 'Iniciando']
+- [05-windows-and-menus.md, 'Manual', 'Telas e Menus']
+- [06-other-tools.md,'Manual', ' Outras ferramentas']
+- [tutorial/04.00-tutorial.md, 'Tutorial', 'Index']
+- [tutorial/04.01-tutorial-ex01.md, 'Tutorial', 'Exemplo 01']
+- [tutorial/04.02-tutorial-ex02.md, 'Tutorial', 'Exemplo 02']
+#- [relnotes/0.1.2.md, 'Release Notes', 'v0.1.2']
+#- [relnotes/0.1.4.md, 'Release Notes', 'v0.1.4']
+#- [relnotes/0.1.5.md, 'Release Notes', 'v0.1.5']
+#- [relnotes/0.1.6.md, 'Release Notes', 'v0.1.6']
+#- [relnotes/0.1.7.md, 'Release Notes', 'v0.1.7']
+#- [relnotes/0.1.8.md, 'Release Notes', 'v0.1.8']
+#- [relnotes/0.1.9.md, 'Release Notes', 'v0.1.9']
+#- [relnotes/0.2.0.md, 'Release Notes', 'v0.2.0']
+
+
+docs_dir: pt-br
+
+#theme: flatly
+
