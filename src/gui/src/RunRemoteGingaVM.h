@@ -12,7 +12,7 @@
 
 #include <QThread>
 #include <QProgressBar>
-#include <core/model/Project.h>
+#include <model/Project.h>
 
 #include "SimpleSSHClient.h"
 
