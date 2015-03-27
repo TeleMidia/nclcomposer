@@ -677,8 +677,12 @@ usted desea crear este archivo de nuevo?</translation>
     </message>
     <message>
         <location filename="../ui/GeneralPreferences.ui" line="37"/>
+        <source>Warning: After you change the current Language, you must restart NCL Composer in order to the changes have effect!</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>Warning: After you change the current Language, you have to restart NCL Composer to it take effect!</source>
-        <translation>Advertencia: Después de cambiar el idioma actual, tiene que resetear NCL Composer para que surta efecto!</translation>
+        <translation type="obsolete">Advertencia: Después de cambiar el idioma actual, tiene que resetear NCL Composer para que surta efecto!</translation>
     </message>
     <message>
         <source>QSS File Theme:</source>

@@ -730,8 +730,12 @@ Do you want to save your changes?</source>
     </message>
     <message>
         <location filename="../ui/GeneralPreferences.ui" line="37"/>
+        <source>Warning: After you change the current Language, you must restart NCL Composer in order to the changes have effect!</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>Warning: After you change the current Language, you have to restart NCL Composer to it take effect!</source>
-        <translation>Aviso: Após alterar sua língua corrent, você deve reiniciar o NCL Composer para que essa alteração tenha efeito!</translation>
+        <translation type="obsolete">Aviso: Após alterar sua opção de língua, você deve reiniciar o NCL Composer para que essa alteração tenha efeito!</translation>
     </message>
     <message>
         <source>QSS File Theme:</source>
