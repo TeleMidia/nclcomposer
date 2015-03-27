@@ -5,12 +5,13 @@ Maintainer: Roberto Azevedo <robertogerson@telemidia.puc-rio.br>
 Build-Depends: debhelper (>= 7.0.50~), libssh2-1-dev, libqt4-dev
 Standards-Version: 3.8.4
 Homepage: http://composer.telemidia.puc-rio.br
-Vcs-Git: http://git.telemidia.puc-rio.br/composer.git
-Vcs-Browser: http://git.telemidia.puc-rio.br
+Vcs-Git: http://git.telemidia.puc-rio.br/nclcomposer.git
+Vcs-Browser: http://git.telemidia.puc-rio.br/nclcomposer.git
 
 Package: composer
 Architecture: any
-Depends: libssh2-1, libqt4-core, libqt4-gui, libqt4-network, libqt4-xml, libqt4-svg, libqtwebkit4, libqt4-help
+Depends: libssh2-1, libqt4-core, libqt4-gui, libqt4-network, libqt4-xml, \
+         libqt4-svg, libqtwebkit4, libqt4-help
 Description: NCL Composer is an extensible authoring tool for NCL.
  NCL Composer allows you to create interactive digital applications
  for Digital Television using NCL through a simple way. Its extensible
