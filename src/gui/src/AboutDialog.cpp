@@ -16,9 +16,9 @@ AboutDialog::AboutDialog(QWidget *parent):
 {
   ui->setupUi(this);
   ui->label_ProgramName->setText( QString("NCL Composer v.") +
-                                  QString(NCLCOMPOSER_GUI_VERSION) );
+                                  qApp->applicationVersion());
 
-  ui->label_buildDate->setText(BUILD_DATE);
+  ui->label_buildDate->setText(QString (BUILD_DATE));
 
   connect(ui->button_Close, SIGNAL(pressed()), this, SLOT(close()));
 
