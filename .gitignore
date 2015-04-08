@@ -7,7 +7,7 @@ Makefile*
 *.obj
 *.ui
 *.DS_Store
-*.pro.user
+*.pro.user*
 *.app
 *.dylib
 *.framework
