@@ -62,21 +62,22 @@ NCLTreeWidget::~NCLTreeWidget()
 
 void NCLTreeWidget::createActions ()
 {
-  _insertNodeAct = new QAction( QIcon(":/images/save.png"),
+  _insertNodeAct = new QAction( QIcon(":/icon/plus"),
                                tr("&Add child"),
                                this);
   connect( _insertNodeAct, SIGNAL(triggered()),
            this, SLOT(userAddNewElement()));
   addAction(_insertNodeAct);
 
-  _removeNodeAct = new QAction( QIcon(":/images/delete.png"),
-                               tr("&Remove Selected element"),
-                               this);
+  _removeNodeAct = new QAction( QIcon(":/icon/minus"),
+                                tr("&Remove selected element"),
+                                this);
   _removeNodeAct->setShortcutContext(Qt::WidgetShortcut);
   _removeNodeAct->setShortcut(QKeySequence::Delete);
+
   addAction(_removeNodeAct);
   connect( _removeNodeAct, SIGNAL(triggered()),
-           this, SLOT(userRemoveElement()));
+           this, SLOT(userRemoveElement()) );
 
   _expandAllAct = new QAction(tr("&Expand All"), this);
   _expandAllAct->setCheckable(true);
@@ -336,7 +337,7 @@ void NCLTreeWidget::userRemoveElement()
     int resp = QMessageBox::question(
           this,
           tr("Deleting Element"),
-          tr("Do you really want delete the \"%1\" element ?").arg(name),
+          tr("Are you sure you want to delete the \"%1\" element ?").arg(name),
           QMessageBox::Yes,
           QMessageBox::No );
 

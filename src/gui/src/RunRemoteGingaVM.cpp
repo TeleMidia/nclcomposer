@@ -21,7 +21,7 @@
 #include <QApplication>
 #include <iostream>
 
-#include <core/util/ComposerSettings.h>
+#include <util/ComposerSettings.h>
 using namespace composer::core::util;
 
 RunRemoteGingaVMAction::RunRemoteGingaVMAction()
@@ -37,6 +37,8 @@ void RunRemoteGingaVMAction::setCurrentProject(Project *project)
 QStringList RunRemoteGingaVMAction::filesToSendToGingaVM(Project *project,
                                                          QString nclLocalPath)
 {
+  Q_UNUSED(nclLocalPath)
+
   QStringList filesToSend;
   QFileInfo fileInfo(project->getLocation());
   QString absoluteFilePath = fileInfo.path();

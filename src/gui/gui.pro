@@ -1,4 +1,4 @@
-TARGET = composer
+TARGET = nclcomposer
 DESTDIR = $$PWD/../../bin/
 TEMPLATE = app
 
@@ -64,10 +64,11 @@ VERSTR = '\\"$${GUI_VERSION}\\"'
 DEFINES += NCLCOMPOSER_GUI_VERSION=\"$${VERSTR}\"
 
 macx {
-    DEFINES += BUILD_DATE=\"\\\"$$system(echo \" $${_DATE_}\" | sed \"s/ /\\\\\\t/g\")\\\"\"
+    DEFINES += BUILD_DATE=\"\\\"$$system(echo \"$${_DATE_}\" | sed \"s/ /\\\\\\t/g\")\\\"\"
 }
 else {
-    DEFINES += BUILD_DATE=\"\\\" $$system(echo \"$${_DATE_}\" | sed \"s/ /\\\\\\ /g\") \\\"\"
+  message (\"\\\"$$system(echo \"$${_DATE_}\" | sed \"s/ /\\\\\t/g\")\\\"\")
+  DEFINES += BUILD_DATE=\"\\\"$$system(echo \"$${_DATE_}\" | sed \"s/ /\\\\\\t/g\") \\\"\"
 }
 
 #NOTIFY SYSTEM
@@ -132,7 +133,7 @@ else:win32 {
   data.path = $$INSTALLBASE/data
 }
 
-
+# Copy command. Useful for local build.
 macx {
   COPY_CMD = cp -R
 }
@@ -229,8 +230,8 @@ runssh_on {
 
   SOURCES +=    src/SimpleSSHClient.cpp \
                 src/RunRemoteGingaVM.cpp
-  HEADERS +=    include/SimpleSSHClient.h \
-                include/RunRemoteGingaVM.h
+  HEADERS +=    src/SimpleSSHClient.h \
+                src/RunRemoteGingaVM.h
 }
 
 SOURCES += main.cpp \

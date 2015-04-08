@@ -46,7 +46,7 @@
     <message>
         <location filename="../ui/ComposerMainWindow.ui" line="266"/>
         <source>toolBar</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../ui/ComposerMainWindow.ui" line="327"/>
@@ -107,7 +107,7 @@
     <message>
         <location filename="../ui/ComposerMainWindow.ui" line="416"/>
         <source>Exit NCL Composer</source>
-        <translation type="unfinished"></translation>
+        <translation>Sair do NCL Composer</translation>
     </message>
     <message>
         <location filename="../ui/ComposerMainWindow.ui" line="419"/>
@@ -147,7 +147,7 @@
     <message>
         <location filename="../ui/ComposerMainWindow.ui" line="452"/>
         <source>Clear Recent Projects</source>
-        <translation type="unfinished">Apagar a lista de projetos recentes</translation>
+        <translation>Apagar a lista de projetos recentes</translation>
     </message>
     <message>
         <location filename="../ui/ComposerMainWindow.ui" line="461"/>
@@ -172,12 +172,12 @@
     <message>
         <location filename="../ui/ComposerMainWindow.ui" line="486"/>
         <source>Run NCL Project</source>
-        <translation>Executar Projeto NCL</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../ui/ComposerMainWindow.ui" line="489"/>
         <source>Ctrl+R</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../ui/ComposerMainWindow.ui" line="501"/>
@@ -269,7 +269,7 @@
     <message>
         <location filename="../ui/ComposerMainWindow.ui" line="569"/>
         <source>Share This Project Online</source>
-        <translation type="unfinished">Compartilhe este projeto online</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../ui/ComposerMainWindow.ui" line="574"/>
@@ -293,7 +293,7 @@
     <message>
         <location filename="../ui/EnvironmentPreferencesWidget.ui" line="14"/>
         <source>Form</source>
-        <translation type="unfinished">Formulário</translation>
+        <translation>Formulário</translation>
     </message>
     <message>
         <location filename="../ui/EnvironmentPreferencesWidget.ui" line="42"/>
@@ -313,17 +313,17 @@
     <message>
         <location filename="../ui/EnvironmentPreferencesWidget.ui" line="70"/>
         <source>Directories to search plugins:</source>
-        <translation type="unfinished"></translation>
+        <translation>Diretórios para buscar plugins:</translation>
     </message>
     <message>
         <location filename="../ui/EnvironmentPreferencesWidget.ui" line="82"/>
         <source>Delete</source>
-        <translation type="unfinished">Deletar</translation>
+        <translation>Deletar</translation>
     </message>
     <message>
         <location filename="../ui/EnvironmentPreferencesWidget.ui" line="89"/>
         <source>New</source>
-        <translation type="unfinished">Novo</translation>
+        <translation>Novo</translation>
     </message>
     <message>
         <source>Directories to search the plugins:</source>
@@ -332,7 +332,7 @@
     <message>
         <location filename="../ui/EnvironmentPreferencesWidget.ui" line="112"/>
         <source>Keyboard</source>
-        <translation type="unfinished">Teclado</translation>
+        <translation>Teclado</translation>
     </message>
 </context>
 <context>
@@ -536,24 +536,24 @@
     <message>
         <location filename="../ui/WelcomeWidget.ui" line="14"/>
         <source>Form</source>
-        <translation type="unfinished">Formulário</translation>
+        <translation>Formulário</translation>
     </message>
     <message>
         <location filename="../ui/WelcomeWidget.ui" line="184"/>
         <source>Did you Know?</source>
-        <translation type="unfinished">Você sabia?</translation>
+        <translation>Você sabia?</translation>
     </message>
     <message>
         <location filename="../ui/WelcomeWidget.ui" line="198"/>
         <source>You can change your default preferences going to Edit-&gt;Preferences and choosing Enviroment or an individual plugin.</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../ui/WelcomeWidget.ui" line="239"/>
         <location filename="../ui/WelcomeWidget.ui" line="262"/>
         <location filename="../ui/WelcomeWidget.ui" line="568"/>
         <source>...</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../ui/WelcomeWidget.ui" line="319"/>
@@ -568,7 +568,7 @@
     <message>
         <location filename="../ui/WelcomeWidget.ui" line="408"/>
         <source>Introduction to Digital TV and to Ginga-NCL</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../ui/WelcomeWidget.ui" line="421"/>
@@ -757,7 +757,7 @@
     <message>
         <location filename="../src/ComposerMainWindow.cpp" line="300"/>
         <source>Change your current language</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Alternar língua corrente</translation>
     </message>
     <message>
         <location filename="../src/ComposerMainWindow.cpp" line="305"/>
@@ -958,23 +958,23 @@ Do you want to save your changes?</source>
     <message>
         <location filename="../src/PerspectiveManager.cpp" line="88"/>
         <source>Saving a perspective</source>
-        <translation type="unfinished">Salvar Perspectivas</translation>
+        <translation>Salvar Perspectivas</translation>
     </message>
     <message>
         <location filename="../src/PerspectiveManager.cpp" line="105"/>
         <source>Reloading a perspective</source>
-        <translation type="unfinished">Recarregar uma perspectiva</translation>
+        <translation>Recarregar uma perspectiva</translation>
     </message>
     <message>
         <location filename="../src/PerspectiveManager.cpp" line="178"/>
         <source>Deleting perspective</source>
-        <translation type="unfinished">Deletar Perspectiva</translation>
+        <translation>Deletar Perspectiva</translation>
     </message>
     <message>
         <location filename="../src/PerspectiveManager.cpp" line="179"/>
         <source>Are you sure you want to delete the.
 &quot;%1&quot; perspective ?</source>
-        <translation type="unfinished">Você tem certeza de que deseja deletar a perspectiva &quot;%1&quot;?</translation>
+        <translation>Você tem certeza de que deseja deletar a perspectiva &quot;%1&quot;?</translation>
     </message>
 </context>
 <context>
@@ -982,53 +982,53 @@ Do you want to save your changes?</source>
     <message>
         <location filename="../src/WelcomeWidget.cpp" line="209"/>
         <source>Connection to NCL Club has failed.</source>
-        <translation type="unfinished">Conexão com Clube NCL falhou.</translation>
+        <translation>Conexão com Clube NCL falhou.</translation>
     </message>
     <message>
         <location filename="../src/WelcomeWidget.cpp" line="220"/>
         <source>Downloading application...</source>
-        <translation type="unfinished">Baixando aplicação...</translation>
+        <translation>Baixando aplicação...</translation>
     </message>
     <message>
         <location filename="../src/WelcomeWidget.cpp" line="234"/>
         <location filename="../src/WelcomeWidget.cpp" line="253"/>
         <source>Application from NCL Club</source>
-        <translation type="unfinished">Aplicação do Clube NCL</translation>
+        <translation>Aplicação do Clube NCL</translation>
     </message>
     <message>
         <location filename="../src/WelcomeWidget.cpp" line="235"/>
         <source>There already exists a file called %1 in the current directory. Overwrite?</source>
-        <translation type="unfinished">Já existe um arquivo chamado %1 no diretório corrente. Você deseja sobreescrevê-lo?</translation>
+        <translation>Já existe um arquivo chamado %1 no diretório corrente. Você deseja sobreescrevê-lo?</translation>
     </message>
     <message>
         <location filename="../src/WelcomeWidget.cpp" line="245"/>
         <source>HTTP</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/WelcomeWidget.cpp" line="246"/>
         <source>Unable to save the file %1: %2.</source>
-        <translation type="unfinished">Não foi possível salvar arquivo %1: %2.</translation>
+        <translation>Não foi possível salvar arquivo %1: %2.</translation>
     </message>
     <message>
         <location filename="../src/WelcomeWidget.cpp" line="254"/>
         <source>Downloading %1.</source>
-        <translation type="unfinished">Baixando %1.</translation>
+        <translation>Baixando %1.</translation>
     </message>
     <message>
         <location filename="../src/WelcomeWidget.cpp" line="312"/>
         <source>Download and Import this application</source>
-        <translation type="unfinished">Baixe e importe essa aplicação</translation>
+        <translation>Baixe e importe essa aplicação</translation>
     </message>
     <message>
         <location filename="../src/WelcomeWidget.cpp" line="318"/>
         <source>Choose the name of the new project to be created</source>
-        <translation type="unfinished">Escolha o nome do novo projeto a ser criado</translation>
+        <translation>Escolha o nome do novo projeto a ser criado</translation>
     </message>
     <message>
         <location filename="../src/WelcomeWidget.cpp" line="320"/>
         <source>Composer Projects (*.cpr)</source>
-        <translation type="unfinished">Projetos do Composer (*.cpr)</translation>
+        <translation>Projetos do Composer (*.cpr)</translation>
     </message>
 </context>
 </TS>

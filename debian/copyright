@@ -4,17 +4,16 @@ This work was packaged for Debian by:
 
 It was downloaded from:
 
-    <http://git.telemidia.puc-rio.br>
+    http://git.telemidia.puc-rio.br/nclcomposer.git
 
 Upstream Author(s):
 
-    <put author's name and email here>
-    <likewise for another author>
+    Roberto Azevedo <robertogerson@telemidia.puc-rio.br>
+    Eduardo Cruz Araújo <edcaraujo@telemidia.puc-rio.br>
 
 Copyright:
 
-    <Copyright (C) YYYY Firstname Lastname>
-    <likewise for another author>
+    Copyright (C) 2012, 2013, 2014, 2015 PUC-Rio/TeleMídia Lab
 
 License:
 
@@ -36,15 +35,7 @@ Public License version 3 can be found in "/usr/share/common-licenses/GPL-3".
 
 The Debian packaging is:
 
-    Copyright (C) 2011 Roberto Azevedo <robertogerson@telemidia.puc-rio.br>
-
-# Please chose a license for your packaging work. If the program you package
-# uses a mainstream license, using the same license is the safest choice.
-# Please avoid to pick license terms that are more restrictive than the
-# packaged work, as it may make Debian's contributions unacceptable upstream.
-# If you just want it to be GPL version 3, leave the following line in.
+    Copyright (C) 2011-2015 Roberto Azevedo <robertogerson@telemidia.puc-rio.br>
 
 and is licensed under the GPL version 3, see above.
 
-# Please also look if there are files or directories which have a
-# different copyright/license attached and list them here.

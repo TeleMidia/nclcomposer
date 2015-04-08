@@ -61,30 +61,64 @@ void loadTranslations()
   }
 }
 
+int handleArguments (QStringList &args, bool &initGUI)
+{
+  if ( args.contains ("-version") )
+  {
+    initGUI = false;
+    cout << "NCL Composer v."
+         << QCoreApplication::applicationVersion().toStdString()
+         << endl
+         << "Copyright (C) 2015 "
+         << QCoreApplication::organizationName().toStdString() << "." << endl
+         << "This is free software; see the source for copying conditions."
+         << "  There is NO" << endl
+         << "warranty; not even for MERCHANTABILITY or FITNESS FOR "
+         << "A PARTICULAR PURPOSE." << endl << endl;
+
+  }
+  else if (args.contains("-help"))
+  {
+    initGUI = false;
+    cout << "Usage nclcomposer [options] [files] ..." << endl;
+    cout << "Options:" << endl;
+  }
+
+  return 1;
+}
+
 int main(int argc, char *argv[])
 {
-    QApplication a(argc, argv);
-    a.setQuitOnLastWindowClosed(true);
+  bool initGUI = true;
+  QApplication a(argc, argv);
+  QCoreApplication::setOrganizationName("TeleMidia Lab/PUC-Rio");
+  QCoreApplication::setOrganizationDomain("telemidia.pucrio.br");
+  QCoreApplication::setApplicationName("composer");
+  QCoreApplication::setApplicationVersion(NCLCOMPOSER_GUI_VERSION);
 
+  QStringList args = a.arguments();
+  handleArguments(args, initGUI);
+
+  if (initGUI)
+  {
     GlobalSettings settings;
     // We need that to make sure the defaults are in the settings
     settings.updateWithDefaults(DATA_PATH);
     loadTranslations();
 
     QResource::registerResource("images.qrc");
-    QCoreApplication::setOrganizationName("Telemidia Lab");
-    QCoreApplication::setOrganizationDomain("telemidia.pucrio.br");
-    QCoreApplication::setApplicationName("composer");
+
 
     //make the library search path include the application dir on windows
     //this is so the plugins can find the dlls they are linked to at run time
     QApplication::addLibraryPath(QApplication::applicationDirPath());
 
+    a.setQuitOnLastWindowClosed(true);
     ComposerMainWindow w;
     w.setWindowIcon(QIcon(":/mainwindow/icon"));
 
     QStringList dirs =
-        GlobalSettings().value("default_stylesheets_dirs").toStringList();
+          GlobalSettings().value("default_stylesheets_dirs").toStringList();
 
     foreach(QString dir, dirs)
     {
@@ -106,6 +140,7 @@ int main(int argc, char *argv[])
     QStringList filesToOpen;
     for(int i = 0; i < argList.size(); i++)
     {
+      // Take only the arguments ending with .cpr
       if(argList.at(i).endsWith(".cpr"))
         filesToOpen << argList.at(i);
     }
@@ -113,4 +148,7 @@ int main(int argc, char *argv[])
     w.openProjects(filesToOpen);
 
     return a.exec();
+  }
+
+  return 1;
 }

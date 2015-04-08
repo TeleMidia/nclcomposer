@@ -11,10 +11,10 @@
 export PREFIX=/usr
 
 #Getting current version
-VERSION=`git --git-dir=./composer-plugins/.git describe --tags | sed "s/v//g"`
+VERSION=`git --git-dir=.git describe --tags | sed "s/v//g"`
 
 #I can also FORCE an specific version
-#VERSION=0.1.9
+VERSION=0.2.0
 
 QMAKE=qmake-qt4 FORCERELEASE=true RUNSSHON=true CPRVERSION=${VERSION} PREFIX=/usr
 
@@ -23,7 +23,7 @@ builddir:
 	mkdir -p builddir
 
 builddir/Makefile: builddir
-	cd builddir && $(QMAKE) ../composer-all.pro
+	cd builddir && $(QMAKE) ../nclcomposer.pro
 	dh_auto_configure
 
 build: build-stamp

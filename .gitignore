@@ -23,3 +23,6 @@ Thumbs.db
 *.exe
 *~
 bin/
+doc/build
+*.qm
+qscintilla_*.ts

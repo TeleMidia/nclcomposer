@@ -1480,6 +1480,7 @@ void ComposerMainWindow::copyOnRemoteGingaVM(bool autoplay)
     reply = QMessageBox::warning(NULL, tr("Warning!"),
                                  tr("There aren't a current NCL project."),
                                  QMessageBox::Ok);
+    Q_UNUSED(reply)
   }
 
 #else

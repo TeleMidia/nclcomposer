@@ -258,7 +258,6 @@ private:
   qreal zindexTop;
 
   QMenu* viewMenu;
-  QMenu* insertMenu;
   QMenu* showMenu;
   QMenu* arrangeMenu;
   QMenu* switchMenu;

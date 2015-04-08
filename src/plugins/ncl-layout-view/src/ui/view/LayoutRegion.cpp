@@ -68,7 +68,6 @@ LayoutRegion::LayoutRegion(QMenu* switchMenu, LayoutRegion* parent)
 LayoutRegion::~LayoutRegion()
 {
   delete(viewMenu);
-  delete(insertMenu);
   delete(arrangeMenu);
   delete(contextMenu);
 }
@@ -505,7 +504,8 @@ void LayoutRegion::LayoutRegion::createActions()
 
   // delete action
   deleteAction = new QAction(this);
-  deleteAction->setText(tr("Delete"));
+  deleteAction->setText(tr("&Delete"));
+  deleteAction->setIcon(QIcon(":/icon/minus"));
 
   deleteAction->setEnabled(true);
   deleteAction->setShortcut(QKeySequence("Del"));
@@ -546,13 +546,15 @@ void LayoutRegion::LayoutRegion::createActions()
 
   // region action
   regionAction = new QAction(this);
-  regionAction->setText(tr("Region"));
+  regionAction->setText(tr("Add &Region"));
+  regionAction->setIcon(QIcon(":/icon/plus"));
 
   regionAction->setEnabled(true);
 
   // regionbase action
   regionbaseAction = new QAction(this);
-  regionbaseAction->setText(tr("Regionbase"));
+  regionbaseAction->setText(tr("Add Region &Base"));
+  regionbaseAction->setIcon(QIcon(":/icon/plus"));
 
   regionbaseAction->setEnabled(true);
 
@@ -624,15 +626,6 @@ void LayoutRegion::createMenus()
   viewMenu->addSeparator();
   viewMenu->addAction(fullscreenAction);
 
-  // insert menu
-  insertMenu = new QMenu();
-  insertMenu->setTitle(tr("Insert"));
-
-  insertMenu->setEnabled(true);
-
-  insertMenu->addAction(regionAction);
-  insertMenu->addAction(regionbaseAction);
-
   // show menu
   showMenu = new QMenu();
   showMenu->setTitle(tr("Show"));
@@ -652,7 +645,11 @@ void LayoutRegion::createMenus()
 
   // context menu
   contextMenu = new QMenu();
-  contextMenu->addAction(helpAction);
+
+  contextMenu->addAction(regionAction);
+  // contextMenu->addAction(regionbaseAction);
+  contextMenu->addSeparator();
+  contextMenu->addAction(deleteAction);
   contextMenu->addSeparator();
   //    contextMenu->addAction(undoAction);
   //    contextMenu->addAction(redoAction);
@@ -661,18 +658,19 @@ void LayoutRegion::createMenus()
   contextMenu->addAction(copyAction);
   contextMenu->addAction(pasteAction);
   contextMenu->addSeparator();
-  contextMenu->addAction(deleteAction);
-  contextMenu->addSeparator();
   contextMenu->addAction(exportAction);
   contextMenu->addSeparator();
   // contextMenu->addMenu(viewMenu); // disabled for while
-  contextMenu->addMenu(insertMenu);
+
   contextMenu->addMenu(showMenu);
   // contextMenu->addMenu(arrangeMenu); // disabled for while
   contextMenu->addSeparator();
   contextMenu->addAction(hideAction);
   contextMenu->addSeparator();
   contextMenu->addMenu(switchMenu);
+
+  contextMenu->addSeparator();
+  contextMenu->addAction(helpAction);
   // contextMenu->addSeparator(); //disabled for now
   // contextMenu->addAction(propertiesAction); //disabled for now
 }
@@ -1648,12 +1646,17 @@ void LayoutRegion::dragLeaveEvent(QGraphicsSceneDragDropEvent *event)
 void LayoutRegion::dropEvent(QGraphicsSceneDragDropEvent *event)
 {
   isDragging = false;
+
+  scene()->update();
+
   qDebug() << "dropEvent " << event->mimeData()->data("nclcomposer/mediaid")
            << event->mimeData()->data("nclcomposer/qnstuid");
 
 
   emit dragMediaOverRegion(event->mimeData()->data("nclcomposer/mediaid"),
                            this);
+
+
 }
 
 QMap <QString, QString> LayoutRegion::getAttributes()

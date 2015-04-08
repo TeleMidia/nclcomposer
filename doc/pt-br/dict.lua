@@ -6,7 +6,7 @@ local dict = {
   ["properties_view"] = "Visão de Propriedades",
   ["textual_view"]    = "Visão Textual",
   ["rules_view"]      = "Visão de Regras",
-  ["validator"]       = "Visão de Validaćão",
+  ["validator"]       = "Visão de Validação",
   ["default_views"]   = "Visão Estrutural, Visão de Leiaute, Visão de Outline, Visão Proprieades, Visão de Regras, Visão de Validaćão"
 }
 

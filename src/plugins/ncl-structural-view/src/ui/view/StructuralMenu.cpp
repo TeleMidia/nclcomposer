@@ -84,7 +84,7 @@ void StructuralMenu::createActions()
   // delete action
   actionDelete = new QAction(this);
   actionDelete->setText(tr("Delete"));
-  actionDelete->setIcon(QIcon(":/icon/delete"));
+  actionDelete->setIcon(QIcon(":/icon/minus"));
   actionDelete->setShortcut(QKeySequence("Del"));
   actionDelete->setEnabled(false);
 

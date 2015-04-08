@@ -85,7 +85,8 @@ void LayoutView::createActions()
 
   // delete action
   deleteAction = new QAction(this);
-  deleteAction->setText(tr("Delete"));
+  deleteAction->setText(tr("&Delete"));
+  deleteAction->setIcon(QIcon(":/icon/minus"));
 
   deleteAction->setEnabled(false);
   deleteAction->setShortcut(QKeySequence("Del"));
@@ -127,12 +128,14 @@ void LayoutView::createActions()
   // region action
   regionAction = new QAction(this);
   regionAction->setText(tr("Region"));
+  regionAction->setIcon(QIcon(":/icon/plus"));
 
   regionAction->setEnabled(false);
 
   // regionbase action
   regionbaseAction = new QAction(this);
-  regionbaseAction->setText(tr("Region Base"));
+  regionbaseAction->setText(tr("Add Region &Base"));
+  regionbaseAction->setIcon(QIcon(":/icon/plus"));
 
   regionbaseAction->setEnabled(true);
 
@@ -196,15 +199,6 @@ void LayoutView::createMenus()
   viewMenu->addSeparator();
   viewMenu->addAction(fullscreenAction);
 
-  // insert menu
-  insertMenu = new QMenu();
-  insertMenu->setTitle(tr("Insert"));
-
-  insertMenu->setEnabled(true);
-
-  insertMenu->addAction(regionAction);
-  insertMenu->addAction(regionbaseAction);
-
   showMenu = new QMenu();
   showMenu->setTitle(tr("Show"));
 
@@ -223,13 +217,17 @@ void LayoutView::createMenus()
 
   // switch menu
   switchMenu = new QMenu();
-  switchMenu->setTitle(tr("Switch"));
+  switchMenu->setTitle(tr("Current RegionBase"));
 
   switchMenu->setEnabled(false);
 
   // context menu
   contextMenu = new QMenu();
-  contextMenu->addAction(helpAction);
+  contextMenu->addAction(regionAction);
+  contextMenu->addAction(regionbaseAction);
+  contextMenu->addSeparator();
+  contextMenu->addAction(deleteAction);
+  contextMenu->addSeparator();
   //    contextMenu->addSeparator();
   //    contextMenu->addAction(undoAction);
   //    contextMenu->addAction(redoAction);
@@ -238,12 +236,9 @@ void LayoutView::createMenus()
   //    contextMenu->addAction(copyAction);
   contextMenu->addAction(pasteAction);
   contextMenu->addSeparator();
-  contextMenu->addAction(deleteAction);
-  contextMenu->addSeparator();
   contextMenu->addAction(exportAction);
   contextMenu->addSeparator();
   contextMenu->addMenu(viewMenu);
-  contextMenu->addMenu(insertMenu);
   contextMenu->addMenu(showMenu);
   contextMenu->addMenu(arrangeMenu);
   contextMenu->addSeparator();
@@ -252,6 +247,8 @@ void LayoutView::createMenus()
   contextMenu->addMenu(switchMenu);
   contextMenu->addSeparator();
   contextMenu->addAction(propertiesAction);
+  contextMenu->addSeparator();
+  contextMenu->addAction(helpAction);
 }
 
 void LayoutView::createConnections()

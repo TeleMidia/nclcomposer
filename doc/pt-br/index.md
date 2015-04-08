@@ -1,7 +1,5 @@
 # Prefácio #
 
-![](../imgs/nclcomposer.png)
-
 ## Requisitos ##
 
 Para tirar total proveito deste manual você precisará de um computador com:

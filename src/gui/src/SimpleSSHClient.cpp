@@ -50,9 +50,13 @@ static int qmutex_mutex_unlock(void **lock)
 }
 
 static struct gcry_thread_cbs gcry_threads_qmutex =
-{ GCRY_THREAD_OPTION_USER, NULL,
-  qmutex_mutex_init, qmutex_mutex_destroy,
-  qmutex_mutex_lock, qmutex_mutex_unlock };
+  { GCRY_THREAD_OPTION_USER,
+    NULL,
+    qmutex_mutex_init,
+    qmutex_mutex_destroy,
+    qmutex_mutex_lock,
+    qmutex_mutex_unlock,
+    NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL};
 
 int SimpleSSHClient::init()
 {
@@ -260,12 +264,9 @@ int SimpleSSHClient::sftp_copy_file(const char *localncl, const char *destpath)
   struct stat fileinfo;
   char mem[1024 * 100];
   char *ptr;
-  size_t memuse;
   size_t nread;
-  int total = 0;
 
   LIBSSH2_CHANNEL *channel;
-  LIBSSH2_SFTP_HANDLE *sftp_handle;
   LIBSSH2_SFTP_ATTRIBUTES attrs;
   bool isModified = true;
 
@@ -453,7 +454,7 @@ int SimpleSSHClient::exec_cmd(const char *command)
   LIBSSH2_CHANNEL *channel;
 
   int exitcode;
-  char *exitsignal=(char *)"none";
+  // char *exitsignal=(char *)"none";
   int bytecount = 0;
 
   // \todo Make sure we are connected.
