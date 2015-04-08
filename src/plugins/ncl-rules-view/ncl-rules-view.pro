@@ -5,8 +5,7 @@ include (../plugins-common.pri)
 INCLUDEPATH += . \
             src
 
-macx:LIBS +=    -L$$quote(/Library/Application Support/Composer/Extensions) \
-                -lNCLLanguageProfile
+macx:LIBS += -lNCLLanguageProfile
 
 SOURCES += \
     src/ComboBoxItem.cpp \

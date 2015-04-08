@@ -459,3 +459,5 @@ TRANSLATIONS = \
 	qscintilla_fr.ts \
 	qscintilla_pt_br.ts \
 	qscintilla_ru.ts
+
+DESTDIR  = $$PWD/../../../../../../bin/extensions/

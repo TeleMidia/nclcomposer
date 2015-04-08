@@ -174,9 +174,11 @@ INCLUDEPATH   +=  ../core/src \
 LIBS          +=  -L$$DESTDIR
 
 macx {
-    LIBS += -F/Library/Frameworks -framework ComposerCore
+  LIBS += -F/Library/Frameworks \
+          -F$$PWD/../../bin -framework ComposerCore
 
     INCLUDEPATH += \
+        $$PWD/../core/src \
         /Library/Frameworks/ComposerCore.framework/ \
         /Library/Frameworks/ComposerCore.framework/core/ \
         /opt/local/include/

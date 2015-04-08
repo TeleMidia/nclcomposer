@@ -26,9 +26,7 @@ LIBS      +=    -Ldeps/QScintilla-gpl-2.8/Qt4Qt5/debug \
                 -lqscintilla2_telem
 }
 
-macx:LIBS += -L/Library/Frameworks \
-            -L$$quote(/Library/Application Support/Composer/Extensions) \
-            -lNCLLanguageProfile
+macx:LIBS += -lNCLLanguageProfile -lqscintilla2_telem
 
 unix:LIBS += -Ldeps/QScintilla-gpl-2.8/Qt4Qt5
 

@@ -46,7 +46,8 @@ void GlobalSettings::updateWithDefaults(const QString &dataPath)
 
   // After that we will look for plugins in the default system path
 #ifdef Q_OS_MAC
-  defaultPluginsPath << "/Library/Application Support/Composer/Extensions"
+  defaultPluginsPath << QApplication::applicationDirPath() + "/../../../extensions"
+                     << "/Library/Application Support/Composer/Extensions"
                      << QApplication::applicationDirPath() +
                         "/../PlugIns/composer";
 #elif defined(Q_OS_WIN32)
@@ -94,7 +95,7 @@ void GlobalSettings::updateWithDefaults(const QString &dataPath)
 #ifdef QT_NO_DEBUG
     defaultConnBaseDir = "../PlugIns/composer/";
 #else
-    defaultConnBaseDir = "/Library/Application Support/Composer/Data/";
+    defaultConnBaseDir = QApplication::applicationDirPath() + "/../../../data/";
 #endif
 #elif defined(Q_OS_WIN32)
     defaultConnBaseDir = QApplication::applicationDirPath() + "/data/";

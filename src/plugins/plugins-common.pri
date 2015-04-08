@@ -53,13 +53,18 @@ else:win32 {
 }
 
 macx {
-  LIBS += -F/Library/Frameworks -framework ComposerCore
-  LIBS +=  $$quote(-L/Library/Application Support/Composer/Extensions)
-  INCLUDEPATH +=  include /Library/Frameworks/ComposerCore.framework/ \
+  LIBS += -F/Library/Frameworks \
+          -F$$PWD/../../bin -framework ComposerCore
+
+  LIBS += -L$$PWD/../../bin \
+          -L$$PWD/../../bin/extensions \
+          $$quote(-L/Library/Application Support/Composer/Extensions)
+
+  INCLUDEPATH +=  $$PWD/../core/src \
+                  $$PWD/ncl-profile/ \
+                  include /Library/Frameworks/ComposerCore.framework/ \
                   /Library/Frameworks/ComposerCore.framework/core \
                   /Library/Frameworks/ComposerCore.framework/core/extensions
-
-  HEADERSPATH
 
   target.path = $$quote(/Library/Application Support/Composer/Extensions)
 }
