@@ -1,4 +1,4 @@
-; composer.nsi
+; nclcomposer.nsi
 ;
 ; This script is used to create the NCL Composer package installer for
 ; Windows.
@@ -9,13 +9,13 @@
 ;--------------------------------
 
 !ifndef VERSION
-!define VERSION "0.1.5"
+!define VERSION "0.2.0"
 !endif
 
 Name "NCL Composer ${VERSION}"
 Caption "NCL Composer Installer"
 OutFile "nclcomposer-installer-${VERSION}.exe"
-Icon "../composer-gui/images/icon.ico"
+Icon "../src/gui/images/icon.ico"
 
 !define APPNAME "NCL Composer"
 !define COMPANYNAME "TeleMidia"
@@ -26,7 +26,7 @@ InstallDir "C:\Composer"
 
 ; License informations
 LicenseText "Please review the license terms before installing NCL Composer."
-LicenseData "../composer-core/LICENSE.EPL"
+LicenseData "../LICENSE.EPL"
 
 ; Request application privileges for Windows Vista
 RequestExecutionLevel admin
@@ -110,7 +110,7 @@ Section "NCL Composer Core (required)" ; No components page, name is not importa
   File "C:\Composer\extensions\*.qm"
 
   ; Associate .cpr files with NCL Composer
-  ${registerExtension} $INSTDIR\composer.exe ".cpr" "NCL Composer project"
+  ${registerExtension} $INSTDIR\nclcomposer.exe ".cpr" "NCL Composer project"
 
   ; Registry information for add/remove programs
   WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${COMPANYNAME} ${APPNAME}" "UninstallString" "$\"$INSTDIR\uninstall.exe$\""
@@ -121,7 +121,7 @@ Section "Start Menu Shortcuts"
   SectionIn 1
   CreateDirectory "$SMPROGRAMS\NCL Composer"
   CreateShortCut "$SMPROGRAMS\NCL Composer\Uninstall.lnk" "$INSTDIR\uninstall.exe" "" "$INSTDIR\uninstall.exe" 0
-  CreateShortCut "$SMPROGRAMS\NCL Composer\NCL Composer.lnk" "$INSTDIR\composer.exe" "" "$INSTDIR\composer.exe" 0      
+  CreateShortCut "$SMPROGRAMS\NCL Composer\NCL Composer.lnk" "$INSTDIR\nclcomposer.exe" "" "$INSTDIR\nclcomposer.exe" 0      
   CreateShortCut "$SMPROGRAMS\NCL Composer\ (MakeNSISW).lnk" "$INSTDIR\nclcomposer.nsi" "" "$INSTDIR\nclcomposer.nsi" 0      
 SectionEnd
 
@@ -131,13 +131,13 @@ SectionGroup /e "Install Default Plugins"
     SectionIn 1
     SetOutPath $INSTDIR\extensions
     ; File "C:\Composer\extensions\qscintilla2.dll"
-    File "C:\Composer\extensions\ncl_textual_plugin.dll"
+    File "C:\Composer\extensions\ncl_textual_view.dll"
   SectionEnd
 
   Section "Layout View"
     SectionIn 1
     SetOutPath $INSTDIR\extensions
-    File "C:\Composer\\extensions\Qnly0.dll"
+    File "C:\Composer\\extensions\ncl_layout_view.dll"
   SectionEnd
 
   Section "Properties View"
@@ -149,7 +149,7 @@ SectionGroup /e "Install Default Plugins"
   Section "Structural View"
     SectionIn 1
     SetOutPath $INSTDIR\extensions
-    File "C:\Composer\extensions\Qnst0.dll"
+    File "C:\Composer\extensions\ncl_structural_view.dll"
   SectionEnd
 
   Section "Outline View"
@@ -161,13 +161,13 @@ SectionGroup /e "Install Default Plugins"
   Section "Validator Plugin"
     SectionIn 1
     SetOutPath $INSTDIR\extensions
-    File "C:\Composer\extensions\ValidatorPlugin.dll"
+    File "C:\Composer\extensions\validator.dll"
   SectionEnd
   
   Section "Rules View"
     SectionIn 1
     SetOutPath $INSTDIR\extensions
-    File "C:\Composer\extensions\RulesView.dll"
+    File "C:\Composer\extensions\ncl_rules_view.dll"
   SectionEnd
 SectionGroupEnd
 

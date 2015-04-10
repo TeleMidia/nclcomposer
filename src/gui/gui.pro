@@ -141,14 +141,14 @@ else:unix {
   COPY_CMD = "cp -R"
 }
 else:win32 {
-  COPY_CMD = xcopy /E
+  COPY_CMD = "xcopy /E"
 }
 
 copydata.commands = $$COPY_CMD $$PWD/data $$DESTDIR
 first.depends = $(first) copydata
 export(first.depends)
 export(copydata.commands)
-QMAKE_EXTRA_TARGETS += first copydata
+QMAKE_EXTRA_TARGETS += $(first) $(copydata)
 
 data.files = data/defaultConnBase.ncl data/style.qss
 

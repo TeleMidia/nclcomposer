@@ -20,7 +20,7 @@ REM -     * ssc/scp (if we want to publish)
 echo off
 
 REM - GET THE GIT VERSION
-REM - cd ../composer-plugins/
+REM - cd ../
 REM - git describe --tag | sed "s/v//g" > ..\VERSION
 
 REM - Go to default NCL Composer PATH
@@ -29,7 +29,7 @@ cd ..
 SET /p CPRVERSION= <VERSION
 
 REM - I CAN FORCE A VERSION IF I UNCOMMENT THE NEXT LINE
-SET CPRVERSION=0.1.9
+SET CPRVERSION=0.2.0
 
 REM - makensis path
 SET MAKENSIS="makensis.exe"
@@ -44,15 +44,15 @@ REM - Run qmake with release parameters
 IF "%CPRVERSION%"=="" (qmake FORCERELEASE=true RUNSSHON=true) ELSE (qmake FORCERELEASE=true RUNSSHON=true CPRVERSION=%CPRVERSION%)
 
 REM - Generate translation files
-cd composer-gui 
-lupdate Composer.pro
-lrelease Composer.pro
+cd src\gui 
+lupdate gui.pro
+lrelease gui.pro
 
-cd ..\composer-plugins
+cd ..\plugins
 lupdate plugin-suite.pro
 lrelease plugin-suite.pro
 
-cd ..
+cd ..\..\
 
 REM - COMPILE
 mingw32-make install
