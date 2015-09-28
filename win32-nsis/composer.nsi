@@ -7,7 +7,6 @@
 !include "FileAssociation.nsh"
 
 ;--------------------------------
-
 !ifndef VERSION
 !define VERSION "0.2.0"
 !endif
@@ -33,7 +32,6 @@ RequestExecutionLevel admin
 
 ;--------------------------------
 ; onInit function
-
 Function .onInit
   ReadRegStr $R0 HKLM \
      "Software\Microsoft\Windows\CurrentVersion\Uninstall\${COMPANYNAME} ${APPNAME}" \
@@ -75,13 +73,11 @@ UninstPage instfiles
 
 ;--------------------------------
 ; Install Types
-
 InstType "Full" 
 InstType "Minimal"
 
 ;--------------------------------
 ; The stuffs to install
-
 Section "NCL Composer Core (required)" ; No components page, name is not important
   SectionIn RO
   ; Set output path to the installation directory.
@@ -124,6 +120,37 @@ Section "Start Menu Shortcuts"
   CreateShortCut "$SMPROGRAMS\NCL Composer\NCL Composer.lnk" "$INSTDIR\nclcomposer.exe" "" "$INSTDIR\nclcomposer.exe" 0      
   CreateShortCut "$SMPROGRAMS\NCL Composer\ (MakeNSISW).lnk" "$INSTDIR\nclcomposer.nsi" "" "$INSTDIR\nclcomposer.nsi" 0      
 SectionEnd
+
+; Ginga default executable
+SectionGroup "Install NCL Player"
+  Section "Ginga-NCL ITU-T Reference Implementation"
+    SectionIn 1
+
+    SetOutPath "$TEMP"
+
+    DetailPrint "Downloading Ginga-NCL Reference Implementation..."
+
+    DetailPrint "Contacting Ginga-ncl.org.br..."
+    NSISdl::download /TIMEOUT=15000 "http://composer.telemidia.puc-rio.br/downloads/latest_ginga.php?system=exe" "latest_ginga-win32.exe"
+
+    Pop $R0 ;Get the return value
+
+    StrCmp $R0 "success" OnSuccess
+
+    MessageBox MB_OK "Could not download Ginga-NCL ITU-T Reference Implementation; none of the mirrors appear to be functional."
+      Goto done
+
+    OnSuccess:
+      DetailPrint "Running Ginga-NCL ITU-T Reference Implementation Setup..."
+      ExecWait '"$TEMP\latest_ginga-win32.exe" /qb'
+      DetailPrint "Finished Ginga-NCL ITU-T Reference Implementation Setup"
+
+    Delete "$TEMP\latest_ginga-win32.exe"
+
+    done:
+
+  SectionEnd
+SectionGroupEnd
 
 ; Plugins optional section (can be disabled by the user)
 SectionGroup /e "Install Default Plugins"
