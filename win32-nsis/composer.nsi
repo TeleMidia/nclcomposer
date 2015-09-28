@@ -20,8 +20,8 @@ Icon "../src/gui/images/icon.ico"
 !define COMPANYNAME "TeleMidia"
 
 ; The default installation directory
-; InstallDir "$PROGRAMFILES\NCL Composer"
-InstallDir "C:\Composer"
+InstallDir "$PROGRAMFILES\TeleMidia\NCL Composer"
+; InstallDir "C:\Composer"
 
 ; License informations
 LicenseText "Please review the license terms before installing NCL Composer."
