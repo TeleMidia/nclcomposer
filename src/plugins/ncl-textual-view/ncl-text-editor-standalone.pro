@@ -11,10 +11,10 @@ DEFINES     +=  NCLEDITOR_STANDALONE
 
 # We use QMAKE_CXXFLAGS instead of INCLUDEPATH because our qscintilla is
 # modified, and must be found before any other that is installed.
-QMAKE_CXXFLAGS  += -Ideps/QScintilla-gpl-2.7.2/Qt4Qt5
+QMAKE_CXXFLAGS  += -Ideps/QScintilla-gpl-2.9/Qt4Qt5
 
-LIBS      +=    deps/QScintilla-gpl-2.7.2/Qt4Qt5/libqscintilla2_telem.a
-#		-Ldeps/QScintilla-gpl-2.7.2/Qt4Qt5 \
+LIBS      +=    deps/QScintilla-gpl-2.9/Qt4Qt5/libqscintilla2_telem.a
+#		-Ldeps/QScintilla-gpl-2.9/Qt4Qt5 \
 #                -lqscintilla2_telem
 
 INCLUDEPATH +=  include \
