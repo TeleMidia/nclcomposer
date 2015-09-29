@@ -1,34 +1,28 @@
-// This module implements partt of the support for rectangular selections on
+// This module implements part of the support for rectangular selections on
 // OS/X.  It is a separate file to avoid clashes between OS/X and Scintilla
 // data types.
 //
-// Copyright (c) 2012 Riverbank Computing Limited <info@riverbankcomputing.com>
+// Copyright (c) 2015 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
 // This file is part of QScintilla.
 // 
-// This file may be used under the terms of the GNU General Public
-// License versions 2.0 or 3.0 as published by the Free Software
-// Foundation and appearing in the files LICENSE.GPL2 and LICENSE.GPL3
-// included in the packaging of this file.  Alternatively you may (at
-// your option) use any later version of the GNU General Public
-// License if such license has been publicly approved by Riverbank
-// Computing Limited (or its successors, if any) and the KDE Free Qt
-// Foundation. In addition, as a special exception, Riverbank gives you
-// certain additional rights. These rights are described in the Riverbank
-// GPL Exception version 1.1, which can be found in the file
-// GPL_EXCEPTION.txt in this package.
+// This file may be used under the terms of the GNU General Public License
+// version 3.0 as published by the Free Software Foundation and appearing in
+// the file LICENSE included in the packaging of this file.  Please review the
+// following information to ensure the GNU General Public License version 3.0
+// requirements will be met: http://www.gnu.org/copyleft/gpl.html.
 // 
-// If you are unsure which license is appropriate for your use, please
-// contact the sales department at sales@riverbankcomputing.com.
+// If you do not wish to use this file under the terms of the GPL version 3.0
+// then you may purchase a commercial license.  For more information contact
+// info@riverbankcomputing.com.
 // 
 // This file is provided AS IS with NO WARRANTY OF ANY KIND, INCLUDING THE
 // WARRANTY OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
 
 
-#include <QtGlobal>
+#include <qglobal.h>
 
-#if defined(Q_OS_MAC)
-#if (QT_VERSION >= 0x040200 && QT_VERSION < 0x050000) || QT_VERSION >= 0x050200
+#if (QT_VERSION >= 0x040200 && QT_VERSION < 0x050000 && defined(Q_OS_MAC)) || (QT_VERSION >= 0x050200 && defined(Q_OS_OSX))
 
 #include <QByteArray>
 #include <QLatin1String>
@@ -114,5 +108,4 @@ void initialiseRectangularPasteboardMime()
 }
 
 
-#endif
 #endif
