@@ -314,6 +314,8 @@ private slots:
   /*! Run the current open Project.*/
   void runNCL();
   void stopNCL();
+  void functionRunPassive();
+  void functionRunActive();
   bool isRunningNCL();
   void runOnLocalGinga();
   void copyOnRemoteGingaVM(bool autoplay = true);

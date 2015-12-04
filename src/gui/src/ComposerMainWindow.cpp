@@ -20,6 +20,8 @@
 #include <QRegExp>
 #include <QDesktopServices>
 
+#include <QInputDialog>
+
 #include "GeneralPreferences.h"
 
 #include "NewProjectWizard.h"
@@ -353,6 +355,8 @@ void ComposerMainWindow::initGUI()
 
   connect(ui->action_RunNCL, SIGNAL(triggered()), this, SLOT(runNCL()));
   connect(ui->action_StopNCL, SIGNAL(triggered()), this, SLOT(stopNCL()));
+  connect(ui->runPassiveNCL, SIGNAL(triggered()), this, SLOT(functionRunPassive()));
+  connect(ui->runActiveNCL, SIGNAL(triggered()), this, SLOT(functionRunActive()));
 
   ui->action_RunNCL->setEnabled(true);
 
@@ -1433,6 +1437,58 @@ void ComposerMainWindow::runOnLocalGinga()
   }
 }
 
+void ComposerMainWindow::functionRunPassive()
+{
+    int i;
+    bool ok;
+    GlobalSettings settings;
+    settings.beginGroup("runginga");
+    QString command = settings.value("local_ginga_cmd").toString();
+    settings.endGroup();
+
+    int value = QInputDialog::getInt(
+                        this,
+                        tr("Multidevices"),//title
+                        tr("Passive"), //label
+                        1, //start
+                        1, //min
+                        5, //max
+                        1, //step
+                        &ok );
+    if( ok )
+    {
+      qWarning() << command;
+      command += " --device-class 1";
+      qWarning() << command;
+      for(i=0;i<value;i++) QProcess::startDetached(command);
+    }
+}
+
+void ComposerMainWindow::functionRunActive()
+{
+    int i;
+    bool ok;
+    GlobalSettings settings;
+    settings.beginGroup("runginga");
+    QString command = settings.value("local_ginga_cmd").toString();
+    settings.endGroup();
+
+    int value = QInputDialog::getInt(
+                        this,
+                        tr("Multidevices"),
+                        tr("Active"),
+                        1,
+                        1,
+                        5,
+                        1,
+                        &ok );
+    if( ok )
+    {
+      command += " --device-class 2";
+      for(i=0;i<value;i++) QProcess::startDetached(command);
+    }
+}
+
 void ComposerMainWindow::copyOnRemoteGingaVM(bool autoplay)
 {
 
@@ -1507,6 +1563,7 @@ void ComposerMainWindow::stopNCL()
 
   updateRunActions();
 }
+
 
 bool ComposerMainWindow::isRunningNCL()
 {
