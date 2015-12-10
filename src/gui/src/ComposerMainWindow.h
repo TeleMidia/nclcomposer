@@ -106,6 +106,7 @@ private:
                                              perspective as a menu. */
   QMenu        *menu_Perspective; /*!< The menu containing the list of
                                   perspectives. */
+  QMenu        *menu_Multidevice; /*!<todo */
   QToolButton  *tbLanguageDropList; /*!< Action that shows the list of
                                              languages as a menu. */
   QMenu         *menu_Language; /*!< The menu containing the list of languages.*/

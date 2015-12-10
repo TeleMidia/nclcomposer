@@ -355,8 +355,8 @@ void ComposerMainWindow::initGUI()
 
   connect(ui->action_RunNCL, SIGNAL(triggered()), this, SLOT(runNCL()));
   connect(ui->action_StopNCL, SIGNAL(triggered()), this, SLOT(stopNCL()));
-  connect(ui->runPassiveNCL, SIGNAL(triggered()), this, SLOT(functionRunPassive()));
-  connect(ui->runActiveNCL, SIGNAL(triggered()), this, SLOT(functionRunActive()));
+  connect(ui->action_runPassiveNCL, SIGNAL(triggered()), this, SLOT(functionRunPassive()));
+  connect(ui->action_runActiveNCL, SIGNAL(triggered()), this, SLOT(functionRunActive()));
 
   ui->action_RunNCL->setEnabled(true);
 
@@ -722,6 +722,15 @@ void ComposerMainWindow::createMenus()
   /* menu_Language = new QMenu(0);
   tbLanguageDropList->setMenu(menu_Language);
   ui->toolBar->addWidget(tbLanguageDropList);*/
+
+  QToolButton *button_Run = new QToolButton(0); //create a run_NCL button(It used to be created in design mode)
+  menu_Multidevice = new QMenu(0); // assign a dropdown menu to the button
+  menu_Multidevice->addAction(ui->action_runPassiveNCL);
+  menu_Multidevice->addAction(ui->action_runActiveNCL);
+  button_Run->setMenu(menu_Multidevice);
+  button_Run->setDefaultAction(ui->action_RunNCL);
+  button_Run->setPopupMode(QToolButton::MenuButtonPopup);
+  ui->toolBar->addWidget(button_Run); //put button_run in toolbar
 
   menu_Perspective = new QMenu(0);
   // assing menu_Perspective to tbPerspectiveDropList

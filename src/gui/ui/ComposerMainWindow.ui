@@ -264,11 +264,8 @@
    </attribute>
    <addaction name="action_Save"/>
    <addaction name="separator"/>
-   <addaction name="action_RunNCL"/>
    <addaction name="action_StopNCL"/>
    <addaction name="separator"/>
-   <addaction name="runActiveNCL"/>
-   <addaction name="runPassiveNCL"/>
   </widget>
   <action name="action_NewProject">
    <property name="icon">
@@ -511,12 +508,12 @@
     <string>Publish current project to server.</string>
    </property>
   </action>
-  <action name="runPassiveNCL">
+  <action name="action_runPassiveNCL">
    <property name="text">
     <string>Passive</string>
    </property>
   </action>
-  <action name="runActiveNCL">
+  <action name="action_runActiveNCL">
    <property name="text">
     <string>Active</string>
    </property>
