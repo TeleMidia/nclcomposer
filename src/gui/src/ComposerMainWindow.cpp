@@ -732,6 +732,8 @@ void ComposerMainWindow::createMenus()
   button_Run->setPopupMode(QToolButton::MenuButtonPopup);
   ui->toolBar->addWidget(button_Run); //put button_run in toolbar
 
+  ui->toolBar->addSeparator();
+
   menu_Perspective = new QMenu(0);
   // assing menu_Perspective to tbPerspectiveDropList
   tbPerspectiveDropList->setMenu(menu_Perspective);
