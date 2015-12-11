@@ -29,40 +29,28 @@ using namespace composer::core::util;
 PropertyButtons::PropertyButtons(QString propName, QWidget *parent)
   : LineEditWithButton(parent, ":/images/esf-search.png"),
     key(propName)
-{
-  connect(mButton, SIGNAL(pressed()), SLOT(openfile()));
-
-  connect(this, SIGNAL(lostFocus()), SLOT(emitNewValue()));
-
-  qDebug() << "PropertyButtons" << propName;
+{ 
+  connect(mButton, SIGNAL(pressed()), SLOT(openfile()), Qt::DirectConnection);
 }
 
 void PropertyButtons::openfile()
 {
-  disconnect(this, SIGNAL(lostFocus()), this, SLOT(emitNewValue()));
-  QFileDialog dialog;
+  QFileDialog dialog (this);
+  dialog.setModal(true);
   dialog.setFileMode(QFileDialog::AnyFile);
+  dialog.setDirectory(Utilities::getLastFileDialogPath());
 
-  QString filename = dialog.getOpenFileName(NULL, tr("Select file"),
-                                            Utilities::getLastFileDialogPath());
+  QString filename = "";
+  if (dialog.exec())
+  {
+    QStringList selectedFiles = dialog.selectedFiles();
+    if (selectedFiles.size())
+      filename = selectedFiles.at(0);
+  }
 
   if(!filename.isEmpty() && !filename.isNull())
   {
     Utilities::updateLastFileDialogPath(filename);
-    value = filename;
-    emitNewValue(value);
+    this->setText(filename);
   }
-
-  connect(this, SIGNAL(lostFocus()), SLOT(emitNewValue()));
 }
-
-void PropertyButtons::emitNewValue()
-{
-  emit newValue(key, text());
-}
-
-void PropertyButtons::emitNewValue(QString text)
-{
-  emit newValue(key, text);
-}
-

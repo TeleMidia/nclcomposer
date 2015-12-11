@@ -65,7 +65,7 @@ QString LineEditWithButton::styleSheetForCurrentState() const
   { */
   //    style += "font-family: 'MS Sans Serif';";
   //    style += "font-style: italic;";
-  style += "font-size: 11px;";
+  // style += "font-size: 11px;";
   // }
 
   //  style += "padding-left: 3px;";

@@ -56,6 +56,7 @@ PropertyEditor::PropertyEditor(QWidget *parent):
   internalPropertyChange = false;
 
   ui->treeView->setVisible(WITH_TREEVIEW);
+
 #if WITH_TREEVIEW
   standardModel = new QStandardItemModel(0, 2);
   attributesRootItem = new QStandardItem("Common");
@@ -146,34 +147,15 @@ void PropertyEditor::setAttributeValue(QString property, QString value)
   {
     int line = propertyToLine.value(property);
 
-    // \todo This must be improved to use NCLStructure
-    if(isURL(currentTagname, property))
+    QTableWidgetItem *item = ui->tableWidget->item(line, 1);
+    if(item)
     {
-      PropertyButtons *item = dynamic_cast <PropertyButtons*>
-          (ui->tableWidget->cellWidget(line, 1));
-      if(item)
+      // Try to update if the values are not equal
+      if(item->text() != value)
       {
-        // Try to update if the values are not equal
-        if(item->text() != value)
-        {
-          //          internalPropertyChange = true;
-          item->setText(value);
-          propertyToValue[property] = value;
-        }
-      }
-    }
-    else
-    {
-      QTableWidgetItem *item = ui->tableWidget->item(line, 1);
-      if(item)
-      {
-        // Try to update if the values are not equal
-        if(item->text() != value)
-        {
-          internalPropertyChange = true;
-          item->setText(value);
-          propertyToValue[property] = value;
-        }
+        internalPropertyChange = true;
+        item->setText(value);
+        propertyToValue[property] = value;
       }
     }
   }
@@ -250,31 +232,6 @@ void PropertyEditor::filterProperties(const QString& text)
 
       internalPropertyChange = true;
       ui->tableWidget->setItem(ui->tableWidget->rowCount()-1, 1, itemValue);
-
-      if(isURL(currentTagname, attr))
-      {
-        PropertyButtons *control = new PropertyButtons( attr );
-        ui->tableWidget->setCellWidget(ui->tableWidget->rowCount()-1, 1,
-                                       control);
-
-        control->setText(propertyToValue[attr]);
-        control->show();
-
-        QObject::connect(control,SIGNAL(newValue(QString,QString)),
-                         SIGNAL(propertyChanged(QString,QString)));
-      }
     }
   }
-}
-
-
-bool PropertyEditor::isURL(const QString &tagname, const QString &attr)
-{
-  Q_UNUSED(tagname)
-
-  /*! \todo This must be improved to use NCLStructure */
-  return (attr == "src" ||
-          attr == "focusSrc" ||
-          attr == "focusSelSrc" ||
-          attr == "documentURI");
 }

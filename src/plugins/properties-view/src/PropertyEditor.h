@@ -26,8 +26,9 @@
 #include <QItemDelegate>
 #include <QStyledItemDelegate>
 #include <QComboBox>
-#include <QTextEdit>
+#include <QLineEdit>
 
+#include <PropertyButton.h>
 #include <NCLStructure.h>
 using namespace  composer::language;
 
@@ -64,13 +65,24 @@ public:
         QComboBox *comboEdit = new QComboBox(parent);
         comboEdit->setEditable(true);
         comboEdit->addItems( defaultSuggestions );
+        comboEdit->setStyleSheet("padding: 0,0,0,0;");
 
         return comboEdit;
       }
       else
       {
-        QWidget *textEdit = new QTextEdit(parent);
-        return textEdit;
+        if (datatype == "URI")
+        {
+          qWarning() << "aq" << endl;
+          PropertyButtons *urlEdit = new PropertyButtons( "tmp", parent);
+          return (QWidget*) urlEdit;
+        }
+        else
+        {
+          QLineEdit *lineEdit = new QLineEdit(parent);
+          lineEdit->setTextMargins(0,0,0,0);
+          return (QWidget*)lineEdit;
+        }
       }
     }
     else
@@ -88,9 +100,9 @@ public:
         combobox->setEditText(index.data().toString());
       else
       {
-        QTextEdit *textEdit = qobject_cast <QTextEdit *> (editor);
-        if(textEdit)
-          textEdit->setText(index.data().toString());
+        QLineEdit *lineEdit = qobject_cast <QLineEdit *> (editor);
+        if(lineEdit)
+          lineEdit->setText(index.data().toString());
       }
     }
     else
@@ -109,9 +121,10 @@ public:
         model->setData(index, qVariantFromValue(combobox->currentText()));
       else
       {
-        QTextEdit *textEdit = qobject_cast <QTextEdit *> (editor);
-        if(textEdit)
-          model->setData(index, qVariantFromValue(textEdit->toPlainText()));
+        QLineEdit *lineEdit = qobject_cast <QLineEdit *> (editor);
+        if(lineEdit)
+          model->setData(index, qVariantFromValue(lineEdit->text()));
+
       }
     }
     else
@@ -134,9 +147,13 @@ private:
   QString currentTagname;
   QTableWidget *tableWidget;
 
-  /*
 private slots:
-  void commitAndCloseEditor(); */
+  void commitAndCloseEditor()
+  {
+    // CQuantityEditor* editor = qobject_cast<CQuantityEditor*>(sender());
+    // emit commitData(editor);
+    // emit closeEditor(editor);
+  }
 };
 
 /*!
@@ -199,11 +216,6 @@ public:
    * \param value The new Value of the property.
    */
   void setAttributeValue(QString property, QString value);
-
-  /*!
-   * \brief
-   */
-  static bool isURL(const QString &tagname, const QString &attr);
 
   QSize sizeHint() const { return QSize(250, 400); }
 

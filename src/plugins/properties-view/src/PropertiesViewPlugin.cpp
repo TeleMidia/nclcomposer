@@ -160,7 +160,7 @@ void PropertiesViewPlugin::updateCurrentEntityAttr(QString attr, QString value)
         {
           if(!value.isNull() && !value.isEmpty())
           {
-            if(PropertyEditor::isURL(currentEntity->getType(), attr))
+            if(NCLStructure::getInstance()->getAttributeDatatype(currentEntity->getType(), attr) == "URI")
             {
               try {
                 value = Utilities::relativePath(project->getLocation(), value,
@@ -181,7 +181,7 @@ void PropertiesViewPlugin::updateCurrentEntityAttr(QString attr, QString value)
       {
         if(!value.isNull() && !value.isEmpty() && value != "")
         {
-          if(PropertyEditor::isURL(currentEntity->getType(), attr))
+          if(NCLStructure::getInstance()->getAttributeDatatype(currentEntity->getType(), attr) == "URI")
           {
             try {
               value = Utilities::relativePath(project->getLocation(), value,

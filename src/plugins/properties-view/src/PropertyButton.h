@@ -32,14 +32,6 @@ public:
 public slots:
   void openfile();
 
-signals:
-  void newValue(QString name, QString value);
-
-private slots:
-  void emitNewValue();
-  void emitNewValue(QString);
-
-
 private:
   QWidget *window;
 };
