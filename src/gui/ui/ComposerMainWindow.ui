@@ -265,7 +265,6 @@
    <addaction name="action_Save"/>
    <addaction name="separator"/>
    <addaction name="action_StopNCL"/>
-   <addaction name="separator"/>
   </widget>
   <action name="action_NewProject">
    <property name="icon">
