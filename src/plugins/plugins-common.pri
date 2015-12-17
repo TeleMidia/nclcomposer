@@ -52,6 +52,14 @@ else:win32 {
   INSTALLBASE = "C:/Composer"
 }
 
+INCLUDEPATH += . \
+               $$PWD/../core/src \
+               $$PWD/ncl-profile/ \
+
+LIBS += -L$$PWD/../../bin \
+        -L$$PWD/../../bin/extensions
+
+ 
 macx {
   LIBS += -F/Library/Frameworks \
           -F$$PWD/../../bin -framework ComposerCore
@@ -60,26 +68,20 @@ macx {
           -L$$PWD/../../bin/extensions \
           $$quote(-L/Library/Application Support/Composer/Extensions)
 
-  INCLUDEPATH +=  $$PWD/../core/src \
-                  $$PWD/ncl-profile/ \
-                  include /Library/Frameworks/ComposerCore.framework/ \
+  INCLUDEPATH +=  /Library/Frameworks/ComposerCore.framework/ \
                   /Library/Frameworks/ComposerCore.framework/core \
                   /Library/Frameworks/ComposerCore.framework/core/extensions
 
   target.path = $$quote(/Library/Application Support/Composer/Extensions)
 }
 else:unix {
-  LIBS += -L$$PWD/../../bin \
-          -L$$PWD/../../bin/extensions \
-          -L$$INSTALLBASE/lib/composer -lComposerCore
+  LIBS += -L$$INSTALLBASE/lib/composer -lComposerCore
 
   link_ncl_profile {
     LIBS += -L$$INSTALLBASE/lib/composer/extensions -lNCLLanguageProfile
   }
 
-  INCLUDEPATH += $$PWD/../core/src \
-                 $$PWD/ncl-profile/ \
-                 $$INSTALLBASE/include/composer \
+  INCLUDEPATH += $$INSTALLBASE/include/composer \
                  $$INSTALLBASE/include/composer/core \
                  $$INSTALLBASE/include/composer/extensions
 
@@ -90,13 +92,14 @@ else:unix {
   target.path = $$quote($$INSTALLBASE/lib/composer/extensions)
 }
 else:win32 {
-  LIBS += -L$$INSTALLBASE -lComposerCore1
+  LIBS += -L$$INSTALLBASE/lib/composer -lComposerCore1
+
 
   link_ncl_profile {
          LIBS += -L$$INSTALLBASE/extensions -lNCLLanguageProfile
   }
 
-  INCLUDEPATH += . include $$INSTALLBASE/include/composer \
+  INCLUDEPATH += $$INSTALLBASE/include/composer \
                  $$INSTALLBASE/include/composer/core \
                  $$INSTALLBASE/include/composer/extensions
 

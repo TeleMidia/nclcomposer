@@ -1,14 +1,26 @@
 TEMPLATE = \
     subdirs
 
-CONFIG += \
-    ordered
+# Handling dependencies between plug-ins
+outline-view.depends = ncl-profile
 
+qscintilla2_telem.file = ncl-textual-view/deps/QScintilla-gpl-2.9/Qt4Qt5/qscintilla.pro
+ncl-textual-view.depends = qscintilla_telem
+
+properties-view.depends = ncl-profile
+ncl-layout-view.depends = ncl-profile
+ncl-structural-view.depends = ncl-profile
+ncl-structural-view_next.depends = ncl-profile
+validator.depends = ncl-profile
+ncl-rules-view.depends = ncl-profile
+media-preview.depends = ncl_profile
+
+# Add plug-ins to subdirectory
 SUBDIRS = \
     ncl-profile \
     outline-view \
-    ncl-textual-view/deps/QScintilla-gpl-2.9/Qt4Qt5/qscintilla.pro \
-    ncl-textual-view/ncl-textual-view.pro \
+    qscintilla2_telem \
+    ncl-textual-view/ \
     debug-console \
     properties-view \
     ncl-layout-view \
