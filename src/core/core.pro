@@ -9,7 +9,7 @@ CONFIG += silent
 
 TEMPLATE = lib
 TARGET = ComposerCore
-DESTDIR = $$PWD/../../bin
+DESTDIR = $${PWD}/../../bin
 
 VERSION = 1.0
 CONFIG += dll
@@ -43,7 +43,7 @@ else:unix {
  isEmpty(PREFIX) {
     PREFIX = /usr/local
   } 
-  INSTALLBASE = $$PREFIX
+  INSTALLBASE = $${PREFIX}
 }
 else:win32 {
   INSTALLBASE = C:/Composer

@@ -8,6 +8,14 @@ UI_DIR      =   .ui
 greaterThan(QT_MAJOR_VERSION, 4) {
   QT += widgets
 }
+else {
+  # check for whitespace
+  X = $$PWD
+  test_var = $$find(X, "\\s")
+  !isEmpty(test_var) {
+    warning("We have found spaces on your source path. Sue to an knwon issue, If you are using qmake 2.x, this may be a problem, due to a known issue. If you face problems building the software, maybe you would like to use a new qmake version, or move your code to an unspaced path.".)
+  }
+}
 
 GIT_VERSION=true
 

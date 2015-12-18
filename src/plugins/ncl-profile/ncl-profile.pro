@@ -9,8 +9,6 @@ MOC_DIR = .mocs
 OBJECTS_DIR = .objs
 
 TARGET = NCLLanguageProfile
-TEMPLATE = lib
-CONFIG += plugin dll
 
 DEFINES += NCLLANGUAGEPROFILE_LIBRARY
 
@@ -34,3 +32,4 @@ OTHER_FILES += \
     nclLanguageProfile.json
 
 INSTALLS += headers_nclprofile
+
