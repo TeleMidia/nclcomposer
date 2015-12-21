@@ -1450,54 +1450,55 @@ void ComposerMainWindow::runOnLocalGinga()
 
 void ComposerMainWindow::functionRunPassive()
 {
-    int i;
-    bool ok;
-    GlobalSettings settings;
-    settings.beginGroup("runginga");
-    QString command = settings.value("local_ginga_cmd").toString();
-    settings.endGroup();
+  int i;
+  bool ok;
+  GlobalSettings settings;
+  settings.beginGroup("runginga");
+  QString command = settings.value("local_ginga_cmd").toString();
+  settings.endGroup();
 
-    int value = QInputDialog::getInt(
-                        this,
-                        tr("Multidevices"),//title
-                        tr("Passive"), //label
-                        1, //start
-                        1, //min
-                        5, //max
-                        1, //step
-                        &ok );
-    if( ok )
-    {
-      qWarning() << command;
-      command += " --device-class 1";
-      qWarning() << command;
-      for(i=0;i<value;i++) QProcess::startDetached(command);
-    }
+  int value = QInputDialog::getInt(
+        this,
+        tr("Multidevices"),//title
+        tr("Passive"), //label
+        1, //start
+        1, //min
+        5, //max
+        1, //step
+        &ok );
+  if( ok )
+  {
+    qWarning() << command;
+    command += " --device-class 1 --vmode 320x180";
+    qWarning() << command;
+    for(i=0;i<value;i++) QProcess::startDetached(command);
+  }
 }
 
 void ComposerMainWindow::functionRunActive()
 {
-    int i;
-    bool ok;
-    GlobalSettings settings;
-    settings.beginGroup("runginga");
-    QString command = settings.value("local_ginga_cmd").toString();
-    settings.endGroup();
+  int i;
+  bool ok;
+  GlobalSettings settings;
+  settings.beginGroup("runginga");
+  QString command = settings.value("local_ginga_cmd").toString();
+  settings.endGroup();
 
-    int value = QInputDialog::getInt(
-                        this,
-                        tr("Multidevices"),
-                        tr("Active"),
-                        1,
-                        1,
-                        5,
-                        1,
-                        &ok );
-    if( ok )
-    {
-      command += " --device-class 2";
-      for(i=0;i<value;i++) QProcess::startDetached(command);
-    }
+  int value = QInputDialog::getInt(
+        this,
+        tr("Multidevices"),
+        tr("Active"),
+        1,
+        1,
+        5,
+        1,
+        &ok );
+
+  if( ok )
+  {
+    command += " --device-class 2 --vmode 320x180";
+    for(i=0;i<value;i++) QProcess::startDetached(command);
+  }
 }
 
 void ComposerMainWindow::copyOnRemoteGingaVM(bool autoplay)
