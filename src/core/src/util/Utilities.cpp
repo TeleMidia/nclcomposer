@@ -149,5 +149,21 @@ void Utilities::updateLastFileDialogPath(const QString &filepath)
   settings.endGroup();
 }
 
+QStringList Utilities::splitParams(QString &params)
+{
+  QStringList plist;
+  QRegExp rx;
+  rx.setPattern("([-${}\\w\\\\:]+|\\\".*\\\")");
+
+  int pos = 0;
+  while ((pos = rx.indexIn(params, pos)) != -1)
+  {
+    plist << rx.cap(1);
+    pos += rx.matchedLength();
+  }
+
+  return plist;
+}
+
 } } } //end namespace
 

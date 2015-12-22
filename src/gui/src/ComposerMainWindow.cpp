@@ -1414,8 +1414,8 @@ void ComposerMainWindow::runOnLocalGinga()
   args = settings.value("local_ginga_args").toString();
   settings.endGroup();
 
-  // TODO: Ask to Save current project before send it to Ginga VM.
-  QStringList args_list;
+  // \todo: Ask to Save current project before send it to Ginga VM.
+
   QString location = tabProjects->tabToolTip(tabProjects->currentIndex());
 
   if(location.isEmpty())
@@ -1443,9 +1443,11 @@ void ComposerMainWindow::runOnLocalGinga()
 
     /* PARAMETERS */
     //\todo Other parameters
-    args.replace("${nclpath}", nclpath);
-    args_list << args.split("\n");
+    QStringList args_list = Utilities::splitParams(args);
+    args_list.replaceInStrings("${nclpath}", nclpath);
+
     /* RUNNING GINGA */
+    qDebug() << command << args_list;
     localGingaProcess.start(command, args_list);
     QByteArray result = localGingaProcess.readAll();
   }
@@ -1464,8 +1466,12 @@ void ComposerMainWindow::functionRunPassive()
   settings.beginGroup("runginga");
   QString command = settings.value("local_ginga_cmd").toString();
   QString args = settings.value("local_ginga_passive_args").toString();
-  QStringList args_list = args.split("\n");
   settings.endGroup();
+
+  /* PARAMETERS */
+  //\todo Other parameters
+  QStringList args_list = Utilities::splitParams(args);
+  // args_list.replaceInStrings("${nclpath}", nclpath);
 
   int value = QInputDialog::getInt(
         this,
@@ -1493,8 +1499,12 @@ void ComposerMainWindow::functionRunActive()
   settings.beginGroup("runginga");
   QString command = settings.value("local_ginga_cmd").toString();
   QString args = settings.value("local_ginga_active_args").toString();
-  QStringList args_list = args.split("\n");
   settings.endGroup();
+
+  /* PARAMETERS */
+  //\todo Other parameters
+  QStringList args_list = Utilities::splitParams(args);
+  // args_list.replaceInStrings("${nclpath}", nclpath);
 
   int value = QInputDialog::getInt(
         this,

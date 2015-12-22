@@ -91,6 +91,13 @@ public:
    */
   static void updateLastFileDialogPath( const QString &filepath );
 
+  /*!
+   * \brief splitParameters
+   * \param params
+   * \return
+   */
+  static QStringList splitParams(QString &params);
+
 private:
   static QMap<QString,LanguageType> types; /*!< TODO */
 };

@@ -155,6 +155,16 @@
         <item row="4" column="1" colspan="2">
          <widget class="QPlainTextEdit" name="plainTextEdit_local_passive_args"/>
         </item>
+        <item row="1" column="2">
+         <widget class="QPushButton" name="pushButton_Browse">
+          <property name="enabled">
+           <bool>false</bool>
+          </property>
+          <property name="text">
+           <string>Browse...</string>
+          </property>
+         </widget>
+        </item>
         <item row="3" column="0">
          <widget class="QLabel" name="label_local_Args">
           <property name="text">
@@ -166,30 +176,6 @@
          <widget class="QLabel" name="label">
           <property name="text">
            <string>Command:</string>
-          </property>
-         </widget>
-        </item>
-        <item row="1" column="2">
-         <widget class="QPushButton" name="pushButton_Browse">
-          <property name="enabled">
-           <bool>false</bool>
-          </property>
-          <property name="text">
-           <string>Browse...</string>
-          </property>
-         </widget>
-        </item>
-        <item row="3" column="1" colspan="2">
-         <widget class="QPlainTextEdit" name="plainTextEdit_local_args">
-          <property name="plainText">
-           <string/>
-          </property>
-         </widget>
-        </item>
-        <item row="1" column="1">
-         <widget class="QLineEdit" name="lineEdit_local_Command">
-          <property name="text">
-           <string/>
           </property>
          </widget>
         </item>
@@ -207,13 +193,17 @@
           </property>
          </widget>
         </item>
-        <item row="6" column="0" colspan="3">
-         <widget class="QLabel" name="label_10">
-          <property name="styleSheet">
-           <string notr="true">color: rgb(255, 0, 0)</string>
+        <item row="3" column="1" colspan="2">
+         <widget class="QPlainTextEdit" name="plainTextEdit_local_args">
+          <property name="plainText">
+           <string/>
           </property>
+         </widget>
+        </item>
+        <item row="1" column="1">
+         <widget class="QLineEdit" name="lineEdit_local_Command">
           <property name="text">
-           <string>* Different arguments must be in different lines.</string>
+           <string/>
           </property>
          </widget>
         </item>
