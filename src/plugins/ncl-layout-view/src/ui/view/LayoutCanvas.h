@@ -29,8 +29,16 @@ public:
   LayoutCanvas(QWidget* parent = 0);
   ~LayoutCanvas();
 
+private:
+  int zoomStep;
+
 protected:
+  void performZoomIn();
+  void performZoomOut();
+  void performZoomReset();
+  virtual void keyPressEvent(QKeyEvent *event);
   virtual void resizeEvent(QResizeEvent* event);
+  virtual void wheelEvent(QWheelEvent* event);
 };
 
 #endif // QNLYCANVAS_H

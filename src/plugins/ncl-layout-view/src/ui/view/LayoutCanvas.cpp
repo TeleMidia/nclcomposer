@@ -17,8 +17,13 @@
  */
 #include "LayoutCanvas.h"
 
+#include <QScrollBar>
+
+#include <cmath>
+
 LayoutCanvas::LayoutCanvas(QWidget* parent) : QGraphicsView(parent)
 {
+  zoomStep = 0;
   setBackgroundBrush(QBrush(QColor("#eee")));
 }
 
@@ -31,16 +36,68 @@ void LayoutCanvas::resizeEvent(QResizeEvent* event)
 {
   QGraphicsView::resizeEvent(event);
 
-  //    QSize size = event->size();
+  /* QSize size = event->size();
+  QGraphicsScene* s = scene();
+  s->setSceneRect(0, 0, size.width(), size.height());
 
-  //    QGraphicsScene* s = scene();
+  foreach(QGraphicsItem* item, s->items())
+  {
+    LayoutRegion* region = (LayoutRegion*) item;
+    region->adjust();
+  }*/
+}
 
-  //    s->setSceneRect(0,0,size.width(),size.height());
+void LayoutCanvas::wheelEvent(QWheelEvent *event)
+{
+  if(event->modifiers() == Qt::ControlModifier)
+  {
+    if (event->delta() > 0)
+      performZoomIn();
+    else
+      performZoomOut();
 
-  //    foreach(QGraphicsItem* item, s->items())
-  //    {
-  //        QnlyGraphicsRegion* region = (QnlyGraphicsRegion*) item;
+    event->accept();
+  }
+  else
+  {
+    // call the parent wheelEvent
+    QGraphicsView::wheelEvent(event);
+  }
+}
 
-  //        region->adjust();
-  //    }
+void LayoutCanvas::keyPressEvent(QKeyEvent *event)
+{
+  if( event->modifiers() == Qt::ControlModifier &&
+            event->key() == Qt::Key_0)
+  {
+    performZoomReset();
+  }
+
+  QGraphicsView::keyPressEvent(event);
+}
+
+void LayoutCanvas::performZoomIn()
+{
+  if (zoomStep > 0)
+  {
+    zoomStep--;
+    resetMatrix();
+    scale(1 - zoomStep*0.05, 1 - zoomStep*0.05);
+  }
+}
+
+void LayoutCanvas::performZoomOut()
+{
+  if (zoomStep*0.05 < 0.9)
+  {
+    zoomStep++;
+    resetMatrix();
+    scale(1 - zoomStep*0.05, 1 - zoomStep*0.05);
+  }
+}
+
+void LayoutCanvas::performZoomReset()
+{
+  zoomStep = 0;
+  resetMatrix();
 }
