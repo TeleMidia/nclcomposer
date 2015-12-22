@@ -81,13 +81,13 @@ void RunGingaConfig::initializeDefaultValues()
     settings.setValue("local_ginga_cmd", "ginga");
 
   if(!settings.contains("local_ginga_args"))
-      settings.setValue("local_ginga_args", "--ncl\n${nclpath}");
+      settings.setValue("local_ginga_args", "--ncl ${nclpath}");
 
   if(!settings.contains("local_ginga_passive_args"))
-      settings.setValue("local_ginga_passive_args", "--device-class\n1");
+      settings.setValue("local_ginga_passive_args", "--device-class 1");
 
   if(!settings.contains("local_ginga_active_args"))
-      settings.setValue("local_ginga_active_args", "--device-class\n2");
+      settings.setValue("local_ginga_active_args", "--device-class 2");
 
   settings.endGroup();
 }
