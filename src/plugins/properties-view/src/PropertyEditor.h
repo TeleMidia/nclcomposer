@@ -87,7 +87,7 @@ public:
     }
     else
     {
-      return QStyledItemDelegate::createEditor(parent, option, index);
+      return NULL;
     }
   }
 
