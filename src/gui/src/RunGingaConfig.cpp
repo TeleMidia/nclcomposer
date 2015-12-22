@@ -83,6 +83,12 @@ void RunGingaConfig::initializeDefaultValues()
   if(!settings.contains("local_ginga_args"))
       settings.setValue("local_ginga_args", "--ncl\n${nclpath}");
 
+  if(!settings.contains("local_ginga_passive_args"))
+      settings.setValue("local_ginga_passive_args", "--device-class\n1");
+
+  if(!settings.contains("local_ginga_active_args"))
+      settings.setValue("local_ginga_active_args", "--device-class\n2");
+
   settings.endGroup();
 }
 
@@ -110,7 +116,9 @@ void RunGingaConfig::loadValuesFromSettings()
 
     //Local Run data
     ui->lineEdit_local_Command->setText(settings.value("local_ginga_cmd").toString());
-    ui->plainTextEdit_local_Args->setPlainText(settings.value("local_ginga_args").toString());
+    ui->plainTextEdit_local_args->setPlainText(settings.value("local_ginga_args").toString());
+    ui->plainTextEdit_local_passive_args->setPlainText(settings.value("local_ginga_passive_args").toString());
+    ui->plainTextEdit_local_active_args->setPlainText(settings.value("local_ginga_active_args").toString());
   settings.endGroup();
 }
 
@@ -130,7 +138,11 @@ void RunGingaConfig::applyValues()
 
   settings.setValue("local_ginga_cmd", ui->lineEdit_local_Command->text());
   settings.setValue("local_ginga_args",
-                    ui->plainTextEdit_local_Args->toPlainText());
+                    ui->plainTextEdit_local_args->toPlainText());
+  settings.setValue("local_ginga_passive_args",
+                    ui->plainTextEdit_local_passive_args->toPlainText());
+  settings.setValue("local_ginga_active_args",
+                    ui->plainTextEdit_local_active_args->toPlainText());
   settings.endGroup();
 }
 

@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>400</width>
-    <height>400</height>
+    <height>517</height>
    </rect>
   </property>
   <property name="focusPolicy">
@@ -152,12 +152,13 @@
      <layout class="QHBoxLayout" name="horizontalLayout">
       <item>
        <layout class="QGridLayout" name="gridLayout">
+        <item row="4" column="1" colspan="2">
+         <widget class="QPlainTextEdit" name="plainTextEdit_local_passive_args"/>
+        </item>
         <item row="3" column="0">
          <widget class="QLabel" name="label_local_Args">
           <property name="text">
-           <string>Arguments: 
-(each line is handled 
-as a different argument)</string>
+           <string>Arguments*:</string>
           </property>
          </widget>
         </item>
@@ -165,13 +166,6 @@ as a different argument)</string>
          <widget class="QLabel" name="label">
           <property name="text">
            <string>Command:</string>
-          </property>
-         </widget>
-        </item>
-        <item row="1" column="1">
-         <widget class="QLineEdit" name="lineEdit_local_Command">
-          <property name="text">
-           <string/>
           </property>
          </widget>
         </item>
@@ -186,11 +180,45 @@ as a different argument)</string>
          </widget>
         </item>
         <item row="3" column="1" colspan="2">
-         <widget class="QPlainTextEdit" name="plainTextEdit_local_Args">
+         <widget class="QPlainTextEdit" name="plainTextEdit_local_args">
           <property name="plainText">
            <string/>
           </property>
          </widget>
+        </item>
+        <item row="1" column="1">
+         <widget class="QLineEdit" name="lineEdit_local_Command">
+          <property name="text">
+           <string/>
+          </property>
+         </widget>
+        </item>
+        <item row="5" column="0">
+         <widget class="QLabel" name="label_9">
+          <property name="text">
+           <string>Arguments (Active device)*:</string>
+          </property>
+         </widget>
+        </item>
+        <item row="4" column="0">
+         <widget class="QLabel" name="label_8">
+          <property name="text">
+           <string>Arguments (Passive device)*:</string>
+          </property>
+         </widget>
+        </item>
+        <item row="6" column="0" colspan="3">
+         <widget class="QLabel" name="label_10">
+          <property name="styleSheet">
+           <string notr="true">color: rgb(255, 0, 0)</string>
+          </property>
+          <property name="text">
+           <string>* Different arguments must be in different lines.</string>
+          </property>
+         </widget>
+        </item>
+        <item row="5" column="1" colspan="2">
+         <widget class="QPlainTextEdit" name="plainTextEdit_local_active_args"/>
         </item>
        </layout>
       </item>

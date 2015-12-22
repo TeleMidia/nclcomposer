@@ -16,14 +16,11 @@
 #include <QToolBar>
 #include <QToolButton>
 #include <QApplication>
-
 #include <QRegExp>
 #include <QDesktopServices>
-
 #include <QInputDialog>
 
 #include "GeneralPreferences.h"
-
 #include "NewProjectWizard.h"
 
 #ifdef USE_MDI
@@ -185,7 +182,7 @@ void ComposerMainWindow::readExtensions()
   settings.beginGroup("extensions");
   extensions_paths.clear();
 
-  //Remember: The dafault paths are been added in main.cpp
+  //Remember: The default paths are been added in main.cpp
   if (settings.contains("path"))
     extensions_paths << settings.value("path").toStringList();
 
@@ -212,9 +209,8 @@ void ComposerMainWindow::readExtensions()
   }
   settings.endGroup();
 
-  preferences->addPreferencePage(new GeneralPreferences());
-
   /* Load the preferences page */
+  preferences->addPreferencePage(new GeneralPreferences());
   preferences->addPreferencePage(new RunGingaConfig());
 
   // preferences->addPreferencePage(new ImportBasePreferences());
@@ -247,7 +243,9 @@ QString ComposerMainWindow::promptChooseExtDirectory()
                                                   getLastFileDialogPath(),
                                                   QFileDialog::ShowDirsOnly);
     return dirName;
-  } else {
+  }
+  else
+  {
     return "";
   }
 }
@@ -302,7 +300,6 @@ void ComposerMainWindow::openProjects(const QStringList &projects)
     if (openCurrentFile)
     {
       checkTemporaryFileLastModified(src);
-
       ProjectControl::getInstance()->launchProject(src);
     }
   }
@@ -615,7 +612,8 @@ void ComposerMainWindow::tabClosed(int index)
   QString location = tabProjects->tabToolTip(index);
   Project *project = ProjectControl::getInstance()->getOpenProject(location);
   qDebug() << location << project;
-  if(project != NULL && project->isDirty())
+  if( project != NULL &&
+      project->isDirty() )
   {
     int ret = QMessageBox::warning(this, project->getAttribute("id"),
                                    tr("The project has been modified.\n"
@@ -679,6 +677,17 @@ void ComposerMainWindow::closeAllFiles()
 {
   while(tabProjects->count() > 1)
   {
+    // TODO: Ask to save all projects here!
+//    for (int i = 0; i < tabProjects->count(); i++)
+//    {
+//      QString location = tabProjects->tabToolTip(i);
+//      Project *project = ProjectControl::getInstance()->getOpenProject(location);
+//      if (project->isDirty())
+//      {
+//        qDebug() << "ask to save" << location;
+//      }
+//    }
+
     tabClosed(1);
     tabProjects->removeTab(1);
   }
@@ -1008,7 +1017,6 @@ void ComposerMainWindow::updateViewMenu()
   ui->menu_Window->addSeparator();
   ui->menu_Window->addAction(saveCurrentPluginsLayoutAct);
   ui->menu_Window->addAction(restorePluginsLayoutAct);
-
 }
 
 void ComposerMainWindow::closeEvent(QCloseEvent *event)
@@ -1455,6 +1463,8 @@ void ComposerMainWindow::functionRunPassive()
   GlobalSettings settings;
   settings.beginGroup("runginga");
   QString command = settings.value("local_ginga_cmd").toString();
+  QString args = settings.value("local_ginga_passive_args").toString();
+  QStringList args_list = args.split("\n");
   settings.endGroup();
 
   int value = QInputDialog::getInt(
@@ -1466,12 +1476,12 @@ void ComposerMainWindow::functionRunPassive()
         5, //max
         1, //step
         &ok );
+
   if( ok )
   {
-    qWarning() << command;
-    command += " --device-class 1 --vmode 320x180";
-    qWarning() << command;
-    for(i=0;i<value;i++) QProcess::startDetached(command);
+    qDebug() << command << args_list;
+    for(i = 0; i < value; i++)
+      QProcess::startDetached(command, args_list);
   }
 }
 
@@ -1482,6 +1492,8 @@ void ComposerMainWindow::functionRunActive()
   GlobalSettings settings;
   settings.beginGroup("runginga");
   QString command = settings.value("local_ginga_cmd").toString();
+  QString args = settings.value("local_ginga_active_args").toString();
+  QStringList args_list = args.split("\n");
   settings.endGroup();
 
   int value = QInputDialog::getInt(
@@ -1496,8 +1508,9 @@ void ComposerMainWindow::functionRunActive()
 
   if( ok )
   {
-    command += " --device-class 2 --vmode 320x180";
-    for(i=0;i<value;i++) QProcess::startDetached(command);
+    qDebug() << command << args_list;
+    for(i = 0; i < value; i++)
+      QProcess::startDetached(command, args_list);
   }
 }
 
