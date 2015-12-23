@@ -285,6 +285,8 @@ private:
   QAction* propertiesAction;
   QAction* gridAction;
 
+  qreal controlPointSize; // Resize controller squares that appear when the region is selected.
+
   QString id;
   QString uid;
   QString title;

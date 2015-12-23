@@ -63,6 +63,8 @@ LayoutRegion::LayoutRegion(QMenu* switchMenu, LayoutRegion* parent)
   setColor("#E4E4E4");
 
   isDragging = false;
+
+  controlPointSize = 8;
 }
 
 LayoutRegion::~LayoutRegion()
@@ -223,7 +225,7 @@ void LayoutRegion::setTop(qreal top)
 {
   this->top = top;
 
-  setY(top-4);
+  setY(top);
 }
 
 qreal LayoutRegion::getMoveTop() const
@@ -275,7 +277,7 @@ void LayoutRegion::setLeft(qreal left)
 {
   this->left = left;
 
-  setX(left-4);
+  setX(left);
 }
 
 qreal LayoutRegion::getMoveLeft() const
@@ -722,10 +724,10 @@ void LayoutRegion::performExport()
       QFileDialog::getSaveFileName(NULL, "Export...", "",
                                    tr("Images (*.png)"));
 
-  if (location != ""){
-
-    qreal w = getWidth()+8;
-    qreal h = getHeight()+8;
+  if (location != "")
+  {
+    qreal w = getWidth();
+    qreal h = getHeight();
 
     QImage image(w, h, QImage::Format_ARGB32_Premultiplied);
 
@@ -839,16 +841,16 @@ void LayoutRegion::move(QGraphicsSceneMouseEvent* event)
   qreal minx;
   qreal miny;
 
-  if (parentItem() != NULL)
-  {
-    minx = 4;
-    miny = 4;
-  }
-  else
-  {
+//  if (parentItem() != NULL)
+//  {
+//    minx = 4;
+//    miny = 4;
+//  }
+//  else
+//  {
     minx = 0;
     miny = 0;
-  }
+//  }
 
   /* setting maximal position */
   qreal maxx;
@@ -856,8 +858,8 @@ void LayoutRegion::move(QGraphicsSceneMouseEvent* event)
 
   if (parentItem() != NULL)
   {
-    maxx = parentItem()->boundingRect().width() - width - 4;
-    maxy = parentItem()->boundingRect().height() - height - 4;
+    maxx = parentItem()->boundingRect().width() - width - controlPointSize;
+    maxy = parentItem()->boundingRect().height() - height - controlPointSize;
   }
   else
   {
@@ -913,16 +915,16 @@ void LayoutRegion::resize(QGraphicsSceneMouseEvent* event)
   qreal minx;
   qreal miny;
 
-  if (parentItem() != NULL)
-  {
-    minx = 4;
-    miny = 4;
-  }
-  else
-  {
+//  if (parentItem() != NULL)
+//  {
+//    minx = 4;
+//    miny = 4;
+//  }
+//  else
+//  {
     minx = 0;
     miny = 0;
-  }
+//  }
 
   /* setting maximal bounds */
 //  qreal maxx;
@@ -932,8 +934,8 @@ void LayoutRegion::resize(QGraphicsSceneMouseEvent* event)
 
   if (parentItem() != NULL)
   {
-    maxw = parentItem()->boundingRect().width() - 4;
-    maxh = parentItem()->boundingRect().height() - 4;
+    maxw = parentItem()->boundingRect().width() - controlPointSize;
+    maxh = parentItem()->boundingRect().height() - controlPointSize;
   }
   else
   {
@@ -1115,8 +1117,8 @@ void LayoutRegion::adjust(bool repaint)
   {
     LayoutRegion* item = (LayoutRegion*) parentItem();
 
-    setTop(qRound(item->getHeight()*relativeTop + 4));
-    setLeft(qRound(item->getWidth()*relativeLeft + 4));
+    setTop(qRound(item->getHeight()*relativeTop));
+    setLeft(qRound(item->getWidth()*relativeLeft));
 
     setWidth(qRound(item->getWidth()*relativeWidth));
     setHeight(qRound(item->getHeight()*relativeHeight));
@@ -1154,13 +1156,13 @@ QPainterPath LayoutRegion::shape() const
 {
   QPainterPath path;
 
-  path.addRect(4, 4, width, height);
+  path.addRect(0, 0, width, height);
 
   if (selected)
   {
     path.setFillRule(Qt::WindingFill);
 
-    path.addRect(0,0,8,8);                                  // topleft
+    path.addRect(0, 0, 8, 8);                                  // topleft
     path.addRect((width+8)/2 - 4,0,8,8);                    // top
     path.addRect((width+8) - 8,0,8,8);                      // topright
     path.addRect((width+8) - 8,(height+8)/2 - 4,8,8);       // right
@@ -1177,10 +1179,10 @@ QRectF LayoutRegion::boundingRect() const
 {
   QRectF bounds;
 
-  bounds.setX(0);
-  bounds.setY(0);
-  bounds.setWidth(width+8);
-  bounds.setHeight(height+8);
+  bounds.setX(- controlPointSize/2);
+  bounds.setY(- controlPointSize/2);
+  bounds.setWidth(width + controlPointSize);
+  bounds.setHeight(height + controlPointSize);
 
   return bounds;
 }
@@ -1204,19 +1206,19 @@ void LayoutRegion::paint(QPainter *painter,
   else
     painter->setPen(QPen(QBrush(Qt::black), 0));
 
-  painter->drawRect(4,4,width-1,height-1);
+  painter->drawRect(0, 0, width, height);
 
   if (moving)
   {
     painter->setBrush(Qt::NoBrush);
     painter->setPen(QPen(QBrush(Qt::black), 0));    // 0px = cosmetic border
-    painter->drawRect(moveLeft+4-left,moveTop+4-top,width-1,height-1);
+    painter->drawRect(moveLeft - left, moveTop - top, width, height);
   }
   else if (resizing)
   {
     painter->setBrush(Qt::NoBrush);
     painter->setPen(QPen(QBrush(Qt::black), 0));// 0px = cosmetic border
-    painter->drawRect(resizeLeft+4-left,resizeTop+4-top,resizeWidth-1,resizeHeight-1);
+    painter->drawRect(resizeLeft - left, resizeTop - top,resizeWidth,resizeHeight);
   }
   else if (selected)
   {
@@ -1224,14 +1226,14 @@ void LayoutRegion::paint(QPainter *painter,
     // 0px = cosmetic border
     painter->setPen(QPen(QBrush(QBrush(Qt::black)), 0));
 
-    painter->drawRect(0,0,8,8);                                 // topleft
-    painter->drawRect((width+8)/2-4-1,0,8,8);                   // top
-    painter->drawRect((width+8)-8-1,0,8,8);                     // topright
-    painter->drawRect((width+8)-8-1,(height+8)/2-4-1,8,8);      // right
-    painter->drawRect((width+8)-8-1,(height+8)-8-1,8,8);        // bottomright
-    painter->drawRect((width+8)/2-4-1,(height+8)-8-1,8,8);      // bottom
-    painter->drawRect(0,(height+8)-8-1,8,8);                    // bottomleft
-    painter->drawRect(0,(height+8)/2-4-1,8,8);                  // left
+    painter->drawRect(-controlPointSize/2, -controlPointSize/2, controlPointSize, controlPointSize);                                 // topleft
+    painter->drawRect(width/2 - controlPointSize/2, -controlPointSize/2, controlPointSize, controlPointSize);                   // top
+    painter->drawRect(width - controlPointSize/2, -controlPointSize/2, controlPointSize ,controlPointSize);                     // topright
+    painter->drawRect(width - controlPointSize/2, height/2 -controlPointSize/2, controlPointSize, controlPointSize);      // right
+    painter->drawRect(width - controlPointSize/2, height - controlPointSize/2, controlPointSize, controlPointSize);        // bottomright
+    painter->drawRect(width/2 - controlPointSize/2, height -controlPointSize/2, controlPointSize, controlPointSize);      // bottom
+    painter->drawRect(-controlPointSize/2, height -controlPointSize/2, controlPointSize, controlPointSize);                    // bottomleft
+    painter->drawRect(-controlPointSize/2, height/2-controlPointSize/2, controlPointSize, controlPointSize);                  // left
   }
 
   QString text = "";
@@ -1241,7 +1243,7 @@ void LayoutRegion::paint(QPainter *painter,
     text = title+" "+"("+id+")";
   }
 
-  painter->drawText(4+6,4+6,width-1-4-6,height-1-4-6,Qt::AlignLeft, text);
+  painter->drawText(4+6, 4+6, width-1-4-6, height-1-4-6, Qt::AlignLeft, text);
 }
 
 void LayoutRegion::updateCursor(QGraphicsSceneMouseEvent* event)
@@ -1252,30 +1254,30 @@ void LayoutRegion::updateCursor(QGraphicsSceneMouseEvent* event)
     QPointF pos = mapFromScene(event->scenePos());
 
     // in the middle (UP or DOWN)
-    if (QRectF((width+8)/2 - 4,0,8,8).contains(pos) ||
-        QRectF((width+8)/2 - 4,(height+8) - 8,8,8).contains(pos))
+    if (QRectF(width/2 -controlPointSize/2, -controlPointSize/2, controlPointSize, controlPointSize).contains(pos) ||
+        QRectF(width/2 -controlPointSize/2, height-controlPointSize/2, controlPointSize, controlPointSize).contains(pos))
     {
       newShape = Qt::SizeVerCursor;
     }
 
     // TOPLEFT or BOTTOM RIGHT
-    else if (QRectF(0,0,8,8).contains(pos) ||
-             QRectF((width+8) - 8,(height+8) - 8,8,8).contains(pos))
+    else if (QRectF(-controlPointSize/2,-controlPointSize/2, controlPointSize, controlPointSize).contains(pos) ||
+             QRectF(width-controlPointSize/2, height-controlPointSize/2, controlPointSize, controlPointSize).contains(pos))
 
     {
       newShape = Qt::SizeFDiagCursor;
     }
 
     // TOPRIGHT or BOTTOMLEFT
-    else if (QRectF((width+8) - 8,0,8,8).contains(pos) ||
-             QRectF(0,(height+8) - 8,8,8).contains(pos))
+    else if (QRectF(width-controlPointSize/2, -controlPointSize/2, controlPointSize, controlPointSize).contains(pos) ||
+             QRectF(-controlPointSize/2, height-controlPointSize/2, controlPointSize, controlPointSize).contains(pos))
     {
       newShape = Qt::SizeBDiagCursor;
     }
 
     // RIGHT OR LEFT
-    else if (QRectF((width+8)-8-1,(height+8)/2-4-1,8,8).contains(pos) ||
-             QRectF(0,(height+8)/2-4-1,8,8).contains(pos))
+    else if (QRectF(width-controlPointSize/2, height/2-controlPointSize/2, controlPointSize, controlPointSize).contains(pos) ||
+             QRectF(-controlPointSize/2, height/2-controlPointSize/2, controlPointSize, controlPointSize).contains(pos))
     {
       newShape = Qt::SizeHorCursor;
     }
@@ -1327,49 +1329,49 @@ void LayoutRegion::mousePressEvent(QGraphicsSceneMouseEvent* event)
     setResizeHeight(height);
 
     /* if over TOPLEFT resize region */
-    if (QRectF(0,0,8,8).contains(event->pos()))
+    if (QRectF(-controlPointSize/2, -controlPointSize/2, controlPointSize, controlPointSize).contains(event->pos()))
     {
       setResizeType(LayoutRegion::TopLeft);
       setResizing(true);
     }
     /* if over TOP resize region */
-    else if (QRectF((width+8)/2 - 4,0,8,8).contains(event->pos()))
+    else if (QRectF(width/2 -controlPointSize/2, -controlPointSize/2, controlPointSize, controlPointSize).contains(event->pos()))
     {
       setResizeType(LayoutRegion::Top);
       setResizing(true);
     }
     /* if over TOPRIGHT resize region */
-    else if (QRectF((width+8) - 8,0,8,8).contains(event->pos()))
+    else if (QRectF(width-controlPointSize/2, -controlPointSize/2, controlPointSize, controlPointSize).contains(event->pos()))
     {
       setResizeType(LayoutRegion::TopRight);
       setResizing(true);
     }
     /* if over RIGHT resize region */
-    else if (QRectF((width+8) - 8,(height+8)/2 - 4,8,8).contains(event->pos()))
+    else if (QRectF(width-controlPointSize/2,height/2-controlPointSize/2, controlPointSize, controlPointSize).contains(event->pos()))
     {
       setResizeType(LayoutRegion::Right);
       setResizing(true);
     }
     /* if over BOTTOMRIGHT resize region */
-    else if (QRectF((width+8) - 8,(height+8) - 8,8,8).contains(event->pos()))
+    else if (QRectF(width-controlPointSize/2, height-controlPointSize/2, controlPointSize, controlPointSize).contains(event->pos()))
     {
       setResizeType(LayoutRegion::BottomRight);
       setResizing(true);
     }
     /* if over BOTTOM resize region */
-    else if (QRectF((width+8)/2 - 4,(height+8) - 8,8,8).contains(event->pos()))
+    else if (QRectF(width/2-controlPointSize/2, height-controlPointSize/2, controlPointSize, controlPointSize).contains(event->pos()))
     {
       setResizeType(LayoutRegion::Bottom);
       setResizing(true);
     }
     /* if over BOTTOMLEFT resize region */
-    else if (QRectF(0,(height+8) - 8,8,8).contains(event->pos()))
+    else if (QRectF(-controlPointSize/2, height-controlPointSize/2, controlPointSize, controlPointSize).contains(event->pos()))
     {
       setResizeType(LayoutRegion::BottomLeft);
       setResizing(true);
     }
     /* if over LEFT resize region */
-    else if (QRectF(0,(height+8)/2 - 4,8,8).contains(event->pos()))
+    else if (QRectF(-controlPointSize/2, height/2-controlPointSize/2, controlPointSize, controlPointSize).contains(event->pos()))
     {
       setResizeType(LayoutRegion::Left);
       setResizing(true);
@@ -1409,19 +1411,19 @@ void LayoutRegion::mouseReleaseEvent(QGraphicsSceneMouseEvent* event)
         parentH = scene()->height();
       }
 
-      value = ((moveTop-4)/parentH) * 100;
+      value = (moveTop/parentH) * 100;
       ROUND_DOUBLE(value);
       attributes["top"] = QString::number(value, 'f', 2) + "%";
 
-      value = ((moveLeft-4)/parentW) * 100;
+      value = (moveLeft/parentW) * 100;
       ROUND_DOUBLE(value);
       attributes["left"] = QString::number(value, 'f', 2) + "%";
 
-      value = (1 - (((moveLeft-4)/parentW)+(width/parentW))) * 100;
+      value = (1 - ((moveLeft/parentW)+(width/parentW))) * 100;
       ROUND_DOUBLE(value);
       attributes["right"] = QString::number(value, 'f', 2) + "%";
 
-      value = (1 - (((moveTop-4)/parentH)+(height/parentH)))*100;
+      value = (1 - ((moveTop/parentH)+(height/parentH)))*100;
       ROUND_DOUBLE(value);
       attributes["bottom"] = QString::number(value, 'f', 2) + "%";
 
@@ -1478,11 +1480,11 @@ void LayoutRegion::mouseReleaseEvent(QGraphicsSceneMouseEvent* event)
         parentH = (scene())->height();
       }
 
-      value = ((resizeTop-4)/parentH)*100;
+      value = (resizeTop/parentH)*100;
       ROUND_DOUBLE(value);
       attrs["top"] = QString::number(value, 'f', 2) + "%";
 
-      value = ((resizeLeft-4)/parentW)*100;
+      value = (resizeLeft/parentW)*100;
       ROUND_DOUBLE(value);
       attrs["left"] = QString::number(value, 'f', 2) + "%";
 
@@ -1494,12 +1496,12 @@ void LayoutRegion::mouseReleaseEvent(QGraphicsSceneMouseEvent* event)
       ROUND_DOUBLE(value);
       attrs["width"] = QString::number(value, 'f', 2) + "%";
 
-      value = (1 - (((resizeLeft-4)/parentW)+
+      value = (1 - ((resizeLeft/parentW)+
                     (resizeWidth/parentW)))*100;
       ROUND_DOUBLE(value);
       attrs["right"] = QString::number(value, 'f', 2) + "%";
 
-      value = (1 - (((resizeTop-4)/parentH)+ (resizeHeight/parentH)))*100;
+      value = (1 - ((resizeTop/parentH)+ (resizeHeight/parentH)))*100;
       ROUND_DOUBLE(value);
       attrs["bottom"] = QString::number(value, 'f', 2) + "%";
 
