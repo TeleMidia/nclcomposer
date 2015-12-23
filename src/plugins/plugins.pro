@@ -5,7 +5,8 @@ TEMPLATE = \
 outline-view.depends = ncl-profile
 
 qscintilla2_telem.file = ncl-textual-view/deps/QScintilla-gpl-2.9/Qt4Qt5/qscintilla.pro
-ncl-textual-view.depends = qscintilla_telem
+ncl-textual-view.file = ncl-textual-view/ncl-textual-view.pro
+ncl-textual-view.depends = ncl-profile qscintilla2_telem
 
 properties-view.depends = ncl-profile
 ncl-layout-view.depends = ncl-profile
@@ -20,7 +21,7 @@ SUBDIRS = \
     ncl-profile \
     outline-view \
     qscintilla2_telem \
-    ncl-textual-view/ \
+    ncl-textual-view \
     debug-console \
     properties-view \
     ncl-layout-view \
