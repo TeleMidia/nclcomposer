@@ -150,16 +150,17 @@ private slots:
 
   void showSearchBox();
   void hideSearchBox();
+
   void findNext();
-  bool findNext(QString text);
+  bool findNext(const QString &text);
   void findPrevious();
-  void findPrevious(QString text);
+  void findPrevious(const QString &text);
   void replaceWord();
-  void replaceWord(QString text);
+  void replaceWord(const QString &text);
   void replaceAndFind();
-  void replaceAndFind(QString textSearch,QString textReplace);
+  void replaceAndFind(const QString &textSearch, const QString &textReplace);
   void replaceAll();
-  void replaceAll(QString textSearch,QString textReplace);
+  void replaceAll(const QString &textSearch, const QString &textReplace);
 };
 
 #endif

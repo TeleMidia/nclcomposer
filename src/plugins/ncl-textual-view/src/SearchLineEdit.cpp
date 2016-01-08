@@ -31,8 +31,9 @@ SearchLineEdit::SearchLineEdit(QWidget *parent) :
   this->_mSearchButton->setStyleSheet(this->buttonStyleSheetForCurrentState());
 
   // Update the search button when the text changes
-  QObject::connect(this, SIGNAL(textChanged(QString)),
-                   SLOT(updateSearchButton(QString)));
+  QObject::connect( this,
+                    SIGNAL(textChanged(const QString &)),
+                    SLOT(updateSearchButton(const QString &)) );
 
   // Some stylesheet and size corrections for the text box
   this->setPlaceholderText(tr("Search"));
@@ -40,11 +41,14 @@ SearchLineEdit::SearchLineEdit(QWidget *parent) :
 
   int frameWidth = this->style()->pixelMetric(QStyle::PM_DefaultFrameWidth);
   QSize minSizeHint = this->minimumSizeHint();
-  this->setMinimumSize(
+
+  /* this->setMinimumSize(
         qMax(minSizeHint.width(),
              this->_mSearchButton->sizeHint().width() + frameWidth * 2 + 2),
         qMax(minSizeHint.height(),
-             this->_mSearchButton->sizeHint().height() + frameWidth * 2 + 2));
+             this->_mSearchButton->sizeHint().height() + frameWidth * 2 + 2)); */
+
+  this->_mSearchButton->setVisible(false);
 }
 
 void SearchLineEdit::resizeEvent(QResizeEvent *event)
@@ -80,7 +84,7 @@ QString SearchLineEdit::styleSheetForCurrentState() const
   int frameWidth = this->style()->pixelMetric(QStyle::PM_DefaultFrameWidth);
 
   QString style;
-  style += "QLineEdit {";
+  /* style += "QLineEdit {";
   if (this->text().isEmpty())
   {
     style += "font-family: 'MS Sans Serif';";
@@ -89,16 +93,17 @@ QString SearchLineEdit::styleSheetForCurrentState() const
   }
 
   style += "padding-left: 3px;";
-  style += QString("padding-right: %1px;").arg(
-        this->_mSearchButton->sizeHint().width() + frameWidth + 1);
+  //style += QString("padding-right: %1px;").arg(
+  //      this->_mSearchButton->sizeHint().width() + frameWidth + 1 );
 
   style += "border-width: 3px;";
   style += "border-image: url(:/images/esf-border.png) 3 3 3 3 stretch;";
   style += "background-color: rgba(255, 255, 255, 204);";
   style += "}";
+
   style += "QLineEdit:hover, QLineEdit:focus {";
   style += "background-color: rgba(255, 255, 255, 255);";
-  style += "}";
+  style += "}"; */
   return style;
 }
 

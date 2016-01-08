@@ -355,8 +355,9 @@ void NCLTextEditorMainWindow::createSearchBox()
   layout->addWidget(replaceAll, 1, 4);
 
   //  connect(&doSearchButton, SIGNAL(pressed()), this, SLOT(findNext()));
-  connect(&_searchBoxText, SIGNAL(textChanged(QString)),
-          SLOT(findNext(QString)));
+  connect( &_searchBoxText,
+           SIGNAL(textChanged(const QString &)),
+           SLOT(findNext(const QString &)) );
 
   connect(&_searchBoxText, SIGNAL(returnPressed()), SLOT(findNext()));
 
@@ -670,7 +671,7 @@ void NCLTextEditorMainWindow::findNext()
   findNext(text);
 }
 
-bool NCLTextEditorMainWindow::findNext(QString text)
+bool NCLTextEditorMainWindow::findNext(const QString &text)
 {
   return _textEdit->findFirst(text, true, false, true, true);
 }
@@ -681,7 +682,7 @@ void NCLTextEditorMainWindow::findPrevious()
   findPrevious(text);
 }
 
-void NCLTextEditorMainWindow::findPrevious(QString text)
+void NCLTextEditorMainWindow::findPrevious(const QString &text)
 {
   int line, index;
   _textEdit->getCursorPosition(&line, &index);
@@ -698,7 +699,7 @@ void NCLTextEditorMainWindow::replaceWord()
 }
 
 
-void NCLTextEditorMainWindow::replaceWord(QString text)
+void NCLTextEditorMainWindow::replaceWord(const QString &text)
 {
   _textEdit->replace(text);
 }
@@ -710,13 +711,14 @@ void NCLTextEditorMainWindow::replaceAndFind()
   replaceAndFind(textSearch, textReplace);
 }
 
-void NCLTextEditorMainWindow::replaceAndFind(QString textSearch,QString textReplace)
+void NCLTextEditorMainWindow::replaceAndFind(const QString &textSearch, const QString &textReplace)
 {
   //todo:verify if highlightedtext == textsearch before replace
   //_textEdit->
   replaceWord(textReplace);
   findNext(textSearch);
 }
+
 void NCLTextEditorMainWindow::replaceAll()
 {
   QString textSearch = _searchBoxText.text();
@@ -724,8 +726,8 @@ void NCLTextEditorMainWindow::replaceAll()
   replaceAll(textSearch, textReplace);
 }
 
-void NCLTextEditorMainWindow::replaceAll(QString textSearch,QString textReplace)
+void NCLTextEditorMainWindow::replaceAll(const QString &textSearch, const QString &textReplace)
 {
   while(findNext(textSearch))
-  replaceWord(textReplace);
+    replaceWord(textReplace);
 }
