@@ -117,6 +117,7 @@ private:
   QPushButton _doSearchButton;
   QDockWidget *_dockSearchBox;
   SearchLineEdit _searchBoxText;
+  QLineEdit _replaceBoxText;
 
   /** VIEWS **/
   /** Outline View */
@@ -150,9 +151,15 @@ private slots:
   void showSearchBox();
   void hideSearchBox();
   void findNext();
-  void findNext(QString text);
+  bool findNext(QString text);
   void findPrevious();
   void findPrevious(QString text);
+  void replaceWord();
+  void replaceWord(QString text);
+  void replaceAndFind();
+  void replaceAndFind(QString textSearch,QString textReplace);
+  void replaceAll();
+  void replaceAll(QString textSearch,QString textReplace);
 };
 
 #endif
