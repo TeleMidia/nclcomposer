@@ -3,11 +3,7 @@ include (../plugins-common.pri)
 
 QT              += xml
 
-macx:LIBS += \
-  -L$$quote(/Library/Application Support/Composer/Extensions) \
-  -lNCLLanguageProfile
-
-win32:LIBS +=   -lNCLLanguageProfile
+win32:LIBS += -lNCLLanguageProfile
 
 INCLUDEPATH += \
   src \
