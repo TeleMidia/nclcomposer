@@ -16,13 +16,8 @@
 namespace composer {
     namespace core {
         namespace util {
-#ifdef Q_OS_MAC
-GlobalSettings::GlobalSettings() :
-  QSettings ("br.puc-rio.telemidia", "Composer")
-#else
 GlobalSettings::GlobalSettings() :
   QSettings(QSettings::IniFormat, QSettings::UserScope, "telemidia", "composer")
-#endif
 {
 
 }
@@ -38,18 +33,21 @@ void GlobalSettings::updateWithDefaults(const QString &dataPath)
   /* Defaults plugins paths */
   QStringList defaultPluginsPath;
 
+#ifndef Q_OS_MAC
   // The first path will look for plug-ins is relative to the executable
   defaultPluginsPath << QApplication::applicationDirPath() + "/extensions";
 
   // Then, we will look for plug-ins is at user's home.
   defaultPluginsPath << QDir::homePath() + QString("/composer/extensions");
+#endif
 
   // After that we will look for plugins in the default system path
 #ifdef Q_OS_MAC
-  defaultPluginsPath << QApplication::applicationDirPath() + "/../../../extensions"
-                     << "/Library/Application Support/Composer/Extensions"
-                     << QApplication::applicationDirPath() +
-                        "/../PlugIns/composer";
+#ifdef QT_NO_DEBUG_OUTPUT
+    defaultPluginsPath << QApplication::applicationDirPath() + "/../PlugIns/composer/";
+#else
+    defaultPluginsPath << "/Library/Application Support/Composer/Extensions/";
+#endif
 #elif defined(Q_OS_WIN32)
 
   defaultPluginsPath << "C:/Composer/extensions";
@@ -92,10 +90,10 @@ void GlobalSettings::updateWithDefaults(const QString &dataPath)
   if(!this->contains("default_connector_base"))
   {
 #ifdef Q_OS_MAC
-#ifdef QT_NO_DEBUG
-    defaultConnBaseDir = "../PlugIns/composer/";
+#ifdef QT_NO_DEBUG_OUTPUT
+    defaultConnBaseDir = QApplication::applicationDirPath() + "/../PlugIns/composer/";
 #else
-    defaultConnBaseDir = QApplication::applicationDirPath() + "/../../../data/";
+    defaultConnBaseDir = "/Library/Application Support/Composer/Data/";
 #endif
 #elif defined(Q_OS_WIN32)
     defaultConnBaseDir = QApplication::applicationDirPath() + "/data/";
@@ -118,10 +116,12 @@ void GlobalSettings::updateWithDefaults(const QString &dataPath)
       this->value("default_stylesheets_dirs").toStringList();
   stylesheetsDirs << QString(dataPath);
 
-#if defined(Q_OS_MAC)
-  stylesheetsDirs << QApplication::applicationDirPath() + "/../PlugIns/composer";
+#ifdef Q_OS_MAC
+#ifdef QT_NO_DEBUG_OUTPUT
+    stylesheetsDirs << QApplication::applicationDirPath() + "/../PlugIns/composer/";
 #else
-  stylesheetsDirs << QApplication::applicationDirPath() + "/data";
+    stylesheetsDirs << "/Library/Application Support/Composer/Data/";
+#endif
 #endif
 
   stylesheetsDirs.removeDuplicates();
