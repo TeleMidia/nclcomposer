@@ -4,9 +4,6 @@ include (../plugins-common.pri)
 INCLUDEPATH += \
   src
 
-LIBS += \
-  -lNCLLanguageProfile
-
 DEFINES += \
   PROPERTIESVIEW_LIBRARY
 

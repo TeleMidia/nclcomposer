@@ -26,8 +26,6 @@ LIBS      +=    -Ldeps/QScintilla-gpl-2.9/Qt4Qt5/debug \
                 -lqscintilla2_telem
 }
 
-macx:LIBS += -lNCLLanguageProfile -lqscintilla2_telem
-
 unix:LIBS += -Ldeps/QScintilla-gpl-2.9/Qt4Qt5
 
 win32:LIBS += -lNCLLanguageProfile

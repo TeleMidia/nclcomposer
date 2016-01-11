@@ -1,6 +1,6 @@
 #!/bin/bash
 
-DIR=`pwd`; DIR="$DIR/../"; cd $DIR/composer-gui/;
+DIR=`pwd`; DIR="$DIR/../"; cd $DIR/bin/;
 
 echo "(1/4) ------ Setting ------";
 
