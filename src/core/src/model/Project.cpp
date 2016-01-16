@@ -20,21 +20,13 @@ namespace composer {
 Project::Project(QObject *parent) :
   Entity(parent)
 {
-  setType("document");
-  dirty = false;
-  entities[this->getUniqueId()] = this;
-
-  lockEntities = new QMutex();
+  init();
 }
 
 Project::Project(const QMap<QString,QString> &atts, QObject *parent) :
   Entity(atts, parent)
 {
-  setType("document");
-  dirty = false;
-  entities[this->getUniqueId()] = this;
-
-  lockEntities = new QMutex();
+  init();
 }
 
 Project::Project( const QString &uniqueId,
@@ -42,15 +34,23 @@ Project::Project( const QString &uniqueId,
                   QObject *parent) :
   Entity(uniqueId, "document", atts, parent)
 {
+  init();
+}
+
+void Project::init()
+{
+  setType("document");
   dirty = false;
-  entities[this->getUniqueId()] = this;
+
+  this->dirty = false;
+  this->entities[this->getUniqueId()] = this;
 
   lockEntities = new QMutex();
 }
 
 Project::~Project()
 {
-//     QMutexLocker locker(lockEntities);
+// QMutexLocker locker(lockEntities);
   entities.clear();
   delete lockEntities;
 }

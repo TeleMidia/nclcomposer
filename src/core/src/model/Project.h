@@ -133,6 +133,11 @@ protected:
   Project(const QString &uniqueId, const QMap<QString,QString> &atts, QObject *parent = 0);
 
   /*!
+   * \brief init
+   */
+  void init();
+
+  /*!
    * \brief Destructor;
    */
   ~Project();
