@@ -13,8 +13,8 @@ DESTDIR = $${PWD}/../../bin
 
 VERSION = 1.0
 CONFIG += dll
-MOC_DIR = .mocs
-OBJECTS_DIR = .objs
+MOC_DIR = .moc
+OBJECTS_DIR = .obj
 
 # Uses FORCERELEASE variable because CONFIG and SUBDIR force three executions
 # if qmake and the last one does not preserves CONFIG from command line.
