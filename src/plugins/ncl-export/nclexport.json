@@ -1,0 +1,14 @@
+{
+  "name": "NCL export",
+  "version": "0.2",
+  "compatVersion": "0.2",
+
+  "vendor": "TeleMidia Labs",
+  "copyright": "TeleMidia/PUC-Rio",
+  "license": "LGPL",
+
+  "description": "Export core from cpr to a .ncl .",
+  "url": "http://composer.telemidia.puc-rio.br/debug",
+
+  "category": "General"
+}
