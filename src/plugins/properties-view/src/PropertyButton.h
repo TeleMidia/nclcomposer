@@ -27,13 +27,12 @@ class PropertyButtons : public LineEditWithButton
 public:
   explicit PropertyButtons(QString propName, QWidget *parent = 0);
 
-  QString key, value;
-
 public slots:
   void openfile();
 
 private:
   QWidget *window;
+  QString key, value;
 };
 
 #endif // PROPERTYBUTTONS_H

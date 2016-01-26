@@ -27,11 +27,11 @@ public:
 public slots:
   void init();
 
-  void onEntityAdded(QString pluginID, Entity *);
-  void onEntityChanged(QString pluginID, Entity *entity);
-  void onEntityRemoved(QString, QString entityID);
+  void onEntityAdded(const QString &pluginID, Entity *);
+  void onEntityChanged(const QString &pluginID, Entity *entity);
+  void onEntityRemoved(const QString &pluginID, const QString &entityID);
 
-  void changeSelectedEntity(QString pluginID, void *param);
+  void changeSelectedEntity(const QString &pluginID, void *param);
 
 private slots:
   void updateValue(QTreeWidgetItem*);

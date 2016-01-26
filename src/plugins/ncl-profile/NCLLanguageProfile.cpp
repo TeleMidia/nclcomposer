@@ -58,18 +58,18 @@ map <QString, map <QString, char> *> *NCLLanguageProfile::getNesting()
   return NCLStructure::getInstance()->getNesting();
 }
 
-map <QString, bool> *NCLLanguageProfile::getAttributes (QString element)
+map <QString, bool> *NCLLanguageProfile::getAttributes (const QString &element)
 {
   return NCLStructure::getInstance()->getAttributes(element);
 }
 
-map <QString, char> *NCLLanguageProfile::getChildren (QString tagname)
+map <QString, char> *NCLLanguageProfile::getChildren (const QString &tagname)
 {
   return NCLStructure::getInstance()->getChildren(tagname);
 }
 
 vector <AttributeReferences *>
-        NCLLanguageProfile::getReferences (QString element, QString attr)
+        NCLLanguageProfile::getReferences (const QString &element, const QString &attr)
 {
   return NCLStructure::getInstance()->getReferences(element, attr);
 }

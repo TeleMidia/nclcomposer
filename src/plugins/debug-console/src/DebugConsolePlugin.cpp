@@ -52,9 +52,10 @@ QWidget* DebugConsolePlugin::getWidget()
   return window;
 }
 
-void DebugConsolePlugin::onEntityAdded(QString ID, Entity *entity)
+void DebugConsolePlugin::onEntityAdded(const QString &pluginID,
+                                       Entity *entity)
 {
-  QString line = "PLUGIN (" + ID + ") added the Entity (" +
+  QString line = "PLUGIN (" + pluginID + ") added the Entity (" +
       entity->getType() + " - " + entity->getUniqueId() +")";
   list->insertItem(0, new QListWidgetItem(line));
   /* if(list->count())
@@ -63,7 +64,7 @@ void DebugConsolePlugin::onEntityAdded(QString ID, Entity *entity)
     list->addItem(new QListWidgetItem(line));*/
 }
 
-void DebugConsolePlugin::errorMessage(QString error)
+void DebugConsolePlugin::errorMessage( const QString &error )
 {
   //    list->insertItem(0, new QListWidgetItem(error));
   if(list->count())
@@ -72,9 +73,10 @@ void DebugConsolePlugin::errorMessage(QString error)
     list->addItem(new QListWidgetItem(error));
 }
 
-void DebugConsolePlugin::onEntityChanged(QString ID, Entity * entity)
+void DebugConsolePlugin::onEntityChanged( const QString &pluginID,
+                                          Entity *entity )
 {
-  QString line = "PLUGIN (" + ID + ") changed the Entity (" +
+  QString line = "PLUGIN (" + pluginID + ") changed the Entity (" +
       entity->getType() + " - " + entity->getUniqueId() +")";
   list->insertItem(0, new QListWidgetItem(line));
   /*  if(list->count())
@@ -88,9 +90,10 @@ void DebugConsolePlugin::onEntityChanged(QString ID, Entity * entity)
 
 }*/
 
-void DebugConsolePlugin::onEntityRemoved(QString ID, QString entityID)
+void DebugConsolePlugin::onEntityRemoved( const QString &pluginID,
+                                          const QString &entityID)
 {
-  QString line = "PLUGIN (" + ID + ") removed Entity (" +
+  QString line = "PLUGIN (" + pluginID + ") removed Entity (" +
       entityID + ")";
   list->insertItem(0, new QListWidgetItem(line));
   /*if(list->count())

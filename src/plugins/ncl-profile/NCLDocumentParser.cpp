@@ -124,14 +124,14 @@ bool NCLDocumentParser::fatalError(const QXmlParseException &exception)
   return false;
 }
 
-void NCLDocumentParser::onEntityAdded(QString , Entity *entity)
+void NCLDocumentParser::onEntityAdded(const QString&, Entity *entity)
 {
   lockStack.lock();
   elementStack.push(entity);
   lockStack.unlock();
 }
 
-void NCLDocumentParser::onEntityAddError(QString error)
+void NCLDocumentParser::onEntityAddError(const QString &error)
 {
   qDebug() << "NCLDocumentParser::onEntityAddError(" << error << ")";
 }

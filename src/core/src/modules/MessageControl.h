@@ -61,9 +61,9 @@ public slots:
      \param atts
      \param force
     */
-  void onAddEntity( QString type,
-                    QString parentEntityId,
-                    QMap<QString,QString>& atts,
+  void onAddEntity( const QString &type,
+                    const QString &parentEntityId,
+                    const QMap<QString,QString>& atts,
                     bool force );
   /*!
      \brief
@@ -73,8 +73,8 @@ public slots:
      \param atts
      \param force
     */
-  void onAddEntity( QString entity_content,
-                    QString parentId,
+  void onAddEntity( const QString &entity_content,
+                    const QString &parentId,
                     Data::Format format,
                     bool force );
   /*!
@@ -84,7 +84,9 @@ public slots:
      \param atts
      \param force
     */
-  void onEditEntity(Entity *entity, QMap<QString,QString> atts, bool force);
+  void onEditEntity( Entity *entity,
+                     const QMap<QString,QString> &atts,
+                     bool force );
   /*!
      \brief
 
@@ -95,12 +97,12 @@ public slots:
   /*!
    * \brief TODO
    */
-  void setListenFilter(QStringList list);
+  void setListenFilter(const QStringList &list);
 
   /*!
    * \brief TODO
    */
-  void setPluginData(QByteArray data);
+  void setPluginData(const QByteArray &data);
 
   /*!
    * \brief TODO
@@ -112,9 +114,9 @@ public slots:
    *
    * It allows anyone send a addEntityMessage, even when it is not a plugin.
    */
-  void anonymousAddEntity(QString type,
-                          QString parentEntityId,
-                          QMap<QString,QString>& atts,
+  void anonymousAddEntity(const QString &type,
+                          const QString &parentEntityId,
+                          const QMap<QString,QString>& atts,
                           bool force = false,
                           bool notifyPlugins = true);
 
@@ -123,7 +125,7 @@ public slots:
    *    pointer to an entity already created.
    */
   void anonymousAddEntity( Entity *entity,
-                           QString parentEntityId,
+                           const QString &parentEntityId,
                            bool force = false,
                            bool notifyPlugins = true);
 
@@ -132,7 +134,7 @@ public slots:
    *
    * It allows anyone send a removeEntityMessage, even if it is not a plugin.
    */
-  void anonymousRemoveEntity( QString entityUniqueId,
+  void anonymousRemoveEntity( const QString &entityUniqueId,
                               bool force = false,
                               bool notifyPlugins = true);
   /*!
@@ -147,8 +149,8 @@ public slots:
    *
    * It allows anyone send an addEntityMessage, even if it is not a plugin.
    */
-  void anonymousChangeEntity( QString entityId,
-                              QMap<QString,QString>& atts,
+  void anonymousChangeEntity( const QString &entityId,
+                              const QMap<QString,QString>& atts,
                               bool force = false,
                               bool notifyPlugins = true);
 
@@ -156,7 +158,7 @@ public slots:
   void redo();
 
 signals:
-  void entityAdded(QString, Entity*);
+  void entityAdded(const QString&, Entity*);
 
 
 private:
@@ -167,23 +169,23 @@ private:
   /*!
    * \brief TODO
    */
-  void sendEntityAddedMessageToPlugins( QString pluginInstanceId,
+  void sendEntityAddedMessageToPlugins( const QString &pluginInstanceId,
                                         Entity *entity );
   /*!
    * \brief TODO
    */
-  void sendEntityChangedMessageToPlugins( QString pluginInstanceId,
+  void sendEntityChangedMessageToPlugins( const QString &pluginInstanceId,
                                           Entity *entity );
   /*!
    * \brief TODO
    */
-  void sendEntityRemovedMessageToPlugins( QString pluginInstanceId,
+  void sendEntityRemovedMessageToPlugins( const QString &pluginInstanceId,
                                           Entity *entity );
 
   /*!
    * \brief TODO
    */
-  bool pluginIsInterestedIn(IPlugin *plugin, Entity *entity);
+  bool pluginIsInterestedIn(const IPlugin *plugin, Entity *entity);
 };
 } } //end namespace
 #endif // MESSAGECONTROL_H

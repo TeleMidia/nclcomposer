@@ -40,11 +40,11 @@ public:
   virtual bool saveSubsession();
 
 public slots:
-  virtual void onEntityAdded(QString pluginID, Entity *entity);
-  virtual void errorMessage(QString error);
-  virtual void onEntityChanged(QString pluginID, Entity *entity);
-  virtual void onEntityRemoved(QString pluginID, QString entityID);
-  virtual void changeSelectedEntity(QString pluginID, void* entityUID);
+  virtual void onEntityAdded(const QString &pluginID, Entity *entity);
+  virtual void errorMessage(const QString &error);
+  virtual void onEntityChanged(const QString &pluginID, Entity *entity);
+  virtual void onEntityRemoved(const QString &pluginID, const QString &entityID);
+  virtual void changeSelectedEntity(const QString &pluginID, void* entityUID);
   virtual void updateFromModel();
 
 protected slots:

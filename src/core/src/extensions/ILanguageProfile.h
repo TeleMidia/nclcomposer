@@ -51,12 +51,12 @@ public:
   //FUNCTIONS RELATED TO LANGUAGE STRUCTURE
   virtual map <QString, map <QString, char> *> *getNesting() = 0;
 
-  virtual map <QString, bool> *getAttributes (QString element) = 0;
+  virtual map <QString, bool> *getAttributes (const QString &element) = 0;
 
-  virtual map <QString, char> *getChildren (QString tagname) = 0;
+  virtual map <QString, char> *getChildren (const QString &tagname) = 0;
 
   virtual vector <AttributeReferences *>
-    getReferences (QString element, QString attr) = 0;
+    getReferences (const QString &element, const QString &attr) = 0;
 };
 
 } } //end namespace

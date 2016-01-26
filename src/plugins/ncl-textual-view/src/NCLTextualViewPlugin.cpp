@@ -39,9 +39,9 @@ NCLTextualViewPlugin::NCLTextualViewPlugin()
 
   project = NULL;
   connect( _window,
-           SIGNAL(elementAdded(QString,QString,QMap<QString,QString>&,bool)),
+           SIGNAL(elementAdded(const QString&, const QString&, const QMap<QString,QString>&, bool)),
            this,
-           SIGNAL(addEntity(QString,QString,QMap<QString,QString>&,bool)));
+           SIGNAL(addEntity(const QString&, const QString&, const QMap<QString,QString>&, bool)));
 
   _isSyncing = false;
 
@@ -217,7 +217,7 @@ void NCLTextualViewPlugin::nonIncrementalUpdateFromModel()
   }
 }
 
-void NCLTextualViewPlugin::onEntityAdded(QString pluginID, Entity *entity)
+void NCLTextualViewPlugin::onEntityAdded(const QString &pluginID, Entity *entity)
 {
   // Return if this is my call to onEntityAdded
   // qDebug() << " isSyncing= " << isSyncing;
@@ -282,13 +282,13 @@ void NCLTextualViewPlugin::onEntityAdded(QString pluginID, Entity *entity)
   //  printEntitiesOffset();
 }
 
-void NCLTextualViewPlugin::errorMessage(QString error)
+void NCLTextualViewPlugin::errorMessage(const QString &error)
 {
   Q_UNUSED(error)
   //  qDebug() << "NCLTextualViewPlugin::onEntityAddError(" << error << ")";
 }
 
-void NCLTextualViewPlugin::onEntityChanged(QString pluginID, Entity *entity)
+void NCLTextualViewPlugin::onEntityChanged(const QString &pluginID, Entity *entity)
 {
   qDebug() << "PLUGIN (" + pluginID + ") changed the Entity (" +
               entity->getType() + " - " + entity->getUniqueId() +")";
@@ -363,7 +363,7 @@ void NCLTextualViewPlugin::onEntityChanged(QString pluginID, Entity *entity)
                << insertAtOffset;
 }
 
-void NCLTextualViewPlugin::onEntityRemoved(QString pluginID, QString entityID)
+void NCLTextualViewPlugin::onEntityRemoved(const QString &pluginID, const QString &entityID)
 {
   // skip if this is my own call to onEntityRemoved
   if(pluginID == getPluginInstanceID() && !_isSyncing)
@@ -550,6 +550,7 @@ void NCLTextualViewPlugin::updateCoreModel()
   //  int line, column;
   //  nclTextEditor->getCursorPosition(&line, &column);
   sendBroadcastMessage("textualStartSync", NULL);
+
   //double-buffering
   _tmpNclTextEditor = _nclTextEditor;
   _nclTextEditor = new NCLTextEditor(0);
@@ -573,8 +574,10 @@ void NCLTextualViewPlugin::updateCoreModel()
 void NCLTextualViewPlugin::nonIncrementalUpdateCoreModel()
 {
   //delete the content of the current project
-  if(project->getChildren().size())
+  while (project->getChildren().size())
+  {
     emit removeEntity(project->getChildren().at(0), true);
+  }
 
   // clear the entities offset
   _nclTextEditor->clear();

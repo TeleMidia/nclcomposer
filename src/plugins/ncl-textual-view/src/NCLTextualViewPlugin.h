@@ -80,7 +80,7 @@ public slots:
    * \param pluginID
    * \param
    */
-  void onEntityAdded(QString pluginID, Entity *);
+  void onEntityAdded(const QString &pluginID, Entity *);
 
   /*!
    * \brief This function is part of the IPlugin API.
@@ -88,21 +88,21 @@ public slots:
    * \param pluginID
    * \param
    */
-  void onEntityChanged(QString pluginID, Entity *);
+  void onEntityChanged(const QString &pluginID, Entity *);
 
   /*!
    * \brief This function is part of the IPlugin API.
    * \param pluginID
    * \param entityID
    */
-  void onEntityRemoved(QString pluginID, QString entityID);
+  void onEntityRemoved(const QString &pluginID, const QString &entityID);
 
   /*!
    * \brief This function is part of the IPlugin API.
    *
    * \param error
    */
-  void errorMessage(QString error);
+  void errorMessage(const QString &error);
 
   /*!
    * \brief

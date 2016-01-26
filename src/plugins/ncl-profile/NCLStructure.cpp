@@ -235,10 +235,10 @@ vector <QString> NCLStructure::parseLine(const QString &line)
 }
 
 //TODO: SCOPE
-void NCLStructure::addElement(const QString &name,
-                              const QString &father,
-                              char cardinality,
-                              bool define_scope)
+void NCLStructure::addElement( const QString &name,
+                               const QString &father,
+                               char cardinality,
+                               bool define_scope)
 {
   if(!nesting->count(father))
     (*nesting)[father] = new map <QString, char>();

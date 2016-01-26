@@ -243,7 +243,7 @@ void StructuralViewPlugin::updateFromModel()
   view->adjustAll();
 }
 
-void StructuralViewPlugin::onEntityAdded(QString pluginID, Entity *entity)
+void StructuralViewPlugin::onEntityAdded(const QString &pluginID, Entity *entity)
 {
   if(isSyncingFromTextual) return;
 
@@ -287,12 +287,7 @@ void StructuralViewPlugin::onEntityAdded(QString pluginID, Entity *entity)
   view->clearValidationErrors();
 }
 
-void StructuralViewPlugin::errorMessage(QString error)
-{
-  Q_UNUSED(error)
-}
-
-void StructuralViewPlugin::onEntityChanged(QString pluginID, Entity *entity)
+void StructuralViewPlugin::onEntityChanged(const QString &pluginID, Entity *entity)
 {    
   if(isSyncingFromTextual)
   {
@@ -331,7 +326,7 @@ void StructuralViewPlugin::onEntityChanged(QString pluginID, Entity *entity)
   view->clearValidationErrors();
 }
 
-void StructuralViewPlugin::onEntityRemoved(QString pluginID, QString entityID)
+void StructuralViewPlugin::onEntityRemoved(const QString &pluginID, const QString &entityID)
 {
   if(isSyncingFromTextual) return;
 
@@ -342,7 +337,12 @@ void StructuralViewPlugin::onEntityRemoved(QString pluginID, QString entityID)
   }
 }
 
-void StructuralViewPlugin::changeSelectedEntity(QString pluginID, void* param)
+void StructuralViewPlugin::errorMessage(const QString &error)
+{
+  Q_UNUSED(error)
+}
+
+void StructuralViewPlugin::changeSelectedEntity(const QString &pluginID, void* param)
 {
   Q_UNUSED(pluginID)
 
@@ -2304,14 +2304,14 @@ void StructuralViewPlugin::textualFinishSync(QString, void*)
   updateFromModel();
 }
 
-void StructuralViewPlugin::clearValidationError(QString, void *param)
+void StructuralViewPlugin::clearValidationError(const QString&, void *param)
 {
   Q_UNUSED(param)
 
   view->clearValidationErrors();
 }
 
-void StructuralViewPlugin::validationError(QString pluginID, void *param)
+void StructuralViewPlugin::validationError(const QString &pluginID, void *param)
 {
   Q_UNUSED(pluginID)
 

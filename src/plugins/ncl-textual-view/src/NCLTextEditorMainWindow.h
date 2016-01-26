@@ -66,7 +66,7 @@ public:
 #endif
 
 signals:
-  void elementAdded(QString, QString, QMap <QString, QString>&, bool);
+  void elementAdded(const QString&, const QString&, const QMap <QString, QString>&, bool);
   void focusLosted();
 
 protected:

@@ -46,9 +46,12 @@ class ComboBoxDelegate : public QStyledItemDelegate
 public:
   ComboBoxDelegate(QWidget *parent = 0) : QStyledItemDelegate(parent) {}
 
-  QWidget *createEditor(QWidget *parent, const QStyleOptionViewItem &option,
-                        const QModelIndex &index) const
+  QWidget *createEditor( QWidget *parent,
+                         const QStyleOptionViewItem &option,
+                         const QModelIndex &index) const
   {
+    Q_UNUSED(option);
+
     if(index.column() == 1)
     {
       // \todo References
