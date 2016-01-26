@@ -1247,7 +1247,8 @@ void ComposerMainWindow::saveAsCurrentProject()
         destFileName  = destFileName + ".cpr";
 
       /* Move the location of the current project to destFileName */
-      ProjectControl::getInstance()->moveProject(location, destFileName);
+      if (location != destFileName)
+        ProjectControl::getInstance()->moveProject(location, destFileName);
 
       /* Get the project */
       Project *project =
