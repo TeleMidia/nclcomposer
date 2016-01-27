@@ -223,14 +223,12 @@ void NCLLayoutViewPlugin::init()
       else if(key == "resolutionWidth")
       {
         resolutionWidth = value.toInt(&ok);
-        if(!ok)
-          resolutionWidth = 0;
+        if(!ok) resolutionWidth = 0;
       }
       else if(key == "resolutionHeight")
       {
         resolutionHeight = value.toInt(&ok);
-        if(!ok)
-          resolutionHeight = 0;
+        if(!ok) resolutionHeight = 0;
       }
     }
   }
@@ -251,8 +249,8 @@ void NCLLayoutViewPlugin::init()
 
       // \todo In the future we should support saving individual
       // resolutions foreach regionBase
-      view->getSelectedRegionBase()->
-          changeResolution(resolutionWidth, resolutionHeight);
+      if (view->getSelectedRegion())
+        view->getSelectedRegionBase()->changeResolution(resolutionWidth, resolutionHeight);
     }
     else if(current->getType() == "region")
     {
