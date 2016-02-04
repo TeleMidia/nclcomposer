@@ -16,6 +16,7 @@
 #include <util/ComposerSettings.h>
 
 #include "ComposerMainWindow.h"
+#include "fvupdater.h"
 
 using namespace composer::gui;
 
@@ -95,6 +96,12 @@ int main(int argc, char *argv[])
   QCoreApplication::setOrganizationDomain("telemidia.pucrio.br");
   QCoreApplication::setApplicationName("composer");
   QCoreApplication::setApplicationVersion(NCLCOMPOSER_GUI_VERSION);
+
+  //QApplication::setApplicationVersion(NCLCOMPOSER_GUI_VERSION);
+  // Set this to your own appcast URL, of course FERVOR
+  FvUpdater::sharedUpdater()->SetFeedURL("http://composer.telemidia.puc-rio.br/downloads/appcast_nclcomposer.xml");
+  FvUpdater::sharedUpdater()->CheckForUpdatesSilent();
+
 
   QStringList args = a.arguments();
   handleArguments(args, initGUI);
