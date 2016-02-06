@@ -1,6 +1,6 @@
 # Prefácio #
 
-![](../imgs/nclcomposer.png)
+![](img/nclcomposer.png)
 
 ## Requisitos ##
 
