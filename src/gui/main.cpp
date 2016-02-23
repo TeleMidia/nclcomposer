@@ -16,7 +16,10 @@
 #include <util/ComposerSettings.h>
 
 #include "ComposerMainWindow.h"
+
+#ifdef FV_GUI
 #include "fvupdater.h"
+#endif
 
 using namespace composer::gui;
 
