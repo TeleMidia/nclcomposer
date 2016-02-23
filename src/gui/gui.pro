@@ -313,6 +313,9 @@ unix:!macx {
 OTHER_FILES += LICENSE.LGPL
 
 # Fervor autoupdater
-!include("../fervor/Fervor.pri") {
+fervor {
+  !include("../fervor/Fervor.pri") {
     error("Unable to include Fervor autoupdater.")
+  }
 }
+
