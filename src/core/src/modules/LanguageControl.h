@@ -43,14 +43,14 @@ public:
    * \param profilesDirPath the directory path from where the profiles must be
    * loaded.
    */
-  void loadProfiles(QString profilesDirPath);
+  void loadProfiles(const QString &profilesDirPath);
 
   /*!
    * \brief Load a language profile from a specific fileName.
    *
    * \param fileName th
    */
-  ILanguageProfile* loadProfile(QString fileName);
+  ILanguageProfile* loadProfile(const QString &fileName);
 
   /*!
    * \brief
@@ -78,6 +78,8 @@ signals:
   void notifyError(QString);
 
 private:
+  QMap<LanguageType, ILanguageProfile*> profiles; /*!< TODO */
+
   /*!
    * \brief Constructor (it is private because this class is a Singleton).
    */
@@ -87,8 +89,6 @@ private:
    * \brief Destructor (it is private because this class is a Singleton).
    */
   ~LanguageControl();
-
-  QMap<LanguageType, ILanguageProfile*> profiles; /*!< TODO */
 };
 
 } } //end namespace

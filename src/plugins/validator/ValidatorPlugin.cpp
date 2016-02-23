@@ -103,7 +103,7 @@ void ValidatorPlugin::updateMessages(std::vector<pair<void *, string> > msgs)
 
 }
 
-void ValidatorPlugin::onEntityAdded(QString pluginID, Entity *entity)
+void ValidatorPlugin::onEntityAdded(const QString &pluginID, Entity *entity)
 {
   Q_UNUSED(pluginID)
 
@@ -116,7 +116,7 @@ void ValidatorPlugin::onEntityAdded(QString pluginID, Entity *entity)
 
 }
 
-void ValidatorPlugin::onEntityChanged(QString pluginID, Entity * entity)
+void ValidatorPlugin::onEntityChanged(const QString &pluginID, Entity * entity)
 {
   Q_UNUSED(pluginID)
 
@@ -126,7 +126,7 @@ void ValidatorPlugin::onEntityChanged(QString pluginID, Entity * entity)
 
 }
 
-void ValidatorPlugin::onEntityRemoved(QString pluginID, QString entityID)
+void ValidatorPlugin::onEntityRemoved(const QString &pluginID, const QString &entityID)
 {
   Q_UNUSED(pluginID)
 
@@ -137,7 +137,7 @@ void ValidatorPlugin::onEntityRemoved(QString pluginID, QString entityID)
 }
 
 
-void ValidatorPlugin::errorMessage(QString error)
+void ValidatorPlugin::errorMessage(const QString &error)
 {
   qDebug () << "Validator: Error: " << error;
 }
@@ -179,8 +179,8 @@ void ValidatorPlugin::validationErrorSelected(QString pluginID, void *param)
 
     if (p)
     {
-      qDebug( p->first.toStdString().c_str() );
-      qDebug( p->second.toStdString().c_str() );
+      qDebug() << p->first;
+      qDebug() << p->second;
     }
   }
 }

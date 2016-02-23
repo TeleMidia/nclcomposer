@@ -47,30 +47,21 @@ public:
 public slots:
   virtual void updateFromModel();
 
-  virtual void onEntityAdded(QString pluginID, Entity *entity);
+  virtual void onEntityAdded(const QString &pluginID, Entity *entity);
+  virtual void onEntityChanged(const QString &pluginID, Entity *entity);
+  virtual void onEntityRemoved(const QString &pluginID, const QString &entityID);
+  virtual void errorMessage(const QString &error);
 
-  virtual void errorMessage(QString error);
-
-  virtual void onEntityChanged(QString pluginID, Entity *entity);
-
-  virtual void onEntityRemoved(QString pluginID, QString entityID);
-
-  virtual void changeSelectedEntity(QString pluginID, void* entityUID);
-
-  void clearValidationError(QString pluginID, void *param);
-
-  void validationError(QString pluginID, void *param);
+  void changeSelectedEntity(const QString &pluginID, void* entityUID);
+  void clearValidationError(const QString &pluginID, void *param);
+  void validationError(const QString &pluginID, void *param);
 
 
   /* From Core */
   void requestEntitySelection(const QString uid);
-
   void requestEntityAddition(Entity* entity);
-
   void requestEntityRemotion(Entity* entity);
-
   void requestEntityChange(Entity* entity);
-
   void requestEntitySelection(Entity* entity);
 
   /* From View */

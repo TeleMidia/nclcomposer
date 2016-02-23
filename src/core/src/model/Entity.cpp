@@ -158,24 +158,24 @@ bool Entity::hasAttribute(const QString &name)
   return this->atts.contains(name);
 }
 
-QString Entity::getUniqueId()
+QString Entity::getUniqueId() const
 {
   return this->_id;
 }
 
-QString Entity::getType()
+QString Entity::getType() const
 {
 //    QMutexLocker locker(&lockType);
   return this->type;
 }
 
-Entity* Entity::getParent()
+Entity* Entity::getParent() const
 {
 //    QMutexLocker locker(&lockParent);
   return parent;
 }
 
-QString Entity::getParentUniqueId()
+QString Entity::getParentUniqueId() const
 {
 //    QMutexLocker loecker(&lockParent);
   return parent->getUniqueId();
@@ -186,7 +186,7 @@ void Entity::setDeleteChildren(bool _delete)
   this->deleteChildren = _delete;
 }
 
-QVector <Entity *> Entity::getChildren()
+QVector <Entity *> Entity::getChildren() const
 {
   return this->children;
 }
@@ -257,7 +257,7 @@ QString Entity::toString(int ntab, bool writeuid)
   return out;
 }
 
-Entity *Entity::cloneEntity()
+Entity *Entity::cloneEntity() const
 {
   // QMap <QString, QString>::iterator begin, end, it;
   // QMap <QString, QString> attrs;

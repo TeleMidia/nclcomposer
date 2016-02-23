@@ -57,11 +57,11 @@ public:
   void init();
 
 public slots:
-  void onEntityAdded(QString ID, Entity *);
-  void onEntityChanged(QString ID, Entity *);
-  void onEntityRemoved(QString ID, QString entityID);
+  void onEntityAdded(const QString &pluginID, Entity *);
+  void onEntityChanged(const QString &pluginID, Entity *);
+  void onEntityRemoved(const QString &pluginID, const QString &entityID);
 
-  void errorMessage(QString error);
+  void errorMessage(const QString &error);
 
   void itemSelected (QTreeWidgetItem *);
   void itemDoubleClickedSelected (QTreeWidgetItem *);

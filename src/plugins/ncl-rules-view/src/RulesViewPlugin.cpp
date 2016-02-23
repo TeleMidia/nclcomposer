@@ -56,7 +56,7 @@ RulesViewPlugin::RulesViewPlugin() :
   emit setListenFilter(listenFilter);
 }
 
-void RulesViewPlugin::onEntityAdded(QString pluginID, Entity *entity)
+void RulesViewPlugin::onEntityAdded(const QString &pluginID, Entity *entity)
 {
   Q_UNUSED(pluginID)
 
@@ -89,7 +89,7 @@ void RulesViewPlugin::onEntityAdded(QString pluginID, Entity *entity)
   }
 }
 
-void RulesViewPlugin::onEntityChanged(QString pluginID, Entity *entity)
+void RulesViewPlugin::onEntityChanged(const QString &pluginID, Entity *entity)
 {
   if (pluginID == IPlugin::pluginInstanceID || !entity)
     return;
@@ -124,7 +124,7 @@ void RulesViewPlugin::onEntityChanged(QString pluginID, Entity *entity)
   }
 }
 
-void RulesViewPlugin::onEntityRemoved(QString pluginID, QString entityID)
+void RulesViewPlugin::onEntityRemoved(const QString &pluginID, const QString &entityID)
 {
   Q_UNUSED(pluginID)
 
@@ -384,7 +384,7 @@ void RulesViewPlugin::sendAddEntitySignal(QTreeWidgetItem *parent, int type)
   }
 }
 
-void RulesViewPlugin::changeSelectedEntity(QString pluginID, void *param)
+void RulesViewPlugin::changeSelectedEntity(const QString &pluginID, void *param)
 {
   if (pluginID == IPlugin::pluginInstanceID || pluginID == "")
     return;

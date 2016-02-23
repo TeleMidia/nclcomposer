@@ -50,7 +50,7 @@ bool LanguageControl::removeProfile(LanguageType type)
   return true;
 }
 
-ILanguageProfile* LanguageControl::loadProfile(QString fileName)
+ILanguageProfile* LanguageControl::loadProfile(const QString &fileName)
 {
   ILanguageProfile *lProfile = NULL;
   QPluginLoader loader(fileName);
@@ -86,7 +86,7 @@ ILanguageProfile* LanguageControl::loadProfile(QString fileName)
   return lProfile;
 }
 
-void LanguageControl::loadProfiles(QString profilesDirPath)
+void LanguageControl::loadProfiles(const QString &profilesDirPath)
 {
   QDir profileDir = QDir(profilesDirPath);
 

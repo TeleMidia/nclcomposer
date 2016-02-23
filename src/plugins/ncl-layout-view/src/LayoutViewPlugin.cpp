@@ -153,7 +153,6 @@ void NCLLayoutViewPlugin::loadRegion(Entity* region)
     addRegionToView(region);
 
     QVector<Entity*> children = region->getChildren();
-
     foreach(Entity* child, children)
     {
       loadRegion(child);
@@ -224,14 +223,12 @@ void NCLLayoutViewPlugin::init()
       else if(key == "resolutionWidth")
       {
         resolutionWidth = value.toInt(&ok);
-        if(!ok)
-          resolutionWidth = 0;
+        if(!ok) resolutionWidth = 0;
       }
       else if(key == "resolutionHeight")
       {
         resolutionHeight = value.toInt(&ok);
-        if(!ok)
-          resolutionHeight = 0;
+        if(!ok) resolutionHeight = 0;
       }
     }
   }
@@ -250,10 +247,10 @@ void NCLLayoutViewPlugin::init()
     {
       addRegionBaseToView(current);
 
-      // TODO: In the future we should support saving individual resolutions
-      // foreach regionBase
-      view->getSelectedRegionBase()->
-          changeResolution(resolutionWidth, resolutionHeight);
+      // \todo In the future we should support saving individual
+      // resolutions foreach regionBase
+      if (view->getSelectedRegion())
+        view->getSelectedRegionBase()->changeResolution(resolutionWidth, resolutionHeight);
     }
     else if(current->getType() == "region")
     {
@@ -270,13 +267,13 @@ void NCLLayoutViewPlugin::init()
   view->setGridVisible(gridVisible);
 }
 
-void NCLLayoutViewPlugin::errorMessage(QString error)
+void NCLLayoutViewPlugin::errorMessage(const QString &error)
 {
   Q_UNUSED(error)
   //TODO: void QnlyComposerPlugin::errorMessage(QString error)
 }
 
-void NCLLayoutViewPlugin::onEntityAdded(QString pluginID, Entity *entity)
+void NCLLayoutViewPlugin::onEntityAdded(const QString &pluginID, Entity *entity)
 {
   Q_UNUSED(pluginID)
 
@@ -293,7 +290,7 @@ void NCLLayoutViewPlugin::onEntityAdded(QString pluginID, Entity *entity)
   }
 }
 
-void NCLLayoutViewPlugin::onEntityRemoved(QString pluginID, QString entityID)
+void NCLLayoutViewPlugin::onEntityRemoved(const QString &pluginID, const QString &entityID)
 {
   Q_UNUSED(pluginID)
 
@@ -310,7 +307,7 @@ void NCLLayoutViewPlugin::onEntityRemoved(QString pluginID, QString entityID)
   }
 }
 
-void NCLLayoutViewPlugin::onEntityChanged(QString pluginID, Entity *entity)
+void NCLLayoutViewPlugin::onEntityChanged(const QString &pluginID, Entity *entity)
 {
   Q_UNUSED(pluginID)
 
@@ -327,7 +324,7 @@ void NCLLayoutViewPlugin::onEntityChanged(QString pluginID, Entity *entity)
   }
 }
 
-void NCLLayoutViewPlugin::changeSelectedEntity (QString pluginID, void* param)
+void NCLLayoutViewPlugin::changeSelectedEntity (const QString &pluginID, void* param)
 {
   Q_UNUSED(pluginID)
 
@@ -366,9 +363,7 @@ void NCLLayoutViewPlugin::addRegionToView(Entity* entity)
         return; // abort addition
       }
 
-      QString regionUID;
-
-      regionUID = entityUID;
+      QString regionUID = entityUID;
 
       QString parentUID;
 
@@ -390,7 +385,6 @@ void NCLLayoutViewPlugin::addRegionToView(Entity* entity)
       else if (regionbases.contains(entity->getParentUniqueId()))
       {
         regionbaseUID = entity->getParentUniqueId();
-
       }
       else
       {
@@ -1101,7 +1095,7 @@ QMap <QString, QString> NCLLayoutViewPlugin::getRegionAttributes(Entity *region)
   for(i = lefts.size()-1; i >= 0; --i)
     left += lefts[i] * widths[i+1];
 
-  qDebug() << tops;
+  // qDebug() << tops;
   for(i = tops.size()-1; i >= 0; --i)
     top += tops[i] * heights[i+1];
 

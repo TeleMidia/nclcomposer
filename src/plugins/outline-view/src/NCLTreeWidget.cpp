@@ -257,6 +257,7 @@ void NCLTreeWidget::userAddNewElement()
     QMap<QString,QString> attr;
     if(element == "ncl")
       attr.insert("id", "myNCLID");
+
     emit elementAddedByUser (element, parentId, attr, false);
   }
 }

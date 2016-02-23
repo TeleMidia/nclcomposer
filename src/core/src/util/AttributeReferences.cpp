@@ -12,10 +12,10 @@
 namespace composer {
     namespace util {
 
-AttributeReferences::AttributeReferences ( QString element,
-                                           QString attr,
-                                           QString ref_element,
-                                           QString ref_attr,
+AttributeReferences::AttributeReferences ( const QString &element,
+                                           const QString &attr,
+                                           const QString &ref_element,
+                                           const QString &ref_attr,
                                            REFERENCE_SCOPE scope)
 {
   this->element = element;
@@ -27,11 +27,11 @@ AttributeReferences::AttributeReferences ( QString element,
   initializeStringToScope();
 }
 
-AttributeReferences::AttributeReferences ( QString element,
-                                           QString attr,
-                                           QString ref_element,
-                                           QString ref_attr,
-                                           QString scope)
+AttributeReferences::AttributeReferences ( const QString &element,
+                                           const QString &attr,
+                                           const QString &ref_element,
+                                           const QString &ref_attr,
+                                           const QString &scope)
 {
   this->element = element;
   this->attr = attr;

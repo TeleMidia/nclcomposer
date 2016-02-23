@@ -38,7 +38,7 @@ public:
   ProjectReader();
   virtual ~ProjectReader();
 
-  Project *readFile(QString location);
+  Project *readFile(const QString &location);
 
 protected:
   bool startElement(const QString &namespaceURI,

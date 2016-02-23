@@ -311,7 +311,7 @@ void NCLTextEditorMainWindow::createSearchBox()
 {
   _dockSearchBox = new QDockWidget("Search", this);
   _dockSearchBox->setVisible(false);
-  _dockSearchBox->setMaximumHeight(65);
+  _dockSearchBox->setMaximumHeight(100);//65 alterado
   _dockSearchBox->setObjectName(QString("dockSearchBox"));
   _dockSearchBox->setFeatures(QDockWidget::DockWidgetClosable );
 
@@ -321,6 +321,8 @@ void NCLTextEditorMainWindow::createSearchBox()
   QGridLayout *layout = new QGridLayout(&_searchBox);
   layout->addWidget(&_searchBoxText, 0, 0);
   // layout->addWidget(&doSearchButton, 0, 1);
+  layout->addWidget(&_replaceBoxText, 1, 0);
+  _replaceBoxText.setPlaceholderText(tr("Replace"));
   _searchBox.setLayout(layout);
   layout->setMargin(0);
 
@@ -332,14 +334,30 @@ void NCLTextEditorMainWindow::createSearchBox()
   previousButton->setFlat(true);
   connect(previousButton, SIGNAL(pressed()), SLOT(findPrevious()));
 
+  QPushButton *replaceButton = new QPushButton(QString("Replace"));
+  //replaceButton->setFlat(true);
+  connect(replaceButton, SIGNAL(pressed()),SLOT(replaceWord()));
+
+  QPushButton *replaceAndNextButton = new QPushButton(QString("Replace and Find"));
+  //replaceButton->setFlat(true);
+  connect(replaceAndNextButton, SIGNAL(pressed()),SLOT(replaceAndFind()));
+
+  QPushButton *replaceAll = new QPushButton(QString("Replace all"));
+  //replaceButton->setFlat(true);
+  connect(replaceAll, SIGNAL(pressed()),SLOT(replaceAll()));
+
   nextButton->setMaximumSize(16, 16);
   previousButton->setMaximumSize(16, 16);
   layout->addWidget(previousButton, 0, 1);
   layout->addWidget(nextButton, 0, 2);
+  layout->addWidget(replaceButton, 1, 2);
+  layout->addWidget(replaceAndNextButton, 1, 3);
+  layout->addWidget(replaceAll, 1, 4);
 
   //  connect(&doSearchButton, SIGNAL(pressed()), this, SLOT(findNext()));
-  connect(&_searchBoxText, SIGNAL(textChanged(QString)),
-          SLOT(findNext(QString)));
+  connect( &_searchBoxText,
+           SIGNAL(textChanged(const QString &)),
+           SLOT(findNext(const QString &)) );
 
   connect(&_searchBoxText, SIGNAL(returnPressed()), SLOT(findNext()));
 
@@ -653,9 +671,9 @@ void NCLTextEditorMainWindow::findNext()
   findNext(text);
 }
 
-void NCLTextEditorMainWindow::findNext(QString text)
+bool NCLTextEditorMainWindow::findNext(const QString &text)
 {
-  _textEdit->findFirst(text, true, false, true, true);
+  return _textEdit->findFirst(text, true, false, true, true);
 }
 
 void NCLTextEditorMainWindow::findPrevious()
@@ -664,7 +682,7 @@ void NCLTextEditorMainWindow::findPrevious()
   findPrevious(text);
 }
 
-void NCLTextEditorMainWindow::findPrevious(QString text)
+void NCLTextEditorMainWindow::findPrevious(const QString &text)
 {
   int line, index;
   _textEdit->getCursorPosition(&line, &index);
@@ -672,4 +690,44 @@ void NCLTextEditorMainWindow::findPrevious(QString text)
   if(index < 0) line--;
 
   _textEdit->findFirst(text, true, false, true, true, false, line, index);
+}
+
+void NCLTextEditorMainWindow::replaceWord()
+{
+  QString text = _replaceBoxText.text();
+  replaceWord(text);
+}
+
+
+void NCLTextEditorMainWindow::replaceWord(const QString &text)
+{
+  _textEdit->replace(text);
+}
+
+void NCLTextEditorMainWindow::replaceAndFind()
+{
+  QString textSearch = _searchBoxText.text();
+  QString textReplace = _replaceBoxText.text();
+  replaceAndFind(textSearch, textReplace);
+}
+
+void NCLTextEditorMainWindow::replaceAndFind(const QString &textSearch, const QString &textReplace)
+{
+  //todo:verify if highlightedtext == textsearch before replace
+  //_textEdit->
+  replaceWord(textReplace);
+  findNext(textSearch);
+}
+
+void NCLTextEditorMainWindow::replaceAll()
+{
+  QString textSearch = _searchBoxText.text();
+  QString textReplace = _replaceBoxText.text();
+  replaceAll(textSearch, textReplace);
+}
+
+void NCLTextEditorMainWindow::replaceAll(const QString &textSearch, const QString &textReplace)
+{
+  while(findNext(textSearch))
+    replaceWord(textReplace);
 }

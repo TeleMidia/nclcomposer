@@ -22,7 +22,7 @@ ProjectReader::~ProjectReader()
 
 }
 
-Project *ProjectReader::readFile(QString location)
+Project *ProjectReader::readFile(const QString &location)
 {
   QFile file(location);
   bool error = false;

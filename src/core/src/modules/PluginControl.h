@@ -69,7 +69,7 @@ public:
    *
    * \param pluginsDirPath
    */
-  void loadPlugins(QString pluginsDirPath);
+  void loadPlugins(const QString &pluginsDirPath);
 
   /*!
    * \brief
@@ -77,7 +77,7 @@ public:
    * \param fileName
    * \return IPluginFactory *
    */
-  IPluginFactory* loadPlugin(QString fileName);
+  IPluginFactory* loadPlugin(const QString &fileName);
 
   /*!
    * \brief

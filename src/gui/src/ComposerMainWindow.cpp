@@ -473,63 +473,66 @@ void ComposerMainWindow::addPluginWidget( IPluginFactory *fac,
   }
   QWidget *pW = plugin->getWidget();
 
-#ifdef USE_MDI
-  mdiArea->addSubWindow(pW);
-  pW->setWindowModified(true);
-  #if QT_VERSION < 0x050000
-    pW->setWindowTitle(projectId + " - " + fac->name());
-  #else
-    pW->setWindowTitle(projectId + " - " + fac->metadata().value("name").toString());
-  #endif
-  pW->show();
-  pW->setObjectName(fac->id());
-#else
-  ClickableQDockWidget *dock;
-#if QT_VERSION < 0x050000
-  dock = new ClickableQDockWidget(fac->name());
-#else
-  dock = new ClickableQDockWidget(fac->metadata().value("name").toString());
-#endif
-  dock->setProperty("project", location);
-
-  dock->setAllowedAreas(Qt::AllDockWidgetAreas);
-  dock->setFeatures(QDockWidget::AllDockWidgetFeatures);
-
-  connect(dock, SIGNAL(clicked()), pW, SLOT(setFocus()));
-  pW->setFocusPolicy(Qt::StrongFocus);
-
-  QFrame *borderFrame = new QFrame();
-  borderFrame->setFrameShape(QFrame::NoFrame);
-  borderFrame->setFrameShadow(QFrame::Plain);
-
-  QVBoxLayout *layoutBorderFrame = new QVBoxLayout();
-  layoutBorderFrame->setMargin(0);
-  layoutBorderFrame->addWidget(pW);
-  borderFrame->setLayout(layoutBorderFrame);
-
-  dock->setWidget(borderFrame);
-  dock->setObjectName(fac->id());
-
-  dock->setMinimumSize(0, 0);
-  tabProjects->setCurrentWidget(w);
-
-  if(firstDock.contains(location)) {
-    w->tabifyDockWidget(firstDock[location], dock);
-  }
-  else
+  if (pW != NULL)
   {
-    w->addDockWidget(Qt::LeftDockWidgetArea, dock);
-    firstDock[location] = dock;
+    #ifdef USE_MDI
+      mdiArea->addSubWindow(pW);
+      pW->setWindowModified(true);
+      #if QT_VERSION < 0x050000
+        pW->setWindowTitle(projectId + " - " + fac->name());
+      #else
+        pW->setWindowTitle(projectId + " - " + fac->metadata().value("name").toString());
+      #endif
+      pW->show();
+      pW->setObjectName(fac->id());
+    #else
+      ClickableQDockWidget *dock;
+    #if QT_VERSION < 0x050000
+      dock = new ClickableQDockWidget(fac->name());
+    #else
+      dock = new ClickableQDockWidget(fac->metadata().value("name").toString());
+    #endif
+      dock->setProperty("project", location);
+
+      dock->setAllowedAreas(Qt::AllDockWidgetAreas);
+      dock->setFeatures(QDockWidget::AllDockWidgetFeatures);
+
+      connect(dock, SIGNAL(clicked()), pW, SLOT(setFocus()));
+      pW->setFocusPolicy(Qt::StrongFocus);
+
+      QFrame *borderFrame = new QFrame();
+      borderFrame->setFrameShape(QFrame::NoFrame);
+      borderFrame->setFrameShadow(QFrame::Plain);
+
+      QVBoxLayout *layoutBorderFrame = new QVBoxLayout();
+      layoutBorderFrame->setMargin(0);
+      layoutBorderFrame->addWidget(pW);
+      borderFrame->setLayout(layoutBorderFrame);
+
+      dock->setWidget(borderFrame);
+      dock->setObjectName(fac->id());
+
+      dock->setMinimumSize(0, 0);
+      tabProjects->setCurrentWidget(w);
+
+      if(firstDock.contains(location)) {
+        w->tabifyDockWidget(firstDock[location], dock);
+      }
+      else
+      {
+        w->addDockWidget(Qt::LeftDockWidgetArea, dock);
+        firstDock[location] = dock;
+      }
+
+      allDocksMutex.lock();
+      allDocks.insert(0, dock);
+      allDocksMutex.unlock();
+
+      connect(dock, SIGNAL(refreshPressed()), plugin, SLOT(updateFromModel()));
+
+      // dock->installEventFilter(this);
+      updateDockStyle(dock, false);
   }
-
-  allDocksMutex.lock();
-  allDocks.insert(0, dock);
-  allDocksMutex.unlock();
-
-  connect(dock, SIGNAL(refreshPressed()), plugin, SLOT(updateFromModel()));
-
-  // dock->installEventFilter(this);
-  updateDockStyle(dock, false);
 #endif
 }
 
@@ -1244,7 +1247,8 @@ void ComposerMainWindow::saveAsCurrentProject()
         destFileName  = destFileName + ".cpr";
 
       /* Move the location of the current project to destFileName */
-      ProjectControl::getInstance()->moveProject(location, destFileName);
+      if (location != destFileName)
+        ProjectControl::getInstance()->moveProject(location, destFileName);
 
       /* Get the project */
       Project *project =

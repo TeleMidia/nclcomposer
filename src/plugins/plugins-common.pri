@@ -62,19 +62,17 @@ else:win32 {
 
 INCLUDEPATH += . \
                $$PWD/../core/src \
-               $$PWD/ncl-profile/ \
+               $$PWD/ncl-profile/
 
 LIBS += -L$$PWD/../../bin \
         -L$$PWD/../../bin/extensions
 
- 
 macx {
-  LIBS += -F/Library/Frameworks \
-          -F$$PWD/../../bin -framework ComposerCore
+  LIBS += -F/Library/Frameworks -framework ComposerCore
 
-  LIBS += -L$$PWD/../../bin \
-          -L$$PWD/../../bin/extensions \
-          $$quote(-L/Library/Application Support/Composer/Extensions)
+  link_ncl_profile {
+    LIBS += -L$$quote(/Library/Application Support/Composer/Extensions) -lNCLLanguageProfile
+  }
 
   INCLUDEPATH +=  /Library/Frameworks/ComposerCore.framework/ \
                   /Library/Frameworks/ComposerCore.framework/core \

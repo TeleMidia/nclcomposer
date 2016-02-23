@@ -20,7 +20,8 @@
 #include "modules/LanguageControl.h"
 
 OutlineViewPlugin::OutlineViewPlugin() :
-  _window(new NCLTreeWidget(0)), _windowBuffering(new NCLTreeWidget(0))
+  _window(new NCLTreeWidget(0)),
+  _windowBuffering(new NCLTreeWidget(0))
 {
   project = NULL;
 
@@ -61,7 +62,7 @@ QWidget* OutlineViewPlugin::getWidget()
   return _window;
 }
 
-void OutlineViewPlugin::onEntityAdded(QString pluginID, Entity *entity)
+void OutlineViewPlugin::onEntityAdded(const QString &pluginID, Entity *entity)
 {
   Q_UNUSED(pluginID)
 
@@ -128,12 +129,12 @@ void OutlineViewPlugin::onEntityAdded(QString pluginID, Entity *entity)
   // emit sendBroadcastMessage("askAllValidationMessages", NULL);
 }
 
-void OutlineViewPlugin::errorMessage(QString error)
+void OutlineViewPlugin::errorMessage(const QString &error)
 {
   qDebug() << "OutlineViewPlugin::onEntityAddError(" << error << ")";
 }
 
-void OutlineViewPlugin::onEntityChanged(QString pluginID, Entity * entity)
+void OutlineViewPlugin::onEntityChanged(const QString &pluginID, Entity * entity)
 {
   Q_UNUSED(pluginID)
 
@@ -168,7 +169,7 @@ void OutlineViewPlugin::onEntityChanged(QString pluginID, Entity * entity)
   // emit sendBroadcastMessage("askAllValidationMessages", NULL);
 }
 
-void OutlineViewPlugin::onEntityRemoved(QString pluginID, QString entityID)
+void OutlineViewPlugin::onEntityRemoved(const QString &pluginID, const QString &entityID)
 {
   if(_isSyncingFromTextual)
     return;
@@ -207,6 +208,7 @@ void OutlineViewPlugin::elementAddedByUser( QString type,
   if(parentId == "")
     parentId = project->getUniqueId();
 
+  qWarning() << "OutlineViewPlugin::elementAddedByUser calling addEntity";
   emit addEntity(type, parentId, atts, force);
 }
 

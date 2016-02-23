@@ -83,13 +83,13 @@ public:
   */
   bool hasAttribute(const QString &name);
 
-  QString getUniqueId();
+  QString getUniqueId() const;
 
-  QString getType();
+  QString getType() const;
 
-  Entity* getParent();
+  Entity* getParent() const;
 
-  QString getParentUniqueId();
+  QString getParentUniqueId() const;
   /*!
    * \brief Tell if the children should be deleted when this entity is deleted
    *          through destructor.
@@ -98,7 +98,8 @@ public:
    */
   void setDeleteChildren(bool mustDelete);
 
-  QVector <Entity *> getChildren();
+  QVector <Entity *> getChildren() const;
+
   /*!
    * \brief Convert the current Entity to a XML String.
    *
@@ -111,7 +112,7 @@ public:
    *
    * All the content of the entity will be cloned, including its uniqueId.
    */
-  Entity *cloneEntity();
+  Entity *cloneEntity() const;
 
 protected:
   /*!

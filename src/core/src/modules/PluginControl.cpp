@@ -68,7 +68,7 @@ PluginControl::~PluginControl()
   messageControls.clear();
 }
 
-IPluginFactory* PluginControl::loadPlugin(QString fileName)
+IPluginFactory* PluginControl::loadPlugin(const QString &fileName)
 {
   IPluginFactory *pluginFactory = NULL;
   QPluginLoader loader(fileName);
@@ -116,7 +116,7 @@ IPluginFactory* PluginControl::loadPlugin(QString fileName)
   return loader.unload();
 }*/
 
-void PluginControl::loadPlugins(QString pluginsDirPath)
+void PluginControl::loadPlugins(const QString &pluginsDirPath)
 {
   QDir pluginsDir = QDir(pluginsDirPath);
   pluginsDir.setFilter(QDir::Files | QDir::NoSymLinks);
@@ -202,7 +202,7 @@ void PluginControl::launchNewPlugin(IPlugin *plugin, MessageControl *mControl)
   /*
     \deprecated
 
-    Today, the message control is reponsible to call this slots directly.
+    Now, the message control is reponsible for calling these slots directly.
 
     connect(mControl,SIGNAL(entityAdded(QString, Entity*)),
             plugin, SLOT(onEntityAdded(QString, Entity*)));
@@ -214,33 +214,33 @@ void PluginControl::launchNewPlugin(IPlugin *plugin, MessageControl *mControl)
 
   /* Connect signals from the plugin to slots of the core */
   connect(plugin,
-          SIGNAL(addEntity(QString, QString, QMap<QString,QString>&, bool)),
+          SIGNAL(addEntity(const QString&, const QString&, const QMap<QString,QString>&, bool)),
           mControl,
-          SLOT(onAddEntity(QString, QString, QMap<QString,QString>&, bool)),
+          SLOT(onAddEntity(const QString&, const QString&, const QMap<QString,QString>&, bool)),
           Qt::DirectConnection);
 
   connect(plugin,
-          SIGNAL(addEntity(QString,QString,Data::Format,bool)),
+          SIGNAL(addEntity(const QString&, const QString&, Data::Format,bool)),
           mControl,
-          SLOT(onAddEntity(QString,QString,Data::Format,bool)),
+          SLOT(onAddEntity(const QString&, const QString&, Data::Format,bool)),
           Qt::DirectConnection);
 
   connect(plugin,
-          SIGNAL(setAttributes(Entity*, QMap<QString,QString>, bool)),
+          SIGNAL(setAttributes(Entity*, const QMap<QString,QString>&, bool)),
           mControl,
-          SLOT(onEditEntity(Entity*, QMap<QString,QString>, bool)),
+          SLOT(onEditEntity(Entity*, const QMap<QString,QString>&, bool)),
           Qt::DirectConnection);
 
   connect(plugin,
-          SIGNAL(removeEntity(Entity*,bool)),
+          SIGNAL(removeEntity(Entity*, bool)),
           mControl,
           SLOT(onRemoveEntity(Entity*,bool)),
           Qt::DirectConnection);
 
   connect(plugin,
-          SIGNAL(setListenFilter(QStringList)),
+          SIGNAL(setListenFilter(const QStringList&)),
           mControl,
-          SLOT(setListenFilter(QStringList)),
+          SLOT(setListenFilter(const QStringList&)),
           Qt::DirectConnection);
 
   connect(plugin,
@@ -255,8 +255,8 @@ void PluginControl::launchNewPlugin(IPlugin *plugin, MessageControl *mControl)
           Qt::DirectConnection);
 
   /* setPluginData */
-  connect(plugin, SIGNAL(setPluginData(QByteArray)),
-          mControl, SLOT(setPluginData(QByteArray)),
+  connect(plugin, SIGNAL(setPluginData(const QByteArray&)),
+          mControl, SLOT(setPluginData(const QByteArray&)),
           Qt::DirectConnection);
 }
 
@@ -268,8 +268,8 @@ void PluginControl::connectParser(IDocumentParser *parser,
           mControl,
           SLOT(onAddEntity(QString, QString, QMap<QString,QString>&, bool)));
 
-  connect(mControl,SIGNAL(entityAdded(QString, Entity*)),
-          parser, SLOT(onEntityAdded(QString, Entity*)));
+  connect(mControl,SIGNAL(entityAdded(const QString&, Entity*)),
+          parser, SLOT(onEntityAdded(const QString&, Entity*)));
 }
 
 QList<IPluginFactory*> PluginControl::getLoadedPlugins()
@@ -348,6 +348,7 @@ void PluginControl::sendBroadcastMessage(const char* slot, void *obj)
                     Q_ARG(void *, obj));
     }
   }
+
 }
 
 void PluginControl::savePluginsData(Project *project)

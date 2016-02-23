@@ -1,4 +1,4 @@
-site_name: NCL Composer User Manual
+site_name: NCL Composer Documentation
 pages:
 - [index.md, 'Prefácio']
 - [02-introduction.md, 'Manual', 'Introdução']
@@ -17,8 +17,7 @@ pages:
 #- [relnotes/0.1.9.md, 'Release Notes', 'v0.1.9']
 #- [relnotes/0.2.0.md, 'Release Notes', 'v0.2.0']
 
-
 docs_dir: pt-br
 
-#theme: flatly
+#theme: cosmo
 

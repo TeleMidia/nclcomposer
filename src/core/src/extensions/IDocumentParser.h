@@ -59,7 +59,7 @@ public slots:
    *
    * \param error The description of the error.
    */
-  virtual void onEntityAddError(QString error) = 0;
+  virtual void onEntityAddError(const QString &error) = 0;
 
   /*!
    * \brief This slot is called after the addEntity has success. This
@@ -68,7 +68,7 @@ public slots:
    * \param uniqueID the unique id of the entity in the model.
    * \param entity the pointer to the entity.
    */
-  virtual void onEntityAdded(QString uniqueID, Entity *entity) = 0;
+  virtual void onEntityAdded(const QString &uniqueID, Entity *entity) = 0;
 
 signals:
   /*!
@@ -81,8 +81,10 @@ signals:
    * \param force true if the entity must be added even if this cause an error
    *  in the model.
    */
-  void addEntity( QString type, QString parentEntityId,
-                  QMap<QString,QString>& atts, bool force);
+  void addEntity( const QString &type,
+                  const QString &parentEntityId,
+                  const QMap<QString,QString>& atts,
+                  bool force );
 };
 } } //end namespace
 

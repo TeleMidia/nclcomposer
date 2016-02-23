@@ -42,8 +42,8 @@ public:
   bool serialize();
 
 public slots:
-    void onEntityAddError(QString error);
-    void onEntityAdded(QString ID, Entity *entity);
+    void onEntityAddError(const QString &error);
+    void onEntityAdded(const QString &ID, Entity *entity);
 
 signals:
     void parseFinished();

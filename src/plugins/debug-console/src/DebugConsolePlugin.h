@@ -49,12 +49,12 @@ public:
   bool saveSubsession();
 
 public slots:
-  void onEntityAdded(QString ID, Entity *);
-  void onEntityChanged(QString ID, Entity *);
+  void onEntityAdded(const QString &, Entity *);
+  void onEntityChanged(const QString &, Entity *);
   /*void onEntityAboutToRemove(Entity *);*/
-  void onEntityRemoved(QString ID, QString entityID);
+  void onEntityRemoved(const QString &, const QString &);
 
-  void errorMessage(QString error);
+  void errorMessage(const QString &);
 
   void sendToAll();
 };

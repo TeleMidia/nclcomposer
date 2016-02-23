@@ -38,7 +38,7 @@ ProjectControl::~ProjectControl()
   }
 }
 
-bool ProjectControl::closeProject(QString location)
+bool ProjectControl::closeProject(const QString &location)
 {
   if (!openProjects.contains(location)) return false;
 
@@ -57,7 +57,7 @@ bool ProjectControl::closeProject(QString location)
   return true;
 }
 
-bool ProjectControl::launchProject(QString location)
+bool ProjectControl::launchProject(const QString &location)
 {
   if (openProjects.contains(location))
   {
@@ -126,8 +126,8 @@ bool ProjectControl::launchProject(QString location)
   return true;
 }
 
-void ProjectControl::importFromDocument( QString docLocation,
-                                         QString projLocation)
+void ProjectControl::importFromDocument( const QString &docLocation,
+                                         const QString &projLocation)
 {
   if (openProjects.contains(projLocation))
   {
@@ -203,7 +203,7 @@ void ProjectControl::importFromDocument( QString docLocation,
      ->setCurrentProjectAsDirty(); */
 }
 
-void ProjectControl::saveProject(QString location)
+void ProjectControl::saveProject(const QString &location)
 {
   Project *project = openProjects.value(location);
   QFile fout(location);
@@ -228,7 +228,7 @@ void ProjectControl::saveProject(QString location)
   project->setDirty(false);
 }
 
-void ProjectControl::moveProject(QString location, QString dest, bool saveDest)
+void ProjectControl::moveProject(const QString &location, const QString &dest, bool saveDest)
 {
   QFileInfo fileInfo(dest);
   if(fileInfo.absoluteDir().exists())
@@ -252,7 +252,7 @@ void ProjectControl::moveProject(QString location, QString dest, bool saveDest)
                << " to " << dest;
 }
 
-void ProjectControl::saveTemporaryProject(QString location)
+void ProjectControl::saveTemporaryProject(const QString &location)
 {
   Project *project = openProjects.value(location);
   QFile fout(location+"~");
@@ -277,7 +277,7 @@ void ProjectControl::saveTemporaryProject(QString location)
 //  project->setDirty(false);
 }
 
-Project *ProjectControl::getOpenProject(QString location)
+Project *ProjectControl::getOpenProject(const QString &location)
 {
   if(openProjects.contains(location))
     return openProjects.value(location);
@@ -296,4 +296,3 @@ void ProjectControl::projectIsDirty(bool isDirty)
 }
 
 } }//end namespace
-

@@ -159,7 +159,6 @@ void PreferencesDialog::applyCurrentValues()
 
 /* void PreferencesDialog::show()
 {
-  qDebug() << "eu aqui1";
   QDialog::show();
   selectFirst();
 }

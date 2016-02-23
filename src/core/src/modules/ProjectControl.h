@@ -47,7 +47,7 @@ public:
    * \param location
    * \return
    */
-  Project *getOpenProject(QString location);
+  Project *getOpenProject(const QString &location);
 
 public slots:
   /*!
@@ -55,13 +55,13 @@ public slots:
    * \param location
    * \return
    */
-  bool closeProject(QString location);
+  bool closeProject(const QString &location);
 
   /*!
    * \brief saveProject
    * \param location
    */
-  void saveProject(QString location);
+  void saveProject(const QString &location);
 
   /*!
    * \brief moveProject
@@ -70,14 +70,14 @@ public slots:
    * \param dest
    * \param saveDesc
    */
-  void moveProject(QString location, QString dest, bool saveDesc = false);
+  void moveProject(const QString &location, const QString &dest, bool saveDesc = false);
 
   /*!
    * \brief saveTemporaryProject
    *
    * \param location
    */
-  void saveTemporaryProject(QString location);
+  void saveTemporaryProject(const QString &location);
 
   /*!
    * \brief launchProject
@@ -85,7 +85,7 @@ public slots:
    * \param location
    * \return
    */
-  bool launchProject(QString location);
+  bool launchProject(const QString &location);
 
 
   /*!
@@ -94,7 +94,7 @@ public slots:
    * \param docLocation
    * \param projLocation
    */
-  void importFromDocument(QString docLocation, QString projLocation);
+  void importFromDocument(const QString &docLocation, const QString &projLocation);
 
 signals:
   /*!
@@ -102,31 +102,31 @@ signals:
    *
    * \param document
    */
-  void startOpenProject(QString document);
+  void startOpenProject(const QString &document);
 
   /*!
    * \brief endOpenProject
    *
    * \param document
    */
-  void endOpenProject(QString document);
+  void endOpenProject(const QString &document);
 
   /*!
    * \brief projectAlreadyOpen
    */
-  void projectAlreadyOpen(QString);
+  void projectAlreadyOpen(const QString&);
 
   /*!
    * \brief notifyError
    *
    * \param strError
    */
-  void notifyError(QString strError);
+  void notifyError(const QString &strError);
 
   /*!
    * \brief dirtyProject
    */
-  void dirtyProject(QString, bool);
+  void dirtyProject(const QString&, bool);
 
 private:
   /*!

@@ -11,6 +11,7 @@
 #define IPLUGIN_H
 
 #include <QObject>
+#include <QEvent>
 #include <QMutexLocker>
 #include <QMutex>
 
@@ -45,7 +46,7 @@ class COMPOSERCORESHARED_EXPORT IPlugin : public QObject
   Q_OBJECT
 
 public:
-  inline QString getPluginInstanceID()
+  inline QString getPluginInstanceID() const
   {
     return this->pluginInstanceID;
   }
@@ -143,7 +144,7 @@ public slots:
    * This call is invoked by the core when a new Entity (from that
    * particular types the plugin is listening) is added in the model.
    */
-  virtual void onEntityAdded(QString pluginID, Entity *entity) /*= 0*/
+  virtual void onEntityAdded(const QString &pluginID, Entity *entity) /*= 0*/
   {
     Q_UNUSED(pluginID);
     Q_UNUSED(entity);
@@ -156,7 +157,7 @@ public slots:
    *     the entity.
    * \param entity The entity that was modified.
    */
-  virtual void onEntityChanged(QString pluginID, Entity *entity) /*= 0*/
+  virtual void onEntityChanged(const QString &pluginID, Entity *entity) /*= 0*/
   {
     Q_UNUSED(pluginID);
     Q_UNUSED(entity);
@@ -176,7 +177,7 @@ public slots:
    *     the entity.
    * \param entityID the entity's identifier that was removed.
    */
-  virtual void onEntityRemoved( QString pluginID, QString entityID) /*= 0*/
+  virtual void onEntityRemoved(const QString &pluginID, const QString &entityID) /*= 0*/
   {
     Q_UNUSED(pluginID);
     Q_UNUSED(entityID);
@@ -188,7 +189,7 @@ public slots:
    *
    * \param error A description of the error.
    */
-  virtual void errorMessage(QString error) /*= 0*/
+  virtual void errorMessage(const QString &error) /*= 0*/
   {
     Q_UNUSED(error);
   }
@@ -202,8 +203,10 @@ signals:
    * \param atts
    * \param force
    */
-  void addEntity( QString type, QString parentEntityId,
-                  QMap<QString,QString>& atts, bool force );
+  void addEntity( const QString &type,
+                  const QString &parentEntityId,
+                  const QMap<QString,QString>& atts,
+                  bool force );
 
   /*!
    * \brief This message allows to add an Entity (and its children, recursively)
@@ -214,8 +217,8 @@ signals:
    * \param force
    */
   // \fixme Maybe, this message should be addContent
-  void addEntity( QString entity_content,
-                  QString parentId,
+  void addEntity( const QString &entity_content,
+                  const QString &parentId,
                   Data::Format format,
                   bool force);
 
@@ -226,7 +229,8 @@ signals:
    * \param atts
    * \param force
    */
-  void setAttributes( Entity *entity, QMap<QString,QString> atts,
+  void setAttributes( Entity *entity,
+                      const QMap<QString,QString> &atts,
                       bool force );
   /*!
    * \brief This message can be used to ask the core to remove an Entity.
@@ -235,7 +239,7 @@ signals:
    * \param force It should be true if the user want to remove that entity even
    *  the internal model will not be consistent.
    */
-  void removeEntity(Entity * entity, bool force);
+  void removeEntity(Entity *entity, bool force);
 
   /*!
    * \brief Say the core that the plugin is interested in just the entities of
@@ -256,7 +260,7 @@ signals:
    * be an public slot like:
    *      void msg(QString pluginID, void *obj)
    *
-   * The core will call this msg method to each publin that implements it when
+   * The core will call this msg method to each plug-in that implements it when
    * sendBroadcastMethod is called.
    */
   void sendBroadcastMessage(const char* msg, void *obj);
@@ -268,9 +272,9 @@ signals:
    * Important: When a plugin send this message, the previous plug-in data is
    *  overwrited.
    *
-   * \param data A byte array contatining the data that plugin wants to save.
+   * \param data A byte array containing the data that plugin wants to save.
    */
-  void setPluginData(QByteArray data);
+  void setPluginData(const QByteArray &data);
 
   /*!
    * \brief TODO

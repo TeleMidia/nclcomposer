@@ -12,6 +12,11 @@ TARGET = NCLLanguageProfile
 
 DEFINES += NCLLANGUAGEPROFILE_LIBRARY
 
+mac {
+    EXTENSIONS_DIR = $$quote(/Library/Application Support/Composer/Extensions)
+    QMAKE_LFLAGS += -Wl,-install_name,'\'$$EXTENSIONS_DIR/lib'$$TARGET'.dylib\''
+}
+
 SOURCES += \
     NCLLanguageProfile.cpp \
     NCLDocumentParser.cpp \

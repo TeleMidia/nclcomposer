@@ -66,7 +66,7 @@ public:
 #endif
 
 signals:
-  void elementAdded(QString, QString, QMap <QString, QString>&, bool);
+  void elementAdded(const QString&, const QString&, const QMap <QString, QString>&, bool);
   void focusLosted();
 
 protected:
@@ -117,6 +117,7 @@ private:
   QPushButton _doSearchButton;
   QDockWidget *_dockSearchBox;
   SearchLineEdit _searchBoxText;
+  QLineEdit _replaceBoxText;
 
   /** VIEWS **/
   /** Outline View */
@@ -149,10 +150,17 @@ private slots:
 
   void showSearchBox();
   void hideSearchBox();
+
   void findNext();
-  void findNext(QString text);
+  bool findNext(const QString &text);
   void findPrevious();
-  void findPrevious(QString text);
+  void findPrevious(const QString &text);
+  void replaceWord();
+  void replaceWord(const QString &text);
+  void replaceAndFind();
+  void replaceAndFind(const QString &textSearch, const QString &textReplace);
+  void replaceAll();
+  void replaceAll(const QString &textSearch, const QString &textReplace);
 };
 
 #endif
