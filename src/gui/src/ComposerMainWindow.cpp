@@ -27,6 +27,10 @@
 #include <QMdiArea>
 #endif
 
+#ifdef FV_GUI
+#include "fvupdater.h"
+#endif
+
 #define SHOW_PROFILES 1
 
 namespace composer {
@@ -707,6 +711,13 @@ void ComposerMainWindow::createMenus()
 {
 #ifdef Q_OS_MAC
   ui->menubar->setNativeMenuBar(true);
+#endif
+
+#ifdef FV_GUI
+  QAction *action_checkForUpdate = new QAction("Check for updates",this);
+  connect (action_checkForUpdate,SIGNAL(triggered()),FvUpdater::sharedUpdater(),SLOT(CheckForUpdatesNotSilent()));
+  ui->menu_Help->addAction(action_checkForUpdate);
+
 #endif
 
   ui->menu_Edit->addAction(editPreferencesAct);
