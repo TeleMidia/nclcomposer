@@ -22,23 +22,24 @@
 #include "ImageView.h"
 #include "GifView.h"
 #include "TextView.h"
-#include "HypertextView.h"
+// #include "HypertextView.h"
 #include "NCLView.h"
 #include "LuaView.h"
 #include "VideoPlayer.h"
 
-#include <composer/core/extensions/IPlugin.h>
+#include <core/extensions/IPlugin.h>
 
-#include <VideoPlayer>
-#include <MediaObject>
 #include <QPushButton>
 #include <QLabel>
 #include <QWidget>
 #include <QMovie>
 #include <QFileInfo>
-#include <QtWebKit/QWebView>
 #include <QTextEdit>
 #include <QMainWindow>
+
+#include <VideoPlayer>
+#include <MediaObject>
+#include <QtWebKit/QWebView>
 
 using namespace composer::core;
 
@@ -98,7 +99,7 @@ private:
   ImageView *imageview;
   GifView *picgifview;
   TextView *txtview;
-  HypertextView *hyperview;
+  // HypertextView *hyperview;
   NCLView *ncldocview;
   LuaView *luaobjview;
   VideoPlayer *videoplay;

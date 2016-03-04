@@ -74,7 +74,7 @@ AudioPlayer::AudioPlayer(const QString &filename)
   mediaobject->setCurrentSource(Phonon::MediaSource(filename));
   Audioutput =new Phonon::AudioOutput(Phonon::MusicCategory, this);
   audioOutputPath = Phonon::createPath(mediaobject, Audioutput);
-  Audioutput->setVolume(0.003);
+  // Audioutput->setVolume(0.003);
 
   volumeslider= new Phonon::VolumeSlider();
   volumeslider->setAudioOutput(Audioutput);
@@ -137,11 +137,3 @@ void AudioPlayer::stop()
 {
   mediaobject->stop();
 }
-
-
-
-
-
-
-
-

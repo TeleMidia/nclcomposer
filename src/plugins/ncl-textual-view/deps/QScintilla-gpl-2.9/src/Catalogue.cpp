@@ -132,7 +132,9 @@ int Scintilla_LinkLexers() {
 	LINK_LEXER(lmLiterateHaskell);
 	LINK_LEXER(lmLot);
 	LINK_LEXER(lmLout);
+*/
 	LINK_LEXER(lmLua);
+/*
 	LINK_LEXER(lmMagikSF);
 	LINK_LEXER(lmMake);
 	LINK_LEXER(lmMarkdown);

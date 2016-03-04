@@ -32,7 +32,7 @@
 
 #include "AudioPlayer.h"
 #include "GifView.h"
-#include "HypertextView.h"
+//#include "HypertextView.h"
 #include "NCLView.h"
 #include "VideoPlayer.h"
 
@@ -132,13 +132,14 @@ void MediaPreviewPlugin::changeSelectedEntity(QString plugID, void *param)
           }
 
           /*Objeto de mídia do tipo HYPERTEXT*/
+          /*
           else if (attrSrc.startsWith ("http")
                    || attrSrc.endsWith(".html")
                    || attrSrc.endsWith(".htm")
                    || attrSrc.endsWith(".xhtml"))
           {
             type = "hypertext";
-          }
+          } */
 
           /*Objeto de mídia do tipo TEXTO*/
           else if (attrSrc.endsWith(".txt"))
@@ -277,9 +278,9 @@ void MediaPreviewPlugin::changeSelectedEntity(QString plugID, void *param)
           /*hypertext*/
           else if(type=="hypertext")
           {
-            hyperview = new HypertextView(attrSrc);
-            hyperview->setParent(windowg);
-            windowg->setCentralWidget(hyperview);
+            // hyperview = new HypertextView(attrSrc);
+            // hyperview->setParent(windowg);
+            // windowg->setCentralWidget(hyperview);
           }
           /*XML*/
           else if(type=="xml")
@@ -289,7 +290,7 @@ void MediaPreviewPlugin::changeSelectedEntity(QString plugID, void *param)
           /*NCL DOCUMENTS */
           else if(type=="ncl")
           {
-            ncldocview =new NCLView(attrSrc);
+            ncldocview = new NCLView(attrSrc);
             ncldocview->setParent(windowg);
             windowg->setCentralWidget(ncldocview);
           }

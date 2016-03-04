@@ -30,17 +30,15 @@ LuaView::LuaView(const QString &filename)
 
   setMarginLineNumbers(1, true);
   setMarginWidth(1, 25);
-  // setMarginsBackgroundColor(MARGINS_BACKGROUND_COLOR);
+  //setMarginsBackgroundColor(MARGINS_BACKGROUND_COLOR);
 
   setCaretWidth(20);
   setCaretLineBackgroundColor(QColor("#e6fff0"));
   setCaretLineVisible(true);
 
   setLexer(lexerLua);
-
   loadFile(filename);
 }
-
 
 void LuaView::loadFile(const QString &fileName)
 {

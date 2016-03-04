@@ -25,7 +25,7 @@ SOURCES += \
     src/ImageView.cpp \
     src/GifView.cpp \
     src/TextView.cpp \
-    src/HypertextView.cpp \
+    # src/HypertextView.cpp \
     src/NCLView.cpp \
     src/LuaView.cpp \
     src/MediaPreviewPlugin.cpp \
@@ -38,7 +38,7 @@ HEADERS += \
     src/ImageView.h \
     src/GifView.h \
     src/TextView.h \
-    src/HypertextView.h \
+    # src/HypertextView.h \
     src/NCLView.h \
     src/LuaView.h \
     src/VideoPlayer.h

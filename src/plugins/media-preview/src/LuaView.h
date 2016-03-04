@@ -24,7 +24,7 @@
 /*!
  \brief Handles the creation of NCL objects.
 */
-class LuaView :public QsciScintilla
+class LuaView : public QsciScintilla
 {
   Q_OBJECT
 public:

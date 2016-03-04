@@ -72,7 +72,7 @@ public slots:
    * \brief setVolume
    * \param volume
    */
-  void setVolume(int volume);
+  // void setVolume(int volume);
 
 private:
   AudioPlayer *mvideoWidget;

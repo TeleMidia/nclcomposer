@@ -56,7 +56,7 @@ VideoPlayer::VideoPlayer(const QString &filename): ui(new Ui::VideoPlayer)
 
   audioOutput = new Phonon::AudioOutput(Phonon::VideoCategory, this);
   Phonon::createPath(mediaObject, audioOutput);
-  audioOutput->setVolume(0.003);
+  // audioOutput->setVolume(0.003);
 
   ui->volumeSlider->setAudioOutput(audioOutput);
   ui->volumeSlider->setSingleStep(0.002);

@@ -134,7 +134,7 @@ INSTALLS += header trans qsci target
 
 greaterThan(QT_MAJOR_VERSION, 3) {
     features.path = $$[QSCI_INSTALL_DATA]/mkspecs/features
-    features.files = $$PWD/features/qscintilla2.prf
+    features.files = $${PWD}/features/qscintilla2.prf
     INSTALLS += features
 }
 
@@ -196,7 +196,8 @@ else {
 		./Qsci/qscilexerpython.h \
 		./Qsci/qscilexerjavascript.h \
 		./Qsci/qscilexerhtml.h \
-		./Qsci/qscilexerxml.h
+                ./Qsci/qscilexerxml.h \
+                ./Qsci/qscilexerlua.h \
 }
 
 HEADERS += \
@@ -317,7 +318,8 @@ else {
 		qscilexerpython.cpp \
 		qscilexerjavascript.cpp \
 		qscilexerhtml.cpp \
-		qscilexerxml.cpp
+                qscilexerxml.cpp \
+                qscilexerlua.cpp
 }
 
 SOURCES += \
@@ -325,8 +327,8 @@ SOURCES += \
 	qsciprinter.cpp \
 	qscistyle.cpp \
 	qscistyledtext.cpp \
-    MacPasteboardMime.cpp \
-    InputMethod.cpp \
+	MacPasteboardMime.cpp \
+	InputMethod.cpp \
 	SciClasses.cpp \
 	ListBoxQt.cpp \
 	PlatQt.cpp \
@@ -379,8 +381,8 @@ contains(ALL_LEXERS, true) {
 	../lexers/LexKVIrc.cpp \
 	../lexers/LexLaTex.cpp \
 	../lexers/LexLisp.cpp \
-	../lexers/LexLout.cpp \
-	../lexers/LexLua.cpp \
+        ../lexers/LexLout.cpp \
+        ../lexers/LexLua.cpp \
 	../lexers/LexMagik.cpp \
 	../lexers/LexMarkdown.cpp \
 	../lexers/LexMatlab.cpp \
@@ -434,9 +436,10 @@ contains(ALL_LEXERS, true) {
 }
 else {
 	SOURCES += \
-		../lexers/LexPython.cpp \
-		../lexers/LexCPP.cpp \
-		../lexers/LexHTML.cpp
+	../lexers/LexPython.cpp \
+	../lexers/LexCPP.cpp \
+	../lexers/LexHTML.cpp \
+	../lexers/LexLua.cpp
 }
 
 SOURCES += \
@@ -486,4 +489,4 @@ TRANSLATIONS = \
 	qscintilla_fr.ts \
 	qscintilla_pt_br.ts
 
-DESTDIR  = $$PWD/../../../../../../bin/extensions/
+DESTDIR  = $${PWD}/../../../../../../bin/extensions/
