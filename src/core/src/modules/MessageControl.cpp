@@ -307,7 +307,7 @@ void MessageControl::onEditEntity( Entity *entity,
 
     try
     {
-      // qUndoStack->push(new EditCommand(project, entity, atts));
+      qUndoStack->push(new EditCommand(project, entity, atts));
 
       /*! \todo Call validator to check */
       // entity->setAtrributes(atts); //do it!
@@ -332,8 +332,6 @@ void MessageControl::onEditEntity( Entity *entity,
 void MessageControl::onRemoveEntity(Entity *entity, bool force)
 {
   Q_UNUSED(force)
-
-  qWarning() << " >>>>>>>>>>>>>>> onRemoveEntity" << entity->getAttribute("id");
 
   IPlugin *plugin = qobject_cast<IPlugin *> (QObject::sender());
   if(plugin)
