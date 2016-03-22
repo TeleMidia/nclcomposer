@@ -297,8 +297,13 @@ void MediaPreviewPlugin::changeSelectedEntity(QString plugID, void *param)
           /*LUA OBJECTS*/
           else if(type=="lua")
           {
+            QAction *savelua = new QAction("save",windowg);
+            menubar = new QMenuBar(windowg);
             luaobjview = new LuaView(attrSrc);
             luaobjview->setParent(windowg);
+            connect(savelua, SIGNAL(triggered()),luaobjview,SLOT(saveFile()));
+            menubar->addAction(savelua);
+            windowg->setMenuBar(menubar);
             windowg->setCentralWidget(luaobjview);
           }
         }

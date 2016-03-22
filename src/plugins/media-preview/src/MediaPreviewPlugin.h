@@ -36,6 +36,8 @@
 #include <QFileInfo>
 #include <QTextEdit>
 #include <QMainWindow>
+#include <QMenuBar>
+#include <QAction>
 
 #include <VideoPlayer>
 #include <MediaObject>
@@ -104,6 +106,8 @@ private:
   LuaView *luaobjview;
   VideoPlayer *videoplay;
   QMovie *movie;
+
+  QMenuBar *menubar;
 };
 
 #endif // MEDIAPREVIEWPLUGIN_H

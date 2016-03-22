@@ -20,9 +20,12 @@
 #include <QFile>
 #include <QTextStream>
 #include <QApplication>
+#include <QMessageBox>
+#include <QDebug>
 
-LuaView::LuaView(const QString &filename)
+LuaView::LuaView(const QString &src)
 {
+  fileName = src;
   lexerLua = new QsciLexerLua(this);
 
   setFolding(QsciScintilla::CircledTreeFoldStyle);
@@ -37,10 +40,10 @@ LuaView::LuaView(const QString &filename)
   setCaretLineVisible(true);
 
   setLexer(lexerLua);
-  loadFile(filename);
+  loadFile();
 }
 
-void LuaView::loadFile(const QString &fileName)
+void LuaView::loadFile(/*const QString &fileName*/)
 {
   QFile file(fileName);
   if (!file.open(QFile::ReadOnly))
@@ -48,12 +51,54 @@ void LuaView::loadFile(const QString &fileName)
     setText("-- File not found");
     return;
   }
-
   QTextStream in(&file);
   QApplication::setOverrideCursor(Qt::WaitCursor);
   setText(in.readAll());
   QApplication::restoreOverrideCursor();
+
+  file.close();
 }
+
+void LuaView::saveFile(/*const QString &fileName*/)
+{
+  QFile file(fileName);
+  if (!file.open(QFile::WriteOnly))
+  {
+    qDebug() << "file not saved";
+    return;
+  }
+  QTextStream out(&file);
+  out << text();
+
+  file.close();
+}
+
+/*
+void LuaView::focusOutEvent(QFocusEvent *event)
+{
+  int ret = QMessageBox::question(_window,
+                                  tr("Save"),
+                                  tr("Save it?"),
+                                                 QMessageBox::Yes |
+                                                 QMessageBox::No |
+                                                 QMessageBox::Cancel,
+
+                                     QMessageBox::Cancel);
+
+      switch(ret)
+  {
+      case QMessageBox::Yes:
+      saveFile();
+      break;
+      case QMessageBox::No:
+      loadFile();
+      break;
+      case QMessageBox::Cancel:
+
+      break;
+  }
+
+}*/
 
 LuaView::~LuaView()
 {

@@ -27,12 +27,20 @@
 class LuaView : public QsciScintilla
 {
   Q_OBJECT
+
+public slots:
+  /*!
+   * \brief saveFile
+   * \param fileName
+   */
+  void saveFile();
+
 public:
   /*!
    * \brief Constructor.
    * \param Filename is the variable for specifying the media object location.
    */
-  explicit LuaView(const QString &filename = "");
+  explicit LuaView(const QString &src = "");
 
   /*!
    * \brief Destructor.
@@ -43,9 +51,10 @@ public:
    * \brief loadFile
    * \param fileName
    */
-  void loadFile(const QString &fileName);
-
+  void loadFile();
 private:
   QsciLexerLua *lexerLua;
+  QString fileName;
+
 };
 #endif // LUAVIEW_H
