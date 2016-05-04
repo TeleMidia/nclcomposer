@@ -1,21 +1,27 @@
 NCL Composer
 ============
-This project is intended to group all NCL Composer related suprojects using 
-the git submodules feature. This project does not contain any source code, it 
-just uses the abstraction of git submodules to link to git projects where the 
-code of each individual NCL Composer's project is available.
+This is NCL Composer. NCL Composer is an authoring tool for interactive
+applications for Digital TV based on NCL (Nested Context Language). It provides
+different views with graphical and textual abstractions that helps in
+developing NCL applications.
 
-Additionally, this project also brings some useful files and scripts related to
-code documentation, like Doxyfile, scripts to add the License HEAD to files,
-packaging features and so on.
+Contributing
+===========
+  * NCL Composer Website (http://composer.telemidia.puc-rio.br)
+  * Redmine link: (http://redmine.telemidia.puc-rio.br:8080/redmine/projects/composer3)
 
-Today, there are three main submodules inside this project:
+
+Code organization
+=================
+TODO
   * composer-core
   * composer-gui
   * composer-plugins
 
-If you want specific information about one of the above subproject go to its
-specfic README file.
+
+Building
+========
+TODO
 
 Dependencies
 ============
@@ -30,41 +36,16 @@ By doing so, you have to be installed the following:
   * libssh2
   * libcrypt
 
-Getting Submodules Source Code
-==============================
-Prerequisites:
- * Git 1.7.x or greater
-    Probably you already had git, once you get this project.
- * Qt 4.7.1
-     The Qt SDK provides you with most of the required software.
 
-The easistr way to get the all submodules projects required is running:
-  $ qmake
-
-in the root directory of composer.git. The first time you run qmake, it will
-initialize and update all the submodules, getting all the necessary source code
-for compile NCL Composer. By default, every submodule will be checkouted to
-branch master.
-
-Otherwise, if you want to do it by yourself you can execute the following 
-commands:
-  $ git submodule init
-  $ git submodule update
-  $ git submodule foreach "git checkout master"
-
-Changing and Committing the code 
-================================
-Even put together in the same root directory, each git project is totally 
-independent. So, each change, commit and push must be realized individually to
-each submodules.
-
-If you need more information about git submodule these links can be useful:
-  - http://kernel.org/pub/software/scm/git/docs/git-submodule.html
-  - https://git.wiki.kernel.org/index.php/GitSubmoduleTutorial
+Additionally, this project also brings some useful files and scripts related to
+code documentation, like Doxyfile, scripts to add the License HEAD to files,
+Today, there are three main submodules inside this project:
+If you want specific information about one of the above subproject go to its
+specfic README file.
 
 Packaging
 =========
-One of the most important feature of the composer-all project is packaging.
+This repository also provides the necessary files for packaging NCL Composer.
 
 * Generating MSI (Windows installer) package
   To generate the Windows Package installer, you will need the NSIS (Nullsoft
