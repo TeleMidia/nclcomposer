@@ -13,8 +13,8 @@ abstractions that helps in developing NCL applications.
   * Structural view of NCL documents
   * Integration with different players (e.g. [Ginga-NCL Reference
     Implemenation](http://www.ginga.org.br))
-  * Multi-platform
-  * Extensible through plug-ins
+  * Easily extensible through a plug-in API
+  * Multi-platform (Linux, Windows, and Mac officially supported)
 
 ## Screenshots
 TODO
@@ -65,10 +65,8 @@ This repository also provides the necessary files for packaging NCL Composer.
 To generate the Windows Package installer, you will need the NSIS ([Nullsoft 
 scriptable install system](http://nsis.sourceforge.net/).
 
-To generate the windows installer, go to win32-nsis directory and run:
+To generate the windows installer, go to `win32-nsis` directory and run:
 
-    $ qmake
-    $ mingw32-make install
     $ makensis composer.nsis
 
 ### Generating DEBIAN package
