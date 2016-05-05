@@ -1,9 +1,12 @@
+![Some screenshots](http://composer.telemidia.puc-rio.br/_media/screenshot/nclcomposer.png)
+
 # NCL Composer
 [NCL Composer](http://composer.telemidia.puc-rio.br) is a multiplataform and
-flexible multimedia authoring tool for creating Interactive Digital TV (iDTV)
-applications in NCL ([Nested Context Language](http://www.ncl.org.br)). 
-It provides a minimal core and different views supporting graphical and textual
-abstractions that helps in developing NCL applications.
+flexible authoring tool for creating Interactive multimedia applications for
+Digital TV (iDTV) based on NCL
+([Nested Context Language](http://www.ncl.org.br)).
+It provides a minimal core and different views (implemented as plug-ins)
+supporting textual and graphical abstractions.
 
 ## Features
   * Textual editing supporting code coloring, autocomplete, error marking,
@@ -17,15 +20,16 @@ abstractions that helps in developing NCL applications.
   * Multi-platform (Linux, Windows, and Mac officially supported)
 
 ## Screenshots
-TODO
+
 
 ## Source code organization
 NCL Composer source code is divided into three main parts:
-  * __src/core__: implements a minimal core that allows the loading and communication
-   between plug-ins.
-  * __src/gui__: 
+  * __src/core__: implements a minimal core that allows the loading and
+    communication between plug-ins.
+  * __src/gui__: implements the GUI engine that is responsible for grouping the
+    different views in the same user interface.
   * __src/plugins__: brings the official plug-ins supported by NCL Composer. An
-   special type of plug-in are the views.
+    special type of plug-in are the views.
 
 ## Contributing
 
