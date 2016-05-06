@@ -1,5 +1,4 @@
 TARGET = nclcomposer
-DESTDIR = $$PWD/../../bin/
 TEMPLATE = app
 
 CONFIG += silent
@@ -20,6 +19,14 @@ else {
   DEFINES += WITH_TEST_VERSION_MESSAGE=\"\\\"1\\\"\"
   message ("Composer.pro DEBUG build!")
 }
+
+# Output directories
+debug: DESTDIR = $${PWD}/../../bin/debug/
+release: DESTDIR = $${PWD}/../../bin/release
+OBJECTS_DIR = $$DESTDIR/.obj
+MOC_DIR = $$DESTDIR/.moc
+RCC_DIR = $$DESTDIR/.qrc
+UI_DIR = $$DESTDIR/.ui
 
 #WHAT FEATURES TO COMPILE?
 #CONFIG += clubencl
@@ -77,10 +84,6 @@ DEFINES += DEFAULT_MIN_MESSAGE_ID_TO_SHOW=\"2\"
 DEFINES += NCL_COMPOSER_NOTIFY_URL=\"\\\"http://composer.telemidia.puc-rio.br/update/NEXT_VERSION\\\"\"
 
 RC_FILE = images/nclcomposer.rc
-
-MOC_DIR     =   .moc
-OBJECTS_DIR =   .obj
-UI_DIR      =   .ui
 
 macx {
   TARGET = Composer

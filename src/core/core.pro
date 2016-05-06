@@ -9,12 +9,16 @@ CONFIG += silent
 
 TEMPLATE = lib
 TARGET = ComposerCore
-DESTDIR = $${PWD}/../../bin
 
 VERSION = 1.0
 CONFIG += dll
-MOC_DIR = .moc
-OBJECTS_DIR = .obj
+
+debug: DESTDIR = $${PWD}/../../bin/debug/
+release: DESTDIR = $${PWD}/../../bin/release
+OBJECTS_DIR = $$DESTDIR/.obj
+MOC_DIR = $$DESTDIR/.moc
+RCC_DIR = $$DESTDIR/.qrc
+UI_DIR = $$DESTDIR/.ui
 
 # Uses FORCERELEASE variable because CONFIG and SUBDIR force three executions
 # if qmake and the last one does not preserves CONFIG from command line.
@@ -29,6 +33,8 @@ else {
   CONFIG -= release
   message ("core.pro DEBUG build!")
 }
+
+
 
 contains(NO_DEBUG_OUTPUT, true) {
     DEFINES += QT_NO_DEBUG_OUTPUT QT_NO_DEBUG_WARNING

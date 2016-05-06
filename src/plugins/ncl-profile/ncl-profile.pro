@@ -5,9 +5,6 @@ CONFiG += silent
 QT       -= gui
 QT       += xml
 
-MOC_DIR = .mocs
-OBJECTS_DIR = .objs
-
 TARGET = NCLLanguageProfile
 
 DEFINES += NCLLANGUAGEPROFILE_LIBRARY

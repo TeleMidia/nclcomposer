@@ -1,9 +1,26 @@
 TEMPLATE    =   lib
 CONFIG      +=  plugin dll silent
-CONFIG      -=  debug
-MOC_DIR     =   .moc
-OBJECTS_DIR =   .obj
-UI_DIR      =   .ui
+
+# Uses FORCERELEASE variable because CONFIG and SUBDIR force three executions
+# if qmake and the last one does not preserves CONFIG from command line.
+contains(FORCERELEASE, true) {
+  CONFIG += qt warn_on release
+  CONFIG -= debug
+  DEFINES += QT_NO_DEBUG_OUTPUT QT_NO_DEBUG_WARNING
+  message ("plugins-common.pri RELEASE build!")
+}
+else {
+  CONFIG += qt warn_on debug console
+  CONFIG -= release
+  message ("plugins-common.pri DEBUG build!")
+}
+
+release: DESTDIR = $$PWD/../../bin/release/extensions
+debug:   DESTDIR = $$PWD/../../bin/debug/extensions
+OBJECTS_DIR = $$DESTDIR/.obj
+MOC_DIR = $$DESTDIR/.moc
+RCC_DIR = $$DESTDIR/.qrc
+UI_DIR = $$DESTDIR/.ui
 
 greaterThan(QT_MAJOR_VERSION, 4) {
   QT += widgets
@@ -33,20 +50,6 @@ message("NCL Composer Plugins build version $${PLUGINS_VERSION} (from git=$${GIT
 VERSTR = '\\"$${PLUGINS_VERSION}\\"'
 DEFINES += NCLCOMPOSER_PLUGINS_VERSION=\"$${VERSTR}\"
 
-# Uses FORCERELEASE variable because CONFIG and SUBDIR force three executions
-# if qmake and the last one does not preserves CONFIG from command line.
-contains(FORCERELEASE, true) {
-  CONFIG += qt warn_on release
-  CONFIG -= debug
-  DEFINES += QT_NO_DEBUG_OUTPUT QT_NO_DEBUG_WARNING
-  message ("plugins-common.pri RELEASE build!")
-}
-else {
-  CONFIG += qt warn_on debug console
-  CONFIG -= release
-  message ("plugins-common.pri DEBUG build!")
-}
-
 macx {
   INSTALLBASE = /Applications/Composer
 } 
@@ -64,8 +67,8 @@ INCLUDEPATH += . \
                $$PWD/../core/src \
                $$PWD/ncl-profile/
 
-LIBS += -L$$PWD/../../bin \
-        -L$$PWD/../../bin/extensions
+LIBS += -L$$DESTDIR/.. \
+        -L$$DESTDIR/
 
 macx {
   LIBS += -F/Library/Frameworks -framework ComposerCore
@@ -98,11 +101,10 @@ else:unix {
   target.path = $$quote($$INSTALLBASE/lib/composer/extensions)
 }
 else:win32 {
-  LIBS += -L$$INSTALLBASE/lib/composer -lComposerCore1
-
+  LIBS += -lComposerCore1
 
   link_ncl_profile {
-         LIBS += -L$$INSTALLBASE/extensions -lNCLLanguageProfile
+         LIBS += -lNCLLanguageProfile
   }
 
   INCLUDEPATH += $$INSTALLBASE/include/composer \
@@ -116,6 +118,7 @@ else:win32 {
 DEFAULT_TARGET=$$basename(_PRO_FILE_)
 DEFAULT_TARGET=$$replace(DEFAULT_TARGET, "-", "_")
 DEFAULT_TARGET=$$replace(DEFAULT_TARGET, ".pro", "")
+
 contains(FORCERELEASE, true) {
   TARGET=$$DEFAULT_TARGET
 }
@@ -124,4 +127,3 @@ else {
 }
 
 INSTALLS += target
-DESTDIR  = $$PWD/../../bin/extensions/
