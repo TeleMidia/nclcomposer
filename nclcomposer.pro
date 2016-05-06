@@ -10,4 +10,3 @@ src_gui.depends = src_core
 SUBDIRS = src_core \
           src_plugin_suite \
           src_gui
-

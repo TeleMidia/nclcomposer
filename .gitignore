@@ -26,3 +26,5 @@ bin/
 doc/build
 *.qm
 qscintilla_*.ts
+*.rc
+
