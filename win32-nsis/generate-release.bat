@@ -23,9 +23,6 @@ REM - GET THE GIT VERSION
 REM - cd ../
 REM - git describe --tag | sed "s/v//g" > ..\VERSION
 
-REM - Go to default NCL Composer PATH
-cd ..
-
 SET /p CPRVERSION= <VERSION
 
 REM - I CAN FORCE A VERSION IF I UNCOMMENT THE NEXT LINE
@@ -38,7 +35,13 @@ SET PUBLISH_SERVER="robertogerson@xserve1"
 SET PUBLISH_SERVER_PATH="/Library/WebServer/Documents/composer/downloads/nightly/"
 SET PUBLISH_URL="%PUBLISH_SERVER%:%PUBLISH_SERVER_PATH%"
 
+REM --------------------------------------------------------------------------
+REM - Build start here!
+REM --------------------------------------------------------------------------
 echo Generating NCL Composer %CPRVERSION% Windows Installer and Zip files.
+
+REM - Go to root NCL Composer PATH
+cd ..\
 
 REM - Run qmake with release parameters
 IF "%CPRVERSION%"=="" (qmake FORCERELEASE=true RUNSSHON=true) ELSE (qmake FORCERELEASE=true RUNSSHON=true CPRVERSION=%CPRVERSION%)
