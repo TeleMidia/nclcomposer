@@ -588,7 +588,7 @@ void StructuralView::change(QString uid, QMap<QString, QString> properties, QMap
          (entity->isCollapsed() && properties.value(PLG_ENTITY_COLLAPSED) == "0"))
        ((StructuralComposition*) entity)->collapse(false);
      entity->setStructuralProperties(properties);
-     entity->adjust();
+     entity->adjust(false);
 
 
     if (settings[PLG_SETTING_NOTIFY] == "1")
@@ -606,19 +606,18 @@ void StructuralView::unSelect()
   {
     entities.value(_selected_UID)->setSelected(false);
 
-    _selected_UID = "";
+}
 
+  _selected_UID = "";
 
+  scene->update();
 
-    scene->update();
+  emit cutStateChange(false);
+  emit copyStateChange(false);
+  emit pasteStateChange(false);
 
-    emit cutStateChange(false);
-    emit copyStateChange(false);
-    emit pasteStateChange(false);
-
-    emit selectChange("");
-    emit selected("", QMap<QString, QString>());
-  }
+  emit selectChange("");
+  emit selected("", QMap<QString, QString>());
 }
 
 StructuralEntity* StructuralView::getBody()
@@ -665,7 +664,7 @@ void StructuralView::select(QString uid, QMap<QString, QString> settings)
       if (_selected != NULL)
       {
         _selected->setSelected(false);
-        _selected->adjust();
+        _selected->adjust(false);
       }
 
 
@@ -1203,7 +1202,7 @@ void StructuralView::mousePressEvent(QMouseEvent* event)
       if (_selected != NULL)
       {
         _selected->setSelected(false);
-        _selected->adjust();
+        _selected->adjust(false);
       }
 
       _selected_UID = "";
@@ -1257,7 +1256,7 @@ void StructuralView::keyPressEvent(QKeyEvent *event)
     if (_selected != NULL)
     {
       _selected->setSelected(false);
-      _selected->adjust();
+      _selected->adjust(false);
     }
 
     _selected_UID =  "";
@@ -1347,6 +1346,8 @@ void StructuralView::clearAllData()
     scene->removeRoot(scene->getRoots().at(0));
   */
 
+  unSelect();
+
   foreach (QString uid, entities.keys()) {
     QMap<QString,QString> settings;
     settings[PLG_SETTING_UNDO] = "1";
@@ -1356,6 +1357,8 @@ void StructuralView::clearAllData()
 
     remove(uid,settings);
   }
+
+
 
   entities.clear();
   importBases.clear();

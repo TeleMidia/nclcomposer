@@ -114,7 +114,13 @@ bool StructuralViewPlugin::saveSubsession()
 
 void StructuralViewPlugin::updateFromModel()
 {
-  QMap <QString, double> top, left, width, height;
+//  QMap <QString, double> top, left, width, height;
+  QMap <QString, QMap<QString,QString>> prop;
+
+  qDebug() << "========================== ENTITIES SIZE" << entities.size();
+  qDebug() << "========================== ENTITIES CONTENT" << entities;
+
+
   foreach (QString key, entities.keys())
   {
     StructuralEntity* e = _window->getView()->getEntity(entities.value(key));
@@ -126,10 +132,15 @@ void StructuralViewPlugin::updateFromModel()
       if (e->getStructuralParent() != NULL)
          pid = e->getStructuralParent()->getStructuralId();
 
-      top.insert(e->getStructuralId()+pid,e->getTop());
-      left.insert(e->getStructuralId()+pid,e->getLeft());
-      width.insert(e->getStructuralId()+pid,e->getWidth());
-      height.insert(e->getStructuralId()+pid,e->getHeight());
+//      top.insert(e->getStructuralId()+pid,e->getTop());
+//      left.insert(e->getStructuralId()+pid,e->getLeft());
+//      width.insert(e->getStructuralId()+pid,e->getWidth());
+//      height.insert(e->getStructuralId()+pid,e->getHeight());
+
+      qDebug() << e->getStructuralProperties();
+      qDebug() << "---------------------";
+
+      prop.insert(e->getStructuralId()+pid, e->getStructuralProperties());
     }
   }
 
@@ -149,27 +160,32 @@ void StructuralViewPlugin::updateFromModel()
     }
   }
 
-  foreach (QString key, entities.keys())
-  {
-    StructuralEntity* e = _window->getView()->getEntity(entities.value(key));
 
-    if (e != NULL)
-    {
+  StructuralEntity* root = _window->getView()->getBody();
+  if (root != NULL)
+  {
+    QStack<StructuralEntity*> s;
+    s.push(root);
+
+    while (!s.isEmpty()) {
+      StructuralEntity* e = s.pop();
+
       QString pid = "";
 
       if (e->getStructuralParent() != NULL)
          pid = e->getStructuralParent()->getStructuralId();
 
-      if (top.contains(e->getStructuralId()+pid)){
-        QMap<QString, QString> properties;
-        properties.insert(PLG_ENTITY_TOP,QString::number(top.value(e->getStructuralId()+pid)));
-        properties.insert(PLG_ENTITY_LEFT,QString::number(left.value(e->getStructuralId()+pid)));
-        properties.insert(PLG_ENTITY_WIDTH,QString::number(width.value(e->getStructuralId()+pid)));
-        properties.insert(PLG_ENTITY_HEIGHT,QString::number(height.value(e->getStructuralId()+pid)));
-
+      if (prop.contains(e->getStructuralId()+pid)){
         QMap<QString, QString> settings = StructuralUtil::createSettings(true, false);
 
-        _window->getView()->change(e->getStructuralUid(),properties,e->getStructuralProperties(),settings);
+        QMap<QString, QString> cprop = prop.value(e->getStructuralId()+pid);
+        cprop.insert(PLG_ENTITY_UID,e->getStructuralUid());
+
+        _window->getView()->change(e->getStructuralUid(),cprop,e->getStructuralProperties(),settings);
+      }
+
+      foreach (StructuralEntity* c, e->getStructuralEntities()) {
+          s.push(c);
       }
     }
   }
@@ -247,10 +263,14 @@ void StructuralViewPlugin::changeSelectedEntity(QString pluginID, void* param)
 
 void StructuralViewPlugin::requestEntityAddition(Entity* entity)
 {
+
   QMap<QString, QString> properties;
 
 
   Structural::StructuralType type = StructuralUtil::getnstTypeFromStr(entity->getType());
+
+  if (type != Structural::NoType){
+
   properties[PLG_ENTITY_TYPE] = QString::number(type);
 
   QMap<QString, QString> m = StructuralUtil::createCoreTranslationMap(type);
@@ -282,6 +302,7 @@ void StructuralViewPlugin::requestEntityAddition(Entity* entity)
 
     _window->getView()->insert(entity->getUniqueId(), parentUID, properties, settings);
   }
+  }
 }
 
 void StructuralViewPlugin::requestEntityRemotion(Entity* entity, bool enableUndo)
@@ -304,6 +325,9 @@ void StructuralViewPlugin::requestEntityChange(Entity* entity)
   QMap<QString, QString> properties;
 
   Structural::StructuralType type = StructuralUtil::getnstTypeFromStr(entity->getType());
+
+  if (type != Structural::NoType){
+
   properties[PLG_ENTITY_TYPE] = QString::number(type);
 
   QMap<QString, QString> m = StructuralUtil::createCoreTranslationMap(type);
@@ -326,6 +350,7 @@ void StructuralViewPlugin::requestEntityChange(Entity* entity)
       _window->getView()->change(entityPlgUID, properties, _window->getView()->getEntity(entityPlgUID)->getStructuralProperties(), settings);
      }
     }
+  }
 }
 
 void StructuralViewPlugin::requestEntitySelection(Entity* entity)

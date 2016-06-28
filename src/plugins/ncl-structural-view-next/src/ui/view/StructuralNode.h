@@ -18,7 +18,7 @@ public:
 
   virtual void inside();
 
-  virtual void adjust(bool avoidCollision = true);
+  virtual void adjust(bool avoidCollision = false);
 
 protected:
   virtual void draw(QPainter* painter) = 0;
