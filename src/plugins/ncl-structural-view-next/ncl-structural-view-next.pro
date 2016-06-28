@@ -54,7 +54,6 @@ SOURCES += \
     src/core/Insert.cpp \
     src/core/Change.cpp \
     src/ui/view/StructuralContent.cpp \
-#    src/main.cpp
 
 RESOURCES += \
     ncl-structural-view-next.qrc \
