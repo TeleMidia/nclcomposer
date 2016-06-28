@@ -15,8 +15,8 @@ StructuralScene::~StructuralScene()
 void StructuralScene::createMenus()
 {
   _menu = new StructuralMenu();
-  _menu->undoAction->setEnabled(true);
-  _menu->redoAction->setEnabled(true);
+  _menu->undoAction->setEnabled(false);
+  _menu->redoAction->setEnabled(false);
 
   _menu->snapshotAction->setEnabled(true);
 
@@ -26,7 +26,7 @@ void StructuralScene::createMenus()
 
 void StructuralScene::createConnections()
 {
-  connect(_menu, SIGNAL(insert(Structural::EntityName)), SLOT(performInsert(Structural::EntityName)));
+//  connect(_menu, SIGNAL(insert(Structural::EntitySubtype)), SLOT(performInsert(Structural::EntitySubtype)));
 }
 
 void StructuralScene::performUndo()
@@ -41,14 +41,14 @@ void StructuralScene::performRedo()
   view->performRedo();
 }
 
-void StructuralScene::performInsert(Structural::EntityName name)
+void StructuralScene::performInsert(Structural::StructuralType name)
 {
   switch (name) {
     case Structural::Body:
     {
       QMap<QString, QString> properties;
-      properties["LOCAL:TOP"] = QString::number(_insertPoint.y() - DEFAULT_BODY_HEIGHT/2);
-      properties["LOCAL:LEFT"] = QString::number(_insertPoint.x() - DEFAULT_BODY_WIDTH/2);
+      properties[PLG_ENTITY_TOP] = QString::number(_insertPoint.y() - DEFAULT_BODY_HEIGHT/2);
+      properties[PLG_ENTITY_LEFT] = QString::number(_insertPoint.x() - DEFAULT_BODY_WIDTH/2);
 
       QMap<QString, QString> settings;
 
@@ -78,8 +78,6 @@ void StructuralScene::contextMenuEvent(QGraphicsSceneContextMenuEvent* event)
   if (!event->isAccepted())
   {
     _insertPoint = event->scenePos();
-
-    qDebug() << _insertPoint;
 
     _menu->exec(event->screenPos());
 

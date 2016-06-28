@@ -1,5 +1,5 @@
-#ifndef QNSTGRAPHICSMEDIA_H
-#define QNSTGRAPHICSMEDIA_H
+#ifndef STRUCTURALCONTENT_H
+#define STRUCTURALCONTENT_H
 
 #include <QGraphicsSceneDragDropEvent>
 #include <QMimeData>
@@ -10,23 +10,23 @@
 
 #include "StructuralNode.h"
 
-class StructuralMedia : public StructuralNode
+class StructuralContent : public StructuralNode
 {
   Q_OBJECT
 
 public:
-  StructuralMedia(StructuralEntity* parent = 0);
-  ~StructuralMedia();
+  StructuralContent(StructuralEntity* parent = 0);
+  ~StructuralContent();
 
   QString getIcon() const;
 
-  void setMediaType(Structural::MediaTypes type);
+  void setMediaType(Structural::StructuralMedia type);
 
   void setSource(QString source);
 
-  virtual void setLocalName(LocalName _name);
+  virtual void setStructuralType(StructuralType _subtype);
 
-  virtual void setLocalProperty(const QString &name, const QString &value);
+  virtual void setStructuralProperty(const QString &name, const QString &value);
 
   QString getSource() const;
 
@@ -42,7 +42,7 @@ public:
 
   void setInstance(QString instance);
 
-  virtual void updateToolTip();
+  virtual void refresh();
 protected:
   virtual void draw(QPainter* painter);
 
@@ -67,7 +67,7 @@ private:
 
   bool enableDrag;
 
-  Structural::MediaTypes mediatype;
+  Structural::StructuralMedia mediatype;
 };
 
-#endif // QNSTGRAPHICSMEDIA_H
+#endif // STRUCTURALCONTENT_H

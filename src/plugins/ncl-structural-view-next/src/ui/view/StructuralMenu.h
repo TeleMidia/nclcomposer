@@ -14,8 +14,10 @@ public:
   StructuralMenu(QWidget* _parent = 0);
   virtual ~StructuralMenu();
 
+  void updateInsertAction(StructuralType type, bool enableBody = false);
+
 signals:
-  void insert(Structural::EntityName);
+  void insert(StructuralType);
 
 private:
   void createActions();
@@ -31,6 +33,13 @@ private slots:
   void performArea();
   void performSwitchPort();
   void performProperty();
+
+public slots:
+  void changeUndoState(bool enable);
+  void changeRedoState(bool enable);
+  void changeCutState(bool enable);
+  void changeCopyState(bool enable);
+  void changePasteState(bool enable);
 
 public:
   QMenu* insertMenu;
@@ -51,6 +60,7 @@ public:
   QAction* areaAction;
   QAction* propertyAction;
   QAction* switchPortAction;
+  QAction* propertiesAction;
 };
 
 #endif // QNSTMENU_H

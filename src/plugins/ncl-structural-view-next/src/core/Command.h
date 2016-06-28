@@ -1,11 +1,13 @@
-#ifndef QNSTCOMMAND_H
-#define QNSTCOMMAND_H
+#ifndef COMMAND_H
+#define COMMAND_H
 
 #include <QUndoCommand>
 #include <QObject>
 #include <QMap>
 #include <QString>
 #include <QString>
+
+#include "Structural.h"
 
 class Command : public QObject, public QUndoCommand
 {
@@ -25,4 +27,4 @@ signals:
   void select(QString uid, QMap<QString, QString> settings);
 };
 
-#endif // QNSTCOMMAND_H
+#endif // COMMAND_H

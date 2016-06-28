@@ -18,21 +18,20 @@
 #include <QDebug>
 
 #include "StructuralScene.h"
-#include "StructuralViewLink.h"
 #include "StructuralEntity.h"
-#include "StructuralMedia.h"
+#include "StructuralContent.h"
 #include "StructuralInterface.h"
-#include "StructuralReference.h"
-#include "StructuralLink.h"
-#include "StructuralBind.h"
 #include "StructuralComposition.h"
 
 #include "Remove.h"
 #include "Change.h"
 #include "Insert.h"
 
+#include "StructuralMinimap.h"
+
 class QnstAddCommand;
 class StructuralScene;
+class StructuralMiniMap;
 
 class StructuralView : public QGraphicsView
 {
@@ -42,68 +41,81 @@ public:
   StructuralView(QWidget* _parent = 0);
   virtual ~StructuralView();
 
-  bool canUndo();
-  bool canRedo();
-
 public:
+  StructuralScene* getScene();
+
   bool hasEntity(QString uid);
   StructuralEntity* getEntity(QString uid);
-  QMap<QString, StructuralEntity*> entities;
+  QMap<QString, StructuralEntity*> getEntities();
 
-  void setEnableLink(bool status);
+  void switchMinimapVis();
 
-//  void setAction(QString action);
-//  void setCondition(QString condition);
+public slots:
+  void insert(QString uid, QString parent, QMap<QString, QString> properties, QMap<QString, QString> settings);
+  void remove(QString uid, QMap<QString, QString> settings);
+  void change(QString uid, QMap<QString, QString> properties, QMap<QString, QString> previous, QMap<QString, QString> settings);
+  void select(QString uid, QMap<QString, QString> settings);
+  void move(QString uid, QString parent);
 
+  void create(StructuralType type);
+  void create(StructuralType type, QMap<QString, QString> &properties, QMap<QString, QString> &settings);
+
+  void performHelp();
+
+  void performCut();
+  void performCopy();
+  void performPaste();
+
+
+  void performZoomIn();
+  void performZoomOut();
+  void performZoomReset();
+
+  void performUndo();
+  void performRedo();
+
+  void performSnapshot();
+
+  void performDelete();
+
+  void performProperties();
+
+public:
   void load(QString &data);
 
   void read(QDomElement element, QDomElement parent);
 
-  void serialize(QString &data);
+  QString serialize(QString data = "");
   void exportDataFromEntity(StructuralEntity* entity, QDomDocument* doc, QDomElement _parent);
 
   void unSelect();
 
-public slots:
-  void insert(QString uid, QString _parent, QMap<QString, QString> properties, QMap<QString, QString> settings);
-  void remove(QString uid, QMap<QString, QString> settings);
-  void change(QString uid, QMap<QString, QString> properties, QMap<QString, QString> previous, QMap<QString, QString> settings);
-  void select(QString uid, QMap<QString, QString> settings);
+   StructuralEntity* getBody();
 
-  void create(LocalName name, QMap<QString, QString> &properties, QMap<QString, QString> &settings);  
+   void clearErrors();
+   void markError(QString uid, QString msg);
 
-  bool performHelp();
+   void setMiniMapVisible(bool enable);
 
-  bool performCut();
-  bool performCopy();
-  bool performPaste();
-
-  bool performUndo();
-  bool performRedo();
-
-  bool performSnapshot();
-
-  bool performDelete();
-
-  bool performZoomIn();
-  bool performZoomOut();
-  bool performZoomReset();
-  bool performFullscreen();
-
-  bool performBringfront();
-  bool performBringforward();
-  bool performSendback();
-  bool performSendbackward();
-
-  bool performHide();
-
-  bool performProperties();
 
 signals:
   void inserted(QString uid, QString _parent, QMap<QString, QString> properties, QMap<QString, QString> settings);
   void removed(QString uid, QMap<QString, QString> settings);
   void changed(QString uid, QMap<QString, QString> properties, QMap<QString, QString> previous, QMap<QString, QString> settings);
   void selected(QString uid, QMap<QString, QString> settings);
+
+
+  void undoStateChange(bool state);
+  void redoStateChange(bool state);
+  void cutStateChange(bool state);
+  void copyStateChange(bool state);
+  void pasteStateChange(bool state);
+
+  void zoominStateChange(bool state);
+
+  void bodyStateChange(bool state);
+
+  void selectChange(QString uid);
 
   void viewChanged();
 
@@ -131,17 +143,13 @@ public slots:
   void clearAllData();
 
 private:
-  void performPaste(StructuralEntity* entity, StructuralEntity* _parent, QString CODE);
+  StructuralEntity* clone(StructuralEntity* e, StructuralEntity * p);
+
+  void performPaste(StructuralEntity* entity, StructuralEntity* _parent, QString CODE, bool newPos);
 
   bool isChild(StructuralEntity* e , StructuralEntity* p);
-  void createLink(StructuralEntity* a, StructuralEntity* b);
-  void createBind(StructuralEntity* a, StructuralEntity* b,Structural::BindType type = Structural::NoBindType, QString code = "");
-  void createReference(StructuralEntity* a, StructuralEntity* b);
-  Command* rmcmd(StructuralEntity* entity, Command* cmdparent, QMap<QString, QString> settings);
 
 //  void rec_clip(StructuralEntity* e, StructuralEntity* parent);
-
-  void adjustAngles(StructuralBind* edge);
 
   void createObjects();
 
@@ -159,13 +167,15 @@ private:
 
   bool hasCutted;
 
+
+
+  QMap<QString, StructuralEntity*> entities;
+
   QAction* undoAct;
 
   QAction* redoAct;
 
   StructuralScene* scene;
-
-  StructuralViewLink* link;
 
   QString _selected_UID;
 
@@ -175,12 +185,6 @@ private:
   QString clip_copy;
 
   QSet<QString> linkWriterAux;
-
-  QMap<QString, StructuralLink*> links;
-
-  QMap<QString, StructuralBind*> binds;
-
-  QMap<QString, QString> refers;
 
   QMap<QString, QString> importBases; // importBaseUid - ConnUid
 
@@ -196,14 +200,12 @@ private:
 
   StructuralEntity* lastLinkMouseOver;
 
-  std::map < Structural::EntityName, int > entityCounter;
+  std::map < Structural::StructuralType, int > entityCounter;
 
-  static std::map <Structural::EntityName, QString> mediaTypeToXMLStr;
+  static std::map <Structural::StructuralType, QString> mediaTypeToXMLStr;
 
-  //  MiniMap *minimap;
+  StructuralMiniMap *minimap;
 
-  Structural::BindType action;
-  Structural::BindType condition;
 
   StructuralEntity* e_clip;
 };

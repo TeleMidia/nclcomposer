@@ -1,5 +1,5 @@
-#ifndef QNSTGRAPHICSCOMPOSITION_H
-#define QNSTGRAPHICSCOMPOSITION_H
+#ifndef STRUCTURALCOMPOSITION_H
+#define STRUCTURALCOMPOSITION_H
 
 #include "Structural.h"
 #include "StructuralNode.h"
@@ -24,13 +24,12 @@ public:
 
   ~StructuralComposition();
 
-  virtual void setLocalName(const LocalName _name);
+  virtual void setStructuralType(const StructuralType _subtype);
+  virtual void setStructuralProperty(const QString &name, const QString &value);
 
   QString getColor() const;
 
   void setColor(QString color);
-
-  void setCollapsed(bool collapsed);
 
   qreal getLastW();
 
@@ -40,11 +39,9 @@ public:
 
   void setLastH(qreal lastH);
 
-  bool isCollapsed();
+  void collapse(bool notify = false);
 
-  void collapse();
-
-  virtual void updateToolTip();
+  virtual void refresh();
 
 private:
   void createObjects();
@@ -66,7 +63,6 @@ protected:
   virtual void mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event);
 
 private:
-  bool collapsed;
 
   QString color;
 
@@ -74,7 +70,7 @@ private:
 
   qreal lasth;
 
-  StructuralNode* tmp;
+  StructuralComposition* tmp;
 };
 
-#endif // QNSTGRAPHICSCOMPOSITION_H
+#endif // STRUCTURALCOMPOSITION_H

@@ -1,21 +1,22 @@
 #include "StructuralEntity.h"
-#include "StructuralMedia.h"
+#include "StructuralContent.h"
 #include "StructuralComposition.h"
 
 StructuralEntity::StructuralEntity(StructuralEntity* parent)
   : QObject(parent), QGraphicsItem(parent)
 {
-  setLocalUid((QString) QUuid::createUuid().toString());
-  setLocalType(Structural::NoType);
-  setLocalName(Structural::NoName);
+  setStructuralCategory(Structural::NoCategory);
+  setStructuralType(Structural::NoType);
 
-  setLocalParent(parent);
+  setStructuralUid(StructuralUtil::CreateUid());
+
+  setStructuralParent(parent);
 
   setMoveable(true);
   setResizable(true);
   setSelectable(true);
   setHoverable(true);
-  setDraggable(true);
+  setDraggable(false);
 
   setMoving(false);
   setHidden(false);
@@ -42,24 +43,26 @@ StructuralEntity::StructuralEntity(StructuralEntity* parent)
   setResizeWidth(0);
   setResizeHeight(0);
 
+  setUncollapedTop(0);
+  setUncollapedLeft(0);
+  setUncollapedWidth(0);
+  setUncollapedHeight(0);
+
   setzIndex(0);
+
+  createMenus();
+  createConnections();
 
   setFlag(QGraphicsItem::ItemIsMovable, true);
   setFlag(QGraphicsItem::ItemIsFocusable, true);
 
   setAcceptHoverEvents(true);
+  setAcceptDrops(true);
 
-  // ----------------------
-  hover = false;
-  menu = new StructuralMenu();
-  connect(menu, SIGNAL(insert(Structural::EntityName)),SLOT(performInsert(Structural::EntityName)));
+  setSelected(false);
+  setCollapsed(false);
 
-  menu->insertMenu->setEnabled(true);
-
-  _draggable = false;
   hasError = false;
-  enableMouseHoverHighlight = true;
-  // ----------------------
 }
 
 StructuralEntity::~StructuralEntity()
@@ -67,117 +70,118 @@ StructuralEntity::~StructuralEntity()
   // TODO
 }
 
-QString StructuralEntity::getLocalUid() const
+QString StructuralEntity::getStructuralUid() const
 {
   return _uid;
 }
 
-void StructuralEntity::setLocalUid(const QString &uid)
+void StructuralEntity::setStructuralUid(const QString &uid)
 {
   _uid = uid;
-
-  _properties["LOCAL:UID"] = uid;
+  _properties.insert(PLG_ENTITY_UID, uid);
 }
 
-QString StructuralEntity::getLocalId() const
+QString StructuralEntity::getStructuralId() const
 {
   return _id;
 }
 
-void StructuralEntity::setLocalId(const QString &id)
+void StructuralEntity::setStructuralId(const QString &id)
 {
   _id = id;
+  _properties.insert(PLG_ENTITY_ID, id) ;
 
-  _properties["LOCAL:ID"] = id;
-
-  // --------------------
-  updateToolTip();
-  // --------------------
+  refresh();
 }
 
-LocalType StructuralEntity::getLocalType() const
+StructualCategory StructuralEntity::getStructuralCategory() const
 {
   return _type;
 }
 
-void StructuralEntity::setLocalType(const LocalType type)
+void StructuralEntity::setStructuralCategory(const StructualCategory type)
 {
   _type = type;
-
-  _properties["LOCAL:TYPE"] = QString::number(type);
+  _properties.insert(PLG_ENTITY_CATEGORY,StructuralUtil::convertType(type));
 }
 
-LocalName StructuralEntity::getLocalName() const
+StructuralType StructuralEntity::getStructuralType() const
 {
-  return _name;
+  return _subtype;
 }
 
-void StructuralEntity::setLocalName(const LocalName subtype)
+void StructuralEntity::setStructuralType(const StructuralType subtype)
 {
-  _name = subtype;
-
-  _properties["LOCAL:NAME"] = StructuralUtil::getStrFromNstType(subtype);
+  _subtype = subtype;
+  _properties.insert(PLG_ENTITY_TYPE,StructuralUtil::convertSubtype(subtype));
 }
 
-QMap<QString, QString> StructuralEntity::getLocalProperties() const
+QMap<QString, QString> StructuralEntity::getStructuralProperties() const
 {
   return _properties;
 }
 
-void StructuralEntity::setLocalProperties(const QMap<QString, QString> &properties)
+void StructuralEntity::setStructuralProperties(const QMap<QString, QString> &properties)
 {
-  // TODO
-
-  foreach (QString name, properties.keys())
-  {
-    setLocalProperty(name, properties[name]);
+  foreach (QString name, properties.keys()){
+    setStructuralProperty(name, properties.value(name));
   }
 }
 
-QString StructuralEntity::getLocalProperty(const QString &name)
+QString StructuralEntity::getStructuralProperty(const QString &name) const
 {
   return _properties.value(name,"");
 }
 
-void StructuralEntity::setLocalProperty(const QString &name, const QString &value)
+void StructuralEntity::setStructuralProperty(const QString &name, const QString &value)
 {
-  // TODO
-
-  _properties.insert(name, value);
-
-
-  if (name == "LOCAL:TOP")
-  {
+  if (name == PLG_ENTITY_TOP)
     setTop(value.toDouble());
-  }
-  else if (name == "LOCAL:LEFT")
-  {
+
+  else if (name == PLG_ENTITY_LEFT)
     setLeft(value.toDouble());
-  }
-  else if (name == "LOCAL:WIDTH")
-  {
+
+  else if (name == PLG_ENTITY_WIDTH)
     setWidth(value.toDouble());
-  }
-  else if (name == "LOCAL:HEIGHT")
-  {
+
+  else if (name == PLG_ENTITY_HEIGHT)
     setHeight(value.toDouble());
-  }
-  else if (name == "LOCAL:ZINDEX")
-  {
+
+  else if (name == PLG_ENTITY_UNCOLLAPSED_TOP)
+    setUncollapedTop(value.toDouble());
+
+  else if (name == PLG_ENTITY_UNCOLLAPSED_LEFT)
+    setUncollapedLeft(value.toDouble());
+
+  else if (name == PLG_ENTITY_UNCOLLAPSED_WIDTH)
+    setUncollapedWidth(value.toDouble());
+
+  else if (name == PLG_ENTITY_UNCOLLAPSED_HEIGHT)
+    setUncollapedHeight(value.toDouble());
+
+  else if (name == PLG_ENTITY_ZINDEX)
     setzIndex(value.toInt());
-  }
-  else if (name == "LOCAL:ID")
-  {
-    setLocalId(value);
-  }
-  else if (name == "LOCAL:UID")
-  {
-    setLocalUid(value);
-  }
-  else if (name == "LOCAL:HIDDEN")
-  {
-    setHidden((value == "TRUE" ? true : false));
-  }
+
+  else if (name == PLG_ENTITY_ID)
+    setStructuralId(value);
+
+  else if (name == PLG_ENTITY_UID)
+    setStructuralUid(value);
+
+  else if (name == PLG_ENTITY_CATEGORY)
+    setStructuralCategory((StructualCategory)value.toInt());
+
+  else if (name == PLG_ENTITY_TYPE)
+    setStructuralType((StructuralType)value.toInt());
+
+  else if (name == PLG_ENTITY_HIDDEN)
+    setHidden((value == "1" ? true : false));
+  else if (name == PLG_ENTITY_COLLAPSED)
+    setCollapsed((value == "1" ? true : false));
+
+
+  else
+    _properties.insert(name, value);
 }
 
 bool StructuralEntity::isMoveable() const
@@ -188,8 +192,6 @@ bool StructuralEntity::isMoveable() const
 void StructuralEntity::setMoveable(bool moveable)
 {
   _moveable = moveable;
-
-//  _properties["LOCAL:MOVEABLE"] = (moveable ? "TRUE" : "FALSE");
 }
 
 bool StructuralEntity::isSelectable() const
@@ -200,8 +202,6 @@ bool StructuralEntity::isSelectable() const
 void StructuralEntity::setSelectable(bool selectable)
 {
   _selectable = selectable;
-
-//  _properties["LOCAL:SELECTABLE"] = (selectable ? "TRUE" : "FALSE");
 }
 
 bool StructuralEntity::isHoverable() const
@@ -212,8 +212,6 @@ bool StructuralEntity::isHoverable() const
 void StructuralEntity::setHoverable(bool hoverable)
 {
   _hoverable = hoverable;
-
-//  _properties["LOCAL:HOVERABLE"] = (hoverable ? "TRUE" : "FALSE");
 }
 
 bool StructuralEntity::isResizable() const
@@ -224,8 +222,6 @@ bool StructuralEntity::isResizable() const
 void StructuralEntity::setResizable(bool resizable)
 {
   _resizable = resizable;
-
-//  _properties["LOCAL:RESIZABLE"] = (resizable ? "TRUE" : "FALSE");
 }
 
 bool StructuralEntity::isDraggable()
@@ -236,8 +232,6 @@ bool StructuralEntity::isDraggable()
 void StructuralEntity::setDraggable(bool draggable)
 {
   _draggable = draggable;
-
-//  _properties["LOCAL:DRAGGABLE"] = (draggable ? "TRUE" : "FALSE");
 }
 
 bool StructuralEntity::isMoving() const
@@ -248,8 +242,6 @@ bool StructuralEntity::isMoving() const
 void StructuralEntity::setMoving(bool moving)
 {
   _moving = moving;
-
-//  _properties["LOCAL:MOVING"] = (moving ? "TRUE" : "FALSE");
 }
 
 bool StructuralEntity::isHidden() const
@@ -259,10 +251,8 @@ bool StructuralEntity::isHidden() const
 
 void StructuralEntity::setHidden(bool hidden)
 {
-  // TODO
   _hidden = hidden;
-
-  _properties["LOCAL:HIDDEN"] = (hidden ? "TRUE" : "FALSE");
+  _properties.insert(PLG_ENTITY_HIDDEN,(hidden ? "1" : "0"));
 
   setVisible(!hidden);
 }
@@ -275,8 +265,6 @@ bool StructuralEntity::isResizing() const
 void StructuralEntity::setResizing(bool resizing)
 {
   _resizing = resizing;
-
-//  _properties["LOCAL:RESIZING"] = (resizing ? "TRUE" : "FALSE");
 }
 
 bool StructuralEntity::isHovering() const
@@ -287,8 +275,6 @@ bool StructuralEntity::isHovering() const
 void StructuralEntity::setHovering(bool hovering)
 {
   _hovering = hovering;
-
-//  _properties["LOCAL:HOVERING"] = (hovering ? "TRUE" : "FALSE");
 }
 
 bool StructuralEntity::isDragging() const
@@ -299,8 +285,6 @@ bool StructuralEntity::isDragging() const
 void StructuralEntity::setDragging(bool dragging)
 {
   _dragging = dragging;
-
-//  _properties["LOCAL:DRAGGING"] = (dragging ? "TRUE" : "FALSE");
 }
 
 bool StructuralEntity::isSelected() const
@@ -311,8 +295,17 @@ bool StructuralEntity::isSelected() const
 void StructuralEntity::setSelected(bool selected)
 {
   _selected = selected;
+}
 
-  _properties["LOCAL:SELECTED"] = (selected ? "TRUE" : "FALSE");
+bool StructuralEntity::isCollapsed() const
+{
+  return _collapsed;
+}
+
+void StructuralEntity::setCollapsed(bool collapsed)
+{
+  _collapsed = collapsed;
+  _properties.insert(PLG_ENTITY_COLLAPSED,(collapsed ? "1" : "0"));
 }
 
 qreal StructuralEntity::getTop() const
@@ -323,10 +316,8 @@ qreal StructuralEntity::getTop() const
 void StructuralEntity::setTop(qreal top)
 {
   _top = top;
+  _properties.insert(PLG_ENTITY_TOP,QString::number(top));
 
-  _properties["LOCAL:TOP"] = QString::number(top);
-
-  // TODO
   setY(top-4);
 }
 
@@ -338,8 +329,6 @@ qreal StructuralEntity::getMoveTop() const
 void StructuralEntity::setMoveTop(qreal moveTop)
 {
   _moveTop = moveTop;
-
-//  _properties["LOCAL:MOVETOP"] = QString::number(moveTop);
 }
 
 qreal StructuralEntity::getPressTop() const
@@ -350,8 +339,6 @@ qreal StructuralEntity::getPressTop() const
 void StructuralEntity::setPressTop(qreal pressTop)
 {
   _pressTop = pressTop;
-
-//  _properties["LOCAL:PRESSTOP"] = QString::number(pressTop);
 }
 
 qreal StructuralEntity::getResizeTop() const
@@ -362,8 +349,6 @@ qreal StructuralEntity::getResizeTop() const
 void StructuralEntity::setResizeTop(qreal resizeTop)
 {
   _resizeTop = resizeTop;
-
-//  _properties["LOCAL:RESIZETOP"] = QString::number(resizeTop);
 }
 
 qreal StructuralEntity::getLeft() const
@@ -374,10 +359,8 @@ qreal StructuralEntity::getLeft() const
 void StructuralEntity::setLeft(qreal left)
 {
   _left = left;
+  _properties.insert(PLG_ENTITY_LEFT,QString::number(left));
 
-  _properties["LOCAL:LEFT"] = QString::number(left);
-
-  // TODO
   setX(left-4);
 }
 
@@ -389,8 +372,6 @@ qreal StructuralEntity::getMoveLeft() const
 void StructuralEntity::setMoveLeft(qreal moveLeft)
 {
   _moveLeft = moveLeft;
-
-//  _properties["LOCAL:MOVELEFT"] = QString::number(moveLeft);
 }
 
 qreal StructuralEntity::getPressLeft() const
@@ -401,8 +382,6 @@ qreal StructuralEntity::getPressLeft() const
 void StructuralEntity::setPressLeft(qreal pressLeft)
 {
   _pressLeft = pressLeft;
-
-//  _properties["LOCAL:PRESSLEFT"] = QString::number(pressLeft);
 }
 
 qreal StructuralEntity::getResizeLeft() const
@@ -413,8 +392,6 @@ qreal StructuralEntity::getResizeLeft() const
 void StructuralEntity::setResizeLeft(qreal resizeLeft)
 {
   _resizeLeft = resizeLeft;
-
-//  _properties["LOCAL:RESIZELEFT"] = QString::number(resizeLeft);
 }
 
 qreal StructuralEntity::getWidth() const
@@ -425,8 +402,7 @@ qreal StructuralEntity::getWidth() const
 void StructuralEntity::setWidth(qreal width)
 {
   _width = width;
-
-  _properties["LOCAL:WIDTH"] = QString::number(width);
+  _properties.insert(PLG_ENTITY_WIDTH,QString::number(width));
 }
 
 qreal StructuralEntity::getPressWidth() const
@@ -437,8 +413,6 @@ qreal StructuralEntity::getPressWidth() const
 void StructuralEntity::setPressWidth(qreal pressWidth)
 {
   _pressWidth = pressWidth;
-
-//  _properties["LOCAL:PRESSWIDTH"] = QString::number(pressWidth);
 }
 
 qreal StructuralEntity::getResizeWidth() const
@@ -449,8 +423,6 @@ qreal StructuralEntity::getResizeWidth() const
 void StructuralEntity::setResizeWidth(qreal resizeWidth)
 {
   _resizeWidth = resizeWidth;
-
-//  _properties["LOCAL:RESIZEWIDTH"] = QString::number(resizeWidth);
 }
 
 qreal StructuralEntity::getHeight() const
@@ -461,8 +433,7 @@ qreal StructuralEntity::getHeight() const
 void StructuralEntity::setHeight(qreal height)
 {
   _height = height;
-
-  _properties["LOCAL:HEIGHT"] = QString::number(height);
+  _properties.insert(PLG_ENTITY_HEIGHT,QString::number(height));
 }
 
 qreal StructuralEntity::getPressHeight() const
@@ -473,8 +444,6 @@ qreal StructuralEntity::getPressHeight() const
 void StructuralEntity::setPressHeight(qreal pressHeight)
 {
   _pressHeight = pressHeight;
-
-//  _properties["LOCAL:PRESSHEIGHT"] = QString::number(pressHeight);
 }
 
 qreal StructuralEntity::getResizeHeight() const
@@ -485,8 +454,50 @@ qreal StructuralEntity::getResizeHeight() const
 void StructuralEntity::setResizeHeight(qreal resizeHeight)
 {
   _resizeHeight = resizeHeight;
+}
 
-//  _properties["LOCAL:RESIZEHEIGHT"] = QString::number(resizeHeight);
+qreal StructuralEntity::getUncollapedTop() const
+{
+  return _uncollapsedTop;
+}
+
+void StructuralEntity::setUncollapedTop(qreal uncollapedTop)
+{
+  _uncollapsedTop = uncollapedTop;
+  _properties.insert(PLG_ENTITY_UNCOLLAPSED_TOP,QString::number(uncollapedTop));
+}
+
+qreal StructuralEntity::getUncollapedLeft() const
+{
+  return _uncollapsedLeft;
+}
+
+void StructuralEntity::setUncollapedLeft(qreal uncollapedLeft)
+{
+  _uncollapsedLeft = uncollapedLeft;
+  _properties.insert(PLG_ENTITY_UNCOLLAPSED_LEFT,QString::number(uncollapedLeft));
+}
+
+qreal StructuralEntity::getUncollapedWidth() const
+{
+  return _uncollapsedWidth;
+}
+
+void StructuralEntity::setUncollapedWidth(qreal uncollapedWidth)
+{
+  _uncollapsedWidth = uncollapedWidth;
+  _properties.insert(PLG_ENTITY_UNCOLLAPSED_WIDTH,QString::number(uncollapedWidth));
+}
+
+qreal StructuralEntity::getUncollapedHeight() const
+{
+  return _uncollapsedHeight;
+}
+
+void StructuralEntity::setUncollapedHeight(qreal uncollapedHeight)
+{
+  _uncollapsedHeight = uncollapedHeight;
+  _properties.insert(PLG_ENTITY_UNCOLLAPSED_HEIGHT,QString::number(uncollapedHeight));
 }
 
 qreal StructuralEntity::getzIndex() const
@@ -496,92 +507,84 @@ qreal StructuralEntity::getzIndex() const
 
 void StructuralEntity::setzIndex(qreal zIndex)
 {
-  // TODO
   _zIndex = zIndex;
-
-  _properties["LOCAL:ZINDEX"] = QString::number(zIndex);
+  _properties.insert(PLG_ENTITY_ZINDEX,QString::number(zIndex));
 
   setZValue(zIndex);
 }
 
-StructuralEntity* StructuralEntity::getLocalParent() const
+StructuralEntity* StructuralEntity::getStructuralParent() const
 {
   return _parent;
 }
 
-void StructuralEntity::setLocalParent(StructuralEntity* parent)
+void StructuralEntity::setStructuralParent(StructuralEntity* parent)
 {
-  // TODO
   _parent = parent;
 
   setParent(parent);
   setParentItem(parent);
 
-  if (parent !=NULL)
-    parent->insertLocalChild(this);
+  if (parent != NULL)
+    parent->addStructuralEntity(this);
 }
 
-QVector<StructuralEntity*> StructuralEntity::getLocalChildren()
+QVector<StructuralEntity*> StructuralEntity::getStructuralEntities()
 {
   return _children;
 }
 
-void StructuralEntity::insertLocalChild(StructuralEntity* child)
+void StructuralEntity::createMenus()
 {
-  if (child != NULL)
-  {
-  // \fixme This is only an additional check. Maybe, the better way to do
-  // that could be using a set instead of a vector to entities.
-  if(!_children.contains(child))
-  {
-    _children.append(child);
+  menu = new StructuralMenu();
+}
 
-    // connect(entity, SIGNAL(undoRequested()), SIGNAL(undoRequested()));
-    // connect(entity, SIGNAL(redoRequested()), SIGNAL(redoRequested()));
-
-  }
-  else
-  {
-    qWarning() << "[QNST] Warning! You are adding the same entity twice as \
-                  child of " << QString().sprintf("%p", this) << __FILE__ << __LINE__;
-  }
-  }
-  }
-
-void StructuralEntity::removeLocalChild(StructuralEntity* child)
+void StructuralEntity::createConnections()
 {
-  if (child != NULL)
+  connect(menu, SIGNAL(insert(StructuralType)),SLOT(performInsert(StructuralType)));
+}
+
+void StructuralEntity::addStructuralEntity(StructuralEntity* entity)
+{
+  if (entity != NULL)
+    if(!_children.contains(entity))
+      _children.append(entity);
+}
+
+void StructuralEntity::removeStructuralEntity(StructuralEntity* entity)
+{
+  if (entity != NULL)
   {
-    int index = _children.indexOf(child);
+    int index = _children.indexOf(entity);
 
     if (index >= 0)
-    _children.remove(index);
+      _children.remove(index);
 
-    child->setLocalParent(NULL);
+    entity->setStructuralParent(NULL);
   }
 }
 
-void StructuralEntity::newChild(Structural::EntityName type)
+void StructuralEntity::newChild(Structural::StructuralType type)
 {
   QString uid = QUuid::createUuid().toString();
-  QString parent = getLocalUid();
+  QString parent = getStructuralUid();
   QMap<QString, QString> properties;
-  properties["LOCAL:NAME"] = QString::number(type);
+  properties[PLG_ENTITY_CATEGORY] = QString::number(type);
 
   QMap<QString, QString> settings;
-  settings["UNDO"] = "1";
-  settings["NOTIFY"] = "1";
-  settings["CODE"] = QUuid::createUuid().toString();
+  settings[PLG_SETTING_UNDO] = "1";
+  settings[PLG_SETTING_NOTIFY] = "1";
+  settings[PLG_SETTING_CODE] = QUuid::createUuid().toString();
 
   emit inserted(uid, parent, properties, settings);
 }
 
-LocalResize StructuralEntity::getLocalResize() const
+StructuralResize StructuralEntity::getStructuralResize() const
 {
   return _resize;
 }
 
-void StructuralEntity::setLocalResize(const LocalResize resize)
+void StructuralEntity::setStructuralResize(const StructuralResize resize)
 {
   _resize = resize;
 }
@@ -661,6 +664,28 @@ void StructuralEntity::mouseMoveEvent(QGraphicsSceneMouseEvent* event)
 
   } else if (_resizable && _resizing){
     resize(event);
+  }else if(_draggable && _dragging){
+    QDrag *drag = new QDrag(event->widget());
+    QMimeData* minedata = new QMimeData();
+
+    minedata->setObjectName(QString::number(_subtype));
+    minedata->setText(_uid);
+    drag->setMimeData(minedata);
+/*
+    QPixmap pixmap(boundingRect().size().toSize());
+    pixmap.fill(Qt::white);
+
+    QPainter painter (&pixmap);
+    painter.setBackgroundMode(Qt::OpaqueMode);
+    painter.setOpacity(0.5);
+    QStyleOptionGraphicsItem styleOption;
+    paint(&painter,&styleOption,0);
+    painter.end();
+
+    drag->setPixmap(pixmap);
+*/
+
+    drag->exec();
   }
 }
 
@@ -671,7 +696,7 @@ void StructuralEntity::mousePressEvent(QGraphicsSceneMouseEvent* event)
 
   }else if (event->button() == Qt::LeftButton){
     if (_selectable && !_selected){
-      setSelected(true); QMap<QString, QString> settings; emit selected(getLocalUid(), settings);
+      setSelected(true); QMap<QString, QString> settings; emit selected(getStructuralUid(), settings);
     }
 
     setPressTop(event->pos().y());
@@ -679,10 +704,20 @@ void StructuralEntity::mousePressEvent(QGraphicsSceneMouseEvent* event)
     setPressWidth(_width);
     setPressHeight(_height);
 
+    if (_draggable){
+      setDragging(true);
+
+      QGraphicsItem::mousePressEvent(event);
+
+      return;
+    }
+
     // avoid flickering on first move
     if (_moveable){
       setMoveTop(_top);
       setMoveLeft(_left);
+      setCursor(Qt::SizeAllCursor);
+
     }
 
     // avoid flickering on first resize
@@ -699,42 +734,42 @@ void StructuralEntity::mousePressEvent(QGraphicsSceneMouseEvent* event)
     if (_resizable){
       // if over TOPLEFT resize region
       if (QRectF(0,0,W,H).contains(event->pos())){
-        setLocalResize(Structural::TopLeft);
+        setStructuralResize(Structural::TopLeft);
         setResizing(true);
 
         // if over TOP resize region
       }else if (QRectF((_width+W)/2 - W/2,0,W,H).contains(event->pos())){
-        setLocalResize(Structural::Top);
+        setStructuralResize(Structural::Top);
         setResizing(true);
 
         // if over TOPRIGHT resize region
       }else if (QRectF((_width+W) - W,0,W,H).contains(event->pos())){
-        setLocalResize(Structural::TopRight);
+        setStructuralResize(Structural::TopRight);
         setResizing(true);
 
         // if over RIGHT resize region
       }else if (QRectF((_width+W) - W,(_height+H)/2 - H/2,W,H).contains(event->pos())){
-        setLocalResize(Structural::Right);
+        setStructuralResize(Structural::Right);
         setResizing(true);
 
         // if over BOTTOMRIGHT resize region
       }else if (QRectF((_width+W) - W,(_height+H) - H,W,H).contains(event->pos())){
-        setLocalResize(Structural::BottomRight);
+        setStructuralResize(Structural::BottomRight);
         setResizing(true);
 
         // if over BOTTOM resize region
       }else if (QRectF((_width+W)/2 - W/2,(_height+H) - H,W,H).contains(event->pos())){
-        setLocalResize(Structural::Bottom);
+        setStructuralResize(Structural::Bottom);
         setResizing(true);
 
         // if over BOTTOMLEFT resize region
       }else if (QRectF(0,(_height+H) - H,W,H).contains(event->pos())){
-        setLocalResize(Structural::BottomLeft);
+        setStructuralResize(Structural::BottomLeft);
         setResizing(true);
 
         // if over LEFT resize region
       }else if (QRectF(0,(_height+H)/2 - H/2,W,H).contains(event->pos())){
-        setLocalResize(Structural::Left);
+        setStructuralResize(Structural::Left);
         setResizing(true);
 
         // if not over any resize region
@@ -757,26 +792,21 @@ void StructuralEntity::mouseReleaseEvent(QGraphicsSceneMouseEvent*event)
 
     if ((_top != _moveTop || _left != _moveLeft)){
 
-      /**********************/
-      QMap<QString, QString> previous = getLocalProperties();
 
-      //            emit entityAboutToChange(properties);
+      QMap<QString, QString> previous = getStructuralProperties();
+
 
       setTop(_moveTop);
       setLeft(_moveLeft);
 
-      adjust();
-
-      QMap<QString, QString> properties = getLocalProperties();
-      //            properties["top"] = QString::number(moveTop);
-      //            properties["left"] = QString::number(moveLeft);
+      QMap<QString, QString> properties = getStructuralProperties();
 
       QMap<QString, QString> settings;
-      settings["UNDO"] = "1";
-      settings["ADJUST"] = "0";
-      settings["CODE"] = QUuid::createUuid().toString();
+      settings[PLG_SETTING_UNDO] = "1";
+      settings[PLG_SETTING_CODE] = StructuralUtil::CreateUid();
+      settings["LOCATION"] = "INTERNAL MOVE";
 
-      emit changed(getLocalUid(), properties, previous,settings);
+      emit changed(getStructuralUid(), properties, previous,settings);
 
 
       //            emit entityChanged();
@@ -791,7 +821,7 @@ void StructuralEntity::mouseReleaseEvent(QGraphicsSceneMouseEvent*event)
   }else if (_resizing){
     setResizing(false);
 
-    QMap<QString, QString> previous = getLocalProperties();
+    QMap<QString, QString> previous = getStructuralProperties();
 
     if ((_top != _resizeTop || _left != _resizeLeft || _width != _resizeWidth || _height != _resizeHeight)){
       if (_resizeTop > _top + _height){
@@ -835,16 +865,16 @@ void StructuralEntity::mouseReleaseEvent(QGraphicsSceneMouseEvent*event)
 
       adjust();
 
-      QMap<QString, QString> properties = getLocalProperties();
+      QMap<QString, QString> properties = getStructuralProperties();
 
       //            emit entityChanged();
 
       QMap<QString, QString> settings;
-      settings["UNDO"] = "1";
-      settings["ADJUST"] = "0";
-      settings["CODE"] = QUuid::createUuid().toString();
+      settings[PLG_SETTING_UNDO] = "1";
+      settings["LOCATION"] = "INTERNAL MOVE";
+      settings[PLG_SETTING_CODE] = StructuralUtil::CreateUid();
 
-      emit changed(getLocalUid(), properties, previous,settings);
+      emit changed(getStructuralUid(), properties, previous,settings);
 
     }else{
       adjust();
@@ -854,7 +884,7 @@ void StructuralEntity::mouseReleaseEvent(QGraphicsSceneMouseEvent*event)
   QGraphicsItem::mouseReleaseEvent(event);
 }
 
-void StructuralEntity::hoverMoveEvent(QGraphicsSceneHoverEvent* event)
+void StructuralEntity::updateCursor(QGraphicsSceneHoverEvent* event)
 {
   if (_selected){
     if (_resizable){
@@ -908,6 +938,12 @@ void StructuralEntity::hoverMoveEvent(QGraphicsSceneHoverEvent* event)
     setCursor(Qt::ArrowCursor);
   }
 
+}
+
+void StructuralEntity::hoverMoveEvent(QGraphicsSceneHoverEvent* event)
+{
+  updateCursor(event);
+
   QGraphicsItem::hoverEnterEvent(event);
 }
 
@@ -922,75 +958,16 @@ void StructuralEntity::contextMenuEvent(QGraphicsSceneContextMenuEvent* event)
     {
       setSelected(true);
       //emit entitySelected(this);
-      QMap<QString, QString> settings; emit selected(getLocalUid(), settings);
+      QMap<QString, QString> settings; emit selected(getStructuralUid(), settings);
     }
 
     _insertPoint = event->pos();
 
     if (menu != NULL)
     {
-      switch (_name) {
-        case Structural::Media:
-          menu->mediaAction->setEnabled(false);
-          menu->contextAction->setEnabled(false);
-          menu->switchAction->setEnabled(false);
-          menu->bodyAction->setEnabled(false);
-          menu->areaAction->setEnabled(true);
-          menu->propertyAction->setEnabled(true);
-          menu->portAction->setEnabled(false);
-          menu->switchPortAction->setEnabled(false);
-          break;
+      menu->updateInsertAction(_subtype);
 
-        case Structural::Context:
-          menu->mediaAction->setEnabled(true);
-          menu->contextAction->setEnabled(true);
-          menu->switchAction->setEnabled(true);
-          menu->bodyAction->setEnabled(false);
-          menu->areaAction->setEnabled(false);
-          menu->propertyAction->setEnabled(true);
-          menu->portAction->setEnabled(true);
-          menu->switchPortAction->setEnabled(false);
-          break;
 
-        case Structural::Switch:
-          menu->mediaAction->setEnabled(true);
-          menu->contextAction->setEnabled(true);
-          menu->switchAction->setEnabled(true);
-          menu->bodyAction->setEnabled(false);
-          menu->areaAction->setEnabled(false);
-          menu->propertyAction->setEnabled(true);
-          menu->portAction->setEnabled(false);
-          menu->switchPortAction->setEnabled(true);
-          break;
-
-        case Structural::Body:
-          menu->mediaAction->setEnabled(true);
-          menu->contextAction->setEnabled(true);
-          menu->switchAction->setEnabled(true);
-          menu->bodyAction->setEnabled(false);
-          menu->areaAction->setEnabled(false);
-          menu->propertyAction->setEnabled(true);
-          menu->portAction->setEnabled(true);
-          menu->switchPortAction->setEnabled(false);
-          break;
-
-        case Structural::Area:
-        case Structural::Property:
-        case Structural::Port:
-        case Structural::SwitchPort:
-          menu->mediaAction->setEnabled(false);
-          menu->contextAction->setEnabled(false);
-          menu->switchAction->setEnabled(false);
-          menu->bodyAction->setEnabled(false);
-          menu->areaAction->setEnabled(false);
-          menu->propertyAction->setEnabled(false);
-          menu->portAction->setEnabled(false);
-          menu->switchPortAction->setEnabled(false);
-          break;
-
-        default:
-          break;
-      }
 
       menu->exec(event->screenPos());
     }
@@ -1016,6 +993,8 @@ void StructuralEntity::setMouseHoverHighlight(bool enable)
 
 void StructuralEntity::hoverEnterEvent(QGraphicsSceneHoverEvent* event)
 {
+//  updateCursor(event);
+
   QGraphicsItem::hoverEnterEvent(event);
 
   hover = true;
@@ -1023,6 +1002,8 @@ void StructuralEntity::hoverEnterEvent(QGraphicsSceneHoverEvent* event)
 
 void StructuralEntity::hoverLeaveEvent(QGraphicsSceneHoverEvent* event)
 {
+//  updateCursor(event);
+
   QGraphicsItem::hoverLeaveEvent(event);
 
   hover = false;
@@ -1038,9 +1019,43 @@ void StructuralEntity::setErrorMsg(QString erroMsg)
   this->erroMsg = erroMsg;
 }
 
+void StructuralEntity::dragEnterEvent(QGraphicsSceneDragDropEvent* event)
+{
+
+
+  StructuralType dropEntity = (StructuralType) event->mimeData()->objectName().toInt();
+
+  if (StructuralUtil::hasValidKinshp(dropEntity,_subtype)){
+    if (event->mimeData()->text() == _uid)
+      event->accept();
+    else
+      event->acceptProposedAction();
+  }else{
+
+    event->ignore();
+  }
+}
+void StructuralEntity::dropEvent(QGraphicsSceneDragDropEvent* event)
+{
+
+  StructuralType dropEntity = (StructuralType) event->mimeData()->objectName().toInt();
+
+  if (StructuralUtil::hasValidKinshp(dropEntity,_subtype)){
+    if (event->mimeData()->text() == _uid)
+      event->accept();
+    else
+      event->acceptProposedAction();
+
+    emit move(event->mimeData()->text(), _uid);
+
+  }else{
+    event->accept();
+  }
+}
+
 void StructuralEntity::drawMouseHoverHighlight(QPainter *painter)
 {
-  if(enableMouseHoverHighlight)
+  if(_hovering)
   {
     // Draw MouseHover rectangle
     if (!isSelected() && hasMouseHover())
@@ -1053,19 +1068,19 @@ void StructuralEntity::drawMouseHoverHighlight(QPainter *painter)
   }
 }
 
-void StructuralEntity::performInsert(Structural::EntityName name)
+void StructuralEntity::performInsert(Structural::StructuralType name)
 {
 
   QMap<QString, QString> properties;
-  properties["LOCAL:NAME"] = QString::number(name);
+  properties[PLG_ENTITY_CATEGORY] = QString::number(name);
 
   switch (name) {
     case Structural::Body:
     {
-      properties["LOCAL:TOP"] = QString::number(_insertPoint.y() - DEFAULT_BODY_HEIGHT/2);
-      properties["LOCAL:LEFT"] = QString::number(_insertPoint.x() - DEFAULT_BODY_WIDTH/2);
-      properties["LOCAL:HEIGHT"] = QString::number(DEFAULT_BODY_HEIGHT);
-      properties["LOCAL:WIDTH"] = QString::number(DEFAULT_BODY_WIDTH);
+      properties[PLG_ENTITY_TOP] = QString::number(_insertPoint.y() - DEFAULT_BODY_HEIGHT/2);
+      properties[PLG_ENTITY_LEFT] = QString::number(_insertPoint.x() - DEFAULT_BODY_WIDTH/2);
+      properties[PLG_ENTITY_HEIGHT] = QString::number(DEFAULT_BODY_HEIGHT);
+      properties[PLG_ENTITY_WIDTH] = QString::number(DEFAULT_BODY_WIDTH);
 
       break;
     }
@@ -1073,10 +1088,10 @@ void StructuralEntity::performInsert(Structural::EntityName name)
     case Structural::Switch:
     {
 
-      properties["LOCAL:TOP"] = QString::number(_insertPoint.y() - DEFAULT_CONTEXT_HEIGHT/2);
-      properties["LOCAL:LEFT"] = QString::number(_insertPoint.x() - DEFAULT_CONTEXT_WIDTH/2);
-      properties["LOCAL:HEIGHT"] = QString::number(DEFAULT_CONTEXT_HEIGHT);
-      properties["LOCAL:WIDTH"] = QString::number(DEFAULT_CONTEXT_WIDTH);
+      properties[PLG_ENTITY_TOP] = QString::number(_insertPoint.y() - DEFAULT_CONTEXT_HEIGHT/2);
+      properties[PLG_ENTITY_LEFT] = QString::number(_insertPoint.x() - DEFAULT_CONTEXT_WIDTH/2);
+      properties[PLG_ENTITY_HEIGHT] = QString::number(DEFAULT_CONTEXT_HEIGHT);
+      properties[PLG_ENTITY_WIDTH] = QString::number(DEFAULT_CONTEXT_WIDTH);
 
       break;
     }
@@ -1084,10 +1099,10 @@ void StructuralEntity::performInsert(Structural::EntityName name)
     case Structural::Media:
     {
 
-      properties["LOCAL:TOP"] = QString::number(_insertPoint.y() - DEFAULT_MEDIA_HEIGHT/2);
-      properties["LOCAL:LEFT"] = QString::number(_insertPoint.x() - DEFAULT_MEDIA_WIDTH/2);
-      properties["LOCAL:HEIGHT"] = QString::number(DEFAULT_MEDIA_HEIGHT);
-      properties["LOCAL:WIDTH"] = QString::number(DEFAULT_MEDIA_WIDTH);
+      properties[PLG_ENTITY_TOP] = QString::number(_insertPoint.y() - DEFAULT_MEDIA_HEIGHT/2);
+      properties[PLG_ENTITY_LEFT] = QString::number(_insertPoint.x() - DEFAULT_MEDIA_WIDTH/2);
+      properties[PLG_ENTITY_HEIGHT] = QString::number(DEFAULT_MEDIA_HEIGHT);
+      properties[PLG_ENTITY_WIDTH] = QString::number(DEFAULT_MEDIA_WIDTH);
 
       break;
     }
@@ -1097,10 +1112,10 @@ void StructuralEntity::performInsert(Structural::EntityName name)
   }
 
   QMap<QString, QString> settings;
-  settings["UNDO"] = "1";
-  settings["NOTIFY"] = "1";
-  settings["CODE"] = QUuid::createUuid().toString();
+  settings[PLG_SETTING_UNDO] = "1";
+  settings[PLG_SETTING_NOTIFY] = "1";
+  settings[PLG_SETTING_CODE] = QUuid::createUuid().toString();
 
-  inserted(QUuid::createUuid().toString(),getLocalUid(), properties, settings);
+  inserted(QUuid::createUuid().toString(),getStructuralUid(), properties, settings);
 }
 

@@ -1,5 +1,5 @@
-#ifndef QNSTREMOVE_H
-#define QNSTREMOVE_H
+#ifndef REMOVE_H
+#define REMOVE_H
 
 #include "Command.h"
 
@@ -18,4 +18,4 @@ private:
   QMap<QString, QString> _properties; QMap<QString, QString> _settings;
 };
 
-#endif // QNSTREMOVE_H
+#endif // REMOVE_H

@@ -2,16 +2,15 @@
 #define QNSTGRAPHICSINTERFACE_H
 
 #include "StructuralEntity.h"
-#include "StructuralEdge.h"
 
-class StructuralInterface : public QnstEntityWithEdges
+class StructuralInterface : public StructuralEntity
 {
 public:
   StructuralInterface(StructuralEntity* parent = 0);
 
   ~StructuralInterface();
 
-  virtual void setLocalName(const LocalName _name);
+  virtual void setStructuralType(const StructuralType _subtype);
 
   virtual void adjust(bool avoidCollision = true);
 
@@ -22,7 +21,7 @@ public:
   void setHexColor(QString hexColor);
   void setHexBorderColor(QString hexBorderColor);
 
-  virtual void updateToolTip();
+  virtual void refresh();
 
 protected:
   virtual void draw(QPainter* painter);

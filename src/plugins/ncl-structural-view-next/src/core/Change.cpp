@@ -16,15 +16,21 @@ Change::~Change()
 
 void Change::undo()
 {
-  _settings["UNDO"] = "0";
-  _settings["NOTIFY"] = "1";
+  _settings.insert(PLG_SETTING_UNDO,"0");
+  _settings.insert(PLG_SETTING_NOTIFY,"1");
+  _settings.insert("LOCATION","UNDO COMMAND");
 
   emit change(_uid, _previous, _properties, _settings);
 }
 
 void Change::redo()
 {
-  _settings["UNDO"] = "0";
+  _settings.insert(PLG_SETTING_UNDO,"0");
+
+
 
   emit change(_uid, _properties, _previous, _settings);
+
+  if(_settings.value("LOCATION") != "REDO COMMAND")
+    _settings.insert("LOCATION", "REDO COMMAND");
 }

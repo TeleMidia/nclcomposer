@@ -23,12 +23,9 @@
 #include <core/extensions/IPlugin.h>
 using namespace composer::extension;
 
-#include "StructuralView.h"
 #include "StructuralWindow.h"
-
-//
-// ATTENTION: This code needs a refactoring.
-//
+#include "StructuralView.h"
+#include "StructuralScene.h"
 
 class StructuralViewPlugin : public IPlugin
 {
@@ -51,18 +48,14 @@ public slots:
   virtual void changeSelectedEntity(QString pluginID, void* entityUID);
 
   virtual void errorMessage(QString error);
-  void clearValidationError(QString pluginID, void *param);
+  void clearValidationMessages(QString pluginID, void *param);
   void validationError(QString pluginID, void *param);
 
   /* From Core */
   void requestEntitySelection(const QString uid);
-
   void requestEntityAddition(Entity* entity);
-
-  void requestEntityRemotion(Entity* entity);
-
+  void requestEntityRemotion(Entity* entity, bool enableUndo = true);
   void requestEntityChange(Entity* entity);
-
   void requestEntitySelection(Entity* entity);
 
   /* From View */
@@ -79,6 +72,8 @@ public slots:
                                  QMap<QString, QString> settings);
 
 private:
+  void clear();
+
   QString getUidById(QString id);
 
   QString getUidById(QString id, Entity* entity);
@@ -89,58 +84,18 @@ private:
 
   void createConnections();
 
-  /* FROM NCL COMPOSER CORE */
-  void requestImportBaseAddition(Entity* entity);
-
-  void requestImportBaseChange(Entity* entity);
-
-  void requestCausalConnectorAddition(Entity* entity);
-
-  void requestCausalConnectorChange(Entity* entity);
-
-  void requestSimpleConditionAddition(Entity* entity);
-
-  void requestSimpleConditionChange(Entity* entity);
-
-  void requestSimpleActionAddition(Entity* entity);
-
-  void requestSimpleActionChange(Entity* entity);
-
-  void requestConnectorParamAddition(Entity* entity);
-
-  void requestConnectorParamChange(Entity* entity);
-  /* END FROM NCL COMPOSER CORE */
-
 
 
   /* FROM QNSTVIEW */
   void requestBodyDependence();
 
-  void requestConnectorAddition(const QString uid, const QString parent,
-                                const QMap<QString, QString> &properties);
-
-  void requestComplexConnectorAddition(const QString uid,
-                                       const QString parent,
-                                       const QMap<QString, QString> &properties);
-
-  void requestBindAddition(const QString uid, const QString parent,
-                           const QMap<QString, QString> &properties);
-
-  void requestConnectorDependence();
-
-  void requestConnectorBaseDependence();
-  /* END FROM QNSTVIEW */
-
 
 private:
-  int n;
 
   bool isConnector;
+  StructuralWindow* _window;
 
-  StructuralView* view;
-  StructuralWindow* window;
-
-  QString request;
+  QString _notified;
   QMap <QString, QString> entities; // core -> structural
   QMap <QString, QString> nclIDtoStructural; // nclId -> structural ID
 
@@ -152,17 +107,13 @@ private:
 
   QString *_selectedId;
 
-  /* Functions to handle the "sinchronization with core" */
-//  bool isSyncingFromTextual;
-//  void cacheNCLIds();
-//  QString insertNCLIDIfEmpty(Entity *entity);
-//  QString getNCLIdFromEntity(Entity *entity);
-  bool isEntityHandled(Entity *entity);
-//  void syncNCLIdsWithStructuralIds();
+  bool _synching;
+  bool _waiting;
+
 
 public slots:
-//  void textualStartSync(QString, void*); /* from textual plugin */
-//  void textualFinishSync(QString, void*); /* from textual plugin */
+  void textualStartSync(QString, void*); /* from textual plugin */
+  void textualFinishSync(QString, void*); /* from textual plugin */
   /* End "synchronization with core". */
 };
 

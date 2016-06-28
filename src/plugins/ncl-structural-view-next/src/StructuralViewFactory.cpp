@@ -19,13 +19,14 @@
 #include "StructuralViewFactory.h"
 
 StructuralViewFactory::StructuralViewFactory(QObject* parent)
+  : QObject(parent)
 {
-  setParent(parent);
+  // Nothing todo.
 }
 
 StructuralViewFactory::~StructuralViewFactory()
 {
-
+  // Nothing todo.
 }
 
 IPlugin* StructuralViewFactory::createPluginInstance()
@@ -40,7 +41,7 @@ void StructuralViewFactory::releasePluginInstance(IPlugin* plugin)
 
 QString StructuralViewFactory::id() const
 {
-  return "br.puc-rio.telemidia.nclstructural";
+  return "br.puc-rio.telemidia.composer.structural";
 }
 
 #if QT_VERSION < 0x050000

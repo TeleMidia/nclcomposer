@@ -13,6 +13,80 @@ StructuralMenu::~StructuralMenu()
 
 }
 
+void StructuralMenu::updateInsertAction(StructuralType type, bool enableBody)
+{
+  switch (type) {
+    case Structural::Media:
+      mediaAction->setEnabled(false);
+      contextAction->setEnabled(false);
+      switchAction->setEnabled(false);
+      bodyAction->setEnabled(false);
+      areaAction->setEnabled(true);
+      propertyAction->setEnabled(true);
+      portAction->setEnabled(false);
+      switchPortAction->setEnabled(false);
+      break;
+
+    case Structural::Context:
+      mediaAction->setEnabled(true);
+      contextAction->setEnabled(true);
+      switchAction->setEnabled(true);
+      bodyAction->setEnabled(false);
+      areaAction->setEnabled(false);
+      propertyAction->setEnabled(true);
+      portAction->setEnabled(true);
+      switchPortAction->setEnabled(false);
+      break;
+
+    case Structural::Switch:
+      mediaAction->setEnabled(true);
+      contextAction->setEnabled(true);
+      switchAction->setEnabled(true);
+      bodyAction->setEnabled(false);
+      areaAction->setEnabled(false);
+      propertyAction->setEnabled(true);
+      portAction->setEnabled(false);
+      switchPortAction->setEnabled(true);
+      break;
+
+    case Structural::Body:
+      mediaAction->setEnabled(true);
+      contextAction->setEnabled(true);
+      switchAction->setEnabled(true);
+      bodyAction->setEnabled(false);
+      areaAction->setEnabled(false);
+      propertyAction->setEnabled(true);
+      portAction->setEnabled(true);
+      switchPortAction->setEnabled(false);
+      break;
+
+    case Structural::Area:
+    case Structural::Property:
+    case Structural::Port:
+    case Structural::SwitchPort:
+      mediaAction->setEnabled(false);
+      contextAction->setEnabled(false);
+      switchAction->setEnabled(false);
+      bodyAction->setEnabled(false);
+      areaAction->setEnabled(false);
+      propertyAction->setEnabled(false);
+      portAction->setEnabled(false);
+      switchPortAction->setEnabled(false);
+      break;
+
+    default:
+      mediaAction->setEnabled(false);
+      contextAction->setEnabled(false);
+      switchAction->setEnabled(false);
+      bodyAction->setEnabled(enableBody);
+      areaAction->setEnabled(false);
+      propertyAction->setEnabled(false);
+      portAction->setEnabled(false);
+      switchPortAction->setEnabled(false);
+      break;
+  }
+}
+
 void StructuralMenu::createActions()
 {
   // help action
@@ -20,47 +94,55 @@ void StructuralMenu::createActions()
   helpAction->setEnabled(false);
   helpAction->setText(tr("Help"));
   helpAction->setShortcut(QKeySequence("F1"));
+  helpAction->setIcon(QIcon(":/images/icon/help"));
 
   // undo action
   undoAction = new QAction(this);
   undoAction->setEnabled(false);
   undoAction->setText(tr("Undo"));
   undoAction->setShortcut(QKeySequence("Ctrl+Z"));
+  undoAction->setIcon(QIcon(":/images/icon/undo"));
 
   // redo action
   redoAction = new QAction(this);
   redoAction->setEnabled(false);
   redoAction->setText(tr("Redo"));
   redoAction->setShortcut(QKeySequence("Ctrl+Shift+Z"));
+  redoAction->setIcon(QIcon(":/images/icon/redo"));
 
   // cut action
   cutAction = new QAction(this);
   cutAction->setEnabled(false);
   cutAction->setText(tr("Cut"));
   cutAction->setShortcut(QKeySequence("Ctrl+X"));
+  cutAction->setIcon(QIcon(":/images/icon/cut"));
 
   // copy action
   copyAction = new QAction(this);
   copyAction->setEnabled(false);
   copyAction->setText(tr("Copy"));
   copyAction->setShortcut(QKeySequence("Ctrl+C"));
+  copyAction->setIcon(QIcon(":/images/icon/copy"));
 
   // paste action
   pasteAction = new QAction(this);
   pasteAction->setEnabled(false);
   pasteAction->setText(tr("Paste"));
   pasteAction->setShortcut(QKeySequence("Ctrl+V"));
+  pasteAction->setIcon(QIcon(":/images/icon/paste"));
 
   // delete action
   deleteAction = new QAction(this);
   deleteAction->setEnabled(false);
   deleteAction->setText(tr("Delete"));
   deleteAction->setShortcut(QKeySequence("Del"));
+  deleteAction->setIcon(QIcon(":/images/icon/delete"));
 
   // export action
   snapshotAction = new QAction(this);
   snapshotAction->setEnabled(false);
   snapshotAction->setText(tr("Snapshot..."));
+  snapshotAction->setIcon(QIcon(":/images/icon/snapshot"));
 
   // media action
   mediaAction = new QAction(this);
@@ -109,6 +191,12 @@ void StructuralMenu::createActions()
   propertyAction->setEnabled(false);
   propertyAction->setText(tr("Property"));
   propertyAction->setIcon(QIcon(":/images/icon/property-insert"));
+
+  // properties action
+  propertiesAction = new QAction(this);
+  propertiesAction->setEnabled(false);
+  propertiesAction->setText(tr("Properties"));
+  propertiesAction->setIcon(QIcon(":/images/icon/properties"));
 }
 
 void StructuralMenu::createMenus()
@@ -116,6 +204,7 @@ void StructuralMenu::createMenus()
   // insert menu
   insertMenu = new QMenu();
   insertMenu->setTitle(tr("Insert"));
+  insertMenu->setIcon(QIcon(":/images/icon/insert"));
 
   insertMenu->addAction(mediaAction);
   insertMenu->addSeparator();
@@ -127,9 +216,10 @@ void StructuralMenu::createMenus()
   insertMenu->addAction(propertyAction);
   insertMenu->addAction(portAction);
   insertMenu->addAction(switchPortAction);
-  insertMenu->setEnabled(false);
 
   addAction(helpAction);
+  addSeparator();
+  addMenu(insertMenu);
   addSeparator();
   addAction(undoAction);
   addAction(redoAction);
@@ -142,7 +232,33 @@ void StructuralMenu::createMenus()
   addSeparator();
   addAction(snapshotAction);
   addSeparator();
-  addMenu(insertMenu);
+  addAction(propertiesAction  );
+
+}
+
+void StructuralMenu::changeUndoState(bool enable)
+{
+  undoAction->setEnabled(enable);
+}
+
+void StructuralMenu::changeRedoState(bool enable)
+{
+  redoAction->setEnabled(enable);
+}
+
+void StructuralMenu::changeCutState(bool enable)
+{
+  cutAction->setEnabled(enable);
+}
+
+void StructuralMenu::changeCopyState(bool enable)
+{
+  copyAction->setEnabled(enable);
+}
+
+void StructuralMenu::changePasteState(bool enable)
+{
+  pasteAction->setEnabled(enable);
 }
 
 void StructuralMenu::createConnections()
@@ -159,40 +275,40 @@ void StructuralMenu::createConnections()
 
 void StructuralMenu::performBody()
 {
-  insert(Structural::Body);
+  emit insert(Structural::Body);
 }
 
 void StructuralMenu::performContext()
 {
-  insert(Structural::Context);
+  emit insert(Structural::Context);
 }
 
 void StructuralMenu::performSwitch()
 {
-  insert(Structural::Switch);
+  emit insert(Structural::Switch);
 }
 
 void StructuralMenu::performMedia()
 {
-  insert(Structural::Media);
+  emit insert(Structural::Media);
 }
 
 void StructuralMenu::performPort()
 {
-  insert(Structural::Port);
+  emit insert(Structural::Port);
 }
 
 void StructuralMenu::performArea()
 {
-  insert(Structural::Area);
+  emit insert(Structural::Area);
 }
 
 void StructuralMenu::performSwitchPort()
 {
-  insert(Structural::SwitchPort);
+  emit insert(Structural::SwitchPort);
 }
 
 void StructuralMenu::performProperty()
 {
-  insert(Structural::Property);
+  emit insert(Structural::Property);
 }

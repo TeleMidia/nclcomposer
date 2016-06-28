@@ -23,10 +23,6 @@ using namespace composer::extension;
 
 #include "StructuralViewPlugin.h"
 
-//
-// ATTENTION: This code needs a refactoring.
-//
-
 class StructuralViewFactory : public QObject, public IPluginFactory
 {
   Q_OBJECT
@@ -38,67 +34,21 @@ class StructuralViewFactory : public QObject, public IPluginFactory
 
 public:
   StructuralViewFactory(QObject* parent = 0);
-
-  ~StructuralViewFactory();
+  virtual ~StructuralViewFactory();
 
   IPlugin* createPluginInstance();
-
   void releasePluginInstance(IPlugin *);
-
   QString id() const;
 
 #if QT_VERSION < 0x050000
-  /*!
-   * \brief Returns the name of the structural view plug-in.
-   *
-   * \return QString the name of the plug-in.
-   */
-  QString name() { return "NCL Structural View (Next)"; }
-
-  /*!
-     \brief Returns the version of Layout View implementation.
-
-     \return QString the version number as string.
-    */
+  QString name() { return "NCL Structural View Next"; }
   QString version() { return NCLCOMPOSER_PLUGINS_VERSION; }
-  /*!
-     \brief Returns the core version that is compatible with this plugin.
-
-     \return QString the core version that is compatible with this plugin
-               as a string.
-    */
-  QString compatVersion() {return "0.1";}
-  /*!
-     \brief Returns the vendor of Layout View (i.e. Telemidia Lab).
-
-     \return QString the name of the vendor of Layout View.
-    */
+  QString compatVersion() {return "0.2";}
   QString vendor() {return "Telemidia Lab";}
-  /*!
-     \brief Returns the copyright of Layout View.
-
-     \return QString the copyright of Layout View.
-    */
   QString copyright() {return "Telemidia/PUC-Rio";}
-  /*!
-      \brief Returns the license of Layout View plugin (i.e. GPLv3).
-      \todo The complete license description.
-
-      \return QString the license of Layout View.
-    */
-  QString license() {return "GPLv3";}
-
-  /*!
-      \brief Returns a description of the Layout View
-
-      \return QString the description of Layout View.
-    */
-  QString description() {return tr("NCL Structural View enable the user to edit"
-                                   "the logical structure of a NCL document "
-                                   "visually.");}
-
+  QString license() {return "LGPL";}
+  QString description() {return tr("NCL Structural View enable the user to edit the logical structure of a NCL document visually.");}
   QString url() {return "http://composer.telemidia.puc-rio.br/structural";}
-
   QString category() {return "NCL";}
 #endif
 };

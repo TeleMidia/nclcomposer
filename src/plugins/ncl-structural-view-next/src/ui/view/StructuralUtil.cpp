@@ -1,7 +1,6 @@
 #include "StructuralUtil.h"
 
-#include "StructuralMedia.h"
-#include "StructuralLink.h"
+#include "StructuralContent.h"
 
 /* config */
 static std::map <QString, QString> config  =
@@ -48,8 +47,8 @@ static std::map <QString, QString> config  =
   (":nst:entity:composition:collapsed", "0");
 
 /* Initialize icon from type Map */
-std::map <Structural::EntityName, QString> StructuralUtil::iconFromTypeMap =
-  create_map<Structural::EntityName, QString >
+std::map <Structural::StructuralType, QString> StructuralUtil::iconFromTypeMap =
+  create_map<Structural::StructuralType, QString >
 
     (Structural::Media, ":/images/icon/media")
 
@@ -65,22 +64,22 @@ std::map <Structural::EntityName, QString> StructuralUtil::iconFromTypeMap =
                                            // to 0.1.3
     //(Qnst::Link, ":icon/aggregator")
 
-std::map <Structural::MediaTypes, QString> StructuralUtil::iconFromMediaTypeMap =
-  create_map<Structural::MediaTypes, QString >
+std::map <Structural::StructuralMedia, QString> StructuralUtil::iconFromMediaTypeMap =
+  create_map<Structural::StructuralMedia, QString >
     (Structural::Text, ":/icon/text")
     (Structural::Image, ":/icon/image")
     (Structural::Audio, ":/icon/audio")
     (Structural::Video, ":/icon/video")
-    (Structural::Html, ":/icon/html")
+    (Structural::HTML, ":/icon/html")
     (Structural::NCL, ":/icon/ncl")
     (Structural::Settings, ":/icon/settings")
     (Structural::NCLua, ":/icon/script")
-    (Structural::NoMediaType, ":/images/icon/media");
+    (Structural::NoContent, ":/images/icon/media");
 
 
 /* Initialize type from extension Map */
-std::map <QString, Structural::MediaTypes> StructuralUtil::typeFromExtMap =
-  create_map <QString, Structural::MediaTypes>
+std::map <QString, Structural::StructuralMedia> StructuralUtil::typeFromExtMap =
+  create_map <QString, Structural::StructuralMedia>
     ("txt", Structural::Text)
     ("png", Structural::Image)
     ("jpg", Structural::Image)
@@ -98,16 +97,16 @@ std::map <QString, Structural::MediaTypes> StructuralUtil::typeFromExtMap =
     ("avi", Structural::Video)
     ("mkv", Structural::Video)
 
-    ("htm", Structural::Html)
-    ("html", Structural::Html)
+    ("htm", Structural::HTML)
+    ("html", Structural::HTML)
 
     ("ncl", Structural::NCL)
 
     ("lua", Structural::NCLua);
 
 /* Initialize map from str type to qnsttype */
-std::map <QString, Structural::EntityName> StructuralUtil::typeFromStr =
-  create_map <QString, Structural::EntityName>
+std::map <QString, Structural::StructuralType> StructuralUtil::typeFromStr =
+  create_map <QString, Structural::StructuralType>
     ("body", Structural::Body)
     ("context", Structural::Context)
     ("port", Structural::Port)
@@ -118,11 +117,7 @@ std::map <QString, Structural::EntityName> StructuralUtil::typeFromStr =
 
     ("media", Structural::Media)
     ("area", Structural::Area)
-    ("property", Structural::Property)
-
-    ("link", Structural::Link)
-    ("bind", Structural::Bind)
-    ("reference", Structural::Reference);
+    ("property", Structural::Property);
    // ("bindParam", Qnst::BindParam)
 
     /*("causalConnector", Qnst::)
@@ -131,12 +126,12 @@ std::map <QString, Structural::EntityName> StructuralUtil::typeFromStr =
 
   //  ("aggregator",  Qnst::Aggregator);
 
-std::map <Structural::EntityName, QString> StructuralUtil::strFromType =
-    invert_map<Structural::EntityName, QString>(StructuralUtil::typeFromStr);
+std::map <Structural::StructuralType, QString> StructuralUtil::strFromType =
+    invert_map<Structural::StructuralType, QString>(StructuralUtil::typeFromStr);
 
 /* Initialize prefix id from type Map */
-std::map <Structural::EntityName, QString> StructuralUtil::prefixIdFromType =
-  create_map<Structural::EntityName, QString >
+std::map <Structural::StructuralType, QString> StructuralUtil::prefixIdFromType =
+  create_map<Structural::StructuralType, QString >
     (Structural::Media, "m")
 /*
     (Qnst::Image, "m")
@@ -160,32 +155,9 @@ std::map <Structural::EntityName, QString> StructuralUtil::prefixIdFromType =
 
    // (Qnst::Aggregator, "link") // \fixme This is here only for compatibility
                                // with versions prior to 0.1.3.
-   (Structural::Link, "link");
+   ;
 
-/* Initialize BindType from Role string Map */
-std::map <QString, Structural::BindType> StructuralUtil::bindTypeFromRoleStr =
-  create_map<QString, Structural::BindType>
-    ("onBegin", Structural::onBegin)
-    ("onEnd", Structural::onEnd)
-    ("onSelection", Structural::onSelection)
-    ("onResume", Structural::onResume)
-    ("onPause", Structural::onPause)
-    ("onBeginAttribution", Structural::onBeginAttribution)
-    ("onEndAttribution", Structural::onEndAttribution)
-    ("onPauseAttribution", Structural::onPauseAttribution)
-    ("onResumeAttribution", Structural::onResumeAttribution)
-
-    ("start", Structural::Start)
-    ("stop", Structural::Stop)
-    ("resume", Structural::Resume)
-    ("pause", Structural::Pause)
-    ("set", Structural::Set);
-
-/* Initialize String from Qnst::BindType Map */
-std::map <Structural::BindType, QString> StructuralUtil::strFromBindType =
-  invert_map<Structural::BindType, QString> (StructuralUtil::bindTypeFromRoleStr);
-
-StructuralEntity *StructuralUtil::makeGraphicsEntity(Structural::EntityName type,
+StructuralEntity *StructuralUtil::makeGraphicsEntity(Structural::StructuralType type,
                                                  StructuralEntity *parent,
                                            const QMap <QString, QString> &props)
 {
@@ -204,8 +176,8 @@ StructuralEntity *StructuralUtil::makeGraphicsEntity(Structural::EntityName type
     case Qnst::NCL:
     */
     case Structural::Media:
-      entity = new StructuralMedia(parent);
-      entity->setLocalName(type);
+      entity = new StructuralContent(parent);
+      entity->setStructuralType(type);
       break;
 
     case Structural::Body:
@@ -251,9 +223,84 @@ StructuralEntity *StructuralUtil::makeGraphicsEntity(Structural::EntityName type
   return entity;
 }
 
-Structural::MediaTypes StructuralUtil::getnstTypeFromMime(const QString &mimeType)
+QMap<QString,QString> StructuralUtil::createSettings(bool undo, bool notify)
 {
-  Structural::MediaTypes type;
+   return createSettings((undo ? "1" : "0"), (notify ? "1" : "0"), CreateUid());
+}
+
+QMap<QString,QString> StructuralUtil::createSettings(QString undo, QString notify, QString code)
+{
+  QMap<QString,QString> settings;
+
+  if (undo.isEmpty())
+    settings.insert(PLG_SETTING_UNDO,"1");
+  else
+    settings.insert(PLG_SETTING_UNDO,undo);
+
+  if (notify.isEmpty())
+    settings.insert(PLG_SETTING_NOTIFY,"1");
+  else
+    settings.insert(PLG_SETTING_NOTIFY,notify);
+
+  if (code.isEmpty())
+    settings.insert(PLG_SETTING_CODE,CreateUid());
+  else
+    settings.insert(PLG_SETTING_CODE,code);
+
+  return settings;
+}
+
+bool StructuralUtil::hasValidKinshp(StructuralType entityType, StructuralType parentType)
+{
+  switch (entityType) {
+    case Structural::Body:
+    {
+      return false;
+      break;
+    }
+
+    case Structural::Media:
+    case Structural::Switch:
+    case Structural::Context:
+    {
+      switch (parentType) {
+        case Structural::Body:
+        case Structural::Switch:
+        case Structural::Context:
+        {
+          return true;
+          break;
+        }
+        default:
+        {
+          return false;
+          break;
+        }
+      }
+      break;
+    }
+
+    default:
+    {
+      return false;
+      break;
+    }
+  }
+}
+
+QString StructuralUtil::convertType(StructualCategory type)
+{
+  return QString::number(type);
+}
+
+QString StructuralUtil::convertSubtype(StructuralType subtype)
+{
+  return QString::number(subtype);
+}
+
+Structural::StructuralMedia StructuralUtil::getnstTypeFromMime(const QString &mimeType)
+{
+  Structural::StructuralMedia type;
 
   if (mimeType.startsWith("image"))
    type = Structural::Image;
@@ -262,7 +309,7 @@ Structural::MediaTypes StructuralUtil::getnstTypeFromMime(const QString &mimeTyp
   else if (mimeType.startsWith("video"))
     type = Structural::Video;
   else if (mimeType == "text/html")
-    type = Structural::Html;
+    type = Structural::HTML;
   else if (mimeType == "application/x-ginga-NCL")
     type = Structural::NCL;
   else if (mimeType.startsWith("text"))
@@ -273,17 +320,171 @@ Structural::MediaTypes StructuralUtil::getnstTypeFromMime(const QString &mimeTyp
   else if (mimeType == "application/x-ginga-NCLua")
     type = Structural::NCLua;
   else
-    type = Structural::NoMediaType;
+    type = Structural::NoContent;
 
   return type;
 }
 
-QString StructuralUtil::createUid()
+void StructuralUtil::dbg(QObject* object, QString message)
+{
+  qDebug() << "[PLUGIN][STR]" << ":" << object->metaObject()->className() << ":" << message;
+}
+
+QMap<QString,QString> StructuralUtil::createCoreTranslationMap(StructuralType type)
+{
+  QMap<QString, QString> m;
+
+  switch (type)
+  {
+    case Structural::Body:
+    {
+      m.insert(NCL_ENTITY_ID, PLG_ENTITY_ID);
+
+      break;
+    }
+
+    case Structural::Context:
+    case Structural::Switch:
+    {
+      m.insert(NCL_ENTITY_ID, PLG_ENTITY_ID);
+      m.insert(NCL_ENTITY_REFER, NCL_ENTITY_REFER);
+
+      break;
+    }
+
+    case Structural::Media:
+    {
+      m.insert(NCL_ENTITY_ID, PLG_ENTITY_ID);
+      m.insert(NCL_ENTITY_REFER, NCL_ENTITY_REFER);
+      m.insert(NCL_ENTITY_INSTANCE, NCL_ENTITY_INSTANCE);
+      m.insert(NCL_ENTITY_TYPE, NCL_ENTITY_TYPE);
+      m.insert(NCL_ENTITY_SRC, PLG_ENTITY_SRC);
+      m.insert(NCL_ENTITY_DESCRIPTOR, NCL_ENTITY_DESCRIPTOR);
+
+      break;
+    }
+
+    case Structural::Port:
+    {
+      m.insert(NCL_ENTITY_ID, PLG_ENTITY_ID);
+      m.insert(NCL_ENTITY_COMPONENT, NCL_ENTITY_COMPONENT);
+      m.insert(NCL_ENTITY_INTERFACE, NCL_ENTITY_INTERFACE);
+
+      break;
+    }
+
+    case Structural::Property:
+    {
+      m.insert(NCL_ENTITY_NAME, PLG_ENTITY_ID);
+      m.insert(NCL_ENTITY_VALUE, NCL_ENTITY_VALUE);
+      m.insert(NCL_ENTITY_EXTERNABLE, NCL_ENTITY_EXTERNABLE);
+      break;
+    }
+
+    case Structural::Area:
+    {
+      m.insert(NCL_ENTITY_ID, PLG_ENTITY_ID);
+      //coords, begin, end, beginText, endText, beginPosition, endPosition, first, last, label, clip
+
+      break;
+    }
+
+    case Structural::SwitchPort:
+    {
+      m.insert(NCL_ENTITY_ID, PLG_ENTITY_ID);
+
+      break;
+    }
+
+    default:
+      break;
+
+  }
+
+  return m;
+}
+
+QMap<QString,QString> StructuralUtil::createViewTranslationMap(StructuralType type)
+{
+  QMap<QString, QString> m;
+
+  switch(type)
+  {
+    case Structural::Body:
+    {
+      m.insert(PLG_ENTITY_ID, NCL_ENTITY_ID);
+
+      break;
+    }
+
+    case Structural::Context:
+    case Structural::Switch:
+    {
+      m.insert(PLG_ENTITY_ID, NCL_ENTITY_ID);
+      m.insert(NCL_ENTITY_REFER,NCL_ENTITY_REFER);
+
+      break;
+    }
+
+    case Structural::Media:
+    {
+      m.insert(PLG_ENTITY_ID, NCL_ENTITY_ID);
+      m.insert(NCL_ENTITY_REFER,NCL_ENTITY_REFER);
+      m.insert(NCL_ENTITY_TYPE,NCL_ENTITY_TYPE);
+      m.insert(PLG_ENTITY_SRC, NCL_ENTITY_SRC);
+      m.insert(NCL_ENTITY_INSTANCE, NCL_ENTITY_INSTANCE);
+      m.insert(NCL_ENTITY_DESCRIPTOR, NCL_ENTITY_DESCRIPTOR);
+
+      break;
+    }
+
+    case Structural::Port:
+    {
+      m.insert(PLG_ENTITY_ID, NCL_ENTITY_ID);
+      m.insert(NCL_ENTITY_COMPONENT, NCL_ENTITY_COMPONENT);
+      m.insert(NCL_ENTITY_INTERFACE, NCL_ENTITY_INTERFACE);
+
+      break;
+    }
+
+    case Structural::Property:
+    {
+      m.insert(PLG_ENTITY_ID, NCL_ENTITY_NAME);
+      m.insert(NCL_ENTITY_VALUE, NCL_ENTITY_VALUE);
+      m.insert(NCL_ENTITY_EXTERNABLE, NCL_ENTITY_EXTERNABLE);
+      break;
+    }
+
+    case Structural::Area:
+    {
+      m.insert(PLG_ENTITY_ID, NCL_ENTITY_ID);
+      //coords, begin, end, beginText, endText, beginPosition, endPosition, first, last, label, clip
+
+      break;
+    }
+
+    case Structural::SwitchPort:
+    {
+      m.insert(PLG_ENTITY_ID, NCL_ENTITY_ID);
+
+      break;
+    }
+
+    default:
+      // do nothing
+      break;
+  }
+
+  return m;
+}
+
+
+QString StructuralUtil::CreateUid()
 {
   return QUuid::createUuid().toString();
 }
 
-QString StructuralUtil::iconFromEntityType(Structural::EntityName type)
+QString StructuralUtil::iconFromEntityType(Structural::StructuralType type)
 {
   QString path;
   if(iconFromTypeMap.count(type))
@@ -294,7 +495,7 @@ QString StructuralUtil::iconFromEntityType(Structural::EntityName type)
   return path;
 }
 
-QString StructuralUtil::iconFromMediaType(Structural::MediaTypes type)
+QString StructuralUtil::iconFromMediaType(Structural::StructuralMedia type)
 {
   QString path;
   if(iconFromMediaTypeMap.count(type))
@@ -315,56 +516,32 @@ QString StructuralUtil::normalizeXMLID(const QString &id)
   return tmp;
 }
 
-Structural::MediaTypes StructuralUtil::getnstTypeFromExtension(const QString &ext)
+Structural::StructuralMedia StructuralUtil::getnstTypeFromExtension(const QString &ext)
 {
   if(typeFromExtMap.count(ext))
     return typeFromExtMap[ext];
 
-  return Structural::NoMediaType;
+  return Structural::NoContent;
 }
 
-Structural::EntityName StructuralUtil::getnstTypeFromStr(const QString &strType)
+Structural::StructuralType StructuralUtil::getnstTypeFromStr(const QString &strType)
 {
   if(typeFromStr.count(strType))
     return typeFromStr[strType];
 
-  return Structural::NoName;
+  return Structural::NoType;
 }
 
-QString StructuralUtil::getStrFromNstType(Structural::EntityName type)
+
+
+QString StructuralUtil::getStrFromNstType(Structural::StructuralType type)
 {
   if(strFromType.count(type))
     return strFromType[type];
 
   else return "";
 }
-
-bool StructuralUtil::isCondition(Structural::BindType btype)
-{
-
-  switch (btype) {
-    case Structural::onBegin:
-    case Structural::onEnd:
-    case Structural::onSelection:
-    case Structural::onResume:
-    case Structural::onPause:
-    case Structural::onBeginAttribution:
-    case Structural::onEndAttribution:
-    case Structural::onPauseAttribution:
-    case Structural::onResumeAttribution:
-      return true;
-
-      break;
-    default:
-
-      return false;
-      break;
-  }
-
-  return false;
-}
-
-QString StructuralUtil::getPrefixIdFromType(Structural::EntityName type)
+QString StructuralUtil::getPrefixIdFromType(Structural::StructuralType type)
 {
   if(prefixIdFromType.count(type))
     return prefixIdFromType[type];
@@ -372,18 +549,3 @@ QString StructuralUtil::getPrefixIdFromType(Structural::EntityName type)
   return "unknown";
 }
 
-Structural::BindType StructuralUtil::getBindTypeFromStr(const QString &role)
-{
-  if(bindTypeFromRoleStr.count(role))
-    return bindTypeFromRoleStr[role];
-
-  return Structural::NoBindType;
-}
-
-QString StructuralUtil::getStrFromBindType(Structural::BindType type)
-{
-  if(strFromBindType.count(type))
-    return strFromBindType[type];
-
-  return QString("NoBindType");
-}

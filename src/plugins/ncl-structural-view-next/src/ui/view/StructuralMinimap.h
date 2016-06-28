@@ -5,8 +5,10 @@
 
 #include "StructuralView.h"
 
-#define MINIMAP_DEFAULT_W 160*2
-#define MINIMAP_DEFAULT_H 90*2
+#define MINIMAP_DEFAULT_W 120*2
+#define MINIMAP_DEFAULT_H 60*2
+
+class StructuralView;
 
 /** @brief Minimap for the current viewed structural scene
   *

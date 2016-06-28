@@ -4,13 +4,8 @@
         <file alias="icon/cut">images/icon-cut.png</file>
         <file alias="icon/delete">images/icon-delete.png</file>
         <file alias="icon/new">images/icon-new.png</file>
-        <file alias="icon/open">images/icon-open.png</file>
         <file alias="icon/paste">images/icon-paste.png</file>
-        <file alias="icon/preferences">images/icon-preferences.png</file>
         <file alias="icon/redo">images/icon-redo.png</file>
-        <file alias="icon/report">images/icon-report.png</file>
-        <file alias="icon/save">images/icon-save.png</file>
-        <file alias="icon/saveas">images/icon-saveas.png</file>
         <file alias="icon/undo">images/icon-undo.png</file>
         <file alias="icon/link">images/icon-link.png</file>
         <file alias="icon/pointer">images/icon-pointer.png</file>
@@ -31,6 +26,11 @@
         <file alias="icon/switchport-insert">images/icon-switchport-insert.png</file>
         <file alias="icon/area-insert">images/icon-area-insert.png</file>
         <file alias="icon/snapshot">images/icon-snapshot.png</file>
+        <file alias="icon/insert">images/icon-insert.png</file>
+        <file alias="icon/properties">images/icon-properties.png</file>
+        <file alias="icon/minimap">images/icon-minimap.png</file>
         <file alias="icon/help">images/icon-help.png</file>
+        <file alias="icon/zoomin">images/icon-zoomin.png</file>
+        <file alias="icon/zoomout">images/icon-zoomout.png</file>
     </qresource>
 </RCC>

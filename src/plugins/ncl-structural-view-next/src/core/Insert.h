@@ -1,5 +1,5 @@
-#ifndef QNSTINSERT_H
-#define QNSTINSERT_H
+#ifndef INSERT_H
+#define INSERT_H
 
 #include "Command.h"
 
@@ -21,4 +21,4 @@ private:
 };
 
 
-#endif // QNSTINSERT_H
+#endif // INSERT_H

@@ -3,7 +3,9 @@
 
 #include <QObject>
 
-#include "View.h"
+#include "StructuralView.h"
+
+class StructuralView;
 
 #define MINIMAP_DEFAULT_W 160*2
 #define MINIMAP_DEFAULT_H 90*2
@@ -27,7 +29,7 @@ public:
 
 	explicit MiniMap(QWidget *parent = 0);
 
-	void init(View *view);
+        void init(StructuralView *view);
 
 	void setScene(QGraphicsScene *scene);
 
@@ -54,7 +56,7 @@ private:
 	/// @return a rectangle of the scene which is viewed in the editor view
 	QRectF getNewRect();
 
-	View *mEditorView;
+        StructuralView *mEditorView;
 	/// in the scene coordinates
 	QRectF mEditorViewRect;
 

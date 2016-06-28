@@ -21,6 +21,8 @@ public:
   StructuralScene(QObject* _parent = 0);
   virtual ~StructuralScene();
 
+  StructuralMenu* _menu;
+
 protected:
   virtual void contextMenuEvent(QGraphicsSceneContextMenuEvent* event);
 
@@ -28,13 +30,13 @@ protected slots:
   void performUndo();
   void performRedo();
   void performSnapshot();
-  void performInsert(Structural::EntityName);
+  void performInsert(Structural::StructuralType);
 
 private:
   void createMenus();
   void createConnections();
 
-  StructuralMenu* _menu;
+
 
   QPointF _insertPoint;
 };

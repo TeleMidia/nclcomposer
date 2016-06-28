@@ -6,9 +6,8 @@
 #include <QGraphicsSceneHoverEvent>
 
 #include "StructuralEntity.h"
-#include "StructuralEdge.h"
 
-class StructuralNode : public QnstEntityWithEdges
+class StructuralNode : public StructuralEntity
 {
 public:
   StructuralNode(StructuralEntity* parent = 0);

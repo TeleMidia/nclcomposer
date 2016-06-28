@@ -9,9 +9,8 @@
 #include <QToolBar>
 #include <QPushButton>
 
-#include <QDebug>
-
 #include "StructuralView.h"
+#include "StructuralUtil.h"
 
 class StructuralWindow : public QMainWindow
 {
@@ -25,21 +24,14 @@ public:
   void setView(StructuralView* view);
 
 protected slots:
-  void performNew();
-  void performOpen();
-  void performSave();
-  void performSaveAs();
-  void performExport();
-  void performImport();
-  void performClose();
-  void performQuit();
   void performUndo();
   void performRedo();
   void performCut();
   void performCopy();
   void performPaste();
+  void performZoomIn();
+  void performZoomOut();
   void performPointer();
-  void performLink();
   void performBody();
   void performContext();
   void performSwitch();
@@ -48,9 +40,17 @@ protected slots:
   void performArea();
   void performSwitchPort();
   void performProperty();
-  void performPreferences();
-  void performReport();
-  void performAbout();
+  void performMinimap();
+
+  void changeUndoState(bool enable);
+  void changeRedoState(bool enable);
+  void changeCutState(bool enable);
+  void changeCopyState(bool enable);
+  void changePasteState(bool enable);
+  void changeBodyState(bool enable);
+  void changeZoomInState(bool enable);
+
+  void changeSelect(QString uid);
 
   void insert(QString uid, QString parent, QMap<QString, QString> properties, QMap<QString, QString> settings);
   void remove(QString uid, QMap<QString, QString> settings);
@@ -59,37 +59,28 @@ protected slots:
 
 private:
   void createActions();
-  void createMenus();
   void createToolbar();
   void createWidgets();
   void createStatusbar();
   void createConnections();
 
-  QMenu* _fileMenu;
   QMenu* _editMenu;
   QMenu* _insertMenu;
   QMenu* _windowMenu;
   QMenu* _helpMenu;
 
-  QToolBar* _fileToolbar;
   QToolBar* _editToolbar;
   QToolBar* _insertToolbar;
+  QToolBar* _windowToolbar;
 
-  QAction* _newAction;
-  QAction* _openAction;
-  QAction* _saveAction;
-  QAction* _saveAsAction;
-  QAction* _importAction;
-  QAction* _exportAction;
-  QAction* _closeAction;
-  QAction* _quitAction;
   QAction* _undoAction;
   QAction* _redoAction;
   QAction* _cutAction;
   QAction* _copyAction;
   QAction* _pasteAction;
+  QAction* _zoominAction;
+  QAction* _zoomoutAction;
   QAction* _pointerAction;
-  QAction* _linkAction;
   QAction* _mediaAction;
   QAction* _contextAction;
   QAction* _switchAction;
@@ -98,6 +89,7 @@ private:
   QAction* _propertyAction;
   QAction* _portAction;
   QAction* _switchportAction;
+  QAction* _minimapAction;
   QAction* _preferencesAction;
   QAction* _reportAction;
   QAction* _aboutAction;

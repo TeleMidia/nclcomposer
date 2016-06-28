@@ -11,7 +11,9 @@
 #include <QGraphicsSceneHoverEvent>
 #include <QObject>
 #include <QCursor>
+#include <QDrag>
 #include <QUuid>
+#include <QStyleOptionGraphicsItem>
 
 #include <QDebug>
 
@@ -28,33 +30,33 @@ public:
   StructuralEntity(StructuralEntity* parent = 0);
   virtual ~StructuralEntity();
 
-  QString getLocalId() const;
-  void setLocalId(const QString &id);
+  QString getStructuralId() const;
+  void setStructuralId(const QString &id);
 
-  QString getLocalUid() const;
-  void setLocalUid(const QString &uid);
+  QString getStructuralUid() const;
+  void setStructuralUid(const QString &uid);
 
-  LocalType getLocalType() const;
-  virtual void setLocalType(const LocalType type);
+  StructualCategory getStructuralCategory() const;
+  void setStructuralCategory(const StructualCategory category);
 
-  LocalName getLocalName() const;
-  virtual void setLocalName(const LocalName name);
+  StructuralType getStructuralType() const;
+  virtual void setStructuralType(const StructuralType type);
 
-  QMap<QString, QString> getLocalProperties() const;
-  virtual void setLocalProperties(const QMap<QString, QString> &properties);
+  StructuralResize getStructuralResize() const;
+  virtual void setStructuralResize(const StructuralResize resize);
 
-  QString getLocalProperty(const QString &name);
-  virtual void setLocalProperty(const QString &name, const QString &value);
+  QMap<QString, QString> getStructuralProperties() const;
+  void setStructuralProperties(const QMap<QString, QString> &properties);
 
-  StructuralEntity* getLocalParent() const;
-  virtual void setLocalParent(StructuralEntity* parent);
+  QString getStructuralProperty(const QString &name) const;
+  virtual void setStructuralProperty(const QString &name, const QString &value);
 
-  QVector<StructuralEntity*> getLocalChildren();
-  virtual void insertLocalChild(StructuralEntity* entity);
-  virtual void removeLocalChild(StructuralEntity* entity);
+  StructuralEntity* getStructuralParent() const;
+  void setStructuralParent(StructuralEntity* parent);
 
-  LocalResize getLocalResize() const;
-  virtual void setLocalResize(const LocalResize resize);
+  QVector<StructuralEntity*> getStructuralEntities();
+  virtual void addStructuralEntity(StructuralEntity* entity);
+  virtual void removeStructuralEntity(StructuralEntity* entity);
 
   bool isMoveable() const;
   void setMoveable(bool moveable);
@@ -88,6 +90,9 @@ public:
 
   bool isSelected() const;
   void setSelected(bool selected);
+
+  bool isCollapsed() const;
+  void setCollapsed(bool collapsed);
 
   qreal getTop() const;
   void setTop(qreal top);
@@ -131,18 +136,31 @@ public:
   qreal getResizeHeight() const;
   void setResizeHeight(qreal resizeHeight);
 
+  qreal getUncollapedTop() const;
+  void setUncollapedTop(qreal uncollapedTop);
+
+  qreal getUncollapedLeft() const;
+  void setUncollapedLeft(qreal uncollapedLeft);
+
+  qreal getUncollapedWidth() const;
+  void setUncollapedWidth(qreal uncollapedWidth);
+
+  qreal getUncollapedHeight() const;
+  void setUncollapedHeight(qreal uncollapedHeight);
+
   qreal getzIndex() const;
   void setzIndex(qreal zIndex);
 
 public slots:
-  virtual void newChild(LocalName _name);
-  void performInsert(Structural::EntityName _name);
+  virtual void newChild(StructuralType _subtype);
+  void performInsert(StructuralType _subtype);
 
 signals:
   void inserted(QString _uid, QString _parent, QMap<QString, QString> _properties, QMap<QString, QString> settings);
   void removed(QString _uid, QMap<QString, QString> settings);
   void changed(QString _uid, QMap<QString, QString> _properties, QMap<QString, QString> previous, QMap<QString, QString> settings);
   void selected(QString _uid, QMap<QString, QString> settings);
+  void move(QString uid, QString newParent);
 
 protected:
   virtual void draw(QPainter* painter) = 0;
@@ -165,6 +183,11 @@ protected:
   virtual void contextMenuEvent(QGraphicsSceneContextMenuEvent* event);
 
 private:
+  void createMenus();
+  void createConnections();
+
+  void updateCursor(QGraphicsSceneHoverEvent* event);
+
   QString _id;
   QString _uid;
   QMap<QString, QString> _properties;
@@ -177,6 +200,7 @@ private:
   bool _resizable;
   bool _draggable;
   bool _hoverable;
+  bool _focusable;
 
   bool _moving;
   bool _hidden;
@@ -185,6 +209,8 @@ private:
   bool _hovering;
 
   bool _selected;
+  bool _focused;
+  bool _collapsed;
 
   qreal _top;
   qreal _left;
@@ -206,9 +232,14 @@ private:
   qreal _resizeWidth;
   qreal _resizeHeight;
 
-  LocalType _type;
-  LocalName _name;
-  LocalResize _resize;
+  qreal _uncollapsedTop;
+  qreal _uncollapsedLeft;
+  qreal _uncollapsedWidth;
+  qreal _uncollapsedHeight;
+
+  StructualCategory _type;
+  StructuralType _subtype;
+  StructuralResize _resize;
 
 /****************************************************************************/
 
@@ -219,7 +250,7 @@ public:
   bool hasMouseHover();
   void setMouseHover(bool hover);
   void setMouseHoverHighlight(bool enable);
-  virtual void updateToolTip() {}
+  virtual void refresh() {}
   virtual void adjust(bool avoidCollision = false) = 0;
 
 protected:
@@ -235,6 +266,10 @@ public:
 
 protected:
   virtual void drawMouseHoverHighlight(QPainter *painter);
+  virtual void dragEnterEvent(QGraphicsSceneDragDropEvent* event);
+//  virtual void dragLeaveEvent(QGraphicsSceneDragDropEvent* event);
+//  virtual void dragMoveEvent(QGraphicsSceneDragDropEvent* event);
+  virtual void dropEvent(QGraphicsSceneDragDropEvent* event);
 };
 
 #endif // QNSTENTITY_H

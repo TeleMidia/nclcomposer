@@ -3,10 +3,10 @@
 #include <QDebug>
 
 StructuralNode::StructuralNode(StructuralEntity* parent)
-  : QnstEntityWithEdges(parent)
+  : StructuralEntity(parent)
 {
-  setLocalType(Structural::Node);
-  setLocalName(Structural::NoName);
+  setStructuralCategory(Structural::Node);
+  setStructuralType(Structural::NoType);
 
   hover = false;
 }
@@ -28,9 +28,9 @@ void StructuralNode::fit(qreal padding)
   qreal nextWidth = width;
   qreal nextHeight = height;
 
-  foreach(StructuralEntity* entity, getLocalChildren())
+  foreach(StructuralEntity* entity, getStructuralEntities())
   {
-    if (entity->getLocalType() == Structural::Node)
+    if (entity->getStructuralCategory() == Structural::Node)
     {
       if ((entity->getTop()-4) + top < nextTop + padding)
       {
@@ -62,9 +62,9 @@ void StructuralNode::fit(qreal padding)
 
   if (nextTop != top)
   {
-    foreach(StructuralEntity* entity, getLocalChildren())
+    foreach(StructuralEntity* entity, getStructuralEntities())
     {
-      if (entity->getLocalType() == Structural::Node)
+      if (entity->getStructuralCategory() == Structural::Node)
       {
         entity->setTop(entity->getTop() + (top - nextTop));
       }
@@ -76,9 +76,9 @@ void StructuralNode::fit(qreal padding)
 
   if (nextLeft != left)
   {
-    foreach(StructuralEntity* entity, getLocalChildren())
+    foreach(StructuralEntity* entity, getStructuralEntities())
     {
-      if (entity->getLocalType() == Structural::Node)
+      if (entity->getStructuralCategory() == Structural::Node)
       {
         entity->setLeft(entity->getLeft() + (left - nextLeft));
       }
@@ -88,7 +88,7 @@ void StructuralNode::fit(qreal padding)
     setLeft(nextLeft);
   }
 
-  StructuralNode* parent = (StructuralNode*) getLocalParent();
+  StructuralNode* parent = (StructuralNode*) getStructuralParent();
 
   if (parent != NULL)
     parent->fit(padding);
@@ -96,7 +96,7 @@ void StructuralNode::fit(qreal padding)
 
 void StructuralNode::inside()
 {
-  StructuralEntity* parent = getLocalParent();
+  StructuralEntity* parent = getStructuralParent();
 
   if (parent != NULL)
   {
@@ -139,15 +139,15 @@ void StructuralNode::inside()
 
 void StructuralNode::adjust(bool avoidCollision)
 {
-  foreach(StructuralEntity* entity, getLocalChildren())
+  foreach(StructuralEntity* entity, getStructuralEntities())
   {
-    if (entity->getLocalType() != Structural::Edge)
+    if (entity->getStructuralCategory() != Structural::Edge)
     {
       entity->adjust(false);
     }
   }
 
-  if(getLocalParent() != NULL)
+  if(getStructuralParent() != NULL)
   {
     if (avoidCollision){
       int colliding;
@@ -159,10 +159,10 @@ void StructuralNode::adjust(bool avoidCollision)
 
         colliding = false;
         foreach(StructuralEntity *entity,
-                getLocalParent()->getLocalChildren())
+                getStructuralParent()->getStructuralEntities())
         {
-          if(this != entity && entity->getLocalName() >= Structural::Node &&
-             entity->getLocalName() <= Structural::Switch)
+          if(this != entity && entity->getStructuralType() >= Structural::Node &&
+             entity->getStructuralType() <= Structural::Switch)
           {
             qreal n = 0;
             qreal i = 0.0;
@@ -196,7 +196,7 @@ void StructuralNode::adjust(bool avoidCollision)
         }
 
         foreach(StructuralEntity *entity,
-                getLocalParent()->getLocalChildren())
+                getStructuralParent()->getStructuralEntities())
         {
           if(collidesWithItem(entity, Qt::IntersectsItemBoundingRect))
           {
@@ -226,7 +226,7 @@ void StructuralNode::move(QGraphicsSceneMouseEvent* event)
   qreal x = getLeft();
   qreal y = getTop();
 
-  StructuralEntity* parent = getLocalParent();
+  StructuralEntity* parent = getStructuralParent();
 
   // setting minimal position
   qreal minx;
@@ -282,7 +282,7 @@ void StructuralNode::resize(QGraphicsSceneMouseEvent* event)
   qreal w = getWidth();
   qreal h = getHeight();
 
-  StructuralEntity* parent = getLocalParent();
+  StructuralEntity* parent = getStructuralParent();
 
   // setting minimal bounds
   qreal minx;
@@ -339,7 +339,7 @@ void StructuralNode::resize(QGraphicsSceneMouseEvent* event)
   qreal nexth = h + dh;
 
   // adjusting
-  switch(getLocalResize())
+  switch(getStructuralResize())
   {
     case Structural::TopLeft:
     {

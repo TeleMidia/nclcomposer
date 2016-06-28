@@ -1,22 +1,22 @@
-#include "StructuralMedia.h"
+#include "StructuralContent.h"
 
 #include <QDrag>
 
 #include "StructuralUtil.h"
 
-StructuralMedia::StructuralMedia(StructuralEntity* parent)
+StructuralContent::StructuralContent(StructuralEntity* parent)
   : StructuralNode(parent), enableDrag(false)
 {
-  setLocalName(Structural::Media);
+  setStructuralType(Structural::Media);
 
-  setMediaType(Structural::NoMediaType);
+  setMediaType(Structural::NoContent);
 
   setResizable(false);
 
   createObjects();
   createConnections();
 
-  setLocalId("");
+  setStructuralId("");
 
   /* Default media position */
   if(parent)
@@ -34,47 +34,49 @@ StructuralMedia::StructuralMedia(StructuralEntity* parent)
   setHeight(DEFAULT_MEDIA_HEIGHT);
 }
 
-StructuralMedia::~StructuralMedia()
+StructuralContent::~StructuralContent()
 {
 
 }
 
-QString StructuralMedia::getIcon() const
+QString StructuralContent::getIcon() const
 {
   return icon;
 }
 
-QString StructuralMedia::getSource() const
+QString StructuralContent::getSource() const
 {
   return source;
 }
 
-void StructuralMedia::setSource(QString source)
+void StructuralContent::setSource(QString source)
 {
   this->source = source;
 
   setMediaType(StructuralUtil::getnstTypeFromExtension(QFileInfo(source).suffix().toLower()));
+
+  StructuralNode::setStructuralProperty(PLG_ENTITY_SRC, source);
 }
 
-void StructuralMedia::setLocalName(LocalName type)
+void StructuralContent::setStructuralType(StructuralType type)
 {
-  StructuralNode::setLocalName(type);
+  StructuralNode::setStructuralType(type);
 }
 
-void StructuralMedia::setLocalProperty(const QString &name, const QString &value)
+void StructuralContent::setStructuralProperty(const QString &name, const QString &value)
 {
-  StructuralNode::setLocalProperty(name, value);
-
-  if (name == "LOCAL:SRC")
+  if (name == PLG_ENTITY_SRC)
     setSource(value);
-  else if (name == "LOCAL:MEDIATYPE")
-    setMediaType((Structural::MediaTypes) value.toInt());
+  else if (name == PLG_ENTITY_MEDIA)
+    setMediaType((Structural::StructuralMedia) value.toInt());
+  else
+    StructuralNode::setStructuralProperty(name, value);
 }
 
-void StructuralMedia::updateToolTip()
+void StructuralContent::refresh()
 {
   QString tip = "";
-  QString name = (getLocalProperty("LOCAL:ID") != "" ? getLocalProperty("LOCAL:ID") : "?");
+  QString name = (getStructuralId() != "" ? getStructuralId() : "?");
 
 
   switch(mediatype)
@@ -99,7 +101,7 @@ void StructuralMedia::updateToolTip()
       tip += "NCLua ("+name+")";
       break;
 
-    case Structural::Html:
+    case Structural::HTML:
       tip += "HTML ("+name+")";
       break;
 
@@ -124,37 +126,37 @@ void StructuralMedia::updateToolTip()
   setToolTip(tip);
 }
 
-QString StructuralMedia::getRefer() const
+QString StructuralContent::getRefer() const
 {
   return refer;
 }
 
-void StructuralMedia::setRefer(QString refer)
+void StructuralContent::setRefer(QString refer)
 {
   this->refer = refer;
 }
 
-QString StructuralMedia::getReferUID() const
+QString StructuralContent::getReferUID() const
 {
   return referUID;
 }
 
-void StructuralMedia::setReferUID(QString refetUID)
+void StructuralContent::setReferUID(QString refetUID)
 {
   this->referUID = refetUID;
 }
 
-QString StructuralMedia::getInstance() const
+QString StructuralContent::getInstance() const
 {
   return instance;
 }
 
-void StructuralMedia::setInstance(QString instance)
+void StructuralContent::setInstance(QString instance)
 {
   this->instance = instance;
 }
 
-void StructuralMedia::createObjects()
+void StructuralContent::createObjects()
 {
 //  menu->_cutAction->setEnabled(true);
 //  menu->_copyAction->setEnabled(true);
@@ -168,7 +170,7 @@ void StructuralMedia::createObjects()
 //  menu->_propertyAction->setEnabled(true);
 }
 
-void StructuralMedia::createConnections()
+void StructuralContent::createConnections()
 {
   // connect(menu, SIGNAL(undoRequested()), SIGNAL(undoRequested()));
   // connect(menu, SIGNAL(redoRequested()), SIGNAL(redoRequested()));
@@ -178,7 +180,7 @@ void StructuralMedia::createConnections()
 //          SLOT(newChild(QnstSubtype)));
 }
 
-void StructuralMedia::draw(QPainter* painter)
+void StructuralContent::draw(QPainter* painter)
 {
   painter->setRenderHint(QPainter::SmoothPixmapTransform, true);
 
@@ -202,11 +204,11 @@ void StructuralMedia::draw(QPainter* painter)
     painter->drawPixmap(8, getHeight()-40, 32, 32, QPixmap(":/icon/alias"));
   }
 
-  QString localid = (getLocalProperty("LOCAL:ID") != "" ? getLocalProperty("LOCAL:ID") : "?");
+  QString localid = (getStructuralId() != "" ? getStructuralId() : "?");
 
   if (localid.length() > 5)
   {
-    localid = getLocalProperty("LOCAL:ID").replace(3,getLocalProperty("LOCAL:ID").length()-3,"...");
+    localid = getStructuralId().replace(3,getStructuralId().length()-3,"...");
   }
 
   // draw a formated text with underline when there is error
@@ -248,33 +250,22 @@ void StructuralMedia::draw(QPainter* painter)
   }
 }
 
-void StructuralMedia::delineate(QPainterPath* painter) const
+void StructuralContent::delineate(QPainterPath* painter) const
 {
   painter->addRect(4, 4, getWidth(), getHeight());
 }
 
-void StructuralMedia::setMediaType(Structural::MediaTypes type)
+void StructuralContent::setMediaType(Structural::StructuralMedia type)
 {
   mediatype = type;
 
   this->icon = StructuralUtil::iconFromMediaType(mediatype);
+
+  StructuralNode::setStructuralProperty(PLG_ENTITY_MEDIA, QString::number(type));
 }
 
 
-void StructuralMedia::mousePressEvent(QGraphicsSceneMouseEvent *event)
+void StructuralContent::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
-//  qDebug() << "QnstGraphicsMedia::mousePressEvent" << isDraggable();
-//  if(isDraggable())
-//  {
-//    QMimeData *data = new QMimeData;
-//    data->setColorData(Qt::green);
-//    data->setData("nclcomposer/mediaid", getnstProperty(":nst:uid").toAscii());
-//    data->setData("nclcomposer/qnstuid", getnstUid().toAscii());
-
-//    QDrag *drag = new QDrag(event->widget());
-//    drag->setMimeData(data);
-//    drag->start();
-//  }
-//  else
     StructuralNode::mousePressEvent(event);
 }

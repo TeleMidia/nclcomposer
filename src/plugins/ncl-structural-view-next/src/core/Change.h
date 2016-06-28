@@ -1,5 +1,5 @@
-#ifndef QNSTCHANGE_H
-#define QNSTCHANGE_H
+#ifndef CHANGE_H
+#define CHANGE_H
 
 #include "Command.h"
 
@@ -18,4 +18,4 @@ private:
   QMap<QString, QString> _properties; QMap<QString, QString> _previous; QMap<QString, QString> _settings;
 };
 
-#endif // QNSTCHANGE_H
+#endif // CHANGE_H
