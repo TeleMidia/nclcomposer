@@ -115,7 +115,7 @@ bool StructuralViewPlugin::saveSubsession()
 void StructuralViewPlugin::updateFromModel()
 {
 //  QMap <QString, double> top, left, width, height;
-  QMap <QString, QMap<QString,QString>> prop;
+  QMap <QString, QMap<QString,QString> > prop;
 
   qDebug() << "========================== ENTITIES SIZE" << entities.size();
   qDebug() << "========================== ENTITIES CONTENT" << entities;

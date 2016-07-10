@@ -41,6 +41,7 @@ protected slots:
   void performSwitchPort();
   void performProperty();
   void performMinimap();
+  void performSnapshot();
 
   void changeUndoState(bool enable);
   void changeRedoState(bool enable);
@@ -90,6 +91,7 @@ private:
   QAction* _portAction;
   QAction* _switchportAction;
   QAction* _minimapAction;
+  QAction* _snapshotAction;
   QAction* _preferencesAction;
   QAction* _reportAction;
   QAction* _aboutAction;

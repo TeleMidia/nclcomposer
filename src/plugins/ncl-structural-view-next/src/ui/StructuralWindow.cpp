@@ -160,6 +160,13 @@ void StructuralWindow::createActions()
   _minimapAction->setIcon(QIcon(":/images/icon/minimap"));
   _minimapAction->setShortcut(QKeySequence("Ctrl+M"));
 
+  // action
+  _snapshotAction = new QAction((QObject*) this);
+  _snapshotAction->setEnabled(true);
+  _snapshotAction->setText(tr("Snapshot"));
+  _snapshotAction->setToolTip(tr("Take a snapshot of the structural view"));
+  _snapshotAction->setIcon(QIcon(":/images/icon/snapshot"));
+
   // preferences action
   _preferencesAction = new QAction((QObject*) this);
   _preferencesAction->setEnabled(true);
@@ -238,6 +245,7 @@ void StructuralWindow::createToolbar()
   _windowToolbar->setIconSize(QSize(32,32));
 
   _windowToolbar->addAction(_minimapAction);
+  _windowToolbar->addAction(_snapshotAction);
 
 #ifdef Q_WS_MACX
   _editToolbar->addSeparator();
@@ -277,6 +285,7 @@ void  StructuralWindow::createConnections()
   connect(_propertyAction, SIGNAL(triggered()), SLOT(performProperty()));
 
   connect(_minimapAction, SIGNAL(triggered()), SLOT(performMinimap()));
+  connect(_snapshotAction, SIGNAL(triggered()), SLOT(performSnapshot()));
 
   connect(_view, SIGNAL(inserted(QString,QString,QMap<QString,QString>,QMap<QString,QString>)),SLOT(insert(QString,QString,QMap<QString,QString>,QMap<QString,QString>)));
   connect(_view, SIGNAL(removed(QString,QMap<QString,QString>)),SLOT(remove(QString,QMap<QString,QString>)));
@@ -423,6 +432,13 @@ void StructuralWindow::performMinimap()
   StructuralUtil::dbg((QObject*) this, "Performing 'Minimap' action");
 
   _view->switchMinimapVis();
+}
+
+void StructuralWindow::performSnapshot()
+{
+  StructuralUtil::dbg((QObject*) this, "Performing 'Snapshot' action");
+
+  _view->performSnapshot();
 }
 
 void StructuralWindow::changeUndoState(bool enable)
