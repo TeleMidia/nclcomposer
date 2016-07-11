@@ -296,7 +296,7 @@ void StructuralViewPlugin::requestEntityAddition(Entity* entity)
 
     else
     {
-      parentUID = entity->getParentUniqueId();
+      parentUID = entities.value(entity->getParentUniqueId());
     }
 
 
