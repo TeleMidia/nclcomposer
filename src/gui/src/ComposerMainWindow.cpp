@@ -72,6 +72,7 @@ ComposerMainWindow::ComposerMainWindow(QWidget *parent)
 #else
   ui->actionProject_from_Wizard->setVisible(false);
 #endif
+  setWindowFlags(Qt::Window | Qt::WindowTitleHint);
 }
 
 void ComposerMainWindow::init(const QApplication &app)
@@ -367,8 +368,8 @@ void ComposerMainWindow::initGUI()
   _tabProjects->addTab(welcomeWidget, tr("Welcome"));
   _tabProjects->setTabIcon(0, QIcon());
   QTabBar *tabBar = _tabProjects->findChild<QTabBar *>();
-  tabBar->setTabButton(0, QTabBar::RightSide, 0);
-  tabBar->setTabButton(0, QTabBar::LeftSide, 0);
+  // tabBar->setTabButton(0, QTabBar::RightSide, 0);
+  // tabBar->setTabButton(0, QTabBar::LeftSide, 0);
 
   connect(welcomeWidget, SIGNAL(userPressedOpenProject()),
           this, SLOT(openProject()));
@@ -522,7 +523,7 @@ void ComposerMainWindow::addPluginWidget( IPluginFactory *fac,
       layout->setMargin(0);
       btn_group->setLayout(layout);
 
-      w->setTabButton(pW, QTabBar::RightSide, btn_group);
+      // w->setTabButton(pW, QTabBar::RightSide, btn_group);
   }
 #endif
 }
@@ -725,7 +726,6 @@ void ComposerMainWindow::createMenus()
   button_Run->setDefaultAction(ui->action_RunNCL);
   button_Run->setPopupMode(QToolButton::MenuButtonPopup);
   ui->toolBar->addWidget(button_Run); //put button_run in toolbar
-
   ui->toolBar->addSeparator();
 
   _menuPerspective = new QMenu(0);
@@ -734,9 +734,11 @@ void ComposerMainWindow::createMenus()
   ui->toolBar->addWidget(_tbPerspectiveDropList);
 
   // _tabProjects->setCornerWidget(_tbPerspectiveDropList, Qt::TopRightCorner);
-  _tabProjects->setCornerWidget(ui->toolBar, Qt::TopRightCorner);
-  // _tabProjects->setCornerWidget(ui->menu_Window, Qt::TopLeftCorner);
+  //_tabProjects->setCornerWidget(ui->menu_Window, Qt::TopLeftCorner);
+  //ui->menubar->setCornerWidget(ui->toolBar, Qt::TopRightCorner);
+  _tabProjects->setCornerWidget(ui->menubar, Qt::TopLeftCorner);
 
+  // ui->toolBar->setIconSize(QSize(24, 24));
 //  updateMenuLanguages();
   updateMenuPerspectives();
 }
@@ -2073,13 +2075,13 @@ void ComposerMainWindow::updateMenuPerspectives()
   QStringList keys = settings.allKeys();
   settings.endGroup();
 
-  _menuPerspective->clear();
+  ui->toolBar_Perspectives->clear();
 
   for(int i = 0; i < keys.size(); i++)
   {
-    QAction *act = _menuPerspective->addAction(keys.at(i),
-                                            this,
-                                            SLOT(restorePerspectiveFromMenu()));
+    QAction *act = ui->toolBar_Perspectives->addAction( keys.at(i),
+                                                        this,
+                                                        SLOT(restorePerspectiveFromMenu()));
     act->setData(keys[i]);
   }
 
