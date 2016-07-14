@@ -473,6 +473,8 @@ void ComposerMainWindow::addPluginWidget( IPluginFactory *fac,
   }
 
   QWidget *pW = plugin->getWidget();
+  pW->setObjectName(fac->id());
+
   if (pW != NULL)
   {
     #ifdef USE_MDI
@@ -484,7 +486,6 @@ void ComposerMainWindow::addPluginWidget( IPluginFactory *fac,
         pW->setWindowTitle(projectId + " - " + fac->metadata().value("name").toString());
       #endif
       pW->show();
-      pW->setObjectName(fac->id());
     #else
       // ClickableQDockWidget *dock;
     #if QT_VERSION < 0x050000
@@ -1341,12 +1342,15 @@ void ComposerMainWindow::restorePerspective(QString layoutName)
 
     QToolWindowManager *window = _projectsWidgets[location];
 
-    GlobalSettings settings;
-    settings.beginGroup("pluginslayout");
-#ifndef USE_MDI
-    // window->restoreState(settings.value(layoutName).toByteArray());
-#endif
-    settings.endGroup();
+    if(window != NULL)
+    {
+      GlobalSettings settings;
+      settings.beginGroup("pluginslayout");
+  #ifndef USE_MDI
+      window->restoreState(settings.value(layoutName));
+  #endif
+      settings.endGroup();
+    }
 
   }
 }
