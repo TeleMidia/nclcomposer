@@ -41,14 +41,13 @@ const int autoSaveInterval = 1 * 60 * 1000; //ms
 ComposerMainWindow::ComposerMainWindow(QWidget *parent)
   : QMainWindow(parent),
     ui(new Ui::ComposerMainWindow),
-    allDocksMutex(QMutex::Recursive),
     localGingaProcess(this)
 {
   ui->setupUi(this);
 
   // Local Ginga Run
-  connect(&localGingaProcess, SIGNAL(finished(int)),
-          this, SLOT(copyHasFinished()));
+  connect( &localGingaProcess, SIGNAL(finished(int)),
+           this, SLOT(copyHasFinished()) );
 
   // Remote Ginga Run
 #ifdef WITH_LIBSSH2
@@ -68,10 +67,8 @@ ComposerMainWindow::ComposerMainWindow(QWidget *parent)
 #endif
 
 #if WITH_WIZARD
-  connect(&wizardProcess,
-          SIGNAL(finished(int)),
-          this,
-          SLOT(wizardFinished(int)));
+  connect( &wizardProcess, SIGNAL(finished(int)),
+           this, SLOT(wizardFinished(int)) );
 #else
   ui->actionProject_from_Wizard->setVisible(false);
 #endif
@@ -127,7 +124,7 @@ void ComposerMainWindow::init(const QApplication &app)
 ComposerMainWindow::~ComposerMainWindow()
 {
   delete ui;
-  delete menu_Perspective;
+  delete _menuPerspective;
 #ifdef WITH_LIBSSH2
   SimpleSSHClient::exit();
 #endif
@@ -321,27 +318,27 @@ void ComposerMainWindow::initGUI()
   setWindowIcon(QIcon(":/mainwindow/icon"));
 #endif
   setWindowTitle(tr("NCL Composer"));
-  tabProjects = new QTabWidget(0);
+  _tabProjects = new QTabWidget(0);
 
-  ui->frame->layout()->addWidget(tabProjects);
+  ui->frame->layout()->addWidget(_tabProjects);
 
-  //    tabProjects->setMovable(true);
-  tabProjects->setTabsClosable(true);
+  //    _tabProjects->setMovable(true);
+  _tabProjects->setTabsClosable(true);
 
-  /* tbLanguageDropList = new QToolButton(this);
-  tbLanguageDropList->setIcon(QIcon(":/mainwindow/language"));
-  tbLanguageDropList->setToolTip(tr("Change your current language"));
-  tbLanguageDropList->setPopupMode(QToolButton::InstantPopup); */
+  /* _tbLanguageDropList = new QToolButton(this);
+  _tbLanguageDropList->setIcon(QIcon(":/mainwindow/language"));
+  _tbLanguageDropList->setToolTip(tr("Change your current language"));
+  _tbLanguageDropList->setPopupMode(QToolButton::InstantPopup); */
 
-  tbPerspectiveDropList = new QToolButton(this);
-  tbPerspectiveDropList->setIcon(QIcon(":/mainwindow/perspective"));
-  tbPerspectiveDropList->setToolTip(tr("Change your current perspective"));
-  tbPerspectiveDropList->setPopupMode(QToolButton::InstantPopup);
+  _tbPerspectiveDropList = new QToolButton(this);
+  _tbPerspectiveDropList->setIcon(QIcon(":/mainwindow/perspective"));
+  _tbPerspectiveDropList->setToolTip(tr("Change your current perspective"));
+  _tbPerspectiveDropList->setPopupMode(QToolButton::InstantPopup);
 
-  connect( tabProjects, SIGNAL(tabCloseRequested(int)),
+  connect( _tabProjects, SIGNAL(tabCloseRequested(int)),
           this, SLOT(tabClosed(int)), Qt::DirectConnection);
 
-  connect(tabProjects, SIGNAL(currentChanged(int)),
+  connect(_tabProjects, SIGNAL(currentChanged(int)),
           this, SLOT(currentTabChanged(int)));
 
 //  createStatusBar();
@@ -367,9 +364,9 @@ void ComposerMainWindow::initGUI()
 
   welcomeWidget = new WelcomeWidget();
 
-  tabProjects->addTab(welcomeWidget, tr("Welcome"));
-  tabProjects->setTabIcon(0, QIcon());
-  QTabBar *tabBar = tabProjects->findChild<QTabBar *>();
+  _tabProjects->addTab(welcomeWidget, tr("Welcome"));
+  _tabProjects->setTabIcon(0, QIcon());
+  QTabBar *tabBar = _tabProjects->findChild<QTabBar *>();
   tabBar->setTabButton(0, QTabBar::RightSide, 0);
   tabBar->setTabButton(0, QTabBar::LeftSide, 0);
 
@@ -384,44 +381,43 @@ void ComposerMainWindow::initGUI()
 
 
   //Task Progress Bar
-
 #ifdef WITH_LIBSSH2
-  taskProgressBar = new QProgressDialog(this);
-  taskProgressBar->setWindowTitle(tr("Copy content to Ginga VM."));
-  taskProgressBar->setModal(true);
+  _taskProgressBar = new QProgressDialog(this);
+  _taskProgressBar->setWindowTitle(tr("Copy content to Ginga VM."));
+  _taskProgressBar->setModal(true);
 
-  // start taskProgressBar
-  connect(&runRemoteGingaVMAction, SIGNAL(startTask()),
-          taskProgressBar, SLOT(show()));
+  // start _taskProgressBar
+  connect( &runRemoteGingaVMAction, SIGNAL(startTask()),
+           _taskProgressBar, SLOT(show()) );
 
-  connect(&runRemoteGingaVMAction, SIGNAL(taskDescription(QString)),
-          taskProgressBar, SLOT(setLabelText(QString)));
+  connect( &runRemoteGingaVMAction, SIGNAL(taskDescription(QString)),
+           _taskProgressBar, SLOT(setLabelText(QString)) );
 
-  connect(&runRemoteGingaVMAction, SIGNAL(taskMaximumValue(int)),
-          taskProgressBar, SLOT(setMaximum(int)));
+  connect( &runRemoteGingaVMAction, SIGNAL(taskMaximumValue(int)),
+           _taskProgressBar, SLOT(setMaximum(int)) );
 
-  connect(&runRemoteGingaVMAction, SIGNAL(taskValue(int)),
-          taskProgressBar, SLOT(setValue(int)));
+  connect( &runRemoteGingaVMAction, SIGNAL(taskValue(int)),
+           _taskProgressBar, SLOT(setValue(int)) );
 
   connect(&runRemoteGingaVMAction, SIGNAL(copyFinished()),
-          taskProgressBar, SLOT(hide()));
+          _taskProgressBar, SLOT(hide()) );
 
-  connect(&runRemoteGingaVMAction, SIGNAL(finished()),
-          taskProgressBar, SLOT(hide()));
+  connect( &runRemoteGingaVMAction, SIGNAL(finished()),
+           _taskProgressBar, SLOT(hide()));
 
-  connect(taskProgressBar, SIGNAL(canceled()),
-          &runRemoteGingaVMAction, SLOT(stopExecution()),
-          Qt::DirectConnection);
+  connect( _taskProgressBar, SIGNAL(canceled()),
+           &runRemoteGingaVMAction, SLOT(stopExecution()),
+           Qt::DirectConnection );
 
-  disconnect(taskProgressBar, SIGNAL(canceled()),
-             taskProgressBar, SLOT(cancel()));
+  disconnect( _taskProgressBar, SIGNAL(canceled()),
+              _taskProgressBar, SLOT(cancel()) );
 
-  connect(&runRemoteGingaVMAction, SIGNAL(finished()),
-          taskProgressBar, SLOT(hide()));
+  connect( &runRemoteGingaVMAction, SIGNAL(finished()),
+           _taskProgressBar, SLOT(hide()) );
 
 // This shows the taskBar inside the toolBar. In the future, this can
-//   taskProgressBarAction = ui->toolBar->insertWidget(ui->action_Save,
-//                                                    taskProgressBar);
+//   _taskProgressBarAction = ui->toolBar->insertWidget( ui->action_Save,
+//                                                       _taskProgressBar);
 // taskProgressBarAction->setVisible(false);
 #endif
 
@@ -446,37 +442,37 @@ void ComposerMainWindow::addPluginWidget( IPluginFactory *fac,
                                           IPlugin *plugin,
                                           Project *project )
 {
-  QMainWindow *w;
+  QToolWindowManager *w;
   QString location = project->getLocation();
   QString projectId = project->getAttribute("id");
 
 #ifdef USE_MDI
   QMdiArea *mdiArea;
 #endif
-  if (projectsWidgets.contains(location))
+  if (_projectsWidgets.contains(location))
   {
-    w = projectsWidgets[location];
+    w = _projectsWidgets[location];
 #ifdef USE_MDI
     mdiArea = (QMdiArea *)w->centralWidget();
     mdiArea->setBackground(QBrush(QColor("#FFFFFF")));
 #endif
   } else {
-    w = new QMainWindow(tabProjects);
+    w = new QToolWindowManager(_tabProjects);
 #ifdef USE_MDI
     mdiArea = new QMdiArea;
     mdiArea->setHorizontalScrollBarPolicy(Qt::ScrollBarAsNeeded);
     mdiArea->setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded);
     w->setCentralWidget(mdiArea);
 #else
-    w->setDockNestingEnabled(true);
-    w->setTabPosition(Qt::AllDockWidgetAreas, QTabWidget::West);
+    // w->setDockNestingEnabled(true);
+    // w->setTabPosition(Qt::AllDockWidgetAreas, QTabWidget::West);
 #endif
-    int index = tabProjects->addTab(w, projectId);
+    int index = _tabProjects->addTab(w, projectId);
     updateTabWithProject(index, location);
-    projectsWidgets[location] = w;
+    _projectsWidgets[location] = w;
   }
-  QWidget *pW = plugin->getWidget();
 
+  QWidget *pW = plugin->getWidget();
   if (pW != NULL)
   {
     #ifdef USE_MDI
@@ -490,52 +486,42 @@ void ComposerMainWindow::addPluginWidget( IPluginFactory *fac,
       pW->show();
       pW->setObjectName(fac->id());
     #else
-      ClickableQDockWidget *dock;
+      // ClickableQDockWidget *dock;
     #if QT_VERSION < 0x050000
-      dock = new ClickableQDockWidget(fac->name());
+      // dock = new ClickableQDockWidget(fac->name());
+      pW->setWindowTitle(fac->name());
     #else
-      dock = new ClickableQDockWidget(fac->metadata().value("name").toString());
+      //dock = new ClickableQDockWidget(fac->metadata().value("name").toString());
+      pW->setWindowTitle(fac->metadata().value("name").toString());
     #endif
-      dock->setProperty("project", location);
 
-      dock->setAllowedAreas(Qt::AllDockWidgetAreas);
-      dock->setFeatures(QDockWidget::AllDockWidgetFeatures);
+      w->addToolWindow(pW, QToolWindowManager::EmptySpaceArea);
 
-      connect(dock, SIGNAL(clicked()), pW, SLOT(setFocus()));
-      pW->setFocusPolicy(Qt::StrongFocus);
+      // Add updateFromModel and close button
+      QFrame *btn_group = new QFrame(pW);
 
-      QFrame *borderFrame = new QFrame();
-      borderFrame->setFrameShape(QFrame::NoFrame);
-      borderFrame->setFrameShadow(QFrame::Plain);
+      QPushButton *btn_UpdateFromModel = new QPushButton(btn_group);
+      btn_UpdateFromModel->setFlat(true);
+      btn_UpdateFromModel->setIcon(QIcon(":/mainwindow/refreshplugin"));
+      btn_UpdateFromModel->setIconSize(QSize(18, 18));
+      btn_UpdateFromModel->setToolTip(tr("Reload View Model"));
+      connect(btn_UpdateFromModel, SIGNAL(pressed()),
+              plugin, SLOT(updateFromModel()));
 
-      QVBoxLayout *layoutBorderFrame = new QVBoxLayout();
-      layoutBorderFrame->setMargin(0);
-      layoutBorderFrame->addWidget(pW);
-      borderFrame->setLayout(layoutBorderFrame);
+      QPushButton *btn_close = new QPushButton(btn_group);
+      btn_close->setFlat(true);
+      btn_close->setIcon(QIcon(":/mainwindow/closeplugin"));
+      btn_close->setIconSize(QSize(18, 18));
+      btn_close->setToolTip(tr("Close plugin"));
 
-      dock->setWidget(borderFrame);
-      dock->setObjectName(fac->id());
+      QHBoxLayout *layout = new QHBoxLayout(btn_group);
+      layout->addWidget(btn_UpdateFromModel);
+      layout->addWidget(btn_close);
+      layout->setSpacing(0);
+      layout->setMargin(0);
+      btn_group->setLayout(layout);
 
-      dock->setMinimumSize(0, 0);
-      tabProjects->setCurrentWidget(w);
-
-      if(firstDock.contains(location)) {
-        w->tabifyDockWidget(firstDock[location], dock);
-      }
-      else
-      {
-        w->addDockWidget(Qt::LeftDockWidgetArea, dock);
-        firstDock[location] = dock;
-      }
-
-      allDocksMutex.lock();
-      allDocks.insert(0, dock);
-      allDocksMutex.unlock();
-
-      connect(dock, SIGNAL(refreshPressed()), plugin, SLOT(updateFromModel()));
-
-      // dock->installEventFilter(this);
-      updateDockStyle(dock, false);
+      w->setTabButton(pW, QTabBar::RightSide, btn_group);
   }
 #endif
 }
@@ -616,9 +602,9 @@ void ComposerMainWindow::tabClosed(int index)
   if(index == 0)
     return; // Do nothing
 
-  QString location = tabProjects->tabToolTip(index);
+  QString location = _tabProjects->tabToolTip(index);
   Project *project = ProjectControl::getInstance()->getOpenProject(location);
-  qDebug() << location << project;
+
   if( project != NULL &&
       project->isDirty() )
   {
@@ -639,28 +625,9 @@ void ComposerMainWindow::tabClosed(int index)
   //Remove temporary file
   removeTemporaryFile(location);
 
-  if(projectsWidgets.contains(location))
+  if(_projectsWidgets.contains(location))
   {
-    QMainWindow *w = projectsWidgets[location];
-
-    allDocksMutex.lock();
-      QList <QDockWidget*> newAllDocks;
-      //Remove from allDocks
-      for( int i = 0; i < allDocks.size(); i++)
-      {
-        if(allDocks.at(i)->property("project") == location)
-        {
-          // It will not be part of the new allDock widget!
-          // allDocks.removeAt(i);
-        }
-        else
-          newAllDocks.push_back(allDocks.at(i));
-      }
-      allDocks = newAllDocks;
-    allDocksMutex.unlock();
-
-    projectsWidgets.remove(location);
-    firstDock.remove(location);
+    QToolWindowManager *w = _projectsWidgets[location];
 
     // Delete QMainWindow
     if (w)
@@ -668,26 +635,28 @@ void ComposerMainWindow::tabClosed(int index)
       w->close();
       w->deleteLater();
     }
-  }
-  qWarning() << "ComposerMainWindow::tabClosed ends";
+
+    _projectsWidgets.remove(location);
+  }  
 }
 
 void ComposerMainWindow::closeCurrentTab()
 {
-  if(tabProjects->currentIndex())
+  if(_tabProjects->currentIndex())
   {
-    int currentIndex = tabProjects->currentIndex();
+    int currentIndex = _tabProjects->currentIndex();
     tabClosed(currentIndex);
   }
 }
+
 void ComposerMainWindow::closeAllFiles()
 {
-  while(tabProjects->count() > 1)
+  while(_tabProjects->count() > 1)
   {
     // TODO: Ask to save all projects here!
-//    for (int i = 0; i < tabProjects->count(); i++)
+//    for (int i = 0; i < _tabProjects->count(); i++)
 //    {
-//      QString location = tabProjects->tabToolTip(i);
+//      QString location = _tabProjects->tabToolTip(i);
 //      Project *project = ProjectControl::getInstance()->getOpenProject(location);
 //      if (project->isDirty())
 //      {
@@ -696,15 +665,15 @@ void ComposerMainWindow::closeAllFiles()
 //    }
 
     tabClosed(1);
-    tabProjects->removeTab(1);
+    _tabProjects->removeTab(1);
   }
 }
 
 void ComposerMainWindow::onOpenProjectTab(QString location)
 {
-  if (!projectsWidgets.contains(location)) return;
-  QMainWindow *w = projectsWidgets[location];
-  tabProjects->setCurrentWidget(w);
+  if (!_projectsWidgets.contains(location)) return;
+  QToolWindowManager *w = _projectsWidgets[location];
+  _tabProjects->setCurrentWidget(w);
 }
 
 void ComposerMainWindow::createMenus()
@@ -715,56 +684,57 @@ void ComposerMainWindow::createMenus()
 
 #ifdef FV_GUI
   QAction *action_checkForUpdate = new QAction("Check for updates",this);
-  connect (action_checkForUpdate,SIGNAL(triggered()),FvUpdater::sharedUpdater(),SLOT(CheckForUpdatesNotSilent()));
+  connect (action_checkForUpdate, SIGNAL(triggered()),
+           FvUpdater::sharedUpdater(), SLOT(CheckForUpdatesNotSilent()));
   ui->menu_Help->addAction(action_checkForUpdate);
 
 #endif
 
-  ui->menu_Edit->addAction(editPreferencesAct);
+  ui->menu_Edit->addAction(_editPreferencesAction);
 
   menuBar()->addSeparator();
 
   connect( ui->menu_Window, SIGNAL(aboutToShow()),
-          this, SLOT(updateViewMenu()));
+           this, SLOT(updateViewMenu()) );
 
-  connect(ui->action_CloseProject, SIGNAL(triggered()),
-          this, SLOT(closeCurrentTab()));
+  connect( ui->action_CloseProject, SIGNAL(triggered()),
+           this, SLOT(closeCurrentTab()) );
 
-  connect(ui->action_CloseAll, SIGNAL(triggered()),
-          this, SLOT(closeAllFiles()));
+  connect( ui->action_CloseAll, SIGNAL(triggered()),
+           this, SLOT(closeAllFiles()) );
 
   connect( ui->action_Save, SIGNAL(triggered()),
-          this, SLOT(saveCurrentProject()));
+           this, SLOT(saveCurrentProject()) );
 
   connect( ui->action_SaveAs, SIGNAL(triggered()),
-          this, SLOT(saveAsCurrentProject()));
+           this, SLOT(saveAsCurrentProject()) );
 
   connect ( ui->action_NewProject, SIGNAL(triggered()),
-           this, SLOT(launchProjectWizard()));
+            this, SLOT(launchProjectWizard()) );
 
-  /* menu_Language = new QMenu(0);
-  tbLanguageDropList->setMenu(menu_Language);
-  ui->toolBar->addWidget(tbLanguageDropList);*/
+  /* _menuLanguage = new QMenu(0);
+  _tbLanguageDropList->setMenu(_menuLanguage);
+  ui->toolBar->addWidget(_tbLanguageDropList);*/
 
   QToolButton *button_Run = new QToolButton(0); //create a run_NCL button(It used to be created in design mode)
-  menu_Multidevice = new QMenu(0); // assign a dropdown menu to the button
-  menu_Multidevice->addAction(ui->action_runPassiveNCL);
-  menu_Multidevice->addAction(ui->action_runActiveNCL);
-  button_Run->setMenu(menu_Multidevice);
+  _menuMultidevice = new QMenu(0); // assign a dropdown menu to the button
+  _menuMultidevice->addAction(ui->action_runPassiveNCL);
+  _menuMultidevice->addAction(ui->action_runActiveNCL);
+  button_Run->setMenu(_menuMultidevice);
   button_Run->setDefaultAction(ui->action_RunNCL);
   button_Run->setPopupMode(QToolButton::MenuButtonPopup);
   ui->toolBar->addWidget(button_Run); //put button_run in toolbar
 
   ui->toolBar->addSeparator();
 
-  menu_Perspective = new QMenu(0);
-  // assing menu_Perspective to tbPerspectiveDropList
-  tbPerspectiveDropList->setMenu(menu_Perspective);
-  ui->toolBar->addWidget(tbPerspectiveDropList);
+  _menuPerspective = new QMenu(0);
+  // assing _menuPerspective to _tbPerspectiveDropList
+  _tbPerspectiveDropList->setMenu(_menuPerspective);
+  ui->toolBar->addWidget(_tbPerspectiveDropList);
 
-  // tabProjects->setCornerWidget(tbPerspectiveDropList, Qt::TopRightCorner);
-  tabProjects->setCornerWidget(ui->toolBar, Qt::TopRightCorner);
-  // tabProjects->setCornerWidget(ui->menu_Window, Qt::TopLeftCorner);
+  // _tabProjects->setCornerWidget(_tbPerspectiveDropList, Qt::TopRightCorner);
+  _tabProjects->setCornerWidget(ui->toolBar, Qt::TopRightCorner);
+  // _tabProjects->setCornerWidget(ui->menu_Window, Qt::TopLeftCorner);
 
 //  updateMenuLanguages();
   updateMenuPerspectives();
@@ -801,9 +771,11 @@ void ComposerMainWindow::createAboutPlugins()
   detailsButton->setIcon(QIcon());
   detailsButton->setEnabled(false);
 
-  connect(bOk, SIGNAL(rejected()), aboutPluginsDialog, SLOT(close()));
+  connect( bOk, SIGNAL(rejected()),
+           aboutPluginsDialog, SLOT(close()) );
 
-  connect( detailsButton, SIGNAL(pressed()), this, SLOT(showPluginDetails()) );
+  connect( detailsButton, SIGNAL(pressed()),
+           this, SLOT(showPluginDetails()) );
 
   QGridLayout *gLayout = new QGridLayout(aboutPluginsDialog);
   gLayout->addWidget(new QLabel(tr("The <b>Composer</b> is an IDE for"
@@ -822,8 +794,8 @@ void ComposerMainWindow::createAboutPlugins()
 
   aboutPluginsDialog->setModal(true);
 
-  connect(aboutPluginsDialog, SIGNAL(finished(int)),
-          this, SLOT(saveLoadPluginData(int)));
+  connect( aboutPluginsDialog, SIGNAL(finished(int)),
+           this, SLOT(saveLoadPluginData(int)) );
 }
 
 void ComposerMainWindow::about()
@@ -925,10 +897,10 @@ void ComposerMainWindow::errorDialog(QString message)
 
 void ComposerMainWindow::createActions() {
 
-  connect(ui->action_About, SIGNAL(triggered()), this, SLOT(about()));
+  connect( ui->action_About, SIGNAL(triggered()), this, SLOT(about()));
 
   connect( ui->action_AboutPlugins, SIGNAL(triggered()),
-           this, SLOT(aboutPlugins()));
+           this, SLOT(aboutPlugins()) );
 
 #ifdef WITH_SERV_PUB
   ui->actionPublish->setEnabled(true);
@@ -936,30 +908,25 @@ void ComposerMainWindow::createActions() {
   ui->actionPublish->setEnabled(false);
 #endif
 
-  fullScreenViewAct = new QAction(tr("&FullScreen"),this);
-  fullScreenViewAct->setShortcut(tr("F11"));
-
-  connect(fullScreenViewAct,SIGNAL(triggered()),this,
-          SLOT(showCurrentWidgetFullScreen()));
-
-  editPreferencesAct = new QAction(tr("&Preferences"), this);
-  editPreferencesAct->setStatusTip(tr("Edit preferences"));
-  connect (editPreferencesAct, SIGNAL(triggered()), this,
+  _editPreferencesAction = new QAction(tr("&Preferences"), this);
+  _editPreferencesAction->setStatusTip(tr("Edit preferences"));
+  connect (_editPreferencesAction, SIGNAL(triggered()), this,
            SLOT(showEditPreferencesDialog()));
 
   connect(ui->action_Preferences, SIGNAL(triggered()),
           this, SLOT(showEditPreferencesDialog()));
 
-  connect(ui->action_Exit, SIGNAL(triggered()), this, SLOT(close()));
-  saveCurrentPluginsLayoutAct = new QAction(tr("Save current perspective..."),
-                                            this);
+  connect( ui->action_Exit, SIGNAL(triggered()),
+           this, SLOT(close()) );
 
-  connect(    saveCurrentPluginsLayoutAct, SIGNAL(triggered()),
-          this, SLOT(saveCurrentGeometryAsPerspective()));
+  connect ( ui->action_Fullscreen, SIGNAL(triggered()),
+            this, SLOT(showCurrentWidgetFullScreen()) );
 
-  restorePluginsLayoutAct = new QAction(tr("Restore a perspective"), this);
-  connect(restorePluginsLayoutAct, SIGNAL(triggered()),
-          this, SLOT(restorePerspective()));
+  connect( ui->action_Save_current_perspective, SIGNAL(triggered()),
+           this, SLOT(saveCurrentGeometryAsPerspective()));
+
+  connect( ui->action_Restore_a_perspective, SIGNAL(triggered()),
+           this, SLOT(restorePerspective()) );
 
   QWidget* spacer = new QWidget();
   spacer->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
@@ -987,39 +954,45 @@ void ComposerMainWindow::createStatusBar()
 
 void ComposerMainWindow::showCurrentWidgetFullScreen()
 {
-  tabProjects->addAction(fullScreenViewAct);
+  _tabProjects->addAction(ui->action_Fullscreen);
 
-  if(!tabProjects->isFullScreen())
+  if(!_tabProjects->isFullScreen())
   {
-    tabProjects->setWindowFlags(Qt::Window);
-    tabProjects->showFullScreen();
+    _tabProjects->setWindowFlags(Qt::Window);
+    _tabProjects->showFullScreen();
   }
   else
   {
-    tabProjects->setParent(ui->frame, Qt::Widget);
-    tabProjects->show();
+    _tabProjects->setParent(ui->frame, Qt::Widget);
+    _tabProjects->show();
   }
 }
 
-void ComposerMainWindow::updateViewMenu()
+void ComposerMainWindow::updateViewMenu ()
 {
-  ui->menu_Window->clear();
-
-  ui->menu_Window->addAction(fullScreenViewAct);
-
-  ui->menu_Window->addSeparator();
-
   //Update menu Views.
   ui->menu_Views->clear();
-  ui->menu_Window->addMenu(ui->menu_Views);
-  if(tabProjects->count()) //see if there is any open document
+  if(_tabProjects->count()) //see if there is any open document
   {
-    QString location = tabProjects->tabToolTip(tabProjects->currentIndex());
+    QToolWindowManager *toolWidgetManager =
+        dynamic_cast<QToolWindowManager *> (_tabProjects->currentWidget());
 
-    for(int i = 0; i < allDocks.size(); i++)
+    if(toolWidgetManager != 0)
     {
-      if(allDocks.at(i)->property("project").toString() == location)
-        ui->menu_Views->addAction(allDocks.at(i)->toggleViewAction());
+      QWidgetList toolWindows = toolWidgetManager->toolWindows();
+      for (int i = 0; i < toolWindows.length(); i++)
+      {
+        QWidget *w = toolWindows.at(i);
+        QAction *act = ui->menu_Views->addAction(w->windowTitle());
+
+        act->setData(i);
+        act->setCheckable(true);
+        qDebug() << w->parent();
+        act->setChecked(w->parent() != 0);
+
+        connect( act, SIGNAL(triggered(bool)),
+                 this, SLOT(pluginWidgetViewToggled(bool)) );
+      }
     }
   }
 
@@ -1027,25 +1000,21 @@ void ComposerMainWindow::updateViewMenu()
     ui->menu_Views->setEnabled(false);
   else
     ui->menu_Views->setEnabled(true);
-
-  ui->menu_Window->addSeparator();
-  ui->menu_Window->addAction(saveCurrentPluginsLayoutAct);
-  ui->menu_Window->addAction(restorePluginsLayoutAct);
 }
 
 void ComposerMainWindow::closeEvent(QCloseEvent *event)
 {
 
   /** Save any dirty project. \todo This must be a function. */
-  for(int index = 1; index < tabProjects->count(); index++)
+  for(int index = 1; index < _tabProjects->count(); index++)
   {
-    QString location = tabProjects->tabToolTip(index);
+    QString location = _tabProjects->tabToolTip(index);
     Project *project = ProjectControl::getInstance()->getOpenProject(location);
 
     qDebug() << location << project;
     if(project != NULL && project->isDirty())
     {
-      tabProjects->setCurrentIndex(index);
+      _tabProjects->setCurrentIndex(index);
       int ret = QMessageBox::warning(this, project->getAttribute("id"),
                                      tr("The project %1 has been modified.\n"
                                         "Do you want to save your changes?").
@@ -1075,7 +1044,7 @@ void ComposerMainWindow::closeEvent(QCloseEvent *event)
 
   QStringList openfiles;
   QString key;
-  foreach (key, projectsWidgets.keys())
+  foreach (key, _projectsWidgets.keys())
     openfiles << key;
 
   settings.beginGroup("openfiles");
@@ -1133,8 +1102,9 @@ void ComposerMainWindow::endOpenProject(QString project)
   }
   else
   {
+    /*
     // There is no a default perspective, so let use the system default.
-    QMainWindow *window = projectsWidgets[project];
+    QToolWindowManager *window = _projectsWidgets[project];
     QList <QDockWidget *> docks = window->findChildren <QDockWidget* >(QRegExp("br.*"));
     QMap <QString, QDockWidget*> dockByPluginId;
     QList <QDockWidget *> leftDocks, rightDocks, bottomDocks;
@@ -1190,7 +1160,7 @@ void ComposerMainWindow::endOpenProject(QString project)
         window->addDockWidget(Qt::RightDockWidgetArea, bottomDocks[i], Qt::Vertical);
       else
         window->tabifyDockWidget(bottomDocks[0], bottomDocks[i]);
-    }
+    }*/
   }
 
   this->updateGeometry();
@@ -1198,12 +1168,12 @@ void ComposerMainWindow::endOpenProject(QString project)
 
 void ComposerMainWindow::saveCurrentProject()
 {
-  int index = tabProjects->currentIndex();
+  int index = _tabProjects->currentIndex();
   bool saveAlsoNCLDocument = true;
 
   if(index != 0)
   {
-    QString location = tabProjects->tabToolTip(index);
+    QString location = _tabProjects->tabToolTip(index);
     Project *project = ProjectControl::getInstance()->getOpenProject(location);
 
     PluginControl::getInstance()->savePluginsData(project);
@@ -1237,12 +1207,12 @@ void ComposerMainWindow::saveCurrentProject()
 
 void ComposerMainWindow::saveAsCurrentProject()
 {
-  int index = tabProjects->currentIndex();
+  int index = _tabProjects->currentIndex();
   bool saveAlsoNCLDocument = true;
 
   if(index != 0)
   {
-    QString location = tabProjects->tabToolTip(index);
+    QString location = _tabProjects->tabToolTip(index);
 
     QString destFileName = QFileDialog::getSaveFileName(
           this,
@@ -1305,7 +1275,7 @@ void ComposerMainWindow::saveAsCurrentProject()
 
 void ComposerMainWindow::saveCurrentGeometryAsPerspective()
 {
-  if(tabProjects->count()) // If there is a document open
+  if(_tabProjects->count()) // If there is a document open
   {
     perspectiveManager->setBehavior(PERSPEC_SAVE);
     if(perspectiveManager->exec())
@@ -1341,18 +1311,18 @@ void ComposerMainWindow::restorePerspective()
 
 void ComposerMainWindow::savePerspective(QString layoutName)
 {
-  if(tabProjects->count()) //see if there is any open document
+  if(_tabProjects->count()) //see if there is any open document
   {
-    QString location = tabProjects->tabToolTip(tabProjects->currentIndex());
+    QString location = _tabProjects->tabToolTip(_tabProjects->currentIndex());
 
-    QMainWindow *window = projectsWidgets[location];
+    QToolWindowManager *window = _projectsWidgets[location];
     QSettings settings(QSettings::IniFormat,
                        QSettings::UserScope,
                        "telemidia",
                        "composer");
 
     settings.beginGroup("pluginslayout");
-    settings.setValue(layoutName, window->saveState(0));
+    settings.setValue(layoutName, window->saveState());
     settings.endGroup();
   }
 }
@@ -1365,18 +1335,19 @@ void ComposerMainWindow::saveDefaultPerspective(QString defaultPerspectiveName)
 
 void ComposerMainWindow::restorePerspective(QString layoutName)
 {
-  if(tabProjects->count()) //see if there is any open project
+  if(_tabProjects->count() > 1) // see if there is any open project
   {
-    QString location = tabProjects->tabToolTip(
-          tabProjects->currentIndex());
+    QString location = _tabProjects->tabToolTip(_tabProjects->currentIndex());
 
-    QMainWindow *window = projectsWidgets[location];
+    QToolWindowManager *window = _projectsWidgets[location];
+
     GlobalSettings settings;
     settings.beginGroup("pluginslayout");
 #ifndef USE_MDI
-    window->restoreState(settings.value(layoutName).toByteArray());
+    // window->restoreState(settings.value(layoutName).toByteArray());
 #endif
     settings.endGroup();
+
   }
 }
 
@@ -1431,7 +1402,7 @@ void ComposerMainWindow::runOnLocalGinga()
 
   // \todo: Ask to Save current project before send it to Ginga VM.
 
-  QString location = tabProjects->tabToolTip(tabProjects->currentIndex());
+  QString location = _tabProjects->tabToolTip(_tabProjects->currentIndex());
 
   if(location.isEmpty())
   {
@@ -1543,13 +1514,13 @@ void ComposerMainWindow::copyOnRemoteGingaVM(bool autoplay)
 {
 
 #ifdef WITH_LIBSSH2
-  int currentTab = tabProjects->currentIndex();
+  int currentTab = _tabProjects->currentIndex();
   if(currentTab != 0)
   {
     //Disable a future Run (while the current one does not finish)!!
     ui->action_RunNCL->setEnabled(false);
 
-    QString location = tabProjects->tabToolTip(currentTab);
+    QString location = _tabProjects->tabToolTip(currentTab);
     Project *currentProject = ProjectControl::getInstance()->
                                                       getOpenProject(location);
 
@@ -2098,19 +2069,19 @@ void ComposerMainWindow::updateMenuPerspectives()
   QStringList keys = settings.allKeys();
   settings.endGroup();
 
-  menu_Perspective->clear();
+  _menuPerspective->clear();
 
   for(int i = 0; i < keys.size(); i++)
   {
-    QAction *act = menu_Perspective->addAction(keys.at(i),
+    QAction *act = _menuPerspective->addAction(keys.at(i),
                                             this,
                                             SLOT(restorePerspectiveFromMenu()));
     act->setData(keys[i]);
   }
 
   // Add Option to save current Perspective
-  menu_Perspective->addSeparator();
-  menu_Perspective->addAction(saveCurrentPluginsLayoutAct);
+  /* _menuPerspective->addSeparator();
+  _menuPerspective->addAction(_saveCurrentPluginsLayoutAction); */
 }
 
 void ComposerMainWindow::updateMenuLanguages()
@@ -2120,7 +2091,7 @@ void ComposerMainWindow::updateMenuLanguages()
 
   for(int i = 0; i < languages.size(); i++)
   {
-    QAction *act = menu_Language->addAction(languages.at(i),
+    QAction *act = _menuLanguage->addAction(languages.at(i),
                                             this,
                                             SLOT(changeLanguageFromMenu()));
     act->setData(languages[i]);
@@ -2131,9 +2102,9 @@ void ComposerMainWindow::currentTabChanged(int n)
 {
   if(n)
   {
-    tbPerspectiveDropList->setEnabled(true);
-    saveCurrentPluginsLayoutAct->setEnabled(true);
-    restorePluginsLayoutAct->setEnabled(true);
+    _tbPerspectiveDropList->setEnabled(true);
+    ui->action_Save_current_perspective->setEnabled(true);
+    ui->action_Restore_a_perspective->setEnabled(true);
     ui->action_CloseProject->setEnabled(true);
     ui->action_Save->setEnabled(true);
     ui->action_SaveAs->setEnabled(true);
@@ -2143,9 +2114,9 @@ void ComposerMainWindow::currentTabChanged(int n)
   }
   else
   {
-    tbPerspectiveDropList->setEnabled(false);
-    saveCurrentPluginsLayoutAct->setEnabled(false);
-    restorePluginsLayoutAct->setEnabled(false);
+    _tbPerspectiveDropList->setEnabled(false);
+    ui->action_Save_current_perspective->setEnabled(false);
+    ui->action_Restore_a_perspective->setEnabled(false);
     ui->action_CloseProject->setEnabled(false);
     ui->action_Save->setEnabled(false);
     ui->action_SaveAs->setEnabled(false);
@@ -2154,10 +2125,22 @@ void ComposerMainWindow::currentTabChanged(int n)
   }
 }
 
+void ComposerMainWindow::pluginWidgetViewToggled(bool state)
+{
+  QToolWindowManager *toolWidgetManager =
+      dynamic_cast<QToolWindowManager *> (_tabProjects->currentWidget());
+  int index = static_cast<QAction*>(sender())->data().toInt();
+  QWidget *toolWindow = toolWidgetManager->toolWindows()[index];
+  toolWidgetManager->moveToolWindow( toolWindow, state ?
+                                     QToolWindowManager::LastUsedArea :
+                                     QToolWindowManager::NoArea );
+}
+
 void ComposerMainWindow::focusChanged(QWidget *old, QWidget *now)
 {
   Q_UNUSED(old)
 
+  /*
   if(now == NULL)
     return; // Do nothing!!
 
@@ -2203,34 +2186,36 @@ void ComposerMainWindow::focusChanged(QWidget *old, QWidget *now)
   }
   allDocksMutex.unlock();
 //  qDebug() << "Unlocked allDocksMutex 2";
+  */
 }
 
 void ComposerMainWindow::setProjectDirty(QString location, bool isDirty)
 {
-  QMainWindow *window = projectsWidgets[location];
+  QToolWindowManager *window = _projectsWidgets[location];
+
   QString projectId =
       ProjectControl::getInstance()->
       getOpenProject(location)->getAttribute("id");
 
-  int index = tabProjects->indexOf(window);
+  int index = _tabProjects->indexOf(window);
 
   ui->action_Save->setEnabled(true);
 
   if(index >= 0) {
     if(isDirty)
-      tabProjects->setTabText(index, QString("*")+projectId);
+      _tabProjects->setTabText(index, QString("*")+projectId);
     else
-      tabProjects->setTabText(index, projectId);
+      _tabProjects->setTabText(index, projectId);
   }
 }
 
 void ComposerMainWindow::undo()
 {
-  int index = tabProjects->currentIndex();
+  int index = _tabProjects->currentIndex();
 
   if(index >= 1)
   {
-    QString location = tabProjects->tabToolTip(index);
+    QString location = _tabProjects->tabToolTip(index);
     Project *project = ProjectControl::getInstance()->getOpenProject(location);
     MessageControl *msgControl =
         PluginControl::getInstance()->getMessageControl(project);
@@ -2242,11 +2227,11 @@ void ComposerMainWindow::undo()
 
 void ComposerMainWindow::redo()
 {
-  int index = tabProjects->currentIndex();
+  int index = _tabProjects->currentIndex();
 
   if(index >= 1)
   {
-    QString location = tabProjects->tabToolTip(index);
+    QString location = _tabProjects->tabToolTip(index);
     Project *project = ProjectControl::getInstance()->getOpenProject(location);
     MessageControl *msgControl =
         PluginControl::getInstance()->getMessageControl(project);
@@ -2299,9 +2284,9 @@ bool ComposerMainWindow::showHelp()
 
 void ComposerMainWindow::autoSaveCurrentProjects()
 {
-  for(int i = 1; i < tabProjects->count(); i++)
+  for(int i = 1; i < _tabProjects->count(); i++)
   {
-    QString location = tabProjects->tabToolTip(i);
+    QString location = _tabProjects->tabToolTip(i);
     Project *project = ProjectControl::getInstance()->getOpenProject(location);
     if(project->isDirty())
     {
@@ -2314,7 +2299,7 @@ void ComposerMainWindow::autoSaveCurrentProjects()
 // we create the menu entries dynamically, dependant on the existing translations
 void ComposerMainWindow::createLanguageMenu(void)
 {
-  QActionGroup* langGroup = new QActionGroup(menu_Language);
+  QActionGroup* langGroup = new QActionGroup(_menuLanguage);
   langGroup->setExclusive(true);
 
   connect(langGroup, SIGNAL(triggered(QAction *)), this, SLOT(slotLanguageChanged(QAction *)));
@@ -2344,8 +2329,8 @@ void ComposerMainWindow::createLanguageMenu(void)
     action->setCheckable(true);
     action->setData(locale);
 
-//    ui->menu_Language->addAction(action);
-    menu_Language->addAction(action);
+//    ui->_menuLanguage->addAction(action);
+    _menuLanguage->addAction(action);
     langGroup->addAction(action);
 
     // set default translators and language checked
@@ -2423,35 +2408,27 @@ void ComposerMainWindow::changeEvent(QEvent* event)
 
 void ComposerMainWindow::updateTabWithProject(int index, QString newLocation)
 {
-  QString oldLocation = tabProjects->tabToolTip(index);
+  QString oldLocation = _tabProjects->tabToolTip(index);
 
   if(oldLocation == newLocation) return; /* do nothing */
 
   /* Already had a project in this tab */
   if(!oldLocation.isNull() && !oldLocation.isEmpty())
   {
-    // Update projectsWidgets
-    if(projectsWidgets.contains(oldLocation))
+    // Update _projectsWidgets
+    if(_projectsWidgets.contains(oldLocation))
     {
-      projectsWidgets.insert(newLocation, projectsWidgets.value(oldLocation));
-      projectsWidgets.remove(oldLocation);
+      _projectsWidgets.insert(newLocation, _projectsWidgets.value(oldLocation));
+      _projectsWidgets.remove(oldLocation);
     }
-
-    //update firstDock
-    if(firstDock.contains(oldLocation))
-    {
-      firstDock.insert(newLocation, firstDock.value(oldLocation));
-      firstDock.remove(oldLocation);
-
-    };
   }
 
-  tabProjects->setTabToolTip(index, newLocation);
+  _tabProjects->setTabToolTip(index, newLocation);
   Project *project = ProjectControl::getInstance()->getOpenProject(newLocation);
   if(project != NULL)
   {
     QString projectId = project->getAttribute("id");
-    tabProjects->setTabText(index, projectId);
+    _tabProjects->setTabText(index, projectId);
   }
 }
 
@@ -2484,11 +2461,11 @@ void ComposerMainWindow::on_actionReport_Bug_triggered()
 #ifdef WITH_SERV_PUB
 void ComposerMainWindow::on_actionPublish_triggered()
 {
-  int index = tabProjects->currentIndex();
+  int index = _tabProjects->currentIndex();
 
   if (index != 0)
   {
-    QString location = tabProjects->tabToolTip(index);
+    QString location = _tabProjects->tabToolTip(index);
 
     Project *currentProject =
         ProjectControl::getInstance()->getOpenProject(location);

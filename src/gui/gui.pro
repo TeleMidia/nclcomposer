@@ -47,7 +47,7 @@ contains(SERVERPUB, true) {
 QT += core xml network
 
 greaterThan(QT_MAJOR_VERSION, 4) {
-  QT += widgets webkitwidgets
+  QT += widgets
 }
 else {
   QT += webkit
@@ -170,7 +170,7 @@ else {
     target.path = $$INSTALLBASE
 }
 
-INCLUDEPATH +=  . src
+INCLUDEPATH +=  . src src/qtoolwindowmanager/
 
 INCLUDEPATH   +=  ../core/src \
                   ../core
@@ -285,6 +285,22 @@ FORMS   += ui/PreferencesDialog.ui \
     ui/GeneralPreferences.ui \
     ui/NewProjectWizard.ui \
     ui/FileChooser.ui
+
+# LibToolWindowManager library
+INCLUDEPATH += src/toolwindowmanager/libqtoolwindowmanager/
+HEADERS += \
+    src/toolwindowmanager/libqtoolwindowmanager/qabstracttoolwindowmanagerarea.h \
+    src/toolwindowmanager/libqtoolwindowmanager/qtoolwindowmanager.h \
+    src/toolwindowmanager/libqtoolwindowmanager/private/qtoolwindowmanagerarea_p.h \
+    src/toolwindowmanager/libqtoolwindowmanager/private/qtoolwindowmanager_p.h \
+    src/toolwindowmanager/libqtoolwindowmanager/private/qtoolwindowmanagerwrapper_p.h
+
+SOURCES += \
+    src/toolwindowmanager/libqtoolwindowmanager/qabstracttoolwindowmanagerarea.cpp \
+    src/toolwindowmanager/libqtoolwindowmanager/qtoolwindowmanager.cpp \
+    src/toolwindowmanager/libqtoolwindowmanager/qtoolwindowmanagerarea.cpp \
+    src/toolwindowmanager/libqtoolwindowmanager/qtoolwindowmanagerwrapper.cpp
+# end of LibToolWindowManager library
 
 #TRANSLATIONS
 win32 {

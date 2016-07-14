@@ -86,15 +86,6 @@
         <verstretch>0</verstretch>
        </sizepolicy>
       </property>
-      <property name="frameShape">
-       <enum>QFrame::NoFrame</enum>
-      </property>
-      <property name="frameShadow">
-       <enum>QFrame::Raised</enum>
-      </property>
-      <property name="lineWidth">
-       <number>1</number>
-      </property>
       <layout class="QHBoxLayout" name="horizontalLayout_2">
        <property name="spacing">
         <number>0</number>
@@ -125,7 +116,7 @@
      <x>0</x>
      <y>0</y>
      <width>776</width>
-     <height>19</height>
+     <height>27</height>
     </rect>
    </property>
    <property name="layoutDirection">
@@ -207,7 +198,12 @@
       <string>Views</string>
      </property>
     </widget>
+    <addaction name="action_Fullscreen"/>
+    <addaction name="separator"/>
     <addaction name="menu_Views"/>
+    <addaction name="separator"/>
+    <addaction name="action_Save_current_perspective"/>
+    <addaction name="action_Restore_a_perspective"/>
    </widget>
    <widget class="QMenu" name="menu_Share">
     <property name="enabled">
@@ -515,6 +511,24 @@
   <action name="action_runActiveNCL">
    <property name="text">
     <string>Active</string>
+   </property>
+  </action>
+  <action name="action_Fullscreen">
+   <property name="text">
+    <string>&amp;Fullscreen</string>
+   </property>
+   <property name="shortcut">
+    <string>F11</string>
+   </property>
+  </action>
+  <action name="action_Save_current_perspective">
+   <property name="text">
+    <string>&amp;Save current perspective</string>
+   </property>
+  </action>
+  <action name="action_Restore_a_perspective">
+   <property name="text">
+    <string>&amp;Restore a perspective</string>
    </property>
   </action>
  </widget>

@@ -64,6 +64,7 @@ using namespace composer::core::util;
 // #include "ComposerHelpWidget.h"
 #include "ClickableDockWidget.h"
 
+#include <qtoolwindowmanager.h>
 #include "RunGingaConfig.h"
 
 #ifdef WITH_LIBSSH2
@@ -98,42 +99,36 @@ class ComposerMainWindow : public QMainWindow {
 private:
   static const int maximumRecentProjectsSize = 10;
 
-  Ui::ComposerMainWindow *ui; /*!< A reference to Ui class. */
-  QTabWidget  *tabProjects; /*!< Each open project is show in a different
-                                tab. The tabProjects variable keeps the list of
-                                the projects open tabs. */
-  QToolButton  *tbPerspectiveDropList; /*!< Action that shows the list of
-                                             perspective as a menu. */
-  QMenu        *menu_Perspective; /*!< The menu containing the list of
-                                  perspectives. */
-  QMenu        *menu_Multidevice; /*!<todo */
-  QToolButton  *tbLanguageDropList; /*!< Action that shows the list of
-                                             languages as a menu. */
-  QMenu         *menu_Language; /*!< The menu containing the list of languages.*/
-
-  QMap<QString, QMainWindow*> projectsWidgets; /*!< Keeps a reference to each
-                                                      project widget. */
-  QMap<QString, QDockWidget*> firstDock; /*!< To each project location
-                                                keeps the reference of the
-                                                first QDockWidget added.*/
-  QList <QDockWidget*> allDocks; /*!< A list with all the QDockWidgets, to
-                                        each plugin. */
-  QMutex allDocksMutex;
-
-  QAction *fullScreenViewAct; /*!< Action to show Composer in FullScreen. */
-  QAction *projectViewAct; /*!< TODO */
-  QAction *editPreferencesAct; /*!< TODO */
-
-  QAction *publishProjectAct; /*!< Action to open publish dialog. */
-
-  QAction *saveCurrentPluginsLayoutAct; /*!< Action to save current plugins
-                                                layout as a new perspective. */
-  QAction *restorePluginsLayoutAct; /*!< Action to restore a previously saved
-                                           perspective as the current plugins
-                                           layout. */
+  Ui::ComposerMainWindow *ui;
 
   QListWidget *profilesExt; /*!< Shows a list of the current loaded language
                                    profiles. */
+  QStringList extensions_paths; /*!< TODO */
+
+
+  QTabWidget  *_tabProjects; /*!< Each open project is show in a different tab.
+                                  The tabProjects variable keeps the list of the
+                                  projects open tabs. */
+
+  QToolButton  *_tbPerspectiveDropList; /*!< Action that shows the list of
+                                             perspective as a menu. */
+  QToolButton  *_tbLanguageDropList; /*!< Action that shows the list of
+                                          languages as a menu. */
+
+  QMenu        *_menuPerspective; /*!< The menu containing the list of perspectives. */
+  QMenu        *_menuMultidevice; /*!<todo */
+  QMenu        *_menuLanguage;    /*!< The menu containing the list of languages.*/
+
+  QAction      *_projectViewAction; /*!< TODO */
+  QAction      *_editPreferencesAction; /*!< TODO */
+  QAction      *_restorePluginsLayoutAction; /*!< Action to restore a
+                                                  previously saved perspective
+                                                  as the current
+                                                  plugins layout. */
+
+  QMap<QString, QToolWindowManager*> _projectsWidgets; /*!< Keeps a reference
+                                                            to each project
+                                                            widget. */
   QTreeWidget *pluginsExt; /*!< Shows a list with the current loaded
                                   plugins. */
 
@@ -144,7 +139,6 @@ private:
   QDialog *aboutPluginsDialog; /*!< TODO */
   QPushButton *detailsButton;
 
-  QStringList extensions_paths; /*!< TODO */
 
   WelcomeWidget *welcomeWidget; /*!< TODO */
 
@@ -157,7 +151,7 @@ private:
   RunRemoteGingaVMAction runRemoteGingaVMAction;
   StopRemoteGingaVMAction stopRemoteGingaVMAction;
 #endif
-  QProgressDialog *taskProgressBar;
+  QProgressDialog *_taskProgressBar;
 
   QTimer *autoSaveTimer; // auto save timer
 
@@ -364,6 +358,8 @@ private slots:
                                     bool shouldCreateADefaultRegion = true,
                                     bool save = true);
   void on_actionReport_Bug_triggered();
+
+  void pluginWidgetViewToggled(bool);
 
 #ifdef WITH_SERV_PUB
   void on_actionPublish_triggered();
