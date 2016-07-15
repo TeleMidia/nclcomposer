@@ -38,6 +38,11 @@ namespace gui {
 
 const int autoSaveInterval = 1 * 60 * 1000; //ms
 
+/*!
+ * \brief Constructs the Composer Main Window with the given parent.
+ *
+ * \param parent The parent of the Composer Main Window.
+ */
 ComposerMainWindow::ComposerMainWindow(QWidget *parent)
   : QMainWindow(parent),
     ui(new Ui::ComposerMainWindow),
@@ -75,6 +80,12 @@ ComposerMainWindow::ComposerMainWindow(QWidget *parent)
   setWindowFlags(Qt::Window | Qt::WindowTitleHint);
 }
 
+/*!
+ * \brief You should call this method to initialize the NCL Composer Main
+ *        Window and show the SplashScreen.
+ *
+ * \param app QApplication instance
+ */
 void ComposerMainWindow::init(const QApplication &app)
 {
   /* The following code could be in another function */
@@ -426,19 +437,44 @@ void ComposerMainWindow::initGUI()
 
 void ComposerMainWindow::keyPressEvent(QKeyEvent *event)
 {
-  if(event->modifiers() == Qt::ControlModifier && event->key() == Qt::Key_Z)
+  qDebug() << "ComposerMainWindow::keyPressEvent " << event;
+  if(event->modifiers() == Qt::ControlModifier)
   {
-    undo();
-    event->accept();
-  }
-  else if(event->modifiers() == Qt::ControlModifier &&
-          event->key() == Qt::Key_Y)
-  {
-    redo();
-    event->accept();
+    if(event->key() == Qt::Key_Z)
+    {
+        undo();
+        event->accept();
+    }
+    else if(event->key() == Qt::Key_Y)
+    {
+        redo();
+        event->accept();
+    }
+    else if ( (event->key() >= Qt::Key_1)
+              && (event->key() <= Qt::Key_9) )
+    {
+      GlobalSettings settings;
+      settings.beginGroup("pluginslayout");
+      QStringList perspectives = settings.allKeys();
+      if ( (event->key() - Qt::Key_1) < perspectives.count() )
+      {
+        restorePerspective( perspectives.at(event->key() - Qt::Key_1) );
+      }
+
+      settings.endGroup();
+      event->accept();
+    }
   }
 }
 
+/*!
+ * \brief Add a plugin Widget an link it to the given project.
+ *
+ * \param fac
+ * \param plugin
+ * \param doc
+ * \param n
+ */
 void ComposerMainWindow::addPluginWidget( IPluginFactory *fac,
                                           IPlugin *plugin,
                                           Project *project )
@@ -599,6 +635,10 @@ void ComposerMainWindow::updateDockStyle(QDockWidget *dock, bool selected)
   }
 }
 
+/*!
+ * \brief
+ * \param index
+ */
 void ComposerMainWindow::tabClosed(int index)
 {
   if(index == 0)
@@ -642,6 +682,9 @@ void ComposerMainWindow::tabClosed(int index)
   }  
 }
 
+/*!
+ * \brief
+ */
 void ComposerMainWindow::closeCurrentTab()
 {
   if(_tabProjects->currentIndex())
@@ -651,6 +694,9 @@ void ComposerMainWindow::closeCurrentTab()
   }
 }
 
+/*!
+ * \brief
+ */
 void ComposerMainWindow::closeAllFiles()
 {
   while(_tabProjects->count() > 1)
@@ -671,6 +717,11 @@ void ComposerMainWindow::closeAllFiles()
   }
 }
 
+/*!
+ * \brief Called when a new tab is open.
+ *
+ * \param location
+ */
 void ComposerMainWindow::onOpenProjectTab(QString location)
 {
   if (!_projectsWidgets.contains(location)) return;
@@ -801,12 +852,18 @@ void ComposerMainWindow::createAboutPlugins()
            this, SLOT(saveLoadPluginData(int)) );
 }
 
+/*!
+ * \brief Shows the about dialog.
+ */
 void ComposerMainWindow::about()
 {
   AboutDialog dialog(this);
   dialog.exec();
 }
 
+/*!
+ * \brief Shows the about plugins dialog.
+ */
 void ComposerMainWindow::aboutPlugins()
 {
   QList<IPluginFactory*>::iterator it;
@@ -892,6 +949,11 @@ void ComposerMainWindow::aboutPlugins()
   aboutPluginsDialog->show();
 }
 
+/*!
+ * \brief
+ *
+ * \param QString
+ */
 void ComposerMainWindow::errorDialog(QString message)
 {
   //QMessageBox::warning(this,tr("Error!"),message);
@@ -955,6 +1017,9 @@ void ComposerMainWindow::createStatusBar()
   statusBar()->showMessage(tr("Ready"));
 }
 
+/*!
+ * \brief
+ */
 void ComposerMainWindow::showCurrentWidgetFullScreen()
 {
   _tabProjects->addAction(ui->action_Fullscreen);
@@ -971,6 +1036,9 @@ void ComposerMainWindow::showCurrentWidgetFullScreen()
   }
 }
 
+/*!
+ * \brief
+ */
 void ComposerMainWindow::updateViewMenu ()
 {
   //Update menu Views.
@@ -1074,11 +1142,17 @@ void ComposerMainWindow::cleanUp()
   PluginControl::releaseInstance();
 }
 
+/*!
+ * \brief TODO
+ */
 void ComposerMainWindow::showEditPreferencesDialog()
 {
   preferences->show();
 }
 
+/*!
+ * \brief
+ */
 void ComposerMainWindow::startOpenProject(QString project)
 {
   (void) project;
@@ -1091,8 +1165,9 @@ void ComposerMainWindow::endOpenProject(QString project)
 {
   this->setCursor(QCursor(Qt::ArrowCursor));
 
-  GlobalSettings settings;
+  onOpenProjectTab(project);
 
+  GlobalSettings settings;
   if(settings.contains("default_perspective"))
   {
     QString defaultPerspective =
@@ -1169,6 +1244,9 @@ void ComposerMainWindow::endOpenProject(QString project)
   this->updateGeometry();
 }
 
+/*!
+ * \brief Save the current project.
+ */
 void ComposerMainWindow::saveCurrentProject()
 {
   int index = _tabProjects->currentIndex();
@@ -1208,6 +1286,9 @@ void ComposerMainWindow::saveCurrentProject()
   }
 }
 
+/*!
+ * \brief Save the current project.
+ */
 void ComposerMainWindow::saveAsCurrentProject()
 {
   int index = _tabProjects->currentIndex();
@@ -1289,13 +1370,13 @@ void ComposerMainWindow::saveCurrentGeometryAsPerspective()
   }
   else
   {
-    QMessageBox box(QMessageBox::Warning,
-                    tr("Information"),
-                    tr("There aren't a layout open to be saved."),
-                    QMessageBox::Ok
-                    );
+    QMessageBox box( QMessageBox::Warning,
+                     tr("Information"),
+                     tr("There aren't a layout open to be saved."),
+                     QMessageBox::Ok );
     box.exec();
   }
+
   /* Update the elements in MENU PERSPECTIVE*/
   updateMenuPerspectives();
 }
@@ -1312,7 +1393,7 @@ void ComposerMainWindow::restorePerspective()
   updateMenuPerspectives();
 }
 
-void ComposerMainWindow::savePerspective(QString layoutName)
+void ComposerMainWindow::savePerspective (QString layoutName)
 {
   if(_tabProjects->count()) //see if there is any open document
   {
@@ -1357,6 +1438,9 @@ void ComposerMainWindow::restorePerspective(QString layoutName)
   }
 }
 
+/*!
+ * \brief Run the current open Project.
+ */
 void ComposerMainWindow::runNCL()
 {
   // check if there is other instance already running
@@ -1820,6 +1904,9 @@ void ComposerMainWindow::addDefaultStructureToProject(Project *project,
     saveCurrentProject(); //Save the just created basic file!
 }
 
+/*!
+ * \brief Called by the user when he/she wants to open an existent project.
+ */
 void ComposerMainWindow::openProject()
 {
   QString filename = QFileDialog::getOpenFileName(this,
@@ -2003,7 +2090,7 @@ void ComposerMainWindow::userPressedRecentProject(QString src)
       // Create the directory structure if it does not exist anymore
 
       QDir dir;
-      bool ok = dir.mkpath(QFileInfo(src).absolutePath()); //this function creates the path, with all its necessary parents;
+      bool ok = dir.mkpath(QFileInfo(src).absolutePath()); // this function creates the path, with all its necessary parents;
 
       if(!ok)
       {
@@ -2057,6 +2144,9 @@ void ComposerMainWindow::selectedAboutCurrentPluginFactory()
   }
 }
 
+/*!
+ * \brief Shows the details of the current selected plugins.
+ */
 void ComposerMainWindow::showPluginDetails()
 {
   pluginDetailsDialog->show();
@@ -2081,7 +2171,7 @@ void ComposerMainWindow::updateMenuPerspectives()
   {
     QAction *act = ui->toolBar_Perspectives->addAction( keys.at(i),
                                                         this,
-                                                        SLOT(restorePerspectiveFromMenu()));
+                                                        SLOT(restorePerspectiveFromMenu()) );
     act->setData(keys[i]);
   }
 
@@ -2253,6 +2343,9 @@ void ComposerMainWindow::gotoNCLClubWebsite()
   QDesktopServices::openUrl(QUrl("http://club.ncl.org.br"));
 }
 
+/*!
+   * \brief Show the NCL Composer Help.
+   */
 bool ComposerMainWindow::showHelp()
 {
   // composerHelpWidget.show();
@@ -2302,13 +2395,18 @@ void ComposerMainWindow::autoSaveCurrentProjects()
   }
 }
 
-// we create the menu entries dynamically, dependant on the existing translations
+/*!
+ * \brief Creates the language menu dynamically from the content of m_langPath.
+ *        We create the menu entries dynamically, dependant on the existing
+ *        translations
+ */
 void ComposerMainWindow::createLanguageMenu(void)
 {
   QActionGroup* langGroup = new QActionGroup(_menuLanguage);
   langGroup->setExclusive(true);
 
-  connect(langGroup, SIGNAL(triggered(QAction *)), this, SLOT(slotLanguageChanged(QAction *)));
+  connect( langGroup, SIGNAL(triggered(QAction *)),
+           this, SLOT(slotLanguageChanged(QAction *)) );
 
   // format systems language
   QString defaultLocale = QLocale::system().name();       // e.g. "de_DE"
@@ -2347,7 +2445,11 @@ void ComposerMainWindow::createLanguageMenu(void)
   }
 }
 
-// Called every time, when a menu entry of the language menu is called
+/*!
+ * \brief This slot is called by the language menu actions.
+ *
+ * Called every time, a menu entry of the language menu is called.
+ */
 void ComposerMainWindow::slotLanguageChanged(QAction* action)
 {
   if(0 != action)
@@ -2369,6 +2471,9 @@ void ComposerMainWindow::switchTranslator(QTranslator& translator,
     qApp->installTranslator(&translator);
 }
 
+/*!
+ * \brief Loads a language by the given language shortcurt (e.g. de, en, ...)
+ */
 void ComposerMainWindow::loadLanguage(const QString& rLanguage)
 {
   qDebug() << rLanguage;
@@ -2386,6 +2491,10 @@ void ComposerMainWindow::loadLanguage(const QString& rLanguage)
   }
 }
 
+/*!
+ * \brief This event is called, when a new translator is loaded or the system
+ *    language is changed.
+ */
 void ComposerMainWindow::changeEvent(QEvent* event)
 {
   if(0 != event)
@@ -2438,6 +2547,9 @@ void ComposerMainWindow::updateTabWithProject(int index, QString newLocation)
   }
 }
 
+/*!
+ * \brief TODO
+ */
 void ComposerMainWindow::saveLoadPluginData(int)
 {
   GlobalSettings settings;

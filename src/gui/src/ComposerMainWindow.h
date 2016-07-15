@@ -170,51 +170,27 @@ private:
    * \return QString the path to the choosen directory.
    */
   QString promptChooseExtDirectory();
-  /*!
-   * \brief
-   */
+
   void initModules();
-  /*!
-   * \brief
-   */
+
   void initGUI();
-  /*!
-   * \brief
-   */
+
   void createAboutPlugins();
-  /*!
-   * \brief
-   */
+
   void createStatusBar();
-  /*!
-   * \brief
-   */
+
   void createMenus();
-  /*!
-   * \brief
-   */
+
   void createActions();
-  /*!
-   * \brief
-   */
+
   void createFileSystem();
-  /*!
-   * \brief
-   */
+
   void readSettings();
-  /*!
-   * \brief
-   */
+
   void readExtensions();
-  /*!
-   * \brief
-   *
-   * \param event
-   */
+
   void closeEvent(QCloseEvent *event);
-  /*!
-   * \brief
-   */
+
   void cleanUp();
 
   void updateRecentProjectsMenu(QStringList &recentProjects);
@@ -229,74 +205,29 @@ private:
   QString m_langPath;     /**< Path of language files. This is always fixed to
                                /languages. */
 
-  /*!
-   * \brief Loads a language by the given language shortcurt (e.g. de, en, ...)
-   */
   void loadLanguage(const QString& rLanguage);
-  /*!
-   * \brief Creates the language menu dynamically from the content of m_langPath
-   */
   void createLanguageMenu(void);
-
   void switchTranslator(QTranslator& translator, const QString& filename);
 
 protected:
-  /*!
-   * \brief This event is called, when a new translator is loaded or the system
-   *    language is changed.
-   */
   void changeEvent(QEvent*);
-
-  virtual void keyPressEvent(QKeyEvent *event);
+  void keyPressEvent(QKeyEvent *event);
 
 protected slots:
-  /*!
-   * \brief This slot is called by the language menu actions
-   */
   void slotLanguageChanged(QAction* action);
-
-  /*!
-   * \brief TODO
-   */
   void saveLoadPluginData(int);
 
 private slots:
-  /*!
-   * \brief Shows the about dialog.
-   */
+
   void about();
-  /*!
-   * \brief Shows the about plugins dialog.
-   */
   void aboutPlugins();
-  /*!
-   * \brief
-   */
   void updateViewMenu();
-  /*!
-     * \brief
-     */
   void showEditPreferencesDialog();
-  /*!
-     * \brief
-     * \param index
-     */
   void tabClosed(int index);
-  /*!
-     * \brief
-     */
   void closeCurrentTab();
-  /*!
-     * \brief
-     */
   void showCurrentWidgetFullScreen();
-  /*!
-     \brief
-    */
   void closeAllFiles();
-  /*!
-     * \brief
-     */
+
   void startOpenProject(QString projectLoc);
   void endOpenProject(QString projectLoc);
 
@@ -306,14 +237,13 @@ private slots:
   void saveDefaultPerspective(QString defaultPerspectiveName);
   void restorePerspective(QString layoutName);
 
-  /*! Run the current open Project.*/
   void runNCL();
   void stopNCL();
   void functionRunPassive();
   void functionRunActive();
   bool isRunningNCL();
   void runOnLocalGinga();
-  void copyOnRemoteGingaVM(bool autoplay = true);
+  void copyOnRemoteGingaVM (bool autoplay = true);
   void copyHasFinished();
   void updateRunActions();
 
@@ -321,15 +251,11 @@ private slots:
   void addToRecentProjects(QString projectUrl);
   void userPressedRecentProject(QString src);
   void userPressedRecentProject();
-  void clearRecentProjects(void);
+  void clearRecentProjects (void);
   void importFromDocument();
-  /*!
-   *
-   */
+
   void selectedAboutCurrentPluginFactory();
-  /*!
-   * \brief Shows the details of the current selected plugins.
-   */
+
   void showPluginDetails();
 
   void updateMenuPerspectives();
@@ -357,6 +283,7 @@ private slots:
                                     bool shouldCopyDefaultConnBase = true,
                                     bool shouldCreateADefaultRegion = true,
                                     bool save = true);
+
   void on_actionReport_Bug_triggered();
 
   void pluginWidgetViewToggled(bool);
@@ -371,63 +298,23 @@ private slots:
 #endif
 
 public:
-  /*!
-     * \brief Constructs the Composer Main Window with the given parent.
-     *
-     * \param parent The parent of the Composer Main Window.
-     */
-  explicit ComposerMainWindow(QWidget *parent = 0);
 
-  /*!
-   * \brief You should call this method to initialize the NCL Composer Main Window and
-   *    show the SplashScreen
-   *
-   * \param app QApplication instance
-   */
-  void init(const QApplication &app);
-  /*!
-     * \brief
-     */
+  explicit ComposerMainWindow(QWidget *parent = 0);
   virtual ~ComposerMainWindow();
 
+  void init(const QApplication &app);  
+
 public slots:
-  /*!
-     * \brief
-     *
-     * \param QString
-     */
+
   void errorDialog(QString);
-  /*!
-     * \brief Add a plugin Widget an link it to the given project.
-     *
-     * \param fac
-     * \param plugin
-     * \param doc
-     * \param n
-     */
-  void addPluginWidget( IPluginFactory *fac,
-                        IPlugin *plugin,
-                        Project *project );
-  /*!
-     * \brief Called when a new tab is open.
-     *
-     * \param location
-     */
+
+  void addPluginWidget(IPluginFactory *fac, IPlugin *plugin, Project *project);
+
+  void openProject();
   void onOpenProjectTab(QString location);
 
-  /*!
-   * \brief Save the current project.
-   */
   void saveCurrentProject();
-  /*!
-   * \brief Save the current project.
-   */
   void saveAsCurrentProject();
-
-  /*!
-   * \brief Called by the user when he/she wants to open an existent project.
-   */
-  void openProject();
 
   /*!
    * \brief
@@ -441,15 +328,13 @@ public slots:
    */
   bool removeTemporaryFile(QString location);
 
-  /*!
-     * \brief Show the NCL Composer Help.
-     */
   bool showHelp();
 
   void undo();
   void redo();
 
   void openProjects(const QStringList &projects);
+
 
 signals:
   /*!
