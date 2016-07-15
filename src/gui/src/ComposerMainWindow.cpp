@@ -370,7 +370,6 @@ void ComposerMainWindow::initGUI()
   // connect(ui->action_Redo, SIGNAL(triggered()), this, SLOT(redo()));
 
   welcomeWidget = new WelcomeWidget();
-
   _tabProjects->addTab(welcomeWidget, tr("Welcome"));
   _tabProjects->setTabIcon(0, QIcon());
 

@@ -113,16 +113,13 @@ private:
   QToolButton  *_tbLanguageDropList; /*!< Action that shows the list of
                                           languages as a menu. */
 
-  QMenu        *_menuPerspective; /*!< The menu containing the list of perspectives. */
+  QMenu        *_menuPerspective; /*!< Contains the list of perspectives. */
   QMenu        *_menuMultidevice; /*!<todo */
-  QMenu        *_menuLanguage;    /*!< The menu containing the list of languages.*/
+  QMenu        *_menuLanguage;    /*!< Contains the list of supported
+                                       languages.*/
 
   QAction      *_projectViewAction; /*!< TODO */
   QAction      *_editPreferencesAction; /*!< TODO */
-  QAction      *_restorePluginsLayoutAction; /*!< Action to restore a
-                                                  previously saved perspective
-                                                  as the current
-                                                  plugins layout. */
 
   QMap<QString, QToolWindowManager*> _projectsWidgets; /*!< Keeps a reference
                                                             to each project
