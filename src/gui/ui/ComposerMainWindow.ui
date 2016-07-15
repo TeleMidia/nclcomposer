@@ -216,14 +216,7 @@
      </property>
      <addaction name="action_ImportFromExistingNCL"/>
     </widget>
-    <widget class="QMenu" name="menuNew">
-     <property name="title">
-      <string>&amp;New</string>
-     </property>
-     <addaction name="action_NewProject"/>
-     <addaction name="actionProject_from_Wizard"/>
-    </widget>
-    <addaction name="menuNew"/>
+    <addaction name="action_NewProject"/>
     <addaction name="action_OpenProject"/>
     <addaction name="menu_Recent_Files"/>
     <addaction name="separator"/>
@@ -295,7 +288,7 @@
      <normaloff>:/mainwindow/images/new_document_icon.png</normaloff>:/mainwindow/images/new_document_icon.png</iconset>
    </property>
    <property name="text">
-    <string>&amp;Project</string>
+    <string>&amp;New project</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+N</string>
