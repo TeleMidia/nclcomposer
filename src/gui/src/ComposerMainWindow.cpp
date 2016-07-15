@@ -148,42 +148,42 @@ void ComposerMainWindow::initModules()
   LanguageControl *lgControl = LanguageControl::getInstance();
   ProjectControl *projectControl = ProjectControl::getInstance();
 
-  connect(pgControl,SIGNAL(notifyError(QString)),
-          SLOT(errorDialog(QString)));
+  connect( pgControl,SIGNAL(notifyError(QString)),
+           SLOT(errorDialog(QString)) );
 
-  connect(pgControl,SIGNAL(addPluginWidgetToWindow(IPluginFactory*,
-                                                   IPlugin*, Project*)),
-          SLOT(addPluginWidget(IPluginFactory*, IPlugin*, Project*)));
+  connect( pgControl, SIGNAL(addPluginWidgetToWindow(IPluginFactory*,
+                                                    IPlugin*, Project*)),
+           SLOT(addPluginWidget(IPluginFactory*, IPlugin*, Project*)) );
 
-  connect(lgControl,SIGNAL(notifyError(QString)),
-          SLOT(errorDialog(QString)));
+  connect( lgControl, SIGNAL(notifyError(QString)),
+           SLOT(errorDialog(QString)));
 
-  connect(projectControl, SIGNAL(notifyError(QString)),
-          SLOT(errorDialog(QString)));
+  connect( projectControl, SIGNAL(notifyError(QString)),
+           SLOT(errorDialog(QString)) );
 
-  connect(projectControl,SIGNAL(projectAlreadyOpen(QString)),
-          SLOT(onOpenProjectTab(QString)));
+  connect( projectControl,SIGNAL(projectAlreadyOpen(QString)),
+           SLOT(onOpenProjectTab(QString)) );
 
-  connect(projectControl, SIGNAL(startOpenProject(QString)),
-          this, SLOT(startOpenProject(QString)));
+  connect( projectControl, SIGNAL(startOpenProject(QString)),
+           this, SLOT(startOpenProject(QString)) );
 
-  connect(projectControl, SIGNAL(endOpenProject(QString)), this,
-          SLOT(endOpenProject(QString)));
+  connect( projectControl, SIGNAL(endOpenProject(QString)), this,
+           SLOT(endOpenProject(QString)) );
 
-  connect(projectControl,SIGNAL(endOpenProject(QString)),
-          SLOT(addToRecentProjects(QString)));
+  connect( projectControl,SIGNAL(endOpenProject(QString)),
+           SLOT(addToRecentProjects(QString)) );
 
   //connect(projectControl, SIGNAL(endOpenProject(QString)),
   //        welcomeWidget, SLOT(addToRecentProjects(QString)));
 
-  connect(welcomeWidget, SIGNAL(userPressedRecentProject(QString)),
-          this, SLOT(userPressedRecentProject(QString)));
+  connect( welcomeWidget, SIGNAL(userPressedRecentProject(QString)),
+           this, SLOT(userPressedRecentProject(QString)) );
 
-  connect(projectControl,SIGNAL(projectAlreadyOpen(QString)),
-          SLOT(onOpenProjectTab(QString)));
+  connect( projectControl,SIGNAL(projectAlreadyOpen(QString)),
+           SLOT(onOpenProjectTab(QString)) );
 
-  connect(projectControl, SIGNAL(dirtyProject(QString, bool)),
-          this, SLOT(setProjectDirty(QString, bool)));
+  connect( projectControl, SIGNAL(dirtyProject(QString, bool)),
+           this, SLOT(setProjectDirty(QString, bool)) );
 
   readExtensions();
 }
@@ -251,10 +251,10 @@ QString ComposerMainWindow::promptChooseExtDirectory()
   mBox.setIcon(QMessageBox::Question);
   if (mBox.exec() == QMessageBox::No)
   {
-    QString dirName = QFileDialog::getExistingDirectory(this,
+    QString dirName = QFileDialog::getExistingDirectory( this,
                                                         tr("Select Directory"),
-                                                  getLastFileDialogPath(),
-                                                  QFileDialog::ShowDirsOnly);
+                                                       getLastFileDialogPath(),
+                                                    QFileDialog::ShowDirsOnly);
     return dirName;
   }
   else
@@ -342,11 +342,6 @@ void ComposerMainWindow::initGUI()
   _tbLanguageDropList->setToolTip(tr("Change your current language"));
   _tbLanguageDropList->setPopupMode(QToolButton::InstantPopup); */
 
-  _tbPerspectiveDropList = new QToolButton(this);
-  _tbPerspectiveDropList->setIcon(QIcon(":/mainwindow/perspective"));
-  _tbPerspectiveDropList->setToolTip(tr("Change your current perspective"));
-  _tbPerspectiveDropList->setPopupMode(QToolButton::InstantPopup);
-
   connect( _tabProjects, SIGNAL(tabCloseRequested(int)),
           this, SLOT(tabClosed(int)), Qt::DirectConnection);
 
@@ -378,7 +373,8 @@ void ComposerMainWindow::initGUI()
 
   _tabProjects->addTab(welcomeWidget, tr("Welcome"));
   _tabProjects->setTabIcon(0, QIcon());
-  QTabBar *tabBar = _tabProjects->findChild<QTabBar *>();
+
+  // QTabBar *tabBar = _tabProjects->findChild<QTabBar *>();
   // tabBar->setTabButton(0, QTabBar::RightSide, 0);
   // tabBar->setTabButton(0, QTabBar::LeftSide, 0);
 
@@ -437,7 +433,6 @@ void ComposerMainWindow::initGUI()
 
 void ComposerMainWindow::keyPressEvent(QKeyEvent *event)
 {
-  qDebug() << "ComposerMainWindow::keyPressEvent " << event;
   if(event->modifiers() == Qt::ControlModifier)
   {
     if(event->key() == Qt::Key_Z)
@@ -780,17 +775,10 @@ void ComposerMainWindow::createMenus()
   ui->toolBar->addSeparator();
 
   _menuPerspective = new QMenu(0);
-  // assing _menuPerspective to _tbPerspectiveDropList
-  _tbPerspectiveDropList->setMenu(_menuPerspective);
-  ui->toolBar->addWidget(_tbPerspectiveDropList);
 
-  // _tabProjects->setCornerWidget(_tbPerspectiveDropList, Qt::TopRightCorner);
-  //_tabProjects->setCornerWidget(ui->menu_Window, Qt::TopLeftCorner);
-  //ui->menubar->setCornerWidget(ui->toolBar, Qt::TopRightCorner);
   _tabProjects->setCornerWidget(ui->menubar, Qt::TopLeftCorner);
 
-  // ui->toolBar->setIconSize(QSize(24, 24));
-//  updateMenuLanguages();
+  // updateMenuLanguages();
   updateMenuPerspectives();
 }
 
@@ -1932,8 +1920,8 @@ void ComposerMainWindow::checkTemporaryFileLastModified(QString filename)
   QFileInfo temporaryFileInfo(filename + "~");
   QFileInfo fileInfo(filename);
 
-  if(temporaryFileInfo.exists() &&
-     temporaryFileInfo.lastModified() > fileInfo.lastModified())
+  if( temporaryFileInfo.exists() &&
+      temporaryFileInfo.lastModified() > fileInfo.lastModified() )
   {
       bool replace = QMessageBox::question(this,
                             tr("Temporary file is newer."),
@@ -2198,7 +2186,6 @@ void ComposerMainWindow::currentTabChanged(int n)
 {
   if(n)
   {
-    _tbPerspectiveDropList->setEnabled(true);
     ui->action_Save_current_perspective->setEnabled(true);
     ui->action_Restore_a_perspective->setEnabled(true);
     ui->action_CloseProject->setEnabled(true);
@@ -2210,7 +2197,6 @@ void ComposerMainWindow::currentTabChanged(int n)
   }
   else
   {
-    _tbPerspectiveDropList->setEnabled(false);
     ui->action_Save_current_perspective->setEnabled(false);
     ui->action_Restore_a_perspective->setEnabled(false);
     ui->action_CloseProject->setEnabled(false);
@@ -2402,7 +2388,7 @@ void ComposerMainWindow::autoSaveCurrentProjects()
  */
 void ComposerMainWindow::createLanguageMenu(void)
 {
-  QActionGroup* langGroup = new QActionGroup(_menuLanguage);
+  QActionGroup* langGroup = new QActionGroup( _menuLanguage );
   langGroup->setExclusive(true);
 
   connect( langGroup, SIGNAL(triggered(QAction *)),
@@ -2422,9 +2408,9 @@ void ComposerMainWindow::createLanguageMenu(void)
   {
     // get locale extracted by filename
     QString locale;
-    locale = fileNames[i];                  // "TranslationExample_de.qm"
-    locale.truncate(locale.lastIndexOf('.'));   // "TranslationExample_de"
-    locale.remove(0, locale.indexOf('_') + 1);   // "de"
+    locale = fileNames[i];                     // "TranslationExample_de.qm"
+    locale.truncate(locale.lastIndexOf('.'));  // "TranslationExample_de"
+    locale.remove(0, locale.indexOf('_') + 1); // "de"
 
     QString lang = QLocale::languageToString(QLocale(locale).language());
     QIcon ico(QString("%1/%2.png").arg(m_langPath).arg(locale));
@@ -2433,7 +2419,7 @@ void ComposerMainWindow::createLanguageMenu(void)
     action->setCheckable(true);
     action->setData(locale);
 
-//    ui->_menuLanguage->addAction(action);
+    // ui->_menuLanguage->addAction(action);
     _menuLanguage->addAction(action);
     langGroup->addAction(action);
 
@@ -2493,7 +2479,7 @@ void ComposerMainWindow::loadLanguage(const QString& rLanguage)
 
 /*!
  * \brief This event is called, when a new translator is loaded or the system
- *    language is changed.
+ * language is changed.
  */
 void ComposerMainWindow::changeEvent(QEvent* event)
 {

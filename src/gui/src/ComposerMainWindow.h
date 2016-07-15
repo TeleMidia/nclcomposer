@@ -91,7 +91,7 @@ protected:
  *
  * This class is the main window of NCL Composer.
  *
- * \fixme This class is too big it must be splitted
+ * \fixme This class is too big it must be refactored
  */
 class ComposerMainWindow : public QMainWindow {
   Q_OBJECT
@@ -110,8 +110,6 @@ private:
                                   The tabProjects variable keeps the list of the
                                   projects open tabs. */
 
-  QToolButton  *_tbPerspectiveDropList; /*!< Action that shows the list of
-                                             perspective as a menu. */
   QToolButton  *_tbLanguageDropList; /*!< Action that shows the list of
                                           languages as a menu. */
 
