@@ -136,7 +136,6 @@ void ComposerMainWindow::init(const QApplication &app)
 ComposerMainWindow::~ComposerMainWindow()
 {
   delete ui;
-  delete _menuPerspective;
 #ifdef WITH_LIBSSH2
   SimpleSSHClient::exit();
 #endif
@@ -739,9 +738,7 @@ void ComposerMainWindow::createMenus()
 
   ui->menu_Edit->addAction(_editPreferencesAction);
 
-  menuBar()->addSeparator();
-
-  connect( ui->menu_Window, SIGNAL(aboutToShow()),
+  connect( ui->menu_View, SIGNAL(aboutToShow()),
            this, SLOT(updateViewMenu()) );
 
   connect( ui->action_CloseProject, SIGNAL(triggered()),
@@ -773,9 +770,14 @@ void ComposerMainWindow::createMenus()
   ui->toolBar->addWidget(button_Run); //put button_run in toolbar
   ui->toolBar->addSeparator();
 
-  _menuPerspective = new QMenu(0);
+  ui->action_Main_toolbar->setChecked(ui->toolBar->isVisible());
+  ui->action_Perspectives_toolbar->setChecked(ui->toolBar_Perspectives->isVisible());
+
+  connect(ui->action_Main_toolbar, SIGNAL(triggered(bool)), ui->toolBar, SLOT(setVisible(bool)));
+  connect(ui->action_Perspectives_toolbar, SIGNAL(triggered(bool)), ui->toolBar_Perspectives, SLOT(setVisible(bool)));
 
   _tabProjects->setCornerWidget(ui->menubar, Qt::TopLeftCorner);
+
 
   // updateMenuLanguages();
   updateMenuPerspectives();
@@ -997,6 +999,7 @@ void ComposerMainWindow::createActions() {
            this, SLOT(gotoNCLClubWebsite()));
 
   connect (ui->action_Help, SIGNAL(triggered()), this, SLOT(showHelp()));
+
 }
 
 void ComposerMainWindow::createStatusBar()
