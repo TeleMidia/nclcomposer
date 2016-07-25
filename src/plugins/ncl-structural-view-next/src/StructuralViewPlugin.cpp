@@ -269,39 +269,35 @@ void StructuralViewPlugin::requestEntityAddition(Entity* entity)
 
   Structural::StructuralType type = StructuralUtil::getnstTypeFromStr(entity->getType());
 
+  if (!DEFAULT_BODY_ENABLE && type == Structural::Body)
+    return;
+
   if (type != Structural::NoType){
+    properties[PLG_ENTITY_TYPE] = QString::number(type);
 
-  properties[PLG_ENTITY_TYPE] = QString::number(type);
+    QMap<QString, QString> m = StructuralUtil::createCoreTranslationMap(type);
 
-  QMap<QString, QString> m = StructuralUtil::createCoreTranslationMap(type);
+    entities[entity->getUniqueId()] = entity->getUniqueId();
 
-  entities[entity->getUniqueId()] = entity->getUniqueId();
+    if (!m.isEmpty()){
+      foreach (QString key, m.keys()) {
+        if (!entity->getAttribute(key).isEmpty())
+          properties.insert(m.value(key),entity->getAttribute(key));
+      }
 
+      QMap<QString,QString> settings = StructuralUtil::createSettings(true, false);
 
-  if (!m.isEmpty()){
-  foreach (QString key, m.keys()) {
-    if (!entity->getAttribute(key).isEmpty())
-      properties.insert(m.value(key),entity->getAttribute(key));
-  }
+      QString parentUID = entity->getParentUniqueId();
+      parentUID = entities.value(entity->getParentUniqueId(),"");
 
+      if (!DEFAULT_BODY_ENABLE &&
+          parentUID.isEmpty() &&
+          type != Structural::Property &&
+          type != Structural::Port)
+        return;
 
-    QMap<QString,QString> settings = StructuralUtil::createSettings(true, false);
-
-    QString parentUID = entity->getParentUniqueId();
-
-    if(type == Structural::Body)
-    {
-      parentUID = "";
+      _window->getView()->insert(entity->getUniqueId(), parentUID, properties, settings);
     }
-
-    else
-    {
-      parentUID = entities.value(entity->getParentUniqueId());
-    }
-
-
-    _window->getView()->insert(entity->getUniqueId(), parentUID, properties, settings);
-  }
   }
 }
 
@@ -381,7 +377,7 @@ void StructuralViewPlugin::notifyEntityAddedInView(const QString uid,
   if (!parent.isEmpty())
     entity = getProject()->getEntityById(entities.key(parent));
 
-  else if (type == Structural::Body)
+  else if (type == Structural::Body || !DEFAULT_BODY_ENABLE)
   {
     requestBodyDependence();
 
@@ -391,6 +387,24 @@ void StructuralViewPlugin::notifyEntityAddedInView(const QString uid,
     else
       return;
 
+    if (!DEFAULT_BODY_ENABLE){
+      list = getProject()->getEntitiesbyType("body");
+
+      if (list.isEmpty()){
+        QMap<QString, QString> att;
+        att.insert("id","newBody");
+
+        emit addEntity("body",
+                       entity->getUniqueId(), att, false);
+
+        list = getProject()->getEntitiesbyType("body");
+      }
+
+      if (!list.isEmpty())
+        entity = list.first();
+      else
+        return;
+    }
   }else
     return;
 

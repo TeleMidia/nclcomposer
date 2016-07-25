@@ -138,7 +138,7 @@ void StructuralMenu::createActions()
   deleteAction->setShortcut(QKeySequence("Del"));
   deleteAction->setIcon(QIcon(":/images/icon/delete"));
 
-  // export action
+  // snapshot action
   snapshotAction = new QAction(this);
   snapshotAction->setEnabled(false);
   snapshotAction->setText(tr("Snapshot..."));

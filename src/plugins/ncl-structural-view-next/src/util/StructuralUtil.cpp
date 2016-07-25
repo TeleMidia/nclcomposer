@@ -150,6 +150,7 @@ std::map <Structural::StructuralType, QString> StructuralUtil::prefixIdFromType 
     (Structural::Body, "body")
 
     (Structural::Port, "p")
+    (Structural::Property, "prop")
     (Structural::SwitchPort, "swp")
     (Structural::Area, "area")
 

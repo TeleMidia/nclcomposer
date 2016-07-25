@@ -176,6 +176,7 @@ void StructuralEntity::setStructuralProperty(const QString &name, const QString 
 
   else if (name == PLG_ENTITY_HIDDEN)
     setHidden((value == "1" ? true : false));
+
   else if (name == PLG_ENTITY_COLLAPSED)
     setCollapsed((value == "1" ? true : false));
 

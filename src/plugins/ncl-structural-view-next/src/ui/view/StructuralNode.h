@@ -6,6 +6,9 @@
 #include <QGraphicsSceneHoverEvent>
 
 #include "StructuralEntity.h"
+//#include "StructuralView.h"
+
+class StructuralView;
 
 class StructuralNode : public StructuralEntity
 {

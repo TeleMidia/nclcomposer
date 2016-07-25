@@ -1,5 +1,7 @@
 #include "StructuralNode.h"
 
+#include "StructuralView.h"
+
 #include <QDebug>
 
 StructuralNode::StructuralNode(StructuralEntity* parent)
@@ -147,65 +149,71 @@ void StructuralNode::adjust(bool avoidCollision)
     }
   }
 
-  if(getStructuralParent() != NULL)
-  {
-    if (avoidCollision){
-      int colliding;
-      int maxInter = 10, inter = 0;
-      do
+  if (avoidCollision){
+    int colliding;
+    int maxInter = 10, inter = 0;
+    do
+    {
+      if(inter > maxInter) break;
+      inter++;
+
+      colliding = false;
+      QVector<StructuralEntity*> roots;
+
+      if (getStructuralParent() != NULL)
+        roots = getStructuralParent()->getStructuralEntities();
+      else
       {
-        if(inter > maxInter) break;
-        inter++;
+        StructuralView* v = (StructuralView*) scene()->views().first();
+        roots = v->getRoots();
+      }
 
-        colliding = false;
-        foreach(StructuralEntity *entity,
-                getStructuralParent()->getStructuralEntities())
+
+      foreach(StructuralEntity *entity, roots)
+      {
+        if(this != entity && entity->getStructuralType() >= Structural::Node &&
+           entity->getStructuralType() <= Structural::Switch)
         {
-          if(this != entity && entity->getStructuralType() >= Structural::Node &&
-             entity->getStructuralType() <= Structural::Switch)
+          qreal n = 0;
+          qreal i = 0.0;
+
+          entity->setSelectable(false); update();
+          // check collision
+          while(collidesWithItem(entity, Qt::IntersectsItemBoundingRect))
           {
-            qreal n = 0;
-            qreal i = 0.0;
 
-            entity->setSelectable(false); update();
-            // check collision
-            while(collidesWithItem(entity, Qt::IntersectsItemBoundingRect))
-            {
+            QPointF pa(getLeft()+getWidth()/2, getTop()+getHeight()/2);
+            QPointF pb(entity->getWidth()/2, entity->getHeight()/2);
 
-              QPointF pa(getLeft()+getWidth()/2, getTop()+getHeight()/2);
-              QPointF pb(entity->getWidth()/2, entity->getHeight()/2);
+            QLineF line(pa, pb);
 
-              QLineF line(pa, pb);
+            line.setAngle(qrand()%360);
 
-              line.setAngle(qrand()%360);
+            i += (double)(qrand()%100)/10000.0;
 
-              i += (double)(qrand()%100)/10000.0;
+            setTop(getTop()+line.pointAt(i/2).y()-pa.y());
+            setLeft(getLeft()+line.pointAt(i/2).x()-pa.x());
 
-              setTop(getTop()+line.pointAt(i/2).y()-pa.y());
-              setLeft(getLeft()+line.pointAt(i/2).x()-pa.x());
-
-              if (++n > 1000){
-                n = -1; break;
-              }
+            if (++n > 1000){
+              n = -1; break;
             }
-
-            inside();
-
-            entity->setSelectable(true); update();
           }
-        }
 
-        foreach(StructuralEntity *entity,
-                getStructuralParent()->getStructuralEntities())
-        {
-          if(collidesWithItem(entity, Qt::IntersectsItemBoundingRect))
-          {
-            colliding = true;
-          }
+          inside();
+
+          entity->setSelectable(true); update();
         }
       }
-      while(colliding);
+
+      foreach(StructuralEntity *entity, roots)
+      {
+        if(collidesWithItem(entity, Qt::IntersectsItemBoundingRect))
+        {
+          colliding = true;
+        }
+      }
     }
+    while(colliding);
   }
 
   inside();

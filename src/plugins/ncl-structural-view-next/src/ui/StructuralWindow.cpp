@@ -227,7 +227,10 @@ void StructuralWindow::createToolbar()
   _insertToolbar->addSeparator();
   _insertToolbar->addAction(_contextAction);
   _insertToolbar->addAction(_switchAction);
+
+  if (DEFAULT_BODY_ENABLE)
   _insertToolbar->addAction(_bodyAction);
+
   _insertToolbar->addSeparator();
   _insertToolbar->addAction(_areaAction);
   _insertToolbar->addAction(_propertyAction);
@@ -250,6 +253,8 @@ void StructuralWindow::createToolbar()
 #ifdef Q_WS_MACX
   _editToolbar->addSeparator();
 #endif
+
+  changeSelect("NULL");
 }
 
 void StructuralWindow::createWidgets()
@@ -635,7 +640,7 @@ void StructuralWindow::changeSelect(QString uid)
     changeCutState(true);
     changeCopyState(true);
   }
-  else
+  else if (DEFAULT_BODY_ENABLE)
   {
     _mediaAction->setEnabled(false);
     _contextAction->setEnabled(false);
@@ -644,7 +649,18 @@ void StructuralWindow::changeSelect(QString uid)
     _areaAction->setEnabled(false);
     _propertyAction->setEnabled(false);
     _portAction->setEnabled(false);
-    _switchAction->setEnabled(false);
+
+    changeCutState(false);
+    changeCopyState(false);
+  }
+  else
+  {
+    _mediaAction->setEnabled(true);
+    _contextAction->setEnabled(true);
+    _switchAction->setEnabled(true);
+    _areaAction->setEnabled(false);
+    _propertyAction->setEnabled(false);
+    _portAction->setEnabled(false);
 
     changeCutState(false);
     changeCopyState(false);

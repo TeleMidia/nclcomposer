@@ -91,6 +91,7 @@ public:
   void unSelect();
 
    StructuralEntity* getBody();
+   QVector<StructuralEntity*> getRoots();
 
    void clearErrors();
    void markError(QString uid, QString msg);
@@ -166,8 +167,6 @@ private:
   int zoomStep;
 
   bool hasCutted;
-
-
 
   QMap<QString, StructuralEntity*> entities;
 
