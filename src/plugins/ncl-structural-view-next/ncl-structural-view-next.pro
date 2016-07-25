@@ -14,7 +14,8 @@ INCLUDEPATH += \
     src/ \
     src/core/ \
     src/ui/ \
-    src/ui/view/
+    src/ui/view/ \
+    src/util/
 
 HEADERS += \
     src/core/Command.h \
@@ -26,7 +27,7 @@ HEADERS += \
     src/StructuralViewFactory.h \
     src/ui/StructuralWindow.h \
     src/ui/view/StructuralView.h \
-    src/ui/view/StructuralUtil.h \
+    src/util/StructuralUtil.h \
     src/ui/view/StructuralScene.h \
     src/ui/view/StructuralNode.h \
     src/ui/view/StructuralMinimap.h \
@@ -42,7 +43,7 @@ SOURCES += \
     src/StructuralViewFactory.cpp \
     src/ui/StructuralWindow.cpp \
     src/ui/view/StructuralView.cpp \
-    src/ui/view/StructuralUtil.cpp \
+    src/util/StructuralUtil.cpp \
     src/ui/view/StructuralScene.cpp \
     src/ui/view/StructuralNode.cpp \
     src/ui/view/StructuralMinimap.cpp \
