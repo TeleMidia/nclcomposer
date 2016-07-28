@@ -3,8 +3,7 @@
 # NCL Composer
 [NCL Composer](http://composer.telemidia.puc-rio.br) is a multiplataform and
 flexible authoring tool for creating Interactive multimedia applications for
-Digital TV (iDTV) based on NCL
-([Nested Context Language](http://www.ncl.org.br)).
+Digital TV based on NCL ([Nested Context Language](http://www.ncl.org.br)).
 It provides a minimal core and different views (implemented as plug-ins)
 supporting textual and graphical abstractions.
 
