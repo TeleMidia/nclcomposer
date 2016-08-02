@@ -32,6 +32,7 @@ protected slots:
   void performZoomIn();
   void performZoomOut();
   void performPointer();
+  void performLink();
   void performBody();
   void performContext();
   void performSwitch();
@@ -50,6 +51,8 @@ protected slots:
   void changePasteState(bool enable);
   void changeBodyState(bool enable);
   void changeZoomInState(bool enable);
+
+  void changeLinkState(bool enable);
 
   void changeSelect(QString uid);
 
@@ -82,6 +85,7 @@ private:
   QAction* _zoominAction;
   QAction* _zoomoutAction;
   QAction* _pointerAction;
+  QAction* _linkAction;
   QAction* _mediaAction;
   QAction* _contextAction;
   QAction* _switchAction;

@@ -15,13 +15,14 @@ StructuralScene::~StructuralScene()
 void StructuralScene::createMenus()
 {
   _menu = new StructuralMenu();
-  _menu->undoAction->setEnabled(false);
-  _menu->redoAction->setEnabled(false);
+//  _menu->undoAction->setEnabled(false);
+//  _menu->redoAction->setEnabled(false);
 
-  _menu->snapshotAction->setEnabled(true);
+//  _menu->snapshotAction->setEnabled(true);
 
-  _menu->insertMenu->setEnabled(true);
-  _menu->bodyAction->setEnabled(true);
+//  _menu->insertMenu->setEnabled(true);
+//  _menu->bodyAction->setEnabled(true);
+  _menu->updateInsertAction(Structural::NoType);
 }
 
 void StructuralScene::createConnections()

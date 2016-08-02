@@ -75,14 +75,24 @@ void StructuralMenu::updateInsertAction(StructuralType type, bool enableBody)
       break;
 
     default:
-      mediaAction->setEnabled(false);
-      contextAction->setEnabled(false);
-      switchAction->setEnabled(false);
-      bodyAction->setEnabled(enableBody);
-      areaAction->setEnabled(false);
-      propertyAction->setEnabled(false);
-      portAction->setEnabled(false);
-      switchPortAction->setEnabled(false);
+      if (DEFAULT_BODY_ENABLE) {
+        mediaAction->setEnabled(false);
+        contextAction->setEnabled(false);
+        switchAction->setEnabled(false);
+        bodyAction->setEnabled(enableBody);
+        areaAction->setEnabled(false);
+        propertyAction->setEnabled(false);
+        portAction->setEnabled(false);
+        switchPortAction->setEnabled(false);
+      }else{
+        mediaAction->setEnabled(true);
+        contextAction->setEnabled(true);
+        switchAction->setEnabled(true);
+        areaAction->setEnabled(false);
+        propertyAction->setEnabled(false);
+        portAction->setEnabled(false);
+        switchPortAction->setEnabled(false);
+      }
       break;
   }
 }
@@ -210,7 +220,8 @@ void StructuralMenu::createMenus()
   insertMenu->addSeparator();
   insertMenu->addAction(contextAction);
   insertMenu->addAction(switchAction);
-  insertMenu->addAction(bodyAction);
+  if (DEFAULT_BODY_ENABLE)
+    insertMenu->addAction(bodyAction);
   insertMenu->addSeparator();
   insertMenu->addAction(areaAction);
   insertMenu->addAction(propertyAction);

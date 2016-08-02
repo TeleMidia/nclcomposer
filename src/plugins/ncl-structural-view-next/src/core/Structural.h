@@ -32,6 +32,9 @@
 #define PLG_ENTITY_SRC ":plugin:entity:src"
 #define PLG_ENTITY_COLLAPSED ":plugin:entity:collapsed"
 
+#define PLG_ENTITY_START_UID ":plugin:entity:start:uid"
+#define PLG_ENTITY_END_UID ":plugin:entity:end:uid"
+
 #define PLG_SETTING_UNDO_CHILDREN ":plugin:setting:undo:children"
 #define PLG_SETTING_UNDO ":plugin:setting:undo"
 #define PLG_SETTING_NOTIFY ":plugin:setting:notify"
@@ -91,6 +94,9 @@ public:
     Area        = 6,
     SwitchPort  = 7,
     Property    = 8,
+    Link        = 9,
+    Bind        = 10,
+    Reference   = 11,
 
     NoType      = 0
   };
@@ -121,11 +127,36 @@ public:
     NoContent   = 0
   };
 
+
+  enum StructuralRole
+  {
+    /* Conditions */
+    onBegin,
+    onEnd,
+    onSelection,
+    onResume,
+    onPause,
+    onBeginAttribution,
+    onEndAttribution,
+    onPauseAttribution,
+    onResumeAttribution,
+
+    /* Actions */
+    Start,
+    Stop,
+    Resume,
+    Pause,
+    Set,
+
+    NoRole
+  };
+
 };
 
 typedef Structural::StructuralCategory StructualCategory;
 typedef Structural::StructuralType StructuralType;
 typedef Structural::StructuralResize StructuralResize;
 typedef Structural::StructuralMedia StructuralMedia;
+typedef Structural::StructuralRole StructuralRole;
 
 #endif // STRUCTURAL_H

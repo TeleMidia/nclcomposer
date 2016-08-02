@@ -251,7 +251,7 @@ public:
   void setMouseHover(bool hover);
   void setMouseHoverHighlight(bool enable);
   virtual void refresh() {}
-  virtual void adjust(bool avoidCollision = false) = 0;
+  virtual void adjust(bool avoidCollision = false, bool rec = true) = 0;
 
 protected:
   bool hover, hasError, enableMouseHoverHighlight;

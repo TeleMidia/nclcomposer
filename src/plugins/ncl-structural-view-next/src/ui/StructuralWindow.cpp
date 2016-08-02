@@ -86,6 +86,16 @@ void StructuralWindow::createActions()
   _pointerAction->setIcon(QIcon(":/images/icon/pointer"));
   _pointerAction->setShortcut(QKeySequence("1"));
 
+  // link action
+  _linkAction = new QAction((QObject*) this);
+  _linkAction->setEnabled(true);
+  _linkAction->setCheckable(true);
+  _linkAction->setChecked(false);
+  _linkAction->setText(tr("Linking tool"));
+  _linkAction->setToolTip(tr("Linking tool"));
+  _linkAction->setIcon(QIcon(":/images/icon/link"));
+  _linkAction->setShortcut(QKeySequence("2"));
+
   // media action
   _mediaAction = new QAction((QObject*) this);
   _mediaAction->setEnabled(false);
@@ -189,7 +199,9 @@ void StructuralWindow::createActions()
   _insertActionGroup = new QActionGroup((QObject*) this);
   _insertActionGroup->setExclusive(true);
 
+  _insertActionGroup->addAction(_linkAction);
   _insertActionGroup->addAction(_pointerAction);
+
 }
 
 void StructuralWindow::createToolbar()
@@ -222,6 +234,8 @@ void StructuralWindow::createToolbar()
   _insertToolbar->setIconSize(QSize(32,32));
 
   _insertToolbar->addAction(_pointerAction);
+  _insertToolbar->addAction(_linkAction);
+
   _insertToolbar->addSeparator();
   _insertToolbar->addAction(_mediaAction);
   _insertToolbar->addSeparator();
@@ -288,6 +302,7 @@ void  StructuralWindow::createConnections()
   connect(_switchportAction, SIGNAL(triggered()), SLOT(performSwitchPort()));
   connect(_areaAction, SIGNAL(triggered()), SLOT(performArea()));
   connect(_propertyAction, SIGNAL(triggered()), SLOT(performProperty()));
+  connect(_linkAction, SIGNAL(triggered()), SLOT(performLink()));
 
   connect(_minimapAction, SIGNAL(triggered()), SLOT(performMinimap()));
   connect(_snapshotAction, SIGNAL(triggered()), SLOT(performSnapshot()));
@@ -307,6 +322,8 @@ void  StructuralWindow::createConnections()
   connect(_view, SIGNAL(bodyStateChange(bool)), SLOT(changeBodyState(bool)));
 
   connect(_view, SIGNAL(selectChange(QString)), SLOT(changeSelect(QString)));
+
+  connect(_view, SIGNAL(linkStateChange(bool)), SLOT(changeLinkState(bool)));
 }
 
 void StructuralWindow::changeBodyState(bool enable)
@@ -374,6 +391,15 @@ void StructuralWindow::performZoomOut()
 void StructuralWindow::performPointer()
 { 
   StructuralUtil::dbg((QObject*) this, "Performing 'Pointer' action");
+
+  _view->setMod(false);
+}
+
+void StructuralWindow::performLink()
+{
+  StructuralUtil::dbg((QObject*) this, "Performing 'Link' action");
+
+  _view->setMod(true);
 }
 
 void StructuralWindow::performBody()
@@ -479,6 +505,12 @@ void StructuralWindow::changeCutState(bool enable)
   foreach (StructuralEntity* e, _view->getEntities()) {
     e->menu->cutAction->setEnabled(enable);
   }
+}
+
+void StructuralWindow::changeLinkState(bool enable)
+{
+  _linkAction->setChecked(enable);
+  _pointerAction->setChecked(!enable);
 }
 
 void StructuralWindow::changeCopyState(bool enable)

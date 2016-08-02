@@ -139,13 +139,13 @@ void StructuralNode::inside()
 }
 
 
-void StructuralNode::adjust(bool avoidCollision)
+void StructuralNode::adjust(bool avoidCollision, bool rec)
 {
-  foreach(StructuralEntity* entity, getStructuralEntities())
-  {
-    if (entity->getStructuralCategory() != Structural::Edge)
+  if (rec){
+    foreach(StructuralEntity* entity, getStructuralEntities())
     {
-      entity->adjust(false);
+      if (entity->getStructuralCategory() != Structural::Edge)
+        entity->adjust(false, false);
     }
   }
 
@@ -218,11 +218,27 @@ void StructuralNode::adjust(bool avoidCollision)
 
   inside();
 
+  QVector<StructuralEntity*> roots;
 
-//  foreach(QnstEntity* entity, getnstGraphicsEdges())
-//  {
-//      entity->adjust();
-//  }
+  if (getStructuralParent() != NULL){
+    roots = getStructuralParent()->getStructuralEntities();
+
+  }else{
+    StructuralView* v = (StructuralView*) scene()->views().first();
+    roots = v->getRoots();
+
+
+  }
+
+  foreach (StructuralEntity* c, roots) {
+    if (c->getStructuralCategory() == Structural::Edge){
+      StructuralEdge *e = (StructuralEdge*) c;
+
+      if (e->getEntityA() == this || e->getEntityB() == this){
+        e->adjust();
+      }
+    }
+  }
 
   if (scene() != NULL)
     scene()->update();

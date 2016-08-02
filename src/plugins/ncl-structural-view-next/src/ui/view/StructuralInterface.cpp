@@ -102,7 +102,7 @@ void StructuralInterface::refresh()
 }
 
 
-void StructuralInterface::adjust(bool avoidCollision)
+void StructuralInterface::adjust(bool avoidCollision,  bool rec)
 {
   StructuralEntity* parent = getStructuralParent();
 
@@ -169,21 +169,21 @@ void StructuralInterface::adjust(bool avoidCollision)
       }
       while(colliding);
     }
-  }
 
-  /*
-  foreach(QnstEntity* edges, getnstGraphicsEdges())
-  {
-    if (edges->getnstSubtype() == Qnst::Reference ||
-        edges->getnstSubtype() == Qnst::Link ||
-        edges->getnstSubtype() == Qnst::Mapping ||
-        edges->getnstSubtype() == Qnst::Action ||
-        edges->getnstSubtype() == Qnst::Condition)
-    {
-      edges->adjust();
+    QVector<StructuralEntity*> roots;
+    roots = getStructuralParent()->getStructuralEntities();
+
+    foreach (StructuralEntity* c, roots) {
+      if (c->getStructuralCategory() == Structural::Edge){
+        StructuralEdge *e = (StructuralEdge*) c;
+
+        if (e->getEntityA() == this || e->getEntityB() == this){
+          e->adjust();
+        }
+      }
     }
   }
-*/
+
   // redrawing
   if (scene() != NULL)
     scene()->update();

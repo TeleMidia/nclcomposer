@@ -22,12 +22,14 @@
 #include "StructuralContent.h"
 #include "StructuralInterface.h"
 #include "StructuralComposition.h"
+#include "StructuralReference.h"
 
 #include "Remove.h"
 #include "Change.h"
 #include "Insert.h"
 
 #include "StructuralMinimap.h"
+#include "StructuralViewLink.h"
 
 class QnstAddCommand;
 class StructuralScene;
@@ -40,6 +42,8 @@ class StructuralView : public QGraphicsView
 public:
   StructuralView(QWidget* _parent = 0);
   virtual ~StructuralView();
+
+  void setMod(bool mod);
 
 public:
   StructuralScene* getScene();
@@ -111,6 +115,7 @@ signals:
   void cutStateChange(bool state);
   void copyStateChange(bool state);
   void pasteStateChange(bool state);
+  void linkStateChange(bool state);
 
   void zoominStateChange(bool state);
 
@@ -149,8 +154,9 @@ private:
   void performPaste(StructuralEntity* entity, StructuralEntity* _parent, QString CODE, bool newPos);
 
   bool isChild(StructuralEntity* e , StructuralEntity* p);
-
-//  void rec_clip(StructuralEntity* e, StructuralEntity* parent);
+//  void createLink(StructuralEntity* a, StructuralEntity* b);
+//  void createBind(StructuralEntity* a, StructuralEntity* b,Structural::BindType type = Structural::NoBindType, QString code = "");
+  void createReference(StructuralEntity* a, StructuralEntity* b);
 
   void createObjects();
 
@@ -169,6 +175,7 @@ private:
   bool hasCutted;
 
   QMap<QString, StructuralEntity*> entities;
+  QMap<QString, QMap<QString, StructuralEdge*>> edges;
 
   QAction* undoAct;
 
@@ -196,6 +203,8 @@ private:
   QVector<StructuralEntity*> toDelete;
 
   QUndoStack commnads;
+
+  StructuralViewLink* link;
 
   StructuralEntity* lastLinkMouseOver;
 

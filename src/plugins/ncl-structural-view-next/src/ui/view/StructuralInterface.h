@@ -2,6 +2,7 @@
 #define QNSTGRAPHICSINTERFACE_H
 
 #include "StructuralEntity.h"
+#include "StructuralEdge.h"
 
 class StructuralInterface : public StructuralEntity
 {
@@ -12,7 +13,7 @@ public:
 
   virtual void setStructuralType(const StructuralType _subtype);
 
-  virtual void adjust(bool avoidCollision = true);
+  virtual void adjust(bool avoidCollision = true,  bool rec = true);
 
   bool isRefer();
 
