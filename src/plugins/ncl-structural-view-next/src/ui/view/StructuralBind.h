@@ -72,7 +72,7 @@ public:
   bool isAction() const;
   bool isCondition() const;
 
-  virtual void adjust(bool avoidCollision = false);
+  virtual void adjust(bool avoidCollision = false, bool rec = true);
 
   // \todo This two functions must be merged
   void adjust_action();

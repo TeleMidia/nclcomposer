@@ -408,6 +408,13 @@ void StructuralViewPlugin::notifyEntityAddedInView(const QString uid,
   }else
     return;
 
+  // do not notify link, reference and bind entities additions yet
+  // (working in progress...)
+  if (type == Structural::Reference ||
+      type == Structural::Link ||
+      type == Structural::Bind)
+    return;
+
   QMap<QString, QString> m = StructuralUtil::createViewTranslationMap(type);
   QMap<QString, QString> attributes;
 

@@ -376,6 +376,38 @@ void StructuralView::insert(QString uid, QString parent, QMap<QString, QString> 
           emit bodyStateChange(false);
         }
 
+      case Structural::Link:
+      {
+        entity = new StructuralLink();
+        break;
+      }
+
+      case Structural::Bind:
+      {
+        if (entities.contains(properties.value(PLG_ENTITY_START_UID)) &&
+            entities.contains(properties.value(PLG_ENTITY_END_UID)))
+        {
+            entity = new StructuralBind();
+
+            StructuralBind* bind = (StructuralBind*) entity;
+            bind->setEntityA(entities.value(properties.value(PLG_ENTITY_START_UID)));
+            bind->setEntityB(entities.value(properties.value(PLG_ENTITY_END_UID)));
+            bind->setType((StructuralRole) properties.value(PLG_ENTITY_ROLE).toInt());
+
+            if (properties.value(PLG_ENTITY_ANGLE).isEmpty())
+            {
+              adjustAngles(bind);
+              bind->setStructuralProperty(PLG_ENTITY_ANGLE, QString::number(bind->getAngle()));
+            }
+            else
+            {
+              bind->setAngle(properties.value(PLG_ENTITY_ANGLE).toDouble());
+            }
+        }
+
+        break;
+      }
+
       case Structural::Reference:
       {
         if (entities.contains(properties.value(PLG_ENTITY_START_UID)) &&
@@ -398,7 +430,7 @@ void StructuralView::insert(QString uid, QString parent, QMap<QString, QString> 
                 }
             }
 
-            entity = new StructuralReference(entities.value(parent));
+            entity = new StructuralReference();
             ((StructuralReference*) entity)->setEntityA(entities.value(properties.value(PLG_ENTITY_START_UID)));
             ((StructuralReference*) entity)->setEntityB(entities.value(properties.value(PLG_ENTITY_END_UID)));
         }
@@ -523,6 +555,55 @@ void StructuralView::insert(QString uid, QString parent, QMap<QString, QString> 
       }
     }
   }
+}
+
+void StructuralView::adjustAngles(StructuralBind* edge)
+{
+  int MIN =  100000;
+  int MAX = -100000;
+
+  bool HAS = false;
+
+  foreach (StructuralEntity *e, entities)
+  {
+    if (e->getStructuralType() == Structural::Bind)
+    {
+      StructuralBind *ea = (StructuralBind*) e;
+
+      if ((edge->getEntityA() == ea->getEntityA() || edge->getEntityA() == ea->getEntityB()) &&
+          (edge->getEntityB() == ea->getEntityB() || edge->getEntityB() == ea->getEntityA()) &&
+          edge != ea)
+      {
+        HAS = true;
+
+        int A = ea->getAngle();
+
+        if (!ea->isCondition())
+          A = -A;
+
+        if (MAX < A )
+          MAX = A;
+
+        if (MIN > A )
+          MIN = A;
+      }
+    }
+  }
+
+  int ANGLE = -1;
+
+  if (!HAS)
+    ANGLE = 0;
+  else if (MAX <= abs(MIN))
+    ANGLE = MAX+60;
+  else if (MAX > abs(MIN))
+    ANGLE = MIN-60;
+
+  if (!edge->isCondition())
+    edge->setAngle(-ANGLE);
+  else
+    edge->setAngle(ANGLE);
+
 }
 
 QVector<StructuralEntity*> StructuralView::getRoots()
@@ -1005,6 +1086,164 @@ bool StructuralView::isChild(StructuralEntity* e , StructuralEntity* p)
     return r;
 }
 
+void StructuralView::createLink(StructuralEntity* a, StructuralEntity* b)
+{
+
+    StructuralEntity* pa = (StructuralEntity*) a->getStructuralParent();
+    StructuralEntity* pb = (StructuralEntity*) b->getStructuralParent();
+
+    if (pa != NULL && pb != NULL)
+    {
+      QString uid = QUuid::createUuid().toString();
+      StructuralEntity* parent = NULL;
+      QMap<QString, QString> properties;
+      properties[PLG_ENTITY_TYPE] = QString::number(Structural::Link);
+
+      QPointF pt_a;
+      QPointF pt_b;
+
+      if (pa == pb)
+      {
+          parent = pa;
+
+          pt_a.setX(a->getLeft()), pt_a.setY(a->getTop());
+          pt_b.setX(b->getLeft()), pt_b.setY(b->getTop());
+      }
+      else if (pa->getStructuralParent() == pb)
+      {
+          parent = pb;
+
+          QPointF cv = pa->mapToParent(a->getLeft(), a->getTop());
+
+          pt_a.setX(cv.x()), pt_a.setY(cv.y());
+          pt_b.setX(b->getLeft()), pt_b.setY(b->getTop());
+      }
+      else if (pa == pb->getStructuralParent())
+      {
+          parent = pa;
+
+          QPointF cv = pb->mapToParent(b->getLeft(), b->getTop());
+
+          pt_a.setX(a->getLeft()), pt_a.setY(a->getTop());
+          pt_b.setX(cv.x()), pt_b.setY(cv.y());
+      }
+      else if (pa->getStructuralParent() == pb->getStructuralParent() &&
+               pa->getStructuralParent() != NULL)
+      {
+        parent = pa->getStructuralParent();
+
+        QPointF ca = pa->mapToParent(a->getLeft(), a->getTop());
+        QPointF cb = pb->mapToParent(b->getLeft(), b->getTop());
+
+        pt_a.setX(ca.x()), pt_a.setY(ca.y());
+        pt_b.setX(cb.x()), pt_b.setY(cb.y());
+      }
+      else
+        return;
+
+      if (pt_a.y() > pt_b.y())
+          properties[PLG_ENTITY_TOP] = QString::number(pt_b.y() + (pt_a.y() - pt_b.y())/2);
+      else
+          properties[PLG_ENTITY_TOP] = QString::number(pt_a.y() + (pt_b.y() - pt_a.y())/2);
+
+
+      if (pt_a.x() > pt_b.x())
+          properties[PLG_ENTITY_LEFT] = QString::number(pt_b.x() + (pt_a.x() - pt_b.x())/2);
+      else
+          properties[PLG_ENTITY_LEFT] = QString::number(pt_a.x() + (pt_b.x() - pt_a.x())/2);
+
+
+      QMap<QString, QString> settings = StructuralUtil::createSettings(true, true);
+
+      insert(uid, parent->getStructuralUid(), properties, settings);
+
+      if (entities.contains(uid))
+      {
+          createBind(a,entities.value(uid),Structural::onBegin,settings.value(PLG_SETTING_CODE));
+          createBind(entities.value(uid),b,Structural::Start,settings.value(PLG_SETTING_CODE));
+      }
+    }
+}
+
+void StructuralView::createBind(StructuralEntity* a, StructuralEntity* b, StructuralRole type, QString code)
+{
+    StructuralEntity* pa = a->getStructuralParent();
+    StructuralEntity* pb = b->getStructuralParent();
+
+    if (pa != NULL && pb != NULL)
+    {
+      QString parent;
+
+      if (pa == pb)
+      {
+          parent = pa->getStructuralUid();
+      }
+      else if (pa->getStructuralParent() == pb)
+      {
+          parent = pb->getStructuralUid();
+      }
+      else if (pa == pb->getStructuralParent())
+      {
+          parent = pa->getStructuralUid();
+      }
+      else
+      {
+          return;
+      }
+
+      QString uid = QUuid::createUuid().toString();
+
+      QMap<QString, QString> properties;
+      properties[PLG_ENTITY_TYPE] = QString::number(Structural::Bind);
+      properties[PLG_ENTITY_START_UID] = a->getStructuralUid();
+      properties[PLG_ENTITY_END_UID] = b->getStructuralUid();
+
+      properties[PLG_ENTITY_ROLE] = QString::number(type);
+
+      StructuralEntity* e_link = NULL;
+      StructuralEntity* e_nolink = NULL;
+      StructuralEntity* pe_nolink = NULL;
+
+      if (a->getStructuralType() == Structural::Link)
+      {
+        e_link = a;
+        e_nolink = b;
+        pe_nolink = pb;
+      }
+      else if (b->getStructuralType() == Structural::Link)
+      {
+        e_link = b;
+        e_nolink = a;
+        pe_nolink = pa;
+      }
+
+      if (e_link != NULL && e_nolink != NULL && pe_nolink != NULL){
+        properties[PLG_ENTITY_LINK_ID] = e_link->getStructuralId();
+        properties[PLG_ENTITY_LINK_UID] = e_link->getStructuralUid();
+
+        if (b->getStructuralCategory() == Structural::Interface)
+        {
+          properties[PLG_ENTITY_INTERFACE_ID] = e_nolink->getStructuralId();
+          properties[PLG_ENTITY_INTERFACE_ID] = e_nolink->getStructuralUid();
+          properties[PLG_ENTITY_COMPONENT_ID] = pe_nolink->getStructuralId();
+          properties[PLG_ENTITY_COMPONENT_UID] = pe_nolink->getStructuralUid();
+        }
+        else
+        {
+          properties[PLG_ENTITY_COMPONENT_ID] = e_nolink->getStructuralId();
+          properties[PLG_ENTITY_COMPONENT_UID] = e_nolink->getStructuralUid();
+        }
+      }
+
+      QMap<QString, QString> settings = StructuralUtil::createSettings(true, true);
+
+      if (!code.isEmpty())
+          settings[PLG_SETTING_CODE] = code;
+
+      insert(uid, parent, properties, settings);
+    }
+}
+
 void StructuralView::createReference(StructuralEntity* a, StructuralEntity* b)
 {
   if (a->getStructuralType() == Structural::Port || a->getStructuralType() == Structural::SwitchPort)
@@ -1383,29 +1622,31 @@ void StructuralView::mouseReleaseEvent(QMouseEvent* event)
         if (entitya->getStructuralType() == Structural::Node &&
             entityb->getStructuralType() == Structural::Node)
         {
-//            qDebug()  << "if linking NODE to NODE";
-//            if (entitya->getLocalName() != Structural::Link && entityb->getLocalName() != Structural::Link)
-//            {
-//                createLink(entitya, entityb);
-//            }
-//            else if (entitya->getLocalName() == Structural::Link || entityb->getLocalName() == Structural::Link)
-//            {
-//                createBind(entitya, entityb);
-//            }
+          StructuralUtil::dbg(this, "Linking NODE to NODE");
+
+          if (entitya->getStructuralType() != Structural::Link && entityb->getStructuralType() != Structural::Link)
+          {
+            createLink(entitya, entityb);
+          }
+          else if (entitya->getStructuralType() == Structural::Link || entityb->getStructuralType() == Structural::Link)
+          {
+            createBind(entitya, entityb);
+          }
         }
         // if linking NODE to INTERFACE
         else if (entitya->getStructuralCategory() == Structural::Node &&
                  entityb->getStructuralCategory() == Structural::Interface)
         {
-//            qDebug()  << "if linking NODE to INTERFACE";
-//            if (entitya->getLocalName() != Structural::Link)
-//            {
-//                createLink(entitya, entityb);
-//            }
-//            else
-//            {
-//                createBind(entitya, entityb);
-//            }
+            StructuralUtil::dbg(this, "Linking NODE to INTERFACE");
+
+            if (entitya->getStructuralType() != Structural::Link)
+            {
+                createLink(entitya, entityb);
+            }
+            else
+            {
+                createBind(entitya, entityb);
+            }
         }
         // if linking INTERFACE to NODE
         else if (entitya->getStructuralCategory() == Structural::Interface &&
@@ -1422,11 +1663,11 @@ void StructuralView::mouseReleaseEvent(QMouseEvent* event)
             }
             else if (entityb->getStructuralType() != Structural::Link)
             {
-//                createLink(entitya, entityb);
+                createLink(entitya, entityb);
             }
             else
             {
-//                createBind(entitya, entityb);
+                createBind(entitya, entityb);
             }
         }
         // if linking INTERFACE to INTERFACE
@@ -1438,13 +1679,13 @@ void StructuralView::mouseReleaseEvent(QMouseEvent* event)
 
             StructuralUtil::dbg(this, "Linking INTERFACE to INTERFACE");
 
-            if (pa != NULL && pb != NULL && (pa == pb || pa == pb->getStructuralParent()))
+            if (pa != NULL && pb != NULL &&  pa == pb->getStructuralParent())
             {
                 createReference(entitya, entityb);
             }
             else
             {
-//                createLink(entitya, entityb);
+                createLink(entitya, entityb);
             }
         }
       }

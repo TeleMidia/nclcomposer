@@ -34,6 +34,14 @@
 
 #define PLG_ENTITY_START_UID ":plugin:entity:start:uid"
 #define PLG_ENTITY_END_UID ":plugin:entity:end:uid"
+#define PLG_ENTITY_ROLE ":plugin:entity:role"
+#define PLG_ENTITY_LINK_ID ":plugin:entity:link:id"
+#define PLG_ENTITY_LINK_UID ":plugin:entity:link:uid"
+#define PLG_ENTITY_COMPONENT_ID ":plugin:entity:component:id"
+#define PLG_ENTITY_COMPONENT_UID ":plugin:entity:component:id"
+#define PLG_ENTITY_INTERFACE_ID ":plugin:entity:interface:id"
+#define PLG_ENTITY_INTERFACE_UID ":plugin:entity:interface:id"
+#define PLG_ENTITY_ANGLE ":plugin:entity:angle"
 
 #define PLG_SETTING_UNDO_CHILDREN ":plugin:setting:undo:children"
 #define PLG_SETTING_UNDO ":plugin:setting:undo"

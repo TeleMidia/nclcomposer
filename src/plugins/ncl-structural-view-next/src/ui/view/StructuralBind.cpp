@@ -88,7 +88,7 @@ QString StructuralBind::getIcon()
   return icon;
 }
 
-void StructuralBind::adjust(bool avoidCollision)
+void StructuralBind::adjust(bool avoidCollision, bool rec)
 {
   if(isCondition())
     adjust_condition();

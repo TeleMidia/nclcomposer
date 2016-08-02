@@ -173,6 +173,10 @@ void StructuralInterface::adjust(bool avoidCollision,  bool rec)
     QVector<StructuralEntity*> roots;
     roots = getStructuralParent()->getStructuralEntities();
 
+    if (getStructuralParent()->getStructuralParent() != NULL){
+      roots.append(getStructuralParent()->getStructuralParent()->getStructuralEntities());
+    }
+
     foreach (StructuralEntity* c, roots) {
       if (c->getStructuralCategory() == Structural::Edge){
         StructuralEdge *e = (StructuralEdge*) c;

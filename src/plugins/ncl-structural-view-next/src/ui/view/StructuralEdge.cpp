@@ -215,33 +215,70 @@ QPointF StructuralEdge::arcPointAt(QLineF line, qreal at, bool toend, bool inver
 
 void StructuralEdge::aux_adjust(QPointF pointa, QPointF pointb)
 {
+//  if (pointa.x() <= pointb.x() && pointa.y() <= pointb.y())
+//  {
+//    StructuralUtil::dbg(this, "#1 pointa.x() <= pointb.x() && pointa.y() <= pointb.y()");
+
+//    setTop(pointa.y()-6);
+//    setLeft(pointa.x()-6);
+//    setWidth((pointb.x()-6)-(pointa.x()-6) + 12);
+//    setHeight((pointb.y()-6)-(pointa.y()-6) + 12);
+//  }
+//  else if (pointa.x() > pointb.x() && pointa.y() < pointb.y())
+//  {
+//    StructuralUtil::dbg(this, "#2 pointa.x() > pointb.x() && pointa.y() < pointb.y()");
+
+//    setTop(pointa.y()-6);
+//    setLeft(pointb.x()-6);
+//    setWidth((pointa.x()-6)-(pointb.x()-6) + 12);
+//    setHeight((pointb.y()-6)-(pointa.y()-6) + 12);
+//  }
+//  else if (pointa.x() < pointb.x() && pointa.y() > pointb.y())
+//  {
+//    StructuralUtil::dbg(this, "#3 pointa.x() < pointb.x() && pointa.y() > pointb.y()");
+
+//    setTop(pointb.y()-6);
+//    setLeft((pointa.x()-6));
+//    setWidth((pointb.x()-6)-(pointa.x()-6) + 12);
+//    setHeight((pointa.y()-6)-(pointb.y()-6) + 12);
+//  }
+//  else if (pointa.x() > pointb.x() && pointa.y() > pointb.y())
+//  {
+//    StructuralUtil::dbg(this, "#4 pointa.x() > pointb.x() && pointa.y() > pointb.y()");
+
+//    setTop(pointb.y()-6);
+//    setLeft(pointb.x()-6);
+//    setWidth((pointa.x()-6)-(pointb.x()-6) + 12);
+//    setHeight((pointa.y()-6)-(pointb.y()-6) + 12);
+//  }
+
   if (pointa.x() <= pointb.x() && pointa.y() <= pointb.y())
   {
-    setTop(pointa.y()-6);
-    setLeft(pointa.x()-6);
-    setWidth((pointb.x()-6)-(pointa.x()-6) + 12);
-    setHeight((pointb.y()-6)-(pointa.y()-6) + 12);
+    setTop(pointa.y()-4);
+    setLeft(pointa.x()-4);
+    setWidth((pointb.x()-4)-(pointa.x()-4) + 8);
+    setHeight((pointb.y()-4)-(pointa.y()-4) + 8);
   }
-  else if (pointa.x() > pointb.x() && pointa.y() < pointb.y())
+  else if (pointa.x() > pointb.x() && pointa.y() <= pointb.y())
   {
-    setTop(pointa.y()-6);
-    setLeft(pointb.x()-6);
-    setWidth((pointa.x()-6)-(pointb.x()-6) + 12);
-    setHeight((pointb.y()-6)-(pointa.y()-6) + 12);
+    setTop(pointa.y()-4);
+    setLeft(pointb.x()-4);
+    setWidth((pointa.x()-4)-(pointb.x()-4) + 8);
+    setHeight((pointb.y()-4)-(pointa.y()-4) + 8);
   }
-  else if (pointa.x() < pointb.x() && pointa.y() > pointb.y())
+  else if (pointa.x() <= pointb.x() && pointa.y() > pointb.y())
   {
-    setTop(pointb.y()-6);
-    setLeft((pointa.x()-6));
-    setWidth((pointb.x()-6)-(pointa.x()-6) + 12);
-    setHeight((pointa.y()-6)-(pointb.y()-6) + 12);
+    setTop(pointb.y()-4);
+    setLeft((pointa.x()-4));
+    setWidth((pointb.x()-4)-(pointa.x()-4) + 8);
+    setHeight((pointa.y()-4)-(pointb.y()-4) + 8);
   }
   else if (pointa.x() > pointb.x() && pointa.y() > pointb.y())
   {
-    setTop(pointb.y()-6);
-    setLeft(pointb.x()-6);
-    setWidth((pointa.x()-6)-(pointb.x()-6) + 12);
-    setHeight((pointa.y()-6)-(pointb.y()-6) + 12);
+    setTop(pointb.y()-4);
+    setLeft(pointb.x()-4);
+    setWidth((pointa.x()-4)-(pointb.x()-4) + 8);
+    setHeight((pointa.y()-4)-(pointb.y()-4) + 8);
   }
 }
 

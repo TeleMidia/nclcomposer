@@ -7,6 +7,7 @@
 #include <QLineF>
 
 #include "StructuralEntity.h"
+#include "StructuralUtil.h"
 
 class StructuralEdge : public StructuralEntity
 {

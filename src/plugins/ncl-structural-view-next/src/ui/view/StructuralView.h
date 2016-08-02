@@ -23,6 +23,7 @@
 #include "StructuralInterface.h"
 #include "StructuralComposition.h"
 #include "StructuralReference.h"
+#include "StructuralBind.h"
 
 #include "Remove.h"
 #include "Change.h"
@@ -154,9 +155,10 @@ private:
   void performPaste(StructuralEntity* entity, StructuralEntity* _parent, QString CODE, bool newPos);
 
   bool isChild(StructuralEntity* e , StructuralEntity* p);
-//  void createLink(StructuralEntity* a, StructuralEntity* b);
-//  void createBind(StructuralEntity* a, StructuralEntity* b,Structural::BindType type = Structural::NoBindType, QString code = "");
+  void createLink(StructuralEntity* a, StructuralEntity* b);
+  void createBind(StructuralEntity* a, StructuralEntity* b,StructuralRole type = Structural::NoRole, QString code = "");
   void createReference(StructuralEntity* a, StructuralEntity* b);
+  void adjustAngles(StructuralBind* edge);
 
   void createObjects();
 
