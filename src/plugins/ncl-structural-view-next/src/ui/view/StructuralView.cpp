@@ -644,20 +644,40 @@ void StructuralView::remove(QString uid, QMap<QString, QString> settings)
       commnads.push(command); return;
     }
 
-    if (entities[uid]->getStructuralCategory() != Structural::Edge)
-    {
-      foreach (StructuralEntity* entity, entities[uid]->getStructuralEntities())
-      {
-        if (settings.value(PLG_SETTING_UNDO_CHILDREN) != "0")
-          settings[PLG_SETTING_UNDO] = "1";
+    StructuralEntity* entity = entities.value(uid);
+    StructuralEntity* parent = entity->getStructuralParent();
 
-          remove(entity->getStructuralUid(), settings);
-      }
+    while(!entity->getStructuralEntities().isEmpty())
+    {
+      StructuralEntity* e = entity->getStructuralEntities().first();
+
+      if (settings.value(PLG_SETTING_UNDO_CHILDREN) != "0")
+        settings[PLG_SETTING_UNDO] = "1";
+
+        remove(e->getStructuralUid(), settings);
     }
 
-    StructuralEntity* entity = entities[uid];
+    if (entity->getStructuralCategory() != Structural::Edge)
+    {
+      QVector<StructuralEntity*> roots;
 
-    StructuralEntity* parent = entity->getStructuralParent();
+      if (parent != NULL)
+        roots = parent->getStructuralEntities();
+      else
+        roots = getRoots();
+
+      foreach (StructuralEntity* c, roots) {
+        if (c->getStructuralCategory() == Structural::Edge){
+          StructuralEdge *e = (StructuralEdge*) c;
+
+          if (e->getEntityA() == entity || e->getEntityB() == entity){
+
+            remove(e->getStructuralUid(),
+                   StructuralUtil::createSettings("1","1",settings.value(PLG_SETTING_CODE)));
+          }
+        }
+      }
+    }
 
     if (parent != NULL)
     {
