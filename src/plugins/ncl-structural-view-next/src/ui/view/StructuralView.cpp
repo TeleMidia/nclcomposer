@@ -1639,8 +1639,8 @@ void StructuralView::mouseReleaseEvent(QMouseEvent* event)
       if (entitya != entityb)
       {
         // if linking NODE to NODE
-        if (entitya->getStructuralType() == Structural::Node &&
-            entityb->getStructuralType() == Structural::Node)
+        if (entitya->getStructuralCategory() == Structural::Node &&
+            entityb->getStructuralCategory() == Structural::Node)
         {
           StructuralUtil::dbg(this, "Linking NODE to NODE");
 
