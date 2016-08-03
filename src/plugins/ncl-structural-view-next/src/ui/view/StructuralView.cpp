@@ -1161,6 +1161,9 @@ void StructuralView::createLink(StructuralEntity* a, StructuralEntity* b)
       else
         return;
 
+      pt_b.setX(pt_b.x()+b->getWidth());
+      pt_b.setY(pt_b.y()+b->getHeight());
+
       if (pt_a.y() > pt_b.y())
           properties[PLG_ENTITY_TOP] = QString::number(pt_b.y() + (pt_a.y() - pt_b.y())/2);
       else
