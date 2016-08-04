@@ -376,6 +376,9 @@ void StructuralView::insert(QString uid, QString parent, QMap<QString, QString> 
           emit bodyStateChange(false);
         }
 
+        break;
+      }
+
       case Structural::Link:
       {
         entity = new StructuralLink();
@@ -434,9 +437,6 @@ void StructuralView::insert(QString uid, QString parent, QMap<QString, QString> 
             ((StructuralReference*) entity)->setEntityA(entities.value(properties.value(PLG_ENTITY_START_UID)));
             ((StructuralReference*) entity)->setEntityB(entities.value(properties.value(PLG_ENTITY_END_UID)));
         }
-
-        break;
-      }
 
         break;
       }
