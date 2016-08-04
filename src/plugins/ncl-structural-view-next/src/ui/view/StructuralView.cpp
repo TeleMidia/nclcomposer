@@ -1247,7 +1247,7 @@ void StructuralView::createBind(StructuralEntity* a, StructuralEntity* b, Struct
         if (b->getStructuralCategory() == Structural::Interface)
         {
           properties[PLG_ENTITY_INTERFACE_ID] = e_nolink->getStructuralId();
-          properties[PLG_ENTITY_INTERFACE_ID] = e_nolink->getStructuralUid();
+          properties[PLG_ENTITY_INTERFACE_UID] = e_nolink->getStructuralUid();
           properties[PLG_ENTITY_COMPONENT_ID] = pe_nolink->getStructuralId();
           properties[PLG_ENTITY_COMPONENT_UID] = pe_nolink->getStructuralUid();
         }
@@ -1282,6 +1282,20 @@ void StructuralView::createReference(StructuralEntity* a, StructuralEntity* b)
           properties[PLG_ENTITY_TYPE] = QString::number(Structural::Reference);
           properties[PLG_ENTITY_START_UID] = a->getStructuralUid();
           properties[PLG_ENTITY_END_UID] = b->getStructuralUid();
+
+          if (b->getStructuralCategory() == Structural::Interface)
+          {
+            properties[PLG_ENTITY_INTERFACE_ID] = b->getStructuralId();
+            properties[PLG_ENTITY_INTERFACE_UID] = b->getStructuralUid();
+            properties[PLG_ENTITY_COMPONENT_ID] = pb->getStructuralId();
+            properties[PLG_ENTITY_COMPONENT_UID] = pb->getStructuralUid();
+          }
+          else
+          {
+            properties[PLG_ENTITY_COMPONENT_ID] = b->getStructuralId();
+            properties[PLG_ENTITY_COMPONENT_UID] = b->getStructuralUid();
+          }
+
 
           QMap<QString, QString> settings = StructuralUtil::createSettings(true, true);
 

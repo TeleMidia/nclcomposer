@@ -372,10 +372,10 @@ void StructuralViewPlugin::notifyEntityAddedInView(const QString uid,
 {
   StructuralType type = (StructuralType) properties[PLG_ENTITY_TYPE].toInt();
 
-  Entity* entity = NULL;
+  Entity* cparent = NULL;
 
   if (!parent.isEmpty())
-    entity = getProject()->getEntityById(entities.key(parent));
+    cparent = getProject()->getEntityById(entities.key(parent));
 
   else if (type == Structural::Body || !DEFAULT_BODY_ENABLE)
   {
@@ -383,7 +383,7 @@ void StructuralViewPlugin::notifyEntityAddedInView(const QString uid,
 
     QList<Entity*> list = getProject()->getEntitiesbyType("ncl");
     if (!list.isEmpty())
-      entity = list.first();
+      cparent = list.first();
     else
       return;
 
@@ -395,42 +395,63 @@ void StructuralViewPlugin::notifyEntityAddedInView(const QString uid,
         att.insert("id","newBody");
 
         emit addEntity("body",
-                       entity->getUniqueId(), att, false);
+                       cparent->getUniqueId(), att, false);
 
         list = getProject()->getEntitiesbyType("body");
       }
 
       if (!list.isEmpty())
-        entity = list.first();
+        cparent = list.first();
       else
         return;
     }
   }else
     return;
 
-  // do not notify link, reference and bind entities additions yet
+  // do not notify link and bind entities additions yet
   // (working in progress...)
-  if (type == Structural::Reference ||
-      type == Structural::Link ||
+  if (type == Structural::Link ||
       type == Structural::Bind)
     return;
 
-  QMap<QString, QString> m = StructuralUtil::createViewTranslationMap(type);
-  QMap<QString, QString> attributes;
-
-  if(entity != NULL) // Everything is ok, so add my new entity
+  if (type == Structural::Reference)
   {
-    foreach (QString key, m.keys()) {
-      if (properties.contains(key))
-        attributes.insert(m.value(key),properties.value(key));
-    }
+    QString portUID = entities.key(properties.value(PLG_ENTITY_START_UID));
+    Entity* entity = getProject()->getEntityById(portUID);
+
+    QMap<QString, QString> attributes;
+
+    if (!entity->getAttribute("id").isEmpty())
+      attributes.insert(NCL_ENTITY_ID,entity->getAttribute("id"));
+
+    if (!properties.value(PLG_ENTITY_COMPONENT_ID).isEmpty())
+      attributes.insert(NCL_ENTITY_COMPONENT,properties.value(PLG_ENTITY_COMPONENT_ID));
+
+    if (!properties.value(PLG_ENTITY_INTERFACE_ID).isEmpty())
+      attributes.insert(NCL_ENTITY_INTERFACE,properties.value(PLG_ENTITY_INTERFACE_ID));
 
     _waiting = true;
-    _notified = uid;
-    emit addEntity(StructuralUtil::getStrFromNstType(type),
-                   entity->getUniqueId(), attributes, false);
+    emit setAttributes(entity, attributes, false);
+  }
+  else
+  {
+    QMap<QString, QString> m = StructuralUtil::createViewTranslationMap(type);
+    QMap<QString, QString> attributes;
+
+    if(cparent != NULL)
+    {
+      foreach (QString key, m.keys()) {
+        if (properties.contains(key))
+          attributes.insert(m.value(key),properties.value(key));
+      }
+
+      _waiting = true;
+      _notified = uid;
+      emit addEntity(StructuralUtil::getStrFromNstType(type),
+                     cparent->getUniqueId(), attributes, false);
 
 
+    }
   }
 }
 
