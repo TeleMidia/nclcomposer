@@ -103,6 +103,9 @@ public:
 
    void setMiniMapVisible(bool enable);
 
+   void drawPortReference(StructuralEntity* port);
+
+
 
 signals:
   void inserted(QString uid, QString _parent, QMap<QString, QString> properties, QMap<QString, QString> settings);

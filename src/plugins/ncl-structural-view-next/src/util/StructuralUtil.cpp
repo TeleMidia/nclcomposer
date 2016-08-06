@@ -368,8 +368,8 @@ QMap<QString,QString> StructuralUtil::createCoreTranslationMap(StructuralType ty
     case Structural::Port:
     {
       m.insert(NCL_ENTITY_ID, PLG_ENTITY_ID);
-      m.insert(NCL_ENTITY_COMPONENT, NCL_ENTITY_COMPONENT);
-      m.insert(NCL_ENTITY_INTERFACE, NCL_ENTITY_INTERFACE);
+      m.insert(NCL_ENTITY_COMPONENT, PLG_ENTITY_COMPONENT_ID);
+      m.insert(NCL_ENTITY_INTERFACE, PLG_ENTITY_INTERFACE_ID);
 
       break;
     }
@@ -442,8 +442,8 @@ QMap<QString,QString> StructuralUtil::createViewTranslationMap(StructuralType ty
     case Structural::Port:
     {
       m.insert(PLG_ENTITY_ID, NCL_ENTITY_ID);
-      m.insert(NCL_ENTITY_COMPONENT, NCL_ENTITY_COMPONENT);
-      m.insert(NCL_ENTITY_INTERFACE, NCL_ENTITY_INTERFACE);
+      m.insert(PLG_ENTITY_COMPONENT_ID, NCL_ENTITY_COMPONENT);
+      m.insert(PLG_ENTITY_INTERFACE_ID, NCL_ENTITY_INTERFACE);
 
       break;
     }

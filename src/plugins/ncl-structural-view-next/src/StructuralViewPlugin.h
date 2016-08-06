@@ -53,7 +53,7 @@ public slots:
 
   /* From Core */
   void requestEntitySelection(const QString uid);
-  void requestEntityAddition(Entity* entity);
+  void requestEntityAddition(Entity* entity, bool enableUndo = true);
   void requestEntityRemotion(Entity* entity, bool enableUndo = true);
   void requestEntityChange(Entity* entity);
   void requestEntitySelection(Entity* entity);
@@ -75,9 +75,7 @@ private:
   void clear();
 
   QString getUidById(QString id);
-
   QString getUidById(QString id, Entity* entity);
-
   QString getUidByName(QString name, Entity* entity);
 
   void createWidgets();
