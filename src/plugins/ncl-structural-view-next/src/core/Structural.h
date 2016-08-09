@@ -37,6 +37,7 @@
 #define PLG_ENTITY_ROLE ":plugin:entity:role"
 #define PLG_ENTITY_LINK_ID ":plugin:entity:link:id"
 #define PLG_ENTITY_LINK_UID ":plugin:entity:link:uid"
+#define PLG_ENTITY_XCONNECTOR_ID ":plugin:entity:xconnector:id"
 #define PLG_ENTITY_COMPONENT_ID ":plugin:entity:component:id"
 #define PLG_ENTITY_COMPONENT_UID ":plugin:entity:component:uid"
 #define PLG_ENTITY_INTERFACE_ID ":plugin:entity:interface:id"
@@ -59,6 +60,7 @@
 #define NCL_ENTITY_NAME "name"
 #define NCL_ENTITY_VALUE "value"
 #define NCL_ENTITY_EXTERNABLE "externable"
+#define NCL_ENTITY_XCONNECTOR "xconnector"
 
 #define DEFAULT_BODY_WIDTH  750
 #define DEFAULT_BODY_HEIGHT 500

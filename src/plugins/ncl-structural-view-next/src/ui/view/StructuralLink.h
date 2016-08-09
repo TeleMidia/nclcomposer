@@ -14,6 +14,8 @@ public:
 
   ~StructuralLink();
 
+  virtual void refresh();
+
 protected:
   virtual void draw(QPainter* painter);
 

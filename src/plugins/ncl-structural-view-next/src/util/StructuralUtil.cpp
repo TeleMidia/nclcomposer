@@ -117,7 +117,8 @@ std::map <QString, Structural::StructuralType> StructuralUtil::typeFromStr =
 
     ("media", Structural::Media)
     ("area", Structural::Area)
-    ("property", Structural::Property);
+    ("property", Structural::Property)
+    ("link", Structural::Link);
    // ("bindParam", Qnst::BindParam)
 
     /*("causalConnector", Qnst::)
@@ -153,6 +154,7 @@ std::map <Structural::StructuralType, QString> StructuralUtil::prefixIdFromType 
     (Structural::Property, "prop")
     (Structural::SwitchPort, "swp")
     (Structural::Area, "area")
+    (Structural::Link, "link")
 
    // (Qnst::Aggregator, "link") // \fixme This is here only for compatibility
                                // with versions prior to 0.1.3.
@@ -397,6 +399,14 @@ QMap<QString,QString> StructuralUtil::createCoreTranslationMap(StructuralType ty
       break;
     }
 
+    case Structural::Link:
+    {
+      m.insert(NCL_ENTITY_ID, PLG_ENTITY_ID);
+      m.insert(NCL_ENTITY_XCONNECTOR, PLG_ENTITY_XCONNECTOR_ID);
+
+      break;
+    }
+
     default:
       break;
 
@@ -467,6 +477,14 @@ QMap<QString,QString> StructuralUtil::createViewTranslationMap(StructuralType ty
     case Structural::SwitchPort:
     {
       m.insert(PLG_ENTITY_ID, NCL_ENTITY_ID);
+
+      break;
+    }
+
+    case Structural::Link:
+    {
+      m.insert(PLG_ENTITY_ID, NCL_ENTITY_ID);
+      m.insert(PLG_ENTITY_XCONNECTOR_ID, NCL_ENTITY_XCONNECTOR);
 
       break;
     }

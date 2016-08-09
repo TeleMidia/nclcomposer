@@ -364,6 +364,12 @@ void StructuralViewPlugin::requestEntityAddition(Entity* entity, bool enableUndo
         }
       }
 
+      if (type == Structural::Link)
+      {
+        // TODO: Load connector properties in order to create
+        // binds correctly
+      }
+
       _window->getView()->insert(entity->getUniqueId(), parentUID, properties, settings);
     }
   }
@@ -492,9 +498,7 @@ void StructuralViewPlugin::notifyEntityAddedInView(const QString uid,
 
   // do not notify link and bind entities additions yet
   // (working in progress...)
-  if (type == Structural::Link ||
-      type == Structural::Reference ||
-      type == Structural::Bind)
+  if (type == Structural::Bind)
     return;
 
     QMap<QString, QString> m = StructuralUtil::createViewTranslationMap(type);

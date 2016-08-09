@@ -1275,6 +1275,10 @@ void StructuralView::createLink(StructuralEntity* a, StructuralEntity* b)
       else
           properties[PLG_ENTITY_LEFT] = QString::number(pt_a.x() + (pt_b.x() - pt_a.x())/2);
 
+      // this is temporarity. a dialog should me display here
+      // to get the xconnector value e the connectors properties
+      // directly from core (a signal should be emitted).
+      properties.insert(PLG_ENTITY_XCONNECTOR_ID, "onBeginStart");
 
       QMap<QString, QString> settings = StructuralUtil::createSettings(true, true);
 

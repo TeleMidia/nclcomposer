@@ -57,3 +57,13 @@ void StructuralLink::delineate(QPainterPath* painter) const
 {
   painter->addRect(4, 4, getWidth(), getHeight());
 }
+
+void StructuralLink::refresh()
+{
+  QString tip = "";
+  QString name = (getStructuralId() != "" ? getStructuralId() : "?");
+
+  tip += "Link ("+name+") : "+getStructuralProperty(PLG_ENTITY_XCONNECTOR_ID);
+
+  setToolTip(tip);
+}
