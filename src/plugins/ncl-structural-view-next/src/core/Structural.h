@@ -43,6 +43,7 @@
 #define PLG_ENTITY_INTERFACE_ID ":plugin:entity:interface:id"
 #define PLG_ENTITY_INTERFACE_UID ":plugin:entity:interface:uid"
 #define PLG_ENTITY_ANGLE ":plugin:entity:angle"
+#define PLG_ENTITY_ROLE ":plugin:entity:role"
 
 #define PLG_SETTING_UNDO_CHILDREN ":plugin:setting:undo:children"
 #define PLG_SETTING_UNDO ":plugin:setting:undo"
@@ -61,6 +62,7 @@
 #define NCL_ENTITY_VALUE "value"
 #define NCL_ENTITY_EXTERNABLE "externable"
 #define NCL_ENTITY_XCONNECTOR "xconnector"
+#define NCL_ENTITY_ROLE "role"
 
 #define DEFAULT_BODY_WIDTH  750
 #define DEFAULT_BODY_HEIGHT 500

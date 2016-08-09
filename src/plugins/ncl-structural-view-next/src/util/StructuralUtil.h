@@ -80,6 +80,24 @@ public:
    */
   static QString getPrefixIdFromType(Structural::StructuralType type);
 
+  /*!
+   * \brief Returns the Qnst::StructuralRole related to the string role passed as
+   *    parameter.
+   *
+   * \arg role the string of the role (onBegin, onEnd, start, stop, ...)
+   * \return the Qnst::StructuralRole related to that string.
+   */
+  static Structural::StructuralRole getStructuralRoleFromStr(const QString &role);
+
+  /*!
+   * \brief Returns a string that represents the QnstStructuralRole passed as
+   *    parameter.
+   *
+   * \arg type the Qnst::StructuralRole
+   * \return a string that represents that type.
+   */
+  static QString getStrFromStructuralRole(Structural::StructuralRole type);
+
   static QString CreateUid();
   static bool hasValidKinshp(StructuralType subtype, StructuralType parent);
   static QString convertType(StructualCategory type);
@@ -99,6 +117,8 @@ private:
   static std::map <QString, Structural::StructuralType>   typeFromStr;
   static std::map <Structural::StructuralType, QString>   strFromType;
   static std::map  <Structural::StructuralType, QString>  prefixIdFromType;
+  static std::map <QString, Structural::StructuralRole>     roleTypeFromRoleStr;
+  static std::map <Structural::StructuralRole, QString>     strFromRoleType;
 
   static std::map <StructuralResize, QRectF> region;
 };

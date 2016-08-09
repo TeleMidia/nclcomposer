@@ -462,7 +462,10 @@ void StructuralViewPlugin::notifyEntityAddedInView(const QString uid,
 
   Entity* cparent = NULL;
 
-  if (!parent.isEmpty())
+  if (type == Structural::Bind){
+    cparent = getProject()->getEntityById(entities.key(properties.value(PLG_ENTITY_LINK_UID)));
+
+  }else if (!parent.isEmpty())
     cparent = getProject()->getEntityById(entities.key(parent));
 
   else if (type == Structural::Body || !DEFAULT_BODY_ENABLE)
@@ -494,11 +497,6 @@ void StructuralViewPlugin::notifyEntityAddedInView(const QString uid,
         return;
     }
   }else
-    return;
-
-  // do not notify link and bind entities additions yet
-  // (working in progress...)
-  if (type == Structural::Bind)
     return;
 
     QMap<QString, QString> m = StructuralUtil::createViewTranslationMap(type);

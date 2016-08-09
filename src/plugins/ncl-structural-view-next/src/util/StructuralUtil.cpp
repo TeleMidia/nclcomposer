@@ -104,6 +104,29 @@ std::map <QString, Structural::StructuralMedia> StructuralUtil::typeFromExtMap =
 
     ("lua", Structural::NCLua);
 
+
+std::map <QString, Structural::StructuralRole> StructuralUtil::roleTypeFromRoleStr =
+  create_map<QString, Structural::StructuralRole>
+    ("onBegin", Structural::onBegin)
+    ("onEnd", Structural::onEnd)
+    ("onSelection", Structural::onSelection)
+    ("onResume", Structural::onResume)
+    ("onPause", Structural::onPause)
+    ("onBeginAttribution", Structural::onBeginAttribution)
+    ("onEndAttribution", Structural::onEndAttribution)
+    ("onPauseAttribution", Structural::onPauseAttribution)
+    ("onResumeAttribution", Structural::onResumeAttribution)
+
+    ("start", Structural::Start)
+    ("stop", Structural::Stop)
+    ("resume", Structural::Resume)
+    ("pause", Structural::Pause)
+    ("set", Structural::Set);
+
+/* Initialize String from Qnst::StructuralRole Map */
+std::map <Structural::StructuralRole, QString> StructuralUtil::strFromRoleType =
+  invert_map<Structural::StructuralRole, QString> (StructuralUtil::roleTypeFromRoleStr);
+
 /* Initialize map from str type to qnsttype */
 std::map <QString, Structural::StructuralType> StructuralUtil::typeFromStr =
   create_map <QString, Structural::StructuralType>
@@ -118,7 +141,8 @@ std::map <QString, Structural::StructuralType> StructuralUtil::typeFromStr =
     ("media", Structural::Media)
     ("area", Structural::Area)
     ("property", Structural::Property)
-    ("link", Structural::Link);
+    ("link", Structural::Link)
+    ("bind", Structural::Bind);
    // ("bindParam", Qnst::BindParam)
 
     /*("causalConnector", Qnst::)
@@ -407,6 +431,17 @@ QMap<QString,QString> StructuralUtil::createCoreTranslationMap(StructuralType ty
       break;
     }
 
+    case Structural::Bind:
+    {
+      m.insert(NCL_ENTITY_ROLE, PLG_ENTITY_ID);
+      m.insert(NCL_ENTITY_XCONNECTOR, PLG_ENTITY_XCONNECTOR_ID);
+      m.insert(NCL_ENTITY_COMPONENT, PLG_ENTITY_COMPONENT_ID);
+      m.insert(NCL_ENTITY_INTERFACE, PLG_ENTITY_INTERFACE_ID);
+      m.insert(NCL_ENTITY_DESCRIPTOR, NCL_ENTITY_DESCRIPTOR);
+
+      break;
+    }
+
     default:
       break;
 
@@ -489,6 +524,17 @@ QMap<QString,QString> StructuralUtil::createViewTranslationMap(StructuralType ty
       break;
     }
 
+    case Structural::Bind:
+    {
+      m.insert(PLG_ENTITY_ID, NCL_ENTITY_ROLE);
+      m.insert(PLG_ENTITY_XCONNECTOR_ID, NCL_ENTITY_XCONNECTOR);
+      m.insert(PLG_ENTITY_COMPONENT_ID, NCL_ENTITY_COMPONENT);
+      m.insert(PLG_ENTITY_INTERFACE_ID, NCL_ENTITY_INTERFACE);
+      m.insert(NCL_ENTITY_DESCRIPTOR, NCL_ENTITY_DESCRIPTOR);
+
+      break;
+    }
+
     default:
       // do nothing
       break;
@@ -566,5 +612,21 @@ QString StructuralUtil::getPrefixIdFromType(Structural::StructuralType type)
     return prefixIdFromType[type];
 
   return "unknown";
+}
+
+Structural::StructuralRole StructuralUtil::getStructuralRoleFromStr(const QString &role)
+{
+  if(roleTypeFromRoleStr.count(role))
+    return roleTypeFromRoleStr[role];
+
+  return Structural::NoRole;
+}
+
+QString StructuralUtil::getStrFromStructuralRole(Structural::StructuralRole type)
+{
+  if(strFromRoleType.count(type))
+    return strFromRoleType[type];
+
+  return QString("NoRole");
 }
 

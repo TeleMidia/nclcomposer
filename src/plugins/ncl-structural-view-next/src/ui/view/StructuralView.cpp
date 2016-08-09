@@ -1278,7 +1278,7 @@ void StructuralView::createLink(StructuralEntity* a, StructuralEntity* b)
       // this is temporarity. a dialog should me display here
       // to get the xconnector value e the connectors properties
       // directly from core (a signal should be emitted).
-      properties.insert(PLG_ENTITY_XCONNECTOR_ID, "onBeginStart");
+      properties.insert(PLG_ENTITY_XCONNECTOR_ID, "conn#onBeginStart");
 
       QMap<QString, QString> settings = StructuralUtil::createSettings(true, true);
 
@@ -1326,6 +1326,7 @@ void StructuralView::createBind(StructuralEntity* a, StructuralEntity* b, Struct
       properties[PLG_ENTITY_END_UID] = b->getStructuralUid();
 
       properties[PLG_ENTITY_ROLE] = QString::number(type);
+      properties[PLG_ENTITY_ID] = StructuralUtil::getStrFromStructuralRole(type);
 
       StructuralEntity* e_link = NULL;
       StructuralEntity* e_nolink = NULL;
@@ -1348,7 +1349,7 @@ void StructuralView::createBind(StructuralEntity* a, StructuralEntity* b, Struct
         properties[PLG_ENTITY_LINK_ID] = e_link->getStructuralId();
         properties[PLG_ENTITY_LINK_UID] = e_link->getStructuralUid();
 
-        if (b->getStructuralCategory() == Structural::Interface)
+        if (e_nolink->getStructuralCategory() == Structural::Interface)
         {
           properties[PLG_ENTITY_INTERFACE_ID] = e_nolink->getStructuralId();
           properties[PLG_ENTITY_INTERFACE_UID] = e_nolink->getStructuralUid();
@@ -1359,6 +1360,8 @@ void StructuralView::createBind(StructuralEntity* a, StructuralEntity* b, Struct
         {
           properties[PLG_ENTITY_COMPONENT_ID] = e_nolink->getStructuralId();
           properties[PLG_ENTITY_COMPONENT_UID] = e_nolink->getStructuralUid();
+          properties[PLG_ENTITY_INTERFACE_ID] = "";
+          properties[PLG_ENTITY_INTERFACE_UID] = "";
         }
       }
 
@@ -1767,10 +1770,20 @@ void StructuralView::mouseReleaseEvent(QMouseEvent* event)
           {
             createLink(entitya, entityb);
           }
-          else if (entitya->getStructuralType() == Structural::Link || entityb->getStructuralType() == Structural::Link)
+
+          else if (entitya->getStructuralType() == Structural::Link)
           {
-            createBind(entitya, entityb);
+            // this is temporarity. a dialog should me display here
+            // to get the 'role' value.
+            createBind(entitya, entityb, Structural::Start);
+
+          }else if (entityb->getStructuralType() == Structural::Link)
+          {
+            // this is temporarity. a dialog should me display here
+            // to get the 'role' value.
+            createBind(entitya, entityb, Structural::onBegin);
           }
+
         }
         // if linking NODE to INTERFACE
         else if (entitya->getStructuralCategory() == Structural::Node &&
@@ -1784,7 +1797,9 @@ void StructuralView::mouseReleaseEvent(QMouseEvent* event)
             }
             else
             {
-                createBind(entitya, entityb);
+              // this is temporarity. a dialog should me display here
+              // to get the 'role' value.
+              createBind(entitya, entityb, Structural::Start);
             }
         }
         // if linking INTERFACE to NODE
@@ -1806,7 +1821,9 @@ void StructuralView::mouseReleaseEvent(QMouseEvent* event)
             }
             else
             {
-                createBind(entitya, entityb);
+              // this is temporarity. a dialog should me display here
+              // to get the 'role' value.
+              createBind(entitya, entityb, Structural::onBegin);
             }
         }
         // if linking INTERFACE to INTERFACE

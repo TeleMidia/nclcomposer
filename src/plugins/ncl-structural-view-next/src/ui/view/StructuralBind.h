@@ -17,6 +17,9 @@ public:
 
   QString getRole() const;
 
+  virtual void refresh();
+
+
   void setRole(QString role);
 
   QString getComponent() const;

@@ -67,12 +67,23 @@ void StructuralBind::setType(StructuralRole type)
   }
 }
 
+void StructuralBind::refresh()
+{
+  QString tip = "";
+  QString name = (getStructuralId() != "" ? getStructuralId() : "?");
+
+  tip += "Bind ("+name+")";
+
+  setToolTip(tip);
+}
+
+
 void StructuralBind::setLocalProperty(const QString &name, const QString &value)
 {/*
   if (name == "LOCAL:BIND")
   {
     setType((StructuralR) value.toInt());
-    setRole(StructuralUtil::getStrFromBindType(getType()));
+    setRole(StructuralUtil::getStrFromStructuralRole(getType()));
   }
 
   StructuralEdge::setLocalProperty(name, value);*/
@@ -940,7 +951,7 @@ void StructuralBind::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
       {
         foreach(QString type, conn->getActions().values())
         {
-          if (type == QnstUtil::getStrFromBindType(getType()))
+          if (type == QnstUtil::getStrFromStructuralRole(getType()))
           {
             UID = conn->getActions().key(type,"");
           }
@@ -965,7 +976,7 @@ void StructuralBind::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
       {
         foreach(QString type, conn->getConditions().values())
         {
-          if (type == QnstUtil::getStrFromBindType(getType()))
+          if (type == QnstUtil::getStrFromStructuralRole(getType()))
           {
             UID = conn->getConditions().key(type,"");
           }
