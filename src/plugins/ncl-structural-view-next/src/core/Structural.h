@@ -80,7 +80,7 @@
 #define DEFAULT_ANCHOR_WIDTH  8
 #define DEFAULT_ANCHOR_HEIGHT 8
 
-#define DEFAULT_BODY_ENABLE 0
+#define DEFAULT_BODY_ENABLE 1
 
 class Structural
 {
