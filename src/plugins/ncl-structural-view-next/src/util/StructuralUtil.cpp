@@ -450,6 +450,24 @@ QMap<QString,QString> StructuralUtil::createCoreTranslationMap(StructuralType ty
   return m;
 }
 
+bool StructuralUtil::isConditionRole(StructuralRole role)
+{
+  return (role == Structural::onBegin ||
+          role == Structural::onBeginAttribution ||
+          role == Structural::onEnd ||
+          role == Structural::onEndAttribution ||
+          role == Structural::onPause ||
+          role == Structural::onPauseAttribution ||
+          role == Structural::onResume ||
+          role == Structural::onResumeAttribution ||
+          role == Structural::onSelection);
+}
+
+bool StructuralUtil::isActionRole(StructuralRole role)
+{
+  return (role != Structural::NoRole && !isConditionRole(role));
+}
+
 QMap<QString,QString> StructuralUtil::createViewTranslationMap(StructuralType type)
 {
   QMap<QString, QString> m;

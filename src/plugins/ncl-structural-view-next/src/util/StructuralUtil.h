@@ -99,6 +99,9 @@ public:
   static QString getStrFromStructuralRole(Structural::StructuralRole type);
 
   static QString CreateUid();
+
+  static bool isConditionRole(StructuralRole role);
+  static bool isActionRole(StructuralRole role);
   static bool hasValidKinshp(StructuralType subtype, StructuralType parent);
   static QString convertType(StructualCategory type);
   static QString convertSubtype(StructuralType subtype);

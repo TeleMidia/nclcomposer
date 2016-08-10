@@ -193,6 +193,55 @@ void StructuralViewPlugin::updateFromModel()
           }
         }
 
+        if (e->getStructuralType() == Structural::Bind)
+        {
+          if (!cacheprop.value(PLG_ENTITY_ID).isEmpty()){
+            StructuralRole role = StructuralUtil::getStructuralRoleFromStr(cacheprop.value(PLG_ENTITY_ID));
+
+            if (cacheprop.contains(PLG_ENTITY_COMPONENT_ID)){
+              QString coreUID = getUidById(cacheprop.value(PLG_ENTITY_COMPONENT_ID));
+
+              if (entities.contains(coreUID))
+                cacheprop.insert(PLG_ENTITY_COMPONENT_UID, entities.value(coreUID));
+            }
+
+            if (cacheprop.contains(PLG_ENTITY_INTERFACE_ID)){
+              QString coreUID = getUidById(cacheprop.value(PLG_ENTITY_INTERFACE_ID));
+
+              if (entities.contains(coreUID)){
+                cacheprop.insert(PLG_ENTITY_INTERFACE_UID, entities.value(coreUID));
+              }
+            }
+
+            QString coreBindUID = entities.key(e->getStructuralUid());
+            QString viewLinkUID = entities.value(getProject()->getEntityById(coreBindUID)->getParentUniqueId());
+
+            cacheprop.insert(PLG_ENTITY_LINK_UID, viewLinkUID);
+
+            if (StructuralUtil::isConditionRole(role))
+            {
+              if (!cacheprop.value(PLG_ENTITY_INTERFACE_UID).isEmpty()){
+                cacheprop.insert(PLG_ENTITY_START_UID, cacheprop.value(PLG_ENTITY_INTERFACE_UID));
+                cacheprop.insert(PLG_ENTITY_END_UID, cacheprop.value(PLG_ENTITY_LINK_UID));
+
+              }else if (!cacheprop.value(PLG_ENTITY_COMPONENT_UID).isEmpty()){
+                cacheprop.insert(PLG_ENTITY_START_UID, cacheprop.value(PLG_ENTITY_COMPONENT_UID));
+                cacheprop.insert(PLG_ENTITY_END_UID, cacheprop.value(PLG_ENTITY_LINK_UID));
+              }
+
+            }else if (StructuralUtil::isActionRole(role)){
+              if (!cacheprop.value(PLG_ENTITY_INTERFACE_UID).isEmpty()){
+                cacheprop.insert(PLG_ENTITY_START_UID, cacheprop.value(PLG_ENTITY_LINK_UID));
+                cacheprop.insert(PLG_ENTITY_END_UID, cacheprop.value(PLG_ENTITY_INTERFACE_UID));
+
+              }else if (!cacheprop.value(PLG_ENTITY_COMPONENT_UID).isEmpty()){
+                cacheprop.insert(PLG_ENTITY_START_UID, cacheprop.value(PLG_ENTITY_LINK_UID));
+                cacheprop.insert(PLG_ENTITY_END_UID, cacheprop.value(PLG_ENTITY_COMPONENT_UID));
+              }
+            }
+          }
+        }
+
         _window->getView()->change(e->getStructuralUid(),cacheprop,e->getStructuralProperties(),settings);
 
       }else{
@@ -370,6 +419,57 @@ void StructuralViewPlugin::requestEntityAddition(Entity* entity, bool enableUndo
         // binds correctly
       }
 
+      if (type == Structural::Bind)
+      {
+        parentUID = entity->getParent()->getParentUniqueId();
+
+        if (!properties.value(PLG_ENTITY_ID).isEmpty()){
+          StructuralRole role = StructuralUtil::getStructuralRoleFromStr(properties.value(PLG_ENTITY_ID));
+
+          properties.insert(PLG_ENTITY_ROLE, QString::number(role));
+
+          if (properties.contains(PLG_ENTITY_COMPONENT_ID)){
+            QString coreUID = getUidById(properties.value(PLG_ENTITY_COMPONENT_ID));
+
+            if (entities.contains(coreUID))
+              properties.insert(PLG_ENTITY_COMPONENT_UID, entities.value(coreUID));
+          }
+
+          if (properties.contains(PLG_ENTITY_INTERFACE_ID)){
+            QString coreUID = getUidById(properties.value(PLG_ENTITY_INTERFACE_ID));
+
+            if (entities.contains(coreUID)){
+              properties.insert(PLG_ENTITY_INTERFACE_UID, entities.value(coreUID));
+            }
+          }
+
+          properties.insert(PLG_ENTITY_LINK_UID, entities.value(entity->getParentUniqueId()));
+
+          if (StructuralUtil::isConditionRole(role))
+          {
+            if (!properties.value(PLG_ENTITY_INTERFACE_UID).isEmpty()){
+              properties.insert(PLG_ENTITY_START_UID, properties.value(PLG_ENTITY_INTERFACE_UID));
+              properties.insert(PLG_ENTITY_END_UID, entities.value(entity->getParentUniqueId()));
+
+            }else if (!properties.value(PLG_ENTITY_COMPONENT_UID).isEmpty()){
+              properties.insert(PLG_ENTITY_START_UID, properties.value(PLG_ENTITY_COMPONENT_UID));
+              properties.insert(PLG_ENTITY_END_UID, entities.value(entity->getParentUniqueId()));
+
+            }
+
+          }else if (StructuralUtil::isActionRole(role)){
+            if (!properties.value(PLG_ENTITY_INTERFACE_UID).isEmpty()){
+              properties.insert(PLG_ENTITY_START_UID, entities.value(entity->getParentUniqueId()));
+              properties.insert(PLG_ENTITY_END_UID, properties.value(PLG_ENTITY_INTERFACE_UID));
+
+            }else if (!properties.value(PLG_ENTITY_COMPONENT_UID).isEmpty()){
+              properties.insert(PLG_ENTITY_START_UID, entities.value(entity->getParentUniqueId()));
+              properties.insert(PLG_ENTITY_END_UID, properties.value(PLG_ENTITY_COMPONENT_UID));
+            }
+          }
+        }
+      }
+
       _window->getView()->insert(entity->getUniqueId(), parentUID, properties, settings);
     }
   }
@@ -422,6 +522,54 @@ void StructuralViewPlugin::requestEntityChange(Entity* entity)
 
           if (entities.contains(coreUID)){
             properties.insert(PLG_ENTITY_INTERFACE_UID, entities.value(coreUID));
+          }
+        }
+      }
+
+      if (type == Structural::Bind)
+      {
+        if (!properties.value(PLG_ENTITY_ID).isEmpty()){
+          StructuralRole role = StructuralUtil::getStructuralRoleFromStr(properties.value(PLG_ENTITY_ID));
+
+          properties.insert(PLG_ENTITY_ROLE, QString::number(role));
+
+          if (properties.contains(PLG_ENTITY_COMPONENT_ID)){
+            QString coreUID = getUidById(properties.value(PLG_ENTITY_COMPONENT_ID));
+
+            if (entities.contains(coreUID))
+              properties.insert(PLG_ENTITY_COMPONENT_UID, entities.value(coreUID));
+          }
+
+          if (properties.contains(PLG_ENTITY_INTERFACE_ID)){
+            QString coreUID = getUidById(properties.value(PLG_ENTITY_INTERFACE_ID));
+
+            if (entities.contains(coreUID)){
+              properties.insert(PLG_ENTITY_INTERFACE_UID, entities.value(coreUID));
+            }
+          }
+
+          properties.insert(PLG_ENTITY_LINK_UID, entities.value(entity->getParentUniqueId()));
+
+          if (StructuralUtil::isConditionRole(role))
+          {
+            if (!properties.value(PLG_ENTITY_INTERFACE_UID).isEmpty()){
+              properties.insert(PLG_ENTITY_START_UID, properties.value(PLG_ENTITY_INTERFACE_UID));
+              properties.insert(PLG_ENTITY_END_UID, entities.value(entity->getParentUniqueId()));
+
+            }else if (!properties.value(PLG_ENTITY_COMPONENT_UID).isEmpty()){
+              properties.insert(PLG_ENTITY_START_UID, properties.value(PLG_ENTITY_COMPONENT_UID));
+              properties.insert(PLG_ENTITY_END_UID, entities.value(entity->getParentUniqueId()));
+            }
+
+          }else if (StructuralUtil::isActionRole(role)){
+            if (!properties.value(PLG_ENTITY_INTERFACE_UID).isEmpty()){
+              properties.insert(PLG_ENTITY_START_UID, entities.value(entity->getParentUniqueId()));
+              properties.insert(PLG_ENTITY_END_UID, properties.value(PLG_ENTITY_INTERFACE_UID));
+
+            }else if (!properties.value(PLG_ENTITY_COMPONENT_UID).isEmpty()){
+              properties.insert(PLG_ENTITY_START_UID, entities.value(entity->getParentUniqueId()));
+              properties.insert(PLG_ENTITY_END_UID, properties.value(PLG_ENTITY_COMPONENT_UID));
+            }
           }
         }
       }

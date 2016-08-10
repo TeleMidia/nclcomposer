@@ -387,25 +387,24 @@ void StructuralView::insert(QString uid, QString parent, QMap<QString, QString> 
 
       case Structural::Bind:
       {
-        if (entities.contains(properties.value(PLG_ENTITY_START_UID)) &&
-            entities.contains(properties.value(PLG_ENTITY_END_UID)))
+        entity = new StructuralBind();
+
+        StructuralBind* bind = (StructuralBind*) entity;
+        if (entities.contains(properties.value(PLG_ENTITY_START_UID)))
+          bind->setEntityA(entities.value(properties.value(PLG_ENTITY_START_UID)));
+        if (entities.contains(properties.value(PLG_ENTITY_END_UID)))
+          bind->setEntityB(entities.value(properties.value(PLG_ENTITY_END_UID)));
+
+        bind->setType((StructuralRole) properties.value(PLG_ENTITY_ROLE).toInt());
+
+        if (properties.value(PLG_ENTITY_ANGLE).isEmpty())
         {
-            entity = new StructuralBind();
-
-            StructuralBind* bind = (StructuralBind*) entity;
-            bind->setEntityA(entities.value(properties.value(PLG_ENTITY_START_UID)));
-            bind->setEntityB(entities.value(properties.value(PLG_ENTITY_END_UID)));
-            bind->setType((StructuralRole) properties.value(PLG_ENTITY_ROLE).toInt());
-
-            if (properties.value(PLG_ENTITY_ANGLE).isEmpty())
-            {
-              adjustAngles(bind);
-              bind->setStructuralProperty(PLG_ENTITY_ANGLE, QString::number(bind->getAngle()));
-            }
-            else
-            {
-              bind->setAngle(properties.value(PLG_ENTITY_ANGLE).toDouble());
-            }
+          adjustAngles(bind);
+          bind->setStructuralProperty(PLG_ENTITY_ANGLE, QString::number(bind->getAngle()));
+        }
+        else
+        {
+          bind->setAngle(properties.value(PLG_ENTITY_ANGLE).toDouble());
         }
 
         break;
@@ -762,6 +761,7 @@ void StructuralView:: change(QString uid, QMap<QString, QString> properties, QMa
     {
       QMap<QString,QString> tmp = previous;
 
+      if (entities.value(uid)->getStructuralType() == Structural::Port){
       if (!properties.contains(PLG_ENTITY_COMPONENT_ID))
         tmp.remove(PLG_ENTITY_COMPONENT_ID);
 
@@ -773,6 +773,7 @@ void StructuralView:: change(QString uid, QMap<QString, QString> properties, QMa
 
       if (!properties.contains(PLG_ENTITY_COMPONENT_ID))
         tmp.remove(PLG_ENTITY_COMPONENT_ID);
+      }
 
       foreach (QString key, properties.keys()) {
         tmp[key] = properties.value(key);
@@ -801,6 +802,18 @@ void StructuralView:: change(QString uid, QMap<QString, QString> properties, QMa
 
      entity->setStructuralProperties(properties);
      entity->adjust(false);
+
+     if (entity->getStructuralType() ==  Structural::Bind) {
+       StructuralBind* b = (StructuralBind*) entity;
+
+       b->setType((StructuralRole) properties.value(PLG_ENTITY_ROLE).toInt());
+
+       if (entities.contains(properties.value(PLG_ENTITY_START_UID)))
+         b->setEntityA(entities.value(properties.value(PLG_ENTITY_START_UID)));
+
+       if (entities.contains(properties.value(PLG_ENTITY_END_UID)))
+         b->setEntityB(entities.value(properties.value(PLG_ENTITY_END_UID)));
+     }
 
      if (entity->getStructuralType() ==  Structural::Port) {
        drawPortReference(entity);
@@ -1346,7 +1359,6 @@ void StructuralView::createBind(StructuralEntity* a, StructuralEntity* b, Struct
       }
 
       if (e_link != NULL && e_nolink != NULL && pe_nolink != NULL){
-        properties[PLG_ENTITY_LINK_ID] = e_link->getStructuralId();
         properties[PLG_ENTITY_LINK_UID] = e_link->getStructuralUid();
 
         if (e_nolink->getStructuralCategory() == Structural::Interface)
