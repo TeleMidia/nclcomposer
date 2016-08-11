@@ -688,9 +688,9 @@ void StructuralView::remove(QString uid, QMap<QString, QString> settings)
       {
         if (parent != NULL)
           if (parent->getStructuralParent() != NULL)
-            roots.append(parent->getStructuralParent()->getStructuralEntities());
+            roots += parent->getStructuralParent()->getStructuralEntities();
           else
-            roots.append(getRoots());
+            roots += getRoots();
       }
 
 
@@ -2050,6 +2050,12 @@ void StructuralView::deletePendingEntities()
   }
 
   toDelete.clear();
+}
+
+void StructuralView::cleanUndoRedo()
+{
+  emit redoStateChange(false);
+ emit undoStateChange(false);
 }
 
 //void StructuralView::setAction(QString action)

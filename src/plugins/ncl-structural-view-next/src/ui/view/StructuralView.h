@@ -54,6 +54,7 @@ public:
   QMap<QString, StructuralEntity*> getEntities();
 
   void switchMinimapVis();
+  void cleanUndoRedo();
 
 public slots:
   void insert(QString uid, QString parent, QMap<QString, QString> properties, QMap<QString, QString> settings);

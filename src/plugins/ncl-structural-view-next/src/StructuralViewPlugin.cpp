@@ -287,8 +287,7 @@ void StructuralViewPlugin::updateFromModel()
     }
   }
 
-  _window->getView()->undoStateChange(false);
-  _window->getView()->redoStateChange(false);
+  _window->getView()->cleanUndoRedo();
 }
 
 void StructuralViewPlugin::clear()
