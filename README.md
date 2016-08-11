@@ -97,6 +97,9 @@ You can install it, using dpkg, for example:
 ## Authors and contributors
   * Roberto Azevedo (robertogerson@telemidia.puc-rio.br)
   * Eduardo Araújo (edcaraujo@telemidia.puc-rio.br)
+
+### Previous contributors
+  * Marcelo Moreno (moreno@telemidia.puc-rio.br)
   * Bruno Lima (bslima@telemidia.puc-rio.br)
 
 ## License
