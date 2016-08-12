@@ -40,7 +40,8 @@ HEADERS += \
     src/ui/view/StructuralViewLink.h \
     src/ui/view/StructuralEntity.h \
     src/ui/view/StructuralComposition.h \
-    src/ui/view/StructuralContent.h
+    src/ui/view/StructuralContent.h \
+    src/ui/view/StructuralLinkDialog.h
 
 SOURCES += \
     src/core/Command.cpp \
@@ -65,12 +66,14 @@ SOURCES += \
     src/core/Insert.cpp \
     src/core/Change.cpp \
     src/ui/view/StructuralContent.cpp \
+    src/ui/view/StructuralLinkDialog.cpp
 
 RESOURCES += \
     ncl-structural-view-next.qrc \
      ../common-resources/images.qrc
 
-FORMS +=
+FORMS += \
+    ui/StructuralLinkForm.ui
 
 INSTALLS = \
     target

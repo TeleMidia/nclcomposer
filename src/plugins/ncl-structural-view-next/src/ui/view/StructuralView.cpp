@@ -69,6 +69,8 @@ void StructuralView::createObjects()
 
   setScene(scene); centerOn(3600/2,1800/2);
 
+  linkDialog = new StructuralLinkDialog(this);
+
   connect(scene->_menu->redoAction, SIGNAL(triggered(bool)), this, SLOT(performRedo()));
   connect(scene->_menu->undoAction, SIGNAL(triggered(bool)), this, SLOT(performUndo()));
   connect(scene->_menu->pasteAction, SIGNAL(triggered(bool)), this, SLOT(performPaste()));
@@ -1277,30 +1279,40 @@ void StructuralView::createLink(StructuralEntity* a, StructuralEntity* b)
       pt_b.setX(pt_b.x()+b->getWidth()/2);
       pt_b.setY(pt_b.y()+b->getHeight()/2);
 
-      if (pt_a.y() > pt_b.y())
-          properties[PLG_ENTITY_TOP] = QString::number(pt_b.y() + (pt_a.y() - pt_b.y())/2);
-      else
-          properties[PLG_ENTITY_TOP] = QString::number(pt_a.y() + (pt_b.y() - pt_a.y())/2);
+
+        if (pt_a.y() > pt_b.y())
+            properties[PLG_ENTITY_TOP] = QString::number(pt_b.y() + (pt_a.y() - pt_b.y())/2);
+        else
+            properties[PLG_ENTITY_TOP] = QString::number(pt_a.y() + (pt_b.y() - pt_a.y())/2);
 
 
-      if (pt_a.x() > pt_b.x())
-          properties[PLG_ENTITY_LEFT] = QString::number(pt_b.x() + (pt_a.x() - pt_b.x())/2);
-      else
-          properties[PLG_ENTITY_LEFT] = QString::number(pt_a.x() + (pt_b.x() - pt_a.x())/2);
+        if (pt_a.x() > pt_b.x())
+            properties[PLG_ENTITY_LEFT] = QString::number(pt_b.x() + (pt_a.x() - pt_b.x())/2);
+        else
+            properties[PLG_ENTITY_LEFT] = QString::number(pt_a.x() + (pt_b.x() - pt_a.x())/2);
 
-      // this is temporarity. a dialog should me display here
-      // to get the xconnector value e the connectors properties
-      // directly from core (a signal should be emitted).
-      properties.insert(PLG_ENTITY_XCONNECTOR_ID, "conn#onBeginStart");
+        // TODO: update dialog content with connetors data from core.
+        linkDialog->init();
 
-      QMap<QString, QString> settings = StructuralUtil::createSettings(true, true);
+        modified = false;
+        emit linkStateChange(false);
 
-      insert(uid, parent->getStructuralUid(), properties, settings);
+        if (linkDialog->exec()){
 
-      if (entities.contains(uid))
-      {
-          createBind(a,entities.value(uid),Structural::onBegin,settings.value(PLG_SETTING_CODE));
-          createBind(entities.value(uid),b,Structural::Start,settings.value(PLG_SETTING_CODE));
+          properties.insert(PLG_ENTITY_XCONNECTOR_ID, linkDialog->getCurrentConnector());
+
+          QMap<QString, QString> settings = StructuralUtil::createSettings(true, true);
+
+          insert(uid, parent->getStructuralUid(), properties, settings);
+
+          if (entities.contains(uid))
+          {
+            StructuralRole con = StructuralUtil::getStructuralRoleFromStr(linkDialog->form.cbCondition->currentText());
+            StructuralRole act = StructuralUtil::getStructuralRoleFromStr(linkDialog->form.cbAction->currentText());
+
+            createBind(a,entities.value(uid),con,settings.value(PLG_SETTING_CODE));
+            createBind(entities.value(uid),b,act,settings.value(PLG_SETTING_CODE));
+          }
       }
     }
 }

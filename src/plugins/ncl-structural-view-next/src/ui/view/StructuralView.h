@@ -24,6 +24,7 @@
 #include "StructuralComposition.h"
 #include "StructuralReference.h"
 #include "StructuralBind.h"
+#include "StructuralLinkDialog.h"
 
 #include "Remove.h"
 #include "Change.h"
@@ -188,6 +189,8 @@ private:
   QAction* redoAct;
 
   StructuralScene* scene;
+
+  StructuralLinkDialog* linkDialog;
 
   QString _selected_UID;
 
