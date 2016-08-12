@@ -5,7 +5,6 @@ Makefile*
 *.objs
 *.moc
 *.obj
-*.ui
 *.DS_Store
 *.pro.user*
 *.app
