@@ -48,6 +48,8 @@ void StructuralViewPlugin::createConnections()
   connect(view, SIGNAL(removed(QString,QMap<QString,QString>)), SLOT(notifyEntityDeletedInView(QString,QMap<QString,QString>)));
   connect(view, SIGNAL(changed(QString,QMap<QString,QString>,QMap<QString,QString>,QMap<QString,QString>)),SLOT(notifyEntityChangedInView(QString,QMap<QString,QString>,QMap<QString,QString>,QMap<QString,QString>)));
   connect(view, SIGNAL(selected(QString,QMap<QString,QString>)),SLOT(notifyEntitySelectionInView(QString,QMap<QString,QString>)));
+
+  connect(view, SIGNAL(requestLinkDialogUpdate()), SLOT(updateConnectorsDataInView()));
 }
 
 void StructuralViewPlugin::init()
@@ -806,3 +808,177 @@ QString StructuralViewPlugin::getUidByName(QString name, Entity* entity)
   return uid;
 }
 
+void StructuralViewPlugin::updateConnectorsDataInView()
+{
+  // TODO: this function should be calling only when a change occurs in
+  // <connectorBase>. Currently, this function is calling every time the
+  // link's dialog is displayed.
+  if (!getProject()->getEntitiesbyType("connectorBase").isEmpty()){
+    Entity* connectorBase = getProject()->getEntitiesbyType("connectorBase").first();
+
+    QMap<QString, QVector<QString> > conditions;
+    QMap<QString, QVector<QString> > actions;
+    QMap<QString, QVector<QString> > params;
+
+    foreach (Entity* e, connectorBase->getChildren()){
+
+      // loading data from local causalConnector
+      if (e->getType() == "causalConnector") {
+        QString connId;
+        QVector<QString> connConditions;
+        QVector<QString> connActions;
+        QVector<QString> connParams;
+
+        connId = e->getAttribute("id");
+
+        foreach (Entity* ec, e->getChildren()) {
+          if (ec->getType() == "simpleCondition") {
+            connConditions.append(ec->getAttribute("role"));
+          }
+
+          if (ec->getType() == "simpleAction") {
+            connActions.append(ec->getAttribute("role"));
+          }
+
+          if (ec->getType() == "connectorParam") {
+            connParams.append(ec->getAttribute("name"));
+          }
+
+          if (ec->getType() == "compoundCondition") {
+            foreach (Entity* ecc, ec->getChildren()) {
+              if (ecc->getType() == "simpleCondition") {
+                connConditions.append(ecc->getAttribute("role"));
+              }
+            }
+          }
+
+          if (ec->getType() == "compoundAction") {
+            foreach (Entity* ecc, ec->getChildren()) {
+              if (ecc->getType() == "simpleAction") {
+                connActions .append(ecc->getAttribute("role"));
+              }
+            }
+          }
+        }
+
+        conditions.insert(connId, connConditions);
+        actions.insert(connId, connActions);
+        params.insert(connId, connParams);
+
+      // loading data from importBases
+      }else if (e->getType() == "importBase") {
+        QString importAlias;
+        QString importURI;
+
+        QString projectURI;
+        QString projectSeparator;
+
+        importAlias = e->getAttribute("alias");
+        importURI = e->getAttribute("documentURI");
+
+        projectURI = getProject()->getLocation();
+        projectSeparator = QDir::separator();
+
+        QFile importFile(projectURI.left(projectURI.lastIndexOf(projectSeparator))+projectSeparator+importURI);
+
+        if (importFile.open(QIODevice::ReadOnly)){
+          QDomDocument d;
+          if (d.setContent(&importFile)){
+
+            QDomElement r = d.firstChildElement(); // <ncl>
+            QDomElement h = r.firstChildElement(); // <head>
+            QDomElement b;                         // <connectorBase>
+
+            bool hasConnBase = false;
+
+            QDomNodeList hc = h.childNodes();
+            for (unsigned int i = 0; i < hc.length(); i++){
+              if (hc.item(i).isElement()){
+
+                if (hc.item(i).nodeName() == "connectorBase"){
+                  b = hc.item(i).toElement();
+                  hasConnBase = true;
+                  break;
+                }
+              }
+            }
+
+            if (hasConnBase){
+              QDomNodeList bc = b.childNodes();
+              for (unsigned int i = 0; i < bc.length(); i++){
+                if (bc.item(i).isElement()){
+                  if (bc.item(i).nodeName() == "causalConnector"){
+                    QString connId;
+                    QVector<QString> connConditions;
+                    QVector<QString> connActions;
+                    QVector<QString> connParams;
+
+                    if (bc.item(i).attributes().namedItem("id").isNull())
+                      break;
+
+                    connId = bc.item(i).attributes().namedItem("id").nodeValue();
+                    connId = importAlias+"#"+connId;
+
+                    QDomNodeList bcc = bc.item(i).childNodes();
+                    for (unsigned int j = 0; j < bcc.length(); j++){
+                      if (bcc.item(j).nodeName() == "simpleCondition"){
+                        if (bcc.item(j).attributes().namedItem("role").isNull())
+                          break;
+
+                        connConditions.append(bcc.item(j).attributes().namedItem("role").nodeValue());
+                      }
+
+                      if (bcc.item(j).nodeName() == "simpleAction"){
+                        if (bcc.item(j).attributes().namedItem("role").isNull())
+                          break;
+
+                        connActions.append(bcc.item(j).attributes().namedItem("role").nodeValue());
+                      }
+
+                      if (bcc.item(j).nodeName() == "connectorParam"){
+                        if (bcc.item(j).attributes().namedItem("name").isNull())
+                          break;
+
+                        connParams.append(bcc.item(j).attributes().namedItem("name").nodeValue());
+                      }
+
+                      if (bcc.item(j).nodeName() == "compoundCondition"){
+                        QDomNodeList bccc = bcc.item(j).childNodes();
+                        for (unsigned int k = 0; k < bccc.length(); k++){
+                          if (bccc.item(k).nodeName() == "simpleCondition"){
+                            if (bccc.item(k).attributes().namedItem("role").isNull())
+                              break;
+
+                            connConditions.append(bccc.item(k).attributes().namedItem("role").nodeValue());
+                          }
+                        }
+                      }
+
+                      if (bcc.item(j).nodeName() == "compoundAction"){
+                        QDomNodeList bccc = bcc.item(j).childNodes();
+                        for (unsigned int k = 0; k < bccc.length(); k++){
+                          if (bccc.item(k).nodeName() == "simpleAction"){
+                            if (bccc.item(k).attributes().namedItem("role").isNull())
+                              break;
+
+                            connActions.append(bccc.item(k).attributes().namedItem("role").nodeValue());
+                          }
+                        }
+                      }
+                    }
+
+                    conditions.insert(connId, connConditions);
+                    actions.insert(connId, connActions);
+                    params.insert(connId, connParams);
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+
+    _window->getView()->updateLinkDialog(conditions, actions, params);
+  }
+}

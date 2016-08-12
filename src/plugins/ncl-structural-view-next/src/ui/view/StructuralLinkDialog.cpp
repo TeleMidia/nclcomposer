@@ -191,9 +191,14 @@ StructuralLinkDialog::~StructuralLinkDialog()
 
 }
 
-void StructuralLinkDialog::init()
+void StructuralLinkDialog::init(QMap<QString, QVector<QString> > conditions,
+                                QMap<QString, QVector<QString> > actions,
+                                QMap<QString, QVector<QString> > params)
 {
-//  this->connectors = connectors;
+
+  _conditions = conditions;
+  _actions = actions;
+  _params = params;
 
   form.cbCondition->setEnabled(false);
   form.cbCondition->clear();
@@ -201,35 +206,25 @@ void StructuralLinkDialog::init()
   form.cbAction->setEnabled(false);
   form.cbAction->clear();
 
+  connLineEdit->clear();
+
   QStringList strConn;
-//  foreach(StructuralConnector* conn, connectors.values())
-//  {
-//    strConn << conn->getName();
-//  }
 
-//  if (strConn.count() > 0){
-//    strConn << "----------";
-//  }
-
-  strConn << "conn#onBeginStart";
+  foreach (QString conn, _conditions.keys()) {
+    strConn << conn;
+  }
 
   connLineEdit->setStringList(strConn);
 
-  // Center the Dialog if this is the first time that we are openning
-  // QnstGraphicsLinkDialog
   if(firstTime)
   {
     setMinimumWidth(350);
     updateGeometry();
-    // QWidget *screen = NULL;
+
     QRect screenGeometry;
 
     if(this->parentWidget())
     {
-      //screen = QApplication::desktop()->screen(
-      //          QApplication::desktop()->screenNumber(this->parentWidget())
-      //         );
-
       screenGeometry = QApplication::desktop()->screenGeometry(this->parentWidget());
     }
     else
@@ -250,83 +245,20 @@ void StructuralLinkDialog::init()
 
 void StructuralLinkDialog::adjustBinds(QString conn)
 {
-  /*
-  if (conn == "" || conn == "----------")
-  {
-    form.cbCondition->setEnabled(false);
-    form.cbCondition->clear();
-
-    form.cbAction->setEnabled(false);
-    form.cbAction->clear();
-
-  }
-  else if (conn == "New...")
-  {
-    form.cbCondition->setEnabled(true);
-    form.cbCondition->clear();
-
-    form.cbCondition->addItem("onBegin");
-    form.cbCondition->addItem("onEnd");
-    form.cbCondition->addItem("onSelection");
-    form.cbCondition->addItem("onResume");
-    form.cbCondition->addItem("onPause");
-
-    form.cbAction->setEnabled(true);
-    form.cbAction->clear();
-
-    form.cbAction->addItem("start");
-    form.cbAction->addItem("stop");
-    form.cbAction->addItem("resume");
-    form.cbAction->addItem("pause");
-    form.cbAction->addItem("set");
-  }
-  else
-  {
-    StructuralConnector* oconn = NULL;
-
-    if(connectors.contains(conn))
-    {
-      oconn = connectors[conn];
-    }
-    else
-    {
-      form.cbAction->clear();
-      form.cbCondition->clear();
-      return;
-    }
-
-    form.cbCondition->setEnabled(true);
-    form.cbCondition->clear();
-
-    if (oconn->getName() == conn)
-    {
-      foreach(QString cond, oconn->getConditions().values())
-      {
-        form.cbCondition->addItem(cond);
-      }
-    }
-
-    form.cbAction->setEnabled(true);
-    form.cbAction->clear();
-
-    if (oconn->getName() == conn)
-    {
-      foreach(QString act, oconn->getActions().values()){
-        form.cbAction->addItem(act);
-      }
-    }
-  }
-  */
 
   form.cbCondition->setEnabled(true);
   form.cbCondition->clear();
 
-  form.cbCondition->addItem("onBegin");
+  foreach (QString b, _conditions.value(conn)) {
+    form.cbCondition->addItem(b);
+  }
 
   form.cbAction->setEnabled(true);
   form.cbAction->clear();
 
-  form.cbAction->addItem("start");
+  foreach (QString b, _actions.value(conn)) {
+    form.cbAction->addItem(b);
+  }
 }
 
 void StructuralLinkDialog::showEvent(QShowEvent *evt)

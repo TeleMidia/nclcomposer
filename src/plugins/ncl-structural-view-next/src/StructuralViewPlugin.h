@@ -58,6 +58,8 @@ public slots:
   void requestEntityChange(Entity* entity);
   void requestEntitySelection(Entity* entity);
 
+  void updateConnectorsDataInView();
+
   /* From View */
   void notifyEntityAddedInView (const QString uid, const QString parent,
                                 QMap<QString, QString> properties, QMap<QString, QString> settings);

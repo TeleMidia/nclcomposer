@@ -1291,8 +1291,7 @@ void StructuralView::createLink(StructuralEntity* a, StructuralEntity* b)
         else
             properties[PLG_ENTITY_LEFT] = QString::number(pt_a.x() + (pt_b.x() - pt_a.x())/2);
 
-        // TODO: update dialog content with connetors data from core.
-        linkDialog->init();
+        emit requestLinkDialogUpdate();
 
         modified = false;
         emit linkStateChange(false);
@@ -2068,6 +2067,13 @@ void StructuralView::cleanUndoRedo()
 {
   emit redoStateChange(false);
  emit undoStateChange(false);
+}
+
+void StructuralView::updateLinkDialog(QMap<QString, QVector<QString> > conditions,
+                                      QMap<QString, QVector<QString> > actions,
+                                      QMap<QString, QVector<QString> > params)
+{
+  linkDialog->init(conditions, actions, params);
 }
 
 //void StructuralView::setAction(QString action)

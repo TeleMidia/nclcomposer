@@ -52,7 +52,9 @@ public:
 
   ~StructuralLinkDialog();
 
-  void init();
+  void init(QMap<QString, QVector<QString> > conditions,
+            QMap<QString, QVector<QString> > actions,
+            QMap<QString, QVector<QString> > params);
 
 protected slots:
   void adjustBinds(QString conn);
@@ -64,7 +66,10 @@ public:
   //TODO: This shouldn't be public
   Ui::StructuralLinkForm form;
 
-//  QMap<QString, StructuralConnector*> connectors;
+  QMap<QString, QVector<QString> > _conditions;
+  QMap<QString, QVector<QString> > _actions;
+  QMap<QString, QVector<QString> > _params;
+
   QString getCurrentConnector();
 
 private:

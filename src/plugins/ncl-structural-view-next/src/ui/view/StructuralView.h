@@ -57,6 +57,10 @@ public:
   void switchMinimapVis();
   void cleanUndoRedo();
 
+  void updateLinkDialog(QMap<QString, QVector<QString> > conditions,
+                        QMap<QString, QVector<QString> > actions,
+                        QMap<QString, QVector<QString> > params);
+
 public slots:
   void insert(QString uid, QString parent, QMap<QString, QString> properties, QMap<QString, QString> settings);
   void remove(QString uid, QMap<QString, QString> settings);
@@ -130,6 +134,7 @@ signals:
   void selectChange(QString uid);
 
   void viewChanged();
+  void requestLinkDialogUpdate();
 
 protected:
 
