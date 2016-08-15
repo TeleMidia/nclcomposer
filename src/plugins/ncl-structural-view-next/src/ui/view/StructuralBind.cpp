@@ -62,7 +62,7 @@ void StructuralBind::setType(StructuralRole type)
       break;
 
     default:
-        this->icon = ":/icon/nocondition";
+      this->icon = "";
       break;
   }
 }
@@ -271,6 +271,9 @@ void StructuralBind::draw_action(QPainter* painter)
 {
   if (getEntityA() != NULL && getEntityB() != NULL)
   {
+    if (icon.isEmpty())
+      icon = ":/icon/noaction";
+
     painter->setRenderHint(QPainter::Antialiasing, true);
     painter->setRenderHint(QPainter::SmoothPixmapTransform, true);
 
@@ -523,6 +526,9 @@ void StructuralBind::draw_condition(QPainter* painter)
 {
   if (getEntityA() != NULL && getEntityB() != NULL)
   {
+    if (icon.isEmpty())
+      icon = ":/icon/nocondition";
+
     painter->setRenderHint(QPainter::Antialiasing, true);
     painter->setRenderHint(QPainter::SmoothPixmapTransform, true);
 
