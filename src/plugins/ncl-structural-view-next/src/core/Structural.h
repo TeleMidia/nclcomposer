@@ -109,6 +109,7 @@ public:
     Link        = 9,
     Bind        = 10,
     Reference   = 11,
+    Mapping     = 12,
 
     NoType      = 0
   };

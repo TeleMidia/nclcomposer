@@ -123,10 +123,10 @@ QMap<QString, QString> StructuralEntity::getStructuralProperties() const
 
 void StructuralEntity::setStructuralProperties(const QMap<QString, QString> &properties)
 {
-  if (getStructuralType() == Structural::Port){
-  // removing component and interface properties in
-  // case it are not set. this helps drawing
-  // reference entities correctly.
+  if (getStructuralType() == Structural::Port ||
+      getStructuralType() == Structural::Mapping ||
+      getStructuralType() == Structural::Bind){
+
   if (!properties.contains(PLG_ENTITY_COMPONENT_ID))
     _properties.remove(PLG_ENTITY_COMPONENT_ID);
 

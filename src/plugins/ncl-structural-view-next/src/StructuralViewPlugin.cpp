@@ -414,12 +414,6 @@ void StructuralViewPlugin::requestEntityAddition(Entity* entity, bool enableUndo
         }
       }
 
-      if (type == Structural::Link)
-      {
-        // TODO: Load connector properties in order to create
-        // binds correctly
-      }
-
       if (type == Structural::Bind)
       {
         parentUID = entity->getParent()->getParentUniqueId();
@@ -468,6 +462,35 @@ void StructuralViewPlugin::requestEntityAddition(Entity* entity, bool enableUndo
               properties.insert(PLG_ENTITY_END_UID, properties.value(PLG_ENTITY_COMPONENT_UID));
             }
           }
+        }
+      }
+
+      if (type == Structural::Mapping)
+      {
+        parentUID = entity->getParent()->getParentUniqueId();
+
+        if (properties.contains(PLG_ENTITY_COMPONENT_ID)){
+          QString coreUID = getUidById(properties.value(PLG_ENTITY_COMPONENT_ID));
+
+          if (entities.contains(coreUID))
+            properties.insert(PLG_ENTITY_COMPONENT_UID, entities.value(coreUID));
+        }
+
+        if (properties.contains(PLG_ENTITY_INTERFACE_ID)){
+          QString coreUID = getUidById(properties.value(PLG_ENTITY_INTERFACE_ID));
+
+          if (entities.contains(coreUID)){
+            properties.insert(PLG_ENTITY_INTERFACE_UID, entities.value(coreUID));
+          }
+        }
+
+        if (!properties.value(PLG_ENTITY_INTERFACE_UID).isEmpty()){
+          properties.insert(PLG_ENTITY_START_UID, entities.value(entity->getParentUniqueId()));
+          properties.insert(PLG_ENTITY_END_UID, properties.value(PLG_ENTITY_INTERFACE_UID));
+
+        }else if (!properties.value(PLG_ENTITY_COMPONENT_UID).isEmpty()){
+          properties.insert(PLG_ENTITY_START_UID, entities.value(entity->getParentUniqueId()));
+          properties.insert(PLG_ENTITY_END_UID, properties.value(PLG_ENTITY_COMPONENT_UID));
         }
       }
 
@@ -575,6 +598,33 @@ void StructuralViewPlugin::requestEntityChange(Entity* entity)
         }
       }
 
+      if (type == Structural::Mapping)
+      {
+        if (properties.contains(PLG_ENTITY_COMPONENT_ID)){
+          QString coreUID = getUidById(properties.value(PLG_ENTITY_COMPONENT_ID));
+
+          if (entities.contains(coreUID))
+            properties.insert(PLG_ENTITY_COMPONENT_UID, entities.value(coreUID));
+        }
+
+        if (properties.contains(PLG_ENTITY_INTERFACE_ID)){
+          QString coreUID = getUidById(properties.value(PLG_ENTITY_INTERFACE_ID));
+
+          if (entities.contains(coreUID)){
+            properties.insert(PLG_ENTITY_INTERFACE_UID, entities.value(coreUID));
+          }
+        }
+
+        if (!properties.value(PLG_ENTITY_INTERFACE_UID).isEmpty()){
+          properties.insert(PLG_ENTITY_START_UID, entities.value(entity->getParentUniqueId()));
+          properties.insert(PLG_ENTITY_END_UID, properties.value(PLG_ENTITY_INTERFACE_UID));
+
+        }else if (!properties.value(PLG_ENTITY_COMPONENT_UID).isEmpty()){
+          properties.insert(PLG_ENTITY_START_UID, entities.value(entity->getParentUniqueId()));
+          properties.insert(PLG_ENTITY_END_UID, properties.value(PLG_ENTITY_COMPONENT_UID));
+        }
+      }
+
       QMap<QString,QString> settings = StructuralUtil::createSettings(true,false);
 
       QString entityPlgUID = entities[entity->getUniqueId()];
@@ -613,6 +663,9 @@ void StructuralViewPlugin::notifyEntityAddedInView(const QString uid,
 
   if (type == Structural::Bind){
     cparent = getProject()->getEntityById(entities.key(properties.value(PLG_ENTITY_LINK_UID)));
+
+  }if (type == Structural::Mapping){
+    cparent = getProject()->getEntityById(entities.key(properties.value(PLG_ENTITY_START_UID)));
 
   }else if (!parent.isEmpty())
     cparent = getProject()->getEntityById(entities.key(parent));

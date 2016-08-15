@@ -136,13 +136,14 @@ std::map <QString, Structural::StructuralType> StructuralUtil::typeFromStr =
 
     ("switch", Structural::Switch)
     ("switchPort", Structural::SwitchPort)
-    //("mapping", Qnst::Mapping)
+    ("mapping", Structural::Mapping)
 
     ("media", Structural::Media)
     ("area", Structural::Area)
     ("property", Structural::Property)
     ("link", Structural::Link)
     ("bind", Structural::Bind);
+
    // ("bindParam", Qnst::BindParam)
 
     /*("causalConnector", Qnst::)
@@ -442,6 +443,14 @@ QMap<QString,QString> StructuralUtil::createCoreTranslationMap(StructuralType ty
       break;
     }
 
+    case Structural::Mapping:
+    {
+      m.insert(NCL_ENTITY_COMPONENT, PLG_ENTITY_COMPONENT_ID);
+      m.insert(NCL_ENTITY_INTERFACE, PLG_ENTITY_INTERFACE_ID);
+
+      break;
+    }
+
     default:
       break;
 
@@ -549,6 +558,14 @@ QMap<QString,QString> StructuralUtil::createViewTranslationMap(StructuralType ty
       m.insert(PLG_ENTITY_COMPONENT_ID, NCL_ENTITY_COMPONENT);
       m.insert(PLG_ENTITY_INTERFACE_ID, NCL_ENTITY_INTERFACE);
       m.insert(NCL_ENTITY_DESCRIPTOR, NCL_ENTITY_DESCRIPTOR);
+
+      break;
+    }
+
+    case Structural::Mapping:
+    {
+      m.insert(PLG_ENTITY_COMPONENT_ID, NCL_ENTITY_COMPONENT);
+      m.insert(PLG_ENTITY_INTERFACE_ID, NCL_ENTITY_INTERFACE);
 
       break;
     }

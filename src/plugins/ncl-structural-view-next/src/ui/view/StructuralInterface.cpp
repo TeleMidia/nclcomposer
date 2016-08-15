@@ -102,7 +102,7 @@ void StructuralInterface::refresh()
 }
 
 
-void StructuralInterface::adjust(bool avoidCollision,  bool rec)
+void StructuralInterface::  adjust(bool avoidCollision,  bool rec)
 {
   StructuralEntity* parent = getStructuralParent();
 
@@ -174,7 +174,7 @@ void StructuralInterface::adjust(bool avoidCollision,  bool rec)
     roots = getStructuralParent()->getStructuralEntities();
 
     if (getStructuralParent()->getStructuralParent() != NULL){
-      roots.append(getStructuralParent()->getStructuralParent()->getStructuralEntities());
+      roots += getStructuralParent()->getStructuralParent()->getStructuralEntities();
     }
 
     foreach (StructuralEntity* c, roots) {

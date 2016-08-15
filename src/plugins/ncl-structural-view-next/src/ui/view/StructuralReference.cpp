@@ -3,6 +3,7 @@
 StructuralReference::StructuralReference(StructuralEntity* parent)
   : StructuralEdge(parent)
 {
+  setStructuralCategory(Structural::Edge);
   setStructuralType(Structural::Reference);
 }
 
@@ -37,13 +38,18 @@ void StructuralReference::draw(QPainter* painter)
     QPointF pointa = line.p1();
     QPointF pointb = line.p2();
 
+    QColor lineColor("#000000");
+
+    if (getStructuralType() == Structural::Mapping)
+      lineColor = QColor("#990099");
+
     if (pointa.x() <= pointb.x() && pointa.y() <= pointb.y())
     {
-      painter->setPen(QPen(QBrush(QColor("#000000")), 1, Qt::DashLine));
+      painter->setPen(QPen(QBrush(lineColor), 1, Qt::DashLine));
 
       painter->drawLine(4+6,4+6, 4+6+getWidth()-12, 4+6+getHeight()-12);
 
-      painter->setBrush(QBrush(QColor("#000000")));
+      painter->setBrush(QBrush(lineColor));
       painter->setPen(Qt::NoPen);
 
       p1 = QPointF(4+6+getWidth()-12, 4+6+getHeight()-12);
@@ -51,11 +57,11 @@ void StructuralReference::draw(QPainter* painter)
     }
     else if (pointa.x() > pointb.x() && pointa.y() < pointb.y())
     {
-      painter->setPen(QPen(QBrush(QColor("#000000")), 1, Qt::DashLine));
+      painter->setPen(QPen(QBrush(lineColor), 1, Qt::DashLine));
 
       painter->drawLine(4+6+getWidth()-12,4+6, 4+6, 4+6+getHeight()-12);
 
-      painter->setBrush(QBrush(QColor("#000000")));
+      painter->setBrush(QBrush(lineColor));
       painter->setPen(Qt::NoPen);
 
       p1 = QPointF(4+6, 4+6+getHeight()-12);
@@ -63,11 +69,11 @@ void StructuralReference::draw(QPainter* painter)
     }
     else if (pointa.x() < pointb.x() && pointa.y() > pointb.y())
     {
-      painter->setPen(QPen(QBrush(QColor("#000000")), 1, Qt::DashLine));
+      painter->setPen(QPen(QBrush(lineColor), 1, Qt::DashLine));
 
       painter->drawLine(4+6, 4+6+getHeight()-12, 4+6+getWidth()-12, 4+6);
 
-      painter->setBrush(QBrush(QColor("#000000")));
+      painter->setBrush(QBrush(lineColor));
       painter->setPen(Qt::NoPen);
 
       p1 = QPointF(4+6+getWidth()-12, 4+6);
@@ -75,11 +81,11 @@ void StructuralReference::draw(QPainter* painter)
     }
     else if (pointa.x() > pointb.x() && pointa.y() > pointb.y())
     {
-      painter->setPen(QPen(QBrush(QColor("#000000")), 1, Qt::DashLine));
+      painter->setPen(QPen(QBrush(lineColor), 1, Qt::DashLine));
 
       painter->drawLine(4+6+getWidth()-12, 4+6+getHeight()-12, 4+6, 4+6);
 
-      painter->setBrush(QBrush(QColor("#000000")));
+      painter->setBrush(QBrush(lineColor));
       painter->setPen(Qt::NoPen);
 
       p1 = QPointF(4+6, 4+6);
