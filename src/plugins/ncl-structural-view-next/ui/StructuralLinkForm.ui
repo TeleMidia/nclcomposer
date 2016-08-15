@@ -6,15 +6,21 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>260</width>
-    <height>205</height>
+    <width>284</width>
+    <height>504</height>
    </rect>
+  </property>
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+    <horstretch>0</horstretch>
+    <verstretch>0</verstretch>
+   </sizepolicy>
   </property>
   <property name="windowTitle">
    <string>New Link</string>
   </property>
   <layout class="QGridLayout" name="gridLayout">
-   <item row="1" column="0">
+   <item row="2" column="0">
     <widget class="QDialogButtonBox" name="buttonBox">
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
@@ -26,33 +32,74 @@
    </item>
    <item row="0" column="0">
     <widget class="QGroupBox" name="gpLink">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
      <property name="title">
-      <string>Properties</string>
+      <string>Link Properties</string>
      </property>
      <layout class="QGridLayout" name="gridLayout_2">
       <item row="0" column="0">
-       <widget class="QLabel" name="lbConnector">
+       <widget class="QLabel" name="lbLink">
         <property name="text">
          <string>Connector:</string>
         </property>
        </widget>
       </item>
       <item row="2" column="0">
-       <widget class="QLabel" name="lbCondition">
-        <property name="enabled">
-         <bool>true</bool>
-        </property>
+       <widget class="QCheckBox" name="kbLinkParams">
         <property name="text">
-         <string>Condition:</string>
+         <string>Show Params</string>
         </property>
        </widget>
       </item>
-      <item row="2" column="1">
-       <widget class="QComboBox" name="cbCondition">
+      <item row="3" column="0" colspan="2">
+       <widget class="QTableView" name="tbLinkParams"/>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item row="1" column="0">
+    <widget class="QGroupBox" name="gpBinds">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="title">
+      <string>Binds Properties</string>
+     </property>
+     <layout class="QGridLayout" name="gridLayout_3">
+      <item row="1" column="0">
+       <widget class="QCheckBox" name="kbConditionParams">
+        <property name="text">
+         <string>Show Params</string>
+        </property>
+       </widget>
+      </item>
+      <item row="5" column="0" colspan="2">
+       <widget class="QTableView" name="tbActionParams"/>
+      </item>
+      <item row="4" column="0">
+       <widget class="QCheckBox" name="kbActionParams">
+        <property name="text">
+         <string>Show Params</string>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="1">
+       <widget class="QComboBox" name="cbAction">
         <property name="enabled">
          <bool>false</bool>
         </property>
        </widget>
+      </item>
+      <item row="2" column="0" colspan="2">
+       <widget class="QTableView" name="tbConditionParams"/>
       </item>
       <item row="3" column="0">
        <widget class="QLabel" name="lbAction">
@@ -64,17 +111,20 @@
         </property>
        </widget>
       </item>
-      <item row="3" column="1">
-       <widget class="QComboBox" name="cbAction">
+      <item row="0" column="1">
+       <widget class="QComboBox" name="cbCondition">
         <property name="enabled">
          <bool>false</bool>
         </property>
        </widget>
       </item>
-      <item row="1" column="0" colspan="2">
-       <widget class="Line" name="line">
-        <property name="orientation">
-         <enum>Qt::Horizontal</enum>
+      <item row="0" column="0">
+       <widget class="QLabel" name="lbCondition">
+        <property name="enabled">
+         <bool>true</bool>
+        </property>
+        <property name="text">
+         <string>Condition:</string>
         </property>
        </widget>
       </item>

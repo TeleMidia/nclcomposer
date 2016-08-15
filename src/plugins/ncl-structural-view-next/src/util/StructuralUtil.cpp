@@ -477,6 +477,16 @@ bool StructuralUtil::isActionRole(StructuralRole role)
   return (role != Structural::NoRole && !isConditionRole(role));
 }
 
+bool StructuralUtil::isConditionRole(QString role)
+{
+  return isConditionRole(roleTypeFromRoleStr[role]);
+}
+
+bool StructuralUtil::isActionRole(QString role)
+{
+  return isActionRole(roleTypeFromRoleStr[role]);
+}
+
 QMap<QString,QString> StructuralUtil::createViewTranslationMap(StructuralType type)
 {
   QMap<QString, QString> m;

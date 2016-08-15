@@ -9,6 +9,8 @@
 #include <QStringListModel>
 #include <QDebug>
 
+#include "StructuralUtil.h"
+
 CompleteLineEdit::CompleteLineEdit(QStringList words, QWidget *parent)
   : QLineEdit(parent), words(words)
 {
@@ -197,6 +199,14 @@ StructuralLinkDialog::StructuralLinkDialog(QWidget* parent)
 
   changeModel = true;
 
+  form.tbLinkParams->hide();
+  form.tbConditionParams->hide();
+  form.tbActionParams->hide();
+
+  form.gridLayout->setSizeConstraint(QLayout::SetMaximumSize);
+  form.gridLayout_2->setSizeConstraint(QLayout::SetMaximumSize);
+  form.gridLayout_3->setSizeConstraint(QLayout::SetMaximumSize);
+
   _currentMode = LinkMode;
 }
 
@@ -215,7 +225,7 @@ void StructuralLinkDialog::setData(QMap<QString, QVector<QString> > conditions,
 }
 
 void StructuralLinkDialog::init(QString connName, QString condName, QString actionName, LinkDialogMode mode)
-{ 
+{
   _currentMode = mode;
 
   switch (_currentMode) {
@@ -300,7 +310,15 @@ void StructuralLinkDialog::adjustBinds(QString conn)
 
   if (_currentMode != ActionMode){
     foreach (QString b, _conditions.value(conn)) {
-      form.cbCondition->addItem(b);
+      QString icon = ":/icon/nocondition";
+
+      if (StructuralUtil::isConditionRole(b))
+          icon = ":/icon/"+b.toLower();
+
+      if (icon.contains("attribution"))
+        icon = ":/icon/nocondition";
+
+      form.cbCondition->addItem(QIcon(icon), b);
       form.cbCondition->setEnabled(true);
     }
   }
@@ -310,7 +328,15 @@ void StructuralLinkDialog::adjustBinds(QString conn)
 
   if (_currentMode != ConditionMode){
     foreach (QString b, _actions.value(conn)) {
-      form.cbAction->addItem(b);
+      QString icon = ":/icon/noaction";
+
+      if (StructuralUtil::isActionRole(b))
+          icon = ":/icon/"+b.toLower();
+
+      if (icon.contains("attribution"))
+        icon = ":/icon/noaction";
+
+      form.cbAction->addItem(QIcon(icon),b);
       form.cbAction->setEnabled(true);
     }
   }

@@ -102,6 +102,8 @@ public:
 
   static bool isConditionRole(StructuralRole role);
   static bool isActionRole(StructuralRole role);
+  static bool isConditionRole(QString role);
+  static bool isActionRole(QString role);
   static bool hasValidKinshp(StructuralType subtype, StructuralType parent);
   static QString convertType(StructualCategory type);
   static QString convertSubtype(StructuralType subtype);
