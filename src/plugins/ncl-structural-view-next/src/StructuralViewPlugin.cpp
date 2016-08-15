@@ -664,7 +664,7 @@ void StructuralViewPlugin::notifyEntityAddedInView(const QString uid,
   if (type == Structural::Bind){
     cparent = getProject()->getEntityById(entities.key(properties.value(PLG_ENTITY_LINK_UID)));
 
-  }if (type == Structural::Mapping){
+  }else if (type == Structural::Mapping){
     cparent = getProject()->getEntityById(entities.key(properties.value(PLG_ENTITY_START_UID)));
 
   }else if (!parent.isEmpty())
