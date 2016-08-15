@@ -15,6 +15,8 @@ CompleteLineEdit::CompleteLineEdit(QStringList words, QWidget *parent)
   listView = new QListView(this);
   model = new QStringListModel(this);
 
+  _noShow = false;
+
   listView->setWindowFlags(Qt::ToolTip);
   listView->setUniformItemSizes(true);
 
@@ -30,6 +32,14 @@ CompleteLineEdit::CompleteLineEdit(QStringList words, QWidget *parent)
 void CompleteLineEdit::setStringList(const QStringList &words)
 {
   this->words = words;
+}
+
+void CompleteLineEdit::setNoShow(const bool noShow)
+{
+  _noShow = noShow;
+
+  if (_noShow)
+    listView->hide();
 }
 
 bool CompleteLineEdit::eventFilter(QObject *object, QEvent *event)
@@ -162,7 +172,9 @@ void CompleteLineEdit::setCompleter(const QString &text)
   int y = mapToGlobal(p).y() + 1;
 
   listView->move(x, y);
-  listView->show();
+
+  if (!_noShow)
+    listView->show();
 }
 
 void CompleteLineEdit::completeText(const QModelIndex &index)
@@ -184,6 +196,8 @@ StructuralLinkDialog::StructuralLinkDialog(QWidget* parent)
           SLOT(adjustBinds(QString)));
 
   changeModel = true;
+
+  _currentMode = LinkMode;
 }
 
 StructuralLinkDialog::~StructuralLinkDialog()
@@ -191,30 +205,66 @@ StructuralLinkDialog::~StructuralLinkDialog()
 
 }
 
-void StructuralLinkDialog::init(QMap<QString, QVector<QString> > conditions,
-                                QMap<QString, QVector<QString> > actions,
-                                QMap<QString, QVector<QString> > params)
+void StructuralLinkDialog::setData(QMap<QString, QVector<QString> > conditions,
+                                   QMap<QString, QVector<QString> > actions,
+                                   QMap<QString, QVector<QString> > params)
 {
-
   _conditions = conditions;
   _actions = actions;
   _params = params;
+}
 
-  form.cbCondition->setEnabled(false);
-  form.cbCondition->clear();
+void StructuralLinkDialog::init(QString connName, QString condName, QString actionName, LinkDialogMode mode)
+{ 
+  _currentMode = mode;
 
-  form.cbAction->setEnabled(false);
-  form.cbAction->clear();
+  switch (_currentMode) {
+    case LinkMode:
+      setWindowTitle(tr("Create New Link:"));
+      break;
+
+    case ConditionMode:
+      setWindowTitle(tr("Create New Bind (Condition):"));
+      break;
+
+    case ActionMode:
+      setWindowTitle(tr("Create New Bind (Action):"));
+      break;
+
+    default:
+      break;
+  }
 
   connLineEdit->clear();
 
-  QStringList strConn;
+  if (!connName.isEmpty() && _conditions.contains(connName))
+  {
+    connLineEdit->setText(connName);
+    connLineEdit->setEnabled(false);
 
-  foreach (QString conn, _conditions.keys()) {
-    strConn << conn;
+    if (!condName.isEmpty() && _conditions.value(connName).contains(condName)){
+      form.cbCondition->setCurrentText(condName);
+      form.cbCondition->setEnabled(false);
+    }
+
+    if (!actionName.isEmpty() && _actions.value(connName).contains(actionName)){
+      form.cbAction->setCurrentText(actionName);
+      form.cbAction->setEnabled(false);
+    }
+
+    connLineEdit->setNoShow(true);
+
+  }else {
+    QStringList connList;
+
+    foreach (QString conn, _conditions.keys()){
+      connList << conn;
+    }
+
+    connLineEdit->setStringList(connList);
+    connLineEdit->setEnabled(true);
+    connLineEdit->setNoShow(false);
   }
-
-  connLineEdit->setStringList(strConn);
 
   if(firstTime)
   {
@@ -245,26 +295,36 @@ void StructuralLinkDialog::init(QMap<QString, QVector<QString> > conditions,
 
 void StructuralLinkDialog::adjustBinds(QString conn)
 {
-
-  form.cbCondition->setEnabled(true);
   form.cbCondition->clear();
+  form.cbCondition->setEnabled(false);
 
-  foreach (QString b, _conditions.value(conn)) {
-    form.cbCondition->addItem(b);
+  if (_currentMode != ActionMode){
+    foreach (QString b, _conditions.value(conn)) {
+      form.cbCondition->addItem(b);
+      form.cbCondition->setEnabled(true);
+    }
   }
 
-  form.cbAction->setEnabled(true);
   form.cbAction->clear();
+  form.cbAction->setEnabled(false);
 
-  foreach (QString b, _actions.value(conn)) {
-    form.cbAction->addItem(b);
+  if (_currentMode != ConditionMode){
+    foreach (QString b, _actions.value(conn)) {
+      form.cbAction->addItem(b);
+      form.cbAction->setEnabled(true);
+    }
   }
+
+  if (!form.cbCondition->count())
+    form.cbCondition->addItem(tr("Not available"));
+
+  if (!form.cbAction->count())
+    form.cbAction->addItem(tr("Not available"));
 }
 
 void StructuralLinkDialog::showEvent(QShowEvent *evt)
 {
   Q_UNUSED(evt)
-  this->connLineEdit->setText("");
   this->connLineEdit->setFocus();
 }
 

@@ -24,6 +24,7 @@ class CompleteLineEdit : public QLineEdit
 public:
   CompleteLineEdit(QStringList words, QWidget *parent = 0);
   void setStringList(const QStringList &words);
+  void setNoShow(const bool noShow);
 
 public slots:
   void setCompleter(const QString &text);
@@ -37,6 +38,7 @@ protected:
   virtual bool eventFilter(QObject *object, QEvent *event);
 
 private:
+  bool _noShow;
   QStringList words;
   QListView *listView;
   QStringListModel *model;
@@ -49,12 +51,20 @@ class StructuralLinkDialog : public QDialog
 
 public:
   StructuralLinkDialog(QWidget* parent = 0);
-
   ~StructuralLinkDialog();
 
-  void init(QMap<QString, QVector<QString> > conditions,
-            QMap<QString, QVector<QString> > actions,
-            QMap<QString, QVector<QString> > params);
+  enum LinkDialogMode
+  {
+    LinkMode,
+    ActionMode,
+    ConditionMode
+  };
+
+  void setData(QMap<QString, QVector<QString> > conditions,
+               QMap<QString, QVector<QString> > actions,
+               QMap<QString, QVector<QString> > params);
+
+  void init(QString connName = "", QString condName = "", QString actionName = "", LinkDialogMode mode = LinkMode);
 
 protected slots:
   void adjustBinds(QString conn);
@@ -74,6 +84,7 @@ public:
 
 private:
   bool firstTime, changeModel;
+  LinkDialogMode _currentMode;
   CompleteLineEdit *connLineEdit;
 };
 

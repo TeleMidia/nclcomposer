@@ -1293,8 +1293,10 @@ void StructuralView::createLink(StructuralEntity* a, StructuralEntity* b)
 
         emit requestLinkDialogUpdate();
 
-        modified = false;
-        emit linkStateChange(false);
+        modified = false;            // turn off link mode
+        emit linkStateChange(false); // turn off link mode on UI
+
+        linkDialog->init();
 
         if (linkDialog->exec()){
 
@@ -1361,12 +1363,50 @@ void StructuralView::createBind(StructuralEntity* a, StructuralEntity* b, Struct
         e_link = a;
         e_nolink = b;
         pe_nolink = pb;
+
+        if (type == Structural::NoRole){
+          emit requestLinkDialogUpdate();
+
+          modified = false;            // turn off link mode
+          emit linkStateChange(false); // turn off link mode on UI
+
+          linkDialog->init(e_link->getStructuralProperty(PLG_ENTITY_XCONNECTOR_ID),"","",
+                           StructuralLinkDialog::ActionMode);
+
+          if (linkDialog->exec()){
+            QString role = linkDialog->form.cbAction->currentText();
+
+            properties[PLG_ENTITY_ROLE] = QString::number(StructuralUtil::getStructuralRoleFromStr(role));
+            properties[PLG_ENTITY_ID] = role;
+          }else{
+            return;
+          }
+        }
       }
       else if (b->getStructuralType() == Structural::Link)
       {
         e_link = b;
         e_nolink = a;
         pe_nolink = pa;
+
+        if (type == Structural::NoRole){
+          emit requestLinkDialogUpdate();
+
+          modified = false;            // turn off link mode
+          emit linkStateChange(false); // turn off link mode on UI
+
+          linkDialog->init(e_link->getStructuralProperty(PLG_ENTITY_XCONNECTOR_ID),"","",
+                           StructuralLinkDialog::ConditionMode);
+
+          if (linkDialog->exec()){
+            QString role = linkDialog->form.cbCondition->currentText();
+
+            properties[PLG_ENTITY_ROLE] = QString::number(StructuralUtil::getStructuralRoleFromStr(role));
+            properties[PLG_ENTITY_ID] = role;
+          }else{
+            return;
+          }
+        }
       }
 
       if (e_link != NULL && e_nolink != NULL && pe_nolink != NULL){
@@ -1796,15 +1836,11 @@ void StructuralView::mouseReleaseEvent(QMouseEvent* event)
 
           else if (entitya->getStructuralType() == Structural::Link)
           {
-            // this is temporarity. a dialog should me display here
-            // to get the 'role' value.
-            createBind(entitya, entityb, Structural::Start);
+            createBind(entitya, entityb);
 
           }else if (entityb->getStructuralType() == Structural::Link)
           {
-            // this is temporarity. a dialog should me display here
-            // to get the 'role' value.
-            createBind(entitya, entityb, Structural::onBegin);
+            createBind(entitya, entityb);
           }
 
         }
@@ -1820,9 +1856,7 @@ void StructuralView::mouseReleaseEvent(QMouseEvent* event)
             }
             else
             {
-              // this is temporarity. a dialog should me display here
-              // to get the 'role' value.
-              createBind(entitya, entityb, Structural::Start);
+              createBind(entitya, entityb);
             }
         }
         // if linking INTERFACE to NODE
@@ -1844,9 +1878,7 @@ void StructuralView::mouseReleaseEvent(QMouseEvent* event)
             }
             else
             {
-              // this is temporarity. a dialog should me display here
-              // to get the 'role' value.
-              createBind(entitya, entityb, Structural::onBegin);
+              createBind(entitya, entityb);
             }
         }
         // if linking INTERFACE to INTERFACE
@@ -2073,7 +2105,7 @@ void StructuralView::updateLinkDialog(QMap<QString, QVector<QString> > condition
                                       QMap<QString, QVector<QString> > actions,
                                       QMap<QString, QVector<QString> > params)
 {
-  linkDialog->init(conditions, actions, params);
+  linkDialog->setData(conditions, actions, params);
 }
 
 //void StructuralView::setAction(QString action)
