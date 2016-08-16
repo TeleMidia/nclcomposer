@@ -927,6 +927,9 @@ void StructuralView::select(QString uid, QMap<QString, QString> settings)
 
       _selected_UID = uid;
 
+      if (entities.value(_selected_UID)->getStructuralType() == Structural::Body)
+        centerOn(entities.value(_selected_UID));
+
       emit selectChange(uid);
 
 //      if (settings[PLG_SETTING_NOTIFY] == "1")
