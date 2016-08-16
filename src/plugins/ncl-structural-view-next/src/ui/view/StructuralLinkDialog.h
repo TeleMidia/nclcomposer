@@ -68,6 +68,9 @@ public:
 
 protected slots:
   void adjustBinds(QString conn);
+  void changeLinkParamState(int state);
+  void changeConditionParamState(int state);
+  void changeActionParamState(int state);
 
 protected:
   virtual void showEvent(QShowEvent *evt);

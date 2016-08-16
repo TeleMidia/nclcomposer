@@ -9,6 +9,8 @@
 #include <QStringListModel>
 #include <QDebug>
 
+#include <QStandardItemModel>
+
 #include "StructuralUtil.h"
 
 CompleteLineEdit::CompleteLineEdit(QStringList words, QWidget *parent)
@@ -197,15 +199,19 @@ StructuralLinkDialog::StructuralLinkDialog(QWidget* parent)
   connect(connLineEdit, SIGNAL(textChanged(QString)),
           SLOT(adjustBinds(QString)));
 
+  connect(form.kbLinkParams, SIGNAL(stateChanged(int)), this, SLOT(changeLinkParamState(int)));
+  connect(form.kbConditionParams, SIGNAL(stateChanged(int)), this, SLOT(changeConditionParamState(int)));
+  connect(form.kbActionParams, SIGNAL(stateChanged(int)), this, SLOT(changeActionParamState(int)));
+
   changeModel = true;
 
   form.tbLinkParams->hide();
   form.tbConditionParams->hide();
   form.tbActionParams->hide();
 
-  form.gridLayout->setSizeConstraint(QLayout::SetMaximumSize);
-  form.gridLayout_2->setSizeConstraint(QLayout::SetMaximumSize);
-  form.gridLayout_3->setSizeConstraint(QLayout::SetMaximumSize);
+  form.gridLayout->setSizeConstraint(QLayout::SetMinAndMaxSize);
+  form.gridLayout_2->setSizeConstraint(QLayout::SetMinAndMaxSize);
+  form.gridLayout_3->setSizeConstraint(QLayout::SetMinAndMaxSize);
 
   _currentMode = LinkMode;
 }
@@ -230,15 +236,15 @@ void StructuralLinkDialog::init(QString connName, QString condName, QString acti
 
   switch (_currentMode) {
     case LinkMode:
-      setWindowTitle(tr("Create New Link:"));
+      setWindowTitle(tr("Create Link"));
       break;
 
     case ConditionMode:
-      setWindowTitle(tr("Create New Bind (Condition):"));
+      setWindowTitle(tr("Create Bind (Condition)"));
       break;
 
     case ActionMode:
-      setWindowTitle(tr("Create New Bind (Action):"));
+      setWindowTitle(tr("Create Bind (Action)"));
       break;
 
     default:
@@ -252,14 +258,23 @@ void StructuralLinkDialog::init(QString connName, QString condName, QString acti
     connLineEdit->setText(connName);
     connLineEdit->setEnabled(false);
 
+    form.kbLinkParams->setEnabled(false);
+    form.kbLinkParams->setChecked(false);
+
     if (!condName.isEmpty() && _conditions.value(connName).contains(condName)){
       form.cbCondition->setCurrentText(condName);
       form.cbCondition->setEnabled(false);
+
+      form.kbConditionParams->setEnabled(false);
+      form.kbConditionParams->setChecked(false);
     }
 
     if (!actionName.isEmpty() && _actions.value(connName).contains(actionName)){
       form.cbAction->setCurrentText(actionName);
       form.cbAction->setEnabled(false);
+
+      form.kbActionParams->setEnabled(false);
+      form.kbActionParams->setChecked(false);
     }
 
     connLineEdit->setNoShow(true);
@@ -307,6 +322,8 @@ void StructuralLinkDialog::adjustBinds(QString conn)
 {
   form.cbCondition->clear();
   form.cbCondition->setEnabled(false);
+  form.kbConditionParams->setEnabled(false);
+  form.kbConditionParams->setChecked(false);
 
   if (_currentMode != ActionMode){
     foreach (QString b, _conditions.value(conn)) {
@@ -320,11 +337,20 @@ void StructuralLinkDialog::adjustBinds(QString conn)
 
       form.cbCondition->addItem(QIcon(icon), b);
       form.cbCondition->setEnabled(true);
+
+      form.kbConditionParams->setEnabled(true);
     }
+  }
+
+  if (!form.cbCondition->count()) {
+    form.cbCondition->addItem(tr("Not available"));
   }
 
   form.cbAction->clear();
   form.cbAction->setEnabled(false);
+  form.kbActionParams->setEnabled(false);
+  form.kbActionParams->setChecked(false);
+
 
   if (_currentMode != ConditionMode){
     foreach (QString b, _actions.value(conn)) {
@@ -338,14 +364,76 @@ void StructuralLinkDialog::adjustBinds(QString conn)
 
       form.cbAction->addItem(QIcon(icon),b);
       form.cbAction->setEnabled(true);
+
+      form.kbActionParams->setEnabled(true);
     }
   }
 
-  if (!form.cbCondition->count())
-    form.cbCondition->addItem(tr("Not available"));
-
   if (!form.cbAction->count())
     form.cbAction->addItem(tr("Not available"));
+
+  int ncol = 2;
+  int nrow = _params.value(conn).size();
+
+#if QT_VERSION < 0x050000
+  form.tbLinkParams->horizontalHeader()->setResizeMode(QHeaderView::Stretch);
+  form.tbConditionParams->horizontalHeader()->setResizeMode(QHeaderView::Stretch);
+  form.tbActionParams->horizontalHeader()->setResizeMode(QHeaderView::Stretch);
+#else
+  form.tbLinkParams->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+  form.tbConditionParams->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+  form.tbActionParams->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+#endif
+
+  form.tbLinkParams->verticalHeader()->hide();
+  form.tbConditionParams->verticalHeader()->hide();
+  form.tbActionParams->verticalHeader()->hide();
+
+  QStandardItemModel* mdLinkParams = new QStandardItemModel(nrow, ncol);
+
+  mdLinkParams->setHorizontalHeaderItem(0, new QStandardItem("Name"));
+  mdLinkParams->setHorizontalHeaderItem(1, new QStandardItem("Value"));
+
+  form.tbLinkParams->setModel(mdLinkParams);
+
+  QStandardItemModel* mdConditionParams = new QStandardItemModel(nrow, ncol);
+
+  mdConditionParams->setHorizontalHeaderItem(0, new QStandardItem("Name"));
+  mdConditionParams->setHorizontalHeaderItem(1, new QStandardItem("Value"));
+
+  form.tbConditionParams->setModel(mdConditionParams);
+
+  QStandardItemModel* mdActionParams = new QStandardItemModel(nrow, ncol);
+
+  mdActionParams->setHorizontalHeaderItem(0, new QStandardItem("Name"));
+  mdActionParams->setHorizontalHeaderItem(1, new QStandardItem("Value"));
+
+  form.tbActionParams->setModel(mdActionParams);
+
+  int i = 0;
+
+  foreach(QString name, _params.value(conn))
+  {
+    QStandardItem* linkItem = new QStandardItem(name);
+    linkItem->setEditable(false);
+
+    QStandardItem* conditionItem = new QStandardItem(name);
+    conditionItem->setEditable(false);
+
+    QStandardItem* actionItem = new QStandardItem(name);
+    actionItem->setEditable(false);
+
+    mdLinkParams->setItem(i, 0, linkItem);
+    mdLinkParams->setItem(i, 1, new QStandardItem());
+
+    mdConditionParams->setItem(i, 0, conditionItem);
+    mdConditionParams->setItem(i, 1, new QStandardItem());
+
+    mdActionParams->setItem(i, 0, actionItem);
+    mdActionParams->setItem(i, 1, new QStandardItem());
+
+    ++i;
+  }
 }
 
 void StructuralLinkDialog::showEvent(QShowEvent *evt)
@@ -357,4 +445,28 @@ void StructuralLinkDialog::showEvent(QShowEvent *evt)
 QString StructuralLinkDialog::getCurrentConnector()
 {
   return this->connLineEdit->text();
+}
+
+void StructuralLinkDialog::changeLinkParamState(int state)
+{
+  if (!state)
+    form.tbLinkParams->hide();
+  else
+    form.tbLinkParams->show();
+}
+
+void StructuralLinkDialog::changeConditionParamState(int state)
+{
+  if (!state)
+    form.tbConditionParams->hide();
+  else
+    form.tbConditionParams->show();
+}
+
+void StructuralLinkDialog::changeActionParamState(int state)
+{
+  if (!state)
+    form.tbActionParams->hide();
+  else
+    form.tbActionParams->show();
 }
