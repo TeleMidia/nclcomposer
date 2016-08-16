@@ -716,10 +716,9 @@ void StructuralViewPlugin::notifyEntityAddedInView(const QString uid,
       emit addEntity(StructuralUtil::getStrFromNstType(type),
                      cparent->getUniqueId(), attributes, false);
 
-
-      QVector<QString> alreadyInserted;
-
       if (type == Structural::Link){
+        QVector<QString> alreadyInserted;
+
         foreach (QString name, properties.keys()) {
           if (name.contains(PLG_ENTITY_BINDPARAM_NAME)){
             QString lpUid = name.right(name.length() - name.lastIndexOf(':') - 1);
@@ -727,9 +726,6 @@ void StructuralViewPlugin::notifyEntityAddedInView(const QString uid,
             if (!alreadyInserted.contains(lpUid)){
               QString lpName = properties.value(name);
               QString lpValue = properties.value(QString(PLG_ENTITY_BINDPARAM_VALUE)+":"+lpUid);
-
-              qDebug() << "===================================== NAME:" << lpName;
-              qDebug() << "===================================== VALUE:" << lpValue;
 
               QMap<QString, QString> lpAttr;
               lpAttr.insert("name", lpName);
@@ -779,6 +775,32 @@ void StructuralViewPlugin::notifyEntityChangedInView(const QString uid,
   foreach (QString key, m.keys()) {
     if (!properties.value(key).isEmpty())
       attributes.insert(m.value(key),properties.value(key));
+  }
+
+  if (type == Structural::Link){
+    QVector<QString> alreadyInserted;
+
+    foreach (QString name, properties.keys()) {
+      if (name.contains(PLG_ENTITY_BINDPARAM_NAME)){
+        QString lpUid = name.right(name.length() - name.lastIndexOf(':') - 1);
+
+        if (!alreadyInserted.contains(lpUid)){
+          QString lpName = properties.value(name);
+          QString lpValue = properties.value(QString(PLG_ENTITY_BINDPARAM_VALUE)+":"+lpUid);
+
+          QMap<QString, QString> lpAttr;
+          lpAttr.insert("name", lpName);
+          lpAttr.insert("value", lpValue);
+
+          Entity* bp = getProject()->getEntityById(entities.key(lpUid));
+
+          _waiting = true;
+          emit setAttributes(bp, lpAttr, false);
+
+          alreadyInserted.append(lpUid);
+        }
+      }
+    }
   }
 
   _waiting = true;

@@ -24,7 +24,8 @@ class CompleteLineEdit : public QLineEdit
 public:
   CompleteLineEdit(QStringList words, QWidget *parent = 0);
   void setStringList(const QStringList &words);
-  void setNoShow(const bool noShow);
+
+  void hideList();
 
 public slots:
   void setCompleter(const QString &text);
@@ -38,7 +39,6 @@ protected:
   virtual bool eventFilter(QObject *object, QEvent *event);
 
 private:
-  bool _noShow;
   QStringList words;
   QListView *listView;
   QStringListModel *model;
@@ -55,23 +55,30 @@ public:
 
   enum LinkDialogMode
   {
-    LinkMode,
-    ActionMode,
-    ConditionMode
+    CreateLink,
+    CreateAction,
+    CreateCondition,
+    EditLink,
+    EditAction,
+    EditCondition
   };
 
   void setData(QMap<QString, QVector<QString> > conditions,
                QMap<QString, QVector<QString> > actions,
                QMap<QString, QVector<QString> > params);
 
-  void init(QString connName = "", QString condName = "", QString actionName = "", LinkDialogMode mode = LinkMode);
+  void init(QString connName = "", QString condName = "", QString actionName = "", LinkDialogMode mode = CreateLink);
+
+  void updateCurrentLinkParam(QMap<QString, QString> params);
+  void updateCurrentConditionParam(QMap<QString, QString> params);
+  void updateCurrentActionParam(QMap<QString, QString> params);
 
   QMap<QString, QString> getLinkParams();
   QMap<QString, QString> getConditionParams();
   QMap<QString, QString> getActionParams();
 
 protected slots:
-  void adjustBinds(QString conn);
+  void updateForm(QString conn);
   void changeLinkParamState(int state);
   void changeConditionParamState(int state);
   void changeActionParamState(int state);
@@ -91,6 +98,7 @@ public:
 
 private:
   QMap<QString, QString> getParams(QTableView* table);
+  void updateCurrentParams(QTableView* table, QMap<QString, QString> params);
   bool firstTime, changeModel;
   LinkDialogMode _currentMode;
   CompleteLineEdit *connLineEdit;

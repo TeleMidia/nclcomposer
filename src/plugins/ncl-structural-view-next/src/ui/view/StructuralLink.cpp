@@ -67,3 +67,13 @@ void StructuralLink::refresh()
 
   setToolTip(tip);
 }
+
+void StructuralLink::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
+{
+  StructuralNode::mouseDoubleClickEvent(event);
+
+  setMoving(false);
+  update();
+
+  emit showLinkEditDialog(this);
+}
