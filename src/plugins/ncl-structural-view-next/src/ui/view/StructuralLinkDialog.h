@@ -66,6 +66,10 @@ public:
 
   void init(QString connName = "", QString condName = "", QString actionName = "", LinkDialogMode mode = LinkMode);
 
+  QMap<QString, QString> getLinkParams();
+  QMap<QString, QString> getConditionParams();
+  QMap<QString, QString> getActionParams();
+
 protected slots:
   void adjustBinds(QString conn);
   void changeLinkParamState(int state);
@@ -86,6 +90,7 @@ public:
   QString getCurrentConnector();
 
 private:
+  QMap<QString, QString> getParams(QTableView* table);
   bool firstTime, changeModel;
   LinkDialogMode _currentMode;
   CompleteLineEdit *connLineEdit;

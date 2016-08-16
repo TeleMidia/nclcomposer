@@ -470,3 +470,32 @@ void StructuralLinkDialog::changeActionParamState(int state)
   else
     form.tbActionParams->show();
 }
+
+QMap<QString, QString> StructuralLinkDialog::getLinkParams()
+{
+  return getParams(form.tbLinkParams);
+}
+
+QMap<QString, QString> StructuralLinkDialog::getConditionParams()
+{
+  return getParams(form.tbConditionParams);
+}
+
+QMap<QString, QString> StructuralLinkDialog::getActionParams()
+{
+  return getParams(form.tbActionParams);
+}
+
+QMap<QString, QString> StructuralLinkDialog::getParams(QTableView* table)
+{
+  QMap<QString, QString> p;
+
+  QAbstractItemModel* m = table->model();
+
+  int nrow = m->rowCount();
+
+  for (int i=0; i<nrow; ++i)
+    p[m->data(m->index(i,0)).toString()] =m->data(m->index(i,1)).toString();
+
+  return p;
+}

@@ -45,6 +45,9 @@
 #define PLG_ENTITY_ANGLE ":plugin:entity:angle"
 #define PLG_ENTITY_ROLE ":plugin:entity:role"
 
+#define PLG_ENTITY_BINDPARAM_NAME ":plugin:entity:bindparam:name"
+#define PLG_ENTITY_BINDPARAM_VALUE ":plugin:entity:bindparam:value"
+
 #define PLG_SETTING_UNDO_CHILDREN ":plugin:setting:undo:children"
 #define PLG_SETTING_UNDO ":plugin:setting:undo"
 #define PLG_SETTING_NOTIFY ":plugin:setting:notify"

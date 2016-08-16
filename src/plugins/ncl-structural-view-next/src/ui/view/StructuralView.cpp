@@ -1295,6 +1295,18 @@ void StructuralView::createLink(StructuralEntity* a, StructuralEntity* b)
 
           properties.insert(PLG_ENTITY_XCONNECTOR_ID, linkDialog->getCurrentConnector());
 
+
+          QMap<QString, QString> p = linkDialog->getLinkParams();
+
+          foreach (QString name, p.keys()) {
+            if (!p.value(name).isEmpty()){
+              QString uid = StructuralUtil::CreateUid();
+
+              properties.insert(QString(PLG_ENTITY_BINDPARAM_NAME)+":"+uid, name);
+              properties.insert(QString(PLG_ENTITY_BINDPARAM_VALUE)+":"+uid, p.value(name));
+            }
+          }
+
           QMap<QString, QString> settings = StructuralUtil::createSettings(true, true);
 
           insert(uid, parent->getStructuralUid(), properties, settings);
@@ -1307,6 +1319,7 @@ void StructuralView::createLink(StructuralEntity* a, StructuralEntity* b)
             createBind(a,entities.value(uid),con,settings.value(PLG_SETTING_CODE));
             createBind(entities.value(uid),b,act,settings.value(PLG_SETTING_CODE));
           }
+
       }
     }
 }
