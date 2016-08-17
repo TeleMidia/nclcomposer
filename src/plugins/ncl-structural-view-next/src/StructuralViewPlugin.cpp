@@ -778,28 +778,44 @@ void StructuralViewPlugin::notifyEntityChangedInView(const QString uid,
   }
 
   if (type == Structural::Link){
-    QVector<QString> alreadyInserted;
+    QVector<QString> linkParamUids;
+
+    foreach (Entity* c, entity->getChildren()) {
+      if (c->getType() == "linkParam")
+        linkParamUids.append(c->getUniqueId());
+    }
 
     foreach (QString name, properties.keys()) {
       if (name.contains(PLG_ENTITY_BINDPARAM_NAME)){
         QString lpUid = name.right(name.length() - name.lastIndexOf(':') - 1);
 
-        if (!alreadyInserted.contains(lpUid)){
-          QString lpName = properties.value(name);
-          QString lpValue = properties.value(QString(PLG_ENTITY_BINDPARAM_VALUE)+":"+lpUid);
+        QString lpName = properties.value(name);
+        QString lpValue = properties.value(QString(PLG_ENTITY_BINDPARAM_VALUE)+":"+lpUid);
 
-          QMap<QString, QString> lpAttr;
-          lpAttr.insert("name", lpName);
-          lpAttr.insert("value", lpValue);
+        QMap<QString, QString> lpAttr;
+        lpAttr.insert("name", lpName);
+        lpAttr.insert("value", lpValue);
 
-          Entity* bp = getProject()->getEntityById(entities.key(lpUid));
+        Entity* bp = getProject()->getEntityById(entities.key(lpUid));
+
+        if (bp != NULL){
+          if (linkParamUids.contains(bp->getUniqueId()))
+            linkParamUids.remove(linkParamUids.indexOf(bp->getUniqueId()));
+
 
           _waiting = true;
           emit setAttributes(bp, lpAttr, false);
-
-          alreadyInserted.append(lpUid);
+        }else
+        {
+          _waiting = true;
+          _notified = lpUid;
+          emit addEntity("linkParam",entity->getUniqueId(), lpAttr, false);
         }
       }
+    }
+
+    foreach (QString lpCoreUid, linkParamUids) {
+      emit removeEntity(getProject()->getEntityById(lpCoreUid), false);
     }
   }
 

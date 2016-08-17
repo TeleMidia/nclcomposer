@@ -140,6 +140,18 @@ void StructuralEntity::setStructuralProperties(const QMap<QString, QString> &pro
     _properties.remove(PLG_ENTITY_COMPONENT_ID);
   }
 
+  QMap<QString, QString> previous = _properties;
+
+  if (getStructuralType() == Structural::Link){
+    foreach (QString key, previous.keys()) {
+      if (key.contains(PLG_ENTITY_BINDPARAM_NAME) ||
+          key.contains(PLG_ENTITY_BINDPARAM_VALUE)) {
+        if (!properties.contains(key))
+          _properties.remove(key);
+      }
+    }
+  }
+
   foreach (QString name, properties.keys()){
     setStructuralProperty(name, properties.value(name));
   }

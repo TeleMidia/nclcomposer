@@ -761,6 +761,16 @@ void StructuralView:: change(QString uid, QMap<QString, QString> properties, QMa
         tmp.remove(PLG_ENTITY_COMPONENT_ID);
       }
 
+      if (entities.value(uid)->getStructuralType() == Structural::Link){
+        foreach (QString key, previous.keys()) {
+          if (key.contains(PLG_ENTITY_BINDPARAM_NAME) ||
+              key.contains(PLG_ENTITY_BINDPARAM_VALUE)) {
+            if (!properties.contains(key))
+              tmp.remove(key);
+          }
+        }
+      }
+
       foreach (QString key, properties.keys()) {
         tmp[key] = properties.value(key);
       };
@@ -2160,8 +2170,13 @@ void StructuralView::showEditLinkDialog(StructuralLink* entity)
         QString key = properties.key(name);
         QString uid = key.right(key.length() - key.lastIndexOf(':') - 1);
 
-        properties.insert(QString(PLG_ENTITY_BINDPARAM_NAME)+":"+uid, name);
-        properties.insert(QString(PLG_ENTITY_BINDPARAM_VALUE)+":"+uid, p.value(name));
+        if (!p.value(name).isEmpty()){
+          properties.insert(QString(PLG_ENTITY_BINDPARAM_NAME)+":"+uid, name);
+          properties.insert(QString(PLG_ENTITY_BINDPARAM_VALUE)+":"+uid, p.value(name));
+        }else{
+          properties.remove(QString(PLG_ENTITY_BINDPARAM_NAME)+":"+uid);
+          properties.remove(QString(PLG_ENTITY_BINDPARAM_VALUE)+":"+uid);
+        }
 
       } else if (!p.value(name).isEmpty()){
         QString uid = StructuralUtil::CreateUid();
