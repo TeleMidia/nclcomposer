@@ -129,7 +129,15 @@ void StructuralViewPlugin::updateFromModel()
       if (e->getStructuralParent() != NULL)
          pid = e->getStructuralParent()->getStructuralId();
 
-      prop.insert(e->getStructuralId()+pid, e->getStructuralProperties());
+      QMap<QString,QString> tocache = e->getStructuralProperties();
+
+      foreach (QString key, e->getStructuralProperties().keys()) {
+        if (key.contains(PLG_ENTITY_LINKPARAM_NAME) ||
+            key.contains(PLG_ENTITY_LINKPARAM_VALUE))
+          tocache.remove(key);
+      }
+
+      prop.insert(e->getStructuralId()+pid, tocache);
     }
   }
 
@@ -241,6 +249,14 @@ void StructuralViewPlugin::updateFromModel()
                 cacheprop.insert(PLG_ENTITY_END_UID, cacheprop.value(PLG_ENTITY_COMPONENT_UID));
               }
             }
+          }
+        }
+
+        if (e->getStructuralType() == Structural::Link){
+          foreach (QString key, e->getStructuralProperties().keys()) {
+            if (key.contains(PLG_ENTITY_LINKPARAM_NAME) ||
+                key.contains(PLG_ENTITY_LINKPARAM_VALUE))
+              cacheprop.insert(key, e->getStructuralProperty(key));
           }
         }
 
@@ -496,7 +512,29 @@ void StructuralViewPlugin::requestEntityAddition(Entity* entity, bool enableUndo
 
       _window->getView()->insert(entity->getUniqueId(), parentUID, properties, settings);
     }
+
+  }else if (entity->getType() == "linkParam"){
+    if (!entity->getAttribute("name").isEmpty() &&
+        !entity->getAttribute("value").isEmpty()){
+
+      StructuralEntity* link = _window->getView()->getEntity(
+            entities.value(entity->getParentUniqueId()));
+
+      QString lpUid = entity->getUniqueId();
+      QMap<QString, QString> prev = link->getStructuralProperties();
+      QMap<QString, QString> next = link->getStructuralProperties();
+
+      next.insert(QString(PLG_ENTITY_LINKPARAM_NAME)+":"+lpUid, entity->getAttribute("name"));
+      next.insert(QString(PLG_ENTITY_LINKPARAM_VALUE)+":"+lpUid, entity->getAttribute("value"));
+
+      entities[lpUid] = lpUid;
+
+      _window->getView()->change(link->getStructuralUid(), next, prev,
+                                 StructuralUtil::createSettings(true, false));
+    }
   }
+
+
 }
 
 void StructuralViewPlugin::requestEntityRemotion(Entity* entity, bool enableUndo)
@@ -507,7 +545,28 @@ void StructuralViewPlugin::requestEntityRemotion(Entity* entity, bool enableUndo
     {
       QMap<QString,QString> settings = StructuralUtil::createSettings(enableUndo,false);
 
-      _window->getView()->remove(entities[entityID], settings);
+      if (entity->getType() == "linkParam"){
+        StructuralEntity* link = _window->getView()->getEntity(
+              entities.value(entity->getParentUniqueId()));
+
+        QString lpUid = entities.value(entity->getUniqueId());
+        QMap<QString, QString> prev = link->getStructuralProperties();
+        QMap<QString, QString> next = link->getStructuralProperties();
+
+        if (next.contains(QString(PLG_ENTITY_LINKPARAM_NAME)+":"+lpUid) ||
+            next.contains(QString(PLG_ENTITY_LINKPARAM_VALUE)+":"+lpUid)){
+
+          next.remove(QString(PLG_ENTITY_LINKPARAM_NAME)+":"+lpUid);
+          next.remove(QString(PLG_ENTITY_LINKPARAM_VALUE)+":"+lpUid);
+
+          _window->getView()->change(link->getStructuralUid(), next, prev,
+                                     StructuralUtil::createSettings(true, false));
+        }
+
+      }else{
+        _window->getView()->remove(entities[entityID], settings);
+      }
+
       entities.remove(entityID);
     }
 
@@ -633,6 +692,38 @@ void StructuralViewPlugin::requestEntityChange(Entity* entity)
       _window->getView()->change(entityPlgUID, properties, _window->getView()->getEntity(entityPlgUID)->getStructuralProperties(), settings);
      }
     }
+
+  }else if (entity->getType() == "linkParam"){
+    StructuralEntity* link = _window->getView()->getEntity(
+          entities.value(entity->getParentUniqueId()));
+
+    QString lpUid;
+    QMap<QString, QString> prev = link->getStructuralProperties();
+    QMap<QString, QString> next = link->getStructuralProperties();
+
+    if (!entity->getAttribute("name").isEmpty() &&
+        !entity->getAttribute("value").isEmpty()){
+
+      if (entities.contains(entity->getUniqueId()))
+        lpUid = entities.value(entity->getUniqueId());
+      else
+        lpUid = entity->getUniqueId();
+
+      entities.insert(entity->getUniqueId(), lpUid);
+
+      next.insert(QString(PLG_ENTITY_LINKPARAM_NAME)+":"+lpUid, entity->getAttribute("name"));
+      next.insert(QString(PLG_ENTITY_LINKPARAM_VALUE)+":"+lpUid, entity->getAttribute("value"));
+
+      _window->getView()->change(link->getStructuralUid(), next, prev,StructuralUtil::createSettings(true, false));
+
+    }else if (entities.contains(entity->getUniqueId())){
+      lpUid = entities.value(entity->getUniqueId());
+
+      next.remove(QString(PLG_ENTITY_LINKPARAM_NAME)+":"+lpUid);
+      next.remove(QString(PLG_ENTITY_LINKPARAM_VALUE)+":"+lpUid);
+
+      _window->getView()->change(link->getStructuralUid(), next, prev,StructuralUtil::createSettings(true, false));
+    }
   }
 }
 
@@ -720,12 +811,12 @@ void StructuralViewPlugin::notifyEntityAddedInView(const QString uid,
         QVector<QString> alreadyInserted;
 
         foreach (QString name, properties.keys()) {
-          if (name.contains(PLG_ENTITY_BINDPARAM_NAME)){
+          if (name.contains(PLG_ENTITY_LINKPARAM_NAME)){
             QString lpUid = name.right(name.length() - name.lastIndexOf(':') - 1);
 
             if (!alreadyInserted.contains(lpUid)){
               QString lpName = properties.value(name);
-              QString lpValue = properties.value(QString(PLG_ENTITY_BINDPARAM_VALUE)+":"+lpUid);
+              QString lpValue = properties.value(QString(PLG_ENTITY_LINKPARAM_VALUE)+":"+lpUid);
 
               QMap<QString, QString> lpAttr;
               lpAttr.insert("name", lpName);
@@ -778,19 +869,22 @@ void StructuralViewPlugin::notifyEntityChangedInView(const QString uid,
   }
 
   if (type == Structural::Link){
-    QVector<QString> linkParamUids;
+    QVector<QString> coreLinkParamUid;
+    QVector<QString> coreLinkParamName;
 
     foreach (Entity* c, entity->getChildren()) {
-      if (c->getType() == "linkParam")
-        linkParamUids.append(c->getUniqueId());
+      if (c->getType() == "linkParam"){
+        coreLinkParamUid.append(c->getUniqueId());
+        coreLinkParamName.append(c->getAttribute("name"));
+      }
     }
 
     foreach (QString name, properties.keys()) {
-      if (name.contains(PLG_ENTITY_BINDPARAM_NAME)){
+      if (name.contains(PLG_ENTITY_LINKPARAM_NAME)){
         QString lpUid = name.right(name.length() - name.lastIndexOf(':') - 1);
 
         QString lpName = properties.value(name);
-        QString lpValue = properties.value(QString(PLG_ENTITY_BINDPARAM_VALUE)+":"+lpUid);
+        QString lpValue = properties.value(QString(PLG_ENTITY_LINKPARAM_VALUE)+":"+lpUid);
 
         QMap<QString, QString> lpAttr;
         lpAttr.insert("name", lpName);
@@ -798,15 +892,31 @@ void StructuralViewPlugin::notifyEntityChangedInView(const QString uid,
 
         Entity* bp = getProject()->getEntityById(entities.key(lpUid));
 
+        // Change a linkParam entity in core that
+        // has been added by the view.
         if (bp != NULL){
-          if (linkParamUids.contains(bp->getUniqueId()))
-            linkParamUids.remove(linkParamUids.indexOf(bp->getUniqueId()));
-
+          if (coreLinkParamUid.contains(bp->getUniqueId()))
+            coreLinkParamUid.remove(coreLinkParamUid.indexOf(bp->getUniqueId()));
 
           _waiting = true;
           emit setAttributes(bp, lpAttr, false);
-        }else
-        {
+
+        // Change a linkParam entity in core that has not been added
+        // by the view and contains a empty 'value' attribute.
+        }else if (coreLinkParamName.contains(lpName)){
+
+          int index = coreLinkParamName.indexOf(lpName);
+
+          bp = getProject()->getEntityById(coreLinkParamUid.at(index));
+
+          coreLinkParamUid.remove(index);
+
+          entities.insert(bp->getUniqueId(), lpUid);
+
+          _waiting = true;
+          emit setAttributes(bp, lpAttr, false);
+
+        }else {
           _waiting = true;
           _notified = lpUid;
           emit addEntity("linkParam",entity->getUniqueId(), lpAttr, false);
@@ -814,7 +924,7 @@ void StructuralViewPlugin::notifyEntityChangedInView(const QString uid,
       }
     }
 
-    foreach (QString lpCoreUid, linkParamUids) {
+    foreach (QString lpCoreUid, coreLinkParamUid) {
       emit removeEntity(getProject()->getEntityById(lpCoreUid), false);
     }
   }
