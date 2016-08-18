@@ -732,6 +732,19 @@ void StructuralView::remove(QString uid, QMap<QString, QString> settings)
       }
     }
 
+    if (entity->getStructuralType() == Structural::Bind){
+      foreach (QString name, entity->getStructuralProperties().keys()) {
+        if (name.contains(PLG_ENTITY_BINDPARAM_NAME)){
+          QString bpUid = name.right(name.length() - name.lastIndexOf(':') - 1);
+
+          if (settings[PLG_SETTING_NOTIFY] == "1")
+          {
+            emit removed(bpUid, settings);
+          }
+        }
+      }
+    }
+
     entities.remove(uid);
 
     if (uid == _selected_UID){
