@@ -69,6 +69,18 @@
 #define NCL_ENTITY_XCONNECTOR "xconnector"
 #define NCL_ENTITY_ROLE "role"
 
+#define NCL_ENTITY_COORDS "coords"
+#define NCL_ENTITY_BEGIN "begin"
+#define NCL_ENTITY_END "end"
+#define NCL_ENTITY_BEGINTEXT "beginText"
+#define NCL_ENTITY_ENDTEXT "endText"
+#define NCL_ENTITY_BEGINPOSITION "beginPosition"
+#define NCL_ENTITY_ENDPOSITION "endPosition"
+#define NCL_ENTITY_FIRST "first"
+#define NCL_ENTITY_LAST "last"
+#define NCL_ENTITY_LABEL "label"
+#define NCL_ENTITY_CLIP "clip"
+
 #define DEFAULT_BODY_WIDTH  750
 #define DEFAULT_BODY_HEIGHT 500
 

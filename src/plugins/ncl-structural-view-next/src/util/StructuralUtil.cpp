@@ -412,7 +412,18 @@ QMap<QString,QString> StructuralUtil::createCoreTranslationMap(StructuralType ty
     case Structural::Area:
     {
       m.insert(NCL_ENTITY_ID, PLG_ENTITY_ID);
-      //coords, begin, end, beginText, endText, beginPosition, endPosition, first, last, label, clip
+
+      m.insert(NCL_ENTITY_COORDS, NCL_ENTITY_COORDS);
+      m.insert(NCL_ENTITY_BEGIN, NCL_ENTITY_BEGIN);
+      m.insert(NCL_ENTITY_END, NCL_ENTITY_END);
+      m.insert(NCL_ENTITY_BEGINTEXT, NCL_ENTITY_BEGINTEXT);
+      m.insert(NCL_ENTITY_ENDTEXT, NCL_ENTITY_ENDTEXT);
+      m.insert(NCL_ENTITY_BEGINPOSITION, NCL_ENTITY_BEGINPOSITION);
+      m.insert(NCL_ENTITY_ENDPOSITION, NCL_ENTITY_ENDPOSITION);
+      m.insert(NCL_ENTITY_FIRST, NCL_ENTITY_FIRST);
+      m.insert(NCL_ENTITY_LAST, NCL_ENTITY_LAST);
+      m.insert(NCL_ENTITY_LABEL, NCL_ENTITY_LABEL);
+      m.insert(NCL_ENTITY_CLIP, NCL_ENTITY_CLIP);
 
       break;
     }
@@ -541,7 +552,18 @@ QMap<QString,QString> StructuralUtil::createViewTranslationMap(StructuralType ty
     case Structural::Area:
     {
       m.insert(PLG_ENTITY_ID, NCL_ENTITY_ID);
-      //coords, begin, end, beginText, endText, beginPosition, endPosition, first, last, label, clip
+
+      m.insert(NCL_ENTITY_COORDS, NCL_ENTITY_COORDS);
+      m.insert(NCL_ENTITY_BEGIN, NCL_ENTITY_BEGIN);
+      m.insert(NCL_ENTITY_END, NCL_ENTITY_END);
+      m.insert(NCL_ENTITY_BEGINTEXT, NCL_ENTITY_BEGINTEXT);
+      m.insert(NCL_ENTITY_ENDTEXT, NCL_ENTITY_ENDTEXT);
+      m.insert(NCL_ENTITY_BEGINPOSITION, NCL_ENTITY_BEGINPOSITION);
+      m.insert(NCL_ENTITY_ENDPOSITION, NCL_ENTITY_ENDPOSITION);
+      m.insert(NCL_ENTITY_FIRST, NCL_ENTITY_FIRST);
+      m.insert(NCL_ENTITY_LAST, NCL_ENTITY_LAST);
+      m.insert(NCL_ENTITY_LABEL, NCL_ENTITY_LABEL);
+      m.insert(NCL_ENTITY_CLIP, NCL_ENTITY_CLIP);
 
       break;
     }
