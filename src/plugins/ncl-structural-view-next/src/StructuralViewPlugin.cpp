@@ -133,7 +133,9 @@ void StructuralViewPlugin::updateFromModel()
 
       foreach (QString key, e->getStructuralProperties().keys()) {
         if (key.contains(PLG_ENTITY_LINKPARAM_NAME) ||
-            key.contains(PLG_ENTITY_LINKPARAM_VALUE))
+            key.contains(PLG_ENTITY_LINKPARAM_VALUE) ||
+            key.contains(PLG_ENTITY_BINDPARAM_NAME) ||
+            key.contains(PLG_ENTITY_BINDPARAM_VALUE))
           tocache.remove(key);
       }
 
@@ -256,6 +258,13 @@ void StructuralViewPlugin::updateFromModel()
           foreach (QString key, e->getStructuralProperties().keys()) {
             if (key.contains(PLG_ENTITY_LINKPARAM_NAME) ||
                 key.contains(PLG_ENTITY_LINKPARAM_VALUE))
+              cacheprop.insert(key, e->getStructuralProperty(key));
+          }
+
+        }else if (e->getStructuralType() == Structural::Bind){
+          foreach (QString key, e->getStructuralProperties().keys()) {
+            if (key.contains(PLG_ENTITY_BINDPARAM_NAME) ||
+                key.contains(PLG_ENTITY_BINDPARAM_VALUE))
               cacheprop.insert(key, e->getStructuralProperty(key));
           }
         }
@@ -532,9 +541,27 @@ void StructuralViewPlugin::requestEntityAddition(Entity* entity, bool enableUndo
       _window->getView()->change(link->getStructuralUid(), next, prev,
                                  StructuralUtil::createSettings(true, false));
     }
+
+  }else if (entity->getType() == "bindParam"){
+    if (!entity->getAttribute("name").isEmpty() &&
+        !entity->getAttribute("value").isEmpty()){
+
+      StructuralEntity* bind = _window->getView()->getEntity(
+            entities.value(entity->getParentUniqueId()));
+
+      QString bpUid = entity->getUniqueId();
+      QMap<QString, QString> prev = bind->getStructuralProperties();
+      QMap<QString, QString> next = bind->getStructuralProperties();
+
+      next.insert(QString(PLG_ENTITY_BINDPARAM_NAME)+":"+bpUid, entity->getAttribute("name"));
+      next.insert(QString(PLG_ENTITY_BINDPARAM_VALUE)+":"+bpUid, entity->getAttribute("value"));
+
+      entities[bpUid] = bpUid;
+
+      _window->getView()->change(bind->getStructuralUid(), next, prev,
+                                 StructuralUtil::createSettings(true, false));
+    }
   }
-
-
 }
 
 void StructuralViewPlugin::requestEntityRemotion(Entity* entity, bool enableUndo)
@@ -560,6 +587,24 @@ void StructuralViewPlugin::requestEntityRemotion(Entity* entity, bool enableUndo
           next.remove(QString(PLG_ENTITY_LINKPARAM_VALUE)+":"+lpUid);
 
           _window->getView()->change(link->getStructuralUid(), next, prev,
+                                     StructuralUtil::createSettings(true, false));
+        }
+
+      }else if (entity->getType() == "bindParam"){
+        StructuralEntity* bind = _window->getView()->getEntity(
+              entities.value(entity->getParentUniqueId()));
+
+        QString bpUid = entities.value(entity->getUniqueId());
+        QMap<QString, QString> prev = bind->getStructuralProperties();
+        QMap<QString, QString> next = bind->getStructuralProperties();
+
+        if (next.contains(QString(PLG_ENTITY_BINDPARAM_NAME)+":"+bpUid) ||
+            next.contains(QString(PLG_ENTITY_BINDPARAM_VALUE)+":"+bpUid)){
+
+          next.remove(QString(PLG_ENTITY_BINDPARAM_NAME)+":"+bpUid);
+          next.remove(QString(PLG_ENTITY_BINDPARAM_VALUE)+":"+bpUid);
+
+          _window->getView()->change(bind->getStructuralUid(), next, prev,
                                      StructuralUtil::createSettings(true, false));
         }
 
@@ -724,7 +769,40 @@ void StructuralViewPlugin::requestEntityChange(Entity* entity)
 
       _window->getView()->change(link->getStructuralUid(), next, prev,StructuralUtil::createSettings(true, false));
     }
+
+  }else if (entity->getType() == "bindParam"){
+    StructuralEntity* bind = _window->getView()->getEntity(
+          entities.value(entity->getParentUniqueId()));
+
+    QString bpUid;
+    QMap<QString, QString> prev = bind->getStructuralProperties();
+    QMap<QString, QString> next = bind->getStructuralProperties();
+
+    if (!entity->getAttribute("name").isEmpty() &&
+        !entity->getAttribute("value").isEmpty()){
+
+      if (entities.contains(entity->getUniqueId()))
+        bpUid = entities.value(entity->getUniqueId());
+      else
+        bpUid = entity->getUniqueId();
+
+      entities.insert(entity->getUniqueId(), bpUid);
+
+      next.insert(QString(PLG_ENTITY_BINDPARAM_NAME)+":"+bpUid, entity->getAttribute("name"));
+      next.insert(QString(PLG_ENTITY_BINDPARAM_VALUE)+":"+bpUid, entity->getAttribute("value"));
+
+      _window->getView()->change(bind->getStructuralUid(), next, prev,StructuralUtil::createSettings(true, false));
+
+    }else if (entities.contains(entity->getUniqueId())){
+      bpUid = entities.value(entity->getUniqueId());
+
+      next.remove(QString(PLG_ENTITY_BINDPARAM_NAME)+":"+bpUid);
+      next.remove(QString(PLG_ENTITY_BINDPARAM_VALUE)+":"+bpUid);
+
+      _window->getView()->change(bind->getStructuralUid(), next, prev,StructuralUtil::createSettings(true, false));
+    }
   }
+
 }
 
 void StructuralViewPlugin::requestEntitySelection(Entity* entity)
@@ -829,18 +907,18 @@ void StructuralViewPlugin::notifyEntityAddedInView(const QString uid,
       if (type == Structural::Bind){
         foreach (QString name, properties.keys()) {
           if (name.contains(PLG_ENTITY_BINDPARAM_NAME)){
-            QString lpUid = name.right(name.length() - name.lastIndexOf(':') - 1);
+            QString bpUid = name.right(name.length() - name.lastIndexOf(':') - 1);
 
-            QString lpName = properties.value(name);
-            QString lpValue = properties.value(QString(PLG_ENTITY_BINDPARAM_VALUE)+":"+lpUid);
+            QString bpName = properties.value(name);
+            QString bpValue = properties.value(QString(PLG_ENTITY_BINDPARAM_VALUE)+":"+bpUid);
 
-            QMap<QString, QString> lpAttr;
-            lpAttr.insert("name", lpName);
-            lpAttr.insert("value", lpValue);
+            QMap<QString, QString> bpAttr;
+            bpAttr.insert("name", bpName);
+            bpAttr.insert("value", bpValue);
 
             _waiting = true;
-            _notified = lpUid;
-            emit addEntity("bindParam",entities.key(uid), lpAttr, false);
+            _notified = bpUid;
+            emit addEntity("bindParam",entities.key(uid), bpAttr, false);
           }
         }
       }
@@ -941,8 +1019,6 @@ void StructuralViewPlugin::notifyEntityChangedInView(const QString uid,
       emit removeEntity(getProject()->getEntityById(lpCoreUid), false);
     }
   }
-
-  //////////////////////////
 
   if (type == Structural::Bind){
     QVector<QString> coreBindParamUid;
