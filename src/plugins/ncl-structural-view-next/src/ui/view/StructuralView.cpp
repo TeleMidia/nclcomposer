@@ -410,6 +410,8 @@ void StructuralView::insert(QString uid, QString parent, QMap<QString, QString> 
           bind->setAngle(properties.value(PLG_ENTITY_ANGLE).toDouble());
         }
 
+        connect(bind, SIGNAL(showEditBindDialog(StructuralBind*)),SLOT(showEditBindDialog(StructuralBind*)));
+
         break;
       }
 
@@ -774,10 +776,13 @@ void StructuralView:: change(QString uid, QMap<QString, QString> properties, QMa
         tmp.remove(PLG_ENTITY_COMPONENT_ID);
       }
 
-      if (entities.value(uid)->getStructuralType() == Structural::Link){
+      if (entities.value(uid)->getStructuralType() == Structural::Link ||
+          entities.value(uid)->getStructuralType() == Structural::Bind){
         foreach (QString key, previous.keys()) {
           if (key.contains(PLG_ENTITY_LINKPARAM_NAME) ||
-              key.contains(PLG_ENTITY_LINKPARAM_VALUE)) {
+              key.contains(PLG_ENTITY_LINKPARAM_VALUE) ||
+              key.contains(PLG_ENTITY_BINDPARAM_NAME) ||
+              key.contains(PLG_ENTITY_BINDPARAM_VALUE)) {
             if (!properties.contains(key))
               tmp.remove(key);
           }
@@ -2227,12 +2232,80 @@ void StructuralView::showEditLinkDialog(StructuralLink* entity)
   }
 }
 
-//void StructuralView::setAction(QString action)
-//{
-//    this->action = action;
-//}
+void StructuralView::showEditBindDialog(StructuralBind* entity)
+{
+  QMap<QString, QString> pBind;
+  foreach (QString name, entity->getStructuralProperties().keys()) {
+    if (name.contains(PLG_ENTITY_BINDPARAM_NAME)){
+      QString bpUid = name.right(name.length() - name.lastIndexOf(':') - 1);
+      QString bpName = entity->getStructuralProperties().value(name);
+      QString bpValue = entity->getStructuralProperties().value(QString(PLG_ENTITY_BINDPARAM_VALUE)+":"+bpUid);
 
-//void StructuralView::setCondition(QString condition)
-//{
-//    this->condition = condition;
-//}
+      pBind.insert(bpName, bpValue);
+    }
+  }
+
+  emit requestLinkDialogUpdate();
+
+  if (entity->isCondition()){
+    linkDialog->init(entity->getEntityB()->getStructuralProperty(PLG_ENTITY_XCONNECTOR_ID),"","",
+                     StructuralLinkDialog::EditCondition);
+
+    linkDialog->form.cbCondition->setCurrentText(entity->getStructuralId());
+    linkDialog->updateCurrentConditionParam(pBind);
+  }else if (entity->isAction()){
+
+    linkDialog->init(entity->getEntityA()->getStructuralProperty(PLG_ENTITY_XCONNECTOR_ID),"","",
+                     StructuralLinkDialog::EditAction);
+
+    linkDialog->form.cbAction->setCurrentText(entity->getStructuralId());
+    linkDialog->updateCurrentActionParam(pBind);
+  }
+
+
+  if (linkDialog->exec()){
+
+    QMap<QString, QString> prev = entity->getStructuralProperties();
+    QMap<QString, QString> properties = entity->getStructuralProperties();
+
+    QString role;
+    QMap<QString, QString> p;
+
+    if (entity->isCondition()){
+      role = linkDialog->form.cbCondition->currentText();
+      p = linkDialog->getConditionParams();
+
+    }else if (entity->isAction()){
+      role = linkDialog->form.cbAction->currentText();
+      p = linkDialog->getActionParams();
+    }
+
+    properties[PLG_ENTITY_ROLE] = QString::number(StructuralUtil::getStructuralRoleFromStr(role));
+    properties[PLG_ENTITY_ID] = role;
+
+    foreach (QString name, p.keys()) {
+      if (properties.key(name).contains(PLG_ENTITY_BINDPARAM_NAME)) {
+        QString key = properties.key(name);
+        QString uid = key.right(key.length() - key.lastIndexOf(':') - 1);
+
+        if (!p.value(name).isEmpty()){
+          properties.insert(QString(PLG_ENTITY_BINDPARAM_NAME)+":"+uid, name);
+          properties.insert(QString(PLG_ENTITY_BINDPARAM_VALUE)+":"+uid, p.value(name));
+        }else{
+          properties.remove(QString(PLG_ENTITY_BINDPARAM_NAME)+":"+uid);
+          properties.remove(QString(PLG_ENTITY_BINDPARAM_VALUE)+":"+uid);
+        }
+
+      } else if (!p.value(name).isEmpty()){
+        QString uid = StructuralUtil::CreateUid();
+
+        properties.insert(QString(PLG_ENTITY_BINDPARAM_NAME)+":"+uid, name);
+        properties.insert(QString(PLG_ENTITY_BINDPARAM_VALUE)+":"+uid, p.value(name));
+      }
+    }
+
+    QMap<QString, QString> settings = StructuralUtil::createSettings(true, true);
+
+    change(entity->getStructuralUid(), properties, prev, settings);
+  }
+}

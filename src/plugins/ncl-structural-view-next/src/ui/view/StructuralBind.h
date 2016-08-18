@@ -92,6 +92,8 @@ signals:
   void bindParamUpdated(QString bindUid, QMap<QString, QString> params,
                         QMap<QString, QString> name_uids);
 
+  void showEditBindDialog(StructuralBind* entity);
+
 protected:
   virtual void draw(QPainter* painter);
 

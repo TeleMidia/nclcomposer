@@ -942,6 +942,68 @@ void StructuralViewPlugin::notifyEntityChangedInView(const QString uid,
     }
   }
 
+  //////////////////////////
+
+  if (type == Structural::Bind){
+    QVector<QString> coreBindParamUid;
+    QVector<QString> coreBindParamName;
+
+    foreach (Entity* c, entity->getChildren()) {
+      if (c->getType() == "bindParam"){
+        coreBindParamUid.append(c->getUniqueId());
+        coreBindParamUid.append(c->getAttribute("name"));
+      }
+    }
+
+    foreach (QString name, properties.keys()) {
+      if (name.contains(PLG_ENTITY_BINDPARAM_NAME)){
+        QString bpUid = name.right(name.length() - name.lastIndexOf(':') - 1);
+
+        QString bpName = properties.value(name);
+        QString bpValue = properties.value(QString(PLG_ENTITY_BINDPARAM_VALUE)+":"+bpUid);
+
+        QMap<QString, QString> bpAttr;
+        bpAttr.insert("name", bpName);
+        bpAttr.insert("value", bpValue);
+
+        Entity* bp = getProject()->getEntityById(entities.key(bpUid));
+
+        // Change a linkParam entity in core that
+        // has been added by the view.
+        if (bp != NULL){
+          if (coreBindParamUid.contains(bp->getUniqueId()))
+            coreBindParamUid.remove(coreBindParamUid.indexOf(bp->getUniqueId()));
+
+          _waiting = true;
+          emit setAttributes(bp, bpAttr, false);
+
+        // Change a linkParam entity in core that has not been added
+        // by the view and contains a empty 'value' attribute.
+        }else if (coreBindParamName.contains(bpName)){
+
+          int index = coreBindParamName.indexOf(bpName);
+
+          bp = getProject()->getEntityById(coreBindParamUid.at(index));
+
+          coreBindParamUid.remove(index);
+
+          entities.insert(bp->getUniqueId(), bpUid);
+
+          _waiting = true;
+          emit setAttributes(bp, bpAttr, false);
+
+        }else {
+          _waiting = true;
+          _notified = bpUid;
+          emit addEntity("bindParam",entity->getUniqueId(), bpAttr, false);
+        }
+      }
+    }
+
+    foreach (QString lpCoreUid, coreBindParamUid) {
+      emit removeEntity(getProject()->getEntityById(lpCoreUid), false);
+    }
+  }
   _waiting = true;
   emit setAttributes(entity, attributes, false);
 }

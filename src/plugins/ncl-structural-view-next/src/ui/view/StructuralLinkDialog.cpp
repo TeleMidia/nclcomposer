@@ -234,6 +234,7 @@ void StructuralLinkDialog::init(QString connName, QString condName, QString acti
   _currentMode = mode;
 
   connLineEdit->clear();
+  connLineEdit->hideList();
   connLineEdit->setStringList(_conditions.keys());
 
   switch (_currentMode) {
@@ -428,7 +429,7 @@ void StructuralLinkDialog::updateForm(QString conn)
   }
 
   if (!form.cbCondition->count()) {
-    form.cbCondition->addItem(tr("Not applicable"));
+    form.cbCondition->addItem(tr("Not available"));
   }
 
   form.cbAction->clear();
@@ -450,7 +451,7 @@ void StructuralLinkDialog::updateForm(QString conn)
   }
 
   if (!form.cbAction->count())
-    form.cbAction->addItem(tr("Not applicable"));
+    form.cbAction->addItem(tr("Not available"));
 
   int ncol = 2;
   int nrow = _params.value(conn).size();

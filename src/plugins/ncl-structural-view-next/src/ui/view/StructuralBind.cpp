@@ -923,120 +923,12 @@ void StructuralBind::setParams(QMap<QString, QString> params)
 
 void StructuralBind::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
 {
-//  StructuralBindDialog *d = new StructuralBindDialog();
+  StructuralEdge::mouseDoubleClickEvent(event);
 
-//  if (isCondition())
-//    d->setType(StructuralBindDialog::CONDITION);
-//  else
-//    d->setType(StructuralBindDialog::ACTION);
+  setMoving(false);
+  update();
 
-//  if (d->exec())
-//  {
-//    QMap<QString,QString> previous = getLocalProperties();
-//    QMap<QString,QString> properties = getLocalProperties();
-//    properties["LOCAL:BIND"] = d->getSelected();
-
-//    QMap<QString, QString> settings;
-//    settings["UNDO"] = "1";
-//    settings["NOTIFY"] = "1";
-//    settings["CODE"] = StructuralUtil::createUid();
-
-//    changed(getStructuralId(), properties, previous, settings);
-//  }
-
-//  delete d;
-  /*
-  if (conn != NULL)
-  {
-    QString UID = "";
-    QMap<QString, QString> values;
-
-    if (params.isEmpty())
-    {
-      if (isAction())
-      {
-        foreach(QString type, conn->getActions().values())
-        {
-          if (type == QnstUtil::getStrFromStructuralRole(getType()))
-          {
-            UID = conn->getActions().key(type,"");
-          }
-        }
-
-        QMap<QPair<QString, QString>, QString> parameters = conn->getActionParams();
-
-        QPair<QString, QString> key;
-
-        foreach(key , parameters.keys())
-        {
-          if (key.first == UID)
-          {
-            values[parameters.value(key)] = params.value(parameters.value(key),"");
-          }
-        }
-
-
-
-      }
-      else if (isCondition())
-      {
-        foreach(QString type, conn->getConditions().values())
-        {
-          if (type == QnstUtil::getStrFromStructuralRole(getType()))
-          {
-            UID = conn->getConditions().key(type,"");
-          }
-        }
-
-        QMap<QPair<QString, QString>, QString> parameters = conn->getConditionParams();
-
-        QPair<QString, QString> key;
-
-        foreach(key , parameters.keys())
-        {
-          if (key.first == UID)
-          {
-            values[parameters.value(key)] = params.value(parameters.value(key),"");
-          }
-        }
-
-
-      }
-    }
-    else
-    {
-      values = params;
-    }
-
-    dialog->init(values);
-
-    if (dialog->exec())
-    {
-      params = dialog->getProperties();
-
-      foreach(QString name, params.keys())
-      {
-        QMap<QString, QString> p;
-
-        p["name"] = name;
-        p["value"] = params[name];
-
-        if (names_uids[name].isEmpty())
-        {
-          names_uids[name] = QUuid::createUuid().toString();
-        }
-
-        emit bindParamAdded(names_uids[name], getnstUid(), p);
-      }
-
-      emit bindParamUpdated(getnstUid(), params, names_uids);
-    }
-  }
-  else
-  {
-    qWarning() << "[QNST] Connector is NULL. I can not load connectorParams";
-  }
-  */
+  emit showEditBindDialog(this);
 }
 
 bool StructuralBind::isCondition() const
@@ -1054,7 +946,7 @@ bool StructuralBind::isCondition() const
 
 bool StructuralBind::isAction() const
 {
-  return !isCondition();
+  return (!isCondition() && _name != Structural::NoRole);
 }
 
 QString StructuralBind::getRole() const

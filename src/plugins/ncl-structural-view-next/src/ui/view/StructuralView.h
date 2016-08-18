@@ -92,6 +92,7 @@ public slots:
   void performProperties();
 
   void showEditLinkDialog(StructuralLink* entity);
+  void showEditBindDialog(StructuralBind* entity);
 
 public:
   void load(QString &data);
