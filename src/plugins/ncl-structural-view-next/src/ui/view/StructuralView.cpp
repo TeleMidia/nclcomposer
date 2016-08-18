@@ -1411,6 +1411,17 @@ void StructuralView::createBind(StructuralEntity* a, StructuralEntity* b, Struct
             return;
           }
         }
+
+        QMap<QString, QString> p = linkDialog->getActionParams();
+
+        foreach (QString name, p.keys()) {
+          if (!p.value(name).isEmpty()){
+            QString uid = StructuralUtil::CreateUid();
+
+            properties.insert(QString(PLG_ENTITY_BINDPARAM_NAME)+":"+uid, name);
+            properties.insert(QString(PLG_ENTITY_BINDPARAM_VALUE)+":"+uid, p.value(name));
+          }
+        }
       }
       else if (b->getStructuralType() == Structural::Link)
       {
@@ -1434,6 +1445,17 @@ void StructuralView::createBind(StructuralEntity* a, StructuralEntity* b, Struct
             properties[PLG_ENTITY_ID] = role;
           }else{
             return;
+          }
+        }
+
+        QMap<QString, QString> p = linkDialog->getConditionParams();
+
+        foreach (QString name, p.keys()) {
+          if (!p.value(name).isEmpty()){
+            QString uid = StructuralUtil::CreateUid();
+
+            properties.insert(QString(PLG_ENTITY_BINDPARAM_NAME)+":"+uid, name);
+            properties.insert(QString(PLG_ENTITY_BINDPARAM_VALUE)+":"+uid, p.value(name));
           }
         }
       }

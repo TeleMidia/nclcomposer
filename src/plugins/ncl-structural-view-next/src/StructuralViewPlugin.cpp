@@ -808,26 +808,39 @@ void StructuralViewPlugin::notifyEntityAddedInView(const QString uid,
                      cparent->getUniqueId(), attributes, false);
 
       if (type == Structural::Link){
-        QVector<QString> alreadyInserted;
-
         foreach (QString name, properties.keys()) {
           if (name.contains(PLG_ENTITY_LINKPARAM_NAME)){
             QString lpUid = name.right(name.length() - name.lastIndexOf(':') - 1);
 
-            if (!alreadyInserted.contains(lpUid)){
-              QString lpName = properties.value(name);
-              QString lpValue = properties.value(QString(PLG_ENTITY_LINKPARAM_VALUE)+":"+lpUid);
+            QString lpName = properties.value(name);
+            QString lpValue = properties.value(QString(PLG_ENTITY_LINKPARAM_VALUE)+":"+lpUid);
 
-              QMap<QString, QString> lpAttr;
-              lpAttr.insert("name", lpName);
-              lpAttr.insert("value", lpValue);
+            QMap<QString, QString> lpAttr;
+            lpAttr.insert("name", lpName);
+            lpAttr.insert("value", lpValue);
 
-              _waiting = true;
-              _notified = lpUid;
-              emit addEntity("linkParam",entities.key(uid), lpAttr, false);
+            _waiting = true;
+            _notified = lpUid;
+            emit addEntity("linkParam",entities.key(uid), lpAttr, false);
+          }
+        }
+      }
 
-              alreadyInserted.append(lpUid);
-            }
+      if (type == Structural::Bind){
+        foreach (QString name, properties.keys()) {
+          if (name.contains(PLG_ENTITY_BINDPARAM_NAME)){
+            QString lpUid = name.right(name.length() - name.lastIndexOf(':') - 1);
+
+            QString lpName = properties.value(name);
+            QString lpValue = properties.value(QString(PLG_ENTITY_BINDPARAM_VALUE)+":"+lpUid);
+
+            QMap<QString, QString> lpAttr;
+            lpAttr.insert("name", lpName);
+            lpAttr.insert("value", lpValue);
+
+            _waiting = true;
+            _notified = lpUid;
+            emit addEntity("bindParam",entities.key(uid), lpAttr, false);
           }
         }
       }

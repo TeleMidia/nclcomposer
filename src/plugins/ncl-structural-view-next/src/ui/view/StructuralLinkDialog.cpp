@@ -340,7 +340,7 @@ void StructuralLinkDialog::init(QString connName, QString condName, QString acti
       form.cbAction->setEnabled(true);
       form.tbActionParams->setEnabled(true);
       form.kbActionParams->setEnabled(true);
-      form.kbActionParams->setChecked(false);
+      form.kbActionParams->setChecked(true);
 
       break;
 
