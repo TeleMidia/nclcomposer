@@ -1329,7 +1329,6 @@ void StructuralView::createLink(StructuralEntity* a, StructuralEntity* b)
         emit requestLinkDialogUpdate();
 
         modified = false;            // turn off link mode
-        emit linkStateChange(false); // turn off link mode on UI
 
         linkDialog->init();
 
@@ -1362,6 +1361,8 @@ void StructuralView::createLink(StructuralEntity* a, StructuralEntity* b)
             createBind(entities.value(uid),b,act,settings.value(PLG_SETTING_CODE));
           }
       }
+
+      modified = true;            // turn on link mode
     }
 }
 
@@ -1415,7 +1416,6 @@ void StructuralView::createBind(StructuralEntity* a, StructuralEntity* b, Struct
           emit requestLinkDialogUpdate();
 
           modified = false;            // turn off link mode
-          emit linkStateChange(false); // turn off link mode on UI
 
           linkDialog->init(e_link->getStructuralProperty(PLG_ENTITY_XCONNECTOR_ID),"","",
                            StructuralLinkDialog::CreateAction);
@@ -1426,8 +1426,11 @@ void StructuralView::createBind(StructuralEntity* a, StructuralEntity* b, Struct
             properties[PLG_ENTITY_ROLE] = QString::number(StructuralUtil::getStructuralRoleFromStr(role));
             properties[PLG_ENTITY_ID] = role;
           }else{
+            modified = true;            // turn on link mode
             return;
           }
+
+          modified = true;            // turn on link mode
         }
 
         QMap<QString, QString> p = linkDialog->getActionParams();
@@ -1450,8 +1453,7 @@ void StructuralView::createBind(StructuralEntity* a, StructuralEntity* b, Struct
         if (type == Structural::NoRole){
           emit requestLinkDialogUpdate();
 
-          modified = false;            // turn off link mode
-          emit linkStateChange(false); // turn off link mode on UI
+          modified = true;            // turn off link mode
 
           linkDialog->init(e_link->getStructuralProperty(PLG_ENTITY_XCONNECTOR_ID),"","",
                            StructuralLinkDialog::CreateCondition);
@@ -1462,8 +1464,11 @@ void StructuralView::createBind(StructuralEntity* a, StructuralEntity* b, Struct
             properties[PLG_ENTITY_ROLE] = QString::number(StructuralUtil::getStructuralRoleFromStr(role));
             properties[PLG_ENTITY_ID] = role;
           }else{
+            modified = true;            // turn on link mode
             return;
           }
+
+          modified = true;            // turn on link mode
         }
 
         QMap<QString, QString> p = linkDialog->getConditionParams();
