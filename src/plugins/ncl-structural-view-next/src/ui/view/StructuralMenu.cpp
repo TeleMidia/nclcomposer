@@ -202,6 +202,13 @@ void StructuralMenu::createActions()
   propertyAction->setText(tr("Property"));
   propertyAction->setIcon(QIcon(":/images/icon/property-insert"));
 
+#ifdef WITH_GRAPHVIZ
+  // autoadjust action
+  autoadjustAction = new QAction(this);
+  autoadjustAction->setEnabled(true);
+  autoadjustAction->setText(tr("Auto adjust"));
+#endif
+
   // properties action
   propertiesAction = new QAction(this);
   propertiesAction->setEnabled(false);
@@ -243,6 +250,10 @@ void StructuralMenu::createMenus()
   addSeparator();
   addAction(snapshotAction);
   addSeparator();
+#ifdef WITH_GRAPHVIZ
+  addAction(autoadjustAction);
+  addSeparator();
+#endif
   addAction(propertiesAction  );
 
 }

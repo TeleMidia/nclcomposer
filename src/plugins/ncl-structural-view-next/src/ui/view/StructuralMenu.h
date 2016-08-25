@@ -61,6 +61,10 @@ public:
   QAction* propertyAction;
   QAction* switchPortAction;
   QAction* propertiesAction;
+
+#ifdef WITH_GRAPHVIZ
+  QAction* autoadjustAction;
+#endif
 };
 
 #endif // QNSTMENU_H

@@ -94,6 +94,11 @@ public slots:
   void showEditLinkDialog(StructuralLink* entity);
   void showEditBindDialog(StructuralBind* entity);
 
+#ifdef WITH_GRAPHVIZ
+   void adjustAllWithGraphiviz();
+   void adjustChildrenWithGraphiviz(StructuralEntity* e, QString code, bool interfaceAsNode = false);
+#endif
+
 public:
   void load(QString &data);
 
@@ -113,8 +118,6 @@ public:
    void setMiniMapVisible(bool enable);
 
    void drawPortReference(StructuralEntity* port);
-
-
 
 signals:
   void inserted(QString uid, QString _parent, QMap<QString, QString> properties, QMap<QString, QString> settings);
@@ -190,7 +193,6 @@ private:
   bool hasCutted;
 
   QMap<QString, StructuralEntity*> entities;
-  QMap<QString, QMap<QString, StructuralEdge*>> edges;
 
   QAction* undoAct;
 

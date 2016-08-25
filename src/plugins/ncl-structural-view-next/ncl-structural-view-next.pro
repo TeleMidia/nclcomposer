@@ -10,6 +10,10 @@ TARGET = \
 DESTDIR = \
     bin/
 
+# Uncomment the next two line to enable graphviz as default option
+#CONFIG += \
+#    graphviz
+
 INCLUDEPATH += \
     src/ \
     src/core/ \
@@ -77,3 +81,17 @@ FORMS += \
 
 INSTALLS = \
     target
+
+graphviz {
+  unix {
+    DEFINES += \
+      WITH_GRAPHVIZ
+
+    INCLUDEPATH += \
+      /usr/include/graphviz/ \
+      /usr/local/include/graphviz/
+
+    LIBS += \
+      -lgvc -lcgraph
+  }
+}

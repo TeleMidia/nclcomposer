@@ -75,6 +75,11 @@ void StructuralView::createObjects()
   connect(scene->_menu->undoAction, SIGNAL(triggered(bool)), this, SLOT(performUndo()));
   connect(scene->_menu->pasteAction, SIGNAL(triggered(bool)), this, SLOT(performPaste()));
   connect(scene->_menu->snapshotAction, SIGNAL(triggered(bool)), this, SLOT(performSnapshot()));
+
+#ifdef WITH_GRAPHVIZ
+      connect(scene->_menu->autoadjustAction, SIGNAL(triggered(bool)), this, SLOT(adjustAllWithGraphiviz()));
+#endif
+
   connect(scene->_menu,SIGNAL(insert(StructuralType)), this,SLOT(create(StructuralType)));
 
   this->resize(scene->itemsBoundingRect().size().width(), scene->itemsBoundingRect().height());
@@ -526,6 +531,9 @@ void StructuralView::insert(QString uid, QString parent, QMap<QString, QString> 
       connect(entity->menu->pasteAction, SIGNAL(triggered(bool)), this, SLOT(performPaste()));
       connect(entity->menu->copyAction, SIGNAL(triggered(bool)), this, SLOT(performCopy()));
       connect(entity->menu->snapshotAction, SIGNAL(triggered(bool)), this, SLOT(performSnapshot()));
+#ifdef WITH_GRAPHVIZ
+      connect(entity->menu->autoadjustAction, SIGNAL(triggered(bool)), this, SLOT(adjustAllWithGraphiviz()));
+#endif
       connect(entity->menu,SIGNAL(insert(StructuralType)), this,SLOT(create(StructuralType)));
 
       if (entities.size() <= 1){
@@ -829,6 +837,7 @@ void StructuralView:: change(QString uid, QMap<QString, QString> properties, QMa
 
      entity->setStructuralProperties(properties);
      entity->adjust(false);
+
 
      if (entity->getStructuralType() ==  Structural::Bind) {
        StructuralBind* b = (StructuralBind*) entity;
@@ -2038,7 +2047,6 @@ void StructuralView::keyPressEvent(QKeyEvent *event)
 
     event->accept();
   }
-
   // SHIFT - Enabling liking
   else if (event->key() == Qt::Key_Shift)
   {
@@ -2327,3 +2335,136 @@ void StructuralView::showEditBindDialog(StructuralBind* entity)
     change(entity->getStructuralUid(), properties, prev, settings);
   }
 }
+
+
+#ifdef WITH_GRAPHVIZ
+#include "gvc.h"
+#include "cgraph.h"
+
+void StructuralView::adjustAllWithGraphiviz()
+{
+  adjustChildrenWithGraphiviz(getBody(), StructuralUtil::CreateUid());
+}
+
+void StructuralView::adjustChildrenWithGraphiviz(StructuralEntity* parent, QString code, bool interfaceAsNode)
+{
+  if (parent != NULL && !parent->getStructuralEntities().isEmpty())
+  {
+    foreach (StructuralEntity* c, parent->getStructuralEntities()) {
+      if (c->getStructuralType() == Structural::Context ||
+          c->getStructuralType() == Structural::Switch ||
+          c->getStructuralType() == Structural::Body){
+        adjustChildrenWithGraphiviz(c, code);
+      }
+    }
+
+    GVC_t *c;
+    c = gvContext();
+
+    Agraph_t *g;
+    g = agopen("g", Agdirected, NULL);
+
+    agattr(g, AGRAPH, "splines", "ortho");
+    agattr(g, AGRAPH, "nodesep", "0.4");
+
+    agattr(g, AGNODE, "shape", "box");
+    agattr(g, AGNODE, "nodesep", "0.4");
+    agattr(g, AGNODE, "minlen", "2");
+
+    qreal GZDPI = 72;
+
+    QMap<QString, Agnode_t*> nodes;
+
+    foreach (StructuralEntity* c, parent->getStructuralEntities()) {
+      if (c->getStructuralCategory() == Structural::Node ||
+          (interfaceAsNode && c->getStructuralCategory() == Structural::Interface)){
+        QString w = QString::number(c->getWidth()/GZDPI);
+        QString h = QString::number(c->getHeight()/GZDPI);
+
+        Agnode_t* node = agnode(g,(char*) c->getStructuralUid().toStdString().c_str(),1);
+        agsafeset(node, "width", (char*) w.toStdString().c_str(), (char*) w.toStdString().c_str() );
+        agsafeset(node, "height", (char*) h.toStdString().c_str(), (char*) h.toStdString().c_str() );
+
+        nodes.insert(c->getStructuralUid(), node);
+      }
+    }
+
+//    QString r = nodes.firstKey();
+//    agsafeset(g, "root", (char*) r.toStdString().c_str(), (char*) r.toStdString().c_str());
+
+    foreach (StructuralEntity* c, parent->getStructuralEntities()) {
+      if (c->getStructuralCategory() == Structural::Edge ){
+        StructuralEdge* edge = (StructuralEdge*) c;
+
+        if (interfaceAsNode){
+          if (!nodes.contains(edge->getEntityA()->getStructuralUid())){
+            StructuralEntity* a = edge->getEntityA();
+
+            QString w = QString::number(a->getWidth()/GZDPI);
+            QString h = QString::number(a->getHeight()/GZDPI);
+
+            Agnode_t* node = agnode(g,(char*) a->getStructuralUid().toStdString().c_str(),1);
+            agsafeset(node, "width", (char*) w.toStdString().c_str(), (char*) w.toStdString().c_str() );
+            agsafeset(node, "height", (char*) h.toStdString().c_str(), (char*) h.toStdString().c_str() );
+
+            nodes.insert(a->getStructuralUid(), node);
+          }
+
+          if (!nodes.contains(edge->getEntityB()->getStructuralUid())){
+            StructuralEntity* b = edge->getEntityB();
+
+            QString w = QString::number(b->getWidth()/GZDPI);
+            QString h = QString::number(b->getHeight()/GZDPI);
+
+            Agnode_t* node = agnode(g,(char*) b->getStructuralUid().toStdString().c_str(),1);
+            agsafeset(node, "width", (char*) w.toStdString().c_str(), (char*) w.toStdString().c_str() );
+            agsafeset(node, "height", (char*) h.toStdString().c_str(), (char*) h.toStdString().c_str() );
+
+            nodes.insert(b->getStructuralUid(), node);
+          }
+        }
+
+        if (nodes.contains(edge->getEntityA()->getStructuralUid()) &&
+            nodes.contains(edge->getEntityB()->getStructuralUid())){
+          agedge(g,nodes.value(edge->getEntityA()->getStructuralUid()),
+                   nodes.value(edge->getEntityB()->getStructuralUid()),
+                   NULL,1);
+        }
+      }
+    }
+
+    gvLayout(c, g, "dot");
+
+    // Update parent 'size' in view...
+    qreal PADDING = 64*2;
+
+    QMap<QString, QString> next = parent->getStructuralProperties();
+    next.insert(PLG_ENTITY_WIDTH, QString::number(GD_bb(g).UR.x + PADDING));
+    next.insert(PLG_ENTITY_HEIGHT, QString::number(GD_bb(g).UR.y + PADDING));
+
+    change(parent->getStructuralUid(), next, parent->getStructuralProperties(), StructuralUtil::createSettings("1", "0", code));
+
+    // Update children 'pos' in view...
+    foreach (QString UID, nodes.keys()) {
+      Agnode_t* n = nodes.value(UID);
+      StructuralEntity* e = entities.value(UID);
+
+      qreal x = ND_coord(n).x + parent->getWidth()/2 - GD_bb(g).UR.x/2 - e->getWidth()/2;
+      qreal y = (GD_bb(g).UR.y - ND_coord(n).y) + parent->getHeight()/2 - GD_bb(g).UR.y/2 - e->getHeight()/2;
+
+      QMap<QString, QString> next = e->getStructuralProperties();
+      next.insert(PLG_ENTITY_TOP, QString::number(y));
+      next.insert(PLG_ENTITY_LEFT, QString::number(x));
+
+      change(e->getStructuralUid(), next, e->getStructuralProperties(), StructuralUtil::createSettings("1", "0", code));
+    }
+
+    foreach (StructuralEntity* c, parent->getStructuralEntities()) {
+      if (c->getStructuralCategory() == Structural::Edge ){
+        StructuralBind* bind = (StructuralBind*) c;
+        bind->adjust();
+      }
+    }
+  }
+}
+#endif
