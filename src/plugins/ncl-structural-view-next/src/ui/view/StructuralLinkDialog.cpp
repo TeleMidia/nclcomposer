@@ -13,7 +13,7 @@
 
 #include "StructuralUtil.h"
 
-CompleteLineEdit::CompleteLineEdit(QStringList words, QWidget *parent)
+CompleteLineEdit::CompleteLineEdit(const QStringList &words, QWidget *parent)
   : QLineEdit(parent), words(words)
 {
   listView = new QListView(this);
@@ -375,10 +375,16 @@ void StructuralLinkDialog::init(QString connName, QString condName, QString acti
     connLineEdit->setText(connName);
 
     if (!condName.isEmpty() && _conditions.value(connName).contains(condName))
-      form.cbCondition->setCurrentText(condName);
+    {
+      int index = form.cbCondition->findText(condName);
+      form.cbCondition->setCurrentIndex(index);
+    }
 
     if (!actionName.isEmpty() && _actions.value(connName).contains(actionName))
-      form.cbAction->setCurrentText(actionName);
+    {
+      int index = form.cbCondition->findText(actionName);
+      form.cbAction->setCurrentIndex(index);
+    }
   }
 
   if(firstTime)

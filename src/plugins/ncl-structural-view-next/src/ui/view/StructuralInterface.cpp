@@ -62,12 +62,12 @@ void StructuralInterface::setStructuralType(const StructuralType subtype)
   refresh();
 }
 
-void StructuralInterface::setHexColor(QString hexColor)
+void StructuralInterface::setHexColor(const QString &hexColor)
 {
   this->hexColor = hexColor;
 }
 
-void StructuralInterface::setHexBorderColor(QString hexBorderColor)
+void StructuralInterface::setHexBorderColor(const QString &hexBorderColor)
 {
   this->hexBorderColor = hexBorderColor;
 }

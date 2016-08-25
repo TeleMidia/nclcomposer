@@ -51,7 +51,7 @@ public:
   StructuralScene* getScene();
 
   bool hasEntity(QString uid);
-  StructuralEntity* getEntity(QString uid);
+  StructuralEntity* getEntity(const QString &uid);
   QMap<QString, StructuralEntity*> getEntities();
 
   void switchMinimapVis();
@@ -104,7 +104,7 @@ public:
 
   void read(QDomElement element, QDomElement parent);
 
-  QString serialize(QString data = "");
+  QString serialize();
   void exportDataFromEntity(StructuralEntity* entity, QDomDocument* doc, QDomElement _parent);
 
   void unSelect();
@@ -113,7 +113,7 @@ public:
    QVector<StructuralEntity*> getRoots();
 
    void clearErrors();
-   void markError(QString uid, QString msg);
+   void markError(const QString &uid, const QString &msg);
 
    void setMiniMapVisible(bool enable);
 

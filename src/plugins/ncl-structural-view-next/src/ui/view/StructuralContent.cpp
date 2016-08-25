@@ -49,7 +49,7 @@ QString StructuralContent::getSource() const
   return source;
 }
 
-void StructuralContent::setSource(QString source)
+void StructuralContent::setSource(const QString &source)
 {
   this->source = source;
 

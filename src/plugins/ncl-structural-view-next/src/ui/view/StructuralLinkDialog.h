@@ -22,7 +22,7 @@ class CompleteLineEdit : public QLineEdit
   Q_OBJECT
 
 public:
-  CompleteLineEdit(QStringList words, QWidget *parent = 0);
+  CompleteLineEdit(const QStringList &words, QWidget *parent = 0);
   void setStringList(const QStringList &words);
 
   void hideList();

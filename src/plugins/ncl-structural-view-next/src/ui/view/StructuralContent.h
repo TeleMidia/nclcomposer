@@ -22,7 +22,7 @@ public:
 
   void setMediaType(Structural::StructuralMedia type);
 
-  void setSource(QString source);
+  void setSource(const QString &source);
 
   virtual void setStructuralType(StructuralType _subtype);
 
