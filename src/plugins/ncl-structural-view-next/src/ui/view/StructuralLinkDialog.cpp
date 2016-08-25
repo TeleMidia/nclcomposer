@@ -475,6 +475,11 @@ void StructuralLinkDialog::updateForm(QString conn)
   mdLinkParams->setHorizontalHeaderItem(0, new QStandardItem("Name"));
   mdLinkParams->setHorizontalHeaderItem(1, new QStandardItem("Value"));
 
+  if (form.tbLinkParams->model() != NULL){
+    QAbstractItemModel* m = form.tbLinkParams->model();
+    delete m;
+  }
+
   form.tbLinkParams->setModel(mdLinkParams);
 
   QStandardItemModel* mdConditionParams = new QStandardItemModel(nrow, ncol);
@@ -482,12 +487,22 @@ void StructuralLinkDialog::updateForm(QString conn)
   mdConditionParams->setHorizontalHeaderItem(0, new QStandardItem("Name"));
   mdConditionParams->setHorizontalHeaderItem(1, new QStandardItem("Value"));
 
+  if (form.tbConditionParams->model() != NULL){
+    QAbstractItemModel* m = form.tbConditionParams->model();
+    delete m;
+  }
+
   form.tbConditionParams->setModel(mdConditionParams);
 
   QStandardItemModel* mdActionParams = new QStandardItemModel(nrow, ncol);
 
   mdActionParams->setHorizontalHeaderItem(0, new QStandardItem("Name"));
   mdActionParams->setHorizontalHeaderItem(1, new QStandardItem("Value"));
+
+  if (form.tbActionParams->model() != NULL){
+    QAbstractItemModel* m = form.tbActionParams->model();
+    delete m;
+  }
 
   form.tbActionParams->setModel(mdActionParams);
 
@@ -600,13 +615,15 @@ void StructuralLinkDialog::updateCurrentParams(QTableView* table, QMap<QString, 
 {
   QAbstractItemModel* m = table->model();
 
-  int nrow = m->rowCount();
+  if (m != NULL){
+    int nrow = m->rowCount();
 
-  for (int i=0; i<nrow; ++i){
-    QString key = m->data(m->index(i,0)).toString();
+    for (int i=0; i<nrow; ++i){
+      QString key = m->data(m->index(i,0)).toString();
 
-    if (params.contains(key)){
-      m->setData(m->index(i,1),params.value(key));
+      if (params.contains(key)){
+        m->setData(m->index(i,1),params.value(key));
+      }
     }
   }
 }
