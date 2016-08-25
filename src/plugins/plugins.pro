@@ -11,7 +11,6 @@ ncl-textual-view.depends = ncl-profile qscintilla2_telem
 properties-view.depends = ncl-profile
 ncl-layout-view.depends = ncl-profile
 ncl-structural-view.depends = ncl-profile
-ncl-structural-view_next.depends = ncl-profile
 validator.depends = ncl-profile
 ncl-rules-view.depends = ncl-profile
 media-preview.depends = ncl_profile
@@ -26,11 +25,22 @@ SUBDIRS = \
     properties-view \
     ncl-layout-view \
     ncl-structural-view \
-#   ncl-structural-view-next \
     validator \
     ncl-rules-view \
     media-preview
 #   clube-ncl
+
+# Uncomment the next two line to enable 'next' build as default option
+#CONFIG += \
+#  next
+
+next {
+  SUBDIRS -= \
+    ncl-structural-view
+
+  SUBDIRS += \
+    ncl-structural-view-next/ncl-structural-view-next.pro
+}
 
 contains(FORCERELEASE, true)
 {
