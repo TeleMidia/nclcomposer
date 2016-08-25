@@ -4,12 +4,6 @@ QT += \
     widgets \
     xml
 
-TARGET = \
-    ncl-structural-view-next
-
-DESTDIR = \
-    bin/
-
 # Uncomment the next two line to enable graphviz as default option
 #CONFIG += \
 #    graphviz
