@@ -16,6 +16,7 @@
 #include <QMap>
 #include <QDir>
 #include <QFileInfo>
+#include <QLoggingCategory>
 
 #include "util/ComposerSettings.h"
 
@@ -101,6 +102,8 @@ public:
 private:
   static QMap<QString,LanguageType> types; /*!< TODO */
 };
+
+Q_DECLARE_LOGGING_CATEGORY(cprCoreLog)
 
 } } } //end namespace
 
