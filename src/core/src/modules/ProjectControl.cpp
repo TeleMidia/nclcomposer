@@ -33,7 +33,7 @@ ProjectControl::~ProjectControl()
     }
     else
     {
-      qDebug() << "Error: Failed to releasePlugins ";
+      qCDebug(cprCoreLog) << "Error: Failed to releasePlugins ";
     }
   }
 }
@@ -51,7 +51,7 @@ bool ProjectControl::closeProject(const QString &location)
   }
   else
   {
-    qDebug() << "Error: Failed to close the project :" << location;
+    qCDebug(cprCoreLog) << "Error: Failed to close the project :" << location;
     return false;
   }
   return true;
@@ -119,7 +119,7 @@ bool ProjectControl::launchProject(const QString &location)
               this, SLOT(projectIsDirty(bool)) );
   }
   else
-    qDebug() << tr("Project could not be open!");
+    qCDebug(cprCoreLog) << tr("Project could not be open!");
 
   emit endOpenProject(location);
 
@@ -141,7 +141,7 @@ void ProjectControl::importFromDocument( const QString &docLocation,
 
   if(type == NONE)
   {
-    qDebug() << "File format not recognized.";
+    qCDebug(cprCoreLog) << "File format not recognized.";
     return;
   }
 
@@ -188,12 +188,12 @@ void ProjectControl::importFromDocument( const QString &docLocation,
     if(input.open(QIODevice::ReadOnly))
       parser->parseContent(input.readAll());
     else
-      qDebug() << tr("File could not be open!");
+      qCDebug(cprCoreLog) << tr("File could not be open!");
 
     input.close();
   }
   else
-    qDebug() << tr("Project could not be open!");
+    qCDebug(cprCoreLog) << tr("Project could not be open!");
 
   emit endOpenProject(projLocation);
 
@@ -211,15 +211,16 @@ void ProjectControl::saveProject(const QString &location)
   //qDebug() << "Trying to save: " << location;
   if(!fout.exists())
   {
-    qDebug() << "The file (" << location << ") doesn't exists. It will be\
-                created.";
+    qCDebug(cprCoreLog) << "The file (" << location << ") doesn't exists. \
+                           It will be created.";
   }
 
   if( !fout.open( QIODevice::WriteOnly ) )
   {
-   // It could not open
-   qDebug() << "Failed to open file (" <<  location << ") for writing.";
-   return;
+    // It could not open
+    qCDebug(cprCoreLog) << "Failed to open file (" <<  location
+                       << ") for writing.";
+    return;
   }
 
   QString content = project->toString();
@@ -248,8 +249,8 @@ void ProjectControl::moveProject(const QString &location, const QString &dest, b
     project->setAtrributes(atts);
   }
   else
-    qWarning() << "Could not copy the current project from  " << location
-               << " to " << dest;
+    qCWarning(cprCoreLog) << "Could not copy the current project from  "
+                          << location << " to " << dest;
 }
 
 void ProjectControl::saveTemporaryProject(const QString &location)
@@ -257,17 +258,18 @@ void ProjectControl::saveTemporaryProject(const QString &location)
   Project *project = openProjects.value(location);
   QFile fout(location+"~");
 
-  qDebug() << "Trying to autosave: " << location;
+  qCDebug(cprCoreLog) << "Trying to autosave: " << location;
   if(!fout.exists())
   {
-    qDebug() << "The file (" << location << ") doesn't exists. It will be\
-               created.";
+    qCDebug(cprCoreLog) << "The file (" << location << ") doesn't exists.\
+                            It will be created.";
   }
 
   if( !fout.open( QIODevice::WriteOnly ) )
   {
     // It could not open
-    qDebug() << "Failed to open file (" <<  location << ") for writing.";
+    qCDebug(cprCoreLog) << "Failed to open file (" <<  location
+                        << ") for writing.";
     return;
   }
 
@@ -292,7 +294,8 @@ void ProjectControl::projectIsDirty(bool isDirty)
   {
     emit dirtyProject(project->getLocation(), isDirty);
   }
-  else qDebug() << "Received a dirtyProject message for a NULL project";
+  else
+    qCDebug(cprCoreLog) <<"Received a dirtyProject message for a NULL project";
 }
 
 } }//end namespace

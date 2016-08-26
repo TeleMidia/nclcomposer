@@ -25,6 +25,8 @@ namespace composer {
   namespace core {
     namespace util {
 
+Q_LOGGING_CATEGORY(cprCoreLog, "cpr.core")
+
 QMap<QString,LanguageType> Utilities::types = createMap();
 
 
@@ -134,7 +136,7 @@ QString Utilities::getLastFileDialogPath()
     lastFileDialogPath = settings.value("lastFileDialogPath").toString();
   settings.endGroup();
 
-  qDebug() << lastFileDialogPath;
+  qCDebug(cprCoreLog) << lastFileDialogPath;
 
   return lastFileDialogPath;
 }

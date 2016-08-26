@@ -25,6 +25,7 @@ using namespace composer::core::model;
 #include <QXmlInputSource>
 
 #include <QFile>
+#include <util/Utilities.h>
 
 namespace composer {
   namespace core {
