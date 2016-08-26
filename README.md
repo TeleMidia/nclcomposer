@@ -36,7 +36,7 @@ NCL Composer source code is divided into three main parts:
 
 ### Requirements
 The main requirement for NCL Composer is:
-  * Qt >= 4.7.x
+  * Qt >= 5.2
 
 If you want to enable the Run your application on Ginga Virtual Set-top box,
 then you should run qmake like this:
