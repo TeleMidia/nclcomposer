@@ -1,6 +1,9 @@
 #include "Insert.h"
 
-Insert::Insert(QString uid, QString parent, QMap<QString, QString> properties, QMap<QString, QString> settings)
+Insert::Insert(const QString &uid,
+               const QString &parent,
+               const QMap<QString, QString> &properties,
+               const QMap<QString, QString> &settings)
 {
   this->_uid = uid;
   this->_parent = parent;

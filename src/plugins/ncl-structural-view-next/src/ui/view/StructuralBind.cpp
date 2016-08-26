@@ -871,7 +871,7 @@ void StructuralBind::delineate_condition(QPainterPath* painter) const
   }
 }
 
-void StructuralBind::addParam(QString uid, QString name, QString value)
+void StructuralBind::addParam(const QString &uid, const QString &name, const QString &value)
 {
   if (name != "")
   {
@@ -882,7 +882,7 @@ void StructuralBind::addParam(QString uid, QString name, QString value)
   }
 }
 
-void StructuralBind::setParam(QString name, QString value)
+void StructuralBind::setParam(const QString &name, const QString &value)
 {
   if (name != "")
   {
@@ -892,7 +892,7 @@ void StructuralBind::setParam(QString name, QString value)
   }
 }
 
-void StructuralBind::removeUId(QString uid)
+void StructuralBind::removeUId(const QString &uid)
 {
   QString name = names_uids.key(uid);
 
@@ -905,7 +905,7 @@ void StructuralBind::removeUId(QString uid)
   }
 }
 
-void StructuralBind::removeParam(QString name)
+void StructuralBind::removeParam(const QString &name)
 {
   if(name != "")
   {
@@ -916,7 +916,7 @@ void StructuralBind::removeParam(QString name)
   }
 }
 
-void StructuralBind::setParams(QMap<QString, QString> params)
+void StructuralBind::setParams(const QMap<QString, QString> &params)
 {
   this->params = params;
 }
@@ -954,7 +954,7 @@ QString StructuralBind::getRole() const
   return role;
 }
 
-void StructuralBind::setRole(QString role)
+void StructuralBind::setRole(const QString &role)
 {
   this->role = role;
 }
@@ -964,7 +964,7 @@ QString StructuralBind::getComponent() const
   return component;
 }
 
-void StructuralBind::setComponent(QString component)
+void StructuralBind::setComponent(const QString &component)
 {
   this->component = component;
 }
@@ -974,7 +974,7 @@ QString StructuralBind::getComponentUid() const
   return componentUID;
 }
 
-void StructuralBind::setComponentUid(QString componentUID)
+void StructuralBind::setComponentUid(const QString &componentUID)
 {
   this->componentUID = componentUID;
 }
@@ -984,7 +984,7 @@ QString StructuralBind::getInterface() const
   return interface;
 }
 
-void StructuralBind::setInterface(QString interface)
+void StructuralBind::setInterface(const QString &interface)
 {
   this->interface = interface;
 }
@@ -994,7 +994,7 @@ QString StructuralBind::getInterfaceUid() const
   return interfaceUID;
 }
 
-void StructuralBind::setInterfaceUid(QString interfaceUID)
+void StructuralBind::setInterfaceUid(const QString &interfaceUID)
 {
   this->interfaceUID = interfaceUID;
 }
@@ -1009,7 +1009,7 @@ QMap<QString, QString> StructuralBind::getNameUIDs()
   return names_uids;
 }
 
-void StructuralBind::setNamesUIDs(QMap<QString, QString> names_uids)
+void StructuralBind::setNamesUIDs(const QMap<QString, QString> &names_uids)
 {
   this->names_uids = names_uids;
 }

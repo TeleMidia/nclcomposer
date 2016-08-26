@@ -256,7 +256,7 @@ QMap<QString,QString> StructuralUtil::createSettings(bool undo, bool notify)
    return createSettings((undo ? "1" : "0"), (notify ? "1" : "0"), CreateUid());
 }
 
-QMap<QString,QString> StructuralUtil::createSettings(QString undo, QString notify, QString code)
+QMap<QString,QString> StructuralUtil::createSettings(const QString &undo, const QString &notify, const QString &code)
 {
   QMap<QString,QString> settings;
 
@@ -353,7 +353,7 @@ Structural::StructuralMedia StructuralUtil::getnstTypeFromMime(const QString &mi
   return type;
 }
 
-void StructuralUtil::dbg(QObject* object, QString message)
+void StructuralUtil::dbg(QObject* object, const QString &message)
 {
   qDebug() << "[PLUGIN][STR]" << ":" << object->metaObject()->className() << ":" << message;
 }

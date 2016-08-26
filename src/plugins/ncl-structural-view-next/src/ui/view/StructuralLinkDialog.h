@@ -63,15 +63,16 @@ public:
     EditCondition
   };
 
-  void setData(QMap<QString, QVector<QString> > conditions,
-               QMap<QString, QVector<QString> > actions,
-               QMap<QString, QVector<QString> > params);
+  void setData(const QMap<QString, QVector<QString> > &conditions,
+               const QMap<QString, QVector<QString> > &actions,
+               const QMap<QString, QVector<QString> > &StructuralLinkDialogparams);
 
-  void init(QString connName = "", QString condName = "", QString actionName = "", LinkDialogMode mode = CreateLink);
+  void init(const QString &connName = "", const QString &condName = "",
+            const QString &actionName = "", LinkDialogMode mode = CreateLink);
 
-  void updateCurrentLinkParam(QMap<QString, QString> params);
-  void updateCurrentConditionParam(QMap<QString, QString> params);
-  void updateCurrentActionParam(QMap<QString, QString> params);
+  void updateCurrentLinkParam(const QMap<QString, QString> &params);
+  void updateCurrentConditionParam(const QMap<QString, QString> &params);
+  void updateCurrentActionParam(const QMap<QString, QString> &params);
 
   QMap<QString, QString> getLinkParams();
   QMap<QString, QString> getConditionParams();
@@ -98,7 +99,8 @@ public:
 
 private:
   QMap<QString, QString> getParams(QTableView* table);
-  void updateCurrentParams(QTableView* table, QMap<QString, QString> params);
+  void updateCurrentParams(QTableView* table,
+                           const QMap<QString, QString> &params);
   bool firstTime, changeModel;
   LinkDialogMode _currentMode;
   CompleteLineEdit *connLineEdit;

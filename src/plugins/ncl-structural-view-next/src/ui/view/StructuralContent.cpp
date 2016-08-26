@@ -131,7 +131,7 @@ QString StructuralContent::getRefer() const
   return refer;
 }
 
-void StructuralContent::setRefer(QString refer)
+void StructuralContent::setRefer(const QString &refer)
 {
   this->refer = refer;
 }
@@ -141,7 +141,7 @@ QString StructuralContent::getReferUID() const
   return referUID;
 }
 
-void StructuralContent::setReferUID(QString refetUID)
+void StructuralContent::setReferUID(const QString &refetUID)
 {
   this->referUID = refetUID;
 }
@@ -151,7 +151,7 @@ QString StructuralContent::getInstance() const
   return instance;
 }
 
-void StructuralContent::setInstance(QString instance)
+void StructuralContent::setInstance(const QString &instance)
 {
   this->instance = instance;
 }
