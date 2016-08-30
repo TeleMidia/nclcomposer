@@ -20,41 +20,41 @@ public:
   virtual void refresh();
 
 
-  void setRole(QString role);
+  void setRole(const QString &qt_check_for_QOBJECT_macrorole);
 
   QString getComponent() const;
 
-  void setComponent(QString component);
+  void setComponent(const QString &component);
 
   QString getComponentUid() const;
 
-  void setComponentUid(QString componentUid);
+  void setComponentUid(const QString &componentUid);
 
   QString getInterface() const;
 
-  void setInterface(QString interface);
+  void setInterface(const QString &interface);
 
   QString getInterfaceUid() const;
 
-  void setInterfaceUid(QString interfaceUid);
+  void setInterfaceUid(const QString &interfaceUid);
 
   QMap<QString, QString> getParams();
 
-  void setParams(QMap<QString, QString> params);
+  void setParams(const QMap<QString, QString> &params);
 
   QMap<QString, QString> getNameUIDs();
 
-  void setNamesUIDs(QMap<QString, QString> name_uids);
+  void setNamesUIDs(const QMap<QString, QString> &name_uids);
 
   //void setConn(QnstConnector* conn);
 
-  void addParam(QString _uid, QString _name, QString value);
+  void addParam(const QString &_uid, const QString &_name, const QString &value);
 
-  void setParam(QString _name, QString value);
+  void setParam(const QString &_name, const QString &value);
 
-  void removeParam(QString _name);
+  void removeParam(const QString &_name);
 
-  void removeUId(QString _uid);
+  void removeUId(const QString &_uid);
 
   void setLink(StructuralLink *link);
 

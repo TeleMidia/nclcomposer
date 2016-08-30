@@ -22,7 +22,7 @@ public:
 
   void setMediaType(Structural::StructuralMedia type);
 
-  void setSource(QString source);
+  void setSource(const QString &source);
 
   virtual void setStructuralType(StructuralType _subtype);
 
@@ -32,17 +32,18 @@ public:
 
   QString getRefer() const;
 
-  void setRefer(QString refer);
+  void setRefer(const QString &refer);
 
   QString getReferUID() const;
 
-  void setReferUID(QString refetUID);
+  void setReferUID(const QString &refetUID);
 
   QString getInstance() const;
 
-  void setInstance(QString instance);
+  void setInstance(const QString &instance);
 
   virtual void refresh();
+
 protected:
   virtual void draw(QPainter* painter);
 

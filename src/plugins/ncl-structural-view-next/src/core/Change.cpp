@@ -1,6 +1,9 @@
 #include "Change.h"
 
-Change::Change(QString uid, QMap<QString, QString> properties, QMap<QString, QString> previous, QMap<QString, QString> settings)
+Change::Change(const QString &uid,
+               const QMap<QString, QString> &properties,
+               const QMap<QString, QString> &previous,
+               const QMap<QString, QString> &settings)
 {
   this->_uid = uid;
   this->_properties = properties;

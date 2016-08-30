@@ -6,7 +6,10 @@
 class Insert : public Command
 {
 public:
-  Insert(QString uid, QString parent, QMap<QString, QString> properties, QMap<QString, QString> settings);
+  Insert(const QString &uid,
+         const QString &parent,
+         const QMap<QString, QString> &properties,
+         const QMap<QString, QString> &settings);
   virtual ~Insert();
 
   virtual void undo();

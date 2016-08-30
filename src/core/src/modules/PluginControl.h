@@ -20,6 +20,7 @@
 #include <QHashIterator>
 #include <QDebug>
 
+#include <util/Utilities.h>
 #include "../util/ComposerCoreControl_global.h"
 
 #include "MessageControl.h"
@@ -55,7 +56,6 @@ class COMPOSERCORESHARED_EXPORT PluginControl : public QObject
   SINGLETON(PluginControl)
 
 public:
-
   /*!
    * \brief launchNewPlugin
    *
@@ -194,6 +194,7 @@ private:
   /*!< Plugin Instance given project location */
 
   QMultiHash<IPlugin*, IPluginFactory*> factoryByPlugin;
+
   /*!< Maps each IPlugin to its corresponding IPluginFactory */
   /*!
    * \brief Launchs a new plugin and connect it with the given MessageControl.

@@ -64,7 +64,7 @@ ILanguageProfile* LanguageControl::loadProfile(const QString &fileName)
       LanguageType type = lProfile->getLanguageType();
       if (profiles.contains(type))
       {
-        qDebug() << "LanguageControl::loadProfiles Profile for language ("
+        qCDebug(cprCoreLog) << "LanguageControl::loadProfiles Profile for language ("
                  << Utilities::getExtensionForLanguageType(type) << ") already"
                  << "exists";
       }
@@ -75,13 +75,13 @@ ILanguageProfile* LanguageControl::loadProfile(const QString &fileName)
     }
     else
     {
-      qDebug() << "LanguageControl::loadProfiles" <<
-                  "Error! Could not cast to ILanguageProfile";
+      qCDebug(cprCoreLog) << "LanguageControl::loadProfiles" <<
+                             "Error! Could not cast to ILanguageProfile";
     }
   }
   else
-    qDebug() << "Failed to load languageControl (" << fileName << ")"
-             << loader.errorString();
+    qCDebug(cprCoreLog) << "Failed to load languageControl (" << fileName <<")"
+                        << loader.errorString();
 
   return lProfile;
 }

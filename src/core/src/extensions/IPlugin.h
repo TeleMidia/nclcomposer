@@ -51,7 +51,7 @@ public:
     return this->pluginInstanceID;
   }
 
-  inline void setPluginInstanceID(QString pluginInstID)
+  inline void setPluginInstanceID(const QString &pluginInstID)
   {
     this->pluginInstanceID = pluginInstID;
   }
@@ -177,7 +177,8 @@ public slots:
    *     the entity.
    * \param entityID the entity's identifier that was removed.
    */
-  virtual void onEntityRemoved(const QString &pluginID, const QString &entityID) /*= 0*/
+  virtual void onEntityRemoved( const QString &pluginID,
+                                const QString &entityID ) /*= 0*/
   {
     Q_UNUSED(pluginID);
     Q_UNUSED(entityID);

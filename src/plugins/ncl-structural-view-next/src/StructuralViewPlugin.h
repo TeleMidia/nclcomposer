@@ -66,7 +66,7 @@ public slots:
 
   void notifyEntityDeletedInView(const QString uid, QMap<QString, QString> settings);
 
-    void notifyEntitySelectionInView(const QString uid, QMap<QString, QString> settings);
+  void notifyEntitySelectionInView(const QString uid, QMap<QString, QString> settings);
 
   void notifyEntityChangedInView(const QString uid,
                                  QMap<QString, QString> properties,
@@ -76,19 +76,16 @@ public slots:
 private:
   void clear();
 
-  QString getUidById(QString id);
-  QString getUidById(QString id, Entity* entity);
-  QString getUidByName(QString name, Entity* entity);
+  QString getUidById(const QString &id);
+  QString getUidById(const QString &id, Entity* entity);
+  QString getUidByName(const QString &name, Entity* entity);
 
   void createWidgets();
 
   void createConnections();
 
-
-
   /* FROM QNSTVIEW */
   void requestBodyDependence();
-
 
 private:
 

@@ -13,7 +13,7 @@
 
 #include "StructuralUtil.h"
 
-CompleteLineEdit::CompleteLineEdit(QStringList words, QWidget *parent)
+CompleteLineEdit::CompleteLineEdit(const QStringList &words, QWidget *parent)
   : QLineEdit(parent), words(words)
 {
   listView = new QListView(this);
@@ -220,16 +220,19 @@ StructuralLinkDialog::~StructuralLinkDialog()
 
 }
 
-void StructuralLinkDialog::setData(QMap<QString, QVector<QString> > conditions,
-                                   QMap<QString, QVector<QString> > actions,
-                                   QMap<QString, QVector<QString> > params)
+void StructuralLinkDialog::setData(const QMap<QString, QVector<QString> > &conditions,
+                                   const QMap<QString, QVector<QString> > &actions,
+                                   const QMap<QString, QVector<QString> > &params)
 {
   _conditions = conditions;
   _actions = actions;
   _params = params;
 }
 
-void StructuralLinkDialog::init(QString connName, QString condName, QString actionName, LinkDialogMode mode)
+void StructuralLinkDialog::init(const QString &connName,
+                                const QString &condName,
+                                const QString &actionName,
+                                LinkDialogMode mode)
 {
   _currentMode = mode;
 
@@ -375,10 +378,16 @@ void StructuralLinkDialog::init(QString connName, QString condName, QString acti
     connLineEdit->setText(connName);
 
     if (!condName.isEmpty() && _conditions.value(connName).contains(condName))
-      form.cbCondition->setCurrentText(condName);
+    {
+      int index = form.cbCondition->findText(condName);
+      form.cbCondition->setCurrentIndex(index);
+    }
 
     if (!actionName.isEmpty() && _actions.value(connName).contains(actionName))
-      form.cbAction->setCurrentText(actionName);
+    {
+      int index = form.cbCondition->findText(actionName);
+      form.cbAction->setCurrentIndex(index);
+    }
   }
 
   if(firstTime)
@@ -596,22 +605,22 @@ QMap<QString, QString> StructuralLinkDialog::getParams(QTableView* table)
   return p;
 }
 
-void StructuralLinkDialog::updateCurrentLinkParam(QMap<QString, QString> params)
+void StructuralLinkDialog::updateCurrentLinkParam(const QMap<QString, QString> &params)
 {
   updateCurrentParams(form.tbLinkParams, params);
 }
 
-void StructuralLinkDialog::updateCurrentConditionParam(QMap<QString, QString> params)
+void StructuralLinkDialog::updateCurrentConditionParam(const QMap<QString, QString> &params)
 {
   updateCurrentParams(form.tbConditionParams, params);
 }
 
-void StructuralLinkDialog::updateCurrentActionParam(QMap<QString, QString> params)
+void StructuralLinkDialog::updateCurrentActionParam(const QMap<QString, QString> &params)
 {
   updateCurrentParams(form.tbActionParams, params);
 }
 
-void StructuralLinkDialog::updateCurrentParams(QTableView* table, QMap<QString, QString> params)
+void StructuralLinkDialog::updateCurrentParams(QTableView* table, const QMap<QString, QString> &params)
 {
   QAbstractItemModel* m = table->model();
 

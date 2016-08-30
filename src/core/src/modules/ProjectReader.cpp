@@ -30,7 +30,7 @@ Project *ProjectReader::readFile(const QString &location)
 
   if(!file.open(QIODevice::ReadOnly))
   {
-    qDebug() << "ERROR: Could not open the file " << location;
+    qCDebug(cprCoreLog) << "ERROR: Could not open the file " << location;
     error = true;
   }
 
@@ -85,7 +85,7 @@ Project *ProjectReader::readFile(const QString &location)
   /* FINISH READING MODEL */
 
   if(error)
-    qDebug() << "ERROR: File is corrupted " << location;
+    qCDebug(cprCoreLog) << "ERROR: File is corrupted " << location;
 
   file.close();
 
@@ -135,7 +135,7 @@ bool ProjectReader::startElement( const QString &namespaceURI,
   if(qName != "document" && parentEntity != NULL)
   {
     if(uniqueId == "")
-      qDebug() << "trying to add an entity whithout an uniqueId";
+      qCDebug(cprCoreLog) << "trying to add an entity whithout an uniqueId";
     else
     {
       entity = new Entity(uniqueId, qName, atts, project);
@@ -176,7 +176,7 @@ bool ProjectReader::characters(const QString &str)
 
 bool ProjectReader::fatalError(const QXmlParseException &exception)
 {
-  qDebug() << "Fatal error on line" << exception.lineNumber()
+  qCDebug(cprCoreLog) << "Fatal error on line" << exception.lineNumber()
            << ", column" << exception.columnNumber() << ":"
            << exception.message();
 

@@ -19,8 +19,8 @@ public:
 
   void setRefer(bool refer);
 
-  void setHexColor(QString hexColor);
-  void setHexBorderColor(QString hexBorderColor);
+  void setHexColor(const QString &hexColor);
+  void setHexBorderColor(const QString &hexBorderColor);
 
   virtual void refresh();
 

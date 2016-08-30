@@ -117,9 +117,9 @@ bool StructuralView::hasEntity(QString uid)
   return entities.contains(uid);
 }
 
-StructuralEntity* StructuralView::getEntity(QString uid)
+StructuralEntity* StructuralView::getEntity(const QString &uid)
 {
-  return entities.value(uid,NULL);
+  return entities.value(uid, NULL);
 }
 
 QMap<QString, StructuralEntity*> StructuralView::getEntities()
@@ -273,7 +273,7 @@ void StructuralView::read(QDomElement element, QDomElement parent)
   }
 }
 
-QString StructuralView::serialize(QString data)
+QString StructuralView::serialize()
 {
   QDomDocument* document = new QDomDocument();
   QDomElement root = document->createElement("structural");
@@ -287,9 +287,8 @@ QString StructuralView::serialize(QString data)
   }
 
   document->appendChild(root);
-  data = document->toString(4);
 
-  return data;
+  return document->toString(4);
 }
 
 void StructuralView::exportDataFromEntity(StructuralEntity* entity, QDomDocument* doc, QDomElement parent)
@@ -943,7 +942,7 @@ void StructuralView::clearErrors()
   }
 }
 
-void StructuralView::markError(QString uid, QString msg)
+void StructuralView::markError(const QString &uid, const QString &msg)
 {
   if(entities.contains(uid))
   {
@@ -2282,14 +2281,16 @@ void StructuralView::showEditBindDialog(StructuralBind* entity)
     linkDialog->init(entity->getEntityB()->getStructuralProperty(PLG_ENTITY_XCONNECTOR_ID),"","",
                      StructuralLinkDialog::EditCondition);
 
-    linkDialog->form.cbCondition->setCurrentText(entity->getStructuralId());
+    int index = linkDialog->form.cbCondition->findText(entity->getStructuralId());
+    linkDialog->form.cbCondition->setCurrentIndex(index);
     linkDialog->updateCurrentConditionParam(pBind);
   }else if (entity->isAction()){
 
     linkDialog->init(entity->getEntityA()->getStructuralProperty(PLG_ENTITY_XCONNECTOR_ID),"","",
                      StructuralLinkDialog::EditAction);
 
-    linkDialog->form.cbAction->setCurrentText(entity->getStructuralId());
+    int index = linkDialog->form.cbAction->findText(entity->getStructuralId());
+    linkDialog->form.cbAction->setCurrentIndex(index);
     linkDialog->updateCurrentActionParam(pBind);
   }
 

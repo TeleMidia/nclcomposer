@@ -1214,12 +1214,12 @@ void StructuralViewPlugin::validationError(QString pluginID, void *param)
   }
 }
 
-QString StructuralViewPlugin::getUidById(QString id)
+QString StructuralViewPlugin::getUidById(const QString &id)
 {
   return getUidById(id, getProject());
 }
 
-QString StructuralViewPlugin::getUidById(QString id, Entity* entity)
+QString StructuralViewPlugin::getUidById(const QString &id, Entity* entity)
 {
   QString uid = "";
 
@@ -1240,7 +1240,7 @@ QString StructuralViewPlugin::getUidById(QString id, Entity* entity)
   return uid;
 }
 
-QString StructuralViewPlugin::getUidByName(QString name, Entity* entity)
+QString StructuralViewPlugin::getUidByName(const QString &name, Entity* entity)
 {
   QString uid = "";
 

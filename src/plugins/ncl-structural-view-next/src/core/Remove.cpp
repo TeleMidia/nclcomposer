@@ -1,6 +1,10 @@
 #include "Remove.h"
 
-Remove::Remove(QString uid, QString parent, QMap<QString, QString> properties, QMap<QString, QString> settings, Command* command)
+Remove::Remove(const QString &uid,
+               const QString &parent,
+               const QMap<QString, QString> &properties,
+               const QMap<QString, QString> &settings,
+               Command* command)
   : Command(command)
 {
   this->_uid = uid;

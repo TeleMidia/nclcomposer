@@ -253,7 +253,7 @@ QList<Entity*> Project::getEntityByAttrId(const QString &id)
   QMutexLocker locker(lockEntities);
   QMapIterator<QString, Entity*> it(entities);
   QList<Entity*> listRet;
-  qDebug() << "Project::getEntitiesbyType " << type;
+  qCDebug(cprCoreLog) << "Project::getEntitiesbyType " << type;
 
   while(it.hasNext())
   {

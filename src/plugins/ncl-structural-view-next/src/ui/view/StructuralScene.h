@@ -36,8 +36,6 @@ private:
   void createMenus();
   void createConnections();
 
-
-
   QPointF _insertPoint;
 };
 
