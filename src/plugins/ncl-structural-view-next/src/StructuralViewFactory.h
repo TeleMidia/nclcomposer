@@ -18,7 +18,7 @@
 #ifndef QNSTCOMPOSERPLUGINFACTORY_H
 #define QNSTCOMPOSERPLUGINFACTORY_H
 
-#include <core/extensions/IPluginFactory.h>
+#include <extensions/IPluginFactory.h>
 using namespace composer::extension;
 
 #include "StructuralViewPlugin.h"
