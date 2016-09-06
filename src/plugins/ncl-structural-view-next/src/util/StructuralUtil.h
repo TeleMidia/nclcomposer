@@ -16,6 +16,9 @@ public:
   static QMap<QString,QString> createSettings(bool undo, bool notify, const QString &code);
   static QMap<QString,QString> createSettings(const QString &undo, const QString &notify, const QString &code);
 
+  static QMap<QString,QString> createComposerTranslations(StructuralType type);
+  static QMap<QString,QString> createStructuralTranslations(StructuralType type);
+
   static QString translateCategoryToString(StructualCategory category);
   static StructualCategory translateStringToCategory(const QString &category);
 
@@ -28,80 +31,35 @@ public:
   static QString translateTypeToIcon(StructuralType type);
   static QString translateMediaToIcon(StructuralMedia type);
 
+  static QString translateTypeToPrefix(StructuralType type);
 
-
-  /*!
-   * \brief Returns the Qnst::EntitySubtype based on the media mimetype.
-   *
-   * \arg mimeType the mime-type.
-   *
-   * \return the qnst media type.
-   */
-  static Structural::StructuralMedia getnstTypeFromMime(const QString &mimeType);
-
-
-
-  /*!
-   * \brief Returns the media type based on the extension of the media source.
-   *
-   * \arg ext the extension of the path.
-   * \return the media type associated with that extension.
-   */
-  static Structural::StructuralMedia getnstTypeFromExtension(const QString &ext);
-
-  static QString normalizeXMLID(const QString &id);
-
-  /*!
-   * \brief Returns the media type based on the string the represent that type.
-   *
-   * \arg strType the type specified in a string.
-   * \return the media type associated with that string.
-   */
-  static Structural::StructuralType getnstTypeFromStr(const QString &strType);
-
-  /*!
-   * \brief Returns the string that represents the type.
-   *
-   * One of the use of this function is to serialize the Qnst::EntitySubtype.
-   *
-   * \arg type the entity type
-   * \return the string that represent that type.
-   */
-  static QString getStrFromNstType(Structural::StructuralType type);
-
-  /*!
-   * \brief Returns a media identifier prefix for an specific qnst entity type.
-   *
-   * \arg type the qnst entity type.
-   * \return the prefix for the entity type.
-   */
-  static QString getPrefixIdFromType(Structural::StructuralType type);
-
-
-
-
+  static StructuralMedia translateExtensionToMedia(const QString &extension);
 
   static bool isConditionRole(StructuralRole role);
+  static bool isConditionRole(const QString &role);
+
   static bool isActionRole(StructuralRole role);
-  static bool isConditionRole(QString role);
-  static bool isActionRole(QString role);
-  static bool hasValidKinshp(StructuralType subtype, StructuralType parent);
+  static bool isActionRole(const QString &role);
 
-  static QMap<QString,QString> createCoreTranslationMap(StructuralType type);
-  static QMap<QString,QString> createViewTranslationMap(StructuralType type);
+  static QString formatId(const QString &id);
 
-
+  static bool validateKinship(StructuralType type, StructuralType parent);
 
 private:
   static std::map <StructualCategory, QString> _mapCategoryToString;
   static std::map <QString, StructualCategory> _mapStringToCategory;
+
   static std::map <StructuralType, QString> _mapTypeToString;
   static std::map <QString, StructuralType> _mapStringToType;
+
   static std::map <StructuralRole, QString> _mapRoleToString;
   static std::map <QString, StructuralRole> _mapStringToRole;
+
+  static std::map  <StructuralType, QString>  _mapTypeToPrefix;
+
   static std::map <StructuralType, QString> _mapTypeToIcon;
   static std::map <StructuralMedia, QString>  _mapMediaToIcon;
-  static std::map  <StructuralType, QString>  _mapTypeToPrefix;
+
   static std::map <QString, StructuralMedia>  _mapExtensionToMedia;
 };
 

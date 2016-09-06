@@ -1058,7 +1058,7 @@ void StructuralEntity::dragEnterEvent(QGraphicsSceneDragDropEvent* event)
 
   StructuralType dropEntity = (StructuralType) event->mimeData()->objectName().toInt();
 
-  if (StructuralUtil::hasValidKinshp(dropEntity,_subtype)){
+  if (StructuralUtil::validateKinship(dropEntity,_subtype)){
     if (event->mimeData()->text() == _uid)
       event->accept();
     else
@@ -1073,7 +1073,7 @@ void StructuralEntity::dropEvent(QGraphicsSceneDragDropEvent* event)
 
   StructuralType dropEntity = (StructuralType) event->mimeData()->objectName().toInt();
 
-  if (StructuralUtil::hasValidKinshp(dropEntity,_subtype)){
+  if (StructuralUtil::validateKinship(dropEntity,_subtype)){
     if (event->mimeData()->text() == _uid)
       event->accept();
     else

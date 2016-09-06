@@ -4,8 +4,6 @@
 #define STR_VALUE_TRUE "1"
 #define STR_VALUE_FALSE "0"
 
-#define PLG_ENTITY_PREFIX ":plugin:entity"
-
 #define PLG_ENTITY_ID ":plugin:entity:id"
 #define PLG_ENTITY_UID ":plugin:entity:uid"
 #define PLG_ENTITY_CATEGORY ":plugin:entity:category"

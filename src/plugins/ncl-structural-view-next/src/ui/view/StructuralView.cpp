@@ -999,7 +999,7 @@ void StructuralView::select(QString uid, QMap<QString, QString> settings)
         if (!clip_copy.isEmpty())
           e = entities.value(clip_copy);
 
-        if (StructuralUtil::hasValidKinshp(e->getStructuralType(), entities.value(_selected_UID)->getStructuralType()))
+        if (StructuralUtil::validateKinship(e->getStructuralType(), entities.value(_selected_UID)->getStructuralType()))
           emit pasteStateChange(true);
         else
           emit pasteStateChange(false);
@@ -1017,7 +1017,7 @@ void StructuralView::move(QString uid, QString parent)
       StructuralEntity* e = entities.value(uid);
       StructuralEntity* p = entities.value(parent);
 
-    if (!StructuralUtil::hasValidKinshp(
+    if (!StructuralUtil::validateKinship(
           e->getStructuralType(),
           p->getStructuralType()))
       return;
@@ -1689,7 +1689,7 @@ bool StructuralView::updateEntityWithUniqueNstId(StructuralEntity *entity)
       entityCounter[type] = 0;
 
     // change this check in future
-    QString prefix = StructuralUtil::getPrefixIdFromType(type);
+    QString prefix = StructuralUtil::translateTypeToPrefix(type);
 
 
     bool match = false;

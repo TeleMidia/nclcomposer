@@ -403,9 +403,9 @@ void StructuralComposition::dropEvent(QGraphicsSceneDragDropEvent *event)
 
     QMap<QString,QString> properties;
     properties[PLG_ENTITY_TYPE] = StructuralUtil::translateTypeToString(Structural::Media);
-    properties[PLG_ENTITY_ID] = StructuralUtil::normalizeXMLID(QFileInfo(filename).baseName());
+    properties[PLG_ENTITY_ID] = StructuralUtil::formatId(QFileInfo(filename).baseName());
     properties[PLG_ENTITY_SRC] = filename;
-    properties[PLG_ENTITY_MEDIA] = StructuralUtil::getnstTypeFromExtension(suffix);
+    properties[PLG_ENTITY_MEDIA] = StructuralUtil::translateExtensionToMedia(suffix);
 
     QMap<QString,QString> settings;
     settings[PLG_SETTING_UNDO] = "1";

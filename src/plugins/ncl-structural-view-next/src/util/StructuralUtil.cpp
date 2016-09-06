@@ -39,6 +39,130 @@ QMap<QString,QString> StructuralUtil::createSettings(const QString &undo, const 
   return settings;
 }
 
+QMap<QString,QString> StructuralUtil::createComposerTranslations(StructuralType type)
+{
+  QMap<QString, QString> translations;
+
+  switch (type)
+  {
+    case Structural::Body:
+    {
+      translations.insert(NCL_ENTITY_ID, PLG_ENTITY_ID);
+
+      break;
+    }
+
+    case Structural::Context:
+    case Structural::Switch:
+    {
+      translations.insert(NCL_ENTITY_ID, PLG_ENTITY_ID);
+      translations.insert(NCL_ENTITY_REFER, NCL_ENTITY_REFER);
+
+      break;
+    }
+
+    case Structural::Media:
+    {
+      translations.insert(NCL_ENTITY_ID, PLG_ENTITY_ID);
+      translations.insert(NCL_ENTITY_REFER, NCL_ENTITY_REFER);
+      translations.insert(NCL_ENTITY_INSTANCE, NCL_ENTITY_INSTANCE);
+      translations.insert(NCL_ENTITY_TYPE, NCL_ENTITY_TYPE);
+      translations.insert(NCL_ENTITY_SRC, PLG_ENTITY_SRC);
+      translations.insert(NCL_ENTITY_DESCRIPTOR, NCL_ENTITY_DESCRIPTOR);
+
+      break;
+    }
+
+    case Structural::Port:
+    {
+      translations.insert(NCL_ENTITY_ID, PLG_ENTITY_ID);
+      translations.insert(NCL_ENTITY_COMPONENT, PLG_ENTITY_COMPONENT_ID);
+      translations.insert(NCL_ENTITY_INTERFACE, PLG_ENTITY_INTERFACE_ID);
+
+      break;
+    }
+
+    case Structural::Property:
+    {
+      translations.insert(NCL_ENTITY_NAME, PLG_ENTITY_ID);
+      translations.insert(NCL_ENTITY_VALUE, NCL_ENTITY_VALUE);
+      translations.insert(NCL_ENTITY_EXTERNABLE, NCL_ENTITY_EXTERNABLE);
+      break;
+    }
+
+    case Structural::Area:
+    {
+      translations.insert(NCL_ENTITY_ID, PLG_ENTITY_ID);
+
+      translations.insert(NCL_ENTITY_COORDS, NCL_ENTITY_COORDS);
+      translations.insert(NCL_ENTITY_BEGIN, NCL_ENTITY_BEGIN);
+      translations.insert(NCL_ENTITY_END, NCL_ENTITY_END);
+      translations.insert(NCL_ENTITY_BEGINTEXT, NCL_ENTITY_BEGINTEXT);
+      translations.insert(NCL_ENTITY_ENDTEXT, NCL_ENTITY_ENDTEXT);
+      translations.insert(NCL_ENTITY_BEGINPOSITION, NCL_ENTITY_BEGINPOSITION);
+      translations.insert(NCL_ENTITY_ENDPOSITION, NCL_ENTITY_ENDPOSITION);
+      translations.insert(NCL_ENTITY_FIRST, NCL_ENTITY_FIRST);
+      translations.insert(NCL_ENTITY_LAST, NCL_ENTITY_LAST);
+      translations.insert(NCL_ENTITY_LABEL, NCL_ENTITY_LABEL);
+      translations.insert(NCL_ENTITY_CLIP, NCL_ENTITY_CLIP);
+
+      break;
+    }
+
+    case Structural::SwitchPort:
+    {
+      translations.insert(NCL_ENTITY_ID, PLG_ENTITY_ID);
+
+      break;
+    }
+
+    case Structural::Link:
+    {
+      translations.insert(NCL_ENTITY_ID, PLG_ENTITY_ID);
+      translations.insert(NCL_ENTITY_XCONNECTOR, PLG_ENTITY_XCONNECTOR_ID);
+
+      break;
+    }
+
+    case Structural::Bind:
+    {
+      translations.insert(NCL_ENTITY_ROLE, PLG_ENTITY_ID);
+      translations.insert(NCL_ENTITY_XCONNECTOR, PLG_ENTITY_XCONNECTOR_ID);
+      translations.insert(NCL_ENTITY_COMPONENT, PLG_ENTITY_COMPONENT_ID);
+      translations.insert(NCL_ENTITY_INTERFACE, PLG_ENTITY_INTERFACE_ID);
+      translations.insert(NCL_ENTITY_DESCRIPTOR, NCL_ENTITY_DESCRIPTOR);
+
+      break;
+    }
+
+    case Structural::Mapping:
+    {
+      translations.insert(NCL_ENTITY_COMPONENT, PLG_ENTITY_COMPONENT_ID);
+      translations.insert(NCL_ENTITY_INTERFACE, PLG_ENTITY_INTERFACE_ID);
+
+      break;
+    }
+
+    default:
+      break;
+
+  }
+
+  return translations;
+}
+
+QMap<QString,QString> StructuralUtil::createStructuralTranslations(StructuralType type)
+{
+  QMap<QString, QString> translations;
+
+  QMap<QString, QString> reverse = createComposerTranslations(type);
+  foreach (QString key, reverse.keys())
+    translations.insert(reverse.value(key), key);
+
+  return translations;
+}
+
+
 std::map<Structural::StructuralCategory, QString> StructuralUtil::_mapCategoryToString =
   create_map<Structural::StructuralCategory, QString>
   (Structural::Node, "node")
@@ -186,70 +310,70 @@ QString StructuralUtil::translateMediaToIcon(Structural::StructuralMedia type)
     return ":/images/icon/media";
 }
 
-/*******************/
-
-/* Initialize type from extension Map */
-std::map <QString, Structural::StructuralMedia> StructuralUtil::_mapExtensionToMedia =
-  create_map <QString, Structural::StructuralMedia>
-    ("txt", Structural::Text)
-    ("png", Structural::Image)
-    ("jpg", Structural::Image)
-    ("jpeg", Structural::Image)
-    ("gif", Structural::Image)
-
-    ("mp3", Structural::Audio)
-    ("wav", Structural::Audio)
-
-    ("mp4", Structural::Video)
-    ("mpeg4", Structural::Video)
-    ("mpeg", Structural::Video)
-    ("mpg", Structural::Video)
-    ("mov", Structural::Video)
-    ("avi", Structural::Video)
-    ("mkv", Structural::Video)
-
-    ("htm", Structural::HTML)
-    ("html", Structural::HTML)
-
-    ("ncl", Structural::NCL)
-
-    ("lua", Structural::NCLua);
-
-
-
-
 /* Initialize prefix id from type Map */
 std::map <Structural::StructuralType, QString> StructuralUtil::_mapTypeToPrefix =
   create_map<Structural::StructuralType, QString >
-    (Structural::Media, "m")
-/*
-    (Qnst::Image, "m")
-    (Qnst::Audio, "m")
-    (Qnst::Video, "m")
-    (Qnst::Html, "m")
-    (Qnst::NCL, "m")
-    (Qnst::Settings, "m")
-    (Qnst::NCLua, "m")
-*/
+  (Structural::Media, "m")
+  (Structural::Body, ":b")
+  (Structural::Context, "c")
+  (Structural::Switch, "s")
+  (Structural::Port, "p")
+  (Structural::SwitchPort, "sp")
+  (Structural::Area, "a")
+  (Structural::Property, "p")
+  (Structural::Link, "")
+  (Structural::Bind, "")
+  (Structural::Reference, "")
+  (Structural::Mapping, "")
 
-    (Structural::Media, "m")
+  (Structural::NoType, "e");
 
-    (Structural::Context, "ctx")
-    (Structural::Switch, "swt")
-    (Structural::Body, "body")
+QString StructuralUtil::translateTypeToPrefix(Structural::StructuralType type)
+{
+  if(_mapTypeToPrefix.count(type))
+    return _mapTypeToPrefix[type];
+  else
+    return "e";
+}
 
-    (Structural::Port, "p")
-    (Structural::Property, "prop")
-    (Structural::SwitchPort, "swp")
-    (Structural::Area, "area")
-    (Structural::Link, "link")
+std::map <QString, Structural::StructuralMedia> StructuralUtil::_mapExtensionToMedia =
+  create_map <QString, Structural::StructuralMedia>
+  ("txt", Structural::Text)
 
-   // (Qnst::Aggregator, "link") // \fixme This is here only for compatibility
-                               // with versions prior to 0.1.3.
-   ;
+  ("png", Structural::Image)
+  ("jpg", Structural::Image)
+  ("jpeg", Structural::Image)
+  ("gif", Structural::Image)
+
+  ("mp3", Structural::Audio)
+  ("wav", Structural::Audio)
+
+  ("mp4", Structural::Video)
+  ("mpeg4", Structural::Video)
+  ("mpeg", Structural::Video)
+  ("mpg", Structural::Video)
+  ("mov", Structural::Video)
+  ("avi", Structural::Video)
+  ("mkv", Structural::Video)
+
+  ("htm", Structural::HTML)
+  ("html", Structural::HTML)
+
+  ("ncl", Structural::NCL)
+
+  ("lua", Structural::NCLua);
+
+Structural::StructuralMedia StructuralUtil::translateExtensionToMedia(const QString &extension)
+{
+  if(_mapExtensionToMedia.count(extension))
+    return _mapExtensionToMedia[extension];
+  else
+    return Structural::NoMedia;
+}
 
 
-bool StructuralUtil::hasValidKinshp(StructuralType entityType, StructuralType parentType)
+
+bool StructuralUtil::validateKinship(StructuralType entityType, StructuralType parentType)
 {
   switch (entityType) {
     case Structural::Body:
@@ -287,117 +411,7 @@ bool StructuralUtil::hasValidKinshp(StructuralType entityType, StructuralType pa
   }
 }
 
-QMap<QString,QString> StructuralUtil::createCoreTranslationMap(StructuralType type)
-{
-  QMap<QString, QString> m;
 
-  switch (type)
-  {
-    case Structural::Body:
-    {
-      m.insert(NCL_ENTITY_ID, PLG_ENTITY_ID);
-
-      break;
-    }
-
-    case Structural::Context:
-    case Structural::Switch:
-    {
-      m.insert(NCL_ENTITY_ID, PLG_ENTITY_ID);
-      m.insert(NCL_ENTITY_REFER, NCL_ENTITY_REFER);
-
-      break;
-    }
-
-    case Structural::Media:
-    {
-      m.insert(NCL_ENTITY_ID, PLG_ENTITY_ID);
-      m.insert(NCL_ENTITY_REFER, NCL_ENTITY_REFER);
-      m.insert(NCL_ENTITY_INSTANCE, NCL_ENTITY_INSTANCE);
-      m.insert(NCL_ENTITY_TYPE, NCL_ENTITY_TYPE);
-      m.insert(NCL_ENTITY_SRC, PLG_ENTITY_SRC);
-      m.insert(NCL_ENTITY_DESCRIPTOR, NCL_ENTITY_DESCRIPTOR);
-
-      break;
-    }
-
-    case Structural::Port:
-    {
-      m.insert(NCL_ENTITY_ID, PLG_ENTITY_ID);
-      m.insert(NCL_ENTITY_COMPONENT, PLG_ENTITY_COMPONENT_ID);
-      m.insert(NCL_ENTITY_INTERFACE, PLG_ENTITY_INTERFACE_ID);
-
-      break;
-    }
-
-    case Structural::Property:
-    {
-      m.insert(NCL_ENTITY_NAME, PLG_ENTITY_ID);
-      m.insert(NCL_ENTITY_VALUE, NCL_ENTITY_VALUE);
-      m.insert(NCL_ENTITY_EXTERNABLE, NCL_ENTITY_EXTERNABLE);
-      break;
-    }
-
-    case Structural::Area:
-    {
-      m.insert(NCL_ENTITY_ID, PLG_ENTITY_ID);
-
-      m.insert(NCL_ENTITY_COORDS, NCL_ENTITY_COORDS);
-      m.insert(NCL_ENTITY_BEGIN, NCL_ENTITY_BEGIN);
-      m.insert(NCL_ENTITY_END, NCL_ENTITY_END);
-      m.insert(NCL_ENTITY_BEGINTEXT, NCL_ENTITY_BEGINTEXT);
-      m.insert(NCL_ENTITY_ENDTEXT, NCL_ENTITY_ENDTEXT);
-      m.insert(NCL_ENTITY_BEGINPOSITION, NCL_ENTITY_BEGINPOSITION);
-      m.insert(NCL_ENTITY_ENDPOSITION, NCL_ENTITY_ENDPOSITION);
-      m.insert(NCL_ENTITY_FIRST, NCL_ENTITY_FIRST);
-      m.insert(NCL_ENTITY_LAST, NCL_ENTITY_LAST);
-      m.insert(NCL_ENTITY_LABEL, NCL_ENTITY_LABEL);
-      m.insert(NCL_ENTITY_CLIP, NCL_ENTITY_CLIP);
-
-      break;
-    }
-
-    case Structural::SwitchPort:
-    {
-      m.insert(NCL_ENTITY_ID, PLG_ENTITY_ID);
-
-      break;
-    }
-
-    case Structural::Link:
-    {
-      m.insert(NCL_ENTITY_ID, PLG_ENTITY_ID);
-      m.insert(NCL_ENTITY_XCONNECTOR, PLG_ENTITY_XCONNECTOR_ID);
-
-      break;
-    }
-
-    case Structural::Bind:
-    {
-      m.insert(NCL_ENTITY_ROLE, PLG_ENTITY_ID);
-      m.insert(NCL_ENTITY_XCONNECTOR, PLG_ENTITY_XCONNECTOR_ID);
-      m.insert(NCL_ENTITY_COMPONENT, PLG_ENTITY_COMPONENT_ID);
-      m.insert(NCL_ENTITY_INTERFACE, PLG_ENTITY_INTERFACE_ID);
-      m.insert(NCL_ENTITY_DESCRIPTOR, NCL_ENTITY_DESCRIPTOR);
-
-      break;
-    }
-
-    case Structural::Mapping:
-    {
-      m.insert(NCL_ENTITY_COMPONENT, PLG_ENTITY_COMPONENT_ID);
-      m.insert(NCL_ENTITY_INTERFACE, PLG_ENTITY_INTERFACE_ID);
-
-      break;
-    }
-
-    default:
-      break;
-
-  }
-
-  return m;
-}
 
 bool StructuralUtil::isConditionRole(StructuralRole role)
 {
@@ -417,134 +431,24 @@ bool StructuralUtil::isActionRole(StructuralRole role)
   return (role != Structural::NoRole && !isConditionRole(role));
 }
 
-bool StructuralUtil::isConditionRole(QString role)
+bool StructuralUtil::isConditionRole(const QString &role)
 {
   return isConditionRole(_mapStringToRole[role]);
 }
 
-bool StructuralUtil::isActionRole(QString role)
+bool StructuralUtil::isActionRole(const QString &role)
 {
   return isActionRole(_mapStringToRole[role]);
 }
 
-QMap<QString,QString> StructuralUtil::createViewTranslationMap(StructuralType type)
-{
-  QMap<QString, QString> m;
-
-  switch(type)
-  {
-    case Structural::Body:
-    {
-      m.insert(PLG_ENTITY_ID, NCL_ENTITY_ID);
-
-      break;
-    }
-
-    case Structural::Context:
-    case Structural::Switch:
-    {
-      m.insert(PLG_ENTITY_ID, NCL_ENTITY_ID);
-      m.insert(NCL_ENTITY_REFER,NCL_ENTITY_REFER);
-
-      break;
-    }
-
-    case Structural::Media:
-    {
-      m.insert(PLG_ENTITY_ID, NCL_ENTITY_ID);
-      m.insert(NCL_ENTITY_REFER,NCL_ENTITY_REFER);
-      m.insert(NCL_ENTITY_TYPE,NCL_ENTITY_TYPE);
-      m.insert(PLG_ENTITY_SRC, NCL_ENTITY_SRC);
-      m.insert(NCL_ENTITY_INSTANCE, NCL_ENTITY_INSTANCE);
-      m.insert(NCL_ENTITY_DESCRIPTOR, NCL_ENTITY_DESCRIPTOR);
-
-      break;
-    }
-
-    case Structural::Port:
-    {
-      m.insert(PLG_ENTITY_ID, NCL_ENTITY_ID);
-      m.insert(PLG_ENTITY_COMPONENT_ID, NCL_ENTITY_COMPONENT);
-      m.insert(PLG_ENTITY_INTERFACE_ID, NCL_ENTITY_INTERFACE);
-
-      break;
-    }
-
-    case Structural::Property:
-    {
-      m.insert(PLG_ENTITY_ID, NCL_ENTITY_NAME);
-      m.insert(NCL_ENTITY_VALUE, NCL_ENTITY_VALUE);
-      m.insert(NCL_ENTITY_EXTERNABLE, NCL_ENTITY_EXTERNABLE);
-      break;
-    }
-
-    case Structural::Area:
-    {
-      m.insert(PLG_ENTITY_ID, NCL_ENTITY_ID);
-
-      m.insert(NCL_ENTITY_COORDS, NCL_ENTITY_COORDS);
-      m.insert(NCL_ENTITY_BEGIN, NCL_ENTITY_BEGIN);
-      m.insert(NCL_ENTITY_END, NCL_ENTITY_END);
-      m.insert(NCL_ENTITY_BEGINTEXT, NCL_ENTITY_BEGINTEXT);
-      m.insert(NCL_ENTITY_ENDTEXT, NCL_ENTITY_ENDTEXT);
-      m.insert(NCL_ENTITY_BEGINPOSITION, NCL_ENTITY_BEGINPOSITION);
-      m.insert(NCL_ENTITY_ENDPOSITION, NCL_ENTITY_ENDPOSITION);
-      m.insert(NCL_ENTITY_FIRST, NCL_ENTITY_FIRST);
-      m.insert(NCL_ENTITY_LAST, NCL_ENTITY_LAST);
-      m.insert(NCL_ENTITY_LABEL, NCL_ENTITY_LABEL);
-      m.insert(NCL_ENTITY_CLIP, NCL_ENTITY_CLIP);
-
-      break;
-    }
-
-    case Structural::SwitchPort:
-    {
-      m.insert(PLG_ENTITY_ID, NCL_ENTITY_ID);
-
-      break;
-    }
-
-    case Structural::Link:
-    {
-      m.insert(PLG_ENTITY_ID, NCL_ENTITY_ID);
-      m.insert(PLG_ENTITY_XCONNECTOR_ID, NCL_ENTITY_XCONNECTOR);
-
-      break;
-    }
-
-    case Structural::Bind:
-    {
-      m.insert(PLG_ENTITY_ID, NCL_ENTITY_ROLE);
-      m.insert(PLG_ENTITY_XCONNECTOR_ID, NCL_ENTITY_XCONNECTOR);
-      m.insert(PLG_ENTITY_COMPONENT_ID, NCL_ENTITY_COMPONENT);
-      m.insert(PLG_ENTITY_INTERFACE_ID, NCL_ENTITY_INTERFACE);
-      m.insert(NCL_ENTITY_DESCRIPTOR, NCL_ENTITY_DESCRIPTOR);
-
-      break;
-    }
-
-    case Structural::Mapping:
-    {
-      m.insert(PLG_ENTITY_COMPONENT_ID, NCL_ENTITY_COMPONENT);
-      m.insert(PLG_ENTITY_INTERFACE_ID, NCL_ENTITY_INTERFACE);
-
-      break;
-    }
-
-    default:
-      // do nothing
-      break;
-  }
-
-  return m;
-}
 
 
 
 
 
 
-QString StructuralUtil::normalizeXMLID(const QString &id)
+
+QString StructuralUtil::formatId(const QString &id)
 {
   QString tmp = id.normalized(QString::NormalizationForm_KD);
   tmp.remove(QRegExp("[^a-zA-Z_-\.\\s]"));
@@ -554,21 +458,8 @@ QString StructuralUtil::normalizeXMLID(const QString &id)
   return tmp;
 }
 
-Structural::StructuralMedia StructuralUtil::getnstTypeFromExtension(const QString &ext)
-{
-  if(_mapExtensionToMedia.count(ext))
-    return _mapExtensionToMedia[ext];
 
-  return Structural::NoMedia;
-}
 
-QString StructuralUtil::getPrefixIdFromType(Structural::StructuralType type)
-{
-  if(_mapTypeToPrefix.count(type))
-    return _mapTypeToPrefix[type];
-
-  return "unknown";
-}
 
 
 

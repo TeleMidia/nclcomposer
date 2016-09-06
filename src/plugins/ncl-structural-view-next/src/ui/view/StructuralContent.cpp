@@ -53,7 +53,7 @@ void StructuralContent::setSource(const QString &source)
 {
   this->source = source;
 
-  setMediaType(StructuralUtil::getnstTypeFromExtension(QFileInfo(source).suffix().toLower()));
+  setMediaType(StructuralUtil::translateExtensionToMedia(QFileInfo(source).suffix().toLower()));
 
   StructuralNode::setStructuralProperty(PLG_ENTITY_SRC, source);
 }

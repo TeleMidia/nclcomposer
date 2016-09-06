@@ -179,7 +179,7 @@ void StructuralViewPlugin::updateFromModel()
         QMap<QString, QString> cacheprop = prop.value(e->getStructuralId()+pid);
         cacheprop.insert(PLG_ENTITY_UID,e->getStructuralUid());
 
-        QMap<QString, QString> m = StructuralUtil::createCoreTranslationMap(e->getStructuralType());
+        QMap<QString, QString> m = StructuralUtil::createComposerTranslations(e->getStructuralType());
 
         foreach (QString p, m.values()) {
           if (e->getStructuralProperty(p).isEmpty())
@@ -464,7 +464,7 @@ void StructuralViewPlugin::requestEntityAddition(Entity* entity, bool enableUndo
   QMap<QString, QString> properties;
 
 
-  Structural::StructuralType type = StructuralUtil::getnstTypeFromStr(entity->getType());
+  Structural::StructuralType type = StructuralUtil::translateStringToType(entity->getType());
 
   if (!DEFAULT_BODY_ENABLE && type == Structural::Body)
     return;
@@ -472,7 +472,7 @@ void StructuralViewPlugin::requestEntityAddition(Entity* entity, bool enableUndo
   if (type != Structural::NoType){
     properties[PLG_ENTITY_TYPE] = QString::number(type);
 
-    QMap<QString, QString> m = StructuralUtil::createCoreTranslationMap(type);
+    QMap<QString, QString> m = StructuralUtil::createComposerTranslations(type);
 
     entities[entity->getUniqueId()] = entity->getUniqueId();
 
@@ -696,13 +696,13 @@ void StructuralViewPlugin::requestEntityChange(Entity* entity)
 
   QMap<QString, QString> properties;
 
-  Structural::StructuralType type = StructuralUtil::getnstTypeFromStr(entity->getType());
+  Structural::StructuralType type = StructuralUtil::translateStringToType(entity->getType());
 
   if (type != Structural::NoType){
 
   properties[PLG_ENTITY_TYPE] = QString::number(type);
 
-  QMap<QString, QString> m = StructuralUtil::createCoreTranslationMap(type);
+  QMap<QString, QString> m = StructuralUtil::createComposerTranslations(type);
 
   foreach (QString key, m.keys()) {
     if (!entity->getAttribute(key).isEmpty())
@@ -944,7 +944,7 @@ void StructuralViewPlugin::notifyEntityAddedInView(const QString uid,
   }else
     return;
 
-    QMap<QString, QString> m = StructuralUtil::createViewTranslationMap(type);
+    QMap<QString, QString> m = StructuralUtil::createStructuralTranslations(type);
     QMap<QString, QString> attributes;
 
     if(cparent != NULL)
@@ -956,7 +956,7 @@ void StructuralViewPlugin::notifyEntityAddedInView(const QString uid,
 
       _waiting = true;
       _notified = uid;
-      emit addEntity(StructuralUtil::getStrFromNstType(type),
+      emit addEntity(StructuralUtil::translateTypeToString(type),
                      cparent->getUniqueId(), attributes, false);
 
       if (type == Structural::Link){
@@ -1024,7 +1024,7 @@ void StructuralViewPlugin::notifyEntityChangedInView(const QString uid,
 
   Structural::StructuralType type = (Structural::StructuralType) properties[PLG_ENTITY_TYPE].toInt();
 
-  QMap<QString, QString> m = StructuralUtil::createViewTranslationMap(type);
+  QMap<QString, QString> m = StructuralUtil::createStructuralTranslations(type);
   QMap<QString, QString> attributes;
   Entity* entity = getProject()->getEntityById(entities.key(uid));
 
