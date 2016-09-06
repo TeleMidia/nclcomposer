@@ -1,29 +1,34 @@
-#ifndef QNSTUTIL_H
-#define QNSTUTIL_H
+#ifndef STRUCTURALUTIL_H
+#define STRUCTURALUTIL_H
 
-#include <algorithm>
 #include <QMap>
 
 #include "StructuralEntity.h"
-//#include "StructuralMedia.h"
 
 class StructuralEntity;
-//class StructuralMedia;
-
 
 class StructuralUtil {
 public:
-  /*!
-   * \brief Creates an entity based on the type passed as parameter.
-   *
-   * \arg type the type of entity to be created.
-   * \arg parent the parent of the entity to be created.
-   *
-   * \return a new QnstGraphicsEntity
-   */
-  static StructuralEntity *makeGraphicsEntity(Structural::StructuralType type,
-                                              StructuralEntity *parent = 0,
-                                              const QMap<QString, QString> &props = (QMap<QString,QString>()));
+
+  static QString createUid();
+
+  static QMap<QString,QString> createSettings(bool undo, bool notify);
+  static QMap<QString,QString> createSettings(bool undo, bool notify, const QString &code);
+  static QMap<QString,QString> createSettings(const QString &undo, const QString &notify, const QString &code);
+
+  static QString translateCategoryToString(StructualCategory category);
+  static StructualCategory translateStringToCategory(const QString &category);
+
+  static QString translateTypeToString(StructuralType type);
+  static StructuralType translateStringToType(const QString &type);
+
+  static StructuralRole translateStringToRole(const QString &role);
+  static QString translateRoleToString(StructuralRole role);
+
+  static QString translateTypeToIcon(StructuralType type);
+  static QString translateMediaToIcon(StructuralMedia type);
+
+
 
   /*!
    * \brief Returns the Qnst::EntitySubtype based on the media mimetype.
@@ -34,15 +39,7 @@ public:
    */
   static Structural::StructuralMedia getnstTypeFromMime(const QString &mimeType);
 
-  /*!
-   * \brief Returns the icon that represents the Qnst::EntitySubtype.
-   *
-   * \arg type the Qnst::EntitySubtype.
-   * \return the path to the icon of that type.
-   */
-  static QString iconFromEntityType(Structural::StructuralType type);
 
-  static QString iconFromMediaType(Structural::StructuralMedia type);
 
   /*!
    * \brief Returns the media type based on the extension of the media source.
@@ -80,52 +77,32 @@ public:
    */
   static QString getPrefixIdFromType(Structural::StructuralType type);
 
-  /*!
-   * \brief Returns the Qnst::StructuralRole related to the string role passed as
-   *    parameter.
-   *
-   * \arg role the string of the role (onBegin, onEnd, start, stop, ...)
-   * \return the Qnst::StructuralRole related to that string.
-   */
-  static Structural::StructuralRole getStructuralRoleFromStr(const QString &role);
 
-  /*!
-   * \brief Returns a string that represents the QnstStructuralRole passed as
-   *    parameter.
-   *
-   * \arg type the Qnst::StructuralRole
-   * \return a string that represents that type.
-   */
-  static QString getStrFromStructuralRole(Structural::StructuralRole type);
 
-  static QString CreateUid();
+
 
   static bool isConditionRole(StructuralRole role);
   static bool isActionRole(StructuralRole role);
   static bool isConditionRole(QString role);
   static bool isActionRole(QString role);
   static bool hasValidKinshp(StructuralType subtype, StructuralType parent);
-  static QString convertType(StructualCategory type);
-  static QString convertSubtype(StructuralType subtype);
-  static void dbg(QObject* object, const QString &message);
 
   static QMap<QString,QString> createCoreTranslationMap(StructuralType type);
   static QMap<QString,QString> createViewTranslationMap(StructuralType type);
 
-  static QMap<QString,QString> createSettings(bool undo, bool notify);
-  static QMap<QString,QString> createSettings(const QString &undo, const QString &notify, const QString &code);
+
 
 private:
-  static std::map <Structural::StructuralType, QString>   iconFromTypeMap;
-  static std::map <Structural::StructuralMedia, QString>  iconFromMediaTypeMap;
-  static std::map <QString, Structural::StructuralMedia>  typeFromExtMap;
-  static std::map <QString, Structural::StructuralType>   typeFromStr;
-  static std::map <Structural::StructuralType, QString>   strFromType;
-  static std::map  <Structural::StructuralType, QString>  prefixIdFromType;
-  static std::map <QString, Structural::StructuralRole>   roleTypeFromRoleStr;
-  static std::map <Structural::StructuralRole, QString>   strFromRoleType;
-
-  static std::map <StructuralResize, QRectF> region;
+  static std::map <StructualCategory, QString> _mapCategoryToString;
+  static std::map <QString, StructualCategory> _mapStringToCategory;
+  static std::map <StructuralType, QString> _mapTypeToString;
+  static std::map <QString, StructuralType> _mapStringToType;
+  static std::map <StructuralRole, QString> _mapRoleToString;
+  static std::map <QString, StructuralRole> _mapStringToRole;
+  static std::map <StructuralType, QString> _mapTypeToIcon;
+  static std::map <StructuralMedia, QString>  _mapMediaToIcon;
+  static std::map  <StructuralType, QString>  _mapTypeToPrefix;
+  static std::map <QString, StructuralMedia>  _mapExtensionToMedia;
 };
 
 /*!
@@ -178,4 +155,4 @@ std::map <K, V> invert_map (const std::map <V, K> &in)
        return out;
 }
 
-#endif
+#endif // STRUCTURALUTIL_H

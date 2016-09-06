@@ -1,6 +1,9 @@
 #ifndef STRUCTURAL_H
 #define STRUCTURAL_H
 
+#define STR_VALUE_TRUE "1"
+#define STR_VALUE_FALSE "0"
+
 #define PLG_ENTITY_PREFIX ":plugin:entity"
 
 #define PLG_ENTITY_ID ":plugin:entity:id"
@@ -119,9 +122,9 @@ public:
     Body        = 2,
     Context     = 3,
     Switch      = 4,
-    Port        = 5,
-    Area        = 6,
-    SwitchPort  = 7,
+    Port        = 5,    
+    SwitchPort  = 6,
+    Area        = 7,
     Property    = 8,
     Link        = 9,
     Bind        = 10,
@@ -129,6 +132,19 @@ public:
     Mapping     = 12,
 
     NoType      = 0
+  };
+
+  enum StructuralMedia {
+    Image       = 1,
+    Audio       = 2,
+    Video       = 3,
+    Text        = 4,
+    HTML        = 5,
+    NCL         = 6,
+    NCLua       = 7,
+    Settings    = 9,
+
+    NoMedia     = 0
   };
 
   enum StructuralResize {
@@ -143,20 +159,6 @@ public:
 
     NoResize    = 0
   };
-
-  enum StructuralMedia {
-    Image       = 1,
-    Audio       = 2,
-    Video       = 3,
-    Text        = 4,
-    HTML        = 5,
-    NCL         = 6,
-    NCLua       = 7,
-    Settings    = 9,
-
-    NoContent   = 0
-  };
-
 
   enum StructuralRole
   {

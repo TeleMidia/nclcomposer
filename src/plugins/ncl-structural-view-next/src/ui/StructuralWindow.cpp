@@ -340,135 +340,97 @@ void StructuralWindow::changeZoomInState(bool enable)
 
 void StructuralWindow::performUndo()
 {
-  StructuralUtil::dbg((QObject*) this, "Performing 'Undo' action");
-
   _view->performUndo();
 
 }
 
 void StructuralWindow::performRedo()
 {
-  StructuralUtil::dbg((QObject*) this, "Performing 'Redo' action");
-
   _view->performRedo();
 }
 
 void StructuralWindow::performCut()
 { 
-  StructuralUtil::dbg((QObject*) this, "Performing 'Cut' action");
-
   _view->performCut();
 }
 
 void StructuralWindow::performCopy()
 {
-  StructuralUtil::dbg((QObject*) this, "Performing 'Copy' action");
-
   _view->performCopy();
 }
 
 void StructuralWindow::performPaste()
 {
-  StructuralUtil::dbg((QObject*) this, "Performing 'Paste' action");
-
   _view->performPaste();
 }
 
 void StructuralWindow::performZoomIn()
 {
-  StructuralUtil::dbg((QObject*) this, "Performing 'Zoom In' action");
-
   _view->performZoomIn();
 }
 
 void StructuralWindow::performZoomOut()
 {
-  StructuralUtil::dbg((QObject*) this, "Performing 'Zoom Out' action");
-
   _view->performZoomOut();
 }
 
 void StructuralWindow::performPointer()
 { 
-  StructuralUtil::dbg((QObject*) this, "Performing 'Pointer' action");
-
   _view->setMod(false);
 }
 
 void StructuralWindow::performLink()
 {
-  StructuralUtil::dbg((QObject*) this, "Performing 'Link' action");
-
   _view->setMod(true);
 }
 
 void StructuralWindow::performBody()
 { 
-  StructuralUtil::dbg((QObject*) this, "Performing 'Body' action");
-
   _view->create(Structural::Body);
 }
 
 void StructuralWindow::performContext()
 { 
-  StructuralUtil::dbg((QObject*) this, "Performing 'Context' action");
-
   _view->create(Structural::Context);
 }
 
 void StructuralWindow::performSwitch()
 { 
-  StructuralUtil::dbg((QObject*) this, "Performing 'Switch' action");
-
   _view->create(Structural::Switch);
 }
 
 void StructuralWindow::performMedia()
 { 
-  StructuralUtil::dbg((QObject*) this, "Performing 'Media' action");
-
   _view->create(Structural::Media);
 }
 
 void StructuralWindow::performPort()
 { 
-  StructuralUtil::dbg((QObject*) this, "Performing 'Port' action");
-
   _view->create(Structural::Port);
 }
 
 void StructuralWindow::performArea()
-{ 
-  StructuralUtil::dbg((QObject*) this, "Performing 'Area' action");
-
+{
   _view->create(Structural::Area);
 }
 
 void StructuralWindow::performSwitchPort()
-{ 
-  StructuralUtil::dbg((QObject*) this, "Performing 'SwitchPort' action");
-
+{
   _view->create(Structural::SwitchPort);
 }
 
 void StructuralWindow::performProperty()
 { 
-  StructuralUtil::dbg((QObject*) this, "Performing 'Property' action");
-
   _view->create(Structural::Property);
 }
 
 void StructuralWindow::performMinimap()
-{ 
-  StructuralUtil::dbg((QObject*) this, "Performing 'Minimap' action");
-
+{
   _view->switchMinimapVis();
 }
 
 void StructuralWindow::performSnapshot()
 {
-  StructuralUtil::dbg((QObject*) this, "Performing 'Snapshot' action");
-
   _view->performSnapshot();
 }
 

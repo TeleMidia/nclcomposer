@@ -9,7 +9,7 @@ StructuralContent::StructuralContent(StructuralEntity* parent)
 {
   setStructuralType(Structural::Media);
 
-  setMediaType(Structural::NoContent);
+  setMediaType(Structural::NoMedia);
 
   setResizable(false);
 
@@ -259,7 +259,7 @@ void StructuralContent::setMediaType(Structural::StructuralMedia type)
 {
   mediatype = type;
 
-  this->icon = StructuralUtil::iconFromMediaType(mediatype);
+  this->icon = StructuralUtil::translateMediaToIcon(mediatype);
 
   StructuralNode::setStructuralProperty(PLG_ENTITY_MEDIA, QString::number(type));
 }

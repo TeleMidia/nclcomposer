@@ -8,7 +8,7 @@ StructuralEntity::StructuralEntity(StructuralEntity* parent)
   setStructuralCategory(Structural::NoCategory);
   setStructuralType(Structural::NoType);
 
-  setStructuralUid(StructuralUtil::CreateUid());
+  setStructuralUid(StructuralUtil::createUid());
 
   setStructuralParent(parent);
 
@@ -102,7 +102,7 @@ StructualCategory StructuralEntity::getStructuralCategory() const
 void StructuralEntity::setStructuralCategory(const StructualCategory type)
 {
   _type = type;
-  _properties.insert(PLG_ENTITY_CATEGORY,StructuralUtil::convertType(type));
+  _properties.insert(PLG_ENTITY_CATEGORY,StructuralUtil::translateCategoryToString(type));
 }
 
 StructuralType StructuralEntity::getStructuralType() const
@@ -113,7 +113,7 @@ StructuralType StructuralEntity::getStructuralType() const
 void StructuralEntity::setStructuralType(const StructuralType subtype)
 {
   _subtype = subtype;
-  _properties.insert(PLG_ENTITY_TYPE,StructuralUtil::convertSubtype(subtype));
+  _properties.insert(PLG_ENTITY_TYPE,StructuralUtil::translateTypeToString(subtype));
 }
 
 QMap<QString, QString> StructuralEntity::getStructuralProperties() const
@@ -836,7 +836,7 @@ void StructuralEntity::mouseReleaseEvent(QGraphicsSceneMouseEvent*event)
 
       QMap<QString, QString> settings;
       settings[PLG_SETTING_UNDO] = "1";
-      settings[PLG_SETTING_CODE] = StructuralUtil::CreateUid();
+      settings[PLG_SETTING_CODE] = StructuralUtil::createUid();
       settings["LOCATION"] = "INTERNAL MOVE";
 
       emit changed(getStructuralUid(), properties, previous,settings);
@@ -905,7 +905,7 @@ void StructuralEntity::mouseReleaseEvent(QGraphicsSceneMouseEvent*event)
       QMap<QString, QString> settings;
       settings[PLG_SETTING_UNDO] = "1";
       settings["LOCATION"] = "INTERNAL MOVE";
-      settings[PLG_SETTING_CODE] = StructuralUtil::CreateUid();
+      settings[PLG_SETTING_CODE] = StructuralUtil::createUid();
 
       emit changed(getStructuralUid(), properties, previous,settings);
 

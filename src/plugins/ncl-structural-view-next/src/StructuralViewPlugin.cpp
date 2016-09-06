@@ -206,7 +206,7 @@ void StructuralViewPlugin::updateFromModel()
         if (e->getStructuralType() == Structural::Bind)
         {
           if (!cacheprop.value(PLG_ENTITY_ID).isEmpty()){
-            StructuralRole role = StructuralUtil::getStructuralRoleFromStr(cacheprop.value(PLG_ENTITY_ID));
+            StructuralRole role = StructuralUtil::translateStringToRole(cacheprop.value(PLG_ENTITY_ID));
 
             if (cacheprop.contains(PLG_ENTITY_COMPONENT_ID)){
               QString coreUID = getUidById(cacheprop.value(PLG_ENTITY_COMPONENT_ID));
@@ -515,7 +515,7 @@ void StructuralViewPlugin::requestEntityAddition(Entity* entity, bool enableUndo
         parentUID = entity->getParent()->getParentUniqueId();
 
         if (!properties.value(PLG_ENTITY_ID).isEmpty()){
-          StructuralRole role = StructuralUtil::getStructuralRoleFromStr(properties.value(PLG_ENTITY_ID));
+          StructuralRole role = StructuralUtil::translateStringToRole(properties.value(PLG_ENTITY_ID));
 
           properties.insert(PLG_ENTITY_ROLE, QString::number(role));
 
@@ -731,7 +731,7 @@ void StructuralViewPlugin::requestEntityChange(Entity* entity)
       if (type == Structural::Bind)
       {
         if (!properties.value(PLG_ENTITY_ID).isEmpty()){
-          StructuralRole role = StructuralUtil::getStructuralRoleFromStr(properties.value(PLG_ENTITY_ID));
+          StructuralRole role = StructuralUtil::translateStringToRole(properties.value(PLG_ENTITY_ID));
 
           properties.insert(PLG_ENTITY_ROLE, QString::number(role));
 
