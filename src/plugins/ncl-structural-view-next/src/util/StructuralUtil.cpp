@@ -10,7 +10,7 @@ QMap<QString,QString> StructuralUtil::createSettings()
   return createSettings(true, true);
 }
 
-QMap<QString,QString> StructuralUtil::createSettings(bool undo, bool notify)
+QMap<QString,QString> StructuralUtil::createSettings(const bool undo, const bool notify)
 {
   return createSettings((undo ? PLG_VALUE_TRUE : PLG_VALUE_FALSE), (notify ? PLG_VALUE_TRUE : PLG_VALUE_FALSE), createUid());
 }
@@ -37,7 +37,7 @@ QMap<QString,QString> StructuralUtil::createSettings(const QString &undo, const 
   return settings;
 }
 
-QMap<QString,QString> StructuralUtil::createCoreTranslations(StructuralType type)
+QMap<QString,QString> StructuralUtil::createCoreTranslations(const StructuralType type)
 {
   QMap<QString, QString> translations;
 
@@ -149,7 +149,7 @@ QMap<QString,QString> StructuralUtil::createCoreTranslations(StructuralType type
   return translations;
 }
 
-QMap<QString,QString> StructuralUtil::createPluginTranslations(StructuralType type)
+QMap<QString,QString> StructuralUtil::createPluginTranslations(const StructuralType type)
 {
   QMap<QString, QString> translations;
 
@@ -171,7 +171,7 @@ std::map<Structural::StructuralCategory, QString> StructuralUtil::_mapCategoryTo
 std::map<QString, Structural::StructuralCategory> StructuralUtil::_mapStringToCategory =
     invert<QString, Structural::StructuralCategory> (StructuralUtil::_mapCategoryToString);
 
-QString StructuralUtil::translateCategoryToString(StructualCategory category)
+QString StructuralUtil::translateCategoryToString(const StructualCategory category)
 {
   if (_mapCategoryToString.count(category))
     return _mapCategoryToString[category];
@@ -207,7 +207,7 @@ std::map<Structural::StructuralType, QString> StructuralUtil::_mapTypeToString =
 std::map <QString, Structural::StructuralType> StructuralUtil::_mapStringToType =
     invert<QString, Structural::StructuralType>(StructuralUtil::_mapTypeToString);
 
-QString StructuralUtil::translateTypeToString(StructuralType type)
+QString StructuralUtil::translateTypeToString(const StructuralType type)
 {
   if (_mapTypeToString.count(type))
     return _mapTypeToString[type];
@@ -246,7 +246,7 @@ std::map <Structural::StructuralRole, QString> StructuralUtil::_mapRoleToString 
 std::map <QString, Structural::StructuralRole> StructuralUtil::_mapStringToRole =
     invert<QString, Structural::StructuralRole> (StructuralUtil::_mapRoleToString);
 
-QString StructuralUtil::translateRoleToString(StructuralRole role)
+QString StructuralUtil::translateRoleToString(const StructuralRole role)
 {
   if(_mapRoleToString.count(role))
     return _mapRoleToString[role];
@@ -278,7 +278,7 @@ std::map <Structural::StructuralMimeType, QString> StructuralUtil::_mapMimeTypeT
 std::map <QString, Structural::StructuralMimeType> StructuralUtil::_mapStringToMimeType =
     invert<QString, Structural::StructuralMimeType> (StructuralUtil::_mapMimeTypeToString);
 
-QString StructuralUtil::translateMimeTypeToString(StructuralMimeType mimetype)
+QString StructuralUtil::translateMimeTypeToString(const StructuralMimeType mimetype)
 {
   if(_mapMimeTypeToString.count(mimetype))
     return _mapMimeTypeToString[mimetype];
@@ -311,7 +311,7 @@ std::map <Structural::StructuralType, QString> StructuralUtil::_entitiesIcon =
 
 (Structural::NoType, "");
 
-QString StructuralUtil::getEntityIcon(Structural::StructuralType type)
+QString StructuralUtil::getEntityIcon(const StructuralType type)
 {
   if(_entitiesIcon.count(type))
     return _entitiesIcon[type];
@@ -332,7 +332,7 @@ std::map <Structural::StructuralMimeType, QString> StructuralUtil::_mimetypesIco
 
 (Structural::NoMimeType, ":/images/icon/media");
 
-QString StructuralUtil::getMimeTypeIcon(Structural::StructuralMimeType type)
+QString StructuralUtil::getMimeTypeIcon(const StructuralMimeType type)
 {
   if(_mimetypesIcon.count(type))
     return _mimetypesIcon[type];
@@ -357,7 +357,7 @@ std::map <Structural::StructuralType, QString> StructuralUtil::_entitiesPrefix =
 
 (Structural::NoType, "e");
 
-QString StructuralUtil::getEntityPrefix(Structural::StructuralType type)
+QString StructuralUtil::getEntityPrefix(const StructuralType type)
 {
   if(_entitiesPrefix.count(type))
     return _entitiesPrefix[type];
@@ -394,7 +394,7 @@ Structural::StructuralMimeType StructuralUtil::getMimeTypeByExtension(const QStr
     return Structural::NoMimeType;
 }
 
-bool StructuralUtil::isConditionRole(StructuralRole role)
+bool StructuralUtil::isConditionRole(const StructuralRole role)
 {
   return (role == Structural::onBegin ||
           role == Structural::onBeginAttribution ||
@@ -412,7 +412,7 @@ bool StructuralUtil::isConditionRole(const QString &role)
   return isConditionRole(_mapStringToRole[role]);
 }
 
-bool StructuralUtil::isActionRole(StructuralRole role)
+bool StructuralUtil::isActionRole(const StructuralRole role)
 {
   return (role != Structural::NoRole && !isConditionRole(role));
 }
@@ -433,7 +433,7 @@ QString StructuralUtil::formatId(const QString &id)
   return normalized;
 }
 
-bool StructuralUtil::validateKinship(StructuralType entityType, StructuralType parentType)
+bool StructuralUtil::validateKinship(const StructuralType entityType, const StructuralType parentType)
 {
   switch (entityType) {
     case Structural::Body:
