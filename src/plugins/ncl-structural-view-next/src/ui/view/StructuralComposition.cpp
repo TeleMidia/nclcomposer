@@ -18,7 +18,7 @@ StructuralComposition::StructuralComposition(StructuralEntity* parent)
   lastw = 0;
   lasth = 0;
 
-  setCollapsed(false);
+  setUncollapsed(true);
 
   tmp = NULL;
 
@@ -93,8 +93,8 @@ void StructuralComposition::setColor(QString color)
 
 void StructuralComposition::setStructuralProperty(const QString &name, const QString &value)
 {
-  if (name == PLG_ENTITY_COLLAPSED)
-    setCollapsed((value == "1" ? true : false));
+  if (name == PLG_ENTITY_UNCOLLAPSED)
+    setUncollapsed((value == "1" ? true : false));
   else
     StructuralNode::setStructuralProperty(name,value);
 }
@@ -162,7 +162,7 @@ void StructuralComposition::refresh()
 
 void StructuralComposition::draw(QPainter* painter)
 {
-  if (!isCollapsed())
+  if (isUncollapsed())
   {
     painter->setRenderHint(QPainter::Antialiasing,true);
 
@@ -273,10 +273,9 @@ void StructuralComposition::dragEnterEvent(QGraphicsSceneDragDropEvent *event)
 
 void StructuralComposition::collapse(bool notify)
 {
-
   QMap<QString,QString> prev = getStructuralProperties();
 
-  if (isCollapsed())
+  if (!isUncollapsed())
   {
     setHovering(false);
 
@@ -298,7 +297,7 @@ void StructuralComposition::collapse(bool notify)
 //        tmp->remove(e);
         e->setHidden(false);
 
-        if (!e->isCollapsed())
+        if (e->isUncollapsed())
         {
           e->setWidth(e->getUncollapedWidth());
           e->setHeight(e->getUncollapedHeight());
@@ -349,7 +348,7 @@ void StructuralComposition::collapse(bool notify)
 //        e->setStructuralParent(NULL);
         e->setHidden(true);
 
-        if (!e->isCollapsed())
+        if (e->isUncollapsed())
         {
           e->setUncollapedWidth(e->getWidth());
           e->setUncollapedHeight(e->getHeight());
@@ -377,7 +376,7 @@ void StructuralComposition::collapse(bool notify)
     getStructuralParent()->adjust();
   }
 
-  setCollapsed(!isCollapsed());
+  setUncollapsed(!isUncollapsed());
 
   if (notify)
     emit changed(getStructuralUid(),getStructuralProperties(),prev,StructuralUtil::createSettings(true,false));
@@ -404,8 +403,8 @@ void StructuralComposition::dropEvent(QGraphicsSceneDragDropEvent *event)
     QMap<QString,QString> properties;
     properties[PLG_PROPERTY_TYPE] = StructuralUtil::translateTypeToString(Structural::Media);
     properties[PLG_PROPERTY_ID] = StructuralUtil::formatId(QFileInfo(filename).baseName());
-    properties[PLG_ENTITY_SRC] = filename;
-    properties[PLG_PROPERTY_MIMETYPE] = StructuralUtil::getMimeTypeByExtension(suffix);
+    properties[PLG_PROPERTY_LOCATION] = filename;
+    properties[PLG_PROPERTY_MIMETYPE] = StructuralUtil::translateMimeTypeToString(StructuralUtil::getMimeTypeByExtension(suffix));
 
     QMap<QString,QString> settings;
     settings[PLG_SETTING_UNDO] = "1";

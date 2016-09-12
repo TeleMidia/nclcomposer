@@ -60,7 +60,7 @@ StructuralEntity::StructuralEntity(StructuralEntity* parent)
   setAcceptDrops(true);
 
   setSelected(false);
-  setCollapsed(false);
+  setUncollapsed(true);
 
   hasError = false;
 }
@@ -167,16 +167,16 @@ QString StructuralEntity::getStructuralProperty(const QString &name) const
 
 void StructuralEntity::setStructuralProperty(const QString &name, const QString &value)
 {
-  if (name == PLG_ENTITY_TOP)
+  if (name == PLG_PROPERTY_TOP)
     setTop(value.toDouble());
 
-  else if (name == PLG_ENTITY_LEFT)
+  else if (name == PLG_PROPERTY_LEFT)
     setLeft(value.toDouble());
 
-  else if (name == PLG_ENTITY_WIDTH)
+  else if (name == PLG_PROPERTY_WIDTH)
     setWidth(value.toDouble());
 
-  else if (name == PLG_ENTITY_HEIGHT)
+  else if (name == PLG_PROPERTY_HEIGHT)
     setHeight(value.toDouble());
 
   else if (name == PLG_ENTITY_UNCOLLAPSED_TOP)
@@ -191,7 +191,7 @@ void StructuralEntity::setStructuralProperty(const QString &name, const QString 
   else if (name == PLG_ENTITY_UNCOLLAPSED_HEIGHT)
     setUncollapedHeight(value.toDouble());
 
-  else if (name == PLG_ENTITY_ZINDEX)
+  else if (name == PLG_PROPERTY_ZINDEX)
     setzIndex(value.toInt());
 
   else if (name == PLG_PROPERTY_ID)
@@ -206,11 +206,11 @@ void StructuralEntity::setStructuralProperty(const QString &name, const QString 
   else if (name == PLG_PROPERTY_TYPE)
     setStructuralType(StructuralUtil::translateStringToType(value));
 
-  else if (name == PLG_ENTITY_HIDDEN)
+  else if (name == PLG_PROPERTY_HIDDEN)
     setHidden((value == "1" ? true : false));
 
-  else if (name == PLG_ENTITY_COLLAPSED)
-    setCollapsed((value == "1" ? true : false));
+  else if (name == PLG_ENTITY_UNCOLLAPSED)
+    setUncollapsed((value == "1" ? true : false));
 
 
   else
@@ -285,7 +285,7 @@ bool StructuralEntity::isHidden() const
 void StructuralEntity::setHidden(bool hidden)
 {
   _hidden = hidden;
-  _properties.insert(PLG_ENTITY_HIDDEN,(hidden ? "1" : "0"));
+  _properties.insert(PLG_PROPERTY_HIDDEN,(hidden ? "1" : "0"));
 
   setVisible(!hidden);
 }
@@ -330,15 +330,15 @@ void StructuralEntity::setSelected(bool selected)
   _selected = selected;
 }
 
-bool StructuralEntity::isCollapsed() const
+bool StructuralEntity::isUncollapsed() const
 {
-  return _collapsed;
+  return _uncollapsed;
 }
 
-void StructuralEntity::setCollapsed(bool collapsed)
+void StructuralEntity::setUncollapsed(bool uncollapsed)
 {
-  _collapsed = collapsed;
-  _properties.insert(PLG_ENTITY_COLLAPSED,(collapsed ? "1" : "0"));
+  _uncollapsed = uncollapsed;
+  _properties.insert(PLG_ENTITY_UNCOLLAPSED,(uncollapsed ? "1" : "0"));
 }
 
 qreal StructuralEntity::getTop() const
@@ -349,7 +349,7 @@ qreal StructuralEntity::getTop() const
 void StructuralEntity::setTop(qreal top)
 {
   _top = top;
-  _properties.insert(PLG_ENTITY_TOP,QString::number(top));
+  _properties.insert(PLG_PROPERTY_TOP,QString::number(top));
 
   setY(top-4);
 }
@@ -392,7 +392,7 @@ qreal StructuralEntity::getLeft() const
 void StructuralEntity::setLeft(qreal left)
 {
   _left = left;
-  _properties.insert(PLG_ENTITY_LEFT,QString::number(left));
+  _properties.insert(PLG_PROPERTY_LEFT,QString::number(left));
 
   setX(left-4);
 }
@@ -435,7 +435,7 @@ qreal StructuralEntity::getWidth() const
 void StructuralEntity::setWidth(qreal width)
 {
   _width = width;
-  _properties.insert(PLG_ENTITY_WIDTH,QString::number(width));
+  _properties.insert(PLG_PROPERTY_WIDTH,QString::number(width));
 }
 
 qreal StructuralEntity::getPressWidth() const
@@ -466,7 +466,7 @@ qreal StructuralEntity::getHeight() const
 void StructuralEntity::setHeight(qreal height)
 {
   _height = height;
-  _properties.insert(PLG_ENTITY_HEIGHT,QString::number(height));
+  _properties.insert(PLG_PROPERTY_HEIGHT,QString::number(height));
 }
 
 qreal StructuralEntity::getPressHeight() const
@@ -541,7 +541,7 @@ qreal StructuralEntity::getzIndex() const
 void StructuralEntity::setzIndex(qreal zIndex)
 {
   _zIndex = zIndex;
-  _properties.insert(PLG_ENTITY_ZINDEX,QString::number(zIndex));
+  _properties.insert(PLG_PROPERTY_ZINDEX,QString::number(zIndex));
 
   setZValue(zIndex);
 }
@@ -1110,10 +1110,10 @@ void StructuralEntity::performInsert(Structural::StructuralType name)
   switch (name) {
     case Structural::Body:
     {
-      properties[PLG_ENTITY_TOP] = QString::number(_insertPoint.y() - DEFAULT_BODY_HEIGHT/2);
-      properties[PLG_ENTITY_LEFT] = QString::number(_insertPoint.x() - DEFAULT_BODY_WIDTH/2);
-      properties[PLG_ENTITY_HEIGHT] = QString::number(DEFAULT_BODY_HEIGHT);
-      properties[PLG_ENTITY_WIDTH] = QString::number(DEFAULT_BODY_WIDTH);
+      properties[PLG_PROPERTY_TOP] = QString::number(_insertPoint.y() - DEFAULT_BODY_HEIGHT/2);
+      properties[PLG_PROPERTY_LEFT] = QString::number(_insertPoint.x() - DEFAULT_BODY_WIDTH/2);
+      properties[PLG_PROPERTY_HEIGHT] = QString::number(DEFAULT_BODY_HEIGHT);
+      properties[PLG_PROPERTY_WIDTH] = QString::number(DEFAULT_BODY_WIDTH);
 
       break;
     }
@@ -1121,10 +1121,10 @@ void StructuralEntity::performInsert(Structural::StructuralType name)
     case Structural::Switch:
     {
 
-      properties[PLG_ENTITY_TOP] = QString::number(_insertPoint.y() - DEFAULT_CONTEXT_HEIGHT/2);
-      properties[PLG_ENTITY_LEFT] = QString::number(_insertPoint.x() - DEFAULT_CONTEXT_WIDTH/2);
-      properties[PLG_ENTITY_HEIGHT] = QString::number(DEFAULT_CONTEXT_HEIGHT);
-      properties[PLG_ENTITY_WIDTH] = QString::number(DEFAULT_CONTEXT_WIDTH);
+      properties[PLG_PROPERTY_TOP] = QString::number(_insertPoint.y() - DEFAULT_CONTEXT_HEIGHT/2);
+      properties[PLG_PROPERTY_LEFT] = QString::number(_insertPoint.x() - DEFAULT_CONTEXT_WIDTH/2);
+      properties[PLG_PROPERTY_HEIGHT] = QString::number(DEFAULT_CONTEXT_HEIGHT);
+      properties[PLG_PROPERTY_WIDTH] = QString::number(DEFAULT_CONTEXT_WIDTH);
 
       break;
     }
@@ -1132,10 +1132,10 @@ void StructuralEntity::performInsert(Structural::StructuralType name)
     case Structural::Media:
     {
 
-      properties[PLG_ENTITY_TOP] = QString::number(_insertPoint.y() - DEFAULT_MEDIA_HEIGHT/2);
-      properties[PLG_ENTITY_LEFT] = QString::number(_insertPoint.x() - DEFAULT_MEDIA_WIDTH/2);
-      properties[PLG_ENTITY_HEIGHT] = QString::number(DEFAULT_MEDIA_HEIGHT);
-      properties[PLG_ENTITY_WIDTH] = QString::number(DEFAULT_MEDIA_WIDTH);
+      properties[PLG_PROPERTY_TOP] = QString::number(_insertPoint.y() - DEFAULT_MEDIA_HEIGHT/2);
+      properties[PLG_PROPERTY_LEFT] = QString::number(_insertPoint.x() - DEFAULT_MEDIA_WIDTH/2);
+      properties[PLG_PROPERTY_HEIGHT] = QString::number(DEFAULT_MEDIA_HEIGHT);
+      properties[PLG_PROPERTY_WIDTH] = QString::number(DEFAULT_MEDIA_WIDTH);
 
       break;
     }

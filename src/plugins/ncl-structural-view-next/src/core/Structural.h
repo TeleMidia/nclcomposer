@@ -1,37 +1,27 @@
 #ifndef STRUCTURAL_H
 #define STRUCTURAL_H
 
-#define PLG_VALUE_TRUE  "1"
-#define PLG_VALUE_FALSE "0"
-
-#define PLG_PROPERTY_ID       ":plugin:property:id"
-#define PLG_PROPERTY_UID      ":plugin:property:uid"
+#define PLG_PROPERTY_ID ":plugin:property:id"
+#define PLG_PROPERTY_UID ":plugin:property:uid"
 #define PLG_PROPERTY_CATEGORY ":plugin:property:category"
-#define PLG_PROPERTY_TYPE     ":plugin:property:type"
+#define PLG_PROPERTY_TYPE ":plugin:property:type"
 #define PLG_PROPERTY_MIMETYPE ":plugin:property:mimetype"
 
-#define PLG_ENTITY_TOP ":plugin:property:top"
-#define PLG_ENTITY_LEFT ":plugin:property:left"
-#define PLG_ENTITY_WIDTH ":plugin:property:width"
-#define PLG_ENTITY_HEIGHT ":plugin:property:height"
-#define PLG_ENTITY_ZINDEX ":plugin:property:zindex"
+#define PLG_PROPERTY_TOP ":plugin:property:top"
+#define PLG_PROPERTY_LEFT ":plugin:property:left"
+#define PLG_PROPERTY_WIDTH ":plugin:property:width"
+#define PLG_PROPERTY_HEIGHT ":plugin:property:height"
+#define PLG_PROPERTY_ZINDEX ":plugin:property:zindex"
 
+#define PLG_PROPERTY_HIDDEN ":plugin:property:hidden"
+
+#define PLG_ENTITY_UNCOLLAPSED ":plugin:property:uncollapsed"
 #define PLG_ENTITY_UNCOLLAPSED_TOP ":plugin:property:uncollaped:top"
 #define PLG_ENTITY_UNCOLLAPSED_LEFT ":plugin:property:uncollaped:left"
 #define PLG_ENTITY_UNCOLLAPSED_WIDTH ":plugin:property:uncollaped:width"
 #define PLG_ENTITY_UNCOLLAPSED_HEIGHT ":plugin:property:uncollaped:height"
 
-#define PLG_ENTITY_SELECTED ":plugin:property:selected"
-#define PLG_ENTITY_HIDDEN ":plugin:property:hidden"
-
-#define PLG_ENTITY_MOVEABLE ":plugin:property:moveable"
-#define PLG_ENTITY_SELECTABLE ":plugin:property:selectable"
-#define PLG_ENTITY_HOVERABLE ":plugin:property:hoverable"
-#define PLG_ENTITY_RESIZABLE ":plugin:property:resizable"
-#define PLG_ENTITY_DRAGGABLE ":plugin:property:draggable"
-
-#define PLG_ENTITY_SRC ":plugin:property:src"
-#define PLG_ENTITY_COLLAPSED ":plugin:property:collapsed"
+#define PLG_PROPERTY_LOCATION ":plugin:property:location"
 
 #define PLG_ENTITY_START_UID ":plugin:property:start:uid"
 #define PLG_ENTITY_END_UID ":plugin:property:end:uid"
@@ -55,6 +45,29 @@
 #define PLG_SETTING_UNDO ":plugin:setting:undo"
 #define PLG_SETTING_NOTIFY ":plugin:setting:notify"
 #define PLG_SETTING_CODE ":plugin:setting:code"
+
+#define PLG_VALUE_TRUE "1"
+#define PLG_VALUE_FALSE "0"
+
+#define DEFAULT_BODY_WIDTH  750
+#define DEFAULT_BODY_HEIGHT 500
+
+#define DEFAULT_CONTEXT_WIDTH  250
+#define DEFAULT_CONTEXT_HEIGHT 200
+
+#define DEFAULT_MEDIA_WIDTH  48
+#define DEFAULT_MEDIA_HEIGHT 64
+
+#define DEFAULT_INTERFACE_WIDTH  18
+#define DEFAULT_INTERFACE_HEIGHT 18
+
+#define DEFAULT_AGGREGATOR_WIDTH  14
+#define DEFAULT_AGGREGATOR_HEIGHT 14
+
+#define DEFAULT_ANCHOR_WIDTH  8
+#define DEFAULT_ANCHOR_HEIGHT 8
+
+#define DEFAULT_BODY_ENABLE 1
 
 #define NCL_ENTITY_ID "id"
 #define NCL_ENTITY_REFER "refer"
@@ -82,25 +95,7 @@
 #define NCL_ENTITY_LABEL "label"
 #define NCL_ENTITY_CLIP "clip"
 
-#define DEFAULT_BODY_WIDTH  750
-#define DEFAULT_BODY_HEIGHT 500
 
-#define DEFAULT_CONTEXT_WIDTH  250
-#define DEFAULT_CONTEXT_HEIGHT 200
-
-#define DEFAULT_MEDIA_WIDTH  48
-#define DEFAULT_MEDIA_HEIGHT 64
-
-#define DEFAULT_INTERFACE_WIDTH  18
-#define DEFAULT_INTERFACE_HEIGHT 18
-
-#define DEFAULT_AGGREGATOR_WIDTH  14
-#define DEFAULT_AGGREGATOR_HEIGHT 14
-
-#define DEFAULT_ANCHOR_WIDTH  8
-#define DEFAULT_ANCHOR_HEIGHT 8
-
-#define DEFAULT_BODY_ENABLE 1
 
 class Structural
 {

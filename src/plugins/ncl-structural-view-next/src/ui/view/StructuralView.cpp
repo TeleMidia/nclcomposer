@@ -451,7 +451,7 @@ void StructuralView::insert(QString uid, QString parent, QMap<QString, QString> 
 
         bool uncollapseAndThenCollapse = false;
 
-        if (p->isCollapsed()){
+        if (!p->isUncollapsed()){
           if (p->getStructuralType() == Structural::Body ||
               p->getStructuralType() == Structural::Switch ||
               p->getStructuralType() == Structural::Context)
@@ -469,7 +469,7 @@ void StructuralView::insert(QString uid, QString parent, QMap<QString, QString> 
 
 
         if (entity->getStructuralCategory() != Structural::Edge){
-          if (!properties.value(PLG_ENTITY_TOP).isEmpty() && !properties.value(PLG_ENTITY_LEFT).isEmpty())
+          if (!properties.value(PLG_PROPERTY_TOP).isEmpty() && !properties.value(PLG_PROPERTY_LEFT).isEmpty())
           {
             avoidCollision = false;
           }
@@ -491,6 +491,9 @@ void StructuralView::insert(QString uid, QString parent, QMap<QString, QString> 
           entity->setLeft(scene->sceneRect().width()/2 - entity->getWidth()/2);
         }
       }
+
+      entity->setStructuralUid(uid);
+      entity->setStructuralProperties(properties);
 
       entity->setSelected(false);
 
@@ -815,8 +818,8 @@ void StructuralView:: change(QString uid, QMap<QString, QString> properties, QMa
 
      StructuralEntity* entity = entities[uid];
 
-     if ((!entity->isCollapsed() && properties.value(PLG_ENTITY_COLLAPSED) == "1") ||
-         (entity->isCollapsed() && properties.value(PLG_ENTITY_COLLAPSED) == "0"))
+     if ((!entity->isUncollapsed() && properties.value(PLG_ENTITY_UNCOLLAPSED) == "1") ||
+         (entity->isUncollapsed() && properties.value(PLG_ENTITY_UNCOLLAPSED) == "0"))
        ((StructuralComposition*) entity)->collapse(false);
 
      entity->setStructuralProperties(properties);
@@ -1309,15 +1312,15 @@ void StructuralView::createLink(StructuralEntity* a, StructuralEntity* b)
 
 
         if (pt_a.y() > pt_b.y())
-            properties[PLG_ENTITY_TOP] = QString::number(pt_b.y() + (pt_a.y() - pt_b.y())/2);
+            properties[PLG_PROPERTY_TOP] = QString::number(pt_b.y() + (pt_a.y() - pt_b.y())/2);
         else
-            properties[PLG_ENTITY_TOP] = QString::number(pt_a.y() + (pt_b.y() - pt_a.y())/2);
+            properties[PLG_PROPERTY_TOP] = QString::number(pt_a.y() + (pt_b.y() - pt_a.y())/2);
 
 
         if (pt_a.x() > pt_b.x())
-            properties[PLG_ENTITY_LEFT] = QString::number(pt_b.x() + (pt_a.x() - pt_b.x())/2);
+            properties[PLG_PROPERTY_LEFT] = QString::number(pt_b.x() + (pt_a.x() - pt_b.x())/2);
         else
-            properties[PLG_ENTITY_LEFT] = QString::number(pt_a.x() + (pt_b.x() - pt_a.x())/2);
+            properties[PLG_PROPERTY_LEFT] = QString::number(pt_a.x() + (pt_b.x() - pt_a.x())/2);
 
         emit requestLinkDialogUpdate();
 
@@ -1621,8 +1624,8 @@ void StructuralView::performPaste(StructuralEntity* entity, StructuralEntity* pa
     properties[PLG_PROPERTY_UID] = uid;
 
     if (newPos){
-      properties.remove(PLG_ENTITY_TOP);
-     properties.remove(PLG_ENTITY_LEFT);
+      properties.remove(PLG_PROPERTY_TOP);
+     properties.remove(PLG_PROPERTY_LEFT);
     }
 
 
@@ -2417,8 +2420,8 @@ void StructuralView::adjustChildrenWithGraphiviz(StructuralEntity* parent, QStri
     qreal PADDING = 64*2;
 
     QMap<QString, QString> next = parent->getStructuralProperties();
-    next.insert(PLG_ENTITY_WIDTH, QString::number(GD_bb(g).UR.x + PADDING));
-    next.insert(PLG_ENTITY_HEIGHT, QString::number(GD_bb(g).UR.y + PADDING));
+    next.insert(PLG_PROPERTY_WIDTH, QString::number(GD_bb(g).UR.x + PADDING));
+    next.insert(PLG_PROPERTY_HEIGHT, QString::number(GD_bb(g).UR.y + PADDING));
 
     change(parent->getStructuralUid(), next, parent->getStructuralProperties(), StructuralUtil::createSettings("1", "0", code));
 
@@ -2431,8 +2434,8 @@ void StructuralView::adjustChildrenWithGraphiviz(StructuralEntity* parent, QStri
       qreal y = (GD_bb(g).UR.y - ND_coord(n).y) + parent->getHeight()/2 - GD_bb(g).UR.y/2 - e->getHeight()/2;
 
       QMap<QString, QString> next = e->getStructuralProperties();
-      next.insert(PLG_ENTITY_TOP, QString::number(y));
-      next.insert(PLG_ENTITY_LEFT, QString::number(x));
+      next.insert(PLG_PROPERTY_TOP, QString::number(y));
+      next.insert(PLG_PROPERTY_LEFT, QString::number(x));
 
       change(e->getStructuralUid(), next, e->getStructuralProperties(), StructuralUtil::createSettings("1", "0", code));
     }

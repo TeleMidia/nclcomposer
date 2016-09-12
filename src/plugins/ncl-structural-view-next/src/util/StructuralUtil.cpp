@@ -65,7 +65,7 @@ QMap<QString,QString> StructuralUtil::createCoreTranslations(const StructuralTyp
       translations[NCL_ENTITY_REFER] = NCL_ENTITY_REFER;
       translations[NCL_ENTITY_INSTANCE] = NCL_ENTITY_INSTANCE;
       translations[NCL_ENTITY_TYPE] = NCL_ENTITY_TYPE;
-      translations[NCL_ENTITY_SRC] = PLG_ENTITY_SRC;
+      translations[NCL_ENTITY_SRC] = PLG_PROPERTY_LOCATION;
       translations[NCL_ENTITY_DESCRIPTOR] = NCL_ENTITY_DESCRIPTOR;
 
       break;

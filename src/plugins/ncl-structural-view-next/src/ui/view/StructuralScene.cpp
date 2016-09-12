@@ -48,8 +48,8 @@ void StructuralScene::performInsert(Structural::StructuralType name)
     case Structural::Body:
     {
       QMap<QString, QString> properties;
-      properties[PLG_ENTITY_TOP] = QString::number(_insertPoint.y() - DEFAULT_BODY_HEIGHT/2);
-      properties[PLG_ENTITY_LEFT] = QString::number(_insertPoint.x() - DEFAULT_BODY_WIDTH/2);
+      properties[PLG_PROPERTY_TOP] = QString::number(_insertPoint.y() - DEFAULT_BODY_HEIGHT/2);
+      properties[PLG_PROPERTY_LEFT] = QString::number(_insertPoint.x() - DEFAULT_BODY_WIDTH/2);
 
       QMap<QString, QString> settings;
 

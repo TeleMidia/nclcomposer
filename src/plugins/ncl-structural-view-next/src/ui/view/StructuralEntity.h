@@ -91,8 +91,8 @@ public:
   bool isSelected() const;
   void setSelected(bool selected);
 
-  bool isCollapsed() const;
-  void setCollapsed(bool collapsed);
+  bool isUncollapsed() const;
+  void setUncollapsed(bool uncollapsed);
 
   qreal getTop() const;
   void setTop(qreal top);
@@ -210,7 +210,7 @@ private:
 
   bool _selected;
   bool _focused;
-  bool _collapsed;
+  bool _uncollapsed;
 
   qreal _top;
   qreal _left;

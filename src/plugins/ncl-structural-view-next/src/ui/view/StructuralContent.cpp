@@ -55,7 +55,7 @@ void StructuralContent::setSource(const QString &source)
 
   setMediaType(StructuralUtil::getMimeTypeByExtension(QFileInfo(source).suffix().toLower()));
 
-  StructuralNode::setStructuralProperty(PLG_ENTITY_SRC, source);
+  StructuralNode::setStructuralProperty(PLG_PROPERTY_LOCATION, source);
 }
 
 void StructuralContent::setStructuralType(StructuralType type)
@@ -65,10 +65,10 @@ void StructuralContent::setStructuralType(StructuralType type)
 
 void StructuralContent::setStructuralProperty(const QString &name, const QString &value)
 {
-  if (name == PLG_ENTITY_SRC)
+  if (name == PLG_PROPERTY_LOCATION)
     setSource(value);
   else if (name == PLG_PROPERTY_MIMETYPE)
-    setMediaType((Structural::StructuralMimeType) value.toInt());
+    setMediaType(StructuralUtil::translateStringToMimeType(value));
   else
     StructuralNode::setStructuralProperty(name, value);
 }
@@ -261,7 +261,7 @@ void StructuralContent::setMediaType(Structural::StructuralMimeType type)
 
   this->icon = StructuralUtil::getMimeTypeIcon(mediatype);
 
-  StructuralNode::setStructuralProperty(PLG_PROPERTY_MIMETYPE, QString::number(type));
+  StructuralNode::setStructuralProperty(PLG_PROPERTY_MIMETYPE, StructuralUtil::translateMimeTypeToString(type));
 }
 
 
