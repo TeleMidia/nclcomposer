@@ -197,7 +197,7 @@ void StructuralComposition::draw(QPainter* painter)
   {
     painter->setRenderHint(QPainter::SmoothPixmapTransform, true);
 
-    painter->drawPixmap(4 + 8/2, 4 + 8/2, getWidth()-8, getHeight()-16-8, QPixmap(StructuralUtil::translateTypeToIcon(getStructuralType())));
+    painter->drawPixmap(4 + 8/2, 4 + 8/2, getWidth()-8, getHeight()-16-8, QPixmap(StructuralUtil::getEntityIcon(getStructuralType())));
 
     drawMouseHoverHighlight(painter); // This should not be HERE!!
 
@@ -402,10 +402,10 @@ void StructuralComposition::dropEvent(QGraphicsSceneDragDropEvent *event)
     dropsrc = filename;
 
     QMap<QString,QString> properties;
-    properties[PLG_ENTITY_TYPE] = StructuralUtil::translateTypeToString(Structural::Media);
-    properties[PLG_ENTITY_ID] = StructuralUtil::formatId(QFileInfo(filename).baseName());
+    properties[PLG_PROPERTY_TYPE] = StructuralUtil::translateTypeToString(Structural::Media);
+    properties[PLG_PROPERTY_ID] = StructuralUtil::formatId(QFileInfo(filename).baseName());
     properties[PLG_ENTITY_SRC] = filename;
-    properties[PLG_ENTITY_MEDIA] = StructuralUtil::translateExtensionToMedia(suffix);
+    properties[PLG_PROPERTY_MIMETYPE] = StructuralUtil::getMimeTypeByExtension(suffix);
 
     QMap<QString,QString> settings;
     settings[PLG_SETTING_UNDO] = "1";

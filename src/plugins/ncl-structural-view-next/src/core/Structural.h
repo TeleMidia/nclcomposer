@@ -1,55 +1,55 @@
 #ifndef STRUCTURAL_H
 #define STRUCTURAL_H
 
-#define STR_VALUE_TRUE "1"
-#define STR_VALUE_FALSE "0"
+#define PLG_VALUE_TRUE  "1"
+#define PLG_VALUE_FALSE "0"
 
-#define PLG_ENTITY_ID ":plugin:entity:id"
-#define PLG_ENTITY_UID ":plugin:entity:uid"
-#define PLG_ENTITY_CATEGORY ":plugin:entity:category"
-#define PLG_ENTITY_TYPE ":plugin:entity:type"
-#define PLG_ENTITY_MEDIA ":plugin:entity:media"
+#define PLG_PROPERTY_ID       ":plugin:property:id"
+#define PLG_PROPERTY_UID      ":plugin:property:uid"
+#define PLG_PROPERTY_CATEGORY ":plugin:property:category"
+#define PLG_PROPERTY_TYPE     ":plugin:property:type"
+#define PLG_PROPERTY_MIMETYPE ":plugin:property:mimetype"
 
-#define PLG_ENTITY_TOP ":plugin:entity:top"
-#define PLG_ENTITY_LEFT ":plugin:entity:left"
-#define PLG_ENTITY_WIDTH ":plugin:entity:width"
-#define PLG_ENTITY_HEIGHT ":plugin:entity:height"
-#define PLG_ENTITY_ZINDEX ":plugin:entity:zindex"
+#define PLG_ENTITY_TOP ":plugin:property:top"
+#define PLG_ENTITY_LEFT ":plugin:property:left"
+#define PLG_ENTITY_WIDTH ":plugin:property:width"
+#define PLG_ENTITY_HEIGHT ":plugin:property:height"
+#define PLG_ENTITY_ZINDEX ":plugin:property:zindex"
 
-#define PLG_ENTITY_UNCOLLAPSED_TOP ":plugin:entity:uncollaped:top"
-#define PLG_ENTITY_UNCOLLAPSED_LEFT ":plugin:entity:uncollaped:left"
-#define PLG_ENTITY_UNCOLLAPSED_WIDTH ":plugin:entity:uncollaped:width"
-#define PLG_ENTITY_UNCOLLAPSED_HEIGHT ":plugin:entity:uncollaped:height"
+#define PLG_ENTITY_UNCOLLAPSED_TOP ":plugin:property:uncollaped:top"
+#define PLG_ENTITY_UNCOLLAPSED_LEFT ":plugin:property:uncollaped:left"
+#define PLG_ENTITY_UNCOLLAPSED_WIDTH ":plugin:property:uncollaped:width"
+#define PLG_ENTITY_UNCOLLAPSED_HEIGHT ":plugin:property:uncollaped:height"
 
-#define PLG_ENTITY_SELECTED ":plugin:entity:selected"
-#define PLG_ENTITY_HIDDEN ":plugin:entity:hidden"
+#define PLG_ENTITY_SELECTED ":plugin:property:selected"
+#define PLG_ENTITY_HIDDEN ":plugin:property:hidden"
 
-#define PLG_ENTITY_MOVEABLE ":plugin:entity:moveable"
-#define PLG_ENTITY_SELECTABLE ":plugin:entity:selectable"
-#define PLG_ENTITY_HOVERABLE ":plugin:entity:hoverable"
-#define PLG_ENTITY_RESIZABLE ":plugin:entity:resizable"
-#define PLG_ENTITY_DRAGGABLE ":plugin:entity:draggable"
+#define PLG_ENTITY_MOVEABLE ":plugin:property:moveable"
+#define PLG_ENTITY_SELECTABLE ":plugin:property:selectable"
+#define PLG_ENTITY_HOVERABLE ":plugin:property:hoverable"
+#define PLG_ENTITY_RESIZABLE ":plugin:property:resizable"
+#define PLG_ENTITY_DRAGGABLE ":plugin:property:draggable"
 
-#define PLG_ENTITY_SRC ":plugin:entity:src"
-#define PLG_ENTITY_COLLAPSED ":plugin:entity:collapsed"
+#define PLG_ENTITY_SRC ":plugin:property:src"
+#define PLG_ENTITY_COLLAPSED ":plugin:property:collapsed"
 
-#define PLG_ENTITY_START_UID ":plugin:entity:start:uid"
-#define PLG_ENTITY_END_UID ":plugin:entity:end:uid"
-#define PLG_ENTITY_ROLE ":plugin:entity:role"
-#define PLG_ENTITY_LINK_ID ":plugin:entity:link:id"
-#define PLG_ENTITY_LINK_UID ":plugin:entity:link:uid"
-#define PLG_ENTITY_XCONNECTOR_ID ":plugin:entity:xconnector:id"
-#define PLG_ENTITY_COMPONENT_ID ":plugin:entity:component:id"
-#define PLG_ENTITY_COMPONENT_UID ":plugin:entity:component:uid"
-#define PLG_ENTITY_INTERFACE_ID ":plugin:entity:interface:id"
-#define PLG_ENTITY_INTERFACE_UID ":plugin:entity:interface:uid"
-#define PLG_ENTITY_ANGLE ":plugin:entity:angle"
-#define PLG_ENTITY_ROLE ":plugin:entity:role"
+#define PLG_ENTITY_START_UID ":plugin:property:start:uid"
+#define PLG_ENTITY_END_UID ":plugin:property:end:uid"
+#define PLG_ENTITY_ROLE ":plugin:property:role"
+#define PLG_ENTITY_LINK_ID ":plugin:property:link:id"
+#define PLG_ENTITY_LINK_UID ":plugin:property:link:uid"
+#define PLG_ENTITY_XCONNECTOR_ID ":plugin:property:xconnector:id"
+#define PLG_ENTITY_COMPONENT_ID ":plugin:property:component:id"
+#define PLG_ENTITY_COMPONENT_UID ":plugin:property:component:uid"
+#define PLG_ENTITY_INTERFACE_ID ":plugin:property:interface:id"
+#define PLG_ENTITY_INTERFACE_UID ":plugin:property:interface:uid"
+#define PLG_ENTITY_ANGLE ":plugin:property:angle"
+#define PLG_ENTITY_ROLE ":plugin:property:role"
 
-#define PLG_ENTITY_LINKPARAM_NAME ":plugin:entity:linkparam:name"
-#define PLG_ENTITY_LINKPARAM_VALUE ":plugin:entity:linkparam:value"
-#define PLG_ENTITY_BINDPARAM_NAME ":plugin:entity:bindparam:name"
-#define PLG_ENTITY_BINDPARAM_VALUE ":plugin:entity:bindparam:value"
+#define PLG_ENTITY_LINKPARAM_NAME ":plugin:property:linkparam:name"
+#define PLG_ENTITY_LINKPARAM_VALUE ":plugin:property:linkparam:value"
+#define PLG_ENTITY_BINDPARAM_NAME ":plugin:property:bindparam:name"
+#define PLG_ENTITY_BINDPARAM_VALUE ":plugin:property:bindparam:value"
 
 #define PLG_SETTING_UNDO_CHILDREN ":plugin:setting:undo:children"
 #define PLG_SETTING_UNDO ":plugin:setting:undo"
@@ -132,7 +132,28 @@ public:
     NoType      = 0
   };
 
-  enum StructuralMedia {
+  enum StructuralRole
+  {
+    onBegin,
+    onEnd,
+    onSelection,
+    onResume,
+    onPause,
+    onBeginAttribution,
+    onEndAttribution,
+    onPauseAttribution,
+    onResumeAttribution,
+
+    Start,
+    Stop,
+    Resume,
+    Pause,
+    Set,
+
+    NoRole
+  };
+
+  enum StructuralMimeType {
     Image       = 1,
     Audio       = 2,
     Video       = 3,
@@ -142,7 +163,7 @@ public:
     NCLua       = 7,
     Settings    = 9,
 
-    NoMedia     = 0
+    NoMimeType  = 0
   };
 
   enum StructuralResize {
@@ -157,36 +178,12 @@ public:
 
     NoResize    = 0
   };
-
-  enum StructuralRole
-  {
-    /* Conditions */
-    onBegin,
-    onEnd,
-    onSelection,
-    onResume,
-    onPause,
-    onBeginAttribution,
-    onEndAttribution,
-    onPauseAttribution,
-    onResumeAttribution,
-
-    /* Actions */
-    Start,
-    Stop,
-    Resume,
-    Pause,
-    Set,
-
-    NoRole
-  };
-
 };
 
 typedef Structural::StructuralCategory StructualCategory;
 typedef Structural::StructuralType StructuralType;
 typedef Structural::StructuralResize StructuralResize;
-typedef Structural::StructuralMedia StructuralMedia;
+typedef Structural::StructuralMimeType StructuralMimeType;
 typedef Structural::StructuralRole StructuralRole;
 
 #endif // STRUCTURAL_H

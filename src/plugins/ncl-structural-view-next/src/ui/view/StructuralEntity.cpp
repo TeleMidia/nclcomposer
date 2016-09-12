@@ -78,7 +78,7 @@ QString StructuralEntity::getStructuralUid() const
 void StructuralEntity::setStructuralUid(const QString &uid)
 {
   _uid = uid;
-  _properties.insert(PLG_ENTITY_UID, uid);
+  _properties.insert(PLG_PROPERTY_UID, uid);
 }
 
 QString StructuralEntity::getStructuralId() const
@@ -89,7 +89,7 @@ QString StructuralEntity::getStructuralId() const
 void StructuralEntity::setStructuralId(const QString &id)
 {
   _id = id;
-  _properties.insert(PLG_ENTITY_ID, id) ;
+  _properties.insert(PLG_PROPERTY_ID, id) ;
 
   refresh();
 }
@@ -102,7 +102,7 @@ StructualCategory StructuralEntity::getStructuralCategory() const
 void StructuralEntity::setStructuralCategory(const StructualCategory type)
 {
   _type = type;
-  _properties.insert(PLG_ENTITY_CATEGORY,StructuralUtil::translateCategoryToString(type));
+  _properties.insert(PLG_PROPERTY_CATEGORY,StructuralUtil::translateCategoryToString(type));
 }
 
 StructuralType StructuralEntity::getStructuralType() const
@@ -113,7 +113,7 @@ StructuralType StructuralEntity::getStructuralType() const
 void StructuralEntity::setStructuralType(const StructuralType subtype)
 {
   _subtype = subtype;
-  _properties.insert(PLG_ENTITY_TYPE,StructuralUtil::translateTypeToString(subtype));
+  _properties.insert(PLG_PROPERTY_TYPE,StructuralUtil::translateTypeToString(subtype));
 }
 
 QMap<QString, QString> StructuralEntity::getStructuralProperties() const
@@ -194,17 +194,17 @@ void StructuralEntity::setStructuralProperty(const QString &name, const QString 
   else if (name == PLG_ENTITY_ZINDEX)
     setzIndex(value.toInt());
 
-  else if (name == PLG_ENTITY_ID)
+  else if (name == PLG_PROPERTY_ID)
     setStructuralId(value);
 
-  else if (name == PLG_ENTITY_UID)
+  else if (name == PLG_PROPERTY_UID)
     setStructuralUid(value);
 
-  else if (name == PLG_ENTITY_CATEGORY)
-    setStructuralCategory((StructualCategory)value.toInt());
+  else if (name == PLG_PROPERTY_CATEGORY)
+    setStructuralCategory(StructuralUtil::translateStringToCategory(value));
 
-  else if (name == PLG_ENTITY_TYPE)
-    setStructuralType((StructuralType)value.toInt());
+  else if (name == PLG_PROPERTY_TYPE)
+    setStructuralType(StructuralUtil::translateStringToType(value));
 
   else if (name == PLG_ENTITY_HIDDEN)
     setHidden((value == "1" ? true : false));
@@ -602,7 +602,7 @@ void StructuralEntity::newChild(Structural::StructuralType type)
   QString uid = QUuid::createUuid().toString();
   QString parent = getStructuralUid();
   QMap<QString, QString> properties;
-  properties[PLG_ENTITY_CATEGORY] = QString::number(type);
+  properties[PLG_PROPERTY_CATEGORY] = QString::number(type);
 
   QMap<QString, QString> settings;
   settings[PLG_SETTING_UNDO] = "1";
@@ -1105,7 +1105,7 @@ void StructuralEntity::performInsert(Structural::StructuralType name)
 {
 
   QMap<QString, QString> properties;
-  properties[PLG_ENTITY_CATEGORY] = QString::number(name);
+  properties[PLG_PROPERTY_CATEGORY] = QString::number(name);
 
   switch (name) {
     case Structural::Body:

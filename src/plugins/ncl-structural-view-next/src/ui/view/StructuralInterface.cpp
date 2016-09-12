@@ -75,7 +75,7 @@ void StructuralInterface::setHexBorderColor(const QString &hexBorderColor)
 void StructuralInterface::refresh()
 {
   QString tip = "";
-  QString name = (getStructuralProperty(PLG_ENTITY_ID) != "" ? getStructuralProperty(PLG_ENTITY_ID) : "?");
+  QString name = (getStructuralProperty(PLG_PROPERTY_ID) != "" ? getStructuralProperty(PLG_PROPERTY_ID) : "?");
 
   if (getStructuralType() == Structural::Port)
   {

@@ -20,7 +20,7 @@ public:
 
   QString getIcon() const;
 
-  void setMediaType(Structural::StructuralMedia type);
+  void setMediaType(Structural::StructuralMimeType type);
 
   void setSource(const QString &source);
 
@@ -68,7 +68,7 @@ private:
 
   bool enableDrag;
 
-  Structural::StructuralMedia mediatype;
+  Structural::StructuralMimeType mediatype;
 };
 
 #endif // STRUCTURALCONTENT_H

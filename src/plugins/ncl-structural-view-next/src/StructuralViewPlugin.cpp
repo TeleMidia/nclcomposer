@@ -177,9 +177,9 @@ void StructuralViewPlugin::updateFromModel()
 
       if (prop.contains(e->getStructuralId()+pid)){
         QMap<QString, QString> cacheprop = prop.value(e->getStructuralId()+pid);
-        cacheprop.insert(PLG_ENTITY_UID,e->getStructuralUid());
+        cacheprop.insert(PLG_PROPERTY_UID,e->getStructuralUid());
 
-        QMap<QString, QString> m = StructuralUtil::createComposerTranslations(e->getStructuralType());
+        QMap<QString, QString> m = StructuralUtil::createCoreTranslations(e->getStructuralType());
 
         foreach (QString p, m.values()) {
           if (e->getStructuralProperty(p).isEmpty())
@@ -205,8 +205,8 @@ void StructuralViewPlugin::updateFromModel()
 
         if (e->getStructuralType() == Structural::Bind)
         {
-          if (!cacheprop.value(PLG_ENTITY_ID).isEmpty()){
-            StructuralRole role = StructuralUtil::translateStringToRole(cacheprop.value(PLG_ENTITY_ID));
+          if (!cacheprop.value(PLG_PROPERTY_ID).isEmpty()){
+            StructuralRole role = StructuralUtil::translateStringToRole(cacheprop.value(PLG_PROPERTY_ID));
 
             if (cacheprop.contains(PLG_ENTITY_COMPONENT_ID)){
               QString coreUID = getUidById(cacheprop.value(PLG_ENTITY_COMPONENT_ID));
@@ -323,7 +323,7 @@ void StructuralViewPlugin::updateFromModel()
             }
           }
 
-          if (StructuralUtil::isConditionRole(e->getStructuralProperty(PLG_ENTITY_ID)))
+          if (StructuralUtil::isConditionRole(e->getStructuralProperty(PLG_PROPERTY_ID)))
           {
             if (!p.value(PLG_ENTITY_INTERFACE_UID).isEmpty()){
               p.insert(PLG_ENTITY_START_UID, p.value(PLG_ENTITY_INTERFACE_UID));
@@ -334,7 +334,7 @@ void StructuralViewPlugin::updateFromModel()
               p.insert(PLG_ENTITY_END_UID, e->getStructuralProperty(PLG_ENTITY_LINK_UID));
             }
 
-          }else if (StructuralUtil::isActionRole(e->getStructuralProperty(PLG_ENTITY_ID))){
+          }else if (StructuralUtil::isActionRole(e->getStructuralProperty(PLG_PROPERTY_ID))){
             if (!p.value(PLG_ENTITY_INTERFACE_UID).isEmpty()){
               p.insert(PLG_ENTITY_START_UID, e->getStructuralProperty(PLG_ENTITY_LINK_UID));
               p.insert(PLG_ENTITY_END_UID, p.value(PLG_ENTITY_INTERFACE_UID));
@@ -463,16 +463,15 @@ void StructuralViewPlugin::requestEntityAddition(Entity* entity, bool enableUndo
 
   QMap<QString, QString> properties;
 
-
   Structural::StructuralType type = StructuralUtil::translateStringToType(entity->getType());
 
   if (!DEFAULT_BODY_ENABLE && type == Structural::Body)
     return;
 
   if (type != Structural::NoType){
-    properties[PLG_ENTITY_TYPE] = QString::number(type);
+    properties[PLG_PROPERTY_TYPE] = entity->getType();
 
-    QMap<QString, QString> m = StructuralUtil::createComposerTranslations(type);
+    QMap<QString, QString> m = StructuralUtil::createCoreTranslations(type);
 
     entities[entity->getUniqueId()] = entity->getUniqueId();
 
@@ -514,8 +513,8 @@ void StructuralViewPlugin::requestEntityAddition(Entity* entity, bool enableUndo
       {
         parentUID = entity->getParent()->getParentUniqueId();
 
-        if (!properties.value(PLG_ENTITY_ID).isEmpty()){
-          StructuralRole role = StructuralUtil::translateStringToRole(properties.value(PLG_ENTITY_ID));
+        if (!properties.value(PLG_PROPERTY_ID).isEmpty()){
+          StructuralRole role = StructuralUtil::translateStringToRole(properties.value(PLG_PROPERTY_ID));
 
           properties.insert(PLG_ENTITY_ROLE, QString::number(role));
 
@@ -700,9 +699,9 @@ void StructuralViewPlugin::requestEntityChange(Entity* entity)
 
   if (type != Structural::NoType){
 
-  properties[PLG_ENTITY_TYPE] = QString::number(type);
+  properties[PLG_PROPERTY_TYPE] = entity->getType();
 
-  QMap<QString, QString> m = StructuralUtil::createComposerTranslations(type);
+  QMap<QString, QString> m = StructuralUtil::createCoreTranslations(type);
 
   foreach (QString key, m.keys()) {
     if (!entity->getAttribute(key).isEmpty())
@@ -730,8 +729,8 @@ void StructuralViewPlugin::requestEntityChange(Entity* entity)
 
       if (type == Structural::Bind)
       {
-        if (!properties.value(PLG_ENTITY_ID).isEmpty()){
-          StructuralRole role = StructuralUtil::translateStringToRole(properties.value(PLG_ENTITY_ID));
+        if (!properties.value(PLG_PROPERTY_ID).isEmpty()){
+          StructuralRole role = StructuralUtil::translateStringToRole(properties.value(PLG_PROPERTY_ID));
 
           properties.insert(PLG_ENTITY_ROLE, QString::number(role));
 
@@ -900,7 +899,7 @@ void StructuralViewPlugin::notifyEntityAddedInView(const QString uid,
                                               QMap<QString, QString> properties,
                                               QMap<QString, QString> settings)
 {
-  StructuralType type = (StructuralType) properties[PLG_ENTITY_TYPE].toInt();
+  StructuralType type = StructuralUtil::translateStringToType(properties[PLG_PROPERTY_TYPE]);;
 
   Entity* cparent = NULL;
 
@@ -944,7 +943,7 @@ void StructuralViewPlugin::notifyEntityAddedInView(const QString uid,
   }else
     return;
 
-    QMap<QString, QString> m = StructuralUtil::createStructuralTranslations(type);
+    QMap<QString, QString> m = StructuralUtil::createPluginTranslations(type);
     QMap<QString, QString> attributes;
 
     if(cparent != NULL)
@@ -1022,9 +1021,9 @@ void StructuralViewPlugin::notifyEntityChangedInView(const QString uid,
                                                      QMap<QString, QString> settings)
 {
 
-  Structural::StructuralType type = (Structural::StructuralType) properties[PLG_ENTITY_TYPE].toInt();
+  Structural::StructuralType type = StructuralUtil::translateStringToType(properties[PLG_PROPERTY_TYPE]);
 
-  QMap<QString, QString> m = StructuralUtil::createStructuralTranslations(type);
+  QMap<QString, QString> m = StructuralUtil::createPluginTranslations(type);
   QMap<QString, QString> attributes;
   Entity* entity = getProject()->getEntityById(entities.key(uid));
 

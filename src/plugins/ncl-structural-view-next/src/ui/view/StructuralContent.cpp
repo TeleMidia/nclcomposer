@@ -9,7 +9,7 @@ StructuralContent::StructuralContent(StructuralEntity* parent)
 {
   setStructuralType(Structural::Media);
 
-  setMediaType(Structural::NoMedia);
+  setMediaType(Structural::NoMimeType);
 
   setResizable(false);
 
@@ -53,7 +53,7 @@ void StructuralContent::setSource(const QString &source)
 {
   this->source = source;
 
-  setMediaType(StructuralUtil::translateExtensionToMedia(QFileInfo(source).suffix().toLower()));
+  setMediaType(StructuralUtil::getMimeTypeByExtension(QFileInfo(source).suffix().toLower()));
 
   StructuralNode::setStructuralProperty(PLG_ENTITY_SRC, source);
 }
@@ -67,8 +67,8 @@ void StructuralContent::setStructuralProperty(const QString &name, const QString
 {
   if (name == PLG_ENTITY_SRC)
     setSource(value);
-  else if (name == PLG_ENTITY_MEDIA)
-    setMediaType((Structural::StructuralMedia) value.toInt());
+  else if (name == PLG_PROPERTY_MIMETYPE)
+    setMediaType((Structural::StructuralMimeType) value.toInt());
   else
     StructuralNode::setStructuralProperty(name, value);
 }
@@ -255,13 +255,13 @@ void StructuralContent::delineate(QPainterPath* painter) const
   painter->addRect(4, 4, getWidth(), getHeight());
 }
 
-void StructuralContent::setMediaType(Structural::StructuralMedia type)
+void StructuralContent::setMediaType(Structural::StructuralMimeType type)
 {
   mediatype = type;
 
-  this->icon = StructuralUtil::translateMediaToIcon(mediatype);
+  this->icon = StructuralUtil::getMimeTypeIcon(mediatype);
 
-  StructuralNode::setStructuralProperty(PLG_ENTITY_MEDIA, QString::number(type));
+  StructuralNode::setStructuralProperty(PLG_PROPERTY_MIMETYPE, QString::number(type));
 }
 
 

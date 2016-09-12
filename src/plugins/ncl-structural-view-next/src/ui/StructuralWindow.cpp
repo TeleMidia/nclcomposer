@@ -562,6 +562,7 @@ void StructuralWindow::changeSelect(QString uid)
 
   if (entity != NULL)
   {
+
     StructuralType NAME = _view->getEntity(uid)->getStructuralType();
 
     entity->menu->updateInsertAction(NAME);
