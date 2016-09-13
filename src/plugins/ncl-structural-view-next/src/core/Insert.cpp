@@ -19,15 +19,15 @@ Insert::~Insert()
 
 void Insert::undo()
 {
-  _settings.insert(PLG_SETTING_UNDO, "0");
-  _settings.insert(PLG_SETTING_NOTIFY,"1");
+  _settings.insert(STR_SETTING_UNDO, "0");
+  _settings.insert(STR_SETTING_NOTIFY,"1");
 
   emit remove(_uid, _settings);
 }
 
 void Insert::redo()
 {
-  _settings.insert(PLG_SETTING_UNDO,"0");
+  _settings.insert(STR_SETTING_UNDO,"0");
 
   emit insert(_uid, _parent, _properties, _settings);
 }

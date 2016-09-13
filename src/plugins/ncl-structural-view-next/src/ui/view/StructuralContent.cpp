@@ -21,8 +21,8 @@ StructuralContent::StructuralContent(StructuralEntity* parent)
   /* Default media position */
   if(parent)
   {
-    setTop(parent->getHeight()/2 - DEFAULT_MEDIA_HEIGHT/2);
-    setLeft(parent->getWidth()/2 - DEFAULT_MEDIA_WIDTH/2);
+    setTop(parent->getHeight()/2 - STR_DEFAULT_MEDIA_H/2);
+    setLeft(parent->getWidth()/2 - STR_DEFAULT_MEDIA_W/2);
   }
   else
   {
@@ -30,8 +30,8 @@ StructuralContent::StructuralContent(StructuralEntity* parent)
     setLeft(0);
   }
 
-  setWidth(DEFAULT_MEDIA_WIDTH);
-  setHeight(DEFAULT_MEDIA_HEIGHT);
+  setWidth(STR_DEFAULT_MEDIA_W);
+  setHeight(STR_DEFAULT_MEDIA_H);
 }
 
 StructuralContent::~StructuralContent()
@@ -55,7 +55,7 @@ void StructuralContent::setSource(const QString &source)
 
   setMediaType(StructuralUtil::getMimeTypeByExtension(QFileInfo(source).suffix().toLower()));
 
-  StructuralNode::setStructuralProperty(PLG_PROPERTY_LOCATION, source);
+  StructuralNode::setStructuralProperty(STR_PROPERTY_CONTENT_LOCATION, source);
 }
 
 void StructuralContent::setStructuralType(StructuralType type)
@@ -65,9 +65,9 @@ void StructuralContent::setStructuralType(StructuralType type)
 
 void StructuralContent::setStructuralProperty(const QString &name, const QString &value)
 {
-  if (name == PLG_PROPERTY_LOCATION)
+  if (name == STR_PROPERTY_CONTENT_LOCATION)
     setSource(value);
-  else if (name == PLG_PROPERTY_MIMETYPE)
+  else if (name == STR_PROPERTY_CONTENT_MIMETYPE)
     setMediaType(StructuralUtil::translateStringToMimeType(value));
   else
     StructuralNode::setStructuralProperty(name, value);
@@ -261,7 +261,7 @@ void StructuralContent::setMediaType(Structural::StructuralMimeType type)
 
   this->icon = StructuralUtil::getMimeTypeIcon(mediatype);
 
-  StructuralNode::setStructuralProperty(PLG_PROPERTY_MIMETYPE, StructuralUtil::translateMimeTypeToString(type));
+  StructuralNode::setStructuralProperty(STR_PROPERTY_CONTENT_MIMETYPE, StructuralUtil::translateMimeTypeToString(type));
 }
 
 

@@ -75,7 +75,7 @@ void StructuralMenu::updateInsertAction(StructuralType type, bool enableBody)
       break;
 
     default:
-      if (DEFAULT_BODY_ENABLE) {
+      if (STR_DEFAULT_WITH_BODY) {
         mediaAction->setEnabled(false);
         contextAction->setEnabled(false);
         switchAction->setEnabled(false);
@@ -227,7 +227,7 @@ void StructuralMenu::createMenus()
   insertMenu->addSeparator();
   insertMenu->addAction(contextAction);
   insertMenu->addAction(switchAction);
-  if (DEFAULT_BODY_ENABLE)
+  if (STR_DEFAULT_WITH_BODY)
     insertMenu->addAction(bodyAction);
   insertMenu->addSeparator();
   insertMenu->addAction(areaAction);

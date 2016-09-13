@@ -21,16 +21,16 @@ Remove::~Remove()
 
 void Remove::undo()
 {
-  _settings.insert(PLG_SETTING_UNDO,"0");
-  _settings.insert(PLG_SETTING_NOTIFY,"1");
+  _settings.insert(STR_SETTING_UNDO,"0");
+  _settings.insert(STR_SETTING_NOTIFY,"1");
 
   emit insert(_uid, _parent, _properties, _settings);
 }
 
 void Remove::redo()
 {
-  _settings.insert(PLG_SETTING_UNDO,"0");
-  _settings.insert(PLG_SETTING_UNDO_CHILDREN,"1");
+  _settings.insert(STR_SETTING_UNDO,"0");
+  _settings.insert(STR_SETTING_UNDO_TRACE,"1");
 
   emit remove(_uid, _settings);
 

@@ -241,8 +241,6 @@ void StructuralWindow::createToolbar()
   _insertToolbar->addSeparator();
   _insertToolbar->addAction(_contextAction);
   _insertToolbar->addAction(_switchAction);
-
-  if (DEFAULT_BODY_ENABLE)
   _insertToolbar->addAction(_bodyAction);
 
   _insertToolbar->addSeparator();
@@ -635,24 +633,12 @@ void StructuralWindow::changeSelect(QString uid)
     changeCutState(true);
     changeCopyState(true);
   }
-  else if (DEFAULT_BODY_ENABLE)
+  else
   {
     _mediaAction->setEnabled(false);
     _contextAction->setEnabled(false);
     _switchAction->setEnabled(false);
     _bodyAction->setEnabled((_view->getBody() == NULL));
-    _areaAction->setEnabled(false);
-    _propertyAction->setEnabled(false);
-    _portAction->setEnabled(false);
-
-    changeCutState(false);
-    changeCopyState(false);
-  }
-  else
-  {
-    _mediaAction->setEnabled(true);
-    _contextAction->setEnabled(true);
-    _switchAction->setEnabled(true);
     _areaAction->setEnabled(false);
     _propertyAction->setEnabled(false);
     _portAction->setEnabled(false);

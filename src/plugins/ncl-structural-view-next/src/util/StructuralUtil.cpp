@@ -12,7 +12,7 @@ QMap<QString,QString> StructuralUtil::createSettings()
 
 QMap<QString,QString> StructuralUtil::createSettings(const bool undo, const bool notify)
 {
-  return createSettings((undo ? PLG_VALUE_TRUE : PLG_VALUE_FALSE), (notify ? PLG_VALUE_TRUE : PLG_VALUE_FALSE), createUid());
+  return createSettings((undo ? STR_VALUE_TRUE : STR_VALUE_FALSE), (notify ? STR_VALUE_TRUE : STR_VALUE_FALSE), createUid());
 }
 
 QMap<QString,QString> StructuralUtil::createSettings(const QString &undo, const QString &notify, const QString &code)
@@ -20,19 +20,19 @@ QMap<QString,QString> StructuralUtil::createSettings(const QString &undo, const 
   QMap<QString,QString> settings;
 
   if (undo.isEmpty())
-    settings.insert(PLG_SETTING_UNDO, PLG_VALUE_TRUE);
+    settings.insert(STR_SETTING_UNDO, STR_VALUE_TRUE);
   else
-    settings.insert(PLG_SETTING_UNDO, undo);
+    settings.insert(STR_SETTING_UNDO, undo);
 
   if (notify.isEmpty())
-    settings.insert(PLG_SETTING_NOTIFY,PLG_VALUE_TRUE);
+    settings.insert(STR_SETTING_NOTIFY,STR_VALUE_TRUE);
   else
-    settings.insert(PLG_SETTING_NOTIFY, notify);
+    settings.insert(STR_SETTING_NOTIFY, notify);
 
   if (code.isEmpty())
-    settings.insert(PLG_SETTING_CODE, createUid());
+    settings.insert(STR_SETTING_CODE, createUid());
   else
-    settings.insert(PLG_SETTING_CODE, code);
+    settings.insert(STR_SETTING_CODE, code);
 
   return settings;
 }
@@ -45,7 +45,7 @@ QMap<QString,QString> StructuralUtil::createCoreTranslations(const StructuralTyp
   {
     case Structural::Body:
     {
-      translations[NCL_ENTITY_ID] = PLG_PROPERTY_ID;
+      translations[NCL_ATTRIBUTE_ID] = STR_PROPERTY_ENTITY_ID;
 
       break;
     }
@@ -53,90 +53,90 @@ QMap<QString,QString> StructuralUtil::createCoreTranslations(const StructuralTyp
     case Structural::Context:
     case Structural::Switch:
     {
-      translations[NCL_ENTITY_ID] = PLG_PROPERTY_ID;
-      translations[NCL_ENTITY_REFER] = NCL_ENTITY_REFER;
+      translations[NCL_ATTRIBUTE_ID] = STR_PROPERTY_ENTITY_ID;
+      translations[NCL_ATTRIBUTE_REFER] = NCL_ATTRIBUTE_REFER;
 
       break;
     }
 
     case Structural::Media:
     {
-      translations[NCL_ENTITY_ID] = PLG_PROPERTY_ID;
-      translations[NCL_ENTITY_REFER] = NCL_ENTITY_REFER;
-      translations[NCL_ENTITY_INSTANCE] = NCL_ENTITY_INSTANCE;
-      translations[NCL_ENTITY_TYPE] = NCL_ENTITY_TYPE;
-      translations[NCL_ENTITY_SRC] = PLG_PROPERTY_LOCATION;
-      translations[NCL_ENTITY_DESCRIPTOR] = NCL_ENTITY_DESCRIPTOR;
+      translations[NCL_ATTRIBUTE_ID] = STR_PROPERTY_ENTITY_ID;
+      translations[NCL_ATTRIBUTE_REFER] = NCL_ATTRIBUTE_REFER;
+      translations[NCL_ATTRIBUTE_INSTANCE] = NCL_ATTRIBUTE_INSTANCE;
+      translations[NCL_ATTRIBUTE_TYPE] = NCL_ATTRIBUTE_TYPE;
+      translations[NCL_ATTRIBUTE_SRC] = STR_PROPERTY_CONTENT_LOCATION;
+      translations[NCL_ATTRIBUTE_DESCRIPTOR] = NCL_ATTRIBUTE_DESCRIPTOR;
 
       break;
     }
 
     case Structural::Port:
     {
-      translations[NCL_ENTITY_ID] = PLG_PROPERTY_ID;
-      translations[NCL_ENTITY_COMPONENT] = PLG_ENTITY_COMPONENT_ID;
-      translations[NCL_ENTITY_INTERFACE] = PLG_ENTITY_INTERFACE_ID;
+      translations[NCL_ATTRIBUTE_ID] = STR_PROPERTY_ENTITY_ID;
+      translations[NCL_ATTRIBUTE_COMPONENT] = STR_PROPERTY_REFERENCE_COMPONENT_ID;
+      translations[NCL_ATTRIBUTE_INTERFACE] = STR_PROPERTY_REFERENCE_INTERFACE_ID;
 
       break;
     }
 
     case Structural::Property:
     {
-      translations[NCL_ENTITY_NAME] = PLG_PROPERTY_ID;
-      translations[NCL_ENTITY_VALUE] = NCL_ENTITY_VALUE;
-      translations[NCL_ENTITY_EXTERNABLE] = NCL_ENTITY_EXTERNABLE;
+      translations[NCL_ATTRIBUTE_NAME] = STR_PROPERTY_ENTITY_ID;
+      translations[NCL_ATTRIBUTE_VALUE] = NCL_ATTRIBUTE_VALUE;
+      translations[NCL_ATTRIBUTE_EXTERNABLE] = NCL_ATTRIBUTE_EXTERNABLE;
       break;
     }
 
     case Structural::Area:
     {
-      translations[NCL_ENTITY_ID] = PLG_PROPERTY_ID;
+      translations[NCL_ATTRIBUTE_ID] = STR_PROPERTY_ENTITY_ID;
 
-      translations[NCL_ENTITY_COORDS] = NCL_ENTITY_COORDS;
-      translations[NCL_ENTITY_BEGIN] = NCL_ENTITY_BEGIN;
-      translations[NCL_ENTITY_END] = NCL_ENTITY_END;
-      translations[NCL_ENTITY_BEGINTEXT] = NCL_ENTITY_BEGINTEXT;
-      translations[NCL_ENTITY_ENDTEXT] = NCL_ENTITY_ENDTEXT;
-      translations[NCL_ENTITY_BEGINPOSITION] = NCL_ENTITY_BEGINPOSITION;
-      translations[NCL_ENTITY_ENDPOSITION] = NCL_ENTITY_ENDPOSITION;
-      translations[NCL_ENTITY_FIRST] = NCL_ENTITY_FIRST;
-      translations[NCL_ENTITY_LAST] = NCL_ENTITY_LAST;
-      translations[NCL_ENTITY_LABEL] = NCL_ENTITY_LABEL;
-      translations[NCL_ENTITY_CLIP] = NCL_ENTITY_CLIP;
+      translations[NCL_ATTRIBUTE_COORDS] = NCL_ATTRIBUTE_COORDS;
+      translations[NCL_ATTRIBUTE_BEGIN] = NCL_ATTRIBUTE_BEGIN;
+      translations[NCL_ATTRIBUTE_END] = NCL_ATTRIBUTE_END;
+      translations[NCL_ATTRIBUTE_BEGINTEXT] = NCL_ATTRIBUTE_BEGINTEXT;
+      translations[NCL_ATTRIBUTE_ENDTEXT] = NCL_ATTRIBUTE_ENDTEXT;
+      translations[NCL_ATTRIBUTE_BEGINPOSITION] = NCL_ATTRIBUTE_BEGINPOSITION;
+      translations[NCL_ATTRIBUTE_ENDPOSITION] = NCL_ATTRIBUTE_ENDPOSITION;
+      translations[NCL_ATTRIBUTE_FIRST] = NCL_ATTRIBUTE_FIRST;
+      translations[NCL_ATTRIBUTE_LAST] = NCL_ATTRIBUTE_LAST;
+      translations[NCL_ATTRIBUTE_LABEL] = NCL_ATTRIBUTE_LABEL;
+      translations[NCL_ATTRIBUTE_CLIP] = NCL_ATTRIBUTE_CLIP;
 
       break;
     }
 
     case Structural::SwitchPort:
     {
-      translations[NCL_ENTITY_ID] = PLG_PROPERTY_ID;
+      translations[NCL_ATTRIBUTE_ID] = STR_PROPERTY_ENTITY_ID;
 
       break;
     }
 
     case Structural::Link:
     {
-      translations[NCL_ENTITY_ID] = PLG_PROPERTY_ID;
-      translations[NCL_ENTITY_XCONNECTOR] = PLG_ENTITY_XCONNECTOR_ID;
+      translations[NCL_ATTRIBUTE_ID] = STR_PROPERTY_ENTITY_ID;
+      translations[NCL_ATTRIBUTE_XCONNECTOR] = STR_PROPERTY_REFERENCE_XCONNECTOR_ID;
 
       break;
     }
 
     case Structural::Bind:
     {
-      translations[NCL_ENTITY_ROLE] = PLG_PROPERTY_ID;
-      translations[NCL_ENTITY_XCONNECTOR] = PLG_ENTITY_XCONNECTOR_ID;
-      translations[NCL_ENTITY_COMPONENT] = PLG_ENTITY_COMPONENT_ID;
-      translations[NCL_ENTITY_INTERFACE] = PLG_ENTITY_INTERFACE_ID;
-      translations[NCL_ENTITY_DESCRIPTOR] = NCL_ENTITY_DESCRIPTOR;
+      translations[NCL_ATTRIBUTE_ROLE] = STR_PROPERTY_ENTITY_ID;
+      translations[NCL_ATTRIBUTE_XCONNECTOR] = STR_PROPERTY_REFERENCE_XCONNECTOR_ID;
+      translations[NCL_ATTRIBUTE_COMPONENT] = STR_PROPERTY_REFERENCE_COMPONENT_ID;
+      translations[NCL_ATTRIBUTE_INTERFACE] = STR_PROPERTY_REFERENCE_INTERFACE_ID;
+      translations[NCL_ATTRIBUTE_DESCRIPTOR] = NCL_ATTRIBUTE_DESCRIPTOR;
 
       break;
     }
 
     case Structural::Mapping:
     {
-      translations[NCL_ENTITY_COMPONENT] = PLG_ENTITY_COMPONENT_ID;
-      translations[NCL_ENTITY_INTERFACE] = PLG_ENTITY_INTERFACE_ID;
+      translations[NCL_ATTRIBUTE_COMPONENT] = STR_PROPERTY_REFERENCE_COMPONENT_ID;
+      translations[NCL_ATTRIBUTE_INTERFACE] = STR_PROPERTY_REFERENCE_INTERFACE_ID;
 
       break;
     }

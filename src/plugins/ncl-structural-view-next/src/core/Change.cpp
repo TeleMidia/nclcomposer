@@ -19,8 +19,8 @@ Change::~Change()
 
 void Change::undo()
 {
-  _settings.insert(PLG_SETTING_UNDO,"0");
-  _settings.insert(PLG_SETTING_NOTIFY,"1");
+  _settings.insert(STR_SETTING_UNDO,"0");
+  _settings.insert(STR_SETTING_NOTIFY,"1");
   _settings.insert("LOCATION","UNDO COMMAND");
 
   emit change(_uid, _previous, _properties, _settings);
@@ -28,7 +28,7 @@ void Change::undo()
 
 void Change::redo()
 {
-  _settings.insert(PLG_SETTING_UNDO,"0");
+  _settings.insert(STR_SETTING_UNDO,"0");
 
 
 

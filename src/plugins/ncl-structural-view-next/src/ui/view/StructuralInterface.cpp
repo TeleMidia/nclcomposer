@@ -18,8 +18,8 @@ StructuralInterface::StructuralInterface(StructuralEntity* parent)
   /* Default size for interface */
   setTop(0);
   setLeft(0);
-  setWidth(DEFAULT_INTERFACE_WIDTH);
-  setHeight(DEFAULT_INTERFACE_HEIGHT);
+  setWidth(STR_DEFAULT_INTERFACE_W);
+  setHeight(STR_DEFAULT_INTERFACE_H);
 }
 
 StructuralInterface::~StructuralInterface()
@@ -75,7 +75,7 @@ void StructuralInterface::setHexBorderColor(const QString &hexBorderColor)
 void StructuralInterface::refresh()
 {
   QString tip = "";
-  QString name = (getStructuralProperty(PLG_PROPERTY_ID) != "" ? getStructuralProperty(PLG_PROPERTY_ID) : "?");
+  QString name = (getStructuralProperty(STR_PROPERTY_ENTITY_ID) != "" ? getStructuralProperty(STR_PROPERTY_ENTITY_ID) : "?");
 
   if (getStructuralType() == Structural::Port)
   {

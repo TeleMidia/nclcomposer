@@ -78,7 +78,7 @@ QString StructuralEntity::getStructuralUid() const
 void StructuralEntity::setStructuralUid(const QString &uid)
 {
   _uid = uid;
-  _properties.insert(PLG_PROPERTY_UID, uid);
+  _properties.insert(STR_PROPERTY_ENTITY_UID, uid);
 }
 
 QString StructuralEntity::getStructuralId() const
@@ -89,7 +89,7 @@ QString StructuralEntity::getStructuralId() const
 void StructuralEntity::setStructuralId(const QString &id)
 {
   _id = id;
-  _properties.insert(PLG_PROPERTY_ID, id) ;
+  _properties.insert(STR_PROPERTY_ENTITY_ID, id) ;
 
   refresh();
 }
@@ -102,7 +102,7 @@ StructualCategory StructuralEntity::getStructuralCategory() const
 void StructuralEntity::setStructuralCategory(const StructualCategory type)
 {
   _type = type;
-  _properties.insert(PLG_PROPERTY_CATEGORY,StructuralUtil::translateCategoryToString(type));
+  _properties.insert(STR_PROPERTY_ENTITY_CATEGORY,StructuralUtil::translateCategoryToString(type));
 }
 
 StructuralType StructuralEntity::getStructuralType() const
@@ -113,7 +113,7 @@ StructuralType StructuralEntity::getStructuralType() const
 void StructuralEntity::setStructuralType(const StructuralType subtype)
 {
   _subtype = subtype;
-  _properties.insert(PLG_PROPERTY_TYPE,StructuralUtil::translateTypeToString(subtype));
+  _properties.insert(STR_PROPERTY_ENTITY_TYPE,StructuralUtil::translateTypeToString(subtype));
 }
 
 QMap<QString, QString> StructuralEntity::getStructuralProperties() const
@@ -127,17 +127,17 @@ void StructuralEntity::setStructuralProperties(const QMap<QString, QString> &pro
       getStructuralType() == Structural::Mapping ||
       getStructuralType() == Structural::Bind){
 
-  if (!properties.contains(PLG_ENTITY_COMPONENT_ID))
-    _properties.remove(PLG_ENTITY_COMPONENT_ID);
+  if (!properties.contains(STR_PROPERTY_REFERENCE_COMPONENT_ID))
+    _properties.remove(STR_PROPERTY_REFERENCE_COMPONENT_ID);
 
-  if (!properties.contains(PLG_ENTITY_COMPONENT_UID))
-    _properties.remove(PLG_ENTITY_COMPONENT_UID);
+  if (!properties.contains(STR_PROPERTY_REFERENCE_COMPONENT_UID))
+    _properties.remove(STR_PROPERTY_REFERENCE_COMPONENT_UID);
 
-  if (!properties.contains(PLG_ENTITY_INTERFACE_ID))
-    _properties.remove(PLG_ENTITY_INTERFACE_UID);
+  if (!properties.contains(STR_PROPERTY_REFERENCE_INTERFACE_ID))
+    _properties.remove(STR_PROPERTY_REFERENCE_INTERFACE_UID);
 
-  if (!properties.contains(PLG_ENTITY_COMPONENT_ID))
-    _properties.remove(PLG_ENTITY_COMPONENT_ID);
+  if (!properties.contains(STR_PROPERTY_REFERENCE_COMPONENT_ID))
+    _properties.remove(STR_PROPERTY_REFERENCE_COMPONENT_ID);
   }
 
   QMap<QString, QString> previous = _properties;
@@ -145,10 +145,10 @@ void StructuralEntity::setStructuralProperties(const QMap<QString, QString> &pro
   if (getStructuralType() == Structural::Link ||
       getStructuralType() == Structural::Bind){
     foreach (QString key, previous.keys()) {
-      if (key.contains(PLG_ENTITY_LINKPARAM_NAME) ||
-          key.contains(PLG_ENTITY_LINKPARAM_VALUE) ||
-          key.contains(PLG_ENTITY_BINDPARAM_NAME) ||
-          key.contains(PLG_ENTITY_BINDPARAM_VALUE)) {
+      if (key.contains(STR_PROPERTY_LINKPARAM_NAME) ||
+          key.contains(STR_PROPERTY_LINKPARAM_VALUE) ||
+          key.contains(STR_PROPERTY_BINDPARAM_NAME) ||
+          key.contains(STR_PROPERTY_BINDPARAM_VALUE)) {
         if (!properties.contains(key))
           _properties.remove(key);
       }
@@ -167,49 +167,49 @@ QString StructuralEntity::getStructuralProperty(const QString &name) const
 
 void StructuralEntity::setStructuralProperty(const QString &name, const QString &value)
 {
-  if (name == PLG_PROPERTY_TOP)
+  if (name == STR_PROPERTY_ENTITY_TOP)
     setTop(value.toDouble());
 
-  else if (name == PLG_PROPERTY_LEFT)
+  else if (name == STR_PROPERTY_ENTITY_LEFT)
     setLeft(value.toDouble());
 
-  else if (name == PLG_PROPERTY_WIDTH)
+  else if (name == STR_PROPERTY_ENTITY_WIDTH)
     setWidth(value.toDouble());
 
-  else if (name == PLG_PROPERTY_HEIGHT)
+  else if (name == STR_PROPERTY_ENTITY_HEIGHT)
     setHeight(value.toDouble());
 
-  else if (name == PLG_ENTITY_UNCOLLAPSED_TOP)
+  else if (name == STR_PROPERTY_ENTITY_UNCOLLAPSED_TOP)
     setUncollapedTop(value.toDouble());
 
-  else if (name == PLG_ENTITY_UNCOLLAPSED_LEFT)
+  else if (name == STR_PROPERTY_ENTITY_UNCOLLAPSED_LEFT)
     setUncollapedLeft(value.toDouble());
 
-  else if (name == PLG_ENTITY_UNCOLLAPSED_WIDTH)
+  else if (name == STR_PROPERTY_ENTITY_UNCOLLAPSED_WIDTH)
     setUncollapedWidth(value.toDouble());
 
-  else if (name == PLG_ENTITY_UNCOLLAPSED_HEIGHT)
+  else if (name == STR_PROPERTY_ENTITY_UNCOLLAPSED_HEIGHT)
     setUncollapedHeight(value.toDouble());
 
-  else if (name == PLG_PROPERTY_ZINDEX)
+  else if (name == STR_PROPERTY_ENTITY_ZINDEX)
     setzIndex(value.toInt());
 
-  else if (name == PLG_PROPERTY_ID)
+  else if (name == STR_PROPERTY_ENTITY_ID)
     setStructuralId(value);
 
-  else if (name == PLG_PROPERTY_UID)
+  else if (name == STR_PROPERTY_ENTITY_UID)
     setStructuralUid(value);
 
-  else if (name == PLG_PROPERTY_CATEGORY)
+  else if (name == STR_PROPERTY_ENTITY_CATEGORY)
     setStructuralCategory(StructuralUtil::translateStringToCategory(value));
 
-  else if (name == PLG_PROPERTY_TYPE)
+  else if (name == STR_PROPERTY_ENTITY_TYPE)
     setStructuralType(StructuralUtil::translateStringToType(value));
 
-  else if (name == PLG_PROPERTY_HIDDEN)
+  else if (name == STR_PROPERTY_ENTITY_HIDDEN)
     setHidden((value == "1" ? true : false));
 
-  else if (name == PLG_ENTITY_UNCOLLAPSED)
+  else if (name == STR_PROPERTY_ENTITY_UNCOLLAPSED)
     setUncollapsed((value == "1" ? true : false));
 
 
@@ -285,7 +285,7 @@ bool StructuralEntity::isHidden() const
 void StructuralEntity::setHidden(bool hidden)
 {
   _hidden = hidden;
-  _properties.insert(PLG_PROPERTY_HIDDEN,(hidden ? "1" : "0"));
+  _properties.insert(STR_PROPERTY_ENTITY_HIDDEN,(hidden ? "1" : "0"));
 
   setVisible(!hidden);
 }
@@ -338,7 +338,7 @@ bool StructuralEntity::isUncollapsed() const
 void StructuralEntity::setUncollapsed(bool uncollapsed)
 {
   _uncollapsed = uncollapsed;
-  _properties.insert(PLG_ENTITY_UNCOLLAPSED,(uncollapsed ? "1" : "0"));
+  _properties.insert(STR_PROPERTY_ENTITY_UNCOLLAPSED,(uncollapsed ? "1" : "0"));
 }
 
 qreal StructuralEntity::getTop() const
@@ -349,7 +349,7 @@ qreal StructuralEntity::getTop() const
 void StructuralEntity::setTop(qreal top)
 {
   _top = top;
-  _properties.insert(PLG_PROPERTY_TOP,QString::number(top));
+  _properties.insert(STR_PROPERTY_ENTITY_TOP,QString::number(top));
 
   setY(top-4);
 }
@@ -392,7 +392,7 @@ qreal StructuralEntity::getLeft() const
 void StructuralEntity::setLeft(qreal left)
 {
   _left = left;
-  _properties.insert(PLG_PROPERTY_LEFT,QString::number(left));
+  _properties.insert(STR_PROPERTY_ENTITY_LEFT,QString::number(left));
 
   setX(left-4);
 }
@@ -435,7 +435,7 @@ qreal StructuralEntity::getWidth() const
 void StructuralEntity::setWidth(qreal width)
 {
   _width = width;
-  _properties.insert(PLG_PROPERTY_WIDTH,QString::number(width));
+  _properties.insert(STR_PROPERTY_ENTITY_WIDTH,QString::number(width));
 }
 
 qreal StructuralEntity::getPressWidth() const
@@ -466,7 +466,7 @@ qreal StructuralEntity::getHeight() const
 void StructuralEntity::setHeight(qreal height)
 {
   _height = height;
-  _properties.insert(PLG_PROPERTY_HEIGHT,QString::number(height));
+  _properties.insert(STR_PROPERTY_ENTITY_HEIGHT,QString::number(height));
 }
 
 qreal StructuralEntity::getPressHeight() const
@@ -497,7 +497,7 @@ qreal StructuralEntity::getUncollapedTop() const
 void StructuralEntity::setUncollapedTop(qreal uncollapedTop)
 {
   _uncollapsedTop = uncollapedTop;
-  _properties.insert(PLG_ENTITY_UNCOLLAPSED_TOP,QString::number(uncollapedTop));
+  _properties.insert(STR_PROPERTY_ENTITY_UNCOLLAPSED_TOP,QString::number(uncollapedTop));
 }
 
 qreal StructuralEntity::getUncollapedLeft() const
@@ -508,7 +508,7 @@ qreal StructuralEntity::getUncollapedLeft() const
 void StructuralEntity::setUncollapedLeft(qreal uncollapedLeft)
 {
   _uncollapsedLeft = uncollapedLeft;
-  _properties.insert(PLG_ENTITY_UNCOLLAPSED_LEFT,QString::number(uncollapedLeft));
+  _properties.insert(STR_PROPERTY_ENTITY_UNCOLLAPSED_LEFT,QString::number(uncollapedLeft));
 }
 
 qreal StructuralEntity::getUncollapedWidth() const
@@ -519,7 +519,7 @@ qreal StructuralEntity::getUncollapedWidth() const
 void StructuralEntity::setUncollapedWidth(qreal uncollapedWidth)
 {
   _uncollapsedWidth = uncollapedWidth;
-  _properties.insert(PLG_ENTITY_UNCOLLAPSED_WIDTH,QString::number(uncollapedWidth));
+  _properties.insert(STR_PROPERTY_ENTITY_UNCOLLAPSED_WIDTH,QString::number(uncollapedWidth));
 }
 
 qreal StructuralEntity::getUncollapedHeight() const
@@ -530,7 +530,7 @@ qreal StructuralEntity::getUncollapedHeight() const
 void StructuralEntity::setUncollapedHeight(qreal uncollapedHeight)
 {
   _uncollapsedHeight = uncollapedHeight;
-  _properties.insert(PLG_ENTITY_UNCOLLAPSED_HEIGHT,QString::number(uncollapedHeight));
+  _properties.insert(STR_PROPERTY_ENTITY_UNCOLLAPSED_HEIGHT,QString::number(uncollapedHeight));
 }
 
 qreal StructuralEntity::getzIndex() const
@@ -541,7 +541,7 @@ qreal StructuralEntity::getzIndex() const
 void StructuralEntity::setzIndex(qreal zIndex)
 {
   _zIndex = zIndex;
-  _properties.insert(PLG_PROPERTY_ZINDEX,QString::number(zIndex));
+  _properties.insert(STR_PROPERTY_ENTITY_ZINDEX,QString::number(zIndex));
 
   setZValue(zIndex);
 }
@@ -602,12 +602,12 @@ void StructuralEntity::newChild(Structural::StructuralType type)
   QString uid = QUuid::createUuid().toString();
   QString parent = getStructuralUid();
   QMap<QString, QString> properties;
-  properties[PLG_PROPERTY_CATEGORY] = QString::number(type);
+  properties[STR_PROPERTY_ENTITY_CATEGORY] = QString::number(type);
 
   QMap<QString, QString> settings;
-  settings[PLG_SETTING_UNDO] = "1";
-  settings[PLG_SETTING_NOTIFY] = "1";
-  settings[PLG_SETTING_CODE] = QUuid::createUuid().toString();
+  settings[STR_SETTING_UNDO] = "1";
+  settings[STR_SETTING_NOTIFY] = "1";
+  settings[STR_SETTING_CODE] = QUuid::createUuid().toString();
 
   emit inserted(uid, parent, properties, settings);
 }
@@ -631,8 +631,8 @@ QPainterPath StructuralEntity::shape() const
   if (_selectable && _selected && _resizable){
     painter.setFillRule(Qt::WindingFill);
 
-    qreal W = DEFAULT_ANCHOR_WIDTH;
-    qreal H = DEFAULT_ANCHOR_HEIGHT;
+    qreal W = STR_DEFAULT_ANCHOR_W;
+    qreal H = STR_DEFAULT_ANCHOR_H;
 
     painter.addRect(0,0,W,H);                                // topleft
     painter.addRect((_width+W)/2 - W/2,0,W,H);               // top
@@ -653,8 +653,8 @@ QRectF StructuralEntity::boundingRect() const
 
   bounds.setX(0);
   bounds.setY(0);
-  bounds.setWidth(_width+DEFAULT_ANCHOR_WIDTH);
-  bounds.setHeight(_height+DEFAULT_ANCHOR_HEIGHT);
+  bounds.setWidth(_width+STR_DEFAULT_ANCHOR_W);
+  bounds.setHeight(_height+STR_DEFAULT_ANCHOR_H);
 
   return bounds;
 }
@@ -669,14 +669,14 @@ void StructuralEntity::paint(QPainter *painter, const QStyleOptionGraphicsItem *
     painter->setBrush(Qt::NoBrush);
     painter->setPen(QPen(QBrush(Qt::black), 0, Qt::DashLine));
 
-    painter->drawRect(DEFAULT_ANCHOR_WIDTH/2, DEFAULT_ANCHOR_HEIGHT/2, getWidth()-1, getHeight()-1);
+    painter->drawRect(STR_DEFAULT_ANCHOR_W/2, STR_DEFAULT_ANCHOR_H/2, getWidth()-1, getHeight()-1);
 
     if (_resizable){
       painter->setBrush(QBrush(Qt::white));
       painter->setPen(QPen(QBrush(Qt::black), 0));
 
-      qreal W = DEFAULT_ANCHOR_WIDTH;
-      qreal H = DEFAULT_ANCHOR_HEIGHT;
+      qreal W = STR_DEFAULT_ANCHOR_W;
+      qreal H = STR_DEFAULT_ANCHOR_H;
 
       painter->drawRect(0,0,W,H);                                // topleft
       painter->drawRect((_width+W)/2-H/2-1,0,W,H);               // top
@@ -761,8 +761,8 @@ void StructuralEntity::mousePressEvent(QGraphicsSceneMouseEvent* event)
       setResizeHeight(_height);
     }
 
-    qreal W = DEFAULT_ANCHOR_WIDTH;
-    qreal H = DEFAULT_ANCHOR_HEIGHT;
+    qreal W = STR_DEFAULT_ANCHOR_W;
+    qreal H = STR_DEFAULT_ANCHOR_H;
 
     if (_resizable){
       // if over TOPLEFT resize region
@@ -835,8 +835,8 @@ void StructuralEntity::mouseReleaseEvent(QGraphicsSceneMouseEvent*event)
       QMap<QString, QString> properties = getStructuralProperties();
 
       QMap<QString, QString> settings;
-      settings[PLG_SETTING_UNDO] = "1";
-      settings[PLG_SETTING_CODE] = StructuralUtil::createUid();
+      settings[STR_SETTING_UNDO] = "1";
+      settings[STR_SETTING_CODE] = StructuralUtil::createUid();
       settings["LOCATION"] = "INTERNAL MOVE";
 
       emit changed(getStructuralUid(), properties, previous,settings);
@@ -903,9 +903,9 @@ void StructuralEntity::mouseReleaseEvent(QGraphicsSceneMouseEvent*event)
       //            emit entityChanged();
 
       QMap<QString, QString> settings;
-      settings[PLG_SETTING_UNDO] = "1";
+      settings[STR_SETTING_UNDO] = "1";
       settings["LOCATION"] = "INTERNAL MOVE";
-      settings[PLG_SETTING_CODE] = StructuralUtil::createUid();
+      settings[STR_SETTING_CODE] = StructuralUtil::createUid();
 
       emit changed(getStructuralUid(), properties, previous,settings);
 
@@ -921,8 +921,8 @@ void StructuralEntity::updateCursor(QGraphicsSceneHoverEvent* event)
 {
   if (_selected){
     if (_resizable){
-      qreal W = DEFAULT_ANCHOR_WIDTH;
-      qreal H = DEFAULT_ANCHOR_HEIGHT;
+      qreal W = STR_DEFAULT_ANCHOR_W;
+      qreal H = STR_DEFAULT_ANCHOR_H;
 
       // if over TOPLEFT resize region
       if (QRectF(0,0,W,H).contains(event->pos())){
@@ -1096,7 +1096,7 @@ void StructuralEntity::drawMouseHoverHighlight(QPainter *painter)
       painter->setBrush(Qt::NoBrush);
       painter->setPen(QPen(QBrush(QColor("#999999")), 0, Qt::DashLine)); // 0px = cosmetic border
 
-      painter->drawRect(DEFAULT_ANCHOR_WIDTH/2, DEFAULT_ANCHOR_HEIGHT/2, getWidth(), getHeight());
+      painter->drawRect(STR_DEFAULT_ANCHOR_W/2, STR_DEFAULT_ANCHOR_H/2, getWidth(), getHeight());
     }
   }
 }
@@ -1105,15 +1105,15 @@ void StructuralEntity::performInsert(Structural::StructuralType name)
 {
 
   QMap<QString, QString> properties;
-  properties[PLG_PROPERTY_CATEGORY] = QString::number(name);
+  properties[STR_PROPERTY_ENTITY_CATEGORY] = QString::number(name);
 
   switch (name) {
     case Structural::Body:
     {
-      properties[PLG_PROPERTY_TOP] = QString::number(_insertPoint.y() - DEFAULT_BODY_HEIGHT/2);
-      properties[PLG_PROPERTY_LEFT] = QString::number(_insertPoint.x() - DEFAULT_BODY_WIDTH/2);
-      properties[PLG_PROPERTY_HEIGHT] = QString::number(DEFAULT_BODY_HEIGHT);
-      properties[PLG_PROPERTY_WIDTH] = QString::number(DEFAULT_BODY_WIDTH);
+      properties[STR_PROPERTY_ENTITY_TOP] = QString::number(_insertPoint.y() - STR_DEFAULT_BODY_H/2);
+      properties[STR_PROPERTY_ENTITY_LEFT] = QString::number(_insertPoint.x() - STR_DEFAULT_BODY_W/2);
+      properties[STR_PROPERTY_ENTITY_HEIGHT] = QString::number(STR_DEFAULT_BODY_H);
+      properties[STR_PROPERTY_ENTITY_WIDTH] = QString::number(STR_DEFAULT_BODY_W);
 
       break;
     }
@@ -1121,10 +1121,10 @@ void StructuralEntity::performInsert(Structural::StructuralType name)
     case Structural::Switch:
     {
 
-      properties[PLG_PROPERTY_TOP] = QString::number(_insertPoint.y() - DEFAULT_CONTEXT_HEIGHT/2);
-      properties[PLG_PROPERTY_LEFT] = QString::number(_insertPoint.x() - DEFAULT_CONTEXT_WIDTH/2);
-      properties[PLG_PROPERTY_HEIGHT] = QString::number(DEFAULT_CONTEXT_HEIGHT);
-      properties[PLG_PROPERTY_WIDTH] = QString::number(DEFAULT_CONTEXT_WIDTH);
+      properties[STR_PROPERTY_ENTITY_TOP] = QString::number(_insertPoint.y() - STR_DEFAULT_CONTEXT_H/2);
+      properties[STR_PROPERTY_ENTITY_LEFT] = QString::number(_insertPoint.x() - STR_DEFAULT_CONTEXT_W/2);
+      properties[STR_PROPERTY_ENTITY_HEIGHT] = QString::number(STR_DEFAULT_CONTEXT_H);
+      properties[STR_PROPERTY_ENTITY_WIDTH] = QString::number(STR_DEFAULT_CONTEXT_W);
 
       break;
     }
@@ -1132,10 +1132,10 @@ void StructuralEntity::performInsert(Structural::StructuralType name)
     case Structural::Media:
     {
 
-      properties[PLG_PROPERTY_TOP] = QString::number(_insertPoint.y() - DEFAULT_MEDIA_HEIGHT/2);
-      properties[PLG_PROPERTY_LEFT] = QString::number(_insertPoint.x() - DEFAULT_MEDIA_WIDTH/2);
-      properties[PLG_PROPERTY_HEIGHT] = QString::number(DEFAULT_MEDIA_HEIGHT);
-      properties[PLG_PROPERTY_WIDTH] = QString::number(DEFAULT_MEDIA_WIDTH);
+      properties[STR_PROPERTY_ENTITY_TOP] = QString::number(_insertPoint.y() - STR_DEFAULT_MEDIA_H/2);
+      properties[STR_PROPERTY_ENTITY_LEFT] = QString::number(_insertPoint.x() - STR_DEFAULT_MEDIA_W/2);
+      properties[STR_PROPERTY_ENTITY_HEIGHT] = QString::number(STR_DEFAULT_MEDIA_H);
+      properties[STR_PROPERTY_ENTITY_WIDTH] = QString::number(STR_DEFAULT_MEDIA_W);
 
       break;
     }
@@ -1145,9 +1145,9 @@ void StructuralEntity::performInsert(Structural::StructuralType name)
   }
 
   QMap<QString, QString> settings;
-  settings[PLG_SETTING_UNDO] = "1";
-  settings[PLG_SETTING_NOTIFY] = "1";
-  settings[PLG_SETTING_CODE] = QUuid::createUuid().toString();
+  settings[STR_SETTING_UNDO] = "1";
+  settings[STR_SETTING_NOTIFY] = "1";
+  settings[STR_SETTING_CODE] = QUuid::createUuid().toString();
 
   inserted(QUuid::createUuid().toString(),getStructuralUid(), properties, settings);
 }

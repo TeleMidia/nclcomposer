@@ -13,8 +13,8 @@ StructuralLink::StructuralLink(StructuralEntity* parent)
   /* Default position for aggregator */
   if(parent)
   {
-    setTop(parent->getHeight()/2 - DEFAULT_AGGREGATOR_HEIGHT/2);
-    setLeft(parent->getWidth()/2 - DEFAULT_AGGREGATOR_WIDTH/2);
+    setTop(parent->getHeight()/2 - STR_DEFAULT_LINK_H/2);
+    setLeft(parent->getWidth()/2 - STR_DEFAULT_LINK_W/2);
   }
   else
   {
@@ -22,8 +22,8 @@ StructuralLink::StructuralLink(StructuralEntity* parent)
     setLeft(0);
   }
 
-  setWidth(DEFAULT_AGGREGATOR_WIDTH);
-  setHeight(DEFAULT_AGGREGATOR_HEIGHT);
+  setWidth(STR_DEFAULT_LINK_W);
+  setHeight(STR_DEFAULT_LINK_H);
 }
 
 StructuralLink::~StructuralLink()
@@ -63,7 +63,7 @@ void StructuralLink::refresh()
   QString tip = "";
   QString name = (getStructuralId() != "" ? getStructuralId() : "?");
 
-  tip += "Link ("+name+") : "+getStructuralProperty(PLG_ENTITY_XCONNECTOR_ID);
+  tip += "Link ("+name+") : "+getStructuralProperty(STR_PROPERTY_REFERENCE_XCONNECTOR_ID);
 
   setToolTip(tip);
 }

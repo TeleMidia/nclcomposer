@@ -28,8 +28,8 @@ StructuralComposition::StructuralComposition(StructuralEntity* parent)
   /* Default size and position */
   if(parent)
   {
-    setTop(parent->getHeight()/2 - DEFAULT_CONTEXT_HEIGHT/2);
-    setLeft(parent->getWidth()/2 - DEFAULT_CONTEXT_WIDTH/2);
+    setTop(parent->getHeight()/2 - STR_DEFAULT_CONTEXT_H/2);
+    setLeft(parent->getWidth()/2 - STR_DEFAULT_CONTEXT_W/2);
   }
   else
   {
@@ -37,8 +37,8 @@ StructuralComposition::StructuralComposition(StructuralEntity* parent)
     setLeft(0);
   }
 
-  setWidth(DEFAULT_CONTEXT_WIDTH);
-  setHeight(DEFAULT_CONTEXT_HEIGHT);
+  setWidth(STR_DEFAULT_CONTEXT_W);
+  setHeight(STR_DEFAULT_CONTEXT_H);
 
 
   createObjects();
@@ -93,7 +93,7 @@ void StructuralComposition::setColor(QString color)
 
 void StructuralComposition::setStructuralProperty(const QString &name, const QString &value)
 {
-  if (name == PLG_ENTITY_UNCOLLAPSED)
+  if (name == STR_PROPERTY_ENTITY_UNCOLLAPSED)
     setUncollapsed((value == "1" ? true : false));
   else
     StructuralNode::setStructuralProperty(name,value);
@@ -106,24 +106,24 @@ void StructuralComposition::setStructuralType(const StructuralType subtype)
     menu->switchPortAction->setEnabled(false);
     menu->portAction->setEnabled(true);
     if (getStructuralType() == Structural::NoType){
-      setWidth(DEFAULT_CONTEXT_WIDTH);
-      setHeight(DEFAULT_CONTEXT_HEIGHT);
+      setWidth(STR_DEFAULT_CONTEXT_W);
+      setHeight(STR_DEFAULT_CONTEXT_H);
     }
   }else if (subtype == Structural::Switch){
     setColor("#C6E2FF");
     menu->switchPortAction->setEnabled(true);
     menu->portAction->setEnabled(false);
     if (getStructuralType() == Structural::NoType){
-      setWidth(DEFAULT_CONTEXT_WIDTH);
-      setHeight(DEFAULT_CONTEXT_HEIGHT);
+      setWidth(STR_DEFAULT_CONTEXT_W);
+      setHeight(STR_DEFAULT_CONTEXT_H);
     }
   }else if (subtype == Structural::Body){
     setColor("#EEEEEE");
     menu->switchPortAction->setEnabled(false);
     menu->portAction->setEnabled(true);
     if (getStructuralType() == Structural::NoType){
-      setWidth(DEFAULT_BODY_WIDTH);
-      setHeight(DEFAULT_BODY_HEIGHT);
+      setWidth(STR_DEFAULT_BODY_W);
+      setHeight(STR_DEFAULT_BODY_H);
     }
   }
 
@@ -279,8 +279,8 @@ void StructuralComposition::collapse(bool notify)
   {
     setHovering(false);
 
-    setTop(getTop() - (getUncollapedHeight()/2 - DEFAULT_MEDIA_HEIGHT/2));
-    setLeft(getLeft() - (getUncollapedWidth()/2 - DEFAULT_MEDIA_WIDTH/2));
+    setTop(getTop() - (getUncollapedHeight()/2 - STR_DEFAULT_MEDIA_H/2));
+    setLeft(getLeft() - (getUncollapedWidth()/2 - STR_DEFAULT_MEDIA_W/2));
     setWidth(getUncollapedWidth());
     setHeight(getUncollapedHeight());
 
@@ -288,8 +288,8 @@ void StructuralComposition::collapse(bool notify)
     {
       if (e->getStructuralCategory() == Structural::Interface)
       {
-        e->setTop(((e->getTop()*getUncollapedHeight())/DEFAULT_MEDIA_HEIGHT));
-        e->setLeft(((e->getLeft()*getUncollapedWidth())/DEFAULT_MEDIA_WIDTH));
+        e->setTop(((e->getTop()*getUncollapedHeight())/STR_DEFAULT_MEDIA_H));
+        e->setLeft(((e->getLeft()*getUncollapedWidth())/STR_DEFAULT_MEDIA_W));
       }
       else
       {
@@ -329,10 +329,10 @@ void StructuralComposition::collapse(bool notify)
       setUncollapedHeight(getHeight());
 //    }
 
-    setTop(getTop() + getUncollapedHeight()/2 - DEFAULT_MEDIA_HEIGHT/2);
-    setLeft(getLeft() + getUncollapedWidth()/2 - DEFAULT_MEDIA_WIDTH/2);
-    setWidth(DEFAULT_MEDIA_WIDTH);
-    setHeight(DEFAULT_MEDIA_HEIGHT);
+    setTop(getTop() + getUncollapedHeight()/2 - STR_DEFAULT_MEDIA_H/2);
+    setLeft(getLeft() + getUncollapedWidth()/2 - STR_DEFAULT_MEDIA_W/2);
+    setWidth(STR_DEFAULT_MEDIA_W);
+    setHeight(STR_DEFAULT_MEDIA_H);
 
 
     foreach(StructuralEntity* e, getStructuralEntities())
@@ -341,8 +341,8 @@ void StructuralComposition::collapse(bool notify)
       if (e->getStructuralCategory() == Structural::Interface)
       {
 
-        e->setTop(((e->getTop()*DEFAULT_MEDIA_HEIGHT)/getUncollapedHeight()));
-        e->setLeft(((e->getLeft()*DEFAULT_MEDIA_WIDTH)/getUncollapedWidth()));
+        e->setTop(((e->getTop()*STR_DEFAULT_MEDIA_H)/getUncollapedHeight()));
+        e->setLeft(((e->getLeft()*STR_DEFAULT_MEDIA_W)/getUncollapedWidth()));
 
       }else{
 //        e->setStructuralParent(NULL);
@@ -401,15 +401,15 @@ void StructuralComposition::dropEvent(QGraphicsSceneDragDropEvent *event)
     dropsrc = filename;
 
     QMap<QString,QString> properties;
-    properties[PLG_PROPERTY_TYPE] = StructuralUtil::translateTypeToString(Structural::Media);
-    properties[PLG_PROPERTY_ID] = StructuralUtil::formatId(QFileInfo(filename).baseName());
-    properties[PLG_PROPERTY_LOCATION] = filename;
-    properties[PLG_PROPERTY_MIMETYPE] = StructuralUtil::translateMimeTypeToString(StructuralUtil::getMimeTypeByExtension(suffix));
+    properties[STR_PROPERTY_ENTITY_TYPE] = StructuralUtil::translateTypeToString(Structural::Media);
+    properties[STR_PROPERTY_ENTITY_ID] = StructuralUtil::formatId(QFileInfo(filename).baseName());
+    properties[STR_PROPERTY_CONTENT_LOCATION] = filename;
+    properties[STR_PROPERTY_CONTENT_MIMETYPE] = StructuralUtil::translateMimeTypeToString(StructuralUtil::getMimeTypeByExtension(suffix));
 
     QMap<QString,QString> settings;
-    settings[PLG_SETTING_UNDO] = "1";
-    settings[PLG_SETTING_NOTIFY] = "1";
-    settings[PLG_SETTING_CODE] = StructuralUtil::createUid();
+    settings[STR_SETTING_UNDO] = "1";
+    settings[STR_SETTING_NOTIFY] = "1";
+    settings[STR_SETTING_CODE] = StructuralUtil::createUid();
 
     inserted(StructuralUtil::createUid(), getStructuralUid(), properties, settings);
 

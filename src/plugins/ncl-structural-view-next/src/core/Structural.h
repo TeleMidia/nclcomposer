@@ -1,101 +1,150 @@
 #ifndef STRUCTURAL_H
 #define STRUCTURAL_H
 
-#define PLG_PROPERTY_ID ":plugin:property:id"
-#define PLG_PROPERTY_UID ":plugin:property:uid"
-#define PLG_PROPERTY_CATEGORY ":plugin:property:category"
-#define PLG_PROPERTY_TYPE ":plugin:property:type"
-#define PLG_PROPERTY_MIMETYPE ":plugin:property:mimetype"
+/*
+ *
+ * STRUCTURAL
+ *
+ */
 
-#define PLG_PROPERTY_TOP ":plugin:property:top"
-#define PLG_PROPERTY_LEFT ":plugin:property:left"
-#define PLG_PROPERTY_WIDTH ":plugin:property:width"
-#define PLG_PROPERTY_HEIGHT ":plugin:property:height"
-#define PLG_PROPERTY_ZINDEX ":plugin:property:zindex"
+//
+// Properties
+//
 
-#define PLG_PROPERTY_HIDDEN ":plugin:property:hidden"
+// Entity defines
+#define STR_PROPERTY_ENTITY_ID ":structural:property:entity:id"
+#define STR_PROPERTY_ENTITY_UID ":structural:property:entity:uid"
+#define STR_PROPERTY_ENTITY_CATEGORY ":structural:property:entity:category"
+#define STR_PROPERTY_ENTITY_TYPE ":structural:property:entity:type"
 
-#define PLG_ENTITY_UNCOLLAPSED ":plugin:property:uncollapsed"
-#define PLG_ENTITY_UNCOLLAPSED_TOP ":plugin:property:uncollaped:top"
-#define PLG_ENTITY_UNCOLLAPSED_LEFT ":plugin:property:uncollaped:left"
-#define PLG_ENTITY_UNCOLLAPSED_WIDTH ":plugin:property:uncollaped:width"
-#define PLG_ENTITY_UNCOLLAPSED_HEIGHT ":plugin:property:uncollaped:height"
+#define STR_PROPERTY_ENTITY_TOP ":structural:property:entity:top"
+#define STR_PROPERTY_ENTITY_LEFT ":structural:property:entity:left"
+#define STR_PROPERTY_ENTITY_WIDTH ":structural:property:entity:width"
+#define STR_PROPERTY_ENTITY_HEIGHT ":structural:property:entity:height"
+#define STR_PROPERTY_ENTITY_ZINDEX ":structural:property:entity:zindex"
+#define STR_PROPERTY_ENTITY_UNCOLLAPSED_TOP ":structural:property:entity:uncollaped:top"
+#define STR_PROPERTY_ENTITY_UNCOLLAPSED_LEFT ":structural:property:entity:uncollaped:left"
+#define STR_PROPERTY_ENTITY_UNCOLLAPSED_WIDTH ":structural:property:entity:uncollaped:width"
+#define STR_PROPERTY_ENTITY_UNCOLLAPSED_HEIGHT ":structural:property:entity:uncollaped:height"
 
-#define PLG_PROPERTY_LOCATION ":plugin:property:location"
+#define STR_PROPERTY_ENTITY_HIDDEN ":structural:property:entity:hidden"
+#define STR_PROPERTY_ENTITY_UNCOLLAPSED ":structural:property:entity:uncollapsed"
 
-#define PLG_ENTITY_START_UID ":plugin:property:start:uid"
-#define PLG_ENTITY_END_UID ":plugin:property:end:uid"
-#define PLG_ENTITY_ROLE ":plugin:property:role"
-#define PLG_ENTITY_LINK_ID ":plugin:property:link:id"
-#define PLG_ENTITY_LINK_UID ":plugin:property:link:uid"
-#define PLG_ENTITY_XCONNECTOR_ID ":plugin:property:xconnector:id"
-#define PLG_ENTITY_COMPONENT_ID ":plugin:property:component:id"
-#define PLG_ENTITY_COMPONENT_UID ":plugin:property:component:uid"
-#define PLG_ENTITY_INTERFACE_ID ":plugin:property:interface:id"
-#define PLG_ENTITY_INTERFACE_UID ":plugin:property:interface:uid"
-#define PLG_ENTITY_ANGLE ":plugin:property:angle"
-#define PLG_ENTITY_ROLE ":plugin:property:role"
+// Node defines
+#define STR_PROPERTY_CONTENT_LOCATION ":structural:property:content:location"
+#define STR_PROPERTY_CONTENT_MIMETYPE ":structural:property:content:mimetype"
 
-#define PLG_ENTITY_LINKPARAM_NAME ":plugin:property:linkparam:name"
-#define PLG_ENTITY_LINKPARAM_VALUE ":plugin:property:linkparam:value"
-#define PLG_ENTITY_BINDPARAM_NAME ":plugin:property:bindparam:name"
-#define PLG_ENTITY_BINDPARAM_VALUE ":plugin:property:bindparam:value"
+#define STR_PROPERTY_LINKPARAM_NAME ":structural:property:linkparam:name"
+#define STR_PROPERTY_LINKPARAM_VALUE ":structural:propertylinkparam:value"
 
-#define PLG_SETTING_UNDO_CHILDREN ":plugin:setting:undo:children"
-#define PLG_SETTING_UNDO ":plugin:setting:undo"
-#define PLG_SETTING_NOTIFY ":plugin:setting:notify"
-#define PLG_SETTING_CODE ":plugin:setting:code"
+// Edge defines
+#define STR_PROPERTY_EDGE_TAIL ":structural:property:edge:tail"
+#define STR_PROPERTY_EDGE_HEAD ":structural:property:edge:head"
+#define STR_PROPERTY_EDGE_ANGLE ":structural:property:edge:angle"
 
-#define PLG_VALUE_TRUE "1"
-#define PLG_VALUE_FALSE "0"
+#define STR_PROPERTY_BIND_ROLE ":structural:property:bind:role"
 
-#define DEFAULT_BODY_WIDTH  750
-#define DEFAULT_BODY_HEIGHT 500
+#define STR_PROPERTY_BINDPARAM_NAME ":structural:property:bindparam:name"
+#define STR_PROPERTY_BINDPARAM_VALUE ":structural:property:bindparam:value"
 
-#define DEFAULT_CONTEXT_WIDTH  250
-#define DEFAULT_CONTEXT_HEIGHT 200
+// Interface defines
+// nothing...
 
-#define DEFAULT_MEDIA_WIDTH  48
-#define DEFAULT_MEDIA_HEIGHT 64
+// Reference defines
+#define STR_PROPERTY_REFERENCE_LINK_ID ":structural:property:reference:link:id"
+#define STR_PROPERTY_REFERENCE_LINK_UID ":structural:property:reference:link:uid"
 
-#define DEFAULT_INTERFACE_WIDTH  18
-#define DEFAULT_INTERFACE_HEIGHT 18
+#define STR_PROPERTY_REFERENCE_COMPONENT_ID ":structural:property:reference:component:id"
+#define STR_PROPERTY_REFERENCE_COMPONENT_UID ":structural:property:reference:component:uid"
 
-#define DEFAULT_AGGREGATOR_WIDTH  14
-#define DEFAULT_AGGREGATOR_HEIGHT 14
+#define STR_PROPERTY_REFERENCE_INTERFACE_ID ":structural:property:reference:interface:id"
+#define STR_PROPERTY_REFERENCE_INTERFACE_UID ":structural:property:reference:interface:uid"
 
-#define DEFAULT_ANCHOR_WIDTH  8
-#define DEFAULT_ANCHOR_HEIGHT 8
+#define STR_PROPERTY_REFERENCE_XCONNECTOR_ID ":structural:property:reference:xconnector:id"
+#define STR_PROPERTY_REFERENCE_XCONNECTOR_UID ":structural:property:reference:xconnector:uid"
 
-#define DEFAULT_BODY_ENABLE 1
+//
+// Settings
+//
 
-#define NCL_ENTITY_ID "id"
-#define NCL_ENTITY_REFER "refer"
-#define NCL_ENTITY_SRC "src"
-#define NCL_ENTITY_INSTANCE "instance"
-#define NCL_ENTITY_TYPE "type"
-#define NCL_ENTITY_DESCRIPTOR "descriptor"
-#define NCL_ENTITY_COMPONENT "component"
-#define NCL_ENTITY_INTERFACE "interface"
-#define NCL_ENTITY_NAME "name"
-#define NCL_ENTITY_VALUE "value"
-#define NCL_ENTITY_EXTERNABLE "externable"
-#define NCL_ENTITY_XCONNECTOR "xconnector"
-#define NCL_ENTITY_ROLE "role"
+#define STR_SETTING_UNDO ":structural:setting:undo"
+#define STR_SETTING_UNDO_TRACE ":structural:setting:undo:trace"
+#define STR_SETTING_NOTIFY ":structural:setting:notify"
+#define STR_SETTING_CODE ":structural:setting:code"
 
-#define NCL_ENTITY_COORDS "coords"
-#define NCL_ENTITY_BEGIN "begin"
-#define NCL_ENTITY_END "end"
-#define NCL_ENTITY_BEGINTEXT "beginText"
-#define NCL_ENTITY_ENDTEXT "endText"
-#define NCL_ENTITY_BEGINPOSITION "beginPosition"
-#define NCL_ENTITY_ENDPOSITION "endPosition"
-#define NCL_ENTITY_FIRST "first"
-#define NCL_ENTITY_LAST "last"
-#define NCL_ENTITY_LABEL "label"
-#define NCL_ENTITY_CLIP "clip"
+//
+// Values
+//
 
+#define STR_VALUE_TRUE "1"
+#define STR_VALUE_FALSE "0"
 
+//
+// Defaults
+//
+
+// Entities defines
+#define STR_DEFAULT_ANCHOR_W 8
+#define STR_DEFAULT_ANCHOR_H 8
+
+// Nodes defines
+#define STR_DEFAULT_BODY_W 750
+#define STR_DEFAULT_BODY_H 500
+
+#define STR_DEFAULT_CONTEXT_W 250
+#define STR_DEFAULT_CONTEXT_H 200
+
+#define STR_DEFAULT_MEDIA_W 48
+#define STR_DEFAULT_MEDIA_H 64
+
+#define STR_DEFAULT_LINK_W 14
+#define STR_DEFAULT_LINK_H 14
+
+// Interfaces defines
+#define STR_DEFAULT_INTERFACE_W 18
+#define STR_DEFAULT_INTERFACE_H 18
+
+// Edges defines
+// nothing...
+
+// Others defines
+#define STR_DEFAULT_WITH_BODY 1                     // not used yet
+
+/*
+ *
+ * NESTED CONTEXT LANGUAGE
+ *
+ */
+
+//
+// Attributes
+//
+
+// Entities defines
+#define NCL_ATTRIBUTE_ID "id"
+#define NCL_ATTRIBUTE_REFER "refer"
+#define NCL_ATTRIBUTE_SRC "src"
+#define NCL_ATTRIBUTE_INSTANCE "instance"
+#define NCL_ATTRIBUTE_TYPE "type"
+#define NCL_ATTRIBUTE_DESCRIPTOR "descriptor"
+#define NCL_ATTRIBUTE_COMPONENT "component"
+#define NCL_ATTRIBUTE_INTERFACE "interface"
+#define NCL_ATTRIBUTE_NAME "name"
+#define NCL_ATTRIBUTE_VALUE "value"
+#define NCL_ATTRIBUTE_EXTERNABLE "externable"
+#define NCL_ATTRIBUTE_XCONNECTOR "xconnector"
+#define NCL_ATTRIBUTE_ROLE "role"
+#define NCL_ATTRIBUTE_COORDS "coords"
+#define NCL_ATTRIBUTE_BEGIN "begin"
+#define NCL_ATTRIBUTE_END "end"
+#define NCL_ATTRIBUTE_BEGINTEXT "beginText"
+#define NCL_ATTRIBUTE_ENDTEXT "endText"
+#define NCL_ATTRIBUTE_BEGINPOSITION "beginPosition"
+#define NCL_ATTRIBUTE_ENDPOSITION "endPosition"
+#define NCL_ATTRIBUTE_FIRST "first"
+#define NCL_ATTRIBUTE_LAST "last"
+#define NCL_ATTRIBUTE_LABEL "label"
+#define NCL_ATTRIBUTE_CLIP "clip"
 
 class Structural
 {
