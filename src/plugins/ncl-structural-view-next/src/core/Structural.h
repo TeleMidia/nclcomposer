@@ -164,7 +164,7 @@ public:
     Body        = 2,
     Context     = 3,
     Switch      = 4,
-    Port        = 5,    
+    Port        = 5,
     SwitchPort  = 6,
     Area        = 7,
     Property    = 8,
