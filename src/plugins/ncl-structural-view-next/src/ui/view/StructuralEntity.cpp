@@ -546,6 +546,16 @@ void StructuralEntity::setzIndex(qreal zIndex)
   setZValue(zIndex);
 }
 
+StructuralMenu* StructuralEntity::getMenu() const
+{
+  return _menu;
+}
+
+void StructuralEntity::setMenu(StructuralMenu* menu)
+{
+  _menu = menu;
+}
+
 StructuralEntity* StructuralEntity::getStructuralParent() const
 {
   return _parent;
@@ -569,12 +579,12 @@ QVector<StructuralEntity*> StructuralEntity::getStructuralEntities()
 
 void StructuralEntity::createMenus()
 {
-  menu = new StructuralMenu();
+//  _menu = new StructuralMenu();
 }
 
 void StructuralEntity::createConnections()
 {
-  connect(menu, SIGNAL(insert(StructuralType)),SLOT(performInsert(StructuralType)));
+
 }
 
 void StructuralEntity::addStructuralEntity(StructuralEntity* entity)
@@ -996,13 +1006,13 @@ void StructuralEntity::contextMenuEvent(QGraphicsSceneContextMenuEvent* event)
 
     _insertPoint = event->pos();
 
-    if (menu != NULL)
+    if (_menu != NULL)
     {
-      menu->updateInsertAction(_subtype);
+      _menu->setInsertTop(event->pos().y());
+      _menu->setInsertLeft(event->pos().x());
+      _menu->adjust(_subtype);
 
-
-
-      menu->exec(event->screenPos());
+      _menu->exec(event->screenPos());
     }
 
     event->accept();
@@ -1121,10 +1131,10 @@ void StructuralEntity::performInsert(Structural::StructuralType name)
     case Structural::Switch:
     {
 
-      properties[STR_PROPERTY_ENTITY_TOP] = QString::number(_insertPoint.y() - STR_DEFAULT_CONTEXT_H/2);
-      properties[STR_PROPERTY_ENTITY_LEFT] = QString::number(_insertPoint.x() - STR_DEFAULT_CONTEXT_W/2);
-      properties[STR_PROPERTY_ENTITY_HEIGHT] = QString::number(STR_DEFAULT_CONTEXT_H);
-      properties[STR_PROPERTY_ENTITY_WIDTH] = QString::number(STR_DEFAULT_CONTEXT_W);
+      properties[STR_PROPERTY_ENTITY_TOP] = QString::number(_insertPoint.y() - STR_DEFAULT_COMPOSITION_H/2);
+      properties[STR_PROPERTY_ENTITY_LEFT] = QString::number(_insertPoint.x() - STR_DEFAULT_COMPOSITION_W/2);
+      properties[STR_PROPERTY_ENTITY_HEIGHT] = QString::number(STR_DEFAULT_COMPOSITION_H);
+      properties[STR_PROPERTY_ENTITY_WIDTH] = QString::number(STR_DEFAULT_COMPOSITION_W);
 
       break;
     }
@@ -1132,10 +1142,10 @@ void StructuralEntity::performInsert(Structural::StructuralType name)
     case Structural::Media:
     {
 
-      properties[STR_PROPERTY_ENTITY_TOP] = QString::number(_insertPoint.y() - STR_DEFAULT_MEDIA_H/2);
-      properties[STR_PROPERTY_ENTITY_LEFT] = QString::number(_insertPoint.x() - STR_DEFAULT_MEDIA_W/2);
-      properties[STR_PROPERTY_ENTITY_HEIGHT] = QString::number(STR_DEFAULT_MEDIA_H);
-      properties[STR_PROPERTY_ENTITY_WIDTH] = QString::number(STR_DEFAULT_MEDIA_W);
+      properties[STR_PROPERTY_ENTITY_TOP] = QString::number(_insertPoint.y() - STR_DEFAULT_CONTENT_H/2);
+      properties[STR_PROPERTY_ENTITY_LEFT] = QString::number(_insertPoint.x() - STR_DEFAULT_CONTENT_W/2);
+      properties[STR_PROPERTY_ENTITY_HEIGHT] = QString::number(STR_DEFAULT_CONTENT_H);
+      properties[STR_PROPERTY_ENTITY_WIDTH] = QString::number(STR_DEFAULT_CONTENT_W);
 
       break;
     }

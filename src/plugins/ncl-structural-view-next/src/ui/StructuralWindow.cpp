@@ -15,7 +15,7 @@ StructuralWindow::~StructuralWindow()
 
 }
 
-StructuralView* StructuralWindow::getView()
+StructuralView* StructuralWindow::getView() const
 {
   return _view;
 }
@@ -28,7 +28,7 @@ void StructuralWindow::setView(StructuralView* view)
 void StructuralWindow::createActions()
 {
   // undo action
-  _undoAction = new QAction((QObject*) this);
+  _undoAction = new QAction(this);
   _undoAction->setEnabled(false);
   _undoAction->setText(tr("Undo"));
   _undoAction->setIcon(QIcon(":/images/icon/undo"));
@@ -184,18 +184,7 @@ void StructuralWindow::createActions()
   _preferencesAction->setIcon(QIcon(":/images/icon/preferences"));
   _preferencesAction->setShortcut(QKeySequence("Ctrl+P"));
 
-  // report action
-  _reportAction = new QAction((QObject*) this);
-  _reportAction->setEnabled(true);
-  _reportAction->setText(tr("Report Bug..."));
-  _reportAction->setIcon(QIcon(":/images/icon/report"));
-
-  // about action
-  _aboutAction = new QAction((QObject*) this);
-  _aboutAction->setEnabled(true);
-  _aboutAction->setText(tr("About..."));
-
-  // draw group
+  // insert group
   _insertActionGroup = new QActionGroup((QObject*) this);
   _insertActionGroup->setExclusive(true);
 
@@ -271,8 +260,10 @@ void StructuralWindow::createToolbar()
 
 void StructuralWindow::createWidgets()
 {
-  _view = new StructuralView(this); setCentralWidget(_view);
+  _view = new StructuralView(this);
   _view->setMiniMapVisible(false);
+
+  setCentralWidget(_view);
 }
 
 void  StructuralWindow::createStatusbar()
@@ -283,28 +274,27 @@ void  StructuralWindow::createStatusbar()
 void  StructuralWindow::createConnections()
 {
 
-  connect(_undoAction, SIGNAL(triggered()), SLOT(performUndo()));
-  connect(_redoAction, SIGNAL(triggered()), SLOT(performRedo()));
-  connect(_cutAction, SIGNAL(triggered()), SLOT(performCut()));
-  connect(_copyAction, SIGNAL(triggered()), SLOT(performCopy()));
-  connect(_pasteAction, SIGNAL(triggered()), SLOT(performPaste()));
-  connect(_zoominAction, SIGNAL(triggered()), SLOT(performZoomIn()));
-  connect(_zoomoutAction, SIGNAL(triggered()), SLOT(performZoomOut()));
+  connect(_undoAction, SIGNAL(triggered()), _view, SLOT(performUndo()));
+  connect(_redoAction, SIGNAL(triggered()), _view, SLOT(performRedo()));
+  connect(_cutAction, SIGNAL(triggered()), _view, SLOT(performCut()));
+  connect(_copyAction, SIGNAL(triggered()), _view, SLOT(performCopy()));
+  connect(_pasteAction, SIGNAL(triggered()), _view, SLOT(performPaste()));
+  connect(_zoominAction, SIGNAL(triggered()), _view, SLOT(performZoomIn()));
+  connect(_zoomoutAction, SIGNAL(triggered()), _view, SLOT(performZoomOut()));
+  connect(_pointerAction, SIGNAL(triggered()), _view, SLOT(performPointer()));
+  connect(_linkAction, SIGNAL(triggered()), _view, SLOT(performLink()));
+  connect(_snapshotAction, SIGNAL(triggered()), _view, SLOT(performSnapshot()));
+  connect(_minimapAction, SIGNAL(triggered()), _view, SLOT(performMinimap()));
+  connect(_mediaAction, SIGNAL(triggered()), _view, SLOT(performMedia()));
+  connect(_contextAction, SIGNAL(triggered()), _view, SLOT(performContext()));
+  connect(_switchAction, SIGNAL(triggered()), _view, SLOT(performSwitch()));
+  connect(_bodyAction, SIGNAL(triggered()), _view, SLOT(performBody()));
+  connect(_areaAction, SIGNAL(triggered()), _view, SLOT(performArea()));
+  connect(_propertyAction, SIGNAL(triggered()), _view, SLOT(performProperty()));
+  connect(_portAction, SIGNAL(triggered()), _view, SLOT(performPort()));
+  connect(_switchportAction, SIGNAL(triggered()), _view, SLOT(performSwitchPort()));
 
-  connect(_pointerAction, SIGNAL(triggered()), SLOT(performPointer()));
-  connect(_bodyAction, SIGNAL(triggered()), SLOT(performBody()));
-  connect(_contextAction, SIGNAL(triggered()), SLOT(performContext()));
-  connect(_switchAction, SIGNAL(triggered()), SLOT(performSwitch()));
-  connect(_mediaAction, SIGNAL(triggered()), SLOT(performMedia()));
-  connect(_portAction, SIGNAL(triggered()), SLOT(performPort()));
-  connect(_switchportAction, SIGNAL(triggered()), SLOT(performSwitchPort()));
-  connect(_areaAction, SIGNAL(triggered()), SLOT(performArea()));
-  connect(_propertyAction, SIGNAL(triggered()), SLOT(performProperty()));
-  connect(_linkAction, SIGNAL(triggered()), SLOT(performLink()));
-
-  connect(_minimapAction, SIGNAL(triggered()), SLOT(performMinimap()));
-  connect(_snapshotAction, SIGNAL(triggered()), SLOT(performSnapshot()));
-
+  /* TODO: Refactoring */
   connect(_view, SIGNAL(inserted(QString,QString,QMap<QString,QString>,QMap<QString,QString>)),SLOT(insert(QString,QString,QMap<QString,QString>,QMap<QString,QString>)));
   connect(_view, SIGNAL(removed(QString,QMap<QString,QString>)),SLOT(remove(QString,QMap<QString,QString>)));
   connect(_view, SIGNAL(changed(QString,QMap<QString,QString>,QMap<QString,QString>,QMap<QString,QString>)), SLOT(change(QString,QMap<QString,QString>,QMap<QString,QString>,QMap<QString,QString>)));
@@ -322,13 +312,14 @@ void  StructuralWindow::createConnections()
   connect(_view, SIGNAL(selectChange(QString)), SLOT(changeSelect(QString)));
 
   connect(_view, SIGNAL(linkStateChange(bool)), SLOT(changeLinkState(bool)));
+  /* TODO: Refactoring */
 }
 
 void StructuralWindow::changeBodyState(bool enable)
 {
   _bodyAction->setEnabled(enable);
 
-  _view->getScene()->_menu->bodyAction->setEnabled(enable);
+//  _view->getScene()->_menu->_bodyAction->setEnabled(enable);
 }
 
 void StructuralWindow::changeZoomInState(bool enable)
@@ -336,111 +327,15 @@ void StructuralWindow::changeZoomInState(bool enable)
   _zoominAction->setEnabled(enable);
 }
 
-void StructuralWindow::performUndo()
-{
-  _view->performUndo();
-
-}
-
-void StructuralWindow::performRedo()
-{
-  _view->performRedo();
-}
-
-void StructuralWindow::performCut()
-{ 
-  _view->performCut();
-}
-
-void StructuralWindow::performCopy()
-{
-  _view->performCopy();
-}
-
-void StructuralWindow::performPaste()
-{
-  _view->performPaste();
-}
-
-void StructuralWindow::performZoomIn()
-{
-  _view->performZoomIn();
-}
-
-void StructuralWindow::performZoomOut()
-{
-  _view->performZoomOut();
-}
-
-void StructuralWindow::performPointer()
-{ 
-  _view->setMod(false);
-}
-
-void StructuralWindow::performLink()
-{
-  _view->setMod(true);
-}
-
-void StructuralWindow::performBody()
-{ 
-  _view->create(Structural::Body);
-}
-
-void StructuralWindow::performContext()
-{ 
-  _view->create(Structural::Context);
-}
-
-void StructuralWindow::performSwitch()
-{ 
-  _view->create(Structural::Switch);
-}
-
-void StructuralWindow::performMedia()
-{ 
-  _view->create(Structural::Media);
-}
-
-void StructuralWindow::performPort()
-{ 
-  _view->create(Structural::Port);
-}
-
-void StructuralWindow::performArea()
-{
-  _view->create(Structural::Area);
-}
-
-void StructuralWindow::performSwitchPort()
-{
-  _view->create(Structural::SwitchPort);
-}
-
-void StructuralWindow::performProperty()
-{ 
-  _view->create(Structural::Property);
-}
-
-void StructuralWindow::performMinimap()
-{
-  _view->switchMinimapVis();
-}
-
-void StructuralWindow::performSnapshot()
-{
-  _view->performSnapshot();
-}
-
 void StructuralWindow::changeUndoState(bool enable)
 {
   _undoAction->setEnabled(enable);
 
-  _view->getScene()->_menu->undoAction->setEnabled(enable);
+//  _view->getScene()->_menu->_undoAction->setEnabled(enable);
 
-  foreach (StructuralEntity* e, _view->getEntities()) {
-    e->menu->undoAction->setEnabled(enable);
-  }
+//  foreach (StructuralEntity* e, _view->getEntities()) {
+//    e->_menu->_undoAction->setEnabled(enable);
+//  }
 
 }
 
@@ -448,11 +343,11 @@ void StructuralWindow::changeRedoState(bool enable)
 {
   _redoAction->setEnabled(enable);
 
-  _view->getScene()->_menu->redoAction->setEnabled(enable);
+//  _view->getScene()->_menu->_redoAction->setEnabled(enable);
 
-  foreach (StructuralEntity* e, _view->getEntities()) {
-    e->menu->redoAction->setEnabled(enable);
-  }
+//  foreach (StructuralEntity* e, _view->getEntities()) {
+//    e->_menu->_redoAction->setEnabled(enable);
+//  }
 
 }
 
@@ -460,11 +355,11 @@ void StructuralWindow::changeCutState(bool enable)
 {
   _cutAction->setEnabled(enable);
 
-  _view->getScene()->_menu->cutAction->setEnabled(enable);
+//  _view->getScene()->_menu->_cutAction->setEnabled(enable);
 
-  foreach (StructuralEntity* e, _view->getEntities()) {
-    e->menu->cutAction->setEnabled(enable);
-  }
+//  foreach (StructuralEntity* e, _view->getEntities()) {
+//    e->_menu->_cutAction->setEnabled(enable);
+//  }
 }
 
 void StructuralWindow::changeLinkState(bool enable)
@@ -477,81 +372,81 @@ void StructuralWindow::changeCopyState(bool enable)
 {
   _copyAction->setEnabled(enable);
 
-  _view->getScene()->_menu->copyAction->setEnabled(enable);
+//  _view->getScene()->_menu->_copyAction->setEnabled(enable);
 
-  foreach (StructuralEntity* e, _view->getEntities()) {
-    e->menu->copyAction->setEnabled(enable);
-  }
+//  foreach (StructuralEntity* e, _view->getEntities()) {
+//    e->_menu->_copyAction->setEnabled(enable);
+//  }
 }
 
 void StructuralWindow::changePasteState(bool enable)
 {
   _pasteAction->setEnabled(enable);
 
-  _view->getScene()->_menu->pasteAction->setEnabled(enable);
+//  _view->getScene()->_menu->_pasteAction->setEnabled(enable);
 
-  foreach (StructuralEntity* e, _view->getEntities()) {
-    e->menu->pasteAction->setEnabled(enable);
-  }
+//  foreach (StructuralEntity* e, _view->getEntities()) {
+//    e->_menu->_pasteAction->setEnabled(enable);
+//  }
 }
 
 
 void StructuralWindow::insert(QString uid, QString parent, QMap<QString, QString> properties, QMap<QString, QString> settings)
 {
-  StructuralEntity* entity = _view->getEntity(uid);
+//  StructuralEntity* entity = _view->getEntity(uid);
 
-  if (entity)
-  {
-    StructuralType NAME = _view->getEntity(uid)->getStructuralType();
+//  if (entity)
+//  {
+//    StructuralType NAME = _view->getEntity(uid)->getStructuralType();
 
-    switch (NAME) {
-      case Structural::Body:
-        _bodyAction->setEnabled(false);
-        _view->getScene()->_menu->bodyAction->setEnabled(false);
-        break;
+//    switch (NAME) {
+//      case Structural::Body:
+//        _bodyAction->setEnabled(false);
+//        _view->getScene()->_menu->_bodyAction->setEnabled(false);
+//        break;
 
-      default:
-        break;
-    }
-  }
+//      default:
+//        break;
+//    }
+//  }
 }
 
 void StructuralWindow::remove(QString uid, QMap<QString, QString> settings)
 {
-  StructuralEntity* entity = _view->getEntity(uid);
+//  StructuralEntity* entity = _view->getEntity(uid);
 
-  if (entity)
-  {
-    StructuralType NAME = _view->getEntity(uid)->getStructuralType();
+//  if (entity)
+//  {
+//    StructuralType NAME = _view->getEntity(uid)->getStructuralType();
 
-    switch (NAME) {
-      case Structural::Body:
-        _bodyAction->setEnabled(true);
-        break;
+//    switch (NAME) {
+//      case Structural::Body:
+//        _bodyAction->setEnabled(true);
+//        break;
 
-      default:
-        break;
-    }
-  }
+//      default:
+//        break;
+//    }
+//  }
 }
 
 void StructuralWindow::change(QString uid, QMap<QString, QString> properties, QMap<QString, QString> previous, QMap<QString, QString> settings)
 {
-  StructuralEntity* entity = _view->getEntity(uid);
+//  StructuralEntity* entity = _view->getEntity(uid);
 
-  if (entity)
-  {
-    StructuralType NAME = _view->getEntity(uid)->getStructuralType();
+//  if (entity)
+//  {
+//    StructuralType NAME = _view->getEntity(uid)->getStructuralType();
 
-    switch (NAME) {
-      case Structural::Body:
-        _bodyAction->setEnabled(false);
-        break;
+//    switch (NAME) {
+//      case Structural::Body:
+//        _bodyAction->setEnabled(false);
+//        break;
 
-      default:
-        break;
-    }
-  }
+//      default:
+//        break;
+//    }
+//  }
 }
 
 void StructuralWindow::changeSelect(QString uid)
@@ -563,7 +458,7 @@ void StructuralWindow::changeSelect(QString uid)
 
     StructuralType NAME = _view->getEntity(uid)->getStructuralType();
 
-    entity->menu->updateInsertAction(NAME);
+//    entity->_menu->adjust(NAME);
 
     switch (NAME) {
       case Structural::Media:

@@ -2,12 +2,9 @@
 #define QNSTMAINWINDOW_H
 
 #include <QMainWindow>
-#include <QMenu>
-#include <QMenuBar>
+#include <QToolBar>
 #include <QAction>
 #include <QActionGroup>
-#include <QToolBar>
-#include <QPushButton>
 
 #include "StructuralView.h"
 #include "StructuralUtil.h"
@@ -20,30 +17,10 @@ public:
   StructuralWindow(QWidget* parent = 0);
   virtual ~StructuralWindow();
 
-  StructuralView* getView();
+  StructuralView* getView() const;
   void setView(StructuralView* view);
 
 protected slots:
-  void performUndo();
-  void performRedo();
-  void performCut();
-  void performCopy();
-  void performPaste();
-  void performZoomIn();
-  void performZoomOut();
-  void performPointer();
-  void performLink();
-  void performBody();
-  void performContext();
-  void performSwitch();
-  void performMedia();
-  void performPort();
-  void performArea();
-  void performSwitchPort();
-  void performProperty();
-  void performMinimap();
-  void performSnapshot();
-
   void changeUndoState(bool enable);
   void changeRedoState(bool enable);
   void changeCutState(bool enable);
@@ -68,11 +45,6 @@ private:
   void createStatusbar();
   void createConnections();
 
-  QMenu* _editMenu;
-  QMenu* _insertMenu;
-  QMenu* _windowMenu;
-  QMenu* _helpMenu;
-
   QToolBar* _editToolbar;
   QToolBar* _insertToolbar;
   QToolBar* _windowToolbar;
@@ -86,6 +58,8 @@ private:
   QAction* _zoomoutAction;
   QAction* _pointerAction;
   QAction* _linkAction;
+  QAction* _snapshotAction;
+  QAction* _minimapAction;
   QAction* _mediaAction;
   QAction* _contextAction;
   QAction* _switchAction;
@@ -94,11 +68,8 @@ private:
   QAction* _propertyAction;
   QAction* _portAction;
   QAction* _switchportAction;
-  QAction* _minimapAction;
-  QAction* _snapshotAction;
   QAction* _preferencesAction;
-  QAction* _reportAction;
-  QAction* _aboutAction;
+
   QActionGroup* _insertActionGroup;
 
   StructuralView* _view;

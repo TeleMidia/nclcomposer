@@ -151,6 +151,9 @@ public:
   qreal getzIndex() const;
   void setzIndex(qreal zIndex);
 
+  StructuralMenu* getMenu() const;
+  void setMenu(StructuralMenu* menu);
+
 public slots:
   virtual void newChild(StructuralType _subtype);
   void performInsert(StructuralType _subtype);
@@ -260,7 +263,7 @@ protected:
 
 public:
 
-  StructuralMenu* menu;
+  StructuralMenu* _menu;
   void setError(bool hasError);
   void setErrorMsg(QString erroMsg);
 

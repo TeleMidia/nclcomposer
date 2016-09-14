@@ -21,6 +21,9 @@ public:
   StructuralScene(QObject* _parent = 0);
   virtual ~StructuralScene();
 
+  StructuralMenu* getMenu() const;
+  void setMenu(StructuralMenu* menu);
+
   StructuralMenu* _menu;
 
 protected:

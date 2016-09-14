@@ -57,6 +57,7 @@ public:
   void switchMinimapVis();
   void cleanUndoRedo();
 
+
   void updateLinkDialog(QMap<QString, QVector<QString> > conditions,
                         QMap<QString, QVector<QString> > actions,
                         QMap<QString, QVector<QString> > params);
@@ -69,27 +70,38 @@ public slots:
   void move(QString uid, QString parent);
 
   void create(StructuralType type);
-  void create(StructuralType type, QMap<QString, QString> &properties, QMap<QString, QString> &settings);
+  void create(StructuralType type, QMap<QString, QString> properties, QMap<QString, QString> settings);
 
   void performHelp();
-
+  void performUndo();
+  void performRedo();
   void performCut();
   void performCopy();
   void performPaste();
-
-
   void performZoomIn();
   void performZoomOut();
   void performZoomReset();
-
-  void performUndo();
-  void performRedo();
-
-  void performSnapshot();
-
+  void performPointer();
+  void performLink();
   void performDelete();
+  void performSnapshot();
+  void performMinimap();
+  void performMedia();
+  void performContext();
+  void performSwitch();
+  void performBody();
+  void performArea();
+  void performProperty();
+  void performPort();
+  void performSwitchPort();
+
+#ifdef WITH_GRAPHVIZ
+  void performAutoAdjust();
+#endif
 
   void performProperties();
+
+  void performInsert(StructuralType type, QMap<QString, QString> properties);
 
   void showEditLinkDialog(StructuralLink* entity);
   void showEditBindDialog(StructuralBind* entity);
@@ -233,6 +245,7 @@ private:
 
   StructuralMiniMap *minimap;
 
+  StructuralMenu* _menu;
 
   StructuralEntity* e_clip;
 };

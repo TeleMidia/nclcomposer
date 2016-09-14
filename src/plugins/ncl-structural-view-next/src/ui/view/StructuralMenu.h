@@ -1,70 +1,117 @@
-#ifndef QNSTMENU_H
-#define QNSTMENU_H
+#ifndef STRUCTURALMENU_H
+#define STRUCTURALMENU_H
 
 #include <QMenu>
 
-#include "Structural.h"
 #include "StructuralUtil.h"
+#include "StructuralEntity.h"
+
+class StructuralEntity;
 
 class StructuralMenu : public QMenu
 {
   Q_OBJECT
 
 public:
-  StructuralMenu(QWidget* _parent = 0);
+  StructuralMenu(QWidget* parent = 0);
   virtual ~StructuralMenu();
 
-  void updateInsertAction(StructuralType type, bool enableBody = false);
+  qreal getInsertTop() const;
+  void setInsertTop(qreal insertTop);
+
+  qreal getInsertLeft() const;
+  void setInsertLeft(qreal insertLeft);
+
+  void adjust(StructuralType type = Structural::NoType);
+
+public slots:
+  void switchHelp(bool state);
+  void switchUndo(bool state);
+  void switchRedo(bool state);
+  void switchCut(bool state);
+  void switchCopy(bool state);
+  void switchPaste(bool state);
+  void switchDelete(bool state);
+  void switchSnapshot(bool state);
+  void switchMedia(bool state);
+  void switchContext(bool state);
+  void switchSwitch(bool state);
+  void switchBody(bool state);
+  void switchArea(bool state);
+  void switchProperty(bool state);
+  void switchPort(bool state);
+  void switchSwitchPort(bool state);
+#ifdef WITH_GRAPHVIZ
+  void switchAutoAdjust(bool state);
+#endif
+  void switchProperties(bool state);
 
 signals:
-  void insert(StructuralType);
+  void performedHelp();
+  void performedUndo();
+  void performedRedo();
+  void performedCut();
+  void performedCopy();
+  void performedPaste();
+  void performedDelete();
+  void performedSnapshot();
+  void performedMedia();
+  void performedContext();
+  void performedSwitch();
+  void performedBody();
+  void performedArea();
+  void performedProperty();
+  void performedPort();
+  void performedSwitchPort();
+#ifdef WITH_GRAPHVIZ
+  void performedAutoAdjust();
+#endif
+  void performedProperties();
+
+  // For now, passing 'properties' as a copy. This must be changed after
+  // the StructuralView refactory.
+  void performedInsert(StructuralType type, QMap<QString, QString> properties);
+
+private slots:
+  void performMedia();
+  void performContext();
+  void performSwitch();
+  void performBody();
+  void performArea();
+  void performProperty();
+  void performPort();
+  void performSwitchPort();
 
 private:
   void createActions();
   void createMenus();
   void createConnections();
 
-private slots:
-  void performBody();
-  void performContext();
-  void performSwitch();
-  void performMedia();
-  void performPort();
-  void performArea();
-  void performSwitchPort();
-  void performProperty();
+  QMenu* _insertMenu;
 
-public slots:
-  void changeUndoState(bool enable);
-  void changeRedoState(bool enable);
-  void changeCutState(bool enable);
-  void changeCopyState(bool enable);
-  void changePasteState(bool enable);
-
-public:
-  QMenu* insertMenu;
-
-  QAction* helpAction;
-  QAction* undoAction;
-  QAction* redoAction;
-  QAction* cutAction;
-  QAction* copyAction;
-  QAction* pasteAction;
-  QAction* deleteAction;
-  QAction* snapshotAction;
-  QAction* mediaAction;
-  QAction* contextAction;
-  QAction* switchAction;
-  QAction* bodyAction;
-  QAction* portAction;
-  QAction* areaAction;
-  QAction* propertyAction;
-  QAction* switchPortAction;
-  QAction* propertiesAction;
-
+  QAction* _helpAction;
+  QAction* _undoAction;
+  QAction* _redoAction;
+  QAction* _cutAction;
+  QAction* _copyAction;
+  QAction* _pasteAction;
+  QAction* _deleteAction;
+  QAction* _snapshotAction;
+  QAction* _mediaAction;
+  QAction* _contextAction;
+  QAction* _switchAction;
+  QAction* _bodyAction;
+  QAction* _portAction;
+  QAction* _areaAction;
+  QAction* _propertyAction;
+  QAction* _switchPortAction;
 #ifdef WITH_GRAPHVIZ
-  QAction* autoadjustAction;
+  QAction* _autoadjustAction;
 #endif
+  QAction* _propertiesAction;
+
+  qreal _insertTop;
+  qreal _insertLeft;
 };
 
-#endif // QNSTMENU_H
+#endif // STRUCTURALMENU_H

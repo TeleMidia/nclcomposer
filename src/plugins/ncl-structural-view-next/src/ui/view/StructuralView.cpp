@@ -51,24 +51,18 @@ StructuralView::~StructuralView()
 
 void StructuralView::createObjects()
 {
+  _menu = new StructuralMenu(this);
+  _menu->adjust();
+
   scene = new StructuralScene();
   scene->setParent(this);
   scene->setSceneRect(0, 0, 3600, 1800);
+  scene->setMenu(_menu);
 
   setScene(scene); centerOn(3600/2,1800/2);
 
   linkDialog = new StructuralLinkDialog(this);
 
-  connect(scene->_menu->redoAction, SIGNAL(triggered(bool)), this, SLOT(performRedo()));
-  connect(scene->_menu->undoAction, SIGNAL(triggered(bool)), this, SLOT(performUndo()));
-  connect(scene->_menu->pasteAction, SIGNAL(triggered(bool)), this, SLOT(performPaste()));
-  connect(scene->_menu->snapshotAction, SIGNAL(triggered(bool)), this, SLOT(performSnapshot()));
-
-#ifdef WITH_GRAPHVIZ
-      connect(scene->_menu->autoadjustAction, SIGNAL(triggered(bool)), this, SLOT(adjustAllWithGraphiviz()));
-#endif
-
-  connect(scene->_menu,SIGNAL(insert(StructuralType)), this,SLOT(create(StructuralType)));
 
   this->resize(scene->itemsBoundingRect().size().width(), scene->itemsBoundingRect().height());
 }
@@ -97,7 +91,37 @@ void StructuralView::resizeEvent(QResizeEvent *event)
 
 void StructuralView::createConnection()
 {
-  // TODO
+  connect(this, SIGNAL(undoStateChange(bool)), _menu, SLOT(switchUndo(bool)));
+  connect(this, SIGNAL(redoStateChange(bool)), _menu, SLOT(switchRedo(bool)));
+  connect(this, SIGNAL(cutStateChange(bool)), _menu, SLOT(switchCut(bool)));
+  connect(this, SIGNAL(copyStateChange(bool)), _menu, SLOT(switchCopy(bool)));
+  connect(this, SIGNAL(pasteStateChange(bool)), _menu, SLOT(switchPaste(bool)));
+  connect(this, SIGNAL(bodyStateChange(bool)), _menu, SLOT(switchBody(bool)));
+
+  connect(_menu, SIGNAL(performedHelp()), SLOT(performHelp()));
+  connect(_menu, SIGNAL(performedUndo()), SLOT(performUndo()));
+  connect(_menu, SIGNAL(performedRedo()), SLOT(performRedo()));
+  connect(_menu, SIGNAL(performedCut()), SLOT(performCut()));
+  connect(_menu, SIGNAL(performedCopy()), SLOT(performCopy()));
+  connect(_menu, SIGNAL(performedPaste()), SLOT(performPaste()));
+  connect(_menu, SIGNAL(performedDelete()), SLOT(performDelete()));
+  connect(_menu, SIGNAL(performedSnapshot()), SLOT(performSnapshot()));
+  connect(_menu, SIGNAL(performedMedia()), SLOT(performMedia()));
+  connect(_menu, SIGNAL(performedContext()), SLOT(performContext()));
+  connect(_menu, SIGNAL(performedSwitch()), SLOT(performSwitch()));
+  connect(_menu, SIGNAL(performedBody()), SLOT(performBody()));
+  connect(_menu, SIGNAL(performedArea()), SLOT(performArea()));
+  connect(_menu, SIGNAL(performedProperty()), SLOT(performProperty()));
+  connect(_menu, SIGNAL(performedPort()), SLOT(performPort()));
+  connect(_menu, SIGNAL(performedSwitchPort()), SLOT(performSwitchPort()));
+
+#ifdef WITH_GRAPHVIZ
+  connect(_menu, SIGNAL(performedAutoAdjust()), SLOT(performAutoAdjust()));
+#endif
+
+  connect(_menu, SIGNAL(performedProperties()), SLOT(performProperties()));
+
+  connect(_menu, SIGNAL(performedInsert(StructuralType,QMap<QString,QString>)), SLOT(performInsert(StructuralType,QMap<QString,QString>)));
 }
 
 bool StructuralView::hasEntity(QString uid)
@@ -212,6 +236,16 @@ void StructuralView::performZoomReset()
 {
   zoomStep = 0;
   resetMatrix();
+}
+
+void StructuralView::performPointer()
+{
+  setMod(false);
+}
+
+void StructuralView::performLink()
+{
+  setMod(true);
 }
 
 StructuralScene* StructuralView::getScene()
@@ -494,6 +528,7 @@ void StructuralView::insert(QString uid, QString parent, QMap<QString, QString> 
 
       entity->setStructuralUid(uid);
       entity->setStructuralProperties(properties);
+      entity->setMenu(_menu);
 
       entity->setSelected(false);
 
@@ -510,18 +545,6 @@ void StructuralView::insert(QString uid, QString parent, QMap<QString, QString> 
       connect(entity, SIGNAL(changed(QString,QMap<QString,QString>,QMap<QString,QString>,QMap<QString,QString>)), SLOT(change(QString,QMap<QString,QString>,QMap<QString,QString>,QMap<QString,QString>)));
       connect(entity, SIGNAL(selected(QString,QMap<QString,QString>)),SLOT(select(QString,QMap<QString,QString>)));
       connect(entity, SIGNAL(move(QString,QString)), SLOT(move(QString,QString)));
-
-      connect(entity->menu->deleteAction, SIGNAL(triggered(bool)), this, SLOT(performDelete()));
-      connect(entity->menu->redoAction, SIGNAL(triggered(bool)), this, SLOT(performRedo()));
-      connect(entity->menu->undoAction, SIGNAL(triggered(bool)), this, SLOT(performUndo()));
-      connect(entity->menu->cutAction, SIGNAL(triggered(bool)), this, SLOT(performCut()));
-      connect(entity->menu->pasteAction, SIGNAL(triggered(bool)), this, SLOT(performPaste()));
-      connect(entity->menu->copyAction, SIGNAL(triggered(bool)), this, SLOT(performCopy()));
-      connect(entity->menu->snapshotAction, SIGNAL(triggered(bool)), this, SLOT(performSnapshot()));
-#ifdef WITH_GRAPHVIZ
-      connect(entity->menu->autoadjustAction, SIGNAL(triggered(bool)), this, SLOT(adjustAllWithGraphiviz()));
-#endif
-      connect(entity->menu,SIGNAL(insert(StructuralType)), this,SLOT(create(StructuralType)));
 
       if (entities.size() <= 1){
         centerOn(entity);
@@ -1050,7 +1073,7 @@ void StructuralView::create(StructuralType type)
   create(type, properties, settings);
 }
 
-void StructuralView::create(StructuralType type, QMap<QString, QString> &properties, QMap<QString, QString> &settings)
+void StructuralView::create(StructuralType type, QMap<QString, QString> properties, QMap<QString, QString> settings)
 {
   QString uid = StructuralUtil::createUid();
   QString parent = "";
@@ -1091,7 +1114,7 @@ void StructuralView::create(StructuralType type, QMap<QString, QString> &propert
 
 void StructuralView::performHelp()
 {
-
+  // TODO:
 }
 
 void StructuralView::performUndo()
@@ -1771,9 +1794,66 @@ void StructuralView::performSnapshot()
     }
 }
 
+void StructuralView::performMinimap()
+{
+  setMiniMapVisible(!minimap->isVisible());
+}
+
+void StructuralView::performBody()
+{
+  create(Structural::Body);
+}
+
+void StructuralView::performContext()
+{
+  create(Structural::Context);
+}
+
+void StructuralView::performSwitch()
+{
+  create(Structural::Switch);
+}
+
+void StructuralView::performMedia()
+{
+  create(Structural::Media);
+}
+
+void StructuralView::performPort()
+{
+  create(Structural::Port);
+}
+
+void StructuralView::performArea()
+{
+  create(Structural::Area);
+}
+
+void StructuralView::performProperty()
+{
+  create(Structural::Property);
+}
+
+void StructuralView::performSwitchPort()
+{
+  create(Structural::SwitchPort);
+}
+
+#ifdef WITH_GRAPHVIZ
+void StructuralView::performAutoAdjust()
+{
+  adjustAllWithGraphiviz();
+}
+#endif
+
 void StructuralView::performProperties()
 {
+  // TODO
+}
 
+void StructuralView::performInsert(StructuralType type, QMap<QString, QString> properties)
+{
+  create(type, properties, StructuralUtil::createSettings());
 }
 
 void StructuralView::mouseMoveEvent(QMouseEvent* event)

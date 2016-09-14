@@ -9,12 +9,22 @@ StructuralScene::StructuralScene(QObject* parent)
 
 StructuralScene::~StructuralScene()
 {
-  delete _menu;
+
+}
+
+StructuralMenu* StructuralScene::getMenu() const
+{
+  return _menu;
+}
+
+void StructuralScene::setMenu(StructuralMenu* menu)
+{
+  _menu = menu;
 }
 
 void StructuralScene::createMenus()
 {
-  _menu = new StructuralMenu();
+//  _menu = new StructuralMenu();
 //  _menu->undoAction->setEnabled(false);
 //  _menu->redoAction->setEnabled(false);
 
@@ -22,7 +32,7 @@ void StructuralScene::createMenus()
 
 //  _menu->insertMenu->setEnabled(true);
 //  _menu->bodyAction->setEnabled(true);
-  _menu->updateInsertAction(Structural::NoType);
+//  _menu->updateInsertAction(Structural::NoType);
 }
 
 void StructuralScene::createConnections()
@@ -79,6 +89,10 @@ void StructuralScene::contextMenuEvent(QGraphicsSceneContextMenuEvent* event)
   if (!event->isAccepted())
   {
     _insertPoint = event->scenePos();
+
+    _menu->setInsertTop(event->scenePos().y());
+    _menu->setInsertLeft(event->scenePos().x());
+    _menu->adjust();
 
     _menu->exec(event->screenPos());
 
