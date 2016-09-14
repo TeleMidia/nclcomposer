@@ -21,8 +21,8 @@ StructuralContent::StructuralContent(StructuralEntity* parent)
   /* Default media position */
   if(parent)
   {
-    setTop(parent->getHeight()/2 - STR_DEFAULT_MEDIA_H/2);
-    setLeft(parent->getWidth()/2 - STR_DEFAULT_MEDIA_W/2);
+    setTop(parent->getHeight()/2 - STR_DEFAULT_CONTENT_H/2);
+    setLeft(parent->getWidth()/2 - STR_DEFAULT_CONTENT_W/2);
   }
   else
   {
@@ -30,8 +30,8 @@ StructuralContent::StructuralContent(StructuralEntity* parent)
     setLeft(0);
   }
 
-  setWidth(STR_DEFAULT_MEDIA_W);
-  setHeight(STR_DEFAULT_MEDIA_H);
+  setWidth(STR_DEFAULT_CONTENT_W);
+  setHeight(STR_DEFAULT_CONTENT_H);
 }
 
 StructuralContent::~StructuralContent()

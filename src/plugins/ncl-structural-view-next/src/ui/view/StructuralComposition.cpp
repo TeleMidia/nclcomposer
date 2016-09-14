@@ -28,8 +28,8 @@ StructuralComposition::StructuralComposition(StructuralEntity* parent)
   /* Default size and position */
   if(parent)
   {
-    setTop(parent->getHeight()/2 - STR_DEFAULT_CONTEXT_H/2);
-    setLeft(parent->getWidth()/2 - STR_DEFAULT_CONTEXT_W/2);
+    setTop(parent->getHeight()/2 - STR_DEFAULT_COMPOSITION_H/2);
+    setLeft(parent->getWidth()/2 - STR_DEFAULT_COMPOSITION_W/2);
   }
   else
   {
@@ -37,8 +37,8 @@ StructuralComposition::StructuralComposition(StructuralEntity* parent)
     setLeft(0);
   }
 
-  setWidth(STR_DEFAULT_CONTEXT_W);
-  setHeight(STR_DEFAULT_CONTEXT_H);
+  setWidth(STR_DEFAULT_COMPOSITION_W);
+  setHeight(STR_DEFAULT_COMPOSITION_H);
 
 
   createObjects();
@@ -56,17 +56,17 @@ StructuralComposition::~StructuralComposition()
 
 void StructuralComposition::createObjects()
 {
-  menu->deleteAction->setEnabled(true);
+//  _menu->_deleteAction->setEnabled(true);
 
-  menu->snapshotAction->setEnabled(true);
+//  _menu->_snapshotAction->setEnabled(true);
 
-  menu->insertMenu->setEnabled(true);
+//  _menu->_insertMenu->setEnabled(true);
 
-  menu->mediaAction->setEnabled(true);
-  menu->contextAction->setEnabled(true);
-  menu->switchAction->setEnabled(true);
-  menu->portAction->setEnabled(true);
-  menu->propertyAction->setEnabled(true);
+//  _menu->_mediaAction->setEnabled(true);
+//  _menu->_contextAction->setEnabled(true);
+//  _menu->_switchAction->setEnabled(true);
+//  _menu->_portAction->setEnabled(true);
+//  _menu->_propertyAction->setEnabled(true);
 
 }
 
@@ -103,24 +103,24 @@ void StructuralComposition::setStructuralType(const StructuralType subtype)
 {
   if (subtype == Structural::Context){
     setColor("#F4E4CC");
-    menu->switchPortAction->setEnabled(false);
-    menu->portAction->setEnabled(true);
+//    _menu->_switchPortAction->setEnabled(false);
+//    _menu->_portAction->setEnabled(true);
     if (getStructuralType() == Structural::NoType){
-      setWidth(STR_DEFAULT_CONTEXT_W);
-      setHeight(STR_DEFAULT_CONTEXT_H);
+      setWidth(STR_DEFAULT_COMPOSITION_W);
+      setHeight(STR_DEFAULT_COMPOSITION_H);
     }
   }else if (subtype == Structural::Switch){
     setColor("#C6E2FF");
-    menu->switchPortAction->setEnabled(true);
-    menu->portAction->setEnabled(false);
+//    _menu->_switchPortAction->setEnabled(true);
+//    _menu->_portAction->setEnabled(false);
     if (getStructuralType() == Structural::NoType){
-      setWidth(STR_DEFAULT_CONTEXT_W);
-      setHeight(STR_DEFAULT_CONTEXT_H);
+      setWidth(STR_DEFAULT_COMPOSITION_W);
+      setHeight(STR_DEFAULT_COMPOSITION_H);
     }
   }else if (subtype == Structural::Body){
     setColor("#EEEEEE");
-    menu->switchPortAction->setEnabled(false);
-    menu->portAction->setEnabled(true);
+//    _menu->_switchPortAction->setEnabled(false);
+//    _menu->_portAction->setEnabled(true);
     if (getStructuralType() == Structural::NoType){
       setWidth(STR_DEFAULT_BODY_W);
       setHeight(STR_DEFAULT_BODY_H);
@@ -279,8 +279,8 @@ void StructuralComposition::collapse(bool notify)
   {
     setHovering(false);
 
-    setTop(getTop() - (getUncollapedHeight()/2 - STR_DEFAULT_MEDIA_H/2));
-    setLeft(getLeft() - (getUncollapedWidth()/2 - STR_DEFAULT_MEDIA_W/2));
+    setTop(getTop() - (getUncollapedHeight()/2 - STR_DEFAULT_CONTENT_H/2));
+    setLeft(getLeft() - (getUncollapedWidth()/2 - STR_DEFAULT_CONTENT_W/2));
     setWidth(getUncollapedWidth());
     setHeight(getUncollapedHeight());
 
@@ -288,8 +288,8 @@ void StructuralComposition::collapse(bool notify)
     {
       if (e->getStructuralCategory() == Structural::Interface)
       {
-        e->setTop(((e->getTop()*getUncollapedHeight())/STR_DEFAULT_MEDIA_H));
-        e->setLeft(((e->getLeft()*getUncollapedWidth())/STR_DEFAULT_MEDIA_W));
+        e->setTop(((e->getTop()*getUncollapedHeight())/STR_DEFAULT_CONTENT_H));
+        e->setLeft(((e->getLeft()*getUncollapedWidth())/STR_DEFAULT_CONTENT_W));
       }
       else
       {
@@ -329,10 +329,10 @@ void StructuralComposition::collapse(bool notify)
       setUncollapedHeight(getHeight());
 //    }
 
-    setTop(getTop() + getUncollapedHeight()/2 - STR_DEFAULT_MEDIA_H/2);
-    setLeft(getLeft() + getUncollapedWidth()/2 - STR_DEFAULT_MEDIA_W/2);
-    setWidth(STR_DEFAULT_MEDIA_W);
-    setHeight(STR_DEFAULT_MEDIA_H);
+    setTop(getTop() + getUncollapedHeight()/2 - STR_DEFAULT_CONTENT_H/2);
+    setLeft(getLeft() + getUncollapedWidth()/2 - STR_DEFAULT_CONTENT_W/2);
+    setWidth(STR_DEFAULT_CONTENT_W);
+    setHeight(STR_DEFAULT_CONTENT_H);
 
 
     foreach(StructuralEntity* e, getStructuralEntities())
@@ -341,8 +341,8 @@ void StructuralComposition::collapse(bool notify)
       if (e->getStructuralCategory() == Structural::Interface)
       {
 
-        e->setTop(((e->getTop()*STR_DEFAULT_MEDIA_H)/getUncollapedHeight()));
-        e->setLeft(((e->getLeft()*STR_DEFAULT_MEDIA_W)/getUncollapedWidth()));
+        e->setTop(((e->getTop()*STR_DEFAULT_CONTENT_H)/getUncollapedHeight()));
+        e->setLeft(((e->getLeft()*STR_DEFAULT_CONTENT_W)/getUncollapedWidth()));
 
       }else{
 //        e->setStructuralParent(NULL);

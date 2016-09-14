@@ -10,47 +10,64 @@ class StructuralUtil {
 
 public:
   static QString createUid();
-  static QMap<QString,QString> createSettings();
-  static QMap<QString,QString> createSettings(const bool undo, const bool notify);
-  static QMap<QString,QString> createSettings(const QString &undo, const QString &notify, const QString &code);
-  static QMap<QString,QString> createCoreTranslations(const StructuralType type);
-  static QMap<QString,QString> createPluginTranslations(const StructuralType type);
 
-  static QString translateCategoryToString(const StructualCategory category);
+  static QMap<QString,QString> createProperties(qreal top, qreal left);
+  static QMap<QString,QString> createProperties(qreal top, qreal left, qreal width, qreal height);
+
+  static QMap<QString,QString> createSettings();
+  static QMap<QString,QString> createSettings(bool undo, bool notify);
+  static QMap<QString,QString> createSettings(const QString &undo, const QString &notify, const QString &code);
+
+  static QMap<QString,QString> createCoreTranslations(StructuralType type);
+  static QMap<QString,QString> createPluginTranslations(StructuralType type);
+
+  static QString translateCategoryToString(StructualCategory category);
   static StructualCategory translateStringToCategory(const QString &category);
-  static QString translateTypeToString(const StructuralType type);
+
+  static QString translateTypeToString(StructuralType type);
   static StructuralType translateStringToType(const QString &type);
-  static QString translateRoleToString(const StructuralRole role);
+
+  static QString translateRoleToString(StructuralRole role);
   static StructuralRole translateStringToRole(const QString &role);
-  static QString translateMimeTypeToString(const StructuralMimeType mimetype);
+
+  static QString translateMimeTypeToString(StructuralMimeType mimetype);
   static StructuralMimeType translateStringToMimeType(const QString &mimetype);
 
-  static QString getEntityIcon(const StructuralType type);
-  static QString getMimeTypeIcon(const StructuralMimeType type);
-  static QString getEntityPrefix(const StructuralType type);
+  static QString getEntityIcon(StructuralType type);
+  static QString getMimeTypeIcon(StructuralMimeType type);
+
+  static QString getEntityPrefix(StructuralType type);
+
   static StructuralMimeType getMimeTypeByExtension(const QString &extension);
 
-  static bool isConditionRole(const StructuralRole role);
+  static bool isConditionRole(StructuralRole role);
   static bool isConditionRole(const QString &role);
-  static bool isActionRole(const StructuralRole role);
+
+  static bool isActionRole(StructuralRole role);
   static bool isActionRole(const QString &role);
 
   static QString formatId(const QString &id);
-  static bool validateKinship(const StructuralType type, const StructuralType parent);
+
+  static bool validateKinship(StructuralType type, StructuralType parent);
 
 private:
   static std::map <StructualCategory, QString> _mapCategoryToString;
   static std::map <QString, StructualCategory> _mapStringToCategory;
+
   static std::map <QString, StructuralType> _mapStringToType;
   static std::map <StructuralType, QString> _mapTypeToString;
+
   static std::map <StructuralRole, QString> _mapRoleToString;
   static std::map <QString, StructuralRole> _mapStringToRole;
+
   static std::map <StructuralMimeType, QString>  _mapMimeTypeToString;
   static std::map <QString, StructuralMimeType>  _mapStringToMimeType;
 
   static std::map <StructuralType, QString> _entitiesIcon;
-  static std::map  <StructuralType, QString>  _entitiesPrefix;
   static std::map <StructuralMimeType, QString>  _mimetypesIcon;
+
+  static std::map  <StructuralType, QString>  _entitiesPrefix;
+
   static std::map <QString, StructuralMimeType>  _mimetypesExtension;
 };
 
