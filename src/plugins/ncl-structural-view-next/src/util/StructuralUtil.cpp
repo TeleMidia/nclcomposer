@@ -226,7 +226,7 @@ std::map<Structural::StructuralType, QString> StructuralUtil::_mapTypeToString =
 
 (Structural::NoType, "");
 
-std::map <QString, Structural::StructuralType> StructuralUtil::_mapStringToType =
+std::map<QString, Structural::StructuralType> StructuralUtil::_mapStringToType =
     invert<QString, Structural::StructuralType>(StructuralUtil::_mapTypeToString);
 
 QString StructuralUtil::translateTypeToString(StructuralType type)
@@ -245,7 +245,7 @@ StructuralType StructuralUtil::translateStringToType(const QString &type)
     return Structural::NoType;
 }
 
-std::map <Structural::StructuralRole, QString> StructuralUtil::_mapRoleToString =
+std::map<Structural::StructuralRole, QString> StructuralUtil::_mapRoleToString =
     StructuralMap<Structural::StructuralRole, QString>
 (Structural::onBegin, "onBegin")
 (Structural::onEnd, "onEnd")
@@ -265,7 +265,7 @@ std::map <Structural::StructuralRole, QString> StructuralUtil::_mapRoleToString 
 
 (Structural::NoRole, "");
 
-std::map <QString, Structural::StructuralRole> StructuralUtil::_mapStringToRole =
+std::map<QString, Structural::StructuralRole> StructuralUtil::_mapStringToRole =
     invert<QString, Structural::StructuralRole> (StructuralUtil::_mapRoleToString);
 
 QString StructuralUtil::translateRoleToString(StructuralRole role)
@@ -284,7 +284,7 @@ StructuralRole StructuralUtil::translateStringToRole(const QString &role)
     return Structural::NoRole;
 }
 
-std::map <Structural::StructuralMimeType, QString> StructuralUtil::_mapMimeTypeToString =
+std::map<Structural::StructuralMimeType, QString> StructuralUtil::_mapMimeTypeToString =
     StructuralMap<Structural::StructuralMimeType, QString >
 (Structural::Text, "text")
 (Structural::Image, "image")
@@ -297,7 +297,7 @@ std::map <Structural::StructuralMimeType, QString> StructuralUtil::_mapMimeTypeT
 
 (Structural::NoMimeType, "");
 
-std::map <QString, Structural::StructuralMimeType> StructuralUtil::_mapStringToMimeType =
+std::map<QString, Structural::StructuralMimeType> StructuralUtil::_mapStringToMimeType =
     invert<QString, Structural::StructuralMimeType> (StructuralUtil::_mapMimeTypeToString);
 
 QString StructuralUtil::translateMimeTypeToString(StructuralMimeType mimetype)
@@ -316,7 +316,7 @@ StructuralMimeType StructuralUtil::translateStringToMimeType(const QString &mime
     return Structural::NoMimeType;
 }
 
-std::map <Structural::StructuralType, QString> StructuralUtil::_entitiesIcon =
+std::map<Structural::StructuralType, QString> StructuralUtil::_entitiesIcon =
     StructuralMap<Structural::StructuralType, QString >
 (Structural::Media, ":/images/icon/media")
 (Structural::Body, ":/images/icon/body")
@@ -341,28 +341,7 @@ QString StructuralUtil::getIcon(StructuralType type)
     return "";
 }
 
-std::map <Structural::StructuralMimeType, QString> StructuralUtil::_mimetypesIcon =
-    StructuralMap<Structural::StructuralMimeType, QString >
-(Structural::Text, ":/icon/text")
-(Structural::Image, ":/icon/image")
-(Structural::Audio, ":/icon/audio")
-(Structural::Video, ":/icon/video")
-(Structural::HTML, ":/icon/html")
-(Structural::NCL, ":/icon/ncl")
-(Structural::Settings, ":/icon/settings")
-(Structural::NCLua, ":/icon/script")
-
-(Structural::NoMimeType, ":/images/icon/media");
-
-QString StructuralUtil::getMimeTypeIcon(StructuralMimeType type)
-{
-  if(_mimetypesIcon.count(type))
-    return _mimetypesIcon[type];
-  else
-    return ":/images/icon/media";
-}
-
-std::map <Structural::StructuralType, QString> StructuralUtil::_entitiesPrefix =
+std::map<Structural::StructuralType, QString> StructuralUtil::_entitiesPrefix =
     StructuralMap<Structural::StructuralType, QString >
 (Structural::Media, "m")
 (Structural::Body, "b")
@@ -387,7 +366,68 @@ QString StructuralUtil::getPrefix(StructuralType type)
     return "e";
 }
 
-std::map <QString, Structural::StructuralMimeType> StructuralUtil::_mimetypesExtension =
+QString StructuralUtil::getTooltip(StructuralType type, const QString &title, const QString &info, const QString &warning, const QString &error, const QString &extra)
+{
+  QString tooltip;
+
+  // Adding type
+  tooltip += translateTypeToString(type);
+  tooltip += " ";
+
+  // Adding title
+  if (!title.isEmpty())
+    tooltip += "("+title+")";
+  else
+    tooltip += "(?)";
+
+  tooltip += " ";
+
+  // Adding extra
+  if (type == Structural::Link){
+    if (!extra.isEmpty())
+      tooltip += ": "+extra;
+    else
+      tooltip += ": Unknow";
+
+    tooltip += " ";
+  }
+
+  // Adding messages
+  if (!error.isEmpty())
+    tooltip += "- Error: "+error;
+  else if (!warning.isEmpty())
+    tooltip += "- Warning: "+warning;
+  else if (!info.isEmpty())
+    tooltip += "- Info: "+info;
+
+  // Formating
+  tooltip[0] = tooltip[0].toUpper();
+
+  return tooltip;
+}
+
+std::map<Structural::StructuralMimeType, QString> StructuralUtil::_mimetypesIcon =
+    StructuralMap<Structural::StructuralMimeType, QString >
+(Structural::Text, ":/icon/text")
+(Structural::Image, ":/icon/image")
+(Structural::Audio, ":/icon/audio")
+(Structural::Video, ":/icon/video")
+(Structural::HTML, ":/icon/html")
+(Structural::NCL, ":/icon/ncl")
+(Structural::Settings, ":/icon/settings")
+(Structural::NCLua, ":/icon/script")
+
+(Structural::NoMimeType, ":/images/icon/media");
+
+QString StructuralUtil::getMimeTypeIcon(StructuralMimeType type)
+{
+  if(_mimetypesIcon.count(type))
+    return _mimetypesIcon[type];
+  else
+    return ":/images/icon/media";
+}
+
+std::map<QString, Structural::StructuralMimeType> StructuralUtil::_mimetypesExtension =
     StructuralMap <QString, Structural::StructuralMimeType>
 ("txt", Structural::Text)
 ("png", Structural::Image)

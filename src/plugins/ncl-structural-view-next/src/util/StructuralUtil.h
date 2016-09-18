@@ -1,6 +1,7 @@
 #ifndef STRUCTURALUTIL_H
 #define STRUCTURALUTIL_H
 
+#include <QObject>
 #include <QMap>
 
 #include "StructuralEntity.h"
@@ -35,7 +36,7 @@ public:
 
   static QString getIcon(StructuralType type);
   static QString getPrefix(StructuralType type);
-  static QString getTooltip(StructuralType type);
+  static QString getTooltip(StructuralType type, const QString &title = "", const QString &info = "", const QString &warning = "", const QString &error = "", const QString &extra = "");
 
   static QString getMimeTypeIcon(StructuralMimeType mimetype);
   static StructuralMimeType getMimeTypeByExtension(const QString &extension);
@@ -51,24 +52,23 @@ public:
   static bool validateKinship(StructuralType type, StructuralType parent);
 
 private:
-  static std::map <StructualCategory, QString> _mapCategoryToString;
-  static std::map <QString, StructualCategory> _mapStringToCategory;
+  static std::map<StructualCategory, QString> _mapCategoryToString;
+  static std::map<QString, StructualCategory> _mapStringToCategory;
 
-  static std::map <QString, StructuralType> _mapStringToType;
-  static std::map <StructuralType, QString> _mapTypeToString;
+  static std::map<QString, StructuralType> _mapStringToType;
+  static std::map<StructuralType, QString> _mapTypeToString;
 
-  static std::map <StructuralRole, QString> _mapRoleToString;
-  static std::map <QString, StructuralRole> _mapStringToRole;
+  static std::map<StructuralRole, QString> _mapRoleToString;
+  static std::map<QString, StructuralRole> _mapStringToRole;
 
-  static std::map <StructuralMimeType, QString>  _mapMimeTypeToString;
-  static std::map <QString, StructuralMimeType>  _mapStringToMimeType;
+  static std::map<StructuralMimeType, QString>  _mapMimeTypeToString;
+  static std::map<QString, StructuralMimeType>  _mapStringToMimeType;
 
-  static std::map <StructuralType, QString> _entitiesIcon;
-  static std::map <StructuralMimeType, QString>  _mimetypesIcon;
+  static std::map<StructuralType, QString> _entitiesIcon;
+  static std::map<StructuralType, QString> _entitiesPrefix;
 
-  static std::map  <StructuralType, QString>  _entitiesPrefix;
-
-  static std::map <QString, StructuralMimeType>  _mimetypesExtension;
+  static std::map<StructuralMimeType, QString>  _mimetypesIcon;
+  static std::map<QString, StructuralMimeType>  _mimetypesExtension;
 };
 
 template <typename T, typename U>
