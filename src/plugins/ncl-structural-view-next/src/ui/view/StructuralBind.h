@@ -17,8 +17,6 @@ public:
 
   QString getRole() const;
 
-  virtual void refresh();
-
 
   void setRole(const QString &qt_check_for_QOBJECT_macrorole);
 

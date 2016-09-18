@@ -67,16 +67,6 @@ void StructuralBind::setType(StructuralRole type)
   }
 }
 
-void StructuralBind::refresh()
-{
-  QString tip = "";
-  QString name = (getStructuralId() != "" ? getStructuralId() : "?");
-
-  tip += "Bind ("+name+")";
-
-  setToolTip(tip);
-}
-
 
 void StructuralBind::setLocalProperty(const QString &name, const QString &value)
 {/*
@@ -101,6 +91,17 @@ QString StructuralBind::getIcon()
 
 void StructuralBind::adjust(bool avoidCollision, bool rec)
 {
+  StructuralEdge::adjust(avoidCollision, rec);
+
+  // Adjusting properties...
+  QString tip = "";
+  QString name = (getStructuralId() != "" ? getStructuralId() : "?");
+
+  tip += "Bind ("+name+")";
+
+  setToolTip(tip);
+
+  // Adjusting position...
   if(isCondition())
     adjust_condition();
    else

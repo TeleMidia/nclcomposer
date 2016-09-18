@@ -8,14 +8,6 @@ StructuralInterface::StructuralInterface(StructuralEntity* parent)
 
   setResizable(false);
 
-  setStructuralId("");
-
-  setRefer(false);
-
-  setHexColor("#000000");
-  setHexBorderColor("#000000");
-
-  /* Default size for interface */
   setTop(0);
   setLeft(0);
   setWidth(STR_DEFAULT_INTERFACE_W);
@@ -27,69 +19,39 @@ StructuralInterface::~StructuralInterface()
 
 }
 
-bool StructuralInterface::isRefer()
+void StructuralInterface::adjust(bool avoidCollision,  bool rec)
 {
-  return _isRefer;
-}
+  StructuralEntity::adjust(avoidCollision, rec);
 
-void StructuralInterface::setRefer(bool isRefer)
-{
-  _isRefer = isRefer;
-}
+  // Adjusting properties...
+  StructuralType type = getStructuralType();
 
-void StructuralInterface::setStructuralType(const StructuralType subtype)
-{
-  if (subtype == Structural::Port){
-    setHexColor("#000000");
-    setHexBorderColor("#000000");
+  if (type == Structural::Port){
     icon = QPixmap(":/images/icon/port");
-  }else if (subtype == Structural::Area){
-    setHexColor("#F4A460");
-    setHexBorderColor("#999999");
+  }else if (type == Structural::Area){
     icon = QPixmap(":/images/icon/area");
-  }else if (subtype == Structural::Property){
-    setHexColor("#999999");
-    setHexBorderColor("#666666");
+  }else if (type == Structural::Property){
     icon = QPixmap(":/images/icon/property");
-  }else if (subtype == Structural::SwitchPort){
-    setHexColor("#000000");
-    setHexBorderColor("#000000");
+  }else if (type == Structural::SwitchPort){
     icon = QPixmap(":/images/icon/switchport");
   }
 
-  StructuralEntity::setStructuralType(subtype);
-
-  refresh();
-}
-
-void StructuralInterface::setHexColor(const QString &hexColor)
-{
-  this->hexColor = hexColor;
-}
-
-void StructuralInterface::setHexBorderColor(const QString &hexBorderColor)
-{
-  this->hexBorderColor = hexBorderColor;
-}
-
-void StructuralInterface::refresh()
-{
   QString tip = "";
   QString name = (getStructuralProperty(STR_PROPERTY_ENTITY_ID) != "" ? getStructuralProperty(STR_PROPERTY_ENTITY_ID) : "?");
 
-  if (getStructuralType() == Structural::Port)
+  if (type == Structural::Port)
   {
     tip += "Port ("+name+")";
   }
-  else if (getStructuralType() == Structural::Area)
+  else if (type == Structural::Area)
   {
     tip += "Area ("+name+")";
   }
-  else if (getStructuralType() == Structural::Property)
+  else if (type == Structural::Property)
   {
     tip += "Property ("+name+")";
   }
-  else if (getStructuralType() == Structural::SwitchPort)
+  else if (type == Structural::SwitchPort)
   {
     tip += "SwitchPort ("+name+")";
   }
@@ -99,11 +61,10 @@ void StructuralInterface::refresh()
   }
 
   setToolTip(tip);
-}
 
 
-void StructuralInterface::  adjust(bool avoidCollision,  bool rec)
-{
+  // Adjusting position...
+
   StructuralEntity* parent = getStructuralParent();
 
   if (parent != NULL)
@@ -451,18 +412,6 @@ void StructuralInterface::resize(QGraphicsSceneMouseEvent* event)
 
 void StructuralInterface::draw(QPainter* painter)
 {
-  QColor bg(hexColor);
-  QColor border(hexBorderColor);
-
-  if (isRefer())
-  {
-    bg.setAlpha(75);
-    border.setAlpha(75);
-  }
-
-  painter->setBrush(QBrush(bg));
-  painter->setPen(QPen(QBrush(border), 0, Qt::SolidLine));
-
 //  painter->drawRect(4 + 8/2, 4 + 8/2, getWidth()-8, getHeight()-8);
 
   painter->drawPixmap(4 + 4/2, 4 + 4/2, getWidth()-4, getHeight()-4,icon);

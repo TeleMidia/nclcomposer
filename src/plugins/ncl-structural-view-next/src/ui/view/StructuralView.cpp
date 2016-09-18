@@ -528,6 +528,7 @@ void StructuralView::insert(QString uid, QString parent, QMap<QString, QString> 
 
       entity->setStructuralUid(uid);
       entity->setStructuralProperties(properties);
+
       entity->setMenu(_menu);
 
       entity->setSelected(false);
@@ -535,8 +536,6 @@ void StructuralView::insert(QString uid, QString parent, QMap<QString, QString> 
       entities[uid] = entity;
       if (entity->getStructuralId().isEmpty())
         updateEntityWithUniqueNstId(entity);
-
-      entity->refresh();
 
       entity->adjust(avoidCollision);
 
@@ -960,7 +959,7 @@ void StructuralView::markError(const QString &uid, const QString &msg)
     StructuralEntity* entity = entities.value(uid);
     entity->setError(true);
     entity->setErrorMsg(msg);
-    entity->refresh();
+    entity->adjust();
   }
 }
 
@@ -1700,7 +1699,7 @@ bool StructuralView::updateEntityWithUniqueNstId(StructuralEntity *entity)
       entityCounter[type] = 0;
 
     // change this check in future
-    QString prefix = StructuralUtil::getEntityPrefix(type);
+    QString prefix = StructuralUtil::getPrefix(type);
 
 
     bool match = false;

@@ -58,23 +58,14 @@ void StructuralContent::setSource(const QString &source)
   StructuralNode::setStructuralProperty(STR_PROPERTY_CONTENT_LOCATION, source);
 }
 
-void StructuralContent::setStructuralType(StructuralType type)
+void StructuralContent::adjust(bool avoidCollision,  bool rec)
 {
-  StructuralNode::setStructuralType(type);
-}
+  StructuralNode::adjust(avoidCollision,rec);
 
-void StructuralContent::setStructuralProperty(const QString &name, const QString &value)
-{
-  if (name == STR_PROPERTY_CONTENT_LOCATION)
-    setSource(value);
-  else if (name == STR_PROPERTY_CONTENT_MIMETYPE)
-    setMediaType(StructuralUtil::translateStringToMimeType(value));
-  else
-    StructuralNode::setStructuralProperty(name, value);
-}
+  // Adjusting properties
+  setSource(getStructuralProperty(STR_PROPERTY_CONTENT_LOCATION));
+  setMediaType(StructuralUtil::translateStringToMimeType(getStructuralProperty(STR_PROPERTY_CONTENT_LOCATION)));
 
-void StructuralContent::refresh()
-{
   QString tip = "";
   QString name = (getStructuralId() != "" ? getStructuralId() : "?");
 

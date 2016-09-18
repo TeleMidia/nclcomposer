@@ -98,7 +98,7 @@ void StructuralEdge::setAdjAngle(qreal adjangle)
 
 void StructuralEdge::adjust(bool avoidCollision,  bool rec)
 {
-
+  StructuralEntity::adjust(avoidCollision, rec);
 
   if (entitya != NULL && entityb != NULL)
   {

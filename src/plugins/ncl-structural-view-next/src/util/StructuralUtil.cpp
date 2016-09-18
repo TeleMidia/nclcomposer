@@ -333,7 +333,7 @@ std::map <Structural::StructuralType, QString> StructuralUtil::_entitiesIcon =
 
 (Structural::NoType, "");
 
-QString StructuralUtil::getEntityIcon(StructuralType type)
+QString StructuralUtil::getIcon(StructuralType type)
 {
   if(_entitiesIcon.count(type))
     return _entitiesIcon[type];
@@ -379,7 +379,7 @@ std::map <Structural::StructuralType, QString> StructuralUtil::_entitiesPrefix =
 
 (Structural::NoType, "e");
 
-QString StructuralUtil::getEntityPrefix(StructuralType type)
+QString StructuralUtil::getPrefix(StructuralType type)
 {
   if(_entitiesPrefix.count(type))
     return _entitiesPrefix[type];

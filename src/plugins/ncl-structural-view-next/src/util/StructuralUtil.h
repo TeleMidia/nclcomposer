@@ -33,11 +33,11 @@ public:
   static QString translateMimeTypeToString(StructuralMimeType mimetype);
   static StructuralMimeType translateStringToMimeType(const QString &mimetype);
 
-  static QString getEntityIcon(StructuralType type);
-  static QString getMimeTypeIcon(StructuralMimeType type);
+  static QString getIcon(StructuralType type);
+  static QString getPrefix(StructuralType type);
+  static QString getTooltip(StructuralType type);
 
-  static QString getEntityPrefix(StructuralType type);
-
+  static QString getMimeTypeIcon(StructuralMimeType mimetype);
   static StructuralMimeType getMimeTypeByExtension(const QString &extension);
 
   static bool isConditionRole(StructuralRole role);

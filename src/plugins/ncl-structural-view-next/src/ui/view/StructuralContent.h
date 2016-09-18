@@ -24,10 +24,6 @@ public:
 
   void setSource(const QString &source);
 
-  virtual void setStructuralType(StructuralType _subtype);
-
-  virtual void setStructuralProperty(const QString &name, const QString &value);
-
   QString getSource() const;
 
   QString getRefer() const;
@@ -42,7 +38,7 @@ public:
 
   void setInstance(const QString &instance);
 
-  virtual void refresh();
+  virtual void adjust(bool avoidCollision = false,  bool rec = true);
 
 protected:
   virtual void draw(QPainter* painter);

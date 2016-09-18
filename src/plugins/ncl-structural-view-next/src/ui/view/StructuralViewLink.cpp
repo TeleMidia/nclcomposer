@@ -27,6 +27,8 @@ void StructuralViewLink::setLine(QLineF line)
 
 void StructuralViewLink::adjust(bool avoidCollision, bool rec)
 {
+  StructuralEntity::adjust(avoidCollision, rec);
+
   QPointF pointa = line.p1();
   QPointF pointb = line.p2();
 

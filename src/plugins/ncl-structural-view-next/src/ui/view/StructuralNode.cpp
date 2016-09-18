@@ -141,6 +141,8 @@ void StructuralNode::inside()
 
 void StructuralNode::adjust(bool avoidCollision, bool rec)
 {
+  StructuralEntity::adjust(avoidCollision, rec);
+
   if (rec){
     foreach(StructuralEntity* entity, getStructuralEntities())
     {

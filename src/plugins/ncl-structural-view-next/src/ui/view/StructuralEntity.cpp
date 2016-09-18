@@ -90,8 +90,6 @@ void StructuralEntity::setStructuralId(const QString &id)
 {
   _id = id;
   _properties.insert(STR_PROPERTY_ENTITY_ID, id) ;
-
-  refresh();
 }
 
 StructualCategory StructuralEntity::getStructuralCategory() const
@@ -155,9 +153,12 @@ void StructuralEntity::setStructuralProperties(const QMap<QString, QString> &pro
     }
   }
 
+
   foreach (QString name, properties.keys()){
-    setStructuralProperty(name, properties.value(name));
+    _properties[name] = properties.value(name);
   }
+
+  adjust();
 }
 
 QString StructuralEntity::getStructuralProperty(const QString &name) const
@@ -167,54 +168,30 @@ QString StructuralEntity::getStructuralProperty(const QString &name) const
 
 void StructuralEntity::setStructuralProperty(const QString &name, const QString &value)
 {
-  if (name == STR_PROPERTY_ENTITY_TOP)
-    setTop(value.toDouble());
+  _properties.insert(name, value);
+}
 
-  else if (name == STR_PROPERTY_ENTITY_LEFT)
-    setLeft(value.toDouble());
+void StructuralEntity::adjust(bool avoidCollision, bool rec)
+{
+  setStructuralId(_properties[STR_PROPERTY_ENTITY_ID]);
+  setStructuralUid(_properties[STR_PROPERTY_ENTITY_UID]);
+  setStructuralCategory(StructuralUtil::translateStringToCategory(_properties[STR_PROPERTY_ENTITY_CATEGORY]));
+  setStructuralType(StructuralUtil::translateStringToType(_properties[STR_PROPERTY_ENTITY_TYPE]));
 
-  else if (name == STR_PROPERTY_ENTITY_WIDTH)
-    setWidth(value.toDouble());
+  setTop(_properties[STR_PROPERTY_ENTITY_TOP].toDouble());
+  setLeft(_properties[STR_PROPERTY_ENTITY_LEFT].toDouble());
+  setWidth(_properties[STR_PROPERTY_ENTITY_WIDTH].toDouble());
+  setHeight(_properties[STR_PROPERTY_ENTITY_HEIGHT].toDouble());
 
-  else if (name == STR_PROPERTY_ENTITY_HEIGHT)
-    setHeight(value.toDouble());
+  setUncollapedTop(_properties[STR_PROPERTY_ENTITY_UNCOLLAPSED_TOP].toDouble());
+  setUncollapedLeft(_properties[STR_PROPERTY_ENTITY_UNCOLLAPSED_LEFT].toDouble());
+  setUncollapedWidth(_properties[STR_PROPERTY_ENTITY_UNCOLLAPSED_WIDTH].toDouble());
+  setUncollapedHeight(_properties[STR_PROPERTY_ENTITY_UNCOLLAPSED_HEIGHT].toDouble());
 
-  else if (name == STR_PROPERTY_ENTITY_UNCOLLAPSED_TOP)
-    setUncollapedTop(value.toDouble());
+  setzIndex(_properties[STR_PROPERTY_ENTITY_ZINDEX].toInt());
 
-  else if (name == STR_PROPERTY_ENTITY_UNCOLLAPSED_LEFT)
-    setUncollapedLeft(value.toDouble());
-
-  else if (name == STR_PROPERTY_ENTITY_UNCOLLAPSED_WIDTH)
-    setUncollapedWidth(value.toDouble());
-
-  else if (name == STR_PROPERTY_ENTITY_UNCOLLAPSED_HEIGHT)
-    setUncollapedHeight(value.toDouble());
-
-  else if (name == STR_PROPERTY_ENTITY_ZINDEX)
-    setzIndex(value.toInt());
-
-  else if (name == STR_PROPERTY_ENTITY_ID)
-    setStructuralId(value);
-
-  else if (name == STR_PROPERTY_ENTITY_UID)
-    setStructuralUid(value);
-
-  else if (name == STR_PROPERTY_ENTITY_CATEGORY)
-    setStructuralCategory(StructuralUtil::translateStringToCategory(value));
-
-  else if (name == STR_PROPERTY_ENTITY_TYPE)
-    setStructuralType(StructuralUtil::translateStringToType(value));
-
-  else if (name == STR_PROPERTY_ENTITY_HIDDEN)
-    setHidden((value == "1" ? true : false));
-
-  else if (name == STR_PROPERTY_ENTITY_UNCOLLAPSED)
-    setUncollapsed((value == "1" ? true : false));
-
-
-  else
-    _properties.insert(name, value);
+  setHidden((_properties[STR_PROPERTY_ENTITY_HIDDEN] == STR_VALUE_TRUE ? true : false));
+  setUncollapsed((_properties[STR_PROPERTY_ENTITY_UNCOLLAPSED] == STR_VALUE_TRUE ? true : false));
 }
 
 bool StructuralEntity::isMoveable() const

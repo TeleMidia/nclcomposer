@@ -24,9 +24,6 @@ public:
 
   ~StructuralComposition();
 
-  virtual void setStructuralType(const StructuralType _subtype);
-  virtual void setStructuralProperty(const QString &name, const QString &value);
-
   QString getColor() const;
 
   void setColor(QString color);
@@ -41,7 +38,7 @@ public:
 
   void collapse(bool notify = false);
 
-  virtual void refresh();
+  virtual void adjust(bool avoidCollision = false,  bool rec = true);
 
 private:
   void createObjects();

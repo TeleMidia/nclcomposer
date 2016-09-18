@@ -15,7 +15,7 @@ public:
 
   ~StructuralLink();
 
-  virtual void refresh();
+  virtual void adjust(bool avoidCollision = false,  bool rec = true);
 
 signals:
   void showLinkEditDialog(StructuralLink* entity);
