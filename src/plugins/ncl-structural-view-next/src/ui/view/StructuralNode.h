@@ -21,7 +21,7 @@ public:
 
   virtual void inside();
 
-  virtual void adjust(bool avoidCollision = false,  bool rec = true);
+  virtual void adjust(bool collision = false,  bool recursion = true);
 
 protected:
   virtual void draw(QPainter* painter) = 0;

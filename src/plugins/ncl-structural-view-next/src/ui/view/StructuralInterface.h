@@ -10,18 +10,13 @@ public:
   StructuralInterface(StructuralEntity* parent = 0);
   virtual ~StructuralInterface();
 
-  virtual void adjust(bool avoidCollision = true,  bool rec = true);
+  virtual void adjust(bool collision = false,  bool recursion = true);
 
 protected:
   virtual void draw(QPainter* painter);
-  virtual void delineate(QPainterPath* painter) const;
-  virtual void move(QGraphicsSceneMouseEvent* event);
-  virtual void resize(QGraphicsSceneMouseEvent* event);
 
 private:
-  void adjustToBorder();
-
-  QPixmap icon;
+  void constrain();
 };
 
 #endif // STRUCTURALINTERFACE_H

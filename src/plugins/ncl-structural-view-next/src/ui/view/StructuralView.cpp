@@ -474,7 +474,7 @@ void StructuralView::insert(QString uid, QString parent, QMap<QString, QString> 
       }
     }
 
-    bool avoidCollision = true;
+    bool collision = false;
 
     if (entity != NULL)
     {
@@ -505,14 +505,14 @@ void StructuralView::insert(QString uid, QString parent, QMap<QString, QString> 
         if (entity->getStructuralCategory() != Structural::Edge){
           if (!properties.value(STR_PROPERTY_ENTITY_TOP).isEmpty() && !properties.value(STR_PROPERTY_ENTITY_LEFT).isEmpty())
           {
-            avoidCollision = false;
+            collision = true;
           }
           else
           {
             entity->setTop(entities[parent]->getHeight()/2 - entity->getHeight()/2);
             entity->setLeft(entities[parent]->getWidth()/2 - entity->getWidth()/2);
 
-            avoidCollision = true;
+            collision = false;
           }
         }
       }
@@ -537,7 +537,7 @@ void StructuralView::insert(QString uid, QString parent, QMap<QString, QString> 
       if (entity->getStructuralId().isEmpty())
         updateEntityWithUniqueNstId(entity);
 
-      entity->adjust(avoidCollision);
+      entity->adjust(collision);
 
       connect(entity, SIGNAL(inserted(QString,QString,QMap<QString,QString>,QMap<QString,QString>)),SLOT(insert(QString,QString,QMap<QString,QString>,QMap<QString,QString>)));
       connect(entity, SIGNAL(removed(QString,QMap<QString,QString>)),SLOT(remove(QString,QMap<QString,QString>)));
@@ -845,7 +845,7 @@ void StructuralView:: change(QString uid, QMap<QString, QString> properties, QMa
        ((StructuralComposition*) entity)->collapse(false);
 
      entity->setStructuralProperties(properties);
-     entity->adjust(false);
+     entity->adjust(true);
 
 
      if (entity->getStructuralType() ==  Structural::Bind) {
@@ -978,7 +978,7 @@ void StructuralView::select(QString uid, QMap<QString, QString> settings)
       if (_selected != NULL)
       {
         _selected->setSelected(false);
-        _selected->adjust(false);
+        _selected->adjust(true);
       }
 
 
@@ -1949,7 +1949,7 @@ void StructuralView::mousePressEvent(QMouseEvent* event)
         if (_selected != NULL)
         {
           _selected->setSelected(false);
-          _selected->adjust(false);
+          _selected->adjust(true);
         }
 
         _selected_UID = "";

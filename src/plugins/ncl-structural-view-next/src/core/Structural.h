@@ -84,6 +84,8 @@
 //
 
 // Entities defines
+#define STR_DEFAULT_PADDING 4
+
 #define STR_DEFAULT_ANCHOR_W 8
 #define STR_DEFAULT_ANCHOR_H 8
 
@@ -101,6 +103,8 @@
 #define STR_DEFAULT_LINK_H 14
 
 // Interfaces defines
+#define STR_DEFAULT_INTERFACE_PADDING 1
+
 #define STR_DEFAULT_INTERFACE_W 18
 #define STR_DEFAULT_INTERFACE_H 18
 
