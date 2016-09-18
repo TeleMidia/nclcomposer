@@ -47,6 +47,8 @@ public:
   static bool isActionRole(StructuralRole role);
   static bool isActionRole(const QString &role);
 
+  static void adjustEdges(StructuralEntity* entity);
+
   static QString formatId(const QString &id);
 
   static bool validateKinship(StructuralType type, StructuralType parent);

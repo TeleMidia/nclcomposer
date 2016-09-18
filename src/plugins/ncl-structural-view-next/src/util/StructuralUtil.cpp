@@ -1,5 +1,7 @@
 #include "StructuralUtil.h"
 
+#include "StructuralEdge.h"
+
 QString StructuralUtil::createUid()
 {
   return QUuid::createUuid().toString();
@@ -482,6 +484,30 @@ bool StructuralUtil::isActionRole(StructuralRole role)
 bool StructuralUtil::isActionRole(const QString &role)
 {
   return isActionRole(_mapStringToRole[role]);
+}
+
+void StructuralUtil::adjustEdges(StructuralEntity* entity)
+{
+  StructuralEntity* parent = entity->getStructuralParent();
+
+  if (parent != NULL)
+  {
+    QVector<StructuralEntity*> relatives;
+    relatives = parent->getStructuralEntities();
+
+    if (parent->getStructuralParent() != NULL){
+      relatives += parent->getStructuralParent()->getStructuralEntities();
+    }
+
+    foreach (StructuralEntity* relative, relatives) {
+      if (relative->getStructuralCategory() == Structural::Edge){
+        StructuralEdge *edge = (StructuralEdge*) relative;
+
+        if (edge->getEntityA() == entity || edge->getEntityB() == entity)
+          edge->adjust();
+      }
+    }
+  }
 }
 
 QString StructuralUtil::formatId(const QString &id)
