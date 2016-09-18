@@ -49,17 +49,17 @@ void StructuralInterface::adjust(bool collision,  bool recursion)
             e->update();
 
             while(collidesWithItem(e, Qt::IntersectsItemBoundingRect)) {
-              QPointF head(getLeft()+getWidth()/2, getTop()+getHeight()/2);
-              QPointF tail(e->getWidth()/2, e->getHeight()/2);
+              QPointF tail(getLeft()+getWidth()/2, getTop()+getHeight()/2);
+              QPointF head(e->getWidth()/2, e->getHeight()/2);
 
-              QLineF line(head, tail);
+              QLineF line(tail, head);
 
               line.setAngle(qrand()%360);
 
               index += (double)(qrand()%100)/10000.0;
 
-              setTop(getTop()+line.pointAt(index/2).y()-head.y());
-              setLeft(getLeft()+line.pointAt(index/2).x()-head.x());
+              setTop(getTop()+line.pointAt(index/2).y()-tail.y());
+              setLeft(getLeft()+line.pointAt(index/2).x()-tail.x());
 
               if (++n > 1000)
                 break;
@@ -89,20 +89,20 @@ void StructuralInterface::constrain()
 
   if (parent != NULL)
   {
-    QPointF head(parent->getWidth()/2, parent->getHeight()/2);
-    QPointF tail(getLeft() + getWidth()/2, getTop() + getHeight()/2);
+    QPointF tail(parent->getWidth()/2, parent->getHeight()/2);
+    QPointF head(getLeft() + getWidth()/2, getTop() + getHeight()/2);
 
-    if (head == tail) {
-      tail.setX(head.x());
-      tail.setY(head.y() - 10);
+    if (tail == head) {
+      head.setX(tail.x());
+      head.setY(tail.y() - 10);
     }
 
-    QPointF p = tail;  QLineF line(head,tail); bool status = true;
+    QPointF p = head;  QLineF line(tail,head); bool status = true;
 
     qreal current = 1.0;
     qreal step = 0.01;
 
-    if (!parent->contains(tail)) {
+    if (!parent->contains(head)) {
       step = -0.01;
       status = false;
     }
