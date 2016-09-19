@@ -14,23 +14,23 @@ StructuralReference::~StructuralReference()
 
 void StructuralReference::draw(QPainter* painter)
 {
-  if (getEntityA() != NULL && getEntityB() != NULL)
+  if (getTail() != NULL && getHead() != NULL)
   {
     painter->setRenderHint(QPainter::Antialiasing, true);
 
-    QLineF line = QLineF(QPointF(getEntityA()->getLeft() + getEntityA()->getWidth()/2,
-                                 getEntityA()->getTop() + getEntityA()->getHeight()/2),
-                         QPointF(getEntityB()->getLeft() + getEntityB()->getWidth()/2,
-                                 getEntityB()->getTop() + getEntityB()->getHeight()/2));
+    QLineF line = QLineF(QPointF(getTail()->getLeft() + getTail()->getWidth()/2,
+                                 getTail()->getTop() + getTail()->getHeight()/2),
+                         QPointF(getHead()->getLeft() + getHead()->getWidth()/2,
+                                 getHead()->getTop() + getHead()->getHeight()/2));
 
-    if (getEntityA()->getStructuralCategory() == Structural::Interface)
+    if (getTail()->getStructuralCategory() == Structural::Interface)
     {
-      line.setP1(getStructuralParent()->mapFromItem(getEntityA()->getStructuralParent(), line.p1()));
+      line.setP1(getStructuralParent()->mapFromItem(getTail()->getStructuralParent(), line.p1()));
     }
 
-    if (getEntityB()->getStructuralCategory() == Structural::Interface)
+    if (getHead()->getStructuralCategory() == Structural::Interface)
     {
-      line.setP2(getStructuralParent()->mapFromItem(getEntityB()->getStructuralParent(), line.p2()));
+      line.setP2(getStructuralParent()->mapFromItem(getHead()->getStructuralParent(), line.p2()));
     }
 
     QPointF p1;
@@ -113,23 +113,23 @@ void StructuralReference::draw(QPainter* painter)
 
 void StructuralReference::delineate(QPainterPath* painter) const
 {
-  if (getEntityA() != NULL && getEntityB() != NULL)
+  if (getTail() != NULL && getHead() != NULL)
   {
-    QLineF line = QLineF(QPointF(getEntityA()->getLeft() + getEntityA()->getWidth()/2,
-                                 getEntityA()->getTop() + getEntityA()->getHeight()/2),
-                         QPointF(getEntityB()->getLeft() + getEntityB()->getWidth()/2,
-                                 getEntityB()->getTop() + getEntityB()->getHeight()/2));
+    QLineF line = QLineF(QPointF(getTail()->getLeft() + getTail()->getWidth()/2,
+                                 getTail()->getTop() + getTail()->getHeight()/2),
+                         QPointF(getHead()->getLeft() + getHead()->getWidth()/2,
+                                 getHead()->getTop() + getHead()->getHeight()/2));
 
-    if (getEntityA()->getStructuralCategory() == Structural::Interface)
+    if (getTail()->getStructuralCategory() == Structural::Interface)
     {
       if(getStructuralParent())
-        line.setP1(getStructuralParent()->mapFromItem(getEntityA()->getStructuralParent(), line.p1()));
+        line.setP1(getStructuralParent()->mapFromItem(getTail()->getStructuralParent(), line.p1()));
     }
 
-    if (getEntityB()->getStructuralCategory() == Structural::Interface)
+    if (getHead()->getStructuralCategory() == Structural::Interface)
     {
       if(getStructuralParent())
-        line.setP2(getStructuralParent()->mapFromItem(getEntityB()->getStructuralParent(), line.p2()));
+        line.setP2(getStructuralParent()->mapFromItem(getHead()->getStructuralParent(), line.p2()));
     }
 
     QPointF p1;

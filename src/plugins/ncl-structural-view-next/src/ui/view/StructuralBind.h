@@ -79,8 +79,6 @@ public:
   void adjust_action();
   void adjust_condition();
 
-  void aux_adjust(QPointF pointa, QPointF pointb);
-
   // \fixme This method should not be here!!
 
 signals:

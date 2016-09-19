@@ -503,7 +503,7 @@ void StructuralUtil::adjustEdges(StructuralEntity* entity)
       if (relative->getStructuralCategory() == Structural::Edge){
         StructuralEdge *edge = (StructuralEdge*) relative;
 
-        if (edge->getEntityA() == entity || edge->getEntityB() == entity)
+        if (edge->getTail() == entity || edge->getHead() == entity)
           edge->adjust();
       }
     }

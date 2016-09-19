@@ -420,9 +420,9 @@ void StructuralView::insert(QString uid, QString parent, QMap<QString, QString> 
 
         StructuralBind* bind = (StructuralBind*) entity;
         if (entities.contains(properties.value(STR_PROPERTY_EDGE_TAIL)))
-          bind->setEntityA(entities.value(properties.value(STR_PROPERTY_EDGE_TAIL)));
+          bind->setTail(entities.value(properties.value(STR_PROPERTY_EDGE_TAIL)));
         if (entities.contains(properties.value(STR_PROPERTY_EDGE_HEAD)))
-          bind->setEntityB(entities.value(properties.value(STR_PROPERTY_EDGE_HEAD)));
+          bind->setHead(entities.value(properties.value(STR_PROPERTY_EDGE_HEAD)));
 
         bind->setType((StructuralRole) properties.value(STR_PROPERTY_BIND_ROLE).toInt());
 
@@ -447,8 +447,8 @@ void StructuralView::insert(QString uid, QString parent, QMap<QString, QString> 
             entities.contains(properties.value(STR_PROPERTY_EDGE_HEAD)))
         {
             entity = new StructuralReference();
-            ((StructuralReference*) entity)->setEntityA(entities.value(properties.value(STR_PROPERTY_EDGE_TAIL)));
-            ((StructuralReference*) entity)->setEntityB(entities.value(properties.value(STR_PROPERTY_EDGE_HEAD)));
+            ((StructuralReference*) entity)->setTail(entities.value(properties.value(STR_PROPERTY_EDGE_TAIL)));
+            ((StructuralReference*) entity)->setHead(entities.value(properties.value(STR_PROPERTY_EDGE_HEAD)));
         }
 
         break;
@@ -459,10 +459,10 @@ void StructuralView::insert(QString uid, QString parent, QMap<QString, QString> 
         entity = new StructuralReference();
         entity->setStructuralType(Structural::Mapping);
         if (entities.contains(properties.value(STR_PROPERTY_EDGE_TAIL)))
-          ((StructuralReference*) entity)->setEntityA(entities.value(properties.value(STR_PROPERTY_EDGE_TAIL)));
+          ((StructuralReference*) entity)->setTail(entities.value(properties.value(STR_PROPERTY_EDGE_TAIL)));
 
         if (entities.contains(properties.value(STR_PROPERTY_EDGE_HEAD)))
-          ((StructuralReference*) entity)->setEntityB(entities.value(properties.value(STR_PROPERTY_EDGE_HEAD)));
+          ((StructuralReference*) entity)->setHead(entities.value(properties.value(STR_PROPERTY_EDGE_HEAD)));
 
         break;
       }
@@ -591,8 +591,8 @@ void StructuralView::adjustAngles(StructuralBind* edge)
     {
       StructuralBind *ea = (StructuralBind*) e;
 
-      if ((edge->getEntityA() == ea->getEntityA() || edge->getEntityA() == ea->getEntityB()) &&
-          (edge->getEntityB() == ea->getEntityB() || edge->getEntityB() == ea->getEntityA()) &&
+      if ((edge->getTail() == ea->getTail() || edge->getTail() == ea->getHead()) &&
+          (edge->getHead() == ea->getHead() || edge->getHead() == ea->getTail()) &&
           edge != ea)
       {
         HAS = true;
@@ -701,7 +701,7 @@ void StructuralView::remove(QString uid, QMap<QString, QString> settings)
         if (c->getStructuralCategory() == Structural::Edge){
           StructuralEdge *e = (StructuralEdge*) c;
 
-          if (e->getEntityA() == entity || e->getEntityB() == entity){
+          if (e->getTail() == entity || e->getHead() == entity){
 
             if (e->getStructuralType() != Structural::Reference)
               remove(e->getStructuralUid(),
@@ -854,20 +854,20 @@ void StructuralView:: change(QString uid, QMap<QString, QString> properties, QMa
        b->setType((StructuralRole) properties.value(STR_PROPERTY_BIND_ROLE).toInt());
 
        if (entities.contains(properties.value(STR_PROPERTY_EDGE_TAIL)))
-         b->setEntityA(entities.value(properties.value(STR_PROPERTY_EDGE_TAIL)));
+         b->setTail(entities.value(properties.value(STR_PROPERTY_EDGE_TAIL)));
 
        if (entities.contains(properties.value(STR_PROPERTY_EDGE_HEAD)))
-         b->setEntityB(entities.value(properties.value(STR_PROPERTY_EDGE_HEAD)));
+         b->setHead(entities.value(properties.value(STR_PROPERTY_EDGE_HEAD)));
      }
 
      if (entity->getStructuralType() ==  Structural::Mapping) {
        StructuralReference* map = (StructuralReference*) entity;
 
        if (entities.contains(properties.value(STR_PROPERTY_EDGE_TAIL)))
-         map->setEntityA(entities.value(properties.value(STR_PROPERTY_EDGE_TAIL)));
+         map->setTail(entities.value(properties.value(STR_PROPERTY_EDGE_TAIL)));
 
        if (entities.contains(properties.value(STR_PROPERTY_EDGE_HEAD)))
-         map->setEntityB(entities.value(properties.value(STR_PROPERTY_EDGE_HEAD)));
+         map->setHead(entities.value(properties.value(STR_PROPERTY_EDGE_HEAD)));
      }
 
      if (entity != NULL && entity->getStructuralType() == Structural::Port)
@@ -2332,7 +2332,7 @@ void StructuralView::showEditBindDialog(StructuralBind* entity)
   emit requestLinkDialogUpdate();
 
   if (entity->isCondition()){
-    linkDialog->init(entity->getEntityB()->getStructuralProperty(STR_PROPERTY_REFERENCE_XCONNECTOR_ID),"","",
+    linkDialog->init(entity->getHead()->getStructuralProperty(STR_PROPERTY_REFERENCE_XCONNECTOR_ID),"","",
                      StructuralLinkDialog::EditCondition);
 
     int index = linkDialog->form.cbCondition->findText(entity->getStructuralId());
@@ -2340,7 +2340,7 @@ void StructuralView::showEditBindDialog(StructuralBind* entity)
     linkDialog->updateCurrentConditionParam(pBind);
   }else if (entity->isAction()){
 
-    linkDialog->init(entity->getEntityA()->getStructuralProperty(STR_PROPERTY_REFERENCE_XCONNECTOR_ID),"","",
+    linkDialog->init(entity->getTail()->getStructuralProperty(STR_PROPERTY_REFERENCE_XCONNECTOR_ID),"","",
                      StructuralLinkDialog::EditAction);
 
     int index = linkDialog->form.cbAction->findText(entity->getStructuralId());
@@ -2457,8 +2457,8 @@ void StructuralView::adjustChildrenWithGraphiviz(StructuralEntity* parent, QStri
         StructuralEdge* edge = (StructuralEdge*) c;
 
         if (interfaceAsNode){
-          if (!nodes.contains(edge->getEntityA()->getStructuralUid())){
-            StructuralEntity* a = edge->getEntityA();
+          if (!nodes.contains(edge->getTail()->getStructuralUid())){
+            StructuralEntity* a = edge->getTail();
 
             QString w = QString::number(a->getWidth()/GZDPI);
             QString h = QString::number(a->getHeight()/GZDPI);
@@ -2470,8 +2470,8 @@ void StructuralView::adjustChildrenWithGraphiviz(StructuralEntity* parent, QStri
             nodes.insert(a->getStructuralUid(), node);
           }
 
-          if (!nodes.contains(edge->getEntityB()->getStructuralUid())){
-            StructuralEntity* b = edge->getEntityB();
+          if (!nodes.contains(edge->getHead()->getStructuralUid())){
+            StructuralEntity* b = edge->getHead();
 
             QString w = QString::number(b->getWidth()/GZDPI);
             QString h = QString::number(b->getHeight()/GZDPI);
@@ -2484,10 +2484,10 @@ void StructuralView::adjustChildrenWithGraphiviz(StructuralEntity* parent, QStri
           }
         }
 
-        if (nodes.contains(edge->getEntityA()->getStructuralUid()) &&
-            nodes.contains(edge->getEntityB()->getStructuralUid())){
-          agedge(g,nodes.value(edge->getEntityA()->getStructuralUid()),
-                   nodes.value(edge->getEntityB()->getStructuralUid()),
+        if (nodes.contains(edge->getTail()->getStructuralUid()) &&
+            nodes.contains(edge->getHead()->getStructuralUid())){
+          agedge(g,nodes.value(edge->getTail()->getStructuralUid()),
+                   nodes.value(edge->getHead()->getStructuralUid()),
                    NULL,1);
         }
       }

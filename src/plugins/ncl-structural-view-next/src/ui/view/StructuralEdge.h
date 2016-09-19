@@ -3,96 +3,59 @@
 
 #define PI 3.14159265
 
-#include <cmath>
-#include <QLineF>
-
 #include "StructuralEntity.h"
-#include "StructuralUtil.h"
 
 class StructuralEdge : public StructuralEntity
 {
 public:
   StructuralEdge(StructuralEntity* parent = 0);
+  virtual ~StructuralEdge();
 
-  ~StructuralEdge();
-
-  bool isInvalid();
-
-  void setInvalid(bool invalid);
-
-  StructuralEntity* getEntityA() const;
-
-  void setEntityA(StructuralEntity* entity);
-
-  StructuralEntity* getEntityB() const;
-
-  void setEntityB(StructuralEntity* entity);
-
-  bool isEntityAEnabled() const;
-
-  void setEntityAEnabled(bool enable);
-
-  bool isEntityBEnabled() const;
-
-  void setEntityBEnabled(bool enable);
-
-  virtual void adjust(bool avoidCollision = false,  bool rec = true);
-
-  void aux_adjust(QPointF pointa, QPointF pointb);
-
-  QPointF arcPointAt(QLineF line, qreal at, bool toend = true, bool invert = false);
-
-  qreal getAngle();
-
+  qreal getAngle() const;
   void setAngle(qreal angle);
 
-  qreal getAdjAngle();
+  StructuralEntity* getTail() const;
+  void setTail(StructuralEntity* tail);
 
-  void setAdjAngle(qreal adjangle);
+  StructuralEntity* getHead() const;
+  void setHead(StructuralEntity* head);
+
+  virtual void adjust(bool collision = false,  bool recursion = true);
 
 protected:
-  virtual void draw(QPainter* painter) = 0;
+  qreal getAlfa() const;
+  void setAlfa(qreal alfa);
 
+  qreal getTailTop() const;
+  void setTailTop(qreal tailTop);
+
+  qreal getTailLeft() const;
+  void setTailLeft(qreal tailLeft);
+
+  qreal getHeadTop() const;
+  void setHeadTop(qreal headTop);
+
+  qreal getHeadLeft() const;
+  void setHeadLeft(qreal headLeft);
+
+  void adjustBox(QLineF line);
+  void adjustExtreme(StructuralEntity* extreme, QLineF line, qreal index, qreal step, qreal angle);
+
+  virtual void draw(QPainter* painter) = 0;
   virtual void delineate(QPainterPath* painter) const = 0;
 
-  virtual void move(QGraphicsSceneMouseEvent* event);
-
-  virtual void resize(QGraphicsSceneMouseEvent* event);
-
 private:
-  bool invalid;
+  qreal _alfa;
+  qreal _angle;
 
-  qreal angle;
+  qreal _tailTop;
+  qreal _tailLeft;
 
-  qreal adjustedangle;
+  qreal _headTop;
+  qreal _headLeft;
 
-  bool entityaenabled;
-
-  bool entitybenabled;
-
-  StructuralEntity* entitya;
-
-  StructuralEntity* entityb;
+  StructuralEntity* _tail;
+  StructuralEntity* _head;
 };
-
-//// \fixme This class is temporary and must be removed as soon as possible!
-//// The information of edges should be in the parent, and not inside the own
-//// entity
-//class QnstEntityWithEdges : public StructuralEntity
-//{
-//public:
-//  QnstEntityWithEdges(StructuralEntity *parent = 0);
-//  ~QnstEntityWithEdges();
-
-
-//  QVector<StructuralEdge*> getnstGraphicsEdges();
-
-//  void addnstGraphicsEdge(StructuralEdge* edge);
-
-//  void removenstGraphicsEdge(StructuralEdge* edge);
-
-//private:
-//    QVector<StructuralEdge*> edges;
-//};
 
 #endif // STRUCTURALSEDGE_H
