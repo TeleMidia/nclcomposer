@@ -343,6 +343,31 @@ QString StructuralUtil::getIcon(StructuralType type)
     return "";
 }
 
+std::map<Structural::StructuralType, QString> StructuralUtil::_entitiesColor =
+    StructuralMap<Structural::StructuralType, QString >
+(Structural::Media, "")
+(Structural::Body, "")
+(Structural::Context, "")
+(Structural::Switch, "")
+(Structural::Port, "")
+(Structural::SwitchPort, "")
+(Structural::Area, "")
+(Structural::Property, "")
+(Structural::Link, "")
+(Structural::Bind, "")
+(Structural::Reference, "#000000")
+(Structural::Mapping, "#5C0099")
+
+(Structural::NoType, "");
+
+QString StructuralUtil::getColor(StructuralType type)
+{
+  if(_entitiesColor.count(type))
+    return _entitiesColor[type];
+  else
+    return "";
+}
+
 std::map<Structural::StructuralType, QString> StructuralUtil::_entitiesPrefix =
     StructuralMap<Structural::StructuralType, QString >
 (Structural::Media, "m")

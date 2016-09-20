@@ -22,7 +22,6 @@
 #include "StructuralContent.h"
 #include "StructuralInterface.h"
 #include "StructuralComposition.h"
-#include "StructuralReference.h"
 #include "StructuralBind.h"
 #include "StructuralLinkDialog.h"
 

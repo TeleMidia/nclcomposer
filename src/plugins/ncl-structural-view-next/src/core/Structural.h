@@ -109,7 +109,13 @@
 #define STR_DEFAULT_INTERFACE_H 18
 
 // Edges defines
-// nothing...
+#define STR_DEFAULT_EDGE_PADDING 6
+
+#define STR_DEFAULT_EDGE_TAIL_W 3
+#define STR_DEFAULT_EDGE_TAIL_H 3
+
+#define STR_DEFAULT_EDGE_HEAD_W 12
+#define STR_DEFAULT_EDGE_HEAD_H 12
 
 // Others defines
 #define STR_DEFAULT_WITH_BODY 1                     // not used yet

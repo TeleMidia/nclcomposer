@@ -446,9 +446,10 @@ void StructuralView::insert(QString uid, QString parent, QMap<QString, QString> 
         if (entities.contains(properties.value(STR_PROPERTY_EDGE_TAIL)) &&
             entities.contains(properties.value(STR_PROPERTY_EDGE_HEAD)))
         {
-            entity = new StructuralReference();
-            ((StructuralReference*) entity)->setTail(entities.value(properties.value(STR_PROPERTY_EDGE_TAIL)));
-            ((StructuralReference*) entity)->setHead(entities.value(properties.value(STR_PROPERTY_EDGE_HEAD)));
+            entity = new StructuralEdge();
+            entity->setStructuralType(Structural::Reference);
+            ((StructuralEdge*) entity)->setTail(entities.value(properties.value(STR_PROPERTY_EDGE_TAIL)));
+            ((StructuralEdge*) entity)->setHead(entities.value(properties.value(STR_PROPERTY_EDGE_HEAD)));
         }
 
         break;
@@ -456,13 +457,13 @@ void StructuralView::insert(QString uid, QString parent, QMap<QString, QString> 
 
       case Structural::Mapping:
       {
-        entity = new StructuralReference();
+        entity = new StructuralEdge();
         entity->setStructuralType(Structural::Mapping);
         if (entities.contains(properties.value(STR_PROPERTY_EDGE_TAIL)))
-          ((StructuralReference*) entity)->setTail(entities.value(properties.value(STR_PROPERTY_EDGE_TAIL)));
+          ((StructuralEdge*) entity)->setTail(entities.value(properties.value(STR_PROPERTY_EDGE_TAIL)));
 
         if (entities.contains(properties.value(STR_PROPERTY_EDGE_HEAD)))
-          ((StructuralReference*) entity)->setHead(entities.value(properties.value(STR_PROPERTY_EDGE_HEAD)));
+          ((StructuralEdge*) entity)->setHead(entities.value(properties.value(STR_PROPERTY_EDGE_HEAD)));
 
         break;
       }
@@ -861,7 +862,7 @@ void StructuralView:: change(QString uid, QMap<QString, QString> properties, QMa
      }
 
      if (entity->getStructuralType() ==  Structural::Mapping) {
-       StructuralReference* map = (StructuralReference*) entity;
+       StructuralEdge* map = (StructuralEdge*) entity;
 
        if (entities.contains(properties.value(STR_PROPERTY_EDGE_TAIL)))
          map->setTail(entities.value(properties.value(STR_PROPERTY_EDGE_TAIL)));

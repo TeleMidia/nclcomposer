@@ -35,6 +35,7 @@ public:
   static StructuralMimeType translateStringToMimeType(const QString &mimetype);
 
   static QString getIcon(StructuralType type);
+  static QString getColor(StructuralType type);
   static QString getPrefix(StructuralType type);
   static QString getTooltip(StructuralType type, const QString &title = "", const QString &info = "", const QString &warning = "", const QString &error = "", const QString &extra = "");
 
@@ -67,6 +68,7 @@ private:
   static std::map<QString, StructuralMimeType>  _mapStringToMimeType;
 
   static std::map<StructuralType, QString> _entitiesIcon;
+  static std::map<StructuralType, QString> _entitiesColor;
   static std::map<StructuralType, QString> _entitiesPrefix;
 
   static std::map<StructuralMimeType, QString>  _mimetypesIcon;
