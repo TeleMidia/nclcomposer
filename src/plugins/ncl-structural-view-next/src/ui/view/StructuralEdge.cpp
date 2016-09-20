@@ -136,7 +136,10 @@ void StructuralEdge::adjust(bool collision,  bool recursion)
         head->setSelectable(false);
 
         adjustExtreme(tail, line, 0.0,  0.01, angle);
+        line.setP1(QPointF(getTailLeft(), getTailTop()));
+
         adjustExtreme(head, line, 1.0, -0.01, angle);
+        line.setP2(QPointF(getHeadLeft(), getHeadTop()));
 
         tail->setSelectable(true);
         head->setSelectable(true);
