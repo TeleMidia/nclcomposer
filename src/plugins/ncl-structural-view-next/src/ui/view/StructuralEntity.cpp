@@ -158,7 +158,7 @@ void StructuralEntity::setStructuralProperties(const QMap<QString, QString> &pro
     _properties[name] = properties.value(name);
   }
 
-  adjust();
+  adjust(true);
 }
 
 QString StructuralEntity::getStructuralProperty(const QString &name) const
