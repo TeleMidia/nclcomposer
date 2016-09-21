@@ -41,6 +41,8 @@ protected:
   void adjustBox(QLineF line);
   void adjustExtreme(StructuralEntity* extreme, QLineF line, qreal index, qreal step, qreal angle);
 
+  QLineF getDrawLine(qreal padding) const;
+
   virtual void draw(QPainter* painter);
   virtual void delineate(QPainterPath* painter) const;
 

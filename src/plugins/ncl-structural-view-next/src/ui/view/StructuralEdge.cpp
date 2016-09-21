@@ -38,7 +38,9 @@ qreal StructuralEdge::getAngle() const
 
 void StructuralEdge::setAngle(qreal angle)
 {
-  this->_angle = angle;
+  _angle = angle;
+
+  setStructuralProperty(STR_PROPERTY_EDGE_ANGLE, QString::number(angle));
 }
 
 qreal StructuralEdge::getTailTop() const
@@ -105,6 +107,9 @@ void StructuralEdge::adjust(bool collision,  bool recursion)
 {
   StructuralEntity::adjust(collision, recursion);
 
+  // Adjusting properties...
+  setAngle(getStructuralProperty(STR_PROPERTY_EDGE_ANGLE).toDouble());
+
   // Adjusting position...
   StructuralEntity* parent = getStructuralParent();
 
@@ -153,34 +158,34 @@ void StructuralEdge::adjustBox(QLineF line)
   QPointF ptail = line.p1();
   QPointF phead = line.p2();
 
-  int x = -STR_DEFAULT_PADDING;
-  int y = -STR_DEFAULT_PADDING;
-  int w = 2*STR_DEFAULT_PADDING;
-  int h = 2*STR_DEFAULT_PADDING;
+  qreal x;
+  qreal y;
+  qreal w;
+  qreal h;
 
   if (ptail.x() <= phead.x() && ptail.y() <= phead.y()) {
-    x += ptail.x();
-    y += ptail.y();
-    w += phead.x() - ptail.x();
-    h += phead.y() - ptail.y();
+    x = ptail.x();
+    y = ptail.y();
+    w = phead.x() - ptail.x();
+    h = phead.y() - ptail.y();
 
   } else if (ptail.x() > phead.x() && ptail.y() <= phead.y()) {
-    x += phead.x();
-    y += ptail.y();
-    w += ptail.x() - phead.x();
-    h += phead.y() - ptail.y();
+    x = phead.x();
+    y = ptail.y();
+    w = ptail.x() - phead.x();
+    h = phead.y() - ptail.y();
 
   } else if (ptail.x() <= phead.x() && ptail.y() > phead.y()) {
-    x += ptail.x();
-    y += phead.y();
-    w += phead.x() - ptail.x();
-    h += ptail.y() - phead.y();
+    x = ptail.x();
+    y = phead.y();
+    w = phead.x() - ptail.x();
+    h = ptail.y() - phead.y();
 
   } else if (ptail.x() > phead.x() && ptail.y() > phead.y()) {
-    x += phead.x();
-    y += phead.y();
-    w += ptail.x() - phead.x();
-    h += ptail.y() - phead.y();
+    x = phead.x();
+    y = phead.y();
+    w = ptail.x() - phead.x();
+    h = ptail.y() - phead.y();
   }
 
   setTailTop(ptail.y());
@@ -246,143 +251,120 @@ void StructuralEdge::adjustExtreme(StructuralEntity* extreme, QLineF line, qreal
   }
 }
 
+QLineF StructuralEdge::getDrawLine(qreal padding) const
+{
+  QPointF ptail = QPointF(getTailLeft(), getTailTop());
+  QPointF phead = QPointF(getHeadLeft(), getHeadTop());
+
+  int x;
+  int y;
+  int z;
+  int w;
+
+  if (ptail.x() <= phead.x() && ptail.y() <= phead.y()) {
+    x = STR_DEFAULT_ENTITY_PADDING;
+    y = STR_DEFAULT_ENTITY_PADDING;
+    z = getWidth() + STR_DEFAULT_ENTITY_PADDING;
+    w = getHeight() + STR_DEFAULT_ENTITY_PADDING;
+
+  } else if (ptail.x() > phead.x() && ptail.y() < phead.y()) {
+    x = getWidth() + STR_DEFAULT_ENTITY_PADDING;
+    y = STR_DEFAULT_ENTITY_PADDING;
+    z = STR_DEFAULT_ENTITY_PADDING;
+    w = getHeight() + STR_DEFAULT_ENTITY_PADDING;
+
+  } else if (ptail.x() < phead.x() && ptail.y() > phead.y()) {
+    x = STR_DEFAULT_ENTITY_PADDING;
+    y = getHeight() + STR_DEFAULT_ENTITY_PADDING;
+    z = getWidth() + STR_DEFAULT_ENTITY_PADDING;
+    w = STR_DEFAULT_ENTITY_PADDING;
+
+  } else if (ptail.x() > phead.x() && ptail.y() > phead.y()) {
+    x = getWidth() + STR_DEFAULT_ENTITY_PADDING;
+    y = getHeight() + STR_DEFAULT_ENTITY_PADDING;
+    z = STR_DEFAULT_ENTITY_PADDING;
+    w = STR_DEFAULT_ENTITY_PADDING;
+  }
+
+  QLineF line;
+  line.setPoints(QPointF(x, y),QPointF(z, w));
+  line.setPoints(line.pointAt(padding/line.length()), line.pointAt(1 - padding/line.length()));
+
+  return line;
+}
+
 void StructuralEdge::draw(QPainter* painter)
 {
-  StructuralEntity* tail = getTail();
-  StructuralEntity* head = getHead();
+  painter->setRenderHint(QPainter::Antialiasing, true);
 
-  if (tail != NULL && head != NULL)
-  {
-    painter->setRenderHint(QPainter::Antialiasing, true);
+  // Setting...
+  QLineF drawLine = getDrawLine(STR_DEFAULT_EDGE_PADDING);
 
-    QLineF line = QLineF(QPointF(getTailLeft(), getTailTop()),
-                         QPointF(getHeadLeft(), getHeadTop()));
+  // Drawing line...
+  painter->setPen(QPen(QBrush(QColor(StructuralUtil::getColor(getStructuralType()))), 1, Qt::DashLine));
+  painter->drawLine(drawLine);
 
-    QPointF ptail = line.p1();
-    QPointF phead = line.p2();
+  // Drawing tail...
+  // nothing...
 
-    int x = STR_DEFAULT_PADDING;
-    int y = STR_DEFAULT_PADDING;
-    int z = STR_DEFAULT_PADDING;
-    int w = STR_DEFAULT_PADDING;
+  // Drawing head...
+  painter->setBrush(QBrush(QColor(StructuralUtil::getColor(getStructuralType()))));
+  painter->setPen(Qt::NoPen);
+  qreal angle;
 
-    if (ptail.x() <= phead.x() && ptail.y() <= phead.y()) {
-      x += STR_DEFAULT_EDGE_PADDING;
-      y += STR_DEFAULT_EDGE_PADDING;
-      z += getWidth() - STR_DEFAULT_EDGE_PADDING;
-      w += getHeight() - STR_DEFAULT_EDGE_PADDING;
+  if (drawLine.dy() < 0)
+    angle = ::acos(drawLine.dx() / drawLine.length());
+  else
+    angle = (PI * 2) - ::acos(drawLine.dx() / drawLine.length());
 
-    } else if (ptail.x() > phead.x() && ptail.y() < phead.y()) {
-      x += getWidth() - STR_DEFAULT_EDGE_PADDING;
-      y += STR_DEFAULT_EDGE_PADDING;
-      z += STR_DEFAULT_EDGE_PADDING;
-      w += getHeight() - STR_DEFAULT_EDGE_PADDING;
+  QPointF a = drawLine.p2();
 
-    } else if (ptail.x() < phead.x() && ptail.y() > phead.y()) {
-      x += STR_DEFAULT_EDGE_PADDING;
-      y += getHeight() - STR_DEFAULT_EDGE_PADDING;
-      z += getWidth() - STR_DEFAULT_EDGE_PADDING;
-      w += STR_DEFAULT_EDGE_PADDING;
+  QPointF b = a - QPointF(sin(angle + PI / 3) * STR_DEFAULT_EDGE_HEAD_W,
+                          cos(angle + PI / 3) * STR_DEFAULT_EDGE_HEAD_H);
+  QPointF c = a - QPointF(sin(angle + PI - PI / 3) * STR_DEFAULT_EDGE_HEAD_W,
+                          cos(angle + PI - PI / 3) * STR_DEFAULT_EDGE_HEAD_H);
 
-    } else if (ptail.x() > phead.x() && ptail.y() > phead.y()) {
-      x += getWidth() - STR_DEFAULT_EDGE_PADDING;
-      y += getHeight() - STR_DEFAULT_EDGE_PADDING;
-      z += STR_DEFAULT_EDGE_PADDING;
-      w += STR_DEFAULT_EDGE_PADDING;
-    }
+  QVector<QPointF> polygon;
+  polygon.append(a);
+  polygon.append(b);
+  polygon.append(c);
 
-    painter->setPen(QPen(QBrush(QColor(StructuralUtil::getColor(getStructuralType()))), 1, Qt::DashLine));
-    painter->drawLine(x, y, z, w);
-
-    qreal angle;
-
-    if (line.dy() < 0)
-      angle = ::acos(line.dx() / line.length());
-    else
-      angle = (PI * 2) - ::acos(line.dx() / line.length());
-
-    QPointF a = QPointF(z, w);
-
-    QPointF b = a - QPointF(sin(angle + PI / 3) * STR_DEFAULT_EDGE_HEAD_W,
-                            cos(angle + PI / 3) * STR_DEFAULT_EDGE_HEAD_H);
-    QPointF c = a - QPointF(sin(angle + PI - PI / 3) * STR_DEFAULT_EDGE_HEAD_W,
-                            cos(angle + PI - PI / 3) * STR_DEFAULT_EDGE_HEAD_H);
-
-    QVector<QPointF> polygon;
-    polygon.append(a);
-    polygon.append(b);
-    polygon.append(c);
-
-    painter->setBrush(QBrush(QColor(StructuralUtil::getColor(getStructuralType()))));
-    painter->setPen(Qt::NoPen);
-    painter->drawPolygon(QPolygonF(polygon));
-  }
+  painter->drawPolygon(QPolygonF(polygon));
 }
 
 void StructuralEdge::delineate(QPainterPath* painter) const
 {
-  StructuralEntity* tail = getTail();
-  StructuralEntity* head = getHead();
+  // Setting...
+  QLineF boxLine = getDrawLine(0);
+  QLineF drawLine = getDrawLine(STR_DEFAULT_EDGE_PADDING);
 
-  if (tail != NULL && head != NULL)
-  {
-    QLineF line = QLineF(QPointF(getTailLeft(), getTailTop()),
-                         QPointF(getHeadLeft(), getHeadTop()));
+  // Delineating line
+  // nothing
 
-    QPointF ptail = line.p1();
-    QPointF phead = line.p2();
+  // Delineating tail...
+  painter->addEllipse(boxLine.p1().x(), boxLine.p1().y(), 1, 1);
 
-    int x = STR_DEFAULT_PADDING;
-    int y = STR_DEFAULT_PADDING;
+  // Delineating head...
+  painter->addEllipse(boxLine.p2().x(), boxLine.p2().y(), 1, 1);
 
-    int z = STR_DEFAULT_PADDING;
-    int w = STR_DEFAULT_PADDING;
+  qreal angle;
 
-    if (ptail.x() <= phead.x() && ptail.y() <= phead.y()) {
-      z += getWidth() - STR_DEFAULT_EDGE_PADDING;
-      w += getHeight() - STR_DEFAULT_EDGE_PADDING;
+  if (drawLine.dy() < 0)
+    angle = ::acos(drawLine.dx() / drawLine.length());
+  else
+    angle = (PI * 2) - ::acos(drawLine.dx() / drawLine.length());
 
-    } else if (ptail.x() > phead.x() && ptail.y() < phead.y()) {
-      x += getWidth() - STR_DEFAULT_EDGE_TAIL_W;
+  QPointF a = drawLine.p2();
 
-      z += STR_DEFAULT_EDGE_PADDING;
-      w += getHeight() - STR_DEFAULT_EDGE_PADDING;
+  QPointF b = a - QPointF(sin(angle + PI / 3) * STR_DEFAULT_EDGE_HEAD_W,
+                          cos(angle + PI / 3) * STR_DEFAULT_EDGE_HEAD_H);
+  QPointF c = a - QPointF(sin(angle + PI - PI / 3) * STR_DEFAULT_EDGE_HEAD_W,
+                          cos(angle + PI - PI / 3) * STR_DEFAULT_EDGE_HEAD_H);
 
-    } else if (ptail.x() < phead.x() && ptail.y() > phead.y()) {
-      y += getHeight() - STR_DEFAULT_EDGE_TAIL_H;
+  QVector<QPointF> polygon;
+  polygon.append(a);
+  polygon.append(b);
+  polygon.append(c);
 
-      z += getWidth() - STR_DEFAULT_EDGE_PADDING;
-      w += STR_DEFAULT_EDGE_PADDING;
-
-    } else if (ptail.x() > phead.x() && ptail.y() > phead.y()) {
-      x += getWidth() - STR_DEFAULT_EDGE_TAIL_W;
-      y += getHeight() - STR_DEFAULT_EDGE_TAIL_H;
-
-      z += STR_DEFAULT_EDGE_PADDING;
-      w += STR_DEFAULT_EDGE_PADDING;
-    }
-
-    painter->addEllipse(x, y, STR_DEFAULT_EDGE_TAIL_W, STR_DEFAULT_EDGE_TAIL_H);
-
-    qreal angle;
-
-    if (line.dy() < 0)
-      angle = ::acos(line.dx() / line.length());
-    else
-      angle = (PI * 2) - ::acos(line.dx() / line.length());
-
-    QPointF a = QPointF(z, w);
-
-    QPointF b = a - QPointF(sin(angle + PI / 3) * STR_DEFAULT_EDGE_HEAD_W,
-                            cos(angle + PI / 3) * STR_DEFAULT_EDGE_HEAD_H);
-    QPointF c = a - QPointF(sin(angle + PI - PI / 3) * STR_DEFAULT_EDGE_HEAD_W,
-                            cos(angle + PI - PI / 3) * STR_DEFAULT_EDGE_HEAD_H);
-
-    QVector<QPointF> polygon;
-    polygon.append(a);
-    polygon.append(b);
-    polygon.append(c);
-
-    painter->addPolygon(QPolygonF(polygon));
-  }
+  painter->addPolygon(QPolygonF(polygon));
 }
