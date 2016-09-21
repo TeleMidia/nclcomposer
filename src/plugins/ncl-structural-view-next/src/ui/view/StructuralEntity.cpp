@@ -823,8 +823,8 @@ QPainterPath StructuralEntity::shape() const
   if (_selectable && _selected && _resizable){
     painter.setFillRule(Qt::WindingFill);
 
-    qreal W = STR_DEFAULT_ANCHOR_W;
-    qreal H = STR_DEFAULT_ANCHOR_H;
+    qreal W = STR_DEFAULT_ENTITY_ANCHOR_W;
+    qreal H = STR_DEFAULT_ENTITY_ANCHOR_H;
 
     painter.addRect(0,0,W,H);                                // topleft
     painter.addRect((_width+W)/2 - W/2,0,W,H);               // top
@@ -845,8 +845,8 @@ QRectF StructuralEntity::boundingRect() const
 
   bounds.setX(0);
   bounds.setY(0);
-  bounds.setWidth(_width+STR_DEFAULT_ANCHOR_W);
-  bounds.setHeight(_height+STR_DEFAULT_ANCHOR_H);
+  bounds.setWidth(_width+STR_DEFAULT_ENTITY_ANCHOR_W);
+  bounds.setHeight(_height+STR_DEFAULT_ENTITY_ANCHOR_H);
 
   return bounds;
 }
@@ -861,14 +861,14 @@ void StructuralEntity::paint(QPainter *painter, const QStyleOptionGraphicsItem *
     painter->setBrush(Qt::NoBrush);
     painter->setPen(QPen(QBrush(Qt::black), 0, Qt::DashLine));
 
-    painter->drawRect(STR_DEFAULT_ANCHOR_W/2, STR_DEFAULT_ANCHOR_H/2, getWidth()-1, getHeight()-1);
+    painter->drawRect(STR_DEFAULT_ENTITY_ANCHOR_W/2, STR_DEFAULT_ENTITY_ANCHOR_H/2, getWidth(), getHeight());
 
     if (_resizable){
       painter->setBrush(QBrush(Qt::white));
       painter->setPen(QPen(QBrush(Qt::black), 0));
 
-      qreal W = STR_DEFAULT_ANCHOR_W;
-      qreal H = STR_DEFAULT_ANCHOR_H;
+      qreal W = STR_DEFAULT_ENTITY_ANCHOR_W;
+      qreal H = STR_DEFAULT_ENTITY_ANCHOR_H;
 
       painter->drawRect(0,0,W,H);                                // topleft
       painter->drawRect((_width+W)/2-H/2-1,0,W,H);               // top
@@ -953,8 +953,8 @@ void StructuralEntity::mousePressEvent(QGraphicsSceneMouseEvent* event)
       setResizeHeight(_height);
     }
 
-    qreal W = STR_DEFAULT_ANCHOR_W;
-    qreal H = STR_DEFAULT_ANCHOR_H;
+    qreal W = STR_DEFAULT_ENTITY_ANCHOR_W;
+    qreal H = STR_DEFAULT_ENTITY_ANCHOR_H;
 
     if (_resizable){
       // if over TOPLEFT resize region
@@ -1113,8 +1113,8 @@ void StructuralEntity::updateCursor(QGraphicsSceneHoverEvent* event)
 {
   if (_selected){
     if (_resizable){
-      qreal W = STR_DEFAULT_ANCHOR_W;
-      qreal H = STR_DEFAULT_ANCHOR_H;
+      qreal W = STR_DEFAULT_ENTITY_ANCHOR_W;
+      qreal H = STR_DEFAULT_ENTITY_ANCHOR_H;
 
       // if over TOPLEFT resize region
       if (QRectF(0,0,W,H).contains(event->pos())){
@@ -1288,7 +1288,7 @@ void StructuralEntity::drawMouseHoverHighlight(QPainter *painter)
       painter->setBrush(Qt::NoBrush);
       painter->setPen(QPen(QBrush(QColor("#999999")), 0, Qt::DashLine)); // 0px = cosmetic border
 
-      painter->drawRect(STR_DEFAULT_ANCHOR_W/2, STR_DEFAULT_ANCHOR_H/2, getWidth(), getHeight());
+      painter->drawRect(STR_DEFAULT_ENTITY_ANCHOR_W/2, STR_DEFAULT_ENTITY_ANCHOR_H/2, getWidth(), getHeight());
     }
   }
 }
