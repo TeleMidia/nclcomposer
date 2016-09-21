@@ -34,7 +34,6 @@ HEADERS += \
     src/ui/view/StructuralInterface.h \
     src/ui/view/StructuralLink.h \
     src/ui/view/StructuralBind.h \
-    src/ui/view/StructuralReference.h \
     src/ui/view/StructuralViewLink.h \
     src/ui/view/StructuralEntity.h \
     src/ui/view/StructuralComposition.h \
@@ -57,7 +56,6 @@ SOURCES += \
     src/ui/view/StructuralEntity.cpp \
     src/ui/view/StructuralLink.cpp \
     src/ui/view/StructuralBind.cpp \
-    src/ui/view/StructuralReference.cpp \
     src/ui/view/StructuralViewLink.cpp \
     src/ui/view/StructuralComposition.cpp \
     src/core/Remove.cpp \
