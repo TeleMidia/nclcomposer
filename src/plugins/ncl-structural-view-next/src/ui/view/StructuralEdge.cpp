@@ -256,6 +256,8 @@ QLineF StructuralEdge::getDrawLine(qreal padding) const
   QPointF ptail = QPointF(getTailLeft(), getTailTop());
   QPointF phead = QPointF(getHeadLeft(), getHeadTop());
 
+  QLineF drawLine;
+
   int x;
   int y;
   int z;
@@ -286,11 +288,10 @@ QLineF StructuralEdge::getDrawLine(qreal padding) const
     w = STR_DEFAULT_ENTITY_PADDING;
   }
 
-  QLineF line;
-  line.setPoints(QPointF(x, y),QPointF(z, w));
-  line.setPoints(line.pointAt(padding/line.length()), line.pointAt(1 - padding/line.length()));
+  drawLine.setPoints(QPointF(x, y),QPointF(z, w));
+  drawLine.setPoints(drawLine.pointAt(padding/drawLine.length()), drawLine.pointAt(1 - padding/drawLine.length()));
 
-  return line;
+  return drawLine;
 }
 
 void StructuralEdge::draw(QPainter* painter)
