@@ -507,7 +507,8 @@ void StructuralViewPlugin::requestEntityAddition(Entity* entity, bool enableUndo
         if (!properties.value(STR_PROPERTY_ENTITY_ID).isEmpty()){
           StructuralRole role = StructuralUtil::translateStringToRole(properties.value(STR_PROPERTY_ENTITY_ID));
 
-          properties.insert(STR_PROPERTY_BIND_ROLE, QString::number(role));
+
+          properties.insert(STR_PROPERTY_BIND_ROLE, StructuralUtil::translateRoleToString(role));
 
           if (properties.contains(STR_PROPERTY_REFERENCE_COMPONENT_ID)){
             QString coreUID = getUidById(properties.value(STR_PROPERTY_REFERENCE_COMPONENT_ID));
@@ -723,7 +724,7 @@ void StructuralViewPlugin::requestEntityChange(Entity* entity)
         if (!properties.value(STR_PROPERTY_ENTITY_ID).isEmpty()){
           StructuralRole role = StructuralUtil::translateStringToRole(properties.value(STR_PROPERTY_ENTITY_ID));
 
-          properties.insert(STR_PROPERTY_BIND_ROLE, QString::number(role));
+          properties.insert(STR_PROPERTY_BIND_ROLE, StructuralUtil::translateRoleToString(role));
 
           if (properties.contains(STR_PROPERTY_REFERENCE_COMPONENT_ID)){
             QString coreUID = getUidById(properties.value(STR_PROPERTY_REFERENCE_COMPONENT_ID));

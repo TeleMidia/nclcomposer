@@ -424,7 +424,7 @@ void StructuralView::insert(QString uid, QString parent, QMap<QString, QString> 
         if (entities.contains(properties.value(STR_PROPERTY_EDGE_HEAD)))
           bind->setHead(entities.value(properties.value(STR_PROPERTY_EDGE_HEAD)));
 
-        bind->setType((StructuralRole) properties.value(STR_PROPERTY_BIND_ROLE).toInt());
+        bind->setRole(StructuralUtil::translateStringToRole(properties.value(STR_PROPERTY_BIND_ROLE)));
 
         if (properties.value(STR_PROPERTY_EDGE_ANGLE).isEmpty())
         {
@@ -436,7 +436,7 @@ void StructuralView::insert(QString uid, QString parent, QMap<QString, QString> 
           bind->setAngle(properties.value(STR_PROPERTY_EDGE_ANGLE).toDouble());
         }
 
-        connect(bind, SIGNAL(showEditBindDialog(StructuralBind*)),SLOT(showEditBindDialog(StructuralBind*)));
+        connect(bind, SIGNAL(performedEdit(StructuralBind*)),SLOT(showEditBindDialog(StructuralBind*)));
 
         break;
       }
@@ -600,7 +600,7 @@ void StructuralView::adjustAngles(StructuralBind* edge)
 
         int A = ea->getAngle();
 
-        if (!ea->isCondition())
+        if (!StructuralUtil::isConditionRole(ea->getRole()))
           A = -A;
 
         if (MAX < A )
@@ -621,7 +621,7 @@ void StructuralView::adjustAngles(StructuralBind* edge)
   else if (MAX > abs(MIN))
     ANGLE = MIN-60;
 
-  if (!edge->isCondition())
+  if (!StructuralUtil::isConditionRole(edge->getRole()))
     edge->setAngle(-ANGLE);
   else
     edge->setAngle(ANGLE);
@@ -852,7 +852,7 @@ void StructuralView:: change(QString uid, QMap<QString, QString> properties, QMa
      if (entity->getStructuralType() ==  Structural::Bind) {
        StructuralBind* b = (StructuralBind*) entity;
 
-       b->setType((StructuralRole) properties.value(STR_PROPERTY_BIND_ROLE).toInt());
+       b->setRole(StructuralUtil::translateStringToRole(properties.value(STR_PROPERTY_BIND_ROLE)));
 
        if (entities.contains(properties.value(STR_PROPERTY_EDGE_TAIL)))
          b->setTail(entities.value(properties.value(STR_PROPERTY_EDGE_TAIL)));
@@ -1418,7 +1418,7 @@ void StructuralView::createBind(StructuralEntity* a, StructuralEntity* b, Struct
       properties[STR_PROPERTY_EDGE_TAIL] = a->getStructuralUid();
       properties[STR_PROPERTY_EDGE_HEAD] = b->getStructuralUid();
 
-      properties[STR_PROPERTY_BIND_ROLE] = QString::number(type);
+      properties[STR_PROPERTY_BIND_ROLE] = StructuralUtil::translateRoleToString(type);
       properties[STR_PROPERTY_ENTITY_ID] = StructuralUtil::translateRoleToString(type);
 
       StructuralEntity* e_link = NULL;
@@ -1442,7 +1442,7 @@ void StructuralView::createBind(StructuralEntity* a, StructuralEntity* b, Struct
           if (linkDialog->exec()){
             QString role = linkDialog->form.cbAction->currentText();
 
-            properties[STR_PROPERTY_BIND_ROLE] = QString::number(StructuralUtil::translateStringToRole(role));
+            properties[STR_PROPERTY_BIND_ROLE] = role;
             properties[STR_PROPERTY_ENTITY_ID] = role;
           }else{
             modified = true;            // turn on link mode
@@ -1480,7 +1480,7 @@ void StructuralView::createBind(StructuralEntity* a, StructuralEntity* b, Struct
           if (linkDialog->exec()){
             QString role = linkDialog->form.cbCondition->currentText();
 
-            properties[STR_PROPERTY_BIND_ROLE] = QString::number(StructuralUtil::translateStringToRole(role));
+            properties[STR_PROPERTY_BIND_ROLE] = role;
             properties[STR_PROPERTY_ENTITY_ID] = role;
           }else{
             modified = true;            // turn on link mode
@@ -2117,7 +2117,7 @@ void StructuralView::keyPressEvent(QKeyEvent *event)
     if (_selected != NULL)
     {
       _selected->setSelected(false);
-      _selected->adjust(false);
+      _selected->adjust(true);
     }
 
     _selected_UID =  "";
@@ -2332,14 +2332,14 @@ void StructuralView::showEditBindDialog(StructuralBind* entity)
 
   emit requestLinkDialogUpdate();
 
-  if (entity->isCondition()){
+  if (StructuralUtil::isConditionRole(entity->getRole())){
     linkDialog->init(entity->getHead()->getStructuralProperty(STR_PROPERTY_REFERENCE_XCONNECTOR_ID),"","",
                      StructuralLinkDialog::EditCondition);
 
     int index = linkDialog->form.cbCondition->findText(entity->getStructuralId());
     linkDialog->form.cbCondition->setCurrentIndex(index);
     linkDialog->updateCurrentConditionParam(pBind);
-  }else if (entity->isAction()){
+  }else if (StructuralUtil::isActionRole(entity->getRole())){
 
     linkDialog->init(entity->getTail()->getStructuralProperty(STR_PROPERTY_REFERENCE_XCONNECTOR_ID),"","",
                      StructuralLinkDialog::EditAction);
@@ -2358,16 +2358,16 @@ void StructuralView::showEditBindDialog(StructuralBind* entity)
     QString role;
     QMap<QString, QString> p;
 
-    if (entity->isCondition()){
+    if (StructuralUtil::isConditionRole(entity->getRole())){
       role = linkDialog->form.cbCondition->currentText();
       p = linkDialog->getConditionParams();
 
-    }else if (entity->isAction()){
+    }else if (StructuralUtil::isActionRole(entity->getRole())){
       role = linkDialog->form.cbAction->currentText();
       p = linkDialog->getActionParams();
     }
 
-    properties[STR_PROPERTY_BIND_ROLE] = QString::number(StructuralUtil::translateStringToRole(role));
+    properties[STR_PROPERTY_BIND_ROLE] = role;
     properties[STR_PROPERTY_ENTITY_ID] = role;
 
     foreach (QString name, p.keys()) {

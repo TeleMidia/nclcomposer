@@ -42,6 +42,8 @@ public:
   static QString getMimeTypeIcon(StructuralMimeType mimetype);
   static StructuralMimeType getMimeTypeByExtension(const QString &extension);
 
+  static QString getRoleIcon(StructuralRole role);
+
   static bool isConditionRole(StructuralRole role);
   static bool isConditionRole(const QString &role);
 
@@ -73,6 +75,8 @@ private:
 
   static std::map<StructuralMimeType, QString>  _mimetypesIcon;
   static std::map<QString, StructuralMimeType>  _mimetypesExtension;
+
+  static std::map<StructuralRole, QString>  _rolesIcon;
 };
 
 template <typename T, typename U>

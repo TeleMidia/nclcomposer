@@ -354,7 +354,7 @@ std::map<Structural::StructuralType, QString> StructuralUtil::_entitiesColor =
 (Structural::Area, "")
 (Structural::Property, "")
 (Structural::Link, "")
-(Structural::Bind, "")
+(Structural::Bind, "#000000")
 (Structural::Reference, "#000000")
 (Structural::Mapping, "#5C0099")
 
@@ -481,6 +481,34 @@ Structural::StructuralMimeType StructuralUtil::getMimeTypeByExtension(const QStr
     return _mimetypesExtension[extension];
   else
     return Structural::NoMimeType;
+}
+
+std::map<Structural::StructuralRole, QString> StructuralUtil::_rolesIcon =
+    StructuralMap<Structural::StructuralRole, QString>
+(Structural::onBegin, ":/icon/onbegin")
+(Structural::onEnd, ":/icon/onend")
+(Structural::onSelection, ":/icon/onselection")
+(Structural::onResume, ":/icon/onresume")
+(Structural::onPause, ":/icon/onpause")
+(Structural::onBeginAttribution, "")
+(Structural::onEndAttribution, "")
+(Structural::onPauseAttribution, "")
+(Structural::onResumeAttribution, "")
+
+(Structural::Start, ":/icon/start")
+(Structural::Stop, ":/icon/stop")
+(Structural::Resume, ":/icon/resume")
+(Structural::Pause, ":/icon/pause")
+(Structural::Set, ":/icon/set")
+
+(Structural::NoRole, "");
+
+QString StructuralUtil::getRoleIcon(StructuralRole role)
+{
+  if(_rolesIcon.count(role))
+    return _rolesIcon[role];
+  else
+    return "";
 }
 
 bool StructuralUtil::isConditionRole(StructuralRole role)
