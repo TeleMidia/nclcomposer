@@ -108,7 +108,7 @@ public slots:
 
 #ifdef WITH_GRAPHVIZ
    void adjustAllWithGraphiviz();
-   void adjustChildrenWithGraphiviz(StructuralEntity* e, QString code, bool interfaceAsNode = false);
+   void adjustChildrenWithGraphiviz(StructuralEntity* e, QString code);
 #endif
 
 public:
