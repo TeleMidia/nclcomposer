@@ -3,49 +3,15 @@
 #include "StructuralContent.h"
 #include "StructuralUtil.h"
 
-#include <QDebug>
-
 StructuralComposition::StructuralComposition(StructuralEntity* parent)
   : StructuralNode(parent)
 {
-  //setnstSubtype(Qnst::Composition);
-
-  setColor("#EEEEEE");
-
-  setAcceptDrops(true);
-
-
-  lastw = 0;
-  lasth = 0;
-
-  setUncollapsed(true);
-
-  tmp = NULL;
-
-  //tmp = new QnstGraphicsComposition();
-  //tmp->hide();
-
-  /* Default size and position */
-  if(parent)
-  {
-    setTop(parent->getHeight()/2 - STR_DEFAULT_COMPOSITION_H/2);
-    setLeft(parent->getWidth()/2 - STR_DEFAULT_COMPOSITION_W/2);
-  }
-  else
-  {
-    setTop(0);
-    setLeft(0);
-  }
-
   setWidth(STR_DEFAULT_COMPOSITION_W);
   setHeight(STR_DEFAULT_COMPOSITION_H);
 
-
-  createObjects();
-  createConnections();
-
-  // By default composition will not be able to show mouse hover highlight
+  setUncollapsed(true);
   setHovering(false);
+
   setAcceptDrops(true);
 }
 
@@ -54,212 +20,9 @@ StructuralComposition::~StructuralComposition()
 
 }
 
-void StructuralComposition::createObjects()
-{
-//  _menu->_deleteAction->setEnabled(true);
-
-//  _menu->_snapshotAction->setEnabled(true);
-
-//  _menu->_insertMenu->setEnabled(true);
-
-//  _menu->_mediaAction->setEnabled(true);
-//  _menu->_contextAction->setEnabled(true);
-//  _menu->_switchAction->setEnabled(true);
-//  _menu->_portAction->setEnabled(true);
-//  _menu->_propertyAction->setEnabled(true);
-
-}
-
-void StructuralComposition::createConnections()
-{
-  // connect(menu, SIGNAL(undoRequested()), SIGNAL(undoRequested()));
-  // connect(menu, SIGNAL(redoRequested()), SIGNAL(redoRequested()));
-
-
-//  connect(menu, SIGNAL(menuAddEntityTriggered(QnstSubtype)),SLOT(newChild(QnstSubtype)));
-
-//  connect(menu, SIGNAL(autoRequested()), SLOT(adjustWithSpring()));
-}
-
-QString StructuralComposition::getColor() const
-{
-  return color;
-}
-
-void StructuralComposition::setColor(QString color)
-{
-  this->color = color;
-}
-
-
-void StructuralComposition::adjust(bool avoidCollision,  bool rec)
-{
-  StructuralNode::adjust(avoidCollision, rec);
-
-  setUncollapsed((getStructuralProperty(STR_PROPERTY_ENTITY_UNCOLLAPSED) == "1" ? true : false));
-
-  StructuralType type = getStructuralType();
-
-  if (type == Structural::Context){
-    setColor("#F4E4CC");
-//    _menu->_switchPortAction->setEnabled(false);
-//    _menu->_portAction->setEnabled(true);
-    //    _
-  }else if (type == Structural::Switch){
-   setColor("#C6E2FF");
-//    setComenu->_switchPortAction->setEnabled(true);
-//    _menu->_portAction->setEnabled(false);
-  }else if (type == Structural::Body){
-    setColor("#EEEEEE");
-//    _menu->_switchPortAction->setEnabled(false);
-//    _menu->_portAction->setEnabled(true);
-    if (getWidth() == STR_DEFAULT_COMPOSITION_W && getHeight() == STR_DEFAULT_COMPOSITION_H){
-       setWidth(STR_DEFAULT_BODY_W);
-       setHeight(STR_DEFAULT_BODY_H);
-    }
-  }
-
-  QString tip = "";
-  QString name = (getStructuralId() != "" ? getStructuralId() : "?");
-
-  if (getStructuralType() == Structural::Context)
-  {
-    tip += "Context ("+name+")";
-  }
-  else if (getStructuralType() == Structural::Switch)
-  {
-    tip += "Switch ("+name+")";
-  }
-  else if (getStructuralType() == Structural::Body)
-  {
-    tip += "Body ("+name+")";
-  }
-  else
-  {
-    tip += "Composition ("+name+")";
-  }
-
-  if (hasError)
-    tip += " - Error: " + erroMsg;
-
-  setToolTip(tip);
-}
-
-
-void StructuralComposition::draw(QPainter* painter)
-{
-  if (isUncollapsed())
-  {
-    painter->setRenderHint(QPainter::Antialiasing,true);
-
-    painter->setBrush(QColor(color));
-
-    if (hasError)
-      painter->setPen(QPen(QBrush(Qt::red), 2));
-    else
-      painter->setPen(QPen(QBrush(Qt::black), 0));
-
-    painter->drawEllipse(4, 4, getWidth()-1, getHeight()-1);
-
-    drawMouseHoverHighlight(painter); // This should not be HERE!!
-
-    if (isMoving())
-    {
-      painter->setBrush(Qt::NoBrush);
-      painter->setPen(QPen(QBrush(Qt::black), 0)); // 0px = cosmetic border
-
-      painter->drawEllipse(getMoveLeft()+4-getLeft(), getMoveTop()+4-getTop(), getWidth()-1, getHeight()-1);
-
-    }
-    else if (isResizing())
-    {
-      painter->setBrush(Qt::NoBrush);
-      painter->setPen(QPen(QBrush(Qt::black), 0)); // 0px = cosmetic border
-
-      painter->drawEllipse(getResizeLeft()+4-getLeft(), getResizeTop()+4-getTop(), getResizeWidth()-1, getResizeHeight()-1);
-    }
-  }
-  else
-  {
-    painter->setRenderHint(QPainter::SmoothPixmapTransform, true);
-
-    painter->drawPixmap(4 + 8/2, 4 + 8/2, getWidth()-8, getHeight()-16-8, QPixmap(StructuralUtil::getIcon(getStructuralType())));
-
-    drawMouseHoverHighlight(painter); // This should not be HERE!!
-
-    painter->setPen(QPen(QBrush(Qt::black),0));
-
-    // draw a formated text with underline when there is error
-    if(hasError)
-    {
-      painter->drawPixmap((getWidth()-8)/2 + 12, (getHeight()-8)/2 + 4, 12, 12, QPixmap(":/icon/delete"));
-
-      int N_STEPS = 20;
-      int begin_w = 8;
-      int end_w = getWidth();
-      double current_x = begin_w;
-      double step = (double) ( end_w - begin_w ) / N_STEPS;
-
-      QPolygonF polygon;
-      painter->setPen(QPen(QBrush(Qt::red), 0)); // 0px = cosmetic border
-      painter->setRenderHint(QPainter::Antialiasing, true);
-
-      for (int i = 0; i < N_STEPS; i++)
-      {
-        current_x = begin_w + (double) i * step;
-
-        if( i % 2)
-          polygon << QPointF( current_x, getHeight() - 3 );
-        else
-          polygon << QPointF( current_x, getHeight() );
-      }
-
-      painter->drawPolyline(polygon);
-    }
-
-    QString localid = (getStructuralId() != "" ? getStructuralId() : "?");
-
-    if (localid.length() > 5)
-    {
-      localid = localid.replace(3,localid.length()-3,"...");
-    }
-
-    painter->drawText(4 + 8/2, 4 + 8/2 + getHeight()-16-8, getWidth()-8, 16, Qt::AlignCenter, localid);
-
-    if (isMoving())
-    {
-      painter->setBrush(Qt::NoBrush);
-      painter->setPen(QPen(QBrush(Qt::black), 0)); // 0px = cosmetic border
-
-      painter->setRenderHint(QPainter::Antialiasing,false);
-      painter->drawRect(getMoveLeft()+4-getLeft(), getMoveTop()+4-getTop(), getWidth()-1, getHeight()-1);
-    }
-  }
-}
-
-void StructuralComposition::delineate(QPainterPath* painter) const
-{
-  painter->addEllipse(4, 4, getWidth(), getHeight());
-}
-
-void StructuralComposition::dragEnterEvent(QGraphicsSceneDragDropEvent *event)
-{
-  bool enter = false;
-
-  foreach(QUrl url, event->mimeData()->urls())
-  {
-    event->acceptProposedAction();
-
-    enter = true;
-  }
-
-    if (!enter)
-  StructuralNode::dragEnterEvent(event);
-}
-
 void StructuralComposition::collapse(bool notify)
 {
-  QMap<QString,QString> prev = getStructuralProperties();
+  QMap<QString,QString> previous = getStructuralProperties();
 
   if (!isUncollapsed())
   {
@@ -270,169 +33,179 @@ void StructuralComposition::collapse(bool notify)
     setWidth(getUncollapedWidth());
     setHeight(getUncollapedHeight());
 
-    foreach(StructuralEntity* e, getStructuralEntities())
-    {
-      if (e->getStructuralCategory() == Structural::Interface)
-      {
-        e->setTop(((e->getTop()*getUncollapedHeight())/STR_DEFAULT_CONTENT_H));
-        e->setLeft(((e->getLeft()*getUncollapedWidth())/STR_DEFAULT_CONTENT_W));
-      }
-      else
-      {
-//        e->setStructuralParent(this);
-//        tmp->remove(e);
-        e->setHidden(false);
+    foreach(StructuralEntity* entity, getStructuralEntities()) {
+      if (entity->getStructuralCategory() == Structural::Interface) {
+        entity->setTop(((entity->getTop()*getUncollapedHeight())/STR_DEFAULT_CONTENT_H));
+        entity->setLeft(((entity->getLeft()*getUncollapedWidth())/STR_DEFAULT_CONTENT_W));
 
-        if (e->isUncollapsed())
-        {
-          e->setWidth(e->getUncollapedWidth());
-          e->setHeight(e->getUncollapedHeight());
+      } else {
+        entity->setHidden(false);
+
+        entity->setTop(entity->getUncollapedTop());
+        entity->setLeft(entity->getUncollapedLeft());
+
+        if (entity->isUncollapsed()) {
+          entity->setWidth(entity->getUncollapedWidth());
+          entity->setHeight(entity->getUncollapedHeight());
         }
-
-        e->setTop(e->getUncollapedTop());
-        e->setLeft(e->getUncollapedLeft());
-
       }
 
-      e->adjust();
-
+      entity->adjust(true);
     }
-
-//    adjust();
-
-//    setUncollapedWidth(getWidth());
-//    setUncollapedHeight(getHeight());
 
     setResizable(true);
 
-  }
-  else
-  {
+  } else {
     setHovering(true);
 
-//    if (getUncollapedHeight() == 0 && getUncollapedWidth() == 0){
-      setUncollapedWidth(getWidth());
-      setUncollapedHeight(getHeight());
-//    }
+    setUncollapedWidth(getWidth());
+    setUncollapedHeight(getHeight());
 
     setTop(getTop() + getUncollapedHeight()/2 - STR_DEFAULT_CONTENT_H/2);
     setLeft(getLeft() + getUncollapedWidth()/2 - STR_DEFAULT_CONTENT_W/2);
     setWidth(STR_DEFAULT_CONTENT_W);
     setHeight(STR_DEFAULT_CONTENT_H);
 
+    foreach(StructuralEntity* entity, getStructuralEntities()) {
+      if (entity->getStructuralCategory() == Structural::Interface) {
+        entity->setTop(((entity->getTop()*STR_DEFAULT_CONTENT_H)/getUncollapedHeight()));
+        entity->setLeft(((entity->getLeft()*STR_DEFAULT_CONTENT_W)/getUncollapedWidth()));
 
-    foreach(StructuralEntity* e, getStructuralEntities())
-    {
+      } else {
+        entity->setHidden(true);
 
-      if (e->getStructuralCategory() == Structural::Interface)
-      {
+        entity->setUncollapedTop(entity->getTop());
+        entity->setUncollapedLeft(entity->getLeft());
 
-        e->setTop(((e->getTop()*STR_DEFAULT_CONTENT_H)/getUncollapedHeight()));
-        e->setLeft(((e->getLeft()*STR_DEFAULT_CONTENT_W)/getUncollapedWidth()));
-
-      }else{
-
-
-      //        e->setStructuralParent(NULL);
-        e->setHidden(true);
-
-        if (e->isUncollapsed())
-        {
-          e->setUncollapedWidth(e->getWidth());
-          e->setUncollapedHeight(e->getHeight());
+        if (entity->isUncollapsed()) {
+          entity->setUncollapedWidth(entity->getWidth());
+          entity->setUncollapedHeight(entity->getHeight());
         }
-
-        e->setUncollapedTop(e->getTop());
-        e->setUncollapedLeft(e->getLeft());
-
-
-//        remove(e);
       }
-       e->adjust();
+
+      entity->adjust(true);
     }
 
     setResizable(false);
   }
 
-  adjust();
+  StructuralEntity* parent = getStructuralParent();
 
-
-  if (getStructuralParent() != NULL)
-  {
-    getStructuralParent()->adjust();
-  }
+  if (parent != NULL)
+    parent->adjust(true);
 
   setUncollapsed(!isUncollapsed());
 
-
-
   if (notify)
-    emit changed(getStructuralUid(),getStructuralProperties(),prev,StructuralUtil::createSettings(true,false));
+    emit changed(getStructuralUid(),getStructuralProperties(),previous,StructuralUtil::createSettings(true,false));
 }
 
-void StructuralComposition::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
+void StructuralComposition::draw(QPainter* painter)
 {
-  collapse(true);
+  if (isUncollapsed()) {
+    painter->setRenderHint(QPainter::Antialiasing,true);
+    painter->setRenderHint(QPainter::SmoothPixmapTransform, false);
+
+    QColor drawColor = QColor(StructuralUtil::getColor(getStructuralType()));
+
+    painter->setBrush(drawColor);
+    painter->setPen(QPen(drawColor.darker(), 0));
+
+    painter->drawEllipse(STR_DEFAULT_ENTITY_PADDING,
+                         STR_DEFAULT_ENTITY_PADDING,
+                         getWidth(),
+                         getHeight());
+
+    painter->setBrush(Qt::NoBrush);
+
+    if (isMoving())
+      painter->drawEllipse(getMoveLeft()+STR_DEFAULT_ENTITY_PADDING-getLeft(),
+                           getMoveTop()+STR_DEFAULT_ENTITY_PADDING-getTop(),
+                           getWidth(),
+                           getHeight());
+
+    else if (isResizing())
+      painter->drawEllipse(getResizeLeft()+STR_DEFAULT_ENTITY_PADDING-getLeft(),
+                           getResizeTop()+STR_DEFAULT_ENTITY_PADDING-getTop(),
+                           getResizeWidth(),
+                           getResizeHeight());
+
+  } else {
+    painter->setRenderHint(QPainter::Antialiasing,false);
+    painter->setRenderHint(QPainter::SmoothPixmapTransform, true);
+
+    painter->drawPixmap(STR_DEFAULT_ENTITY_PADDING + STR_DEFAULT_CONTENT_PADDING,
+                        STR_DEFAULT_ENTITY_PADDING + STR_DEFAULT_CONTENT_PADDING,
+                        getWidth() - 2*STR_DEFAULT_CONTENT_PADDING,
+                        getHeight() - 2*STR_DEFAULT_CONTENT_PADDING - 4*STR_DEFAULT_CONTENT_PADDING,
+                        QPixmap(StructuralUtil::getIcon(getStructuralType())));
+
+    painter->setBrush(Qt::NoBrush);
+    painter->setPen(QPen(QBrush(Qt::black),0));
+
+    QString text = getStructuralId();
+
+    if (text.isEmpty())
+      text = "(?)";
+
+    if (text.length() > 5)
+      text = text.replace(3, text.length()-3, "...");
+
+    painter->drawText(STR_DEFAULT_ENTITY_PADDING + STR_DEFAULT_CONTENT_PADDING,
+                      STR_DEFAULT_ENTITY_PADDING + STR_DEFAULT_CONTENT_PADDING + getHeight() - STR_DEFAULT_CONTENT_TEXT_H - 2*STR_DEFAULT_CONTENT_PADDING,
+                      getWidth() - 2*STR_DEFAULT_CONTENT_PADDING,
+                      STR_DEFAULT_CONTENT_TEXT_H,
+                      Qt::AlignCenter, text);
+
+    if (isMoving())
+      painter->drawRect(getMoveLeft() + STR_DEFAULT_ENTITY_PADDING - getLeft(),
+                        getMoveTop() + STR_DEFAULT_ENTITY_PADDING - getTop(),
+                        getWidth(),
+                        getHeight());
+  }
 }
 
+void StructuralComposition::delineate(QPainterPath* painter) const
+{
+  painter->addEllipse(STR_DEFAULT_ENTITY_PADDING,
+                      STR_DEFAULT_ENTITY_PADDING,
+                      getWidth(),
+                      getHeight());
+}
+
+void StructuralComposition::dragEnterEvent(QGraphicsSceneDragDropEvent *event)
+{
+  if (!event->mimeData()->urls().isEmpty())
+    event->acceptProposedAction();
+
+  StructuralNode::dragEnterEvent(event);
+}
 
 void StructuralComposition::dropEvent(QGraphicsSceneDragDropEvent *event)
 {
-  if(event->mimeData()->urls().size() > 0)
-  {
-  foreach(QUrl url, event->mimeData()->urls())
-  {
-    QString filename = url.toLocalFile();
-    QString suffix = QFileInfo(filename).suffix().toLower();
-
+  if (!event->mimeData()->urls().isEmpty()) {
     event->acceptProposedAction();
-    dropsrc = filename;
 
-    QMap<QString,QString> properties;
-    properties[STR_PROPERTY_ENTITY_TYPE] = StructuralUtil::translateTypeToString(Structural::Media);
-    properties[STR_PROPERTY_ENTITY_ID] = StructuralUtil::formatId(QFileInfo(filename).baseName());
-    properties[STR_PROPERTY_CONTENT_LOCATION] = filename;
-    properties[STR_PROPERTY_CONTENT_MIMETYPE] = StructuralUtil::translateMimeTypeToString(StructuralUtil::getMimeTypeByExtension(suffix));
+    foreach(QUrl url, event->mimeData()->urls()) {
+      QString filename = url.toLocalFile();
+      QString suffix = QFileInfo(filename).suffix().toLower();
 
-    QMap<QString,QString> settings;
-    settings[STR_SETTING_UNDO] = "1";
-    settings[STR_SETTING_NOTIFY] = "1";
-    settings[STR_SETTING_CODE] = StructuralUtil::createUid();
+      QMap<QString,QString> properties;
+      properties[STR_PROPERTY_ENTITY_TYPE] = StructuralUtil::translateTypeToString(Structural::Media);
+      properties[STR_PROPERTY_ENTITY_ID] = StructuralUtil::formatId(QFileInfo(filename).baseName());
+      properties[STR_PROPERTY_CONTENT_MIMETYPE] = StructuralUtil::translateMimeTypeToString(StructuralUtil::getMimeTypeByExtension(suffix));
+      properties[STR_PROPERTY_CONTENT_LOCATION] = filename;
 
-    inserted(StructuralUtil::createUid(), getStructuralUid(), properties, settings);
-
-  }
+      inserted(StructuralUtil::createUid(), getStructuralUid(), properties, StructuralUtil::createSettings());
+    }
   }
 
   StructuralNode::dropEvent(event);
 }
 
-
-void StructuralComposition::adjustWithSpring()
+void StructuralComposition::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
 {
-}
+  collapse(true);
 
-qreal StructuralComposition::getLastW()
-{
-  return lastw;
+  StructuralNode::mouseDoubleClickEvent(event);
 }
-
-qreal StructuralComposition::getLastH()
-{
-  return lasth;
-}
-
-void StructuralComposition::setLastW(qreal lastW)
-{
-  this->lastw = lastW;
-}
-
-void StructuralComposition::setLastH(qreal lastH)
-{
-  this->lasth = lastH;
-}
-
-//void QnstGraphicsComposition::setCollpsed(bool collapsed)
-//{
-//    this->collapsed = collapsed;
-//}

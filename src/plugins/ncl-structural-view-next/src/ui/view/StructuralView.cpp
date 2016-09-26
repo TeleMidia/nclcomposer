@@ -400,6 +400,8 @@ void StructuralView::insert(QString uid, QString parent, QMap<QString, QString> 
 
           entity = new StructuralComposition();
           entity->setStructuralType(Structural::Body);
+          entity->setWidth(STR_DEFAULT_BODY_W);
+          entity->setHeight(STR_DEFAULT_BODY_H);
 
           emit bodyStateChange(false);
         }
@@ -1930,7 +1932,7 @@ void StructuralView::mousePressEvent(QMouseEvent* event)
     link = new StructuralViewLink();
     scene->addItem(link);
     link->setLine(QLineF(mapToScene(event->pos()), mapToScene(event->pos())));
-    link->adjust();
+    link->adjust(true);
 
     linking = true;
   }
@@ -2523,7 +2525,7 @@ void StructuralView::adjustChildrenWithGraphiviz(StructuralEntity* parent, QStri
     foreach (StructuralEntity* c, parent->getStructuralEntities()) {
       if (c->getStructuralCategory() == Structural::Edge ){
         StructuralBind* bind = (StructuralBind*) c;
-        bind->adjust();
+        bind->adjust(true);
       }
     }
   }

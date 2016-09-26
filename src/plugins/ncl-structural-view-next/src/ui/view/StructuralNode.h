@@ -24,8 +24,6 @@ public:
   virtual void adjust(bool collision = false,  bool recursion = true);
 
 protected:
-  virtual void draw(QPainter* painter) = 0;
-  virtual void delineate(QPainterPath* painter) const = 0;
 
   virtual void move(QGraphicsSceneMouseEvent* event);
   virtual void resize(QGraphicsSceneMouseEvent* event);

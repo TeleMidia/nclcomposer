@@ -346,9 +346,9 @@ QString StructuralUtil::getIcon(StructuralType type)
 std::map<Structural::StructuralType, QString> StructuralUtil::_entitiesColor =
     StructuralMap<Structural::StructuralType, QString >
 (Structural::Media, "")
-(Structural::Body, "")
-(Structural::Context, "")
-(Structural::Switch, "")
+(Structural::Body, "#EEEEEE")
+(Structural::Context, "#F4E4CC")
+(Structural::Switch, "#C6E2FF")
 (Structural::Port, "")
 (Structural::SwitchPort, "")
 (Structural::Area, "")
@@ -557,7 +557,7 @@ void StructuralUtil::adjustEdges(StructuralEntity* entity)
         StructuralEdge *edge = (StructuralEdge*) relative;
 
         if (edge->getTail() == entity || edge->getHead() == entity)
-          edge->adjust();
+          edge->adjust(true);
       }
     }
   }
