@@ -1,5 +1,7 @@
 #include "StructuralBind.h"
 
+#include <math.h>
+
 StructuralBind::StructuralBind(StructuralEntity* parent)
   : StructuralEdge(parent)
 {
