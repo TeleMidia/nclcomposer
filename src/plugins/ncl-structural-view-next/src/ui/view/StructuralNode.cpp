@@ -1,16 +1,12 @@
 #include "StructuralNode.h"
 
-#include "StructuralView.h"
-
-#include <QDebug>
+#include "StructuralEdge.h"
 
 StructuralNode::StructuralNode(StructuralEntity* parent)
   : StructuralEntity(parent)
 {
   setStructuralCategory(Structural::Node);
   setStructuralType(Structural::NoType);
-
-  hover = false;
 }
 
 StructuralNode::~StructuralNode()
@@ -18,123 +14,39 @@ StructuralNode::~StructuralNode()
 
 }
 
-void StructuralNode::fit(qreal padding)
-{
-  qreal top = getTop();
-  qreal left = getLeft();
-  qreal width = getWidth();
-  qreal height = getHeight();
-
-  qreal nextTop = top;
-  qreal nextLeft = left;
-  qreal nextWidth = width;
-  qreal nextHeight = height;
-
-  foreach(StructuralEntity* entity, getStructuralEntities())
-  {
-    if (entity->getStructuralCategory() == Structural::Node)
-    {
-      if ((entity->getTop()-4) + top < nextTop + padding)
-      {
-        nextTop = (entity->getTop()-4) + top - padding;
-      }
-
-      if ((entity->getLeft()-4) + left < nextLeft + padding)
-      {
-        nextLeft = (entity->getLeft()-4) + left - padding;
-      }
-
-      if ((entity->getLeft()-4) + entity->getWidth() > nextWidth - padding)
-      {
-        nextWidth = (entity->getLeft()-4) + entity->getWidth() + padding;
-      }
-
-      if ((entity->getTop()-4) + entity->getHeight() > nextHeight - padding)
-      {
-        nextHeight = (entity->getTop()-4) + entity->getHeight() + padding;
-      }
-    }
-  }
-
-  if (nextWidth != width)
-    setWidth(nextWidth);
-
-  if (nextHeight != height)
-    setHeight(nextHeight);
-
-  if (nextTop != top)
-  {
-    foreach(StructuralEntity* entity, getStructuralEntities())
-    {
-      if (entity->getStructuralCategory() == Structural::Node)
-      {
-        entity->setTop(entity->getTop() + (top - nextTop));
-      }
-    }
-
-    setHeight(getHeight() + (top - nextTop));
-    setTop(nextTop);
-  }
-
-  if (nextLeft != left)
-  {
-    foreach(StructuralEntity* entity, getStructuralEntities())
-    {
-      if (entity->getStructuralCategory() == Structural::Node)
-      {
-        entity->setLeft(entity->getLeft() + (left - nextLeft));
-      }
-    }
-
-    setWidth(getWidth() + (left - nextLeft));
-    setLeft(nextLeft);
-  }
-
-  StructuralNode* parent = (StructuralNode*) getStructuralParent();
-
-  if (parent != NULL)
-    parent->fit(padding);
-}
-
 void StructuralNode::inside()
 {
   StructuralEntity* parent = getStructuralParent();
 
-  if (parent != NULL)
-  {
-    QPointF pa(getLeft()+getWidth()/2, getTop()+getHeight()/2);
-    QPointF pb(parent->getWidth()/2, parent->getHeight()/2);
+  if (parent != NULL) {
+    QLineF line = QLineF(getLeft()+getWidth()/2, getTop()+getHeight()/2,
+                         parent->getWidth()/2, parent->getHeight()/2);
 
-    QLineF line(pa, pb);
+    int max = 1000;
+    int n = 0;
 
-    qreal n = 0;
-
-    qreal i = 0.0;
+    qreal current = 0.0;
 
     setSelectable(false);
-    update();
 
-    while(!collidesWithItem(parent,Qt::ContainsItemShape))
-    {
-      i += 0.01;
+    while(!collidesWithItem(parent,Qt::ContainsItemShape)) {
+      current += 0.01;
 
-      setTop(getTop()+line.pointAt(i).y()-pa.y());
-      setLeft(getLeft()+line.pointAt(i).x()-pa.x());
+      setTop(getTop()+line.pointAt(current).y()-line.p1().y());
+      setLeft(getLeft()+line.pointAt(current).x()-line.p1().x());
 
-      if (++n > 1000) // avoid inifinity loop
-      {
+      if (++n > max) {
         n = -1;
         break;
       }
     }
 
-    if (n < 0)
-    {
-      setTop(pb.x()-getHeight()/2);
-      setLeft(pb.y()-getWidth()/2);
+    if (n < 0) {
+      setTop(line.p2().y()-getHeight()/2);
+      setLeft(line.p2().x()-getWidth()/2);
     }
 
-    setSelectable(true); update();
+    setSelectable(true);
   }
 }
 
@@ -143,101 +55,73 @@ void StructuralNode::adjust(bool collision, bool recursion)
 {
   StructuralEntity::adjust(collision, recursion);
 
-  if (recursion){
+  if (recursion)
     foreach(StructuralEntity* entity, getStructuralEntities())
-    {
       if (entity->getStructuralCategory() != Structural::Edge)
         entity->adjust(true, false);
-    }
-  }
 
-  if (!collision){
-    int colliding;
-    int maxInter = 10, inter = 0;
-    do
-    {
-      if(inter > maxInter) break;
-      inter++;
+  StructuralEntity* parent = getStructuralParent();
 
-      colliding = false;
-      QVector<StructuralEntity*> roots;
+  if (parent != NULL) {
 
-      if (getStructuralParent() != NULL)
-        roots = getStructuralParent()->getStructuralEntities();
-      else
-      {
-        StructuralView* v = (StructuralView*) scene()->views().first();
-        roots = v->getRoots();
-      }
+    if (!collision) {
+      // Tries (10x) to find a position where there is no collision
+      // with others relatives
+      for (int i = 0; i < 10; i++) {
+        bool colliding = false;
 
+        foreach(StructuralEntity *entity, parent->getStructuralEntities()) {
+          if(this != entity &&
+             entity->getStructuralType() >= Structural::Media &&
+             entity->getStructuralType() <= Structural::Switch) {
 
-      foreach(StructuralEntity *entity, roots)
-      {
-        if(this != entity && entity->getStructuralType() >= Structural::Node &&
-           entity->getStructuralType() <= Structural::Switch)
-        {
-          qreal n = 0;
-          qreal i = 0.0;
+            int max = 1000;
+            int n = 0;
 
-          entity->setSelectable(false); update();
-          // check collision
-          while(collidesWithItem(entity, Qt::IntersectsItemBoundingRect))
-          {
+            qreal current = 0.0;
 
-            QPointF pa(getLeft()+getWidth()/2, getTop()+getHeight()/2);
-            QPointF pb(entity->getWidth()/2, entity->getHeight()/2);
+            entity->setSelectable(false);
 
-            QLineF line(pa, pb);
+            while(collidesWithItem(entity, Qt::IntersectsItemBoundingRect)) {
+              QLineF line = QLineF(getLeft()+getWidth()/2, getTop()+getHeight()/2,
+                                   parent->getWidth()/2, parent->getHeight()/2);
 
-            line.setAngle(qrand()%360);
+              line.setAngle(qrand()%360);
 
-            i += (double)(qrand()%100)/10000.0;
+              current += (double)(qrand()%100)/10000.0;
 
-            setTop(getTop()+line.pointAt(i/2).y()-pa.y());
-            setLeft(getLeft()+line.pointAt(i/2).x()-pa.x());
+              setTop(getTop()+line.pointAt(current/2).y()-line.p1().y());
+              setLeft(getLeft()+line.pointAt(current/2).x()-line.p1().x());
 
-            if (++n > 1000){
-              n = -1; break;
+              if (++n > max)
+                break;
             }
+
+            inside();
+
+            entity->setSelectable(true);
           }
-
-          inside();
-
-          entity->setSelectable(true); update();
         }
-      }
 
-      foreach(StructuralEntity *entity, roots)
-      {
-        if(collidesWithItem(entity, Qt::IntersectsItemBoundingRect))
-        {
-          colliding = true;
-        }
+        foreach(StructuralEntity *entity, parent->getStructuralEntities())
+          if(collidesWithItem(entity, Qt::IntersectsItemBoundingRect))
+            colliding = true;
+
+        if (!colliding)
+          break;
       }
     }
-    while(colliding);
-  }
 
-  inside();
+    inside();
 
-  QVector<StructuralEntity*> roots;
+    foreach (StructuralEntity* entity, parent->getStructuralEntities()) {
+      if (entity->getStructuralCategory() == Structural::Edge) {
+        StructuralEdge* edge = (StructuralEdge*) entity;
 
-  if (getStructuralParent() != NULL){
-    roots = getStructuralParent()->getStructuralEntities();
-
-  }else{
-    StructuralView* v = (StructuralView*) scene()->views().first();
-    roots = v->getRoots();
-
-
-  }
-
-  foreach (StructuralEntity* c, roots) {
-    if (c->getStructuralCategory() == Structural::Edge){
-      StructuralEdge *e = (StructuralEdge*) c;
-
-      if (e->getTail() == this || e->getHead() == this){
-        e->adjust(true);
+        if (edge->getTail() == this ||
+            edge->getHead() == this) {
+          edge->adjust(true);
+        }
       }
     }
   }
@@ -258,13 +142,11 @@ void StructuralNode::move(QGraphicsSceneMouseEvent* event)
   qreal minx;
   qreal miny;
 
-  if (parent != NULL)
-  {
-    minx = 4;
-    miny = 4;
-  }
-  else
-  {
+  if (parent != NULL) {
+    minx = STR_DEFAULT_ENTITY_PADDING;
+    miny = STR_DEFAULT_ENTITY_PADDING;
+
+  } else {
     minx = 0;
     miny = 0;
   }
@@ -273,13 +155,11 @@ void StructuralNode::move(QGraphicsSceneMouseEvent* event)
   qreal maxx;
   qreal maxy;
 
-  if (parent != NULL)
-  {
-    maxx = parent->getWidth() - getWidth() - 4;
-    maxy = parent->getHeight() - getHeight() - 4;
-  }
-  else
-  {
+  if (parent != NULL) {
+    maxx = parent->getWidth() - getWidth() - STR_DEFAULT_ENTITY_PADDING;
+    maxy = parent->getHeight() - getHeight() - STR_DEFAULT_ENTITY_PADDING;
+
+  } else {
     maxx = scene()->width() - getWidth();
     maxy = scene()->height() - getHeight();
   }
@@ -296,8 +176,8 @@ void StructuralNode::move(QGraphicsSceneMouseEvent* event)
   setMoveTop(nexty);
   setMoveLeft(nextx);
 
-
-  scene()->update();
+  if (scene() != NULL)
+    scene()->update();
 }
 
 void StructuralNode::resize(QGraphicsSceneMouseEvent* event)
@@ -316,15 +196,13 @@ void StructuralNode::resize(QGraphicsSceneMouseEvent* event)
   qreal minw;
   qreal minh;
 
-  if (parentItem() != NULL)
-  {
-    minx = 4;
-    miny = 4;
+  if (parentItem() != NULL) {
+    minx = STR_DEFAULT_ENTITY_PADDING;
+    miny = STR_DEFAULT_ENTITY_PADDING;
     minw = -1; // not used
     minh = -1; // not used
-  }
-  else
-  {
+
+  } else {
     minx = 0;
     miny = 0;
     minw = -1; // not used
@@ -337,15 +215,13 @@ void StructuralNode::resize(QGraphicsSceneMouseEvent* event)
   qreal maxw;
   qreal maxh;
 
-  if (parentItem() != NULL)
-  {
-    maxx = parent->getWidth() - getWidth() - 4;
-    maxy = parent->getHeight() - getHeight() - 4;
-    maxw = parent->getWidth() - 4;
-    maxh = parent->getHeight() - 4;
-  }
-  else
-  {
+  if (parentItem() != NULL) {
+    maxx = parent->getWidth() - getWidth() - STR_DEFAULT_ENTITY_PADDING;
+    maxy = parent->getHeight() - getHeight() - STR_DEFAULT_ENTITY_PADDING;
+    maxw = parent->getWidth() - STR_DEFAULT_ENTITY_PADDING;
+    maxh = parent->getHeight() - STR_DEFAULT_ENTITY_PADDING;
+
+  } else {
     maxx = scene()->width() - getWidth();
     maxy = scene()->height() - getHeight();
     maxw = scene()->width();
@@ -365,8 +241,7 @@ void StructuralNode::resize(QGraphicsSceneMouseEvent* event)
   qreal nexth = h + dh;
 
   // adjusting
-  switch(getStructuralResize())
-  {
+  switch(getStructuralResize()) {
     case Structural::TopLeft:
     {
       break;
@@ -444,5 +319,6 @@ void StructuralNode::resize(QGraphicsSceneMouseEvent* event)
   setResizeWidth(nextw);
   setResizeHeight(nexth);
 
-  scene()->update();
+  if (scene() != NULL)
+    scene()->update();
 }
