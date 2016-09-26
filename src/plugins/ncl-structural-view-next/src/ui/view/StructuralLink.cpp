@@ -58,8 +58,10 @@ void StructuralLink::delineate(QPainterPath* painter) const
   painter->addRect(4, 4, getWidth(), getHeight());
 }
 
-void StructuralLink::refresh()
+void StructuralLink::adjust(bool avoidCollision,  bool rec)
 {
+  StructuralNode::adjust(avoidCollision, rec);
+
   QString tip = "";
   QString name = (getStructuralId() != "" ? getStructuralId() : "?");
 

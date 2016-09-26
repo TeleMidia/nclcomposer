@@ -139,17 +139,19 @@ void StructuralNode::inside()
 }
 
 
-void StructuralNode::adjust(bool avoidCollision, bool rec)
+void StructuralNode::adjust(bool collision, bool recursion)
 {
-  if (rec){
+  StructuralEntity::adjust(collision, recursion);
+
+  if (recursion){
     foreach(StructuralEntity* entity, getStructuralEntities())
     {
       if (entity->getStructuralCategory() != Structural::Edge)
-        entity->adjust(false, false);
+        entity->adjust(true, false);
     }
   }
 
-  if (avoidCollision){
+  if (!collision){
     int colliding;
     int maxInter = 10, inter = 0;
     do
@@ -234,7 +236,7 @@ void StructuralNode::adjust(bool avoidCollision, bool rec)
     if (c->getStructuralCategory() == Structural::Edge){
       StructuralEdge *e = (StructuralEdge*) c;
 
-      if (e->getEntityA() == this || e->getEntityB() == this){
+      if (e->getTail() == this || e->getHead() == this){
         e->adjust();
       }
     }

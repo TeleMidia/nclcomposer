@@ -90,8 +90,6 @@ void StructuralEntity::setStructuralId(const QString &id)
 {
   _id = id;
   _properties.insert(STR_PROPERTY_ENTITY_ID, id) ;
-
-  refresh();
 }
 
 StructualCategory StructuralEntity::getStructuralCategory() const
@@ -155,9 +153,12 @@ void StructuralEntity::setStructuralProperties(const QMap<QString, QString> &pro
     }
   }
 
+
   foreach (QString name, properties.keys()){
-    setStructuralProperty(name, properties.value(name));
+    _properties[name] = properties.value(name);
   }
+
+  adjust(true);
 }
 
 QString StructuralEntity::getStructuralProperty(const QString &name) const
@@ -167,54 +168,35 @@ QString StructuralEntity::getStructuralProperty(const QString &name) const
 
 void StructuralEntity::setStructuralProperty(const QString &name, const QString &value)
 {
-  if (name == STR_PROPERTY_ENTITY_TOP)
-    setTop(value.toDouble());
+  _properties.insert(name, value);
+}
 
-  else if (name == STR_PROPERTY_ENTITY_LEFT)
-    setLeft(value.toDouble());
+void StructuralEntity::adjust(bool collision, bool recursion)
+{
+  setStructuralId(_properties[STR_PROPERTY_ENTITY_ID]);
+  setStructuralUid(_properties[STR_PROPERTY_ENTITY_UID]);
+  setStructuralCategory(StructuralUtil::translateStringToCategory(_properties[STR_PROPERTY_ENTITY_CATEGORY]));
+  setStructuralType(StructuralUtil::translateStringToType(_properties[STR_PROPERTY_ENTITY_TYPE]));
 
-  else if (name == STR_PROPERTY_ENTITY_WIDTH)
-    setWidth(value.toDouble());
+  setTop(_properties[STR_PROPERTY_ENTITY_TOP].toDouble());
+  setLeft(_properties[STR_PROPERTY_ENTITY_LEFT].toDouble());
+  setWidth(_properties[STR_PROPERTY_ENTITY_WIDTH].toDouble());
+  setHeight(_properties[STR_PROPERTY_ENTITY_HEIGHT].toDouble());
 
-  else if (name == STR_PROPERTY_ENTITY_HEIGHT)
-    setHeight(value.toDouble());
+  setUncollapedTop(_properties[STR_PROPERTY_ENTITY_UNCOLLAPSED_TOP].toDouble());
+  setUncollapedLeft(_properties[STR_PROPERTY_ENTITY_UNCOLLAPSED_LEFT].toDouble());
+  setUncollapedWidth(_properties[STR_PROPERTY_ENTITY_UNCOLLAPSED_WIDTH].toDouble());
+  setUncollapedHeight(_properties[STR_PROPERTY_ENTITY_UNCOLLAPSED_HEIGHT].toDouble());
 
-  else if (name == STR_PROPERTY_ENTITY_UNCOLLAPSED_TOP)
-    setUncollapedTop(value.toDouble());
+  setzIndex(_properties[STR_PROPERTY_ENTITY_ZINDEX].toInt());
 
-  else if (name == STR_PROPERTY_ENTITY_UNCOLLAPSED_LEFT)
-    setUncollapedLeft(value.toDouble());
+  setHidden((_properties[STR_PROPERTY_ENTITY_HIDDEN] == STR_VALUE_TRUE ? true : false));
+  setUncollapsed((_properties[STR_PROPERTY_ENTITY_UNCOLLAPSED] == STR_VALUE_TRUE ? true : false));
 
-  else if (name == STR_PROPERTY_ENTITY_UNCOLLAPSED_WIDTH)
-    setUncollapedWidth(value.toDouble());
+  setToolTip(StructuralUtil::getTooltip(_subtype, _id));
 
-  else if (name == STR_PROPERTY_ENTITY_UNCOLLAPSED_HEIGHT)
-    setUncollapedHeight(value.toDouble());
-
-  else if (name == STR_PROPERTY_ENTITY_ZINDEX)
-    setzIndex(value.toInt());
-
-  else if (name == STR_PROPERTY_ENTITY_ID)
-    setStructuralId(value);
-
-  else if (name == STR_PROPERTY_ENTITY_UID)
-    setStructuralUid(value);
-
-  else if (name == STR_PROPERTY_ENTITY_CATEGORY)
-    setStructuralCategory(StructuralUtil::translateStringToCategory(value));
-
-  else if (name == STR_PROPERTY_ENTITY_TYPE)
-    setStructuralType(StructuralUtil::translateStringToType(value));
-
-  else if (name == STR_PROPERTY_ENTITY_HIDDEN)
-    setHidden((value == "1" ? true : false));
-
-  else if (name == STR_PROPERTY_ENTITY_UNCOLLAPSED)
-    setUncollapsed((value == "1" ? true : false));
-
-
-  else
-    _properties.insert(name, value);
+  if (scene() != NULL)
+    scene()->update();
 }
 
 bool StructuralEntity::isMoveable() const
@@ -632,6 +614,206 @@ void StructuralEntity::setStructuralResize(const StructuralResize resize)
   _resize = resize;
 }
 
+void StructuralEntity::delineate(QPainterPath* painter) const
+{
+  painter->addRect(4, 4, getWidth(), getHeight());
+}
+
+void StructuralEntity::move(QGraphicsSceneMouseEvent* event)
+{
+  // setting
+  qreal x = getLeft();
+  qreal y = getTop();
+
+  StructuralEntity* parent = getStructuralParent();
+
+  qreal minx;
+  qreal miny;
+
+  if (parent != NULL)
+  {
+    minx = 4;
+    miny = 4;
+  }
+  else
+  {
+    minx = 0;
+    miny = 0;
+  }
+
+  qreal maxx;
+  qreal maxy;
+
+  if (parent != NULL)
+  {
+    maxx = parent->getWidth() - getWidth() - 4;
+    maxy = parent->getHeight() - getHeight() - 4;
+  }
+  else
+  {
+    maxx = scene()->width() - getWidth();
+    maxy = scene()->height() - getHeight();
+  }
+
+  qreal dx = event->pos().x() - getPressLeft(); // (x1 - x0)
+  qreal dy = event->pos().y() - getPressTop();  // (y1 - y0)
+
+  qreal nextx = x + dx;
+  qreal nexty = y + dy;
+
+  // moving
+  setMoveTop(nexty);
+  setMoveLeft(nextx);
+
+  // redrawing
+  if (scene() != NULL)
+    scene()->update();
+}
+
+void StructuralEntity::resize(QGraphicsSceneMouseEvent* event)
+{
+  // setting
+  qreal x = getLeft();
+  qreal y = getTop();
+  qreal w = getWidth();
+  qreal h = getHeight();
+
+  StructuralEntity* parent = getStructuralParent();
+
+  qreal minx;
+  qreal miny;
+  qreal minw;
+  qreal minh;
+
+  if (parentItem() != NULL)
+  {
+    minx = 4;
+    miny = 4;
+    minw = -1; // not used
+    minh = -1; // not used
+  }
+  else
+  {
+    minx = 0;
+    miny = 0;
+    minw = -1; // not used
+    minh = -1; // not used
+  }
+
+  qreal maxx;
+  qreal maxy;
+  qreal maxw;
+  qreal maxh;
+
+  if (parentItem() != NULL)
+  {
+    maxx = parent->getWidth() - getWidth() - 4;
+    maxy = parent->getHeight() - getHeight() - 4;
+    maxw = parent->getWidth() - 4;
+    maxh = parent->getHeight() - 4;
+  }
+  else
+  {
+    maxx = scene()->width() - getWidth();
+    maxy = scene()->height() - getHeight();
+    maxw = scene()->width();
+    maxh = scene()->height();
+  }
+
+  qreal dx = event->pos().x() - getPressLeft();    // (x1 - x0)
+  qreal dy = event->pos().y() - getPressTop();     // (y1 - y0)
+  qreal dw = -dx;
+  qreal dh = -dy;
+
+  qreal nextx = x + dx;
+  qreal nexty = y + dy;
+  qreal nextw = w + dw;
+  qreal nexth = h + dh;
+
+  // adjusting
+  switch(getStructuralResize())
+  {
+    case Structural::TopLeft:
+    {
+      break;
+    }
+
+    case Structural::Top:
+    {
+      nextx = x; // fixed x
+      nextw = w; // fixed width
+
+      break;
+    }
+
+    case Structural::TopRight:
+    {
+      nextx = x; // fixed x
+      nextw = w - dw;
+
+      break;
+    }
+
+    case Structural::Right:
+    {
+      nextx = x; // fixed x
+      nextw = w - dw;
+
+      nexty = y; // fixed y
+      nexth = h; // fixed height
+
+      break;
+    }
+
+    case Structural::BottomRight:
+    {
+      nextx = x; // fixed x
+      nextw = w - dw;
+
+      nexty = y; // fixed y
+      nexth = h - dh;
+
+      break;
+    }
+
+    case Structural::Bottom:
+    {
+      nextx = x; // fixed x
+      nextw = w; // fixed width
+
+      nexty = y; // fixed y
+      nexth = h - dh;
+
+      break;
+    }
+
+    case Structural::BottomLeft:
+    {
+      nexty = y; // fixed y
+      nexth = h - dh;
+      break;
+    }
+
+    case Structural::Left:
+    {
+      nexty = y; // fixed y
+      nexth = h; // fixed height
+
+      break;
+    }
+  }
+
+  // resizing
+  setResizeTop(nexty);
+  setResizeLeft(nextx);
+  setResizeWidth(nextw);
+  setResizeHeight(nexth);
+
+  // redrawing
+  if (scene() != NULL)
+    scene()->update();
+}
+
 QPainterPath StructuralEntity::shape() const
 {
   QPainterPath painter;
@@ -641,8 +823,8 @@ QPainterPath StructuralEntity::shape() const
   if (_selectable && _selected && _resizable){
     painter.setFillRule(Qt::WindingFill);
 
-    qreal W = STR_DEFAULT_ANCHOR_W;
-    qreal H = STR_DEFAULT_ANCHOR_H;
+    qreal W = STR_DEFAULT_ENTITY_ANCHOR_W;
+    qreal H = STR_DEFAULT_ENTITY_ANCHOR_H;
 
     painter.addRect(0,0,W,H);                                // topleft
     painter.addRect((_width+W)/2 - W/2,0,W,H);               // top
@@ -663,8 +845,8 @@ QRectF StructuralEntity::boundingRect() const
 
   bounds.setX(0);
   bounds.setY(0);
-  bounds.setWidth(_width+STR_DEFAULT_ANCHOR_W);
-  bounds.setHeight(_height+STR_DEFAULT_ANCHOR_H);
+  bounds.setWidth(_width+STR_DEFAULT_ENTITY_ANCHOR_W);
+  bounds.setHeight(_height+STR_DEFAULT_ENTITY_ANCHOR_H);
 
   return bounds;
 }
@@ -679,14 +861,14 @@ void StructuralEntity::paint(QPainter *painter, const QStyleOptionGraphicsItem *
     painter->setBrush(Qt::NoBrush);
     painter->setPen(QPen(QBrush(Qt::black), 0, Qt::DashLine));
 
-    painter->drawRect(STR_DEFAULT_ANCHOR_W/2, STR_DEFAULT_ANCHOR_H/2, getWidth()-1, getHeight()-1);
+    painter->drawRect(STR_DEFAULT_ENTITY_ANCHOR_W/2, STR_DEFAULT_ENTITY_ANCHOR_H/2, getWidth(), getHeight());
 
     if (_resizable){
       painter->setBrush(QBrush(Qt::white));
       painter->setPen(QPen(QBrush(Qt::black), 0));
 
-      qreal W = STR_DEFAULT_ANCHOR_W;
-      qreal H = STR_DEFAULT_ANCHOR_H;
+      qreal W = STR_DEFAULT_ENTITY_ANCHOR_W;
+      qreal H = STR_DEFAULT_ENTITY_ANCHOR_H;
 
       painter->drawRect(0,0,W,H);                                // topleft
       painter->drawRect((_width+W)/2-H/2-1,0,W,H);               // top
@@ -771,8 +953,8 @@ void StructuralEntity::mousePressEvent(QGraphicsSceneMouseEvent* event)
       setResizeHeight(_height);
     }
 
-    qreal W = STR_DEFAULT_ANCHOR_W;
-    qreal H = STR_DEFAULT_ANCHOR_H;
+    qreal W = STR_DEFAULT_ENTITY_ANCHOR_W;
+    qreal H = STR_DEFAULT_ENTITY_ANCHOR_H;
 
     if (_resizable){
       // if over TOPLEFT resize region
@@ -931,8 +1113,8 @@ void StructuralEntity::updateCursor(QGraphicsSceneHoverEvent* event)
 {
   if (_selected){
     if (_resizable){
-      qreal W = STR_DEFAULT_ANCHOR_W;
-      qreal H = STR_DEFAULT_ANCHOR_H;
+      qreal W = STR_DEFAULT_ENTITY_ANCHOR_W;
+      qreal H = STR_DEFAULT_ENTITY_ANCHOR_H;
 
       // if over TOPLEFT resize region
       if (QRectF(0,0,W,H).contains(event->pos())){
@@ -1106,7 +1288,7 @@ void StructuralEntity::drawMouseHoverHighlight(QPainter *painter)
       painter->setBrush(Qt::NoBrush);
       painter->setPen(QPen(QBrush(QColor("#999999")), 0, Qt::DashLine)); // 0px = cosmetic border
 
-      painter->drawRect(STR_DEFAULT_ANCHOR_W/2, STR_DEFAULT_ANCHOR_H/2, getWidth(), getHeight());
+      painter->drawRect(STR_DEFAULT_ENTITY_ANCHOR_W/2, STR_DEFAULT_ENTITY_ANCHOR_H/2, getWidth(), getHeight());
     }
   }
 }

@@ -91,49 +91,34 @@ void StructuralComposition::setColor(QString color)
   this->color = color;
 }
 
-void StructuralComposition::setStructuralProperty(const QString &name, const QString &value)
-{
-  if (name == STR_PROPERTY_ENTITY_UNCOLLAPSED)
-    setUncollapsed((value == "1" ? true : false));
-  else
-    StructuralNode::setStructuralProperty(name,value);
-}
 
-void StructuralComposition::setStructuralType(const StructuralType subtype)
+void StructuralComposition::adjust(bool avoidCollision,  bool rec)
 {
-  if (subtype == Structural::Context){
+  StructuralNode::adjust(avoidCollision, rec);
+
+  setUncollapsed((getStructuralProperty(STR_PROPERTY_ENTITY_UNCOLLAPSED) == "1" ? true : false));
+
+  StructuralType type = getStructuralType();
+
+  if (type == Structural::Context){
     setColor("#F4E4CC");
 //    _menu->_switchPortAction->setEnabled(false);
 //    _menu->_portAction->setEnabled(true);
-    if (getStructuralType() == Structural::NoType){
-      setWidth(STR_DEFAULT_COMPOSITION_W);
-      setHeight(STR_DEFAULT_COMPOSITION_H);
-    }
-  }else if (subtype == Structural::Switch){
-    setColor("#C6E2FF");
-//    _menu->_switchPortAction->setEnabled(true);
+    //    _
+  }else if (type == Structural::Switch){
+   setColor("#C6E2FF");
+//    setComenu->_switchPortAction->setEnabled(true);
 //    _menu->_portAction->setEnabled(false);
-    if (getStructuralType() == Structural::NoType){
-      setWidth(STR_DEFAULT_COMPOSITION_W);
-      setHeight(STR_DEFAULT_COMPOSITION_H);
-    }
-  }else if (subtype == Structural::Body){
+  }else if (type == Structural::Body){
     setColor("#EEEEEE");
 //    _menu->_switchPortAction->setEnabled(false);
 //    _menu->_portAction->setEnabled(true);
-    if (getStructuralType() == Structural::NoType){
-      setWidth(STR_DEFAULT_BODY_W);
-      setHeight(STR_DEFAULT_BODY_H);
+    if (getWidth() == STR_DEFAULT_COMPOSITION_W && getHeight() == STR_DEFAULT_COMPOSITION_H){
+       setWidth(STR_DEFAULT_BODY_W);
+       setHeight(STR_DEFAULT_BODY_H);
     }
   }
 
-  StructuralNode::setStructuralType(subtype);
-
-  refresh();
-}
-
-void StructuralComposition::refresh()
-{
   QString tip = "";
   QString name = (getStructuralId() != "" ? getStructuralId() : "?");
 
@@ -159,6 +144,7 @@ void StructuralComposition::refresh()
 
   setToolTip(tip);
 }
+
 
 void StructuralComposition::draw(QPainter* painter)
 {
@@ -197,7 +183,7 @@ void StructuralComposition::draw(QPainter* painter)
   {
     painter->setRenderHint(QPainter::SmoothPixmapTransform, true);
 
-    painter->drawPixmap(4 + 8/2, 4 + 8/2, getWidth()-8, getHeight()-16-8, QPixmap(StructuralUtil::getEntityIcon(getStructuralType())));
+    painter->drawPixmap(4 + 8/2, 4 + 8/2, getWidth()-8, getHeight()-16-8, QPixmap(StructuralUtil::getIcon(getStructuralType())));
 
     drawMouseHoverHighlight(painter); // This should not be HERE!!
 
@@ -345,7 +331,9 @@ void StructuralComposition::collapse(bool notify)
         e->setLeft(((e->getLeft()*STR_DEFAULT_CONTENT_W)/getUncollapedWidth()));
 
       }else{
-//        e->setStructuralParent(NULL);
+
+
+      //        e->setStructuralParent(NULL);
         e->setHidden(true);
 
         if (e->isUncollapsed())
@@ -360,16 +348,14 @@ void StructuralComposition::collapse(bool notify)
 
 //        remove(e);
       }
-
        e->adjust();
     }
 
-
-    adjust();
-
-
     setResizable(false);
   }
+
+  adjust();
+
 
   if (getStructuralParent() != NULL)
   {
@@ -377,6 +363,8 @@ void StructuralComposition::collapse(bool notify)
   }
 
   setUncollapsed(!isUncollapsed());
+
+
 
   if (notify)
     emit changed(getStructuralUid(),getStructuralProperties(),prev,StructuralUtil::createSettings(true,false));

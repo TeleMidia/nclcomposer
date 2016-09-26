@@ -6,19 +6,14 @@ StructuralEdge::StructuralEdge(StructuralEntity* parent)
   setStructuralCategory(Structural::Edge);
   setStructuralType(Structural::NoType);
 
-  setSelectable(true);
   setResizable(false);
   setMoveable(false);
 
-  entitya = NULL;
-  entityb = NULL;
+  setAlfa(0);
+  setAngle(0);
 
-  entityaenabled = true;
-  entitybenabled = true;
-
-  angle = 0;
-
-  invalid = false;
+  setTail(NULL);
+  setHead(NULL);
 }
 
 StructuralEdge::~StructuralEdge()
@@ -26,301 +21,351 @@ StructuralEdge::~StructuralEdge()
 
 }
 
-bool StructuralEdge::isInvalid()
+qreal StructuralEdge::getAlfa() const
 {
-  return invalid;
+  return _alfa;
 }
 
-void StructuralEdge::setInvalid(bool invalid)
+void StructuralEdge::setAlfa(qreal alfa)
 {
-  this->invalid = invalid;
+  _alfa = alfa;
 }
 
-StructuralEntity* StructuralEdge::getEntityA() const
+qreal StructuralEdge::getAngle() const
 {
-  return entitya;
-}
-
-void StructuralEdge::setEntityA(StructuralEntity* entity)
-{
-  this->entitya = entity;
-}
-
-StructuralEntity* StructuralEdge::getEntityB() const
-{
-  return entityb;
-}
-
-void StructuralEdge::setEntityB(StructuralEntity* entity)
-{
-  this->entityb = entity;
-}
-
-bool StructuralEdge::isEntityAEnabled() const
-{
-  return entityaenabled;
-}
-
-void StructuralEdge::setEntityAEnabled(bool enable)
-{
-  this->entityaenabled = enable;
-}
-
-bool StructuralEdge::isEntityBEnabled() const
-{
-  return entitybenabled;
-}
-
-void StructuralEdge::setEntityBEnabled(bool enable)
-{
-  this->entitybenabled = enable;
-}
-
-qreal StructuralEdge::getAngle()
-{
-  return angle;
+  return _angle;
 }
 
 void StructuralEdge::setAngle(qreal angle)
 {
-  this->angle = angle;
+  _angle = angle;
+
+  setStructuralProperty(STR_PROPERTY_EDGE_ANGLE, QString::number(angle));
 }
 
-qreal StructuralEdge::getAdjAngle()
+qreal StructuralEdge::getTailTop() const
 {
-  return adjustedangle;
+  return _tailTop;
 }
 
-void StructuralEdge::setAdjAngle(qreal adjangle)
+void StructuralEdge::setTailTop(qreal tailTop)
 {
-  this->adjustedangle = adjangle;
+  _tailTop = tailTop;
 }
 
-void StructuralEdge::adjust(bool avoidCollision,  bool rec)
+qreal StructuralEdge::getTailLeft() const
 {
+  return _tailLeft;
+}
 
+void StructuralEdge::setTailLeft(qreal tailLeft)
+{
+  _tailLeft = tailLeft;
+}
 
-  if (entitya != NULL && entityb != NULL)
-  {
-    QLineF line = QLineF(QPointF(entitya->getLeft() + entitya->getWidth()/2,
-                                 entitya->getTop() + entitya->getHeight()/2),
-                         QPointF(entityb->getLeft() + entityb->getWidth()/2,
-                                 entityb->getTop() + entityb->getHeight()/2));
+qreal StructuralEdge::getHeadTop() const
+{
+  return _headTop;
+}
 
-    if (getEntityA()->getStructuralCategory() == Structural::Interface)
-    {
-      if(getStructuralParent())
-        line.setP1(getStructuralParent()->mapFromItem(getEntityA()->getStructuralParent(), line.p1()));
-    }
+void StructuralEdge::setHeadTop(qreal headTop)
+{
+  _headTop = headTop;
+}
 
-    if (getEntityB()->getStructuralCategory() == Structural::Interface)
-    {
-      if(getStructuralParent())
-        line.setP2(getStructuralParent()->mapFromItem(getEntityB()->getStructuralParent(), line.p2()));
-    }
+qreal StructuralEdge::getHeadLeft() const
+{
+  return _headLeft;
+}
 
-    QPointF pointa = line.p1();
-    QPointF pointb = line.p2();
+void StructuralEdge::setHeadLeft(qreal headLeft)
+{
+  _headLeft = headLeft;
+}
 
-    aux_adjust(pointa, pointb);
+StructuralEntity* StructuralEdge::getTail() const
+{
+  return _tail;
+}
 
-    entitya->setSelectable(false);
-    entityb->setSelectable(false);
+void StructuralEdge::setTail(StructuralEntity* entity)
+{
+  _tail = entity;
+}
 
-    qreal index;
+StructuralEntity* StructuralEdge::getHead() const
+{
+  return _head;
+}
 
-    if (pointa != pointb){
-      index = 1.0;
+void StructuralEdge::setHead(StructuralEntity* entity)
+{
+  _head = entity;
+}
 
-      int n = 0;
+void StructuralEdge::adjust(bool collision,  bool recursion)
+{
+  StructuralEntity::adjust(collision, recursion);
 
-      while(entityb->collidesWithItem(this))
-      {
-        index -= 0.01;
+  // Adjusting properties...
+  setAngle(getStructuralProperty(STR_PROPERTY_EDGE_ANGLE).toDouble());
 
-        if (angle == 0)
-          pointb = line.pointAt(index);
-        else
-          pointb = arcPointAt(line , index);
+  // Adjusting position...
+  StructuralEntity* parent = getStructuralParent();
 
-        aux_adjust(pointa, pointb);
+  if (parent != NULL) {
 
-        if (++n > 100) // avoiding infinity loop
-        {
-          break;
-        }
+    qreal angle = getAngle();
+
+    StructuralEntity* tail = getTail();
+    StructuralEntity* head = getHead();
+
+    if (tail != NULL && head != NULL) {
+      QLineF line = QLineF(QPointF(tail->getLeft() + tail->getWidth()/2,
+                                   tail->getTop() + tail->getHeight()/2),
+                           QPointF(head->getLeft() + head->getWidth()/2,
+                                   head->getTop() + head->getHeight()/2));
+
+      if (tail->getStructuralCategory() == Structural::Interface)
+        if(parent != NULL)
+          line.setP1(parent->mapFromItem(tail->getStructuralParent(), line.p1()));
+
+      if (head->getStructuralCategory() == Structural::Interface)
+        if(parent != NULL)
+          line.setP2(parent->mapFromItem(head->getStructuralParent(), line.p2()));
+
+      adjustBox(line);
+
+      if (tail != head) {
+        tail->setSelectable(false);
+        head->setSelectable(false);
+
+        adjustExtreme(tail, line, 0.0,  0.01, angle);
+        line.setP1(QPointF(getTailLeft(), getTailTop()));
+
+        adjustExtreme(head, line, 1.0, -0.01, angle);
+        line.setP2(QPointF(getHeadLeft(), getHeadTop()));
+
+        tail->setSelectable(true);
+        head->setSelectable(true);
       }
-
-      index = 0;
-
-      n = 0;
-
-      while(entitya->collidesWithItem(this))
-      {
-        index += 0.01;
-
-        if (angle == 0)
-          pointa = line.pointAt(index);
-        else
-          pointa = arcPointAt(line , index);
-
-        aux_adjust(pointa, pointb);
-
-        if (++n > 100){ // avoiding infinity loop
-          break;
-        }
-      }
     }
-
-    entitya->setSelectable(true);
-    entityb->setSelectable(true);
-
-    if (scene() != NULL)
-      scene()->update();
   }
 }
 
-QPointF StructuralEdge::arcPointAt(QLineF line, qreal at, bool toend, bool invert)
+void StructuralEdge::adjustBox(QLineF line)
 {
-  qreal alfa = getAngle();
+  QPointF ptail = line.p1();
+  QPointF phead = line.p2();
 
-  if (invert)
-    alfa = -alfa;
+  qreal x;
+  qreal y;
+  qreal w;
+  qreal h;
 
-  qreal beta = (180 - alfa)/2 + (360 - line.angle());
+  if (ptail.x() <= phead.x() && ptail.y() <= phead.y()) {
+    x = ptail.x();
+    y = ptail.y();
+    w = phead.x() - ptail.x();
+    h = phead.y() - ptail.y();
 
-  qreal R = line.length()/(::sin(((alfa/2)*PI)/180)*2);
+  } else if (ptail.x() > phead.x() && ptail.y() <= phead.y()) {
+    x = phead.x();
+    y = ptail.y();
+    w = ptail.x() - phead.x();
+    h = phead.y() - ptail.y();
 
-  QPointF center_p(line.p2().x() - ::cos((180-beta-alfa)*PI/180)*R,
-                   line.p2().y() + ::sin((180-beta-alfa)*PI/180)*R);
+  } else if (ptail.x() <= phead.x() && ptail.y() > phead.y()) {
+    x = ptail.x();
+    y = phead.y();
+    w = phead.x() - ptail.x();
+    h = ptail.y() - phead.y();
 
-  qreal arc_len = (qreal) alfa*PI*R/180;
+  } else if (ptail.x() > phead.x() && ptail.y() > phead.y()) {
+    x = phead.x();
+    y = phead.y();
+    w = ptail.x() - phead.x();
+    h = ptail.y() - phead.y();
+  }
 
-  qreal new_arc_len = arc_len*at;
+  setTailTop(ptail.y());
+  setTailLeft(ptail.x());
+  setHeadTop(phead.y());
+  setHeadLeft(phead.x());
 
-  qreal new_alfa = (qreal) (180*new_arc_len)/(PI*R);
+  setTop(y);
+  setLeft(x);
+  setWidth(w);
+  setHeight(h);
+}
 
-  qreal gama = (180-beta-new_alfa);
+void StructuralEdge::adjustExtreme(StructuralEntity* extreme, QLineF line, qreal index, qreal step, qreal angle)
+{
+  int max = 100;
+  int n = 0;
 
-  QPointF new_start_p(center_p.x() + ::cos((gama)*PI/180)*R,
-                      center_p.y() - ::sin((gama)*PI/180)*R);
+  while(extreme->collidesWithItem(this)) {
+    index += step;
 
-  if (toend)
-    this->adjustedangle = new_alfa;
+    QPointF p;
+
+    if (angle != 0) {
+      qreal r;
+      qreal len;
+
+      qreal alfa;
+      qreal beta;
+      qreal gama;
+
+      QPointF center;
+
+      r = line.length()/(::sin(((angle/2)*PI)/180.0)*2);
+      len = (angle*PI*r/180.0)*index;
+
+      alfa = (180.0*len)/(PI*r);
+      beta = (180.0 - angle)/2 + (360.0 - line.angle());
+      gama = (180.0 - beta - alfa);
+
+      center.setX(line.p2().x() - ::cos((180.0-beta-angle)*PI/180.0)*r);
+      center.setY(line.p2().y() + ::sin((180.0-beta-angle)*PI/180.0)*r);
+
+      p.setX(center.x() + ::cos((gama)*PI/180.0)*r);
+      p.setY(center.y() - ::sin((gama)*PI/180.0)*r);
+
+      if (extreme == getTail())
+        setAlfa(alfa*(1/index - 1));
+      else
+        setAlfa(alfa);
+
+    } else {
+      p = line.pointAt(index);
+    }
+
+    if (extreme == getTail())
+      adjustBox(QLineF(p, line.p2()));
+    else
+      adjustBox(QLineF(line.p1(), p));
+
+    if (++n > max)
+      break;
+  }
+}
+
+QLineF StructuralEdge::getDrawLine(qreal padding) const
+{
+  QPointF ptail = QPointF(getTailLeft(), getTailTop());
+  QPointF phead = QPointF(getHeadLeft(), getHeadTop());
+
+  QLineF drawLine;
+
+  int x;
+  int y;
+  int z;
+  int w;
+
+  if (ptail.x() <= phead.x() && ptail.y() <= phead.y()) {
+    x = STR_DEFAULT_ENTITY_PADDING;
+    y = STR_DEFAULT_ENTITY_PADDING;
+    z = getWidth() + STR_DEFAULT_ENTITY_PADDING;
+    w = getHeight() + STR_DEFAULT_ENTITY_PADDING;
+
+  } else if (ptail.x() > phead.x() && ptail.y() < phead.y()) {
+    x = getWidth() + STR_DEFAULT_ENTITY_PADDING;
+    y = STR_DEFAULT_ENTITY_PADDING;
+    z = STR_DEFAULT_ENTITY_PADDING;
+    w = getHeight() + STR_DEFAULT_ENTITY_PADDING;
+
+  } else if (ptail.x() < phead.x() && ptail.y() > phead.y()) {
+    x = STR_DEFAULT_ENTITY_PADDING;
+    y = getHeight() + STR_DEFAULT_ENTITY_PADDING;
+    z = getWidth() + STR_DEFAULT_ENTITY_PADDING;
+    w = STR_DEFAULT_ENTITY_PADDING;
+
+  } else if (ptail.x() > phead.x() && ptail.y() > phead.y()) {
+    x = getWidth() + STR_DEFAULT_ENTITY_PADDING;
+    y = getHeight() + STR_DEFAULT_ENTITY_PADDING;
+    z = STR_DEFAULT_ENTITY_PADDING;
+    w = STR_DEFAULT_ENTITY_PADDING;
+  }
+
+  drawLine.setPoints(QPointF(x, y),QPointF(z, w));
+  drawLine.setPoints(drawLine.pointAt(padding/drawLine.length()), drawLine.pointAt(1 - padding/drawLine.length()));
+
+  return drawLine;
+}
+
+void StructuralEdge::draw(QPainter* painter)
+{
+  painter->setRenderHint(QPainter::Antialiasing, true);
+
+  // Setting...
+  QLineF drawLine = getDrawLine(STR_DEFAULT_EDGE_PADDING);
+
+  // Drawing line...
+  painter->setPen(QPen(QBrush(QColor(StructuralUtil::getColor(getStructuralType()))), 1, Qt::DashLine));
+  painter->drawLine(drawLine);
+
+  // Drawing tail...
+  // nothing...
+
+  // Drawing head...
+  painter->setBrush(QBrush(QColor(StructuralUtil::getColor(getStructuralType()))));
+  painter->setPen(Qt::NoPen);
+  qreal angle;
+
+  if (drawLine.dy() < 0)
+    angle = ::acos(drawLine.dx() / drawLine.length());
   else
-    this->adjustedangle = (qreal)(180*(arc_len-arc_len*at))/(PI*R);
+    angle = (PI * 2) - ::acos(drawLine.dx() / drawLine.length());
 
-  return new_start_p;
+  QPointF a = drawLine.p2();
+
+  QPointF b = a - QPointF(sin(angle + PI / 3) * STR_DEFAULT_EDGE_HEAD_W,
+                          cos(angle + PI / 3) * STR_DEFAULT_EDGE_HEAD_H);
+  QPointF c = a - QPointF(sin(angle + PI - PI / 3) * STR_DEFAULT_EDGE_HEAD_W,
+                          cos(angle + PI - PI / 3) * STR_DEFAULT_EDGE_HEAD_H);
+
+  QVector<QPointF> polygon;
+  polygon.append(a);
+  polygon.append(b);
+  polygon.append(c);
+
+  painter->drawPolygon(QPolygonF(polygon));
 }
 
-void StructuralEdge::aux_adjust(QPointF pointa, QPointF pointb)
+void StructuralEdge::delineate(QPainterPath* painter) const
 {
-//  if (pointa.x() <= pointb.x() && pointa.y() <= pointb.y())
-//  {
-//    StructuralUtil::dbg(this, "#1 pointa.x() <= pointb.x() && pointa.y() <= pointb.y()");
+  // Setting...
+  QLineF boxLine = getDrawLine(0);
+  QLineF drawLine = getDrawLine(STR_DEFAULT_EDGE_PADDING);
 
-//    setTop(pointa.y()-6);
-//    setLeft(pointa.x()-6);
-//    setWidth((pointb.x()-6)-(pointa.x()-6) + 12);
-//    setHeight((pointb.y()-6)-(pointa.y()-6) + 12);
-//  }
-//  else if (pointa.x() > pointb.x() && pointa.y() < pointb.y())
-//  {
-//    StructuralUtil::dbg(this, "#2 pointa.x() > pointb.x() && pointa.y() < pointb.y()");
+  // Delineating line
+  // nothing
 
-//    setTop(pointa.y()-6);
-//    setLeft(pointb.x()-6);
-//    setWidth((pointa.x()-6)-(pointb.x()-6) + 12);
-//    setHeight((pointb.y()-6)-(pointa.y()-6) + 12);
-//  }
-//  else if (pointa.x() < pointb.x() && pointa.y() > pointb.y())
-//  {
-//    StructuralUtil::dbg(this, "#3 pointa.x() < pointb.x() && pointa.y() > pointb.y()");
+  // Delineating tail...
+  painter->addEllipse(boxLine.p1().x(), boxLine.p1().y(), 1, 1);
 
-//    setTop(pointb.y()-6);
-//    setLeft((pointa.x()-6));
-//    setWidth((pointb.x()-6)-(pointa.x()-6) + 12);
-//    setHeight((pointa.y()-6)-(pointb.y()-6) + 12);
-//  }
-//  else if (pointa.x() > pointb.x() && pointa.y() > pointb.y())
-//  {
-//    StructuralUtil::dbg(this, "#4 pointa.x() > pointb.x() && pointa.y() > pointb.y()");
+  // Delineating head...
+  painter->addEllipse(boxLine.p2().x(), boxLine.p2().y(), 1, 1);
 
-//    setTop(pointb.y()-6);
-//    setLeft(pointb.x()-6);
-//    setWidth((pointa.x()-6)-(pointb.x()-6) + 12);
-//    setHeight((pointa.y()-6)-(pointb.y()-6) + 12);
-//  }
+  qreal angle;
 
-  if (pointa.x() <= pointb.x() && pointa.y() <= pointb.y())
-  {
-    setTop(pointa.y()-4);
-    setLeft(pointa.x()-4);
-    setWidth((pointb.x()-4)-(pointa.x()-4) + 8);
-    setHeight((pointb.y()-4)-(pointa.y()-4) + 8);
-  }
-  else if (pointa.x() > pointb.x() && pointa.y() <= pointb.y())
-  {
-    setTop(pointa.y()-4);
-    setLeft(pointb.x()-4);
-    setWidth((pointa.x()-4)-(pointb.x()-4) + 8);
-    setHeight((pointb.y()-4)-(pointa.y()-4) + 8);
-  }
-  else if (pointa.x() <= pointb.x() && pointa.y() > pointb.y())
-  {
-    setTop(pointb.y()-4);
-    setLeft((pointa.x()-4));
-    setWidth((pointb.x()-4)-(pointa.x()-4) + 8);
-    setHeight((pointa.y()-4)-(pointb.y()-4) + 8);
-  }
-  else if (pointa.x() > pointb.x() && pointa.y() > pointb.y())
-  {
-    setTop(pointb.y()-4);
-    setLeft(pointb.x()-4);
-    setWidth((pointa.x()-4)-(pointb.x()-4) + 8);
-    setHeight((pointa.y()-4)-(pointb.y()-4) + 8);
-  }
+  if (drawLine.dy() < 0)
+    angle = ::acos(drawLine.dx() / drawLine.length());
+  else
+    angle = (PI * 2) - ::acos(drawLine.dx() / drawLine.length());
+
+  QPointF a = drawLine.p2();
+
+  QPointF b = a - QPointF(sin(angle + PI / 3) * STR_DEFAULT_EDGE_HEAD_W,
+                          cos(angle + PI / 3) * STR_DEFAULT_EDGE_HEAD_H);
+  QPointF c = a - QPointF(sin(angle + PI - PI / 3) * STR_DEFAULT_EDGE_HEAD_W,
+                          cos(angle + PI - PI / 3) * STR_DEFAULT_EDGE_HEAD_H);
+
+  QVector<QPointF> polygon;
+  polygon.append(a);
+  polygon.append(b);
+  polygon.append(c);
+
+  painter->addPolygon(QPolygonF(polygon));
 }
-
-void StructuralEdge::move(QGraphicsSceneMouseEvent* event)
-{
-  // nothing to do
-}
-
-void StructuralEdge::resize(QGraphicsSceneMouseEvent* event)
-{
-  // nothing to do
-}
-
-//QnstEntityWithEdges::QnstEntityWithEdges(StructuralEntity *parent)
-//  : StructuralEntity(parent)
-//{
-
-//}
-
-//QnstEntityWithEdges::~QnstEntityWithEdges()
-//{
-
-//}
-
-//QVector<StructuralEdge*> QnstEntityWithEdges::getnstGraphicsEdges()
-//{
-//  return edges;
-//}
-
-//void QnstEntityWithEdges::addnstGraphicsEdge(StructuralEdge* edge)
-//{
-//  if (edge != NULL)
-//    edges.append(edge);
-//}
-
-//void QnstEntityWithEdges::removenstGraphicsEdge(StructuralEdge* edge)
-//{
-//  if (edge != NULL)
-//  {
-//    int index = edges.indexOf(edge);
-
-//    if (index >= 0)
-//      edges.remove(index);
-//  }
-//}

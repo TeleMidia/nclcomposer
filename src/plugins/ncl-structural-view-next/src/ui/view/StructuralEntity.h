@@ -167,9 +167,9 @@ signals:
 
 protected:
   virtual void draw(QPainter* painter) = 0;
-  virtual void delineate(QPainterPath* painter) const = 0;
-  virtual void move(QGraphicsSceneMouseEvent* event) = 0;
-  virtual void resize(QGraphicsSceneMouseEvent* event) = 0;
+  virtual void delineate(QPainterPath* painter) const;
+  virtual void move(QGraphicsSceneMouseEvent* event);
+  virtual void resize(QGraphicsSceneMouseEvent* event);
 
   virtual QPainterPath shape() const;
   virtual QRectF boundingRect() const;
@@ -253,8 +253,7 @@ public:
   bool hasMouseHover();
   void setMouseHover(bool hover);
   void setMouseHoverHighlight(bool enable);
-  virtual void refresh() {}
-  virtual void adjust(bool avoidCollision = false, bool rec = true) = 0;
+  virtual void adjust(bool collision = false, bool recursion = true);
 
 protected:
   bool hover, hasError, enableMouseHoverHighlight;

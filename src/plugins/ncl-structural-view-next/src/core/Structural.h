@@ -84,8 +84,10 @@
 //
 
 // Entities defines
-#define STR_DEFAULT_ANCHOR_W 8
-#define STR_DEFAULT_ANCHOR_H 8
+#define STR_DEFAULT_ENTITY_PADDING 4
+
+#define STR_DEFAULT_ENTITY_ANCHOR_W 8
+#define STR_DEFAULT_ENTITY_ANCHOR_H 8
 
 // Nodes defines
 #define STR_DEFAULT_COMPOSITION_W 250
@@ -101,11 +103,24 @@
 #define STR_DEFAULT_LINK_H 14
 
 // Interfaces defines
+#define STR_DEFAULT_INTERFACE_PADDING 1
+
 #define STR_DEFAULT_INTERFACE_W 18
 #define STR_DEFAULT_INTERFACE_H 18
 
 // Edges defines
-// nothing...
+#define STR_DEFAULT_EDGE_PADDING 8
+
+#define STR_DEFAULT_EDGE_TAIL_W 2
+#define STR_DEFAULT_EDGE_TAIL_H 2
+
+#define STR_DEFAULT_EDGE_HEAD_W 12
+#define STR_DEFAULT_EDGE_HEAD_H 12
+
+#define STR_DEFAULT_BIND_PADDING 0
+
+#define STR_DEFAULT_BIND_ROLE_W 16
+#define STR_DEFAULT_BIND_ROLE_H 16
 
 // Others defines
 #define STR_DEFAULT_WITH_BODY 1                     // not used yet
