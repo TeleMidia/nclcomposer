@@ -1,5 +1,7 @@
 #include "StructuralEdge.h"
 
+#include <math.h>
+
 StructuralEdge::StructuralEdge(StructuralEntity* parent)
   : StructuralEntity(parent)
 {
