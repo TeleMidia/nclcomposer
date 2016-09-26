@@ -31,7 +31,7 @@
 #include "Insert.h"
 
 #include "StructuralMinimap.h"
-#include "StructuralViewLink.h"
+#include "StructuralLinkTool.h"
 
 class QnstAddCommand;
 class StructuralScene;
@@ -235,7 +235,7 @@ private:
 
   QUndoStack commnads;
 
-  StructuralViewLink* link;
+  StructuralLinkTool* link;
 
   StructuralEntity* lastLinkMouseOver;
 

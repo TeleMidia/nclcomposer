@@ -34,11 +34,11 @@ HEADERS += \
     src/ui/view/StructuralInterface.h \
     src/ui/view/StructuralLink.h \
     src/ui/view/StructuralBind.h \
-    src/ui/view/StructuralViewLink.h \
     src/ui/view/StructuralEntity.h \
     src/ui/view/StructuralComposition.h \
     src/ui/view/StructuralContent.h \
-    src/ui/view/StructuralLinkDialog.h
+    src/ui/view/StructuralLinkDialog.h \
+    src/ui/view/StructuralLinkTool.h
 
 SOURCES += \
     src/core/Command.cpp \
@@ -56,13 +56,13 @@ SOURCES += \
     src/ui/view/StructuralEntity.cpp \
     src/ui/view/StructuralLink.cpp \
     src/ui/view/StructuralBind.cpp \
-    src/ui/view/StructuralViewLink.cpp \
     src/ui/view/StructuralComposition.cpp \
     src/core/Remove.cpp \
     src/core/Insert.cpp \
     src/core/Change.cpp \
     src/ui/view/StructuralContent.cpp \
-    src/ui/view/StructuralLinkDialog.cpp
+    src/ui/view/StructuralLinkDialog.cpp \
+    src/ui/view/StructuralLinkTool.cpp
 
 RESOURCES += \
     ncl-structural-view-next.qrc \

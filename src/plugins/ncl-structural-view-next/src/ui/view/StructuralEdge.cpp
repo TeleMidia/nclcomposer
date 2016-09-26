@@ -313,6 +313,7 @@ void StructuralEdge::draw(QPainter* painter)
   // Drawing head...
   painter->setBrush(QBrush(QColor(StructuralUtil::getColor(getStructuralType()))));
   painter->setPen(Qt::NoPen);
+
   qreal angle;
 
   if (drawLine.dy() < 0)

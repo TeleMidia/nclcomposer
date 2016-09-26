@@ -1914,6 +1914,7 @@ void StructuralView::mouseMoveEvent(QMouseEvent* event)
     }
 
     link->setLine(QLineF(link->getLine().p1(), mapToScene(event->pos())));
+    scene->update();
   }
 
   QGraphicsView::mouseMoveEvent(event);
@@ -1929,7 +1930,7 @@ void StructuralView::mousePressEvent(QMouseEvent* event)
       link = NULL;
     }
 
-    link = new StructuralViewLink();
+    link = new StructuralLinkTool();
     scene->addItem(link);
     link->setLine(QLineF(mapToScene(event->pos()), mapToScene(event->pos())));
     link->adjust(true);
