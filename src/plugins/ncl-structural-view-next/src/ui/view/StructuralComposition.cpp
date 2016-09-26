@@ -1,5 +1,7 @@
 #include "StructuralComposition.h"
 
+#include <QMimeData>
+
 #include "StructuralContent.h"
 #include "StructuralUtil.h"
 
@@ -177,8 +179,6 @@ void StructuralComposition::dragEnterEvent(QGraphicsSceneDragDropEvent *event)
 {
   if (!event->mimeData()->urls().isEmpty())
     event->acceptProposedAction();
-
-  StructuralNode::dragEnterEvent(event);
 }
 
 void StructuralComposition::dropEvent(QGraphicsSceneDragDropEvent *event)
@@ -199,8 +199,6 @@ void StructuralComposition::dropEvent(QGraphicsSceneDragDropEvent *event)
       inserted(StructuralUtil::createUid(), getStructuralUid(), properties, StructuralUtil::createSettings());
     }
   }
-
-  StructuralNode::dropEvent(event);
 }
 
 void StructuralComposition::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
