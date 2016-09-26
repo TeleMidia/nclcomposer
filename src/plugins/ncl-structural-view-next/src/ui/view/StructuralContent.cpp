@@ -5,33 +5,16 @@
 #include "StructuralUtil.h"
 
 StructuralContent::StructuralContent(StructuralEntity* parent)
-  : StructuralNode(parent), enableDrag(false)
+  : StructuralNode(parent)
 {
   setStructuralType(Structural::Media);
 
-  setMediaType(Structural::NoMimeType);
-
-  setResizable(false);
-
-  createObjects();
-  createConnections();
-
-  setStructuralId("");
-
-  /* Default media position */
-  if(parent)
-  {
-    setTop(parent->getHeight()/2 - STR_DEFAULT_CONTENT_H/2);
-    setLeft(parent->getWidth()/2 - STR_DEFAULT_CONTENT_W/2);
-  }
-  else
-  {
-    setTop(0);
-    setLeft(0);
-  }
+  setMimeType(Structural::NoMimeType);
 
   setWidth(STR_DEFAULT_CONTENT_W);
   setHeight(STR_DEFAULT_CONTENT_H);
+
+  setResizable(false);
 }
 
 StructuralContent::~StructuralContent()
@@ -39,224 +22,74 @@ StructuralContent::~StructuralContent()
 
 }
 
-QString StructuralContent::getIcon() const
+QString StructuralContent::getLocation() const
 {
-  return icon;
+  return _location;
 }
 
-QString StructuralContent::getSource() const
+void StructuralContent::setLocation(const QString &location)
 {
-  return source;
+  this->_location = location;
+
+  setStructuralProperty(STR_PROPERTY_CONTENT_LOCATION, location);
 }
 
-void StructuralContent::setSource(const QString &source)
+StructuralMimeType StructuralContent::getMimeType() const
 {
-  this->source = source;
-
-  setMediaType(StructuralUtil::getMimeTypeByExtension(QFileInfo(source).suffix().toLower()));
-
-  StructuralNode::setStructuralProperty(STR_PROPERTY_CONTENT_LOCATION, source);
+  return _mimetype;
 }
 
-void StructuralContent::adjust(bool avoidCollision,  bool rec)
+void StructuralContent::setMimeType(Structural::StructuralMimeType type)
 {
-  StructuralNode::adjust(avoidCollision,rec);
+  _mimetype = type;
+
+  StructuralNode::setStructuralProperty(STR_PROPERTY_CONTENT_MIMETYPE, StructuralUtil::translateMimeTypeToString(type));
+}
+
+void StructuralContent::adjust(bool collision,  bool recursion)
+{
+  StructuralNode::adjust(collision, recursion);
 
   // Adjusting properties
-  setSource(getStructuralProperty(STR_PROPERTY_CONTENT_LOCATION));
-  setMediaType(StructuralUtil::translateStringToMimeType(getStructuralProperty(STR_PROPERTY_CONTENT_LOCATION)));
+  setLocation(getStructuralProperty(STR_PROPERTY_CONTENT_LOCATION));
+  setMimeType(StructuralUtil::translateStringToMimeType(getStructuralProperty(STR_PROPERTY_CONTENT_MIMETYPE)));
 
-  QString tip = "";
-  QString name = (getStructuralId() != "" ? getStructuralId() : "?");
+  StructuralMimeType mimetype = getMimeType();
 
-
-  switch(mediatype)
-  {
-    case Structural::Image:
-      tip += "Image ("+name+")";
-      break;
-
-    case Structural::Audio:
-      tip += "Audio ("+name+")";
-      break;
-
-    case Structural::Text:
-      tip += "Text ("+name+")";
-      break;
-
-    case Structural::Video:
-      tip += "Video ("+name+")";
-      break;
-
-    case Structural::NCLua:
-      tip += "NCLua ("+name+")";
-      break;
-
-    case Structural::HTML:
-      tip += "HTML ("+name+")";
-      break;
-
-    case Structural::NCL:
-      tip += "NCL ("+name+")";
-      break;
-
-    case Structural::Settings:
-      tip += "Settings ("+name+")";
-      break;
-
-    default:
-      tip += "Media ("+name+")";
-      break;
-  }
-
-  if (hasError)
-    tip += " - Error: " + erroMsg;
-  else if (getSource().isEmpty())
-    tip += " - Alert: Missing 'src' attribute";
-
-  setToolTip(tip);
-}
-
-QString StructuralContent::getRefer() const
-{
-  return refer;
-}
-
-void StructuralContent::setRefer(const QString &refer)
-{
-  this->refer = refer;
-}
-
-QString StructuralContent::getReferUID() const
-{
-  return referUID;
-}
-
-void StructuralContent::setReferUID(const QString &refetUID)
-{
-  this->referUID = refetUID;
-}
-
-QString StructuralContent::getInstance() const
-{
-  return instance;
-}
-
-void StructuralContent::setInstance(const QString &instance)
-{
-  this->instance = instance;
-}
-
-void StructuralContent::createObjects()
-{
-//  menu->_cutAction->setEnabled(true);
-//  menu->_copyAction->setEnabled(true);
-
-//  menu->_deleteAction->setEnabled(true);
-
-//  menu->actionExport->setEnabled(true);
-
-//  menu->_insertMenu->setEnabled(true);
-//  menu->_areaAction->setEnabled(true);
-//  menu->_propertyAction->setEnabled(true);
-}
-
-void StructuralContent::createConnections()
-{
-  // connect(menu, SIGNAL(undoRequested()), SIGNAL(undoRequested()));
-  // connect(menu, SIGNAL(redoRequested()), SIGNAL(redoRequested()));
-
-
-//  connect(menu, SIGNAL(menuAddEntityTriggered(QnstSubtype)),
-//          SLOT(newChild(QnstSubtype)));
+  if (mimetype != Structural::NoMimeType)
+    setToolTip(StructuralUtil::getMimeTypeTooltip(mimetype, getStructuralId()));
 }
 
 void StructuralContent::draw(QPainter* painter)
 {
   painter->setRenderHint(QPainter::SmoothPixmapTransform, true);
 
-  painter->drawPixmap(4 + 8/2, 4 + 8/2, getWidth()-8, getHeight()-16-8, QPixmap(icon));
+  painter->drawPixmap(STR_DEFAULT_ENTITY_PADDING + STR_DEFAULT_CONTENT_PADDING,
+                      STR_DEFAULT_ENTITY_PADDING + STR_DEFAULT_CONTENT_PADDING,
+                      getWidth() - 2*STR_DEFAULT_CONTENT_PADDING,
+                      getHeight() - 2*STR_DEFAULT_CONTENT_PADDING - 4*STR_DEFAULT_CONTENT_PADDING,
+                      QPixmap(StructuralUtil::getMimeTypeIcon(getMimeType())));
 
-  drawMouseHoverHighlight(painter); // This should not be HERE!!
-
+  painter->setBrush(Qt::NoBrush);
   painter->setPen(QPen(QBrush(Qt::black),0));
 
-  if(hasError)
-  {
-    painter->drawPixmap((getWidth()-8)/2 + 12, (getHeight()-8)/2 + 4, 12, 12, QPixmap(":/icon/delete"));
-  }
-  else if (getSource().isEmpty())
-  {
-    painter->drawPixmap((getWidth()-8)/2 + 12, (getHeight()-8)/2 + 4, 12, 12, QPixmap(":/icon/alert"));
-  }
+  QString text = getStructuralId();
 
-  if(!getReferUID().isEmpty() && !getReferUID().isEmpty())
-  {
-    painter->drawPixmap(8, getHeight()-40, 32, 32, QPixmap(":/icon/alias"));
-  }
+  if (text.isEmpty())
+    text = "(?)";
 
-  QString localid = (getStructuralId() != "" ? getStructuralId() : "?");
+  if (text.length() > 5)
+    text = text.replace(3, text.length()-3, "...");
 
-  if (localid.length() > 5)
-  {
-    localid = getStructuralId().replace(3,getStructuralId().length()-3,"...");
-  }
-
-  // draw a formated text with underline when there is error
-  if(hasError)
-  {
-    int N_STEPS = 20;
-    int begin_w = 8;
-    int end_w = getWidth();
-    double current_x = begin_w;
-    double step = (double) ( end_w - begin_w ) / N_STEPS;
-
-    QPolygonF polygon;
-    painter->setPen(QPen(QBrush(Qt::red), 0)); // 0px = cosmetic border
-    painter->setRenderHint(QPainter::Antialiasing, true);
-
-    for (int i = 0; i < N_STEPS; i++)
-    {
-      current_x = begin_w + (double) i * step;
-
-      if( i % 2)
-        polygon << QPointF( current_x, getHeight() - 3 );
-      else
-        polygon << QPointF( current_x, getHeight() );
-    }
-
-    painter->drawPolyline(polygon);
-  }
-
-  // draw the text
-  painter->drawText(4 + 8/2, 4 + 8/2 + getHeight()-16-8, getWidth()-8, 16, Qt::AlignCenter, localid);
+  painter->drawText(STR_DEFAULT_ENTITY_PADDING + STR_DEFAULT_CONTENT_PADDING,
+                    STR_DEFAULT_ENTITY_PADDING + STR_DEFAULT_CONTENT_PADDING + getHeight() - STR_DEFAULT_CONTENT_TEXT_H - 2*STR_DEFAULT_CONTENT_PADDING,
+                    getWidth() - 2*STR_DEFAULT_CONTENT_PADDING,
+                    STR_DEFAULT_CONTENT_TEXT_H,
+                    Qt::AlignCenter, text);
 
   if (isMoving())
-  {
-    painter->setBrush(Qt::NoBrush);
-    painter->setPen(QPen(QBrush(Qt::black), 0)); // 0px = cosmetic border
-
-    painter->setRenderHint(QPainter::Antialiasing,false);
-    painter->drawRect(getMoveLeft()+4-getLeft(), getMoveTop()+4-getTop(), getWidth()-1, getHeight()-1);
-  }
-}
-
-void StructuralContent::delineate(QPainterPath* painter) const
-{
-  painter->addRect(4, 4, getWidth(), getHeight());
-}
-
-void StructuralContent::setMediaType(Structural::StructuralMimeType type)
-{
-  mediatype = type;
-
-  this->icon = StructuralUtil::getMimeTypeIcon(mediatype);
-
-  StructuralNode::setStructuralProperty(STR_PROPERTY_CONTENT_MIMETYPE, StructuralUtil::translateMimeTypeToString(type));
-}
-
-
-void StructuralContent::mousePressEvent(QGraphicsSceneMouseEvent *event)
-{
-    StructuralNode::mousePressEvent(event);
+    painter->drawRect(getMoveLeft() + STR_DEFAULT_ENTITY_PADDING - getLeft(),
+                      getMoveTop() + STR_DEFAULT_ENTITY_PADDING - getTop(),
+                      getWidth(),
+                      getHeight());
 }

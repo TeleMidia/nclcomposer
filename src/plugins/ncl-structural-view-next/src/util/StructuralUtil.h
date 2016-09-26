@@ -40,6 +40,7 @@ public:
   static QString getTooltip(StructuralType type, const QString &title = "", const QString &info = "", const QString &warning = "", const QString &error = "", const QString &extra = "");
 
   static QString getMimeTypeIcon(StructuralMimeType mimetype);
+  static QString getMimeTypeTooltip(StructuralMimeType mimetype, const QString &title = "", const QString &info = "", const QString &warning = "", const QString &error = "", const QString &extra = "");
   static StructuralMimeType getMimeTypeByExtension(const QString &extension);
 
   static QString getRoleIcon(StructuralRole role);

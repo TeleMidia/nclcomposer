@@ -454,6 +454,39 @@ QString StructuralUtil::getMimeTypeIcon(StructuralMimeType type)
     return ":/images/icon/media";
 }
 
+QString StructuralUtil::getMimeTypeTooltip(StructuralMimeType mimetype, const QString &title, const QString &info, const QString &warning, const QString &error, const QString &extra)
+{
+  QString tooltip;
+
+  // Adding type
+  tooltip += translateMimeTypeToString(mimetype);
+  tooltip += " ";
+
+  // Adding title
+  if (!title.isEmpty())
+    tooltip += "("+title+")";
+  else
+    tooltip += "(?)";
+
+  tooltip += " ";
+
+  // Adding extra
+  // nothing...
+
+  // Adding messages
+  if (!error.isEmpty())
+    tooltip += "- Error: "+error;
+  else if (!warning.isEmpty())
+    tooltip += "- Warning: "+warning;
+  else if (!info.isEmpty())
+    tooltip += "- Info: "+info;
+
+  // Formating
+  tooltip[0] = tooltip[0].toUpper();
+
+  return tooltip;
+}
+
 std::map<QString, Structural::StructuralMimeType> StructuralUtil::_mimetypesExtension =
     StructuralMap <QString, Structural::StructuralMimeType>
 ("txt", Structural::Text)

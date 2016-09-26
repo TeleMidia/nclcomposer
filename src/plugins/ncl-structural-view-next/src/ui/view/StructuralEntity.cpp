@@ -2,6 +2,8 @@
 #include "StructuralContent.h"
 #include "StructuralComposition.h"
 
+#include <QMimeData>
+
 StructuralEntity::StructuralEntity(StructuralEntity* parent)
   : QObject(parent), QGraphicsItem(parent)
 {
