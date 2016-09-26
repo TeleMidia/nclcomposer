@@ -237,7 +237,7 @@ void StructuralNode::adjust(bool collision, bool recursion)
       StructuralEdge *e = (StructuralEdge*) c;
 
       if (e->getTail() == this || e->getHead() == this){
-        e->adjust();
+        e->adjust(true);
       }
     }
   }

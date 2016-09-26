@@ -1040,7 +1040,7 @@ void StructuralEntity::mouseReleaseEvent(QGraphicsSceneMouseEvent*event)
       /**************/
 
     }else{
-      adjust();
+      adjust(true);
     }
 
   }else if (_resizing){
@@ -1088,7 +1088,7 @@ void StructuralEntity::mouseReleaseEvent(QGraphicsSceneMouseEvent*event)
       setWidth(_resizeWidth);
       setHeight(_resizeHeight);
 
-      adjust();
+      adjust(true);
 
       QMap<QString, QString> properties = getStructuralProperties();
 
@@ -1102,7 +1102,7 @@ void StructuralEntity::mouseReleaseEvent(QGraphicsSceneMouseEvent*event)
       emit changed(getStructuralUid(), properties, previous,settings);
 
     }else{
-      adjust();
+      adjust(true);
     }
   }
 

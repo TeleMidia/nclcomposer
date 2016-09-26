@@ -22,7 +22,7 @@ void StructuralViewLink::setLine(QLineF line)
 {
   this->line = line;
 
-  adjust();
+  adjust(true);
 }
 
 void StructuralViewLink::adjust(bool avoidCollision, bool rec)
