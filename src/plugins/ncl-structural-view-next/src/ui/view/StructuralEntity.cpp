@@ -195,7 +195,7 @@ void StructuralEntity::adjust(bool collision, bool recursion)
   setHidden((_properties[STR_PROPERTY_ENTITY_HIDDEN] == STR_VALUE_TRUE ? true : false));
   setUncollapsed((_properties[STR_PROPERTY_ENTITY_UNCOLLAPSED] == STR_VALUE_TRUE ? true : false));
 
-  setToolTip(StructuralUtil::getTooltip(_subtype, _id));
+  setToolTip(StructuralUtil::getTooltip(_subtype, _id, "", "", "", _properties[STR_PROPERTY_REFERENCE_XCONNECTOR_ID]));
 
   if (scene() != NULL)
     scene()->update();

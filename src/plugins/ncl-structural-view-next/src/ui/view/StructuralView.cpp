@@ -412,7 +412,7 @@ void StructuralView::insert(QString uid, QString parent, QMap<QString, QString> 
       case Structural::Link:
       {
         entity = new StructuralLink();
-        connect((StructuralLink*) entity, SIGNAL(showLinkEditDialog(StructuralLink*)),SLOT(showEditLinkDialog(StructuralLink*)));
+        connect((StructuralLink*) entity, SIGNAL(performedEdit(StructuralLink*)),SLOT(showEditLinkDialog(StructuralLink*)));
         break;
       }
 

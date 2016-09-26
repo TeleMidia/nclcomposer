@@ -1,31 +1,23 @@
-#ifndef QNSTGRAPHICSLINK_H
-#define QNSTGRAPHICSLINK_H
+#ifndef STRUCTURALLINK_H
+#define STRUCTURALLINK_H
 
 #include "StructuralNode.h"
-#include "StructuralBind.h"
 
-class StructuralBind;
-
-// \todo The qnstgraphicsaggregator and qnstlink must be part of this class.
 class StructuralLink : public StructuralNode
 {
   Q_OBJECT
+
 public:
   StructuralLink(StructuralEntity* parent = 0);
-
-  ~StructuralLink();
-
-  virtual void adjust(bool avoidCollision = false,  bool rec = true);
+  virtual ~StructuralLink();
 
 signals:
-  void showLinkEditDialog(StructuralLink* entity);
+  void performedEdit(StructuralLink* entity);
 
 protected:
   virtual void draw(QPainter* painter);
 
-  virtual void delineate(QPainterPath* painter) const;
-
-  virtual void 	mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event);
+  virtual void mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event);
 };
 
-#endif // QNSTGRAPHICSLINK_H
+#endif // STRUCTURALLINK_H
