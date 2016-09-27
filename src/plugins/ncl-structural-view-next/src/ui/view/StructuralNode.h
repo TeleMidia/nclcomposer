@@ -9,13 +9,10 @@ public:
   StructuralNode(StructuralEntity* parent = 0);
   virtual ~StructuralNode();
 
-  virtual void inside();
-
   virtual void adjust(bool collision = false,  bool recursion = true);
 
 protected:
-  virtual void move(QGraphicsSceneMouseEvent* event);
-  virtual void resize(QGraphicsSceneMouseEvent* event);
+  virtual void inside();
 };
 
 #endif // STRUCTURALNODE_H
