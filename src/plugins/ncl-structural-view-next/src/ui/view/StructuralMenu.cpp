@@ -277,6 +277,19 @@ void StructuralMenu::createMenus()
 
 void StructuralMenu::createConnections()
 {
+  connect(_helpAction,SIGNAL(triggered()),SIGNAL(performedHelp()));
+  connect(_undoAction,SIGNAL(triggered()),SIGNAL(performedUndo()));
+  connect(_redoAction,SIGNAL(triggered()),SIGNAL(performedRedo()));
+  connect(_cutAction,SIGNAL(triggered()),SIGNAL(performedCut()));
+  connect(_copyAction,SIGNAL(triggered()),SIGNAL(performedCopy()));
+  connect(_pasteAction,SIGNAL(triggered()),SIGNAL(performedPaste()));
+  connect(_deleteAction,SIGNAL(triggered()),SIGNAL(performedDelete()));
+  connect(_snapshotAction,SIGNAL(triggered()),SIGNAL(performedSnapshot()));
+#ifdef WITH_GRAPHVIZ
+  connect(_autoadjustAction,SIGNAL(triggered()),SIGNAL(performedAutoAdjust()));
+#endif
+  connect(_propertiesAction,SIGNAL(triggered()),SIGNAL(performedProperties()));
+
   connect(_mediaAction,SIGNAL(triggered()),SLOT(performMedia()));
   connect(_bodyAction,SIGNAL(triggered()),SLOT(performBody()));
   connect(_contextAction,SIGNAL(triggered()),SLOT(performContext()));
