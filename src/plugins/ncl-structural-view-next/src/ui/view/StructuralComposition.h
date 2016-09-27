@@ -17,6 +17,7 @@ protected:
 
   virtual void dragEnterEvent(QGraphicsSceneDragDropEvent *event);
   virtual void dropEvent(QGraphicsSceneDragDropEvent *event);
+
   virtual void mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event);
 };
 
