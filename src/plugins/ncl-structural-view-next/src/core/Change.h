@@ -6,11 +6,7 @@
 class Change : public Command
 {
 public:
-  Change(const QString &uid,
-         const QMap<QString, QString> &properties,
-         const QMap<QString, QString> &previous,
-         const QMap<QString, QString> &settings);
-
+  Change(const QString &uid, const QMap<QString, QString> &properties, const QMap<QString, QString> &previous, const QMap<QString, QString> &settings);
   virtual ~Change();
 
   virtual void undo();
@@ -18,7 +14,6 @@ public:
 
 private:
   QString _uid;
-  QString _parent;
 
   QMap<QString, QString> _properties;
   QMap<QString, QString> _previous;

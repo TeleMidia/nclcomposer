@@ -3,9 +3,8 @@
 
 #include <QUndoCommand>
 #include <QObject>
+#include <QString>
 #include <QMap>
-#include <QString>
-#include <QString>
 
 #include "Structural.h"
 
