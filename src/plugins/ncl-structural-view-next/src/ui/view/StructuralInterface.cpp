@@ -29,57 +29,54 @@ void StructuralInterface::adjust(bool collision,  bool recursion)
   if (parent != NULL) {
 
     if (!collision) {
-      bool colliding = true;
+      // Tries (10x) to find a position where there is no collision
+      // with others relatives
+      for (int i = 0; i < 10; i++) {
+        bool colliding = false;
 
-      int max = 10;
-      int current = 0;
+        foreach(StructuralEntity *entity, parent->getStructuralEntities()) {
+          if(this != entity && entity->getStructuralCategory() == Structural::Interface) {
 
-      do {
-        if(current > max)
-          break;
+            int max = 1000;
+            int n = 0;
 
-        current++; colliding = false;
+            qreal current = 0.0;
 
-        foreach(StructuralEntity *e, parent->getStructuralEntities()) {
-          if(this != e && e->getStructuralCategory() == Structural::Interface) {
-            qreal n = 0;
-            qreal index = 0.0;
+            entity->setSelectable(false);
 
-            e->setSelectable(false);
-            e->update();
-
-            while(collidesWithItem(e, Qt::IntersectsItemBoundingRect)) {
-              QPointF tail(getLeft()+getWidth()/2, getTop()+getHeight()/2);
-              QPointF head(e->getWidth()/2, e->getHeight()/2);
-
-              QLineF line(tail, head);
+            while(collidesWithItem(entity, Qt::IntersectsItemBoundingRect)) {
+              QLineF line = QLineF(getLeft()+getWidth()/2, getTop()+getHeight()/2,
+                                   entity->getWidth()/2, entity->getHeight()/2);
 
               line.setAngle(qrand()%360);
 
-              index += (double)(qrand()%100)/10000.0;
+              current += (double)(qrand()%100)/1000.0;
 
-              setTop(getTop()+line.pointAt(index/2).y()-tail.y());
-              setLeft(getLeft()+line.pointAt(index/2).x()-tail.x());
+              setTop(getTop()+line.pointAt(current/2).y()-line.p1().y());
+              setLeft(getLeft()+line.pointAt(current/2).x()-line.p1().x());
 
-              if (++n > 1000)
+              if (++n > max)
                 break;
             }
 
             constrain();
 
-            e->setSelectable(true);
-            e->update();
+            entity->setSelectable(true);
           }
         }
 
-        foreach(StructuralEntity *e, parent->getStructuralEntities())
-          if(collidesWithItem(e, Qt::IntersectsItemBoundingRect))
+        foreach(StructuralEntity *entity, parent->getStructuralEntities())
+          if(collidesWithItem(entity, Qt::IntersectsItemBoundingRect))
             colliding = true;
 
-      }while(colliding);
+        if (!colliding)
+          break;
+      }
     }
 
-    constrain(); StructuralUtil::adjustEdges(this);
+    constrain();
+
+    StructuralUtil::adjustEdges(this);
   }
 }
 
