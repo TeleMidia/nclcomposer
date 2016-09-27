@@ -38,189 +38,199 @@ void StructuralBind::adjust(bool collision, bool recursion)
 
 void StructuralBind::draw(QPainter* painter)
 {
-  painter->setRenderHint(QPainter::Antialiasing, true);
-  painter->setRenderHint(QPainter::SmoothPixmapTransform, true);
+  StructuralEntity* tail = getTail();
+  StructuralEntity* head = getHead();
 
-  // Setting...
-  QLineF drawLine = getDrawLine(STR_DEFAULT_BIND_PADDING);
+  if (tail != NULL && head != NULL) {
+    painter->setRenderHint(QPainter::Antialiasing, true);
+    painter->setRenderHint(QPainter::SmoothPixmapTransform, true);
 
-  // Drawing line...
-  painter->setPen(QPen(QBrush(QColor(StructuralUtil::getColor(getStructuralType()))), 1));
+    // Setting...
+    QLineF drawLine = getDrawLine(STR_DEFAULT_BIND_PADDING);
 
-  qreal x;
-  qreal y;
-  qreal z;
-  qreal w;
-  qreal a;
-  qreal b;
+    // Drawing line...
+    painter->setPen(QPen(QBrush(QColor(StructuralUtil::getColor(getStructuralType()))), 1));
 
-  qreal r;
+    qreal x;
+    qreal y;
+    qreal z;
+    qreal w;
+    qreal a;
+    qreal b;
 
-  qreal alfa;
-  qreal beta;
-  qreal delta;
+    qreal r;
 
-  qreal angle;
+    qreal alfa;
+    qreal beta;
+    qreal delta;
 
-  QPointF center;
+    qreal angle;
 
-  x = drawLine.p1().x();
-  y = drawLine.p1().y();
-  z = drawLine.p2().x();
-  w = drawLine.p2().y();
+    QPointF center;
 
-  if (getTail()->getStructuralType() == Structural::Link) {
-    a = drawLine.p2().x();
-    b = drawLine.p2().y();
-  } else {
-    a = drawLine.p1().x();
-    b = drawLine.p1().y();
+    x = drawLine.p1().x();
+    y = drawLine.p1().y();
+    z = drawLine.p2().x();
+    w = drawLine.p2().y();
+
+    if (tail->getStructuralType() == Structural::Link) {
+      a = drawLine.p2().x();
+      b = drawLine.p2().y();
+    } else {
+      a = drawLine.p1().x();
+      b = drawLine.p1().y();
+    }
+
+    alfa = getAngle();
+
+    angle = getAngle();
+
+    if (drawLine.p1().x() <= drawLine.p2().x() && drawLine.p1().y() <= drawLine.p2().y()) {
+      if (tail->getStructuralType() == Structural::Link) {
+        z -= STR_DEFAULT_BIND_ROLE_W/2;
+        w -= STR_DEFAULT_BIND_ROLE_H/2;
+
+        a -= STR_DEFAULT_BIND_ROLE_W;
+        b -= STR_DEFAULT_BIND_ROLE_H;
+      } else {
+        x += STR_DEFAULT_BIND_ROLE_W/2;
+        y += STR_DEFAULT_BIND_ROLE_H/2;
+      }
+
+    } else if (drawLine.p1().x() > drawLine.p2().x() && drawLine.p1().y() < drawLine.p2().y()) {
+      if (tail->getStructuralType() == Structural::Link) {
+        z += STR_DEFAULT_BIND_ROLE_W/2;
+        w -= STR_DEFAULT_BIND_ROLE_H/2;
+
+        b -= STR_DEFAULT_BIND_ROLE_H;
+      } else {
+        x -= STR_DEFAULT_BIND_ROLE_W/2;
+        y += STR_DEFAULT_BIND_ROLE_H/2;
+
+        a -= STR_DEFAULT_BIND_ROLE_H;
+      }
+
+    } else if (drawLine.p1().x() < drawLine.p2().x() && drawLine.p1().y() > drawLine.p2().y()) {
+      if (tail->getStructuralType() == Structural::Link) {
+        z -= STR_DEFAULT_BIND_ROLE_W/2;
+        w += STR_DEFAULT_BIND_ROLE_H/2;
+
+        a -= STR_DEFAULT_BIND_ROLE_W;
+      } else {
+        x += STR_DEFAULT_BIND_ROLE_W/2;
+        y -= STR_DEFAULT_BIND_ROLE_H/2;
+
+        b -= STR_DEFAULT_BIND_ROLE_W;
+      }
+
+    } else if (drawLine.p1().x() > drawLine.p2().x() && drawLine.p1().y() > drawLine.p2().y()) {
+      if (tail->getStructuralType() == Structural::Link) {
+        z += STR_DEFAULT_BIND_ROLE_W/2;
+        w += STR_DEFAULT_BIND_ROLE_H/2;
+      } else {
+        x -= STR_DEFAULT_BIND_ROLE_W/2;
+        y -= STR_DEFAULT_BIND_ROLE_H/2;
+
+        a -= STR_DEFAULT_BIND_ROLE_W;
+        b -= STR_DEFAULT_BIND_ROLE_H;
+      }
+    }
+
+    QString icon = StructuralUtil::getRoleIcon(getRole());
+
+    if (icon.isEmpty())
+      if (tail->getStructuralType() == Structural::Link)
+        icon = ":/icon/noaction";
+      else
+        icon = ":/icon/nocondition";
+
+    if (angle != 0) {
+      QLineF line = QLineF(x, y, z, w);
+
+      if (alfa < 0) {
+        alfa = -alfa;
+
+        r = line.length()/(::sin(((alfa/2)*PI)/180)*2);
+        beta = (180-alfa)/2 + (360 - line.angle());
+        delta = (180-beta-alfa)+180;
+
+        center.setX(line.p1().x() + ::cos((180-beta-alfa)*PI/180)*r);
+        center.setY(line.p1().y() - ::sin((180-beta-alfa)*PI/180)*r);
+
+      } else {
+        r = line.length()/(::sin(((alfa/2)*PI)/180)*2);
+        beta = (180-alfa)/2 + (360 - line.angle());
+        delta = (180-beta-alfa);
+
+        center.setX(line.p2().x() - ::cos((180-beta-alfa)*PI/180)*r);
+        center.setY(line.p2().y() + ::sin((180-beta-alfa)*PI/180)*r);
+      }
+
+      painter->drawArc(center.x()-r,center.y()-r,2*r,2*r,16*delta,16*alfa);
+
+    } else {
+      painter->drawLine(x, y, z, w);
+    }
+
+    // Drawing tail...
+    // nothing...
+
+    // Drawing head...
+    painter->drawPixmap(a, b, QPixmap(icon));
   }
-
-  alfa = getAngle();
-
-  angle = getAngle();
-
-  if (drawLine.p1().x() <= drawLine.p2().x() && drawLine.p1().y() <= drawLine.p2().y()) {
-    if (getTail()->getStructuralType() == Structural::Link) {
-      z -= STR_DEFAULT_BIND_ROLE_W/2;
-      w -= STR_DEFAULT_BIND_ROLE_H/2;
-
-      a -= STR_DEFAULT_BIND_ROLE_W;
-      b -= STR_DEFAULT_BIND_ROLE_H;
-    } else {
-      x += STR_DEFAULT_BIND_ROLE_W/2;
-      y += STR_DEFAULT_BIND_ROLE_H/2;
-    }
-
-  } else if (drawLine.p1().x() > drawLine.p2().x() && drawLine.p1().y() < drawLine.p2().y()) {
-    if (getTail()->getStructuralType() == Structural::Link) {
-      z += STR_DEFAULT_BIND_ROLE_W/2;
-      w -= STR_DEFAULT_BIND_ROLE_H/2;
-
-      b -= STR_DEFAULT_BIND_ROLE_H;
-    } else {
-      x -= STR_DEFAULT_BIND_ROLE_W/2;
-      y += STR_DEFAULT_BIND_ROLE_H/2;
-
-      a -= STR_DEFAULT_BIND_ROLE_H;
-    }
-
-  } else if (drawLine.p1().x() < drawLine.p2().x() && drawLine.p1().y() > drawLine.p2().y()) {
-    if (getTail()->getStructuralType() == Structural::Link) {
-      z -= STR_DEFAULT_BIND_ROLE_W/2;
-      w += STR_DEFAULT_BIND_ROLE_H/2;
-
-      a -= STR_DEFAULT_BIND_ROLE_W;
-    } else {
-      x += STR_DEFAULT_BIND_ROLE_W/2;
-      y -= STR_DEFAULT_BIND_ROLE_H/2;
-
-      b -= STR_DEFAULT_BIND_ROLE_W;
-    }
-
-  } else if (drawLine.p1().x() > drawLine.p2().x() && drawLine.p1().y() > drawLine.p2().y()) {
-    if (getTail()->getStructuralType() == Structural::Link) {
-      z += STR_DEFAULT_BIND_ROLE_W/2;
-      w += STR_DEFAULT_BIND_ROLE_H/2;
-    } else {
-      x -= STR_DEFAULT_BIND_ROLE_W/2;
-      y -= STR_DEFAULT_BIND_ROLE_H/2;
-
-      a -= STR_DEFAULT_BIND_ROLE_W;
-      b -= STR_DEFAULT_BIND_ROLE_H;
-    }
-  }
-
-  QString icon = StructuralUtil::getRoleIcon(getRole());
-
-  if (icon.isEmpty())
-    if (getTail()->getStructuralType() == Structural::Link)
-      icon = ":/icon/noaction";
-    else
-      icon = ":/icon/nocondition";
-
-  if (angle != 0) {
-    QLineF line = QLineF(x, y, z, w);
-
-    if (alfa < 0) {
-      alfa = -alfa;
-
-      r = line.length()/(::sin(((alfa/2)*PI)/180)*2);
-      beta = (180-alfa)/2 + (360 - line.angle());
-      delta = (180-beta-alfa)+180;
-
-      center.setX(line.p1().x() + ::cos((180-beta-alfa)*PI/180)*r);
-      center.setY(line.p1().y() - ::sin((180-beta-alfa)*PI/180)*r);
-
-    } else {
-      r = line.length()/(::sin(((alfa/2)*PI)/180)*2);
-      beta = (180-alfa)/2 + (360 - line.angle());
-      delta = (180-beta-alfa);
-
-      center.setX(line.p2().x() - ::cos((180-beta-alfa)*PI/180)*r);
-      center.setY(line.p2().y() + ::sin((180-beta-alfa)*PI/180)*r);
-    }
-
-    painter->drawArc(center.x()-r,center.y()-r,2*r,2*r,16*delta,16*alfa);
-
-  } else {
-    painter->drawLine(x, y, z, w);
-  }
-
-  // Drawing tail...
-  // nothing...
-
-  // Drawing head...
-  painter->drawPixmap(a, b, QPixmap(icon));
 }
 
 void StructuralBind::delineate(QPainterPath* painter) const
 {
-  // Setting...
-  QLineF drawLine = getDrawLine(STR_DEFAULT_BIND_PADDING);
+  StructuralEntity* tail = getTail();
+  StructuralEntity* head = getHead();
 
-  qreal x;
-  qreal y;
+  if (tail != NULL && head != NULL) {
+    // Setting...
+    QLineF drawLine = getDrawLine(STR_DEFAULT_BIND_PADDING);
 
-  if (drawLine.p1().x() <= drawLine.p2().x() && drawLine.p1().y() <= drawLine.p2().y()) {
-    if (getTail()->getStructuralType() == Structural::Link) {
-      x = drawLine.p2().x() - STR_DEFAULT_BIND_ROLE_W;
-      y = drawLine.p2().y() - STR_DEFAULT_BIND_ROLE_H;
-    } else {
-      x = drawLine.p1().x();
-      y = drawLine.p1().y();
+    qreal x;
+    qreal y;
+
+    if (drawLine.p1().x() <= drawLine.p2().x() && drawLine.p1().y() <= drawLine.p2().y()) {
+      if (tail->getStructuralType() == Structural::Link) {
+        x = drawLine.p2().x() - STR_DEFAULT_BIND_ROLE_W;
+        y = drawLine.p2().y() - STR_DEFAULT_BIND_ROLE_H;
+      } else {
+        x = drawLine.p1().x();
+        y = drawLine.p1().y();
+      }
+
+    } else if (drawLine.p1().x() > drawLine.p2().x() && drawLine.p1().y() < drawLine.p2().y()) {
+      if (tail->getStructuralType() == Structural::Link) {
+        x = drawLine.p2().x();
+        y = drawLine.p2().y() - STR_DEFAULT_BIND_ROLE_H;
+      } else {
+        x = drawLine.p1().x() - STR_DEFAULT_BIND_ROLE_W;
+        y = drawLine.p1().y();
+      }
+
+    } else if (drawLine.p1().x() < drawLine.p2().x() && drawLine.p1().y() > drawLine.p2().y()) {
+      if (tail->getStructuralType() == Structural::Link) {
+        x = drawLine.p2().x() - STR_DEFAULT_BIND_ROLE_W;
+        y = drawLine.p2().y();
+      } else {
+        x = drawLine.p1().x();
+        y = drawLine.p1().y() - STR_DEFAULT_BIND_ROLE_H;
+      }
+
+    } else if (drawLine.p1().x() > drawLine.p2().x() && drawLine.p1().y() > drawLine.p2().y()) {
+      if (tail->getStructuralType() == Structural::Link) {
+        x = drawLine.p2().x();
+        y = drawLine.p2().y();
+      } else {
+        x = drawLine.p1().x() - STR_DEFAULT_BIND_ROLE_W;
+        y = drawLine.p1().y() - STR_DEFAULT_BIND_ROLE_H;
+      }
     }
 
-  } else if (drawLine.p1().x() > drawLine.p2().x() && drawLine.p1().y() < drawLine.p2().y()) {
-    if (getTail()->getStructuralType() == Structural::Link) {
-      x = drawLine.p2().x();
-      y = drawLine.p2().y() - STR_DEFAULT_BIND_ROLE_H;
-    } else {
-      x = drawLine.p1().x() - STR_DEFAULT_BIND_ROLE_W;
-      y = drawLine.p1().y();
-    }
-
-  } else if (drawLine.p1().x() < drawLine.p2().x() && drawLine.p1().y() > drawLine.p2().y()) {
-    if (getTail()->getStructuralType() == Structural::Link) {
-      x = drawLine.p2().x() - STR_DEFAULT_BIND_ROLE_W;
-      y = drawLine.p2().y();
-    } else {
-      x = drawLine.p1().x();
-      y = drawLine.p1().y() - STR_DEFAULT_BIND_ROLE_H;
-    }
-
-  } else if (drawLine.p1().x() > drawLine.p2().x() && drawLine.p1().y() > drawLine.p2().y()) {
-    if (getTail()->getStructuralType() == Structural::Link) {
-      x = drawLine.p2().x();
-      y = drawLine.p2().y();
-    } else {
-      x = drawLine.p1().x() - STR_DEFAULT_BIND_ROLE_W;
-      y = drawLine.p1().y() - STR_DEFAULT_BIND_ROLE_H;
-    }
+    painter->addEllipse(x, y, STR_DEFAULT_BIND_ROLE_W, STR_DEFAULT_BIND_ROLE_H);
   }
-
-  painter->addEllipse(x, y, STR_DEFAULT_BIND_ROLE_W, STR_DEFAULT_BIND_ROLE_H);
 }
 
 void StructuralBind::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
