@@ -1,6 +1,8 @@
 #include "StructuralComposition.h"
 
 #include <QMimeData>
+#include <QFileInfo>
+#include <QUrl>
 
 #include "StructuralContent.h"
 #include "StructuralUtil.h"
@@ -11,8 +13,8 @@ StructuralComposition::StructuralComposition(StructuralEntity* parent)
   setWidth(STR_DEFAULT_COMPOSITION_W);
   setHeight(STR_DEFAULT_COMPOSITION_H);
 
+  setHoverable(false);
   setUncollapsed(true);
-  setHovering(false);
 
   setAcceptDrops(true);
 }
@@ -177,16 +179,24 @@ void StructuralComposition::delineate(QPainterPath* painter) const
 
 void StructuralComposition::dragEnterEvent(QGraphicsSceneDragDropEvent *event)
 {
-  if (!event->mimeData()->urls().isEmpty())
+  StructuralNode::dragEnterEvent(event);
+
+  QList<QUrl> list = event->mimeData()->urls();
+
+  if (!list.isEmpty())
     event->acceptProposedAction();
 }
 
 void StructuralComposition::dropEvent(QGraphicsSceneDragDropEvent *event)
 {
-  if (!event->mimeData()->urls().isEmpty()) {
+  StructuralNode::dropEvent(event);
+
+  QList<QUrl> list = event->mimeData()->urls();
+
+  if (!list.isEmpty()) {
     event->acceptProposedAction();
 
-    foreach(QUrl url, event->mimeData()->urls()) {
+    foreach(QUrl url, list) {
       QString filename = url.toLocalFile();
       QString suffix = QFileInfo(filename).suffix().toLower();
 
@@ -203,7 +213,7 @@ void StructuralComposition::dropEvent(QGraphicsSceneDragDropEvent *event)
 
 void StructuralComposition::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
 {
-  collapse(true);
-
   StructuralNode::mouseDoubleClickEvent(event);
+
+  collapse(true);
 }
