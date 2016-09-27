@@ -3,7 +3,7 @@
 #include <assert.h>
 #include <QDebug>
 
-
+#include <QUuid>
 #include <QFileDialog>
 #include "StructuralUtil.h"
 
