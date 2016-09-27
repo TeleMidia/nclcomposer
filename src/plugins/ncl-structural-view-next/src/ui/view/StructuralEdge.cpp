@@ -90,9 +90,9 @@ StructuralEntity* StructuralEdge::getTail() const
   return _tail;
 }
 
-void StructuralEdge::setTail(StructuralEntity* entity)
+void StructuralEdge::setTail(StructuralEntity* tail)
 {
-  _tail = entity;
+  _tail = tail;
 }
 
 StructuralEntity* StructuralEdge::getHead() const
@@ -100,9 +100,9 @@ StructuralEntity* StructuralEdge::getHead() const
   return _head;
 }
 
-void StructuralEdge::setHead(StructuralEntity* entity)
+void StructuralEdge::setHead(StructuralEntity* head)
 {
-  _head = entity;
+  _head = head;
 }
 
 void StructuralEdge::adjust(bool collision,  bool recursion)
