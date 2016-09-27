@@ -1,5 +1,7 @@
 #include "StructuralUtil.h"
 
+#include <QUuid>
+
 #include "StructuralEdge.h"
 
 QString StructuralUtil::createUid()

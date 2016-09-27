@@ -3,6 +3,8 @@
 #include <assert.h>
 #include <QDebug>
 
+
+#include <QFileDialog>
 #include "StructuralUtil.h"
 
 StructuralView::StructuralView(QWidget* parent)
@@ -791,6 +793,7 @@ void StructuralView:: change(QString uid, QMap<QString, QString> properties, QMa
   {
     if (settings[STR_SETTING_UNDO] == "1")
     {
+      /*
       QMap<QString,QString> tmp = previous;
 
       if (entities.value(uid)->getStructuralType() == Structural::Port ||
@@ -822,11 +825,14 @@ void StructuralView:: change(QString uid, QMap<QString, QString> properties, QMa
         }
       }
 
+
       foreach (QString key, properties.keys()) {
         tmp[key] = properties.value(key);
       };
 
-      Change* command = new Change(uid, tmp, previous, settings);
+      */
+
+      Change* command = new Change(uid, properties, previous, settings);
 
       command->setText(settings[STR_SETTING_CODE]);
 
@@ -850,27 +856,88 @@ void StructuralView:: change(QString uid, QMap<QString, QString> properties, QMa
      entity->setStructuralProperties(properties);
      entity->adjust(true);
 
-
      if (entity->getStructuralType() ==  Structural::Bind) {
        StructuralBind* b = (StructuralBind*) entity;
 
        b->setRole(StructuralUtil::translateStringToRole(properties.value(STR_PROPERTY_BIND_ROLE)));
 
+       bool toHide = true;
+
        if (entities.contains(properties.value(STR_PROPERTY_EDGE_TAIL)))
          b->setTail(entities.value(properties.value(STR_PROPERTY_EDGE_TAIL)));
+       else
+         b->setTail(NULL);
 
        if (entities.contains(properties.value(STR_PROPERTY_EDGE_HEAD)))
          b->setHead(entities.value(properties.value(STR_PROPERTY_EDGE_HEAD)));
+       else
+         b->setHead(NULL);
+
+       if (b->getTail() != NULL && b->getHead() != NULL)
+         toHide = false;
+       else
+         toHide = true;
+
+       StructuralEntity* co = entities.value(properties.value(STR_PROPERTY_REFERENCE_COMPONENT_UID), NULL);
+       StructuralEntity* in = entities.value(properties.value(STR_PROPERTY_REFERENCE_INTERFACE_UID), NULL);
+
+       if (in != NULL) {
+         if (co != NULL){
+           toHide = true;
+
+           foreach (StructuralEntity* e, co->getStructuralEntities()) {
+             if (e == in){
+               toHide = false;
+               break;
+             }
+           }
+         }else{
+           toHide = true;
+         }
+       }
+
+       b->setHidden(toHide);
      }
 
      if (entity->getStructuralType() ==  Structural::Mapping) {
        StructuralEdge* map = (StructuralEdge*) entity;
 
-       if (entities.contains(properties.value(STR_PROPERTY_EDGE_TAIL)))
-         map->setTail(entities.value(properties.value(STR_PROPERTY_EDGE_TAIL)));
+       bool toHide = true;
 
-       if (entities.contains(properties.value(STR_PROPERTY_EDGE_HEAD)))
+       if (entities.contains(properties.value(STR_PROPERTY_EDGE_TAIL))){
+         map->setTail(entities.value(properties.value(STR_PROPERTY_EDGE_TAIL)));
+       }else
+         map->setTail(NULL);
+
+       if (entities.contains(properties.value(STR_PROPERTY_EDGE_HEAD))){
          map->setHead(entities.value(properties.value(STR_PROPERTY_EDGE_HEAD)));
+       }else
+         map->setHead(NULL);
+
+       if (map->getTail() != NULL && map->getHead() != NULL)
+         toHide = false;
+       else
+         toHide = true;
+
+       StructuralEntity* co = entities.value(properties.value(STR_PROPERTY_REFERENCE_COMPONENT_UID), NULL);
+       StructuralEntity* in = entities.value(properties.value(STR_PROPERTY_REFERENCE_INTERFACE_UID), NULL);
+
+       if (in != NULL) {
+         if (co != NULL){
+           toHide = true;
+
+           foreach (StructuralEntity* e, co->getStructuralEntities()) {
+             if (e == in){
+               toHide = false;
+               break;
+             }
+           }
+         }else{
+           toHide = true;
+         }
+       }
+
+       map->setHidden(toHide);
      }
 
      if (entity != NULL && entity->getStructuralType() == Structural::Port)
@@ -950,8 +1017,9 @@ StructuralEntity* StructuralView::getBody()
 void StructuralView::clearErrors()
 {
   foreach (StructuralEntity* e, entities.values()) {
-    e->setError(false);
-    e->setErrorMsg("");
+    e->setError("");
+    e->setWarning("");
+    e->setInfo("");
   }
 }
 
@@ -960,9 +1028,8 @@ void StructuralView::markError(const QString &uid, const QString &msg)
   if(entities.contains(uid))
   {
     StructuralEntity* entity = entities.value(uid);
-    entity->setError(true);
-    entity->setErrorMsg(msg);
-    entity->adjust();
+    entity->setError(msg);
+    entity->adjust(true);
   }
 }
 
@@ -1864,14 +1931,14 @@ void StructuralView::mouseMoveEvent(QMouseEvent* event)
   {
     if (lastLinkMouseOver != NULL)
     {
-      lastLinkMouseOver->setMouseHover(false);
+      lastLinkMouseOver->setHoverable(false);
 
       // \fixme This is not the best place to control this!!
       if(
          lastLinkMouseOver->getStructuralType() == Structural::Context ||
          lastLinkMouseOver->getStructuralType() == Structural::Switch)
       {
-        lastLinkMouseOver->setMouseHoverHighlight(false);
+        lastLinkMouseOver->setHoverable(false);
       }
 
       lastLinkMouseOver = NULL;
@@ -1887,7 +1954,7 @@ void StructuralView::mouseMoveEvent(QMouseEvent* event)
     if (itemsa.count())
     {
       StructuralEntity* entitya = (StructuralEntity*) itemsa.first();
-      entitya->setMouseHover(true);
+      entitya->setHoverable(true);
     }
 
     QList<QGraphicsItem*> itemsb = scene->items(link->getLine().p2());
@@ -1900,14 +1967,14 @@ void StructuralView::mouseMoveEvent(QMouseEvent* event)
     if (itemsb.count())
     {
       StructuralEntity* entityb = (StructuralEntity*) itemsb.first();
-      entityb->setMouseHover(true);
+      entityb->setHoverable(true);
 
       // \fixme This is not the best place to control this!!
       if(
          entityb->getStructuralType() == Structural::Context ||
          entityb->getStructuralType() == Structural::Switch)
       {
-        entityb->setMouseHoverHighlight(true);
+        entityb->setHoverable(true);
       }
 
       lastLinkMouseOver = entityb;
@@ -2058,15 +2125,15 @@ void StructuralView::mouseReleaseEvent(QMouseEvent* event)
         }
       }
 
-      entitya->setMouseHover(false);
-      entityb->setMouseHover(false);
+      entitya->setHoverable(false);
+      entityb->setHoverable(false);
 
       // \fixme This is not the best place to control this!!
       if(
          entityb->getStructuralType() == Structural::Context ||
          entityb->getStructuralType() == Structural::Switch)
       {
-        entityb->setMouseHoverHighlight(false);
+        entityb->setHoverable(false);
       }
     }
 

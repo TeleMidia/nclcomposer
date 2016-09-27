@@ -1,8 +1,6 @@
-#ifndef QNSTENTITY_H
-#define QNSTENTITY_H
+#ifndef STRUCTURALENTITY_H
+#define STRUCTURALENTITY_H
 
-#include <QAction>
-#include <QFileDialog>
 #include <QGraphicsItem>
 #include <QGraphicsScene>
 #include <QPainter>
@@ -12,10 +10,7 @@
 #include <QObject>
 #include <QCursor>
 #include <QDrag>
-#include <QUuid>
 #include <QStyleOptionGraphicsItem>
-
-#include <QDebug>
 
 #include "Structural.h"
 #include "StructuralMenu.h"
@@ -37,26 +32,30 @@ public:
   void setStructuralUid(const QString &uid);
 
   StructualCategory getStructuralCategory() const;
-  void setStructuralCategory(const StructualCategory category);
+  void setStructuralCategory(StructualCategory category);
 
   StructuralType getStructuralType() const;
-  virtual void setStructuralType(const StructuralType type);
+  void setStructuralType(StructuralType type);
 
   StructuralResize getStructuralResize() const;
-  virtual void setStructuralResize(const StructuralResize resize);
+  void setStructuralResize(StructuralResize resize);
 
   QMap<QString, QString> getStructuralProperties() const;
   void setStructuralProperties(const QMap<QString, QString> &properties);
 
   QString getStructuralProperty(const QString &name) const;
-  virtual void setStructuralProperty(const QString &name, const QString &value);
+  void setStructuralProperty(const QString &name, const QString &value);
 
   StructuralEntity* getStructuralParent() const;
   void setStructuralParent(StructuralEntity* parent);
 
-  QVector<StructuralEntity*> getStructuralEntities();
-  virtual void addStructuralEntity(StructuralEntity* entity);
-  virtual void removeStructuralEntity(StructuralEntity* entity);
+  QVector<StructuralEntity*> getStructuralEntities() const;
+  void addStructuralEntity(StructuralEntity* entity);
+  void removeStructuralEntity(StructuralEntity* entity);
+
+  QVector<QString> getStructuralRestrictions() const;
+  void addStructuralRestriction(const QString &restriction);
+  void removeStructuralRestriction(const QString &restriction);
 
   bool isMoveable() const;
   void setMoveable(bool moveable);
@@ -154,20 +153,28 @@ public:
   StructuralMenu* getMenu() const;
   void setMenu(StructuralMenu* menu);
 
-public slots:
-  virtual void newChild(StructuralType _subtype);
-  void performInsert(StructuralType _subtype);
+  QString getError() const;
+  void setError(const QString &error);
+
+  QString getWarning() const;
+  void setWarning(const QString &warning);
+
+  QString getInfo() const;
+  void setInfo(const QString &info);
+
+  virtual void adjust(bool collision = false, bool recursion = true);
 
 signals:
-  void inserted(QString _uid, QString _parent, QMap<QString, QString> _properties, QMap<QString, QString> settings);
-  void removed(QString _uid, QMap<QString, QString> settings);
-  void changed(QString _uid, QMap<QString, QString> _properties, QMap<QString, QString> previous, QMap<QString, QString> settings);
-  void selected(QString _uid, QMap<QString, QString> settings);
-  void move(QString uid, QString newParent);
+  void inserted(QString uid, QString parent, QMap<QString, QString> properties, QMap<QString, QString> settings);
+  void removed(QString uid, QMap<QString, QString> settings);
+  void changed(QString uid, QMap<QString, QString> properties, QMap<QString, QString> previous, QMap<QString, QString> settings);
+  void selected(QString uid, QMap<QString, QString> settings);
+  void move(QString uid, QString parent);
 
 protected:
   virtual void draw(QPainter* painter) = 0;
   virtual void delineate(QPainterPath* painter) const;
+
   virtual void move(QGraphicsSceneMouseEvent* event);
   virtual void resize(QGraphicsSceneMouseEvent* event);
 
@@ -179,25 +186,15 @@ protected:
   virtual void mousePressEvent(QGraphicsSceneMouseEvent* event);
   virtual void mouseReleaseEvent(QGraphicsSceneMouseEvent*event);
 
-  virtual void hoverMoveEvent(QGraphicsSceneHoverEvent* event);
   virtual void hoverEnterEvent(QGraphicsSceneHoverEvent* event);
   virtual void hoverLeaveEvent(QGraphicsSceneHoverEvent* event);
+
+  virtual void dragEnterEvent(QGraphicsSceneDragDropEvent* event);
+  virtual void dropEvent(QGraphicsSceneDragDropEvent* event);
 
   virtual void contextMenuEvent(QGraphicsSceneContextMenuEvent* event);
 
 private:
-  void createMenus();
-  void createConnections();
-
-  void updateCursor(QGraphicsSceneHoverEvent* event);
-
-  QString _id;
-  QString _uid;
-  QMap<QString, QString> _properties;
-
-  StructuralEntity* _parent;
-  QVector<StructuralEntity*> _children;
-
   bool _moveable;
   bool _selectable;
   bool _resizable;
@@ -220,7 +217,7 @@ private:
   qreal _width;
   qreal _height;
 
-  qreal _zIndex;
+  qreal _zindex;
 
   qreal _moveTop;
   qreal _moveLeft;
@@ -240,38 +237,25 @@ private:
   qreal _uncollapsedWidth;
   qreal _uncollapsedHeight;
 
-  StructualCategory _type;
-  StructuralType _subtype;
-  StructuralResize _resize;
+  QString _id;
+  QString _uid;
 
-/****************************************************************************/
+  QMap<QString, QString> _properties;
 
-  QPointF _insertPoint;
-public:
-  void addAngle(QString _uid, int angle);
-  void removeAngle(QString _uid, int angle);
-  bool hasMouseHover();
-  void setMouseHover(bool hover);
-  void setMouseHoverHighlight(bool enable);
-  virtual void adjust(bool collision = false, bool recursion = true);
+  StructuralType _type;
+  StructualCategory _category;
 
-protected:
-  bool hover, hasError, enableMouseHoverHighlight;
-  QString erroMsg;
-  QString dropsrc;
+  StructuralEntity* _parent;
+  QVector<StructuralEntity*> _children;
 
-public:
+  QVector<QString> _restrictions;
+
+  QString _info;
+  QString _error;
+  QString _warnning;
 
   StructuralMenu* _menu;
-  void setError(bool hasError);
-  void setErrorMsg(QString erroMsg);
-
-protected:
-  virtual void drawMouseHoverHighlight(QPainter *painter);
-  virtual void dragEnterEvent(QGraphicsSceneDragDropEvent* event);
-//  virtual void dragLeaveEvent(QGraphicsSceneDragDropEvent* event);
-//  virtual void dragMoveEvent(QGraphicsSceneDragDropEvent* event);
-  virtual void dropEvent(QGraphicsSceneDragDropEvent* event);
+  StructuralResize _resize;
 };
 
-#endif // QNSTENTITY_H
+#endif // STRUCTURALENTITY_H

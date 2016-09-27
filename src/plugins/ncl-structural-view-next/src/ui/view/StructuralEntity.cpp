@@ -1,6 +1,4 @@
 #include "StructuralEntity.h"
-#include "StructuralContent.h"
-#include "StructuralComposition.h"
 
 #include <QMimeData>
 
@@ -11,7 +9,6 @@ StructuralEntity::StructuralEntity(StructuralEntity* parent)
   setStructuralType(Structural::NoType);
 
   setStructuralUid(StructuralUtil::createUid());
-
   setStructuralParent(parent);
 
   setMoveable(true);
@@ -52,9 +49,6 @@ StructuralEntity::StructuralEntity(StructuralEntity* parent)
 
   setzIndex(0);
 
-  createMenus();
-  createConnections();
-
   setFlag(QGraphicsItem::ItemIsMovable, true);
   setFlag(QGraphicsItem::ItemIsFocusable, true);
 
@@ -63,13 +57,11 @@ StructuralEntity::StructuralEntity(StructuralEntity* parent)
 
   setSelected(false);
   setUncollapsed(true);
-
-  hasError = false;
 }
 
 StructuralEntity::~StructuralEntity()
 {
-  // TODO
+
 }
 
 QString StructuralEntity::getStructuralUid() const
@@ -80,7 +72,7 @@ QString StructuralEntity::getStructuralUid() const
 void StructuralEntity::setStructuralUid(const QString &uid)
 {
   _uid = uid;
-  _properties.insert(STR_PROPERTY_ENTITY_UID, uid);
+  _properties[STR_PROPERTY_ENTITY_UID] = _uid;
 }
 
 QString StructuralEntity::getStructuralId() const
@@ -91,29 +83,72 @@ QString StructuralEntity::getStructuralId() const
 void StructuralEntity::setStructuralId(const QString &id)
 {
   _id = id;
-  _properties.insert(STR_PROPERTY_ENTITY_ID, id) ;
+  _properties.insert(STR_PROPERTY_ENTITY_ID, _id) ;
 }
 
 StructualCategory StructuralEntity::getStructuralCategory() const
 {
-  return _type;
+  return _category;
 }
 
-void StructuralEntity::setStructuralCategory(const StructualCategory type)
+void StructuralEntity::setStructuralCategory(StructualCategory category)
 {
-  _type = type;
-  _properties.insert(STR_PROPERTY_ENTITY_CATEGORY,StructuralUtil::translateCategoryToString(type));
+  _category = category;
+  _properties[STR_PROPERTY_ENTITY_CATEGORY] = StructuralUtil::translateCategoryToString(_category);
 }
 
 StructuralType StructuralEntity::getStructuralType() const
 {
-  return _subtype;
+  return _type;
 }
 
-void StructuralEntity::setStructuralType(const StructuralType subtype)
+void StructuralEntity::setStructuralType(StructuralType type)
 {
-  _subtype = subtype;
-  _properties.insert(STR_PROPERTY_ENTITY_TYPE,StructuralUtil::translateTypeToString(subtype));
+  _type = type;
+  _properties[STR_PROPERTY_ENTITY_TYPE] = StructuralUtil::translateTypeToString(_type);
+
+  _restrictions.clear();
+
+  switch (type) {
+    case Structural::Port:
+    case Structural::Mapping:
+    {
+      addStructuralRestriction(STR_PROPERTY_REFERENCE_COMPONENT_ID);
+      addStructuralRestriction(STR_PROPERTY_REFERENCE_COMPONENT_UID);
+      addStructuralRestriction(STR_PROPERTY_REFERENCE_INTERFACE_ID);
+      addStructuralRestriction(STR_PROPERTY_REFERENCE_INTERFACE_UID);
+      break;
+    }
+
+    case Structural::Bind:
+    {
+      addStructuralRestriction(STR_PROPERTY_REFERENCE_COMPONENT_ID);
+      addStructuralRestriction(STR_PROPERTY_REFERENCE_COMPONENT_UID);
+      addStructuralRestriction(STR_PROPERTY_REFERENCE_INTERFACE_ID);
+      addStructuralRestriction(STR_PROPERTY_REFERENCE_INTERFACE_UID);
+
+      addStructuralRestriction(STR_PROPERTY_REFERENCE_COMPONENT_ID);
+      addStructuralRestriction(STR_PROPERTY_REFERENCE_COMPONENT_UID);
+      addStructuralRestriction(STR_PROPERTY_REFERENCE_INTERFACE_ID);
+      addStructuralRestriction(STR_PROPERTY_REFERENCE_INTERFACE_UID);
+      break;
+    }
+
+    default:
+    {
+      break;
+    }
+  }
+}
+
+StructuralResize StructuralEntity::getStructuralResize() const
+{
+  return _resize;
+}
+
+void StructuralEntity::setStructuralResize(StructuralResize resize)
+{
+  _resize = resize;
 }
 
 QMap<QString, QString> StructuralEntity::getStructuralProperties() const
@@ -123,42 +158,20 @@ QMap<QString, QString> StructuralEntity::getStructuralProperties() const
 
 void StructuralEntity::setStructuralProperties(const QMap<QString, QString> &properties)
 {
-  if (getStructuralType() == Structural::Port ||
-      getStructuralType() == Structural::Mapping ||
-      getStructuralType() == Structural::Bind){
+  if (!_restrictions.isEmpty()) {
+    QMap<QString, QString> previous = _properties;
 
-  if (!properties.contains(STR_PROPERTY_REFERENCE_COMPONENT_ID))
-    _properties.remove(STR_PROPERTY_REFERENCE_COMPONENT_ID);
-
-  if (!properties.contains(STR_PROPERTY_REFERENCE_COMPONENT_UID))
-    _properties.remove(STR_PROPERTY_REFERENCE_COMPONENT_UID);
-
-  if (!properties.contains(STR_PROPERTY_REFERENCE_INTERFACE_ID))
-    _properties.remove(STR_PROPERTY_REFERENCE_INTERFACE_UID);
-
-  if (!properties.contains(STR_PROPERTY_REFERENCE_COMPONENT_ID))
-    _properties.remove(STR_PROPERTY_REFERENCE_COMPONENT_ID);
-  }
-
-  QMap<QString, QString> previous = _properties;
-
-  if (getStructuralType() == Structural::Link ||
-      getStructuralType() == Structural::Bind){
     foreach (QString key, previous.keys()) {
-      if (key.contains(STR_PROPERTY_LINKPARAM_NAME) ||
-          key.contains(STR_PROPERTY_LINKPARAM_VALUE) ||
-          key.contains(STR_PROPERTY_BINDPARAM_NAME) ||
-          key.contains(STR_PROPERTY_BINDPARAM_VALUE)) {
-        if (!properties.contains(key))
-          _properties.remove(key);
+      foreach (QString restriction, _restrictions) {
+        if (key.contains(restriction))
+          if (!properties.contains(key))
+            _properties.remove(key);
       }
     }
   }
 
-
-  foreach (QString name, properties.keys()){
+  foreach (QString name, properties.keys())
     _properties[name] = properties.value(name);
-  }
 
   adjust(true);
 }
@@ -170,11 +183,14 @@ QString StructuralEntity::getStructuralProperty(const QString &name) const
 
 void StructuralEntity::setStructuralProperty(const QString &name, const QString &value)
 {
-  _properties.insert(name, value);
+  _properties[name] = value;
 }
 
 void StructuralEntity::adjust(bool collision, bool recursion)
 {
+  Q_UNUSED(collision);
+  Q_UNUSED(recursion);
+
   setStructuralId(_properties[STR_PROPERTY_ENTITY_ID]);
   setStructuralUid(_properties[STR_PROPERTY_ENTITY_UID]);
   setStructuralCategory(StructuralUtil::translateStringToCategory(_properties[STR_PROPERTY_ENTITY_CATEGORY]));
@@ -195,7 +211,7 @@ void StructuralEntity::adjust(bool collision, bool recursion)
   setHidden((_properties[STR_PROPERTY_ENTITY_HIDDEN] == STR_VALUE_TRUE ? true : false));
   setUncollapsed((_properties[STR_PROPERTY_ENTITY_UNCOLLAPSED] == STR_VALUE_TRUE ? true : false));
 
-  setToolTip(StructuralUtil::getTooltip(_subtype, _id, "", "", "", _properties[STR_PROPERTY_REFERENCE_XCONNECTOR_ID]));
+  setToolTip(StructuralUtil::getTooltip(_type, _id, _info, _warnning, _error, _properties[STR_PROPERTY_REFERENCE_XCONNECTOR_ID]));
 
   if (scene() != NULL)
     scene()->update();
@@ -269,7 +285,7 @@ bool StructuralEntity::isHidden() const
 void StructuralEntity::setHidden(bool hidden)
 {
   _hidden = hidden;
-  _properties.insert(STR_PROPERTY_ENTITY_HIDDEN,(hidden ? "1" : "0"));
+  _properties[STR_PROPERTY_ENTITY_HIDDEN] = (hidden ? STR_VALUE_TRUE : STR_VALUE_FALSE);
 
   setVisible(!hidden);
 }
@@ -322,7 +338,7 @@ bool StructuralEntity::isUncollapsed() const
 void StructuralEntity::setUncollapsed(bool uncollapsed)
 {
   _uncollapsed = uncollapsed;
-  _properties.insert(STR_PROPERTY_ENTITY_UNCOLLAPSED,(uncollapsed ? "1" : "0"));
+  _properties[STR_PROPERTY_ENTITY_UNCOLLAPSED] = (uncollapsed ? STR_VALUE_TRUE : STR_VALUE_FALSE);
 }
 
 qreal StructuralEntity::getTop() const
@@ -333,7 +349,7 @@ qreal StructuralEntity::getTop() const
 void StructuralEntity::setTop(qreal top)
 {
   _top = top;
-  _properties.insert(STR_PROPERTY_ENTITY_TOP,QString::number(top));
+  _properties[STR_PROPERTY_ENTITY_TOP] = QString::number(top);
 
   setY(top-4);
 }
@@ -376,7 +392,7 @@ qreal StructuralEntity::getLeft() const
 void StructuralEntity::setLeft(qreal left)
 {
   _left = left;
-  _properties.insert(STR_PROPERTY_ENTITY_LEFT,QString::number(left));
+  _properties[STR_PROPERTY_ENTITY_LEFT] = QString::number(left);
 
   setX(left-4);
 }
@@ -419,7 +435,7 @@ qreal StructuralEntity::getWidth() const
 void StructuralEntity::setWidth(qreal width)
 {
   _width = width;
-  _properties.insert(STR_PROPERTY_ENTITY_WIDTH,QString::number(width));
+  _properties[STR_PROPERTY_ENTITY_WIDTH] = QString::number(width);
 }
 
 qreal StructuralEntity::getPressWidth() const
@@ -450,7 +466,7 @@ qreal StructuralEntity::getHeight() const
 void StructuralEntity::setHeight(qreal height)
 {
   _height = height;
-  _properties.insert(STR_PROPERTY_ENTITY_HEIGHT,QString::number(height));
+  _properties[STR_PROPERTY_ENTITY_HEIGHT] = QString::number(height);
 }
 
 qreal StructuralEntity::getPressHeight() const
@@ -481,7 +497,7 @@ qreal StructuralEntity::getUncollapedTop() const
 void StructuralEntity::setUncollapedTop(qreal uncollapedTop)
 {
   _uncollapsedTop = uncollapedTop;
-  _properties.insert(STR_PROPERTY_ENTITY_UNCOLLAPSED_TOP,QString::number(uncollapedTop));
+  _properties[STR_PROPERTY_ENTITY_UNCOLLAPSED_TOP] = QString::number(uncollapedTop);
 }
 
 qreal StructuralEntity::getUncollapedLeft() const
@@ -492,7 +508,7 @@ qreal StructuralEntity::getUncollapedLeft() const
 void StructuralEntity::setUncollapedLeft(qreal uncollapedLeft)
 {
   _uncollapsedLeft = uncollapedLeft;
-  _properties.insert(STR_PROPERTY_ENTITY_UNCOLLAPSED_LEFT,QString::number(uncollapedLeft));
+  _properties[STR_PROPERTY_ENTITY_UNCOLLAPSED_LEFT] = QString::number(uncollapedLeft);
 }
 
 qreal StructuralEntity::getUncollapedWidth() const
@@ -503,7 +519,7 @@ qreal StructuralEntity::getUncollapedWidth() const
 void StructuralEntity::setUncollapedWidth(qreal uncollapedWidth)
 {
   _uncollapsedWidth = uncollapedWidth;
-  _properties.insert(STR_PROPERTY_ENTITY_UNCOLLAPSED_WIDTH,QString::number(uncollapedWidth));
+  _properties[STR_PROPERTY_ENTITY_UNCOLLAPSED_WIDTH] = QString::number(uncollapedWidth);
 }
 
 qreal StructuralEntity::getUncollapedHeight() const
@@ -514,18 +530,18 @@ qreal StructuralEntity::getUncollapedHeight() const
 void StructuralEntity::setUncollapedHeight(qreal uncollapedHeight)
 {
   _uncollapsedHeight = uncollapedHeight;
-  _properties.insert(STR_PROPERTY_ENTITY_UNCOLLAPSED_HEIGHT,QString::number(uncollapedHeight));
+  _properties[STR_PROPERTY_ENTITY_UNCOLLAPSED_HEIGHT] = QString::number(uncollapedHeight);
 }
 
 qreal StructuralEntity::getzIndex() const
 {
-  return _zIndex;
+  return _zindex;
 }
 
 void StructuralEntity::setzIndex(qreal zIndex)
 {
-  _zIndex = zIndex;
-  _properties.insert(STR_PROPERTY_ENTITY_ZINDEX,QString::number(zIndex));
+  _zindex = zIndex;
+  _properties[STR_PROPERTY_ENTITY_ZINDEX] = QString::number(zIndex);
 
   setZValue(zIndex);
 }
@@ -545,6 +561,36 @@ StructuralEntity* StructuralEntity::getStructuralParent() const
   return _parent;
 }
 
+QString StructuralEntity::getError() const
+{
+  return _error;
+}
+
+void StructuralEntity::setError(const QString &error)
+{
+  _error = error;
+}
+
+QString StructuralEntity::getWarning() const
+{
+  return _warnning;
+}
+
+void StructuralEntity::setWarning(const QString &warning)
+{
+  _warnning = warning;
+}
+
+QString StructuralEntity::getInfo() const
+{
+  return _info;
+}
+
+void StructuralEntity::setInfo(const QString &info)
+{
+  _info = info;
+}
+
 void StructuralEntity::setStructuralParent(StructuralEntity* parent)
 {
   _parent = parent;
@@ -556,19 +602,9 @@ void StructuralEntity::setStructuralParent(StructuralEntity* parent)
     parent->addStructuralEntity(this);
 }
 
-QVector<StructuralEntity*> StructuralEntity::getStructuralEntities()
+QVector<StructuralEntity*> StructuralEntity::getStructuralEntities() const
 {
   return _children;
-}
-
-void StructuralEntity::createMenus()
-{
-//  _menu = new StructuralMenu();
-}
-
-void StructuralEntity::createConnections()
-{
-
 }
 
 void StructuralEntity::addStructuralEntity(StructuralEntity* entity)
@@ -591,34 +627,28 @@ void StructuralEntity::removeStructuralEntity(StructuralEntity* entity)
   }
 }
 
-void StructuralEntity::newChild(Structural::StructuralType type)
+QVector<QString> StructuralEntity::getStructuralRestrictions() const
 {
-  QString uid = QUuid::createUuid().toString();
-  QString parent = getStructuralUid();
-  QMap<QString, QString> properties;
-  properties[STR_PROPERTY_ENTITY_CATEGORY] = QString::number(type);
-
-  QMap<QString, QString> settings;
-  settings[STR_SETTING_UNDO] = "1";
-  settings[STR_SETTING_NOTIFY] = "1";
-  settings[STR_SETTING_CODE] = QUuid::createUuid().toString();
-
-  emit inserted(uid, parent, properties, settings);
+  return _restrictions;
 }
 
-StructuralResize StructuralEntity::getStructuralResize() const
+void StructuralEntity::addStructuralRestriction(const QString &restriction)
 {
-  return _resize;
+  if(!_restrictions.contains(restriction))
+    _restrictions.append(restriction);
 }
 
-void StructuralEntity::setStructuralResize(const StructuralResize resize)
+void StructuralEntity::removeStructuralRestriction(const QString &restriction)
 {
-  _resize = resize;
+
 }
 
 void StructuralEntity::delineate(QPainterPath* painter) const
 {
-  painter->addRect(4, 4, getWidth(), getHeight());
+  painter->addRect(STR_DEFAULT_ENTITY_PADDING,
+                   STR_DEFAULT_ENTITY_PADDING,
+                   getWidth(),
+                   getHeight());
 }
 
 void StructuralEntity::move(QGraphicsSceneMouseEvent* event)
@@ -629,37 +659,37 @@ void StructuralEntity::move(QGraphicsSceneMouseEvent* event)
 
   StructuralEntity* parent = getStructuralParent();
 
+  // setting minimal position
   qreal minx;
   qreal miny;
 
-  if (parent != NULL)
-  {
-    minx = 4;
-    miny = 4;
-  }
-  else
-  {
+  if (parent != NULL) {
+    minx = STR_DEFAULT_ENTITY_PADDING;
+    miny = STR_DEFAULT_ENTITY_PADDING;
+
+  } else {
     minx = 0;
     miny = 0;
   }
 
+  // setting maximal position
   qreal maxx;
   qreal maxy;
 
-  if (parent != NULL)
-  {
-    maxx = parent->getWidth() - getWidth() - 4;
-    maxy = parent->getHeight() - getHeight() - 4;
-  }
-  else
-  {
+  if (parent != NULL) {
+    maxx = parent->getWidth() - getWidth() - STR_DEFAULT_ENTITY_PADDING;
+    maxy = parent->getHeight() - getHeight() - STR_DEFAULT_ENTITY_PADDING;
+
+  } else {
     maxx = scene()->width() - getWidth();
     maxy = scene()->height() - getHeight();
   }
 
+  // setting delta
   qreal dx = event->pos().x() - getPressLeft(); // (x1 - x0)
   qreal dy = event->pos().y() - getPressTop();  // (y1 - y0)
 
+  // setting next position
   qreal nextx = x + dx;
   qreal nexty = y + dy;
 
@@ -667,7 +697,6 @@ void StructuralEntity::move(QGraphicsSceneMouseEvent* event)
   setMoveTop(nexty);
   setMoveLeft(nextx);
 
-  // redrawing
   if (scene() != NULL)
     scene()->update();
 }
@@ -682,59 +711,58 @@ void StructuralEntity::resize(QGraphicsSceneMouseEvent* event)
 
   StructuralEntity* parent = getStructuralParent();
 
+  // setting minimal bounds
   qreal minx;
   qreal miny;
   qreal minw;
   qreal minh;
 
-  if (parentItem() != NULL)
-  {
-    minx = 4;
-    miny = 4;
+  if (parentItem() != NULL) {
+    minx = STR_DEFAULT_ENTITY_PADDING;
+    miny = STR_DEFAULT_ENTITY_PADDING;
     minw = -1; // not used
     minh = -1; // not used
-  }
-  else
-  {
+
+  } else {
     minx = 0;
     miny = 0;
     minw = -1; // not used
     minh = -1; // not used
   }
 
+  // setting maximal bounds
   qreal maxx;
   qreal maxy;
   qreal maxw;
   qreal maxh;
 
-  if (parentItem() != NULL)
-  {
-    maxx = parent->getWidth() - getWidth() - 4;
-    maxy = parent->getHeight() - getHeight() - 4;
-    maxw = parent->getWidth() - 4;
-    maxh = parent->getHeight() - 4;
-  }
-  else
-  {
+  if (parentItem() != NULL) {
+    maxx = parent->getWidth() - getWidth() - STR_DEFAULT_ENTITY_PADDING;
+    maxy = parent->getHeight() - getHeight() - STR_DEFAULT_ENTITY_PADDING;
+    maxw = parent->getWidth() - STR_DEFAULT_ENTITY_PADDING;
+    maxh = parent->getHeight() - STR_DEFAULT_ENTITY_PADDING;
+
+  } else {
     maxx = scene()->width() - getWidth();
     maxy = scene()->height() - getHeight();
     maxw = scene()->width();
     maxh = scene()->height();
   }
 
+  // setting delta
   qreal dx = event->pos().x() - getPressLeft();    // (x1 - x0)
   qreal dy = event->pos().y() - getPressTop();     // (y1 - y0)
   qreal dw = -dx;
   qreal dh = -dy;
 
+  // setting next bounds
   qreal nextx = x + dx;
   qreal nexty = y + dy;
   qreal nextw = w + dw;
   qreal nexth = h + dh;
 
   // adjusting
-  switch(getStructuralResize())
-  {
+  switch(getStructuralResize()) {
     case Structural::TopLeft:
     {
       break;
@@ -793,6 +821,7 @@ void StructuralEntity::resize(QGraphicsSceneMouseEvent* event)
     {
       nexty = y; // fixed y
       nexth = h - dh;
+
       break;
     }
 
@@ -811,7 +840,6 @@ void StructuralEntity::resize(QGraphicsSceneMouseEvent* event)
   setResizeWidth(nextw);
   setResizeHeight(nexth);
 
-  // redrawing
   if (scene() != NULL)
     scene()->update();
 }
@@ -822,20 +850,20 @@ QPainterPath StructuralEntity::shape() const
 
   delineate(&painter);
 
-  if (_selectable && _selected && _resizable){
+  if (_selectable && _selected && _resizable) {
     painter.setFillRule(Qt::WindingFill);
 
-    qreal W = STR_DEFAULT_ENTITY_ANCHOR_W;
-    qreal H = STR_DEFAULT_ENTITY_ANCHOR_H;
+    qreal w = STR_DEFAULT_ENTITY_ANCHOR_W;
+    qreal h = STR_DEFAULT_ENTITY_ANCHOR_H;
 
-    painter.addRect(0,0,W,H);                                // topleft
-    painter.addRect((_width+W)/2 - W/2,0,W,H);               // top
-    painter.addRect((_width+W) - W,0,W,H);                   // topright
-    painter.addRect((_width+W) - W,(_height+H)/2 - H/2,W,H); // right
-    painter.addRect((_width+W) - W,(_height+H) - H,W,H);     // bottomright
-    painter.addRect((_width+W)/2 - W/2,(_height+H) - H,W,H); // bottom
-    painter.addRect(0,(_height+H) - H,W,H);                  // bottomleft
-    painter.addRect(0,(_height+H)/2 - H/2,W,H);              // left
+    painter.addRect(0,0,w,h);                                // topleft
+    painter.addRect((_width+w)/2 - w/2,0,w,h);               // top
+    painter.addRect((_width+w) - w,0,w,h);                   // topright
+    painter.addRect((_width+w) - w,(_height+h)/2 - h/2,w,h); // right
+    painter.addRect((_width+w) - w,(_height+h) - h,w,h);     // bottomright
+    painter.addRect((_width+w)/2 - w/2,(_height+h) - h,w,h); // bottom
+    painter.addRect(0,(_height+h) - h,w,h);                  // bottomleft
+    painter.addRect(0,(_height+h)/2 - h/2,w,h);              // left
   }
 
   return painter;
@@ -857,7 +885,7 @@ void StructuralEntity::paint(QPainter *painter, const QStyleOptionGraphicsItem *
 {
   draw(painter);
 
-  if (_selectable && _selected){
+  if (_selectable && _selected) {
     painter->setRenderHint(QPainter::Antialiasing,false);
 
     painter->setBrush(Qt::NoBrush);
@@ -869,61 +897,56 @@ void StructuralEntity::paint(QPainter *painter, const QStyleOptionGraphicsItem *
       painter->setBrush(QBrush(Qt::white));
       painter->setPen(QPen(QBrush(Qt::black), 0));
 
-      qreal W = STR_DEFAULT_ENTITY_ANCHOR_W;
-      qreal H = STR_DEFAULT_ENTITY_ANCHOR_H;
+      qreal w = STR_DEFAULT_ENTITY_ANCHOR_W;
+      qreal h = STR_DEFAULT_ENTITY_ANCHOR_H;
 
-      painter->drawRect(0,0,W,H);                                // topleft
-      painter->drawRect((_width+W)/2-H/2-1,0,W,H);               // top
-      painter->drawRect((_width+W)-W-1,0,W,H);                   // topright
-      painter->drawRect((_width+W)-W-1,(_height+H)/2-H/2-1,W,H); // right
-      painter->drawRect((_width+W)-W-1,(_height+H)-H-1,W,H);     // bottomright
-      painter->drawRect((_width+W)/2-W/2-1,(_height+H)-H-1,W,H); // bottom
-      painter->drawRect(0,(_height+H)-H-1,W,H);                  // bottomleft
-      painter->drawRect(0,(_height+H)/2-H/2-1,W,H);              // left
+      painter->drawRect(0,0,w,h);                                // topleft
+      painter->drawRect((_width+w)/2 - w/2,0,w,h);               // top
+      painter->drawRect((_width+w) - w,0,w,h);                   // topright
+      painter->drawRect((_width+w) - w,(_height+h)/2 - h/2,w,h); // right
+      painter->drawRect((_width+w) - w,(_height+h) - h,w,h);     // bottomright
+      painter->drawRect((_width+w)/2 - w/2,(_height+h) - h,w,h); // bottom
+      painter->drawRect(0,(_height+h) - h,w,h);                  // bottomleft
+      painter->drawRect(0,(_height+h)/2 - h/2,w,h);              // left
     }
+
+  } else if(_hoverable && _hovering) {
+    painter->setBrush(Qt::NoBrush);
+    painter->setPen(QPen(QBrush(QColor("#999999")), 0, Qt::DashLine));
+
+    painter->drawRect(STR_DEFAULT_ENTITY_PADDING, STR_DEFAULT_ENTITY_PADDING, getWidth(), getHeight());
   }
 }
 
 void StructuralEntity::mouseMoveEvent(QGraphicsSceneMouseEvent* event)
 {
-  if (_moveable && _moving){
+  if (_moveable && _moving) {
     move(event);
 
-  } else if (_resizable && _resizing){
+  } else if (_resizable && _resizing) {
     resize(event);
-  }else if(_draggable && _dragging){
+
+  }else if(_draggable && _dragging) {
     QDrag *drag = new QDrag(event->widget());
     QMimeData* minedata = new QMimeData();
 
-    minedata->setObjectName(QString::number(_subtype));
+    minedata->setObjectName(StructuralUtil::translateTypeToString(_type));
     minedata->setText(_uid);
+
     drag->setMimeData(minedata);
-/*
-    QPixmap pixmap(boundingRect().size().toSize());
-    pixmap.fill(Qt::white);
-
-    QPainter painter (&pixmap);
-    painter.setBackgroundMode(Qt::OpaqueMode);
-    painter.setOpacity(0.5);
-    QStyleOptionGraphicsItem styleOption;
-    paint(&painter,&styleOption,0);
-    painter.end();
-
-    drag->setPixmap(pixmap);
-*/
-
     drag->exec();
   }
 }
 
 void StructuralEntity::mousePressEvent(QGraphicsSceneMouseEvent* event)
 {
-  if (event->button() == Qt::RightButton){
+  if (event->button() == Qt::RightButton) {
     event->ignore();
 
-  }else if (event->button() == Qt::LeftButton){
-    if (_selectable && !_selected){
-      setSelected(true); QMap<QString, QString> settings; emit selected(getStructuralUid(), settings);
+  } else if (event->button() == Qt::LeftButton) {
+    if (_selectable && !_selected) {
+      setSelected(true);
+      emit selected(getStructuralUid(), StructuralUtil::createSettings());
     }
 
     setPressTop(event->pos().y());
@@ -931,23 +954,12 @@ void StructuralEntity::mousePressEvent(QGraphicsSceneMouseEvent* event)
     setPressWidth(_width);
     setPressHeight(_height);
 
-    if (_draggable){
-      setDragging(true);
 
-      QGraphicsItem::mousePressEvent(event);
-
-      return;
-    }
-
-    // avoid flickering on first move
     if (_moveable){
       setMoveTop(_top);
       setMoveLeft(_left);
-      setCursor(Qt::SizeAllCursor);
-
     }
 
-    // avoid flickering on first resize
     if (_resizable){
       setResizeTop(_top);
       setResizeLeft(_left);
@@ -955,57 +967,74 @@ void StructuralEntity::mousePressEvent(QGraphicsSceneMouseEvent* event)
       setResizeHeight(_height);
     }
 
-    qreal W = STR_DEFAULT_ENTITY_ANCHOR_W;
-    qreal H = STR_DEFAULT_ENTITY_ANCHOR_H;
+    qreal w = STR_DEFAULT_ENTITY_ANCHOR_W;
+    qreal h = STR_DEFAULT_ENTITY_ANCHOR_H;
 
-    if (_resizable){
+    if (_draggable) {
+      setDragging(true);
+
+    } else if (_resizable) {
       // if over TOPLEFT resize region
-      if (QRectF(0,0,W,H).contains(event->pos())){
+      if (QRectF(0,0,w,h).contains(event->pos())) {
         setStructuralResize(Structural::TopLeft);
         setResizing(true);
 
         // if over TOP resize region
-      }else if (QRectF((_width+W)/2 - W/2,0,W,H).contains(event->pos())){
+      } else if (QRectF((_width+w)/2 - w/2,0,w,h).contains(event->pos())) {
         setStructuralResize(Structural::Top);
         setResizing(true);
+        setCursor(Qt::SizeVerCursor);
 
         // if over TOPRIGHT resize region
-      }else if (QRectF((_width+W) - W,0,W,H).contains(event->pos())){
+      } else if (QRectF((_width+w) - w,0,w,h).contains(event->pos())) {
         setStructuralResize(Structural::TopRight);
         setResizing(true);
+        setCursor(Qt::SizeBDiagCursor);
 
         // if over RIGHT resize region
-      }else if (QRectF((_width+W) - W,(_height+H)/2 - H/2,W,H).contains(event->pos())){
+      } else if (QRectF((_width+w) - w,(_height+h)/2 - h/2,w,h).contains(event->pos())) {
         setStructuralResize(Structural::Right);
         setResizing(true);
+        setCursor(Qt::SizeHorCursor);
 
         // if over BOTTOMRIGHT resize region
-      }else if (QRectF((_width+W) - W,(_height+H) - H,W,H).contains(event->pos())){
+      } else if (QRectF((_width+w) - w,(_height+h) - h,w,h).contains(event->pos())) {
         setStructuralResize(Structural::BottomRight);
         setResizing(true);
+        setCursor(Qt::SizeFDiagCursor);
 
         // if over BOTTOM resize region
-      }else if (QRectF((_width+W)/2 - W/2,(_height+H) - H,W,H).contains(event->pos())){
+      } else if (QRectF((_width+w)/2 - w/2,(_height+h) - h,w,h).contains(event->pos())) {
         setStructuralResize(Structural::Bottom);
         setResizing(true);
+        setCursor(Qt::SizeVerCursor);
 
         // if over BOTTOMLEFT resize region
-      }else if (QRectF(0,(_height+H) - H,W,H).contains(event->pos())){
+      } else if (QRectF(0,(_height+h) - h,w,h).contains(event->pos())) {
         setStructuralResize(Structural::BottomLeft);
         setResizing(true);
+        setCursor(Qt::SizeBDiagCursor);
 
         // if over LEFT resize region
-      }else if (QRectF(0,(_height+H)/2 - H/2,W,H).contains(event->pos())){
+      } else if (QRectF(0,(_height+h)/2 - h/2,w,h).contains(event->pos())) {
         setStructuralResize(Structural::Left);
         setResizing(true);
+        setCursor(Qt::SizeHorCursor);
 
         // if not over any resize region
-      }else if (_moveable){
+      } else if (_moveable) {
         setMoving(true);
+        setCursor(Qt::SizeAllCursor);
+      } else {
+        setCursor(Qt::ArrowCursor);
       }
 
-    }else if (_moveable){
+    } else if (_moveable) {
       setMoving(true);
+      setCursor(Qt::SizeAllCursor);
+
+    } else {
+      setCursor(Qt::ArrowCursor);
     }
   }
 
@@ -1017,32 +1046,13 @@ void StructuralEntity::mouseReleaseEvent(QGraphicsSceneMouseEvent*event)
   if (_moving){
     setMoving(false);
 
-    if ((_top != _moveTop || _left != _moveLeft)){
-
-
+    if ((_top != _moveTop || _left != _moveLeft)) {
       QMap<QString, QString> previous = getStructuralProperties();
-
 
       setTop(_moveTop);
       setLeft(_moveLeft);
 
-      QMap<QString, QString> properties = getStructuralProperties();
-
-      QMap<QString, QString> settings;
-      settings[STR_SETTING_UNDO] = "1";
-      settings[STR_SETTING_CODE] = StructuralUtil::createUid();
-      settings["LOCATION"] = "INTERNAL MOVE";
-
-      emit changed(getStructuralUid(), properties, previous,settings);
-
-
-      //            emit entityChanged();
-
-
-      /**************/
-
-    }else{
-      adjust(true);
+      emit changed(getStructuralUid(), getStructuralProperties(), previous, StructuralUtil::createSettings());
     }
 
   }else if (_resizing){
@@ -1050,151 +1060,61 @@ void StructuralEntity::mouseReleaseEvent(QGraphicsSceneMouseEvent*event)
 
     QMap<QString, QString> previous = getStructuralProperties();
 
-    if ((_top != _resizeTop || _left != _resizeLeft || _width != _resizeWidth || _height != _resizeHeight)){
-      if (_resizeTop > _top + _height){
+    if ((_top != _resizeTop || _left != _resizeLeft || _width != _resizeWidth || _height != _resizeHeight)) {
+
+      if (_resizeTop > _top + _height) {
         setResizeHeight(_resizeTop - (_top + _height));
         setResizeTop(_top + _height);
       }
 
-      if (_resizeLeft > _left + _width){
+      if (_resizeLeft > _left + _width) {
         setResizeWidth(_resizeLeft - (_left + _width));
         setResizeLeft(_left + _width);
       }
 
-      if (_resizeWidth < 0){
+      if (_resizeWidth < 0) {
         setResizeLeft(_resizeLeft + _resizeWidth);
         setResizeWidth(-_resizeWidth);
       }
 
-      if (_resizeHeight < 0){
+      if (_resizeHeight < 0) {
         setResizeTop(_resizeTop + _resizeHeight);
         setResizeHeight(-_resizeHeight);
       }
 
-      foreach(StructuralEntity* entity, _children){
+      foreach(StructuralEntity* entity, _children) {
         entity->setTop(entity->getTop() - (_resizeTop - _top));
         entity->setLeft(entity->getLeft() - (_resizeLeft - _left));
       }
-
-      //            QMap<QString, QString> properties;
-
-      //            properties["top"] = QString::number(moveTop);
-      //            properties["left"] = QString::number(moveLeft);
-      //            properties["width"] = QString::number(resizeWidth);
-      //            properties["height"] = QString::number(resizeHeight);
-
-      //            emit entityAboutToChange(properties);
 
       setTop(_resizeTop);
       setLeft(_resizeLeft);
       setWidth(_resizeWidth);
       setHeight(_resizeHeight);
 
-      adjust(true);
-
-      QMap<QString, QString> properties = getStructuralProperties();
-
-      //            emit entityChanged();
-
-      QMap<QString, QString> settings;
-      settings[STR_SETTING_UNDO] = "1";
-      settings["LOCATION"] = "INTERNAL MOVE";
-      settings[STR_SETTING_CODE] = StructuralUtil::createUid();
-
-      emit changed(getStructuralUid(), properties, previous,settings);
-
-    }else{
-      adjust(true);
+      emit changed(getStructuralUid(), getStructuralProperties(), previous, StructuralUtil::createSettings());
     }
   }
+
+  adjust(true);
 
   QGraphicsItem::mouseReleaseEvent(event);
 }
-
-void StructuralEntity::updateCursor(QGraphicsSceneHoverEvent* event)
-{
-  if (_selected){
-    if (_resizable){
-      qreal W = STR_DEFAULT_ENTITY_ANCHOR_W;
-      qreal H = STR_DEFAULT_ENTITY_ANCHOR_H;
-
-      // if over TOPLEFT resize region
-      if (QRectF(0,0,W,H).contains(event->pos())){
-        setCursor(Qt::SizeFDiagCursor);
-
-        // if over TOP resize region
-      }else if (QRectF((_width+W)/2 - W/2,0,W,H).contains(event->pos())){
-        setCursor(Qt::SizeVerCursor);
-
-        // if over TOPRIGHT resize region
-      }else if (QRectF((_width+W) - W,0,W,H).contains(event->pos())){
-        setCursor(Qt::SizeBDiagCursor);
-
-        // if over RIGHT resize region
-      }else if (QRectF((_width+W) - W,(_height+H)/2 - H/2,W,H).contains(event->pos())){
-        setCursor(Qt::SizeHorCursor);
-
-        // if over BOTTOMRIGHT resize region
-      }else if (QRectF((_width+W) - W,(_height+H) - H,W,H).contains(event->pos())){
-        setCursor(Qt::SizeFDiagCursor);
-
-        // if over BOTTOM resize region
-      }else if (QRectF((_width+W)/2 - W/2,(_height+H) - H,W,H).contains(event->pos())){
-        setCursor(Qt::SizeVerCursor);
-
-        // if over BOTTOMLEFT resize region
-      }else if (QRectF(0,(_height+H) - H,W,H).contains(event->pos())){
-        setCursor(Qt::SizeBDiagCursor);
-
-        // if over LEFT resize region
-      }else if (QRectF(0,(_height+H)/2 - H/2,W,H).contains(event->pos())){
-        setCursor(Qt::SizeHorCursor);
-
-        // if not over any resize region
-      }else if (_moveable){
-        setCursor(Qt::SizeAllCursor);
-      }
-
-    }else if (_moveable){
-      setCursor(Qt::SizeAllCursor);
-
-    }else{
-      setCursor(Qt::ArrowCursor);
-    }
-  }else{
-    setCursor(Qt::ArrowCursor);
-  }
-
-}
-
-void StructuralEntity::hoverMoveEvent(QGraphicsSceneHoverEvent* event)
-{
-  updateCursor(event);
-
-  QGraphicsItem::hoverEnterEvent(event);
-}
-
 
 void StructuralEntity::contextMenuEvent(QGraphicsSceneContextMenuEvent* event)
 {
   QGraphicsItem::contextMenuEvent(event);
 
-  if (!event->isAccepted())
-  {
-    if (!isSelected())
-    {
+  if (!event->isAccepted()) {
+    if (!isSelected()) {
       setSelected(true);
-      //emit entitySelected(this);
-      QMap<QString, QString> settings; emit selected(getStructuralUid(), settings);
+      emit selected(getStructuralUid(), StructuralUtil::createSettings());
     }
 
-    _insertPoint = event->pos();
-
-    if (_menu != NULL)
-    {
+    if (_menu != NULL) {
       _menu->setInsertTop(event->pos().y());
       _menu->setInsertLeft(event->pos().x());
-      _menu->adjust(_subtype);
+      _menu->adjust(_type);
 
       _menu->exec(event->screenPos());
     }
@@ -1203,146 +1123,43 @@ void StructuralEntity::contextMenuEvent(QGraphicsSceneContextMenuEvent* event)
   }
 }
 
-bool StructuralEntity::hasMouseHover()
-{
-  return hover;
-}
-
-void StructuralEntity::setMouseHover(bool hover)
-{
-  this->hover = hover;
-}
-
-void StructuralEntity::setMouseHoverHighlight(bool enable)
-{
-  this->enableMouseHoverHighlight = enable;
-}
-
 void StructuralEntity::hoverEnterEvent(QGraphicsSceneHoverEvent* event)
 {
-//  updateCursor(event);
-
   QGraphicsItem::hoverEnterEvent(event);
 
-  hover = true;
+  setHovering(true);
 }
 
 void StructuralEntity::hoverLeaveEvent(QGraphicsSceneHoverEvent* event)
 {
-//  updateCursor(event);
-
   QGraphicsItem::hoverLeaveEvent(event);
 
-  hover = false;
-}
-
-void StructuralEntity::setError(bool hasError)
-{
-  this->hasError = hasError;
-}
-
-void StructuralEntity::setErrorMsg(QString erroMsg)
-{
-  this->erroMsg = erroMsg;
+  setHovering(false);
 }
 
 void StructuralEntity::dragEnterEvent(QGraphicsSceneDragDropEvent* event)
 {
+  StructuralType type = StructuralUtil::translateStringToType(event->mimeData()->objectName());
 
-
-  StructuralType dropEntity = (StructuralType) event->mimeData()->objectName().toInt();
-
-  if (StructuralUtil::validateKinship(dropEntity,_subtype)){
-    if (event->mimeData()->text() == _uid)
-      event->accept();
-    else
+  if (StructuralUtil::validateKinship(type, _type))
+    if (event->mimeData()->text() != _uid)
       event->acceptProposedAction();
-  }else{
+    else
+      event->ignore();
 
-    event->ignore();
-  }
+  QGraphicsItem::dragEnterEvent(event);
 }
+
 void StructuralEntity::dropEvent(QGraphicsSceneDragDropEvent* event)
 {
+  StructuralType type = StructuralUtil::translateStringToType(event->mimeData()->objectName());
 
-  StructuralType dropEntity = (StructuralType) event->mimeData()->objectName().toInt();
-
-  if (StructuralUtil::validateKinship(dropEntity,_subtype)){
-    if (event->mimeData()->text() == _uid)
-      event->accept();
-    else
+  if (StructuralUtil::validateKinship(type, _type))
+    if (event->mimeData()->text() != _uid) {
       event->acceptProposedAction();
 
-    emit move(event->mimeData()->text(), _uid);
+      emit move(event->mimeData()->text(), _uid);
+    }
 
-  }else{
-    event->accept();
-  }
+  QGraphicsItem::dropEvent(event);
 }
-
-void StructuralEntity::drawMouseHoverHighlight(QPainter *painter)
-{
-  if(_hovering)
-  {
-    // Draw MouseHover rectangle
-    if (!isSelected() && hasMouseHover())
-    {
-      painter->setBrush(Qt::NoBrush);
-      painter->setPen(QPen(QBrush(QColor("#999999")), 0, Qt::DashLine)); // 0px = cosmetic border
-
-      painter->drawRect(STR_DEFAULT_ENTITY_ANCHOR_W/2, STR_DEFAULT_ENTITY_ANCHOR_H/2, getWidth(), getHeight());
-    }
-  }
-}
-
-void StructuralEntity::performInsert(Structural::StructuralType name)
-{
-
-  QMap<QString, QString> properties;
-  properties[STR_PROPERTY_ENTITY_CATEGORY] = QString::number(name);
-
-  switch (name) {
-    case Structural::Body:
-    {
-      properties[STR_PROPERTY_ENTITY_TOP] = QString::number(_insertPoint.y() - STR_DEFAULT_BODY_H/2);
-      properties[STR_PROPERTY_ENTITY_LEFT] = QString::number(_insertPoint.x() - STR_DEFAULT_BODY_W/2);
-      properties[STR_PROPERTY_ENTITY_HEIGHT] = QString::number(STR_DEFAULT_BODY_H);
-      properties[STR_PROPERTY_ENTITY_WIDTH] = QString::number(STR_DEFAULT_BODY_W);
-
-      break;
-    }
-    case Structural::Context:
-    case Structural::Switch:
-    {
-
-      properties[STR_PROPERTY_ENTITY_TOP] = QString::number(_insertPoint.y() - STR_DEFAULT_COMPOSITION_H/2);
-      properties[STR_PROPERTY_ENTITY_LEFT] = QString::number(_insertPoint.x() - STR_DEFAULT_COMPOSITION_W/2);
-      properties[STR_PROPERTY_ENTITY_HEIGHT] = QString::number(STR_DEFAULT_COMPOSITION_H);
-      properties[STR_PROPERTY_ENTITY_WIDTH] = QString::number(STR_DEFAULT_COMPOSITION_W);
-
-      break;
-    }
-
-    case Structural::Media:
-    {
-
-      properties[STR_PROPERTY_ENTITY_TOP] = QString::number(_insertPoint.y() - STR_DEFAULT_CONTENT_H/2);
-      properties[STR_PROPERTY_ENTITY_LEFT] = QString::number(_insertPoint.x() - STR_DEFAULT_CONTENT_W/2);
-      properties[STR_PROPERTY_ENTITY_HEIGHT] = QString::number(STR_DEFAULT_CONTENT_H);
-      properties[STR_PROPERTY_ENTITY_WIDTH] = QString::number(STR_DEFAULT_CONTENT_W);
-
-      break;
-    }
-
-    default:
-      break;
-  }
-
-  QMap<QString, QString> settings;
-  settings[STR_SETTING_UNDO] = "1";
-  settings[STR_SETTING_NOTIFY] = "1";
-  settings[STR_SETTING_CODE] = QUuid::createUuid().toString();
-
-  inserted(QUuid::createUuid().toString(),getStructuralUid(), properties, settings);
-}
-
