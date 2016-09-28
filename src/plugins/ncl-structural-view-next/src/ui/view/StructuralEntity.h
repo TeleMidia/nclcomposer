@@ -186,6 +186,7 @@ protected:
   virtual void mousePressEvent(QGraphicsSceneMouseEvent* event);
   virtual void mouseReleaseEvent(QGraphicsSceneMouseEvent*event);
 
+  virtual void hoverMoveEvent(QGraphicsSceneHoverEvent* event);
   virtual void hoverEnterEvent(QGraphicsSceneHoverEvent* event);
   virtual void hoverLeaveEvent(QGraphicsSceneHoverEvent* event);
 

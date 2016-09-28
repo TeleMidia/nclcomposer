@@ -954,19 +954,6 @@ void StructuralEntity::mousePressEvent(QGraphicsSceneMouseEvent* event)
     setPressWidth(_width);
     setPressHeight(_height);
 
-
-    if (_moveable){
-      setMoveTop(_top);
-      setMoveLeft(_left);
-    }
-
-    if (_resizable){
-      setResizeTop(_top);
-      setResizeLeft(_left);
-      setResizeWidth(_width);
-      setResizeHeight(_height);
-    }
-
     qreal w = STR_DEFAULT_ENTITY_ANCHOR_W;
     qreal h = STR_DEFAULT_ENTITY_ANCHOR_H;
 
@@ -974,6 +961,11 @@ void StructuralEntity::mousePressEvent(QGraphicsSceneMouseEvent* event)
       setDragging(true);
 
     } else if (_resizable) {
+      setResizeTop(_top);
+      setResizeLeft(_left);
+      setResizeWidth(_width);
+      setResizeHeight(_height);
+
       // if over TOPLEFT resize region
       if (QRectF(0,0,w,h).contains(event->pos())) {
         setStructuralResize(Structural::TopLeft);
@@ -983,58 +975,50 @@ void StructuralEntity::mousePressEvent(QGraphicsSceneMouseEvent* event)
       } else if (QRectF((_width+w)/2 - w/2,0,w,h).contains(event->pos())) {
         setStructuralResize(Structural::Top);
         setResizing(true);
-        setCursor(Qt::SizeVerCursor);
 
         // if over TOPRIGHT resize region
       } else if (QRectF((_width+w) - w,0,w,h).contains(event->pos())) {
         setStructuralResize(Structural::TopRight);
         setResizing(true);
-        setCursor(Qt::SizeBDiagCursor);
 
         // if over RIGHT resize region
       } else if (QRectF((_width+w) - w,(_height+h)/2 - h/2,w,h).contains(event->pos())) {
         setStructuralResize(Structural::Right);
         setResizing(true);
-        setCursor(Qt::SizeHorCursor);
 
         // if over BOTTOMRIGHT resize region
       } else if (QRectF((_width+w) - w,(_height+h) - h,w,h).contains(event->pos())) {
         setStructuralResize(Structural::BottomRight);
         setResizing(true);
-        setCursor(Qt::SizeFDiagCursor);
 
         // if over BOTTOM resize region
       } else if (QRectF((_width+w)/2 - w/2,(_height+h) - h,w,h).contains(event->pos())) {
         setStructuralResize(Structural::Bottom);
         setResizing(true);
-        setCursor(Qt::SizeVerCursor);
 
         // if over BOTTOMLEFT resize region
       } else if (QRectF(0,(_height+h) - h,w,h).contains(event->pos())) {
         setStructuralResize(Structural::BottomLeft);
         setResizing(true);
-        setCursor(Qt::SizeBDiagCursor);
 
         // if over LEFT resize region
       } else if (QRectF(0,(_height+h)/2 - h/2,w,h).contains(event->pos())) {
         setStructuralResize(Structural::Left);
         setResizing(true);
-        setCursor(Qt::SizeHorCursor);
 
         // if not over any resize region
       } else if (_moveable) {
+        setMoveTop(_top);
+        setMoveLeft(_left);
+
         setMoving(true);
-        setCursor(Qt::SizeAllCursor);
-      } else {
-        setCursor(Qt::ArrowCursor);
       }
 
     } else if (_moveable) {
-      setMoving(true);
-      setCursor(Qt::SizeAllCursor);
+      setMoveTop(_top);
+      setMoveLeft(_left);
 
-    } else {
-      setCursor(Qt::ArrowCursor);
+      setMoving(true);
     }
   }
 
@@ -1096,7 +1080,7 @@ void StructuralEntity::mouseReleaseEvent(QGraphicsSceneMouseEvent*event)
     }
   }
 
-  adjust(true);
+  update();
 
   QGraphicsItem::mouseReleaseEvent(event);
 }
@@ -1120,6 +1104,65 @@ void StructuralEntity::contextMenuEvent(QGraphicsSceneContextMenuEvent* event)
     }
 
     event->accept();
+  }
+}
+
+/*
+ *
+*/
+
+void StructuralEntity::hoverMoveEvent(QGraphicsSceneHoverEvent* event)
+{
+  if (_selected){
+    if (_resizable){
+      qreal w = STR_DEFAULT_ENTITY_ANCHOR_W;
+      qreal h = STR_DEFAULT_ENTITY_ANCHOR_H;
+
+      // if over TOPLEFT resize region
+      if (QRectF(0,0,w,h).contains(event->pos())){
+        setCursor(Qt::SizeFDiagCursor);
+
+        // if over TOP resize region
+      }else if (QRectF((_width+w)/2 - w/2,0,w,h).contains(event->pos())){
+        setCursor(Qt::SizeVerCursor);
+
+        // if over TOPRIGHT resize region
+      }else if (QRectF((_width+w) - w,0,w,h).contains(event->pos())){
+        setCursor(Qt::SizeBDiagCursor);
+
+        // if over RIGHT resize region
+      }else if (QRectF((_width+w) - w,(_height+h)/2 - h/2,w,h).contains(event->pos())){
+        setCursor(Qt::SizeHorCursor);
+
+        // if over BOTTOMRIGHT resize region
+      }else if (QRectF((_width+w) - w,(_height+h) - h,w,h).contains(event->pos())){
+        setCursor(Qt::SizeFDiagCursor);
+
+        // if over BOTTOM resize region
+      }else if (QRectF((_width+w)/2 - w/2,(_height+h) - h,w,h).contains(event->pos())){
+        setCursor(Qt::SizeVerCursor);
+
+        // if over BOTTOMLEFT resize region
+      }else if (QRectF(0,(_height+h) - h,w,h).contains(event->pos())){
+        setCursor(Qt::SizeBDiagCursor);
+
+        // if over LEFT resize region
+      }else if (QRectF(0,(_height+h)/2 - h/2,w,h).contains(event->pos())){
+        setCursor(Qt::SizeHorCursor);
+
+        // if not over any resize region
+      }else if (_moveable){
+        setCursor(Qt::SizeAllCursor);
+      }
+
+    }else if (_moveable){
+      setCursor(Qt::SizeAllCursor);
+
+    }else{
+      setCursor(Qt::ArrowCursor);
+    }
+  }else{
+    setCursor(Qt::ArrowCursor);
   }
 }
 
