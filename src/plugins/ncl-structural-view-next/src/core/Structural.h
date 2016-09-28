@@ -85,11 +85,11 @@
 
 // Minimap defines
 #define STR_DEFAULT_MINIMAP_W 240
-#define STR_DEFAULT_MINIMAP_H 120
+#define STR_DEFAULT_MINIMAP_H 160
 
 // Scene defines
 #define STR_DEFAULT_SCENE_W 3600
-#define STR_DEFAULT_SCENE_H 3600
+#define STR_DEFAULT_SCENE_H 2400
 
 // Entities defines
 #define STR_DEFAULT_ENTITY_PADDING 4
@@ -139,7 +139,6 @@
 
 // Others defines
 #define STR_DEFAULT_WITH_BODY 1                     // not used yet
-
 /*
  *
  * NESTED CONTEXT LANGUAGE
@@ -194,11 +193,11 @@ public:
     Body        = 2,
     Context     = 3,
     Switch      = 4,
-    Port        = 5,
-    SwitchPort  = 6,
-    Area        = 7,
-    Property    = 8,
-    Link        = 9,
+    Link        = 5,
+    Port        = 6,
+    SwitchPort  = 7,
+    Area        = 8,
+    Property    = 9,
     Bind        = 10,
     Reference   = 11,
     Mapping     = 12,

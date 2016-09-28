@@ -73,7 +73,7 @@ void StructuralNode::adjust(bool collision, bool recursion)
         foreach(StructuralEntity *entity, parent->getStructuralEntities()) {
           if(this != entity &&
              entity->getStructuralType() >= Structural::Media &&
-             entity->getStructuralType() <= Structural::Switch) {
+             entity->getStructuralType() <= Structural::Link) {
 
             int max = 1000;
             int n = 0;

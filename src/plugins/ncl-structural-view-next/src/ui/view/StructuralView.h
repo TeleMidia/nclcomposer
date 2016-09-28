@@ -44,11 +44,15 @@ public:
   StructuralMode getMode() const;
   void setMode(StructuralMode mode);
 
+  StructuralMode getMinimap() const;
+  void setMinimap(StructuralMode minimap);
+
 public slots:
   void insert(QString uid, QString parent, QMap<QString, QString> properties, QMap<QString, QString> settings);
   void remove(QString uid, QMap<QString, QString> settings);
   void change(QString uid, QMap<QString, QString> properties, QMap<QString, QString> previous, QMap<QString, QString> settings);
   void select(QString uid, QMap<QString, QString> settings);
+
   void move(QString uid, QString parent);
 
   void create(StructuralType type);
@@ -87,11 +91,6 @@ public slots:
   void showEditLinkDialog(StructuralLink* entity);
   void showEditBindDialog(StructuralBind* entity);
 
-#ifdef WITH_GRAPHVIZ
-   void adjustAllWithGraphiviz();
-   void adjustChildrenWithGraphiviz(StructuralEntity* e, QString code);
-#endif
-
 signals:
   void inserted(QString uid, QString _parent, QMap<QString, QString> properties, QMap<QString, QString> settings);
   void removed(QString uid, QMap<QString, QString> settings);
@@ -115,6 +114,10 @@ signals:
   void requestLinkDialogUpdate();
 
 private:
+#ifdef WITH_GRAPHVIZ
+   void autoadjust();
+   void autoadjust(StructuralEntity* entity, const QString &code);
+#endif
 
    int _zoomStep;
 
