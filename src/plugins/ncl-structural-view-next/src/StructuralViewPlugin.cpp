@@ -914,22 +914,22 @@ void StructuralViewPlugin::notifyEntityAddedInView(const QString uid,
     else
       return;
 
-    list = getProject()->getEntitiesbyType("body");
+//    list = getProject()->getEntitiesbyType("body");
 
-    if (list.isEmpty()){
-      QMap<QString, QString> att;
-      att.insert("id","newBody");
+//    if (list.isEmpty()){
+//      QMap<QString, QString> att;
+//      att.insert("id","newBody");
 
-      emit addEntity("body",
-                     cparent->getUniqueId(), att, false);
+//      emit addEntity("body",
+//                     cparent->getUniqueId(), att, false);
 
-      list = getProject()->getEntitiesbyType("body");
-    }
+//      list = getProject()->getEntitiesbyType("body");
+//    }
 
-    if (!list.isEmpty())
-      cparent = list.first();
-    else
-      return;
+//    if (!list.isEmpty())
+//      cparent = list.first();
+//    else
+//      return;
   }else
     return;
 
