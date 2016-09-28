@@ -252,6 +252,13 @@ public:
 
     NoResize    = 0
   };
+
+  enum StructuralMode {
+    Pointing    = 1,
+    Linking     = 2,
+
+    NoMode      = 0
+  };
 };
 
 typedef Structural::StructuralCategory StructualCategory;
@@ -259,5 +266,6 @@ typedef Structural::StructuralType StructuralType;
 typedef Structural::StructuralResize StructuralResize;
 typedef Structural::StructuralMimeType StructuralMimeType;
 typedef Structural::StructuralRole StructuralRole;
+typedef Structural::StructuralMode StructuralMode;
 
 #endif // STRUCTURAL_H

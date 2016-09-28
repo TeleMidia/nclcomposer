@@ -41,6 +41,9 @@ public:
   StructuralView(QWidget* parent = 0);
   virtual ~StructuralView();
 
+  StructuralMode getMode() const;
+  void setMode(StructuralMode mode);
+
 public slots:
   void insert(QString uid, QString parent, QMap<QString, QString> properties, QMap<QString, QString> settings);
   void remove(QString uid, QMap<QString, QString> settings);
@@ -100,6 +103,7 @@ signals:
   void switchedCut(bool state);
   void switchedCopy(bool state);
   void switchedPaste(bool state);
+  void switchedPointer(bool state);
   void switchedLink(bool state);
   void switchedZoomIn(bool state);
   void switchedZoomOut(bool state);
@@ -123,6 +127,8 @@ private:
    StructuralMinimap* _minimap;
 
    StructuralScene* _scene;
+
+   StructuralMode _mode;
 
    QUndoStack _commnads;
 

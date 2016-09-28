@@ -312,6 +312,7 @@ void  StructuralWindow::createConnections()
 
   connect(_view, SIGNAL(selectChange(QString)), SLOT(changeSelect(QString)));
 
+  connect(_view, SIGNAL(switchedPointer(bool)), SLOT(switchPointer(bool)));
   connect(_view, SIGNAL(linkStateChange(bool)), SLOT(changeLinkState(bool)));
   /* TODO: Refactoring */
 }
@@ -368,10 +369,17 @@ void StructuralWindow::changeCutState(bool enable)
 //  }
 }
 
+void StructuralWindow::switchPointer(bool enable)
+{
+  if (enable)
+    _pointerAction->setChecked(true);
+  else
+    _linkAction->setChecked(true);
+}
+
 void StructuralWindow::changeLinkState(bool enable)
 {
-  _linkAction->setChecked(enable);
-  _pointerAction->setChecked(!enable);
+  switchPointer(!enable);
 }
 
 void StructuralWindow::changeCopyState(bool enable)

@@ -17,7 +17,8 @@ StructuralView::StructuralView(QWidget* parent)
 
   linking = false;
 
-  modified = false;
+  _mode = Structural::Pointing;
+
   _selected = "";
 
   _clipboard = NULL;
@@ -44,6 +45,16 @@ StructuralView::StructuralView(QWidget* parent)
 StructuralView::~StructuralView()
 {
   // TODO
+}
+
+StructuralMode StructuralView::getMode() const
+{
+  return _mode;
+}
+
+void StructuralView::setMode(StructuralMode mode)
+{
+  _mode = mode;
 }
 
 void StructuralView::createObjects()
@@ -236,22 +247,17 @@ void StructuralView::performZoomOut()
 
 void StructuralView::performPointer()
 {
-  setMod(false);
+  setMode(Structural::Pointing);
 }
 
 void StructuralView::performLink()
 {
-  setMod(true);
+  setMode(Structural::Linking);
 }
 
 StructuralScene* StructuralView::getScene()
 {
   return _scene;
-}
-
-void StructuralView::setMod(bool mod)
-{
-  modified = mod;
 }
 
 void StructuralView::read(QDomElement element, QDomElement parent)
@@ -1318,7 +1324,8 @@ void StructuralView::createLink(StructuralEntity* a, StructuralEntity* b)
 
         emit requestLinkDialogUpdate();
 
-        modified = false;            // turn off link mode
+        setMode(Structural::Pointing);
+        emit switchedPointer(true);
 
         _linkDialog->init();
 
@@ -1351,8 +1358,6 @@ void StructuralView::createLink(StructuralEntity* a, StructuralEntity* b)
             createBind(_entities.value(uid),b,act,settings.value(STR_SETTING_CODE));
           }
       }
-
-      modified = true;            // turn on link mode
     }
 }
 
@@ -1405,7 +1410,8 @@ void StructuralView::createBind(StructuralEntity* a, StructuralEntity* b, Struct
         if (type == Structural::NoRole){
           emit requestLinkDialogUpdate();
 
-          modified = false;            // turn off link mode
+          setMode(Structural::Pointing);
+          emit switchedPointer(true);
 
           _linkDialog->init(e_link->getStructuralProperty(STR_PROPERTY_REFERENCE_XCONNECTOR_ID),"","",
                            StructuralLinkDialog::CreateAction);
@@ -1416,11 +1422,8 @@ void StructuralView::createBind(StructuralEntity* a, StructuralEntity* b, Struct
             properties[STR_PROPERTY_BIND_ROLE] = role;
             properties[STR_PROPERTY_ENTITY_ID] = role;
           }else{
-            modified = true;            // turn on link mode
             return;
           }
-
-          modified = true;            // turn on link mode
         }
 
         QMap<QString, QString> p = _linkDialog->getActionParams();
@@ -1443,7 +1446,8 @@ void StructuralView::createBind(StructuralEntity* a, StructuralEntity* b, Struct
         if (type == Structural::NoRole){
           emit requestLinkDialogUpdate();
 
-          modified = true;            // turn off link mode
+          setMode(Structural::Pointing);
+          emit switchedPointer(true);
 
           _linkDialog->init(e_link->getStructuralProperty(STR_PROPERTY_REFERENCE_XCONNECTOR_ID),"","",
                            StructuralLinkDialog::CreateCondition);
@@ -1454,11 +1458,8 @@ void StructuralView::createBind(StructuralEntity* a, StructuralEntity* b, Struct
             properties[STR_PROPERTY_BIND_ROLE] = role;
             properties[STR_PROPERTY_ENTITY_ID] = role;
           }else{
-            modified = true;            // turn on link mode
             return;
           }
-
-          modified = true;            // turn on link mode
         }
 
         QMap<QString, QString> p = _linkDialog->getConditionParams();
@@ -1532,6 +1533,9 @@ void StructuralView::createReference(StructuralEntity* a, StructuralEntity* b)
           }
 
           QMap<QString, QString> settings = StructuralUtil::createSettings(true, true);
+
+          setMode(Structural::Pointing);
+          emit switchedPointer(true);
 
           if (a->getStructuralType() == Structural::Port)
             change(a->getStructuralUid(),properties, prev, settings);
@@ -1781,7 +1785,7 @@ void StructuralView::mouseMoveEvent(QMouseEvent* event)
 
 void StructuralView::mousePressEvent(QMouseEvent* event)
 {
-  if (modified)
+  if (_mode == Structural::Linking)
   {
     if (link != NULL)
     {
@@ -1988,7 +1992,8 @@ void StructuralView::keyPressEvent(QKeyEvent *event)
     }
 
     _selected =  "";
-    modified = true;
+
+    setMode(Structural::Linking);
 
     emit switchedLink(true);
 
@@ -2015,9 +2020,9 @@ void StructuralView::keyReleaseEvent(QKeyEvent *event)
   // SHIFT - Disabling linking
   if (event->key() == Qt::Key_Shift)
   {
-    modified = false;
+    setMode(Structural::Pointing);
 
-    emit switchedLink(false);
+    emit switchedPointer(true);
   }
   else if(event->key() == Qt::Key_Control)
   {
