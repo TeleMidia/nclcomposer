@@ -30,7 +30,8 @@ void StructuralComposition::collapse(bool notify)
 
   if (!isUncollapsed())
   {
-    setHovering(false);
+    setHoverable(false);
+    setResizable(true);
 
     setTop(getTop() - (getUncollapedHeight()/2 - STR_DEFAULT_CONTENT_H/2));
     setLeft(getLeft() - (getUncollapedWidth()/2 - STR_DEFAULT_CONTENT_W/2));
@@ -57,10 +58,9 @@ void StructuralComposition::collapse(bool notify)
       entity->adjust(true);
     }
 
-    setResizable(true);
-
   } else {
-    setHovering(true);
+    setHoverable(true);
+    setResizable(false);
 
     setUncollapedWidth(getWidth());
     setUncollapedHeight(getHeight());
@@ -89,8 +89,6 @@ void StructuralComposition::collapse(bool notify)
 
       entity->adjust(true);
     }
-
-    setResizable(false);
   }
 
   StructuralEntity* parent = getStructuralParent();
@@ -213,7 +211,7 @@ void StructuralComposition::dropEvent(QGraphicsSceneDragDropEvent *event)
 
 void StructuralComposition::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
 {
-  StructuralNode::mouseDoubleClickEvent(event);
+//  StructuralNode::mouseDoubleClickEvent(event);
 
   collapse(true);
 }
