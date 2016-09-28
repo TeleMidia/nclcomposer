@@ -59,7 +59,6 @@ public slots:
   void performPaste();
   void performZoomIn();
   void performZoomOut();
-  void performZoomReset();
   void performPointer();
   void performLink();
   void performDelete();
@@ -96,14 +95,15 @@ signals:
   void changed(QString uid, QMap<QString, QString> properties, QMap<QString, QString> previous, QMap<QString, QString> settings);
   void selected(QString uid, QMap<QString, QString> settings);
 
-  void switchUndo(bool state);
-  void switchRedo(bool state);
-  void switchCut(bool state);
-  void switchCopy(bool state);
-  void switchPaste(bool state);
-  void switchLink(bool state);
-  void switchZoomIn(bool state);
-  void switchBody(bool state);
+  void switchedUndo(bool state);
+  void switchedRedo(bool state);
+  void switchedCut(bool state);
+  void switchedCopy(bool state);
+  void switchedPaste(bool state);
+  void switchedLink(bool state);
+  void switchedZoomIn(bool state);
+  void switchedZoomOut(bool state);
+  void switchedBody(bool state);
 
 
   void selectChange(QString uid);
@@ -111,6 +111,8 @@ signals:
   void requestLinkDialogUpdate();
 
 private:
+
+   int _zoomStep;
 
    QString _selected;
 
@@ -216,7 +218,6 @@ private:
 
   bool linking;
 
-  int zoomStep;
 
   bool hasCutted;
 

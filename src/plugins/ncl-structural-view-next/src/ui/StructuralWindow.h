@@ -28,6 +28,7 @@ protected slots:
   void changePasteState(bool enable);
   void changeBodyState(bool enable);
   void changeZoomInState(bool enable);
+  void switchZoomOut(bool enable);
 
   void changeLinkState(bool enable);
 

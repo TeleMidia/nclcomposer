@@ -13,7 +13,7 @@ StructuralView::StructuralView(QWidget* parent)
   createObjects();
   createConnection();
 
-  zoomStep = 0;
+  _zoomStep = 0;
 
   linking = false;
 
@@ -95,12 +95,12 @@ void StructuralView::resizeEvent(QResizeEvent *event)
 
 void StructuralView::createConnection()
 {
-  connect(this, SIGNAL(switchUndo(bool)), _menu, SLOT(switchUndo(bool)));
-  connect(this, SIGNAL(switchRedo(bool)), _menu, SLOT(switchRedo(bool)));
-  connect(this, SIGNAL(switchCut(bool)), _menu, SLOT(switchCut(bool)));
-  connect(this, SIGNAL(switchCopy(bool)), _menu, SLOT(switchCopy(bool)));
-  connect(this, SIGNAL(switchPaste(bool)), _menu, SLOT(switchPaste(bool)));
-  connect(this, SIGNAL(switchBody(bool)), _menu, SLOT(switchBody(bool)));
+  connect(this, SIGNAL(switchedUndo(bool)), _menu, SLOT(switchedUndo(bool)));
+  connect(this, SIGNAL(switchedRedo(bool)), _menu, SLOT(switchedRedo(bool)));
+  connect(this, SIGNAL(switchedCut(bool)), _menu, SLOT(switchedCut(bool)));
+  connect(this, SIGNAL(switchedCopy(bool)), _menu, SLOT(switchedCopy(bool)));
+  connect(this, SIGNAL(switchedPaste(bool)), _menu, SLOT(switchedPaste(bool)));
+  connect(this, SIGNAL(switchedBody(bool)), _menu, SLOT(switchedBody(bool)));
 
   connect(_menu, SIGNAL(performedHelp()), SLOT(performHelp()));
   connect(_menu, SIGNAL(performedUndo()), SLOT(performUndo()));
@@ -206,40 +206,32 @@ void StructuralView::load(QString &data)
 
 void StructuralView::performZoomIn()
 {
-
-  if (zoomStep > 0)
-  {
-    zoomStep--;
+  if (_zoomStep > 0) {
+    _zoomStep--;
 
     resetMatrix();
+    scale(1 - _zoomStep*0.05, 1 - _zoomStep*0.05);
 
-    scale(1 - zoomStep*0.05, 1 - zoomStep*0.05);
-  }
-  else
-  {
-    emit switchZoomIn(false);
+    emit switchedZoomOut(true);
   }
 
+  if (_zoomStep <= 0)
+    emit switchedZoomIn(false);
 }
 
 void StructuralView::performZoomOut()
 {
-  if (zoomStep*0.05 < 0.9)
-  {
-    emit switchZoomIn(true);
-
-    zoomStep++;
+  if (_zoomStep*0.05 < 0.9) {
+    _zoomStep++;
 
     resetMatrix();
+    scale(1 - _zoomStep*0.05, 1 - _zoomStep*0.05);
 
-    scale(1 - zoomStep*0.05, 1 - zoomStep*0.05);
+    emit switchedZoomIn(true);
   }
-}
 
-void StructuralView::performZoomReset()
-{
-  zoomStep = 0;
-  resetMatrix();
+  if (_zoomStep*0.05 >= 0.9)
+    emit switchedZoomOut(false);
 }
 
 void StructuralView::performPointer()
@@ -407,7 +399,7 @@ void StructuralView::insert(QString uid, QString parent, QMap<QString, QString> 
           entity->setWidth(STR_DEFAULT_BODY_W);
           entity->setHeight(STR_DEFAULT_BODY_H);
 
-          emit switchBody(false);
+          emit switchedBody(false);
         }
 
         break;
@@ -570,7 +562,7 @@ void StructuralView::insert(QString uid, QString parent, QMap<QString, QString> 
 
         _commnads.push(command);
 
-        emit switchUndo(true);
+        emit switchedUndo(true);
       }
 
       if (entity->getStructuralType() ==  Structural::Port)
@@ -667,7 +659,7 @@ void StructuralView::remove(QString uid, QMap<QString, QString> settings)
       connect(command, SIGNAL(change(QString,QMap<QString,QString>,QMap<QString,QString>,QMap<QString,QString>)), SLOT(change(QString,QMap<QString,QString>,QMap<QString,QString>,QMap<QString,QString>)));
       connect(command, SIGNAL(select(QString,QMap<QString,QString>)),SLOT(select(QString,QMap<QString,QString>)));
 
-      emit switchUndo(true);
+      emit switchedUndo(true);
 
       _commnads.push(command); return;
     }
@@ -777,7 +769,7 @@ void StructuralView::remove(QString uid, QMap<QString, QString> settings)
     }
 
     if (entity->getStructuralType() == Structural::Body)
-      emit switchBody(true);
+      emit switchedBody(true);
 
     delete entity; entity = NULL;
 
@@ -843,7 +835,7 @@ void StructuralView:: change(QString uid, QMap<QString, QString> properties, QMa
       connect(command, SIGNAL(change(QString,QMap<QString,QString>,QMap<QString,QString>,QMap<QString,QString>)), SLOT(change(QString,QMap<QString,QString>,QMap<QString,QString>,QMap<QString,QString>)));
       connect(command, SIGNAL(select(QString,QMap<QString,QString>)),SLOT(select(QString,QMap<QString,QString>)));
 
-      emit switchUndo(true);
+      emit switchedUndo(true);
 
       _commnads.push(command); return;
     }
@@ -1002,9 +994,9 @@ void StructuralView::unSelect()
 
   _scene->update();
 
-  emit switchCut(false);
-  emit switchCopy(false);
-  emit switchPaste(false);
+  emit switchedCut(false);
+  emit switchedCopy(false);
+  emit switchedPaste(false);
 
   emit selectChange("");
   emit selected("", QMap<QString, QString>());
@@ -1073,8 +1065,8 @@ void StructuralView::select(QString uid, QMap<QString, QString> settings)
         emit selected(uid, settings);
 //      }
 
-      emit switchCut(true);
-      emit switchCopy(true);
+      emit switchedCut(true);
+      emit switchedCopy(true);
 
       if (!clip_cut.isEmpty() || !clip_copy.isEmpty()){
         StructuralEntity* e = NULL;
@@ -1086,9 +1078,9 @@ void StructuralView::select(QString uid, QMap<QString, QString> settings)
           e = _entities.value(clip_copy);
 
         if (StructuralUtil::validateKinship(e->getStructuralType(), _entities.value(_selected)->getStructuralType()))
-          emit switchPaste(true);
+          emit switchedPaste(true);
         else
-          emit switchPaste(false);
+          emit switchedPaste(false);
       }
 
           _scene->update();
@@ -1180,11 +1172,11 @@ void StructuralView::performUndo()
     while(code == _commnads.undoText())
       _commnads.undo();
 
-    emit switchRedo(true);
+    emit switchedRedo(true);
   }
 
   if (!_commnads.canUndo())
-    emit switchUndo(false);
+    emit switchedUndo(false);
 }
 
 void StructuralView::performRedo()
@@ -1195,11 +1187,11 @@ void StructuralView::performRedo()
     while(code == _commnads.redoText())
       _commnads.redo();
 
-    emit switchUndo(true);
+    emit switchedUndo(true);
   }
 
   if (!_commnads.canRedo())
-    emit switchRedo(false);
+    emit switchedRedo(false);
 }
 
 void StructuralView::performCut()
@@ -1229,7 +1221,7 @@ void StructuralView::performCopy()
           entity->getStructuralType() != Structural::Body) {
         _clipboard = clone(entity);
 
-        emit switchPaste(true);
+        emit switchedPaste(true);
       }
   }
 }
@@ -1998,7 +1990,7 @@ void StructuralView::keyPressEvent(QKeyEvent *event)
     _selected =  "";
     modified = true;
 
-    emit switchLink(true);
+    emit switchedLink(true);
 
     event->accept();
   }
@@ -2025,7 +2017,7 @@ void StructuralView::keyReleaseEvent(QKeyEvent *event)
   {
     modified = false;
 
-    emit switchLink(false);
+    emit switchedLink(false);
   }
   else if(event->key() == Qt::Key_Control)
   {
@@ -2125,8 +2117,8 @@ void StructuralView::deletePendingEntities()
 
 void StructuralView::cleanUndoRedo()
 {
-  emit switchRedo(false);
- emit switchUndo(false);
+  emit switchedRedo(false);
+ emit switchedUndo(false);
 }
 
 void StructuralView::updateLinkDialog(QMap<QString, QVector<QString> > conditions,
