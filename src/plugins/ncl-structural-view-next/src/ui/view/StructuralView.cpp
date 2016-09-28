@@ -1600,15 +1600,7 @@ bool StructuralView::updateEntityWithUniqueNstId(StructuralEntity *entity)
 void StructuralView::performDelete()
 {
   if (_entities.contains(_selected))
-  {
-      QMap<QString, QString> settings;
-      settings[STR_SETTING_UNDO] = "1";
-      settings[STR_SETTING_NOTIFY] = "1";
-      settings[STR_SETTING_CODE] = StructuralUtil::createUid();
-
-      remove(_selected, settings);
-
-  }
+    remove(_selected, StructuralUtil::createSettings());
 }
 
 void StructuralView::performSnapshot()
