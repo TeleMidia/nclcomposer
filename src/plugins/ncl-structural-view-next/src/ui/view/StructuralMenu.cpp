@@ -171,7 +171,7 @@ void StructuralMenu::createActions()
   // snapshot action
   _snapshotAction = new QAction(this);
   _snapshotAction->setEnabled(true);
-  _snapshotAction->setText(tr("Snapshot..."));
+  _snapshotAction->setText(tr("Take a Snapshot..."));
   _snapshotAction->setIcon(QIcon(":/images/icon/snapshot"));
 
   // media action

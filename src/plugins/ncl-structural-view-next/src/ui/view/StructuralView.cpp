@@ -1605,50 +1605,56 @@ void StructuralView::performDelete()
 
 void StructuralView::performSnapshot()
 {
-  QString location = QFileDialog::getSaveFileName(NULL, "Snapshot...", "", tr("Images (*.png)"));
+  QString location =
+      QFileDialog::getSaveFileName(NULL,
+                                   tr("Save snapshot..."),
+                                   QDir::homePath(),
+                                   tr("Images (*.png)"));
 
-    if (location != ""){
-      qreal top = 0;
-      qreal left = 0;
-      qreal width = _scene->width();
-      qreal height = _scene->height();
+  if (!location.isEmpty()) {
+    qreal top = 0;
+    qreal left = 0;
+    qreal width = _scene->width();
+    qreal height = _scene->height();
 
-      StructuralEntity* entity = getBody();
+    StructuralEntity* entity = getBody();
 
-      if (entity != NULL)
-      {
-        if (entity->getTop() > top)
-          top = entity->getTop();
+    if (entity != NULL) {
+      if (entity->getTop() > top)
+        top = entity->getTop();
 
-        if (entity->getLeft() > left)
-          left = entity->getLeft();
+      if (entity->getLeft() > left)
+        left = entity->getLeft();
 
-        if (entity->getWidth() < width)
-            width = entity->getWidth();
+      if (entity->getWidth() < width)
+        width = entity->getWidth();
 
-        if (entity->getHeight() < height)
-            height = entity->getHeight();
-      }
-
-      QImage image(width, height, QImage::Format_ARGB32_Premultiplied);
-
-      QPainter painter(&image);
-
-
-
-      if (!_selected.isEmpty())
-        _entities.value(_selected)->setSelected(false);
-
-      _scene->render(&painter, QRect(), QRect(left-25,top-25,width+50,height+50));
-
-      if (!_selected.isEmpty())
-        _entities.value(_selected)->setSelected(true);
-
-
-      painter.end();
-
-      image.save(location, "PNG");
+      if (entity->getHeight() < height)
+        height = entity->getHeight();
     }
+
+    StructuralEntity* selected = NULL;
+
+    if (_entities.contains(_selected))
+      selected = _entities.value(_selected);
+
+    if (selected != NULL)
+      selected->setSelected(false);
+
+    QImage image = QImage(width, height, QImage::Format_ARGB32_Premultiplied);
+
+    QPainter painter(&image);
+    _scene->render(&painter, QRect(), QRect(left-25, top-25, width+50, height+50));
+    painter.end();
+
+    if (!location.endsWith(".png"))
+      location += ".png";
+
+    image.save(location, "png");
+
+    if (selected != NULL)
+      selected->setSelected(true);
+  }
 }
 
 void StructuralView::performMinimap()
