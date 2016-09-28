@@ -9,6 +9,8 @@ StructuralMenu::StructuralMenu(QWidget* parent)
 
   setInsertTop(0);
   setInsertLeft(0);
+
+  adjust();
 }
 
 StructuralMenu::~StructuralMenu()

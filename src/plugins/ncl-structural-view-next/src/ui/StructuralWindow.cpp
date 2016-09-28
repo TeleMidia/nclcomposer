@@ -300,14 +300,14 @@ void  StructuralWindow::createConnections()
   connect(_view, SIGNAL(changed(QString,QMap<QString,QString>,QMap<QString,QString>,QMap<QString,QString>)), SLOT(change(QString,QMap<QString,QString>,QMap<QString,QString>,QMap<QString,QString>)));
   connect(_view, SIGNAL(selected(QString,QMap<QString,QString>)),SLOT(select(QString,QMap<QString,QString>)));
 
-  connect(_view, SIGNAL(undoStateChange(bool)), SLOT(changeUndoState(bool)));
-  connect(_view, SIGNAL(redoStateChange(bool)), SLOT(changeRedoState(bool)));
-  connect(_view, SIGNAL(cutStateChange(bool)), SLOT(changeCutState(bool)));
-  connect(_view, SIGNAL(copyStateChange(bool)), SLOT(changeCopyState(bool)));
-  connect(_view, SIGNAL(pasteStateChange(bool)), SLOT(changePasteState(bool)));
-  connect(_view, SIGNAL(zoominStateChange(bool)), SLOT(changeZoomInState(bool)));
+  connect(_view, SIGNAL(switchUndo(bool)), SLOT(changeUndoState(bool)));
+  connect(_view, SIGNAL(switchRedo(bool)), SLOT(changeRedoState(bool)));
+  connect(_view, SIGNAL(switchCut(bool)), SLOT(changeCutState(bool)));
+  connect(_view, SIGNAL(switchCopy(bool)), SLOT(changeCopyState(bool)));
+  connect(_view, SIGNAL(switchPaste(bool)), SLOT(changePasteState(bool)));
+  connect(_view, SIGNAL(switchZoomIn(bool)), SLOT(changeZoomInState(bool)));
 
-  connect(_view, SIGNAL(bodyStateChange(bool)), SLOT(changeBodyState(bool)));
+  connect(_view, SIGNAL(switchBody(bool)), SLOT(changeBodyState(bool)));
 
   connect(_view, SIGNAL(selectChange(QString)), SLOT(changeSelect(QString)));
 

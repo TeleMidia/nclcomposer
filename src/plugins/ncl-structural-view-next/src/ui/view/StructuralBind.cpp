@@ -235,7 +235,7 @@ void StructuralBind::delineate(QPainterPath* painter) const
 
 void StructuralBind::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
 {
-  StructuralEdge::mouseDoubleClickEvent(event);
+//  StructuralEdge::mouseDoubleClickEvent(event);
 
   emit performedEdit(this);
 }

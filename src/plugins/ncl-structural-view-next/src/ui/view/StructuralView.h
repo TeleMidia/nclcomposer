@@ -1,9 +1,8 @@
-#ifndef QNSTVIEW_H
-#define QNSTVIEW_H
+#ifndef STRUCTURALVIEW_H
+#define STRUCTURALVIEW_H
 
 #include <QGraphicsView>
-#include <QVector>
-#include <QMap>
+
 #include <QDomDocument>
 #include <QDomElement>
 #include <QMouseEvent>
@@ -14,8 +13,6 @@
 #include <QUndoStack>
 #include <QDir>
 #include <QGraphicsScene>
-
-#include <QDebug>
 
 #include "StructuralScene.h"
 #include "StructuralEntity.h"
@@ -33,34 +30,16 @@
 #include "StructuralMinimap.h"
 #include "StructuralLinkTool.h"
 
-class QnstAddCommand;
 class StructuralScene;
-class StructuralMiniMap;
+class StructuralMinimap;
 
 class StructuralView : public QGraphicsView
 {
   Q_OBJECT
 
 public:
-  StructuralView(QWidget* _parent = 0);
+  StructuralView(QWidget* parent = 0);
   virtual ~StructuralView();
-
-  void setMod(bool mod);
-
-public:
-  StructuralScene* getScene();
-
-  bool hasEntity(QString uid);
-  StructuralEntity* getEntity(const QString &uid);
-  QMap<QString, StructuralEntity*> getEntities();
-
-  void switchMinimapVis();
-  void cleanUndoRedo();
-
-
-  void updateLinkDialog(QMap<QString, QVector<QString> > conditions,
-                        QMap<QString, QVector<QString> > actions,
-                        QMap<QString, QVector<QString> > params);
 
 public slots:
   void insert(QString uid, QString parent, QMap<QString, QString> properties, QMap<QString, QString> settings);
@@ -111,6 +90,64 @@ public slots:
    void adjustChildrenWithGraphiviz(StructuralEntity* e, QString code);
 #endif
 
+signals:
+  void inserted(QString uid, QString _parent, QMap<QString, QString> properties, QMap<QString, QString> settings);
+  void removed(QString uid, QMap<QString, QString> settings);
+  void changed(QString uid, QMap<QString, QString> properties, QMap<QString, QString> previous, QMap<QString, QString> settings);
+  void selected(QString uid, QMap<QString, QString> settings);
+
+  void switchUndo(bool state);
+  void switchRedo(bool state);
+  void switchCut(bool state);
+  void switchCopy(bool state);
+  void switchPaste(bool state);
+  void switchLink(bool state);
+  void switchZoomIn(bool state);
+  void switchBody(bool state);
+
+
+  void selectChange(QString uid);
+  void viewChanged();
+  void requestLinkDialogUpdate();
+
+private:
+
+   QString _selected;
+
+   StructuralEntity* _clipboard;
+   QMap<QString, QString> _clipboardReferences;
+
+   StructuralMenu* _menu;
+   StructuralMinimap* _minimap;
+
+   StructuralScene* _scene;
+
+   QUndoStack _commnads;
+
+   StructuralLinkDialog* _linkDialog;
+
+   QMap<QString, StructuralEntity*> _entities;
+
+   /************ */
+public:
+  void setMod(bool mod);
+
+public:
+  StructuralScene* getScene();
+
+  bool hasEntity(QString uid);
+  StructuralEntity* getEntity(const QString &uid);
+  QMap<QString, StructuralEntity*> getEntities();
+
+  void switchMinimapVis();
+  void cleanUndoRedo();
+
+
+  void updateLinkDialog(QMap<QString, QVector<QString> > conditions,
+                        QMap<QString, QVector<QString> > actions,
+                        QMap<QString, QVector<QString> > params);
+
+
 public:
   void load(QString &data);
 
@@ -131,28 +168,6 @@ public:
 
    void drawPortReference(StructuralEntity* port);
 
-signals:
-  void inserted(QString uid, QString _parent, QMap<QString, QString> properties, QMap<QString, QString> settings);
-  void removed(QString uid, QMap<QString, QString> settings);
-  void changed(QString uid, QMap<QString, QString> properties, QMap<QString, QString> previous, QMap<QString, QString> settings);
-  void selected(QString uid, QMap<QString, QString> settings);
-
-
-  void undoStateChange(bool state);
-  void redoStateChange(bool state);
-  void cutStateChange(bool state);
-  void copyStateChange(bool state);
-  void pasteStateChange(bool state);
-  void linkStateChange(bool state);
-
-  void zoominStateChange(bool state);
-
-  void bodyStateChange(bool state);
-
-  void selectChange(QString uid);
-
-  void viewChanged();
-  void requestLinkDialogUpdate();
 
 protected:
 
@@ -178,9 +193,10 @@ public slots:
   void clearAllData();
 
 private:
-  StructuralEntity* clone(StructuralEntity* e, StructuralEntity * p);
+  StructuralEntity* clone(StructuralEntity* entity, StructuralEntity * parent = NULL);
 
-  void performPaste(StructuralEntity* entity, StructuralEntity* _parent, QString CODE, bool newPos);
+  void paste(StructuralEntity* entity, StructuralEntity* parent);
+  void paste(StructuralEntity* entity, StructuralEntity* parent, const QString &code, bool adjust);
 
   bool isChild(StructuralEntity* e , StructuralEntity* p);
   void createLink(StructuralEntity* a, StructuralEntity* b);
@@ -204,19 +220,16 @@ private:
 
   bool hasCutted;
 
-  QMap<QString, StructuralEntity*> entities;
+
 
   QAction* undoAct;
 
   QAction* redoAct;
 
-  StructuralScene* scene;
 
-  StructuralLinkDialog* linkDialog;
 
-  QString _selected_UID;
 
-  StructuralEntity* clipboard;
+
 
   QString clip_cut;
   QString clip_copy;
@@ -233,7 +246,7 @@ private:
 
   QVector<StructuralEntity*> toDelete;
 
-  QUndoStack commnads;
+
 
   StructuralLinkTool* link;
 
@@ -243,11 +256,11 @@ private:
 
   static std::map <Structural::StructuralType, QString> mediaTypeToXMLStr;
 
-  StructuralMiniMap *minimap;
 
-  StructuralMenu* _menu;
+
+
 
   StructuralEntity* e_clip;
 };
 
-#endif // QNSTVIEW_H
+#endif // STRUCTURALVIEW_H
