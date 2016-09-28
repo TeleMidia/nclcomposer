@@ -1,6 +1,6 @@
 #include "StructuralMinimap.h"
 
-StructuralMiniMap::StructuralMiniMap(QWidget *parent)
+StructuralMinimap::StructuralMinimap(QWidget *parent)
   : QGraphicsView(parent)
   , mEditorView(NULL)
   , mMode(None)
@@ -16,7 +16,7 @@ StructuralMiniMap::StructuralMiniMap(QWidget *parent)
   viewport()->setAutoFillBackground(false);
 }
 
-void StructuralMiniMap::init(StructuralView *mEditorView)
+void StructuralMinimap::init(StructuralView *mEditorView)
 {
   this->mEditorView = mEditorView;
 
@@ -37,13 +37,13 @@ void StructuralMiniMap::init(StructuralView *mEditorView)
   }
 }
 
-void StructuralMiniMap::setScene(QGraphicsScene *scene)
+void StructuralMinimap::setScene(QGraphicsScene *scene)
 {
   QGraphicsView::setScene(scene);
   showScene();
 }
 
-void StructuralMiniMap::showScene()
+void StructuralMinimap::showScene()
 {
   if (scene() != NULL)
   {
@@ -52,7 +52,7 @@ void StructuralMiniMap::showScene()
   }
 }
 
-void StructuralMiniMap::ensureVisible(QList<QRectF> region)
+void StructuralMinimap::ensureVisible(QList<QRectF> region)
 {
   foreach (QRectF rect, region)
   {
@@ -60,13 +60,13 @@ void StructuralMiniMap::ensureVisible(QList<QRectF> region)
   }
 }
 
-void StructuralMiniMap::clear()
+void StructuralMinimap::clear()
 {
   mEditorViewRect = QRectF();
   mEditorView = NULL;
 }
 
-QRectF StructuralMiniMap::getNewRect()
+QRectF StructuralMinimap::getNewRect()
 {
   QRect visibleRect = mEditorView->viewport()->rect();
   QRectF newRect = mEditorView->mapToScene(visibleRect).boundingRect();
@@ -77,14 +77,14 @@ QRectF StructuralMiniMap::getNewRect()
   return newRect;
 }
 
-void StructuralMiniMap::wheelEvent(QWheelEvent *event)
+void StructuralMinimap::wheelEvent(QWheelEvent *event)
 {
   setInteractive(true);
   QGraphicsView::wheelEvent(event);
   setInteractive(false);
 }
 
-void StructuralMiniMap::mousePressEvent(QMouseEvent *event)
+void StructuralMinimap::mousePressEvent(QMouseEvent *event)
 {
   if (mEditorView != NULL)
   {
@@ -94,7 +94,7 @@ void StructuralMiniMap::mousePressEvent(QMouseEvent *event)
   QGraphicsView::mousePressEvent(event);
 }
 
-void StructuralMiniMap::mouseMoveEvent(QMouseEvent *event)
+void StructuralMinimap::mouseMoveEvent(QMouseEvent *event)
 {
   if (mEditorView != NULL && mMode == Drag)
   {
@@ -104,19 +104,19 @@ void StructuralMiniMap::mouseMoveEvent(QMouseEvent *event)
   QGraphicsView::mouseMoveEvent(event);
 }
 
-void StructuralMiniMap::mouseReleaseEvent(QMouseEvent *event)
+void StructuralMinimap::mouseReleaseEvent(QMouseEvent *event)
 {
   mMode = None;
   QGraphicsView::mouseReleaseEvent(event);
 }
 
-void StructuralMiniMap::resizeEvent(QResizeEvent *event)
+void StructuralMinimap::resizeEvent(QResizeEvent *event)
 {
   showScene();
   QGraphicsView::resizeEvent(event);
 }
 
-void StructuralMiniMap::drawForeground(QPainter *painter, QRectF const &rect)
+void StructuralMinimap::drawForeground(QPainter *painter, QRectF const &rect)
 {
   setWindowOpacity(0.5);
   painter->setOpacity(0.5);
@@ -130,7 +130,7 @@ void StructuralMiniMap::drawForeground(QPainter *painter, QRectF const &rect)
   painter->drawRect(mEditorViewRect);
 }
 
-void StructuralMiniMap::drawNonExistentAreas(QPainter *painter, QRectF const &rect)
+void StructuralMinimap::drawNonExistentAreas(QPainter *painter, QRectF const &rect)
 {
   QList<QRectF> areas = getNonExistentAreas(rect);
   foreach (QRectF area, areas)
@@ -139,7 +139,7 @@ void StructuralMiniMap::drawNonExistentAreas(QPainter *painter, QRectF const &re
   }
 }
 
-QList<QRectF> StructuralMiniMap::getNonExistentAreas(QRectF const &rect)
+QList<QRectF> StructuralMinimap::getNonExistentAreas(QRectF const &rect)
 {
   QRectF existent = rect.intersected(sceneRect());
 

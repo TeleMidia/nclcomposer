@@ -20,14 +20,14 @@ class StructuralView;
   * This code is and adaptation of the available at:
   *           https://github.com/qreal/qreal/blob/master/qrgui/mainwindow/miniMap.h
   */
-class StructuralMiniMap : public QGraphicsView
+class StructuralMinimap : public QGraphicsView
 {
 	Q_OBJECT
 public:
 	/// Drag mode is used for dragging a rectangle of the main view
 	enum Mode { None, Drag };
 
-  explicit StructuralMiniMap(QWidget *_parent = 0);
+  explicit StructuralMinimap(QWidget *_parent = 0);
 
 	void init(StructuralView *view);
 
