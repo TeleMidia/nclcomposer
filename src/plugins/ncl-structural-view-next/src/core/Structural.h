@@ -83,6 +83,14 @@
 // Defaults
 //
 
+// Minimap defines
+#define STR_DEFAULT_MINIMAP_W 240
+#define STR_DEFAULT_MINIMAP_H 120
+
+// Scene defines
+#define STR_DEFAULT_SCENE_W 3600
+#define STR_DEFAULT_SCENE_H 3600
+
 // Entities defines
 #define STR_DEFAULT_ENTITY_PADDING 4
 

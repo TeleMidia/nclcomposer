@@ -3,7 +3,7 @@
 StructuralScene::StructuralScene(QObject* parent)
   : QGraphicsScene(parent)
 {
-
+  setSceneRect(0, 0, STR_DEFAULT_SCENE_W, STR_DEFAULT_SCENE_H);
 }
 
 StructuralScene::~StructuralScene()
