@@ -1,6 +1,6 @@
 // This is the SIP interface definition for QsciAbstractAPIs.
 //
-// Copyright (c) 2015 Riverbank Computing Limited <info@riverbankcomputing.com>
+// Copyright (c) 2016 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
 // This file is part of QScintilla.
 // 
@@ -31,7 +31,7 @@ public:
     QsciLexer *lexer() const;
 
     virtual void updateAutoCompletionList(const QStringList &context,
-            QStringList &list) = 0;
+            QStringList &list /In, Out/) = 0;
     virtual void autoCompletionSelected(const QString &selection);
 
     virtual QStringList callTips(const QStringList &context, int commas,

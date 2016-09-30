@@ -1,6 +1,6 @@
 # The project file for the QScintilla library.
 #
-# Copyright (c) 2015 Riverbank Computing Limited <info@riverbankcomputing.com>
+# Copyright (c) 2016 Riverbank Computing Limited <info@riverbankcomputing.com>
 # 
 # This file is part of QScintilla.
 # 
@@ -20,19 +20,17 @@
 
 # This must be kept in sync with Python/configure.py, Python/configure-old.py,
 # example-Qt4Qt5/application.pro and designer-Qt4Qt5/designer.pro.
-!win32:VERSION = 12.0.0
+!win32:VERSION = 12.0.2
 
 TEMPLATE = lib
 TARGET = qscintilla2_telem
-CONFIG += qt warn_off release thread exceptions silent
+CONFIG += qt warn_off release thread exceptions hide_symbols silent
 INCLUDEPATH += . ../include ../lexlib ../src
 
-DEFINES += QSCINTILLA_MAKE_DLL SCINTILLA_QT SCI_LEXER
-greaterThan(QT_MAJOR_VERSION, 3) {
-    CONFIG(staticlib) {
-        DEFINES -= QSCINTILLA_MAKE_DLL
-    }
+!CONFIG(staticlib) {
+    DEFINES += QSCINTILLA_MAKE_DLL
 }
+
 
 # Uses FORCERELEASE variable because CONFIG and SUBDIR force three executions
 # if qmake and the last one does not preserves CONFIG from command line.
@@ -130,13 +128,17 @@ isEmpty(qsci.path) {
 	qsci.path = $(QTDIR)
 }
 
-INSTALLS += header trans qsci target
-
-greaterThan(QT_MAJOR_VERSION, 3) {
-    features.path = $$[QSCI_INSTALL_DATA]/mkspecs/features
-    features.files = $${PWD}/features/qscintilla2.prf
-    INSTALLS += features
+greaterThan(QT_MAJOR_VERSION, 4) {
+    features.path = $$[QT_HOST_DATA]/mkspecs/features
+} else {
+    features.path = $$[QT_INSTALL_DATA]/mkspecs/features
 }
+CONFIG(staticlib) {
+    features.files = $$PWD/features_staticlib/qscintilla2.prf
+} else {
+    features.files = $$PWD/features/qscintilla2.prf
+}
+INSTALLS += features
 
 HEADERS = \
 	./Qsci/qsciglobal.h \

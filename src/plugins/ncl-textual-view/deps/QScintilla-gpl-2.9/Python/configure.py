@@ -1,4 +1,4 @@
-# Copyright (c) 2015, Riverbank Computing Limited
+# Copyright (c) 2016, Riverbank Computing Limited
 # All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
@@ -23,7 +23,7 @@
 # ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 # POSSIBILITY OF SUCH DAMAGE.
 
-# This is v1.3 of this boilerplate.
+# This is v1.8 of this boilerplate.
 
 
 from distutils import sysconfig
@@ -60,7 +60,7 @@ class ModuleConfiguration(object):
 
     # The version of the module as a string.  Set it to None if you don't
     # provide version information.
-    version = '2.9'
+    version = '2.9.3'
 
     # Set if a configuration script is provided that handles versions of PyQt4
     # prior to v4.10 (i.e. versions where the pyqtconfig.py module is
@@ -71,10 +71,15 @@ class ModuleConfiguration(object):
     # The minimum version of SIP that is required.  This should be a
     # dot-separated string of two or three integers (e.g. '1.0', '4.10.3').  If
     # it is None or an empty string then the version is not checked.
-    minimum_sip_version = '4.16'
+    minimum_sip_version = '4.18'
 
     # Set if support for C++ exceptions can be disabled.
     no_exceptions = True
+
+    # The name (without the .pyi extension) of the name of the PEP 484 stub
+    # file to be generated.  If it is None or an empty string then a stub file
+    # is not generated.
+    pep484_stub_file = 'Qsci'
 
     # Set if the module supports redefining 'protected' as 'public'.
     protected_is_public_is_supported = True
@@ -117,9 +122,9 @@ class ModuleConfiguration(object):
         """
 
         target_configuration.qsci_version = None
+        target_configuration.qsci_features_dir = None
         target_configuration.qsci_inc_dir = None
         target_configuration.qsci_lib_dir = None
-        target_configuration.qsci_is_dll = (target_configuration.py_platform == 'win32')
         target_configuration.qsci_sip_dir = None
 
     def init_optparser(self, optparser, target_configuration):
@@ -135,15 +140,18 @@ class ModuleConfiguration(object):
                 help="the directory containing the QScintilla Qsci header "
                         "file directory is DIR [default: QT_INSTALL_HEADERS]")
 
+        optparser.add_option('--qsci-featuresdir', dest='qsci_features_dir',
+                type='string', default=None, action='callback',
+                callback=optparser_store_abspath_dir, metavar="DIR",
+                help="the directory containing the qscintilla2.prf features "
+                        "file is DIR [default: "
+                        "QT_INSTALL_PREFIX/mkspecs/features]")
+
         optparser.add_option('--qsci-libdir', '-o', dest='qsci_lib_dir',
                 type='string', default=None, action='callback',
                 callback=optparser_store_abspath_dir, metavar="DIR",
                 help="the directory containing the QScintilla library is DIR "
                         "[default: QT_INSTALL_LIBS]")
-
-        optparser.add_option('--no-dll', '-s', dest='qsci_is_dll',
-                default=None, action='store_false',
-                help="QScintilla is a static library and not a Windows DLL")
 
         optparser.add_option('--qsci-sipdir', '-v', dest='qsci_sip_dir',
                 type='string', default=None, action='callback',
@@ -162,14 +170,14 @@ class ModuleConfiguration(object):
         options are the parsed options.
         """
 
+        if options.qsci_features_dir is not None:
+            target_configuration.qsci_features_dir = options.qsci_features_dir
+
         if options.qsci_inc_dir is not None:
             target_configuration.qsci_inc_dir = options.qsci_inc_dir
 
         if options.qsci_lib_dir is not None:
             target_configuration.qsci_lib_dir = options.qsci_lib_dir
-
-        if options.qsci_is_dll is not None:
-            target_configuration.qsci_is_dll = options.qsci_is_dll
 
         if options.qsci_sip_dir is not None:
             target_configuration.qsci_sip_dir = options.qsci_sip_dir
@@ -293,8 +301,8 @@ class ModuleConfiguration(object):
         if target_configuration.qsci_lib_dir is not None:
             qmake['LIBS'] = '-L%s' % quote(target_configuration.qsci_lib_dir)
 
-        if target_configuration.qsci_is_dll:
-            qmake['DEFINES'] = 'QSCINTILLA_DLL'
+        if target_configuration.qsci_features_dir is not None:
+            os.environ['QMAKEFEATURES'] = target_configuration.qsci_features_dir
 
         return qmake
 
@@ -680,7 +688,9 @@ class _TargetConfiguration:
 
         # The default qmake spec.
         if self.py_platform == 'win32':
-            if self.py_version >= 0x030300:
+            if self.py_version >= 0x030500:
+                self.qmake_spec = 'win32-msvc2015'
+            elif self.py_version >= 0x030300:
                 self.qmake_spec = 'win32-msvc2010'
             elif self.py_version >= 0x020600:
                 self.qmake_spec = 'win32-msvc2008'
@@ -700,6 +710,7 @@ class _TargetConfiguration:
         self.sip = self._find_exe('sip5', 'sip')
         self.sip_version = None
         self.sysroot = ''
+        self.stubs_dir = ''
 
         self.prot_is_public = (self.py_platform.startswith('linux') or self.py_platform == 'darwin')
 
@@ -806,13 +817,9 @@ class _TargetConfiguration:
 
                 if qt_version > 0x060000:
                     qt_version = 0x060000
-
-                backstop = 'Qt_6_0_0'
             else:
                 if qt_version > 0x050000:
                     qt_version = 0x050000
-
-                backstop = 'Qt_5_0_0'
 
             major = (qt_version >> 16) & 0xff
             minor = (qt_version >> 8) & 0xff
@@ -820,9 +827,6 @@ class _TargetConfiguration:
 
             flags.append('-t')
             flags.append('Qt_%d_%d_%d' % (major, minor, patch))
-
-            flags.append('-B')
-            flags.append(backstop)
 
             for feat in parser.getlist(section, 'pyqt_disabled_features', []):
                 flags.append('-x')
@@ -914,27 +918,6 @@ class _TargetConfiguration:
         are the command line options.
         """
 
-        try:
-            qmake = opts.qmake
-        except AttributeError:
-            # Windows.
-            qmake = None
-
-        if qmake is not None:
-            self.qmake = qmake
-        elif self.qmake is None:
-            # Under Windows qmake and the Qt DLLs must be on the system PATH
-            # otherwise the dynamic linker won't be able to resolve the
-            # symbols.  On other systems we assume we can just run qmake by
-            # using its full pathname.
-            if sys.platform == 'win32':
-                error("Make sure you have a working Qt qmake on your PATH.")
-            else:
-                error(
-                        "Make sure you have a working Qt qmake on your PATH "
-                        "or use the --qmake argument to explicitly specify a "
-                        "working Qt qmake.")
-
         # Query qmake.
         qt_config = _TargetQtConfiguration(self.qmake)
 
@@ -970,6 +953,25 @@ class _TargetConfiguration:
         if opts.sysroot is not None:
             self.sysroot = opts.sysroot
 
+        # Determine how to run qmake.
+        if opts.qmake is not None:
+            self.qmake = opts.qmake
+
+            # On Windows add the directory that probably contains the Qt DLLs
+            # to PATH.
+            if sys.platform == 'win32':
+                path = os.environ['PATH']
+                path = os.path.dirname(self.qmake) + ';' + path
+                os.environ['PATH'] = path
+
+        if self.qmake is None:
+            error(
+                    "Use the --qmake argument to explicitly specify a working "
+                    "Qt qmake.")
+
+        if opts.qmakespec is not None:
+            self.qmake_spec = opts.qmakespec
+
         if self.pyqt_package is not None:
             try:
                 self.pyqt_package = opts.pyqt_package
@@ -997,6 +999,15 @@ class _TargetConfiguration:
                 self.pyqt_sip_dir = os.path.join(self.py_sip_dir,
                         self.pyqt_package)
 
+        if module_config.pep484_stub_file:
+            if opts.stubsdir is not None:
+                self.stubs_dir = opts.stubsdir
+
+            if opts.no_stubs:
+                self.stubs_dir = ''
+            elif self.stubs_dir == '':
+                self.stubs_dir = self.module_dir
+
         if module_config.qscintilla_api_file:
             if opts.apidir is not None:
                 self.api_dir = opts.apidir
@@ -1006,9 +1017,6 @@ class _TargetConfiguration:
 
         if opts.destdir is not None:
             self.module_dir = opts.destdir
-
-        if opts.qmakespec is not None:
-            self.qmake_spec = opts.qmakespec
 
         if module_config.protected_is_public_is_supported:
             if opts.prot_is_public is not None:
@@ -1031,6 +1039,10 @@ class _TargetConfiguration:
         path_dirs = os.environ.get('PATH', '').split(os.pathsep)
 
         for exe in exes:
+            # Strip any surrounding quotes.
+            if exe.startswith('"') and exe.endswith('"'):
+                exe = exe[1:-1]
+
             if sys.platform == 'win32':
                 exe = exe + '.exe'
 
@@ -1057,6 +1069,17 @@ def _create_optparser(target_config, module_config):
     p.add_option('--spec', dest='qmakespec', default=None, action='store',
             metavar="SPEC",
             help="pass -spec SPEC to qmake [default: %s]" % "don't pass -spec" if target_config.qmake_spec == '' else target_config.qmake_spec)
+
+    if module_config.pep484_stub_file:
+        p.add_option('--stubsdir', dest='stubsdir', type='string',
+                default=None, action='callback',
+                callback=optparser_store_abspath, metavar="DIR", 
+                help="the PEP 484 stub file will be installed in DIR "
+                        "[default: with the module]")
+        p.add_option('--no-stubs', dest='no_stubs', default=False,
+                action='store_true',
+                help="disable the installation of the PEP 484 stub file "
+                        "[default: enabled]")
 
     if module_config.qscintilla_api_file:
         p.add_option('--apidir', '-a', dest='apidir', type='string',
@@ -1104,12 +1127,11 @@ def _create_optparser(target_config, module_config):
                 default=None, action='store', metavar="FLAGS",
                 help="the sip flags used to build PyQt [default: query PyQt]")
 
-    if sys.platform != 'win32':
-        p.add_option('--qmake', '-q', dest='qmake', type='string',
-                default=None, action='callback',
-                callback=optparser_store_abspath_exe, metavar="FILE",
-                help="the pathname of qmake is FILE [default: "
-                        "%s]" % (target_config.qmake or "None"))
+    p.add_option('--qmake', '-q', dest='qmake', type='string', default=None,
+            action='callback', callback=optparser_store_abspath_exe,
+            metavar="FILE",
+            help="the pathname of qmake is FILE [default: %s]" % (
+                    target_config.qmake or "search PATH"))
 
     p.add_option('--sip', dest='sip', type='string', default=None,
             action='callback', callback=optparser_store_abspath_exe,
@@ -1153,10 +1175,6 @@ def _create_optparser(target_config, module_config):
     p.add_option('--verbose', '-w', dest='verbose', default=False,
             action='store_true',
             help="enable verbose output during configuration")
-    p.add_option('--no-timestamp', '-T', dest='no_timestamp', default=False,
-            action='store_true',
-            help="suppress timestamps in the header comments of generated "
-                    "code [default: include timestamps]")
 
     module_config.init_optparser(p, target_config)
 
@@ -1196,15 +1214,19 @@ def _inform_user(target_config, module_config):
                 "The %s module is being built with 'protected' redefined as "
                 "'public'." % module_name)
 
+    if target_config.stubs_dir != '':
+        inform("The PEP 484 stub file will be installed in %s." %
+                target_config.stubs_dir)
+
     if module_config.qscintilla_api_file and target_config.api_dir != '':
         inform("The QScintilla API file will be installed in %s." %
                 os.path.join(target_config.api_dir, 'api', 'python'))
 
 
 def _generate_code(target_config, opts, module_config):
-    """ Generate the code for the QScintilla module.  target_config is the
-    target configuration.  opts are the command line options.  module_config is
-    the module configuration.
+    """ Generate the code for the module.  target_config is the target
+    configuration.  opts are the command line options.  module_config is the
+    module configuration.
     """
 
     inform(
@@ -1221,20 +1243,27 @@ def _generate_code(target_config, opts, module_config):
         # Get the flags used for the main PyQt module.
         argv.extend(target_config.pyqt_sip_flags.split())
 
+        # Add the backstop version.
+        argv.append('-B')
+        argv.append('Qt_6_0_0' if target_config.pyqt_package == 'PyQt5'
+                else 'Qt_5_0_0')
+
         # Add PyQt's .sip files to the search path.
         argv.append('-I')
-        argv.append(target_config.pyqt_sip_dir)
+        argv.append(quote(target_config.pyqt_sip_dir))
+
+    if target_config.stubs_dir != '':
+        # Generate the stub file.
+        argv.append('-y')
+        argv.append(quote(module_config.pep484_stub_file + '.pyi'))
 
     if module_config.qscintilla_api_file and target_config.api_dir != '':
         # Generate the API file.
         argv.append('-a')
-        argv.append(module_config.qscintilla_api_file + '.api')
+        argv.append(quote(module_config.qscintilla_api_file + '.api'))
 
     if target_config.prot_is_public:
         argv.append('-P');
-
-    if opts.no_timestamp:
-        argv.append('-T')
 
     if not opts.no_docstrings:
         argv.append('-o');
@@ -1360,6 +1389,13 @@ target.path = %s
 INSTALLS += target
 ''' % quote(target_config.module_dir))
 
+    if target_config.stubs_dir != '':
+        pro.write('''
+pep484_stubs.path = %s
+pep484_stubs.files = %s.pyi
+INSTALLS += pep484_stubs
+''' % (target_config.stubs_dir, module_config.pep484_stub_file))
+
     if module_config.qscintilla_api_file and target_config.api_dir != '':
         pro.write('''
 api.path = %s/api/python
@@ -1434,6 +1470,9 @@ macx {
     QMAKE_LFLAGS += "-undefined dynamic_lookup"
     greaterThan(QT_MAJOR_VERSION, 4) {
         QMAKE_LFLAGS += "-install_name $$absolute_path($$PY_MODULE, $$target.path)"
+        greaterThan(QT_MINOR_VERSION, 4) {
+            QMAKE_RPATHDIR += $$[QT_INSTALL_LIBS]
+        }
     }
 ''')
 
@@ -1569,7 +1608,7 @@ def _check_sip(target_config, module_config):
                 "Make sure you have a working sip on your PATH or use the "
                 "--sip argument to explicitly specify a working sip.")
 
-    pipe = os.popen(' '.join([target_config.sip, '-V']))
+    pipe = os.popen(' '.join([quote(target_config.sip), '-V']))
 
     for l in pipe:
         version_str = l.strip()
@@ -1579,7 +1618,7 @@ def _check_sip(target_config, module_config):
 
     pipe.close()
 
-    if 'snapshot' not in version_str and 'preview' not in version_str:
+    if '.dev' not in version_str and 'snapshot' not in version_str:
         version = version_from_string(version_str)
         if version is None:
             error(

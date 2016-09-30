@@ -1,3 +1,13 @@
+v2.9.3 25th July 2016
+  - Bug fixes.
+
+v2.9.2 18th April 2016
+  - Added support for a PEP 484 stub file for the Python extension module.
+
+v2.9.1 24th October 2015
+  - Added the .api file for Python v3.5.
+  - Bug fixes.
+
 v2.9 20th April 2015
   - Based on Scintilla v3.5.4.
   - Added UserLiteral, InactiveUserLiteral, TaskMarker, InactiveTaskMarker,

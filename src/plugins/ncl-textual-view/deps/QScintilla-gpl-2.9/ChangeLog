@@ -1,8 +1,250 @@
+2016-07-25  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* .hgtags:
+	Added tag 2.9.3 for changeset 19c9752958b7
+	[fb5cd006685f] [tip] <2.9-maint>
+
+	* NEWS:
+	Released as v2.9.3.
+	[19c9752958b7] [2.9.3] <2.9-maint>
+
+2016-07-19  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* METADATA.in:
+	Updated METADATA.
+	[aa51b27d9baf] <2.9-maint>
+
+2016-06-21  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* build.py, lib/qscintilla.dxy:
+	Simplify the generation of the doxygen documentation.
+	[12575460cd55] <2.9-maint>
+
+	* rb-product, rbproduct.py:
+	Replaced the product plugin with a product file.
+	[846ad54d791e] <2.9-maint>
+
+2016-06-10  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* qt/ScintillaQt.cpp, qt/qscintilla.pro:
+	Fixed a flicker problem on OS X.
+	[c1482a759dc0] <2.9-maint>
+
+2016-05-12  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* METADATA.in, rbproduct.py:
+	Try to prevent the GPL and commercial versions being installed at
+	the same time. (Although it doesn't seem to work.)
+	[826424d291a2] <2.9-maint>
+
+	* METADATA.in, rbproduct.py:
+	Configure the PKG-INFO meta-data according to the license.
+	[e3243207aa15] <2.9-maint>
+
+2016-05-10  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* rbproduct.py:
+	More changes to the product plugin required by rbtools.
+	[437e6032e4df] <2.9-maint>
+
+2016-05-09  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* rbproduct.py:
+	Updated the product plugin for the latest rbtools changes.
+	[393cae59af91] <2.9-maint>
+
+2016-04-22  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* METADATA.in:
+	Updated the meta-data now that Linux wheels are available from PyPI.
+	[40f18e066c6f] <2.9-maint>
+
+2016-04-18  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* .hgtags:
+	Added tag 2.9.2 for changeset 15888f3e91ce
+	[5cd132938309] <2.9-maint>
+
+	* NEWS:
+	Released as v2.9.2.
+	[15888f3e91ce] [2.9.2] <2.9-maint>
+
+	* Python/sip/qsciscintillabase.sip:
+	Remove all deprecated /DocType/ annotations.
+	[b9d570ab642a] <2.9-maint>
+
+2016-04-17  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* rbproduct.py:
+	Locate the static library on Windows.
+	[dd8c14dace83] <2.9-maint>
+
+	* rbproduct.py:
+	Fixed a typo.
+	[baf5c942f528] <2.9-maint>
+
+	* rbproduct.py:
+	Add any pre-installed .api files to the wheel.
+	[cf7b6302ae83] <2.9-maint>
+
+	* rbproduct.py:
+	Exploit verbose mode in the product plugin.
+	[da743c037880] <2.9-maint>
+
+	* rbproduct.py:
+	Fixed permissions of the product plugin.
+	[6fac075e0b88] <2.9-maint>
+
+2016-04-16  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* Makefile:
+	Updated the clean target.
+	[692b14f48ade] <2.9-maint>
+
+	* rbproduct.py:
+	The wheel now includes translations and API files.
+	[bf911094e537] <2.9-maint>
+
+	* METADATA.in, Makefile, Python/configure.py, build.py, rbproduct.py:
+	Added the initial support for creating wheels.
+	[da0a5d22e864] <2.9-maint>
+
+	* Makefile, build.py:
+	Added the --omit-license-tag option to build.py. Added the dist-
+	wheel-gpl target to the master Makefile.
+	[a63c245de735] <2.9-maint>
+
+2016-04-15  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* Python/configure-old.py, Python/configure.py, build.py,
+	qt/features/qscintilla2.prf, qt/features_staticlib/qscintilla2.prf,
+	qt/qsciglobal.h, qt/qscintilla.pro:
+	Symbols are now hidden if possible on all platforms. Improved the
+	handling of QSCINTILLA_DLL so it should be completely automatic.
+	Removed the --no-dll option to configure.py.
+	[e35caca29dd6] <2.9-maint>
+
+2016-03-25  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* Python/configure-old.py, build.py:
+	Use the new naming standards for development versions.
+	[21d2f882320a] <2.9-maint>
+
+2016-03-14  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* Python/configure.py, build.py:
+	The configure.py boilerplate code is applied automatically.
+	[848f3fca41c0] <2.9-maint>
+
+2016-03-13  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* Python/configure.py:
+	Updated the configure.py boilerplate.
+	[b3fd404a1134] <2.9-maint>
+
+2016-03-07  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* Python/configure.py:
+	Added support for PEP 484 stub files to configure.py.
+	[9316fed27503] <2.9-maint>
+
+2015-12-15  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* Makefile:
+	Switched the internal build system to Python v3.5.
+	[5215e7f3116e] <2.9-maint>
+
+2015-10-28  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* Python/configure.py:
+	Handle PATH components that are enclosed in quotes.
+	[d0f19b69ce26] <2.9-maint>
+
+2015-10-24  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* .hgtags:
+	Added tag 2.9.1 for changeset 9bd39be91ef8
+	[c71bd22d6ccf] <2.9-maint>
+
+	* NEWS:
+	Released as v2.9.1.
+	[9bd39be91ef8] [2.9.1] <2.9-maint>
+
+2015-10-17  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* qt/qsciscintilla.cpp:
+	Fixed the handling of the keypad modifier.
+	[e363cc2c347f] <2.9-maint>
+
+2015-09-18  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* qsci/api/python/Python-3.5.api:
+	Added the .api file for Python v3.5.
+	[5b4e58de4663] <2.9-maint>
+
+2015-09-10  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* Python/sip/qsciabstractapis.sip, Python/sip/qsciapis.sip:
+	Fixed the Python binding for
+	QsciAbstractAPIs::updateAutoCompletionList().
+	[53f2939a3b29] <2.9-maint>
+
+2015-09-08  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* Python/configure.py:
+	Use win32-msvc2015 for Python v3.5 and later.
+	[2f264662e2c7] <2.9-maint>
+
+2015-09-01  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* qt/qsciscintilla.cpp:
+	Fixed the restyling of a document displayed in multiple editors.
+	[9309f264ab57] <2.9-maint>
+
+2015-08-24  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* qt/qscintilla.pro, qt/qsciscintilla.cpp:
+	Fixed a problem starting a call tip when the auto-completion list is
+	displayed. Bumped the library version.
+	[2ec2115ea4d2] <2.9-maint>
+
+2015-07-12  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* designer-Qt4Qt5/qscintillaplugin.h:
+	Fixed a warning message when compiling against Qt v5.5.0.
+	[3ff05a0ef88d] <2.9-maint>
+
+2015-07-09  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* Python/configure.py:
+	Update QMAKE_RPATHDIR rather than set it.
+	[045c64a7e65c] <2.9-maint>
+
+2015-06-24  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* Python/configure.py:
+	Set QMAKE_RPATHDIR for Qt v5.5 on OS X.
+	[b83394e4a676] <2.9-maint>
+
+2015-05-26  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* Python/configure.py:
+	Fixed the backstop handling in the Python bindings configuration
+	script and bumped the version number.
+	[1ab1dd7ea495] <2.9-maint>
+
+2015-05-02  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* qt/qscintilla.pro:
+	Use QT_HOST_DATA for the .prf destination with Qt v5. Removed all Qt
+	v3 support from the .pro file.
+	[63c0391624a8] <2.9-maint>
+
 2015-04-20  Phil Thompson  <phil@riverbankcomputing.com>
 
 	* .hgtags:
 	Added tag 2.9 for changeset 41ee8162fa81
-	[9817b0a7a4f7] [tip]
+	[9817b0a7a4f7]
 
 	* NEWS:
 	Released as v2.9.
@@ -5013,4 +5255,3 @@
 	win32/scintilla_vc6.mak, zipsrc.bat:
 	First import of QScintilla
 	[0521804cd44a]
-
