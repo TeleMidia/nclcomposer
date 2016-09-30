@@ -24,6 +24,7 @@ QToolBar {
 QTabWidget::tab-bar {
   color: rgb(255, 255, 255);
   font-size: 10px;
+  alignment: right;
 }
 
 QTabBar::tab {
