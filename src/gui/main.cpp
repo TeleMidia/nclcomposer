@@ -69,7 +69,7 @@ int handleArguments (QStringList &args, bool &initGUI)
   cout << "NCL Composer v."
        << QCoreApplication::applicationVersion().toStdString()
        << endl
-       << "Copyright (C) 2012-2016 "
+       << "Copyright (C) 2011-2016 "
        << QCoreApplication::organizationName().toStdString() << "." << endl
        << "This is free software; see the source for copying conditions."
        << "  There is NO" << endl
