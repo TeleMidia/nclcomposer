@@ -15,7 +15,6 @@
 #include <QApplication>
 #include <QQueue>
 #include <QDomDocument>
-#include <QDebug>
 
 #include "util/Commands.h"
 

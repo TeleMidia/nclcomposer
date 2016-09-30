@@ -11,10 +11,7 @@
 #define __SINGLETON_HPP_
 
 #include <QObject>
-#include <QDebug>
-
 #include <assert.h>
-
 
 #define SINGLETON(T) \
 private: static T* m_pInstance; \

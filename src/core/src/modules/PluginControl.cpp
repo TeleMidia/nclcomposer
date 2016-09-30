@@ -70,7 +70,7 @@ PluginControl::~PluginControl()
 
 IPluginFactory* PluginControl::loadPlugin(const QString &fileName)
 {
-  qCDebug(cprCoreLog) << "Trying to load " << fileName;
+  qCDebug(CPR_CORE) << "Trying to load " << fileName;
   IPluginFactory *pluginFactory = NULL;
   QPluginLoader loader(fileName);
   QObject *plugin = loader.instance();
@@ -80,7 +80,7 @@ IPluginFactory* PluginControl::loadPlugin(const QString &fileName)
     pluginFactory = qobject_cast<IPluginFactory*> (plugin);
     if (pluginFactory)
     {
-      qCDebug(cprCoreLog) << fileName << "loaded --- "
+      qCDebug(CPR_CORE) << fileName << "loaded --- "
                           << "pluginFactory = " << pluginFactory;
 
       QString pluginID = pluginFactory->id();
@@ -97,7 +97,7 @@ IPluginFactory* PluginControl::loadPlugin(const QString &fileName)
         }
 
 #if QT_VERSION >= 0x050000
-        qCDebug(cprCoreLog) << loader.metaData();
+        qCDebug(CPR_CORE) << loader.metaData();
         QJsonObject metadata = loader.metaData().value("MetaData").toObject();
         pluginFactory->setMetadata(metadata);
 #endif
@@ -106,7 +106,7 @@ IPluginFactory* PluginControl::loadPlugin(const QString &fileName)
   }//end load OK
   else
   {
-    qCWarning(cprCoreLog) << "PluginControl::loadPlugins failed to load"
+    qCWarning(CPR_CORE) << "PluginControl::loadPlugins failed to load"
                           << "(" << fileName << ")" << " -- "
                           << loader.errorString();
   }
@@ -291,13 +291,13 @@ QList<IPluginFactory*> PluginControl::getLoadedPlugins()
 bool PluginControl::releasePlugins(Project *project)
 {
   if (!project) {
-    qCDebug(cprCoreLog) << "Project is NULL";
+    qCDebug(CPR_CORE) << "Project is NULL";
     return false;
   }
 
   if (!messageControls.contains(project))
   {
-    qCDebug(cprCoreLog) << "Message Control does not know the project";
+    qCDebug(CPR_CORE) << "Message Control does not know the project";
     return false;
   }
 

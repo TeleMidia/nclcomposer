@@ -11,7 +11,6 @@
 #define MESSAGECONTROL_H
 
 #include <QObject>
-#include <QDebug>
 #include <QUndoStack>
 
 #include <exception>
