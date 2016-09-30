@@ -42,12 +42,11 @@ void loadTranslations()
   QStringList extensions_paths = settings.value("path").toStringList();
   settings.endGroup();
 
-  qDebug() << "[GUI]" <<  extensions_paths;
+  qDebug() << "[GUI] Looking for extensions in " <<  extensions_paths;
 
   /* Go in each path and search for files from that language */
   foreach(QString curPath, extensions_paths)
   {
-    qDebug() << curPath;
     QDir curDir(curPath);
     //filter only the files for the current language code
     curDir.setNameFilters(QStringList() << "*_" + language_code + ".qm");
@@ -67,19 +66,19 @@ void loadTranslations()
 
 int handleArguments (QStringList &args, bool &initGUI)
 {
+  cout << "NCL Composer v."
+       << QCoreApplication::applicationVersion().toStdString()
+       << endl
+       << "Copyright (C) 2012-2016 "
+       << QCoreApplication::organizationName().toStdString() << "." << endl
+       << "This is free software; see the source for copying conditions."
+       << "  There is NO" << endl
+       << "warranty; not even for MERCHANTABILITY or FITNESS FOR "
+       << "A PARTICULAR PURPOSE." << endl << endl;
+
   if ( args.contains ("-version") )
   {
     initGUI = false;
-    cout << "NCL Composer v."
-         << QCoreApplication::applicationVersion().toStdString()
-         << endl
-         << "Copyright (C) 2015 "
-         << QCoreApplication::organizationName().toStdString() << "." << endl
-         << "This is free software; see the source for copying conditions."
-         << "  There is NO" << endl
-         << "warranty; not even for MERCHANTABILITY or FITNESS FOR "
-         << "A PARTICULAR PURPOSE." << endl << endl;
-
   }
   else if (args.contains("-help"))
   {
