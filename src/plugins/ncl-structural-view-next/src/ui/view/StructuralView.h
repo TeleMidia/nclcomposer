@@ -44,9 +44,6 @@ public:
   StructuralMode getMode() const;
   void setMode(StructuralMode mode);
 
-  StructuralMode getMinimap() const;
-  void setMinimap(StructuralMode minimap);
-
 public slots:
   void insert(QString uid, QString parent, QMap<QString, QString> properties, QMap<QString, QString> settings);
   void remove(QString uid, QMap<QString, QString> settings);
@@ -177,11 +174,12 @@ public:
 
    void setMiniMapVisible(bool enable);
 
-   void drawPortReference(StructuralEntity* port);
+   void adjustReferences(StructuralEntity* entity);
 
 
 protected:
 
+  QString getNewId(StructuralEntity *entity);
   bool updateEntityWithUniqueNstId(StructuralEntity *entity);
 
   void resizeEvent(QResizeEvent *event);
@@ -209,11 +207,15 @@ private:
   void paste(StructuralEntity* entity, StructuralEntity* parent);
   void paste(StructuralEntity* entity, StructuralEntity* parent, const QString &code, bool adjust);
 
+  void adjustProperties(StructuralEntity* entity);
+  qreal getNewAngle(StructuralBind* edge);
+  void adjustAngles(StructuralBind* edge);
+
   bool isChild(StructuralEntity* e , StructuralEntity* p);
   void createLink(StructuralEntity* a, StructuralEntity* b);
   void createBind(StructuralEntity* a, StructuralEntity* b,StructuralRole type = Structural::NoRole, QString code = "");
   void createReference(StructuralEntity* a, StructuralEntity* b);
-  void adjustAngles(StructuralBind* edge);
+
 
   void createObjects();
 
@@ -237,7 +239,7 @@ private:
   QAction* redoAct;
 
 
-
+  QMap<StructuralType, int> entityCount;
 
 
 

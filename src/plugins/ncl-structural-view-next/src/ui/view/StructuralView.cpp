@@ -340,248 +340,314 @@ void StructuralView::exportDataFromEntity(StructuralEntity* entity, QDomDocument
 
 void StructuralView::insert(QString uid, QString parent, QMap<QString, QString> properties, QMap<QString, QString> settings)
 {
-  if (!_entities.contains(uid))
-  {
-    StructuralEntity* entity; StructuralType type = StructuralUtil::translateStringToType(properties[STR_PROPERTY_ENTITY_TYPE]);
+  if (!_entities.contains(uid)) {
+    //
+    // Initializing....
+    //
 
-    switch (type)
-    {
-      case Structural::Context:
-      {
-        entity = new StructuralComposition();
-        entity->setStructuralType(Structural::Context);
-        break;
-      }
+    StructuralEntity* e = NULL;
+    StructuralEntity* p = _entities.value(parent, NULL);
 
-      case Structural::Switch:
-      {
-        entity = new StructuralComposition();
-        entity->setStructuralType(Structural::Switch);
-        break;
-      }
+    //
+    // Creating...
+    //
 
-      case Structural::Media:
-      {
-        entity = new StructuralContent();
-        break;
-      }
+    StructuralType type = StructuralUtil::translateStringToType(properties[STR_PROPERTY_ENTITY_TYPE]);
 
-      case Structural::Port:
-      {
-        entity = new StructuralInterface();
-        entity->setStructuralType(Structural::Port);
-        break;
-      }
+    if (p != NULL) {
+      switch (type) {
+        case Structural::Media:
+          // Creating...
+          e = new StructuralContent();
 
-      case Structural::SwitchPort:
-      {
-        entity = new StructuralInterface();
-        entity->setStructuralType(Structural::SwitchPort);
-        break;
-      }
+          // Setting...
+          // nothing
 
-      case Structural::Area:
-      {
-        entity = new StructuralInterface();
-        entity->setStructuralType(Structural::Area);
-        break;
-      }
+          // Connecting...
+          // nothing
 
-      case Structural::Property:
-      {
-        entity = new StructuralInterface();
-        entity->setStructuralType(Structural::Property);
-        break;
-      }
+          break;
 
-      case Structural::Body:
-      {
-        // check if it is allowed to insert body and
-        // if the view already contains one
-        if (STR_DEFAULT_WITH_BODY  && getBody() == NULL) {
+        case Structural::Context:
+        case Structural::Switch:
+        case Structural::Body:
+          // Creating...
+          e = new StructuralComposition();
+          e->setStructuralType(type);
 
-          entity = new StructuralComposition();
-          entity->setStructuralType(Structural::Body);
-          entity->setWidth(STR_DEFAULT_BODY_W);
-          entity->setHeight(STR_DEFAULT_BODY_H);
+          // Setting...
+          // nothing
 
-          emit switchedBody(false);
-        }
+          // Connecting...
+          // nothing
 
-        break;
-      }
+          break;
 
-      case Structural::Link:
-      {
-        entity = new StructuralLink();
-        connect((StructuralLink*) entity, SIGNAL(performedEdit(StructuralLink*)),SLOT(showEditLinkDialog(StructuralLink*)));
-        break;
-      }
-
-      case Structural::Bind:
-      {
-        entity = new StructuralBind();
-
-        StructuralBind* bind = (StructuralBind*) entity;
-        if (_entities.contains(properties.value(STR_PROPERTY_EDGE_TAIL)))
-          bind->setTail(_entities.value(properties.value(STR_PROPERTY_EDGE_TAIL)));
-        if (_entities.contains(properties.value(STR_PROPERTY_EDGE_HEAD)))
-          bind->setHead(_entities.value(properties.value(STR_PROPERTY_EDGE_HEAD)));
-
-        bind->setRole(StructuralUtil::translateStringToRole(properties.value(STR_PROPERTY_BIND_ROLE)));
-
-        if (properties.value(STR_PROPERTY_EDGE_ANGLE).isEmpty())
+        case Structural::Link:
         {
-          adjustAngles(bind);
-          bind->setStructuralProperty(STR_PROPERTY_EDGE_ANGLE, QString::number(bind->getAngle()));
+          // Creating...
+          e = new StructuralLink();
+          e->setStructuralType(type);
+
+          // Setting...
+          // nothing
+
+          // Connecting...
+          connect((StructuralLink*) e, SIGNAL(performedEdit(StructuralLink*)),SLOT(showEditLinkDialog(StructuralLink*)));
+
+          break;
         }
-        else
+
+        case Structural::Area:
+        case Structural::Property:
+        case Structural::Port:
+        case Structural::SwitchPort:
         {
-          bind->setAngle(properties.value(STR_PROPERTY_EDGE_ANGLE).toDouble());
+          // Creating...
+          e = new StructuralInterface();
+          e->setStructuralType(type);
+
+          // Setting...
+          // nothing
+
+          // Connecting...
+          // nothing
+
+          break;
         }
 
-        connect(bind, SIGNAL(performedEdit(StructuralBind*)),SLOT(showEditBindDialog(StructuralBind*)));
-
-        break;
-      }
-
-      case Structural::Reference:
-      {
-        if (_entities.contains(properties.value(STR_PROPERTY_EDGE_TAIL)) &&
-            _entities.contains(properties.value(STR_PROPERTY_EDGE_HEAD)))
+        case Structural::Reference:
+        case Structural::Mapping:
         {
-            entity = new StructuralEdge();
-            entity->setStructuralType(Structural::Reference);
-            ((StructuralEdge*) entity)->setTail(_entities.value(properties.value(STR_PROPERTY_EDGE_TAIL)));
-            ((StructuralEdge*) entity)->setHead(_entities.value(properties.value(STR_PROPERTY_EDGE_HEAD)));
+          // Creating...
+          e = new StructuralEdge();
+          e->setStructuralType(type);
+
+          // Setting...
+          if (_entities.contains(properties.value(STR_PROPERTY_EDGE_TAIL)))
+            ((StructuralEdge*) e)->setTail(_entities.value(properties.value(STR_PROPERTY_EDGE_TAIL)));
+
+          if (_entities.contains(properties.value(STR_PROPERTY_EDGE_HEAD)))
+            ((StructuralEdge*) e)->setHead(_entities.value(properties.value(STR_PROPERTY_EDGE_HEAD)));
+
+          // Connecting...
+          // Nothing
+
+          break;
         }
 
-        break;
+        case Structural::Bind:
+        {
+          // Creating...
+          e = new StructuralBind();
+          e->setStructuralType(type);
+
+          // Setting...
+          if (_entities.contains(properties.value(STR_PROPERTY_EDGE_TAIL)))
+            ((StructuralBind*) e)->setTail(_entities.value(properties.value(STR_PROPERTY_EDGE_TAIL)));
+
+          if (_entities.contains(properties.value(STR_PROPERTY_EDGE_HEAD)))
+            ((StructuralBind*) e)->setHead(_entities.value(properties.value(STR_PROPERTY_EDGE_HEAD)));
+
+          if (!_entities.contains(properties.value(STR_PROPERTY_EDGE_ANGLE)))
+            ((StructuralBind*) e)->setAngle(getNewAngle((StructuralBind*) e));
+
+          // Connecting...
+          connect(((StructuralBind*) e), SIGNAL(performedEdit(StructuralBind*)),SLOT(showEditBindDialog(StructuralBind*)));
+
+          break;
+        }
+
+        default:
+        {
+          break;
+        }
       }
+    } else {
 
-      case Structural::Mapping:
-      {
-        entity = new StructuralEdge();
-        entity->setStructuralType(Structural::Mapping);
-        if (_entities.contains(properties.value(STR_PROPERTY_EDGE_TAIL)))
-          ((StructuralEdge*) entity)->setTail(_entities.value(properties.value(STR_PROPERTY_EDGE_TAIL)));
+      switch (type) {
+        case Structural::Body:
+        {
+          if (getBody() == NULL) {
+            // Creating...
+            e = new StructuralComposition();
+            e->setStructuralType(type);
 
-        if (_entities.contains(properties.value(STR_PROPERTY_EDGE_HEAD)))
-          ((StructuralEdge*) entity)->setHead(_entities.value(properties.value(STR_PROPERTY_EDGE_HEAD)));
+            // Setting...
+            e->setWidth(STR_DEFAULT_BODY_W);
+            e->setHeight(STR_DEFAULT_BODY_H);
 
-        break;
-      }
+            // Connecting...
+            // nothing
 
-      default:
-      {
-        entity = NULL;
-        break;
+            // Notifing...
+            switchedBody(false);
+          }
+
+          break;
+        }
+
+        default:
+        {
+          break;
+        }
       }
     }
 
-    bool collision = false;
 
-    if (entity != NULL)
-    {
-      if (_entities.contains(parent))
-      {
+    if (e != NULL) {
 
-        StructuralEntity* p = _entities.value(parent);
+      //
+      // Setting...
+      //
 
-        bool uncollapseAndThenCollapse = false;
+      //
+      bool isUncollapsed = true;
 
-        if (!p->isUncollapsed()){
+      if (p != NULL) {
+        if (!p->isUncollapsed()) {
           if (p->getStructuralType() == Structural::Body ||
               p->getStructuralType() == Structural::Switch ||
-              p->getStructuralType() == Structural::Context)
-          {
-            uncollapseAndThenCollapse = true;
+              p->getStructuralType() == Structural::Context) {
 
-            ((StructuralComposition*) p)->collapse();
-          }
-        }
-
-        entity->setStructuralParent(_entities.value(parent));
-
-        if (uncollapseAndThenCollapse)
-          ((StructuralComposition*) p)->collapse();
-
-
-        if (entity->getStructuralCategory() != Structural::Edge){
-          if (!properties.value(STR_PROPERTY_ENTITY_TOP).isEmpty() && !properties.value(STR_PROPERTY_ENTITY_LEFT).isEmpty())
-          {
-            collision = true;
-          }
-          else
-          {
-            entity->setTop(_entities[parent]->getHeight()/2 - entity->getHeight()/2);
-            entity->setLeft(_entities[parent]->getWidth()/2 - entity->getWidth()/2);
-
-            collision = false;
+            ((StructuralComposition*) p)->collapse(); isUncollapsed  = false;
           }
         }
       }
+
+      // Setting 'uid'...
+      e->setStructuralUid(uid);
+
+      // Setting 'id'...
+      if (!properties.contains(STR_PROPERTY_ENTITY_ID))
+        e->setStructuralId(getNewId(e));
+
+      // Setting 'parent'...
+      if (p != NULL)
+        e->setStructuralParent(p);
       else
-      {
-        _scene->addItem(entity);
+        _scene->addItem(e);
 
-        if (entity->getStructuralCategory() != Structural::Edge){
-          entity->setTop(_scene->sceneRect().height()/2 - entity->getHeight()/2);
-          entity->setLeft(_scene->sceneRect().width()/2 - entity->getWidth()/2);
-        }
+      // Setting 'top'...
+      if (!properties.contains(STR_PROPERTY_ENTITY_TOP)) {
+        if (p != NULL)
+          e->setTop(p->getHeight()/2 - e->getHeight()/2);
+        else
+          e->setTop(_scene->sceneRect().height()/2 - e->getHeight()/2);
       }
 
-      entity->setStructuralUid(uid);
-      entity->setStructuralProperties(properties);
-
-      entity->setMenu(_menu);
-
-      entity->setSelected(false);
-
-      _entities[uid] = entity;
-      if (entity->getStructuralId().isEmpty())
-        updateEntityWithUniqueNstId(entity);
-
-      entity->adjust(collision);
-
-      connect(entity, SIGNAL(inserted(QString,QString,QMap<QString,QString>,QMap<QString,QString>)),SLOT(insert(QString,QString,QMap<QString,QString>,QMap<QString,QString>)));
-      connect(entity, SIGNAL(removed(QString,QMap<QString,QString>)),SLOT(remove(QString,QMap<QString,QString>)));
-      connect(entity, SIGNAL(changed(QString,QMap<QString,QString>,QMap<QString,QString>,QMap<QString,QString>)), SLOT(change(QString,QMap<QString,QString>,QMap<QString,QString>,QMap<QString,QString>)));
-      connect(entity, SIGNAL(selected(QString,QMap<QString,QString>)),SLOT(select(QString,QMap<QString,QString>)));
-      connect(entity, SIGNAL(move(QString,QString)), SLOT(move(QString,QString)));
-
-      if (_entities.size() <= 1){
-        centerOn(entity);
+      // Setting 'left'...
+      if (!properties.contains(STR_PROPERTY_ENTITY_LEFT)) {
+        if (p != NULL)
+          e->setLeft(p->getWidth()/2 - e->getWidth()/2);
+        else
+          e->setLeft(_scene->sceneRect().width()/2 - e->getWidth()/2);
       }
 
-      if (settings[STR_SETTING_UNDO] == "1")
-      {
-        Insert* command = new Insert(uid, parent, entity->getStructuralProperties(), settings);
+      // Setting 'menu'...
+      e->setMenu(_menu);
+
+      // Setting 'others'...
+      e->setStructuralProperties(properties);
+
+      //
+      // Adjusting...
+      //
+
+      // Adjust 'references'
+      adjustReferences(e);
+
+      // Adjust 'others'
+      if (!properties.contains(STR_PROPERTY_ENTITY_TOP) || !properties.contains(STR_PROPERTY_ENTITY_LEFT))
+        e->adjust(false);
+      else
+        e->adjust(true);
+
+      //
+      if (!isUncollapsed)
+        ((StructuralComposition*) p)->collapse();
+
+      //
+      // Connecting...
+      //
+
+      connect(e, SIGNAL(inserted(QString,QString,QMap<QString,QString>,QMap<QString,QString>)),SLOT(insert(QString,QString,QMap<QString,QString>,QMap<QString,QString>)));
+      connect(e, SIGNAL(removed(QString,QMap<QString,QString>)),SLOT(remove(QString,QMap<QString,QString>)));
+      connect(e, SIGNAL(changed(QString,QMap<QString,QString>,QMap<QString,QString>,QMap<QString,QString>)), SLOT(change(QString,QMap<QString,QString>,QMap<QString,QString>,QMap<QString,QString>)));
+      connect(e, SIGNAL(selected(QString,QMap<QString,QString>)),SLOT(select(QString,QMap<QString,QString>)));
+      connect(e, SIGNAL(move(QString,QString)), SLOT(move(QString,QString)));
+
+      //
+      // Saving...
+      //
+
+      _entities[uid] = e;
+
+      if (settings[STR_SETTING_UNDO] == STR_VALUE_TRUE) {
+        Insert* command = new Insert(uid, parent, e->getStructuralProperties(), settings);
+        command->setText(settings[STR_SETTING_CODE]);
 
         connect(command, SIGNAL(insert(QString,QString,QMap<QString,QString>,QMap<QString,QString>)), SLOT(insert(QString,QString,QMap<QString,QString>,QMap<QString,QString>)));
         connect(command, SIGNAL(remove(QString,QMap<QString,QString>)),SLOT(remove(QString,QMap<QString,QString>)));
         connect(command, SIGNAL(change(QString,QMap<QString,QString>,QMap<QString,QString>,QMap<QString,QString>)), SLOT(change(QString,QMap<QString,QString>,QMap<QString,QString>,QMap<QString,QString>)));
         connect(command, SIGNAL(select(QString,QMap<QString,QString>)),SLOT(select(QString,QMap<QString,QString>)));
 
-
-        command->setText(settings[STR_SETTING_CODE]);
-
-        _commnads.push(command);
-
-        emit switchedUndo(true);
+        _commnads.push(command); emit switchedUndo(true);
       }
 
-      if (entity->getStructuralType() ==  Structural::Port)
-        drawPortReference(entity);
+      //
+      // Notifing...
+      //
 
-      if (settings[STR_SETTING_NOTIFY] == "1")
-      {
-        emit inserted(uid, parent, entity->getStructuralProperties(), settings);
+      if (settings[STR_SETTING_NOTIFY] == STR_VALUE_TRUE) {
+        emit inserted(uid, parent, e->getStructuralProperties(), settings);
       }
     }
   }
 }
 
+qreal StructuralView::getNewAngle(StructuralBind* bind)
+{
+  int min =  100000;
+  int max = -100000;
+
+  foreach (StructuralEntity *e, _entities.values()) {
+    if (e->getStructuralType() == Structural::Bind) {
+      if (e != bind) {
+        StructuralBind *b = (StructuralBind*) e;
+
+        if ((bind->getTail() == b->getTail() || bind->getTail() == b->getHead()) &&
+            (bind->getHead() == b->getHead() || bind->getHead() == b->getTail())) {
+
+          int current = b->getAngle();
+
+          if (b->getHead()->getStructuralType() != Structural::Link)
+            current = -current;
+
+          if (max < current )
+            max = current;
+
+          if (min > current )
+            min = current;
+        }
+      }
+    }
+  }
+
+  qreal angle = 0;
+
+  if (min != 100000 || max != -100000) {
+    if (max <= abs(min))
+      angle = max+60;
+    else if (max > abs(min))
+      angle = min-60;
+  }
+
+  if (bind->getHead()->getStructuralType() != Structural::Link)
+    return -angle;
+
+  return angle;
+}
 
 void StructuralView::adjustAngles(StructuralBind* edge)
 {
@@ -847,10 +913,6 @@ void StructuralView:: change(QString uid, QMap<QString, QString> properties, QMa
     }
 
 
-    qDebug() << "====" << previous;
-
-    qDebug() << "====" << properties;
-
      StructuralEntity* entity = _entities[uid];
 
      if ((!entity->isUncollapsed() && properties.value(STR_PROPERTY_ENTITY_UNCOLLAPSED) == "1") ||
@@ -945,7 +1007,7 @@ void StructuralView:: change(QString uid, QMap<QString, QString> properties, QMa
      }
 
      if (entity != NULL && entity->getStructuralType() == Structural::Port)
-       drawPortReference(entity);
+       adjustReferences(entity);
 
     if (settings[STR_SETTING_NOTIFY] == "1")
     {
@@ -955,34 +1017,47 @@ void StructuralView:: change(QString uid, QMap<QString, QString> properties, QMa
   }
 }
 
-void StructuralView::drawPortReference(StructuralEntity* entity)
+void StructuralView::adjustReferences(StructuralEntity* entity)
 {
-  if (entity != NULL && entity->getStructuralType() == Structural::Port){
-    QString uid = "";
-    if (!entity->getStructuralProperty(STR_PROPERTY_REFERENCE_INTERFACE_UID).isEmpty())
-      uid =  entity->getStructuralProperty(STR_PROPERTY_REFERENCE_INTERFACE_UID);
+  if (entity != NULL){
+    StructuralType type = entity->getStructuralType();
 
-    else if (!entity->getStructuralProperty(STR_PROPERTY_REFERENCE_COMPONENT_UID).isEmpty())
-      uid =  entity->getStructuralProperty(STR_PROPERTY_REFERENCE_COMPONENT_UID);
-
-    foreach (StructuralEntity* e, _entities.values()) {
-      if (e->getStructuralType() == Structural::Reference)
+    switch (type) {
+      case Structural::Port:
       {
-        if (e->getStructuralProperty(STR_PROPERTY_EDGE_TAIL) == entity->getStructuralUid())
-          remove(e->getStructuralUid(),StructuralUtil::createSettings(false,false));
+        QString uid = "";
+
+        if (!entity->getStructuralProperty(STR_PROPERTY_REFERENCE_INTERFACE_UID).isEmpty())
+          uid =  entity->getStructuralProperty(STR_PROPERTY_REFERENCE_INTERFACE_UID);
+
+        else if (!entity->getStructuralProperty(STR_PROPERTY_REFERENCE_COMPONENT_UID).isEmpty())
+          uid =  entity->getStructuralProperty(STR_PROPERTY_REFERENCE_COMPONENT_UID);
+
+        foreach (StructuralEntity* e, _entities.values())
+          if (e->getStructuralType() == Structural::Reference)
+            if (e->getStructuralProperty(STR_PROPERTY_EDGE_TAIL) == entity->getStructuralUid())
+              remove(e->getStructuralUid(),StructuralUtil::createSettings(false,false));
+
+
+        if (_entities.contains(uid)) {
+          QMap<QString, QString> properties;
+          properties[STR_PROPERTY_ENTITY_TYPE] = StructuralUtil::translateTypeToString(Structural::Reference);
+          properties[STR_PROPERTY_EDGE_TAIL] = entity->getStructuralUid();
+          properties[STR_PROPERTY_EDGE_HEAD] = uid;
+
+          insert(StructuralUtil::createUid(),
+                 entity->getStructuralParent()->getStructuralUid(),
+                 properties,
+                 StructuralUtil::createSettings(false,false));
+        }
+
+        break;
       }
-    }
 
-    if (_entities.contains(uid)){
-      QMap<QString, QString> properties;
-      properties[STR_PROPERTY_ENTITY_TYPE] = StructuralUtil::translateTypeToString(Structural::Reference);
-      properties[STR_PROPERTY_EDGE_TAIL] = entity->getStructuralUid();
-      properties[STR_PROPERTY_EDGE_HEAD] = uid;
-
-      insert(StructuralUtil::createUid(),
-             entity->getStructuralParent()->getStructuralUid(),
-             properties,
-             StructuralUtil::createSettings(false,false));
+      default:
+      {
+        break;
+      }
     }
   }
 }
@@ -1551,6 +1626,44 @@ void StructuralView::createReference(StructuralEntity* a, StructuralEntity* b)
       }
   }
 
+}
+
+QString StructuralView::getNewId(StructuralEntity *entity)
+{
+  QString name = "";
+
+  if (entity != NULL) {
+    StructuralType type = entity->getStructuralType();
+
+    if (entityCount.contains(type))
+      entityCount[type] = 0;
+
+    int n;
+    QString prefix;
+
+    n = entityCount.value(type);
+    prefix = StructuralUtil::getPrefix(type);
+
+    if (!prefix.isEmpty()) {
+      bool contains;
+
+      do {
+        contains = false;
+
+        foreach(StructuralEntity* e, _entities.values()) {
+          if (e->getStructuralId() == QString(prefix + QString::number(n))) {
+            contains = true; ++n;
+            break;
+          }
+        }
+
+      } while(contains);
+
+      name = QString(prefix + QString::number(n));
+    }
+  }
+
+  return name;
 }
 
 bool StructuralView::updateEntityWithUniqueNstId(StructuralEntity *entity)
