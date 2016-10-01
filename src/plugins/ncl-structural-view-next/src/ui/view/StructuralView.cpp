@@ -823,51 +823,15 @@ void StructuralView::remove(QString uid, QMap<QString, QString> settings)
 
 void StructuralView:: change(QString uid, QMap<QString, QString> properties, QMap<QString, QString> previous, QMap<QString, QString> settings)
 {
-  if (_entities.contains(uid))
-  {
-    if (settings[STR_SETTING_UNDO] == "1")
-    {
-      /*
-      QMap<QString,QString> tmp = previous;
+  if (_entities.contains(uid)) {
 
-      if (entities.value(uid)->getStructuralType() == Structural::Port ||
-          entities.value(uid)->getStructuralType() == Structural::Mapping ||
-          entities.value(uid)->getStructuralType() == Structural::Bind){
-      if (!properties.contains(STR_PROPERTY_REFERENCE_COMPONENT_ID))
-        tmp.remove(STR_PROPERTY_REFERENCE_COMPONENT_ID);
+    //
+    // Saving...
+    //
 
-      if (!properties.contains(STR_PROPERTY_REFERENCE_COMPONENT_UID))
-        tmp.remove(STR_PROPERTY_REFERENCE_COMPONENT_UID);
-
-      if (!properties.contains(STR_PROPERTY_REFERENCE_INTERFACE_ID))
-        tmp.remove(STR_PROPERTY_REFERENCE_INTERFACE_UID);
-
-      if (!properties.contains(STR_PROPERTY_REFERENCE_COMPONENT_ID))
-        tmp.remove(STR_PROPERTY_REFERENCE_COMPONENT_ID);
-      }
-
-      if (entities.value(uid)->getStructuralType() == Structural::Link ||
-          entities.value(uid)->getStructuralType() == Structural::Bind){
-        foreach (QString key, previous.keys()) {
-          if (key.contains(STR_PROPERTY_LINKPARAM_NAME) ||
-              key.contains(STR_PROPERTY_LINKPARAM_VALUE) ||
-              key.contains(STR_PROPERTY_BINDPARAM_NAME) ||
-              key.contains(STR_PROPERTY_BINDPARAM_VALUE)) {
-            if (!properties.contains(key))
-              tmp.remove(key);
-          }
-        }
-      }
-
-
-      foreach (QString key, properties.keys()) {
-        tmp[key] = properties.value(key);
-      };
-
-      */
+    if (settings[STR_SETTING_UNDO] == STR_VALUE_TRUE) {
 
       Change* command = new Change(uid, properties, previous, settings);
-
       command->setText(settings[STR_SETTING_CODE]);
 
       connect(command, SIGNAL(insert(QString,QString,QMap<QString,QString>,QMap<QString,QString>)), SLOT(insert(QString,QString,QMap<QString,QString>,QMap<QString,QString>)));
@@ -875,113 +839,48 @@ void StructuralView:: change(QString uid, QMap<QString, QString> properties, QMa
       connect(command, SIGNAL(change(QString,QMap<QString,QString>,QMap<QString,QString>,QMap<QString,QString>)), SLOT(change(QString,QMap<QString,QString>,QMap<QString,QString>,QMap<QString,QString>)));
       connect(command, SIGNAL(select(QString,QMap<QString,QString>)),SLOT(select(QString,QMap<QString,QString>)));
 
-      emit switchedUndo(true);
-
-      _commnads.push(command); return;
+      _commnads.push(command); emit switchedUndo(true); return;
     }
 
+    //
+    // Initializing...
+    //
 
-     StructuralEntity* entity = _entities[uid];
+    StructuralEntity* entity = _entities[uid];
 
-     if ((!entity->isUncollapsed() && properties.value(STR_PROPERTY_ENTITY_UNCOLLAPSED) == "1") ||
-         (entity->isUncollapsed() && properties.value(STR_PROPERTY_ENTITY_UNCOLLAPSED) == "0"))
-       ((StructuralComposition*) entity)->collapse(false);
+    //
+    // Setting...
+    //
 
-     entity->setStructuralProperties(properties);
-     entity->adjust(true);
+    //
+    if (entity->isUncollapsed())
+      if (properties.value(STR_PROPERTY_ENTITY_UNCOLLAPSED) == STR_VALUE_FALSE)
+        ((StructuralComposition*) entity)->collapse();
 
-     if (entity->getStructuralType() ==  Structural::Bind) {
-       StructuralBind* b = (StructuralBind*) entity;
+    if (!entity->isUncollapsed())
+      if (properties.value(STR_PROPERTY_ENTITY_UNCOLLAPSED) == STR_VALUE_TRUE)
+        ((StructuralComposition*) entity)->collapse();
 
-       b->setRole(StructuralUtil::translateStringToRole(properties.value(STR_PROPERTY_BIND_ROLE)));
+    // Setting 'others'...
+    entity->setStructuralProperties(properties);
 
-       bool toHide = true;
+    //
+    // Adjusting...
+    //
 
-       if (_entities.contains(properties.value(STR_PROPERTY_EDGE_TAIL)))
-         b->setTail(_entities.value(properties.value(STR_PROPERTY_EDGE_TAIL)));
-       else
-         b->setTail(NULL);
+    // Adjust 'references'
+    adjustReferences(entity);
 
-       if (_entities.contains(properties.value(STR_PROPERTY_EDGE_HEAD)))
-         b->setHead(_entities.value(properties.value(STR_PROPERTY_EDGE_HEAD)));
-       else
-         b->setHead(NULL);
+    // Adjust 'others'
+    entity->adjust(true);
 
-       if (b->getTail() != NULL && b->getHead() != NULL)
-         toHide = false;
-       else
-         toHide = true;
+    //
+    // Notifing...
+    //
 
-       StructuralEntity* co = _entities.value(properties.value(STR_PROPERTY_REFERENCE_COMPONENT_UID), NULL);
-       StructuralEntity* in = _entities.value(properties.value(STR_PROPERTY_REFERENCE_INTERFACE_UID), NULL);
-
-       if (in != NULL) {
-         if (co != NULL){
-           toHide = true;
-
-           foreach (StructuralEntity* e, co->getStructuralEntities()) {
-             if (e == in){
-               toHide = false;
-               break;
-             }
-           }
-         }else{
-           toHide = true;
-         }
-       }
-
-       b->setHidden(toHide);
-     }
-
-     if (entity->getStructuralType() ==  Structural::Mapping) {
-       StructuralEdge* map = (StructuralEdge*) entity;
-
-       bool toHide = true;
-
-       if (_entities.contains(properties.value(STR_PROPERTY_EDGE_TAIL))){
-         map->setTail(_entities.value(properties.value(STR_PROPERTY_EDGE_TAIL)));
-       }else
-         map->setTail(NULL);
-
-       if (_entities.contains(properties.value(STR_PROPERTY_EDGE_HEAD))){
-         map->setHead(_entities.value(properties.value(STR_PROPERTY_EDGE_HEAD)));
-       }else
-         map->setHead(NULL);
-
-       if (map->getTail() != NULL && map->getHead() != NULL)
-         toHide = false;
-       else
-         toHide = true;
-
-       StructuralEntity* co = _entities.value(properties.value(STR_PROPERTY_REFERENCE_COMPONENT_UID), NULL);
-       StructuralEntity* in = _entities.value(properties.value(STR_PROPERTY_REFERENCE_INTERFACE_UID), NULL);
-
-       if (in != NULL) {
-         if (co != NULL){
-           toHide = true;
-
-           foreach (StructuralEntity* e, co->getStructuralEntities()) {
-             if (e == in){
-               toHide = false;
-               break;
-             }
-           }
-         }else{
-           toHide = true;
-         }
-       }
-
-       map->setHidden(toHide);
-     }
-
-     if (entity != NULL && entity->getStructuralType() == Structural::Port)
-       adjustReferences(entity);
-
-    if (settings[STR_SETTING_NOTIFY] == "1")
-    {
+    if (settings[STR_SETTING_NOTIFY] == STR_VALUE_TRUE) {
       emit changed(uid, properties, previous, settings);
     }
-
   }
 }
 
@@ -1031,27 +930,39 @@ void StructuralView::adjustReferences(StructuralEntity* entity)
 
       case Structural::Port:
       {
-        QString uid = "";
-
-        if (!entity->getStructuralProperty(STR_PROPERTY_REFERENCE_INTERFACE_UID).isEmpty())
-          uid =  entity->getStructuralProperty(STR_PROPERTY_REFERENCE_INTERFACE_UID);
-
-        else if (!entity->getStructuralProperty(STR_PROPERTY_REFERENCE_COMPONENT_UID).isEmpty())
-          uid =  entity->getStructuralProperty(STR_PROPERTY_REFERENCE_COMPONENT_UID);
-
         foreach (StructuralEntity* e, _entities.values())
           if (e->getStructuralType() == Structural::Reference)
             if (e->getStructuralProperty(STR_PROPERTY_EDGE_TAIL) == entity->getStructuralUid())
               remove(e->getStructuralUid(), StructuralUtil::createSettings(false,false));
 
+        StructuralEntity* component = NULL;
+        StructuralEntity* interface = NULL;
 
-        if (_entities.contains(uid)) {
-          QMap<QString, QString> properties;
-          properties[STR_PROPERTY_ENTITY_TYPE] = StructuralUtil::translateTypeToString(Structural::Reference);
-          properties[STR_PROPERTY_EDGE_TAIL] = entity->getStructuralUid();
-          properties[STR_PROPERTY_EDGE_HEAD] = uid;
+        if (_entities.contains(entity->getStructuralProperty(STR_PROPERTY_REFERENCE_INTERFACE_UID)))
+          interface = _entities.value(entity->getStructuralProperty(STR_PROPERTY_REFERENCE_INTERFACE_UID));
 
-          insert(StructuralUtil::createUid(), entity->getStructuralParent()->getStructuralUid(), properties, StructuralUtil::createSettings(false,false));
+        if (_entities.contains(entity->getStructuralProperty(STR_PROPERTY_REFERENCE_COMPONENT_UID)))
+          component = _entities.value(entity->getStructuralProperty(STR_PROPERTY_REFERENCE_COMPONENT_UID));
+
+        if (component != NULL) {
+          QString uid = "";
+
+          if (interface != NULL) {
+            if (interface->getStructuralParent() == component) {
+              uid = interface->getStructuralUid();
+            }
+          } else {
+            uid = component->getStructuralUid();
+          }
+
+          if (!uid.isEmpty()) {
+            QMap<QString, QString> properties;
+            properties[STR_PROPERTY_ENTITY_TYPE] = StructuralUtil::translateTypeToString(Structural::Reference);
+            properties[STR_PROPERTY_EDGE_TAIL] = entity->getStructuralUid();
+            properties[STR_PROPERTY_EDGE_HEAD] = uid;
+
+            insert(StructuralUtil::createUid(), entity->getStructuralParent()->getStructuralUid(), properties, StructuralUtil::createSettings(false,false));
+          }
         }
 
         break;
