@@ -542,15 +542,16 @@ void ComposerMainWindow::addPluginWidget( IPluginFactory *fac,
       QToolButton *btn_UpdateFromModel = new QToolButton(btn_group);
       btn_UpdateFromModel->setIcon(QIcon(":/mainwindow/refreshplugin"));
       btn_UpdateFromModel->setIconSize(QSize(12, 12));
-      btn_UpdateFromModel->setToolTip(tr("Reload View Model"));
+      btn_UpdateFromModel->setToolTip(tr("Reload View's Model"));
       connect(btn_UpdateFromModel, SIGNAL(pressed()),
               plugin, SLOT(updateFromModel()));
 
       QToolButton *btn_close = new QToolButton(btn_group);
-      btn_close->setIcon(QIcon(":/mainwindow/closeplugin"));
+      QAction* close_view_action = new QAction(QIcon(":/mainwindow/closeplugin"), tr("Close view"), btn_group);
       btn_close->setIconSize(QSize(12, 12));
-      btn_close->setToolTip(tr("Close plugin"));
-      connect(btn_close, SIGNAL(pressed()), pW, SLOT(close()));
+      btn_close->setDefaultAction(close_view_action);
+      close_view_action->setData(w->toolWindows().size()-1);
+      connect(close_view_action, SIGNAL(triggered(bool)), this, SLOT(pluginWidgetViewToggled(bool)));
 
       QHBoxLayout *layout = new QHBoxLayout(btn_group);
       layout->addStretch();
