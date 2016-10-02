@@ -371,9 +371,9 @@ void ComposerMainWindow::initGUI()
   _tabProjects->addTab(welcomeWidget, tr("Welcome"));
   _tabProjects->setTabIcon(0, QIcon());
 
-  // QTabBar *tabBar = _tabProjects->findChild<QTabBar *>();
-  // tabBar->setTabButton(0, QTabBar::RightSide, 0);
-  // tabBar->setTabButton(0, QTabBar::LeftSide, 0);
+  QTabBar *tabBar = _tabProjects->findChild<QTabBar *>();
+  tabBar->setTabButton(0, QTabBar::RightSide, 0);
+  tabBar->setTabButton(0, QTabBar::LeftSide, 0);
 
   connect(welcomeWidget, SIGNAL(userPressedOpenProject()),
           this, SLOT(openProject()));
@@ -530,28 +530,38 @@ void ComposerMainWindow::addPluginWidget( IPluginFactory *fac,
       // Add updateFromModel and close button
       QFrame *btn_group = new QFrame(pW);
 
-      QPushButton *btn_UpdateFromModel = new QPushButton(btn_group);
-      btn_UpdateFromModel->setFlat(true);
+      // \todo Move this to *.css file
+      btn_group->setStyleSheet("QToolButton { border: none; } \
+                                QToolButton::hover {  background: #aaaaaa; } \
+                                QToolButton:pressed { \
+                                  background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, \
+                                              top: 0 #dcebfd, \
+                                              stop: 1 #c2dcfd); \
+                                }");
+
+      QToolButton *btn_UpdateFromModel = new QToolButton(btn_group);
       btn_UpdateFromModel->setIcon(QIcon(":/mainwindow/refreshplugin"));
-      btn_UpdateFromModel->setIconSize(QSize(18, 18));
+      btn_UpdateFromModel->setIconSize(QSize(12, 12));
       btn_UpdateFromModel->setToolTip(tr("Reload View Model"));
       connect(btn_UpdateFromModel, SIGNAL(pressed()),
               plugin, SLOT(updateFromModel()));
 
-      QPushButton *btn_close = new QPushButton(btn_group);
-      btn_close->setFlat(true);
+      QToolButton *btn_close = new QToolButton(btn_group);
       btn_close->setIcon(QIcon(":/mainwindow/closeplugin"));
-      btn_close->setIconSize(QSize(18, 18));
+      btn_close->setIconSize(QSize(12, 12));
       btn_close->setToolTip(tr("Close plugin"));
+      connect(btn_close, SIGNAL(pressed()), pW, SLOT(close()));
 
       QHBoxLayout *layout = new QHBoxLayout(btn_group);
+      layout->addStretch();
       layout->addWidget(btn_UpdateFromModel);
       layout->addWidget(btn_close);
+      layout->setContentsMargins(0,0,0,0);
       layout->setSpacing(0);
       layout->setMargin(0);
       btn_group->setLayout(layout);
 
-      // w->setTabButton(pW, QTabBar::RightSide, btn_group);
+      w->setTabButton(pW, QTabBar::RightSide, btn_group);
   }
 #endif
 }
