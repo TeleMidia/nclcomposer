@@ -1,7 +1,6 @@
 #include "ComposerSplashScreen.h"
 
 #include <QPainter>
-#include <QDebug>
 
 ComposerSplashScreen::ComposerSplashScreen( const QPixmap &pixmap,
                                             Qt::WindowFlags f ):

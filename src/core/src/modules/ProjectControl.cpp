@@ -208,7 +208,6 @@ void ProjectControl::saveProject(const QString &location)
   Project *project = openProjects.value(location);
   QFile fout(location);
 
-  //qDebug() << "Trying to save: " << location;
   if(!fout.exists())
   {
     qCDebug(CPR_CORE) << "The file (" << location << ") doesn't exists. \

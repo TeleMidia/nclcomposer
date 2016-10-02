@@ -14,8 +14,6 @@ extern "C" {
 #include <time.h>
 }
 
-#include <QDebug>
-
 // This variable tell us if the libssh2 was initialized properly. This value
 // will be equal to zero only if the libssh2 are safely initialized through
 // \ref SimpleSSHClient::init()
@@ -333,8 +331,6 @@ int SimpleSSHClient::sftp_copy_file(const char *localncl, const char *destpath)
     do {
         nread = fread(mem, 1, sizeof(mem), local);
         total += nread;
-
-        qDebug() << nread << total << fileinfo.st_size;
 
         if (nread <= 0) {
             // end of file

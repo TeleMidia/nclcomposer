@@ -10,7 +10,6 @@
 #include "RunGingaConfig.h"
 #include "ui_RunGingaConfig.h"
 
-#include <QDebug>
 #include <QFileDialog>
 #include <QMessageBox>
 
