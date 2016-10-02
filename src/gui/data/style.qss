@@ -1,21 +1,21 @@
 QMainWindow {
-	font: 7pt;
+  font: 7pt;
 }
 
 QMainWindow::separator {
-     background: black;
-     width: 1px; /* when vertical */
-     height: 1px; /* when horizontal */
-     border: 10px;
+  background: black;
+  width: 1px; /* when vertical */
+  height: 1px; /* when horizontal */
+  border: 10px;
 }
 
 QMainWindow::separator:vertical {
-     height: 1px; /* when vertical */
- }
+  height: 1px; /* when vertical */
+}
 
- QMainWindow::separator:hover {
-     background: lightgray;
- }
+QMainWindow::separator:hover {
+  background: lightgray;
+}
 
 QToolBar {
   border: none;
@@ -28,20 +28,20 @@ QTabWidget::tab-bar {
 }
 
 QTabBar::tab {
-    background: lightgray;
-    color: darkgray;
-    padding: 4px;
-    border: 2px solid #C4C4C3;
-    border-right: 0px;
-    border-top-left-radius: 4px;
-    border-top-right-radius: 4px;
-    font-size: 10px;
+  background: lightgray;
+  color: darkgray;
+  padding: 4px;
+  border: 2px solid #C4C4C3;
+  border-right: 0px;
+  border-top-left-radius: 4px;
+  border-top-right-radius: 4px;
+  font-size: 10px;
 }
 
 QTabBar::tab:selected {
-    background: steelblue;
-    color: white;
-    font-size: 10px;
+  background: steelblue;
+  color: white;
+  font-size: 10px;
 }
 
 QDockWidget {
@@ -69,7 +69,7 @@ QTabBar[activePlugin="false"]::tab::selected {
   font-size: 10px;
   border-top-left-radius: 8px;
   border-top-right-radius: 8px;
- }
+}
 
 *[activePluginTitleBar="false"] QLabel {
   color: white;
@@ -92,7 +92,7 @@ QTabBar[activePlugin="false"]::tab::selected {
         stop: 0 #868686, stop: 0.08 #5f5f5f,
         stop: 0.19999 #717171, stop: 0.4 #424242,
         stop: 0.9 #2c2c2c, stop: 1 #111111);
-}
+}	
 
 *[activePluginTitleBar="false"] QPushButton:flat {
   border: none;
