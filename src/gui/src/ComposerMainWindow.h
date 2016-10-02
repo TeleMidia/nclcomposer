@@ -25,7 +25,6 @@
 
 #include <QMainWindow>
 #include <QTabWidget>
-#include <QStatusBar>
 #include <QMenu>
 #include <QAction>
 #include <QMessageBox>
@@ -171,8 +170,6 @@ private:
   void initGUI();
 
   void createAboutPlugins();
-
-  void createStatusBar();
 
   void createMenus();
 

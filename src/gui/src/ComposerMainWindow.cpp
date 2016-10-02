@@ -172,8 +172,8 @@ void ComposerMainWindow::initModules()
   connect( projectControl,SIGNAL(endOpenProject(QString)),
            SLOT(addToRecentProjects(QString)) );
 
-  //connect(projectControl, SIGNAL(endOpenProject(QString)),
-  //        welcomeWidget, SLOT(addToRecentProjects(QString)));
+  connect(projectControl, SIGNAL(endOpenProject(QString)),
+          welcomeWidget, SLOT(addToRecentProjects(QString)));
 
   connect( welcomeWidget, SIGNAL(userPressedRecentProject(QString)),
            this, SLOT(userPressedRecentProject(QString)) );
@@ -347,7 +347,6 @@ void ComposerMainWindow::initGUI()
   connect(_tabProjects, SIGNAL(currentChanged(int)),
           this, SLOT(currentTabChanged(int)));
 
-//  createStatusBar();
   createActions();
   createMenus();
 //  createLanguageMenu();
@@ -1000,11 +999,6 @@ void ComposerMainWindow::createActions() {
 
   connect (ui->action_Help, SIGNAL(triggered()), this, SLOT(showHelp()));
 
-}
-
-void ComposerMainWindow::createStatusBar()
-{
-  statusBar()->showMessage(tr("Ready"));
 }
 
 /*!
@@ -2475,7 +2469,6 @@ void ComposerMainWindow::loadLanguage(const QString& rLanguage)
                      m_langPath + "/" + QString("composer_%1.qm").arg(rLanguage));
     switchTranslator(m_translatorQt, QString("qt_%1.qm").arg(rLanguage));
 
-//  ui->statusBar->showMessage(tr("Current Language changed to %1").arg(languageName));
   }
 }
 
