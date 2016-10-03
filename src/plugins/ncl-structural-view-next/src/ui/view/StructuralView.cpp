@@ -25,16 +25,11 @@ StructuralView::StructuralView(QWidget* parent)
 
   _linkTool = NULL;
 
-  lastLinkMouseOver = NULL;
-
   _tailHovered = NULL;
   _headHovered = NULL;
 
-
-  hasCutted = false;
-
-  foreach (StructuralType key, entityCount.keys()) {
-    entityCount[key] = 0;
+  foreach (StructuralType key, _entityCount.keys()) {
+    _entityCount[key] = 0;
   }
 
   setAttribute(Qt::WA_TranslucentBackground);
@@ -86,11 +81,6 @@ void StructuralView::setMiniMapVisible(bool enable)
     _minimap->show();
   else
     _minimap->hide();
-}
-
-void StructuralView::switchMinimapVis()
-{
-  setMiniMapVisible(!_minimap->isVisible());
 }
 
 void StructuralView::resizeEvent(QResizeEvent *event)
@@ -1524,13 +1514,13 @@ QString StructuralView::getNewId(StructuralEntity *entity)
   if (entity != NULL) {
     StructuralType type = entity->getStructuralType();
 
-    if (entityCount.contains(type))
-      entityCount[type] = 0;
+    if (_entityCount.contains(type))
+      _entityCount[type] = 0;
 
     int n;
     QString prefix;
 
-    n = entityCount.value(type);
+    n = _entityCount.value(type);
     prefix = StructuralUtil::getPrefix(type);
 
     if (!prefix.isEmpty()) {
@@ -1914,11 +1904,8 @@ void StructuralView::clearAllData()
 
 
   _entities.clear();
-  importBases.clear();
 
   _commnads.clear();
-
-  bindParamUIDToBindUID.clear();
 
 }
 

@@ -136,9 +136,7 @@ private:
 
    QMap<QString, StructuralEntity*> _entities;
 
-   /************ */
 public:
-  void setMod(bool mod);
 
 public:
   StructuralScene* getScene();
@@ -147,7 +145,6 @@ public:
   StructuralEntity* getEntity(const QString &uid);
   QMap<QString, StructuralEntity*> getEntities();
 
-  void switchMinimapVis();
   void cleanUndoRedo();
 
 
@@ -211,43 +208,17 @@ private:
 
 
   void createObjects();
-
   void createConnection();
-
-  void collapseCompositions(QDomElement element, QDomElement _parent);
-
-  bool modified;
 
   bool _linking;
   StructuralEntity* _tailHovered;
   StructuralEntity* _headHovered;
 
 
-  bool hasCutted;
-
-
-
-  QAction* undoAct;
-
-  QAction* redoAct;
-
-
-  QMap<StructuralType, int> entityCount;
-
-
-
-  QString clip_cut;
-  QString clip_copy;
-
-  QSet<QString> linkWriterAux;
-
-  QMap<QString, QString> importBases; // importBaseUid - ConnUid
-
-  QMap<QString, QString> bindParamUIDToBindUID;
+  QMap<StructuralType, int> _entityCount;
 
   StructuralLinkTool* _linkTool;
 
-  StructuralEntity* lastLinkMouseOver;
 };
 
 #endif // STRUCTURALVIEW_H
