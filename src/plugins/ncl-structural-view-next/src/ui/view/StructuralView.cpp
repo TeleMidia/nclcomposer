@@ -1083,42 +1083,39 @@ void StructuralView::select(QString uid, QMap<QString, QString> settings)
 
 void StructuralView::move(QString uid, QString parent)
 {
-  if (_entities.contains(uid) &&
-      _entities.contains(parent)){
+  if (_entities.contains(uid) && _entities.contains(parent)) {
 
-      StructuralEntity* e = _entities.value(uid);
-      StructuralEntity* p = _entities.value(parent);
+    //
+    // Initializing...
+    //
 
-    if (!StructuralUtil::validateKinship(
-          e->getStructuralType(),
-          p->getStructuralType()))
-      return;
+    StructuralEntity* e = _entities.value(uid);
+    StructuralEntity* p = _entities.value(parent);
 
-    if (e->getStructuralParent()->getStructuralUid() == p->getStructuralUid())
-      return;
+    if (StructuralUtil::validateKinship(e->getStructuralType(), p->getStructuralType()) &&
+        e->getStructuralParent() != p) {
 
-    select("",StructuralUtil::createSettings());
+      //
+      // Setting...
+      //
 
-    StructuralEntity* moveEntity = clone(_entities.value(uid), NULL);
+      foreach(StructuralEntity *entity, _entities.values())
+        entity->setDraggable(false);
 
-    QString CODE = StructuralUtil::createUid();
+      unselect();
 
-    QMap<QString, QString> settings;
-    settings[STR_SETTING_UNDO] = "1";
-    settings[STR_SETTING_NOTIFY] = "1";
-    settings[STR_SETTING_CODE] = CODE;
+      //
+      // Moving...
+      //
 
-    remove(uid, settings);
+      QString code = StructuralUtil::createUid();
 
-    paste(moveEntity, _entities.value(parent), CODE, true);
+      QMap<QString, QString> settings = StructuralUtil::createSettings();
+      settings[STR_SETTING_CODE] = code;
 
-    StructuralEntity *entity;
-    foreach(entity, _entities.values())
-    {
-      entity->setDraggable(false);
+      paste(clone(e, NULL), p, code, true); remove(uid, settings);
     }
   }
-
 }
 
 void StructuralView::create(StructuralType type)
@@ -2291,7 +2288,6 @@ StructuralEntity* StructuralView::clone(StructuralEntity* entity, StructuralEnti
   }
 
   if (newentity != NULL) {
-
     newentity->setStructuralProperties(entity->getStructuralProperties());
 
     if (newparent != NULL)
@@ -2348,10 +2344,10 @@ void StructuralView::paste(StructuralEntity* entity, StructuralEntity* parent, c
             e->getStructuralType() != Structural::Port &&
             e->getStructuralType() != Structural::Link) {
 
-          paste(entity, _entities.value(uid), code, false);
+          paste(e, _entities.value(uid), code, false);
         }
 
-      foreach (StructuralEntity* e, entity->getStructuralEntities())
+      foreach (StructuralEntity* e, entity->getStructuralEntities()) {
         if (e->getStructuralCategory() == Structural::Edge ||
             e->getStructuralType() == Structural::Port ||
             e->getStructuralType() == Structural::Link) {
@@ -2410,6 +2406,7 @@ void StructuralView::paste(StructuralEntity* entity, StructuralEntity* parent, c
 
           paste(e, _entities.value(uid), code, false);
         }
+      }
     }
   }
 }
