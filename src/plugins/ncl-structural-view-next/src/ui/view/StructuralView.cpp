@@ -1217,116 +1217,122 @@ void StructuralView::performPaste()
   }
 }
 
-void StructuralView::createLink(StructuralEntity* a, StructuralEntity* b)
+void StructuralView::createLink(StructuralEntity* tail, StructuralEntity* head)
 {
+  StructuralEntity* parentTail = (StructuralEntity*) tail->getStructuralParent();
+  StructuralEntity* parentHead = (StructuralEntity*) head->getStructuralParent();
 
-    StructuralEntity* pa = (StructuralEntity*) a->getStructuralParent();
-    StructuralEntity* pb = (StructuralEntity*) b->getStructuralParent();
+  if (parentTail != NULL && parentHead != NULL) {
 
-    if (pa != NULL && pb != NULL)
-    {
-      QString uid = QUuid::createUuid().toString();
+    setMode(Structural::Pointing); emit switchedPointer(true);
+
+    emit requestLinkDialogUpdate();
+    _linkDialog->init();
+
+    if (_linkDialog->exec()) {
+
       StructuralEntity* parent = NULL;
+
+      qreal x;
+      qreal y;
+      qreal z;
+      qreal w;
+
+      if (parentTail == parentHead) {
+        parent = parentTail;
+
+        x = tail->getLeft();
+        y = tail->getTop();
+        z = head->getLeft();
+        w = head->getTop();
+
+      } else if (parentTail->getStructuralParent() == parentHead) {
+        QPointF pointTail = parentTail->mapToParent(tail->getLeft(),
+                                                    tail->getTop());
+
+        parent = parentHead;
+
+        x = pointTail.x();
+        y = pointTail.y();
+        z = head->getLeft();
+        w = head->getTop();
+
+      } else if (parentTail == parentHead->getStructuralParent()) {
+        QPointF pointHead = parentHead->mapToParent(head->getLeft(),
+                                                    head->getTop());
+
+        parent = parentTail;
+
+        x = tail->getLeft();
+        y = tail->getTop();
+        z = pointHead.x();
+        w = pointHead.y();
+
+      } else if (parentTail->getStructuralParent() == parentHead->getStructuralParent() &&
+                 parentTail->getStructuralParent() != NULL) {
+        QPointF pointTail = parentTail->mapToParent(tail->getLeft(),
+                                                    tail->getTop());
+
+        QPointF pointHead = parentHead->mapToParent(head->getLeft(),
+                                                    head->getTop());
+
+        parent = parentTail->getStructuralParent();
+
+        x = pointTail.x();
+        y = pointTail.y();
+        z = pointHead.x();
+        w = pointHead.y();
+
+      } else  {
+        return;
+      }
+
+      x += tail->getWidth()/2;
+      y += tail->getHeight()/2;
+      z += head->getWidth()/2;
+      w += head->getHeight()/2;
+
+      QString uid = StructuralUtil::createUid();
+
       QMap<QString, QString> properties;
       properties[STR_PROPERTY_ENTITY_TYPE] = StructuralUtil::translateTypeToString(Structural::Link);
+      properties[STR_PROPERTY_REFERENCE_XCONNECTOR_ID] =_linkDialog->getCurrentConnector();
 
-      QPointF pt_a;
-      QPointF pt_b;
-
-      if (pa == pb)
-      {
-          parent = pa;
-
-          pt_a.setX(a->getLeft()), pt_a.setY(a->getTop());
-          pt_b.setX(b->getLeft()), pt_b.setY(b->getTop());
-      }
-      else if (pa->getStructuralParent() == pb)
-      {
-          parent = pb;
-
-          QPointF cv = pa->mapToParent(a->getLeft(), a->getTop());
-
-          pt_a.setX(cv.x()), pt_a.setY(cv.y());
-          pt_b.setX(b->getLeft()), pt_b.setY(b->getTop());
-      }
-      else if (pa == pb->getStructuralParent())
-      {
-          parent = pa;
-
-          QPointF cv = pb->mapToParent(b->getLeft(), b->getTop());
-
-          pt_a.setX(a->getLeft()), pt_a.setY(a->getTop());
-          pt_b.setX(cv.x()), pt_b.setY(cv.y());
-      }
-      else if (pa->getStructuralParent() == pb->getStructuralParent() &&
-               pa->getStructuralParent() != NULL)
-      {
-        parent = pa->getStructuralParent();
-
-        QPointF ca = pa->mapToParent(a->getLeft(), a->getTop());
-        QPointF cb = pb->mapToParent(b->getLeft(), b->getTop());
-
-        pt_a.setX(ca.x()), pt_a.setY(ca.y());
-        pt_b.setX(cb.x()), pt_b.setY(cb.y());
-      }
+      if (y > w)
+        properties[STR_PROPERTY_ENTITY_TOP] = QString::number(w + (y - w)/2);
       else
-        return;
+        properties[STR_PROPERTY_ENTITY_TOP] = QString::number(y + (w - y)/2);
 
-      pt_a.setX(pt_a.x()+a->getWidth()/2);
-      pt_a.setY(pt_a.y()+a->getHeight()/2);
-
-      pt_b.setX(pt_b.x()+b->getWidth()/2);
-      pt_b.setY(pt_b.y()+b->getHeight()/2);
-
-
-        if (pt_a.y() > pt_b.y())
-            properties[STR_PROPERTY_ENTITY_TOP] = QString::number(pt_b.y() + (pt_a.y() - pt_b.y())/2);
-        else
-            properties[STR_PROPERTY_ENTITY_TOP] = QString::number(pt_a.y() + (pt_b.y() - pt_a.y())/2);
+      if (x > z)
+        properties[STR_PROPERTY_ENTITY_LEFT] = QString::number(z + (z - z)/2);
+      else
+        properties[STR_PROPERTY_ENTITY_LEFT] = QString::number(x + (z - x)/2);
 
 
-        if (pt_a.x() > pt_b.x())
-            properties[STR_PROPERTY_ENTITY_LEFT] = QString::number(pt_b.x() + (pt_a.x() - pt_b.x())/2);
-        else
-            properties[STR_PROPERTY_ENTITY_LEFT] = QString::number(pt_a.x() + (pt_b.x() - pt_a.x())/2);
+      QMap<QString, QString> params = _linkDialog->getLinkParams();
 
-        emit requestLinkDialogUpdate();
+      foreach (QString key, params.keys()) {
+        if (!params.value(key).isEmpty()){
+          QString uid = StructuralUtil::createUid();
 
-        setMode(Structural::Pointing);
-        emit switchedPointer(true);
+          properties[QString(STR_PROPERTY_LINKPARAM_NAME)+":"+uid]  = key;
+          properties[QString(STR_PROPERTY_LINKPARAM_VALUE)+":"+uid] = params.value(key);
+        }
+      }
 
-        _linkDialog->init();
+      QMap<QString, QString> settings = StructuralUtil::createSettings(true, true);
 
-        if (_linkDialog->exec()){
+      insert(uid, parent->getStructuralUid(), properties, settings);
 
-          properties.insert(STR_PROPERTY_REFERENCE_XCONNECTOR_ID, _linkDialog->getCurrentConnector());
+      if (_entities.contains(uid)) {
+        StructuralRole condition = StructuralUtil::translateStringToRole(_linkDialog->form.cbCondition->currentText());
+        StructuralRole action = StructuralUtil::translateStringToRole(_linkDialog->form.cbAction->currentText());
 
-
-          QMap<QString, QString> p = _linkDialog->getLinkParams();
-
-          foreach (QString name, p.keys()) {
-            if (!p.value(name).isEmpty()){
-              QString uid = StructuralUtil::createUid();
-
-              properties.insert(QString(STR_PROPERTY_LINKPARAM_NAME)+":"+uid, name);
-              properties.insert(QString(STR_PROPERTY_LINKPARAM_VALUE)+":"+uid, p.value(name));
-            }
-          }
-
-          QMap<QString, QString> settings = StructuralUtil::createSettings(true, true);
-
-          insert(uid, parent->getStructuralUid(), properties, settings);
-
-          if (_entities.contains(uid))
-          {
-            StructuralRole con = StructuralUtil::translateStringToRole(_linkDialog->form.cbCondition->currentText());
-            StructuralRole act = StructuralUtil::translateStringToRole(_linkDialog->form.cbAction->currentText());
-
-            createBind(a,_entities.value(uid),con,settings.value(STR_SETTING_CODE));
-            createBind(_entities.value(uid),b,act,settings.value(STR_SETTING_CODE));
-          }
+        createBind(tail,_entities.value(uid),condition,settings.value(STR_SETTING_CODE));
+        createBind(_entities.value(uid),head,action,settings.value(STR_SETTING_CODE));
       }
     }
+  }
 }
 
 void StructuralView::createBind(StructuralEntity* a, StructuralEntity* b, StructuralRole type, QString code)
