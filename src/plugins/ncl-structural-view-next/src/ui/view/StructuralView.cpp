@@ -479,18 +479,7 @@ void StructuralView::insert(QString uid, QString parent, QMap<QString, QString> 
       //
 
       //
-      bool isUncollapsed = true;
 
-      if (p != NULL) {
-        if (!p->isUncollapsed()) {
-          if (p->getStructuralType() == Structural::Body ||
-              p->getStructuralType() == Structural::Switch ||
-              p->getStructuralType() == Structural::Context) {
-
-            ((StructuralComposition*) p)->collapse(); isUncollapsed  = false;
-          }
-        }
-      }
 
       // Setting 'uid'...
       e->setStructuralUid(uid);
@@ -531,6 +520,19 @@ void StructuralView::insert(QString uid, QString parent, QMap<QString, QString> 
       // Adjusting...
       //
 
+      // Adjust 'compositions'
+      if (p != NULL) {
+        if (!p->isUncollapsed()) {
+          if (p->getStructuralType() == Structural::Body ||
+              p->getStructuralType() == Structural::Switch ||
+              p->getStructuralType() == Structural::Context) {
+
+            ((StructuralComposition*) p)->collapse();
+            ((StructuralComposition*) p)->collapse();
+          }
+        }
+      }
+
       // Adjust 'references'
       adjustReferences(e);
 
@@ -539,10 +541,6 @@ void StructuralView::insert(QString uid, QString parent, QMap<QString, QString> 
         e->adjust(false);
       else
         e->adjust(true);
-
-      //
-      if (!isUncollapsed)
-        ((StructuralComposition*) p)->collapse();
 
       //
       // Connecting...

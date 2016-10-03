@@ -39,15 +39,12 @@ void StructuralComposition::collapse(bool notify)
     setHeight(getUncollapedHeight());
 
     foreach(StructuralEntity* entity, getStructuralEntities()) {
-      if (entity->getStructuralCategory() == Structural::Interface) {
-        entity->setTop(((entity->getTop()*getUncollapedHeight())/STR_DEFAULT_CONTENT_H));
-        entity->setLeft(((entity->getLeft()*getUncollapedWidth())/STR_DEFAULT_CONTENT_W));
 
-      } else {
+      entity->setTop(entity->getUncollapedTop());
+      entity->setLeft(entity->getUncollapedLeft());
+
+      if (entity->getStructuralCategory() != Structural::Interface) {
         entity->setHidden(false);
-
-        entity->setTop(entity->getUncollapedTop());
-        entity->setLeft(entity->getUncollapedLeft());
 
         if (entity->isUncollapsed()) {
           entity->setWidth(entity->getUncollapedWidth());
@@ -71,15 +68,16 @@ void StructuralComposition::collapse(bool notify)
     setHeight(STR_DEFAULT_CONTENT_H);
 
     foreach(StructuralEntity* entity, getStructuralEntities()) {
+
+      entity->setUncollapedTop(entity->getTop());
+      entity->setUncollapedLeft(entity->getLeft());
+
       if (entity->getStructuralCategory() == Structural::Interface) {
         entity->setTop(((entity->getTop()*STR_DEFAULT_CONTENT_H)/getUncollapedHeight()));
         entity->setLeft(((entity->getLeft()*STR_DEFAULT_CONTENT_W)/getUncollapedWidth()));
 
       } else {
         entity->setHidden(true);
-
-        entity->setUncollapedTop(entity->getTop());
-        entity->setUncollapedLeft(entity->getLeft());
 
         if (entity->isUncollapsed()) {
           entity->setUncollapedWidth(entity->getWidth());
