@@ -1818,42 +1818,21 @@ void StructuralView::mouseReleaseEvent(QMouseEvent* event)
 
 void StructuralView::keyPressEvent(QKeyEvent *event)
 {
-  if (event->key() == Qt::Key_Delete)
-  {
-
+  if (event->key() == Qt::Key_Delete ||
+      event->key() == Qt::Key_Backspace) {
     performDelete();
 
     event->accept();
-  }
-  // BACKSPACE - Delete
-  else if (event->key() == Qt::Key_Backspace)
-  {
-    performDelete();
 
-    event->accept();
-  }
-//  else if (event->key() == Qt::Key_I){
-//    adjustAllWithGraphiviz();
-
-//    event->accept();
-//  }
-  // SHIFT - Enabling liking
-  else if (event->key() == Qt::Key_Shift)
-  {
-    unselect();
-
+  } else if (event->key() == Qt::Key_Shift) {
     setMode(Structural::Linking); emit switchedLink(true);
 
     event->accept();
-  }
-  else if(event->key() == Qt::Key_Control)
-  {
 
-    StructuralEntity *entity;
-    foreach(entity, _entities.values())
-    {
+  } else if(event->key() == Qt::Key_Control) {
+
+    foreach(StructuralEntity *e, _entities.values())
       entity->setDraggable(true);
-    }
 
     event->accept();
   }
@@ -1864,34 +1843,20 @@ void StructuralView::keyPressEvent(QKeyEvent *event)
 
 void StructuralView::keyReleaseEvent(QKeyEvent *event)
 {
-  // SHIFT - Disabling linking
-  if (event->key() == Qt::Key_Shift)
-  {
-    setMode(Structural::Pointing);
+  if (event->key() == Qt::Key_Shift) {
+    setMode(Structural::Pointing); emit switchedPointer(true);
 
-    emit switchedPointer(true);
-  }
-  else if(event->key() == Qt::Key_Control)
-  {
-    StructuralEntity *entity;
-    foreach(entity, _entities.values())
-    {
-      entity->setDraggable(false);
-    }
-  }
-  else if(event->key() == Qt::Key_Control)
-  {
+    event->accept();
 
-    StructuralEntity *entity;
-    foreach(entity, _entities.values())
-    {
+  } else if(event->key() == Qt::Key_Control) {
+    foreach(StructuralEntity* e, _entities.values())
       entity->setDraggable(false);
-    }
 
     event->accept();
   }
 
-  QGraphicsView::keyReleaseEvent(event);
+  if (!event->isAccepted())
+    QGraphicsView::keyReleaseEvent(event);
 }
 
 void StructuralView::wheelEvent(QWheelEvent * event)
