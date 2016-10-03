@@ -1832,7 +1832,7 @@ void StructuralView::keyPressEvent(QKeyEvent *event)
   } else if(event->key() == Qt::Key_Control) {
 
     foreach(StructuralEntity *e, _entities.values())
-      entity->setDraggable(true);
+      e->setDraggable(true);
 
     event->accept();
   }
@@ -1850,7 +1850,7 @@ void StructuralView::keyReleaseEvent(QKeyEvent *event)
 
   } else if(event->key() == Qt::Key_Control) {
     foreach(StructuralEntity* e, _entities.values())
-      entity->setDraggable(false);
+      e->setDraggable(false);
 
     event->accept();
   }
@@ -1861,32 +1861,19 @@ void StructuralView::keyReleaseEvent(QKeyEvent *event)
 
 void StructuralView::wheelEvent(QWheelEvent * event)
 {
-  if(event->modifiers() == Qt::ControlModifier)
-  {
+  if(event->modifiers() == Qt::ControlModifier) {
 
-//    if (event->delta() > 0)
-//        performZoomIn();
-//    else
-//        performZoomOut();
-
+    if (event->delta() > 0)
+        performZoomIn();
+    else
+        performZoomOut();
 
     event->accept();
   }
-  else
-  {
-    // call the parent wheelEvent
-    QGraphicsView::wheelEvent(event);
-  }
-}
 
-//void StructuralView::focusOutEvent(QFocusEvent *event)
-//{
-//  StructuralEntity *entity;
-//  foreach(entity, _entities.values())
-//  {
-//    entity->setDraggable(false);
-//  }
-//}
+  if (!event->isAccepted())
+    QGraphicsView::wheelEvent(event);
+}
 
 void StructuralView::clearAllData()
 {
