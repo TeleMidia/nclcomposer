@@ -13,9 +13,9 @@ fi
 echo "Generating NCL Composer ${VERSION} deb package"
 
 PARAMS="FORCERELEASE=true RUNSSH=true CPRVERSION=${VERSION} PREFIX=/usr"
-QMAKE="qmake-qt4 -recursive ${PARAMS}"
-LUPDATE="lupdate-qt4 nclcomposer.pro"
-LRELEASE="lrelease-qt4 nclcomposer.pro"
+QMAKE="qmake -recursive ${PARAMS}"
+LUPDATE="lupdate nclcomposer.pro"
+LRELEASE="lrelease nclcomposer.pro"
 
 #We need to install before to be able to compile the plugins.
 ${QMAKE} && ${LUPDATE} && ${LRELEASE} && make install
