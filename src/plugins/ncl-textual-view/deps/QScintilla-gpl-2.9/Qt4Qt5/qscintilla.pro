@@ -128,6 +128,8 @@ isEmpty(qsci.path) {
 	qsci.path = $(QTDIR)
 }
 
+INSTALLS += header trans qsci target
+
 greaterThan(QT_MAJOR_VERSION, 4) {
     features.path = $$[QT_HOST_DATA]/mkspecs/features
 } else {
