@@ -107,9 +107,24 @@ void StructuralComposition::draw(QPainter* painter)
     painter->setRenderHint(QPainter::SmoothPixmapTransform, false);
 
     QColor drawColor = QColor(StructuralUtil::getColor(getStructuralType()));
-
     painter->setBrush(drawColor);
-    painter->setPen(QPen(drawColor.darker(), 0));
+
+    if (!getError().isEmpty() ||
+        !getWarning().isEmpty()) {
+      QString color;
+
+      if (!getError().isEmpty()) {
+        color = QString(STR_DEFAULT_ALERT_ERROR_COLOR);
+      } else {
+
+        color = QString(STR_DEFAULT_ALERT_WARNING_COLOR);
+      }
+
+      painter->setPen(QPen(QBrush(QColor(color)), 2));
+
+    }else {
+      painter->setPen(QPen(drawColor.darker(), 0));
+    }
 
     painter->drawEllipse(STR_DEFAULT_ENTITY_PADDING,
                          STR_DEFAULT_ENTITY_PADDING,
@@ -139,6 +154,50 @@ void StructuralComposition::draw(QPainter* painter)
                         getWidth() - 2*STR_DEFAULT_CONTENT_PADDING,
                         getHeight() - 2*STR_DEFAULT_CONTENT_PADDING - 4*STR_DEFAULT_CONTENT_PADDING,
                         QPixmap(StructuralUtil::getIcon(getStructuralType())));
+
+    if (!getError().isEmpty() ||
+        !getWarning().isEmpty()) {
+      QString icon;
+      QString color;
+
+      if (!getError().isEmpty()) {
+        icon = QString(STR_DEFAULT_ALERT_ERROR_ICON);
+        color = QString(STR_DEFAULT_ALERT_ERROR_COLOR);
+      } else {
+
+        icon = QString(STR_DEFAULT_ALERT_WARNING_ICON);
+        color = QString(STR_DEFAULT_ALERT_WARNING_COLOR);
+      }
+
+      painter->drawPixmap((getWidth() - 2*STR_DEFAULT_CONTENT_PADDING)/2 + STR_DEFAULT_ALERT_ICON_W,
+                          (getHeight() - 2*STR_DEFAULT_CONTENT_PADDING)/2 + STR_DEFAULT_CONTENT_PADDING,
+                          STR_DEFAULT_ALERT_ICON_W, STR_DEFAULT_ALERT_ICON_H, QPixmap(icon));
+
+      int max = 20;
+
+      int start = 8;
+      int end = getWidth();
+
+
+      double current = start;
+      double step = (double) ( end - start ) / max;
+
+      QPolygonF polygon;
+      painter->setPen(QPen(QBrush(QColor(color)), 0));
+      painter->setRenderHint(QPainter::Antialiasing, true);
+
+      for (int i = 0; i < max; i++) {
+        current = start + (double) i * step;
+
+        if( i % 2)
+          polygon << QPointF( current, getHeight() - 3 );
+        else
+          polygon << QPointF( current, getHeight() );
+      }
+
+      painter->drawPolyline(polygon);
+    }
+
 
     painter->setBrush(Qt::NoBrush);
     painter->setPen(QPen(QBrush(Qt::black),0));

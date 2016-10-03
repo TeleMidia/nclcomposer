@@ -125,9 +125,27 @@ void StructuralInterface::draw(QPainter* painter)
 
   painter->drawPixmap(x, y, w, h, QPixmap(StructuralUtil::getIcon(getStructuralType())));
 
+  if (!getError().isEmpty() ||
+      !getWarning().isEmpty()) {
+
+    QString icon;
+
+    if (!getError().isEmpty()) {
+      icon = QString(STR_DEFAULT_ALERT_ERROR_ICON);
+    } else {
+
+      icon = QString(STR_DEFAULT_ALERT_WARNING_ICON);
+    }
+
+    painter->drawPixmap(x + w/2 - STR_DEFAULT_ALERT_ICON_W/2,
+                        y + h/2 - STR_DEFAULT_ALERT_ICON_H/2,
+                        STR_DEFAULT_ALERT_ICON_W, STR_DEFAULT_ALERT_ICON_H,
+                        QPixmap(icon));
+  }
+
   if (isMoving()) {
-    painter->setPen(QPen(QBrush(Qt::black), 0));
     painter->setBrush(QBrush(Qt::NoBrush));
+    painter->setPen(QPen(QBrush(Qt::black), 0));
 
     int moveX = x + getMoveLeft() - getLeft();
     int moveY = y + getMoveTop() - getTop();

@@ -176,7 +176,27 @@ void StructuralBind::draw(QPainter* painter)
     // nothing...
 
     // Drawing head...
-    painter->drawPixmap(a, b, QPixmap(icon));
+    painter->drawPixmap(a, b, STR_DEFAULT_BIND_ROLE_W, STR_DEFAULT_BIND_ROLE_H, QPixmap(icon));
+
+    if (!getError().isEmpty() ||
+        !getWarning().isEmpty()) {
+
+      QColor color;
+
+      if (!getError().isEmpty()) {
+        color = QColor(QString(STR_DEFAULT_ALERT_ERROR_COLOR));
+      } else {
+
+        color = QColor(QString(STR_DEFAULT_ALERT_WARNING_COLOR));
+      }
+
+      color.setAlpha(0.75);
+
+      painter->setBrush(color);
+      painter->setPen(QPen(QBrush(color),0));
+
+      painter->drawEllipse(a, b, STR_DEFAULT_BIND_ROLE_W, STR_DEFAULT_BIND_ROLE_H);
+    }
   }
 }
 
