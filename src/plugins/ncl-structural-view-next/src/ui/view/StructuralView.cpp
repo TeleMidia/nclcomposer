@@ -1279,8 +1279,9 @@ void StructuralView::createLink(StructuralEntity* tail, StructuralEntity* head)
       w = pointHead.y();
     }
 
+    setMode(Structural::Pointing); emit switchedPointer(true);
+
     if (parent != NULL) {
-      setMode(Structural::Pointing); emit switchedPointer(true);
 
       emit requestLinkDialogUpdate();
       _linkDialog->init();
@@ -1346,10 +1347,12 @@ void StructuralView::createBind(StructuralEntity* tail, StructuralEntity* head, 
     if (parentTail == parentHead)
         parent = parentTail;
 
-    else if (parentTail->getStructuralParent() == parentHead)
+    else if (parentTail->getStructuralParent() == parentHead &&
+             tail->getStructuralCategory() == Structural::Interface)
         parent = parentHead;
 
-    else if (parentTail == parentHead->getStructuralParent())
+    else if (parentTail == parentHead->getStructuralParent() &&
+             head->getStructuralCategory() == Structural::Interface)
         parent = parentTail;
 
     if (parent != NULL) {
