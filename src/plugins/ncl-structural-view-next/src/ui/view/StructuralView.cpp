@@ -15,7 +15,7 @@ StructuralView::StructuralView(QWidget* parent)
 
   _zoomStep = 0;
 
-  linking = false;
+  _linking = false;
 
   _mode = Structural::Pointing;
 
@@ -23,7 +23,12 @@ StructuralView::StructuralView(QWidget* parent)
 
   _clipboard = NULL;
 
-  link = NULL;
+  _linkTool = NULL;
+
+  lastLinkMouseOver = NULL;
+
+  _tailHovered = NULL;
+  _headHovered = NULL;
 
 
   hasCutted = false;
@@ -91,7 +96,7 @@ void StructuralView::switchMinimapVis()
 void StructuralView::resizeEvent(QResizeEvent *event)
 {
   _minimap->move(event->size().width() - _minimap->width(),
-                event->size().height() - _minimap->height());
+                 event->size().height() - _minimap->height());
 
   QGraphicsView::resizeEvent(event);
 }
@@ -1681,60 +1686,40 @@ void StructuralView::performInsert(StructuralType type, QMap<QString, QString> p
 
 void StructuralView::mouseMoveEvent(QMouseEvent* event)
 {
-  if (linking)
-  {
-    if (lastLinkMouseOver != NULL)
-    {
-      lastLinkMouseOver->setHoverable(false);
+  if (_linking) {
+    if (_tailHovered != NULL)
+      _tailHovered->setHovering(false);
 
-      // \fixme This is not the best place to control this!!
-      if(
-         lastLinkMouseOver->getStructuralType() == Structural::Context ||
-         lastLinkMouseOver->getStructuralType() == Structural::Switch)
-      {
-        lastLinkMouseOver->setHoverable(false);
-      }
+    if (_headHovered != NULL)
+      _headHovered->setHovering(false);
 
-      lastLinkMouseOver = NULL;
+    QList<QGraphicsItem*> tailItems = _scene->items(_linkTool->getLine().p1());
+
+    if (tailItems.count() && tailItems.first() == _linkTool) {
+      tailItems.removeFirst();
     }
 
-    QList<QGraphicsItem *> itemsa = _scene->items(link->getLine().p1());
+    QList<QGraphicsItem*> headItems = _scene->items(_linkTool->getLine().p2());
 
-    if (itemsa.count() && itemsa.first() == link)
-    {
-      itemsa.removeFirst();
+    if (headItems.count() && headItems.first() == _linkTool) {
+      headItems.removeFirst();
     }
 
-    if (itemsa.count())
-    {
-      StructuralEntity* entitya = (StructuralEntity*) itemsa.first();
-      entitya->setHoverable(true);
+    if (tailItems.count()) {
+      _tailHovered = (StructuralEntity*) tailItems.first();
+
+      if (_tailHovered != NULL)
+        _tailHovered->setHovering(true);
     }
 
-    QList<QGraphicsItem*> itemsb = _scene->items(link->getLine().p2());
+    if (headItems.count()) {
+      _headHovered = (StructuralEntity*) headItems.first();
 
-    if (itemsb.count() && itemsb.first() == link)
-    {
-      itemsb.removeFirst();
+      if (_headHovered != NULL)
+        _headHovered->setHovering(true);
     }
 
-    if (itemsb.count())
-    {
-      StructuralEntity* entityb = (StructuralEntity*) itemsb.first();
-      entityb->setHoverable(true);
-
-      // \fixme This is not the best place to control this!!
-      if(
-         entityb->getStructuralType() == Structural::Context ||
-         entityb->getStructuralType() == Structural::Switch)
-      {
-        entityb->setHoverable(true);
-      }
-
-      lastLinkMouseOver = entityb;
-    }
-
-    link->setLine(QLineF(link->getLine().p1(), mapToScene(event->pos())));
+    _linkTool->setLine(QLineF(_linkTool->getLine().p1(),mapToScene(event->pos())));
     _scene->update();
   }
 
@@ -1743,171 +1728,109 @@ void StructuralView::mouseMoveEvent(QMouseEvent* event)
 
 void StructuralView::mousePressEvent(QMouseEvent* event)
 {
-  if (_mode == Structural::Linking)
-  {
-    if (link != NULL)
-    {
-      delete (link);
-      link = NULL;
+  if (_mode == Structural::Linking) {
+    if (_linkTool != NULL) {
+      delete (_linkTool); _linkTool = NULL;
     }
 
-    link = new StructuralLinkTool();
-    _scene->addItem(link);
-    link->setLine(QLineF(mapToScene(event->pos()), mapToScene(event->pos())));
-    link->adjust(true);
+    _linkTool = new StructuralLinkTool(); _scene->addItem(_linkTool);
+    _linkTool->setLine(QLineF(mapToScene(event->pos()), mapToScene(event->pos())));
+    _linkTool->adjust(true);
 
-    linking = true;
-  }
-  else
-  {
+    _linking = true;
+
+  } else {
     QGraphicsView::mousePressEvent(event);
 
-    if (!event->isAccepted()){
-
-      if (event->button() == Qt::LeftButton)
-      {
-        StructuralEntity* selected_e = NULL;
-
-        if (!_selected.isEmpty())
-          selected_e = _entities[_selected];
-
-        if (selected_e != NULL)
-        {
-          selected_e->setSelected(false);
-          selected_e->adjust(true);
-        }
-
-        _selected = "";
-
-        emit selected("", QMap<QString, QString>());
-      }
-
+    if (!event->isAccepted()) {
       event->accept();
+
+      unselect();
     }
   }
-
 }
 
 void StructuralView::mouseReleaseEvent(QMouseEvent* event)
 {
-  if (linking)
-  {
-    QList<QGraphicsItem *> itemsa = _scene->items(link->getLine().p1());
+  if (_linking) {
+    if (_tailHovered != NULL)
+      _tailHovered->setHovering(false);
 
-    if (itemsa.count() && itemsa.first() == link)
-      itemsa.removeFirst();
+    if (_headHovered != NULL)
+      _headHovered->setHovering(false);
 
-    QList<QGraphicsItem*> itemsb = _scene->items(link->getLine().p2());
+    QList<QGraphicsItem *> tailItems = _scene->items(_linkTool->getLine().p1());
 
-    if (itemsb.count() && itemsb.first() == link)
-      itemsb.removeFirst();
+    if (tailItems.count() && tailItems.first() == _linkTool)
+      tailItems.removeFirst();
 
-    if (itemsa.count() && itemsb.count())
-    {
-      StructuralEntity* entitya = (StructuralEntity*) itemsa.first();
-      StructuralEntity* entityb = (StructuralEntity*) itemsb.first();
+    QList<QGraphicsItem*> headtems = _scene->items(_linkTool->getLine().p2());
 
-      if (entitya != entityb)
-      {
+    if (headtems.count() && headtems.first() == _linkTool)
+      headtems.removeFirst();
+
+    if (tailItems.count() && headtems.count()) {
+      StructuralEntity* tail = (StructuralEntity*) tailItems.first();
+      StructuralEntity* head = (StructuralEntity*) headtems.first();
+
+      if (tail != head) {
         // if linking NODE to NODE
-        if (entitya->getStructuralCategory() == Structural::Node &&
-            entityb->getStructuralCategory() == Structural::Node)
-        {
-          if (entitya->getStructuralType() != Structural::Link && entityb->getStructuralType() != Structural::Link)
-          {
-            createLink(entitya, entityb);
-          }
+        if (tail->getStructuralCategory() == Structural::Node &&
+            head->getStructuralCategory() == Structural::Node) {
 
-          else if (entitya->getStructuralType() == Structural::Link)
-          {
-            createBind(entitya, entityb);
+          if (tail->getStructuralType() != Structural::Link && head->getStructuralType() != Structural::Link)
+            createLink(tail, head);
+          else if (tail->getStructuralType() == Structural::Link)
+            createBind(tail, head);
+          else if (head->getStructuralType() == Structural::Link)
+            createBind(tail, head);
 
-          }else if (entityb->getStructuralType() == Structural::Link)
-          {
-            createBind(entitya, entityb);
-          }
-
-        }
         // if linking NODE to INTERFACE
-        else if (entitya->getStructuralCategory() == Structural::Node &&
-                 entityb->getStructuralCategory() == Structural::Interface)
-        {
-            if (entitya->getStructuralType() != Structural::Link)
-            {
-                createLink(entitya, entityb);
-            }
-            else
-            {
-              createBind(entitya, entityb);
-            }
-        }
+        } else if (tail->getStructuralCategory() == Structural::Node &&
+                 head->getStructuralCategory() == Structural::Interface) {
+
+          if (tail->getStructuralType() != Structural::Link)
+            createLink(tail, head);
+          else
+            createBind(tail, head);
+
         // if linking INTERFACE to NODE
-        else if (entitya->getStructuralCategory() == Structural::Interface &&
-                 entityb->getStructuralCategory() == Structural::Node)
-        {
-            StructuralEntity* pa = entitya->getStructuralParent();
-            StructuralEntity* pb = entityb->getStructuralParent();
+        } else if (tail->getStructuralCategory() == Structural::Interface &&
+                 head->getStructuralCategory() == Structural::Node) {
 
-            if (pa != NULL && pb != NULL && pa == pb)
-            {
-                createReference(entitya, entityb);
-            }
-            else if (entityb->getStructuralType() != Structural::Link)
-            {
-                createLink(entitya, entityb);
-            }
+            StructuralEntity* parentTail = tail->getStructuralParent();
+            StructuralEntity* parentHead = head->getStructuralParent();
+
+            if (parentTail != NULL && parentHead != NULL && parentTail == parentHead)
+              createReference(tail, head);
+            else if (head->getStructuralType() != Structural::Link)
+              createLink(tail, head);
             else
-            {
-              createBind(entitya, entityb);
-            }
-        }
+              createBind(tail, head);
+
         // if linking INTERFACE to INTERFACE
-        else if (entitya->getStructuralCategory() == Structural::Interface &&
-                 entityb->getStructuralCategory() == Structural::Interface)
-        {
-            StructuralEntity* pa = entitya->getStructuralParent();
-            StructuralEntity* pb = entityb->getStructuralParent();
+        } else if (tail->getStructuralCategory() == Structural::Interface &&
+                 head->getStructuralCategory() == Structural::Interface) {
 
-            if (pa != NULL && pb != NULL &&  pa == pb->getStructuralParent())
-            {
-                createReference(entitya, entityb);
-            }
+            StructuralEntity* parentTail = tail->getStructuralParent();
+            StructuralEntity* parentHead = head->getStructuralParent();
+
+            if (parentTail != NULL && parentHead != NULL &&  parentTail == parentHead->getStructuralParent())
+              createReference(tail, head);
             else
-            {
-                createLink(entitya, entityb);
-            }
+              createLink(tail, head);
         }
-      }
-
-      entitya->setHoverable(false);
-      entityb->setHoverable(false);
-
-      // \fixme This is not the best place to control this!!
-      if(
-         entityb->getStructuralType() == Structural::Context ||
-         entityb->getStructuralType() == Structural::Switch)
-      {
-        entityb->setHoverable(false);
       }
     }
 
-    if (link != NULL)
-    {
-      _scene->removeItem(link);
+    if (_linkTool != NULL) {
+      _scene->removeItem(_linkTool);
       _scene->update();
 
-      delete link;
-      link = NULL;
+      delete _linkTool; _linkTool = NULL;
     }
 
-    linking = false;
-  }
-
-  StructuralEntity *entity;
-  foreach(entity, _entities.values())
-  {
-    assert(entity != NULL);
-    entity->setDraggable(false);
+    _linking = false;
   }
 
   QGraphicsView::mouseReleaseEvent(event);
@@ -1938,22 +1861,9 @@ void StructuralView::keyPressEvent(QKeyEvent *event)
   // SHIFT - Enabling liking
   else if (event->key() == Qt::Key_Shift)
   {
-    StructuralEntity* selected_e = NULL;
+    unselect();
 
-    if (!_selected.isEmpty())
-      selected_e = _entities[_selected];
-
-    if (selected_e != NULL)
-    {
-      selected_e->setSelected(false);
-      selected_e->adjust(true);
-    }
-
-    _selected =  "";
-
-    setMode(Structural::Linking);
-
-    emit switchedLink(true);
+    setMode(Structural::Linking); emit switchedLink(true);
 
     event->accept();
   }
@@ -2025,14 +1935,14 @@ void StructuralView::wheelEvent(QWheelEvent * event)
   }
 }
 
-void StructuralView::focusOutEvent(QFocusEvent *event)
-{
-  StructuralEntity *entity;
-  foreach(entity, _entities.values())
-  {
-    entity->setDraggable(false);
-  }
-}
+//void StructuralView::focusOutEvent(QFocusEvent *event)
+//{
+//  StructuralEntity *entity;
+//  foreach(entity, _entities.values())
+//  {
+//    entity->setDraggable(false);
+//  }
+//}
 
 void StructuralView::clearAllData()
 {

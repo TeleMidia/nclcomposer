@@ -183,18 +183,13 @@ protected:
   void resizeEvent(QResizeEvent *event);
 
   virtual void mouseMoveEvent(QMouseEvent* event);
-
   virtual void mousePressEvent(QMouseEvent* event);
-
   virtual void mouseReleaseEvent(QMouseEvent*event);
 
   virtual void keyPressEvent(QKeyEvent *event);
-
   virtual void keyReleaseEvent(QKeyEvent *event);
 
-  virtual void focusOutEvent(QFocusEvent *event);
-
-  void wheelEvent(QWheelEvent * event);
+  virtual void wheelEvent(QWheelEvent * event);
 
 public slots:
   void clearAllData();
@@ -223,7 +218,9 @@ private:
 
   bool modified;
 
-  bool linking;
+  bool _linking;
+  StructuralEntity* _tailHovered;
+  StructuralEntity* _headHovered;
 
 
   bool hasCutted;
@@ -248,7 +245,7 @@ private:
 
   QMap<QString, QString> bindParamUIDToBindUID;
 
-  StructuralLinkTool* link;
+  StructuralLinkTool* _linkTool;
 
   StructuralEntity* lastLinkMouseOver;
 };

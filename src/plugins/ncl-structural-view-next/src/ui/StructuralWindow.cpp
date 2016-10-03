@@ -313,7 +313,7 @@ void  StructuralWindow::createConnections()
   connect(_view, SIGNAL(selectChange(QString)), SLOT(changeSelect(QString)));
 
   connect(_view, SIGNAL(switchedPointer(bool)), SLOT(switchPointer(bool)));
-  connect(_view, SIGNAL(linkStateChange(bool)), SLOT(changeLinkState(bool)));
+  connect(_view, SIGNAL(switchedLink(bool)), SLOT(changeLinkState(bool)));
   /* TODO: Refactoring */
 }
 
