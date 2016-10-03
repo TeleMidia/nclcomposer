@@ -1225,68 +1225,67 @@ void StructuralView::createLink(StructuralEntity* tail, StructuralEntity* head)
   StructuralEntity* parentHead = (StructuralEntity*) head->getStructuralParent();
 
   if (parentTail != NULL && parentHead != NULL) {
+    StructuralEntity* parent = NULL;
 
-    setMode(Structural::Pointing); emit switchedPointer(true);
+    qreal x;
+    qreal y;
+    qreal z;
+    qreal w;
 
-    emit requestLinkDialogUpdate();
-    _linkDialog->init();
+    if (parentTail == parentHead) {
+      parent = parentTail;
 
-    if (_linkDialog->exec()) {
+      x = tail->getLeft();
+      y = tail->getTop();
+      z = head->getLeft();
+      w = head->getTop();
 
-      StructuralEntity* parent = NULL;
+    } else if (parentTail->getStructuralParent() == parentHead) {
+      QPointF pointTail = parentTail->mapToParent(tail->getLeft(),
+                                                  tail->getTop());
 
-      qreal x;
-      qreal y;
-      qreal z;
-      qreal w;
+      parent = parentHead;
 
-      if (parentTail == parentHead) {
-        parent = parentTail;
+      x = pointTail.x();
+      y = pointTail.y();
+      z = head->getLeft();
+      w = head->getTop();
 
-        x = tail->getLeft();
-        y = tail->getTop();
-        z = head->getLeft();
-        w = head->getTop();
+    } else if (parentTail == parentHead->getStructuralParent() &&
+               head->getStructuralCategory() == Structural::Interface) {
+      QPointF pointHead = parentHead->mapToParent(head->getLeft(),
+                                                  head->getTop());
 
-      } else if (parentTail->getStructuralParent() == parentHead) {
-        QPointF pointTail = parentTail->mapToParent(tail->getLeft(),
-                                                    tail->getTop());
+      parent = parentTail;
 
-        parent = parentHead;
+      x = tail->getLeft();
+      y = tail->getTop();
+      z = pointHead.x();
+      w = pointHead.y();
 
-        x = pointTail.x();
-        y = pointTail.y();
-        z = head->getLeft();
-        w = head->getTop();
+    } else if (parentTail->getStructuralParent() == parentHead->getStructuralParent() &&
+               tail->getStructuralCategory() == Structural::Interface) {
+      QPointF pointTail = parentTail->mapToParent(tail->getLeft(),
+                                                  tail->getTop());
 
-      } else if (parentTail == parentHead->getStructuralParent()) {
-        QPointF pointHead = parentHead->mapToParent(head->getLeft(),
-                                                    head->getTop());
+      QPointF pointHead = parentHead->mapToParent(head->getLeft(),
+                                                  head->getTop());
 
-        parent = parentTail;
+      parent = parentTail->getStructuralParent();
 
-        x = tail->getLeft();
-        y = tail->getTop();
-        z = pointHead.x();
-        w = pointHead.y();
+      x = pointTail.x();
+      y = pointTail.y();
+      z = pointHead.x();
+      w = pointHead.y();
+    }
 
-      } else if (parentTail->getStructuralParent() == parentHead->getStructuralParent() &&
-                 parentTail->getStructuralParent() != NULL) {
-        QPointF pointTail = parentTail->mapToParent(tail->getLeft(),
-                                                    tail->getTop());
+    if (parent != NULL) {
+      setMode(Structural::Pointing); emit switchedPointer(true);
 
-        QPointF pointHead = parentHead->mapToParent(head->getLeft(),
-                                                    head->getTop());
+      emit requestLinkDialogUpdate();
+      _linkDialog->init();
 
-        parent = parentTail->getStructuralParent();
-
-        x = pointTail.x();
-        y = pointTail.y();
-        z = pointHead.x();
-        w = pointHead.y();
-      }
-
-      if (parent != NULL) {
+      if (_linkDialog->exec()) {
         x += tail->getWidth()/2;
         y += tail->getHeight()/2;
         z += head->getWidth()/2;
