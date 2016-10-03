@@ -874,11 +874,11 @@ void StructuralView::adjustReferences(StructuralEntity* entity)
         if (_entities.contains(entity->getStructuralProperty(STR_PROPERTY_EDGE_HEAD)))
           ((StructuralEdge*) entity)->setHead(_entities.value(entity->getStructuralProperty(STR_PROPERTY_EDGE_HEAD)));
 
-        bool isVisible = false;
+        bool isVisible = true;
 
-        if (((StructuralEdge*) entity)->getTail() != NULL &&
-            ((StructuralEdge*) entity)->getHead() != NULL)
-          isVisible = true;
+        if (((StructuralEdge*) entity)->getTail() == NULL ||
+            ((StructuralEdge*) entity)->getHead() == NULL)
+          isVisible = false;
 
         StructuralEntity* component = NULL;
         StructuralEntity* interface = NULL;
@@ -893,11 +893,14 @@ void StructuralView::adjustReferences(StructuralEntity* entity)
           if (!_entities.contains(entity->getStructuralProperty(STR_PROPERTY_EDGE_ANGLE)))
             ((StructuralBind*) entity)->setAngle(getNewAngle((StructuralBind*) entity));
 
-        if (component != NULL && interface != NULL)
-          if (interface->getStructuralParent() == component)
-            isVisible = true;
+        if (component == NULL)
+          isVisible = false;
 
-        setHidden(!isVisible);
+        if (component != NULL && interface != NULL)
+            if (interface->getStructuralParent() != component)
+              isVisible = false;
+
+        entity->setHidden(!isVisible);
 
         break;
       }
@@ -976,8 +979,7 @@ void StructuralView::clearErrors()
 
 void StructuralView::markError(const QString &uid, const QString &msg)
 {
-  if(_entities.contains(uid))
-  {
+  if(_entities.contains(uid)) {
     StructuralEntity* entity = _entities.value(uid);
     entity->setError(msg);
     entity->adjust(true);
