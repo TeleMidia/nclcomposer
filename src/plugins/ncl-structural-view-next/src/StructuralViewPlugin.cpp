@@ -102,7 +102,7 @@ bool StructuralViewPlugin::saveSubsession()
 
   data.append("-- BEGIN OF PLUGIN DATA");
   data.append("-- VIEW DATA");
-  data.append(_window->getView()->serialize());
+  data.append(_window->getView()->save());
   data.append("-- EXTRA DATA");
   foreach(QString key, entities.keys()){
       data.append(key+"="+entities[key]+":");

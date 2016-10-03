@@ -279,46 +279,39 @@ void StructuralView::load(QDomElement entity, QDomElement parent)
   }
 }
 
-QString StructuralView::serialize()
+QString StructuralView::save()
 {
   QDomDocument* document = new QDomDocument();
+
   QDomElement root = document->createElement("structural");
 
-  foreach(StructuralEntity* entity, _entities.values())
-  {
-    if (entity->getStructuralParent() == NULL)
-    {
-      exportDataFromEntity(entity, document, root);
-    }
-  }
+  foreach(StructuralEntity* e, _entities.values())
+    if (e->getStructuralType() == Structural::Body)
+      createDocument(e, document, root);
 
   document->appendChild(root);
 
   return document->toString(4);
 }
 
-void StructuralView::exportDataFromEntity(StructuralEntity* entity, QDomDocument* doc, QDomElement parent)
+void StructuralView::createDocument(StructuralEntity* entity, QDomDocument* document, QDomElement parent)
 {  
   if (entity->getStructuralType() != Structural::Reference) {
-  QDomElement element = doc->createElement("entity");
+    QDomElement element = document->createElement("entity");
+    element.setAttribute("uid",entity->getStructuralUid());
 
-  element.setAttribute("uid",entity->getStructuralUid());
+    foreach (QString key, entity->getStructuralProperties().keys()) {
+      QDomElement property = document->createElement("property");
+      property.setAttribute("name", key);
+      property.setAttribute("value", entity->getStructuralProperty(key));
 
-  foreach (QString name, entity->getStructuralProperties().keys())
-  {
-    QDomElement property = doc->createElement("property");
-    property.setAttribute("name",name);
-    property.setAttribute("value", entity->getStructuralProperty(name));
+      element.appendChild(property);
+    }
 
-    element.appendChild(property);
-  }
+    foreach (StructuralEntity* e, entity->getStructuralEntities())
+      createDocument(e, document, element);
 
-
-  foreach (StructuralEntity* child, entity->getStructuralEntities()) {
-    exportDataFromEntity(child, doc, element);
-  }
-
-  parent.appendChild(element);
+    parent.appendChild(element);
   }
 }
 

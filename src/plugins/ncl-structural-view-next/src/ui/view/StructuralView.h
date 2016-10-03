@@ -160,8 +160,8 @@ public:
   void load(const QString &data);
   void load(QDomElement entity, QDomElement parent);
 
-  QString serialize();
-  void exportDataFromEntity(StructuralEntity* entity, QDomDocument* doc, QDomElement _parent);
+  QString save();
+  void createDocument(StructuralEntity* entity, QDomDocument* document, QDomElement parent);
 
   void unselect();
 
