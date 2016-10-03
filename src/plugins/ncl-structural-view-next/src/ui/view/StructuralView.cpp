@@ -883,22 +883,27 @@ void StructuralView::adjustReferences(StructuralEntity* entity)
         StructuralEntity* component = NULL;
         StructuralEntity* interface = NULL;
 
-        if (_entities.contains(entity->getStructuralProperty(STR_PROPERTY_REFERENCE_INTERFACE_UID)))
-          interface = _entities.value(entity->getStructuralProperty(STR_PROPERTY_REFERENCE_INTERFACE_UID));
+        if (!entity->getStructuralProperty(STR_PROPERTY_REFERENCE_INTERFACE_ID).isEmpty())
+          if (_entities.contains(entity->getStructuralProperty(STR_PROPERTY_REFERENCE_INTERFACE_UID)))
+            interface = _entities.value(entity->getStructuralProperty(STR_PROPERTY_REFERENCE_INTERFACE_UID));
+          else
+            isVisible = false;
 
-        if (_entities.contains(entity->getStructuralProperty(STR_PROPERTY_REFERENCE_COMPONENT_UID)))
-          component = _entities.value(entity->getStructuralProperty(STR_PROPERTY_REFERENCE_COMPONENT_UID));
+        if (!entity->getStructuralProperty(STR_PROPERTY_REFERENCE_COMPONENT_ID).isEmpty())
+          if (_entities.contains(entity->getStructuralProperty(STR_PROPERTY_REFERENCE_COMPONENT_UID)))
+            component = _entities.value(entity->getStructuralProperty(STR_PROPERTY_REFERENCE_COMPONENT_UID));
+          else
+            isVisible = false;
+        else
+          isVisible = false;
+
+        if (component != NULL && interface != NULL)
+          if (interface->getStructuralParent() != component)
+            isVisible = false;
 
         if (type == Structural::Bind)
           if (!_entities.contains(entity->getStructuralProperty(STR_PROPERTY_EDGE_ANGLE)))
             ((StructuralBind*) entity)->setAngle(getNewAngle((StructuralBind*) entity));
-
-        if (component == NULL)
-          isVisible = false;
-
-        if (component != NULL && interface != NULL)
-            if (interface->getStructuralParent() != component)
-              isVisible = false;
 
         entity->setHidden(!isVisible);
 
@@ -921,22 +926,25 @@ void StructuralView::adjustReferences(StructuralEntity* entity)
         if (_entities.contains(entity->getStructuralProperty(STR_PROPERTY_REFERENCE_COMPONENT_UID)))
           component = _entities.value(entity->getStructuralProperty(STR_PROPERTY_REFERENCE_COMPONENT_UID));
 
+        StructuralEntity* head = NULL;
+
         if (component != NULL) {
-          QString uid = "";
+          head = component;
 
-          if (interface != NULL) {
-            if (interface->getStructuralParent() == component) {
-              uid = interface->getStructuralUid();
-            }
-          } else {
-            uid = component->getStructuralUid();
-          }
+          if (interface != NULL)
+            if (interface->getStructuralParent() == component)
+              head = interface;
 
-          if (!uid.isEmpty()) {
+          if (head != NULL) {
             QMap<QString, QString> properties;
             properties[STR_PROPERTY_ENTITY_TYPE] = StructuralUtil::translateTypeToString(Structural::Reference);
             properties[STR_PROPERTY_EDGE_TAIL] = entity->getStructuralUid();
-            properties[STR_PROPERTY_EDGE_HEAD] = uid;
+            properties[STR_PROPERTY_EDGE_HEAD] = head->getStructuralUid();
+
+            properties[STR_PROPERTY_REFERENCE_COMPONENT_ID] = entity->getStructuralProperty(STR_PROPERTY_REFERENCE_COMPONENT_ID);
+            properties[STR_PROPERTY_REFERENCE_COMPONENT_UID] = entity->getStructuralProperty(STR_PROPERTY_REFERENCE_COMPONENT_UID);
+            properties[STR_PROPERTY_REFERENCE_INTERFACE_ID] = entity->getStructuralProperty(STR_PROPERTY_REFERENCE_INTERFACE_ID);
+            properties[STR_PROPERTY_REFERENCE_INTERFACE_UID] = entity->getStructuralProperty(STR_PROPERTY_REFERENCE_INTERFACE_UID);
 
             insert(StructuralUtil::createUid(), entity->getStructuralParent()->getStructuralUid(), properties, StructuralUtil::createSettings(false,false));
           }
@@ -1463,11 +1471,16 @@ void StructuralView::createBind(StructuralEntity* tail, StructuralEntity* head, 
 
 void StructuralView::createReference(StructuralEntity* tail, StructuralEntity* head)
 {
-  if (tail->getStructuralType() == Structural::Port || tail->getStructuralType() == Structural::SwitchPort) {
+  if (tail->getStructuralType() == Structural::Port ||
+      tail->getStructuralType() == Structural::SwitchPort) {
+
     StructuralEntity* parentTail = tail->getStructuralParent();
     StructuralEntity* parentHead = head->getStructuralParent();
 
-    if (parentTail != NULL && parentHead != NULL && (parentTail == parentHead || parentTail == parentHead->getStructuralParent())) {
+    if (parentTail != NULL &&
+        parentHead != NULL &&
+        (parentTail == parentHead || parentTail == parentHead->getStructuralParent())) {
+
       QMap<QString, QString> previous = tail->getStructuralProperties();
       QMap<QString, QString> properties;
 
