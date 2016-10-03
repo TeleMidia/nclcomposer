@@ -149,67 +149,53 @@ QMap<QString, StructuralEntity*> StructuralView::getEntities()
 
 /**********************************************************/
 
-void StructuralView::load(QString &data)
+void StructuralView::load(const QString &data)
 {
   QDomDocument* dom = new QDomDocument();
   dom->setContent(data);
 
-
   QDomElement root = dom->firstChildElement();
-  QDomElement noParentElement;
+  QDomNodeList rootChildren = root.childNodes();
 
-  QDomNodeList childList = root.childNodes();
+  for (unsigned int i = 0; i < rootChildren.length(); i++) {
+    if (rootChildren.item(i).isElement()) {
+      QDomElement body = rootChildren.item(i).toElement();
+      QDomNodeList bodyChildren = body.childNodes();
 
-  for (unsigned int k = 0; k < childList.length(); k++)
-  {
-    if (!childList.item(k).isElement())
-      continue;
+      QString bodyUid = body.attributeNode("uid").nodeValue();
+      QString parentUid = "";
 
-    noParentElement = childList.item(k).toElement();
+      QMap<QString,QString> properties;
 
-    QMap<QString,QString> properties;
+      for (unsigned int j = 0; j < bodyChildren.length(); j++) {
+        if (bodyChildren.item(j).isElement()) {
+          QDomElement property = bodyChildren.item(j).toElement();
 
-
-    QDomNodeList list = noParentElement.childNodes();
-
-    for (unsigned int i = 0; i < list.length(); i++)
-    {
-      if (list.item(i).isElement())
-      {
-        QDomElement e = list.item(i).toElement();
-
-        if (e.nodeName() == "property")
-          properties.insert(e.attributeNode("name").nodeValue(), e.attributeNode("value").nodeValue());
+          if (property.nodeName() == "property")
+            properties.insert(property.attributeNode("name").nodeValue(),
+                              property.attributeNode("value").nodeValue());
+        }
       }
-    }
 
-    QMap<QString,QString> settings;
-    settings[STR_SETTING_UNDO] = "0";
-    settings[STR_SETTING_NOTIFY] = "0";
-    settings[STR_SETTING_CODE] = StructuralUtil::createUid();
+      insert(bodyUid, parentUid, properties, StructuralUtil::createSettings(false, false));
 
-    insert(properties.value(STR_PROPERTY_ENTITY_UID), "", properties, settings);
+      for (unsigned int j = 0; j < bodyChildren.length(); j++) {
+        if (bodyChildren.item(j).isElement()) {
+          QDomElement entity = bodyChildren.item(j).toElement();
 
-    for (unsigned int i = 0; i < list.length(); i++)
-    {
-      if (list.item(i).isElement())
-      {
-        QDomElement e = list.item(i).toElement();
-
-        if (e.nodeName() == "entity")
-          read(e, noParentElement);
+          if (entity.nodeName() == "entity")
+            load(entity, body);
+        }
       }
+
+      foreach (StructuralEntity* e, _entities.values()) {
+        if (e->getStructuralCategory() == Structural::Edge ||
+            e->getStructuralType() == Structural::Port)
+          adjustReferences(e);
+      }
+
+      select(bodyUid, StructuralUtil::createSettings());
     }
-
-    foreach (StructuralEntity* e, _entities.values()) {
-      if (e->getStructuralType() == Structural::Port)
-        adjustReferences(e);
-    }
-
-      settings.insert(STR_SETTING_NOTIFY,"1");
-      select(properties.value(STR_PROPERTY_ENTITY_UID), settings);
-
-      centerOn(_entities.value(properties.value(STR_PROPERTY_ENTITY_UID)));
   }
 }
 
@@ -258,38 +244,37 @@ StructuralScene* StructuralView::getScene()
   return _scene;
 }
 
-void StructuralView::read(QDomElement element, QDomElement parent)
+void StructuralView::load(QDomElement entity, QDomElement parent)
 {
-  QMap<QString,QString> properties;
+  if (!entity.attributeNode("uid").nodeValue().isEmpty() &&
+      !parent.attributeNode("uid").nodeValue().isEmpty()) {
 
-  QDomNodeList list = element.childNodes();
+    QDomNodeList entityChildren = entity.childNodes();
 
-  for (unsigned int i = 0; i < list.length(); i++)
-  {
-    if (list.item(i).isElement())
-    {
-      QDomElement e = list.item(i).toElement();
+    QString entityUid = entity.attributeNode("uid").nodeValue();
+    QString parentUid = parent.attributeNode("uid").nodeValue();
 
-      if (e.nodeName() == "property")
-        properties.insert(e.attributeNode("name").nodeValue(), e.attributeNode("value").nodeValue());
+    QMap<QString,QString> properties;
+
+    for (unsigned int i = 0; i < entityChildren.length(); i++) {
+      if (entityChildren.item(i).isElement()) {
+        QDomElement child = entityChildren.item(i).toElement();
+
+        if (child.nodeName() == "property")
+          properties.insert(child.attributeNode("name").nodeValue(),
+                            child.attributeNode("value").nodeValue());
+      }
     }
-  }
 
-  QMap<QString,QString> settings;
-  settings[STR_SETTING_UNDO] = "0";
-  settings[STR_SETTING_NOTIFY] = "0";
-  settings[STR_SETTING_CODE] = StructuralUtil::createUid();
+    insert(entityUid, parentUid, properties, StructuralUtil::createSettings(false, false));
 
-  insert(properties.value(STR_PROPERTY_ENTITY_UID), parent.attributeNode("uid").nodeValue(), properties, settings);
+    for (unsigned int i = 0; i < entityChildren.length(); i++) {
+      if (entityChildren.item(i).isElement()) {
+        QDomElement child = entityChildren.item(i).toElement();
 
-  for (unsigned int i = 0; i < list.length(); i++)
-  {
-    if (list.item(i).isElement())
-    {
-      QDomElement e = list.item(i).toElement();
-
-      if (e.nodeName() == "entity")
-        read(e, element);
+        if (child.nodeName() == "entity")
+          load(child, entity);
+      }
     }
   }
 }

@@ -157,9 +157,8 @@ public:
 
 
 public:
-  void load(QString &data);
-
-  void read(QDomElement element, QDomElement parent);
+  void load(const QString &data);
+  void load(QDomElement entity, QDomElement parent);
 
   QString serialize();
   void exportDataFromEntity(StructuralEntity* entity, QDomDocument* doc, QDomElement _parent);
