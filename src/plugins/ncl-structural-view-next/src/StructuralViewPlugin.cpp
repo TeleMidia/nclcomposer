@@ -882,7 +882,7 @@ void StructuralViewPlugin::requestEntitySelection(Entity* entity)
   }
   else
   {
-    _window->getView()->unSelect();
+    _window->getView()->unselect();
   }
 }
 

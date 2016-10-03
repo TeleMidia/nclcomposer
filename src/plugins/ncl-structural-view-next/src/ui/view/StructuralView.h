@@ -164,7 +164,7 @@ public:
   QString serialize();
   void exportDataFromEntity(StructuralEntity* entity, QDomDocument* doc, QDomElement _parent);
 
-  void unSelect();
+  void unselect();
 
    StructuralEntity* getBody();
    QVector<StructuralEntity*> getRoots();
@@ -180,7 +180,6 @@ public:
 protected:
 
   QString getNewId(StructuralEntity *entity);
-  bool updateEntityWithUniqueNstId(StructuralEntity *entity);
 
   void resizeEvent(QResizeEvent *event);
 
@@ -223,8 +222,6 @@ private:
 
   void collapseCompositions(QDomElement element, QDomElement _parent);
 
-  void deletePendingEntities();
-
   bool modified;
 
   bool linking;
@@ -252,27 +249,9 @@ private:
 
   QMap<QString, QString> bindParamUIDToBindUID;
 
-  //QMap<QString, QnstConnector*> connectors2; // uid - conn
-
-  //QMap<QString, QnstConnector*> connectors; // id - conn
-
-  QVector<StructuralEntity*> toDelete;
-
-
-
   StructuralLinkTool* link;
 
   StructuralEntity* lastLinkMouseOver;
-
-  std::map < Structural::StructuralType, int > entityCounter;
-
-  static std::map <Structural::StructuralType, QString> mediaTypeToXMLStr;
-
-
-
-
-
-  StructuralEntity* e_clip;
 };
 
 #endif // STRUCTURALVIEW_H

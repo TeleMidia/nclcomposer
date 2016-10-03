@@ -23,21 +23,14 @@ StructuralView::StructuralView(QWidget* parent)
 
   _clipboard = NULL;
 
-  e_clip = NULL;
-
-  clip_cut = "";
-  clip_copy = "";
-
   link = NULL;
 
 
   hasCutted = false;
 
-  lastLinkMouseOver = NULL;
-
-  // Initialize entity counters
-  for(int i = Structural::Node; i < Structural::NoType; i += 1)
-    entityCounter[ (Structural::StructuralType) i ] = 0;
+  foreach (StructuralType key, entityCount.keys()) {
+    entityCount[key] = 0;
+  }
 
   setAttribute(Qt::WA_TranslucentBackground);
 }
@@ -976,25 +969,9 @@ void StructuralView::adjustReferences(StructuralEntity* entity)
   }
 }
 
-void StructuralView::unSelect()
+void StructuralView::unselect()
 {
-
-  if (_entities.contains(_selected))
-  {
-    _entities.value(_selected)->setSelected(false);
-
-}
-
-  _selected = "";
-
-  _scene->update();
-
-  emit switchedCut(false);
-  emit switchedCopy(false);
-  emit switchedPaste(false);
-
-  emit selectChange("");
-  emit selected("", QMap<QString, QString>());
+  select("", StructuralUtil::createSettings());
 }
 
 StructuralEntity* StructuralView::getBody()
@@ -1028,69 +1005,82 @@ void StructuralView::markError(const QString &uid, const QString &msg)
 
 void StructuralView::select(QString uid, QMap<QString, QString> settings)
 {
-  if (_entities.contains(uid))
-  {
-      if (uid == _selected)
-        return;
+  if (_entities.contains(uid)) {
 
-      StructuralEntity* selected_e = NULL;
+    if (uid != _selected) {
+      //
+      // Initializing...
+      //
 
-      if (!_selected.isEmpty())
-        selected_e = _entities.value(_selected,NULL);
+      StructuralEntity* entity = _entities.value(_selected);
 
-      if (selected_e != NULL)
-      {
-        selected_e->setSelected(false);
-        selected_e->adjust(true);
-      }
+      if (entity != NULL)
+        entity->setSelected(false);
 
+      //
+      // Selecting...
+      //
 
-      StructuralEntity* entity = _entities[uid];
+      entity = _entities.value(uid);
       entity->setSelected(true);
 
-      _selected = uid;
+      _selected = entity->getStructuralUid();
 
-      if (_entities.value(_selected)->getStructuralType() == Structural::Body)
-        centerOn(_entities.value(_selected));
 
-      emit selectChange(uid);
-
-//      if (settings[STR_SETTING_NOTIFY] == "1")
-//      {
-        emit selected(uid, settings);
-//      }
+      //
+      // Notifing...
+      //
 
       emit switchedCut(true);
       emit switchedCopy(true);
 
-      if (!clip_cut.isEmpty() || !clip_copy.isEmpty()){
-        StructuralEntity* e = NULL;
-
-        if (!clip_cut.isEmpty())
-          e = e_clip;
-
-        if (!clip_copy.isEmpty())
-          e = _entities.value(clip_copy);
-
-        if (StructuralUtil::validateKinship(e->getStructuralType(), _entities.value(_selected)->getStructuralType()))
+      if (_clipboard != NULL) {
+        if (StructuralUtil::validateKinship(entity->getStructuralType(), _clipboard->getStructuralType()) &&
+            isChild(entity, _clipboard))
           emit switchedPaste(true);
-        else
-          emit switchedPaste(false);
+      } else {
+        emit switchedPaste(false);
       }
 
-          _scene->update();
+      emit selectChange(uid); // Remove this after StructuralWindow refactory
+
+      if (settings[STR_SETTING_NOTIFY] == STR_VALUE_TRUE) {
+        emit selected(uid, settings);
+      }
+    }
+
   } else {
+    //
+    // Initializing...
+    //
+
+    StructuralEntity* entity = _entities.value(_selected);
+
+    if (entity != NULL)
+      entity->setSelected(false);
+
+    //
+    // Unselecting...
+    //
+
     _selected = "";
 
-    _scene->update();
+    //
+    // Notifing...
+    //
 
     emit switchedCut(false);
     emit switchedCopy(false);
     emit switchedPaste(false);
 
-    emit selectChange("");
-    emit selected("", QMap<QString, QString>());
+    emit selectChange(""); // Remove this after StructuralWindow refactory
+
+    if (settings[STR_SETTING_NOTIFY] == STR_VALUE_TRUE) {
+      emit selected(uid, settings);
+    }
   }
+
+  _scene->update();
 }
 
 void StructuralView::move(QString uid, QString parent)
@@ -1109,7 +1099,7 @@ void StructuralView::move(QString uid, QString parent)
     if (e->getStructuralParent()->getStructuralUid() == p->getStructuralUid())
       return;
 
-    unSelect();
+    select("",StructuralUtil::createSettings());
 
     StructuralEntity* moveEntity = clone(_entities.value(uid), NULL);
 
@@ -1589,50 +1579,6 @@ QString StructuralView::getNewId(StructuralEntity *entity)
   }
 
   return name;
-}
-
-bool StructuralView::updateEntityWithUniqueNstId(StructuralEntity *entity)
-{
-  if(entity != NULL)
-  {
-    int n = 0;
-    Structural::StructuralType type = entity->getStructuralType();
-
-    // check if type is in the map
-    if(!entityCounter.count(type))
-      entityCounter[type] = 0;
-
-    // change this check in future
-    QString prefix = StructuralUtil::getPrefix(type);
-
-
-    bool match = false;
-
-    while(1)
-    {
-      match = false;
-
-      foreach(StructuralEntity* e, _entities.values())
-      {
-          if (e->getStructuralId() == QString(prefix + QString::number(n)))
-          {
-            match = true;
-            break;
-          }
-      }
-
-      if (match)
-        n++;
-      else
-        break;
-    }
-
-    entity->setStructuralId(QString(prefix + QString::number(n)));
-
-    return true;
-  }
-
-  return false;
 }
 
 void StructuralView::performDelete()
@@ -2122,7 +2068,7 @@ void StructuralView::clearAllData()
     scene->removeRoot(scene->getRoots().at(0));
   */
 
-  unSelect();
+  unselect();
 
   foreach (QString uid, _entities.keys()) {
     QMap<QString,QString> settings;
@@ -2143,20 +2089,6 @@ void StructuralView::clearAllData()
 
   bindParamUIDToBindUID.clear();
 
-  //connectors.clear();
-  //connectors2.clear();
-
-  deletePendingEntities();
-}
-
-void StructuralView::deletePendingEntities()
-{
-  foreach(StructuralEntity* e, toDelete)
-  {
-    e->deleteLater();
-  }
-
-  toDelete.clear();
 }
 
 void StructuralView::cleanUndoRedo()
