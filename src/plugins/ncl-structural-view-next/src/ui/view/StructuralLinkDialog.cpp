@@ -427,7 +427,7 @@ void StructuralLinkDialog::updateForm(QString conn)
     foreach (QString b, _conditions.value(conn)) {
       QString icon = ":/icon/nocondition";
 
-      if (StructuralUtil::isConditionRole(b))
+      if (StructuralUtil::isCondition(b))
           icon = ":/icon/"+b.toLower();
 
       if (icon.contains("attribution"))
@@ -449,7 +449,7 @@ void StructuralLinkDialog::updateForm(QString conn)
     foreach (QString b, _actions.value(conn)) {
       QString icon = ":/icon/noaction";
 
-      if (StructuralUtil::isActionRole(b))
+      if (StructuralUtil::isAction(b))
           icon = ":/icon/"+b.toLower();
 
       if (icon.contains("attribution"))

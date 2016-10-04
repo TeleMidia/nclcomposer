@@ -136,7 +136,7 @@ void StructuralBind::draw(QPainter* painter)
       }
     }
 
-    QString icon = StructuralUtil::getRoleIcon(getRole());
+    QString icon = StructuralUtil::getIcon(getRole());
 
     if (icon.isEmpty())
       if (tail->getStructuralType() == Structural::Link)
