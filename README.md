@@ -38,13 +38,13 @@ NCL Composer source code is divided into three main parts:
 The main requirement for NCL Composer is:
   * Qt >= 5.2
 
-If you want to enable the Run your application on Ginga Virtual Set-top box,
+<!-- If you want to enable the Run your application on Ginga Virtual Set-top box,
 then you should run qmake like this:
   * qmake RUNSSHON=true
 
 By doing so, you have to be installed the following:
   * libssh2
-  * libcrypt
+  * libcrypt -->
 
 ### Linux (Debian/Ubuntu)
   * TODO
@@ -55,13 +55,7 @@ By doing so, you have to be installed the following:
 ### Mac OS X
   * TODO
 
-<!-- Additionally, this project also brings some useful files and scripts
-related to code documentation, like Doxyfile, scripts to add the License HEAD
-to files, Today, there are three main submodules inside this project: If you
-want specific information about one of the above subproject go to its specfic
-README file. -->
-
-## Packaging
+## Packaging NCL Composer
 This repository also provides the necessary files for packaging NCL Composer.
 
 ### MSI (Windows installer) package
@@ -95,12 +89,12 @@ You can install it, using dpkg, for example:
   * TODO
 
 ## Authors and contributors
-  * Roberto Azevedo (robertogerson@telemidia.puc-rio.br)
-  * Eduardo Araújo (edcaraujo@telemidia.puc-rio.br)
+  * Roberto Azevedo <robertogerson@telemidia.puc-rio.br>
+  * Eduardo Araújo <edcaraujo@telemidia.puc-rio.br>
 
 ### Previous contributors
-  * Marcelo Moreno (moreno@telemidia.puc-rio.br)
-  * Bruno Lima (bslima@telemidia.puc-rio.br)
+  * Marcelo Moreno <moreno@telemidia.puc-rio.br>
+  * Bruno Lima <bslima@telemidia.puc-rio.br>
 
 ## License
 
