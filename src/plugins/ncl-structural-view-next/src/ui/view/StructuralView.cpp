@@ -229,6 +229,7 @@ void StructuralView::createObjects()
   _minimap->init(this);
   _minimap->setMinimumSize(STR_DEFAULT_MINIMAP_W, STR_DEFAULT_MINIMAP_H);
   _minimap->setMaximumSize(STR_DEFAULT_MINIMAP_W * 2, STR_DEFAULT_MINIMAP_H * 2);
+  _minimap->hide();
 
   // Creating dialogs
   _dialog = new StructuralLinkDialog(this);
@@ -374,7 +375,6 @@ void StructuralView::insert(QString uid, QString parent, QMap<QString, QString> 
 
         case Structural::Context:
         case Structural::Switch:
-        case Structural::Body:
           // Creating...
           e = new StructuralComposition();
           e->setStructuralType(type);
@@ -653,7 +653,7 @@ void StructuralView::adjustAngles(StructuralBind* edge)
 
         int A = ea->getAngle();
 
-        if (!StructuralUtil::isConditionRole(ea->getRole()))
+        if (!StructuralUtil::isCondition(ea->getRole()))
           A = -A;
 
         if (MAX < A )
@@ -674,7 +674,7 @@ void StructuralView::adjustAngles(StructuralBind* edge)
   else if (MAX > abs(MIN))
     ANGLE = MIN-60;
 
-  if (!StructuralUtil::isConditionRole(edge->getRole()))
+  if (!StructuralUtil::isCondition(edge->getRole()))
     edge->setAngle(-ANGLE);
   else
     edge->setAngle(ANGLE);
@@ -911,9 +911,14 @@ void StructuralView::adjustReferences(StructuralEntity* entity)
           isVisible = false;
         }
 
-        if (component != NULL && interface != NULL)
-          if (interface->getStructuralParent() != component)
+        if (component != NULL) {
+          if (interface != NULL)
+            if (interface->getStructuralParent() != component)
+              isVisible = false;
+
+          if (entity->getStructuralParent() != component->getStructuralParent())
             isVisible = false;
+        }
 
         if (type == Structural::Bind)
           if (!_entities.contains(entity->getStructuralProperty(STR_PROPERTY_EDGE_ANGLE)))
@@ -1969,14 +1974,14 @@ void StructuralView::performDialog(StructuralBind* entity)
 
   emit requestedUpdate();
 
-  if (StructuralUtil::isConditionRole(entity->getRole())){
+  if (StructuralUtil::isCondition(entity->getRole())){
     _dialog->init(entity->getHead()->getStructuralProperty(STR_PROPERTY_REFERENCE_XCONNECTOR_ID),"","",
                      StructuralLinkDialog::EditCondition);
 
     int index = _dialog->form.cbCondition->findText(entity->getStructuralId());
     _dialog->form.cbCondition->setCurrentIndex(index);
     _dialog->updateCurrentConditionParam(pBind);
-  }else if (StructuralUtil::isActionRole(entity->getRole())){
+  }else if (StructuralUtil::isAction(entity->getRole())){
 
     _dialog->init(entity->getTail()->getStructuralProperty(STR_PROPERTY_REFERENCE_XCONNECTOR_ID),"","",
                      StructuralLinkDialog::EditAction);
@@ -1986,7 +1991,6 @@ void StructuralView::performDialog(StructuralBind* entity)
     _dialog->updateCurrentActionParam(pBind);
   }
 
-
   if (_dialog->exec()){
 
     QMap<QString, QString> prev = entity->getStructuralProperties();
@@ -1995,11 +1999,11 @@ void StructuralView::performDialog(StructuralBind* entity)
     QString role;
     QMap<QString, QString> p;
 
-    if (StructuralUtil::isConditionRole(entity->getRole())){
+    if (StructuralUtil::isCondition(entity->getRole())){
       role = _dialog->form.cbCondition->currentText();
       p = _dialog->getConditionParams();
 
-    }else if (StructuralUtil::isActionRole(entity->getRole())){
+    }else if (StructuralUtil::isAction(entity->getRole())){
       role = _dialog->form.cbAction->currentText();
       p = _dialog->getActionParams();
     }
