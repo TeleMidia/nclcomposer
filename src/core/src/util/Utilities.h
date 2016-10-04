@@ -103,7 +103,7 @@ private:
   static QMap<QString,LanguageType> types; /*!< TODO */
 };
 
-Q_DECLARE_LOGGING_CATEGORY(cprCoreLog)
+Q_DECLARE_LOGGING_CATEGORY(CPR_CORE)
 
 } } } //end namespace
 

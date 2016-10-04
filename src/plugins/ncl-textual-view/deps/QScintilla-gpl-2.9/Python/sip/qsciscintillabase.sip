@@ -1,6 +1,6 @@
 // This is the SIP interface definition for QsciScintillaBase.
 //
-// Copyright (c) 2015 Riverbank Computing Limited <info@riverbankcomputing.com>
+// Copyright (c) 2016 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
 // This file is part of QScintilla.
 // 
@@ -1362,16 +1362,16 @@ while (i >= 0);
     long SendScintilla(unsigned int msg, unsigned long wParam,
             void *lParam) const;
     long SendScintilla(unsigned int msg, unsigned long wParam,
-            const char *lParam /DocType="Py_v3:bytes;str", Encoding="None"/) const;
+            const char *lParam /TypeHint="Py_v3:bytes;str", Encoding="None"/) const;
     long SendScintilla(unsigned int msg,
-            const char *lParam /DocType="Py_v3:bytes;str", Encoding="None"/); const
+            const char *lParam /TypeHint="Py_v3:bytes;str", Encoding="None"/); const
     long SendScintilla(unsigned int msg,
-            const char *wParam /DocType="Py_v3:bytes;str", Encoding="None"/,
-            const char *lParam /DocType="Py_v3:bytes;str", Encoding="None"/) const;
+            const char *wParam /TypeHint="Py_v3:bytes;str", Encoding="None"/,
+            const char *lParam /TypeHint="Py_v3:bytes;str", Encoding="None"/) const;
     long SendScintilla(unsigned int msg, long wParam) const;
     //long SendScintilla(unsigned int msg, int wParam) const;
     long SendScintilla(unsigned int msg, long cpMin, long cpMax,
-            char *lpstrText /DocType="Py_v3:bytes;str", Encoding="None"/) const;
+            char *lpstrText /TypeHint="Py_v3:bytes;str", Encoding="None"/) const;
     long SendScintilla(unsigned int msg, unsigned long wParam,
             const QColor &col) const;
     long SendScintilla(unsigned int msg, const QColor &col) const;

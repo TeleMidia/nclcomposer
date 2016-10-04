@@ -13,7 +13,6 @@
 #include <QtPlugin>
 #include <QList>
 #include <QString>
-#include <QDebug>
 
 #include "IDocumentParser.h"
 using namespace composer::extension;

@@ -10,7 +10,6 @@
 #include "PerspectiveManager.h"
 #include "ui_PerspectiveManager.h"
 
-#include <QDebug>
 #include <QAbstractItemModel>
 #include <QMessageBox>
 

@@ -11,7 +11,6 @@
 #define PREFERENCES_H
 
 #include <QDir>
-#include <QDebug>
 #include <QPluginLoader>
 #include <QDialog>
 #include <QAbstractButton>

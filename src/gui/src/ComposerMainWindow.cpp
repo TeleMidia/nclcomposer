@@ -172,8 +172,8 @@ void ComposerMainWindow::initModules()
   connect( projectControl,SIGNAL(endOpenProject(QString)),
            SLOT(addToRecentProjects(QString)) );
 
-  //connect(projectControl, SIGNAL(endOpenProject(QString)),
-  //        welcomeWidget, SLOT(addToRecentProjects(QString)));
+  connect(projectControl, SIGNAL(endOpenProject(QString)),
+          welcomeWidget, SLOT(addToRecentProjects(QString)));
 
   connect( welcomeWidget, SIGNAL(userPressedRecentProject(QString)),
            this, SLOT(userPressedRecentProject(QString)) );
@@ -347,7 +347,6 @@ void ComposerMainWindow::initGUI()
   connect(_tabProjects, SIGNAL(currentChanged(int)),
           this, SLOT(currentTabChanged(int)));
 
-//  createStatusBar();
   createActions();
   createMenus();
 //  createLanguageMenu();
@@ -372,9 +371,9 @@ void ComposerMainWindow::initGUI()
   _tabProjects->addTab(welcomeWidget, tr("Welcome"));
   _tabProjects->setTabIcon(0, QIcon());
 
-  // QTabBar *tabBar = _tabProjects->findChild<QTabBar *>();
-  // tabBar->setTabButton(0, QTabBar::RightSide, 0);
-  // tabBar->setTabButton(0, QTabBar::LeftSide, 0);
+  QTabBar *tabBar = _tabProjects->findChild<QTabBar *>();
+  tabBar->setTabButton(0, QTabBar::RightSide, 0);
+  tabBar->setTabButton(0, QTabBar::LeftSide, 0);
 
   connect(welcomeWidget, SIGNAL(userPressedOpenProject()),
           this, SLOT(openProject()));
@@ -531,28 +530,39 @@ void ComposerMainWindow::addPluginWidget( IPluginFactory *fac,
       // Add updateFromModel and close button
       QFrame *btn_group = new QFrame(pW);
 
-      QPushButton *btn_UpdateFromModel = new QPushButton(btn_group);
-      btn_UpdateFromModel->setFlat(true);
+      // \todo Move this to *.css file
+      btn_group->setStyleSheet("QToolButton { border: none; } \
+                                QToolButton::hover {  background: #aaaaaa; } \
+                                QToolButton:pressed { \
+                                  background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, \
+                                              top: 0 #dcebfd, \
+                                              stop: 1 #c2dcfd); \
+                                }");
+
+      QToolButton *btn_UpdateFromModel = new QToolButton(btn_group);
       btn_UpdateFromModel->setIcon(QIcon(":/mainwindow/refreshplugin"));
-      btn_UpdateFromModel->setIconSize(QSize(18, 18));
-      btn_UpdateFromModel->setToolTip(tr("Reload View Model"));
+      btn_UpdateFromModel->setIconSize(QSize(12, 12));
+      btn_UpdateFromModel->setToolTip(tr("Reload View's Model"));
       connect(btn_UpdateFromModel, SIGNAL(pressed()),
               plugin, SLOT(updateFromModel()));
 
-      QPushButton *btn_close = new QPushButton(btn_group);
-      btn_close->setFlat(true);
-      btn_close->setIcon(QIcon(":/mainwindow/closeplugin"));
-      btn_close->setIconSize(QSize(18, 18));
-      btn_close->setToolTip(tr("Close plugin"));
+      QToolButton *btn_close = new QToolButton(btn_group);
+      QAction* close_view_action = new QAction(QIcon(":/mainwindow/closeplugin"), tr("Close view"), btn_group);
+      btn_close->setIconSize(QSize(12, 12));
+      btn_close->setDefaultAction(close_view_action);
+      close_view_action->setData(w->toolWindows().size()-1);
+      connect(close_view_action, SIGNAL(triggered(bool)), this, SLOT(pluginWidgetViewToggled(bool)));
 
       QHBoxLayout *layout = new QHBoxLayout(btn_group);
+      layout->addStretch();
       layout->addWidget(btn_UpdateFromModel);
       layout->addWidget(btn_close);
+      layout->setContentsMargins(0,0,0,0);
       layout->setSpacing(0);
       layout->setMargin(0);
       btn_group->setLayout(layout);
 
-      // w->setTabButton(pW, QTabBar::RightSide, btn_group);
+      w->setTabButton(pW, QTabBar::RightSide, btn_group);
   }
 #endif
 }
@@ -1000,11 +1010,6 @@ void ComposerMainWindow::createActions() {
 
   connect (ui->action_Help, SIGNAL(triggered()), this, SLOT(showHelp()));
 
-}
-
-void ComposerMainWindow::createStatusBar()
-{
-  statusBar()->showMessage(tr("Ready"));
 }
 
 /*!
@@ -2475,7 +2480,6 @@ void ComposerMainWindow::loadLanguage(const QString& rLanguage)
                      m_langPath + "/" + QString("composer_%1.qm").arg(rLanguage));
     switchTranslator(m_translatorQt, QString("qt_%1.qm").arg(rLanguage));
 
-//  ui->statusBar->showMessage(tr("Current Language changed to %1").arg(languageName));
   }
 }
 

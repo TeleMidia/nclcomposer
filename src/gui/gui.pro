@@ -153,7 +153,7 @@ export(first.depends)
 export(copydata.commands)
 QMAKE_EXTRA_TARGETS += $(first) $(copydata)
 
-data.files = data/defaultConnBase.ncl data/style.qss
+data.files = data/defaultConnBase.ncl data/style.qss data/default.ini
 
 DEFINES += EXT_DEFAULT_PATH=\"\\\"$$PREFIX\\\"\"
 DEFINES += INSTALL_PATH=\"\\\"$$INSTALLBASE\\\"\"

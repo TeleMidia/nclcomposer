@@ -109,7 +109,6 @@ HEADERS = \
     $$HEADERS_EXCEPTION \
     $$HEADERS_MODEL
 
-
 headers_man.files = $$HEADERS_MAN
 headers_extensions.files = $$HEADERS_EXTENSIONS
 headers_util.files = $$HEADERS_UTIL

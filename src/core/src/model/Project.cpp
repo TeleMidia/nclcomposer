@@ -173,7 +173,6 @@ bool Project::removeEntity(Entity* entity, bool appendChild)
     return false; // entity does not exist in the model
   }
 
-  //  qDebug() << entities;
   setDirty(true);
   return true;
 }
@@ -253,7 +252,7 @@ QList<Entity*> Project::getEntityByAttrId(const QString &id)
   QMutexLocker locker(lockEntities);
   QMapIterator<QString, Entity*> it(entities);
   QList<Entity*> listRet;
-  qCDebug(cprCoreLog) << "Project::getEntitiesbyType " << type;
+  qCDebug(CPR_CORE) << "Project::getEntitiesbyType " << type;
 
   while(it.hasNext())
   {
