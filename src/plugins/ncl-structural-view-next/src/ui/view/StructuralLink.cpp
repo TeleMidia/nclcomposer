@@ -47,7 +47,7 @@ void StructuralLink::draw(QPainter* painter)
 
 void StructuralLink::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
 {
-  StructuralNode::mouseDoubleClickEvent(event);
+//  StructuralNode::mouseDoubleClickEvent(event);
 
   emit performedEdit(this);
 }
