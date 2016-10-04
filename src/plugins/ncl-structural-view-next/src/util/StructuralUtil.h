@@ -43,13 +43,12 @@ public:
   static QString getMimeTypeTooltip(StructuralMimeType mimetype, const QString &title = "", const QString &info = "", const QString &warning = "", const QString &error = "", const QString &extra = "");
   static StructuralMimeType getMimeTypeByExtension(const QString &extension);
 
-  static QString getRoleIcon(StructuralRole role);
+  static QString getIcon(StructuralRole role);
 
-  static bool isConditionRole(StructuralRole role);
-  static bool isConditionRole(const QString &role);
-
-  static bool isActionRole(StructuralRole role);
-  static bool isActionRole(const QString &role);
+  static bool isCondition(StructuralRole role);
+  static bool isCondition(const QString &role);
+  static bool isAction(StructuralRole role);
+  static bool isAction(const QString &role);
 
   static void adjustEdges(StructuralEntity* entity);
 

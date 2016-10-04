@@ -538,7 +538,7 @@ std::map<Structural::StructuralRole, QString> StructuralUtil::_rolesIcon =
 
 (Structural::NoRole, "");
 
-QString StructuralUtil::getRoleIcon(StructuralRole role)
+QString StructuralUtil::getIcon(StructuralRole role)
 {
   if(_rolesIcon.count(role))
     return _rolesIcon[role];
@@ -546,7 +546,7 @@ QString StructuralUtil::getRoleIcon(StructuralRole role)
     return "";
 }
 
-bool StructuralUtil::isConditionRole(StructuralRole role)
+bool StructuralUtil::isCondition(StructuralRole role)
 {
   return (role == Structural::onBegin ||
           role == Structural::onBeginAttribution ||
@@ -559,19 +559,19 @@ bool StructuralUtil::isConditionRole(StructuralRole role)
           role == Structural::onSelection);
 }
 
-bool StructuralUtil::isConditionRole(const QString &role)
+bool StructuralUtil::isCondition(const QString &role)
 {
-  return isConditionRole(_mapStringToRole[role]);
+  return isCondition(_mapStringToRole[role]);
 }
 
-bool StructuralUtil::isActionRole(StructuralRole role)
+bool StructuralUtil::isAction(StructuralRole role)
 {
-  return (role != Structural::NoRole && !isConditionRole(role));
+  return (role != Structural::NoRole && !isCondition(role));
 }
 
-bool StructuralUtil::isActionRole(const QString &role)
+bool StructuralUtil::isAction(const QString &role)
 {
-  return isActionRole(_mapStringToRole[role]);
+  return isAction(_mapStringToRole[role]);
 }
 
 void StructuralUtil::adjustEdges(StructuralEntity* entity)
