@@ -15,8 +15,8 @@
  * License along with this library.  If not, see
  * <http://www.gnu.org/licenses/>.
  */
-#ifndef QNSTCOMPOSERPLUGIN_H
-#define QNSTCOMPOSERPLUGIN_H
+#ifndef STRUCTUALVIEWPLUGIN_H
+#define STRUCTUALVIEWPLUGIN_H
 
 #include <QMap>
 
@@ -51,67 +51,46 @@ public slots:
   void clearValidationMessages(QString pluginID, void *param);
   void validationError(QString pluginID, void *param);
 
-  /* From Core */
-  void requestEntitySelection(const QString uid);
-  void requestEntityAddition(Entity* entity, bool enableUndo = true);
-  void requestEntityRemotion(Entity* entity, bool enableUndo = true);
-  void requestEntityChange(Entity* entity);
-  void requestEntitySelection(Entity* entity);
+  void insertInView(Entity* entity, bool undo = true);
+  void removeInView(Entity* entity, bool undo = true);
+  void changeInView(Entity* entity);
+  void selectInView(Entity* entity);
 
-  void updateConnectorsDataInView();
+  void insertInCore (QString uid, QString parent, QMap<QString, QString> properties, QMap<QString, QString> settings);
+  void removeInCore(QString uid, QMap<QString, QString> settings);
+  void changeInCore(QString uid, QMap<QString, QString> properties, QMap<QString, QString> previous, QMap<QString, QString> settings);
+  void selectInCore(QString uid, QMap<QString, QString> settings);
 
-  /* From View */
-  void notifyEntityAddedInView (const QString uid, const QString parent,
-                                QMap<QString, QString> properties, QMap<QString, QString> settings);
+  void adjustConnectors();
 
-  void notifyEntityDeletedInView(const QString uid, QMap<QString, QString> settings);
-
-  void notifyEntitySelectionInView(const QString uid, QMap<QString, QString> settings);
-
-  void notifyEntityChangedInView(const QString uid,
-                                 QMap<QString, QString> properties,
-                                 QMap<QString, QString> previous,
-                                 QMap<QString, QString> settings);
+  void textualStartSync(QString, void*); /* from textual plugin */
+  void textualFinishSync(QString, void*); /* from textual plugin */
 
 private:
-  void clear();
+  void createWidgets();
+  void createConnections();
+
+  void createBodyDependences();
 
   QString getUidById(const QString &id);
   QString getUidById(const QString &id, Entity* entity);
   QString getUidByName(const QString &name, Entity* entity);
 
-  void createWidgets();
+  void adjustReferences(QMap<QString, QString> &properties);
 
-  void createConnections();
-
-  /* FROM QNSTVIEW */
-  void requestBodyDependence();
+  void clean();
 
 private:
-
-  bool isConnector;
-  StructuralWindow* _window;
-
-  QString _notified;
-  QMap <QString, QString> entities; // core -> structural
-  QMap <QString, QString> nclIDtoStructural; // nclId -> structural ID
-
-  QMap <QString, QString> xconnector_viewLink; // nclId -> structural ID
-  QList <QString> dirtyEntities;
-  QList <QString> previousCoreID;
-
-  QString lastSelected;
-
-  QString *_selectedId;
-
   bool _synching;
   bool _waiting;
 
+  QString _notified;
+  QString _selected;
 
-public slots:
-  void textualStartSync(QString, void*); /* from textual plugin */
-  void textualFinishSync(QString, void*); /* from textual plugin */
-  /* End "synchronization with core". */
+  StructuralWindow* _window;
+
+  QMap <QString, QString> _mapCoreToView;
+  QMap <QString, QString> _mapViewToCore;
 };
 
-#endif // QNSTCOMPOSERPLUGIN_H
+#endif // STRUCTUALVIEWPLUGIN_H
