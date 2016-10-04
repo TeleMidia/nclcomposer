@@ -5,14 +5,18 @@
 
 #include <QDomDocument>
 #include <QDomElement>
+
 #include <QMouseEvent>
 #include <QKeyEvent>
-#include <QMessageBox>
 #include <QWheelEvent>
-#include <QSet>
+#include <QResizeEvent>
+
 #include <QUndoStack>
 #include <QDir>
-#include <QGraphicsScene>
+
+#include "Remove.h"
+#include "Change.h"
+#include "Insert.h"
 
 #include "StructuralScene.h"
 #include "StructuralEntity.h"
@@ -22,15 +26,9 @@
 #include "StructuralBind.h"
 #include "StructuralLink.h"
 #include "StructuralLinkDialog.h"
-
-#include "Remove.h"
-#include "Change.h"
-#include "Insert.h"
-
 #include "StructuralMinimap.h"
 #include "StructuralLinkTool.h"
 
-class StructuralScene;
 class StructuralMinimap;
 
 class StructuralView : public QGraphicsView
@@ -41,8 +39,28 @@ public:
   StructuralView(QWidget* parent = 0);
   virtual ~StructuralView();
 
+  StructuralScene* getScene();
+  StructuralMenu* getMenu();
+  StructuralEntity* getBody();
+  StructuralLinkDialog* getDialog();
+
+  StructuralEntity* getEntity(const QString &uid);
+  QMap<QString, StructuralEntity*> getEntities();
+
   StructuralMode getMode() const;
   void setMode(StructuralMode mode);
+
+  QString getError(const QString &uid) const;
+  void setError(const QString &uid, const QString &error);
+
+  void cleanErrors();
+
+  bool contains(const QString &uid);
+
+  void load(const QString &data);
+  void load(QDomElement entity, QDomElement parent);
+
+  QString save();
 
 public slots:
   void insert(QString uid, QString parent, QMap<QString, QString> properties, QMap<QString, QString> settings);
@@ -51,9 +69,6 @@ public slots:
   void select(QString uid, QMap<QString, QString> settings);
 
   void move(QString uid, QString parent);
-
-  void create(StructuralType type);
-  void create(StructuralType type, QMap<QString, QString> properties, QMap<QString, QString> settings);
 
   void performHelp();
   void performUndo();
@@ -85,8 +100,10 @@ public slots:
 
   void performInsert(StructuralType type, QMap<QString, QString> properties);
 
-  void showEditLinkDialog(StructuralLink* entity);
-  void showEditBindDialog(StructuralBind* entity);
+  void performDialog(StructuralLink* entity);
+  void performDialog(StructuralBind* entity);
+
+  void clean();
 
 signals:
   void inserted(QString uid, QString _parent, QMap<QString, QString> properties, QMap<QString, QString> settings);
@@ -105,80 +122,9 @@ signals:
   void switchedZoomOut(bool state);
   void switchedBody(bool state);
 
-
-  void selectChange(QString uid);
-  void viewChanged();
-  void requestLinkDialogUpdate();
-
-private:
-#ifdef WITH_GRAPHVIZ
-   void autoadjust();
-   void autoadjust(StructuralEntity* entity, const QString &code);
-#endif
-
-   int _zoomStep;
-
-   QString _selected;
-
-   StructuralEntity* _clipboard;
-   QMap<QString, QString> _clipboardReferences;
-
-   StructuralMenu* _menu;
-   StructuralMinimap* _minimap;
-
-   StructuralScene* _scene;
-
-   StructuralMode _mode;
-
-   QUndoStack _commnads;
-
-   StructuralLinkDialog* _linkDialog;
-
-   QMap<QString, StructuralEntity*> _entities;
-
-public:
-
-public:
-  StructuralScene* getScene();
-
-  bool hasEntity(QString uid);
-  StructuralEntity* getEntity(const QString &uid);
-  QMap<QString, StructuralEntity*> getEntities();
-
-  void cleanUndoRedo();
-
-
-  void updateLinkDialog(QMap<QString, QVector<QString> > conditions,
-                        QMap<QString, QVector<QString> > actions,
-                        QMap<QString, QVector<QString> > params);
-
-
-public:
-  void load(const QString &data);
-  void load(QDomElement entity, QDomElement parent);
-
-  QString save();
-  void createDocument(StructuralEntity* entity, QDomDocument* document, QDomElement parent);
-
-  void unselect();
-
-   StructuralEntity* getBody();
-   QVector<StructuralEntity*> getRoots();
-
-   void clearErrors();
-   void markError(const QString &uid, const QString &msg);
-
-   void setMiniMapVisible(bool enable);
-
-   void adjustReferences(StructuralEntity* entity);
-
+  void requestedUpdate();
 
 protected:
-
-  QString getNewId(StructuralEntity *entity);
-
-  void resizeEvent(QResizeEvent *event);
-
   virtual void mouseMoveEvent(QMouseEvent* event);
   virtual void mousePressEvent(QMouseEvent* event);
   virtual void mouseReleaseEvent(QMouseEvent*event);
@@ -188,37 +134,62 @@ protected:
 
   virtual void wheelEvent(QWheelEvent * event);
 
-public slots:
-  void clearAllData();
+  virtual void resizeEvent(QResizeEvent *event);
 
 private:
-  StructuralEntity* clone(StructuralEntity* entity, StructuralEntity * parent = NULL);
+  void createObjects();
+  void createConnection();
+
+  void createEntity(StructuralType type);
+  void createEntity(StructuralType type, QMap<QString, QString> properties, QMap<QString, QString> settings);
+  void createDocument(StructuralEntity* entity, QDomDocument* document, QDomElement parent);
+  void createLink(StructuralEntity* tail, StructuralEntity* head);
+  void createBind(StructuralEntity* tail, StructuralEntity* head, StructuralRole role = Structural::NoRole, const QString &code = "");
+  void createReference(StructuralEntity* tail, StructuralEntity* head);
+
+  QString getNewId(StructuralEntity *entity);
+  qreal getNewAngle(StructuralBind* edge);
+
+  void adjustAngles(StructuralBind* edge);
+  void adjustReferences(StructuralEntity* entity);
+  void adjustProperties(StructuralEntity* entity);
+
+#ifdef WITH_GRAPHVIZ
+  void adjustLayout();
+  void adjustLayout(StructuralEntity* entity, const QString &code);
+#endif
+
+  bool isChild(StructuralEntity* entity , StructuralEntity* parent);
 
   void paste(StructuralEntity* entity, StructuralEntity* parent);
   void paste(StructuralEntity* entity, StructuralEntity* parent, const QString &code, bool adjust);
 
-  void adjustProperties(StructuralEntity* entity);
-  qreal getNewAngle(StructuralBind* edge);
-  void adjustAngles(StructuralBind* edge);
+  StructuralEntity* clone(StructuralEntity* entity, StructuralEntity* parent = NULL);
 
-  bool isChild(StructuralEntity* e , StructuralEntity* p);
-  void createLink(StructuralEntity* a, StructuralEntity* b);
-  void createBind(StructuralEntity* a, StructuralEntity* b,StructuralRole type = Structural::NoRole, QString code = "");
-  void createReference(StructuralEntity* a, StructuralEntity* b);
+  StructuralMode _mode;
 
-
-  void createObjects();
-  void createConnection();
+  int _zoom;
 
   bool _linking;
-  StructuralEntity* _tailHovered;
-  StructuralEntity* _headHovered;
+  StructuralEntity* _linkingTail;
+  StructuralEntity* _linkingHead;
 
+  QString _selected;
 
-  QMap<StructuralType, int> _entityCount;
+  StructuralEntity* _clipboard;
+  QMap<QString, QString> _clipboardReferences;
 
-  StructuralLinkTool* _linkTool;
+  QUndoStack _commnads;
 
+  StructuralMenu* _menu;
+  StructuralScene* _scene;
+  StructuralLinkTool* _tool;
+  StructuralLinkDialog* _dialog;
+  StructuralMinimap* _minimap;
+
+  QMap<StructuralType, int> _counter;
+
+  QMap<QString, StructuralEntity*> _entities;
 };
 
 #endif // STRUCTURALVIEW_H

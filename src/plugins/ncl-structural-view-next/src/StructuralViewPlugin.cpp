@@ -49,7 +49,7 @@ void StructuralViewPlugin::createConnections()
   connect(view, SIGNAL(changed(QString,QMap<QString,QString>,QMap<QString,QString>,QMap<QString,QString>)),SLOT(notifyEntityChangedInView(QString,QMap<QString,QString>,QMap<QString,QString>,QMap<QString,QString>)));
   connect(view, SIGNAL(selected(QString,QMap<QString,QString>)),SLOT(notifyEntitySelectionInView(QString,QMap<QString,QString>)));
 
-  connect(view, SIGNAL(requestLinkDialogUpdate()), SLOT(updateConnectorsDataInView()));
+  connect(view, SIGNAL(requestedUpdate()), SLOT(updateConnectorsDataInView()));
 }
 
 void StructuralViewPlugin::init()
@@ -143,7 +143,7 @@ void StructuralViewPlugin::updateFromModel()
     }
   }
 
-  _window->getView()->clearAllData(); clear();
+  _window->getView()->clean(); clear();
 
   QStack <Entity *> stack; stack.push(project);
   while(stack.size())
@@ -385,7 +385,7 @@ void StructuralViewPlugin::updateFromModel()
     }
   }
 
-  _window->getView()->cleanUndoRedo();
+//  _window->getView()->cleanUndoRedo();
 }
 
 void StructuralViewPlugin::clear()
@@ -798,7 +798,7 @@ void StructuralViewPlugin::requestEntityChange(Entity* entity)
 
       QString entityPlgUID = entities[entity->getUniqueId()];
 
-     if (_window->getView()->hasEntity(entityPlgUID)){
+     if (_window->getView()->contains(entityPlgUID)){
       _window->getView()->change(entityPlgUID, properties, _window->getView()->getEntity(entityPlgUID)->getStructuralProperties(), settings);
      }
     }
@@ -882,7 +882,7 @@ void StructuralViewPlugin::requestEntitySelection(Entity* entity)
   }
   else
   {
-    _window->getView()->unselect();
+    _window->getView()->select("", StructuralUtil::createSettings(false, false));
   }
 }
 
@@ -1186,7 +1186,7 @@ void StructuralViewPlugin::textualFinishSync(QString, void*)
 
 void StructuralViewPlugin::clearValidationMessages(QString, void *param)
 {
-  _window->getView()->clearErrors();
+  _window->getView()->cleanErrors();
 }
 
 void StructuralViewPlugin::validationError(QString pluginID, void *param)
@@ -1199,7 +1199,7 @@ void StructuralViewPlugin::validationError(QString pluginID, void *param)
     pair <QString, QString> *p = (pair <QString, QString> *)param;
 
     if (entities.contains(p->first))
-      _window->getView()->markError(entities.value(p->first), p->second);
+      _window->getView()->setError(entities.value(p->first), p->second);
   }
 }
 
@@ -1421,6 +1421,6 @@ void StructuralViewPlugin::updateConnectorsDataInView()
       }
     }
 
-    _window->getView()->updateLinkDialog(conditions, actions, params);
+    _window->getView()->getDialog()->setData(conditions, actions, params);
   }
 }

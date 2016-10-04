@@ -261,7 +261,6 @@ void StructuralWindow::createToolbar()
 void StructuralWindow::createWidgets()
 {
   _view = new StructuralView(this);
-  _view->setMiniMapVisible(false);
 
   setCentralWidget(_view);
 }
@@ -309,8 +308,6 @@ void  StructuralWindow::createConnections()
   connect(_view, SIGNAL(switchedZoomOut(bool)), SLOT(switchZoomOut(bool)));
 
   connect(_view, SIGNAL(switchedBody(bool)), SLOT(changeBodyState(bool)));
-
-  connect(_view, SIGNAL(selectChange(QString)), SLOT(changeSelect(QString)));
 
   connect(_view, SIGNAL(switchedPointer(bool)), SLOT(switchPointer(bool)));
   connect(_view, SIGNAL(switchedLink(bool)), SLOT(changeLinkState(bool)));
