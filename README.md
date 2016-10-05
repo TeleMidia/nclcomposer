@@ -115,10 +115,12 @@ NCL Composer is available through
 NCL Composer would not be possible without many other open source software that
 we use as base.  In special:
 
-  * [Qt](http://qt.io)
+  * [Qt](http://qt.io) for multi-plataform, gui, etc.
   * [QScintilla](https://riverbankcomputing.com/software/qscintilla/intro) and
-    [Scintilla](http://www.scintilla.org/) for textual editing feautres.
-  * [QToolMainWindow](https://github.com/Riateche/toolwindowmanager)
-  * [Graphviz](http://www.graphviz.org)
+    [Scintilla](http://www.scintilla.org/) for textual editing features.
+  * [QToolMainWindow](https://github.com/Riateche/toolwindowmanager): for a
+    beautiful and easy-to-use organization of the interface.
+  * [Graphviz](http://www.graphviz.org): for automatically layout of nodes in
+    structural view.
 
 
