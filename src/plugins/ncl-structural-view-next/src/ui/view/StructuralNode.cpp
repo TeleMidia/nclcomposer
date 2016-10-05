@@ -55,6 +55,8 @@ void StructuralNode::adjust(bool collision, bool recursion)
 {
   StructuralEntity::adjust(collision, recursion);
 
+  setSelectable(false);
+
   if (recursion)
     foreach(StructuralEntity* entity, getStructuralEntities())
       if (entity->getStructuralCategory() != Structural::Edge)
@@ -116,6 +118,8 @@ void StructuralNode::adjust(bool collision, bool recursion)
 
     StructuralUtil::adjustEdges(this);
   }
+
+  setSelectable(true);
 
   if (scene() != NULL)
     scene()->update();

@@ -99,20 +99,20 @@ void StructuralInterface::constrain()
     qreal current = 1.0;
     qreal step = 0.01;
 
-    if (!parent->contains(head)) {
+    if (!parent->contains(p)) {
       step = -0.01;
       status = false;
     }
 
-    if (parent->contains(line.pointAt(current+step)) == status) {
-      while(parent->contains(p) == status) {
-        current += step;
-        p = line.pointAt(current);
-      }
-    }
+    do {
+      current += step;
+      p = line.pointAt(current);
+    } while(parent->contains(p) == status);
 
-    setTop(p.y() - getHeight()/2);
-    setLeft(p.x() - getWidth()/2);
+    if (QLineF(p,head).length() > 7) {
+      setTop(p.y() - getHeight()/2);
+      setLeft(p.x() - getWidth()/2);
+    }
   }
 }
 

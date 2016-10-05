@@ -842,6 +842,9 @@ void StructuralView::adjustReferences(StructuralEntity* entity)
 
         bool isVisible = true;
 
+        if (!entity->getStructuralParent()->isUncollapsed())
+          isVisible = false;
+
         if (((StructuralEdge*) entity)->getTail() == NULL ||
             ((StructuralEdge*) entity)->getHead() == NULL)
           isVisible = false;

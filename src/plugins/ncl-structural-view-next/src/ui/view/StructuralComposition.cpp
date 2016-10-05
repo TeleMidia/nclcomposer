@@ -40,10 +40,14 @@ void StructuralComposition::collapse(bool notify)
 
     foreach(StructuralEntity* entity, getStructuralEntities()) {
 
-      entity->setTop(entity->getUncollapedTop());
-      entity->setLeft(entity->getUncollapedLeft());
+      if (entity->getStructuralCategory() == Structural::Interface) {
+        entity->setTop(entity->getTop()*getUncollapedHeight()/STR_DEFAULT_CONTENT_H);
+        entity->setLeft(entity->getLeft()*getUncollapedWidth()/STR_DEFAULT_CONTENT_W);
 
-      if (entity->getStructuralCategory() != Structural::Interface) {
+      } else {
+        entity->setTop(entity->getUncollapedTop());
+        entity->setLeft(entity->getUncollapedLeft());
+
         entity->setHidden(false);
 
         if (entity->isUncollapsed()) {
@@ -51,8 +55,6 @@ void StructuralComposition::collapse(bool notify)
           entity->setHeight(entity->getUncollapedHeight());
         }
       }
-
-      entity->adjust(true);
     }
 
   } else {
@@ -84,15 +86,8 @@ void StructuralComposition::collapse(bool notify)
           entity->setUncollapedHeight(entity->getHeight());
         }
       }
-
-      entity->adjust(true);
     }
   }
-
-  StructuralEntity* parent = getStructuralParent();
-
-  if (parent != NULL)
-    parent->adjust(true);
 
   setUncollapsed(!isUncollapsed());
 
@@ -226,10 +221,15 @@ void StructuralComposition::draw(QPainter* painter)
 
 void StructuralComposition::delineate(QPainterPath* painter) const
 {
-  painter->addEllipse(STR_DEFAULT_ENTITY_PADDING,
-                      STR_DEFAULT_ENTITY_PADDING,
-                      getWidth(),
-                      getHeight());
+  int x = STR_DEFAULT_ENTITY_PADDING;
+  int y = STR_DEFAULT_ENTITY_PADDING;
+  int w = getWidth();
+  int h = getHeight();
+
+  if (isUncollapsed())
+    painter->addEllipse(x, y, w, h);
+  else
+    painter->addRect(x, y, w, h);
 }
 
 void StructuralComposition::dragEnterEvent(QGraphicsSceneDragDropEvent *event)
