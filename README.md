@@ -18,9 +18,6 @@ supporting textual and graphical abstractions.
   * Easily extensible through a plug-in API
   * Multi-platform (Linux, Windows, and Mac officially supported)
 
-## Screenshots
-
-
 ## Source code organization
 NCL Composer source code is divided into three main parts:
   * __src/core__: implements a minimal core that allows the loading and
@@ -32,7 +29,11 @@ NCL Composer source code is divided into three main parts:
 
 ## Contributing
 
+  * TODO
+
 ## Building
+
+  * TODO
 
 ### Requirements
 The main requirement for NCL Composer is:
@@ -64,7 +65,7 @@ scriptable install system](http://nsis.sourceforge.net/).
 
 To generate the windows installer, go to `win32-nsis` directory and run:
 
-    $ makensis composer.nsis
+    $ makensis nclcomposer.nsis
 
 ### Generating DEBIAN package
 Before generate the debian package you must update the debian files, inside the
@@ -72,17 +73,17 @@ debian directory.
 
 To generate a new debian package, the only thing you need to do is run:
   
-  ./scripts/deb-package.sh
+    $ ./scripts/deb-package.sh
   
 in your terminal.
 
-This will generate a `composer_x.x.x.deb` file one directory behind the root
-NCL Composer directory. This package is what you need to install on other
-Debian/Ubuntu systems.
+This will generate a `nclcomposer_x.x.x.deb` file one directory behind the root
+NCL Composer directory. This package all you need to install NCL Composer on 
+other Debian/Ubuntu systems.
 
 You can install it, using dpkg, for example:
 
-    $ dpkg -i composer_x.x.x.deb
+    $ dpkg -i nclcomposer_x.x.x.deb
 
 ### Mac OS X
 
@@ -95,6 +96,17 @@ You can install it, using dpkg, for example:
 ### Previous contributors
   * Marcelo Moreno <moreno@telemidia.puc-rio.br>
   * Bruno Lima <bslima@telemidia.puc-rio.br>
+
+## Acknowledgment
+
+NCL Composer would not be possible without many other open source software that
+we use as base.  In special:
+
+  * [Qt](http://qt.io)
+  * [QScintilla](https://riverbankcomputing.com/software/qscintilla/intro) and
+    [Scintilla](http://www.scintilla.org/) for textual editing feautres.
+  * [QToolMainWindow](https://github.com/Riateche/toolwindowmanager)
+  * [Graphviz](http://www.graphviz.org)
 
 ## License
 
