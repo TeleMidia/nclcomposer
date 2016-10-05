@@ -486,9 +486,6 @@ void StructuralView::insert(QString uid, QString parent, QMap<QString, QString> 
       // Setting...
       //
 
-      //
-
-
       // Setting 'uid'...
       e->setStructuralUid(uid);
 
@@ -543,6 +540,11 @@ void StructuralView::insert(QString uid, QString parent, QMap<QString, QString> 
 
       // Adjust 'references'
       adjustReferences(e);
+
+      // Adjust 'angles'
+      if (e->getStructuralType() == Structural::Bind)
+        if (!properties.contains(STR_PROPERTY_EDGE_ANGLE))
+          ((StructuralBind*) e)->setAngle(getNewAngle((StructuralBind*) e));
 
       // Adjust 'others'
       if (!properties.contains(STR_PROPERTY_ENTITY_TOP) || !properties.contains(STR_PROPERTY_ENTITY_LEFT))
@@ -630,54 +632,6 @@ qreal StructuralView::getNewAngle(StructuralBind* bind)
     return -angle;
 
   return angle;
-}
-
-void StructuralView::adjustAngles(StructuralBind* edge)
-{
-  int MIN =  100000;
-  int MAX = -100000;
-
-  bool HAS = false;
-
-  foreach (StructuralEntity *e, _entities)
-  {
-    if (e->getStructuralType() == Structural::Bind)
-    {
-      StructuralBind *ea = (StructuralBind*) e;
-
-      if ((edge->getTail() == ea->getTail() || edge->getTail() == ea->getHead()) &&
-          (edge->getHead() == ea->getHead() || edge->getHead() == ea->getTail()) &&
-          edge != ea)
-      {
-        HAS = true;
-
-        int A = ea->getAngle();
-
-        if (!StructuralUtil::isCondition(ea->getRole()))
-          A = -A;
-
-        if (MAX < A )
-          MAX = A;
-
-        if (MIN > A )
-          MIN = A;
-      }
-    }
-  }
-
-  int ANGLE = -1;
-
-  if (!HAS)
-    ANGLE = 0;
-  else if (MAX <= abs(MIN))
-    ANGLE = MAX+60;
-  else if (MAX > abs(MIN))
-    ANGLE = MIN-60;
-
-  if (!StructuralUtil::isCondition(edge->getRole()))
-    edge->setAngle(-ANGLE);
-  else
-    edge->setAngle(ANGLE);
 }
 
 void StructuralView::remove(QString uid, QMap<QString, QString> settings)
@@ -919,10 +873,6 @@ void StructuralView::adjustReferences(StructuralEntity* entity)
           if (entity->getStructuralParent() != component->getStructuralParent())
             isVisible = false;
         }
-
-        if (type == Structural::Bind)
-          if (!_entities.contains(entity->getStructuralProperty(STR_PROPERTY_EDGE_ANGLE)))
-            ((StructuralBind*) entity)->setAngle(getNewAngle((StructuralBind*) entity));
 
         entity->setHidden(!isVisible);
 

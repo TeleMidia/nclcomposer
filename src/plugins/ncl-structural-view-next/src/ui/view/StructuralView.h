@@ -150,7 +150,6 @@ private:
   QString getNewId(StructuralEntity *entity);
   qreal getNewAngle(StructuralBind* edge);
 
-  void adjustAngles(StructuralBind* edge);
   void adjustReferences(StructuralEntity* entity);
   void adjustProperties(StructuralEntity* entity);
 
