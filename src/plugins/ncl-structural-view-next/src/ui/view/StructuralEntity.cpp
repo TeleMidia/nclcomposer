@@ -117,6 +117,7 @@ void StructuralEntity::setStructuralType(StructuralType type)
       addStructuralRestriction(STR_PROPERTY_REFERENCE_COMPONENT_UID);
       addStructuralRestriction(STR_PROPERTY_REFERENCE_INTERFACE_ID);
       addStructuralRestriction(STR_PROPERTY_REFERENCE_INTERFACE_UID);
+
       break;
     }
 
@@ -131,6 +132,15 @@ void StructuralEntity::setStructuralType(StructuralType type)
       addStructuralRestriction(STR_PROPERTY_LINKPARAM_VALUE);
       addStructuralRestriction(STR_PROPERTY_BINDPARAM_NAME);
       addStructuralRestriction(STR_PROPERTY_BINDPARAM_VALUE);
+
+      break;
+    }
+
+    case Structural::Link:
+    {
+      addStructuralRestriction(STR_PROPERTY_LINKPARAM_NAME);
+      addStructuralRestriction(STR_PROPERTY_LINKPARAM_VALUE);
+
       break;
     }
 
