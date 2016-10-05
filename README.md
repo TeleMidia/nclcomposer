@@ -37,18 +37,24 @@ NCL Composer source code is divided into three main parts:
 
 ### Requirements
 The main requirement for NCL Composer is:
+
   * Qt >= 5.2
 
-<!-- If you want to enable the Run your application on Ginga Virtual Set-top box,
-then you should run qmake like this:
-  * qmake RUNSSHON=true
-
-By doing so, you have to be installed the following:
-  * libssh2
-  * libcrypt -->
-
 ### Linux (Debian/Ubuntu)
-  * TODO
+In an Debian-based system you can easily install Qt libraries through:
+
+    $ apt-get install libqtbase5-dev libqttool5-dev
+
+After installing the dependencies and cloning the repository, you can compile
+NCL Composer by entering in the nclcomposer root directory and typing:
+
+    $ qmake
+    $ make
+
+If everything is alright with the compilation process you should be able to
+find the executable (and run):
+
+    $ ./bin/debug/nclcomposer
 
 ### Windows
   * TODO
@@ -61,16 +67,13 @@ This repository also provides the necessary files for packaging NCL Composer.
 
 ### MSI (Windows installer) package
 To generate the Windows Package installer, you will need the NSIS ([Nullsoft 
-scriptable install system](http://nsis.sourceforge.net/).
+scriptable install system](http://nsis.sourceforge.net/)).
 
 To generate the windows installer, go to `win32-nsis` directory and run:
 
     $ makensis nclcomposer.nsis
 
 ### Generating DEBIAN package
-Before generate the debian package you must update the debian files, inside the
-debian directory.
-
 To generate a new debian package, the only thing you need to do is run:
   
     $ ./scripts/deb-package.sh
@@ -97,6 +100,16 @@ You can install it, using dpkg, for example:
   * Marcelo Moreno <moreno@telemidia.puc-rio.br>
   * Bruno Lima <bslima@telemidia.puc-rio.br>
 
+## License
+
+NCL Composer is available through
+[LGPLv3](http://www.gnu.org/licenses/lgpl-3.0.html).
+
+## Further information
+  * NCL Composer Official Website (http://composer.telemidia.puc-rio.br)
+  * Redmine link:
+    (http://redmine.telemidia.puc-rio.br:8080/redmine/projects/composer3)
+
 ## Acknowledgment
 
 NCL Composer would not be possible without many other open source software that
@@ -108,13 +121,4 @@ we use as base.  In special:
   * [QToolMainWindow](https://github.com/Riateche/toolwindowmanager)
   * [Graphviz](http://www.graphviz.org)
 
-## License
-
-NCL Composer is available through
-[LGPLv3](http://www.gnu.org/licenses/lgpl-3.0.html).
-
-## Further information
-  * NCL Composer Official Website (http://composer.telemidia.puc-rio.br)
-  * Redmine link:
-    (http://redmine.telemidia.puc-rio.br:8080/redmine/projects/composer3)
 
