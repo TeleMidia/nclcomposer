@@ -1378,18 +1378,19 @@ void StructuralView::createBind(StructuralEntity* tail, StructuralEntity* head, 
             properties[STR_PROPERTY_BIND_ROLE] = role;
             properties[STR_PROPERTY_ENTITY_ID] = role;
           }
+        }
 
-          QMap<QString, QString> params = _dialog->getActionParams();
+        QMap<QString, QString> params = _dialog->getActionParams();
 
-          foreach (QString key, params.keys()) {
-            if (!params.value(key).isEmpty()) {
-              QString uid = StructuralUtil::createUid();
+        foreach (QString key, params.keys()) {
+          if (!params.value(key).isEmpty()) {
+            QString uid = StructuralUtil::createUid();
 
-              properties.insert(QString(STR_PROPERTY_BINDPARAM_NAME)+":"+uid, key);
-              properties.insert(QString(STR_PROPERTY_BINDPARAM_VALUE)+":"+uid, params.value(key));
-            }
+            properties.insert(QString(STR_PROPERTY_BINDPARAM_NAME)+":"+uid, key);
+            properties.insert(QString(STR_PROPERTY_BINDPARAM_VALUE)+":"+uid, params.value(key));
           }
         }
+
       } else if (head->getStructuralType() == Structural::Link) {
         entityLink = head;
         entityNonLink = tail;
@@ -1409,16 +1410,16 @@ void StructuralView::createBind(StructuralEntity* tail, StructuralEntity* head, 
             properties[STR_PROPERTY_BIND_ROLE] = role;
             properties[STR_PROPERTY_ENTITY_ID] = role;
           }
+        }
 
-          QMap<QString, QString> params = _dialog->getConditionParams();
+        QMap<QString, QString> params = _dialog->getConditionParams();
 
-          foreach (QString key, params.keys()) {
-            if (!params.value(key).isEmpty()){
-              QString uid = StructuralUtil::createUid();
+        foreach (QString key, params.keys()) {
+          if (!params.value(key).isEmpty()){
+            QString uid = StructuralUtil::createUid();
 
-              properties.insert(QString(STR_PROPERTY_BINDPARAM_NAME)+":"+uid, key);
-              properties.insert(QString(STR_PROPERTY_BINDPARAM_VALUE)+":"+uid, params.value(key));
-            }
+            properties.insert(QString(STR_PROPERTY_BINDPARAM_NAME)+":"+uid, key);
+            properties.insert(QString(STR_PROPERTY_BINDPARAM_VALUE)+":"+uid, params.value(key));
           }
         }
       }

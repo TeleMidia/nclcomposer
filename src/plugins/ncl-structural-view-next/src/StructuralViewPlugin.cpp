@@ -737,6 +737,7 @@ void StructuralViewPlugin::insertInCore(QString uid, QString parent, QMap<QStrin
 
     if (!list.isEmpty())
       entityParent = list.first();
+
   } else if (!parent.isEmpty()) {
     entityParent = getProject()->getEntityById(_mapViewToCore.value(parent));
   }
@@ -759,30 +760,33 @@ void StructuralViewPlugin::insertInCore(QString uid, QString parent, QMap<QStrin
     if (type == Structural::Link ||
         type == Structural::Bind) {
 
+      QString tag;
       QString name;
       QString value;
 
       if (type == Structural::Link) {
+        tag = "linkParam";
         name = QString(STR_PROPERTY_LINKPARAM_NAME);
         value = QString(STR_PROPERTY_LINKPARAM_VALUE);
 
       } else {
+        tag = "bindParam";
         name = QString(STR_PROPERTY_BINDPARAM_NAME);
         value = QString(STR_PROPERTY_BINDPARAM_VALUE);
       }
 
       foreach (QString key, properties.keys()) {
         if (key.contains(name)){
-          QString uid = key.right(key.length() - key.lastIndexOf(':') - 1);
+          QString pUid = key.right(key.length() - key.lastIndexOf(':') - 1);
 
-          QMap<QString, QString> attr;
-          attr.insert("name", properties.value(key));
-          attr.insert("value", properties.value(value+":"+uid));
+          QMap<QString, QString> pAttr;
+          pAttr.insert("name", properties.value(key));
+          pAttr.insert("value", properties.value(value+":"+pUid));
 
           _waiting = true;
-          _notified = uid;
+          _notified = pUid;
 
-          emit addEntity("linkParam",_mapViewToCore.value(uid), attr, false);
+          emit addEntity(tag, _mapViewToCore.value(uid), pAttr, false);
         }
       }
     }
