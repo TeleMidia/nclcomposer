@@ -271,13 +271,13 @@ QLineF StructuralEdge::getDrawLine(qreal padding) const
     z = getWidth() + STR_DEFAULT_ENTITY_PADDING;
     w = getHeight() + STR_DEFAULT_ENTITY_PADDING;
 
-  } else if (ptail.x() > phead.x() && ptail.y() < phead.y()) {
+  } else if (ptail.x() > phead.x() && ptail.y() <= phead.y()) {
     x = getWidth() + STR_DEFAULT_ENTITY_PADDING;
     y = STR_DEFAULT_ENTITY_PADDING;
     z = STR_DEFAULT_ENTITY_PADDING;
     w = getHeight() + STR_DEFAULT_ENTITY_PADDING;
 
-  } else if (ptail.x() < phead.x() && ptail.y() > phead.y()) {
+  } else if (ptail.x() <= phead.x() && ptail.y() > phead.y()) {
     x = STR_DEFAULT_ENTITY_PADDING;
     y = getHeight() + STR_DEFAULT_ENTITY_PADDING;
     z = getWidth() + STR_DEFAULT_ENTITY_PADDING;
