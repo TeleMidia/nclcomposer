@@ -112,8 +112,8 @@ NCL Composer is available through
 
 ## Acknowledgment
 
-NCL Composer would not be possible without many other open source software that
-we use as base.  In special:
+NCL Composer would not be possible without many other open source software we
+use.  In special:
 
   * [Qt](http://qt.io) for multi-plataform, gui, etc.
   * [QScintilla](https://riverbankcomputing.com/software/qscintilla/intro) and
