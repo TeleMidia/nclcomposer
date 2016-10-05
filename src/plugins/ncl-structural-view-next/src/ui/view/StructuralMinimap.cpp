@@ -121,7 +121,7 @@ void StructuralMinimap::drawForeground(QPainter *painter, QRectF const &rect)
   setWindowOpacity(0.5);
   painter->setOpacity(0.5);
   QGraphicsView::drawForeground(painter, rect);
-  painter->setPen(Qt::red);
+  painter->setPen(QPen(QBrush(Qt::gray),20));
 
   if (mEditorView != NULL)
       mEditorViewRect = getNewRect();
@@ -135,7 +135,7 @@ void StructuralMinimap::drawNonExistentAreas(QPainter *painter, QRectF const &re
   QList<QRectF> areas = getNonExistentAreas(rect);
   foreach (QRectF area, areas)
   {
-    painter->fillRect(area, Qt::lightGray);
+    painter->fillRect(area, Qt::gray);
   }
 }
 
