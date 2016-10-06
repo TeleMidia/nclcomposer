@@ -286,8 +286,11 @@ FORMS   += ui/PreferencesDialog.ui \
     ui/NewProjectWizard.ui \
     ui/FileChooser.ui
 
-# LibToolWindowManager library
+## LibToolWindowManager library
+DEFINES += QTOOLWINDOWMANAGER_BUILD_LIB
+
 INCLUDEPATH += src/toolwindowmanager/libqtoolwindowmanager/
+
 HEADERS += \
     src/toolwindowmanager/libqtoolwindowmanager/qabstracttoolwindowmanagerarea.h \
     src/toolwindowmanager/libqtoolwindowmanager/qtoolwindowmanager.h \
@@ -300,7 +303,7 @@ SOURCES += \
     src/toolwindowmanager/libqtoolwindowmanager/qtoolwindowmanager.cpp \
     src/toolwindowmanager/libqtoolwindowmanager/qtoolwindowmanagerarea.cpp \
     src/toolwindowmanager/libqtoolwindowmanager/qtoolwindowmanagerwrapper.cpp
-# end of LibToolWindowManager library
+## end of LibToolWindowManager library
 
 #TRANSLATIONS
 win32 {
