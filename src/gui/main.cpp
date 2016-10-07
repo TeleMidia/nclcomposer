@@ -123,8 +123,13 @@ int main(int argc, char *argv[])
      * values from default settigns*/
     if (settings.allKeys().empty())
     {
+#ifdef WIN32
+      QSettings defaultSettings( QApplication::applicationDirPath() + "/data/default.ini",
+                                 QSettings::IniFormat );
+#else
       QSettings defaultSettings( QString (DATA_PATH) + "/default.ini",
                                  QSettings::IniFormat );
+#endif
 
       QStringList keys = defaultSettings.allKeys();
       for( QStringList::iterator i = keys.begin(); i != keys.end(); i++ )
@@ -134,7 +139,11 @@ int main(int argc, char *argv[])
     }
 
     // We must be sure the defaults are in the settings
+#ifdef WIN32
+    settings.updateWithDefaults(QApplication::applicationDirPath() + "/data/");
+#else
     settings.updateWithDefaults(DATA_PATH);
+#endif
     loadTranslations();
 
     QResource::registerResource("images.qrc");

@@ -77,7 +77,7 @@ ComposerMainWindow::ComposerMainWindow(QWidget *parent)
 #else
   ui->actionProject_from_Wizard->setVisible(false);
 #endif
-  setWindowFlags(Qt::Window | Qt::WindowTitleHint);
+  // setWindowFlags(Qt::Window | Qt::WindowTitleHint);
 }
 
 /*!

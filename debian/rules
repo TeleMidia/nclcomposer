@@ -7,47 +7,40 @@
 # This special exception was added by Craig Small in version 0.37 of dh-make.
 
 # Uncomment this to turn on verbose mode.
-#export DH_VERBOSE=1
+export DH_VERBOSE=1
 export PREFIX=/usr
 
 #Getting current version
 VERSION=`git --git-dir=.git describe --tags | sed "s/v//g"`
 
 #I can also FORCE an specific version
-VERSION=0.2.1
+VERSION=0.3.0
 
-QMAKE=qmake-qt4 FORCERELEASE=true RUNSSHON=true CPRVERSION=${VERSION} PREFIX=/usr
+QMAKE=qmake FORCERELEASE=true CPRVERSION=${VERSION} PREFIX=/usr
 
 APPNAME := composer
-builddir:
-	mkdir -p builddir
-
-builddir/Makefile: builddir
-	cd builddir && $(QMAKE) ../nclcomposer.pro
-	dh_auto_configure
-
-build: build-stamp
-
-build-stamp: builddir/Makefile
+build:
 	dh_testdir
 	# Add here commands to compile the package.
-	cd builddir && $(MAKE)
-	touch $@
+	$(QMAKE)
+	$(MAKE) -j4
 
 clean:
 	dh_testdir
 	dh_testroot
-	rm -f build-stamp
 	# Add here commands to clean up after the build process.
-	rm -rf builddir
+	$(MAKE) clean
+	$(MAKE) distclean
+	rm -rf bin
 	dh_clean
+
 install: build
 	dh_testdir
 	dh_testroot
-	dh_clean -k
+	dh_prep
 	dh_installdirs
 # Add here commands to install the package into debian/your_appname
-	cd builddir && $(MAKE) install  INSTALL_ROOT=$(CURDIR)/debian/tmp install
+	$(MAKE) install INSTALL_ROOT=$(CURDIR)/debian/nclcomposer install
 
 # Build architecture-independent files here.
 binary-indep: build install

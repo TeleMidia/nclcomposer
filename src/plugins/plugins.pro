@@ -24,32 +24,32 @@ SUBDIRS = \
     debug-console \
     properties-view \
     ncl-layout-view \
-    ncl-structural-view \
+    ncl-structural-view-next \
     validator \
     ncl-rules-view \
-    media-preview
+    media-preview \
+    gingagui-all/run-view
 #   clube-ncl
 
 # Uncomment the next two line to enable 'next' build as default option
 #CONFIG += \
-#  next
+#  structural_old
 
-next {
+structural_old {
   SUBDIRS -= \
-    ncl-structural-view
+    ncl-structural-view-next
 
   SUBDIRS += \
-    ncl-structural-view-next/ncl-structural-view-next.pro
+    ncl-structural-view
 }
 
-contains(FORCERELEASE, true)
-{
+contains(FORCERELEASE, true) {
   SUBDIRS -= debug-console  # Debug must not be present in release.
 
   # These plug-ins are still experimental
   #  (and must not be present in the release):
   SUBDIRS -= media-preview
-  SUBDIRS -= ncl-structural-view-next
+  SUBDIRS -= ncl-structural-view
 }
 
 macx {

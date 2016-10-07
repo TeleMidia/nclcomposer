@@ -18,7 +18,7 @@ LUPDATE="lupdate nclcomposer.pro"
 LRELEASE="lrelease nclcomposer.pro"
 
 #We need to install before to be able to compile the plugins.
-${QMAKE} && ${LUPDATE} && ${LRELEASE} && make install
+${QMAKE} && ${LUPDATE} && ${LRELEASE}
 
 #Now, we start to generate the deb.
 debuild -us -uc
