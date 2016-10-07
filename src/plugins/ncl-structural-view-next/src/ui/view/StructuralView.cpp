@@ -588,21 +588,7 @@ void StructuralView::insert(QString uid, QString parent, QMap<QString, QString> 
         if (e->getStructuralCategory() == Structural::Interface) {
           if (p != NULL) {
             if (p->getStructuralType() == Structural::Media) {
-              /*
-              QString instance = "new";
 
-              if (!p->getStructuralProperty(STR_PROPERTY_CONTENT_INSTANCE).isEmpty())
-                instance = p->getStructuralProperty(STR_PROPERTY_CONTENT_INSTANCE);
-
-              foreach (QString key, _references.keys())
-                if (_references.value(key) == p->getStructuralUid())
-                  adjustReferences(_entities.value(key));
-
-              if (instance == "instSame" ||
-                  instance == "gradSame")
-                adjustReferences(p);
-
-                */
               if (p->isReference())
                 adjustReferences(p);
               else
@@ -612,11 +598,6 @@ void StructuralView::insert(QString uid, QString parent, QMap<QString, QString> 
             }
           }
         }
-
-//        foreach (QString key, _references.keys(e->getStructuralUid())) {
-//          if (_entities.contains(key))
-//            adjustReferences(_entities.value(key));
-//        }
       }
 
       //
@@ -758,20 +739,6 @@ void StructuralView::remove(QString uid, QMap<QString, QString> settings)
           _entities.value(key)->adjust(true);
         }
     }
-
-//    foreach (QString key, _references.keys(e->getStructuralUid()))
-//      if (e->getStructuralType() == Structural::Interface) {
-//        remove(key, StructuralUtil::createSettings(false, false));
-
-//      } else if (e->getStructuralType() == Structural::Media) {
-//        if (_entities.contains(key))
-//          _entities.value(key)->setReference(false);
-//      }
-
-//    foreach (StructuralEntity* entity, e->getStructuralEntities())
-//      if (entity->getStructuralType() == Structural::Interface)
-//        if (entity->isReference())
-//          remove(entity->getStructuralUid(), StructuralUtil::createSettings(false, false));
 
     // Removing 'children'...
     if (settings.value(STR_SETTING_UNDO_TRACE) != STR_VALUE_FALSE)
@@ -1049,10 +1016,6 @@ void StructuralView::adjustReferences(StructuralEntity* entity)
                         if (key != entity->getStructuralUid())
                           adjustReferences(_entities.value(key));
                 }
-
-//                foreach (QString value, _references.values())
-//                  if (_entities.contains(value))
-//                    adjustReferences(_entities.value(value));
 
                 _references[entity->getStructuralUid()] = refer->getStructuralUid(); entity->setReference(true); hasChange = true;
               }
@@ -1455,7 +1418,6 @@ void StructuralView::performPaste()
             QMap<QString, QString> properties = _clipboard->getStructuralProperties();
             properties[STR_PROPERTY_ENTITY_UID] = uid;
             properties[STR_PROPERTY_ENTITY_ID] = "r_"+_clipboard->getStructuralProperty(STR_PROPERTY_ENTITY_ID);
-//            properties[STR_PROPERTY_ENTITY_REFERENCE] = STR_VALUE_TRUE;
 
             properties[STR_PROPERTY_REFERENCE_REFER_ID] = _clipboard->getStructuralId();
             properties[STR_PROPERTY_REFERENCE_REFER_UID] = _clipboard->getStructuralUid();
