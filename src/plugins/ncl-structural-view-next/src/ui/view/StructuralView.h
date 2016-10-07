@@ -105,6 +105,8 @@ public slots:
 
   void clean();
 
+  void adjustReferences(StructuralEntity* entity);
+
 signals:
   void inserted(QString uid, QString _parent, QMap<QString, QString> properties, QMap<QString, QString> settings);
   void removed(QString uid, QMap<QString, QString> settings);
@@ -150,7 +152,6 @@ private:
   QString getNewId(StructuralEntity *entity);
   qreal getNewAngle(StructuralBind* edge);
 
-  void adjustReferences(StructuralEntity* entity);
   void adjustProperties(StructuralEntity* entity);
 
 #ifdef WITH_GRAPHVIZ

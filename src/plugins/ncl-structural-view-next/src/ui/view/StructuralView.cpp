@@ -661,40 +661,44 @@ qreal StructuralView::getNewAngle(StructuralBind* bind)
   int min =  100000;
   int max = -100000;
 
-  foreach (StructuralEntity *e, _entities.values()) {
-    if (e->getStructuralType() == Structural::Bind) {
-      if (e != bind) {
-        StructuralBind *b = (StructuralBind*) e;
+  qreal angle = 0;
 
-        if ((bind->getTail() == b->getTail() || bind->getTail() == b->getHead()) &&
-            (bind->getHead() == b->getHead() || bind->getHead() == b->getTail())) {
+  if (bind->getTail() != NULL && bind->getHead() != NULL) {
+    foreach (StructuralEntity *e, _entities.values()) {
+      if (e->getStructuralType() == Structural::Bind) {
+        if (e != bind) {
+          StructuralBind *b = (StructuralBind*) e;
 
-          int current = b->getAngle();
+          if (b->getTail() != NULL && b->getHead() != NULL) {
+            if ((bind->getTail() == b->getTail() || bind->getTail() == b->getHead()) &&
+                (bind->getHead() == b->getHead() || bind->getHead() == b->getTail())) {
 
-          if (b->getHead()->getStructuralType() != Structural::Link)
-            current = -current;
+              int current = b->getAngle();
 
-          if (max < current )
-            max = current;
+              if (b->getHead()->getStructuralType() != Structural::Link)
+                current = -current;
 
-          if (min > current )
-            min = current;
+              if (max < current )
+                max = current;
+
+              if (min > current )
+                min = current;
+            }
+          }
         }
       }
     }
+
+    if (min != 100000 || max != -100000) {
+      if (max <= abs(min))
+        angle = max+60;
+      else if (max > abs(min))
+        angle = min-60;
+    }
+
+    if (bind->getHead()->getStructuralType() != Structural::Link)
+      return -angle;
   }
-
-  qreal angle = 0;
-
-  if (min != 100000 || max != -100000) {
-    if (max <= abs(min))
-      angle = max+60;
-    else if (max > abs(min))
-      angle = min-60;
-  }
-
-  if (bind->getHead()->getStructuralType() != Structural::Link)
-    return -angle;
 
   return angle;
 }
@@ -741,7 +745,7 @@ void StructuralView::remove(QString uid, QMap<QString, QString> settings)
     // Removing 'references'...
     if (e->getStructuralCategory() == Structural::Interface) {
       foreach (QString key, _references.keys(e->getStructuralUid()))
-          remove(key, StructuralUtil::createSettings(false, false));
+          remove(key, StructuralUtil::createSettings(STR_VALUE_FALSE, STR_VALUE_FALSE, settings.value(STR_SETTING_CODE)));
 
       // Only remove interface -> interface references. Keeping
       // Media -> Media references to enable undo. All "trash" references
@@ -975,6 +979,9 @@ void StructuralView::adjustReferences(StructuralEntity* entity)
                         properties[STR_PROPERTY_REFERENCE_REFER_ID] = e->getStructuralId();
                         properties[STR_PROPERTY_REFERENCE_REFER_UID] = e->getStructuralUid();
 
+                        properties.remove(STR_PROPERTY_ENTITY_TOP);
+                        properties.remove(STR_PROPERTY_ENTITY_LEFT);
+
                         mapChildToRefer[uid] = e->getStructuralUid();
                         mapChildToRefer[e->getStructuralUid()] = uid;
 
@@ -1016,6 +1023,9 @@ void StructuralView::adjustReferences(StructuralEntity* entity)
                           QMap<QString, QString> properties = e->getStructuralProperties();
                           properties[STR_PROPERTY_ENTITY_UID] = uid;
                           properties[STR_PROPERTY_ENTITY_REFERENCE] = STR_VALUE_TRUE;
+
+                          properties.remove(STR_PROPERTY_ENTITY_TOP);
+                          properties.remove(STR_PROPERTY_ENTITY_LEFT);
 
                           properties[STR_PROPERTY_REFERENCE_REFER_ID] = e->getStructuralId();
                           properties[STR_PROPERTY_REFERENCE_REFER_UID] = e->getStructuralUid();
@@ -1339,6 +1349,32 @@ void StructuralView::performUndo()
     if (_entities.contains(key))
       if (_entities.value(key)->getStructuralType() == Structural::Media)
         adjustReferences(_entities.value(key));
+  }
+
+  foreach (StructuralEntity* g, _entities.values()) {
+    if (g->getStructuralCategory() == Structural::Edge) {
+      StructuralEntity* component = _entities.value(g->getStructuralProperty(STR_PROPERTY_REFERENCE_COMPONENT_UID));
+      StructuralEntity* interface = _entities.value(g->getStructuralProperty(STR_PROPERTY_REFERENCE_INTERFACE_UID));
+
+      if (component != NULL) {
+        if (interface == NULL) {
+          foreach (StructuralEntity* cc, component->getStructuralEntities()) {
+            if (cc->getStructuralId() == g->getStructuralProperty(STR_PROPERTY_REFERENCE_INTERFACE_ID)) {
+              g->setStructuralProperty(STR_PROPERTY_REFERENCE_INTERFACE_UID, cc->getStructuralUid());
+
+              if (((StructuralEdge*) g)->getTail() != NULL)
+                g->setStructuralProperty(STR_PROPERTY_EDGE_HEAD, cc->getStructuralUid());
+              else
+                g->setStructuralProperty(STR_PROPERTY_EDGE_TAIL, cc->getStructuralUid());
+
+              adjustReferences(g); g->adjust(true);
+
+              break;
+            }
+          }
+        }
+      }
+    }
   }
 }
 
