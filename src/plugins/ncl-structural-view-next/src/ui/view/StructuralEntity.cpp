@@ -24,6 +24,8 @@ StructuralEntity::StructuralEntity(StructuralEntity* parent)
   setDragging(false);
   setHovering(false);
 
+  setReference(false);
+
   setTop(0);
   setLeft(0);
   setWidth(0);
@@ -110,6 +112,19 @@ void StructuralEntity::setStructuralType(StructuralType type)
   _restrictions.clear();
 
   switch (type) {
+    case Structural::Media:
+    case Structural::Context:
+    case Structural::Switch:
+    {
+      if (type == Structural::Media)
+        addStructuralRestriction(STR_PROPERTY_CONTENT_INSTANCE);
+
+      addStructuralRestriction(STR_PROPERTY_REFERENCE_REFER_ID);
+      addStructuralRestriction(STR_PROPERTY_REFERENCE_REFER_UID);
+
+      break;
+    }
+
     case Structural::Port:
     case Structural::Mapping:
     {
@@ -219,6 +234,7 @@ void StructuralEntity::adjust(bool collision, bool recursion)
   setzIndex(_properties[STR_PROPERTY_ENTITY_ZINDEX].toInt());
 
   setHidden((_properties[STR_PROPERTY_ENTITY_HIDDEN] == STR_VALUE_TRUE ? true : false));
+  setReference((_properties[STR_PROPERTY_ENTITY_REFERENCE] == STR_VALUE_TRUE ? true : false));
   setUncollapsed((_properties[STR_PROPERTY_ENTITY_UNCOLLAPSED] == STR_VALUE_TRUE ? true : false));
 
   setToolTip(StructuralUtil::getTooltip(_type, _id, _info, _warnning, _error, _properties[STR_PROPERTY_REFERENCE_XCONNECTOR_ID]));
@@ -349,6 +365,17 @@ void StructuralEntity::setUncollapsed(bool uncollapsed)
 {
   _uncollapsed = uncollapsed;
   _properties[STR_PROPERTY_ENTITY_UNCOLLAPSED] = (uncollapsed ? STR_VALUE_TRUE : STR_VALUE_FALSE);
+}
+
+bool StructuralEntity::isReference() const
+{
+  return _reference;
+}
+
+void StructuralEntity::setReference(bool reference)
+{
+  _reference = reference;
+  _properties[STR_PROPERTY_ENTITY_REFERENCE] = (reference ? STR_VALUE_TRUE : STR_VALUE_FALSE);
 }
 
 qreal StructuralEntity::getTop() const
@@ -893,6 +920,9 @@ QRectF StructuralEntity::boundingRect() const
 
 void StructuralEntity::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
+  if (_reference)
+    painter->setOpacity(0.5);
+
   draw(painter);
 
   if (_selectable && _selected) {

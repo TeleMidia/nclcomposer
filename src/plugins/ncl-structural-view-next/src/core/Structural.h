@@ -28,11 +28,13 @@
 #define STR_PROPERTY_ENTITY_UNCOLLAPSED_HEIGHT ":structural:property:entity:uncollaped:height"
 
 #define STR_PROPERTY_ENTITY_HIDDEN ":structural:property:entity:hidden"
+#define STR_PROPERTY_ENTITY_REFERENCE ":structural:property:entity:reference"
 #define STR_PROPERTY_ENTITY_UNCOLLAPSED ":structural:property:entity:uncollapsed"
 
 // Node defines
 #define STR_PROPERTY_CONTENT_LOCATION ":structural:property:content:location"
 #define STR_PROPERTY_CONTENT_MIMETYPE ":structural:property:content:mimetype"
+#define STR_PROPERTY_CONTENT_INSTANCE ":structural:property:content:instance"
 
 #define STR_PROPERTY_LINKPARAM_NAME ":structural:property:linkparam:name"
 #define STR_PROPERTY_LINKPARAM_VALUE ":structural:propertylinkparam:value"
@@ -63,6 +65,9 @@
 #define STR_PROPERTY_REFERENCE_XCONNECTOR_ID ":structural:property:reference:xconnector:id"
 #define STR_PROPERTY_REFERENCE_XCONNECTOR_UID ":structural:property:reference:xconnector:uid"
 
+#define STR_PROPERTY_REFERENCE_REFER_ID ":structural:property:reference:refer:id"
+#define STR_PROPERTY_REFERENCE_REFER_UID ":structural:property:reference:refer:uid"
+
 //
 // Settings
 //
@@ -71,6 +76,7 @@
 #define STR_SETTING_UNDO_TRACE ":structural:setting:undo:trace"
 #define STR_SETTING_NOTIFY ":structural:setting:notify"
 #define STR_SETTING_CODE ":structural:setting:code"
+#define STR_SETTING_ADJUST_REFERENCE ":structural:setting:adjust:reference"
 
 //
 // Values

@@ -93,6 +93,9 @@ public:
   bool isUncollapsed() const;
   void setUncollapsed(bool uncollapsed);
 
+  bool isReference() const;
+  void setReference(bool reference);
+
   qreal getTop() const;
   void setTop(qreal top);
 
@@ -212,6 +215,8 @@ private:
   bool _selected;
   bool _focused;
   bool _uncollapsed;
+
+  bool _reference;
 
   qreal _top;
   qreal _left;

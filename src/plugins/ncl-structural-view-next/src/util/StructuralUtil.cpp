@@ -80,7 +80,7 @@ QMap<QString,QString> StructuralUtil::createCoreTranslations(StructuralType type
     case Structural::Switch:
     {
       translations[NCL_ATTRIBUTE_ID] = STR_PROPERTY_ENTITY_ID;
-      translations[NCL_ATTRIBUTE_REFER] = NCL_ATTRIBUTE_REFER;
+      translations[NCL_ATTRIBUTE_REFER] = STR_PROPERTY_REFERENCE_REFER_ID;
 
       break;
     }
@@ -88,8 +88,8 @@ QMap<QString,QString> StructuralUtil::createCoreTranslations(StructuralType type
     case Structural::Media:
     {
       translations[NCL_ATTRIBUTE_ID] = STR_PROPERTY_ENTITY_ID;
-      translations[NCL_ATTRIBUTE_REFER] = NCL_ATTRIBUTE_REFER;
-      translations[NCL_ATTRIBUTE_INSTANCE] = NCL_ATTRIBUTE_INSTANCE;
+      translations[NCL_ATTRIBUTE_REFER] = STR_PROPERTY_REFERENCE_REFER_ID;
+      translations[NCL_ATTRIBUTE_INSTANCE] = STR_PROPERTY_CONTENT_INSTANCE;
       translations[NCL_ATTRIBUTE_TYPE] = NCL_ATTRIBUTE_TYPE;
       translations[NCL_ATTRIBUTE_SRC] = STR_PROPERTY_CONTENT_LOCATION;
       translations[NCL_ATTRIBUTE_DESCRIPTOR] = NCL_ATTRIBUTE_DESCRIPTOR;

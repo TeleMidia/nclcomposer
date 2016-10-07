@@ -188,6 +188,8 @@ private:
 
   QMap<StructuralType, int> _counter;
 
+  QMap<QString, QString> _references;
+
   QMap<QString, StructuralEntity*> _entities;
 };
 
