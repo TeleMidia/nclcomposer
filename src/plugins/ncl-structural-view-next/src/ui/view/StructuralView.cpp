@@ -1604,6 +1604,8 @@ void StructuralView::createBind(StructuralEntity* tail, StructuralEntity* head, 
 
             properties[STR_PROPERTY_BIND_ROLE] = role;
             properties[STR_PROPERTY_ENTITY_ID] = role;
+          } else {
+            return;
           }
         }
 
@@ -1636,6 +1638,8 @@ void StructuralView::createBind(StructuralEntity* tail, StructuralEntity* head, 
 
             properties[STR_PROPERTY_BIND_ROLE] = role;
             properties[STR_PROPERTY_ENTITY_ID] = role;
+          } else {
+            return;
           }
         }
 
