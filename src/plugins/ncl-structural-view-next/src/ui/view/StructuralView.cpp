@@ -2105,32 +2105,21 @@ void StructuralView::wheelEvent(QWheelEvent * event)
 
 void StructuralView::clean()
 {
-  /*
-  if(scene->getRoots().size())
-    scene->removeRoot(scene->getRoots().at(0));
-  */
-
   select("", StructuralUtil::createSettings());
 
   foreach (QString uid, _entities.keys()) {
-    QMap<QString,QString> settings;
-    settings[STR_SETTING_UNDO] = "1";
+    QMap<QString,QString> settings = StructuralUtil::createSettings(true,false);
     settings[STR_SETTING_UNDO_TRACE] = "0";
-    settings[STR_SETTING_NOTIFY] = "0";
-    settings[STR_SETTING_CODE] = StructuralUtil::createUid();
 
     remove(uid,settings);
   }
 
-
-
+  _references.clear();
   _entities.clear();
-
   _commnads.clear();
 
  emit switchedRedo(false);
  emit switchedUndo(false);
-
 }
 
 void StructuralView::performDialog(StructuralLink* entity)
