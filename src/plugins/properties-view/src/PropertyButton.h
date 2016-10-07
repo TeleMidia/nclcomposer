@@ -18,6 +18,7 @@
 #ifndef PROPERTYBUTTONS_H
 #define PROPERTYBUTTONS_H
 
+#include  <QTableWidgetItem>
 #include "LineEditWithButton.h"
 
 class PropertyButtons : public LineEditWithButton
@@ -25,7 +26,9 @@ class PropertyButtons : public LineEditWithButton
   Q_OBJECT
 
 public:
-  explicit PropertyButtons(QString propName, QWidget *parent = 0);
+  explicit PropertyButtons( const QString &propName,
+                            QTableWidgetItem *item,
+                            QWidget *parent = 0 );
 
 public slots:
   void openfile();
@@ -33,6 +36,7 @@ public slots:
 private:
   QWidget *window;
   QString key, value;
+  QTableWidgetItem *item;
 };
 
 #endif // PROPERTYBUTTONS_H
