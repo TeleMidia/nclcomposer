@@ -21,7 +21,7 @@
 #include "DebugConsole_global.h"
 #include "DebugConsolePlugin.h"
 
-#include <core/extensions/IPluginFactory.h>
+#include <extensions/IPluginFactory.h>
 using namespace composer::extension;
 
 /*!
