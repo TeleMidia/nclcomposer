@@ -8,7 +8,7 @@
 
 ;--------------------------------
 !ifndef VERSION
-!define VERSION "0.2.0"
+!define VERSION "0.3.0"
 !endif
 
 Name "NCL Composer ${VERSION}"
@@ -176,7 +176,7 @@ SectionGroup /e "Install Default Plugins"
   Section "Structural View"
     SectionIn 1
     SetOutPath $INSTDIR\extensions
-    File "C:\Composer\extensions\ncl_structural_view.dll"
+    File "C:\Composer\extensions\ncl_structural_view_next.dll"
   SectionEnd
 
   Section "Outline View"
@@ -196,6 +196,13 @@ SectionGroup /e "Install Default Plugins"
     SetOutPath $INSTDIR\extensions
     File "C:\Composer\extensions\ncl_rules_view.dll"
   SectionEnd
+
+  Section "Run View"
+    SectionIn 1
+    SetOutPath $INSTDIR\extensions
+    File "C:\Composer\extensions\run_view.dll"
+  SectionEnd
+
 SectionGroupEnd
 
 ;--------------------------------
