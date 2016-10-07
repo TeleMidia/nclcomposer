@@ -160,9 +160,12 @@ void StructuralView::load(const QString &data)
         foreach (StructuralEntity* e, _entities.values()) {
           if (e->getStructuralCategory() == Structural::Edge ||
               e->getStructuralType() == Structural::Port ||
-              e->isReference())
-            adjustReferences(e);
+              e->isReference()) {
+            adjustReferences(e); e->adjust(true);
+          }
         }
+
+
 
         select(bodyUid, StructuralUtil::createSettings());
 
