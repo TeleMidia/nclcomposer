@@ -190,7 +190,6 @@ void StructuralWindow::createActions()
 
   _insertActionGroup->addAction(_linkAction);
   _insertActionGroup->addAction(_pointerAction);
-
 }
 
 void StructuralWindow::createToolbar()
@@ -255,7 +254,7 @@ void StructuralWindow::createToolbar()
   _editToolbar->addSeparator();
 #endif
 
-  changeSelect("NULL");
+  select("", StructuralUtil::createSettings());
 }
 
 void StructuralWindow::createWidgets()
@@ -293,35 +292,28 @@ void  StructuralWindow::createConnections()
   connect(_portAction, SIGNAL(triggered()), _view, SLOT(performPort()));
   connect(_switchportAction, SIGNAL(triggered()), _view, SLOT(performSwitchPort()));
 
-  /* TODO: Refactoring */
-  connect(_view, SIGNAL(inserted(QString,QString,QMap<QString,QString>,QMap<QString,QString>)),SLOT(insert(QString,QString,QMap<QString,QString>,QMap<QString,QString>)));
-  connect(_view, SIGNAL(removed(QString,QMap<QString,QString>)),SLOT(remove(QString,QMap<QString,QString>)));
-  connect(_view, SIGNAL(changed(QString,QMap<QString,QString>,QMap<QString,QString>,QMap<QString,QString>)), SLOT(change(QString,QMap<QString,QString>,QMap<QString,QString>,QMap<QString,QString>)));
   connect(_view, SIGNAL(selected(QString,QMap<QString,QString>)),SLOT(select(QString,QMap<QString,QString>)));
 
-  connect(_view, SIGNAL(switchedUndo(bool)), SLOT(changeUndoState(bool)));
-  connect(_view, SIGNAL(switchedRedo(bool)), SLOT(changeRedoState(bool)));
-  connect(_view, SIGNAL(switchedCut(bool)), SLOT(changeCutState(bool)));
-  connect(_view, SIGNAL(switchedCopy(bool)), SLOT(changeCopyState(bool)));
-  connect(_view, SIGNAL(switchedPaste(bool)), SLOT(changePasteState(bool)));
-  connect(_view, SIGNAL(switchedZoomIn(bool)), SLOT(changeZoomInState(bool)));
+  connect(_view, SIGNAL(switchedUndo(bool)), SLOT(switchUndo(bool)));
+  connect(_view, SIGNAL(switchedRedo(bool)), SLOT(switchRedo(bool)));
+  connect(_view, SIGNAL(switchedCut(bool)), SLOT(switchCut(bool)));
+  connect(_view, SIGNAL(switchedCopy(bool)), SLOT(switchCopy(bool)));
+  connect(_view, SIGNAL(switchedPaste(bool)), SLOT(switchPaste(bool)));
+  connect(_view, SIGNAL(switchedZoomIn(bool)), SLOT(switchZoomIn(bool)));
   connect(_view, SIGNAL(switchedZoomOut(bool)), SLOT(switchZoomOut(bool)));
 
-  connect(_view, SIGNAL(switchedBody(bool)), SLOT(changeBodyState(bool)));
+  connect(_view, SIGNAL(switchedBody(bool)), SLOT(switchBody(bool)));
 
   connect(_view, SIGNAL(switchedPointer(bool)), SLOT(switchPointer(bool)));
-  connect(_view, SIGNAL(switchedLink(bool)), SLOT(changeLinkState(bool)));
-  /* TODO: Refactoring */
+  connect(_view, SIGNAL(switchedLink(bool)), SLOT(switchLink(bool)));
 }
 
-void StructuralWindow::changeBodyState(bool enable)
+void StructuralWindow::switchBody(bool enable)
 {
   _bodyAction->setEnabled(enable);
-
-//  _view->getScene()->_menu->_bodyAction->setEnabled(enable);
 }
 
-void StructuralWindow::changeZoomInState(bool enable)
+void StructuralWindow::switchZoomIn(bool enable)
 {
   _zoominAction->setEnabled(enable);
 }
@@ -331,39 +323,19 @@ void StructuralWindow::switchZoomOut(bool enable)
   _zoomoutAction->setEnabled(enable);
 }
 
-void StructuralWindow::changeUndoState(bool enable)
+void StructuralWindow::switchUndo(bool enable)
 {
   _undoAction->setEnabled(enable);
-
-//  _view->getScene()->_menu->_undoAction->setEnabled(enable);
-
-//  foreach (StructuralEntity* e, _view->getEntities()) {
-//    e->_menu->_undoAction->setEnabled(enable);
-//  }
-
 }
 
-void StructuralWindow::changeRedoState(bool enable)
+void StructuralWindow::switchRedo(bool enable)
 {
   _redoAction->setEnabled(enable);
-
-//  _view->getScene()->_menu->_redoAction->setEnabled(enable);
-
-//  foreach (StructuralEntity* e, _view->getEntities()) {
-//    e->_menu->_redoAction->setEnabled(enable);
-//  }
-
 }
 
-void StructuralWindow::changeCutState(bool enable)
+void StructuralWindow::switchCut(bool enable)
 {
   _cutAction->setEnabled(enable);
-
-//  _view->getScene()->_menu->_cutAction->setEnabled(enable);
-
-//  foreach (StructuralEntity* e, _view->getEntities()) {
-//    e->_menu->_cutAction->setEnabled(enable);
-//  }
 }
 
 void StructuralWindow::switchPointer(bool enable)
@@ -374,105 +346,33 @@ void StructuralWindow::switchPointer(bool enable)
     _linkAction->setChecked(true);
 }
 
-void StructuralWindow::changeLinkState(bool enable)
+void StructuralWindow::switchLink(bool enable)
 {
   switchPointer(!enable);
 }
 
-void StructuralWindow::changeCopyState(bool enable)
+void StructuralWindow::switchCopy(bool enable)
 {
   _copyAction->setEnabled(enable);
-
-//  _view->getScene()->_menu->_copyAction->setEnabled(enable);
-
-//  foreach (StructuralEntity* e, _view->getEntities()) {
-//    e->_menu->_copyAction->setEnabled(enable);
-//  }
 }
 
-void StructuralWindow::changePasteState(bool enable)
+void StructuralWindow::switchPaste(bool enable)
 {
   _pasteAction->setEnabled(enable);
-
-//  _view->getScene()->_menu->_pasteAction->setEnabled(enable);
-
-//  foreach (StructuralEntity* e, _view->getEntities()) {
-//    e->_menu->_pasteAction->setEnabled(enable);
-//  }
 }
 
-
-void StructuralWindow::insert(QString uid, QString parent, QMap<QString, QString> properties, QMap<QString, QString> settings)
+void StructuralWindow::select(QString uid, QMap<QString, QString> settings)
 {
-//  StructuralEntity* entity = _view->getEntity(uid);
+  Q_UNUSED(settings);
 
-//  if (entity)
-//  {
-//    StructuralType NAME = _view->getEntity(uid)->getStructuralType();
-
-//    switch (NAME) {
-//      case Structural::Body:
-//        _bodyAction->setEnabled(false);
-//        _view->getScene()->_menu->_bodyAction->setEnabled(false);
-//        break;
-
-//      default:
-//        break;
-//    }
-//  }
-}
-
-void StructuralWindow::remove(QString uid, QMap<QString, QString> settings)
-{
-//  StructuralEntity* entity = _view->getEntity(uid);
-
-//  if (entity)
-//  {
-//    StructuralType NAME = _view->getEntity(uid)->getStructuralType();
-
-//    switch (NAME) {
-//      case Structural::Body:
-//        _bodyAction->setEnabled(true);
-//        break;
-
-//      default:
-//        break;
-//    }
-//  }
-}
-
-void StructuralWindow::change(QString uid, QMap<QString, QString> properties, QMap<QString, QString> previous, QMap<QString, QString> settings)
-{
-//  StructuralEntity* entity = _view->getEntity(uid);
-
-//  if (entity)
-//  {
-//    StructuralType NAME = _view->getEntity(uid)->getStructuralType();
-
-//    switch (NAME) {
-//      case Structural::Body:
-//        _bodyAction->setEnabled(false);
-//        break;
-
-//      default:
-//        break;
-//    }
-//  }
-}
-
-void StructuralWindow::changeSelect(QString uid)
-{
   StructuralEntity* entity = _view->getEntity(uid);
 
-  if (entity != NULL)
-  {
+  if (entity != NULL) {
+    StructuralType type = _view->getEntity(uid)->getStructuralType();
 
-    StructuralType NAME = _view->getEntity(uid)->getStructuralType();
-
-//    entity->_menu->adjust(NAME);
-
-    switch (NAME) {
+    switch (type) {
       case Structural::Media:
+      {
         _mediaAction->setEnabled(false);
         _contextAction->setEnabled(false);
         _switchAction->setEnabled(false);
@@ -482,10 +382,11 @@ void StructuralWindow::changeSelect(QString uid)
         _portAction->setEnabled(false);
         _switchportAction->setEnabled(false);
 
-
         break;
+      }
 
       case Structural::Context:
+      {
         _mediaAction->setEnabled(true);
         _contextAction->setEnabled(true);
         _switchAction->setEnabled(true);
@@ -494,9 +395,12 @@ void StructuralWindow::changeSelect(QString uid)
         _propertyAction->setEnabled(true);
         _portAction->setEnabled(true);
         _switchportAction->setEnabled(false);
+
         break;
+      }
 
       case Structural::Switch:
+      {
         _mediaAction->setEnabled(true);
         _contextAction->setEnabled(true);
         _switchAction->setEnabled(true);
@@ -505,9 +409,12 @@ void StructuralWindow::changeSelect(QString uid)
         _propertyAction->setEnabled(true);
         _portAction->setEnabled(false);
         _switchportAction->setEnabled(true);
+
         break;
+      }
 
       case Structural::Body:
+      {
         _mediaAction->setEnabled(true);
         _contextAction->setEnabled(true);
         _switchAction->setEnabled(true);
@@ -516,12 +423,15 @@ void StructuralWindow::changeSelect(QString uid)
         _propertyAction->setEnabled(true);
         _portAction->setEnabled(true);
         _switchportAction->setEnabled(false);
+
         break;
+      }
 
       case Structural::Area:
       case Structural::Property:
       case Structural::Port:
       case Structural::SwitchPort:
+      {
         _mediaAction->setEnabled(false);
         _contextAction->setEnabled(false);
         _switchAction->setEnabled(false);
@@ -530,17 +440,20 @@ void StructuralWindow::changeSelect(QString uid)
         _propertyAction->setEnabled(false);
         _portAction->setEnabled(false);
         _switchportAction->setEnabled(false);
+
         break;
+      }
 
       default:
+      {
         break;
+      }
     }
 
-    changeCutState(true);
-    changeCopyState(true);
-  }
-  else
-  {
+    switchCut(true);
+    switchCopy(true);
+
+  } else  {
     _mediaAction->setEnabled(false);
     _contextAction->setEnabled(false);
     _switchAction->setEnabled(false);
@@ -549,12 +462,7 @@ void StructuralWindow::changeSelect(QString uid)
     _propertyAction->setEnabled(false);
     _portAction->setEnabled(false);
 
-    changeCutState(false);
-    changeCopyState(false);
+    switchCut(false);
+    switchCopy(false);
   }
-}
-
-void StructuralWindow::select(QString uid, QMap<QString, QString> settings)
-{
-  changeSelect(uid);
 }
