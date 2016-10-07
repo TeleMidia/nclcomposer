@@ -76,7 +76,7 @@ private:
   QString getUidById(const QString &id, Entity* entity);
   QString getUidByName(const QString &name, Entity* entity);
 
-  void adjustReferences(QMap<QString, QString> &properties);
+  void setReferences(QMap<QString, QString> &properties);
 
   void clean();
 
