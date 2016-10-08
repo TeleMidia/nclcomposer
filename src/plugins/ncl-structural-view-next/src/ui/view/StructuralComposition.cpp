@@ -253,12 +253,10 @@ void StructuralComposition::dropEvent(QGraphicsSceneDragDropEvent *event)
 
     foreach(QUrl url, list) {
       QString filename = url.toLocalFile();
-      QString suffix = QFileInfo(filename).suffix().toLower();
 
       QMap<QString,QString> properties;
       properties[STR_PROPERTY_ENTITY_TYPE] = StructuralUtil::translateTypeToString(Structural::Media);
       properties[STR_PROPERTY_ENTITY_ID] = StructuralUtil::formatId(QFileInfo(filename).baseName());
-      properties[STR_PROPERTY_CONTENT_MIMETYPE] = StructuralUtil::translateMimeTypeToString(StructuralUtil::getMimeTypeByExtension(suffix));
       properties[STR_PROPERTY_CONTENT_LOCATION] = filename;
 
       inserted(StructuralUtil::createUid(), getStructuralUid(), properties, StructuralUtil::createSettings());

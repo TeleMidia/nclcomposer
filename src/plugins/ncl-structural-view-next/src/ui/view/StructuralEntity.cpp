@@ -116,8 +116,11 @@ void StructuralEntity::setStructuralType(StructuralType type)
     case Structural::Context:
     case Structural::Switch:
     {
-      if (type == Structural::Media)
+      if (type == Structural::Media) {
+        addStructuralRestriction(STR_PROPERTY_CONTENT_TYPE);
+        addStructuralRestriction(STR_PROPERTY_CONTENT_LOCATION);
         addStructuralRestriction(STR_PROPERTY_CONTENT_INSTANCE);
+      }
 
       addStructuralRestriction(STR_PROPERTY_REFERENCE_REFER_ID);
       addStructuralRestriction(STR_PROPERTY_REFERENCE_REFER_UID);

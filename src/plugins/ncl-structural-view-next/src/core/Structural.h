@@ -33,6 +33,7 @@
 
 // Node defines
 #define STR_PROPERTY_CONTENT_LOCATION ":structural:property:content:location"
+#define STR_PROPERTY_CONTENT_TYPE ":structural:property:content:type"
 #define STR_PROPERTY_CONTENT_MIMETYPE ":structural:property:content:mimetype"
 #define STR_PROPERTY_CONTENT_INSTANCE ":structural:property:content:instance"
 

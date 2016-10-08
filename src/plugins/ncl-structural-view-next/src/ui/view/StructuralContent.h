@@ -9,9 +9,6 @@ public:
   StructuralContent(StructuralEntity* parent = 0);
   virtual ~StructuralContent();
 
-  QString getLocation() const;
-  void setLocation(const QString &_location);
-
   StructuralMimeType getMimeType() const;
   void setMimeType(StructuralMimeType mimetype);
 
@@ -21,8 +18,6 @@ protected:
   virtual void draw(QPainter* painter);
 
 private:
-  QString _location;
-
   StructuralMimeType _mimetype;
 };
 

@@ -22,18 +22,6 @@ StructuralContent::~StructuralContent()
 
 }
 
-QString StructuralContent::getLocation() const
-{
-  return _location;
-}
-
-void StructuralContent::setLocation(const QString &location)
-{
-  this->_location = location;
-
-  setStructuralProperty(STR_PROPERTY_CONTENT_LOCATION, location);
-}
-
 StructuralMimeType StructuralContent::getMimeType() const
 {
   return _mimetype;
@@ -51,13 +39,46 @@ void StructuralContent::adjust(bool collision,  bool recursion)
   StructuralNode::adjust(collision, recursion);
 
   // Adjusting properties
-  setLocation(getStructuralProperty(STR_PROPERTY_CONTENT_LOCATION));
-  setMimeType(StructuralUtil::translateStringToMimeType(getStructuralProperty(STR_PROPERTY_CONTENT_MIMETYPE)));
+  if (!getStructuralProperty(STR_PROPERTY_CONTENT_TYPE).isEmpty()) {
+      QString type = getStructuralProperty(STR_PROPERTY_CONTENT_TYPE);
 
-  StructuralMimeType mimetype = getMimeType();
+      if (type.startsWith("image")) {
+        setMimeType(Structural::Image);
+      } else if (type.startsWith("audio")) {
+        setMimeType(Structural::Audio);
+      } else if (type.startsWith("video")) {
+        setMimeType(Structural::Video);
+      } else if (type.startsWith("text")) {
+          if (type.endsWith("html"))
+            setMimeType(Structural::HTML);
+          else
+            setMimeType(Structural::Text);
+      } else if (type.endsWith("NCLua")) {
+        setMimeType(Structural::NCLua);
+      } else if (type.endsWith("NCL")) {
+        setMimeType(Structural::NCL);
+      } else if (type.endsWith("settings")) {
+        setMimeType(Structural::Settings);
+      } else {
+        setMimeType(Structural::NoMimeType);
+      }
 
-  if (mimetype != Structural::NoMimeType)
-    setToolTip(StructuralUtil::getMimeTypeTooltip(mimetype, getStructuralId()));
+  }else if (!getStructuralProperty(STR_PROPERTY_CONTENT_LOCATION).isEmpty()) {
+    QString location = getStructuralProperty(STR_PROPERTY_CONTENT_LOCATION);
+    QString suffix = location.right(location.length() - location.lastIndexOf('.') - 1);
+
+    setMimeType(StructuralUtil::getMimeTypeByExtension(suffix));
+
+  } else {
+    setMimeType(Structural::NoMimeType);
+  }
+
+  if (_mimetype != Structural::NoMimeType)
+    setToolTip(StructuralUtil::getMimeTypeTooltip(_mimetype,
+                                                getStructuralId(),
+                                                getInfo(),
+                                                getWarning(),
+                                                getError()));
 }
 
 void StructuralContent::draw(QPainter* painter)

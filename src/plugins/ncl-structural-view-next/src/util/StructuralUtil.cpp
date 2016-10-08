@@ -90,7 +90,7 @@ QMap<QString,QString> StructuralUtil::createCoreTranslations(StructuralType type
       translations[NCL_ATTRIBUTE_ID] = STR_PROPERTY_ENTITY_ID;
       translations[NCL_ATTRIBUTE_REFER] = STR_PROPERTY_REFERENCE_REFER_ID;
       translations[NCL_ATTRIBUTE_INSTANCE] = STR_PROPERTY_CONTENT_INSTANCE;
-      translations[NCL_ATTRIBUTE_TYPE] = NCL_ATTRIBUTE_TYPE;
+      translations[NCL_ATTRIBUTE_TYPE] = STR_PROPERTY_CONTENT_TYPE;
       translations[NCL_ATTRIBUTE_SRC] = STR_PROPERTY_CONTENT_LOCATION;
       translations[NCL_ATTRIBUTE_DESCRIPTOR] = NCL_ATTRIBUTE_DESCRIPTOR;
 
@@ -309,7 +309,7 @@ QString StructuralUtil::translateMimeTypeToString(StructuralMimeType mimetype)
   if(_mapMimeTypeToString.count(mimetype))
     return _mapMimeTypeToString[mimetype];
   else
-    return "";
+    return "Media";
 }
 
 StructuralMimeType StructuralUtil::translateStringToMimeType(const QString &mimetype)
