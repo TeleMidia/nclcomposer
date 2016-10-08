@@ -159,6 +159,13 @@ void StructuralEntity::setStructuralType(StructuralType type)
       break;
     }
 
+    case Structural::Body:
+    {
+      setzIndex(1);
+
+      break;
+    }
+
     default:
     {
       break;
@@ -647,8 +654,18 @@ QVector<StructuralEntity*> StructuralEntity::getStructuralEntities() const
 void StructuralEntity::addStructuralEntity(StructuralEntity* entity)
 {
   if (entity != NULL)
-    if(!_children.contains(entity))
+    if(!_children.contains(entity)) {
+      if (entity->getStructuralType() == Structural::Link)
+        entity->setzIndex(_zindex+1);
+      else if (entity->getStructuralType() == Structural::Context ||
+               entity->getStructuralType() == Structural::Switch) {
+        entity->setzIndex(_zindex+2);;
+      }else{
+        entity->setzIndex(_zindex);
+      }
+
       _children.append(entity);
+    }
 }
 
 void StructuralEntity::removeStructuralEntity(StructuralEntity* entity)

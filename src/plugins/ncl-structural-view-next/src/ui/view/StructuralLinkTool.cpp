@@ -3,7 +3,7 @@
 StructuralLinkTool::StructuralLinkTool(StructuralEntity* parent)
   : StructuralEdge(parent)
 {
-
+  setzIndex(1000);
 }
 
 StructuralLinkTool::~StructuralLinkTool()
