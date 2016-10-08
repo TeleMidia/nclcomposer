@@ -349,9 +349,17 @@ bool Model::removeElement(virtualId &id)
 set <virtualId> Model::elementsWithErrorInLastPass()
 {
   for (set<virtualId>::iterator it = _elementsWithErrorInLastPass.begin();
-       it != _elementsWithErrorInLastPass.end(); it++)
+       it != _elementsWithErrorInLastPass.end(); )
+  {
     if (_markedElements.count(*it))
-      _elementsWithErrorInLastPass.erase(it);
+    {
+      _elementsWithErrorInLastPass.erase(it++);
+    }
+    else
+    {
+      ++it;
+    }
+  }
 
   return _elementsWithErrorInLastPass;
 }
