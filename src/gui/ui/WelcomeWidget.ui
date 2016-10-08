@@ -357,7 +357,7 @@ p, li { white-space: pre-wrap; }
             <enum>QTabWidget::Rounded</enum>
            </property>
            <property name="currentIndex">
-            <number>0</number>
+            <number>2</number>
            </property>
            <property name="elideMode">
             <enum>Qt::ElideLeft</enum>
@@ -786,8 +786,8 @@ p, li { white-space: pre-wrap; }
                     <rect>
                      <x>0</x>
                      <y>0</y>
-                     <width>99</width>
-                     <height>243</height>
+                     <width>738</width>
+                     <height>216</height>
                     </rect>
                    </property>
                    <attribute name="label">
@@ -1045,15 +1045,6 @@ p, li { white-space: pre-wrap; }
                      </layout>
                     </widget>
                    </item>
-                   <item row="16" column="1">
-                    <widget class="QWebView" name="webView">
-                     <property name="url">
-                      <url>
-                       <string>about:blank</string>
-                      </url>
-                     </property>
-                    </widget>
-                   </item>
                    <item row="0" column="1">
                     <widget class="QLabel" name="label_10">
                      <property name="text">
@@ -1154,13 +1145,6 @@ p, li { white-space: pre-wrap; }
    </item>
   </layout>
  </widget>
- <customwidgets>
-  <customwidget>
-   <class>QWebView</class>
-   <extends>QWidget</extends>
-   <header>QtWebKitWidgets/QWebView</header>
-  </customwidget>
- </customwidgets>
  <resources>
   <include location="../images.qrc"/>
  </resources>
