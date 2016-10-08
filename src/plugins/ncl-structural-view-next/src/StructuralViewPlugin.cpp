@@ -1156,15 +1156,14 @@ void StructuralViewPlugin::adjustConnectors()
         QString importURI;
 
         QString projectURI;
-        QString projectSeparator;
 
         importAlias = e->getAttribute("alias");
         importURI = e->getAttribute("documentURI");
 
+        // projectURI use '/' as separator
         projectURI = getProject()->getLocation();
-        projectSeparator = QDir::separator();
 
-        QFile importFile(projectURI.left(projectURI.lastIndexOf(projectSeparator))+projectSeparator+importURI);
+        QFile importFile(projectURI.left(projectURI.lastIndexOf("/"))+"/"+importURI);
 
         if (importFile.open(QIODevice::ReadOnly)){
           QDomDocument d;
