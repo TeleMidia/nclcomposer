@@ -26,7 +26,7 @@ REM - git describe --tag | sed "s/v//g" > ..\VERSION
 SET /p CPRVERSION= <VERSION
 
 REM - I CAN FORCE A VERSION IF I UNCOMMENT THE NEXT LINE
-SET CPRVERSION=0.2.1
+SET CPRVERSION="0.3.0"
 
 REM - makensis path
 SET MAKENSIS="makensis.exe"
@@ -44,7 +44,7 @@ REM - Go to root NCL Composer PATH
 cd ..\
 
 REM - Run qmake with release parameters
-IF "%CPRVERSION%"=="" (qmake FORCERELEASE=true RUNSSHON=true) ELSE (qmake FORCERELEASE=true RUNSSHON=true CPRVERSION=%CPRVERSION%)
+IF "%CPRVERSION%"=="" (qmake FORCERELEASE=true) ELSE (qmake FORCERELEASE=true CPRVERSION=%CPRVERSION%)
 
 REM - Generate translation files
 cd src\gui 
@@ -68,6 +68,7 @@ REM - Generate .zip release
 7z a -tzip nclcomposer-%CPRVERSION%.zip C:\Composer
 
 REM - Generate installer
-%MAKENSIS% /DVERSION=%CPRVERSION% composer.nsi
+%MAKENSIS% /DVERSION=%CPRVERSION% nclcomposer.nsis
+
 IF "%1"=="publish" (scp nclcomposer-installer-%CPRVERSION%.exe %PUBLISH_URL% && ssh %PUBLISH_SERVER% chmod 644 "%PUBLISH_SERVER_PATH%nclcomposer-installer-%CPRVERSION%.exe")
 
