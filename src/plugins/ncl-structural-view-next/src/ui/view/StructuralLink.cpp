@@ -24,12 +24,14 @@ void StructuralLink::draw(QPainter* painter)
   QColor drawColor = QColor(StructuralUtil::getColor(getStructuralType()));
 
   if (!getError().isEmpty() ||
-      !getWarning().isEmpty()) {
-
-    if (!getError().isEmpty()) {
+      !getWarning().isEmpty())
+  {
+    if (!getError().isEmpty())
+    {
       drawColor = QString(STR_DEFAULT_ALERT_ERROR_COLOR);
-    } else {
-
+    }
+    else
+    {
       drawColor = QString(STR_DEFAULT_ALERT_WARNING_COLOR);
     }
 

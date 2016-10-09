@@ -94,6 +94,7 @@ void CompleteLineEdit::focusInEvent(QFocusEvent *e)
 {
   if (text().isEmpty())
     setCompleter("");
+
   QLineEdit::focusInEvent(e);
 }
 
@@ -249,7 +250,8 @@ void StructuralLinkDialog::init(const QString &connName,
   connLineEdit->hideList();
   connLineEdit->setStringList(_conditions.keys());
 
-  switch (_currentMode) {
+  switch (_currentMode)
+  {
     case CreateLink:
       setWindowTitle(tr("Create Link"));
 
@@ -432,8 +434,10 @@ void StructuralLinkDialog::updateForm(QString conn)
 
   if (_currentMode == CreateCondition ||
       _currentMode == EditCondition ||
-      _currentMode == CreateLink){
-    foreach (QString b, _conditions.value(conn)) {
+      _currentMode == CreateLink)
+  {
+    foreach (QString b, _conditions.value(conn))
+    {
       QString icon = ":/icon/nocondition";
 
       if (StructuralUtil::isCondition(b))
@@ -446,7 +450,8 @@ void StructuralLinkDialog::updateForm(QString conn)
     }
   }
 
-  if (!form.cbCondition->count()) {
+  if (!form.cbCondition->count())
+  {
     form.cbCondition->addItem(tr("Not available"));
   }
 
@@ -454,8 +459,10 @@ void StructuralLinkDialog::updateForm(QString conn)
 
   if (_currentMode == CreateAction ||
       _currentMode == EditAction ||
-      _currentMode == CreateLink){
-    foreach (QString b, _actions.value(conn)) {
+      _currentMode == CreateLink)
+  {
+    foreach (QString b, _actions.value(conn))
+    {
       QString icon = ":/icon/noaction";
 
       if (StructuralUtil::isAction(b))
@@ -493,7 +500,8 @@ void StructuralLinkDialog::updateForm(QString conn)
   mdLinkParams->setHorizontalHeaderItem(0, new QStandardItem("Name"));
   mdLinkParams->setHorizontalHeaderItem(1, new QStandardItem("Value"));
 
-  if (form.tbLinkParams->model() != NULL){
+  if (form.tbLinkParams->model() != NULL)
+  {
     QAbstractItemModel* m = form.tbLinkParams->model();
     delete m;
   }
@@ -505,7 +513,8 @@ void StructuralLinkDialog::updateForm(QString conn)
   mdConditionParams->setHorizontalHeaderItem(0, new QStandardItem("Name"));
   mdConditionParams->setHorizontalHeaderItem(1, new QStandardItem("Value"));
 
-  if (form.tbConditionParams->model() != NULL){
+  if (form.tbConditionParams->model() != NULL)
+  {
     QAbstractItemModel* m = form.tbConditionParams->model();
     delete m;
   }
@@ -517,7 +526,8 @@ void StructuralLinkDialog::updateForm(QString conn)
   mdActionParams->setHorizontalHeaderItem(0, new QStandardItem("Name"));
   mdActionParams->setHorizontalHeaderItem(1, new QStandardItem("Value"));
 
-  if (form.tbActionParams->model() != NULL){
+  if (form.tbActionParams->model() != NULL)
+  {
     QAbstractItemModel* m = form.tbActionParams->model();
     delete m;
   }
@@ -647,13 +657,16 @@ void StructuralLinkDialog::updateCurrentParams(QTableView* table, const QMap<QSt
 {
   QAbstractItemModel* m = table->model();
 
-  if (m != NULL){
+  if (m != NULL)
+  {
     int nrow = m->rowCount();
 
-    for (int i=0; i<nrow; ++i){
+    for (int i=0; i<nrow; ++i)
+    {
       QString key = m->data(m->index(i,0)).toString();
 
-      if (params.contains(key)){
+      if (params.contains(key))
+      {
         m->setData(m->index(i,1),params.value(key));
       }
     }
