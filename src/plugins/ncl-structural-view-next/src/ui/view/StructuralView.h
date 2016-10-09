@@ -56,8 +56,6 @@ public:
 
   void cleanErrors();
 
-  bool contains(const QString &uid);
-
   void load(const QString &data);
   void load(QDomElement entity, QDomElement parent);
 

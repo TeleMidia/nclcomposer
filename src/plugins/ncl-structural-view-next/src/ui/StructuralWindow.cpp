@@ -164,7 +164,7 @@ void StructuralWindow::createActions()
   _minimapAction = new QAction((QObject*) this);
   _minimapAction->setEnabled(true);
   _minimapAction->setCheckable(true);
-  _minimapAction->setChecked(false);
+  _minimapAction->setChecked(true);
   _minimapAction->setText(tr("Minimap"));
   _minimapAction->setToolTip(tr("Show/Hide minimap"));
   _minimapAction->setIcon(QIcon(":/images/icon/minimap"));
@@ -210,6 +210,8 @@ void StructuralWindow::createToolbar()
   _editToolbar->addSeparator();
   _editToolbar->addAction(_zoominAction);
   _editToolbar->addAction(_zoomoutAction);
+  _editToolbar->addSeparator();
+  _editToolbar->addAction(_snapshotAction);
 
 #ifdef Q_WS_MACX
   _editToolbar->addSeparator();
@@ -248,7 +250,6 @@ void StructuralWindow::createToolbar()
   _windowToolbar->setIconSize(QSize(32,32));
 
   _windowToolbar->addAction(_minimapAction);
-  _windowToolbar->addAction(_snapshotAction);
 
 #ifdef Q_WS_MACX
   _editToolbar->addSeparator();
@@ -466,3 +467,4 @@ void StructuralWindow::select(QString uid, QMap<QString, QString> settings)
     switchCopy(false);
   }
 }
+

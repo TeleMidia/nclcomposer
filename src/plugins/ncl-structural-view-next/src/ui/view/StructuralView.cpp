@@ -120,11 +120,6 @@ void StructuralView::cleanErrors()
     e->setError("");
 }
 
-bool StructuralView::contains(const QString &uid)
-{
-  return _entities.contains(uid);
-}
-
 void StructuralView::load(const QString &data)
 {
   QDomDocument* dom = new QDomDocument();
@@ -174,9 +169,9 @@ void StructuralView::load(const QString &data)
         }
 
         foreach (QString key, _entities.keys())
-	{
+        {
           if (_entities.contains(key))
-	  {
+          {
             StructuralEntity* e = _entities.value(key);
 
             if (e->getStructuralCategory() == Structural::Edge ||
@@ -188,9 +183,6 @@ void StructuralView::load(const QString &data)
             }
           }
         }
-
-        select(bodyUid, StructuralUtil::createSettings());
-
       }
       else if (element.nodeName() == "reference")
       {
@@ -285,15 +277,13 @@ void StructuralView::createObjects()
   _minimap->init(this);
   _minimap->setMinimumSize(STR_DEFAULT_MINIMAP_W, STR_DEFAULT_MINIMAP_H);
   _minimap->setMaximumSize(STR_DEFAULT_MINIMAP_W * 2, STR_DEFAULT_MINIMAP_H * 2);
-  _minimap->hide();
+  _minimap->show();
 
   // Creating dialogs
   _dialog = new StructuralLinkDialog(this);
 
   // Setting...
   setScene(_scene);
-  centerOn(STR_DEFAULT_SCENE_W/2, STR_DEFAULT_SCENE_H/2);
-
   resize(STR_DEFAULT_SCENE_W, STR_DEFAULT_SCENE_H);
 }
 

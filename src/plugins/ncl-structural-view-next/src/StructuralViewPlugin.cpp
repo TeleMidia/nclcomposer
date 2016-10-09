@@ -810,7 +810,7 @@ void StructuralViewPlugin::changeInView(Entity* entity)
 
       QString uid = _mapCoreToView[entity->getUniqueId()];
 
-      if (_window->getView()->contains(uid)){
+      if (_window->getView()->hasEntity(uid)){
         _window->getView()->change(uid, properties, _window->getView()->getEntity(uid)->getStructuralProperties(), settings);
       }
     }
