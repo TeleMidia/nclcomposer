@@ -1543,62 +1543,39 @@ void StructuralView::createLink(StructuralEntity* tail, StructuralEntity* head)
   {
     StructuralEntity* parent = NULL;
 
-    qreal x;
-    qreal y;
-    qreal z;
-    qreal w;
+    QPointF ptail;
+    QPointF phead;
 
     if (parentTail == parentHead)
     {
-      parent = parentTail;
+      ptail = QPointF(tail->getLeft(), tail->getTop());
+      phead = QPointF(head->getLeft(), head->getTop());
 
-      x = tail->getLeft();
-      y = tail->getTop();
-      z = head->getLeft();
-      w = head->getTop();
+      parent = parentTail;
     }
     else if (parentTail->getStructuralParent() == parentHead)
     {
-      QPointF pointTail = parentTail->mapToParent(tail->getLeft(),
+      phead = QPointF(head->getLeft(), head->getTop());
+      ptail = parentTail->mapToParent(tail->getLeft(),
                                                   tail->getTop());
 
       parent = parentHead;
-
-      x = pointTail.x();
-      y = pointTail.y();
-      z = head->getLeft();
-      w = head->getTop();
-
     }
     else if (parentTail == parentHead->getStructuralParent() &&
              head->getStructuralCategory() == Structural::Interface)
     {
-      QPointF pointHead = parentHead->mapToParent(head->getLeft(),
-                                                  head->getTop());
+      ptail = QPointF(tail->getLeft(), tail->getTop());
+      phead = parentHead->mapToParent(head->getLeft(),head->getTop());
 
       parent = parentTail;
-
-      x = tail->getLeft();
-      y = tail->getTop();
-      z = pointHead.x();
-      w = pointHead.y();
-
     }
     else if (parentTail->getStructuralParent() == parentHead->getStructuralParent() &&
                tail->getStructuralCategory() == Structural::Interface)
     {
-      QPointF pointTail = parentTail->mapToParent(tail->getLeft(),
-                                                  tail->getTop());
-
-      QPointF pointHead = parentHead->mapToParent(head->getLeft(),
-                                                  head->getTop());
+      ptail = parentTail->mapToParent(tail->getLeft(),tail->getTop());
+      phead = parentHead->mapToParent(head->getLeft(),head->getTop());
 
       parent = parentTail->getStructuralParent();
-
-      x = pointTail.x();
-      y = pointTail.y();
-      z = pointHead.x();
-      w = pointHead.y();
     }
 
     setMode(Structural::Pointing); emit switchedPointer(true);
@@ -1609,10 +1586,10 @@ void StructuralView::createLink(StructuralEntity* tail, StructuralEntity* head)
       _dialog->init();
 
       if (_dialog->exec()) {
-        x += tail->getWidth()/2;
-        y += tail->getHeight()/2;
-        z += head->getWidth()/2;
-        w += head->getHeight()/2;
+        ptail.setX(ptail.x()+tail->getWidth()/2);
+        ptail.setY(ptail.y()+tail->getHeight()/2);
+        phead.setX(phead.x()+head->getWidth()/2);
+        phead.setY(phead.y()+head->getHeight()/2);
 
         QString uid = StructuralUtil::createUid();
 
@@ -1620,16 +1597,60 @@ void StructuralView::createLink(StructuralEntity* tail, StructuralEntity* head)
         properties[STR_PROPERTY_ENTITY_TYPE] = StructuralUtil::translateTypeToString(Structural::Link);
         properties[STR_PROPERTY_REFERENCE_XCONNECTOR_ID] =_dialog->getCurrentConnector();
 
-        if (y > w)
-          properties[STR_PROPERTY_ENTITY_TOP] = QString::number(w + (y - w)/2);
-        else
-          properties[STR_PROPERTY_ENTITY_TOP] = QString::number(y + (w - y)/2);
+        qreal x;
+        qreal y;
 
-        if (x > z)
-          properties[STR_PROPERTY_ENTITY_LEFT] = QString::number(z + (z - z)/2);
-        else
-          properties[STR_PROPERTY_ENTITY_LEFT] = QString::number(x + (z - x)/2);
+        if (ptail.x() <= phead.x() && ptail.y() <= phead.y())
+        {
+          if (ptail.x() + tail->getWidth()/2 <  phead.x() - head->getWidth()/2)
+            x = (ptail.x() + tail->getWidth()/2 + phead.x() - head->getWidth()/2)/2;
+          else
+            x = ptail.x() + (phead.x() - ptail.x())/2;
 
+          if (ptail.y() + tail->getHeight()/2 <  phead.y() - head->getHeight()/2)
+            y = (ptail.y() + tail->getHeight()/2 + phead.y() - head->getHeight()/2)/2;
+          else
+            y = ptail.y() + (phead.y() - ptail.y())/2;
+        }
+        else if (ptail.x() > phead.x() && ptail.y() <= phead.y())
+        {
+          if (phead.x() + head->getWidth()/2 <  ptail.x() - tail->getWidth()/2)
+            x = (phead.x() + head->getWidth()/2 + ptail.x() - tail->getWidth()/2)/2;
+          else
+            x = phead.x() + (ptail.x() - phead.x())/2;
+
+          if (ptail.y() + tail->getHeight()/2 <  phead.y() - head->getHeight()/2)
+            y = (ptail.y() + tail->getHeight()/2 + phead.y() - head->getHeight()/2)/2;
+          else
+            y = ptail.y() + (phead.y() - ptail.y())/2;
+        }
+        else if (ptail.x() <= phead.x() && ptail.y() > phead.y())
+        {
+          if (ptail.x() + tail->getWidth()/2 <  phead.x() - head->getWidth()/2)
+            x = (ptail.x() + tail->getWidth()/2 + phead.x() - head->getWidth()/2)/2;
+          else
+            x = ptail.x() + (phead.x() - ptail.x())/2;
+
+          if (phead.y() + head->getHeight()/2 <  ptail.y() - tail->getHeight()/2)
+            y = (phead.y() + head->getHeight()/2 + ptail.y() - tail->getHeight()/2)/2;
+          else
+            y = phead.y() + (ptail.y() - phead.y())/2;
+        }
+        else if (ptail.x() > phead.x() && ptail.y() > phead.y())
+        {
+          if (phead.x() + head->getWidth()/2 <  ptail.x() - tail->getWidth()/2)
+            x = (phead.x() + head->getWidth()/2 + ptail.x() - tail->getWidth()/2)/2;
+          else
+            x = phead.x() + (ptail.x() - phead.x())/2;
+
+          if (phead.y() + head->getHeight()/2 <  ptail.y() - tail->getHeight()/2)
+            y = (phead.y() + head->getHeight()/2 + ptail.y() - tail->getHeight()/2)/2;
+          else
+            y = phead.y() + (ptail.y() - phead.y())/2;
+        }
+
+        properties[STR_PROPERTY_ENTITY_TOP] = QString::number(y);
+        properties[STR_PROPERTY_ENTITY_LEFT] = QString::number(x);
 
         QMap<QString, QString> params = _dialog->getLinkParams();
 
