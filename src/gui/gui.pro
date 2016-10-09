@@ -47,11 +47,10 @@ contains(SERVERPUB, true) {
 QT += core xml network
 
 greaterThan(QT_MAJOR_VERSION, 4) {
-  QT += widgets webkit webkitwidgets
+  QT += widgets
 }
 else {
   CONFIG += help
-  QT += webkit
 }
 
 #VERSION INFORMATION
