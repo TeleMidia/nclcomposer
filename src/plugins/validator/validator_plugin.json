@@ -1,7 +1,7 @@
 {
   "name": "Validator Plug-in",
-  "version": "0.2",
-  "compatVersion": "0.2",
+  "version": "0.3.0",
+  "compatVersion": "0.3",
 
   "vendor": "Laws Lab",
   "copyright": "Laws/UFMA",
