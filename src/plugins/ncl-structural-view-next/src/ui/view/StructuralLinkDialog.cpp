@@ -63,6 +63,21 @@ void CompleteLineEdit::hideList()
   listView->hide();
 }
 
+void CompleteLineEdit::updateListPos()
+{
+  QPoint p(0, height());
+  int x = mapToGlobal(p).x();
+  int y = mapToGlobal(p).y() + 1;
+
+  listView->move(x, y);
+}
+
+void CompleteLineEdit::updateListSize()
+{
+  listView->setMinimumWidth(width());
+  listView->setMaximumWidth(width());
+}
+
 void CompleteLineEdit::hideEvent ( QHideEvent * event )
 {
   Q_UNUSED(event)
@@ -169,14 +184,8 @@ void CompleteLineEdit::setCompleter(const QString &text)
     return;
 
   // Position the text edit
-  listView->setMinimumWidth(width());
-  listView->setMaximumWidth(width());
-
-  QPoint p(0, height());
-  int x = mapToGlobal(p).x();
-  int y = mapToGlobal(p).y() + 1;
-
-  listView->move(x, y);
+  updateListSize();
+  updateListPos();
   listView->show();
 }
 
@@ -539,6 +548,20 @@ void StructuralLinkDialog::updateForm(QString conn)
 
     ++i;
   }
+}
+
+void StructuralLinkDialog::moveEvent(QMoveEvent *event)
+{
+  QDialog::moveEvent(event);
+
+  connLineEdit->updateListPos();
+}
+
+void StructuralLinkDialog::resizeEvent(QResizeEvent *event)
+{
+  QDialog::resizeEvent(event);
+
+  connLineEdit->updateListSize();
 }
 
 void StructuralLinkDialog::showEvent(QShowEvent *evt)

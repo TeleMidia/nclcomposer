@@ -26,6 +26,8 @@ public:
   void setStringList(const QStringList &words);
 
   void hideList();
+  void updateListPos();
+  void updateListSize();
 
 public slots:
   void setCompleter(const QString &text);
@@ -35,6 +37,7 @@ protected:
   virtual void keyPressEvent(QKeyEvent *e);
   virtual void focusInEvent(QFocusEvent *e);
   virtual void hideEvent ( QHideEvent * event );
+//  virtual void moveEvent( QMoveEvent* event);
   // virtual void focusOutEvent(QFocusEvent *e);
   virtual bool eventFilter(QObject *object, QEvent *event);
 
@@ -84,8 +87,11 @@ protected slots:
   void changeConditionParamState(int state);
   void changeActionParamState(int state);
 
+
 protected:
   virtual void showEvent(QShowEvent *evt);
+  virtual void moveEvent(QMoveEvent *event);
+  virtual void resizeEvent(QResizeEvent *event);
 
 public:
   //TODO: This shouldn't be public
