@@ -66,6 +66,11 @@ StructuralLinkDialog* StructuralView::getDialog()
   return _dialog;
 }
 
+bool StructuralView::hasEntity(const QString &uid)
+{
+  return  _entities.contains(uid);
+}
+
 StructuralEntity* StructuralView::getEntity(const QString &uid)
 {
   return _entities.value(uid, NULL);
@@ -168,17 +173,21 @@ void StructuralView::load(const QString &data)
           }
         }
 
-        foreach (StructuralEntity* e, _entities.values())
-        {
-          if (e->getStructuralCategory() == Structural::Edge ||
-              e->getStructuralType() == Structural::Port ||
-              e->isReference())
-          {
-            adjustReferences(e); e->adjust(true);
+        foreach (QString key, _entities.keys())
+	{
+          if (_entities.contains(key))
+	  {
+            StructuralEntity* e = _entities.value(key);
+
+            if (e->getStructuralCategory() == Structural::Edge ||
+                e->getStructuralType() == Structural::Port ||
+                e->isReference()) {
+
+                adjustReferences(e);
+                e->adjust(true);
+            }
           }
         }
-
-
 
         select(bodyUid, StructuralUtil::createSettings());
 
@@ -629,8 +638,10 @@ void StructuralView::insert(QString uid, QString parent, QMap<QString, QString> 
                 adjustReferences(p);
               else
                 foreach (QString key, _references.keys())
-                  if (_references.value(key) == p->getStructuralUid())
-                    adjustReferences(_entities.value(key));
+                  if (_references.contains(key))
+                    if (_references.value(key) == p->getStructuralUid())
+                      if (_entities.contains(key))
+                        adjustReferences(_entities.value(key));
             }
           }
         }
@@ -776,7 +787,7 @@ void StructuralView::remove(QString uid, QMap<QString, QString> settings)
       // are ignore when saving the project.
       _references.remove(e->getStructuralUid());
     }
-    else if (e->getStructuralCategory() == Structural::Media)
+    else if (e->getStructuralType() == Structural::Media)
     {
       foreach (QString key, _references.keys(e->getStructuralUid()))
       {
@@ -1131,9 +1142,9 @@ void StructuralView::adjustReferences(StructuralEntity* entity)
 
         bool isVisible = true;
 
-        if (entity->getStructuralParent() != NULL &&
-                !entity->getStructuralParent()->isUncollapsed())
-          isVisible = false;
+        if (entity->getStructuralParent() != NULL)
+          if (!entity->getStructuralParent()->isUncollapsed())
+           isVisible = false;
 
         if (((StructuralEdge*) entity)->getTail() == NULL ||
             ((StructuralEdge*) entity)->getHead() == NULL)
@@ -1255,19 +1266,17 @@ void StructuralView::select(QString uid, QMap<QString, QString> settings)
       //
       // Notifing...
       //
-      emit switchedCut(true);
-      emit switchedCopy(true);
+      bool enablePaste = false;
 
       if (_clipboard != NULL)
-      {
-        if (StructuralUtil::validateKinship(entity->getStructuralType(), _clipboard->getStructuralType()) &&
-            isChild(entity, _clipboard))
-          emit switchedPaste(true);
-      }
-      else
-      {
-        emit switchedPaste(false);
-      }
+        if (entity->getStructuralUid() != _clipboard->getStructuralUid())
+          if (StructuralUtil::validateKinship(_clipboard->getStructuralType(), entity->getStructuralType()) &&
+              !isChild(entity, _clipboard))
+            enablePaste = true;
+
+      emit switchedCut(true);
+      emit switchedCopy(true);
+      emit switchedPaste(enablePaste);
 
       if (settings[STR_SETTING_NOTIFY] == STR_VALUE_TRUE)
       {
@@ -1399,31 +1408,32 @@ void StructuralView::performUndo()
         adjustReferences(_entities.value(key));
   }
 
-  foreach (StructuralEntity* g, _entities.values())
+  foreach (QString key, _entities.keys())
   {
-    if (g->getStructuralCategory() == Structural::Edge)
+    if (_entities.contains(key))
     {
-      StructuralEntity* component = _entities.value(g->getStructuralProperty(STR_PROPERTY_REFERENCE_COMPONENT_UID));
-      StructuralEntity* interface = _entities.value(g->getStructuralProperty(STR_PROPERTY_REFERENCE_INTERFACE_UID));
+      StructuralEntity* e = _entities.value(key);
 
-      if (component != NULL)
-      {
-        if (interface == NULL)
-        {
-          foreach (StructuralEntity* cc, component->getStructuralEntities())
-          {
-            if (cc->getStructuralId() == g->getStructuralProperty(STR_PROPERTY_REFERENCE_INTERFACE_ID))
-            {
-              g->setStructuralProperty(STR_PROPERTY_REFERENCE_INTERFACE_UID, cc->getStructuralUid());
+      if (e->getStructuralCategory() == Structural::Edge) {
+        StructuralEntity* c = _entities.value(e->getStructuralProperty(STR_PROPERTY_REFERENCE_COMPONENT_UID));
+        StructuralEntity* i = _entities.value(e->getStructuralProperty(STR_PROPERTY_REFERENCE_INTERFACE_UID));
 
-              if (((StructuralEdge*) g)->getTail() != NULL)
-                g->setStructuralProperty(STR_PROPERTY_EDGE_HEAD, cc->getStructuralUid());
-              else
-                g->setStructuralProperty(STR_PROPERTY_EDGE_TAIL, cc->getStructuralUid());
+        if (c != NULL) {
+          if (i == NULL) {
+            foreach (StructuralEntity* r, c->getStructuralEntities()) {
+              if (r->getStructuralId() == e->getStructuralProperty(STR_PROPERTY_REFERENCE_INTERFACE_ID)) {
+                e->setStructuralProperty(STR_PROPERTY_REFERENCE_INTERFACE_UID, r->getStructuralUid());
 
-              adjustReferences(g); g->adjust(true);
+                if (((StructuralEdge*) e)->getTail() != NULL)
+                  e->setStructuralProperty(STR_PROPERTY_EDGE_HEAD, r->getStructuralUid());
+                else
+                  e->setStructuralProperty(STR_PROPERTY_EDGE_TAIL, r->getStructuralUid());
 
-              break;
+                adjustReferences(e);
+                e->adjust(true);
+
+                break;
+              }
             }
           }
         }
@@ -1478,7 +1488,7 @@ void StructuralView::performCopy()
       {
         _clipboard = clone(entity);
 
-        emit switchedPaste(true);
+        emit switchedPaste(false);
       }
   }
 }
@@ -1495,8 +1505,8 @@ void StructuralView::performPaste()
     if (parent != NULL)
       if (_clipboard->getStructuralUid() != parent->getStructuralUid())
         if (StructuralUtil::validateKinship(_clipboard->getStructuralType(), parent->getStructuralType()) &&
-            !isChild(_clipboard, parent))
-        {
+            !isChild(parent, _clipboard))
+	{
 
           // 0: Cancel - Nothing todo.
           // 1: No - Paste entity.
@@ -2513,19 +2523,15 @@ StructuralEntity* StructuralView::clone(StructuralEntity* entity, StructuralEnti
   return newentity;
 }
 
-bool StructuralView::isChild(StructuralEntity* e , StructuralEntity* p)
+bool StructuralView::isChild(StructuralEntity* entity , StructuralEntity* parent)
 {
-  bool r = false;
+  if (entity != parent)
+    foreach (StructuralEntity* e, parent->getStructuralEntities())
+      if (e->getStructuralUid() == entity->getStructuralUid() ||
+          isChild(entity, e))
+        return true;
 
-  foreach (StructuralEntity* ec, p->getStructuralEntities())
-  {
-    if (ec == e)
-      return true;
-    else
-      r = r || isChild(e, ec);
-  }
-
-  return r;
+  return false;
 }
 
 void StructuralView::paste(StructuralEntity* entity, StructuralEntity* parent)
