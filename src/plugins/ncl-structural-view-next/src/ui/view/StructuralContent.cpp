@@ -39,37 +39,55 @@ void StructuralContent::adjust(bool collision,  bool recursion)
   StructuralNode::adjust(collision, recursion);
 
   // Adjusting properties
-  if (!getStructuralProperty(STR_PROPERTY_CONTENT_TYPE).isEmpty()) {
-      QString type = getStructuralProperty(STR_PROPERTY_CONTENT_TYPE);
+  if (!getStructuralProperty(STR_PROPERTY_CONTENT_TYPE).isEmpty())
+  {
+    QString type = getStructuralProperty(STR_PROPERTY_CONTENT_TYPE);
 
-      if (type.startsWith("image")) {
-        setMimeType(Structural::Image);
-      } else if (type.startsWith("audio")) {
-        setMimeType(Structural::Audio);
-      } else if (type.startsWith("video")) {
-        setMimeType(Structural::Video);
-      } else if (type.startsWith("text")) {
-          if (type.endsWith("html"))
-            setMimeType(Structural::HTML);
-          else
-            setMimeType(Structural::Text);
-      } else if (type.endsWith("NCLua")) {
-        setMimeType(Structural::NCLua);
-      } else if (type.endsWith("NCL")) {
-        setMimeType(Structural::NCL);
-      } else if (type.endsWith("settings")) {
-        setMimeType(Structural::Settings);
-      } else {
-        setMimeType(Structural::NoMimeType);
-      }
-
-  }else if (!getStructuralProperty(STR_PROPERTY_CONTENT_LOCATION).isEmpty()) {
+    if (type.startsWith("image"))
+    {
+      setMimeType(Structural::Image);
+    }
+    else if (type.startsWith("audio"))
+    {
+      setMimeType(Structural::Audio);
+    }
+    else if (type.startsWith("video"))
+    {
+      setMimeType(Structural::Video);
+    }
+    else if (type.startsWith("text"))
+    {
+      if (type.endsWith("html"))
+        setMimeType(Structural::HTML);
+      else
+        setMimeType(Structural::Text);
+    }
+    else if (type.endsWith("NCLua"))
+    {
+      setMimeType(Structural::NCLua);
+    }
+    else if (type.endsWith("NCL"))
+    {
+      setMimeType(Structural::NCL);
+    }
+    else if (type.endsWith("settings"))
+    {
+      setMimeType(Structural::Settings);
+    }
+    else
+    {
+      setMimeType(Structural::NoMimeType);
+    }
+  }
+  else if (!getStructuralProperty(STR_PROPERTY_CONTENT_LOCATION).isEmpty())
+  {
     QString location = getStructuralProperty(STR_PROPERTY_CONTENT_LOCATION);
     QString suffix = location.right(location.length() - location.lastIndexOf('.') - 1);
 
     setMimeType(StructuralUtil::getMimeTypeByExtension(suffix));
-
-  } else {
+  }
+  else
+  {
     setMimeType(Structural::NoMimeType);
   }
 
@@ -92,15 +110,18 @@ void StructuralContent::draw(QPainter* painter)
                       QPixmap(StructuralUtil::getMimeTypeIcon(getMimeType())));
 
   if (!getError().isEmpty() ||
-      !getWarning().isEmpty()) {
+      !getWarning().isEmpty())
+  {
     QString icon;
     QString color;
 
-    if (!getError().isEmpty()) {
+    if (!getError().isEmpty())
+    {
       icon = QString(STR_DEFAULT_ALERT_ERROR_ICON);
       color = QString(STR_DEFAULT_ALERT_ERROR_COLOR);
-    } else {
-
+    }
+    else
+    {
       icon = QString(STR_DEFAULT_ALERT_WARNING_ICON);
       color = QString(STR_DEFAULT_ALERT_WARNING_COLOR);
     }
@@ -110,10 +131,8 @@ void StructuralContent::draw(QPainter* painter)
                         STR_DEFAULT_ALERT_ICON_W, STR_DEFAULT_ALERT_ICON_H, QPixmap(icon));
 
     int max = 20;
-
     int start = 8;
     int end = getWidth();
-
 
     double current = start;
     double step = (double) ( end - start ) / max;
@@ -122,7 +141,8 @@ void StructuralContent::draw(QPainter* painter)
     painter->setPen(QPen(QBrush(QColor(color)), 0));
     painter->setRenderHint(QPainter::Antialiasing, true);
 
-    for (int i = 0; i < max; i++) {
+    for (int i = 0; i < max; i++)
+    {
       current = start + (double) i * step;
 
       if( i % 2)

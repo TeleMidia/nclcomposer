@@ -69,7 +69,8 @@ void StructuralViewPlugin::init()
   int li = 0;
   int ni = c.indexOf(":");
 
-  while(ni > 0) {
+  while(ni > 0)
+  {
     QStringList list = (c.mid(li,ni - li)).split("=");
 
     _mapCoreToView[list.at(0)] = list.at(1);
@@ -108,8 +109,9 @@ bool StructuralViewPlugin::saveSubsession()
   data.append(_window->getView()->save());
 
   data.append("-- EXTRA DATA");
-  foreach(QString key, _mapCoreToView.keys()){
-      data.append(key+"="+_mapCoreToView[key]+":");
+  foreach(QString key, _mapCoreToView.keys())
+  {
+    data.append(key+"="+_mapCoreToView[key]+":");
   }
 
   data.append("-- END OF PLUGIN DATA");
@@ -127,11 +129,14 @@ void StructuralViewPlugin::updateFromModel()
 
   QMap <QString, QMap<QString,QString> > cache;
 
-  foreach (QString key, _mapCoreToView.keys()) {
+  foreach (QString key, _mapCoreToView.keys())
+  {
     StructuralEntity* e = _window->getView()->getEntity(_mapCoreToView.value(key));
 
-    if (e != NULL) {
-      if (!e->getStructuralId().isEmpty()) {
+    if (e != NULL)
+    {
+      if (!e->getStructuralId().isEmpty())
+      {
         QString pId = "";
 
         if (e->getStructuralParent() != NULL)
@@ -139,7 +144,8 @@ void StructuralViewPlugin::updateFromModel()
 
         QMap<QString,QString> properties = e->getStructuralProperties();
 
-        foreach (QString key, e->getStructuralProperties().keys()) {
+        foreach (QString key, e->getStructuralProperties().keys())
+        {
           if (key.contains(STR_PROPERTY_LINKPARAM_NAME) ||
               key.contains(STR_PROPERTY_LINKPARAM_VALUE) ||
               key.contains(STR_PROPERTY_BINDPARAM_NAME) ||
@@ -157,19 +163,22 @@ void StructuralViewPlugin::updateFromModel()
   // Cleaning...
   //
 
-  _window->getView()->clean(); clean();
+  _window->getView()->clean();
+  clean();
 
   //
   // Inserting...
   //
 
   QStack <Entity *> stack; stack.push(project);
-  while(stack.size()) {
+  while(stack.size())
+  {
     Entity *current = stack.top();
     stack.pop();
 
     QVector <Entity *> children = current->getChildren();
-    for(int i = 0; i <children.size(); i++) {
+    for(int i = 0; i <children.size(); i++)
+    {
       insertInView(children[i], false);
       stack.push(children[i]);
     }
@@ -178,18 +187,20 @@ void StructuralViewPlugin::updateFromModel()
   //
   // Settings...
   //
-
   QMap<QString,StructuralEntity*> entities = _window->getView()->getEntities();
 
-  foreach (StructuralEntity* e, entities.values()) {
-    if (!e->getStructuralProperty(STR_PROPERTY_REFERENCE_REFER_ID).isEmpty()) {
+  foreach (StructuralEntity* e, entities.values())
+  {
+    if (!e->getStructuralProperty(STR_PROPERTY_REFERENCE_REFER_ID).isEmpty())
+    {
       QString coreUID = getUidById(e->getStructuralProperty(STR_PROPERTY_REFERENCE_REFER_ID));
 
       if (_mapCoreToView.contains(coreUID))
         e->setStructuralProperty(STR_PROPERTY_REFERENCE_REFER_UID, _mapCoreToView.value(coreUID));
     }
 
-    if (!e->getStructuralProperty(STR_PROPERTY_REFERENCE_COMPONENT_ID).isEmpty()) {
+    if (!e->getStructuralProperty(STR_PROPERTY_REFERENCE_COMPONENT_ID).isEmpty())
+    {
       QString coreUID = getUidById(e->getStructuralProperty(STR_PROPERTY_REFERENCE_COMPONENT_ID));
 
       if (_mapCoreToView.contains(coreUID))
@@ -207,11 +218,13 @@ void StructuralViewPlugin::updateFromModel()
   }
 
   StructuralEntity* root = _window->getView()->getBody();
-  if (root != NULL) {
+  if (root != NULL)
+  {
     QStack<StructuralEntity*> s;
     s.push(root);
 
-    while (!s.isEmpty()) {
+    while (!s.isEmpty())
+    {
       StructuralEntity* e = s.pop();
 
       QString pId = "";
@@ -222,7 +235,8 @@ void StructuralViewPlugin::updateFromModel()
       QMap<QString, QString> settings = StructuralUtil::createSettings(false, false);
 
       // Setting cached data...
-      if (cache.contains(e->getStructuralId()+pId)) {
+      if (cache.contains(e->getStructuralId()+pId))
+      {
         QMap<QString, QString> properties = cache.value(e->getStructuralId()+pId);
         properties.insert(STR_PROPERTY_ENTITY_UID, e->getStructuralUid());
 
@@ -553,6 +567,7 @@ void StructuralViewPlugin::insertInView(Entity* entity, bool undo)
 
       if (type == Structural::Bind) {
         parentUID = entity->getParent()->getParentUniqueId();
+        assert (parentUID != NULL);
 
         if (!properties.value(STR_PROPERTY_ENTITY_ID).isEmpty()) {
           StructuralRole role = StructuralUtil::translateStringToRole(properties.value(STR_PROPERTY_ENTITY_ID));
@@ -851,7 +866,8 @@ void StructuralViewPlugin::insertInCore(QString uid, QString parent, QMap<QStrin
       QString name;
       QString value;
 
-      if (type == Structural::Link) {
+      if (type == Structural::Link)
+      {
         tag = "linkParam";
         name = QString(STR_PROPERTY_LINKPARAM_NAME);
         value = QString(STR_PROPERTY_LINKPARAM_VALUE);
@@ -1022,7 +1038,8 @@ void StructuralViewPlugin::textualStartSync(QString, void*)
 
 void StructuralViewPlugin::textualFinishSync(QString, void*)
 {
-  _synching = false; updateFromModel();
+  _synching = false;
+  updateFromModel();
 }
 
 void StructuralViewPlugin::clearValidationMessages(QString, void *param)
@@ -1105,8 +1122,8 @@ void StructuralViewPlugin::adjustConnectors()
     QMap<QString, QVector<QString> > actions;
     QMap<QString, QVector<QString> > params;
 
-    foreach (Entity* e, connectorBase->getChildren()){
-
+    foreach (Entity* e, connectorBase->getChildren())
+    {
       // loading data from local causalConnector
       if (e->getType() == "causalConnector") {
         QString connId;

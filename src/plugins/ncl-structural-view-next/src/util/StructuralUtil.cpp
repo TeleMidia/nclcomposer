@@ -587,8 +587,10 @@ void StructuralUtil::adjustEdges(StructuralEntity* entity)
       relatives += parent->getStructuralParent()->getStructuralEntities();
     }
 
-    foreach (StructuralEntity* relative, relatives) {
-      if (relative->getStructuralCategory() == Structural::Edge){
+    foreach (StructuralEntity* relative, relatives)
+    {
+      if (relative->getStructuralCategory() == Structural::Edge)
+      {
         StructuralEdge *edge = (StructuralEdge*) relative;
 
         if (edge->getTail() == entity || edge->getHead() == entity)
@@ -615,7 +617,6 @@ bool StructuralUtil::validateKinship(StructuralType entityType, StructuralType p
     case Structural::Body:
     {
       return false;
-      break;
     }
 
     case Structural::Switch:
@@ -633,13 +634,11 @@ bool StructuralUtil::validateKinship(StructuralType entityType, StructuralType p
         case Structural::Context:
         {
           return true;
-          break;
         }
 
         default:
         {
-          return false;
-          break;
+          return false;          
         }
       }
       break;
@@ -652,13 +651,11 @@ bool StructuralUtil::validateKinship(StructuralType entityType, StructuralType p
         case Structural::Switch:
         {
           return true;
-          break;
         }
 
         default:
         {
-          return false;
-          break;
+          return false;          
         }
       }
       break;
@@ -666,17 +663,16 @@ bool StructuralUtil::validateKinship(StructuralType entityType, StructuralType p
 
     case Structural::Area:
     {
-      switch (parentType) {
+      switch (parentType)
+      {
         case Structural::Media:
         {
           return true;
-          break;
         }
 
         default:
         {
-          return false;
-          break;
+          return false;          
         }
       }
       break;
@@ -685,7 +681,6 @@ bool StructuralUtil::validateKinship(StructuralType entityType, StructuralType p
     default:
     {
       return false;
-      break;
     }
   }
 }

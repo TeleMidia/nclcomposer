@@ -38,26 +38,31 @@ void StructuralComposition::collapse(bool notify)
     setWidth(getUncollapedWidth());
     setHeight(getUncollapedHeight());
 
-    foreach(StructuralEntity* entity, getStructuralEntities()) {
-
-      if (entity->getStructuralCategory() == Structural::Interface) {
+    foreach(StructuralEntity* entity, getStructuralEntities())
+    {
+      if (entity->getStructuralCategory() == Structural::Interface)
+      {
         entity->setTop(entity->getTop()*getUncollapedHeight()/STR_DEFAULT_CONTENT_H);
         entity->setLeft(entity->getLeft()*getUncollapedWidth()/STR_DEFAULT_CONTENT_W);
-
-      } else {
+      }
+      else
+      {
         entity->setTop(entity->getUncollapedTop());
         entity->setLeft(entity->getUncollapedLeft());
 
         entity->setHidden(false);
 
-        if (entity->isUncollapsed()) {
+        if (entity->isUncollapsed())
+        {
           entity->setWidth(entity->getUncollapedWidth());
           entity->setHeight(entity->getUncollapedHeight());
         }
       }
     }
 
-  } else {
+  }
+  else
+  {
     setHoverable(true);
     setResizable(false);
 
@@ -69,19 +74,22 @@ void StructuralComposition::collapse(bool notify)
     setWidth(STR_DEFAULT_CONTENT_W);
     setHeight(STR_DEFAULT_CONTENT_H);
 
-    foreach(StructuralEntity* entity, getStructuralEntities()) {
-
+    foreach(StructuralEntity* entity, getStructuralEntities())
+    {
       entity->setUncollapedTop(entity->getTop());
       entity->setUncollapedLeft(entity->getLeft());
 
-      if (entity->getStructuralCategory() == Structural::Interface) {
+      if (entity->getStructuralCategory() == Structural::Interface)
+      {
         entity->setTop(((entity->getTop()*STR_DEFAULT_CONTENT_H)/getUncollapedHeight()));
         entity->setLeft(((entity->getLeft()*STR_DEFAULT_CONTENT_W)/getUncollapedWidth()));
-
-      } else {
+      }
+      else
+      {
         entity->setHidden(true);
 
-        if (entity->isUncollapsed()) {
+        if (entity->isUncollapsed())
+        {
           entity->setUncollapedWidth(entity->getWidth());
           entity->setUncollapedHeight(entity->getHeight());
         }
@@ -97,7 +105,8 @@ void StructuralComposition::collapse(bool notify)
 
 void StructuralComposition::draw(QPainter* painter)
 {
-  if (isUncollapsed()) {
+  if (isUncollapsed())
+  {
     painter->setRenderHint(QPainter::Antialiasing,true);
     painter->setRenderHint(QPainter::SmoothPixmapTransform, false);
 
@@ -105,19 +114,24 @@ void StructuralComposition::draw(QPainter* painter)
     painter->setBrush(drawColor);
 
     if (!getError().isEmpty() ||
-        !getWarning().isEmpty()) {
+        !getWarning().isEmpty())
+    {
       QString color;
 
-      if (!getError().isEmpty()) {
+      if (!getError().isEmpty())
+      {
         color = QString(STR_DEFAULT_ALERT_ERROR_COLOR);
-      } else {
-
+      }
+      else
+      {
         color = QString(STR_DEFAULT_ALERT_WARNING_COLOR);
       }
 
       painter->setPen(QPen(QBrush(QColor(color)), 2));
 
-    }else {
+    }
+    else
+    {
       painter->setPen(QPen(drawColor.darker(), 0));
     }
 
@@ -140,7 +154,9 @@ void StructuralComposition::draw(QPainter* painter)
                            getResizeWidth(),
                            getResizeHeight());
 
-  } else {
+  }
+  else
+  {
     painter->setRenderHint(QPainter::Antialiasing,false);
     painter->setRenderHint(QPainter::SmoothPixmapTransform, true);
 
@@ -151,15 +167,18 @@ void StructuralComposition::draw(QPainter* painter)
                         QPixmap(StructuralUtil::getIcon(getStructuralType())));
 
     if (!getError().isEmpty() ||
-        !getWarning().isEmpty()) {
+        !getWarning().isEmpty())
+    {
       QString icon;
       QString color;
 
-      if (!getError().isEmpty()) {
+      if (!getError().isEmpty())
+      {
         icon = QString(STR_DEFAULT_ALERT_ERROR_ICON);
         color = QString(STR_DEFAULT_ALERT_ERROR_COLOR);
-      } else {
-
+      }
+      else
+      {
         icon = QString(STR_DEFAULT_ALERT_WARNING_ICON);
         color = QString(STR_DEFAULT_ALERT_WARNING_COLOR);
       }
@@ -181,7 +200,8 @@ void StructuralComposition::draw(QPainter* painter)
       painter->setPen(QPen(QBrush(QColor(color)), 0));
       painter->setRenderHint(QPainter::Antialiasing, true);
 
-      for (int i = 0; i < max; i++) {
+      for (int i = 0; i < max; i++)
+      {
         current = start + (double) i * step;
 
         if( i % 2)
@@ -248,10 +268,12 @@ void StructuralComposition::dropEvent(QGraphicsSceneDragDropEvent *event)
 
   QList<QUrl> list = event->mimeData()->urls();
 
-  if (!list.isEmpty()) {
+  if (!list.isEmpty())
+  {
     event->acceptProposedAction();
 
-    foreach(QUrl url, list) {
+    foreach(QUrl url, list)
+    {
       QString filename = url.toLocalFile();
 
       QMap<QString,QString> properties;

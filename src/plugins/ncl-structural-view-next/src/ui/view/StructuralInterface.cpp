@@ -26,16 +26,20 @@ void StructuralInterface::adjust(bool collision,  bool recursion)
   // Adjusting position...
   StructuralEntity* parent = getStructuralParent();
 
-  if (parent != NULL) {
-
-    if (!collision) {
+  if (parent != NULL)
+  {
+    if (!collision)
+    {
       // Tries (10x) to find a position where there is no collision
       // with others relatives
-      for (int i = 0; i < 10; i++) {
+      for (int i = 0; i < 10; i++)
+      {
         bool colliding = false;
 
-        foreach(StructuralEntity *entity, parent->getStructuralEntities()) {
-          if(this != entity && entity->getStructuralCategory() == Structural::Interface) {
+        foreach(StructuralEntity *entity, parent->getStructuralEntities())
+        {
+          if(this != entity && entity->getStructuralCategory() == Structural::Interface)
+          {
 
             int max = 1000;
             int n = 0;
@@ -44,7 +48,8 @@ void StructuralInterface::adjust(bool collision,  bool recursion)
 
             entity->setSelectable(false);
 
-            while(collidesWithItem(entity, Qt::IntersectsItemBoundingRect)) {
+            while(collidesWithItem(entity, Qt::IntersectsItemBoundingRect))
+            {
               QLineF line = QLineF(getLeft()+getWidth()/2, getTop()+getHeight()/2,
                                    entity->getWidth()/2, entity->getHeight()/2);
 
@@ -89,7 +94,8 @@ void StructuralInterface::constrain()
     QPointF tail(parent->getWidth()/2, parent->getHeight()/2);
     QPointF head(getLeft() + getWidth()/2, getTop() + getHeight()/2);
 
-    if (tail == head) {
+    if (tail == head)
+    {
       head.setX(tail.x());
       head.setY(tail.y() - 10);
     }
@@ -99,17 +105,20 @@ void StructuralInterface::constrain()
     qreal current = 1.0;
     qreal step = 0.01;
 
-    if (!parent->contains(p)) {
+    if (!parent->contains(p))
+    {
       step = -0.01;
       status = false;
     }
 
-    do {
+    do
+    {
       current += step;
       p = line.pointAt(current);
     } while(parent->contains(p) == status);
 
-    if (QLineF(p,head).length() > 7) {
+    if (QLineF(p,head).length() > 7)
+    {
       setTop(p.y() - getHeight()/2);
       setLeft(p.x() - getWidth()/2);
     }
@@ -126,14 +135,17 @@ void StructuralInterface::draw(QPainter* painter)
   painter->drawPixmap(x, y, w, h, QPixmap(StructuralUtil::getIcon(getStructuralType())));
 
   if (!getError().isEmpty() ||
-      !getWarning().isEmpty()) {
+      !getWarning().isEmpty())
+  {
 
     QString icon;
 
-    if (!getError().isEmpty()) {
+    if (!getError().isEmpty())
+    {
       icon = QString(STR_DEFAULT_ALERT_ERROR_ICON);
-    } else {
-
+    }
+    else
+    {
       icon = QString(STR_DEFAULT_ALERT_WARNING_ICON);
     }
 
@@ -143,7 +155,8 @@ void StructuralInterface::draw(QPainter* painter)
                         QPixmap(icon));
   }
 
-  if (isMoving()) {
+  if (isMoving())
+  {
     painter->setBrush(QBrush(Qt::NoBrush));
     painter->setPen(QPen(QBrush(Qt::black), 0));
 

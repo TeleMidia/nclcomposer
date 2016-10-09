@@ -115,14 +115,15 @@ void StructuralEdge::adjust(bool collision,  bool recursion)
   // Adjusting position...
   StructuralEntity* parent = getStructuralParent();
 
-  if (parent != NULL) {
-
+  if (parent != NULL)
+  {
     qreal angle = getAngle();
 
     StructuralEntity* tail = getTail();
     StructuralEntity* head = getHead();
 
-    if (tail != NULL && head != NULL) {
+    if (tail != NULL && head != NULL)
+    {
       QLineF line = QLineF(QPointF(tail->getLeft() + tail->getWidth()/2,
                                    tail->getTop() + tail->getHeight()/2),
                            QPointF(head->getLeft() + head->getWidth()/2,
@@ -165,25 +166,30 @@ void StructuralEdge::adjustBox(QLineF line)
   qreal w;
   qreal h;
 
-  if (ptail.x() <= phead.x() && ptail.y() <= phead.y()) {
+  if (ptail.x() <= phead.x() && ptail.y() <= phead.y())
+  {
     x = ptail.x();
     y = ptail.y();
     w = phead.x() - ptail.x();
     h = phead.y() - ptail.y();
 
-  } else if (ptail.x() > phead.x() && ptail.y() <= phead.y()) {
+  }
+  else if (ptail.x() > phead.x() && ptail.y() <= phead.y())
+  {
     x = phead.x();
     y = ptail.y();
     w = ptail.x() - phead.x();
     h = phead.y() - ptail.y();
-
-  } else if (ptail.x() <= phead.x() && ptail.y() > phead.y()) {
+  }
+  else if (ptail.x() <= phead.x() && ptail.y() > phead.y())
+  {
     x = ptail.x();
     y = phead.y();
     w = phead.x() - ptail.x();
     h = ptail.y() - phead.y();
-
-  } else if (ptail.x() > phead.x() && ptail.y() > phead.y()) {
+  }
+  else if (ptail.x() > phead.x() && ptail.y() > phead.y())
+  {
     x = phead.x();
     y = phead.y();
     w = ptail.x() - phead.x();
@@ -206,12 +212,14 @@ void StructuralEdge::adjustExtreme(StructuralEntity* extreme, QLineF line, qreal
   int max = 100;
   int n = 0;
 
-  while(extreme->collidesWithItem(this)) {
+  while(extreme->collidesWithItem(this))
+  {
     index += step;
 
     QPointF p;
 
-    if (angle != 0) {
+    if (angle != 0)
+    {
       qreal r;
       qreal len;
 
@@ -239,7 +247,9 @@ void StructuralEdge::adjustExtreme(StructuralEntity* extreme, QLineF line, qreal
       else
         setAlfa(alfa);
 
-    } else {
+    }
+    else
+    {
       p = line.pointAt(index);
     }
 
@@ -265,25 +275,29 @@ QLineF StructuralEdge::getDrawLine(qreal padding) const
   int z;
   int w;
 
-  if (ptail.x() <= phead.x() && ptail.y() <= phead.y()) {
+  if (ptail.x() <= phead.x() && ptail.y() <= phead.y())
+  {
     x = STR_DEFAULT_ENTITY_PADDING;
     y = STR_DEFAULT_ENTITY_PADDING;
     z = getWidth() + STR_DEFAULT_ENTITY_PADDING;
     w = getHeight() + STR_DEFAULT_ENTITY_PADDING;
-
-  } else if (ptail.x() > phead.x() && ptail.y() <= phead.y()) {
+  }
+  else if (ptail.x() > phead.x() && ptail.y() <= phead.y())
+  {
     x = getWidth() + STR_DEFAULT_ENTITY_PADDING;
     y = STR_DEFAULT_ENTITY_PADDING;
     z = STR_DEFAULT_ENTITY_PADDING;
     w = getHeight() + STR_DEFAULT_ENTITY_PADDING;
-
-  } else if (ptail.x() <= phead.x() && ptail.y() > phead.y()) {
+  }
+  else if (ptail.x() <= phead.x() && ptail.y() > phead.y())
+  {
     x = STR_DEFAULT_ENTITY_PADDING;
     y = getHeight() + STR_DEFAULT_ENTITY_PADDING;
     z = getWidth() + STR_DEFAULT_ENTITY_PADDING;
     w = STR_DEFAULT_ENTITY_PADDING;
-
-  } else if (ptail.x() > phead.x() && ptail.y() > phead.y()) {
+  }
+  else if (ptail.x() > phead.x() && ptail.y() > phead.y())
+  {
     x = getWidth() + STR_DEFAULT_ENTITY_PADDING;
     y = getHeight() + STR_DEFAULT_ENTITY_PADDING;
     z = STR_DEFAULT_ENTITY_PADDING;
