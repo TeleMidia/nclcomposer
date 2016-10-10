@@ -18,7 +18,7 @@ VERSION=0.3.0
 
 QMAKE=qmake FORCERELEASE=true CPRVERSION=${VERSION} PREFIX=/usr
 
-APPNAME := composer
+APPNAME := nclcomposer
 build:
 	dh_testdir
 	# Add here commands to compile the package.

@@ -12,7 +12,7 @@ fi
 
 echo "Generating NCL Composer ${VERSION} deb package"
 
-PARAMS="FORCERELEASE=true RUNSSH=true CPRVERSION=${VERSION} PREFIX=/usr"
+PARAMS="FORCERELEASE=true CPRVERSION=${VERSION} PREFIX=/usr"
 QMAKE="qmake -recursive ${PARAMS}"
 LUPDATE="lupdate nclcomposer.pro"
 LRELEASE="lrelease nclcomposer.pro"
