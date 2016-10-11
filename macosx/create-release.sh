@@ -22,7 +22,7 @@ echo;
 
 echo "(3/3) ------ Install ------";
 echo "Installing release version of 'all'...";
-qmake -spec macx-g++ nclcomposer.pro FORCERELEASE=true RUNSSHON=false CPRVERSION=$VERSION
+qmake -spec macx-g++ nclcomposer.pro FORCERELEASE=true RUNSSHON=false CPRVERSION=$VERSION	
 lupdate nclcomposer.pro 
 lrelease nclcomposer.pro
 sudo make

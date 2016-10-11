@@ -8,7 +8,7 @@ if [ -z $VERSION ]; then
 	exit   
 fi
 
-DIR=`pwd`; DIR="$DIR/../"; cd $DIR/composer-gui/;
+DIR=`pwd`; DIR="$DIR/../"; cd $DIR/bin/release/;
 
 echo "(1/3) ------ Setting ------";
 
@@ -19,8 +19,8 @@ cp $BUNDLE $NAME
  
 echo "(2/3) ------ Pulishing ------";
 
-scp $NAME edcaraujo@xserve1.telemidia.puc-rio.br:/Library/WebServer/Documents/composer/downloads/unstable
-ssh edcaraujo@xserve1.telemidia.puc-rio.br "chmod 777 /Library/WebServer/Documents/composer/downloads/unstable/$NAME" 
+scp $NAME edcaraujo@telemidia.puc-rio.br:/Library/WebServer/Documents/composer/downloads/unstable
+ssh edcaraujo@telemidia.puc-rio.br "chmod 777 /Library/WebServer/Documents/composer/downloads/unstable/$NAME" 
 
 echo "(3/3) ------ Cleaning ------";
 
