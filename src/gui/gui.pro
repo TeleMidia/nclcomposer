@@ -177,7 +177,7 @@ INCLUDEPATH   +=  ../core/src \
 LIBS          +=  -L$$DESTDIR
 
 macx {
-  LIBS += -F/Library/Frameworks \
+    LIBS += -F/Library/Frameworks \
           -F$$PWD/../../bin -framework ComposerCore
 
     INCLUDEPATH += \
@@ -185,6 +185,11 @@ macx {
         /Library/Frameworks/ComposerCore.framework/ \
         /Library/Frameworks/ComposerCore.framework/core/ \
         /opt/local/include/
+
+    QT += macextras
+
+    QMAKE_CXXFLAGS += -mmacosx-version-min=10.7 -std=c++11 -stdlib=libc++
+    LIBS += -mmacosx-version-min=10.7 -stdlib=libc++
 
     runssh_on {
       message ("NCL Composer.pro will be built with support to run over SSH.")

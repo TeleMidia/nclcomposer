@@ -130,6 +130,8 @@ macx {
     target.path = $$INSTALLBASE
     INSTALLS += target
 
+    QMAKE_CXXFLAGS += -mmacosx-version-min=10.7 -std=c++11 -stdlib=libc++
+    LIBS += -mmacosx-version-min=10.7 -stdlib=libc++
 }
 else:unix {
     target.path = $$INSTALLBASE/lib/composer

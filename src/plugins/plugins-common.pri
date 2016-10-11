@@ -77,6 +77,9 @@ macx {
     LIBS += -L$$quote(/Library/Application Support/Composer/Extensions) -lNCLLanguageProfile
   }
 
+  QMAKE_CXXFLAGS += -mmacosx-version-min=10.7 -std=c++11 -stdlib=libc++
+  LIBS += -mmacosx-version-min=10.7 -stdlib=libc++
+
   INCLUDEPATH +=  /Library/Frameworks/ComposerCore.framework/ \
                   /Library/Frameworks/ComposerCore.framework/core \
                   /Library/Frameworks/ComposerCore.framework/core/extensions

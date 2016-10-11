@@ -72,6 +72,9 @@ mac {
   QSCI_INSTALL_TRANSLATIONS = $$[QT_INSTALL_HEADERS]
   QSCI_INSTALL_DATA = $$[QT_INSTALL_DATA]
 
+  QMAKE_CXXFLAGS += -mmacosx-version-min=10.7 -std=c++11 -stdlib=libc++
+  LIBS += -mmacosx-version-min=10.7 -stdlib=libc++
+
   QMAKE_LFLAGS += -Wl,-install_name,'\'$$QSCI_INSTALL_LIBS/lib'$$TARGET'.dylib\''
 }
 else:unix {
