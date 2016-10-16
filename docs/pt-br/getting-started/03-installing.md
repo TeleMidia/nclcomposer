@@ -15,23 +15,23 @@ Para instalar o {nclcomposer} em ambiente Windows:
 
   * Caso contrário, a seguinte tela será exibida:
 
-![](img/cap3_install_1.png "Instalando")
+![](../img/cap3_install_1.png "Instalando")
 
   * Clique no botão _I Agree_ para aceitar a licença do {nclcomposer}.
   * Após aceitar a licença do software, será possível escolher quais _plugins_
     serão instalados na sua máquina, por meio da tela (em caso de dúvida não
     altere):
 
-![](img/cap3_install_2.png "Instalando")
+![](../img/cap3_install_2.png "Instalando")
 
   * Clique no botão _Next_, e será possível escolher o local onde o
 	{nclcomposer} será instalado:
 
-![](img/cap3_install_3.png "Instalando")
+![](../img/cap3_install_3.png "Instalando")
 
   * Por fim, o {nclcomposer} será instalado, e a seguinte tela exibida:
   
-![](img/cap3_install_4.png "Instalando")
+![](../img/cap3_install_4.png "Instalando")
 
   * Caso não tenha ocorrido nenhum problema, feche o instalador. Será possível 
     executar o {nclcomposer} através do menu _Iniciar->{nclcomposer}->NCL 
@@ -155,7 +155,7 @@ interface do {nclcomposer}:
 Para configurar o {nclcomposer} para executar em uma instalação local do Ginga
 selecione o Menu: _Edit->Preferences->Run Configuration_.
 
-![](img/nclcomposer-run-config-local.png "Execução local.")
+![](../img/nclcomposer-run-config-local.png "Execução local.")
 
 Nessa janela, marque a opção _Local: Ginga Player_ e na caixa de texto
 _Command_ coloque o caminho completo do executável Ginga-NCL.
@@ -168,7 +168,7 @@ uma das linhas.
 Para executar no Ginga Virtual Set-top Box escolha a opção: _Remote: Ginga-NCL
 Virtual Set-top Box_, conforme a figura a seguir:
 
-![](img/nclcomposer-run-config-remote.png "Configuração para executar aplicação no _Ginga-NCL Virtual Set-top Box_.")
+![](../img/nclcomposer-run-config-remote.png "Configuração para executar aplicação no _Ginga-NCL Virtual Set-top Box_.")
 
 Usualmente, o único parâmetro a ser modificado é o endereço IP da máquina
 virtual contendo o _Ginga-NCL Virtual Set-top Box_. Só é sugerido modificar os
@@ -180,7 +180,7 @@ outros parâmetros caso você saiba exatamente o que está fazendo.
 É possível esconder ou mostrar cada uma das visões instaladas no {nclcomposer}
 por meio do menu _Window->Views_:
 
-![](img/nclcomposer-menu-hide-show-views.png "Menu para mostrar esconder visões.")
+![](../img/nclcomposer-menu-hide-show-views.png "Menu para mostrar esconder visões.")
 
 ### Criando novas perspectivas ###
 
@@ -195,15 +195,16 @@ suficiente ir no menu _Windows->Perspectives->Save current perspective..._.
 Outra alternativa é clicar no ícone _Change your current perspective_ na barra
 de tarefas e depois em _Save current perspective..._:
 
-![](img/nclcomposer-save-perspective-1.png "Salvando disposição corrente como uma nova perspectiva.")
+![](../img/nclcomposer-save-perspective-1.png "Salvando disposição corrente como uma nova perspectiva.")
 
 Idependente de pelo menu _Windows_ ou pela barra de tarefas, após a seleção da
 opção _Save current perspective..._ o {nclcomposer}, irá solicitar o nome da
 nova perspectiva (permitindo também marcá-la como a perspectiva padrão) através 
 da janela a seguir:
 
-![](img/nclcomposer-save-perspective-2.png "Menu para mostrar esconder visões.")
+![](../img/nclcomposer-save-perspective-2.png "Menu para mostrar esconder visões.")
 
 ### Alternando entre perspectivas ###
 
-![](img/nclcomposer-save-perspective-3.png "Alternando entre perspectivas")
+![](../img/nclcomposer-save-perspective-3.png "Alternando entre perspectivas")
+

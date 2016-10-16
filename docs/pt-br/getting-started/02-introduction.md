@@ -1,18 +1,5 @@
 # Introdução #
 
-## Sobre o {nclcomposer} ##
-
-O [{nclcomposer}](http://composer.telemidia.puc-rio.br) é uma ferramenta de
-autoria para a linguagem [NCL (Nested Context Language)](http://www.ncl.org.br)
-que visa facilitar o desenvolvimento de aplicações interativas para TV Digital.
-Para isso, ele utiliza-se de várias abstrações gráficas (visões) que permitem ao
-autor focar em apenas um determinado aspecto, durante cada fase distinta da
-autoria.
-
-O {nclcomposer} foi desenvolvido com o objetivo  de ser facilmente extensível. 
-Por isso, novas funcionalidades podem ser adicionadas facilmente por meio de 
-_plugins_.
-
 ### O que é NCL ? ###
 Criada no [Laboratório TeleMídia](http://www.telemidia.puc-rio.br) da
 [PUC-Rio](http://www.puc-rio.br), a  linguagem
@@ -21,13 +8,29 @@ Criada no [Laboratório TeleMídia](http://www.telemidia.puc-rio.br) da
 modelo conceitual NCM - Nested Context Model. NCL define como objetos de mídia
 são estruturados e relacionados, no tempo e espaço.
 
-O {nclcomposer} é uma ferramenta que facilita o uso da linguagem NCL por parte de
-usuários não programadores, além de poder ajudar no aprendizado dos principais
-conceitos da linguagem. 
+
+## O que é o {nclcomposer}? ##
+
+O [{nclcomposer}](http://composer.telemidia.puc-rio.br) é uma ferramenta de
+autoria para a linguagem que visa facilitar o desenvolvimento de aplicações
+multimídia interativas  usando [NCL (Nested Context
+Language)](http://www.ncl.org.br).
+Para isso, ele utiliza-se de várias abstrações gráficas (__visões__) que
+permitem ao autor focar em apenas um determinado aspecto, durante cada fase
+distinta da autoria.
+
+Com isso, o {nclcomposer} permite que usuários não-programadores possam criar
+aplicações multimídia interativas.  Além disso, o {nclcomposer} também pode
+ajudar no ensino/aprendizado dos principais conceitos da linguagem NCL.
+
 
 ### Principais recursos do {nclcomposer} ###
 
 * **Edição gráfica de documentos NCL**
 * **Edição textual de documentos NCL**
 * **Integração com ferramentas de execução**
+
+Além disso, o {nclcomposer} foi desenvolvido com o objetivo  de ser facilmente
+extensível.   Novas funcionalidades podem ser facilmente adicionadas por meio
+de  _plugins_.
 

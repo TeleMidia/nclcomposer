@@ -1,28 +1,32 @@
 site_name: NCL Composer Docs
+
 pages:
-- [index.md, 'Iniciando', 'Prefácio']
-- [getting-started/02-introduction.md, 'Iniciando', 'O que é o NCL Composer?']
-- [getting-started/03-installing.md, 'Iniciando', 'Instalando o NCL Composer']
-- [getting-started/04-basic-concepts.md, 'Iniciando', 'Conceitos básicos']
-- [getting-started/05-windows-and-menus.md, 'Iniciando', 'Telas e Menus']
-- [06-other-tools.md,'Iniciando', ' Outras ferramentas']
-- [tutorial/04.00-tutorial.md, 'Tutoriais', 'Index']
-- [tutorial/04.01-tutorial-ex01.md, 'Tutoriais', 'Exemplo 01 - Olá Garrincha!']
-- [tutorial/04.02-tutorial-ex02.md, 'Tutoriais', 'Exemplo 02 - Sincronismo sem interatividade']
-- [advanced/01-nclcomposer-architecture.md, 'Avançado', 'Arquitetura do NCL Composer']
-- [advanced/02-extending-nclcomposer.md, 'Avançado', 'Estendendo o NCL Composer']
-- [relnotes/0.1.2.md, 'Release Notes', 'v0.1.2']
-- [relnotes/0.1.4.md, 'Release Notes', 'v0.1.4']
-- [relnotes/0.1.5.md, 'Release Notes', 'v0.1.5']
-- [relnotes/0.1.6.md, 'Release Notes', 'v0.1.6']
-- [relnotes/0.1.7.md, 'Release Notes', 'v0.1.7']
-- [relnotes/0.1.8.md, 'Release Notes', 'v0.1.8']
-- [relnotes/0.1.9.md, 'Release Notes', 'v0.1.9']
-- [relnotes/0.2.0.md, 'Release Notes', 'v0.2.0']
-- [relnotes/0.2.1.md, 'Release Notes', 'v0.2.1']
-- [relnotes/0.3.0.md, 'Release Notes', 'v0.3.0']
+
+- Iniciando:
+  - Prefácio: index.md
+  - O que é o NCL Composer?: getting-started/02-introduction.md
+  - Instalando o NCL Composer: getting-started/03-installing.md
+  - Conceitos básicos: getting-started/04-basic-concepts.md
+  - Telas e menus: getting-started/05-windows-and-menus.md
+  - Outras ferramentas: 06-other-tools.md
+- Tutoriais:
+  - Olá Garrincha: tutorial/04.01-tutorial-ex01.md
+  - Sincronismo sem interatividade: tutorial/04.02-tutorial-ex02.md
+- Avançado:
+  - Arquitetura do NCL Composer: advanced/01-nclcomposer-architecture.md
+  - Estendendo o NCL Composer: advanced/02-extending-nclcomposer.md
+- Release notes:
+  - v0.1.2: 'relnotes/0.1.2.md'
+  - v0.1.4: 'relnotes/0.1.4.md'
+  - v0.1.5: 'relnotes/0.1.5.md'
+  - v0.1.7: 'relnotes/0.1.7.md'
+  - v0.1.8: 'relnotes/0.1.8.md'
+  - v0.1.9: 'relnotes/0.1.9.md'
+  - v0.2.0: 'relnotes/0.2.0.md'
+  - v0.2.1: 'relnotes/0.2.1.md'
+  - v0.3.0: 'relnotes/0.3.0.md'
 
 docs_dir: pt-br
 
-#theme: cosmo
+theme: flatly
 

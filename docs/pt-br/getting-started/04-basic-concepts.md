@@ -1,30 +1,27 @@
 # Conceitos Básicos #
 
+O modelo NCM, no qual a linguagem NCL se baseia, modela aplicações multimídia
+interativas por meio de nós (__nodes__) e elos (__links__) (Figura 1).
 
-## Objeto de mídia ##
+## Nós
 
-TODO.
-
-## Elo (Link) ##
-
-TODO.
-
-## Regiões ##
+### Nós de mídia
 
 TODO.
 
-## Plugins ##
-_Plugins_ são pedaços de software que podem ser distribuídos separadamente e
-adicionar ou modificar funcionalidades de um determinado software _host_.
-Uma lista completa dos _plugins_ disponíveis oficialmente no site do
-{nclcomposer}, pode ser encontrada em:
-http://composer.telemidia.puc-rio.br/en/plugins/[].
+### Nós de contexto
+
+## Elo (Link) (Quando tocar?) ##
+
+TODO.
+
+## Regiões (Onde tocar?) ##
+
+TODO.
 
 ## Visões ##
-O tipo de _plugin_ mais comum do {nclcomposer} é aquele que denominamos
-_Visão_. Uma visão é um _plugin_ que possui uma representação na interface
-gráfica e permite ao autor visualizar/editar uma característica específica do
-documento NCL.
+Uma visão traz alguma representação (geralmente gráfica) que permite
+visualizar/editar uma característica específica do documento NCL.
 
 As principais visões do {nclcomposer} são: {default_views}.
 

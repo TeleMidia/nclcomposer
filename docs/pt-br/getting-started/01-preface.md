@@ -60,11 +60,6 @@ Contém uma série de exemplos e o passo-a-passo de como desenvolvê-los no
 ## Onde buscar mais ajuda? ##
 
 Além deste manual, existem alguns canais _online_ onde é possível buscar mais
-ajuda. Você pode contactar as seguintes listas de e-mail:
-
-  * _Lista de usuários_ <nclcomposer-user@telemidia.puc-rio.br> - Questões e
-     discussões relacionadas ao uso do {nclcomposer}.
-  * _Lista de desenvolvedores_ <nclcomposer-devel@telemidia.puc-rio.br> -
-    Discussões relacionadas ao _design_ e desenvolvimento do {nclcomposer} e
-	submissão de correções (_patches_).
+ajuda. Você pode contactar a lista de e-mail oficial
+<nclcomposer@groups.google.com> do {nclcomposer}.
 

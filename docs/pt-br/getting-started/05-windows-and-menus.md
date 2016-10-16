@@ -362,7 +362,7 @@ com as regiões onde os objetos de mídia serão inicialmente apresentados. Nest
 visão, os autores podem criar e manipular as regiões e a hierarquia de regiões
 do documento.
 
-![](../img/plugin-layout.png "{layout_view}")
+![](../img/views-layout.png "{layout_view}")
 
 
 ### {outline_view} ###
