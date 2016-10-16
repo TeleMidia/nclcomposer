@@ -14,7 +14,7 @@ local f = assert(io.open(arg[1], "r"))
 local t = f:read("*all")
 
 --Replace strings
-x = string.gsub(t, "%\{([%w_]+)%}", dict)
+x = string.gsub(t, "%{([%w_]+)%}", dict)
 
 print (x)
 f:close()
