@@ -1,31 +1,8 @@
-
 # Telas e Menus do {nclcomposer} #
-
-## Conceitos Básicos ##
-
-### Plugins ###
-_Plugins_ são pedaços de software que podem ser distribuídos separadamente e
-adicionar ou modificar funcionalidades de um determinado software _host_.
-Uma lista completa dos _plugins_ disponíveis oficialmente no site do
-{nclcomposer}, pode ser encontrada em:
-http://composer.telemidia.puc-rio.br/en/plugins/[].
-
-### Visões ###
-O tipo de _plugin_ mais comum do {nclcomposer} é aquele que denominamos
-_Visão_. Uma visão é um _plugin_ que possui uma representação na interface
-gráfica e permite ao autor visualizar/editar uma característica específica do
-documento NCL.
-
-As principais visões do {nclcomposer} são: {default_views}.
-
-.Perspectivas
-Uma _perspectiva_, no {nclcomposer}, é a disposição das visões na tela. É
-permitido ao usuário criar suas próprias perspectivas, escolhendo a que melhor
-o ajuda a efetuar uma determinada tarefa.
 
 ## Janela Principal ##
 
-![](img/cap4_mainwindow.png)
+![](../img/cap4_mainwindow.png)
 
 ### Barra de título ###
 Evidencia o nome do {nclcomposer} e do projeto corrente.
@@ -60,7 +37,7 @@ com a estrutura lógica do documento NCL. Em NCL, a estrutura lógica é
 representada pelos seus objetos (nós de conteúdo e nós de composição) e os
 elos entre esses objetos (representadas pelos elementos <link>).
 
-![](img/plugin-structural.png "{structural_view}")
+![](../img/plugin-structural.png "{structural_view}")
 
 #### Ações ####
 
@@ -204,7 +181,7 @@ Esta ação pode ser executada através da: [barra de ferramentas](#barra-de-fer
 
 A partir da versão 0.3.0 a {structural_view} disponibiliza uma *barra de ferramentas* para facilitar o processo de autoria. 
 
-![](img/plugin-structural-toolbar-index.png "{structural_view} - Barra de Ferramenta")
+![](../img/plugin-structural-toolbar-index.png "{structural_view} - Barra de Ferramenta")
 
 A figura acima apresenta a *barra de ferramentas*, cujo detalhes de cada ferramenta são descritos a seguir:
 
@@ -252,7 +229,7 @@ A figura acima apresenta a *barra de ferramentas*, cujo detalhes de cada ferrame
 
 O menu contextual é exibido sempre que o usuário clica com o botão direito do *mouse* em qualquer entidade ou nas áreas vazias (em branco) da visão. 
 
-![](img/plugin-structural-menu-contextual-index.png "{structural_view} - Menu Contextual")
+![](../img/plugin-structural-menu-contextual-index.png "{structural_view} - Menu Contextual")
 
 A figura acima apresenta o *menu contextual*, cujo detalhes são descritos abaixo:
 
@@ -300,35 +277,35 @@ O diálogo de *link* é utilizado para criação e edição de: *links*, *binds*
 
 Logo que exibido (figura abaixo), o diálogo de *link* apresenta uma lista de conectores para que o usuário possa escolher. A lista de conectores é carregada dinâmicamente a partir das especificações da aplicação em desenvolvimento.
 
-![](img/plugin-structural-dialog-create-link.png "{structural_view} - Diálogo para Criação de 'Links'")
+![](../img/plugin-structural-dialog-create-link.png "{structural_view} - Diálogo para Criação de 'Links'")
 
 Assim que o usuário começar a preencher a caixa de texto *"connector"* (figura abaixo), a lista de conectores é filtrada para facilitar a seleção do conector apropriado.
 
-![](img/plugin-structural-dialog-create-link-autocomplete.png "{structural_view} - Diálogo para Criação de 'Links'")
+![](../img/plugin-structural-dialog-create-link-autocomplete.png "{structural_view} - Diálogo para Criação de 'Links'")
 
 Uma vez selecionado um dos conectores na lista, o usuário pode escolher qual o tipo de condição e ação na seção de *binds* do diálogo (figura abaixo). Os tipos de condições e ações disponíveis são carregados a patir do conector selecionado. 
 
 Ainda na criação do *link*, quando o usuário habilita a exibição de parâmetros (*"show params"*), é possível especificar os valores dos parâmetros de *link*, parâmetros do *bind* de condição e parâmetros do *bind* de ação (figura abaixo) que devem ser considerados para criação do relacionamento.
 
-![](img/plugin-structural-dialog-create-link-params.png "{structural_view} - Diálogo para Criação de 'Links'")
+![](../img/plugin-structural-dialog-create-link-params.png "{structural_view} - Diálogo para Criação de 'Links'")
 
 Para editar os parâmetros de um *link*, o usuário deve clicar duas vezes na entidade do tipo *link* na visão. Esta ação resultana exibição do diálogo abaixo.
 
-![](img/plugin-structural-dialog-edit-link.png "{structural_view} - Diálogo para Edição de 'Links'")
+![](../img/plugin-structural-dialog-edit-link.png "{structural_view} - Diálogo para Edição de 'Links'")
 
 De modo semelhante, para editar um *bind*, o usuário deve clicar duas vezes na entidade do tipo *bind*, resultando na exibição do diálogo abaixo.
 
-![](img/plugin-structural-dialog-edit-bind-condition.png "{structural_view} - Diálogo para Edição de 'Bind' (Condição)")
+![](../img/plugin-structural-dialog-edit-bind-condition.png "{structural_view} - Diálogo para Edição de 'Bind' (Condição)")
 
 ##### Referência #####
 
 É possível especificar uma referência através da ação de [colar](#ações). Assim que a ação de colar é realizada o diálogo abaixo é exibido, solicitando que o autor escolha entre copiar ou criar uma referência da entidade copiada para *área de tranferência*.
 
-![](img/plugin-structural-dialog-create-refer.png "{structural_view} - Diálogo para Criação de Referência")
+![](../img/plugin-structural-dialog-create-refer.png "{structural_view} - Diálogo para Criação de Referência")
 
 Quando uma entidade é uma referência, ela fica levemente transparente (figura abaixo) e herda todas as interfaces da entidade referenciada. Não é possível referenciar uma entidade que já referencia uma outra. Nesta versão ainda não é possível fazer referência para entidades do tipo: contexto, *switch* e *body*.
 
-![](img/plugin-structural-refer.png "{structural_view} - Referência")
+![](../img/plugin-structural-refer.png "{structural_view} - Referência")
 
 #### Atalhos ####
 
@@ -385,7 +362,7 @@ com as regiões onde os objetos de mídia serão inicialmente apresentados. Nest
 visão, os autores podem criar e manipular as regiões e a hierarquia de regiões
 do documento.
 
-![](img/plugin-layout.png "{layout_view}")
+![](../img/plugin-layout.png "{layout_view}")
 
 
 ### {outline_view} ###
@@ -393,7 +370,7 @@ do documento.
 A {outline_view} apresenta a estrutura do documento NCL como uma árvore,
 permitindo aos autores navegarem no documento.
 
-![](img/plugin-outline.png "{outline_view}")
+![](../img/plugin-outline.png "{outline_view}")
 
 
 ### {properties_view} ###
@@ -402,7 +379,7 @@ A {properties_view} apresenta o conjunto de propriedades da entidade
 selecionada. Essa entidade selecionada por ser, por exemplo, uma região na
 {layout_view}, um objeto de mídia na {structural_view} etc.
 
-![](img/plugin-property.png "{properties_view}")
+![](../img/plugin-property.png "{properties_view}")
 
 ### {textual_view} ###
 
@@ -414,7 +391,7 @@ código contextual e formatação de código.
 A _{textual_view}_ é recomendada especialmente para usuários avançados e que se
 sentem à vontade com a sintaxe XML.
 
-![](img/plugin-textual.png "{textual_view}")
+![](../img/plugin-textual.png "{textual_view}")
 
 ### {rules_view} ###
 
@@ -425,5 +402,5 @@ TODO
 O validador é responsável por notificar erros e alertas no documento NCL.
 A figura a seguir apresenta um exemplo.
 
-![](img/plugin-validator.png "{validator}")
+![](../img/plugin-validator.png "{validator}")
 
