@@ -1,5 +1,5 @@
 
-# Janelas e Menus do {nclcomposer} #
+# Telas e Menus do {nclcomposer} #
 
 ## Conceitos Básicos ##
 
