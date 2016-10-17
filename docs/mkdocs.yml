@@ -6,15 +6,21 @@ pages:
   - Prefácio: index.md
   - O que é o NCL Composer?: getting-started/02-introduction.md
   - Instalando o NCL Composer: getting-started/03-installing.md
-  - Conceitos básicos: getting-started/04-basic-concepts.md
-  - Telas e menus: getting-started/05-windows-and-menus.md
-  - Outras ferramentas: 06-other-tools.md
+  - Configurando o ambiente: getting-started/04-configuring.md
+  - Conceitos básicos: getting-started/05-basic-concepts.md
+  - Telas e menus: getting-started/06-windows-and-menus.md
 - Tutoriais:
-  - Olá Garrincha: tutorial/04.01-tutorial-ex01.md
-  - Sincronismo sem interatividade: tutorial/04.02-tutorial-ex02.md
+  - Introdução: tutorial/00.intro.md
+  - 'Tutorial 01: Reproduzindo um objeto de mídia': tutorial/01.hello_world.md
+  - 'Tutorial 02: Iniciando e terminando dois objetos de mídia simultaneamente': tutorial/02.simultaneous_media_objects.md
+  - 'Tutorial 03: Iniciando um objeto de mídia quando outro termina': tutorial/01.hello_world.md
+  - 'Tutorial 04: Sincronizando um vídeo com diferentes arquivos de legenda': tutorial/01.hello_world.md
+  - 'Tutorial 05: Exibindo um vídeo em loop até a intervenção do usuário': tutorial/01.hello_world.md
+  - 'Tutorial 06: Redimensionando uma região de vídeo durante a exibição de uma imagem': tutorial/01.hello_world.md
 - Avançado:
   - Arquitetura do NCL Composer: advanced/01-nclcomposer-architecture.md
   - Estendendo o NCL Composer: advanced/02-extending-nclcomposer.md
+  - Outras ferramentas: advanced/06-other-tools.md
 - Release notes (English):
   - v0.1.2: 'relnotes/0.1.2.md'
   - v0.1.4: 'relnotes/0.1.4.md'

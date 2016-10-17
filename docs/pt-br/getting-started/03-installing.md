@@ -1,6 +1,5 @@
-# Iniciando #
-## Instalando o {nclcomposer} ##
-### Windows ###
+# Instalando o {nclcomposer}
+## Windows
 
 Para instalar o {nclcomposer} em ambiente Windows:
 
@@ -37,7 +36,7 @@ Para instalar o {nclcomposer} em ambiente Windows:
     executar o {nclcomposer} através do menu _Iniciar->{nclcomposer}->NCL 
     Composer_.
 
-### Linux (Ubuntu/Debian) ###
+## Linux (Ubuntu/Debian)
 
 Para instalar o {nclcomposer} em ambiente Linux (Ubuntu/Debian):
 
@@ -54,7 +53,7 @@ Para instalar o {nclcomposer} em ambiente Linux (Ubuntu/Debian):
 
 	> $ composer
 
-### MacOS X ###
+### MacOS X
 
 TODO
 <!--
