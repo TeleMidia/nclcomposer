@@ -26,9 +26,10 @@ ajudar no ensino/aprendizado dos principais conceitos da linguagem NCL.
 
 ### Principais recursos do {nclcomposer} ###
 
-* **Edição gráfica de documentos NCL**
-* **Edição textual de documentos NCL**
-* **Integração com ferramentas de execução**
+  * **Edição gráfica de documentos NCL**
+  * **Edição textual de documentos NCL**
+  * **Integração com ferramentas de execução**
+  * **Multiplataforma (Linux, Windows e MacOS)**
 
 Além disso, o {nclcomposer} foi desenvolvido com o objetivo  de ser facilmente
 extensível.   Novas funcionalidades podem ser facilmente adicionadas por meio
