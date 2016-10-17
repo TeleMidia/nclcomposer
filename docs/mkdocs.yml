@@ -15,7 +15,7 @@ pages:
 - Avançado:
   - Arquitetura do NCL Composer: advanced/01-nclcomposer-architecture.md
   - Estendendo o NCL Composer: advanced/02-extending-nclcomposer.md
-- Release notes:
+- Release notes (English):
   - v0.1.2: 'relnotes/0.1.2.md'
   - v0.1.4: 'relnotes/0.1.4.md'
   - v0.1.5: 'relnotes/0.1.5.md'
@@ -27,6 +27,6 @@ pages:
   - v0.3.0: 'relnotes/0.3.0.md'
 
 docs_dir: pt-br
-
-theme: flatly
+repo_url: http://github.com/telemidia/nclcomposer
+theme: cosmo
 
