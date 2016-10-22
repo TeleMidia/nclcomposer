@@ -12,16 +12,16 @@ são estruturados e relacionados, no tempo e espaço.
 ## O que é o {nclcomposer}? ##
 
 O [{nclcomposer}](http://composer.telemidia.puc-rio.br) é uma ferramenta de
-autoria para a linguagem que visa facilitar o desenvolvimento de aplicações
-multimídia interativas  usando [NCL (Nested Context
-Language)](http://www.ncl.org.br).
+autoria que visa facilitar o desenvolvimento de aplicações multimídia
+interativas  usando [NCL (Nested Context Language)](http://www.ncl.org.br).
 Para isso, ele utiliza-se de várias abstrações gráficas (__visões__) que
 permitem ao autor focar em apenas um determinado aspecto, durante cada fase
 distinta da autoria.
 
 Com isso, o {nclcomposer} permite que usuários não-programadores possam criar
 aplicações multimídia interativas.  Além disso, o {nclcomposer} também pode
-ajudar no ensino/aprendizado dos principais conceitos da linguagem NCL.
+ajudar no ensino/aprendizado dos principais conceitos da linguagem NCL e do
+modelo NCM.
 
 
 ### Principais recursos do {nclcomposer} ###
