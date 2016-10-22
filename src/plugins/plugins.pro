@@ -34,6 +34,8 @@ SUBDIRS = \
 # Uncomment the next two line to enable 'next' build as default option
 #CONFIG += \
 #  structural_old
+CONFIG += \
+  next run_view
 
 structural_old {
   SUBDIRS -= \
@@ -43,7 +45,12 @@ structural_old {
     ncl-structural-view
 }
 
-contains(FORCERELEASE, true) {
+run_view {
+  SUBDIRS += gingagui-all/run-view/run-view.pro
+}
+
+contains(FORCERELEASE, true)
+{
   SUBDIRS -= debug-console  # Debug must not be present in release.
 
   # These plug-ins are still experimental
