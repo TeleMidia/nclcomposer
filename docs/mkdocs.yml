@@ -9,29 +9,33 @@ pages:
   - Conceitos básicos: getting-started/05-basic-concepts.md
   - Instalando o NCL Composer: getting-started/03-installing.md
 - Tutoriais:
-  - Introdução: tutorial/00.intro.md
-  - 'Tutorial 01: Reproduzindo um objeto de mídia': tutorial/01.hello_world.md
-  - 'Tutorial 02: Iniciando e terminando dois objetos de mídia simultaneamente': tutorial/02.simultaneous_media_objects.md
-  - 'Tutorial 03: Iniciando um objeto de mídia quando outro termina': tutorial/01.hello_world.md
-  - 'Tutorial 04: Sincronizando um vídeo com diferentes arquivos de legenda': tutorial/01.hello_world.md
-  - 'Tutorial 05: Exibindo um vídeo em loop até a intervenção do usuário': tutorial/01.hello_world.md
-  - 'Tutorial 06: Redimensionando uma região de vídeo durante a exibição de uma imagem': tutorial/01.hello_world.md
+  - Introdução: tutorial/index.md
+  - 'Exemplo 01: Reproduzindo um objeto de mídia': tutorial/01.hello_world.md
+  - 'Exemplo 02: Iniciando um objeto de mídia quando outro termina': tutorial/02.on_end_start.md
+  - 'Exemplo 03: Iniciando e terminando dois objetos de mídia simultaneamente': tutorial/03.simultaneous_media_objects.md
+  - 'Exemplo 04: Sincronizando um vídeo com diferentes arquivos de legenda': tutorial/01.hello_world.md
+  - 'Exemplo 05: Exibindo um vídeo em loop até a intervenção do usuário': tutorial/01.hello_world.md
+  - 'Exemplo 06: Redimensionando uma região de vídeo durante a exibição de uma imagem': tutorial/01.hello_world.md
 - Outros:
   - Telas e menus: getting-started/06-windows-and-menus.md
   - Arquitetura do NCL Composer: advanced/01-nclcomposer-architecture.md
   - Estendendo o NCL Composer: advanced/02-extending-nclcomposer.md
   - Outras ferramentas: advanced/06-other-tools.md
+  - Onde buscar mais ajuda?: advanced/07-more-help.md
   - Licença: license.md
 - Release notes (English):
-  - v0.1.2: 'relnotes/0.1.2.md'
-  - v0.1.4: 'relnotes/0.1.4.md'
-  - v0.1.5: 'relnotes/0.1.5.md'
-  - v0.1.7: 'relnotes/0.1.7.md'
-  - v0.1.8: 'relnotes/0.1.8.md'
-  - v0.1.9: 'relnotes/0.1.9.md'
-  - v0.2.0: 'relnotes/0.2.0.md'
-  - v0.2.1: 'relnotes/0.2.1.md'
   - v0.3.0: 'relnotes/0.3.0.md'
+  - v0.2.1: 'relnotes/0.2.1.md'
+  - v0.2.0: 'relnotes/0.2.0.md'
+  - v0.1.9: 'relnotes/0.1.9.md'
+  - v0.1.8: 'relnotes/0.1.8.md'
+  - v0.1.7: 'relnotes/0.1.7.md'
+  - v0.1.5: 'relnotes/0.1.5.md'
+  - v0.1.4: 'relnotes/0.1.4.md'
+  - v0.1.2: 'relnotes/0.1.2.md'
+
+markdown_extensions:
+  - mdx_grid_tables
 
 docs_dir: pt-br
 repo_url: http://github.com/telemidia/nclcomposer

@@ -33,7 +33,7 @@ Para instalar o {nclcomposer} em ambiente Windows:
 ![](../img/cap3_install_4.png "Instalando")
 
   * Caso não tenha ocorrido nenhum problema, feche o instalador. Será possível 
-    executar o {nclcomposer} através do menu _Iniciar->{nclcomposer}->NCL 
+    executar o {nclcomposer} através do menu _Iniciar->TeleMídia->NCL 
     Composer_.
 
 ## Linux (Ubuntu/Debian)
@@ -41,8 +41,8 @@ Para instalar o {nclcomposer} em ambiente Windows:
 Para instalar o {nclcomposer} em ambiente Linux (Ubuntu/Debian):
 
   * Baixe a versão mais atual do {nclcomposer} para Linux (Ubuntu/Debian) em:
-    http://composer.telemidia.puc-rio.br/en/downloads
-  * O arquivo deve ter o nome na forma _composer_X.X.X_i386.deb_, onde
+    [http://composer.telemidia.puc-rio.br/en/download](http://composer.telemidia.puc-rio.br/en/download)
+  * O arquivo deve ter o nome na forma _nclcomposer_X.X.X_i386.deb_, onde
     X.X.X deve conter a versão do {nclcomposer}. Para instalar o arquivo que foi
     baixado, execute o seguinte comando na linha de comando:
 
@@ -51,7 +51,7 @@ Para instalar o {nclcomposer} em ambiente Linux (Ubuntu/Debian):
   * Caso a instalação ocorra sem problemas, é possível acessar o
     {nclcomposer} através do menu de aplicações, ou por meio do comando:
 
-	> $ composer
+	> $ nclcomposer
 
 ## MacOS X
 
