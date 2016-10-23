@@ -1,30 +1,26 @@
 # Telas e Menus do {nclcomposer} #
 
-## Janela Principal ##
+## Janela Principal
 
 ![](../img/cap4_mainwindow.png)
 
 ### Barra de título ###
 Evidencia o nome do {nclcomposer} e do projeto corrente.
 
-### Barra de menu ###
+### Barra de menu
 Mostra as entradas de menu disponíveis.
 
-### Barra de ferramentas ###
-As ações globais ficam disponíveis na barra de ferramentas. Por exemplo, as
-açoes para salvar o projeto atual, executá-lo etc.
-
-### Tab Bar ###
+### Barra de projetos
 Lista a tela de boas-vindas e a lista de projetos abertos, permitindo navegar
 entre eles.
 
-### Área das Visões ###
+### Área das Visões
 Área de desenho das diversas <<def:views, Visões>>. Cada visão pode ter
 seus próprios elementos de interface. Também é possível organizar e salvar a
 disposição das diversas visões por meio das <<def:perspective, Perspectivas>>.
 
 
-## {structural_view} ##
+## {structural_view}
 
 *Versão: 0.3.0*
 
@@ -35,7 +31,7 @@ elos entre esses objetos (representadas pelos elementos <link>).
 
 ![](../img/plugin-structural.png "{structural_view}")
 
-#### Ações ####
+### Ações
 
 As ações são as diversas atividades que o usuário pode realizar durante o
 processo de autoria. Uma ação pode ser executada de várias formas: através da
@@ -43,236 +39,225 @@ barra de ferramenta, do menu contextual, de um atalho de teclado, do *mouse* e
 da combinação de várias dessas formas. Abaixo são descritas cada uma das ações
 disponíveis na {structural_view} e como elas podem ser executadas.
 
-##### Desfazer #####
-
-Desfaz a última ação realizada na visão. Esta ação é ignorada caso não exista
-nenhuma ação para ser defeita. *Inserir*, *remover*, *mover* e *redimencionar*
-são exemplos de ações que podem ser desfeitas. Por outro lado, selecionar não é
-uma ação que pode ser desfeita. Na versão atual, não existe um limite na
-quantidade de ações que podem ser desfeitas.
-
-Esta ação pode ser executada através da: [barra de
-ferramentas](#barra-de-ferramentas), [menu contextual](#menus) e
-[atalho](#atalhos).
-
-##### Resfazer #####
-
-Refaz a última ação reallizada na visão. Esta ação é ignorada caso não exista
-nenhuma ação para ser refeita, ou seja, nenhuma ação foi desfeita
-anteriormente. Na versão atual, não existe um limite na quantidade de ações que
-podem ser desfeitas.
-
-Esta ação pode ser executada através da: [barra de
-ferramentas](#barra-de-ferramentas), [menu contextual](#menus) e
-[atalho](#atalhos).
-
-##### Recortar #####
-
-Copia a entidade selecionada para a **área de trânsferencia** e **remove** ela
-da visão. Esta ação é ignorada caso nenhuma entidade tenha sido selecionada e
-se a entidade selecionada é do tipo *body*.
-
-Esta ação pode ser executada através da: [barra de
-ferramentas](#barra-de-ferramentas), [menu contextual](#menus) e
-[atalho](#atalhos).
-
-##### Copiar #####
-
-Copia a entidade selecionada para a **área de trânsferencia**. Esta ação é
-ignorada caso nenhuma entidade tenha sido selecionada e se a entidade
-selecionada é do tipo *body*.
-
-Esta ação pode ser executada através da: [barra de
-ferramentas](#barra-de-ferramentas), [menu contextual](#menus) e
-[atalho](#atalhos).
-
-##### Colar #####
-
-Adiciona a entidade copiada para *área de trânsferencia* como filha da entidade
-selecionada. Esta ação é ignorada caso nenhuma entidade tenha sido recortada ou
-copiada e se a entidade selecionada não permita que seja adicionado como um de
-seus filhos entidades do tipo selecionada. Por exemplo, não é possível colar um
-contexto em uma mídia.
-
-> Caso uma entidade tenha sido **copiada** (e não recortada) previamente, ao
-> executar a ação de **colar**, uma [caixa de diálogo](#referência) será
-> apresentada ao usuário permitindo a criação de uma **referência** ao invês de
-> uma cópia. Caso o usuário escolha criar uma cópia, a ação executada será a de
-> colar, descrita anteriormente. Porém, caso o usuário prefira criar uma
-> referência, uma entidade será adicionada fazendo referência à entidade
-> previamente copiada. Detalhes sobre a [referência de entidades](#referência)
-> será tratado mais a frente. 
-
-Esta ação pode ser executada através da: [barra de
-ferramentas](#barra-de-ferramentas), [menu contextual](#menus) e
-[atalho](#atalhos).
-
-##### Deletar #####
-
-Remove a entidade selecionada da visão. Esta ação é ignorada caso nenhuma
-entidade esteja selecionada na visão.
-
-Esta ação pode ser executada através do: [menu contextual](#menus) e
-[atalho](#atalhos).
-
-##### Mover #####
-
-Move a entidade selecionada para uma entidade de destino. Para a
-{structural_view}, mover significa alterar o parêntesco da entidade
-selecionada. A entidade de destino é determinada manipulando a entidade
-selecionada por meio de *drag-n-drop* para o interior da entidade de destino.
-Esta ação é ignorada caso a entidade de destino não permita que seja adicionado
-como um de seus filhos entidades do tipo selecionado.
-
-> O *drag-n-drop* de uma entidade é realizado em 4 (quatro) passos: **i)**
-> segurar a tecla Ctrl, **ii)** clicar com o botão esquerdo do *mouse* em uma
-> entidade, **iii)** arrastar o *mouse* até entidade de destino e **iv)**
-> soltar o botão do *mouse*. 
-
-Esta ação pode ser executada através de [atalho](#atalhos).
-
-##### Aumentar Zoom #####
-
-Aumenta o *Zoom* na visão. Esta ação é ignorada caso a visão tenha alcançado
-seu *Zoom* máximo.
-
-Esta ação pode ser executada através da: [barra de
-ferramentas](#barra-de-ferramentas) e [atalho](#atalhos).
-
-##### Diminuir Zoom #####
-
-Diminue o *Zoom* na visão. Esta ação é ignorada caso a visão tenha alcançado
-seu *Zoom* mínimo.
-
-Esta ação pode ser executada através da: [barra de
-ferramentas](#barra-de-ferramentas) e [atalho](#atalhos).
-
-##### Tirar uma Foto #####
-
-Exporta o projeto como imagem (.png). O projeto pode ser exportado mesmo que
-nenhuma entidade tenha sido adicionada.
-
-Esta ação pode ser executada através da: [barra de
-ferramentas](#barra-de-ferramentas) e [menu contextual](#menus).
-
-##### Habilitar Ferramenta de Ponteiro #####
-
-Altera o modo de edição da {structural_view} para "ponteiro". Quando no modo de
-"ponteiro", a {structural_view} permite selecionar, mover e redimencionar as
-entidades da através do *mouse*. O modo de "ponteiro" é desabilitado sempre o
-modo de  *"link"* é habilitado.
-
-Esta ação pode ser executada através da: [barra de
-ferramentas](#barra-de-ferramentas) e [atalho](#atalhos).
-
-##### Habilitar Ferramenta de Link #####
-
-Altera o modo de edição da {structural_view} para *"link"*. Quando no modo de
-*"link"*, a {structural_view} permite criar *links* (relacionamentos) entre
-duas entidades. Para criar um novo *link*, o usuário deve: **i)** clicar com o
-botão esquerdo do *mouse* na entidade de origem, **ii)** arrastar o *mouse* até
-a entidade de destino e, em seguida, **iii)** soltar o botão esquerdo do
-*mouse*. O modo de *"link"* é desabilitado sempre o modo de  "ponteiro" é
-habilitado.
-
-> Caso seja permitido criar um relaciomaneto entre as entidades de origem e
-> destino, uma caixa de diálogo será apresentada para finalizar o processo de
-> criação de *link*. Caso contrário, a ação é ignorada. Detalhes sobre o
-> [diálogo de criação](#links) de *link* será discutido mais a frente. 
-
-Esta ação pode ser executada através da: [barra de
-ferramentas](#barra-de-ferramentas) e [atalho](#atalhos).
-
-##### Criar uma Mídia #####
-
-Adiciona uma entidade do tipo mídia como filha da entidade selecionada. Esta
-ação é ignorada caso a entidade selecionada não permita que seja adicionada
-como um de seus filhos entidades do tipo mídia.
-
-Esta ação pode ser executada através da: [barra de
-ferramentas](#barra-de-ferramentas), [menu contextual](#menus) e
-[atalho](#atalhos).
-
-
-##### Criar uma Contexto #####
-
-Adiciona uma entidade do tipo contexto como filha da entidade selecionada. Esta
-ação é ignorada caso a entidade selecionada não permita que seja adicionada
-como um de seus filhos entidades do tipo contexto.
-
-Esta ação pode ser executada através da: [barra de
-ferramentas](#barra-de-ferramentas), [menu contextual](#menus) e
-[atalho](#atalhos).
-
-
-##### Criar um *Switch* #####
-
-Adiciona uma entidade do tipo *switch* como filha da entidade selecionada. Esta
-ação é ignorada caso a entidade selecionada não permita que seja adicionada
-como um de seus filhos entidades do tipo *switch*.
-
-Esta ação pode ser executada através da: [barra de
-ferramentas](#barra-de-ferramentas), [menu contextual](#menus) e
-[atalho](#atalhos).
-
-##### Criar um *Body* #####
-
-Adiciona uma entidade do tipo *body* na visão. Esta ação é ignorada caso um
-*body* já tenha sido adicionado previamente.
-
-Esta ação pode ser executada através da: [barra de
-ferramentas](#barra-de-ferramentas), [menu contextual](#menus) e
-[atalho](#atalhos).
-
-##### Criar uma Área #####
-
-Adiciona uma entidade do tipo área como filha da entidade selecionada. Esta
-ação é ignorada caso a entidade selecionada não permita que seja adicionada
-como um de seus filhos entidades do tipo área.
-
-Esta ação pode ser executada através da: [barra de
-ferramentas](#barra-de-ferramentas), [menu contextual](#menus) e
-[atalho](#atalhos).
-
-##### Criar uma Propriedade #####
-
-Adiciona uma entidade do tipo propriedade como filha da entidade selecionada.
-Esta ação é ignorada caso a entidade selecionada não permita que seja
-adicionada como um de seus filhos entidades do tipo propriedade.
-
-Esta ação pode ser executada através da: [barra de
-ferramentas](#barra-de-ferramentas), [menu contextual](#menus) e
-[atalho](#atalhos).
-
-##### Criar uma Porta #####
-
-Adiciona uma entidade do tipo porta como filha da entidade selecionada. Esta
-ação é ignorada caso a entidade selecionada não permita que seja adicionada
-como um de seus filhos entidades do tipo porta.
-
-Esta ação pode ser executada através da: [barra de
-ferramentas](#barra-de-ferramentas), [menu contextual](#menus) e
-[atalho](#atalhos).
-
-##### Criar uma Porta de *Switch* #####
-
-Adiciona uma entidade do tipo porta de *switch* como filha da entidade
-selecionada. Esta ação é ignorada caso a entidade selecionada não permita que
-seja adicionada como um de seus filhos entidades do tipo porta de *switch*.
-
-Esta ação pode ser executada através da: [barra de
-ferramentas](#barra-de-ferramentas), [menu contextual](#menus) e
-[atalho](#atalhos).
-
-##### Habilitar/Desabilitar Minimapa #####
-
-Habilita/Desabilita o minimapa. Quando habilitado, o minimapa é exibido no
-canto inferior direito da visão.
-
-Esta ação pode ser executada através da: [barra de
-ferramentas](#barra-de-ferramentas) e [atalho](#atalhos).
-
-#### Barra de Ferramentas ####
++-------------+---------------------------------+-----------------------------+
+| Ação        | Descrição                       |                             |
++=============+=================================+=============================+
+| Desfazer    | Desfaz a última ação            | Esta ação pode ser          |
+|             | realizada na visão. Esta        | executada através da:       |
+|             | ação é ignorada caso não        | [barra de ferra mentas]     |
+|             | exista nenhuma ação para ser    | (#barra- de- ferra mentas), |
+|             | defeita. *Inserir*, *remover*,  | [menu contextual](#menus)   |
+|             | *mover* e * redimencion ar*     | e [atalho](#at alhos).      |
+|             | são exemplos de ações que       |                             |
+|             | podem ser desfeitas. Por outro  |                             |
+|             | lado, selecionar não é #uma     |                             |
+|             | ação que pode ser desfeita.     |                             |
+|             | Na versão atual, não existe     |                             |
+|             | um limite na #quantidade de     |                             |
+|             | ações que podem ser             |                             |
+|             | desfeitas.                      |                             |
++-------------+---------------------------------+-----------------------------+
+| Refazer     | Refaz a última ação             | Esta ação pode ser          |
+|             | realizada na visão. Esta        | executada através da:       |
+|             | ação é ignorada caso não        | [barra de ferramentas]      |
+|             | exista nenhuma ação para ser    | (#barra-de- ferramentas),   |
+|             | refeita, ou seja, nenhuma       | [menu contextual](#menus) e |
+|             | ação foi desfeita               | [atalho](#atalhos).         |
+|             | anteriormente. Na versão        |                             |
+|             | atual, não existe um limite na  |                             |
+|             | quantidade de ações que podem   |                             |
+|             | ser desfeitas.                  |                             |
++-------------+---------------------------------+-----------------------------+
+| Recortar    | Copia a entidade selecionada    | Esta ação pode ser          |
+|             | para a **área de                | executada através da:       |
+|             | trânsferencia** e **remove**    | [barra de #ferramentas]     |
+|             | ela da visão. Esta ação é       | (#barra-de-ferramentas),    |
+|             | ignorada caso nenhuma entidade  | [menu contextual](#menus) e |
+|             | tenha sido selecionada e se a   | [atalho](#atalhos).         |
+|             | entidade selecionada é do tipo  |                             |
+|             | *body*.                         |                             |
++-------------+---------------------------------+-----------------------------+
+| Copiar      | Copia a entidade selecionada    | Esta ação pode ser          |
+|             | para a **área de                | executada através da:       |
+|             | trânsferencia**. Esta ação      | [barra de #ferramentas]     |
+|             | é ignorada caso nenhuma         | (#barra-de- ferramentas),   |
+|             | entidade tenha sido selecionada | [menu contextual](#menus) e |
+|             | e se a entidade selecionada é   | [atalho](#atalhos).         |
+|             | do tipo *body*.                 |                             |
++-------------+---------------------------------+-----------------------------+
+| Colar       | Adiciona a entidade copiada     | Esta ação pode ser          |
+|             | para *área de trânsferencia*    | executada através da:       |
+|             | como filha da entidade          | [barra de ferramentas]      |
+|             | selecionada. Esta ação é        | (#barra-de- ferramentas),   |
+|             | ignorada caso nenhuma entidade  | [menu contextual](#menus) e |
+|             | tenha sido recortada ou copiada | [atalho](#atalhos).         |
+|             | e se a entidade selecionada     |                             |
+|             | não permita que seja            |                             |
+|             | adicionado como um de seus      |                             |
+|             | filhos entidades do tipo        |                             |
+|             | selecionada. Por exemplo, não   |                             |
+|             | é possível colar um contexto    |                             |
+|             | em uma mídia.                   |                             |
++-------------+---------------------------------+-----------------------------+
+| Deletar     | Remove a entidade selecionada   | Esta ação pode ser          |
+|             | da visão. Esta ação é           | executada através do:       |
+|             | ignorada caso nenhuma entidade  | [menu contextual](#menus) e |
+|             | esteja selecionada na visão.    | [atalho](#atalhos).         |
++-------------+---------------------------------+-----------------------------+
+| Mover       | Move a entidade selecionada     | Esta ação pode ser          |
+|             | para uma entidade de destino.   | executada através de        |
+|             | Para a #{structural_view},      | [atalho](#atalhos).         |
+|             | mover significa alterar o       |                             |
+|             | parêntesco da entidade          |                             |
+|             | selecionada. A entidade de      |                             |
+|             | destino é determinada           |                             |
+|             | manipulando a entidade          |                             |
+|             | selecionada por meio de         |                             |
+|             | *drag-n-drop* para o interior   |                             |
+|             | da entidade de destino. Esta    |                             |
+|             | ação é ignorada caso a          |                             |
+|             | entidade de destino não         |                             |
+|             | permita que seja adicionado     |                             |
+|             | como um de seus filhos          |                             |
+|             | entidades do tipo selecionado.  |                             |
++-------------+---------------------------------+-----------------------------+
+| Aumentar    | Aumenta o *Zoom* na visão.      | Esta ação pode ser          |
+| Zoom        | Esta ação é ignorada caso a     | executada através da:       |
+|             | visão tenha alcançado seu       | [barra de ferramentas]      |
+|             | *Zoom* máximo.                  | (#barra-de- ferramentas) e  |
+|             |                                 | [atalho](#atalhos).         |
++-------------+---------------------------------+-----------------------------+
+| Diminuir    | Diminue o *Zoom* na visão.      | Esta ação pode ser          |
+| Zoom        | Esta ação é ignorada caso a     | executada através da:       |
+|             | visão tenha alcançado seu       | [barra de #ferramentas]     |
+|             | *Zoom* mínimo.                  | (#barra-de-ferramentas) e   |
+|             |                                 | [atalho](#atalhos).         |
++-------------+---------------------------------+-----------------------------+
+| Tirar uma   | Exporta o projeto como imagem   | Esta ação pode ser          |
+| Foto        | (.png). O projeto pode ser      | executada através da:       |
+|             | exportado mesmo que nenhuma     | [barra de #ferramentas]     |
+|             | entidade tenha sido adicionada. | (#barra-de-ferramentas) e   |
+|             |                                 | [menu contextual](#menus).  |
++-------------+---------------------------------+-----------------------------+
+| Habilitar   | Altera o modo de edição da      | Esta ação pode ser          |
+| Ferramenta  | {structural_view} para          | executada através da:       |
+| de Ponteiro | "ponteiro". Quando no modo de   | [barra de ferramentas]      |
+|             | "ponteiro", a {structural_view} | (#barra-de-ferramentas) e   |
+|             | permite selecionar, mover e     | [atalho](#atalhos).         |
+|             | redimencionar as entidades da   |                             |
+|             | através do *mouse*. O modo de   |                             |
+|             | "ponteiro" é desabilitado       |                             |
+|             | sempre o modo de  *"link"* é    |                             |
+|             | habilitado.                     |                             |
++-------------+---------------------------------+-----------------------------+
+| Habilitar   | Altera o modo de edição da      | Esta ação pode ser          |
+| Ferramenta  | {structural_view} para          | executada através da:       |
+| de Link     | *"link"*. Quando no modo de     | [barra de ferramentas]      |
+|             | *"link"*, a {structural_view}   | (#barra-de-ferramentas) e   |
+|             | permite criar *links*           | [atalho](#atalhos).         |
+|             | (relacionamentos) entre duas    |                             |
+|             | entidades. Para criar um novo   |                             |
+|             | *link*, o usuário deve: **i)**  |                             |
+|             | clicar com o botão esquerdo do  |                             |
+|             | *mouse* na entidade de origem,  |                             |
+|             | **ii)** arrastar o *mouse* até  |                             |
+|             | a entidade de destino e, em     |                             |
+|             | seguida, **iii)** soltar o      |                             |
+|             | botão esquerdo do *mouse*. O    |                             |
+|             | modo de *"link"* é              |                             |
+|             | desabilitado sempre o modo de   |                             |
+|             | "ponteiro" é habilitado. <em>   |                             |
+|             | Caso seja permitido criar um    |                             |
+|             | relaciomaneto entre as          |                             |
+|             | entidades de origem e destino,  |                             |
+|             | uma caixa de diálogo será       |                             |
+|             | apresentada para finalizar o    |                             |
+|             | processo de criação de          |                             |
+|             | *link*. Caso contrário, a       |                             |
+|             | ação é ignorada. Detalhes       |                             |
+|             | sobre o [diálogo de             |                             |
+|             | criação](#links) de *link*      |                             |
+|             | será discutido mais a frente.   |                             |
+|             | </em>                           |                             |
++-------------+---------------------------------+-----------------------------+
+| Criar uma   | Adiciona uma entidade do tipo   | Esta ação pode ser          |
+| Mídia       | mídia como filha da entidade    | executada através da:       |
+|             | selecionada. Esta ação é        | [barra de ferramentas       |
+|             | ignorada caso a entidade        | ](#barra-de-ferramentas),   |
+|             | selecionada não permita que     | [menu contextual](#menus) e |
+|             | seja adicionada como um de seus | [atalho](#atalhos).         |
+|             | filhos entidades do tipo        |                             |
+|             | mídia.                          |                             |
++-------------+---------------------------------+-----------------------------+
+| Criar uma   | Adiciona uma entidade do tipo   | Esta ação pode ser          |
+| Contexto    | contexto como filha da entidade | executada através da:       |
+|             | selecionada. Esta ação é        | [barra de ferramentas       |
+|             | ignorada caso a entidade        | ](#barra-de-ferramentas),   |
+|             | selecionada não permita que     | [menu contextual](#menus) e |
+|             | seja adicionada como um de seus | [atalho](#atalhos).         |
+|             | filhos entidades do tipo        |                             |
+|             | contexto.                       |                             |
++-------------+---------------------------------+-----------------------------+
+| Criar um    | Adiciona uma entidade do tipo   | Esta ação pode ser          |
+| *Switch*    | *switch* como filha da entidade | executada através da:       |
+|             | selecionada. Esta ação é        | [barra de ferramentas       |
+|             | ignorada caso a entidade        | ](#barra-de-ferramentas),   |
+|             | selecionada não permita que     | [menu contextual](#menus) e |
+|             | seja adicionada como um de seus | [atalho](#atalhos).         |
+|             | filhos entidades do tipo        |                             |
+|             | *switch*.                       |                             |
++-------------+---------------------------------+-----------------------------+
+| Criar o     | Adiciona uma entidade do tipo   | Esta ação pode ser          |
+| *Body*      | *body* na visão. Esta ação      | executada através da:       |
+|             | é ignorada caso um *body* já    | [barra de ferramentas       |
+|             | tenha sido adicionado           | ](#barra-de-ferramentas),   |
+|             | previamente.                    | [menu contextual](#menus) e |
+|             |                                 | [atalho](#atalhos).         |
++-------------+---------------------------------+-----------------------------+
+| Criar uma   | Adiciona uma entidade do tipo   | Esta ação pode ser          |
+| Área        | área como filha da entidade     | executada através da:       |
+|             | selecionada. Esta ação é        | [barra de ferramentas       |
+|             | ignorada caso a entidade        | ](#barra-de-ferramentas),   |
+|             | selecionada não permita que     | [menu contextual](#menus) e |
+|             | seja adicionada como um de seus | [atalho](#atalhos).         |
+|             | filhos entidades do tipo área.  |                             |
++-------------+---------------------------------+-----------------------------+
+| Criar uma   | Adiciona uma entidade do tipo   | Esta ação pode ser          |
+| Propriedade | propriedade como filha da       | executada através da:       |
+|             | entidade selecionada. Esta      | [barra de ferramentas       |
+|             | ação é ignorada caso a          | ](#barra-de-ferramentas),   |
+|             | entidade selecionada não        | [menu contextual](#menus) e |
+|             | permita que seja adicionada     | [atalho](#atalhos).         |
+|             | como um de seus filhos          |                             |
+|             | entidades do tipo propriedade.  |                             |
++-------------+---------------------------------+-----------------------------+
+| Criar uma   | Adiciona uma entidade do tipo   | Esta ação pode ser          |
+| Porta       | porta como filha da entidade    | executada através da:       |
+|             | selecionada. Esta ação é        | [barra de ferramentas       |
+|             | ignorada caso a entidade        | ](#barra-de-ferramentas),   |
+|             | selecionada não permita que     | [menu contextual](#menus) e |
+|             | seja adicionada como um de seus | [atalho](#atalhos).         |
+|             | filhos entidades do tipo porta. |                             |
++-------------+---------------------------------+-----------------------------+
+| Criar uma   | Adiciona uma entidade do tipo   | Esta ação pode ser          |
+| Porta de    | porta de *switch* como filha da | executada através da:       |
+| *Switch*    | entidade selecionada. Esta      | [barra de ferramentas       |
+|             | ação é ignorada caso a          | ](#barra-de-ferramentas),   |
+|             | entidade selecionada não        | [menu contextual](#menus) e |
+|             | permita que seja adicionada     | [atalho](#atalhos).         |
+|             | como um de seus filhos          |                             |
+|             | entidades do tipo porta de      |                             |
+|             | *switch*.                       |                             |
++-------------+---------------------------------+-----------------------------+
+| Habilitar/  | Habilita/Desabilita o minimapa. | Esta ação pode ser          |
+| Desabilitar | Quando habilitado, o minimapa   | executada através da:       |
+| Minimapa    | é exibido no canto inferior     | [barra de ferramentas       |
+|             | direito da visão.               | ](#barra-de-ferramentas) e  |
+|             |                                 | [atalho](#atalhos).         |
++-------------+---------------------------------+-----------------------------+
+
+
+### Barra de Ferramentas
 
 A partir da versão 0.3.0 a {structural_view} disponibiliza uma *barra de
 ferramentas* para facilitar o processo de autoria. 
@@ -327,7 +312,7 @@ ferramenta são descritos a seguir:
 
 ### Menus
 
-##### Menu Contextual #####
+#### Menu Contextual
 
 O menu contextual é exibido sempre que o usuário clica com o botão direito do
 *mouse* em qualquer entidade ou nas áreas vazias (em branco) da visão. 
@@ -379,9 +364,9 @@ abaixo:
 					 *switch* como filha da entidade
                                          selecionada. [Mais detalhes](#ações).
 
-#### Diálogos ####
+### Diálogos
 
-##### Diálogo de Link #####
+#### Diálogo de Link
 
 O diálogo de *link* é utilizado para criação e edição de: *links*, *binds*,
 parâmetros de *link* e parâmetros de *binds*. O diálogo para criação de *link*
@@ -428,7 +413,7 @@ entidade do tipo *bind*, resultando na exibição do diálogo abaixo.
 ![](../img/plugin-structural-dialog-edit-bind-condition.png "{structural_view}
 - Diálogo para Edição de 'Bind' (Condição)")
 
-##### Referência #####
+#### Referência
 
 É possível especificar uma referência através da ação de [colar](#ações). Assim
 que a ação de colar é realizada o diálogo abaixo é exibido, solicitando que o
@@ -445,7 +430,7 @@ possível fazer referência para entidades do tipo: contexto, *switch* e *body*.
 
 ![](../img/plugin-structural-refer.png "{structural_view} - Referência")
 
-#### Atalhos ####
+### Atalhos
 
 Abaixo segua a lista de atalhos da {structural_view}:
 
@@ -490,7 +475,7 @@ Abaixo segua a lista de atalhos da {structural_view}:
 - **Habilitar/Desabilitar Minimapa (Ctrl+M):** Habilita/Desabilita o minimapa.
   [Mais detalhes](#ações).
 
-#### Outros detalhes ####
+### Outros detalhes
 
 Todo plugins do {nclcomposer} permite sincronizar (ou resincronizar) o estado
 atual da visão com o modelo do núcleo da ferramenta. Esta tarefa é realiza
@@ -499,7 +484,7 @@ que a visão é resincronizada com o modelo do núcleo da ferramenta, todo o
 histório de ações é perdido, de modo que não é possível desfazer ou refazer uma
 ação.
 
-## {layout_view} ##
+## {layout_view}
 
 A {layout_view} permite que os autores de aplicações NCL interajam visualmente
 com as regiões onde os objetos de mídia serão inicialmente apresentados. Nesta
@@ -509,7 +494,7 @@ do documento.
 ![](../img/views-layout.png "{layout_view}")
 
 
-## {outline_view} ##
+## {outline_view}
 
 A {outline_view} apresenta a estrutura do documento NCL como uma árvore,
 permitindo aos autores navegarem no documento.
@@ -517,7 +502,7 @@ permitindo aos autores navegarem no documento.
 ![](../img/plugin-outline.png "{outline_view}")
 
 
-## {properties_view} ##
+## {properties_view}
 
 A {properties_view} apresenta o conjunto de propriedades da entidade
 selecionada. Essa entidade selecionada por ser, por exemplo, uma região na
@@ -525,7 +510,7 @@ selecionada. Essa entidade selecionada por ser, por exemplo, uma região na
 
 ![](../img/plugin-property.png "{properties_view}")
 
-## {textual_view} ##
+## {textual_view}
 
 A _{textual_view}__ permite aos usuários interagirem diretamente com o
 código-fonte da aplicação NCL. Ela é um editor de texto avançado focado na
@@ -537,11 +522,11 @@ sentem à vontade com a sintaxe XML.
 
 ![](../img/plugin-textual.png "{textual_view}")
 
-## {rules_view} ##
+## {rules_view}
 
 TODO	
 
-## {validator} ##
+## {validator}
 
 O validador é responsável por notificar erros e alertas no documento NCL.
 A figura a seguir apresenta um exemplo.
@@ -549,7 +534,7 @@ A figura a seguir apresenta um exemplo.
 ![](../img/plugin-validator.png "{validator}")
 
 
-## {run_view} ##
+## {run_view}
 
 TODO
 
