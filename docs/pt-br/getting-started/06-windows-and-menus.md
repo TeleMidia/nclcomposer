@@ -45,22 +45,22 @@ disponíveis na {structural_view} e como elas podem ser executadas.
 | Desfazer    | Desfaz a última ação            | Esta ação pode ser          |
 |             | realizada na visão. Esta        | executada através da:       |
 |             | ação é ignorada caso não        | [barra de ferra mentas]     |
-|             | exista nenhuma ação para ser    | (#barra- de- ferra mentas), |
+|             | exista nenhuma ação para ser    | (#barra-de-ferramentas),    |
 |             | defeita. *Inserir*, *remover*,  | [menu contextual](#menus)   |
-|             | *mover* e * redimencion ar*     | e [atalho](#at alhos).      |
+|             | *mover* e *redimencionar*       | e [atalho](#atalhos).       |
 |             | são exemplos de ações que       |                             |
 |             | podem ser desfeitas. Por outro  |                             |
 |             | lado, selecionar não é #uma     |                             |
 |             | ação que pode ser desfeita.     |                             |
 |             | Na versão atual, não existe     |                             |
-|             | um limite na #quantidade de     |                             |
+|             | um limite na quantidade de      |                             |
 |             | ações que podem ser             |                             |
 |             | desfeitas.                      |                             |
 +-------------+---------------------------------+-----------------------------+
 | Refazer     | Refaz a última ação             | Esta ação pode ser          |
 |             | realizada na visão. Esta        | executada através da:       |
 |             | ação é ignorada caso não        | [barra de ferramentas]      |
-|             | exista nenhuma ação para ser    | (#barra-de- ferramentas),   |
+|             | exista nenhuma ação para ser    | (#barra-de-ferramentas),    |
 |             | refeita, ou seja, nenhuma       | [menu contextual](#menus) e |
 |             | ação foi desfeita               | [atalho](#atalhos).         |
 |             | anteriormente. Na versão        |                             |
@@ -70,7 +70,7 @@ disponíveis na {structural_view} e como elas podem ser executadas.
 +-------------+---------------------------------+-----------------------------+
 | Recortar    | Copia a entidade selecionada    | Esta ação pode ser          |
 |             | para a **área de                | executada através da:       |
-|             | trânsferencia** e **remove**    | [barra de #ferramentas]     |
+|             | trânsferencia** e **remove**    | [barra de ferramentas]      |
 |             | ela da visão. Esta ação é       | (#barra-de-ferramentas),    |
 |             | ignorada caso nenhuma entidade  | [menu contextual](#menus) e |
 |             | tenha sido selecionada e se a   | [atalho](#atalhos).         |
@@ -79,8 +79,8 @@ disponíveis na {structural_view} e como elas podem ser executadas.
 +-------------+---------------------------------+-----------------------------+
 | Copiar      | Copia a entidade selecionada    | Esta ação pode ser          |
 |             | para a **área de                | executada através da:       |
-|             | trânsferencia**. Esta ação      | [barra de #ferramentas]     |
-|             | é ignorada caso nenhuma         | (#barra-de- ferramentas),   |
+|             | trânsferencia**. Esta ação      | [barra de ferramentas]      |
+|             | é ignorada caso nenhuma         | (#barra-de-ferramentas),    |
 |             | entidade tenha sido selecionada | [menu contextual](#menus) e |
 |             | e se a entidade selecionada é   | [atalho](#atalhos).         |
 |             | do tipo *body*.                 |                             |
@@ -88,7 +88,7 @@ disponíveis na {structural_view} e como elas podem ser executadas.
 | Colar       | Adiciona a entidade copiada     | Esta ação pode ser          |
 |             | para *área de trânsferencia*    | executada através da:       |
 |             | como filha da entidade          | [barra de ferramentas]      |
-|             | selecionada. Esta ação é        | (#barra-de- ferramentas),   |
+|             | selecionada. Esta ação é        | (#barra-de-ferramentas),    |
 |             | ignorada caso nenhuma entidade  | [menu contextual](#menus) e |
 |             | tenha sido recortada ou copiada | [atalho](#atalhos).         |
 |             | e se a entidade selecionada     |                             |
@@ -106,7 +106,7 @@ disponíveis na {structural_view} e como elas podem ser executadas.
 +-------------+---------------------------------+-----------------------------+
 | Mover       | Move a entidade selecionada     | Esta ação pode ser          |
 |             | para uma entidade de destino.   | executada através de        |
-|             | Para a #{structural_view},      | [atalho](#atalhos).         |
+|             | Para a {structural_view},       | [atalho](#atalhos).         |
 |             | mover significa alterar o       |                             |
 |             | parêntesco da entidade          |                             |
 |             | selecionada. A entidade de      |                             |
@@ -121,21 +121,21 @@ disponíveis na {structural_view} e como elas podem ser executadas.
 |             | como um de seus filhos          |                             |
 |             | entidades do tipo selecionado.  |                             |
 +-------------+---------------------------------+-----------------------------+
-| Aumentar    | Aumenta o *Zoom* na visão.      | Esta ação pode ser          |
+| Aumentar    | Aumenta o *zoom* na visão.      | Esta ação pode ser          |
 | Zoom        | Esta ação é ignorada caso a     | executada através da:       |
 |             | visão tenha alcançado seu       | [barra de ferramentas]      |
-|             | *Zoom* máximo.                  | (#barra-de- ferramentas) e  |
+|             | *zoom* máximo.                  | (#barra-de-ferramentas) e   |
 |             |                                 | [atalho](#atalhos).         |
 +-------------+---------------------------------+-----------------------------+
-| Diminuir    | Diminue o *Zoom* na visão.      | Esta ação pode ser          |
+| Diminuir    | Diminue o *zoom* na visão.      | Esta ação pode ser          |
 | Zoom        | Esta ação é ignorada caso a     | executada através da:       |
-|             | visão tenha alcançado seu       | [barra de #ferramentas]     |
-|             | *Zoom* mínimo.                  | (#barra-de-ferramentas) e   |
+|             | visão tenha alcançado seu       | [barra de ferramentas]      |
+|             | *zoom* mínimo.                  | (#barra-de-ferramentas) e   |
 |             |                                 | [atalho](#atalhos).         |
 +-------------+---------------------------------+-----------------------------+
 | Tirar uma   | Exporta o projeto como imagem   | Esta ação pode ser          |
 | Foto        | (.png). O projeto pode ser      | executada através da:       |
-|             | exportado mesmo que nenhuma     | [barra de #ferramentas]     |
+|             | exportado mesmo que nenhuma     | [barra de ferramentas]      |
 |             | entidade tenha sido adicionada. | (#barra-de-ferramentas) e   |
 |             |                                 | [menu contextual](#menus).  |
 +-------------+---------------------------------+-----------------------------+
@@ -147,7 +147,7 @@ disponíveis na {structural_view} e como elas podem ser executadas.
 |             | redimencionar as entidades da   |                             |
 |             | através do *mouse*. O modo de   |                             |
 |             | "ponteiro" é desabilitado       |                             |
-|             | sempre o modo de  *"link"* é    |                             |
+|             | sempre o modo de *"link"* é     |                             |
 |             | habilitado.                     |                             |
 +-------------+---------------------------------+-----------------------------+
 | Habilitar   | Altera o modo de edição da      | Esta ação pode ser          |
@@ -323,8 +323,8 @@ Menu Contextual")
 A figura acima apresenta o *menu contextual*, cujo detalhes são descritos
 abaixo:
 
-- **(a) - Exibir Ajuda:** Exibe o diálogo de ajuda. *Desabilitado nesta
-                          versão*.
+- **(a) - Exibir Ajuda:** Exibe o diálogo de ajuda. **Desabilitado nesta
+                          versão**.
 - **(b) - Insert:** Exibe o submenu de adção de entidades.
 - **(c) - Desfazer:** Desfaz a última ação realizada na visão. [Mais
                       detalhes](#ações).
@@ -341,8 +341,8 @@ abaixo:
                      detalhes](#ações).
 - **(i) - Tirar uma Foto:** Exporta o projeto como imagem (.png). [Mais
                             detalhes](#ações).
-- **(j) - Exibir Propriedades:** Exibe o diálogo de propriedades. *Desabilitado
-                                 nesta versão*
+- **(j) - Exibir Propriedades:** Exibe o diálogo de propriedades. **Desabilitado
+                                 nesta versão**
 - **(k) - Adicionar Mídia:** Adiciona uma entidade do tipo mídia como filha da
                              entidade selecionada. [Mais detalhes](#ações).
 - **(l) - Adicionar Contexto:** Adiciona uma entidade do tipo context como
@@ -434,45 +434,45 @@ possível fazer referência para entidades do tipo: contexto, *switch* e *body*.
 
 Abaixo segua a lista de atalhos da {structural_view}:
 
-- **Desfazer (Ctrl+z):** Desfaz a última ação realizada na visão. [Mais
+- `Ctrl`+`z` - Desfazer: Desfaz a última ação realizada na visão. [Mais
   detalhes](#ações).
-- **Refazer (Ctrl+Shift+z):** Refaz a última ação reallizada na visão. [Mais
+- `Ctrl`+`Shift`+`z` - Refazer: Refaz a última ação reallizada na visão. [Mais
   detalhes](#ações).
-- **Recortar (Ctrl+x):** Copia a entidade selecionada para a **área de
+- `Ctrl`+`x` - Recortar: Copia a entidade selecionada para a **área de
   trânsferencia** e **remove** ela da visão. [Mais detalhes](#ações).
-- **Copiar (Ctrl+c):** Copia a entidade selecionada para a **área de
+- `Ctrl`+`c` - Copiar: Copia a entidade selecionada para a **área de
   trânsferencia**. [Mais detalhes](#ações).
-- **Colar (Ctrl+v):** Adiciona a entidade da *área de trânsferencia* como filha
+- `Ctrl`+`v` - Colar: Adiciona a entidade da *área de trânsferencia* como filha
   da entidade selecionada. [Mais detalhes](#ações).
-- **Deletar (Del):** Remove a entidade selecionada da visão. [Mais
+- `Del` - Deletar: Remove a entidade selecionada da visão. [Mais
   detalhes](#ações).
-- **Mover (Ctrl+Drag-n-Drop):** Remove a entidade selecionada da visão. [Mais
+- *Segurar* `Ctrl`+*Drag-n-drop*  - Mover: Remove a entidade selecionada da visão. [Mais
   detalhes](#ações).
-- **Aumentar o *Zoom* (Ctrl++ OU Ctrl+Roda do *mouse* para cima):** Aumenta o
-  *Zoom* na visão. [Mais detalhes](#ações).
-- **Diminuir o *Zoom* (Ctrl+- OU Ctrl+Roda do *mouse* para baixo):** Diminue o
-  *Zoom* na visão. [Mais detalhes](#ações).
-- **Ferramenta de Ponteiro (1):** Altera o modo de edição da visão para
+- `Ctrl`+`+` ou `Ctrl`+*Roda do mouse para cima* - Aumentar o *zoom*: Aumenta o
+  *zoom* na visão. [Mais detalhes](#ações).
+- `Ctrl`+`-` ou `Ctrl`+*Roda do mouse para baixo* - Diminuir o *zoom*: Diminue o
+  *zoom* na visão. [Mais detalhes](#ações).
+- `1` - Habilitar Ferramenta de Ponteiro: Altera o modo de edição da visão para
   "ponteiro". [Mais detalhes](#ações).
-- **Ferramenta de *Link* (2 OU Segurar Shift):** Altera o modo de edição da
+- `2` ou *Segurar* `Shift` - Habilitar Ferramenta de *Link*: Altera o modo de edição da
   visão para "link". [Mais detalhes](#ações).
-- **Adicionar Mídia (3):** Adiciona uma entidade do tipo mídia como filha da
+- `3` - Adicionar Mídia: Adiciona uma entidade do tipo mídia como filha da
   entidade selecionada. [Mais detalhes](#ações).
-- **Adicionar Contexto (4):** Adiciona uma entidade do tipo context como filha
+- `4` - Adicionar Contexto: Adiciona uma entidade do tipo context como filha
   da entidade selecionada. [Mais detalhes](#ações).
-- **Adicionar *Switch* (5):** Adiciona uma entidade do tipo *switch* como filha
+- `5` - Adicionar *Switch*: Adiciona uma entidade do tipo *switch* como filha
   da entidade selecionada. [Mais detalhes](#ações).
-- **Adicionar *Body* (6):** Adiciona um *body* na visão. [Mais
+- `6` - Adicionar *Body*: Adiciona um *body* na visão. [Mais
   detalhes](#ações).
-- **Adicionar Área (7):** Adiciona uma entidade do tipo área como filha da
+- `7` - Adicionar Área: Adiciona uma entidade do tipo área como filha da
   entidade selecionada. [Mais detalhes](#ações).
-- **Adicionar Propriedade (8):** Adiciona uma entidade do tipo propriedade como
+- `8` - Adicionar Propriedade: Adiciona uma entidade do tipo propriedade como
   filha da entidade selecionada. [Mais detalhes](#ações).
-- **Adicionar Porta (9):** Adiciona uma entidade do tipo porta como filha da
+- `9` - Adicionar Porta: Adiciona uma entidade do tipo porta como filha da
   entidade selecionada. [Mais detalhes](#ações).
-- **Adicionar Porta de *Switch* (0):** Adiciona uma entidade do tipo porta de
+- `0` - Adicionar Porta de *Switch*: Adiciona uma entidade do tipo porta de
   *switch* como filha da entidade selecionada. [Mais detalhes](#ações).
-- **Habilitar/Desabilitar Minimapa (Ctrl+M):** Habilita/Desabilita o minimapa.
+- `Ctrl`+`m` - Habilitar/Desabilitar Minimapa: Habilita/Desabilita o minimapa.
   [Mais detalhes](#ações).
 
 ### Outros detalhes
