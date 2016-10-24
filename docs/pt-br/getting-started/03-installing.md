@@ -53,29 +53,29 @@ Para instalar o {nclcomposer} em ambiente Linux (Ubuntu/Debian):
 
 	> $ nclcomposer
 
-## macOS
+## MacOS
 
-Segue abaixo as informações necessárias para instalção do 
-{nclcomposer} no ambiente macOS:
+Para instalar o {nclcomposer} em ambiente MacOS:
 
-  * Baixe a versão mais atual do {nclcomposer} para macOS em:
+  * Baixe a versão mais atual do {nclcomposer} para MacOS em:
     [http://composer.telemidia.puc-rio.br/en/download](http://composer.telemidia.puc-rio.br/en/download)
 
-  * O arquivo deve ter o nome na forma _nclcomposer-X.X.X-YYYYMMDD.dmg_, 
-    onde X.X.X deve conter a versão do {nclcomposer} e YYYYMMDD 
-    a data do lançamento. 
+  * O arquivo deve ter o nome na forma _nclcomposer-X.X.X-YYYYMMDD.dmg_, onde
+    X.X.X deve conter a versão do {nclcomposer} e YYYYMMDD a data do lançamento. 
 
-> O *release* do {nclcomposer} para macOS é realizado através 
-> de um arquivo [DMG](https://pt.wikipedia.org/wiki/.dmg). 
-> O arquivo DMG é uma imagem de disco, 
-> que se assemelha a um arquivo compactado (ZIP ou RAR). Dessa forma, 
-> para instalar a aplicação é necessário extraí-la de dentro do 
-> aquivo DMG.
+> O *release* do {nclcomposer} para macOS é realizado através de um arquivo
+> [DMG](https://pt.wikipedia.org/wiki/.dmg).  O arquivo DMG é uma imagem de
+> disco, que se assemelha a um arquivo compactado (ZIP ou RAR).  Dessa forma,
+> para instalar a aplicação é necessário extraí-la de dentro do aquivo DMG.
 
-  * Para instalar (extrair) o {nclcomposer}, clique duas vezes no arquivo DMG baixado. Assim, uma janela será exibida contendo a aplicação do {nclcomposer}. Clique e arraste a aplicação do {nclcomposer} para dentro da pasta de aplicações do sistema (normalmente */Applications/*). 
+  * Para instalar (extrair) o {nclcomposer}, clique duas vezes no arquivo DMG
+    baixado. Assim, uma janela será exibida contendo a aplicação do
+    {nclcomposer}.  Clique e arraste a aplicação do {nclcomposer} para dentro
+    da pasta de aplicações do sistema (normalmente */Applications/*). 
 
   * Pronto!
 
-> Este processo é semelhante para qualquer arquivo DMG. Caso queira 
-> assitir um vídeo explicativo, acesse o
-> [Doutor Apple](https://www.youtube.com/watch?v=gNqDTE7Vvwc).
+> Este processo é semelhante para qualquer arquivo DMG. Caso queira  assitir um
+> vídeo explicativo, acesse o [Doutor
+> Apple](https://www.youtube.com/watch?v=gNqDTE7Vvwc).
+
