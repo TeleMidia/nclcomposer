@@ -24,8 +24,9 @@ pages:
   - Licença: license.md
 - Release notes (English): relnotes.md
 
-#markdown_extensions:
-#  - grid_tables
+markdown_extensions:
+  - replace_strings
+  - grid_tables
 
 docs_dir: pt-br
 repo_url: http://github.com/telemidia/nclcomposer

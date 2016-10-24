@@ -44,18 +44,17 @@ disponíveis na {structural_view} e como elas podem ser executadas.
 +=============+=================================+=============================+
 | Desfazer    | Desfaz a última ação            | Esta ação pode ser          |
 |             | realizada na visão. Esta        | executada através da:       |
-|             | ação é ignorada caso não        | [barra de ferra mentas]     |
+|             | ação é ignorada caso não        | [barra de ferramentas]      |
 |             | exista nenhuma ação para ser    | (#barra-de-ferramentas),    |
-|             | defeita. *Inserir*, *remover*,  | [menu contextual](#menus)   |
-|             | *mover* e *redimencionar*       | e [atalho](#atalhos).       |
-|             | são exemplos de ações que       |                             |
-|             | podem ser desfeitas. Por outro  |                             |
-|             | lado, selecionar não é #uma     |                             |
-|             | ação que pode ser desfeita.     |                             |
-|             | Na versão atual, não existe     |                             |
-|             | um limite na quantidade de      |                             |
-|             | ações que podem ser             |                             |
-|             | desfeitas.                      |                             |
+|             | defeita. *Inserir*, *remover*,  | [menu contextual](#menus) e |
+|             | *mover* e *redimencionar* são   | [atalho](#atalhos).         |
+|             | exemplos de ações que podem     |                             |
+|             | ser desfeitas. Por outro lado,  |                             |
+|             | selecionar não é uma ação       |                             |
+|             | que pode ser desfeita. Na       |                             |
+|             | versão atual, não existe um     |                             |
+|             | limite na quantidade de ações   |                             |
+|             | que podem ser desfeitas.        |                             |
 +-------------+---------------------------------+-----------------------------+
 | Refazer     | Refaz a última ação             | Esta ação pode ser          |
 |             | realizada na visão. Esta        | executada através da:       |
@@ -106,20 +105,20 @@ disponíveis na {structural_view} e como elas podem ser executadas.
 +-------------+---------------------------------+-----------------------------+
 | Mover       | Move a entidade selecionada     | Esta ação pode ser          |
 |             | para uma entidade de destino.   | executada através de        |
-|             | Para a {structural_view},       | [atalho](#atalhos).         |
-|             | mover significa alterar o       |                             |
-|             | parêntesco da entidade          |                             |
-|             | selecionada. A entidade de      |                             |
-|             | destino é determinada           |                             |
-|             | manipulando a entidade          |                             |
-|             | selecionada por meio de         |                             |
-|             | *drag-n-drop* para o interior   |                             |
-|             | da entidade de destino. Esta    |                             |
-|             | ação é ignorada caso a          |                             |
-|             | entidade de destino não         |                             |
-|             | permita que seja adicionado     |                             |
-|             | como um de seus filhos          |                             |
-|             | entidades do tipo selecionado.  |                             |
+|             | Para a structural_view, mover   | [atalho](#atalhos).         |
+|             | significa alterar o parêntesco  |                             |
+|             | da entidade selecionada. A      |                             |
+|             | entidade de destino é           |                             |
+|             | determinada manipulando a       |                             |
+|             | entidade selecionada por meio   |                             |
+|             | de *drag-n-drop* para o         |                             |
+|             | interior da entidade de         |                             |
+|             | destino. Esta ação é            |                             |
+|             | ignorada caso a entidade de     |                             |
+|             | destino não permita que seja    |                             |
+|             | adicionado como um de seus      |                             |
+|             | filhos entidades do tipo        |                             |
+|             | selecionado.                    |                             |
 +-------------+---------------------------------+-----------------------------+
 | Aumentar    | Aumenta o *zoom* na visão.      | Esta ação pode ser          |
 | Zoom        | Esta ação é ignorada caso a     | executada através da:       |
@@ -140,9 +139,9 @@ disponíveis na {structural_view} e como elas podem ser executadas.
 |             |                                 | [menu contextual](#menus).  |
 +-------------+---------------------------------+-----------------------------+
 | Habilitar   | Altera o modo de edição da      | Esta ação pode ser          |
-| Ferramenta  | {structural_view} para          | executada através da:       |
+| Ferramenta  | structural_view para            | executada através da:       |
 | de Ponteiro | "ponteiro". Quando no modo de   | [barra de ferramentas]      |
-|             | "ponteiro", a {structural_view} | (#barra-de-ferramentas) e   |
+|             | "ponteiro", a structural_view   | (#barra-de-ferramentas) e   |
 |             | permite selecionar, mover e     | [atalho](#atalhos).         |
 |             | redimencionar as entidades da   |                             |
 |             | através do *mouse*. O modo de   |                             |
@@ -151,20 +150,19 @@ disponíveis na {structural_view} e como elas podem ser executadas.
 |             | habilitado.                     |                             |
 +-------------+---------------------------------+-----------------------------+
 | Habilitar   | Altera o modo de edição da      | Esta ação pode ser          |
-| Ferramenta  | {structural_view} para          | executada através da:       |
-| de Link     | *"link"*. Quando no modo de     | [barra de ferramentas]      |
-|             | *"link"*, a {structural_view}   | (#barra-de-ferramentas) e   |
-|             | permite criar *links*           | [atalho](#atalhos).         |
-|             | (relacionamentos) entre duas    |                             |
-|             | entidades. Para criar um novo   |                             |
-|             | *link*, o usuário deve: **i)**  |                             |
-|             | clicar com o botão esquerdo do  |                             |
-|             | *mouse* na entidade de origem,  |                             |
-|             | **ii)** arrastar o *mouse* até  |                             |
-|             | a entidade de destino e, em     |                             |
-|             | seguida, **iii)** soltar o      |                             |
-|             | botão esquerdo do *mouse*. O    |                             |
-|             | modo de *"link"* é              |                             |
+| Ferramenta  | structural_view para *"link"*.  | executada através da:       |
+| de Link     | Quando no modo de *"link"*, a   | [barra de ferramentas]      |
+|             | structural_view permite criar   | (#barra-de-ferramentas) e   |
+|             | *links* (relacionamentos) entre | [atalho](#atalhos).         |
+|             | duas entidades. Para criar um   |                             |
+|             | novo *link*, o usuário deve:    |                             |
+|             | **i)** clicar com o botão       |                             |
+|             | esquerdo do *mouse* na entidade |                             |
+|             | de origem, **ii)** arrastar o   |                             |
+|             | *mouse* até a entidade de       |                             |
+|             | destino e, em seguida, **iii)** |                             |
+|             | soltar o botão esquerdo do      |                             |
+|             | *mouse*. O modo de *"link"* é   |                             |
 |             | desabilitado sempre o modo de   |                             |
 |             | "ponteiro" é habilitado. <em>   |                             |
 |             | Caso seja permitido criar um    |                             |
@@ -182,8 +180,8 @@ disponíveis na {structural_view} e como elas podem ser executadas.
 +-------------+---------------------------------+-----------------------------+
 | Criar uma   | Adiciona uma entidade do tipo   | Esta ação pode ser          |
 | Mídia       | mídia como filha da entidade    | executada através da:       |
-|             | selecionada. Esta ação é        | [barra de ferramentas       |
-|             | ignorada caso a entidade        | ](#barra-de-ferramentas),   |
+|             | selecionada. Esta ação é        | [barra de ferramentas]      |
+|             | ignorada caso a entidade        | (#barra-de-ferramentas),    |
 |             | selecionada não permita que     | [menu contextual](#menus) e |
 |             | seja adicionada como um de seus | [atalho](#atalhos).         |
 |             | filhos entidades do tipo        |                             |
@@ -191,8 +189,8 @@ disponíveis na {structural_view} e como elas podem ser executadas.
 +-------------+---------------------------------+-----------------------------+
 | Criar uma   | Adiciona uma entidade do tipo   | Esta ação pode ser          |
 | Contexto    | contexto como filha da entidade | executada através da:       |
-|             | selecionada. Esta ação é        | [barra de ferramentas       |
-|             | ignorada caso a entidade        | ](#barra-de-ferramentas),   |
+|             | selecionada. Esta ação é        | [barra de ferramentas]      |
+|             | ignorada caso a entidade        | (#barra-de-ferramentas),    |
 |             | selecionada não permita que     | [menu contextual](#menus) e |
 |             | seja adicionada como um de seus | [atalho](#atalhos).         |
 |             | filhos entidades do tipo        |                             |

@@ -5,7 +5,9 @@
 
 all:
 	ls -r relnotes/* | xargs cat  >pt-br/relnotes.md
-	mkdocs build --clean
+	./build_and_serve.py
 	#mkdir -p ${BUILD_DIR}/${LANG}
 	#$(foreach i,$(INPUT), lua ${LANG}/dict.lua $(i) >${BUILD_DIR}/$(i); )
+clean:
+	rm -rf site
 
