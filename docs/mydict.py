@@ -7,6 +7,13 @@ mydict = {
   "textual_view":  "Visão Textual",
   "rules_view": "Visão de Regras",
   "validator": "Visão de Validação",
-  "default_views": "Visão Estrutural, Visão de Leiaute, Visão de Outline, Visão Proprieades, Visão de Regras, Visão de Validaćão"
+  "run_view": "Visão de Execução",
+  "default_views": "Visão Estrutural, \
+                    Visão de Leiaute, \
+                    Visão de Outline, \
+                    Visão Proprieades, \
+                    Visão de Regras, \
+                    Visão de Validaćão e \
+                    Visão de execução"
 }
 

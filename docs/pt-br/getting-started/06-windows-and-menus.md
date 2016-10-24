@@ -2,7 +2,7 @@
 
 ## Janela Principal
 
-![](../img/cap4_mainwindow.png)
+![](../img/main-window-details.png)
 
 ### Barra de título ###
 Evidencia o nome do {nclcomposer} e do projeto corrente.
@@ -489,7 +489,7 @@ com as regiões onde os objetos de mídia serão inicialmente apresentados. Nest
 visão, os autores podem criar e manipular as regiões e a hierarquia de regiões
 do documento.
 
-![](../img/views-layout.png "{layout_view}")
+![](../img/plugin-layout-view.png "{layout_view}")
 
 
 ## {outline_view}
@@ -497,7 +497,7 @@ do documento.
 A {outline_view} apresenta a estrutura do documento NCL como uma árvore,
 permitindo aos autores navegarem no documento.
 
-![](../img/plugin-outline.png "{outline_view}")
+![](../img/plugin-outline-view.png "{outline_view}")
 
 
 ## {properties_view}
@@ -506,7 +506,7 @@ A {properties_view} apresenta o conjunto de propriedades da entidade
 selecionada. Essa entidade selecionada por ser, por exemplo, uma região na
 {layout_view}, um objeto de mídia na {structural_view} etc.
 
-![](../img/plugin-property.png "{properties_view}")
+![](../img/plugin-properties-view.png "{properties_view}")
 
 ## {textual_view}
 
@@ -518,21 +518,27 @@ código contextual e formatação de código.
 A _{textual_view}_ é recomendada especialmente para usuários avançados e que se
 sentem à vontade com a sintaxe XML.
 
-![](../img/plugin-textual.png "{textual_view}")
+![](../img/plugin-textual-view.png "{textual_view}")
 
 ## {rules_view}
 
-TODO	
+Permite a definição de uma base de regras, as quais podem ser utilizada em
+*switchs* para adaptação do conteúdo a ser apresentado.
+
+![](../img/plugin-rules-view.png "{rules_view}")
 
 ## {validator}
 
 O validador é responsável por notificar erros e alertas no documento NCL.
 A figura a seguir apresenta um exemplo.
 
-![](../img/plugin-validator.png "{validator}")
+![](../img/plugin-validator-view.png "{validator}")
 
 
 ## {run_view}
 
-TODO
+Possibilita ver o resultado da execução do seu projeto.
+
+![](../img/plugin-run-view.png "{run_view}")
+
 
