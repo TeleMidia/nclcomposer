@@ -63,7 +63,7 @@ Para instalar o {nclcomposer} em ambiente MacOS:
   * O arquivo deve ter o nome na forma _nclcomposer-X.X.X-YYYYMMDD.dmg_, onde
     X.X.X deve conter a versão do {nclcomposer} e YYYYMMDD a data do lançamento. 
 
-> O *release* do {nclcomposer} para macOS é realizado através de um arquivo
+> O *release* do {nclcomposer} para MacOS é realizado através de um arquivo
 > [DMG](https://pt.wikipedia.org/wiki/.dmg).  O arquivo DMG é uma imagem de
 > disco, que se assemelha a um arquivo compactado (ZIP ou RAR).  Dessa forma,
 > para instalar a aplicação é necessário extraí-la de dentro do aquivo DMG.
