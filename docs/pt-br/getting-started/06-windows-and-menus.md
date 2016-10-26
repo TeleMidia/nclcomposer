@@ -7,22 +7,45 @@
 ### Barra de título ###
 Evidencia o nome do {nclcomposer} e do projeto corrente.
 
-### Barra de menu
-Mostra as entradas de menu disponíveis.
-
 ### Barra de projetos
 Lista a tela de boas-vindas e a lista de projetos abertos, permitindo navegar
 entre eles.
 
 ### Área das Visões
-Área de desenho das diversas <<def:views, Visões>>. Cada visão pode ter
-seus próprios elementos de interface. Também é possível organizar e salvar a
-disposição das diversas visões por meio das <<def:perspective, Perspectivas>>.
+Área de desenho das diversas visões. Cada visão pode ter seus próprios
+elementos de interface. Também é possível organizar e salvar a disposição das
+diversas visões por meio das perspectivas.
+
+### Barra de perspectivas
+Apresenta as perspectivas salvas pelo usuário e permite facilmente alternar
+entre elas.
+
+### Barra de menus
+
+Mostra as entradas de menu disponíveis.
+
++-------------------------+----------------------------------------+
+| Menu                    | Screnshot                              |
++=========================+========================================+
+| __File__:  Da acesso às | ![](../img/main-window-menu-file.png)  |
+| seguintes opções:       |                                        |
+|                         |                                        |
+|                         |                                        |
+| * Novo projeto          |                                        |
+| * Abrir                 |                                        |
+| * Salvar                |                                        |
++-------------------------+----------------------------------------+
+| __Edit__:               | ![](../img/main-window-menu-edit.png)  |
++-------------------------+----------------------------------------+
+| __View__:               | ![](../img/main-window-menu-view.png)  |
++-------------------------+----------------------------------------+
+| __Share__:              | ![](../img/main-window-menu-share.png) |
++-------------------------+----------------------------------------+
+| __Help__:               | ![](../img/main-window-menu-help.png)  |
++-------------------------+----------------------------------------+
 
 
 ## {structural_view}
-
-*Versão: 0.3.0*
 
 A {structural_view} permite que os autores de aplicações interajam visualmente
 com a estrutura lógica do documento NCL. Em NCL, a estrutura lógica é
@@ -510,7 +533,7 @@ selecionada. Essa entidade selecionada por ser, por exemplo, uma região na
 
 ## {textual_view}
 
-A _{textual_view}__ permite aos usuários interagirem diretamente com o
+A __{textual_view}__ permite aos usuários interagirem diretamente com o
 código-fonte da aplicação NCL. Ela é um editor de texto avançado focado na
 linguagem NCL e traz funcionalidades como: coloração sintática, sugestão de
 código contextual e formatação de código.
