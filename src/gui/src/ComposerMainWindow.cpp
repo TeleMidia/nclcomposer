@@ -19,6 +19,7 @@
 #include <QRegExp>
 #include <QDesktopServices>
 #include <QInputDialog>
+#include <QShortcut>
 
 #include "GeneralPreferences.h"
 #include "NewProjectWizard.h"
@@ -540,11 +541,20 @@ void ComposerMainWindow::addPluginWidget( IPluginFactory *fac,
                                 }");
 
       QToolButton *btn_UpdateFromModel = new QToolButton(btn_group);
-      btn_UpdateFromModel->setIcon(QIcon(":/mainwindow/refreshplugin"));
       btn_UpdateFromModel->setIconSize(QSize(12, 12));
-      btn_UpdateFromModel->setToolTip(tr("Reload View's Model"));
-      connect(btn_UpdateFromModel, SIGNAL(pressed()),
-              plugin, SLOT(updateFromModel()));
+
+      QAction *action_updateFromModel = new QAction(pW);
+      action_updateFromModel->setIcon(QIcon(":/mainwindow/refreshplugin"));
+      action_updateFromModel->setToolTip(tr("Reload View's Model"));
+      btn_UpdateFromModel->setDefaultAction(action_updateFromModel);
+
+      QShortcut *shortcut = new QShortcut(
+                                  QKeySequence(tr("F5", "Update from Model")),
+                                  pW);
+      shortcut->setContext(Qt::WidgetWithChildrenShortcut);
+
+      connect(action_updateFromModel, SIGNAL(triggered()), plugin, SLOT(updateFromModel()));
+      connect(shortcut, SIGNAL(activated()), plugin, SLOT(updateFromModel()));
 
       QToolButton *btn_close = new QToolButton(btn_group);
       QAction* close_view_action = new QAction(QIcon(":/mainwindow/closeplugin"), tr("Close view"), btn_group);
