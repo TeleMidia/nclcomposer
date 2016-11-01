@@ -13,8 +13,19 @@ vários exemplos de aplicações multimídia interativas usando o {nclcomposer}.
 
 ## Índice dos exemplos
 
-  * [Exemplo 1: Reproduzindo um objeto de mídia](01.hello_world)
-  * [Exemplo 2: Iniciando um objeto de mídia quando outro termina](02.on_end_start)
-  * [Exemplo 3: Iniciando e terminando dois objetos de mídia
-     simultaneamente](03.simultaneous_media_objects)
+  * __Aquecimento__
+    * [Exemplo 01: Reproduzindo um objeto de mídia](01.hello_world)
+    * [Exemplo 02: Reproduzindo um vídeo e uma imagem](02.video_and_image)
 
+
+  * __Sincronizando nós de mídia através de elos e conectores (ou quando acontecer "isto", faça "aquilo")__
+    * [Exemplo 03: Iniciando e terminando dois objetos de mídia
+      simultaneamente](03.simultaneous_media_objects)
+
+<!--
+    * [Exemplo 04: Iniciando um objeto de mídia sincronizado a outro com retardo]()
+    * [Exemplo 05: Iniciando um objeto de mídia quando o outro termina]()
+  * __Interação com o usuário__
+    * [Exemplo 6: Interrompendo um vídeo e iniciando outro conforme a intervenção do
+       usuário]()
+-->
