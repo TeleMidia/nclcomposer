@@ -44,6 +44,21 @@ Mostra as entradas de menu disponíveis.
 | __Help__:               | ![](../img/main-window-menu-help.png)  |
 +-------------------------+----------------------------------------+
 
+### Atalhos
+
+Os atalhos globais (válidos em qualquer visão) do {nclcomposer} são:
+
+- __`Ctrl`+`n`__ - __Criar um novo projeto__.
+- __`Ctrl`+`o`__ - __Abrir um novo projeto__.
+- __`Ctrl`+`s`__ - __Salva o projeto corrente__.
+- __`TODO`__ - __Salva o projeto corrente com outro nome__.
+- __`Ctrl`+`Shift`+`s`__ - __Salva todos os projetos abertos__.
+- __`Ctrl`+`F4`__ - __Fecha o projeto corrente__.
+- __`Ctrl`+`Q`__ - __Fecha o {nclcomposer}__.
+- __`F11`__ - __Habilita/desabilita visualização em tela cheia__.
+- __`F1`__ - __Abre a ajuda do {nclcomposer}__.
+- __`F5`__ - __Atualiza o modelo da visão que atualmente tem o foco__.
+
 
 ## {structural_view}
 
@@ -453,48 +468,50 @@ possível fazer referência para entidades do tipo: contexto, *switch* e *body*.
 
 ### Atalhos
 
-Abaixo segua a lista de atalhos da {structural_view}:
+Abaixo segue a lista de atalhos da {structural_view}:
 
-- `Ctrl`+`z` - Desfazer: Desfaz a última ação realizada na visão. [Mais
+- __`Ctrl`+`z`__ - __Desfazer__: Desfaz a última ação realizada na visão. [Mais
   detalhes](#ações).
-- `Ctrl`+`Shift`+`z` - Refazer: Refaz a última ação reallizada na visão. [Mais
-  detalhes](#ações).
-- `Ctrl`+`x` - Recortar: Copia a entidade selecionada para a **área de
+- __`Ctrl`+`Shift`+`z`__ - __Refazer__: Refaz a última ação reallizada na
+  visão. [Mais detalhes](#ações).
+- __`Ctrl`+`x`__ - __Recortar__: Copia a entidade selecionada para a **área de
   trânsferencia** e **remove** ela da visão. [Mais detalhes](#ações).
-- `Ctrl`+`c` - Copiar: Copia a entidade selecionada para a **área de
+- __`Ctrl`+`c`__ - __Copiar__: Copia a entidade selecionada para a **área de
   trânsferencia**. [Mais detalhes](#ações).
-- `Ctrl`+`v` - Colar: Adiciona a entidade da *área de trânsferencia* como filha
-  da entidade selecionada. [Mais detalhes](#ações).
-- `Del` - Deletar: Remove a entidade selecionada da visão. [Mais
+- __`Ctrl`+`v`__ - __Colar__: Adiciona a entidade da *área de trânsferencia*
+  como filha da entidade selecionada. [Mais detalhes](#ações).
+- __`Del`__ - __Deletar__: Remove a entidade selecionada da visão. [Mais
   detalhes](#ações).
-- *Segurar* `Ctrl`+*Drag-n-drop*  - Mover: Remove a entidade selecionada da visão. [Mais
-  detalhes](#ações).
-- `Ctrl`+`+` ou `Ctrl`+*Roda do mouse para cima* - Aumentar o *zoom*: Aumenta o
-  *zoom* na visão. [Mais detalhes](#ações).
-- `Ctrl`+`-` ou `Ctrl`+*Roda do mouse para baixo* - Diminuir o *zoom*: Diminue o
-  *zoom* na visão. [Mais detalhes](#ações).
-- `1` - Habilitar Ferramenta de Ponteiro: Altera o modo de edição da visão para
+- __*Segurar* `Ctrl`+*Drag-n-drop*__  - Mover: Remove a entidade selecionada da
+  visão. [Mais detalhes](#ações).
+- __`Ctrl`+`+`__ ou __`Ctrl`+*Roda do mouse para cima*__ - __Aumentar o
+  *zoom*__: Aumenta o *zoom* na visão. [Mais detalhes](#ações).
+- __`Ctrl`+`-`__ ou __`Ctrl`+*Roda do mouse para baixo*__ - __Diminuir o
+  *zoom*__: Diminue o *zoom* na visão. [Mais detalhes](#ações).
+- __`1`__ - __Habilitar Ferramenta de Ponteiro__: Altera o modo de edição da
+visão para
   "ponteiro". [Mais detalhes](#ações).
-- `2` ou *Segurar* `Shift` - Habilitar Ferramenta de *Link*: Altera o modo de edição da
-  visão para "link". [Mais detalhes](#ações).
-- `3` - Adicionar Mídia: Adiciona uma entidade do tipo mídia como filha da
-  entidade selecionada. [Mais detalhes](#ações).
-- `4` - Adicionar Contexto: Adiciona uma entidade do tipo context como filha
+- __`2`__ ou __*Segurar* `Shift`__ - Habilitar Ferramenta de *Link*: Altera o
+  modo de edição da visão para "link". [Mais detalhes](#ações).
+- __`3`__ - __Adicionar Mídia__: Adiciona uma entidade do tipo mídia como filha
   da entidade selecionada. [Mais detalhes](#ações).
-- `5` - Adicionar *Switch*: Adiciona uma entidade do tipo *switch* como filha
-  da entidade selecionada. [Mais detalhes](#ações).
-- `6` - Adicionar *Body*: Adiciona um *body* na visão. [Mais
-  detalhes](#ações).
-- `7` - Adicionar Área: Adiciona uma entidade do tipo área como filha da
-  entidade selecionada. [Mais detalhes](#ações).
-- `8` - Adicionar Propriedade: Adiciona uma entidade do tipo propriedade como
+- __`4`__ - __Adicionar Contexto__: Adiciona uma entidade do tipo context como
   filha da entidade selecionada. [Mais detalhes](#ações).
-- `9` - Adicionar Porta: Adiciona uma entidade do tipo porta como filha da
+- __`5`__ - __Adicionar *Switch*__: Adiciona uma entidade do tipo *switch* como
+  filha da entidade selecionada. [Mais detalhes](#ações).
+- __`6`__ - __Adicionar *Body*__: Adiciona um *body* na visão. [Mais
+  detalhes](#ações).
+- __`7`__ - __Adicionar Área__: Adiciona uma entidade do tipo área como filha da
   entidade selecionada. [Mais detalhes](#ações).
-- `0` - Adicionar Porta de *Switch*: Adiciona uma entidade do tipo porta de
-  *switch* como filha da entidade selecionada. [Mais detalhes](#ações).
-- `Ctrl`+`m` - Habilitar/Desabilitar Minimapa: Habilita/Desabilita o minimapa.
-  [Mais detalhes](#ações).
+- __`8`__ - __Adicionar Propriedade__: Adiciona uma entidade do tipo
+  propriedade como filha da entidade selecionada. [Mais detalhes](#ações).
+- __`9`__ - __Adicionar Porta__: Adiciona uma entidade do tipo porta como filha
+  da entidade selecionada. [Mais detalhes](#ações).
+- __`0`__ - __Adicionar Porta de *Switch*__: Adiciona uma entidade do tipo
+  porta de *switch* como filha da entidade selecionada. [Mais
+  detalhes](#ações).
+- __`Ctrl`+`m`__ - __Habilitar/Desabilitar Minimapa__: Habilita/Desabilita o
+  minimapa. [Mais detalhes](#ações).
 
 ### Outros detalhes
 
@@ -513,6 +530,53 @@ visão, os autores podem criar e manipular as regiões e a hierarquia de regiõe
 do documento.
 
 ![](../img/plugin-layout-view.png "{layout_view}")
+
++-----------------+---------------------------------+-----------------------------+
+| Ação            | Descrição                       |                             |
++=================+=================================+=============================+
+| Criar uma       | Cria uma nova região, filha     | Esta ação pode ser          |
+| região          | região que está selecionada.    | executada através da:       |
++-----------------+---------------------------------+-----------------------------+
+| Remover uma     | Remove a região que está        | Esta ação pode ser          |
+| região          | atualmente selecionada e seus   | executada através da:       |
+|                 | filhos.                         | [barra de ferramentas]      |
++-----------------+---------------------------------+-----------------------------+
+| Copiar região   | Copia a região selecionada      | Esta ação pode ser          |
+|                 | para a **área de                | executada através da:       |
+|                 | trânsferencia**. Esta ação      | [barra de ferramentas]      |
+|                 | é ela da visão. Esta ação       | (#barra-de-ferramentas),    |
+|                 | é ignorada caso nenhuma         | [menu contextual](#menus) e |
+|                 | entidade esteja selecionada.    | [atalho](#atalhos).         |
++-----------------+---------------------------------+-----------------------------+
+| Colar região    | Cola a região que está na       | Esta ação pode ser          |
+|                 | **área de transferência**       | executada através da:       |
+|                 | como filha da região            | [barra de ferramentas]      |
+|                 | selecionada.                    | (#barra-de-ferramentas),    |
+|                 |                                 | [menu contextual](#menus) e |
+|                 |                                 | [atalho](#atalhos).         |
++-----------------+---------------------------------+-----------------------------+
+| Esconder        | Esconde a região atualmente     | Esta ação pode ser          |
+| região          | selecionada da visão de         | executada através da:       |
+|                 | leiaute. A região continua      | [barra de ferramentas]      |
+|                 | existindo no modelo (e pode ser | (#barra-de-ferramentas),    |
+|                 | mostrada depois) apenas não é   | [menu contextual](#menus) e |
+|                 | visualizada.                    | [atalho](#atalhos).         |
++-----------------+---------------------------------+-----------------------------+
+| Mostrar/esconde | Copia a entidade selecionada    | Esta ação pode ser          |
+| r grade         | para a **área de                | executada através da:       |
+|                 | trânsferencia**. Esta ação      | [barra de ferramentas]      |
+|                 | é ignorada caso nenhuma         | (#barra-de-ferramentas),    |
+|                 | entidade tenha sido selecionada | [menu contextual](#menus) e |
+|                 | e se a entidade selecionada é   | [atalho](#atalhos).         |
+|                 | do tipo *body*.                 |                             |
++-----------------+---------------------------------+-----------------------------+
+| Tirar um        | Permite salvar uma imagem com a | Esta ação pode ser          |
+| instantâneo     | disposição atual das regiões    | executada através da:       |
+|                 | da visão de leiaute.            | [barra de ferramentas]      |
+|                 |                                 | (#barra-de-ferramentas),    |
+|                 |                                 | [menu contextual](#menus) e |
+|                 |                                 | [atalho](#atalhos).         |
++-----------------+---------------------------------+-----------------------------+
 
 
 ## {outline_view}
