@@ -13,7 +13,7 @@ mydict = {
                     Visão de Outline, \
                     Visão Proprieades, \
                     Visão de Regras, \
-                    Visão de Validaćão e \
+                    Visão de Validação e \
                     Visão de execução"
 }
 
