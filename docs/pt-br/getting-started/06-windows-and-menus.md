@@ -48,16 +48,17 @@ Mostra as entradas de menu disponíveis.
 
 Os atalhos globais (válidos em qualquer visão) do {nclcomposer} são:
 
-- __`Ctrl`+`n`__ - __Criar um novo projeto__.
-- __`Ctrl`+`o`__ - __Abrir um novo projeto__.
-- __`Ctrl`+`s`__ - __Salva o projeto corrente__.
-- __`TODO`__ - __Salva o projeto corrente com outro nome__.
-- __`Ctrl`+`Shift`+`s`__ - __Salva todos os projetos abertos__.
-- __`Ctrl`+`F4`__ - __Fecha o projeto corrente__.
-- __`Ctrl`+`Q`__ - __Fecha o {nclcomposer}__.
+- __`Ctrl`+`n`__ - __Novo projeto__.
+- __`Ctrl`+`o`__ - __Abrir projeto__.
+- __`Ctrl`+`s`__ - __Salvar o projeto corrente__.
+- __`Ctrl`+`Shift`+`s`__ - __Salvar todos os projetos abertos__.
+- __`Ctrl`+`Alt`+`s`__ - __Salvar como...__:  Salva o projeto corrente com
+  outro nome.
+- __`Ctrl`+`F4`__ - __Fechar projeto__.
+- __`Ctrl`+`Q`__ - __Fechar o {nclcomposer}__.
 - __`F11`__ - __Habilita/desabilita visualização em tela cheia__.
 - __`F1`__ - __Abre a ajuda do {nclcomposer}__.
-- __`F5`__ - __Atualiza o modelo da visão que atualmente tem o foco__.
+- __`F5`__ - __Atualiza o modelo da visão com foco__.
 
 
 ## {structural_view}
