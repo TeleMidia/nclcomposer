@@ -3,7 +3,7 @@ Este tutorial é o ponto de partida para os interessados em desenvolver
 aplicações para TV Digital usando o {nclcomposer}.  Nele, desenvolveremos
 vários exemplos de aplicações multimídia interativas usando o {nclcomposer}.
 
-> __Observação__:  Neste tutorial, não existe a preocupação nem de definir a
+> __Observação__:  Neste tutorial, não existe nem a preocupação de definir a
 > linguagem NCL completamente e nem de apresentar todas as funcionalidades do
 > {nclcomposer}.  Os exemplos são desenvolvidos seguindo o que __os autores
 > acreditam__ ser a forma mais prática de utilização da ferramenta.
@@ -21,6 +21,8 @@ vários exemplos de aplicações multimídia interativas usando o {nclcomposer}.
   * __Sincronizando nós de mídia através de elos e conectores (ou quando acontecer "isto", faça "aquilo")__
     * [Exemplo 03: Iniciando e terminando dois objetos de mídia
       simultaneamente](03.simultaneous_media_objects)
+    * [Exemplo 04: Iniciando um objeto quando outro termina
+      simultaneamente](04.onend_start)
 
 <!--
     * [Exemplo 04: Iniciando um objeto de mídia sincronizado a outro com retardo]()
