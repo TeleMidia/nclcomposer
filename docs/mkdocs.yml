@@ -7,21 +7,24 @@ pages:
   - Sobre este manual: index.md
 - Iniciando:
   - Instalando o NCL Composer: getting-started/03-installing.md
+  - Executando o NCL Composer: getting-started/04-running.md
   - Conceitos básicos: getting-started/05-basic-concepts.md
 - Tutoriais:
   - Índice: tutorial/index.md
   - 'Exemplo 01: Reproduzindo um objeto de mídia': tutorial/01.hello_world.md
   - 'Exemplo 02: Reproduzindo um vídeo e uma imagem': tutorial/02.video_and_image.md
   - 'Exemplo 03: Iniciando e terminando dois objetos de mídia simultaneamente': tutorial/03.simultaneous_media_objects.md
+  - 'Exemplo 04: Iniciando um objeto de mídia quando outro termina': tutorial/04.onend_start.md
+  - 'Exemplo 05: Sincronizando um vídeo com diferentes arquivos de legenda': "tutorial/05.video_with_subtitle.md"
 #  - 'Exemplo 04: Sincronizando um vídeo com diferentes arquivos de legenda': tutorial/04.video_with_subtitle.md
 #  - 'Exemplo 05: Exibindo um vídeo em loop até a intervenção do usuário': tutorial/01.hello_world.md
 #  - 'Exemplo 06: Redimensionando uma região de vídeo durante a exibição de uma imagem': tutorial/01.hello_world.md
 - Outros:
   - Telas e menus: getting-started/06-windows-and-menus.md
-  - Arquitetura do NCL Composer: advanced/01-nclcomposer-architecture.md
-  - Estendendo o NCL Composer: advanced/02-extending-nclcomposer.md
-  - Onde buscar mais ajuda?: advanced/07-more-help.md
-  - Outros links úteis: advanced/06-other-useful-links.md
+  - Arquitetura do NCL Composer: others/01-nclcomposer-architecture.md
+  - Estendendo o NCL Composer: others/02-extending-nclcomposer.md
+  - Onde buscar mais ajuda?: others/07-more-help.md
+  - Outros links úteis: others/06-other-useful-links.md
   - Licença: license.md
 - Release notes (English): relnotes.md
 
@@ -32,5 +35,6 @@ markdown_extensions:
 docs_dir: pt-br
 site_dir: site
 repo_url: http://github.com/telemidia/nclcomposer
-theme: 'material'
+theme: 'readthedocs'
+
 
