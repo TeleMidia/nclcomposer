@@ -24,26 +24,15 @@ SUBDIRS = \
     debug-console \
     properties-view \
     ncl-layout-view \
-    ncl-structural-view-next \
+    ncl-structural-view \
     validator \
     ncl-rules-view \
     media-preview \
     gingagui-all/run-view
 #   clube-ncl
 
-# Uncomment the next two line to enable 'next' build as default option
-#CONFIG += \
-#  structural_old
 CONFIG += \
   next run_view
-
-structural_old {
-  SUBDIRS -= \
-    ncl-structural-view-next
-
-  SUBDIRS += \
-    ncl-structural-view
-}
 
 run_view {
   SUBDIRS += gingagui-all/run-view/run-view.pro
