@@ -224,7 +224,7 @@ void ComposerMainWindow::readExtensions()
 
   /* Load the preferences page */
   preferences->addPreferencePage(new GeneralPreferences());
-  preferences->addPreferencePage(new RunGingaConfig());
+  // preferences->addPreferencePage(new RunGingaConfig());
 
   // preferences->addPreferencePage(new ImportBasePreferences());
 
