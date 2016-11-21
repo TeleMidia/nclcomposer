@@ -16,6 +16,7 @@
  * <http://www.gnu.org/licenses/>.
  */
 #include "DebugConsolePlugin.h"
+#include "DebugConsoleFactory.h"
 
 DebugConsolePlugin::DebugConsolePlugin()
 {
@@ -32,7 +33,6 @@ DebugConsolePlugin::DebugConsolePlugin()
   window->setLayout(layout);
   window->setWindowIcon(QIcon(":/images/icon.png"));
   project = NULL;
-
 }
 
 DebugConsolePlugin::~DebugConsolePlugin()
@@ -58,6 +58,7 @@ void DebugConsolePlugin::onEntityAdded(const QString &pluginID,
   QString line = "PLUGIN (" + pluginID + ") added the Entity (" +
       entity->getType() + " - " + entity->getUniqueId() +")";
   list->insertItem(0, new QListWidgetItem(line));
+  // qCWarning(Debug) << "########### " << line;
   /* if(list->count())
     list->item(0)->setText(line);
   else
@@ -91,7 +92,7 @@ void DebugConsolePlugin::onEntityChanged( const QString &pluginID,
 }*/
 
 void DebugConsolePlugin::onEntityRemoved( const QString &pluginID,
-                                          const QString &entityID)
+                                          const QString &entityID )
 {
   QString line = "PLUGIN (" + pluginID + ") removed Entity (" +
       entityID + ")";

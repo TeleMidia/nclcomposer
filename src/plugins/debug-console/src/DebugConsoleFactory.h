@@ -34,7 +34,7 @@ class DebugConsoleFactory : public QObject,
   Q_INTERFACES(IPluginFactory)
 
 #if QT_VERSION >= 0x050000
-  Q_PLUGIN_METADATA(IID IPluginFactory_iid FILE "debug_console.json")
+  Q_PLUGIN_METADATA (IID IPluginFactory_iid FILE "debug_console.json")
 #endif
 
 public:
@@ -57,6 +57,7 @@ public:
   void setDefaultValues();
 
   void applyValues();
+
 
 #if QT_VERSION < 0x050000
   /*!
@@ -124,7 +125,6 @@ public:
    */
   QString category() {return tr("General");}
 #endif
-
 };
 
 #endif // DEBUGCONSOLE_H
