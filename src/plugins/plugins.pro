@@ -45,7 +45,6 @@ contains(FORCERELEASE, true)
   # These plug-ins are still experimental
   #  (and must not be present in the release):
   SUBDIRS -= media-preview
-  SUBDIRS -= ncl-structural-view
 }
 
 macx {
