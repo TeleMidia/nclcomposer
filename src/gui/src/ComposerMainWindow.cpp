@@ -148,7 +148,7 @@ void ComposerMainWindow::initModules()
   LanguageControl *lgControl = LanguageControl::getInstance();
   ProjectControl *projectControl = ProjectControl::getInstance();
 
-  connect( pgControl,SIGNAL(notifyError(QString)),
+  connect( pgControl, SIGNAL(notifyError(QString)),
            SLOT(errorDialog(QString)) );
 
   connect( pgControl, SIGNAL(addPluginWidgetToWindow(IPluginFactory*,
@@ -173,9 +173,6 @@ void ComposerMainWindow::initModules()
   /* Recent projects */
   connect( projectControl, SIGNAL(endOpenProject(QString)),
            SLOT(addToRecentProjects(QString)) );
-
-  connect(projectControl, SIGNAL(endOpenProject(QString)),
-          welcomeWidget, SLOT(addToRecentProjects(QString)));
 
   connect( welcomeWidget, SIGNAL(userPressedRecentProject(QString)),
            this, SLOT(userPressedRecentProject(QString)) );
@@ -207,7 +204,6 @@ void ComposerMainWindow::readExtensions()
   // dll dependencies in the extensions path.
   for (int i = 0; i < extensions_paths.size(); i++)
   {
-    qDebug() << "Adding library " << extensions_paths.at(i);
     QApplication::addLibraryPath(extensions_paths.at(i) + "/");
   }
 
