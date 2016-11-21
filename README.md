@@ -41,7 +41,8 @@ The main requirement for NCL Composer is:
   * Qt >= 5.2
 
 ### Linux (Debian/Ubuntu)
-In an Debian-based system you can easily install Qt libraries through:
+In a Debian-based system (e.g. Debian, Ubuntu, or Linux Mint) you can easily
+install Qt libraries through:
 
     $ apt-get install libqtbase5-dev libqttool5-dev
 
@@ -55,6 +56,10 @@ If everything is alright with the compilation process you should be able to
 find the executable (and run):
 
     $ ./bin/debug/nclcomposer
+
+> If you want build a release version of the NCL Composer executable and plugins,
+> you can call `qmake FORCERELEASE=true`.  The executable will be available at
+> `./bin/release/nclcomposer`.
 
 ### Windows
   * TODO
