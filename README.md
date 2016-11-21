@@ -7,16 +7,16 @@ Digital TV based on NCL ([Nested Context Language](http://www.ncl.org.br)).
 It provides a minimal core and different views (implemented as plug-ins)
 supporting textual and graphical abstractions.
 
-## Features
-  * Textual editing supporting code coloring, autocomplete, error marking,
-    etc.
+## Main features
+  * Advanced textual editing supporting code coloring, autocomplete, error
+    marking, etc.
   * Validation of NCL documents
   * Graphical layout definition
   * Structural view of NCL documents
   * Integration with different players (e.g. [Ginga-NCL Reference
-    Implemenation](http://www.ginga.org.br))
-  * Easily extensible through a plug-in API
-  * Multi-platform (Linux, Windows, and Mac officially supported)
+    Implementation](http://www.ginga.org.br))
+  * Easily extensible through plug-ins
+  * Multi-platform (Linux, Windows, and MacOS X officially supported)
 
 ## Source code organization
 NCL Composer source code is divided into three main parts:
