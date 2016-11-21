@@ -3,8 +3,8 @@ site_name: NCL Composer Docs
 pages:
 
 - Prefácio:
-  - O que é o NCL Composer?: getting-started/02-introduction.md
   - Sobre este manual: index.md
+  - O que é o NCL Composer?: getting-started/02-introduction.md
 - Iniciando:
   - Instalando o NCL Composer: getting-started/03-installing.md
   - Executando o NCL Composer: getting-started/04-running.md

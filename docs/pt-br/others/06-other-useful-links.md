@@ -4,6 +4,8 @@
 
   * __Site oficial da NCL__: [http://www.ncl.org.br](http://www.ncl.org.br)
   * __NCL Resources__: [http://www.telemidia.puc-rio.br/~roberto/ncl-resources](http://www.telemidia.puc-rio.br/~roberto/ncl-resources)
+  * __Livro Programando em NCL 3.0__: [http://www.ncl.org.br/programandoncl](http://www.ncl.org.br/programandoncl)
+  * __Construindo Programas Audiovisuais Interativos Utilizando a NCL 3.0__: [http://www.telemidia.puc-rio.br/sites/telemidia.puc-rio.br/files/TutorialNCL3.0-2ed-3rev.pdf](http://www.telemidia.puc-rio.br/sites/telemidia.puc-rio.br/files/TutorialNCL3.0-2ed-3rev.pdf)
   * __Clube NCL__: [http://club.ncl.org.br](http://clube.ncl.org.br)
 
 ## Outras ferramentas de autoria
