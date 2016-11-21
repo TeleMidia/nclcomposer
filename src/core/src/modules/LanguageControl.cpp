@@ -64,9 +64,10 @@ ILanguageProfile* LanguageControl::loadProfile(const QString &fileName)
       LanguageType type = lProfile->getLanguageType();
       if (profiles.contains(type))
       {
-        qCDebug(CPR_CORE) << "LanguageControl::loadProfiles Profile for language ("
-                 << Utilities::getExtensionForLanguageType(type) << ") already"
-                 << "exists";
+        qCDebug(CPR_CORE)
+            << "LanguageControl::loadProfiles Profile for language ("
+            << Utilities::getExtensionForLanguageType(type) << ") already"
+            << "exists";
       }
       else
       {
@@ -75,8 +76,7 @@ ILanguageProfile* LanguageControl::loadProfile(const QString &fileName)
     }
     else
     {
-      qCDebug(CPR_CORE) << "LanguageControl::loadProfiles" <<
-                             "Error! Could not cast to ILanguageProfile";
+      qCDebug(CPR_CORE) <<  fileName << "is not a ILanguageProfile.";
     }
   }
   else
@@ -89,11 +89,11 @@ ILanguageProfile* LanguageControl::loadProfile(const QString &fileName)
 void LanguageControl::loadProfiles(const QString &profilesDirPath)
 {
   QDir profileDir = QDir(profilesDirPath);
-
+  qCDebug(CPR_CORE) << "Trying to load language profiles from "
+                    << profilesDirPath;
   if(!profileDir.exists())
   {
-    emit notifyError(tr("The Language Profile extension directory (%1) does \
-                        not exist!").arg(profilesDirPath));
+    qCDebug(CPR_CORE) << profilesDirPath << " directory does not exist!";
     return;
   }
 

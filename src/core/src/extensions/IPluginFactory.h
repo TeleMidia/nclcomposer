@@ -108,4 +108,4 @@ private:
 #define IPluginFactory_iid "br.puc_rio.telemidia.composer.IPluginFactory"
 Q_DECLARE_INTERFACE(IPluginFactory, IPluginFactory_iid)
 
-#endif // ILAYOUTPLUGIN_H
+#endif

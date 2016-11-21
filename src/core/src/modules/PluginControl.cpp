@@ -70,7 +70,7 @@ PluginControl::~PluginControl()
 
 IPluginFactory* PluginControl::loadPlugin(const QString &fileName)
 {
-  qCDebug(CPR_CORE) << "Trying to load " << fileName;
+  qCDebug(CPR_CORE) << "Trying to load plugin " << fileName;
   IPluginFactory *pluginFactory = NULL;
   QPluginLoader loader(fileName);
   QObject *plugin = loader.instance();
@@ -123,13 +123,13 @@ IPluginFactory* PluginControl::loadPlugin(const QString &fileName)
 
 void PluginControl::loadPlugins(const QString &pluginsDirPath)
 {
+  qCDebug(CPR_CORE) << "Trying to load plugins from " << pluginsDirPath;
   QDir pluginsDir = QDir(pluginsDirPath);
   pluginsDir.setFilter(QDir::Files | QDir::NoSymLinks);
 
   if(!pluginsDir.exists())
   {
-    emit notifyError(tr("The Plugin Directory (%1) does not exist").
-                     arg(pluginsDirPath));
+    qCDebug(CPR_CORE) << pluginsDirPath << " directory does not exist.";
     return;
   }
 
@@ -176,11 +176,10 @@ void PluginControl::launchProject(Project *project)
 void PluginControl::launchNewPlugin(IPluginFactory *factory, Project *project)
 {
   IPlugin *pluginInstance = factory->createPluginInstance();
-  QString location  = project->getLocation();
   if (pluginInstance)
   {
     pluginInstance->setPluginInstanceID(
-          factory->id() + "#" +QUuid::createUuid().toString());
+          factory->id() + "#" + QUuid::createUuid().toString());
     pluginInstance->setProject(project);
     launchNewPlugin(pluginInstance, messageControls[project]);
 
@@ -195,8 +194,8 @@ void PluginControl::launchNewPlugin(IPluginFactory *factory, Project *project)
     pluginInstance->init();
   }
   else {
-    emit notifyError(tr("Could not create an instance for the"
-                        "plugin (%1)").arg(factory->id()));
+    qCWarning(CPR_CORE) << "Could not create an instance for the plugin "
+                      << factory->id();
   }
 
 }
