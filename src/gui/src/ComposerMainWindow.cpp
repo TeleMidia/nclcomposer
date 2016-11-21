@@ -167,10 +167,11 @@ void ComposerMainWindow::initModules()
   connect( projectControl, SIGNAL(startOpenProject(QString)),
            this, SLOT(startOpenProject(QString)) );
 
-  connect( projectControl, SIGNAL(endOpenProject(QString)), this,
+  connect( projectControl, SIGNAL(endOpenProject(QString)),
            SLOT(endOpenProject(QString)) );
 
-  connect( projectControl,SIGNAL(endOpenProject(QString)),
+  /* Recent projects */
+  connect( projectControl, SIGNAL(endOpenProject(QString)),
            SLOT(addToRecentProjects(QString)) );
 
   connect(projectControl, SIGNAL(endOpenProject(QString)),
@@ -178,6 +179,7 @@ void ComposerMainWindow::initModules()
 
   connect( welcomeWidget, SIGNAL(userPressedRecentProject(QString)),
            this, SLOT(userPressedRecentProject(QString)) );
+  /* end recent projects */
 
   connect( projectControl,SIGNAL(projectAlreadyOpen(QString)),
            SLOT(onOpenProjectTab(QString)) );
@@ -203,14 +205,14 @@ void ComposerMainWindow::readExtensions()
 
   // add all the paths to LibraryPath, i.e., plugins are allowed to install
   // dll dependencies in the extensions path.
-  for(int i = 0; i < extensions_paths.size(); i++)
+  for (int i = 0; i < extensions_paths.size(); i++)
   {
     qDebug() << "Adding library " << extensions_paths.at(i);
     QApplication::addLibraryPath(extensions_paths.at(i) + "/");
   }
 
   // foreach path where extensions can be installed, try to load profiles.
-  for(int i = 0; i < extensions_paths.size(); i++)
+  for (int i = 0; i < extensions_paths.size(); i++)
   {
     LanguageControl::getInstance()->loadProfiles(extensions_paths.at(i));
   }
@@ -279,6 +281,8 @@ void ComposerMainWindow::readSettings()
   settings.endGroup();
 
   openProjects(openfiles);
+
+  updateRecentProjectsWidgets();
 }
 
 void ComposerMainWindow::openProjects(const QStringList &projects)
@@ -317,11 +321,7 @@ void ComposerMainWindow::openProjects(const QStringList &projects)
     }
   }
 
-  /* Update Recent Projects on Menu */
-  GlobalSettings settings;
-  QStringList recentProjects = settings.value("recentprojects").toStringList();
-  updateRecentProjectsMenu(recentProjects);
-  welcomeWidget->updateRecentProjects(recentProjects);
+  updateRecentProjectsWidgets();
 }
 
 void ComposerMainWindow::initGUI()
@@ -350,8 +350,8 @@ void ComposerMainWindow::initGUI()
 
   createActions();
   createMenus();
-//  createLanguageMenu();
   createAboutPlugins();
+// createLanguageMenu();
 
   preferences = new PreferencesDialog(this);
   perspectiveManager = new PerspectiveManager(this);
@@ -2028,12 +2028,14 @@ void ComposerMainWindow::addToRecentProjects(QString projectUrl)
 
   settings.setValue("recentProjects", recentProjects);
 
-  updateRecentProjectsMenu(recentProjects);
-  welcomeWidget->updateRecentProjects(recentProjects);
+  updateRecentProjectsWidgets();
 }
 
-void ComposerMainWindow::updateRecentProjectsMenu(QStringList &recentProjects)
+void ComposerMainWindow::updateRecentProjectsWidgets()
 {
+  GlobalSettings settings;
+  QStringList recentProjects = settings.value("recentProjects").toStringList();
+
   ui->menu_Recent_Files->clear();
   if(recentProjects.size() == 0 )
   {
@@ -2042,22 +2044,25 @@ void ComposerMainWindow::updateRecentProjectsMenu(QStringList &recentProjects)
   }
   else /* There are at least one element in the recentProject list */
   {
-    for(int i = 0; i < recentProjects.size(); i++)
+    for (int i = 0; i < recentProjects.size(); i++)
     {
-      QAction *act = ui->menu_Recent_Files->addAction(
-            recentProjects.at(i));
+      QAction *act = ui->menu_Recent_Files->addAction(recentProjects.at(i));
       act->setData(recentProjects.at(i));
-      connect(act, SIGNAL(triggered()), this, SLOT(userPressedRecentProject()));
+
+      connect( act, SIGNAL(triggered()),
+               this, SLOT(userPressedRecentProject()) );
     }
 
     ui->menu_Recent_Files->addSeparator();
+
     QAction *clearRecentProjects =
         ui->menu_Recent_Files->addAction(tr("Clear Recent Projects"));
 
     connect(clearRecentProjects, SIGNAL(triggered()),
             this, SLOT(clearRecentProjects()));
-
   }
+
+  welcomeWidget->updateRecentProjects(recentProjects);
 }
 
 void ComposerMainWindow::userPressedRecentProject(QString src)
@@ -2126,11 +2131,9 @@ void ComposerMainWindow::userPressedRecentProject()
 void ComposerMainWindow::clearRecentProjects(void)
 {
   GlobalSettings settings;
-
   settings.remove("recentProjects");
-  QStringList empty;
-  updateRecentProjectsMenu(empty);
-  welcomeWidget->updateRecentProjects(empty);
+
+  updateRecentProjectsWidgets();
 }
 
 void ComposerMainWindow::selectedAboutCurrentPluginFactory()

@@ -185,7 +185,7 @@ private:
 
   void cleanUp();
 
-  void updateRecentProjectsMenu(QStringList &recentProjects);
+  void updateRecentProjectsWidgets();
 
   void updateDockStyle(QDockWidget *titleBar, bool selected=false);  
 
