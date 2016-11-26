@@ -1,7 +1,7 @@
 TARGET = nclcomposer
 TEMPLATE = app
 
-CONFIG += silent
+CONFIG += c++11 silent
 
 # I'm using FORCERELEASE variable because CONFIG and SUBDIR force three
 # executions if qmake and the last one does not preserves CONFIG from command
@@ -137,7 +137,7 @@ else:win32 {
 
 # Copy command. Useful for local build.
 macx {
-  COPY_CMD = cp -R
+  COPY_CMD = "cp -R"
 }
 else:unix {
   COPY_CMD = "cp -R"

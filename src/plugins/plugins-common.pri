@@ -1,5 +1,5 @@
 TEMPLATE    =   lib
-CONFIG      +=  plugin dll silent
+CONFIG      +=  c++11 plugin dll silent
 
 # Uses FORCERELEASE variable because CONFIG and SUBDIR force three executions
 # if qmake and the last one does not preserves CONFIG from command line.
