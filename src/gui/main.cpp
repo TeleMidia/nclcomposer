@@ -12,6 +12,7 @@
 #include <QResource>
 #include <QObject>
 #include <QStringList>
+#include <QCommandLineParser>
 
 #include <util/ComposerSettings.h>
 
@@ -64,27 +65,37 @@ void loadTranslations()
   }
 }
 
-int handleArguments (QStringList &args, bool &initGUI)
+int handleArguments (bool &initGUI)
 {
-  cout << "NCL Composer v."
-       << QCoreApplication::applicationVersion().toStdString()
-       << endl
-       << "Copyright (C) 2011-2016 "
-       << QCoreApplication::organizationName().toStdString() << "." << endl
-       << "This is free software; see the source for copying conditions."
-       << "  There is NO" << endl
-       << "warranty; not even for MERCHANTABILITY or FITNESS FOR "
-       << "A PARTICULAR PURPOSE." << endl << endl;
+  QCommandLineParser parser;
+  QString desc;
+  desc += "NCL Composer is a flexible authoring tool for interactive \n"
+          "multimedia applications.\n";
+  desc += "Copyright (C) 2011-2016 by ";
+  desc += QCoreApplication::organizationName();
+  desc += ".";
+  /* desc += "\n\nThis is free software; see the source for copying conditions.\n"
+          "There is NO warranty; not even for MERCHANTABILITY or FITNESS \n"
+          "FOR PARTICULAR PURPOSE."; */
 
-  if ( args.contains ("-version") )
+  parser.setApplicationDescription(desc);
+
+  const QCommandLineOption helpOption = parser.addHelpOption();
+  const QCommandLineOption versionOption = parser.addVersionOption();
+
+  if(!parser.parse(QCoreApplication::arguments()))
+    return 0;
+
+  if (parser.isSet(helpOption))
   {
+    parser.showHelp();
     initGUI = false;
   }
-  else if (args.contains("-help"))
+
+  if (parser.isSet(versionOption))
   {
+    parser.showVersion();
     initGUI = false;
-    cout << "Usage nclcomposer [options] [files] ..." << endl;
-    cout << "Options:" << endl;
   }
 
   return 1;
@@ -96,7 +107,7 @@ int main(int argc, char *argv[])
   QApplication a(argc, argv);
   QCoreApplication::setOrganizationName("TeleMidia Lab/PUC-Rio");
   QCoreApplication::setOrganizationDomain("telemidia.pucrio.br");
-  QCoreApplication::setApplicationName("composer");
+  QCoreApplication::setApplicationName("NCL Composer");
   QCoreApplication::setApplicationVersion(NCLCOMPOSER_GUI_VERSION);
 
 #ifdef FV_GUI
@@ -112,19 +123,19 @@ int main(int argc, char *argv[])
   FvUpdater::sharedUpdater()->CheckForUpdatesSilent();
 #endif
 
-  QStringList args = a.arguments();
-  handleArguments(args, initGUI);
+  handleArguments(initGUI);
 
   if (initGUI)
   {
     GlobalSettings settings;
 
-    /* If the settings is empty (i.e. first time we are running, copy all
-     * values from default settigns*/
+    /* If the settings is empty (i.e. it is the first time we are running, copy
+     * all values from the default settings */
     if (settings.allKeys().empty())
     {
 #ifdef WIN32
-      QSettings defaultSettings( QApplication::applicationDirPath() + "/data/default.ini",
+      QSettings defaultSettings( QApplication::applicationDirPath() +
+                                 "/data/default.ini",
                                  QSettings::IniFormat );
 #else
       QSettings defaultSettings( QString (DATA_PATH) + "/default.ini",
@@ -159,16 +170,17 @@ int main(int argc, char *argv[])
     QStringList dirs =
           GlobalSettings().value("default_stylesheets_dirs").toStringList();
 
-    foreach(QString dir, dirs)
+    foreach (QString dir, dirs)
     {
-      if (QFile::exists(dir+"/style.qss"))
+      if (QFile::exists(dir + "/style.qss"))
       {
-        QFile style(dir+"/style.qss");
+        QFile style(dir + "/style.qss");
         if (style.open(QFile::ReadOnly))
         {
           w.setStyleSheet(style.readAll());
           style.close();
         }
+
         break;
       }
     }
@@ -177,6 +189,7 @@ int main(int argc, char *argv[])
 
     QStringList argList = a.arguments();
     QStringList filesToOpen;
+
     for(int i = 0; i < argList.size(); i++)
     {
       // Take only the arguments ending with .cpr
