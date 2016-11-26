@@ -27,8 +27,8 @@ NCLTextEditor::NCLTextEditor(QWidget *parent) :
   QsciScintilla(parent)
 {
   initParameters();
-  _nclLexer = NULL;
-  _apis = NULL;
+  _nclLexer = nullptr;
+  _apis = nullptr;
   _textWithoutUserInter = "";
   _focusInIgnoringCurrentText = false;
 
@@ -37,8 +37,7 @@ NCLTextEditor::NCLTextEditor(QWidget *parent) :
 
 NCLTextEditor::~NCLTextEditor()
 {
-  // if(nclexer != NULL) delete nclexer;
-  // if(apis != NULL) delete apis;
+
 }
 
 void NCLTextEditor::initParameters()
@@ -143,7 +142,7 @@ void NCLTextEditor::markError ( const QString &description,
                                 const QString &file,
                                 int line,
                                 int column,
-                                int severity)
+                                int severity )
 {
   Q_UNUSED(file)
   Q_UNUSED(column)
@@ -229,6 +228,7 @@ void NCLTextEditor::keyPressEvent(QKeyEvent *event)
     autoCompleteFromAPIs();
     return;
   }
+
   //Ctrl + Shift + F == format Text
   if((event->modifiers() & Qt::ControlModifier) &&
      (event->modifiers() & Qt::ShiftModifier) &&
@@ -254,9 +254,7 @@ void NCLTextEditor::keyPressEvent(QKeyEvent *event)
     event = new QKeyEvent(event->type(), Qt::Key_Tab, Qt::ShiftModifier);
   }
 
-  //check zoomin event.
-  //if((event->modifiers() & Qt::ControlModifier) &&
-  //   (event->key() == Qt::Key_Plus))
+  // zoomin event.
   if(event->key() == Qt::Key_ZoomIn)
   {
     event->accept();
@@ -264,10 +262,7 @@ void NCLTextEditor::keyPressEvent(QKeyEvent *event)
     return;
   }
 
-  //check zoomout event.
-
-  //if((event->modifiers() & Qt::ControlModifier) &&
-  //   (event->key() == Qt::Key_Minus))
+  // zoomout event.
   if(event->key() == Qt::Key_ZoomOut)
   {
     event->accept();
@@ -297,9 +292,10 @@ void NCLTextEditor::keyPressEvent(QKeyEvent *event)
       QString strline = text(line);
       pos = SendScintilla(SCI_GETCURRENTPOS);
       style = SendScintilla(SCI_GETSTYLEAT, pos);
+
       bool error = false;
 
-      //SHIFT+TAB -> GO TO PREVIOUS ATRIBUTE
+      // SHIFT+TAB -> GO TO PREVIOUS ATRIBUTE
       if(event->modifiers() & Qt::ShiftModifier)
       {
         while (pos > 0 )
@@ -315,7 +311,7 @@ void NCLTextEditor::keyPressEvent(QKeyEvent *event)
         else
           error = true;
       }
-      //JUST TAB -> GO TO NEXT ATTRIBUTE
+      // JUST TAB -> GO TO NEXT ATTRIBUTE
       else if(event->modifiers() == Qt::NoModifier)
       {
         while (pos < size)
@@ -346,7 +342,6 @@ void NCLTextEditor::keyPressEvent(QKeyEvent *event)
     }
     else
     {
-      QsciScintilla::keyPressEvent ( event ) ;
       getCursorPosition (&line, &index);
       pos = SendScintilla(SCI_GETCURRENTPOS);
       style = SendScintilla(SCI_GETSTYLEAT, pos);
@@ -356,7 +351,7 @@ void NCLTextEditor::keyPressEvent(QKeyEvent *event)
       // the current one as an attribute
       if ( style == QsciLexerNCL::HTMLDoubleQuotedString && pos-1 >=0 )
       {
-        //TODO: IMPROVE PERFORMANCE
+        // TODO: IMPROVE PERFORMANCE
         recolor();
         style = SendScintilla(SCI_GETSTYLEAT, pos-1);
 
@@ -378,14 +373,63 @@ void NCLTextEditor::keyPressEvent(QKeyEvent *event)
   }
   else
   {
-    QsciScintilla::keyPressEvent(event);
+    QsciScintilla::keyPressEvent ( event ) ;
+
     pos = SendScintilla(SCI_GETCURRENTPOS);
     style = SendScintilla(SCI_GETSTYLEAT, pos);
 
+#ifdef AUTOREMOVE_ENDTAG
+    char curChar = SendScintilla( QsciScintilla::SCI_GETCHARAT, pos);
+
+    // \todo This should be defined as a preference!
+    if (style == QsciLexerNCL::Tag &&
+        event->key() == Qt::Key_Slash &&
+        curChar == Qt::Key_Greater)
+    {
+      qWarning() << curChar << "Now, I need to close the tag :)";
+      pos++;
+      int begin_del = pos;
+
+      style = SendScintilla(SCI_GETSTYLEAT, pos);
+      while (pos < size-1 &&
+             style != QsciLexerNCL::Tag)
+      {
+        pos++;
+        style = SendScintilla(SCI_GETSTYLEAT, pos);
+      }
+
+      if (pos < size)
+      {
+        curChar = SendScintilla( QsciScintilla::SCI_GETCHARAT, pos);
+        char nextChar = SendScintilla( QsciScintilla::SCI_GETCHARAT, pos+1);
+
+        // \fixme Here, I should also check if the close tag is the same of the
+        // open tag.
+        if (curChar == '<' && nextChar == '/')
+        {
+          qWarning() << "I can del a close tag!";
+          int end_del = pos;
+
+          style = SendScintilla(SCI_GETSTYLEAT, pos);
+          while (end_del < size-1 && style == QsciLexerNCL::Tag)
+          {
+            end_del++;
+            style = SendScintilla(QsciScintilla::SCI_GETSTYLEAT, end_del);
+          }
+
+          if (end_del < size)
+          {
+            qWarning () << "Remove from" << curChar << (char) SendScintilla(QsciScintilla::SCI_GETCHARAT, end_del);
+            SendScintilla (QsciScintilla::SCI_DELETERANGE, begin_del, end_del-begin_del);
+          }
+        }
+      }
+    }
+#endif
     //Test if pos-1 is also inside the attribute, otherwise it will
     // treat a text inside the end of previous Quote and the start of
     // the current one as an attribute
-    if (style == QsciLexerNCL::HTMLDoubleQuotedString && pos-1 >=0 )
+    else if (style == QsciLexerNCL::HTMLDoubleQuotedString && pos-1 >=0 )
     {
       //TODO: IMPROVE PERFORMANCE
       recolor();
@@ -414,7 +458,7 @@ void NCLTextEditor::AutoCompleteCompleted()
   //qDebug() << "NCLTextEditor::AutoCompleteCompleted()";
 }
 
-void NCLTextEditor::MarkLine(int margin, int line, Qt::KeyboardModifiers state)
+void NCLTextEditor::markLine(int margin, int line, Qt::KeyboardModifiers state)
 {
   (void) margin;
   (void) line;
@@ -428,8 +472,6 @@ void NCLTextEditor::userFillingNextAttribute(int pos)
 
   _interactionState = FILLING_ATTRIBUTES_STATE;
 
-  // qDebug() << pos;
-
   while( i < size )
   {
     style = SendScintilla(SCI_GETSTYLEAT, i);
@@ -437,9 +479,8 @@ void NCLTextEditor::userFillingNextAttribute(int pos)
       break;
     i++;
   }
-  i++;
 
-  // qDebug() << i;
+  i++;
 
   if( i >= size ) {
     _interactionState = DEFAULT_STATE;
@@ -505,6 +546,7 @@ void NCLTextEditor::updateVisualFillingAttributeField( int line,
     _interactionState = DEFAULT_STATE;
     return;
   }
+
   begin++;
 
   while( end < strline.size() && strline[end] != '\"')
@@ -522,9 +564,11 @@ void NCLTextEditor::updateVisualFillingAttributeField( int line,
     end++;
     inserted_space = true;
   }
+
   fillIndicatorRange(line, begin, line, end, _fillingAttributeIndicator);
 
-  if(inserted_space) setSelection(line, begin, line, end);
+  if(inserted_space)
+    setSelection(line, begin, line, end);
 }
 
 void NCLTextEditor::setTabBehavior(TAB_BEHAVIOR tabBehavior)
@@ -630,7 +674,6 @@ bool NCLTextEditor::parseImportedDocuments( const QString &currentFileURI,
   {
     current = stack.top();
     stack.pop();
-    qDebug() << current.tagName() << "id = " << current.attribute("id");
 
     if(current.tagName() == "importBase" &&
        current.hasAttribute("documentURI") &&
@@ -734,8 +777,10 @@ QDomElement NCLTextEditor::elementById( const QDomDocument &domDoc,
       child = child.nextSibling();
     }
   }
+
   // The function QDomDocument::elementById will always returns a NULL doc.
   // That is why we have to reimplement this function.
+
   return QDomElement();
 }
 
@@ -773,11 +818,13 @@ QList <QDomElement> NCLTextEditor::elementsByTagname(const QString &tagname)
 {
   QList <QDomElement> ret;
   QMapIterator<QString, QDomDocument> i(_domDocs);
+
   while (i.hasNext())
   {
     i.next();
     ret.append(elementsByTagname(i.value(), tagname));
   }
+
   return ret;
 }
 
@@ -804,12 +851,14 @@ QList <QDomElement> NCLTextEditor::elementsByTagname(const QString &tagname,
     {
       first = false;
       QDomElement child = current.firstChildElement();
+
       while(!child.isNull())
       {
         // \todo We must not continue if the current element define a scope
         stack.push_back(child);
         child = child.nextSiblingElement();
       }
+
     }
   }
 

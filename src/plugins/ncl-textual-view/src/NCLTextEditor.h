@@ -34,6 +34,7 @@
 #define PREF_FONT_SIZE 10
 
 #define LIGTHSTYLE 1
+#define AUTOREMOVE_ENDTAG
 
 #ifdef LIGTHSTYLE
 /* Light Style */
@@ -104,7 +105,9 @@ public slots:
   void markError(const QString &description,
                  const QString &file,
                  int line, int column = 0, int severity = 0);
-  void MarkLine(int, int, Qt::KeyboardModifiers);
+
+  void markLine(int, int, Qt::KeyboardModifiers);
+
   void formatText();
 
 signals:
