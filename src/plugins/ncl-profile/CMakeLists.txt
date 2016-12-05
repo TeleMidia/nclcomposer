@@ -6,6 +6,8 @@ set (CMAKE_INCLUDE_CURRENTDIR ON)
 set (CMAKE_AUTOMOC ON)
 set (CMAKE_AUTORCC ON)
 
+add_definitions(-DNCLLANGUAGEPROFILE_LIBRARY)
+
 include_directories(
   .
   "${CMAKE_SOURCE_DIR}/src/core/src"

@@ -17,6 +17,7 @@ add_definitions(-DDATA_PATH="~/")
 # CMake/Qt Integration
 set (CMAKE_INCLUDE_CURRENTDIR ON)
 set (CMAKE_AUTOMOC ON)
+set (CMAKE_AUTORCC ON)
 
 find_package (Qt5Xml REQUIRED)
 find_package (Qt5Widgets REQUIRED)
@@ -75,12 +76,13 @@ add_executable(nclcomposer
   src/toolwindowmanager/libqtoolwindowmanager/private/qtoolwindowmanagerarea_p.h
   src/toolwindowmanager/libqtoolwindowmanager/private/qtoolwindowmanager_p.h
   src/toolwindowmanager/libqtoolwindowmanager/private/qtoolwindowmanagerwrapper_p.h
+  images.qrc
 )
 
 set_target_properties(nclcomposer PROPERTIES
   BUILD_WITH_INSTALL_RPATH TRUE
-  INSTALL_RPATH "\$ORIGIN/../lib:...")
-
+  INSTALL_RPATH "\$ORIGIN/../lib:..."
+)
 
 target_link_libraries (
   nclcomposer

@@ -7,6 +7,8 @@ set (CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib/plugins)
 set (CMAKE_INCLUDE_CURRENTDIR ON)
 set (CMAKE_AUTOMOC ON)
 
+add_definitions(-DNCLLANGUAGEPROFILE_LIBRARY)
+
 include_directories(
   .
   src

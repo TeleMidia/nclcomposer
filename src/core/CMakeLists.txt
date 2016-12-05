@@ -4,6 +4,8 @@ project(nclcomposer_core)
 
 include_directories (src)
 
+add_definitions(-DCOMPOSERCORE_LIBRARY)
+
 set (CMAKE_INCLUDE_CURRENTDIR ON)
 set (CMAKE_AUTOMOC ON)
 

@@ -13,6 +13,8 @@ include_directories(
   ${nclcomposer_core_SOURCE_DIR}
 )
 
+add_definitions(-DDEBUGCONSOLE_LIBRARY)
+
 find_package (Qt5Core REQUIRED)
 find_package (Qt5Xml REQUIRED)
 
