@@ -1,8 +1,5 @@
 cmake_minimum_required (VERSION 3.5)
-
 project(ncl_structural_view)
-
-set (CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib/plugins)
 
 set (CMAKE_INCLUDE_CURRENTDIR ON)
 set (CMAKE_AUTOMOC ON)
