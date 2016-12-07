@@ -84,8 +84,7 @@ set_target_properties(nclcomposer PROPERTIES
   INSTALL_RPATH "\$ORIGIN/../lib:..."
 )
 
-target_link_libraries (
-  nclcomposer
+target_link_libraries (nclcomposer
   nclcomposer_core
   Qt5::Core
   Qt5::Xml
