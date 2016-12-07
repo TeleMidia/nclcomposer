@@ -3,10 +3,11 @@
 
 #include <QTreeWidget>
 
-static const int RULEBASE_TYPE = QTreeWidgetItem::UserType;
-static const int RULE_TYPE = QTreeWidgetItem::UserType + 1;
-static const int COMPOSITERULE_TYPE = QTreeWidgetItem::UserType + 2;
-
+enum {
+  RULEBASE_TYPE = QTreeWidgetItem::UserType,
+  RULE_TYPE,
+  COMPOSITERULE_TYPE
+};
 
 class RulesTreeWidget : public QTreeWidget
 {

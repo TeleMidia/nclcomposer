@@ -17,9 +17,4 @@ extern const int VAR_COLUMN;
 extern const int COMP_COLUMN;
 extern const int VALUE_COLUMN;
 
-extern const int RULEBASE_TYPE;
-extern const int RULE_TYPE;
-extern const int COMPOSITERULE_TYPE;
-
-
 #endif // UTIL_H
