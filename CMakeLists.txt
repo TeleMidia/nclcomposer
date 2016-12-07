@@ -15,7 +15,9 @@ add_subdirectory(src/plugins/outline-view)
 add_subdirectory(src/plugins/properties-view)
 add_subdirectory(src/plugins/ncl-layout-view)
 add_subdirectory(src/plugins/ncl-structural-view)
+add_subdirectory(src/plugins/ncl-rules-view)
 
+# cpack
 set(CPACK_PACKAGE_NAME "nclcomposer")
 set(CPACK_PACKAGE_VENDOR "TeleMídia Lab/PUC-Rio")
 set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "NCL Composer - Authoring tool for interactive multimedia applications")
