@@ -2,7 +2,7 @@
   "name": "NCL Structural View (Next)",
   "version": "0.3.0",
   "compatVersion": "0.3",
-  "vendor": "TeleMidia Labs",
+  "vendor": "TeleMidia Lab",
   "copyright": "TeleMidia/PUC-Rio",
   "license": "LGPL",
   "description": "Structural View enable the user to edit the logical structure of a NCL document visually.",
