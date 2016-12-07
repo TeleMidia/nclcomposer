@@ -31,47 +31,18 @@ class ValidatorFactory : public QObject,
 {
   Q_OBJECT
   Q_INTERFACES(IPluginFactory)
-
-#if QT_VERSION >= 0x050000
   Q_PLUGIN_METADATA(IID IPluginFactory_iid FILE "validator_plugin.json")
-#endif
 
 public:
   ValidatorFactory(QWidget *parent = 0);
   ~ValidatorFactory();
 
   IPlugin* createPluginInstance();
-
   void releasePluginInstance(IPlugin *);
-
   QList<LanguageType> getSupportedLanguages();
-
   QString id() const {return "br.ufma.deinf.laws.validator";}
-
   QIcon icon() const {return QIcon ();}
-
   QWidget* getPreferencePageWidget() {return 0;}
-
-  void setDefaultValues() {};
-
-  void applyValues() {};
-
-#if QT_VERSION < 0x050000
-
-  /* Informações úteis que devem estar no plugin (em um XML?)*/
-  QString name() { return "Validator View"; }
-  QString version() { return NCLCOMPOSER_PLUGINS_VERSION;  }
-  QString compatVersion() {return "0.1";}
-  QString vendor() {return "Laws Lab";}
-  QString copyright() {return "Laws Lab/UFMA";}
-  QString license() {return "LGPL";}
-  QString description() {return tr("Validator View validates the current "
-                                   "document being edited and shows error "
-                                   "messages.");}
-  QString url() {return "http://www.laws.deinf.ufma.br/nclvalidator";}
-  QString category() {return "NCL";}
-  
-#endif
 
 };
 
