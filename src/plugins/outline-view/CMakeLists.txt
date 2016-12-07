@@ -4,8 +4,6 @@ project(outline_view)
 set (CMAKE_INCLUDE_CURRENTDIR ON)
 set (CMAKE_AUTOMOC ON)
 
-add_definitions(-DNCLLANGUAGEPROFILE_LIBRARY)
-
 include_directories(
   .
   src
