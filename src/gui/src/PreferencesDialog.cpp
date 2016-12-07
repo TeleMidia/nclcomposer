@@ -53,15 +53,9 @@ void PreferencesDialog::addPreferencePage(IPluginFactory *pF)
 {
   if (pF->getPreferencePageWidget() == NULL) return;
 
-#if QT_VERSION < 0x050000
-  addPreferencePage( pF->icon(),
-                     pF->name(),
-                     pF->getPreferencePageWidget() );
-#else
   addPreferencePage( pF->icon(),
                      pF->metadata().value("name").toString(),
                      pF->getPreferencePageWidget());
-#endif
 }
 
 void PreferencesDialog::addPreferencePage(QIcon icon, QString name,
@@ -94,22 +88,12 @@ void PreferencesDialog::loadPreferencesPages()
     IPluginFactory *pF = *it;
     if (pF->getPreferencePageWidget() == NULL) continue;
 
-#if QT_VERSION < 0x050000
-    new QListWidgetItem( pF->icon(),
-                         pF->name(),
-                         ui->listWidget, 0 );
-#else
     new QListWidgetItem( pF->icon(),
                          pF->metadata().value("name").toString(),
                          ui->listWidget, 0 );
-#endif
 
     QWidget *page = pF->getPreferencePageWidget();
-#if QT_VERSION < 0x050000
-    pages[pF->name()] = page;
-#else
     pages[pF->metadata().value("name").toString()] = page;
-#endif
     page->hide();
     ui->scrollAreaVerticalLayout->addWidget(page);
   }

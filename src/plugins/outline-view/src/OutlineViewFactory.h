@@ -32,10 +32,7 @@ class OutlineViewFactory :
 {
   Q_OBJECT
   Q_INTERFACES(IPluginFactory)
-
-#if QT_VERSION >= 0x050000
   Q_PLUGIN_METADATA(IID IPluginFactory_iid FILE "outline_view.json")
-#endif
 
 public:
   /*!
@@ -68,72 +65,6 @@ public:
    * \return QIcon
    */
   QIcon icon() const;
-
-#if QT_VERSION < 0x050000
-  /*!
-   * \brief Returns the name of outline plug-in.
-   *
-   * \return QString the name of the plug-in.
-   */
-  QString name() { return "Outline View"; }
-
-  /*!
-   * \brief Returns the version of Outline View implementation.
-   *
-   * \return QString the version number as string.
-   */
-  QString version() { return NCLCOMPOSER_PLUGINS_VERSION; }
-
-  /*!
-   * \brief Returns the core version that is compatible with this plugin.
-   *
-   * \return QString the core version that is compatible with this plugin
-   *  as a string.
-   */
-  QString compatVersion() {return "0.1";}
-
-  /*!
-   * \brief Returns the vendor of Outline View (i.e. Telemidia Lab).
-   *
-   * \return QString the name of the vendor of OutlineView.
-   */
-  QString vendor() {return "Telemidia Lab";}
-
-  /*!
-   * \brief Returns the copyright of Outline View.
-   *
-   * \return QString the copyright of Outline View.
-   */
-  QString copyright() {return "Telemidia/PUC-Rio";}
-
-  /*!
-   * \brief Returns the license of Outline View plugin (i.e. GPLv3).
-   *
-   * \todo The complete license description.
-   * \return QString the license of Outline View.
-   */
-  QString license() {return "LGPL";}
-
-  /*!
-   * \brief Returns a description of the Outline View
-   *
-   * \return QString the description of Outline View.
-   */
-  QString description() {return tr("Outline View enables the user "
-                                   "navigates in the project as a tree.");}
-
-  /*!
-   * \brief url
-   * \return
-   */
-  QString url() {return "http://composer.telemidia.puc-rio.br/outline";}
-
-  /*!
-   * \brief category
-   * \return
-   */
-  QString category() {return "NCL";}
-#endif
 };
 
 #endif // OUTLINEVIEWPLUGINFACTORY_H

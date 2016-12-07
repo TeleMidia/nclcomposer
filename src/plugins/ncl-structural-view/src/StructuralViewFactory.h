@@ -27,10 +27,7 @@ class StructuralViewFactory : public QObject, public IPluginFactory
 {
   Q_OBJECT
   Q_INTERFACES(IPluginFactory)
-
-#if QT_VERSION >= 0x050000
   Q_PLUGIN_METADATA(IID IPluginFactory_iid FILE "ncl-structural-view.json")
-#endif
 
 public:
   StructuralViewFactory(QObject* parent = 0);
@@ -39,18 +36,6 @@ public:
   IPlugin* createPluginInstance();
   void releasePluginInstance(IPlugin *);
   QString id() const;
-
-#if QT_VERSION < 0x050000
-  QString name() { return "NCL Structural View Next"; }
-  QString version() { return NCLCOMPOSER_PLUGINS_VERSION; }
-  QString compatVersion() {return "0.2";}
-  QString vendor() {return "Telemidia Lab";}
-  QString copyright() {return "Telemidia/PUC-Rio";}
-  QString license() {return "LGPL";}
-  QString description() {return tr("NCL Structural View enable the user to edit the logical structure of a NCL document visually.");}
-  QString url() {return "http://composer.telemidia.puc-rio.br/structural";}
-  QString category() {return "NCL";}
-#endif
 };
 
 #endif // QNSTCOMPOSERPLUGINFACTORY_H

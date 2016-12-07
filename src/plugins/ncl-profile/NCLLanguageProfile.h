@@ -24,10 +24,7 @@ class NCLLANGUAGEPROFILESHARED_EXPORT NCLLanguageProfile :
 {
   Q_OBJECT
   Q_INTERFACES(ILanguageProfile)
-
-#if QT_VERSION >= 0x050000
   Q_PLUGIN_METADATA(IID ILanguageProfile_iid FILE "nclLanguageProfile.json")
-#endif
 
 public:
   NCLLanguageProfile();

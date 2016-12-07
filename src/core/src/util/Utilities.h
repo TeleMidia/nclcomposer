@@ -16,6 +16,7 @@
 #include <QMap>
 #include <QDir>
 #include <QFileInfo>
+
 #include <QLoggingCategory>
 
 #include "util/ComposerSettings.h"

@@ -481,15 +481,9 @@ void StructuralLinkDialog::updateForm(QString conn)
   int ncol = 2;
   int nrow = _params.value(conn).size();
 
-#if QT_VERSION < 0x050000
-  form.tbLinkParams->horizontalHeader()->setResizeMode(QHeaderView::Stretch);
-  form.tbConditionParams->horizontalHeader()->setResizeMode(QHeaderView::Stretch);
-  form.tbActionParams->horizontalHeader()->setResizeMode(QHeaderView::Stretch);
-#else
   form.tbLinkParams->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
   form.tbConditionParams->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
   form.tbActionParams->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
-#endif
 
   form.tbLinkParams->verticalHeader()->hide();
   form.tbConditionParams->verticalHeader()->hide();

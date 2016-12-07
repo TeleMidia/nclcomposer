@@ -14,9 +14,7 @@
 #include <QString>
 #include <QtGui/QIcon>
 
-#if QT_VERSION >= 0x050000
 #include <QJsonObject>
-#endif
 
 #include "../util/ComposerCoreControl_global.h"
 
@@ -77,26 +75,11 @@ public:
     return lTypes;
   }
 
-#if QT_VERSION >= 0x050000
   void setMetadata(const QJsonObject &obj) { this->metadata_obj = obj; }
   QJsonObject metadata() { return this->metadata_obj; }
-#else
-  /*Useful information about the plugin (go to XML?)*/
-  virtual QString name() { return "Unknown"; }
-  virtual QString version() { return "Unknown"; }
-  virtual QString compatVersion() { return "Unknown"; }
-  virtual QString vendor() { return "Unknown"; }
-  virtual QString copyright() { return "Unknown"; }
-  virtual QString license() { return "Unknown"; }
-  virtual QString description() { return "Unknown"; }
-  virtual QString url() { return "Unknown"; }
-  virtual QString category() { return "Unknown"; }
-#endif
 
-#if QT_VERSION >= 0x050000
 private:
     QJsonObject metadata_obj;
-#endif
 };
 
 } } //end namespace

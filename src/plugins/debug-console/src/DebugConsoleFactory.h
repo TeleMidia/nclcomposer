@@ -32,10 +32,7 @@ class DebugConsoleFactory : public QObject,
 {
   Q_OBJECT
   Q_INTERFACES(IPluginFactory)
-
-#if QT_VERSION >= 0x050000
   Q_PLUGIN_METADATA (IID IPluginFactory_iid FILE "debug_console.json")
-#endif
 
 public:
   DebugConsoleFactory();
@@ -57,74 +54,6 @@ public:
   void setDefaultValues();
 
   void applyValues();
-
-
-#if QT_VERSION < 0x050000
-  /*!
-   * \brief Returns the name of the plug-in.
-   *
-   * \return QString the name of the plug-in.
-   */
-  QString name() { return tr("Debug Console"); }
-
-  /*!
-   * \brief Returns the version of Debug Console View implementation.
-   *
-   * \return QString the version number as string.
-   */
-  QString version() { return NCLCOMPOSER_PLUGINS_VERSION; }
-
-  /*!
-   * \brief Returns the core version that is compatible with this plugin.
-   *
-   * \return QString the core version that is compatible with this plugin
-   * as a string.
-   */
-  QString compatVersion() {return "0.1";}
-
-  /*!
-   * \brief Returns the vendor of Debug Console View (i.e. Telemidia Lab).
-   *
-   * \return QString the name of the vendor of OutlineView.
-   */
-  QString vendor() {return "Telemidia Lab";}
-
-  /*!
-   * \brief Returns the copyright of Debug Console View.
-   *
-   * \return QString the copyright of Debug Console View.
-   */
-  QString copyright() {return "Telemidia/PUC-Rio";}
-
-  /*!
-   * \brief Returns the license of Debug Console plugin (i.e. LGPL).
-   * \todo The complete license description.
-   * \return QString the license of Debug Console.
-   */
-  QString license() {return "LGPL";}
-
-  /*!
-   * \brief Returns a description of the Debug Console View
-   *
-   * \return QString the description of Debug Console View.
-   */
-  QString description() {return tr("Debug Console View prints all the "
-                                   " messages send by composer-core to plugins.");}
-
-  /*!
-   * \brief Returns the URL to find more information about the plugin.
-   *
-   * \return QString the description of Debug Console View.
-   */
-  QString url() {return "http://composer.telemidia.puc-rio.br/debug";}
-
-  /*!
-   * \brief Returns the plugin category.
-   *
-   * \return QString the description of Debug Console View.
-   */
-  QString category() {return tr("General");}
-#endif
 };
 
 #endif // DEBUGCONSOLE_H

@@ -29,7 +29,6 @@ Q_LOGGING_CATEGORY(CPR_CORE, "cpr.core")
 
 QMap<QString,LanguageType> Utilities::types = createMap();
 
-
 QString Utilities::normalizeXMLID(const QString &id)
 {
   QString tmp = id.normalized(QString::NormalizationForm_KD);
@@ -39,6 +38,7 @@ QString Utilities::normalizeXMLID(const QString &id)
 
   return tmp;
 }
+
 LanguageType Utilities::getLanguageTypeByExtension(const QString &ext)
 {
   if (!types.contains(ext)) return NONE;

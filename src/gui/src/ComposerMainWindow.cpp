@@ -506,21 +506,12 @@ void ComposerMainWindow::addPluginWidget( IPluginFactory *fac,
     #ifdef USE_MDI
       mdiArea->addSubWindow(pW);
       pW->setWindowModified(true);
-      #if QT_VERSION < 0x050000
-        pW->setWindowTitle(projectId + " - " + fac->name());
-      #else
         pW->setWindowTitle(projectId + " - " + fac->metadata().value("name").toString());
-      #endif
       pW->show();
     #else
       // ClickableQDockWidget *dock;
-    #if QT_VERSION < 0x050000
-      // dock = new ClickableQDockWidget(fac->name());
-      pW->setWindowTitle(fac->name());
-    #else
       //dock = new ClickableQDockWidget(fac->metadata().value("name").toString());
       pW->setWindowTitle(fac->metadata().value("name").toString());
-    #endif
 
       w->addToolWindow(pW, QToolWindowManager::EmptySpaceArea);
 
@@ -881,11 +872,7 @@ void ComposerMainWindow::aboutPlugins()
   QMap <QString, QTreeWidgetItem*> categories;
   for (it = pList.begin(); it != pList.end(); it++) {
     IPluginFactory *pF = *it;
-#if QT_VERSION < 0x050000
-    QString category = pF->category();
-#else
     QString category = pF->metadata().value("category").toString();
-#endif
 
     if(!categories.contains(category)){
       treeWidgetItem = new QTreeWidgetItem(pluginsExt);
