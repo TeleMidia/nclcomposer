@@ -23,6 +23,7 @@ add_subdirectory(src/plugins/ncl-layout-view)
 add_subdirectory(src/plugins/ncl-structural-view)
 add_subdirectory(src/plugins/ncl-rules-view)
 add_subdirectory(src/plugins/validator)
+add_subdirectory(src/plugins/gingagui-all/run-view)
 
 # cpack
 set(CPACK_PACKAGE_NAME "nclcomposer")
