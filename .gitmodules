@@ -4,4 +4,5 @@
 	branch = autoupdate  
 [submodule "src/plugins/gingagui-all"]
 	path = src/plugins/gingagui-all
-	url = http://git.telemidia.puc-rio.br/gingagui-all.git
+	url = https://github.com/TeleMidia/gingagui.git
+	branch = master
