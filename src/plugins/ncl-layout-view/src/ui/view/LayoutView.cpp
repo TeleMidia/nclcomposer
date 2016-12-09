@@ -341,8 +341,16 @@ void LayoutView::performPaste()
 {
   QString selectedRegionUId = "";
   if(selectedRegion != NULL)
+  {
     selectedRegionUId = selectedRegion->getUid();
 
+    if(selectedRegion->isMoving()) //being called by ctrl+mousepressmove
+    {
+      LayoutRegion* parent = (LayoutRegion*) selectedRegion->parentItem();
+      if(parent != NULL)
+        selectedRegionUId = parent->getUid();
+    }
+  }
   qDebug() << "Perform paste inside: " << selectedRegionUId;
 
   QString selectedRegionBaseUId = "";

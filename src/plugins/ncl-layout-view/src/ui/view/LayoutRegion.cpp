@@ -19,6 +19,7 @@
 
 #include <QCursor>
 #include <QMimeData>
+#include <QGuiApplication>
 
 #define KEYBOARD_MOVE_REGION_STEP 10.0
 #define KEYBOARD_MOVE_REGION_STEP_SMALL 1.0
@@ -1392,6 +1393,11 @@ void LayoutRegion::mouseReleaseEvent(QGraphicsSceneMouseEvent* event)
 {
   if (moving)
   {
+    if(QGuiApplication::keyboardModifiers() == Qt::ControlModifier) /*clone if control is held*/
+    {
+      emit copyRequested(this); //region copy
+      emit pasteRequested();  //region paste
+    }
     setMoving(false);
 
     if ((top != moveTop || left != moveLeft))
