@@ -64,7 +64,7 @@ public:
   virtual QString id() const = 0;
 
   virtual QIcon icon() const { return QIcon(); }
-  virtual QWidget* getPreferencePageWidget() { return NULL; }
+  virtual QWidget* getPreferencePageWidget() { return nullptr; }
   virtual void setDefaultValues() {}
   virtual void applyValues() {}
 
@@ -90,5 +90,4 @@ private:
  */
 #define IPluginFactory_iid "br.puc_rio.telemidia.composer.IPluginFactory"
 Q_DECLARE_INTERFACE(IPluginFactory, IPluginFactory_iid)
-
 #endif

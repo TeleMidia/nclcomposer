@@ -51,7 +51,8 @@ PreferencesDialog::~PreferencesDialog()
 
 void PreferencesDialog::addPreferencePage(IPluginFactory *pF)
 {
-  if (pF->getPreferencePageWidget() == NULL) return;
+  if (pF->getPreferencePageWidget() == nullptr)
+      return;
 
   addPreferencePage( pF->icon(),
                      pF->metadata().value("name").toString(),
@@ -86,7 +87,8 @@ void PreferencesDialog::loadPreferencesPages()
   for (it = plugins.begin(); it != plugins.end(); it++)
   {
     IPluginFactory *pF = *it;
-    if (pF->getPreferencePageWidget() == NULL) continue;
+    if (pF->getPreferencePageWidget() == nullptr)
+        continue;
 
     new QListWidgetItem( pF->icon(),
                          pF->metadata().value("name").toString(),
@@ -103,7 +105,8 @@ void PreferencesDialog::changeActivePage()
 {
   if (currentItem != NULL)
   {
-    if(pages.contains(currentItem->text())){
+    if(pages.contains(currentItem->text()))
+    {
       pages[currentItem->text()]->hide();
     }
   }
