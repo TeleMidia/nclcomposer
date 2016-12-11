@@ -46,31 +46,9 @@ const int autoSaveInterval = 1 * 60 * 1000; //ms
  */
 ComposerMainWindow::ComposerMainWindow(QWidget *parent)
   : QMainWindow(parent),
-    _ui(new Ui::ComposerMainWindow),
-    _localGingaProcess(this)
+    _ui(new Ui::ComposerMainWindow)
 {
   _ui->setupUi(this);
-
-  // Local Ginga Run
-  connect( &_localGingaProcess, SIGNAL(finished(int)),
-           this, SLOT(copyHasFinished()) );
-
-  // Remote Ginga Run
-#ifdef WITH_LIBSSH2
-  runRemoteGingaVMAction.moveToThread(&runRemoteGingaVMThread);
-
-  connect(&runRemoteGingaVMThread, SIGNAL(started()),
-          &runRemoteGingaVMAction, SLOT(copyCurrentProject()));
-
-  connect(&runRemoteGingaVMAction, SIGNAL(finished()),
-          &runRemoteGingaVMThread, SLOT(quit()));
-
-  connect(&runRemoteGingaVMThread, SIGNAL(finished()),
-          this, SLOT(copyHasFinished()));
-
-  connect(&runRemoteGingaVMThread, SIGNAL(terminated()),
-          this, SLOT(copyHasFinished()));
-#endif
 
 #if WITH_WIZARD
   connect( &wizardProcess, SIGNAL(finished(int)),
@@ -128,9 +106,6 @@ void ComposerMainWindow::init(const QApplication &app)
   app.processEvents();
 
   splash.finish(this);
-  connect(&app, SIGNAL(focusChanged(QWidget *, QWidget *)),
-          this, SLOT(focusChanged(QWidget *, QWidget *)),
-          Qt::DirectConnection);
 
   show();
 }
@@ -183,7 +158,7 @@ void ComposerMainWindow::initModules()
            SLOT(onOpenProjectTab(QString)) );
 
   connect( projectControl, SIGNAL(dirtyProject(QString, bool)),
-           this, SLOT(setProjectDirty(QString, bool)) );
+           this, SLOT(setProjectAsDirty(QString, bool)) );
 
   readExtensions();
 }
@@ -250,10 +225,11 @@ QString ComposerMainWindow::promptChooseExtDirectory()
   mBox.setIcon(QMessageBox::Question);
   if (mBox.exec() == QMessageBox::No)
   {
-    QString dirName = QFileDialog::getExistingDirectory( this,
-                                                        tr("Select Directory"),
-                                                       getLastFileDialogPath(),
-                                                    QFileDialog::ShowDirsOnly);
+    QString dirName =
+            QFileDialog::getExistingDirectory( this,
+                                               tr("Select Directory"),
+                                               Utilities::getLastFileDialogPath(),
+                                               QFileDialog::ShowDirsOnly );
     return dirName;
   }
   else
@@ -373,13 +349,6 @@ void ComposerMainWindow::initGUI()
   _perspectiveManager = new PerspectiveManager(this);
   _pluginDetailsDialog = new PluginDetailsDialog(_aboutPluginsDialog);
 
-  connect(_ui->action_RunNCL, SIGNAL(triggered()), this, SLOT(runNCL()));
-  connect(_ui->action_StopNCL, SIGNAL(triggered()), this, SLOT(stopNCL()));
-  connect(_ui->action_runPassiveNCL, SIGNAL(triggered()), this, SLOT(functionRunPassive()));
-  connect(_ui->action_runActiveNCL, SIGNAL(triggered()), this, SLOT(functionRunActive()));
-
-  _ui->action_RunNCL->setEnabled(true);
-
 // UNDO/REDO
   // connect(ui->action_Undo, SIGNAL(triggered()), this, SLOT(undo()));
   // connect(ui->action_Redo, SIGNAL(triggered()), this, SLOT(redo()));
@@ -400,49 +369,6 @@ void ComposerMainWindow::initGUI()
 
   connect(_welcomeWidget, SIGNAL(userPressedSeeInstalledPlugins()),
           this, SLOT(aboutPlugins()));
-
-
-  //Task Progress Bar
-#ifdef WITH_LIBSSH2
-  _taskProgressBar = new QProgressDialog(this);
-  _taskProgressBar->setWindowTitle(tr("Copy content to Ginga VM."));
-  _taskProgressBar->setModal(true);
-
-  // start _taskProgressBar
-  connect( &runRemoteGingaVMAction, SIGNAL(startTask()),
-           _taskProgressBar, SLOT(show()) );
-
-  connect( &runRemoteGingaVMAction, SIGNAL(taskDescription(QString)),
-           _taskProgressBar, SLOT(setLabelText(QString)) );
-
-  connect( &runRemoteGingaVMAction, SIGNAL(taskMaximumValue(int)),
-           _taskProgressBar, SLOT(setMaximum(int)) );
-
-  connect( &runRemoteGingaVMAction, SIGNAL(taskValue(int)),
-           _taskProgressBar, SLOT(setValue(int)) );
-
-  connect(&runRemoteGingaVMAction, SIGNAL(copyFinished()),
-          _taskProgressBar, SLOT(hide()) );
-
-  connect( &runRemoteGingaVMAction, SIGNAL(finished()),
-           _taskProgressBar, SLOT(hide()));
-
-  connect( _taskProgressBar, SIGNAL(canceled()),
-           &runRemoteGingaVMAction, SLOT(stopExecution()),
-           Qt::DirectConnection );
-
-  disconnect( _taskProgressBar, SIGNAL(canceled()),
-              _taskProgressBar, SLOT(cancel()) );
-
-  connect( &runRemoteGingaVMAction, SIGNAL(finished()),
-           _taskProgressBar, SLOT(hide()) );
-
-// This shows the taskBar inside the toolBar. In the future, this can
-//   _taskProgressBarAction = ui->toolBar->insertWidget( ui->action_Save,
-//                                                       _taskProgressBar);
-// taskProgressBarAction->setVisible(false);
-#endif
-
 }
 
 void ComposerMainWindow::keyPressEvent(QKeyEvent *event)
@@ -529,10 +455,8 @@ void ComposerMainWindow::addPluginWidget( IPluginFactory *fac,
         pW->setWindowTitle(projectId + " - " + fac->metadata().value("name").toString());
       pW->show();
     #else
-      // ClickableQDockWidget *dock;
-      //dock = new ClickableQDockWidget(fac->metadata().value("name").toString());
-      pW->setWindowTitle(fac->metadata().value("name").toString());
 
+      pW->setWindowTitle(fac->metadata().value("name").toString());
       w->addToolWindow(pW, QToolWindowManager::EmptySpaceArea);
 
       // Add updateFromModel and close button
@@ -582,77 +506,6 @@ void ComposerMainWindow::addPluginWidget( IPluginFactory *fac,
       w->setTabButton(pW, QTabBar::RightSide, btn_group);
   }
 #endif
-}
-
-void ComposerMainWindow::updateDockStyle(QDockWidget *dock, bool selected)
-{
-  qWarning() << "ComposerMainWindows::updateDockStyle ( " << dock << selected << ")";
-
-  QList <QTabBar*> tabBars = this->findChildren <QTabBar *>();
-
-  // \todo We can improve this foreach
-  foreach (QTabBar *tabBar, tabBars)
-  {
-    for(int index = 0; index < tabBar->count(); index++)
-    {
-      QVariant tmp = tabBar->tabData(index);
-      QDockWidget * dockWidget = reinterpret_cast<QDockWidget *>(tmp.toULongLong());
-      if(dockWidget == dock)
-      {
-        if(!tabBar->property("activePlugin").isValid())
-        {
-          tabBar->setProperty("activePlugin", "false");
-          tabBar->setStyleSheet(styleSheet());
-        }
-
-        bool activePlugin = tabBar->property("activePlugin").toBool();
-        if(selected)
-        {
-          if(!activePlugin)
-          {
-            tabBar->setProperty("activePlugin", "true");
-            tabBar->setStyleSheet(styleSheet());
-          }
-        }
-        else
-        {
-          if(activePlugin)
-          {
-            tabBar->setProperty("activePlugin", "false");
-            tabBar->setStyleSheet(styleSheet());
-          }
-        }
-      }
-    }
-  }
-
-  QFrame *titleBar = (QFrame*) dock->titleBarWidget();
-  if(!titleBar->property("activePluginTitleBar").isValid())
-  {
-    titleBar->setProperty("activePluginTitleBar", "false");
-    dock->setProperty("activePluginBorder", "false");
-    dock->setStyleSheet(styleSheet());
-  }
-
-  bool activePluginTitleBar = titleBar->property("activePluginTitleBar").toBool();
-  if(!selected)
-  {
-    if(activePluginTitleBar)
-    {
-      titleBar->setProperty("activePluginTitleBar", "false");
-      dock->setProperty("activePluginBorder", "false");
-      dock->setStyleSheet(styleSheet());
-    }
-  }
-  else
-  {
-    if(!activePluginTitleBar)
-    {
-      titleBar->setProperty("activePluginTitleBar", "true");
-      dock->setProperty("activePluginBorder", "true");
-      dock->setStyleSheet(styleSheet());
-    }
-  }
 }
 
 /*!
@@ -787,24 +640,11 @@ void ComposerMainWindow::createMenus()
   _tbLanguageDropList->setMenu(_menuLanguage);
   ui->toolBar->addWidget(_tbLanguageDropList);*/
 
-  QToolButton *button_Run = new QToolButton(0); //create a run_NCL button(It used to be created in design mode)
-  _menuMultidevice = new QMenu(0); // assign a dropdown menu to the button
-  _menuMultidevice->addAction(_ui->action_runPassiveNCL);
-  _menuMultidevice->addAction(_ui->action_runActiveNCL);
-  button_Run->setMenu(_menuMultidevice);
-  button_Run->setDefaultAction(_ui->action_RunNCL);
-  button_Run->setPopupMode(QToolButton::MenuButtonPopup);
-  _ui->toolBar->addWidget(button_Run); //put button_run in toolbar
-  _ui->toolBar->addSeparator();
-
-  _ui->action_Main_toolbar->setChecked(_ui->toolBar->isVisible());
   _ui->action_Perspectives_toolbar->setChecked(_ui->toolBar_Perspectives->isVisible());
 
-  connect(_ui->action_Main_toolbar, SIGNAL(triggered(bool)), _ui->toolBar, SLOT(setVisible(bool)));
   connect(_ui->action_Perspectives_toolbar, SIGNAL(triggered(bool)), _ui->toolBar_Perspectives, SLOT(setVisible(bool)));
 
   _tabProjects->setCornerWidget(_ui->menubar, Qt::TopLeftCorner);
-
 
   // updateMenuLanguages();
   updateMenuPerspectives();
@@ -995,10 +835,6 @@ void ComposerMainWindow::createActions() {
   QWidget* spacer = new QWidget();
   spacer->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
 
-  //Add a separator to the toolbar. All actions after preferences (including
-  // it will be aligned in the bottom.
-  _ui->toolBar->insertWidget(_ui->action_Preferences, spacer);
-
   connect (_ui->action_OpenProject, SIGNAL(triggered()),
            this, SLOT(openProject()));
 
@@ -1009,7 +845,6 @@ void ComposerMainWindow::createActions() {
            this, SLOT(gotoNCLClubWebsite()));
 
   connect (_ui->action_Help, SIGNAL(triggered()), this, SLOT(showHelp()));
-
 }
 
 /*!
@@ -1034,7 +869,7 @@ void ComposerMainWindow::showCurrentWidgetFullScreen()
 /*!
  * \brief
  */
-void ComposerMainWindow::updateViewMenu ()
+void ComposerMainWindow::updateViewMenu()
 {
   //Update menu Views.
   _ui->menu_Views->clear();
@@ -1296,12 +1131,12 @@ void ComposerMainWindow::saveAsCurrentProject()
     QString destFileName = QFileDialog::getSaveFileName(
           this,
           tr("Save as NCL Composer Project"),
-          getLastFileDialogPath(),
+          Utilities::getLastFileDialogPath(),
           tr("NCL Composer Projects (*.cpr)") );
 
     if(!destFileName.isNull() && !destFileName.isEmpty())
     {
-      updateLastFileDialogPath(destFileName);
+      Utilities::updateLastFileDialogPath(destFileName);
 
       if(!destFileName.endsWith(".cpr"))
         destFileName  = destFileName + ".cpr";
@@ -1433,278 +1268,6 @@ void ComposerMainWindow::restorePerspective(QString layoutName)
   }
 }
 
-/*!
- * \brief Run the current open Project.
- */
-void ComposerMainWindow::runNCL()
-{
-  // check if there is other instance already running
-  if(_localGingaProcess.state() == QProcess::Running
-#ifdef WITH_LIBSSH2
-        || runRemoteGingaVMThread.isRunning()
-#endif
-        )
-  {
-    QMessageBox::StandardButton reply;
-    reply = QMessageBox::warning( NULL, tr("Warning!"),
-                                  tr("You already have an NCL application "
-                                     "running. Please, stop it before you start "
-                                     "a new one."),
-                                  QMessageBox::Ok);
-    Q_UNUSED(reply)
-
-    return;
-  }
-
-  _ui->action_RunNCL->setEnabled(false);
-
-  // There is no other instance running, so let's run
-  bool runRemote = false;
-  GlobalSettings settings;
-  settings.beginGroup("runginga");
-  if(settings.contains("run_remote") && settings.value("run_remote").toBool())
-    runRemote = true;
-  else
-    runRemote = false;
-  settings.endGroup();
-
-  if(runRemote)
-    copyOnRemoteGingaVM();
-  else
-    runOnLocalGinga();
-
-  _ui->action_StopNCL->setEnabled(true);
-}
-
-void ComposerMainWindow::runOnLocalGinga()
-{
-  GlobalSettings settings;
-  QString command, args;
-  settings.beginGroup("runginga");
-  command = settings.value("local_ginga_cmd").toString();
-  args = settings.value("local_ginga_args").toString();
-  settings.endGroup();
-
-  // \todo: Ask to Save current project before send it to Ginga VM.
-
-  QString location = _tabProjects->tabToolTip(_tabProjects->currentIndex());
-
-  if(location.isEmpty())
-  {
-    QMessageBox::StandardButton reply;
-    reply = QMessageBox::warning(this, tr("Warning!"),
-                                 tr("There aren't a current NCL project."),
-                                 QMessageBox::Ok);
-    Q_UNUSED(reply)
-    return;
-  }
-
-  Project *project = ProjectControl::getInstance()->getOpenProject(location);
-  QString nclpath = location.mid(0, location.lastIndexOf("/")) +  "/tmp.ncl";
-  qDebug() << "Running NCL File: " << nclpath;
-
-  QFile file(nclpath);
-  if(file.open(QFile::WriteOnly | QIODevice::Truncate))
-  {
-    /* Write FILE!! */
-    if(project->getChildren().size())
-      file.write(project->getChildren().at(0)->toString(0, false).toLatin1());
-
-    file.close();
-
-    /* PARAMETERS */
-    //\todo Other parameters
-    QStringList args_list = Utilities::splitParams(args);
-    args_list.replaceInStrings("${nclpath}", nclpath);
-
-    /* RUNNING GINGA */
-    qDebug() << command << args_list;
-    _localGingaProcess.start(command, args_list);
-    QByteArray result = _localGingaProcess.readAll();
-  }
-  else
-  {
-    qWarning() << "Error trying to running NCL. Could not create : "
-               << nclpath << " !";
-  }
-}
-
-void ComposerMainWindow::functionRunPassive()
-{
-  int i;
-  bool ok;
-  GlobalSettings settings;
-  settings.beginGroup("runginga");
-  QString command = settings.value("local_ginga_cmd").toString();
-  QString args = settings.value("local_ginga_passive_args").toString();
-  settings.endGroup();
-
-  /* PARAMETERS */
-  //\todo Other parameters
-  QStringList args_list = Utilities::splitParams(args);
-  // args_list.replaceInStrings("${nclpath}", nclpath);
-
-  int value = QInputDialog::getInt(
-        this,
-        tr("Multidevices"),//title
-        tr("Passive"), //label
-        1, //start
-        1, //min
-        5, //max
-        1, //step
-        &ok );
-
-  if( ok )
-  {
-    qDebug() << command << args_list;
-    for(i = 0; i < value; i++)
-      QProcess::startDetached(command, args_list);
-  }
-}
-
-void ComposerMainWindow::functionRunActive()
-{
-  int i;
-  bool ok;
-  GlobalSettings settings;
-  settings.beginGroup("runginga");
-  QString command = settings.value("local_ginga_cmd").toString();
-  QString args = settings.value("local_ginga_active_args").toString();
-  settings.endGroup();
-
-  /* PARAMETERS */
-  //\todo Other parameters
-  QStringList args_list = Utilities::splitParams(args);
-  // args_list.replaceInStrings("${nclpath}", nclpath);
-
-  int value = QInputDialog::getInt(
-        this,
-        tr("Multidevices"),
-        tr("Active"),
-        1,
-        1,
-        5,
-        1,
-        &ok );
-
-  if( ok )
-  {
-    qDebug() << command << args_list;
-    for(i = 0; i < value; i++)
-      QProcess::startDetached(command, args_list);
-  }
-}
-
-void ComposerMainWindow::copyOnRemoteGingaVM(bool autoplay)
-{
-
-#ifdef WITH_LIBSSH2
-  int currentTab = _tabProjects->currentIndex();
-  if(currentTab != 0)
-  {
-    //Disable a future Run (while the current one does not finish)!!
-    ui->action_RunNCL->setEnabled(false);
-
-    QString location = _tabProjects->tabToolTip(currentTab);
-    Project *currentProject = ProjectControl::getInstance()->
-                                                      getOpenProject(location);
-
-    if(currentProject->isDirty())
-    {
-      /*QMessageBox::StandardButton reply;
-      reply = QMessageBox::warning(this, tr("Warning!"),
-                                     tr("Your document is not saved. "
-                                        "Do you want to save it now?"),
-                                     QMessageBox::Yes, QMessageBox::No);*/
-
-      int reply;
-      reply = QMessageBox::warning(NULL, tr("Warning!"),
-                                   tr("Your document is not saved."
-                                      "Do you want to save it now?"),
-                                   QMessageBox::Yes, QMessageBox::No);
-
-      if(reply == QMessageBox::Yes)
-      {
-        // save the current project before send it to Ginga VM
-        saveCurrentProject();
-      }
-    }
-
-    runRemoteGingaVMAction.setCurrentProject(currentProject);
-    runRemoteGingaVMAction.setAutoplay(autoplay);
-
-    runRemoteGingaVMThread.start();
-  }
-  else
-  {
-    // There aren't a current project.
-    QMessageBox::StandardButton reply;
-    reply = QMessageBox::warning(NULL, tr("Warning!"),
-                                 tr("There aren't a current NCL project."),
-                                 QMessageBox::Ok);
-    Q_UNUSED(reply)
-  }
-
-#else
-  Q_UNUSED(autoplay)
-
-  QMessageBox::StandardButton reply;
-  reply = QMessageBox::warning(NULL, tr("Warning!"),
-                               tr("Your NCL Composer was not build with Remote "
-                                  "Run support."),
-                               QMessageBox::Ok);
-  Q_UNUSED (reply)
-#endif
-}
-
-void ComposerMainWindow::stopNCL()
-{
-  if(_localGingaProcess.state() == QProcess::Running)
-      _localGingaProcess.close();
-
-#ifdef WITH_LIBSSH2
-  if(runRemoteGingaVMThread.isRunning())
-    stopRemoteGingaVMAction.stopRunningApplication();
-#endif
-
-  updateRunActions();
-}
-
-
-bool ComposerMainWindow::isRunningNCL()
-{
-  // check if there is other instance already running
-  if(_localGingaProcess.state() == QProcess::Running
-#ifdef WITH_LIBSSH2
-        || runRemoteGingaVMThread.isRunning()
-#endif
-    )
-  {
-      return true;
-  }
-  return false;
-}
-
-void ComposerMainWindow::updateRunActions()
-{
-  if(isRunningNCL())
-  {
-    _ui->action_RunNCL->setEnabled(false);
-    _ui->action_StopNCL->setEnabled(true);
-  }
-  else
-  {
-    _ui->action_RunNCL->setEnabled(true);
-    _ui->action_StopNCL->setEnabled(false);
-  }
-}
-
-void ComposerMainWindow::copyHasFinished()
-{
-  qDebug() << "ComposerMainWindow::runHasFinished()";
-  updateRunActions();
-}
-
 void ComposerMainWindow::launchProjectWizard()
 {
   NewProjectWizard wizard (this);
@@ -1720,7 +1283,7 @@ void ComposerMainWindow::launchProjectWizard()
     if( !filename.isNull() && !filename.isEmpty())
     {
 
-      updateLastFileDialogPath(filename);
+      Utilities::updateLastFileDialogPath(filename);
 
       if(!filename.endsWith(".cpr"))
         filename = filename + QString(".cpr");
@@ -1904,10 +1467,11 @@ void ComposerMainWindow::addDefaultStructureToProject(Project *project,
  */
 void ComposerMainWindow::openProject()
 {
-  QString filename = QFileDialog::getOpenFileName(this,
-                                               tr("Open NCL Composer Project"),
-                                               getLastFileDialogPath(),
-                                           tr("NCL Composer Projects (*.cpr)"));
+  QString filename =
+          QFileDialog::getOpenFileName(this,
+                                       tr("Open NCL Composer Project"),
+                                       Utilities::getLastFileDialogPath(),
+                                       tr("NCL Composer Projects (*.cpr)"));
   if(filename != "")
   {
 #ifdef WIN32
@@ -1918,11 +1482,11 @@ void ComposerMainWindow::openProject()
 
     ProjectControl::getInstance()->launchProject(filename);
 
-    updateLastFileDialogPath(filename);
+    Utilities::updateLastFileDialogPath(filename);
   }
 }
 
-void ComposerMainWindow::checkTemporaryFileLastModified(QString filename)
+void ComposerMainWindow::checkTemporaryFileLastModified(const QString &filename)
 {
   QFileInfo temporaryFileInfo(filename + "~");
   QFileInfo fileInfo(filename);
@@ -1957,34 +1521,24 @@ bool ComposerMainWindow::removeTemporaryFile(QString location)
   return file.remove();
 }
 
-void ComposerMainWindow::updateLastFileDialogPath(QString filepath)
-{
-  Utilities::updateLastFileDialogPath(filepath);
-}
-
-QString ComposerMainWindow::getLastFileDialogPath()
-{
-  return Utilities::getLastFileDialogPath();
-}
-
 void ComposerMainWindow::importFromDocument()
 {
-  QString docFilename = QFileDialog::getOpenFileName(
-        this,
-        tr("Choose the NCL file to be imported"),
-        getLastFileDialogPath(),
-        tr("NCL Documents (*.ncl)") );
+  QString docFilename =
+          QFileDialog::getOpenFileName( this,
+                                        tr("Choose the NCL file to be imported"),
+                                        Utilities::getLastFileDialogPath(),
+                                        tr("NCL Documents (*.ncl)") );
 
   if(docFilename != "")
   {
-    updateLastFileDialogPath(docFilename);
+    Utilities::updateLastFileDialogPath(docFilename);
 
     QString projFilename = QFileDialog::getSaveFileName(
           this,
           tr("Choose the NCL Composer Project where the NCL document must be "
              "imported"),
-             getLastFileDialogPath(),
-             tr("NCL Composer Projects (*.cpr)") );
+           Utilities::getLastFileDialogPath(),
+           tr("NCL Composer Projects (*.cpr)") );
 
     //Create the file
     QFile f(projFilename);
@@ -1999,7 +1553,7 @@ void ComposerMainWindow::importFromDocument()
       ProjectControl::getInstance()->importFromDocument(docFilename,
                                                         projFilename);
 
-      updateLastFileDialogPath(projFilename);
+      Utilities::updateLastFileDialogPath(projFilename);
     }
   }
 }
@@ -2201,9 +1755,6 @@ void ComposerMainWindow::currentTabChanged(int n)
     _ui->action_CloseProject->setEnabled(true);
     _ui->action_Save->setEnabled(true);
     _ui->action_SaveAs->setEnabled(true);
-
-    // \todo: This should check if there is already running application
-    updateRunActions();
   }
   else
   {
@@ -2212,8 +1763,6 @@ void ComposerMainWindow::currentTabChanged(int n)
     _ui->action_CloseProject->setEnabled(false);
     _ui->action_Save->setEnabled(false);
     _ui->action_SaveAs->setEnabled(false);
-    _ui->action_RunNCL->setEnabled(false);
-    _ui->action_StopNCL->setEnabled(false);
   }
 }
 
@@ -2228,60 +1777,7 @@ void ComposerMainWindow::pluginWidgetViewToggled(bool state)
                                      QToolWindowManager::NoArea );
 }
 
-void ComposerMainWindow::focusChanged(QWidget *old, QWidget *now)
-{
-  Q_UNUSED(old)
-
-  /*
-  if(now == NULL)
-    return; // Do nothing!!
-
-  if(qApp->activeModalWidget() != NULL)
-    return; // Do nothing!! (Wait for the popup to end)
-
-  // qDebug() << "Locking allDocksMutex 1";
-  allDocksMutex.lock();
-  for(int i = 0; i < allDocks.size(); i++)
-  {
-    // if(old != NULL && allDocks.at(i)->isAncestorOf(old))
-    updateDockStyle(allDocks.at(i), false);
-  }
-  allDocksMutex.unlock();
-  // qDebug() << "Unlocked allDocksMutex 1";
-
-  // qDebug() << "Locking allDocksMutex 2";
-  allDocksMutex.lock();
-
-  if(now != NULL)
-  {
-    for(int i = 0 ; i < allDocks.size(); i++)
-    {
-      bool isAncestor = false;
-      QWidget *child = now;
-//      qDebug() << "Start" << i << allDocks.size();
-      while (child && child != this)
-      {
-//        qDebug() << "child pointer" << child;
-//        qDebug() << child->metaObject()->className();
-        if (child == allDocks.at(i))
-        {
-          isAncestor = true;
-          break;
-        }
-        child = child->parentWidget();
-      }
-//      qDebug() << "End";
-
-      if(isAncestor)
-        updateDockStyle(allDocks.at(i), true);
-    }
-  }
-  allDocksMutex.unlock();
-//  qDebug() << "Unlocked allDocksMutex 2";
-  */
-}
-
-void ComposerMainWindow::setProjectDirty(QString location, bool isDirty)
+void ComposerMainWindow::setProjectAsDirty(QString location, bool isDirty)
 {
   QToolWindowManager *window = _projectsWidgets[location];
 
@@ -2331,7 +1827,6 @@ void ComposerMainWindow::redo()
     if(msgControl != 0)
       msgControl->redo();
   }
-
 }
 
 void ComposerMainWindow::gotoNCLClubWebsite()
@@ -2363,7 +1858,7 @@ void ComposerMainWindow::autoSaveCurrentProjects()
 }
 
 /*!
- * \brief Creates the language menu dynamically from the content of m_langPath.
+ * \brief Creates the language menu dynamically from the content of _langPath.
  *        We create the menu entries dynamically, dependant on the existing
  *        translations
  */
@@ -2379,9 +1874,9 @@ void ComposerMainWindow::createLanguageMenu(void)
   QString defaultLocale = QLocale::system().name();       // e.g. "de_DE"
   defaultLocale.truncate(defaultLocale.lastIndexOf('_')); // e.g. "de"
 
-  m_langPath = QApplication::applicationDirPath();
-  m_langPath.append("/languages");
-  QDir dir(m_langPath);
+  _langPath = QApplication::applicationDirPath();
+  _langPath.append("/languages");
+  QDir dir(_langPath);
   QStringList fileNames = dir.entryList(QStringList("composer_*.qm"));
 
   qDebug() << fileNames;
@@ -2394,7 +1889,7 @@ void ComposerMainWindow::createLanguageMenu(void)
     locale.remove(0, locale.indexOf('_') + 1); // "de"
 
     QString lang = QLocale::languageToString(QLocale(locale).language());
-    QIcon ico(QString("%1/%2.png").arg(m_langPath).arg(locale));
+    QIcon ico(QString("%1/%2.png").arg(_langPath).arg(locale));
 
     QAction *action = new QAction(ico, lang, this);
     action->setCheckable(true);
@@ -2419,7 +1914,7 @@ void ComposerMainWindow::createLanguageMenu(void)
  */
 void ComposerMainWindow::slotLanguageChanged(QAction* action)
 {
-  if(0 != action)
+  if(action)
   {
     // load the language dependant on the action content
     loadLanguage(action->data().toString());
@@ -2444,16 +1939,15 @@ void ComposerMainWindow::switchTranslator(QTranslator& translator,
 void ComposerMainWindow::loadLanguage(const QString& rLanguage)
 {
   qDebug() << rLanguage;
-  if(m_currLang != rLanguage)
+  if(_currLang != rLanguage)
   {
-    m_currLang = rLanguage;
-    QLocale locale = QLocale(m_currLang);
+    _currLang = rLanguage;
+    QLocale locale = QLocale(_currLang);
     QLocale::setDefault(locale);
     QString languageName = QLocale::languageToString(locale.language());
-    switchTranslator(m_translator,
-                     m_langPath + "/" + QString("composer_%1.qm").arg(rLanguage));
-    switchTranslator(m_translatorQt, QString("qt_%1.qm").arg(rLanguage));
-
+    switchTranslator(_translator,
+                     _langPath + "/" + QString("composer_%1.qm").arg(rLanguage));
+    switchTranslator(_translatorQt, QString("qt_%1.qm").arg(rLanguage));
   }
 }
 
@@ -2463,7 +1957,7 @@ void ComposerMainWindow::loadLanguage(const QString& rLanguage)
  */
 void ComposerMainWindow::changeEvent(QEvent* event)
 {
-  if(0 != event)
+  if(event)
   {
     switch(event->type())
     {
@@ -2513,9 +2007,6 @@ void ComposerMainWindow::updateTabWithProject(int index, QString newLocation)
   }
 }
 
-/*!
- * \brief TODO
- */
 void ComposerMainWindow::saveLoadPluginData(int)
 {
   GlobalSettings settings;
@@ -2539,43 +2030,8 @@ void ComposerMainWindow::saveLoadPluginData(int)
 
 void ComposerMainWindow::on_actionReport_Bug_triggered()
 {
-  QDesktopServices::openUrl(QUrl("http://composer.telemidia.puc-rio.br/en/contact"));
+  QDesktopServices::openUrl(QUrl("http://redmine.telemidia.puc-rio.br:8080/redmine/projects/composer3"));
 }
-
-#ifdef WITH_SERV_PUB
-void ComposerMainWindow::on_actionPublish_triggered()
-{
-  int index = _tabProjects->currentIndex();
-
-  if (index != 0)
-  {
-    QString location = _tabProjects->tabToolTip(index);
-
-    Project *currentProject =
-        ProjectControl::getInstance()->getOpenProject(location);
-
-    QString projectName = currentProject->getLocation();
-
-    GlobalSettings settings;
-    settings.beginGroup("runginga");
-    QString remoteIp = settings.value("remote_ip").toString();
-    QString remoteUser = settings.value("remote_user").toString();
-    QString remotePath = settings.value("remote_path").toString();
-    settings.endGroup();
-
-    QString  remoteLocation = remoteUser+"@"+remoteIp+":"+remotePath;
-
-    int r = QMessageBox::question(this,
-                    tr("Publish"), tr("Are you sure you want to publish"
-    " the project <b>'%1'</b> to <b>'%2'</b>").arg(projectName, remoteLocation),
-                    QMessageBox::Yes | QMessageBox::No,
-                    QMessageBox::No);
-
-    if (r == QMessageBox::Yes)
-      copyOnRemoteGingaVM(false);
-  }
-}
-#endif
 
 #if WITH_WIZARD
 void ComposerMainWindow::on_actionProject_from_Wizard_triggered()

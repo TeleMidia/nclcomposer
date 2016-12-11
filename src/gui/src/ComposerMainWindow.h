@@ -64,11 +64,6 @@ using namespace composer::core::util;
 #include "ClickableDockWidget.h"
 
 #include <qtoolwindowmanager.h>
-#include "RunGingaConfig.h"
-
-#ifdef WITH_LIBSSH2
-#include "RunRemoteGingaVM.h"
-#endif
 
 using namespace composer::gui;
 
@@ -79,17 +74,10 @@ class ComposerMainWindow;
 namespace composer {
 namespace gui {
 
-class QThreadEx : public QThread
-{
-protected:
-  void run() { exec(); }
-};
-
 /*!
  * \brief The main Window of NCL Composer.
  *
  * This class is the main window of NCL Composer.
- *
  * \fixme This class is too big it must be refactored
  */
 class ComposerMainWindow : public QMainWindow {
@@ -138,12 +126,6 @@ private:
   PerspectiveManager *_perspectiveManager;
   PluginDetailsDialog *_pluginDetailsDialog;
 
-  QProcess _localGingaProcess;
-#ifdef WITH_LIBSSH2
-  QThreadEx runRemoteGingaVMThread;
-  RunRemoteGingaVMAction runRemoteGingaVMAction;
-  StopRemoteGingaVMAction stopRemoteGingaVMAction;
-#endif
   QProgressDialog *_taskProgressBar;
   QTimer *_autoSaveTimer; // auto save timer
 
@@ -155,6 +137,7 @@ private:
 #endif
 
 private:
+  void readSettings();
   void initModules();
 
   void loadStyleSheets();
@@ -163,23 +146,19 @@ private:
   void createAboutPluginsWidgets();
   void createMenus();
   void createActions();
-  void readSettings();
 
   void readExtensions();
   void closeEvent(QCloseEvent *event);
   void cleanUp();
   void updateRecentProjectsWidgets();
 
-  void updateDockStyle(QDockWidget *titleBar, bool selected=false);  
-
   void updateTabWithProject(int index, QString newLocation);
 
-  QTranslator m_translator;   /**< contains the translations for this application */
-  QTranslator m_translatorQt; /**< contains the translations for qt */
-  QString m_currLang;     /**< contains the currently loaded language */
-  QString m_langPath;     /**< Path of language files. This is always fixed to
-                               /languages. */
-
+  QTranslator _translator;   /**< contains the translations for this application */
+  QTranslator _translatorQt; /**< contains the translations for qt */
+  QString     _currLang;     /**< contains the currently loaded language */
+  QString     _langPath;     /**< Path of language files. This is always fixed to
+                                  /languages. */
   void loadLanguage(const QString& rLanguage);
   void createLanguageMenu(void);
   void switchTranslator(QTranslator& translator, const QString& filename);
@@ -192,6 +171,19 @@ private:
    */
   QString promptChooseExtDirectory();
 
+
+  /*!
+   * \brief
+   * \todo Move this function from here!
+   */
+  void checkTemporaryFileLastModified(const QString &filename);
+
+  /*!
+   * \brief Remove the temporary file related to location.
+   * \todo Move this function from here!
+   */
+  bool removeTemporaryFile(QString location);
+
 protected:
   void changeEvent(QEvent*);
   void keyPressEvent(QKeyEvent *event);
@@ -201,11 +193,12 @@ protected slots:
   void saveLoadPluginData(int);
 
 private slots:
-
   void about();
   void aboutPlugins();
+
   void updateViewMenu();
   void showEditPreferencesDialog();
+
   void tabClosed(int index);
   void closeCurrentTab();
   void showCurrentWidgetFullScreen();
@@ -219,16 +212,6 @@ private slots:
   void savePerspective(QString layoutName);
   void saveDefaultPerspective(QString defaultPerspectiveName);
   void restorePerspective(QString layoutName);
-
-  void runNCL();
-  void stopNCL();
-  void functionRunPassive();
-  void functionRunActive();
-  bool isRunningNCL();
-  void runOnLocalGinga();
-  void copyOnRemoteGingaVM (bool autoplay = true);
-  void copyHasFinished();
-  void updateRunActions();
 
   void launchProjectWizard();
   void addToRecentProjects(QString projectUrl);
@@ -248,24 +231,16 @@ private slots:
 
   void currentTabChanged(int n);
 
-  void focusChanged(QWidget *old, QWidget *now);
-
-  void setProjectDirty(QString location, bool isDirty);
+  void setProjectAsDirty(QString location, bool isDirty);
 
   void gotoNCLClubWebsite();
 
   void autoSaveCurrentProjects();
 
-  // TODO: Remove this function from here.
-  void updateLastFileDialogPath(QString filepath);
-
-  // TODO: Remove this function from here.
-  QString getLastFileDialogPath();
-
-  void addDefaultStructureToProject(Project *project,
-                                    bool shouldCopyDefaultConnBase = true,
-                                    bool shouldCreateADefaultRegion = true,
-                                    bool save = true);
+  void addDefaultStructureToProject ( Project *project,
+                                      bool shouldCopyDefaultConnBase = true,
+                                      bool shouldCreateADefaultRegion = true,
+                                      bool save = true );
 
   void on_actionReport_Bug_triggered();
 
@@ -281,35 +256,19 @@ private slots:
 #endif
 
 public:
-
   explicit ComposerMainWindow(QWidget *parent = 0);
   virtual ~ComposerMainWindow();
 
-  void init(const QApplication &app);  
+  void init(const QApplication &app);
 
 public slots:
-
   void errorDialog(QString);
-
   void addPluginWidget(IPluginFactory *fac, IPlugin *plugin, Project *project);
-
   void openProject();
   void onOpenProjectTab(QString location);
 
   void saveCurrentProject();
   void saveAsCurrentProject();
-
-  /*!
-   * \brief
-   * \todo Move this function from here!
-   */
-  void checkTemporaryFileLastModified(QString filename);
-
-  /*!
-   * \brief Remove the temporary file related to location.
-   * \todo Move this function from here!
-   */
-  bool removeTemporaryFile(QString location);
 
   bool showHelp();
 
@@ -317,13 +276,6 @@ public slots:
   void redo();
 
   void openProjects(const QStringList &projects);
-
-signals:
-  /*!
-     \brief Send this signal when must be writed the current settings.
-     \deprecated
-    */
-  void writeSettings();
 };
 
 } } //end namespace
