@@ -96,13 +96,13 @@ class ComposerMainWindow : public QMainWindow {
   Q_OBJECT
 
 private:
-  static const int maximumRecentProjectsSize = 10;
+  static const int _maximumRecentProjectsSize = 10;
 
-  Ui::ComposerMainWindow *ui;
+  Ui::ComposerMainWindow *_ui;
 
-  QListWidget *profilesExt; /*!< Shows a list of the current loaded language
+  QListWidget *_listWidgetProfilesExt; /*!< Shows a list of the current loaded language
                                    profiles. */
-  QStringList extensions_paths; /*!< TODO */
+  QStringList _extensionsPaths; /*!< TODO */
 
 
   QTabWidget  *_tabProjects; /*!< Each open project is show in a different tab.
@@ -128,25 +128,24 @@ private:
 
   QMap <QTreeWidgetItem*, IPluginFactory*> treeWidgetItem2plFactory;
 
-  PreferencesDialog *preferences; /*!< TODO */
+  PreferencesDialog *_preferencesDialog; /*!< TODO */
 
-  QDialog *aboutPluginsDialog; /*!< TODO */
-  QPushButton *detailsButton;
+  QDialog *_aboutPluginsDialog; /*!< TODO */
+  QPushButton *_detailsButton;
 
+  WelcomeWidget *_welcomeWidget; /*!< TODO */
 
-  WelcomeWidget *welcomeWidget; /*!< TODO */
+  PerspectiveManager *_perspectiveManager;
+  PluginDetailsDialog *_pluginDetailsDialog;
 
-  PerspectiveManager *perspectiveManager;
-  PluginDetailsDialog *pluginDetailsDialog;
-
-  QProcess localGingaProcess;
+  QProcess _localGingaProcess;
 #ifdef WITH_LIBSSH2
   QThreadEx runRemoteGingaVMThread;
   RunRemoteGingaVMAction runRemoteGingaVMAction;
   StopRemoteGingaVMAction stopRemoteGingaVMAction;
 #endif
   QProgressDialog *_taskProgressBar;
-  QTimer *autoSaveTimer; // auto save timer
+  QTimer *_autoSaveTimer; // auto save timer
 
   // ComposerHelpWidget composerHelpWidget;
 

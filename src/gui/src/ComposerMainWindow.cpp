@@ -46,13 +46,13 @@ const int autoSaveInterval = 1 * 60 * 1000; //ms
  */
 ComposerMainWindow::ComposerMainWindow(QWidget *parent)
   : QMainWindow(parent),
-    ui(new Ui::ComposerMainWindow),
-    localGingaProcess(this)
+    _ui(new Ui::ComposerMainWindow),
+    _localGingaProcess(this)
 {
-  ui->setupUi(this);
+  _ui->setupUi(this);
 
   // Local Ginga Run
-  connect( &localGingaProcess, SIGNAL(finished(int)),
+  connect( &_localGingaProcess, SIGNAL(finished(int)),
            this, SLOT(copyHasFinished()) );
 
   // Remote Ginga Run
@@ -76,7 +76,7 @@ ComposerMainWindow::ComposerMainWindow(QWidget *parent)
   connect( &wizardProcess, SIGNAL(finished(int)),
            this, SLOT(wizardFinished(int)) );
 #else
-  ui->actionProject_from_Wizard->setVisible(false);
+  _ui->actionProject_from_Wizard->setVisible(false);
 #endif
   // setWindowFlags(Qt::Window | Qt::WindowTitleHint);
 }
@@ -116,11 +116,11 @@ void ComposerMainWindow::init(const QApplication &app)
   SimpleSSHClient::init(); // Initializes the libssh2 library
 #endif
 
-  autoSaveTimer = new QTimer(this);
-  connect(autoSaveTimer, SIGNAL(timeout()),
+  _autoSaveTimer = new QTimer(this);
+  connect(_autoSaveTimer, SIGNAL(timeout()),
           this, SLOT(autoSaveCurrentProjects()));
 
-  autoSaveTimer->start(autoSaveInterval);
+  _autoSaveTimer->start(autoSaveInterval);
 
   splash.showMessage(tr("Reloading last session..."),
                      Qt::AlignRight, Qt::gray);
@@ -137,7 +137,7 @@ void ComposerMainWindow::init(const QApplication &app)
 
 ComposerMainWindow::~ComposerMainWindow()
 {
-  delete ui;
+  delete _ui;
 #ifdef WITH_LIBSSH2
   SimpleSSHClient::exit();
 #endif
@@ -175,7 +175,7 @@ void ComposerMainWindow::initModules()
   connect( projectControl, SIGNAL(endOpenProject(QString)),
            SLOT(addToRecentProjects(QString)) );
 
-  connect( welcomeWidget, SIGNAL(userPressedRecentProject(QString)),
+  connect( _welcomeWidget, SIGNAL(userPressedRecentProject(QString)),
            this, SLOT(userPressedRecentProject(QString)) );
   /* end recent projects */
 
@@ -193,36 +193,36 @@ void ComposerMainWindow::readExtensions()
   GlobalSettings settings;
 
   settings.beginGroup("extensions");
-  extensions_paths.clear();
+  _extensionsPaths.clear();
 
   //Remember: The default paths are been added in main.cpp
   if (settings.contains("path"))
-    extensions_paths << settings.value("path").toStringList();
+    _extensionsPaths << settings.value("path").toStringList();
 
-  extensions_paths.removeDuplicates(); // Remove duplicate paths
+  _extensionsPaths.removeDuplicates(); // Remove duplicate paths
 
   // add all the paths to LibraryPath, i.e., plugins are allowed to install
   // dll dependencies in the extensions path.
-  for (int i = 0; i < extensions_paths.size(); i++)
+  for (int i = 0; i < _extensionsPaths.size(); i++)
   {
-    QApplication::addLibraryPath(extensions_paths.at(i) + "/");
+    QApplication::addLibraryPath(_extensionsPaths.at(i) + "/");
   }
 
   // foreach path where extensions can be installed, try to load profiles.
-  for (int i = 0; i < extensions_paths.size(); i++)
+  for (int i = 0; i < _extensionsPaths.size(); i++)
   {
-    LanguageControl::getInstance()->loadProfiles(extensions_paths.at(i));
+    LanguageControl::getInstance()->loadProfiles(_extensionsPaths.at(i));
   }
 
   // foreach path where extensions can be installed, try to load plugins.
-  for(int i = 0; i < extensions_paths.size(); i++)
+  for(int i = 0; i < _extensionsPaths.size(); i++)
   {
-    PluginControl::getInstance()->loadPlugins(extensions_paths.at(i));
+    PluginControl::getInstance()->loadPlugins(_extensionsPaths.at(i));
   }
   settings.endGroup();
 
   /* Load the preferences page */
-  preferences->addPreferencePage(new GeneralPreferences());
+  _preferencesDialog->addPreferencePage(new GeneralPreferences());
   // preferences->addPreferencePage(new RunGingaConfig());
 
   // preferences->addPreferencePage(new ImportBasePreferences());
@@ -234,7 +234,7 @@ void ComposerMainWindow::readExtensions()
   IPluginFactory *currentFactory;
   foreach(currentFactory, list)
   {
-    preferences->addPreferencePage(currentFactory);
+    _preferencesDialog->addPreferencePage(currentFactory);
   }
 }
 
@@ -348,7 +348,7 @@ void ComposerMainWindow::initGUI()
 
   _tabProjects = new QTabWidget(0);
 
-  ui->frame->layout()->addWidget(_tabProjects);
+  _ui->frame->layout()->addWidget(_tabProjects);
 
   //    _tabProjects->setMovable(true);
   _tabProjects->setTabsClosable(true);
@@ -369,36 +369,36 @@ void ComposerMainWindow::initGUI()
   createAboutPluginsWidgets();
 // createLanguageMenu();
 
-  preferences = new PreferencesDialog(this);
-  perspectiveManager = new PerspectiveManager(this);
-  pluginDetailsDialog = new PluginDetailsDialog(aboutPluginsDialog);
+  _preferencesDialog = new PreferencesDialog(this);
+  _perspectiveManager = new PerspectiveManager(this);
+  _pluginDetailsDialog = new PluginDetailsDialog(_aboutPluginsDialog);
 
-  connect(ui->action_RunNCL, SIGNAL(triggered()), this, SLOT(runNCL()));
-  connect(ui->action_StopNCL, SIGNAL(triggered()), this, SLOT(stopNCL()));
-  connect(ui->action_runPassiveNCL, SIGNAL(triggered()), this, SLOT(functionRunPassive()));
-  connect(ui->action_runActiveNCL, SIGNAL(triggered()), this, SLOT(functionRunActive()));
+  connect(_ui->action_RunNCL, SIGNAL(triggered()), this, SLOT(runNCL()));
+  connect(_ui->action_StopNCL, SIGNAL(triggered()), this, SLOT(stopNCL()));
+  connect(_ui->action_runPassiveNCL, SIGNAL(triggered()), this, SLOT(functionRunPassive()));
+  connect(_ui->action_runActiveNCL, SIGNAL(triggered()), this, SLOT(functionRunActive()));
 
-  ui->action_RunNCL->setEnabled(true);
+  _ui->action_RunNCL->setEnabled(true);
 
 // UNDO/REDO
   // connect(ui->action_Undo, SIGNAL(triggered()), this, SLOT(undo()));
   // connect(ui->action_Redo, SIGNAL(triggered()), this, SLOT(redo()));
 
-  welcomeWidget = new WelcomeWidget();
-  _tabProjects->addTab(welcomeWidget, tr("Welcome"));
+  _welcomeWidget = new WelcomeWidget();
+  _tabProjects->addTab(_welcomeWidget, tr("Welcome"));
   _tabProjects->setTabIcon(0, QIcon());
 
   QTabBar *tabBar = _tabProjects->findChild<QTabBar *>();
   tabBar->setTabButton(0, QTabBar::RightSide, 0);
   tabBar->setTabButton(0, QTabBar::LeftSide, 0);
 
-  connect(welcomeWidget, SIGNAL(userPressedOpenProject()),
+  connect(_welcomeWidget, SIGNAL(userPressedOpenProject()),
           this, SLOT(openProject()));
 
-  connect(welcomeWidget, SIGNAL(userPressedNewProject()),
+  connect(_welcomeWidget, SIGNAL(userPressedNewProject()),
           this, SLOT(launchProjectWizard()));
 
-  connect(welcomeWidget, SIGNAL(userPressedSeeInstalledPlugins()),
+  connect(_welcomeWidget, SIGNAL(userPressedSeeInstalledPlugins()),
           this, SLOT(aboutPlugins()));
 
 
@@ -763,24 +763,24 @@ void ComposerMainWindow::createMenus()
 
 #endif
 
-  ui->menu_Edit->addAction(_editPreferencesAction);
+  _ui->menu_Edit->addAction(_editPreferencesAction);
 
-  connect( ui->menu_View, SIGNAL(aboutToShow()),
+  connect( _ui->menu_View, SIGNAL(aboutToShow()),
            this, SLOT(updateViewMenu()) );
 
-  connect( ui->action_CloseProject, SIGNAL(triggered()),
+  connect( _ui->action_CloseProject, SIGNAL(triggered()),
            this, SLOT(closeCurrentTab()) );
 
-  connect( ui->action_CloseAll, SIGNAL(triggered()),
+  connect( _ui->action_CloseAll, SIGNAL(triggered()),
            this, SLOT(closeAllFiles()) );
 
-  connect( ui->action_Save, SIGNAL(triggered()),
+  connect( _ui->action_Save, SIGNAL(triggered()),
            this, SLOT(saveCurrentProject()) );
 
-  connect( ui->action_SaveAs, SIGNAL(triggered()),
+  connect( _ui->action_SaveAs, SIGNAL(triggered()),
            this, SLOT(saveAsCurrentProject()) );
 
-  connect ( ui->action_NewProject, SIGNAL(triggered()),
+  connect ( _ui->action_NewProject, SIGNAL(triggered()),
             this, SLOT(launchProjectWizard()) );
 
   /* _menuLanguage = new QMenu(0);
@@ -789,21 +789,21 @@ void ComposerMainWindow::createMenus()
 
   QToolButton *button_Run = new QToolButton(0); //create a run_NCL button(It used to be created in design mode)
   _menuMultidevice = new QMenu(0); // assign a dropdown menu to the button
-  _menuMultidevice->addAction(ui->action_runPassiveNCL);
-  _menuMultidevice->addAction(ui->action_runActiveNCL);
+  _menuMultidevice->addAction(_ui->action_runPassiveNCL);
+  _menuMultidevice->addAction(_ui->action_runActiveNCL);
   button_Run->setMenu(_menuMultidevice);
-  button_Run->setDefaultAction(ui->action_RunNCL);
+  button_Run->setDefaultAction(_ui->action_RunNCL);
   button_Run->setPopupMode(QToolButton::MenuButtonPopup);
-  ui->toolBar->addWidget(button_Run); //put button_run in toolbar
-  ui->toolBar->addSeparator();
+  _ui->toolBar->addWidget(button_Run); //put button_run in toolbar
+  _ui->toolBar->addSeparator();
 
-  ui->action_Main_toolbar->setChecked(ui->toolBar->isVisible());
-  ui->action_Perspectives_toolbar->setChecked(ui->toolBar_Perspectives->isVisible());
+  _ui->action_Main_toolbar->setChecked(_ui->toolBar->isVisible());
+  _ui->action_Perspectives_toolbar->setChecked(_ui->toolBar_Perspectives->isVisible());
 
-  connect(ui->action_Main_toolbar, SIGNAL(triggered(bool)), ui->toolBar, SLOT(setVisible(bool)));
-  connect(ui->action_Perspectives_toolbar, SIGNAL(triggered(bool)), ui->toolBar_Perspectives, SLOT(setVisible(bool)));
+  connect(_ui->action_Main_toolbar, SIGNAL(triggered(bool)), _ui->toolBar, SLOT(setVisible(bool)));
+  connect(_ui->action_Perspectives_toolbar, SIGNAL(triggered(bool)), _ui->toolBar_Perspectives, SLOT(setVisible(bool)));
 
-  _tabProjects->setCornerWidget(ui->menubar, Qt::TopLeftCorner);
+  _tabProjects->setCornerWidget(_ui->menubar, Qt::TopLeftCorner);
 
 
   // updateMenuLanguages();
@@ -812,16 +812,16 @@ void ComposerMainWindow::createMenus()
 
 void ComposerMainWindow::createAboutPluginsWidgets()
 {
-  aboutPluginsDialog = new QDialog(this);
-  aboutPluginsDialog->setWindowTitle(tr("Installed Plugins"));
+  _aboutPluginsDialog = new QDialog(this);
+  _aboutPluginsDialog->setWindowTitle(tr("Installed Plugins"));
 
 #ifdef SHOW_PROFILES
-  profilesExt = new QListWidget(aboutPluginsDialog);
-  profilesExt->setAlternatingRowColors(true);
+  _listWidgetProfilesExt = new QListWidget(_aboutPluginsDialog);
+  _listWidgetProfilesExt->setAlternatingRowColors(true);
 #endif
 
   /* This should be a new Widget and change some code for there */
-  _treeWidgetPlugins = new QTreeWidget(aboutPluginsDialog);
+  _treeWidgetPlugins = new QTreeWidget(_aboutPluginsDialog);
   _treeWidgetPlugins->setAlternatingRowColors(true);
 
   connect(_treeWidgetPlugins, SIGNAL(itemSelectionChanged()),
@@ -834,37 +834,37 @@ void ComposerMainWindow::createAboutPluginsWidgets()
   QDialogButtonBox *bOk = new QDialogButtonBox(QDialogButtonBox::Ok |
                                                QDialogButtonBox::Close,
                                                Qt::Horizontal,
-                                               aboutPluginsDialog);
+                                               _aboutPluginsDialog);
 
-  detailsButton = bOk->button(QDialogButtonBox::Ok);
-  detailsButton->setText(tr("Details"));
-  detailsButton->setIcon(QIcon());
-  detailsButton->setEnabled(false);
+  _detailsButton = bOk->button(QDialogButtonBox::Ok);
+  _detailsButton->setText(tr("Details"));
+  _detailsButton->setIcon(QIcon());
+  _detailsButton->setEnabled(false);
 
   connect( bOk, SIGNAL(rejected()),
-           aboutPluginsDialog, SLOT(close()) );
+           _aboutPluginsDialog, SLOT(close()) );
 
-  connect( detailsButton, SIGNAL(pressed()),
+  connect( _detailsButton, SIGNAL(pressed()),
            this, SLOT(showPluginDetails()) );
 
-  QGridLayout *gLayout = new QGridLayout(aboutPluginsDialog);
+  QGridLayout *gLayout = new QGridLayout(_aboutPluginsDialog);
   gLayout->addWidget(new QLabel(tr("The <b>Composer</b> is an IDE for"
                                    " Declarative Multimedia languages."),
-                                aboutPluginsDialog));
+                                _aboutPluginsDialog));
 
 #ifdef SHOW_PROFILES
   gLayout->addWidget(new QLabel(tr("<b>Installed Language Profiles</b>"),
-                                aboutPluginsDialog));
-  gLayout->addWidget(profilesExt);
+                                _aboutPluginsDialog));
+  gLayout->addWidget(_listWidgetProfilesExt);
 #endif
   gLayout->addWidget(new QLabel(tr("<b>Installed Plug-ins</b>")));
   gLayout->addWidget(_treeWidgetPlugins);
   gLayout->addWidget(bOk);
-  aboutPluginsDialog->setLayout(gLayout);
+  _aboutPluginsDialog->setLayout(gLayout);
 
-  aboutPluginsDialog->setModal(true);
+  _aboutPluginsDialog->setModal(true);
 
-  connect( aboutPluginsDialog, SIGNAL(finished(int)),
+  connect( _aboutPluginsDialog, SIGNAL(finished(int)),
            this, SLOT(saveLoadPluginData(int)) );
 }
 
@@ -935,17 +935,17 @@ void ComposerMainWindow::aboutPlugins()
   QList<ILanguageProfile*>::iterator itL;
   QList<ILanguageProfile*> lList = LanguageControl::getInstance()->
       getLoadedProfiles();
-  profilesExt->clear();
+  _listWidgetProfilesExt->clear();
 
   for(itL = lList.begin(); itL != lList.end(); itL++)
   {
     ILanguageProfile *lg = *itL;
-    profilesExt->addItem(new QListWidgetItem(lg->getProfileName()));
+    _listWidgetProfilesExt->addItem(new QListWidgetItem(lg->getProfileName()));
   }
 #endif
 
-  detailsButton->setEnabled(false);
-  aboutPluginsDialog->show();
+  _detailsButton->setEnabled(false);
+  _aboutPluginsDialog->show();
 }
 
 /*!
@@ -961,15 +961,15 @@ void ComposerMainWindow::errorDialog(QString message)
 
 void ComposerMainWindow::createActions() {
 
-  connect( ui->action_About, SIGNAL(triggered()), this, SLOT(about()));
+  connect( _ui->action_About, SIGNAL(triggered()), this, SLOT(about()));
 
-  connect( ui->action_AboutPlugins, SIGNAL(triggered()),
+  connect( _ui->action_AboutPlugins, SIGNAL(triggered()),
            this, SLOT(aboutPlugins()) );
 
 #ifdef WITH_SERV_PUB
   ui->actionPublish->setEnabled(true);
 #else
-  ui->actionPublish->setEnabled(false);
+  _ui->actionPublish->setEnabled(false);
 #endif
 
   _editPreferencesAction = new QAction(tr("&Preferences"), this);
@@ -977,19 +977,19 @@ void ComposerMainWindow::createActions() {
   connect (_editPreferencesAction, SIGNAL(triggered()), this,
            SLOT(showEditPreferencesDialog()));
 
-  connect(ui->action_Preferences, SIGNAL(triggered()),
+  connect(_ui->action_Preferences, SIGNAL(triggered()),
           this, SLOT(showEditPreferencesDialog()));
 
-  connect( ui->action_Exit, SIGNAL(triggered()),
+  connect( _ui->action_Exit, SIGNAL(triggered()),
            this, SLOT(close()) );
 
-  connect ( ui->action_Fullscreen, SIGNAL(triggered()),
+  connect ( _ui->action_Fullscreen, SIGNAL(triggered()),
             this, SLOT(showCurrentWidgetFullScreen()) );
 
-  connect( ui->action_Save_current_perspective, SIGNAL(triggered()),
+  connect( _ui->action_Save_current_perspective, SIGNAL(triggered()),
            this, SLOT(saveCurrentGeometryAsPerspective()));
 
-  connect( ui->action_Restore_a_perspective, SIGNAL(triggered()),
+  connect( _ui->action_Restore_a_perspective, SIGNAL(triggered()),
            this, SLOT(restorePerspective()) );
 
   QWidget* spacer = new QWidget();
@@ -997,18 +997,18 @@ void ComposerMainWindow::createActions() {
 
   //Add a separator to the toolbar. All actions after preferences (including
   // it will be aligned in the bottom.
-  ui->toolBar->insertWidget(ui->action_Preferences, spacer);
+  _ui->toolBar->insertWidget(_ui->action_Preferences, spacer);
 
-  connect (ui->action_OpenProject, SIGNAL(triggered()),
+  connect (_ui->action_OpenProject, SIGNAL(triggered()),
            this, SLOT(openProject()));
 
-  connect (ui->action_ImportFromExistingNCL, SIGNAL(triggered()),
+  connect (_ui->action_ImportFromExistingNCL, SIGNAL(triggered()),
            this, SLOT(importFromDocument()));
 
-  connect (ui->action_GoToClubeNCLWebsite, SIGNAL(triggered()),
+  connect (_ui->action_GoToClubeNCLWebsite, SIGNAL(triggered()),
            this, SLOT(gotoNCLClubWebsite()));
 
-  connect (ui->action_Help, SIGNAL(triggered()), this, SLOT(showHelp()));
+  connect (_ui->action_Help, SIGNAL(triggered()), this, SLOT(showHelp()));
 
 }
 
@@ -1017,7 +1017,7 @@ void ComposerMainWindow::createActions() {
  */
 void ComposerMainWindow::showCurrentWidgetFullScreen()
 {
-  _tabProjects->addAction(ui->action_Fullscreen);
+  _tabProjects->addAction(_ui->action_Fullscreen);
 
   if(!_tabProjects->isFullScreen())
   {
@@ -1026,7 +1026,7 @@ void ComposerMainWindow::showCurrentWidgetFullScreen()
   }
   else
   {
-    _tabProjects->setParent(ui->frame, Qt::Widget);
+    _tabProjects->setParent(_ui->frame, Qt::Widget);
     _tabProjects->show();
   }
 }
@@ -1037,7 +1037,7 @@ void ComposerMainWindow::showCurrentWidgetFullScreen()
 void ComposerMainWindow::updateViewMenu ()
 {
   //Update menu Views.
-  ui->menu_Views->clear();
+  _ui->menu_Views->clear();
   if(_tabProjects->count()) //see if there is any open document
   {
     QToolWindowManager *toolWidgetManager =
@@ -1049,7 +1049,7 @@ void ComposerMainWindow::updateViewMenu ()
       for (int i = 0; i < toolWindows.length(); i++)
       {
         QWidget *w = toolWindows.at(i);
-        QAction *act = ui->menu_Views->addAction(w->windowTitle());
+        QAction *act = _ui->menu_Views->addAction(w->windowTitle());
 
         act->setData(i);
         act->setCheckable(true);
@@ -1062,10 +1062,10 @@ void ComposerMainWindow::updateViewMenu ()
     }
   }
 
-  if(ui->menu_Views->isEmpty())
-    ui->menu_Views->setEnabled(false);
+  if(_ui->menu_Views->isEmpty())
+    _ui->menu_Views->setEnabled(false);
   else
-    ui->menu_Views->setEnabled(true);
+    _ui->menu_Views->setEnabled(true);
 }
 
 void ComposerMainWindow::closeEvent(QCloseEvent *event)
@@ -1100,7 +1100,7 @@ void ComposerMainWindow::closeEvent(QCloseEvent *event)
 
   GlobalSettings settings;
   settings.beginGroup("extensions");
-  settings.setValue("path", extensions_paths);
+  settings.setValue("path", _extensionsPaths);
   settings.endGroup();
 
   settings.beginGroup("mainwindow");
@@ -1142,7 +1142,7 @@ void ComposerMainWindow::cleanUp()
  */
 void ComposerMainWindow::showEditPreferencesDialog()
 {
-  preferences->show();
+  _preferencesDialog->show();
 }
 
 /*!
@@ -1254,7 +1254,7 @@ void ComposerMainWindow::saveCurrentProject()
 
     PluginControl::getInstance()->savePluginsData(project);
     ProjectControl::getInstance()->saveProject(location);
-    ui->action_Save->setEnabled(false);
+    _ui->action_Save->setEnabled(false);
 
     if(saveAlsoNCLDocument)
     {
@@ -1320,7 +1320,7 @@ void ComposerMainWindow::saveAsCurrentProject()
       /* Update Tab Text and Index */
       updateTabWithProject(index, destFileName);
 
-      ui->action_Save->setEnabled(false);
+      _ui->action_Save->setEnabled(false);
 
       if(saveAlsoNCLDocument)
       {
@@ -1356,11 +1356,11 @@ void ComposerMainWindow::saveCurrentGeometryAsPerspective()
 {
   if(_tabProjects->count()) // If there is a document open
   {
-    perspectiveManager->setBehavior(PERSPEC_SAVE);
-    if(perspectiveManager->exec())
+    _perspectiveManager->setBehavior(PERSPEC_SAVE);
+    if(_perspectiveManager->exec())
     {
-      savePerspective(perspectiveManager->getSelectedName());
-      saveDefaultPerspective(perspectiveManager->getDefaultPerspective());
+      savePerspective(_perspectiveManager->getSelectedName());
+      saveDefaultPerspective(_perspectiveManager->getDefaultPerspective());
     }
   }
   else
@@ -1378,10 +1378,10 @@ void ComposerMainWindow::saveCurrentGeometryAsPerspective()
 
 void ComposerMainWindow::restorePerspective()
 {
-  perspectiveManager->setBehavior(PERSPEC_LOAD);
-  if(perspectiveManager->exec())
+  _perspectiveManager->setBehavior(PERSPEC_LOAD);
+  if(_perspectiveManager->exec())
   {
-    restorePerspective(perspectiveManager->getSelectedName());
+    restorePerspective(_perspectiveManager->getSelectedName());
   }
 
   /* Update the elements in MENU PERSPECTIVE*/
@@ -1439,7 +1439,7 @@ void ComposerMainWindow::restorePerspective(QString layoutName)
 void ComposerMainWindow::runNCL()
 {
   // check if there is other instance already running
-  if(localGingaProcess.state() == QProcess::Running
+  if(_localGingaProcess.state() == QProcess::Running
 #ifdef WITH_LIBSSH2
         || runRemoteGingaVMThread.isRunning()
 #endif
@@ -1456,7 +1456,7 @@ void ComposerMainWindow::runNCL()
     return;
   }
 
-  ui->action_RunNCL->setEnabled(false);
+  _ui->action_RunNCL->setEnabled(false);
 
   // There is no other instance running, so let's run
   bool runRemote = false;
@@ -1473,7 +1473,7 @@ void ComposerMainWindow::runNCL()
   else
     runOnLocalGinga();
 
-  ui->action_StopNCL->setEnabled(true);
+  _ui->action_StopNCL->setEnabled(true);
 }
 
 void ComposerMainWindow::runOnLocalGinga()
@@ -1519,8 +1519,8 @@ void ComposerMainWindow::runOnLocalGinga()
 
     /* RUNNING GINGA */
     qDebug() << command << args_list;
-    localGingaProcess.start(command, args_list);
-    QByteArray result = localGingaProcess.readAll();
+    _localGingaProcess.start(command, args_list);
+    QByteArray result = _localGingaProcess.readAll();
   }
   else
   {
@@ -1659,8 +1659,8 @@ void ComposerMainWindow::copyOnRemoteGingaVM(bool autoplay)
 
 void ComposerMainWindow::stopNCL()
 {
-  if(localGingaProcess.state() == QProcess::Running)
-      localGingaProcess.close();
+  if(_localGingaProcess.state() == QProcess::Running)
+      _localGingaProcess.close();
 
 #ifdef WITH_LIBSSH2
   if(runRemoteGingaVMThread.isRunning())
@@ -1674,7 +1674,7 @@ void ComposerMainWindow::stopNCL()
 bool ComposerMainWindow::isRunningNCL()
 {
   // check if there is other instance already running
-  if(localGingaProcess.state() == QProcess::Running
+  if(_localGingaProcess.state() == QProcess::Running
 #ifdef WITH_LIBSSH2
         || runRemoteGingaVMThread.isRunning()
 #endif
@@ -1689,13 +1689,13 @@ void ComposerMainWindow::updateRunActions()
 {
   if(isRunningNCL())
   {
-    ui->action_RunNCL->setEnabled(false);
-    ui->action_StopNCL->setEnabled(true);
+    _ui->action_RunNCL->setEnabled(false);
+    _ui->action_StopNCL->setEnabled(true);
   }
   else
   {
-    ui->action_RunNCL->setEnabled(true);
-    ui->action_StopNCL->setEnabled(false);
+    _ui->action_RunNCL->setEnabled(true);
+    _ui->action_StopNCL->setEnabled(false);
   }
 }
 
@@ -2013,7 +2013,7 @@ void ComposerMainWindow::addToRecentProjects(QString projectUrl)
   recentProjects.removeDuplicates();
 
   //MAXIMUM SIZE
-  while(recentProjects.size() > this->maximumRecentProjectsSize)
+  while(recentProjects.size() > this->_maximumRecentProjectsSize)
     recentProjects.pop_back();
 
   settings.setValue("recentProjects", recentProjects);
@@ -2026,33 +2026,33 @@ void ComposerMainWindow::updateRecentProjectsWidgets()
   GlobalSettings settings;
   QStringList recentProjects = settings.value("recentProjects").toStringList();
 
-  ui->menu_Recent_Files->clear();
+  _ui->menu_Recent_Files->clear();
   if(recentProjects.size() == 0 )
   {
-    QAction *act = ui->menu_Recent_Files->addAction(tr("empty"));
+    QAction *act = _ui->menu_Recent_Files->addAction(tr("empty"));
     act->setEnabled(false);
   }
   else /* There are at least one element in the recentProject list */
   {
     for (int i = 0; i < recentProjects.size(); i++)
     {
-      QAction *act = ui->menu_Recent_Files->addAction(recentProjects.at(i));
+      QAction *act = _ui->menu_Recent_Files->addAction(recentProjects.at(i));
       act->setData(recentProjects.at(i));
 
       connect( act, SIGNAL(triggered()),
                this, SLOT(userPressedRecentProject()) );
     }
 
-    ui->menu_Recent_Files->addSeparator();
+    _ui->menu_Recent_Files->addSeparator();
 
     QAction *clearRecentProjects =
-        ui->menu_Recent_Files->addAction(tr("Clear Recent Projects"));
+        _ui->menu_Recent_Files->addAction(tr("Clear Recent Projects"));
 
     connect(clearRecentProjects, SIGNAL(triggered()),
             this, SLOT(clearRecentProjects()));
   }
 
-  welcomeWidget->updateRecentProjects(recentProjects);
+  _welcomeWidget->updateRecentProjects(recentProjects);
 }
 
 void ComposerMainWindow::userPressedRecentProject(QString src)
@@ -2133,12 +2133,12 @@ void ComposerMainWindow::selectedAboutCurrentPluginFactory()
   {
     if(treeWidgetItem2plFactory.value(selectedPlugins.at(0)) != NULL)
     {
-      pluginDetailsDialog->setCurrentPlugin(
+      _pluginDetailsDialog->setCurrentPlugin(
             treeWidgetItem2plFactory.value(selectedPlugins.at(0)));
-      detailsButton->setEnabled(true);
+      _detailsButton->setEnabled(true);
     }
     else
-      detailsButton->setEnabled(false);
+      _detailsButton->setEnabled(false);
   }
 }
 
@@ -2147,7 +2147,7 @@ void ComposerMainWindow::selectedAboutCurrentPluginFactory()
  */
 void ComposerMainWindow::showPluginDetails()
 {
-  pluginDetailsDialog->show();
+  _pluginDetailsDialog->show();
 }
 
 void ComposerMainWindow::restorePerspectiveFromMenu()
@@ -2163,11 +2163,11 @@ void ComposerMainWindow::updateMenuPerspectives()
   QStringList keys = settings.allKeys();
   settings.endGroup();
 
-  ui->toolBar_Perspectives->clear();
+  _ui->toolBar_Perspectives->clear();
 
   for(int i = 0; i < keys.size(); i++)
   {
-    QAction *act = ui->toolBar_Perspectives->addAction( keys.at(i),
+    QAction *act = _ui->toolBar_Perspectives->addAction( keys.at(i),
                                                         this,
                                                         SLOT(restorePerspectiveFromMenu()) );
     act->setData(keys[i]);
@@ -2196,24 +2196,24 @@ void ComposerMainWindow::currentTabChanged(int n)
 {
   if(n)
   {
-    ui->action_Save_current_perspective->setEnabled(true);
-    ui->action_Restore_a_perspective->setEnabled(true);
-    ui->action_CloseProject->setEnabled(true);
-    ui->action_Save->setEnabled(true);
-    ui->action_SaveAs->setEnabled(true);
+    _ui->action_Save_current_perspective->setEnabled(true);
+    _ui->action_Restore_a_perspective->setEnabled(true);
+    _ui->action_CloseProject->setEnabled(true);
+    _ui->action_Save->setEnabled(true);
+    _ui->action_SaveAs->setEnabled(true);
 
     // \todo: This should check if there is already running application
     updateRunActions();
   }
   else
   {
-    ui->action_Save_current_perspective->setEnabled(false);
-    ui->action_Restore_a_perspective->setEnabled(false);
-    ui->action_CloseProject->setEnabled(false);
-    ui->action_Save->setEnabled(false);
-    ui->action_SaveAs->setEnabled(false);
-    ui->action_RunNCL->setEnabled(false);
-    ui->action_StopNCL->setEnabled(false);
+    _ui->action_Save_current_perspective->setEnabled(false);
+    _ui->action_Restore_a_perspective->setEnabled(false);
+    _ui->action_CloseProject->setEnabled(false);
+    _ui->action_Save->setEnabled(false);
+    _ui->action_SaveAs->setEnabled(false);
+    _ui->action_RunNCL->setEnabled(false);
+    _ui->action_StopNCL->setEnabled(false);
   }
 }
 
@@ -2291,7 +2291,7 @@ void ComposerMainWindow::setProjectDirty(QString location, bool isDirty)
 
   int index = _tabProjects->indexOf(window);
 
-  ui->action_Save->setEnabled(true);
+  _ui->action_Save->setEnabled(true);
 
   if(index >= 0) {
     if(isDirty)
@@ -2346,35 +2346,6 @@ bool ComposerMainWindow::showHelp()
 {
   // composerHelpWidget.show();
   return true;
-
-  // Old implementation based on Assistant
-  /*if (!proc)
-    proc = new QProcess();
-
-  if (proc->state() != QProcess::Running)
-  {
-    QString app = QLibraryInfo::location(QLibraryInfo::BinariesPath) +
-        QDir::separator();
-#if !defined(Q_OS_MAC)
-    app += QLatin1String("assistant");
-#else
-    app += QLatin1String("Assistant.app/Contents/MacOS/Assistant");
-#endif
-
-    QStringList args;
-//  args << QLatin1String("-collectionFile")
-//       << QLatin1String("help/composerhelp.qhc")
-//       << QLatin1String("-enableRemoteControl");
-
-    proc->start(app, args);
-
-    if (!proc->waitForStarted()) {
-      QMessageBox::critical(0, QObject::tr("Simple Text Viewer"),
-                    QObject::tr("Unable to launch Qt Assistant (%1)").arg(app));
-      return false;
-    }
-  }
-  return true; */
 }
 
 void ComposerMainWindow::autoSaveCurrentProjects()
@@ -2498,7 +2469,7 @@ void ComposerMainWindow::changeEvent(QEvent* event)
     {
     // this event is send if a translator is loaded
     case QEvent::LanguageChange:
-      ui->retranslateUi(this);
+      _ui->retranslateUi(this);
       break;
       // this event is send, if the system, language changes
     case QEvent::LocaleChange:
