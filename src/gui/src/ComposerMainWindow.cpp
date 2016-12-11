@@ -103,6 +103,7 @@ void ComposerMainWindow::init(const QApplication &app)
   splash.showMessage(tr("Starting GUI..."),
                      Qt::AlignRight, Qt::gray);
 
+  loadStyleSheets();
   initGUI();
   app.processEvents();
 
@@ -320,12 +321,31 @@ void ComposerMainWindow::openProjects(const QStringList &projects)
   updateRecentProjectsWidgets();
 }
 
+void ComposerMainWindow::loadStyleSheets()
+{
+  QStringList style_sheets_dirs =
+          GlobalSettings().value("default_stylesheets_dirs").toStringList();
+
+  foreach (const QString &dir, style_sheets_dirs)
+  {
+    if (QFile::exists(dir + "/style.qss"))
+    {
+      QFile style(dir + "/style.qss");
+      if (style.open(QFile::ReadOnly))
+      {
+        setStyleSheet(style.readAll());
+        style.close();
+      }
+      break;
+    }
+  }
+}
+
 void ComposerMainWindow::initGUI()
 {
-#ifndef Q_OS_MAC
   setWindowIcon(QIcon(":/mainwindow/icon"));
-#endif
   setWindowTitle(tr("NCL Composer"));
+
   _tabProjects = new QTabWidget(0);
 
   ui->frame->layout()->addWidget(_tabProjects);
@@ -346,7 +366,7 @@ void ComposerMainWindow::initGUI()
 
   createActions();
   createMenus();
-  createAboutPlugins();
+  createAboutPluginsWidgets();
 // createLanguageMenu();
 
   preferences = new PreferencesDialog(this);
@@ -790,7 +810,7 @@ void ComposerMainWindow::createMenus()
   updateMenuPerspectives();
 }
 
-void ComposerMainWindow::createAboutPlugins()
+void ComposerMainWindow::createAboutPluginsWidgets()
 {
   aboutPluginsDialog = new QDialog(this);
   aboutPluginsDialog->setWindowTitle(tr("Installed Plugins"));
@@ -801,15 +821,15 @@ void ComposerMainWindow::createAboutPlugins()
 #endif
 
   /* This should be a new Widget and change some code for there */
-  pluginsExt = new QTreeWidget(aboutPluginsDialog);
-  pluginsExt->setAlternatingRowColors(true);
+  _treeWidgetPlugins = new QTreeWidget(aboutPluginsDialog);
+  _treeWidgetPlugins->setAlternatingRowColors(true);
 
-  connect(pluginsExt, SIGNAL(itemSelectionChanged()),
+  connect(_treeWidgetPlugins, SIGNAL(itemSelectionChanged()),
           this, SLOT(selectedAboutCurrentPluginFactory()));
 
   QStringList header;
   header << tr("Name") << tr("Load") << tr("Version") << tr("Vendor");
-  pluginsExt->setHeaderLabels(header);
+  _treeWidgetPlugins->setHeaderLabels(header);
 
   QDialogButtonBox *bOk = new QDialogButtonBox(QDialogButtonBox::Ok |
                                                QDialogButtonBox::Close,
@@ -838,7 +858,7 @@ void ComposerMainWindow::createAboutPlugins()
   gLayout->addWidget(profilesExt);
 #endif
   gLayout->addWidget(new QLabel(tr("<b>Installed Plug-ins</b>")));
-  gLayout->addWidget(pluginsExt);
+  gLayout->addWidget(_treeWidgetPlugins);
   gLayout->addWidget(bOk);
   aboutPluginsDialog->setLayout(gLayout);
 
@@ -865,7 +885,7 @@ void ComposerMainWindow::aboutPlugins()
   QList<IPluginFactory*>::iterator it;
   QList<IPluginFactory*> pList = PluginControl::getInstance()->
       getLoadedPlugins();
-  pluginsExt->clear();
+  _treeWidgetPlugins->clear();
 
   //search for categories
   QTreeWidgetItem *treeWidgetItem;
@@ -875,7 +895,7 @@ void ComposerMainWindow::aboutPlugins()
     QString category = pF->metadata().value("category").toString();
 
     if(!categories.contains(category)){
-      treeWidgetItem = new QTreeWidgetItem(pluginsExt);
+      treeWidgetItem = new QTreeWidgetItem(_treeWidgetPlugins);
       categories.insert(category, treeWidgetItem);
       treeWidgetItem->setText(0, category);
       treeWidgetItem->setTextColor(0, QColor("#0000FF"));
@@ -903,12 +923,12 @@ void ComposerMainWindow::aboutPlugins()
     treeWidgetItem->setText(3, pF->metadata().value("vendor").toString());
   }
 
-  pluginsExt->expandAll();
+  _treeWidgetPlugins->expandAll();
 
-  pluginsExt->setColumnWidth(0, 150);
-  pluginsExt->resizeColumnToContents(1);
-  pluginsExt->resizeColumnToContents(2);
-  pluginsExt->resizeColumnToContents(3);
+  _treeWidgetPlugins->setColumnWidth(0, 150);
+  _treeWidgetPlugins->resizeColumnToContents(1);
+  _treeWidgetPlugins->resizeColumnToContents(2);
+  _treeWidgetPlugins->resizeColumnToContents(3);
 
   /* PROFILE LANGUAGE */
 #ifdef SHOW_PROFILES
@@ -2108,7 +2128,7 @@ void ComposerMainWindow::clearRecentProjects(void)
 
 void ComposerMainWindow::selectedAboutCurrentPluginFactory()
 {
-  QList<QTreeWidgetItem*> selectedPlugins = pluginsExt->selectedItems();
+  QList<QTreeWidgetItem*> selectedPlugins = _treeWidgetPlugins->selectedItems();
   if(selectedPlugins.size())
   {
     if(treeWidgetItem2plFactory.value(selectedPlugins.at(0)) != NULL)

@@ -22,13 +22,22 @@ GlobalSettings::GlobalSettings() :
 
 }
 
+void GlobalSettings::loadDefaults(const QString &dataPath)
+{
+  QSettings defaultSettings(dataPath);
+
+  QStringList keys = defaultSettings.allKeys();
+  for (QStringList::iterator i = keys.begin(); i != keys.end(); ++i)
+    setValue( *i, defaultSettings.value(*i) );
+}
+
 /*!
  * \brief Add the default paths to GlobalSettings.
  *
  * \fixme This function came from GUI, maybe some of the MACROS used above are
  * not working.
  */
-void GlobalSettings::updateWithDefaults(const QString &dataPath)
+void GlobalSettings::addPlatformDefaults(const QString &dataPath)
 {
   /* Defaults plugins paths */
   QStringList defaultPluginsPath;

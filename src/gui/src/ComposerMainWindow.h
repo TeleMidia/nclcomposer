@@ -123,7 +123,7 @@ private:
   QMap<QString, QToolWindowManager*> _projectsWidgets; /*!< Keeps a reference
                                                             to each project
                                                             widget. */
-  QTreeWidget *pluginsExt; /*!< Shows a list with the current loaded
+  QTreeWidget *_treeWidgetPlugins; /*!< Shows a list with the current loaded
                                   plugins. */
 
   QMap <QTreeWidgetItem*, IPluginFactory*> treeWidgetItem2plFactory;
@@ -146,7 +146,6 @@ private:
   StopRemoteGingaVMAction stopRemoteGingaVMAction;
 #endif
   QProgressDialog *_taskProgressBar;
-
   QTimer *autoSaveTimer; // auto save timer
 
   // ComposerHelpWidget composerHelpWidget;
@@ -157,34 +156,19 @@ private:
 #endif
 
 private:
-  /*!
-   * \brief Shows a prompt where the user can choose where its plugins are
-   *    located.
-   *
-   * \return QString the path to the choosen directory.
-   */
-  QString promptChooseExtDirectory();
-
   void initModules();
 
+  void loadStyleSheets();
   void initGUI();
 
-  void createAboutPlugins();
-
+  void createAboutPluginsWidgets();
   void createMenus();
-
   void createActions();
-
-  void createFileSystem();
-
   void readSettings();
 
   void readExtensions();
-
   void closeEvent(QCloseEvent *event);
-
   void cleanUp();
-
   void updateRecentProjectsWidgets();
 
   void updateDockStyle(QDockWidget *titleBar, bool selected=false);  
@@ -200,6 +184,14 @@ private:
   void loadLanguage(const QString& rLanguage);
   void createLanguageMenu(void);
   void switchTranslator(QTranslator& translator, const QString& filename);
+
+  /*!
+   * \brief Shows a prompt where the user can choose where its plugins are
+   *    located.
+   *
+   * \return QString the path to the choosen directory.
+   */
+  QString promptChooseExtDirectory();
 
 protected:
   void changeEvent(QEvent*);
@@ -326,7 +318,6 @@ public slots:
   void redo();
 
   void openProjects(const QStringList &projects);
-
 
 signals:
   /*!

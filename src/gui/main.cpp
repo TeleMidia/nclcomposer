@@ -105,6 +105,8 @@ int main(int argc, char *argv[])
 {
   bool initGUI = true;
   QApplication a(argc, argv);
+  QApplication::addLibraryPath(QApplication::applicationDirPath());
+
   QCoreApplication::setOrganizationName("TeleMidia Lab/PUC-Rio");
   QCoreApplication::setOrganizationDomain("telemidia.pucrio.br");
   QCoreApplication::setApplicationName("NCL Composer");
@@ -127,6 +129,7 @@ int main(int argc, char *argv[])
 
   if (initGUI)
   {
+    QResource::registerResource("images.qrc");
     GlobalSettings settings;
 
     /* If the settings is empty (i.e. it is the first time we are running, copy
@@ -134,69 +137,35 @@ int main(int argc, char *argv[])
     if (settings.allKeys().empty())
     {
 #ifdef WIN32
-      QSettings defaultSettings( QApplication::applicationDirPath() +
-                                 "/data/default.ini",
-                                 QSettings::IniFormat );
+      settings.loadDefaults(QApplication::applicationDirPath() +
+                           "/../data/default.ini");
 #else
-      QSettings defaultSettings( QString (DATA_PATH) + "/default.ini",
-                                 QSettings::IniFormat );
+      settings.loadDefaults(QString (DATA_PATH) + "/default.ini",
+                           QSettings::IniFormat);
 #endif
-
-      QStringList keys = defaultSettings.allKeys();
-      for( QStringList::iterator i = keys.begin(); i != keys.end(); i++ )
-      {
-        settings.setValue( *i, defaultSettings.value( *i ) );
-      }
     }
 
-    // We must be sure the defaults are in the settings
+    // We must be sure the platform defaults are in the settings
 #ifdef WIN32
-    settings.updateWithDefaults(QApplication::applicationDirPath() + "/data/");
+    settings.addPlatformDefaults(QApplication::applicationDirPath() + "/../data/");
 #else
-    settings.updateWithDefaults(DATA_PATH);
+    settings.addPlatformDefaults(DATA_PATH);
 #endif
+
     loadTranslations();
-
-    QResource::registerResource("images.qrc");
-
-    //make the library search path include the application dir on windows
-    //this is so the plugins can find the dlls they are linked to at run time
-    QApplication::addLibraryPath(QApplication::applicationDirPath());
-
     a.setQuitOnLastWindowClosed(true);
+
     ComposerMainWindow w;
-    w.setWindowIcon(QIcon(":/mainwindow/icon"));
-
-    QStringList dirs =
-          GlobalSettings().value("default_stylesheets_dirs").toStringList();
-
-    foreach (QString dir, dirs)
-    {
-      if (QFile::exists(dir + "/style.qss"))
-      {
-        QFile style(dir + "/style.qss");
-        if (style.open(QFile::ReadOnly))
-        {
-          w.setStyleSheet(style.readAll());
-          style.close();
-        }
-
-        break;
-      }
-    }
-
     w.init(a);
 
+    // Load cpr files passed as parameters
     QStringList argList = a.arguments();
     QStringList filesToOpen;
-
     for(int i = 0; i < argList.size(); i++)
     {
-      // Take only the arguments ending with .cpr
       if(argList.at(i).endsWith(".cpr"))
         filesToOpen << argList.at(i);
     }
-
     w.openProjects(filesToOpen);
 
     return a.exec();
