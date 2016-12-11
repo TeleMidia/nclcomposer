@@ -64,8 +64,8 @@ add_executable(nclcomposer
   src/FileChooser.cpp
   src/ClickableDockWidget.cpp
   src/ComposerSplashScreen.cpp
-  ${UI_GENERATED_HEADERS}
   src/IPreferencesPage.h
+
   src/toolwindowmanager/libqtoolwindowmanager/qabstracttoolwindowmanagerarea.cpp
   src/toolwindowmanager/libqtoolwindowmanager/qabstracttoolwindowmanagerarea.h
   src/toolwindowmanager/libqtoolwindowmanager/qtoolwindowmanagerarea.cpp
@@ -75,6 +75,8 @@ add_executable(nclcomposer
   src/toolwindowmanager/libqtoolwindowmanager/private/qtoolwindowmanagerarea_p.h
   src/toolwindowmanager/libqtoolwindowmanager/private/qtoolwindowmanager_p.h
   src/toolwindowmanager/libqtoolwindowmanager/private/qtoolwindowmanagerwrapper_p.h
+
+  ${UI_GENERATED_HEADERS}
   images.qrc
 )
 
@@ -92,4 +94,6 @@ target_link_libraries (nclcomposer
 )
 
 install (TARGETS nclcomposer DESTINATION bin)
-
+file (COPY data/defaultConnBase.ncl DESTINATION ${CMAKE_BINARY_DIR}/data)
+file (COPY data/style.qss DESTINATION ${CMAKE_BINARY_DIR}/data)
+file (COPY data/default.ini DESTINATION ${CMAKE_BINARY_DIR}/data)
