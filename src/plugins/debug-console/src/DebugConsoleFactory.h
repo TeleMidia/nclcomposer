@@ -49,8 +49,6 @@ public:
 
   QIcon icon() const;
 
-  QWidget* getPreferencePageWidget();
-
   void setDefaultValues();
 
   void applyValues();

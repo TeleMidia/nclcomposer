@@ -37,11 +37,10 @@ void DebugConsoleFactory::releasePluginInstance(IPlugin *plugin)
   DebugConsolePlugin *debug = qobject_cast<DebugConsolePlugin*>(plugin);
 
   if (debug)
-    {
-      delete debug;
-      debug = NULL;
-    }
-
+  {
+    delete debug;
+    debug = NULL;
+  }
 }
 
 QList<LanguageType> DebugConsoleFactory::getSupportedLanguages()
@@ -59,11 +58,6 @@ QString DebugConsoleFactory::id() const
 QIcon DebugConsoleFactory::icon()  const
 {
   return QIcon(":/images/icon.png");
-}
-
-QWidget* DebugConsoleFactory::getPreferencePageWidget()
-{
-  return NULL;
 }
 
 void DebugConsoleFactory::setDefaultValues()

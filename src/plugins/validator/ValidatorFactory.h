@@ -42,8 +42,6 @@ public:
   QList<LanguageType> getSupportedLanguages();
   QString id() const {return "br.ufma.deinf.laws.validator";}
   QIcon icon() const {return QIcon ();}
-  QWidget* getPreferencePageWidget() {return 0;}
-
 };
 
 
