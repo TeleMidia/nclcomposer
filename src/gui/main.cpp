@@ -138,11 +138,10 @@ int main(int argc, char *argv[])
     if (settings.allKeys().empty())
     {
 #ifdef WIN32
-      settings.loadDefaults(QApplication::applicationDirPath() +
-                           "/../data/default.ini");
+      settings.loadDefaults( QApplication::applicationDirPath() +
+                             "/../data/default.ini" );
 #else
-      settings.loadDefaults(QString (DATA_PATH) + "/default.ini",
-                           QSettings::IniFormat);
+      settings.loadDefaults( QString (DATA_PATH) + "/default.ini");
 #endif
     }
 

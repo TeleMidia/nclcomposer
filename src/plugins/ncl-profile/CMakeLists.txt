@@ -32,10 +32,10 @@ add_library(nclprofile
   ../common-resources/language.qrc
 )
 
-target_link_libraries (
-  nclprofile
+target_link_libraries (nclprofile
   nclcomposer_core
   Qt5::Core
   Qt5::Xml
 )
 
+install (TARGETS nclprofile DESTINATION plugins)

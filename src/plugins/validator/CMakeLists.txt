@@ -63,3 +63,5 @@ target_link_libraries(validator
   Qt5::Core
   Qt5::Xml
 )
+
+install (TARGETS validator DESTINATION plugins)

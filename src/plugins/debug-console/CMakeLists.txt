@@ -28,8 +28,9 @@ add_library(debugconsole
   ${DEBUG_CONSOLE_SOURCES}
 )
 
-target_link_libraries (
-  debugconsole
+target_link_libraries (debugconsole
   nclcomposer_core
   Qt5::Core
 )
+
+install (TARGETS debugconsole DESTINATION plugins)

@@ -71,5 +71,5 @@ target_link_libraries(
   Qt5::Widgets
 )
 
-install (TARGETS nclcomposer_core DESTINATION lib)
+install (TARGETS nclcomposer_core DESTINATION bin)
 

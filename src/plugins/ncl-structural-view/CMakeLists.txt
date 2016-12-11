@@ -90,3 +90,4 @@ target_link_libraries (ncl_structural_view
   Qt5::Widgets
 )
 
+install (TARGETS ncl_structural_view DESTINATION plugins)

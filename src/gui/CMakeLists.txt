@@ -93,7 +93,10 @@ target_link_libraries (nclcomposer
   Qt5::Network
 )
 
-install (TARGETS nclcomposer DESTINATION bin)
-file (COPY data/defaultConnBase.ncl DESTINATION ${CMAKE_BINARY_DIR}/data)
-file (COPY data/style.qss DESTINATION ${CMAKE_BINARY_DIR}/data)
-file (COPY data/default.ini DESTINATION ${CMAKE_BINARY_DIR}/data)
+install(TARGETS nclcomposer DESTINATION bin)
+install(FILES
+    data/defaultConnBase.ncl
+    data/style.qss
+    data/default.ini
+  DESTINATION data)
+

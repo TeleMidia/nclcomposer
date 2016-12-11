@@ -50,3 +50,4 @@ target_link_libraries (properties_view
   Qt5::Widgets
 )
 
+install (TARGETS properties_view DESTINATION plugins)

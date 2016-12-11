@@ -44,10 +44,12 @@ void GlobalSettings::addPlatformDefaults(const QString &dataPath)
 
 #ifndef Q_OS_MAC
   // The first path will look for plug-ins is relative to the executable
-  defaultPluginsPath << QApplication::applicationDirPath() + "/extensions";
+  defaultPluginsPath << QApplication::applicationDirPath();
+  defaultPluginsPath << QApplication::applicationDirPath() + "/plugins";
+  defaultPluginsPath << QApplication::applicationDirPath() + "/../plugins";
 
   // Then, we will look for plug-ins is at user's home.
-  defaultPluginsPath << QDir::homePath() + QString("/composer/extensions");
+  defaultPluginsPath << QDir::homePath() + QString("/nclcomposer/plugins");
 #endif
 
   // After that we will look for plugins in the default system path
@@ -55,16 +57,13 @@ void GlobalSettings::addPlatformDefaults(const QString &dataPath)
 #ifdef QT_NO_DEBUG_OUTPUT
     defaultPluginsPath << QApplication::applicationDirPath() + "/../PlugIns/composer/";
 #else
-    defaultPluginsPath << "/Library/Application Support/Composer/Extensions/";
+    defaultPluginsPath << "/Library/Application Support/Composer/PlugIns/";
 #endif
-#elif defined(Q_OS_WIN32)
-
-  defaultPluginsPath << "C:/Composer/extensions";
 #else
   // PREFIX Should be defined by the qmake while compiling the source code.
 #ifdef EXT_DEFAULT_PATH
   defaultPluginsPath << QString(EXT_DEFAULT_PATH)
-                        + QString("/lib/composer/extensions");
+                        + QString("/lib/nclcomposer/plugins");
 #endif
 
 #endif

@@ -32,10 +32,10 @@ add_library(outline_view
   ${OUTLINE_VIEW_SOURCES}
 )
 
-target_link_libraries (
-  outline_view
+target_link_libraries (outline_view
   nclcomposer_core
   nclprofile
   Qt5::Widgets
 )
 
+install (TARGETS outline_view DESTINATION plugins)
