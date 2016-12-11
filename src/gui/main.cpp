@@ -65,9 +65,8 @@ void loadTranslations()
   }
 }
 
-int handleArguments (bool &initGUI)
+bool handleArguments (QCommandLineParser &cmdParser, bool &initGUI)
 {
-  QCommandLineParser parser;
   QString desc;
   desc += "NCL Composer is a flexible authoring tool for interactive \n"
           "multimedia applications.\n";
@@ -78,27 +77,28 @@ int handleArguments (bool &initGUI)
           "There is NO warranty; not even for MERCHANTABILITY or FITNESS \n"
           "FOR PARTICULAR PURPOSE."; */
 
-  parser.setApplicationDescription(desc);
+  cmdParser.setApplicationDescription(desc);
 
-  const QCommandLineOption helpOption = parser.addHelpOption();
-  const QCommandLineOption versionOption = parser.addVersionOption();
+  const QCommandLineOption helpOption = cmdParser.addHelpOption();
+  const QCommandLineOption versionOption = cmdParser.addVersionOption();
+  cmdParser.addPositionalArgument("projects", "List of projects to open.");
 
-  if(!parser.parse(QCoreApplication::arguments()))
-    return 0;
+  if(!cmdParser.parse(QCoreApplication::arguments()))
+    return false;
 
-  if (parser.isSet(helpOption))
+  if (cmdParser.isSet(helpOption))
   {
-    parser.showHelp();
+    cmdParser.showHelp();
     initGUI = false;
   }
 
-  if (parser.isSet(versionOption))
+  if (cmdParser.isSet(versionOption))
   {
-    parser.showVersion();
+    cmdParser.showVersion();
     initGUI = false;
   }
 
-  return 1;
+  return true;
 }
 
 int main(int argc, char *argv[])
@@ -125,7 +125,8 @@ int main(int argc, char *argv[])
   FvUpdater::sharedUpdater()->CheckForUpdatesSilent();
 #endif
 
-  handleArguments(initGUI);
+  QCommandLineParser cmdParser;
+  handleArguments(cmdParser, initGUI);
 
   if (initGUI)
   {
@@ -158,14 +159,8 @@ int main(int argc, char *argv[])
     ComposerMainWindow w;
     w.init(a);
 
-    // Load cpr files passed as parameters
-    QStringList argList = a.arguments();
-    QStringList filesToOpen;
-    for(int i = 0; i < argList.size(); i++)
-    {
-      if(argList.at(i).endsWith(".cpr"))
-        filesToOpen << argList.at(i);
-    }
+    // Load files passed as positional arguments
+    const QStringList filesToOpen = cmdParser.positionalArguments();
     w.openProjects(filesToOpen);
 
     return a.exec();
