@@ -12,23 +12,24 @@
 #include <QApplication>
 #include <QStringList>
 #include <QDir>
+#include <QDebug>
 
 namespace composer {
     namespace core {
         namespace util {
 GlobalSettings::GlobalSettings() :
-  QSettings(QSettings::IniFormat, QSettings::UserScope, "telemidia", "composer")
+  QSettings(QSettings::IniFormat, QSettings::UserScope, "telemidia", "nclcomposer")
 {
 
 }
 
 void GlobalSettings::loadDefaults(const QString &dataPath)
 {
-  QSettings defaultSettings(dataPath);
+  QSettings defaultSettings(dataPath, QSettings::IniFormat);
 
   QStringList keys = defaultSettings.allKeys();
-  for (QStringList::iterator i = keys.begin(); i != keys.end(); ++i)
-    setValue( *i, defaultSettings.value(*i) );
+  for (const QString &key : keys)
+    setValue( key, defaultSettings.value(key) );
 }
 
 /*!

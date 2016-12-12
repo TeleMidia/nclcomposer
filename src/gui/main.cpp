@@ -24,6 +24,10 @@
 
 using namespace composer::gui;
 
+Q_DECLARE_LOGGING_CATEGORY(CPR_MAIN)
+Q_LOGGING_CATEGORY(CPR_MAIN, "cpr.main")
+
+
 // \todo this function should move from here
 void loadTranslations()
 {
@@ -133,24 +137,34 @@ int main(int argc, char *argv[])
     QResource::registerResource("images.qrc");
     GlobalSettings settings;
 
-    /* If the settings is empty (i.e. it is the first time we are running, copy
-     * all values from the default settings */
+    /* If the settings is empty (i.e. it is the first time we are running,
+     * copy all values from the default settings */
     if (settings.allKeys().empty())
     {
 #ifdef WIN32
-      settings.loadDefaults( QApplication::applicationDirPath() +
-                             "/../data/default.ini" );
+      const QString defaultIni =
+              QApplication::applicationDirPath()+"/../data/default.ini";
 #else
-      settings.loadDefaults( QString (DATA_PATH) + "/default.ini");
+      const QString defaultIni =
+              QString (DATA_PATH) + "/default.ini";
 #endif
+
+      qCDebug(CPR_MAIN) << "This is the first time you are running "
+                        << "NCL Composer.  It will copy the default settings"
+                        << "from " << defaultIni;
+
+      settings.loadDefaults(defaultIni);
     }
 
-    // We must be sure the platform defaults are in the settings
 #ifdef WIN32
-    settings.addPlatformDefaults(QApplication::applicationDirPath() + "/../data/");
+    const QString defaulDataPath =
+            QApplication::applicationDirPath() + "/../data/";
 #else
-    settings.addPlatformDefaults(DATA_PATH);
+    const QString defaulDataPath =
+            DATA_PATH;
 #endif
+    // We must be sure the platform defaults are loaded in the settings
+    settings.addPlatformDefaults(defaulDataPath);
 
     loadTranslations();
     a.setQuitOnLastWindowClosed(true);

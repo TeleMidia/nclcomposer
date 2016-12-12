@@ -94,9 +94,10 @@ target_link_libraries (nclcomposer
 )
 
 install(TARGETS nclcomposer DESTINATION bin)
-install(FILES
+file(
+  INSTALL
     data/defaultConnBase.ncl
     data/style.qss
     data/default.ini
-  DESTINATION data)
-
+  DESTINATION
+    "${CMAKE_BINARY_DIR}/data/")
