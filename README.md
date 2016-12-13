@@ -27,7 +27,7 @@ NCL Composer source code is divided into three main parts:
   * __src/plugins__: brings the official plug-ins supported by NCL Composer. An
     special type of plug-in are the views.
 
-## Contributing
+## Contribute!
 
   * TODO
 
@@ -38,7 +38,7 @@ NCL Composer source code is divided into three main parts:
 ### Requirements
 The main requirement for NCL Composer is:
 
-  * Qt >= 5.2
+  * Qt >= 5.4
 
 ### Linux (Debian/Ubuntu)
 In a Debian-based system (e.g. Debian, Ubuntu, or Linux Mint) you can easily
@@ -115,7 +115,7 @@ NCL Composer is available through
   * Redmine link:
     (http://redmine.telemidia.puc-rio.br:8080/redmine/projects/composer3)
 
-## Acknowledgment
+## Acknowledgments
 
 NCL Composer would not be possible without many other open source software we
 use.  In special:
