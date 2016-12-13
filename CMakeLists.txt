@@ -1,5 +1,4 @@
-cmake_minimum_required(VERSION 3.5)
-
+cmake_minimum_required(VERSION 3.2)
 project(nclcomposer)
 
 set(CMAKE_CXX_STANDARD 11)
@@ -40,7 +39,7 @@ add_subdirectory(src/plugins/ncl-layout-view)
 add_subdirectory(src/plugins/ncl-structural-view)
 add_subdirectory(src/plugins/ncl-rules-view)
 add_subdirectory(src/plugins/validator)
-add_subdirectory(src/plugins/gingagui-all/run-view)
+# add_subdirectory(src/plugins/gingagui-all/run-view)
 
 # cpack
 set(CPACK_PACKAGE_NAME "nclcomposer")
