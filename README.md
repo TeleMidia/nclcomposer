@@ -1,5 +1,7 @@
 ![Some screenshots](http://composer.telemidia.puc-rio.br/_media/screenshot/nclcomposer.png)
 
+[![Build Status](https://semaphoreci.com/api/v1/robertogerson/nclcomposer/branches/master/shields_badge.svg)](https://semaphoreci.com/robertogerson/nclcomposer)
+
 # NCL Composer
 [NCL Composer](http://composer.telemidia.puc-rio.br) is a multiplataform and
 flexible authoring tool for creating Interactive multimedia applications for
