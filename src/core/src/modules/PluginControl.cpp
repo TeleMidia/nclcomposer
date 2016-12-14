@@ -69,7 +69,7 @@ PluginControl::~PluginControl()
 IPluginFactory* PluginControl::loadPlugin(const QString &fileName)
 {
   qCDebug(CPR_CORE) << "Trying to load plugin " << fileName;
-  IPluginFactory *pluginFactory = NULL;
+  IPluginFactory *pluginFactory = nullptr;
   QPluginLoader loader(fileName);
   QObject *plugin = loader.instance();
 
@@ -78,7 +78,7 @@ IPluginFactory* PluginControl::loadPlugin(const QString &fileName)
     pluginFactory = qobject_cast<IPluginFactory*> (plugin);
     if (pluginFactory)
     {
-      qCDebug(CPR_CORE) << fileName << "loaded --- "
+      qCDebug(CPR_CORE) << fileName << " loaded --- "
                           << "pluginFactory = " << pluginFactory;
 
       QString pluginID = pluginFactory->id();
@@ -135,11 +135,16 @@ void PluginControl::loadPlugins(const QString &pluginsDirPath)
   filter.append("*.dll");
   pluginsDir.setNameFilters(filter);
 
-  foreach (QString fileName, pluginsDir.entryList(QDir::Files
+  for (const QString& fileName: pluginsDir.entryList(QDir::Files
                                                   | QDir::NoSymLinks))
   {
-    loadPlugin(pluginsDir.absoluteFilePath(fileName));
-  } //end foreach
+    IPluginFactory *pluginFactory  =
+            loadPlugin(pluginsDir.absoluteFilePath(fileName));
+
+    // If, fileName is not a view, lets's try to load as a language profile
+    if (pluginFactory == nullptr)
+        LanguageControl::getInstance()->loadProfile(fileName);
+  }
 
 } //end function
 
@@ -189,7 +194,8 @@ void PluginControl::launchNewPlugin(IPluginFactory *factory, Project *project)
     //TODO: CREATE A NEW FUNCTION TO UPDATE FROM SAVED CONTENT
     pluginInstance->init();
   }
-  else {
+  else
+  {
     qCWarning(CPR_CORE) << "Could not create an instance for the plugin "
                       << factory->id();
   }
@@ -311,7 +317,6 @@ bool PluginControl::releasePlugins(Project *project)
   }
 
   QList<IPlugin*> instances = pluginInstances.values(project);
-
   QList<IPlugin*>::iterator it;
   for (it = instances.begin(); it != instances.end(); it++)
   {

@@ -178,21 +178,15 @@ void ComposerMainWindow::readExtensions()
 
   // add all the paths to LibraryPath, i.e., plugins are allowed to install
   // dll dependencies in the extensions path.
-  for (int i = 0; i < _extensionsPaths.size(); i++)
+  for(const QString &extDir: _extensionsPaths)
   {
-    QApplication::addLibraryPath(_extensionsPaths.at(i) + "/");
-  }
-
-  // foreach path where extensions can be installed, try to load profiles.
-  for (int i = 0; i < _extensionsPaths.size(); i++)
-  {
-    LanguageControl::getInstance()->loadProfiles(_extensionsPaths.at(i));
+    QApplication::addLibraryPath(extDir + "/");
   }
 
   // foreach path where extensions can be installed, try to load plugins.
-  for(int i = 0; i < _extensionsPaths.size(); i++)
+  for(const QString &extDir: _extensionsPaths)
   {
-    PluginControl::getInstance()->loadPlugins(_extensionsPaths.at(i));
+    PluginControl::getInstance()->loadPlugins(extDir);
   }
   settings.endGroup();
 

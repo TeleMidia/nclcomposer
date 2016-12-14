@@ -72,6 +72,8 @@ ILanguageProfile* LanguageControl::loadProfile(const QString &fileName)
       else
       {
         profiles.insert(type, lProfile);
+        qCDebug(CPR_CORE) << fileName << " loaded --- "
+                            << "languageProfile = " << lProfile;
       }
     }
     else
@@ -103,7 +105,7 @@ void LanguageControl::loadProfiles(const QString &profilesDirPath)
   filter.append("*.dll");
   profileDir.setNameFilters(filter);
 
-  foreach ( QString fileName,
+  for ( const QString& fileName:
             profileDir.entryList(QDir::Files | QDir::NoSymLinks) )
   {
     loadProfile(profileDir.absoluteFilePath(fileName));
