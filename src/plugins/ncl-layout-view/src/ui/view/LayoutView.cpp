@@ -349,6 +349,8 @@ void LayoutView::performPaste()
       LayoutRegion* parent = (LayoutRegion*) selectedRegion->parentItem();
       if(parent != NULL)
         selectedRegionUId = parent->getUid();
+      else
+        selectedRegionUId = selectedRegionBase->getUid();
     }
   }
   qDebug() << "Perform paste inside: " << selectedRegionUId;
