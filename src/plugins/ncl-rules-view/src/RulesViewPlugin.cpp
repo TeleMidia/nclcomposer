@@ -4,7 +4,7 @@
 #include <QList>
 #include <QMessageBox>
 
-#include "util.h"
+#include "Util.h"
 #include "RuleItem.h"
 #include "CompositeRuleItem.h"
 

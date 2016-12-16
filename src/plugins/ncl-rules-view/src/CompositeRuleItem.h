@@ -2,7 +2,7 @@
 #define COMPOSITERULEITEM_H
 
 #include <QTreeWidgetItem>
-#include "util.h"
+#include "Util.h"
 
 static const int AND_OP = 0;
 static const int OR_OP = 1;

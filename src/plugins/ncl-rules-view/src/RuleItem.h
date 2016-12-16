@@ -3,7 +3,7 @@
 
 #include <QTreeWidgetItem>
 #include "ComboBoxItem.h"
-#include "util.h"
+#include "Util.h"
 
 class RuleItem : public QObject, public QTreeWidgetItem
 {
