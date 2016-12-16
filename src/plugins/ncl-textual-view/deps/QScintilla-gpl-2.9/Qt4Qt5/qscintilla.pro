@@ -82,7 +82,7 @@ else:unix {
     PREFIX = /usr/local
   }
 
-  QSCI_INSTALL_LIBS = $$PREFIX/lib/composer/extensions
+  QSCI_INSTALL_LIBS = $$PREFIX/lib/composer/plugins
   QSCI_INSTALL_HEADERS = $$PREFIX/include/composer
   QSCI_INSTALL_TRANSLATIONS = $$PREFIX/lib/composer/translations
   QSCI_INSTALL_DATA = $$PREFIX/lib/composer/
@@ -97,8 +97,8 @@ else:win32 {
   QSCI_INSTALL_LIBS = $$PREFIX
   QSCI_INSTALL_HEADERS = $$PREFIX/include/composer
   #QSCI_INSTALL_TRANSLATIONS = $$PREFIX/translations
-  QSCI_INSTALL_TRANSLATIONS = $$PREFIX/extensions
-  QSCI_INSTALL_DATA = $$PREFIX/extensions
+  QSCI_INSTALL_TRANSLATIONS = $$PREFIX/plugins
+  QSCI_INSTALL_DATA = $$PREFIX/plugins
 }
 
 #QSCI_INSTALL_LIBS = $$[QT_INSTALL_LIBS]
@@ -509,8 +509,8 @@ else {
   message ("plugins-common.pri DEBUG build!")
 }
 
-release: DESTDIR = $${PWD}/../../../../../../bin/release/extensions/
-debug:   DESTDIR = $${PWD}/../../../../../../bin/debug/extensions/
+release: DESTDIR = $${PWD}/../../../../../../bin/release/plugins/
+debug:   DESTDIR = $${PWD}/../../../../../../bin/debug/plugins/
 
 #OBJECTS_DIR = $$DESTDIR/.obj
 #MOC_DIR = $$DESTDIR/.moc

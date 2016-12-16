@@ -62,13 +62,13 @@ else:win32 {
 
 #TRANSLATIONS
 win32 {
-    trans.path = $$INSTALLBASE/extensions
+    trans.path = $$INSTALLBASE/plugins
 
 } else:macx{
-    trans.path = "/Library/Application Support/Composer/Extensions"
+    trans.path = "/Library/Application Support/Composer/plugins"
 
 }else:unix {
-    trans.path = $$INSTALLBASE/lib/composer/extensions
+    trans.path = $$INSTALLBASE/lib/nclcomposer/plugins
 }
 
 trans.files = translations/*.qm

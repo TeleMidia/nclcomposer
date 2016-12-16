@@ -27,7 +27,7 @@ HEADERS +=  \
 
 headers_nclprofile.files = $$HEADERS
 
-headers_nclprofile.path = $$INSTALLBASE/include/composer/extensions
+headers_nclprofile.path = $$INSTALLBASE/include/composer/plugins
 
 OTHER_FILES += \
     nclLanguageProfile.json \

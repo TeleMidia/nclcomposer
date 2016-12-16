@@ -162,7 +162,7 @@ unix:!macx {
     target.path = $$INSTALLBASE/bin
 
     QMAKE_LFLAGS += -Wl,-rpath,\'\$\$ORIGIN/../lib/composer\'
-    QMAKE_LFLAGS += -Wl,-rpath,\'\$\$ORIGIN/../lib/composer/extensions\'
+    QMAKE_LFLAGS += -Wl,-rpath,\'\$\$ORIGIN/../lib/composer/plugins\'
     QMAKE_LFLAGS += -Wl,-rpath,\'.\'
 }
 else {
@@ -311,13 +311,13 @@ SOURCES += \
 
 #TRANSLATIONS
 win32 {
-    trans.path = $$INSTALLBASE/extensions
+    trans.path = $$INSTALLBASE/plugins
 
 } else:macx{
-    trans.path = "/Library/Application Support/Composer/Extensions"
+    trans.path = "/Library/Application Support/Composer/Plugins"
 
 }else:unix {
-    trans.path = $$INSTALLBASE/lib/composer/extensions
+    trans.path = $$INSTALLBASE/lib/nclcomposer/plugins
 }
 
 trans.files = translations/*.qm

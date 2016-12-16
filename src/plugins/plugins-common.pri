@@ -1,5 +1,5 @@
 TEMPLATE    =   lib
-CONFIG      +=  c++11 plugin dll silent
+CONFIG      +=  c++11 plugin dll
 
 # Uses FORCERELEASE variable because CONFIG and SUBDIR force three executions
 # if qmake and the last one does not preserves CONFIG from command line.
@@ -15,8 +15,8 @@ else {
   message ("plugins-common.pri DEBUG build!")
 }
 
-release: DESTDIR = $$PWD/../../bin/release/extensions
-debug:   DESTDIR = $$PWD/../../bin/debug/extensions
+release: DESTDIR = $$PWD/../../bin/release/plugins
+debug:   DESTDIR = $$PWD/../../bin/debug/plugins
 OBJECTS_DIR = $$DESTDIR/.obj
 MOC_DIR = $$DESTDIR/.moc
 RCC_DIR = $$DESTDIR/.qrc
@@ -74,7 +74,7 @@ macx {
   LIBS += -F/Library/Frameworks -framework ComposerCore
 
   link_ncl_profile {
-    LIBS += -L$$quote(/Library/Application Support/Composer/Extensions) -lNCLLanguageProfile
+    LIBS += -L$$quote(/Library/Application Support/Composer/Plugins) -lNCLLanguageProfile
   }
 
   QMAKE_CXXFLAGS += -mmacosx-version-min=10.7 -std=c++11 -stdlib=libc++
@@ -82,26 +82,26 @@ macx {
 
   INCLUDEPATH +=  /Library/Frameworks/ComposerCore.framework/ \
                   /Library/Frameworks/ComposerCore.framework/core \
-                  /Library/Frameworks/ComposerCore.framework/core/extensions
+                  /Library/Frameworks/ComposerCore.framework/core/plugins
 
-  target.path = $$quote(/Library/Application Support/Composer/Extensions)
+  target.path = $$quote(/Library/Application Support/Composer/PlugIns)
 }
 else:unix {
   LIBS += -L$$INSTALLBASE/lib/composer -lComposerCore
 
   link_ncl_profile {
-    LIBS += -L$$INSTALLBASE/lib/composer/extensions -lNCLLanguageProfile
+    LIBS += -L$$INSTALLBASE/lib/composer/plugins -lNCLLanguageProfile
   }
 
   INCLUDEPATH += $$INSTALLBASE/include/composer \
                  $$INSTALLBASE/include/composer/core \
-                 $$INSTALLBASE/include/composer/extensions
+                 $$INSTALLBASE/include/composer/plugins
 
   QMAKE_LFLAGS += -Wl,-rpath,\'\$\$ORIGIN\':\'\$\$ORIGIN/../\'
   QMAKE_LFLAGS += -Wl,-rpath,\'\$\$ORIGIN/../lib/composer\'
-  QMAKE_LFLAGS += -Wl,-rpath,\'\$\$ORIGIN/../lib/composer/extensions\'
+  QMAKE_LFLAGS += -Wl,-rpath,\'\$\$ORIGIN/../lib/composer/plugins\'
 
-  target.path = $$quote($$INSTALLBASE/lib/composer/extensions)
+  target.path = $$quote($$INSTALLBASE/lib/composer/plugins)
 }
 else:win32 {
   LIBS += -lComposerCore1
@@ -112,9 +112,9 @@ else:win32 {
 
   INCLUDEPATH += $$INSTALLBASE/include/composer \
                  $$INSTALLBASE/include/composer/core \
-                 $$INSTALLBASE/include/composer/extensions
+                 $$INSTALLBASE/include/composer/plugins
 
-  target.path = $$INSTALLBASE/extensions
+  target.path = $$INSTALLBASE/plugins
 }
 
 # Set the name of the default target based on the .pro file
