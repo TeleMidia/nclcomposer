@@ -22,12 +22,11 @@ supporting textual and graphical abstractions.
 
 ## Source code organization
 NCL Composer source code is divided into three main parts:
-  * __src/core__: implements a minimal core that allows the loading and
+  * __src/core__: a minimal core that allows the loading and
     communication between plug-ins.
-  * __src/gui__: implements the GUI engine that is responsible for grouping the
+  * __src/gui__: the GUI engine, which is responsible for grouping the
     different views in the same user interface.
-  * __src/plugins__: brings the official plug-ins supported by NCL Composer. An
-    special type of plug-in are the views.
+  * __src/plugins__: the official plug-ins supported by NCL Composer.
 
 ## Contribute!
 
@@ -35,14 +34,12 @@ NCL Composer source code is divided into three main parts:
 
 ## Building
 
-  * TODO
-
 ### Requirements
 The main requirement for NCL Composer is:
 
   * Qt >= 5.4
 
-### Linux (Debian/Ubuntu)
+### Building on Linux (Debian/Ubuntu)
 In a Debian-based system (e.g. Debian, Ubuntu, or Linux Mint) you can easily
 install Qt libraries through:
 
@@ -63,10 +60,10 @@ find the executable (and run):
 > you can call `qmake FORCERELEASE=true`.  The executable will be available at
 > `./bin/release/nclcomposer`.
 
-### Windows
+### Building on Windows
   * TODO
 
-### Mac OS X
+### Building on Mac OS X
   * TODO
 
 ## Packaging NCL Composer
