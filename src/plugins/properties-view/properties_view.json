@@ -1,16 +1,13 @@
 {
   "name": "Properties View",
-  "version": "0.3.0",
-  "compatVersion": "0.3",
+  "version": "${VERSION}",
+  "compatVersion": "${VERSION}",
 
   "vendor": "TeleMídia Lab",
   "copyright": "TeleMídia/PUC-Rio",
   "license": "LGPL",
 
-  "description": "Property View shows the attributes \
-                  of a current selected entity and \
-                  enables the user to change its \
-                  values.",
+  "description": "Property View shows the attributes of a current selected entity and enables the user to change its values.",
   "url": "http://composer.telemidia.puc-rio.br/property",
 
   "category": "NCL"

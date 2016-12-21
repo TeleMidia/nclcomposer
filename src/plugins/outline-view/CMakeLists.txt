@@ -4,8 +4,10 @@ project(outline_view)
 set (CMAKE_INCLUDE_CURRENTDIR ON)
 set (CMAKE_AUTOMOC ON)
 
+configure_file (outline_view.json outline_view.json)
+
 include_directories(
-  .
+  ${CMAKE_CURRENT_BINARY_DIR}
   src
   "${CMAKE_SOURCE_DIR}/src/plugins/ncl-profile"
   "${CMAKE_SOURCE_DIR}/src/plugins/ncl-textual-view/src"

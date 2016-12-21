@@ -1,14 +1,13 @@
 {
   "name": "Outline View",
-  "version": "0.3.0",
-  "compatVersion": "0.3",
+  "version": "${VERSION}",
+  "compatVersion": "${VERSION}",
 
   "vendor": "TeleMídia Lab",
   "copyright": "TeleMídia/PUC-Rio",
   "license": "LGPL",
 
-  "description": "Outline View enables the user \
-                  navigates in the project as a tree.",
+  "description": "Outline View enables the user navigates in the project as a tree.",
   "url": "http://composer.telemidia.puc-rio.br/outline",
 
   "category": "NCL"

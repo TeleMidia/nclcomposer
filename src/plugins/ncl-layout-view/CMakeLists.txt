@@ -4,8 +4,10 @@ project(ncl_layout_view)
 set (CMAKE_INCLUDE_CURRENTDIR ON)
 set (CMAKE_AUTOMOC ON)
 
+configure_file (ncl-layout-view.json ncl-layout-view.json)
+
 include_directories(
-  .
+  ${CMAKE_CURRENT_BINARY_DIR}
   src
   src/ui
   src/ui/view

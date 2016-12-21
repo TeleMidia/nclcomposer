@@ -5,8 +5,10 @@ set (CMAKE_INCLUDE_CURRENTDIR ON)
 set (CMAKE_AUTOMOC ON)
 set (CMAKE_AUTORCC ON)
 
+configure_file (ncl-rules-view.json ncl-rules-view.json)
+
 include_directories(
-  .
+  ${CMAKE_CURRENT_BINARY_DIR}
   src
   "${CMAKE_SOURCE_DIR}/src/plugins/ncl-profile"
   "${CMAKE_SOURCE_DIR}/src/core/src"

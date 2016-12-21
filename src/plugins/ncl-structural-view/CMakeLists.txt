@@ -5,7 +5,10 @@ set (CMAKE_INCLUDE_CURRENTDIR ON)
 set (CMAKE_AUTOMOC ON)
 set (CMAKE_AUTORCC ON)
 
+configure_file (ncl-structural-view.json ncl-structural-view.json)
+
 include_directories(
+  ${CMAKE_CURRENT_BINARY_DIR}
   .
   src
   src/core

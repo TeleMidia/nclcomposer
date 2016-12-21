@@ -4,7 +4,10 @@ project(validator)
 set (CMAKE_INCLUDE_CURRENTDIR ON)
 set (CMAKE_AUTOMOC ON)
 
+configure_file (validator_plugin.json validator_plugin.json)
+
 include_directories(
+  ${CMAKE_CURRENT_BINARY_DIR}
   .
   "${CMAKE_SOURCE_DIR}/src/core/src"
   ${nclcomposer_core_SOURCE_DIR}

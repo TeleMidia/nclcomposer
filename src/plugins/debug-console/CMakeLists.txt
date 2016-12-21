@@ -4,8 +4,10 @@ project(debugconsole)
 set (CMAKE_INCLUDE_CURRENTDIR ON)
 set (CMAKE_AUTOMOC ON)
 
+configure_file (debug_console.json debug_console.json)
+
 include_directories(
-  .
+  ${CMAKE_CURRENT_BINARY_DIR}
   "${CMAKE_SOURCE_DIR}/src/core/src"
   ${nclcomposer_core_SOURCE_DIR}
 )
@@ -34,3 +36,4 @@ target_link_libraries (debugconsole
 )
 
 install (TARGETS debugconsole DESTINATION plugins)
+

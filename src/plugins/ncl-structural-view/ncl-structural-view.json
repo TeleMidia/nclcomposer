@@ -1,11 +1,15 @@
 {
-  "name": "NCL Structural View (Next)",
-  "version": "0.3.0",
-  "compatVersion": "0.3",
-  "vendor": "TeleMidia Lab",
-  "copyright": "TeleMidia/PUC-Rio",
+  "name": "Structural View",
+  "version": "${VERSION}",
+  "compatVersion": "${VERSION}",
+
+  "vendor": "TeleMídia Lab",
+  "copyright": "TeleMídia/PUC-Rio",
   "license": "LGPL",
-  "description": "Structural View enable the user to edit the logical structure of a NCL document visually.",
+
+  "description": "Structural View enables the user to edit the logical structure of a NCL document visually.",
   "url": "http://composer.telemidia.puc-rio.br/structural",
+
   "category": "NCL"
 }
+
