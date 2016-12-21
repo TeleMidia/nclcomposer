@@ -82,7 +82,7 @@ add_executable(nclcomposer
 
 set_target_properties(nclcomposer PROPERTIES
   BUILD_WITH_INSTALL_RPATH TRUE
-  INSTALL_RPATH "\$ORIGIN/../lib:..."
+  INSTALL_RPATH "\$ORIGIN/../lib/${CMAKE_PROJECT_NAME}:..."
 )
 
 target_link_libraries (nclcomposer
@@ -100,4 +100,4 @@ file(
     data/style.qss
     data/default.ini
   DESTINATION
-    "${CMAKE_BINARY_DIR}/data/")
+    "${CMAKE_BINARY_DIR}/etc/${CMAKE_PROJECT_NAME}")

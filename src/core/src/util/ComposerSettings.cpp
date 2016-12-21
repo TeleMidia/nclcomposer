@@ -47,7 +47,7 @@ void GlobalSettings::addPlatformDefaults(const QString &dataPath)
   // The first path will look for plug-ins is relative to the executable
   defaultPluginsPath << QApplication::applicationDirPath();
   defaultPluginsPath << QApplication::applicationDirPath() + "/plugins";
-  defaultPluginsPath << QApplication::applicationDirPath() + "/../plugins";
+  defaultPluginsPath << QApplication::applicationDirPath() + "/../lib/nclcomposer/plugins";
 
   // Then, we will look for plug-ins is at user's home.
   defaultPluginsPath << QDir::homePath() + QString("/nclcomposer/plugins");

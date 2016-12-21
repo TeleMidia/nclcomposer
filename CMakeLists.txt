@@ -19,7 +19,7 @@ else()
 endif(Qt5Widgets_FOUND)
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
-set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib/${CMAKE_PROJECT_NAME})
 
 add_subdirectory(src/core)
 add_subdirectory(src/gui)
@@ -27,7 +27,7 @@ add_subdirectory(src/gui)
 if(WIN32)
   set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/plugins)
 else()
-  set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/plugins)
+  set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib/${CMAKE_PROJECT_NAME}/plugins)
 endif()
 
 # plugins
@@ -39,7 +39,7 @@ add_subdirectory(src/plugins/ncl-layout-view)
 add_subdirectory(src/plugins/ncl-structural-view)
 add_subdirectory(src/plugins/ncl-rules-view)
 add_subdirectory(src/plugins/validator)
-# add_subdirectory(src/plugins/gingagui-all/run-view)
+add_subdirectory(src/plugins/gingagui-all/run-view)
 
 # cpack
 set(CPACK_PACKAGE_NAME "nclcomposer")
