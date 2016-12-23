@@ -23,7 +23,7 @@ public:
   GlobalSettings();
 
   void loadDefaults(const QString &dataPath);
-  void addPlatformDefaults(const QString &dataPath);
+  void addPlatformDefaults();
 };
 
 class COMPOSERCORESHARED_EXPORT ProjectSettings: public QSettings

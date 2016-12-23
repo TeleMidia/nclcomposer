@@ -5,7 +5,11 @@ set(VERSION "0.3.1")
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-# Check Qt >= 5.4
+set (NCLCOMPOSER_BINARY_DIR_BIN bin/)
+set (NCLCOMPOSER_BINARY_DIR_LIB lib/${CMAKE_PROJECT_NAME})
+set (NCLCOMPOSER_BINARY_DIR_PLUGINS lib/${CMAKE_PROJECT_NAME}/plugins)
+
+# Looking for Qt >= 5.4
 message("-- Looking for Qt5 (>=5.4)")
 find_package(Qt5Widgets REQUIRED)
 
@@ -19,19 +23,20 @@ else()
   message(SEND_ERROR "The Qt5 (>=5.4) library could not be found!")
 endif(Qt5Widgets_FOUND)
 
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
-set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib/${CMAKE_PROJECT_NAME})
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/${NCLCOMPOSER_BINARY_DIR_BIN})
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/${NCLCOMPOSER_BINARY_DIR_LIB})
 
+# NCLCOMPOSER - CORE AND GUI
 add_subdirectory(src/core)
 add_subdirectory(src/gui)
 
+# NCLCOMPOSER - PLUGINS
 if(WIN32)
-  set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/plugins)
+  set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/${NCLCOMPOSER_BINARY_DIR_PLUGINS})
 else()
-  set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib/${CMAKE_PROJECT_NAME}/plugins)
+  set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/${NCLCOMPOSER_BINARY_DIR_PLUGINS})
 endif()
 
-# plugins
 add_subdirectory(src/plugins/ncl-profile)
 add_subdirectory(src/plugins/debug-console)
 add_subdirectory(src/plugins/outline-view)

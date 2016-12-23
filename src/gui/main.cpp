@@ -27,7 +27,6 @@ using namespace composer::gui;
 Q_DECLARE_LOGGING_CATEGORY(CPR_MAIN)
 Q_LOGGING_CATEGORY(CPR_MAIN, "cpr.main")
 
-
 // \todo this function should move from here
 void loadTranslations()
 {
@@ -141,13 +140,8 @@ int main(int argc, char *argv[])
      * copy all values from the default settings */
     if (settings.allKeys().empty())
     {
-#ifdef WIN32
       const QString defaultIni =
-              QApplication::applicationDirPath()+"/../data/default.ini";
-#else
-      const QString defaultIni =
-              QString (DATA_PATH) + "/default.ini";
-#endif
+              QApplication::applicationDirPath()+"/../etc/nclcomposer/default.ini";
 
       qCDebug(CPR_MAIN) << "This is the first time you are running "
                         << "NCL Composer.  It will copy the default settings"
@@ -156,15 +150,7 @@ int main(int argc, char *argv[])
       settings.loadDefaults(defaultIni);
     }
 
-#ifdef WIN32
-    const QString defaulDataPath =
-            QApplication::applicationDirPath() + "/../data/";
-#else
-    const QString defaulDataPath =
-            DATA_PATH;
-#endif
-    // We must be sure the platform defaults are loaded in the settings
-    settings.addPlatformDefaults(defaulDataPath);
+    settings.addPlatformDefaults();
 
     loadTranslations();
     a.setQuitOnLastWindowClosed(true);
@@ -181,3 +167,4 @@ int main(int argc, char *argv[])
 
   return 1;
 }
+

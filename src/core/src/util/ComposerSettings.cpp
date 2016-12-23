@@ -38,7 +38,7 @@ void GlobalSettings::loadDefaults(const QString &dataPath)
  * \fixme This function came from GUI, maybe some of the MACROS used above are
  * not working.
  */
-void GlobalSettings::addPlatformDefaults(const QString &dataPath)
+void GlobalSettings::addPlatformDefaults()
 {
   /* Defaults plugins paths */
   QStringList defaultPluginsPath;
@@ -49,24 +49,13 @@ void GlobalSettings::addPlatformDefaults(const QString &dataPath)
   defaultPluginsPath << QApplication::applicationDirPath() + "/plugins";
   defaultPluginsPath << QApplication::applicationDirPath() + "/../lib/nclcomposer/plugins";
 
-  // Then, we will look for plug-ins is at user's home.
+  // Then, we will look for plug-ins in user's home.
   defaultPluginsPath << QDir::homePath() + QString("/nclcomposer/plugins");
 #endif
 
-  // After that we will look for plugins in the default system path
+  // After that we will look for plugins in the default system path (do we need that?)
 #ifdef Q_OS_MAC
-#ifdef QT_NO_DEBUG_OUTPUT
     defaultPluginsPath << QApplication::applicationDirPath() + "/../PlugIns/composer/";
-#else
-    defaultPluginsPath << "/Library/Application Support/Composer/PlugIns/";
-#endif
-#else
-  // PREFIX Should be defined by the qmake while compiling the source code.
-#ifdef EXT_DEFAULT_PATH
-  defaultPluginsPath << QString(EXT_DEFAULT_PATH)
-                        + QString("/lib/nclcomposer/plugins");
-#endif
-
 #endif
 
   this->beginGroup("extensions");
@@ -104,14 +93,8 @@ void GlobalSettings::addPlatformDefaults(const QString &dataPath)
 #else
     defaultConnBaseDir = "/Library/Application Support/Composer/Data/";
 #endif
-#elif defined(Q_OS_WIN32)
-    defaultConnBaseDir = QApplication::applicationDirPath() + "/data/";
 #else
-    // PREFIX Should be defined by the qmake while compiling the source code.
-#ifdef EXT_DEFAULT_PATH
-    defaultConnBaseDir = QString(EXT_DEFAULT_PATH)
-        + QString("/share/composer/");
-#endif
+    defaultConnBaseDir = QApplication::applicationDirPath() + "/../etc/nclcomposer/";
 #endif
   }
 
@@ -123,7 +106,7 @@ void GlobalSettings::addPlatformDefaults(const QString &dataPath)
   /* Stylesheets */
   QStringList stylesheetsDirs =
       this->value("default_stylesheets_dirs").toStringList();
-  stylesheetsDirs << QString(dataPath);
+  stylesheetsDirs << QApplication::applicationDirPath() + "/../etc/nclcomposer/";
 
 #ifdef Q_OS_MAC
 #ifdef QT_NO_DEBUG_OUTPUT
@@ -145,6 +128,5 @@ ProjectSettings::ProjectSettings(const QString &project) :
 
 }
 
-
-
 } } } // end namespace
+
