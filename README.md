@@ -1,6 +1,11 @@
 ![Some screenshots](http://composer.telemidia.puc-rio.br/_media/screenshot/nclcomposer.png)
 
-[![Build Status](https://semaphoreci.com/api/v1/robertogerson/nclcomposer/branches/master/shields_badge.svg)](https://semaphoreci.com/robertogerson/nclcomposer)
+<p align="center">
+  <a href="https://semaphoreci.com/robertogerson/nclcomposer"><img src="https://semaphoreci.com/api/v1/robertogerson/nclcomposer/branches/master/shields_badge.svg" alt="Build Status (Linux)" title="Build Status (Linux)"></a>
+  <a href="https://ci.appveyor.com/project/robertogerson/nclcomposer">
+    <img src="https://ci.appveyor.com/api/projects/status/uq1btj2acxf2eqxi?svg=true" alt="Build Status (Windows)" title="Build Status (Windows)">
+  </a>
+</p>
 
 # NCL Composer
 [NCL Composer](http://composer.telemidia.puc-rio.br) is a multiplataform and
