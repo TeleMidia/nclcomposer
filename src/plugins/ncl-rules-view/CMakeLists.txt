@@ -50,4 +50,4 @@ target_link_libraries (ncl_rules_view
   Qt5::Widgets
 )
 
-install (TARGETS ncl_rules_view DESTINATION plugins)
+install (TARGETS ncl_rules_view DESTINATION ${NCLCOMPOSER_BINARY_DIR_PLUGINS})

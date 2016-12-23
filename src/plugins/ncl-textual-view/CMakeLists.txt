@@ -90,4 +90,4 @@ target_link_libraries (ncl_textual_view
   Qt5::Widgets
 )
 
-install (TARGETS ncl_textual_view DESTINATION plugins)
+install (TARGETS ncl_textual_view DESTINATION ${NCLCOMPOSER_BINARY_DIR_PLUGINS})

@@ -38,4 +38,4 @@ target_link_libraries (nclprofile
   Qt5::Xml
 )
 
-install (TARGETS nclprofile DESTINATION plugins)
+install (TARGETS nclprofile DESTINATION ${NCLCOMPOSER_BINARY_DIR_PLUGINS})

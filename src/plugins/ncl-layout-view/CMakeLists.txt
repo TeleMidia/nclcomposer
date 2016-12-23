@@ -57,4 +57,4 @@ target_link_libraries (ncl_layout_view
   Qt5::Widgets
 )
 
-install (TARGETS ncl_layout_view DESTINATION plugins)
+install (TARGETS ncl_layout_view DESTINATION ${NCLCOMPOSER_BINARY_DIR_PLUGINS})

@@ -40,4 +40,4 @@ target_link_libraries (outline_view
   Qt5::Widgets
 )
 
-install (TARGETS outline_view DESTINATION plugins)
+install (TARGETS outline_view DESTINATION ${NCLCOMPOSER_BINARY_DIR_PLUGINS})

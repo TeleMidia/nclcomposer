@@ -35,5 +35,5 @@ target_link_libraries (debugconsole
   Qt5::Core
 )
 
-install (TARGETS debugconsole DESTINATION plugins)
+install (TARGETS debugconsole DESTINATION ${NCLCOMPOSER_BINARY_DIR_PLUGINS})
 

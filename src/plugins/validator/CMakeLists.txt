@@ -67,4 +67,4 @@ target_link_libraries(validator
   Qt5::Xml
 )
 
-install (TARGETS validator DESTINATION plugins)
+install (TARGETS validator DESTINATION ${NCLCOMPOSER_BINARY_DIR_PLUGINS})
