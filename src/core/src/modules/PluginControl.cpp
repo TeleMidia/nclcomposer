@@ -32,8 +32,8 @@ PluginControl::~PluginControl()
   QMultiHash<Project*,IPlugin*>::iterator itInst;
   QHash<QString,IPluginFactory*>::iterator itFac;
 
-  IPlugin *inst = NULL;
-  IPluginFactory *fac = NULL;
+  IPlugin *inst = nullptr;
+  IPluginFactory *fac = nullptr;
 
   for (itInst = pluginInstances.begin();
        itInst != pluginInstances.end(); itInst++)
@@ -56,7 +56,7 @@ PluginControl::~PluginControl()
   {
     fac = itFac.value();
     delete fac;
-    fac = NULL;
+    fac = nullptr;
   }
 
   pluginFactories.clear();
@@ -96,6 +96,7 @@ IPluginFactory* PluginControl::loadPlugin(const QString &fileName)
 
         qCDebug(CPR_CORE) << loader.metaData();
         QJsonObject metadata = loader.metaData().value("MetaData").toObject();
+        metadata["path"] = fileName;
         pluginFactory->setMetadata(metadata);
       }
     }
@@ -291,7 +292,8 @@ QList<IPluginFactory*> PluginControl::getLoadedPlugins()
 
 bool PluginControl::releasePlugins(Project *project)
 {
-  if (!project) {
+  if (!project)
+  {
     qCDebug(CPR_CORE) << "Project is NULL";
     return false;
   }
@@ -312,7 +314,7 @@ bool PluginControl::releasePlugins(Project *project)
   if (t)
   {
     delete t;
-    t = NULL;
+    t = nullptr;
     messageControls.remove(project);
   }
 
@@ -353,7 +355,6 @@ void PluginControl::sendBroadcastMessage(const char* slot, void *obj)
                     Q_ARG(void *, obj));
     }
   }
-
 }
 
 void PluginControl::savePluginsData(Project *project)

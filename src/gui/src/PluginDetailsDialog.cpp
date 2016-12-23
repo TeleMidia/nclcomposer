@@ -32,6 +32,8 @@ void PluginDetailsDialog::setCurrentPlugin(IPluginFactory *currentPluginFactory)
     ui->label_CompatibilityVersionValue
                 ->setText(currentPluginFactory->metadata().value("compatVersion").toString());
 
+    ui->label_PluginPathValue->setText(currentPluginFactory->metadata().value("path").toString());
+
     ui->label_VersionValue->setText(currentPluginFactory->metadata().value("version").toString());
     ui->label_CategoryValue->setText(currentPluginFactory->metadata().value("category").toString());
 
