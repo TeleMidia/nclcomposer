@@ -36,7 +36,7 @@ void loadTranslations()
   QString language_code = settings.value("currentLanguage",
                                          QString("en")).toString();
   settings.endGroup();
-  qDebug() << "[GUI] Current Language = " << language_code;
+  qCDebug(CPR_MAIN) << "Current Language = " << language_code;
 
   QLocale locale = QLocale(language_code);
   QLocale::setDefault(locale);
@@ -46,7 +46,7 @@ void loadTranslations()
   QStringList extensions_paths = settings.value("path").toStringList();
   settings.endGroup();
 
-  qDebug() << "[GUI] Looking for extensions in " <<  extensions_paths;
+  qCDebug(CPR_MAIN) << "Looking for extensions in " <<  extensions_paths;
 
   /* Go in each path and search for files from that language */
   foreach(QString curPath, extensions_paths)
@@ -60,7 +60,7 @@ void loadTranslations()
     // for each translation file install in the application.
     foreach(QFileInfo fileInfo, fileInfoList)
     {
-      qDebug() << "[GUI] translation file = " << fileInfo.absoluteFilePath();
+      qCDebug(CPR_MAIN) << "Loading translation file = " << fileInfo.absoluteFilePath();
       QTranslator *composerTranslator = new QTranslator(qApp);
       composerTranslator->load(fileInfo.absoluteFilePath());
       QCoreApplication::installTranslator(composerTranslator);
