@@ -1221,13 +1221,10 @@ void ComposerMainWindow::savePerspective (QString layoutName)
 {
   if(_tabProjects->count()) //see if there is any open document
   {
-    QString location = _tabProjects->tabToolTip(_tabProjects->currentIndex());
+    GlobalSettings settings;
 
+    QString location = _tabProjects->tabToolTip(_tabProjects->currentIndex());
     QToolWindowManager *window = _projectsWidgets[location];
-    QSettings settings(QSettings::IniFormat,
-                       QSettings::UserScope,
-                       "telemidia",
-                       "composer");
 
     settings.beginGroup("pluginslayout");
     settings.setValue(layoutName, window->saveState());
