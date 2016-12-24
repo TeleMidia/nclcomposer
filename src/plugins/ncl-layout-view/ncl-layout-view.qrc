@@ -1,0 +1,8 @@
+<RCC>
+    <qresource prefix="/icon">
+        <file alias="add-region-icon">images/application-add-icon.png</file>
+        <file alias="remove-region-icon">images/application-remove-icon.png</file>
+        <file alias="grid-icon">images/grid-icon.png</file>
+        <file alias="export-icon">images/application-export-icon.png</file>
+    </qresource>
+</RCC>
