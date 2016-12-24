@@ -28,7 +28,12 @@ HEADERS += \
     src/ui/LayoutWindow.h
 
 FORMS += \
-    ui/LayoutWindow.ui
+   src/ui/LayoutWindow.ui
 
 OTHER_FILES += \
   ncl-layout-view.json
+
+RESOURCES += \
+    ncl-layout-view.qrc \
+    ../common-resources/images.qrc
+
