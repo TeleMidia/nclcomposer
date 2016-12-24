@@ -50,10 +50,6 @@
         <file alias="ncl">images/icon-ncl.png</file>
         <file alias="alias2">images/alias.png</file>
         <file alias="alias">images/icon-alias2.png</file>
-        <file alias="add-region-icon">images/application-add-icon.png</file>
-        <file alias="remove-region-icon">images/application-remove-icon.png</file>
-        <file alias="grid-icon">images/grid-icon.png</file>
-        <file alias="export-icon">images/application-export-icon.png</file>
         <file alias="stream">images/icon-stream.png</file>
         <file alias="minus">images/minus.png</file>
         <file alias="error">images/error.png</file>

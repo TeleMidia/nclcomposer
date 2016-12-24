@@ -52,7 +52,7 @@
   </widget>
   <action name="actionAdd_Region">
    <property name="icon">
-    <iconset resource="../../../common-resources/images.qrc">
+    <iconset resource="../../common-resources/images.qrc">
      <normaloff>:/icon/add-region-icon</normaloff>:/icon/add-region-icon</iconset>
    </property>
    <property name="text">
@@ -64,7 +64,7 @@
   </action>
   <action name="actionRemove_Region">
    <property name="icon">
-    <iconset resource="../../../common-resources/images.qrc">
+    <iconset resource="../../common-resources/images.qrc">
      <normaloff>:/icon/remove-region-icon</normaloff>:/icon/remove-region-icon</iconset>
    </property>
    <property name="text">
@@ -79,7 +79,7 @@
     <bool>true</bool>
    </property>
    <property name="icon">
-    <iconset resource="../../../common-resources/images.qrc">
+    <iconset resource="../../common-resources/images.qrc">
      <normaloff>:/icon/grid-icon</normaloff>:/icon/grid-icon</iconset>
    </property>
    <property name="text">
@@ -88,7 +88,7 @@
   </action>
   <action name="actionAction_Export">
    <property name="icon">
-    <iconset resource="../../../common-resources/images.qrc">
+    <iconset resource="../../common-resources/images.qrc">
      <normaloff>:/icon/export-icon</normaloff>:/icon/export-icon</iconset>
    </property>
    <property name="text">
@@ -100,9 +100,7 @@
   </action>
  </widget>
  <resources>
-  <include location="../../../common-resources/images.qrc"/>
-  <include location="../../../common-resources/images.qrc"/>
-  <include location="../../../common-resources/images.qrc"/>
+  <include location="../../common-resources/images.qrc"/>
  </resources>
  <connections/>
 </ui>

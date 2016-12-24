@@ -3,11 +3,15 @@ project(ncl_layout_view)
 
 set (CMAKE_INCLUDE_CURRENTDIR ON)
 set (CMAKE_AUTOMOC ON)
+set (CMAKE_AUTORCC ON)
+set (CMAKE_AUTOUIC ON)
 
 configure_file (ncl-layout-view.json ncl-layout-view.json)
 
 include_directories(
   ${CMAKE_CURRENT_BINARY_DIR}
+  .
+  ui
   src
   src/ui
   src/ui/view
@@ -38,10 +42,9 @@ set (NCL_LAYOUT_VIEW_SOURCES
   src/ui/view/LayoutRegionBase.h
   src/ui/view/LayoutView.h
   src/ui/LayoutWindow.h
-)
 
-qt5_wrap_ui (UI_GENERATED_HEADERS
-  ui/LayoutWindow.ui
+  ../common-resources/images.qrc
+  ncl-layout-view.qrc
 )
 
 add_library (ncl_layout_view
