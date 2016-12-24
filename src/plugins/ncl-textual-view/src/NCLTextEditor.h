@@ -110,6 +110,8 @@ public slots:
 
   void formatText();
 
+  void handleCursorPositionChanged(int line, int pos);
+
 signals:
   void focusLosted(QFocusEvent *event);
 
@@ -123,14 +125,6 @@ protected:
   void dropEvent(QDropEvent *event);*/
 
 private:
-  enum INTERACTION_STATE
-  {
-    DEFAULT_STATE = 1,
-    FILLING_ATTRIBUTES_STATE
-  };
-
-  INTERACTION_STATE _interactionState;
-
   QsciLexerNCL *_nclLexer;
   QsciNCLAPIs *_apis;
   QDomDocument _domDoc;
