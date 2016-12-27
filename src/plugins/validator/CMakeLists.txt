@@ -52,8 +52,6 @@ set (VALIDATOR_SOURCES
   nclmodel/connectorparser.h
   
   Resource.qrc
-  ../common-resources/language.qrc
-  ../common-resources/images.qrc
 )
 
 add_library(validator

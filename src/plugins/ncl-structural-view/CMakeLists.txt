@@ -75,7 +75,6 @@ set (NCL_STRUCTURAL_VIEW_SOURCES
   src/ui/view/StructuralLinkTool.cpp
   
   ncl-structural-view.qrc
-  ../common-resources/images.qrc
 )
 
 add_library (ncl_structural_view

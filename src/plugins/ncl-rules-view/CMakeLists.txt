@@ -35,8 +35,6 @@ set (NCL_RULES_VIEW_SOURCES
   src/RuleItem.h
   src/CompositeRuleItem.h
   src/ComboBoxItem.h
-  
-  ../common-resources/images.qrc
 )
 
 add_library (ncl_rules_view

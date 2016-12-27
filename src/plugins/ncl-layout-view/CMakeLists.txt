@@ -43,7 +43,6 @@ set (NCL_LAYOUT_VIEW_SOURCES
   src/ui/view/LayoutView.h
   src/ui/LayoutWindow.h
 
-  ../common-resources/images.qrc
   ncl-layout-view.qrc
 )
 

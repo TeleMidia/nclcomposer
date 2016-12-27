@@ -80,6 +80,7 @@ add_executable(nclcomposer
   ${UI_GENERATED_HEADERS}
   images.qrc
   ../plugins/common-resources/images.qrc
+  ../plugins/common-resources/language.qrc
 )
 
 set_target_properties(nclcomposer PROPERTIES
