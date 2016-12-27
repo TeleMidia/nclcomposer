@@ -103,23 +103,16 @@ void GlobalSettings::addPlatformDefaults()
   this->endGroup();
   /*End Import Bases*/
 
-  /* Stylesheets */
-  QStringList stylesheetsDirs =
-      this->value("default_stylesheets_dirs").toStringList();
-  stylesheetsDirs << QApplication::applicationDirPath() + "/../etc/nclcomposer/";
-
-#ifdef Q_OS_MAC
-#ifdef QT_NO_DEBUG_OUTPUT
-    stylesheetsDirs << QApplication::applicationDirPath() + "/../PlugIns/composer/";
-#else
-    stylesheetsDirs << "/Library/Application Support/Composer/Data/";
-#endif
-#endif
-
-  stylesheetsDirs.removeDuplicates();
-
-  this->setValue("default_stylesheets_dirs", stylesheetsDirs);
-  /* End Stylesheets */
+  /* Stylesheet */
+  this->beginGroup("theme");
+  QString stylesheet =
+    QApplication::applicationDirPath() + "/../etc/nclcomposer/style.qss";
+  this->setValue("stylesheet", stylesheet);
+  QString stylesheet_ini =
+    QApplication::applicationDirPath() + "/../etc/nclcomposer/style.ini";
+  this->setValue("stylesheet_ini", stylesheet_ini);
+  this->endGroup();
+  /* End Stylesheet */
 }
 
 ProjectSettings::ProjectSettings(const QString &project) :

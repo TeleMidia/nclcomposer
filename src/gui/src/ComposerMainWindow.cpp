@@ -34,6 +34,10 @@
 
 #define SHOW_PROFILES 1
 
+#if WITH_LIBSASS
+#include "sass/context.h"
+#endif
+
 namespace composer {
 namespace gui {
 
@@ -293,21 +297,51 @@ void ComposerMainWindow::openProjects(const QStringList &projects)
 
 void ComposerMainWindow::loadStyleSheets()
 {
-  QStringList style_sheets_dirs =
-          GlobalSettings().value("default_stylesheets_dirs").toStringList();
+  GlobalSettings settings;
+  settings.beginGroup("theme");
+  QString style_path = settings.value("stylesheet").toString();
 
-  foreach (const QString &dir, style_sheets_dirs)
+  if (QFile::exists(style_path))
   {
-    if (QFile::exists(dir + "/style.qss"))
+#if WITH_LIBSASS
+    QString style_content;
+    struct Sass_File_Context* file_ctx = sass_make_file_context(style_path.toLatin1().data());
+    struct Sass_Context* ctx = sass_file_context_get_context(file_ctx);
+    struct Sass_Options* ctx_opt = sass_context_get_options(ctx);
+
+    // configure some options ...
+    sass_option_set_precision(ctx_opt, 10);
+
+    // context is set up, call the compile step now
+    int status = sass_compile_file_context(file_ctx);
+
+    // print the result or the error to the stdout
+    if (status == 0)
+      style_content = sass_context_get_output_string(ctx);
+    else 
+      puts(sass_context_get_error_message(ctx));
+
+    setStyleSheet(style_content);
+
+    // release allocated memory
+    sass_delete_file_context(file_ctx);
+#else
+    QFile style_file (style_path);
+    if (style_file.open(QFile::ReadOnly))
     {
-      QFile style(dir + "/style.qss");
-      if (style.open(QFile::ReadOnly))
+      QString style_ini_path = settings.value("stylesheet_ini").toString();
+      QSettings settings(style_ini_path, QSettings::IniFormat);
+      QString style = style_file.readAll();
+
+      for (const QString &key: settings.allKeys())
       {
-        setStyleSheet(style.readAll());
-        style.close();
+        style.replace(key, settings.value(key).toString());
       }
-      break;
+
+      setStyleSheet(style);
+      style_file.close();
     }
+#endif
   }
 }
 

@@ -21,6 +21,7 @@ set (CMAKE_AUTORCC ON)
 find_package (Qt5Xml REQUIRED)
 find_package (Qt5Widgets REQUIRED)
 find_package (Qt5Network REQUIRED)
+#find_library (sass_aaa OPTIONAL)
 find_library (nclcomposer_core REQUIRED)
 
 include_directories(
@@ -78,6 +79,7 @@ add_executable(nclcomposer
 
   ${UI_GENERATED_HEADERS}
   images.qrc
+  ../plugins/common-resources/images.qrc
 )
 
 set_target_properties(nclcomposer PROPERTIES
@@ -87,6 +89,7 @@ set_target_properties(nclcomposer PROPERTIES
 
 target_link_libraries (nclcomposer
   nclcomposer_core
+#  sass
   Qt5::Core
   Qt5::Xml
   Qt5::Widgets
@@ -98,6 +101,8 @@ file(
   INSTALL
     data/defaultConnBase.ncl
     data/style.qss
+    data/style.ini
     data/default.ini
   DESTINATION
     "${CMAKE_BINARY_DIR}/etc/${CMAKE_PROJECT_NAME}")
+

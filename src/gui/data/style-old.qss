@@ -1,0 +1,152 @@
+QMainWindow {
+  font: 7pt;
+}
+
+QMainWindow::separator {
+  background: black;
+  width: 1px; /* when vertical */
+  height: 1px; /* when horizontal */
+  border: 10px;
+}
+
+QMainWindow::separator:vertical {
+  height: 1px; /* when vertical */
+}
+
+QMainWindow::separator:hover {
+  background: lightgray;
+}
+
+QToolBar {
+  border: none;
+}
+
+QTabWidget::tab-bar {
+  color: rgb(255, 255, 255);
+  font-size: 10px;
+  alignment: right;
+}
+
+QTabBar::tab {
+  background: lightgray;
+  color: darkgray;
+  padding: 4px;
+  border: 2px solid #C4C4C3;
+  border-right: 0px;
+  border-top-left-radius: 4px;
+  border-top-right-radius: 4px;
+  font-size: 10px;
+}
+
+QTabBar::tab:selected {
+  background: @main-color@;
+  color: white;
+  font-size: 10px;
+}
+
+QDockWidget {
+  color: white;
+  font: 9pt "Nimbus Sans L";
+}
+
+/* When View is not Selected */
+QTabBar[activePlugin="false"]::tab::selected {
+  background: #cccccc;
+  color: white;
+}
+
+*[activePluginBorder="false"] > QFrame {
+  border:0px;
+  margin: 0px;
+}
+
+*[activePluginTitleBar="false"] {
+  border: none;
+  background: #cccccc;
+  color: white;
+  font-style: bold;
+  padding-left: 2px;
+  font-size: 10px;
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
+}
+
+*[activePluginTitleBar="false"] QLabel {
+  color: white;
+  font-style: bold;
+  padding-left: 2px;
+  font-size: 10px;
+}
+
+*[activePluginTitleBar="false"] QPushButton {
+  background-color: transparent;
+  border: none;
+}
+
+*[activePluginTitleBar="false"] QPushButton:hover {
+  background: #aaaaaa;
+}
+
+*[activePluginTitleBar="false"] QPushButton:pressed {
+  background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+        stop: 0 #868686, stop: 0.08 #5f5f5f,
+        stop: 0.19999 #717171, stop: 0.4 #424242,
+        stop: 0.9 #2c2c2c, stop: 1 #111111);
+}	
+
+*[activePluginTitleBar="false"] QPushButton:flat {
+  border: none;
+}
+
+
+/* View selected */
+QTabBar[activePlugin="true"]::tab::selected {
+  background: @main-color@;
+  color: white;
+}
+
+*[activePluginBorder="true"] > QFrame {
+  border: 3px solid steelblue;
+  border-top: 0;
+  margin: 0;
+}
+
+*[activePluginTitleBar="true"] {
+  border: none;
+  background: steelblue;
+  color: white;
+  font-style: bold;
+  padding-left: 2px;
+  font-size: 10px;
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
+}
+
+*[activePluginTitleBar="true"] QLabel {
+  color: white;
+  font-style: bold;
+  padding-left: 2px;
+  font-size: 10px;
+}
+
+*[activePluginTitleBar="true"] QPushButton {
+  background-color: transparent;
+  border: none;
+}
+
+*[activePluginTitleBar="true"] QPushButton:hover {
+  background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+        stop: 0 #edfcfe,
+        stop: 1 #d3edfe);
+}
+
+*[activePluginTitleBar="true"] QPushButton:pressed {
+  background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+        stop: 0 #dcebfd,
+        stop: 1 #c2dcfd);
+}
+
+*[activePluginTitleBar="true"] QPushButton:flat {
+  border: none;
+}
+
