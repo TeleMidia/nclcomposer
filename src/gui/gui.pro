@@ -276,7 +276,7 @@ HEADERS += src/ComposerMainWindow.h \
 #   include/ComposerHelpWidget.h \
 #   include/ImportBasePreferences.h
 
-RESOURCES += images.qrc
+RESOURCES += gui.qrc
 
 FORMS   += ui/PreferencesDialog.ui \
     ui/ComposerMainWindow.ui \

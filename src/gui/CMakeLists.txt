@@ -78,7 +78,7 @@ add_executable(nclcomposer
   src/toolwindowmanager/libqtoolwindowmanager/private/qtoolwindowmanagerwrapper_p.h
 
   ${UI_GENERATED_HEADERS}
-  images.qrc
+  gui.qrc
   ../plugins/common-resources/images.qrc
   ../plugins/common-resources/language.qrc
 )
