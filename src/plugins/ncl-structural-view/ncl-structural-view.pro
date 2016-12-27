@@ -69,7 +69,7 @@ RESOURCES += \
      ../common-resources/images.qrc
 
 FORMS += \
-    ui/StructuralLinkForm.ui
+    src/ui/view/StructuralLinkForm.ui
 
 INSTALLS = \
     target
