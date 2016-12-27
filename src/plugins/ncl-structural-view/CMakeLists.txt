@@ -4,12 +4,14 @@ project(ncl_structural_view)
 set (CMAKE_INCLUDE_CURRENTDIR ON)
 set (CMAKE_AUTOMOC ON)
 set (CMAKE_AUTORCC ON)
+set (CMAKE_AUTOUIC ON)
 
 configure_file (ncl-structural-view.json ncl-structural-view.json)
 
 include_directories(
   ${CMAKE_CURRENT_BINARY_DIR}
   .
+  ui
   src
   src/core
   src/ui
@@ -74,10 +76,6 @@ set (NCL_STRUCTURAL_VIEW_SOURCES
   
   ncl-structural-view.qrc
   ../common-resources/images.qrc
-)
-
-qt5_wrap_ui (UI_GENERATED_HEADERS
-  ui/StructuralLinkForm.ui
 )
 
 add_library (ncl_structural_view
