@@ -3,6 +3,7 @@ project(validator)
 
 set (CMAKE_INCLUDE_CURRENTDIR ON)
 set (CMAKE_AUTOMOC ON)
+set (CMAKE_AUTORCC ON)
 
 configure_file (validator_plugin.json validator_plugin.json)
 
