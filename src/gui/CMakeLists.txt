@@ -6,7 +6,7 @@ string(TIMESTAMP BUILD_DATE "%Y-%m-%d %H:%M")
 add_definitions(-DBUILD_DATE="${BUILD_DATE}")
 
 # Definitions
-add_definitions(-DNCLCOMPOSER_GUI_VERSION="3.1")
+add_definitions(-DNCLCOMPOSER_GUI_VERSION="${VERSION}")
 add_definitions(-DNCL_COMPOSER_NOTIFY_URL="http://composer.telemidia.puc-rio.br/")
 add_definitions(-DDEFAULT_MIN_MESSAGE_ID_TO_SHOW=1)
 add_definitions(-DDEFAULT_MAX_NOTIFY_MESSAGES=3)

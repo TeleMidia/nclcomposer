@@ -668,7 +668,7 @@ void ComposerMainWindow::createMenus()
   _tbLanguageDropList->setMenu(_menuLanguage);
   ui->toolBar->addWidget(_tbLanguageDropList);*/
 
-  _ui->action_Perspectives_toolbar->setChecked(_ui->toolBar_Perspectives->isVisible());
+  // _ui->action_Perspectives_toolbar->setChecked(_ui->toolBar_Perspectives->isVisible());
 
   connect(_ui->action_Perspectives_toolbar, SIGNAL(triggered(bool)), _ui->toolBar_Perspectives, SLOT(setVisible(bool)));
 
@@ -1780,6 +1780,8 @@ void ComposerMainWindow::currentTabChanged(int n)
     _ui->action_CloseProject->setEnabled(true);
     _ui->action_Save->setEnabled(true);
     _ui->action_SaveAs->setEnabled(true);
+    _ui->toolBar_Perspectives->setVisible(
+                 _ui->action_Perspectives_toolbar->isChecked());
   }
   else
   {
@@ -1788,6 +1790,7 @@ void ComposerMainWindow::currentTabChanged(int n)
     _ui->action_CloseProject->setEnabled(false);
     _ui->action_Save->setEnabled(false);
     _ui->action_SaveAs->setEnabled(false);
+    _ui->toolBar_Perspectives->setVisible(false);
   }
 }
 

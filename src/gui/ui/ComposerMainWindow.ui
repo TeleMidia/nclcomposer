@@ -86,6 +86,9 @@
         <verstretch>0</verstretch>
        </sizepolicy>
       </property>
+      <property name="lineWidth">
+       <number>0</number>
+      </property>
       <layout class="QHBoxLayout" name="horizontalLayout_2">
        <property name="spacing">
         <number>0</number>
@@ -127,7 +130,7 @@
      <x>0</x>
      <y>0</y>
      <width>776</width>
-     <height>21</height>
+     <height>23</height>
     </rect>
    </property>
    <property name="layoutDirection">
@@ -229,7 +232,7 @@
   </widget>
   <action name="action_NewProject">
    <property name="icon">
-    <iconset resource="../images.qrc">
+    <iconset>
      <normaloff>:/mainwindow/images/new_document_icon.png</normaloff>:/mainwindow/images/new_document_icon.png</iconset>
    </property>
    <property name="text">
@@ -289,7 +292,7 @@
   </action>
   <action name="action_Save">
    <property name="icon">
-    <iconset resource="../images.qrc">
+    <iconset>
      <normaloff>:/mainwindow/images/save_document_icon.png</normaloff>:/mainwindow/images/save_document_icon.png</iconset>
    </property>
    <property name="text">
@@ -329,7 +332,7 @@
   </action>
   <action name="action_Preferences">
    <property name="icon">
-    <iconset resource="../images.qrc">
+    <iconset>
      <normaloff>:/mainwindow/images/preferences_icon.png</normaloff>:/mainwindow/images/preferences_icon.png</iconset>
    </property>
    <property name="text">
@@ -344,7 +347,7 @@
     <bool>false</bool>
    </property>
    <property name="icon">
-    <iconset resource="../images.qrc">
+    <iconset>
      <normaloff>:/mainwindow/images/help_icon.png</normaloff>:/mainwindow/images/help_icon.png</iconset>
    </property>
    <property name="text">
@@ -356,7 +359,7 @@
   </action>
   <action name="action_OpenProject">
    <property name="icon">
-    <iconset resource="../images.qrc">
+    <iconset>
      <normaloff>:/mainwindow/images/open_project_icon.png</normaloff>:/mainwindow/images/open_project_icon.png</iconset>
    </property>
    <property name="text">
@@ -384,7 +387,7 @@
   </action>
   <action name="action_ImportFromExistingNCL">
    <property name="icon">
-    <iconset resource="../images.qrc">
+    <iconset>
      <normaloff>:/mainwindow/images/import_document_icon.png</normaloff>:/mainwindow/images/import_document_icon.png</iconset>
    </property>
    <property name="text">
@@ -411,7 +414,7 @@
   </action>
   <action name="action_StopNCL">
    <property name="icon">
-    <iconset resource="../images.qrc">
+    <iconset>
      <normaloff>:/mainwindow/stop</normaloff>:/mainwindow/stop</iconset>
    </property>
    <property name="text">
@@ -439,7 +442,7 @@
   </action>
   <action name="actionReport_Bug">
    <property name="icon">
-    <iconset resource="../images.qrc">
+    <iconset>
      <normaloff>:/mainwindow/reportbug</normaloff>:/mainwindow/reportbug</iconset>
    </property>
    <property name="text">
@@ -451,7 +454,7 @@
   </action>
   <action name="actionProject_from_Wizard">
    <property name="icon">
-    <iconset resource="../images.qrc">
+    <iconset>
      <normaloff>:/mainwindow/images/wizard-icon.png</normaloff>:/mainwindow/images/wizard-icon.png</iconset>
    </property>
    <property name="text">
@@ -465,7 +468,7 @@
   </action>
   <action name="actionPublish">
    <property name="icon">
-    <iconset resource="../images.qrc">
+    <iconset>
      <normaloff>:/mainwindow/pub</normaloff>:/mainwindow/pub</iconset>
    </property>
    <property name="text">
@@ -507,13 +510,14 @@
    <property name="checkable">
     <bool>true</bool>
    </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
    <property name="text">
     <string>&amp;Perspectives toolbar</string>
    </property>
   </action>
  </widget>
- <resources>
-  <include location="../images.qrc"/>
- </resources>
+ <resources/>
  <connections/>
 </ui>
