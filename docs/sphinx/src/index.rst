@@ -23,12 +23,14 @@ Welcome to NCL Composer's documentation!
 
    tutorial/01-hello-world
    tutorial/02-video-and-image
+   tutorial/03-simultaneous-media-objects
 
 .. toctree::
    :maxdepth: 2
    :caption: Outros
 
    06-windows-and-menus
+
 Indices and tables
 ==================
 
