@@ -77,3 +77,7 @@ QTabBar::tab:selected {
   font-size: 11px;
 }
 
+NCLTextEditor {
+  qproperty-tabwidth: 2;
+}
+
