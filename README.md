@@ -5,6 +5,9 @@
   <a href="https://ci.appveyor.com/project/robertogerson/nclcomposer">
     <img src="https://ci.appveyor.com/api/projects/status/uq1btj2acxf2eqxi?svg=true" alt="Build Status (Windows)" title="Build Status (Windows)">
   </a>
+  <a href='http://ncl-composer-manual.readthedocs.io/en/latest/?badge=latest'>
+    <img src='https://readthedocs.org/projects/ncl-composer-manual/badge/?version=latest' alt='Documentation Status' />
+  </a>
 </p>
 
 # NCL Composer
