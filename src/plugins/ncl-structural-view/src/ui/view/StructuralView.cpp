@@ -501,7 +501,6 @@ void StructuralView::insert(QString uid, QString parent, QMap<QString, QString> 
     }
     else
     {
-
       switch (type)
       {
         case Structural::Body:

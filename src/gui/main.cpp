@@ -108,12 +108,13 @@ int main(int argc, char *argv[])
 {
   bool initGUI = true;
   QApplication a(argc, argv);
-  QApplication::addLibraryPath(QApplication::applicationDirPath());
 
   QCoreApplication::setOrganizationName("TeleMidia Lab/PUC-Rio");
   QCoreApplication::setOrganizationDomain("telemidia.pucrio.br");
   QCoreApplication::setApplicationName("NCL Composer");
   QCoreApplication::setApplicationVersion(NCLCOMPOSER_GUI_VERSION);
+  
+  QApplication::addLibraryPath(QApplication::applicationDirPath());
 
 #ifdef FV_GUI
   // Set this to your own appcast URL, of course FERVOR
