@@ -94,7 +94,7 @@ void GlobalSettings::addPlatformDefaults()
     defaultConnBaseDir = "/Library/Application Support/Composer/Data/";
 #endif
 #else
-    defaultConnBaseDir = QApplication::applicationDirPath() + "/../etc/nclcomposer/";
+    defaultConnBaseDir = QApplication::applicationDirPath() + "/../share/nclcomposer/";
 #endif
   }
 
@@ -106,10 +106,10 @@ void GlobalSettings::addPlatformDefaults()
   /* Stylesheet */
   this->beginGroup("theme");
   QString stylesheet =
-    QApplication::applicationDirPath() + "/../etc/nclcomposer/style.qss";
+    QApplication::applicationDirPath() + "/../share/nclcomposer/style.qss";
   this->setValue("stylesheet", stylesheet);
   QString stylesheet_ini =
-    QApplication::applicationDirPath() + "/../etc/nclcomposer/style.ini";
+    QApplication::applicationDirPath() + "/../share/nclcomposer/style.ini";
   this->setValue("stylesheet_ini", stylesheet_ini);
   this->endGroup();
   /* End Stylesheet */
