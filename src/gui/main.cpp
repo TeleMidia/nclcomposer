@@ -142,7 +142,7 @@ int main(int argc, char *argv[])
     if (settings.allKeys().empty())
     {
       const QString defaultIni =
-              QApplication::applicationDirPath()+"/../etc/nclcomposer/default.ini";
+              QApplication::applicationDirPath()+"/../share/nclcomposer/default.ini";
 
       qCDebug(CPR_MAIN) << "This is the first time you are running "
                         << "NCL Composer.  It will copy the default settings"
