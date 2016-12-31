@@ -39,7 +39,10 @@ PreferencesDialog::PreferencesDialog(QWidget *parent) :
            SLOT(buttonClicked(QAbstractButton*)) );
 
 
-  connect(this, SIGNAL(accepted()), this, SLOT(applyCurrentValues()));
+  connect( this,
+           SIGNAL(accepted()),
+           this,
+           SLOT(applyCurrentValues()) );
 
   currentItem = NULL;
 }
@@ -56,11 +59,11 @@ void PreferencesDialog::addPreferencePage(IPluginFactory *pF)
 
   addPreferencePage( pF->icon(),
                      pF->metadata().value("name").toString(),
-                     pF->getPreferencePageWidget());
+                     (IPreferencesPage*) pF->getPreferencePageWidget());
 }
 
 void PreferencesDialog::addPreferencePage(QIcon icon, QString name,
-                                          QWidget *page)
+                                          IPreferencesPage *page)
 {
   new QListWidgetItem(icon, name, ui->listWidget, 0);
 
@@ -94,7 +97,7 @@ void PreferencesDialog::loadPreferencesPages()
                          pF->metadata().value("name").toString(),
                          ui->listWidget, 0 );
 
-    QWidget *page = pF->getPreferencePageWidget();
+    IPreferencesPage *page = (IPreferencesPage*) pF->getPreferencePageWidget();
     pages[pF->metadata().value("name").toString()] = page;
     page->hide();
     ui->scrollAreaVerticalLayout->addWidget(page);
@@ -118,6 +121,7 @@ void PreferencesDialog::changeActivePage()
     {
       pages[currentItem->text()]->show();
       currentPage = pages[currentItem->text()];
+      ui->pageTitle->setText(currentItem->text());
     }
   }
 }
@@ -132,16 +136,7 @@ void PreferencesDialog::buttonClicked(QAbstractButton* button)
 
 void PreferencesDialog::applyCurrentValues()
 {
-  QString slotName("applyValues()");
-
-  QWidget *inst = currentPage;
-  int idxSlot = inst->metaObject()
-      ->indexOfSlot( slotName.toStdString().c_str() );
-  if(idxSlot != -1)
-  {
-    QMetaMethod method = inst->metaObject()->method(idxSlot);
-    method.invoke(inst, Qt::DirectConnection);
-  }
+  currentPage->applyValues();
 }
 
 /* void PreferencesDialog::show()

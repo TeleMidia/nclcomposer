@@ -14,6 +14,7 @@
 using namespace composer::core::util;
 
 #include <QLocale>
+#include <QDebug>
 
 namespace composer {
     namespace gui {
@@ -24,9 +25,9 @@ GeneralPreferences::GeneralPreferences(QWidget *parent)
   ui->setupUi(this);
   GlobalSettings settings;
   settings.beginGroup("languages");
-  QStringList list = settings.value("supportedLanguages").toStringList();
+  QStringList langs = settings.value("supportedLanguages").toStringList();
 
-  foreach (QString cur, list)
+  for (const QString &cur: langs)
   {
     QLocale locale(cur);
 
@@ -36,19 +37,21 @@ GeneralPreferences::GeneralPreferences(QWidget *parent)
   }
 
   QString current = settings.value("currentLanguage").toString();
-  int index = list.indexOf(current);
+  int index = langs.indexOf(current);
   if(index >= 0)
     ui->comboBox->setCurrentIndex(index);
   settings.endGroup();
 
-
-  QString currentQss = settings.value("default_stylesheets_dirs").toString();
-  fileChooser = new FileChooser(tr("QSS File Theme:"),
-                                FileChooser::GET_EXISTINGDIRECTORY,
+  settings.beginGroup("theme");
+  QString currentQss = settings.value("stylesheet").toString();
+  fileChooser = new FileChooser(tr(""),
+                                FileChooser::OPEN_FILENAME,
                                 "", "", this);
 
   fileChooser->setText(currentQss);
-  ui->formLayout->setWidget( 6, QFormLayout::FieldRole, fileChooser);
+  settings.endGroup();
+
+  ((QFormLayout *)ui->groupBox->layout())->setWidget(1, QFormLayout::FieldRole, fileChooser);
 }
 
 GeneralPreferences::~GeneralPreferences()
@@ -65,7 +68,17 @@ void GeneralPreferences::applyValues()
                     .toString());
   settings.endGroup();
 
-  settings.setValue("default_stylesheets_dirs", fileChooser->getText());
+  settings.beginGroup("theme");
+  settings.setValue("stylesheet", fileChooser->getText());
+  settings.endGroup();
+
+  QFile css (fileChooser->getText());
+  css.open(QFile::ReadOnly);
+  QString css_content = css.readAll();
+  qApp->setStyleSheet(css_content);
+  foreach(QWidget *widget, qApp->topLevelWidgets())
+    widget->setStyleSheet(css_content);
+  css.close();
 }
 
 void GeneralPreferences::setDefaultValues()

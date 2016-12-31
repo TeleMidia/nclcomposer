@@ -105,12 +105,17 @@ void GlobalSettings::addPlatformDefaults()
 
   /* Stylesheet */
   this->beginGroup("theme");
-  QString stylesheet =
-    QApplication::applicationDirPath() + "/../share/nclcomposer/style.qss";
-  this->setValue("stylesheet", stylesheet);
-  QString stylesheet_ini =
-    QApplication::applicationDirPath() + "/../share/nclcomposer/style.ini";
-  this->setValue("stylesheet_ini", stylesheet_ini);
+  if(!this->contains("stylesheet"))
+  {
+    this->setValue("stylesheet",
+                   QApplication::applicationDirPath() + "/../share/nclcomposer/style.qss");
+  }
+
+  if(!this->contains("stylesheet_ini"))
+  {
+    this->setValue("stylesheet_ini",
+                   QApplication::applicationDirPath() + "/../share/nclcomposer/style.ini");
+  }
   this->endGroup();
   /* End Stylesheet */
 }

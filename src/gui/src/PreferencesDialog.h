@@ -44,7 +44,7 @@ public:
   /*!
    * \deprecated
    */
-  void addPreferencePage(QIcon icon, QString name, QWidget *widget);
+  void addPreferencePage(QIcon icon, QString name, IPreferencesPage *widget);
 
 /*public Q_SLOTS:
     void show();
@@ -53,10 +53,10 @@ public:
 private:
   Ui::PreferencesDialog *ui;
   QListWidgetItem *currentItem;
-  QWidget *currentPage;
+  IPreferencesPage *currentPage;
 
   void loadPreferencesPages();
-  QMap <QString, QWidget *> pages;
+  QMap <QString, IPreferencesPage *> pages;
 
 private slots:
   void changeActivePage();

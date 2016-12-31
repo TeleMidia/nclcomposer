@@ -34,6 +34,8 @@ FileChooser::FileChooser( const QString &label,
 {
   ui->setupUi(this);
   ui->label->setText(label);
+  if(label == "")
+    ui->label->setVisible(false);
 }
 
 FileChooser::~FileChooser()
@@ -64,7 +66,8 @@ void FileChooser::on_pushButton_pressed()
       break;
   }
 
-  ui->lineEdit->setText(location);
+  if(location != "")
+    ui->lineEdit->setText(location);
 }
 
 QString FileChooser::getText()
