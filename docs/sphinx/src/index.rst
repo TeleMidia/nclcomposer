@@ -27,9 +27,10 @@ Welcome to NCL Composer's documentation!
 
 .. toctree::
    :maxdepth: 2
-   :caption: Outros
+   :caption: Variados
 
    06-windows-and-menus
+   misc/how-to-change-style
 
 Indices and tables
 ==================
