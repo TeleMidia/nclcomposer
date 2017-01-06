@@ -42,5 +42,9 @@
         <file alias="bggray">images/bg-gray-one.png</file>
         <file>images/wizard-icon.png</file>
         <file alias="pub">images/publish.png</file>
+        <file alias="window_close">images/Gnome window close.svg</file>
+        <file alias="quit">images/Gnome-system-shutdown.svg</file>
+        <file alias="help-about">images/Gnome-help-about.svg</file>
+        <file alias="view-fullscreen">images/Gnome-view-fullscreen.svg</file>
     </qresource>
 </RCC>

@@ -106,7 +106,6 @@ private:
                                        languages.*/
 
   QAction      *_projectViewAction; /*!< TODO */
-  QAction      *_editPreferencesAction; /*!< TODO */
 
   QMap<QString, QToolWindowManager*> _projectsWidgets; /*!< Keeps a reference
                                                             to each project

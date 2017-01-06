@@ -644,8 +644,6 @@ void ComposerMainWindow::createMenus()
 
 #endif
 
-  _ui->menu_Edit->addAction(_editPreferencesAction);
-
   connect( _ui->menu_View, SIGNAL(aboutToShow()),
            this, SLOT(updateViewMenu()) );
 
@@ -839,11 +837,6 @@ void ComposerMainWindow::createActions() {
 #else
   _ui->actionPublish->setEnabled(false);
 #endif
-
-  _editPreferencesAction = new QAction(tr("&Preferences"), this);
-  _editPreferencesAction->setStatusTip(tr("Edit preferences"));
-  connect (_editPreferencesAction, SIGNAL(triggered()), this,
-           SLOT(showEditPreferencesDialog()));
 
   connect(_ui->action_Preferences, SIGNAL(triggered()),
           this, SLOT(showEditPreferencesDialog()));
