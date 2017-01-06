@@ -87,9 +87,6 @@ private:
   static const int _maximumRecentProjectsSize = 10;
 
   Ui::ComposerMainWindow *_ui;
-
-  QListWidget *_listWidgetProfilesExt; /*!< Shows a list of the current loaded language
-                                   profiles. */
   QStringList _extensionsPaths; /*!< TODO */
 
 

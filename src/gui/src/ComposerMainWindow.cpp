@@ -681,11 +681,6 @@ void ComposerMainWindow::createAboutPluginsWidgets()
   _aboutPluginsDialog = new QDialog(this);
   _aboutPluginsDialog->setWindowTitle(tr("Installed Plugins"));
 
-#ifdef SHOW_PROFILES
-  _listWidgetProfilesExt = new QListWidget(_aboutPluginsDialog);
-  _listWidgetProfilesExt->setAlternatingRowColors(true);
-#endif
-
   /* This should be a new Widget and change some code for there */
   _treeWidgetPlugins = new QTreeWidget(_aboutPluginsDialog);
   _treeWidgetPlugins->setAlternatingRowColors(true);
@@ -718,11 +713,6 @@ void ComposerMainWindow::createAboutPluginsWidgets()
                                    " Declarative Multimedia languages."),
                                 _aboutPluginsDialog));
 
-#ifdef SHOW_PROFILES
-  gLayout->addWidget(new QLabel(tr("<b>Installed Language Profiles</b>"),
-                                _aboutPluginsDialog));
-  gLayout->addWidget(_listWidgetProfilesExt);
-#endif
   gLayout->addWidget(new QLabel(tr("<b>Installed Plug-ins</b>")));
   gLayout->addWidget(_treeWidgetPlugins);
   gLayout->addWidget(bOk);
@@ -748,19 +738,37 @@ void ComposerMainWindow::about()
  */
 void ComposerMainWindow::aboutPlugins()
 {
-  QList<IPluginFactory*>::iterator it;
+  _treeWidgetPlugins->clear();
+
+  QList<ILanguageProfile*> langList = LanguageControl::getInstance()->
+      getLoadedProfiles();
   QList<IPluginFactory*> pList = PluginControl::getInstance()->
       getLoadedPlugins();
-  _treeWidgetPlugins->clear();
+
 
   //search for categories
   QTreeWidgetItem *treeWidgetItem;
   QMap <QString, QTreeWidgetItem*> categories;
-  for (it = pList.begin(); it != pList.end(); it++) {
-    IPluginFactory *pF = *it;
+
+  for (const ILanguageProfile *langProfile: langList)
+  {
+    QString category = "Language profile";
+
+    if(!categories.contains(category))
+    {
+      treeWidgetItem = new QTreeWidgetItem(_treeWidgetPlugins);
+      categories.insert(category, treeWidgetItem);
+      treeWidgetItem->setText(0, category);
+      treeWidgetItem->setTextColor(0, QColor("#0000FF"));
+    }
+  }
+
+  for (IPluginFactory *pF: pList)
+  {
     QString category = pF->metadata().value("category").toString();
 
-    if(!categories.contains(category)){
+    if(!categories.contains(category))
+    {
       treeWidgetItem = new QTreeWidgetItem(_treeWidgetPlugins);
       categories.insert(category, treeWidgetItem);
       treeWidgetItem->setText(0, category);
@@ -769,8 +777,17 @@ void ComposerMainWindow::aboutPlugins()
   }
 
   treeWidgetItem2plFactory.clear();
-  for (it = pList.begin(); it != pList.end(); it++) {
-    IPluginFactory *pF = *it;
+  for (ILanguageProfile *langProfile: langList)
+  {
+    QString category = "Language profile";
+    treeWidgetItem = new QTreeWidgetItem ( categories.value(category) );
+    treeWidgetItem->setText(0, langProfile->getProfileName());
+
+    treeWidgetItem->setCheckState(1, Qt::Checked);
+  }
+
+  for (IPluginFactory *pF: pList)
+  {
     QString category = pF->metadata().value("category").toString();
     treeWidgetItem = new QTreeWidgetItem ( categories.value(category) );
     treeWidgetItem2plFactory.insert(treeWidgetItem, pF);
@@ -795,20 +812,6 @@ void ComposerMainWindow::aboutPlugins()
   _treeWidgetPlugins->resizeColumnToContents(1);
   _treeWidgetPlugins->resizeColumnToContents(2);
   _treeWidgetPlugins->resizeColumnToContents(3);
-
-  /* PROFILE LANGUAGE */
-#ifdef SHOW_PROFILES
-  QList<ILanguageProfile*>::iterator itL;
-  QList<ILanguageProfile*> lList = LanguageControl::getInstance()->
-      getLoadedProfiles();
-  _listWidgetProfilesExt->clear();
-
-  for(itL = lList.begin(); itL != lList.end(); itL++)
-  {
-    ILanguageProfile *lg = *itL;
-    _listWidgetProfilesExt->addItem(new QListWidgetItem(lg->getProfileName()));
-  }
-#endif
 
   _detailsButton->setEnabled(false);
   _aboutPluginsDialog->show();
