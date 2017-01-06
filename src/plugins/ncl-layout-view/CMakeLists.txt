@@ -43,13 +43,14 @@ set (NCL_LAYOUT_VIEW_SOURCES
   src/ui/view/LayoutView.h
   src/ui/LayoutWindow.h
 
+  src/ui/LayoutWindow.ui
+
   ncl-layout-view.qrc
 )
 
 add_library (ncl_layout_view
   SHARED
   ${NCL_LAYOUT_VIEW_SOURCES}
-  ${UI_GENERATED_HEADERS}
 )
 
 target_link_libraries (ncl_layout_view

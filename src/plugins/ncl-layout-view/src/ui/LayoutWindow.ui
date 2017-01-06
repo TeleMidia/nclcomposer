@@ -13,6 +13,12 @@
   <property name="windowTitle">
    <string>MainWindow</string>
   </property>
+  <property name="iconSize">
+   <size>
+    <width>24</width>
+    <height>24</height>
+   </size>
+  </property>
   <widget class="QWidget" name="centralwidget">
    <widget class="QComboBox" name="regionBaseComboBox">
     <property name="geometry">
@@ -35,9 +41,29 @@
     </item>
    </widget>
   </widget>
-  <widget class="QToolBar" name="toolBar">
+  <widget class="QToolBar" name="toolBar_edit">
    <property name="windowTitle">
     <string>toolBar</string>
+   </property>
+   <attribute name="toolBarArea">
+    <enum>LeftToolBarArea</enum>
+   </attribute>
+   <attribute name="toolBarBreak">
+    <bool>true</bool>
+   </attribute>
+   <addaction name="actionAdd_Region"/>
+   <addaction name="actionRemove_Region"/>
+   <addaction name="actionDuplicate_Region"/>
+   <addaction name="separator"/>
+   <addaction name="actionCut_region"/>
+   <addaction name="actionPaste_region"/>
+   <addaction name="actionCopy_region"/>
+   <addaction name="separator"/>
+   <addaction name="actionAction_Export"/>
+  </widget>
+  <widget class="QToolBar" name="toolBar_2">
+   <property name="windowTitle">
+    <string>toolBar_2</string>
    </property>
    <attribute name="toolBarArea">
     <enum>TopToolBarArea</enum>
@@ -45,33 +71,43 @@
    <attribute name="toolBarBreak">
     <bool>false</bool>
    </attribute>
-   <addaction name="actionAdd_Region"/>
-   <addaction name="actionRemove_Region"/>
+   <addaction name="actionZoom_in"/>
+   <addaction name="actionZoom_out"/>
    <addaction name="actionShow_Hide_Grid"/>
-   <addaction name="actionAction_Export"/>
+  </widget>
+  <widget class="QToolBar" name="toolBar_regionBases">
+   <property name="windowTitle">
+    <string>toolBar_3</string>
+   </property>
+   <attribute name="toolBarArea">
+    <enum>TopToolBarArea</enum>
+   </attribute>
+   <attribute name="toolBarBreak">
+    <bool>false</bool>
+   </attribute>
   </widget>
   <action name="actionAdd_Region">
    <property name="icon">
-    <iconset resource="../../common-resources/images.qrc">
+    <iconset resource="../../ncl-layout-view.qrc">
      <normaloff>:/icon/add-region-icon</normaloff>:/icon/add-region-icon</iconset>
    </property>
    <property name="text">
-    <string>Add Region</string>
+    <string>Add region</string>
    </property>
    <property name="toolTip">
-    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Add Region&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+    <string>Add region</string>
    </property>
   </action>
   <action name="actionRemove_Region">
    <property name="icon">
-    <iconset resource="../../common-resources/images.qrc">
+    <iconset resource="../../ncl-layout-view.qrc">
      <normaloff>:/icon/remove-region-icon</normaloff>:/icon/remove-region-icon</iconset>
    </property>
    <property name="text">
-    <string>Remove Region</string>
+    <string>Delete region</string>
    </property>
    <property name="toolTip">
-    <string>Remove Region</string>
+    <string>Delete region</string>
    </property>
   </action>
   <action name="actionShow_Hide_Grid">
@@ -79,16 +115,19 @@
     <bool>true</bool>
    </property>
    <property name="icon">
-    <iconset resource="../../common-resources/images.qrc">
+    <iconset resource="../../ncl-layout-view.qrc">
      <normaloff>:/icon/grid-icon</normaloff>:/icon/grid-icon</iconset>
    </property>
    <property name="text">
-    <string>Show/Hide Grid</string>
+    <string>Show/hide grid</string>
+   </property>
+   <property name="toolTip">
+    <string>Show/hide grid</string>
    </property>
   </action>
   <action name="actionAction_Export">
    <property name="icon">
-    <iconset resource="../../common-resources/images.qrc">
+    <iconset resource="../../ncl-layout-view.qrc">
      <normaloff>:/icon/export-icon</normaloff>:/icon/export-icon</iconset>
    </property>
    <property name="text">
@@ -98,9 +137,97 @@
     <string>Take a picture of the current layout</string>
    </property>
   </action>
+  <action name="actionDuplicate_Region">
+   <property name="icon">
+    <iconset resource="../../ncl-layout-view.qrc">
+     <normaloff>:/icon/duplicate-region-icon</normaloff>:/icon/duplicate-region-icon</iconset>
+   </property>
+   <property name="text">
+    <string>Duplicate Region</string>
+   </property>
+   <property name="toolTip">
+    <string>Duplicate selected region</string>
+   </property>
+  </action>
+  <action name="actionAdd_region_base">
+   <property name="icon">
+    <iconset resource="../../ncl-layout-view.qrc">
+     <normaloff>:/icon/add-region-base-icon</normaloff>:/icon/add-region-base-icon</iconset>
+   </property>
+   <property name="text">
+    <string>Add region base</string>
+   </property>
+  </action>
+  <action name="actionCopy_region">
+   <property name="icon">
+    <iconset resource="../../../ncl-structural-view/ncl-structural-view.qrc">
+     <normaloff>:/images/icon/copy</normaloff>:/images/icon/copy</iconset>
+   </property>
+   <property name="text">
+    <string>Copy region</string>
+   </property>
+   <property name="toolTip">
+    <string>Copy region</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+C</string>
+   </property>
+  </action>
+  <action name="actionCut_region">
+   <property name="icon">
+    <iconset resource="../../../ncl-structural-view/ncl-structural-view.qrc">
+     <normaloff>:/images/icon/cut</normaloff>:/images/icon/cut</iconset>
+   </property>
+   <property name="text">
+    <string>Cut region</string>
+   </property>
+   <property name="toolTip">
+    <string>Cut region</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+X</string>
+   </property>
+  </action>
+  <action name="actionPaste_region">
+   <property name="icon">
+    <iconset resource="../../../ncl-structural-view/ncl-structural-view.qrc">
+     <normaloff>:/images/icon/paste</normaloff>:/images/icon/paste</iconset>
+   </property>
+   <property name="text">
+    <string>Paste region</string>
+   </property>
+   <property name="toolTip">
+    <string>Paste region</string>
+   </property>
+  </action>
+  <action name="actionZoom_in">
+   <property name="icon">
+    <iconset resource="../../../ncl-structural-view/ncl-structural-view.qrc">
+     <normaloff>:/images/icon/zoomin</normaloff>:/images/icon/zoomin</iconset>
+   </property>
+   <property name="text">
+    <string>Zoom in</string>
+   </property>
+   <property name="toolTip">
+    <string>Zoom in</string>
+   </property>
+  </action>
+  <action name="actionZoom_out">
+   <property name="icon">
+    <iconset resource="../../../ncl-structural-view/ncl-structural-view.qrc">
+     <normaloff>:/images/icon/zoomout</normaloff>:/images/icon/zoomout</iconset>
+   </property>
+   <property name="text">
+    <string>Zoom out</string>
+   </property>
+   <property name="toolTip">
+    <string>Zoom out</string>
+   </property>
+  </action>
  </widget>
  <resources>
-  <include location="../../common-resources/images.qrc"/>
+  <include location="../../ncl-layout-view.qrc"/>
+  <include location="../../../ncl-structural-view/ncl-structural-view.qrc"/>
  </resources>
  <connections/>
 </ui>

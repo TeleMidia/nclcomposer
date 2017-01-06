@@ -17,9 +17,8 @@ LayoutWindow::LayoutWindow(QWidget *parent) :
   separator->setSizePolicy(QSizePolicy::Expanding,
                            QSizePolicy::Expanding);
 
-  ui->toolBar->addWidget(separator);
-  ui->toolBar->addWidget(new QLabel(tr("Region Bases:"), this));
-  ui->toolBar->addWidget(ui->regionBaseComboBox);
+  ui->toolBar_regionBases->addWidget(new QLabel(tr("Region Bases:"), this));
+  ui->toolBar_regionBases->addWidget(ui->regionBaseComboBox);
 }
 
 LayoutWindow::~LayoutWindow()
