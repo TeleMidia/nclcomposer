@@ -199,7 +199,7 @@ void StructuralWindow::createToolbar()
 
   _editToolbar->setMovable(true);
   _editToolbar->setFloatable(true);
-  _editToolbar->setIconSize(QSize(32,32));
+  _editToolbar->setIconSize(QSize(24,24));
 
   _editToolbar->addAction(_undoAction);
   _editToolbar->addAction(_redoAction);
@@ -207,9 +207,6 @@ void StructuralWindow::createToolbar()
   _editToolbar->addAction(_cutAction);
   _editToolbar->addAction(_copyAction);
   _editToolbar->addAction(_pasteAction);
-  _editToolbar->addSeparator();
-  _editToolbar->addAction(_zoominAction);
-  _editToolbar->addAction(_zoomoutAction);
   _editToolbar->addSeparator();
   _editToolbar->addAction(_snapshotAction);
 
@@ -221,7 +218,7 @@ void StructuralWindow::createToolbar()
   _insertToolbar = addToolBar(tr("Insert"));
   _insertToolbar->setMovable(true);
   _insertToolbar->setFloatable(true);
-  _insertToolbar->setIconSize(QSize(32,32));
+  _insertToolbar->setIconSize(QSize(24,24));
 
   _insertToolbar->addAction(_pointerAction);
   _insertToolbar->addAction(_linkAction);
@@ -247,8 +244,11 @@ void StructuralWindow::createToolbar()
   _windowToolbar = addToolBar(tr("Window"));
   _windowToolbar->setMovable(true);
   _windowToolbar->setFloatable(true);
-  _windowToolbar->setIconSize(QSize(32,32));
+  _windowToolbar->setIconSize(QSize(24,24));
 
+  _windowToolbar->addAction(_zoominAction);
+  _windowToolbar->addAction(_zoomoutAction);
+  _windowToolbar->addSeparator();
   _windowToolbar->addAction(_minimapAction);
 
 #ifdef Q_WS_MACX
