@@ -65,7 +65,6 @@ SOURCES += \
     src/ui/view/StructuralLinkTool.cpp
 
 RESOURCES += \
-    ncl-structural-view.qrc \
      ../common-resources/images.qrc
 
 FORMS += \

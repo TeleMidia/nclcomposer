@@ -322,14 +322,14 @@ StructuralMimeType StructuralUtil::translateStringToMimeType(const QString &mime
 
 std::map<Structural::StructuralType, QString> StructuralUtil::_entitiesIcon =
     StructuralMap<Structural::StructuralType, QString >
-(Structural::Media, ":/images/icon/media")
-(Structural::Body, ":/images/icon/body")
-(Structural::Context, ":/images/icon/context")
-(Structural::Switch, ":/images/icon/switch")
-(Structural::Port, ":/images/icon/port")
-(Structural::SwitchPort, ":/images/icon/switchport")
-(Structural::Area, ":/images/icon/area")
-(Structural::Property, ":/images/icon/property")
+(Structural::Media, ":/icon/media")
+(Structural::Body, ":/icon/body")
+(Structural::Context, ":/icon/context")
+(Structural::Switch, ":/icon/switch")
+(Structural::Port, ":/icon/port")
+(Structural::SwitchPort, ":/icon/switchport")
+(Structural::Area, ":/icon/area")
+(Structural::Property, ":/icon/property")
 (Structural::Link, "")
 (Structural::Bind, "")
 (Structural::Reference, "")
@@ -446,14 +446,14 @@ std::map<Structural::StructuralMimeType, QString> StructuralUtil::_mimetypesIcon
 (Structural::Settings, ":/icon/settings")
 (Structural::NCLua, ":/icon/script")
 
-(Structural::NoMimeType, ":/images/icon/media");
+(Structural::NoMimeType, ":/icon/media");
 
 QString StructuralUtil::getMimeTypeIcon(StructuralMimeType type)
 {
   if(_mimetypesIcon.count(type))
     return _mimetypesIcon[type];
   else
-    return ":/images/icon/media";
+    return ":/icon/media";
 }
 
 QString StructuralUtil::getMimeTypeTooltip(StructuralMimeType mimetype, const QString &title, const QString &info, const QString &warning, const QString &error, const QString &extra)
