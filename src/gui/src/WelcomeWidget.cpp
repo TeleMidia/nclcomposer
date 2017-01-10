@@ -660,3 +660,8 @@ void composer::gui::WelcomeWidget::on_commandLinkButton_3_pressed()
 {
   QDesktopServices::openUrl(QUrl("http://ncl.org.br/programandoncl"));
 }
+
+void composer::gui::WelcomeWidget::on_pushButton_Documentation_clicked()
+{
+  QDesktopServices::openUrl(QUrl("http://composer.telemidia.puc-rio.br/en/docs/"));
+}

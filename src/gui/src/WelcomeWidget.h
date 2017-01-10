@@ -220,6 +220,7 @@ private slots:
   void sendRecentProjectClicked();
 
   void on_commandLinkButton_3_pressed();
+  void on_pushButton_Documentation_clicked();
 };
 
 } }
