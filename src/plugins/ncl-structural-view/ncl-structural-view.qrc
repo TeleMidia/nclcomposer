@@ -32,5 +32,6 @@
         <file alias="icon/help">images/icon-help.png</file>
         <file alias="icon/zoomin">images/icon-zoomin.png</file>
         <file alias="icon/zoomout">images/icon-zoomout.png</file>
+        <file alias="icon/zoomoriginal">images/icon-zoomoriginal.svg</file>
     </qresource>
 </RCC>

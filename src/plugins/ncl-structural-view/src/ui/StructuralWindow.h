@@ -52,6 +52,7 @@ private:
   QAction* _pasteAction;
   QAction* _zoominAction;
   QAction* _zoomoutAction;
+  QAction* _zoomoriginalAction;
   QAction* _pointerAction;
   QAction* _linkAction;
   QAction* _snapshotAction;

@@ -364,6 +364,16 @@ void StructuralView::performZoomOut()
     emit switchedZoomOut(false);
 }
 
+void StructuralView::performZoomOriginal()
+{
+  _zoom = 0;
+
+  resetMatrix();
+  scale(1 - _zoom*0.05, 1 - _zoom*0.05);
+
+  emit switchedZoomIn(false);
+}
+
 void StructuralView::performPointer()
 {
   setMode(Structural::Pointing);
