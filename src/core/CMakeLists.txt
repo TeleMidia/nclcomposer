@@ -24,6 +24,7 @@ set(NCLCOMPOSER_CORE_HEADERS
   src/extensions/IDocumentParser.h
   src/extensions/IPlugin.h
   src/extensions/IPluginFactory.h
+  src/extensions/IPreferencesPage.h
 
 # Util
   src/util/ComposerCoreControl_global.h

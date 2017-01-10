@@ -22,7 +22,7 @@ using namespace composer::extension;
 #include <modules/PluginControl.h>
 using namespace composer::core;
 
-#include "IPreferencesPage.h"
+#include "extensions/IPreferencesPage.h"
 
 namespace Ui {
   class PreferencesDialog;

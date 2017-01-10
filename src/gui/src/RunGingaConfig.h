@@ -10,7 +10,7 @@
 #ifndef RUNGINGACONFIG_H
 #define RUNGINGACONFIG_H
 
-#include "IPreferencesPage.h"
+#include <extensions/IPreferencesPage.h>
 
 namespace Ui {
   class RunGingaConfig;
@@ -22,7 +22,8 @@ namespace gui {
 /*!
  * \todo User input validation.
  */
-class RunGingaConfig : public IPreferencesPage
+class RunGingaConfig :
+        public IPreferencesPage
 {
   Q_OBJECT
 
