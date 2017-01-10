@@ -1,8 +1,90 @@
+2016-12-25  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* .hgtags:
+	Added tag 2.9.4 for changeset 06e486532f86
+	[a0e7ce41b57a] [tip] <2.9-maint>
+
+	* NEWS:
+	Released as v2.9.4.
+	[06e486532f86] [2.9.4] <2.9-maint>
+
+2016-12-24  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* qsci/api/python/Python-3.6.api:
+	Added the .api file for Python v3.6.
+	[4af5841ab5d2] <2.9-maint>
+
+2016-11-07  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* qt/qsciscintillabase.cpp:
+	Updated a comment to explain why setting custom scrollbars doesn't
+	work.
+	[757ca3bbc419] <2.9-maint>
+
+2016-10-25  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* Python/configure.py:
+	Fixed configure.py for Python v2.
+	[6d784269a812] <2.9-maint>
+
+2016-10-23  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* Python/sip/qscimod4.sip, Python/sip/qscimod5.sip:
+	Explicitly %Import the QtCore module so that it is imported in the
+	.pyi file.
+	[fec61f546e2b] <2.9-maint>
+
+2016-09-26  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* lib/README.doc:
+	Removed some (possibly out of date) information about installation
+	on macOS.
+	[c793591a8192] <2.9-maint>
+
+	* qt/InputMethod.cpp:
+	Disable the hack for handling null input method method events on
+	Windows as there are reports that this breaks character composition.
+	[42977285ae81] <2.9-maint>
+
+2016-09-25  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* qt/qsciscintilla.cpp:
+	Fixed a Qt warning about a too large red value in a QColor.
+	[f9af82c24301] <2.9-maint>
+
+2016-09-23  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* rb-product:
+	Added the minimum PyQt5 wheel version to the product file.
+	[11d2fb4dc51a] <2.9-maint>
+
+2016-09-10  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* Python/configure.py, rb-product:
+	Updated the handling of the minimum SIP version.
+	[1e50ffa9dac1] <2.9-maint>
+
+2016-09-09  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* Python/sip/qscimod5.sip:
+	The limited API is now used for the Python bindings.
+	[a2b8118a4483] <2.9-maint>
+
+2016-08-08  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* Makefile, build.py:
+	Removed the old internal build system.
+	[522e8b386eef] <2.9-maint>
+
 2016-07-25  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* METADATA.in:
+	Removed the Obsoletes tag from METADATA.
+	[fbf9aa05d0b4] <2.9-maint>
 
 	* .hgtags:
 	Added tag 2.9.3 for changeset 19c9752958b7
-	[fb5cd006685f] [tip] <2.9-maint>
+	[fb5cd006685f] <2.9-maint>
 
 	* NEWS:
 	Released as v2.9.3.
