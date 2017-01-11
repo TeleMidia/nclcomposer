@@ -263,7 +263,6 @@ HEADERS += src/ComposerMainWindow.h \
     src/PerspectiveManager.h \
     src/PluginDetailsDialog.h \
     src/EnvironmentPreferencesWidget.h \
-    src/IPreferencesPage.h \
     src/WelcomeWidget.h \
     src/AboutDialog.h \
     src/RunGingaConfig.h \
