@@ -52,6 +52,11 @@ add_subdirectory(src/plugins/ncl-structural-view)
 #add_subdirectory(src/plugins/ncl-textual-view)
 add_subdirectory(src/plugins/ncl-rules-view)
 add_subdirectory(src/plugins/validator)
+
+if( NOT EXISTS "${CMAKE_SOURCE_DIR}/src/plugins/gingagui-all/.git" )
+  execute_process(COMMAND git submodule update --init
+                    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})
+endif()
 add_subdirectory(src/plugins/gingagui-all/run-view)
 
 # cpack
