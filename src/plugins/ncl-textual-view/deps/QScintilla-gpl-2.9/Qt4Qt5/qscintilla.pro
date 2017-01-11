@@ -495,6 +495,7 @@ TRANSLATIONS = \
 	qscintilla_es.ts \
 	qscintilla_fr.ts \
 	qscintilla_pt_br.ts
+
 # Uses FORCERELEASE variable because CONFIG and SUBDIR force three executions
 # if qmake and the last one does not preserves CONFIG from command line.
 contains(FORCERELEASE, true) {
@@ -509,8 +510,10 @@ else {
   message ("plugins-common.pri DEBUG build!")
 }
 
-release: DESTDIR = $${PWD}/../../../../../../bin/release/plugins/
-debug:   DESTDIR = $${PWD}/../../../../../../bin/debug/plugins/
+isEmpty(DESTDIR) {
+  release: DESTDIR = $${PWD}/../../../../../../bin/release/plugins/
+  debug:   DESTDIR = $${PWD}/../../../../../../bin/debug/plugins/
+}
 
 #OBJECTS_DIR = $$DESTDIR/.obj
 #MOC_DIR = $$DESTDIR/.moc

@@ -49,7 +49,7 @@ add_subdirectory(src/plugins/outline-view)
 add_subdirectory(src/plugins/properties-view)
 add_subdirectory(src/plugins/ncl-layout-view)
 add_subdirectory(src/plugins/ncl-structural-view)
-#add_subdirectory(src/plugins/ncl-textual-view)
+add_subdirectory(src/plugins/ncl-textual-view)
 add_subdirectory(src/plugins/ncl-rules-view)
 add_subdirectory(src/plugins/validator)
 
