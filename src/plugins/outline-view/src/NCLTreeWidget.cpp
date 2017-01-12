@@ -433,7 +433,9 @@ void NCLTreeWidget::updateItem(QTreeWidgetItem *item, QString tagname,
     else
       icon = QIcon (":/icon/media");
   }
-  else if(tagname == "context" || tagname == "body")
+  else if(tagname == "body")
+    icon = QIcon (":/icon/body");
+  else if(tagname == "context")
     icon = QIcon (":/icon/context");
   else if(tagname == "meta" || tagname == "metadata")
     icon = QIcon (":/icon/metadata");
