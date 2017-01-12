@@ -31,8 +31,9 @@ add_library(nclprofile
   ../common-resources/language.qrc
 )
 
-target_compile_definitions(nclprofile PUBLIC
-    NCLLANGUAGEPROFILE_MAKE_DLL)
+target_compile_definitions(nclprofile PRIVATE
+  NCLLANGUAGEPROFILE_MAKE_DLL
+)
 
 target_link_libraries (nclprofile
   nclcomposer_core
