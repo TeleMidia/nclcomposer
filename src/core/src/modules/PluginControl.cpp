@@ -12,6 +12,7 @@
 #include <QUuid>
 #include <QMetaObject>
 #include <QMetaMethod>
+#include <QApplication>
 
 #include <QJsonObject>
 
@@ -118,6 +119,20 @@ IPluginFactory* PluginControl::loadPlugin(const QString &fileName)
   return loader.unload();
 }*/
 
+void PluginControl::loadPlugins()
+{
+  GlobalSettings settings;
+  QStringList extPaths = settings.getExtensionsPaths();
+  // add all the paths to LibraryPath, i.e., plugins are allowed to install
+  // dll dependencies in the extensions path.
+  for(const QString &extDir: extPaths)
+    QApplication::addLibraryPath(extDir + "/");
+
+  // foreach path where extensions can be installed, try to load plugins.
+  for(const QString &extDir: extPaths)
+    PluginControl::getInstance()->loadPlugins(extDir);
+}
+
 void PluginControl::loadPlugins(const QString &pluginsDirPath)
 {
   qCDebug(CPR_CORE) << "Trying to load plugins from " << pluginsDirPath;
@@ -139,12 +154,7 @@ void PluginControl::loadPlugins(const QString &pluginsDirPath)
   for (const QString& fileName: pluginsDir.entryList(QDir::Files
                                                   | QDir::NoSymLinks))
   {
-    IPluginFactory *pluginFactory  =
-            loadPlugin(pluginsDir.absoluteFilePath(fileName));
-
-    // If, fileName is not a view, lets's try to load as a language profile
-    if (pluginFactory == nullptr)
-        LanguageControl::getInstance()->loadProfile(fileName);
+    loadPlugin(pluginsDir.absoluteFilePath(fileName));
   }
 
 } //end function

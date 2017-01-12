@@ -24,6 +24,7 @@ public:
 
   void loadDefaults(const QString &dataPath);
   void addPlatformDefaults();
+  QStringList getExtensionsPaths();
 };
 
 class COMPOSERCORESHARED_EXPORT ProjectSettings: public QSettings

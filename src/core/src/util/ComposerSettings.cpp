@@ -120,6 +120,16 @@ void GlobalSettings::addPlatformDefaults()
   /* End Stylesheet */
 }
 
+QStringList GlobalSettings::getExtensionsPaths()
+{
+  beginGroup("extensions");
+  QStringList extPaths = value("path").toStringList();
+  endGroup();
+
+  extPaths.removeDuplicates(); // Remove duplicate paths
+  return extPaths;
+}
+
 ProjectSettings::ProjectSettings(const QString &project) :
   QSettings(project + ".ini", QSettings::IniFormat)
 {

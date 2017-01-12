@@ -9,6 +9,8 @@
  */
 #include "modules/LanguageControl.h"
 
+#include <QApplication>
+
 namespace composer {
   namespace core {
 
@@ -82,10 +84,25 @@ ILanguageProfile* LanguageControl::loadProfile(const QString &fileName)
     }
   }
   else
-    qCDebug(CPR_CORE) << "Failed to load languageControl (" << fileName <<")"
+    qCDebug(CPR_CORE) << "Failed to load languageProfile (" << fileName <<")"
                         << loader.errorString();
 
   return lProfile;
+}
+
+void LanguageControl::loadProfiles()
+{
+  GlobalSettings settings;
+  QStringList extPaths = settings.getExtensionsPaths();
+
+  // add all the paths to LibraryPath, i.e., plugins are allowed to install
+  // dll dependencies in the extensions path.
+  for(const QString &extDir: extPaths)
+    QApplication::addLibraryPath(extDir + "/");
+
+  // foreach path where extensions can be installed, try to load language profiles.
+  for(const QString &extDir: extPaths)
+    LanguageControl::getInstance()->loadProfiles(extDir);
 }
 
 void LanguageControl::loadProfiles(const QString &profilesDirPath)

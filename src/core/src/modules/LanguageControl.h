@@ -38,6 +38,10 @@ class COMPOSERCORESHARED_EXPORT LanguageControl : public QObject
 
 public:
   /*!
+   * \brief Load all the profiles from the default extensions paths.
+   */
+  void loadProfiles();
+  /*!
    * \brief Load all the profiles from a specific directory.
    *
    * \param profilesDirPath the directory path from where the profiles must be

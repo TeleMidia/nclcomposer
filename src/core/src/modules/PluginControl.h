@@ -65,6 +65,11 @@ public:
   void launchNewPlugin(IPluginFactory *factory, Project *project);
 
   /*!
+   * \brief Load all the plugins from the default extensions paths.
+   */
+  void loadPlugins();
+
+  /*!
    * \brief
    *
    * \param pluginsDirPath
