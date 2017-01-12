@@ -163,9 +163,9 @@ void StructuralBind::draw(QPainter* painter)
 
     if (icon.isEmpty())
       if (tail->getStructuralType() == Structural::Link)
-        icon = ":/icon/noaction";
+        icon = ":/icon/bind-unknow-action";
       else
-        icon = ":/icon/nocondition";
+        icon = ":/icon/bind-unknow-condition";
 
     if (angle != 0)
     {

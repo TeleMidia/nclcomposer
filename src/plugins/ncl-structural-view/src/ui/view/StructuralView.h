@@ -118,6 +118,8 @@ signals:
   void switchedCut(bool state);
   void switchedCopy(bool state);
   void switchedPaste(bool state);
+  void switchedDelete(bool state);
+  void switchedSnapshot(bool state);
   void switchedPointer(bool state);
   void switchedLink(bool state);
   void switchedZoomIn(bool state);

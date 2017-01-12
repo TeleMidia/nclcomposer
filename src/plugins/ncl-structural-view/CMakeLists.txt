@@ -73,8 +73,6 @@ set (NCL_STRUCTURAL_VIEW_SOURCES
   src/ui/view/StructuralContent.cpp
   src/ui/view/StructuralLinkDialog.cpp
   src/ui/view/StructuralLinkTool.cpp
-  
-  ncl-structural-view.qrc
 )
 
 add_library (ncl_structural_view

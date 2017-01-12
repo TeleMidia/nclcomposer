@@ -124,103 +124,103 @@ void StructuralMenu::createActions()
   _helpAction->setEnabled(false);
   _helpAction->setText(tr("Help"));
   _helpAction->setShortcut(QKeySequence("F1"));
-  _helpAction->setIcon(QIcon(":/images/icon/help"));
+  _helpAction->setIcon(QIcon(":/icon/help"));
 
   // undo action
   _undoAction = new QAction(this);
   _undoAction->setEnabled(false);
   _undoAction->setText(tr("Undo"));
   _undoAction->setShortcut(QKeySequence("Ctrl+Z"));
-  _undoAction->setIcon(QIcon(":/images/icon/undo"));
+  _undoAction->setIcon(QIcon(":/icon/undo"));
 
   // redo action
   _redoAction = new QAction(this);
   _redoAction->setEnabled(false);
   _redoAction->setText(tr("Redo"));
   _redoAction->setShortcut(QKeySequence("Ctrl+Shift+Z"));
-  _redoAction->setIcon(QIcon(":/images/icon/redo"));
+  _redoAction->setIcon(QIcon(":/icon/redo"));
 
   // cut action
   _cutAction = new QAction(this);
   _cutAction->setEnabled(false);
   _cutAction->setText(tr("Cut"));
   _cutAction->setShortcut(QKeySequence("Ctrl+X"));
-  _cutAction->setIcon(QIcon(":/images/icon/cut"));
+  _cutAction->setIcon(QIcon(":/icon/cut"));
 
   // copy action
   _copyAction = new QAction(this);
   _copyAction->setEnabled(false);
   _copyAction->setText(tr("Copy"));
   _copyAction->setShortcut(QKeySequence("Ctrl+C"));
-  _copyAction->setIcon(QIcon(":/images/icon/copy"));
+  _copyAction->setIcon(QIcon(":/icon/copy"));
 
   // paste action
   _pasteAction = new QAction(this);
   _pasteAction->setEnabled(false);
   _pasteAction->setText(tr("Paste"));
   _pasteAction->setShortcut(QKeySequence("Ctrl+V"));
-  _pasteAction->setIcon(QIcon(":/images/icon/paste"));
+  _pasteAction->setIcon(QIcon(":/icon/paste"));
 
   // delete action
   _deleteAction = new QAction(this);
   _deleteAction->setEnabled(false);
   _deleteAction->setText(tr("Delete"));
   _deleteAction->setShortcut(QKeySequence("Del"));
-  _deleteAction->setIcon(QIcon(":/images/icon/delete"));
+  _deleteAction->setIcon(QIcon(":/icon/delete"));
 
   // snapshot action
   _snapshotAction = new QAction(this);
   _snapshotAction->setEnabled(true);
   _snapshotAction->setText(tr("Take a Snapshot..."));
-  _snapshotAction->setIcon(QIcon(":/images/icon/snapshot"));
+  _snapshotAction->setIcon(QIcon(":/icon/snapshot"));
 
   // media action
   _mediaAction = new QAction(this);
   _mediaAction->setEnabled(false);
   _mediaAction->setText(tr("Media"));
-  _mediaAction->setIcon(QIcon(":/images/icon/media-insert"));
+  _mediaAction->setIcon(QIcon(":/icon/media-insert"));
 
   // context action
   _contextAction = new QAction(this);
   _contextAction->setEnabled(false);
   _contextAction->setText(tr("Context"));
-  _contextAction->setIcon(QIcon(":/images/icon/context-insert"));
+  _contextAction->setIcon(QIcon(":/icon/context-insert"));
 
   // switch action
   _switchAction = new QAction(this);
   _switchAction->setEnabled(false);
   _switchAction->setText(tr("Switch"));
-  _switchAction->setIcon(QIcon(":/images/icon/switch-insert"));
+  _switchAction->setIcon(QIcon(":/icon/switch-insert"));
 
   // body action
   _bodyAction = new QAction(this);
   _bodyAction->setEnabled(true);
   _bodyAction->setText(tr("Body"));
-  _bodyAction->setIcon(QIcon(":/images/icon/body-insert"));
+  _bodyAction->setIcon(QIcon(":/icon/body-insert"));
 
   // port action
   _portAction = new QAction(this);
   _portAction->setEnabled(false);
   _portAction->setText(tr("Port"));
-  _portAction->setIcon(QIcon(":/images/icon/port-insert"));
+  _portAction->setIcon(QIcon(":/icon/port-insert"));
 
   // switchport action
   _switchPortAction = new QAction(this);
   _switchPortAction->setEnabled(false);
   _switchPortAction->setText(tr("Switch Port"));
-  _switchPortAction->setIcon(QIcon(":/images/icon/switchport-insert"));
+  _switchPortAction->setIcon(QIcon(":/icon/switchport-insert"));
 
   // area action
   _areaAction = new QAction(this);
   _areaAction->setEnabled(false);
   _areaAction->setText(tr("Area"));
-  _areaAction->setIcon(QIcon(":/images/icon/area-insert"));
+  _areaAction->setIcon(QIcon(":/icon/area-insert"));
 
   // property action
   _propertyAction = new QAction(this);
   _propertyAction->setEnabled(false);
   _propertyAction->setText(tr("Property"));
-  _propertyAction->setIcon(QIcon(":/images/icon/property-insert"));
+  _propertyAction->setIcon(QIcon(":/icon/property-insert"));
 
 #ifdef WITH_GRAPHVIZ
   // autoadjust action
@@ -233,7 +233,7 @@ void StructuralMenu::createActions()
   _propertiesAction = new QAction(this);
   _propertiesAction->setEnabled(false);
   _propertiesAction->setText(tr("Properties"));
-  _propertiesAction->setIcon(QIcon(":/images/icon/properties"));
+  _propertiesAction->setIcon(QIcon(":/icon/properties"));
 }
 
 void StructuralMenu::createMenus()
@@ -241,7 +241,7 @@ void StructuralMenu::createMenus()
   // insert menu
   _insertMenu = new QMenu();
   _insertMenu->setTitle(tr("Insert"));
-  _insertMenu->setIcon(QIcon(":/images/icon/insert"));
+  _insertMenu->setIcon(QIcon(":/icon/insert"));
 
   _insertMenu->addAction(_mediaAction);
   _insertMenu->addSeparator();

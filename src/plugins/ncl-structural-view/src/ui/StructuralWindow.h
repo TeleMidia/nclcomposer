@@ -21,16 +21,18 @@ public:
   void setView(StructuralView* view);
 
 protected slots:
-  void switchUndo(bool enable);
-  void switchRedo(bool enable);
-  void switchCut(bool enable);
-  void switchCopy(bool enable);
-  void switchPaste(bool enable);
-  void switchZoomIn(bool enable);
-  void switchZoomOut(bool enable);
-  void switchPointer(bool enable);
-  void switchLink(bool enable);
-  void switchBody(bool enable);
+  void switchUndo(bool state);
+  void switchRedo(bool state);
+  void switchCut(bool state);
+  void switchCopy(bool state);
+  void switchPaste(bool state);
+  void switchDelete(bool state);
+  void switchSnapshot(bool state);
+  void switchZoomIn(bool state);
+  void switchZoomOut(bool state);
+  void switchPointer(bool state);
+  void switchLink(bool state);
+  void switchBody(bool state);
 
   void select(QString uid, QMap<QString, QString> settings);
 
@@ -50,12 +52,13 @@ private:
   QAction* _cutAction;
   QAction* _copyAction;
   QAction* _pasteAction;
+  QAction* _deleteAction;
+  QAction* _snapshotAction;
   QAction* _zoominAction;
   QAction* _zoomoutAction;
   QAction* _zoomoriginalAction;
   QAction* _pointerAction;
   QAction* _linkAction;
-  QAction* _snapshotAction;
   QAction* _minimapAction;
   QAction* _mediaAction;
   QAction* _contextAction;

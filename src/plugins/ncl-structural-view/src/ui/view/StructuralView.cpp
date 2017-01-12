@@ -298,12 +298,12 @@ void StructuralView::resizeEvent(QResizeEvent *event)
 void StructuralView::createConnection()
 {
   // Connecting with menu...
-  connect(this, SIGNAL(switchedUndo(bool)), _menu, SLOT(switchedUndo(bool)));
-  connect(this, SIGNAL(switchedRedo(bool)), _menu, SLOT(switchedRedo(bool)));
-  connect(this, SIGNAL(switchedCut(bool)), _menu, SLOT(switchedCut(bool)));
-  connect(this, SIGNAL(switchedCopy(bool)), _menu, SLOT(switchedCopy(bool)));
-  connect(this, SIGNAL(switchedPaste(bool)), _menu, SLOT(switchedPaste(bool)));
-  connect(this, SIGNAL(switchedBody(bool)), _menu, SLOT(switchedBody(bool)));
+  connect(this, SIGNAL(switchedUndo(bool)), _menu, SLOT(switchUndo(bool)));
+  connect(this, SIGNAL(switchedRedo(bool)), _menu, SLOT(switchRedo(bool)));
+  connect(this, SIGNAL(switchedCut(bool)), _menu, SLOT(switchCut(bool)));
+  connect(this, SIGNAL(switchedCopy(bool)), _menu, SLOT(switchCopy(bool)));
+  connect(this, SIGNAL(switchedPaste(bool)), _menu, SLOT(switchPaste(bool)));
+  connect(this, SIGNAL(switchedBody(bool)), _menu, SLOT(switchBody(bool)));
 
   connect(_menu, SIGNAL(performedHelp()), SLOT(performHelp()));
   connect(_menu, SIGNAL(performedUndo()), SLOT(performUndo()));

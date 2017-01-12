@@ -322,14 +322,14 @@ StructuralMimeType StructuralUtil::translateStringToMimeType(const QString &mime
 
 std::map<Structural::StructuralType, QString> StructuralUtil::_entitiesIcon =
     StructuralMap<Structural::StructuralType, QString >
-(Structural::Media, ":/images/icon/media")
-(Structural::Body, ":/images/icon/body")
-(Structural::Context, ":/images/icon/context")
-(Structural::Switch, ":/images/icon/switch")
-(Structural::Port, ":/images/icon/port")
-(Structural::SwitchPort, ":/images/icon/switchport")
-(Structural::Area, ":/images/icon/area")
-(Structural::Property, ":/images/icon/property")
+(Structural::Media, ":/icon/media")
+(Structural::Body, ":/icon/body")
+(Structural::Context, ":/icon/context")
+(Structural::Switch, ":/icon/switch")
+(Structural::Port, ":/icon/port-mini")
+(Structural::SwitchPort, ":/icon/switchport-mini")
+(Structural::Area, ":/icon/area-mini")
+(Structural::Property, ":/icon/property-mini")
 (Structural::Link, "")
 (Structural::Bind, "")
 (Structural::Reference, "")
@@ -446,14 +446,14 @@ std::map<Structural::StructuralMimeType, QString> StructuralUtil::_mimetypesIcon
 (Structural::Settings, ":/icon/settings")
 (Structural::NCLua, ":/icon/script")
 
-(Structural::NoMimeType, ":/images/icon/media");
+(Structural::NoMimeType, ":/icon/media");
 
 QString StructuralUtil::getMimeTypeIcon(StructuralMimeType type)
 {
   if(_mimetypesIcon.count(type))
     return _mimetypesIcon[type];
   else
-    return ":/images/icon/media";
+    return ":/icon/media";
 }
 
 QString StructuralUtil::getMimeTypeTooltip(StructuralMimeType mimetype, const QString &title, const QString &info, const QString &warning, const QString &error, const QString &extra)
@@ -520,21 +520,21 @@ Structural::StructuralMimeType StructuralUtil::getMimeTypeByExtension(const QStr
 
 std::map<Structural::StructuralRole, QString> StructuralUtil::_rolesIcon =
     StructuralMap<Structural::StructuralRole, QString>
-(Structural::onBegin, ":/icon/onbegin")
-(Structural::onEnd, ":/icon/onend")
-(Structural::onSelection, ":/icon/onselection")
-(Structural::onResume, ":/icon/onresume")
-(Structural::onPause, ":/icon/onpause")
+(Structural::onBegin, ":/icon/bind-onbegin")
+(Structural::onEnd, ":/icon/bind-onend")
+(Structural::onSelection, ":/icon/bind-onselection")
+(Structural::onResume, ":/icon/bind-onresume")
+(Structural::onPause, ":/icon/bind-onpause")
 (Structural::onBeginAttribution, "")
 (Structural::onEndAttribution, "")
 (Structural::onPauseAttribution, "")
 (Structural::onResumeAttribution, "")
 
-(Structural::Start, ":/icon/start")
-(Structural::Stop, ":/icon/stop")
-(Structural::Resume, ":/icon/resume")
-(Structural::Pause, ":/icon/pause")
-(Structural::Set, ":/icon/set")
+(Structural::Start, ":/icon/bind-start")
+(Structural::Stop, ":/icon/bind-stop")
+(Structural::Resume, ":/icon/bind-resume")
+(Structural::Pause, ":/icon/bind-pause")
+(Structural::Set, ":/icon/bind-set")
 
 (Structural::NoRole, "");
 

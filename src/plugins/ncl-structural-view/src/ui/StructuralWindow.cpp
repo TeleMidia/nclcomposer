@@ -31,49 +31,63 @@ void StructuralWindow::createActions()
   _undoAction = new QAction(this);
   _undoAction->setEnabled(false);
   _undoAction->setText(tr("Undo"));
-  _undoAction->setIcon(QIcon(":/images/icon/undo"));
+  _undoAction->setIcon(QIcon(":/icon/undo"));
   _undoAction->setShortcut(QKeySequence("Ctrl+Z"));
 
   // redo action
   _redoAction = new QAction((QObject*) this);
   _redoAction->setEnabled(false);
   _redoAction->setText(tr("Redo"));
-  _redoAction->setIcon(QIcon(":/images/icon/redo"));
+  _redoAction->setIcon(QIcon(":/icon/redo"));
   _redoAction->setShortcut(QKeySequence("Ctrl+Shift+Z"));
 
   // cut action
   _cutAction = new QAction((QObject*) this);
   _cutAction->setEnabled(false);
   _cutAction->setText(tr("Cut"));
-  _cutAction->setIcon(QIcon(":/images/icon/cut"));
+  _cutAction->setIcon(QIcon(":/icon/cut"));
   _cutAction->setShortcut(QKeySequence("Ctrl+X"));
 
   // copy action
   _copyAction = new QAction((QObject*) this);
   _copyAction->setEnabled(false);
   _copyAction->setText(tr("Copy"));
-  _copyAction->setIcon(QIcon(":/images/icon/copy"));
+  _copyAction->setIcon(QIcon(":/icon/copy"));
   _copyAction->setShortcut(QKeySequence("Ctrl+C"));
 
   // paste action
   _pasteAction = new QAction((QObject*) this);
   _pasteAction->setEnabled(false);
   _pasteAction->setText(tr("Paste"));
-  _pasteAction->setIcon(QIcon(":/images/icon/paste"));
+  _pasteAction->setIcon(QIcon(":/icon/paste"));
   _pasteAction->setShortcut(QKeySequence("Ctrl+V"));
+
+  // delete action
+  _deleteAction = new QAction((QObject*) this);
+  _deleteAction->setEnabled(false);
+  _deleteAction->setText(tr("Delete"));
+  _deleteAction->setToolTip(tr("Delete"));
+  _deleteAction->setIcon(QIcon(":/icon/delete"));
+
+  // snapshot action
+  _snapshotAction = new QAction((QObject*) this);
+  _snapshotAction->setEnabled(true);
+  _snapshotAction->setText(tr("Snapshot"));
+  _snapshotAction->setToolTip(tr("Take a Snapshot..."));
+  _snapshotAction->setIcon(QIcon(":/icon/snapshot"));
 
   // zoomin action
   _zoominAction = new QAction((QObject*) this);
   _zoominAction->setEnabled(false);
   _zoominAction->setText(tr("Zoom In"));
-  _zoominAction->setIcon(QIcon(":/images/icon/zoomin"));
+  _zoominAction->setIcon(QIcon(":/icon/zoomin"));
   _zoominAction->setShortcut(QKeySequence("Ctrl++"));
 
   // zoomout action
   _zoomoutAction = new QAction((QObject*) this);
   _zoomoutAction->setEnabled(true);
   _zoomoutAction->setText(tr("Zoom Out"));
-  _zoomoutAction->setIcon(QIcon(":/images/icon/zoomout"));
+  _zoomoutAction->setIcon(QIcon(":/icon/zoomout"));
   _zoomoutAction->setShortcut(QKeySequence("Ctrl+-"));
 
   // zoomout action
@@ -90,7 +104,7 @@ void StructuralWindow::createActions()
   _pointerAction->setChecked(true);
   _pointerAction->setText(tr("Pointer tool"));
   _pointerAction->setToolTip(tr("Pointer tool"));
-  _pointerAction->setIcon(QIcon(":/images/icon/pointer"));
+  _pointerAction->setIcon(QIcon(":/icon/pointer"));
   _pointerAction->setShortcut(QKeySequence("1"));
 
   // link action
@@ -100,7 +114,7 @@ void StructuralWindow::createActions()
   _linkAction->setChecked(false);
   _linkAction->setText(tr("Linking tool"));
   _linkAction->setToolTip(tr("Linking tool"));
-  _linkAction->setIcon(QIcon(":/images/icon/link"));
+  _linkAction->setIcon(QIcon(":/icon/link"));
   _linkAction->setShortcut(QKeySequence("2"));
 
   // media action
@@ -108,7 +122,7 @@ void StructuralWindow::createActions()
   _mediaAction->setEnabled(false);
   _mediaAction->setText(tr("Media"));
   _mediaAction->setToolTip(tr("Insert &lt;media&gt; entity"));
-  _mediaAction->setIcon(QIcon(":/images/icon/media-insert"));
+  _mediaAction->setIcon(QIcon(":/icon/media-insert"));
   _mediaAction->setShortcut(QKeySequence("3"));
 
   // context action
@@ -116,7 +130,7 @@ void StructuralWindow::createActions()
   _contextAction->setEnabled(false);
   _contextAction->setText(tr("Context"));
   _contextAction->setToolTip(tr("Insert &lt;context&gt; entity"));
-  _contextAction->setIcon(QIcon(":/images/icon/context-insert"));
+  _contextAction->setIcon(QIcon(":/icon/context-insert"));
   _contextAction->setShortcut(QKeySequence("4"));
 
   // switch action
@@ -124,7 +138,7 @@ void StructuralWindow::createActions()
   _switchAction->setEnabled(false);
   _switchAction->setText(tr("Switch"));
   _switchAction->setToolTip(tr("Insert &lt;switch&gt; entity"));
-  _switchAction->setIcon(QIcon(":/images/icon/switch-insert"));
+  _switchAction->setIcon(QIcon(":/icon/switch-insert"));
   _switchAction->setShortcut(QKeySequence("5"));
 
   // body action
@@ -132,7 +146,7 @@ void StructuralWindow::createActions()
   _bodyAction->setEnabled(true);
   _bodyAction->setText(tr("Body"));
   _bodyAction->setToolTip(tr("Insert &lt;body&gt; entity"));
-  _bodyAction->setIcon(QIcon(":/images/icon/body-insert"));
+  _bodyAction->setIcon(QIcon(":/icon/body-insert"));
   _bodyAction->setShortcut(QKeySequence("6"));
 
   // area action
@@ -140,7 +154,7 @@ void StructuralWindow::createActions()
   _areaAction->setEnabled(false);
   _areaAction->setText(tr("Area"));
   _areaAction->setToolTip(tr("Insert &lt;area&gt; entity"));
-  _areaAction->setIcon(QIcon(":/images/icon/area-insert"));
+  _areaAction->setIcon(QIcon(":/icon/area-insert"));
   _areaAction->setShortcut(QKeySequence("7"));
 
   // property action
@@ -148,7 +162,7 @@ void StructuralWindow::createActions()
   _propertyAction->setEnabled(false);
   _propertyAction->setText(tr("Property"));
   _propertyAction->setToolTip(tr("Insert &lt;property&gt; entity"));
-  _propertyAction->setIcon(QIcon(":/images/icon/property-insert"));
+  _propertyAction->setIcon(QIcon(":/icon/property-insert"));
   _propertyAction->setShortcut(QKeySequence("8"));
 
   // port action
@@ -156,7 +170,7 @@ void StructuralWindow::createActions()
   _portAction->setEnabled(false);
   _portAction->setText(tr("Port"));
   _portAction->setToolTip(tr("Insert &lt;port&gt; entity"));
-  _portAction->setIcon(QIcon(":/images/icon/port-insert"));
+  _portAction->setIcon(QIcon(":/icon/port-insert"));
   _portAction->setShortcut(QKeySequence("9"));
 
   // switchport action
@@ -164,7 +178,7 @@ void StructuralWindow::createActions()
   _switchportAction->setEnabled(false);
   _switchportAction->setText(tr("Switch Port"));
   _switchportAction->setToolTip(tr("Insert &lt;switchport&gt; entity"));
-  _switchportAction->setIcon(QIcon(":/images/icon/switchport-insert"));
+  _switchportAction->setIcon(QIcon(":/icon/switchport-insert"));
   _switchportAction->setShortcut(QKeySequence("0"));
 
   // minimap action
@@ -174,21 +188,14 @@ void StructuralWindow::createActions()
   _minimapAction->setChecked(true);
   _minimapAction->setText(tr("Minimap"));
   _minimapAction->setToolTip(tr("Show/Hide minimap"));
-  _minimapAction->setIcon(QIcon(":/images/icon/minimap"));
+  _minimapAction->setIcon(QIcon(":/icon/minimap"));
   _minimapAction->setShortcut(QKeySequence("Ctrl+M"));
-
-  // action
-  _snapshotAction = new QAction((QObject*) this);
-  _snapshotAction->setEnabled(true);
-  _snapshotAction->setText(tr("Snapshot"));
-  _snapshotAction->setToolTip(tr("Take a snapshot of the structural view"));
-  _snapshotAction->setIcon(QIcon(":/images/icon/snapshot"));
 
   // preferences action
   _preferencesAction = new QAction((QObject*) this);
   _preferencesAction->setEnabled(true);
   _preferencesAction->setText(tr("Preferences..."));
-  _preferencesAction->setIcon(QIcon(":/images/icon/preferences"));
+  _preferencesAction->setIcon(QIcon(":/icon/preferences"));
   _preferencesAction->setShortcut(QKeySequence("Ctrl+P"));
 
   // insert group
@@ -215,7 +222,7 @@ void StructuralWindow::createToolbar()
   _editToolbar->addAction(_copyAction);
   _editToolbar->addAction(_pasteAction);
   _editToolbar->addSeparator();
-  _editToolbar->addAction(_snapshotAction);
+  _editToolbar->addAction(_deleteAction);
 
 #ifdef Q_WS_MACX
   _editToolbar->addSeparator();
@@ -257,6 +264,8 @@ void StructuralWindow::createToolbar()
   _windowToolbar->addAction(_zoomoutAction);
   _windowToolbar->addAction(_zoomoriginalAction);
   _windowToolbar->addSeparator();
+  _windowToolbar->addAction(_snapshotAction);
+  _windowToolbar->addSeparator();
   _windowToolbar->addAction(_minimapAction);
 
 #ifdef Q_WS_MACX
@@ -286,12 +295,13 @@ void  StructuralWindow::createConnections()
   connect(_cutAction, SIGNAL(triggered()), _view, SLOT(performCut()));
   connect(_copyAction, SIGNAL(triggered()), _view, SLOT(performCopy()));
   connect(_pasteAction, SIGNAL(triggered()), _view, SLOT(performPaste()));
+  connect(_deleteAction, SIGNAL(triggered()), _view, SLOT(performDelete()));
+  connect(_snapshotAction, SIGNAL(triggered()), _view, SLOT(performSnapshot()));
   connect(_zoominAction, SIGNAL(triggered()), _view, SLOT(performZoomIn()));
   connect(_zoomoutAction, SIGNAL(triggered()), _view, SLOT(performZoomOut()));
   connect(_zoomoriginalAction, SIGNAL(triggered()), _view, SLOT(performZoomOriginal()));
   connect(_pointerAction, SIGNAL(triggered()), _view, SLOT(performPointer()));
   connect(_linkAction, SIGNAL(triggered()), _view, SLOT(performLink()));
-  connect(_snapshotAction, SIGNAL(triggered()), _view, SLOT(performSnapshot()));
   connect(_minimapAction, SIGNAL(triggered()), _view, SLOT(performMinimap()));
   connect(_mediaAction, SIGNAL(triggered()), _view, SLOT(performMedia()));
   connect(_contextAction, SIGNAL(triggered()), _view, SLOT(performContext()));
@@ -302,73 +312,84 @@ void  StructuralWindow::createConnections()
   connect(_portAction, SIGNAL(triggered()), _view, SLOT(performPort()));
   connect(_switchportAction, SIGNAL(triggered()), _view, SLOT(performSwitchPort()));
 
-  connect(_view, SIGNAL(selected(QString,QMap<QString,QString>)),SLOT(select(QString,QMap<QString,QString>)));
-
   connect(_view, SIGNAL(switchedUndo(bool)), SLOT(switchUndo(bool)));
   connect(_view, SIGNAL(switchedRedo(bool)), SLOT(switchRedo(bool)));
   connect(_view, SIGNAL(switchedCut(bool)), SLOT(switchCut(bool)));
   connect(_view, SIGNAL(switchedCopy(bool)), SLOT(switchCopy(bool)));
   connect(_view, SIGNAL(switchedPaste(bool)), SLOT(switchPaste(bool)));
+  connect(_view, SIGNAL(switchedDelete(bool)), SLOT(switchDelete(bool)));
+  connect(_view, SIGNAL(switchedSnapshot(bool)), SLOT(switchSnapshot(bool)));
   connect(_view, SIGNAL(switchedZoomIn(bool)), SLOT(switchZoomIn(bool)));
   connect(_view, SIGNAL(switchedZoomOut(bool)), SLOT(switchZoomOut(bool)));
-
-  connect(_view, SIGNAL(switchedBody(bool)), SLOT(switchBody(bool)));
-
   connect(_view, SIGNAL(switchedPointer(bool)), SLOT(switchPointer(bool)));
   connect(_view, SIGNAL(switchedLink(bool)), SLOT(switchLink(bool)));
+  connect(_view, SIGNAL(switchedBody(bool)), SLOT(switchBody(bool)));
+
+  connect(_view, SIGNAL(selected(QString,QMap<QString,QString>)),SLOT(select(QString,QMap<QString,QString>)));
 }
 
-void StructuralWindow::switchBody(bool enable)
+void StructuralWindow::switchUndo(bool state)
 {
-  _bodyAction->setEnabled(enable);
+  _undoAction->setEnabled(state);
 }
 
-void StructuralWindow::switchZoomIn(bool enable)
+void StructuralWindow::switchRedo(bool state)
 {
-  _zoominAction->setEnabled(enable);
+  _redoAction->setEnabled(state);
 }
 
-void StructuralWindow::switchZoomOut(bool enable)
+void StructuralWindow::switchCut(bool state)
 {
-  _zoomoutAction->setEnabled(enable);
+  _cutAction->setEnabled(state);
 }
 
-void StructuralWindow::switchUndo(bool enable)
+void StructuralWindow::switchCopy(bool state)
 {
-  _undoAction->setEnabled(enable);
+  _copyAction->setEnabled(state);
 }
 
-void StructuralWindow::switchRedo(bool enable)
+void StructuralWindow::switchPaste(bool state)
 {
-  _redoAction->setEnabled(enable);
+  _pasteAction->setEnabled(state);
 }
 
-void StructuralWindow::switchCut(bool enable)
+void StructuralWindow::switchDelete(bool state)
 {
-  _cutAction->setEnabled(enable);
+  _deleteAction->setEnabled(state);
 }
 
-void StructuralWindow::switchPointer(bool enable)
+void StructuralWindow::switchSnapshot(bool state)
 {
-  if (enable)
+  _snapshotAction->setEnabled(state);
+}
+
+
+void StructuralWindow::switchZoomIn(bool state)
+{
+  _zoominAction->setEnabled(state);
+}
+
+void StructuralWindow::switchZoomOut(bool state)
+{
+  _zoomoutAction->setEnabled(state);
+}
+
+void StructuralWindow::switchPointer(bool state)
+{
+  if (state)
     _pointerAction->setChecked(true);
   else
     _linkAction->setChecked(true);
 }
 
-void StructuralWindow::switchLink(bool enable)
+void StructuralWindow::switchLink(bool state)
 {
-  switchPointer(!enable);
+  switchPointer(!state);
 }
 
-void StructuralWindow::switchCopy(bool enable)
+void StructuralWindow::switchBody(bool state)
 {
-  _copyAction->setEnabled(enable);
-}
-
-void StructuralWindow::switchPaste(bool enable)
-{
-  _pasteAction->setEnabled(enable);
+  _bodyAction->setEnabled(state);
 }
 
 void StructuralWindow::select(QString uid, QMap<QString, QString> settings)
@@ -462,6 +483,7 @@ void StructuralWindow::select(QString uid, QMap<QString, QString> settings)
 
     switchCut(true);
     switchCopy(true);
+    switchDelete(true);
 
   } else  {
     _mediaAction->setEnabled(false);
@@ -474,6 +496,7 @@ void StructuralWindow::select(QString uid, QMap<QString, QString> settings)
 
     switchCut(false);
     switchCopy(false);
+    switchDelete(false);
   }
 }
 
