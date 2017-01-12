@@ -43,5 +43,17 @@
         <file alias="regionbase">images/icon-regionbase.png</file>
         <file alias="connectorbase">images/icon-connectorbase.png</file>
         <file alias="descriptorbase">images/icon-descriptorbase.png</file>
+        <file alias="bind-onbegin">images/icon-bind-onbegin.png</file>
+        <file alias="bind-onend">images/icon-bind-onend.png</file>
+        <file alias="bind-onpause">images/icon-bind-onpause.png</file>
+        <file alias="bind-onresume">images/icon-bind-onresume.png</file>
+        <file alias="bind-onselection">images/icon-bind-onselection.png</file>
+        <file alias="bind-pause">images/icon-bind-pause.png</file>
+        <file alias="bind-resume">images/icon-bind-resume.png</file>
+        <file alias="bind-set">images/icon-bind-set.png</file>
+        <file alias="bind-start">images/icon-bind-start.png</file>
+        <file alias="bind-stop">images/icon-bind-stop.png</file>
+        <file alias="bind-unknow-action">images/icon-bind-unknow-action.png</file>
+        <file alias="bind-unknow-condition">images/icon-bind-unknow-condition.png</file>
     </qresource>
 </RCC>
