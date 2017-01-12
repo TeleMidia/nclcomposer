@@ -441,14 +441,44 @@ void NCLTreeWidget::updateItem(QTreeWidgetItem *item, QString tagname,
     icon = QIcon (":/icon/switch");
   else if(tagname == "descriptor")
     icon = QIcon (":/icon/descriptor");
+  else if(tagname == "descriptorBase")
+    icon = QIcon (":/icon/descriptorbase");
+  else if(tagname == "connectorBase")
+    icon = QIcon (":/icon/connectorbase");
+  else if(tagname == "regionBase")
+    icon = QIcon (":/icon/regionbase");
   else if(tagname == "link")
     icon = QIcon (":/icon/link");
+  else if(tagname == "region")
+    icon = QIcon (":/icon/region");
   else if(tagname == "port")
     icon = QIcon (":/icon/port");
+  else if(tagname == "area")
+    icon = QIcon (":/icon/area");
+  else if(tagname == "switchPort")
+    icon = QIcon (":/icon/switchport");
   else if(tagname == "property")
     icon = QIcon (":/icon/property");
+  else if(tagname == "bind")
+  {
+    QString role = (attrs.value("role")).toLower();
+
+    if (role == "onbegin" ||
+        role == "onend" ||
+        role == "onpause" ||
+        role == "onresume" ||
+        role == "onselection" ||
+        role == "pause" ||
+        role == "resume" ||
+        role == "set" ||
+        role == "start" ||
+        role == "stop")
+         icon = QIcon (":/icon/bind-"+role);
+    else
+      icon = QIcon (":/icon/bind-unknow-action");
+  }
   else
-    icon = QIcon (":/icon/element");
+    icon = QIcon (":/icon/tag");
 
   QString strAttrList = "";
   QString key;
