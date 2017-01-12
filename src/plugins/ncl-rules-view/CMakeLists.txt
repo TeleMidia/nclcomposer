@@ -3,19 +3,20 @@ project(ncl_rules_view)
 
 set (CMAKE_INCLUDE_CURRENTDIR ON)
 set (CMAKE_AUTOMOC ON)
-set (CMAKE_AUTORCC ON)
 
 configure_file (ncl-rules-view.json ncl-rules-view.json)
 
 include_directories(
   ${CMAKE_CURRENT_BINARY_DIR}
+  .
   src
-  "${CMAKE_SOURCE_DIR}/src/plugins/ncl-profile"
   "${CMAKE_SOURCE_DIR}/src/core/src"
-  "${CMAKE_BINARY_DIR}/src/plugins/ncl-structural-view"
+  "${CMAKE_SOURCE_DIR}/src/plugins/ncl-profile"
   ${nclcomposer_core_SOURCE_DIR}
 )
 
+find_package (Qt5Core REQUIRED)
+find_package (Qt5Xml REQUIRED)
 find_package (Qt5Widgets REQUIRED)
 
 set (NCL_RULES_VIEW_SOURCES
@@ -45,6 +46,8 @@ add_library (ncl_rules_view
 target_link_libraries (ncl_rules_view
   nclcomposer_core
   nclprofile
+  Qt5::Core
+  Qt5::Xml
   Qt5::Widgets
 )
 

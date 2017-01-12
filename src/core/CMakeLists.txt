@@ -3,8 +3,6 @@ project(nclcomposer_core)
 
 include_directories (src)
 
-add_definitions(-DCOMPOSERCORE_LIBRARY)
-
 set (CMAKE_INCLUDE_CURRENTDIR ON)
 set (CMAKE_AUTOMOC ON)
 
@@ -71,6 +69,9 @@ target_link_libraries(
   Qt5::Xml
   Qt5::Widgets
 )
+
+target_compile_definitions(nclcomposer_core PUBLIC
+    COMPOSERCORE_MAKE_DLL)
 
 install(TARGETS
     nclcomposer_core

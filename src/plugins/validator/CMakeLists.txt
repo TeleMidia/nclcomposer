@@ -15,6 +15,7 @@ include_directories(
 )
 
 find_package (Qt5Core REQUIRED)
+find_package (Qt5Widgets REQUIRED)
 find_package (Qt5Xml REQUIRED)
 
 set (VALIDATOR_SOURCES
@@ -64,6 +65,7 @@ target_link_libraries(validator
   nclcomposer_core
   Qt5::Core
   Qt5::Xml
+  Qt5::Widgets
 )
 
 install (TARGETS validator DESTINATION ${NCLCOMPOSER_BINARY_DIR_PLUGINS})

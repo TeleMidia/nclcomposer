@@ -21,6 +21,7 @@ include_directories(
   ${nclcomposer_core_SOURCE_DIR}
 )
 
+find_package (Qt5Core REQUIRED)
 find_package (Qt5Xml REQUIRED)
 find_package (Qt5Widgets REQUIRED)
 
@@ -56,6 +57,7 @@ add_library (ncl_layout_view
 target_link_libraries (ncl_layout_view
   nclcomposer_core
   nclprofile
+  Qt5::Core
   Qt5::Xml
   Qt5::Widgets
 )

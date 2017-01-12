@@ -89,7 +89,6 @@ set_target_properties(nclcomposer PROPERTIES
 
 target_link_libraries (nclcomposer
   nclcomposer_core
-#  sass
   Qt5::Core
   Qt5::Xml
   Qt5::Widgets

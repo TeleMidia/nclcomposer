@@ -60,7 +60,11 @@ add_library (ncl_textual_view
   ${UI_GENERATED_HEADERS}
 )
 
+target_compile_definitions(ncl_textual_view PUBLIC
+  QSCINTILLA_DLL)
+
 add_subdirectory(deps/QScintilla-gpl-2.9/Qt4Qt5)
+
 target_link_libraries (ncl_textual_view
   qscintilla2_telem
   nclcomposer_core

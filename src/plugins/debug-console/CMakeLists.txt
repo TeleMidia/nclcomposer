@@ -12,10 +12,8 @@ include_directories(
   ${nclcomposer_core_SOURCE_DIR}
 )
 
-add_definitions(-DDEBUGCONSOLE_LIBRARY)
-
 find_package (Qt5Core REQUIRED)
-find_package (Qt5Xml REQUIRED)
+find_package (Qt5Widgets REQUIRED)
 
 set (DEBUG_CONSOLE_SOURCES
   src/DebugConsoleFactory.cpp
@@ -33,7 +31,7 @@ add_library(debugconsole
 target_link_libraries (debugconsole
   nclcomposer_core
   Qt5::Core
+  Qt5::Widgets
 )
 
 install (TARGETS debugconsole DESTINATION ${NCLCOMPOSER_BINARY_DIR_PLUGINS})
-
