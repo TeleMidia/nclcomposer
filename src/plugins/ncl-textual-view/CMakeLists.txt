@@ -21,25 +21,16 @@ include_directories(
 find_package (Qt5Widgets REQUIRED)
 find_package (Qt5Xml REQUIRED)
 
-link_directories(${CMAKE_CURRENT_SOURCE_DIR}/deps/QScintilla-gpl-2.9/Qt4Qt5)
+link_directories(${CMAKE_BINARY_DIR}/${NCLCOMPOSER_BINARY_DIR_PLUGINS})
 
 message(STATUS "Looking for qmake")
 find_program(QMAKE_EXECUTABLE
-  NAMES qmake qmake-qt4
+  NAMES qmake
   PATHS ENV QMAKE_PATH)
 if (QMAKE_EXECUTABLE)
   set(QMAKE_FOUND 1)
   message(STATUS "Looking for qmake -- found")
 endif()
-
-add_custom_command(
-  OUTPUT deps/QScintilla-gpl-2.9/Qt4Qt5/qscintila2_telem.dll
-  WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/deps/QScintilla-gpl-2.9/Qt4Qt5/
-  COMMAND ${QMAKE_EXECUTABLE} FORCE_RELEASE=true
-  COMMENT "Running qmake for qscintilla.pro"
-  COMMAND make
-  COMMENT "Building qscintilla2_telem.so"
-)
 
 set (NCL_TEXTUAL_VIEW_SOURCES
   src/NCLTextEditorMainWindow.cpp
@@ -47,7 +38,6 @@ set (NCL_TEXTUAL_VIEW_SOURCES
   src/QsciLexerNCL.cpp
   src/QsciNCLAPIs.cpp
   src/MyLexer.cpp
-  src/NCLValidator.cpp
   src/NCLProblemsView.cpp
   ../outline-view/src/NCLParser.cpp
   ../outline-view/src/NCLTreeWidget.cpp
@@ -60,7 +50,6 @@ set (NCL_TEXTUAL_VIEW_SOURCES
   src/QsciLexerNCL.h
   src/QsciNCLAPIs.h
   src/MyLexer.h
-  src/NCLValidator.h
   src/NCLProblemsView.h
   ../outline-view/src/NCLParser.h
   ../outline-view/src/NCLTreeWidget.h
@@ -68,8 +57,6 @@ set (NCL_TEXTUAL_VIEW_SOURCES
   src/NCLTextualViewPluginFactory.h
   src/NCLTextualViewPlugin_global.h
   src/SearchLineEdit.h
-  
-  deps/QScintilla-gpl-2.9/Qt4Qt5/qscintila2_telem.dll
 )
 
 qt5_wrap_ui (UI_GENERATED_HEADERS
@@ -88,6 +75,15 @@ target_link_libraries (ncl_textual_view
   nclprofile
   Qt5::Xml
   Qt5::Widgets
+)
+
+add_custom_command (TARGET ncl_textual_view
+  PRE_BUILD
+  WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/deps/QScintilla-gpl-2.9/Qt4Qt5/
+  COMMAND ${QMAKE_EXECUTABLE} FORCE_RELEASE=true DESTDIR=${CMAKE_BINARY_DIR}/${NCLCOMPOSER_BINARY_DIR_PLUGINS}
+  COMMENT "Running qmake for qscintilla.pro"
+  COMMAND make
+  COMMENT "Building qscintilla2_telem.so"
 )
 
 install (TARGETS ncl_textual_view DESTINATION ${NCLCOMPOSER_BINARY_DIR_PLUGINS})

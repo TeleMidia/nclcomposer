@@ -77,6 +77,7 @@ public slots:
   void performPaste();
   void performZoomIn();
   void performZoomOut();
+  void performZoomOriginal();
   void performPointer();
   void performLink();
   void performDelete();

@@ -82,7 +82,8 @@ HEADERS_EXTENSIONS += \
     src/extensions/ILanguageProfile.h \
     src/extensions/IDocumentParser.h \
     src/extensions/IPlugin.h \
-    src/extensions/IPluginFactory.h
+    src/extensions/IPluginFactory.h \
+    src/extensions/IPreferencesPage.h
 
 HEADERS_UTIL += \
     src/util/ComposerCoreControl_global.h \

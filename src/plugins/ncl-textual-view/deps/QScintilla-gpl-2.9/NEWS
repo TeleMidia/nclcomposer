@@ -1,3 +1,7 @@
+v2.9.4 25th December 2016
+  - Added the .api file for Python v3.6.
+  - Bug fixes.
+
 v2.9.3 25th July 2016
   - Bug fixes.
 

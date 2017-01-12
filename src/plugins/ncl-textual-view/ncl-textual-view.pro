@@ -35,7 +35,6 @@ HEADERS     =   src/NCLTextEditorMainWindow.h \
                 src/QsciLexerNCL.h \
                 src/QsciNCLAPIs.h \
                 src/MyLexer.h \
-                src/NCLValidator.h \
                 src/NCLProblemsView.h \
                 ../outline-view/src/NCLParser.h \
                 ../outline-view/src/NCLTreeWidget.h \
@@ -49,7 +48,6 @@ SOURCES     =   src/NCLTextEditorMainWindow.cpp \
                 src/QsciLexerNCL.cpp \
                 src/QsciNCLAPIs.cpp \
                 src/MyLexer.cpp \
-                src/NCLValidator.cpp \
                 src/NCLProblemsView.cpp \
                 ../outline-view/src/NCLParser.cpp \
                 ../outline-view/src/NCLTreeWidget.cpp \

@@ -65,7 +65,6 @@ add_executable(nclcomposer
   src/FileChooser.cpp
   src/ClickableDockWidget.cpp
   src/ComposerSplashScreen.cpp
-  src/IPreferencesPage.h
 
   src/toolwindowmanager/libqtoolwindowmanager/qabstracttoolwindowmanagerarea.cpp
   src/toolwindowmanager/libqtoolwindowmanager/qabstracttoolwindowmanagerarea.h

@@ -15,17 +15,17 @@
 #include <QIcon>
 
 namespace composer {
-    namespace gui {
+  namespace gui {
 
 class IPreferencesPage : public QWidget
 {
-  Q_OBJECT
 
 public:
   IPreferencesPage(QWidget *parent) : QWidget(parent) { }
 
   virtual const QString getName() { return windowTitle(); }
   virtual const QIcon getIcon() = 0;
+  virtual ~IPreferencesPage() {}
 
 public slots:
   virtual void applyValues() = 0;

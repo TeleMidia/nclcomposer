@@ -90,6 +90,13 @@ void StructuralWindow::createActions()
   _zoomoutAction->setIcon(QIcon(":/icon/zoomout"));
   _zoomoutAction->setShortcut(QKeySequence("Ctrl+-"));
 
+  // zoomout action
+  _zoomoriginalAction = new QAction((QObject*) this);
+  _zoomoriginalAction->setEnabled(true);
+  _zoomoriginalAction->setText(tr("Zoom Out"));
+  _zoomoriginalAction->setIcon(QIcon(":/images/icon/zoomoriginal"));
+  _zoomoriginalAction->setShortcut(QKeySequence("Ctrl+0"));
+
   // pointer action
   _pointerAction = new QAction((QObject*) this);
   _pointerAction->setEnabled(true);
@@ -255,6 +262,7 @@ void StructuralWindow::createToolbar()
 
   _windowToolbar->addAction(_zoominAction);
   _windowToolbar->addAction(_zoomoutAction);
+  _windowToolbar->addAction(_zoomoriginalAction);
   _windowToolbar->addSeparator();
   _windowToolbar->addAction(_snapshotAction);
   _windowToolbar->addSeparator();
@@ -291,6 +299,7 @@ void  StructuralWindow::createConnections()
   connect(_snapshotAction, SIGNAL(triggered()), _view, SLOT(performSnapshot()));
   connect(_zoominAction, SIGNAL(triggered()), _view, SLOT(performZoomIn()));
   connect(_zoomoutAction, SIGNAL(triggered()), _view, SLOT(performZoomOut()));
+  connect(_zoomoriginalAction, SIGNAL(triggered()), _view, SLOT(performZoomOriginal()));
   connect(_pointerAction, SIGNAL(triggered()), _view, SLOT(performPointer()));
   connect(_linkAction, SIGNAL(triggered()), _view, SLOT(performLink()));
   connect(_minimapAction, SIGNAL(triggered()), _view, SLOT(performMinimap()));
