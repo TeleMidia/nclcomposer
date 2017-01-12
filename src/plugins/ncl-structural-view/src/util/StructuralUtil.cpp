@@ -520,21 +520,21 @@ Structural::StructuralMimeType StructuralUtil::getMimeTypeByExtension(const QStr
 
 std::map<Structural::StructuralRole, QString> StructuralUtil::_rolesIcon =
     StructuralMap<Structural::StructuralRole, QString>
-(Structural::onBegin, ":/icon/onbegin")
-(Structural::onEnd, ":/icon/onend")
-(Structural::onSelection, ":/icon/onselection")
-(Structural::onResume, ":/icon/onresume")
-(Structural::onPause, ":/icon/onpause")
+(Structural::onBegin, ":/icon/bind-onbegin")
+(Structural::onEnd, ":/icon/bind-onend")
+(Structural::onSelection, ":/icon/bind-onselection")
+(Structural::onResume, ":/icon/bind-onresume")
+(Structural::onPause, ":/icon/bind-onpause")
 (Structural::onBeginAttribution, "")
 (Structural::onEndAttribution, "")
 (Structural::onPauseAttribution, "")
 (Structural::onResumeAttribution, "")
 
-(Structural::Start, ":/icon/start")
-(Structural::Stop, ":/icon/stop")
-(Structural::Resume, ":/icon/resume")
-(Structural::Pause, ":/icon/pause")
-(Structural::Set, ":/icon/set")
+(Structural::Start, ":/icon/bind-start")
+(Structural::Stop, ":/icon/bind-stop")
+(Structural::Resume, ":/icon/bind-resume")
+(Structural::Pause, ":/icon/bind-pause")
+(Structural::Set, ":/icon/bind-set")
 
 (Structural::NoRole, "");
 

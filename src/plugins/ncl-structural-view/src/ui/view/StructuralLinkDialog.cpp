@@ -438,13 +438,13 @@ void StructuralLinkDialog::updateForm(QString conn)
   {
     foreach (QString b, _conditions.value(conn))
     {
-      QString icon = ":/icon/nocondition";
+      QString icon = ":/icon/bind-unknow-condition";
 
       if (StructuralUtil::isCondition(b))
-          icon = ":/icon/"+b.toLower();
+          icon = ":/icon/bind-"+b.toLower();
 
       if (icon.contains("attribution"))
-        icon = ":/icon/nocondition";
+        icon = ":/icon/bind-unknow-condition";
 
       form.cbCondition->addItem(QIcon(icon), b);
     }
@@ -463,13 +463,13 @@ void StructuralLinkDialog::updateForm(QString conn)
   {
     foreach (QString b, _actions.value(conn))
     {
-      QString icon = ":/icon/noaction";
+      QString icon = ":/icon/bind-unknow-action";
 
       if (StructuralUtil::isAction(b))
-          icon = ":/icon/"+b.toLower();
+          icon = ":/icon/bind-"+b.toLower();
 
       if (icon.contains("attribution"))
-        icon = ":/icon/noaction";
+        icon = ":/icon/bind-unknow-action";
 
       form.cbAction->addItem(QIcon(icon),b);
     }
