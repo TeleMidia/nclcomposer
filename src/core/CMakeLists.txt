@@ -64,14 +64,14 @@ add_library(nclcomposer_core
   ${NCLCOMPOSER_CORE_HEADERS}
 )
 
-target_link_libraries(
-  nclcomposer_core
+target_compile_definitions(nclcomposer_core PRIVATE
+  COMPOSERCORE_MAKE_DLL
+)
+
+target_link_libraries(nclcomposer_core
   Qt5::Xml
   Qt5::Widgets
 )
-
-target_compile_definitions(nclcomposer_core PUBLIC
-    COMPOSERCORE_MAKE_DLL)
 
 install(TARGETS
     nclcomposer_core

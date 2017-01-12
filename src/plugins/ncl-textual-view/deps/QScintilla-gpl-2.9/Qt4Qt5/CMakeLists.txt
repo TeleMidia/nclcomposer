@@ -5,10 +5,6 @@ set (CMAKE_AUTOMOC ON)
 set (CMAKE_AUTORCC ON)
 set (CMAKE_INCLUDE_CURRENT_DIR ON)
 
-add_definitions(-DQSCINTILLA_MAKE_DLL
-                -DSCINTILLA_QT
-                -DSCI_LEXER)
-
 include_directories(
   ../include
   ../lexlib
@@ -174,6 +170,12 @@ set (QSCINTILLA_SOURCES
 add_library (qscintilla2_telem
   SHARED
   ${QSCINTILLA_SOURCES}
+)
+
+target_compile_definitions(qscintilla2_telem PRIVATE
+  QSCINTILLA_MAKE_DLL
+  SCINTILLA_QT
+  SCI_LEXER
 )
 
 target_link_libraries (qscintilla2_telem
