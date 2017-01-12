@@ -23,15 +23,6 @@ find_package (Qt5Xml REQUIRED)
 
 link_directories(${CMAKE_BINARY_DIR}/${NCLCOMPOSER_BINARY_DIR_PLUGINS})
 
-message(STATUS "Looking for qmake")
-find_program(QMAKE_EXECUTABLE
-  NAMES qmake
-  PATHS ENV QMAKE_PATH)
-if (QMAKE_EXECUTABLE)
-  set(QMAKE_FOUND 1)
-  message(STATUS "Looking for qmake -- found")
-endif()
-
 set (NCL_TEXTUAL_VIEW_SOURCES
   src/NCLTextEditorMainWindow.cpp
   src/NCLTextEditor.cpp
@@ -69,21 +60,13 @@ add_library (ncl_textual_view
   ${UI_GENERATED_HEADERS}
 )
 
+add_subdirectory(deps/QScintilla-gpl-2.9/Qt4Qt5)
 target_link_libraries (ncl_textual_view
   qscintilla2_telem
   nclcomposer_core
   nclprofile
   Qt5::Xml
   Qt5::Widgets
-)
-
-add_custom_command (TARGET ncl_textual_view
-  PRE_BUILD
-  WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/deps/QScintilla-gpl-2.9/Qt4Qt5/
-  COMMAND ${QMAKE_EXECUTABLE} FORCE_RELEASE=true DESTDIR=${CMAKE_BINARY_DIR}/${NCLCOMPOSER_BINARY_DIR_PLUGINS}
-  COMMENT "Running qmake for qscintilla.pro"
-  COMMAND make
-  COMMENT "Building qscintilla2_telem.so"
 )
 
 install (TARGETS ncl_textual_view DESTINATION ${NCLCOMPOSER_BINARY_DIR_PLUGINS})
