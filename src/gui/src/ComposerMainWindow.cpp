@@ -94,10 +94,6 @@ void ComposerMainWindow::init(const QApplication &app)
   initModules();
   app.processEvents();
 
-#ifdef WITH_LIBSSH2
-  SimpleSSHClient::init(); // Initializes the libssh2 library
-#endif
-
   _autoSaveTimer = new QTimer(this);
   connect(_autoSaveTimer, SIGNAL(timeout()),
           this, SLOT(autoSaveCurrentProjects()));
@@ -117,9 +113,6 @@ void ComposerMainWindow::init(const QApplication &app)
 ComposerMainWindow::~ComposerMainWindow()
 {
   delete _ui;
-#ifdef WITH_LIBSSH2
-  SimpleSSHClient::exit();
-#endif
 }
 
 void ComposerMainWindow::initModules()
@@ -169,35 +162,12 @@ void ComposerMainWindow::initModules()
 
 void ComposerMainWindow::readExtensions()
 {
-  GlobalSettings settings;
-
-  settings.beginGroup("extensions");
-  _extensionsPaths.clear();
-
-  //Remember: The default paths are been added in main.cpp
-  if (settings.contains("path"))
-    _extensionsPaths << settings.value("path").toStringList();
-
-  _extensionsPaths.removeDuplicates(); // Remove duplicate paths
-
-  // add all the paths to LibraryPath, i.e., plugins are allowed to install
-  // dll dependencies in the extensions path.
-  for(const QString &extDir: _extensionsPaths)
-  {
-    QApplication::addLibraryPath(extDir + "/");
-  }
-
-  // foreach path where extensions can be installed, try to load plugins.
-  for(const QString &extDir: _extensionsPaths)
-  {
-    PluginControl::getInstance()->loadPlugins(extDir);
-  }
-  settings.endGroup();
+  LanguageControl::getInstance()->loadProfiles();
+  PluginControl::getInstance()->loadPlugins();
 
   /* Load the preferences page */
   _preferencesDialog->addPreferencePage(new GeneralPreferences());
   // preferences->addPreferencePage(new RunGingaConfig());
-
   // preferences->addPreferencePage(new ImportBasePreferences());
 
   /* Load PreferencesPages from Plugins */
@@ -958,10 +928,6 @@ void ComposerMainWindow::closeEvent(QCloseEvent *event)
   }
 
   GlobalSettings settings;
-  settings.beginGroup("extensions");
-  settings.setValue("path", _extensionsPaths);
-  settings.endGroup();
-
   settings.beginGroup("mainwindow");
   settings.setValue("geometry", saveGeometry());
   settings.setValue("windowState", saveState());

@@ -80,15 +80,13 @@ namespace gui {
  * This class is the main window of NCL Composer.
  * \fixme This class is too big it must be refactored
  */
-class ComposerMainWindow : public QMainWindow {
+class ComposerMainWindow :
+        public QMainWindow {
   Q_OBJECT
 
 private:
   static const int _maximumRecentProjectsSize = 10;
-
   Ui::ComposerMainWindow *_ui;
-  QStringList _extensionsPaths; /*!< TODO */
-
 
   QTabWidget  *_tabProjects; /*!< Each open project is show in a different tab.
                                   The tabProjects variable keeps the list of the
