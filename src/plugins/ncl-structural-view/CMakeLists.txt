@@ -17,10 +17,7 @@ include_directories(
   src/ui
   src/ui/view
   src/util
-  "${CMAKE_SOURCE_DIR}/src/plugins/ncl-profile"
-  "${CMAKE_SOURCE_DIR}/src/core/src"
   "${CMAKE_BINARY_DIR}/src/plugins/ncl-structural-view"
-  ${nclcomposer_core_SOURCE_DIR}
 )
 
 find_package (Qt5Xml REQUIRED)

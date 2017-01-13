@@ -10,13 +10,7 @@ configure_file (ncl_textual_view.json ncl_textual_view.json)
 include_directories(
   ${CMAKE_CURRENT_BINARY_DIR}
   src
-  "${CMAKE_SOURCE_DIR}/src/core/src"
-  "../ncl-profile"
-  "../outline-view/src"
-  "deps/QScintilla-gpl-2.9/Qt4Qt5"
-  "deps/QScintilla-gpl-2.9/include"
-  ${nclcomposer_core_SOURCE_DIR}
-)
+  "../outline-view/src")
 
 find_package (Qt5Widgets REQUIRED)
 find_package (Qt5Xml REQUIRED)
@@ -54,14 +48,15 @@ qt5_wrap_ui (UI_GENERATED_HEADERS
   ui/TextualPluginPreferencesWidget.ui
 )
 
-add_library (ncl_textual_view
+add_library(ncl_textual_view
   SHARED
   ${NCL_TEXTUAL_VIEW_SOURCES}
   ${UI_GENERATED_HEADERS}
 )
 
-target_compile_definitions(ncl_textual_view PRIVATE
-  QSCINTILLA_DLL)
+target_compile_definitions(ncl_textual_view
+  PRIVATE QSCINTILLA_DLL
+)
 
 add_subdirectory(deps/QScintilla-gpl-2.9/Qt4Qt5)
 

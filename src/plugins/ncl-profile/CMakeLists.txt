@@ -5,12 +5,6 @@ set (CMAKE_INCLUDE_CURRENTDIR ON)
 set (CMAKE_AUTOMOC ON)
 set (CMAKE_AUTORCC ON)
 
-include_directories(
-  .
-  "${CMAKE_SOURCE_DIR}/src/core/src"
-  ${nclcomposer_core_SOURCE_DIR}
-)
-
 find_package (Qt5Core REQUIRED)
 find_package (Qt5Xml REQUIRED)
 find_package (Qt5Widgets REQUIRED)
@@ -31,12 +25,16 @@ add_library(nclprofile
   ../common-resources/language.qrc
 )
 
-target_compile_definitions(nclprofile PRIVATE
-  NCLLANGUAGEPROFILE_MAKE_DLL
+target_compile_definitions(nclprofile
+  PRIVATE NCLLANGUAGEPROFILE_MAKE_DLL
+)
+
+target_include_directories(nclprofile
+  PUBLIC .
 )
 
 target_link_libraries (nclprofile
-  nclcomposer_core
+  PUBLIC nclcomposer_core
   Qt5::Core
   Qt5::Xml
   Qt5::Widgets

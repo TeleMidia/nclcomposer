@@ -10,9 +10,6 @@ include_directories(
   ${CMAKE_CURRENT_BINARY_DIR}
   .
   src
-  "${CMAKE_SOURCE_DIR}/src/core/src"
-  "${CMAKE_SOURCE_DIR}/src/plugins/ncl-profile"
-  ${nclcomposer_core_SOURCE_DIR}
 )
 
 find_package (Qt5Core REQUIRED)

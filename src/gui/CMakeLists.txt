@@ -26,10 +26,8 @@ find_library (nclcomposer_core REQUIRED)
 
 include_directories(
   src
-  "${CMAKE_SOURCE_DIR}/src/core/src"
   "${CMAKE_BINARY_DIR}/src/gui"
   "src/toolwindowmanager/libqtoolwindowmanager"
-  ${nclcomposer_core_INCLUDES}
 )
 
 set (UI_SOURCES
@@ -102,11 +100,11 @@ set(GUI_DATAFILES
  data/default.ini
 )
 
-file(
-  COPY
-    ${GUI_DATAFILES}
-  DESTINATION
-    ${CMAKE_BINARY_DIR}/${NCLCOMPOSER_DATA_DIR})
+file(COPY
+       ${GUI_DATAFILES}
+     DESTINATION
+       ${CMAKE_BINARY_DIR}/${NCLCOMPOSER_DATA_DIR}
+)
   
 install(TARGETS nclcomposer DESTINATION bin)
 install(

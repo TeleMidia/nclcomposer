@@ -1,8 +1,6 @@
 cmake_minimum_required (VERSION 3.2)
 project(nclcomposer_core)
 
-include_directories (src)
-
 set (CMAKE_INCLUDE_CURRENTDIR ON)
 set (CMAKE_AUTOMOC ON)
 
@@ -66,6 +64,10 @@ add_library(nclcomposer_core
 
 target_compile_definitions(nclcomposer_core PRIVATE
   COMPOSERCORE_MAKE_DLL
+)
+
+target_include_directories(nclcomposer_core
+  PUBLIC src
 )
 
 target_link_libraries(nclcomposer_core

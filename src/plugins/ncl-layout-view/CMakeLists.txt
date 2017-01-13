@@ -15,10 +15,7 @@ include_directories(
   src
   src/ui
   src/ui/view
-  "${CMAKE_SOURCE_DIR}/src/plugins/ncl-profile"
-  "${CMAKE_SOURCE_DIR}/src/core/src"
   "${CMAKE_BINARY_DIR}/src/plugins/ncl-layout-view"
-  ${nclcomposer_core_SOURCE_DIR}
 )
 
 find_package (Qt5Core REQUIRED)
@@ -49,12 +46,12 @@ set (NCL_LAYOUT_VIEW_SOURCES
   ncl-layout-view.qrc
 )
 
-add_library (ncl_layout_view
+add_library(ncl_layout_view
   SHARED
   ${NCL_LAYOUT_VIEW_SOURCES}
 )
 
-target_link_libraries (ncl_layout_view
+target_link_libraries(ncl_layout_view
   nclcomposer_core
   nclprofile
   Qt5::Core

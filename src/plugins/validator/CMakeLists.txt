@@ -8,10 +8,8 @@ set (CMAKE_AUTORCC ON)
 configure_file (validator_plugin.json validator_plugin.json)
 
 include_directories(
-  ${CMAKE_CURRENT_BINARY_DIR}
   .
-  "${CMAKE_SOURCE_DIR}/src/core/src"
-  ${nclcomposer_core_SOURCE_DIR}
+  ${CMAKE_CURRENT_BINARY_DIR}
 )
 
 find_package (Qt5Core REQUIRED)

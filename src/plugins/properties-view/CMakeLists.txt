@@ -9,10 +9,7 @@ configure_file (properties_view.json properties_view.json)
 include_directories(
   ${CMAKE_CURRENT_BINARY_DIR}
   src
-  "${CMAKE_SOURCE_DIR}/src/plugins/ncl-profile"
-  "${CMAKE_SOURCE_DIR}/src/core/src"
   "${CMAKE_BINARY_DIR}/src/plugins/properties-view"
-  ${nclcomposer_core_SOURCE_DIR}
 )
 
 find_package (Qt5Xml REQUIRED)

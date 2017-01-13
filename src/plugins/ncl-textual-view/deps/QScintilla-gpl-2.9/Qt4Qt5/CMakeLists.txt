@@ -5,12 +5,6 @@ set (CMAKE_AUTOMOC ON)
 set (CMAKE_AUTORCC ON)
 set (CMAKE_INCLUDE_CURRENT_DIR ON)
 
-include_directories(
-  ../include
-  ../lexlib
-  ../src
-)
-
 find_package (Qt5Core REQUIRED)
 find_package (Qt5PrintSupport REQUIRED)
 find_package (Qt5Widgets REQUIRED)
@@ -176,6 +170,10 @@ target_compile_definitions(qscintilla2_telem PRIVATE
   QSCINTILLA_MAKE_DLL
   SCINTILLA_QT
   SCI_LEXER
+)
+
+target_include_directories(qscintilla2_telem
+  PUBLIC . ../include ../lexlib ../src
 )
 
 target_link_libraries (qscintilla2_telem

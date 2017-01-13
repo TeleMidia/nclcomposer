@@ -9,10 +9,6 @@ configure_file (outline_view.json outline_view.json)
 include_directories(
   ${CMAKE_CURRENT_BINARY_DIR}
   src
-  "${CMAKE_SOURCE_DIR}/src/plugins/ncl-profile"
-  "${CMAKE_SOURCE_DIR}/src/plugins/ncl-textual-view/src"
-  "${CMAKE_SOURCE_DIR}/src/core/src"
-  ${nclcomposer_core_SOURCE_DIR}
 )
 
 find_package (Qt5Widgets REQUIRED)
