@@ -5,24 +5,10 @@ set(VERSION "0.3.1")
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-set (NCLCOMPOSER_BINARY_DIR_BIN bin/)
-set (NCLCOMPOSER_BINARY_DIR_LIB lib/${CMAKE_PROJECT_NAME})
-set (NCLCOMPOSER_BINARY_DIR_PLUGINS lib/${CMAKE_PROJECT_NAME}/plugins)
-set (NCLCOMPOSER_DATA_DIR share/${CMAKE_PROJECT_NAME})
-
-# Looking for Qt >= 5.4
-message("-- Looking for Qt5 (>=5.4)")
-find_package(Qt5Widgets REQUIRED)
-
-if (Qt5Widgets_FOUND)
-  if (Qt5Widgets_VERSION VERSION_LESS 5.4.0)
-    message(FATAL_ERROR "Minimum supported Qt5 version is 5.4!")
-  else()
-    message("-- Looking for Qt5 (>=5.4) -- found!")
-  endif()
-else()
-  message(SEND_ERROR "The Qt5 (>=5.4) library could not be found!")
-endif(Qt5Widgets_FOUND)
+set(NCLCOMPOSER_BINARY_DIR_BIN bin/)
+set(NCLCOMPOSER_BINARY_DIR_LIB lib/${CMAKE_PROJECT_NAME})
+set(NCLCOMPOSER_BINARY_DIR_PLUGINS lib/${CMAKE_PROJECT_NAME}/plugins)
+set(NCLCOMPOSER_DATA_DIR share/${CMAKE_PROJECT_NAME})
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY
     ${CMAKE_BINARY_DIR}/${NCLCOMPOSER_BINARY_DIR_BIN})
@@ -55,7 +41,7 @@ add_subdirectory(src/plugins/validator)
 
 if( NOT EXISTS "${CMAKE_SOURCE_DIR}/src/plugins/gingagui-all/.git" )
   execute_process(COMMAND git submodule update --init
-                    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})
+                  WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})
 endif()
 add_subdirectory(src/plugins/gingagui-all/run-view)
 
@@ -85,7 +71,8 @@ if(WIN32)
                 "${QT_INSTALLED_PATH}/bin/libgcc_s_dw2-1.dll"
                 "${QT_INSTALLED_PATH}/bin/libstdc++-6.dll"
                 "${QT_INSTALLED_PATH}/bin/libwinpthread-1.dll"
-          DESTINATION bin)
+          DESTINATION
+                bin)
 
   install(FILES "${QT_INSTALLED_PATH}/plugins/platforms/qwindows.dll"
           DESTINATION plugins/platforms)
