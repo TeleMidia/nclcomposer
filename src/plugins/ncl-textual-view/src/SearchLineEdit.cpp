@@ -139,13 +139,9 @@ void SearchLineEdit::keyPressEvent(QKeyEvent *event)
   else if(event->key() == Qt::Key_Return)
   {
     if(event->modifiers() & Qt::ShiftModifier)
-    {
       emit shiftReturnPressed();
-    }
     else
-    {
       emit returnPressed();
-    }
   }
   else
   {

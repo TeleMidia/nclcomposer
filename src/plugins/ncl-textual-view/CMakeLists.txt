@@ -23,29 +23,30 @@ set (NCL_TEXTUAL_VIEW_SOURCES
   src/QsciLexerNCL.cpp
   src/QsciNCLAPIs.cpp
   src/MyLexer.cpp
-  src/NCLProblemsView.cpp
   ../outline-view/src/NCLParser.cpp
   ../outline-view/src/NCLTreeWidget.cpp
   src/NCLTextualViewPlugin.cpp
   src/NCLTextualViewPluginFactory.cpp
   src/SearchLineEdit.cpp
+  src/SearchBox.cpp
   
   src/NCLTextEditorMainWindow.h
   src/NCLTextEditor.h
   src/QsciLexerNCL.h
   src/QsciNCLAPIs.h
   src/MyLexer.h
-  src/NCLProblemsView.h
   ../outline-view/src/NCLParser.h
   ../outline-view/src/NCLTreeWidget.h
   src/NCLTextualViewPlugin.h
   src/NCLTextualViewPluginFactory.h
   src/NCLTextualViewPlugin_global.h
   src/SearchLineEdit.h
+  src/SearchBox.h
 )
 
 qt5_wrap_ui (UI_GENERATED_HEADERS
   ui/TextualPluginPreferencesWidget.ui
+  src/SearchBox.ui
 )
 
 add_library(ncl_textual_view

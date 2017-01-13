@@ -16,13 +16,14 @@
  * <http://www.gnu.org/licenses/>.
  */
 #include <QtGui>
+#include <QToolBar>
 
 #include <Qsci/qsciscintilla.h>
 
 #include "NCLTextEditorMainWindow.h"
 
 NCLTextEditorMainWindow::NCLTextEditorMainWindow(QWidget *parent):
-  QMainWindow(parent), _searchBox(this)
+  QMainWindow(parent)
 {
   // preferences = new Preferences(parent);
   createTextView();
@@ -36,15 +37,17 @@ NCLTextEditorMainWindow::NCLTextEditorMainWindow(QWidget *parent):
   createProblemsView();
   createStatusBar();
 #endif
+
   setDockOptions(NCLTextEditorMainWindow::AllowNestedDocks
                  | NCLTextEditorMainWindow::AllowTabbedDocks
                  | NCLTextEditorMainWindow::AnimatedDocks);
+
   //  Set window to fixed size
 #ifndef NCLEDITOR_STANDALONE
   this->setWindowFlags(Qt::CustomizeWindowHint);//Set window with no title bar
 #endif
-  //  this->setWindowFlags(Qt::FramelessWindowHint); //Set a frameless window
 
+  //  this->setWindowFlags(Qt::FramelessWindowHint); //Set a frameless window
   /* setTabPosition(Qt::LeftDockWidgetArea, QTabWidget::North);
     setTabPosition(Qt::RightDockWidgetArea, QTabWidget::North);
     setTabPosition(Qt::BottomDockWidgetArea, QTabWidget::North);
@@ -61,7 +64,6 @@ NCLTextEditorMainWindow::NCLTextEditorMainWindow(QWidget *parent):
 
   setCurrentFile("");
   setUnifiedTitleAndToolBarOnMac(true);
-
 }
 
 void NCLTextEditorMainWindow::closeEvent(QCloseEvent *event)
@@ -115,7 +117,8 @@ bool NCLTextEditorMainWindow::saveAs()
 
 void NCLTextEditorMainWindow::about()
 {
-  QMessageBox::about(this, tr("About Application"),
+  QMessageBox::about(this,
+                     tr("About Application"),
                      tr("The <b>Application</b> example demonstrates how to "
                         "write modern GUI applications using Qt, with a menu "
                         "bar, toolbars, and a status bar."));
@@ -205,7 +208,7 @@ void NCLTextEditorMainWindow::createActions()
   _showSearchBoxAct = new QAction(QIcon(), tr("Search"), _textEdit);
   _showSearchBoxAct->setShortcut(tr("Ctrl+F"));
   _showSearchBoxAct->setShortcutContext(Qt::WindowShortcut);
-  connect(_showSearchBoxAct, SIGNAL(triggered()), this, SLOT(showSearchBox()));
+  connect(_showSearchBoxAct, SIGNAL(triggered()), SLOT(showSearchBox()));
 
   addAction(_showSearchBoxAct);
 }
@@ -294,12 +297,12 @@ void NCLTextEditorMainWindow::createOutlineView()
 
 void NCLTextEditorMainWindow::createProblemsView()
 {
+#ifdef NCLEDITOR_STANDALONE
   _problemsView = new NCLProblemsView(this);
   _problemsView->setObjectName(QString("dockProblemsView"));
   //problemsView->setMaximumHeight(150);
   addDockWidget(Qt::RightDockWidgetArea, _problemsView);
 
-#ifdef NCLEDITOR_STANDALONE
   connect( outlineView,
            SIGNAL(parserErrorNotify(QString, QString, int, int, int)),
            problemsView,
@@ -309,69 +312,46 @@ void NCLTextEditorMainWindow::createProblemsView()
 
 void NCLTextEditorMainWindow::createSearchBox()
 {
+  _searchBox = new SearchBox(this);
+
   _dockSearchBox = new QDockWidget("Search", this);
   _dockSearchBox->setVisible(false);
-  _dockSearchBox->setMaximumHeight(100);//65 alterado
+  _dockSearchBox->setTitleBarWidget(new QWidget());
   _dockSearchBox->setObjectName(QString("dockSearchBox"));
-  _dockSearchBox->setFeatures(QDockWidget::DockWidgetClosable );
+  _dockSearchBox->setFeatures( QDockWidget::DockWidgetClosable );
+  _dockSearchBox->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Minimum);
 
-  //  doSearchButton.setText(tr("Search"));
-  _searchBox.setWindowTitle(tr("Search..."));
+  connect( _searchBox,
+           SIGNAL(findNext(QString)),
+           SLOT(findNext(QString)) );
 
-  QGridLayout *layout = new QGridLayout(&_searchBox);
-  layout->addWidget(&_searchBoxText, 0, 0);
-  // layout->addWidget(&doSearchButton, 0, 1);
-  layout->addWidget(&_replaceBoxText, 1, 0);
-  _replaceBoxText.setPlaceholderText(tr("Replace"));
-  _searchBox.setLayout(layout);
-  layout->setMargin(0);
+  connect( _searchBox,
+           SIGNAL(findPrevious(QString)),
+           SLOT(findPrevious(QString)) );
 
-  QPushButton *nextButton = new QPushButton(QIcon(":/images/next_icon.png"), "");
-  nextButton->setFlat(true);
-  connect(nextButton, SIGNAL(pressed()), SLOT(findNext()));
+  connect( _searchBox,
+           SIGNAL(hideButtonClicked()),
+           SLOT(hideSearchBox()) );
 
-  QPushButton *previousButton = new QPushButton(QIcon(":/images/previous_icon.png"), "");
-  previousButton->setFlat(true);
-  connect(previousButton, SIGNAL(pressed()), SLOT(findPrevious()));
+  connect( _searchBox,
+           SIGNAL(replace(QString, QString, bool)),
+           SLOT(replace(QString, QString, bool)));
 
-  QPushButton *replaceButton = new QPushButton(QString("Replace"));
-  //replaceButton->setFlat(true);
-  connect(replaceButton, SIGNAL(pressed()),SLOT(replaceWord()));
+  connect( _searchBox,
+           SIGNAL(replaceAll(QString,QString)),
+           SLOT(replaceAll(QString,QString)) );
 
-  QPushButton *replaceAndNextButton = new QPushButton(QString("Replace and Find"));
-  //replaceButton->setFlat(true);
-  connect(replaceAndNextButton, SIGNAL(pressed()),SLOT(replaceAndFind()));
 
-  QPushButton *replaceAll = new QPushButton(QString("Replace all"));
-  //replaceButton->setFlat(true);
-  connect(replaceAll, SIGNAL(pressed()),SLOT(replaceAll()));
-
-  nextButton->setMaximumSize(16, 16);
-  previousButton->setMaximumSize(16, 16);
-  layout->addWidget(previousButton, 0, 1);
-  layout->addWidget(nextButton, 0, 2);
-  layout->addWidget(replaceButton, 1, 2);
-  layout->addWidget(replaceAndNextButton, 1, 3);
-  layout->addWidget(replaceAll, 1, 4);
-
-  //  connect(&doSearchButton, SIGNAL(pressed()), this, SLOT(findNext()));
-  connect( &_searchBoxText,
-           SIGNAL(textChanged(const QString &)),
-           SLOT(findNext(const QString &)) );
-
-  connect(&_searchBoxText, SIGNAL(returnPressed()), SLOT(findNext()));
-
-  connect(&_searchBoxText, SIGNAL(shiftReturnPressed()), SLOT(findPrevious()));
-
-  connect(&_searchBoxText, SIGNAL(escPressed()), SLOT(hideSearchBox()));
-
-  _dockSearchBox->setWidget(&_searchBox);
+  _dockSearchBox->setWidget(_searchBox);
   addDockWidget(Qt::RightDockWidgetArea, _dockSearchBox);
 }
 
 void NCLTextEditorMainWindow::readSettings()
 {
-  QSettings settings(QSettings::IniFormat, QSettings::UserScope, "Trolltech", "Application Example");
+  QSettings settings( QSettings::IniFormat,
+                      QSettings::UserScope,
+                      "TeleMidia",
+                      "NCL Editor" );
   QPoint pos = settings.value("pos", QPoint(200, 200)).toPoint();
   QSize size = settings.value("size", QSize(400, 400)).toSize();
   bool fullscreen = settings.value("fullscreen", true).toBool();
@@ -388,7 +368,10 @@ void NCLTextEditorMainWindow::readSettings()
 
 void NCLTextEditorMainWindow::writeSettings()
 {
-  QSettings settings(QSettings::IniFormat, QSettings::UserScope, "Trolltech", "Application Example");
+  QSettings settings( QSettings::IniFormat,
+                      QSettings::UserScope,
+                      "TeleMidia",
+                      "NCL Editor" );
   settings.setValue("pos", pos());
   settings.setValue("size", size());
   settings.setValue("fullscreen", isFullScreen());
@@ -399,7 +382,8 @@ void NCLTextEditorMainWindow::writeSettings()
 
 bool NCLTextEditorMainWindow::maybeSave()
 {
-  if (_textEdit->isModified()) {
+  if (_textEdit->isModified())
+  {
     int ret = QMessageBox::warning(this, tr("Application"),
                                    tr("The document has been modified.\n"
                                       "Do you want to save your changes?"),
@@ -417,7 +401,8 @@ bool NCLTextEditorMainWindow::maybeSave()
 void NCLTextEditorMainWindow::loadFile(const QString &fileName)
 {
   QFile file(fileName);
-  if (!file.open(QFile::ReadOnly)) {
+  if (!file.open(QFile::ReadOnly))
+  {
     QMessageBox::warning(this, tr("Application"),
                          tr("Cannot read file %1:\n%2.")
                          .arg(fileName)
@@ -437,7 +422,8 @@ void NCLTextEditorMainWindow::loadFile(const QString &fileName)
 bool NCLTextEditorMainWindow::saveFile(const QString &fileName)
 {
   QFile file(fileName);
-  if (!file.open(QFile::WriteOnly)) {
+  if (!file.open(QFile::WriteOnly))
+  {
     QMessageBox::warning(this, tr("Application"),
                          tr("Cannot write file %1:\n%2.")
                          .arg(fileName)
@@ -489,6 +475,7 @@ void NCLTextEditorMainWindow::showInFullScreen(){
     showNormal();
 }
 
+#ifdef NCLEDITOR_STANDALONE
 void NCLTextEditorMainWindow::gotoLineOf(QTreeWidgetItem *item, int column)
 {
   (void) column;
@@ -499,8 +486,9 @@ void NCLTextEditorMainWindow::gotoLineOf(QTreeWidgetItem *item, int column)
   _textEdit->ensureLineVisible(line-1);
   _textEdit->SendScintilla(QsciScintilla::SCI_SETFOCUS, true);
 }
+#endif
 
-//FIXME:    1. fix line element line numbers.
+//FIXME: fix line element line numbers.
 void NCLTextEditorMainWindow::insertElement()
 {
 #ifdef NCLEDITOR_STANDALONE
@@ -615,48 +603,23 @@ void NCLTextEditorMainWindow::createTextView()
   _dockTextEdit->setObjectName(QString("dockTextView"));
   _dockTextEdit->setFeatures(QDockWidget::DockWidgetMovable);
 
-  //Remove the title bar if whe are working in the plugin version.
+  // Remove the title bar if whe are working in the plugin version.
 #ifndef NCLEDITOR_STANDALONE
   QWidget* titleWidget = new QWidget(this);/*where this a QMainWindow object*/
   _dockTextEdit->setTitleBarWidget( titleWidget );
 #endif
 
-  //    dockTextEdit2 = new QDockWidget("Text", this);
-  //    dockTextEdit2->setObjectName(QString("dockTextView2"));
-  //    dockTextEdit2->setFeatures(QDockWidget::DockWidgetMovable /*|
-  //                              QDockWidget::DockWidgetFloatable*/);
-
-  // dockTextEdit->setAllowedAreas(Qt::LeftDockWidgetArea |
-  //                               Qt::RightDockWidgetArea);
-
   _textEdit = new NCLTextEditor(this);
   _textEdit->setTabBehavior(NCLTextEditor::TAB_BEHAVIOR_NEXT_ATTR);
   _dockTextEdit->setWidget(_textEdit);
 
-  //    textEdit2 = new NCLTextEditor(this);
-  //    textEdit2->setTabBehavior(NCLTextEditor::TAB_BEHAVIOR_NEXT_ATTR);
-  //    dockTextEdit2->setWidget(textEdit2);
-  //    textEdit2->setDocument(textEdit->document());
-
   addDockWidget(Qt::RightDockWidgetArea, _dockTextEdit);
-  //    addDockWidget(Qt::RightDockWidgetArea, dockTextEdit2);
-
-  // setCentralWidget(textEdit);
-
-  /** Initialize Text Preferences Pages*/
-  //textEditorPreferencesPage = preferences->addPreferencesPage("Text Editor");
-  //textEditorPreferencesPage->addInputString("teste", "teste");
-}
-
-void NCLTextEditorMainWindow::showPreferences()
-{
-  //preferences->show();
 }
 
 void NCLTextEditorMainWindow::showSearchBox()
 {
   _dockSearchBox->show();
-  _searchBoxText.setFocus();
+  _searchBox->setFocusToFindLineEdit();
 }
 
 void NCLTextEditorMainWindow::hideSearchBox()
@@ -665,21 +628,9 @@ void NCLTextEditorMainWindow::hideSearchBox()
   _textEdit->setFocus();
 }
 
-void NCLTextEditorMainWindow::findNext()
-{
-  QString text = _searchBoxText.text();
-  findNext(text);
-}
-
 bool NCLTextEditorMainWindow::findNext(const QString &text)
 {
-  return _textEdit->findFirst(text, true, false, true, true);
-}
-
-void NCLTextEditorMainWindow::findPrevious()
-{
-  QString text = _searchBoxText.text();
-  findPrevious(text);
+  return _textEdit->findFirst(text, true, true, true, true);
 }
 
 void NCLTextEditorMainWindow::findPrevious(const QString &text)
@@ -687,47 +638,27 @@ void NCLTextEditorMainWindow::findPrevious(const QString &text)
   int line, index;
   _textEdit->getCursorPosition(&line, &index);
   index -= text.size();
+
   if(index < 0) line--;
 
   _textEdit->findFirst(text, true, false, true, true, false, line, index);
 }
 
-void NCLTextEditorMainWindow::replaceWord()
+void NCLTextEditorMainWindow::replace( const QString &textSearch,
+                                       const QString &textReplace,
+                                       bool findNext )
 {
-  QString text = _replaceBoxText.text();
-  replaceWord(text);
+  _textEdit->replace(textReplace);
+
+  if (findNext)
+    this->findNext(textSearch);
 }
 
-
-void NCLTextEditorMainWindow::replaceWord(const QString &text)
-{
-  _textEdit->replace(text);
-}
-
-void NCLTextEditorMainWindow::replaceAndFind()
-{
-  QString textSearch = _searchBoxText.text();
-  QString textReplace = _replaceBoxText.text();
-  replaceAndFind(textSearch, textReplace);
-}
-
-void NCLTextEditorMainWindow::replaceAndFind(const QString &textSearch, const QString &textReplace)
-{
-  //todo:verify if highlightedtext == textsearch before replace
-  //_textEdit->
-  replaceWord(textReplace);
-  findNext(textSearch);
-}
-
-void NCLTextEditorMainWindow::replaceAll()
-{
-  QString textSearch = _searchBoxText.text();
-  QString textReplace = _replaceBoxText.text();
-  replaceAll(textSearch, textReplace);
-}
-
-void NCLTextEditorMainWindow::replaceAll(const QString &textSearch, const QString &textReplace)
+void NCLTextEditorMainWindow::replaceAll( const QString &textSearch,
+                                          const QString &textReplace )
 {
   while(findNext(textSearch))
-    replaceWord(textReplace);
+  {
+    _textEdit->replace(textReplace);
+  }
 }

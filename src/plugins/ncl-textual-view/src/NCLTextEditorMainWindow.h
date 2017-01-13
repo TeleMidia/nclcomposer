@@ -35,16 +35,13 @@ using namespace std;
 #include <QMenuBar>
 #include <QGridLayout>
 
-#include "NCLProblemsView.h"
-
 #ifdef NCLEDITOR_STANDALONE
+#include "NCLProblemsView.h"
 #include "NCLTreeWidget.h"
 #endif
 
+#include "SearchBox.h"
 #include "NCLTextEditor.h"
-//#include "LayoutView.h"
-//#include "Preferences.h"
-
 #include "SearchLineEdit.h"
 
 class QAction;
@@ -53,7 +50,8 @@ class QMenu;
 /*!
  * \brief The main window of the NCL Textual Editor.
  */
-class NCLTextEditorMainWindow : public QMainWindow
+class NCLTextEditorMainWindow :
+        public QMainWindow
 {
   Q_OBJECT
 
@@ -66,7 +64,9 @@ public:
 #endif
 
 signals:
-  void elementAdded(const QString&, const QString&, const QMap <QString, QString>&, bool);
+  void elementAdded( const QString&,
+                     const QString&,
+                     const QMap <QString, QString>&, bool );
   void focusLosted();
 
 protected:
@@ -81,23 +81,28 @@ private:
   void createOutlineView();
   void createProblemsView();
   void createSearchBox();
+
   void readSettings();
   void writeSettings();
+
   bool maybeSave();
   void loadFile(const QString &fileName);
   bool saveFile(const QString &fileName);
   void setCurrentFile(const QString &fileName);
   QString strippedName(const QString &fullFileName);
 
-  QDockWidget *_dockTextEdit, *_dockTextEdit2;
-  NCLTextEditor *_textEdit, *_textEdit2;
+private:
+  QDockWidget *_dockTextEdit;
+  NCLTextEditor *_textEdit;
   QString _curFile;
 
   QMenu *_fileMenu;
   QMenu *_editMenu;
   QMenu *_helpMenu;
+
   QToolBar *_fileToolBar;
   QToolBar *_editToolBar;
+
   QAction *_newAct;
   QAction *_openAct;
   QAction *_saveAct;
@@ -113,29 +118,22 @@ private:
   QAction *_synchronizeAct;
   QAction *_showSearchBoxAct;
 
-  QFrame _searchBox;
-  QPushButton _doSearchButton;
   QDockWidget *_dockSearchBox;
-  SearchLineEdit _searchBoxText;
-  QLineEdit _replaceBoxText;
+  SearchBox   *_searchBox;
 
   /** VIEWS **/
   /** Outline View */
 #ifdef NCLEDITOR_STANDALONE
   QDockWidget *_dockOutlineView;
   NCLTreeWidget *_outlineView;
+
+  /** Problems View */
+  NCLProblemsView *_problemsView;
 #endif
 
   QMenu *_nodeMenu;
   QAction *_insertNodeChildAct;
 
-  /** Problems View */
-  NCLProblemsView *_problemsView;
-
-  /*  QDockWidget *dockLayoutView;
-  LayoutView *layoutView; */
-  /* Preferences *preferences;
-  PreferencesPage *textEditorPreferencesPage; */
 private slots:
   void newFile();
   void open();
@@ -145,22 +143,22 @@ private slots:
   void documentWasModified();
   void showInFullScreen();
   void insertElement();
+
+#ifdef NCLEDITOR_STANDALONE
   void gotoLineOf(QTreeWidgetItem *item, int column);
-  void showPreferences();
+#endif
 
   void showSearchBox();
   void hideSearchBox();
 
-  void findNext();
   bool findNext(const QString &text);
-  void findPrevious();
   void findPrevious(const QString &text);
-  void replaceWord();
-  void replaceWord(const QString &text);
-  void replaceAndFind();
-  void replaceAndFind(const QString &textSearch, const QString &textReplace);
-  void replaceAll();
-  void replaceAll(const QString &textSearch, const QString &textReplace);
+  void replace( const QString &textSearch,
+                const QString &textReplace,
+                bool findNext = false );
+  void replaceAll( const QString &textSearch,
+                   const QString &textReplace );
+
 };
 
 #endif
