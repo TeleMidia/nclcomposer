@@ -1,14 +1,14 @@
 #ifndef SEARCHBOX_H
 #define SEARCHBOX_H
 
-#include <QWidget>
+#include <QFrame>
 #include <QString>
 
 namespace Ui {
 class SearchBox;
 }
 
-class SearchBox : public QWidget
+class SearchBox : public QFrame
 {
   Q_OBJECT
 
@@ -32,12 +32,13 @@ signals:
   void hideButtonClicked();
 
 private slots:
-  void on_toolButton_FindPrevious_clicked();
-  void on_toolButton_FindNext_clicked();
   void on_pushButton_hide_clicked();
-  void on_toolButton_ReplaceAndFind_clicked();
-  void on_toolButton_Replace_clicked();
-  void on_toolButton_ReplaceAll_clicked();
+
+  void on_pushButton_FindPrevious_clicked();
+  void on_pushButton_FindNext_clicked();
+  void on_pushButton_ReplaceAndFind_clicked();
+  void on_pushButton_Replace_clicked();
+  void on_pushButton_ReplaceAll_clicked();
   void on_lineEdit_Find_textChanged(const QString &arg1);
 };
 

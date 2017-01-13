@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
  <class>SearchBox</class>
- <widget class="QWidget" name="SearchBox">
+ <widget class="QFrame" name="SearchBox">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -18,6 +18,9 @@
   </property>
   <property name="windowTitle">
    <string>Form</string>
+  </property>
+  <property name="styleSheet">
+   <string notr="true"/>
   </property>
   <layout class="QGridLayout" name="gridLayout">
    <property name="topMargin">
@@ -68,14 +71,14 @@
        <number>0</number>
       </property>
       <item>
-       <widget class="QToolButton" name="toolButton_FindPrevious">
+       <widget class="QPushButton" name="pushButton_FindPrevious">
         <property name="text">
          <string>Find previous</string>
         </property>
        </widget>
       </item>
       <item>
-       <widget class="QToolButton" name="toolButton_FindNext">
+       <widget class="QPushButton" name="pushButton_FindNext">
         <property name="text">
          <string>Find next</string>
         </property>
@@ -126,21 +129,21 @@
        <number>0</number>
       </property>
       <item>
-       <widget class="QToolButton" name="toolButton_Replace">
+       <widget class="QPushButton" name="pushButton_Replace">
         <property name="text">
          <string>Replace</string>
         </property>
        </widget>
       </item>
       <item>
-       <widget class="QToolButton" name="toolButton_ReplaceAndFind">
+       <widget class="QPushButton" name="pushButton_ReplaceAndFind">
         <property name="text">
          <string>Replace &amp;&amp; find</string>
         </property>
        </widget>
       </item>
       <item>
-       <widget class="QToolButton" name="toolButton_ReplaceAll">
+       <widget class="QPushButton" name="pushButton_ReplaceAll">
         <property name="text">
          <string>Replace All</string>
         </property>
