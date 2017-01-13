@@ -27,8 +27,8 @@ using namespace composer::extension;
 /*!
  * \brief Handles the creation and deletion of DebugConsolePlugin objects.
  */
-class DebugConsoleFactory : public QObject,
-    public IPluginFactory
+class DebugConsoleFactory :
+        public QObject, public IPluginFactory
 {
   Q_OBJECT
   Q_INTERFACES(IPluginFactory)
@@ -36,22 +36,14 @@ class DebugConsoleFactory : public QObject,
 
 public:
   DebugConsoleFactory();
-
   ~DebugConsoleFactory();
 
   IPlugin* createPluginInstance();
-
   void releasePluginInstance(IPlugin *);
-
   QList<LanguageType> getSupportedLanguages();
 
   QString id() const;
-
   QIcon icon() const;
-
-  void setDefaultValues();
-
-  void applyValues();
 };
 
 #endif // DEBUGCONSOLE_H
