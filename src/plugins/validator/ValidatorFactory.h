@@ -26,8 +26,8 @@
 
 using namespace composer::extension;
 
-class ValidatorFactory : public QObject,
-    public IPluginFactory
+class ValidatorFactory :
+        public QObject, public IPluginFactory
 {
   Q_OBJECT
   Q_INTERFACES(IPluginFactory)

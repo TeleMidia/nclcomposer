@@ -35,7 +35,8 @@ namespace composer {
  \brief Manages the messages sent from plugins to NCL Composer Core and
     vice-versa.
  */
-class COMPOSERCORESHARED_EXPORT MessageControl : public QObject
+class COMPOSERCORESHARED_EXPORT MessageControl :
+        public QObject
 {
   Q_OBJECT
 
