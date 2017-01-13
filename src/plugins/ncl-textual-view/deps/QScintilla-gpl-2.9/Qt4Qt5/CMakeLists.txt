@@ -182,4 +182,14 @@ target_link_libraries (qscintilla2_telem
   Qt5::Widgets
 )
 
-install (TARGETS qscintilla2_telem DESTINATION ${NCLCOMPOSER_BINARY_DIR_PLUGINS})
+if(WIN32)
+  set_target_properties(qscintilla2_telem PROPERTIES
+    RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/${NCLCOMPOSER_BINARY_DIR_BIN}
+  )
+endif()
+
+if(WIN32)
+  install (TARGETS qscintilla2_telem DESTINATION bin)
+else()
+  install (TARGETS qscintilla2_telem DESTINATION ${NCLCOMPOSER_BINARY_DIR_PLUGINS})
+endif()
