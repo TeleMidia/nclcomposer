@@ -1,15 +1,15 @@
 QMainWindow {
-  background: $main-color;
+  background: $main-background-color;
   font: 7pt;
 }
 
 QMenuBar {
-  background: $main-color;
+  background: $main-background-color;
 }
 
 QMenuBar::item {
   background-color: transparent;
-  color: white;
+  color: $main-color;
 }
 
 QMenuBar::item:selected { /* when selected using mouse or keyboard */
@@ -36,21 +36,21 @@ QMainWindow::separator:hover {
 }
 
 QToolBar {
-  background: $main-color;
+  background: $main-background-color;
   border: none;
 }
 
 QToolButton { /* all types of tool button */
-  color: white;
+  color: $main-color;
   font-size: 10px;
 }
 
 QToolButton:hover {
-  background-color: white;
+  background-color: $main-color;
 }
 
 QToolButton:pressed {
-  background-color: white;
+  background-color: $main-color;
 }
 
 QToolButton:checked {
@@ -72,8 +72,8 @@ QTabBar::tab {
 }
 
 QTabBar::tab:selected {
-  background: $main-color;
-  color: white;
+  background: $main-background-color;
+  color: $main-color;
   font-size: 11px;
 }
 
@@ -81,3 +81,14 @@ NCLTextEditor {
   qproperty-tabwidth: 2;
 }
 
+SearchBox {
+  background-color: $main-background-color;
+}
+
+SearchBox QLabel {
+  color: $main-color;
+}
+
+SearchBox QCheckBox {
+  color: $main-color;
+}

@@ -305,7 +305,7 @@ void ComposerMainWindow::loadStyleSheets()
 
       for (const QString &key: settings.allKeys())
       {
-        style.replace(key, settings.value(key).toString());
+        style = style.replace(key, settings.value(key).toString());
       }
 
       setStyleSheet(style);
