@@ -1,13 +1,11 @@
 cmake_minimum_required (VERSION 3.2)
 project(nclprofile)
 
-set (CMAKE_INCLUDE_CURRENTDIR ON)
-set (CMAKE_AUTOMOC ON)
-set (CMAKE_AUTORCC ON)
+set(CMAKE_INCLUDE_CURRENTDIR ON)
+set(CMAKE_AUTOMOC ON)
+set(CMAKE_AUTORCC ON)
 
-find_package (Qt5Core REQUIRED)
-find_package (Qt5Xml REQUIRED)
-find_package (Qt5Widgets REQUIRED)
+find_package(Qt5 REQUIRED COMPONENTS Xml Widgets)
 
 set (NCL_PROFILE_SOURCES
   NCLDocumentParser.cpp
@@ -19,8 +17,7 @@ set (NCL_PROFILE_SOURCES
   NCLStructure.h
 )
 
-add_library(nclprofile
-  SHARED
+add_library(nclprofile SHARED
   ${NCL_PROFILE_SOURCES}
   ../common-resources/language.qrc
 )
@@ -33,11 +30,10 @@ target_include_directories(nclprofile
   PUBLIC .
 )
 
-target_link_libraries (nclprofile
+target_link_libraries(nclprofile
   PUBLIC nclcomposer_core
-  Qt5::Core
   Qt5::Xml
   Qt5::Widgets
 )
 
-install (TARGETS nclprofile DESTINATION ${NCLCOMPOSER_BINARY_DIR_PLUGINS})
+install(TARGETS nclprofile DESTINATION ${NCLCOMPOSER_BINARY_DIR_PLUGINS})

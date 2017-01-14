@@ -14,23 +14,16 @@ add_definitions(-DQTOOLWINDOWMANAGER_BUILD_LIB)
 add_definitions(-DDATA_PATH="~/")
 
 # CMake/Qt Integration
-set (CMAKE_INCLUDE_CURRENTDIR ON)
-set (CMAKE_AUTOMOC ON)
-set (CMAKE_AUTORCC ON)
+set(CMAKE_INCLUDE_CURRENTDIR ON)
+set(CMAKE_AUTOMOC ON)
+set(CMAKE_AUTORCC ON)
 
-find_package (Qt5Xml REQUIRED)
-find_package (Qt5Widgets REQUIRED)
-find_package (Qt5Network REQUIRED)
+find_package(Qt5 REQUIRED COMPONENTS Xml Widgets Network)
+find_library(nclcomposer_core REQUIRED)
+
 #find_library (sass_aaa OPTIONAL)
-find_library (nclcomposer_core REQUIRED)
 
-include_directories(
-  src
-  "${CMAKE_BINARY_DIR}/src/gui"
-  "src/toolwindowmanager/libqtoolwindowmanager"
-)
-
-set (UI_SOURCES
+set(UI_SOURCES
   ui/PreferencesDialog.ui
   ui/ComposerMainWindow.ui
   ui/PerspectiveManager.ui
@@ -85,12 +78,18 @@ set_target_properties(nclcomposer PROPERTIES
   INSTALL_RPATH "\$ORIGIN/../lib/${CMAKE_PROJECT_NAME}:..."
 )
 
-target_link_libraries (nclcomposer
+target_link_libraries(nclcomposer
   nclcomposer_core
   Qt5::Core
   Qt5::Xml
   Qt5::Widgets
   Qt5::Network
+)
+
+target_include_directories(nclcomposer PRIVATE
+  src
+  "${CMAKE_BINARY_DIR}/src/gui"
+  "src/toolwindowmanager/libqtoolwindowmanager"
 )
 
 set(GUI_DATAFILES
@@ -107,9 +106,4 @@ file(COPY
 )
   
 install(TARGETS nclcomposer DESTINATION bin)
-install(
-  FILES
-    ${GUI_DATAFILES}
-  DESTINATION
-    ${NCLCOMPOSER_DATA_DIR})
-
+install(FILES ${GUI_DATAFILES} DESTINATION ${NCLCOMPOSER_DATA_DIR})

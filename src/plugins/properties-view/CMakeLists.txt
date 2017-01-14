@@ -1,21 +1,14 @@
 cmake_minimum_required (VERSION 3.2)
 project(properties_view)
 
-set (CMAKE_INCLUDE_CURRENTDIR ON)
-set (CMAKE_AUTOMOC ON)
+set(CMAKE_INCLUDE_CURRENTDIR ON)
+set(CMAKE_AUTOMOC ON)
 
-configure_file (properties_view.json properties_view.json)
+configure_file(properties_view.json properties_view.json)
 
-include_directories(
-  ${CMAKE_CURRENT_BINARY_DIR}
-  src
-  "${CMAKE_BINARY_DIR}/src/plugins/properties-view"
-)
+find_package(Qt5 REQUIRED COMPONENTS Widgets)
 
-find_package (Qt5Xml REQUIRED)
-find_package (Qt5Widgets REQUIRED)
-
-set (PROPERTIES_VIEW_SOURCES
+set(PROPERTIES_VIEW_SOURCES
   src/PropertiesViewFactory.cpp
   src/PropertiesViewPlugin.cpp
   src/PropertyEditor.cpp
@@ -32,21 +25,24 @@ set (PROPERTIES_VIEW_SOURCES
   src/PropertyButton.h
 )
 
-qt5_wrap_ui (UI_GENERATED_HEADERS
+qt5_wrap_ui(UI_GENERATED_HEADERS
   ui/PropertyEditorWidget.ui
 )
 
-add_library (properties_view
-  SHARED
+add_library(properties_view SHARED
   ${PROPERTIES_VIEW_SOURCES}
   ${UI_GENERATED_HEADERS}
 )
 
-target_link_libraries (properties_view
+target_include_directories(properties_view PRIVATE
+  src
+  ${CMAKE_CURRENT_BINARY_DIR}
+)
+
+target_link_libraries(properties_view PRIVATE
   nclcomposer_core
   nclprofile
-  Qt5::Xml
   Qt5::Widgets
 )
 
-install (TARGETS properties_view DESTINATION ${NCLCOMPOSER_BINARY_DIR_PLUGINS})
+install(TARGETS properties_view DESTINATION ${NCLCOMPOSER_BINARY_DIR_PLUGINS})

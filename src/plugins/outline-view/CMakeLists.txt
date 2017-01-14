@@ -1,19 +1,14 @@
 cmake_minimum_required (VERSION 3.2)
 project(outline_view)
 
-set (CMAKE_INCLUDE_CURRENTDIR ON)
-set (CMAKE_AUTOMOC ON)
+set(CMAKE_INCLUDE_CURRENTDIR ON)
+set(CMAKE_AUTOMOC ON)
 
-configure_file (outline_view.json outline_view.json)
+configure_file(outline_view.json outline_view.json)
 
-include_directories(
-  ${CMAKE_CURRENT_BINARY_DIR}
-  src
-)
+find_package(Qt5 REQUIRED COMPONENTS Widgets)
 
-find_package (Qt5Widgets REQUIRED)
-
-set (OUTLINE_VIEW_SOURCES
+set(OUTLINE_VIEW_SOURCES
   src/NCLTreeWidget.h
   src/NCLParser.h
   src/OutlineViewPlugin.h
@@ -25,12 +20,16 @@ set (OUTLINE_VIEW_SOURCES
   src/OutlineViewFactory.cpp
 )
 
-add_library(outline_view
-  SHARED
+add_library (outline_view SHARED
   ${OUTLINE_VIEW_SOURCES}
 )
 
-target_link_libraries (outline_view
+target_include_directories (outline_view PRIVATE
+  ${CMAKE_CURRENT_BINARY_DIR}
+  src
+)
+
+target_link_libraries (outline_view PRIVATE
   nclcomposer_core
   nclprofile
   Qt5::Widgets

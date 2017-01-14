@@ -1,11 +1,10 @@
 cmake_minimum_required (VERSION 3.2)
 project(nclcomposer_core)
 
-set (CMAKE_INCLUDE_CURRENTDIR ON)
-set (CMAKE_AUTOMOC ON)
+set(CMAKE_INCLUDE_CURRENTDIR ON)
+set(CMAKE_AUTOMOC ON)
 
-find_package (Qt5Xml REQUIRED)
-find_package (Qt5Widgets REQUIRED)
+find_package(Qt5 REQUIRED COMPONENTS Xml Widgets)
 
 set(NCLCOMPOSER_CORE_HEADERS
 # Modules
@@ -56,8 +55,7 @@ set(NCLCOMPOSER_CORE_SOURCES
   src/util/Utilities.cpp
 )
 
-add_library(nclcomposer_core
-  SHARED
+add_library(nclcomposer_core SHARED
   ${NCLCOMPOSER_CORE_SOURCES}
   ${NCLCOMPOSER_CORE_HEADERS}
 )
@@ -71,11 +69,7 @@ target_include_directories(nclcomposer_core
 )
 
 target_link_libraries(nclcomposer_core
-  Qt5::Xml
-  Qt5::Widgets
+  LINK_PUBLIC Qt5::Xml Qt5::Widgets
 )
 
-install(TARGETS
-    nclcomposer_core
-  DESTINATION
-    lib/${CMAKE_PROJECT_NAME})
+install(TARGETS nclcomposer_core DESTINATION ${NCLCOMPOSER_BINARY_DIR_LIB})

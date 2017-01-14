@@ -4,19 +4,11 @@ project(ncl_rules_view)
 set (CMAKE_INCLUDE_CURRENTDIR ON)
 set (CMAKE_AUTOMOC ON)
 
-configure_file (ncl-rules-view.json ncl-rules-view.json)
+configure_file(ncl-rules-view.json ncl-rules-view.json)
 
-include_directories(
-  ${CMAKE_CURRENT_BINARY_DIR}
-  .
-  src
-)
+find_package(Qt5 REQUIRED COMPONENTS Widgets)
 
-find_package (Qt5Core REQUIRED)
-find_package (Qt5Xml REQUIRED)
-find_package (Qt5Widgets REQUIRED)
-
-set (NCL_RULES_VIEW_SOURCES
+set(NCL_RULES_VIEW_SOURCES
   src/ComboBoxItem.cpp
   src/CompositeRuleItem.cpp
   src/RuleItem.cpp
@@ -35,16 +27,19 @@ set (NCL_RULES_VIEW_SOURCES
   src/ComboBoxItem.h
 )
 
-add_library (ncl_rules_view
-  SHARED
+add_library(ncl_rules_view SHARED
   ${NCL_RULES_VIEW_SOURCES}
 )
 
-target_link_libraries (ncl_rules_view
+target_include_directories(ncl_rules_view PRIVATE
+  .
+  src
+  ${CMAKE_CURRENT_BINARY_DIR}
+)
+
+target_link_libraries(ncl_rules_view PRIVATE
   nclcomposer_core
   nclprofile
-  Qt5::Core
-  Qt5::Xml
   Qt5::Widgets
 )
 

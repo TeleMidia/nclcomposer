@@ -6,24 +6,11 @@ set (CMAKE_AUTOMOC ON)
 set (CMAKE_AUTORCC ON)
 set (CMAKE_AUTOUIC ON)
 
-configure_file (ncl-structural-view.json ncl-structural-view.json)
+configure_file(ncl-structural-view.json ncl-structural-view.json)
 
-include_directories(
-  ${CMAKE_CURRENT_BINARY_DIR}
-  .
-  ui
-  src
-  src/core
-  src/ui
-  src/ui/view
-  src/util
-  "${CMAKE_BINARY_DIR}/src/plugins/ncl-structural-view"
-)
+find_package(Qt5 REQUIRED COMPONENTS Xml Widgets)
 
-find_package (Qt5Xml REQUIRED)
-find_package (Qt5Widgets REQUIRED)
-
-set (NCL_STRUCTURAL_VIEW_SOURCES
+set(NCL_STRUCTURAL_VIEW_SOURCES
   src/core/Command.h
   src/core/Structural.h
   src/core/Remove.h
@@ -72,17 +59,28 @@ set (NCL_STRUCTURAL_VIEW_SOURCES
   src/ui/view/StructuralLinkTool.cpp
 )
 
-add_library (ncl_structural_view
+add_library(ncl_structural_view
   SHARED
   ${NCL_STRUCTURAL_VIEW_SOURCES}
   ${UI_GENERATED_HEADERS}
 )
 
-target_link_libraries (ncl_structural_view
+target_include_directories(ncl_structural_view PRIVATE
+  .
+  ui
+  src
+  src/core
+  src/ui
+  src/ui/view
+  src/util
+  ${CMAKE_CURRENT_BINARY_DIR}
+)
+
+target_link_libraries(ncl_structural_view PRIVATE
   nclcomposer_core
   nclprofile
   Qt5::Xml
   Qt5::Widgets
 )
 
-install (TARGETS ncl_structural_view DESTINATION ${NCLCOMPOSER_BINARY_DIR_PLUGINS})
+install(TARGETS ncl_structural_view DESTINATION ${NCLCOMPOSER_BINARY_DIR_PLUGINS})

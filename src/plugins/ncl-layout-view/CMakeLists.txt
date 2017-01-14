@@ -1,28 +1,16 @@
 cmake_minimum_required (VERSION 3.2)
 project(ncl_layout_view)
 
-set (CMAKE_INCLUDE_CURRENTDIR ON)
-set (CMAKE_AUTOMOC ON)
-set (CMAKE_AUTORCC ON)
-set (CMAKE_AUTOUIC ON)
+set(CMAKE_INCLUDE_CURRENTDIR ON)
+set(CMAKE_AUTOMOC ON)
+set(CMAKE_AUTORCC ON)
+set(CMAKE_AUTOUIC ON)
 
-configure_file (ncl-layout-view.json ncl-layout-view.json)
+configure_file(ncl-layout-view.json ncl-layout-view.json)
 
-include_directories(
-  ${CMAKE_CURRENT_BINARY_DIR}
-  .
-  ui
-  src
-  src/ui
-  src/ui/view
-  "${CMAKE_BINARY_DIR}/src/plugins/ncl-layout-view"
-)
+find_package(Qt5 REQUIRED COMPONENTS Xml Widgets)
 
-find_package (Qt5Core REQUIRED)
-find_package (Qt5Xml REQUIRED)
-find_package (Qt5Widgets REQUIRED)
-
-set (NCL_LAYOUT_VIEW_SOURCES
+set(NCL_LAYOUT_VIEW_SOURCES
   src/LayoutViewPlugin.cpp
   src/LayoutViewFactory.cpp
   src/ui/view/LayoutView.cpp
@@ -46,15 +34,22 @@ set (NCL_LAYOUT_VIEW_SOURCES
   ncl-layout-view.qrc
 )
 
-add_library(ncl_layout_view
-  SHARED
+add_library(ncl_layout_view SHARED
   ${NCL_LAYOUT_VIEW_SOURCES}
+)
+
+target_include_directories(ncl_layout_view PRIVATE
+  .
+  ui
+  src
+  src/ui
+  src/ui/view
+  ${CMAKE_CURRENT_BINARY_DIR}
 )
 
 target_link_libraries(ncl_layout_view
   nclcomposer_core
   nclprofile
-  Qt5::Core
   Qt5::Xml
   Qt5::Widgets
 )
