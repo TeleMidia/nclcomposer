@@ -25,7 +25,7 @@ supporting textual and graphical abstractions.
   * Structure viewing/edition the NCL documents
   * Integration with different players (e.g. [Ginga-NCL Reference
     Implementation](http://www.ginga.org.br))
-  * Multi-platform (Linux, Windows, and MacOS X officially supported)
+  * Multi-platform (Linux, Windows, and MacOS X are officially supported)
   * Easily extensible through plug-ins
 
 ## Source code organization
@@ -50,7 +50,7 @@ The main requirement for NCL Composer is:
 In a Debian-based system (e.g. Debian, Ubuntu, or Linux Mint) you can easily
 install Qt libraries through:
 
-  $ apt-get install libqtbase5-dev libqttool5-dev
+    $ apt-get install libqtbase5-dev libqttool5-dev
 
 ### Building
 
