@@ -99,11 +99,17 @@ set(GUI_DATAFILES
  data/default.ini
 )
 
-file(COPY
-       ${GUI_DATAFILES}
-     DESTINATION
-       ${CMAKE_BINARY_DIR}/${NCLCOMPOSER_DATA_DIR}
-)
-  
+# Copy datafiles to build dir
+add_custom_target(copy_datafiles ALL)
+foreach(file_i ${GUI_DATAFILES})
+  get_filename_component(filename ${file_i} NAME)
+  add_custom_command(TARGET copy_datafiles POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different
+      ${CMAKE_CURRENT_SOURCE_DIR}/${file_i}
+      ${CMAKE_BINARY_DIR}/${NCLCOMPOSER_DATA_DIR}/${filename}
+    DEPENDS ${file_i}
+    COMMENT "Copying ${file_i}")
+endforeach(file_i)
+
 install(TARGETS nclcomposer DESTINATION bin)
 install(FILES ${GUI_DATAFILES} DESTINATION ${NCLCOMPOSER_DATA_DIR})
