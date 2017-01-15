@@ -12,28 +12,28 @@
 
 # NCL Composer
 [NCL Composer](http://composer.telemidia.puc-rio.br) is a multiplataform and
-flexible authoring tool for creating Interactive multimedia applications for
+flexible authoring tool for creating interactive multimedia applications for
 Digital TV based on NCL ([Nested Context Language](http://www.ncl.org.br)).
 It provides a minimal core and different views (implemented as plug-ins)
 supporting textual and graphical abstractions.
 
 ## Main features
-  * Advanced textual editing supporting code coloring, autocomplete, error
-    marking, etc.
+  * Advanced textual editing, such as code coloring, autocomplete, and error
+    marking
   * Validation of NCL documents
-  * Graphical layout definition
-  * Structural view of NCL documents
+  * WYSISWG definition of the application layout
+  * Structure viewing/edition the NCL documents
   * Integration with different players (e.g. [Ginga-NCL Reference
     Implementation](http://www.ginga.org.br))
-  * Easily extensible through plug-ins
   * Multi-platform (Linux, Windows, and MacOS X officially supported)
+  * Easily extensible through plug-ins
 
 ## Source code organization
 NCL Composer source code is divided into three main parts:
-  * __src/core__: a minimal core that allows the loading and
-    communication between plug-ins.
-  * __src/gui__: the GUI engine, which is responsible for grouping the
-    different views in the same user interface.
+  * __src/core__: a minimal core that supports loading and communication
+    between plug-ins.
+  * __src/gui__: the GUI engine, responsible for grouping the different plugins
+    in the same user interface.
   * __src/plugins__: the official plug-ins supported by NCL Composer.
 
 ## Contribute!
@@ -47,32 +47,24 @@ The main requirement for NCL Composer is:
 
   * Qt >= 5.4
 
-### Building on Linux (Debian/Ubuntu)
 In a Debian-based system (e.g. Debian, Ubuntu, or Linux Mint) you can easily
 install Qt libraries through:
 
-    $ apt-get install libqtbase5-dev libqttool5-dev
+  $ apt-get install libqtbase5-dev libqttool5-dev
 
-After installing the dependencies and cloning the repository, you can compile
-NCL Composer by entering in the nclcomposer root directory and typing:
+### Building
 
-    $ qmake
+After installing the dependencies and cloning the NCL Composer's repository,
+you can compile NCL Composer by (in the nclcomposer's root directory):
+
+    $ mkdir _build && cd _build
+    $ cmake ..
     $ make
 
 If everything is alright with the compilation process you should be able to
 find the executable (and run):
 
-    $ ./bin/debug/nclcomposer
-
-> If you want build a release version of the NCL Composer executable and plugins,
-> you can call `qmake FORCERELEASE=true`.  The executable will be available at
-> `./bin/release/nclcomposer`.
-
-### Building on Windows
-  * TODO
-
-### Building on Mac OS X
-  * TODO
+    $ ./_build/bin/nclcomposer
 
 ## Packaging NCL Composer
 This repository also provides the necessary files for packaging NCL Composer.
@@ -104,7 +96,7 @@ You can install it, using dpkg, for example:
 
   * TODO
 
-## Authors and contributors
+## Main authors and contributors
   * Roberto Azevedo <robertogerson@telemidia.puc-rio.br>
   * Eduardo Araújo <edcaraujo@telemidia.puc-rio.br>
 
@@ -124,8 +116,8 @@ NCL Composer is available through
 
 ## Acknowledgments
 
-NCL Composer would not be possible without many other open source software we
-use.  In special:
+NCL Composer would not be possible without other open source software we use.
+In special, we would like to acknowledge:
 
   * [Qt](http://qt.io) for multi-plataform, gui, etc.
   * [QScintilla](https://riverbankcomputing.com/software/qscintilla/intro) and
@@ -134,5 +126,4 @@ use.  In special:
     beautiful and easy-to-use organization of the interface.
   * [Graphviz](http://www.graphviz.org): for automatically layout of nodes in
     structural view.
-
 
