@@ -13,10 +13,6 @@ LayoutWindow::LayoutWindow(QWidget *parent) :
 {
   ui->setupUi(this);
 
-  QWidget *separator = new QWidget(this);
-  separator->setSizePolicy(QSizePolicy::Expanding,
-                           QSizePolicy::Expanding);
-
   ui->toolBar_regionBases->addWidget(new QLabel(tr("Region Bases:"), this));
   ui->toolBar_regionBases->addWidget(ui->regionBaseComboBox);
 }
