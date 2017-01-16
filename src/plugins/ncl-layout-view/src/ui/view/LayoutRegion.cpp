@@ -41,6 +41,7 @@ LayoutRegion::LayoutRegion(QMenu* switchMenu, LayoutRegion* parent)
   setFlag(QGraphicsItem::ItemIsFocusable, true);
 
   setMoving(false);
+  setCloning(false);
   setResizing(false);
   setSelected(false);
 
@@ -93,6 +94,15 @@ void LayoutRegion::setMoving(bool moving)
     setCursor(QCursor(Qt::ClosedHandCursor));
   else
     setCursor(QCursor(Qt::ArrowCursor));
+}
+
+bool LayoutRegion::isCloning() const
+{
+  return cloning;
+}
+void LayoutRegion::setCloning(bool cloning)
+{
+  this->cloning = cloning;
 }
 
 bool LayoutRegion::isResizing() const
@@ -904,6 +914,69 @@ void LayoutRegion::move(QGraphicsSceneMouseEvent* event)
   scene()->update();
 }
 
+void LayoutRegion::clone(QGraphicsSceneMouseEvent* event)
+{
+  /* setting */
+  qreal x = left;
+  qreal y = top;
+
+  /* setting minimal position */
+  qreal minx;
+  qreal miny;
+  minx = 0;
+  miny = 0;
+  
+  /* setting maximal position */
+  qreal maxx;
+  qreal maxy;
+
+  if (parentItem() != NULL)
+  {
+    maxx = parentItem()->boundingRect().width() - width - controlPointSize;
+    maxy = parentItem()->boundingRect().height() - height - controlPointSize;
+  }
+  else
+  {
+    maxx = scene()->width() - width;
+    maxy = scene()->height() - height;
+  }
+  
+  /* setting delta */
+  qreal dx = event->pos().x() - pressLeft; // (x1 - x0)
+  qreal dy = event->pos().y() - pressTop;  // (y1 - y0)
+
+  /* setting next position */
+  qreal nextx = x + dx;
+  qreal nexty = y + dy;
+
+  /* adjusting */
+  if (nextx < minx)
+  {
+    nextx = minx;
+  }
+
+  if (nexty < miny)
+  {
+    nexty = miny;
+  }
+
+  if (nextx > maxx)
+  {
+    nextx = maxx;
+  }
+
+  if (nexty > maxy)
+  {
+    nexty = maxy;
+  }
+  
+  /*paste*/
+  setMoveTop(nexty);
+  setMoveLeft(nextx);
+
+  scene()->update();
+}
+
 void LayoutRegion::resize(QGraphicsSceneMouseEvent* event)
 {
   /* setting bounds */
@@ -1215,6 +1288,12 @@ void LayoutRegion::paint(QPainter *painter,
     painter->setPen(QPen(QBrush(Qt::black), 0));    // 0px = cosmetic border
     painter->drawRect(moveLeft - left, moveTop - top, width, height);
   }
+  else if (cloning)
+  {
+    painter->setBrush(Qt::NoBrush);
+    painter->setPen(QPen(QBrush(Qt::black), 0));    // 0px = cosmetic border
+    painter->drawRect(moveLeft - left, moveTop - top, width, height);
+  }
   else if (resizing)
   {
     painter->setBrush(Qt::NoBrush);
@@ -1299,6 +1378,8 @@ void LayoutRegion::mouseMoveEvent(QGraphicsSceneMouseEvent* event)
 {
   if (moving)
     move(event);
+  else if (cloning)
+    clone(event);
   else if (resizing)
     resize(event);
 }
@@ -1313,6 +1394,7 @@ void LayoutRegion::mousePressEvent(QGraphicsSceneMouseEvent* event)
   else if (event->button() == Qt::LeftButton)
   {
     emit regionSelectionRequested(this);
+
 
     setPressTop(event->pos().y());
     setPressLeft(event->pos().x());
@@ -1380,7 +1462,14 @@ void LayoutRegion::mousePressEvent(QGraphicsSceneMouseEvent* event)
     /* if not over any resize region */
     else
     {
-      setMoving(true);
+      if(QGuiApplication::keyboardModifiers() == Qt::ControlModifier) /*clone if control is held*/
+      {
+        setCloning(true);
+      }
+      else
+      {
+        setMoving(true);
+      }
     }
   }
 
@@ -1393,11 +1482,6 @@ void LayoutRegion::mouseReleaseEvent(QGraphicsSceneMouseEvent* event)
 {
   if (moving)
   {
-    if(QGuiApplication::keyboardModifiers() == Qt::ControlModifier) /*clone if control is held*/
-    {
-      emit copyRequested(this); //region copy
-      emit pasteRequested();  //region paste
-    }
     setMoving(false);
 
     if ((top != moveTop || left != moveLeft))
@@ -1438,6 +1522,52 @@ void LayoutRegion::mouseReleaseEvent(QGraphicsSceneMouseEvent* event)
       setChanged(true);
       emit regionChangeRequested(this, attributes);
     }
+  }
+
+  if (cloning)
+  {
+    emit copyRequested(this);//cloning overwrites what is currently in "clipboard"
+
+    if ((top != moveTop || left != moveLeft))
+    {
+      double value = 0.0;
+      qreal parentW, parentH;
+
+      if (parentItem() != NULL)
+      {
+        parentW = ((LayoutRegion*) parentItem())->getWidth();
+        parentH = ((LayoutRegion*) parentItem())->getHeight();
+      }
+      else
+      {
+        parentW = scene()->width();
+        parentH = scene()->height();
+      }
+
+      value = (moveTop/parentH) * 100;
+      ROUND_DOUBLE(value);
+      cloneAttributes["top"] = QString::number(value, 'f', 2) + "%";
+
+      value = (moveLeft/parentW) * 100;
+      ROUND_DOUBLE(value);
+      cloneAttributes["left"] = QString::number(value, 'f', 2) + "%";
+
+      value = (1 - ((moveLeft/parentW)+(width/parentW))) * 100;
+      ROUND_DOUBLE(value);
+      cloneAttributes["right"] = QString::number(value, 'f', 2) + "%";
+
+      value = (1 - ((moveTop/parentH)+(height/parentH)))*100;
+      ROUND_DOUBLE(value);
+      cloneAttributes["bottom"] = QString::number(value, 'f', 2) + "%";
+
+      cloneAttributes["zIndex"] = QString::number(getzIndex());
+    }
+
+
+    /* performing paste */
+    emit performPaste();
+
+    setCloning(false);
   }
 
   if (resizing)
@@ -1696,4 +1826,9 @@ QMap <QString, QString> LayoutRegion::getAttributes()
   full["zIndex"] = QString::number(value);
 
   return full;
+}
+
+QMap <QString, QString> LayoutRegion::getCloneAttributes()
+{
+  return cloneAttributes;
 }

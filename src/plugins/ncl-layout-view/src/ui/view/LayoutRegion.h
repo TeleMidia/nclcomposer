@@ -66,6 +66,9 @@ public:
   bool isMoving() const;
   void setMoving(bool moving);
 
+  bool isCloning() const;
+  void setCloning(bool cloning);
+
   bool isResizing() const;
   void setResizing(bool resizing);
 
@@ -151,6 +154,7 @@ public:
   void setGridAction(QAction* action);
 
   QMap <QString, QString> getAttributes();
+  QMap <QString, QString> getCloneAttributes();
 
 public slots:
   void performRegion();
@@ -191,6 +195,7 @@ protected:
   void setResizeType(const QnlyResizeType &resizeType);
 
   virtual void move(QGraphicsSceneMouseEvent* event);
+  virtual void clone(QGraphicsSceneMouseEvent* event);
   virtual void resize(QGraphicsSceneMouseEvent* event);
 
   virtual QPainterPath shape() const;
@@ -219,6 +224,7 @@ private:
   void createConnections();
 
   bool moving;
+  bool cloning;
   bool resizing;
   bool selected;
   bool validated;
@@ -298,6 +304,7 @@ private:
 
   QMap<QString, QAction*> regionActions;
   QMap<QString, LayoutRegion*> regions;
+  QMap<QString, QString> cloneAttributes;
 };
 
 #endif // QNLYGRAPHICSREGION_H

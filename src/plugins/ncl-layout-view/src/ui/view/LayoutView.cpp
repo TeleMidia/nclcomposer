@@ -343,9 +343,14 @@ void LayoutView::performPaste()
   if(selectedRegion != NULL)
   {
     selectedRegionUId = selectedRegion->getUid();
-
-    if(selectedRegion->isMoving()) //being called by ctrl+mousepressmove
+    if(selectedRegion->isCloning()) //being called by ctrl+mousepressmove,which clones region
     {
+      //selectedRegion->getCloneAttributes();
+      copiedRegionAttrs["top"] = selectedRegion->getCloneAttributes()["top"];
+      copiedRegionAttrs["left"] = selectedRegion->getCloneAttributes()["left"];
+      copiedRegionAttrs["right"] = selectedRegion->getCloneAttributes()["right"];
+      copiedRegionAttrs["bottom"] = selectedRegion->getCloneAttributes()["bottom"];
+      copiedRegionAttrs["zIndex"] = selectedRegion->getCloneAttributes()["zIndex"];
       LayoutRegion* parent = (LayoutRegion*) selectedRegion->parentItem();
       if(parent != NULL)
         selectedRegionUId = parent->getUid();
