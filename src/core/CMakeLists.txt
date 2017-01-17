@@ -8,51 +8,49 @@ find_package(Qt5 REQUIRED COMPONENTS Xml Widgets)
 
 set(NCLCOMPOSER_CORE_HEADERS
 # Modules
-  src/modules/PluginControl.h
-  src/modules/MessageControl.h
-  src/modules/LanguageControl.h
-  src/modules/ProjectControl.h
-  src/modules/ProjectReader.h
+  modules/PluginControl.h
+  modules/MessageControl.h
+  modules/LanguageControl.h
+  modules/ProjectControl.h
+  modules/ProjectReader.h
 
 # Extensions
-  src/extensions/ILanguageProfile.h
-  src/extensions/IDocumentParser.h
-  src/extensions/IPlugin.h
-  src/extensions/IPluginFactory.h
-  src/extensions/IPreferencesPage.h
+  extensions/ILanguageProfile.h
+  extensions/IDocumentParser.h
+  extensions/IPlugin.h
+  extensions/IPluginFactory.h
+  extensions/IPreferencesPage.h
 
 # Util
-  src/util/ComposerCoreControl_global.h
-  src/util/Singleton.h
-  src/util/AttributeReferences.h
-  src/util/Utilities.h
-  src/util/ComposerSettings.h
-  src/util/Commands.h
-
-# Exceptions
-  src/model/exception/EntityNotFound.h
-  src/model/exception/ParentNotFound.h
-  src/model/exception/CreationFailed.h
+  util/ComposerCoreControl_global.h
+  util/Singleton.h
+  util/AttributeReferences.h
+  util/Utilities.h
+  util/ComposerSettings.h
+  util/Commands.h
 
 # Model
-  src/model/Entity.h
-  src/model/Project.h
-  #include/model/Model.h
+  model/Entity.h
+  model/Project.h
+  #model/Model.h
+  model/exception/EntityNotFound.h
+  model/exception/ParentNotFound.h
+  model/exception/CreationFailed.h
 )
 
 set(NCLCOMPOSER_CORE_SOURCES
-  src/model/Entity.cpp
-  src/model/Project.cpp
-  src/model/Project.cpp
-  src/modules/LanguageControl.cpp
-  src/modules/MessageControl.cpp
-  src/modules/PluginControl.cpp
-  src/modules/ProjectControl.cpp
-  src/modules/ProjectReader.cpp
-  src/util/AttributeReferences.cpp
-  src/util/Commands.cpp
-  src/util/ComposerSettings.cpp
-  src/util/Utilities.cpp
+  model/Entity.cpp
+  model/Project.cpp
+  model/Project.cpp
+  modules/LanguageControl.cpp
+  modules/MessageControl.cpp
+  modules/PluginControl.cpp
+  modules/ProjectControl.cpp
+  modules/ProjectReader.cpp
+  util/AttributeReferences.cpp
+  util/Commands.cpp
+  util/ComposerSettings.cpp
+  util/Utilities.cpp
 )
 
 add_library(nclcomposer_core SHARED
@@ -65,7 +63,7 @@ target_compile_definitions(nclcomposer_core PRIVATE
 )
 
 target_include_directories(nclcomposer_core
-  PUBLIC src
+  PUBLIC .
 )
 
 target_link_libraries(nclcomposer_core

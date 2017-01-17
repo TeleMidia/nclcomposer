@@ -58,50 +58,50 @@ DEFINES += EXT_DEFAULT_PATH=\"\\\"$$PREFIX\\\"\"
 DEFINES += COMPOSERCORE_LIBRARY
 
 SOURCES += \
-    src/modules/PluginControl.cpp \
-    src/modules/MessageControl.cpp \
-    src/modules/LanguageControl.cpp \
-    src/modules/ProjectControl.cpp \
-    src/model/Entity.cpp \
-    src/model/Project.cpp \
-    src/util/Utilities.cpp \
-    src/util/AttributeReferences.cpp \
-    src/modules/ProjectReader.cpp \
-    src/util/ComposerSettings.cpp \
-    src/util/Commands.cpp
-    # src/model/Model.cpp
+    modules/PluginControl.cpp \
+    modules/MessageControl.cpp \
+    modules/LanguageControl.cpp \
+    modules/ProjectControl.cpp \
+    model/Entity.cpp \
+    model/Project.cpp \
+    util/Utilities.cpp \
+    util/AttributeReferences.cpp \
+    modules/ProjectReader.cpp \
+    util/ComposerSettings.cpp \
+    util/Commands.cpp
+    # model/Model.cpp
 
 HEADERS_MAN += \
-    src/modules/PluginControl.h \
-    src/modules/MessageControl.h \
-    src/modules/LanguageControl.h \
-    src/modules/ProjectControl.h \
-    src/modules/ProjectReader.h
+    modules/PluginControl.h \
+    modules/MessageControl.h \
+    modules/LanguageControl.h \
+    modules/ProjectControl.h \
+    modules/ProjectReader.h
 
 HEADERS_EXTENSIONS += \
-    src/extensions/ILanguageProfile.h \
-    src/extensions/IDocumentParser.h \
-    src/extensions/IPlugin.h \
-    src/extensions/IPluginFactory.h \
-    src/extensions/IPreferencesPage.h
+    extensions/ILanguageProfile.h \
+    extensions/IDocumentParser.h \
+    extensions/IPlugin.h \
+    extensions/IPluginFactory.h \
+    extensions/IPreferencesPage.h
 
 HEADERS_UTIL += \
-    src/util/ComposerCoreControl_global.h \
-    src/util/Singleton.h \
-    src/util/AttributeReferences.h \
-    src/util/Utilities.h \
-    src/util/ComposerSettings.h \
-    src/util/Commands.h
+    util/ComposerCoreControl_global.h \
+    util/Singleton.h \
+    util/AttributeReferences.h \
+    util/Utilities.h \
+    util/ComposerSettings.h \
+    util/Commands.h
 
 HEADERS_EXCEPTION +=  \
-    src/model/exception/EntityNotFound.h \
-    src/model/exception/ParentNotFound.h \
-    src/model/exception/CreationFailed.h
+    model/exception/EntityNotFound.h \
+    model/exception/ParentNotFound.h \
+    model/exception/CreationFailed.h
 
 HEADERS_MODEL += \
-    src/model/Entity.h \
-    src/model/Project.h
-    #include/model/Model.h
+    model/Entity.h \
+    model/Project.h
+    #model/Model.h
 
 HEADERS = \
     $$HEADERS_MAN \
@@ -116,7 +116,7 @@ headers_util.files = $$HEADERS_UTIL
 headers_exception.files = $$HEADERS_EXCEPTION
 headers_model.files = $$HEADERS_MODEL
 
-INCLUDEPATH += . ./src
+INCLUDEPATH += .
 
 macx { 
     QMAKE_FRAMEWORK_BUNDLE_NAME = $$TARGET
