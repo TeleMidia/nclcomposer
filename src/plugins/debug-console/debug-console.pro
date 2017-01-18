@@ -2,20 +2,19 @@ include (../plugins-common.pri)
 
 DEFINES += DEBUGCONSOLE_LIBRARY
 
-INCLUDEPATH += \
-  src
+INCLUDEPATH += .
 
 SOURCES += \
-  src/DebugConsoleFactory.cpp \
-  src/DebugConsolePlugin.cpp
+  DebugConsoleFactory.cpp \
+  DebugConsolePlugin.cpp
 
 HEADERS += \
-  src/DebugConsoleFactory.h\
-  src/DebugConsole_global.h \
-  src/DebugConsolePlugin.h
+  DebugConsoleFactory.h\
+  DebugConsole_global.h \
+  DebugConsolePlugin.h
 
 RESOURCES += \
   images.qrc
 
 OTHER_FILES += \
-    debug_console.json
+  debug_console.json

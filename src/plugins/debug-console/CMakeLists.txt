@@ -9,11 +9,11 @@ configure_file(debug_console.json debug_console.json)
 find_package(Qt5 REQUIRED COMPONENTS Widgets)
 
 set(DEBUG_CONSOLE_SOURCES
-  src/DebugConsoleFactory.cpp
-  src/DebugConsoleFactory.h
-  src/DebugConsolePlugin.cpp
-  src/DebugConsolePlugin.h
-  src/DebugConsole_global.h
+  DebugConsoleFactory.cpp
+  DebugConsoleFactory.h
+  DebugConsolePlugin.cpp
+  DebugConsolePlugin.h
+  DebugConsole_global.h
 )
 
 add_library(debugconsole SHARED
