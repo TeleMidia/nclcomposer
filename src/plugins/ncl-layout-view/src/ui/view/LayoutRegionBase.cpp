@@ -63,11 +63,11 @@ void LayoutRegionBase::setId(const QString &id)
 {
   this->id = id;
 
-  //  if(graphicsRegionBaseId == NULL)
-  //    graphicsRegionBaseId = addText("regionBaseId");
-  //  graphicsRegionBaseId->setPos(10,10);
-  //  graphicsRegionBaseId->setToolTip(id);
-  //  graphicsRegionBaseId->setPlainText(id);
+  //if(graphicsRegionBaseId == NULL)
+  //  graphicsRegionBaseId = addText("regionBaseId");
+  //graphicsRegionBaseId->setPos(10,10);
+  //graphicsRegionBaseId->setToolTip(id);
+  //graphicsRegionBaseId->setPlainText(id);
 }
 
 QString LayoutRegionBase::getUid() const
@@ -335,14 +335,14 @@ void LayoutRegionBase::LayoutRegionBase::createActions()
   copyAction->setText(tr("Copy"));
 
   copyAction->setEnabled(false);
-  copyAction->setShortcut(QKeySequence("Ctrl+C"));
+  // copyAction->setShortcut(QKeySequence("Ctrl+C"));
 
   // paste action
   pasteAction = new QAction(this);
   pasteAction->setText(tr("Paste"));
 
   pasteAction->setEnabled(true);
-  pasteAction->setShortcut(QKeySequence("Ctrl+V"));
+  // pasteAction->setShortcut(QKeySequence("Ctrl+V"));
 
   // delete action
   deleteAction = new QAction(this);

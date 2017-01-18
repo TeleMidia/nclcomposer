@@ -89,10 +89,10 @@ public slots:
 
   void setGridVisible(bool visible);
 
-  void snapshot();
+  void doSnapshot();
 
+  void performCopy();
   void performCopy(LayoutRegion *);
-
   void performPaste();
 
 signals:

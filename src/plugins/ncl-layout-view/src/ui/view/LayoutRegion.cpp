@@ -28,7 +28,6 @@ LayoutRegion::LayoutRegion(QMenu* switchMenu, LayoutRegion* parent)
   : QObject(parent), QGraphicsItem(parent)
 {
   this->switchMenu = switchMenu;
-
   this->switchMenu->setEnabled(true);
 
   /* creating */
@@ -499,21 +498,19 @@ void LayoutRegion::LayoutRegion::createActions()
   cutAction->setText(tr("Cut"));
 
   cutAction->setEnabled(false);
-  cutAction->setShortcut(QKeySequence("Ctrl+X"));
+  // cutAction->setShortcut(QKeySequence("Ctrl+X"));
 
   // copy action
   copyAction = new QAction(this);
   copyAction->setText(tr("Copy"));
-
   copyAction->setEnabled(true);
-  copyAction->setShortcut(QKeySequence("Ctrl+C"));
 
   // paste action
   pasteAction = new QAction(this);
   pasteAction->setText(tr("Paste"));
 
   pasteAction->setEnabled(true);
-  pasteAction->setShortcut(QKeySequence("Ctrl+V"));
+  // pasteAction->setShortcut(QKeySequence("Ctrl+V"));
 
   // delete action
   deleteAction = new QAction(this);
@@ -705,11 +702,14 @@ void LayoutRegion::createConnections()
   connect(deleteAction, SIGNAL(triggered()),
           SLOT(performDelete()));
 
-  connect(exportAction, SIGNAL(triggered()), SLOT(performExport()));
+  connect(exportAction, SIGNAL(triggered()),
+          SLOT(performExport()));
 
-  connect(copyAction, SIGNAL(triggered()), SLOT(performCopy()));
+  connect(copyAction, SIGNAL(triggered()),
+          SLOT(performCopy()));
 
-  connect(pasteAction, SIGNAL(triggered()), SLOT(performPaste()));
+  connect(pasteAction, SIGNAL(triggered()),
+          SLOT(performPaste()));
 }
 
 void LayoutRegion::updateActionText(LayoutRegion *region)
@@ -789,6 +789,7 @@ void LayoutRegion::performShow(QAction* action)
 
 void LayoutRegion::performCopy()
 {
+  qWarning () << "LayoutRegion::performCopy";
   emit copyRequested(this);
 }
 
@@ -1050,7 +1051,7 @@ void LayoutRegion::resize(QGraphicsSceneMouseEvent* event)
         }
         break;
       }
-      /* adjusting TOP */
+    /* adjusting TOP */
     case LayoutRegion::Top:
       {
         nextx = x; // fixed x
@@ -1065,7 +1066,7 @@ void LayoutRegion::resize(QGraphicsSceneMouseEvent* event)
         break;
       }
 
-      /* adjusting TOPRIGHT */
+    /* adjusting TOPRIGHT */
     case LayoutRegion::TopRight:
       {
         nextx = x; // fixed x
@@ -1085,7 +1086,7 @@ void LayoutRegion::resize(QGraphicsSceneMouseEvent* event)
         break;
       }
 
-      /* adjusting RIGHT */
+    /* adjusting RIGHT */
     case LayoutRegion::Right:
       {
         nextx = x; // fixed x
@@ -1655,27 +1656,12 @@ void LayoutRegion::mouseReleaseEvent(QGraphicsSceneMouseEvent* event)
 
 void LayoutRegion::keyPressEvent( QKeyEvent * event )
 {
-  if (event->key() == Qt::Key_Delete || event->key() == Qt::Key_Backspace)
+  qWarning() << event << event->key();
+
+  if ( event->key() == Qt::Key_Delete ||
+       event->key() == Qt::Key_Backspace )
   {
     performDelete();
-    event->accept();
-  }
-
-  // CTRL+C - Copy
-  else if (event->modifiers() == Qt::ControlModifier &&
-           event->key() == Qt::Key_C)
-  {
-    qDebug() << "Ctrl+C -- performCopy()" << this->getId();
-
-    performCopy();
-    event->accept();
-  }
-  // CTRL+V - Paste
-  else if (event->modifiers() == Qt::ControlModifier &&
-           event->key() == Qt::Key_V)
-  {
-    performPaste();
-
     event->accept();
   }
   else

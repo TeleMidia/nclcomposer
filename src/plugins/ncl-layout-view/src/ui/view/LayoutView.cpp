@@ -74,14 +74,14 @@ void LayoutView::createActions()
   copyAction->setText(tr("Copy"));
 
   copyAction->setEnabled(false);
-  copyAction->setShortcut(QKeySequence("Ctrl+C"));
+  // copyAction->setShortcut(QKeySequence("Ctrl+C"));
 
   // paste action
   pasteAction = new QAction(this);
   pasteAction->setText(tr("Paste"));
 
   pasteAction->setEnabled(true);
-  pasteAction->setShortcut(QKeySequence("Ctrl+V"));
+  // pasteAction->setShortcut(QKeySequence("Ctrl+V"));
 
   // delete action
   deleteAction = new QAction(this);
@@ -228,12 +228,14 @@ void LayoutView::createMenus()
   contextMenu->addSeparator();
   contextMenu->addAction(deleteAction);
   contextMenu->addSeparator();
-  //    contextMenu->addSeparator();
-  //    contextMenu->addAction(undoAction);
-  //    contextMenu->addAction(redoAction);
-  //    contextMenu->addSeparator();
-  //    contextMenu->addAction(cutAction);
-  //    contextMenu->addAction(copyAction);
+
+  //  contextMenu->addSeparator();
+  //  contextMenu->addAction(undoAction);
+  //  contextMenu->addAction(redoAction);
+  //  contextMenu->addSeparator();
+  //  contextMenu->addAction(cutAction);
+  //  contextMenu->addAction(copyAction);
+
   contextMenu->addAction(pasteAction);
   contextMenu->addSeparator();
   contextMenu->addAction(exportAction);
@@ -324,6 +326,12 @@ void LayoutView::addRegion(const QString regionUID,
   }
 }
 
+void LayoutView::performCopy()
+{
+  if (this->selectedRegion)
+    performCopy(this->selectedRegion);
+}
+
 void LayoutView::performCopy(LayoutRegion *region)
 {
   // setting
@@ -335,6 +343,8 @@ void LayoutView::performCopy(LayoutRegion *region)
     if(key != "id")
       copiedRegionAttrs[key] = attr[key];
   }
+
+  qWarning () << copiedRegionAttrs;
 }
 
 void LayoutView::performPaste()
@@ -343,6 +353,7 @@ void LayoutView::performPaste()
   if(selectedRegion != NULL)
   {
     selectedRegionUId = selectedRegion->getUid();
+
     if(selectedRegion->isCloning()) //being called by ctrl+mousepressmove,which clones region
     {
       //selectedRegion->getCloneAttributes();
@@ -351,7 +362,9 @@ void LayoutView::performPaste()
       copiedRegionAttrs["right"] = selectedRegion->getCloneAttributes()["right"];
       copiedRegionAttrs["bottom"] = selectedRegion->getCloneAttributes()["bottom"];
       copiedRegionAttrs["zIndex"] = selectedRegion->getCloneAttributes()["zIndex"];
+
       LayoutRegion* parent = (LayoutRegion*) selectedRegion->parentItem();
+
       if(parent != NULL)
         selectedRegionUId = parent->getUid();
       else
@@ -473,8 +486,8 @@ void LayoutView::addRegion(LayoutRegion* region,
   }
 }
 
-void LayoutView::removeRegion(LayoutRegion* region,
-                              LayoutRegionBase* regionBase)
+void LayoutView::removeRegion( LayoutRegion* region,
+                               LayoutRegionBase* regionBase )
 {
   if (region != NULL && regionBase != NULL)
   {
@@ -491,258 +504,241 @@ void LayoutView::removeRegion(LayoutRegion* region,
                       of the type QnlyGraphicsRegion " << __FILE__ << __LINE__;
     }
 
-                      regions.remove(region->getUid());
-
-      regionBase->removeRegion(region);
-
-      // delete(region);
-    }
+    regions.remove(region->getUid());
+    regionBase->removeRegion(region);
+    //delete(region);
   }
+}
 
-  void LayoutView::changeRegion(LayoutRegion* region,
-                                LayoutRegionBase* regionBase,
-                                const QMap<QString, QString> attributes)
+void LayoutView::changeRegion( LayoutRegion* region,
+                               LayoutRegionBase* regionBase,
+                               const QMap<QString, QString> attributes )
+{
+  if (region != NULL && regionBase != NULL)
   {
-    if (region != NULL && regionBase != NULL)
-    {
-      regionBase->changeRegion(region, attributes);
-    }
+    regionBase->changeRegion(region, attributes);
   }
+}
 
-  void LayoutView::selectRegion(LayoutRegion* region,
-                                LayoutRegionBase* regionBase)
+void LayoutView::selectRegion( LayoutRegion* region,
+                               LayoutRegionBase* regionBase )
+{
+  if (region != nullptr && regionBase != nullptr)
   {
-    if (region != NULL && regionBase != NULL)
+    if (selectedRegion != nullptr)
     {
-      if (selectedRegion != NULL)
+      selectedRegion->setSelected(false);
+    }
+
+    regionBase->selectRegion(region);
+    selectedRegion = region;
+
+    QWidget* parent = (QWidget*) regionBase->parent();
+    setCurrentWidget(parent);
+  }
+}
+
+void LayoutView::addRegionBase( LayoutRegionBase* regionBase,
+                                const QMap<QString, QString> attributes )
+{
+  if (regionBase != NULL)
+  {
+    qDebug() << "LayoutRegionBase Added!";
+
+    if (attributes.contains("id"))
+      regionBase->setId(attributes["id"]);
+
+    if (attributes.contains("region"))
+      regionBase->setId(attributes["region"]);
+
+    if (attributes.contains("device"))
+      regionBase->setId(attributes["device"]);
+
+    QWidget* parent = (QWidget*) regionBase->parent();
+    addWidget(parent);
+    setCurrentWidget(parent);
+
+    regionbases[regionBase->getUid()] = regionBase;
+
+    QAction* action = new QAction(this);
+    action->setText(regionBase->getId());
+    action->setCheckable(true);
+    action->setEnabled(true);
+
+    switchMenu->addAction(action);
+    regionbaseActionGroup->addAction(action);
+
+    action->trigger();
+    regionbaseActions[regionBase->getUid()] = action;
+
+    connect(regionBase, SIGNAL(regionbasePerformed()),
+            SLOT(performRegionBase()));
+    connect(regionBase,
+            SIGNAL(regionAdditionRequested(QString,QString,QString,
+                                           QMap<QString,QString>)),
+            SLOT(requestRegionAddition(QString,QString,QString,
+                                       QMap<QString,QString>)) );
+
+    connect(regionBase,
+            SIGNAL(regionChangeRequested(QString,QString,QMap<QString,QString>)),
+            SLOT(requestRegionChange(QString,QString,QMap<QString,QString>)));
+
+    connect(regionBase,
+            SIGNAL(regionSelectionRequested(QString,QString)),
+            SIGNAL(regionSelected(QString,QString)));
+
+    connect(regionBase,
+            SIGNAL(regionBaseSelectionRequested(QString)),
+            SIGNAL(regionBaseSelected(QString)));
+
+    connect(regionBase,
+            SIGNAL(regionBaseDeletionRequested(QString)),
+            SIGNAL(regionBaseRemoved(QString)));
+
+     connect(regionBase,
+             SIGNAL(regionDeletionRequested(QString,QString)),
+             SIGNAL(regionRemoved(QString,QString)));
+
+    connect(regionBase,
+            SIGNAL(mediaOverRegion(QString,QString)),
+            SIGNAL(mediaOverRegionAction(QString,QString)));
+
+    regionBase->setGridVisible(gridVisibility);
+    connect(regionBase,
+            SIGNAL(gridVisibilityChanged(bool)),
+            SLOT(setGridVisible(bool)));
+
+    connect(regionBase,
+            SIGNAL(copyRequested(LayoutRegion*)),
+            SLOT(performCopy(LayoutRegion *)));
+
+    connect(regionBase,
+            SIGNAL(pasteRequested()),
+            SLOT(performPaste()));
+
+    emit regionBaseSelected(regionBase->getUid());
+  }
+}
+
+void LayoutView::removeRegionBase(LayoutRegionBase* regionBase)
+{
+  if (regionBase != NULL)
+  {
+    QAction* action = regionbaseActions[regionBase->getUid()];
+    switchMenu->removeAction(action);
+
+    regionbaseActionGroup->removeAction(action);
+
+    foreach(QGraphicsItem* item, regionBase->items())
+    {
+      if (item != regionBase->getBackgroundItem())
       {
-        selectedRegion->setSelected(false);
+        LayoutRegion* child = dynamic_cast<LayoutRegion *> (item);
+
+        if (child != NULL)
+        {
+          regions.remove(child->getUid());
+        }
+        else
+          qWarning() << "Trying to remove an element that is not of the\
+                        type QnlyGraphicsRegion " << __FILE__ << __LINE__;
       }
+    }
 
-      regionBase->selectRegion(region);
+    QWidget* parent = (QWidget*) regionBase->parent();
+    removeWidget(parent);
+    regionbases.remove(regionBase->getUid());
 
-      selectedRegion = region;
+    if (currentWidget() != NULL)
+    {
+      LayoutRegionBase* current =
+              (LayoutRegionBase*) ((QGraphicsView*)currentWidget())->scene();
 
-      QWidget* parent = (QWidget*) regionBase->parent();
-
-      setCurrentWidget(parent);
+      emit regionBaseSelected(current->getUid());
     }
   }
+}
 
-  void LayoutView::addRegionBase(LayoutRegionBase* regionBase,
-                                 const QMap<QString, QString> attributes)
+void LayoutView::changeRegionBase( LayoutRegionBase* regionBase,
+                                   const QMap<QString, QString> attributes )
+{
+  if (regionBase != NULL)
   {
-    if (regionBase != NULL)
+    if (attributes.contains("id"))
     {
-      qDebug() << "LayoutRegionBase Added!";
+      regionBase->setId(attributes["id"]);
 
-      if (attributes.contains("id"))
-        regionBase->setId(attributes["id"]);
-
-      if (attributes.contains("region"))
-        regionBase->setId(attributes["region"]);
-
-      if (attributes.contains("device"))
-        regionBase->setId(attributes["device"]);
-
-      QWidget* parent = (QWidget*) regionBase->parent();
-
-      addWidget(parent);
-      setCurrentWidget(parent);
-
-      regionbases[regionBase->getUid()] = regionBase;
-
-      QAction* action = new QAction(this);
-      action->setText(regionBase->getId());
-
-      switchMenu->addAction(action);
-
-      action->setCheckable(true);
-      action->setEnabled(true);
-
-      regionbaseActionGroup->addAction(action);
-
-      action->trigger();
-
-      regionbaseActions[regionBase->getUid()] = action;
-
-      connect(regionBase, SIGNAL(regionbasePerformed()),
-              SLOT(performRegionBase()));
-
-      connect(regionBase,
-              SIGNAL(regionAdditionRequested(QString,QString,QString
-                                             ,QMap<QString,QString>)),
-              SLOT(requestRegionAddition(QString,QString,QString
-                                         ,QMap<QString,QString>)));
-
-      connect(regionBase,
-              SIGNAL(regionChangeRequested(QString,QString,QMap<QString,QString>)),
-              SLOT(requestRegionChange(QString,QString,QMap<QString,QString>)));
-
-      connect(regionBase,
-              SIGNAL(regionSelectionRequested(QString,QString)),
-              SIGNAL(regionSelected(QString,QString)));
-
-      connect(regionBase,
-              SIGNAL(regionBaseSelectionRequested(QString)),
-              SIGNAL(regionBaseSelected(QString)));
-
-      connect(regionBase,
-              SIGNAL(regionBaseDeletionRequested(QString)),
-              SIGNAL(regionBaseRemoved(QString)));
-
-      connect(regionBase,
-              SIGNAL(regionDeletionRequested(QString,QString)),
-              SIGNAL(regionRemoved(QString,QString)));
-
-      connect(regionBase,
-              SIGNAL(mediaOverRegion(QString,QString)),
-              SIGNAL(mediaOverRegionAction(QString,QString)));
-
-      regionBase->setGridVisible(gridVisibility);
-      connect(regionBase,
-              SIGNAL(gridVisibilityChanged(bool)),
-              SLOT(setGridVisible(bool)));
-
-      connect(regionBase,
-              SIGNAL(copyRequested(LayoutRegion*)),
-              SLOT(performCopy(LayoutRegion *)));
-
-      connect(regionBase,
-              SIGNAL(pasteRequested()),
-              SLOT(performPaste()));
-
-      emit regionBaseSelected(regionBase->getUid());
-    }
-  }
-
-  void LayoutView::removeRegionBase(LayoutRegionBase* regionBase)
-  {
-    if (regionBase != NULL)
-    {
       QAction* action = regionbaseActions[regionBase->getUid()];
-      switchMenu->removeAction(action);
+      action->setText(attributes["id"]);
+    }
 
-      regionbaseActionGroup->removeAction(action);
+    if (attributes.contains("region"))
+      regionBase->setId(attributes["region"]);
 
-      // delete(action);
+    if (attributes.contains("device"))
+      regionBase->setId(attributes["device"]);
+  }
+}
 
-      foreach(QGraphicsItem* item, regionBase->items())
-      {
-        if (item != regionBase->getBackgroundItem()) {
-          LayoutRegion* child = dynamic_cast<LayoutRegion *> (item);
+void LayoutView::selectRegionBase(LayoutRegionBase* regionBase)
+{
+  if (regionBase != NULL)
+  {
+    QWidget* parent = (QWidget*) regionBase->parent();
+    setCurrentWidget(parent);
 
-          if (child != NULL)
-          {
-            regions.remove(child->getUid());
-          }
-          else
-            qWarning() << "Trying to remove an element that is not of the\
-                          type QnlyGraphicsRegion " << __FILE__ << __LINE__;
-        }
-        }
+    QAction* action = regionbaseActions[regionBase->getUid()];
+    action->setChecked(true);
 
-                          //        delete (regionBase);
+    if (selectedRegion != NULL)
+    {
+      selectedRegion->setSelected(false);
+      selectedRegion = NULL;
+    }
 
+    selectedRegionBase = regionBase;
 
-                          QWidget* parent = (QWidget*) regionBase->parent();
+    emit regionBaseSelected(selectedRegionBase->getUid());
+  }
+}
 
-          removeWidget(parent);
+void LayoutView::setGridVisible(bool visible)
+{
+  if(this->gridVisibility != visible)
+  {
+    this->gridVisibility = visible;
+    foreach(LayoutRegionBase *regionBase, regionbases.values())
+    {
+      regionBase->setGridVisible(visible);
+    }
 
-          regionbases.remove(regionBase->getUid());
+    emit gridVisibilityChanged(visible);
+  }
+}
 
-          if (currentWidget() != NULL)
-          {
-            LayoutRegionBase* current =
-                (LayoutRegionBase*) ((QGraphicsView*)currentWidget())->scene();
+LayoutRegionBase* LayoutView::getSelectedRegionBase()
+{
+  return selectedRegionBase;
+}
 
-            emit regionBaseSelected(current->getUid());
-          }
-        }
-      }
+LayoutRegion* LayoutView::getSelectedRegion()
+{
+  return selectedRegion;
+}
 
-      void LayoutView::changeRegionBase(LayoutRegionBase* regionBase,
-                                        const QMap<QString, QString> attributes)
-      {
-        if (regionBase != NULL)
-        {
-          if (attributes.contains("id"))
-          {
-            regionBase->setId(attributes["id"]);
+void LayoutView::contextMenuEvent(QContextMenuEvent *event)
+{
+  QStackedWidget::contextMenuEvent(event);
 
-            QAction* action = regionbaseActions[regionBase->getUid()];
-            action->setText(attributes["id"]);
-          }
+  if (!event->isAccepted())
+  {
+    contextMenu->exec(event->globalPos());
+    event->accept();
+  }
+}
 
-          if (attributes.contains("region"))
-            regionBase->setId(attributes["region"]);
-
-          if (attributes.contains("device"))
-            regionBase->setId(attributes["device"]);
-        }
-      }
-
-      void LayoutView::selectRegionBase(LayoutRegionBase* regionBase)
-      {
-        if (regionBase != NULL)
-        {
-          QWidget* parent = (QWidget*) regionBase->parent();
-
-          setCurrentWidget(parent);
-
-          QAction* action = regionbaseActions[regionBase->getUid()];
-          action->setChecked(true);
-
-          if (selectedRegion != NULL)
-          {
-            selectedRegion->setSelected(false);
-            selectedRegion = NULL;
-          }
-
-          selectedRegionBase = regionBase;
-
-          emit regionBaseSelected(selectedRegionBase->getUid());
-        }
-      }
-
-      void LayoutView::setGridVisible(bool visible)
-      {
-        if(this->gridVisibility != visible)
-        {
-          this->gridVisibility = visible;
-          foreach(LayoutRegionBase *regionBase, regionbases.values())
-          {
-            regionBase->setGridVisible(visible);
-          }
-
-          emit gridVisibilityChanged(visible);
-        }
-      }
-
-      LayoutRegionBase* LayoutView::getSelectedRegionBase()
-      {
-        return selectedRegionBase;
-      }
-
-      LayoutRegion* LayoutView::getSelectedRegion()
-      {
-        return selectedRegion;
-      }
-
-      void LayoutView::contextMenuEvent(QContextMenuEvent *event)
-      {
-        QStackedWidget::contextMenuEvent(event);
-
-        if (!event->isAccepted())
-        {
-          contextMenu->exec(event->globalPos());
-
-          event->accept();
-        }
-      }
-
-      void LayoutView::snapshot()
-      {
-        if(getSelectedRegionBase() != NULL)
-          getSelectedRegionBase()->performExport();
-      }
+void LayoutView::doSnapshot()
+{
+  if(getSelectedRegionBase() != NULL)
+    getSelectedRegionBase()->performExport();
+}

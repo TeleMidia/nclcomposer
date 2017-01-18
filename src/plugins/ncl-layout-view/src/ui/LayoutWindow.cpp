@@ -143,5 +143,15 @@ void LayoutWindow::updateRegionBaseInComboBox(
 
 void LayoutWindow::on_actionAction_Export_triggered()
 {
-  view->snapshot();
+  view->doSnapshot();
+}
+
+void LayoutWindow::on_actionCopy_region_triggered()
+{
+  view->performCopy();
+}
+
+void LayoutWindow::on_actionPaste_region_triggered()
+{
+  view->performPaste();
 }

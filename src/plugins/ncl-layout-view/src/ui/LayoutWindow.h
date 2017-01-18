@@ -59,11 +59,12 @@ signals:
 
 private slots:
   void on_actionAction_Export_triggered();
+  void on_actionCopy_region_triggered();
+  void on_actionPaste_region_triggered();
 
 private:
   Ui::QnlyMainWindow *ui;
   LayoutView *view;
-
 };
 
 #endif // QNLYMAINWINDOW_H
