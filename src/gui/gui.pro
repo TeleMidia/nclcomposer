@@ -171,8 +171,7 @@ else {
 
 INCLUDEPATH +=  . src src/qtoolwindowmanager/
 
-INCLUDEPATH   +=  ../core/src \
-                  ../core
+INCLUDEPATH   +=  ../core
 
 LIBS          +=  -L$$DESTDIR
 
@@ -181,7 +180,7 @@ macx {
           -F$$PWD/../../bin -framework ComposerCore
 
     INCLUDEPATH += \
-        $$PWD/../core/src \
+        $$PWD/../core/ \
         /Library/Frameworks/ComposerCore.framework/ \
         /Library/Frameworks/ComposerCore.framework/core/ \
         /opt/local/include/
