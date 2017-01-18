@@ -9,22 +9,22 @@ configure_file(ncl-rules-view.json ncl-rules-view.json)
 find_package(Qt5 REQUIRED COMPONENTS Widgets)
 
 set(NCL_RULES_VIEW_SOURCES
-  src/ComboBoxItem.cpp
-  src/CompositeRuleItem.cpp
-  src/RuleItem.cpp
-  src/RulesTreeWidget.cpp
-  src/RulesView.cpp
-  src/RulesViewFactory.cpp
-  src/RulesViewPlugin.cpp
+  ComboBoxItem.cpp
+  CompositeRuleItem.cpp
+  RuleItem.cpp
+  RulesTreeWidget.cpp
+  RulesView.cpp
+  RulesViewFactory.cpp
+  RulesViewPlugin.cpp
   
-  src/Util.h
-  src/RulesViewPlugin.h
-  src/RulesViewFactory.h
-  src/RulesView.h
-  src/RulesTreeWidget.h
-  src/RuleItem.h
-  src/CompositeRuleItem.h
-  src/ComboBoxItem.h
+  Util.h
+  RulesViewPlugin.h
+  RulesViewFactory.h
+  RulesView.h
+  RulesTreeWidget.h
+  RuleItem.h
+  CompositeRuleItem.h
+  ComboBoxItem.h
 )
 
 add_library(ncl_rules_view SHARED
@@ -33,7 +33,6 @@ add_library(ncl_rules_view SHARED
 
 target_include_directories(ncl_rules_view PRIVATE
   .
-  src
   ${CMAKE_CURRENT_BINARY_DIR}
 )
 
@@ -44,3 +43,4 @@ target_link_libraries(ncl_rules_view PRIVATE
 )
 
 install (TARGETS ncl_rules_view DESTINATION ${NCLCOMPOSER_BINARY_DIR_PLUGINS})
+

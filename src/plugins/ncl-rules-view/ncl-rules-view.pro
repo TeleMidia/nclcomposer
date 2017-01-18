@@ -2,27 +2,26 @@ CONFIG += link_ncl_profile
 
 include (../plugins-common.pri)
 
-INCLUDEPATH += . \
-            src
+INCLUDEPATH += .
 
 SOURCES += \
-    src/ComboBoxItem.cpp \
-    src/CompositeRuleItem.cpp \
-    src/RuleItem.cpp \
-    src/RulesTreeWidget.cpp \
-    src/RulesView.cpp \
-    src/RulesViewFactory.cpp \
-    src/RulesViewPlugin.cpp
+    ComboBoxItem.cpp \
+    CompositeRuleItem.cpp \
+    RuleItem.cpp \
+    RulesTreeWidget.cpp \
+    RulesView.cpp \
+    RulesViewFactory.cpp \
+    RulesViewPlugin.cpp
 
 HEADERS += \
-    src/Util.h \
-    src/RulesViewPlugin.h \
-    src/RulesViewFactory.h \
-    src/RulesView.h \
-    src/RulesTreeWidget.h \
-    src/RuleItem.h \
-    src/CompositeRuleItem.h \
-    src/ComboBoxItem.h
+    Util.h \
+    RulesViewPlugin.h \
+    RulesViewFactory.h \
+    RulesView.h \
+    RulesTreeWidget.h \
+    RuleItem.h \
+    CompositeRuleItem.h \
+    ComboBoxItem.h
 
 RESOURCES += \
     ../common-resources/images.qrc
