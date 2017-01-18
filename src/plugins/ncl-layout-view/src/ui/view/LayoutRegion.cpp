@@ -986,6 +986,9 @@ void LayoutRegion::resize(QGraphicsSceneMouseEvent* event)
   qreal w = width;
   qreal h = height;
 
+  /*setting aspect ratio,used with shift modifier on resize*/
+  qreal aspectratio = width/height;
+
   /* setting minimal bounds */
   qreal minx;
   qreal miny;
@@ -1054,13 +1057,20 @@ void LayoutRegion::resize(QGraphicsSceneMouseEvent* event)
     /* adjusting TOP */
     case LayoutRegion::Top:
       {
-        nextx = x; // fixed x
-        nextw = w; // fixed width
-
         if (nexty < miny)
         {
           nexty = miny;
           nexth = y + h - miny;
+        }
+        nextx = x; // fixed x
+
+        if(QGuiApplication::keyboardModifiers() == Qt::ShiftModifier) /*maintain ratio*/
+        {
+          nextw = nexth*aspectratio;
+        }
+        else
+        {
+          nextw = w; // fixed width
         }
 
         break;
@@ -1098,7 +1108,15 @@ void LayoutRegion::resize(QGraphicsSceneMouseEvent* event)
         }
 
         nexty = y; // fixed y
-        nexth = h; // fixed height
+
+        if(QGuiApplication::keyboardModifiers() == Qt::ShiftModifier) /*maintain ratio*/
+        {
+          nexth = nextw/aspectratio;
+        }
+        else
+        {
+          nexth = h; // fixed height
+        }
 
         break;
       }
@@ -1127,15 +1145,22 @@ void LayoutRegion::resize(QGraphicsSceneMouseEvent* event)
       /* adjusting BOTTOM */
     case LayoutRegion::Bottom:
       {
-        nextx = x; // fixed x
-        nextw = w; // fixed width
-
         nexty = y; // fixed y
 
         nexth = h - dh;
         if (y + nexth > maxh)
         {
           nexth = maxh - y;
+        }
+
+        nextx = x; // fixed x
+        if(QGuiApplication::keyboardModifiers() == Qt::ShiftModifier) /*maintain ratio*/
+        {
+          nextw = nexth*aspectratio;
+        }
+        else
+        {
+          nextw = w; // fixed width
         }
 
         break;
@@ -1171,7 +1196,14 @@ void LayoutRegion::resize(QGraphicsSceneMouseEvent* event)
         }
 
         nexty = y; // fixed y
-        nexth = h; // fixed height
+        if(QGuiApplication::keyboardModifiers() == Qt::ShiftModifier) /*maintain ratio*/
+        {
+          nexth = nextw/aspectratio;
+        }
+        else
+        {
+          nexth = h; // fixed height
+        }
 
         break;
       }
