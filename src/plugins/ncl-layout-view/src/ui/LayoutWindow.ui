@@ -73,6 +73,7 @@
    </attribute>
    <addaction name="actionZoom_in"/>
    <addaction name="actionZoom_out"/>
+   <addaction name="actionActionZoom_original"/>
    <addaction name="actionShow_Hide_Grid"/>
   </widget>
   <widget class="QToolBar" name="toolBar_regionBases">
@@ -160,8 +161,8 @@
   </action>
   <action name="actionCopy_region">
    <property name="icon">
-    <iconset>
-     <normaloff>:/images/icon/copy</normaloff>:/images/icon/copy</iconset>
+    <iconset resource="../../../common-resources/images.qrc">
+     <normaloff>:/icon/copy</normaloff>:/icon/copy</iconset>
    </property>
    <property name="text">
     <string>Copy region</string>
@@ -175,8 +176,8 @@
   </action>
   <action name="actionCut_region">
    <property name="icon">
-    <iconset>
-     <normaloff>:/images/icon/cut</normaloff>:/images/icon/cut</iconset>
+    <iconset resource="../../../common-resources/images.qrc">
+     <normaloff>:/icon/cut</normaloff>:/icon/cut</iconset>
    </property>
    <property name="text">
     <string>Cut region</string>
@@ -187,8 +188,8 @@
   </action>
   <action name="actionPaste_region">
    <property name="icon">
-    <iconset>
-     <normaloff>:/images/icon/paste</normaloff>:/images/icon/paste</iconset>
+    <iconset resource="../../../common-resources/images.qrc">
+     <normaloff>:/icon/paste</normaloff>:/icon/paste</iconset>
    </property>
    <property name="text">
     <string>Paste region</string>
@@ -202,8 +203,8 @@
   </action>
   <action name="actionZoom_in">
    <property name="icon">
-    <iconset>
-     <normaloff>:/images/icon/zoomin</normaloff>:/images/icon/zoomin</iconset>
+    <iconset resource="../../../common-resources/images.qrc">
+     <normaloff>:/icon/zoomin</normaloff>:/icon/zoomin</iconset>
    </property>
    <property name="text">
     <string>Zoom in</string>
@@ -214,8 +215,8 @@
   </action>
   <action name="actionZoom_out">
    <property name="icon">
-    <iconset>
-     <normaloff>:/images/icon/zoomout</normaloff>:/images/icon/zoomout</iconset>
+    <iconset resource="../../../common-resources/images.qrc">
+     <normaloff>:/icon/zoomout</normaloff>:/icon/zoomout</iconset>
    </property>
    <property name="text">
     <string>Zoom out</string>
@@ -224,8 +225,18 @@
     <string>Zoom out</string>
    </property>
   </action>
+  <action name="actionActionZoom_original">
+   <property name="icon">
+    <iconset resource="../../../common-resources/images.qrc">
+     <normaloff>:/icon/zoomoriginal</normaloff>:/icon/zoomoriginal</iconset>
+   </property>
+   <property name="text">
+    <string>actionZoom_original</string>
+   </property>
+  </action>
  </widget>
  <resources>
+  <include location="../../../common-resources/images.qrc"/>
   <include location="../../ncl-layout-view.qrc"/>
  </resources>
  <connections/>
