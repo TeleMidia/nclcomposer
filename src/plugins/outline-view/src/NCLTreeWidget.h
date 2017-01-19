@@ -211,6 +211,11 @@ private:
   int _fontSize;
   QFont _defaultFont;
 
+  QMap<QString, QString> _entitiesIcons;
+  QMap<QString, QString> _mediaIcons;
+  QMap<QString, QString> _extIcons;
+  QMap<QString, QString> _bindIcons;
+
   /*!
    * \brief Creates the QActions
    */

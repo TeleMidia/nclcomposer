@@ -53,6 +53,89 @@ NCLTreeWidget::NCLTreeWidget(QWidget *parent) : QTreeWidget(parent)
   _defaultFont = QFont();
 
   setDragEnabled(true);
+
+  // Entities Icon
+  _entitiesIcons["media"] = ":/icon/media";
+  _entitiesIcons["body"] = ":/icon/body";
+  _entitiesIcons["context"] = ":/icon/context";
+  _entitiesIcons["switch"] = ":/icon/switch";
+  _entitiesIcons["descriptor"] = ":/icon/descriptor";
+  _entitiesIcons["descriptorBase"] = ":/icon/descriptorbase";
+  _entitiesIcons["connector"] = ":/icon/connector";
+  _entitiesIcons["connectorBase"] = ":/icon/connectorbase";
+  _entitiesIcons["region"] = ":/icon/region";
+  _entitiesIcons["regionBase"] = ":/icon/regionbase";
+  _entitiesIcons["link"] = ":/icon/link";
+  _entitiesIcons["port"] = ":/icon/port";
+  _entitiesIcons["area"] = ":/icon/area";
+  _entitiesIcons["switchPort"] = ":/icon/switchport";
+  _entitiesIcons["bind"] = ":/icon/bind";
+
+  // Media Icons
+  _mediaIcons["text/html"] = ":/icon/media-text-html";
+  _mediaIcons["text/css"] = ":/icon/media-text";
+  _mediaIcons["text/xml"] = ":/icon/media-text";
+  _mediaIcons["text/plain"] = ":/icon/media-text";
+  _mediaIcons["image/bmp"] = ":/icon/media-image";
+  _mediaIcons["image/png"] = ":/icon/media-image";
+  _mediaIcons["image/gif"] = ":/icon/media-image";
+  _mediaIcons["image/jpeg"] = ":/icon/media-image";
+  _mediaIcons["audio/basic"] = ":/icon/media-audio";
+  _mediaIcons["audio/x-wav"] = ":/icon/media-audio";
+  _mediaIcons["audio/mpeg"] = ":/icon/media-audio";
+  _mediaIcons["audio/mp3"] = ":/icon/media-audio";
+  _mediaIcons["audio/mp2"] = ":/icon/media-audio";
+  _mediaIcons["video/mpeg"] = ":/icon/media-video";
+  _mediaIcons["video/mp4"] = ":/icon/media-video";
+  _mediaIcons["video/x-mng"] = ":/icon/media-video";
+  _mediaIcons["video/quicktime"] = ":/icon/media-video";
+  _mediaIcons["video/x-msvideo"] = ":/icon/media-video";
+  _mediaIcons["application/x-ginga-NCL"] = ":/icon/media-ncl";
+  _mediaIcons["application/x-ncl-NCL"] = ":/icon/media-ncl";
+  _mediaIcons["application/x-ginga-NCLua"] = ":/icon/media-nclua";
+  _mediaIcons["application/x-ncl-NCLua"] = ":/icon/media-nclua";
+  _mediaIcons["application/x-ginga-settings"] = ":/icon/media-settings";
+  _mediaIcons["application/x-ncl-settings"] = ":/icon/media-settings";
+  _mediaIcons["application/x-ginga-time"] = ":/icon/media-time";
+  _mediaIcons["application/x-ncl-time"] = ":/icon/media-time";
+  _mediaIcons["application/x-ginga-NCLet"] = ":/icon/media-nclet";
+
+  // Extension Icons
+  _extIcons["txt"] = ":/icon/media-text";
+  _extIcons["htm"] = ":/icon/media-text-html";
+  _extIcons["html"] = ":/icon/media-text-html";
+  _extIcons["gif"] = ":/icon/media-image";
+  _extIcons["png"] = ":/icon/media-image";
+  _extIcons["jpg"] = ":/icon/media-image";
+  _extIcons["jpeg"] = ":/icon/media-image";
+  _extIcons["gif"] = ":/icon/media-image";
+  _extIcons["mp3"] = ":/icon/media-audio";
+  _extIcons["wav"] = ":/icon/media-audio";
+  _extIcons["ac3"] = ":/icon/media-audio";
+  _extIcons["mpa"] = ":/icon/media-audio";
+  _extIcons["mp2"] = ":/icon/media-audio";
+  _extIcons["mp4"] = ":/icon/media-video";
+  _extIcons["avi"] = ":/icon/media-video";
+  _extIcons["mpeg4"] = ":/icon/media-video";
+  _extIcons["mpeg"] = ":/icon/media-video";
+  _extIcons["mpg"] = ":/icon/media-video";
+  _extIcons["mov"] = ":/icon/media-video";
+  _extIcons["ts"] = ":/icon/media-video";
+  _extIcons["ncl"] = ":/icon/media-ncl";
+  _extIcons["lua"] = ":/icon/media-nclua";
+
+  // Bind Icons
+  _bindIcons["onBegin"] = ":/icon/bind-onbegin";
+  _bindIcons["onEnd"] = ":/icon/bind-onend";
+  _bindIcons["onPause"] = ":/icon/bind-onpause";
+  _bindIcons["onResume"] = ":/icon/bind-onresume";
+  _bindIcons["onSelection"] = ":/icon/bind-onselection";
+  _bindIcons["pause"] = ":/icon/bind-pause";
+  _bindIcons["resume"] = ":/icon/bind-resume";
+  _bindIcons["set"] = ":/icon/bind-set";
+  _bindIcons["start"] = ":/icon/bind-start";
+  _bindIcons["stop"] = ":/icon/bind-stop";
+
 }
 
 NCLTreeWidget::~NCLTreeWidget()
@@ -352,135 +435,40 @@ void NCLTreeWidget::userRemoveElement()
 void NCLTreeWidget::updateItem(QTreeWidgetItem *item, QString tagname,
                                QMap <QString, QString> &attrs)
 {
-  QIcon icon;
+  QString icon = ":/icon/tag";
   /*!
    *  \todo Create a method to return an Icon to a given element.
    */
-  if(tagname == "media")
-  {
-    QString type = "";
 
-    if(attrs.contains("type") && !attrs.values("type").empty())
-    {
-      type = attrs.value("type");
-    }
-    else if(attrs.contains("src") && !attrs.values("src").empty())
+  if (_entitiesIcons.contains(tagname))
+  {
+    icon = _entitiesIcons.value(tagname);
+
+    if (tagname == "media")
     {
       QString src = attrs.value("src");
       QString ext = src.mid(src.lastIndexOf(".") + 1);
 
-      //TODO: The mapping between extension and media type should be in the
-      // settings file.
+      if (_extIcons.contains(ext))
+        icon = _extIcons.value(ext);
 
-      /* GlobalSettings settings;
-      settings.beginGroup("mimetypes");
-      type = settings.value(ext).toString();
-      settings.endGroup(); */
+      QString type = attrs.value("type");
 
-      if(ext == "png" || ext == "jpg" || ext == "jpeg" || ext == "gif")
-      {
-        type = "image";
-      }
-      else if(ext == "mp4" || ext == "avi" || ext == "mpeg4" || ext == "mpeg"
-              || ext == "mpg" || ext == "mov" || ext == "ts")
-      {
-        type = "video";
-      }
-      else if(ext == "mp3" || ext == "wav" || ext == "ac3" || ext == "mpa"
-              || ext == "mp2")
-      {
-        type = "audio";
-      }
-      else if(ext == "htm" || ext == "html")
-      {
-        type = "text/html";
-      }
-      else if(ext == "ncl")
-      {
-        type = "application/x-ginga-ncl";
-      }
-      else if(ext == "txt")
-      {
-        type = "text/plain";
-      }
-      else if(ext == "lua")
-      {
-        type = "application/x-ginga-NCLua";
-      }
+      if (_mediaIcons.contains(type))
+        icon = _mediaIcons.value(type);
     }
-
-    if(!type.isEmpty())
+    else if (tagname == "bind")
     {
-      if(type.startsWith("audio"))
-        icon = QIcon(":/icon/audio");
-      else if(type.startsWith("image"))
-        icon = QIcon(":/icon/image");
-      else if(type.startsWith("video"))
-        icon = QIcon(":/icon/video");
-      else if(type.startsWith("text/html"))
-        icon = QIcon(":/icon/html");
-      else if(type.startsWith("text"))
-        icon = QIcon(":/icon/text");
-      else if(type.startsWith("application/x-ginga-NCLua"))
-        icon = QIcon(":/icon/script");
-      else if(type.startsWith("application/x-ginga-ncl"))
-        icon = QIcon(":/icon/ncl");
-      else if(type.startsWith("application/x-ncl-settings") ||
-              type.startsWith("application/x-ginga-settings"))
-        icon = QIcon(":/icon/settings");
-      else icon = QIcon (":/icon/media");
-    }
-    else
-      icon = QIcon (":/icon/media");
-  }
-  else if(tagname == "body")
-    icon = QIcon (":/icon/body");
-  else if(tagname == "context")
-    icon = QIcon (":/icon/context");
-  else if(tagname == "meta" || tagname == "metadata")
-    icon = QIcon (":/icon/metadata");
-  else if(tagname == "switch")
-    icon = QIcon (":/icon/switch");
-  else if(tagname == "descriptor")
-    icon = QIcon (":/icon/descriptor");
-  else if(tagname == "descriptorBase")
-    icon = QIcon (":/icon/descriptorbase");
-  else if(tagname == "connectorBase")
-    icon = QIcon (":/icon/connectorbase");
-  else if(tagname == "regionBase")
-    icon = QIcon (":/icon/regionbase");
-  else if(tagname == "link")
-    icon = QIcon (":/icon/link");
-  else if(tagname == "region")
-    icon = QIcon (":/icon/region");
-  else if(tagname == "port")
-    icon = QIcon (":/icon/port");
-  else if(tagname == "area")
-    icon = QIcon (":/icon/area");
-  else if(tagname == "switchPort")
-    icon = QIcon (":/icon/switchport");
-  else if(tagname == "property")
-    icon = QIcon (":/icon/property");
-  else if(tagname == "bind")
-  {
-    QString role = (attrs.value("role")).toLower();
+      QString role = attrs.value("role");
 
-    if (role == "onbegin" ||
-        role == "onend" ||
-        role == "onpause" ||
-        role == "onresume" ||
-        role == "onselection" ||
-        role == "pause" ||
-        role == "resume" ||
-        role == "set" ||
-        role == "start" ||
-        role == "stop")
-         icon = QIcon (":/icon/bind-"+role);
-    else
-      icon = QIcon (":/icon/bind-unknow-action");
+      if (_bindIcons.contains(role))
+        icon = _bindIcons.value(role);
+      else if (role.startsWith("on"))
+        icon = ":/icon/bind-unknow-condition";
+      else
+        icon = ":/icon/bind-unknow-action";
+    }
   }
-  else
-    icon = QIcon (":/icon/tag");
 
   QString strAttrList = "";
   QString key;
@@ -495,7 +483,7 @@ void NCLTreeWidget::updateItem(QTreeWidgetItem *item, QString tagname,
     }
   }
 
-  item->setIcon(0, icon);
+  item->setIcon(0, QIcon(icon));
   item->setText(4, tagname);
 
   if(name != "")
