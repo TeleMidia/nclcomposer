@@ -437,14 +437,14 @@ QString StructuralUtil::getTooltip(StructuralType type, const QString &title, co
 
 std::map<Structural::StructuralMimeType, QString> StructuralUtil::_mimetypesIcon =
     StructuralMap<Structural::StructuralMimeType, QString >
-(Structural::Text, ":/icon/text")
-(Structural::Image, ":/icon/image")
-(Structural::Audio, ":/icon/audio")
-(Structural::Video, ":/icon/video")
-(Structural::HTML, ":/icon/html")
-(Structural::NCL, ":/icon/ncl")
-(Structural::Settings, ":/icon/settings")
-(Structural::NCLua, ":/icon/script")
+(Structural::Text, ":/icon/media-text")
+(Structural::Image, ":/icon/media-image")
+(Structural::Audio, ":/icon/media-audio")
+(Structural::Video, ":/icon/media-video")
+(Structural::HTML, ":/icon/media-text-html")
+(Structural::NCL, ":/icon/media-ncl")
+(Structural::Settings, ":/icon/media-settings")
+(Structural::NCLua, ":/icon/media-nclua")
 
 (Structural::NoMimeType, ":/icon/media");
 

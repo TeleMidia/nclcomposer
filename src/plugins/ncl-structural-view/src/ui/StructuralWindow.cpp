@@ -93,8 +93,8 @@ void StructuralWindow::createActions()
   // zoomout action
   _zoomoriginalAction = new QAction((QObject*) this);
   _zoomoriginalAction->setEnabled(true);
-  _zoomoriginalAction->setText(tr("Zoom Out"));
-  _zoomoriginalAction->setIcon(QIcon(":/images/icon/zoomoriginal"));
+  _zoomoriginalAction->setText(tr("Zoom Original"));
+  _zoomoriginalAction->setIcon(QIcon(":/icon/zoomoriginal"));
   _zoomoriginalAction->setShortcut(QKeySequence("Ctrl+0"));
 
   // pointer action
