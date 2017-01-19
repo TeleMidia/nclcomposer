@@ -55,5 +55,16 @@
         <file alias="bind-stop">images/icon-bind-stop.png</file>
         <file alias="bind-unknow-action">images/icon-bind-unknow-action.png</file>
         <file alias="bind-unknow-condition">images/icon-bind-unknow-condition.png</file>
+        <file alias="media-text">images/icon-media-text.png</file>
+        <file alias="media-text-html">images/icon-media-text-html.png</file>
+        <file alias="media-audio">images/icon-media-audio.png</file>
+        <file alias="media-image">images/icon-media-image.png</file>
+        <file alias="media-video">images/icon-media-video.png</file>
+        <file alias="zoomoriginal">images/icon-zoomoriginal.png</file>
+        <file alias="bind">images/icon-bind.png</file>
+        <file alias="media-nclua">images/icon-media-nclua.png</file>
+        <file alias="media-time">images/icon-media-time.png</file>
+        <file alias="media-settings">images/icon-media-settings.png</file>
+        <file alias="media-ncl">images/icon-media-ncl.png</file>
     </qresource>
 </RCC>
