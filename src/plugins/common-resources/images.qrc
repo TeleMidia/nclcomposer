@@ -60,11 +60,11 @@
         <file alias="media-audio">images/icon-media-audio.png</file>
         <file alias="media-image">images/icon-media-image.png</file>
         <file alias="media-video">images/icon-media-video.png</file>
-        <file alias="zoomoriginal">images/icon-zoomoriginal.png</file>
         <file alias="bind">images/icon-bind.png</file>
         <file alias="media-nclua">images/icon-media-nclua.png</file>
         <file alias="media-time">images/icon-media-time.png</file>
         <file alias="media-settings">images/icon-media-settings.png</file>
         <file alias="media-ncl">images/icon-media-ncl.png</file>
+        <file alias="zoomreset">images/icon-zoomreset.png</file>
     </qresource>
 </RCC>
