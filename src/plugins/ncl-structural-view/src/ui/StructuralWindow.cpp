@@ -90,12 +90,12 @@ void StructuralWindow::createActions()
   _zoomoutAction->setIcon(QIcon(":/icon/zoomout"));
   _zoomoutAction->setShortcut(QKeySequence("Ctrl+-"));
 
-  // zoomout action
-  _zoomoriginalAction = new QAction((QObject*) this);
-  _zoomoriginalAction->setEnabled(true);
-  _zoomoriginalAction->setText(tr("Zoom Original"));
-  _zoomoriginalAction->setIcon(QIcon(":/icon/zoomoriginal"));
-  _zoomoriginalAction->setShortcut(QKeySequence("Ctrl+0"));
+  // zoomreset action
+  _zoomresetAction = new QAction((QObject*) this);
+  _zoomresetAction->setEnabled(false);
+  _zoomresetAction->setText(tr("Reset Zoom"));
+  _zoomresetAction->setIcon(QIcon(":/icon/zoomreset"));
+  _zoomresetAction->setShortcut(QKeySequence("Ctrl+0"));
 
   // pointer action
   _pointerAction = new QAction((QObject*) this);
@@ -262,7 +262,7 @@ void StructuralWindow::createToolbar()
 
   _windowToolbar->addAction(_zoominAction);
   _windowToolbar->addAction(_zoomoutAction);
-  _windowToolbar->addAction(_zoomoriginalAction);
+  _windowToolbar->addAction(_zoomresetAction);
   _windowToolbar->addSeparator();
   _windowToolbar->addAction(_snapshotAction);
   _windowToolbar->addSeparator();
@@ -299,7 +299,7 @@ void  StructuralWindow::createConnections()
   connect(_snapshotAction, SIGNAL(triggered()), _view, SLOT(performSnapshot()));
   connect(_zoominAction, SIGNAL(triggered()), _view, SLOT(performZoomIn()));
   connect(_zoomoutAction, SIGNAL(triggered()), _view, SLOT(performZoomOut()));
-  connect(_zoomoriginalAction, SIGNAL(triggered()), _view, SLOT(performZoomOriginal()));
+  connect(_zoomresetAction, SIGNAL(triggered()), _view, SLOT(performZoomOriginal()));
   connect(_pointerAction, SIGNAL(triggered()), _view, SLOT(performPointer()));
   connect(_linkAction, SIGNAL(triggered()), _view, SLOT(performLink()));
   connect(_minimapAction, SIGNAL(triggered()), _view, SLOT(performMinimap()));
@@ -367,6 +367,7 @@ void StructuralWindow::switchSnapshot(bool state)
 void StructuralWindow::switchZoomIn(bool state)
 {
   _zoominAction->setEnabled(state);
+  _zoomresetAction->setEnabled(state);
 }
 
 void StructuralWindow::switchZoomOut(bool state)

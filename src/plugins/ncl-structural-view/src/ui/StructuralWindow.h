@@ -56,7 +56,7 @@ private:
   QAction* _snapshotAction;
   QAction* _zoominAction;
   QAction* _zoomoutAction;
-  QAction* _zoomoriginalAction;
+  QAction* _zoomresetAction;
   QAction* _pointerAction;
   QAction* _linkAction;
   QAction* _minimapAction;
