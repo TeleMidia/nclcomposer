@@ -86,5 +86,8 @@
         <file alias="regionbase-insert">images/icon-regionbase-insert.png</file>
         <file alias="region-duplicate">images/icon-region-duplicate.png</file>
         <file alias="grid">images/icon-grid.png</file>
+        <file alias="rulebase-remove">images/icon-rulebase-remove.png</file>
+        <file alias="rule-remove">images/icon-rule-remove.png</file>
+        <file alias="rule-insert">images/icon-rule-insert.png</file>
     </qresource>
 </RCC>
