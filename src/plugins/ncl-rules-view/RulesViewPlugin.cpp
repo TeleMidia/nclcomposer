@@ -210,6 +210,8 @@ void RulesViewPlugin::addRule(Entity *entity)
 
     item->setFlags(item->flags() | Qt::ItemIsEditable);
 
+    item->setIcon(0, QIcon(":/icon/rulebase"));
+
     _ruleBaseEntity = entity;
   }
 
@@ -234,6 +236,8 @@ void RulesViewPlugin::addRule(Entity *entity)
                             entity->getAttribute(VALUE_ATTR),
                             RULE_TYPE, _rulesTable);
 
+      item->setIcon(0, QIcon(":/icon/rule"));
+
     }
 
     else if(entityType == COMPOSITERULE_LABEL)
@@ -242,6 +246,8 @@ void RulesViewPlugin::addRule(Entity *entity)
                                     entity->getAttribute(ID_ATTR),
                                     entity->getAttribute(OPERATOR_ATTR),
                                     COMPOSITERULE_TYPE, _rulesTable);
+
+      item->setIcon(0, QIcon(":/icon/rule"));
     }
   }
 

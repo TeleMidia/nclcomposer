@@ -86,9 +86,9 @@ void LayoutWindow::addRegionBaseToCombobox(
   int comboCount = ui->regionBaseComboBox->count();
 
   if(properties.count("id"))
-    ui->regionBaseComboBox->insertItem(comboCount - 2, properties["id"], uuid);
+    ui->regionBaseComboBox->insertItem(comboCount - 2, QIcon(":/icon/regionbase"), properties["id"], uuid);
   else
-    ui->regionBaseComboBox->insertItem(comboCount - 2, tr("Unknown"), uuid);
+    ui->regionBaseComboBox->insertItem(comboCount - 2, QIcon(":/icon/regionbase"), tr("Unknown"), uuid);
 }
 
 void LayoutWindow::removeRegionBaseFromCombobox(const QString &uuid)

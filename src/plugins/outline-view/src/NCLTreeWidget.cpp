@@ -57,19 +57,28 @@ NCLTreeWidget::NCLTreeWidget(QWidget *parent) : QTreeWidget(parent)
   // Entities Icon
   _entitiesIcons["media"] = ":/icon/media";
   _entitiesIcons["body"] = ":/icon/body";
+  _entitiesIcons["transition"] = ":/icon/transition";
+  _entitiesIcons["transitionBase"] = ":/icon/transitionbase";
+  _entitiesIcons["rule"] = ":/icon/rule";
+  _entitiesIcons["ruleBase"] = ":/icon/rulebase";
   _entitiesIcons["context"] = ":/icon/context";
   _entitiesIcons["switch"] = ":/icon/switch";
   _entitiesIcons["descriptor"] = ":/icon/descriptor";
+  _entitiesIcons["descriptorParam"] = ":/icon/descriptorparam";
   _entitiesIcons["descriptorBase"] = ":/icon/descriptorbase";
   _entitiesIcons["connector"] = ":/icon/connector";
+  _entitiesIcons["connectorParam"] = ":/icon/connectorparam";
   _entitiesIcons["connectorBase"] = ":/icon/connectorbase";
+  _entitiesIcons["importBase"] = ":/icon/importbase";
   _entitiesIcons["region"] = ":/icon/region";
   _entitiesIcons["regionBase"] = ":/icon/regionbase";
   _entitiesIcons["link"] = ":/icon/link";
+  _entitiesIcons["linkParam"] = ":/icon/linkparam";
   _entitiesIcons["port"] = ":/icon/port";
   _entitiesIcons["area"] = ":/icon/area";
   _entitiesIcons["switchPort"] = ":/icon/switchport";
   _entitiesIcons["bind"] = ":/icon/bind";
+  _entitiesIcons["bindparam"] = ":/icon/bindparam";
 
   // Media Icons
   _mediaIcons["text/html"] = ":/icon/media-text-html";
@@ -457,17 +466,13 @@ void NCLTreeWidget::updateItem(QTreeWidgetItem *item, QString tagname,
       if (_mediaIcons.contains(type))
         icon = _mediaIcons.value(type);
     }
-    else if (tagname == "bind")
-    {
-      QString role = attrs.value("role");
+//    else if (tagname == "bind")
+//    {
+//      QString role = attrs.value("role");
 
-      if (_bindIcons.contains(role))
-        icon = _bindIcons.value(role);
-      else if (role.startsWith("on"))
-        icon = ":/icon/bind-unknow-condition";
-      else
-        icon = ":/icon/bind-unknow-action";
-    }
+//      if (_bindIcons.contains(role))
+//        icon = _bindIcons.value(role);
+//    }
   }
 
   QString strAttrList = "";

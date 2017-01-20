@@ -89,8 +89,8 @@
   </widget>
   <action name="actionAdd_Region">
    <property name="icon">
-    <iconset resource="../../ncl-layout-view.qrc">
-     <normaloff>:/icon/add-region-icon</normaloff>:/icon/add-region-icon</iconset>
+    <iconset resource="../../../common-resources/images.qrc">
+     <normaloff>:/icon/region-insert</normaloff>:/icon/region-insert</iconset>
    </property>
    <property name="text">
     <string>Add region</string>
@@ -101,8 +101,8 @@
   </action>
   <action name="actionRemove_Region">
    <property name="icon">
-    <iconset resource="../../ncl-layout-view.qrc">
-     <normaloff>:/icon/remove-region-icon</normaloff>:/icon/remove-region-icon</iconset>
+    <iconset resource="../../../common-resources/images.qrc">
+     <normaloff>:/icon/region-remove</normaloff>:/icon/region-remove</iconset>
    </property>
    <property name="text">
     <string>Delete region</string>
@@ -116,8 +116,8 @@
     <bool>true</bool>
    </property>
    <property name="icon">
-    <iconset resource="../../ncl-layout-view.qrc">
-     <normaloff>:/icon/grid-icon</normaloff>:/icon/grid-icon</iconset>
+    <iconset resource="../../../common-resources/images.qrc">
+     <normaloff>:/icon/grid</normaloff>:/icon/grid</iconset>
    </property>
    <property name="text">
     <string>Show/hide grid</string>
@@ -140,8 +140,8 @@
   </action>
   <action name="actionDuplicate_Region">
    <property name="icon">
-    <iconset resource="../../ncl-layout-view.qrc">
-     <normaloff>:/icon/duplicate-region-icon</normaloff>:/icon/duplicate-region-icon</iconset>
+    <iconset resource="../../../common-resources/images.qrc">
+     <normaloff>:/icon/region-duplicate</normaloff>:/icon/region-duplicate</iconset>
    </property>
    <property name="text">
     <string>Duplicate Region</string>
@@ -152,8 +152,8 @@
   </action>
   <action name="actionAdd_region_base">
    <property name="icon">
-    <iconset resource="../../ncl-layout-view.qrc">
-     <normaloff>:/icon/add-region-base-icon</normaloff>:/icon/add-region-base-icon</iconset>
+    <iconset resource="../../../common-resources/images.qrc">
+     <normaloff>:/icon/regionbase-insert</normaloff>:/icon/regionbase-insert</iconset>
    </property>
    <property name="text">
     <string>Add region base</string>
@@ -228,7 +228,7 @@
   <action name="actionActionZoom_original">
    <property name="icon">
     <iconset resource="../../../common-resources/images.qrc">
-     <normaloff>:/icon/zoomoriginal</normaloff>:/icon/zoomoriginal</iconset>
+     <normaloff>:/icon/zoomreset</normaloff>:/icon/zoomreset</iconset>
    </property>
    <property name="text">
     <string>actionZoom_original</string>

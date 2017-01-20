@@ -60,11 +60,34 @@
         <file alias="media-audio">images/icon-media-audio.png</file>
         <file alias="media-image">images/icon-media-image.png</file>
         <file alias="media-video">images/icon-media-video.png</file>
-        <file alias="zoomoriginal">images/icon-zoomoriginal.png</file>
         <file alias="bind">images/icon-bind.png</file>
         <file alias="media-nclua">images/icon-media-nclua.png</file>
         <file alias="media-time">images/icon-media-time.png</file>
         <file alias="media-settings">images/icon-media-settings.png</file>
         <file alias="media-ncl">images/icon-media-ncl.png</file>
+        <file alias="zoomreset">images/icon-zoomreset.png</file>
+        <file alias="bindparam">images/icon-bindparam.png</file>
+        <file alias="connector-insert">images/icon-connector-insert.png</file>
+        <file alias="connector">images/icon-connector.png</file>
+        <file alias="connector-base">images/icon-connectorbase-insert.png</file>
+        <file alias="connectorparam">images/icon-connectorparam.png</file>
+        <file alias="descriptorparam">images/icon-descriptorparam.png</file>
+        <file alias="importbase-insert">images/icon-importbase-insert.png</file>
+        <file alias="importbase">images/icon-importbase.png</file>
+        <file alias="linkparam">images/icon-linkparam.png</file>
+        <file alias="transition">images/icon-transition.png</file>
+        <file alias="transitionbase-insert">images/icon-transitionbase-insert.png</file>
+        <file alias="transitionbase">images/icon-transitionbase.png</file>
+        <file alias="rule">images/icon-rule.png</file>
+        <file alias="rulebase-insert">images/icon-rulebase-insert.png</file>
+        <file alias="rulebase">images/icon-rulebase.png</file>
+        <file alias="region-insert">images/icon-region-insert.png</file>
+        <file alias="region-remove">images/icon-region-remove.png</file>
+        <file alias="regionbase-insert">images/icon-regionbase-insert.png</file>
+        <file alias="region-duplicate">images/icon-region-duplicate.png</file>
+        <file alias="grid">images/icon-grid.png</file>
+        <file alias="rulebase-remove">images/icon-rulebase-remove.png</file>
+        <file alias="rule-remove">images/icon-rule-remove.png</file>
+        <file alias="rule-insert">images/icon-rule-insert.png</file>
     </qresource>
 </RCC>
