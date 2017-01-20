@@ -304,7 +304,7 @@ bool PluginControl::releasePlugins(Project *project)
 {
   if (!project)
   {
-    qCDebug(CPR_CORE) << "Project is NULL";
+    qCDebug(CPR_CORE) << "Project is nullptr";
     return false;
   }
 

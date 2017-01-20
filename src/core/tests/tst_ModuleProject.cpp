@@ -30,11 +30,11 @@ void tst_ModuleProject::initTestCase()
 void tst_ModuleProject::cleanupTestCase()
 {
   ProjectControl::releaseInstance();
-  pjControl = NULL;
+  pjControl = nullptr;
   LanguageControl::releaseInstance();
-  lgControl = NULL;
+  lgControl = nullptr;
   PluginControl::releaseInstance();
-  pgControl = NULL;
+  pgControl = nullptr;
 
   QString projectDir = resourceDir + QDir::separator() + "projects";
   QDir docDir(projectDir);
@@ -126,14 +126,14 @@ void tst_ModuleProject::importFromExistingNCL()
 
   timeval begin, end;
   // QVERIFY(pjControl->launchProject(projectFileName));
-  gettimeofday(&begin,NULL);
+  gettimeofday(&begin,nullptr);
   pjControl->importFromDocument(docFileName, projectFileName);
-  gettimeofday(&end, NULL);
+  gettimeofday(&end, nullptr);
   long long int interval = TestUtil::timeval_subtract_micro(begin, end);
   cout << numPlugins << " " << size << " " << (double)interval/1000.0 << " ";
-  gettimeofday(&begin,NULL);
+  gettimeofday(&begin,nullptr);
   pjControl->saveProject(projectFileName);
-  gettimeofday(&end,NULL);
+  gettimeofday(&end,nullptr);
   interval = TestUtil::timeval_subtract_micro(begin, end);
   cout << (double) interval / 1000.0 << endl;
   QApplication::processEvents();
@@ -191,15 +191,15 @@ void tst_ModuleProject::importNCLForEachPlugin()
   myfile.open(filename.toStdString().c_str());
 
   timeval begin, end;
-  gettimeofday(&begin,NULL);
+  gettimeofday(&begin,nullptr);
   pjControl->importFromDocument(docFileName, projectFileName);
-  gettimeofday(&end, NULL);
+  gettimeofday(&end, nullptr);
   long long int interval = TestUtil::timeval_subtract_micro(begin, end);
   myfile << pluginName.mid(pluginName.lastIndexOf("/")+1).toStdString().c_str()
          << " " << size << " " << (double)interval/1000.0 << " ";
-  gettimeofday(&begin,NULL);
+  gettimeofday(&begin,nullptr);
   pjControl->saveProject(projectFileName);
-  gettimeofday(&end,NULL);
+  gettimeofday(&end,nullptr);
   interval = TestUtil::timeval_subtract_micro(begin, end);
   myfile << (double)interval / 1000.0 << endl;
   QVERIFY(pjControl->closeProject(projectFileName));

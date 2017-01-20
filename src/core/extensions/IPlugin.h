@@ -98,7 +98,7 @@ public:
    *
    * \return QWidget - wrapping the plugin interface
    */
-  virtual QWidget* getWidget() { return NULL; }
+  virtual QWidget* getWidget() { return nullptr; }
 
   /*!
    * \brief Says to plugin save its settings.

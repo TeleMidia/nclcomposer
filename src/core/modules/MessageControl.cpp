@@ -46,7 +46,7 @@ void MessageControl::anonymousAddEntity( const QString &type,
 {
   Q_UNUSED(force)
 
-  Entity *ent = NULL;
+  Entity *ent = nullptr;
 
   try
   {
@@ -62,7 +62,7 @@ void MessageControl::anonymousAddEntity( const QString &type,
   catch(exception& e)
   {
     delete ent;
-    ent = NULL;
+    ent = nullptr;
 
     return;
   }
@@ -100,7 +100,7 @@ void MessageControl::anonymousRemoveEntity( const QString &entityUniqueId,
   try
   {
     Entity *entity = project->getEntityById(entityUniqueId);
-    if(entity != NULL)
+    if(entity != nullptr)
     {
       //send message to All PLUGINS interested in this message.
       if(notifyPlugins)
@@ -126,7 +126,7 @@ void MessageControl::anonymousChangeEntity( const QString &entityId,
   Q_UNUSED(force)
 
   Entity *ent = project->getEntityById(entityId);
-  if(ent != NULL)
+  if(ent != nullptr)
   {
     ent->setAtrributes(atts); //do it!
 
@@ -174,7 +174,7 @@ void MessageControl::onAddEntity( const QString &type,
   else if (parser)
       pluginID = parser->getParserName();
 
-  Entity *ent = NULL;
+  Entity *ent = nullptr;
 
   try
   {
@@ -193,7 +193,7 @@ void MessageControl::onAddEntity( const QString &type,
       parser->onEntityAddError(e.what());
 
     delete ent;
-    ent = NULL;
+    ent = nullptr;
 
     return;
   }
@@ -217,7 +217,7 @@ void MessageControl::onAddEntity(const QString &entity_content,
   else if (parser)
       pluginID = parser->getParserName();
 
-  Entity *ent = NULL;
+  Entity *ent = nullptr;
 
   if (format == Data::XML)
   {
@@ -297,7 +297,7 @@ void MessageControl::onEditEntity( Entity *entity,
 {
   Q_UNUSED(force)
 
-  assert (entity != NULL);
+  assert (entity != nullptr);
 
   IPlugin *plugin = qobject_cast<IPlugin *>(QObject::sender());
   if(plugin)
@@ -388,7 +388,7 @@ void MessageControl::onRemoveEntity(Entity *entity, bool force)
       }
       else
       {
-        plugin->errorMessage(tr("You have tried to remove a NULL entity!!"));
+        plugin->errorMessage(tr("You have tried to remove a nullptr entity!!"));
       }
     }
     catch(exception e)
@@ -426,7 +426,7 @@ void MessageControl::sendEntityAddedMessageToPlugins( const QString &pluginInsta
       PluginControl::getInstance()->getPluginInstances(this->project);
 
   QString slotName("onEntityAdded(QString,Entity*)"); //Normalized Slot
-  IPlugin *pluginMsgSrc = NULL;
+  IPlugin *pluginMsgSrc = nullptr;
 
   for (it = instances.begin(); it != instances.end(); it++)
   {
@@ -456,7 +456,7 @@ void MessageControl::sendEntityAddedMessageToPlugins( const QString &pluginInsta
   }
 
   // \fixme: Now I call for the plugin that asked the message.
-  if(pluginMsgSrc != NULL && pluginIsInterestedIn(pluginMsgSrc, entity))
+  if(pluginMsgSrc != nullptr && pluginIsInterestedIn(pluginMsgSrc, entity))
   {
     int idxSlot = pluginMsgSrc->metaObject()
         ->indexOfSlot(slotName.toStdString().c_str());
@@ -488,7 +488,7 @@ void MessageControl::sendEntityChangedMessageToPlugins(const QString &pluginInst
       PluginControl::getInstance()->getPluginInstances(this->project);
 
   QString slotName("onEntityChanged(QString,Entity*)");
-  IPlugin *pluginMsgSrc = NULL;
+  IPlugin *pluginMsgSrc = nullptr;
 
   for (it = instances.begin(); it != instances.end(); it++)
   {
@@ -517,7 +517,7 @@ void MessageControl::sendEntityChangedMessageToPlugins(const QString &pluginInst
   }
 
   // \fixme: Now I call for the plugin that asked the message.
-  if(pluginMsgSrc != NULL && pluginIsInterestedIn(pluginMsgSrc, entity))
+  if(pluginMsgSrc != nullptr && pluginIsInterestedIn(pluginMsgSrc, entity))
   {
     int idxSlot = pluginMsgSrc->metaObject()
         ->indexOfSlot(slotName.toStdString().c_str());
@@ -539,7 +539,7 @@ void MessageControl::sendEntityRemovedMessageToPlugins(const QString &pluginInst
       PluginControl::getInstance()->getPluginInstances(this->project);
 
   QString slotName("onEntityRemoved(QString,QString)");
-  IPlugin *pluginMsgSrc = NULL;
+  IPlugin *pluginMsgSrc = nullptr;
   QString entityId = entity->getUniqueId();
 
   for (it = instances.begin(); it != instances.end(); it++)
@@ -569,7 +569,7 @@ void MessageControl::sendEntityRemovedMessageToPlugins(const QString &pluginInst
   }
 
   // \fixme: Now I call for the plugin that asked the message.
-  if(pluginMsgSrc != NULL && pluginIsInterestedIn(pluginMsgSrc, entity))
+  if(pluginMsgSrc != nullptr && pluginIsInterestedIn(pluginMsgSrc, entity))
   {
     int idxSlot = pluginMsgSrc->metaObject()
         ->indexOfSlot(slotName.toStdString().c_str());

@@ -21,7 +21,7 @@ void tst_ModuleLanguage::initTestCase()
 void tst_ModuleLanguage::cleanupTestCase()
 {
   LanguageControl::releaseInstance();
-  lgControl = NULL;
+  lgControl = nullptr;
 }
 
 void tst_ModuleLanguage::languageLoadBenchmark_data()
