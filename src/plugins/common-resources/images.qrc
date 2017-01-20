@@ -81,5 +81,10 @@
         <file alias="rule">images/icon-rule.png</file>
         <file alias="rulebase-insert">images/icon-rulebase-insert.png</file>
         <file alias="rulebase">images/icon-rulebase.png</file>
+        <file alias="region-insert">images/icon-region-insert.png</file>
+        <file alias="region-remove">images/icon-region-remove.png</file>
+        <file alias="regionbase-insert">images/icon-regionbase-insert.png</file>
+        <file alias="region-duplicate">images/icon-region-duplicate.png</file>
+        <file alias="grid">images/icon-grid.png</file>
     </qresource>
 </RCC>
