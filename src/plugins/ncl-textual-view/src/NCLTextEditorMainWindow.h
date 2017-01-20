@@ -74,7 +74,9 @@ protected:
 
 private:
   void createActions();
+#ifdef NCLEDITOR_STANDALONE
   void createMenus();
+#endif
   void createToolBars();
   void createStatusBar();
   void createTextView();
@@ -103,19 +105,22 @@ private:
   QToolBar *_fileToolBar;
   QToolBar *_editToolBar;
 
+#ifdef NCLEDITOR_STANDALONE
   QAction *_newAct;
   QAction *_openAct;
   QAction *_saveAct;
   QAction *_saveAsAct;
   QAction *_exitAct;
+  QAction *_aboutAct;
+  QAction *_aboutQtAct;
+  QAction *_synchronizeAct;
+#endif
   QAction *_cutAct;
   QAction *_copyAct;
   QAction *_pasteAct;
-  QAction *_aboutAct;
-  QAction *_aboutQtAct;
+
   QAction *_fullscreenAct;
   QAction *_editPreferencesAct;
-  QAction *_synchronizeAct;
   QAction *_showSearchBoxAct;
 
   QDockWidget *_dockSearchBox;

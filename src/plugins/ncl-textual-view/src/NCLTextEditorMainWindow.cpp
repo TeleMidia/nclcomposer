@@ -29,10 +29,10 @@ NCLTextEditorMainWindow::NCLTextEditorMainWindow(QWidget *parent):
   createTextView();
   createActions();
   createSearchBox();
+  createToolBars();
 
 #ifdef NCLEDITOR_STANDALONE
   createMenus();
-  createToolBars();
   createOutlineView();
   createProblemsView();
   createStatusBar();
@@ -131,6 +131,7 @@ void NCLTextEditorMainWindow::documentWasModified()
 
 void NCLTextEditorMainWindow::createActions()
 {
+#ifdef NCLEDITOR_STANDALONE
   _newAct = new QAction(QIcon(":/images/new.png"), tr("&New"), this);
   _newAct->setShortcut(tr("Ctrl+N"));
   _newAct->setStatusTip(tr("Create a new file"));
@@ -155,24 +156,6 @@ void NCLTextEditorMainWindow::createActions()
   _exitAct->setStatusTip(tr("Exit the application"));
   connect(_exitAct, SIGNAL(triggered()), this, SLOT(close()));
 
-  _cutAct = new QAction(QIcon(":/images/clipboard_cut.png"), tr("Cu&t"), this);
-  _cutAct->setShortcut(tr("Ctrl+X"));
-  _cutAct->setStatusTip(tr("Cut the current selection's contents to the "
-                          "clipboard"));
-  connect(_cutAct, SIGNAL(triggered()), _textEdit, SLOT(cut()));
-
-  _copyAct = new QAction(QIcon(":/images/copy.png"), tr("&Copy"), this);
-  _copyAct->setShortcut(tr("Ctrl+C"));
-  _copyAct->setStatusTip(tr("Copy the current selection's contents to the "
-                           "clipboard"));
-  connect(_copyAct, SIGNAL(triggered()), _textEdit, SLOT(copy()));
-
-  _pasteAct = new QAction(QIcon(":/images/paste.png"), tr("&Paste"), this);
-  _pasteAct->setShortcut(tr("Ctrl+V"));
-  _pasteAct->setStatusTip(tr("Paste the clipboard's contents into the current "
-                            "selection"));
-  connect(_pasteAct, SIGNAL(triggered()), _textEdit, SLOT(paste()));
-
   _aboutAct = new QAction(tr("&About"), this);
   _aboutAct->setStatusTip(tr("Show the application's About box"));
   connect(_aboutAct, SIGNAL(triggered()), this, SLOT(about()));
@@ -180,6 +163,30 @@ void NCLTextEditorMainWindow::createActions()
   _aboutQtAct = new QAction(tr("About &Qt"), this);
   _aboutQtAct->setStatusTip(tr("Show the Qt library's About box"));
   connect(_aboutQtAct, SIGNAL(triggered()), qApp, SLOT(aboutQt()));
+
+  _synchronizeAct = new QAction ( QIcon(":/images/synchronize-icon-24.png"),
+                                 tr("&Synchronize"), this);
+  _synchronizeAct->setStatusTip(tr("Synchronize current text with the others"
+                                  " plugins."));
+#endif
+
+  _cutAct = new QAction(QIcon(":/icon/cut"), tr("Cu&t"), this);
+  _cutAct->setShortcut(tr("Ctrl+X"));
+  _cutAct->setStatusTip(tr("Cut the current selection's contents to the "
+                          "clipboard"));
+  connect(_cutAct, SIGNAL(triggered()), _textEdit, SLOT(cut()));
+
+  _copyAct = new QAction(QIcon(":/icon/copy"), tr("&Copy"), this);
+  _copyAct->setShortcut(tr("Ctrl+C"));
+  _copyAct->setStatusTip(tr("Copy the current selection's contents to the "
+                           "clipboard"));
+  connect(_copyAct, SIGNAL(triggered()), _textEdit, SLOT(copy()));
+
+  _pasteAct = new QAction(QIcon(":/icon/paste"), tr("&Paste"), this);
+  _pasteAct->setShortcut(tr("Ctrl+V"));
+  _pasteAct->setStatusTip(tr("Paste the clipboard's contents into the current "
+                            "selection"));
+  connect(_pasteAct, SIGNAL(triggered()), _textEdit, SLOT(paste()));
 
   _cutAct->setEnabled(false);
   _copyAct->setEnabled(false);
@@ -200,11 +207,6 @@ void NCLTextEditorMainWindow::createActions()
   connect ( _editPreferencesAct, SIGNAL(triggered()),
             this, SLOT(showPreferences()));
 
-  _synchronizeAct = new QAction ( QIcon(":/images/synchronize-icon-24.png"),
-                                 tr("&Synchronize"), this);
-  _synchronizeAct->setStatusTip(tr("Synchronize current text with the others"
-                                  " plugins."));
-
   _showSearchBoxAct = new QAction(QIcon(), tr("Search"), _textEdit);
   _showSearchBoxAct->setShortcut(tr("Ctrl+F"));
   _showSearchBoxAct->setShortcutContext(Qt::WindowShortcut);
@@ -213,6 +215,7 @@ void NCLTextEditorMainWindow::createActions()
   addAction(_showSearchBoxAct);
 }
 
+#ifdef NCLEDITOR_STANDALONE
 void NCLTextEditorMainWindow::createMenus()
 {
   _fileMenu = menuBar()->addMenu(tr("&File"));
@@ -238,22 +241,27 @@ void NCLTextEditorMainWindow::createMenus()
   _helpMenu->addAction(_aboutAct);
   _helpMenu->addAction(_aboutQtAct);
 }
+#endif
 
 void NCLTextEditorMainWindow::createToolBars()
 {
+#ifdef NCLEDITOR_STANDALONE
   _fileToolBar = addToolBar(tr("File"));
   _fileToolBar->setObjectName(QString("fileToolBar"));
   _fileToolBar->addAction(_newAct);
   _fileToolBar->addAction(_openAct);
   _fileToolBar->addAction(_saveAct);
   _fileToolBar->addAction(_fullscreenAct);
+#endif
 
   _editToolBar = addToolBar(tr("Edit"));
   _editToolBar->setObjectName(QString("editToolBar"));
   _editToolBar->addAction(_cutAct);
   _editToolBar->addAction(_copyAct);
   _editToolBar->addAction(_pasteAct);
+#ifdef NCLEDITOR_STANDALONE
   _editToolBar->addAction(_synchronizeAct);
+#endif
 }
 
 void NCLTextEditorMainWindow::createStatusBar()
