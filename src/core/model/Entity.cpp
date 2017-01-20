@@ -228,7 +228,7 @@ QString Entity::toString(int ntab, bool writeuid)
 
   out += "<";
   out.append(getType().toLatin1());
-  foreach(QString attr, atts.keys())
+  for(const QString &attr: atts.keys())
   {
     out += " ";
     out.append(attr);

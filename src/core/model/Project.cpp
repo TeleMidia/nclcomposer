@@ -188,8 +188,7 @@ QString Project::toString()
   result += Entity::toString(0);
   result += "#END_COMPOSER_MODEL#\n";
 
-  QString key;
-  foreach(key, pluginData.keys())
+  for(const QString &key: pluginData.keys())
   {
    result += "#COMPOSER_PLUGIN_DATA "+ key + "#\n";
    result += pluginData[key];
