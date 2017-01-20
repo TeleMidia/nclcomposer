@@ -89,5 +89,7 @@
         <file alias="rulebase-remove">images/icon-rulebase-remove.png</file>
         <file alias="rule-remove">images/icon-rule-remove.png</file>
         <file alias="rule-insert">images/icon-rule-insert.png</file>
+        <file alias="error">images/icon-error.png</file>
+        <file alias="warning">images/icon-warning.png</file>
     </qresource>
 </RCC>

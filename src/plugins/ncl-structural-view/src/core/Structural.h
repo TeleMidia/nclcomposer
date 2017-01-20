@@ -148,10 +148,10 @@
 #define STR_DEFAULT_ALERT_ICON_W 12
 #define STR_DEFAULT_ALERT_ICON_H 12
 
-#define STR_DEFAULT_ALERT_ERROR_ICON ":/icon/delete"
+#define STR_DEFAULT_ALERT_ERROR_ICON ":/icon/error"
 #define STR_DEFAULT_ALERT_ERROR_COLOR "#BD0300"
 
-#define STR_DEFAULT_ALERT_WARNING_ICON ":/icon/alert"
+#define STR_DEFAULT_ALERT_WARNING_ICON ":/icon/warning"
 #define STR_DEFAULT_ALERT_WARNING_COLOR "#E5E500"
 
 #define STR_DEFAULT_WITH_BODY 1                     // not used yet

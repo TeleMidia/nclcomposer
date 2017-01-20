@@ -1131,7 +1131,7 @@ void LayoutRegionBase::createGrid()
 {
   _grid = new LayoutGrid(0, this);
   _grid->setStep(25);
-  _grid->setPen(QPen(QBrush(Qt::lightGray), 1.5,Qt::DotLine));
+  _grid->setPen(QPen(QBrush(Qt::lightGray), 1,Qt::DotLine));
   _grid->setRect(0,0,854,480);
   _grid->setZValue(1000);
   _grid->setVisible(false);
