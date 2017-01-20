@@ -58,7 +58,7 @@ Entity::~Entity() {
     {
       Entity *child = children.at(0);
       delete child;
-      child = NULL;
+      child = nullptr;
       children.pop_front();
     }
   }
@@ -101,7 +101,7 @@ void Entity::setParent(Entity *parent)
 
 bool Entity::addChild(Entity *entity, int pos)
 {
-  assert(entity != NULL);
+  assert(entity != nullptr);
   QMutexLocker locker(&lockChildren);
   QString _id = entity->getUniqueId();
 
@@ -121,7 +121,7 @@ bool Entity::addChild(Entity *entity, int pos)
 //! Deletes the child and its children in a recursive way
 bool Entity::deleteChild(Entity *entity)
 {
-  assert(entity != NULL);
+  assert(entity != nullptr);
 //    QMutexLocker locker(&lockChildren);
   entity->setDeleteChildren(true);
   for(int i = 0; i < children.size(); i++)
@@ -133,7 +133,7 @@ bool Entity::deleteChild(Entity *entity)
   }
 
   delete entity;
-  // entity = NULL;
+  // entity = nullptr;
 
   return true;
 }
@@ -195,7 +195,7 @@ QVector <Entity *> Entity::getChildren() const
 // Is it useful ??
 bool Entity::removeChildAppendChildren(Entity *entity)
 {
-  assert(entity != NULL);
+  assert(entity != nullptr);
 
   for(int i= 0; i < children.size(); i++)
   {
@@ -205,7 +205,7 @@ bool Entity::removeChildAppendChildren(Entity *entity)
 
   entity->setDeleteChildren(false);
   // delete entity;
-  // entity = NULL;
+  // entity = nullptr;
 
   return true;
 }

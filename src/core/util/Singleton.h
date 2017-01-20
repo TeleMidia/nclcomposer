@@ -17,15 +17,15 @@
 private: static T* m_pInstance; \
 public: \
 static T* getInstance(){ \
-        if(m_pInstance == NULL) return m_pInstance = new T(); \
+        if(m_pInstance == nullptr) return m_pInstance = new T(); \
         return m_pInstance; \
  } \
 static void releaseInstance(){ \
-        if(m_pInstance != NULL) delete m_pInstance; \
-        m_pInstance = NULL; \
+        if(m_pInstance != nullptr) delete m_pInstance; \
+        m_pInstance = nullptr; \
  }
 
 #define INIT_SINGLETON(T) \
-    T* T::m_pInstance = NULL;
+    T* T::m_pInstance = nullptr;
 
 #endif

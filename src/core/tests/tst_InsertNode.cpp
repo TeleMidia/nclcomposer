@@ -31,11 +31,11 @@ void tst_InsertNode::initTestCase()
 void tst_InsertNode::cleanupTestCase()
 {
   ProjectControl::releaseInstance();
-  pjControl = NULL;
+  pjControl = nullptr;
   LanguageControl::releaseInstance();
-  lgControl = NULL;
+  lgControl = nullptr;
   PluginControl::releaseInstance();
-  pgControl = NULL;
+  pgControl = nullptr;
 
   /* Clean up the project directory */
   QString projectDir = resourceDir + QDir::separator() + "projects";
@@ -123,13 +123,13 @@ void tst_InsertNode::insertNode()
   for(int i = 0; i < nNodes; i++)
   {
     attrs.insert("id", "node");
-    gettimeofday(&begin,NULL);
+    gettimeofday(&begin,nullptr);
     messageControl->anonymousAddEntity("region", regionBase->getUniqueId(),
                                        attrs);
 
     QApplication::processEvents();
     showWidgets.redraw();
-    gettimeofday(&end, NULL);
+    gettimeofday(&end, nullptr);
     interval = TestUtil::timeval_subtract_micro(begin, end);
     myfile << ((double)interval)/1000.0 << endl;
   }
@@ -200,7 +200,7 @@ void tst_InsertNode::insertNodeNPlugins()
   for(int i = 0; i < nNodes; i++)
   {
     attrs.insert("id", "node");
-    gettimeofday(&begin,NULL);
+    gettimeofday(&begin,nullptr);
     messageControl->anonymousAddEntity("region", regionBase->getUniqueId(),
                                        attrs, false, false);
 
@@ -209,7 +209,7 @@ void tst_InsertNode::insertNodeNPlugins()
     messageControl->anonymousUpdateFromModel();
     QApplication::processEvents();
     showWidgets.redraw();
-    gettimeofday(&end, NULL);
+    gettimeofday(&end, nullptr);
     interval = TestUtil::timeval_subtract_micro (begin, end);
     myfile << ((double)interval)/1000.0 << endl;
   }
@@ -312,14 +312,14 @@ void tst_InsertNode::updateNodes()
 
   for(int i = 0; i < nUpdates; i++)
   {
-    gettimeofday(&begin,NULL);
+    gettimeofday(&begin,nullptr);
     for(int j = 0; j < i; j++)
     {
       QString value = QString::number(j);
       attrs.insert("top", value);
       messageControl->anonymousChangeEntity(region->getUniqueId(), attrs);
     }
-    gettimeofday(&end, NULL);
+    gettimeofday(&end, nullptr);
     interval = TestUtil::timeval_subtract_micro (begin, end);
     myfile << ((double)interval)/1000.0 << endl;
   }
@@ -337,7 +337,7 @@ void tst_InsertNode::updateNodes()
 
   for(int i = 0; i < nUpdates; i++)
   {
-    gettimeofday(&begin,NULL);
+    gettimeofday(&begin,nullptr);
     for(int j = 0; j < i; j++)
     {
       QString value = QString::number(i);
@@ -349,7 +349,7 @@ void tst_InsertNode::updateNodes()
     QApplication::processEvents();
     showWidgets.redraw();
 
-    gettimeofday(&end, NULL);
+    gettimeofday(&end, nullptr);
     interval = TestUtil::timeval_subtract_micro (begin, end);
     myfile << ((double)interval)/1000.0 << endl;
   }

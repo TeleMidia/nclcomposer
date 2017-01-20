@@ -29,7 +29,7 @@ ProjectControl::~ProjectControl()
     if (pg->releasePlugins(project))
     {
       delete project;
-      project = NULL;
+      project = nullptr;
     }
     else
     {
@@ -46,7 +46,7 @@ bool ProjectControl::closeProject(const QString &location)
   if (PluginControl::getInstance()->releasePlugins(project))
   {
     delete project;
-    project = NULL;
+    project = nullptr;
     openProjects.remove(location);
   }
   else
@@ -106,7 +106,7 @@ bool ProjectControl::launchProject(const QString &location)
   ProjectReader pr;
   Project *project = pr.readFile(location);
 
-  if(project != NULL)
+  if(project != nullptr)
   {
     project->setAtrributes(atts);
     // The project was readed without a problem.
@@ -167,7 +167,7 @@ void ProjectControl::importFromDocument( const QString &docLocation,
   Project *project = pr.readFile(projLocation);
   project->setAtrributes(atts);
 
-  if(project != NULL)
+  if(project != nullptr)
   {
     // The project was read without any problem.
     project->setLocation(projLocation);
@@ -283,18 +283,18 @@ Project *ProjectControl::getOpenProject(const QString &location)
   if(openProjects.contains(location))
     return openProjects.value(location);
 
-  return NULL;
+  return nullptr;
 }
 
 void ProjectControl::projectIsDirty(bool isDirty)
 {
   Project *project = qobject_cast<Project *> (QObject::sender());
-  if(project != NULL)
+  if(project != nullptr)
   {
     emit dirtyProject(project->getLocation(), isDirty);
   }
   else
-    qCDebug(CPR_CORE) <<"Received a dirtyProject message for a NULL project";
+    qCDebug(CPR_CORE) <<"Received a dirtyProject message for a nullptr project";
 }
 
 } }//end namespace

@@ -68,7 +68,7 @@ void Project::setProjectType(LanguageType type)
 Entity* Project::getEntityById(const QString &id)
 {
   QMutexLocker locker(lockEntities);
-  return entities.contains(id) ? entities[id] : NULL;
+  return entities.contains(id) ? entities[id] : nullptr;
 }
 
 QList<Entity*> Project::getEntitiesbyType(const QString &type)
@@ -102,7 +102,7 @@ void Project::setLocation(const QString &location)
 bool Project::addEntity(Entity* entity, const QString &parentId)
     throw (EntityNotFound, ParentNotFound)
 {
-  assert(entity != NULL);
+  assert(entity != nullptr);
 
   QMutexLocker locker(lockEntities);
   if (!entities.contains(parentId))
@@ -130,7 +130,7 @@ bool Project::removeEntity(Entity* entity, bool appendChild)
 {
   Q_UNUSED(appendChild)
 
-  assert(entity != NULL);
+  assert(entity != nullptr);
 
   QMutexLocker locker(lockEntities);
   if (entities.contains(entity->getUniqueId()))
@@ -164,7 +164,7 @@ bool Project::removeEntity(Entity* entity, bool appendChild)
     {
       // does not have a parent, so don't append
       delete entity;
-      entity = NULL;
+      entity = nullptr;
     }
   }
   else

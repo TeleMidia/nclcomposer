@@ -26,7 +26,7 @@ Project *ProjectReader::readFile(const QString &location)
 {
   QFile file(location);
   bool error = false;
-  project = NULL;
+  project = nullptr;
 
   if(!file.open(QIODevice::ReadOnly))
   {
@@ -115,7 +115,7 @@ bool ProjectReader::startElement( const QString &namespaceURI,
   QMap<QString,QString> atts;
   QString uniqueId = "";
 
-  Entity *parentEntity = NULL;
+  Entity *parentEntity = nullptr;
   if (qName != "document")
   {
     lockStack.lock();
@@ -131,8 +131,8 @@ bool ProjectReader::startElement( const QString &namespaceURI,
       uniqueId = attributes.value(i);
   }
 
-  Entity *entity = NULL;
-  if(qName != "document" && parentEntity != NULL)
+  Entity *entity = nullptr;
+  if(qName != "document" && parentEntity != nullptr)
   {
     if(uniqueId == "")
       qCDebug(CPR_CORE) << "trying to add an entity whithout an uniqueId";

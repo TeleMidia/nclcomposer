@@ -15,7 +15,7 @@ void tst_ModulePlugin::initTestCase()
 void tst_ModulePlugin::cleanupTestCase()
 {
   PluginControl::releaseInstance();
-  pgControl = NULL;
+  pgControl = nullptr;
 }
 
 void tst_ModulePlugin::loadPluginDir()
@@ -66,7 +66,7 @@ void tst_ModulePlugin::pluginName()
 {
   QFETCH(QString, fileName);
 
-  IPluginFactory *factory = NULL;
+  IPluginFactory *factory = nullptr;
 
   factory = pgControl->loadPlugin(fileName);
   QVERIFY(factory);

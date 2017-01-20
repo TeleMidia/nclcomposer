@@ -28,9 +28,9 @@ LanguageControl::~LanguageControl()
   for(it = profiles.begin(); it != profiles.end(); it++)
   {
     ILanguageProfile *pf = it.value();
-    assert(pf != NULL);
+    assert(pf != nullptr);
     delete pf;
-    pf = NULL;
+    pf = nullptr;
   }
   profiles.clear();
 }
@@ -41,12 +41,12 @@ bool LanguageControl::removeProfile(LanguageType type)
     return false;
 
   ILanguageProfile *lp = profiles[type];
-  assert(lp != NULL);
-  if (lp == NULL)
+  assert(lp != nullptr);
+  if (lp == nullptr)
     return false;
 
   delete lp;
-  lp = NULL;
+  lp = nullptr;
   profiles.remove(type);
 
   return true;
@@ -54,7 +54,7 @@ bool LanguageControl::removeProfile(LanguageType type)
 
 ILanguageProfile* LanguageControl::loadProfile(const QString &fileName)
 {
-  ILanguageProfile *lProfile = NULL;
+  ILanguageProfile *lProfile = nullptr;
   QPluginLoader loader(fileName);
 
   QObject *profile = loader.instance();
@@ -134,7 +134,7 @@ ILanguageProfile* LanguageControl::getProfileFromType(LanguageType type)
   if (profiles.contains(type))
     return profiles[type];
   else
-    return NULL;
+    return nullptr;
 }
 
 QList<ILanguageProfile*> LanguageControl::getLoadedProfiles()
