@@ -3,7 +3,6 @@
         <file alias="copy">images/icon-copy.png</file>
         <file alias="cut">images/icon-cut.png</file>
         <file alias="delete">images/icon-delete.png</file>
-        <file alias="new">images/icon-new.png</file>
         <file alias="paste">images/icon-paste.png</file>
         <file alias="redo">images/icon-redo.png</file>
         <file alias="undo">images/icon-undo.png</file>
