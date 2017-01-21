@@ -8,32 +8,31 @@ INCLUDEPATH += \
   src/ui/view/
 
 SOURCES += \
-    src/LayoutViewPlugin.cpp \
-    src/LayoutViewFactory.cpp \
-    src/ui/view/LayoutView.cpp \
-    src/ui/view/LayoutRegion.cpp \
-    src/ui/view/LayoutRegionBase.cpp \
-    src/ui/view/LayoutGrid.cpp \
-    src/ui/view/LayoutCanvas.cpp \
-    src/ui/LayoutWindow.cpp
+  src/LayoutViewPlugin.cpp \
+  src/LayoutViewFactory.cpp \
+  src/ui/view/LayoutView.cpp \
+  src/ui/view/LayoutRegion.cpp \
+  src/ui/view/LayoutRegionBase.cpp \
+  src/ui/view/LayoutGrid.cpp \
+  src/ui/view/LayoutCanvas.cpp \
+  src/ui/LayoutWindow.cpp
 
 HEADERS += \
-    src/LayoutViewPlugin.h \
-    src/LayoutViewFactory.h \
-    src/ui/view/LayoutCanvas.h \
-    src/ui/view/LayoutGrid.h \
-    src/ui/view/LayoutRegion.h \
-    src/ui/view/LayoutRegionBase.h \
-    src/ui/view/LayoutView.h \
-    src/ui/LayoutWindow.h
+  src/LayoutViewPlugin.h \
+  src/LayoutViewFactory.h \
+  src/ui/view/LayoutCanvas.h \
+  src/ui/view/LayoutGrid.h \
+  src/ui/view/LayoutRegion.h \
+  src/ui/view/LayoutRegionBase.h \
+  src/ui/view/LayoutView.h \
+  src/ui/LayoutWindow.h
 
 FORMS += \
-   src/ui/LayoutWindow.ui
+  src/ui/LayoutWindow.ui
 
 OTHER_FILES += \
   ncl-layout-view.json
 
 RESOURCES += \
-    ncl-layout-view.qrc \
-    ../common-resources/images.qrc
+  ../common-resources/images.qrc
 
