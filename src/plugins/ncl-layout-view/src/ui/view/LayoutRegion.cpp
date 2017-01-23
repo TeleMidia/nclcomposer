@@ -984,11 +984,25 @@ void LayoutRegion::resize(QGraphicsSceneMouseEvent* event)
           nextx = minx;
           nextw = x + w - minx;
         }
-
-        if (nexty < miny)
+        if(QGuiApplication::keyboardModifiers() == Qt::ShiftModifier) /*maintain ratio*/
         {
-          nexty = miny;
-          nexth = y + h - miny;
+          nexth = nextw/aspectratio;
+          nexty = y + h - nexth;
+          if (nexty < miny)
+          {
+            nexth = y + h - miny;
+            nextw = nexth * aspectratio;
+            nexty = miny;
+            nextx = x + w - nextw;
+          }
+        }
+        else
+        {
+          if (nexty < miny)
+          {
+            nexty = miny;
+            nexth = y + h - miny;
+          }
         }
         break;
       }
@@ -1005,6 +1019,13 @@ void LayoutRegion::resize(QGraphicsSceneMouseEvent* event)
         if(QGuiApplication::keyboardModifiers() == Qt::ShiftModifier) /*maintain ratio*/
         {
           nextw = nexth*aspectratio;
+
+          if (x + nextw > maxw)
+          {
+            nextw = maxw - x;
+            nexth = nextw/aspectratio;
+            nexty = y + h - nexth;
+          }
         }
         else
         {
@@ -1025,12 +1046,26 @@ void LayoutRegion::resize(QGraphicsSceneMouseEvent* event)
           nextw = maxw - x;
         }
 
-        if (nexty < miny)
+        if(QGuiApplication::keyboardModifiers() == Qt::ShiftModifier) /*maintain ratio*/
         {
-          nexty = miny;
-          nexth = y + h - miny;
+          nexth = nextw/aspectratio;
+          nexty = y + h - nexth;
+          if (nexty < miny)
+          {
+            nexth = y + h - miny;
+            nextw = nexth * aspectratio;
+            nexty = miny;
+            nextx = x;
+          }
         }
-
+        else
+        {
+          if (nexty < miny)
+          {
+            nexty = miny;
+            nexth = y + h - miny;
+          }
+        }
         break;
       }
 
@@ -1050,6 +1085,12 @@ void LayoutRegion::resize(QGraphicsSceneMouseEvent* event)
         if(QGuiApplication::keyboardModifiers() == Qt::ShiftModifier) /*maintain ratio*/
         {
           nexth = nextw/aspectratio;
+          if (y + nexth > maxh)
+          {
+            nexth = maxh - y;
+            nextw = nexth * aspectratio;
+            nexty = y;
+          }
         }
         else
         {
@@ -1071,12 +1112,23 @@ void LayoutRegion::resize(QGraphicsSceneMouseEvent* event)
 
         nexty = y; // fixed y
 
-        nexth = h - dh;
-        if (y + nexth > maxh)
+        if(QGuiApplication::keyboardModifiers() == Qt::ShiftModifier) /*maintain ratio*/
         {
-          nexth = maxh - y;
+          nexth = nextw/aspectratio;
+          if (y + nexth > maxh)
+          {
+            nexth = maxh - y;
+            nextw = nexth * aspectratio;
+          }
         }
-
+        else
+        {
+          nexth = h - dh;
+          if (y + nexth > maxh)
+          {
+            nexth = maxh - y;
+          }
+        }
         break;
       }
 
@@ -1095,6 +1147,12 @@ void LayoutRegion::resize(QGraphicsSceneMouseEvent* event)
         if(QGuiApplication::keyboardModifiers() == Qt::ShiftModifier) /*maintain ratio*/
         {
           nextw = nexth*aspectratio;
+          if (x + nextw > maxw)
+          {
+            nextw = maxw - x;
+            nexth = nextw/aspectratio;
+            nexty = y;
+          }
         }
         else
         {
@@ -1115,12 +1173,24 @@ void LayoutRegion::resize(QGraphicsSceneMouseEvent* event)
 
         nexty = y; // fixed y
 
-        nexth = h - dh;
-        if (y + nexth > maxh)
+        if(QGuiApplication::keyboardModifiers() == Qt::ShiftModifier) /*maintain ratio*/
         {
-          nexth = maxh - y;
+          nexth = nextw/aspectratio;
+          if (y + nexth > maxh)
+          {
+            nexth = maxh - y;
+            nextw = nexth * aspectratio;
+            nextx = x + w - nextw;
+          }
         }
-
+        else
+        {
+          nexth = h - dh;
+          if (y + nexth > maxh)
+          {
+            nexth = maxh - y;
+          }
+        }
         break;
       }
 
@@ -1137,6 +1207,12 @@ void LayoutRegion::resize(QGraphicsSceneMouseEvent* event)
         if(QGuiApplication::keyboardModifiers() == Qt::ShiftModifier) /*maintain ratio*/
         {
           nexth = nextw/aspectratio;
+          if (y + nexth > maxh)
+          {
+            nexth = maxh - y;
+            nextw = nexth * aspectratio;
+            nextx = x + w - nextw;
+          }
         }
         else
         {
