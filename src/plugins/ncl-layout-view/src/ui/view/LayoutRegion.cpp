@@ -915,68 +915,6 @@ void LayoutRegion::move(QGraphicsSceneMouseEvent* event)
   scene()->update();
 }
 
-void LayoutRegion::clone(QGraphicsSceneMouseEvent* event)
-{
-  /* setting */
-  qreal x = left;
-  qreal y = top;
-
-  /* setting minimal position */
-  qreal minx;
-  qreal miny;
-  minx = 0;
-  miny = 0;
-  
-  /* setting maximal position */
-  qreal maxx;
-  qreal maxy;
-
-  if (parentItem() != NULL)
-  {
-    maxx = parentItem()->boundingRect().width() - width - controlPointSize;
-    maxy = parentItem()->boundingRect().height() - height - controlPointSize;
-  }
-  else
-  {
-    maxx = scene()->width() - width;
-    maxy = scene()->height() - height;
-  }
-  
-  /* setting delta */
-  qreal dx = event->pos().x() - pressLeft; // (x1 - x0)
-  qreal dy = event->pos().y() - pressTop;  // (y1 - y0)
-
-  /* setting next position */
-  qreal nextx = x + dx;
-  qreal nexty = y + dy;
-
-  /* adjusting */
-  if (nextx < minx)
-  {
-    nextx = minx;
-  }
-
-  if (nexty < miny)
-  {
-    nexty = miny;
-  }
-
-  if (nextx > maxx)
-  {
-    nextx = maxx;
-  }
-
-  if (nexty > maxy)
-  {
-    nexty = maxy;
-  }
-  
-  /*paste*/
-  setMoveTop(nexty);
-  setMoveLeft(nextx);
-
-  scene()->update();
-}
 
 void LayoutRegion::resize(QGraphicsSceneMouseEvent* event)
 {
@@ -1412,7 +1350,7 @@ void LayoutRegion::mouseMoveEvent(QGraphicsSceneMouseEvent* event)
   if (moving)
     move(event);
   else if (cloning)
-    clone(event);
+    move(event); //
   else if (resizing)
     resize(event);
 }

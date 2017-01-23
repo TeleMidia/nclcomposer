@@ -195,7 +195,6 @@ protected:
   void setResizeType(const QnlyResizeType &resizeType);
 
   virtual void move(QGraphicsSceneMouseEvent* event);
-  virtual void clone(QGraphicsSceneMouseEvent* event);
   virtual void resize(QGraphicsSceneMouseEvent* event);
 
   virtual QPainterPath shape() const;
