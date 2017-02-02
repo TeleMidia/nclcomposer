@@ -9,24 +9,24 @@ configure_file(properties_view.json properties_view.json)
 find_package(Qt5 REQUIRED COMPONENTS Widgets)
 
 set(PROPERTIES_VIEW_SOURCES
-  src/PropertiesViewFactory.cpp
-  src/PropertiesViewPlugin.cpp
-  src/PropertyEditor.cpp
-  src/QLLineEditFilter.cpp
-  src/LineEditWithButton.cpp
-  src/PropertyButton.cpp
+  PropertiesViewFactory.cpp
+  PropertiesViewPlugin.cpp
+  PropertyEditor.cpp
+  QLLineEditFilter.cpp
+  LineEditWithButton.cpp
+  PropertyButton.cpp
 
-  src/PropertiesViewFactory.h
-  src/PropertiesView_global.h
-  src/PropertyEditor.h
-  src/PropertiesViewPlugin.h
-  src/QLineEditFilter.h
-  src/LineEditWithButton.h
-  src/PropertyButton.h
+  PropertiesViewFactory.h
+  PropertiesView_global.h
+  PropertyEditor.h
+  PropertiesViewPlugin.h
+  QLineEditFilter.h
+  LineEditWithButton.h
+  PropertyButton.h
 )
 
 qt5_wrap_ui(UI_GENERATED_HEADERS
-  ui/PropertyEditorWidget.ui
+  PropertyEditorWidget.ui
 )
 
 add_library(properties_view SHARED
@@ -35,7 +35,7 @@ add_library(properties_view SHARED
 )
 
 target_include_directories(properties_view PRIVATE
-  src
+  .
   ${CMAKE_CURRENT_BINARY_DIR}
 )
 
