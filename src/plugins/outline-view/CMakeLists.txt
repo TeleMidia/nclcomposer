@@ -9,15 +9,15 @@ configure_file(outline_view.json outline_view.json)
 find_package(Qt5 REQUIRED COMPONENTS Widgets)
 
 set(OUTLINE_VIEW_SOURCES
-  src/NCLTreeWidget.h
-  src/NCLParser.h
-  src/OutlineViewPlugin.h
-  src/OutlineViewFactory.h
+  NCLTreeWidget.h
+  NCLParser.h
+  OutlineViewPlugin.h
+  OutlineViewFactory.h
 
-  src/NCLTreeWidget.cpp
-  src/NCLParser.cpp
-  src/OutlineViewPlugin.cpp
-  src/OutlineViewFactory.cpp
+  NCLTreeWidget.cpp
+  NCLParser.cpp
+  OutlineViewPlugin.cpp
+  OutlineViewFactory.cpp
 )
 
 add_library (outline_view SHARED
@@ -26,7 +26,7 @@ add_library (outline_view SHARED
 
 target_include_directories (outline_view PRIVATE
   ${CMAKE_CURRENT_BINARY_DIR}
-  src
+  .
 )
 
 target_link_libraries (outline_view PRIVATE

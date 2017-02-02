@@ -6,21 +6,21 @@ QT              += xml
 win32:LIBS += -lNCLLanguageProfile
 
 INCLUDEPATH += \
-  src \
+  $$PWD \
   $$PWD/../ncl-profile \
   $$PWD/../ncl-textual-view/src
 
 HEADERS = \
-  src/NCLTreeWidget.h \
-  src/NCLParser.h \
-  src/OutlineViewPlugin.h \
-  src/OutlineViewFactory.h
+  NCLTreeWidget.h \
+  NCLParser.h \
+  OutlineViewPlugin.h \
+  OutlineViewFactory.h
 
 SOURCES = \
-  src/NCLTreeWidget.cpp \
-  src/NCLParser.cpp \
-  src/OutlineViewPlugin.cpp \
-  src/OutlineViewFactory.cpp
+  NCLTreeWidget.cpp \
+  NCLParser.cpp \
+  OutlineViewPlugin.cpp \
+  OutlineViewFactory.cpp
 
 RESOURCES += \
   ../common-resources/images.qrc \
@@ -28,3 +28,4 @@ RESOURCES += \
 
 OTHER_FILES += \
   outline_view.json
+

@@ -15,8 +15,8 @@ set (NCL_TEXTUAL_VIEW_SOURCES
   src/QsciLexerNCL.cpp
   src/QsciNCLAPIs.cpp
   src/MyLexer.cpp
-  ../outline-view/src/NCLParser.cpp
-  ../outline-view/src/NCLTreeWidget.cpp
+  ../outline-view/NCLParser.cpp
+  ../outline-view/NCLTreeWidget.cpp
   src/NCLTextualViewPlugin.cpp
   src/NCLTextualViewPluginFactory.cpp
   src/SearchLineEdit.cpp
@@ -27,8 +27,8 @@ set (NCL_TEXTUAL_VIEW_SOURCES
   src/QsciLexerNCL.h
   src/QsciNCLAPIs.h
   src/MyLexer.h
-  ../outline-view/src/NCLParser.h
-  ../outline-view/src/NCLTreeWidget.h
+  ../outline-view/NCLParser.h
+  ../outline-view/NCLTreeWidget.h
   src/NCLTextualViewPlugin.h
   src/NCLTextualViewPluginFactory.h
   src/NCLTextualViewPlugin_global.h
@@ -54,7 +54,7 @@ add_subdirectory(deps/QScintilla-gpl-2.9/Qt4Qt5)
 
 target_include_directories(ncl_textual_view PRIVATE
   src
-  "../outline-view/src"
+  "../outline-view/"
   ${CMAKE_CURRENT_BINARY_DIR}
 )
 
