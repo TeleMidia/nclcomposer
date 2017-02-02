@@ -36,8 +36,8 @@ HEADERS     =   src/NCLTextEditorMainWindow.h \
                 src/QsciNCLAPIs.h \
                 src/MyLexer.h \
                 src/NCLProblemsView.h \
-                ../outline-view/src/NCLParser.h \
-                ../outline-view/src/NCLTreeWidget.h \
+                ../outline-view/NCLParser.h \
+                ../outline-view/NCLTreeWidget.h \
                 src/NCLTextualViewPlugin.h \
                 src/NCLTextualViewPluginFactory.h \
                 src/NCLTextualViewPlugin_global.h \
@@ -49,8 +49,8 @@ SOURCES     =   src/NCLTextEditorMainWindow.cpp \
                 src/QsciNCLAPIs.cpp \
                 src/MyLexer.cpp \
                 src/NCLProblemsView.cpp \
-                ../outline-view/src/NCLParser.cpp \
-                ../outline-view/src/NCLTreeWidget.cpp \
+                ../outline-view/NCLParser.cpp \
+                ../outline-view/NCLTreeWidget.cpp \
                 src/NCLTextualViewPlugin.cpp \
                 src/NCLTextualViewPluginFactory.cpp \
                 src/SearchLineEdit.cpp
