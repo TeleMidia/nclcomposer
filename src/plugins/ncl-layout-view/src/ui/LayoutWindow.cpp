@@ -15,6 +15,8 @@ LayoutWindow::LayoutWindow(QWidget *parent) :
 
   ui->toolBar_regionBases->addWidget(new QLabel(tr("Region Bases:"), this));
   ui->toolBar_regionBases->addWidget(ui->regionBaseComboBox);
+  ui->toolBar_regionBases->addWidget(new QLabel(tr("Resolution:"), this));
+  ui->toolBar_regionBases->addWidget(ui->resolutionComboBox);
 }
 
 LayoutWindow::~LayoutWindow()
@@ -154,4 +156,42 @@ void LayoutWindow::on_actionCopy_region_triggered()
 void LayoutWindow::on_actionPaste_region_triggered()
 {
   view->performPaste();
+}
+
+void LayoutWindow::on_resolutionComboBox_activated(int index)
+{
+  int w,h;
+  LayoutRegionBase *currentRegionBase;
+  switch (index)
+  {
+    case 0:
+      w = 640; h = 480;
+      break;
+    case 1:
+      w = 800; h = 600;
+      break;
+    case 2:
+      w = 1024; h = 768;
+      break;
+    case 3:
+      w = 854; h = 480;
+      break;
+    case 4:
+      w = 1280; h = 720;
+      break;
+    case 5:
+      w = 1920; h = 1080;
+      break;
+    case 6:
+      w = 320; h = 400;
+      break;
+
+    default:
+      break;
+  }
+  currentRegionBase = view->getSelectedRegionBase();
+  if(currentRegionBase != NULL)
+  {
+    currentRegionBase->changeResolution(w,h);
+  }
 }

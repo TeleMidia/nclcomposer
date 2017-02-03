@@ -62,6 +62,8 @@ private slots:
   void on_actionCopy_region_triggered();
   void on_actionPaste_region_triggered();
 
+  void on_resolutionComboBox_activated(int index);
+
 private:
   Ui::QnlyMainWindow *ui;
   LayoutView *view;

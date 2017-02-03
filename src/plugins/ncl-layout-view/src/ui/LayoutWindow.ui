@@ -29,6 +29,9 @@
       <height>31</height>
      </rect>
     </property>
+    <property name="currentIndex">
+     <number>-1</number>
+    </property>
     <item>
      <property name="text">
       <string>---------</string>
@@ -37,6 +40,57 @@
     <item>
      <property name="text">
       <string>Create new...</string>
+     </property>
+    </item>
+   </widget>
+   <widget class="QComboBox" name="resolutionComboBox">
+    <property name="geometry">
+     <rect>
+      <x>710</x>
+      <y>510</y>
+      <width>72</width>
+      <height>22</height>
+     </rect>
+    </property>
+    <property name="currentText">
+     <string>640x480</string>
+    </property>
+    <property name="currentIndex">
+     <number>0</number>
+    </property>
+    <item>
+     <property name="text">
+      <string>640x480</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>800x600</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>1024x768</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>854x480</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>1280x720</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>1920x1080</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>320x400</string>
      </property>
     </item>
    </widget>
@@ -128,7 +182,7 @@
   </action>
   <action name="actionAction_Export">
    <property name="icon">
-    <iconset resource="../../ncl-layout-view.qrc">
+    <iconset>
      <normaloff>:/icon/export-icon</normaloff>:/icon/export-icon</iconset>
    </property>
    <property name="text">
@@ -237,7 +291,11 @@
  </widget>
  <resources>
   <include location="../../../common-resources/images.qrc"/>
-  <include location="../../ncl-layout-view.qrc"/>
+  <include location="../../../common-resources/images.qrc"/>
+  <include location="../../../common-resources/images.qrc"/>
+  <include location="../../../common-resources/images.qrc"/>
+  <include location="../../../common-resources/images.qrc"/>
+  <include location="../../../common-resources/images.qrc"/>
  </resources>
  <connections/>
 </ui>
