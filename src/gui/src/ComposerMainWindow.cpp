@@ -445,7 +445,7 @@ void ComposerMainWindow::addPluginWidget( IPluginFactory *fac,
   QWidget *pW = plugin->getWidget();
   pW->setObjectName(fac->id());
 
-  if (pW != NULL)
+  if (pW != nullptr)
   {
     #ifdef USE_MDI
       mdiArea->addSubWindow(pW);
@@ -518,7 +518,7 @@ void ComposerMainWindow::tabClosed(int index)
   QString location = _tabProjects->tabToolTip(index);
   Project *project = ProjectControl::getInstance()->getOpenProject(location);
 
-  if( project != NULL &&
+  if( project != nullptr &&
       project->isDirty() )
   {
     int ret = QMessageBox::warning(this, project->getAttribute("id"),
@@ -907,7 +907,7 @@ void ComposerMainWindow::closeEvent(QCloseEvent *event)
     Project *project = ProjectControl::getInstance()->getOpenProject(location);
 
     qDebug() << location << project;
-    if(project != NULL && project->isDirty())
+    if(project != nullptr && project->isDirty())
     {
       _tabProjects->setCurrentIndex(index);
       int ret = QMessageBox::warning(this, project->getAttribute("id"),
@@ -1242,7 +1242,7 @@ void ComposerMainWindow::restorePerspective(QString layoutName)
 
     QToolWindowManager *window = _projectsWidgets[location];
 
-    if(window != NULL)
+    if(window != nullptr)
     {
       GlobalSettings settings;
       settings.beginGroup("pluginslayout");
@@ -1332,7 +1332,7 @@ void ComposerMainWindow::addDefaultStructureToProject(Project *project,
 
   nclEntity = project->getEntitiesbyType("ncl").first();
 
-  if(nclEntity != NULL)
+  if(nclEntity != nullptr)
   {
     QString nclEntityId = nclEntity->getUniqueId();
     msgControl->anonymousAddEntity("head", nclEntityId, headAttrs);
@@ -1672,7 +1672,7 @@ void ComposerMainWindow::selectedAboutCurrentPluginFactory()
   QList<QTreeWidgetItem*> selectedPlugins = _treeWidgetPlugins->selectedItems();
   if(selectedPlugins.size())
   {
-    if(treeWidgetItem2plFactory.value(selectedPlugins.at(0)) != NULL)
+    if(treeWidgetItem2plFactory.value(selectedPlugins.at(0)) != nullptr)
     {
       _pluginDetailsDialog->setCurrentPlugin(
             treeWidgetItem2plFactory.value(selectedPlugins.at(0)));
@@ -1798,7 +1798,7 @@ void ComposerMainWindow::undo()
     MessageControl *msgControl =
         PluginControl::getInstance()->getMessageControl(project);
 
-    if(msgControl != NULL)
+    if(msgControl != nullptr)
       msgControl->undo();
   }
 }
@@ -1990,7 +1990,7 @@ void ComposerMainWindow::updateTabWithProject(int index, QString newLocation)
 
   _tabProjects->setTabToolTip(index, newLocation);
   Project *project = ProjectControl::getInstance()->getOpenProject(newLocation);
-  if(project != NULL)
+  if(project != nullptr)
   {
     QString projectId = project->getAttribute("id");
     _tabProjects->setTabText(index, projectId);

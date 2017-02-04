@@ -50,19 +50,19 @@ void FileChooser::on_pushButton_pressed()
   switch(fctype)
   {
     case OPEN_FILENAME:
-      location = QFileDialog::getOpenFileName(NULL, caption, "", filter);
+      location = QFileDialog::getOpenFileName(nullptr, caption, "", filter);
       break;
     case SAVE_FILENAME:
-      location = QFileDialog::getSaveFileName(NULL, caption, "", filter);
+      location = QFileDialog::getSaveFileName(nullptr, caption, "", filter);
       break;
     case GET_EXISTINGDIRECTORY:
-      location = QFileDialog::getExistingDirectory(NULL, caption, "");
+      location = QFileDialog::getExistingDirectory(nullptr, caption, "");
       break;
     //case OPEN_FILENAMES:
-    //  location = QFileDialog::getOpenFileNames(NULL, caption, "", filter);
+    //  location = QFileDialog::getOpenFileNames(nullptr, caption, "", filter);
     //  break;
     default:
-      location = QFileDialog::getOpenFileName(NULL, caption, "", filter);
+      location = QFileDialog::getOpenFileName(nullptr, caption, "", filter);
       break;
   }
 

@@ -44,7 +44,7 @@ PreferencesDialog::PreferencesDialog(QWidget *parent) :
            this,
            SLOT(applyCurrentValues()) );
 
-  currentItem = NULL;
+  currentItem = nullptr;
 }
 
 PreferencesDialog::~PreferencesDialog()
@@ -106,7 +106,7 @@ void PreferencesDialog::loadPreferencesPages()
 
 void PreferencesDialog::changeActivePage()
 {
-  if (currentItem != NULL)
+  if (currentItem != nullptr)
   {
     if(pages.contains(currentItem->text()))
     {
@@ -115,7 +115,7 @@ void PreferencesDialog::changeActivePage()
   }
 
   currentItem = ui->listWidget->currentItem();
-  if(currentItem != NULL)
+  if(currentItem != nullptr)
   {
     if(pages.contains(currentItem->text()))
     {

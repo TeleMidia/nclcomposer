@@ -181,7 +181,7 @@ void WelcomeWidget::sendRecentProjectClicked()
   QCommandLinkButton *button =
       static_cast<QCommandLinkButton*> (QObject::sender());
 
-  if(button != NULL)
+  if(button != nullptr)
   {
     emit userPressedRecentProject(button->description());
   }
@@ -405,7 +405,7 @@ void WelcomeWidget::cancelDownload()
 {
     // statusLabel->setText(tr("Download canceled."));
     httpRequestAborted = true;
-    if(reply != NULL)
+    if(reply != nullptr)
         reply->abort();
 
     isDownloading = false;
