@@ -252,6 +252,7 @@ public:
     NCL         = 6,
     NCLua       = 7,
     Settings    = 9,
+    Time        = 10,
 
     NoMimeType  = 0
   };

@@ -296,8 +296,10 @@ std::map<Structural::StructuralMimeType, QString> StructuralUtil::_mapMimeTypeTo
 (Structural::Video, "video")
 (Structural::HTML, "html")
 (Structural::NCL, "ncl")
-(Structural::Settings, "settings")
 (Structural::NCLua, "nclua")
+(Structural::Settings, "settings")
+(Structural::Time, "time")
+
 
 (Structural::NoMimeType, "");
 
@@ -309,7 +311,7 @@ QString StructuralUtil::translateMimeTypeToString(StructuralMimeType mimetype)
   if(_mapMimeTypeToString.count(mimetype))
     return _mapMimeTypeToString[mimetype];
   else
-    return "Media";
+    return "media";
 }
 
 StructuralMimeType StructuralUtil::translateStringToMimeType(const QString &mimetype)
@@ -443,8 +445,9 @@ std::map<Structural::StructuralMimeType, QString> StructuralUtil::_mimetypesIcon
 (Structural::Video, ":/icon/media-video")
 (Structural::HTML, ":/icon/media-text-html")
 (Structural::NCL, ":/icon/media-ncl")
-(Structural::Settings, ":/icon/media-settings")
 (Structural::NCLua, ":/icon/media-nclua")
+(Structural::Settings, ":/icon/media-settings")
+(Structural::Time, ":/icon/media-time")
 
 (Structural::NoMimeType, ":/icon/media");
 
