@@ -70,8 +70,6 @@ private:
   void createWidgets();
   void createConnections();
 
-  void createBodyDependences();
-
   QString getUidById(const QString &id);
   QString getUidById(const QString &id, Entity* entity);
   QString getUidByName(const QString &name, Entity* entity);

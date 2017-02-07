@@ -2,6 +2,7 @@
 
 #include <QUuid>
 
+#include "StructuralView.h"
 #include "StructuralEdge.h"
 
 QString StructuralUtil::createUid()
@@ -296,8 +297,10 @@ std::map<Structural::StructuralMimeType, QString> StructuralUtil::_mapMimeTypeTo
 (Structural::Video, "video")
 (Structural::HTML, "html")
 (Structural::NCL, "ncl")
-(Structural::Settings, "settings")
 (Structural::NCLua, "nclua")
+(Structural::Settings, "settings")
+(Structural::Time, "time")
+
 
 (Structural::NoMimeType, "");
 
@@ -309,7 +312,7 @@ QString StructuralUtil::translateMimeTypeToString(StructuralMimeType mimetype)
   if(_mapMimeTypeToString.count(mimetype))
     return _mapMimeTypeToString[mimetype];
   else
-    return "Media";
+    return "media";
 }
 
 StructuralMimeType StructuralUtil::translateStringToMimeType(const QString &mimetype)
@@ -443,8 +446,9 @@ std::map<Structural::StructuralMimeType, QString> StructuralUtil::_mimetypesIcon
 (Structural::Video, ":/icon/media-video")
 (Structural::HTML, ":/icon/media-text-html")
 (Structural::NCL, ":/icon/media-ncl")
-(Structural::Settings, ":/icon/media-settings")
 (Structural::NCLua, ":/icon/media-nclua")
+(Structural::Settings, ":/icon/media-settings")
+(Structural::Time, ":/icon/media-time")
 
 (Structural::NoMimeType, ":/icon/media");
 
@@ -546,6 +550,61 @@ QString StructuralUtil::getIcon(StructuralRole role)
     return "";
 }
 
+QVector<StructuralEntity*> StructuralUtil::getNeighbors(StructuralEntity* entity)
+{
+  QVector<StructuralEntity*> neighbors;
+
+  if (STR_DEFAULT_WITH_BODY)
+  {
+    StructuralEntity* parent = entity->getStructuralParent();
+
+    if (parent != NULL)
+      neighbors = parent->getStructuralEntities();
+  }
+  else
+  {
+    StructuralView* view = (StructuralView*) entity->scene()->views().at(1);
+
+    foreach (StructuralEntity* current, view->getEntities().values())
+      if (current->getStructuralParent() == NULL && current != entity)
+        neighbors += current;
+  }
+
+  return neighbors;
+}
+
+QVector<StructuralEntity*> StructuralUtil::getUpNeighbors(StructuralEntity* entity)
+{
+  QVector<StructuralEntity*> neighbors;
+
+  if (STR_DEFAULT_WITH_BODY)
+  {
+    StructuralEntity* parent = entity->getStructuralParent();
+
+    if (parent != NULL)
+      if (parent->getStructuralParent() != NULL)
+        neighbors += parent->getStructuralParent()->getStructuralEntities();
+  }
+  else
+  {
+    StructuralEntity* parent = entity->getStructuralParent();
+
+    if (parent != NULL)
+    {
+      if (parent->getStructuralParent() == NULL)
+      {
+        StructuralView* view = (StructuralView*) entity->scene()->views().at(1);
+
+        foreach (StructuralEntity* current, view->getEntities().values())
+          if (current->getStructuralParent() == NULL && current != entity)
+            neighbors += current;
+      }
+    }
+  }
+
+  return neighbors;
+}
+
 bool StructuralUtil::isCondition(StructuralRole role)
 {
   return (role == Structural::onBegin ||
@@ -576,26 +635,18 @@ bool StructuralUtil::isAction(const QString &role)
 
 void StructuralUtil::adjustEdges(StructuralEntity* entity)
 {
-  StructuralEntity* parent = entity->getStructuralParent();
+  QVector<StructuralEntity*> relatives;
+  relatives += getNeighbors(entity);
+  relatives += getUpNeighbors(entity);
 
-  if (parent != NULL)
+  foreach (StructuralEntity* relative, relatives)
   {
-    QVector<StructuralEntity*> relatives;
-    relatives = parent->getStructuralEntities();
-
-    if (parent->getStructuralParent() != NULL){
-      relatives += parent->getStructuralParent()->getStructuralEntities();
-    }
-
-    foreach (StructuralEntity* relative, relatives)
+    if (relative->getStructuralCategory() == Structural::Edge)
     {
-      if (relative->getStructuralCategory() == Structural::Edge)
-      {
-        StructuralEdge *edge = (StructuralEdge*) relative;
+      StructuralEdge *edge = (StructuralEdge*) relative;
 
-        if (edge->getTail() == entity || edge->getHead() == entity)
-          edge->adjust(true);
-      }
+      if (edge->getTail() == entity || edge->getHead() == entity)
+        edge->adjust(true);
     }
   }
 }

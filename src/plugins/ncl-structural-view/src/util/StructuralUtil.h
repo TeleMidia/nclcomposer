@@ -45,6 +45,9 @@ public:
 
   static QString getIcon(StructuralRole role);
 
+  static QVector<StructuralEntity*> getNeighbors(StructuralEntity* entity);
+  static QVector<StructuralEntity*> getUpNeighbors(StructuralEntity* entity);
+
   static bool isCondition(StructuralRole role);
   static bool isCondition(const QString &role);
   static bool isAction(StructuralRole role);

@@ -74,6 +74,10 @@ void StructuralContent::adjust(bool collision,  bool recursion)
     {
       setMimeType(Structural::Settings);
     }
+    else if (type.endsWith("time"))
+    {
+      setMimeType(Structural::Time);
+    }
     else
     {
       setMimeType(Structural::NoMimeType);

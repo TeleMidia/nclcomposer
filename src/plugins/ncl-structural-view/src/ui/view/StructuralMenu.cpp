@@ -104,13 +104,27 @@ void StructuralMenu::adjust(StructuralType type)
     default:
     {
       switchDelete(false);
-      switchMedia(false);
-      switchContext(false);
-      switchSwitch(false);
-      switchArea(false);
-      switchProperty(false);
-      switchPort(false);
       switchSwitchPort(false);
+
+      if (STR_DEFAULT_WITH_BODY)
+      {
+        switchMedia(false);
+        switchContext(false);
+        switchSwitch(false);
+        switchArea(false);
+        switchProperty(false);
+        switchPort(false);
+        switchSwitchPort(false);
+      }
+      else
+      {
+        switchMedia(true);
+        switchContext(true);
+        switchSwitch(true);
+        switchArea(true);
+        switchProperty(true);
+        switchPort(true);
+      }
 
       break;
     }
@@ -247,7 +261,10 @@ void StructuralMenu::createMenus()
   _insertMenu->addSeparator();
   _insertMenu->addAction(_contextAction);
   _insertMenu->addAction(_switchAction);
-  _insertMenu->addAction(_bodyAction);
+
+  if (STR_DEFAULT_WITH_BODY)
+    _insertMenu->addAction(_bodyAction);
+
   _insertMenu->addSeparator();
   _insertMenu->addAction(_areaAction);
   _insertMenu->addAction(_propertyAction);

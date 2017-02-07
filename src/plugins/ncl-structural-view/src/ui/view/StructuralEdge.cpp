@@ -115,7 +115,7 @@ void StructuralEdge::adjust(bool collision,  bool recursion)
   // Adjusting position...
   StructuralEntity* parent = getStructuralParent();
 
-  if (parent != NULL)
+  if (parent != NULL || !STR_DEFAULT_WITH_BODY)
   {
     qreal angle = getAngle();
 

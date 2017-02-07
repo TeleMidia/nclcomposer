@@ -242,7 +242,9 @@ void StructuralWindow::createToolbar()
   _insertToolbar->addSeparator();
   _insertToolbar->addAction(_contextAction);
   _insertToolbar->addAction(_switchAction);
-  _insertToolbar->addAction(_bodyAction);
+
+  if (STR_DEFAULT_WITH_BODY)
+    _insertToolbar->addAction(_bodyAction);
 
   _insertToolbar->addSeparator();
   _insertToolbar->addAction(_areaAction);
@@ -487,13 +489,30 @@ void StructuralWindow::select(QString uid, QMap<QString, QString> settings)
     switchDelete(true);
 
   } else  {
-    _mediaAction->setEnabled(false);
-    _contextAction->setEnabled(false);
-    _switchAction->setEnabled(false);
-    _bodyAction->setEnabled((_view->getBody() == NULL));
-    _areaAction->setEnabled(false);
-    _propertyAction->setEnabled(false);
-    _portAction->setEnabled(false);
+
+    _switchportAction->setEnabled(false);
+
+    if (STR_DEFAULT_WITH_BODY)
+    {
+      _mediaAction->setEnabled(false);
+      _contextAction->setEnabled(false);
+      _switchAction->setEnabled(false);
+      _bodyAction->setEnabled((_view->getBody() == NULL));
+      _areaAction->setEnabled(false);
+      _propertyAction->setEnabled(false);
+      _portAction->setEnabled(false);
+    }
+    else
+    {
+      _mediaAction->setEnabled(true);
+      _contextAction->setEnabled(true);
+      _switchAction->setEnabled(true);
+      _bodyAction->setEnabled(false);
+      _areaAction->setEnabled(true);
+      _propertyAction->setEnabled(true);
+      _portAction->setEnabled(true);
+
+    }
 
     switchCut(false);
     switchCopy(false);
