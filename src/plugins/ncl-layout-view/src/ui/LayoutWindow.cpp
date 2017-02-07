@@ -2,6 +2,7 @@
 #include "ui_LayoutWindow.h"
 
 #include <assert.h>
+#include <QRegExp>
 #include "LayoutView.h"
 
 #include "LayoutRegionBase.h"
@@ -158,37 +159,13 @@ void LayoutWindow::on_actionPaste_region_triggered()
   view->performPaste();
 }
 
-void LayoutWindow::on_resolutionComboBox_activated(int index)
+void LayoutWindow::on_resolutionComboBox_activated(const QString &arg1)
 {
-  int w,h;
+  int w,h; // arg1 is "w x h"
   LayoutRegionBase *currentRegionBase;
-  switch (index)
-  {
-    case 0:
-      w = 640; h = 480;
-      break;
-    case 1:
-      w = 800; h = 600;
-      break;
-    case 2:
-      w = 1024; h = 768;
-      break;
-    case 3:
-      w = 854; h = 480;
-      break;
-    case 4:
-      w = 1280; h = 720;
-      break;
-    case 5:
-      w = 1920; h = 1080;
-      break;
-    case 6:
-      w = 320; h = 400;
-      break;
-
-    default:
-      break;
-  }
+  QStringList list = arg1.split('x');
+  w = list[0].toInt();
+  h = list[1].toInt();
   currentRegionBase = view->getSelectedRegionBase();
   if(currentRegionBase != NULL)
   {
