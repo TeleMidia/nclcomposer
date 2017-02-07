@@ -879,21 +879,67 @@ void StructuralViewPlugin::insertInCore(QString uid, QString parent, QMap<QStrin
 
   Entity* entityParent = NULL;
 
-  if (type == Structural::Bind) {
+  if (type == Structural::Bind)
+  {
     entityParent = getProject()->getEntityById(_mapViewToCore.value(properties.value(STR_PROPERTY_REFERENCE_LINK_UID)));
 
-  } else if (type == Structural::Mapping) {
+  }
+  else if (type == Structural::Mapping)
+  {
     entityParent = getProject()->getEntityById(_mapViewToCore.value(properties.value(STR_PROPERTY_EDGE_TAIL)));
 
-  } else if (type == Structural::Body) {
-    createBodyDependences();
+  }
+  else if (type == Structural::Body)
+  {
+    QList<Entity*> list;
 
-    QList<Entity*> list = getProject()->getEntitiesbyType("ncl");
+    // Check if core already has a 'body' entity.
+    // If so, update references.
+    list = getProject()->getEntitiesbyType("body");
+
+    if (!list.isEmpty())
+    {
+      Entity* body = list.first();
+
+      // Cleaning
+      _mapViewToCore.remove(_mapCoreToView[body->getUniqueId()]);
+
+      // Updating
+      _mapCoreToView[body->getUniqueId()] = uid;
+      _mapViewToCore[uid] = body->getUniqueId();
+
+      // Finishing
+      return;
+    }
+
+    // Check if core already has a 'ncl' entity.
+    // If don't, adds and set entity as parent.
+    list = getProject()->getEntitiesbyType("ncl");
+
+    if (list.isEmpty())
+    {
+      Entity* project = getProject();
+      if (project != NULL)
+      {
+        QMap<QString, QString> attributes;
+        emit addEntity("ncl", project->getUniqueId(), attributes, false);
+      }
+
+      list = getProject()->getEntitiesbyType("ncl");
+
+      if (!list.isEmpty())
+        entityParent = list.first();
+    }
+  }
+  else if (parent.isEmpty() && !STR_DEFAULT_WITH_BODY)
+  {
+    QList<Entity*> list = getProject()->getEntitiesbyType("body");
 
     if (!list.isEmpty())
       entityParent = list.first();
-
-  } else if (!parent.isEmpty()) {
+  }
+  else
+  {
     entityParent = getProject()->getEntityById(_mapViewToCore.value(parent));
   }
 
@@ -1066,21 +1112,6 @@ void StructuralViewPlugin::changeInCore(QString uid, QMap<QString, QString> prop
     _waiting = true;
 
     emit setAttributes(entity, attributes, false);
-  }
-}
-
-void StructuralViewPlugin::createBodyDependences()
-{
-  QList<Entity*> list = getProject()->getEntitiesbyType("ncl");
-
-  if (list.isEmpty())
-  {
-    Entity* project = getProject();
-    if (project != NULL)
-    {
-      QMap<QString, QString> attributes;
-      emit addEntity("ncl", project->getUniqueId(), attributes, false);
-    }
   }
 }
 
