@@ -10,8 +10,8 @@
  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  GNU Lesser General Public License for more details.
 
- You should have received a copy of the GNU General Lesser Public
- License along with Foobar.  If not, see <http://www.gnu.org/licenses/>. */
+ You should have received a copy of the GNU General Lesser Public License
+ along with NCL Composer.  If not, see <http://www.gnu.org/licenses/>. */
 
 #include "util/Commands.h"
 
