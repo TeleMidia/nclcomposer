@@ -449,10 +449,10 @@ void ComposerMainWindow::addPluginWidget( IPluginFactory *fac,
   }
 
   QWidget *pW = plugin->getWidget();
-  pW->setObjectName(fac->id());
 
   if (pW != nullptr)
   {
+    pW->setObjectName(fac->id());
     #ifdef USE_MDI
       mdiArea->addSubWindow(pW);
       pW->setWindowModified(true);
