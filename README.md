@@ -47,12 +47,11 @@ The main requirement for NCL Composer is:
 
   * Qt >= 5.4
 
+### Linux
 In a Debian-based system (e.g. Debian, Ubuntu, or Linux Mint) you can easily
 install Qt libraries through:
 
     $ apt-get install libqtbase5-dev libqttool5-dev
-
-### Building
 
 After installing the dependencies and cloning the NCL Composer's repository,
 you can compile NCL Composer by (in the nclcomposer's root directory):
@@ -65,36 +64,6 @@ If everything is alright with the compilation process you should be able to
 find the executable (and run):
 
     $ ./_build/bin/nclcomposer
-
-## Packaging NCL Composer
-This repository also provides the necessary files for packaging NCL Composer.
-
-### MSI (Windows installer) package
-To generate the Windows Package installer, you will need the NSIS ([Nullsoft 
-scriptable install system](http://nsis.sourceforge.net/)).
-
-To generate the windows installer, go to `win32-nsis` directory and run:
-
-    $ makensis nclcomposer.nsis
-
-### Generating DEBIAN package
-To generate a new debian package, the only thing you need to do is run:
-  
-    $ ./scripts/deb-package.sh
-  
-in your terminal.
-
-This will generate a `nclcomposer_x.x.x.deb` file one directory behind the root
-NCL Composer directory. This package all you need to install NCL Composer on 
-other Debian/Ubuntu systems.
-
-You can install it, using dpkg, for example:
-
-    $ dpkg -i nclcomposer_x.x.x.deb
-
-### Mac OS X
-
-  * TODO
 
 ## Main authors and contributors
   * Roberto Azevedo <robertogerson@telemidia.puc-rio.br>
