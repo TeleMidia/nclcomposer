@@ -64,7 +64,7 @@ void StructuralNode::adjust(bool collision, bool recursion)
 
   StructuralEntity* parent = getStructuralParent();
 
-  if (parent != NULL) {
+  if (parent != NULL || !STR_DEFAULT_WITH_BODY) {
 
     if (!collision) {
       // Tries (10x) to find a position where there is no collision
@@ -72,7 +72,7 @@ void StructuralNode::adjust(bool collision, bool recursion)
       for (int i = 0; i < 10; i++) {
         bool colliding = false;
 
-        foreach(StructuralEntity *entity, parent->getStructuralEntities()) {
+        foreach(StructuralEntity *entity, StructuralUtil::getNeighbors(this)) {
           if(this != entity &&
              entity->getStructuralType() >= Structural::Media &&
              entity->getStructuralType() <= Structural::Link) {
@@ -105,7 +105,7 @@ void StructuralNode::adjust(bool collision, bool recursion)
           }
         }
 
-        foreach(StructuralEntity *entity, parent->getStructuralEntities())
+        foreach(StructuralEntity *entity, StructuralUtil::getNeighbors(this))
           if(collidesWithItem(entity, Qt::IntersectsItemBoundingRect))
             colliding = true;
 
