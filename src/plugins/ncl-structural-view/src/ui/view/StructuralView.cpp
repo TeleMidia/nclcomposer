@@ -829,15 +829,8 @@ void StructuralView::remove(QString uid, QMap<QString, QString> settings)
     if (e->getStructuralCategory() != Structural::Edge)
     {
       QVector<StructuralEntity*> relatives;
-
-      if (p != NULL)
-      {
-        relatives = p->getStructuralEntities();
-
-        if (e->getStructuralCategory() == Structural::Interface)
-          if (p->getStructuralParent() != NULL)
-            relatives += p->getStructuralParent()->getStructuralEntities();
-      }
+      relatives += StructuralUtil::getNeighbors(e);
+      relatives += StructuralUtil::getUpNeighbors(e);
 
       foreach (StructuralEntity* entity, relatives)
       {
