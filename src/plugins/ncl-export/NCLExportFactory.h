@@ -18,10 +18,10 @@
 #ifndef NCLEXPORT_H
 #define NCLEXPORT_H
 
-#include "nclExport_global.h"
-#include "nclExportPlugin.h"
+#include "NCLExport_global.h"
+#include "NCLExportPlugin.h"
 
-#include <core/extensions/IPluginFactory.h>
+#include <extensions/IPluginFactory.h>
 using namespace composer::extension;
 
 /*!
@@ -40,84 +40,12 @@ public:
   ~nclExportFactory();
 
   IPlugin* createPluginInstance();
-
   void releasePluginInstance(IPlugin *);
 
-
   QList<LanguageType> getSupportedLanguages();
-
   QString id() const ;
-
   QIcon icon() const;
-
   QWidget* getPreferencePageWidget();
-
-#if QT_VERSION < 0x050000
-  /*!
-   * \brief Returns the name of the plug-in.
-   *
-   * \return QString the name of the plug-in.
-   */
-  QString name() { return tr("NCL export"); }
-
-  /*!
-   * \brief Returns the version of Debug Console View implementation.
-   *
-   * \return QString the version number as string.
-   */
-  QString version() { return NCLCOMPOSER_PLUGINS_VERSION; }
-
-  /*!
-   * \brief Returns the core version that is compatible with this plugin.
-   *
-   * \return QString the core version that is compatible with this plugin
-   * as a string.
-   */
-  QString compatVersion() {return "0.1";}
-
-  /*!
-   * \brief Returns the vendor of Debug Console View (i.e. Telemidia Lab).
-   *
-   * \return QString the name of the vendor of OutlineView.
-   */
-  QString vendor() {return "Telemidia Lab";}
-
-  /*!
-   * \brief Returns the copyright of Debug Console View.
-   *
-   * \return QString the copyright of Debug Console View.
-   */
-  QString copyright() {return "Telemidia/PUC-Rio";}
-
-  /*!
-   * \brief Returns the license of Debug Console plugin (i.e. LGPL).
-   * \todo The complete license description.
-   * \return QString the license of Debug Console.
-   */
-  QString license() {return "LGPL";}
-
-  /*!
-   * \brief Returns a description of the Debug Console View
-   *
-   * \return QString the description of Debug Console View.
-   */
-  QString description() {return tr("Export NCL - export what is in the "
-                                   "project to ncl file.");}
-
-  /*!
-   * \brief Returns the URL to find more information about the plugin.
-   *
-   * \return QString the description of Debug Console View.
-   */
-  QString url() {return "http://composer.telemidia.puc-rio.br/debug";}
-
-  /*!
-   * \brief Returns the plugin category.
-   *
-   * \return QString the description of Debug Console View.
-   */
-  QString category() {return tr("General");}
-#endif
 
 };
 

@@ -15,7 +15,7 @@
  * License along with this library.  If not, see
  * <http://www.gnu.org/licenses/>.
  */
-#include "nclExportFactory.h"
+#include "NCLExportFactory.h"
 
 
 nclExportFactory::nclExportFactory()
@@ -40,9 +40,7 @@ void nclExportFactory::releasePluginInstance(IPlugin *plugin)
   if (debug)
     {
       delete debug;
-      debug = NULL;
     }
-
 }
 
 QList<LanguageType> nclExportFactory::getSupportedLanguages()
@@ -66,6 +64,4 @@ QWidget* nclExportFactory::getPreferencePageWidget()
 {
   return NULL;
 }
-
-Q_EXPORT_PLUGIN2(nclExportPlugin, nclExportFactory)
 

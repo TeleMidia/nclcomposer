@@ -15,35 +15,11 @@
  * License along with this library.  If not, see
  * <http://www.gnu.org/licenses/>.
  */
-#include "nclExportPlugin.h"
+#include "NCLExportPlugin.h"
 
-nclExportPlugin::nclExportPlugin()
-{
-  /*
-  window = new QWidget();
-  QGridLayout *layout = new QGridLayout(window);
-  QPushButton *bt = new QPushButton(window);
-  bt->setText(tr("Clear"));
-  layout->addWidget(bt);
-  list = new QListWidget(window);
-  list->setAlternatingRowColors(true);
-  layout->addWidget(list);
-  connect(bt, SIGNAL(clicked()), list, SLOT(clear()));
-  connect(bt, SIGNAL(clicked()), this, SLOT(sendToAll()));
-  window->setLayout(layout);
-  window->setWindowIcon(QIcon(":/images/icon.png"));
-  project = NULL;
-  */
-}
+nclExportPlugin::nclExportPlugin() { }
 
-nclExportPlugin::~nclExportPlugin()
-{
-  /*
-  if(window != NULL)
-    delete window;
-  window = NULL;
-  */
-}
+nclExportPlugin::~nclExportPlugin() { }
 
 void nclExportPlugin::init()
 {
@@ -52,12 +28,11 @@ void nclExportPlugin::init()
 
 QWidget* nclExportPlugin::getWidget()
 {
-  return NULL; //No window to return
+  return nullptr; //No window to return
 }
 
 bool nclExportPlugin::saveSubsession()
 {
-  //qDebug() << "EXPORT DISPLAYS " << project->getChildren().at(0)->toString(0, false);
   QString nclfilepath = project->getLocation();
   nclfilepath.chop(4);
   nclfilepath += ".ncl";
@@ -72,5 +47,4 @@ bool nclExportPlugin::saveSubsession()
   }
   return true;
 }
-
 
