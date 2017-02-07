@@ -128,6 +128,41 @@ void StructuralView::load(const QString &data)
   QDomElement root = dom->firstChildElement();
   QDomNodeList rootChildren = root.childNodes();
 
+  // Cheking if exist a 'body' entity when 'body'
+  // in enable in view. If don't, adds one.
+  if (STR_DEFAULT_WITH_BODY)
+  {
+    bool hasBody = false;
+
+    for (int i = 0; i < rootChildren.length(); i++)
+    {
+      if (rootChildren.item(i).isElement())
+      {
+        QDomElement element = rootChildren.item(i).toElement();
+
+        if (element.nodeName() == "entity")
+        {
+          if (element.attributeNode("type").nodeValue() ==
+              StructuralUtil::translateTypeToString(Structural::Body))
+          {
+            hasBody = true;
+            break;
+          }
+        }
+
+      }
+    }
+
+    if (!hasBody)
+    {
+      // Creating
+      createEntity(Structural::Body);
+
+      // Setting
+      root.setAttribute("uid", _entities.firstKey());
+    }
+  }
+
   for (int i = 0; i < rootChildren.length(); i++)
   {
     if (rootChildren.item(i).isElement())
@@ -136,53 +171,7 @@ void StructuralView::load(const QString &data)
 
       if (element.nodeName() == "entity")
       {
-        QDomNodeList elementChildren = element.childNodes();
-
-        QString bodyUid = element.attributeNode("uid").nodeValue();
-        QString parentUid = "";
-
-        QMap<QString,QString> properties;
-
-        for (int j = 0; j < elementChildren.length(); j++)
-        {
-          if (elementChildren.item(j).isElement())
-          {
-            QDomElement property = elementChildren.item(j).toElement();
-
-            if (property.nodeName() == "property")
-              properties.insert(property.attributeNode("name").nodeValue(),
-                                property.attributeNode("value").nodeValue());
-          }
-        }
-
-        insert(bodyUid, parentUid, properties, StructuralUtil::createSettings(false, false));
-
-        for (int j = 0; j < elementChildren.length(); j++)
-        {
-          if (elementChildren.item(j).isElement())
-          {
-            QDomElement entity = elementChildren.item(j).toElement();
-
-            if (entity.nodeName() == "entity")
-              load(entity, element);
-          }
-        }
-
-        foreach (QString key, _entities.keys())
-        {
-          if (_entities.contains(key))
-          {
-            StructuralEntity* e = _entities.value(key);
-
-            if (e->getStructuralCategory() == Structural::Edge ||
-                e->getStructuralType() == Structural::Port ||
-                e->isReference()) {
-
-                adjustReferences(e);
-                e->adjust(true);
-            }
-          }
-        }
+        load(element, root);
       }
       else if (element.nodeName() == "reference")
       {
@@ -190,17 +179,39 @@ void StructuralView::load(const QString &data)
       }
     }
   }
+
+  foreach (QString key, _entities.keys())
+  {
+    if (_entities.contains(key))
+    {
+      StructuralEntity* e = _entities.value(key);
+
+      if (e->getStructuralCategory() == Structural::Edge ||
+          e->getStructuralType() == Structural::Port ||
+          e->isReference()) {
+
+          adjustReferences(e);
+          e->adjust(true);
+      }
+    }
+  }
 }
 
 void StructuralView::load(QDomElement entity, QDomElement parent)
 {
-  if (!entity.attributeNode("uid").nodeValue().isEmpty() &&
-      !parent.attributeNode("uid").nodeValue().isEmpty())
+  if (!entity.attributeNode("uid").nodeValue().isEmpty())
   {
-    QDomNodeList entityChildren = entity.childNodes();
+    QString entityUid;
+    QString parentUid;
 
-    QString entityUid = entity.attributeNode("uid").nodeValue();
-    QString parentUid = parent.attributeNode("uid").nodeValue();
+    entityUid = entity.attributeNode("uid").nodeValue();
+
+    if (!parent.attributeNode("uid").nodeValue().isEmpty())
+      parentUid = parent.attributeNode("uid").nodeValue();
+    else
+      parentUid = "";
+
+    QDomNodeList entityChildren = entity.childNodes();
 
     QMap<QString,QString> properties;
 
@@ -254,9 +265,18 @@ QString StructuralView::save()
     }
   }
 
-  foreach(StructuralEntity* e, _entities.values())
-    if (e->getStructuralType() == Structural::Body)
-      createDocument(e, document, root);
+  if (STR_DEFAULT_WITH_BODY)
+  {
+    foreach(StructuralEntity* e, _entities.values())
+      if (e->getStructuralType() == Structural::Body)
+        createDocument(e, document, root);
+  }
+  else
+  {
+    foreach(StructuralEntity* e, _entities.values())
+      if (e->getStructuralParent() == NULL)
+        createDocument(e, document, root);
+  }
 
   document->appendChild(root);
 
@@ -390,6 +410,7 @@ void StructuralView::createDocument(StructuralEntity* entity, QDomDocument* docu
   {
     QDomElement element = document->createElement("entity");
     element.setAttribute("uid",entity->getStructuralUid());
+    element.setAttribute("type",entity->getStructuralType());
 
     foreach (QString key, entity->getStructuralProperties().keys())
     {
@@ -424,7 +445,7 @@ void StructuralView::insert(QString uid, QString parent, QMap<QString, QString> 
 
     StructuralType type = StructuralUtil::translateStringToType(properties[STR_PROPERTY_ENTITY_TYPE]);
 
-    if (p != NULL)
+    if (p != NULL || !STR_DEFAULT_WITH_BODY)
     {
       switch (type)
       {
@@ -539,7 +560,6 @@ void StructuralView::insert(QString uid, QString parent, QMap<QString, QString> 
         }
       }
     }
-
 
     if (e != NULL)
     {
@@ -1548,7 +1568,7 @@ void StructuralView::createLink(StructuralEntity* tail, StructuralEntity* head)
   StructuralEntity* parentTail = (StructuralEntity*) tail->getStructuralParent();
   StructuralEntity* parentHead = (StructuralEntity*) head->getStructuralParent();
 
-  if (parentTail != NULL && parentHead != NULL)
+  if ((parentTail != NULL && parentHead != NULL) || !STR_DEFAULT_WITH_BODY)
   {
     StructuralEntity* parent = NULL;
 
@@ -1589,7 +1609,7 @@ void StructuralView::createLink(StructuralEntity* tail, StructuralEntity* head)
 
     setMode(Structural::Pointing); emit switchedPointer(true);
 
-    if (parent != NULL)
+    if (parent != NULL || !STR_DEFAULT_WITH_BODY)
     {
       emit requestedUpdate();
       _dialog->init();
@@ -1676,7 +1696,7 @@ void StructuralView::createLink(StructuralEntity* tail, StructuralEntity* head)
 
         QMap<QString, QString> settings = StructuralUtil::createSettings(true, true);
 
-        insert(uid, parent->getStructuralUid(), properties, settings);
+        insert(uid, (parent != NULL ? parent->getStructuralUid() : ""), properties, settings);
 
         if (_entities.contains(uid))
         {
@@ -1696,7 +1716,7 @@ void StructuralView::createBind(StructuralEntity* tail, StructuralEntity* head, 
   StructuralEntity* parentTail = tail->getStructuralParent();
   StructuralEntity* parentHead = head->getStructuralParent();
 
-  if (parentTail != NULL && parentHead != NULL)
+  if ((parentTail != NULL && parentHead != NULL) || !STR_DEFAULT_WITH_BODY)
   {
     StructuralEntity* parent = NULL;
 
@@ -1711,7 +1731,7 @@ void StructuralView::createBind(StructuralEntity* tail, StructuralEntity* head, 
              head->getStructuralCategory() == Structural::Interface)
         parent = parentTail;
 
-    if (parent != NULL)
+    if (parent != NULL || !STR_DEFAULT_WITH_BODY)
     {
       QString uid = StructuralUtil::createUid();
 
@@ -1811,7 +1831,7 @@ void StructuralView::createBind(StructuralEntity* tail, StructuralEntity* head, 
         }
       }
 
-      if (entityLink != NULL && entityNonLink != NULL && parentNonLink != NULL)
+      if (entityLink != NULL && entityNonLink != NULL)
       {
         properties[STR_PROPERTY_REFERENCE_LINK_UID] = entityLink->getStructuralUid();
 
@@ -1836,7 +1856,7 @@ void StructuralView::createBind(StructuralEntity* tail, StructuralEntity* head, 
       if (!code.isEmpty())
         settings[STR_SETTING_CODE] = code;
 
-      insert(uid, parent->getStructuralUid(), properties, settings);
+      insert(uid, (parent != NULL ? parent->getStructuralUid() : ""), properties, settings);
     }
   }
 }
