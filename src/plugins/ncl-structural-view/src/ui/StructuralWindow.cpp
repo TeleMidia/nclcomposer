@@ -508,7 +508,7 @@ void StructuralWindow::select(QString uid, QMap<QString, QString> settings)
       _contextAction->setEnabled(true);
       _switchAction->setEnabled(true);
       _bodyAction->setEnabled(false);
-      _areaAction->setEnabled(true);
+      _areaAction->setEnabled(false);
       _propertyAction->setEnabled(true);
       _portAction->setEnabled(true);
 

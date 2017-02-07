@@ -121,7 +121,7 @@ void StructuralMenu::adjust(StructuralType type)
         switchMedia(true);
         switchContext(true);
         switchSwitch(true);
-        switchArea(true);
+        switchArea(false);
         switchProperty(true);
         switchPort(true);
       }
