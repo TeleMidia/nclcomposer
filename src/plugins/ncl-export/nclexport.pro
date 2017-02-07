@@ -3,19 +3,20 @@ include (../plugins-common.pri)
 DEFINES += ncl-export_LIBRARY
 
 INCLUDEPATH += \
-  src
+  .
 
 SOURCES += \
-    src/nclExportFactory.cpp \
-    src/nclExportPlugin.cpp
+  nclExportFactory.cpp \
+  nclExportPlugin.cpp
 
 HEADERS += \
-    src/nclExportFactory.h \
-    src/nclExportPlugin.h \
-    src/nclExport_global.h
+  nclExportFactory.h \
+  nclExportPlugin.h \
+  nclExport_global.h
 
 RESOURCES += \
   images.qrc
 
 OTHER_FILES += \
-    nclexport.json
+  nclexport.json
+

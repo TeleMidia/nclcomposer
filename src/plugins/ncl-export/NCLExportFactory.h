@@ -32,10 +32,7 @@ class nclExportFactory : public QObject,
 {
   Q_OBJECT
   Q_INTERFACES(IPluginFactory)
-
-#if QT_VERSION >= 0x050000
   Q_PLUGIN_METADATA(IID IPluginFactory_iid FILE "nclexport.json")
-#endif
 
 public:
   nclExportFactory();

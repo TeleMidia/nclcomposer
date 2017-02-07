@@ -67,7 +67,5 @@ QWidget* nclExportFactory::getPreferencePageWidget()
   return NULL;
 }
 
-#if QT_VERSION < 0x050000
-Q_EXPORT_PLUGIN2(nclExportPlugin,nclExportFactory)
+Q_EXPORT_PLUGIN2(nclExportPlugin, nclExportFactory)
 
-#endif
