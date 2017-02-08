@@ -23,7 +23,7 @@ OutlineViewPlugin::OutlineViewPlugin() :
   _window(new NCLTreeWidget(0)),
   _windowBuffering(new NCLTreeWidget(0))
 {
-  project = NULL;
+  project = nullptr;
 
   connect ( _window,
             SIGNAL( elementAddedByUser ( QString,
@@ -44,13 +44,13 @@ OutlineViewPlugin::OutlineViewPlugin() :
           this,
           SLOT(itemSelectionChanged()));
 
-  _selectedId = NULL;
+  _selectedId = nullptr;
   _isSyncingFromTextual = false;
 }
 
 OutlineViewPlugin::~OutlineViewPlugin()
 {
-  if(_selectedId != NULL)
+  if(_selectedId != nullptr)
     delete _selectedId;
 
   delete _window;
@@ -126,7 +126,7 @@ void OutlineViewPlugin::onEntityAdded(const QString &pluginID, Entity *entity)
 
   // \todo This must be incremental
   clearErrorMessages();
-  // emit sendBroadcastMessage("askAllValidationMessages", NULL);
+  // emit sendBroadcastMessage("askAllValidationMessages", nullptr);
 }
 
 void OutlineViewPlugin::errorMessage(const QString &error)
@@ -166,7 +166,7 @@ void OutlineViewPlugin::onEntityChanged(const QString &pluginID, Entity * entity
 
   // \todo This must be incremental
   clearErrorMessages();
-  // emit sendBroadcastMessage("askAllValidationMessages", NULL);
+  // emit sendBroadcastMessage("askAllValidationMessages", nullptr);
 }
 
 void OutlineViewPlugin::onEntityRemoved(const QString &pluginID, const QString &entityID)
@@ -183,10 +183,10 @@ void OutlineViewPlugin::onEntityRemoved(const QString &pluginID, const QString &
   {
     _idToItem.remove(entityID);
     _window->removeItem(entityID);
-    if (_selectedId != NULL && entityID == *_selectedId)
+    if (_selectedId != nullptr && entityID == *_selectedId)
     {
       delete _selectedId;
-      _selectedId = NULL;
+      _selectedId = nullptr;
     }
   }
 
@@ -332,10 +332,10 @@ void OutlineViewPlugin::debugHasSendClearAll(QString pluginID, void *param)
 
 void OutlineViewPlugin::itemSelectionChanged()
 {
-  if(_selectedId != NULL)
+  if(_selectedId != nullptr)
   {
     delete _selectedId;
-    _selectedId = NULL;
+    _selectedId = nullptr;
   }
 
   QList <QTreeWidgetItem*> selecteds = _window->selectedItems();
@@ -356,7 +356,7 @@ void OutlineViewPlugin::changeSelectedEntity(QString pluginID, void *param)
   {
     QString *id = (QString*)param;
     QTreeWidgetItem *item = _window->getItemById(*id);
-    if(item != NULL)
+    if(item != nullptr)
       _window->setCurrentItem(item, 0);
     else
       qWarning() << "The OutlineViewPlugin receive a message to select an"
@@ -412,7 +412,7 @@ void OutlineViewPlugin::validationError(QString pluginID, void *param)
     QString uid = p->first;
 
     QTreeWidgetItem *item = _window->getItemById(uid);
-    if(item != NULL)
+    if(item != nullptr)
     {
       item->setTextColor(0, Qt::red);
       item->setToolTip(0, p->second);

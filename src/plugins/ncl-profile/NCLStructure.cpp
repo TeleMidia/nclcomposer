@@ -333,14 +333,14 @@ map <QString, bool> *NCLStructure::getAttributes(const QString &element)
 {
   if(attributes->count(element))
     return (*attributes)[element];
-  return NULL;
+  return nullptr;
 }
 
 deque <QString> *NCLStructure::getAttributesOrdered(const QString &element)
 {
   if(attributes_ordered->count(element))
     return (*attributes_ordered)[element];
-  return NULL;
+  return nullptr;
 }
 
 map <QString, map <QString, char> *> *NCLStructure::getNesting()
@@ -352,7 +352,7 @@ map <QString, char> * NCLStructure::getChildren (const QString &tagname)
 {
   if(nesting->count(tagname))
     return (*nesting)[tagname];
-  return NULL;
+  return nullptr;
 }
 
 deque <QString> *NCLStructure::getElementsOrdered()

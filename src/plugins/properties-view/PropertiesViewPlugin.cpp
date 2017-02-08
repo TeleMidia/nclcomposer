@@ -23,8 +23,8 @@
 PropertiesViewPlugin::PropertiesViewPlugin()
 {
   window = new PropertyEditor(0);
-  project = NULL;
-  currentEntity = NULL;
+  project = nullptr;
+  currentEntity = nullptr;
 
   connect( window, SIGNAL(propertyChanged(QString, QString)),
            this, SLOT(updateCurrentEntityAttr(QString, QString)) );
@@ -57,7 +57,7 @@ void PropertiesViewPlugin::onEntityChanged(QString pluginID, Entity * entity)
 {
   Q_UNUSED(pluginID)
 
-  if(entity != NULL && currentEntity != NULL)
+  if(entity != nullptr && currentEntity != nullptr)
   {
     if(entity->getUniqueId() == currentEntity->getUniqueId())
       updateCurrentEntity();
@@ -70,7 +70,7 @@ void PropertiesViewPlugin::onEntityRemoved(QString pluginID, QString entityID)
 
   if(entityID == currentEntityId)
   {
-    currentEntity = NULL;
+    currentEntity = nullptr;
     window->setTagname("", "");
     currentEntityId = "";
   }
@@ -99,18 +99,18 @@ void PropertiesViewPlugin::changeSelectedEntity(QString pluginID, void *param)
   Q_UNUSED(pluginID)
 
   QString *id = (QString*) param;
-  if(id != NULL && *id != "") {
+  if(id != nullptr && *id != "") {
     currentEntity = project->getEntityById(*id);
     currentEntityId = *id;
   }
 
-  if(currentEntity != NULL)
+  if(currentEntity != nullptr)
   {
     window->setTagname(currentEntity->getType(), "");
     updateCurrentEntity();
   }
 
-  emit sendBroadcastMessage("askAllValidationMessages", NULL);
+  emit sendBroadcastMessage("askAllValidationMessages", nullptr);
 }
 
 void PropertiesViewPlugin::updateCurrentEntity(QString errorMessage)
@@ -140,7 +140,7 @@ void PropertiesViewPlugin::updateCurrentEntity(QString errorMessage)
 
 void PropertiesViewPlugin::updateCurrentEntityAttr(QString attr, QString value)
 {
-  if (currentEntity != NULL)
+  if (currentEntity != nullptr)
   {
     if(currentEntity->hasAttribute(attr) &&
        currentEntity->getAttribute(attr) == value)

@@ -39,7 +39,7 @@ void PropertiesViewFactory::releasePluginInstance(IPlugin *plugin)
   if (debug)
   {
     delete debug;
-    debug = NULL;
+    debug = nullptr;
   }
 }
 

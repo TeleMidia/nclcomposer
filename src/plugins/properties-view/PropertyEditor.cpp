@@ -97,7 +97,7 @@ void PropertyEditor::setTagname(QString tagname, QString name)
   deque <QString> *attrs =
       NCLStructure::getInstance()->getAttributesOrdered(currentTagname);
 
-  if(attrs != NULL)
+  if(attrs != nullptr)
   {
     deque <QString>::iterator it;
 
@@ -178,13 +178,13 @@ void PropertyEditor::updateWithItemChanges(QTableWidgetItem *item)
   QTableWidgetItem *leftItem = ui->tableWidget->item(row, column-1);
   QString name = "", value = "";
 
-  if(item != NULL)
+  if(item != nullptr)
   {
     name = leftItem->text();
   }
   else return; //property with empty name isn't usefull
 
-  if(item != NULL)
+  if(item != nullptr)
   {
     value = item->text();
   }

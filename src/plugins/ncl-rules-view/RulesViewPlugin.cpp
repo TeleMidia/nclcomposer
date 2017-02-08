@@ -402,7 +402,7 @@ void RulesViewPlugin::changeSelectedEntity(const QString &pluginID, void *param)
 
   QString *id = (QString*) param;
 
-  if (id != NULL && *id != "")
+  if (id != nullptr && *id != "")
   {
     QTreeWidgetItem *item = _items.key(*id);
     if (item)

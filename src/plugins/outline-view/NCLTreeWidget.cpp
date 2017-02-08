@@ -324,7 +324,7 @@ void NCLTreeWidget::userAddNewElement()
     map <QString, char> *
         children = NCLStructure::getInstance()->getChildren(tagname);
 
-    if(children != NULL)
+    if(children != nullptr)
     {
       map <QString, char>::iterator it;
       for(it = children->begin(); it != children->end(); ++it)
@@ -372,7 +372,7 @@ QTreeWidgetItem *NCLTreeWidget::getItemById(QString itemId)
     if(items.at(i)->text(2) == itemId)
       return items.at(i);
   }
-  return NULL;
+  return nullptr;
 }
 
 void NCLTreeWidget::removeItem(QString itemId)
@@ -397,7 +397,7 @@ void NCLTreeWidget::removeItem(QString itemId)
   for (int i = 0; i < items.size(); i++)
   {
     item  = items.at(i);
-    if (item->parent() != NULL)
+    if (item->parent() != nullptr)
     {
       item->parent()->removeChild(item);
       qDeleteAll(item->takeChildren());
@@ -420,13 +420,13 @@ void NCLTreeWidget::userRemoveElement()
   QList<QTreeWidgetItem*> selecteds = this->selectedItems();
   QTreeWidgetItem *item = selecteds.at (0);
 
-  if(item == NULL)
+  if(item == nullptr)
     return;
 
   QString id = item->text(2);
   QString name = item->text(0);
 
-  if (item != NULL) {
+  if (item != nullptr) {
     int resp = QMessageBox::question(
           this,
           tr("Deleting Element"),

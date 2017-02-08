@@ -512,7 +512,7 @@ void NCLTextEditorMainWindow::insertElement()
   map <QString, char> * children =
       NCLStructure::getInstance()->getChildren(tagname);
 
-  if(children != NULL) {
+  if(children != nullptr) {
     map <QString, char>::iterator it;
     for(it = children->begin(); it != children->end(); ++it){
       strlist << it->first;
@@ -557,7 +557,7 @@ void NCLTextEditorMainWindow::insertElement()
     //TODO: remove from here (create a function)
     map <QString, bool> *attributes =
         NCLStructure::getInstance()->getAttributes(element);
-    if(attributes != NULL) {
+    if(attributes != nullptr) {
       map <QString, bool>::iterator it;
       for(it = attributes->begin(); it != attributes->end(); ++it){
         if(it->second) {

@@ -49,7 +49,7 @@ void NCLLanguageProfile::releaseDocumentParser (IDocumentParser *parser)
   if (parser)
   {
     delete parser;
-    parser = NULL;
+    parser = nullptr;
   }
 }
 

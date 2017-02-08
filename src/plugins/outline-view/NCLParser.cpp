@@ -74,7 +74,7 @@ bool NCLParser::endElement(const QString & /* namespaceURI */,
 
 bool NCLParser::fatalError(const QXmlParseException &exception)
 {
-  if(_currentItem != NULL)
+  if(_currentItem != nullptr)
   {
     _currentItem->setIcon(0, QIcon(":/images/error-icon-16.png"));
     _currentItem->setTextColor(0, QColor("#FF0000"));

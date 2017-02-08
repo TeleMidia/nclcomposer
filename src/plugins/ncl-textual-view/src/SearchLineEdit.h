@@ -31,7 +31,7 @@ class SearchLineEdit : public QLineEdit
   Q_OBJECT
 
 public:
-  explicit SearchLineEdit(QWidget *parent = NULL);
+  explicit SearchLineEdit(QWidget *parent = nullptr);
 
 signals:
   void escPressed();

@@ -684,7 +684,7 @@ QDomElement NCLTextEditor::elementById( const QDomDocument &domDoc,
     }
   }
 
-  // The function QDomDocument::elementById will always returns a NULL doc.
+  // The function QDomDocument::elementById will always returns a nullptr doc.
   // That is why we have to reimplement this function.
 
   return QDomElement();

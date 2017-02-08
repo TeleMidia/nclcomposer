@@ -33,7 +33,7 @@ void OutlineViewFactory::releasePluginInstance(IPlugin *plugin)
   if (outlineView)
   {
     delete outlineView;
-    outlineView = NULL;
+    outlineView = nullptr;
   }
 }
 

@@ -32,14 +32,14 @@ DebugConsolePlugin::DebugConsolePlugin()
   connect(bt, SIGNAL(clicked()), this, SLOT(sendToAll()));
   window->setLayout(layout);
   window->setWindowIcon(QIcon(":/images/icon.png"));
-  project = NULL;
+  project = nullptr;
 }
 
 DebugConsolePlugin::~DebugConsolePlugin()
 {
-  if(window != NULL)
+  if(window != nullptr)
     delete window;
-  window = NULL;
+  window = nullptr;
 }
 
 void DebugConsolePlugin::init()
@@ -118,6 +118,6 @@ void DebugConsolePlugin::sendToAll()
 
     in.sendBroadcastMessage("debugHasSendClearAll"); */
 
-  emit sendBroadcastMessage("debugHasSendClearAll", NULL);
+  emit sendBroadcastMessage("debugHasSendClearAll", nullptr);
 }
 

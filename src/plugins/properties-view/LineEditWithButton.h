@@ -27,7 +27,7 @@ class LineEditWithButton : public QLineEdit
   Q_OBJECT
 
 public:
-  explicit LineEditWithButton(QWidget *parent = NULL,
+  explicit LineEditWithButton(QWidget *parent = nullptr,
                               const QString &iconPath = "");
 
 signals:

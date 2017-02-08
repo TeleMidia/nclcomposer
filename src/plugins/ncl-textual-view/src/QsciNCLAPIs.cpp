@@ -62,7 +62,7 @@ void QsciNCLAPIs::updateAutoCompletionList( const QStringList &context,
       map <QString, char> *elements = _nclStructure->getChildren(father);
       map <QString, char>::iterator it;
 
-      if(elements != NULL)
+      if(elements != nullptr)
       {
         it = elements->begin();
         for (; it != elements->end(); ++it)
@@ -94,7 +94,7 @@ void QsciNCLAPIs::updateAutoCompletionList( const QStringList &context,
       deque <QString> *attrs_ordered =
           _nclStructure->getAttributesOrdered(tagname);
 
-      if(attrs != NULL){
+      if(attrs != nullptr){
         deque <QString>::iterator it;
         for (int i = 0; i < context.count(); ++i)
         {
@@ -309,7 +309,7 @@ void QsciNCLAPIs::autoCompletionSelected(const QString &selection)
     outputStr += selection + " " + attributes;
 
     map <QString, char> *children = _nclStructure->getChildren(selection);
-    if ( children != NULL && children->size() ) {
+    if ( children != nullptr && children->size() ) {
       outputStr += ">";
       outputStr += "\n";
       outputStr += "</";
@@ -444,7 +444,7 @@ QString QsciNCLAPIs::getRequiredAttributesAsStr(const QString &element)
   deque <QString> *attrs_ordered = NCLStructure::getInstance()
       ->getAttributesOrdered(element);
 
-  if(attributes != NULL && attrs_ordered != NULL)
+  if(attributes != nullptr && attrs_ordered != nullptr)
   {
     deque <QString>::iterator it;
     bool first = true;

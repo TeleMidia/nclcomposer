@@ -62,6 +62,6 @@ QIcon nclExportFactory::icon()  const
 
 QWidget* nclExportFactory::getPreferencePageWidget()
 {
-  return NULL;
+  return nullptr;
 }
 

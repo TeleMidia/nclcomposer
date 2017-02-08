@@ -61,7 +61,7 @@ public:
      *
      *  This function is part of the IPlugin API.
      *
-     * \return QWidget* the widget that represents this plugin. If NULL, the
+     * \return QWidget* the widget that represents this plugin. If nullptr, the
      *      plugin has not a visual representation
      */
   QWidget* getWidget();

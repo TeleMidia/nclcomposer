@@ -35,9 +35,9 @@ NCLTextualViewPlugin::NCLTextualViewPlugin()
   _window = new NCLTextEditorMainWindow();
   _nclTextEditor = _window->getTextEditor();
 
-  _tmpNclTextEditor = NULL;
+  _tmpNclTextEditor = nullptr;
 
-  project = NULL;
+  project = nullptr;
   connect( _window,
            SIGNAL(elementAdded(const QString&, const QString&, const QMap<QString,QString>&, bool)),
            this,
@@ -61,7 +61,7 @@ NCLTextualViewPlugin::NCLTextualViewPlugin()
 NCLTextualViewPlugin::~NCLTextualViewPlugin()
 {
   delete _window;
-  _window = NULL;
+  _window = nullptr;
 }
 
 void NCLTextualViewPlugin::init()
@@ -232,7 +232,7 @@ void NCLTextualViewPlugin::onEntityAdded(const QString &pluginID, Entity *entity
   bool hasOpennedTag = false;
 
   // get the line number where the new element must be inserted
-  if(entity->getParentUniqueId() != NULL &&
+  if(entity->getParentUniqueId() != nullptr &&
      entity->getParent()->getType() != "project")
   {
     // Test if exists before access from operator[] because if doesn't exist
@@ -554,7 +554,7 @@ void NCLTextualViewPlugin::updateCoreModel()
 
   //  int line, column;
   //  nclTextEditor->getCursorPosition(&line, &column);
-  sendBroadcastMessage("textualStartSync", NULL);
+  sendBroadcastMessage("textualStartSync", nullptr);
 
   //double-buffering
   _tmpNclTextEditor = _nclTextEditor;
@@ -569,7 +569,7 @@ void NCLTextualViewPlugin::updateCoreModel()
     //    incrementalUpdateCoreModelById();
     incrementalUpdateCoreModel();
   emit syncFinished();
-  sendBroadcastMessage("textualFinishSync", NULL);
+  sendBroadcastMessage("textualFinishSync", nullptr);
 
   //  nclTextEditor->setCursorPosition(line, column); //go back to the previous position
 
@@ -817,7 +817,7 @@ void NCLTextualViewPlugin::syncFinished()
   // tmpNclTextEditor->setText(nclTextEditor->text());
   delete _nclTextEditor;
   _nclTextEditor = _tmpNclTextEditor;
-  _tmpNclTextEditor = NULL;
+  _tmpNclTextEditor = nullptr;
   updateFromModel();
   _nclTextEditor->setTextWithoutUserInteraction(_nclTextEditor->text());
   _isSyncing = false;
@@ -946,14 +946,14 @@ void NCLTextualViewPlugin::manageFocusLost(QFocusEvent *event)
 #ifndef NCLEDITOR_STANDALONE
 
   // When AutoComplete list gets the focus, the QApplication::focusWidget
-  // has a NULL value. This is an QScintilla issues.
+  // has a nullptr value. This is an QScintilla issues.
   // When the focus goes to AutoComplete list we don't want to synchronize with
-  // the core, that is why the test "QApplication::focusWidget() != NULL" is
+  // the core, that is why the test "QApplication::focusWidget() != nullptr" is
   // here.
   // qDebug() << nclTextEditor << QApplication::focusWidget();
   if(_nclTextEditor->textWithoutUserInteraction() != _nclTextEditor->text()
      && !_isSyncing
-     && (QApplication::focusWidget() != NULL))
+     && (QApplication::focusWidget() != nullptr))
   {
     int ret = QMessageBox::question(_window,
                                     tr("Textual View synchronization"),
@@ -979,7 +979,7 @@ void NCLTextualViewPlugin::manageFocusLost(QFocusEvent *event)
         break;
   }
   }
-  else if(QApplication::focusWidget() == NULL)
+  else if(QApplication::focusWidget() == nullptr)
   {
     // If the focus goes to AutoComplete list we force Qt keeps the focus in the
     // NCLTextEditor!!!
@@ -993,9 +993,9 @@ void NCLTextualViewPlugin::updateErrorMessages()
   if(_isSyncing)
     return;
 
-  clearValidationMessages(this->pluginInstanceID, NULL);
+  clearValidationMessages(this->pluginInstanceID, nullptr);
 
-  emit sendBroadcastMessage("askAllValidationMessages", NULL);
+  emit sendBroadcastMessage("askAllValidationMessages", nullptr);
 }
 
 void NCLTextualViewPlugin::clearValidationMessages(QString, void *param)
@@ -1031,7 +1031,7 @@ QString NCLTextualViewPlugin::getEntityAttributesAsString(/*const */ Entity *ent
   deque <QString> *attributes_ordered =
       NCLStructure::getInstance()->getAttributesOrdered(entity->getType());
 
-  if(attributes_ordered != NULL)
+  if(attributes_ordered != nullptr)
   {
     for(uint i = 0; i < attributes_ordered->size(); i++)
     {
@@ -1051,7 +1051,7 @@ QString NCLTextualViewPlugin::getEntityAttributesAsString(/*const */ Entity *ent
   entity->getAttributeIterator(begin, end);
   for (it = begin; it != end; ++it)
   {
-    if(attributes == NULL || !attributes->count(it.key()))
+    if(attributes == nullptr || !attributes->count(it.key()))
       line += " " + it.key() + "=\"" + it.value() + "\"";
   }
 

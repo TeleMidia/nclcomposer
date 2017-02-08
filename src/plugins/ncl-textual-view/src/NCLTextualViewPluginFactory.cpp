@@ -20,7 +20,7 @@
 
 NCLTextualViewPluginFactory::NCLTextualViewPluginFactory()
 {
-  _prefPageWidget = NULL;
+  _prefPageWidget = nullptr;
 }
 
 IPlugin* NCLTextualViewPluginFactory::createPluginInstance()
@@ -36,7 +36,7 @@ void NCLTextualViewPluginFactory::releasePluginInstance(IPlugin *plugin)
   if (textualView)
   {
     delete textualView;
-    textualView = NULL;
+    textualView = nullptr;
   }
 }
 
@@ -52,14 +52,14 @@ QIcon NCLTextualViewPluginFactory::icon() const
 
 QWidget* NCLTextualViewPluginFactory::getPreferencePageWidget()
 {
-  /* if (prefPageWidget == NULL)
+  /* if (prefPageWidget == nullptr)
         {
             prefPageWidget = new QFrame();
             prefPageUi = new Ui::TextPluginPreferencesWidget();
             prefPageUi->setupUi(prefPageWidget);
         }
     return prefPageWidget; */
-  return NULL;
+  return nullptr;
 }
 
 void NCLTextualViewPluginFactory::setDefaultValues()
