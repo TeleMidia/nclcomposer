@@ -1238,7 +1238,14 @@ void StructuralView::adjustReferences(StructuralEntity* entity)
             properties[STR_PROPERTY_REFERENCE_INTERFACE_ID] = entity->getStructuralProperty(STR_PROPERTY_REFERENCE_INTERFACE_ID);
             properties[STR_PROPERTY_REFERENCE_INTERFACE_UID] = entity->getStructuralProperty(STR_PROPERTY_REFERENCE_INTERFACE_UID);
 
-            insert(StructuralUtil::createUid(), entity->getStructuralParent()->getStructuralUid(), properties, StructuralUtil::createSettings(false,false));
+            QString parentUid;
+
+            if (entity->getStructuralParent() != NULL)
+              parentUid = entity->getStructuralParent()->getStructuralUid();
+            else
+              parentUid = "";
+
+            insert(StructuralUtil::createUid(), parentUid, properties, StructuralUtil::createSettings(false,false));
           }
         }
         break;
@@ -1282,9 +1289,9 @@ void StructuralView::select(QString uid, QMap<QString, QString> settings)
 
       if (_clipboard != NULL)
         if (entity->getStructuralUid() != _clipboard->getStructuralUid())
-          if (StructuralUtil::validateKinship(_clipboard->getStructuralType(), entity->getStructuralType()) &&
-              !isChild(entity, _clipboard))
-            enablePaste = true;
+          if (StructuralUtil::validateKinship(_clipboard->getStructuralType(), entity->getStructuralType()))
+            if (!isChild(entity, _clipboard))
+              enablePaste = true;
 
       emit switchedCut(true);
       emit switchedCopy(true);
@@ -1317,7 +1324,15 @@ void StructuralView::select(QString uid, QMap<QString, QString> settings)
     //
     emit switchedCut(false);
     emit switchedCopy(false);
-    emit switchedPaste(false);
+
+    bool enablePaste = false;
+
+    if (!STR_DEFAULT_WITH_BODY)
+      if (_clipboard != NULL)
+          if (StructuralUtil::validateKinship(_clipboard->getStructuralType(), Structural::Body))
+            enablePaste = true;
+
+    emit switchedPaste(enablePaste);
 
     if (settings[STR_SETTING_NOTIFY] == STR_VALUE_TRUE)
     {
@@ -1514,45 +1529,57 @@ void StructuralView::performPaste()
     if (_entities.contains(_selected))
       parent = _entities.value(_selected, NULL);
 
-    if (parent != NULL)
-      if (_clipboard->getStructuralUid() != parent->getStructuralUid())
-        if (StructuralUtil::validateKinship(_clipboard->getStructuralType(), parent->getStructuralType()) &&
-            !isChild(parent, _clipboard))
-	{
+    bool isAValidPaste = false;
 
-          // 0: Cancel - Nothing todo.
-          // 1: No - Paste entity.
-          // 2: Yes - Create refer entity.
-          int result = 1;
+    if (!STR_DEFAULT_WITH_BODY)
+    {
+      if (StructuralUtil::validateKinship(_clipboard->getStructuralType(), Structural::Body))
+          isAValidPaste = true;
+    }
+    else
+    {
+      if (parent != NULL)
+        if (_clipboard->getStructuralUid() != parent->getStructuralUid())
+          if (StructuralUtil::validateKinship(_clipboard->getStructuralType(), parent->getStructuralType()) &&
+              !isChild(parent, _clipboard))
+            isAValidPaste = true;
+    }
 
-          if (_entities.contains(_clipboard->getStructuralUid()))
-            result = QMessageBox::question( this, tr("Paste"), tr("Would you like to make a reference instead?"), tr("Cancel"), tr("No"), tr("Yes"), 1);
+    if (isAValidPaste)
+    {
+      // 0: Cancel - Nothing todo.
+      // 1: No - Paste entity.
+      // 2: Yes - Create refer entity.
+      int result = 1;
 
-          if (result == 1)
-          {
-            paste(_clipboard, parent);
-          }
-          else if (result == 2)
-          {
-            QString uid = StructuralUtil::createUid();
+      if (_entities.contains(_clipboard->getStructuralUid()))
+        result = QMessageBox::question( this, tr("Paste"), tr("Would you like to make a reference instead?"), tr("Cancel"), tr("No"), tr("Yes"), 1);
 
-            QMap<QString, QString> properties = _clipboard->getStructuralProperties();
-            properties[STR_PROPERTY_ENTITY_UID] = uid;
-            properties[STR_PROPERTY_ENTITY_ID] = "r_"+_clipboard->getStructuralProperty(STR_PROPERTY_ENTITY_ID);
+      if (result == 1)
+      {
+        paste(_clipboard, parent);
+      }
+      else if (result == 2)
+      {
+        QString uid = StructuralUtil::createUid();
 
-            properties[STR_PROPERTY_REFERENCE_REFER_ID] = _clipboard->getStructuralId();
-            properties[STR_PROPERTY_REFERENCE_REFER_UID] = _clipboard->getStructuralUid();
+        QMap<QString, QString> properties = _clipboard->getStructuralProperties();
+        properties[STR_PROPERTY_ENTITY_UID] = uid;
+        properties[STR_PROPERTY_ENTITY_ID] = "r_"+_clipboard->getStructuralProperty(STR_PROPERTY_ENTITY_ID);
 
-            properties.remove(STR_PROPERTY_ENTITY_TOP);
-            properties.remove(STR_PROPERTY_ENTITY_LEFT);
+        properties[STR_PROPERTY_REFERENCE_REFER_ID] = _clipboard->getStructuralId();
+        properties[STR_PROPERTY_REFERENCE_REFER_UID] = _clipboard->getStructuralUid();
 
-            insert(uid, parent->getStructuralUid(), properties, StructuralUtil::createSettings());
-          }
+        properties.remove(STR_PROPERTY_ENTITY_TOP);
+        properties.remove(STR_PROPERTY_ENTITY_LEFT);
 
-          // Fix entity drag status
-          foreach(StructuralEntity* e, _entities.values())
-            e->setDraggable(false);
-        }
+        insert(uid, (parent != NULL ? parent->getStructuralUid() : ""), properties, StructuralUtil::createSettings());
+      }
+
+      // Fix entity drag status
+      foreach(StructuralEntity* e, _entities.values())
+        e->setDraggable(false);
+    }
   }
 }
 
@@ -1575,15 +1602,17 @@ void StructuralView::createLink(StructuralEntity* tail, StructuralEntity* head)
 
       parent = parentTail;
     }
-    else if (parentTail->getStructuralParent() == parentHead)
+    else if (parentTail != NULL &&
+             parentTail->getStructuralParent() == parentHead &&
+             tail->getStructuralCategory() == Structural::Interface)
     {
       phead = QPointF(head->getLeft(), head->getTop());
-      ptail = parentTail->mapToParent(tail->getLeft(),
-                                                  tail->getTop());
+      ptail = parentTail->mapToParent(tail->getLeft(),tail->getTop());
 
       parent = parentHead;
     }
-    else if (parentTail == parentHead->getStructuralParent() &&
+    else if (parentHead != NULL &&
+             parentTail == parentHead->getStructuralParent() &&
              head->getStructuralCategory() == Structural::Interface)
     {
       ptail = QPointF(tail->getLeft(), tail->getTop());
@@ -1591,8 +1620,11 @@ void StructuralView::createLink(StructuralEntity* tail, StructuralEntity* head)
 
       parent = parentTail;
     }
-    else if (parentTail->getStructuralParent() == parentHead->getStructuralParent() &&
-               tail->getStructuralCategory() == Structural::Interface)
+    else if (parentTail != NULL &&
+             parentHead != NULL &&
+             parentTail->getStructuralParent() == parentHead->getStructuralParent() &&
+             tail->getStructuralCategory() == Structural::Interface &&
+             head->getStructuralCategory() == Structural::Interface)
     {
       ptail = parentTail->mapToParent(tail->getLeft(),tail->getTop());
       phead = parentHead->mapToParent(head->getLeft(),head->getTop());
@@ -1704,7 +1736,7 @@ void StructuralView::createLink(StructuralEntity* tail, StructuralEntity* head)
   }
 }
 
-void StructuralView::createBind(StructuralEntity* tail, StructuralEntity* head, StructuralRole role, const QString &code)
+void StructuralView:: createBind(StructuralEntity* tail, StructuralEntity* head, StructuralRole role, const QString &code)
 {
   StructuralEntity* parentTail = tail->getStructuralParent();
   StructuralEntity* parentHead = head->getStructuralParent();
@@ -1716,11 +1748,13 @@ void StructuralView::createBind(StructuralEntity* tail, StructuralEntity* head, 
     if (parentTail == parentHead)
         parent = parentTail;
 
-    else if (parentTail->getStructuralParent() == parentHead &&
+    else if (parentTail != NULL &&
+             parentTail->getStructuralParent() == parentHead &&
              tail->getStructuralCategory() == Structural::Interface)
         parent = parentHead;
 
-    else if (parentTail == parentHead->getStructuralParent() &&
+    else if (parentHead != NULL &&
+             parentTail == parentHead->getStructuralParent() &&
              head->getStructuralCategory() == Structural::Interface)
         parent = parentTail;
 
@@ -1862,9 +1896,8 @@ void StructuralView::createReference(StructuralEntity* tail, StructuralEntity* h
     StructuralEntity* parentTail = tail->getStructuralParent();
     StructuralEntity* parentHead = head->getStructuralParent();
 
-    if (parentTail != NULL &&
-        parentHead != NULL &&
-        (parentTail == parentHead || parentTail == parentHead->getStructuralParent()))
+    if (parentTail == parentHead ||
+       (parentHead != NULL && parentTail == parentHead->getStructuralParent()))
     {
       QMap<QString, QString> previous = tail->getStructuralProperties();
       QMap<QString, QString> properties;
@@ -1965,26 +1998,27 @@ void StructuralView::performSnapshot()
 
   if (!location.isEmpty())
   {
-    qreal top = 0;
-    qreal left = 0;
-    qreal width = _scene->width();
-    qreal height = _scene->height();
+    qreal top = _scene->height();
+    qreal left = _scene->width();
+    qreal bottom = 0.0;
+    qreal right = 0.0;
 
-    StructuralEntity* entity = getBody();
-
-    if (entity != NULL)
+    foreach (StructuralEntity* entity, _entities.values())
     {
-      if (entity->getTop() > top)
-        top = entity->getTop();
+      if (entity->getStructuralParent() == NULL)
+      {
+        if (entity->getTop() < top)
+          top = entity->getTop();
 
-      if (entity->getLeft() > left)
-        left = entity->getLeft();
+        if (entity->getLeft() < left)
+          left = entity->getLeft();
 
-      if (entity->getWidth() < width)
-        width = entity->getWidth();
+        if (entity->getLeft() + entity->getWidth() > right)
+          right = entity->getLeft() + entity->getWidth();
 
-      if (entity->getHeight() < height)
-        height = entity->getHeight();
+        if (entity->getTop() + entity->getHeight() > bottom)
+          bottom = entity->getTop() + entity->getHeight();
+      }
     }
 
     StructuralEntity* selected = NULL;
@@ -1995,10 +2029,10 @@ void StructuralView::performSnapshot()
     if (selected != NULL)
       selected->setSelected(false);
 
-    QImage image = QImage(width, height, QImage::Format_ARGB32_Premultiplied);
+    QImage image = QImage(right-left+50, bottom-top+50, QImage::Format_ARGB32_Premultiplied);
 
     QPainter painter(&image);
-    _scene->render(&painter, QRect(), QRect(left-25, top-25, width+50, height+50));
+    _scene->render(&painter, QRect(), QRect(left-25, top-25, right-left+50, bottom-top+50));
     painter.end();
 
     if (!location.endsWith(".png"))
@@ -2208,7 +2242,9 @@ void StructuralView::mouseReleaseEvent(QMouseEvent* event)
           StructuralEntity* parentTail = tail->getStructuralParent();
           StructuralEntity* parentHead = head->getStructuralParent();
 
-          if (parentTail != NULL && parentHead != NULL && parentTail == parentHead)
+          if (parentTail == parentHead &&
+             (tail->getStructuralType() == Structural::Port ||
+              tail->getStructuralType() == Structural::SwitchPort))
             createReference(tail, head);
           else if (head->getStructuralType() != Structural::Link)
             createLink(tail, head);
@@ -2224,7 +2260,7 @@ void StructuralView::mouseReleaseEvent(QMouseEvent* event)
           StructuralEntity* parentTail = tail->getStructuralParent();
           StructuralEntity* parentHead = head->getStructuralParent();
 
-          if (parentTail != NULL && parentHead != NULL &&  parentTail == parentHead->getStructuralParent())
+          if (parentHead != NULL &&  parentTail == parentHead->getStructuralParent())
             createReference(tail, head);
           else
             createLink(tail, head);
@@ -2574,7 +2610,7 @@ void StructuralView::paste(StructuralEntity* entity, StructuralEntity* parent)
 
 void StructuralView::paste(StructuralEntity* entity, StructuralEntity* parent, const QString &code, bool adjust)
 {
-  if (entity != NULL && parent != NULL)
+  if (entity != NULL)
   {
     QString uid = StructuralUtil::createUid();
 
@@ -2589,7 +2625,7 @@ void StructuralView::paste(StructuralEntity* entity, StructuralEntity* parent, c
 
     QMap<QString, QString> setting = StructuralUtil::createSettings(STR_VALUE_TRUE, STR_VALUE_TRUE, code);
 
-    insert(uid, parent->getStructuralUid(), properties, setting);
+    insert(uid, (parent != NULL ? parent->getStructuralUid() : ""), properties, setting);
 
     if (_entities.contains(uid))
     {
