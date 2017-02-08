@@ -26,7 +26,7 @@ void StructuralInterface::adjust(bool collision,  bool recursion)
   // Adjusting position...
   StructuralEntity* parent = getStructuralParent();
 
-  if (parent != NULL)
+  if (parent != NULL || !STR_DEFAULT_WITH_BODY)
   {
     if (!collision)
     {
@@ -36,11 +36,10 @@ void StructuralInterface::adjust(bool collision,  bool recursion)
       {
         bool colliding = false;
 
-        foreach(StructuralEntity *entity, parent->getStructuralEntities())
+        foreach(StructuralEntity *entity, StructuralUtil::getNeighbors(this))
         {
-          if(this != entity && entity->getStructuralCategory() == Structural::Interface)
+          if(this != entity)
           {
-
             int max = 1000;
             int n = 0;
 
@@ -70,7 +69,7 @@ void StructuralInterface::adjust(bool collision,  bool recursion)
           }
         }
 
-        foreach(StructuralEntity *entity, parent->getStructuralEntities())
+        foreach(StructuralEntity *entity, StructuralUtil::getNeighbors(this))
           if(collidesWithItem(entity, Qt::IntersectsItemBoundingRect))
             colliding = true;
 

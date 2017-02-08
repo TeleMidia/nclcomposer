@@ -554,20 +554,22 @@ QVector<StructuralEntity*> StructuralUtil::getNeighbors(StructuralEntity* entity
 {
   QVector<StructuralEntity*> neighbors;
 
-  if (STR_DEFAULT_WITH_BODY)
-  {
-    StructuralEntity* parent = entity->getStructuralParent();
+  StructuralEntity* parent = entity->getStructuralParent();
 
-    if (parent != NULL)
-      neighbors = parent->getStructuralEntities();
+  if (parent != NULL)
+  {
+    neighbors = parent->getStructuralEntities();
   }
-  else
+  else if (!STR_DEFAULT_WITH_BODY)
   {
-    StructuralView* view = (StructuralView*) entity->scene()->views().at(1);
+    if (entity->scene() != NULL)
+    {
+      StructuralView* view = (StructuralView*) entity->scene()->views().at(1);
 
-    foreach (StructuralEntity* current, view->getEntities().values())
-      if (current->getStructuralParent() == NULL && current != entity)
-        neighbors += current;
+      foreach (StructuralEntity* current, view->getEntities().values())
+        if (current->getStructuralParent() == NULL && current != entity)
+          neighbors += current;
+    }
   }
 
   return neighbors;
@@ -577,21 +579,17 @@ QVector<StructuralEntity*> StructuralUtil::getUpNeighbors(StructuralEntity* enti
 {
   QVector<StructuralEntity*> neighbors;
 
-  if (STR_DEFAULT_WITH_BODY)
-  {
-    StructuralEntity* parent = entity->getStructuralParent();
+  StructuralEntity* parent = entity->getStructuralParent();
 
-    if (parent != NULL)
-      if (parent->getStructuralParent() != NULL)
-        neighbors += parent->getStructuralParent()->getStructuralEntities();
-  }
-  else
+  if (parent != NULL)
   {
-    StructuralEntity* parent = entity->getStructuralParent();
-
-    if (parent != NULL)
+    if (parent->getStructuralParent() != NULL)
     {
-      if (parent->getStructuralParent() == NULL)
+      neighbors += parent->getStructuralParent()->getStructuralEntities();
+    }
+    else if (!STR_DEFAULT_WITH_BODY)
+    {
+      if (entity->scene() != NULL)
       {
         StructuralView* view = (StructuralView*) entity->scene()->views().at(1);
 

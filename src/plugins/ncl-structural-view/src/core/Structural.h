@@ -154,7 +154,7 @@
 #define STR_DEFAULT_ALERT_WARNING_ICON ":/icon/warning"
 #define STR_DEFAULT_ALERT_WARNING_COLOR "#E5E500"
 
-#define STR_DEFAULT_WITH_BODY 1                     // not used yet
+#define STR_DEFAULT_WITH_BODY 0
 
 /*
  *

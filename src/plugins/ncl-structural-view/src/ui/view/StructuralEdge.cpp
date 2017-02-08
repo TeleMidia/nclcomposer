@@ -132,10 +132,15 @@ void StructuralEdge::adjust(bool collision,  bool recursion)
       if (tail->getStructuralCategory() == Structural::Interface)
         if(parent != NULL)
           line.setP1(parent->mapFromItem(tail->getStructuralParent(), line.p1()));
+        else if (tail->getStructuralParent() != NULL)
+          line.setP1(tail->getStructuralParent()->mapToScene(line.p1()));
+
 
       if (head->getStructuralCategory() == Structural::Interface)
         if(parent != NULL)
           line.setP2(parent->mapFromItem(head->getStructuralParent(), line.p2()));
+        else if (head->getStructuralParent() != NULL)
+          line.setP2(head->getStructuralParent()->mapToScene(line.p2()));
 
       adjustBox(line);
 
