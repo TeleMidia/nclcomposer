@@ -1,12 +1,18 @@
-/* Copyright (c) 2011 Telemidia/PUC-Rio.
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
- *
- * Contributors:
- *    Telemidia/PUC-Rio - initial API and implementation
- */
+/* Copyright (C) 2011-2017 PUC-Rio/TeleMídia Lab.
+
+ NCL Composer is free software: you can redistribute it and/or modify
+ it under the terms of the GNU Lesser General Public License as published
+ by the Free Software Foundation, either version 3 of the License, or
+ (at your option) any later version.
+
+ NCL Composer is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU Lesser General Public License for more details.
+
+ You should have received a copy of the GNU General Lesser Public License
+ along with NCL Composer.  If not, see <http://www.gnu.org/licenses/>. */
+
 #include "SimpleSSHClient.h"
 
 extern "C" {
@@ -49,12 +55,12 @@ static int qmutex_mutex_unlock(void **lock)
 
 static struct gcry_thread_cbs gcry_threads_qmutex =
   { GCRY_THREAD_OPTION_USER,
-    NULL,
+    nullptr,
     qmutex_mutex_init,
     qmutex_mutex_destroy,
     qmutex_mutex_lock,
     qmutex_mutex_unlock,
-    NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL};
+    nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr};
 
 int SimpleSSHClient::init()
 {
@@ -405,7 +411,7 @@ int SimpleSSHClient::sftp_copy_file(const char *localncl, const char *destpath)
 
          libssh2_channel_free(channel);
 
-         channel = NULL;
+         channel = nullptr;
     /* End SEND FILE THROUGH SCP */
 
     rc = libssh2_sftp_stat(sftp_session, sftp_file.c_str(), &attrs);
@@ -458,7 +464,7 @@ int SimpleSSHClient::exec_cmd(const char *command)
   /* Exec non-blocking on the remove host */
   channel = libssh2_channel_open_session(session);
 
-  if( channel == NULL )
+  if( channel == nullptr )
   {
     fprintf(stderr,"Error 1\n");
     ::exit(1);
@@ -523,7 +529,7 @@ int SimpleSSHClient::exec_cmd(const char *command)
 
     // Just for libssh2 1.2.8 or greater
     // libssh2_channel_get_exit_signal(channel, &exitsignal,
-    //                                NULL, NULL, NULL, NULL, NULL);
+    //                                nullptr, nullptr, nullptr, nullptr, nullptr);
   }
 
   if (!exitcode)
@@ -539,8 +545,8 @@ int SimpleSSHClient::waitsocket(int socket_fd, LIBSSH2_SESSION *session)
   struct timeval timeout;
   int rc;
   fd_set fd;
-  fd_set *writefd = NULL;
-  fd_set *readfd = NULL;
+  fd_set *writefd = nullptr;
+  fd_set *readfd = nullptr;
   int dir;
 
   timeout.tv_sec = 10;
@@ -559,7 +565,7 @@ int SimpleSSHClient::waitsocket(int socket_fd, LIBSSH2_SESSION *session)
   if(dir & LIBSSH2_SESSION_BLOCK_OUTBOUND)
     writefd = &fd;
 
-  rc = select(socket_fd + 1, readfd, writefd, NULL, &timeout);
+  rc = select(socket_fd + 1, readfd, writefd, nullptr, &timeout);
 
   return rc;
 }
