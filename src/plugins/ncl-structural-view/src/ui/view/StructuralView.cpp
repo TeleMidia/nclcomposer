@@ -2158,7 +2158,7 @@ void StructuralView::mouseMoveEvent(QMouseEvent* event)
 }
 
 void StructuralView::mousePressEvent(QMouseEvent* event)
-{
+{ 
   if (_mode == Structural::Linking)
   {
     if (_tool != NULL)
@@ -2707,10 +2707,10 @@ void StructuralView::paste(StructuralEntity* entity, StructuralEntity* parent, c
 }
 
 #ifdef WITH_GRAPHVIZ
-#include "gvc.h"
-#include "cgraph.h"
+#include "graphviz/gvc.h"
+#include "graphviz/cgraph.h"
 
-#define WITH_INTERFACE 0
+#define WITH_INTERFACE_AS_NODE 1
 
 void StructuralView::adjustLayout()
 {
@@ -2718,234 +2718,384 @@ void StructuralView::adjustLayout()
 
   if (_entities.contains(_selected))
     entity = _entities.value(_selected);
-  else
-    entity = getBody();
 
   adjustLayout(entity, StructuralUtil::createUid());
 }
 
 void StructuralView::adjustLayout(StructuralEntity* entity, const QString &code)
 {
-  if (entity != NULL) {
-    // Autoadjust children
-    foreach (StructuralEntity* e, entity->getStructuralEntities()) {
-      if (e->getStructuralType() == Structural::Context ||
-          e->getStructuralType() == Structural::Switch ||
-          e->getStructuralType() == Structural::Body) {
+  QVector<StructuralEntity*> children;
 
-        adjustLayout(e, code);
-      }
+  if (entity != NULL)
+  {
+    children = entity->getStructuralEntities();
+  }
+  else if (!STR_DEFAULT_WITH_BODY)
+  {
+    foreach (StructuralEntity* current, _entities.values())
+      if (current->getStructuralParent() == NULL)
+        children += current;
+  }
+
+  // Autoadjust children
+  foreach (StructuralEntity* e, children) {
+    if (e->getStructuralType() == Structural::Context ||
+        e->getStructuralType() == Structural::Switch ||
+        e->getStructuralType() == Structural::Body) {
+
+      adjustLayout(e, code);
     }
+  }
 
-    // Create graphviz context
-    GVC_t *c;
-    c = gvContext();
+  // Create graphviz context
+  GVC_t *c;
+  c = gvContext();
 
-    // Create graphviz graph
-    Agraph_t *g;
-    g = agopen("g", Agdirected, NULL);
+  // Create graphviz graph
+  Agraph_t *g;
+  g = agopen("g", Agdirected, NULL);
 
-    agattr(g, AGRAPH, "splines", "ortho");
-    agattr(g, AGRAPH, "nodesep", "0.4");
-    agattr(g, AGNODE, "shape", "box");
-    agattr(g, AGNODE, "nodesep", "0.4");
-    agattr(g, AGEDGE, "minlen", "3");
+  agattr(g, AGRAPH, "splines", "ortho");
+  agattr(g, AGRAPH, "nodesep", "0.4");
+  agattr(g, AGNODE, "shape", "box");
+  agattr(g, AGNODE, "nodesep", "0.4");
+  agattr(g, AGEDGE, "minlen", "3");
 
-    qreal GRAPHVIZ_DPI = 72;
+  qreal GRAPHVIZ_DPI = 72;
 
-    QMap<QString, Agnode_t*> nodes;
+  QMap<QString, Agnode_t*> nodes;
 
-    // Add nodes in graphviz graph based on children entities.
-    // Skip link entities.
-    foreach (StructuralEntity* e, entity->getStructuralEntities()) {
-      if (e->getStructuralCategory() == Structural::Node &&
-          e->getStructuralType() != Structural::Link) {
+  // Add nodes in graphviz graph based on children entities.
+  // Skip link entities.
+  foreach (StructuralEntity* e, children) {
+    if ((e->getStructuralCategory() == Structural::Node ||
+        (WITH_INTERFACE_AS_NODE && e->getStructuralCategory() == Structural::Interface)) &&
+        e->getStructuralType() != Structural::Link) {
 
-        QString w = QString::number(e->getWidth()/GRAPHVIZ_DPI);
-        QString h = QString::number(e->getHeight()/GRAPHVIZ_DPI);
+      QString w = QString::number(e->getWidth()/GRAPHVIZ_DPI);
+      QString h = QString::number(e->getHeight()/GRAPHVIZ_DPI);
 
-        Agnode_t* node = agnode(g, (char*) e->getStructuralUid().toStdString().c_str(),1);
-        agsafeset(node, "width", (char*) w.toStdString().c_str(), (char*) w.toStdString().c_str() );
-        agsafeset(node, "height", (char*) h.toStdString().c_str(), (char*) h.toStdString().c_str() );
+      Agnode_t* node = agnode(g, (char*) e->getStructuralUid().toStdString().c_str(),1);
+      agsafeset(node, "width", (char*) w.toStdString().c_str(), (char*) w.toStdString().c_str() );
+      agsafeset(node, "height", (char*) h.toStdString().c_str(), (char*) h.toStdString().c_str() );
 
-        nodes.insert(e->getStructuralUid(), node);
-      }
+      nodes.insert(e->getStructuralUid(), node);
     }
+  }
 
 //    QString r = nodes.firstKey();
 //    agsafeset(g, "root", (char*) r.toStdString().c_str(), (char*) r.toStdString().c_str());
 
-    // Load condition and action entities for each link entity.
-    QMap<QString, StructuralEntity*> links;
-    QMap<QString, QVector<StructuralEntity*> > tails;
-    QMap<QString, QVector<StructuralEntity*> > heads;
+  // Load condition and action entities for each link entity.
+  QMap<QString, StructuralEntity*> links;
+  QMap<QString, QVector<StructuralEntity*> > tails;
+  QMap<QString, QVector<StructuralEntity*> > heads;
 
-    foreach (StructuralEntity* e, entity->getStructuralEntities()) {
-      if (e->getStructuralType() == Structural::Bind ) {
-        StructuralBind* b = (StructuralBind*) e;
+  foreach (StructuralEntity* e, children) {
+    if (e->getStructuralCategory() == Structural::Edge) {
+      StructuralEdge* ee = (StructuralEdge*) e;
 
-        StructuralEntity* tail = b->getTail();
-        StructuralEntity* head = b->getHead();
+      StructuralEntity* tail = ee->getTail();
+      StructuralEntity* head = ee->getHead();
 
-        if (tail != NULL && head != NULL) {
-          if (tail->getStructuralType() == Structural::Link) {
-            QString uid = tail->getStructuralUid();
+      if (tail != NULL && head != NULL) {
+        if (tail->getStructuralType() == Structural::Link) {
+          QString uid = tail->getStructuralUid();
 
-            links.insert(uid, tail);
+          links.insert(uid, tail);
 
-            if (!heads.contains(uid))
-              heads.insert(uid, QVector<StructuralEntity*>());
+          if (!heads.contains(uid))
+            heads.insert(uid, QVector<StructuralEntity*>());
 
-            // In case the bind connect the link entity with a interface entity
-            // (Node -> Interface) consider the parent of the interface entity
-            // instead (Node -> Node).
-            if (head->getStructuralCategory() == Structural::Interface &&
-                head->getStructuralParent() != entity)
-              head = head->getStructuralParent();
+          // In case the bind connect the link entity with a interface entity
+          // (Node -> Interface) consider the parent of the interface entity
+          // instead (Node -> Node).
+          if (head->getStructuralCategory() == Structural::Interface &&
+              head->getStructuralParent() != entity)
+            head = head->getStructuralParent();
 
-            QVector<StructuralEntity*> entities = heads.value(uid);
-            entities.append(head);
+          QVector<StructuralEntity*> entities = heads.value(uid);
+          entities.append(head);
 
-            heads.insert(uid, entities);
+          heads.insert(uid, entities);
 
-          } else if (head->getStructuralType() == Structural::Link) {
-            QString uid = head->getStructuralUid();
+        } else if (head->getStructuralType() == Structural::Link) {
+          QString uid = head->getStructuralUid();
 
-            links.insert(uid, head);
+          links.insert(uid, head);
 
-            if (!tails.contains(uid))
-              tails.insert(uid, QVector<StructuralEntity*>());
+          if (!tails.contains(uid))
+            tails.insert(uid, QVector<StructuralEntity*>());
 
-            // In case the bind connect the link entity with a interface entity
-            // (Interface -> Node) consider the parent of the interface entity
-            // instead (Node -> Node).
-            if (tail->getStructuralCategory() == Structural::Interface &&
-                tail->getStructuralParent() != entity)
-              tail = tail->getStructuralParent();
+          // In case the bind connect the link entity with a interface entity
+          // (Interface -> Node) consider the parent of the interface entity
+          // instead (Node -> Node).
+          if (tail->getStructuralCategory() == Structural::Interface &&
+              tail->getStructuralParent() != entity)
+            tail = tail->getStructuralParent();
 
-            QVector<StructuralEntity*> entities = tails.value(uid);
-            entities.append(tail);
+          QVector<StructuralEntity*> entities = tails.value(uid);
+          entities.append(tail);
 
-            tails.insert(uid, entities);
-          }
+          tails.insert(uid, entities);
+
+        } else if (WITH_INTERFACE_AS_NODE) {
+          QString uid = e->getStructuralUid();
+
+          links.insert(uid, e);
+
+          if (!heads.contains(uid))
+            heads.insert(uid, QVector<StructuralEntity*>());
+
+          // In case the bind connect the link entity with a interface entity
+          // (Node -> Interface) consider the parent of the interface entity
+          // instead (Node -> Node).
+          if (head->getStructuralCategory() == Structural::Interface &&
+              head->getStructuralParent() != entity)
+            head = head->getStructuralParent();
+
+          QVector<StructuralEntity*> headentities = heads.value(uid);
+          headentities.append(head);
+
+          heads.insert(uid, headentities);
+
+          if (!tails.contains(uid))
+            tails.insert(uid, QVector<StructuralEntity*>());
+
+          // In case the bind connect the link entity with a interface entity
+          // (Interface -> Node) consider the parent of the interface entity
+          // instead (Node -> Node).
+          if (tail->getStructuralCategory() == Structural::Interface &&
+              tail->getStructuralParent() != entity)
+            tail = tail->getStructuralParent();
+
+          QVector<StructuralEntity*> tailentities = tails.value(uid);
+          tailentities.append(tail);
+
+          tails.insert(uid, tailentities);
         }
       }
     }
+  }
 
-    // Add edges in graphviz graph based on the tails and heads loaded
-    // from each link entity.
-    foreach (StructuralEntity* link, links) {
-      QString uid = link->getStructuralUid();
+  QMap<QString, Agedge_t*> edges;
 
-      foreach (StructuralEntity* tail, tails.value(uid)) {
-        foreach (StructuralEntity* head, heads.value(uid)) {
-          if (nodes.contains(tail->getStructuralUid()) &&
-              nodes.contains(head->getStructuralUid())) {
+  // Add edges in graphviz graph based on the tails and heads loaded
+  // from each link entity.
+  foreach (StructuralEntity* link, links) {
+    QString uid = link->getStructuralUid();
 
-            agedge(g,nodes.value(tail->getStructuralUid()),
-                   nodes.value(head->getStructuralUid()),
-                   NULL,1);
-          }
+    foreach (StructuralEntity* tail, tails.value(uid)) {
+      foreach (StructuralEntity* head, heads.value(uid)) {
+        if (nodes.contains(tail->getStructuralUid()) &&
+            nodes.contains(head->getStructuralUid())) {
+
+          Agedge_t* edge = agedge(g,nodes.value(tail->getStructuralUid()),
+                                    nodes.value(head->getStructuralUid()),
+                                    NULL,1);
+
+          edges.insert(uid, edge);
         }
       }
     }
+  }
 
-    // Adjust graph, nodes and edges size and pos using 'dot' algorithm.
-    gvLayout(c, g, "dot");
+  // Adjust graph, nodes and edges size and pos using 'dot' algorithm.
+  gvLayout(c, g, "dot");
 
-    // Update entity size in view.
-    qreal PADDING = 64*2;
+  // Update entity size in view.
+  qreal PADDING = 64*2;
 
-    qreal nextTop = entity->getTop();
-    qreal nextLeft = entity->getLeft();
-    qreal nextWidth = GD_bb(g).UR.x + PADDING;
-    qreal nextHeight = GD_bb(g).UR.y + PADDING;
+  qreal nextTop;
+  qreal nextLeft;
+  qreal nextWidth;
+  qreal nextHeight;
+
+  if (entity != NULL)
+  {
+    nextTop = entity->getTop();
+    nextLeft = entity->getLeft();
+    nextWidth = GD_bb(g).UR.x + PADDING;
+    nextHeight = GD_bb(g).UR.y + PADDING;
 
     change(entity->getStructuralUid(),
            StructuralUtil::createProperties(nextTop, nextLeft, nextWidth, nextHeight),
            entity->getStructuralProperties(),
            StructuralUtil::createSettings(STR_VALUE_TRUE, STR_VALUE_FALSE, code));
-
-    // Update children entities 'pos' in view. Skip link entities for now.
-    foreach (QString key, nodes.keys()) {
-      Agnode_t* n = nodes.value(key);
-      StructuralEntity* e = _entities.value(key);
-
-      nextTop = (GD_bb(g).UR.y - ND_coord(n).y) + entity->getHeight()/2 - GD_bb(g).UR.y/2 - e->getHeight()/2;
-      nextLeft = ND_coord(n).x + entity->getWidth()/2 - GD_bb(g).UR.x/2 - e->getWidth()/2;
-
-      change(e->getStructuralUid(),
-             StructuralUtil::createProperties(nextTop, nextLeft),
-             e->getStructuralProperties(),
-             StructuralUtil::createSettings(STR_VALUE_TRUE, STR_VALUE_FALSE, code));
-    }
-
-    // Update link entities 'pos'.
-    //
-    // Note:
-    // This is NOT the best solution.
-    //
-    // Known Issues:
-    // - link entity can be moved into a composition
-    // - links entity can be moved to a same position
-    //
-    // Todo:
-    // Use the middle 'pos' of the edges path generated by graphviz instead
-    // of bounding box center.
-    qreal top;
-    qreal left;
-    qreal width;
-    qreal height;
-
-    foreach (StructuralEntity* link, links.values()) {
-      top = 1024*1024;;
-      left = 1024*1024;
-      width = 0;
-      height = 0;
-
-      foreach (StructuralEntity* tail, tails.value(link->getStructuralUid())) {
-        if (tail->getTop() < top)
-          top = tail->getTop();
-
-        if (tail->getLeft() < left)
-          left = tail->getLeft();
-
-        if (tail->getLeft() + tail->getWidth() > width)
-          width = tail->getLeft() + tail->getWidth();
-
-        if (tail->getTop() + tail->getHeight() > height)
-          height = tail->getTop() + tail->getHeight();
-      }
-
-      foreach (StructuralEntity* head, heads.value(link->getStructuralUid())) {
-        if (head->getTop() < top)
-          top = head->getTop();
-
-        if (head->getLeft() < left)
-          left = head->getLeft();
-
-        if (head->getLeft() + head->getWidth() > width)
-          width = head->getLeft() + head->getWidth();
-
-        if (head->getTop() + head->getHeight() > height)
-          height = head->getTop() + head->getHeight();
-      }
-
-      width = width - left;
-      height = height - top;
-
-      nextTop = top + height/2 - link->getHeight()/2;
-      nextLeft = left + width/2 - link->getWidth()/2;
-
-      change(link->getStructuralUid(),
-             StructuralUtil::createProperties(nextTop, nextLeft),
-             link->getStructuralProperties(),
-             StructuralUtil::createSettings(STR_VALUE_TRUE, STR_VALUE_FALSE, code));
-    }
-
-    // Update interface entities 'pos'.
-    // TODO
   }
 
+  qreal parentWidth;
+  qreal parentHeight;
+
+  if (entity != NULL)
+  {
+    parentWidth = entity->getWidth();
+    parentHeight = entity->getHeight();
+  }
+  else if (!STR_DEFAULT_WITH_BODY)
+  {
+    parentWidth = _scene->width();
+    parentHeight = _scene->height();
+  }
+
+  // Update children entities 'pos' in view. Skip link entities for now.
+  foreach (QString key, nodes.keys()) {
+    Agnode_t* n = nodes.value(key);
+    StructuralEntity* e = _entities.value(key);
+
+    nextTop = (GD_bb(g).UR.y - ND_coord(n).y) + parentHeight/2 - GD_bb(g).UR.y/2 - e->getHeight()/2;
+    nextLeft = ND_coord(n).x + parentWidth/2 - GD_bb(g).UR.x/2 - e->getWidth()/2;
+
+    QMap<QString, QString> properties = e->getStructuralProperties();
+    properties[STR_PROPERTY_ENTITY_TOP] = QString::number(nextTop);
+    properties[STR_PROPERTY_ENTITY_LEFT] = QString::number(nextLeft);
+
+    change(e->getStructuralUid(),
+           properties,
+           e->getStructuralProperties(),
+           StructuralUtil::createSettings(STR_VALUE_TRUE, STR_VALUE_FALSE, code));
+  }
+
+  /*
+  // Update link entities 'pos' based on
+  // boundbox.
+  //
+  // Note:
+  // This is NOT the best solution.
+  //
+  // Known Issues:
+  // - link entity can be moved into a composition
+  // - links entity can be moved to a same position
+  //
+  qreal boxTop;
+  qreal boxLeft;
+  qreal boxWidth;
+  qreal boxHeight;
+
+  foreach (StructuralEntity* link, links.values()) {
+    boxTop = 1024*1024;;
+    boxLeft = 1024*1024;
+    boxWidth = 0;
+    boxHeight = 0;
+
+    foreach (StructuralEntity* tail, tails.value(link->getStructuralUid())) {
+      if (tail->getTop() < boxTop)
+        boxTop = tail->getTop();
+
+      if (tail->getLeft() < boxLeft)
+        boxLeft = tail->getLeft();
+
+      if (tail->getLeft() + tail->getWidth() > boxWidth)
+        boxWidth = tail->getLeft() + tail->getWidth();
+
+      if (tail->getTop() + tail->getHeight() > boxHeight)
+        boxHeight = tail->getTop() + tail->getHeight();
+    }
+
+    foreach (StructuralEntity* head, heads.value(link->getStructuralUid())) {
+      if (head->getTop() < boxTop)
+        boxTop = head->getTop();
+
+      if (head->getLeft() < boxLeft)
+        boxLeft = head->getLeft();
+
+      if (head->getLeft() + head->getWidth() > boxWidth)
+        boxWidth = head->getLeft() + head->getWidth();
+
+      if (head->getTop() + head->getHeight() > boxHeight)
+        boxHeight = head->getTop() + head->getHeight();
+    }
+
+    boxWidth = boxWidth - boxLeft;
+    boxHeight = boxHeight - boxTop;
+
+    nextTop = boxTop + boxHeight/2 - link->getHeight()/2;
+    nextLeft = boxLeft + boxWidth/2 - link->getWidth()/2;
+
+    change(link->getStructuralUid(),
+           StructuralUtil::createProperties(nextTop, nextLeft),
+           link->getStructuralProperties(),
+           StructuralUtil::createSettings(STR_VALUE_TRUE, STR_VALUE_FALSE, code));
+  }
+  */
+
+  // Update link entities 'pos' using
+  // path generated by graphviz.
+  //
+  qreal p = 0.5;
+
+  foreach (StructuralEntity* link, links.values())
+  {
+    if (link->getStructuralType() == Structural::Link)
+    {
+      QVector<QLineF> lines; qreal length = 0.0;
+
+      // Creating lines
+      const splines* s = ED_spl(edges.value(link->getStructuralUid()));
+
+      if((s->list != 0) && (s->list->size%3 == 1))
+      {
+        QLineF currentLine;
+        QPointF currentPoint;
+
+        bezier b = s->list[0];
+
+        if(b.sflag)
+        {
+          currentLine = QLineF(b.sp.x, b.sp.y,b.list[0].x, b.list[0].y);
+
+          lines.append(currentLine);
+          length += currentLine.length();
+        }
+
+        currentPoint = QPointF(b.list[0].x, b.list[0].y);
+
+        for(int i=2; i<b.size; i+=2)
+        {
+          currentLine = QLineF(currentPoint.x(), currentPoint.y(),b.list[i].x, b.list[i].y);
+
+          lines.append(currentLine);
+          length += currentLine.length();
+
+          currentPoint = QPointF(b.list[i].x, b.list[i].y);
+        }
+
+        if(b.eflag)
+        {
+          currentLine = QLineF(currentPoint.x(), currentPoint.y(),b.ep.x, b.ep.y);
+
+          lines.append(currentLine);
+          length += currentLine.length();
+        }
+
+        // Set link 'pos'
+        qreal currentLength = 0;
+
+        foreach (QLineF line, lines)
+        {
+          if (currentLength+line.length() < length*p)
+          {
+            currentLength += line.length();
+          }
+          else
+          {
+            QPointF next = line.pointAt(((length*p) - currentLength)/line.length());
+
+            nextTop = (GD_bb(g).UR.y - next.y()) + parentHeight/2 - GD_bb(g).UR.y/2 - link->getHeight()/2;
+            nextLeft = next.x() + parentWidth/2 - GD_bb(g).UR.x/2 - link->getWidth()/2;
+
+            QMap<QString, QString> properties = link->getStructuralProperties();
+            properties[STR_PROPERTY_ENTITY_TOP] = QString::number(nextTop);
+            properties[STR_PROPERTY_ENTITY_LEFT] = QString::number(nextLeft);
+
+            change(link->getStructuralUid(),
+                   properties,
+                   link->getStructuralProperties(),
+                   StructuralUtil::createSettings(STR_VALUE_TRUE, STR_VALUE_FALSE, code));
+          }
+        }
+      }
+    }
+  }
 }
 #endif
