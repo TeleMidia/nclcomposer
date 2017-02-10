@@ -64,6 +64,12 @@ private slots:
 
   void on_resolutionComboBox_activated(const QString &arg1);
 
+  void on_actionZoom_in_triggered();
+
+  void on_actionZoom_out_triggered();
+
+  void on_actionActionZoom_original_triggered();
+
 private:
   Ui::QnlyMainWindow *ui;
   LayoutView *view;

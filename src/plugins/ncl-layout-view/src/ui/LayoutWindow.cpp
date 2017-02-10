@@ -32,6 +32,7 @@ void LayoutWindow::setQnlyView(LayoutView *view)
   this->view = view;
   this->setCentralWidget(view);
 
+
   connect(ui->actionAdd_Region,
           SIGNAL(triggered()),
           this,
@@ -170,5 +171,32 @@ void LayoutWindow::on_resolutionComboBox_activated(const QString &arg1)
   if(currentRegionBase != NULL)
   {
     currentRegionBase->changeResolution(w,h);
+  }
+}
+
+void LayoutWindow::on_actionZoom_in_triggered()
+{
+    if(view->getSelectedRegionBase() != NULL)
+    {
+      LayoutCanvas* zoomObject = (LayoutCanvas*) view->getSelectedRegionBase()->parent();
+      zoomObject->performZoomIn();
+    }
+}
+
+void LayoutWindow::on_actionZoom_out_triggered()
+{
+  if(view->getSelectedRegionBase() != NULL)
+  {
+    LayoutCanvas* zoomObject = (LayoutCanvas*) view->getSelectedRegionBase()->parent();
+    zoomObject->performZoomOut();
+  }
+}
+
+void LayoutWindow::on_actionActionZoom_original_triggered()
+{
+  if(view->getSelectedRegionBase() != NULL)
+  {
+    LayoutCanvas* zoomObject = (LayoutCanvas*) view->getSelectedRegionBase()->parent();
+    zoomObject->performZoomReset();
   }
 }
