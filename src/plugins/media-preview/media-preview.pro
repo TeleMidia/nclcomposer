@@ -6,7 +6,7 @@ QT += xml
 CONFIG +=qtestlib
 
 DEPENDPATH += .
-INCLUDEPATH += . src
+INCLUDEPATH += . 
 
 release {
 LIBS      +=    -L../ncl-textual-view/deps/QScintilla-gpl-2.8/Qt4Qt5/release \
@@ -20,31 +20,31 @@ CODECFORTR = UTF-8
 
 # Input
 SOURCES += \
-    src/MediaPreviewFactory.cpp \
-    src/AudioPlayer.cpp \
-    src/ImageView.cpp \
-    src/GifView.cpp \
-    src/TextView.cpp \
-    # src/HypertextView.cpp \
-    src/NCLView.cpp \
-    src/LuaView.cpp \
-    src/MediaPreviewPlugin.cpp \
-    src/VideoPlayer.cpp
+    MediaPreviewFactory.cpp \
+    AudioPlayer.cpp \
+    ImageView.cpp \
+    GifView.cpp \
+    TextView.cpp \
+    # HypertextView.cpp \
+    NCLView.cpp \
+    LuaView.cpp \
+    MediaPreviewPlugin.cpp \
+    VideoPlayer.cpp
 
 HEADERS += \
-    src/MediaPreviewFactory.h \
-    src/MediaPreviewPlugin.h \
-    src/AudioPlayer.h \
-    src/ImageView.h \
-    src/GifView.h \
-    src/TextView.h \
-    # src/HypertextView.h \
-    src/NCLView.h \
-    src/LuaView.h \
-    src/VideoPlayer.h
+    MediaPreviewFactory.h \
+    MediaPreviewPlugin.h \
+    AudioPlayer.h \
+    ImageView.h \
+    GifView.h \
+    TextView.h \
+    # HypertextView.h \
+    NCLView.h \
+    LuaView.h \
+    VideoPlayer.h
 
 FORMS += \
-    ui/VideoPlayer.ui
+    VideoPlayer.ui
 
 RESOURCES += \
     media-preview.qrc
