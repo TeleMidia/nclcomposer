@@ -680,9 +680,7 @@ void NCLLayoutViewPlugin::addRegionBaseToView(Entity* entity)
       regionbases[regionbaseUID] = entity;
 
       view->addRegionBase(regionbaseUID, attributes);
-
       mainWindow->addRegionBaseToCombobox(regionbaseUID, attributes);
-
       mainWindow->selectRegionBaseInComboBox(regionbaseUID);
     }
   }

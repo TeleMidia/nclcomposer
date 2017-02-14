@@ -170,7 +170,7 @@ void LayoutWindow::on_resolutionComboBox_activated(const QString &arg1)
   currentRegionBase = view->getSelectedRegionBase();
   if(currentRegionBase != NULL)
   {
-    currentRegionBase->changeResolution(w,h);
+    currentRegionBase->changeResolution(w, h);
   }
 }
 
