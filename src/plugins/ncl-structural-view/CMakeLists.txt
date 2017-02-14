@@ -59,6 +59,21 @@ set(NCL_STRUCTURAL_VIEW_SOURCES
   src/ui/view/StructuralLinkTool.cpp
 )
 
+if (WITH_STRUCTURAL_AUTOADJUST)
+  # Cheking
+  find_library(GRAPHVIZ_LIBS NAMES gvc cgraph)
+
+  if(NOT GRAPHVIZ_LIBS)
+    message(FATAL_ERROR "[ ! ] GraphViz library not found!")
+  endif()
+
+  # Set WITH_GRAPHVIZ
+  add_definitions(-DWITH_GRAPHVIZ)
+
+  # Update DEPS_LIBS
+  set(DEPS_LIBS ${DEPS_LIBS} ${GRAPHVIZ_LIBS})
+endif()
+
 add_library(ncl_structural_view
   SHARED
   ${NCL_STRUCTURAL_VIEW_SOURCES}
@@ -79,6 +94,7 @@ target_include_directories(ncl_structural_view PRIVATE
 target_link_libraries(ncl_structural_view PRIVATE
   nclcomposer_core
   nclprofile
+  ${DEPS_LIBS}
   Qt5::Xml
   Qt5::Widgets
 )
