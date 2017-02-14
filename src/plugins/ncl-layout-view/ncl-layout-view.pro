@@ -3,32 +3,32 @@ CONFIG += link_ncl_profile
 include (../plugins-common.pri)
 
 INCLUDEPATH += \
-  src/ \
-  src/ui/ \
-  src/ui/view/
+  . \
+  ui/ \
+  ui/view/
 
 SOURCES += \
-  src/LayoutViewPlugin.cpp \
-  src/LayoutViewFactory.cpp \
-  src/ui/view/LayoutView.cpp \
-  src/ui/view/LayoutRegion.cpp \
-  src/ui/view/LayoutRegionBase.cpp \
-  src/ui/view/LayoutGrid.cpp \
-  src/ui/view/LayoutCanvas.cpp \
-  src/ui/LayoutWindow.cpp
+  LayoutViewPlugin.cpp \
+  LayoutViewFactory.cpp \
+  ui/view/LayoutView.cpp \
+  ui/view/LayoutRegion.cpp \
+  ui/view/LayoutRegionBase.cpp \
+  ui/view/LayoutGrid.cpp \
+  ui/view/LayoutCanvas.cpp \
+  ui/LayoutWindow.cpp
 
 HEADERS += \
-  src/LayoutViewPlugin.h \
-  src/LayoutViewFactory.h \
-  src/ui/view/LayoutCanvas.h \
-  src/ui/view/LayoutGrid.h \
-  src/ui/view/LayoutRegion.h \
-  src/ui/view/LayoutRegionBase.h \
-  src/ui/view/LayoutView.h \
-  src/ui/LayoutWindow.h
+  LayoutViewPlugin.h \
+  LayoutViewFactory.h \
+  ui/view/LayoutCanvas.h \
+  ui/view/LayoutGrid.h \
+  ui/view/LayoutRegion.h \
+  ui/view/LayoutRegionBase.h \
+  ui/view/LayoutView.h \
+  ui/LayoutWindow.h
 
 FORMS += \
-  src/ui/LayoutWindow.ui
+  ui/LayoutWindow.ui
 
 OTHER_FILES += \
   ncl-layout-view.json
