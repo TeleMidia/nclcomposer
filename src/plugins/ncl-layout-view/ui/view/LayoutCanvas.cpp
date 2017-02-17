@@ -67,10 +67,27 @@ void LayoutCanvas::wheelEvent(QWheelEvent *event)
 
 void LayoutCanvas::keyPressEvent(QKeyEvent *event)
 {
-  if( event->modifiers() == Qt::ControlModifier &&
-            event->key() == Qt::Key_0)
+
+  if(event->modifiers() & Qt::ControlModifier)
   {
-    performZoomReset();
+    if(event->key() == Qt::Key_0)
+    {
+      performZoomReset();
+      event->accept();
+    }
+
+    if(event->key() == Qt::Key_Minus)
+    {
+      performZoomOut();
+      event->accept();
+    }
+
+    if(event->key() == Qt::Key_Plus)
+    {
+      performZoomIn();
+      event->accept();
+      /* ctrl+plus was not working properly as a shortcut for action*/
+    }
   }
 
   QGraphicsView::keyPressEvent(event);
