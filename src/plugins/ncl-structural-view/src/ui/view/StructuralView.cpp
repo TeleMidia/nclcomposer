@@ -28,6 +28,7 @@ StructuralView::StructuralView(QWidget* parent)
   _tool = NULL;
 
   setAttribute(Qt::WA_TranslucentBackground);
+  setDragMode(ScrollHandDrag);
 }
 
 StructuralView::~StructuralView()
