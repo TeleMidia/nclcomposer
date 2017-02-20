@@ -45,12 +45,6 @@ NCLTextualViewPlugin::NCLTextualViewPlugin()
 
   _isSyncing = false;
 
-  _updateModelShortcut = new QShortcut(_window);
-  // _updateModelShortcut->setKey(QKeySequence("F5"));
-
-  connect(_updateModelShortcut, SIGNAL(activated()),
-          this, SLOT(updateCoreModel()) );
-
   connect(_nclTextEditor, SIGNAL(focusLosted(QFocusEvent*)),
           this, SLOT(manageFocusLost(QFocusEvent*)));
 
@@ -955,7 +949,7 @@ void NCLTextualViewPlugin::manageFocusLost(QFocusEvent *event)
      && !_isSyncing
      && (QApplication::focusWidget() != nullptr))
   {
-    int ret = QMessageBox::question(_window,
+    /*int ret = QMessageBox::question(_window,
                                     tr("Textual View synchronization"),
                                     tr("You have changed the textual content of the NCL "
                                        "Document. Do you want to synchronize this text with "
@@ -968,16 +962,16 @@ void NCLTextualViewPlugin::manageFocusLost(QFocusEvent *event)
 
         switch(ret)
     {
-        case QMessageBox::Yes:
+        case QMessageBox::Yes: */
         updateCoreModel();
-        break;
+    /*    break;
         case QMessageBox::No:
         _nclTextEditor->setText(_nclTextEditor->textWithoutUserInteraction());
         break;
         case QMessageBox::Cancel:
         _nclTextEditor->keepFocused();
         break;
-  }
+    } */
   }
   else if(QApplication::focusWidget() == nullptr)
   {

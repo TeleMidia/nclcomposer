@@ -188,8 +188,6 @@ private:
                                               element */
   QMap <QString, int> _endEntityOffset; /*!< Keep the offset of endTag offset */
 
-  QShortcut *_updateModelShortcut;
-
   bool _isSyncing;
   Entity *_currentEntity;
 
