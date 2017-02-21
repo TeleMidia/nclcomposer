@@ -509,9 +509,15 @@ void StructuralWindow::select(QString uid, QMap<QString, QString> settings)
       _switchAction->setEnabled(true);
       _bodyAction->setEnabled(false);
       _areaAction->setEnabled(false);
-      _propertyAction->setEnabled(true);
-      _portAction->setEnabled(true);
 
+      if (STR_DEFAULT_WITH_FLOATING_INTERFACE)
+      {
+        _propertyAction->setEnabled(true);
+        _portAction->setEnabled(true);
+      }else{
+        _propertyAction->setEnabled(false);
+        _portAction->setEnabled(false);
+      }
     }
 
     switchCut(false);
