@@ -38,6 +38,7 @@ QMainWindow::separator:hover {
 QToolBar {
   background: steelblue;
   border: none;
+  qproperty-toolButtonStyle: $toolButtonStyle;
 }
 
 QToolButton { /* all types of tool button */

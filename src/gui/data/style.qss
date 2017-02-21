@@ -39,6 +39,7 @@ QToolBar {
   color: $main-color;
   background: $main-background-color;
   border: none;
+  qproperty-toolButtonStyle: $toolButtonStyle;
 }
 
 QToolBar QLabel {
