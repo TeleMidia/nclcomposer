@@ -26,18 +26,16 @@
 #include <util/Utilities.h>
 using namespace composer::core::util;
 
-PropertyButtons::PropertyButtons(const QString &propName,
-                                 QTableWidgetItem *item,
-                                 QWidget *parent)
-  : LineEditWithButton(parent, ":/images/esf-search.png"),
-    key(propName), item(item)
+PropertyButtons::PropertyButtons(QWidget *parent)
+  : LineEditWithButton(parent, ":/images/esf-search.png")
 { 
-  connect(mButton, SIGNAL(pressed()), SLOT(openfile()), Qt::DirectConnection);
+  connect(mButton, SIGNAL(pressed()),
+                   SLOT(openfile()), Qt::DirectConnection);
 }
 
 void PropertyButtons::openfile()
 {
-  QFileDialog dialog (0);
+  QFileDialog dialog (this);
   dialog.setModal(true);
   dialog.setFileMode(QFileDialog::AnyFile);
   dialog.setDirectory(Utilities::getLastFileDialogPath());
@@ -53,6 +51,6 @@ void PropertyButtons::openfile()
   if(!filename.isEmpty() && !filename.isNull())
   {
     Utilities::updateLastFileDialogPath(filename);
-    item->setText(filename);
+    this->setText(filename);
   }
 }

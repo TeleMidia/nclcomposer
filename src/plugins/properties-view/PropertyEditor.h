@@ -76,9 +76,7 @@ public:
       {
         if (datatype == "URI")
         {
-          PropertyButtons *urlEdit = new PropertyButtons( "tmp",
-                                                          tableWidget->item(index.row(), 1),
-                                                          parent );
+          PropertyButtons *urlEdit = new PropertyButtons( parent );
           return (QWidget*) urlEdit;
         }
         else
