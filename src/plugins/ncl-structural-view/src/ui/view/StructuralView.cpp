@@ -2756,12 +2756,6 @@ void StructuralView::adjustLayout(StructuralEntity* entity, const QString &code)
   Agraph_t *g;
   g = agopen("g", Agdirected, NULL);
 
-  agattr(g, AGRAPH, "splines", "ortho");
-  agattr(g, AGRAPH, "nodesep", "0.4");
-  agattr(g, AGNODE, "shape", "box");
-  agattr(g, AGNODE, "nodesep", "0.4");
-  agattr(g, AGEDGE, "minlen", "3");
-
   qreal GRAPHVIZ_DPI = 72;
 
   QMap<QString, Agnode_t*> nodes;
@@ -2879,7 +2873,7 @@ void StructuralView::adjustLayout(StructuralEntity* entity, const QString &code)
     }
   }
 
-  QMap<QString, Agedge_t*> edges;
+  QMap<Agedge_t*, StructuralEntity*> edges;
 
   // Add edges in graphviz graph based on the tails and heads loaded
   // from each link entity.
@@ -2895,11 +2889,17 @@ void StructuralView::adjustLayout(StructuralEntity* entity, const QString &code)
                                     nodes.value(head->getStructuralUid()),
                                     NULL,1);
 
-          edges.insert(uid, edge);
+          edges.insert(edge, link);
         }
       }
     }
   }
+
+  agattr(g, AGRAPH, "splines", "polyline");
+  agattr(g, AGRAPH, "nodesep", "0.4");
+  agattr(g, AGNODE, "shape", "box");
+  agattr(g, AGNODE, "nodesep", "0.4");
+  agattr(g, AGEDGE, "minlen", "3");
 
   // Adjust graph, nodes and edges size and pos using 'dot' algorithm.
   gvLayout(c, g, "dot");
@@ -3025,75 +3025,85 @@ void StructuralView::adjustLayout(StructuralEntity* entity, const QString &code)
   //
   qreal p = 0.5;
 
-  foreach (StructuralEntity* link, links.values())
+  QMap<QString, QPointF> last;
+
+  foreach (Agedge_t* edge, edges.keys())
   {
-    if (link->getStructuralType() == Structural::Link)
+    QVector<QLineF> lines; qreal length = 0.0;
+
+    // Creating lines
+    const splines* s = ED_spl(edge);
+
+    if((s->list != 0) && (s->list->size%3 == 1))
     {
-      QVector<QLineF> lines; qreal length = 0.0;
+      QLineF currentLine;
+      QPointF currentPoint;
 
-      // Creating lines
-      const splines* s = ED_spl(edges.value(link->getStructuralUid()));
+      bezier b = s->list[0];
 
-      if((s->list != 0) && (s->list->size%3 == 1))
+      if(b.sflag)
       {
-        QLineF currentLine;
-        QPointF currentPoint;
+        currentLine = QLineF(b.sp.x, b.sp.y,b.list[0].x, b.list[0].y);
 
-        bezier b = s->list[0];
+        lines.append(currentLine);
+        length += currentLine.length();
+      }
 
-        if(b.sflag)
+      currentPoint = QPointF(b.list[0].x, b.list[0].y);
+
+      for(int i=2; i<b.size; i+=2)
+      {
+        currentLine = QLineF(currentPoint.x(), currentPoint.y(),b.list[i].x, b.list[i].y);
+
+        lines.append(currentLine);
+        length += currentLine.length();
+
+        currentPoint = QPointF(b.list[i].x, b.list[i].y);
+      }
+
+      if(b.eflag)
+      {
+        currentLine = QLineF(currentPoint.x(), currentPoint.y(),b.ep.x, b.ep.y);
+
+        lines.append(currentLine);
+        length += currentLine.length();
+      }
+
+      // Set link 'pos'
+      qreal currentLength = 0;
+
+      foreach (QLineF line, lines)
+      {
+        if (currentLength+line.length() < length*p)
         {
-          currentLine = QLineF(b.sp.x, b.sp.y,b.list[0].x, b.list[0].y);
-
-          lines.append(currentLine);
-          length += currentLine.length();
+          currentLength += line.length();
         }
-
-        currentPoint = QPointF(b.list[0].x, b.list[0].y);
-
-        for(int i=2; i<b.size; i+=2)
+        else
         {
-          currentLine = QLineF(currentPoint.x(), currentPoint.y(),b.list[i].x, b.list[i].y);
+          StructuralEntity* link = edges.value(edge);
 
-          lines.append(currentLine);
-          length += currentLine.length();
+          QPointF next = line.pointAt(((length*p) - currentLength)/line.length());
 
-          currentPoint = QPointF(b.list[i].x, b.list[i].y);
-        }
-
-        if(b.eflag)
-        {
-          currentLine = QLineF(currentPoint.x(), currentPoint.y(),b.ep.x, b.ep.y);
-
-          lines.append(currentLine);
-          length += currentLine.length();
-        }
-
-        // Set link 'pos'
-        qreal currentLength = 0;
-
-        foreach (QLineF line, lines)
-        {
-          if (currentLength+line.length() < length*p)
+          if (last.contains(link->getStructuralUid()))
           {
-            currentLength += line.length();
+            next = QLineF(last[link->getStructuralUid()], next).center();
           }
-          else
-          {
-            QPointF next = line.pointAt(((length*p) - currentLength)/line.length());
 
-            nextTop = (GD_bb(g).UR.y - next.y()) + parentHeight/2 - GD_bb(g).UR.y/2 - link->getHeight()/2;
-            nextLeft = next.x() + parentWidth/2 - GD_bb(g).UR.x/2 - link->getWidth()/2;
+          last[link->getStructuralUid()] = next;
 
-            QMap<QString, QString> properties = link->getStructuralProperties();
-            properties[STR_PROPERTY_ENTITY_TOP] = QString::number(nextTop);
-            properties[STR_PROPERTY_ENTITY_LEFT] = QString::number(nextLeft);
+          nextTop = (GD_bb(g).UR.y - next.y()) + parentHeight/2 - GD_bb(g).UR.y/2 - link->getHeight()/2;
+          nextLeft = next.x() + parentWidth/2 - GD_bb(g).UR.x/2 - link->getWidth()/2;
 
-            change(link->getStructuralUid(),
-                   properties,
-                   link->getStructuralProperties(),
-                   StructuralUtil::createSettings(STR_VALUE_TRUE, STR_VALUE_FALSE, code));
-          }
+          QMap<QString, QString> properties = link->getStructuralProperties();
+          properties[STR_PROPERTY_ENTITY_TOP] = QString::number(nextTop);
+          properties[STR_PROPERTY_ENTITY_LEFT] = QString::number(nextLeft);
+
+          change(link->getStructuralUid(),
+                 properties,
+                 link->getStructuralProperties(),
+                 StructuralUtil::createSettings(STR_VALUE_TRUE, STR_VALUE_FALSE, code));
+
+          break;
         }
       }
     }
