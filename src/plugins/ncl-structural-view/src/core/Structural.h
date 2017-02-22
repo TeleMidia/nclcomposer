@@ -27,6 +27,7 @@
 #define STR_PROPERTY_ENTITY_UNCOLLAPSED_WIDTH ":structural:property:entity:uncollaped:width"
 #define STR_PROPERTY_ENTITY_UNCOLLAPSED_HEIGHT ":structural:property:entity:uncollaped:height"
 
+#define STR_PROPERTY_ENTITY_AUTOPLAY ":structural:property:entity:autoplay"
 #define STR_PROPERTY_ENTITY_HIDDEN ":structural:property:entity:hidden"
 #define STR_PROPERTY_ENTITY_REFERENCE ":structural:property:entity:reference"
 #define STR_PROPERTY_ENTITY_UNCOLLAPSED ":structural:property:entity:uncollapsed"
@@ -155,7 +156,7 @@
 #define STR_DEFAULT_ALERT_WARNING_COLOR "#E5E500"
 
 #define STR_DEFAULT_WITH_BODY 0
-#define STR_DEFAULT_WITH_FLOATING_INTERFACE 0
+#define STR_DEFAULT_WITH_FLOATING_INTERFACES 0
 
 /*
  *

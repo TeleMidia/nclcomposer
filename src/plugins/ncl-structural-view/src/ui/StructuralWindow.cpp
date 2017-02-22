@@ -510,7 +510,7 @@ void StructuralWindow::select(QString uid, QMap<QString, QString> settings)
       _bodyAction->setEnabled(false);
       _areaAction->setEnabled(false);
 
-      if (STR_DEFAULT_WITH_FLOATING_INTERFACE)
+      if (STR_DEFAULT_WITH_FLOATING_INTERFACES)
       {
         _propertyAction->setEnabled(true);
         _portAction->setEnabled(true);

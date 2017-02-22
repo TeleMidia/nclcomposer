@@ -26,6 +26,8 @@ public:
 
 public slots:
   void switchHelp(bool state);
+  void switchAutostart(bool state);
+  void switchAutostartProperty(bool state);
   void switchUndo(bool state);
   void switchRedo(bool state);
   void switchCut(bool state);
@@ -41,20 +43,22 @@ public slots:
   void switchProperty(bool state);
   void switchPort(bool state);
   void switchSwitchPort(bool state);
+  void switchProperties(bool state);
+
 #ifdef WITH_GRAPHVIZ
   void switchAutoAdjust(bool state);
 #endif
-  void switchProperties(bool state);
 
 signals:
   void performedHelp();
+  void performedAutostart();
   void performedUndo();
   void performedRedo();
   void performedCut();
   void performedCopy();
   void performedPaste();
   void performedDelete();
-  void performedSnapshot();
+  void performedSnapshot();  
   void performedMedia();
   void performedContext();
   void performedSwitch();
@@ -63,13 +67,12 @@ signals:
   void performedProperty();
   void performedPort();
   void performedSwitchPort();
+  void performedProperties();
+
 #ifdef WITH_GRAPHVIZ
   void performedAutoAdjust();
 #endif
-  void performedProperties();
 
-  // For now, passing 'properties' as a copy. This must be changed after
-  // the StructuralView refactory.
   void performedInsert(StructuralType type, QMap<QString, QString> properties);
 
 private slots:
@@ -97,6 +100,7 @@ private:
   QAction* _pasteAction;
   QAction* _deleteAction;
   QAction* _snapshotAction;
+  QAction* _autostartAction;
   QAction* _mediaAction;
   QAction* _contextAction;
   QAction* _switchAction;
@@ -105,10 +109,11 @@ private:
   QAction* _areaAction;
   QAction* _propertyAction;
   QAction* _switchPortAction;
+  QAction* _propertiesAction;
+
 #ifdef WITH_GRAPHVIZ
   QAction* _autoadjustAction;
 #endif
-  QAction* _propertiesAction;
 
   qreal _insertTop;
   qreal _insertLeft;

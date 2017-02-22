@@ -1207,6 +1207,28 @@ void StructuralEntity::contextMenuEvent(QGraphicsSceneContextMenuEvent* event)
       _menu->setInsertLeft(event->pos().x());
       _menu->adjust(_type);
 
+      if (!STR_DEFAULT_WITH_BODY &&
+          !STR_DEFAULT_WITH_FLOATING_INTERFACES)
+      {
+        if (getStructuralParent() == NULL)
+        {
+          _menu->switchAutostart(true);
+
+          if (getStructuralProperty(STR_PROPERTY_ENTITY_AUTOPLAY) == STR_VALUE_TRUE)
+            _menu->switchAutostartProperty(true);
+        }
+        else if (getStructuralParent()->getStructuralParent() == NULL)
+        {
+          if (getStructuralCategory() == Structural::Interface)
+          {
+            _menu->switchAutostart(true);
+
+            if (getStructuralProperty(STR_PROPERTY_ENTITY_AUTOPLAY) == STR_VALUE_TRUE)
+              _menu->switchAutostartProperty(true);
+          }
+        }
+      }
+
       _menu->exec(event->screenPos());
     }
 

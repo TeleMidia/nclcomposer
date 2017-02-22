@@ -43,6 +43,8 @@ void StructuralMenu::adjust(StructuralType type)
   switch (type) {
     case Structural::Media:
     {
+      switchAutostart(false);
+      switchAutostartProperty(false);
       switchDelete(true);
       switchMedia(false);
       switchContext(false);
@@ -58,6 +60,8 @@ void StructuralMenu::adjust(StructuralType type)
     case Structural::Body:
     case Structural::Context:
     {
+      switchAutostart(false);
+      switchAutostartProperty(false);
       switchDelete(true);
       switchMedia(true);
       switchContext(true);
@@ -72,6 +76,8 @@ void StructuralMenu::adjust(StructuralType type)
 
     case Structural::Switch:
     {
+      switchAutostart(false);
+      switchAutostartProperty(false);
       switchDelete(true);
       switchMedia(true);
       switchContext(true);
@@ -89,6 +95,8 @@ void StructuralMenu::adjust(StructuralType type)
     case Structural::Port:
     case Structural::SwitchPort:
     {
+      switchAutostart(false);
+      switchAutostartProperty(false);
       switchDelete(true);
       switchMedia(false);
       switchContext(false);
@@ -103,6 +111,8 @@ void StructuralMenu::adjust(StructuralType type)
 
     default:
     {
+      switchAutostart(false);
+      switchAutostartProperty(false);
       switchDelete(false);
       switchSwitchPort(false);
 
@@ -122,8 +132,17 @@ void StructuralMenu::adjust(StructuralType type)
         switchContext(true);
         switchSwitch(true);
         switchArea(false);
-        switchProperty(true);
-        switchPort(true);
+
+        if (STR_DEFAULT_WITH_FLOATING_INTERFACES)
+        {
+          switchProperty(true);
+          switchPort(true);
+        }
+        else
+        {
+          switchProperty(false);
+          switchPort(false);
+        }
       }
 
       break;
@@ -187,6 +206,14 @@ void StructuralMenu::createActions()
   _snapshotAction->setEnabled(true);
   _snapshotAction->setText(tr("Take a Snapshot..."));
   _snapshotAction->setIcon(QIcon(":/icon/snapshot"));
+
+  // autostart action
+  _autostartAction = new QAction(this);
+  _autostartAction->setEnabled(false);
+  _autostartAction->setCheckable(true);
+  _autostartAction->setChecked(false);
+  _autostartAction->setText(tr("Autostart"));
+  _autostartAction->setIcon(QIcon(""));
 
   // media action
   _mediaAction = new QAction(this);
@@ -263,7 +290,9 @@ void StructuralMenu::createMenus()
   _insertMenu->addAction(_switchAction);
 
   if (STR_DEFAULT_WITH_BODY)
+  {
     _insertMenu->addAction(_bodyAction);
+  }
 
   _insertMenu->addSeparator();
   _insertMenu->addAction(_areaAction);
@@ -273,6 +302,13 @@ void StructuralMenu::createMenus()
 
   addAction(_helpAction);
   addSeparator();
+
+  if (!STR_DEFAULT_WITH_FLOATING_INTERFACES)
+  {
+    addAction(_autostartAction);
+    addSeparator();
+  }
+
   addMenu(_insertMenu);
   addSeparator();
   addAction(_undoAction);
@@ -286,10 +322,12 @@ void StructuralMenu::createMenus()
   addSeparator();
   addAction(_snapshotAction);
   addSeparator();
+
 #ifdef WITH_GRAPHVIZ
   addAction(_autoadjustAction);
   addSeparator();
 #endif
+
   addAction(_propertiesAction);
 
 }
@@ -297,6 +335,7 @@ void StructuralMenu::createMenus()
 void StructuralMenu::createConnections()
 {
   connect(_helpAction,SIGNAL(triggered()),SIGNAL(performedHelp()));
+  connect(_autostartAction,SIGNAL(triggered()),SIGNAL(performedAutostart()));
   connect(_undoAction,SIGNAL(triggered()),SIGNAL(performedUndo()));
   connect(_redoAction,SIGNAL(triggered()),SIGNAL(performedRedo()));
   connect(_cutAction,SIGNAL(triggered()),SIGNAL(performedCut()));
@@ -304,11 +343,12 @@ void StructuralMenu::createConnections()
   connect(_pasteAction,SIGNAL(triggered()),SIGNAL(performedPaste()));
   connect(_deleteAction,SIGNAL(triggered()),SIGNAL(performedDelete()));
   connect(_snapshotAction,SIGNAL(triggered()),SIGNAL(performedSnapshot()));
+
 #ifdef WITH_GRAPHVIZ
   connect(_autoadjustAction,SIGNAL(triggered()),SIGNAL(performedAutoAdjust()));
 #endif
-  connect(_propertiesAction,SIGNAL(triggered()),SIGNAL(performedProperties()));
 
+  connect(_propertiesAction,SIGNAL(triggered()),SIGNAL(performedProperties()));
   connect(_mediaAction,SIGNAL(triggered()),SLOT(performMedia()));
   connect(_bodyAction,SIGNAL(triggered()),SLOT(performBody()));
   connect(_contextAction,SIGNAL(triggered()),SLOT(performContext()));
@@ -322,6 +362,16 @@ void StructuralMenu::createConnections()
 void StructuralMenu::switchHelp(bool state)
 {
   _helpAction->setEnabled(state);
+}
+
+void StructuralMenu::switchAutostart(bool state)
+{
+  _autostartAction->setEnabled(state);
+}
+
+void StructuralMenu::switchAutostartProperty(bool state)
+{
+  _autostartAction->setChecked(state);
 }
 
 void StructuralMenu::switchUndo(bool state)
