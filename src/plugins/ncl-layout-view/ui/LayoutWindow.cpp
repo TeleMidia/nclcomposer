@@ -200,3 +200,8 @@ void LayoutWindow::on_actionActionZoom_original_triggered()
     zoomObject->performZoomReset();
   }
 }
+
+void LayoutWindow::on_actionCut_region_triggered()
+{
+    view->performCut();
+}

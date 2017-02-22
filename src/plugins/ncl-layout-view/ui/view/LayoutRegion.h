@@ -160,6 +160,7 @@ public slots:
   void performRegion();
   void performDelete();
   void performCopy();
+  void performCut();
   void performPaste();
 
 signals:
@@ -171,6 +172,7 @@ signals:
   void dragMediaOverRegion(QString mediaid, LayoutRegion *region);
   void regionbasePerformed();
   void copyRequested(LayoutRegion *);
+  void cutRequested(LayoutRegion *);
   void pasteRequested();
 
 protected:

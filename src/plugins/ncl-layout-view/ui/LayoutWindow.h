@@ -70,6 +70,8 @@ private slots:
 
   void on_actionActionZoom_original_triggered();
 
+  void on_actionCut_region_triggered();
+
 private:
   Ui::QnlyMainWindow *ui;
   LayoutView *view;

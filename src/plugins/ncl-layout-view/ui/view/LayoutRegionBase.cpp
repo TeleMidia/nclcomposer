@@ -984,6 +984,10 @@ void LayoutRegionBase::addRegion(LayoutRegion* region,
             SIGNAL(copyRequested(LayoutRegion*)));
 
     connect(region,
+            SIGNAL(cutRequested(LayoutRegion*)),
+            SIGNAL(cutRequested(LayoutRegion*)));
+
+    connect(region,
             SIGNAL(pasteRequested()),
             SIGNAL(pasteRequested()));
 

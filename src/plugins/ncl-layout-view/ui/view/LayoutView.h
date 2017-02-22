@@ -93,6 +93,8 @@ public slots:
 
   void performCopy();
   void performCopy(LayoutRegion *);
+  void performCut();
+  void performCut(LayoutRegion *);
   void performPaste();
 
 signals:

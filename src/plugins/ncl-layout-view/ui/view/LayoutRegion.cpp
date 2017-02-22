@@ -497,7 +497,7 @@ void LayoutRegion::LayoutRegion::createActions()
   cutAction = new QAction(this);
   cutAction->setText(tr("Cut"));
 
-  cutAction->setEnabled(false);
+  cutAction->setEnabled(true);
   // cutAction->setShortcut(QKeySequence("Ctrl+X"));
 
   // copy action
@@ -708,6 +708,9 @@ void LayoutRegion::createConnections()
   connect(copyAction, SIGNAL(triggered()),
           SLOT(performCopy()));
 
+  connect(cutAction, SIGNAL(triggered()),
+          SLOT(performCut()));
+
   connect(pasteAction, SIGNAL(triggered()),
           SLOT(performPaste()));
 }
@@ -791,6 +794,12 @@ void LayoutRegion::performCopy()
 {
   qWarning () << "LayoutRegion::performCopy";
   emit copyRequested(this);
+}
+
+void LayoutRegion::performCut()
+{
+  qWarning () << "LayoutRegion::performCut";
+  emit cutRequested(this);
 }
 
 void LayoutRegion::performPaste()
