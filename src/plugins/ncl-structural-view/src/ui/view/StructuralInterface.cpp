@@ -133,6 +133,16 @@ void StructuralInterface::draw(QPainter* painter)
 
   painter->drawPixmap(x, y, w, h, QPixmap(StructuralUtil::getIcon(getStructuralType())));
 
+  if (!STR_DEFAULT_WITH_BODY &&
+      !STR_DEFAULT_WITH_FLOATING_INTERFACES)
+  {
+    if (getStructuralProperty(STR_PROPERTY_ENTITY_AUTOSTART) == STR_VALUE_TRUE)
+    {
+      painter->setPen(QPen(QBrush(QColor(76,76,76)),2));
+      painter->drawRect(x, y, w, h);
+    }
+  }
+
   if (!getError().isEmpty() ||
       !getWarning().isEmpty())
   {
@@ -148,9 +158,9 @@ void StructuralInterface::draw(QPainter* painter)
       icon = QString(STR_DEFAULT_ALERT_WARNING_ICON);
     }
 
-    painter->drawPixmap(x + w/2 - STR_DEFAULT_ALERT_ICON_W/2,
-                        y + h/2 - STR_DEFAULT_ALERT_ICON_H/2,
-                        STR_DEFAULT_ALERT_ICON_W, STR_DEFAULT_ALERT_ICON_H,
+    painter->drawPixmap(x + w/2 - (STR_DEFAULT_ALERT_ICON_W-3)/2,
+                        y + h/2 - (STR_DEFAULT_ALERT_ICON_H-3)/2,
+                        STR_DEFAULT_ALERT_ICON_W - 3, STR_DEFAULT_ALERT_ICON_H - 3,
                         QPixmap(icon));
   }
 

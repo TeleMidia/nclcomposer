@@ -132,7 +132,18 @@ void StructuralComposition::draw(QPainter* painter)
     }
     else
     {
-      painter->setPen(QPen(drawColor.darker(), 0));
+      if (!STR_DEFAULT_WITH_BODY &&
+          !STR_DEFAULT_WITH_FLOATING_INTERFACES)
+      {
+        if (getStructuralProperty(STR_PROPERTY_ENTITY_AUTOSTART) == STR_VALUE_TRUE)
+        {
+          painter->setPen(QPen(QBrush(QColor(76,76,76)),2));
+        }
+      }
+      else
+      {
+        painter->setPen(QPen(drawColor.darker(), 0));
+      }
     }
 
     painter->drawEllipse(STR_DEFAULT_ENTITY_PADDING,
@@ -159,6 +170,26 @@ void StructuralComposition::draw(QPainter* painter)
   {
     painter->setRenderHint(QPainter::Antialiasing,false);
     painter->setRenderHint(QPainter::SmoothPixmapTransform, true);
+
+    if (!STR_DEFAULT_WITH_BODY &&
+        !STR_DEFAULT_WITH_FLOATING_INTERFACES)
+    {
+      if (getStructuralProperty(STR_PROPERTY_ENTITY_AUTOSTART) == STR_VALUE_TRUE)
+      {
+        painter->fillRect(STR_DEFAULT_ENTITY_PADDING + STR_DEFAULT_CONTENT_PADDING,
+                          STR_DEFAULT_ENTITY_PADDING + STR_DEFAULT_CONTENT_PADDING,
+                          getWidth() - 2*STR_DEFAULT_CONTENT_PADDING,
+                          getHeight() - 2*STR_DEFAULT_CONTENT_PADDING - 4*STR_DEFAULT_CONTENT_PADDING,
+                          QBrush(QColor(76,76,76,95)));
+
+        painter->setPen(QPen(QBrush(QColor(76,76,76)),2));
+
+        painter->drawRect(STR_DEFAULT_ENTITY_PADDING + STR_DEFAULT_CONTENT_PADDING,
+                          STR_DEFAULT_ENTITY_PADDING + STR_DEFAULT_CONTENT_PADDING,
+                          getWidth() - 2*STR_DEFAULT_CONTENT_PADDING,
+                          getHeight() - 2*STR_DEFAULT_CONTENT_PADDING - 4*STR_DEFAULT_CONTENT_PADDING);
+      }
+    }
 
     painter->drawPixmap(STR_DEFAULT_ENTITY_PADDING + STR_DEFAULT_CONTENT_PADDING,
                         STR_DEFAULT_ENTITY_PADDING + STR_DEFAULT_CONTENT_PADDING,

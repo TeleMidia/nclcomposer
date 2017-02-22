@@ -27,7 +27,7 @@
 #define STR_PROPERTY_ENTITY_UNCOLLAPSED_WIDTH ":structural:property:entity:uncollaped:width"
 #define STR_PROPERTY_ENTITY_UNCOLLAPSED_HEIGHT ":structural:property:entity:uncollaped:height"
 
-#define STR_PROPERTY_ENTITY_AUTOPLAY ":structural:property:entity:autoplay"
+#define STR_PROPERTY_ENTITY_AUTOSTART ":structural:property:entity:autostart"
 #define STR_PROPERTY_ENTITY_HIDDEN ":structural:property:entity:hidden"
 #define STR_PROPERTY_ENTITY_REFERENCE ":structural:property:entity:reference"
 #define STR_PROPERTY_ENTITY_UNCOLLAPSED ":structural:property:entity:uncollapsed"
@@ -146,8 +146,8 @@
 #define STR_DEFAULT_BIND_ROLE_H 16
 
 // Others defines
-#define STR_DEFAULT_ALERT_ICON_W 12
-#define STR_DEFAULT_ALERT_ICON_H 12
+#define STR_DEFAULT_ALERT_ICON_W 16
+#define STR_DEFAULT_ALERT_ICON_H 16
 
 #define STR_DEFAULT_ALERT_ERROR_ICON ":/icon/error"
 #define STR_DEFAULT_ALERT_ERROR_COLOR "#BD0300"

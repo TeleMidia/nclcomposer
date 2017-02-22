@@ -28,7 +28,7 @@ StructuralView::StructuralView(QWidget* parent)
   _tool = NULL;
 
   setAttribute(Qt::WA_TranslucentBackground);
-  setDragMode(ScrollHandDrag);
+//  setDragMode(ScrollHandDrag);
 }
 
 StructuralView::~StructuralView()
@@ -327,6 +327,7 @@ void StructuralView::createConnection()
   connect(this, SIGNAL(switchedBody(bool)), _menu, SLOT(switchBody(bool)));
 
   connect(_menu, SIGNAL(performedHelp()), SLOT(performHelp()));
+  connect(_menu, SIGNAL(performedAutostart()), SLOT(performAutostart()));
   connect(_menu, SIGNAL(performedUndo()), SLOT(performUndo()));
   connect(_menu, SIGNAL(performedRedo()), SLOT(performRedo()));
   connect(_menu, SIGNAL(performedCut()), SLOT(performCut()));
@@ -884,6 +885,28 @@ void StructuralView::remove(QString uid, QMap<QString, QString> settings)
       }
     }
 
+    if (!STR_DEFAULT_WITH_BODY &&
+        !STR_DEFAULT_WITH_FLOATING_INTERFACES)
+    {
+      if (e->getStructuralType() == Structural::Port)
+      {
+        StructuralEntity* target = NULL;
+
+        if (_entities.contains(e->getStructuralProperty(STR_PROPERTY_REFERENCE_COMPONENT_UID)))
+        {
+          target = _entities.value(e->getStructuralProperty(STR_PROPERTY_REFERENCE_COMPONENT_UID));
+
+          if (_entities.contains(e->getStructuralProperty(STR_PROPERTY_REFERENCE_INTERFACE_UID)))
+          {
+            target = _entities.value(e->getStructuralProperty(STR_PROPERTY_REFERENCE_INTERFACE_UID));
+          }
+        }
+
+        if (target != NULL)
+          target->setStructuralProperty(STR_PROPERTY_ENTITY_AUTOSTART, STR_VALUE_FALSE);
+      }
+    }
+
     // Removing 'others'...
     if (p != NULL)
       p->removeStructuralEntity(e);
@@ -947,6 +970,28 @@ void StructuralView:: change(QString uid, QMap<QString, QString> properties, QMa
     if (!entity->isUncollapsed())
       if (properties.value(STR_PROPERTY_ENTITY_UNCOLLAPSED) == STR_VALUE_TRUE)
         ((StructuralComposition*) entity)->collapse();
+
+    if (!STR_DEFAULT_WITH_BODY &&
+        !STR_DEFAULT_WITH_FLOATING_INTERFACES)
+    {
+      if (entity->getStructuralType() == Structural::Port)
+      {
+        StructuralEntity* lasttarget = NULL;
+
+        if (_entities.contains(previous.value(STR_PROPERTY_REFERENCE_COMPONENT_UID)))
+        {
+          lasttarget = _entities.value(previous.value(STR_PROPERTY_REFERENCE_COMPONENT_UID));
+
+          if (_entities.contains(previous.value(STR_PROPERTY_REFERENCE_INTERFACE_UID)))
+          {
+            lasttarget = _entities.value(previous.value(STR_PROPERTY_REFERENCE_INTERFACE_UID));
+          }
+        }
+
+        if (lasttarget != NULL)
+          lasttarget->setStructuralProperty(STR_PROPERTY_ENTITY_AUTOSTART, STR_VALUE_FALSE);
+      }
+    }
 
     // Setting 'others'...
     entity->setStructuralProperties(properties);
@@ -1196,6 +1241,14 @@ void StructuralView::adjustReferences(StructuralEntity* entity)
             isVisible = false;
         }
 
+        if (!STR_DEFAULT_WITH_BODY &&
+            !STR_DEFAULT_WITH_FLOATING_INTERFACES)
+        {
+          if (((StructuralEdge*) entity)->getTail() != NULL)
+            if (((StructuralEdge*) entity)->getTail()->isHidden())
+              isVisible = false;
+        }
+
         entity->setHidden(!isVisible);
 
         break;
@@ -1245,6 +1298,19 @@ void StructuralView::adjustReferences(StructuralEntity* entity)
               parentUid = entity->getStructuralParent()->getStructuralUid();
             else
               parentUid = "";
+
+            if (!STR_DEFAULT_WITH_BODY &&
+                !STR_DEFAULT_WITH_FLOATING_INTERFACES)
+            {
+              if (entity->getStructuralParent() == NULL)
+              {
+                entity->setHidden(true);
+
+                head->setStructuralProperty(STR_PROPERTY_ENTITY_AUTOSTART, STR_VALUE_TRUE);
+
+                properties[STR_PROPERTY_ENTITY_HIDDEN] = STR_VALUE_TRUE;
+              }
+            }
 
             insert(StructuralUtil::createUid(), parentUid, properties, StructuralUtil::createSettings(false,false));
           }
@@ -1412,6 +1478,34 @@ void StructuralView::createEntity(StructuralType type, QMap<QString, QString> pr
 void StructuralView::performHelp()
 {
   // TODO
+}
+
+void StructuralView::performAutostart()
+{
+  if (_entities.contains(_selected))
+  {
+    StructuralEntity* entity = _entities.value(_selected);
+
+    QMap<QString, QString> properties = entity->getStructuralProperties();
+
+    if (properties.contains(STR_PROPERTY_ENTITY_AUTOSTART))
+    {
+      if (properties[STR_PROPERTY_ENTITY_AUTOSTART] == STR_VALUE_TRUE)
+//        properties.remove(STR_PROPERTY_ENTITY_AUTOSTART);
+        properties[STR_PROPERTY_ENTITY_AUTOSTART] = STR_VALUE_FALSE;
+      else
+        properties[STR_PROPERTY_ENTITY_AUTOSTART] = STR_VALUE_TRUE;
+    }
+    else
+    {
+      properties[STR_PROPERTY_ENTITY_AUTOSTART] = STR_VALUE_TRUE;
+    }
+
+    change(entity->getStructuralUid(),
+           properties,
+           entity->getStructuralProperties(),
+           StructuralUtil::createSettings(true, true));
+  }
 }
 
 void StructuralView::performUndo()

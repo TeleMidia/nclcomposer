@@ -70,6 +70,7 @@ public slots:
   void move(QString uid, QString parent);
 
   void performHelp();
+  void performAutostart();
   void performUndo();
   void performRedo();
   void performCut();

@@ -90,5 +90,6 @@
         <file alias="rule-insert">images/icon-rule-insert.png</file>
         <file alias="error">images/icon-error.png</file>
         <file alias="warning">images/icon-warning.png</file>
+        <file alias="autostart">images/icon-autostart.png</file>
     </qresource>
 </RCC>

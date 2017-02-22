@@ -23,7 +23,7 @@ StructuralViewPlugin::StructuralViewPlugin(QObject* parent)
   createConnections();
 
   _synching = false;
-  _waiting  = false;
+  _waiting = false;
 
   _notified = "";     // last entity uid notified by the view
 
@@ -1025,13 +1025,78 @@ void StructuralViewPlugin::changeInCore(QString uid, QMap<QString, QString> prop
         attributes.insert(translations.value(key), properties.value(key));
     }
 
+    if (!STR_DEFAULT_WITH_BODY &&
+        !STR_DEFAULT_WITH_FLOATING_INTERFACES)
+    {
+      if (properties.contains(STR_PROPERTY_ENTITY_AUTOSTART))
+      {
+        bool isInterface = false;
+
+        if (properties[STR_PROPERTY_ENTITY_CATEGORY] ==
+            StructuralUtil::translateCategoryToString(Structural::Interface))
+        {
+          isInterface = true;
+        }
+
+        bool hasPort = false;
+
+        QList<Entity*> list = getProject()->getEntitiesbyType("port");
+
+        foreach (Entity* current, list)
+        {
+          if (isInterface && current->getAttribute("interface") == properties[STR_PROPERTY_ENTITY_ID])
+          {
+            hasPort = true;
+
+            if (properties[STR_PROPERTY_ENTITY_AUTOSTART] == STR_VALUE_FALSE)
+               _window->getView()->remove(_mapCoreToView[current->getUniqueId()], settings);
+          }
+          else if (current->getAttribute("component") == properties[STR_PROPERTY_ENTITY_ID] &&
+                   current->getAttribute("interface").isEmpty())
+          {
+            hasPort = true;
+
+            if (properties[STR_PROPERTY_ENTITY_AUTOSTART] == STR_VALUE_FALSE)
+               _window->getView()->remove(_mapCoreToView[current->getUniqueId()], settings);
+          }
+        }
+
+        if (!hasPort && (properties[STR_PROPERTY_ENTITY_AUTOSTART] == STR_VALUE_TRUE))
+        {
+          QString parent = _mapCoreToView.value(entity->getParentUniqueId());
+
+          QMap<QString, QString> pp;
+          pp[STR_PROPERTY_ENTITY_TYPE] = StructuralUtil::translateTypeToString(Structural::Port);
+          pp.insert(STR_PROPERTY_ENTITY_ID, "p"+properties.value(STR_PROPERTY_ENTITY_ID));
+
+          if (isInterface)
+          {
+            pp.insert(STR_PROPERTY_REFERENCE_INTERFACE_ID, entity->getAttribute("id"));
+            pp.insert(STR_PROPERTY_REFERENCE_COMPONENT_ID, entity->getParent()->getAttribute("id"));
+
+            parent = _mapCoreToView.value(entity->getParent()->getParentUniqueId());
+          }
+          else
+          {
+            pp.insert(STR_PROPERTY_REFERENCE_COMPONENT_ID, properties[STR_PROPERTY_ENTITY_ID]);
+          }
+
+          setReferences(pp);
+
+          _window->getView()->insert(StructuralUtil::createUid(),
+                                      parent,
+                                      pp,
+                                      settings);
+        }
+      }
+    }
+
     if (type == Structural::Link ||
         type == Structural::Bind) {
 
       QString tag;
       QString name;
       QString value;
-
 
       if (type == Structural::Link) {
         tag = "linkParam";
