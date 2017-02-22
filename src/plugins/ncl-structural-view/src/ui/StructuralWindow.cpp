@@ -213,7 +213,6 @@ void StructuralWindow::createToolbar()
 
   _editToolbar->setMovable(true);
   _editToolbar->setFloatable(true);
-  _editToolbar->setIconSize(QSize(24,24));
 
   _editToolbar->addAction(_undoAction);
   _editToolbar->addAction(_redoAction);
@@ -232,7 +231,6 @@ void StructuralWindow::createToolbar()
   _insertToolbar = addToolBar(tr("Insert"));
   _insertToolbar->setMovable(true);
   _insertToolbar->setFloatable(true);
-  _insertToolbar->setIconSize(QSize(24,24));
 
   _insertToolbar->addAction(_pointerAction);
   _insertToolbar->addAction(_linkAction);
@@ -260,7 +258,6 @@ void StructuralWindow::createToolbar()
   _windowToolbar = addToolBar(tr("Window"));
   _windowToolbar->setMovable(true);
   _windowToolbar->setFloatable(true);
-  _windowToolbar->setIconSize(QSize(24,24));
 
   _windowToolbar->addAction(_zoominAction);
   _windowToolbar->addAction(_zoomoutAction);

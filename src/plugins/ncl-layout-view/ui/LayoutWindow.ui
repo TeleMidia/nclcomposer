@@ -13,11 +13,8 @@
   <property name="windowTitle">
    <string>MainWindow</string>
   </property>
-  <property name="iconSize">
-   <size>
-    <width>24</width>
-    <height>24</height>
-   </size>
+  <property name="toolButtonStyle">
+   <enum>Qt::ToolButtonFollowStyle</enum>
   </property>
   <widget class="QWidget" name="centralwidget">
    <widget class="QComboBox" name="regionBaseComboBox">
@@ -99,6 +96,9 @@
    <property name="windowTitle">
     <string>toolBar</string>
    </property>
+   <property name="toolButtonStyle">
+    <enum>Qt::ToolButtonFollowStyle</enum>
+   </property>
    <attribute name="toolBarArea">
     <enum>TopToolBarArea</enum>
    </attribute>
@@ -119,6 +119,9 @@
    <property name="windowTitle">
     <string>toolBar_2</string>
    </property>
+   <property name="toolButtonStyle">
+    <enum>Qt::ToolButtonFollowStyle</enum>
+   </property>
    <attribute name="toolBarArea">
     <enum>TopToolBarArea</enum>
    </attribute>
@@ -134,6 +137,12 @@
    <property name="windowTitle">
     <string>toolBar_3</string>
    </property>
+   <property name="iconSize">
+    <size>
+     <width>0</width>
+     <height>32</height>
+    </size>
+   </property>
    <attribute name="toolBarArea">
     <enum>TopToolBarArea</enum>
    </attribute>
@@ -143,7 +152,7 @@
   </widget>
   <action name="actionAdd_Region">
    <property name="icon">
-    <iconset resource="../../../common-resources/images.qrc">
+    <iconset resource="../../common-resources/images.qrc">
      <normaloff>:/icon/region-insert</normaloff>:/icon/region-insert</iconset>
    </property>
    <property name="text">
@@ -155,7 +164,7 @@
   </action>
   <action name="actionRemove_Region">
    <property name="icon">
-    <iconset resource="../../../common-resources/images.qrc">
+    <iconset resource="../../common-resources/images.qrc">
      <normaloff>:/icon/region-remove</normaloff>:/icon/region-remove</iconset>
    </property>
    <property name="text">
@@ -170,7 +179,7 @@
     <bool>true</bool>
    </property>
    <property name="icon">
-    <iconset resource="../../../common-resources/images.qrc">
+    <iconset resource="../../common-resources/images.qrc">
      <normaloff>:/icon/grid</normaloff>:/icon/grid</iconset>
    </property>
    <property name="text">
@@ -182,47 +191,50 @@
   </action>
   <action name="actionAction_Export">
    <property name="icon">
-    <iconset>
-     <normaloff>:/icon/export-icon</normaloff>:/icon/export-icon</iconset>
+    <iconset resource="../../common-resources/images.qrc">
+     <normaloff>:/icon/snapshot</normaloff>:/icon/snapshot</iconset>
    </property>
    <property name="text">
-    <string>action_Export</string>
+    <string>Snapshot</string>
    </property>
    <property name="toolTip">
-    <string>Take a picture of the current layout</string>
+    <string>Take an snapshot of the current layout</string>
    </property>
   </action>
   <action name="actionDuplicate_Region">
    <property name="icon">
-    <iconset resource="../../../common-resources/images.qrc">
+    <iconset resource="../../common-resources/images.qrc">
      <normaloff>:/icon/region-duplicate</normaloff>:/icon/region-duplicate</iconset>
    </property>
    <property name="text">
-    <string>Duplicate Region</string>
+    <string>Duplicate region</string>
    </property>
    <property name="toolTip">
-    <string>Duplicate selected region</string>
+    <string>Duplicate the selected region</string>
    </property>
   </action>
   <action name="actionAdd_region_base">
    <property name="icon">
-    <iconset resource="../../../common-resources/images.qrc">
+    <iconset resource="../../common-resources/images.qrc">
      <normaloff>:/icon/regionbase-insert</normaloff>:/icon/regionbase-insert</iconset>
    </property>
    <property name="text">
     <string>Add region base</string>
    </property>
+   <property name="toolTip">
+    <string>Create a new region base</string>
+   </property>
   </action>
   <action name="actionCopy_region">
    <property name="icon">
-    <iconset resource="../../../common-resources/images.qrc">
+    <iconset resource="../../common-resources/images.qrc">
      <normaloff>:/icon/copy</normaloff>:/icon/copy</iconset>
    </property>
    <property name="text">
     <string>Copy region</string>
    </property>
    <property name="toolTip">
-    <string>Copy region</string>
+    <string>Copy the selected region</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+C</string>
@@ -230,26 +242,26 @@
   </action>
   <action name="actionCut_region">
    <property name="icon">
-    <iconset resource="../../../common-resources/images.qrc">
+    <iconset resource="../../common-resources/images.qrc">
      <normaloff>:/icon/cut</normaloff>:/icon/cut</iconset>
    </property>
    <property name="text">
     <string>Cut region</string>
    </property>
    <property name="toolTip">
-    <string>Cut region</string>
+    <string>Cut the selected region</string>
    </property>
   </action>
   <action name="actionPaste_region">
    <property name="icon">
-    <iconset resource="../../../common-resources/images.qrc">
+    <iconset resource="../../common-resources/images.qrc">
      <normaloff>:/icon/paste</normaloff>:/icon/paste</iconset>
    </property>
    <property name="text">
     <string>Paste region</string>
    </property>
    <property name="toolTip">
-    <string>Paste region</string>
+    <string>Paste inside the selected region</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+V</string>
@@ -257,7 +269,7 @@
   </action>
   <action name="actionZoom_in">
    <property name="icon">
-    <iconset resource="../../../common-resources/images.qrc">
+    <iconset resource="../../common-resources/images.qrc">
      <normaloff>:/icon/zoomin</normaloff>:/icon/zoomin</iconset>
    </property>
    <property name="text">
@@ -269,7 +281,7 @@
   </action>
   <action name="actionZoom_out">
    <property name="icon">
-    <iconset resource="../../../common-resources/images.qrc">
+    <iconset resource="../../common-resources/images.qrc">
      <normaloff>:/icon/zoomout</normaloff>:/icon/zoomout</iconset>
    </property>
    <property name="text">
@@ -281,21 +293,19 @@
   </action>
   <action name="actionActionZoom_original">
    <property name="icon">
-    <iconset resource="../../../common-resources/images.qrc">
+    <iconset resource="../../common-resources/images.qrc">
      <normaloff>:/icon/zoomreset</normaloff>:/icon/zoomreset</iconset>
    </property>
    <property name="text">
-    <string>actionZoom_original</string>
+    <string>Reset zoom</string>
+   </property>
+   <property name="toolTip">
+    <string>Zoom original</string>
    </property>
   </action>
  </widget>
  <resources>
-  <include location="../../../common-resources/images.qrc"/>
-  <include location="../../../common-resources/images.qrc"/>
-  <include location="../../../common-resources/images.qrc"/>
-  <include location="../../../common-resources/images.qrc"/>
-  <include location="../../../common-resources/images.qrc"/>
-  <include location="../../../common-resources/images.qrc"/>
+  <include location="../../common-resources/images.qrc"/>
  </resources>
  <connections/>
 </ui>
