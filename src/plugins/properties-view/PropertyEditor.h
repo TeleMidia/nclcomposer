@@ -39,7 +39,8 @@ using namespace  composer::language;
 #include "ui_PropertyEditorWidget.h"
 #include "QLineEditFilter.h"
 
-class ComboBoxDelegate : public QStyledItemDelegate
+class ComboBoxDelegate :
+        public QStyledItemDelegate
 {
   Q_OBJECT
 
@@ -77,7 +78,7 @@ public:
         if (datatype == "URI")
         {
           PropertyButtons *urlEdit = new PropertyButtons( parent );
-          return (QWidget*) urlEdit;
+          return urlEdit;
         }
         else
         {
@@ -126,7 +127,6 @@ public:
         QLineEdit *lineEdit = qobject_cast <QLineEdit *> (editor);
         if(lineEdit)
           model->setData(index, qVariantFromValue(lineEdit->text()));
-
       }
     }
     else
