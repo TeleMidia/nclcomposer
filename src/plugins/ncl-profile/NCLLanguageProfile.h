@@ -24,7 +24,7 @@ class NCLLANGUAGEPROFILESHARED_EXPORT NCLLanguageProfile :
 {
   Q_OBJECT
   Q_INTERFACES(ILanguageProfile)
-  Q_PLUGIN_METADATA(IID ILanguageProfile_iid FILE "nclLanguageProfile.json")
+  Q_PLUGIN_METADATA(IID ILanguageProfile_iid FILE "ncl-profile.json")
 
 public:
   NCLLanguageProfile();

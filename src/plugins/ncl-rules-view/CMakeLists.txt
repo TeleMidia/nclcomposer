@@ -4,7 +4,7 @@ project(ncl_rules_view)
 set (CMAKE_INCLUDE_CURRENTDIR ON)
 set (CMAKE_AUTOMOC ON)
 
-configure_file(ncl-rules-view.json ncl-rules-view.json)
+configure_file(ncl-rules-view.json.in ncl-rules-view.json)
 
 find_package(Qt5 REQUIRED COMPONENTS Widgets)
 

@@ -5,6 +5,8 @@ set(CMAKE_INCLUDE_CURRENTDIR ON)
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 
+configure_file(ncl-profile.json.in ncl-profile.json)
+
 find_package(Qt5 REQUIRED COMPONENTS Xml Widgets)
 
 set (NCL_PROFILE_SOURCES

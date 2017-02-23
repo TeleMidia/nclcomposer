@@ -6,7 +6,7 @@ set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 set(CMAKE_AUTOUIC ON)
 
-configure_file(ncl-layout-view.json ncl-layout-view.json)
+configure_file(ncl-layout-view.json.in ncl-layout-view.json)
 
 find_package(Qt5 REQUIRED COMPONENTS Xml Widgets)
 

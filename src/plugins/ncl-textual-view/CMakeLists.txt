@@ -5,7 +5,7 @@ set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
-configure_file(ncl_textual_view.json ncl_textual_view.json)
+configure_file(ncl-textual-view.json.in ncl-textual-view.json)
 
 find_package(Qt5 REQUIRED COMPONENTS Xml Widgets)
 

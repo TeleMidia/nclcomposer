@@ -33,7 +33,7 @@ class PropertiesViewFactory : public QObject,
 {
   Q_OBJECT
   Q_INTERFACES(IPluginFactory)
-  Q_PLUGIN_METADATA(IID IPluginFactory_iid FILE "properties_view.json")
+  Q_PLUGIN_METADATA(IID IPluginFactory_iid FILE "properties-view.json")
 
 public:
   /*!

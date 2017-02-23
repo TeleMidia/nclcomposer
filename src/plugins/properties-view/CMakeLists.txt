@@ -4,7 +4,7 @@ project(properties_view)
 set(CMAKE_INCLUDE_CURRENTDIR ON)
 set(CMAKE_AUTOMOC ON)
 
-configure_file(properties_view.json properties_view.json)
+configure_file(properties-view.json.in properties-view.json)
 
 find_package(Qt5 REQUIRED COMPONENTS Widgets)
 

@@ -1,7 +1,7 @@
 {
   "name": "Rules View",
-  "version": "0.3.1",
-  "compatVersion": "0.3.1",
+  "version": "${VERSION}",
+  "compatVersion": "${VERSION}",
 
   "vendor": "TeleMídia Lab",
   "copyright": "TeleMídia/PUC-Rio",

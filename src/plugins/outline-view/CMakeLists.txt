@@ -4,8 +4,7 @@ project(outline_view)
 set(CMAKE_INCLUDE_CURRENTDIR ON)
 set(CMAKE_AUTOMOC ON)
 
-configure_file(outline_view.json outline_view.json)
-
+configure_file(outline-view.json.in outline-view.json)
 find_package(Qt5 REQUIRED COMPONENTS Widgets)
 
 set(OUTLINE_VIEW_SOURCES

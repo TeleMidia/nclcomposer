@@ -31,7 +31,7 @@ class ValidatorFactory :
 {
   Q_OBJECT
   Q_INTERFACES(IPluginFactory)
-  Q_PLUGIN_METADATA(IID IPluginFactory_iid FILE "validator_plugin.json")
+  Q_PLUGIN_METADATA(IID IPluginFactory_iid FILE "validator-plugin.json")
 
 public:
   ValidatorFactory(QWidget *parent = 0);

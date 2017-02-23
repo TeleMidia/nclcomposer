@@ -40,7 +40,7 @@ class  NCLTextualViewPluginFactory :
 {
   Q_OBJECT
   Q_INTERFACES(IPluginFactory)
-  Q_PLUGIN_METADATA(IID IPluginFactory_iid FILE "ncl_textual_view.json")
+  Q_PLUGIN_METADATA(IID IPluginFactory_iid FILE "ncl-textual-view.json")
 
 public:
   NCLTextualViewPluginFactory();

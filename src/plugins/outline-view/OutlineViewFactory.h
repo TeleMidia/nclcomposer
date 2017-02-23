@@ -32,7 +32,7 @@ class OutlineViewFactory :
 {
   Q_OBJECT
   Q_INTERFACES(IPluginFactory)
-  Q_PLUGIN_METADATA(IID IPluginFactory_iid FILE "outline_view.json")
+  Q_PLUGIN_METADATA(IID IPluginFactory_iid FILE "outline-view.json")
 
 public:
   /*!

@@ -32,7 +32,7 @@ class DebugConsoleFactory :
 {
   Q_OBJECT
   Q_INTERFACES(IPluginFactory)
-  Q_PLUGIN_METADATA (IID IPluginFactory_iid FILE "debug_console.json")
+  Q_PLUGIN_METADATA (IID IPluginFactory_iid FILE "debug-console.json")
 
 public:
   DebugConsoleFactory();

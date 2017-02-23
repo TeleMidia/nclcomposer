@@ -6,7 +6,7 @@ set (CMAKE_AUTOMOC ON)
 set (CMAKE_AUTORCC ON)
 set (CMAKE_AUTOUIC ON)
 
-configure_file(ncl-structural-view.json ncl-structural-view.json)
+configure_file(ncl-structural-view.json.in ncl-structural-view.json)
 
 find_package(Qt5 REQUIRED COMPONENTS Xml Widgets)
 

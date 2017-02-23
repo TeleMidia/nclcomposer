@@ -4,7 +4,7 @@ project(debugconsole)
 set(CMAKE_INCLUDE_CURRENTDIR ON)
 set(CMAKE_AUTOMOC ON)
 
-configure_file(debug_console.json debug_console.json)
+configure_file(debug-console.json.in debug-console.json)
 
 find_package(Qt5 REQUIRED COMPONENTS Widgets)
 
