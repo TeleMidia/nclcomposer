@@ -91,5 +91,27 @@
         <file alias="error">images/icon-error.png</file>
         <file alias="warning">images/icon-warning.png</file>
         <file alias="autostart">images/icon-autostart.png</file>
+        <file alias="closeall">images/icon-closeall.png</file>
+        <file alias="close">images/icon-close.png</file>
+        <file alias="exit">images/icon-exit.png</file>
+        <file alias="import">images/icon-import.png</file>
+        <file alias="saveall">images/icon-saveall.png</file>
+        <file alias="save">images/icon-save.png</file>
+        <file alias="saveas">images/icon-saveas.png</file>
+        <file alias="open">images/icon-open.png</file>
+        <file alias="new">images/icon-new.png</file>
+        <file alias="recentes">images/icon-recents.png</file>
+        <file alias="clear">images/icon-clear.png</file>
+        <file alias="share">images/icon-share.png</file>
+        <file alias="preferences">images/icon-preferences.png</file>
+        <file alias="publish">images/icon-publish.png</file>
+        <file alias="pespectives-restore">images/icon-pespectives-restore.png</file>
+        <file alias="pespective-save">images/icon-pespectives-save.png</file>
+        <file alias="pespectives">images/icon-pespectives.png</file>
+        <file alias="web">images/icon-web.png</file>
+        <file alias="views">images/icon-views.png</file>
+        <file alias="view-about">images/icon-views-about.png</file>
+        <file alias="about">images/icon-about.png</file>
+        <file alias="monkey">images/icon-monkey.png</file>
     </qresource>
 </RCC>
