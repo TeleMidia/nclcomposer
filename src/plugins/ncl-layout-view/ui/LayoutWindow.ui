@@ -251,6 +251,9 @@
    <property name="toolTip">
     <string>Cut the selected region</string>
    </property>
+   <property name="shortcut">
+    <string>Ctrl+X</string>
+   </property>
   </action>
   <action name="actionPaste_region">
    <property name="icon">
@@ -305,6 +308,11 @@
   </action>
  </widget>
  <resources>
+  <include location="../../common-resources/images.qrc"/>
+  <include location="../../common-resources/images.qrc"/>
+  <include location="../../common-resources/images.qrc"/>
+  <include location="../../common-resources/images.qrc"/>
+  <include location="../../common-resources/images.qrc"/>
   <include location="../../common-resources/images.qrc"/>
  </resources>
  <connections/>

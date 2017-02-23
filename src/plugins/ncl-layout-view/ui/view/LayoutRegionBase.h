@@ -105,6 +105,7 @@ signals:
   void regionbasePerformed();
 
   void copyRequested(LayoutRegion *);
+  void cutRequested(LayoutRegion *);
   void pasteRequested();
 
   void gridVisibilityChanged(bool visible);

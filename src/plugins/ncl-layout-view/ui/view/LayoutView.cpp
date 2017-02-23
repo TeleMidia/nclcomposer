@@ -347,6 +347,21 @@ void LayoutView::performCopy(LayoutRegion *region)
   qWarning () << copiedRegionAttrs;
 }
 
+void LayoutView::performCut()
+{
+  if (this->selectedRegion)
+    performCut(this->selectedRegion);
+}
+
+void LayoutView::performCut(LayoutRegion *region)
+{
+  performCopy(region);
+  if(region != NULL)
+  {
+    region->performDelete();
+  }
+}
+
 void LayoutView::performPaste()
 {
   QString selectedRegionUId = "";
@@ -611,6 +626,10 @@ void LayoutView::addRegionBase( LayoutRegionBase* regionBase,
     connect(regionBase,
             SIGNAL(copyRequested(LayoutRegion*)),
             SLOT(performCopy(LayoutRegion *)));
+
+    connect(regionBase,
+            SIGNAL(cutRequested(LayoutRegion*)),
+            SLOT(performCut(LayoutRegion *)));
 
     connect(regionBase,
             SIGNAL(pasteRequested()),
