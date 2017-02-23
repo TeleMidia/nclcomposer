@@ -130,7 +130,7 @@
      <x>0</x>
      <y>0</y>
      <width>776</width>
-     <height>19</height>
+     <height>22</height>
     </rect>
    </property>
    <property name="layoutDirection">
@@ -153,12 +153,20 @@
      <property name="title">
       <string>&amp;Recent Projects</string>
      </property>
+     <property name="icon">
+      <iconset resource="../../plugins/common-resources/images.qrc">
+       <normaloff>:/icon/recentes</normaloff>:/icon/recentes</iconset>
+     </property>
      <addaction name="action_Clear_Recent_Files"/>
      <addaction name="separator"/>
     </widget>
     <widget class="QMenu" name="menuImport">
      <property name="title">
       <string>Import</string>
+     </property>
+     <property name="icon">
+      <iconset resource="../../plugins/common-resources/images.qrc">
+       <normaloff>:/icon/import</normaloff>:/icon/import</iconset>
      </property>
      <addaction name="action_ImportFromExistingNCL"/>
     </widget>
@@ -205,6 +213,10 @@
      <property name="title">
       <string>&amp;Views</string>
      </property>
+     <property name="icon">
+      <iconset resource="../../plugins/common-resources/images.qrc">
+       <normaloff>:/icon/views</normaloff>:/icon/views</iconset>
+     </property>
     </widget>
     <addaction name="action_Fullscreen"/>
     <addaction name="separator"/>
@@ -233,8 +245,8 @@
   </widget>
   <action name="action_NewProject">
    <property name="icon">
-    <iconset resource="../gui.qrc">
-     <normaloff>:/mainwindow/images/new_document_icon.png</normaloff>:/mainwindow/images/new_document_icon.png</iconset>
+    <iconset resource="../../plugins/common-resources/images.qrc">
+     <normaloff>:/icon/new</normaloff>:/icon/new</iconset>
    </property>
    <property name="text">
     <string>&amp;New project</string>
@@ -245,8 +257,8 @@
   </action>
   <action name="action_Exit">
    <property name="icon">
-    <iconset resource="../gui.qrc">
-     <normaloff>:/mainwindow/quit</normaloff>:/mainwindow/quit</iconset>
+    <iconset resource="../../plugins/common-resources/images.qrc">
+     <normaloff>:/icon/exit</normaloff>:/icon/exit</iconset>
    </property>
    <property name="text">
     <string>E&amp;xit</string>
@@ -259,6 +271,10 @@
    </property>
   </action>
   <action name="action_CloseAll">
+   <property name="icon">
+    <iconset resource="../../plugins/common-resources/images.qrc">
+     <normaloff>:/icon/closeall</normaloff>:/icon/closeall</iconset>
+   </property>
    <property name="text">
     <string>Close All</string>
    </property>
@@ -270,14 +286,18 @@
   </action>
   <action name="action_About">
    <property name="icon">
-    <iconset resource="../gui.qrc">
-     <normaloff>:/mainwindow/help-about</normaloff>:/mainwindow/help-about</iconset>
+    <iconset resource="../../plugins/common-resources/images.qrc">
+     <normaloff>:/icon/about</normaloff>:/icon/about</iconset>
    </property>
    <property name="text">
     <string>&amp;About...</string>
    </property>
   </action>
   <action name="action_AboutPlugins">
+   <property name="icon">
+    <iconset resource="../../plugins/common-resources/images.qrc">
+     <normaloff>:/icon/view-about</normaloff>:/icon/view-about</iconset>
+   </property>
    <property name="text">
     <string>About &amp;Plugins...</string>
    </property>
@@ -295,14 +315,18 @@
    </property>
   </action>
   <action name="action_Clear_Recent_Files">
+   <property name="icon">
+    <iconset resource="../../plugins/common-resources/images.qrc">
+     <normaloff>:/icon/clear</normaloff>:/icon/clear</iconset>
+   </property>
    <property name="text">
     <string>Clear Recent Projects</string>
    </property>
   </action>
   <action name="action_Save">
    <property name="icon">
-    <iconset resource="../gui.qrc">
-     <normaloff>:/mainwindow/images/save_document_icon.png</normaloff>:/mainwindow/images/save_document_icon.png</iconset>
+    <iconset resource="../../plugins/common-resources/images.qrc">
+     <normaloff>:/icon/save</normaloff>:/icon/save</iconset>
    </property>
    <property name="text">
     <string>&amp;Save</string>
@@ -341,8 +365,8 @@
   </action>
   <action name="action_Preferences">
    <property name="icon">
-    <iconset resource="../gui.qrc">
-     <normaloff>:/mainwindow/images/preferences_icon.png</normaloff>:/mainwindow/images/preferences_icon.png</iconset>
+    <iconset resource="../../plugins/common-resources/images.qrc">
+     <normaloff>:/icon/preferences</normaloff>:/icon/preferences</iconset>
    </property>
    <property name="text">
     <string>&amp;Preferences</string>
@@ -356,8 +380,8 @@
     <bool>false</bool>
    </property>
    <property name="icon">
-    <iconset resource="../gui.qrc">
-     <normaloff>:/mainwindow/images/help_icon.png</normaloff>:/mainwindow/images/help_icon.png</iconset>
+    <iconset resource="../../plugins/common-resources/images.qrc">
+     <normaloff>:/icon/help</normaloff>:/icon/help</iconset>
    </property>
    <property name="text">
     <string>Help</string>
@@ -368,8 +392,8 @@
   </action>
   <action name="action_OpenProject">
    <property name="icon">
-    <iconset resource="../gui.qrc">
-     <normaloff>:/mainwindow/images/open_project_icon.png</normaloff>:/mainwindow/images/open_project_icon.png</iconset>
+    <iconset resource="../../plugins/common-resources/images.qrc">
+     <normaloff>:/icon/open</normaloff>:/icon/open</iconset>
    </property>
    <property name="text">
     <string>Open Project</string>
@@ -380,8 +404,8 @@
   </action>
   <action name="action_CloseProject">
    <property name="icon">
-    <iconset resource="../gui.qrc">
-     <normaloff>:/mainwindow/window_close</normaloff>:/mainwindow/window_close</iconset>
+    <iconset resource="../../plugins/common-resources/images.qrc">
+     <normaloff>:/icon/close</normaloff>:/icon/close</iconset>
    </property>
    <property name="text">
     <string>&amp;Close</string>
@@ -391,6 +415,10 @@
    </property>
   </action>
   <action name="action_SaveAll">
+   <property name="icon">
+    <iconset resource="../../plugins/common-resources/images.qrc">
+     <normaloff>:/icon/saveall</normaloff>:/icon/saveall</iconset>
+   </property>
    <property name="text">
     <string>Save A&amp;ll</string>
    </property>
@@ -400,8 +428,8 @@
   </action>
   <action name="action_ImportFromExistingNCL">
    <property name="icon">
-    <iconset resource="../gui.qrc">
-     <normaloff>:/mainwindow/images/import_document_icon.png</normaloff>:/mainwindow/images/import_document_icon.png</iconset>
+    <iconset resource="../../plugins/common-resources/images.qrc">
+     <normaloff>:/icon/media-ncl</normaloff>:/icon/media-ncl</iconset>
    </property>
    <property name="text">
     <string>From NCL Document</string>
@@ -411,11 +439,19 @@
    <property name="enabled">
     <bool>false</bool>
    </property>
+   <property name="icon">
+    <iconset resource="../../plugins/common-resources/images.qrc">
+     <normaloff>:/icon/share</normaloff>:/icon/share</iconset>
+   </property>
    <property name="text">
     <string>Share This Project Online</string>
    </property>
   </action>
   <action name="action_GoToClubeNCLWebsite">
+   <property name="icon">
+    <iconset resource="../../plugins/common-resources/images.qrc">
+     <normaloff>:/icon/web</normaloff>:/icon/web</iconset>
+   </property>
    <property name="text">
     <string>Go to NCL Club Website</string>
    </property>
@@ -441,6 +477,10 @@
    </property>
   </action>
   <action name="action_SaveAs">
+   <property name="icon">
+    <iconset resource="../../plugins/common-resources/images.qrc">
+     <normaloff>:/icon/saveas</normaloff>:/icon/saveas</iconset>
+   </property>
    <property name="text">
     <string>Save &amp;As...</string>
    </property>
@@ -450,8 +490,8 @@
   </action>
   <action name="actionReport_Bug">
    <property name="icon">
-    <iconset resource="../gui.qrc">
-     <normaloff>:/mainwindow/reportbug</normaloff>:/mainwindow/reportbug</iconset>
+    <iconset resource="../../plugins/common-resources/images.qrc">
+     <normaloff>:/icon/monkey</normaloff>:/icon/monkey</iconset>
    </property>
    <property name="text">
     <string>Report &amp;Bug...</string>
@@ -476,8 +516,8 @@
   </action>
   <action name="actionPublish">
    <property name="icon">
-    <iconset resource="../gui.qrc">
-     <normaloff>:/mainwindow/pub</normaloff>:/mainwindow/pub</iconset>
+    <iconset resource="../../plugins/common-resources/images.qrc">
+     <normaloff>:/icon/publish</normaloff>:/icon/publish</iconset>
    </property>
    <property name="text">
     <string>Publish...</string>
@@ -509,11 +549,19 @@
    </property>
   </action>
   <action name="action_Save_current_perspective">
+   <property name="icon">
+    <iconset resource="../../plugins/common-resources/images.qrc">
+     <normaloff>:/icon/pespective-save</normaloff>:/icon/pespective-save</iconset>
+   </property>
    <property name="text">
     <string>&amp;Save current perspective</string>
    </property>
   </action>
   <action name="action_Restore_a_perspective">
+   <property name="icon">
+    <iconset resource="../../plugins/common-resources/images.qrc">
+     <normaloff>:/icon/pespectives-restore</normaloff>:/icon/pespectives-restore</iconset>
+   </property>
    <property name="text">
     <string>&amp;Restore a perspective</string>
    </property>
@@ -525,6 +573,10 @@
    <property name="checked">
     <bool>true</bool>
    </property>
+   <property name="icon">
+    <iconset resource="../../plugins/common-resources/images.qrc">
+     <normaloff>:/icon/pespectives</normaloff>:/icon/pespectives</iconset>
+   </property>
    <property name="text">
     <string>&amp;Perspectives toolbar</string>
    </property>
@@ -532,6 +584,7 @@
  </widget>
  <resources>
   <include location="../gui.qrc"/>
+  <include location="../../plugins/common-resources/images.qrc"/>
  </resources>
  <connections/>
 </ui>
