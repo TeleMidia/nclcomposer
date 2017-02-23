@@ -30,6 +30,7 @@ target_compile_definitions(nclprofile
 
 target_include_directories(nclprofile
   PUBLIC .
+  PRIVATE ${CMAKE_CURRENT_BINARY_DIR}
 )
 
 target_link_libraries(nclprofile
