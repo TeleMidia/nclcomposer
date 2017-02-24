@@ -16,8 +16,6 @@
 #ifndef ABOUTPLUGINS_H
 #define ABOUTPLUGINS_H
 
-#include "PluginDetailsDialog.h"
-
 #include <modules/PluginControl.h>
 #include <modules/LanguageControl.h>
 using namespace composer::core;
@@ -30,6 +28,7 @@ using namespace composer::core::util;
 
 namespace Ui {
   class AboutDialog;
+  class PluginDetailsDialog;
 }
 
 namespace composer {
@@ -59,6 +58,20 @@ private slots:
 };
 
 
+class PluginDetailsDialog : public QDialog
+{
+private:
+  Ui::PluginDetailsDialog *ui;
+  IPluginFactory *currentPluginFactory;
+
+public:
+  PluginDetailsDialog(QWidget *parent = 0);
+  virtual ~PluginDetailsDialog();
+
+  void setCurrentPlugin(IPluginFactory *plugin);
+};
+
+
 class AboutPluginsDialog : public QDialog
 {
   Q_OBJECT
@@ -79,7 +92,6 @@ private:
   QTreeWidget *_treeWidgetPlugins;
   QPushButton *_detailsButton;
   PluginDetailsDialog *_pluginDetailsDialog;
-
 };
 
 } } // end namespace

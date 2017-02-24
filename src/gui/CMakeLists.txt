@@ -46,10 +46,9 @@ add_executable(nclcomposer
   src/ComposerMainWindow.cpp
   src/PreferencesDialog.cpp
   src/PerspectiveManager.cpp
-  src/PluginDetailsDialog.cpp
   src/EnvironmentPreferencesWidget.cpp
   src/WelcomeWidget.cpp
-  src/AboutDialog.cpp
+  src/AboutDialogs.cpp
   src/RunGingaConfig.cpp
   src/GeneralPreferences.cpp
   src/NewProjectWizard.cpp

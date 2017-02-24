@@ -63,9 +63,8 @@ using namespace composer::core::util;
 
 #include "PerspectiveManager.h"
 #include "PreferencesDialog.h"
-#include "PluginDetailsDialog.h"
 #include "WelcomeWidget.h"
-#include "AboutDialog.h"
+#include "AboutDialogs.h"
 #include "ClickableDockWidget.h"
 // #include "ComposerHelpWidget.h"
 
