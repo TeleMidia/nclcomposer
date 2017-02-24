@@ -33,7 +33,7 @@ AboutDialog::AboutDialog(QWidget *parent):
 {
   ui->setupUi(this);
   ui->label_ProgramName->setText( QString("NCL Composer v.") +
-                                  qApp->applicationVersion());
+                                  qApp->applicationVersion() );
 
   ui->label_buildDate->setText(QString (BUILD_DATE));
 
@@ -60,7 +60,6 @@ AboutPluginsDialog::AboutPluginsDialog(QWidget *parent)
 {
   setWindowTitle(tr("Installed Plugins"));
 
-  /* This should be a new Widget and change some code for there */
   _treeWidgetPlugins = new QTreeWidget(this);
   _treeWidgetPlugins->setAlternatingRowColors(true);
 
@@ -140,7 +139,6 @@ void AboutPluginsDialog::loadPlugins()
     }
   }
 
-  _treeWidgetItem2plFactory.clear();
   for (ILanguageProfile *langProfile: langList)
   {
     QString category = "Language profile";
@@ -148,14 +146,15 @@ void AboutPluginsDialog::loadPlugins()
     treeWidgetItem->setText(0, langProfile->getProfileName());
 
     treeWidgetItem->setCheckState(1, Qt::Checked);
+    treeWidgetItem->setDisabled(true);
   }
 
   for (IPluginFactory *pF: pList)
   {
     QString category = pF->metadata().value("category").toString();
     treeWidgetItem = new QTreeWidgetItem ( categories.value(category) );
-    _treeWidgetItem2plFactory.insert(treeWidgetItem, pF);
     treeWidgetItem->setText(0, pF->metadata().value("name").toString());
+    treeWidgetItem->setData(0, Qt::UserRole, qVariantFromValue(pF));
 
     // Set checked (or not) based on the settings
     GlobalSettings settings;
@@ -185,35 +184,47 @@ void AboutPluginsDialog::selectedAboutCurrentPluginFactory()
   QList<QTreeWidgetItem*> selectedPlugins = _treeWidgetPlugins->selectedItems();
   if(selectedPlugins.size())
   {
-    if(_treeWidgetItem2plFactory.value(selectedPlugins.at(0)) != nullptr)
+    QTreeWidgetItem *item = selectedPlugins.at(0);
+    QVariant itemVariant = item->data(0, Qt::UserRole);
+
+    IPluginFactory *pluginFactory = itemVariant.value<IPluginFactory*>();
+    if(pluginFactory)
     {
-      _pluginDetailsDialog->setCurrentPlugin(
-            _treeWidgetItem2plFactory.value(selectedPlugins.at(0)));
+      _pluginDetailsDialog->setCurrentPlugin(pluginFactory);
       _detailsButton->setEnabled(true);
     }
-    else
-      _detailsButton->setEnabled(false);
   }
+  else
+    _detailsButton->setEnabled(false);
 }
 
 void AboutPluginsDialog::saveLoadPluginData(int)
 {
   GlobalSettings settings;
   settings.beginGroup("loadPlugins");
-  QTreeWidgetItem *item;
-  qDebug() << _treeWidgetItem2plFactory.keys();
-  foreach(item, _treeWidgetItem2plFactory.keys())
+
+  for (int i = 0; i < _treeWidgetPlugins->topLevelItemCount(); ++i)
   {
-    if(item->checkState(1))
+    QTreeWidgetItem *cat = _treeWidgetPlugins->topLevelItem(i);
+    for (int j = 0; j < cat->childCount(); ++j)
     {
-      settings.setValue(_treeWidgetItem2plFactory.value(item)->id(), true);
-    }
-    else
-    {
-      qDebug() << _treeWidgetItem2plFactory.value(item) << "2";
-      settings.setValue(_treeWidgetItem2plFactory.value(item)->id(), false);
+      QTreeWidgetItem *item = cat->child(j);
+      QVariant itemVariant = item->data(0, Qt::UserRole);
+      IPluginFactory *pluginFactory = itemVariant.value<IPluginFactory*>();
+      if(pluginFactory)
+      {
+        if(item->checkState(1))
+        {
+          settings.setValue(pluginFactory->id(), true);
+        }
+        else
+        {
+          settings.setValue(pluginFactory->id(), false);
+        }
+      }
     }
   }
+
   settings.endGroup();
 }
 

@@ -90,6 +90,8 @@ private:
 
 } } //end namespace
 
+Q_DECLARE_METATYPE(composer::extension::IPluginFactory*)
+
 /**
  * This is required for the QTPlugin system works.
  * Declaring the interface that is going to be used by external plugins.

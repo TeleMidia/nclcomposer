@@ -77,7 +77,6 @@ private slots:
 
 private:
   QTreeWidget *_treeWidgetPlugins;
-  QMap <QTreeWidgetItem*, IPluginFactory*> _treeWidgetItem2plFactory;
   QPushButton *_detailsButton;
   PluginDetailsDialog *_pluginDetailsDialog;
 
