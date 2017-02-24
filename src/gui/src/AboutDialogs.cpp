@@ -34,9 +34,8 @@ AboutDialog::AboutDialog(QWidget *parent):
   ui(new Ui::AboutDialog)
 {
   ui->setupUi(this);
-  ui->label_ProgramName->setText( QString("NCL Composer v.") +
+  ui->label_ProgramName->setText( QString("NCL Composer ") +
                                   qApp->applicationVersion() );
-
   ui->label_buildDate->setText(QString (BUILD_DATE));
 
   connect(ui->button_Close, SIGNAL(pressed()), this, SLOT(close()));
@@ -58,9 +57,11 @@ void AboutDialog::showLicense()
   box.exec();
 }
 
-AboutPluginsDialog::AboutPluginsDialog(QWidget *parent)
+AboutPluginsDialog::AboutPluginsDialog(QWidget *parent) :
+    QDialog(parent)
 {
   setWindowTitle(tr("Installed Plugins"));
+  setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
 
   _treeWidgetPlugins = new QTreeWidget(this);
   _treeWidgetPlugins->setAlternatingRowColors(true);
@@ -86,7 +87,7 @@ AboutPluginsDialog::AboutPluginsDialog(QWidget *parent)
 
   connect( _detailsButton, SIGNAL(pressed()), this, SLOT(showPluginDetails()) );
 
-  QGridLayout *gLayout = new QGridLayout(this);
+  QVBoxLayout *gLayout = new QVBoxLayout(this);
   gLayout->addWidget(new QLabel(tr("<b>NCL Composer</b> is an IDE for"
                                    " Declarative Multimedia languages."),
                                 this));
@@ -94,6 +95,7 @@ AboutPluginsDialog::AboutPluginsDialog(QWidget *parent)
   gLayout->addWidget(new QLabel(tr("<b>Installed Plug-ins</b>")));
   gLayout->addWidget(_treeWidgetPlugins);
   gLayout->addWidget(bOk);
+  gLayout->setSizeConstraint(QLayout::SetNoConstraint);
   setLayout(gLayout);
 
   setModal(true);
@@ -174,11 +176,13 @@ void AboutPluginsDialog::loadPlugins()
   _treeWidgetPlugins->expandAll();
 
   _treeWidgetPlugins->setColumnWidth(0, 150);
+  _treeWidgetPlugins->resizeColumnToContents(0);
   _treeWidgetPlugins->resizeColumnToContents(1);
   _treeWidgetPlugins->resizeColumnToContents(2);
-  _treeWidgetPlugins->resizeColumnToContents(3);
 
   _detailsButton->setEnabled(false);
+
+  adjustSize();
 }
 
 void AboutPluginsDialog::selectedAboutCurrentPluginFactory()

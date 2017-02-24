@@ -6,12 +6,12 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>542</width>
-    <height>325</height>
+    <width>595</width>
+    <height>268</height>
    </rect>
   </property>
   <property name="sizePolicy">
-   <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+   <sizepolicy hsizetype="MinimumExpanding" vsizetype="Preferred">
     <horstretch>0</horstretch>
     <verstretch>0</verstretch>
    </sizepolicy>
@@ -26,102 +26,7 @@
    <string>About NCL Composer</string>
   </property>
   <layout class="QGridLayout" name="gridLayout">
-   <item row="12" column="1" colspan="3">
-    <widget class="QLabel" name="label_MoreInfo">
-     <property name="text">
-      <string>More information can be found on the download page or mailling lists.</string>
-     </property>
-     <property name="wordWrap">
-      <bool>true</bool>
-     </property>
-    </widget>
-   </item>
-   <item row="2" column="2">
-    <widget class="QLabel" name="label_buildDate">
-     <property name="text">
-      <string>Build date: Unknown</string>
-     </property>
-    </widget>
-   </item>
-   <item row="14" column="1">
-    <widget class="QPushButton" name="button_Homepage">
-     <property name="text">
-      <string>Homepage</string>
-     </property>
-    </widget>
-   </item>
-   <item row="4" column="2" colspan="2">
-    <spacer name="verticalSpacer_4">
-     <property name="orientation">
-      <enum>Qt::Vertical</enum>
-     </property>
-     <property name="sizeHint" stdset="0">
-      <size>
-       <width>20</width>
-       <height>40</height>
-      </size>
-     </property>
-    </spacer>
-   </item>
-   <item row="8" column="1" colspan="3">
-    <widget class="QLabel" name="label_DesignedByTelemidia">
-     <property name="text">
-      <string>This application is designed and written by TeleMidia Laboratory
-(http://www.telemidia.puc-rio.br).
-A complete list of contributors can be found at the NCL Composer's website
-(http://composer.telemidia.puc-rio.br).</string>
-     </property>
-     <property name="wordWrap">
-      <bool>true</bool>
-     </property>
-    </widget>
-   </item>
-   <item row="0" column="2" colspan="2">
-    <widget class="QLabel" name="label_ProgramName">
-     <property name="sizePolicy">
-      <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-       <horstretch>0</horstretch>
-       <verstretch>0</verstretch>
-      </sizepolicy>
-     </property>
-     <property name="styleSheet">
-      <string notr="true">font:600 16pt &quot;Arial&quot;;</string>
-     </property>
-     <property name="text">
-      <string>NCL Composer</string>
-     </property>
-     <property name="alignment">
-      <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
-     </property>
-    </widget>
-   </item>
-   <item row="1" column="2" colspan="2">
-    <widget class="QLabel" name="label_Copyright">
-     <property name="styleSheet">
-      <string notr="true">font-size: 12px;</string>
-     </property>
-     <property name="text">
-      <string>Copyright (C) 2011-2015 TeleMídia/PUC-Rio</string>
-     </property>
-     <property name="alignment">
-      <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
-     </property>
-    </widget>
-   </item>
-   <item row="9" column="1">
-    <spacer name="verticalSpacer_3">
-     <property name="orientation">
-      <enum>Qt::Vertical</enum>
-     </property>
-     <property name="sizeHint" stdset="0">
-      <size>
-       <width>20</width>
-       <height>40</height>
-      </size>
-     </property>
-    </spacer>
-   </item>
-   <item row="14" column="3">
+   <item row="13" column="3">
     <widget class="QFrame" name="frame">
      <property name="frameShape">
       <enum>QFrame::NoFrame</enum>
@@ -175,7 +80,100 @@ A complete list of contributors can be found at the NCL Composer's website
      </layout>
     </widget>
    </item>
+   <item row="11" column="1" colspan="3">
+    <widget class="QLabel" name="label_MoreInfo">
+     <property name="text">
+      <string>More information can be found on the download page or mailling lists.</string>
+     </property>
+     <property name="wordWrap">
+      <bool>true</bool>
+     </property>
+    </widget>
+   </item>
    <item row="13" column="1">
+    <widget class="QPushButton" name="button_Homepage">
+     <property name="text">
+      <string>Homepage</string>
+     </property>
+    </widget>
+   </item>
+   <item row="8" column="1" colspan="3">
+    <widget class="QLabel" name="label_DesignedByTelemidia">
+     <property name="text">
+      <string>This application is designed and written by TeleMidia Laboratory  (http://www.telemidia.puc-rio.br).
+A complete list of contributors can be found at the NCL Composer's website (http://composer.telemidia.puc-rio.br).</string>
+     </property>
+     <property name="wordWrap">
+      <bool>true</bool>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="2">
+    <widget class="QLabel" name="label_buildDate">
+     <property name="text">
+      <string>Build date: Unknown</string>
+     </property>
+    </widget>
+   </item>
+   <item row="4" column="2" colspan="2">
+    <spacer name="verticalSpacer_4">
+     <property name="orientation">
+      <enum>Qt::Vertical</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>20</width>
+       <height>40</height>
+      </size>
+     </property>
+    </spacer>
+   </item>
+   <item row="9" column="1">
+    <spacer name="verticalSpacer_3">
+     <property name="orientation">
+      <enum>Qt::Vertical</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>20</width>
+       <height>40</height>
+      </size>
+     </property>
+    </spacer>
+   </item>
+   <item row="1" column="2" colspan="2">
+    <widget class="QLabel" name="label_Copyright">
+     <property name="styleSheet">
+      <string notr="true">font-size: 12px;</string>
+     </property>
+     <property name="text">
+      <string>Copyright (C) 2011-2017 TeleMídia/PUC-Rio</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="2" colspan="2">
+    <widget class="QLabel" name="label_ProgramName">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="MinimumExpanding" vsizetype="Preferred">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">font: 600 16pt &quot;Arial&quot;;</string>
+     </property>
+     <property name="text">
+      <string>NCL Composer</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+     </property>
+    </widget>
+   </item>
+   <item row="12" column="1">
     <spacer name="verticalSpacer">
      <property name="orientation">
       <enum>Qt::Vertical</enum>
@@ -194,7 +192,7 @@ A complete list of contributors can be found at the NCL Composer's website
       <string/>
      </property>
      <property name="pixmap">
-      <pixmap resource="../images.qrc">:/mainwindow/icon</pixmap>
+      <pixmap resource="../gui.qrc">:/mainwindow/icon</pixmap>
      </property>
      <property name="scaledContents">
       <bool>false</bool>
@@ -203,19 +201,6 @@ A complete list of contributors can be found at the NCL Composer's website
       <set>Qt::AlignHCenter|Qt::AlignTop</set>
      </property>
     </widget>
-   </item>
-   <item row="11" column="1">
-    <spacer name="verticalSpacer_2">
-     <property name="orientation">
-      <enum>Qt::Vertical</enum>
-     </property>
-     <property name="sizeHint" stdset="0">
-      <size>
-       <width>20</width>
-       <height>40</height>
-      </size>
-     </property>
-    </spacer>
    </item>
    <item row="3" column="2" colspan="2">
     <widget class="QLabel" name="label_Warranty">
@@ -239,7 +224,7 @@ A complete list of contributors can be found at the NCL Composer's website
   </layout>
  </widget>
  <resources>
-  <include location="../images.qrc"/>
+  <include location="../gui.qrc"/>
  </resources>
  <connections/>
 </ui>
