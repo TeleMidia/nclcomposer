@@ -36,6 +36,12 @@ class StructuralView : public QGraphicsView
   Q_OBJECT
 
 public:
+  // Zoom values are in %
+  constexpr static int ZOOM_MIN = 25;
+  constexpr static int ZOOM_MAX  = 150;
+  constexpr static int ZOOM_ORIGINAL  = 100;
+  constexpr static int ZOOM_STEP = 5;
+
   StructuralView(QWidget* parent = 0);
   virtual ~StructuralView();
 
@@ -123,8 +129,7 @@ signals:
   void switchedSnapshot(bool state);
   void switchedPointer(bool state);
   void switchedLink(bool state);
-  void switchedZoomIn(bool state);
-  void switchedZoomOut(bool state);
+  void zoomChanged(int zoom);
   void switchedBody(bool state);
 
   void requestedUpdate();
@@ -171,7 +176,7 @@ private:
 
   StructuralMode _mode;
 
-  int _zoom;
+  int _zoom; // an integer in %  (varing from ZOOM_MIN to ZOOM_MAX)
 
   bool _linking;
   StructuralEntity* _linkingTail;

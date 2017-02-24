@@ -28,8 +28,7 @@ protected slots:
   void switchPaste(bool state);
   void switchDelete(bool state);
   void switchSnapshot(bool state);
-  void switchZoomIn(bool state);
-  void switchZoomOut(bool state);
+  void handleZoomChanged(int zoom);
   void switchPointer(bool state);
   void switchLink(bool state);
   void switchBody(bool state);

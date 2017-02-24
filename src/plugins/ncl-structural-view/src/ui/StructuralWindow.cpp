@@ -318,8 +318,9 @@ void  StructuralWindow::createConnections()
   connect(_view, SIGNAL(switchedPaste(bool)), SLOT(switchPaste(bool)));
   connect(_view, SIGNAL(switchedDelete(bool)), SLOT(switchDelete(bool)));
   connect(_view, SIGNAL(switchedSnapshot(bool)), SLOT(switchSnapshot(bool)));
-  connect(_view, SIGNAL(switchedZoomIn(bool)), SLOT(switchZoomIn(bool)));
-  connect(_view, SIGNAL(switchedZoomOut(bool)), SLOT(switchZoomOut(bool)));
+
+  connect(_view, SIGNAL(zoomChanged(int)), SLOT(handleZoomChanged(int)));
+
   connect(_view, SIGNAL(switchedPointer(bool)), SLOT(switchPointer(bool)));
   connect(_view, SIGNAL(switchedLink(bool)), SLOT(switchLink(bool)));
   connect(_view, SIGNAL(switchedBody(bool)), SLOT(switchBody(bool)));
@@ -363,15 +364,24 @@ void StructuralWindow::switchSnapshot(bool state)
 }
 
 
-void StructuralWindow::switchZoomIn(bool state)
+void StructuralWindow::handleZoomChanged(int zoom)
 {
-  _zoominAction->setEnabled(state);
-  _zoomresetAction->setEnabled(state);
-}
+  if ( zoom >= StructuralView::ZOOM_MAX )
+  {
+    _zoominAction->setEnabled(false);
+  }
+  else
+    _zoominAction->setEnabled(true);
 
-void StructuralWindow::switchZoomOut(bool state)
-{
-  _zoomoutAction->setEnabled(state);
+  if ( zoom <= StructuralView::ZOOM_MIN )
+    _zoomoutAction->setEnabled(false);
+  else
+    _zoomoutAction->setEnabled(true);
+
+  if ( zoom == StructuralView::ZOOM_ORIGINAL )
+    _zoomresetAction->setEnabled(false);
+  else
+    _zoomresetAction->setEnabled(true);
 }
 
 void StructuralWindow::switchPointer(bool state)
@@ -485,8 +495,9 @@ void StructuralWindow::select(QString uid, QMap<QString, QString> settings)
     switchCopy(true);
     switchDelete(true);
 
-  } else  {
-
+  }
+  else
+  {
     _switchportAction->setEnabled(false);
 
     if (STR_DEFAULT_WITH_BODY)

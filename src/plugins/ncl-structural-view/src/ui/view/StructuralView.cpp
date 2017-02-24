@@ -16,7 +16,7 @@ StructuralView::StructuralView(QWidget* parent)
 
   _mode = Structural::Pointing;
 
-  _zoom = 0;
+  _zoom = ZOOM_ORIGINAL;
 
   _linking = false;
   _linkingTail = NULL;
@@ -356,44 +356,38 @@ void StructuralView::createConnection()
 
 void StructuralView::performZoomIn()
 {
-  if (_zoom > 0)
+  if (_zoom + ZOOM_STEP <= ZOOM_MAX)
   {
-    _zoom--;
+    _zoom += ZOOM_STEP;
 
     resetMatrix();
-    scale(1 - _zoom*0.05, 1 - _zoom*0.05);
+    scale((double)_zoom / 100.0, (double)_zoom / 100.0);
 
-    emit switchedZoomOut(true);
+    emit zoomChanged(_zoom);
   }
-
-  if (_zoom <= 0)
-    emit switchedZoomIn(false);
 }
 
 void StructuralView::performZoomOut()
 {
-  if (_zoom*0.05 < 0.9)
+  if (_zoom - ZOOM_STEP >= ZOOM_MIN)
   {
-    _zoom++;
+    _zoom -= ZOOM_STEP;
 
     resetMatrix();
-    scale(1 - _zoom*0.05, 1 - _zoom*0.05);
+    scale((double)_zoom / 100.0, (double)_zoom / 100.0);
 
-    emit switchedZoomIn(true);
+    emit zoomChanged(_zoom);
   }
-
-  if (_zoom*0.05 >= 0.9)
-    emit switchedZoomOut(false);
 }
 
 void StructuralView::performZoomOriginal()
 {
-  _zoom = 0;
+  _zoom = ZOOM_ORIGINAL;
 
   resetMatrix();
-  scale(1 - _zoom*0.05, 1 - _zoom*0.05);
+  scale((double)_zoom / 100.0, (double)_zoom / 100.0);
 
-  emit switchedZoomIn(false);
+  emit zoomChanged(_zoom);
 }
 
 void StructuralView::performPointer()
