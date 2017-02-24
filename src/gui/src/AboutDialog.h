@@ -16,7 +16,17 @@
 #ifndef ABOUTPLUGINS_H
 #define ABOUTPLUGINS_H
 
+#include "PluginDetailsDialog.h"
+
+#include <modules/PluginControl.h>
+#include <modules/LanguageControl.h>
+using namespace composer::core;
+
+#include <util/ComposerSettings.h>
+using namespace composer::core::util;
+
 #include <QDialog>
+#include <QTreeWidget>
 
 namespace Ui {
   class AboutDialog;
@@ -46,6 +56,31 @@ private:
 private slots:
   void showLicense();
   void on_button_Homepage_pressed();
+};
+
+
+class AboutPluginsDialog : public QDialog
+{
+  Q_OBJECT
+
+public:
+  AboutPluginsDialog(QWidget *parent);
+  virtual ~AboutPluginsDialog() { }
+
+public slots:
+  void loadPlugins();
+
+private slots:
+  void selectedAboutCurrentPluginFactory();
+  void showPluginDetails();
+  void saveLoadPluginData(int);
+
+private:
+  QTreeWidget *_treeWidgetPlugins;
+  QMap <QTreeWidgetItem*, IPluginFactory*> _treeWidgetItem2plFactory;
+  QPushButton *_detailsButton;
+  PluginDetailsDialog *_pluginDetailsDialog;
+
 };
 
 } } // end namespace

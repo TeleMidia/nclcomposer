@@ -18,7 +18,6 @@
 
 #include <QPixmap>
 #include <QCloseEvent>
-#include <QDialogButtonBox>
 #include <QToolBar>
 #include <QToolButton>
 #include <QApplication>
@@ -346,12 +345,11 @@ void ComposerMainWindow::initGUI()
 
   createActions();
   createMenus();
-  createAboutPluginsWidgets();
 // createLanguageMenu();
 
   _preferencesDialog = new PreferencesDialog(this);
   _perspectiveManager = new PerspectiveManager(this);
-  _pluginDetailsDialog = new PluginDetailsDialog(_aboutPluginsDialog);
+  _aboutPluginsDialog = new AboutPluginsDialog(this);
 
 // UNDO/REDO
   // connect(ui->action_Undo, SIGNAL(triggered()), this, SLOT(undo()));
@@ -652,54 +650,6 @@ void ComposerMainWindow::createMenus()
   updateMenuPerspectives();
 }
 
-void ComposerMainWindow::createAboutPluginsWidgets()
-{
-  _aboutPluginsDialog = new QDialog(this);
-  _aboutPluginsDialog->setWindowTitle(tr("Installed Plugins"));
-
-  /* This should be a new Widget and change some code for there */
-  _treeWidgetPlugins = new QTreeWidget(_aboutPluginsDialog);
-  _treeWidgetPlugins->setAlternatingRowColors(true);
-
-  connect(_treeWidgetPlugins, SIGNAL(itemSelectionChanged()),
-          this, SLOT(selectedAboutCurrentPluginFactory()));
-
-  QStringList header;
-  header << tr("Name") << tr("Load") << tr("Version") << tr("Vendor");
-  _treeWidgetPlugins->setHeaderLabels(header);
-
-  QDialogButtonBox *bOk = new QDialogButtonBox(QDialogButtonBox::Ok |
-                                               QDialogButtonBox::Close,
-                                               Qt::Horizontal,
-                                               _aboutPluginsDialog);
-
-  _detailsButton = bOk->button(QDialogButtonBox::Ok);
-  _detailsButton->setText(tr("Details"));
-  _detailsButton->setIcon(QIcon());
-  _detailsButton->setEnabled(false);
-
-  connect( bOk, SIGNAL(rejected()),
-           _aboutPluginsDialog, SLOT(close()) );
-
-  connect( _detailsButton, SIGNAL(pressed()),
-           this, SLOT(showPluginDetails()) );
-
-  QGridLayout *gLayout = new QGridLayout(_aboutPluginsDialog);
-  gLayout->addWidget(new QLabel(tr("The <b>Composer</b> is an IDE for"
-                                   " Declarative Multimedia languages."),
-                                _aboutPluginsDialog));
-
-  gLayout->addWidget(new QLabel(tr("<b>Installed Plug-ins</b>")));
-  gLayout->addWidget(_treeWidgetPlugins);
-  gLayout->addWidget(bOk);
-  _aboutPluginsDialog->setLayout(gLayout);
-
-  _aboutPluginsDialog->setModal(true);
-
-  connect( _aboutPluginsDialog, SIGNAL(finished(int)),
-           this, SLOT(saveLoadPluginData(int)) );
-}
-
 /*!
  * \brief Shows the about dialog.
  */
@@ -714,82 +664,7 @@ void ComposerMainWindow::about()
  */
 void ComposerMainWindow::aboutPlugins()
 {
-  _treeWidgetPlugins->clear();
-
-  QList<ILanguageProfile*> langList = LanguageControl::getInstance()->
-      getLoadedProfiles();
-  QList<IPluginFactory*> pList = PluginControl::getInstance()->
-      getLoadedPlugins();
-
-
-  //search for categories
-  QTreeWidgetItem *treeWidgetItem;
-  QMap <QString, QTreeWidgetItem*> categories;
-
-  for (const ILanguageProfile *langProfile: langList)
-  {
-    QString category = "Language profile";
-
-    if(!categories.contains(category))
-    {
-      treeWidgetItem = new QTreeWidgetItem(_treeWidgetPlugins);
-      categories.insert(category, treeWidgetItem);
-      treeWidgetItem->setText(0, category);
-      treeWidgetItem->setTextColor(0, QColor("#0000FF"));
-    }
-  }
-
-  for (IPluginFactory *pF: pList)
-  {
-    QString category = pF->metadata().value("category").toString();
-
-    if(!categories.contains(category))
-    {
-      treeWidgetItem = new QTreeWidgetItem(_treeWidgetPlugins);
-      categories.insert(category, treeWidgetItem);
-      treeWidgetItem->setText(0, category);
-      treeWidgetItem->setTextColor(0, QColor("#0000FF"));
-    }
-  }
-
-  treeWidgetItem2plFactory.clear();
-  for (ILanguageProfile *langProfile: langList)
-  {
-    QString category = "Language profile";
-    treeWidgetItem = new QTreeWidgetItem ( categories.value(category) );
-    treeWidgetItem->setText(0, langProfile->getProfileName());
-
-    treeWidgetItem->setCheckState(1, Qt::Checked);
-  }
-
-  for (IPluginFactory *pF: pList)
-  {
-    QString category = pF->metadata().value("category").toString();
-    treeWidgetItem = new QTreeWidgetItem ( categories.value(category) );
-    treeWidgetItem2plFactory.insert(treeWidgetItem, pF);
-    treeWidgetItem->setText(0, pF->metadata().value("name").toString());
-
-    // Set checked (or not) based on the settings
-    GlobalSettings settings;
-    settings.beginGroup("loadPlugins");
-    if(!settings.contains(pF->id()) || settings.value(pF->id()).toBool())
-      treeWidgetItem->setCheckState(1, Qt::Checked);
-    else
-      treeWidgetItem->setCheckState(1, Qt::Unchecked);
-
-    settings.endGroup();
-    treeWidgetItem->setText(2, pF->metadata().value("version").toString());
-    treeWidgetItem->setText(3, pF->metadata().value("vendor").toString());
-  }
-
-  _treeWidgetPlugins->expandAll();
-
-  _treeWidgetPlugins->setColumnWidth(0, 150);
-  _treeWidgetPlugins->resizeColumnToContents(1);
-  _treeWidgetPlugins->resizeColumnToContents(2);
-  _treeWidgetPlugins->resizeColumnToContents(3);
-
-  _detailsButton->setEnabled(false);
+  _aboutPluginsDialog->loadPlugins();
   _aboutPluginsDialog->show();
 }
 
@@ -1673,30 +1548,6 @@ void ComposerMainWindow::clearRecentProjects(void)
   updateRecentProjectsWidgets();
 }
 
-void ComposerMainWindow::selectedAboutCurrentPluginFactory()
-{
-  QList<QTreeWidgetItem*> selectedPlugins = _treeWidgetPlugins->selectedItems();
-  if(selectedPlugins.size())
-  {
-    if(treeWidgetItem2plFactory.value(selectedPlugins.at(0)) != nullptr)
-    {
-      _pluginDetailsDialog->setCurrentPlugin(
-            treeWidgetItem2plFactory.value(selectedPlugins.at(0)));
-      _detailsButton->setEnabled(true);
-    }
-    else
-      _detailsButton->setEnabled(false);
-  }
-}
-
-/*!
- * \brief Shows the details of the current selected plugins.
- */
-void ComposerMainWindow::showPluginDetails()
-{
-  _pluginDetailsDialog->show();
-}
-
 void ComposerMainWindow::restorePerspectiveFromMenu()
 {
   QAction *action = qobject_cast<QAction*>(QObject::sender());
@@ -2001,27 +1852,6 @@ void ComposerMainWindow::updateTabWithProject(int index, QString newLocation)
     QString projectId = project->getAttribute("id");
     _tabProjects->setTabText(index, projectId);
   }
-}
-
-void ComposerMainWindow::saveLoadPluginData(int)
-{
-  GlobalSettings settings;
-  settings.beginGroup("loadPlugins");
-  QTreeWidgetItem *item;
-  qDebug() << treeWidgetItem2plFactory.keys();
-  foreach(item, treeWidgetItem2plFactory.keys())
-  {
-    if(item->checkState(1))
-    {
-      settings.setValue(treeWidgetItem2plFactory.value(item)->id(), true);
-    }
-    else
-    {
-      qDebug() << treeWidgetItem2plFactory.value(item) << "2";
-      settings.setValue(treeWidgetItem2plFactory.value(item)->id(), false);
-    }
-  }
-  settings.endGroup();
 }
 
 void ComposerMainWindow::on_actionReport_Bug_triggered()

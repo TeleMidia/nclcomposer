@@ -66,8 +66,8 @@ using namespace composer::core::util;
 #include "PluginDetailsDialog.h"
 #include "WelcomeWidget.h"
 #include "AboutDialog.h"
-// #include "ComposerHelpWidget.h"
 #include "ClickableDockWidget.h"
+// #include "ComposerHelpWidget.h"
 
 #include <qtoolwindowmanager.h>
 
@@ -111,20 +111,14 @@ private:
   QMap<QString, QToolWindowManager*> _projectsWidgets; /*!< Keeps a reference
                                                             to each project
                                                             widget. */
-  QTreeWidget *_treeWidgetPlugins; /*!< Shows a list with the current loaded
-                                  plugins. */
-
-  QMap <QTreeWidgetItem*, IPluginFactory*> treeWidgetItem2plFactory;
 
   PreferencesDialog *_preferencesDialog; /*!< TODO */
 
-  QDialog *_aboutPluginsDialog; /*!< TODO */
-  QPushButton *_detailsButton;
+  AboutPluginsDialog *_aboutPluginsDialog; /*!< TODO */
 
   WelcomeWidget *_welcomeWidget; /*!< TODO */
 
   PerspectiveManager *_perspectiveManager;
-  PluginDetailsDialog *_pluginDetailsDialog;
 
   QProgressDialog *_taskProgressBar;
   QTimer *_autoSaveTimer; // auto save timer
@@ -190,7 +184,6 @@ protected:
 
 protected slots:
   void slotLanguageChanged(QAction* action);
-  void saveLoadPluginData(int);
 
 private slots:
   void about();
@@ -219,10 +212,6 @@ private slots:
   void userPressedRecentProject();
   void clearRecentProjects (void);
   void importFromDocument();
-
-  void selectedAboutCurrentPluginFactory();
-
-  void showPluginDetails();
 
   void updateMenuPerspectives();
   void updateMenuLanguages();
