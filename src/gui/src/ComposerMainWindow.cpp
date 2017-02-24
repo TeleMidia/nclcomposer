@@ -2026,7 +2026,7 @@ void ComposerMainWindow::saveLoadPluginData(int)
 
 void ComposerMainWindow::on_actionReport_Bug_triggered()
 {
-  QDesktopServices::openUrl(QUrl("http://redmine.telemidia.puc-rio.br:8080/redmine/projects/composer3"));
+  QDesktopServices::openUrl(QUrl("https://github.com/telemidia/nclcomposer/issues"));
 }
 
 #if WITH_WIZARD
