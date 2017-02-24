@@ -205,3 +205,8 @@ void LayoutWindow::on_actionCut_region_triggered()
 {
     view->performCut();
 }
+
+void LayoutWindow::on_actionSafe_area_triggered()
+{
+    view->getSelectedRegionBase()->performSafeArea();
+}

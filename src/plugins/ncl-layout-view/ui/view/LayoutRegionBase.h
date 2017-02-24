@@ -79,6 +79,7 @@ public slots:
   void performRegion();
   void performDelete();
   void performExport();
+  void performSafeArea();
 
 signals:
   void regionAdditionRequested(const QString regionUID,
@@ -152,7 +153,6 @@ protected slots:
                                     LayoutRegion* region);
   void performChangeResolution();
   void performGrid();
-  void performSafeArea();
 
 private:
   void createActions();

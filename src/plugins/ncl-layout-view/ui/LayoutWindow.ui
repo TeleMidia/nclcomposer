@@ -132,6 +132,7 @@
    <addaction name="actionZoom_out"/>
    <addaction name="actionActionZoom_original"/>
    <addaction name="actionShow_Hide_Grid"/>
+   <addaction name="actionSafe_area"/>
   </widget>
   <widget class="QToolBar" name="toolBar_regionBases">
    <property name="windowTitle">
@@ -304,6 +305,14 @@
    </property>
    <property name="toolTip">
     <string>Zoom original</string>
+   </property>
+  </action>
+  <action name="actionSafe_area">
+   <property name="text">
+    <string>Safe Area</string>
+   </property>
+   <property name="toolTip">
+    <string>Show/Hide safe area of Region Base</string>
    </property>
   </action>
  </widget>
