@@ -113,5 +113,6 @@
         <file alias="view-about">images/icon-views-about.png</file>
         <file alias="about">images/icon-about.png</file>
         <file alias="monkey">images/icon-monkey.png</file>
+        <file alias="safearea">images/icon-safearea.png</file>
     </qresource>
 </RCC>

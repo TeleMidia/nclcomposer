@@ -308,6 +308,13 @@
    </property>
   </action>
   <action name="actionSafe_area">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="../../common-resources/images.qrc">
+     <normaloff>:/icon/safearea</normaloff>:/icon/safearea</iconset>
+   </property>
    <property name="text">
     <string>Safe Area</string>
    </property>
@@ -317,11 +324,6 @@
   </action>
  </widget>
  <resources>
-  <include location="../../common-resources/images.qrc"/>
-  <include location="../../common-resources/images.qrc"/>
-  <include location="../../common-resources/images.qrc"/>
-  <include location="../../common-resources/images.qrc"/>
-  <include location="../../common-resources/images.qrc"/>
   <include location="../../common-resources/images.qrc"/>
  </resources>
  <connections/>
