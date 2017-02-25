@@ -18,7 +18,6 @@
 #include "ui_AboutDialog.h"
 #include "ui_PluginDetailsDialog.h"
 
-#include <QDebug>
 #include <QApplication>
 #include <QMessageBox>
 #include <QFile>

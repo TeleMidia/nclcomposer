@@ -30,12 +30,13 @@
 /*!
  \brief
 */
-typedef enum {
-      CPR,
-      NCL,
-      SMIL,
-      HTML,
-      NONE
+typedef enum
+{
+  CPR,
+  NCL,
+  SMIL,
+  HTML,
+  NONE
 } LanguageType;
 
 namespace composer {
@@ -111,6 +112,7 @@ private:
 };
 
 Q_DECLARE_LOGGING_CATEGORY(CPR_CORE)
+Q_DECLARE_LOGGING_CATEGORY(CPR_GUI)
 
 } } } //end namespace
 

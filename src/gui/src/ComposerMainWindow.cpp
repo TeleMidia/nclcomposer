@@ -233,7 +233,7 @@ void ComposerMainWindow::readSettings()
 
 void ComposerMainWindow::openProjects(const QStringList &projects)
 {
-  qDebug() << "Openning files:" << projects;
+  qCDebug(CPR_GUI) << "Openning files:" << projects;
   for(int i = 0; i < projects.size(); i++)
   {
     QString src = projects.at(i);
@@ -583,7 +583,7 @@ void ComposerMainWindow::closeAllFiles()
 //      Project *project = ProjectControl::getInstance()->getOpenProject(location);
 //      if (project->isDirty())
 //      {
-//        qDebug() << "ask to save" << location;
+//        qCDebug(CPR_GUI) << "ask to save" << location;
 //      }
 //    }
 
@@ -676,7 +676,7 @@ void ComposerMainWindow::aboutPlugins()
 void ComposerMainWindow::errorDialog(QString message)
 {
   //QMessageBox::warning(this,tr("Error!"),message);
-  qWarning() << message;
+  qCWarning(CPR_GUI) << message;
 }
 
 void ComposerMainWindow::createActions() {
@@ -763,7 +763,7 @@ void ComposerMainWindow::updateViewMenu()
 
         act->setData(i);
         act->setCheckable(true);
-        qDebug() << w->parent();
+        qCDebug(CPR_GUI) << w->parent();
         act->setChecked(w->parent() != 0);
 
         connect( act, SIGNAL(triggered(bool)),
@@ -787,7 +787,7 @@ void ComposerMainWindow::closeEvent(QCloseEvent *event)
     QString location = _tabProjects->tabToolTip(index);
     Project *project = ProjectControl::getInstance()->getOpenProject(location);
 
-    qDebug() << location << project;
+    qCDebug(CPR_GUI) << location << project;
     if(project != nullptr && project->isDirty())
     {
       _tabProjects->setCurrentIndex(index);
@@ -1231,7 +1231,7 @@ void ComposerMainWindow::addDefaultStructureToProject(Project *project,
         settings.value("default_conn_base").toString();
     settings.endGroup();
 
-    qDebug() << "[GUI] DefaultConnBase " << defaultConnBase;
+    qCDebug(CPR_GUI) << "[GUI] DefaultConnBase " << defaultConnBase;
 
     QFileInfo defaultConnBaseInfo(defaultConnBase);
     if(defaultConnBaseInfo.exists())
@@ -1240,7 +1240,7 @@ void ComposerMainWindow::addDefaultStructureToProject(Project *project,
       QString newConnBase = filename. mid(0, filename.lastIndexOf("/")+1) +
                             defaultConnBaseInfo.fileName();
 
-      qDebug() << "[GUI] Copy " << defaultConnBase << " to "
+      qCDebug(CPR_GUI) << "[GUI] Copy " << defaultConnBase << " to "
                << newConnBase;
 
       //remove the file if it already exists
@@ -1726,7 +1726,7 @@ void ComposerMainWindow::createLanguageMenu(void)
   QDir dir(_langPath);
   QStringList fileNames = dir.entryList(QStringList("composer_*.qm"));
 
-  qDebug() << fileNames;
+  qCDebug(CPR_GUI) << fileNames;
   for (int i = 0; i < fileNames.size(); ++i)
   {
     // get locale extracted by filename
@@ -1785,7 +1785,7 @@ void ComposerMainWindow::switchTranslator(QTranslator& translator,
  */
 void ComposerMainWindow::loadLanguage(const QString& rLanguage)
 {
-  qDebug() << rLanguage;
+  qCDebug(CPR_GUI) << rLanguage;
   if(_currLang != rLanguage)
   {
     _currLang = rLanguage;
@@ -1870,14 +1870,14 @@ void ComposerMainWindow::on_actionProject_from_Wizard_triggered()
 
 void ComposerMainWindow::wizardFinished(int resp)
 {
-  qDebug() << "Wizard process finished with ret=" << resp;
+  qCDebug(CPR_GUI) << "Wizard process finished with ret=" << resp;
   if(!resp)
   {
     QString filename = wizardProcess.readLine();
     filename = (filename.mid(0, filename.size()-1));
 
-    qDebug() << "Wizard process finished with ret=" << resp;
-    qDebug() << filename;
+    qCDebug(CPR_GUI) << "Wizard process finished with ret=" << resp;
+    qCDebug(CPR_GUI) << filename;
 
     QStringList args;
     args << filename;
@@ -1890,8 +1890,8 @@ void ComposerMainWindow::wizardFinished(int resp)
     settings.endGroup();
     talProcess.waitForFinished();
 
-    qDebug() << talProcess.readAllStandardError();
-    qDebug() << talProcess.readAllStandardOutput();
+    qCDebug(CPR_GUI) << talProcess.readAllStandardError();
+    qCDebug(CPR_GUI) << talProcess.readAllStandardOutput();
 
     QFileInfo fInfo("/tmp/a.ncl");
     if(fInfo.exists())

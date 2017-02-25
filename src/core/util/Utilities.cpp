@@ -32,6 +32,7 @@ namespace composer {
     namespace util {
 
 Q_LOGGING_CATEGORY(CPR_CORE, "cpr.core")
+Q_LOGGING_CATEGORY(CPR_GUI, "cpr.gui")
 
 QMap<QString,LanguageType> Utilities::types = createMap();
 
