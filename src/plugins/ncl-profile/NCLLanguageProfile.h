@@ -41,7 +41,8 @@ public:
   map <QString, bool> *getAttributes (const QString &element);
   map <QString, char> *getChildren (const QString &tagname);
 
-  vector <AttributeReferences *> getReferences(const QString &element, const QString &attr);
+  vector <AttributeReferences *> getReferences(const QString &element,
+                                               const QString &attr);
 };
 
 } } //end namespace

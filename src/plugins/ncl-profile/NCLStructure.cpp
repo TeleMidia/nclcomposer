@@ -14,6 +14,8 @@ namespace language{
 
 INIT_SINGLETON(NCLStructure)
 
+#include <QDebug>
+
 NCLStructure::NCLStructure()
 {
   attributes = new map <QString, map <QString, bool > * > ();
@@ -84,10 +86,12 @@ void NCLStructure::loadStructure(){
   }
 
   QTextStream in (&fInput);
+  int nlines = 0;
   while(!in.atEnd())
   {
     QString line = in.readLine();
-    vector <QString> tokens = parseLine(line);
+    nlines++;
+    QStringList tokens = parseLine(line);
 
     //this is a commentary
     if(tokens.size() == 0)
@@ -98,8 +102,8 @@ void NCLStructure::loadStructure(){
       bool error = false;
       if(tokens.size() >= 3)
       {
-        qDebug() << "I'm reading a new DATATYPE element " << tokens[0]
-                 << tokens[1] << " " << tokens[2];
+        // qDebug() << "I'm reading a new DATATYPE element " << tokens[0]
+        //         << tokens[1] << " " << tokens[2];
         addDatatype(tokens[1], tokens[2]);
         if (tokens.size() >= 4)
         {
@@ -127,8 +131,13 @@ void NCLStructure::loadStructure(){
       }
       else
       {
-        qErrnoWarning("element primitive must have exactly 3 arguments \
-                      (ELEMENT NAME, ELEMENT FATHER, CARDINALITY)");
+        QString msg = QString(NCLSTRUCTURE_FILE) + ":" +
+            QString::number(nlines) +
+            " ELEMENT primitive must have exactly 4 arguments "
+            "(ELEMENT NAME, ELEMENT FATHER, CARDINALITY) ";
+
+        qErrnoWarning(msg.toStdString().c_str());
+        qDebug() << tokens;
       }
 
     }
@@ -153,8 +162,8 @@ void NCLStructure::loadStructure(){
     }
     else if(tokens[0].toLower() == "scope")
     {
-      qDebug() << "I'm reading a new SCOPE element - This is not supported yet"
-               << endl;
+      // qDebug() << "I'm reading a new SCOPE element - This is not supported yet"
+      //         << endl;
     }
     else if(tokens[0].toLower() == "reference")
     {
@@ -169,9 +178,9 @@ void NCLStructure::loadStructure(){
 
 // TODO: This function should be based on lex and yacc to a better
 // implementation.
-vector <QString> NCLStructure::parseLine(const QString &line)
+QStringList NCLStructure::parseLine(const QString &line)
 {
-  vector <QString> ret;
+  QStringList ret;
   QChar ch;
   int size = line.size(), i = 0;
   QString token;
@@ -294,7 +303,7 @@ void NCLStructure::addReference( const QString &element, const QString &attr,
 
 void NCLStructure::addDatatype (const QString &name, const QString &regex)
 {
-  qDebug() << "NCLStructure::addDatatype (" << name << ", " << regex << ")";
+  // qDebug() << "NCLStructure::addDatatype (" << name << ", " << regex << ")";
   (*dataTypes)[name] = regex;
 }
 

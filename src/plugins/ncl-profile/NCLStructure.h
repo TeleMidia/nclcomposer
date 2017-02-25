@@ -228,7 +228,7 @@ private:
    * \param line
    * \return vector<QString>
    */
-  vector <QString> parseLine(const QString &line);
+  QStringList parseLine(const QString &line);
 };
 
 }} //end namespace
