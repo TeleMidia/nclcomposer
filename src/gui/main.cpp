@@ -79,12 +79,13 @@ bool handleArguments (QCommandLineParser &cmdParser, bool &initGUI)
   QString desc;
   desc += "NCL Composer is a flexible authoring tool for interactive \n"
           "multimedia applications.\n";
-  desc += "Copyright (C) 2011-2016 by ";
+  desc += "Copyright (C) 2011-2017 by ";
   desc += QCoreApplication::organizationName();
   desc += ".";
-  /* desc += "\n\nThis is free software; see the source for copying conditions.\n"
+  desc += "\n\nNCL Composer is free software; see the source for copying "
+          "conditions.\n"
           "There is NO warranty; not even for MERCHANTABILITY or FITNESS \n"
-          "FOR PARTICULAR PURPOSE."; */
+          "FOR PARTICULAR PURPOSE.";
 
   cmdParser.setApplicationDescription(desc);
 

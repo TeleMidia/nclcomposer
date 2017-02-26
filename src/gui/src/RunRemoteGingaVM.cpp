@@ -49,14 +49,14 @@ QStringList RunRemoteGingaVMAction::filesToSendToGingaVM(Project *project,
   QFileInfo fileInfo(project->getLocation());
   QString absoluteFilePath = fileInfo.path();
 
-//  qDebug() << "############ ABSOLUTE PATH: " << absoluteFilePath << endl;
+//  qCDebug(CPR_GUI)() << "############ ABSOLUTE PATH: " << absoluteFilePath << endl;
   QDirIterator it(absoluteFilePath, QDirIterator::Subdirectories);
   while (it.hasNext()) {
     QString file = it.next();
     if(!file.endsWith("."))
     {
       filesToSend << file;
-//      qDebug() << file;
+//      qCDebug(CPR_GUI)() << file;
     }
   }
 
@@ -79,7 +79,7 @@ QStringList RunRemoteGingaVMAction::filesToSendToGingaVM(Project *project,
     if(current->hasAttribute("focusSelSrc"))
       path = current->getAttribute("focusSelSrc");
 
-    qDebug() << "path " << path;
+    qCDebug(CPR_GUI)() << "path " << path;
 
     // Fix the fullpath if it is necessary
     if(path != "")
@@ -130,7 +130,7 @@ bool RunRemoteGingaVMAction::sendFilesToGingaVM(SimpleSSHClient &sshclient,
 
   // This will force the creation of the baseRemotePath if it does not exists
   // filesToSend.prepend(baseRemotePath);
-  qDebug() << "Must send these files:" << filesToSend;
+  qCDebug(CPR_GUI)() << "Must send these files:" << filesToSend;
 
   emit taskDescription(tr("Sending files to remote machine..."));
   emit taskMaximumValue(filesToSend.size());
@@ -139,7 +139,7 @@ bool RunRemoteGingaVMAction::sendFilesToGingaVM(SimpleSSHClient &sshclient,
   QString mkdir = "mkdir -p ";
   mkdir += baseRemotePath;
 
-  qDebug() << "Running command = " << mkdir;
+  qCDebug(CPR_GUI)() << "Running command = " << mkdir;
   ret = !sshclient.exec_cmd(mkdir.toStdString().c_str());
 
   for(int i = 0; i < filesToSend.size(); i++)
@@ -158,7 +158,7 @@ bool RunRemoteGingaVMAction::sendFilesToGingaVM(SimpleSSHClient &sshclient,
 
       if(fileInfo.isFile())
       {
-        qWarning() << "Sending file = " << fullpath <<
+        qCWarning(CPR_GUI) << "Sending file = " << fullpath <<
                     " to " << baseRemotePath + relativePathDir;
 
         resp = sshclient.sftp_copy_file( fullpath.toStdString().c_str(),
@@ -169,7 +169,7 @@ bool RunRemoteGingaVMAction::sendFilesToGingaVM(SimpleSSHClient &sshclient,
         QString mkdir = "mkdir -p ";
         mkdir += baseRemotePath + relativePath;
 
-        qWarning() << "Running command = " << mkdir;
+        qCWarning(CPR_GUI) << "Running command = " << mkdir;
         resp = sshclient.exec_cmd(mkdir.toStdString().c_str());
       }
     }
@@ -202,7 +202,7 @@ bool RunRemoteGingaVMAction::fixSrcsFromNCLFile(const QString &nclLocalPath)
       int start = src.lastIndexOf(QDir::separator());
       src = src.mid(start+1);
       current.setAttribute("src", src);
-      qDebug() << src;
+      qCDebug(CPR_GUI)() << src;
     }
     if(current.hasAttribute("documentURI"))
     {
@@ -243,7 +243,7 @@ bool RunRemoteGingaVMAction::fixSrcsFromNCLFile(const QString &nclLocalPath)
     tmpXmlFile.close();
   }
   else
-    qWarning() << "I couldn't fix the path in XML file, probably it will "
+    qCWarning(CPR_GUI) << "I couldn't fix the path in XML file, probably it will "
                << "not run!!";
 
   return true;
@@ -281,13 +281,13 @@ void RunRemoteGingaVMAction::copyCurrentProject()
                        arg(remoteIp));
 
 
-  qWarning() << "Trying to connect to remote machine...";
+  qCWarning(CPR_GUI) << "Trying to connect to remote machine...";
 
   int connRet = sshclient.doConnect();
 
   if( connRet != 0 && !mustStop)
   {
-    qWarning() << "Could not connect to remote machine...";
+    qCWarning(CPR_GUI) << "Could not connect to remote machine...";
     emit finished();
     return;
   }
@@ -336,13 +336,13 @@ void RunRemoteGingaVMAction::copyCurrentProject()
     }
     else
     {
-      qWarning() << "Error trying to run NCL. Could not create : "
+      qCWarning(CPR_GUI) << "Error trying to run NCL. Could not create : "
                  << nclLocalPath << " !";
     }
   }
   else
   {
-    qWarning() << "Error copying the dependency files";
+    qCWarning(CPR_GUI) << "Error copying the dependency files";
   }
 
   sshclient.doDisconnect();
@@ -357,7 +357,7 @@ void RunRemoteGingaVMAction::setAutoplay(bool autoplay)
 
 void RunRemoteGingaVMAction::stopExecution()
 {
-  qDebug() << "RunRemoteGingaVMAction::stopExecution";
+  qCDebug(CPR_GUI)() << "RunRemoteGingaVMAction::stopExecution";
   mustStop = true;
   emit taskDescription(tr("Cancelling..."));
 
@@ -385,7 +385,7 @@ void StopRemoteGingaVMAction::stopRunningApplication()
   int connRet = sshclient.doConnect();
   if( connRet != 0)
   {
-    qWarning() << "Could not connect to remote machine...";
+    qCWarning(CPR_GUI) << "Could not connect to remote machine...";
     return;
   }
 

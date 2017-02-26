@@ -72,6 +72,8 @@ private slots:
 
   void on_actionCut_region_triggered();
 
+  void on_actionSafe_area_triggered();
+
 private:
   Ui::QnlyMainWindow *ui;
   LayoutView *view;

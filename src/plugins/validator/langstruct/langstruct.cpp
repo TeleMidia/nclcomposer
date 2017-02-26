@@ -70,7 +70,7 @@ void Langstruct::init ()
     if(!line.size()) continue;
     if(line.substr(0, 2) == "//") continue;
 
-    std::cout << line.c_str();
+    // std::cout << line.c_str();
 
     strTok.clear ();
     strTok.str(line);
@@ -83,7 +83,7 @@ void Langstruct::init ()
     trimmer << component.c_str();
     trimmer >> component;
 
-    std::cout << "########### COMPONENT = " << component.c_str() << std::endl;
+    // std::cout << "########### COMPONENT = " << component.c_str() << std::endl;
 
     //        assert (component == "ELEMENT" || component == "ATTRIBUTE"
     //                || component == "REFERENCE" || component == "DATATYPE");
@@ -184,9 +184,9 @@ void Langstruct::init ()
       getline(strTok, values, '\"');
       getline(strTok, values, '\"');
 
-      std::cout << "########### DATATYPE = " <<
-                   datatype.c_str() << std::endl;
-      std::cout << "########### REGEX = " << regex.c_str() << std::endl;
+      // std::cout << "########### DATATYPE = " <<
+      //             datatype.c_str() << std::endl;
+      //std::cout << "########### REGEX = " << regex.c_str() << std::endl;
       //
       //            RE2 re(regex);
       //            assert(re.ok());  // compiled; if not, see re.error();

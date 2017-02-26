@@ -69,7 +69,8 @@ map <QString, char> *NCLLanguageProfile::getChildren (const QString &tagname)
 }
 
 vector <AttributeReferences *>
-        NCLLanguageProfile::getReferences (const QString &element, const QString &attr)
+        NCLLanguageProfile::getReferences (const QString &element,
+                                           const QString &attr)
 {
   return NCLStructure::getInstance()->getReferences(element, attr);
 }

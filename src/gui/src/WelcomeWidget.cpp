@@ -121,10 +121,10 @@ void WelcomeWidget::updateNotifyMessages()
 
 void WelcomeWidget::notifyMessagesReadData(QNetworkReply *resp)
 {
-  qWarning() << "WelcomeWidget::notifyMessagesReadData";
+  qCWarning(CPR_GUI) << "WelcomeWidget::notifyMessagesReadData";
   if (resp->error() != QNetworkReply::NoError)
   {
-    qWarning() << tr("There was not possible to get update messages from NCL Composer server.");
+    qCWarning(CPR_GUI) << tr("There was not possible to get update messages from NCL Composer server.");
   }
   else // The connection is ready
   {
@@ -172,7 +172,7 @@ void WelcomeWidget::notifyMessagesReadData(QNetworkReply *resp)
         }
       }
 
-      qDebug() << messageToShow;
+      qCDebug(CPR_GUI) << messageToShow;
       if(messageToShow.size())
       {
         ui->labelNotifyMessage->setText(messageToShow);
@@ -226,7 +226,7 @@ void WelcomeWidget::readData(const QHttpResponseHeader &resp)
 
 void WelcomeWidget::parseXml()
 {
-//    qDebug() << "WelcomeWidget::parseXml()";
+//    qCDebug(CPR_GUI)() << "WelcomeWidget::parseXml()";
 
     bool readingItem = false;
 
@@ -267,7 +267,7 @@ void WelcomeWidget::parseXml()
         {
             if (xmlReader.name() == "item")
             {
-//                qDebug() << "#########" << currentTitle
+//                qCDebug(CPR_GUI)() << "#########" << currentTitle
 //                         << currentLink << currentDate <<  currentDesc << n_items;
 
                 ui->listWidget_NCLClub->addItem(currentTitle);
@@ -300,7 +300,7 @@ void WelcomeWidget::parseXml()
     if (xmlReader.error() &&
             xmlReader.error() != QXmlStreamReader::PrematureEndOfDocumentError)
     {
-        qWarning() << "XML ERROR:"
+        qCWarning(CPR_GUI) << "XML ERROR:"
                    << xmlReader.lineNumber() << ": " << xmlReader.errorString();
 
         http.abort();
@@ -324,7 +324,7 @@ void WelcomeWidget::changeCurrentItem(int item)
 
 void WelcomeWidget::finishRSSLoad(int connectionId, bool error)
 {
-    qDebug() << "finishRSSLoad(" << connectionId << "," << error << ");";
+    qCDebug(CPR_GUI)() << "finishRSSLoad(" << connectionId << "," << error << ");";
     if(error)
     {
         if(this->connectionId == connectionId)
@@ -453,7 +453,7 @@ void WelcomeWidget::httpFinished()
     }
     else
     {
-        qDebug() << "Filename is empty. A project will not be created!" << endl;
+        qCDebug(CPR_GUI)() << "Filename is empty. A project will not be created!" << endl;
         return;
     }
 
@@ -492,7 +492,7 @@ bool WelcomeWidget::doExtractCurrentFile( QString extDirPath,
             return false;
         }
 
-        qDebug() << fileNameToImport << projectName;
+        qCDebug(CPR_GUI)() << fileNameToImport << projectName;
         ProjectControl::getInstance()->importFromDocument( fileNameToImport,
                                                            projectName);
         progressDialog->hide();
@@ -598,7 +598,7 @@ bool WelcomeWidget::extract( const QString &filePath,
 
     if (!zip.open(QuaZip::mdUnzip))
     {
-        qWarning() << filePath;
+        qCWarning(CPR_GUI) << filePath;
         qWarning("testRead(): zip.open(): %d", zip.getZipError());
         return false;
     }
