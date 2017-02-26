@@ -111,8 +111,8 @@ private:
   static QMap<QString,LanguageType> types; /*!< TODO */
 };
 
-Q_DECLARE_LOGGING_CATEGORY(CPR_CORE)
-Q_DECLARE_LOGGING_CATEGORY(CPR_GUI)
+static Q_LOGGING_CATEGORY(CPR_CORE, "cpr.core")
+static Q_LOGGING_CATEGORY(CPR_GUI, "cpr.gui")
 
 } } } //end namespace
 
