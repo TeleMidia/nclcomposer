@@ -52,13 +52,15 @@ QIcon NCLTextualViewPluginFactory::icon() const
 
 QWidget* NCLTextualViewPluginFactory::getPreferencePageWidget()
 {
-  /* if (prefPageWidget == nullptr)
-        {
-            prefPageWidget = new QFrame();
-            prefPageUi = new Ui::TextPluginPreferencesWidget();
-            prefPageUi->setupUi(prefPageWidget);
-        }
-    return prefPageWidget; */
+  /*
+  if (prefPageWidget == nullptr)
+  {
+    prefPageWidget = new QFrame();
+    prefPageUi = new Ui::TextPluginPreferencesWidget();
+    prefPageUi->setupUi(prefPageWidget);
+   }
+   return prefPageWidget;
+  */
   return nullptr;
 }
 
