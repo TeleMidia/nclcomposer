@@ -51,6 +51,7 @@ PreferencesDialog::PreferencesDialog(QWidget *parent) :
            SLOT(applyCurrentValues()) );
 
   currentItem = nullptr;
+  currentPage = nullptr;
 }
 
 PreferencesDialog::~PreferencesDialog()
@@ -142,7 +143,8 @@ void PreferencesDialog::buttonClicked(QAbstractButton* button)
 
 void PreferencesDialog::applyCurrentValues()
 {
-  currentPage->applyValues();
+  if (currentPage)
+    currentPage->applyValues();
 }
 
 /* void PreferencesDialog::show()
