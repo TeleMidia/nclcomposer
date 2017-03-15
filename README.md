@@ -22,7 +22,7 @@ supporting textual and graphical abstractions.
     marking
   * Validation of NCL documents
   * WYSISWG definition of the application layout
-  * Structure viewing/edition the NCL documents
+  * Structure viewing/edition of NCL documents
   * Integration with different players (e.g. [Ginga-NCL Reference
     Implementation](http://www.ginga.org.br))
   * Multi-platform (Linux, Windows, and MacOS X are officially supported)
