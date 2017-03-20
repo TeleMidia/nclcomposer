@@ -113,7 +113,8 @@ void StructuralEntity::setStructuralType(StructuralType type)
 
 //  addStructuralRestriction(STR_PROPERTY_ENTITY_AUTOSTART);
 
-  switch (type) {
+  switch (type)
+  {
     case Structural::Media:
     case Structural::Context:
     case Structural::Switch:

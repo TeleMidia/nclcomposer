@@ -138,7 +138,7 @@ void StructuralInterface::draw(QPainter* painter)
   {
     if (getStructuralProperty(STR_PROPERTY_ENTITY_AUTOSTART) == STR_VALUE_TRUE)
     {
-      painter->setPen(QPen(QBrush(QColor(76,76,76)),2));
+      painter->setPen(QPen(QBrush(QColor(76, 76, 76)), 2));
       painter->drawRect(x, y, w, h);
     }
   }

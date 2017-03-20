@@ -90,7 +90,7 @@
         <file alias="rule-insert">images/icon-rule-insert.png</file>
         <file alias="error">images/icon-error.png</file>
         <file alias="warning">images/icon-warning.png</file>
-        <file alias="autostart">images/icon-autostart.png</file>
+        <file alias="autostart-old">images/icon-autostart.png</file>
         <file alias="closeall">images/icon-closeall.png</file>
         <file alias="close">images/icon-close.png</file>
         <file alias="exit">images/icon-exit.png</file>
@@ -114,5 +114,6 @@
         <file alias="about">images/icon-about.png</file>
         <file alias="monkey">images/icon-monkey.png</file>
         <file alias="safearea">images/icon-safearea.png</file>
+        <file alias="autostart">images/icon-autostart-2.png</file>
     </qresource>
 </RCC>

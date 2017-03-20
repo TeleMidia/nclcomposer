@@ -107,31 +107,22 @@ void StructuralContent::draw(QPainter* painter)
 {
   painter->setRenderHint(QPainter::SmoothPixmapTransform, true);
 
-  if (!STR_DEFAULT_WITH_BODY &&
-      !STR_DEFAULT_WITH_FLOATING_INTERFACES)
-  {
-    if (getStructuralProperty(STR_PROPERTY_ENTITY_AUTOSTART) == STR_VALUE_TRUE)
-    {
-      painter->fillRect(STR_DEFAULT_ENTITY_PADDING + STR_DEFAULT_CONTENT_PADDING,
-                        STR_DEFAULT_ENTITY_PADDING + STR_DEFAULT_CONTENT_PADDING,
-                        getWidth() - 2*STR_DEFAULT_CONTENT_PADDING,
-                        getHeight() - 2*STR_DEFAULT_CONTENT_PADDING - 4*STR_DEFAULT_CONTENT_PADDING,
-                        QBrush(QColor(76,76,76,95)));
-
-      painter->setPen(QPen(QBrush(QColor(76,76,76)),2));
-
-      painter->drawRect(STR_DEFAULT_ENTITY_PADDING + STR_DEFAULT_CONTENT_PADDING,
-                        STR_DEFAULT_ENTITY_PADDING + STR_DEFAULT_CONTENT_PADDING,
-                        getWidth() - 2*STR_DEFAULT_CONTENT_PADDING,
-                        getHeight() - 2*STR_DEFAULT_CONTENT_PADDING - 4*STR_DEFAULT_CONTENT_PADDING);
-    }
-  }
-
   painter->drawPixmap(STR_DEFAULT_ENTITY_PADDING + STR_DEFAULT_CONTENT_PADDING,
                       STR_DEFAULT_ENTITY_PADDING + STR_DEFAULT_CONTENT_PADDING,
                       getWidth() - 2*STR_DEFAULT_CONTENT_PADDING,
                       getHeight() - 2*STR_DEFAULT_CONTENT_PADDING - 4*STR_DEFAULT_CONTENT_PADDING,
                       QPixmap(StructuralUtil::getMimeTypeIcon(getMimeType())));
+
+  if (!STR_DEFAULT_WITH_BODY &&
+      !STR_DEFAULT_WITH_FLOATING_INTERFACES)
+  {
+    if (getStructuralProperty(STR_PROPERTY_ENTITY_AUTOSTART) == STR_VALUE_TRUE)
+    {
+      painter->drawPixmap((getWidth() - 2*STR_DEFAULT_CONTENT_PADDING)/2 + STR_DEFAULT_ALERT_ICON_W,
+                          (getHeight() - 2*STR_DEFAULT_CONTENT_PADDING)/2 + STR_DEFAULT_CONTENT_PADDING,
+                          STR_DEFAULT_ALERT_ICON_W, STR_DEFAULT_ALERT_ICON_H, QPixmap(":/icon/autostart"));
+    }
+  }
 
   if (!getError().isEmpty() ||
       !getWarning().isEmpty())

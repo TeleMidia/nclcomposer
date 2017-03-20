@@ -1092,8 +1092,8 @@ void StructuralViewPlugin::changeInCore(QString uid, QMap<QString, QString> prop
     }
 
     if (type == Structural::Link ||
-        type == Structural::Bind) {
-
+        type == Structural::Bind)
+    {
       QString tag;
       QString name;
       QString value;

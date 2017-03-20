@@ -212,7 +212,7 @@ void StructuralMenu::createActions()
   _autostartAction->setEnabled(false);
   _autostartAction->setCheckable(true);
   _autostartAction->setChecked(false);
-  _autostartAction->setText(tr("Autostart"));
+  _autostartAction->setText(tr("Set as starting node"));
   _autostartAction->setIcon(QIcon(""));
 
   // media action
