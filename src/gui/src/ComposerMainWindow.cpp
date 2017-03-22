@@ -90,8 +90,8 @@ void ComposerMainWindow::init(const QApplication &app)
   splash.showMessage(tr("Starting GUI..."),
                      Qt::AlignRight, Qt::gray);
 
-  loadStyleSheets();
   initGUI();
+  loadStyleSheets();
   app.processEvents();
 
   splash.showMessage(tr("Starting Modules and Plugins..."),
@@ -326,6 +326,7 @@ void ComposerMainWindow::initGUI()
   setWindowTitle(tr("NCL Composer"));
 
   _tabProjects = new QTabWidget(0);
+  _tabProjects->setObjectName("TabProjects");
 
   _ui->frame->layout()->addWidget(_tabProjects);
 
