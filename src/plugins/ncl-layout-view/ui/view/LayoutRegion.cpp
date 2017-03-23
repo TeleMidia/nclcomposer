@@ -27,8 +27,8 @@
 LayoutRegion::LayoutRegion(QMenu* switchMenu, LayoutRegion* parent)
   : QObject(parent), QGraphicsItem(parent)
 {
-  this->switchMenu = switchMenu;
-  this->switchMenu->setEnabled(true);
+  this->_switchMenu = switchMenu;
+  this->_switchMenu->setEnabled(true);
 
   /* creating */
   createActions();
@@ -63,21 +63,21 @@ LayoutRegion::LayoutRegion(QMenu* switchMenu, LayoutRegion* parent)
 
   setColor("#E4E4E4");
 
-  isDragging = false;
+  _isDragging = false;
 
-  controlPointSize = 8;
+  _controlPointSize = 8;
 }
 
 LayoutRegion::~LayoutRegion()
 {
-  delete(viewMenu);
-  delete(arrangeMenu);
-  delete(contextMenu);
+  delete(_viewMenu);
+  delete(_arrangeMenu);
+  delete(_contextMenu);
 }
 
 bool LayoutRegion::isMoving() const
 {
-  return moving;
+  return _moving;
 }
 
 void LayoutRegion::setParent(LayoutRegion* region)
@@ -88,7 +88,7 @@ void LayoutRegion::setParent(LayoutRegion* region)
 
 void LayoutRegion::setMoving(bool moving)
 {
-  this->moving = moving;
+  this->_moving = moving;
   if(moving)
     setCursor(QCursor(Qt::ClosedHandCursor));
   else
@@ -97,56 +97,56 @@ void LayoutRegion::setMoving(bool moving)
 
 bool LayoutRegion::isCloning() const
 {
-  return cloning;
+  return _cloning;
 }
 void LayoutRegion::setCloning(bool cloning)
 {
-  this->cloning = cloning;
+  this->_cloning = cloning;
 }
 
 bool LayoutRegion::isResizing() const
 {
-  return resizing;
+  return _resizing;
 }
 
 void LayoutRegion::setResizing(bool resizing)
 {
-  this->resizing = resizing;
+  this->_resizing = resizing;
 }
 
 bool LayoutRegion::isSelected() const
 {
-  return selected;
+  return _selected;
 }
 
 void LayoutRegion::setSelected(bool selected)
 {
-  this->selected = selected;
+  this->_selected = selected;
 
-  if(this->selected)
+  if(this->_selected)
     setFocus(Qt::MouseFocusReason);
 }
 
 bool LayoutRegion::isValidated() const
 {
-  return validated;
+  return _validated;
 }
 
 void LayoutRegion::setValidated(bool validated)
 {
-  this->validated = validated;
+  this->_validated = validated;
 }
 
 QString LayoutRegion::getId() const
 {
-  return id;
+  return _id;
 }
 
 void LayoutRegion::setId(const QString &id)
 {
-  this->id = id;
+  this->_id = id;
 
-  setToolTip(title+" "+"("+id+")");
+  setToolTip(_title+" "+"("+id+")");
 
   if (parentItem() != NULL)
   {
@@ -164,567 +164,567 @@ void LayoutRegion::setId(const QString &id)
 
 QString LayoutRegion::getUid() const
 {
-  return uid;
+  return _uid;
 }
 
 void LayoutRegion::setUid(const QString &uid)
 {
-  this->uid = uid;
+  this->_uid = uid;
 }
 
 QString LayoutRegion::getTitle() const
 {
-  return title;
+  return _title;
 }
 
 void LayoutRegion::setTitle(const QString &title)
 {
-  this->title = title;
+  this->_title = title;
 
-  setToolTip(title+" "+"("+id+")");
+  setToolTip(title+" "+"("+_id+")");
 }
 
 QString LayoutRegion::getColor() const
 {
-  return color;
+  return _color;
 }
 
 void LayoutRegion::setColor(const QString &color)
 {
-  this->color = color;
+  this->_color = color;
 }
 
 bool LayoutRegion::isPainted() const
 {
-  return painted;
+  return _painted;
 }
 
 void LayoutRegion::setPainted(bool painted)
 {
-  this->painted = painted;
+  this->_painted = painted;
 }
 
 void LayoutRegion::setzIndex(int zindex)
 {
-  this->zindex = zindex;
+  this->_zindex = zindex;
 
   setZValue(zindex);
 }
 
 int LayoutRegion::getzIndex() const
 {
-  return zindex;
+  return _zindex;
 }
 
 void LayoutRegion::setzIndexTop(qreal zindexTop)
 {
-  this->zindexTop = zindexTop;
+  this->_zindexTop = zindexTop;
 }
 
 qreal LayoutRegion::getzIndexTop() const
 {
-  return zindexTop;
+  return _zindexTop;
 }
 
 qreal LayoutRegion::getTop() const
 {
-  return top;
+  return _top;
 }
 
 void LayoutRegion::setTop(qreal top)
 {
-  this->top = top;
+  this->_top = top;
 
   setY(top);
 }
 
 qreal LayoutRegion::getMoveTop() const
 {
-  return moveTop;
+  return _moveTop;
 }
 
 void LayoutRegion::setMoveTop(qreal moveTop)
 {
-  this->moveTop = moveTop;
+  this->_moveTop = moveTop;
 }
 
 qreal LayoutRegion::getPressTop() const
 {
-  return pressTop;
+  return _pressTop;
 }
 
 void LayoutRegion::setPressTop(qreal pressTop)
 {
-  this->pressTop = pressTop;
+  this->_pressTop = pressTop;
 }
 
 qreal LayoutRegion::getResizeTop() const
 {
-  return resizeTop;
+  return _resizeTop;
 }
 
 void LayoutRegion::setResizeTop(qreal resizeTop)
 {
-  this->resizeTop = resizeTop;
+  this->_resizeTop = resizeTop;
 }
 
 qreal LayoutRegion::getRelativeTop() const
 {
-  return relativeTop;
+  return _relativeTop;
 }
 
 void LayoutRegion::setRelativeTop(qreal relativeTop)
 {
-  this->relativeTop = relativeTop;
+  this->_relativeTop = relativeTop;
 }
 
 qreal LayoutRegion::getLeft() const
 {
-  return left;
+  return _left;
 }
 
 void LayoutRegion::setLeft(qreal left)
 {
-  this->left = left;
+  this->_left = left;
 
   setX(left);
 }
 
 qreal LayoutRegion::getMoveLeft() const
 {
-  return moveLeft;
+  return _moveLeft;
 }
 
 void LayoutRegion::setMoveLeft(qreal moveLeft)
 {
-  this->moveLeft = moveLeft;
+  this->_moveLeft = moveLeft;
 }
 
 qreal LayoutRegion::getPressLeft() const
 {
-  return pressLeft;
+  return _pressLeft;
 }
 
 void LayoutRegion::setPressLeft(qreal pressLeft)
 {
-  this->pressLeft = pressLeft;
+  this->_pressLeft = pressLeft;
 }
 
 qreal LayoutRegion::getResizeLeft() const
 {
-  return resizeLeft;
+  return _resizeLeft;
 }
 
 void LayoutRegion::setResizeLeft(qreal resizeLeft)
 {
-  this->resizeLeft = resizeLeft;
+  this->_resizeLeft = resizeLeft;
 }
 
 qreal LayoutRegion::getRelativeLeft() const
 {
-  return relativeLeft;
+  return _relativeLeft;
 }
 
 void LayoutRegion::setRelativeLeft(qreal relativeLeft)
 {
-  this->relativeLeft = relativeLeft;
+  this->_relativeLeft = relativeLeft;
 }
 
 qreal LayoutRegion::getRight() const
 {
-  return right;
+  return _right;
 }
 
 void LayoutRegion::setRight(qreal right)
 {
-  this->right = right;
+  this->_right = right;
 }
 
 qreal LayoutRegion::getRelativeRight() const
 {
-  return relativeRight;
+  return _relativeRight;
 }
 
 void LayoutRegion::setRelativeRight(qreal relativeRight)
 {
-  this->relativeRight = relativeRight;
+  this->_relativeRight = relativeRight;
 }
 
 qreal LayoutRegion::getBottom() const
 {
-  return bottom;
+  return _bottom;
 }
 
 void LayoutRegion::setBottom(qreal bottom)
 {
-  this->bottom = bottom;
+  this->_bottom = bottom;
 }
 
 qreal LayoutRegion::getRelativeBottom() const
 {
-  return relativeBottom;
+  return _relativeBottom;
 }
 
 void LayoutRegion::setRelativeBottom(qreal relativeBottom)
 {
-  this->relativeBottom = relativeBottom;
+  this->_relativeBottom = relativeBottom;
 }
 
 qreal LayoutRegion::getWidth() const
 {
-  return width;
+  return _width;
 }
 
 void LayoutRegion::setWidth(qreal width)
 {
-  this->width = width;
+  this->_width = width;
 }
 
 qreal LayoutRegion::getPressWidth() const
 {
-  return pressWidth;
+  return _pressWidth;
 }
 
 void LayoutRegion::setPressWidth(qreal pressWidth)
 {
-  this->pressWidth = pressWidth;
+  this->_pressWidth = pressWidth;
 }
 
 qreal LayoutRegion::getResizeWidth() const
 {
-  return resizeWidth;
+  return _resizeWidth;
 }
 
 bool LayoutRegion::hasChanged() const
 {
-  return changed;
+  return _changed;
 }
 
 void LayoutRegion::setChanged(bool changed)
 {
-  this->changed = changed;
+  this->_changed = changed;
 }
 
 void LayoutRegion::setResizeWidth(qreal resizeWidth)
 {
-  this->resizeWidth = resizeWidth;
+  this->_resizeWidth = resizeWidth;
 }
 
 qreal LayoutRegion::getRelativeWidth() const
 {
-  return relativeWidth;
+  return _relativeWidth;
 }
 
 void LayoutRegion::setRelativeWidth(qreal relativeWidth)
 {
-  this->relativeWidth = relativeWidth;
+  this->_relativeWidth = relativeWidth;
 }
 
 qreal LayoutRegion::getHeight() const
 {
-  return height;
+  return _height;
 }
 
 void LayoutRegion::setHeight(qreal height)
 {
-  this->height = height;
+  this->_height = height;
 }
 
 qreal LayoutRegion::getPressHeight() const
 {
-  return pressHeight;
+  return _pressHeight;
 }
 
 void LayoutRegion::setPressHeight(qreal pressHeight)
 {
-  this->pressHeight = pressHeight;
+  this->_pressHeight = pressHeight;
 }
 
 qreal LayoutRegion::getResizeHeight() const
 {
-  return resizeHeight;
+  return _resizeHeight;
 }
 
 void LayoutRegion::setResizeHeight(qreal resizeHeight)
 {
-  this->resizeHeight = resizeHeight;
+  this->_resizeHeight = resizeHeight;
 }
 
 qreal LayoutRegion::getRelativeHeight() const
 {
-  return relativeHeight;
+  return _relativeHeight;
 }
 
 void LayoutRegion::setRelativeHeight(qreal relativeHeight)
 {
-  this->relativeHeight = relativeHeight;
+  this->_relativeHeight = relativeHeight;
 }
 
 LayoutRegion::QnlyResizeType LayoutRegion::getResizeType() const
 {
-  return resizeType;
+  return _resizeType;
 }
 
 void LayoutRegion::setResizeType(const QnlyResizeType &resizeType)
 {
-  this->resizeType = resizeType;
+  this->_resizeType = resizeType;
 }
 
 void LayoutRegion::LayoutRegion::createActions()
 {
   // help action
-  helpAction = new QAction(this);
-  helpAction->setText(tr("Help"));
+  _helpAction = new QAction(this);
+  _helpAction->setText(tr("Help"));
 
-  helpAction->setEnabled(false);
-  helpAction->setShortcut(QKeySequence("F1"));
+  _helpAction->setEnabled(false);
+  _helpAction->setShortcut(QKeySequence("F1"));
 
   // undo action
-  undoAction = new QAction(this);
-  undoAction->setText(tr("Undo"));
+  _undoAction = new QAction(this);
+  _undoAction->setText(tr("Undo"));
 
-  undoAction->setEnabled(false);
-  undoAction->setShortcut(QKeySequence("Ctrl+Z"));
+  _undoAction->setEnabled(false);
+  _undoAction->setShortcut(QKeySequence("Ctrl+Z"));
 
   // redo action
-  redoAction = new QAction(this);
-  redoAction->setText(tr("Redo"));
+  _redoAction = new QAction(this);
+  _redoAction->setText(tr("Redo"));
 
-  redoAction->setEnabled(false);
-  redoAction->setShortcut(QKeySequence("Ctrl+Shift+Z"));
+  _redoAction->setEnabled(false);
+  _redoAction->setShortcut(QKeySequence("Ctrl+Shift+Z"));
 
   // cut action
-  cutAction = new QAction(this);
-  cutAction->setText(tr("Cut"));
+  _cutAction = new QAction(this);
+  _cutAction->setText(tr("Cut"));
 
-  cutAction->setEnabled(true);
+  _cutAction->setEnabled(true);
   // cutAction->setShortcut(QKeySequence("Ctrl+X"));
 
   // copy action
-  copyAction = new QAction(this);
-  copyAction->setText(tr("Copy"));
-  copyAction->setEnabled(true);
+  _copyAction = new QAction(this);
+  _copyAction->setText(tr("Copy"));
+  _copyAction->setEnabled(true);
 
   // paste action
-  pasteAction = new QAction(this);
-  pasteAction->setText(tr("Paste"));
+  _pasteAction = new QAction(this);
+  _pasteAction->setText(tr("Paste"));
 
-  pasteAction->setEnabled(true);
+  _pasteAction->setEnabled(true);
   // pasteAction->setShortcut(QKeySequence("Ctrl+V"));
 
   // delete action
-  deleteAction = new QAction(this);
-  deleteAction->setText(tr("&Delete"));
-  deleteAction->setIcon(QIcon(":/icon/minus"));
+  _deleteAction = new QAction(this);
+  _deleteAction->setText(tr("&Delete"));
+  _deleteAction->setIcon(QIcon(":/icon/minus"));
 
-  deleteAction->setEnabled(true);
-  deleteAction->setShortcut(QKeySequence("Del"));
+  _deleteAction->setEnabled(true);
+  _deleteAction->setShortcut(QKeySequence("Del"));
 
   // zoomin action
-  zoominAction = new QAction(this);
-  zoominAction->setText(tr("Zoom In"));
+  _zoominAction = new QAction(this);
+  _zoominAction->setText(tr("Zoom In"));
 
-  zoominAction->setEnabled(true);
-  zoominAction->setShortcut(QKeySequence("Ctrl++"));
+  _zoominAction->setEnabled(true);
+  _zoominAction->setShortcut(QKeySequence("Ctrl++"));
 
   // zoomout action
-  zoomoutAction = new QAction(this);
-  zoomoutAction->setText(tr("Zoom Out"));
+  _zoomoutAction = new QAction(this);
+  _zoomoutAction->setText(tr("Zoom Out"));
 
-  zoomoutAction->setEnabled(true);
-  zoomoutAction->setShortcut(QKeySequence("Ctrl+-"));
+  _zoomoutAction->setEnabled(true);
+  _zoomoutAction->setShortcut(QKeySequence("Ctrl+-"));
 
   // reset action
-  zoomresetAction = new QAction(this);
-  zoomresetAction->setText(tr("Reset"));
+  _zoomresetAction = new QAction(this);
+  _zoomresetAction->setText(tr("Reset"));
 
-  zoomresetAction->setEnabled(true);
-  zoomresetAction->setShortcut(QKeySequence("Ctrl+0"));
+  _zoomresetAction->setEnabled(true);
+  _zoomresetAction->setShortcut(QKeySequence("Ctrl+0"));
 
   // fullscreen action
-  fullscreenAction = new QAction(this);
-  fullscreenAction->setText(tr("Full Screen"));
+  _fullscreenAction = new QAction(this);
+  _fullscreenAction->setText(tr("Full Screen"));
 
-  fullscreenAction->setEnabled(true);
-  fullscreenAction->setShortcut(QKeySequence("F11"));
+  _fullscreenAction->setEnabled(true);
+  _fullscreenAction->setShortcut(QKeySequence("F11"));
 
   // export action
-  exportAction = new QAction(this);
-  exportAction->setText(tr("Export..."));
+  _exportAction = new QAction(this);
+  _exportAction->setText(tr("Export..."));
 
-  exportAction->setEnabled(true);
+  _exportAction->setEnabled(true);
 
   // region action
-  regionAction = new QAction(this);
-  regionAction->setText(tr("Add &Region"));
-  regionAction->setIcon(QIcon(":/icon/plus"));
+  _regionAction = new QAction(this);
+  _regionAction->setText(tr("Add &Region"));
+  _regionAction->setIcon(QIcon(":/icon/plus"));
 
-  regionAction->setEnabled(true);
+  _regionAction->setEnabled(true);
 
   // regionbase action
-  regionbaseAction = new QAction(this);
-  regionbaseAction->setText(tr("Add Region &Base"));
-  regionbaseAction->setIcon(QIcon(":/icon/plus"));
+  _regionbaseAction = new QAction(this);
+  _regionbaseAction->setText(tr("Add Region &Base"));
+  _regionbaseAction->setIcon(QIcon(":/icon/plus"));
 
-  regionbaseAction->setEnabled(true);
+  _regionbaseAction->setEnabled(true);
 
   // bring to front action
-  bringfrontAction = new QAction(this);
-  bringfrontAction->setText(tr("Bring to Front"));
+  _bringfrontAction = new QAction(this);
+  _bringfrontAction->setText(tr("Bring to Front"));
 
-  bringfrontAction->setEnabled(false);
-  bringfrontAction->setShortcut(QKeySequence("Shift+Ctrl+]"));
+  _bringfrontAction->setEnabled(false);
+  _bringfrontAction->setShortcut(QKeySequence("Shift+Ctrl+]"));
 
   // bring forward action
-  bringforwardAction = new QAction(this);
-  bringforwardAction->setText(tr("Bring Forward"));
+  _bringforwardAction = new QAction(this);
+  _bringforwardAction->setText(tr("Bring Forward"));
 
-  bringforwardAction->setEnabled(false);
-  bringforwardAction->setShortcut(QKeySequence("Ctrl+]"));
+  _bringforwardAction->setEnabled(false);
+  _bringforwardAction->setShortcut(QKeySequence("Ctrl+]"));
 
   // send backward action
-  sendbackwardAction = new QAction(this);
-  sendbackwardAction->setText(tr("Send Backward"));
+  _sendbackwardAction = new QAction(this);
+  _sendbackwardAction->setText(tr("Send Backward"));
 
-  sendbackwardAction->setEnabled(false);
-  sendbackwardAction->setShortcut(QKeySequence("Ctrl+["));
+  _sendbackwardAction->setEnabled(false);
+  _sendbackwardAction->setShortcut(QKeySequence("Ctrl+["));
 
   // send to back action
-  sendbackAction = new QAction(this);
-  sendbackAction->setText(tr("Send to Back"));
+  _sendbackAction = new QAction(this);
+  _sendbackAction->setText(tr("Send to Back"));
 
-  sendbackAction->setEnabled(false);
-  sendbackAction->setShortcut(QKeySequence("Shift+Ctrl+["));
+  _sendbackAction->setEnabled(false);
+  _sendbackAction->setShortcut(QKeySequence("Shift+Ctrl+["));
 
   // hide action
-  hideAction = new QAction(this);
-  hideAction->setText(tr("Hide"));
+  _hideAction = new QAction(this);
+  _hideAction->setText(tr("Hide"));
 
-  hideAction->setEnabled(true);
+  _hideAction->setEnabled(true);
 
   // properties action
-  propertiesAction = new QAction(this);
-  propertiesAction->setText(tr("Properties"));
+  _propertiesAction = new QAction(this);
+  _propertiesAction->setText(tr("Properties"));
 
-  propertiesAction->setEnabled(true);
+  _propertiesAction->setEnabled(true);
 
-  regionActionGroup = new QActionGroup(this);
-  regionActionGroup->setExclusive(false);
+  _regionActionGroup = new QActionGroup(this);
+  _regionActionGroup->setExclusive(false);
 
   setAcceptDrops(true);
 }
 
 void LayoutRegion::setGridAction(QAction* action)
 {
-  gridAction = action;
+  _gridAction = action;
 
-  showMenu->addAction(gridAction);
+  _showMenu->addAction(_gridAction);
 
 }
 
 void LayoutRegion::createMenus()
 {
   // view menu
-  viewMenu = new QMenu();
-  viewMenu->setTitle(tr("View"));
+  _viewMenu = new QMenu();
+  _viewMenu->setTitle(tr("View"));
 
-  viewMenu->setEnabled(true);
+  _viewMenu->setEnabled(true);
 
-  viewMenu->addAction(zoominAction);
-  viewMenu->addAction(zoomoutAction);
-  viewMenu->addAction(zoomresetAction);
-  viewMenu->addSeparator();
-  viewMenu->addAction(fullscreenAction);
+  _viewMenu->addAction(_zoominAction);
+  _viewMenu->addAction(_zoomoutAction);
+  _viewMenu->addAction(_zoomresetAction);
+  _viewMenu->addSeparator();
+  _viewMenu->addAction(_fullscreenAction);
 
   // show menu
-  showMenu = new QMenu();
-  showMenu->setTitle(tr("Show"));
+  _showMenu = new QMenu();
+  _showMenu->setTitle(tr("Show"));
 
-  showMenu->setEnabled(true);
+  _showMenu->setEnabled(true);
 
   // arrange menu
-  arrangeMenu = new QMenu();
-  arrangeMenu->setTitle(tr("Arrange"));
+  _arrangeMenu = new QMenu();
+  _arrangeMenu->setTitle(tr("Arrange"));
 
-  arrangeMenu->setEnabled(false);
+  _arrangeMenu->setEnabled(false);
 
-  arrangeMenu->addAction(bringfrontAction);
-  arrangeMenu->addAction(bringforwardAction);
-  arrangeMenu->addAction(sendbackwardAction);
-  arrangeMenu->addAction(sendbackAction);
+  _arrangeMenu->addAction(_bringfrontAction);
+  _arrangeMenu->addAction(_bringforwardAction);
+  _arrangeMenu->addAction(_sendbackwardAction);
+  _arrangeMenu->addAction(_sendbackAction);
 
   // context menu
-  contextMenu = new QMenu();
+  _contextMenu = new QMenu();
 
-  contextMenu->addAction(regionAction);
+  _contextMenu->addAction(_regionAction);
   // contextMenu->addAction(regionbaseAction);
-  contextMenu->addSeparator();
-  contextMenu->addAction(deleteAction);
-  contextMenu->addSeparator();
+  _contextMenu->addSeparator();
+  _contextMenu->addAction(_deleteAction);
+  _contextMenu->addSeparator();
   //    contextMenu->addAction(undoAction);
   //    contextMenu->addAction(redoAction);
   //    contextMenu->addSeparator();
-  contextMenu->addAction(cutAction);
-  contextMenu->addAction(copyAction);
-  contextMenu->addAction(pasteAction);
-  contextMenu->addSeparator();
-  contextMenu->addAction(exportAction);
-  contextMenu->addSeparator();
+  _contextMenu->addAction(_cutAction);
+  _contextMenu->addAction(_copyAction);
+  _contextMenu->addAction(_pasteAction);
+  _contextMenu->addSeparator();
+  _contextMenu->addAction(_exportAction);
+  _contextMenu->addSeparator();
   // contextMenu->addMenu(viewMenu); // disabled for while
 
-  contextMenu->addMenu(showMenu);
+  _contextMenu->addMenu(_showMenu);
   // contextMenu->addMenu(arrangeMenu); // disabled for while
-  contextMenu->addSeparator();
-  contextMenu->addAction(hideAction);
-  contextMenu->addSeparator();
-  contextMenu->addMenu(switchMenu);
+  _contextMenu->addSeparator();
+  _contextMenu->addAction(_hideAction);
+  _contextMenu->addSeparator();
+  _contextMenu->addMenu(_switchMenu);
 
-  contextMenu->addSeparator();
-  contextMenu->addAction(helpAction);
+  _contextMenu->addSeparator();
+  _contextMenu->addAction(_helpAction);
   // contextMenu->addSeparator(); //disabled for now
   // contextMenu->addAction(propertiesAction); //disabled for now
 }
 
 void LayoutRegion::createConnections()
 {
-  connect(regionActionGroup, SIGNAL(triggered(QAction*)),
+  connect(_regionActionGroup, SIGNAL(triggered(QAction*)),
           SLOT(performShow(QAction*)));
 
-  connect(regionbaseAction, SIGNAL(triggered()),
+  connect(_regionbaseAction, SIGNAL(triggered()),
           SIGNAL(regionbasePerformed()));
 
-  connect(regionAction, SIGNAL(triggered()),
+  connect(_regionAction, SIGNAL(triggered()),
           SLOT(performRegion()));
 
-  connect(hideAction, SIGNAL(triggered()),
+  connect(_hideAction, SIGNAL(triggered()),
           SLOT(performHide()));
 
-  connect(deleteAction, SIGNAL(triggered()),
+  connect(_deleteAction, SIGNAL(triggered()),
           SLOT(performDelete()));
 
-  connect(exportAction, SIGNAL(triggered()),
+  connect(_exportAction, SIGNAL(triggered()),
           SLOT(performExport()));
 
-  connect(copyAction, SIGNAL(triggered()),
+  connect(_copyAction, SIGNAL(triggered()),
           SLOT(performCopy()));
 
-  connect(cutAction, SIGNAL(triggered()),
+  connect(_cutAction, SIGNAL(triggered()),
           SLOT(performCut()));
 
-  connect(pasteAction, SIGNAL(triggered()),
+  connect(_pasteAction, SIGNAL(triggered()),
           SLOT(performPaste()));
 }
 
 void LayoutRegion::updateActionText(LayoutRegion *region)
 {
   // Update Show Menu
-  if(regionActions.contains(region->getUid()))
-    regionActions[region->getUid()]->setText(region->getId());
+  if(_regionActions.contains(region->getUid()))
+    _regionActions[region->getUid()]->setText(region->getId());
 }
 
 void LayoutRegion::hideRegion(LayoutRegion* region)
 {
-  regionActions[region->getUid()]->trigger();
+  _regionActions[region->getUid()]->trigger();
 }
 
 void LayoutRegion::performDelete()
@@ -782,11 +782,11 @@ void LayoutRegion::performShow(QAction* action)
 {
   if (!action->isChecked())
   {
-    regions[regionActions.key(action)]->setVisible(false);
+    _regions[_regionActions.key(action)]->setVisible(false);
   }
   else
   {
-    regions[regionActions.key(action)]->setVisible(true);
+    _regions[_regionActions.key(action)]->setVisible(true);
   }
 }
 
@@ -809,16 +809,16 @@ void LayoutRegion::performPaste()
 
 void LayoutRegion::removeRegion(LayoutRegion* region)
 {
-  if(regionActions.contains(region->getUid()))
+  if(_regionActions.contains(region->getUid()))
   {
-    QAction *action = regionActions[region->getUid()];
+    QAction *action = _regionActions[region->getUid()];
 
-    showMenu->removeAction(action);
+    _showMenu->removeAction(action);
 
-    regionActionGroup->removeAction(action);
+    _regionActionGroup->removeAction(action);
   }
 
-  regionActions.remove(region->getUid());
+  _regionActions.remove(region->getUid());
 }
 
 void LayoutRegion::addRegion(LayoutRegion* region)
@@ -827,36 +827,36 @@ void LayoutRegion::addRegion(LayoutRegion* region)
   {
     region->setParent(this);
 
-    region->setGridAction(gridAction);
+    region->setGridAction(_gridAction);
 
-    regions[region->getUid()] = region;
+    _regions[region->getUid()] = region;
 
     QAction* action = new QAction(this);
     action->setText(region->getId());
 
-    showMenu->addAction(action);
+    _showMenu->addAction(action);
 
-    showMenu->insertAction(showMenu->actions().front(), action);
+    _showMenu->insertAction(_showMenu->actions().front(), action);
 
-    if (showMenu->actions().size() <= 2){
-      showMenu->insertSeparator(showMenu->actions().back());
+    if (_showMenu->actions().size() <= 2){
+      _showMenu->insertSeparator(_showMenu->actions().back());
     }
 
     action->setCheckable(true);
     action->setChecked(true);
     action->setEnabled(true);
 
-    regionActionGroup->addAction(action);
+    _regionActionGroup->addAction(action);
 
-    regionActions[region->getUid()] = action;
+    _regionActions[region->getUid()] = action;
   }
 }
 
 void LayoutRegion::move(QGraphicsSceneMouseEvent* event)
 {
   /* setting */
-  qreal x = left;
-  qreal y = top;
+  qreal x = _left;
+  qreal y = _top;
 
   /* setting minimal position */
   qreal minx;
@@ -879,18 +879,18 @@ void LayoutRegion::move(QGraphicsSceneMouseEvent* event)
 
   if (parentItem() != NULL)
   {
-    maxx = parentItem()->boundingRect().width() - width - controlPointSize;
-    maxy = parentItem()->boundingRect().height() - height - controlPointSize;
+    maxx = parentItem()->boundingRect().width() - _width - _controlPointSize;
+    maxy = parentItem()->boundingRect().height() - _height - _controlPointSize;
   }
   else
   {
-    maxx = scene()->width() - width;
-    maxy = scene()->height() - height;
+    maxx = scene()->width() - _width;
+    maxy = scene()->height() - _height;
   }
 
   /* setting delta */
-  qreal dx = event->pos().x() - pressLeft; // (x1 - x0)
-  qreal dy = event->pos().y() - pressTop;  // (y1 - y0)
+  qreal dx = event->pos().x() - _pressLeft; // (x1 - x0)
+  qreal dy = event->pos().y() - _pressTop;  // (y1 - y0)
 
   /* setting next position */
   qreal nextx = x + dx;
@@ -928,13 +928,13 @@ void LayoutRegion::move(QGraphicsSceneMouseEvent* event)
 void LayoutRegion::resize(QGraphicsSceneMouseEvent* event)
 {
   /* setting bounds */
-  qreal x = left;
-  qreal y = top;
-  qreal w = width;
-  qreal h = height;
+  qreal x = _left;
+  qreal y = _top;
+  qreal w = _width;
+  qreal h = _height;
 
   /*setting aspect ratio,used with shift modifier on resize*/
-  qreal aspectratio = width/height;
+  qreal aspectratio = _width/_height;
 
   /* setting minimal bounds */
   qreal minx;
@@ -959,8 +959,8 @@ void LayoutRegion::resize(QGraphicsSceneMouseEvent* event)
 
   if (parentItem() != NULL)
   {
-    maxw = parentItem()->boundingRect().width() - controlPointSize;
-    maxh = parentItem()->boundingRect().height() - controlPointSize;
+    maxw = parentItem()->boundingRect().width() - _controlPointSize;
+    maxh = parentItem()->boundingRect().height() - _controlPointSize;
   }
   else
   {
@@ -971,8 +971,8 @@ void LayoutRegion::resize(QGraphicsSceneMouseEvent* event)
   }
 
   /* setting delta */
-  qreal dx = event->pos().x() - pressLeft;    // (x1 - x0)
-  qreal dy = event->pos().y() - pressTop;     // (y1 - y0)
+  qreal dx = event->pos().x() - _pressLeft;    // (x1 - x0)
+  qreal dy = event->pos().y() - _pressTop;     // (y1 - y0)
   qreal dw = -dx;
   qreal dh = -dy;
 
@@ -983,7 +983,7 @@ void LayoutRegion::resize(QGraphicsSceneMouseEvent* event)
   qreal nexth = h + dh;
 
   /* adjusting */
-  switch(resizeType)
+  switch(_resizeType)
   {
     /* adjusting TOPLEFT */
     case LayoutRegion::TopLeft:
@@ -1247,26 +1247,26 @@ void LayoutRegion::adjust(bool repaint)
   {
     LayoutRegion* item = (LayoutRegion*) parentItem();
 
-    setTop(qRound(item->getHeight()*relativeTop));
-    setLeft(qRound(item->getWidth()*relativeLeft));
+    setTop(qRound(item->getHeight()*_relativeTop));
+    setLeft(qRound(item->getWidth()*_relativeLeft));
 
-    setWidth(qRound(item->getWidth()*relativeWidth));
-    setHeight(qRound(item->getHeight()*relativeHeight));
+    setWidth(qRound(item->getWidth()*_relativeWidth));
+    setHeight(qRound(item->getHeight()*_relativeHeight));
 
-    setRight(item->getWidth() - (left+width));      // not use to paint
-    setBottom(item->getHeight() - (top+height));    // not use to paint
+    setRight(item->getWidth() - (_left+_width));      // not use to paint
+    setBottom(item->getHeight() - (_top+_height));    // not use to paint
 
   }
   else
   {
-    setTop(qRound(scene()->height()*relativeTop));
-    setLeft(qRound(scene()->width()*relativeLeft));
+    setTop(qRound(scene()->height()*_relativeTop));
+    setLeft(qRound(scene()->width()*_relativeLeft));
 
-    setWidth(qRound(scene()->width()*relativeWidth));
-    setHeight(qRound(scene()->height()*relativeHeight));
+    setWidth(qRound(scene()->width()*_relativeWidth));
+    setHeight(qRound(scene()->height()*_relativeHeight));
 
-    setRight(scene()->width() - (left+width));      // not use to paint
-    setBottom(scene()->height() - (top+height));    // not use to paint
+    setRight(scene()->width() - (_left+_width));      // not use to paint
+    setBottom(scene()->height() - (_top+_height));    // not use to paint
   }
 
   for (int i=0;i<childItems().size();++i)
@@ -1286,20 +1286,20 @@ QPainterPath LayoutRegion::shape() const
 {
   QPainterPath path;
 
-  path.addRect(0, 0, width, height);
+  path.addRect(0, 0, _width, _height);
 
-  if (selected)
+  if (_selected)
   {
     path.setFillRule(Qt::WindingFill);
 
     path.addRect(0, 0, 8, 8);                                  // topleft
-    path.addRect((width+8)/2 - 4,0,8,8);                    // top
-    path.addRect((width+8) - 8,0,8,8);                      // topright
-    path.addRect((width+8) - 8,(height+8)/2 - 4,8,8);       // right
-    path.addRect((width+8) - 8,(height+8) - 8,8,8);         // bottomright
-    path.addRect((width+8)/2 - 4,(height+8) - 8,8,8);       // bottom
-    path.addRect(0,(height+8) - 8,8,8);                     // bottomleft
-    path.addRect(0,(height+8)/2 - 4,8,8);                   // left
+    path.addRect((_width+8)/2 - 4,0,8,8);                    // top
+    path.addRect((_width+8) - 8,0,8,8);                      // topright
+    path.addRect((_width+8) - 8,(_height+8)/2 - 4,8,8);       // right
+    path.addRect((_width+8) - 8,(_height+8) - 8,8,8);         // bottomright
+    path.addRect((_width+8)/2 - 4,(_height+8) - 8,8,8);       // bottom
+    path.addRect(0,(_height+8) - 8,8,8);                     // bottomleft
+    path.addRect(0,(_height+8)/2 - 4,8,8);                   // left
   }
 
   return path;
@@ -1309,10 +1309,10 @@ QRectF LayoutRegion::boundingRect() const
 {
   QRectF bounds;
 
-  bounds.setX(- controlPointSize/2);
-  bounds.setY(- controlPointSize/2);
-  bounds.setWidth(width + controlPointSize);
-  bounds.setHeight(height + controlPointSize);
+  bounds.setX(- _controlPointSize/2);
+  bounds.setY(- _controlPointSize/2);
+  bounds.setWidth(_width + _controlPointSize);
+  bounds.setHeight(_height + _controlPointSize);
 
   return bounds;
 }
@@ -1324,96 +1324,96 @@ void LayoutRegion::paint(QPainter *painter,
   Q_UNUSED(option)
   Q_UNUSED(widget)
 
-  QString color = this->color;
+  QString color = this->_color;
 
-  if(isDragging)
+  if(_isDragging)
     color = "#C4D8E2"; // FIXME: This should be configurable
 
   painter->setBrush(QColor(color));
 
-  if (selected)
+  if (_selected)
     painter->setPen(QPen(QBrush(Qt::black), 0, Qt::DashLine));
   else
     painter->setPen(QPen(QBrush(Qt::black), 0));
 
-  painter->drawRect(0, 0, width, height);
+  painter->drawRect(0, 0, _width, _height);
 
-  if (moving)
+  if (_moving)
   {
     painter->setBrush(Qt::NoBrush);
     painter->setPen(QPen(QBrush(Qt::black), 0));    // 0px = cosmetic border
-    painter->drawRect(moveLeft - left, moveTop - top, width, height);
+    painter->drawRect(_moveLeft - _left, _moveTop - _top, _width, _height);
   }
-  else if (cloning)
+  else if (_cloning)
   {
     painter->setBrush(Qt::NoBrush);
     painter->setPen(QPen(QBrush(Qt::black), 0));    // 0px = cosmetic border
-    painter->drawRect(moveLeft - left, moveTop - top, width, height);
+    painter->drawRect(_moveLeft - _left, _moveTop - _top, _width, _height);
   }
-  else if (resizing)
+  else if (_resizing)
   {
     painter->setBrush(Qt::NoBrush);
     painter->setPen(QPen(QBrush(Qt::black), 0));// 0px = cosmetic border
-    painter->drawRect(resizeLeft - left, resizeTop - top,resizeWidth,resizeHeight);
+    painter->drawRect(_resizeLeft - _left, _resizeTop - _top,_resizeWidth,_resizeHeight);
   }
-  else if (selected)
+  else if (_selected)
   {
     painter->setBrush(QBrush(Qt::white));
     // 0px = cosmetic border
     painter->setPen(QPen(QBrush(QBrush(Qt::black)), 0));
 
-    painter->drawRect(-controlPointSize/2, -controlPointSize/2, controlPointSize, controlPointSize);                                 // topleft
-    painter->drawRect(width/2 - controlPointSize/2, -controlPointSize/2, controlPointSize, controlPointSize);                   // top
-    painter->drawRect(width - controlPointSize/2, -controlPointSize/2, controlPointSize ,controlPointSize);                     // topright
-    painter->drawRect(width - controlPointSize/2, height/2 -controlPointSize/2, controlPointSize, controlPointSize);      // right
-    painter->drawRect(width - controlPointSize/2, height - controlPointSize/2, controlPointSize, controlPointSize);        // bottomright
-    painter->drawRect(width/2 - controlPointSize/2, height -controlPointSize/2, controlPointSize, controlPointSize);      // bottom
-    painter->drawRect(-controlPointSize/2, height -controlPointSize/2, controlPointSize, controlPointSize);                    // bottomleft
-    painter->drawRect(-controlPointSize/2, height/2-controlPointSize/2, controlPointSize, controlPointSize);                  // left
+    painter->drawRect(-_controlPointSize/2, -_controlPointSize/2, _controlPointSize, _controlPointSize);                                 // topleft
+    painter->drawRect(_width/2 - _controlPointSize/2, -_controlPointSize/2, _controlPointSize, _controlPointSize);                   // top
+    painter->drawRect(_width - _controlPointSize/2, -_controlPointSize/2, _controlPointSize ,_controlPointSize);                     // topright
+    painter->drawRect(_width - _controlPointSize/2, _height/2 -_controlPointSize/2, _controlPointSize, _controlPointSize);      // right
+    painter->drawRect(_width - _controlPointSize/2, _height - _controlPointSize/2, _controlPointSize, _controlPointSize);        // bottomright
+    painter->drawRect(_width/2 - _controlPointSize/2, _height -_controlPointSize/2, _controlPointSize, _controlPointSize);      // bottom
+    painter->drawRect(-_controlPointSize/2, _height -_controlPointSize/2, _controlPointSize, _controlPointSize);                    // bottomleft
+    painter->drawRect(-_controlPointSize/2, _height/2-_controlPointSize/2, _controlPointSize, _controlPointSize);                  // left
   }
 
   QString text = "";
 
-  if (width >= 25 && height >= 25 && id != "")
+  if (_width >= 25 && _height >= 25 && _id != "")
   {
-    text = title+" "+"("+id+")";
+    text = _title+" "+"("+_id+")";
   }
 
-  painter->drawText(4+6, 4+6, width-1-4-6, height-1-4-6, Qt::AlignLeft, text);
+  painter->drawText(4+6, 4+6, _width-1-4-6, _height-1-4-6, Qt::AlignLeft, text);
 }
 
 void LayoutRegion::updateCursor(QGraphicsSceneMouseEvent* event)
 {
   Qt::CursorShape newShape;
-  if(!resizing && !moving)
+  if(!_resizing && !_moving)
   {
     QPointF pos = mapFromScene(event->scenePos());
 
     // in the middle (UP or DOWN)
-    if (QRectF(width/2 -controlPointSize/2, -controlPointSize/2, controlPointSize, controlPointSize).contains(pos) ||
-        QRectF(width/2 -controlPointSize/2, height-controlPointSize/2, controlPointSize, controlPointSize).contains(pos))
+    if (QRectF(_width/2 -_controlPointSize/2, -_controlPointSize/2, _controlPointSize, _controlPointSize).contains(pos) ||
+        QRectF(_width/2 -_controlPointSize/2, _height-_controlPointSize/2, _controlPointSize, _controlPointSize).contains(pos))
     {
       newShape = Qt::SizeVerCursor;
     }
 
     // TOPLEFT or BOTTOM RIGHT
-    else if (QRectF(-controlPointSize/2,-controlPointSize/2, controlPointSize, controlPointSize).contains(pos) ||
-             QRectF(width-controlPointSize/2, height-controlPointSize/2, controlPointSize, controlPointSize).contains(pos))
+    else if (QRectF(-_controlPointSize/2,-_controlPointSize/2, _controlPointSize, _controlPointSize).contains(pos) ||
+             QRectF(_width-_controlPointSize/2, _height-_controlPointSize/2, _controlPointSize, _controlPointSize).contains(pos))
 
     {
       newShape = Qt::SizeFDiagCursor;
     }
 
     // TOPRIGHT or BOTTOMLEFT
-    else if (QRectF(width-controlPointSize/2, -controlPointSize/2, controlPointSize, controlPointSize).contains(pos) ||
-             QRectF(-controlPointSize/2, height-controlPointSize/2, controlPointSize, controlPointSize).contains(pos))
+    else if (QRectF(_width-_controlPointSize/2, -_controlPointSize/2, _controlPointSize, _controlPointSize).contains(pos) ||
+             QRectF(-_controlPointSize/2, _height-_controlPointSize/2, _controlPointSize, _controlPointSize).contains(pos))
     {
       newShape = Qt::SizeBDiagCursor;
     }
 
     // RIGHT OR LEFT
-    else if (QRectF(width-controlPointSize/2, height/2-controlPointSize/2, controlPointSize, controlPointSize).contains(pos) ||
-             QRectF(-controlPointSize/2, height/2-controlPointSize/2, controlPointSize, controlPointSize).contains(pos))
+    else if (QRectF(_width-_controlPointSize/2, _height/2-_controlPointSize/2, _controlPointSize, _controlPointSize).contains(pos) ||
+             QRectF(-_controlPointSize/2, _height/2-_controlPointSize/2, _controlPointSize, _controlPointSize).contains(pos))
     {
       newShape = Qt::SizeHorCursor;
     }
@@ -1432,11 +1432,11 @@ void LayoutRegion::updateCursor(QGraphicsSceneMouseEvent* event)
 
 void LayoutRegion::mouseMoveEvent(QGraphicsSceneMouseEvent* event)
 {
-  if (moving)
+  if (_moving)
     move(event);
-  else if (cloning)
+  else if (_cloning)
     move(event); //
-  else if (resizing)
+  else if (_resizing)
     resize(event);
 }
 
@@ -1454,63 +1454,63 @@ void LayoutRegion::mousePressEvent(QGraphicsSceneMouseEvent* event)
 
     setPressTop(event->pos().y());
     setPressLeft(event->pos().x());
-    setPressWidth(width);
-    setPressHeight(height);
+    setPressWidth(_width);
+    setPressHeight(_height);
 
     /* avoid flickering on first move */
-    setMoveTop(top);
-    setMoveLeft(left);
+    setMoveTop(_top);
+    setMoveLeft(_left);
 
     /* avoid flickering on first resize */
-    setResizeTop(top);
-    setResizeLeft(left);
-    setResizeWidth(width);
-    setResizeHeight(height);
+    setResizeTop(_top);
+    setResizeLeft(_left);
+    setResizeWidth(_width);
+    setResizeHeight(_height);
 
     /* if over TOPLEFT resize region */
-    if (QRectF(-controlPointSize/2, -controlPointSize/2, controlPointSize, controlPointSize).contains(event->pos()))
+    if (QRectF(-_controlPointSize/2, -_controlPointSize/2, _controlPointSize, _controlPointSize).contains(event->pos()))
     {
       setResizeType(LayoutRegion::TopLeft);
       setResizing(true);
     }
     /* if over TOP resize region */
-    else if (QRectF(width/2 -controlPointSize/2, -controlPointSize/2, controlPointSize, controlPointSize).contains(event->pos()))
+    else if (QRectF(_width/2 -_controlPointSize/2, -_controlPointSize/2, _controlPointSize, _controlPointSize).contains(event->pos()))
     {
       setResizeType(LayoutRegion::Top);
       setResizing(true);
     }
     /* if over TOPRIGHT resize region */
-    else if (QRectF(width-controlPointSize/2, -controlPointSize/2, controlPointSize, controlPointSize).contains(event->pos()))
+    else if (QRectF(_width-_controlPointSize/2, -_controlPointSize/2, _controlPointSize, _controlPointSize).contains(event->pos()))
     {
       setResizeType(LayoutRegion::TopRight);
       setResizing(true);
     }
     /* if over RIGHT resize region */
-    else if (QRectF(width-controlPointSize/2,height/2-controlPointSize/2, controlPointSize, controlPointSize).contains(event->pos()))
+    else if (QRectF(_width-_controlPointSize/2,_height/2-_controlPointSize/2, _controlPointSize, _controlPointSize).contains(event->pos()))
     {
       setResizeType(LayoutRegion::Right);
       setResizing(true);
     }
     /* if over BOTTOMRIGHT resize region */
-    else if (QRectF(width-controlPointSize/2, height-controlPointSize/2, controlPointSize, controlPointSize).contains(event->pos()))
+    else if (QRectF(_width-_controlPointSize/2, _height-_controlPointSize/2, _controlPointSize, _controlPointSize).contains(event->pos()))
     {
       setResizeType(LayoutRegion::BottomRight);
       setResizing(true);
     }
     /* if over BOTTOM resize region */
-    else if (QRectF(width/2-controlPointSize/2, height-controlPointSize/2, controlPointSize, controlPointSize).contains(event->pos()))
+    else if (QRectF(_width/2-_controlPointSize/2, _height-_controlPointSize/2, _controlPointSize, _controlPointSize).contains(event->pos()))
     {
       setResizeType(LayoutRegion::Bottom);
       setResizing(true);
     }
     /* if over BOTTOMLEFT resize region */
-    else if (QRectF(-controlPointSize/2, height-controlPointSize/2, controlPointSize, controlPointSize).contains(event->pos()))
+    else if (QRectF(-_controlPointSize/2, _height-_controlPointSize/2, _controlPointSize, _controlPointSize).contains(event->pos()))
     {
       setResizeType(LayoutRegion::BottomLeft);
       setResizing(true);
     }
     /* if over LEFT resize region */
-    else if (QRectF(-controlPointSize/2, height/2-controlPointSize/2, controlPointSize, controlPointSize).contains(event->pos()))
+    else if (QRectF(-_controlPointSize/2, _height/2-_controlPointSize/2, _controlPointSize, _controlPointSize).contains(event->pos()))
     {
       setResizeType(LayoutRegion::Left);
       setResizing(true);
@@ -1536,11 +1536,11 @@ void LayoutRegion::mousePressEvent(QGraphicsSceneMouseEvent* event)
 
 void LayoutRegion::mouseReleaseEvent(QGraphicsSceneMouseEvent* event)
 {
-  if (moving)
+  if (_moving)
   {
     setMoving(false);
 
-    if ((top != moveTop || left != moveLeft))
+    if ((_top != _moveTop || _left != _moveLeft))
     {
       QMap<QString, QString> attributes;
       double value = 0.0;
@@ -1557,19 +1557,19 @@ void LayoutRegion::mouseReleaseEvent(QGraphicsSceneMouseEvent* event)
         parentH = scene()->height();
       }
 
-      value = (moveTop/parentH) * 100;
+      value = (_moveTop/parentH) * 100;
       ROUND_DOUBLE(value);
       attributes["top"] = QString::number(value, 'f', 2) + "%";
 
-      value = (moveLeft/parentW) * 100;
+      value = (_moveLeft/parentW) * 100;
       ROUND_DOUBLE(value);
       attributes["left"] = QString::number(value, 'f', 2) + "%";
 
-      value = (1 - ((moveLeft/parentW)+(width/parentW))) * 100;
+      value = (1 - ((_moveLeft/parentW)+(_width/parentW))) * 100;
       ROUND_DOUBLE(value);
       attributes["right"] = QString::number(value, 'f', 2) + "%";
 
-      value = (1 - ((moveTop/parentH)+(height/parentH)))*100;
+      value = (1 - ((_moveTop/parentH)+(_height/parentH)))*100;
       ROUND_DOUBLE(value);
       attributes["bottom"] = QString::number(value, 'f', 2) + "%";
 
@@ -1580,11 +1580,11 @@ void LayoutRegion::mouseReleaseEvent(QGraphicsSceneMouseEvent* event)
     }
   }
 
-  if (cloning)
+  if (_cloning)
   {
     emit copyRequested(this);//cloning overwrites what is currently in "clipboard"
 
-    if ((top != moveTop || left != moveLeft))
+    if ((_top != _moveTop || _left != _moveLeft))
     {
       double value = 0.0;
       qreal parentW, parentH;
@@ -1600,23 +1600,23 @@ void LayoutRegion::mouseReleaseEvent(QGraphicsSceneMouseEvent* event)
         parentH = scene()->height();
       }
 
-      value = (moveTop/parentH) * 100;
+      value = (_moveTop/parentH) * 100;
       ROUND_DOUBLE(value);
-      cloneAttributes["top"] = QString::number(value, 'f', 2) + "%";
+      _cloneAttributes["top"] = QString::number(value, 'f', 2) + "%";
 
-      value = (moveLeft/parentW) * 100;
+      value = (_moveLeft/parentW) * 100;
       ROUND_DOUBLE(value);
-      cloneAttributes["left"] = QString::number(value, 'f', 2) + "%";
+      _cloneAttributes["left"] = QString::number(value, 'f', 2) + "%";
 
-      value = (1 - ((moveLeft/parentW)+(width/parentW))) * 100;
+      value = (1 - ((_moveLeft/parentW)+(_width/parentW))) * 100;
       ROUND_DOUBLE(value);
-      cloneAttributes["right"] = QString::number(value, 'f', 2) + "%";
+      _cloneAttributes["right"] = QString::number(value, 'f', 2) + "%";
 
-      value = (1 - ((moveTop/parentH)+(height/parentH)))*100;
+      value = (1 - ((_moveTop/parentH)+(_height/parentH)))*100;
       ROUND_DOUBLE(value);
-      cloneAttributes["bottom"] = QString::number(value, 'f', 2) + "%";
+      _cloneAttributes["bottom"] = QString::number(value, 'f', 2) + "%";
 
-      cloneAttributes["zIndex"] = QString::number(getzIndex());
+      _cloneAttributes["zIndex"] = QString::number(getzIndex());
     }
 
 
@@ -1626,35 +1626,35 @@ void LayoutRegion::mouseReleaseEvent(QGraphicsSceneMouseEvent* event)
     setCloning(false);
   }
 
-  if (resizing)
+  if (_resizing)
   {
     setResizing(false);
 
-    if ((top != resizeTop || left != resizeLeft ||
-         width != resizeWidth || height != resizeHeight))
+    if ((_top != _resizeTop || _left != _resizeLeft ||
+         _width != _resizeWidth || _height != _resizeHeight))
     {
-      if (resizeTop > top + height)
+      if (_resizeTop > _top + _height)
       {
-        setResizeHeight(resizeTop - (top + height));
-        setResizeTop(top + height);
+        setResizeHeight(_resizeTop - (_top + _height));
+        setResizeTop(_top + _height);
       }
 
-      if (resizeLeft > left + width)
+      if (_resizeLeft > _left + _width)
       {
-        setResizeWidth(resizeLeft - (left + width));
-        setResizeLeft(left + width);
+        setResizeWidth(_resizeLeft - (_left + _width));
+        setResizeLeft(_left + _width);
       }
 
-      if (resizeWidth < 0)
+      if (_resizeWidth < 0)
       {
-        setResizeLeft(resizeLeft + resizeWidth);
-        setResizeWidth(-resizeWidth);
+        setResizeLeft(_resizeLeft + _resizeWidth);
+        setResizeWidth(-_resizeWidth);
       }
 
-      if (resizeHeight < 0)
+      if (_resizeHeight < 0)
       {
-        setResizeTop(resizeTop + resizeHeight);
-        setResizeHeight(-resizeHeight);
+        setResizeTop(_resizeTop + _resizeHeight);
+        setResizeHeight(-_resizeHeight);
       }
 
       QMap<QString, QString> attrs;
@@ -1672,28 +1672,28 @@ void LayoutRegion::mouseReleaseEvent(QGraphicsSceneMouseEvent* event)
         parentH = (scene())->height();
       }
 
-      value = (resizeTop/parentH)*100;
+      value = (_resizeTop/parentH)*100;
       ROUND_DOUBLE(value);
       attrs["top"] = QString::number(value, 'f', 2) + "%";
 
-      value = (resizeLeft/parentW)*100;
+      value = (_resizeLeft/parentW)*100;
       ROUND_DOUBLE(value);
       attrs["left"] = QString::number(value, 'f', 2) + "%";
 
-      value = (resizeHeight/parentH)*100;
+      value = (_resizeHeight/parentH)*100;
       ROUND_DOUBLE(value);
       attrs["height"] = QString::number(value, 'f', 2) + "%";
 
-      value = (resizeWidth/parentW)*100;
+      value = (_resizeWidth/parentW)*100;
       ROUND_DOUBLE(value);
       attrs["width"] = QString::number(value, 'f', 2) + "%";
 
-      value = (1 - ((resizeLeft/parentW)+
-                    (resizeWidth/parentW)))*100;
+      value = (1 - ((_resizeLeft/parentW)+
+                    (_resizeWidth/parentW)))*100;
       ROUND_DOUBLE(value);
       attrs["right"] = QString::number(value, 'f', 2) + "%";
 
-      value = (1 - ((resizeTop/parentH)+ (resizeHeight/parentH)))*100;
+      value = (1 - ((_resizeTop/parentH)+ (_resizeHeight/parentH)))*100;
       ROUND_DOUBLE(value);
       attrs["bottom"] = QString::number(value, 'f', 2) + "%";
 
@@ -1754,29 +1754,29 @@ void LayoutRegion::keyReleaseEvent( QKeyEvent * event )
       case Qt::Key_Left:
         value = ( (x() - step) / parentW) * 100;
         ROUND_DOUBLE(value);
-        if ((value + relativeWidth * 100) > 100.0)
-          value = (1.0 - relativeWidth) * 100.0;
+        if ((value + _relativeWidth * 100) > 100.0)
+          value = (1.0 - _relativeWidth) * 100.0;
         attrs ["left"] = QString::number( value, 'f', 2) + "%";
         break;
       case Qt::Key_Right:
         value = ( (x() + step) / parentW) * 100;
         ROUND_DOUBLE(value);
-        if ((value + relativeWidth * 100) > 100.0)
-          value = (1.0 - relativeWidth) * 100.0;
+        if ((value + _relativeWidth * 100) > 100.0)
+          value = (1.0 - _relativeWidth) * 100.0;
         attrs ["left"] = QString::number( value, 'f', 2) + "%";
         break;
       case Qt::Key_Down:
         value = ( (y() + step) / parentH) * 100;
         ROUND_DOUBLE(value);
-        if ((value + relativeHeight * 100) > 100.0)
-          value = (1.0 - relativeHeight) * 100.0;
+        if ((value + _relativeHeight * 100) > 100.0)
+          value = (1.0 - _relativeHeight) * 100.0;
         attrs ["top"] = QString::number( value, 'f', 2) + "%";
         break;
       case Qt::Key_Up:
         value = ( (y() - step) / parentH) * 100;
         ROUND_DOUBLE(value);
-        if ((value + relativeHeight * 100) > 100.0)
-          value = (1.0 - relativeHeight) * 100.0;
+        if ((value + _relativeHeight * 100) > 100.0)
+          value = (1.0 - _relativeHeight) * 100.0;
         attrs ["top"] = QString::number( value, 'f', 2) + "%";
         break;
       default:
@@ -1796,7 +1796,7 @@ void LayoutRegion::contextMenuEvent(QGraphicsSceneContextMenuEvent* event)
   {
     emit regionSelectionRequested(this);
 
-    contextMenu->exec(event->screenPos());
+    _contextMenu->exec(event->screenPos());
 
     event->accept();
   }
@@ -1806,7 +1806,7 @@ void LayoutRegion::dragEnterEvent(QGraphicsSceneDragDropEvent *event)
 {
   if (event->mimeData()->hasFormat("nclcomposer/mediaid"))
   {
-    isDragging = true;
+    _isDragging = true;
     event->acceptProposedAction();
 
     scene()->update(); // FIXME: Can we do better?
@@ -1817,14 +1817,14 @@ void LayoutRegion::dragLeaveEvent(QGraphicsSceneDragDropEvent *event)
 {
   Q_UNUSED(event)
 
-  isDragging = false;
+  _isDragging = false;
 
   scene()->update();// FIXME: Can we do better?
 }
 
 void LayoutRegion::dropEvent(QGraphicsSceneDragDropEvent *event)
 {
-  isDragging = false;
+  _isDragging = false;
 
   scene()->update();
 
@@ -1871,5 +1871,5 @@ QMap <QString, QString> LayoutRegion::getAttributes()
 
 QMap <QString, QString> LayoutRegion::getCloneAttributes()
 {
-  return cloneAttributes;
+  return _cloneAttributes;
 }

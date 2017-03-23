@@ -49,7 +49,7 @@ class LayoutRegion : public QObject, public QGraphicsItem
   Q_INTERFACES(QGraphicsItem)
 
 public:
-  explicit LayoutRegion(QMenu* switchMenu, LayoutRegion* parent = 0);
+  explicit LayoutRegion(QMenu* _switchMenu, LayoutRegion* parent = 0);
   virtual ~LayoutRegion();
 
   enum QnlyResizeType {
@@ -64,42 +64,42 @@ public:
   };
 
   bool isMoving() const;
-  void setMoving(bool moving);
+  void setMoving(bool _moving);
 
   bool isCloning() const;
-  void setCloning(bool cloning);
+  void setCloning(bool _cloning);
 
   bool isResizing() const;
-  void setResizing(bool resizing);
+  void setResizing(bool _resizing);
 
   void setParent(LayoutRegion* region);
 
   bool isSelected() const;
-  void setSelected(bool selected);
+  void setSelected(bool _selected);
 
   bool isPainted() const;
-  void setPainted(bool painted);
+  void setPainted(bool _painted);
 
   bool hasChanged() const;
-  void setChanged(bool changed);
+  void setChanged(bool _changed);
 
   bool isValidated() const;
-  void setValidated(bool validated);
+  void setValidated(bool _validated);
 
   QString getId() const;
-  void setId(const QString &id);
+  void setId(const QString &_id);
 
   QString getUid() const;
-  void setUid(const QString &uid);
+  void setUid(const QString &_uid);
 
   QString getTitle() const;
-  void setTitle(const QString &title);
+  void setTitle(const QString &_title);
 
   QString getColor() const;
-  void setColor(const QString &color);
+  void setColor(const QString &_color);
 
   int getzIndex() const;
-  void setzIndex(int zindex);
+  void setzIndex(int _zindex);
   qreal getzIndexTop() const;
 
   qreal getTop() const;
@@ -108,7 +108,7 @@ public:
   qreal getResizeTop() const;
 
   qreal getRelativeTop() const;
-  void setRelativeTop(qreal relativeTop);
+  void setRelativeTop(qreal _relativeTop);
 
   qreal getLeft() const;
   qreal getMoveLeft() const;
@@ -116,31 +116,31 @@ public:
   qreal getResizeLeft() const;
 
   qreal getRelativeLeft() const;
-  void setRelativeLeft(qreal relativeLeft);
+  void setRelativeLeft(qreal _relativeLeft);
 
   qreal getRight() const;
 
   qreal getRelativeRight() const;
-  void setRelativeRight(qreal relativeRight);
+  void setRelativeRight(qreal _relativeRight);
 
   qreal getBottom() const;
 
   qreal getRelativeBottom() const;
-  void setRelativeBottom(qreal relativeBottom);
+  void setRelativeBottom(qreal _relativeBottom);
 
   qreal getWidth() const;
   qreal getPressWidth() const;
   qreal getResizeWidth() const;
 
   qreal getRelativeWidth() const;
-  void setRelativeWidth(qreal relativeWidth);
+  void setRelativeWidth(qreal _relativeWidth);
 
   qreal getHeight() const;
   qreal getPressHeight() const;
   qreal getResizeHeight() const;
 
   qreal getRelativeHeight() const;
-  void setRelativeHeight(qreal relativeHeight);
+  void setRelativeHeight(qreal _relativeHeight);
 
   QnlyResizeType getResizeType() const;
 
@@ -176,25 +176,25 @@ signals:
   void pasteRequested();
 
 protected:
-  void setTop(qreal top);
-  void setMoveTop(qreal moveTop);
-  void setPressTop(qreal pressTop);
-  void setResizeTop(qreal resizeTop);
-  void setLeft(qreal left);
-  void setMoveLeft(qreal moveLeft);
-  void setPressLeft(qreal pressLeft);
-  void setResizeLeft(qreal resizeLeft);
-  void setRight(qreal right);
-  void setBottom(qreal bottom);
-  void setWidth(qreal width);
-  void setPressWidth(qreal pressWidth);
-  void setResizeWidth(qreal resizeWidth);
-  void setHeight(qreal height);
-  void setPressHeight(qreal pressHeight);
-  void setResizeHeight(qreal resizeHeight);
-  void setzIndexTop(qreal zindexTop);
+  void setTop(qreal _top);
+  void setMoveTop(qreal _moveTop);
+  void setPressTop(qreal _pressTop);
+  void setResizeTop(qreal _resizeTop);
+  void setLeft(qreal _left);
+  void setMoveLeft(qreal _moveLeft);
+  void setPressLeft(qreal _pressLeft);
+  void setResizeLeft(qreal _resizeLeft);
+  void setRight(qreal _right);
+  void setBottom(qreal _bottom);
+  void setWidth(qreal _width);
+  void setPressWidth(qreal _pressWidth);
+  void setResizeWidth(qreal _resizeWidth);
+  void setHeight(qreal _height);
+  void setPressHeight(qreal _pressHeight);
+  void setResizeHeight(qreal _resizeHeight);
+  void setzIndexTop(qreal _zindexTop);
 
-  void setResizeType(const QnlyResizeType &resizeType);
+  void setResizeType(const QnlyResizeType &_resizeType);
 
   virtual void move(QGraphicsSceneMouseEvent* event);
   virtual void resize(QGraphicsSceneMouseEvent* event);
@@ -224,88 +224,88 @@ private:
   void createMenus();
   void createConnections();
 
-  bool moving;
-  bool cloning;
-  bool resizing;
-  bool selected;
-  bool validated;
-  bool painted;
-  bool changed;
-  bool isDragging;
+  bool _moving;
+  bool _cloning;
+  bool _resizing;
+  bool _selected;
+  bool _validated;
+  bool _painted;
+  bool _changed;
+  bool _isDragging;
 
-  qreal top;
-  qreal moveTop;
-  qreal pressTop;
-  qreal resizeTop;
-  qreal relativeTop;
+  qreal _top;
+  qreal _moveTop;
+  qreal _pressTop;
+  qreal _resizeTop;
+  qreal _relativeTop;
 
-  qreal left;
-  qreal moveLeft;
-  qreal pressLeft;
-  qreal resizeLeft;
-  qreal relativeLeft;
+  qreal _left;
+  qreal _moveLeft;
+  qreal _pressLeft;
+  qreal _resizeLeft;
+  qreal _relativeLeft;
 
-  qreal right;
-  qreal relativeRight;
+  qreal _right;
+  qreal _relativeRight;
 
-  qreal bottom;
-  qreal relativeBottom;
+  qreal _bottom;
+  qreal _relativeBottom;
 
-  qreal width;
-  qreal pressWidth;
-  qreal resizeWidth;
-  qreal relativeWidth;
+  qreal _width;
+  qreal _pressWidth;
+  qreal _resizeWidth;
+  qreal _relativeWidth;
 
-  qreal height;
-  qreal pressHeight;
-  qreal resizeHeight;
-  qreal relativeHeight;
+  qreal _height;
+  qreal _pressHeight;
+  qreal _resizeHeight;
+  qreal _relativeHeight;
 
-  qreal zindex;
-  qreal zindexTop;
+  qreal _zindex;
+  qreal _zindexTop;
 
-  QMenu* viewMenu;
-  QMenu* showMenu;
-  QMenu* arrangeMenu;
-  QMenu* switchMenu;
-  QMenu* contextMenu;
+  QMenu* _viewMenu;
+  QMenu* _showMenu;
+  QMenu* _arrangeMenu;
+  QMenu* _switchMenu;
+  QMenu* _contextMenu;
 
-  QAction* helpAction;
-  QAction* undoAction;
-  QAction* redoAction;
-  QAction* cutAction;
-  QAction* copyAction;
-  QAction* pasteAction;
-  QAction* deleteAction;
-  QAction* zoominAction;
-  QAction* zoomoutAction;
-  QAction* zoomresetAction;
-  QAction* hideAction;
-  QAction* fullscreenAction;
-  QAction* exportAction;
-  QAction* regionAction;
-  QAction* regionbaseAction;
-  QAction* bringfrontAction;
-  QAction* bringforwardAction;
-  QAction* sendbackwardAction;
-  QAction* sendbackAction;
-  QAction* propertiesAction;
-  QAction* gridAction;
+  QAction* _helpAction;
+  QAction* _undoAction;
+  QAction* _redoAction;
+  QAction* _cutAction;
+  QAction* _copyAction;
+  QAction* _pasteAction;
+  QAction* _deleteAction;
+  QAction* _zoominAction;
+  QAction* _zoomoutAction;
+  QAction* _zoomresetAction;
+  QAction* _hideAction;
+  QAction* _fullscreenAction;
+  QAction* _exportAction;
+  QAction* _regionAction;
+  QAction* _regionbaseAction;
+  QAction* _bringfrontAction;
+  QAction* _bringforwardAction;
+  QAction* _sendbackwardAction;
+  QAction* _sendbackAction;
+  QAction* _propertiesAction;
+  QAction* _gridAction;
 
-  qreal controlPointSize; // Resize controller squares that appear when the region is selected.
+  qreal _controlPointSize; // Resize controller squares that appear when the region is selected.
 
-  QString id;
-  QString uid;
-  QString title;
-  QString color;
+  QString _id;
+  QString _uid;
+  QString _title;
+  QString _color;
 
-  QnlyResizeType resizeType;
+  QnlyResizeType _resizeType;
 
-  QActionGroup* regionActionGroup;
+  QActionGroup* _regionActionGroup;
 
-  QMap<QString, QAction*> regionActions;
-  QMap<QString, LayoutRegion*> regions;
-  QMap<QString, QString> cloneAttributes;
+  QMap<QString, QAction*> _regionActions;
+  QMap<QString, LayoutRegion*> _regions;
+  QMap<QString, QString> _cloneAttributes;
 };
 
 #endif // QNLYGRAPHICSREGION_H

@@ -290,7 +290,8 @@ void NCLLayoutViewPlugin::onEntityAdded(const QString &pluginID, Entity *entity)
   }
 }
 
-void NCLLayoutViewPlugin::onEntityRemoved(const QString &pluginID, const QString &entityID)
+void NCLLayoutViewPlugin::onEntityRemoved( const QString &pluginID,
+                                           const QString &entityID )
 {
   Q_UNUSED(pluginID)
 
