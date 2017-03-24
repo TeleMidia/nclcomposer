@@ -742,14 +742,14 @@ void LayoutRegionBase::performDelete()
 
 void LayoutRegionBase::performRegion()
 {
-  QMap<QString, QString> attributes;
-
-  attributes["top"] = "10%";
-  attributes["left"] = "10%";
-  attributes["right"] = "10%";
-  attributes["bottom"] = "10%";
-  attributes["width"] = "80%";
-  attributes["height"] = "80%";
+  QMap<QString, QString> attributes = {
+      {"top", "10%" },
+      {"left", "10%"},
+      {"right", "10%"},
+      {"bottom", "10%"},
+      {"width", "80%"},
+      {"height", "80%"}
+  };
 
   //Make the zIndex to be the greater one in the regionBase
   int zIndex = 0;
