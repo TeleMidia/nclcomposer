@@ -20,30 +20,30 @@
 LayoutRegionBase::LayoutRegionBase( QObject* parent, QMenu* switchMenu )
   : QGraphicsScene(parent)
 {
-  this->switchMenu = switchMenu;
+  this->_switchMenu = switchMenu;
 
-  this->switchMenu->setEnabled(true);
+  this->_switchMenu->setEnabled(true);
 
   createActions();
   createMenus();
   createConnections();
 
-  graphicsRegionBaseId = NULL;
+  _graphicsRegionBaseId = NULL;
 
-  selectedRegion = NULL;
+  _selectedRegion = NULL;
 
   setSceneRect(0,0,854,480);
 
   int w = 854, h = 480;
-  bgrect = new QGraphicsRectItem(QRect(0, 0, w, h));
+  _bgrect = new QGraphicsRectItem(QRect(0, 0, w, h));
 
-  this->addItem(bgrect);
+  this->addItem(_bgrect);
 
   // bgrect->setBrush(QBrush(QPixmap(":/bg/layout")));
-  bgrect->setBrush(QBrush(Qt::white));
-  bgrect->setPen(QPen(QColor("#BBBBBB")));
+  _bgrect->setBrush(QBrush(Qt::white));
+  _bgrect->setPen(QPen(QColor("#BBBBBB")));
 
-  bgrect->setZValue(-1);
+  _bgrect->setZValue(-1);
 
   createGrid();
   createSafeArea();
@@ -56,12 +56,12 @@ LayoutRegionBase::~LayoutRegionBase()
 
 QString LayoutRegionBase::getId() const
 {
-  return id;
+  return _id;
 }
 
 void LayoutRegionBase::setId(const QString &id)
 {
-  this->id = id;
+  this->_id = id;
 
   //if(graphicsRegionBaseId == NULL)
   //  graphicsRegionBaseId = addText("regionBaseId");
@@ -72,46 +72,46 @@ void LayoutRegionBase::setId(const QString &id)
 
 QString LayoutRegionBase::getUid() const
 {
-  return uid;
+  return _uid;
 }
 
 void LayoutRegionBase::setUid(const QString &uid)
 {
-  this->uid = uid;
+  this->_uid = uid;
 }
 
 QString LayoutRegionBase::getRegion() const
 {
-  return region;
+  return _region;
 }
 
 void LayoutRegionBase::setRegion(const QString &region)
 {
-  this->region = region;
+  this->_region = region;
 }
 
 QString LayoutRegionBase::getDevice() const
 {
-  return device;
+  return _device;
 }
 
 void LayoutRegionBase::setDevice(const QString &device)
 {
-  this->device = device;
+  this->_device = device;
 }
 
 void LayoutRegionBase::selectRegion(LayoutRegion* region)
 {
   if (!region->isSelected())
   {
-    if (selectedRegion != NULL)
+    if (_selectedRegion != NULL)
     {
-      selectedRegion->setSelected(false);
+      _selectedRegion->setSelected(false);
     }
 
     region->setSelected(true);
 
-    selectedRegion = region;
+    _selectedRegion = region;
   }
 }
 
@@ -292,189 +292,189 @@ void LayoutRegionBase::requestRegionChange(LayoutRegion* region,
     full[key] = attributes[key];
   }
 
-  emit regionChangeRequested( region->getUid(), uid, full );
+  emit regionChangeRequested( region->getUid(), _uid, full );
 }
 
 void LayoutRegionBase::requestRegionSelection(LayoutRegion* region)
 {
-  emit regionSelectionRequested(region->getUid(),uid);
+  emit regionSelectionRequested(region->getUid(),_uid);
 }
 
 void LayoutRegionBase::LayoutRegionBase::createActions()
 {
   // help action
-  helpAction = new QAction(this);
-  helpAction->setText(tr("Help"));
+  _helpAction = new QAction(this);
+  _helpAction->setText(tr("Help"));
 
-  helpAction->setEnabled(true);
-  helpAction->setShortcut(QKeySequence("F1"));
+  _helpAction->setEnabled(true);
+  _helpAction->setShortcut(QKeySequence("F1"));
 
   // undo action
-  undoAction = new QAction(this);
-  undoAction->setText(tr("Undo"));
+  _undoAction = new QAction(this);
+  _undoAction->setText(tr("Undo"));
 
-  undoAction->setEnabled(false);
-  undoAction->setShortcut(QKeySequence("Ctrl+Z"));
+  _undoAction->setEnabled(false);
+  _undoAction->setShortcut(QKeySequence("Ctrl+Z"));
 
   // redo action
-  redoAction = new QAction(this);
-  redoAction->setText(tr("Redo"));
+  _redoAction = new QAction(this);
+  _redoAction->setText(tr("Redo"));
 
-  redoAction->setEnabled(false);
-  redoAction->setShortcut(QKeySequence("Ctrl+Shift+Z"));
+  _redoAction->setEnabled(false);
+  _redoAction->setShortcut(QKeySequence("Ctrl+Shift+Z"));
 
   // cut action
-  cutAction = new QAction(this);
-  cutAction->setText(tr("Cut"));
+  _cutAction = new QAction(this);
+  _cutAction->setText(tr("Cut"));
 
-  cutAction->setEnabled(false);
-  cutAction->setShortcut(QKeySequence("Ctrl+X"));
+  _cutAction->setEnabled(false);
+  _cutAction->setShortcut(QKeySequence("Ctrl+X"));
 
   // copy action
-  copyAction = new QAction(this);
-  copyAction->setText(tr("Copy"));
+  _copyAction = new QAction(this);
+  _copyAction->setText(tr("Copy"));
 
-  copyAction->setEnabled(false);
+  _copyAction->setEnabled(false);
   // copyAction->setShortcut(QKeySequence("Ctrl+C"));
 
   // paste action
-  pasteAction = new QAction(this);
-  pasteAction->setText(tr("Paste"));
+  _pasteAction = new QAction(this);
+  _pasteAction->setText(tr("Paste"));
 
-  pasteAction->setEnabled(true);
+  _pasteAction->setEnabled(true);
   // pasteAction->setShortcut(QKeySequence("Ctrl+V"));
 
   // delete action
-  deleteAction = new QAction(this);
-  deleteAction->setText(tr("&Delete"));
-  deleteAction->setIcon(QIcon(":/icon/minus"));
+  _deleteAction = new QAction(this);
+  _deleteAction->setText(tr("&Delete"));
+  _deleteAction->setIcon(QIcon(":/icon/minus"));
 
-  deleteAction->setEnabled(true);
-  deleteAction->setShortcut(QKeySequence("Del"));
+  _deleteAction->setEnabled(true);
+  _deleteAction->setShortcut(QKeySequence("Del"));
 
   // zoomin action
-  zoominAction = new QAction(this);
-  zoominAction->setText(tr("Zoom In"));
+  _zoominAction = new QAction(this);
+  _zoominAction->setText(tr("Zoom In"));
 
-  zoominAction->setEnabled(true);
-  zoominAction->setShortcut(QKeySequence("Ctrl++"));
+  _zoominAction->setEnabled(true);
+  _zoominAction->setShortcut(QKeySequence("Ctrl++"));
 
   // zoomout action
-  zoomoutAction = new QAction(this);
-  zoomoutAction->setText(tr("Zoom Out"));
+  _zoomoutAction = new QAction(this);
+  _zoomoutAction->setText(tr("Zoom Out"));
 
-  zoomoutAction->setEnabled(true);
-  zoomoutAction->setShortcut(QKeySequence("Ctrl+-"));
+  _zoomoutAction->setEnabled(true);
+  _zoomoutAction->setShortcut(QKeySequence("Ctrl+-"));
 
   // reset action
-  zoomresetAction = new QAction(this);
-  zoomresetAction->setText(tr("Reset"));
+  _zoomresetAction = new QAction(this);
+  _zoomresetAction->setText(tr("Reset"));
 
-  zoomresetAction->setEnabled(true);
-  zoomresetAction->setShortcut(QKeySequence("Ctrl+0"));
+  _zoomresetAction->setEnabled(true);
+  _zoomresetAction->setShortcut(QKeySequence("Ctrl+0"));
 
   // fullscreen action
-  fullscreenAction = new QAction(this);
-  fullscreenAction->setText(tr("Full Screen"));
+  _fullscreenAction = new QAction(this);
+  _fullscreenAction->setText(tr("Full Screen"));
 
-  fullscreenAction->setEnabled(true);
-  fullscreenAction->setShortcut(QKeySequence("F11"));
+  _fullscreenAction->setEnabled(true);
+  _fullscreenAction->setShortcut(QKeySequence("F11"));
 
   // export action
-  exportAction = new QAction(this);
-  exportAction->setText(tr("Export..."));
+  _exportAction = new QAction(this);
+  _exportAction->setText(tr("Export..."));
 
-  exportAction->setEnabled(true);
+  _exportAction->setEnabled(true);
 
   // region action
-  regionAction = new QAction(this);
-  regionAction->setText(tr("Add &Region"));
-  regionAction->setIcon(QIcon(":/icon/plus"));
+  _regionAction = new QAction(this);
+  _regionAction->setText(tr("Add &Region"));
+  _regionAction->setIcon(QIcon(":/icon/plus"));
 
-  regionAction->setEnabled(true);
+  _regionAction->setEnabled(true);
 
   // regionbase action
-  regionbaseAction = new QAction(this);
-  regionbaseAction->setText(tr("Add Region &Base"));
-  regionbaseAction->setIcon(QIcon(":/icon/plus"));
+  _regionbaseAction = new QAction(this);
+  _regionbaseAction->setText(tr("Add Region &Base"));
+  _regionbaseAction->setIcon(QIcon(":/icon/plus"));
 
-  regionbaseAction->setEnabled(true);
+  _regionbaseAction->setEnabled(true);
 
   // bring to front action
-  bringfrontAction = new QAction(this);
-  bringfrontAction->setText(tr("Bring to Front"));
+  _bringfrontAction = new QAction(this);
+  _bringfrontAction->setText(tr("Bring to Front"));
 
-  bringfrontAction->setEnabled(false);
-  bringfrontAction->setShortcut(QKeySequence("Shift+Ctrl+]"));
+  _bringfrontAction->setEnabled(false);
+  _bringfrontAction->setShortcut(QKeySequence("Shift+Ctrl+]"));
 
   // bring forward action
-  bringforwardAction = new QAction(this);
-  bringforwardAction->setText(tr("Bring Forward"));
+  _bringforwardAction = new QAction(this);
+  _bringforwardAction->setText(tr("Bring Forward"));
 
-  bringforwardAction->setEnabled(false);
-  bringforwardAction->setShortcut(QKeySequence("Ctrl+]"));
+  _bringforwardAction->setEnabled(false);
+  _bringforwardAction->setShortcut(QKeySequence("Ctrl+]"));
 
   // send backward action
-  sendbackwardAction = new QAction(this);
-  sendbackwardAction->setText(tr("Send Backward"));
+  _sendbackwardAction = new QAction(this);
+  _sendbackwardAction->setText(tr("Send Backward"));
 
-  sendbackwardAction->setEnabled(false);
-  sendbackwardAction->setShortcut(QKeySequence("Ctrl+["));
+  _sendbackwardAction->setEnabled(false);
+  _sendbackwardAction->setShortcut(QKeySequence("Ctrl+["));
 
   // send to back action
-  sendbackAction = new QAction(this);
-  sendbackAction->setText(tr("Send to Back"));
+  _sendbackAction = new QAction(this);
+  _sendbackAction->setText(tr("Send to Back"));
 
-  sendbackAction->setEnabled(false);
-  sendbackAction->setShortcut(QKeySequence("Shift+Ctrl+["));
+  _sendbackAction->setEnabled(false);
+  _sendbackAction->setShortcut(QKeySequence("Shift+Ctrl+["));
 
-  re640x480 = new QAction(this);
-  re640x480->setText(tr("640x480 (4:3)"));
-  re640x480->setCheckable(true);
-  re640x480->setChecked(false);
+  _re640x480 = new QAction(this);
+  _re640x480->setText(tr("640x480 (4:3)"));
+  _re640x480->setCheckable(true);
+  _re640x480->setChecked(false);
 
-  re800x600 = new QAction(this);
-  re800x600->setText(tr("800x600 (4:3)"));
-  re800x600->setCheckable(true);
-  re800x600->setChecked(false);
+  _re800x600 = new QAction(this);
+  _re800x600->setText(tr("800x600 (4:3)"));
+  _re800x600->setCheckable(true);
+  _re800x600->setChecked(false);
 
-  re1024x768 = new QAction(this);
-  re1024x768->setText(tr("1024x768 (4:3)"));
-  re1024x768->setCheckable(true);
-  re1024x768->setChecked(false);
+  _re1024x768 = new QAction(this);
+  _re1024x768->setText(tr("1024x768 (4:3)"));
+  _re1024x768->setCheckable(true);
+  _re1024x768->setChecked(false);
 
-  re854x480 = new QAction(this);
-  re854x480->setText(tr("854x480 (16:9)"));
-  re854x480->setCheckable(true);
-  re854x480->setChecked(true);
+  _re854x480 = new QAction(this);
+  _re854x480->setText(tr("854x480 (16:9)"));
+  _re854x480->setCheckable(true);
+  _re854x480->setChecked(true);
 
-  re1280x720 = new QAction(this);
-  re1280x720->setText(tr("1280x720 (16:9)"));
-  re1280x720->setCheckable(true);
-  re1280x720->setChecked(false);
+  _re1280x720 = new QAction(this);
+  _re1280x720->setText(tr("1280x720 (16:9)"));
+  _re1280x720->setCheckable(true);
+  _re1280x720->setChecked(false);
 
-  re1920x1080 = new QAction(this);
-  re1920x1080->setText(tr("1920x1080 (16:9)"));
-  re1920x1080->setCheckable(true);
-  re1920x1080->setChecked(false);
+  _re1920x1080 = new QAction(this);
+  _re1920x1080->setText(tr("1920x1080 (16:9)"));
+  _re1920x1080->setCheckable(true);
+  _re1920x1080->setChecked(false);
 
-  re320x400 = new QAction(this);
-  re320x400->setText(tr("320x400 (4:5)"));
-  re320x400->setCheckable(true);
-  re320x400->setChecked(false);
+  _re320x400 = new QAction(this);
+  _re320x400->setText(tr("320x400 (4:5)"));
+  _re320x400->setCheckable(true);
+  _re320x400->setChecked(false);
 
   // hide action
-  hideAction = new QAction(this);
-  hideAction->setText(tr("Hide"));
+  _hideAction = new QAction(this);
+  _hideAction->setText(tr("Hide"));
 
-  hideAction->setEnabled(false);
+  _hideAction->setEnabled(false);
 
   // Grid action
-  gridAction = new QAction(this);
-  gridAction->setText(tr("Grid"));
-  gridAction->setEnabled(true);
-  gridAction->setCheckable(true);
-  gridAction->setChecked(false);
+  _gridAction = new QAction(this);
+  _gridAction->setText(tr("Grid"));
+  _gridAction->setEnabled(true);
+  _gridAction->setCheckable(true);
+  _gridAction->setChecked(false);
 
   // Safe area action
   _safeAreaAction = new QAction(this);
@@ -484,81 +484,81 @@ void LayoutRegionBase::LayoutRegionBase::createActions()
   _safeAreaAction->setChecked(false);
 
   // properties action
-  propertiesAction = new QAction(this);
-  propertiesAction->setText(tr("Properties"));
+  _propertiesAction = new QAction(this);
+  _propertiesAction->setText(tr("Properties"));
 
-  propertiesAction->setEnabled(true);
+  _propertiesAction->setEnabled(true);
 
-  regionActionGroup = new QActionGroup(this);
-  regionActionGroup->setExclusive(false);
+  _regionActionGroup = new QActionGroup(this);
+  _regionActionGroup->setExclusive(false);
 
-  screensizeGroup  = new QActionGroup(this);
-  screensizeGroup->setExclusive(true);
+  _screensizeGroup  = new QActionGroup(this);
+  _screensizeGroup->setExclusive(true);
 
-  screensizeGroup->addAction(re640x480);
-  screensizeGroup->addAction(re800x600);
-  screensizeGroup->addAction(re1024x768);
-  screensizeGroup->addAction(re854x480);
-  screensizeGroup->addAction(re1280x720);
-  screensizeGroup->addAction(re1920x1080);
-  screensizeGroup->addAction(re320x400);
+  _screensizeGroup->addAction(_re640x480);
+  _screensizeGroup->addAction(_re800x600);
+  _screensizeGroup->addAction(_re1024x768);
+  _screensizeGroup->addAction(_re854x480);
+  _screensizeGroup->addAction(_re1280x720);
+  _screensizeGroup->addAction(_re1920x1080);
+  _screensizeGroup->addAction(_re320x400);
 }
 
 void LayoutRegionBase::createMenus()
 {
   // view menu
-  viewMenu = new QMenu();
-  viewMenu->setTitle(tr("View"));
+  _viewMenu = new QMenu();
+  _viewMenu->setTitle(tr("View"));
 
-  viewMenu->setEnabled(true);
+  _viewMenu->setEnabled(true);
 
-  viewMenu->addAction(zoominAction);
-  viewMenu->addAction(zoomoutAction);
-  viewMenu->addAction(zoomresetAction);
-  viewMenu->addSeparator();
-  viewMenu->addAction(fullscreenAction);
+  _viewMenu->addAction(_zoominAction);
+  _viewMenu->addAction(_zoomoutAction);
+  _viewMenu->addAction(_zoomresetAction);
+  _viewMenu->addSeparator();
+  _viewMenu->addAction(_fullscreenAction);
 
 
   // show menu
-  showMenu = new QMenu();
-  showMenu->setTitle(tr("Show"));
-  showMenu->addAction(gridAction);
-  showMenu->addAction(_safeAreaAction);
+  _showMenu = new QMenu();
+  _showMenu->setTitle(tr("Show"));
+  _showMenu->addAction(_gridAction);
+  _showMenu->addAction(_safeAreaAction);
 
-  showMenu->setEnabled(true);
+  _showMenu->setEnabled(true);
 
   // arrange menu
-  arrangeMenu = new QMenu();
-  arrangeMenu->setTitle(tr("Arrange"));
+  _arrangeMenu = new QMenu();
+  _arrangeMenu->setTitle(tr("Arrange"));
 
-  arrangeMenu->setEnabled(false);
+  _arrangeMenu->setEnabled(false);
 
-  arrangeMenu->addAction(bringfrontAction);
-  arrangeMenu->addAction(bringforwardAction);
-  arrangeMenu->addAction(sendbackwardAction);
-  arrangeMenu->addAction(sendbackAction);
+  _arrangeMenu->addAction(_bringfrontAction);
+  _arrangeMenu->addAction(_bringforwardAction);
+  _arrangeMenu->addAction(_sendbackwardAction);
+  _arrangeMenu->addAction(_sendbackAction);
 
   // screensize menu
-  screensizeMenu = new QMenu();
-  screensizeMenu->setTitle(tr("Screen Size"));
+  _screensizeMenu = new QMenu();
+  _screensizeMenu->setTitle(tr("Screen Size"));
 
-  screensizeMenu->setEnabled(true);
+  _screensizeMenu->setEnabled(true);
 
-  screensizeMenu->addAction(re640x480);
-  screensizeMenu->addAction(re800x600);
-  screensizeMenu->addAction(re1024x768);
-  screensizeMenu->addAction(re854x480);
-  screensizeMenu->addAction(re1280x720);
-  screensizeMenu->addAction(re1920x1080);
-  screensizeMenu->addAction(re320x400);
+  _screensizeMenu->addAction(_re640x480);
+  _screensizeMenu->addAction(_re800x600);
+  _screensizeMenu->addAction(_re1024x768);
+  _screensizeMenu->addAction(_re854x480);
+  _screensizeMenu->addAction(_re1280x720);
+  _screensizeMenu->addAction(_re1920x1080);
+  _screensizeMenu->addAction(_re320x400);
 
   // context menu
-  contextMenu = new QMenu();
-  contextMenu->addAction(regionAction);
+  _contextMenu = new QMenu();
+  _contextMenu->addAction(_regionAction);
   // contextMenu->addAction(regionbaseAction);
-  contextMenu->addSeparator();
-  contextMenu->addAction(deleteAction);
-  contextMenu->addSeparator();
+  _contextMenu->addSeparator();
+  _contextMenu->addAction(_deleteAction);
+  _contextMenu->addSeparator();
   // contextMenu->addAction(helpAction);
   // contextMenu->addSeparator();
   // contextMenu->addAction(undoAction);
@@ -566,71 +566,71 @@ void LayoutRegionBase::createMenus()
   // contextMenu->addSeparator();
   // contextMenu->addAction(cutAction);
   // contextMenu->addAction(copyAction);
-  contextMenu->addAction(pasteAction);
-  contextMenu->addSeparator();
-  contextMenu->addAction(exportAction);
-  contextMenu->addSeparator();
+  _contextMenu->addAction(_pasteAction);
+  _contextMenu->addSeparator();
+  _contextMenu->addAction(_exportAction);
+  _contextMenu->addSeparator();
   // contextMenu->addMenu(viewMenu); //disabled for while
-  contextMenu->addMenu(showMenu);
-  contextMenu->addMenu(screensizeMenu);
+  _contextMenu->addMenu(_showMenu);
+  _contextMenu->addMenu(_screensizeMenu);
   // contextMenu->addMenu(arrangeMenu); //disabled for while
-  contextMenu->addSeparator();
-  contextMenu->addAction(hideAction);
-  contextMenu->addSeparator();
-  contextMenu->addMenu(switchMenu);
+  _contextMenu->addSeparator();
+  _contextMenu->addAction(_hideAction);
+  _contextMenu->addSeparator();
+  _contextMenu->addMenu(_switchMenu);
   // contextMenu->addSeparator(); // disabled for while
   // contextMenu->addAction(propertiesAction); //disabled for while
 }
 
 void LayoutRegionBase::createConnections()
 {
-  connect(regionAction, SIGNAL(triggered()),
+  connect(_regionAction, SIGNAL(triggered()),
           SLOT(performRegion()));
 
-  connect(regionbaseAction, SIGNAL(triggered()),
+  connect(_regionbaseAction, SIGNAL(triggered()),
           SIGNAL(regionbasePerformed()));
 
-  connect(regionActionGroup, SIGNAL(triggered(QAction*)),
+  connect(_regionActionGroup, SIGNAL(triggered(QAction*)),
           SLOT(performShow(QAction*)));
 
-  connect(deleteAction, SIGNAL(triggered()),
+  connect(_deleteAction, SIGNAL(triggered()),
           SLOT(performDelete()));
 
-  re640x480->setData(QSize(640, 480));
-  connect(re640x480, SIGNAL(triggered()), SLOT(performChangeResolution()));
+  _re640x480->setData(QSize(640, 480));
+  connect(_re640x480, SIGNAL(triggered()), SLOT(performChangeResolution()));
 
-  re800x600->setData(QSize(800, 600));
-  connect(re800x600, SIGNAL(triggered()), SLOT(performChangeResolution()));
+  _re800x600->setData(QSize(800, 600));
+  connect(_re800x600, SIGNAL(triggered()), SLOT(performChangeResolution()));
 
-  re1024x768->setData(QSize(1024, 768));
-  connect(re1024x768, SIGNAL(triggered()), SLOT(performChangeResolution()));
+  _re1024x768->setData(QSize(1024, 768));
+  connect(_re1024x768, SIGNAL(triggered()), SLOT(performChangeResolution()));
 
-  re854x480->setData(QSize(854, 480));
-  connect(re854x480, SIGNAL(triggered()), SLOT(performChangeResolution()));
+  _re854x480->setData(QSize(854, 480));
+  connect(_re854x480, SIGNAL(triggered()), SLOT(performChangeResolution()));
 
-  re1280x720->setData(QSize(1280, 720));
-  connect(re1280x720, SIGNAL(triggered()), SLOT(performChangeResolution()));
+  _re1280x720->setData(QSize(1280, 720));
+  connect(_re1280x720, SIGNAL(triggered()), SLOT(performChangeResolution()));
 
-  re1920x1080->setData(QSize(1920, 1080));
-  connect(re1920x1080, SIGNAL(triggered()), SLOT(performChangeResolution()));
+  _re1920x1080->setData(QSize(1920, 1080));
+  connect(_re1920x1080, SIGNAL(triggered()), SLOT(performChangeResolution()));
 
-  re320x400->setData(QSize(320, 400));
-  connect(re320x400, SIGNAL(triggered()), SLOT(performChangeResolution()));
+  _re320x400->setData(QSize(320, 400));
+  connect(_re320x400, SIGNAL(triggered()), SLOT(performChangeResolution()));
 
-  connect(exportAction, SIGNAL(triggered()), SLOT(performExport()));
+  connect(_exportAction, SIGNAL(triggered()), SLOT(performExport()));
 
-  connect(gridAction, SIGNAL(triggered()), SLOT(performGrid()));
+  connect(_gridAction, SIGNAL(triggered()), SLOT(performGrid()));
   connect(_safeAreaAction, SIGNAL(triggered()), SLOT(performSafeArea()));
 
-  connect(pasteAction, SIGNAL(triggered()), SIGNAL(pasteRequested()));
+  connect(_pasteAction, SIGNAL(triggered()), SIGNAL(pasteRequested()));
 }
 
 void LayoutRegionBase::performShow(QAction* action)
 {
   if (!action->isChecked())
-    regions[regionActions.key(action)]->setVisible(false);
+    _regions[_regionActions.key(action)]->setVisible(false);
   else
-    regions[regionActions.key(action)]->setVisible(true);
+    _regions[_regionActions.key(action)]->setVisible(true);
 }
 
 void LayoutRegionBase::requestAdditionRegion(LayoutRegion* parent)
@@ -646,30 +646,30 @@ void LayoutRegionBase::requestAdditionRegion(LayoutRegion* parent)
 
   //Make the zIndex to be the greater one in the regionBase
   int zIndex = 0;
-  foreach(LayoutRegion *region, regions.values())
+  foreach(LayoutRegion *region, _regions.values())
   {
     zIndex = zIndex > region->getzIndex() ? zIndex : region->getzIndex() + 1;
   }
   attributes["zIndex"] = QString::number(zIndex);
 
-  emit regionAdditionRequested("", parent->getUid(), uid, attributes);
+  emit regionAdditionRequested("", parent->getUid(), _uid, attributes);
 }
 
 void LayoutRegionBase::requestRegionDeletion(LayoutRegion* region)
 {
-  emit regionDeletionRequested(region->getUid(), uid);
+  emit regionDeletionRequested(region->getUid(), _uid);
 }
 
 void LayoutRegionBase::updateActionText(LayoutRegion *region)
 {
   // Update Show Menu
-  if(regionActions.contains(region->getUid()))
-    regionActions[region->getUid()]->setText(region->getId());
+  if(_regionActions.contains(region->getUid()))
+    _regionActions[region->getUid()]->setText(region->getId());
 }
 
 void LayoutRegionBase::hideRegion(LayoutRegion* region)
 {
-  regionActions[region->getUid()]->trigger();
+  _regionActions[region->getUid()]->trigger();
 }
 
 void LayoutRegionBase::removeRegion(LayoutRegion* region)
@@ -686,7 +686,7 @@ void LayoutRegionBase::removeRegion(LayoutRegion* region)
         LayoutRegion* child = dynamic_cast<LayoutRegion*> (item);
 
         if(child != NULL)
-          regions.remove(child->getUid());
+          _regions.remove(child->getUid());
         else
           qWarning() << "Trying to remove an element that is not of\
                         the type QnlyGraphicsRegion " << __FILE__ << __LINE__;
@@ -701,43 +701,43 @@ void LayoutRegionBase::removeRegion(LayoutRegion* region)
         LayoutRegion* child = dynamic_cast<LayoutRegion*> (item);
 
         if(child != NULL)
-          regions.remove(child->getUid());
+          _regions.remove(child->getUid());
         else
           qWarning() << "Trying to remove an element that is not of the\
                         type QnlyGraphicsRegion " << __FILE__ << __LINE__;
       }
 
-      if(regionActions.contains(region->getUid()))
+      if(_regionActions.contains(region->getUid()))
       {
-        QAction *action = regionActions[region->getUid()];
+        QAction *action = _regionActions[region->getUid()];
 
-        showMenu->removeAction(action);
+        _showMenu->removeAction(action);
 
-        regionActionGroup->removeAction(action);
+        _regionActionGroup->removeAction(action);
 
-        regionActions.remove(region->getUid());
+        _regionActions.remove(region->getUid());
       }
     }
 
     removeItem(region);
 
-    regions.remove(region->getUid());
+    _regions.remove(region->getUid());
 
     //  delete(region);
-    selectedRegion = NULL;
+    _selectedRegion = NULL;
 
-    emit regionBaseSelectionRequested(uid);
+    emit regionBaseSelectionRequested(_uid);
   }
 }
 
 QGraphicsItem* LayoutRegionBase::getBackgroundItem()
 {
-  return bgrect;
+  return _bgrect;
 }
 
 void LayoutRegionBase::performDelete()
 {
-  emit regionBaseDeletionRequested(uid);
+  emit regionBaseDeletionRequested(_uid);
 }
 
 void LayoutRegionBase::performRegion()
@@ -753,13 +753,13 @@ void LayoutRegionBase::performRegion()
 
   //Make the zIndex to be the greater one in the regionBase
   int zIndex = 0;
-  foreach(LayoutRegion *region, regions.values())
+  foreach(LayoutRegion *region, _regions.values())
   {
     zIndex = zIndex > region->getzIndex() ? zIndex : region->getzIndex() + 1;
   }
   attributes["zIndex"] = QString::number(zIndex);
 
-  emit regionAdditionRequested("", "", uid, attributes);
+  emit regionAdditionRequested("", "", _uid, attributes);
 }
 
 void LayoutRegionBase::addRegion(LayoutRegion* region,
@@ -919,7 +919,7 @@ void LayoutRegionBase::addRegion(LayoutRegion* region,
     if(attributes.contains("zIndex"))
       region->setzIndex(attributes["zIndex"].toInt());
 
-    region->setGridAction(gridAction);
+    region->setGridAction(_gridAction);
 
     if (parent != NULL)
     {
@@ -929,28 +929,28 @@ void LayoutRegionBase::addRegion(LayoutRegion* region,
     {
       addItem(region);
 
-      action = new QAction(this);
-      action->setText(region->getId());
+      _action = new QAction(this);
+      _action->setText(region->getId());
 
-      showMenu->insertAction(showMenu->actions().front(), action);
+      _showMenu->insertAction(_showMenu->actions().front(), _action);
 
-      if (showMenu->actions().size() <= 2)
+      if (_showMenu->actions().size() <= 2)
       {
-        showMenu->insertSeparator(showMenu->actions().back());
+        _showMenu->insertSeparator(_showMenu->actions().back());
       }
 
-      action->setCheckable(true);
-      action->setChecked(true);
-      action->setEnabled(true);
+      _action->setCheckable(true);
+      _action->setChecked(true);
+      _action->setEnabled(true);
 
-      regionActionGroup->addAction(action);
+      _regionActionGroup->addAction(_action);
 
-      regionActions[region->getUid()] = action;
+      _regionActions[region->getUid()] = _action;
     }
 
     region->adjust();
 
-    regions[region->getUid()] = region;
+    _regions[region->getUid()] = region;
 
     connect(region,
             SIGNAL(regionSelectionRequested(LayoutRegion*)),
@@ -1012,31 +1012,31 @@ void LayoutRegionBase::performChangeResolution()
 void LayoutRegionBase::changeResolution(int w, int h)
 {
   setSceneRect(0, 0, w, h);
-  bgrect->setRect(0, 0, w, h);
+  _bgrect->setRect(0, 0, w, h);
 
   updateSafeAreaPos();
 
   _grid->setRect(0, 0, w, h);
 
-  foreach(LayoutRegion* r, regions.values())
+  foreach(LayoutRegion* r, _regions.values())
     r->adjust();
 
   // TODO: This should be based on an array or a map!
   QSize size(w, h);
-  if(re640x480->data().toSize() == size)
-    re640x480->setChecked(true);
-  else if(re800x600->data().toSize() == size)
-    re800x600->setChecked(true);
-  else if(re1024x768->data().toSize() == size)
-    re1024x768->setChecked(true);
-  else if(re854x480->data().toSize() == size)
-    re854x480->setChecked(true);
-  else if(re1280x720->data().toSize() == size)
-    re1280x720->setChecked(true);
-  else if(re1920x1080->data().toSize() == size)
-    re1920x1080->setChecked(true);
-  else if(re320x400->data().toSize() == size)
-    re320x400->setChecked(true);
+  if(_re640x480->data().toSize() == size)
+    _re640x480->setChecked(true);
+  else if(_re800x600->data().toSize() == size)
+    _re800x600->setChecked(true);
+  else if(_re1024x768->data().toSize() == size)
+    _re1024x768->setChecked(true);
+  else if(_re854x480->data().toSize() == size)
+    _re854x480->setChecked(true);
+  else if(_re1280x720->data().toSize() == size)
+    _re1280x720->setChecked(true);
+  else if(_re1920x1080->data().toSize() == size)
+    _re1920x1080->setChecked(true);
+  else if(_re320x400->data().toSize() == size)
+    _re320x400->setChecked(true);
 }
 
 void LayoutRegionBase::performExport()
@@ -1070,7 +1070,7 @@ void LayoutRegionBase::mousePressEvent(QGraphicsSceneMouseEvent* event)
 
     }
     else if (event->button() == Qt::LeftButton){
-      emit regionBaseSelectionRequested(uid);
+      emit regionBaseSelectionRequested(_uid);
     }
 
     event->accept();
@@ -1079,9 +1079,9 @@ void LayoutRegionBase::mousePressEvent(QGraphicsSceneMouseEvent* event)
 
 void LayoutRegionBase::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 {
-  if(selectedRegion != NULL)
+  if(_selectedRegion != NULL)
   {
-    selectedRegion->updateCursor(event);
+    _selectedRegion->updateCursor(event);
   }
 
   QGraphicsScene::mouseMoveEvent(event);
@@ -1094,9 +1094,9 @@ void LayoutRegionBase::contextMenuEvent(
 
   if (!event->isAccepted())
   {
-    emit regionBaseSelectionRequested(uid);
+    emit regionBaseSelectionRequested(_uid);
 
-    contextMenu->exec(event->screenPos());
+    _contextMenu->exec(event->screenPos());
 
     event->accept();
   }
@@ -1156,7 +1156,7 @@ bool LayoutRegionBase::isGridVisible()
 
 void LayoutRegionBase::setGridVisible(bool visible)
 {
-  gridAction->setChecked(visible);
+  _gridAction->setChecked(visible);
   _grid->setVisible(visible);
 }
 

@@ -67,39 +67,39 @@ public:
   void setMoving(bool _moving);
 
   bool isCloning() const;
-  void setCloning(bool _cloning);
+  void setCloning(bool cloning);
 
   bool isResizing() const;
-  void setResizing(bool _resizing);
+  void setResizing(bool resizing);
 
   void setParent(LayoutRegion* region);
 
   bool isSelected() const;
-  void setSelected(bool _selected);
+  void setSelected(bool selected);
 
   bool isPainted() const;
-  void setPainted(bool _painted);
+  void setPainted(bool painted);
 
   bool hasChanged() const;
-  void setChanged(bool _changed);
+  void setChanged(bool changed);
 
   bool isValidated() const;
-  void setValidated(bool _validated);
+  void setValidated(bool validated);
 
   QString getId() const;
-  void setId(const QString &_id);
+  void setId(const QString &id);
 
   QString getUid() const;
-  void setUid(const QString &_uid);
+  void setUid(const QString &uid);
 
   QString getTitle() const;
-  void setTitle(const QString &_title);
+  void setTitle(const QString &title);
 
   QString getColor() const;
-  void setColor(const QString &_color);
+  void setColor(const QString &color);
 
   int getzIndex() const;
-  void setzIndex(int _zindex);
+  void setzIndex(int zindex);
   qreal getzIndexTop() const;
 
   qreal getTop() const;
@@ -121,26 +121,26 @@ public:
   qreal getRight() const;
 
   qreal getRelativeRight() const;
-  void setRelativeRight(qreal _relativeRight);
+  void setRelativeRight(qreal relativeRight);
 
   qreal getBottom() const;
 
   qreal getRelativeBottom() const;
-  void setRelativeBottom(qreal _relativeBottom);
+  void setRelativeBottom(qreal relativeBottom);
 
   qreal getWidth() const;
   qreal getPressWidth() const;
   qreal getResizeWidth() const;
 
   qreal getRelativeWidth() const;
-  void setRelativeWidth(qreal _relativeWidth);
+  void setRelativeWidth(qreal relativeWidth);
 
   qreal getHeight() const;
   qreal getPressHeight() const;
   qreal getResizeHeight() const;
 
   qreal getRelativeHeight() const;
-  void setRelativeHeight(qreal _relativeHeight);
+  void setRelativeHeight(qreal relativeHeight);
 
   QnlyResizeType getResizeType() const;
 
@@ -176,23 +176,23 @@ signals:
   void pasteRequested();
 
 protected:
-  void setTop(qreal _top);
-  void setMoveTop(qreal _moveTop);
-  void setPressTop(qreal _pressTop);
-  void setResizeTop(qreal _resizeTop);
-  void setLeft(qreal _left);
-  void setMoveLeft(qreal _moveLeft);
-  void setPressLeft(qreal _pressLeft);
-  void setResizeLeft(qreal _resizeLeft);
-  void setRight(qreal _right);
-  void setBottom(qreal _bottom);
-  void setWidth(qreal _width);
-  void setPressWidth(qreal _pressWidth);
-  void setResizeWidth(qreal _resizeWidth);
-  void setHeight(qreal _height);
-  void setPressHeight(qreal _pressHeight);
-  void setResizeHeight(qreal _resizeHeight);
-  void setzIndexTop(qreal _zindexTop);
+  void setTop(qreal top);
+  void setMoveTop(qreal moveTop);
+  void setPressTop(qreal pressTop);
+  void setResizeTop(qreal resizeTop);
+  void setLeft(qreal left);
+  void setMoveLeft(qreal moveLeft);
+  void setPressLeft(qreal pressLeft);
+  void setResizeLeft(qreal resizeLeft);
+  void setRight(qreal right);
+  void setBottom(qreal bottom);
+  void setWidth(qreal width);
+  void setPressWidth(qreal pressWidth);
+  void setResizeWidth(qreal resizeWidth);
+  void setHeight(qreal height);
+  void setPressHeight(qreal pressHeight);
+  void setResizeHeight(qreal resizeHeight);
+  void setzIndexTop(qreal zindexTop);
 
   void setResizeType(const QnlyResizeType &_resizeType);
 
@@ -201,18 +201,20 @@ protected:
 
   virtual QPainterPath shape() const;
   virtual QRectF boundingRect() const;
-  virtual void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
+  virtual void paint(QPainter *painter,
+                     const QStyleOptionGraphicsItem *option,
+                     QWidget *widget);
 
   virtual void mouseMoveEvent(QGraphicsSceneMouseEvent* event);
   virtual void mousePressEvent(QGraphicsSceneMouseEvent* event);
   virtual void mouseReleaseEvent(QGraphicsSceneMouseEvent* event);
   virtual void contextMenuEvent(QGraphicsSceneContextMenuEvent* event);
 
-  void keyReleaseEvent(QKeyEvent * event);
-  void keyPressEvent(QKeyEvent * event);
-  void dragEnterEvent(QGraphicsSceneDragDropEvent *event);
-  void dragLeaveEvent(QGraphicsSceneDragDropEvent *event);
-  void dropEvent(QGraphicsSceneDragDropEvent *event);
+  void keyReleaseEvent(QKeyEvent* event);
+  void keyPressEvent(QKeyEvent* event);
+  void dragEnterEvent(QGraphicsSceneDragDropEvent* event);
+  void dragLeaveEvent(QGraphicsSceneDragDropEvent* event);
+  void dropEvent(QGraphicsSceneDragDropEvent* event);
 
 protected slots:
   void performShow(QAction* action);

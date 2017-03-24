@@ -39,30 +39,30 @@ class LayoutRegionBase : public QGraphicsScene
   Q_OBJECT
 
 public:
-  explicit LayoutRegionBase(QObject* parent, QMenu* switchMenu);
+  explicit LayoutRegionBase(QObject* parent, QMenu* _switchMenu);
   virtual ~LayoutRegionBase();
 
   QString getId() const;
-  void setId(const QString &id);
+  void setId(const QString &_id);
 
   QString getUid() const;
-  void setUid(const QString &uid);
+  void setUid(const QString &_uid);
 
   QString getRegion() const;
-  void setRegion(const QString &region);
+  void setRegion(const QString &_region);
 
   QString getDevice() const;
-  void setDevice(const QString &device);
+  void setDevice(const QString &_device);
 
-  void addRegion(LayoutRegion* region,
+  void addRegion(LayoutRegion* _region,
                  LayoutRegion* parent,
                  const QMap<QString, QString> attributes);
-  void changeRegion(LayoutRegion* region,
+  void changeRegion(LayoutRegion* _region,
                     const QMap<QString, QString> attributes);
-  void selectRegion(LayoutRegion* region);
-  void hideRegion(LayoutRegion* region);
-  void updateActionText(LayoutRegion *region);
-  void removeRegion(LayoutRegion* region);
+  void selectRegion(LayoutRegion* _region);
+  void hideRegion(LayoutRegion* _region);
+  void updateActionText(LayoutRegion *_region);
+  void removeRegion(LayoutRegion* _region);
 
   QGraphicsItem* getBackgroundItem();
 
@@ -142,15 +142,15 @@ protected:
   QRect getSafeAreaRect(int w, int h, double w_perc, double h_perc);
 
 protected slots:
-  void performShow(QAction* action);
+  void performShow(QAction* _action);
 
   void requestAdditionRegion(LayoutRegion* parent);
-  void requestRegionSelection(LayoutRegion* region);
-  void requestRegionDeletion(LayoutRegion* region);
-  void requestRegionChange(LayoutRegion* region,
+  void requestRegionSelection(LayoutRegion* _region);
+  void requestRegionDeletion(LayoutRegion* _region);
+  void requestRegionChange(LayoutRegion* _region,
                            QMap<QString, QString> attributes);
   void requestMediaOverRegionAction(QString mediaId,
-                                    LayoutRegion* region);
+                                    LayoutRegion* _region);
   void performChangeResolution();
   void performGrid();
 
@@ -159,57 +159,57 @@ private:
   void createMenus();
   void createConnections();
 
-  QMenu* viewMenu;
-  QMenu* showMenu;
-  QMenu* arrangeMenu;
-  QMenu* screensizeMenu;
-  QMenu* switchMenu;
-  QMenu* contextMenu;
+  QMenu* _viewMenu;
+  QMenu* _showMenu;
+  QMenu* _arrangeMenu;
+  QMenu* _screensizeMenu;
+  QMenu* _switchMenu;
+  QMenu* _contextMenu;
 
-  QAction* helpAction;
-  QAction* undoAction;
-  QAction* redoAction;
-  QAction* cutAction;
-  QAction* copyAction;
-  QAction* pasteAction;
-  QAction* deleteAction;
-  QAction* zoominAction;
-  QAction* zoomoutAction;
-  QAction* zoomresetAction;
-  QAction* hideAction;
-  QAction* fullscreenAction;
-  QAction* exportAction;
-  QAction* regionAction;
-  QAction* regionbaseAction;
-  QAction* bringfrontAction;
-  QAction* bringforwardAction;
-  QAction* sendbackwardAction;
-  QAction* sendbackAction;
-  QAction* propertiesAction;
-  QAction* gridAction;
+  QAction* _helpAction;
+  QAction* _undoAction;
+  QAction* _redoAction;
+  QAction* _cutAction;
+  QAction* _copyAction;
+  QAction* _pasteAction;
+  QAction* _deleteAction;
+  QAction* _zoominAction;
+  QAction* _zoomoutAction;
+  QAction* _zoomresetAction;
+  QAction* _hideAction;
+  QAction* _fullscreenAction;
+  QAction* _exportAction;
+  QAction* _regionAction;
+  QAction* _regionbaseAction;
+  QAction* _bringfrontAction;
+  QAction* _bringforwardAction;
+  QAction* _sendbackwardAction;
+  QAction* _sendbackAction;
+  QAction* _propertiesAction;
+  QAction* _gridAction;
   QAction* _safeAreaAction;
-  QAction* action;
+  QAction* _action;
 
   /*! \todo This could be an array (and the user could also add its own size) */
-  QAction* re640x480;
-  QAction* re800x600;
-  QAction* re1024x768;
-  QAction* re854x480;
-  QAction* re1280x720;
-  QAction* re1920x1080;
-  QAction* re320x400;
+  QAction* _re640x480;
+  QAction* _re800x600;
+  QAction* _re1024x768;
+  QAction* _re854x480;
+  QAction* _re1280x720;
+  QAction* _re1920x1080;
+  QAction* _re320x400;
 
-  QActionGroup* screensizeGroup;
-  QActionGroup* regionActionGroup;
+  QActionGroup* _screensizeGroup;
+  QActionGroup* _regionActionGroup;
 
-  QGraphicsTextItem *graphicsRegionBaseId;
+  QGraphicsTextItem *_graphicsRegionBaseId;
 
-  QString id;
-  QString uid;
-  QString region;
-  QString device;
+  QString _id;
+  QString _uid;
+  QString _region;
+  QString _device;
 
-  QGraphicsRectItem* bgrect;
+  QGraphicsRectItem* _bgrect;
   QGraphicsRectItem* _safeActionAreaRect;
   QGraphicsTextItem* _safeActionAreaText;
   QGraphicsRectItem* _safeTitleAreaRect;
@@ -217,10 +217,10 @@ private:
 
   LayoutGrid* _grid;
 
-  LayoutRegion* selectedRegion;
+  LayoutRegion* _selectedRegion;
 
-  QMap<QString, QAction*> regionActions;
-  QMap<QString, LayoutRegion*> regions;
+  QMap<QString, QAction*> _regionActions;
+  QMap<QString, LayoutRegion*> _regions;
 };
 
 #endif // QNLYGRAPHICSREGIONBASE_H

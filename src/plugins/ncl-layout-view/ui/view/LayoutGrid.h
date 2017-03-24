@@ -24,8 +24,8 @@ protected:
                       const QStyleOptionGraphicsItem *option,
                       QWidget *widget);
 private:
-  qreal step;
-  QPen pen;
+  qreal _step;
+  QPen _pen;
 
 };
 

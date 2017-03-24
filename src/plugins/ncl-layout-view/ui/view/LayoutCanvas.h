@@ -33,7 +33,7 @@ public:
   void performZoomReset();
 
 private:
-  int zoomStep;
+  int _zoomStep;
 
 protected:
   virtual void keyPressEvent(QKeyEvent *event);

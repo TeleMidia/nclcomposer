@@ -30,8 +30,8 @@ LayoutView::LayoutView(QWidget* parent) :
   nregions = 0;
   nregionbases = 0;
 
-  selectedRegion = NULL;
-  selectedRegionBase = NULL;
+  _selectedRegion = NULL;
+  _selectedRegionBase = NULL;
 }
 
 LayoutView::~LayoutView()
@@ -42,11 +42,11 @@ LayoutView::~LayoutView()
 void LayoutView::createActions()
 {
   // help action
-  helpAction = new QAction(this);
-  helpAction->setText(tr("Help"));
+  _helpAction = new QAction(this);
+  _helpAction->setText(tr("Help"));
 
-  helpAction->setEnabled(false);
-  helpAction->setShortcut(QKeySequence("F1"));
+  _helpAction->setEnabled(false);
+  _helpAction->setShortcut(QKeySequence("F1"));
 
   // undo action
   // undoAction = new QAction(this);
@@ -56,131 +56,131 @@ void LayoutView::createActions()
   // undoAction->setShortcut(QKeySequence("Ctrl+Z"));
 
   // redo action
-  redoAction = new QAction(this);
-  redoAction->setText(tr("Redo"));
+  _redoAction = new QAction(this);
+  _redoAction->setText(tr("Redo"));
 
-  redoAction->setEnabled(false);
-  redoAction->setShortcut(QKeySequence("Ctrl+Shift+Z"));
+  _redoAction->setEnabled(false);
+  _redoAction->setShortcut(QKeySequence("Ctrl+Shift+Z"));
 
   // cut action
-  cutAction = new QAction(this);
-  cutAction->setText(tr("Cut"));
+  _cutAction = new QAction(this);
+  _cutAction->setText(tr("Cut"));
 
-  cutAction->setEnabled(false);
-  cutAction->setShortcut(QKeySequence("Ctrl+X"));
+  _cutAction->setEnabled(false);
+  _cutAction->setShortcut(QKeySequence("Ctrl+X"));
 
   // copy action
-  copyAction = new QAction(this);
-  copyAction->setText(tr("Copy"));
+  _copyAction = new QAction(this);
+  _copyAction->setText(tr("Copy"));
 
-  copyAction->setEnabled(false);
+  _copyAction->setEnabled(false);
   // copyAction->setShortcut(QKeySequence("Ctrl+C"));
 
   // paste action
-  pasteAction = new QAction(this);
-  pasteAction->setText(tr("Paste"));
+  _pasteAction = new QAction(this);
+  _pasteAction->setText(tr("Paste"));
 
-  pasteAction->setEnabled(true);
+  _pasteAction->setEnabled(true);
   // pasteAction->setShortcut(QKeySequence("Ctrl+V"));
 
   // delete action
-  deleteAction = new QAction(this);
-  deleteAction->setText(tr("&Delete"));
-  deleteAction->setIcon(QIcon(":/icon/minus"));
+  _deleteAction = new QAction(this);
+  _deleteAction->setText(tr("&Delete"));
+  _deleteAction->setIcon(QIcon(":/icon/minus"));
 
-  deleteAction->setEnabled(false);
-  deleteAction->setShortcut(QKeySequence("Del"));
+  _deleteAction->setEnabled(false);
+  _deleteAction->setShortcut(QKeySequence("Del"));
 
   // zoomin action
-  zoominAction = new QAction(this);
-  zoominAction->setText(tr("Zoom In"));
+  _zoominAction = new QAction(this);
+  _zoominAction->setText(tr("Zoom In"));
 
-  zoominAction->setEnabled(false);
-  zoominAction->setShortcut(QKeySequence("Ctrl++"));
+  _zoominAction->setEnabled(false);
+  _zoominAction->setShortcut(QKeySequence("Ctrl++"));
 
   // zoomout action
-  zoomoutAction = new QAction(this);
-  zoomoutAction->setText(tr("Zoom Out"));
+  _zoomoutAction = new QAction(this);
+  _zoomoutAction->setText(tr("Zoom Out"));
 
-  zoomoutAction->setEnabled(false);
-  zoomoutAction->setShortcut(QKeySequence("Ctrl+-"));
+  _zoomoutAction->setEnabled(false);
+  _zoomoutAction->setShortcut(QKeySequence("Ctrl+-"));
 
   // reset action
-  zoomresetAction = new QAction(this);
-  zoomresetAction->setText(tr("Reset"));
+  _zoomresetAction = new QAction(this);
+  _zoomresetAction->setText(tr("Reset"));
 
-  zoomresetAction->setEnabled(false);
-  zoomresetAction->setShortcut(QKeySequence("Ctrl+0"));
+  _zoomresetAction->setEnabled(false);
+  _zoomresetAction->setShortcut(QKeySequence("Ctrl+0"));
 
   // fullscreen action
-  fullscreenAction = new QAction(this);
-  fullscreenAction->setText(tr("Full Screen"));
+  _fullscreenAction = new QAction(this);
+  _fullscreenAction->setText(tr("Full Screen"));
 
-  fullscreenAction->setEnabled(true);
-  fullscreenAction->setShortcut(QKeySequence("F11"));
+  _fullscreenAction->setEnabled(true);
+  _fullscreenAction->setShortcut(QKeySequence("F11"));
 
   // export action
-  exportAction = new QAction(this);
-  exportAction->setText(tr("Export..."));
+  _exportAction = new QAction(this);
+  _exportAction->setText(tr("Export..."));
 
-  exportAction->setEnabled(false);
+  _exportAction->setEnabled(false);
 
   // region action
-  regionAction = new QAction(this);
-  regionAction->setText(tr("Region"));
-  regionAction->setIcon(QIcon(":/icon/plus"));
+  _regionAction = new QAction(this);
+  _regionAction->setText(tr("Region"));
+  _regionAction->setIcon(QIcon(":/icon/plus"));
 
-  regionAction->setEnabled(false);
+  _regionAction->setEnabled(false);
 
   // regionbase action
-  regionbaseAction = new QAction(this);
-  regionbaseAction->setText(tr("Add Region &Base"));
-  regionbaseAction->setIcon(QIcon(":/icon/plus"));
+  _regionbaseAction = new QAction(this);
+  _regionbaseAction->setText(tr("Add Region &Base"));
+  _regionbaseAction->setIcon(QIcon(":/icon/plus"));
 
-  regionbaseAction->setEnabled(true);
+  _regionbaseAction->setEnabled(true);
 
   // bring to front action
-  bringfrontAction = new QAction(this);
-  bringfrontAction->setText(tr("Bring to Front"));
+  _bringfrontAction = new QAction(this);
+  _bringfrontAction->setText(tr("Bring to Front"));
 
-  bringfrontAction->setEnabled(false);
-  bringfrontAction->setShortcut(QKeySequence("Shift+Ctrl+]"));
+  _bringfrontAction->setEnabled(false);
+  _bringfrontAction->setShortcut(QKeySequence("Shift+Ctrl+]"));
 
   // bring forward action
-  bringforwardAction = new QAction(this);
-  bringforwardAction->setText(tr("Bring Forward"));
+  _bringforwardAction = new QAction(this);
+  _bringforwardAction->setText(tr("Bring Forward"));
 
-  bringforwardAction->setEnabled(false);
-  bringforwardAction->setShortcut(QKeySequence("Ctrl+]"));
+  _bringforwardAction->setEnabled(false);
+  _bringforwardAction->setShortcut(QKeySequence("Ctrl+]"));
 
   // send backward action
-  sendbackwardAction = new QAction(this);
-  sendbackwardAction->setText(tr("Send Backward"));
+  _sendbackwardAction = new QAction(this);
+  _sendbackwardAction->setText(tr("Send Backward"));
 
-  sendbackwardAction->setEnabled(false);
-  sendbackwardAction->setShortcut(QKeySequence("Ctrl+["));
+  _sendbackwardAction->setEnabled(false);
+  _sendbackwardAction->setShortcut(QKeySequence("Ctrl+["));
 
   // send to back action
-  sendbackAction = new QAction(this);
-  sendbackAction->setText(tr("Send to Back"));
+  _sendbackAction = new QAction(this);
+  _sendbackAction->setText(tr("Send to Back"));
 
-  sendbackAction->setEnabled(false);
-  sendbackAction->setShortcut(QKeySequence("Shift+Ctrl+["));
+  _sendbackAction->setEnabled(false);
+  _sendbackAction->setShortcut(QKeySequence("Shift+Ctrl+["));
 
   // hide action
-  hideAction = new QAction(this);
-  hideAction->setText(tr("Hide"));
+  _hideAction = new QAction(this);
+  _hideAction->setText(tr("Hide"));
 
-  hideAction->setEnabled(false);
+  _hideAction->setEnabled(false);
 
   // properties action
-  propertiesAction = new QAction(this);
-  propertiesAction->setText(tr("Properties"));
+  _propertiesAction = new QAction(this);
+  _propertiesAction->setText(tr("Properties"));
 
-  propertiesAction->setEnabled(false);
+  _propertiesAction->setEnabled(false);
 
-  regionbaseActionGroup = new QActionGroup(this);
-  regionbaseActionGroup->setExclusive(true);
+  _regionbaseActionGroup = new QActionGroup(this);
+  _regionbaseActionGroup->setExclusive(true);
 
   setMouseTracking(true);
 }
@@ -188,46 +188,46 @@ void LayoutView::createActions()
 void LayoutView::createMenus()
 {
   // view menu
-  viewMenu = new QMenu();
-  viewMenu->setTitle(tr("View"));
+  _viewMenu = new QMenu();
+  _viewMenu->setTitle(tr("View"));
 
-  viewMenu->setEnabled(false);
+  _viewMenu->setEnabled(false);
 
-  viewMenu->addAction(zoominAction);
-  viewMenu->addAction(zoomoutAction);
-  viewMenu->addAction(zoomresetAction);
-  viewMenu->addSeparator();
-  viewMenu->addAction(fullscreenAction);
+  _viewMenu->addAction(_zoominAction);
+  _viewMenu->addAction(_zoomoutAction);
+  _viewMenu->addAction(_zoomresetAction);
+  _viewMenu->addSeparator();
+  _viewMenu->addAction(_fullscreenAction);
 
-  showMenu = new QMenu();
-  showMenu->setTitle(tr("Show"));
+  _showMenu = new QMenu();
+  _showMenu->setTitle(tr("Show"));
 
-  showMenu->setEnabled(false);
+  _showMenu->setEnabled(false);
 
   // arrange menu
-  arrangeMenu = new QMenu();
-  arrangeMenu->setTitle(tr("Arrange"));
+  _arrangeMenu = new QMenu();
+  _arrangeMenu->setTitle(tr("Arrange"));
 
-  arrangeMenu->setEnabled(false);
+  _arrangeMenu->setEnabled(false);
 
-  arrangeMenu->addAction(bringfrontAction);
-  arrangeMenu->addAction(bringforwardAction);
-  arrangeMenu->addAction(sendbackwardAction);
-  arrangeMenu->addAction(sendbackAction);
+  _arrangeMenu->addAction(_bringfrontAction);
+  _arrangeMenu->addAction(_bringforwardAction);
+  _arrangeMenu->addAction(_sendbackwardAction);
+  _arrangeMenu->addAction(_sendbackAction);
 
   // switch menu
-  switchMenu = new QMenu();
-  switchMenu->setTitle(tr("Current RegionBase"));
+  _switchMenu = new QMenu();
+  _switchMenu->setTitle(tr("Current RegionBase"));
 
-  switchMenu->setEnabled(false);
+  _switchMenu->setEnabled(false);
 
   // context menu
-  contextMenu = new QMenu();
-  contextMenu->addAction(regionAction);
-  contextMenu->addAction(regionbaseAction);
-  contextMenu->addSeparator();
-  contextMenu->addAction(deleteAction);
-  contextMenu->addSeparator();
+  _contextMenu = new QMenu();
+  _contextMenu->addAction(_regionAction);
+  _contextMenu->addAction(_regionbaseAction);
+  _contextMenu->addSeparator();
+  _contextMenu->addAction(_deleteAction);
+  _contextMenu->addSeparator();
 
   //  contextMenu->addSeparator();
   //  contextMenu->addAction(undoAction);
@@ -236,31 +236,31 @@ void LayoutView::createMenus()
   //  contextMenu->addAction(cutAction);
   //  contextMenu->addAction(copyAction);
 
-  contextMenu->addAction(pasteAction);
-  contextMenu->addSeparator();
-  contextMenu->addAction(exportAction);
-  contextMenu->addSeparator();
-  contextMenu->addMenu(viewMenu);
-  contextMenu->addMenu(showMenu);
-  contextMenu->addMenu(arrangeMenu);
-  contextMenu->addSeparator();
-  contextMenu->addAction(hideAction);
-  contextMenu->addSeparator();
-  contextMenu->addMenu(switchMenu);
-  contextMenu->addSeparator();
-  contextMenu->addAction(propertiesAction);
-  contextMenu->addSeparator();
-  contextMenu->addAction(helpAction);
+  _contextMenu->addAction(_pasteAction);
+  _contextMenu->addSeparator();
+  _contextMenu->addAction(_exportAction);
+  _contextMenu->addSeparator();
+  _contextMenu->addMenu(_viewMenu);
+  _contextMenu->addMenu(_showMenu);
+  _contextMenu->addMenu(_arrangeMenu);
+  _contextMenu->addSeparator();
+  _contextMenu->addAction(_hideAction);
+  _contextMenu->addSeparator();
+  _contextMenu->addMenu(_switchMenu);
+  _contextMenu->addSeparator();
+  _contextMenu->addAction(_propertiesAction);
+  _contextMenu->addSeparator();
+  _contextMenu->addAction(_helpAction);
 }
 
 void LayoutView::createConnections()
 {
-  connect(regionbaseActionGroup, SIGNAL(triggered(QAction*)),
+  connect(_regionbaseActionGroup, SIGNAL(triggered(QAction*)),
           SLOT(performSwitch(QAction*)));
 
-  connect(regionbaseAction, SIGNAL(triggered()),SLOT(performRegionBase()));
+  connect(_regionbaseAction, SIGNAL(triggered()),SLOT(performRegionBase()));
 
-  connect(pasteAction, SIGNAL(triggered()), SLOT(performPaste()));
+  connect(_pasteAction, SIGNAL(triggered()), SLOT(performPaste()));
 }
 
 void LayoutView::requestRegionAddition(const QString regionUID,
@@ -286,7 +286,7 @@ void LayoutView::requestRegionChange(const QString regionUID,
 
 void LayoutView::performSwitch(QAction* action)
 {
-  emit regionBaseSelected(regionbaseActions.key(action));
+  emit regionBaseSelected(_regionbaseActions.key(action));
 }
 
 void LayoutView::performRegionBase()
@@ -303,10 +303,10 @@ void LayoutView::addRegion(const QString regionUID,
                            const QString regionbaseUID,
                            const QMap<QString, QString> attributes)
 {
-  if (!regions.contains(regionUID) &&
-      regionbases.contains(regionbaseUID))
+  if (!_regions.contains(regionUID) &&
+      _regionbases.contains(regionbaseUID))
   {
-    LayoutRegion* region = new LayoutRegion(switchMenu);
+    LayoutRegion* region = new LayoutRegion(_switchMenu);
 
     if (regionUID.isEmpty())
       region->setUid(QUuid::createUuid().toString());
@@ -315,10 +315,10 @@ void LayoutView::addRegion(const QString regionUID,
 
     LayoutRegion* parent = NULL;
 
-    if (regions.contains(parentUID))
-      parent = regions[parentUID];
+    if (_regions.contains(parentUID))
+      parent = _regions[parentUID];
 
-    LayoutRegionBase* regionbase = regionbases[regionbaseUID];
+    LayoutRegionBase* regionbase = _regionbases[regionbaseUID];
 
     nregions++;
 
@@ -328,8 +328,8 @@ void LayoutView::addRegion(const QString regionUID,
 
 void LayoutView::performCopy()
 {
-  if (this->selectedRegion)
-    performCopy(this->selectedRegion);
+  if (this->_selectedRegion)
+    performCopy(this->_selectedRegion);
 }
 
 void LayoutView::performCopy(LayoutRegion *region)
@@ -349,8 +349,8 @@ void LayoutView::performCopy(LayoutRegion *region)
 
 void LayoutView::performCut()
 {
-  if (this->selectedRegion)
-    performCut(this->selectedRegion);
+  if (this->_selectedRegion)
+    performCut(this->_selectedRegion);
 }
 
 void LayoutView::performCut(LayoutRegion *region)
@@ -365,32 +365,32 @@ void LayoutView::performCut(LayoutRegion *region)
 void LayoutView::performPaste()
 {
   QString selectedRegionUId = "";
-  if(selectedRegion != NULL)
+  if(_selectedRegion != NULL)
   {
-    selectedRegionUId = selectedRegion->getUid();
+    selectedRegionUId = _selectedRegion->getUid();
 
-    if(selectedRegion->isCloning()) //being called by ctrl+mousepressmove,which clones region
+    if(_selectedRegion->isCloning()) //being called by ctrl+mousepressmove,which clones region
     {
       //selectedRegion->getCloneAttributes();
-      copiedRegionAttrs["top"] = selectedRegion->getCloneAttributes()["top"];
-      copiedRegionAttrs["left"] = selectedRegion->getCloneAttributes()["left"];
-      copiedRegionAttrs["right"] = selectedRegion->getCloneAttributes()["right"];
-      copiedRegionAttrs["bottom"] = selectedRegion->getCloneAttributes()["bottom"];
-      copiedRegionAttrs["zIndex"] = selectedRegion->getCloneAttributes()["zIndex"];
+      copiedRegionAttrs["top"] = _selectedRegion->getCloneAttributes()["top"];
+      copiedRegionAttrs["left"] = _selectedRegion->getCloneAttributes()["left"];
+      copiedRegionAttrs["right"] = _selectedRegion->getCloneAttributes()["right"];
+      copiedRegionAttrs["bottom"] = _selectedRegion->getCloneAttributes()["bottom"];
+      copiedRegionAttrs["zIndex"] = _selectedRegion->getCloneAttributes()["zIndex"];
 
-      LayoutRegion* parent = (LayoutRegion*) selectedRegion->parentItem();
+      LayoutRegion* parent = (LayoutRegion*) _selectedRegion->parentItem();
 
       if(parent != NULL)
         selectedRegionUId = parent->getUid();
       else
-        selectedRegionUId = selectedRegionBase->getUid();
+        selectedRegionUId = _selectedRegionBase->getUid();
     }
   }
   qDebug() << "Perform paste inside: " << selectedRegionUId;
 
   QString selectedRegionBaseUId = "";
-  if(selectedRegionBase != NULL)
-    selectedRegionBaseUId = selectedRegionBase->getUid();
+  if(_selectedRegionBase != NULL)
+    selectedRegionBaseUId = _selectedRegionBase->getUid();
 
   requestRegionAddition("",
                         selectedRegionUId,
@@ -401,10 +401,10 @@ void LayoutView::performPaste()
 void LayoutView::removeRegion(const QString regionUID,
                               const QString regionbaseUID)
 {
-  if (regions.contains(regionUID) && regionbases.contains(regionbaseUID))
+  if (_regions.contains(regionUID) && _regionbases.contains(regionbaseUID))
   {
-    removeRegion(regions[regionUID],
-                 regionbases[regionbaseUID]);
+    removeRegion(_regions[regionUID],
+                 _regionbases[regionbaseUID]);
   }
 }
 
@@ -412,10 +412,10 @@ void LayoutView::changeRegion(const QString regionUID,
                               const QString regionbaseUID,
                               const QMap<QString, QString> attributes)
 {
-  if (regions.contains(regionUID) && regionbases.contains(regionbaseUID))
+  if (_regions.contains(regionUID) && _regionbases.contains(regionbaseUID))
   {
-    changeRegion(regions[regionUID],
-                 regionbases[regionbaseUID],
+    changeRegion(_regions[regionUID],
+                 _regionbases[regionbaseUID],
                  attributes);
   }
 }
@@ -423,22 +423,22 @@ void LayoutView::changeRegion(const QString regionUID,
 void LayoutView::selectRegion(const QString regionUID,
                               const QString regionbaseUID)
 {
-  if (regions.contains(regionUID) && regionbases.contains(regionbaseUID))
+  if (_regions.contains(regionUID) && _regionbases.contains(regionbaseUID))
   {
-    selectRegion(regions[regionUID],
-                 regionbases[regionbaseUID]);
+    selectRegion(_regions[regionUID],
+                 _regionbases[regionbaseUID]);
   }
 }
 
 void LayoutView::addRegionBase(const QString regionbaseUID,
                                const QMap<QString, QString> attributes)
 {
-  if (!regionbases.contains(regionbaseUID))
+  if (!_regionbases.contains(regionbaseUID))
   {
     LayoutCanvas* canvas = new LayoutCanvas(this);
 
     LayoutRegionBase* regionbase =
-        new LayoutRegionBase(canvas, switchMenu);
+        new LayoutRegionBase(canvas, _switchMenu);
 
     regionbase->setParent(canvas);
 
@@ -458,26 +458,26 @@ void LayoutView::addRegionBase(const QString regionbaseUID,
 
 void LayoutView::removeRegionBase(const QString regionbaseUID)
 {
-  if (regionbases.contains(regionbaseUID))
+  if (_regionbases.contains(regionbaseUID))
   {
-    removeRegionBase(regionbases[regionbaseUID]);
+    removeRegionBase(_regionbases[regionbaseUID]);
   }
 }
 
 void LayoutView::changeRegionBase(const QString regionbaseUID,
                                   const QMap<QString, QString> attributes)
 {
-  if (regionbases.contains(regionbaseUID))
+  if (_regionbases.contains(regionbaseUID))
   {
-    changeRegionBase(regionbases[regionbaseUID], attributes);
+    changeRegionBase(_regionbases[regionbaseUID], attributes);
   }
 }
 
 void LayoutView::selectRegionBase(const QString regionbaseUID)
 {
-  if (regionbases.contains(regionbaseUID))
+  if (_regionbases.contains(regionbaseUID))
   {
-    selectRegionBase(regionbases[regionbaseUID]);
+    selectRegionBase(_regionbases[regionbaseUID]);
   }
   else
     qWarning() << tr("It is not possible to select regionBase ")
@@ -493,7 +493,7 @@ void LayoutView::addRegion(LayoutRegion* region,
   {
     qDebug() << "Adding Region" << attributes;
 
-    regions[region->getUid()] = region;
+    _regions[region->getUid()] = region;
 
     regionBase->addRegion(region,
                           parent,
@@ -519,7 +519,7 @@ void LayoutView::removeRegion( LayoutRegion* region,
                       of the type QnlyGraphicsRegion " << __FILE__ << __LINE__;
     }
 
-    regions.remove(region->getUid());
+    _regions.remove(region->getUid());
     regionBase->removeRegion(region);
     //delete(region);
   }
@@ -540,13 +540,13 @@ void LayoutView::selectRegion( LayoutRegion* region,
 {
   if (region != nullptr && regionBase != nullptr)
   {
-    if (selectedRegion != nullptr)
+    if (_selectedRegion != nullptr)
     {
-      selectedRegion->setSelected(false);
+      _selectedRegion->setSelected(false);
     }
 
     regionBase->selectRegion(region);
-    selectedRegion = region;
+    _selectedRegion = region;
 
     QWidget* parent = (QWidget*) regionBase->parent();
     setCurrentWidget(parent);
@@ -573,18 +573,18 @@ void LayoutView::addRegionBase( LayoutRegionBase* regionBase,
     addWidget(parent);
     setCurrentWidget(parent);
 
-    regionbases[regionBase->getUid()] = regionBase;
+    _regionbases[regionBase->getUid()] = regionBase;
 
     QAction* action = new QAction(this);
     action->setText(regionBase->getId());
     action->setCheckable(true);
     action->setEnabled(true);
 
-    switchMenu->addAction(action);
-    regionbaseActionGroup->addAction(action);
+    _switchMenu->addAction(action);
+    _regionbaseActionGroup->addAction(action);
 
     action->trigger();
-    regionbaseActions[regionBase->getUid()] = action;
+    _regionbaseActions[regionBase->getUid()] = action;
 
     connect(regionBase, SIGNAL(regionbasePerformed()),
             SLOT(performRegionBase()));
@@ -643,10 +643,10 @@ void LayoutView::removeRegionBase(LayoutRegionBase* regionBase)
 {
   if (regionBase != NULL)
   {
-    QAction* action = regionbaseActions[regionBase->getUid()];
-    switchMenu->removeAction(action);
+    QAction* action = _regionbaseActions[regionBase->getUid()];
+    _switchMenu->removeAction(action);
 
-    regionbaseActionGroup->removeAction(action);
+    _regionbaseActionGroup->removeAction(action);
 
     foreach(QGraphicsItem* item, regionBase->items())
     {
@@ -656,7 +656,7 @@ void LayoutView::removeRegionBase(LayoutRegionBase* regionBase)
 
         if (child != NULL)
         {
-          regions.remove(child->getUid());
+          _regions.remove(child->getUid());
         }
         else
           qWarning() << "Trying to remove an element that is not of the\
@@ -666,7 +666,7 @@ void LayoutView::removeRegionBase(LayoutRegionBase* regionBase)
 
     QWidget* parent = (QWidget*) regionBase->parent();
     removeWidget(parent);
-    regionbases.remove(regionBase->getUid());
+    _regionbases.remove(regionBase->getUid());
 
     if (currentWidget() != NULL)
     {
@@ -687,7 +687,7 @@ void LayoutView::changeRegionBase( LayoutRegionBase* regionBase,
     {
       regionBase->setId(attributes["id"]);
 
-      QAction* action = regionbaseActions[regionBase->getUid()];
+      QAction* action = _regionbaseActions[regionBase->getUid()];
       action->setText(attributes["id"]);
     }
 
@@ -706,18 +706,18 @@ void LayoutView::selectRegionBase(LayoutRegionBase* regionBase)
     QWidget* parent = (QWidget*) regionBase->parent();
     setCurrentWidget(parent);
 
-    QAction* action = regionbaseActions[regionBase->getUid()];
+    QAction* action = _regionbaseActions[regionBase->getUid()];
     action->setChecked(true);
 
-    if (selectedRegion != NULL)
+    if (_selectedRegion != NULL)
     {
-      selectedRegion->setSelected(false);
-      selectedRegion = NULL;
+      _selectedRegion->setSelected(false);
+      _selectedRegion = NULL;
     }
 
-    selectedRegionBase = regionBase;
+    _selectedRegionBase = regionBase;
 
-    emit regionBaseSelected(selectedRegionBase->getUid());
+    emit regionBaseSelected(_selectedRegionBase->getUid());
   }
 }
 
@@ -726,7 +726,7 @@ void LayoutView::setGridVisible(bool visible)
   if(this->gridVisibility != visible)
   {
     this->gridVisibility = visible;
-    foreach(LayoutRegionBase *regionBase, regionbases.values())
+    foreach(LayoutRegionBase *regionBase, _regionbases.values())
     {
       regionBase->setGridVisible(visible);
     }
@@ -737,12 +737,12 @@ void LayoutView::setGridVisible(bool visible)
 
 LayoutRegionBase* LayoutView::getSelectedRegionBase()
 {
-  return selectedRegionBase;
+  return _selectedRegionBase;
 }
 
 LayoutRegion* LayoutView::getSelectedRegion()
 {
-  return selectedRegion;
+  return _selectedRegion;
 }
 
 void LayoutView::contextMenuEvent(QContextMenuEvent *event)
@@ -751,7 +751,7 @@ void LayoutView::contextMenuEvent(QContextMenuEvent *event)
 
   if (!event->isAccepted())
   {
-    contextMenu->exec(event->globalPos());
+    _contextMenu->exec(event->globalPos());
     event->accept();
   }
 }

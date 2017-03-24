@@ -161,45 +161,45 @@ private:
   void createMenus();
   void createConnections();
 
-  QMenu* viewMenu;
-  QMenu* showMenu;
-  QMenu* arrangeMenu;
-  QMenu* switchMenu;
-  QMenu* contextMenu;
+  QMenu* _viewMenu;
+  QMenu* _showMenu;
+  QMenu* _arrangeMenu;
+  QMenu* _switchMenu;
+  QMenu* _contextMenu;
   // \todo This actions must be in a place that will be shared by
   //       qnlyview and qnlymainwindow
-  QAction* helpAction;
+  QAction* _helpAction;
   // QAction* undoAction;  // Temporaly disabled
-  QAction* redoAction;
-  QAction* cutAction;
-  QAction* copyAction;
-  QAction* pasteAction;
-  QAction* deleteAction;
-  QAction* zoominAction;
-  QAction* zoomoutAction;
-  QAction* zoomresetAction;
-  QAction* hideAction;
-  QAction* fullscreenAction;
-  QAction* exportAction;
-  QAction* regionAction;
-  QAction* regionbaseAction;
-  QAction* bringfrontAction;
-  QAction* bringforwardAction;
-  QAction* sendbackwardAction;
-  QAction* sendbackAction;
-  QAction* propertiesAction;
+  QAction* _redoAction;
+  QAction* _cutAction;
+  QAction* _copyAction;
+  QAction* _pasteAction;
+  QAction* _deleteAction;
+  QAction* _zoominAction;
+  QAction* _zoomoutAction;
+  QAction* _zoomresetAction;
+  QAction* _hideAction;
+  QAction* _fullscreenAction;
+  QAction* _exportAction;
+  QAction* _regionAction;
+  QAction* _regionbaseAction;
+  QAction* _bringfrontAction;
+  QAction* _bringforwardAction;
+  QAction* _sendbackwardAction;
+  QAction* _sendbackAction;
+  QAction* _propertiesAction;
 
-  QActionGroup* regionbaseActionGroup;
+  QActionGroup* _regionbaseActionGroup;
 
-  LayoutRegion* selectedRegion;
-  LayoutRegionBase* selectedRegionBase;
+  LayoutRegion* _selectedRegion;
+  LayoutRegionBase* _selectedRegionBase;
 
   int nregions;
   int nregionbases;
 
-  QMap<QString, QAction*> regionbaseActions;
-  QMap<QString, LayoutRegion*> regions;
-  QMap<QString, LayoutRegionBase*> regionbases;
+  QMap<QString, QAction*> _regionbaseActions;
+  QMap<QString, LayoutRegion*> _regions;
+  QMap<QString, LayoutRegionBase*> _regionbases;
 };
 
 #endif // QNLYVIEW_H

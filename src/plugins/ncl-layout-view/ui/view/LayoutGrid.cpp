@@ -14,22 +14,22 @@ LayoutGrid::~LayoutGrid()
 
 void LayoutGrid::setStep(qreal step)
 {
-  this->step = step;
+  this->_step = step;
 }
 
 qreal LayoutGrid::getStep()
 {
-  return step;
+  return _step;
 }
 
 void LayoutGrid::setPen(QPen pen)
 {
-  this->pen = pen;
+  this->_pen = pen;
 }
 
 QPen LayoutGrid::getPen()
 {
-  return pen;
+  return _pen;
 }
 
 void LayoutGrid::paint( QPainter *painter,
@@ -39,7 +39,7 @@ void LayoutGrid::paint( QPainter *painter,
   Q_UNUSED(option)
   Q_UNUSED(widget)
 
-  painter->setPen(pen);
+  painter->setPen(_pen);
 
   QRectF r = rect();
   int w = 0;
@@ -47,7 +47,7 @@ void LayoutGrid::paint( QPainter *painter,
   while (w < r.width())
   {
     painter->drawLine(w,0,w,r.height());
-    w += step;
+    w += _step;
   }
 
   int h = 0;
@@ -55,6 +55,6 @@ void LayoutGrid::paint( QPainter *painter,
   while (h < r.height())
   {
     painter->drawLine(0,h,r.width(),h);
-    h  += step;
+    h  += _step;
   }
 }

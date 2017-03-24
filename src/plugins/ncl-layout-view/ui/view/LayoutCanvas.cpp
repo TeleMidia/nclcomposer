@@ -23,7 +23,7 @@
 
 LayoutCanvas::LayoutCanvas(QWidget* parent) : QGraphicsView(parent)
 {
-  zoomStep = 0;
+  _zoomStep = 0;
   setBackgroundBrush(QBrush(QColor("#eee")));
 }
 
@@ -95,26 +95,26 @@ void LayoutCanvas::keyPressEvent(QKeyEvent *event)
 
 void LayoutCanvas::performZoomIn()
 {
-  if (zoomStep > 0)
+  if (_zoomStep > 0)
   {
-    zoomStep--;
+    _zoomStep--;
     resetMatrix();
-    scale(1 - zoomStep*0.05, 1 - zoomStep*0.05);
+    scale(1 - _zoomStep*0.05, 1 - _zoomStep*0.05);
   }
 }
 
 void LayoutCanvas::performZoomOut()
 {
-  if (zoomStep*0.05 < 0.9)
+  if (_zoomStep*0.05 < 0.9)
   {
-    zoomStep++;
+    _zoomStep++;
     resetMatrix();
-    scale(1 - zoomStep*0.05, 1 - zoomStep*0.05);
+    scale(1 - _zoomStep*0.05, 1 - _zoomStep*0.05);
   }
 }
 
 void LayoutCanvas::performZoomReset()
 {
-  zoomStep = 0;
+  _zoomStep = 0;
   resetMatrix();
 }
