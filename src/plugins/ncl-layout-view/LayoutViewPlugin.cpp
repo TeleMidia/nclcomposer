@@ -287,6 +287,10 @@ void NCLLayoutViewPlugin::onEntityAdded(const QString &pluginID, Entity *entity)
     {
       addRegionBaseToView(entity);
     }
+    else if (entity->getType() == "descriptor")
+    {
+      addDescriptorToView(entity);
+    }
   }
 }
 
@@ -321,6 +325,11 @@ void NCLLayoutViewPlugin::onEntityChanged(const QString &pluginID, Entity *entit
     else if (entity->getType() == "regionBase")
     {
       changeRegionBaseInView(entity);
+    }
+    else if (entity->getType() == "descriptor")
+    {
+      addDescriptorToView(entity);
+      //LayoutRegion::descriptorsIDs[] ;
     }
   }
 }
@@ -779,6 +788,42 @@ void NCLLayoutViewPlugin::selectRegionBaseInView(QString entityUID)
     }
   }
 }
+
+void NCLLayoutViewPlugin::addDescriptorToView(Entity* entity)
+{
+  if (entity != NULL)
+  {
+    if (entity->getType() == "descriptor" && !entity->getAttribute("id").isEmpty() && !entity->getAttribute("region").isEmpty())
+    {
+      //descriptorsIDs[entity->getAttribute("region")] = entity->getAttribute("id");
+      //QList<Entity*> model_regions = project->getEntitiesbyType("region");
+      for(Entity *rg : regions.values())
+      {
+        if (entity->getAttribute("region") == rg->getAttribute("id"))
+        {
+          view->addDescriptor(rg->getUniqueId(),entity->getAttribute("id"));
+          //view->changeRegion(rg->getUniqueId());
+        }
+      }
+    }
+  }
+}
+
+void NCLLayoutViewPlugin::removeDescriptorFromView(QString entityUID)
+{
+
+}
+
+//void NCLLayoutViewPlugin::changeDescriptorInView(Entity* entity)
+//{
+//  if (entity != NULL)
+//  {
+//    if (entity->getType() == "descriptor" && !entity->getAttribute("id").isEmpty() && !entity->getAttribute("region").isEmpty())
+//    {
+//      descriptorsIDs[entity->getAttribute("region")] = entity->getAttribute("id");
+//    }
+//  }
+//}
 
 void NCLLayoutViewPlugin::addRegion(const QString &regionUID,
                                     const QString &parentUID,

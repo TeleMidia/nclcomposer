@@ -95,6 +95,9 @@ public:
   QString getTitle() const;
   void setTitle(const QString &title);
 
+  QString getDescriptor() const;
+  void setDescriptor(const QString &descriptor);
+
   QString getColor() const;
   void setColor(const QString &color);
 
@@ -299,6 +302,7 @@ private:
   QString _id;
   QString _uid;
   QString _title;
+  QString _descriptor; //
   QString _color;
 
   QnlyResizeType _resizeType;

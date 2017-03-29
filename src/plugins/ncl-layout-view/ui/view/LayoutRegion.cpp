@@ -49,6 +49,7 @@ LayoutRegion::LayoutRegion(QMenu* switchMenu, LayoutRegion* parent)
   setId("");
   setUid("");
   setTitle("");
+  setDescriptor("");
 
   setRelativeTop(0);
   setRelativeLeft(0);
@@ -145,9 +146,7 @@ QString LayoutRegion::getId() const
 void LayoutRegion::setId(const QString &id)
 {
   this->_id = id;
-
-  setToolTip(_title+" "+"("+id+")");
-
+  setToolTip(_title+" "+"("+_id+") "+_descriptor);
   if (parentItem() != NULL)
   {
     LayoutRegion* parent = (LayoutRegion*) parentItem();
@@ -180,8 +179,19 @@ QString LayoutRegion::getTitle() const
 void LayoutRegion::setTitle(const QString &title)
 {
   this->_title = title;
+  setToolTip(_title+" "+"("+_id+") "+_descriptor);
+}
 
-  setToolTip(title+" "+"("+_id+")");
+QString LayoutRegion::getDescriptor() const
+{
+  return _descriptor;
+}
+
+void LayoutRegion::setDescriptor(const QString &descriptor)
+{
+  this->_descriptor = descriptor;
+
+  setToolTip(_title+" "+"("+_id+") "+_descriptor);
 }
 
 QString LayoutRegion::getColor() const

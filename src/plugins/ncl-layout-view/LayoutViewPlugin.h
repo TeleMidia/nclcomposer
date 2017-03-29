@@ -58,6 +58,10 @@ protected slots:
   void changeRegionBaseInView(Entity* entity);
   void selectRegionBaseInView(QString entityUID);
 
+  void addDescriptorToView(Entity* entity);
+  void removeDescriptorFromView(QString entityUID);
+//  void changeDescriptorInView(Entity* entity);
+
   void addRegion(const QString &regionUID,
                  const QString &parentUID,
                  const QString &regionbaseUID,

@@ -430,6 +430,16 @@ void LayoutView::selectRegion(const QString regionUID,
   }
 }
 
+
+void LayoutView::addDescriptor(const QString regionUID,
+                   const QString descriptor)
+{
+   if (_regions.contains(regionUID))
+   {
+      _regions[regionUID]->setDescriptor(descriptor);
+   }
+}
+
 void LayoutView::addRegionBase(const QString regionbaseUID,
                                const QMap<QString, QString> attributes)
 {

@@ -64,6 +64,9 @@ public slots:
   void selectRegion(const QString regionUID,
                     const QString regionbaseUID);
 
+  void addDescriptor(const QString regionUID,
+                     const QString descriptor);
+
   void addRegionBase(const QString regionbaseUID,
                      const QMap<QString, QString> attributes);
 
