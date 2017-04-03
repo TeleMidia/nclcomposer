@@ -309,6 +309,10 @@ void NCLLayoutViewPlugin::onEntityRemoved( const QString &pluginID,
     {
       removeRegionBaseFromView(entityID);
     }
+    else if (descriptors.contains(entityID))
+    {
+      removeDescriptorFromView(entityID);
+    }
   }
 }
 
@@ -329,7 +333,6 @@ void NCLLayoutViewPlugin::onEntityChanged(const QString &pluginID, Entity *entit
     else if (entity->getType() == "descriptor")
     {
       addDescriptorToView(entity);
-      //LayoutRegion::descriptorsIDs[] ;
     }
   }
 }
@@ -796,10 +799,13 @@ void NCLLayoutViewPlugin::addDescriptorToView(Entity* entity)
     if (entity->getType() == "descriptor" && !entity->getAttribute("id").isEmpty() && !entity->getAttribute("region").isEmpty())
     {
       //QList<Entity*> model_regions = project->getEntitiesbyType("region");
+      QMap<QString, QString> descriptorsIDs;
       for(Entity *rg : regions.values())
       {
         if (entity->getAttribute("region") == rg->getAttribute("id"))
         {
+          descriptorsIDs[entity->getAttribute("region")] = rg->getAttribute("id");
+          descriptors[entity->getUniqueId()] = descriptorsIDs;
           view->addDescriptor(rg->getUniqueId(),entity->getAttribute("id"));
         }
       }
@@ -809,7 +815,17 @@ void NCLLayoutViewPlugin::addDescriptorToView(Entity* entity)
 
 void NCLLayoutViewPlugin::removeDescriptorFromView(QString entityUID)
 {
-
+  if(descriptors.contains(entityUID))
+  {
+    for(Entity *rg : regions.values())
+    {
+      if (descriptors[entityUID].contains(rg->getAttribute("id")))
+      {
+        view->addDescriptor(rg->getUniqueId(),"");// remove descriptor id from view, passing ""
+      }
+    }
+    descriptors.remove(entityUID);
+  }
 }
 
 void NCLLayoutViewPlugin::addRegion(const QString &regionUID,

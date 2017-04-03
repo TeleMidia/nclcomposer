@@ -106,6 +106,7 @@ private:
   QMap<QString, Entity*> regions;
   QMap<QString, Entity*> regionbases;
   QMap<QString, QString> relations;
+  QMap<QString, QMap<QString, QString> > descriptors;
 };
 
 #endif // QNLYCOMPOSERPLUGIN_H
