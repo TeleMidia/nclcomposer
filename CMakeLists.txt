@@ -63,6 +63,8 @@ set(CPACK_PACKAGE_NAME "nclcomposer")
 set(CPACK_PACKAGE_VENDOR "TeleMídia Lab/PUC-Rio")
 set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "NCL Composer - Authoring tool for interactive multimedia applications.")
 
+set(CPACK_GENERATOR "DEB")
+set(CPACK_DEBIAN_PACKAGE_SHLIBDEPS ON)
 set(CPACK_PACKAGE_VERSION "${VERSION}")
 set(CPACK_PACKAGE_INSTALL_DIRECTORY "TeleMidia")
 set(CPACK_PACKAGE_CONTACT "Roberto Azevedo <robertogerson@telemidia.puc-rio.br>")

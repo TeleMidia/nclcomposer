@@ -32,6 +32,7 @@ set(UI_SOURCES
   ui/EnvironmentPreferencesWidget.ui
   ui/WelcomeWidget.ui
   ui/AboutDialog.ui
+  ui/ShortcutsDialog.ui
   ui/GeneralPreferences.ui
   ui/NewProjectWizard.ui
   ui/FileChooser.ui

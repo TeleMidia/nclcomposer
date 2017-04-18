@@ -243,6 +243,8 @@ private slots:
   void wizardFinished(int resp);
 #endif
 
+  void on_actionKeyboard_shortcuts_triggered();
+
 public:
   explicit ComposerMainWindow(QWidget *parent = 0);
   virtual ~ComposerMainWindow();

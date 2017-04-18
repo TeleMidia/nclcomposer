@@ -17,6 +17,7 @@
 
 #include "ui_AboutDialog.h"
 #include "ui_PluginDetailsDialog.h"
+#include "ui_ShortcutsDialog.h"
 
 #include <QApplication>
 #include <QMessageBox>
@@ -285,6 +286,27 @@ void PluginDetailsDialog::setCurrentPlugin(IPluginFactory *currentPluginFactory)
 
   ui->textBrowser_License->setText(
         currentPluginFactory->metadata().value("license").toString());
+}
+
+ShortcutsDialog::ShortcutsDialog(QWidget *parent) :
+    QDialog(parent),
+    _ui(new Ui::ShortcutsDialog)
+{
+  _ui->setupUi(this);
+
+  QList<QAction*> actions = parent->findChildren<QAction*>();
+  _ui->listView->setModel(&_model);
+  QStringList actionList;
+  for (QAction *action: actions)
+    if(!action->shortcut().toString().isEmpty())
+      actionList << action->text() + " (" + action->shortcut().toString() + ")";
+
+  _model.setStringList(actionList);
+}
+
+ShortcutsDialog::~ShortcutsDialog()
+{
+  delete _ui;
 }
 
 } } // end namespace

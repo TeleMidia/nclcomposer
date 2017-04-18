@@ -130,7 +130,7 @@
      <x>0</x>
      <y>0</y>
      <width>776</width>
-     <height>22</height>
+     <height>27</height>
     </rect>
    </property>
    <property name="layoutDirection">
@@ -199,6 +199,7 @@
      <string>&amp;Help</string>
     </property>
     <addaction name="action_Help"/>
+    <addaction name="actionKeyboard_shortcuts"/>
     <addaction name="separator"/>
     <addaction name="actionReport_Bug"/>
     <addaction name="separator"/>
@@ -579,6 +580,11 @@
    </property>
    <property name="text">
     <string>&amp;Perspectives toolbar</string>
+   </property>
+  </action>
+  <action name="actionKeyboard_shortcuts">
+   <property name="text">
+    <string>&amp;Keyboard shortcuts</string>
    </property>
   </action>
  </widget>

@@ -1910,3 +1910,10 @@ void ComposerMainWindow::wizardFinished(int resp)
 #endif
 
 } } //end namespace
+
+void composer::gui::ComposerMainWindow::on_actionKeyboard_shortcuts_triggered()
+{
+  ShortcutsDialog dialog(this);
+
+  dialog.exec();
+}

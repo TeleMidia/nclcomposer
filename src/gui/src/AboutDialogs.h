@@ -24,11 +24,13 @@ using namespace composer::core;
 using namespace composer::core::util;
 
 #include <QDialog>
+#include <QStringListModel>
 #include <QTreeWidget>
 
 namespace Ui {
   class AboutDialog;
   class PluginDetailsDialog;
+  class ShortcutsDialog;
 }
 
 namespace composer {
@@ -56,7 +58,6 @@ private slots:
   void showLicense();
   void on_button_Homepage_pressed();
 };
-
 
 class PluginDetailsDialog : public QDialog
 {
@@ -92,6 +93,19 @@ private:
   QTreeWidget *_treeWidgetPlugins;
   QPushButton *_detailsButton;
   PluginDetailsDialog *_pluginDetailsDialog;
+};
+
+class ShortcutsDialog : public QDialog
+{
+  Q_OBJECT
+
+public:
+  explicit ShortcutsDialog(QWidget *parent = 0);
+  ~ShortcutsDialog();
+
+private:
+  QStringListModel _model;
+  Ui::ShortcutsDialog *_ui;
 };
 
 } } // end namespace
