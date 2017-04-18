@@ -282,6 +282,7 @@ void NCLLayoutViewPlugin::onEntityAdded(const QString &pluginID, Entity *entity)
     if (entity->getType() == "region")
     {
       addRegionToView(entity);
+      updateDescriptors();
     }
     else if (entity->getType() == "regionBase")
     {
@@ -290,6 +291,7 @@ void NCLLayoutViewPlugin::onEntityAdded(const QString &pluginID, Entity *entity)
     else if (entity->getType() == "descriptor")
     {
       addDescriptorToView(entity);
+      updateDescriptors();
     }
   }
 }
@@ -312,6 +314,7 @@ void NCLLayoutViewPlugin::onEntityRemoved( const QString &pluginID,
     else if (descriptors.contains(entityID))
     {
       removeDescriptorFromView(entityID);
+      updateDescriptors();
     }
   }
 }
@@ -325,6 +328,7 @@ void NCLLayoutViewPlugin::onEntityChanged(const QString &pluginID, Entity *entit
     if (entity->getType() == "region")
     {
       changeRegionInView(entity);
+      updateDescriptors();
     }
     else if (entity->getType() == "regionBase")
     {
@@ -333,6 +337,7 @@ void NCLLayoutViewPlugin::onEntityChanged(const QString &pluginID, Entity *entit
     else if (entity->getType() == "descriptor")
     {
       addDescriptorToView(entity);
+      updateDescriptors();
     }
   }
 }
@@ -800,31 +805,54 @@ void NCLLayoutViewPlugin::addDescriptorToView(Entity* entity)
     {
       //QList<Entity*> model_regions = project->getEntitiesbyType("region");
       QMap<QString, QString> descriptorsIDs;
+      descriptorsIDs[entity->getAttribute("region")] = entity->getAttribute("id");
+      descriptors[entity->getUniqueId()] = descriptorsIDs;
+      /*
       for(Entity *rg : regions.values())
       {
         if (entity->getAttribute("region") == rg->getAttribute("id"))
         {
-          descriptorsIDs[entity->getAttribute("region")] = rg->getAttribute("id");
-          descriptors[entity->getUniqueId()] = descriptorsIDs;
           view->addDescriptor(rg->getUniqueId(),entity->getAttribute("id"));
         }
       }
+      */ //is this step done twice if updateDescriptors is after add?
     }
   }
 }
 
-void NCLLayoutViewPlugin::removeDescriptorFromView(QString entityUID)
+void NCLLayoutViewPlugin::removeDescriptorFromView(const QString &entityUID)
 {
   if(descriptors.contains(entityUID))
   {
+    /*
     for(Entity *rg : regions.values())
     {
       if (descriptors[entityUID].contains(rg->getAttribute("id")))
       {
         view->addDescriptor(rg->getUniqueId(),"");// remove descriptor id from view, passing ""
       }
-    }
+    }*/ //done twice if used before updateDescriptors?
     descriptors.remove(entityUID);
+  }
+}
+
+void NCLLayoutViewPlugin::updateDescriptors()
+{
+  for(Entity *rg : regions.values())
+  {
+    bool visited = false;
+    for(QMap<QString,QString> descriptorsID : descriptors.values())
+    {
+      if(descriptorsID.contains(rg->getAttribute("id")) )
+      {
+        view->addDescriptor(rg->getUniqueId(),descriptorsID.value(rg->getAttribute("id")));
+        visited = true;
+      }
+    }
+    if(!visited)
+    {
+      view->addDescriptor(rg->getUniqueId(),"");// remove descriptor id from view, passing ""
+    }
   }
 }
 

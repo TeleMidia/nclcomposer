@@ -302,9 +302,10 @@ private:
   QString _id;
   QString _uid;
   QString _title;
-  QString _descriptor; //
   QString _color;
+  //QString _descriptor;
 
+  QList<QString> _descriptor;
   QnlyResizeType _resizeType;
 
   QActionGroup* _regionActionGroup;
