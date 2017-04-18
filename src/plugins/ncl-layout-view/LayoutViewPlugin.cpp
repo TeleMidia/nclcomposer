@@ -106,7 +106,7 @@ void NCLLayoutViewPlugin::updateFromModel()
   bool isGridVisible = false;
 
   LayoutRegionBase *currentRegionBase = view->getSelectedRegionBase();
-  if(currentRegionBase != NULL)
+  if(currentRegionBase != nullptr)
   {
     previousRect = currentRegionBase->sceneRect();
     isGridVisible = currentRegionBase->isGridVisible();
@@ -117,7 +117,7 @@ void NCLLayoutViewPlugin::updateFromModel()
   loadRegionbase();
 
   currentRegionBase = view->getSelectedRegionBase();
-  if(currentRegionBase != NULL)
+  if(currentRegionBase != nullptr)
   {
     currentRegionBase->changeResolution(previousRect.width(),
                                         previousRect.height());

@@ -129,7 +129,7 @@ void StructuralViewPlugin::updateFromModel()
 
   QMap <QString, QMap<QString,QString> > cache;
 
-  foreach (QString key, _mapCoreToView.keys())
+  foreach (const QString &key, _mapCoreToView.keys())
   {
     StructuralEntity* e = _window->getView()->getEntity(_mapCoreToView.value(key));
 
@@ -144,7 +144,7 @@ void StructuralViewPlugin::updateFromModel()
 
         QMap<QString,QString> properties = e->getStructuralProperties();
 
-        foreach (QString key, e->getStructuralProperties().keys())
+        foreach (const QString &key, e->getStructuralProperties().keys())
         {
           if (key.contains(STR_PROPERTY_LINKPARAM_NAME) ||
               key.contains(STR_PROPERTY_LINKPARAM_VALUE) ||
@@ -154,7 +154,7 @@ void StructuralViewPlugin::updateFromModel()
             properties.remove(key);
         }
 
-        cache.insert(e->getStructuralId()+pId, properties);
+        cache.insert(e->getStructuralId() + pId, properties);
       }
     }
   }
@@ -170,7 +170,9 @@ void StructuralViewPlugin::updateFromModel()
   // Inserting...
   //
 
-  QStack <Entity *> stack; stack.push(project);
+  QStack <Entity *> stack;
+  stack.push(project);
+
   while(stack.size())
   {
     Entity *current = stack.top();
@@ -194,7 +196,7 @@ void StructuralViewPlugin::updateFromModel()
 
   foreach (StructuralEntity* e, _window->getView()->getEntities().values())
   {
-    foreach (QString r, references.keys())
+    foreach (const QString &r, references.keys())
     {
       QString pId = r;
       QString pUid = references.value(r);
@@ -206,6 +208,7 @@ void StructuralViewPlugin::updateFromModel()
           e->setStructuralProperty(pUid, _mapCoreToView.value(coreUid));
       }
     }
+
     _window->getView()->adjustReferences(e);
   }
 
@@ -213,7 +216,7 @@ void StructuralViewPlugin::updateFromModel()
 
   foreach (StructuralEntity* current, _window->getView()->getEntities().values())
   {
-    if (current->getStructuralParent() == NULL)
+    if (current->getStructuralParent() == nullptr)
       s.push(current);
   }
 
@@ -223,20 +226,20 @@ void StructuralViewPlugin::updateFromModel()
 
     QString pId = "";
 
-    if (e->getStructuralParent() != NULL)
+    if (e->getStructuralParent() != nullptr)
        pId = e->getStructuralParent()->getStructuralId();
 
     QMap<QString, QString> settings = StructuralUtil::createSettings(false, false);
 
     // Setting cached data...
-    if (cache.contains(e->getStructuralId()+pId))
+    if (cache.contains(e->getStructuralId() + pId))
     {
       QMap<QString, QString> properties = cache.value(e->getStructuralId()+pId);
       properties.insert(STR_PROPERTY_ENTITY_UID, e->getStructuralUid());
 
       QMap<QString, QString> translations = StructuralUtil::createCoreTranslations(e->getStructuralType());
 
-      foreach (QString translation, translations.values())
+      foreach (const QString &translation, translations.values())
       {
         if (e->getStructuralProperty(translation).isEmpty())
           properties.remove(translation);
@@ -355,7 +358,9 @@ void StructuralViewPlugin::updateFromModel()
         }
       }
 
-      _window->getView()->change(e->getStructuralUid(),properties,e->getStructuralProperties(),settings);
+      _window->getView()->change(e->getStructuralUid(),
+                                 properties,
+                                 e->getStructuralProperties(),settings);
 
     // Setting non cached data...
     }
