@@ -35,27 +35,27 @@ using namespace composer::language;
 PropertyEditor::PropertyEditor(QWidget *parent):
   QWidget(parent)
 {
-  ui = new Ui::PropertyEditorWidget();
-  ui->setupUi(this);
+  _ui = new Ui::PropertyEditorWidget();
+  _ui->setupUi(this);
 
   ComboBoxDelegate *delegate = new ComboBoxDelegate();
-  ui->tableWidget->setItemDelegate(delegate);
-  delegate->setTableWidget(ui->tableWidget);
+  _ui->tableWidget->setItemDelegate(delegate);
+  delegate->setTableWidget(_ui->tableWidget);
 
-  connect(ui->tableWidget,
+  connect(_ui->tableWidget,
           SIGNAL(itemChanged(QTableWidgetItem *)),
           this,
           SLOT(updateWithItemChanges(QTableWidgetItem *)),
           Qt::DirectConnection);
 
-  connect(ui->filterLineEdit,
+  connect(_ui->filterLineEdit,
           SIGNAL(filterTextChanged(const QString&)),
           this,
           SLOT(filterProperties(const QString&)));
 
-  internalPropertyChange = false;
+  _internalPropertyChange = false;
 
-  ui->treeView->setVisible(WITH_TREEVIEW);
+  _ui->treeView->setVisible(WITH_TREEVIEW);
 
 #if WITH_TREEVIEW
   standardModel = new QStandardItemModel(0, 2);
@@ -75,27 +75,27 @@ PropertyEditor::~PropertyEditor()
 
 void PropertyEditor::setTagname(QString tagname, QString name)
 {
-  this->currentTagname = tagname;
+  this->_currentTagname = tagname;
   //this->currentFilterString = "";
   ComboBoxDelegate *delegate =
-      qobject_cast<ComboBoxDelegate *> (ui->tableWidget->itemDelegate());
+      qobject_cast<ComboBoxDelegate *> (_ui->tableWidget->itemDelegate());
 
   if(delegate)
     delegate->setCurrentTagname(tagname);
 
   //Clear previous items
-  propertyToLine.clear();
-  propertyToValue.clear();
-  orderedProperties.clear();
+  _propertyToLine.clear();
+  _propertyToValue.clear();
+  _orderedProperties.clear();
 
-  while(ui->tableWidget->rowCount())
-    ui->tableWidget->removeRow(0);
+  while(_ui->tableWidget->rowCount())
+    _ui->tableWidget->removeRow(0);
 
   setCurrentName(name);
 
   // add the new ones
   deque <QString> *attrs =
-      NCLStructure::getInstance()->getAttributesOrdered(currentTagname);
+      NCLStructure::getInstance()->getAttributesOrdered(_currentTagname);
 
   if(attrs != nullptr)
   {
@@ -105,33 +105,33 @@ void PropertyEditor::setTagname(QString tagname, QString name)
     for(i=0, it = attrs->begin(); it != attrs->end(); ++it, i++)
     {
       QString currentAttr = (*it);
-      propertyToValue[currentAttr] = "";
-      orderedProperties.push_back(currentAttr);
+      _propertyToValue[currentAttr] = "";
+      _orderedProperties.push_back(currentAttr);
     }
   }
 
-  filterProperties(this->currentFilterString);
+  filterProperties(this->_currentFilterString);
 }
 
 void PropertyEditor::setCurrentName(QString name)
 {
-  this->currentName = name;
-  ui->label->setText(currentTagname + ":" + currentName);
+  this->_currentName = name;
+  _ui->label->setText(_currentTagname + ":" + _currentName);
 }
 
 void PropertyEditor::setErrorMessage(QString errorMessage)
 {
   if(!errorMessage.isEmpty())
-    ui->label_ErrorMessage->setText(" (" + errorMessage + ")");
+    _ui->label_ErrorMessage->setText(" (" + errorMessage + ")");
   else
-    ui->label_ErrorMessage->setText("");
+    _ui->label_ErrorMessage->setText("");
 
   if(!errorMessage.isNull() && !errorMessage.isEmpty())
   {
-    ui->frame_Name->setStyleSheet("color: red;");
+    _ui->frame_Name->setStyleSheet("color: red;");
   }
   else
-    ui->frame_Name->setStyleSheet("color: black;");
+    _ui->frame_Name->setStyleSheet("color: black;");
 
   // ui->frame_Name->adjustSize();
 }
@@ -142,20 +142,20 @@ void PropertyEditor::setAttributeValue(QString property, QString value)
   // tagname.
   // Also, if propertyToLine does not contains property it is not been showed by
   // the filter.
-  if( propertyToValue.contains(property) &&
-      propertyToLine.contains(property) )
+  if( _propertyToValue.contains(property) &&
+      _propertyToLine.contains(property) )
   {
-    int line = propertyToLine.value(property);
+    int line = _propertyToLine.value(property);
 
-    QTableWidgetItem *item = ui->tableWidget->item(line, 1);
+    QTableWidgetItem *item = _ui->tableWidget->item(line, 1);
     if(item)
     {
       // Try to update if the values are not equal
       if(item->text() != value)
       {
-        internalPropertyChange = true;
+        _internalPropertyChange = true;
         item->setText(value);
-        propertyToValue[property] = value;
+        _propertyToValue[property] = value;
       }
     }
   }
@@ -164,18 +164,18 @@ void PropertyEditor::setAttributeValue(QString property, QString value)
 void PropertyEditor::updateWithItemChanges(QTableWidgetItem *item)
 {
   //  qDebug() << "updateWithItemChanges " << internalPropertyChange;
-  int row = ui->tableWidget->row(item);
-  int column = ui->tableWidget->column(item);
+  int row = _ui->tableWidget->row(item);
+  int column = _ui->tableWidget->column(item);
 
   if(column == 0) return; //not for me!
 
-  if(internalPropertyChange)
+  if(_internalPropertyChange)
   {
-    internalPropertyChange = false;
+    _internalPropertyChange = false;
     return;
   }
 
-  QTableWidgetItem *leftItem = ui->tableWidget->item(row, column-1);
+  QTableWidgetItem *leftItem = _ui->tableWidget->item(row, column-1);
   QString name = "", value = "";
 
   if(item != nullptr)
@@ -189,17 +189,17 @@ void PropertyEditor::updateWithItemChanges(QTableWidgetItem *item)
     value = item->text();
   }
 
-  propertyToValue[name] = value; //update internal map
+  _propertyToValue[name] = value; //update internal map
   emit propertyChanged(name, value);
 }
 
 void PropertyEditor::filterProperties(const QString& text)
 {
-  this->currentFilterString = text;
-  while(ui->tableWidget->rowCount())
-    ui->tableWidget->removeRow(0);
+  this->_currentFilterString = text;
+  while(_ui->tableWidget->rowCount())
+    _ui->tableWidget->removeRow(0);
 
-  propertyToLine.clear();
+  _propertyToLine.clear();
 
 #if WITH_TREEVIEW
   while(attributesRootItem->rowCount())
@@ -209,14 +209,14 @@ void PropertyEditor::filterProperties(const QString& text)
   QString attr;
   deque <QString>::iterator it;
 
-  for (it = orderedProperties.begin(); it != orderedProperties.end(); ++it)
+  for (it = _orderedProperties.begin(); it != _orderedProperties.end(); ++it)
     // foreach( attr, propertyToValue.keys() )
   {
     attr = *it;
     if(attr.toLower().startsWith(text.toLower()))
     {
       QTableWidgetItem *item = new QTableWidgetItem(attr);
-      QTableWidgetItem *itemValue = new QTableWidgetItem(propertyToValue[attr]);
+      QTableWidgetItem *itemValue = new QTableWidgetItem(_propertyToValue[attr]);
 
 #if WITH_TREEVIEW
       QList<QStandardItem *> property;
@@ -225,13 +225,13 @@ void PropertyEditor::filterProperties(const QString& text)
       attributesRootItem->appendRow(property);
 #endif
 
-      ui->tableWidget->insertRow(ui->tableWidget->rowCount());
-      internalPropertyChange = true;
-      ui->tableWidget->setItem(ui->tableWidget->rowCount()-1, 0, item);
-      propertyToLine.insert(attr, ui->tableWidget->rowCount()-1);
+      _ui->tableWidget->insertRow(_ui->tableWidget->rowCount());
+      _internalPropertyChange = true;
+      _ui->tableWidget->setItem(_ui->tableWidget->rowCount()-1, 0, item);
+      _propertyToLine.insert(attr, _ui->tableWidget->rowCount()-1);
 
-      internalPropertyChange = true;
-      ui->tableWidget->setItem(ui->tableWidget->rowCount()-1, 1, itemValue);
+      _internalPropertyChange = true;
+      _ui->tableWidget->setItem(_ui->tableWidget->rowCount()-1, 1, itemValue);
     }
   }
 }

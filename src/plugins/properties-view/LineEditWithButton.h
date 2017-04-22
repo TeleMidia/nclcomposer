@@ -28,7 +28,7 @@ class LineEditWithButton : public QLineEdit
 
 public:
   explicit LineEditWithButton(QWidget *parent = nullptr,
-                              const QString &iconPath = "");
+                              const QString &_iconPath = "");
 
 signals:
   void buttonPressed();
@@ -36,8 +36,8 @@ signals:
 protected:
   void resizeEvent(QResizeEvent *event);
 
-  QToolButton *mButton;
-  QString iconPath;
+  QToolButton *_mButton;
+  QString _iconPath;
 
 private:
   QString styleSheetForCurrentState() const;

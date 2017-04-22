@@ -257,8 +257,6 @@ private slots:
    * \brief
    */
   void increaseFont();
-
-
 };
 
 #endif

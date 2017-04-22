@@ -193,7 +193,7 @@ public:
   /*!
    * \brief Get the current tagname.
    */
-  QString getTagname() { return this->currentTagname; }
+  QString getTagname() { return this->_currentTagname; }
 
   /*!
    * \brief Set the current name (id, name, ...) of the selected entity.
@@ -209,7 +209,7 @@ public:
   /*!
    * \brief Get the current name.
    */
-  QString getCurrentName(){ return this->currentName; }
+  QString getCurrentName(){ return this->_currentName; }
 
   /*!
    * \brief Set a value of an attribute.
@@ -238,15 +238,15 @@ private slots:
   void filterProperties(const QString&);
 
 private:
-  Ui::PropertyEditorWidget *ui; /*!< TODO */
-  deque <QString> orderedProperties;
-  QMap <QString, int> propertyToLine; /*!< TODO */
-  QMap <QString, QString> propertyToValue; /*!< TODO */
+  Ui::PropertyEditorWidget *_ui; /*!< TODO */
+  deque <QString> _orderedProperties;
+  QMap <QString, int> _propertyToLine; /*!< TODO */
+  QMap <QString, QString> _propertyToValue; /*!< TODO */
 
-  bool internalPropertyChange;
+  bool _internalPropertyChange;
 
-  QString currentTagname, currentName;
-  QString currentFilterString;
+  QString _currentTagname, _currentName;
+  QString _currentFilterString;
 
 #if WITH_TREEVIEW
   QStandardItemModel *standardModel;

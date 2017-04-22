@@ -21,15 +21,15 @@
 
 LineEditWithButton::LineEditWithButton(QWidget *parent,
                                        const QString &iconPath) :
-  QLineEdit(parent), iconPath(iconPath)
+  QLineEdit(parent), _iconPath(iconPath)
 {
   // Create the search button and set its icon, cursor, and stylesheet
-  this->mButton = new QToolButton(this);
+  this->_mButton = new QToolButton(this);
   // this->mButton->setIcon(QIcon(iconPath));
   //  this->mButton->setFixedSize(18, 18);
-  this->mButton->setText("...");
-  this->mButton->setCursor(Qt::ArrowCursor);
-  this->mButton->setStyleSheet(this->buttonStyleSheetForCurrentState());
+  this->_mButton->setText("...");
+  this->_mButton->setCursor(Qt::ArrowCursor);
+  this->_mButton->setStyleSheet(this->buttonStyleSheetForCurrentState());
 
   // Some stylesheet and size corrections for the text box
   this->setStyleSheet(this->styleSheetForCurrentState());
@@ -42,15 +42,15 @@ LineEditWithButton::LineEditWithButton(QWidget *parent,
   //        qMax(minSizeHint.height(),
   //             this->mButton->sizeHint().height() + frameWidth * 2 + 2));
 
-  QObject::connect(this->mButton, SIGNAL(clicked()), SIGNAL(buttonPressed()));
+  QObject::connect(this->_mButton, SIGNAL(clicked()), SIGNAL(buttonPressed()));
 }
 
 void LineEditWithButton::resizeEvent(QResizeEvent *event)
 {
   Q_UNUSED(event);
-  QSize size = this->mButton->sizeHint();
+  QSize size = this->_mButton->sizeHint();
   int frameWidth = this->style()->pixelMetric(QStyle::PM_DefaultFrameWidth);
-  this->mButton->move(
+  this->_mButton->move(
         this->rect().right() - frameWidth - size.width() - 2,
         (this->rect().bottom() + 2 - size.height()) / 2);
 }
@@ -70,7 +70,7 @@ QString LineEditWithButton::styleSheetForCurrentState() const
 
   //  style += "padding-left: 3px;";
   style += QString("padding-right: %1px;").arg(
-        this->mButton->sizeHint().width() + frameWidth + 1);
+        this->_mButton->sizeHint().width() + frameWidth + 1);
   /*
   style += "border-width: 3px;";
   style += "border-image: url( " + iconPath + ") 3 3 3 3 stretch;";

@@ -32,7 +32,7 @@ public slots:
   void openfile();
 
 private:
-  QWidget *window;
+  QWidget *_window;
 };
 
 #endif // PROPERTYBUTTONS_H

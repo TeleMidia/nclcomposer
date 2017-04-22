@@ -14,7 +14,7 @@ namespace composer {
 
 NCLDocumentParser::NCLDocumentParser(Project *project)
 {
-  this->project = project;
+  this->_project = project;
 }
 
 NCLDocumentParser::~NCLDocumentParser()
@@ -29,7 +29,7 @@ QString NCLDocumentParser::getParserName()
 
 bool NCLDocumentParser::parseDocument()
 {
-  QString uri = project->getLocation();
+  QString uri = _project->getLocation();
 
   QFile *file = new QFile(uri, this);
   if (!file->open(QIODevice::ReadWrite))
@@ -67,15 +67,15 @@ bool NCLDocumentParser::startElement(const QString &,
                                      const QXmlAttributes &attributes)
 {
   QMap<QString,QString> atts;
-  QString parentId = project->getUniqueId();
+  QString parentId = _project->getUniqueId();
 
   if (qName != "ncl")
   {
-    if(elementStack.size())
+    if(_elementStack.size())
     {
-      lockStack.lock();
-      Entity *parentEntity = elementStack.top();
-      lockStack.unlock();
+      _lockStack.lock();
+      Entity *parentEntity = _elementStack.top();
+      _lockStack.unlock();
       parentId = parentEntity->getUniqueId();
     }
   }
@@ -96,10 +96,10 @@ bool NCLDocumentParser::endElement(const QString &namespaceURI,
   Q_UNUSED(localName)
   Q_UNUSED(qName)
 
-  lockStack.lock();
-  if(elementStack.size())
-    elementStack.pop();
-  lockStack.unlock();
+  _lockStack.lock();
+  if(_elementStack.size())
+    _elementStack.pop();
+  _lockStack.unlock();
 
   return true;
 }
@@ -126,9 +126,9 @@ bool NCLDocumentParser::fatalError(const QXmlParseException &exception)
 
 void NCLDocumentParser::onEntityAdded(const QString&, Entity *entity)
 {
-  lockStack.lock();
-  elementStack.push(entity);
-  lockStack.unlock();
+  _lockStack.lock();
+  _elementStack.push(entity);
+  _lockStack.unlock();
 }
 
 void NCLDocumentParser::onEntityAddError(const QString &error)

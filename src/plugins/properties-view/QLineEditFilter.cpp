@@ -21,7 +21,7 @@ QLineEditFilter::QLineEditFilter(QWidget *parent) : QLineEdit(parent)
 {
   setStyleSheet("color: #bbbbbb;");
   setText(tr("Filter..."));
-  isFilterText = true;
+  _isFilterText = true;
 
   connect(this, SIGNAL(textEdited(QString)),
           this, SLOT(userTextEdited(QString)));
@@ -34,11 +34,11 @@ QLineEditFilter::~QLineEditFilter()
 
 void QLineEditFilter::focusInEvent(QFocusEvent *focusEvent)
 {
-  if(isFilterText)
+  if(_isFilterText)
   {
     setText("");
     setStyleSheet("color: #000000;");
-    isFilterText = false;
+    _isFilterText = false;
   }
   QLineEdit::focusInEvent(focusEvent);
 }
@@ -46,7 +46,7 @@ void QLineEditFilter::focusInEvent(QFocusEvent *focusEvent)
 void QLineEditFilter::focusOutEvent(QFocusEvent *focusEvent)
 {
   if(text() == "") {
-    isFilterText = true;
+    _isFilterText = true;
     setStyleSheet("color: #bbbbbb;");
     setText(tr("Filter..."));
   }
@@ -55,7 +55,7 @@ void QLineEditFilter::focusOutEvent(QFocusEvent *focusEvent)
 
 void QLineEditFilter::userTextEdited(const QString &text)
 {
-  if(!isFilterText)
+  if(!_isFilterText)
     emit filterTextChanged(text);
   else
     emit filterTextChanged(QString (""));

@@ -30,7 +30,7 @@ using namespace composer::core::util;
 PropertyButtons::PropertyButtons(QWidget *parent)
   : LineEditWithButton(parent, ":/images/esf-search.png")
 {
-  connect(mButton, SIGNAL(pressed()),
+  connect(_mButton, SIGNAL(pressed()),
                    SLOT(openfile()), Qt::DirectConnection);
 }
 

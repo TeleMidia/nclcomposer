@@ -22,7 +22,7 @@ public slots:
   void setFocusToFindLineEdit();
 
 private:
-  Ui::SearchBox *ui;
+  Ui::SearchBox *_ui;
 
 signals:
   void findNext(const QString &);

@@ -32,7 +32,7 @@ class NCLLANGUAGEPROFILESHARED_EXPORT NCLDocumentParser :
   Q_OBJECT
 
 public:
-  explicit NCLDocumentParser(Project *project);
+  explicit NCLDocumentParser(Project *_project);
   ~NCLDocumentParser();
 
   bool parseDocument(); // \deprecated
@@ -63,10 +63,10 @@ protected:
   bool endDocument();
 
 private:
-  Project *project;
-  QMutex lockStack;
-  QWaitCondition sync;
-  QStack<Entity*> elementStack;
+  Project *_project;
+  QMutex _lockStack;
+  QWaitCondition _sync;
+  QStack<Entity*> _elementStack;
 };
 
 } } //end namespace

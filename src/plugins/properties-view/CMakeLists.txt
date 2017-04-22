@@ -12,7 +12,7 @@ set(PROPERTIES_VIEW_SOURCES
   PropertiesViewFactory.cpp
   PropertiesViewPlugin.cpp
   PropertyEditor.cpp
-  QLLineEditFilter.cpp
+  QLineEditFilter.cpp
   LineEditWithButton.cpp
   PropertyButton.cpp
 
@@ -46,3 +46,4 @@ target_link_libraries(properties_view PRIVATE
 )
 
 install(TARGETS properties_view DESTINATION ${NCLCOMPOSER_BINARY_DIR_PLUGINS})
+

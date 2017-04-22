@@ -142,11 +142,11 @@ private slots:
   void updateCurrentEntityAttr(QString attr, QString value);
 
 private:
-  QListWidget *list; /*! TODO */
-  PropertyEditor *window; /*! TODO */
-  Entity *currentEntity; /*! \todo Change pointer reference to
+  QListWidget *_list; /*! TODO */
+  PropertyEditor *_window; /*! TODO */
+  Entity *_currentEntity; /*! \todo Change pointer reference to
                                    the currentEntityId */
-  QString currentEntityId;
+  QString _currentEntityId;
 };
 
 #endif // PROPERTIESVIEWPLUGIN_H

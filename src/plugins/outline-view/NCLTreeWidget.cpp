@@ -53,98 +53,108 @@ NCLTreeWidget::NCLTreeWidget(QWidget *parent) : QTreeWidget(parent)
   _defaultFont = QFont();
 
   setDragEnabled(true);
+  setAcceptDrops(true);
+  setDropIndicatorShown(true);
+  setDragDropMode(QAbstractItemView::InternalMove);
 
   // Entities Icon
-  _entitiesIcons["media"] = ":/icon/media";
-  _entitiesIcons["body"] = ":/icon/body";
-  _entitiesIcons["transition"] = ":/icon/transition";
-  _entitiesIcons["transitionBase"] = ":/icon/transitionbase";
-  _entitiesIcons["rule"] = ":/icon/rule";
-  _entitiesIcons["ruleBase"] = ":/icon/rulebase";
-  _entitiesIcons["context"] = ":/icon/context";
-  _entitiesIcons["switch"] = ":/icon/switch";
-  _entitiesIcons["descriptor"] = ":/icon/descriptor";
-  _entitiesIcons["descriptorParam"] = ":/icon/descriptorparam";
-  _entitiesIcons["descriptorBase"] = ":/icon/descriptorbase";
-  _entitiesIcons["connector"] = ":/icon/connector";
-  _entitiesIcons["connectorParam"] = ":/icon/connectorparam";
-  _entitiesIcons["connectorBase"] = ":/icon/connectorbase";
-  _entitiesIcons["importBase"] = ":/icon/importbase";
-  _entitiesIcons["region"] = ":/icon/region";
-  _entitiesIcons["regionBase"] = ":/icon/regionbase";
-  _entitiesIcons["link"] = ":/icon/link";
-  _entitiesIcons["linkParam"] = ":/icon/linkparam";
-  _entitiesIcons["port"] = ":/icon/port";
-  _entitiesIcons["area"] = ":/icon/area";
-  _entitiesIcons["switchPort"] = ":/icon/switchport";
-  _entitiesIcons["bind"] = ":/icon/bind";
-  _entitiesIcons["bindparam"] = ":/icon/bindparam";
+  _entitiesIcons = {
+    {"media", ":/icon/media"},
+    {"body", ":/icon/body"},
+    {"transition", ":/icon/transition"},
+    {"transitionBase", ":/icon/transitionbase"},
+    {"rule", ":/icon/rule"},
+    {"ruleBase", ":/icon/rulebase"},
+    {"context", ":/icon/context"},
+    {"switch", ":/icon/switch"},
+    {"descriptor", ":/icon/descriptor"},
+    {"descriptorParam", ":/icon/descriptorparam"},
+    {"descriptorBase", ":/icon/descriptorbase"},
+    {"connector", ":/icon/connector"},
+    {"connectorParam", ":/icon/connectorparam"},
+    {"connectorBase", ":/icon/connectorbase"},
+    {"importBase", ":/icon/importbase"},
+    {"region", ":/icon/region"},
+    {"regionBase", ":/icon/regionbase"},
+    {"link", ":/icon/link"},
+    {"linkParam", ":/icon/linkparam"},
+    {"port", ":/icon/port"},
+    {"area", ":/icon/area"},
+    {"switchPort", ":/icon/switchport"},
+    {"bind", ":/icon/bind"},
+    {"bindparam", ":/icon/bindparam"}
+  };
 
   // Media Icons
-  _mediaIcons["text/html"] = ":/icon/media-text-html";
-  _mediaIcons["text/css"] = ":/icon/media-text";
-  _mediaIcons["text/xml"] = ":/icon/media-text";
-  _mediaIcons["text/plain"] = ":/icon/media-text";
-  _mediaIcons["image/bmp"] = ":/icon/media-image";
-  _mediaIcons["image/png"] = ":/icon/media-image";
-  _mediaIcons["image/gif"] = ":/icon/media-image";
-  _mediaIcons["image/jpeg"] = ":/icon/media-image";
-  _mediaIcons["audio/basic"] = ":/icon/media-audio";
-  _mediaIcons["audio/x-wav"] = ":/icon/media-audio";
-  _mediaIcons["audio/mpeg"] = ":/icon/media-audio";
-  _mediaIcons["audio/mp3"] = ":/icon/media-audio";
-  _mediaIcons["audio/mp2"] = ":/icon/media-audio";
-  _mediaIcons["video/mpeg"] = ":/icon/media-video";
-  _mediaIcons["video/mp4"] = ":/icon/media-video";
-  _mediaIcons["video/x-mng"] = ":/icon/media-video";
-  _mediaIcons["video/quicktime"] = ":/icon/media-video";
-  _mediaIcons["video/x-msvideo"] = ":/icon/media-video";
-  _mediaIcons["application/x-ginga-NCL"] = ":/icon/media-ncl";
-  _mediaIcons["application/x-ncl-NCL"] = ":/icon/media-ncl";
-  _mediaIcons["application/x-ginga-NCLua"] = ":/icon/media-nclua";
-  _mediaIcons["application/x-ncl-NCLua"] = ":/icon/media-nclua";
-  _mediaIcons["application/x-ginga-settings"] = ":/icon/media-settings";
-  _mediaIcons["application/x-ncl-settings"] = ":/icon/media-settings";
-  _mediaIcons["application/x-ginga-time"] = ":/icon/media-time";
-  _mediaIcons["application/x-ncl-time"] = ":/icon/media-time";
-  _mediaIcons["application/x-ginga-NCLet"] = ":/icon/media-nclet";
+  _mediaIcons = {
+    {"text/html", ":/icon/media-text-html"},
+    {"text/css", ":/icon/media-text"},
+    {"text/xml", ":/icon/media-text"},
+    {"text/plain", ":/icon/media-text"},
+    {"image/bmp", ":/icon/media-image"},
+    {"image/png", ":/icon/media-image"},
+    {"image/gif", ":/icon/media-image"},
+    {"image/jpeg", ":/icon/media-image"},
+    {"audio/basic", ":/icon/media-audio"},
+    {"audio/x-wav", ":/icon/media-audio"},
+    {"audio/mpeg", ":/icon/media-audio"},
+    {"audio/mp3", ":/icon/media-audio"},
+    {"audio/mp2", ":/icon/media-audio"},
+    {"video/mpeg", ":/icon/media-video"},
+    {"video/mp4", ":/icon/media-video"},
+    {"video/x-mng", ":/icon/media-video"},
+    {"video/quicktime", ":/icon/media-video"},
+    {"video/x-msvideo", ":/icon/media-video"},
+    {"application/x-ginga-NCL", ":/icon/media-ncl"},
+    {"application/x-ncl-NCL", ":/icon/media-ncl"},
+    {"application/x-ginga-NCLua", ":/icon/media-nclua"},
+    {"application/x-ncl-NCLua", ":/icon/media-nclua"},
+    {"application/x-ginga-settings", ":/icon/media-settings"},
+    {"application/x-ncl-settings", ":/icon/media-settings"},
+    {"application/x-ginga-time", ":/icon/media-time"},
+    {"application/x-ncl-time", ":/icon/media-time"},
+    {"application/x-ginga-NCLet", ":/icon/media-nclet"}
+  };
 
   // Extension Icons
-  _extIcons["txt"] = ":/icon/media-text";
-  _extIcons["htm"] = ":/icon/media-text-html";
-  _extIcons["html"] = ":/icon/media-text-html";
-  _extIcons["gif"] = ":/icon/media-image";
-  _extIcons["png"] = ":/icon/media-image";
-  _extIcons["jpg"] = ":/icon/media-image";
-  _extIcons["jpeg"] = ":/icon/media-image";
-  _extIcons["gif"] = ":/icon/media-image";
-  _extIcons["mp3"] = ":/icon/media-audio";
-  _extIcons["wav"] = ":/icon/media-audio";
-  _extIcons["ac3"] = ":/icon/media-audio";
-  _extIcons["mpa"] = ":/icon/media-audio";
-  _extIcons["mp2"] = ":/icon/media-audio";
-  _extIcons["mp4"] = ":/icon/media-video";
-  _extIcons["avi"] = ":/icon/media-video";
-  _extIcons["mpeg4"] = ":/icon/media-video";
-  _extIcons["mpeg"] = ":/icon/media-video";
-  _extIcons["mpg"] = ":/icon/media-video";
-  _extIcons["mov"] = ":/icon/media-video";
-  _extIcons["ts"] = ":/icon/media-video";
-  _extIcons["ncl"] = ":/icon/media-ncl";
-  _extIcons["lua"] = ":/icon/media-nclua";
+  _extIcons = {
+    {"txt", ":/icon/media-text"},
+    {"htm", ":/icon/media-text-html"},
+    {"html", ":/icon/media-text-html"},
+    {"gif", ":/icon/media-image"},
+    {"png", ":/icon/media-image"},
+    {"jpg", ":/icon/media-image"},
+    {"jpeg", ":/icon/media-image"},
+    {"gif", ":/icon/media-image"},
+    {"mp3", ":/icon/media-audio"},
+    {"wav", ":/icon/media-audio"},
+    {"ac3", ":/icon/media-audio"},
+    {"mpa", ":/icon/media-audio"},
+    {"mp2", ":/icon/media-audio"},
+    {"mp4", ":/icon/media-video"},
+    {"avi", ":/icon/media-video"},
+    {"mpeg4", ":/icon/media-video"},
+    {"mpeg", ":/icon/media-video"},
+    {"mpg", ":/icon/media-video"},
+    {"mov", ":/icon/media-video"},
+    {"ts", ":/icon/media-video"},
+    {"ncl", ":/icon/media-ncl"},
+    {"lua", ":/icon/media-nclua"}
+   };
 
   // Bind Icons
-  _bindIcons["onBegin"] = ":/icon/bind-onbegin";
-  _bindIcons["onEnd"] = ":/icon/bind-onend";
-  _bindIcons["onPause"] = ":/icon/bind-onpause";
-  _bindIcons["onResume"] = ":/icon/bind-onresume";
-  _bindIcons["onSelection"] = ":/icon/bind-onselection";
-  _bindIcons["pause"] = ":/icon/bind-pause";
-  _bindIcons["resume"] = ":/icon/bind-resume";
-  _bindIcons["set"] = ":/icon/bind-set";
-  _bindIcons["start"] = ":/icon/bind-start";
-  _bindIcons["stop"] = ":/icon/bind-stop";
-
+  _bindIcons = {
+    {"onBegin", ":/icon/bind-onbegin"},
+    {"onEnd", ":/icon/bind-onend"},
+    {"onPause", ":/icon/bind-onpause"},
+    {"onResume", ":/icon/bind-onresume"},
+    {"onSelection", ":/icon/bind-onselection"},
+    {"pause", ":/icon/bind-pause"},
+    {"resume", ":/icon/bind-resume"},
+    {"set", ":/icon/bind-set"},
+    {"start", ":/icon/bind-start"},
+    {"stop", ":/icon/bind-stop"}
+  };
 }
 
 NCLTreeWidget::~NCLTreeWidget()
@@ -174,6 +184,7 @@ void NCLTreeWidget::createActions ()
   _expandAllAct = new QAction(tr("&Expand All"), this);
   _expandAllAct->setCheckable(true);
   _expandAllAct->setChecked(true);
+
   connect(_expandAllAct, SIGNAL(triggered()), this, SLOT(expandAll()));
   addAction(_expandAllAct);
 
@@ -616,7 +627,8 @@ void NCLTreeWidget::mouseMoveEvent(QMouseEvent *event)
   QTreeWidgetItem *selectedItem = currentItem();
 
   // if not left button - return
-  if (!(event->buttons() & Qt::LeftButton)) return;
+  if (!(event->buttons() & Qt::LeftButton))
+    return;
 
   // If the selected Item exists
   if (selectedItem)

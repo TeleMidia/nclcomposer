@@ -40,7 +40,7 @@ private slots:
   void userTextEdited(const QString &);
 
 private:
-  bool isFilterText;
+  bool _isFilterText;
 };
 
 #endif // QLINEEDITFILTER_H
