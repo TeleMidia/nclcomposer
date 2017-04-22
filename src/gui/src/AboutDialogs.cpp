@@ -295,13 +295,37 @@ ShortcutsDialog::ShortcutsDialog(QWidget *parent) :
   _ui->setupUi(this);
 
   QList<QAction*> actions = parent->findChildren<QAction*>();
-  _ui->listView->setModel(&_model);
-  QStringList actionList;
-  for (QAction *action: actions)
-    if(!action->shortcut().toString().isEmpty())
-      actionList << action->text() + " (" + action->shortcut().toString() + ")";
 
-  _model.setStringList(actionList);
+  QMap <QString, QTreeWidgetItem*> actionCategories;
+  for (QAction *act: actions)
+  {
+    QString parentTitle = act->parentWidget()->windowTitle();
+    if (!act->shortcut().isEmpty())
+    {
+      if (!actionCategories.contains(parentTitle))
+      {
+        QTreeWidgetItem *treeWidgetItem = new QTreeWidgetItem(_ui->treeWidget);
+        actionCategories.insert(parentTitle, treeWidgetItem);
+        treeWidgetItem->setText(0, parentTitle);
+        treeWidgetItem->setTextColor(0, QColor("#0000FF"));
+      }
+    }
+  }
+
+  for (QAction *act: actions)
+  {
+    if (!act->shortcut().isEmpty())
+    {
+      QString parentTitle = act->parentWidget()->windowTitle();
+      QTreeWidgetItem *treeWidgetItem = new QTreeWidgetItem (actionCategories.value(parentTitle));
+      treeWidgetItem->setText(0, act->text());
+      treeWidgetItem->setText(1, act->shortcut().toString());
+    }
+  }
+
+  _ui->treeWidget->expandAll();
+  _ui->treeWidget->resizeColumnToContents(0);
+  _ui->treeWidget->resizeColumnToContents(1);
 }
 
 ShortcutsDialog::~ShortcutsDialog()
