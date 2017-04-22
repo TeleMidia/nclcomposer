@@ -65,10 +65,17 @@ public:
   bool event(QEvent *e);
 
   QString getCurrentTagName (int pos);
+  bool isElement (int pos);
+  bool isAttribute (int pos);
+  bool isAttributeValue (int pos);
+  QString getCurrentAttribute (int pos);
+  int getParentOffset(int pos);
+  QString getParentTagName (int pos);
+  void getAttributesTyped(int pos, QStringList &attrs);
+  QString getAttributeValueFromCurrentElement(int pos, const QString &attr);
+  int getStartTagBegin(int pos);
+  int getStartTagLength(int pos);
 
-signals:
-
-public slots:
 private:
   NCLStructure *_nclStructure;
   int _suggesting;
@@ -81,23 +88,11 @@ private:
   };
 
   QString getRequiredAttributesAsStr (const QString &selection);
-  bool isElement (int pos);
-  bool isAttribute (int pos);
-  bool isAttributeValue (int pos);
-  QString getCurrentAttribute (int pos);
-  int getParentOffset(int pos);
-  QString getParentTagName (int pos);
-  void getAttributesTyped(int pos, QStringList &attrs);
-  QString getAttributeValueFromCurrentElement(int pos, const QString &attr);
-  int getStartTagBegin(int pos);
-  int getStartTagLength(int pos);
 
   // \todo this function must be moved from here.
   QString relativePath( const QString &absolutePath,
                         const QString &relativeTo,
                         bool bIsFile = false );
-
-
 };
 
 #endif // QSCINCLAPIS_H
