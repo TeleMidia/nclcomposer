@@ -13,11 +13,11 @@ QMenuBar::item {
 }
 
 QMenuBar::item:selected { /* when selected using mouse or keyboard */
-    background: #a8a8a8;
+  background: #a8a8a8;
 }
 
 QMenuBar::item:pressed {
-    background: #888888;
+  background: #888888;
 }
 
 QMainWindow::separator {
@@ -36,19 +36,19 @@ QMainWindow::separator:hover {
 }
 
 QToolBar {
-  color: $main-color;
-  background: $main-background-color;
+  color: $toolbar-color;
+  background: $toolbar-background-color;
   border: none;
   qproperty-toolButtonStyle: $toolBarButtonStyle;
   qproperty-iconSize: $toolBarIconSize;
 }
 
 QToolBar QLabel {
-  color: $main-color;
+  color: $toolbar-color;
 }
 
 QToolButton { /* all types of tool button */
-  color: $main-color;
+  color: $toolbar-color;
   font-size: 10px;
 }
 
