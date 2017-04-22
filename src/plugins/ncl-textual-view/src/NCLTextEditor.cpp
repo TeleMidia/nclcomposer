@@ -26,12 +26,12 @@
 NCLTextEditor::NCLTextEditor(QWidget *parent) :
   QsciScintilla(parent)
 {
-  initParameters();
   _nclLexer = nullptr;
   _apis = nullptr;
   _textWithoutUserInter = "";
   _focusInIgnoringCurrentText = false;
 
+  initParameters();
   setAcceptDrops(true);
 
   setTabWidth(2);
@@ -312,29 +312,30 @@ void NCLTextEditor::keyPressEvent(QKeyEvent *event)
 
       if (pos < size)
       {
-        curChar = SendScintilla( QsciScintilla::SCI_GETCHARAT, pos);
-        char nextChar = SendScintilla( QsciScintilla::SCI_GETCHARAT, pos+1);
-
-        qWarning() << curChar << nextChar;
-
-        // \fixme Here, I should also check if the close tag is the same of the
-        // open tag.
+        curChar = SendScintilla( QsciScintilla::SCI_GETCHARAT, pos );
+        char nextChar = SendScintilla( QsciScintilla::SCI_GETCHARAT, pos + 1 );
         if (curChar == '<' && nextChar == '/')
         {
-          qWarning() << "I can del a close tag!";
-          int end_del = pos;
+          int line, index;
+          lineIndexFromPosition(pos+2, &line, &index);
 
-          style = SendScintilla(SCI_GETSTYLEAT, pos);
-          while (end_del < size-1 && style == QsciLexerNCL::Tag)
+          // Check if the close tag is the same of the open tag.
+          if (_apis->getCurrentTagName(begin_del) ==
+                  wordAtLineIndex(line, index))
           {
-            end_del++;
-            style = SendScintilla(QsciScintilla::SCI_GETSTYLEAT, end_del);
-          }
+            int end_del = pos;
+            style = SendScintilla(SCI_GETSTYLEAT, pos);
+            while (end_del < size-1 && style == QsciLexerNCL::Tag)
+            {
+              end_del++;
+              style = SendScintilla(QsciScintilla::SCI_GETSTYLEAT, end_del);
+            }
 
-          if (end_del < size)
-          {
-            qWarning () << "Remove from" << curChar << (char) SendScintilla(QsciScintilla::SCI_GETCHARAT, end_del);
-            SendScintilla (QsciScintilla::SCI_DELETERANGE, begin_del, end_del-begin_del);
+            if (end_del < size)
+            {
+              qWarning () << "Remove from" << curChar << (char) SendScintilla(QsciScintilla::SCI_GETCHARAT, end_del);
+              SendScintilla (QsciScintilla::SCI_DELETERANGE, begin_del, end_del-begin_del);
+            }
           }
         }
       }

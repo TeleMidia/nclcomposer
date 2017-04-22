@@ -64,6 +64,8 @@ public:
 
   bool event(QEvent *e);
 
+  QString getCurrentTagName (int pos);
+
 signals:
 
 public slots:
@@ -82,7 +84,6 @@ private:
   bool isElement (int pos);
   bool isAttribute (int pos);
   bool isAttributeValue (int pos);
-  QString getCurrentTagName (int pos);
   QString getCurrentAttribute (int pos);
   int getParentOffset(int pos);
   QString getParentTagName (int pos);
