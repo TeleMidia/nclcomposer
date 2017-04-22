@@ -21,7 +21,7 @@ LayoutView::LayoutView(QWidget* parent) :
   QStackedWidget(parent),
   gridVisibility(false)
 {
-  setWindowTitle("Qnly");
+  setWindowTitle("Layout view");
 
   createActions();
   createMenus();
