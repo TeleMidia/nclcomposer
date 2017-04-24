@@ -193,19 +193,22 @@ signals:
                           int column,
                           int severity);
 
+  void userAskedToOpenWithDefaultSystemEditor(QString itemId);
+
 
 private:
 #ifdef KEEP_ELEMENTS_ORDER
   static QVector <QString> _entitiesOrder;
 #endif
 
-  QAction *_insertNodeAct; /**< TODO */
-  QAction *_removeNodeAct; /**< TODO */
-  QAction *_expandAllAct; /**< TODO */
-  QMenu   *_elementMenu; /**< TODO */
+  QAction *_insertNodeAct;
+  QAction *_removeNodeAct;
+  QAction *_expandAllAct;
+  QAction *_openWithDefaultEditorAct;
+  QMenu   *_elementMenu;
 
-  QShortcut *_shortcutZoomOut; /**< TODO */
-  QShortcut *_shortcutZoomIn; /**< TODO */
+  QShortcut *_shortcutZoomOut;
+  QShortcut *_shortcutZoomIn;
   bool _isExpandedAll;
 
   int _fontSize;
@@ -257,6 +260,9 @@ private slots:
    * \brief
    */
   void increaseFont();
+
+  void handleSelectionChanged();
+  void openWithDefaultSystemEditor();
 };
 
 #endif

@@ -183,6 +183,8 @@ private slots:
    * \brief
    */
   void itemSelectionChanged();
+
+  void openWithDefaultSystemEditor(QString entityId);
 };
 
 #endif // OUTLINEVIEWPLUGIN_H

@@ -36,13 +36,18 @@ OutlineViewPlugin::OutlineViewPlugin() :
                                       QMap <QString, QString> &,
                                       bool)));
 
-  connect (_window, SIGNAL(elementRemovedByUser(QString)), this,
-           SLOT(elementRemovedByUser(QString)));
+  connect (_window, SIGNAL(elementRemovedByUser(QString)),
+           this, SLOT(elementRemovedByUser(QString)));
 
   connect(_window,
           SIGNAL(itemSelectionChanged()),
           this,
           SLOT(itemSelectionChanged()));
+
+  connect(_window,
+          SIGNAL(userAskedToOpenWithDefaultSystemEditor(QString)),
+          this,
+          SLOT(openWithDefaultSystemEditor(QString)));
 
   _selectedId = nullptr;
   _isSyncingFromTextual = false;
@@ -70,7 +75,6 @@ void OutlineViewPlugin::onEntityAdded(const QString &pluginID, Entity *entity)
     return;
 
   qDebug() << "OutlineViewPlugin::onEntityAdded(" << pluginID << entity << endl;
-  //  QString line = "<" + entity->getType() + "> </" + entity->getType() + ">\n";
 
   QTreeWidgetItem *item;
   QMap <QString, QString> attrs;
@@ -169,15 +173,13 @@ void OutlineViewPlugin::onEntityChanged(const QString &pluginID, Entity * entity
   // emit sendBroadcastMessage("askAllValidationMessages", nullptr);
 }
 
-void OutlineViewPlugin::onEntityRemoved(const QString &pluginID, const QString &entityID)
+void OutlineViewPlugin::onEntityRemoved( const QString &pluginID,
+                                         const QString &entityID )
 {
   if(_isSyncingFromTextual)
     return;
 
   (void) pluginID;
-  //    qDebug() << "OutlineViewPlugin::onEntityRemoved ("<< pluginID << " "
-  //            << entityID << ")";
-  //    qDebug() << idToItem.contains(entityID);
 
   if(_idToItem.contains(entityID))
   {
@@ -418,4 +420,12 @@ void OutlineViewPlugin::validationError(QString pluginID, void *param)
       item->setToolTip(0, p->second);
     }
   }
+}
+
+void OutlineViewPlugin::openWithDefaultSystemEditor(QString entityId)
+{
+  Entity *entity = project->getEntityById(entityId);
+  qWarning() << entity->getAttribute("src");
+  QFileInfo projectInfo(project->getLocation());
+  QDesktopServices::openUrl(projectInfo.absolutePath() + "/" + entity->getAttribute("src"));
 }

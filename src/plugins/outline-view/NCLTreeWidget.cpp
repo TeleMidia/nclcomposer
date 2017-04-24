@@ -155,6 +155,8 @@ NCLTreeWidget::NCLTreeWidget(QWidget *parent) : QTreeWidget(parent)
     {"start", ":/icon/bind-start"},
     {"stop", ":/icon/bind-stop"}
   };
+
+  connect(this, SIGNAL(itemSelectionChanged()), SLOT(handleSelectionChanged()));
 }
 
 NCLTreeWidget::~NCLTreeWidget()
@@ -188,6 +190,16 @@ void NCLTreeWidget::createActions ()
   connect(_expandAllAct, SIGNAL(triggered()), this, SLOT(expandAll()));
   addAction(_expandAllAct);
 
+  _openWithDefaultEditorAct = new QAction (
+              tr("&Open with system default editor"),
+              this);
+  _openWithDefaultEditorAct->setEnabled(false);
+
+  connect(_openWithDefaultEditorAct,
+          SIGNAL(triggered()),
+          SLOT(openWithDefaultSystemEditor()));
+  addAction(_openWithDefaultEditorAct);
+
 }
 
 void NCLTreeWidget::createMenus()
@@ -195,8 +207,12 @@ void NCLTreeWidget::createMenus()
   _elementMenu = new QMenu(this);
   _elementMenu->addAction(_insertNodeAct);
   _elementMenu->addAction(_removeNodeAct);
+
   _elementMenu->addSeparator();
   _elementMenu->addAction(_expandAllAct);
+
+  _elementMenu->addSeparator();
+  _elementMenu->addAction(_openWithDefaultEditorAct);
 }
 
 bool NCLTreeWidget::updateFromText(QString text)
@@ -389,7 +405,8 @@ QTreeWidgetItem *NCLTreeWidget::getItemById(QString itemId)
 void NCLTreeWidget::removeItem(QString itemId)
 {
   QRegExp exp("*");
-  QList <QTreeWidgetItem*> items = this->findItems(itemId, Qt::MatchExactly
+  QList <QTreeWidgetItem*> items = this->findItems(itemId,
+                                                   Qt::MatchExactly
                                                    | Qt::MatchRecursive, 2);
   QTreeWidgetItem *item;
 
@@ -452,7 +469,8 @@ void NCLTreeWidget::userRemoveElement()
   repaint();
 }
 
-void NCLTreeWidget::updateItem(QTreeWidgetItem *item, QString tagname,
+void NCLTreeWidget::updateItem(QTreeWidgetItem *item,
+                               QString tagname,
                                QMap <QString, QString> &attrs)
 {
   QString icon = ":/icon/tag";
@@ -477,19 +495,17 @@ void NCLTreeWidget::updateItem(QTreeWidgetItem *item, QString tagname,
       if (_mediaIcons.contains(type))
         icon = _mediaIcons.value(type);
     }
-//    else if (tagname == "bind")
-//    {
-//      QString role = attrs.value("role");
+    else if (tagname == "bind")
+    {
+      QString role = attrs.value("role");
 
-//      if (_bindIcons.contains(role))
-//        icon = _bindIcons.value(role);
-//    }
+      if (_bindIcons.contains(role))
+        icon = _bindIcons.value(role);
+    }
   }
 
-  QString strAttrList = "";
-  QString key;
-  QString name;
-  foreach (key, attrs.keys())
+  QString strAttrList = "", name = "";
+  foreach (const QString &key, attrs.keys())
   {
     strAttrList += " ";
     strAttrList += key + "=\"" + attrs[key] + "\"";
@@ -642,5 +658,27 @@ void NCLTreeWidget::mouseMoveEvent(QMouseEvent *event)
     drag->setMimeData(mimeData);
     // start drag
     drag->start(Qt::CopyAction | Qt::MoveAction);
+  }
+}
+
+void NCLTreeWidget::handleSelectionChanged()
+{
+  QList<QTreeWidgetItem*> selecteds = this->selectedItems();
+
+  if (selecteds.size() &&
+      selecteds.at(0)->text(4) == "media")
+  {
+    _openWithDefaultEditorAct->setEnabled(true);
+  }
+}
+
+void NCLTreeWidget::openWithDefaultSystemEditor()
+{
+  QList<QTreeWidgetItem*> selecteds = this->selectedItems();
+
+  if (selecteds.size() &&
+      selecteds.at(0)->text(4) == "media")
+  {
+    emit userAskedToOpenWithDefaultSystemEditor(selecteds.at(0)->text(2));
   }
 }
