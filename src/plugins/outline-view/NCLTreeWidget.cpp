@@ -514,6 +514,10 @@ void NCLTreeWidget::updateItem(QTreeWidgetItem *item,
       name = attrs[key];
     }
   }
+  if (tagname == "bind")
+  {
+    name = attrs["role"] + ": " + attrs["component"];
+  }
 
   item->setIcon(0, QIcon(icon));
   item->setText(4, tagname);
