@@ -1179,6 +1179,21 @@ void StructuralView::adjustReferences(StructuralEntity* entity)
           }
         }
 
+        QVector<StructuralEntity*> relatives;
+        relatives += StructuralUtil::getNeighbors(entity);
+        relatives += StructuralUtil::getUpNeighbors(entity);
+
+        foreach (StructuralEntity* relative, relatives)
+        {
+          if (relative->getStructuralCategory() == Structural::Edge)
+          {
+            StructuralEdge *edge = (StructuralEdge*) relative;
+
+            if (edge->getTail() == entity || edge->getHead() == entity)
+              adjustReferences(edge);
+          }
+        }
+
         break;
       }
 
@@ -1194,53 +1209,67 @@ void StructuralView::adjustReferences(StructuralEntity* entity)
 
         bool isVisible = true;
 
-        if (entity->getStructuralParent() != NULL)
-          if (!entity->getStructuralParent()->isUncollapsed())
-           isVisible = false;
+        StructuralEntity* tail = ((StructuralEdge*) entity)->getTail();
+        StructuralEntity* head = ((StructuralEdge*) entity)->getHead();
 
-        if (((StructuralEdge*) entity)->getTail() == NULL ||
-            ((StructuralEdge*) entity)->getHead() == NULL)
-          isVisible = false;
-
-        StructuralEntity* component = NULL;
-        StructuralEntity* interface = NULL;
-
-        if (!entity->getStructuralProperty(STR_PROPERTY_REFERENCE_INTERFACE_ID).isEmpty())
+        if (tail != NULL && head != NULL)
         {
-          if (_entities.contains(entity->getStructuralProperty(STR_PROPERTY_REFERENCE_INTERFACE_UID)))
-            interface = _entities.value(entity->getStructuralProperty(STR_PROPERTY_REFERENCE_INTERFACE_UID));
-          else
-            isVisible = false;
-        }
+          if (entity->getStructuralParent() != NULL)
+            if (!entity->getStructuralParent()->isUncollapsed())
+             isVisible = false;
 
-        if (!entity->getStructuralProperty(STR_PROPERTY_REFERENCE_COMPONENT_ID).isEmpty())
-        {
-          if (_entities.contains(entity->getStructuralProperty(STR_PROPERTY_REFERENCE_COMPONENT_UID)))
-            component = _entities.value(entity->getStructuralProperty(STR_PROPERTY_REFERENCE_COMPONENT_UID));
+          StructuralEntity* component = NULL;
+          StructuralEntity* interface = NULL;
+
+          if (!entity->getStructuralProperty(STR_PROPERTY_REFERENCE_INTERFACE_ID).isEmpty())
+          {
+            if (head->getStructuralId() != entity->getStructuralProperty(STR_PROPERTY_REFERENCE_INTERFACE_ID) &&
+                tail->getStructuralId() != entity->getStructuralProperty(STR_PROPERTY_REFERENCE_INTERFACE_ID))
+              isVisible = false;
+
+            if (_entities.contains(entity->getStructuralProperty(STR_PROPERTY_REFERENCE_INTERFACE_UID)))
+              interface = _entities.value(entity->getStructuralProperty(STR_PROPERTY_REFERENCE_INTERFACE_UID));
+            else
+              isVisible = false;
+          }
+
+          if (!entity->getStructuralProperty(STR_PROPERTY_REFERENCE_COMPONENT_ID).isEmpty())
+          {
+            if (entity->getStructuralProperty(STR_PROPERTY_REFERENCE_INTERFACE_ID).isEmpty())
+              if (head->getStructuralId() != entity->getStructuralProperty(STR_PROPERTY_REFERENCE_COMPONENT_ID) &&
+                  tail->getStructuralId() != entity->getStructuralProperty(STR_PROPERTY_REFERENCE_COMPONENT_ID))
+                isVisible = false;
+
+            if (_entities.contains(entity->getStructuralProperty(STR_PROPERTY_REFERENCE_COMPONENT_UID)))
+              component = _entities.value(entity->getStructuralProperty(STR_PROPERTY_REFERENCE_COMPONENT_UID));
+            else
+              isVisible = false;
+          }
           else
+          {
             isVisible = false;
+          }
+
+          if (component != NULL)
+          {
+            if (interface != NULL)
+              if (interface->getStructuralParent() != component)
+                isVisible = false;
+
+            if (entity->getStructuralParent() != component->getStructuralParent())
+              isVisible = false;
+          }
+
+          if (!STR_DEFAULT_WITH_BODY &&
+              !STR_DEFAULT_WITH_FLOATING_INTERFACES)
+          {
+            if (tail->isHidden())
+              isVisible = false;
+          }
         }
         else
         {
           isVisible = false;
-        }
-
-        if (component != NULL)
-        {
-          if (interface != NULL)
-            if (interface->getStructuralParent() != component)
-              isVisible = false;
-
-          if (entity->getStructuralParent() != component->getStructuralParent())
-            isVisible = false;
-        }
-
-        if (!STR_DEFAULT_WITH_BODY &&
-            !STR_DEFAULT_WITH_FLOATING_INTERFACES)
-        {
-          if (((StructuralEdge*) entity)->getTail() != NULL)
-            if (((StructuralEdge*) entity)->getTail()->isHidden())
-              isVisible = false;
         }
 
         entity->setHidden(!isVisible);
