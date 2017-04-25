@@ -146,7 +146,12 @@ QString LayoutRegion::getId() const
 void LayoutRegion::setId(const QString &id)
 {
   this->_id = id;
-  setToolTip(_title+" "+"("+_id+") "+_descriptor.first());
+
+  QString descriptorId = "";
+  if (!_descriptor.empty())
+    descriptorId = " "+_descriptor.first();
+
+  setToolTip(_title+" "+"("+_id+")"+descriptorId);
   if (parentItem() != NULL)
   {
     LayoutRegion* parent = (LayoutRegion*) parentItem();
@@ -179,7 +184,12 @@ QString LayoutRegion::getTitle() const
 void LayoutRegion::setTitle(const QString &title)
 {
   this->_title = title;
-  setToolTip(_title+" "+"("+_id+") "+_descriptor.first());
+
+  QString descriptorId = "";
+  if (!_descriptor.empty())
+    descriptorId = " "+_descriptor.first();
+
+  setToolTip(_title+" "+"("+_id+")"+descriptorId);
 }
 
 QString LayoutRegion::getDescriptor() const
