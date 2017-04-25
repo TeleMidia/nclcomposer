@@ -1581,8 +1581,12 @@ void StructuralView::performCut()
   StructuralEntity* entity = _entities.value(_selected);
 
   if (entity != NULL)
+  {
+    _clipboard->setStructuralId(entity->getStructuralId());
+
     if (_clipboard->getStructuralUid() == entity->getStructuralUid())
       remove(_selected, StructuralUtil::createSettings());
+  }
 }
 
 void StructuralView::performCopy()
@@ -1603,6 +1607,7 @@ void StructuralView::performCopy()
           entity->getStructuralType() != Structural::Body)
       {
         _clipboard = clone(entity);
+        _clipboard->setStructuralId(getNewId(_clipboard));
 
         emit switchedPaste(false);
       }
