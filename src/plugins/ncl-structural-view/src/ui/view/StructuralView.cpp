@@ -1636,7 +1636,7 @@ void StructuralView::performCopy()
           entity->getStructuralType() != Structural::Body)
       {
         _clipboard = clone(entity);
-        _clipboard->setStructuralId(getNewId(_clipboard));
+        _clipboard->setStructuralId("c_"+_clipboard->getStructuralId());
 
         emit switchedPaste(false);
       }
@@ -1680,6 +1680,19 @@ void StructuralView::performPaste()
 
       if (result == 1)
       {
+        QString nextID = _clipboard->getStructuralId();
+
+        int n = 0;
+
+        foreach (StructuralEntity* entity, _entities.values())
+          if (entity->getStructuralId().startsWith(nextID))
+            ++n;
+
+        if (n > 0)
+          nextID = nextID+"_"+QString::number(n);
+
+        _clipboard->setStructuralId(nextID);
+
         paste(_clipboard, parent);
       }
       else if (result == 2)
@@ -1688,9 +1701,24 @@ void StructuralView::performPaste()
 
         QMap<QString, QString> properties = _clipboard->getStructuralProperties();
         properties[STR_PROPERTY_ENTITY_UID] = uid;
-        properties[STR_PROPERTY_ENTITY_ID] = "r_"+_clipboard->getStructuralProperty(STR_PROPERTY_ENTITY_ID);
 
-        properties[STR_PROPERTY_REFERENCE_REFER_ID] = _clipboard->getStructuralId();
+        QString refID = _clipboard->getStructuralId();
+        refID = refID.section('_', 1, 1);
+
+        int n = 0;
+
+        foreach (StructuralEntity* entity, _entities.values())
+          if (entity->getStructuralId().startsWith("r_"+refID))
+            ++n;
+
+        if (n > 0)
+          refID = "r_"+refID+"_"+QString::number(n);
+        else
+          refID = "r_"+refID;
+
+        properties[STR_PROPERTY_ENTITY_ID] = refID;
+
+        properties[STR_PROPERTY_REFERENCE_REFER_ID] = _clipboard->getStructuralId().section('_', 1, 1);
         properties[STR_PROPERTY_REFERENCE_REFER_UID] = _clipboard->getStructuralUid();
 
         properties.remove(STR_PROPERTY_ENTITY_TOP);
