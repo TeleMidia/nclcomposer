@@ -285,24 +285,30 @@ void StructuralComposition::delineate(QPainterPath* painter) const
 
 void StructuralComposition::dragEnterEvent(QGraphicsSceneDragDropEvent *event)
 {
-  StructuralNode::dragEnterEvent(event);
-
   QList<QUrl> list = event->mimeData()->urls();
 
   if (!list.isEmpty())
-    event->acceptProposedAction();
+    event->setAccepted(true);
+  else
+    StructuralNode::dragEnterEvent(event);
+}
+
+void StructuralComposition::dragMoveEvent(QGraphicsSceneDragDropEvent *event)
+{
+  QList<QUrl> list = event->mimeData()->urls();
+
+  if (!list.isEmpty())
+    event->setAccepted(true);
+  else
+    StructuralNode::dragMoveEvent(event);
 }
 
 void StructuralComposition::dropEvent(QGraphicsSceneDragDropEvent *event)
 {
-  StructuralNode::dropEvent(event);
-
   QList<QUrl> list = event->mimeData()->urls();
 
   if (!list.isEmpty())
   {
-    event->acceptProposedAction();
-
     foreach(QUrl url, list)
     {
       QString filename = url.toLocalFile();
@@ -315,11 +321,13 @@ void StructuralComposition::dropEvent(QGraphicsSceneDragDropEvent *event)
       inserted(StructuralUtil::createUid(), getStructuralUid(), properties, StructuralUtil::createSettings());
     }
   }
+  else
+  {
+    StructuralNode::dropEvent(event);
+  }
 }
 
 void StructuralComposition::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
 {
-//  StructuralNode::mouseDoubleClickEvent(event);
-
   collapse(true);
 }

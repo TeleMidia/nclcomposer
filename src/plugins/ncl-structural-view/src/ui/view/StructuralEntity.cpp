@@ -1333,25 +1333,29 @@ void StructuralEntity::dragEnterEvent(QGraphicsSceneDragDropEvent* event)
 {
   StructuralType type = StructuralUtil::translateStringToType(event->mimeData()->objectName());
 
-  if (StructuralUtil::validateKinship(type, _type))
-    if (event->mimeData()->text() != _uid)
-      event->acceptProposedAction();
-    else
-      event->ignore();
+  if (StructuralUtil::validateKinship(type, _type) &&
+      event->mimeData()->text() != _uid)
+    event->setAccepted(true);
+  else
+    event->setAccepted(false);
+}
 
-  QGraphicsItem::dragEnterEvent(event);
+void StructuralEntity::dragMoveEvent(QGraphicsSceneDragDropEvent* event)
+{
+  StructuralType type = StructuralUtil::translateStringToType(event->mimeData()->objectName());
+
+  if (StructuralUtil::validateKinship(type, _type) &&
+      event->mimeData()->text() != _uid)
+    event->setAccepted(true);
+  else
+    event->setAccepted(false);
 }
 
 void StructuralEntity::dropEvent(QGraphicsSceneDragDropEvent* event)
 {
   StructuralType type = StructuralUtil::translateStringToType(event->mimeData()->objectName());
 
-  if (StructuralUtil::validateKinship(type, _type))
-    if (event->mimeData()->text() != _uid) {
-      event->acceptProposedAction();
-
-      emit move(event->mimeData()->text(), _uid);
-    }
-
-  QGraphicsItem::dropEvent(event);
+  if (StructuralUtil::validateKinship(type, _type) &&
+      event->mimeData()->text() != _uid)
+    emit move(event->mimeData()->text(), _uid);
 }

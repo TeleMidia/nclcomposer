@@ -6,6 +6,8 @@
 
 #include <QUuid>
 #include <QFileDialog>
+#include <QMimeData>
+
 #include "StructuralUtil.h"
 
 StructuralView::StructuralView(QWidget* parent)
@@ -28,6 +30,7 @@ StructuralView::StructuralView(QWidget* parent)
   _tool = NULL;
 
   setAttribute(Qt::WA_TranslucentBackground);
+  setAcceptDrops(true);
 //  setDragMode(ScrollHandDrag);
 }
 
@@ -1435,7 +1438,7 @@ void StructuralView::select(QString uid, QMap<QString, QString> settings)
 
 void StructuralView::move(QString uid, QString parent)
 {
-  if (_entities.contains(uid) && _entities.contains(parent))
+  if (_entities.contains(uid))
   {
     //
     // Initializing...
@@ -1443,7 +1446,12 @@ void StructuralView::move(QString uid, QString parent)
     StructuralEntity* e = _entities.value(uid);
     StructuralEntity* p = _entities.value(parent);
 
-    if (StructuralUtil::validateKinship(e->getStructuralType(), p->getStructuralType()) &&
+    StructuralType type = Structural::Body;
+
+    if (p != NULL)
+      type = p->getStructuralType();
+
+    if (StructuralUtil::validateKinship(e->getStructuralType(), type) &&
         e->getStructuralParent() != p)
     {
       //
@@ -2495,6 +2503,74 @@ void StructuralView::wheelEvent(QWheelEvent * event)
 
   if (!event->isAccepted())
     QGraphicsView::wheelEvent(event);
+}
+
+void StructuralView::dragEnterEvent(QDragEnterEvent *event)
+{
+  QGraphicsView::dragEnterEvent(event);
+
+  if (!STR_DEFAULT_WITH_BODY)
+  {
+    if (!event->isAccepted())
+    {
+      QList<QUrl> list = event->mimeData()->urls();
+      StructuralType type = StructuralUtil::translateStringToType(event->mimeData()->objectName());
+
+      if (!list.isEmpty() || StructuralUtil::validateKinship(type, Structural::Body))
+        event->setAccepted(true);
+      else
+        event->setAccepted(false);
+    }
+  }
+}
+
+void StructuralView::dragMoveEvent(QDragMoveEvent *event)
+{
+  QGraphicsView::dragMoveEvent(event);
+
+  if (!STR_DEFAULT_WITH_BODY)
+  {
+    if (!event->isAccepted())
+    {
+      QList<QUrl> list = event->mimeData()->urls();
+      StructuralType type = StructuralUtil::translateStringToType(event->mimeData()->objectName());
+
+      if (!list.isEmpty() || StructuralUtil::validateKinship(type, Structural::Body))
+        event->setAccepted(true);
+      else
+        event->setAccepted(false);
+    }
+  }
+}
+
+void StructuralView::dropEvent(QDropEvent* event)
+{
+  QGraphicsView::dropEvent(event);
+
+  if (!STR_DEFAULT_WITH_BODY)
+  {
+    QList<QUrl> list = event->mimeData()->urls();
+    StructuralType type = StructuralUtil::translateStringToType(event->mimeData()->objectName());
+
+    if (!list.isEmpty())
+    {
+      foreach(QUrl url, list)
+      {
+        QString filename = url.toLocalFile();
+
+        QMap<QString,QString> properties;
+        properties[STR_PROPERTY_ENTITY_TYPE] = StructuralUtil::translateTypeToString(Structural::Media);
+        properties[STR_PROPERTY_ENTITY_ID] = StructuralUtil::formatId(QFileInfo(filename).baseName());
+        properties[STR_PROPERTY_CONTENT_LOCATION] = filename;
+
+        insert(StructuralUtil::createUid(), "", properties, StructuralUtil::createSettings());
+      }
+    }
+    else if (StructuralUtil::validateKinship(type, Structural::Body))
+    {
+      move(event->mimeData()->text(), "");
+    }
+  }
 }
 
 void StructuralView::clean()

@@ -16,6 +16,7 @@ protected:
   virtual void delineate(QPainterPath* painter) const;
 
   virtual void dragEnterEvent(QGraphicsSceneDragDropEvent *event);
+  virtual void dragMoveEvent(QGraphicsSceneDragDropEvent *event);
   virtual void dropEvent(QGraphicsSceneDragDropEvent *event);
 
   virtual void mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event);
