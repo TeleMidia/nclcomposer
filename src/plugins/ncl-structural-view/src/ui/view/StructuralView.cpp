@@ -673,7 +673,7 @@ void StructuralView::insert(QString uid, QString parent, QMap<QString, QString> 
       connect(e, SIGNAL(removed(QString,QMap<QString,QString>)),SLOT(remove(QString,QMap<QString,QString>)));
       connect(e, SIGNAL(changed(QString,QMap<QString,QString>,QMap<QString,QString>,QMap<QString,QString>)), SLOT(change(QString,QMap<QString,QString>,QMap<QString,QString>,QMap<QString,QString>)));
       connect(e, SIGNAL(selected(QString,QMap<QString,QString>)),SLOT(select(QString,QMap<QString,QString>)));
-      connect(e, SIGNAL(move(QString,QString)), SLOT(move(QString,QString)));
+      connect(e, SIGNAL(moved(QString,QString,QMap<QString,QString>,QMap<QString,QString>)), SLOT(move(QString,QString,QMap<QString,QString>,QMap<QString,QString>)));
 
       //
       // Saving...
@@ -1436,7 +1436,7 @@ void StructuralView::select(QString uid, QMap<QString, QString> settings)
   _scene->update();
 }
 
-void StructuralView::move(QString uid, QString parent)
+void StructuralView::move(QString uid, QString parent, QMap<QString, QString> properties, QMap<QString, QString> settings)
 {
   if (_entities.contains(uid))
   {
@@ -1460,17 +1460,25 @@ void StructuralView::move(QString uid, QString parent)
       foreach(StructuralEntity *entity, _entities.values())
         entity->setDraggable(false);
 
-      QString code = StructuralUtil::createUid();
-
-      QMap<QString, QString> settings = StructuralUtil::createSettings();
-      settings[STR_SETTING_CODE] = code;
-
       select("", settings);
+
+      StructuralEntity* copy = clone(e, NULL);
+
+      foreach (QString name, properties.keys())
+        copy->setStructuralProperty(name, properties.value(name));
+
+      copy->adjust();
+
+      if (properties.contains(STR_PROPERTY_ENTITY_TOP))
+        copy->setTop(copy->getTop() - copy->getHeight()/2);
+
+      if (properties.contains(STR_PROPERTY_ENTITY_LEFT))
+        copy->setLeft(copy->getLeft() - copy->getWidth()/2);
 
       //
       // Moving...
       //
-      paste(clone(e, NULL), p, code, true); remove(uid, settings);
+      paste(copy, p, settings.value(STR_SETTING_CODE), false); remove(uid, settings);
     }
   }
 }
@@ -2549,26 +2557,40 @@ void StructuralView::dropEvent(QDropEvent* event)
 
   if (!STR_DEFAULT_WITH_BODY)
   {
-    QList<QUrl> list = event->mimeData()->urls();
-    StructuralType type = StructuralUtil::translateStringToType(event->mimeData()->objectName());
-
-    if (!list.isEmpty())
+    if (event->isAccepted())
     {
-      foreach(QUrl url, list)
+      QList<QUrl> list = event->mimeData()->urls();
+      StructuralType type = StructuralUtil::translateStringToType(event->mimeData()->objectName());
+
+      if (!list.isEmpty())
       {
-        QString filename = url.toLocalFile();
+        foreach(QUrl url, list)
+        {
+          QString filename = url.toLocalFile();
+
+          QMap<QString,QString> properties;
+          properties[STR_PROPERTY_ENTITY_TYPE] = StructuralUtil::translateTypeToString(Structural::Media);
+          properties[STR_PROPERTY_ENTITY_ID] = StructuralUtil::formatId(QFileInfo(filename).baseName());
+          properties[STR_PROPERTY_CONTENT_LOCATION] = filename;
+
+          QPointF p = mapToScene(event->pos());
+
+          properties[STR_PROPERTY_ENTITY_TOP] = QString::number(p.y() - STR_DEFAULT_CONTENT_H/2);
+          properties[STR_PROPERTY_ENTITY_LEFT] = QString::number(p.x() - STR_DEFAULT_CONTENT_W/2);
+
+          insert(StructuralUtil::createUid(), "", properties, StructuralUtil::createSettings());
+        }
+      }
+      else if (StructuralUtil::validateKinship(type, Structural::Body))
+      {
+        QPointF p = mapToScene(event->pos());
 
         QMap<QString,QString> properties;
-        properties[STR_PROPERTY_ENTITY_TYPE] = StructuralUtil::translateTypeToString(Structural::Media);
-        properties[STR_PROPERTY_ENTITY_ID] = StructuralUtil::formatId(QFileInfo(filename).baseName());
-        properties[STR_PROPERTY_CONTENT_LOCATION] = filename;
+        properties[STR_PROPERTY_ENTITY_TOP] = QString::number(p.y());
+        properties[STR_PROPERTY_ENTITY_LEFT] = QString::number(p.x());
 
-        insert(StructuralUtil::createUid(), "", properties, StructuralUtil::createSettings());
+        move(event->mimeData()->text(), "", properties, StructuralUtil::createSettings());
       }
-    }
-    else if (StructuralUtil::validateKinship(type, Structural::Body))
-    {
-      move(event->mimeData()->text(), "");
     }
   }
 }

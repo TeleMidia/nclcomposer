@@ -1240,10 +1240,6 @@ void StructuralEntity::contextMenuEvent(QGraphicsSceneContextMenuEvent* event)
   }
 }
 
-/*
- *
-*/
-
 void StructuralEntity::hoverMoveEvent(QGraphicsSceneHoverEvent* event)
 {
   if (_selected)
@@ -1357,5 +1353,11 @@ void StructuralEntity::dropEvent(QGraphicsSceneDragDropEvent* event)
 
   if (StructuralUtil::validateKinship(type, _type) &&
       event->mimeData()->text() != _uid)
-    emit move(event->mimeData()->text(), _uid);
+  {
+    QMap<QString,QString> properties;
+    properties[STR_PROPERTY_ENTITY_TOP] = QString::number(event->pos().y());
+    properties[STR_PROPERTY_ENTITY_LEFT] = QString::number(event->pos().x());
+
+    emit moved(event->mimeData()->text(), _uid, properties, StructuralUtil::createSettings());
+  }
 }

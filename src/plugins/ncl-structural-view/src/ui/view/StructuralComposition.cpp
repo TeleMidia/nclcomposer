@@ -15,8 +15,6 @@ StructuralComposition::StructuralComposition(StructuralEntity* parent)
 
   setHoverable(false);
   setUncollapsed(true);
-
-  setAcceptDrops(true);
 }
 
 StructuralComposition::~StructuralComposition()
@@ -309,6 +307,8 @@ void StructuralComposition::dropEvent(QGraphicsSceneDragDropEvent *event)
 
   if (!list.isEmpty())
   {
+    event->setAccepted(false);
+
     foreach(QUrl url, list)
     {
       QString filename = url.toLocalFile();
@@ -317,6 +317,9 @@ void StructuralComposition::dropEvent(QGraphicsSceneDragDropEvent *event)
       properties[STR_PROPERTY_ENTITY_TYPE] = StructuralUtil::translateTypeToString(Structural::Media);
       properties[STR_PROPERTY_ENTITY_ID] = StructuralUtil::formatId(QFileInfo(filename).baseName());
       properties[STR_PROPERTY_CONTENT_LOCATION] = filename;
+
+      properties[STR_PROPERTY_ENTITY_TOP] = QString::number(event->pos().y() - STR_DEFAULT_CONTENT_H/2);
+      properties[STR_PROPERTY_ENTITY_LEFT] = QString::number(event->pos().x() - STR_DEFAULT_CONTENT_W/2);
 
       inserted(StructuralUtil::createUid(), getStructuralUid(), properties, StructuralUtil::createSettings());
     }

@@ -172,7 +172,7 @@ signals:
   void removed(QString uid, QMap<QString, QString> settings);
   void changed(QString uid, QMap<QString, QString> properties, QMap<QString, QString> previous, QMap<QString, QString> settings);
   void selected(QString uid, QMap<QString, QString> settings);
-  void move(QString uid, QString parent);
+  void moved(QString uid, QString parent, QMap<QString, QString> properties, QMap<QString, QString> settings);
 
 protected:
   virtual void draw(QPainter* painter) = 0;

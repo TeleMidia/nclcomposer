@@ -73,7 +73,7 @@ public slots:
   void change(QString uid, QMap<QString, QString> properties, QMap<QString, QString> previous, QMap<QString, QString> settings);
   void select(QString uid, QMap<QString, QString> settings);
 
-  void move(QString uid, QString parent);
+  void move(QString uid, QString parent, QMap<QString, QString> properties, QMap<QString, QString> settings);
 
   void performHelp();
   void performAutostart();
