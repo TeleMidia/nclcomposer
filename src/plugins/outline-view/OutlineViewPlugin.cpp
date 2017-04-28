@@ -427,5 +427,15 @@ void OutlineViewPlugin::openWithDefaultSystemEditor(QString entityId)
   Entity *entity = project->getEntityById(entityId);
   qWarning() << entity->getAttribute("src");
   QFileInfo projectInfo(project->getLocation());
-  QDesktopServices::openUrl(projectInfo.absolutePath() + "/" + entity->getAttribute("src"));
+
+  QString fullurl = entity->getAttribute("src");
+  if(!QFile::exists(fullurl))
+    fullurl = projectInfo.absolutePath() + "/" + entity->getAttribute("src");
+
+  if(QFile::exists(fullurl))
+    QDesktopServices::openUrl(fullurl);
+  else
+    QMessageBox::warning(nullptr,
+                         tr("Warning"),
+                         tr("Could not open file. File does not exist!"));
 }
