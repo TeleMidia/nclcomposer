@@ -182,6 +182,7 @@ void NCLTextEditor::wheelEvent (QWheelEvent *event)
     else
       zoomOut();
   }
+
   QsciScintilla::wheelEvent(event);
 }
 

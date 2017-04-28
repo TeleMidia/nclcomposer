@@ -216,8 +216,10 @@ private:
   QMutex lockType;
   QMutex lockChildren;
   QMutex lockParent;
+
   QString _id;
   QString type;
+
   Entity* parent;
   bool deleteChildren; /* initial value is true */
 
