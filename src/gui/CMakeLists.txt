@@ -1,6 +1,14 @@
 cmake_minimum_required (VERSION 3.2)
 project(nclcomposer_gui)
 
+option(cpr_with_fervor "Use Fervor update system" OFF)
+if(cpr_with_fervor)
+  message("Use fervor gui")
+  add_definitions(-DFV_GUI)
+else()
+  message("Do not use fervor gui")
+endif()
+
 # Current date and time
 string(TIMESTAMP BUILD_DATE "%Y-%m-%d %H:%M")
 add_definitions(-DBUILD_DATE="${BUILD_DATE}")
@@ -20,8 +28,6 @@ set(CMAKE_AUTORCC ON)
 
 find_package(Qt5 REQUIRED COMPONENTS Xml Widgets Network)
 find_library(nclcomposer_core REQUIRED)
-
-#find_library (sass_aaa OPTIONAL)
 
 set(UI_SOURCES
   ui/PreferencesDialog.ui
@@ -54,7 +60,6 @@ add_executable(nclcomposer
   src/GeneralPreferences.cpp
   src/NewProjectWizard.cpp
   src/FileChooser.cpp
-  src/ClickableDockWidget.cpp
   src/ComposerSplashScreen.cpp
 
   src/toolwindowmanager/libqtoolwindowmanager/qabstracttoolwindowmanagerarea.cpp
