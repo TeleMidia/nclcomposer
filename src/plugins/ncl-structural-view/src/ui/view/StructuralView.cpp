@@ -133,7 +133,7 @@ void StructuralView::load(const QString &data)
   QDomNodeList rootChildren = root.childNodes();
 
   // Cheking if exist a 'body' entity when 'body'
-  // in enable in view. If don't, adds one.
+  // is enabled in view. If don't, adds one.
   if (STR_DEFAULT_WITH_BODY)
   {
     bool hasBody = false;
@@ -427,7 +427,9 @@ void StructuralView::createDocument(StructuralEntity* entity, QDomDocument* docu
   }
 }
 
-void StructuralView::insert(QString uid, QString parent, QMap<QString, QString> properties, QMap<QString, QString> settings)
+void StructuralView::insert( QString uid, QString parent,
+                             QMap<QString, QString> properties,
+                             QMap<QString, QString> settings )
 {
   if (!_entities.contains(uid))
   {
@@ -1478,7 +1480,8 @@ void StructuralView::move(QString uid, QString parent, QMap<QString, QString> pr
       //
       // Moving...
       //
-      paste(copy, p, settings.value(STR_SETTING_CODE), false); remove(uid, settings);
+      paste(copy, p, settings.value(STR_SETTING_CODE), false);
+      remove(uid, settings);
     }
   }
 }
@@ -2499,7 +2502,7 @@ void StructuralView::keyReleaseEvent(QKeyEvent *event)
 
 void StructuralView::wheelEvent(QWheelEvent * event)
 {
-  if(event->modifiers() == Qt::ControlModifier)
+  if(event->modifiers() & Qt::ControlModifier)
   {
     if (event->delta() > 0)
         performZoomIn();
@@ -2508,9 +2511,10 @@ void StructuralView::wheelEvent(QWheelEvent * event)
 
     event->accept();
   }
-
-  if (!event->isAccepted())
+  else
+  {
     QGraphicsView::wheelEvent(event);
+  }
 }
 
 void StructuralView::dragEnterEvent(QDragEnterEvent *event)
@@ -2857,7 +2861,9 @@ void StructuralView::paste(StructuralEntity* entity, StructuralEntity* parent)
   paste(entity, parent, StructuralUtil::createUid(), true);
 }
 
-void StructuralView::paste(StructuralEntity* entity, StructuralEntity* parent, const QString &code, bool adjust)
+void StructuralView::paste( StructuralEntity* entity,
+                            StructuralEntity* parent,
+                            const QString &code, bool adjust)
 {
   if (entity != NULL)
   {
