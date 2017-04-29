@@ -59,18 +59,33 @@ endif()
 add_subdirectory(src/plugins/gingagui-all/run-view)
 
 # cpack
+set(CPACK_GENERATOR "DEB")
 set(CPACK_PACKAGE_NAME "nclcomposer")
 set(CPACK_PACKAGE_VENDOR "TeleMídia Lab/PUC-Rio")
-set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "NCL Composer - Authoring tool for interactive multimedia applications.")
 
-set(CPACK_GENERATOR "DEB")
-set(CPACK_DEBIAN_PACKAGE_SHLIBDEPS ON)
-set(CPACK_DEBIAN_COMPRESSION_TYPE "xz")
 set(CPACK_PACKAGE_VERSION "${VERSION}")
 set(CPACK_PACKAGE_INSTALL_DIRECTORY "TeleMidia")
 set(CPACK_PACKAGE_CONTACT "Roberto Azevedo <robertogerson@telemidia.puc-rio.br>")
+set(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_SOURCE_DIR}/README.md")
 set(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_SOURCE_DIR}/LICENSE.LGPL")
+set(CPACK_PACKAGE_FILE_NAME ${CPACK_PACKAGE_NAME}-${CPACK_PACKAGE_VERSION})
 
+set(CPACK_DEBIAN_FILE_NAME DEB-DEFAULT)
+set(CPACK_DEBIAN_COMPRESSION_TYPE "xz")
+
+set(CPACK_DEBIAN_REPLACES "xz")
+set(CPACK_DEBIAN_PACKAGE_DESCRIPTION
+  "NCL Composer is an authoring tool for interactive multimedia applications.
+   NCL Composer allows you to create interactive digital applications for
+   Digital Television using NCL through a simple way. Its extensible
+   architecture also allows to anyone developer pluginsthat satisfy each
+   specific author profile."
+)
+set(CPACK_DEBIAN_PACKAGE_SECTION "contrib/graphics")
+
+set(CPACK_DEBIAN_PACKAGE_DEPENDS "libqt5core5a, libqt5gui5, libqt5network5, libqt5xml5, libqt5svg5, libqt5webkit5, libqt5help5")
+
+set(CPACK_DEBIAN_PACKAGE_SHLIBDEPS ON)
 # Copy QT's dynamic libs
 if(WIN32)
   set(QT_INSTALLED_PATH "C:/Qt/5.5/mingw492_32")

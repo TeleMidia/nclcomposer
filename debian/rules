@@ -10,37 +10,32 @@
 export DH_VERBOSE=1
 export PREFIX=/usr
 
-#Getting current version
-VERSION=`git --git-dir=.git describe --tags | sed "s/v//g"`
-
-#I can also FORCE an specific version
-VERSION=0.3.0
-
-QMAKE=qmake FORCERELEASE=true CPRVERSION=${VERSION} PREFIX=/usr
+BUILDDIR=_build
+CMAKE=/usr/local/bin/cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=${CURDIR}/debian/nclcomposer/usr
 
 APPNAME := nclcomposer
+
 build:
 	dh_testdir
-	# Add here commands to compile the package.
-	$(QMAKE)
-	$(MAKE) -j4
+	dh_testroot
+	mkdir -p $(BUILDDIR)
+	cd $(BUILDDIR); ${CMAKE} ..
+	$(MAKE) -j8 -C ${BUILDDIR}
 
 clean:
 	dh_testdir
 	dh_testroot
 	# Add here commands to clean up after the build process.
-	$(MAKE) clean
-	$(MAKE) distclean
-	rm -rf bin
 	dh_clean
+	rm -rf ${BUILDDIR}
 
-install: build
+install:
 	dh_testdir
 	dh_testroot
 	dh_prep
 	dh_installdirs
 # Add here commands to install the package into debian/your_appname
-	$(MAKE) install INSTALL_ROOT=$(CURDIR)/debian/nclcomposer install
+	$(MAKE) -C ${BUILDDIR} install
 
 # Build architecture-independent files here.
 binary-indep: build install
@@ -59,10 +54,11 @@ binary-arch: build install
 	dh_compress
 	dh_fixperms
 	dh_installdeb
-#	dh_shlibdeps
+	dh_shlibdeps
 	dh_gencontrol
 	dh_md5sums
 	dh_builddeb
 
 binary: binary-indep binary-arch
 .PHONY: build clean binary-indep binary-arch binary install configure
+
