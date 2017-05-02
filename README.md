@@ -26,7 +26,7 @@ supporting textual and graphical abstractions.
   * Integration with different players (e.g. [Ginga-NCL Reference
     Implementation](http://www.ginga.org.br))
   * Multi-platform (Linux, Windows, and MacOS X are officially supported)
-  * Easily extensible through plug-ins
+  * Easily extended through plug-ins
 
 ## Source code organization
 NCL Composer source code is divided into three main parts:
@@ -36,15 +36,13 @@ NCL Composer source code is divided into three main parts:
     in the same user interface.
   * __src/plugins__: the official plug-ins supported by NCL Composer.
 
-## Contribute!
-
-  * TODO
 
 ## Building
 
 ### Requirements
-The main requirement for NCL Composer is:
+The main requirement for building NCL Composer is:
 
+  * cmake >= 3.2
   * Qt >= 5.4
 
 ### Linux
