@@ -25,8 +25,7 @@ set(VALIDATOR_SOURCES
   validatortreewidgetitem.cpp
   nclmodel/textualparser.cpp
   nclmodel/connectorparser.cpp
-  main.cpp
-  
+
   ValidatorPlugin.h
   ValidatorFactory.h
   definitions/definitions.h
@@ -47,18 +46,43 @@ set(VALIDATOR_SOURCES
   Resource.qrc
 )
 
-add_library(validator SHARED
+add_library(validator_plugin SHARED
   ${VALIDATOR_SOURCES}
 )
 
-target_include_directories(validator
+target_include_directories(validator_plugin
   PRIVATE . ${CMAKE_CURRENT_BINARY_DIR}
 )
 
-target_link_libraries(validator PRIVATE
+target_link_libraries(validator_plugin PRIVATE
   nclcomposer_core
   Qt5::Xml
   Qt5::Widgets
 )
 
-install (TARGETS validator DESTINATION ${NCLCOMPOSER_BINARY_DIR_PLUGINS})
+install (TARGETS validator_plugin
+         DESTINATION ${NCLCOMPOSER_BINARY_DIR_PLUGINS})
+
+option(WITH_VALIDATOR_EXE "Build the ncl-validator command-line" OFF)
+
+if (WITH_VALIDATOR_EXE)
+  add_executable (nclvalidator main.cpp
+      ${VALIDATOR_SOURCES}
+    )
+
+  target_include_directories(nclvalidator
+    PRIVATE . ${CMAKE_CURRENT_BINARY_DIR}
+  )
+
+  # TODO: We probably do not need those libraries
+  target_link_libraries(nclvalidator PRIVATE
+    nclcomposer_core
+    Qt5::Xml
+    Qt5::Widgets
+  )
+
+  message("Build ncl-validator executable.")
+else()
+  message("ncl-validator executable WILL NOT BE built.")
+endif()
+
