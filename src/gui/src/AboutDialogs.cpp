@@ -62,6 +62,7 @@ AboutPluginsDialog::AboutPluginsDialog(QWidget *parent) :
 {
   setWindowTitle(tr("Installed Plugins"));
   setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+  resize(600, 400);
 
   _treeWidgetPlugins = new QTreeWidget(this);
   _treeWidgetPlugins->setAlternatingRowColors(true);
@@ -84,8 +85,8 @@ AboutPluginsDialog::AboutPluginsDialog(QWidget *parent) :
   _detailsButton->setEnabled(false);
 
   connect( bOk, SIGNAL(rejected()), this, SLOT(close()) );
-
   connect( _detailsButton, SIGNAL(pressed()), this, SLOT(showPluginDetails()) );
+  connect( _treeWidgetPlugins, SIGNAL(itemDoubleClicked(QTreeWidgetItem*,int)), SLOT(showPluginDetails()));
 
   QVBoxLayout *gLayout = new QVBoxLayout(this);
   gLayout->addWidget(new QLabel(tr("<b>NCL Composer</b> is an IDE for"
@@ -182,7 +183,6 @@ void AboutPluginsDialog::loadPlugins()
 
   _detailsButton->setEnabled(false);
 
-  adjustSize();
 }
 
 void AboutPluginsDialog::selectedAboutCurrentPluginFactory()
