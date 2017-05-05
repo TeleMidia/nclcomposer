@@ -242,7 +242,7 @@ void ComposerMainWindow::openProjects(const QStringList &projects)
 #endif
 
     QFile file(src);
-    bool openCurrentFile = true;
+    bool openCurrentFile = true, createDefaultProjStructure = false;
 
     if(!file.exists())
     {
@@ -252,18 +252,33 @@ void ComposerMainWindow::openProjects(const QStringList &projects)
                                 tr("The File %1 does not exists, but "
                                    "the last time you have closed NCL"
                                    " Composer this files was open. "
-                                   "Do you want to create this file "
-                                   "again?").arg(src),
+                                   "Do you want to create a new (empty) project"
+                                   " in the same path?").arg(src),
                                 QMessageBox::Yes | QMessageBox::No,
                                 QMessageBox::No);
 
-      if(resp != QMessageBox::Yes) openCurrentFile = false;
+      if(resp != QMessageBox::Yes)
+      {
+        openCurrentFile = false;
+      }
+      else
+      {
+        createDefaultProjStructure = true;
+      }
     }
 
     if (openCurrentFile)
     {
       checkTemporaryFileLastModified(src);
       ProjectControl::getInstance()->launchProject(src);
+      if (createDefaultProjStructure)
+      {
+        addDefaultStructureToProject(
+                    ProjectControl::getInstance()->getOpenProject(src),
+                    true,
+                    true,
+                    true);
+      }
     }
   }
 
