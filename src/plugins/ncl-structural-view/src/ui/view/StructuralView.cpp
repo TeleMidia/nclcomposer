@@ -589,9 +589,8 @@ void StructuralView::insert( QString uid, QString parent,
           e->setTop(p->getHeight()/2 - e->getHeight()/2);
         else
         {
-          //e->setTop(_scene->sceneRect().height()/2 - e->getHeight()/2);
           auto rect = this->mapToScene(this->viewport()->rect().center());
-          e->setTop(rect.y());
+          e->setTop(rect.y() - e->getHeight()/2);
         }
       }
 
@@ -602,9 +601,8 @@ void StructuralView::insert( QString uid, QString parent,
           e->setLeft(p->getWidth()/2 - e->getWidth()/2);
         else
         {
-          //e->setLeft(_scene->sceneRect().width()/2 - e->getWidth()/2);
           auto rect = this->mapToScene(this->viewport()->rect().center());
-          e->setLeft(rect.x());
+          e->setLeft(rect.x() - e->getWidth()/2);
         }
       }
 
