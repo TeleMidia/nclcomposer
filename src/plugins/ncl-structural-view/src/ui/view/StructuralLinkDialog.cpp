@@ -10,57 +10,63 @@
 #include <QDebug>
 
 #include <QStandardItemModel>
+#include <QTimer>
 
 #include "StructuralUtil.h"
 
-CompleteLineEdit::CompleteLineEdit(const QStringList &words, QWidget *parent)
-  : QLineEdit(parent), words(words)
+CompleteLineEdit::CompleteLineEdit(const QStringList &words,
+                                   QWidget *parent)
+  : QLineEdit(parent), _words(words)
 {
-  listView = new QListView(this);
-  model = new QStringListModel(this);
+  _listView = new QListView (this);
+  _model = new QStringListModel (this);
+  _listView->setModel(_model);
 
-  listView->setWindowFlags(Qt::ToolTip);
-  listView->setUniformItemSizes(true);
+  _listView->setWindowFlags(Qt::ToolTip);
+  _listView->setUniformItemSizes(true);
+  _listView->setHidden(true);
 
   installEventFilter(this);
 
-  connect(this, SIGNAL(textChanged(const QString &)),
-          this, SLOT(setCompleter(const QString &)));
+  connect(this,
+          SIGNAL(textChanged(const QString &)),
+          this,
+          SLOT(setCompleter(const QString &)));
 
-  connect(listView, SIGNAL(clicked(const QModelIndex &)),
-          this, SLOT(completeText(const QModelIndex &)));
+  connect(_listView,
+          SIGNAL(clicked(const QModelIndex &)),
+          this,
+          SLOT(completeText(const QModelIndex &)));
 }
 
 void CompleteLineEdit::setStringList(const QStringList &words)
 {
-  this->words = words;
+  this->_words = words;
+  setCompleter(text());
 }
 
 bool CompleteLineEdit::eventFilter(QObject *object, QEvent *event)
 {
-  if (object == this && event->type() == QEvent::KeyPress)
+  if ( object == this &&
+       event->type() == QEvent::KeyPress )
   {
     QKeyEvent *keyEvent = static_cast<QKeyEvent *>(event);
     if (keyEvent->key() == Qt::Key_Tab)
     {
-      if(!listView->isHidden())
+      if(!_listView->isHidden())
       {
-        QModelIndex currentIndex = listView->currentIndex();
+        QModelIndex currentIndex = _listView->currentIndex();
         if (currentIndex.isValid())
         {
-          QString text = listView->currentIndex().data().toString();
+          QString text = _listView->currentIndex().data().toString();
           setText(text);
         }
-        listView->hide();
+
+        _listView->hide();
       }
     }
   }
   return false;
-}
-
-void CompleteLineEdit::hideList()
-{
-  listView->hide();
 }
 
 void CompleteLineEdit::updateListPos()
@@ -69,42 +75,35 @@ void CompleteLineEdit::updateListPos()
   int x = mapToGlobal(p).x();
   int y = mapToGlobal(p).y() + 1;
 
-  listView->move(x, y);
+  _listView->move(x, y);
 }
 
 void CompleteLineEdit::updateListSize()
 {
-  listView->setMinimumWidth(width());
-  listView->setMaximumWidth(width());
+  _listView->setMinimumWidth(width());
+  _listView->setMaximumWidth(width());
 }
 
-void CompleteLineEdit::hideEvent ( QHideEvent * event )
+void CompleteLineEdit::focusOutEvent(QFocusEvent *e)
 {
-  Q_UNUSED(event)
-  listView->hide();
+  QLineEdit::focusOutEvent(e);
+  _listView->hide();
 }
-
-// void CompleteLineEdit::focusOutEvent(QFocusEvent *e)
-// {
-//  QLineEdit::focusOutEvent(e);
-//  listView->hide();
-// }
 
 void CompleteLineEdit::focusInEvent(QFocusEvent *e)
 {
-  if (text().isEmpty())
-    setCompleter("");
-
   QLineEdit::focusInEvent(e);
+  if(isVisible())
+    setCompleter(text());
 }
 
 void CompleteLineEdit::keyPressEvent(QKeyEvent *e)
 {
-  if (!listView->isHidden())
+  if (!_listView->isHidden())
   {
     int key = e->key();
-    int count = listView->model()->rowCount();
-    QModelIndex currentIndex = listView->currentIndex();
+    int count = _listView->model()->rowCount();
+    QModelIndex currentIndex = _listView->currentIndex();
 
     if (Qt::Key_Down == key)
     {
@@ -112,8 +111,8 @@ void CompleteLineEdit::keyPressEvent(QKeyEvent *e)
       if (row >= count)
         row = 0;
 
-      QModelIndex index = listView->model()->index(row, 0);
-      listView->setCurrentIndex(index);
+      QModelIndex index = _listView->model()->index(row, 0);
+      _listView->setCurrentIndex(index);
     }
     else if (Qt::Key_Up == key)
     {
@@ -123,26 +122,26 @@ void CompleteLineEdit::keyPressEvent(QKeyEvent *e)
         row = count - 1;
       }
 
-      QModelIndex index = listView->model()->index(row, 0);
-      listView->setCurrentIndex(index);
+      QModelIndex index = _listView->model()->index(row, 0);
+      _listView->setCurrentIndex(index);
     }
     else if (Qt::Key_Escape == key)
     {
-      listView->hide();
+      _listView->hide();
     }
     else if (Qt::Key_Enter == key ||
              Qt::Key_Return == key )
     {
       if (currentIndex.isValid())
       {
-        QString text = listView->currentIndex().data().toString();
+        QString text = _listView->currentIndex().data().toString();
         setText(text);
       }
-      listView->hide();
+
+      _listView->hide();
     }
     else
     {
-//       listView->hide();
       QLineEdit::keyPressEvent(e);
     }
   }
@@ -154,47 +153,36 @@ void CompleteLineEdit::keyPressEvent(QKeyEvent *e)
 
 void CompleteLineEdit::setCompleter(const QString &text)
 {
-//  if (text.isEmpty())
-//  {
-//    listView->hide();
-//    return;
-//  }
-
-//  if ((text.length() > 1) && (!listView->isHidden()))
-//    return;
-
-  if (!isEnabled()){
-    listView->hide();
-    return;
-  }
-
+  QString txt = text.isEmpty() ? "" : text;
 
   QStringList sl;
-  foreach(const QString &word, words)
+
+  for (const QString &word: _words)
   {
-    if (word.toLower().contains(text.toLower()))
-    {
+    if (word.toLower().contains(txt.toLower()))
       sl << word;
-    }
   }
 
-  model->setStringList(sl);
-  listView->setModel(model);
+  _model->setStringList(sl);
 
-  if (model->rowCount() == 0)
-    return;
+  if (isVisible() && isEnabled())
+  {
+    // Position the text edit
+    updateListSize();
+    updateListPos();
 
-  // Position the text edit
-  updateListSize();
-  updateListPos();
-  listView->show();
+    _listView->show();
+  }
+  else
+    _listView->hide();
 }
 
 void CompleteLineEdit::completeText(const QModelIndex &index)
 {
   QString text = index.data().toString();
   setText(text);
-  listView->hide();
+
+  _listView->hide();
 }
 
 StructuralLinkDialog::StructuralLinkDialog(QWidget* parent)
@@ -202,7 +190,7 @@ StructuralLinkDialog::StructuralLinkDialog(QWidget* parent)
 {
   form.setupUi(this);
 
-  connLineEdit = new CompleteLineEdit(QStringList());
+  connLineEdit = new CompleteLineEdit(QStringList(), this);
   this->form.gridLayout_2->addWidget(connLineEdit, 0, 1);
 
   connect(connLineEdit, SIGNAL(textChanged(QString)),
@@ -239,15 +227,14 @@ void StructuralLinkDialog::setData(const QMap<QString, QVector<QString> > &condi
   _params = params;
 }
 
-void StructuralLinkDialog::init(const QString &connName,
-                                const QString &condName,
-                                const QString &actionName,
-                                LinkDialogMode mode)
+void StructuralLinkDialog::init( const QString &connName,
+                                 const QString &condName,
+                                 const QString &actionName,
+                                 LinkDialogMode mode)
 {
   _currentMode = mode;
 
   connLineEdit->clear();
-  connLineEdit->hideList();
   connLineEdit->setStringList(_conditions.keys());
 
   switch (_currentMode)
@@ -568,10 +555,16 @@ void StructuralLinkDialog::resizeEvent(QResizeEvent *event)
   connLineEdit->updateListSize();
 }
 
-void StructuralLinkDialog::showEvent(QShowEvent *evt)
+bool StructuralLinkDialog::event(QEvent *evt)
 {
-  Q_UNUSED(evt)
-  this->connLineEdit->setFocus();
+  int ret = QDialog::event(evt);
+
+  if(evt->type() == QEvent::Show)
+  {
+    // this->connLineEdit->setFocus();
+    QTimer::singleShot(0, this->connLineEdit, SLOT(setFocus()));
+  }
+  return ret;
 }
 
 QString StructuralLinkDialog::getCurrentConnector()
@@ -627,7 +620,7 @@ QMap<QString, QString> StructuralLinkDialog::getParams(QTableView* table)
   int nrow = m->rowCount();
 
   for (int i=0; i<nrow; ++i)
-    p[m->data(m->index(i,0)).toString()] =m->data(m->index(i,1)).toString();
+    p[m->data(m->index(i,0)).toString()] = m->data(m->index(i,1)).toString();
 
   return p;
 }

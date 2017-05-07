@@ -22,10 +22,9 @@ class CompleteLineEdit : public QLineEdit
   Q_OBJECT
 
 public:
-  CompleteLineEdit(const QStringList &words, QWidget *parent = 0);
-  void setStringList(const QStringList &words);
+  CompleteLineEdit(const QStringList &_words, QWidget *parent = 0);
+  void setStringList(const QStringList &_words);
 
-  void hideList();
   void updateListPos();
   void updateListSize();
 
@@ -36,15 +35,13 @@ public slots:
 protected:
   virtual void keyPressEvent(QKeyEvent *e);
   virtual void focusInEvent(QFocusEvent *e);
-  virtual void hideEvent ( QHideEvent * event );
-//  virtual void moveEvent( QMoveEvent* event);
-  // virtual void focusOutEvent(QFocusEvent *e);
+  virtual void focusOutEvent(QFocusEvent *e);
   virtual bool eventFilter(QObject *object, QEvent *event);
 
 private:
-  QStringList words;
-  QListView *listView;
-  QStringListModel *model;
+  QStringList _words;
+  QListView *_listView;
+  QStringListModel *_model;
 
 };
 
@@ -87,15 +84,13 @@ protected slots:
   void changeConditionParamState(int state);
   void changeActionParamState(int state);
 
-
 protected:
-  virtual void showEvent(QShowEvent *evt);
   virtual void moveEvent(QMoveEvent *event);
   virtual void resizeEvent(QResizeEvent *event);
+  virtual bool event(QEvent *);
 
 public:
-  //TODO: This shouldn't be public
-  Ui::StructuralLinkForm form;
+  Ui::StructuralLinkForm form; //TODO: This shouldn't be public
 
   QMap<QString, QVector<QString> > _conditions;
   QMap<QString, QVector<QString> > _actions;
