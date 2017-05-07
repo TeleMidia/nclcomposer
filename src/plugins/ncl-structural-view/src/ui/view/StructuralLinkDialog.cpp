@@ -29,7 +29,7 @@ CompleteLineEdit::CompleteLineEdit(const QStringList &words,
   installEventFilter(this);
 
   connect(this,
-          SIGNAL(textChanged(const QString &)),
+          SIGNAL(textEdited(const QString &)),
           this,
           SLOT(setCompleter(const QString &)));
 
@@ -65,8 +65,6 @@ bool CompleteLineEdit::eventFilter(QObject *object, QEvent *event)
         _listView->hide();
       }
     }
-
-    return true;
   }
 
   return false;
@@ -98,7 +96,11 @@ void CompleteLineEdit::focusOutEvent(QFocusEvent *e)
 void CompleteLineEdit::focusInEvent(QFocusEvent *e)
 {
   QLineEdit::focusInEvent(e);
+
   setCompleter(text());
+  updateListPos();
+
+  _listView->show();
 }
 
 void CompleteLineEdit::keyPressEvent(QKeyEvent *e)
@@ -158,7 +160,6 @@ void CompleteLineEdit::keyPressEvent(QKeyEvent *e)
 void CompleteLineEdit::setCompleter(const QString &text)
 {
   QString txt = text.isEmpty() ? "" : text;
-
   QStringList sl;
 
   for (const QString &word: _words)
@@ -168,25 +169,15 @@ void CompleteLineEdit::setCompleter(const QString &text)
   }
 
   _model->setStringList(sl);
-
-  if (isVisible() && isEnabled())
-  {
-    // Position the text edit
-    // updateListSize();
-    updateListPos();
-
-    _listView->show();
-  }
-  else
-    _listView->hide();
+  _listView->show();
 }
 
 void CompleteLineEdit::completeText(const QModelIndex &index)
 {
   QString text = index.data().toString();
   setText(text);
-
   _listView->hide();
+  nextInFocusChain()->setFocus();
 }
 
 StructuralLinkDialog::StructuralLinkDialog(QWidget* parent)
