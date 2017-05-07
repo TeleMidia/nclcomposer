@@ -80,8 +80,10 @@ void CompleteLineEdit::updateListPos()
 
 void CompleteLineEdit::updateListSize()
 {
-  _listView->setMinimumWidth(width());
-  _listView->setMaximumWidth(width());
+  setMinimumWidth(_listView->sizeHintForColumn(0));
+  setMaximumWidth(_listView->sizeHintForColumn(0));
+  _listView->setMinimumWidth(_listView->sizeHintForColumn(0));
+  _listView->setMaximumWidth(_listView->sizeHintForColumn(0));
 }
 
 void CompleteLineEdit::focusOutEvent(QFocusEvent *e)
@@ -168,7 +170,7 @@ void CompleteLineEdit::setCompleter(const QString &text)
   if (isVisible() && isEnabled())
   {
     // Position the text edit
-    updateListSize();
+    // updateListSize();
     updateListPos();
 
     _listView->show();
