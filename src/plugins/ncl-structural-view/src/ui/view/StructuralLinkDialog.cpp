@@ -34,7 +34,7 @@ CompleteLineEdit::CompleteLineEdit(const QStringList &words,
           SLOT(setCompleter(const QString &)));
 
   connect(_listView,
-          SIGNAL(clicked(const QModelIndex &)),
+          SIGNAL(pressed(const QModelIndex &)),
           this,
           SLOT(completeText(const QModelIndex &)));
 }
@@ -65,7 +65,10 @@ bool CompleteLineEdit::eventFilter(QObject *object, QEvent *event)
         _listView->hide();
       }
     }
+
+    return true;
   }
+
   return false;
 }
 
@@ -95,8 +98,7 @@ void CompleteLineEdit::focusOutEvent(QFocusEvent *e)
 void CompleteLineEdit::focusInEvent(QFocusEvent *e)
 {
   QLineEdit::focusInEvent(e);
-  if(isVisible())
-    setCompleter(text());
+  setCompleter(text());
 }
 
 void CompleteLineEdit::keyPressEvent(QKeyEvent *e)
@@ -563,9 +565,9 @@ bool StructuralLinkDialog::event(QEvent *evt)
 
   if(evt->type() == QEvent::Show)
   {
-    // this->connLineEdit->setFocus();
     QTimer::singleShot(0, this->connLineEdit, SLOT(setFocus()));
   }
+
   return ret;
 }
 

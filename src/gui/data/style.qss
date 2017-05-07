@@ -105,3 +105,8 @@ SearchBox QLabel {
 SearchBox QCheckBox {
   color: $main-color;
 }
+
+QListView::item:hover {
+  color: $main-color;
+  background: $main-background-color;
+}
