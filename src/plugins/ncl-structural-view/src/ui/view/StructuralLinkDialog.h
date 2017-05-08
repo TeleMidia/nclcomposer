@@ -27,9 +27,10 @@ public:
 
   void updateListPos();
   void updateListSize();
+  void setCompleter(const QString &text);
 
 public slots:
-  void setCompleter(const QString &text);
+  void updateCompleter(const QString &text);
   void completeText(const QModelIndex &index);
 
 protected:

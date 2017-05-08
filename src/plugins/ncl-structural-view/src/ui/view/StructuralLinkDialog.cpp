@@ -31,7 +31,7 @@ CompleteLineEdit::CompleteLineEdit(const QStringList &words,
   connect(this,
           SIGNAL(textEdited(const QString &)),
           this,
-          SLOT(setCompleter(const QString &)));
+          SLOT(updateCompleter(const QString &)));
 
   connect(_listView,
           SIGNAL(pressed(const QModelIndex &)),
@@ -90,6 +90,7 @@ void CompleteLineEdit::updateListSize()
 void CompleteLineEdit::focusOutEvent(QFocusEvent *e)
 {
   QLineEdit::focusOutEvent(e);
+
   _listView->hide();
 }
 
@@ -157,6 +158,12 @@ void CompleteLineEdit::keyPressEvent(QKeyEvent *e)
   }
 }
 
+void CompleteLineEdit::updateCompleter(const QString &text)
+{
+  setCompleter(text);
+  _listView->show();
+}
+
 void CompleteLineEdit::setCompleter(const QString &text)
 {
   QString txt = text.isEmpty() ? "" : text;
@@ -169,7 +176,6 @@ void CompleteLineEdit::setCompleter(const QString &text)
   }
 
   _model->setStringList(sl);
-  _listView->show();
 }
 
 void CompleteLineEdit::completeText(const QModelIndex &index)
