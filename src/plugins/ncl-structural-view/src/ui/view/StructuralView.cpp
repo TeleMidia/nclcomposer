@@ -3095,39 +3095,42 @@ void StructuralView::adjustLayout(StructuralEntity* entity, const QString &code)
           tails.insert(uid, entities);
 
         } else if (WITH_INTERFACE_AS_NODE) {
-          QString uid = e->getStructuralUid();
+          if (e->getStructuralType() == Structural::Link)
+          {
+            QString uid = e->getStructuralUid();
 
-          links.insert(uid, e);
+            links.insert(uid, e);
 
-          if (!heads.contains(uid))
-            heads.insert(uid, QVector<StructuralEntity*>());
+            if (!heads.contains(uid))
+              heads.insert(uid, QVector<StructuralEntity*>());
 
-          // In case the bind connect the link entity with a interface entity
-          // (Node -> Interface) consider the parent of the interface entity
-          // instead (Node -> Node).
-          if (head->getStructuralCategory() == Structural::Interface &&
-              head->getStructuralParent() != entity)
-            head = head->getStructuralParent();
+            // In case the bind connect the link entity with a interface entity
+            // (Node -> Interface) consider the parent of the interface entity
+            // instead (Node -> Node).
+            if (head->getStructuralCategory() == Structural::Interface &&
+                head->getStructuralParent() != entity)
+              head = head->getStructuralParent();
 
-          QVector<StructuralEntity*> headentities = heads.value(uid);
-          headentities.append(head);
+            QVector<StructuralEntity*> headentities = heads.value(uid);
+            headentities.append(head);
 
-          heads.insert(uid, headentities);
+            heads.insert(uid, headentities);
 
-          if (!tails.contains(uid))
-            tails.insert(uid, QVector<StructuralEntity*>());
+            if (!tails.contains(uid))
+              tails.insert(uid, QVector<StructuralEntity*>());
 
-          // In case the bind connect the link entity with a interface entity
-          // (Interface -> Node) consider the parent of the interface entity
-          // instead (Node -> Node).
-          if (tail->getStructuralCategory() == Structural::Interface &&
-              tail->getStructuralParent() != entity)
-            tail = tail->getStructuralParent();
+            // In case the bind connect the link entity with a interface entity
+            // (Interface -> Node) consider the parent of the interface entity
+            // instead (Node -> Node).
+            if (tail->getStructuralCategory() == Structural::Interface &&
+                tail->getStructuralParent() != entity)
+              tail = tail->getStructuralParent();
 
-          QVector<StructuralEntity*> tailentities = tails.value(uid);
-          tailentities.append(tail);
+            QVector<StructuralEntity*> tailentities = tails.value(uid);
+            tailentities.append(tail);
 
-          tails.insert(uid, tailentities);
+            tails.insert(uid, tailentities);
+          }
         }
       }
     }
@@ -3346,7 +3349,7 @@ void StructuralView::adjustLayout(StructuralEntity* entity, const QString &code)
 
           if (last.contains(link->getStructuralUid()))
           {
-            next = QLineF(last[link->getStructuralUid()], next).center();
+            next = QLineF(last[link->getStructuralUid()], next).pointAt(0.5);
           }
 
           last[link->getStructuralUid()] = next;
