@@ -674,6 +674,11 @@ void NCLTreeWidget::handleSelectionChanged()
   {
     _openWithDefaultEditorAct->setEnabled(true);
   }
+  else
+  {
+    _openWithDefaultEditorAct->setEnabled(false);
+  }
+
 }
 
 void NCLTreeWidget::openWithDefaultSystemEditor()
