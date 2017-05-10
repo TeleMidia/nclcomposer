@@ -424,26 +424,24 @@ void OutlineViewPlugin::validationError(QString pluginID, void *param)
 
 void OutlineViewPlugin::openWithDefaultSystemEditor(QString entityId)
 {
-  QString fullurl;
+  QString url;
   Entity *entity = project->getEntityById(entityId);
-  qWarning() << entity->getAttribute("src");
   QFileInfo projectInfo(project->getLocation());
 
   if(entity->getType() == "media")
   {
-  fullurl = entity->getAttribute("src");
-  if(!QFile::exists(fullurl))
-    fullurl = projectInfo.absolutePath() + "/" + entity->getAttribute("src");
+    url = entity->getAttribute("src");
   }
   else if(entity->getType() == "importBase")
   {
-    fullurl = entity->getAttribute("documentURI");
-    if(!QFile::exists(fullurl))
-      fullurl = projectInfo.absolutePath() + "/" + entity->getAttribute("documentURI");
+    url = entity->getAttribute("documentURI");
   }
 
-  if(QFile::exists(fullurl))
-    QDesktopServices::openUrl(fullurl);
+  if(!QFile::exists(url))
+    url = projectInfo.absolutePath() + "/" + url;
+
+  if(QFile::exists(url))
+    QDesktopServices::openUrl(url);
   else
     QMessageBox::warning(nullptr,
                          tr("Warning"),
