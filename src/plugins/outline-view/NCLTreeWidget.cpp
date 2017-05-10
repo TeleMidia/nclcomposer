@@ -670,7 +670,8 @@ void NCLTreeWidget::handleSelectionChanged()
   QList<QTreeWidgetItem*> selecteds = this->selectedItems();
 
   if (selecteds.size() &&
-      selecteds.at(0)->text(4) == "media")
+      (selecteds.at(0)->text(4) == "media" ||
+       selecteds.at(0)->text(4) == "importBase") )
   {
     _openWithDefaultEditorAct->setEnabled(true);
   }
@@ -686,7 +687,8 @@ void NCLTreeWidget::openWithDefaultSystemEditor()
   QList<QTreeWidgetItem*> selecteds = this->selectedItems();
 
   if (selecteds.size() &&
-      selecteds.at(0)->text(4) == "media")
+      (selecteds.at(0)->text(4) == "media" ||
+       selecteds.at(0)->text(4) == "importBase") )
   {
     emit userAskedToOpenWithDefaultSystemEditor(selecteds.at(0)->text(2));
   }
