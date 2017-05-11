@@ -88,7 +88,7 @@ set(CPACK_DEBIAN_PACKAGE_DEPENDS "libqt5core5a, libqt5gui5, libqt5network5, libq
 set(CPACK_DEBIAN_PACKAGE_SHLIBDEPS ON)
 # Copy QT's dynamic libs
 if(WIN32)
-  set(QT_INSTALLED_PATH "C:/Qt/5.5/mingw492_32")
+  set(QT_INSTALLED_PATH "C:/Qt/5.8/mingw53_32")
   install(FILES "${QT_INSTALLED_PATH}/bin/Qt5Core.dll"
                 "${QT_INSTALLED_PATH}/bin/Qt5Gui.dll"
                 "${QT_INSTALLED_PATH}/bin/Qt5Network.dll"
@@ -102,7 +102,7 @@ if(WIN32)
                 bin)
 
   install(FILES "${QT_INSTALLED_PATH}/plugins/platforms/qwindows.dll"
-          DESTINATION plugins/platforms)
+          DESTINATION bin/plugins/platforms)
 endif()
 
 # This must always be last!

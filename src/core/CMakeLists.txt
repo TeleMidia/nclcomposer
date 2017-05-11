@@ -70,4 +70,8 @@ target_link_libraries(nclcomposer_core
   LINK_PUBLIC Qt5::Xml Qt5::Widgets
 )
 
-install(TARGETS nclcomposer_core DESTINATION ${NCLCOMPOSER_BINARY_DIR_LIB})
+if(WIN32)
+  install(TARGETS nclcomposer_core DESTINATION ${NCLCOMPOSER_BINARY_DIR_BIN})
+else()
+  install(TARGETS nclcomposer_core DESTINATION ${NCLCOMPOSER_BINARY_DIR_LIB})
+endif()

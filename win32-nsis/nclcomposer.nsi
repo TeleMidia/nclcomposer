@@ -8,7 +8,7 @@
 
 ;--------------------------------
 !ifndef VERSION
-!define VERSION "0.3.0"
+!define VERSION "0.4.0"
 !endif
 
 Name "NCL Composer ${VERSION}"
@@ -25,7 +25,7 @@ InstallDir "$PROGRAMFILES\TeleMidia\NCL Composer"
 
 ; License informations
 LicenseText "Please review the license terms before installing NCL Composer."
-LicenseData "../LICENSE.EPL"
+LicenseData "../LICENSE.LGPL"
 
 ; Request application privileges for Windows Vista
 RequestExecutionLevel admin
@@ -81,29 +81,31 @@ InstType "Minimal"
 Section "NCL Composer Core (required)" ; No components page, name is not important
   SectionIn RO
   ; Set output path to the installation directory.
-  SetOutPath $INSTDIR
+  SetOutPath $INSTDIR\bin
       
   ; Put file there
-  File "C:\Composer\*.dll"
-  File "C:\Composer\*.exe"
+  File "C:\Composer\bin\*"
+  
+  SetOutPath $INSTDIR\bin\plugins\platforms
+  File "C:\Composer\bin\plugins\platforms\qwindows.dll"
 
   WriteUninstaller "uninstall.exe"
 
   ; include Files
-  SetoutPath $INSTDIR\include
-  File /r "C:\Composer\include\*"
+  ; SetoutPath $INSTDIR\include
+  ; File /r "C:\Composer\include\*"
 
   ; data Files
-  SetOutPath $INSTDIR\data
-  File "C:\Composer\data\*"
+  SetOutPath $INSTDIR\share\nclcomposer
+  File "C:\Composer\share\nclcomposer\*"
 
   ; install NCL Language Profile
-  SetOutPath $INSTDIR\extensions
-  File "C:\Composer\extensions\NCLLanguageProfile.dll"
+  SetOutPath $INSTDIR\lib\nclcomposer\plugins
+  File "C:\Composer\lib\nclcomposer\plugins\libnclprofile.dll"
 
   ; translation files
-  SetOutPath $INSTDIR\extensions
-  File "C:\Composer\extensions\*.qm"
+  ; SetOutPath $INSTDIR\extensions
+  ; File "C:\Composer\extensions\*.qm"
 
   ; Associate .cpr files with NCL Composer
   ${registerExtension} $INSTDIR\nclcomposer.exe ".cpr" "NCL Composer project"
@@ -116,9 +118,9 @@ SectionEnd ; end the section
 Section "Start Menu Shortcuts"
   SectionIn 1
   CreateDirectory "$SMPROGRAMS\NCL Composer"
-  CreateShortCut "$SMPROGRAMS\NCL Composer\Uninstall.lnk" "$INSTDIR\uninstall.exe" "" "$INSTDIR\uninstall.exe" 0
-  CreateShortCut "$SMPROGRAMS\NCL Composer\NCL Composer.lnk" "$INSTDIR\nclcomposer.exe" "" "$INSTDIR\nclcomposer.exe" 0      
-  CreateShortCut "$SMPROGRAMS\NCL Composer\ (MakeNSISW).lnk" "$INSTDIR\nclcomposer.nsi" "" "$INSTDIR\nclcomposer.nsi" 0      
+  CreateShortCut  "$SMPROGRAMS\NCL Composer\Uninstall.lnk" "$INSTDIR\uninstall.exe" "" "$INSTDIR\uninstall.exe" 0
+  CreateShortCut  "$SMPROGRAMS\NCL Composer\NCL Composer.lnk" "$INSTDIR\nclcomposer.exe" "" "$INSTDIR\nclcomposer.exe" 0      
+  CreateShortCut  "$SMPROGRAMS\NCL Composer\ (MakeNSISW).lnk" "$INSTDIR\nclcomposer.nsi" "" "$INSTDIR\nclcomposer.nsi" 0      
 SectionEnd
 
 ; Ginga default executable
@@ -156,51 +158,53 @@ SectionGroupEnd
 SectionGroup /e "Install Default Plugins"
   Section "Textual View"
     SectionIn 1
-    SetOutPath $INSTDIR\extensions
-    ; File "C:\Composer\extensions\qscintilla2.dll"
-    File "C:\Composer\extensions\ncl_textual_view.dll"
+    SetOutPath $INSTDIR\lib\nclcomposer\plugins
+    File "C:\Composer\lib\nclcomposer\plugins\libncl_textual_view.dll"
+	
+	SetOutPath $INSTDIR\bin
+	File "C:\Composer\bin\libqscintilla2_telem.dll"
   SectionEnd
 
   Section "Layout View"
     SectionIn 1
-    SetOutPath $INSTDIR\extensions
-    File "C:\Composer\\extensions\ncl_layout_view.dll"
+    SetOutPath $INSTDIR\lib\nclcomposer\plugins
+    File "C:\Composer\lib\nclcomposer\plugins\libncl_layout_view.dll"
   SectionEnd
 
   Section "Properties View"
     SectionIn 1
-    SetOutPath $INSTDIR\extensions
-    File "C:\Composer\extensions\properties_view.dll"
+    SetOutPath $INSTDIR\lib\nclcomposer\plugins
+    File "C:\Composer\lib\nclcomposer\plugins\libproperties_view.dll"
   SectionEnd
 
   Section "Structural View"
     SectionIn 1
-    SetOutPath $INSTDIR\extensions
-    File "C:\Composer\extensions\ncl_structural_view_next.dll"
+    SetOutPath $INSTDIR\lib\nclcomposer\plugins
+    File "C:\Composer\lib\nclcomposer\plugins\libncl_structural_view.dll"
   SectionEnd
 
   Section "Outline View"
     SectionIn 1
-    SetOutPath $INSTDIR\extensions
-    File "C:\Composer\extensions\outline_view.dll"
+    SetOutPath $INSTDIR\lib\nclcomposer\plugins
+    File "C:\Composer\lib\nclcomposer\plugins\liboutline_view.dll"
   SectionEnd
 
   Section "Validator Plugin"
     SectionIn 1
-    SetOutPath $INSTDIR\extensions
-    File "C:\Composer\extensions\validator.dll"
+    SetOutPath $INSTDIR\lib\nclcomposer\plugins
+    File "C:\Composer\lib\nclcomposer\plugins\libvalidator_plugin.dll"
   SectionEnd
   
   Section "Rules View"
     SectionIn 1
-    SetOutPath $INSTDIR\extensions
-    File "C:\Composer\extensions\ncl_rules_view.dll"
+    SetOutPath $INSTDIR\lib\nclcomposer\plugins
+    File "C:\Composer\lib\nclcomposer\plugins\libncl_rules_view.dll"
   SectionEnd
 
   Section "Run View"
     SectionIn 1
-    SetOutPath $INSTDIR\extensions
-    File "C:\Composer\extensions\run_view.dll"
+    SetOutPath $INSTDIR\lib\nclcomposer\plugins
+    File "C:\Composer\lib\nclcomposer\plugins\librun_view.dll"
   SectionEnd
 
 SectionGroupEnd
@@ -210,12 +214,12 @@ SectionGroupEnd
 UninstallText "This will uninstall NCL Composer. Hit next to continue"
 Section "Uninstall"
   Delete "$INSTDIR\*"
-  Delete "$INSTDIR\extensions\*"
-  Delete "$INSTDIR\data\*"
-  Delete "$INSTDIR\include\*"
-  RMDir "$INSTDIR\extensions"
-  RMDir "$INSTDIR\data"
-  RMDir "$INSTDIR\include"
+  Delete "$INSTDIR\bin\*"
+  Delete "$INSTDIR\lib\nclcomposer\plugins\*"
+  Delete "$INSTDIR\share\nclcomposer\*"
+  RMDir "$INSTDIR\bin"
+  RMDir "$INSTDIR\lib"
+  RMDir "$INSTDIR\share"
 
   ;Shortcuts
   Delete "$SMPROGRAMS\NCL Composer\*"

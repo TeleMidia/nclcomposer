@@ -9,6 +9,11 @@ else()
   message("Do not use fervor gui")
 endif()
 
+# Set some Win32 Specific Settings
+IF(WIN32)
+SET(GUI_TYPE WIN32)
+ENDIF(WIN32)
+
 # Current date and time
 string(TIMESTAMP BUILD_DATE "%Y-%m-%d %H:%M")
 add_definitions(-DBUILD_DATE="${BUILD_DATE}")
@@ -48,7 +53,7 @@ QT5_WRAP_UI(UI_GENERATED_HEADERS
   ${UI_SOURCES}
 )
 
-add_executable(nclcomposer
+add_executable(nclcomposer ${GUI_TYPE}
   main.cpp
   src/ComposerMainWindow.cpp
   src/PreferencesDialog.cpp
@@ -76,6 +81,8 @@ add_executable(nclcomposer
   gui.qrc
   ../plugins/common-resources/images.qrc
   ../plugins/common-resources/language.qrc
+  
+  nclcomposer.rc
 )
 
 set_target_properties(nclcomposer PROPERTIES
