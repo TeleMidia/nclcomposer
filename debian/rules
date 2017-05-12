@@ -17,14 +17,12 @@ APPNAME := nclcomposer
 
 build:
 	dh_testdir
-	dh_testroot
 	mkdir -p $(BUILDDIR)
 	cd $(BUILDDIR); ${CMAKE} ..
 	$(MAKE) -j8 -C ${BUILDDIR}
 
 clean:
 	dh_testdir
-	dh_testroot
 	# Add here commands to clean up after the build process.
 	dh_clean
 	rm -rf ${BUILDDIR}
