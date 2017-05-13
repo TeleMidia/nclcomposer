@@ -3,10 +3,10 @@ project(nclcomposer_gui)
 
 option(cpr_with_fervor "Use Fervor update system" OFF)
 if(cpr_with_fervor)
-  message("Use fervor gui")
+  message(STATUS "Use fervor gui")
   add_definitions(-DFV_GUI)
 else()
-  message("Do not use fervor gui")
+  message(STATUS "Do not use fervor gui")
 endif()
 
 # Set some Win32 Specific Settings

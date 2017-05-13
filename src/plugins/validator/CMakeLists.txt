@@ -67,8 +67,8 @@ option(WITH_VALIDATOR_EXE "Build the ncl-validator command-line" OFF)
 
 if (WITH_VALIDATOR_EXE)
   add_executable (nclvalidator main.cpp
-      ${VALIDATOR_SOURCES}
-    )
+    ${VALIDATOR_SOURCES}
+  )
 
   target_include_directories(nclvalidator
     PRIVATE . ${CMAKE_CURRENT_BINARY_DIR}
@@ -81,8 +81,8 @@ if (WITH_VALIDATOR_EXE)
     Qt5::Widgets
   )
 
-  message("Build ncl-validator executable.")
+  message(STATUS "Build ncl-validator executable.")
 else()
-  message("ncl-validator executable WILL NOT BE built.")
+  message(STATUS "ncl-validator executable WILL NOT BE built.")
 endif()
 
