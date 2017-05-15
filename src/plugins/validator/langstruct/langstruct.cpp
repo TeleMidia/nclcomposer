@@ -28,14 +28,8 @@
 #include <QDebug>
 #include <QFile>
 
-#ifdef WITH_LIBBOOST
-#include <boost/regex.hpp>
-#else
-#include <QRegExp>
-#endif
-
 #include <assert.h>
-
+#include <regex>
 
 // Defining static variables
 map<string, ElementStructure> Langstruct::_elements;
@@ -361,14 +355,8 @@ bool Langstruct::isValidAttribute(const string &attName, const string &attValue,
   string pattern = Langstruct::_datatypes[Langstruct::_attributes[attName].
       getDatatype(element)];
 
-#ifdef WITH_LIBBOOST
-  const boost::regex reg (pattern);
-
-  return boost::regex_match (attValue, reg);
-#else
-  QRegExp rx(QString(pattern.c_str()));
-  return rx.exactMatch(QString(attValue.c_str()));
-#endif
+  std::regex word_regex(pattern);
+  return std::regex_match(attValue, word_regex);
 }
 
 
