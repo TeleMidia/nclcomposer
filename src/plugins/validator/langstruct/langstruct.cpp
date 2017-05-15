@@ -83,24 +83,21 @@ void Langstruct::init ()
     trimmer << component.c_str();
     trimmer >> component;
 
-    // std::cout << "########### COMPONENT = " << component.c_str() << std::endl;
+//    std::cout << "########### COMPONENT = " << component.c_str() << std::endl;
 
-    //        assert (component == "ELEMENT" || component == "ATTRIBUTE"
-    //                || component == "REFERENCE" || component == "DATATYPE");
+//    assert (component == "ELEMENT" || component == "ATTRIBUTE" ||
+//            component == "REFERENCE" || component == "DATATYPE");
 
     if (component == "ELEMENT")
     {
-      string name,
-          parent,
-          cardinality,
-          scope;
+      string name, parent, cardinality, scope;
 
       getline(strTok, name, ',');
       getline(strTok, parent, ',');
       getline(strTok, cardinality, ',');
       getline(strTok, scope, ')');
 
-      // Include an ElementStructure
+      // include an ElementStructure
       if (!Langstruct::_elements.count (name))
       {
         ElementStructure el (name, scope == "true");
@@ -203,7 +200,7 @@ void Langstruct::init ()
 
 /*
  */
-bool Langstruct::existElement(const string el)
+bool Langstruct::existElement(const string &el)
 {
   return Langstruct::_elements.count (el);
 }
@@ -211,7 +208,7 @@ bool Langstruct::existElement(const string el)
 
 /*
  */
-bool Langstruct::existAttribute(const string element, const string att)
+bool Langstruct::existAttribute(const string &element, const string &att)
 {
   if (!Langstruct::_elements.count(element))
   {
@@ -224,7 +221,7 @@ bool Langstruct::existAttribute(const string element, const string att)
 
 /*
  */
-bool Langstruct::existParent(const string child, const string parent)
+bool Langstruct::existParent(const string &child, const string &parent)
 {
   if (!Langstruct::_elements.count(child))
   {
@@ -237,7 +234,7 @@ bool Langstruct::existParent(const string child, const string parent)
 
 /*
  */
-set<string> Langstruct::getRequiredAttributes(const string element)
+set<string> Langstruct::getRequiredAttributes(const string &element)
 {
   set<string> requiredAtts;
 
@@ -247,8 +244,6 @@ set<string> Langstruct::getRequiredAttributes(const string element)
   }
 
   map<string, bool> atts = Langstruct::_elements[element].getAtts ();
-
-
 
   // Search required atts
   for (map<string, bool>::iterator it = atts.begin (); it != atts.end (); ++it)
@@ -261,7 +256,7 @@ set<string> Langstruct::getRequiredAttributes(const string element)
 
 /*
  */
-vector<string> Langstruct::getChildrenNames(const string element)
+vector<string> Langstruct::getChildrenNames(const string &element)
 {
   vector<string> childrenNames;
   if (!Langstruct::_elements.count(element))
@@ -280,7 +275,7 @@ vector<string> Langstruct::getChildrenNames(const string element)
 
 /*
  */
-bool Langstruct::defineScope(const string element)
+bool Langstruct::defineScope(const string &element)
 {
   if (!Langstruct::_elements.count(element))
     return false;
@@ -291,7 +286,7 @@ bool Langstruct::defineScope(const string element)
 
 /*
  */
-map<string, bool> Langstruct::getAttributes(const string element)
+map<string, bool> Langstruct::getAttributes(const string &element)
 {
   if (!Langstruct::_elements.count(element))
   {
@@ -350,8 +345,8 @@ const vector <ReferenceStructure> Langstruct::getReferences(
   return references;
 }
 
-bool Langstruct::isValidAttribute(const string attName, const string attValue, 
-                                  const string element)
+bool Langstruct::isValidAttribute(const string &attName, const string &attValue,
+                                  const string &element)
 {
   if (!Langstruct::_elements.count(element))
   {
@@ -379,7 +374,7 @@ bool Langstruct::isValidAttribute(const string attName, const string attValue,
 
 /*
  */
-bool Langstruct::isElementReferenceDependent(const string element)
+bool Langstruct::isElementReferenceDependent(const string &element)
 {
   bool dependent = false;
 
@@ -400,7 +395,7 @@ bool Langstruct::isElementReferenceDependent(const string element)
 
 /*
  */
-bool Langstruct::isElementReferenced(const string element)
+bool Langstruct::isElementReferenced(const string &element)
 {
   bool referenced = false;
 
@@ -437,7 +432,8 @@ bool Langstruct::isAttributeReferenceDependent(const string &element,
 
   bool dependent = false;
 
-  map<string, ReferenceStructure>::iterator it = Langstruct::_references.begin();
+  map<string, ReferenceStructure>::iterator it =
+          Langstruct::_references.begin();
   for (; it != Langstruct::_references.end (); ++it)
   {
     if ((it -> second).getFrom() == element)

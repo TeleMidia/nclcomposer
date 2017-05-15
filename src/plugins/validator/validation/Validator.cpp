@@ -24,7 +24,7 @@
 #include <set>
 
 vector<pair<void *, string> >Validator::validate(Model &model,
-                                                 string messagesLanguage = "en")
+                                          const string &messagesLanguage = "en")
 {
   vector<pair<void *, string> > msgs;
 

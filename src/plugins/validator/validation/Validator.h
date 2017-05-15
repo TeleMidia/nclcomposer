@@ -33,7 +33,7 @@ class Validator
 {
 public:
   static vector<pair<void *, string> > validate (Model &,
-                                                 string messagesLanguage);
+                                                const string &messagesLanguage);
 };
 
 
