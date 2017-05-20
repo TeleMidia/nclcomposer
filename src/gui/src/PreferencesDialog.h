@@ -28,7 +28,7 @@ using namespace composer::extension;
 #include <modules/PluginControl.h>
 using namespace composer::core;
 
-#include "extensions/IPreferencesPage.h"
+#include "IPreferencesPage.h"
 
 namespace Ui {
   class PreferencesDialog;

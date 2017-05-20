@@ -16,7 +16,7 @@
 #ifndef RUNGINGACONFIG_H
 #define RUNGINGACONFIG_H
 
-#include <extensions/IPreferencesPage.h>
+#include "IPreferencesPage.h"
 
 namespace Ui {
   class RunGingaConfig;

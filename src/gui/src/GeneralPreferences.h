@@ -16,7 +16,7 @@
 #ifndef GENERALPREFERENCES_H
 #define GENERALPREFERENCES_H
 
-#include <extensions/IPreferencesPage.h>
+#include "IPreferencesPage.h"
 #include "FileChooser.h"
 
 namespace Ui {

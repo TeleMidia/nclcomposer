@@ -19,7 +19,6 @@ set(NCLCOMPOSER_CORE_HEADERS
   extensions/IDocumentParser.h
   extensions/IPlugin.h
   extensions/IPluginFactory.h
-  extensions/IPreferencesPage.h
 
 # Util
   util/ComposerCoreControl_global.h
@@ -28,6 +27,7 @@ set(NCLCOMPOSER_CORE_HEADERS
   util/Utilities.h
   util/ComposerSettings.h
   util/Commands.h
+  util/Preferences.h
 
 # Model
   model/Entity.h
@@ -41,7 +41,6 @@ set(NCLCOMPOSER_CORE_HEADERS
 set(NCLCOMPOSER_CORE_SOURCES
   model/Entity.cpp
   model/Project.cpp
-  model/Project.cpp
   modules/LanguageControl.cpp
   modules/MessageControl.cpp
   modules/PluginControl.cpp
@@ -51,6 +50,7 @@ set(NCLCOMPOSER_CORE_SOURCES
   util/Commands.cpp
   util/ComposerSettings.cpp
   util/Utilities.cpp
+  util/Preferences.cpp
 )
 
 add_library(nclcomposer_core SHARED
