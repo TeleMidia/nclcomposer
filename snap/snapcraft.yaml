@@ -8,7 +8,24 @@ description: |
 grade: devel # must be 'stable' to release into candidate/stable channels
 confinement: devmode # use 'strict' once you have the right plugs and slots
 
+apps:
+  nclcomposer:
+    command: qt5-launch nclcomposer
+    plugs:
+      - home
+
 parts:
-  my-part:
-    # See 'snapcraft plugins'
+  nclcomposer:
     plugin: cmake
+    build-packages:
+      - qtbase5-dev
+      - qttools5-dev
+    stage-packages:
+      # Here for the plugins-- they're not linked in automatically.
+      - libqt5core5
+      - libqt5gui5
+      - libqt5xml5
+      - libqt5svg5
+      - libqt5webkit5
+      - libqt5help5
+    after: [qt5conf] # A wiki part
