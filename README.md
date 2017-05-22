@@ -78,8 +78,6 @@ NCL Composer is available through
 
 ## Further information
   * NCL Composer Official Website (http://composer.telemidia.puc-rio.br)
-  * Redmine link:
-    (http://redmine.telemidia.puc-rio.br:8080/redmine/projects/composer3)
 
 ## Acknowledgments
 
