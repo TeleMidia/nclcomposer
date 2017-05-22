@@ -10,7 +10,7 @@ confinement: devmode # use 'strict' once you have the right plugs and slots
 
 apps:
   nclcomposer:
-    command: nclcomposer
+    command: desktop-launch nclcomposer
     plugs:
       - home
 
@@ -28,4 +28,4 @@ parts:
       - libqt5svg5
       - libqt5webkit5
       - libqt5help5
-    after: [qt5conf] # A wiki part
+    after: [desktop-qt5] # A wiki part
