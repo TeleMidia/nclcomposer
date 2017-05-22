@@ -46,16 +46,14 @@ void QsciNCLAPIs::updateAutoCompletionList( const QStringList &context,
   int pos = lexer()->editor()
       ->SendScintilla(QsciScintilla::SCI_GETSELECTIONSTART);
 
-  qDebug() << "updateAutoCompletionList to";
-
   if ( isElement(pos) )
   {
     _suggesting = SUGGESTING_ELEMENTS;
-    qDebug() << "Must suggest elements" << endl;
-    for (int i = 0; i < context.count(); ++i) {
-      qDebug() << "'" << context[i] << "'";
+
+    for (int i = 0; i < context.count(); ++i)
+    {
       QString father = getParentTagName(pos);
-      qDebug() << "Father = " << father;
+
       if(father == "")
         father = "NULL";
 
@@ -71,7 +69,6 @@ void QsciNCLAPIs::updateAutoCompletionList( const QStringList &context,
           {
             QString str(it->first);
             list.push_back(str);
-            qDebug() << it->first;
           }
         }
       }
@@ -84,10 +81,9 @@ void QsciNCLAPIs::updateAutoCompletionList( const QStringList &context,
     QStringList current_attrs;
 
     getAttributesTyped(pos, current_attrs);
-    for (int i = 0; i < current_attrs.size(); i++)
-      qDebug() << "Already typed: " << current_attrs.at(i);
+    // for (int i = 0; i < current_attrs.size(); i++)
+    //  qDebug() << "Already typed: " << current_attrs.at(i);
 
-    qDebug() << "Must suggest attributes to " << tagname;
     if(tagname != "")
     {
       map <QString, bool> *attrs = _nclStructure->getAttributes(tagname);
@@ -106,7 +102,6 @@ void QsciNCLAPIs::updateAutoCompletionList( const QStringList &context,
             {
               QString str = *it;
               list.push_back(str);
-              qDebug() << *it;
             }
           }
         }
@@ -121,7 +116,7 @@ void QsciNCLAPIs::updateAutoCompletionList( const QStringList &context,
     QString datatype = _nclStructure->getAttributeDatatype(tagname, attribute);
     NCLTextEditor *nclEditor = ((NCLTextEditor *)lexer()->editor());
 
-    qDebug() << tagname << ":" << attribute << " -> datatype=" << datatype;
+    // qDebug() << tagname << ":" << attribute << " -> datatype=" << datatype;
 
     QStringList defaultSuggestion =
         _nclStructure->getDatatypeDefaultSuggestions(datatype);
@@ -170,9 +165,9 @@ void QsciNCLAPIs::updateAutoCompletionList( const QStringList &context,
       {
         for(unsigned int i = 0; i < references.size(); i++)
         {
-          qDebug() << "Should refer to " << references[i]->getRefElement()
-                   << "." << references[i]->getRefAttribute()
-                   << "in the scope: " << references[i]->getScope();
+          // qDebug() << "Should refer to " << references[i]->getRefElement()
+          //         << "." << references[i]->getRefAttribute()
+          //         << "in the scope: " << references[i]->getScope();
 
           QList <QDomElement> elements;
 
@@ -205,13 +200,13 @@ void QsciNCLAPIs::updateAutoCompletionList( const QStringList &context,
             QString attr;
             QString userDefinedScope = references[i]->getUserDefinedScope();
 
-            qDebug() << "User defined scope" << userDefinedScope;
+            // qDebug() << "User defined scope" << userDefinedScope;
             // \todo The user defined must be recursive, i.e., the user could
             // define $PARENT.$PARENT.$PARENT...
             if(userDefinedScope.startsWith("$THIS"))
             {
               attr = userDefinedScope.mid(6);
-              qDebug() << "$THIS" << attr;
+              // qDebug() << "$THIS" << attr;
               QString idValue = getAttributeValueFromCurrentElement(pos, attr);
               elements = nclEditor->elementsByTagname(
                     references[i]->getRefElement(), idValue);
@@ -219,13 +214,13 @@ void QsciNCLAPIs::updateAutoCompletionList( const QStringList &context,
             else if(userDefinedScope.startsWith("$PARENT"))
             {
               attr = userDefinedScope.mid(8);
-              qDebug() << "$PARENT" << attr;
+              // qDebug() << "$PARENT" << attr;
               int parent_offset = getParentOffset(pos);
-              qDebug() << "parent_offset" << parent_offset;
+              // qDebug() << "parent_offset" << parent_offset;
               QString idValue = getAttributeValueFromCurrentElement(
                     parent_offset, attr);
 
-              qDebug() << "idValue = " << idValue;
+              // qDebug() << "idValue = " << idValue;
               elements = nclEditor->elementsByTagname(
                     references[i]->getRefElement(), idValue);
 
@@ -233,7 +228,7 @@ void QsciNCLAPIs::updateAutoCompletionList( const QStringList &context,
             else if(userDefinedScope.startsWith("$GRANDPARENT"))
             {
               attr = userDefinedScope.mid(13);
-              qDebug() << "$GRANDPARENT" << attr;
+              // qDebug() << "$GRANDPARENT" << attr;
               int grandparent_offset = getParentOffset(getParentOffset(pos));
               QString idValue = getAttributeValueFromCurrentElement(
                     grandparent_offset, attr);
@@ -249,7 +244,7 @@ void QsciNCLAPIs::updateAutoCompletionList( const QStringList &context,
             QString attributeValue =
                 node.attribute(references[i]->getRefAttribute());
 
-            qDebug() << context.count();
+            // qDebug() << context.count();
             for (int k = 0; k < context.count(); ++k)
             {
               if(attributeValue.startsWith(context[k]))
@@ -261,7 +256,7 @@ void QsciNCLAPIs::updateAutoCompletionList( const QStringList &context,
     }
     else
     {
-      qDebug() << "Coud not parse the document";
+      qDebug() << "Could not parse the document";
     }
   }
   list.removeDuplicates();
@@ -363,6 +358,7 @@ void QsciNCLAPIs::autoCompletionSelected(const QString &selection)
         quote1_found = true;
       ps--;
     }
+
     //find quote
     while(pe <= endline && !quote2_found){
       ch = lexer()->editor()->SendScintilla(QsciScintilla::SCI_GETCHARAT, pe);
@@ -370,8 +366,6 @@ void QsciNCLAPIs::autoCompletionSelected(const QString &selection)
         quote2_found = true;
       pe++;
     }
-
-    qDebug() << quote1_found << quote2_found;
 
     if(quote1_found && quote2_found)
     {

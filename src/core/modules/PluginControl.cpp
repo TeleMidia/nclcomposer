@@ -320,12 +320,6 @@ bool PluginControl::releasePlugins(Project *project)
     return false;
   }
 
-  //        if (!pluginInstances.contains(project->getLocation()))
-  //        {
-  //          qDebug() << "There is no plugin instance for this project";
-  //          return false;
-  //        }
-
   MessageControl *t = messageControls.value(project);
   if (t)
   {

@@ -501,8 +501,6 @@ void LayoutView::addRegion(LayoutRegion* region,
 {
   if (region != NULL && regionBase != NULL)
   {
-    qDebug() << "Adding Region" << attributes;
-
     _regions[region->getUid()] = region;
 
     regionBase->addRegion(region,

@@ -193,8 +193,9 @@ bool NCLLayoutViewPlugin::saveSubsession()
   line += QString("resolutionWidth=") + resolutionWidth.toString() + "\n";
   line += QString("resolutionHeight=") + resolutionHeight.toString() + "\n";
   data.append(line);
-  qDebug() << "[QNLY] saveSubsession() data is " << data;
+  qCDebug(CPR_PLUGIN_LAYOUT) << "[QNLY] saveSubsession() data is " << data;
   emit setPluginData(data);
+
   return true;
 }
 
@@ -202,8 +203,8 @@ void NCLLayoutViewPlugin::init()
 {
   // \todo Load specific contents.
   QString data = project->getPluginData("br.puc-rio.telemidia.qncllayout");
-  qDebug() << "[QNLY] data = " << data;
   QStringList lines = data.split("\n");
+
   bool gridVisible = false, ok = true;
   int resolutionWidth = 0, resolutionHeight = 0;
 
@@ -216,7 +217,6 @@ void NCLLayoutViewPlugin::init()
       QString value = list[j+1];
       if(key == "gridVisible")
       {
-        qDebug() << "[QNLY] gridVisible = " << value;
         if(value == "true")
           gridVisible = true;
       }
@@ -233,7 +233,6 @@ void NCLLayoutViewPlugin::init()
     }
   }
 
-  qDebug() << resolutionWidth << resolutionHeight;
   // Update layout model from core model.
   QStack <Entity*> stack;
   stack.push(project);
@@ -1055,8 +1054,6 @@ void NCLLayoutViewPlugin::clear()
   {
     Entity* regionEntity = regions.begin().value();
 
-    qDebug() << regionEntity->getAttribute("id");
-
     removeRegionFromView(regionEntity->getUniqueId());
   }
 
@@ -1170,7 +1167,6 @@ QMap <QString, QString> NCLLayoutViewPlugin::getRegionAttributes(Entity *region)
   for(i = lefts.size()-1; i >= 0; --i)
     left += lefts[i] * widths[i+1];
 
-  // qDebug() << tops;
   for(i = tops.size()-1; i >= 0; --i)
     top += tops[i] * heights[i+1];
 
@@ -1255,7 +1251,6 @@ void NCLLayoutViewPlugin::performMediaOverRegionAction(const QString &mediaId,
       msgBox.exec();
       if (msgBox.clickedButton() == createDescButton) // create a new descriptor
       {
-        qDebug() << "Creating a new descriptor";
         QMap <QString,QString> attrs;
         QList <Entity*> descritorBases =
             project->getEntitiesbyType("descriptorBase");
@@ -1332,7 +1327,6 @@ void NCLLayoutViewPlugin::performMediaOverRegionAction(const QString &mediaId,
           }
         }
 
-        qDebug() << "Import attributes as properties of media element.";
         QMap <QString, QString> newAttrs = getRegionAttributes(region);
         QString key;
         foreach(key, newAttrs.keys())
@@ -1354,7 +1348,6 @@ void NCLLayoutViewPlugin::performMediaOverRegionAction(const QString &mediaId,
     else
     {
       // Does not ask the descriptor or media properties
-      qDebug() << "Creating a new descriptor";
 
       QMap <QString,QString> attrs;
       QList <Entity*> descritorBases =

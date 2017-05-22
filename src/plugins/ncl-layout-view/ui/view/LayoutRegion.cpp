@@ -1848,10 +1848,6 @@ void LayoutRegion::dropEvent(QGraphicsSceneDragDropEvent *event)
 
   scene()->update();
 
-  qDebug() << "dropEvent " << event->mimeData()->data("nclcomposer/mediaid")
-           << event->mimeData()->data("nclcomposer/qnstuid");
-
-
   emit dragMediaOverRegion(event->mimeData()->data("nclcomposer/mediaid"),
                            this);
 

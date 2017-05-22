@@ -383,8 +383,6 @@ void OutlineViewPlugin::clearErrorMessages()
   if(_isSyncingFromTextual)
     return;
 
-  qDebug() << "OutlineViewPlugin::clearErrorMessages" << endl;
-
   foreach (QTreeWidgetItem *item, _idToItem.values())
   {
     item->setTextColor(0, Qt::black);
