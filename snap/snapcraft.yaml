@@ -10,7 +10,7 @@ confinement: devmode # use 'strict' once you have the right plugs and slots
 
 apps:
   nclcomposer:
-    command: qt5-launch nclcomposer
+    command: nclcomposer
     plugs:
       - home
 
