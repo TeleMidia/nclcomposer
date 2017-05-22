@@ -110,6 +110,4 @@ private:
   QMap<QString, QMap<QString, QString> > descriptors;
 };
 
-static Q_LOGGING_CATEGORY(CPR_PLUGIN_LAYOUT, "cpr.plugin.layoutview")
-
 #endif // QNLYCOMPOSERPLUGIN_H

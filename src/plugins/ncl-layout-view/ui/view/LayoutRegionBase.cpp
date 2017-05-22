@@ -17,6 +17,8 @@
  */
 #include "LayoutRegionBase.h"
 
+#include "LayoutViewPlugin_global.h"
+
 LayoutRegionBase::LayoutRegionBase( QObject* parent, QMenu* switchMenu )
   : QGraphicsScene(parent)
 {
@@ -688,7 +690,7 @@ void LayoutRegionBase::removeRegion(LayoutRegion* region)
         if(child != NULL)
           _regions.remove(child->getUid());
         else
-          qWarning() << "Trying to remove an element that is not of\
+          qCWarning (CPR_PLUGIN_LAYOUT) << "Trying to remove an element that is not of\
                         the type QnlyGraphicsRegion " << __FILE__ << __LINE__;
       }
 
@@ -703,7 +705,7 @@ void LayoutRegionBase::removeRegion(LayoutRegion* region)
         if(child != NULL)
           _regions.remove(child->getUid());
         else
-          qWarning() << "Trying to remove an element that is not of the\
+          qCWarning (CPR_PLUGIN_LAYOUT) << "Trying to remove an element that is not of the\
                         type QnlyGraphicsRegion " << __FILE__ << __LINE__;
       }
 

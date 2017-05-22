@@ -467,12 +467,6 @@ void MessageControl::sendEntityAddedMessageToPlugins( const QString &pluginInsta
     int idxSlot = pluginMsgSrc->metaObject()
         ->indexOfSlot(slotName.toStdString().c_str());
 
-    /* for (int i = 0; i < pluginMsgSrc->metaObject()->methodCount(); ++i)
-    {
-      QMetaMethod method = pluginMsgSrc->metaObject()->method(i);
-      qWarning() << "aq" << method.signature() << method.parameterTypes() << method.parameterNames();
-    }*/
-
     if(idxSlot != -1)
     {
       QMetaMethod method = pluginMsgSrc->metaObject()->method(idxSlot);

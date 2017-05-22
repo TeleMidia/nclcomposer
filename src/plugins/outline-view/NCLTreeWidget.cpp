@@ -295,7 +295,7 @@ QTreeWidgetItem* NCLTreeWidget::addElement ( QTreeWidgetItem *father,
                (elements_ordered->at(i) == father->child(p)->text(4)) )
         {
           p++;
-          qDebug() << p << i << father->childCount();
+//          qDebug() << p << i << father->childCount();
         }
 
         if( p == father->childCount() )

@@ -17,6 +17,8 @@
  */
 #include "MyLexer.h"
 
+#include "NCLTextualViewPlugin_global.h"
+
 //TODO: MOVE TO OTHER PLACE
 int text_partition_cmp (const text_partition &a, const text_partition &b)
 {
@@ -32,7 +34,7 @@ int text_partition_cmp (const text_partition &a, const text_partition &b)
 MyLexer::MyLexer(QObject *parent)
   : QsciLexerCustom(parent)
 {
-  qDebug() << __FUNCTION__;
+  qCDebug (CPR_PLUGIN_TEXTUAL) << __FUNCTION__;
 }
 
 MyLexer::~MyLexer()
@@ -61,7 +63,7 @@ QString MyLexer::description(int style) const
 void MyLexer::styleText(int start, int end)
 {
   QString source;
-  qDebug() << __FUNCTION__
+  qCDebug (CPR_PLUGIN_TEXTUAL) << __FUNCTION__
            << "start =" << start
            << " end =" << end;
 
@@ -72,7 +74,7 @@ void MyLexer::styleText(int start, int end)
   editor()->SendScintilla(QsciScintilla::SCI_GETTEXTRANGE, start, end, chars);
   source = QString(chars);
 
-  qDebug() << "source =" << source;
+  qCDebug (CPR_PLUGIN_TEXTUAL) << "source =" << source;
   startStyling(start, 0x1f);
 
   vector <text_partition> parts = makePartitions (chars, 0, source.length());
@@ -80,7 +82,7 @@ void MyLexer::styleText(int start, int end)
   int lastIndex = 0;
   for (unsigned int i = 0; i < parts.size(); i++)
   {
-    qDebug() << "partition id=" << parts[i].id
+    qCDebug (CPR_PLUGIN_TEXTUAL) << "partition id=" << parts[i].id
              << " begin=" << parts[i].begin
              << " end=" << parts[i].end;
 

@@ -17,6 +17,8 @@
  */
 #include "LayoutRegion.h"
 
+#include "LayoutViewPlugin_global.h"
+
 #include <QCursor>
 #include <QMimeData>
 #include <QGuiApplication>
@@ -812,13 +814,13 @@ void LayoutRegion::performShow(QAction* action)
 
 void LayoutRegion::performCopy()
 {
-  qWarning () << "LayoutRegion::performCopy";
+  qCWarning (CPR_PLUGIN_LAYOUT) << "LayoutRegion::performCopy";
   emit copyRequested(this);
 }
 
 void LayoutRegion::performCut()
 {
-  qWarning () << "LayoutRegion::performCut";
+  qCWarning (CPR_PLUGIN_LAYOUT) << "LayoutRegion::performCut";
   emit cutRequested(this);
 }
 
@@ -1731,7 +1733,7 @@ void LayoutRegion::mouseReleaseEvent(QGraphicsSceneMouseEvent* event)
 
 void LayoutRegion::keyPressEvent( QKeyEvent * event )
 {
-  qWarning() << event << event->key();
+  qCWarning (CPR_PLUGIN_LAYOUT) << event << event->key();
 
   if ( event->key() == Qt::Key_Delete ||
        event->key() == Qt::Key_Backspace )

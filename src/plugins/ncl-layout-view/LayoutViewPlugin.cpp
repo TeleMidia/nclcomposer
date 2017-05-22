@@ -17,11 +17,15 @@
  */
 #include "LayoutViewPlugin.h"
 
+#include "LayoutViewPlugin_global.h"
+
 #include <QAbstractButton>
 #include <QPushButton>
 #include <QMessageBox>
 #include <QInputDialog>
 #include <QToolBar>
+
+Q_LOGGING_CATEGORY(CPR_PLUGIN_LAYOUT, "cpr.plugin.layout")
 
 NCLLayoutViewPlugin::NCLLayoutViewPlugin(QObject* parent)
 {
@@ -374,7 +378,7 @@ void NCLLayoutViewPlugin::addRegionToView(Entity* entity)
       }
       else
       {
-        qWarning() << "QnlyComposerPlugin::addRegion:"
+        qCWarning (CPR_PLUGIN_LAYOUT) << "QnlyComposerPlugin::addRegion:"
                    << "Tried to add a region with empty UID.";
 
         return; // abort addition
@@ -405,7 +409,7 @@ void NCLLayoutViewPlugin::addRegionToView(Entity* entity)
       }
       else
       {
-        qWarning() << "QnlyComposerPlugin::addRegion:"
+        qCWarning (CPR_PLUGIN_LAYOUT) << "QnlyComposerPlugin::addRegion:"
                    << "Tried to add a region without regionbase UID.";
 
         return; // abort addition
@@ -490,7 +494,7 @@ void NCLLayoutViewPlugin::removeRegionFromView(QString entityUID)
       }
       else
       {
-        qWarning() << "QnlyComposerPlugin::removeRegion:"
+        qCWarning (CPR_PLUGIN_LAYOUT) << "QnlyComposerPlugin::removeRegion:"
                    << "Tried to remove a region without"
                    << "regionbase UID.";
 
@@ -522,7 +526,7 @@ void NCLLayoutViewPlugin::changeRegionInView(Entity* entity)
       }
       else
       {
-        qWarning() << "QnlyComposerPlugin::addRegion:"
+        qCWarning (CPR_PLUGIN_LAYOUT) << "QnlyComposerPlugin::addRegion:"
                    << "Tried to add an region with empty UID.";
 
         return; // abort addition
@@ -557,7 +561,7 @@ void NCLLayoutViewPlugin::changeRegionInView(Entity* entity)
       }
       else
       {
-        qWarning() << "QnlyComposerPlugin::addRegion:"
+        qCWarning (CPR_PLUGIN_LAYOUT) << "QnlyComposerPlugin::addRegion:"
                    << "Tried to add an region without"
                    << "regionbase UID.";
 
@@ -638,7 +642,7 @@ void NCLLayoutViewPlugin::selectRegionInView(QString entityUID)
       }
       else
       {
-        qWarning() << "QnlyComposerPlugin::selectRegion:"
+        qCWarning (CPR_PLUGIN_LAYOUT) << "QnlyComposerPlugin::selectRegion:"
                    << "Tried to select a region without"
                    << "regionbase UID.";
 
@@ -666,7 +670,7 @@ void NCLLayoutViewPlugin::addRegionBaseToView(Entity* entity)
       }
       else
       {
-        qWarning() << "QnlyComposerPlugin::addRegion:"
+        qCWarning (CPR_PLUGIN_LAYOUT) << "QnlyComposerPlugin::addRegion:"
                    << "Tried to add a region with empty UID.";
 
         return; // abort addition
@@ -741,7 +745,7 @@ void NCLLayoutViewPlugin::changeRegionBaseInView(Entity* entity)
       }
       else
       {
-        qWarning() << "QnlyComposerPlugin::addRegion:"
+        qCWarning (CPR_PLUGIN_LAYOUT) << "QnlyComposerPlugin::addRegion:"
                    << "Tried to add a region with empty UID.";
         return; // abort addition
       }
@@ -1207,7 +1211,7 @@ void NCLLayoutViewPlugin::performMediaOverRegionAction(const QString &mediaId,
 
   if(region == NULL)
   {
-    qWarning() << "QnlyComposerPlugin::performMediaOverRegionAction Region\
+    qCWarning (CPR_PLUGIN_LAYOUT) << "QnlyComposerPlugin::performMediaOverRegionAction Region\
                   does not exists. Nothing will be done." ;
     error = 1;
   }

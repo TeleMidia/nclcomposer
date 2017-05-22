@@ -22,6 +22,12 @@
 #include <QFileInfo>
 #include <QStack>
 #include <Qsci/qscistyledtext.h>
+#include <QVariant>
+
+#include <NCLTextualViewPlugin_global.h>
+
+#include <util/Preferences.h>
+using namespace composer::core;
 
 NCLTextEditor::NCLTextEditor(QWidget *parent) :
   QsciScintilla(parent)
@@ -53,6 +59,7 @@ void NCLTextEditor::initParameters()
   setFoldMarginColors(PREF_FOLD_MARGIN_FORE_COLOR, PREF_FOLD_MARGIN_BACK_COLOR);
 
   setMarginLineNumbers(1, true);
+
   setMarginWidth(1, 25);
   setMarginsBackgroundColor(MARGINS_BACKGROUND_COLOR);
 
@@ -112,7 +119,7 @@ void NCLTextEditor::initParameters()
   setIndicatorForegroundColor(QColor("#FF0000"), _errorIndicator);
   _fillingAttributeIndicator = indicatorDefine (RoundBoxIndicator, 2);
 
-  // qDebug() << error_marker << " " << error_indicator;
+  // qCDebug (CPR_PLUGIN_TEXTUAL) << error_marker << " " << error_indicator;
   // setWhitespaceVisibility(QsciScintilla::WsVisible);
 }
 
@@ -299,7 +306,8 @@ void NCLTextEditor::keyPressEvent(QKeyEvent *event)
         event->key() == Qt::Key_Slash &&
         curChar == Qt::Key_Greater)
     {
-      qWarning() << curChar << "Now, I need to close the tag :)";
+      qCWarning(CPR_PLUGIN_TEXTUAL)
+          << curChar << "Now, I need to close the tag :)";
       pos++;
 
       int begin_del = pos;
@@ -334,8 +342,14 @@ void NCLTextEditor::keyPressEvent(QKeyEvent *event)
 
             if (end_del < size)
             {
-              qWarning () << "Remove from" << curChar << (char) SendScintilla(QsciScintilla::SCI_GETCHARAT, end_del);
-              SendScintilla (QsciScintilla::SCI_DELETERANGE, begin_del, end_del-begin_del);
+              qCWarning (CPR_PLUGIN_TEXTUAL)
+                  << "Remove from" << curChar
+                  << (char) SendScintilla(QsciScintilla::SCI_GETCHARAT,
+                                          end_del);
+
+              SendScintilla (QsciScintilla::SCI_DELETERANGE,
+                             begin_del,
+                             end_del-begin_del);
             }
           }
         }
@@ -352,7 +366,7 @@ void NCLTextEditor::keyReleaseEvent(QKeyEvent *event)
 
 void NCLTextEditor::AutoCompleteCompleted()
 {
-  //qDebug() << "NCLTextEditor::AutoCompleteCompleted()";
+  //qCDebug (CPR_PLUGIN_TEXTUAL) << "NCLTextEditor::AutoCompleteCompleted()";
 }
 
 void NCLTextEditor::markLine(int margin, int line, Qt::KeyboardModifiers state)
@@ -472,7 +486,7 @@ void NCLTextEditor::setTabBehavior(TAB_BEHAVIOR tabBehavior)
 
 void NCLTextEditor::formatText()
 {
-  qDebug() << "NCLTextEditor::formatText()";
+  qCDebug (CPR_PLUGIN_TEXTUAL) << "NCLTextEditor::formatText()";
 }
 
 void NCLTextEditor::keepFocused()
@@ -572,7 +586,7 @@ bool NCLTextEditor::parseImportedDocuments( const QString &currentFileURI,
                                             const QDomDocument &doc,
                                             bool /*recursive*/ )
 {
-  qDebug() << "parseImportedDocument( " << currentFileURI;
+  qCDebug (CPR_PLUGIN_TEXTUAL) << "parseImportedDocument( " << currentFileURI;
   QStack <QDomElement> stack;
   QDomElement current = doc.firstChildElement();
   bool ret = 1;
@@ -602,14 +616,14 @@ bool NCLTextEditor::parseImportedDocuments( const QString &currentFileURI,
 
         if(importedFI.exists())
         {
-          qDebug() << importedFI.absoluteFilePath();
+          qCDebug (CPR_PLUGIN_TEXTUAL) << importedFI.absoluteFilePath();
           fullpath = importedFI.absoluteFilePath();
         }
       }
 
       if(fullpath != "")
       {
-        qDebug() << "I will include the file " << fullpath;
+        qCDebug (CPR_PLUGIN_TEXTUAL) << "I will include the file " << fullpath;
         QFile file(fullpath);
         if (file.open(QIODevice::ReadOnly))
         {
@@ -621,7 +635,7 @@ bool NCLTextEditor::parseImportedDocuments( const QString &currentFileURI,
             if(!parseImportedDocuments(fullpath, currentDomDoc, true))
             {
               ret = false;
-              qDebug() << "Could not import " << fullpath;
+              qCDebug (CPR_PLUGIN_TEXTUAL) << "Could not import " << fullpath;
             }
             _domDocs.insert(fullpath, currentDomDoc);
           }

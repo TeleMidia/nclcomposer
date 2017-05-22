@@ -576,7 +576,7 @@ void NCLTextEditorMainWindow::insertElement()
 
     element.prepend("\n");
 
-    // qDebug() << line << " " << beginLine << " " << endLine << " "
+    // qCDebug (CPR_PLUGIN_TEXTUAL) << line << " " << beginLine << " " << endLine << " "
     //          << end_element_column << " ";
 
     textEdit->insertAt(element, line-1, end_element_column);

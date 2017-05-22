@@ -21,6 +21,7 @@ set(NCL_LAYOUT_VIEW_SOURCES
   ui/LayoutWindow.cpp
 
   LayoutViewPlugin.h
+  LayoutViewPlugin_global.h
   LayoutViewFactory.h
   ui/view/LayoutCanvas.h
   ui/view/LayoutGrid.h

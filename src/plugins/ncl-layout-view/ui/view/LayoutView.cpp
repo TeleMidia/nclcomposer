@@ -17,6 +17,8 @@
  */
 #include "LayoutView.h"
 
+#include "LayoutViewPlugin_global.h"
+
 LayoutView::LayoutView(QWidget* parent) :
   QStackedWidget(parent),
   gridVisibility(false)
@@ -344,7 +346,7 @@ void LayoutView::performCopy(LayoutRegion *region)
       copiedRegionAttrs[key] = attr[key];
   }
 
-  qWarning () << copiedRegionAttrs;
+  qCWarning (CPR_PLUGIN_LAYOUT) << copiedRegionAttrs;
 }
 
 void LayoutView::performCut()
@@ -386,7 +388,7 @@ void LayoutView::performPaste()
         selectedRegionUId = _selectedRegionBase->getUid();
     }
   }
-  qDebug() << "Perform paste inside: " << selectedRegionUId;
+  qDebug (CPR_PLUGIN_LAYOUT) << "Perform paste inside: " << selectedRegionUId;
 
   QString selectedRegionBaseUId = "";
   if(_selectedRegionBase != NULL)
@@ -490,7 +492,7 @@ void LayoutView::selectRegionBase(const QString regionbaseUID)
     selectRegionBase(_regionbases[regionbaseUID]);
   }
   else
-    qWarning() << tr("It is not possible to select regionBase ")
+    qCWarning (CPR_PLUGIN_LAYOUT) << tr("It is not possible to select regionBase ")
                << regionbaseUID;
 }
 
@@ -514,7 +516,7 @@ void LayoutView::removeRegion( LayoutRegion* region,
 {
   if (region != NULL && regionBase != NULL)
   {
-    qDebug() << "Region Removed!";
+    qDebug (CPR_PLUGIN_LAYOUT) << "Region Removed!";
 
     foreach(QGraphicsItem* item, region->childItems())
     {
@@ -523,7 +525,7 @@ void LayoutView::removeRegion( LayoutRegion* region,
       if(item != NULL)
         removeRegion(child, regionBase);
       else
-        qWarning() << "Trying to remove an element that is not\
+        qCWarning (CPR_PLUGIN_LAYOUT) << "Trying to remove an element that is not\
                       of the type QnlyGraphicsRegion " << __FILE__ << __LINE__;
     }
 
@@ -566,7 +568,7 @@ void LayoutView::addRegionBase( LayoutRegionBase* regionBase,
 {
   if (regionBase != NULL)
   {
-    qDebug() << "LayoutRegionBase Added!";
+    qDebug (CPR_PLUGIN_LAYOUT) << "LayoutRegionBase Added!";
 
     if (attributes.contains("id"))
       regionBase->setId(attributes["id"]);
@@ -667,7 +669,7 @@ void LayoutView::removeRegionBase(LayoutRegionBase* regionBase)
           _regions.remove(child->getUid());
         }
         else
-          qWarning() << "Trying to remove an element that is not of the\
+          qCWarning (CPR_PLUGIN_LAYOUT) << "Trying to remove an element that is not of the\
                         type QnlyGraphicsRegion " << __FILE__ << __LINE__;
       }
     }

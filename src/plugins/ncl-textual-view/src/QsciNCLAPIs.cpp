@@ -18,11 +18,12 @@
 #include "QsciNCLAPIs.h"
 
 #include "NCLTextEditor.h"
-
-#include <QFileDialog>
+#include "NCLTextualViewPlugin_global.h"
 
 #include <util/Utilities.h>
 using namespace composer::core::util;
+
+#include <QFileDialog>
 
 QsciNCLAPIs::QsciNCLAPIs(QsciLexer * 	lexer) :
   QsciAPIs(lexer)
@@ -82,7 +83,7 @@ void QsciNCLAPIs::updateAutoCompletionList( const QStringList &context,
 
     getAttributesTyped(pos, current_attrs);
     // for (int i = 0; i < current_attrs.size(); i++)
-    //  qDebug() << "Already typed: " << current_attrs.at(i);
+    //  qCDebug (CPR_PLUGIN_TEXTUAL) << "Already typed: " << current_attrs.at(i);
 
     if(tagname != "")
     {
@@ -116,7 +117,7 @@ void QsciNCLAPIs::updateAutoCompletionList( const QStringList &context,
     QString datatype = _nclStructure->getAttributeDatatype(tagname, attribute);
     NCLTextEditor *nclEditor = ((NCLTextEditor *)lexer()->editor());
 
-    // qDebug() << tagname << ":" << attribute << " -> datatype=" << datatype;
+    // qCDebug (CPR_PLUGIN_TEXTUAL) << tagname << ":" << attribute << " -> datatype=" << datatype;
 
     QStringList defaultSuggestion =
         _nclStructure->getDatatypeDefaultSuggestions(datatype);
@@ -165,7 +166,7 @@ void QsciNCLAPIs::updateAutoCompletionList( const QStringList &context,
       {
         for(unsigned int i = 0; i < references.size(); i++)
         {
-          // qDebug() << "Should refer to " << references[i]->getRefElement()
+          // qCDebug (CPR_PLUGIN_TEXTUAL) << "Should refer to " << references[i]->getRefElement()
           //         << "." << references[i]->getRefAttribute()
           //         << "in the scope: " << references[i]->getScope();
 
@@ -200,13 +201,13 @@ void QsciNCLAPIs::updateAutoCompletionList( const QStringList &context,
             QString attr;
             QString userDefinedScope = references[i]->getUserDefinedScope();
 
-            // qDebug() << "User defined scope" << userDefinedScope;
+            // qCDebug (CPR_PLUGIN_TEXTUAL) << "User defined scope" << userDefinedScope;
             // \todo The user defined must be recursive, i.e., the user could
             // define $PARENT.$PARENT.$PARENT...
             if(userDefinedScope.startsWith("$THIS"))
             {
               attr = userDefinedScope.mid(6);
-              // qDebug() << "$THIS" << attr;
+              // qCDebug (CPR_PLUGIN_TEXTUAL) << "$THIS" << attr;
               QString idValue = getAttributeValueFromCurrentElement(pos, attr);
               elements = nclEditor->elementsByTagname(
                     references[i]->getRefElement(), idValue);
@@ -214,13 +215,13 @@ void QsciNCLAPIs::updateAutoCompletionList( const QStringList &context,
             else if(userDefinedScope.startsWith("$PARENT"))
             {
               attr = userDefinedScope.mid(8);
-              // qDebug() << "$PARENT" << attr;
+              // qCDebug (CPR_PLUGIN_TEXTUAL) << "$PARENT" << attr;
               int parent_offset = getParentOffset(pos);
-              // qDebug() << "parent_offset" << parent_offset;
+              // qCDebug (CPR_PLUGIN_TEXTUAL) << "parent_offset" << parent_offset;
               QString idValue = getAttributeValueFromCurrentElement(
                     parent_offset, attr);
 
-              // qDebug() << "idValue = " << idValue;
+              // qCDebug (CPR_PLUGIN_TEXTUAL) << "idValue = " << idValue;
               elements = nclEditor->elementsByTagname(
                     references[i]->getRefElement(), idValue);
 
@@ -228,7 +229,7 @@ void QsciNCLAPIs::updateAutoCompletionList( const QStringList &context,
             else if(userDefinedScope.startsWith("$GRANDPARENT"))
             {
               attr = userDefinedScope.mid(13);
-              // qDebug() << "$GRANDPARENT" << attr;
+              // qCDebug (CPR_PLUGIN_TEXTUAL) << "$GRANDPARENT" << attr;
               int grandparent_offset = getParentOffset(getParentOffset(pos));
               QString idValue = getAttributeValueFromCurrentElement(
                     grandparent_offset, attr);
@@ -244,7 +245,7 @@ void QsciNCLAPIs::updateAutoCompletionList( const QStringList &context,
             QString attributeValue =
                 node.attribute(references[i]->getRefAttribute());
 
-            // qDebug() << context.count();
+            // qCDebug (CPR_PLUGIN_TEXTUAL) << context.count();
             for (int k = 0; k < context.count(); ++k)
             {
               if(attributeValue.startsWith(context[k]))
@@ -256,7 +257,7 @@ void QsciNCLAPIs::updateAutoCompletionList( const QStringList &context,
     }
     else
     {
-      qDebug() << "Could not parse the document";
+      qCDebug (CPR_PLUGIN_TEXTUAL) << "Could not parse the document";
     }
   }
   list.removeDuplicates();
@@ -426,7 +427,7 @@ QStringList QsciNCLAPIs::callTips(const QStringList &context, int commas,
 bool QsciNCLAPIs::event(QEvent *e)
 {
   (void) e;
-  // qDebug() << "QsciNCLAPIs::event" << e;
+  // qCDebug (CPR_PLUGIN_TEXTUAL) << "QsciNCLAPIs::event" << e;
   return true;
 }
 
@@ -463,7 +464,7 @@ bool QsciNCLAPIs::isElement(int pos)
   int style = lexer()->editor()
       ->SendScintilla( QsciScintilla:: SCI_GETSTYLEAT, pos);
 
-  qDebug() << "Style=" << style;
+  qCDebug (CPR_PLUGIN_TEXTUAL) << "Style=" << style;
 
   if(style == QsciLexerNCL::Default)
   {
@@ -500,7 +501,7 @@ bool QsciNCLAPIs::isElement(int pos)
 //TODO: returning false when just before >
 bool QsciNCLAPIs::isAttribute(int pos)
 {
-  qDebug() << "QsciNCLAPIs::isAttribute";
+  qCDebug (CPR_PLUGIN_TEXTUAL) << "QsciNCLAPIs::isAttribute";
   int style = lexer()->editor()->SendScintilla(QsciScintilla::SCI_GETSTYLEAT,
                                                pos);
   if ( style == QsciLexerNCL::Attribute )
@@ -660,7 +661,7 @@ int QsciNCLAPIs::getParentOffset(int pos)
         else if(reading == QsciLexerNCL::XMLStart)
           closed_tags --;
 
-        // qDebug() << "closed_tags = " << closed_tags << " p=" << p;
+        // qCDebug (CPR_PLUGIN_TEXTUAL) << "closed_tags = " << closed_tags << " p=" << p;
         if(closed_tags < 0)
           return p+2;
       }
@@ -672,7 +673,7 @@ int QsciNCLAPIs::getParentOffset(int pos)
 QString QsciNCLAPIs::getAttributeValueFromCurrentElement(int pos,
                                                          const QString &attr)
 {
-  qDebug() << "QsciNCLAPIs::getAttributeValueFromCurrentElement";
+  qCDebug (CPR_PLUGIN_TEXTUAL) << "QsciNCLAPIs::getAttributeValueFromCurrentElement";
   int start = getStartTagBegin(pos);
   int length = getStartTagLength(pos);
   int end = start + length;
@@ -687,7 +688,7 @@ QString QsciNCLAPIs::getAttributeValueFromCurrentElement(int pos,
                                     end,
                                     chars);
   text = QString(chars);
-  qDebug() << "text = " << text;
+  qCDebug (CPR_PLUGIN_TEXTUAL) << "text = " << text;
 
 
   QDomDocument domDoc;
@@ -717,7 +718,7 @@ QString QsciNCLAPIs::getParentTagName(int pos)
 // this is not true.
 bool QsciNCLAPIs::isAttributeValue(int pos)
 {
-  qDebug() << "QsciNCLAPIs::isAttributeValue";
+  qCDebug (CPR_PLUGIN_TEXTUAL) << "QsciNCLAPIs::isAttributeValue";
   int style = lexer()->editor()->SendScintilla( QsciScintilla:: SCI_GETSTYLEAT,
                                                 pos);
 
@@ -766,7 +767,7 @@ void QsciNCLAPIs::getAttributesTyped(int pos, QStringList &attrs)
   int length = getStartTagLength(pos);
   int end = start + length;
 
-  qDebug() << "start=" << start << " end=" << end;
+  qCDebug (CPR_PLUGIN_TEXTUAL) << "start=" << start << " end=" << end;
 
   if(start < 0 || end < 0) return;
 
@@ -777,7 +778,7 @@ void QsciNCLAPIs::getAttributesTyped(int pos, QStringList &attrs)
                                     end,
                                     chars);
   text = QString(chars);
-  qDebug() << "text = " << text;
+  qCDebug (CPR_PLUGIN_TEXTUAL) << "text = " << text;
 
   //FIXME: The following regex is not completely correct. Te text inside
   // the attribute will be matched in some cases.
@@ -789,7 +790,7 @@ void QsciNCLAPIs::getAttributesTyped(int pos, QStringList &attrs)
   {
     if (index + attrRegex.matchedLength() > end)
       break;
-    qDebug() << index << " " << attrRegex.matchedLength();
+    qCDebug (CPR_PLUGIN_TEXTUAL) << index << " " << attrRegex.matchedLength();
     attrs << text.mid(index, attrRegex.matchedLength()).trimmed();
 
     lastIndex = (index + attrRegex.matchedLength());
