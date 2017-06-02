@@ -26,8 +26,8 @@ using namespace cpr::core;
 
 #define NCLSTRUCTURE_FILE ":/config/NCL_STRUCTURE"
 
-namespace composer {
-    namespace language {
+CPR_NCLPROFILE_BEGIN_NAMESPACE
+
 /*!
  * \brief Class that keep information about the language description.
  *
@@ -231,6 +231,6 @@ private:
   QStringList parseLine(const QString &line);
 };
 
-}} //end namespace
+CPR_NCLPROFILE_END_NAMESPACE
 
 #endif // NCLSTRUCTURE_H

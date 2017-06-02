@@ -12,11 +12,9 @@
 
 #include "NCLLanguageProfile_global.h"
 #include <extensions/ILanguageProfile.h>
-
 using namespace cpr::core;
 
-namespace composer {
-namespace language {
+CPR_NCLPROFILE_BEGIN_NAMESPACE
 
 class NCLLANGUAGEPROFILESHARED_EXPORT NCLLanguageProfile :
     public QObject,
@@ -45,5 +43,6 @@ public:
                                                const QString &attr);
 };
 
-} } //end namespace
+CPR_NCLPROFILE_END_NAMESPACE
+
 #endif // NCLLANGUAGEPROFILE_H

@@ -9,8 +9,7 @@
 */
 #include "NCLDocumentParser.h"
 
-namespace composer {
-  namespace language {
+CPR_NCLPROFILE_BEGIN_NAMESPACE
 
 NCLDocumentParser::NCLDocumentParser(Project *project)
 {
@@ -136,4 +135,4 @@ void NCLDocumentParser::onEntityAddError(const QString &error)
   qDebug() << "NCLDocumentParser::onEntityAddError(" << error << ")";
 }
 
-} } //end namespace
+CPR_NCLPROFILE_END_NAMESPACE

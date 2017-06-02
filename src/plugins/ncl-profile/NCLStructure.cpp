@@ -9,8 +9,7 @@
  */
 #include "NCLStructure.h"
 
-namespace composer {
-namespace language{
+CPR_NCLPROFILE_BEGIN_NAMESPACE
 
 INIT_SINGLETON(NCLStructure)
 
@@ -388,4 +387,4 @@ bool NCLStructure::defineScope(const QString &tagname)
   return false;
 }
 
-} } //end namespace
+CPR_NCLPROFILE_END_NAMESPACE

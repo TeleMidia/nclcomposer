@@ -16,9 +16,9 @@
  * <http://www.gnu.org/licenses/>. 
  */
 #include "NCLTreeWidget.h"
-#include "NCLStructure.h"
 
-using namespace composer::language;
+#include <NCLStructure.h>
+using namespace cpr::nclprofile;
 
 #include <QInputDialog>
 #include <QDialog>

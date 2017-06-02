@@ -29,8 +29,9 @@
 #include <QLineEdit>
 
 #include <PropertyButton.h>
+
 #include <NCLStructure.h>
-using namespace  composer::language;
+using namespace cpr::nclprofile;
 
 #if WITH_TREEVIEW
 #include <QStandardItemModel>

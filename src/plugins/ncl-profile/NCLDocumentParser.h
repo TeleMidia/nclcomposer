@@ -22,8 +22,7 @@
 #include <extensions/IDocumentParser.h>
 using namespace cpr::core;
 
-namespace composer {
-  namespace language {
+CPR_NCLPROFILE_BEGIN_NAMESPACE
 
 class NCLLANGUAGEPROFILESHARED_EXPORT NCLDocumentParser :
     public IDocumentParser,
@@ -69,5 +68,6 @@ private:
   QStack<Entity*> _elementStack;
 };
 
-} } //end namespace
+CPR_NCLPROFILE_END_NAMESPACE
+
 #endif // NCLDOCUMENTPARSER_H

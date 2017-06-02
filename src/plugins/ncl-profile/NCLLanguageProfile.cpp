@@ -11,7 +11,7 @@
 #include "NCLDocumentParser.h"
 #include "NCLStructure.h"
 
-using namespace composer::language;
+CPR_NCLPROFILE_BEGIN_NAMESPACE
 
 NCLLanguageProfile::NCLLanguageProfile()
 {
@@ -74,3 +74,5 @@ vector <AttributeReferences *>
 {
   return NCLStructure::getInstance()->getReferences(element, attr);
 }
+
+CPR_NCLPROFILE_END_NAMESPACE

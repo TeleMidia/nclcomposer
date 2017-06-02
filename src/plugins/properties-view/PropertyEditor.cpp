@@ -28,9 +28,9 @@
 #include <QRect>
 
 #include "PropertyButton.h"
-#include "NCLStructure.h"
 
-using namespace composer::language;
+#include "NCLStructure.h"
+using namespace cpr::nclprofile;
 
 PropertyEditor::PropertyEditor(QWidget *parent):
   QWidget(parent)

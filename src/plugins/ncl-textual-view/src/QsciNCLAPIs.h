@@ -19,7 +19,7 @@
 #define QSCINCLAPIS_H
 
 #include <NCLStructure.h>
-using namespace composer::language;
+using namespace cpr::nclprofile;
 
 #include <Qsci/qsciapis.h>
 #include <QtDebug>

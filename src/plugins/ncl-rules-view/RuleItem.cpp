@@ -1,9 +1,9 @@
 #include "RuleItem.h"
 
 #include <NCLStructure.h>
-#include <QDebug>
+using namespace cpr::nclprofile;
 
-using namespace composer::language;
+#include <QDebug>
 
 QStringList RuleItem::_varList;
 QStringList RuleItem::_cmpList;
