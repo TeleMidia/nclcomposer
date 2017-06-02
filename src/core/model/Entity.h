@@ -16,7 +16,7 @@
 #ifndef ENTITY_H
 #define ENTITY_H
 
-#include "../util/ComposerCoreControl_global.h"
+#include "util/ComposerCore_global.h"
 
 #include <QObject>
 #include <QMutex>
@@ -25,26 +25,17 @@
 #include <QUuid>
 #include <QDebug>
 
-namespace composer {
-namespace core {
-  class MessageControl;
-  class ProjectReader;
+CPR_CORE_BEGIN_NAMESPACE
 
-  namespace model {
-    class Project;
-  }
+class MessageControl;
+class ProjectReader;
 
-  namespace util {
-    class EditCommand;
-    class AddCommand;
-    class RemoveCommand;
-  }
+class Project;
 
-} } //end namespace
+class EditCommand;
+class AddCommand;
+class RemoveCommand;
 
-namespace composer {
-  namespace core {
-    namespace model {
 /*!
  * \brief An Entity is the main class of the internal Composer core.
  *
@@ -56,13 +47,13 @@ class COMPOSERCORESHARED_EXPORT Entity : public QObject
 
   // The following classes are "reliable" and can acess the
   // private and protected members of Entity.
-  friend class composer::core::model::Project;
-  friend class composer::core::MessageControl;
-  friend class composer::core::ProjectReader;
+  friend class cpr::core::Project;
+  friend class cpr::core::MessageControl;
+  friend class cpr::core::ProjectReader;
 
-  friend class composer::core::util::EditCommand;
-  friend class composer::core::util::AddCommand;
-  friend class composer::core::util::RemoveCommand;
+  friend class cpr::core::EditCommand;
+  friend class cpr::core::AddCommand;
+  friend class cpr::core::RemoveCommand;
 
 public:
   /*!
@@ -236,6 +227,6 @@ private:
   QMap<QString, QString> atts;
 };
 
-} } } //end namespace
+CPR_CORE_END_NAMESPACE
 
 #endif // ENTITY_H

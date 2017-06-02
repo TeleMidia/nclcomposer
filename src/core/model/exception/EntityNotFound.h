@@ -16,14 +16,14 @@
 #ifndef ENTITYNOTFOUND_H
 #define ENTITYNOTFOUND_H
 
+#include "util/ComposerCore_global.h"
+
 #include <QString>
 
 #include <exception>
 using namespace std;
 
-namespace composer{
-    namespace core {
-        namespace util {
+CPR_CORE_BEGIN_NAMESPACE
 
 /*!
  \brief Exception to inform that the desired entity wasn't find (e.g. in the
@@ -64,5 +64,6 @@ private:
   QString _id; /*!< TODO */
 };
 
-}}}
+CPR_CORE_END_NAMESPACE
+
 #endif // ENTITYNOTFOUND_H

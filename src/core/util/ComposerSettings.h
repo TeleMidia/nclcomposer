@@ -16,12 +16,10 @@
 #ifndef ComposerSettings_H
 #define ComposerSettings_H
 
-#include "ComposerCoreControl_global.h"
+#include "ComposerCore_global.h"
 #include <QSettings>
 
-namespace composer {
-    namespace core {
-        namespace util {
+CPR_CORE_BEGIN_NAMESPACE
 
 class COMPOSERCORESHARED_EXPORT GlobalSettings: public QSettings
 {
@@ -39,6 +37,6 @@ public:
   ProjectSettings(const QString &project);
 };
 
-} } } // end namespace
+CPR_CORE_END_NAMESPACE
 
 #endif // ComposerSettings_H

@@ -23,21 +23,17 @@
 
 #include <iostream>
 
-#include "../util/ComposerCoreControl_global.h"
+#include "util/ComposerCore_global.h"
 
 #include "PluginControl.h"
 #include "LanguageControl.h"
-using namespace composer::core;
+#include "model/Project.h"
+#include "util/Singleton.h"
+#include "util/Utilities.h"
+using namespace cpr::core;
 
-#include "../model/Project.h"
-using namespace composer::core::model;
+CPR_CORE_BEGIN_NAMESPACE
 
-#include "../util/Singleton.h"
-#include "../util/Utilities.h"
-using namespace composer::core::util;
-
-namespace composer {
-  namespace core {
 /*!
  \brief Manages all the open Projects.
 */
@@ -153,7 +149,6 @@ private slots:
 
 };
 
-} } //end namespace
-
+CPR_CORE_END_NAMESPACE
 
 #endif // DOCUMENTCONTROL_H

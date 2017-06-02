@@ -16,36 +16,28 @@
 #ifndef DOCUMENT_H
 #define DOCUMENT_H
 
-#include "../util/ComposerCoreControl_global.h"
+#include "util/ComposerCore_global.h"
 
 #include <QObject>
 #include <QList>
 #include <QStack>
 
-namespace composer {
-  namespace core {
-    class PluginControl;
-    class MessageControl;
-    class ProjectControl;
-    class ProjectReader;
-    namespace util {
-      class EditCommand;
-      class AddCommand;
-      class DeleteCommand;
-    }
-} } //end namespace
+#include "model/Entity.h"
+#include "model/exception/ParentNotFound.h"
+#include "model/exception/EntityNotFound.h"
+#include "util/Utilities.h"
+using namespace cpr::core;
 
-#include "../model/exception/ParentNotFound.h"
-#include "../model/exception/EntityNotFound.h"
-#include "../util/Utilities.h"
-using namespace composer::core::util;
+CPR_CORE_BEGIN_NAMESPACE
 
-#include "Entity.h"
-using namespace composer::core::model;
+class PluginControl;
+class MessageControl;
+class ProjectControl;
+class ProjectReader;
 
-namespace composer {
-  namespace core {
-    namespace model {
+class EditCommand;
+class AddCommand;
+class DeleteCommand;
 
 /*!
  * \brief A Project is a data structure that will keep all Entities and all
@@ -57,14 +49,14 @@ class COMPOSERCORESHARED_EXPORT Project : public Entity
 
   // The following classes are "reliable" and can acess the
   // private and protected members of Document.
-  friend class composer::core::PluginControl;
-  friend class composer::core::MessageControl;
-  friend class composer::core::ProjectControl;
-  friend class composer::core::ProjectReader;
+  friend class cpr::core::PluginControl;
+  friend class cpr::core::MessageControl;
+  friend class cpr::core::ProjectControl;
+  friend class cpr::core::ProjectReader;
 
-  friend class composer::core::util::EditCommand;
-  friend class composer::core::util::AddCommand;
-  friend class composer::core::util::RemoveCommand;
+  friend class cpr::core::EditCommand;
+  friend class cpr::core::AddCommand;
+  friend class cpr::core::RemoveCommand;
 
 public:
   /*!
@@ -237,6 +229,6 @@ private:
   bool dirty;
 };
 
-} } } //end namespace
+CPR_CORE_END_NAMESPACE
 
 #endif // DOCUMENT_H

@@ -16,14 +16,14 @@
 #ifndef PARENTNOTFOUND_H
 #define PARENTNOTFOUND_H
 
+#include "util/ComposerCore_global.h"
+
 #include <QString>
 
 #include <exception>
 using namespace std;
 
-namespace composer{
-    namespace core {
-        namespace util {
+CPR_CORE_BEGIN_NAMESPACE
 
 /*!
  \brief Exception to inform that the entity doesn't have a parent.
@@ -64,5 +64,6 @@ private:
   QString _id; /*!< TODO */
 };
 
-} } }
+CPR_CORE_END_NAMESPACE
+
 #endif // PARENTNOTFOUND_H

@@ -16,7 +16,7 @@
 #ifndef DEFINITIONS_H
 #define DEFINITIONS_H
 
-#include "ComposerCoreControl_global.h"
+#include "ComposerCore_global.h"
 
 #include <QString>
 #include <QMap>
@@ -39,9 +39,8 @@ typedef enum
   NONE
 } LanguageType;
 
-namespace composer {
-  namespace core {
-    namespace util {
+CPR_CORE_BEGIN_NAMESPACE
+
 /*!
  \brief Groups useful functions.
 */
@@ -114,6 +113,6 @@ private:
 COMPOSERCORESHARED_EXPORT Q_DECLARE_LOGGING_CATEGORY(CPR_CORE)
 COMPOSERCORESHARED_EXPORT Q_DECLARE_LOGGING_CATEGORY(CPR_GUI)
 
-} } } //end namespace
+CPR_CORE_END_NAMESPACE
 
 #endif // DEFINITIONS_H

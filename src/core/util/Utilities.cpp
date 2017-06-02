@@ -27,9 +27,7 @@ QMap<QString,LanguageType> createMap() {
     return types;
 }
 
-namespace composer {
-  namespace core {
-    namespace util {
+CPR_CORE_BEGIN_NAMESPACE
 
 Q_LOGGING_CATEGORY(CPR_CORE, "cpr.core")
 Q_LOGGING_CATEGORY(CPR_GUI, "cpr.gui")
@@ -174,5 +172,4 @@ QStringList Utilities::splitParams(QString &params)
   return plist;
 }
 
-} } } //end namespace
-
+CPR_CORE_END_NAMESPACE

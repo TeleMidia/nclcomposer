@@ -24,8 +24,7 @@
 
 #include "util/Commands.h"
 
-namespace composer {
-namespace core {
+CPR_CORE_BEGIN_NAMESPACE
 
 MessageControl::MessageControl(Project *project)
 {
@@ -629,4 +628,4 @@ void MessageControl::redo()
     qUndoStack->redo();
 }
 
-} } //end namespace
+CPR_CORE_END_NAMESPACE

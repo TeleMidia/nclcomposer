@@ -17,13 +17,12 @@
 
 #include "ComposerSettings.h"
 #include "Utilities.h"
-using namespace composer::core::util;
+using namespace cpr::core;
 
 #include <QSet>
 #include <QDebug>
 
-namespace composer {
-    namespace core {
+CPR_CORE_BEGIN_NAMESPACE
 
 Preference::Preference (const QString &name,
                         QVariant::Type type,
@@ -123,4 +122,4 @@ QList<Preference *> Preferences::preferences(const QString& category) const
   return preferences;
 }
 
-} } //end namespace
+CPR_CORE_END_NAMESPACE

@@ -22,8 +22,7 @@
 
 #include <QJsonObject>
 
-namespace composer {
-namespace core {
+CPR_CORE_BEGIN_NAMESPACE
 
 INIT_SINGLETON(PluginControl)
 
@@ -393,4 +392,4 @@ QList <IPlugin*> PluginControl::getPluginInstances(Project *project)
   return instances;
 }
 
-} }//end namespace
+CPR_CORE_END_NAMESPACE

@@ -15,8 +15,7 @@
 
 #include "util/AttributeReferences.h"
 
-namespace composer {
-    namespace util {
+CPR_CORE_BEGIN_NAMESPACE
 
 AttributeReferences::AttributeReferences ( const QString &element,
                                            const QString &attr,
@@ -94,4 +93,4 @@ QString AttributeReferences::getUserDefinedScope()
   return this->userDefinedScope;
 }
 
-} } //end namespace
+CPR_CORE_END_NAMESPACE

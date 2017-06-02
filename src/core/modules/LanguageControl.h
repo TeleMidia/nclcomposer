@@ -21,17 +21,14 @@
 #include <QPluginLoader>
 #include <QDir>
 
-#include "../util/ComposerCoreControl_global.h"
+#include "util/ComposerCore_global.h"
 
-#include "../extensions/ILanguageProfile.h"
-using namespace composer::extension;
+#include "extensions/ILanguageProfile.h"
+#include "util/Singleton.h"
+#include "util/Utilities.h"
+using namespace cpr::core;
 
-#include "../util/Singleton.h"
-#include "../util/Utilities.h"
-using namespace composer::core::util;
-
-namespace composer {
-  namespace core {
+CPR_CORE_BEGIN_NAMESPACE
 
 /*!
  * \brief Manages the installed language profiles (though ILanguageProfile
@@ -101,6 +98,6 @@ private:
   ~LanguageControl();
 };
 
-} } //end namespace
+CPR_CORE_END_NAMESPACE
 
 #endif // LANGUAGECONTROL_H

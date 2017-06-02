@@ -19,9 +19,7 @@
 
 #include "model/Project.h"
 
-namespace composer {
-  namespace core {
-    namespace util {
+CPR_CORE_BEGIN_NAMESPACE
 
 /*!
  * \brief An internal command of Composer Core to edit an Entity.
@@ -83,5 +81,6 @@ private:
 
 //QString createCommandString(DiagramItem *item, const QPointF &point);
 
-} } } //end namespace
+CPR_CORE_END_NAMESPACE
+
 #endif // COMMANDS_H

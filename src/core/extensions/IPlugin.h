@@ -21,13 +21,12 @@
 #include <QMutexLocker>
 #include <QMutex>
 
-#include "../model/Entity.h"
-#include "../model/Project.h"
-#include "../modules/LanguageControl.h"
-using namespace composer::core::model;
+#include "model/Entity.h"
+#include "model/Project.h"
+#include "modules/LanguageControl.h"
+using namespace cpr::core;
 
-namespace composer {
-  namespace extension {
+CPR_CORE_BEGIN_NAMESPACE
 
 namespace Data {
   enum Format {XML, JSON};
@@ -303,6 +302,6 @@ protected:
   ILanguageProfile *languageProfile;
 };
 
-} } //end namespace
+CPR_CORE_END_NAMESPACE
 
 #endif // IPLUGIN_H

@@ -15,8 +15,7 @@
 
 #include "modules/ProjectReader.h"
 
-namespace composer {
-  namespace core {
+CPR_CORE_BEGIN_NAMESPACE
 
 ProjectReader::ProjectReader()
 {
@@ -189,4 +188,4 @@ bool ProjectReader::fatalError(const QXmlParseException &exception)
   return false;
 }
 
-} } //end namespace
+CPR_CORE_END_NAMESPACE

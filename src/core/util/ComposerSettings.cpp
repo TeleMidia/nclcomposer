@@ -20,9 +20,8 @@
 #include <QDir>
 #include <QDebug>
 
-namespace composer {
-    namespace core {
-        namespace util {
+CPR_CORE_BEGIN_NAMESPACE
+
 GlobalSettings::GlobalSettings() :
   QSettings(QSettings::IniFormat, QSettings::UserScope, "telemidia", "nclcomposer")
 {
@@ -142,5 +141,4 @@ ProjectSettings::ProjectSettings(const QString &project) :
 
 }
 
-} } } // end namespace
-
+CPR_CORE_END_NAMESPACE

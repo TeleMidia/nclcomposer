@@ -19,9 +19,7 @@
 
 #include <assert.h>
 
-namespace composer {
-  namespace core {
-    namespace model {
+CPR_CORE_BEGIN_NAMESPACE
 
 Project::Project(QObject *parent) :
   Entity(parent)
@@ -269,4 +267,4 @@ QList<Entity*> Project::getEntityByAttrId(const QString &id)
   return listRet;
 }
 
-} } } //end namespace
+CPR_CORE_END_NAMESPACE

@@ -16,9 +16,9 @@
 #ifndef PROJECTREADER_H
 #define PROJECTREADER_H
 
-#include "util/ComposerCoreControl_global.h"
-#include "../model/Project.h"
-using namespace composer::core::model;
+#include "util/ComposerCore_global.h"
+#include "model/Project.h"
+using namespace cpr::core;
 
 #include <QString>
 #include <QStringList>
@@ -33,8 +33,8 @@ using namespace composer::core::model;
 #include <QFile>
 #include <util/Utilities.h>
 
-namespace composer {
-  namespace core {
+CPR_CORE_BEGIN_NAMESPACE
+
 /*!
  * \brief The class responsible to parse the Composer Project and generate fills
  *  the data of a Project object.
@@ -68,6 +68,6 @@ private:
   bool parseModelString(const QString &str);
 };
 
-} } //end namespace
+CPR_CORE_END_NAMESPACE
 
 #endif

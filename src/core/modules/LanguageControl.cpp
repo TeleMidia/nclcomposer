@@ -17,8 +17,7 @@
 
 #include <QApplication>
 
-namespace composer {
-  namespace core {
+CPR_CORE_BEGIN_NAMESPACE
 
 INIT_SINGLETON (LanguageControl)
 
@@ -155,6 +154,4 @@ QList<ILanguageProfile*> LanguageControl::getLoadedProfiles()
   return list;
 }
 
-} } //end namespace
-
-
+CPR_CORE_END_NAMESPACE

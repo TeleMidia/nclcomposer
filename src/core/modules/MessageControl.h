@@ -22,20 +22,15 @@
 #include <exception>
 using namespace std;
 
-#include "../util/ComposerCoreControl_global.h"
+#include "util/ComposerCore_global.h"
 
-#include "../extensions/IDocumentParser.h"
-using namespace composer::extension;
+#include "extensions/IDocumentParser.h"
+#include "model/Entity.h"
+#include "model/Project.h"
+#include "extensions/IPlugin.h"
+using namespace cpr::core;
 
-#include "../model/Entity.h"
-#include "../model/Project.h"
-using namespace composer::core::model;
-
-#include "../extensions/IPlugin.h"
-using namespace composer::extension;
-
-namespace composer {
-  namespace core {
+CPR_CORE_BEGIN_NAMESPACE
 
 /*!
  \brief Manages the messages sent from plugins to NCL Composer Core and
@@ -193,5 +188,7 @@ private:
    */
   bool pluginIsInterestedIn(const IPlugin *plugin, Entity *entity);
 };
-} } //end namespace
+
+CPR_CORE_END_NAMESPACE
+
 #endif // MESSAGECONTROL_H

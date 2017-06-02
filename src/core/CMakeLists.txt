@@ -21,7 +21,7 @@ set(NCLCOMPOSER_CORE_HEADERS
   extensions/IPluginFactory.h
 
 # Util
-  util/ComposerCoreControl_global.h
+  util/ComposerCore_global.h
   util/Singleton.h
   util/AttributeReferences.h
   util/Utilities.h

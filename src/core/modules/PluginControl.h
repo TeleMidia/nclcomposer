@@ -27,26 +27,19 @@
 #include <QDebug>
 
 #include <util/Utilities.h>
-#include "../util/ComposerCoreControl_global.h"
+#include "util/ComposerCore_global.h"
 
 #include "MessageControl.h"
 #include "LanguageControl.h"
-using namespace composer::core;
+#include "model/Project.h"
+#include "util/Singleton.h"
+#include "extensions/IDocumentParser.h"
+#include "extensions/ILanguageProfile.h"
+#include "extensions/IPluginFactory.h"
+#include "extensions/IPlugin.h"
+using namespace cpr::core;
 
-#include "../model/Project.h"
-using namespace composer::core::model;
-
-#include "../util/Singleton.h"
-using namespace composer::core::util;
-
-#include "../extensions/IDocumentParser.h"
-#include "../extensions/ILanguageProfile.h"
-#include "../extensions/IPluginFactory.h"
-#include "../extensions/IPlugin.h"
-using namespace composer::extension;
-
-namespace composer {
-  namespace core {
+CPR_CORE_BEGIN_NAMESPACE
 
 /*!
  * \brief Manages the NCL Composer plugins.
@@ -225,6 +218,6 @@ private slots:
   void sendBroadcastMessage(const char *slot, void *payload);
 };
 
-} } //end namespace
+CPR_CORE_END_NAMESPACE
 
 #endif // PLUGINCONTROL_H

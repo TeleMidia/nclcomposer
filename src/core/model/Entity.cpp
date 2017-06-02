@@ -17,9 +17,7 @@
 
 #include <assert.h>
 
-namespace composer {
-    namespace core {
-        namespace model {
+CPR_CORE_BEGIN_NAMESPACE
 
 Entity::Entity(QObject *parent) :
   QObject(parent)
@@ -274,4 +272,4 @@ Entity *Entity::cloneEntity() const
   return new Entity(getUniqueId(), getType(), this->atts);
 }
 
-}}} //end namespace
+CPR_CORE_END_NAMESPACE

@@ -15,13 +15,13 @@
 
 #ifndef ATTRIBUTEREFERENCES_H
 #define ATTRIBUTEREFERENCES_H
-#include "ComposerCoreControl_global.h"
+#include "ComposerCore_global.h"
 
 #include <QString>
 #include <QMap>
 
-namespace composer {
-  namespace util {
+CPR_CORE_BEGIN_NAMESPACE
+
 /*!
  * \brief Keep information about which pair (element, attribute) can refer a
  *    value of another pair (element, attribute).
@@ -123,5 +123,6 @@ private:
   void initializeStringToScope();
 };
 
-}} //end namespace
+CPR_CORE_END_NAMESPACE
+
 #endif

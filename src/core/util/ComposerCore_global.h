@@ -13,8 +13,8 @@
  You should have received a copy of the GNU General Lesser Public License
  along with NCL Composer.  If not, see <http://www.gnu.org/licenses/>. */
 
-#ifndef CORECONTROL_GLOBAL_H
-#define CORECONTROL_GLOBAL_H
+#ifndef CPR_CORE_GLOBAL_H
+#define CPR_CORE_GLOBAL_H
 
 #include <QtCore/qglobal.h>
 
@@ -24,4 +24,12 @@
 #  define COMPOSERCORESHARED_EXPORT Q_DECL_IMPORT
 #endif
 
-#endif // CORECONTROL_GLOBAL_H
+// Namespaces.
+#define _CPR_NS_BEGIN(t)     namespace t {/*}*/
+#define _CPR_NS_END                    /*{*/}
+#define _CPR_BEGIN(t)                 _CPR_NS_BEGIN (cpr) _CPR_NS_BEGIN (t)
+#define _CPR_END                      _CPR_NS_END _CPR_NS_END
+#define CPR_CORE_BEGIN_NAMESPACE      _CPR_BEGIN (core)
+#define CPR_CORE_END_NAMESPACE        _CPR_END
+
+#endif // CPR_GLOBAL_H

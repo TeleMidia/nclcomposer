@@ -22,16 +22,14 @@
 
 #include <QJsonObject>
 
-#include "../util/ComposerCoreControl_global.h"
+#include "util/ComposerCore_global.h"
 
-#include "../util/Utilities.h"
-using namespace composer::core::util;
-
+#include "util/Utilities.h"
 #include "IPlugin.h"
-using namespace composer::extension;
+using namespace cpr::core;
 
-namespace composer {
-  namespace extension {
+CPR_CORE_BEGIN_NAMESPACE
+
 /*!
  * \brief A Factory interface for building plugin instances.
  *
@@ -88,9 +86,9 @@ private:
     QJsonObject metadata_obj;
 };
 
-} } //end namespace
+CPR_CORE_END_NAMESPACE
 
-Q_DECLARE_METATYPE(composer::extension::IPluginFactory*)
+Q_DECLARE_METATYPE(cpr::core::IPluginFactory*)
 
 /**
  * This is required for the QTPlugin system works.

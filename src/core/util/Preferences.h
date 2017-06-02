@@ -16,14 +16,13 @@
 #ifndef PREFERENCE_H
 #define PREFERENCE_H
 
-#include "ComposerCoreControl_global.h"
+#include "ComposerCore_global.h"
 #include "Singleton.h"
 
 #include <QVariant>
 #include <QMap>
 
-namespace composer {
-  namespace core {
+CPR_CORE_BEGIN_NAMESPACE
 
 class COMPOSERCORESHARED_EXPORT Preference
 {
@@ -77,5 +76,6 @@ private:
 
 };
 
-}} //end namespace
+CPR_CORE_END_NAMESPACE
+
 #endif

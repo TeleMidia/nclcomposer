@@ -18,11 +18,10 @@
 
 #include <QObject>
 
-#include "../model/Project.h"
-using namespace composer::core::model;
+#include "model/Project.h"
+using namespace cpr::core;
 
-namespace composer {
-  namespace extension {
+CPR_CORE_BEGIN_NAMESPACE
 
 /*!
  * \brief An abstract interface to document parsers.
@@ -92,6 +91,7 @@ signals:
                   const QMap<QString,QString>& atts,
                   bool force );
 };
-} } //end namespace
+
+CPR_CORE_END_NAMESPACE
 
 #endif // IDOCUMENTPARSER_H

@@ -16,14 +16,14 @@
 #ifndef CREATIONFAILED_H
 #define CREATIONFAILED_H
 
+#include "util/ComposerCore_global.h"
+
 #include <QString>
 
 #include <exception>
 using namespace std;
 
-namespace composer{
-    namespace core {
-        namespace util {
+CPR_CORE_BEGIN_NAMESPACE
 
 /*!
  * \brief Exception to inform that the creation of an element failed.
@@ -53,6 +53,6 @@ private:
   QString id; /*!< TODO */
 };
 
-} } } // end namespace
+CPR_CORE_END_NAMESPACE
 
 #endif // CREATIONFAILED_H

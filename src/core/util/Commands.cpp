@@ -18,9 +18,7 @@
 #include "modules/MessageControl.h"
 #include "modules/ProjectControl.h"
 
-namespace composer {
-  namespace core {
-    namespace util {
+CPR_CORE_BEGIN_NAMESPACE
 
 EditCommand::EditCommand(Project *project, Entity *entity,
                          QMap <QString, QString> newAttrs, QUndoCommand *parent)
@@ -122,4 +120,4 @@ void AddCommand::redo()
   this->entity = entityTmp;
 }
 
-} } } //end namespace
+CPR_CORE_END_NAMESPACE

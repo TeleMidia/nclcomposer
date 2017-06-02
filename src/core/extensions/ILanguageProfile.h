@@ -21,19 +21,13 @@
 #include <QString>
 
 #include "IDocumentParser.h"
-using namespace composer::extension;
+#include "util/Utilities.h"
+#include "model/Project.h"
+#include "util/AttributeReferences.h"
+using namespace cpr::core;
 
-#include "../util/Utilities.h"
-using namespace composer::core::util;
+CPR_CORE_BEGIN_NAMESPACE
 
-#include "../model/Project.h"
-using namespace composer::core::model;
-
-#include "../util/AttributeReferences.h"
-using namespace composer::util;
-
-namespace composer {
-  namespace extension {
 /**!
   * This class must be implemented by anyone that want to support
   * a new language in Composer.
@@ -64,7 +58,7 @@ public:
     getReferences (const QString &element, const QString &attr) = 0;
 };
 
-} } //end namespace
+CPR_CORE_END_NAMESPACE
 
 
 /**

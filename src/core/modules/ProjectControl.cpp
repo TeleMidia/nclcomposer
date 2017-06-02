@@ -16,8 +16,7 @@
 #include "modules/ProjectControl.h"
 #include "modules/ProjectReader.h"
 
-namespace composer {
-    namespace core {
+CPR_CORE_BEGIN_NAMESPACE
 
 INIT_SINGLETON (ProjectControl)
 
@@ -303,4 +302,4 @@ void ProjectControl::projectIsDirty(bool isDirty)
     qCDebug(CPR_CORE) <<"Received a dirtyProject message for a nullptr project";
 }
 
-} }//end namespace
+CPR_CORE_END_NAMESPACE
