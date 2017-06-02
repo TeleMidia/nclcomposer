@@ -24,7 +24,7 @@
 #include <extensions/IPluginFactory.h>
 #include "ValidatorPlugin.h"
 
-using namespace composer::extension;
+using namespace cpr::core;
 
 class ValidatorFactory :
         public QObject, public IPluginFactory

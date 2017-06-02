@@ -30,7 +30,7 @@
 
 #include <QSize>
 
-using namespace composer::extension;
+using namespace cpr::core;
 
 class ValidatorTreeWidget :
     public QTreeWidget

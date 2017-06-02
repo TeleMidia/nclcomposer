@@ -21,8 +21,8 @@
 using namespace std;
 
 #include <util/AttributeReferences.h>
-using namespace composer::util;
 #include <util/Singleton.h>
+using namespace cpr::core;
 
 #define NCLSTRUCTURE_FILE ":/config/NCL_STRUCTURE"
 

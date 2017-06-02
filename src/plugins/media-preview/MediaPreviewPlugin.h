@@ -27,7 +27,7 @@
 #include "LuaView.h"
 #include "VideoPlayer.h"
 
-#include <core/extensions/IPlugin.h>
+#include <extensions/IPlugin.h>
 
 #include <QPushButton>
 #include <QLabel>
@@ -43,7 +43,7 @@
 #include <MediaObject>
 #include <QtWebKit/QWebView>
 
-using namespace composer::core;
+using namespace cpr::core;
 
 /*!
  * \brief MediaPreviewPlugin is a Composer plugin that display a different

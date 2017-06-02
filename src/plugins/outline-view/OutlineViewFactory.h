@@ -20,7 +20,7 @@
 #define OUTLINEVIEWPLUGINFACTORY_H
 
 #include <extensions/IPluginFactory.h>
-using namespace composer::extension;
+using namespace cpr::core;
 
 #include "OutlineViewPlugin.h"
 

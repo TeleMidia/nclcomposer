@@ -29,7 +29,7 @@
 #include <vector>
 #include <string>
 
-using namespace composer::core::model;
+using namespace cpr::core;
 
 class ComposerNCLAdapter
 {

@@ -7,7 +7,7 @@
 #include "RulesView.h"
 #include "RulesTreeWidget.h"
 
-using namespace composer::extension;
+using namespace cpr::core;
 
 /*!
  * \brief Rules View is a simple plugin allows users to graphically

@@ -19,8 +19,8 @@
 #define MEDIAPREVIEWFACTORY_H
 
 #include "MediaPreviewPlugin.h"
-#include <core/extensions/IPluginFactory.h>
-using namespace composer::core;
+#include <extensions/IPluginFactory.h>
+using namespace cpr::core;
 
 /*!
  * \brief Handles the creation and deletion of MediaPreview objects.

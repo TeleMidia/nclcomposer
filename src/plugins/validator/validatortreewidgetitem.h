@@ -22,7 +22,7 @@
 #include <QTreeWidgetItem>
 #include <model/Entity.h>
 
-using namespace composer::core::model;
+using namespace cpr::core;
 
 class ValidatorTreeWidgetItem : public QTreeWidgetItem
 {

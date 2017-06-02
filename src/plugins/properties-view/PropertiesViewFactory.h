@@ -22,7 +22,7 @@
 #include "PropertiesViewPlugin.h"
 
 #include <extensions/IPluginFactory.h>
-using namespace composer::extension;
+using namespace cpr::core;
 
 /*!
  \brief Handles the creation and deletion of PropertyView objects.

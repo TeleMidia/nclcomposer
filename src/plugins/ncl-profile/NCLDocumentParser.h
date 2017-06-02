@@ -20,7 +20,7 @@
 #include <QWaitCondition>
 
 #include <extensions/IDocumentParser.h>
-using namespace composer::extension;
+using namespace cpr::core;
 
 namespace composer {
   namespace language {

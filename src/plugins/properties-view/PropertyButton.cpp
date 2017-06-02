@@ -25,7 +25,7 @@
 #include <QDebug>
 
 #include <util/Utilities.h>
-using namespace composer::core::util;
+using namespace cpr::core;
 
 PropertyButtons::PropertyButtons(QWidget *parent)
   : LineEditWithButton(parent, ":/images/esf-search.png")

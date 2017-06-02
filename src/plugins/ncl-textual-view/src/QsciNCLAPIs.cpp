@@ -21,7 +21,7 @@
 #include "NCLTextualViewPlugin_global.h"
 
 #include <util/Utilities.h>
-using namespace composer::core::util;
+using namespace cpr::core;
 
 #include <QFileDialog>
 

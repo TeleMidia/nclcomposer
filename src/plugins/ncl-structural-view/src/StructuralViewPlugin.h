@@ -21,7 +21,7 @@
 #include <QMap>
 
 #include <extensions/IPlugin.h>
-using namespace composer::extension;
+using namespace cpr::core;
 
 #include "StructuralWindow.h"
 #include "StructuralView.h"

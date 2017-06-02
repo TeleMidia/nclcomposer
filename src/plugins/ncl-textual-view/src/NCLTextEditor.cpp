@@ -27,7 +27,7 @@
 #include <NCLTextualViewPlugin_global.h>
 
 #include <util/Preferences.h>
-using namespace composer::core;
+using namespace cpr::core;
 
 NCLTextEditor::NCLTextEditor(QWidget *parent) :
   QsciScintilla(parent)
@@ -120,7 +120,9 @@ void NCLTextEditor::initParameters()
   _fillingAttributeIndicator = indicatorDefine (RoundBoxIndicator, 2);
 
   // qCDebug (CPR_PLUGIN_TEXTUAL) << error_marker << " " << error_indicator;
-  // setWhitespaceVisibility(QsciScintilla::WsVisible);
+//  setWhitespaceVisibility(QsciScintilla::WsVisible);
+//  setEdgeMode(QsciScintilla::EdgeLine);
+//  setEdgeColumn(80);
 }
 
 void NCLTextEditor::Increasefont()

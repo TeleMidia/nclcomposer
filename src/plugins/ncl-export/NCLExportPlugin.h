@@ -22,7 +22,7 @@
 #include <QFile>
 
 #include <extensions/IPlugin.h>
-using namespace composer::extension;
+using namespace cpr::core;
 
 /*!
  * \brief Debug Console is a simple plugin that just show

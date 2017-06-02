@@ -13,7 +13,7 @@
 #include "NCLLanguageProfile_global.h"
 #include <extensions/ILanguageProfile.h>
 
-using namespace composer::extension;
+using namespace cpr::core;
 
 namespace composer {
 namespace language {

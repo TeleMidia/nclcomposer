@@ -22,7 +22,7 @@
 
 #include "NCLTreeWidget.h"
 #include <extensions/IPlugin.h>
-using namespace composer::extension;
+using namespace cpr::core;
 
 /*!
  \brief OutlineViewPlugin is a Composer plugin that shows the internal model

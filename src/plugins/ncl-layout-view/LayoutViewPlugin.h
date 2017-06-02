@@ -22,7 +22,7 @@
 #include <QMap>
 
 #include <extensions/IPlugin.h>
-using namespace composer::extension;
+using namespace cpr::core;
 
 #include "LayoutWindow.h"
 #include "LayoutView.h"

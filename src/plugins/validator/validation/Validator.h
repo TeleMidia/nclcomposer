@@ -27,7 +27,7 @@
 #include <util/ComposerSettings.h>
 #include <QDebug>
 
-using namespace composer::core::util;
+using namespace cpr::core;
 
 class Validator
 {

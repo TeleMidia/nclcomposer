@@ -137,7 +137,7 @@ void NCLStructure::loadStructure(){
             "(ELEMENT NAME, ELEMENT FATHER, CARDINALITY) ";
 
         qErrnoWarning(msg.toStdString().c_str());
-        qDebug() << tokens;
+        // qDebug() << tokens;
       }
 
     }
@@ -155,7 +155,7 @@ void NCLStructure::loadStructure(){
       }
       else
       {
-        qErrnoWarning("attribute primitive must be exactly 4 arguments \
+        qErrnoWarning("attribute primitive must have exactly 4 arguments \
                       (ELEMENT NAME, ATTR NAME, ATTR TYPE, REQUIRED)");
       }
 

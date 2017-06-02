@@ -31,7 +31,7 @@
 #include <QMutex>
 
 #include <extensions/IPlugin.h>
-using namespace composer::extension;
+using namespace cpr::core;
 
 /*!
  \brief Encapsulates the NCLTextEditor as a Composer plugin.
