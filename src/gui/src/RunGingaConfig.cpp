@@ -20,7 +20,7 @@
 #include <QMessageBox>
 
 #include <util/ComposerSettings.h>
-using namespace composer::core::util;
+using namespace cpr::core;
 
 namespace composer {
 namespace gui {

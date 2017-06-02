@@ -23,10 +23,8 @@
 #include <QListWidgetItem>
 
 #include <extensions/IPluginFactory.h>
-using namespace composer::extension;
-
 #include <modules/PluginControl.h>
-using namespace composer::core;
+using namespace cpr::core;
 
 #include "IPreferencesPage.h"
 

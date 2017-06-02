@@ -24,7 +24,7 @@
 #include <QFileSystemModel>
 
 #include <core/modules/DocumentControl.h>
-using namespace composer::core;
+using namespace cpr::core;
 
 #include "WorkspaceModel.h"
 

@@ -17,7 +17,7 @@
 #include "ui_GeneralPreferences.h"
 
 #include <util/ComposerSettings.h>
-using namespace composer::core::util;
+using namespace cpr::core;
 
 #include <QLocale>
 #include <QDebug>

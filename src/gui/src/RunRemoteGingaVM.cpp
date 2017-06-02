@@ -28,7 +28,7 @@
 #include <iostream>
 
 #include <util/ComposerSettings.h>
-using namespace composer::core::util;
+using namespace cpr::core;
 
 RunRemoteGingaVMAction::RunRemoteGingaVMAction()
 {

@@ -18,10 +18,8 @@
 
 #include <modules/PluginControl.h>
 #include <modules/LanguageControl.h>
-using namespace composer::core;
-
 #include <util/ComposerSettings.h>
-using namespace composer::core::util;
+using namespace cpr::core;
 
 #include <QDialog>
 #include <QStringListModel>

@@ -54,10 +54,8 @@
 #include <modules/PluginControl.h>
 #include <modules/ProjectControl.h>
 #include <modules/LanguageControl.h>
-using namespace composer::core;
-
 #include <util/ComposerSettings.h>
-using namespace composer::core::util;
+using namespace cpr::core;
 
 #include "ComposerSplashScreen.h"
 
@@ -69,7 +67,6 @@ using namespace composer::core::util;
 // #include "ComposerHelpWidget.h"
 
 #include <qtoolwindowmanager.h>
-
 using namespace composer::gui;
 
 namespace Ui {
