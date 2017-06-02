@@ -22,8 +22,7 @@
 #include <util/ComposerSettings.h>
 using namespace cpr::core;
 
-namespace composer {
-namespace gui {
+CPR_GUI_BEGIN_NAMESPACE
 
 RunGingaConfig::RunGingaConfig(QWidget *parent):
   IPreferencesPage(parent), ui(new Ui::RunGingaConfig)
@@ -187,4 +186,4 @@ void RunGingaConfig::browseButtonPressed()
   }
 }
 
-} } //end namespace
+CPR_GUI_END_NAMESPACE

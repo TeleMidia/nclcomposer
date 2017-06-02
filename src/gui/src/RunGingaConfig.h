@@ -17,13 +17,13 @@
 #define RUNGINGACONFIG_H
 
 #include "IPreferencesPage.h"
+#include <util/ComposerCore_global.h>
 
 namespace Ui {
   class RunGingaConfig;
 }
 
-namespace composer {
-namespace gui {
+CPR_GUI_BEGIN_NAMESPACE
 
 /*!
  * \todo User input validation.
@@ -56,5 +56,6 @@ private:
   void loadValuesFromSettings();
 };
 
-} } //end namespace
+CPR_GUI_END_NAMESPACE
+
 #endif // RUNGINGACONFIG_H

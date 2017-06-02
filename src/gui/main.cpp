@@ -23,12 +23,11 @@
 #include <util/ComposerSettings.h>
 
 #include "ComposerMainWindow.h"
+using namespace cpr::gui;
 
 #ifdef FV_GUI
 #include "fvupdater.h"
 #endif
-
-using namespace composer::gui;
 
 Q_DECLARE_LOGGING_CATEGORY(CPR_MAIN)
 Q_LOGGING_CATEGORY(CPR_MAIN, "cpr.main")

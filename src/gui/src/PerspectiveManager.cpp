@@ -22,8 +22,7 @@
 #include <util/ComposerSettings.h>
 using namespace cpr::core;
 
-namespace composer {
-namespace gui {
+CPR_GUI_BEGIN_NAMESPACE
 
 PerspectiveManager::PerspectiveManager(QWidget *parent):
   QDialog(parent),
@@ -195,4 +194,4 @@ void PerspectiveManager::deleteSelectedPerspective()
     return;
 }
 
-} } //end namespace
+CPR_GUI_END_NAMESPACE

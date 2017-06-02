@@ -19,6 +19,8 @@
 #include <QFileDialog>
 #include <QDir>
 
+CPR_GUI_BEGIN_NAMESPACE
+
 NewProjectWizard::NewProjectWizard(QWidget *parent) :
   QWizard(parent),
   ui(new Ui::NewProjectWizard)
@@ -63,3 +65,5 @@ bool NewProjectWizard::shouldCreateADefaultRegion()
 {
   return ui->checkBox_AddDefaultRegion->isChecked();
 }
+
+CPR_GUI_END_NAMESPACE

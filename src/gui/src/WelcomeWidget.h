@@ -39,15 +39,16 @@
 #include <quazip/quazipfile.h>
 #endif
 
+#include <util/ComposerCore_global.h>
+
 #define NCL_CLUB_URL "http://club.ncl.org.br/rss.xml"
 #define MAX_RECENT_PROJECTS 6
 
-namespace Ui{
-class WelcomeWidget;
+namespace Ui {
+  class WelcomeWidget;
 }
 
-namespace composer {
-namespace gui {
+CPR_GUI_BEGIN_NAMESPACE
 
 /* FROM:
 http://www.streamreader.org/stackoverflow/questions/2480773/qt-styling-qtabwidget
@@ -229,5 +230,6 @@ private slots:
   void on_pushButton_Documentation_clicked();
 };
 
-} }
+CPR_GUI_END_NAMESPACE
+
 #endif // WELCOMEWIDGET_H

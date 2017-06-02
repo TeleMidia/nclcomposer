@@ -17,10 +17,13 @@
 #define FILECHOOSER_H
 
 #include <QWidget>
+#include <util/ComposerCore_global.h>
 
 namespace Ui {
   class FileChooser;
 }
+
+CPR_GUI_BEGIN_NAMESPACE
 
 class FileChooser : public QWidget
 {
@@ -55,5 +58,7 @@ private:
 private slots:
   void on_pushButton_pressed();
 };
+
+CPR_GUI_END_NAMESPACE
 
 #endif // FILECHOOSER_H

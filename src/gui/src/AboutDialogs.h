@@ -31,8 +31,7 @@ namespace Ui {
   class ShortcutsDialog;
 }
 
-namespace composer {
-  namespace gui {
+CPR_GUI_BEGIN_NAMESPACE
 
 class AboutDialog : public QDialog
 {
@@ -106,5 +105,6 @@ private:
   Ui::ShortcutsDialog *_ui;
 };
 
-} } // end namespace
+CPR_GUI_END_NAMESPACE
+
 #endif // ABOUTPLUGINS_H

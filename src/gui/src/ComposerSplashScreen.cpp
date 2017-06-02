@@ -17,6 +17,8 @@
 
 #include <QPainter>
 
+CPR_GUI_BEGIN_NAMESPACE
+
 ComposerSplashScreen::ComposerSplashScreen( const QPixmap &pixmap,
                                             Qt::WindowFlags f ):
   QSplashScreen(pixmap, f)
@@ -42,3 +44,5 @@ void ComposerSplashScreen::drawContents(QPainter *painter)
   version += NCLCOMPOSER_GUI_VERSION;
   painter->drawText(r, version);
 }
+
+CPR_GUI_END_NAMESPACE

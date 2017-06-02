@@ -27,13 +27,13 @@
 using namespace cpr::core;
 
 #include "IPreferencesPage.h"
+using namespace cpr::gui;
 
 namespace Ui {
   class PreferencesDialog;
 }
 
-namespace composer {
-  namespace gui {
+CPR_GUI_BEGIN_NAMESPACE
 
 class PreferencesDialog : public QDialog
 {
@@ -68,6 +68,6 @@ private slots:
   void buttonClicked(QAbstractButton*);
 };
 
-}} //end namespace
+CPR_GUI_END_NAMESPACE
 
 #endif // PREFERENCES_H

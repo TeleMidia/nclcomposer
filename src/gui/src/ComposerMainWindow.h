@@ -64,17 +64,17 @@ using namespace cpr::core;
 #include "WelcomeWidget.h"
 #include "AboutDialogs.h"
 #include "ClickableDockWidget.h"
+using namespace cpr::gui;
+
 // #include "ComposerHelpWidget.h"
 
 #include <qtoolwindowmanager.h>
-using namespace composer::gui;
 
 namespace Ui {
 class ComposerMainWindow;
 }
 
-namespace composer {
-namespace gui {
+CPR_GUI_BEGIN_NAMESPACE
 
 /*!
  * \brief The main Window of NCL Composer.
@@ -265,6 +265,6 @@ public slots:
   void openProjects(const QStringList &projects);
 };
 
-} } //end namespace
+CPR_GUI_END_NAMESPACE
 
 #endif // COMPOSERMAINWINDOW_H

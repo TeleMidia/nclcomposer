@@ -18,8 +18,7 @@
 #include <modules/ProjectControl.h>
 #include <QtGlobal>
 
-namespace composer {
-namespace gui {
+CPR_GUI_BEGIN_NAMESPACE
 
 WelcomeWidget::WelcomeWidget(QWidget *parent):
     QWidget(parent),
@@ -615,59 +614,60 @@ bool WelcomeWidget::extract( const QString &filePath,
     return true;
 }
 #endif
-} }
 
-void composer::gui::WelcomeWidget::on_commandLinkButton_29_clicked()
+CPR_GUI_END_NAMESPACE
+
+void cpr::gui::WelcomeWidget::on_commandLinkButton_29_clicked()
 {
   QDesktopServices::openUrl(QUrl("http://www.ncl.org.br/sites/telemidia.puc-rio.br/files/Introduction%20to%20DTV%20and%20to%20Ginga-NCL.pdf"));
 }
 
-void composer::gui::WelcomeWidget::on_commandLinkButton_6_clicked()
+void cpr::gui::WelcomeWidget::on_commandLinkButton_6_clicked()
 {
   QDesktopServices::openUrl(QUrl("http://www.ncl.org.br/sites/telemidia.puc-rio.br/files/Curso%20Ginga%20Brasil.zip"));
 }
 
-void composer::gui::WelcomeWidget::on_commandLinkButton_10_clicked()
+void cpr::gui::WelcomeWidget::on_commandLinkButton_10_clicked()
 {
   QDesktopServices::openUrl(QUrl("http://www.ncl.org.br/sites/telemidia.puc-rio.br/files/Part%209%20-%20NCL3.0-EC.pdf"));
 }
 
-void composer::gui::WelcomeWidget::on_commandLinkButton_11_clicked()
+void cpr::gui::WelcomeWidget::on_commandLinkButton_11_clicked()
 {
   QDesktopServices::openUrl(QUrl("http://www.ncl.org.br/sites/telemidia.puc-rio.br/files/Part%209%20-%20NCL3.0-EC.pdf"));
 }
 
-void composer::gui::WelcomeWidget::on_commandLinkButton_31_clicked()
+void cpr::gui::WelcomeWidget::on_commandLinkButton_31_clicked()
 {
   QDesktopServices::openUrl(QUrl("http://www.ncl.org.br/en/relatoriostecnicos"));
 }
 
-void composer::gui::WelcomeWidget::on_commandLinkButton_7_clicked()
+void cpr::gui::WelcomeWidget::on_commandLinkButton_7_clicked()
 {
   QDesktopServices::openUrl(QUrl("http://composer.telemidia.puc-rio.br"));
 }
 
-void composer::gui::WelcomeWidget::on_commandLinkButton_8_clicked()
+void cpr::gui::WelcomeWidget::on_commandLinkButton_8_clicked()
 {
   QDesktopServices::openUrl(QUrl("http://composer.telemidia.puc-rio.br/doku.php/en/docs/tutorial/how_to_create_a_plugin_to_ncl_composer_0.2.x"));
 }
 
-void composer::gui::WelcomeWidget::on_commandLinkButton_pressed()
+void cpr::gui::WelcomeWidget::on_commandLinkButton_pressed()
 {
   QDesktopServices::openUrl(QUrl("http://composer.telemidia.puc-rio.br/doku.php/plugins:index"));
 }
 
-void composer::gui::WelcomeWidget::on_commandLinkButton_2_pressed()
+void cpr::gui::WelcomeWidget::on_commandLinkButton_2_pressed()
 {
   emit userPressedSeeInstalledPlugins();
 }
 
-void composer::gui::WelcomeWidget::on_commandLinkButton_3_pressed()
+void cpr::gui::WelcomeWidget::on_commandLinkButton_3_pressed()
 {
   QDesktopServices::openUrl(QUrl("http://ncl.org.br/programandoncl"));
 }
 
-void composer::gui::WelcomeWidget::on_pushButton_Documentation_clicked()
+void cpr::gui::WelcomeWidget::on_pushButton_Documentation_clicked()
 {
   QDesktopServices::openUrl(QUrl("http://composer.telemidia.puc-rio.br/en/docs/"));
 }

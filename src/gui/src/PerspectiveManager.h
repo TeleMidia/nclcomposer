@@ -18,9 +18,11 @@
 
 #include <QDialog>
 #include <QTreeWidgetItem>
+#include <util/ComposerCore_global.h>
 
-namespace Ui{
-    class PerpectiveManager;
+namespace Ui
+{
+  class PerpectiveManager;
 }
 
 /*!
@@ -33,8 +35,9 @@ enum PERSPEC_BEHAVIOR //PERSPECTIVE BEHAVIOR
     PERSPEC_LOAD
 };
 
-namespace composer {
-  namespace gui {
+
+CPR_GUI_BEGIN_NAMESPACE
+
 /*!
  * \brief A dialog that allows the user to choose or save one perspective.
  */
@@ -117,5 +120,7 @@ private slots:
    */
   void itemChanged(QTreeWidgetItem *, int);
 };
-} } //end namespace
+
+CPR_GUI_END_NAMESPACE
+
 #endif // PLUGINSLAYOUTMANAGER_H

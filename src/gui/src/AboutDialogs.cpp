@@ -26,8 +26,7 @@
 #include <QUrl>
 #include <QDialogButtonBox>
 
-namespace composer {
-namespace gui {
+CPR_GUI_BEGIN_NAMESPACE
 
 AboutDialog::AboutDialog(QWidget *parent):
   QDialog(parent, Qt::Dialog),
@@ -333,9 +332,9 @@ ShortcutsDialog::~ShortcutsDialog()
   delete _ui;
 }
 
-} } // end namespace
+CPR_GUI_END_NAMESPACE
 
-void composer::gui::AboutDialog::on_button_Homepage_pressed()
+void cpr::gui::AboutDialog::on_button_Homepage_pressed()
 {
   QDesktopServices::openUrl(QUrl("http://composer.telemidia.puc-rio.br"));
 }

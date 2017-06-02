@@ -22,8 +22,7 @@
 #include <QDialogButtonBox>
 #include <QListWidgetItem>
 
-namespace composer {
-namespace gui {
+CPR_GUI_BEGIN_NAMESPACE
 
 PreferencesDialog::PreferencesDialog(QWidget *parent) :
   QDialog(parent),
@@ -159,4 +158,4 @@ void PreferencesDialog::selectFirst()
   ui->listWidget->item(0)->setSelected(true);
 } */
 
-}} //end namespace
+CPR_GUI_END_NAMESPACE

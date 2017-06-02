@@ -17,6 +17,9 @@
 #define COMPOSERSPLASHSCREEN_H
 
 #include <QSplashScreen>
+#include <util/ComposerCore_global.h>
+
+CPR_GUI_BEGIN_NAMESPACE
 
 /**
  * \brief The ComposerSplashScreen class defines the initial splash screen of
@@ -60,5 +63,7 @@ protected:
    */
   virtual void drawContents(QPainter *painter);
 };
+
+CPR_GUI_END_NAMESPACE
 
 #endif // COMPOSERSPLASHSCREEN_H

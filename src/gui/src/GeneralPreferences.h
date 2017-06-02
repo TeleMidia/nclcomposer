@@ -23,8 +23,7 @@ namespace Ui {
   class GeneralPreferences;
 }
 
-namespace composer {
-    namespace gui {
+CPR_GUI_BEGIN_NAMESPACE
 
 class GeneralPreferences : public IPreferencesPage
 {
@@ -56,5 +55,6 @@ private:
   FileChooser *fileChooser;
 };
 
-}} //end namespace
+CPR_GUI_END_NAMESPACE
+
 #endif // GENERALPREFERENCES_H

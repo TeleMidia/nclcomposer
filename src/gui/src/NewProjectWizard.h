@@ -17,10 +17,13 @@
 #define NEWPROJECTWIZARD_H
 
 #include <QWizard>
+#include <util/ComposerCore_global.h>
 
 namespace Ui {
 class NewProjectWizard;
 }
+
+CPR_GUI_BEGIN_NAMESPACE
 
 class NewProjectWizard : public QWizard
 {
@@ -41,5 +44,7 @@ private slots:
   void browseDir();
 
 };
+
+CPR_GUI_END_NAMESPACE
 
 #endif // NEWPROJECTWIZARD_H

@@ -22,8 +22,7 @@ using namespace cpr::core;
 #include <QLocale>
 #include <QDebug>
 
-namespace composer {
-    namespace gui {
+CPR_GUI_BEGIN_NAMESPACE
 
 GeneralPreferences::GeneralPreferences(QWidget *parent)
   : IPreferencesPage(parent), ui(new Ui::GeneralPreferences)
@@ -92,4 +91,4 @@ void GeneralPreferences::setDefaultValues()
 
 }
 
-}} //end namespace
+CPR_GUI_END_NAMESPACE

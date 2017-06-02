@@ -13,15 +13,15 @@
  You should have received a copy of the GNU General Lesser Public License
  along with NCL Composer.  If not, see <http://www.gnu.org/licenses/>. */
 
-
 #ifndef IPREFENCESPAGE_H
 #define IPREFENCESPAGE_H
 
 #include <QWidget>
 #include <QIcon>
 
-namespace composer {
-  namespace gui {
+#include <util/ComposerCore_global.h>
+
+CPR_GUI_BEGIN_NAMESPACE
 
 class IPreferencesPage : public QWidget
 {
@@ -38,5 +38,6 @@ public slots:
   virtual void setDefaultValues() = 0;
 };
 
-}} //end namespace
+CPR_GUI_END_NAMESPACE
+
 #endif

@@ -43,8 +43,7 @@
 #include "sass/context.h"
 #endif
 
-namespace composer {
-namespace gui {
+CPR_GUI_BEGIN_NAMESPACE
 
 const int autoSaveInterval = 1 * 60 * 1000; //ms
 
@@ -1924,9 +1923,9 @@ void ComposerMainWindow::wizardFinished(int resp)
 }
 #endif
 
-} } //end namespace
+CPR_GUI_END_NAMESPACE
 
-void composer::gui::ComposerMainWindow::on_actionKeyboard_shortcuts_triggered()
+void cpr::gui::ComposerMainWindow::on_actionKeyboard_shortcuts_triggered()
 {
   ShortcutsDialog dialog(this);
 

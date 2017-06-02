@@ -18,6 +18,8 @@
 
 #include <QFileDialog>
 
+CPR_GUI_BEGIN_NAMESPACE
+
 FileChooser::FileChooser( const QString &label,
                           FileChooser::FILECHOOSER_TYPE fctype,
                           const QString &caption,
@@ -76,3 +78,5 @@ void FileChooser::setText(const QString &value)
 {
   ui->lineEdit->setText(value);
 }
+
+CPR_GUI_END_NAMESPACE
