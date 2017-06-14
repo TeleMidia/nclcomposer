@@ -2,7 +2,7 @@
   "updates": {
     "windows": {
       "open-url": "",
-      "latest-version": "0.4.0",
+      "latest-version": "4.5.0",
       "download-url": "http://composer.telemidia.puc-rio.br/downloads/stable/nclcomposer-installer-0.4.0.exe",
       "changelog": "This is NCL Composer for Windows. The main features in this version are the support for themes and the optional support for showing the body element in the structural view."
     },
@@ -14,7 +14,7 @@
     },
     "linux": {
       "open-url": "",
-      "latest-version": "0.5.0",
+      "latest-version": "4.5.0",
       "download-url": "http://composer.telemidia.puc-rio.br/downloads/stable/nclcomposer_0.4.0_amd64.deb",
       "changelog": "This is NCL Composer for Linux. The main features in this version are the support for themes and the optional support for showing the body element in the structural view."
     },
