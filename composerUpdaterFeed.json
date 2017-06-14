@@ -1,0 +1,35 @@
+{
+  "updates": {
+    "windows": {
+      "open-url": "",
+      "latest-version": "0.4.0",
+      "download-url": "http://composer.telemidia.puc-rio.br/downloads/stable/nclcomposer-installer-0.4.0.exe",
+      "changelog": "This is NCL Composer for Windows. The main features in this version are the support for themes and the optional support for showing the body element in the structural view."
+    },
+    "osx": {
+      "open-url": "",
+      "latest-version": "0.4.0",
+      "download-url": "https://raw.githubusercontent.com/alex-spataru/QSimpleUpdater/master/tutorial/download/YesItWorks.jpg",
+      "changelog": "This is NCL Composer for Mac OS X. The main features in this version are the support for themes and the optional support for showing the body element in the structural view."
+    },
+    "linux": {
+      "open-url": "",
+      "latest-version": "0.4.0",
+      "download-url": "http://composer.telemidia.puc-rio.br/downloads/stable/nclcomposer_0.4.0_amd64.deb",
+      "changelog": "This is NCL Composer for Linux. The main features in this version are the support for themes and the optional support for showing the body element in the structural view."
+    },
+    "ios": {
+      "open-url": "",
+      "latest-version": "0.0",
+      "download-url": "https://raw.githubusercontent.com/alex-spataru/QSimpleUpdater/master/tutorial/download/YesItWorks.jpg",
+      "changelog": "This is an example changelog for iOS. Go on..."
+    },
+    "android": {
+      "open-url": "",
+      "latest-version": "0.0",
+      "download-url": "https://raw.githubusercontent.com/alex-spataru/QSimpleUpdater/master/tutorial/download/YesItWorks.jpg",
+      "changelog": "This is an example changelog for Android. Go on..."
+    }
+  }
+}
+
