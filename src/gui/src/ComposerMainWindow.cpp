@@ -37,6 +37,13 @@
 #include "fvupdater.h"
 #endif
 
+#include <QSimpleUpdater.h>
+/*static const QString DEFS_URL = "https://raw.githubusercontent.com/"
+                                "alex-spataru/QSimpleUpdater/master/tutorial/"
+                                "definitions/updates.json";*/
+/*static const QString DEFS_URL = "https://raw.githubusercontent.com/TeleMidia/nclcomposer/master/updatetest.json";*/ /*updater tests*/
+static const QString DEFS_URL = "https://raw.githubusercontent.com/TeleMidia/nclcomposer/master/composerUpdaterFeed.json";
+
 #define SHOW_PROFILES 1
 
 #if WITH_LIBSASS
@@ -65,6 +72,9 @@ ComposerMainWindow::ComposerMainWindow(QWidget *parent)
   _ui->actionProject_from_Wizard->setVisible(false);
 #endif
   // setWindowFlags(Qt::Window | Qt::WindowTitleHint);
+
+  /* QSimpleUpdater*/
+  _updater = QSimpleUpdater::getInstance();
 }
 
 /*!
@@ -632,6 +642,11 @@ void ComposerMainWindow::createMenus()
   ui->menu_Help->addAction(action_checkForUpdate);
 
 #endif
+  QAction *action_checkForUpdate = new QAction("Check for updates",this);
+  connect (action_checkForUpdate, SIGNAL(triggered()),
+           this, SLOT(checkForUpdates()));
+  _ui->menu_Help->addAction(action_checkForUpdate);
+
 
   connect( _ui->menu_View, SIGNAL(aboutToShow()),
            this, SLOT(updateViewMenu()) );
@@ -1922,6 +1937,14 @@ void ComposerMainWindow::wizardFinished(int resp)
   }
 }
 #endif
+
+void ComposerMainWindow::checkForUpdates()
+{
+  /* Check for updates */
+  _updater->checkForUpdates (DEFS_URL);
+  /*if no updates */
+  /* ... */
+}
 
 CPR_GUI_END_NAMESPACE
 

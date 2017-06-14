@@ -47,11 +47,18 @@ set(UI_SOURCES
   ui/GeneralPreferences.ui
   ui/NewProjectWizard.ui
   ui/FileChooser.ui
+  src/QSimpleUpdater/src/Downloader.ui
 )
 
 QT5_WRAP_UI(UI_GENERATED_HEADERS
   ${UI_SOURCES}
 )
+
+#add_library(QSimpleUpdater INTERFACE)
+#target_include_directories(QSimpleUpdater INTERFACE)
+#target_sources(QSimpleUpdater INTERFACE
+#  ${CMAKE_CURRENT_SOURCE_DIR}/src/QsimpleUpdater/include/QsimpleUpdater.h
+#)
 
 add_executable(nclcomposer ${GUI_TYPE}
   main.cpp
@@ -76,11 +83,17 @@ add_executable(nclcomposer ${GUI_TYPE}
   src/toolwindowmanager/libqtoolwindowmanager/private/qtoolwindowmanagerarea_p.h
   src/toolwindowmanager/libqtoolwindowmanager/private/qtoolwindowmanager_p.h
   src/toolwindowmanager/libqtoolwindowmanager/private/qtoolwindowmanagerwrapper_p.h
+  src/QSimpleUpdater/src/Downloader.cpp
+  src/QSimpleUpdater/src/QSimpleUpdater.cpp
+  src/QSimpleUpdater/include/QSimpleUpdater.h
+  src/QSimpleUpdater/src/Updater.cpp
+  
 
   ${UI_GENERATED_HEADERS}
   gui.qrc
   ../plugins/common-resources/images.qrc
   ../plugins/common-resources/language.qrc
+  src/QSimpleUpdater/etc/resources/qsimpleupdater.qrc
   
   nclcomposer.rc
 )
@@ -102,6 +115,9 @@ target_include_directories(nclcomposer PRIVATE
   src
   "${CMAKE_BINARY_DIR}/src/gui"
   "src/toolwindowmanager/libqtoolwindowmanager"
+  "src/QSimpleUpdater/"
+  "src/QSimpleUpdater/include/"
+  "src/QSimpleUpdater/src/"
 )
 
 set(GUI_DATAFILES

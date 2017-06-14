@@ -6,3 +6,6 @@
 	path = src/plugins/gingagui-all
 	url = https://github.com/TeleMidia/gingagui.git
 	branch = master
+[submodule "src/gui/src/QSimpleUpdater"]
+	path = src/gui/src/QSimpleUpdater
+	url = https://github.com/alex-spataru/QSimpleUpdater.git

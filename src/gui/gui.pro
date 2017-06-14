@@ -343,3 +343,5 @@ fervor {
   }
 }
 
+QSimpleupdater
+include("src/QSimpleUpdater/QSimpleUpdater.pri")

@@ -74,6 +74,8 @@ namespace Ui {
 class ComposerMainWindow;
 }
 
+class QSimpleUpdater;
+
 CPR_GUI_BEGIN_NAMESPACE
 
 /*!
@@ -121,6 +123,7 @@ private:
 
   // ComposerHelpWidget composerHelpWidget;
 
+  QSimpleUpdater* _updater;
 #if WITH_WIZARD
   QProcess wizardProcess;
   QProcess talProcess;
@@ -263,6 +266,7 @@ public slots:
   void redo();
 
   void openProjects(const QStringList &projects);
+  void checkForUpdates();
 };
 
 CPR_GUI_END_NAMESPACE
