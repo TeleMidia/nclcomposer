@@ -872,7 +872,7 @@ void NCLLayoutViewPlugin::addRegion(const QString &regionUID,
   if (attributes.contains("id"))
     standard["id"] = attributes["id"];
   else
-    standard["id"] = project->generateUniqueNCLId("region");
+    standard["id"] = project->generateUniqueAttrId("region");
 
   if (attributes.contains("title"))
     standard["title"] = attributes["title"];
@@ -1260,7 +1260,7 @@ void NCLLayoutViewPlugin::performMediaOverRegionAction(const QString &mediaId,
             project->getEntitiesbyType("descriptorBase");
 
         // create the descriptor
-        QString newDescriptorID = project->generateUniqueNCLId("descriptor");
+        QString newDescriptorID = project->generateUniqueAttrId("descriptor");
         QStringList alredyExistentsDescriptorsIds, descriptorsIds;
         descriptorsIds << newDescriptorID;
 
@@ -1353,7 +1353,7 @@ void NCLLayoutViewPlugin::performMediaOverRegionAction(const QString &mediaId,
           project->getEntitiesbyType("descriptorBase");
 
       // create the descriptor
-      QString newDescriptorID = project->generateUniqueNCLId("descriptor");
+      QString newDescriptorID = project->generateUniqueAttrId("descriptor");
 
       if(!descritorBases.size()) // if does not exists any descriptorBase
         // create one

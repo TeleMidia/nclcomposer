@@ -119,7 +119,7 @@ void OutlineViewPlugin::onEntityAdded(const QString &pluginID, Entity *entity)
   {
     if(!attrs.keys().contains("id"))
     {
-      attrs.insert("id", project->generateUniqueNCLId(entity->getType()));
+      attrs.insert("id", project->generateUniqueAttrId(entity->getType()));
       emit setAttributes(entity, attrs, false);
     }
   }

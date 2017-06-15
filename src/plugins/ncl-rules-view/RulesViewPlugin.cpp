@@ -72,7 +72,7 @@ void RulesViewPlugin::onEntityAdded(const QString &pluginID, Entity *entity)
     // Set default attributes
     if(entity->getAttribute("id") == "")
     {
-      QString id = project->generateUniqueNCLId(entity->getType());
+      QString id = project->generateUniqueAttrId(entity->getType());
       QMap<QString, QString> attrs;
       attrs["id"] = id;
       if(entity->getType() == "compositeRule")
