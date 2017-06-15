@@ -1,7 +1,3 @@
-[submodule "src/fervor"]
-	path = src/fervor
-	url = https://github.com/LucasGDS/fervor.git
-	branch = autoupdate  
 [submodule "src/plugins/gingagui-all"]
 	path = src/plugins/gingagui-all
 	url = https://github.com/TeleMidia/gingagui.git
