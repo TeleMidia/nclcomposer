@@ -148,7 +148,7 @@ void MessageControl::anonymousUpdateFromModel()
       PluginControl::getInstance()->getPluginInstances(this->_project);
 
   QString slotName("updateFromModel()");
-  for (it = instances.begin(); it != instances.end(); it++)
+  for (it = instances.begin(); it != instances.end(); ++it)
   {
     IPlugin *inst = *it;
     int idxSlot = inst->metaObject()
@@ -430,8 +430,8 @@ void MessageControl::setListenFilter(const QStringList &entityList)
  * \todo The implementation of the folling three implementations should be
  *   merged into only one function.
  */
-void MessageControl::sendEntityAddedMessageToPlugins( const QString &pluginInstanceId,
-                                                      Entity *entity)
+void MessageControl::sendEntityAddedMessageToPlugins(const QString &pluginInstanceId,
+                                                     Entity *entity)
 {
   QList<IPlugin*>::iterator it;
   QList<IPlugin*> instances =
@@ -440,7 +440,7 @@ void MessageControl::sendEntityAddedMessageToPlugins( const QString &pluginInsta
   QString slotName("onEntityAdded(QString,Entity*)"); //Normalized Slot
   IPlugin *pluginMsgSrc = nullptr;
 
-  for (it = instances.begin(); it != instances.end(); it++)
+  for (it = instances.begin(); it != instances.end(); ++it)
   {
     IPlugin *inst = *it;
 
@@ -496,7 +496,7 @@ void MessageControl::sendEntityChangedMessageToPlugins(const QString &pluginInst
   QString slotName("onEntityChanged(QString,Entity*)");
   IPlugin *pluginMsgSrc = nullptr;
 
-  for (it = instances.begin(); it != instances.end(); it++)
+  for (it = instances.begin(); it != instances.end(); ++it)
   {
     IPlugin *inst = *it;
 
@@ -548,7 +548,7 @@ void MessageControl::sendEntityRemovedMessageToPlugins(const QString &pluginInst
   IPlugin *pluginMsgSrc = nullptr;
   QString entityId = entity->getUniqueId();
 
-  for (it = instances.begin(); it != instances.end(); it++)
+  for (it = instances.begin(); it != instances.end(); ++it)
   {
     IPlugin *inst = *it;
 

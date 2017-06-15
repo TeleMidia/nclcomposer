@@ -30,7 +30,7 @@ LanguageControl::~LanguageControl()
 {
   QMap<LanguageType, ILanguageProfile*>::iterator it;
 
-  for(it = _profiles.begin(); it != _profiles.end(); it++)
+  for(it = _profiles.begin(); it != _profiles.end(); ++it)
   {
     ILanguageProfile *pf = it.value();
     assert(pf != nullptr);
@@ -147,7 +147,7 @@ QList<ILanguageProfile*> LanguageControl::getLoadedProfiles()
   QMap<LanguageType, ILanguageProfile*>::iterator it;
   QList<ILanguageProfile*> list;
 
-  for (it = _profiles.begin(); it != _profiles.end(); it++)
+  for (it = _profiles.begin(); it != _profiles.end(); ++it)
   {
     list.append(it.value());
   }

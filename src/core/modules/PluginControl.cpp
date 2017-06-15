@@ -42,12 +42,12 @@ PluginControl::~PluginControl()
   IPluginFactory *fac = nullptr;
 
   for (itInst = _pluginInstances.begin();
-       itInst != _pluginInstances.end(); itInst++)
+       itInst != _pluginInstances.end(); ++itInst)
   {
     QList<IPlugin*> instances = _pluginInstances.values(itInst.key());
     QList<IPlugin*>::iterator it;
 
-    for (it = instances.begin(); it != instances.end(); it++)
+    for (it = instances.begin(); it != instances.end(); ++it)
     {
       inst = *it;
       fac = _factoryByPlugin.value(inst);
@@ -58,7 +58,7 @@ PluginControl::~PluginControl()
   }
 
   for (itFac = _pluginFactories.begin() ; itFac != _pluginFactories.end();
-       itFac++)
+       ++itFac)
   {
     fac = itFac.value();
     delete fac;
@@ -95,7 +95,7 @@ IPluginFactory* PluginControl::loadPlugin(const QString &fileName)
 
         QList<LanguageType>::iterator it;
 
-        for (it = types.begin() ; it!= types.end(); it++)
+        for (it = types.begin() ; it!= types.end(); ++it)
         {
           _pluginsByType.insert(*it, pluginFactory->id());
         }
@@ -175,8 +175,7 @@ void PluginControl::launchProject(Project *project)
 
   QList<QString>::iterator it;
   QList<QString> plugIDs = _pluginsByType.values(type);
-  for (it = plugIDs.begin() ; it != plugIDs.end() ;
-       it++)
+  for (it = plugIDs.begin(); it != plugIDs.end(); ++it)
   {
     factory        = _pluginFactories[*it];
 
@@ -304,7 +303,7 @@ QList<IPluginFactory*> PluginControl::getLoadedPlugins()
 {
   QHash<QString,IPluginFactory*>::iterator it;
   QList<IPluginFactory*> pList;
-  for (it = _pluginFactories.begin() ; it != _pluginFactories.end(); it++)
+  for (it = _pluginFactories.begin() ; it != _pluginFactories.end(); ++it)
   {
     pList.append(it.value());
   }
@@ -335,7 +334,7 @@ bool PluginControl::releasePlugins(Project *project)
 
   QList<IPlugin*> instances = _pluginInstances.values(project);
   QList<IPlugin*>::iterator it;
-  for (it = instances.begin(); it != instances.end(); it++)
+  for (it = instances.begin(); it != instances.end(); ++it)
   {
     IPlugin *inst = *it;
     inst->saveSubsession();
@@ -357,7 +356,7 @@ void PluginControl::sendBroadcastMessage(const char* slot, void *obj)
 
   QString slotName(slot);
   slotName.append("(QString,void*)");
-  for (it = instances.begin(); it != instances.end(); it++)
+  for (it = instances.begin(); it != instances.end(); ++it)
   {
     IPlugin *inst = *it;
     int idxSlot = inst->metaObject()
@@ -377,7 +376,7 @@ void PluginControl::savePluginsData(Project *project)
   QList<IPlugin*>::iterator it;
   QList<IPlugin*> instances = _pluginInstances.values(project);
 
-  for (it = instances.begin(); it != instances.end(); it++)
+  for (it = instances.begin(); it != instances.end(); ++it)
   {
     IPlugin *inst = *it;
     inst->saveSubsession();

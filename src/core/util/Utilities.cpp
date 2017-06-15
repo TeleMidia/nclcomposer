@@ -53,7 +53,7 @@ LanguageType Utilities::getLanguageTypeByExtension(const QString &ext)
 QString Utilities::getExtensionForLanguageType(LanguageType type)
 {
   QMap<QString,LanguageType>::iterator it;
-  for (it = _types.begin(); it != _types.end(); it++)
+  for (it = _types.begin(); it != _types.end(); ++it)
     if(type == it.value())
       return it.key();
   return "";
