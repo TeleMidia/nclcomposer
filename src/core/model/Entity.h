@@ -62,12 +62,14 @@ public:
    * \return A string with the requested attribute.
    */
   QString getAttribute(const QString &name) const;
+
   /*!
    * \brief Gets the attributes of the entity.
    *
    * \return a QMap with the attributes of the entity
    */
   QMap<QString, QString> getAttributes() const;
+
   /*!
    * \brief This method is used to verify if this element has certain
    *      attribute.
@@ -84,6 +86,7 @@ public:
   Entity* getParent() const;
 
   QString getParentUniqueId() const;
+
   /*!
    * \brief Tell if the children should be deleted when this entity is deleted
    *        through destructor.
@@ -92,10 +95,14 @@ public:
    */
   void setDeleteChildren(bool mustDelete);
 
+  /*!
+   * \brief
+   * \return
+   */
   QVector <Entity *> getChildren() const;
 
   /*!
-   * \brief Convert the current Entity to a XML String.
+   * \brief Converts the current Entity to an XML String.
    *
    * \param ntabs the number of tabs to be inserted before the current entity.
    */
@@ -115,6 +122,7 @@ protected:
    * \param parent The QObject parent.
    */
   explicit Entity(QDomDocument &doc, Entity *parent=0);
+
   /*!
    * \brief Constructor.
    *
@@ -124,6 +132,7 @@ protected:
   explicit Entity(const QMap<QString,QString> &atts,
                   QDomDocument &doc,
                   Entity *parent=0);
+
   /*!
    * \brief Contructor.
    *
@@ -135,12 +144,13 @@ protected:
   explicit Entity(const QString &uniqueId,
                   const QString &_type,
                   const QMap<QString,QString> &atts,
-                  QDomDocument &doc, Entity *parent=0);
+                  QDomDocument &doc,
+                  Entity *parent=0);
 
   /*!
    * \brief Destructor.
    */
-  ~Entity();
+  virtual ~Entity();
 
   /*!
    * \brief This method is used to set an specific attribute of the element
@@ -180,7 +190,7 @@ protected:
    */
   void setParent(Entity *parent);
 
-  // OBS: This addChild updates the parent referency
+  // OBS: This method updates the parent reference
   bool addChild(Entity *entity, int pos = -1);
 
   /*!
@@ -199,7 +209,7 @@ private:
   QDomElement _element;
   QString _id;
   Entity* parent;
-  bool deleteChildren; /* initial value is true */
+  bool deleteChildren = true;
 
   /*!
    * \brief children is a list of Entity that is children than this Entity.

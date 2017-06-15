@@ -26,15 +26,15 @@ Project::Project(QDomDocument &doc) : Entity(doc)
   init();
 }
 
-Project::Project(const QMap<QString,QString> &atts, QDomDocument &doc) :
+Project::Project(const QMap<QString, QString> &atts, QDomDocument &doc) :
   Entity(atts, doc)
 {
   init();
 }
 
-Project::Project( const QString &uniqueId,
-                  const QMap<QString,QString> &atts,
-                  QDomDocument &doc) :
+Project::Project(const QString &uniqueId,
+                 const QMap<QString, QString> &atts,
+                 QDomDocument &doc) :
   Entity(uniqueId, "document", atts, doc)
 {
   init();
@@ -91,13 +91,11 @@ QList<Entity*> Project::getEntitiesbyType(const QString &type)
 
 QString Project::getLocation()
 {
-  // QMutexLocker locker(&lockLocation);
   return this->_projectLocation;
 }
 
 void Project::setLocation(const QString &location)
 {
-  // QMutexLocker locker(&lockLocation);
   this->_projectLocation = location;
 }
 
@@ -174,7 +172,7 @@ bool Project::removeEntity(Entity* entity, bool appendChild)
   return true;
 }
 
-/** \todo Return a string to be saved in hard disk. */
+/** \todo Returns a string to be saved in hard disk. */
 QString Project::toString()
 {
   QString result = "";
@@ -219,13 +217,11 @@ bool Project::isDirty()
 
 void Project::setDirty(bool isDirty)
 {
-  // if(dirty != isDirty) {
-    dirty = isDirty;
-    emit dirtyProject(isDirty);
-  // }
+  dirty = isDirty;
+  emit dirtyProject(isDirty);
 }
 
-QString Project::generateUniqueNCLId(const QString &tagname)
+QString Project::generateUniqueAttrId(const QString &tagname)
 {
   QList <Entity*> elements = getEntitiesbyType(tagname);
   QList <QString> currentElementsNCLID;

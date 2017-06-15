@@ -28,7 +28,6 @@ Entity::Entity(QDomDocument &doc, Entity *parent) :
   _element = doc.createElement("empty");
 
   this->parent = parent;
-  this->deleteChildren = true;
 }
 
 Entity::Entity(const QMap<QString,QString> &atts, QDomDocument &doc,
@@ -44,7 +43,6 @@ Entity::Entity(const QMap<QString,QString> &atts, QDomDocument &doc,
     _element.setAttribute(att, atts[att]);
 
   this->parent = parent;
-  this->deleteChildren = true;
 }
 
 Entity::Entity(const QString &uniqueId,
@@ -62,7 +60,6 @@ Entity::Entity(const QString &uniqueId,
     _element.setAttribute(att, atts[att]);
 
   this->parent = parent;
-  this->deleteChildren = true;
   this->setType(type);
 }
 

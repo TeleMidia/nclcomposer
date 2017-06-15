@@ -64,8 +64,7 @@ public slots:
     */
   void onAddEntity(const QString &type,
                    const QString &parentEntityId,
-                   const QMap<QString,QString>& atts,
-                   bool force);
+                   const QMap<QString,QString>& atts);
   /*!
      \brief
 
@@ -76,8 +75,7 @@ public slots:
     */
   void onAddEntity(const QString &entity_content,
                    const QString &parentId,
-                   Data::Format format,
-                   bool force);
+                   Data::Format format);
   /*!
      \brief
 
@@ -86,8 +84,8 @@ public slots:
      \param atts
      \param force
     */
-  void onAddComment(const QString &comment,
-                    const QString &parentId);
+  void onAddComment(const QString &comment, const QString &parentId);
+
   /*!
      \brief
 
@@ -95,16 +93,16 @@ public slots:
      \param atts
      \param force
     */
-  void onEditEntity(Entity *entity,
-                    const QMap<QString,QString> &atts,
-                    bool force);
+  void onEditEntity(Entity *entity, const QMap<QString,QString> &atts);
+
   /*!
      \brief
 
      \param
      \param force
     */
-  void onRemoveEntity(Entity *, bool force);
+  void onRemoveEntity(Entity *entity);
+
   /*!
    * \brief TODO
    */
@@ -128,26 +126,23 @@ public slots:
   void anonymousAddEntity(const QString &type,
                           const QString &parentEntityId,
                           const QMap<QString,QString>& atts,
-                          bool force = false,
                           bool notifyPlugins = true);
 
   /*!
    * \brief This is a variation of the previous message, where the user pass the
    *    pointer to an entity already created.
    */
-  void anonymousAddEntity( Entity *entity,
-                           const QString &parentEntityId,
-                           bool force = false,
-                           bool notifyPlugins = true);
+  void anonymousAddEntity(Entity *entity,
+                          const QString &parentEntityId,
+                          bool notifyPlugins = true);
 
   /*!
    * \brief This message is here, mainly for test purposes.
    *
    * It allows anyone send a removeEntityMessage, even if it is not a plugin.
    */
-  void anonymousRemoveEntity( const QString &entityUniqueId,
-                              bool force = false,
-                              bool notifyPlugins = true);
+  void anonymousRemoveEntity(const QString &entityUniqueId,
+                             bool notifyPlugins = true);
   /*!
    * \brief This message is here, mainly for test purposes.
    *
@@ -160,10 +155,9 @@ public slots:
    *
    * It allows anyone send an addEntityMessage, even if it is not a plugin.
    */
-  void anonymousChangeEntity( const QString &entityId,
-                              const QMap<QString,QString>& atts,
-                              bool force = false,
-                              bool notifyPlugins = true);
+  void anonymousChangeEntity(const QString &entityId,
+                             const QMap<QString,QString>& atts,
+                             bool notifyPlugins = true);
 
   void undo();
   void redo();
@@ -180,18 +174,18 @@ private:
   /*!
    * \brief TODO
    */
-  void sendEntityAddedMessageToPlugins( const QString &pluginInstanceId,
-                                        Entity *entity );
+  void sendEntityAddedMessageToPlugins(const QString &pluginInstanceId,
+                                       Entity *entity );
   /*!
    * \brief TODO
    */
-  void sendEntityChangedMessageToPlugins( const QString &pluginInstanceId,
-                                          Entity *entity );
+  void sendEntityChangedMessageToPlugins(const QString &pluginInstanceId,
+                                         Entity *entity );
   /*!
    * \brief TODO
    */
-  void sendEntityRemovedMessageToPlugins( const QString &pluginInstanceId,
-                                          Entity *entity );
+  void sendEntityRemovedMessageToPlugins(const QString &pluginInstanceId,
+                                         Entity *entity );
 
   /*!
    * \brief TODO

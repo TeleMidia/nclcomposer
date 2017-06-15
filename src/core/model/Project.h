@@ -58,13 +58,13 @@ class COMPOSERCORESHARED_EXPORT Project : public Entity
 
 public:
   /*!
-   * \brief Returns the Entity with the unique id __id.
-   *
+   * \brief Returns the Entity with the uniqueid <id>.
    * \param _id The Unique Identifier of the required entity.
    */
   Entity* getEntityById(const QString &id);
+
   /*!
-   * \brief Returns a list of the entities which are of the type __type.
+   * \brief Returns a list of the entities which are of the type <type>.
    * \param _type The entity type required.
    */
   QList<Entity*> getEntitiesbyType(const QString &_type);
@@ -76,9 +76,7 @@ public:
   QString getLocation();
 
   /*!
-   * \brief Returns the Identifier of this project. A project type says for what
-   *  language this project is. Currently, there are suport only for NCL
-   *  projects.
+   * \brief Returns the Identifier of the project.
    */
   QString getProjectId();
 
@@ -86,6 +84,7 @@ public:
    * \brief Returns the type of the project.
    */
   LanguageType getProjectType();
+
   /*!
    * \brief Returns the specific data of a plugin.
    *
@@ -96,9 +95,19 @@ public:
   /*!
    * \brief Generates a descritor NCLID that are not present in the core.
    */
-  QString generateUniqueNCLId(const QString &tagname);
+  QString generateUniqueAttrId(const QString &tagname);
+
+  /*!
+   * \brief getEntityByAttrId
+   * \param id
+   * \return
+   */
   QList<Entity*> getEntityByAttrId(const QString &id);
 
+  /*!
+   * \brief isDirty
+   * \return
+   */
   bool isDirty();
 
 signals:
@@ -138,18 +147,20 @@ protected:
   /*!
    * \brief Destructor;
    */
-  ~Project();
+  virtual ~Project();
 
   /*!
    * \brief Sets the location of the project.
+   *
    * \todo The locations should be an URL.
    * \param location the location of the project.
    */
   void setLocation(const QString &location);
+
   /*!
    * \brief Sets the type of the project.s
-   * \param type The type of the project. Currently, there are support just for
-   *  NCL projects.
+   * \param type The type of the project. Currently, there are support just
+   *        for NCL projects.
    */
   void setProjectType(LanguageType _type);
 
@@ -166,7 +177,8 @@ protected:
   bool addEntity(Entity* entity, const QString &parentId)
     throw (EntityNotFound, ParentNotFound);
 
-  bool addEntity(Entity *entity, const QString &parentId, Entity *entity_before)
+  bool addEntity(Entity *entity, const QString &parentId,
+                 Entity *entity_before)
     throw (EntityNotFound, ParentNotFound);
 
   /*!
@@ -189,18 +201,19 @@ protected:
   bool removeEntity(Entity* entity, bool appendChild) throw (EntityNotFound);
 
   /*!
-   * \brief Transforms the current project to a string. This string will contain
-   *        the internal model and the specific plugins data.
+   * \brief Transforms the current project to a string. This string will
+   *        contain the internal model and the specific plugins data.
    */
   QString toString();
 
   /*!
    * \brief This slot must be called when there are some data (on the plugin
-   *        data or on the model) that are not synchronized with the saved file.
+   *        data or on the model) that is not synchronized with the saved
+   *        file.
    */
   void setDirty(bool isDirty);
 
-  QDomDocument &getDomDocument () { return this->_doc;}
+  QDomDocument &getDomDocument () { return this->_doc; }
 
 private:
   QMutex *_lockEntities; /*!< TODO */
