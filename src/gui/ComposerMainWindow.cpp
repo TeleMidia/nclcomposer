@@ -38,11 +38,8 @@
 #endif
 
 #include <QSimpleUpdater.h>
-/*static const QString DEFS_URL = "https://raw.githubusercontent.com/"
-                                "alex-spataru/QSimpleUpdater/master/tutorial/"
-                                "definitions/updates.json";*/
-/*static const QString DEFS_URL = "https://raw.githubusercontent.com/TeleMidia/nclcomposer/master/updatetest.json";*/ /*updater tests*/
-static const QString DEFS_URL = "https://raw.githubusercontent.com/TeleMidia/nclcomposer/master/composerUpdaterFeed.json";
+//static const QString DEFS_URL = "https://raw.githubusercontent.com/TeleMidia/nclcomposer/master/updates_test.json";
+static const QString DEFS_URL = "https://raw.githubusercontent.com/TeleMidia/nclcomposer/master/updates.json";
 
 #define SHOW_PROFILES 1
 
@@ -642,7 +639,7 @@ void ComposerMainWindow::createMenus()
   ui->menu_Help->addAction(action_checkForUpdate);
 
 #endif
-  QAction *action_checkForUpdate = new QAction("Check for updates",this);
+  QAction *action_checkForUpdate = new QAction("Check for updates", this);
   connect (action_checkForUpdate, SIGNAL(triggered()),
            this, SLOT(checkForUpdates()));
   _ui->menu_Help->addAction(action_checkForUpdate);
