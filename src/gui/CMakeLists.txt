@@ -35,19 +35,19 @@ find_package(Qt5 REQUIRED COMPONENTS Xml Widgets Network)
 find_library(nclcomposer_core REQUIRED)
 
 set(UI_SOURCES
-  ui/PreferencesDialog.ui
-  ui/ComposerMainWindow.ui
-  ui/PerspectiveManager.ui
-  ui/RunGingaConfig.ui
-  ui/PluginDetailsDialog.ui
-  ui/EnvironmentPreferencesWidget.ui
-  ui/WelcomeWidget.ui
-  ui/AboutDialog.ui
-  ui/ShortcutsDialog.ui
-  ui/GeneralPreferences.ui
-  ui/NewProjectWizard.ui
-  ui/FileChooser.ui
-  src/QSimpleUpdater/src/Downloader.ui
+  PreferencesDialog.ui
+  ComposerMainWindow.ui
+  PerspectiveManager.ui
+  RunGingaConfig.ui
+  PluginDetailsDialog.ui
+  EnvironmentPreferencesWidget.ui
+  WelcomeWidget.ui
+  AboutDialog.ui
+  ShortcutsDialog.ui
+  GeneralPreferences.ui
+  NewProjectWizard.ui
+  FileChooser.ui
+  QSimpleUpdater/src/Downloader.ui
 )
 
 QT5_WRAP_UI(UI_GENERATED_HEADERS
@@ -62,38 +62,38 @@ QT5_WRAP_UI(UI_GENERATED_HEADERS
 
 add_executable(nclcomposer ${GUI_TYPE}
   main.cpp
-  src/ComposerMainWindow.cpp
-  src/PreferencesDialog.cpp
-  src/PerspectiveManager.cpp
-  src/EnvironmentPreferencesWidget.cpp
-  src/WelcomeWidget.cpp
-  src/AboutDialogs.cpp
-  src/RunGingaConfig.cpp
-  src/GeneralPreferences.cpp
-  src/NewProjectWizard.cpp
-  src/FileChooser.cpp
-  src/ComposerSplashScreen.cpp
+  ComposerMainWindow.cpp
+  PreferencesDialog.cpp
+  PerspectiveManager.cpp
+  EnvironmentPreferencesWidget.cpp
+  WelcomeWidget.cpp
+  AboutDialogs.cpp
+  RunGingaConfig.cpp
+  GeneralPreferences.cpp
+  NewProjectWizard.cpp
+  FileChooser.cpp
+  ComposerSplashScreen.cpp
 
-  src/toolwindowmanager/libqtoolwindowmanager/qabstracttoolwindowmanagerarea.cpp
-  src/toolwindowmanager/libqtoolwindowmanager/qabstracttoolwindowmanagerarea.h
-  src/toolwindowmanager/libqtoolwindowmanager/qtoolwindowmanagerarea.cpp
-  src/toolwindowmanager/libqtoolwindowmanager/qtoolwindowmanager.cpp
-  src/toolwindowmanager/libqtoolwindowmanager/qtoolwindowmanager.h
-  src/toolwindowmanager/libqtoolwindowmanager/qtoolwindowmanagerwrapper.cpp
-  src/toolwindowmanager/libqtoolwindowmanager/private/qtoolwindowmanagerarea_p.h
-  src/toolwindowmanager/libqtoolwindowmanager/private/qtoolwindowmanager_p.h
-  src/toolwindowmanager/libqtoolwindowmanager/private/qtoolwindowmanagerwrapper_p.h
-  src/QSimpleUpdater/src/Downloader.cpp
-  src/QSimpleUpdater/src/QSimpleUpdater.cpp
-  src/QSimpleUpdater/include/QSimpleUpdater.h
-  src/QSimpleUpdater/src/Updater.cpp
-  
+  toolwindowmanager/libqtoolwindowmanager/qabstracttoolwindowmanagerarea.cpp
+  toolwindowmanager/libqtoolwindowmanager/qabstracttoolwindowmanagerarea.h
+  toolwindowmanager/libqtoolwindowmanager/qtoolwindowmanagerarea.cpp
+  toolwindowmanager/libqtoolwindowmanager/qtoolwindowmanager.cpp
+  toolwindowmanager/libqtoolwindowmanager/qtoolwindowmanager.h
+  toolwindowmanager/libqtoolwindowmanager/qtoolwindowmanagerwrapper.cpp
+  toolwindowmanager/libqtoolwindowmanager/private/qtoolwindowmanagerarea_p.h
+  toolwindowmanager/libqtoolwindowmanager/private/qtoolwindowmanager_p.h
+  toolwindowmanager/libqtoolwindowmanager/private/qtoolwindowmanagerwrapper_p.h
+
+  QSimpleUpdater/src/Downloader.cpp
+  QSimpleUpdater/src/QSimpleUpdater.cpp
+  QSimpleUpdater/include/QSimpleUpdater.h
+  QSimpleUpdater/src/Updater.cpp  
 
   ${UI_GENERATED_HEADERS}
   gui.qrc
   ../plugins/common-resources/images.qrc
   ../plugins/common-resources/language.qrc
-  src/QSimpleUpdater/etc/resources/qsimpleupdater.qrc
+  QSimpleUpdater/etc/resources/qsimpleupdater.qrc
   
   nclcomposer.rc
 )
@@ -112,19 +112,19 @@ target_link_libraries(nclcomposer
 )
 
 target_include_directories(nclcomposer PRIVATE
-  src
+  ${CMAKE_CURRENT_SOURCE_DIR}
   "${CMAKE_BINARY_DIR}/src/gui"
-  "src/toolwindowmanager/libqtoolwindowmanager"
-  "src/QSimpleUpdater/"
-  "src/QSimpleUpdater/include/"
+  "toolwindowmanager/libqtoolwindowmanager"
+  "QSimpleUpdater/"
+  "QSimpleUpdater/include/"
   "src/QSimpleUpdater/src/"
 )
 
 set(GUI_DATAFILES
- data/defaultConnBase.ncl
- data/style.qss
- data/style.ini
- data/default.ini
+  data/defaultConnBase.ncl
+  data/style.qss
+  data/style.ini
+  data/default.ini
 )
 
 # Copy datafiles to build dir
@@ -141,3 +141,4 @@ endforeach(file_i)
 
 install(TARGETS nclcomposer DESTINATION bin)
 install(FILES ${GUI_DATAFILES} DESTINATION ${NCLCOMPOSER_DATA_DIR})
+
