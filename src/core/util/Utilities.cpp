@@ -18,21 +18,15 @@
 #include <QStringList>
 #include <QDebug>
 
-QMap<QString,LanguageType> createMap() {
-    QMap<QString,LanguageType> types;
-    types["cpr"]      = NCL;
-    types["ncl"]      = NCL;
-    types["smil"]     = SMIL;
-    types["html"]     = HTML;
-    return types;
-}
-
 CPR_CORE_BEGIN_NAMESPACE
 
 Q_LOGGING_CATEGORY(CPR_CORE, "cpr.core")
 Q_LOGGING_CATEGORY(CPR_GUI, "cpr.gui")
 
-QMap<QString,LanguageType> Utilities::_types = createMap();
+QMap<QString,LanguageType> Utilities::_types = { {"cpr",  NCL},
+                                                 {"ncl",  NCL},
+                                                 {"smil", SMIL},
+                                                 {"html", HTML} };
 
 QString Utilities::normalizeXMLID(const QString &id)
 {
@@ -46,8 +40,10 @@ QString Utilities::normalizeXMLID(const QString &id)
 
 LanguageType Utilities::getLanguageTypeByExtension(const QString &ext)
 {
-  if (!_types.contains(ext)) return NONE;
-  else return _types[ext];
+  if (!_types.contains(ext))
+    return NONE;
+  else
+    return _types[ext];
 }
 
 QString Utilities::getExtensionForLanguageType(LanguageType type)
