@@ -21,22 +21,21 @@
 
 CPR_CORE_BEGIN_NAMESPACE
 
-Project::Project(QObject *parent) :
-  Entity(parent)
+Project::Project(QDomDocument &doc) : Entity(doc)
 {
   init();
 }
 
-Project::Project(const QMap<QString,QString> &atts, QObject *parent) :
-  Entity(atts, parent)
+Project::Project(const QMap<QString,QString> &atts, QDomDocument &doc) :
+  Entity(atts, doc)
 {
   init();
 }
 
 Project::Project( const QString &uniqueId,
                   const QMap<QString,QString> &atts,
-                  QObject *parent) :
-  Entity(uniqueId, "document", atts, parent)
+                  QDomDocument &doc) :
+  Entity(uniqueId, "document", atts, doc)
 {
   init();
 }
@@ -47,38 +46,37 @@ void Project::init()
   dirty = false;
 
   this->dirty = false;
-  this->entities[this->getUniqueId()] = this;
+  this->_entities[this->getUniqueId()] = this;
 
-  lockEntities = new QMutex();
+  _lockEntities = new QMutex();
 }
 
 Project::~Project()
 {
-// QMutexLocker locker(lockEntities);
-  entities.clear();
-  delete lockEntities;
+  _entities.clear();
+  delete _lockEntities;
 }
 
 LanguageType Project::getProjectType()
 {
-  return this->projectType;
+  return this->_projectType;
 }
 
 void Project::setProjectType(LanguageType type)
 {
-  this->projectType = type;
+  this->_projectType = type;
 }
 
 Entity* Project::getEntityById(const QString &id)
 {
-  QMutexLocker locker(lockEntities);
-  return entities.contains(id) ? entities[id] : nullptr;
+  QMutexLocker locker(_lockEntities);
+  return _entities.contains(id) ? _entities[id] : nullptr;
 }
 
 QList<Entity*> Project::getEntitiesbyType(const QString &type)
 {
-  QMutexLocker locker(lockEntities);
-  QMapIterator<QString, Entity*> it(entities);
+  QMutexLocker locker(_lockEntities);
+  QMapIterator<QString, Entity*> it(_entities);
   QList<Entity*> listRet;
 
   while(it.hasNext())
@@ -94,13 +92,13 @@ QList<Entity*> Project::getEntitiesbyType(const QString &type)
 QString Project::getLocation()
 {
   // QMutexLocker locker(&lockLocation);
-  return this->projectLocation;
+  return this->_projectLocation;
 }
 
 void Project::setLocation(const QString &location)
 {
   // QMutexLocker locker(&lockLocation);
-  this->projectLocation = location;
+  this->_projectLocation = location;
 }
 
 bool Project::addEntity(Entity* entity, const QString &parentId)
@@ -108,22 +106,22 @@ bool Project::addEntity(Entity* entity, const QString &parentId)
 {
   assert(entity != nullptr);
 
-  QMutexLocker locker(lockEntities);
-  if (!entities.contains(parentId))
+  QMutexLocker locker(_lockEntities);
+  if (!_entities.contains(parentId))
   {
     throw ParentNotFound(entity->getType(), entity->getType(), parentId);
     return false;
   }
 
-  if (entities.contains(entity->getUniqueId()))
+  if (_entities.contains(entity->getUniqueId()))
   {
     throw EntityNotFound(entity->getType(), entity->getUniqueId());
     return false;
   }
 
-  Entity *parent = entities[parentId];
+  Entity *parent = _entities[parentId];
   parent->addChild(entity);
-  entities[entity->getUniqueId()] = entity;
+  _entities[entity->getUniqueId()] = entity;
 
   setDirty(true);
   return true;
@@ -136,17 +134,12 @@ bool Project::removeEntity(Entity* entity, bool appendChild)
 
   assert(entity != nullptr);
 
-  QMutexLocker locker(lockEntities);
-  if (entities.contains(entity->getUniqueId()))
+  QMutexLocker locker(_lockEntities);
+  if (_entities.contains(entity->getUniqueId()))
   {
     Entity *parent = entity->getParent();
     if (parent)
     {
-      /*
-      if (appendChild)
-        parent->removeChildAppendChildren(entity);
-      else
-      */
       QStack <Entity*> stack;
       //remove all children
       stack.push(entity);
@@ -154,7 +147,7 @@ bool Project::removeEntity(Entity* entity, bool appendChild)
       {
         Entity *currentEntity = stack.top();
         stack.pop();
-        entities.remove(currentEntity->getUniqueId());
+        _entities.remove(currentEntity->getUniqueId());
 
         QVector <Entity *> children = currentEntity->getChildren();
         for(int i = 0; i < children.size(); i++)
@@ -185,17 +178,17 @@ bool Project::removeEntity(Entity* entity, bool appendChild)
 QString Project::toString()
 {
   QString result = "";
-  result += "#COMPOSER_PROJECT name=\"" + this->projectName
+  result += "#COMPOSER_PROJECT name=\"" + this->_projectName
          + "\" version=\"0.1\"#\n";
 
   result += "#COMPOSER_MODEL#\n";
   result += Entity::toString(0);
   result += "#END_COMPOSER_MODEL#\n";
 
-  for(const QString &key: pluginData.keys())
+  for(const QString &key: _pluginData.keys())
   {
    result += "#COMPOSER_PLUGIN_DATA "+ key + "#\n";
-   result += pluginData[key];
+   result += _pluginData[key];
    result += "\n#END_COMPOSER_PLUGIN_DATA#\n";
   }
   return result;
@@ -204,7 +197,7 @@ QString Project::toString()
 bool Project::setPluginData(const QString &pluginId,
                             const QByteArray &data)
 {
-  this->pluginData[pluginId] = data;
+  this->_pluginData[pluginId] = data;
 
   setDirty(true);
   return true;
@@ -212,9 +205,9 @@ bool Project::setPluginData(const QString &pluginId,
 
 QByteArray Project::getPluginData(const QString &pluginId)
 {
-  if(pluginData.contains(pluginId))
+  if(_pluginData.contains(pluginId))
   {
-    return this->pluginData[pluginId];
+    return this->_pluginData[pluginId];
   }
   return QByteArray();
 }
@@ -252,10 +245,10 @@ QString Project::generateUniqueNCLId(const QString &tagname)
 
 QList<Entity*> Project::getEntityByAttrId(const QString &id)
 {
-  QMutexLocker locker(lockEntities);
-  QMapIterator<QString, Entity*> it(entities);
+  QMutexLocker locker(_lockEntities);
+  QMapIterator<QString, Entity*> it(_entities);
   QList<Entity*> listRet;
-  qCDebug(CPR_CORE) << "Project::getEntitiesbyType " << type;
+  qCDebug(CPR_CORE) << "Project::getEntitiesbyType " << _element.tagName();
 
   while(it.hasNext())
   {

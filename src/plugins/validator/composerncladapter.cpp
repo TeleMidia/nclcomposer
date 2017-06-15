@@ -96,22 +96,18 @@ std::vector <std::pair<void *, std::string> > ComposerNCLAdapter::validate()
 std::vector <Attribute>
 ComposerNCLAdapter::createVectorAttribute(Entity * entity)
 {
-  QMap <QString, QString>::iterator begin;
-  QMap <QString, QString>::iterator end;
-
-  entity->getAttributeIterator(begin, end);
+  QMap <QString, QString> attrs = entity->getAttributes();
 
   std::vector <Attribute> attributes;
 
-  while (begin != end)
+  foreach (const QString &key, attrs.keys())
   {
-    QString name = begin.key();
-    QString value = begin.value();
+    QString name = key;
+    QString value = attrs[key];
 
     Attribute attr (name.toStdString(), value.toStdString());
 
     attributes.push_back(attr);
-    begin++;
   }
 
   return attributes;

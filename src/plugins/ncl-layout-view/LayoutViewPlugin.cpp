@@ -1135,11 +1135,11 @@ QMap <QString, QString> NCLLayoutViewPlugin::getRegionAttributes(Entity *region)
   // left, top, width and height.
   while(currentRegion != NULL && currentRegion->getType() == "region")
   {
-    currentRegion->getAttributeIterator(begin, end);
-    for (it = begin; it != end; ++it)
+    QMap <QString, QString> attrs = currentRegion->getAttributes();
+    foreach (const QString &key, attrs.keys())
     {
-      QString name = it.key();
-      QString value = it.value();
+      QString name = key;
+      QString value = attrs[key];
       if(value.endsWith("%"))
         cvalue = value.mid(0, value.indexOf("%")).toDouble();
       else
@@ -1306,12 +1306,7 @@ void NCLLayoutViewPlugin::performMediaOverRegionAction(const QString &mediaId,
 
           //update the media to refer to this descriptor
           attrs.clear();
-          QMap <QString, QString>::iterator begin, end, it;
-          media->getAttributeIterator(begin, end);
-          for (it = begin; it != end; ++it)
-          {
-            attrs[it.key()] = it.value();
-          }
+          attrs = media->getAttributes();
           attrs["descriptor"] = newDescriptorID;
           emit setAttributes(media, attrs, false);
         }
@@ -1373,12 +1368,7 @@ void NCLLayoutViewPlugin::performMediaOverRegionAction(const QString &mediaId,
 
       //update the media to refer to this descriptor
       attrs.clear();
-      QMap <QString, QString>::iterator begin, end, it;
-      media->getAttributeIterator(begin, end);
-      for (it = begin; it != end; ++it)
-      {
-        attrs[it.key()] = it.value();
-      }
+      attrs = media->getAttributes();
       attrs["descriptor"] = newDescriptorID;
       emit setAttributes(media, attrs, false);
 
@@ -1392,11 +1382,7 @@ void NCLLayoutViewPlugin::performMediaOverRegionAction(const QString &mediaId,
         if(descriptors.size())
         {
           Entity *desc = descriptors.at(0);
-          desc->getAttributeIterator(begin, end);
-          for (it = begin; it != end; ++it)
-          {
-            attrs[it.key()] = it.value();
-          }
+          attrs = desc->getAttributes();
           attrs["focusIndex"] = "1";
           if(descriptors.size())
             emit setAttributes(desc, attrs, false);

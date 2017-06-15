@@ -85,7 +85,7 @@ signals:
   void notifyError(QString);
 
 private:
-  QMap<LanguageType, ILanguageProfile*> profiles; /*!< TODO */
+  QMap<LanguageType, ILanguageProfile*> _profiles; /*!< TODO */
 
   /*!
    * \brief Constructor (it is private because this class is a Singleton).

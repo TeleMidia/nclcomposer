@@ -107,7 +107,7 @@ public:
   static QStringList splitParams(QString &params);
 
 private:
-  static QMap<QString,LanguageType> types; /*!< TODO */
+  static QMap<QString, LanguageType> _types; /*!< TODO */
 };
 
 COMPOSERCORESHARED_EXPORT Q_DECLARE_LOGGING_CATEGORY(CPR_CORE)

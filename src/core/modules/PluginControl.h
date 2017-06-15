@@ -182,22 +182,22 @@ private:
    */
   virtual ~PluginControl();
 
-  QHash <QString, IPluginFactory*> pluginFactories;
+  QHash <QString, IPluginFactory*> _pluginFactories;
   /*!< PluginFactory by pluginID */
 
-  QMultiHash <LanguageType, QString> pluginsByType;
+  QMultiHash <LanguageType, QString> _pluginsByType;
   /*!< pluginID given LanguageType */
 
   /* TC by DocumentID */
   /* Is this right??
    * And when we have plugins that are not related to documents???
    */
-  QHash <Project *, MessageControl*> messageControls; /*!< TODO */
+  QHash <Project *, MessageControl*> _messageControls; /*!< TODO */
 
-  QMultiHash<Project *, IPlugin*> pluginInstances;
+  QMultiHash<Project *, IPlugin*> _pluginInstances;
   /*!< Plugin Instance given project location */
 
-  QMultiHash<IPlugin*, IPluginFactory*> factoryByPlugin;
+  QMultiHash<IPlugin*, IPluginFactory*> _factoryByPlugin;
 
   /*!< Maps each IPlugin to its corresponding IPluginFactory */
   /*!

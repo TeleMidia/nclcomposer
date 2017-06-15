@@ -28,14 +28,14 @@ CPR_CORE_BEGIN_NAMESPACE
 
 MessageControl::MessageControl(Project *project)
 {
-  this->project = project;
+  this->_project = project;
 
   //Register MetaType allowing to be used by invoke
   qRegisterMetaType<Entity *>("Entity *");
   // qRegisterMetaType<QString>("QString");
   // qRegisterMetaType<const void *>("const Entity *");
 
-  qUndoStack = new QUndoStack(this);
+  _qUndoStack = new QUndoStack(this);
 }
 
 MessageControl::~MessageControl()
@@ -55,10 +55,10 @@ void MessageControl::anonymousAddEntity( const QString &type,
 
   try
   {
-    ent = new Entity(atts);
+    ent = new Entity(atts, _project->getDomDocument());
     ent->setType(type);
     //TODO - calll validator to check
-    project->addEntity(ent, parentEntityId);
+    _project->addEntity(ent, parentEntityId);
 
     //send message to All PLUGINS interested in this message.
     if(notifyPlugins)
@@ -83,7 +83,7 @@ void MessageControl::anonymousAddEntity( Entity *entity,
   try
   {
     // \todo call validator to check
-    project->addEntity(entity, parentEntityId);
+    _project->addEntity(entity, parentEntityId);
 
     //send message to All PLUGINS interested in this message.
     if(notifyPlugins)
@@ -104,7 +104,7 @@ void MessageControl::anonymousRemoveEntity( const QString &entityUniqueId,
 
   try
   {
-    Entity *entity = project->getEntityById(entityUniqueId);
+    Entity *entity = _project->getEntityById(entityUniqueId);
     if(entity != nullptr)
     {
       //send message to All PLUGINS interested in this message.
@@ -113,7 +113,7 @@ void MessageControl::anonymousRemoveEntity( const QString &entityUniqueId,
 
       QApplication::processEvents();
       // \todo call validator to check
-      project->removeEntity(entity, false);
+      _project->removeEntity(entity, false);
     }
   }
   catch(exception& e)
@@ -130,7 +130,7 @@ void MessageControl::anonymousChangeEntity( const QString &entityId,
 {
   Q_UNUSED(force)
 
-  Entity *ent = project->getEntityById(entityId);
+  Entity *ent = _project->getEntityById(entityId);
   if(ent != nullptr)
   {
     ent->setAtrributes(atts); //do it!
@@ -145,7 +145,7 @@ void MessageControl::anonymousUpdateFromModel()
 {
   QList<IPlugin*>::iterator it;
   QList<IPlugin*> instances =
-      PluginControl::getInstance()->getPluginInstances(this->project);
+      PluginControl::getInstance()->getPluginInstances(this->_project);
 
   QString slotName("updateFromModel()");
   for (it = instances.begin(); it != instances.end(); it++)
@@ -183,9 +183,9 @@ void MessageControl::onAddEntity( const QString &type,
 
   try
   {
-    ent = new Entity(atts);
+    ent = new Entity(atts, _project->getDomDocument());
     ent->setType(type);
-    qUndoStack->push(new AddCommand(project, ent, parentEntityId));
+    _qUndoStack->push(new AddCommand(_project, ent, parentEntityId));
 
     //send message to All PLUGINS interested in this message.
     sendEntityAddedMessageToPlugins(pluginID, ent);
@@ -260,7 +260,7 @@ void MessageControl::onAddEntity(const QString &entity_content,
           atts[nodeAtts.item(i).nodeName()] = nodeAtts.item(i).nodeValue();
 
         //Create the new Entity
-        ent = new Entity(atts);
+        ent = new Entity(atts, _project->getDomDocument());
         ent->setType(node.tagName());
         node.setAttribute("uuid", ent->getUniqueId());
 
@@ -274,7 +274,7 @@ void MessageControl::onAddEntity(const QString &entity_content,
           nodeParentUuid = node.parentNode().toElement().attribute("uuid");
 
         // Do the addEntity in the core
-        qUndoStack->push(new AddCommand( project, ent, nodeParentUuid));
+        _qUndoStack->push(new AddCommand( _project, ent, nodeParentUuid));
 
         //send message to All PLUGINS interested in this message.
         sendEntityAddedMessageToPlugins(pluginID, ent);
@@ -296,6 +296,13 @@ void MessageControl::onAddEntity(const QString &entity_content,
   return;
 }
 
+void MessageControl::onAddComment(const QString &comment,
+                                  const QString &parentId)
+{
+  qWarning () << "Trying to add comment :" << comment << parentId;
+  return;
+}
+
 void MessageControl::onEditEntity( Entity *entity,
                                    const QMap<QString,QString> &atts,
                                    bool force)
@@ -311,7 +318,7 @@ void MessageControl::onEditEntity( Entity *entity,
 
     try
     {
-      qUndoStack->push(new EditCommand(project, entity, atts));
+      _qUndoStack->push(new EditCommand(_project, entity, atts));
 
       /*! \todo Call validator to check */
       // entity->setAtrributes(atts); //do it!
@@ -389,7 +396,7 @@ void MessageControl::onRemoveEntity(Entity *entity, bool force)
         // \fixme Since the plugin itself could already removed entity we can
         // get a trash here!!!
         // qUndoStack->push(new RemoveCommand(project, entity));
-        project->removeEntity(entity, true);
+        _project->removeEntity(entity, true);
       }
       else
       {
@@ -415,7 +422,7 @@ void MessageControl::setListenFilter(const QStringList &entityList)
   IPlugin *plugin = qobject_cast<IPlugin *> (QObject::sender());
   if(plugin)
   {
-    listenEntities[plugin->getPluginInstanceID()] = entityList;
+    _listenEntities[plugin->getPluginInstanceID()] = entityList;
   }
 }
 
@@ -428,7 +435,7 @@ void MessageControl::sendEntityAddedMessageToPlugins( const QString &pluginInsta
 {
   QList<IPlugin*>::iterator it;
   QList<IPlugin*> instances =
-      PluginControl::getInstance()->getPluginInstances(this->project);
+      PluginControl::getInstance()->getPluginInstances(this->_project);
 
   QString slotName("onEntityAdded(QString,Entity*)"); //Normalized Slot
   IPlugin *pluginMsgSrc = nullptr;
@@ -484,7 +491,7 @@ void MessageControl::sendEntityChangedMessageToPlugins(const QString &pluginInst
 {
   QList<IPlugin*>::iterator it;
   QList<IPlugin*> instances =
-      PluginControl::getInstance()->getPluginInstances(this->project);
+      PluginControl::getInstance()->getPluginInstances(this->_project);
 
   QString slotName("onEntityChanged(QString,Entity*)");
   IPlugin *pluginMsgSrc = nullptr;
@@ -535,7 +542,7 @@ void MessageControl::sendEntityRemovedMessageToPlugins(const QString &pluginInst
 {
   QList<IPlugin*>::iterator it;
   QList<IPlugin*> instances =
-      PluginControl::getInstance()->getPluginInstances(this->project);
+      PluginControl::getInstance()->getPluginInstances(this->_project);
 
   QString slotName("onEntityRemoved(QString,QString)");
   IPlugin *pluginMsgSrc = nullptr;
@@ -584,14 +591,14 @@ void MessageControl::sendEntityRemovedMessageToPlugins(const QString &pluginInst
 
 bool MessageControl::pluginIsInterestedIn(const IPlugin *plugin, Entity *entity)
 {
-  if(!listenEntities.contains(plugin->getPluginInstanceID()))
+  if(!_listenEntities.contains(plugin->getPluginInstanceID()))
   {
     // \todo An empty Entity should means ALL entities too?
     // Default: Plugin is interested in ALL entities
     return true;
   }
 
-  if(listenEntities.value(
+  if(_listenEntities.value(
        plugin->getPluginInstanceID()).contains(entity->getType())
      )
     return true;
@@ -608,24 +615,24 @@ void MessageControl::setPluginData(const QByteArray &data)
   QString pluginId = plugin->getPluginInstanceID().left(
         plugin->getPluginInstanceID().indexOf("#"));
 
-  project->setPluginData(pluginId, data);
+  _project->setPluginData(pluginId, data);
 }
 
 void MessageControl::setCurrentProjectAsDirty()
 {
-  project->setDirty(true);
+  _project->setDirty(true);
 }
 
 void MessageControl::undo()
 {
-  if(qUndoStack->canUndo())
-    qUndoStack->undo();
+  if(_qUndoStack->canUndo())
+    _qUndoStack->undo();
 }
 
 void MessageControl::redo()
 {
-  if(qUndoStack->canRedo())
-    qUndoStack->redo();
+  if(_qUndoStack->canRedo())
+    _qUndoStack->redo();
 }
 
 CPR_CORE_END_NAMESPACE

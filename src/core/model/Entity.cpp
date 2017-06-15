@@ -19,82 +19,84 @@
 
 CPR_CORE_BEGIN_NAMESPACE
 
-Entity::Entity(QObject *parent) :
-  QObject(parent)
+Entity::Entity(QDomDocument &doc, Entity *parent) :
+  QObject()
 {
   setUniqueID(QUuid::createUuid().toString());
-  //    QMutexLocker locker(&lockParent);
-  this->parent = (Entity*)parent;
+
+  this->_doc = doc;
+  _element = doc.createElement("empty");
+
+  this->parent = parent;
   this->deleteChildren = true;
 }
 
-Entity::Entity(const QMap<QString,QString> &atts, QObject *parent) :
-    QObject(parent)
+Entity::Entity(const QMap<QString,QString> &atts, QDomDocument &doc,
+               Entity *parent) :
+    QObject()
 {
-  // QMutexLocker locker(&lockAtts);
-  this->atts = atts;
   setUniqueID(QUuid::createUuid().toString());
-  QMutexLocker lo(&lockParent);
-  this->parent = (Entity*)parent;
+
+  this->_doc = doc;
+  _element = doc.createElement("empty");
+
+  foreach (const QString &att, atts.keys())
+    _element.setAttribute(att, atts[att]);
+
+  this->parent = parent;
   this->deleteChildren = true;
 }
 
-Entity::Entity( const QString &uniqueId,
-                const QString &type,
-                const QMap<QString, QString> &atts,
-                QObject *parent ) :
-  QObject(parent)
+Entity::Entity(const QString &uniqueId,
+               const QString &type,
+               const QMap<QString, QString> &atts,
+               QDomDocument &doc,
+               Entity *parent) :
+  QObject()
 {
-  //  QMutexLocker locker(&lockAtts);
-  this->atts = atts;
   this->_id = uniqueId;
-  QMutexLocker lo(&lockParent);
-  this->parent = (Entity*)parent;
+  this->_doc = doc;
+  _element = doc.createElement(type);
+
+  foreach (const QString &att, atts.keys())
+    _element.setAttribute(att, atts[att]);
+
+  this->parent = parent;
   this->deleteChildren = true;
   this->setType(type);
 }
 
-Entity::~Entity() {
-  //  QMutexLocker locker(&lockChildren);
+Entity::~Entity()
+{
   if (deleteChildren)
   {
-    while(children.size())
+    while (children.size())
     {
       Entity *child = children.at(0);
       delete child;
-      child = nullptr;
       children.pop_front();
     }
   }
 }
 
-void Entity::setAttribute(const QString &name,
-                          const QString &value)
+void Entity::setAttribute(const QString &name, const QString &value)
 {
-//    QMutexLocker locker(&lockAtts);
-  atts[name] = value;
+  _element.setAttribute(name, value);
 }
 
 void Entity::setAtrributes(const QMap<QString,QString> &newatts)
 {
-//    QMutexLocker locker(&lockAtts);
-  this->atts.clear(); // Should it??!
-  for ( QMap<QString,QString>::const_iterator it = newatts.begin();
-        it != newatts.end(); ++it)
-  {
-    this->atts[it.key()] = it.value();
-  }
+  foreach (const QString &att, newatts.keys())
+    _element.setAttribute(att, newatts[att]);
 }
 
 void Entity::setType(const QString &type)
 {
-//    QMutexLocker locker(&lockType);
-  this->type = type;
+  _element.setTagName(type);
 }
 
 void Entity::setUniqueID(const QString &uniqueId)
 {
-//    QMutexLocker locker(&lockID);
   this->_id = uniqueId;
 }
 
@@ -106,7 +108,6 @@ void Entity::setParent(Entity *parent)
 bool Entity::addChild(Entity *entity, int pos)
 {
   assert(entity != nullptr);
-  QMutexLocker locker(&lockChildren);
   QString _id = entity->getUniqueId();
 
   // Check if the entity is already children of this entity
@@ -126,7 +127,7 @@ bool Entity::addChild(Entity *entity, int pos)
 bool Entity::deleteChild(Entity *entity)
 {
   assert(entity != nullptr);
-//    QMutexLocker locker(&lockChildren);
+
   entity->setDeleteChildren(true);
   for(int i = 0; i < children.size(); i++)
   {
@@ -137,51 +138,50 @@ bool Entity::deleteChild(Entity *entity)
   }
 
   delete entity;
-  // entity = nullptr;
 
   return true;
 }
 
-QString Entity::getAttribute(const QString &name)
+QString Entity::getAttribute(const QString &name) const
 {
-  QMutexLocker locker(&lockAtts);
-  return atts.contains(name) ? atts[name] : "";
+  return _element.attribute(name);
 }
 
-void Entity::getAttributeIterator (QMap<QString,QString>::iterator &begin,
-                                   QMap<QString,QString>::iterator &end)
+QMap <QString, QString> Entity::getAttributes () const
 {
-//    QMutexLocker locker(&lockAtts);
-  begin = this->atts.begin();
-  end = this->atts.end();
+  QMap <QString, QString> attrs;
+  QDomNamedNodeMap domAttrs = _element.attributes();
+  for (int i = 0; i < domAttrs.length(); i++)
+  {
+    QDomAttr item = domAttrs.item(i).toAttr();
+    attrs[item.name()] = item.value();
+  }
+
+  return attrs;
 }
 
-bool Entity::hasAttribute(const QString &name)
+bool Entity::hasAttribute(const QString &name) const
 {
-//    QMutexLocker locker(&lockAtts);
-  return this->atts.contains(name);
+  return _element.attributes().contains(name);
 }
 
 QString Entity::getUniqueId() const
 {
-  return this->_id;
+  return _id;
 }
 
 QString Entity::getType() const
 {
-//    QMutexLocker locker(&lockType);
-  return this->type;
+  return _element.tagName();
 }
 
 Entity* Entity::getParent() const
 {
-//    QMutexLocker locker(&lockParent);
   return parent;
 }
 
 QString Entity::getParentUniqueId() const
 {
-//    QMutexLocker loecker(&lockParent);
   return parent->getUniqueId();
 }
 
@@ -193,25 +193,6 @@ void Entity::setDeleteChildren(bool _delete)
 QVector <Entity *> Entity::getChildren() const
 {
   return this->children;
-}
-
-//! Removes the child and append his children to his parent
-// Is it useful ??
-bool Entity::removeChildAppendChildren(Entity *entity)
-{
-  assert(entity != nullptr);
-
-  for(int i= 0; i < children.size(); i++)
-  {
-    Entity *child = children.at(i);
-    child->setParent(this);
-  }
-
-  entity->setDeleteChildren(false);
-  // delete entity;
-  // entity = nullptr;
-
-  return true;
 }
 
 //! Prints the Entity and its children
@@ -232,6 +213,7 @@ QString Entity::toString(int ntab, bool writeuid)
 
   out += "<";
   out.append(getType().toLatin1());
+  QMap <QString, QString> atts = getAttributes();
   for(const QString &attr: atts.keys())
   {
     out += " ";
@@ -261,15 +243,10 @@ QString Entity::toString(int ntab, bool writeuid)
   return out;
 }
 
-Entity *Entity::cloneEntity() const
+Entity *Entity::cloneEntity()
 {
-  // QMap <QString, QString>::iterator begin, end, it;
-  // QMap <QString, QString> attrs;
-  //getAttributeIterator(begin, end);
-  //for (it = begin; it != end; ++it)
-  //    attrs[it.key()] = it.value();
-
-  return new Entity(getUniqueId(), getType(), this->atts);
+  return new Entity(
+        getUniqueId(), getType(), getAttributes(), this->_doc, this->parent);
 }
 
 CPR_CORE_END_NAMESPACE

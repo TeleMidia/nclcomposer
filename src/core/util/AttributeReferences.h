@@ -56,11 +56,11 @@ public:
    *    attribute).
    * \param scope Which scope.
    */
-  AttributeReferences( const QString &element,
-                       const QString &attr,
-                       const QString &ref_element,
-                       const QString &ref_attr,
-                       REFERENCE_SCOPE scope = ANY_SCOPE);
+  AttributeReferences(const QString &element,
+                      const QString &attr,
+                      const QString &ref_element,
+                      const QString &ref_attr,
+                      REFERENCE_SCOPE scope = ANY_SCOPE);
   /*!
    * \brief Constructor.
    *
@@ -71,11 +71,11 @@ public:
    *                    attribute).
    * \param scope Which scope (as a string).
    */
-  AttributeReferences( const QString &element,
-                       const QString &attr,
-                       const QString &ref_element,
-                       const QString &ref_attr,
-                       const QString &scope);
+  AttributeReferences(const QString &element,
+                      const QString &attr,
+                      const QString &ref_element,
+                      const QString &ref_attr,
+                      const QString &scope);
   /*!
    * \brief Get the source element.
    *

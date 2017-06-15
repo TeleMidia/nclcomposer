@@ -130,11 +130,10 @@ void PropertiesViewPlugin::updateCurrentEntity(QString errorMessage)
 
   _window->setErrorMessage(errorMessage);
 
-  QMap <QString, QString>::iterator begin, end, it;
-  _currentEntity->getAttributeIterator(begin, end);
-  for (it = begin; it != end; ++it)
+  QMap <QString, QString> attrs = _currentEntity->getAttributes();
+  foreach (const QString &key, attrs)
   {
-    _window->setAttributeValue(it.key(), it.value());
+    _window->setAttributeValue(key, attrs[key]);
   }
 }
 
@@ -151,19 +150,19 @@ void PropertiesViewPlugin::updateCurrentEntityAttr(QString attr, QString value)
     else
     {
       QMap <QString, QString> attrs;
-      QMap <QString, QString>::iterator begin, end, it;
-      _currentEntity->getAttributeIterator(begin, end);
+      QMap <QString, QString> entityAttrs = _currentEntity->getAttributes();
 
-      for (it = begin; it != end; ++it)
+      foreach (const QString &key, entityAttrs.keys())
       {
-        if(it.key() == attr)
+        if(key == attr)
         {
           if(!value.isNull() && !value.isEmpty())
           {
             if(NCLStructure::getInstance()->getAttributeDatatype(_currentEntity->getType(), attr) == "URI")
             {
               try {
-                value = Utilities::relativePath(project->getLocation(), value,
+                value = Utilities::relativePath(project->getLocation(),
+                                                value,
                                                 true);
               }
               catch(...){
@@ -174,7 +173,7 @@ void PropertiesViewPlugin::updateCurrentEntityAttr(QString attr, QString value)
           }
         }
         else
-          attrs.insert(it.key(), it.value());
+          attrs.insert(key, entityAttrs[key]);
       }
 
       if(!attrs.contains(attr))

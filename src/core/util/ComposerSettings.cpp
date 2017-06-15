@@ -23,7 +23,8 @@
 CPR_CORE_BEGIN_NAMESPACE
 
 GlobalSettings::GlobalSettings() :
-  QSettings(QSettings::IniFormat, QSettings::UserScope, "telemidia", "nclcomposer")
+  QSettings(QSettings::IniFormat, QSettings::UserScope,
+            "telemidia", "nclcomposer")
 {
 
 }
@@ -52,15 +53,17 @@ void GlobalSettings::addPlatformDefaults()
   // The first path will look for plug-ins is relative to the executable
   defaultPluginsPath << QApplication::applicationDirPath();
   defaultPluginsPath << QApplication::applicationDirPath() + "/plugins";
-  defaultPluginsPath << QApplication::applicationDirPath() + "/../lib/nclcomposer/plugins";
+  defaultPluginsPath
+      << QApplication::applicationDirPath() + "/../lib/nclcomposer/plugins";
 
   // Then, we will look for plug-ins in user's home.
   defaultPluginsPath << QDir::homePath() + QString("/nclcomposer/plugins");
 #endif
 
-  // After that we will look for plugins in the default system path (do we need that?)
+  // After that we will look for plugins in the default system path
 #ifdef Q_OS_MAC
-    defaultPluginsPath << QApplication::applicationDirPath() + "/../PlugIns/composer/";
+    defaultPluginsPath
+        << QApplication::applicationDirPath() + "/../PlugIns/composer/";
 #endif
 
   this->beginGroup("extensions");
@@ -94,12 +97,15 @@ void GlobalSettings::addPlatformDefaults()
   {
 #ifdef Q_OS_MAC
 #ifdef QT_NO_DEBUG_OUTPUT
-    defaultConnBaseDir = QApplication::applicationDirPath() + "/../PlugIns/composer/";
+    defaultConnBaseDir
+        = QApplication::applicationDirPath() + "/../PlugIns/composer/";
 #else
-    defaultConnBaseDir = "/Library/Application Support/Composer/Data/";
+    defaultConnBaseDir
+        = "/Library/Application Support/Composer/Data/";
 #endif
 #else
-    defaultConnBaseDir = QApplication::applicationDirPath() + "/../share/nclcomposer/";
+    defaultConnBaseDir
+        = QApplication::applicationDirPath() + "/../share/nclcomposer/";
 #endif
   }
 
@@ -113,13 +119,15 @@ void GlobalSettings::addPlatformDefaults()
   if(!this->contains("stylesheet"))
   {
     this->setValue("stylesheet",
-                   QApplication::applicationDirPath() + "/../share/nclcomposer/style.qss");
+                   QApplication::applicationDirPath()
+                   + "/../share/nclcomposer/style.qss");
   }
 
   if(!this->contains("stylesheet_ini"))
   {
     this->setValue("stylesheet_ini",
-                   QApplication::applicationDirPath() + "/../share/nclcomposer/style.ini");
+                   QApplication::applicationDirPath()
+                   + "/../share/nclcomposer/style.ini");
   }
   this->endGroup();
   /* End Stylesheet */

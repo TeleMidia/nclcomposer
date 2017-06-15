@@ -32,7 +32,7 @@ CPR_CORE_BEGIN_NAMESPACE
 Q_LOGGING_CATEGORY(CPR_CORE, "cpr.core")
 Q_LOGGING_CATEGORY(CPR_GUI, "cpr.gui")
 
-QMap<QString,LanguageType> Utilities::types = createMap();
+QMap<QString,LanguageType> Utilities::_types = createMap();
 
 QString Utilities::normalizeXMLID(const QString &id)
 {
@@ -46,14 +46,14 @@ QString Utilities::normalizeXMLID(const QString &id)
 
 LanguageType Utilities::getLanguageTypeByExtension(const QString &ext)
 {
-  if (!types.contains(ext)) return NONE;
-  else return types[ext];
+  if (!_types.contains(ext)) return NONE;
+  else return _types[ext];
 }
 
 QString Utilities::getExtensionForLanguageType(LanguageType type)
 {
   QMap<QString,LanguageType>::iterator it;
-  for (it = types.begin(); it != types.end(); it++)
+  for (it = _types.begin(); it != _types.end(); it++)
     if(type == it.value())
       return it.key();
   return "";

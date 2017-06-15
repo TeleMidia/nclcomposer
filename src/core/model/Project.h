@@ -47,16 +47,14 @@ class COMPOSERCORESHARED_EXPORT Project : public Entity
 {
   Q_OBJECT
 
-  // The following classes are "reliable" and can acess the
-  // private and protected members of Document.
-  friend class cpr::core::PluginControl;
-  friend class cpr::core::MessageControl;
-  friend class cpr::core::ProjectControl;
-  friend class cpr::core::ProjectReader;
+  friend class PluginControl;
+  friend class MessageControl;
+  friend class ProjectControl;
+  friend class ProjectReader;
 
-  friend class cpr::core::EditCommand;
-  friend class cpr::core::AddCommand;
-  friend class cpr::core::RemoveCommand;
+  friend class EditCommand;
+  friend class AddCommand;
+  friend class RemoveCommand;
 
 public:
   /*!
@@ -69,7 +67,7 @@ public:
    * \brief Returns a list of the entities which are of the type __type.
    * \param _type The entity type required.
    */
-  QList<Entity*> getEntitiesbyType(const QString &type);
+  QList<Entity*> getEntitiesbyType(const QString &_type);
 
   /*!
    * \brief Returns the location of the project.
@@ -111,7 +109,7 @@ protected:
    * \brief Constructor.
    * \param parent
    */
-  explicit Project(QObject *parent = 0);
+  explicit Project(QDomDocument &doc);
 
   /*!
    * \brief Constructor.
@@ -119,7 +117,7 @@ protected:
    * \param atts
    * \param parent
    */
-  Project(const QMap<QString,QString> &atts, QObject *parent = 0);
+  Project(const QMap<QString,QString> &atts, QDomDocument &doc);
 
   /*!
    * \brief Constructor.
@@ -128,7 +126,9 @@ protected:
    * \param atts
    * \param parent
    */
-  Project(const QString &uniqueId, const QMap<QString,QString> &atts, QObject *parent = 0);
+  Project(const QString &uniqueId,
+          const QMap<QString,QString> &atts,
+          QDomDocument &doc);
 
   /*!
    * \brief init
@@ -141,33 +141,17 @@ protected:
   ~Project();
 
   /*!
-   * \brief Set the location of the project.
+   * \brief Sets the location of the project.
    * \todo The locations should be an URL.
    * \param location the location of the project.
    */
   void setLocation(const QString &location);
   /*!
-   * \brief Set the type of the project.s
+   * \brief Sets the type of the project.s
    * \param type The type of the project. Currently, there are support just for
    *  NCL projects.
    */
-  void setProjectType(LanguageType type);
-
-
-  QString model; /*!< Keeps the model as an string (this will be useful for
-                        serialize the model. */
-  /*!
-   * \brief Replaces the current string that represents the model.
-   *
-   * \param model The new model as a string.
-   */
-  void setModelString(const QString &model) {this->model = model;}
-  /*!
-   * \brief Returns the current model as a string.
-   *
-   * \return QString the current model as a string.
-   */
-  QString getModelString() {return this->model;}
+  void setProjectType(LanguageType _type);
 
   /*!
    * \brief This method is used to add an Entity in the map and as child of
@@ -216,15 +200,17 @@ protected:
    */
   void setDirty(bool isDirty);
 
-private:
-  QMutex *lockEntities; /*!< TODO */
-  QMutex lockLocation; /*!< TODO */
-  QMap<QString, Entity*> entities; /*!< TODO */
-  QMap<QString, QByteArray> pluginData; /*!< TODO */
+  QDomDocument &getDomDocument () { return this->_doc;}
 
-  QString projectLocation; /*!< TODO */
-  QString projectName; /*!< TODO */
-  LanguageType projectType; /*!< TODO */
+private:
+  QMutex *_lockEntities; /*!< TODO */
+  QMutex _lockLocation; /*!< TODO */
+  QMap<QString, Entity*> _entities; /*!< TODO */
+  QMap<QString, QByteArray> _pluginData; /*!< TODO */
+
+  QString _projectLocation; /*!< TODO */
+  QString _projectName; /*!< TODO */
+  LanguageType _projectType; /*!< TODO */
 
   bool dirty;
 };

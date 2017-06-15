@@ -36,8 +36,8 @@ using namespace cpr::core;
 CPR_CORE_BEGIN_NAMESPACE
 
 /*!
- * \brief The class responsible to parse the Composer Project and generate fills
- *  the data of a Project object.
+ * \brief It is responsible for parsing the NCL Composer Project and
+ * generating the data of a Project object.
  */
 class COMPOSERCORESHARED_EXPORT ProjectReader: public QXmlDefaultHandler
 {
@@ -59,11 +59,12 @@ protected:
   bool fatalError(const QXmlParseException &exception);
 
 private:
-  Project *project;
-  Entity *currentEntity;
-  QMutex lockStack;
-  QWaitCondition sync;
-  QStack<Entity*> elementStack;
+  QDomDocument _domDocument;
+  Project *_project;
+  Entity *_currentEntity;
+  QMutex _lockStack;
+  QWaitCondition _sync;
+  QStack<Entity*> _elementStack;
 
   bool parseModelString(const QString &str);
 };

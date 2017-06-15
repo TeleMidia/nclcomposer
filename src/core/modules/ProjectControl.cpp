@@ -28,7 +28,7 @@ ProjectControl::~ProjectControl()
 {
   QMap<QString,Project*>::iterator it;
   PluginControl *pg = PluginControl::getInstance();
-  for (it = openProjects.begin(); it != openProjects.end(); it++)
+  for (it = _openProjects.begin(); it != _openProjects.end(); it++)
   {
     Project *project = it.value();
     if (pg->releasePlugins(project))
@@ -45,14 +45,14 @@ ProjectControl::~ProjectControl()
 
 bool ProjectControl::closeProject(const QString &location)
 {
-  if (!openProjects.contains(location)) return false;
+  if (!_openProjects.contains(location)) return false;
 
-  Project *project = openProjects[location];
+  Project *project = _openProjects[location];
   if (PluginControl::getInstance()->releasePlugins(project))
   {
     delete project;
     project = nullptr;
-    openProjects.remove(location);
+    _openProjects.remove(location);
   }
   else
   {
@@ -64,7 +64,7 @@ bool ProjectControl::closeProject(const QString &location)
 
 bool ProjectControl::launchProject(const QString &location)
 {
-  if (openProjects.contains(location))
+  if (_openProjects.contains(location))
   {
     emit projectAlreadyOpen(location);
     return false;
@@ -119,7 +119,7 @@ bool ProjectControl::launchProject(const QString &location)
     project->setProjectType(type);
 
     PluginControl::getInstance()->launchProject(project);
-    openProjects[location] = project;
+    _openProjects[location] = project;
     connect ( project, SIGNAL(dirtyProject(bool)),
               this, SLOT(projectIsDirty(bool)) );
   }
@@ -134,7 +134,7 @@ bool ProjectControl::launchProject(const QString &location)
 void ProjectControl::importFromDocument( const QString &docLocation,
                                          const QString &projLocation)
 {
-  if (openProjects.contains(projLocation))
+  if (_openProjects.contains(projLocation))
   {
     emit projectAlreadyOpen(projLocation);
     return;
@@ -181,7 +181,7 @@ void ProjectControl::importFromDocument( const QString &docLocation,
     PluginControl::getInstance()->launchProject(project);
     project->setLocation(projLocation);
 
-    openProjects[projLocation] = project;
+    _openProjects[projLocation] = project;
 
     IDocumentParser *parser;
     parser = profile->createParser(project);
@@ -210,7 +210,7 @@ void ProjectControl::importFromDocument( const QString &docLocation,
 
 void ProjectControl::saveProject(const QString &location)
 {
-  Project *project = openProjects.value(location);
+  Project *project = _openProjects.value(location);
   QFile fout(location);
 
   if(!fout.exists())
@@ -238,10 +238,10 @@ void ProjectControl::moveProject(const QString &location, const QString &dest, b
   QFileInfo fileInfo(dest);
   if(fileInfo.absoluteDir().exists())
   {
-    Project *project = openProjects.value(location);
+    Project *project = _openProjects.value(location);
     project->setLocation(dest);
-    openProjects.insert(dest, project);
-    openProjects.remove(location); //remove de old
+    _openProjects.insert(dest, project);
+    _openProjects.remove(location); //remove de old
 
     if(saveDest)
       saveProject(dest);
@@ -259,7 +259,7 @@ void ProjectControl::moveProject(const QString &location, const QString &dest, b
 
 void ProjectControl::saveTemporaryProject(const QString &location)
 {
-  Project *project = openProjects.value(location);
+  Project *project = _openProjects.value(location);
   QFile fout(location+"~");
 
   qCDebug(CPR_CORE) << "Trying to autosave: " << location;
@@ -285,8 +285,8 @@ void ProjectControl::saveTemporaryProject(const QString &location)
 
 Project *ProjectControl::getOpenProject(const QString &location)
 {
-  if(openProjects.contains(location))
-    return openProjects.value(location);
+  if(_openProjects.contains(location))
+    return _openProjects.value(location);
 
   return nullptr;
 }

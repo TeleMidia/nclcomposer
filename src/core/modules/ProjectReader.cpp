@@ -31,7 +31,7 @@ Project *ProjectReader::readFile(const QString &location)
 {
   QFile file(location);
   bool error = false;
-  project = nullptr;
+  _project = nullptr;
 
   if(!file.open(QIODevice::ReadOnly))
   {
@@ -48,8 +48,9 @@ Project *ProjectReader::readFile(const QString &location)
   int startCpModel = content.indexOf(startCpModelStr)+startCpModelStr.size();
   int endCpModel = content.indexOf(endCpModelStr);
 
-  project = new Project();
-  project->setLocation(location);
+  _domDocument = QDomDocument ("cprDoc");
+  _project = new Project(_domDocument);
+  _project->setLocation(location);
 
   if(content != "")
   {
@@ -85,7 +86,7 @@ Project *ProjectReader::readFile(const QString &location)
 
     pos = endPluginData + endPluginDataStr.size() + 1;
 
-    project->setPluginData(pluginID, data.toLatin1());
+    _project->setPluginData(pluginID, data.toLatin1());
   }
   /* FINISH READING MODEL */
 
@@ -94,7 +95,7 @@ Project *ProjectReader::readFile(const QString &location)
 
   file.close();
 
-  return project;
+  return _project;
 }
 
 bool ProjectReader::parseModelString(const QString &str)
@@ -123,9 +124,9 @@ bool ProjectReader::startElement( const QString &namespaceURI,
   Entity *parentEntity = nullptr;
   if (qName != "document")
   {
-    lockStack.lock();
-    parentEntity = elementStack.top();
-    lockStack.unlock();
+    _lockStack.lock();
+    parentEntity = _elementStack.top();
+    _lockStack.unlock();
   }
 
   for (int i=0; i < attributes.count(); i++)
@@ -143,16 +144,17 @@ bool ProjectReader::startElement( const QString &namespaceURI,
       qCDebug(CPR_CORE) << "trying to add an entity whithout an uniqueId";
     else
     {
-      entity = new Entity(uniqueId, qName, atts, project);
-      project->addEntity(entity, parentEntity->getUniqueId());
+      entity = new Entity(uniqueId, qName, atts, _project->getDomDocument(),
+                          _project);
+      _project->addEntity(entity, parentEntity->getUniqueId());
     }
   }
   else
-    entity = project;
+    entity = _project;
 
-  lockStack.lock();
-  elementStack.push(entity);
-  lockStack.unlock();
+  _lockStack.lock();
+  _elementStack.push(entity);
+  _lockStack.unlock();
   return true;
 }
 
@@ -164,10 +166,10 @@ bool ProjectReader::endElement( const QString &namespaceURI,
   Q_UNUSED(localName)
   Q_UNUSED(qName)
 
-  lockStack.lock();
-  if(elementStack.size())
-    elementStack.pop();
-  lockStack.unlock();
+  _lockStack.lock();
+  if(_elementStack.size())
+    _elementStack.pop();
+  _lockStack.unlock();
 
   return true;
 }

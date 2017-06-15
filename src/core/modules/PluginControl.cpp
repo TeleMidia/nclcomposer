@@ -41,23 +41,23 @@ PluginControl::~PluginControl()
   IPlugin *inst = nullptr;
   IPluginFactory *fac = nullptr;
 
-  for (itInst = pluginInstances.begin();
-       itInst != pluginInstances.end(); itInst++)
+  for (itInst = _pluginInstances.begin();
+       itInst != _pluginInstances.end(); itInst++)
   {
-    QList<IPlugin*> instances = pluginInstances.values(itInst.key());
+    QList<IPlugin*> instances = _pluginInstances.values(itInst.key());
     QList<IPlugin*>::iterator it;
 
     for (it = instances.begin(); it != instances.end(); it++)
     {
       inst = *it;
-      fac = factoryByPlugin.value(inst);
-      factoryByPlugin.remove(inst);
+      fac = _factoryByPlugin.value(inst);
+      _factoryByPlugin.remove(inst);
       fac->releasePluginInstance(inst);
-      pluginInstances.remove(itInst.key(),inst);
+      _pluginInstances.remove(itInst.key(),inst);
     }
   }
 
-  for (itFac = pluginFactories.begin() ; itFac != pluginFactories.end();
+  for (itFac = _pluginFactories.begin() ; itFac != _pluginFactories.end();
        itFac++)
   {
     fac = itFac.value();
@@ -65,11 +65,11 @@ PluginControl::~PluginControl()
     fac = nullptr;
   }
 
-  pluginFactories.clear();
-  pluginInstances.clear();
-  pluginsByType.clear();
-  factoryByPlugin.clear();
-  messageControls.clear();
+  _pluginFactories.clear();
+  _pluginInstances.clear();
+  _pluginsByType.clear();
+  _factoryByPlugin.clear();
+  _messageControls.clear();
 }
 
 IPluginFactory* PluginControl::loadPlugin(const QString &fileName)
@@ -88,16 +88,16 @@ IPluginFactory* PluginControl::loadPlugin(const QString &fileName)
                           << "pluginFactory = " << pluginFactory;
 
       QString pluginID = pluginFactory->id();
-      if (!pluginFactories.contains(pluginID))
+      if (!_pluginFactories.contains(pluginID))
       {
-        pluginFactories[pluginID] = pluginFactory;
+        _pluginFactories[pluginID] = pluginFactory;
         QList<LanguageType> types = pluginFactory->getSupportedLanguages();
 
         QList<LanguageType>::iterator it;
 
         for (it = types.begin() ; it!= types.end(); it++)
         {
-          pluginsByType.insert(*it, pluginFactory->id());
+          _pluginsByType.insert(*it, pluginFactory->id());
         }
 
         qCDebug(CPR_CORE) << loader.metaData();
@@ -171,14 +171,14 @@ void PluginControl::launchProject(Project *project)
   LanguageType type = project->getProjectType();
 
   msgControl = new MessageControl(project);
-  messageControls[project] = msgControl;
+  _messageControls[project] = msgControl;
 
   QList<QString>::iterator it;
-  QList<QString> plugIDs = pluginsByType.values(type);
+  QList<QString> plugIDs = _pluginsByType.values(type);
   for (it = plugIDs.begin() ; it != plugIDs.end() ;
        it++)
   {
-    factory        = pluginFactories[*it];
+    factory        = _pluginFactories[*it];
 
     GlobalSettings settings;
     settings.beginGroup("loadPlugins");
@@ -198,10 +198,10 @@ void PluginControl::launchNewPlugin(IPluginFactory *factory, Project *project)
     pluginInstance->setPluginInstanceID(
           factory->id() + "#" + QUuid::createUuid().toString());
     pluginInstance->setProject(project);
-    launchNewPlugin(pluginInstance, messageControls[project]);
+    launchNewPlugin(pluginInstance, _messageControls[project]);
 
-    pluginInstances.insert(project, pluginInstance);
-    factoryByPlugin.insert(pluginInstance, factory);
+    _pluginInstances.insert(project, pluginInstance);
+    _factoryByPlugin.insert(pluginInstance, factory);
 
     emit addPluginWidgetToWindow( factory,
                                   pluginInstance,
@@ -239,6 +239,12 @@ void PluginControl::launchNewPlugin(IPlugin *plugin, MessageControl *mControl)
           SIGNAL(addEntity(const QString&, const QString&, const QMap<QString,QString>&, bool)),
           mControl,
           SLOT(onAddEntity(const QString&, const QString&, const QMap<QString,QString>&, bool)),
+          Qt::DirectConnection);
+
+  connect(plugin,
+          SIGNAL(addComment(const QString&, const QString&)),
+          mControl,
+          SLOT(onAddComment(const QString&, const QString&)),
           Qt::DirectConnection);
 
   connect(plugin,
@@ -298,7 +304,7 @@ QList<IPluginFactory*> PluginControl::getLoadedPlugins()
 {
   QHash<QString,IPluginFactory*>::iterator it;
   QList<IPluginFactory*> pList;
-  for (it = pluginFactories.begin() ; it != pluginFactories.end(); it++)
+  for (it = _pluginFactories.begin() ; it != _pluginFactories.end(); it++)
   {
     pList.append(it.value());
   }
@@ -313,31 +319,31 @@ bool PluginControl::releasePlugins(Project *project)
     return false;
   }
 
-  if (!messageControls.contains(project))
+  if (!_messageControls.contains(project))
   {
     qCDebug(CPR_CORE) << "Message Control does not know the project";
     return false;
   }
 
-  MessageControl *t = messageControls.value(project);
+  MessageControl *t = _messageControls.value(project);
   if (t)
   {
     delete t;
     t = nullptr;
-    messageControls.remove(project);
+    _messageControls.remove(project);
   }
 
-  QList<IPlugin*> instances = pluginInstances.values(project);
+  QList<IPlugin*> instances = _pluginInstances.values(project);
   QList<IPlugin*>::iterator it;
   for (it = instances.begin(); it != instances.end(); it++)
   {
     IPlugin *inst = *it;
     inst->saveSubsession();
-    IPluginFactory *fac = factoryByPlugin.value(inst);
-    factoryByPlugin.remove(inst);
+    IPluginFactory *fac = _factoryByPlugin.value(inst);
+    _factoryByPlugin.remove(inst);
     fac->releasePluginInstance(inst);
   }
-  pluginInstances.remove(project);
+  _pluginInstances.remove(project);
 
   return true;
 }
@@ -347,7 +353,7 @@ void PluginControl::sendBroadcastMessage(const char* slot, void *obj)
   IPlugin *plugin = qobject_cast<IPlugin *> (QObject::sender());
 
   QList<IPlugin*>::iterator it;
-  QList<IPlugin*> instances = pluginInstances.values(plugin->getProject());
+  QList<IPlugin*> instances = _pluginInstances.values(plugin->getProject());
 
   QString slotName(slot);
   slotName.append("(QString,void*)");
@@ -369,7 +375,7 @@ void PluginControl::sendBroadcastMessage(const char* slot, void *obj)
 void PluginControl::savePluginsData(Project *project)
 {
   QList<IPlugin*>::iterator it;
-  QList<IPlugin*> instances = pluginInstances.values(project);
+  QList<IPlugin*> instances = _pluginInstances.values(project);
 
   for (it = instances.begin(); it != instances.end(); it++)
   {
@@ -380,14 +386,14 @@ void PluginControl::savePluginsData(Project *project)
 
 MessageControl *PluginControl::getMessageControl(Project *project)
 {
-  return messageControls.value(project);
+  return _messageControls.value(project);
 }
 
 QList <IPlugin*> PluginControl::getPluginInstances(Project *project)
 {
   QList<IPlugin*> instances;
-  if(pluginInstances.contains(project))
-    instances = pluginInstances.values(project);
+  if(_pluginInstances.contains(project))
+    instances = _pluginInstances.values(project);
 
   return instances;
 }

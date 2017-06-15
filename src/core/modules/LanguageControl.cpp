@@ -30,29 +30,29 @@ LanguageControl::~LanguageControl()
 {
   QMap<LanguageType, ILanguageProfile*>::iterator it;
 
-  for(it = profiles.begin(); it != profiles.end(); it++)
+  for(it = _profiles.begin(); it != _profiles.end(); it++)
   {
     ILanguageProfile *pf = it.value();
     assert(pf != nullptr);
     delete pf;
     pf = nullptr;
   }
-  profiles.clear();
+  _profiles.clear();
 }
 
 bool LanguageControl::removeProfile(LanguageType type)
 {
-  if (!profiles.contains(type))
+  if (!_profiles.contains(type))
     return false;
 
-  ILanguageProfile *lp = profiles[type];
+  ILanguageProfile *lp = _profiles[type];
   assert(lp != nullptr);
   if (lp == nullptr)
     return false;
 
   delete lp;
   lp = nullptr;
-  profiles.remove(type);
+  _profiles.remove(type);
 
   return true;
 }
@@ -69,7 +69,7 @@ ILanguageProfile* LanguageControl::loadProfile(const QString &fileName)
     if (lProfile)
     {
       LanguageType type = lProfile->getLanguageType();
-      if (profiles.contains(type))
+      if (_profiles.contains(type))
       {
         qCDebug(CPR_CORE)
             << "LanguageControl::loadProfiles Profile for language ("
@@ -78,7 +78,7 @@ ILanguageProfile* LanguageControl::loadProfile(const QString &fileName)
       }
       else
       {
-        profiles.insert(type, lProfile);
+        _profiles.insert(type, lProfile);
         qCDebug(CPR_CORE) << fileName << " loaded --- "
                             << "languageProfile = " << lProfile;
       }
@@ -136,8 +136,8 @@ void LanguageControl::loadProfiles(const QString &profilesDirPath)
 
 ILanguageProfile* LanguageControl::getProfileFromType(LanguageType type)
 {
-  if (profiles.contains(type))
-    return profiles[type];
+  if (_profiles.contains(type))
+    return _profiles[type];
   else
     return nullptr;
 }
@@ -147,7 +147,7 @@ QList<ILanguageProfile*> LanguageControl::getLoadedProfiles()
   QMap<LanguageType, ILanguageProfile*>::iterator it;
   QList<ILanguageProfile*> list;
 
-  for (it = profiles.begin(); it != profiles.end(); it++)
+  for (it = _profiles.begin(); it != _profiles.end(); it++)
   {
     list.append(it.value());
   }

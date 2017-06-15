@@ -24,6 +24,7 @@
 #include <QMap>
 #include <QUuid>
 #include <QDebug>
+#include <QDomElement>
 
 CPR_CORE_BEGIN_NAMESPACE
 
@@ -41,19 +42,17 @@ class RemoveCommand;
  *
  * The internal model Composer model is a tree of Entities.
  */
-class COMPOSERCORESHARED_EXPORT Entity : public QObject
+class COMPOSERCORESHARED_EXPORT Entity: public QObject
 {
   Q_OBJECT
 
-  // The following classes are "reliable" and can acess the
-  // private and protected members of Entity.
-  friend class cpr::core::Project;
-  friend class cpr::core::MessageControl;
-  friend class cpr::core::ProjectReader;
+  friend class Project;
+  friend class MessageControl;
+  friend class ProjectReader;
 
-  friend class cpr::core::EditCommand;
-  friend class cpr::core::AddCommand;
-  friend class cpr::core::RemoveCommand;
+  friend class EditCommand;
+  friend class AddCommand;
+  friend class RemoveCommand;
 
 public:
   /*!
@@ -62,15 +61,13 @@ public:
    * \param name - The name of the attribute been requested
    * \return A string with the requested attribute.
    */
-  QString getAttribute(const QString &name);
+  QString getAttribute(const QString &name) const;
   /*!
-   * This method is used to get the iterator in the <map> of attributes.
+   * \brief Gets the attributes of the entity.
    *
-   * \param begin - a reference to be filled with the begin of the map.
-   * \param end - a reference to be filled with the end of the map.
+   * \return a QMap with the attributes of the entity
    */
-  void getAttributeIterator (QMap<QString,QString>::iterator &begin,
-                             QMap<QString,QString>::iterator &end);
+  QMap<QString, QString> getAttributes() const;
   /*!
    * \brief This method is used to verify if this element has certain
    *      attribute.
@@ -78,7 +75,7 @@ public:
    * \param name - The name of the attribute to be verified.
    * \return an boolean depending of the existence of the attribute.
   */
-  bool hasAttribute(const QString &name);
+  bool hasAttribute(const QString &name) const;
 
   QString getUniqueId() const;
 
@@ -89,7 +86,7 @@ public:
   QString getParentUniqueId() const;
   /*!
    * \brief Tell if the children should be deleted when this entity is deleted
-   *          through destructor.
+   *        through destructor.
    *
    * \param mustDelete tell if the children also must be deleted.
    */
@@ -109,7 +106,7 @@ public:
    *
    * All the content of the entity will be cloned, including its uniqueId.
    */
-  Entity *cloneEntity() const;
+  Entity *cloneEntity();
 
 protected:
   /*!
@@ -117,14 +114,16 @@ protected:
    *
    * \param parent The QObject parent.
    */
-  explicit Entity(QObject *parent = 0);
+  explicit Entity(QDomDocument &doc, Entity *parent=0);
   /*!
    * \brief Constructor.
    *
    * \param atts attributes to be set to this Entity.
    * \param parent the QObject parent.
    */
-  explicit Entity(const QMap<QString,QString> &atts, QObject *parent = 0);
+  explicit Entity(const QMap<QString,QString> &atts,
+                  QDomDocument &doc,
+                  Entity *parent=0);
   /*!
    * \brief Contructor.
    *
@@ -133,10 +132,10 @@ protected:
    * \param atts attributes to be set to this Entity.
    * \param parent the QObject parent.
    */
-  explicit Entity( const QString &uniqueId,
-                   const QString &type,
-                   const QMap<QString,QString> &atts,
-                   QObject *parent = 0 );
+  explicit Entity(const QString &uniqueId,
+                  const QString &_type,
+                  const QMap<QString,QString> &atts,
+                  QDomDocument &doc, Entity *parent=0);
 
   /*!
    * \brief Destructor.
@@ -164,7 +163,7 @@ protected:
    *
    * \param type The type of the entity.
    */
-  void setType(const QString &type);
+  void setType(const QString &_type);
 
   /*!
    *  \brief Set the unique identifier of the entity to the value passed as
@@ -181,7 +180,7 @@ protected:
    */
   void setParent(Entity *parent);
 
-  //OBS: This addChild updates the parent referency
+  // OBS: This addChild updates the parent referency
   bool addChild(Entity *entity, int pos = -1);
 
   /*!
@@ -191,26 +190,14 @@ protected:
    */
   bool deleteChild(Entity *entity);
   /*!
-   * \brief This call removes the child and append his children to his parent.
-   *
-   * \param entity
-   */
-  bool removeChildAppendChildren(Entity *entity);
-  /*!
    * \brief
    */
   void print();
 
 private:
-  QMutex lockAtts;
-  QMutex lockID;
-  QMutex lockType;
-  QMutex lockChildren;
-  QMutex lockParent;
-
+  QDomDocument _doc;
+  QDomElement _element;
   QString _id;
-  QString type;
-
   Entity* parent;
   bool deleteChildren; /* initial value is true */
 
@@ -218,13 +205,6 @@ private:
    * \brief children is a list of Entity that is children than this Entity.
    */
   QVector <Entity*> children;
-
-  /*!
-   * \brief This <map> represents the attributes of the element
-   *   the Key is the name of the attribute and Value is the value of that
-   *   attribute.
-   */
-  QMap<QString, QString> atts;
 };
 
 CPR_CORE_END_NAMESPACE

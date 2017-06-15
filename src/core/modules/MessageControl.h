@@ -47,7 +47,7 @@ public:
    *
    * \param project
    */
-  MessageControl(Project *project);
+  MessageControl(Project *_project);
   /*!
    * \brief Destructor.
    */
@@ -62,10 +62,10 @@ public slots:
      \param atts
      \param force
     */
-  void onAddEntity( const QString &type,
-                    const QString &parentEntityId,
-                    const QMap<QString,QString>& atts,
-                    bool force );
+  void onAddEntity(const QString &type,
+                   const QString &parentEntityId,
+                   const QMap<QString,QString>& atts,
+                   bool force);
   /*!
      \brief
 
@@ -74,10 +74,20 @@ public slots:
      \param atts
      \param force
     */
-  void onAddEntity( const QString &entity_content,
-                    const QString &parentId,
-                    Data::Format format,
-                    bool force );
+  void onAddEntity(const QString &entity_content,
+                   const QString &parentId,
+                   Data::Format format,
+                   bool force);
+  /*!
+     \brief
+
+     \param type
+     \param parentEntityId
+     \param atts
+     \param force
+    */
+  void onAddComment(const QString &comment,
+                    const QString &parentId);
   /*!
      \brief
 
@@ -85,9 +95,9 @@ public slots:
      \param atts
      \param force
     */
-  void onEditEntity( Entity *entity,
-                     const QMap<QString,QString> &atts,
-                     bool force );
+  void onEditEntity(Entity *entity,
+                    const QMap<QString,QString> &atts,
+                    bool force);
   /*!
      \brief
 
@@ -163,9 +173,9 @@ signals:
 
 
 private:
-  Project *project; /*!< TODO */
-  QMap <QString, QStringList> listenEntities;
-  QUndoStack *qUndoStack;
+  Project *_project; /*!< TODO */
+  QMap <QString, QStringList> _listenEntities;
+  QUndoStack *_qUndoStack;
 
   /*!
    * \brief TODO

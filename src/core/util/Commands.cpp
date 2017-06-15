@@ -24,26 +24,23 @@ EditCommand::EditCommand(Project *project, Entity *entity,
                          QMap <QString, QString> newAttrs, QUndoCommand *parent)
   : QUndoCommand(parent)
 {
-  this->project = project;
+  this->_project = project;
 
-  this->uniqueId = entity->getUniqueId();
-  QMap <QString, QString>::iterator begin, end, it;
-  entity->getAttributeIterator(begin, end);
-  for (it = begin; it != end; ++it)
-      attrs[it.key()] = it.value();
-  this->newAttrs = newAttrs;
+  this->_uniqueId = entity->getUniqueId();
+  _attrs = entity->getAttributes();
+  this->_newAttrs = newAttrs;
 
-  msgControl = PluginControl::getInstance()->getMessageControl(project);
+  _msgControl = PluginControl::getInstance()->getMessageControl(project);
 }
 
 void EditCommand::undo()
 {
-  msgControl->anonymousChangeEntity(this->uniqueId, this->attrs);
+  _msgControl->anonymousChangeEntity(this->_uniqueId, this->_attrs);
 }
 
 void EditCommand::redo()
 {
-  msgControl->anonymousChangeEntity(this->uniqueId, this->newAttrs);
+  _msgControl->anonymousChangeEntity(this->_uniqueId, this->_newAttrs);
 }
 
 RemoveCommand::RemoveCommand(Project *project, Entity *entity,
@@ -51,23 +48,23 @@ RemoveCommand::RemoveCommand(Project *project, Entity *entity,
 {
   Q_UNUSED(parent)
 
-  this->parentUniqueId = entity->getParentUniqueId();
-  this->entity = entity;
-  this->project = project;
+  this->_parentUniqueId = entity->getParentUniqueId();
+  this->_entity = entity;
+  this->_project = project;
 
-  msgControl = PluginControl::getInstance()->getMessageControl(project);
+  _msgControl = PluginControl::getInstance()->getMessageControl(project);
 
-  first = true;
+  _first = true;
 }
 
 void RemoveCommand::undo()
 {
-  msgControl->anonymousAddEntity(this->entity, parentUniqueId);
+  _msgControl->anonymousAddEntity(this->_entity, _parentUniqueId);
 
   // I have to do this because the core is responsible to Remove the entity.
-  this->entity = entity->cloneEntity();
+  this->_entity = _entity->cloneEntity();
 
-  first = false;
+  _first = false;
 
   // \todo Undo every child of the entity (recursively).
 }
@@ -75,49 +72,49 @@ void RemoveCommand::undo()
 void RemoveCommand::redo()
 {
   //I have to do this because the core is responsible to Remove the entity.
-  Entity *entityTmp = this->entity->cloneEntity();
-  if(first)
-    project->removeEntity(this->entity, false);
+  Entity *entityTmp = this->_entity->cloneEntity();
+  if(_first)
+    _project->removeEntity(this->_entity, false);
   else
-    msgControl->anonymousRemoveEntity(this->entity->getUniqueId());
+    _msgControl->anonymousRemoveEntity(this->_entity->getUniqueId());
 
-  this->entity = entityTmp;
+  this->_entity = entityTmp;
 }
 
-AddCommand::AddCommand(Project *project, Entity *entity, QString parentUniqueId,
-                       QUndoCommand *parent)
+AddCommand::AddCommand(Project *project, Entity *entity,
+                       QString parentUniqueId, QUndoCommand *parent)
 {
   Q_UNUSED(parent)
 
-  this->parentUniqueId = parentUniqueId;
-  this->entity = entity;
-  this->project = project;
+  this->_parentUniqueId = parentUniqueId;
+  this->_entity = entity;
+  this->_project = project;
 
-  first = true;
+  _first = true;
 
-  msgControl = PluginControl::getInstance()->getMessageControl(project);
+  _msgControl = PluginControl::getInstance()->getMessageControl(project);
 }
 
 void AddCommand::undo()
 {
-  this->entity = this->entity->cloneEntity();
+  this->_entity = this->_entity->cloneEntity();
 
-  msgControl->anonymousRemoveEntity(this->entity->getUniqueId());
+  _msgControl->anonymousRemoveEntity(this->_entity->getUniqueId());
 
-  first = false;
+  _first = false;
 }
 
 void AddCommand::redo()
 {
   //I have to do this because the core is responsible to Remove the entity.
-  Entity *entityTmp = this->entity->cloneEntity();
+  Entity *entityTmp = this->_entity->cloneEntity();
   //TODO - calll validator to check
-  if(first)
-    project->addEntity(this->entity, parentUniqueId);
+  if(_first)
+    _project->addEntity(this->_entity, _parentUniqueId);
   else
-    msgControl->anonymousAddEntity(this->entity, parentUniqueId);
+    _msgControl->anonymousAddEntity(this->_entity, _parentUniqueId);
 
-  this->entity = entityTmp;
+  this->_entity = entityTmp;
 }
 
 CPR_CORE_END_NAMESPACE

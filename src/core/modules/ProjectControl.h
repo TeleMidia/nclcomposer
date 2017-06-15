@@ -72,7 +72,8 @@ public slots:
    * \param dest
    * \param saveDesc
    */
-  void moveProject(const QString &location, const QString &dest, bool saveDesc = false);
+  void moveProject(const QString &location, const QString &dest,
+                   bool saveDesc = false);
 
   /*!
    * \brief saveTemporaryProject
@@ -96,7 +97,7 @@ public slots:
    * \param docLocation
    * \param projLocation
    */
-  void importFromDocument(const QString &docLocation, const QString &projLocation);
+  void importFromDocument(const QString &docPath, const QString &projPath);
 
 signals:
   /*!
@@ -141,7 +142,7 @@ private:
    */
   ~ProjectControl();
 
-  QMap<QString, Project*> openProjects; /*!< A map that keeps all the open
+  QMap<QString, Project*> _openProjects; /*!< A map that keeps all the open
                                              projects. */
 
 private slots:

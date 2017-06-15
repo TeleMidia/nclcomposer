@@ -209,10 +209,21 @@ signals:
    * \param atts
    * \param force
    */
-  void addEntity( const QString &type,
-                  const QString &parentEntityId,
-                  const QMap<QString,QString>& atts,
-                  bool force );
+  void addEntity(const QString &type,
+                 const QString &parentEntityId,
+                 const QMap<QString,QString>& atts,
+                 bool force);
+
+  /*!
+   * \brief This message can be used to add a new comment in the model.
+   *
+   * \param type
+   * \param parentEntityId
+   * \param atts
+   * \param force
+   */
+  void addComment(const QString &comment,
+                  const QString &parentEntityId);
 
   /*!
    * \brief This message allows to add an Entity (and its children, recursively)

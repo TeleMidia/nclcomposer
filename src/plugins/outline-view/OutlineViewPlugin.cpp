@@ -80,11 +80,7 @@ void OutlineViewPlugin::onEntityAdded(const QString &pluginID, Entity *entity)
   QMap <QString, QString> attrs;
   QMap <QString, QString>::iterator begin, end, it;
 
-  entity->getAttributeIterator(begin, end);
-  for (it = begin; it != end; ++it)
-  {
-    attrs[it.key()] = it.value();
-  }
+  attrs = entity->getAttributes();
 
   if(_idToItem.contains(entity->getParentUniqueId()))
   {
@@ -148,11 +144,7 @@ void OutlineViewPlugin::onEntityChanged(const QString &pluginID, Entity * entity
   QMap <QString, QString> attrs;
   QMap <QString, QString>::iterator begin, end, it;
 
-  entity->getAttributeIterator(begin, end);
-  for (it = begin; it != end; ++it)
-  {
-    attrs[it.key()] = it.value();
-  }
+  attrs = entity->getAttributes();
 
   // \fixme This "if" should not be here. It is here because after adding an
   // entity, layout view change their content (before outline add the region)
@@ -278,11 +270,7 @@ void OutlineViewPlugin::init()
   QMap <QString, QString> attrs;
   QMap <QString, QString>::iterator begin, end, it;
 
-  entity->getAttributeIterator(begin, end);
-  for (it = begin; it != end; ++it)
-  {
-    attrs[it.key()] = it.value();
-  }
+  attrs = entity->getAttributes();
 
   item = _window->addElement( 0,
                               -1,
@@ -305,11 +293,7 @@ void OutlineViewPlugin::init()
       if(_idToItem.contains(children.at(i)->getUniqueId())) continue;
 
       attrs.clear();
-      children.at(i)->getAttributeIterator(begin, end);
-      for (it = begin; it != end; ++it)
-      {
-        attrs[it.key()] = it.value();
-      }
+      attrs = children.at(i)->getAttributes();
 
       item = _window->addElement( _idToItem[entity->getUniqueId()],
           -1,

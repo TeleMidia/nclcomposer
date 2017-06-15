@@ -27,17 +27,17 @@ CPR_CORE_BEGIN_NAMESPACE
 class EditCommand : public QUndoCommand
 {
 public:
-  EditCommand( Project *project, Entity *entity,
-               QMap <QString, QString> newAttrs, QUndoCommand *parent = 0 );
+  EditCommand( Project *_project, Entity *entity,
+               QMap <QString, QString> _newAttrs, QUndoCommand *parent = 0 );
 
   void undo();
   void redo();
 
 private:
-  Project *project;
-  QString uniqueId;
-  QMap <QString, QString> attrs, newAttrs;
-  MessageControl *msgControl;
+  Project *_project;
+  QString _uniqueId;
+  QMap <QString, QString> _attrs, _newAttrs;
+  MessageControl *_msgControl;
 };
 
 /*!
@@ -52,11 +52,11 @@ public:
   void redo();
 
 private:
-  Project *project;
-  Entity *entity;
-  QString parentUniqueId;
-  MessageControl *msgControl;
-  bool first;
+  Project *_project;
+  Entity *_entity;
+  QString _parentUniqueId;
+  MessageControl *_msgControl;
+  bool _first;
 };
 
 /*!
@@ -65,21 +65,19 @@ private:
 class AddCommand : public QUndoCommand
 {
 public:
-  AddCommand(Project *project, Entity *entity, QString parentUniqueId,
+  AddCommand(Project *_project, Entity *_entity, QString _parentUniqueId,
              QUndoCommand *parent = 0);
 
   void undo();
   void redo();
 
 private:
-  Project *project;
-  Entity *entity;
-  QString parentUniqueId;
-  MessageControl *msgControl;
-  bool first;
+  Project *_project;
+  Entity *_entity;
+  QString _parentUniqueId;
+  MessageControl *_msgControl;
+  bool _first;
 };
-
-//QString createCommandString(DiagramItem *item, const QPointF &point);
 
 CPR_CORE_END_NAMESPACE
 
