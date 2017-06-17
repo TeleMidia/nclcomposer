@@ -266,6 +266,8 @@ public slots:
   void redo();
 
   void openProjects(const QStringList &projects);
+
+private slots:
   void checkForUpdates();
 };
 

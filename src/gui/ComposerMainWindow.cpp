@@ -33,10 +33,6 @@
 #include <QMdiArea>
 #endif
 
-#ifdef FV_GUI
-#include "fvupdater.h"
-#endif
-
 #include <QSimpleUpdater.h>
 //static const QString DEFS_URL = "https://raw.githubusercontent.com/TeleMidia/nclcomposer/master/updates_test.json";
 static const QString DEFS_URL = "https://raw.githubusercontent.com/TeleMidia/nclcomposer/master/updates.json";
@@ -119,6 +115,9 @@ void ComposerMainWindow::init(const QApplication &app)
   splash.finish(this);
 
   show();
+
+  _updater->setNotifyOnFinish(DEFS_URL, false);
+  _updater->checkForUpdates(DEFS_URL);
 }
 
 ComposerMainWindow::~ComposerMainWindow()
@@ -632,13 +631,6 @@ void ComposerMainWindow::createMenus()
   ui->menubar->setNativeMenuBar(true);
 #endif
 
-#ifdef FV_GUI
-  QAction *action_checkForUpdate = new QAction("Check for updates",this);
-  connect (action_checkForUpdate, SIGNAL(triggered()),
-           FvUpdater::sharedUpdater(), SLOT(CheckForUpdatesNotSilent()));
-  ui->menu_Help->addAction(action_checkForUpdate);
-
-#endif
   QAction *action_checkForUpdate = new QAction("Check for updates", this);
   connect (action_checkForUpdate, SIGNAL(triggered()),
            this, SLOT(checkForUpdates()));
@@ -909,7 +901,7 @@ void ComposerMainWindow::endOpenProject(QString project)
   else
   {
     /*
-    // There is no a default perspective, so let use the system default.
+    // There is not a default perspective, so lets use the system default.
     QToolWindowManager *window = _projectsWidgets[project];
     QList <QDockWidget *> docks = window->findChildren <QDockWidget* >(QRegExp("br.*"));
     QMap <QString, QDockWidget*> dockByPluginId;
@@ -1592,9 +1584,8 @@ void ComposerMainWindow::updateMenuPerspectives()
 
   for(int i = 0; i < keys.size(); i++)
   {
-    QAction *act = _ui->toolBar_Perspectives->addAction( keys.at(i),
-                                                        this,
-                                                        SLOT(restorePerspectiveFromMenu()) );
+    QAction *act = _ui->toolBar_Perspectives->addAction(
+          keys.at(i), this, SLOT(restorePerspectiveFromMenu()) );
     act->setData(keys[i]);
   }
 
@@ -1610,9 +1601,8 @@ void ComposerMainWindow::updateMenuLanguages()
 
   for(int i = 0; i < languages.size(); i++)
   {
-    QAction *act = _menuLanguage->addAction(languages.at(i),
-                                            this,
-                                            SLOT(changeLanguageFromMenu()));
+    QAction *act = _menuLanguage->addAction(
+          languages.at(i), this, SLOT(changeLanguageFromMenu()));
     act->setData(languages[i]);
   }
 }
@@ -1663,11 +1653,16 @@ void ComposerMainWindow::setProjectAsDirty(QString location, bool isDirty)
 
   _ui->action_Save->setEnabled(true);
 
-  if(index >= 0) {
+  if(index >= 0)
+  {
     if(isDirty)
+    {
       _tabProjects->setTabText(index, QString("*")+projectId);
+    }
     else
+    {
       _tabProjects->setTabText(index, projectId);
+    }
   }
 }
 
@@ -1929,7 +1924,10 @@ void ComposerMainWindow::wizardFinished(int resp)
     }
     else
     {
-      QMessageBox::warning(this, tr("Error"), tr("It was not possible to create the file from the template!"));
+      QMessageBox::warning(
+            this,
+            tr("Error"),
+            tr("It was not possible to create the file from the template!"));
     }
   }
 }
@@ -1937,10 +1935,8 @@ void ComposerMainWindow::wizardFinished(int resp)
 
 void ComposerMainWindow::checkForUpdates()
 {
-  /* Check for updates */
+  _updater->setNotifyOnFinish(DEFS_URL, false);
   _updater->checkForUpdates (DEFS_URL);
-  /*if no updates */
-  /* ... */
 }
 
 CPR_GUI_END_NAMESPACE

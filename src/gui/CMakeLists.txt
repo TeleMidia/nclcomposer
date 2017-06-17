@@ -1,14 +1,6 @@
 cmake_minimum_required (VERSION 3.2)
 project(nclcomposer_gui)
 
-option(cpr_with_fervor "Use Fervor update system" OFF)
-if(cpr_with_fervor)
-  message(STATUS "Use fervor gui")
-  add_definitions(-DFV_GUI)
-else()
-  message(STATUS "Do not use fervor gui")
-endif()
-
 # Set some Win32 Specific Settings
 IF(WIN32)
 SET(GUI_TYPE WIN32)

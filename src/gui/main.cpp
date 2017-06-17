@@ -25,10 +25,6 @@
 #include "ComposerMainWindow.h"
 using namespace cpr::gui;
 
-#ifdef FV_GUI
-#include "fvupdater.h"
-#endif
-
 Q_DECLARE_LOGGING_CATEGORY(CPR_MAIN)
 Q_LOGGING_CATEGORY(CPR_MAIN, "cpr.main")
 
@@ -122,19 +118,6 @@ int main(int argc, char *argv[])
   
   QApplication::addLibraryPath(QApplication::applicationDirPath());
 
-#ifdef FV_GUI
-  // Set this to your own appcast URL, of course FERVOR
-  FvUpdater::sharedUpdater()->SetFeedURL("http://composer.telemidia.puc-rio.br/downloads/appcast_nclcomposer.xml");
-  //FvUpdater::sharedUpdater()->setRequiredSslFingerPrint("d7e0f2fc899f5ec4456300c7061ff1da");	// Optional
-  //FvUpdater::sharedUpdater()->setHtAuthCredentials("swupdates", "updatepw");	// Optional
-    FvUpdater::sharedUpdater()->setSkipVersionAllowed(false);	// Optional
-    FvUpdater::sharedUpdater()->setRemindLaterAllowed(true);	// Optional
-  // Finish Up old Updates
-  //FvUpdater::sharedUpdater()->finishUpdate();
-
-  FvUpdater::sharedUpdater()->CheckForUpdatesSilent();
-#endif
-
   QCommandLineParser cmdParser;
   handleArguments(cmdParser, initGUI);
 
@@ -174,4 +157,3 @@ int main(int argc, char *argv[])
 
   return 1;
 }
-
