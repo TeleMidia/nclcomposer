@@ -1935,7 +1935,7 @@ void ComposerMainWindow::wizardFinished(int resp)
 
 void ComposerMainWindow::checkForUpdates()
 {
-  _updater->setNotifyOnFinish(DEFS_URL, false);
+  _updater->setNotifyOnFinish(DEFS_URL, true);
   _updater->checkForUpdates (DEFS_URL);
 }
 
