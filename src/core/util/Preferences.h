@@ -36,7 +36,7 @@ public:
   Preference (const QString &name,
               QVariant::Type type,
               const QVariant &defaultValue = QVariant(""),
-              const QString &group = "");
+              const QString  &category = "");
 
   void setValue (const QVariant &value) { this->_value = value; }
   QVariant value() { return _value; }
@@ -73,7 +73,6 @@ public:
 private:
   QMap<QString, Preference*> _preferences;
   bool _enableSaveRestore;
-
 };
 
 CPR_CORE_END_NAMESPACE

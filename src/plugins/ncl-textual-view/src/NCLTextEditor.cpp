@@ -58,6 +58,16 @@ void NCLTextEditor::initParameters()
   setFolding(QsciScintilla::CircledTreeFoldStyle);
   setFoldMarginColors(PREF_FOLD_MARGIN_FORE_COLOR, PREF_FOLD_MARGIN_BACK_COLOR);
 
+  Preferences::getInstance()->registerPreference ("cpr.textual.bgCaretLine",
+                                                  new Preference ("bgCaretLine",
+                                                                  QVariant::String,
+                                                                  "#B9D3EE",
+                                                                  "Textual"));
+
+  Preferences::getInstance()->restore();
+  Preference *bgCaretLine
+      = Preferences::getInstance()->getValue("cpr.textual.bgCaretLine");
+
   setMarginLineNumbers(1, true);
 
   setMarginWidth(1, 25);
@@ -109,7 +119,7 @@ void NCLTextEditor::initParameters()
   font.setFamily(QString::fromUtf8(PREF_FONT_FAMILY));
   font.setPointSize(PREF_FONT_SIZE);
   setFont(font);
-  setCaretLineBackgroundColor(QColor(PREF_CARET_LINE_BG_COLOR));
+  setCaretLineBackgroundColor(QColor(bgCaretLine->value().toString()));
 
   // connect(this, SIGNAL(marginClicked(int,int,Qt::KeyboardModifiers)), this,
   // SLOT(MarkLine(int,int,Qt::KeyboardModifiers)));
@@ -123,6 +133,8 @@ void NCLTextEditor::initParameters()
 //  setWhitespaceVisibility(QsciScintilla::WsVisible);
 //  setEdgeMode(QsciScintilla::EdgeLine);
 //  setEdgeColumn(80);
+
+  Preferences::getInstance()->save();
 }
 
 void NCLTextEditor::Increasefont()
