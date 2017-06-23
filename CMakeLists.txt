@@ -7,7 +7,9 @@ include(GetGitRevisionDescription)
 git_describe(VERSION --tags)
 message (STATUS "Configuring NCL Composer ${VERSION}")
 
-add_definitions(-Wextra -Wall)
+if (UNIX)
+  add_definitions(-Wextra -Wall)
+endif()
 
 #parse the version information into pieces.
 string(REGEX REPLACE "^v([0-9]+)\\..*" "\\1" VERSION_MAJOR "${VERSION}")
