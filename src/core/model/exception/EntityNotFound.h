@@ -26,10 +26,10 @@ using namespace std;
 CPR_CORE_BEGIN_NAMESPACE
 
 /*!
- \brief Exception to inform that the desired entity wasn't find (e.g. in the
-            model).
-
-*/
+ * \ingroup core
+ * \brief Exception to inform that the desired entity wasn't find (e.g. in the
+ * model).
+ */
 class EntityNotFound : public exception
 {
 public:

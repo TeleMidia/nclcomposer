@@ -42,6 +42,7 @@ using namespace cpr::core;
 CPR_CORE_BEGIN_NAMESPACE
 
 /*!
+ * \ingroup core
  * \brief Manages the NCL Composer plugins.
  *
  * It is part of the PluginControl responsability:

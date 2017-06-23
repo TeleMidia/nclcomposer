@@ -36,6 +36,7 @@ using namespace cpr::core;
 CPR_CORE_BEGIN_NAMESPACE
 
 /*!
+ * \ingroup core
  * \brief It is responsible for parsing the NCL Composer Project and
  * generating the data of a Project object.
  */

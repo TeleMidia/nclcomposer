@@ -28,10 +28,11 @@ using namespace cpr::core;
 
 CPR_CORE_BEGIN_NAMESPACE
 
-/**!
-  * This class must be implemented by anyone that want to support
-  * a new language in Composer.
-  */
+/*!
+ * \ingroup core
+ * \brief This class must be implemented by anyone that want to support
+ * a new language in Composer.
+ */
 class COMPOSERCORESHARED_EXPORT ILanguageProfile
 {
 public:

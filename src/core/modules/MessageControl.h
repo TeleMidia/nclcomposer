@@ -33,8 +33,9 @@ using namespace cpr::core;
 CPR_CORE_BEGIN_NAMESPACE
 
 /*!
- \brief Manages the messages sent from plugins to NCL Composer Core and
-    vice-versa.
+ * \ingroup core
+ * \brief Manages the messages sent from plugins to NCL Composer Core and
+ * vice-versa.
  */
 class COMPOSERCORESHARED_EXPORT MessageControl :
         public QObject

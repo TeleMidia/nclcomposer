@@ -35,8 +35,9 @@ using namespace cpr::core;
 CPR_CORE_BEGIN_NAMESPACE
 
 /*!
- \brief Manages all the open Projects.
-*/
+ * \ingroup core
+ * \brief Manages the open projects.
+ */
 class COMPOSERCORESHARED_EXPORT ProjectControl : public QObject
 {
   Q_OBJECT

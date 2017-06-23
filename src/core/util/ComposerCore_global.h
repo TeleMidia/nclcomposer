@@ -18,6 +18,10 @@
 
 #include <QtCore/qglobal.h>
 
+/*!
+ * \defgroup core NCL Composer Core
+ */
+
 #if defined(COMPOSERCORE_MAKE_DLL)
 #  define COMPOSERCORESHARED_EXPORT Q_DECL_EXPORT
 #else

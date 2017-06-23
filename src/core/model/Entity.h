@@ -38,6 +38,7 @@ class AddCommand;
 class RemoveCommand;
 
 /*!
+ * \ingroup core
  * \brief An Entity is the main class of the internal Composer core.
  *
  * The internal model Composer model is a tree of Entities.

@@ -21,6 +21,10 @@
 
 CPR_CORE_BEGIN_NAMESPACE
 
+/*!
+ * \ingroup core
+ * \brief The GlobalSettings class
+ */
 class COMPOSERCORESHARED_EXPORT GlobalSettings: public QSettings
 {
 public:

@@ -31,6 +31,7 @@ using namespace cpr::core;
 CPR_CORE_BEGIN_NAMESPACE
 
 /*!
+ * \ingroup core
  * \brief Manages the installed language profiles (though ILanguageProfile
  *  interface).
  */

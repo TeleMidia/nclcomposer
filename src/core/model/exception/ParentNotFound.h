@@ -26,9 +26,9 @@ using namespace std;
 CPR_CORE_BEGIN_NAMESPACE
 
 /*!
- \brief Exception to inform that the entity doesn't have a parent.
-
-*/
+ * \ingroup core
+ * \brief Exception to inform that the entity doesn't have a parent.
+ */
 class ParentNotFound : public exception
 {
 public:

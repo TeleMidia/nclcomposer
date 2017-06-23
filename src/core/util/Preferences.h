@@ -24,6 +24,10 @@
 
 CPR_CORE_BEGIN_NAMESPACE
 
+/*!
+ * \ingroup core
+ * \brief The Preference class
+ */
 class COMPOSERCORESHARED_EXPORT Preference
 {
 private:
@@ -43,14 +47,15 @@ public:
   QString category() { return _category; }
 };
 
+/*!
+ * \ingroup core
+ * \brief The Preferences class
+ */
 class COMPOSERCORESHARED_EXPORT Preferences
 {
   SINGLETON(Preferences)
 
 public:
-  Preferences ();
-  ~Preferences ();
-
   /*!
    * \brief gets the value of a preference. If the preference is not registered
    *        it will return a qvariant with isNull() == true
@@ -71,6 +76,9 @@ public:
   QList<Preference*> preferences(const QString& category) const;
 
 private:
+  Preferences ();
+  ~Preferences ();
+
   QMap<QString, Preference*> _preferences;
   bool _enableSaveRestore;
 };

@@ -42,8 +42,9 @@ typedef enum
 CPR_CORE_BEGIN_NAMESPACE
 
 /*!
- \brief Groups useful functions.
-*/
+ * \ingroup core
+ * \brief Groups useful functions.
+ */
 class COMPOSERCORESHARED_EXPORT Utilities
 {
 public:

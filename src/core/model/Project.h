@@ -40,6 +40,7 @@ class AddCommand;
 class DeleteCommand;
 
 /*!
+ * \ingroup core
  * \brief A Project is a data structure that will keep all Entities and all
  *      plugin data in a same place.
  */

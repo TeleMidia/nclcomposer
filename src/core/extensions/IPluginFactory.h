@@ -31,6 +31,7 @@ using namespace cpr::core;
 CPR_CORE_BEGIN_NAMESPACE
 
 /*!
+ * \ingroup core
  * \brief A Factory interface for building plugin instances.
  *
  * This extension point is used by the core to build instances of an specific

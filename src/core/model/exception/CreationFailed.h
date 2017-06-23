@@ -26,6 +26,7 @@ using namespace std;
 CPR_CORE_BEGIN_NAMESPACE
 
 /*!
+ * \ingroup core
  * \brief Exception to inform that the creation of an element failed.
  */
 class CreationFailed : public exception

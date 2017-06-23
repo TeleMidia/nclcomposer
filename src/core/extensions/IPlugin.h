@@ -33,6 +33,7 @@ namespace Data {
 }
 
 /*!
+ * \ingroup core
  * \brief The interface for communication between the core and the plugin.
  *
  * This extension point is used by the core to emit and receive signals.

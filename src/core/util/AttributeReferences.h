@@ -23,6 +23,7 @@
 CPR_CORE_BEGIN_NAMESPACE
 
 /*!
+ * \ingroup core
  * \brief Keep information about which pair (element, attribute) can refer a
  *    value of another pair (element, attribute).
  *

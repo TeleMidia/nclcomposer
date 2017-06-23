@@ -24,6 +24,7 @@ using namespace cpr::core;
 CPR_CORE_BEGIN_NAMESPACE
 
 /*!
+ * \ingroup core
  * \brief An abstract interface to document parsers.
  */
 class COMPOSERCORESHARED_EXPORT IDocumentParser : public QObject

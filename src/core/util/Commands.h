@@ -22,6 +22,7 @@
 CPR_CORE_BEGIN_NAMESPACE
 
 /*!
+ * \ingroup core
  * \brief An internal command of Composer Core to edit an Entity.
  */
 class EditCommand : public QUndoCommand
