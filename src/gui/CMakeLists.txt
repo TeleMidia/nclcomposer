@@ -30,7 +30,6 @@ set(UI_SOURCES
   PreferencesDialog.ui
   ComposerMainWindow.ui
   PerspectiveManager.ui
-  RunGingaConfig.ui
   PluginDetailsDialog.ui
   EnvironmentPreferencesWidget.ui
   WelcomeWidget.ui
@@ -60,7 +59,6 @@ add_executable(nclcomposer ${GUI_TYPE}
   EnvironmentPreferencesWidget.cpp
   WelcomeWidget.cpp
   AboutDialogs.cpp
-  RunGingaConfig.cpp
   GeneralPreferences.cpp
   NewProjectWizard.cpp
   FileChooser.cpp
