@@ -177,7 +177,6 @@ void ComposerMainWindow::readExtensions()
 
   /* Load the preferences page */
   _preferencesDialog->addPreferencePage(new GeneralPreferences());
-  // preferences->addPreferencePage(new RunGingaConfig());
   // preferences->addPreferencePage(new ImportBasePreferences());
 
   /* Load PreferencesPages from Plugins */
@@ -195,9 +194,9 @@ QString ComposerMainWindow::promptChooseExtDirectory()
 {
   QMessageBox mBox;
 
-  mBox.setText(tr("The Extension Directory is not set"));
+  mBox.setText(tr("The extensions directory is not set."));
   mBox.setInformativeText(tr("Do you want to try the default"
-                             "directory (%1)?").arg(QDir::homePath()));
+                             "one (%1)?").arg(QDir::homePath()));
   mBox.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
   mBox.setDefaultButton(QMessageBox::Yes);
   mBox.setIcon(QMessageBox::Question);
@@ -890,75 +889,10 @@ void ComposerMainWindow::endOpenProject(QString project)
   GlobalSettings settings;
   if(settings.contains("default_perspective"))
   {
-    QString defaultPerspective =
-        settings.value("default_perspective").toString();
-
-    // Ok! There is a default perspective, so use it
-    restorePerspective(defaultPerspective);
+    QString defaultPerspec = settings.value("default_perspective").toString();
+    restorePerspective(defaultPerspec);
 
     update();
-  }
-  else
-  {
-    /*
-    // There is not a default perspective, so lets use the system default.
-    QToolWindowManager *window = _projectsWidgets[project];
-    QList <QDockWidget *> docks = window->findChildren <QDockWidget* >(QRegExp("br.*"));
-    QMap <QString, QDockWidget*> dockByPluginId;
-    QList <QDockWidget *> leftDocks, rightDocks, bottomDocks;
-    for(int i = 0; i < docks.size(); i++)
-    {
-      dockByPluginId[docks[i]->objectName()] = docks[i];
-      if(docks[i]->objectName() == "br.puc-rio.telemidia.OutlineView" ||
-              docks[i]->objectName() == "br.puc-rio.telemidia.PropertiesView")
-      {
-        leftDocks.append(docks[i]);
-      }
-      else if(docks[i]->objectName() == "br.puc-rio.telemidia.DebugConsole" ||
-              docks[i]->objectName() == "br.ufma.deinf.laws.validator" ||
-              docks[i]->objectName() == "br.puc-rio.telemidia.RulesView")
-      {
-        bottomDocks.append(docks[i]);
-      }
-      else
-        rightDocks.append(docks[i]);
-    }
-
-    for(int i = leftDocks.size()-1; i >= 0; i--)
-    {
-      leftDocks[i]->widget()->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
-      leftDocks[i]->widget()->setMinimumWidth(200);
-      leftDocks[i]->widget()->setMinimumHeight(100);
-      if(!i)
-        window->addDockWidget(Qt::LeftDockWidgetArea, leftDocks[i]);
-      else
-        window->addDockWidget(Qt::LeftDockWidgetArea, leftDocks[i], Qt::Vertical);
-
-      window->adjustSize();
-    }
-
-    for(int i = 0; i < rightDocks.size(); i++)
-    {
-      rightDocks[i]->widget()->setSizePolicy(QSizePolicy::Expanding,
-                                             QSizePolicy::Expanding);
-
-      if(!i)
-        window->addDockWidget(Qt::RightDockWidgetArea, rightDocks[i]);
-      else
-        window->tabifyDockWidget(rightDocks[0], rightDocks[i]);
-    }
-
-    for(int i = 0; i < bottomDocks.size(); i++)
-    {
-      bottomDocks[i]->widget()->setSizePolicy(QSizePolicy::MinimumExpanding,
-                                              QSizePolicy::MinimumExpanding);
-      bottomDocks[i]->widget()->setMaximumHeight(200);
-      bottomDocks[i]->widget()->setMinimumHeight(100);
-      if(!i)
-        window->addDockWidget(Qt::RightDockWidgetArea, bottomDocks[i], Qt::Vertical);
-      else
-        window->tabifyDockWidget(bottomDocks[0], bottomDocks[i]);
-    }*/
   }
 
   this->updateGeometry();
@@ -970,7 +904,6 @@ void ComposerMainWindow::endOpenProject(QString project)
 void ComposerMainWindow::saveCurrentProject()
 {
   int index = _tabProjects->currentIndex();
-  bool saveAlsoNCLDocument = true;
 
   if(index != 0)
   {
@@ -981,18 +914,16 @@ void ComposerMainWindow::saveCurrentProject()
     ProjectControl::getInstance()->saveProject(location);
     _ui->action_Save->setEnabled(false);
 
-    if(saveAlsoNCLDocument)
+    //Save ncl document as well
+    QString nclfilepath = location.mid(0, location.lastIndexOf(".")) + ".ncl";
+    QFile file(nclfilepath);
+    if(file.open(QFile::WriteOnly | QIODevice::Truncate))
     {
-      QString nclfilepath = location.mid(0, location.lastIndexOf(".")) + ".ncl";
-      QFile file(nclfilepath);
-      if(file.open(QFile::WriteOnly | QIODevice::Truncate))
-      {
-        // Write FILE!!
-        if(project->getChildren().size())
-          file.write(project->getChildren().at(0)->toString(0, false).toLatin1());
+      // Write FILE!!
+      if(project->getChildren().size())
+        file.write(project->getChildren().at(0)->toString(0, false).toLatin1());
 
-        file.close();
-      }
+      file.close();
     }
   }
   else
@@ -1057,7 +988,8 @@ void ComposerMainWindow::saveAsCurrentProject()
         {
           // Write FILE!!
           if(project->getChildren().size())
-            file.write(project->getChildren().at(0)->toString(0, false).toLatin1());
+            file.write(
+                  project->getChildren().at(0)->toString(0, false).toLatin1());
 
           file.close();
         }
@@ -1383,9 +1315,9 @@ void ComposerMainWindow::checkTemporaryFileLastModified(const QString &filename)
   {
       bool replace = QMessageBox::question(this,
                             tr("Temporary file is newer."),
-                            tr("There is a temporary file related to %1 that is"
-                               " newer. Do you want replace the %1 file with "
-                               " this temporary one?").arg(filename),
+                            tr("There is a temporary file related to %1 that "
+                               "is newer. Do you want replace the %1 file "
+                               "with it?").arg(filename),
                             QMessageBox::Yes | QMessageBox::No,
                             QMessageBox::No);
 
@@ -1394,9 +1326,9 @@ void ComposerMainWindow::checkTemporaryFileLastModified(const QString &filename)
           QFile file (filename + "~");
           if(!file.copy(filename))
           {
-              QFile oldfile (filename);
-              oldfile.remove();
-              file.copy(filename);
+            QFile oldfile (filename);
+            oldfile.remove();
+            file.copy(filename);
           }
       }
   }
@@ -1878,7 +1810,8 @@ void ComposerMainWindow::updateTabWithProject(int index, QString newLocation)
 
 void ComposerMainWindow::on_actionReport_Bug_triggered()
 {
-  QDesktopServices::openUrl(QUrl("https://github.com/telemidia/nclcomposer/issues"));
+  QDesktopServices::openUrl(
+        QUrl("https://github.com/telemidia/nclcomposer/issues"));
 }
 
 #if WITH_WIZARD
