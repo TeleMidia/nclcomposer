@@ -65,8 +65,6 @@ using namespace cpr::core;
 #include "AboutDialogs.h"
 using namespace cpr::gui;
 
-// #include "ComposerHelpWidget.h"
-
 #include <qtoolwindowmanager.h>
 
 namespace Ui {
@@ -119,8 +117,6 @@ private:
 
   QProgressDialog *_taskProgressBar;
   QTimer *_autoSaveTimer; // auto save timer
-
-  // ComposerHelpWidget composerHelpWidget;
 
   QSimpleUpdater* _updater;
 #if WITH_WIZARD
