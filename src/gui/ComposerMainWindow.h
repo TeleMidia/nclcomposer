@@ -63,7 +63,6 @@ using namespace cpr::core;
 #include "PreferencesDialog.h"
 #include "WelcomeWidget.h"
 #include "AboutDialogs.h"
-#include "ClickableDockWidget.h"
 using namespace cpr::gui;
 
 // #include "ComposerHelpWidget.h"
