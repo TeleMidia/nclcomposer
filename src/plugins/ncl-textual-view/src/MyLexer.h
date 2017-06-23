@@ -61,9 +61,9 @@ public:
                           const QsciStyle &style);
 
 
-  QColor defaultColor(int);
-  QFont  defaultFont(int);
-  QColor defaultPaper(int);
+  QColor defaultColor(int) const;
+  QFont  defaultFont(int) const;
+  QColor defaultPaper(int) const;
 
 private:
   QMap <int, QRegExp > _partitionRegex;

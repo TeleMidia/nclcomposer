@@ -97,7 +97,7 @@ void MyLexer::styleText(int start, int end)
   free(chars);
 }
 
-QColor MyLexer::defaultColor(int style)
+QColor MyLexer::defaultColor(int style) const
 {
   switch(style)
   {
@@ -110,13 +110,13 @@ QColor MyLexer::defaultColor(int style)
   return QsciLexer::defaultColor(style);
 }
 
-QFont  MyLexer::defaultFont(int style)
+QFont MyLexer::defaultFont(int style) const
 {
   Q_UNUSED(style)
   return QFont("Courier New", 10);
 }
 
-QColor MyLexer::defaultPaper(int style)
+QColor MyLexer::defaultPaper(int style) const
 {
   return QsciLexer::defaultPaper(style);
 }

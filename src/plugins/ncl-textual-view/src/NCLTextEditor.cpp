@@ -223,7 +223,7 @@ void NCLTextEditor::mousePressEvent(QMouseEvent *event)
 
   QsciScintilla::mousePressEvent(event);
 
-  int line, index, begin, end;
+  int line, index;
   getCursorPosition(&line, &index);
   int pos, style;
   pos = SendScintilla(SCI_GETCURRENTPOS);
@@ -288,7 +288,6 @@ void NCLTextEditor::keyPressEvent(QKeyEvent *event)
   {
     if(event->key() == Qt::Key_Tab)
     {
-      bool error = false;
       // SHIFT+TAB -> GO TO PREVIOUS ATRIBUTE
       if(event->modifiers() & Qt::ShiftModifier)
       {
@@ -392,7 +391,7 @@ void NCLTextEditor::markLine(int margin, int line, Qt::KeyboardModifiers state)
 
 void NCLTextEditor::userFillingNextAttribute(int pos)
 {
-  int begin, end, style, i = pos;
+  int style, i = pos;
   int size = SendScintilla(SCI_GETTEXTLENGTH);
 
   style = SendScintilla(SCI_GETSTYLEAT, i);
@@ -426,7 +425,7 @@ void NCLTextEditor::userFillingNextAttribute(int pos)
 
 void NCLTextEditor::userFillingPreviousAttribute(int pos)
 {
-  int begin, end, style;
+  int style;
   int i = pos;
 
   style = SendScintilla(SCI_GETSTYLEAT, i);
@@ -461,8 +460,9 @@ void NCLTextEditor::updateVisualFillingAttributeField( int line,
                                                        int &begin,
                                                        int &end)
 {
+  Q_UNUSED (index);
+
   int style;
-  QString strline = text(line);
   int pos = SendScintilla(SCI_GETCURRENTPOS);
   int size = SendScintilla(SCI_GETTEXTLENGTH);
   begin = end = pos;
