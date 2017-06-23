@@ -7,6 +7,8 @@ include(GetGitRevisionDescription)
 git_describe(VERSION --tags)
 message (STATUS "Configuring NCL Composer ${VERSION}")
 
+add_definitions(-Wextra -Wall)
+
 #parse the version information into pieces.
 string(REGEX REPLACE "^v([0-9]+)\\..*" "\\1" VERSION_MAJOR "${VERSION}")
 string(REGEX REPLACE "^v[0-9]+\\.([0-9]+).*" "\\1" VERSION_MINOR "${VERSION}")
@@ -57,6 +59,26 @@ if( NOT EXISTS "${CMAKE_SOURCE_DIR}/src/plugins/gingagui-all/.git" )
                   WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})
 endif()
 add_subdirectory(src/plugins/gingagui-all/run-view)
+
+# target to generate API documentation with Doxygen
+find_package(Doxygen)
+if(DOXYGEN_FOUND)
+  set (top_srcdir ${CMAKE_SOURCE_DIR})
+  configure_file(${CMAKE_CURRENT_SOURCE_DIR}/docs/Doxyfile.in
+                 ${CMAKE_CURRENT_BINARY_DIR}/doc/Doxyfile @ONLY)
+  add_custom_target(doc
+    ${DOXYGEN_EXECUTABLE} ${CMAKE_BINARY_DIR}/doc/Doxyfile
+    WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/doc
+    COMMENT "Generating API documentation with Doxygen" VERBATIM
+  )
+endif(DOXYGEN_FOUND)
+
+include(FeatureSummary)
+feature_summary(WHAT ALL
+                INCLUDE_QUIET_PACKAGES
+                DESCRIPTION "Enabled Features:"
+                VAR enabledFeaturesText)
+message(STATUS "${enabledFeaturesText}")
 
 # cpack
 set(CPACK_GENERATOR "DEB")
