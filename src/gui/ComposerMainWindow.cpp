@@ -39,10 +39,6 @@ static const QString DEFS_URL = "https://raw.githubusercontent.com/TeleMidia/ncl
 
 #define SHOW_PROFILES 1
 
-#if WITH_LIBSASS
-#include "sass/context.h"
-#endif
-
 CPR_GUI_BEGIN_NAMESPACE
 
 const int autoSaveInterval = 1 * 60 * 1000; //ms
@@ -64,9 +60,7 @@ ComposerMainWindow::ComposerMainWindow(QWidget *parent)
 #else
   _ui->actionProject_from_Wizard->setVisible(false);
 #endif
-  // setWindowFlags(Qt::Window | Qt::WindowTitleHint);
 
-  /* QSimpleUpdater*/
   _updater = QSimpleUpdater::getInstance();
 }
 
@@ -85,7 +79,6 @@ void ComposerMainWindow::init(const QApplication &app)
   splash.showMessage(tr("Loading NCL Composer..."),
                      Qt::AlignRight, Qt::gray);
 
-  //splash.blockSignals(true);
   splash.show();
   app.processEvents();
 
@@ -177,7 +170,6 @@ void ComposerMainWindow::readExtensions()
 
   /* Load the preferences page */
   _preferencesDialog->addPreferencePage(new GeneralPreferences());
-  // preferences->addPreferencePage(new ImportBasePreferences());
 
   /* Load PreferencesPages from Plugins */
   QList<IPluginFactory*> list =
@@ -203,10 +195,10 @@ QString ComposerMainWindow::promptChooseExtDirectory()
   if (mBox.exec() == QMessageBox::No)
   {
     QString dirName =
-            QFileDialog::getExistingDirectory( this,
-                                               tr("Select Directory"),
-                                               Utilities::getLastFileDialogPath(),
-                                               QFileDialog::ShowDirsOnly );
+            QFileDialog::getExistingDirectory(this,
+                                              tr("Select Directory"),
+                                              Utilities::getLastFileDialogPath(),
+                                              QFileDialog::ShowDirsOnly);
     return dirName;
   }
   else
@@ -254,10 +246,10 @@ void ComposerMainWindow::openProjects(const QStringList &projects)
           QMessageBox::question(this,
                                 tr("File does not exists anymore."),
                                 tr("The File %1 does not exists, but "
-                                   "the last time you have closed NCL"
-                                   " Composer this files was open. "
-                                   "Do you want to create a new (empty) project"
-                                   " in the same path?").arg(src),
+                                   "the last time you have closed NCL "
+                                   "Composer this files was open. "
+                                   "Do you want to create a new (empty)"
+                                   " project in the same path?").arg(src),
                                 QMessageBox::Yes | QMessageBox::No,
                                 QMessageBox::No);
 
@@ -297,29 +289,6 @@ void ComposerMainWindow::loadStyleSheets()
 
   if (QFile::exists(style_path))
   {
-#if WITH_LIBSASS
-    QString style_content;
-    struct Sass_File_Context* file_ctx = sass_make_file_context(style_path.toLatin1().data());
-    struct Sass_Context* ctx = sass_file_context_get_context(file_ctx);
-    struct Sass_Options* ctx_opt = sass_context_get_options(ctx);
-
-    // configure some options ...
-    sass_option_set_precision(ctx_opt, 10);
-
-    // context is set up, call the compile step now
-    int status = sass_compile_file_context(file_ctx);
-
-    // print the result or the error to the stdout
-    if (status == 0)
-      style_content = sass_context_get_output_string(ctx);
-    else 
-      puts(sass_context_get_error_message(ctx));
-
-    setStyleSheet(style_content);
-
-    // release allocated memory
-    sass_delete_file_context(file_ctx);
-#else
     QFile style_file (style_path);
     if (style_file.open(QFile::ReadOnly))
     {
@@ -335,7 +304,6 @@ void ComposerMainWindow::loadStyleSheets()
       setStyleSheet(style);
       style_file.close();
     }
-#endif
   }
 }
 
@@ -457,9 +425,6 @@ void ComposerMainWindow::addPluginWidget( IPluginFactory *fac,
     mdiArea->setHorizontalScrollBarPolicy(Qt::ScrollBarAsNeeded);
     mdiArea->setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded);
     w->setCentralWidget(mdiArea);
-#else
-    // w->setDockNestingEnabled(true);
-    // w->setTabPosition(Qt::AllDockWidgetAreas, QTabWidget::West);
 #endif
     int index = _tabProjects->addTab(w, projectId);
     updateTabWithProject(index, location);
@@ -658,8 +623,6 @@ void ComposerMainWindow::createMenus()
   _tbLanguageDropList->setMenu(_menuLanguage);
   ui->toolBar->addWidget(_tbLanguageDropList);*/
 
-  // _ui->action_Perspectives_toolbar->setChecked(_ui->toolBar_Perspectives->isVisible());
-
   connect(_ui->action_Perspectives_toolbar, SIGNAL(triggered(bool)), _ui->toolBar_Perspectives, SLOT(setVisible(bool)));
 
   _tabProjects->setCornerWidget(_ui->menubar, Qt::TopLeftCorner);
@@ -693,7 +656,6 @@ void ComposerMainWindow::aboutPlugins()
  */
 void ComposerMainWindow::errorDialog(QString message)
 {
-  //QMessageBox::warning(this,tr("Error!"),message);
   qCWarning(CPR_GUI) << message;
 }
 
@@ -713,31 +675,31 @@ void ComposerMainWindow::createActions() {
   connect(_ui->action_Preferences, SIGNAL(triggered()),
           this, SLOT(showEditPreferencesDialog()));
 
-  connect( _ui->action_Exit, SIGNAL(triggered()),
-           this, SLOT(close()) );
+  connect(_ui->action_Exit, SIGNAL(triggered()),
+          this, SLOT(close()) );
 
-  connect ( _ui->action_Fullscreen, SIGNAL(triggered()),
-            this, SLOT(showCurrentWidgetFullScreen()) );
+  connect (_ui->action_Fullscreen, SIGNAL(triggered()),
+           this, SLOT(showCurrentWidgetFullScreen()) );
 
-  connect( _ui->action_Save_current_perspective, SIGNAL(triggered()),
-           this, SLOT(saveCurrentGeometryAsPerspective()));
+  connect(_ui->action_Save_current_perspective, SIGNAL(triggered()),
+          this, SLOT(saveCurrentGeometryAsPerspective()));
 
-  connect( _ui->action_Restore_a_perspective, SIGNAL(triggered()),
-           this, SLOT(restorePerspective()) );
+  connect(_ui->action_Restore_a_perspective, SIGNAL(triggered()),
+          this, SLOT(restorePerspective()) );
 
   QWidget* spacer = new QWidget();
   spacer->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
 
-  connect (_ui->action_OpenProject, SIGNAL(triggered()),
-           this, SLOT(openProject()));
+  connect(_ui->action_OpenProject, SIGNAL(triggered()),
+          this, SLOT(openProject()));
 
-  connect (_ui->action_ImportFromExistingNCL, SIGNAL(triggered()),
-           this, SLOT(importFromDocument()));
+  connect(_ui->action_ImportFromExistingNCL, SIGNAL(triggered()),
+          this, SLOT(importFromDocument()));
 
-  connect (_ui->action_GoToClubeNCLWebsite, SIGNAL(triggered()),
-           this, SLOT(gotoNCLClubWebsite()));
+  connect(_ui->action_GoToClubeNCLWebsite, SIGNAL(triggered()),
+          this, SLOT(gotoNCLClubWebsite()));
 
-  connect (_ui->action_Help, SIGNAL(triggered()), this, SLOT(showHelp()));
+  connect(_ui->action_Help, SIGNAL(triggered()), this, SLOT(showHelp()));
 }
 
 /*!
@@ -764,9 +726,8 @@ void ComposerMainWindow::showCurrentWidgetFullScreen()
  */
 void ComposerMainWindow::updateViewMenu()
 {
-  //Update menu Views.
   _ui->menu_Views->clear();
-  if(_tabProjects->count()) //see if there is any open document
+  if(_tabProjects->count()) //check if there is an open document
   {
     QToolWindowManager *toolWidgetManager =
         dynamic_cast<QToolWindowManager *> (_tabProjects->currentWidget());
@@ -966,7 +927,6 @@ void ComposerMainWindow::saveAsCurrentProject()
       if (location != destFileName)
         ProjectControl::getInstance()->moveProject(location, destFileName);
 
-      /* Get the project */
       Project *project =
           ProjectControl::getInstance()->getOpenProject(destFileName);
 
@@ -1047,7 +1007,7 @@ void ComposerMainWindow::restorePerspective()
 
 void ComposerMainWindow::savePerspective (QString layoutName)
 {
-  if(_tabProjects->count()) //see if there is any open document
+  if(_tabProjects->count()) // Check if there is any open document
   {
     GlobalSettings settings;
 
@@ -1112,8 +1072,12 @@ void ComposerMainWindow::launchProjectWizard()
       if(info.exists())
       {
           if(QMessageBox::question(this, tr("File already exists!"),
-                                    tr("The file \"%1\" already exists. Do you want overwrite it?").arg(filename),
-                                    QMessageBox::Yes|QMessageBox::No, QMessageBox::No) == QMessageBox::No)
+                                   tr("The file \"%1\" already exists. Do "
+                                      "you want overwrite it?").arg(filename),
+                                   QMessageBox::Yes | QMessageBox::No,
+                                   QMessageBox::No)
+             == QMessageBox::No)
+
             return; // Do not overwrite!
 
           QFile::remove(filename); // Remove the OLD file (only if the user accept it)
@@ -1121,8 +1085,6 @@ void ComposerMainWindow::launchProjectWizard()
 
       // We dont need to check this, when creating a new project
       // checkTemporaryFileLastModified(filename);
-
-
       if(ProjectControl::getInstance()->launchProject(filename))
       {
         // After launch the project we will insert NCL, HEAD and BODY elements
@@ -1182,7 +1144,7 @@ void ComposerMainWindow::addDefaultStructureToProject(Project *project,
         settings.value("default_conn_base").toString();
     settings.endGroup();
 
-    qCDebug(CPR_GUI) << "[GUI] DefaultConnBase " << defaultConnBase;
+    qCDebug(CPR_GUI) << "Default connBase is " << defaultConnBase;
 
     QFileInfo defaultConnBaseInfo(defaultConnBase);
     if(defaultConnBaseInfo.exists())
@@ -1191,8 +1153,7 @@ void ComposerMainWindow::addDefaultStructureToProject(Project *project,
       QString newConnBase = filename. mid(0, filename.lastIndexOf("/")+1) +
                             defaultConnBaseInfo.fileName();
 
-      qCDebug(CPR_GUI) << "[GUI] Copy " << defaultConnBase << " to "
-               << newConnBase;
+      qCDebug(CPR_GUI) << "Copy " << defaultConnBase << " to " << newConnBase;
 
       //remove the file if it already exists
       if(QFile::exists(newConnBase))
@@ -1343,10 +1304,10 @@ bool ComposerMainWindow::removeTemporaryFile(QString location)
 void ComposerMainWindow::importFromDocument()
 {
   QString docFilename =
-          QFileDialog::getOpenFileName( this,
-                                        tr("Choose the NCL file to be imported"),
-                                        Utilities::getLastFileDialogPath(),
-                                        tr("NCL Documents (*.ncl)") );
+          QFileDialog::getOpenFileName(this,
+                                       tr("Choose the NCL file to be imported"),
+                                       Utilities::getLastFileDialogPath(),
+                                       tr("NCL Documents (*.ncl)") );
 
   if(docFilename != "")
   {
@@ -1356,8 +1317,8 @@ void ComposerMainWindow::importFromDocument()
           this,
           tr("Choose the NCL Composer Project where the NCL document must be "
              "imported"),
-           Utilities::getLastFileDialogPath(),
-           tr("NCL Composer Projects (*.cpr)") );
+          Utilities::getLastFileDialogPath(),
+          tr("NCL Composer Projects (*.cpr)"));
 
     //Create the file
     QFile f(projFilename);
@@ -1405,7 +1366,7 @@ void ComposerMainWindow::updateRecentProjectsWidgets()
     QAction *act = _ui->menu_Recent_Files->addAction(tr("empty"));
     act->setEnabled(false);
   }
-  else /* There are at least one element in the recentProject list */
+  else // There is at least one element in the recentProject list
   {
     for (int i = 0; i < recentProjects.size(); i++)
     {
@@ -1463,7 +1424,7 @@ void ComposerMainWindow::userPressedRecentProject(QString src)
       // Create the directory structure if it does not exist anymore
 
       QDir dir;
-      bool ok = dir.mkpath(QFileInfo(src).absolutePath()); // this function creates the path, with all its necessary parents;
+      bool ok = dir.mkpath(QFileInfo(src).absolutePath());
 
       if(!ok)
       {
@@ -1520,10 +1481,6 @@ void ComposerMainWindow::updateMenuPerspectives()
           keys.at(i), this, SLOT(restorePerspectiveFromMenu()) );
     act->setData(keys[i]);
   }
-
-  // Add Option to save current Perspective
-  /* _menuPerspective->addSeparator();
-  _menuPerspective->addAction(_saveCurrentPluginsLayoutAction); */
 }
 
 void ComposerMainWindow::updateMenuLanguages()
@@ -1726,10 +1683,8 @@ void ComposerMainWindow::slotLanguageChanged(QAction* action)
 void ComposerMainWindow::switchTranslator(QTranslator& translator,
                                           const QString& filename)
 {
-  // remove the old translator
-  qApp->removeTranslator(&translator);
+  qApp->removeTranslator(&translator); // remove the old translator
 
-  // load the new translator
   if(translator.load(filename))
     qApp->installTranslator(&translator);
 }
@@ -1739,13 +1694,12 @@ void ComposerMainWindow::switchTranslator(QTranslator& translator,
  */
 void ComposerMainWindow::loadLanguage(const QString& rLanguage)
 {
-  qCDebug(CPR_GUI) << rLanguage;
   if(_currLang != rLanguage)
   {
     _currLang = rLanguage;
     QLocale locale = QLocale(_currLang);
     QLocale::setDefault(locale);
-    QString languageName = QLocale::languageToString(locale.language());
+
     switchTranslator(_translator,
                      _langPath + "/" + QString("composer_%1.qm").arg(rLanguage));
     switchTranslator(_translatorQt, QString("qt_%1.qm").arg(rLanguage));
@@ -1753,7 +1707,7 @@ void ComposerMainWindow::loadLanguage(const QString& rLanguage)
 }
 
 /*!
- * \brief This event is called, when a new translator is loaded or the system
+ * \brief This method is called, when a new translator is loaded or the system
  * language is changed.
  */
 void ComposerMainWindow::changeEvent(QEvent* event)
@@ -1877,6 +1831,5 @@ CPR_GUI_END_NAMESPACE
 void cpr::gui::ComposerMainWindow::on_actionKeyboard_shortcuts_triggered()
 {
   ShortcutsDialog dialog(this);
-
   dialog.exec();
 }
