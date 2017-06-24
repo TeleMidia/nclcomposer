@@ -2,10 +2,11 @@
 Name=NCL Composer
 GenericName=NCL Composer
 Comment=Authoring enviroment for GINGA NCL applications
-Categories=AudioVideo
-Exec=/usr/bin/composer
-MimeType=application/x-nclcomposer
-TryExec=/usr/bin/composer
+Categories=AudioVideo;
+Exec=/usr/bin/nclcomposer
+MimeType=application/x-executable;
+TryExec=/usr/bin/nclcomposer
 Terminal=false
 Type=Application
-Icon=composer
+Icon=/usr/share/icons/hicolor/scalable/nclcomposer.svg
+
