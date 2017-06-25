@@ -208,12 +208,10 @@ signals:
    * \param type
    * \param parentEntityId
    * \param atts
-   * \param force
    */
   void addEntity(const QString &type,
                  const QString &parentEntityId,
-                 const QMap<QString,QString>& atts,
-                 bool force);
+                 const QMap<QString,QString>& atts);
 
   /*!
    * \brief This message can be used to add a new comment in the model.
@@ -248,8 +246,7 @@ signals:
    * \param force
    */
   void setAttributes( Entity *entity,
-                      const QMap<QString,QString> &atts,
-                      bool force );
+                      const QMap<QString,QString> &atts);
   /*!
    * \brief This message can be used to ask the core to remove an Entity.
    *
@@ -257,7 +254,7 @@ signals:
    * \param force It should be true if the user want to remove that entity even
    *  the internal model will not be consistent.
    */
-  void removeEntity(Entity *entity, bool force);
+  void removeEntity(Entity *entity);
 
   /*!
    * \brief Say the core that the plugin is interested in just the entities of

@@ -171,7 +171,7 @@ signals:
    * \param
    * \param bool
    */
-  void elementAddedByUser(QString, QString, QMap<QString,QString>&, bool);
+  void elementAddedByUser(QString, QString, QMap<QString,QString>&);
   /*!
    * \brief
    *

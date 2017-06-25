@@ -28,13 +28,11 @@ OutlineViewPlugin::OutlineViewPlugin() :
   connect ( _window,
             SIGNAL( elementAddedByUser ( QString,
                                          QString,
-                                         QMap <QString, QString> &,
-                                         bool)),
+                                         QMap <QString, QString> &)),
             this,
             SLOT( elementAddedByUser( QString,
                                       QString,
-                                      QMap <QString, QString> &,
-                                      bool)));
+                                      QMap <QString, QString> &)));
 
   connect (_window, SIGNAL(elementRemovedByUser(QString)),
            this, SLOT(elementRemovedByUser(QString)));
@@ -120,7 +118,7 @@ void OutlineViewPlugin::onEntityAdded(const QString &pluginID, Entity *entity)
     if(!attrs.keys().contains("id"))
     {
       attrs.insert("id", project->generateUniqueAttrId(entity->getType()));
-      emit setAttributes(entity, attrs, false);
+      emit setAttributes(entity, attrs);
     }
   }
 
@@ -190,20 +188,19 @@ void OutlineViewPlugin::onEntityRemoved( const QString &pluginID,
 void OutlineViewPlugin::elementRemovedByUser(QString itemId)
 {
   Entity *entity = project->getEntityById(itemId);
-  emit removeEntity(entity, false);
+  emit removeEntity(entity);
 }
 
 void OutlineViewPlugin::elementAddedByUser( QString type,
                                             QString parentId,
-                                            QMap <QString, QString> & atts,
-                                            bool force)
+                                            QMap <QString, QString> & atts)
 {
   /* If there is no parent, put as child of root */
   if(parentId == "")
     parentId = project->getUniqueId();
 
   qWarning() << "OutlineViewPlugin::elementAddedByUser calling addEntity";
-  emit addEntity(type, parentId, atts, force);
+  emit addEntity(type, parentId, atts);
 }
 
 bool OutlineViewPlugin::saveSubsession()

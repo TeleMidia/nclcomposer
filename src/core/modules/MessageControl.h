@@ -48,7 +48,7 @@ public:
    *
    * \param project
    */
-  MessageControl(Project *_project);
+  explicit MessageControl(Project *project);
   /*!
    * \brief Destructor.
    */

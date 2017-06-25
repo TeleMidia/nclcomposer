@@ -84,13 +84,10 @@ signals:
    * \param type the type of the entity (XML tagname).
    * \param parentEntityId uniqueId of the father.
    * \param atts attributes of this entity.
-   * \param force true if the entity must be added even if this cause an error
-   *  in the model.
    */
   void addEntity( const QString &type,
                   const QString &parentEntityId,
-                  const QMap<QString,QString>& atts,
-                  bool force );
+                  const QMap<QString,QString>& atts);
 };
 
 CPR_CORE_END_NAMESPACE

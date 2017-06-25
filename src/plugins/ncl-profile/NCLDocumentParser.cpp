@@ -82,7 +82,7 @@ bool NCLDocumentParser::startElement(const QString &,
   for (int i=0 ;i < attributes.count(); i++)
     atts[attributes.qName(i)] = attributes.value(i);
 
-  emit addEntity(qName, parentId, atts, false);
+  emit addEntity(qName, parentId, atts);
 
   return true;
 }

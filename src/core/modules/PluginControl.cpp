@@ -219,25 +219,11 @@ void PluginControl::launchNewPlugin(IPluginFactory *factory, Project *project)
 
 void PluginControl::launchNewPlugin(IPlugin *plugin, MessageControl *mControl)
 {
-  /* Connect signals from the core to slots in the plugins */
-  /*
-    \deprecated
-
-    Now, the message control is reponsible for calling these slots directly.
-
-    connect(mControl,SIGNAL(entityAdded(QString, Entity*)),
-            plugin, SLOT(onEntityAdded(QString, Entity*)));
-    connect(mControl,SIGNAL(entityChanged(QString, Entity*)),
-            plugin,SLOT(onEntityChanged(QString, Entity*)));
-    connect(mControl,SIGNAL(entityRemoved(QString, QString)),
-            plugin,SLOT(onEntityRemoved(QString, QString)));
-    */
-
   /* Connect signals from the plugin to slots of the core */
   connect(plugin,
-          SIGNAL(addEntity(const QString&, const QString&, const QMap<QString,QString>&, bool)),
+          SIGNAL(addEntity(const QString&, const QString&, const QMap<QString,QString>&)),
           mControl,
-          SLOT(onAddEntity(const QString&, const QString&, const QMap<QString,QString>&, bool)),
+          SLOT(onAddEntity(const QString&, const QString&, const QMap<QString,QString>&)),
           Qt::DirectConnection);
 
   connect(plugin,
@@ -247,21 +233,21 @@ void PluginControl::launchNewPlugin(IPlugin *plugin, MessageControl *mControl)
           Qt::DirectConnection);
 
   connect(plugin,
-          SIGNAL(addEntity(const QString&, const QString&, Data::Format,bool)),
+          SIGNAL(addEntity(const QString&, const QString&, Data::Format)),
           mControl,
-          SLOT(onAddEntity(const QString&, const QString&, Data::Format,bool)),
+          SLOT(onAddEntity(const QString&, const QString&, Data::Format)),
           Qt::DirectConnection);
 
   connect(plugin,
-          SIGNAL(setAttributes(Entity*, const QMap<QString,QString>&, bool)),
+          SIGNAL(setAttributes(Entity*, const QMap<QString,QString>&)),
           mControl,
-          SLOT(onEditEntity(Entity*, const QMap<QString,QString>&, bool)),
+          SLOT(onEditEntity(Entity*, const QMap<QString,QString>&)),
           Qt::DirectConnection);
 
   connect(plugin,
-          SIGNAL(removeEntity(Entity*, bool)),
+          SIGNAL(removeEntity(Entity*)),
           mControl,
-          SLOT(onRemoveEntity(Entity*,bool)),
+          SLOT(onRemoveEntity(Entity*)),
           Qt::DirectConnection);
 
   connect(plugin,
@@ -291,9 +277,9 @@ void PluginControl::connectParser(IDocumentParser *parser,
                                   MessageControl *mControl)
 {
   connect(parser,
-          SIGNAL(addEntity(QString, QString, QMap<QString,QString>&, bool)),
+          SIGNAL(addEntity(QString, QString, QMap<QString,QString>&)),
           mControl,
-          SLOT(onAddEntity(QString, QString, QMap<QString,QString>&, bool)));
+          SLOT(onAddEntity(QString, QString, QMap<QString,QString>&)));
 
   connect(mControl,SIGNAL(entityAdded(const QString&, Entity*)),
           parser, SLOT(onEntityAdded(const QString&, Entity*)));
@@ -314,13 +300,13 @@ bool PluginControl::releasePlugins(Project *project)
 {
   if (!project)
   {
-    qCDebug(CPR_CORE) << "Project is nullptr";
+    qCDebug(CPR_CORE) << "Project is null.";
     return false;
   }
 
   if (!_messageControls.contains(project))
   {
-    qCDebug(CPR_CORE) << "Message Control does not know the project";
+    qCDebug(CPR_CORE) << "Message Control does not know the project.";
     return false;
   }
 

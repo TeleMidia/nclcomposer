@@ -900,9 +900,9 @@ void NCLLayoutViewPlugin::addRegion(const QString &regionUID,
 
   // emitting
   if (!parentUID.isEmpty())
-    emit addEntity("region", parentUID, standard, false);
+    emit addEntity("region", parentUID, standard);
   else
-    emit addEntity("region", regionbaseUID, standard, false);
+    emit addEntity("region", regionbaseUID, standard);
 }
 
 void NCLLayoutViewPlugin::removeRegion(const QString &regionUID,
@@ -912,7 +912,7 @@ void NCLLayoutViewPlugin::removeRegion(const QString &regionUID,
 
   if (regions.contains(regionUID))
   {
-    emit removeEntity(regions[regionUID], false);
+    emit removeEntity(regions[regionUID]);
   }
 }
 
@@ -955,7 +955,7 @@ void NCLLayoutViewPlugin::changeRegion(const QString &regionUID,
       standard["zIndex"] = attributes["zIndex"];
 
     // emitting
-    emit setAttributes(regions[regionUID], standard, false);
+    emit setAttributes(regions[regionUID], standard);
   }
 }
 
@@ -996,7 +996,7 @@ void NCLLayoutViewPlugin::addRegionBase(const QString &regionbaseUID,
 
   QString headUID = getHeadUid();
   // emitting
-  emit addEntity("regionBase", headUID, standard, false);
+  emit addEntity("regionBase", headUID, standard);
 }
 
 void NCLLayoutViewPlugin::removeRegionBase(const QString &regionbaseUID)
@@ -1005,7 +1005,7 @@ void NCLLayoutViewPlugin::removeRegionBase(const QString &regionbaseUID)
   {
     mainWindow->removeRegionBaseFromCombobox(regionbaseUID);
 
-    emit removeEntity(regionbases[regionbaseUID], false);
+    emit removeEntity(regionbases[regionbaseUID]);
   }
 }
 
@@ -1046,7 +1046,7 @@ void NCLLayoutViewPlugin::changeRegionBase(
       standard["zIndex"] = attributes["zIndex"];
 
     // emitting
-    emit setAttributes(regionbases[regionbaseUID],standard, false);
+    emit setAttributes(regionbases[regionbaseUID],standard);
 
     mainWindow->updateRegionBaseInComboBox(regionbaseUID, attributes);
   }
@@ -1103,8 +1103,7 @@ QString NCLLayoutViewPlugin::getHeadUid()
 
       emit addEntity("ncl",
                      getProject()->getUniqueId(),
-                     atts,
-                     false);
+                     atts);
     }
 
     QString nclUID =
@@ -1112,7 +1111,7 @@ QString NCLLayoutViewPlugin::getHeadUid()
 
     QMap<QString, QString> atts;
 
-    emit addEntity("head", nclUID, atts, false);
+    emit addEntity("head", nclUID, atts);
   }
 
   return getProject()->getEntitiesbyType("head").at(0)->getUniqueId();
@@ -1290,7 +1289,7 @@ void NCLLayoutViewPlugin::performMediaOverRegionAction(const QString &mediaId,
         {
           if(!descritorBases.size()) // if does not exists any descriptorBase
             // create one
-            emit addEntity("descriptorBase", getHeadUid(), attrs, false);
+            emit addEntity("descriptorBase", getHeadUid(), attrs);
 
           // If we choose the new descriptor (create it)
           if(!alredyExistentsDescriptorsIds.contains(newDescriptorID))
@@ -1300,15 +1299,14 @@ void NCLLayoutViewPlugin::performMediaOverRegionAction(const QString &mediaId,
             attrs.insert("id", newDescriptorID);
             attrs.insert("region", region->getAttribute("id"));
 
-            emit addEntity("descriptor", descriptorBase->getUniqueId(), attrs,
-                           false);
+            emit addEntity("descriptor", descriptorBase->getUniqueId(), attrs);
           }
 
           //update the media to refer to this descriptor
           attrs.clear();
           attrs = media->getAttributes();
           attrs["descriptor"] = newDescriptorID;
-          emit setAttributes(media, attrs, false);
+          emit setAttributes(media, attrs);
         }
       }
       // import properties from region to media element
@@ -1337,10 +1335,10 @@ void NCLLayoutViewPlugin::performMediaOverRegionAction(const QString &mediaId,
           if(propertyNameToUID.keys().contains(key))
           {
             QString propUID = propertyNameToUID.value(key);
-            emit setAttributes(project->getEntityById(propUID), attrs, false);
+            emit setAttributes(project->getEntityById(propUID), attrs);
           }
           else
-            emit addEntity("property", media->getUniqueId(), attrs, false);
+            emit addEntity("property", media->getUniqueId(), attrs);
         }
       }
     }
@@ -1357,20 +1355,20 @@ void NCLLayoutViewPlugin::performMediaOverRegionAction(const QString &mediaId,
 
       if(!descritorBases.size()) // if does not exists any descriptorBase
         // create one
-        emit addEntity("descriptorBase", getHeadUid(), attrs, false);
+        emit addEntity("descriptorBase", getHeadUid(), attrs);
 
       Entity *descriptorBase =
           project->getEntitiesbyType("descriptorBase").at(0);
       attrs.insert("id", newDescriptorID);
       attrs.insert("region", region->getAttribute("id"));
 
-      emit addEntity("descriptor", descriptorBase->getUniqueId(), attrs, false);
+      emit addEntity("descriptor", descriptorBase->getUniqueId(), attrs);
 
       //update the media to refer to this descriptor
       attrs.clear();
       attrs = media->getAttributes();
       attrs["descriptor"] = newDescriptorID;
-      emit setAttributes(media, attrs, false);
+      emit setAttributes(media, attrs);
 
       if(media->hasAttribute("type") &&
          media->getAttribute("type") == "text/html")
@@ -1385,7 +1383,7 @@ void NCLLayoutViewPlugin::performMediaOverRegionAction(const QString &mediaId,
           attrs = desc->getAttributes();
           attrs["focusIndex"] = "1";
           if(descriptors.size())
-            emit setAttributes(desc, attrs, false);
+            emit setAttributes(desc, attrs);
         }
       }
     }

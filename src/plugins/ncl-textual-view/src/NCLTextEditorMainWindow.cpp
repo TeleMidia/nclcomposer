@@ -599,7 +599,7 @@ void NCLTextEditorMainWindow::insertElement()
     textEdit->ensureLineVisible(line);
     textEdit->SendScintilla(QsciScintilla::SCI_SETFOCUS, true);
 
-    emit elementAdded(tagname, id, empty, false);
+    emit elementAdded(tagname, id, empty);
   }
 #endif
 

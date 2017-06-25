@@ -377,7 +377,7 @@ void NCLTreeWidget::userAddNewElement()
     if(element == "ncl")
       attr.insert("id", "myNCLID");
 
-    emit elementAddedByUser (element, parentId, attr, false);
+    emit elementAddedByUser (element, parentId, attr);
   }
 }
 

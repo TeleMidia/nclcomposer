@@ -43,10 +43,10 @@ NCLTextualViewPlugin::NCLTextualViewPlugin()
   project = nullptr;
   connect(_window,
           SIGNAL(elementAdded(const QString&, const QString&,
-                              const QMap<QString,QString>&, bool)),
+                              const QMap<QString,QString>&)),
           this,
           SIGNAL(addEntity(const QString&, const QString&,
-                           const QMap<QString,QString>&, bool)));
+                           const QMap<QString,QString>&)));
 
   _isSyncing = false;
 
@@ -575,7 +575,7 @@ void NCLTextualViewPlugin::nonIncrementalUpdateCoreModel()
   //delete the content of the current project
   while (project->getChildren().size())
   {
-    emit removeEntity(project->getChildren().at(0), true);
+    emit removeEntity(project->getChildren().at(0));
   }
 
   // clear the entities offset
@@ -615,7 +615,7 @@ void NCLTextualViewPlugin::nonIncrementalUpdateCoreModel()
     }
 
     //Send the addEntity to the core plugin
-    emit addEntity(current.tagName(), parentUId, atts, false);
+    emit addEntity(current.tagName(), parentUId, atts);
     parentUId = _currentEntity->getUniqueId();
 
     QDomElement child = current.firstChildElement();
@@ -744,13 +744,13 @@ void NCLTextualViewPlugin::incrementalUpdateCoreModel()
           changed = true;
 
         if(changed)
-          emit setAttributes(entityChildren[j], atts, false);
+          emit setAttributes(entityChildren[j], atts);
       }
       else
       {
         //if types are not equal, then we should change the type
         //i.e. remove the entity
-        emit removeEntity(entityChildren[j], true);
+        emit removeEntity(entityChildren[j]);
         //and insert a new entity with the required type.
         QMap<QString,QString> atts;
         QDomNamedNodeMap attributes = children[i].attributes();
@@ -759,8 +759,7 @@ void NCLTextualViewPlugin::incrementalUpdateCoreModel()
           QDomNode item = attributes.item(k);
           atts[item.nodeName()] = item.nodeValue();
         }
-        emit addEntity(children[i].tagName(), curEntity->getUniqueId(), atts,
-                       false);
+        emit addEntity(children[i].tagName(), curEntity->getUniqueId(), atts);
       }
     }
 
@@ -768,7 +767,7 @@ void NCLTextualViewPlugin::incrementalUpdateCoreModel()
     {
       // if there are more entities in the composer model than in the XML
       for(; j < entityChildren.size(); j++)
-        emit removeEntity(entityChildren[j], true);
+        emit removeEntity(entityChildren[j]);
     }
     else if(j == entityChildren.size())
     {
@@ -783,8 +782,7 @@ void NCLTextualViewPlugin::incrementalUpdateCoreModel()
           QDomNode item = attributes.item(k);
           atts[item.nodeName()] = item.nodeValue();
         }
-        emit addEntity(children[i].tagName(), curEntity->getUniqueId(), atts,
-                       false);
+        emit addEntity(children[i].tagName(), curEntity->getUniqueId(), atts);
       }
     }
 

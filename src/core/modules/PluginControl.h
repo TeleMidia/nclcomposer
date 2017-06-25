@@ -169,9 +169,9 @@ signals:
    * \param project
    * \param n
    */
-  void addPluginWidgetToWindow( IPluginFactory *pluginFactory,
-                                IPlugin *plugin,
-                                Project* project );
+  void addPluginWidgetToWindow(IPluginFactory *pluginFactory,
+                               IPlugin *plugin,
+                               Project* project);
 
 private:
   /*!

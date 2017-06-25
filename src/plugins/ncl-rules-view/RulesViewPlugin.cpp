@@ -82,7 +82,7 @@ void RulesViewPlugin::onEntityAdded(const QString &pluginID, Entity *entity)
           _operator = "and";
         attrs["operator"] = _operator;
       }
-      emit setAttributes(entity, attrs, false);
+      emit setAttributes(entity, attrs);
     }
     connect(_rulesTable, SIGNAL(itemChanged(QTreeWidgetItem*,int)),
             this, SLOT(updateValue(QTreeWidgetItem*)));
@@ -327,7 +327,7 @@ void RulesViewPlugin::updateValue(QTreeWidgetItem* item)
   }
 
   if (!attr.isEmpty())
-    emit setAttributes(entity, attr, true);
+    emit setAttributes(entity, attr);
 
 }
 
@@ -353,7 +353,7 @@ void RulesViewPlugin::sendRemoveEntitySignal(QTreeWidgetItem *item)
 
   Entity *entity = _currentProject->getEntityById(uId);
   if (entity)
-    emit removeEntity(entity, true);
+    emit removeEntity(entity);
 }
 
 void RulesViewPlugin::sendAddEntitySignal(QTreeWidgetItem *parent, int type)
@@ -369,7 +369,7 @@ void RulesViewPlugin::sendAddEntitySignal(QTreeWidgetItem *parent, int type)
       if (entities.count() > 0)
       {
         parentUId = entities.first()->getUniqueId();
-        emit addEntity(RULEBASE_LABEL, parentUId, attr, true);
+        emit addEntity(RULEBASE_LABEL, parentUId, attr);
       }
       else
       {
@@ -386,7 +386,7 @@ void RulesViewPlugin::sendAddEntitySignal(QTreeWidgetItem *parent, int type)
   {
     QMap <QString, QString> attr;
     emit addEntity(type == RULE_TYPE ? RULE_LABEL : COMPOSITERULE_LABEL,
-                   parentUId, attr, true);
+                   parentUId, attr);
   }
 }
 

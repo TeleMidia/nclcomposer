@@ -194,7 +194,7 @@ void PropertiesViewPlugin::updateCurrentEntityAttr(QString attr, QString value)
         }
       }
 
-      emit setAttributes(_currentEntity, attrs, false);
+      emit setAttributes(_currentEntity, attrs);
     }
   }
 }

@@ -66,7 +66,7 @@ public:
 signals:
   void elementAdded( const QString&,
                      const QString&,
-                     const QMap <QString, QString>&, bool );
+                     const QMap <QString, QString>&);
   void focusLosted();
 
 protected:

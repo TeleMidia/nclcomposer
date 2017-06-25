@@ -177,8 +177,7 @@ private slots:
    */
   void elementAddedByUser( QString type,
                            QString parentId,
-                           QMap <QString, QString> & atts,
-                           bool force);
+                           QMap <QString, QString> & atts);
   /*!
    * \brief
    */

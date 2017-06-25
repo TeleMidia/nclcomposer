@@ -33,9 +33,6 @@ MessageControl::MessageControl(Project *project)
   // Register MetaType allowing to be used by invoke
   qRegisterMetaType<Entity *>("Entity *");
 
-  // qRegisterMetaType<QString>("QString");
-  // qRegisterMetaType<const void *>("const Entity *");
-
   _qUndoStack = new QUndoStack(this);
 }
 

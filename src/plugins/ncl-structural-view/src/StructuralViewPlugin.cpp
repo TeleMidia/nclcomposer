@@ -922,7 +922,7 @@ void StructuralViewPlugin::insertInCore(QString uid, QString parent, QMap<QStrin
       if (project != NULL)
       {
         QMap<QString, QString> attributes;
-        emit addEntity("ncl", project->getUniqueId(), attributes, false);
+        emit addEntity("ncl", project->getUniqueId(), attributes);
       }
 
       list = getProject()->getEntitiesbyType("ncl");
@@ -956,7 +956,7 @@ void StructuralViewPlugin::insertInCore(QString uid, QString parent, QMap<QStrin
     _waiting = true;
     _notified = uid;
 
-    emit addEntity(StructuralUtil::translateTypeToString(type), entityParent->getUniqueId(), attributes, false);
+    emit addEntity(StructuralUtil::translateTypeToString(type), entityParent->getUniqueId(), attributes);
 
     if (type == Structural::Link ||
         type == Structural::Bind) {
@@ -988,7 +988,7 @@ void StructuralViewPlugin::insertInCore(QString uid, QString parent, QMap<QStrin
           _waiting = true;
           _notified = pUid;
 
-          emit addEntity(tag, _mapViewToCore.value(uid), pAttr, false);
+          emit addEntity(tag, _mapViewToCore.value(uid), pAttr);
         }
       }
     }
@@ -998,7 +998,7 @@ void StructuralViewPlugin::insertInCore(QString uid, QString parent, QMap<QStrin
 void StructuralViewPlugin::removeInCore(QString uid, QMap<QString, QString> settings)
 {
   if (!_mapViewToCore.value(uid, "").isEmpty()) {
-    emit removeEntity(getProject()->getEntityById(_mapViewToCore.value(uid)), false);
+    emit removeEntity(getProject()->getEntityById(_mapViewToCore.value(uid)));
 
     _mapCoreToView.remove(_mapViewToCore.value(uid));
     _mapViewToCore.remove(uid);
@@ -1144,7 +1144,7 @@ void StructuralViewPlugin::changeInCore(QString uid, QMap<QString, QString> prop
 
             _waiting = true;
 
-            emit setAttributes(param, pAttr, false);
+            emit setAttributes(param, pAttr);
 
           // Change a param entity in core that has not been added
           // by the view and contains a empty 'value' attribute.
@@ -1159,24 +1159,24 @@ void StructuralViewPlugin::changeInCore(QString uid, QMap<QString, QString> prop
 
             _waiting = true;
 
-            emit setAttributes(param, pAttr, false);
+            emit setAttributes(param, pAttr);
 
           } else {
             _waiting = true;
             _notified = pUid;
 
-            emit addEntity(tag, entity->getUniqueId(), pAttr, false);
+            emit addEntity(tag, entity->getUniqueId(), pAttr);
           }
         }
       }
 
       foreach (QString pUid, paramUids)
-        emit removeEntity(getProject()->getEntityById(pUid), false);
+        emit removeEntity(getProject()->getEntityById(pUid));
     }
 
     _waiting = true;
 
-    emit setAttributes(entity, attributes, false);
+    emit setAttributes(entity, attributes);
   }
 }
 
