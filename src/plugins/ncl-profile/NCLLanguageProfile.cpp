@@ -13,38 +13,38 @@
 
 CPR_NCLPROFILE_BEGIN_NAMESPACE
 
-NCLLanguageProfile::NCLLanguageProfile()
-{
-}
+NCLLanguageProfile::NCLLanguageProfile () {}
 
-NCLLanguageProfile::~NCLLanguageProfile()
-{
+NCLLanguageProfile::~NCLLanguageProfile () {}
 
-}
-
-LanguageType NCLLanguageProfile::getLanguageType()
+LanguageType
+NCLLanguageProfile::getLanguageType ()
 {
   return NCL;
 }
 
-QString NCLLanguageProfile::getProfileName()
+QString
+NCLLanguageProfile::getProfileName ()
 {
   return "Nested Context Language Profile";
 }
 
-QList<QString> NCLLanguageProfile::getOutputDocumentTypes()
+QList<QString>
+NCLLanguageProfile::getOutputDocumentTypes ()
 {
   QList<QString> list;
-  list.append("ncl");
+  list.append ("ncl");
   return list;
 }
 
-IDocumentParser* NCLLanguageProfile::createParser (Project *project)
+IDocumentParser *
+NCLLanguageProfile::createParser (Project *project)
 {
   return new NCLDocumentParser (project);
 }
 
-void NCLLanguageProfile::releaseDocumentParser (IDocumentParser *parser)
+void
+NCLLanguageProfile::releaseDocumentParser (IDocumentParser *parser)
 {
   if (parser)
   {
@@ -53,26 +53,28 @@ void NCLLanguageProfile::releaseDocumentParser (IDocumentParser *parser)
   }
 }
 
-map <QString, map <QString, char> *> *NCLLanguageProfile::getNesting()
+map<QString, map<QString, char> *> *
+NCLLanguageProfile::getNesting ()
 {
-  return NCLStructure::getInstance()->getNesting();
+  return NCLStructure::getInstance ()->getNesting ();
 }
 
-map <QString, bool> *NCLLanguageProfile::getAttributes (const QString &element)
+map<QString, bool> *
+NCLLanguageProfile::getAttributes (const QString &element)
 {
-  return NCLStructure::getInstance()->getAttributes(element);
+  return NCLStructure::getInstance ()->getAttributes (element);
 }
 
-map <QString, char> *NCLLanguageProfile::getChildren (const QString &tagname)
+map<QString, char> *
+NCLLanguageProfile::getChildren (const QString &tagname)
 {
-  return NCLStructure::getInstance()->getChildren(tagname);
+  return NCLStructure::getInstance ()->getChildren (tagname);
 }
 
-vector <AttributeReferences *>
-        NCLLanguageProfile::getReferences (const QString &element,
-                                           const QString &attr)
+vector<AttributeReferences *>
+NCLLanguageProfile::getReferences (const QString &element, const QString &attr)
 {
-  return NCLStructure::getInstance()->getReferences(element, attr);
+  return NCLStructure::getInstance ()->getReferences (element, attr);
 }
 
 CPR_NCLPROFILE_END_NAMESPACE

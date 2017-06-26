@@ -12,60 +12,57 @@
 
 #include "NCLLanguageProfile_global.h"
 
-#include <QObject>
 #include <QDebug>
-#include <QXmlDefaultHandler>
-#include <QStack>
 #include <QMutex>
+#include <QObject>
+#include <QStack>
 #include <QWaitCondition>
+#include <QXmlDefaultHandler>
 
 #include <extensions/IDocumentParser.h>
 using namespace cpr::core;
 
 CPR_NCLPROFILE_BEGIN_NAMESPACE
 
-class NCLLANGUAGEPROFILESHARED_EXPORT NCLDocumentParser :
-    public IDocumentParser,
-    public QXmlDefaultHandler
+class NCLLANGUAGEPROFILESHARED_EXPORT NCLDocumentParser
+    : public IDocumentParser,
+      public QXmlDefaultHandler
 {
   Q_OBJECT
 
 public:
-  explicit NCLDocumentParser(Project *_project);
-  ~NCLDocumentParser();
+  explicit NCLDocumentParser (Project *_project);
+  ~NCLDocumentParser ();
 
-  bool parseDocument(); // \deprecated
-  bool parseContent(const QString &str);
-  QString getParserName();
+  bool parseDocument (); // \deprecated
+  bool parseContent (const QString &str);
+  QString getParserName ();
 
-  bool serialize();
+  bool serialize ();
 
 public slots:
-    void onEntityAddError(const QString &error);
-    void onEntityAdded(const QString &ID, Entity *entity);
+  void onEntityAddError (const QString &error);
+  void onEntityAdded (const QString &ID, Entity *entity);
 
 signals:
-    void parseFinished();
+  void parseFinished ();
 
 protected:
-  bool startElement( const QString &namespaceURI,
-                     const QString &localName,
-                     const QString &qName,
-                     const QXmlAttributes &attributes );
-  bool endElement( const QString &namespaceURI,
-                   const QString &localName,
-                   const QString &qName );
+  bool startElement (const QString &namespaceURI, const QString &localName,
+                     const QString &qName, const QXmlAttributes &attributes);
+  bool endElement (const QString &namespaceURI, const QString &localName,
+                   const QString &qName);
 
-  bool characters(const QString &str);
-  bool fatalError(const QXmlParseException &exception);
+  bool characters (const QString &str);
+  bool fatalError (const QXmlParseException &exception);
 
-  bool endDocument();
+  bool endDocument ();
 
 private:
   Project *_project;
   QMutex _lockStack;
   QWaitCondition _sync;
-  QStack<Entity*> _elementStack;
+  QStack<Entity *> _elementStack;
 };
 
 CPR_NCLPROFILE_END_NAMESPACE

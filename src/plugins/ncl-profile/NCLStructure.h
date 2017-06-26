@@ -12,12 +12,12 @@
 
 #include "NCLLanguageProfile_global.h"
 
-#include <QtDebug>
 #include <QFile>
+#include <QStringList>
 #include <QTextStream>
+#include <QtDebug>
 #include <deque>
 #include <map>
-#include <QStringList>
 using namespace std;
 
 #include <util/AttributeReferences.h>
@@ -34,21 +34,21 @@ CPR_NCLPROFILE_BEGIN_NAMESPACE
  */
 class NCLLANGUAGEPROFILESHARED_EXPORT NCLStructure
 {
-  SINGLETON(NCLStructure)
+  SINGLETON (NCLStructure)
 
 public:
   /*!
    * \brief
    *
    */
-  void loadStructure();
+  void loadStructure ();
   /*!
    * \brief
    *
    */
-  void clear();
+  void clear ();
 
-  //primitives
+  // primitives
   /*!
    * \brief
    *
@@ -58,10 +58,8 @@ public:
    *
    * \todo use const for parameters
    */
-  void addElement ( const QString &name,
-                    const QString &father,
-                    char cardinality,
-                    bool define_scope = false );
+  void addElement (const QString &name, const QString &father,
+                   char cardinality, bool define_scope = false);
   /*!
    * \brief
    *
@@ -72,10 +70,8 @@ public:
    *
    * \todo use const for parameters
    */
-  void addAttribute ( const QString &element,
-                      const QString &attr,
-                      const QString &type,
-                      bool required );
+  void addAttribute (const QString &element, const QString &attr,
+                     const QString &type, bool required);
   /*!
    * \brief
    *
@@ -87,11 +83,9 @@ public:
    *
    * \todo use const for parameters
    */
-  void addReference ( const QString &element,
-                      const QString &attr,
-                      const QString &ref_element,
-                      const QString &ref_attr,
-                      const QString &scope );
+  void addReference (const QString &element, const QString &attr,
+                     const QString &ref_element, const QString &ref_attr,
+                     const QString &scope);
 
   /*!
    * \brief addDatatype
@@ -101,7 +95,7 @@ public:
    *
    * \todo use const for parameters
    */
-  void addDatatype( const QString &datatype, const QString &regex );
+  void addDatatype (const QString &datatype, const QString &regex);
 
   /*!
    * \brief addDatatypeDefaultSuggestions
@@ -111,7 +105,8 @@ public:
    *
    * \todo use const for parameters
    */
-  void addDatatypeDefaultSuggestions(const QString &datatype, const QString &values);
+  void addDatatypeDefaultSuggestions (const QString &datatype,
+                                      const QString &values);
 
   /*!
    * \brief getDatatypeDefaultSuggestions
@@ -120,7 +115,7 @@ public:
    *
    * \todo use const for parameters
    */
-  QStringList getDatatypeDefaultSuggestions(const QString &datatype);
+  QStringList getDatatypeDefaultSuggestions (const QString &datatype);
 
   /*!
    * \brief getNesting
@@ -128,7 +123,7 @@ public:
    *
    * \todo use const to not allow user to modify the map
    */
-  map <QString, map <QString, char> *> *getNesting();
+  map<QString, map<QString, char> *> *getNesting ();
 
   /*!
    * \brief
@@ -139,7 +134,7 @@ public:
    * \todo use const for parameters
    * \todo use const to not allow user to modify the map
    */
-  map <QString, bool> *getAttributes (const QString &element);
+  map<QString, bool> *getAttributes (const QString &element);
 
   /*!
    * \brief getAttributesOrdered
@@ -149,7 +144,7 @@ public:
    * \todo use const for parameters
    * \todo use const to not allow user to modify the deque
    */
-  deque <QString> *getAttributesOrdered (const QString &element);
+  deque<QString> *getAttributesOrdered (const QString &element);
 
   /*!
    * \brief getChildren
@@ -159,7 +154,7 @@ public:
    * \todo use const for parameters
    * \todo use const to not allow user to modify the map
    */
-  map <QString, char> *getChildren (const QString &tagname);
+  map<QString, char> *getChildren (const QString &tagname);
 
   /*!
    * \brief getElementsOrdered
@@ -167,7 +162,7 @@ public:
    *
    * \todo use const to not allow user to modify the deque
    */
-  deque <QString> *getElementsOrdered();
+  deque<QString> *getElementsOrdered ();
 
   /*!
    * \brief getReferences
@@ -178,8 +173,8 @@ public:
    * \todo use const for parameters
    * \todo use const to not allow user to modify the map
    */
-  vector <AttributeReferences *> getReferences (const QString &element,
-                                                const QString &attr);
+  vector<AttributeReferences *> getReferences (const QString &element,
+                                               const QString &attr);
   /*!
    * \brief getAttributeDatatype
    *
@@ -189,7 +184,7 @@ public:
    *
    * \todo use const for parameters
    */
-  QString getAttributeDatatype(const QString &element, const QString &name);
+  QString getAttributeDatatype (const QString &element, const QString &name);
 
   /*!
    * \brief defineScope
@@ -198,29 +193,29 @@ public:
    *
    * \todo use const for parameters
    */
-  bool defineScope(const QString &tagname);
+  bool defineScope (const QString &tagname);
 
 private:
-  map <QString, map <QString, bool> *>  *attributes; /**< TODO */
-  map <QString, deque <QString> *>      *attributes_ordered; /**< TODO */
-  map <QString, map <QString, char> *>  *nesting; /**< TODO */
-  deque <QString>                       *elements_ordered;
-  map <QString, QString >               *dataTypes; /**< TODO */
+  map<QString, map<QString, bool> *> *attributes;     /**< TODO */
+  map<QString, deque<QString> *> *attributes_ordered; /**< TODO */
+  map<QString, map<QString, char> *> *nesting;        /**< TODO */
+  deque<QString> *elements_ordered;
+  map<QString, QString> *dataTypes; /**< TODO */
 
-  map <QString, QStringList>                  *dataTypeDefaultSuggestions;
-  map <QString, map <QString, QString> *>     *attributesDatatype; /**< TODO */
-  QMultiMap <QString, AttributeReferences* >  *references; /**< TODO */
-  map <QString, bool>                         define_scope;
+  map<QString, QStringList> *dataTypeDefaultSuggestions;
+  map<QString, map<QString, QString> *> *attributesDatatype; /**< TODO */
+  QMultiMap<QString, AttributeReferences *> *references;     /**< TODO */
+  map<QString, bool> define_scope;
 
   /*!
    * \brief Constructor (it is private because this class is a singleton).
    */
-  NCLStructure();
+  NCLStructure ();
 
   /*!
    * \brief Destructor
    */
-  ~NCLStructure();
+  ~NCLStructure ();
 
   /*!
    * \brief
@@ -228,7 +223,7 @@ private:
    * \param line
    * \return vector<QString>
    */
-  QStringList parseLine(const QString &line);
+  QStringList parseLine (const QString &line);
 };
 
 CPR_NCLPROFILE_END_NAMESPACE

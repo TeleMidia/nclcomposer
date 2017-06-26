@@ -16,30 +16,30 @@ using namespace cpr::core;
 
 CPR_NCLPROFILE_BEGIN_NAMESPACE
 
-class NCLLANGUAGEPROFILESHARED_EXPORT NCLLanguageProfile :
-    public QObject,
-    public ILanguageProfile
+class NCLLANGUAGEPROFILESHARED_EXPORT NCLLanguageProfile
+    : public QObject,
+      public ILanguageProfile
 {
   Q_OBJECT
-  Q_INTERFACES(ILanguageProfile)
-  Q_PLUGIN_METADATA(IID ILanguageProfile_iid FILE "ncl-profile.json")
+  Q_INTERFACES (ILanguageProfile)
+  Q_PLUGIN_METADATA (IID ILanguageProfile_iid FILE "ncl-profile.json")
 
 public:
-  NCLLanguageProfile();
-  virtual ~NCLLanguageProfile();
+  NCLLanguageProfile ();
+  virtual ~NCLLanguageProfile ();
 
-  LanguageType getLanguageType();
-  QString getProfileName();
-  QList<QString> getOutputDocumentTypes();
+  LanguageType getLanguageType ();
+  QString getProfileName ();
+  QList<QString> getOutputDocumentTypes ();
 
-  IDocumentParser* createParser(Project *project);
+  IDocumentParser *createParser (Project *project);
   void releaseDocumentParser (IDocumentParser *parser);
 
-  map <QString, map <QString, char> *> *getNesting();
-  map <QString, bool> *getAttributes (const QString &element);
-  map <QString, char> *getChildren (const QString &tagname);
+  map<QString, map<QString, char> *> *getNesting ();
+  map<QString, bool> *getAttributes (const QString &element);
+  map<QString, char> *getChildren (const QString &tagname);
 
-  vector <AttributeReferences *> getReferences(const QString &element,
+  vector<AttributeReferences *> getReferences (const QString &element,
                                                const QString &attr);
 };
 
