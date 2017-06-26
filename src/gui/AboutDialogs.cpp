@@ -119,16 +119,10 @@ void AboutPluginsDialog::loadPlugins()
   QMap <QString, QTreeWidgetItem*> categories;
 
   QString category = "Language profile";
-  for (const ILanguageProfile *langProfile: langList)
-  {
-    if(!categories.contains(category))
-    {
-      treeWidgetItem = new QTreeWidgetItem(_treeWidgetPlugins);
-      categories.insert(category, treeWidgetItem);
-      treeWidgetItem->setText(0, category);
-      treeWidgetItem->setTextColor(0, QColor("#0000FF"));
-    }
-  }
+  treeWidgetItem = new QTreeWidgetItem(_treeWidgetPlugins);
+  categories.insert(category, treeWidgetItem);
+  treeWidgetItem->setText(0, category);
+  treeWidgetItem->setTextColor(0, QColor("#0000FF"));
 
   for (IPluginFactory *pF: pList)
   {
@@ -143,9 +137,9 @@ void AboutPluginsDialog::loadPlugins()
     }
   }
 
+  category = "Language profile";
   for (ILanguageProfile *langProfile: langList)
   {
-    QString category = "Language profile";
     treeWidgetItem = new QTreeWidgetItem ( categories.value(category) );
     treeWidgetItem->setText(0, langProfile->getProfileName());
 
