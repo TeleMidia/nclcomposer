@@ -23,8 +23,7 @@
 #include <QStack>
 
 #include "model/Entity.h"
-#include "model/exception/EntityNotFound.h"
-#include "model/exception/ParentNotFound.h"
+#include "model/Exceptions.h"
 #include "util/Utilities.h"
 using namespace cpr::core;
 

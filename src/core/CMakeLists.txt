@@ -33,9 +33,7 @@ set(NCLCOMPOSER_CORE_HEADERS
   model/Entity.h
   model/Project.h
   #model/Model.h
-  model/exception/EntityNotFound.h
-  model/exception/ParentNotFound.h
-  model/exception/CreationFailed.h
+  model/Exceptions.h
 )
 
 set(NCLCOMPOSER_CORE_SOURCES

@@ -13,8 +13,8 @@
  You should have received a copy of the GNU General Lesser Public License
  along with NCL Composer.  If not, see <http://www.gnu.org/licenses/>. */
 
-#ifndef ENTITYNOTFOUND_H
-#define ENTITYNOTFOUND_H
+#ifndef CREATIONFAILED_H
+#define CREATIONFAILED_H
 
 #include "util/ComposerCore_global.h"
 
@@ -24,6 +24,35 @@
 using namespace std;
 
 CPR_CORE_BEGIN_NAMESPACE
+
+/*!
+ * \ingroup core
+ * \brief Exception to inform that the creation of an element failed.
+ */
+class CreationFailed : public exception
+{
+public:
+  /*!
+   * \brief
+   *
+   * \param _element
+   * \param _id
+   */
+  CreationFailed(QString _element, QString _id) : element(_element), id(_id) { }
+  ~CreationFailed() throw() { }
+
+  const char* what() const throw()
+  {
+    QString ret = "Entity (" + element + ") with id (" + id + ") could "
+        + "not be created!";
+
+    return ret.toStdString().c_str();
+  }
+
+private:
+  QString element; /*!< TODO */
+  QString id; /*!< TODO */
+};
 
 /*!
  * \ingroup core
@@ -64,6 +93,45 @@ private:
   QString _id; /*!< TODO */
 };
 
+/*!
+ * \ingroup core
+ * \brief Exception to inform that the entity doesn't have a parent.
+ */
+class ParentNotFound : public exception
+{
+public:
+  /*!
+   * \brief Constructor
+   *
+   * \param element
+   * \param parent
+   * \param id
+   */
+  ParentNotFound( const QString &element, const QString &parent,
+                  const QString &id ) :
+    _element(element), _parent(parent), _id(id) {}
+
+  /*!
+   * \brief Descriptor
+   */
+  ~ParentNotFound() throw() {}
+
+  /*!
+   * \brief return a description of what the exception represents.
+   */
+  const char* what() const throw()
+  {
+    QString ret = "Entity (" + _parent + ") parent of " + _element + "(" + _id
+        + ") could not be found!";
+    return ret.toStdString().c_str();
+  }
+
+private:
+  QString _element; /*!< TODO */
+  QString _parent; /*!< TODO */
+  QString _id; /*!< TODO */
+};
+
 CPR_CORE_END_NAMESPACE
 
-#endif // ENTITYNOTFOUND_H
+#endif // CREATIONFAILED_H
