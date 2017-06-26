@@ -308,7 +308,7 @@ void StructuralView::createObjects()
 
   // Setting...
   setScene(_scene);
-  resize(STR_DEFAULT_SCENE_W, STR_DEFAULT_SCENE_H);
+  centerOn(0,0);
 }
 
 void StructuralView::resizeEvent(QResizeEvent *event)
