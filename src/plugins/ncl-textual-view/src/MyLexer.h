@@ -18,17 +18,17 @@
 #ifndef MYLEXER_H
 #define MYLEXER_H
 
-#include <vector>
 #include <algorithm>
+#include <vector>
 using namespace std;
 
-#include <QObject>
-#include <QDebug>
 #include <QColor>
+#include <QDebug>
 #include <QFont>
+#include <QObject>
 #include <Qsci/qscilexercustom.h>
-#include <Qsci/qscistyle.h>
 #include <Qsci/qsciscintilla.h>
+#include <Qsci/qscistyle.h>
 
 class QsciStyle;
 
@@ -49,29 +49,26 @@ public:
     MaxStyle
   };
 
-  explicit MyLexer(QObject *parent = 0);
-  ~MyLexer();
-  const char *language() const;
-  QString description(int) const;
-  void styleText(int start, int end);
+  explicit MyLexer (QObject *parent = 0);
+  ~MyLexer ();
+  const char *language () const;
+  QString description (int) const;
+  void styleText (int start, int end);
 
-  //TODO: PARTITIONS INSIDE PARTITION
-  bool addTextPartition ( int partition_id,
-                          const QRegExp &regex,
-                          const QsciStyle &style);
+  // TODO: PARTITIONS INSIDE PARTITION
+  bool addTextPartition (int partition_id, const QRegExp &regex,
+                         const QsciStyle &style);
 
-
-  QColor defaultColor(int) const;
-  QFont  defaultFont(int) const;
-  QColor defaultPaper(int) const;
+  QColor defaultColor (int) const;
+  QFont defaultFont (int) const;
+  QColor defaultPaper (int) const;
 
 private:
-  QMap <int, QRegExp > _partitionRegex;
-  QMap <int, QsciStyle > _partitionStyle;
+  QMap<int, QRegExp> _partitionRegex;
+  QMap<int, QsciStyle> _partitionStyle;
 
-  vector <text_partition> makePartitions(char * chars, int begin, int end);
-  QsciStyle getStyle(int);
-
+  vector<text_partition> makePartitions (char *chars, int begin, int end);
+  QsciStyle getStyle (int);
 };
 
 #endif // MYLEXER_H

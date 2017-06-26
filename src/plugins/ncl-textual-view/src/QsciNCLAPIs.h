@@ -31,22 +31,22 @@ class QsciNCLAPIs : public QsciAPIs
   Q_OBJECT
 
 public:
-  QsciNCLAPIs(QsciLexer *lexer	 = 0);
-  virtual ~QsciNCLAPIs();
+  QsciNCLAPIs (QsciLexer *lexer = 0);
+  virtual ~QsciNCLAPIs ();
 
   //! Update the list \a list with API entries derived from \a context.  \a
   //! context is the list of words in the text preceding the cursor position.
   //! The characters that make up a word and the characters that separate
   //! words are defined by the lexer.  The last word is a partial word and
   //! may be empty if the user has just entered a word separator.
-  void updateAutoCompletionList(const QStringList &context,
-                                QStringList &list);
+  void updateAutoCompletionList (const QStringList &context,
+                                 QStringList &list);
 
   //! This is called when the user selects the entry \a selection from the
   //! auto-completion list.  A sub-class can use this as a hint to provide
   //! more specific API entries in future calls to
   //! updateAutoCompletionList().  The default implementation does nothing.
-  void autoCompletionSelected(const QString &selection);
+  void autoCompletionSelected (const QString &selection);
 
   //! Return the call tips valid for the context \a context.  (Note that the
   //! last word of the context will always be empty.)  \a commas is the number
@@ -57,24 +57,23 @@ public:
   //! style.
   //!
   //! \sa updateAutoCompletionList()
-  QStringList callTips(const QStringList &context, int commas,
-                       QsciScintilla::CallTipsStyle style,
-                       QList<int> &shifts);
+  QStringList callTips (const QStringList &context, int commas,
+                        QsciScintilla::CallTipsStyle style,
+                        QList<int> &shifts);
 
-
-  bool event(QEvent *e);
+  bool event (QEvent *e);
 
   QString getCurrentTagName (int pos);
   bool isElement (int pos);
   bool isAttribute (int pos);
   bool isAttributeValue (int pos);
   QString getCurrentAttribute (int pos);
-  int getParentOffset(int pos);
+  int getParentOffset (int pos);
   QString getParentTagName (int pos);
-  void getAttributesTyped(int pos, QStringList &attrs);
-  QString getAttributeValueFromCurrentElement(int pos, const QString &attr);
-  int getStartTagBegin(int pos);
-  int getStartTagLength(int pos);
+  void getAttributesTyped (int pos, QStringList &attrs);
+  QString getAttributeValueFromCurrentElement (int pos, const QString &attr);
+  int getStartTagBegin (int pos);
+  int getStartTagLength (int pos);
 
 private:
   NCLStructure *_nclStructure;
@@ -90,9 +89,8 @@ private:
   QString getRequiredAttributesAsStr (const QString &selection);
 
   // \todo this function must be moved from here.
-  QString relativePath( const QString &absolutePath,
-                        const QString &relativeTo,
-                        bool bIsFile = false );
+  QString relativePath (const QString &absolutePath, const QString &relativeTo,
+                        bool bIsFile = false);
 };
 
 #endif // QSCINCLAPIS_H

@@ -17,78 +17,80 @@
  */
 #include "NCLProblemsView.h"
 
-NCLProblemsView::NCLProblemsView(QWidget *parent):
-  QDockWidget("Problems", parent)
+NCLProblemsView::NCLProblemsView (QWidget *parent)
+    : QDockWidget ("Problems", parent)
 {
-  _mainWindow = new QMainWindow(parent);
+  _mainWindow = new QMainWindow (parent);
 
-  createViewActions();
-  createToolBar();
-  createTreeWidget();
+  createViewActions ();
+  createToolBar ();
+  createTreeWidget ();
 }
 
-void NCLProblemsView::createViewActions()
+void
+NCLProblemsView::createViewActions ()
 {
-  _clearProblemsAct = new QAction( QIcon(":/images/clear-icon.png"),
-                                  tr("&Clear Problems"), this);
+  _clearProblemsAct = new QAction (QIcon (":/images/clear-icon.png"),
+                                   tr ("&Clear Problems"), this);
 
-  _clearProblemsAct->setStatusTip(tr("Clear All"));
-  connect(_clearProblemsAct, SIGNAL(triggered()), this, SLOT(clearProblems()));
+  _clearProblemsAct->setStatusTip (tr ("Clear All"));
+  connect (_clearProblemsAct, SIGNAL (triggered ()), this,
+           SLOT (clearProblems ()));
 }
 
-void NCLProblemsView::createToolBar()
+void
+NCLProblemsView::createToolBar ()
 {
-  QToolBar *file = _mainWindow->addToolBar(tr("File"));
-  file->addAction(_clearProblemsAct);
-  file->setIconSize(QSize(16, 16));
+  QToolBar *file = _mainWindow->addToolBar (tr ("File"));
+  file->addAction (_clearProblemsAct);
+  file->setIconSize (QSize (16, 16));
 }
 
-void NCLProblemsView::createTreeWidget()
+void
+NCLProblemsView::createTreeWidget ()
 {
   QStringList labels;
-  labels << QObject::tr("Description") << QObject::tr("file")
-         << QObject::tr("line");
+  labels << QObject::tr ("Description") << QObject::tr ("file")
+         << QObject::tr ("line");
 
-  _problemsList = new QTreeWidget(this);
-  _problemsList->setSortingEnabled(1);
-  _problemsList->setStyleSheet(/*"background-color:*/ "font-size: 11px;");
-  _problemsList->setHeaderLabels(labels);
+  _problemsList = new QTreeWidget (this);
+  _problemsList->setSortingEnabled (1);
+  _problemsList->setStyleSheet (/*"background-color:*/ "font-size: 11px;");
+  _problemsList->setHeaderLabels (labels);
 
-  QTreeWidgetItem *lst1 = new QTreeWidgetItem(_problemsList);
-  lst1->setIcon(0, QIcon(":/images/error-icon-16.png"));
-  lst1->setText(0, "Error!");
-  lst1->setText(1, "0");
+  QTreeWidgetItem *lst1 = new QTreeWidgetItem (_problemsList);
+  lst1->setIcon (0, QIcon (":/images/error-icon-16.png"));
+  lst1->setText (0, "Error!");
+  lst1->setText (1, "0");
 
-  setFeatures(QDockWidget::DockWidgetMovable |
-              QDockWidget::DockWidgetFloatable);
+  setFeatures (QDockWidget::DockWidgetMovable
+               | QDockWidget::DockWidgetFloatable);
 
-  _mainWindow->setCentralWidget(_problemsList);
+  _mainWindow->setCentralWidget (_problemsList);
 
-  setWidget(_mainWindow);
+  setWidget (_mainWindow);
 }
 
-void NCLProblemsView::clearProblems()
+void
+NCLProblemsView::clearProblems ()
 {
-  _problemsList->clear();
+  _problemsList->clear ();
 }
 
-//TODO: ERROR OR WARNING ??
-void NCLProblemsView::addProblem( QString message,
-                                  QString file,
-                                  int line,
-                                  int column,
-                                  int severity /*ERROR OR WARNING?*/)
+// TODO: ERROR OR WARNING ??
+void
+NCLProblemsView::addProblem (QString message, QString file, int line,
+                             int column, int severity /*ERROR OR WARNING?*/)
 {
-  Q_UNUSED(column)
+  Q_UNUSED (column)
 
-  QTreeWidgetItem *error = new QTreeWidgetItem(_problemsList);
-  if(severity == 0)
-    error->setIcon(0, QIcon(":/images/error-icon-16.png"));
+  QTreeWidgetItem *error = new QTreeWidgetItem (_problemsList);
+  if (severity == 0)
+    error->setIcon (0, QIcon (":/images/error-icon-16.png"));
   else
-    error->setIcon(0, QIcon(":/images/warning-big.png"));
+    error->setIcon (0, QIcon (":/images/warning-big.png"));
 
-  error->setText(0, message);
-  error->setText(1, file);
-  error->setText(2, QString::number(line));
+  error->setText (0, message);
+  error->setText (1, file);
+  error->setText (2, QString::number (line));
 }
-

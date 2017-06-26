@@ -18,8 +18,8 @@
 #ifndef SEARCHLINEEDIT_H
 #define SEARCHLINEEDIT_H
 
-#include <QLineEdit>
 #include <QKeyEvent>
+#include <QLineEdit>
 
 class QToolButton;
 
@@ -31,25 +31,24 @@ class SearchLineEdit : public QLineEdit
   Q_OBJECT
 
 public:
-  explicit SearchLineEdit(QWidget *parent = nullptr);
+  explicit SearchLineEdit (QWidget *parent = nullptr);
 
 signals:
-  void escPressed();
-  void shiftReturnPressed();
+  void escPressed ();
+  void shiftReturnPressed ();
 
 protected:
-  void resizeEvent(QResizeEvent *event);
-  virtual void keyPressEvent(QKeyEvent *keyEvent);
+  void resizeEvent (QResizeEvent *event);
+  virtual void keyPressEvent (QKeyEvent *keyEvent);
 
 private:
-  QString styleSheetForCurrentState() const;
-  QString buttonStyleSheetForCurrentState() const;
+  QString styleSheetForCurrentState () const;
+  QString buttonStyleSheetForCurrentState () const;
 
   QToolButton *_mSearchButton;
 
 private slots:
-  void updateSearchButton(const QString &text);
-
+  void updateSearchButton (const QString &text);
 };
 
 #endif // SEARCHLINEEDIT_H

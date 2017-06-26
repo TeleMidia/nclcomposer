@@ -24,24 +24,24 @@ using namespace std;
 
 #include <QApplication>
 
-#include <QMainWindow>
-#include <QDockWidget>
-#include <QListWidget>
 #include <QDialog>
-#include <QPushButton>
-#include <QLineEdit>
-#include <QStatusBar>
+#include <QDockWidget>
 #include <QFileDialog>
-#include <QMenuBar>
 #include <QGridLayout>
+#include <QLineEdit>
+#include <QListWidget>
+#include <QMainWindow>
+#include <QMenuBar>
+#include <QPushButton>
+#include <QStatusBar>
 
 #ifdef NCLEDITOR_STANDALONE
 #include "NCLProblemsView.h"
 #include "NCLTreeWidget.h"
 #endif
 
-#include "SearchBox.h"
 #include "NCLTextEditor.h"
+#include "SearchBox.h"
 #include "SearchLineEdit.h"
 
 class QAction;
@@ -50,48 +50,54 @@ class QMenu;
 /*!
  * \brief The main window of the NCL Textual Editor.
  */
-class NCLTextEditorMainWindow :
-        public QMainWindow
+class NCLTextEditorMainWindow : public QMainWindow
 {
   Q_OBJECT
 
 public:
-  explicit NCLTextEditorMainWindow(QWidget *parent = 0);
-  NCLTextEditor *getTextEditor() {return this->_textEdit;}
+  explicit NCLTextEditorMainWindow (QWidget *parent = 0);
+  NCLTextEditor *
+  getTextEditor ()
+  {
+    return this->_textEdit;
+  }
 
 #ifdef NCLEDITOR_STANDALONE
-  NCLTreeWidget *getNCLTreeWidget() {return this->outlineView; }
+  NCLTreeWidget *
+  getNCLTreeWidget ()
+  {
+    return this->outlineView;
+  }
 #endif
 
 signals:
-  void elementAdded( const QString&,
-                     const QString&,
-                     const QMap <QString, QString>&);
-  void focusLosted();
+  void elementAdded (const QString &, const QString &,
+                     const QMap<QString, QString> &);
+  void focusLosted ();
 
 protected:
-  void closeEvent(QCloseEvent *event);
+  void closeEvent (QCloseEvent *event);
 
 private:
-  void createActions();
+  void createActions ();
 #ifdef NCLEDITOR_STANDALONE
-  void createMenus();
+  void createMenus ();
 #endif
-  void createToolBars();
-  void createStatusBar();
-  void createTextView();
-  void createOutlineView();
-  void createProblemsView();
-  void createSearchBox();
+  void createToolBars ();
+  void createStatusBar ();
+  void createTextView ();
+  void createOutlineView ();
+  void createProblemsView ();
+  void createSearchBox ();
 
-  void readSettings();
-  void writeSettings();
+  void readSettings ();
+  void writeSettings ();
 
-  bool maybeSave();
-  void loadFile(const QString &fileName);
-  bool saveFile(const QString &fileName);
-  void setCurrentFile(const QString &fileName);
-  QString strippedName(const QString &fullFileName);
+  bool maybeSave ();
+  void loadFile (const QString &fileName);
+  bool saveFile (const QString &fileName);
+  void setCurrentFile (const QString &fileName);
+  QString strippedName (const QString &fullFileName);
 
 private:
   QDockWidget *_dockTextEdit;
@@ -124,10 +130,10 @@ private:
   QAction *_showSearchBoxAct;
 
   QDockWidget *_dockSearchBox;
-  SearchBox   *_searchBox;
+  SearchBox *_searchBox;
 
-  /** VIEWS **/
-  /** Outline View */
+/** VIEWS **/
+/** Outline View */
 #ifdef NCLEDITOR_STANDALONE
   QDockWidget *_dockOutlineView;
   NCLTreeWidget *_outlineView;
@@ -140,30 +146,27 @@ private:
   QAction *_insertNodeChildAct;
 
 private slots:
-  void newFile();
-  void open();
-  bool save();
-  bool saveAs();
-  void about();
-  void documentWasModified();
-  void showInFullScreen();
-  void insertElement();
+  void newFile ();
+  void open ();
+  bool save ();
+  bool saveAs ();
+  void about ();
+  void documentWasModified ();
+  void showInFullScreen ();
+  void insertElement ();
 
 #ifdef NCLEDITOR_STANDALONE
-  void gotoLineOf(QTreeWidgetItem *item, int column);
+  void gotoLineOf (QTreeWidgetItem *item, int column);
 #endif
 
-  void showSearchBox();
-  void hideSearchBox();
+  void showSearchBox ();
+  void hideSearchBox ();
 
-  bool findNext(const QString &text);
-  void findPrevious(const QString &text);
-  void replace( const QString &textSearch,
-                const QString &textReplace,
-                bool findNext = false );
-  void replaceAll( const QString &textSearch,
-                   const QString &textReplace );
-
+  bool findNext (const QString &text);
+  void findPrevious (const QString &text);
+  void replace (const QString &textSearch, const QString &textReplace,
+                bool findNext = false);
+  void replaceAll (const QString &textSearch, const QString &textReplace);
 };
 
 #endif

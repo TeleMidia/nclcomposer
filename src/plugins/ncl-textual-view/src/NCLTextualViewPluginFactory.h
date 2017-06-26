@@ -23,46 +23,43 @@
 #include <extensions/IPluginFactory.h>
 using namespace cpr::core;
 
-
-#include "NCLTextualViewPlugin_global.h"
 #include "NCLTextualViewPlugin.h"
+#include "NCLTextualViewPlugin_global.h"
 
 namespace Ui
 {
-  class TextPluginPreferencesWidget;
+class TextPluginPreferencesWidget;
 }
 
 /*!
   \brief Handles the creation and deletion of NCLTextualView objects.
  */
-class  NCLTextualViewPluginFactory :
-        public QObject, public IPluginFactory
+class NCLTextualViewPluginFactory : public QObject, public IPluginFactory
 {
   Q_OBJECT
-  Q_INTERFACES(IPluginFactory)
-  Q_PLUGIN_METADATA(IID IPluginFactory_iid FILE "ncl-textual-view.json")
+  Q_INTERFACES (IPluginFactory)
+  Q_PLUGIN_METADATA (IID IPluginFactory_iid FILE "ncl-textual-view.json")
 
 public:
-  NCLTextualViewPluginFactory();
+  NCLTextualViewPluginFactory ();
 
-  IPlugin* createPluginInstance();
+  IPlugin *createPluginInstance ();
 
-  void releasePluginInstance(IPlugin *);
+  void releasePluginInstance (IPlugin *);
 
-  QString id() const;
+  QString id () const;
 
-  QIcon icon() const;
+  QIcon icon () const;
 
-  QWidget* getPreferencePageWidget();
+  QWidget *getPreferencePageWidget ();
 
-  void setDefaultValues();
+  void setDefaultValues ();
 
-  void applyValues();
+  void applyValues ();
 
 private:
   QFrame *_prefPageWidget;
   Ui::TextPluginPreferencesWidget *_prefPageUi;
-
 };
 
 #endif // NCLTEXTUALVIEWPLUGINFACTORY_H

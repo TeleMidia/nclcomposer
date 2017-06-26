@@ -1,19 +1,19 @@
 /*
  * Copyright 2011 TeleMidia/PUC-Rio.
- * 
+ *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
- * License as published by the Free Software Foundation; either 
+ * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
- * You should have received a copy of the GNU Lesser General Public 
+ *
+ * You should have received a copy of the GNU Lesser General Public
  * License along with this library.  If not, see
- * <http://www.gnu.org/licenses/>. 
+ * <http://www.gnu.org/licenses/>.
  */
 /****************************************************************************
 **
@@ -41,16 +41,17 @@
 
 #include "NCLTextEditorMainWindow.h"
 
-int main(int argc, char *argv[])
+int
+main (int argc, char *argv[])
 {
-    QApplication app(argc, argv);
+  QApplication app (argc, argv);
 
-//    Q_INIT_RESOURCE(ncl_textual_plugin);
+  //    Q_INIT_RESOURCE(ncl_textual_plugin);
 
-    NCLTextEditorMainWindow mainWin;
-    mainWin.show();
+  NCLTextEditorMainWindow mainWin;
+  mainWin.show ();
 
-    app.setStyleSheet(" QMainWindow{ } \
+  app.setStyleSheet (" QMainWindow{ } \
                         QDockWidget {\
                             border: 0.5px solid black;\
                         }\
@@ -59,5 +60,5 @@ int main(int argc, char *argv[])
                             padding-left: 2px;\
                             padding-top: 2px;\
                         }");
-    return app.exec();
+  return app.exec ();
 }

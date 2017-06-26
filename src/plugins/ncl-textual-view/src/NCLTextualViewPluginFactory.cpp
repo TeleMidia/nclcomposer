@@ -18,20 +18,22 @@
 #include "NCLTextualViewPluginFactory.h"
 #include "ui_TextualPluginPreferencesWidget.h"
 
-NCLTextualViewPluginFactory::NCLTextualViewPluginFactory()
+NCLTextualViewPluginFactory::NCLTextualViewPluginFactory ()
 {
   _prefPageWidget = nullptr;
 }
 
-IPlugin* NCLTextualViewPluginFactory::createPluginInstance()
+IPlugin *
+NCLTextualViewPluginFactory::createPluginInstance ()
 {
-  return new NCLTextualViewPlugin();
+  return new NCLTextualViewPlugin ();
 }
 
-void NCLTextualViewPluginFactory::releasePluginInstance(IPlugin *plugin)
+void
+NCLTextualViewPluginFactory::releasePluginInstance (IPlugin *plugin)
 {
-  NCLTextualViewPlugin *textualView =
-      qobject_cast<NCLTextualViewPlugin*>(plugin);
+  NCLTextualViewPlugin *textualView
+      = qobject_cast<NCLTextualViewPlugin *> (plugin);
 
   if (textualView)
   {
@@ -40,17 +42,20 @@ void NCLTextualViewPluginFactory::releasePluginInstance(IPlugin *plugin)
   }
 }
 
-QString NCLTextualViewPluginFactory::id() const
+QString
+NCLTextualViewPluginFactory::id () const
 {
   return "br.puc-rio.telemidia.NCLTextualView";
 }
 
-QIcon NCLTextualViewPluginFactory::icon() const
+QIcon
+NCLTextualViewPluginFactory::icon () const
 {
-  return QIcon(":/images/ncl.png");
+  return QIcon (":/images/ncl.png");
 }
 
-QWidget* NCLTextualViewPluginFactory::getPreferencePageWidget()
+QWidget *
+NCLTextualViewPluginFactory::getPreferencePageWidget ()
 {
   /*
   if (prefPageWidget == nullptr)
@@ -64,12 +69,14 @@ QWidget* NCLTextualViewPluginFactory::getPreferencePageWidget()
   return nullptr;
 }
 
-void NCLTextualViewPluginFactory::setDefaultValues()
+void
+NCLTextualViewPluginFactory::setDefaultValues ()
 {
-  //TODO
+  // TODO
 }
 
-void NCLTextualViewPluginFactory::applyValues()
+void
+NCLTextualViewPluginFactory::applyValues ()
 {
-  //TODO
+  // TODO
 }

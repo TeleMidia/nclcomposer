@@ -3,83 +3,84 @@
 
 #include <QShowEvent>
 
-SearchBox::SearchBox(QWidget *parent) :
-    QFrame(parent),
-    _ui(new Ui::SearchBox)
+SearchBox::SearchBox (QWidget *parent)
+    : QFrame (parent), _ui (new Ui::SearchBox)
 {
-  _ui->setupUi(this);
+  _ui->setupUi (this);
 
-  connect( _ui->lineEdit_Find,
-           SIGNAL(returnPressed()),
-           SLOT(on_pushButton_FindNext_clicked()) );
+  connect (_ui->lineEdit_Find, SIGNAL (returnPressed ()),
+           SLOT (on_pushButton_FindNext_clicked ()));
 
-  connect( _ui->lineEdit_Find,
-           SIGNAL(shiftReturnPressed()),
-           SLOT(on_pushButton_FindPrevious_clicked()) );
+  connect (_ui->lineEdit_Find, SIGNAL (shiftReturnPressed ()),
+           SLOT (on_pushButton_FindPrevious_clicked ()));
 
-  connect( _ui->lineEdit_Find,
-           SIGNAL(escPressed()),
-           SLOT(on_pushButton_hide_clicked()) );
+  connect (_ui->lineEdit_Find, SIGNAL (escPressed ()),
+           SLOT (on_pushButton_hide_clicked ()));
 }
 
-SearchBox::~SearchBox()
+SearchBox::~SearchBox () { delete _ui; }
+
+const QString
+SearchBox::text () const
 {
-  delete _ui;
+  return _ui->lineEdit_Find->text ();
 }
 
-const QString SearchBox::text() const
+const QString
+SearchBox::replaceText () const
 {
-  return _ui->lineEdit_Find->text();
+  return _ui->lineEdit_ReplaceWith->text ();
 }
 
-const QString SearchBox::replaceText() const
+void
+SearchBox::setFocusToFindLineEdit ()
 {
-  return _ui->lineEdit_ReplaceWith->text();
+  _ui->lineEdit_Find->setFocus ();
+  _ui->lineEdit_Find->selectAll ();
 }
 
-void SearchBox::setFocusToFindLineEdit()
+void
+SearchBox::on_pushButton_hide_clicked ()
 {
-  _ui->lineEdit_Find->setFocus();
-  _ui->lineEdit_Find->selectAll();
+  emit hideButtonClicked ();
 }
 
-void SearchBox::on_pushButton_hide_clicked()
+void
+SearchBox::on_pushButton_FindPrevious_clicked ()
 {
-  emit hideButtonClicked();
+  emit findPrevious (_ui->lineEdit_Find->text ());
 }
 
-void SearchBox::on_pushButton_FindPrevious_clicked()
+void
+SearchBox::on_pushButton_FindNext_clicked ()
 {
-  emit findPrevious(_ui->lineEdit_Find->text());
+  emit findNext (_ui->lineEdit_Find->text ());
 }
 
-void SearchBox::on_pushButton_FindNext_clicked()
+void
+SearchBox::on_pushButton_ReplaceAndFind_clicked ()
 {
-  emit findNext(_ui->lineEdit_Find->text());
+  emit replace (_ui->lineEdit_Find->text (),
+                _ui->lineEdit_ReplaceWith->text (), true);
 }
 
-void SearchBox::on_pushButton_ReplaceAndFind_clicked()
+void
+SearchBox::on_pushButton_Replace_clicked ()
 {
-  emit replace( _ui->lineEdit_Find->text(),
-                _ui->lineEdit_ReplaceWith->text(),
-                true );
+  emit replace (_ui->lineEdit_Find->text (),
+                _ui->lineEdit_ReplaceWith->text (), false);
 }
 
-void SearchBox::on_pushButton_Replace_clicked()
+void
+SearchBox::on_pushButton_ReplaceAll_clicked ()
 {
-  emit replace( _ui->lineEdit_Find->text(),
-                _ui->lineEdit_ReplaceWith->text(),
-                false );
+  emit replaceAll (_ui->lineEdit_Find->text (),
+                   _ui->lineEdit_ReplaceWith->text ());
 }
 
-void SearchBox::on_pushButton_ReplaceAll_clicked()
+void
+SearchBox::on_lineEdit_Find_textChanged (const QString &arg1)
 {
-  emit replaceAll( _ui->lineEdit_Find->text(),
-                   _ui->lineEdit_ReplaceWith->text() );
-}
-
-void SearchBox::on_lineEdit_Find_textChanged(const QString &arg1)
-{
-  if(_ui->checkBox_SearchWhileTyping->isChecked())
-    emit findNext(_ui->lineEdit_Find->text());
+  if (_ui->checkBox_SearchWhileTyping->isChecked ())
+    emit findNext (_ui->lineEdit_Find->text ());
 }

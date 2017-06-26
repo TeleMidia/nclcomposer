@@ -22,34 +22,31 @@
 #include <QToolBar>
 
 #include <QDockWidget>
-#include <QTreeWidget>
 #include <QMainWindow>
+#include <QTreeWidget>
 
 class NCLProblemsView : public QDockWidget
 {
   Q_OBJECT
 
 public:
-  explicit NCLProblemsView(QWidget *parent = 0);
+  explicit NCLProblemsView (QWidget *parent = 0);
 
 private:
-  void createViewActions();
-  void createToolBar();
-  void createTreeWidget();
-  void createProblemsList();
+  void createViewActions ();
+  void createToolBar ();
+  void createTreeWidget ();
+  void createProblemsList ();
 
   QMainWindow *_mainWindow;
   QTreeWidget *_problemsList;
   QAction *_clearProblemsAct;
 
 private slots:
-  void clearProblems();
+  void clearProblems ();
 
-  void addProblem ( QString message,
-                    QString file,
-                    int line,
-                    int column = 0,
-                    int severity = 0 /*ERROR OR WARNING?*/ );
+  void addProblem (QString message, QString file, int line, int column = 0,
+                   int severity = 0 /*ERROR OR WARNING?*/);
 };
 
 #endif
