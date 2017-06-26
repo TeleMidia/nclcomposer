@@ -53,7 +53,7 @@ public:
      *
      * This function is part of the IPlugin API.
      */
-  void init ();
+  void init () override;
 
   /*!
      * \brief Returns the widget of that plugin. This widget will be
@@ -65,7 +65,7 @@ public:
      * \return QWidget* the widget that represents this plugin. If nullptr, the
      *      plugin has not a visual representation
      */
-  QWidget *getWidget ();
+  QWidget *getWidget () override;
 
   /*!
      * \brief Save the specific data of this plugin.
@@ -74,7 +74,7 @@ public:
      *
      * \return bool
      */
-  bool saveSubsession ();
+  bool saveSubsession () override;
 
 public slots:
   /*!
@@ -86,7 +86,7 @@ public slots:
      *     the entity.
      * \param entity the Entity that was added.
      */
-  void onEntityAdded (QString pluginID, Entity *);
+  virtual void onEntityAdded (const QString &pluginID, Entity *) override;
 
   /*!
      * \brief Called by the core when an Entity is changed.
@@ -97,7 +97,7 @@ public slots:
      *     the entity.
      * \param entity The entity that was modified.
      */
-  void onEntityChanged (QString pluginID, Entity *);
+  void onEntityChanged (const QString &pluginID, Entity *) override;
 
   /*!
      * \brief Called by the core after the entity entityID is removed.
@@ -106,7 +106,8 @@ public slots:
      *     the entity.
      * \param entityID the entity's identifier that was removed.
      */
-  void onEntityRemoved (QString pluginID, QString entityID);
+  virtual void onEntityRemoved (const QString &pluginID,
+                                const QString &entityID) override;
 
   /*!
    * \brief This is called by the core when some error triggered by this
@@ -114,7 +115,7 @@ public slots:
    *
    * \param error A description of the error.
    */
-  void errorMessage (QString error);
+  virtual void errorMessage (const QString &error) override;
 
   /*!
    * \brief

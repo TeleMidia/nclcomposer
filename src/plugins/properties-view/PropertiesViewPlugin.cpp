@@ -44,20 +44,20 @@ PropertiesViewPlugin::getWidget ()
 }
 
 void
-PropertiesViewPlugin::onEntityAdded (QString pluginID, Entity *entity)
+PropertiesViewPlugin::onEntityAdded (const QString &pluginID, Entity *entity)
 {
   Q_UNUSED (pluginID)
   Q_UNUSED (entity)
 }
 
 void
-PropertiesViewPlugin::errorMessage (QString error)
+PropertiesViewPlugin::errorMessage (const QString &error)
 {
   qDebug () << "PropertiesViewPlugin::onEntityAddError(" << error << ")";
 }
 
 void
-PropertiesViewPlugin::onEntityChanged (QString pluginID, Entity *entity)
+PropertiesViewPlugin::onEntityChanged (const QString &pluginID, Entity *entity)
 {
   Q_UNUSED (pluginID)
 
@@ -69,7 +69,8 @@ PropertiesViewPlugin::onEntityChanged (QString pluginID, Entity *entity)
 }
 
 void
-PropertiesViewPlugin::onEntityRemoved (QString pluginID, QString entityID)
+PropertiesViewPlugin::onEntityRemoved (const QString &pluginID,
+                                       const QString &entityID)
 {
   Q_UNUSED (pluginID)
 
