@@ -10,8 +10,8 @@
 using namespace cpr::core;
 
 /*!
- * \brief Rules View is a simple plugin allows users to graphically
- *        define rules for content adapt
+ * \brief Rules View is a simple plugin allows users to graphically define
+ * rules for content adapt
  */
 class RulesViewPlugin : public IPlugin
 {
@@ -21,7 +21,7 @@ public:
   ~RulesViewPlugin ();
 
   QWidget *
-  getWidget ()
+  getWidget () override
   {
     return _rulesTable;
   }
@@ -29,11 +29,12 @@ public:
   void addRule (Entity *);
 
 public slots:
-  void init ();
+  void init () override;
 
-  void onEntityAdded (const QString &pluginID, Entity *);
-  void onEntityChanged (const QString &pluginID, Entity *entity);
-  void onEntityRemoved (const QString &pluginID, const QString &entityID);
+  void onEntityAdded (const QString &pluginID, Entity *) override;
+  void onEntityChanged (const QString &pluginID, Entity *entity) override;
+  void onEntityRemoved (const QString &pluginID,
+                        const QString &entityID) override;
 
   void changeSelectedEntity (const QString &pluginID, void *param);
 

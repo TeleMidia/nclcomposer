@@ -17,23 +17,23 @@ class RulesViewFactory : public QObject, public IPluginFactory
   Q_PLUGIN_METADATA (IID IPluginFactory_iid FILE "ncl-rules-view.json")
 
 public:
-  RulesViewFactory ();
+  explicit RulesViewFactory ();
   ~RulesViewFactory ();
 
   IPlugin *
-  createPluginInstance ()
+  createPluginInstance () override
   {
     return new RulesViewPlugin ();
   }
-  void releasePluginInstance (IPlugin *);
-  QList<LanguageType> getSupportedLanguages ();
+  void releasePluginInstance (IPlugin *) override;
+  QList<LanguageType> getSupportedLanguages () override;
   QString
-  id () const
+  id () const override
   {
     return "br.puc-rio.telemidia.RulesView";
   }
   QIcon
-  icon () const
+  icon () const override
   {
     return QIcon ();
   }
