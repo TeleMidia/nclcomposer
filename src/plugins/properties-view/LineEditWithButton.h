@@ -27,21 +27,21 @@ class LineEditWithButton : public QLineEdit
   Q_OBJECT
 
 public:
-  explicit LineEditWithButton(QWidget *parent = nullptr,
-                              const QString &_iconPath = "");
+  explicit LineEditWithButton (QWidget *parent = nullptr,
+                               const QString &_iconPath = "");
 
 signals:
-  void buttonPressed();
+  void buttonPressed ();
 
 protected:
-  void resizeEvent(QResizeEvent *event);
+  void resizeEvent (QResizeEvent *event);
 
   QToolButton *_mButton;
   QString _iconPath;
 
 private:
-  QString styleSheetForCurrentState() const;
-  QString buttonStyleSheetForCurrentState() const;
+  QString styleSheetForCurrentState () const;
+  QString buttonStyleSheetForCurrentState () const;
 };
 
 #endif // LineEditWithButton_H

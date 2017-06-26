@@ -18,8 +18,8 @@
 #ifndef PROPERTIESVIEW_H
 #define PROPERTIESVIEW_H
 
-#include "PropertiesView_global.h"
 #include "PropertiesViewPlugin.h"
+#include "PropertiesView_global.h"
 
 #include <extensions/IPluginFactory.h>
 using namespace cpr::core;
@@ -28,51 +28,50 @@ using namespace cpr::core;
  \brief Handles the creation and deletion of PropertyView objects.
 
 */
-class PropertiesViewFactory : public QObject,
-    public IPluginFactory
+class PropertiesViewFactory : public QObject, public IPluginFactory
 {
   Q_OBJECT
-  Q_INTERFACES(IPluginFactory)
-  Q_PLUGIN_METADATA(IID IPluginFactory_iid FILE "properties-view.json")
+  Q_INTERFACES (IPluginFactory)
+  Q_PLUGIN_METADATA (IID IPluginFactory_iid FILE "properties-view.json")
 
 public:
   /*!
    * \brief Constructor.
    */
-  PropertiesViewFactory();
+  PropertiesViewFactory ();
 
   /*!
    * \brief Destructor.
    */
-  ~PropertiesViewFactory();
+  ~PropertiesViewFactory ();
 
   /*!
    * \brief Creates an PropertiesViewPlugin instance.
    *
    * \return IPlugin* One NEW instance of PropertiesViewPlugin.
    */
-  IPlugin* createPluginInstance();
+  IPlugin *createPluginInstance ();
 
   /*!
    * \brief Destroy an instance of PropertiesViewPlugin.
    *
    * \param IPlugin* the instance that must be destroyed.
    */
-  void releasePluginInstance(IPlugin *);
+  void releasePluginInstance (IPlugin *);
 
   /*!
    * \brief
    *
    * \return QString
    */
-  QString id() const;
+  QString id () const;
 
   /*!
    * \brief
    *
    * \return QIcon
    */
-  QIcon icon() const;
+  QIcon icon () const;
 };
 
 #endif // DEBUGCONSOLE_H

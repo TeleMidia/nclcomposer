@@ -18,11 +18,11 @@
 #ifndef PROPERTIESVIEWPLUGIN_H
 #define PROPERTIESVIEWPLUGIN_H
 
-#include <QObject>
 #include <QGridLayout>
-#include <QPushButton>
 #include <QListWidget>
 #include <QListWidgetItem>
+#include <QObject>
+#include <QPushButton>
 
 #include <extensions/IPlugin.h>
 using namespace cpr::core;
@@ -41,22 +41,23 @@ public:
   /*!
      * \brief Constructor.
      */
-  explicit PropertiesViewPlugin();
+  explicit PropertiesViewPlugin ();
 
   /*!
      * \brief Destructor.
      */
-  ~PropertiesViewPlugin();
+  ~PropertiesViewPlugin ();
 
   /*!
      * \brief
      *
      * This function is part of the IPlugin API.
      */
-  void init();
+  void init ();
 
   /*!
-     * \brief Returns the widget of that plugin. This widget will be presentated
+     * \brief Returns the widget of that plugin. This widget will be
+   * presentated
      *      to the user.
      *
      *  This function is part of the IPlugin API.
@@ -64,7 +65,7 @@ public:
      * \return QWidget* the widget that represents this plugin. If nullptr, the
      *      plugin has not a visual representation
      */
-  QWidget* getWidget();
+  QWidget *getWidget ();
 
   /*!
      * \brief Save the specific data of this plugin.
@@ -73,7 +74,7 @@ public:
      *
      * \return bool
      */
-  bool saveSubsession();
+  bool saveSubsession ();
 
 public slots:
   /*!
@@ -85,7 +86,7 @@ public slots:
      *     the entity.
      * \param entity the Entity that was added.
      */
-  void onEntityAdded(QString pluginID, Entity *);
+  void onEntityAdded (QString pluginID, Entity *);
 
   /*!
      * \brief Called by the core when an Entity is changed.
@@ -96,7 +97,7 @@ public slots:
      *     the entity.
      * \param entity The entity that was modified.
      */
-  void onEntityChanged(QString pluginID, Entity *);
+  void onEntityChanged (QString pluginID, Entity *);
 
   /*!
      * \brief Called by the core after the entity entityID is removed.
@@ -105,7 +106,7 @@ public slots:
      *     the entity.
      * \param entityID the entity's identifier that was removed.
      */
-  void onEntityRemoved(QString pluginID, QString entityID);
+  void onEntityRemoved (QString pluginID, QString entityID);
 
   /*!
    * \brief This is called by the core when some error triggered by this
@@ -113,25 +114,25 @@ public slots:
    *
    * \param error A description of the error.
    */
-  void errorMessage(QString error);
+  void errorMessage (QString error);
 
   /*!
    * \brief
    *
    * \param
    */
-  void changeSelectedEntity (QString pluginID, void*);
+  void changeSelectedEntity (QString pluginID, void *);
 
   /*!
    * \brief
    */
-  void validationError(QString pluginID, void * param);
+  void validationError (QString pluginID, void *param);
 
 private slots:
   /*!
    * \brief Update all the attributes from the currentEntity.
    */
-  void updateCurrentEntity(QString errorMessage="");
+  void updateCurrentEntity (QString errorMessage = "");
 
   /*!
    * \brief Update an individual attribute of the currentEntity.
@@ -139,13 +140,13 @@ private slots:
    * \param attr The attribute to be updated.
    * \param value The new value of this attribute.
    */
-  void updateCurrentEntityAttr(QString attr, QString value);
+  void updateCurrentEntityAttr (QString attr, QString value);
 
 private:
-  QListWidget *_list; /*! TODO */
+  QListWidget *_list;      /*! TODO */
   PropertyEditor *_window; /*! TODO */
-  Entity *_currentEntity; /*! \todo Change pointer reference to
-                                   the currentEntityId */
+  Entity *_currentEntity;  /*! \todo Change pointer reference to
+                                    the currentEntityId */
   QString _currentEntityId;
 };
 

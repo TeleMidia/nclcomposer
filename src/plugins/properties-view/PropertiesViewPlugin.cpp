@@ -20,72 +20,79 @@
 
 #include <QDockWidget>
 
-PropertiesViewPlugin::PropertiesViewPlugin()
+PropertiesViewPlugin::PropertiesViewPlugin ()
 {
-  _window = new PropertyEditor(0);
+  _window = new PropertyEditor (0);
   project = nullptr;
   _currentEntity = nullptr;
 
-  connect( _window, SIGNAL(propertyChanged(QString, QString)),
-           this, SLOT(updateCurrentEntityAttr(QString, QString)) );
+  connect (_window, SIGNAL (propertyChanged (QString, QString)), this,
+           SLOT (updateCurrentEntityAttr (QString, QString)));
 }
 
-PropertiesViewPlugin::~PropertiesViewPlugin()
+PropertiesViewPlugin::~PropertiesViewPlugin ()
 {
   /*!  \todo Review PropertiesViewPlugin::~PropertiesViewPlugin().
              Why not delete 'window'? Memory leak? */
-  //delete window;
+  // delete window;
 }
 
-QWidget* PropertiesViewPlugin::getWidget()
+QWidget *
+PropertiesViewPlugin::getWidget ()
 {
   return _window;
 }
 
-void PropertiesViewPlugin::onEntityAdded(QString pluginID, Entity *entity)
+void
+PropertiesViewPlugin::onEntityAdded (QString pluginID, Entity *entity)
 {
-  Q_UNUSED(pluginID)
-  Q_UNUSED(entity)
+  Q_UNUSED (pluginID)
+  Q_UNUSED (entity)
 }
 
-void PropertiesViewPlugin::errorMessage(QString error)
+void
+PropertiesViewPlugin::errorMessage (QString error)
 {
-  qDebug() << "PropertiesViewPlugin::onEntityAddError(" << error << ")";
+  qDebug () << "PropertiesViewPlugin::onEntityAddError(" << error << ")";
 }
 
-void PropertiesViewPlugin::onEntityChanged(QString pluginID, Entity * entity)
+void
+PropertiesViewPlugin::onEntityChanged (QString pluginID, Entity *entity)
 {
-  Q_UNUSED(pluginID)
+  Q_UNUSED (pluginID)
 
-  if(entity != nullptr && _currentEntity != nullptr)
+  if (entity != nullptr && _currentEntity != nullptr)
   {
-    if(entity->getUniqueId() == _currentEntity->getUniqueId())
-      updateCurrentEntity();
+    if (entity->getUniqueId () == _currentEntity->getUniqueId ())
+      updateCurrentEntity ();
   }
 }
 
-void PropertiesViewPlugin::onEntityRemoved(QString pluginID, QString entityID)
+void
+PropertiesViewPlugin::onEntityRemoved (QString pluginID, QString entityID)
 {
-  Q_UNUSED(pluginID)
+  Q_UNUSED (pluginID)
 
-  if(entityID == _currentEntityId)
+  if (entityID == _currentEntityId)
   {
     _currentEntity = nullptr;
-    _window->setTagname("", "");
+    _window->setTagname ("", "");
     _currentEntityId = "";
   }
 }
 
-bool PropertiesViewPlugin::saveSubsession()
+bool
+PropertiesViewPlugin::saveSubsession ()
 {
   /*!< TODO: Implement PropertiesViewPlugin::saveSubsession() */
   return true;
 }
 
-void PropertiesViewPlugin::init()
+void
+PropertiesViewPlugin::init ()
 {
   /*!< TODO: Implement PropertiesViewPlugin::init() */
-  //TODO: All
+  // TODO: All
   /*
     QPushButton *refresh = new QPushButton(window);
     refresh->setIcon(QIcon(":/mainwindow/refreshplugin"));
@@ -94,122 +101,134 @@ void PropertiesViewPlugin::init()
    */
 }
 
-void PropertiesViewPlugin::changeSelectedEntity(QString pluginID, void *param)
+void
+PropertiesViewPlugin::changeSelectedEntity (QString pluginID, void *param)
 {
-  Q_UNUSED(pluginID)
+  Q_UNUSED (pluginID)
 
-  QString *id = (QString*) param;
-  if(id != nullptr && *id != "") {
-    _currentEntity = project->getEntityById(*id);
+  QString *id = (QString *)param;
+  if (id != nullptr && *id != "")
+  {
+    _currentEntity = project->getEntityById (*id);
     _currentEntityId = *id;
   }
 
-  if(_currentEntity != nullptr)
+  if (_currentEntity != nullptr)
   {
-    _window->setTagname(_currentEntity->getType(), "");
-    updateCurrentEntity();
+    _window->setTagname (_currentEntity->getType (), "");
+    updateCurrentEntity ();
   }
 
-  emit sendBroadcastMessage("askAllValidationMessages", nullptr);
+  emit sendBroadcastMessage ("askAllValidationMessages", nullptr);
 }
 
-void PropertiesViewPlugin::updateCurrentEntity(QString errorMessage)
+void
+PropertiesViewPlugin::updateCurrentEntity (QString errorMessage)
 {
   QString name;
-  if( _currentEntity->hasAttribute("id") )
-    name = _currentEntity->getAttribute("id");
-  else if(_currentEntity->hasAttribute("name"))
-    name = _currentEntity->getAttribute("name");
+  if (_currentEntity->hasAttribute ("id"))
+    name = _currentEntity->getAttribute ("id");
+  else if (_currentEntity->hasAttribute ("name"))
+    name = _currentEntity->getAttribute ("name");
   else
     name = "Unknown";
 
-  if(_currentEntity->getType() != _window->getTagname())
-    _window->setTagname(_currentEntity->getType(), name);
-  else if(_window->getCurrentName() != name)
-    _window->setCurrentName(name);
+  if (_currentEntity->getType () != _window->getTagname ())
+    _window->setTagname (_currentEntity->getType (), name);
+  else if (_window->getCurrentName () != name)
+    _window->setCurrentName (name);
 
-  _window->setErrorMessage(errorMessage);
+  _window->setErrorMessage (errorMessage);
 
-  QMap <QString, QString> attrs = _currentEntity->getAttributes();
+  QMap<QString, QString> attrs = _currentEntity->getAttributes ();
   foreach (const QString &key, attrs)
   {
-    _window->setAttributeValue(key, attrs[key]);
+    _window->setAttributeValue (key, attrs[key]);
   }
 }
 
-void PropertiesViewPlugin::updateCurrentEntityAttr(QString attr, QString value)
+void
+PropertiesViewPlugin::updateCurrentEntityAttr (QString attr, QString value)
 {
   if (_currentEntity != nullptr)
   {
-    if(_currentEntity->hasAttribute(attr) &&
-       _currentEntity->getAttribute(attr) == value)
+    if (_currentEntity->hasAttribute (attr)
+        && _currentEntity->getAttribute (attr) == value)
     {
-      //do nothing
+      // do nothing
       return;
     }
     else
     {
-      QMap <QString, QString> attrs;
-      QMap <QString, QString> entityAttrs = _currentEntity->getAttributes();
+      QMap<QString, QString> attrs;
+      QMap<QString, QString> entityAttrs = _currentEntity->getAttributes ();
 
-      foreach (const QString &key, entityAttrs.keys())
+      foreach (const QString &key, entityAttrs.keys ())
       {
-        if(key == attr)
+        if (key == attr)
         {
-          if(!value.isNull() && !value.isEmpty())
+          if (!value.isNull () && !value.isEmpty ())
           {
-            if(NCLStructure::getInstance()->getAttributeDatatype(_currentEntity->getType(), attr) == "URI")
+            if (NCLStructure::getInstance ()->getAttributeDatatype (
+                    _currentEntity->getType (), attr)
+                == "URI")
             {
-              try {
-                value = Utilities::relativePath(project->getLocation(),
-                                                value,
-                                                true);
+              try
+              {
+                value = Utilities::relativePath (project->getLocation (),
+                                                 value, true);
               }
-              catch(...){
-                qDebug() << "Do not changing to a relative path";
+              catch (...)
+              {
+                qDebug () << "Do not changing to a relative path";
               }
             }
-            attrs.insert(attr, value);
+            attrs.insert (attr, value);
           }
         }
         else
-          attrs.insert(key, entityAttrs[key]);
+          attrs.insert (key, entityAttrs[key]);
       }
 
-      if(!attrs.contains(attr))
+      if (!attrs.contains (attr))
       {
-        if(!value.isNull() && !value.isEmpty() && value != "")
+        if (!value.isNull () && !value.isEmpty () && value != "")
         {
-          if(NCLStructure::getInstance()->getAttributeDatatype(_currentEntity->getType(), attr) == "URI")
+          if (NCLStructure::getInstance ()->getAttributeDatatype (
+                  _currentEntity->getType (), attr)
+              == "URI")
           {
-            try {
-              value = Utilities::relativePath(project->getLocation(), value,
-                                              true);
+            try
+            {
+              value = Utilities::relativePath (project->getLocation (), value,
+                                               true);
             }
-            catch(...){
-              qDebug() << "Do not changing to a relative path";
+            catch (...)
+            {
+              qDebug () << "Do not changing to a relative path";
             }
           }
-          attrs.insert(attr, value);
+          attrs.insert (attr, value);
         }
       }
 
-      emit setAttributes(_currentEntity, attrs);
+      emit setAttributes (_currentEntity, attrs);
     }
   }
 }
 
-void PropertiesViewPlugin::validationError(QString pluginID, void * param)
+void
+PropertiesViewPlugin::validationError (QString pluginID, void *param)
 {
-  Q_UNUSED(pluginID)
+  Q_UNUSED (pluginID)
 
   if (param)
   {
-    pair <QString , QString> *p = (pair <QString, QString> *) param;
+    pair<QString, QString> *p = (pair<QString, QString> *)param;
 
     QString uid = p->first;
 
-    if(_currentEntity == project->getEntityById(uid))
-      updateCurrentEntity(p->second);
+    if (_currentEntity == project->getEntityById (uid))
+      updateCurrentEntity (p->second);
   }
 }

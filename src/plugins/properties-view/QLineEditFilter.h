@@ -18,26 +18,26 @@
 #ifndef QLINEEDITFILTER_H
 #define QLINEEDITFILTER_H
 
-#include <QLineEdit>
 #include <QFocusEvent>
+#include <QLineEdit>
 
 class QLineEditFilter : public QLineEdit
 {
   Q_OBJECT
 
 public:
-  QLineEditFilter(QWidget *parent);
-  virtual ~QLineEditFilter();
+  QLineEditFilter (QWidget *parent);
+  virtual ~QLineEditFilter ();
 
 signals:
-  void filterTextChanged(const QString &);
+  void filterTextChanged (const QString &);
 
 protected:
-  void focusInEvent(QFocusEvent *);
-  void focusOutEvent(QFocusEvent *);
+  void focusInEvent (QFocusEvent *);
+  void focusOutEvent (QFocusEvent *);
 
 private slots:
-  void userTextEdited(const QString &);
+  void userTextEdited (const QString &);
 
 private:
   bool _isFilterText;

@@ -17,46 +17,47 @@
  */
 #include "QLineEditFilter.h"
 
-QLineEditFilter::QLineEditFilter(QWidget *parent) : QLineEdit(parent)
+QLineEditFilter::QLineEditFilter (QWidget *parent) : QLineEdit (parent)
 {
-  setStyleSheet("color: #bbbbbb;");
-  setText(tr("Filter..."));
+  setStyleSheet ("color: #bbbbbb;");
+  setText (tr ("Filter..."));
   _isFilterText = true;
 
-  connect(this, SIGNAL(textEdited(QString)),
-          this, SLOT(userTextEdited(QString)));
+  connect (this, SIGNAL (textEdited (QString)), this,
+           SLOT (userTextEdited (QString)));
 }
 
-QLineEditFilter::~QLineEditFilter()
-{
+QLineEditFilter::~QLineEditFilter () {}
 
-}
-
-void QLineEditFilter::focusInEvent(QFocusEvent *focusEvent)
+void
+QLineEditFilter::focusInEvent (QFocusEvent *focusEvent)
 {
-  if(_isFilterText)
+  if (_isFilterText)
   {
-    setText("");
-    setStyleSheet("color: #000000;");
+    setText ("");
+    setStyleSheet ("color: #000000;");
     _isFilterText = false;
   }
-  QLineEdit::focusInEvent(focusEvent);
+  QLineEdit::focusInEvent (focusEvent);
 }
 
-void QLineEditFilter::focusOutEvent(QFocusEvent *focusEvent)
+void
+QLineEditFilter::focusOutEvent (QFocusEvent *focusEvent)
 {
-  if(text() == "") {
+  if (text () == "")
+  {
     _isFilterText = true;
-    setStyleSheet("color: #bbbbbb;");
-    setText(tr("Filter..."));
+    setStyleSheet ("color: #bbbbbb;");
+    setText (tr ("Filter..."));
   }
-  QLineEdit::focusOutEvent(focusEvent);
+  QLineEdit::focusOutEvent (focusEvent);
 }
 
-void QLineEditFilter::userTextEdited(const QString &text)
+void
+QLineEditFilter::userTextEdited (const QString &text)
 {
-  if(!_isFilterText)
-    emit filterTextChanged(text);
+  if (!_isFilterText)
+    emit filterTextChanged (text);
   else
-    emit filterTextChanged(QString (""));
+    emit filterTextChanged (QString (""));
 }

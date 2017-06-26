@@ -17,35 +17,33 @@
  */
 #include "PropertyButton.h"
 
-#include <QFileDialog>
-#include <QToolButton>
 #include <QApplication>
+#include <QFileDialog>
 #include <QMessageBox>
+#include <QToolButton>
 
 #include <QDebug>
 
 #include <util/Utilities.h>
 using namespace cpr::core;
 
-PropertyButtons::PropertyButtons(QWidget *parent)
-  : LineEditWithButton(parent, ":/images/esf-search.png")
+PropertyButtons::PropertyButtons (QWidget *parent)
+    : LineEditWithButton (parent, ":/images/esf-search.png")
 {
-  connect(_mButton, SIGNAL(pressed()),
-                   SLOT(openfile()), Qt::DirectConnection);
+  connect (_mButton, SIGNAL (pressed ()), SLOT (openfile ()),
+           Qt::DirectConnection);
 }
 
-void PropertyButtons::openfile()
+void
+PropertyButtons::openfile ()
 {
-  QString filename = QFileDialog::getOpenFileName(this,
-                                             tr("Select file"),
-                                             Utilities::getLastFileDialogPath(),
-                                             "",
-                                             nullptr,
-                                             QFileDialog::DontUseNativeDialog);
+  QString filename = QFileDialog::getOpenFileName (
+      this, tr ("Select file"), Utilities::getLastFileDialogPath (), "",
+      nullptr, QFileDialog::DontUseNativeDialog);
 
-  if(!filename.isEmpty() && !filename.isNull())
+  if (!filename.isEmpty () && !filename.isNull ())
   {
-    Utilities::updateLastFileDialogPath(filename);
-    setText(filename);
+    Utilities::updateLastFileDialogPath (filename);
+    setText (filename);
   }
 }

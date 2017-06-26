@@ -17,24 +17,20 @@
  */
 #include "PropertiesViewFactory.h"
 
-PropertiesViewFactory::PropertiesViewFactory()
-{
+PropertiesViewFactory::PropertiesViewFactory () {}
 
+PropertiesViewFactory::~PropertiesViewFactory () {}
+
+IPlugin *
+PropertiesViewFactory::createPluginInstance ()
+{
+  return new PropertiesViewPlugin ();
 }
 
-PropertiesViewFactory::~PropertiesViewFactory()
+void
+PropertiesViewFactory::releasePluginInstance (IPlugin *plugin)
 {
-
-}
-
-IPlugin* PropertiesViewFactory::createPluginInstance()
-{
-  return new PropertiesViewPlugin();
-}
-
-void PropertiesViewFactory::releasePluginInstance(IPlugin *plugin)
-{
-  PropertiesViewPlugin *debug = qobject_cast<PropertiesViewPlugin*>(plugin);
+  PropertiesViewPlugin *debug = qobject_cast<PropertiesViewPlugin *> (plugin);
 
   if (debug)
   {
@@ -43,12 +39,14 @@ void PropertiesViewFactory::releasePluginInstance(IPlugin *plugin)
   }
 }
 
-QString PropertiesViewFactory::id() const
+QString
+PropertiesViewFactory::id () const
 {
   return "br.puc-rio.telemidia.PropertiesView";
 }
 
-QIcon PropertiesViewFactory::icon()  const
+QIcon
+PropertiesViewFactory::icon () const
 {
-  return QIcon(":/images/icon.png");
+  return QIcon (":/images/icon.png");
 }
